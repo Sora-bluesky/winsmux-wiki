@@ -63,20 +63,36 @@ function parseFrontmatter(src: string): { data: Record<string, string | string[]
   return { data, body };
 }
 
+export type Heading = { depth: 2 | 3; text: string; id: string };
+
+export function extractHeadings(body: string): Heading[] {
+  const out: Heading[] = [];
+  let inFence = false;
+  for (const l of body.split('\n')) {
+    if (l.startsWith('```')) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+    const m = l.match(/^(##|###) (.+)$/);
+    if (!m) continue;
+    const { text, id } = headingParts(m[2].trim());
+    out.push({ depth: m[1].length as 2 | 3, text: text.replace(/[`*]/g, ''), id });
+  }
+  return out;
+}
+
 function tocHtml(body: string): string {
-  const heads = body
-    .split('\n')
-    .filter((l) => l.startsWith('## '))
-    .map((l) => l.slice(3).trim());
-  if (heads.length < 3) return '';
+  const heads = extractHeadings(body);
+  if (heads.filter((h) => h.depth === 2).length < 3) return '';
   const items = heads
-    .map((h) => {
-      const { text, id } = headingParts(h);
-      return `<li><a href="#${id}">${text.replace(/[`*]/g, '')}</a></li>`;
-    })
+    .map(
+      (h) =>
+        `<li${h.depth === 3 ? ' class="ml-4"' : ''}><a href="#${h.id}">${h.text}</a></li>`,
+    )
     .join('');
   return (
-    '<details class="toc my-6 rounded-lg border border-border bg-bg-subtle px-4 py-3 text-sm">' +
+    '<details class="toc my-6 rounded-lg border border-border bg-bg-subtle px-4 py-3 text-sm 2xl:hidden">' +
     '<summary class="cursor-pointer select-none font-semibold">目次</summary>' +
     `<ul class="mt-2 space-y-1">${items}</ul></details>`
   );
@@ -87,7 +103,19 @@ export function buildDoc(id: string, src: string): DocData {
   const sources = Array.isArray(data.sources) ? data.sources : [];
   const rendered = renderMarkdown(body);
   const toc = tocHtml(body);
-  const html = resolveMirrorLinks(toc ? rendered.replace(/<\/h1>/, '</h1>' + toc) : rendered);
+  const rail = toc
+    ? '<nav class="toc-rail fixed right-4 top-24 hidden max-h-[70vh] w-56 overflow-y-auto text-sm 2xl:block" aria-label="このページの目次">' +
+      '<p class="pb-1 text-xs font-semibold text-fg-muted">目次</p>' +
+      `<ul class="space-y-1 border-l border-border pl-3">${extractHeadings(body)
+        .map(
+          (h) =>
+            `<li${h.depth === 3 ? ' class="ml-3"' : ''}><a class="text-fg-muted no-underline hover:text-fg" href="#${h.id}">${h.text}</a></li>`,
+        )
+        .join('')}</ul></nav>`
+    : '';
+  const html = resolveMirrorLinks(
+    toc ? rendered.replace(/<\/h1>/, '</h1>' + toc + rail) : rendered,
+  );
   return {
     id,
     title: String(data.title ?? id),

@@ -125,6 +125,42 @@ const next = hasOverride
     </div>
     {showAsk && rawPath && <AskBar rawPath={rawPath} />}
     <script>
+      // 右レール目次の現在地追従（scroll 位置から決定論的に計算）
+      const rail = document.querySelector('.toc-rail');
+      if (rail) {
+        const links = new Map(
+          [...rail.querySelectorAll('a[href^="#"]')].map((a) => [
+            decodeURIComponent(a.getAttribute('href')!.slice(1)),
+            a,
+          ]),
+        );
+        const targets = [...links.keys()]
+          .map((id) => document.getElementById(id))
+          .filter((el): el is HTMLElement => el !== null);
+        let ticking = false;
+        const update = () => {
+          ticking = false;
+          const line = window.scrollY + window.innerHeight * 0.3;
+          let current: string | null = null;
+          for (const el of targets) {
+            if (el.offsetTop <= line) current = el.id;
+            else break;
+          }
+          for (const a of links.values()) a.classList.remove('font-semibold', 'text-fg');
+          if (current) links.get(current)?.classList.add('font-semibold', 'text-fg');
+        };
+        addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              ticking = true;
+              requestAnimationFrame(update);
+            }
+          },
+          { passive: true },
+        );
+        update();
+      }
       document.addEventListener('click', async (e) => {
         const btn = (e.target as HTMLElement).closest('.copy-code');
         if (!(btn instanceof HTMLButtonElement)) return;
