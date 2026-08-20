@@ -13,7 +13,7 @@ raw: /hermes/raw/start.md
 
 # Hermes Agentをインストールする
 
-このページは、公式の Quickstart、Installation、Messaging の順を日本語にしたものです。手順は公式と同じです。独自の手順は足していません。
+このページは、公式の Quickstart、Installation、Messaging の順を日本語にしたものです。手順は公式と同じです。
 
 ## 案内
 
