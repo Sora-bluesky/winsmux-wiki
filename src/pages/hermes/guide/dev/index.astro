@@ -1,0 +1,18 @@
+---
+import src from '../../../../raw/dev.md?raw';
+import { buildDoc } from '../../../../lib/doc';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+
+const doc = buildDoc('dev', src);
+---
+
+<BaseLayout
+  title={doc.title}
+  description={doc.description}
+  rawPath={doc.rawPath}
+  sources={doc.sources}
+  hermesVersion={doc.hermesVersion}
+  confidence={doc.confidence}
+>
+  <article class="prose" set:html={doc.html} />
+</BaseLayout>

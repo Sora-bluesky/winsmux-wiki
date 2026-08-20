@@ -51,3 +51,30 @@ const body = sections
 
 await writeFile(join(root, 'src/raw/all.md'), head + body + '\n');
 console.log(`all.md: ${sections.length} sections, ${total} URLs`);
+
+// dev.md — Developer Guide のみ。入口カードには出さない。
+const dev = sections.find((s) => s.name === 'Developer Guide');
+if (!dev || dev.items.length < 10) {
+  throw new Error('Developer Guide section missing or suspiciously small — llms.txt format changed?');
+}
+const devMd = `---
+title: developer-guide
+description: 公式 developer-guide の索引。Hermes 本体を拡張・貢献する人向け。
+sources:
+  - https://hermes-agent.nousresearch.com/docs/developer-guide/architecture
+  - https://hermes-agent.nousresearch.com/docs/llms.txt
+hermes_version: "0.20.4"
+confidence: high
+raw: /hermes/raw/dev.md
+---
+
+# developer-guide
+
+Hermes Agent 本体を拡張したり、上流に貢献したりする人向けの公式ページ（${dev.items.length} 件）です。リンク先はすべて公式（英語）。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
+
+## Developer Guide（${dev.items.length}）
+
+${dev.items.map(([t, u]) => `- [${t}](${u})`).join('\n')}
+`;
+await writeFile(join(root, 'src/raw/dev.md'), devMd);
+console.log(`dev.md: ${dev.items.length} URLs`);

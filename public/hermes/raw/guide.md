@@ -54,4 +54,26 @@ raw: /hermes/raw/guide.md
 - skill の探し方、入れ方、作り方 — [Work with Skills](https://hermes-agent.nousresearch.com/docs/guides/work-with-skills)
 - cron の実例パターン（監視、レポート、パイプライン） — [Automate with Cron](https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron)
 
-skills の一覧や developer-guide は、入口には出しません。正本は [公式 docs](https://hermes-agent.nousresearch.com/docs/) です。
+## しくみを知る
+
+日本語の短い説明です。手順はありません。正本は各ページに書いてあります。
+
+- [Gateway](/hermes/concepts/gateway/) — メッセージの窓口
+- [Skills](/hermes/concepts/skills/) — あとから足せる知識
+- [Memory](/hermes/concepts/memory/) — 会話をまたぐ記憶
+- [Cron](/hermes/concepts/cron/) — 定時実行
+- [承認](/hermes/concepts/approval/) — 危険な操作を止める
+- [設定](/hermes/concepts/config/) — config.yaml とモデル
+- [コストとモデル](/hermes/syntheses/cost-and-model/) — お金のかかりどころ
+- [正本との差分](/hermes/syntheses/not-a-mirror/) — このサイトと公式の関係
+
+## 置き場所とつなぎ先
+
+- [ローカル](/hermes/entities/local/) — 手元のマシン
+- [Docker](/hermes/entities/docker/) — コンテナで隔離
+- [VPS](/hermes/entities/vps/) — 借りたサーバーに常駐
+- [LINE](/hermes/entities/line/) — LINE から使う
+- [Telegram](/hermes/entities/telegram/) — Telegram から使う
+- [Nous Portal](/hermes/entities/nous-portal/) — 推奨のモデル契約
+
+skill の全一覧は [skill](/hermes/guide/skills/)、開発者向けは [developer-guide](/hermes/guide/dev/) にあります。正本は [公式 docs](https://hermes-agent.nousresearch.com/docs/) です。

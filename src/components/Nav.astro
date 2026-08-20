@@ -4,10 +4,18 @@ import { PAGES } from '../lib/pages.mjs';
 const path = Astro.url.pathname;
 const installActive = path === '/hermes/' || path.startsWith('/hermes/start/') || path.startsWith('/hermes/live/');
 const guideActive = path.startsWith('/hermes/guide/') || path.startsWith('/hermes/ops/') || path.startsWith('/hermes/trust/');
+
+type Group = { name: string; items: typeof PAGES };
+const groups: Group[] = [];
+for (const p of PAGES) {
+  const g = groups.find((x) => x.name === p.group);
+  if (g) g.items.push(p);
+  else groups.push({ name: p.group, items: [p] });
+}
 ---
 
 <header class="border-b border-border bg-bg">
-  <div class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+  <div class="mx-auto flex max-w-3xl lg:max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
     <a href="/hermes/" class="text-sm font-semibold text-fg no-underline hover:text-fg">
       Hermes Agent
     </a>
@@ -46,27 +54,34 @@ const guideActive = path.startsWith('/hermes/guide/') || path.startsWith('/herme
     </div>
   </div>
   <div id="site-menu" class="hidden border-t border-border bg-bg">
-    <nav class="mx-auto max-w-3xl px-4 py-3 sm:px-6" aria-label="全ページ">
-      <ul class="space-y-1 text-sm">
-        {
-          PAGES.map((p) => (
-            <li>
-              <a
-                href={p.path}
-                class:list={[
-                  'flex min-h-11 items-center rounded-lg px-3 no-underline',
-                  p.path === path
-                    ? 'bg-bg-subtle font-semibold text-fg'
-                    : 'text-fg-muted hover:bg-bg-subtle hover:text-fg',
-                ]}
-                aria-current={p.path === path ? 'page' : undefined}
-              >
-                {p.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+    <nav class="mx-auto max-w-3xl lg:max-w-5xl px-4 py-3 sm:px-6 lg:columns-2 lg:gap-8" aria-label="全ページ">
+      {
+        groups.map((g) => (
+          <div class="break-inside-avoid pb-2">
+            {g.name && (
+              <p class="px-3 pb-1 pt-3 text-xs font-semibold text-fg-muted">{g.name}</p>
+            )}
+            <ul class="space-y-1 text-sm">
+              {g.items.map((p) => (
+                <li>
+                  <a
+                    href={p.path}
+                    class:list={[
+                      'flex min-h-11 items-center rounded-lg px-3 no-underline',
+                      p.path === path
+                        ? 'bg-bg-subtle font-semibold text-fg'
+                        : 'text-fg-muted hover:bg-bg-subtle hover:text-fg',
+                    ]}
+                    aria-current={p.path === path ? 'page' : undefined}
+                  >
+                    {p.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
     </nav>
   </div>
 </header>

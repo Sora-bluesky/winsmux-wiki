@@ -46,7 +46,7 @@ const next = pageIndex >= 0 && pageIndex < PAGES.length - 1 ? PAGES[pageIndex + 
   </head>
   <body class="min-h-screen bg-bg text-fg">
     <Nav />
-    <main class="mx-auto w-full max-w-3xl px-4 pb-36 pt-8 sm:px-6">
+    <main class="mx-auto w-full max-w-3xl lg:max-w-5xl px-4 pb-36 pt-8 sm:px-6">
       <slot />
       {
         (prev || next) && (

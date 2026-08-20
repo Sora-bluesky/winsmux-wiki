@@ -17,10 +17,38 @@ Hermes Agent 0.20.4
 - [Hermes Agentの使い方（よく使う）](https://wiki.winsmux.dev/hermes/guide/)
 - [すべて（公式全URLの索引）](https://wiki.winsmux.dev/hermes/guide/all/)
 - [skill（公式skillの同期索引）](https://wiki.winsmux.dev/hermes/guide/skills/)
+- [developer-guide（公式索引）](https://wiki.winsmux.dev/hermes/guide/dev/)
+- [Gateway](https://wiki.winsmux.dev/hermes/concepts/gateway/)
+- [Skills](https://wiki.winsmux.dev/hermes/concepts/skills/)
+- [Memory](https://wiki.winsmux.dev/hermes/concepts/memory/)
+- [Cron](https://wiki.winsmux.dev/hermes/concepts/cron/)
+- [承認](https://wiki.winsmux.dev/hermes/concepts/approval/)
+- [設定](https://wiki.winsmux.dev/hermes/concepts/config/)
+- [ローカル](https://wiki.winsmux.dev/hermes/entities/local/)
+- [Docker](https://wiki.winsmux.dev/hermes/entities/docker/)
+- [VPS](https://wiki.winsmux.dev/hermes/entities/vps/)
+- [LINEから使う](https://wiki.winsmux.dev/hermes/entities/line/)
+- [Telegramから使う](https://wiki.winsmux.dev/hermes/entities/telegram/)
+- [Nous Portal](https://wiki.winsmux.dev/hermes/entities/nous-portal/)
+- [コストとモデル](https://wiki.winsmux.dev/hermes/syntheses/cost-and-model/)
+- [正本との差分](https://wiki.winsmux.dev/hermes/syntheses/not-a-mirror/)
 
 ## 生 Markdown
 
 - https://wiki.winsmux.dev/hermes/raw/all.md
+- https://wiki.winsmux.dev/hermes/raw/concepts/approval.md
+- https://wiki.winsmux.dev/hermes/raw/concepts/config.md
+- https://wiki.winsmux.dev/hermes/raw/concepts/cron.md
+- https://wiki.winsmux.dev/hermes/raw/concepts/gateway.md
+- https://wiki.winsmux.dev/hermes/raw/concepts/memory.md
+- https://wiki.winsmux.dev/hermes/raw/concepts/skills.md
+- https://wiki.winsmux.dev/hermes/raw/dev.md
+- https://wiki.winsmux.dev/hermes/raw/entities/docker.md
+- https://wiki.winsmux.dev/hermes/raw/entities/line.md
+- https://wiki.winsmux.dev/hermes/raw/entities/local.md
+- https://wiki.winsmux.dev/hermes/raw/entities/nous-portal.md
+- https://wiki.winsmux.dev/hermes/raw/entities/telegram.md
+- https://wiki.winsmux.dev/hermes/raw/entities/vps.md
 - https://wiki.winsmux.dev/hermes/raw/guide.md
 - https://wiki.winsmux.dev/hermes/raw/home.md
 - https://wiki.winsmux.dev/hermes/raw/index.md
@@ -29,6 +57,8 @@ Hermes Agent 0.20.4
 - https://wiki.winsmux.dev/hermes/raw/ops.md
 - https://wiki.winsmux.dev/hermes/raw/skills.md
 - https://wiki.winsmux.dev/hermes/raw/start.md
+- https://wiki.winsmux.dev/hermes/raw/syntheses/cost-and-model.md
+- https://wiki.winsmux.dev/hermes/raw/syntheses/not-a-mirror.md
 - https://wiki.winsmux.dev/hermes/raw/telegram.md
 - https://wiki.winsmux.dev/hermes/raw/trust.md
 
