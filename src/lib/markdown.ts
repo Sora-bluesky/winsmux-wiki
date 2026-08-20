@@ -23,7 +23,11 @@ export function headingSlug(s: string): string {
 
 function inline(s: string): string {
   let out = escapeHtml(s);
-  out = out.replace(/\[([^\]]+)\]\((https?:[^)]+|\/[^)]+)\)/g, '<a href="$2">$1</a>');
+  out = out.replace(
+    /\[([^\]]+)\]\((https?:[^)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener">$1</a>',
+  );
+  out = out.replace(/\[([^\]]+)\]\((\/[^)]+)\)/g, '<a href="$2">$1</a>');
   out = out.replace(/`([^`]+)`/g, '<code>$1</code>');
   out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   return out;

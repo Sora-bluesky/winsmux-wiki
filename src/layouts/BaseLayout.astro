@@ -99,7 +99,9 @@ const next = pageIndex >= 0 && pageIndex < PAGES.length - 1 ? PAGES[pageIndex + 
                 {sources.map((url, i) => (
                   <>
                     {i > 0 && ' · '}
-                    <a href={url}>{url.replace('https://hermes-agent.nousresearch.com', '')}</a>
+                    <a href={url} target="_blank" rel="noopener">
+                      {url.replace('https://hermes-agent.nousresearch.com', '')}
+                    </a>
                   </>
                 ))}
               </p>
