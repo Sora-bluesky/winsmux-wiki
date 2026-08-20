@@ -50,7 +50,7 @@ for (const p of PAGES) {
       <button
         id="menu-button"
         type="button"
-        class="flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:bg-bg-subtle hover:text-fg"
+        class="flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:bg-bg-subtle hover:text-fg lg:hidden"
         aria-label="メニューを開く"
         aria-expanded="false"
         aria-controls="site-menu"
@@ -60,7 +60,7 @@ for (const p of PAGES) {
       </button>
     </div>
   </div>
-  <div id="site-menu" class="hidden border-t border-border bg-bg">
+  <div id="site-menu" class="hidden border-t border-border bg-bg lg:!hidden">
     <nav class="mx-auto max-w-3xl lg:max-w-5xl px-4 py-3 sm:px-6 lg:columns-2 lg:gap-8" aria-label="全ページ">
       <a
         href="/hermes/search/"
