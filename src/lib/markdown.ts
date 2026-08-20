@@ -29,6 +29,7 @@ export function headingSlug(s: string): string {
 
 function inline(s: string): string {
   let out = escapeHtml(s);
+  out = out.replace(/&lt;(\/?(?:strong|em|b|i|kbd|sup|sub|br))&gt;/g, '<$1>');
   out = out.replace(
     /!\[([^\]]*)\]\((https?:[^)]+|\/[^)]+)\)/g,
     '<img src="$2" alt="$1" loading="lazy" class="my-2 max-w-full rounded-lg border border-border" />',
@@ -96,7 +97,7 @@ export function renderMarkdown(md: string): string {
       continue;
     }
     if (line.startsWith('# ')) {
-      html.push(`<h1>${inline(line.slice(2))}</h1>`);
+      html.push(`<h1>${inline(headingParts(line.slice(2)).text)}</h1>`);
       i += 1;
       continue;
     }

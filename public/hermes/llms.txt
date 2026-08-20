@@ -32,6 +32,13 @@ Hermes Agent 0.20.4
 - [Nous Portal](https://wiki.winsmux.dev/hermes/entities/nous-portal/)
 - [コストとモデル](https://wiki.winsmux.dev/hermes/syntheses/cost-and-model/)
 - [正本との差分](https://wiki.winsmux.dev/hermes/syntheses/not-a-mirror/)
+- [getting-started/installation（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
+- [getting-started/learning-path（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/learning-path/)
+- [getting-started/nix-setup（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
+- [getting-started/platform-support（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
+- [getting-started/quickstart（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
+- [getting-started/termux（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/termux/)
+- [getting-started/updating（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
 
 ## 生 Markdown
 
@@ -43,6 +50,13 @@ Hermes Agent 0.20.4
 - https://wiki.winsmux.dev/hermes/raw/concepts/memory.md
 - https://wiki.winsmux.dev/hermes/raw/concepts/skills.md
 - https://wiki.winsmux.dev/hermes/raw/dev.md
+- https://wiki.winsmux.dev/hermes/raw/docs/getting-started/installation.md
+- https://wiki.winsmux.dev/hermes/raw/docs/getting-started/learning-path.md
+- https://wiki.winsmux.dev/hermes/raw/docs/getting-started/nix-setup.md
+- https://wiki.winsmux.dev/hermes/raw/docs/getting-started/platform-support.md
+- https://wiki.winsmux.dev/hermes/raw/docs/getting-started/quickstart.md
+- https://wiki.winsmux.dev/hermes/raw/docs/getting-started/termux.md
+- https://wiki.winsmux.dev/hermes/raw/docs/getting-started/updating.md
 - https://wiki.winsmux.dev/hermes/raw/entities/docker.md
 - https://wiki.winsmux.dev/hermes/raw/entities/line.md
 - https://wiki.winsmux.dev/hermes/raw/entities/local.md

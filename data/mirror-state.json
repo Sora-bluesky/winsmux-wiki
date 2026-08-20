@@ -139,31 +139,38 @@
     },
     "getting-started/installation.md": {
       "blob": "3689db72ac1b2c3faa07164e509200d8f64abdad",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T12:32:58.749Z"
     },
     "getting-started/learning-path.md": {
       "blob": "0f6e9d85101cafaa5d88f09e56b6ebc1b10bac70",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T12:41:06.579Z"
     },
     "getting-started/nix-setup.md": {
       "blob": "a663721a914a3bd6681f61c2479af0dd62d0115e",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T12:41:06.585Z"
     },
     "getting-started/platform-support.md": {
       "blob": "1791716717c92e07f449eed99eace2fec2fe5a03",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T12:34:32.371Z"
     },
     "getting-started/quickstart.md": {
       "blob": "73c63a7e7ee6c003eb419b2fe5cffa3bec1ff868",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T12:34:47.414Z"
     },
     "getting-started/termux.md": {
       "blob": "6b31efb30c47f843ea32a668b8790855cb528907",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T12:41:06.583Z"
     },
     "getting-started/updating.md": {
       "blob": "4e1f33e9bccd7f62556340cf4206d2810791158f",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T12:41:06.583Z"
     },
     "guides/agent-email-address.md": {
       "blob": "a879b8ace8d934265cd2bf7b4d5d8a8317ac90c8",

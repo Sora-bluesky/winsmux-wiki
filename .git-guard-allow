@@ -1,0 +1,6 @@
+# Mirrored upstream public docs. Code fences must stay byte-identical to
+# NousResearch/hermes-agent website/docs, which uses placeholder keys in
+# examples (sk-or-..., 123456:ABC...). Secret-scan skip only; all other
+# pre-commit checks still apply. Added 2026-08-20 (nix-setup.md false positive).
+src/raw/docs/*
+public/hermes/raw/docs/*
