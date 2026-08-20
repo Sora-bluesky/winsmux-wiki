@@ -42,6 +42,7 @@ function listUpstream() {
     if (!/\.(md|mdx)$/.test(rel)) continue;
     if (rel === 'index.mdx') continue; // site landing; /hermes/docs/ top is generated locally
     if (rel === 'user-stories.mdx') continue; // JSX collage page, not mirrorable content
+    if (rel === 'reference/automation-blueprints-catalog.mdx') continue; // JSX catalog component page
     out.set(rel, m[1]);
   }
   return out;
@@ -77,7 +78,7 @@ function transform(rel, src) {
 
   // Protect code fences from further transforms
   const fences = [];
-  s = s.replace(/^```[\s\S]*?^```\s*$/gm, (block) => {
+  s = s.replace(/^[ \t]*```[\s\S]*?^[ \t]*```[ \t]*$/gm, (block) => {
     fences.push(block);
     return `\u0000FENCE${fences.length - 1}\u0000`;
   });
@@ -109,20 +110,34 @@ function transform(rel, src) {
     const abs = src.startsWith('/') ? `${OFFICIAL}${src}` : src;
     return `![${alt}](${abs})`;
   });
+  // alert divs -> admonitions
+  const alertMap = { warning: 'warning', danger: 'danger', info: 'info', success: 'tip', secondary: 'note' };
+  s = s.replace(/<div class="alert alert--(\w+)">\s*([\s\S]*?)\s*<\/div>/g, (_, kind, body) => {
+    return `:::${alertMap[kind] ?? 'note'}
+${body.trim()}
+:::`;
+  });
+  // CTA button: a styled div wrapping one styled <a> -> markdown link
+  s = s.replace(/<div[^>]*>\s*<a [^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>\s*<\/div>/g, (_, url, text) => {
+    return `[${text.trim()}](${url})`;
+  });
+  // MDX-escaped angle brackets in prose are literal text, not markup
+  s = s.replace(/\\([<>])/g, '$1');
   // figure captions -> emphasized text
   s = s.replace(/<p className="docs-figure-caption">([\s\S]*?)<\/p>/g, (_, t) => `*${t.trim()}*`);
   // styled div wrappers left around a converted link -> unwrap
   s = s.replace(/<div[^>]*>\s*(\[[^\]]*\]\([^)]*\))\s*<\/div>/g, '$1');
   s = s.replace(/<div[^>]*>\s*<\/div>/g, '');
 
-  // Remaining JSX/HTML tags: allow a small inline whitelist, fail on the rest.
-  // Inline code spans are data, not markup — mask them for the scan.
-  // strong/em etc. are real HTML we escape-render as text or support; hyphenated
-  // lowercase tags (<service-user>) are prose placeholders, not components.
-  const allowed = /^<\/?(br|kbd|sup|sub|code|summary|details|strong|em|b|i|[a-z]+(?:-[a-z]+)+)(?![A-Za-z])/;
+  // Remaining tags: MDX components (Capitalized) and structural HTML we do not
+  // render must fail loud. Other lowercase tags are prose placeholders
+  // (<profile>, <timestamp>, <service-user>) that render safely as escaped text.
+  const structural = /^<\/?(div|span|iframe|video|img|table|thead|tbody|tr|td|th|section|figure|picture|source|script|style|form|input|button|a|p|ul|ol|li|h[1-6])(?![A-Za-z-])/i;
+  const component = /^<\/?[A-Z]/;
   const masked = s.replace(/`[^`\n]*`/g, '');
   for (const m of masked.matchAll(/<[A-Za-z\/][^>\n]*>/g)) {
-    if (!allowed.test(m[0]) && !m[0].startsWith('<http')) problems.push(`unsupported tag: ${m[0].slice(0, 60)}`);
+    if ((component.test(m[0]) || structural.test(m[0])) && !m[0].startsWith('<http'))
+      problems.push(`unsupported tag: ${m[0].slice(0, 60)}`);
   }
 
   // images: /img/... -> official absolute

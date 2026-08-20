@@ -50,11 +50,13 @@ export function renderMarkdown(md: string): string {
   let i = 0;
   while (i < lines.length) {
     const line = lines[i];
-    if (line.startsWith('```')) {
+    const fenceOpen = line.match(/^(\s*)```/);
+    if (fenceOpen) {
+      const indent = fenceOpen[1].length;
       const buf: string[] = [];
       i += 1;
-      while (i < lines.length && !lines[i].startsWith('```')) {
-        buf.push(lines[i]);
+      while (i < lines.length && !/^\s*```\s*$/.test(lines[i])) {
+        buf.push(lines[i].startsWith(fenceOpen[1]) ? lines[i].slice(indent) : lines[i]);
         i += 1;
       }
       html.push(

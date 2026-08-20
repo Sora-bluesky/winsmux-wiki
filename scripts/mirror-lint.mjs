@@ -9,11 +9,12 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const STATE_PATH = join(root, 'data/mirror-state.json');
 const FORBIDDEN = /wiki|はじめる|編む|暮らす|入れところ|リファレンス|複数台|\/fleet/;
 
+const FENCE_RE = /^[ \t]*```[^\n]*\n[\s\S]*?^[ \t]*```[ \t]*$/gm;
 function fences(md) {
-  return [...md.matchAll(/^```[^\n]*\n[\s\S]*?^```\s*$/gm)].map((m) => m[0]);
+  return [...md.matchAll(FENCE_RE)].map((m) => m[0]);
 }
 function stripFences(md) {
-  return md.replace(/^```[^\n]*\n[\s\S]*?^```\s*$/gm, '');
+  return md.replace(FENCE_RE, '');
 }
 function parts(md) {
   const noFence = stripFences(md);
