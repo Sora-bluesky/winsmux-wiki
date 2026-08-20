@@ -39,6 +39,26 @@ Hermes Agent 0.20.4
 - [getting-started/quickstart（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
 - [getting-started/termux（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/termux/)
 - [getting-started/updating（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- [user-guide/bot-mode（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
+- [user-guide/cli（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
+- [user-guide/configuration（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [user-guide/configuring-models（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
+- [user-guide/desktop（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [user-guide/egress/index（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/egress/index/)
+- [user-guide/egress/iron-proxy（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/egress/iron-proxy/)
+- [user-guide/git-worktrees（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/git-worktrees/)
+- [user-guide/managed-scope（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/managed-scope/)
+- [user-guide/multi-connection-desktop（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-connection-desktop/)
+- [user-guide/multi-profile-gateways（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
+- [user-guide/profile-distributions（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/profile-distributions/)
+- [user-guide/profiles（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
+- [user-guide/secrets/bitwarden（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/bitwarden/)
+- [user-guide/secrets/index（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/index/)
+- [user-guide/secrets/onepassword（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/onepassword/)
+- [user-guide/sessions（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
+- [user-guide/tui（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
+- [user-guide/windows-native（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
+- [user-guide/windows-wsl-quickstart（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-wsl-quickstart/)
 
 ## 生 Markdown
 
@@ -57,6 +77,26 @@ Hermes Agent 0.20.4
 - https://wiki.winsmux.dev/hermes/raw/docs/getting-started/quickstart.md
 - https://wiki.winsmux.dev/hermes/raw/docs/getting-started/termux.md
 - https://wiki.winsmux.dev/hermes/raw/docs/getting-started/updating.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/bot-mode.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/cli.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/configuration.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/configuring-models.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/desktop.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/egress/index.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/egress/iron-proxy.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/git-worktrees.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/managed-scope.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/multi-connection-desktop.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/multi-profile-gateways.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/profile-distributions.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/profiles.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/secrets/bitwarden.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/secrets/index.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/secrets/onepassword.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/sessions.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/tui.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/windows-native.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/windows-wsl-quickstart.md
 - https://wiki.winsmux.dev/hermes/raw/entities/docker.md
 - https://wiki.winsmux.dev/hermes/raw/entities/line.md
 - https://wiki.winsmux.dev/hermes/raw/entities/local.md

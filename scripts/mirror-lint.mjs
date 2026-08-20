@@ -21,7 +21,20 @@ function parts(md) {
     fences: fences(md),
     headings: [...noFence.matchAll(/^(#{1,4}) .*\{#([^}]+)\}\s*$/gm)].map((m) => `${m[1]} ${m[2]}`),
     links: [...noFence.matchAll(/\]\(([^)\s]+)\)/g)].map((m) => m[1]),
-    inlineCode: [...noFence.matchAll(/`[^`\n]+`/g)].map((m) => m[0]).sort(),
+    // Pair backticks per paragraph (blank-line blocks, newlines flattened) so
+    // spans survive different wrap points while a stray bare backtick only
+    // poisons its own block. Blocks with odd backtick parity are dropped on
+    // both sides symmetrically (backtick bytes are contract-identical), as are
+    // prose-like mis-pairs from key names (**Ctrl+`**).
+    inlineCode: noFence
+      .split(/\n\s*\n/)
+      .flatMap((block) => {
+        const j = block.replace(/\n/g, ' ');
+        if (((j.match(/`/g) ?? []).length) % 2 !== 0) return [];
+        return [...j.matchAll(/`[^`]+`/g)].map((m) => m[0]);
+      })
+      .filter((s) => !/\*\* /.test(s) && !/^`\s/.test(s) && s.length <= 200)
+      .sort(),
     admOpen: (noFence.match(/^:::\w+/gm) ?? []).length,
     admClose: (noFence.match(/^:::\s*$/gm) ?? []).length,
     tableRows: (noFence.match(/^\|/gm) ?? []).length,

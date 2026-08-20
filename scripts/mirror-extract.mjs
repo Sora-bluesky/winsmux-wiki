@@ -88,10 +88,38 @@ function transform(rel, src) {
     (_, url) => `[YouTube: ${url}](${url})`,
   );
   s = s.replace(/<iframe[\s\S]*?src="([^"]+)"[\s\S]*?<\/iframe>/g, (_, url) => `[YouTube: ${url}](${url})`);
+  // self-closing <iframe ... /> (with or without a div wrapper)
+  s = s.replace(
+    /<div[^>]*>\s*<iframe[\s\S]*?src="([^"]+)"[\s\S]*?\/>\s*<\/div>/g,
+    (_, url) => `[YouTube: ${url}](${url})`,
+  );
+  s = s.replace(/<iframe[\s\S]*?src="([^"]+)"[\s\S]*?\/>/g, (_, url) => `[YouTube: ${url}](${url})`);
+
+  // videos -> plain link line (site-relative media resolves to the official host)
+  s = s.replace(/<video[^>]*?src="([^"]+)"[\s\S]*?<\/video>/g, (_, url) => {
+    const abs = url.startsWith('/') ? `${OFFICIAL}${url}` : url;
+    return `[動画: ${abs}](${abs})`;
+  });
+  // <img ...> (JSX or HTML, any attribute order) -> markdown image
+  s = s.replace(/<img[^>]*>/g, (tag) => {
+    const src =
+      tag.match(/useBaseUrl\('([^']+)'\)/)?.[1] ?? tag.match(/src="([^"]+)"/)?.[1] ?? null;
+    if (!src) return tag; // leave for the fail-loud scan
+    const alt = tag.match(/alt="([^"]*)"/)?.[1] ?? '';
+    const abs = src.startsWith('/') ? `${OFFICIAL}${src}` : src;
+    return `![${alt}](${abs})`;
+  });
+  // figure captions -> emphasized text
+  s = s.replace(/<p className="docs-figure-caption">([\s\S]*?)<\/p>/g, (_, t) => `*${t.trim()}*`);
+  // styled div wrappers left around a converted link -> unwrap
+  s = s.replace(/<div[^>]*>\s*(\[[^\]]*\]\([^)]*\))\s*<\/div>/g, '$1');
+  s = s.replace(/<div[^>]*>\s*<\/div>/g, '');
 
   // Remaining JSX/HTML tags: allow a small inline whitelist, fail on the rest.
   // Inline code spans are data, not markup — mask them for the scan.
-  const allowed = /^<\/?(br|kbd|sup|sub|code|summary|details)\b/;
+  // strong/em etc. are real HTML we escape-render as text or support; hyphenated
+  // lowercase tags (<service-user>) are prose placeholders, not components.
+  const allowed = /^<\/?(br|kbd|sup|sub|code|summary|details|strong|em|b|i|[a-z]+(?:-[a-z]+)+)(?![A-Za-z])/;
   const masked = s.replace(/`[^`\n]*`/g, '');
   for (const m of masked.matchAll(/<[A-Za-z\/][^>\n]*>/g)) {
     if (!allowed.test(m[0]) && !m[0].startsWith('<http')) problems.push(`unsupported tag: ${m[0].slice(0, 60)}`);
