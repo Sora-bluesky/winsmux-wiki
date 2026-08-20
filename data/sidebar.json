@@ -1,0 +1,1877 @@
+{
+  "ref": "upstream/main",
+  "tree": [
+    {
+      "id": "user-stories"
+    },
+    {
+      "label": "Getting Started",
+      "items": [
+        {
+          "id": "getting-started/quickstart"
+        },
+        {
+          "id": "getting-started/installation"
+        },
+        {
+          "id": "getting-started/platform-support"
+        },
+        {
+          "id": "getting-started/termux"
+        },
+        {
+          "id": "getting-started/nix-setup"
+        },
+        {
+          "id": "getting-started/updating"
+        },
+        {
+          "id": "getting-started/learning-path"
+        }
+      ]
+    },
+    {
+      "label": "Using Hermes",
+      "items": [
+        {
+          "id": "user-guide/cli"
+        },
+        {
+          "id": "user-guide/tui"
+        },
+        {
+          "id": "user-guide/desktop"
+        },
+        {
+          "id": "user-guide/bot-mode"
+        },
+        {
+          "id": "user-guide/windows-native"
+        },
+        {
+          "id": "user-guide/windows-wsl-quickstart"
+        },
+        {
+          "id": "user-guide/configuration"
+        },
+        {
+          "id": "user-guide/managed-scope"
+        },
+        {
+          "id": "user-guide/configuring-models"
+        },
+        {
+          "label": "Secrets",
+          "items": [
+            {
+              "id": "user-guide/secrets/index"
+            },
+            {
+              "id": "user-guide/secrets/bitwarden"
+            },
+            {
+              "id": "user-guide/secrets/onepassword"
+            }
+          ]
+        },
+        {
+          "label": "Egress proxy",
+          "items": [
+            {
+              "id": "user-guide/egress/index"
+            },
+            {
+              "id": "user-guide/egress/iron-proxy"
+            }
+          ]
+        },
+        {
+          "id": "user-guide/sessions"
+        },
+        {
+          "id": "user-guide/profiles"
+        },
+        {
+          "id": "user-guide/profile-distributions"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways"
+        },
+        {
+          "id": "user-guide/multi-connection-desktop"
+        },
+        {
+          "id": "user-guide/git-worktrees"
+        },
+        {
+          "id": "user-guide/docker"
+        },
+        {
+          "id": "user-guide/security"
+        },
+        {
+          "id": "user-guide/checkpoints-and-rollback"
+        }
+      ]
+    },
+    {
+      "label": "Features",
+      "items": [
+        {
+          "id": "user-guide/features/overview"
+        },
+        {
+          "id": "user-guide/features/tool-gateway"
+        },
+        {
+          "label": "Core",
+          "items": [
+            {
+              "id": "user-guide/features/tools"
+            },
+            {
+              "id": "user-guide/features/document-extraction"
+            },
+            {
+              "id": "user-guide/features/tool-search"
+            },
+            {
+              "id": "user-guide/features/skills"
+            },
+            {
+              "id": "user-guide/features/lsp"
+            },
+            {
+              "id": "user-guide/features/curator"
+            },
+            {
+              "id": "user-guide/features/memory"
+            },
+            {
+              "id": "user-guide/features/memory-providers"
+            },
+            {
+              "id": "user-guide/features/honcho"
+            },
+            {
+              "id": "user-guide/features/context-files"
+            },
+            {
+              "id": "user-guide/features/context-references"
+            },
+            {
+              "id": "user-guide/features/mixture-of-agents"
+            },
+            {
+              "id": "user-guide/features/personality"
+            },
+            {
+              "id": "user-guide/features/skins"
+            },
+            {
+              "id": "user-guide/features/plugins"
+            },
+            {
+              "id": "user-guide/features/built-in-plugins"
+            }
+          ]
+        },
+        {
+          "label": "Automation",
+          "items": [
+            {
+              "id": "user-guide/features/cron"
+            },
+            {
+              "id": "reference/automation-blueprints-catalog"
+            },
+            {
+              "id": "user-guide/features/delegation"
+            },
+            {
+              "id": "user-guide/features/kanban"
+            },
+            {
+              "id": "user-guide/features/codex-app-server-runtime"
+            },
+            {
+              "id": "user-guide/features/kanban-tutorial"
+            },
+            {
+              "id": "user-guide/features/kanban-worker-lanes"
+            },
+            {
+              "id": "user-guide/features/goals"
+            },
+            {
+              "id": "user-guide/features/heartbeat"
+            },
+            {
+              "id": "user-guide/features/loops"
+            },
+            {
+              "id": "user-guide/features/code-execution"
+            },
+            {
+              "id": "user-guide/features/hooks"
+            },
+            {
+              "id": "user-guide/features/batch-processing"
+            }
+          ]
+        },
+        {
+          "label": "Media & Web",
+          "items": [
+            {
+              "id": "user-guide/features/voice-mode"
+            },
+            {
+              "id": "user-guide/features/wake-word"
+            },
+            {
+              "id": "user-guide/features/web-search"
+            },
+            {
+              "id": "user-guide/features/x-search"
+            },
+            {
+              "id": "user-guide/features/browser"
+            },
+            {
+              "id": "user-guide/features/computer-use"
+            },
+            {
+              "id": "user-guide/features/vision"
+            },
+            {
+              "id": "user-guide/features/image-generation"
+            },
+            {
+              "id": "user-guide/features/spotify"
+            },
+            {
+              "id": "user-guide/features/pets"
+            },
+            {
+              "id": "user-guide/features/tts"
+            },
+            {
+              "id": "user-guide/features/deliverable-mode"
+            }
+          ]
+        },
+        {
+          "label": "Management",
+          "items": [
+            {
+              "id": "user-guide/features/web-dashboard"
+            },
+            {
+              "id": "user-guide/features/extending-the-dashboard"
+            },
+            {
+              "id": "user-guide/features/api-server"
+            },
+            {
+              "id": "user-guide/features/subscription-proxy"
+            }
+          ]
+        },
+        {
+          "label": "Skills",
+          "items": [
+            {
+              "id": "reference/skills-catalog"
+            },
+            {
+              "id": "reference/optional-skills-catalog"
+            },
+            {
+              "label": "Bundled",
+              "items": [
+                {
+                  "label": "apple",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/apple/apple-apple-notes"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/apple/apple-apple-reminders"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/apple/apple-findmy"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/apple/apple-imessage"
+                    }
+                  ]
+                },
+                {
+                  "label": "autonomous-ai-agents",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode"
+                    }
+                  ]
+                },
+                {
+                  "label": "creative",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-architecture-diagram"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-ascii-art"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-ascii-video"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-baoyu-infographic"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-claude-design"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-comfyui"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-design-md"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-excalidraw"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-humanizer"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-manim-video"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-p5js"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-popular-web-designs"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-pretext"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-sketch"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-songwriting-and-ai-music"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/creative/creative-touchdesigner-mcp"
+                    }
+                  ]
+                },
+                {
+                  "label": "email",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/email/email-email-inbox-triage"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/email/email-himalaya"
+                    }
+                  ]
+                },
+                {
+                  "label": "github",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/github/github-codebase-inspection"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/github/github-github-auth"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/github/github-github-code-review"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/github/github-github-issue-to-pr"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/github/github-github-issues"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/github/github-github-pr-workflow"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/github/github-github-repo-management"
+                    }
+                  ]
+                },
+                {
+                  "label": "media",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/media/media-gif-search"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/media/media-songsee"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/media/media-youtube-content"
+                    }
+                  ]
+                },
+                {
+                  "label": "mlops",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/mlops/mlops-evaluation-evaluating-llms-harness"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/mlops/mlops-huggingface-hub"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/mlops/mlops-inference-llama-cpp"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/mlops/mlops-inference-serving-llms-vllm"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/mlops/mlops-evaluation-weights-and-biases"
+                    }
+                  ]
+                },
+                {
+                  "label": "note-taking",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/note-taking/note-taking-obsidian"
+                    }
+                  ]
+                },
+                {
+                  "label": "productivity",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-airtable"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-box"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-document-to-action-items"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-docx"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-google-workspace"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-maps"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-meeting-action-items"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-nano-pdf"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-notion"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-ocr-and-documents"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-pdf"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-powerpoint"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-product-price-monitor"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-session-librarian"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-weekly-review-planning"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/productivity/productivity-xlsx"
+                    }
+                  ]
+                },
+                {
+                  "label": "research",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/research/research-arxiv"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/research/research-blocked-page-recovery"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/research/research-blogwatcher"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/research/research-competitor-news-monitor"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/research/research-grounded-citations"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/research/research-llm-wiki"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/research/research-research-paper-writing"
+                    }
+                  ]
+                },
+                {
+                  "label": "smart-home",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/smart-home/smart-home-openhue"
+                    }
+                  ]
+                },
+                {
+                  "label": "social-media",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/social-media/social-media-xurl"
+                    }
+                  ]
+                },
+                {
+                  "label": "software-development",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-dogfood"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-node-inspect-debugger"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-plan"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-python-debugpy"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-requesting-code-review"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-simplify-code"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-spike"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-systematic-debugging"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-test-driven-development"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Optional",
+              "items": [
+                {
+                  "label": "autonomous-ai-agents",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands"
+                    }
+                  ]
+                },
+                {
+                  "label": "blockchain",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/blockchain/blockchain-evm"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/blockchain/blockchain-hyperliquid"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/blockchain/blockchain-solana"
+                    }
+                  ]
+                },
+                {
+                  "label": "communication",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/communication/communication-one-three-one-rule"
+                    }
+                  ]
+                },
+                {
+                  "label": "creative",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-audiocraft-audio-generation"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-baoyu-article-illustrator"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-baoyu-comic"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-concept-diagrams"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-creative-ideation"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-draw-your-font"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-heartmula"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-hyperframes"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-kanban-video-orchestrator"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-meme-generation"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-pixel-art"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-simple-english"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-social-media-content-calendar"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-tldraw-offline"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-unreal-mcp"
+                    }
+                  ]
+                },
+                {
+                  "label": "data-science",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/data-science/data-science-jupyter-notebook"
+                    }
+                  ]
+                },
+                {
+                  "label": "devops",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/devops/devops-actual-setup"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/devops/devops-docker-management"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/devops/devops-hermes-s6-container-supervision"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/devops/devops-inference-sh-cli"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/devops/devops-pinggy-tunnel"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/devops/devops-watchers"
+                    }
+                  ]
+                },
+                {
+                  "label": "dogfood",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test"
+                    }
+                  ]
+                },
+                {
+                  "label": "email",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/email/email-agentmail"
+                    }
+                  ]
+                },
+                {
+                  "label": "finance",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/finance/finance-3-statement-model"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/finance/finance-comps-analysis"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/finance/finance-dcf-model"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/finance/finance-excel-author"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/finance/finance-lbo-model"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/finance/finance-merger-model"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/finance/finance-polymarket"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/finance/finance-pptx-author"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/finance/finance-stocks"
+                    }
+                  ]
+                },
+                {
+                  "label": "gaming",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/gaming/gaming-minecraft-modpack-server"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/gaming/gaming-pokemon-player"
+                    }
+                  ]
+                },
+                {
+                  "label": "health",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/health/health-fitness-nutrition"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/health/health-neuroskill-bci"
+                    }
+                  ]
+                },
+                {
+                  "label": "mcp",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/mcp/mcp-fastmcp"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mcp/mcp-mcporter"
+                    }
+                  ]
+                },
+                {
+                  "label": "migration",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/migration/migration-openclaw-migration"
+                    }
+                  ]
+                },
+                {
+                  "label": "mlops",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-accelerate"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-training-axolotl"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-chroma"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-clip"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-research-dspy"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-faiss"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-flash-attention"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-guidance"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-huggingface-tokenizers"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-instructor"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-lambda-labs"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-llava"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-modal"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-nemo-curator"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-obliteratus"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-inference-outlines"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-peft"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-pinecone"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-pytorch-fsdp"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-pytorch-lightning"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-qdrant"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-saelens"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-models-segment-anything-model"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-simpo"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-slime"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-stable-diffusion"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-tensorrt-llm"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-torchtitan"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-training-unsloth"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-whisper"
+                    }
+                  ]
+                },
+                {
+                  "label": "payments",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/payments/payments-mpp-agent"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/payments/payments-stripe-link-cli"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/payments/payments-stripe-projects"
+                    }
+                  ]
+                },
+                {
+                  "label": "productivity",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/productivity/productivity-canvas"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/productivity/productivity-here-now"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/productivity/productivity-memento-flashcards"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/productivity/productivity-shop"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/productivity/productivity-shopify"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/productivity/productivity-siyuan"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/productivity/productivity-telephony"
+                    }
+                  ]
+                },
+                {
+                  "label": "research",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/research/research-bioinformatics"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-darwinian-evolver"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-domain-intel"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-drug-discovery"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-duckduckgo-search"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-gitnexus-explorer"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-osint-investigation"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-parallel-cli"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-pinecone-research"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-qmd"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-scrapling"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-searxng-search"
+                    }
+                  ]
+                },
+                {
+                  "label": "security",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/security/security-1password"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/security/security-godmode"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/security/security-oss-forensics"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/security/security-sherlock"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/security/security-unbroker"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/security/security-web-pentest"
+                    }
+                  ]
+                },
+                {
+                  "label": "software-development",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/software-development/software-development-code-wiki"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/software-development/software-development-rest-graphql-debug"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/software-development/software-development-subagent-driven-development"
+                    }
+                  ]
+                },
+                {
+                  "label": "web-development",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/web-development/web-development-page-agent"
+                    }
+                  ]
+                },
+                {
+                  "label": "yuanbao",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/yuanbao/yuanbao-yuanbao"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Messaging Platforms",
+      "items": [
+        {
+          "id": "user-guide/messaging/index"
+        },
+        {
+          "label": "Popular",
+          "items": [
+            {
+              "id": "user-guide/messaging/telegram"
+            },
+            {
+              "id": "user-guide/messaging/discord"
+            },
+            {
+              "id": "user-guide/messaging/slack"
+            },
+            {
+              "id": "user-guide/messaging/whatsapp"
+            },
+            {
+              "id": "user-guide/messaging/whatsapp-cloud"
+            },
+            {
+              "id": "user-guide/messaging/signal"
+            },
+            {
+              "id": "user-guide/messaging/email"
+            },
+            {
+              "id": "user-guide/messaging/sms"
+            }
+          ]
+        },
+        {
+          "label": "Microsoft 365",
+          "items": [
+            {
+              "id": "user-guide/messaging/teams"
+            },
+            {
+              "id": "user-guide/messaging/teams-meetings"
+            },
+            {
+              "id": "user-guide/messaging/msgraph-webhook"
+            }
+          ]
+        },
+        {
+          "label": "Chinese platforms",
+          "items": [
+            {
+              "id": "user-guide/messaging/dingtalk"
+            },
+            {
+              "id": "user-guide/messaging/feishu"
+            },
+            {
+              "id": "user-guide/messaging/wecom"
+            },
+            {
+              "id": "user-guide/messaging/wecom-callback"
+            },
+            {
+              "id": "user-guide/messaging/weixin"
+            },
+            {
+              "id": "user-guide/messaging/qqbot"
+            },
+            {
+              "id": "user-guide/messaging/yuanbao"
+            }
+          ]
+        },
+        {
+          "label": "Other",
+          "items": [
+            {
+              "id": "user-guide/messaging/a2a"
+            },
+            {
+              "id": "user-guide/messaging/homeassistant"
+            },
+            {
+              "id": "user-guide/messaging/mattermost"
+            },
+            {
+              "id": "user-guide/messaging/matrix"
+            },
+            {
+              "id": "user-guide/messaging/bluebubbles"
+            },
+            {
+              "id": "user-guide/messaging/buzz"
+            },
+            {
+              "id": "user-guide/messaging/photon"
+            },
+            {
+              "id": "user-guide/messaging/google_chat"
+            },
+            {
+              "id": "user-guide/messaging/line"
+            },
+            {
+              "id": "user-guide/messaging/simplex"
+            },
+            {
+              "id": "user-guide/messaging/ntfy"
+            },
+            {
+              "id": "user-guide/messaging/irc"
+            },
+            {
+              "id": "user-guide/messaging/open-webui"
+            },
+            {
+              "id": "user-guide/messaging/relay"
+            },
+            {
+              "id": "user-guide/messaging/webhooks"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Integrations",
+      "items": [
+        {
+          "id": "integrations/index"
+        },
+        {
+          "id": "integrations/nous-portal"
+        },
+        {
+          "id": "integrations/providers"
+        },
+        {
+          "id": "integrations/buzz"
+        },
+        {
+          "id": "user-guide/features/mcp"
+        },
+        {
+          "id": "user-guide/features/acp"
+        },
+        {
+          "id": "user-guide/features/provider-routing"
+        },
+        {
+          "id": "user-guide/features/fallback-providers"
+        },
+        {
+          "id": "user-guide/features/credential-pools"
+        }
+      ]
+    },
+    {
+      "label": "Guides & Tutorials",
+      "items": [
+        {
+          "id": "guides/run-nemotron-3-ultra-free"
+        },
+        {
+          "id": "guides/run-hermes-with-nous-portal"
+        },
+        {
+          "id": "guides/tips"
+        },
+        {
+          "id": "guides/local-llm-on-mac"
+        },
+        {
+          "id": "guides/daily-briefing-bot"
+        },
+        {
+          "id": "guides/team-telegram-assistant"
+        },
+        {
+          "id": "guides/python-library"
+        },
+        {
+          "id": "guides/use-mcp-with-hermes"
+        },
+        {
+          "id": "guides/use-soul-with-hermes"
+        },
+        {
+          "id": "guides/use-voice-mode-with-hermes"
+        },
+        {
+          "id": "guides/automate-with-cron"
+        },
+        {
+          "id": "guides/cron-script-only"
+        },
+        {
+          "id": "guides/automation-blueprints"
+        },
+        {
+          "id": "guides/cron-troubleshooting"
+        },
+        {
+          "id": "guides/work-with-skills"
+        },
+        {
+          "id": "guides/delegation-patterns"
+        },
+        {
+          "id": "guides/agent-email-address"
+        },
+        {
+          "id": "guides/github-pr-review-agent"
+        },
+        {
+          "id": "guides/webhook-github-pr-review"
+        },
+        {
+          "id": "guides/migrate-from-openclaw"
+        },
+        {
+          "id": "guides/aws-bedrock"
+        },
+        {
+          "id": "guides/google-vertex"
+        },
+        {
+          "id": "guides/azure-foundry"
+        },
+        {
+          "id": "guides/xai-grok-oauth"
+        },
+        {
+          "id": "guides/oauth-over-ssh"
+        },
+        {
+          "id": "guides/microsoft-graph-app-registration"
+        },
+        {
+          "id": "guides/operate-teams-meeting-pipeline"
+        }
+      ]
+    },
+    {
+      "label": "Developer Guide",
+      "items": [
+        {
+          "id": "developer-guide/contributing"
+        },
+        {
+          "id": "developer-guide/worktree-ui-dev"
+        },
+        {
+          "label": "Architecture",
+          "items": [
+            {
+              "id": "developer-guide/architecture"
+            },
+            {
+              "id": "developer-guide/codebase-ownership"
+            },
+            {
+              "id": "developer-guide/agent-loop"
+            },
+            {
+              "id": "developer-guide/prompt-assembly"
+            },
+            {
+              "id": "developer-guide/context-compression-and-caching"
+            },
+            {
+              "id": "developer-guide/gateway-internals"
+            },
+            {
+              "id": "developer-guide/session-storage"
+            },
+            {
+              "id": "developer-guide/provider-runtime"
+            },
+            {
+              "id": "developer-guide/programmatic-integration"
+            }
+          ]
+        },
+        {
+          "label": "Extending",
+          "items": [
+            {
+              "id": "developer-guide/adding-tools"
+            },
+            {
+              "id": "developer-guide/adding-providers"
+            },
+            {
+              "id": "developer-guide/adding-platform-adapters"
+            },
+            {
+              "label": "Plugins",
+              "items": [
+                {
+                  "id": "developer-guide/plugin-llm-access"
+                },
+                {
+                  "id": "developer-guide/subagent-lifecycle-api"
+                },
+                {
+                  "id": "developer-guide/desktop-plugin-sdk"
+                },
+                {
+                  "id": "developer-guide/memory-provider-plugin"
+                },
+                {
+                  "id": "developer-guide/context-engine-plugin"
+                },
+                {
+                  "id": "developer-guide/secret-source-plugin"
+                },
+                {
+                  "id": "developer-guide/model-provider-plugin"
+                },
+                {
+                  "id": "developer-guide/image-gen-provider-plugin"
+                },
+                {
+                  "id": "developer-guide/video-gen-provider-plugin"
+                },
+                {
+                  "id": "developer-guide/web-search-provider-plugin"
+                },
+                {
+                  "id": "developer-guide/browser-provider-plugin"
+                }
+              ]
+            },
+            {
+              "id": "developer-guide/creating-skills"
+            },
+            {
+              "id": "developer-guide/extending-the-cli"
+            }
+          ]
+        },
+        {
+          "label": "Internals",
+          "items": [
+            {
+              "id": "developer-guide/tools-runtime"
+            },
+            {
+              "id": "developer-guide/browser-supervisor"
+            },
+            {
+              "id": "developer-guide/acp-internals"
+            },
+            {
+              "id": "developer-guide/cron-internals"
+            },
+            {
+              "id": "developer-guide/egress-internals"
+            },
+            {
+              "id": "developer-guide/trajectory-format"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Reference",
+      "items": [
+        {
+          "label": "Command Reference",
+          "items": [
+            {
+              "id": "reference/cli-commands"
+            },
+            {
+              "id": "reference/slash-commands"
+            },
+            {
+              "id": "reference/profile-commands"
+            }
+          ]
+        },
+        {
+          "label": "Configuration Reference",
+          "items": [
+            {
+              "id": "reference/environment-variables"
+            },
+            {
+              "id": "reference/mcp-config-reference"
+            },
+            {
+              "id": "reference/model-catalog"
+            }
+          ]
+        },
+        {
+          "label": "Tools & Skills Reference",
+          "items": [
+            {
+              "id": "reference/tools-reference"
+            },
+            {
+              "id": "reference/toolsets-reference"
+            },
+            {
+              "id": "reference/skills-catalog"
+            },
+            {
+              "id": "reference/optional-skills-catalog"
+            }
+          ]
+        },
+        {
+          "id": "reference/cli-symbols"
+        },
+        {
+          "id": "reference/faq"
+        }
+      ]
+    }
+  ],
+  "order": [
+    "user-stories",
+    "getting-started/quickstart",
+    "getting-started/installation",
+    "getting-started/platform-support",
+    "getting-started/termux",
+    "getting-started/nix-setup",
+    "getting-started/updating",
+    "getting-started/learning-path",
+    "user-guide/cli",
+    "user-guide/tui",
+    "user-guide/desktop",
+    "user-guide/bot-mode",
+    "user-guide/windows-native",
+    "user-guide/windows-wsl-quickstart",
+    "user-guide/configuration",
+    "user-guide/managed-scope",
+    "user-guide/configuring-models",
+    "user-guide/secrets/index",
+    "user-guide/secrets/bitwarden",
+    "user-guide/secrets/onepassword",
+    "user-guide/egress/index",
+    "user-guide/egress/iron-proxy",
+    "user-guide/sessions",
+    "user-guide/profiles",
+    "user-guide/profile-distributions",
+    "user-guide/multi-profile-gateways",
+    "user-guide/multi-connection-desktop",
+    "user-guide/git-worktrees",
+    "user-guide/docker",
+    "user-guide/security",
+    "user-guide/checkpoints-and-rollback",
+    "user-guide/features/overview",
+    "user-guide/features/tool-gateway",
+    "user-guide/features/tools",
+    "user-guide/features/document-extraction",
+    "user-guide/features/tool-search",
+    "user-guide/features/skills",
+    "user-guide/features/lsp",
+    "user-guide/features/curator",
+    "user-guide/features/memory",
+    "user-guide/features/memory-providers",
+    "user-guide/features/honcho",
+    "user-guide/features/context-files",
+    "user-guide/features/context-references",
+    "user-guide/features/mixture-of-agents",
+    "user-guide/features/personality",
+    "user-guide/features/skins",
+    "user-guide/features/plugins",
+    "user-guide/features/built-in-plugins",
+    "user-guide/features/cron",
+    "reference/automation-blueprints-catalog",
+    "user-guide/features/delegation",
+    "user-guide/features/kanban",
+    "user-guide/features/codex-app-server-runtime",
+    "user-guide/features/kanban-tutorial",
+    "user-guide/features/kanban-worker-lanes",
+    "user-guide/features/goals",
+    "user-guide/features/heartbeat",
+    "user-guide/features/loops",
+    "user-guide/features/code-execution",
+    "user-guide/features/hooks",
+    "user-guide/features/batch-processing",
+    "user-guide/features/voice-mode",
+    "user-guide/features/wake-word",
+    "user-guide/features/web-search",
+    "user-guide/features/x-search",
+    "user-guide/features/browser",
+    "user-guide/features/computer-use",
+    "user-guide/features/vision",
+    "user-guide/features/image-generation",
+    "user-guide/features/spotify",
+    "user-guide/features/pets",
+    "user-guide/features/tts",
+    "user-guide/features/deliverable-mode",
+    "user-guide/features/web-dashboard",
+    "user-guide/features/extending-the-dashboard",
+    "user-guide/features/api-server",
+    "user-guide/features/subscription-proxy",
+    "reference/skills-catalog",
+    "reference/optional-skills-catalog",
+    "user-guide/skills/bundled/apple/apple-apple-notes",
+    "user-guide/skills/bundled/apple/apple-apple-reminders",
+    "user-guide/skills/bundled/apple/apple-findmy",
+    "user-guide/skills/bundled/apple/apple-imessage",
+    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code",
+    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex",
+    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use",
+    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent",
+    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode",
+    "user-guide/skills/bundled/creative/creative-architecture-diagram",
+    "user-guide/skills/bundled/creative/creative-ascii-art",
+    "user-guide/skills/bundled/creative/creative-ascii-video",
+    "user-guide/skills/bundled/creative/creative-baoyu-infographic",
+    "user-guide/skills/bundled/creative/creative-claude-design",
+    "user-guide/skills/bundled/creative/creative-comfyui",
+    "user-guide/skills/bundled/creative/creative-design-md",
+    "user-guide/skills/bundled/creative/creative-excalidraw",
+    "user-guide/skills/bundled/creative/creative-humanizer",
+    "user-guide/skills/bundled/creative/creative-manim-video",
+    "user-guide/skills/bundled/creative/creative-p5js",
+    "user-guide/skills/bundled/creative/creative-popular-web-designs",
+    "user-guide/skills/bundled/creative/creative-pretext",
+    "user-guide/skills/bundled/creative/creative-sketch",
+    "user-guide/skills/bundled/creative/creative-songwriting-and-ai-music",
+    "user-guide/skills/bundled/creative/creative-touchdesigner-mcp",
+    "user-guide/skills/bundled/email/email-email-inbox-triage",
+    "user-guide/skills/bundled/email/email-himalaya",
+    "user-guide/skills/bundled/github/github-codebase-inspection",
+    "user-guide/skills/bundled/github/github-github-auth",
+    "user-guide/skills/bundled/github/github-github-code-review",
+    "user-guide/skills/bundled/github/github-github-issue-to-pr",
+    "user-guide/skills/bundled/github/github-github-issues",
+    "user-guide/skills/bundled/github/github-github-pr-workflow",
+    "user-guide/skills/bundled/github/github-github-repo-management",
+    "user-guide/skills/bundled/media/media-gif-search",
+    "user-guide/skills/bundled/media/media-songsee",
+    "user-guide/skills/bundled/media/media-youtube-content",
+    "user-guide/skills/bundled/mlops/mlops-evaluation-evaluating-llms-harness",
+    "user-guide/skills/bundled/mlops/mlops-huggingface-hub",
+    "user-guide/skills/bundled/mlops/mlops-inference-llama-cpp",
+    "user-guide/skills/bundled/mlops/mlops-inference-serving-llms-vllm",
+    "user-guide/skills/bundled/mlops/mlops-evaluation-weights-and-biases",
+    "user-guide/skills/bundled/note-taking/note-taking-obsidian",
+    "user-guide/skills/bundled/productivity/productivity-airtable",
+    "user-guide/skills/bundled/productivity/productivity-box",
+    "user-guide/skills/bundled/productivity/productivity-document-to-action-items",
+    "user-guide/skills/bundled/productivity/productivity-docx",
+    "user-guide/skills/bundled/productivity/productivity-google-workspace",
+    "user-guide/skills/bundled/productivity/productivity-maps",
+    "user-guide/skills/bundled/productivity/productivity-meeting-action-items",
+    "user-guide/skills/bundled/productivity/productivity-nano-pdf",
+    "user-guide/skills/bundled/productivity/productivity-notion",
+    "user-guide/skills/bundled/productivity/productivity-ocr-and-documents",
+    "user-guide/skills/bundled/productivity/productivity-pdf",
+    "user-guide/skills/bundled/productivity/productivity-powerpoint",
+    "user-guide/skills/bundled/productivity/productivity-product-price-monitor",
+    "user-guide/skills/bundled/productivity/productivity-session-librarian",
+    "user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline",
+    "user-guide/skills/bundled/productivity/productivity-weekly-review-planning",
+    "user-guide/skills/bundled/productivity/productivity-xlsx",
+    "user-guide/skills/bundled/research/research-arxiv",
+    "user-guide/skills/bundled/research/research-blocked-page-recovery",
+    "user-guide/skills/bundled/research/research-blogwatcher",
+    "user-guide/skills/bundled/research/research-competitor-news-monitor",
+    "user-guide/skills/bundled/research/research-grounded-citations",
+    "user-guide/skills/bundled/research/research-llm-wiki",
+    "user-guide/skills/bundled/research/research-research-paper-writing",
+    "user-guide/skills/bundled/smart-home/smart-home-openhue",
+    "user-guide/skills/bundled/social-media/social-media-xurl",
+    "user-guide/skills/bundled/software-development/software-development-dogfood",
+    "user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring",
+    "user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom",
+    "user-guide/skills/bundled/software-development/software-development-node-inspect-debugger",
+    "user-guide/skills/bundled/software-development/software-development-plan",
+    "user-guide/skills/bundled/software-development/software-development-python-debugpy",
+    "user-guide/skills/bundled/software-development/software-development-requesting-code-review",
+    "user-guide/skills/bundled/software-development/software-development-simplify-code",
+    "user-guide/skills/bundled/software-development/software-development-spike",
+    "user-guide/skills/bundled/software-development/software-development-systematic-debugging",
+    "user-guide/skills/bundled/software-development/software-development-test-driven-development",
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli",
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox",
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok",
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands",
+    "user-guide/skills/optional/blockchain/blockchain-evm",
+    "user-guide/skills/optional/blockchain/blockchain-hyperliquid",
+    "user-guide/skills/optional/blockchain/blockchain-solana",
+    "user-guide/skills/optional/communication/communication-one-three-one-rule",
+    "user-guide/skills/optional/creative/creative-audiocraft-audio-generation",
+    "user-guide/skills/optional/creative/creative-baoyu-article-illustrator",
+    "user-guide/skills/optional/creative/creative-baoyu-comic",
+    "user-guide/skills/optional/creative/creative-concept-diagrams",
+    "user-guide/skills/optional/creative/creative-creative-ideation",
+    "user-guide/skills/optional/creative/creative-draw-your-font",
+    "user-guide/skills/optional/creative/creative-heartmula",
+    "user-guide/skills/optional/creative/creative-hyperframes",
+    "user-guide/skills/optional/creative/creative-kanban-video-orchestrator",
+    "user-guide/skills/optional/creative/creative-meme-generation",
+    "user-guide/skills/optional/creative/creative-pixel-art",
+    "user-guide/skills/optional/creative/creative-simple-english",
+    "user-guide/skills/optional/creative/creative-social-media-content-calendar",
+    "user-guide/skills/optional/creative/creative-tldraw-offline",
+    "user-guide/skills/optional/creative/creative-unreal-mcp",
+    "user-guide/skills/optional/data-science/data-science-jupyter-notebook",
+    "user-guide/skills/optional/devops/devops-actual-setup",
+    "user-guide/skills/optional/devops/devops-docker-management",
+    "user-guide/skills/optional/devops/devops-hermes-s6-container-supervision",
+    "user-guide/skills/optional/devops/devops-inference-sh-cli",
+    "user-guide/skills/optional/devops/devops-pinggy-tunnel",
+    "user-guide/skills/optional/devops/devops-watchers",
+    "user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test",
+    "user-guide/skills/optional/email/email-agentmail",
+    "user-guide/skills/optional/finance/finance-3-statement-model",
+    "user-guide/skills/optional/finance/finance-comps-analysis",
+    "user-guide/skills/optional/finance/finance-dcf-model",
+    "user-guide/skills/optional/finance/finance-excel-author",
+    "user-guide/skills/optional/finance/finance-lbo-model",
+    "user-guide/skills/optional/finance/finance-merger-model",
+    "user-guide/skills/optional/finance/finance-polymarket",
+    "user-guide/skills/optional/finance/finance-pptx-author",
+    "user-guide/skills/optional/finance/finance-stocks",
+    "user-guide/skills/optional/gaming/gaming-minecraft-modpack-server",
+    "user-guide/skills/optional/gaming/gaming-pokemon-player",
+    "user-guide/skills/optional/health/health-fitness-nutrition",
+    "user-guide/skills/optional/health/health-neuroskill-bci",
+    "user-guide/skills/optional/mcp/mcp-fastmcp",
+    "user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway",
+    "user-guide/skills/optional/mcp/mcp-mcporter",
+    "user-guide/skills/optional/migration/migration-openclaw-migration",
+    "user-guide/skills/optional/mlops/mlops-accelerate",
+    "user-guide/skills/optional/mlops/mlops-training-axolotl",
+    "user-guide/skills/optional/mlops/mlops-chroma",
+    "user-guide/skills/optional/mlops/mlops-clip",
+    "user-guide/skills/optional/mlops/mlops-research-dspy",
+    "user-guide/skills/optional/mlops/mlops-faiss",
+    "user-guide/skills/optional/mlops/mlops-flash-attention",
+    "user-guide/skills/optional/mlops/mlops-guidance",
+    "user-guide/skills/optional/mlops/mlops-huggingface-tokenizers",
+    "user-guide/skills/optional/mlops/mlops-instructor",
+    "user-guide/skills/optional/mlops/mlops-lambda-labs",
+    "user-guide/skills/optional/mlops/mlops-llava",
+    "user-guide/skills/optional/mlops/mlops-modal",
+    "user-guide/skills/optional/mlops/mlops-nemo-curator",
+    "user-guide/skills/optional/mlops/mlops-obliteratus",
+    "user-guide/skills/optional/mlops/mlops-inference-outlines",
+    "user-guide/skills/optional/mlops/mlops-peft",
+    "user-guide/skills/optional/mlops/mlops-pinecone",
+    "user-guide/skills/optional/mlops/mlops-pytorch-fsdp",
+    "user-guide/skills/optional/mlops/mlops-pytorch-lightning",
+    "user-guide/skills/optional/mlops/mlops-qdrant",
+    "user-guide/skills/optional/mlops/mlops-saelens",
+    "user-guide/skills/optional/mlops/mlops-models-segment-anything-model",
+    "user-guide/skills/optional/mlops/mlops-simpo",
+    "user-guide/skills/optional/mlops/mlops-slime",
+    "user-guide/skills/optional/mlops/mlops-stable-diffusion",
+    "user-guide/skills/optional/mlops/mlops-tensorrt-llm",
+    "user-guide/skills/optional/mlops/mlops-torchtitan",
+    "user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning",
+    "user-guide/skills/optional/mlops/mlops-training-unsloth",
+    "user-guide/skills/optional/mlops/mlops-whisper",
+    "user-guide/skills/optional/payments/payments-mpp-agent",
+    "user-guide/skills/optional/payments/payments-stripe-link-cli",
+    "user-guide/skills/optional/payments/payments-stripe-projects",
+    "user-guide/skills/optional/productivity/productivity-canvas",
+    "user-guide/skills/optional/productivity/productivity-here-now",
+    "user-guide/skills/optional/productivity/productivity-memento-flashcards",
+    "user-guide/skills/optional/productivity/productivity-shop",
+    "user-guide/skills/optional/productivity/productivity-shopify",
+    "user-guide/skills/optional/productivity/productivity-siyuan",
+    "user-guide/skills/optional/productivity/productivity-telephony",
+    "user-guide/skills/optional/research/research-bioinformatics",
+    "user-guide/skills/optional/research/research-darwinian-evolver",
+    "user-guide/skills/optional/research/research-domain-intel",
+    "user-guide/skills/optional/research/research-drug-discovery",
+    "user-guide/skills/optional/research/research-duckduckgo-search",
+    "user-guide/skills/optional/research/research-gitnexus-explorer",
+    "user-guide/skills/optional/research/research-osint-investigation",
+    "user-guide/skills/optional/research/research-parallel-cli",
+    "user-guide/skills/optional/research/research-pinecone-research",
+    "user-guide/skills/optional/research/research-qmd",
+    "user-guide/skills/optional/research/research-scrapling",
+    "user-guide/skills/optional/research/research-searxng-search",
+    "user-guide/skills/optional/security/security-1password",
+    "user-guide/skills/optional/security/security-godmode",
+    "user-guide/skills/optional/security/security-oss-forensics",
+    "user-guide/skills/optional/security/security-sherlock",
+    "user-guide/skills/optional/security/security-unbroker",
+    "user-guide/skills/optional/security/security-web-pentest",
+    "user-guide/skills/optional/software-development/software-development-code-wiki",
+    "user-guide/skills/optional/software-development/software-development-rest-graphql-debug",
+    "user-guide/skills/optional/software-development/software-development-subagent-driven-development",
+    "user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy",
+    "user-guide/skills/optional/web-development/web-development-page-agent",
+    "user-guide/skills/optional/yuanbao/yuanbao-yuanbao",
+    "user-guide/messaging/index",
+    "user-guide/messaging/telegram",
+    "user-guide/messaging/discord",
+    "user-guide/messaging/slack",
+    "user-guide/messaging/whatsapp",
+    "user-guide/messaging/whatsapp-cloud",
+    "user-guide/messaging/signal",
+    "user-guide/messaging/email",
+    "user-guide/messaging/sms",
+    "user-guide/messaging/teams",
+    "user-guide/messaging/teams-meetings",
+    "user-guide/messaging/msgraph-webhook",
+    "user-guide/messaging/dingtalk",
+    "user-guide/messaging/feishu",
+    "user-guide/messaging/wecom",
+    "user-guide/messaging/wecom-callback",
+    "user-guide/messaging/weixin",
+    "user-guide/messaging/qqbot",
+    "user-guide/messaging/yuanbao",
+    "user-guide/messaging/a2a",
+    "user-guide/messaging/homeassistant",
+    "user-guide/messaging/mattermost",
+    "user-guide/messaging/matrix",
+    "user-guide/messaging/bluebubbles",
+    "user-guide/messaging/buzz",
+    "user-guide/messaging/photon",
+    "user-guide/messaging/google_chat",
+    "user-guide/messaging/line",
+    "user-guide/messaging/simplex",
+    "user-guide/messaging/ntfy",
+    "user-guide/messaging/irc",
+    "user-guide/messaging/open-webui",
+    "user-guide/messaging/relay",
+    "user-guide/messaging/webhooks",
+    "integrations/index",
+    "integrations/nous-portal",
+    "integrations/providers",
+    "integrations/buzz",
+    "user-guide/features/mcp",
+    "user-guide/features/acp",
+    "user-guide/features/provider-routing",
+    "user-guide/features/fallback-providers",
+    "user-guide/features/credential-pools",
+    "guides/run-nemotron-3-ultra-free",
+    "guides/run-hermes-with-nous-portal",
+    "guides/tips",
+    "guides/local-llm-on-mac",
+    "guides/daily-briefing-bot",
+    "guides/team-telegram-assistant",
+    "guides/python-library",
+    "guides/use-mcp-with-hermes",
+    "guides/use-soul-with-hermes",
+    "guides/use-voice-mode-with-hermes",
+    "guides/automate-with-cron",
+    "guides/cron-script-only",
+    "guides/automation-blueprints",
+    "guides/cron-troubleshooting",
+    "guides/work-with-skills",
+    "guides/delegation-patterns",
+    "guides/agent-email-address",
+    "guides/github-pr-review-agent",
+    "guides/webhook-github-pr-review",
+    "guides/migrate-from-openclaw",
+    "guides/aws-bedrock",
+    "guides/google-vertex",
+    "guides/azure-foundry",
+    "guides/xai-grok-oauth",
+    "guides/oauth-over-ssh",
+    "guides/microsoft-graph-app-registration",
+    "guides/operate-teams-meeting-pipeline",
+    "developer-guide/contributing",
+    "developer-guide/worktree-ui-dev",
+    "developer-guide/architecture",
+    "developer-guide/codebase-ownership",
+    "developer-guide/agent-loop",
+    "developer-guide/prompt-assembly",
+    "developer-guide/context-compression-and-caching",
+    "developer-guide/gateway-internals",
+    "developer-guide/session-storage",
+    "developer-guide/provider-runtime",
+    "developer-guide/programmatic-integration",
+    "developer-guide/adding-tools",
+    "developer-guide/adding-providers",
+    "developer-guide/adding-platform-adapters",
+    "developer-guide/plugin-llm-access",
+    "developer-guide/subagent-lifecycle-api",
+    "developer-guide/desktop-plugin-sdk",
+    "developer-guide/memory-provider-plugin",
+    "developer-guide/context-engine-plugin",
+    "developer-guide/secret-source-plugin",
+    "developer-guide/model-provider-plugin",
+    "developer-guide/image-gen-provider-plugin",
+    "developer-guide/video-gen-provider-plugin",
+    "developer-guide/web-search-provider-plugin",
+    "developer-guide/browser-provider-plugin",
+    "developer-guide/creating-skills",
+    "developer-guide/extending-the-cli",
+    "developer-guide/tools-runtime",
+    "developer-guide/browser-supervisor",
+    "developer-guide/acp-internals",
+    "developer-guide/cron-internals",
+    "developer-guide/egress-internals",
+    "developer-guide/trajectory-format",
+    "reference/cli-commands",
+    "reference/slash-commands",
+    "reference/profile-commands",
+    "reference/environment-variables",
+    "reference/mcp-config-reference",
+    "reference/model-catalog",
+    "reference/tools-reference",
+    "reference/toolsets-reference",
+    "reference/skills-catalog",
+    "reference/optional-skills-catalog",
+    "reference/cli-symbols",
+    "reference/faq"
+  ]
+}

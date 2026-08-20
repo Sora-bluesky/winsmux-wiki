@@ -30,4 +30,17 @@ hermes setup --portal
 - [LINE](/hermes/start/line/) — 常時起動と公開 URL が要ります。ノート PC を閉じると切れます。
 - [Telegram](/hermes/start/telegram/) — LINE と同じ丁寧さです。
 
-つなぎ終わったら [運用](/hermes/ops/) と [どこまで任せる](/hermes/trust/) です。
+つなぎ終わったら [運用方法](/hermes/ops/) と [どこまで任せるか？](/hermes/trust/) です。
+
+## 毎日つかう
+
+ふだんの操作で開くことが多いページです。日本語版がまだのページは、公式（英語）が開きます。
+
+- 端末の操作とキー — [CLI](/hermes/docs/user-guide/cli/)
+- チャットで打つコマンド — [スラッシュコマンド](/hermes/docs/reference/slash-commands/)
+- モデルや API キーを変える — [設定](/hermes/docs/user-guide/configuration/)
+- skill を探す・入れる — [skill 一覧](/hermes/guide/skills/)
+- 定時実行を組む — [Cron](/hermes/docs/user-guide/features/cron/)
+- 困ったとき — [FAQ](/hermes/docs/reference/faq/)・[おかしくなったときの診断](/hermes/docs/guides/troubleshooting-agent-quality/)
+- 最新版にする — [更新](/hermes/docs/getting-started/updating/)
+- 言葉から探す — [検索](/hermes/search/)

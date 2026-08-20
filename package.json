@@ -9,7 +9,7 @@
   "scripts": {
     "sync": "node scripts/sync-public.mjs",
     "dev": "node scripts/sync-public.mjs && astro dev",
-    "build": "node scripts/sync-public.mjs && astro build",
+    "build": "node scripts/sync-public.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -19,6 +19,7 @@
     "tailwindcss": "4.3.3"
   },
   "devDependencies": {
+    "pagefind": "^1.5.2",
     "wrangler": "4.88.0"
   }
 }

@@ -1,4 +1,24 @@
-import { headingSlug, renderMarkdown } from './markdown';
+import { headingParts, renderMarkdown } from './markdown';
+
+const mirrorFiles = import.meta.glob('../raw/docs/**/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+const mirrorSet = new Set(
+  Object.keys(mirrorFiles).map((k) => k.split('raw/docs/')[1].replace(/\.md$/, '')),
+);
+
+// Links to not-yet-translated mirror pages fall back to the official docs.
+function resolveMirrorLinks(html: string): string {
+  return html.replace(
+    /href="\/hermes\/docs\/([^"#]+)\/(#[^"]*)?"/g,
+    (whole, p: string, frag: string | undefined) =>
+      mirrorSet.has(p)
+        ? whole
+        : `href="https://hermes-agent.nousresearch.com/docs/${p}${frag ?? ''}" target="_blank" rel="noopener"`,
+  );
+}
 
 export type DocData = {
   id: string;
@@ -50,7 +70,10 @@ function tocHtml(body: string): string {
     .map((l) => l.slice(3).trim());
   if (heads.length < 3) return '';
   const items = heads
-    .map((h) => `<li><a href="#${headingSlug(h)}">${h.replace(/[`*]/g, '')}</a></li>`)
+    .map((h) => {
+      const { text, id } = headingParts(h);
+      return `<li><a href="#${id}">${text.replace(/[`*]/g, '')}</a></li>`;
+    })
     .join('');
   return (
     '<details class="toc my-6 rounded-lg border border-border bg-bg-subtle px-4 py-3 text-sm">' +
@@ -64,7 +87,7 @@ export function buildDoc(id: string, src: string): DocData {
   const sources = Array.isArray(data.sources) ? data.sources : [];
   const rendered = renderMarkdown(body);
   const toc = tocHtml(body);
-  const html = toc ? rendered.replace(/<\/h1>/, '</h1>' + toc) : rendered;
+  const html = resolveMirrorLinks(toc ? rendered.replace(/<\/h1>/, '</h1>' + toc) : rendered);
   return {
     id,
     title: String(data.title ?? id),

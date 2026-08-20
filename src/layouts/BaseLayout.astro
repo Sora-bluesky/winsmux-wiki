@@ -2,7 +2,10 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import AskBar from '../components/AskBar.astro';
+import Sidebar from '../components/Sidebar.astro';
 import { PAGES } from '../lib/pages.mjs';
+
+type PageLink = { path: string; label: string } | null;
 
 interface Props {
   title: string;
@@ -12,6 +15,8 @@ interface Props {
   hermesVersion?: string;
   confidence?: string;
   showAsk?: boolean;
+  prevOverride?: PageLink;
+  nextOverride?: PageLink;
 }
 
 const {
@@ -26,8 +31,13 @@ const {
 
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const pageIndex = PAGES.findIndex((p) => p.path === Astro.url.pathname);
-const prev = pageIndex > 0 ? PAGES[pageIndex - 1] : null;
-const next = pageIndex >= 0 && pageIndex < PAGES.length - 1 ? PAGES[pageIndex + 1] : null;
+const hasOverride = 'prevOverride' in Astro.props || 'nextOverride' in Astro.props;
+const prev = hasOverride ? (Astro.props.prevOverride ?? null) : pageIndex > 0 ? PAGES[pageIndex - 1] : null;
+const next = hasOverride
+  ? (Astro.props.nextOverride ?? null)
+  : pageIndex >= 0 && pageIndex < PAGES.length - 1
+    ? PAGES[pageIndex + 1]
+    : null;
 ---
 
 <!doctype html>
@@ -55,7 +65,9 @@ const next = pageIndex >= 0 && pageIndex < PAGES.length - 1 ? PAGES[pageIndex + 
   </head>
   <body class="min-h-screen bg-bg text-fg">
     <Nav />
-    <main class="mx-auto w-full max-w-3xl lg:max-w-5xl px-4 pb-36 pt-8 sm:px-6">
+    <div class="mx-auto flex w-full max-w-3xl gap-8 px-4 sm:px-6 lg:max-w-7xl">
+      <Sidebar />
+      <main class="w-full min-w-0 flex-1 pb-36 pt-8 lg:max-w-5xl">
       <slot />
       {
         (prev || next) && (
@@ -109,7 +121,24 @@ const next = pageIndex >= 0 && pageIndex < PAGES.length - 1 ? PAGES[pageIndex + 
           </aside>
         )
       }
-    </main>
+      </main>
+    </div>
     {showAsk && rawPath && <AskBar rawPath={rawPath} />}
+    <script>
+      document.addEventListener('click', async (e) => {
+        const btn = (e.target as HTMLElement).closest('.copy-code');
+        if (!(btn instanceof HTMLButtonElement)) return;
+        const code = btn.parentElement?.querySelector('pre code')?.textContent ?? '';
+        try {
+          await navigator.clipboard.writeText(code);
+          btn.textContent = 'コピーしました';
+        } catch {
+          btn.textContent = 'コピーできません';
+        }
+        setTimeout(() => {
+          btn.textContent = 'コピー';
+        }, 1500);
+      });
+    </script>
   </body>
 </html>

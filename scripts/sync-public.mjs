@@ -58,7 +58,14 @@ const catalog = [
   ['/hermes/syntheses/not-a-mirror/', '正本との差分'],
 ];
 
-const raws = copied.map((f) => `${site}/hermes/raw/${f}`);
+for (const f of copied) {
+  if (f.startsWith('docs/')) {
+    const id = f.replace(/^docs\//, '').replace(/\.md$/, '');
+    catalog.push([`/hermes/docs/${id}/`, `${id}（日本語版）`]);
+  }
+}
+
+const raws = copied.map((f) => `${site}/hermes/raw/${f.replace(/\\/g, '/')}`);
 
 const llms = `# Hermes Agent（日本語）
 

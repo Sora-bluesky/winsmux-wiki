@@ -19,7 +19,7 @@ const doc = buildDoc('index', indexSrc);
   <p class="mt-3 text-fg-secondary leading-7">
     公式 docs の Quickstart / Installation / Messaging の順を日本語にしています。手順は公式と同じです。
   </p>
-  <div class="mt-8 grid gap-4">
+  <div class="mt-8 grid gap-4" id="lane-cards">
     <Card
       href="/hermes/start/"
       title="Hermes Agentをインストールする"
@@ -31,4 +31,22 @@ const doc = buildDoc('index', indexSrc);
       body="案内は出しません。LINE や Telegram へ進むか、運用へ進みます。"
     />
   </div>
+  <script>
+    // 前回選んだ入口を覚えて、次の訪問でそのカードを先頭にする（自動遷移はしない）
+    const KEY = 'hermes-lane';
+    const cards = document.getElementById('lane-cards');
+    const links = cards?.querySelectorAll<HTMLAnchorElement>('a[href^="/hermes/"]') ?? [];
+    for (const a of links) {
+      a.addEventListener('click', () => {
+        try {
+          localStorage.setItem(KEY, a.getAttribute('href') === '/hermes/live/' ? 'live' : 'start');
+        } catch {}
+      });
+    }
+    try {
+      if (localStorage.getItem(KEY) === 'live' && cards && cards.children.length === 2) {
+        cards.appendChild(cards.children[0]);
+      }
+    } catch {}
+  </script>
 </BaseLayout>

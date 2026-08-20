@@ -1,0 +1,48 @@
+---
+import { buildDoc } from '../../../lib/doc';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import sidebar from '../../../../data/sidebar.json';
+
+export function getStaticPaths() {
+  const files = import.meta.glob('../../../raw/docs/**/*.md', {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  }) as Record<string, string>;
+  const existing = new Set(
+    Object.keys(files).map((k) => k.split('raw/docs/')[1].replace(/\.md$/, '')),
+  );
+  return Object.entries(files).map(([path, src]) => {
+    const slug = path.split('raw/docs/')[1].replace(/\.md$/, '');
+    return { params: { slug }, props: { src, existing: [...existing] } };
+  });
+}
+
+const { slug } = Astro.params;
+const { src, existing } = Astro.props;
+const existingSet = new Set(existing as string[]);
+const doc = buildDoc(`docs/${slug}`, src); // buildDoc resolves not-yet-translated mirror links
+
+// prev/next follow the official sidebar order, limited to translated pages.
+const order = (sidebar.order as string[]).filter((id) => existingSet.has(id));
+const idx = order.indexOf(slug as string);
+const label = (id: string) => id.split('/').pop() as string;
+const prev = idx > 0 ? { path: `/hermes/docs/${order[idx - 1]}/`, label: label(order[idx - 1]) } : null;
+const next =
+  idx >= 0 && idx < order.length - 1
+    ? { path: `/hermes/docs/${order[idx + 1]}/`, label: label(order[idx + 1]) }
+    : null;
+---
+
+<BaseLayout
+  title={doc.title}
+  description={doc.description}
+  rawPath={`/hermes/raw/docs/${slug}.md`}
+  sources={doc.sources}
+  hermesVersion={doc.hermesVersion}
+  confidence={doc.confidence}
+  prevOverride={prev}
+  nextOverride={next}
+>
+  <article class="prose" set:html={doc.html} />
+</BaseLayout>

@@ -13,6 +13,12 @@ function escapeHtml(s: string): string {
     .replace(/"/g, '&quot;');
 }
 
+export function headingParts(s: string): { text: string; id: string } {
+  const m = s.match(/^(.*?)\s*\{#([^}]+)\}\s*$/);
+  if (m) return { text: m[1], id: m[2] };
+  return { text: s, id: headingSlug(s) };
+}
+
 export function headingSlug(s: string): string {
   return s
     .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
@@ -23,6 +29,10 @@ export function headingSlug(s: string): string {
 
 function inline(s: string): string {
   let out = escapeHtml(s);
+  out = out.replace(
+    /!\[([^\]]*)\]\((https?:[^)]+|\/[^)]+)\)/g,
+    '<img src="$2" alt="$1" loading="lazy" class="my-2 max-w-full rounded-lg border border-border" />',
+  );
   out = out.replace(
     /\[([^\]]+)\]\((https?:[^)]+)\)/g,
     '<a href="$2" target="_blank" rel="noopener">$1</a>',
@@ -46,7 +56,12 @@ export function renderMarkdown(md: string): string {
         buf.push(lines[i]);
         i += 1;
       }
-      html.push(`<pre><code>${escapeHtml(buf.join('\n'))}</code></pre>`);
+      html.push(
+        '<div class="codeblock relative">' +
+          '<button type="button" class="copy-code absolute right-2 top-2 rounded-md border border-border bg-bg px-2 py-1 text-xs text-fg-muted hover:text-fg" aria-label="コードをコピー">コピー</button>' +
+          `<pre><code>${escapeHtml(buf.join('\n'))}</code></pre>` +
+          '</div>',
+      );
       i += 1;
       continue;
     }
@@ -75,7 +90,8 @@ export function renderMarkdown(md: string): string {
       continue;
     }
     if (line.startsWith('## ')) {
-      html.push(`<h2 id="${headingSlug(line.slice(3))}">${inline(line.slice(3))}</h2>`);
+      const h = headingParts(line.slice(3));
+      html.push(`<h2 id="${h.id}">${inline(h.text)}</h2>`);
       i += 1;
       continue;
     }
@@ -84,9 +100,51 @@ export function renderMarkdown(md: string): string {
       i += 1;
       continue;
     }
-    if (line.startsWith('### ')) {
-      html.push(`<h3>${inline(line.slice(4))}</h3>`);
+    if (line.startsWith('#### ')) {
+      const h = headingParts(line.slice(5));
+      html.push(`<h4 id="${h.id}">${inline(h.text)}</h4>`);
       i += 1;
+      continue;
+    }
+    if (line.startsWith('### ')) {
+      const h = headingParts(line.slice(4));
+      html.push(`<h3 id="${h.id}">${inline(h.text)}</h3>`);
+      i += 1;
+      continue;
+    }
+    if (/^:::(\w+)/.test(line)) {
+      const m = line.match(/^:::(\w+)\s*(.*)$/)!;
+      const type = m[1].toLowerCase();
+      const buf: string[] = [];
+      i += 1;
+      while (i < lines.length && lines[i].trim() !== ':::') {
+        buf.push(lines[i]);
+        i += 1;
+      }
+      i += 1;
+      const titles: Record<string, string> = {
+        note: 'メモ',
+        tip: 'ヒント',
+        info: '情報',
+        warning: '注意',
+        caution: '注意',
+        danger: '危険',
+      };
+      const tones: Record<string, string> = {
+        note: 'border-border bg-bg-subtle',
+        tip: 'border-emerald-300 bg-emerald-50',
+        info: 'border-sky-300 bg-sky-50',
+        warning: 'border-amber-300 bg-amber-50',
+        caution: 'border-amber-300 bg-amber-50',
+        danger: 'border-red-300 bg-red-50',
+      };
+      const title = m[2].trim() || titles[type] || type;
+      html.push(
+        `<aside class="adm my-4 rounded-lg border px-4 py-3 ${tones[type] ?? tones.note}">` +
+          `<p class="mb-1 text-sm font-semibold">${inline(title)}</p>` +
+          renderMarkdown(buf.join('\n')) +
+          '</aside>',
+      );
       continue;
     }
     if (line.trim() === '---') {
@@ -94,11 +152,32 @@ export function renderMarkdown(md: string): string {
       i += 1;
       continue;
     }
-    if (line.startsWith('- ')) {
-      html.push('<ul>');
-      while (i < lines.length && lines[i].startsWith('- ')) {
-        html.push(`<li>${inline(lines[i].slice(2))}</li>`);
+    if (/^\s*- /.test(line)) {
+      const items: { depth: number; text: string }[] = [];
+      while (i < lines.length && /^\s*- /.test(lines[i])) {
+        const m = lines[i].match(/^(\s*)- (.*)$/)!;
+        items.push({ depth: Math.floor(m[1].length / 2), text: m[2] });
         i += 1;
+      }
+      let p = 0;
+      const sub = (depth: number): string => {
+        let out = '<ul>';
+        while (p < items.length && items[p].depth >= depth) {
+          const it = items[p];
+          p += 1;
+          let li = inline(it.text);
+          if (p < items.length && items[p].depth > it.depth) li += sub(items[p].depth);
+          out += `<li>${li}</li>`;
+        }
+        return out + '</ul>';
+      };
+      html.push('<ul>');
+      while (p < items.length) {
+        const it = items[p];
+        p += 1;
+        let li = inline(it.text);
+        if (p < items.length && items[p].depth > it.depth) li += sub(items[p].depth);
+        html.push(`<li>${li}</li>`);
       }
       html.push('</ul>');
       continue;
@@ -118,7 +197,7 @@ export function renderMarkdown(md: string): string {
     }
     const buf = [line];
     i += 1;
-    while (i < lines.length && lines[i].trim() !== '' && !lines[i].startsWith('#') && !lines[i].startsWith('- ') && !lines[i].startsWith('```') && !lines[i].startsWith('|') && !/^\d+\. /.test(lines[i]) && lines[i].trim() !== '---') {
+    while (i < lines.length && lines[i].trim() !== '' && !lines[i].startsWith('#') && !/^\s*- /.test(lines[i]) && !lines[i].startsWith('```') && !lines[i].startsWith('|') && !lines[i].startsWith(':::') && !/^\d+\. /.test(lines[i]) && lines[i].trim() !== '---') {
       buf.push(lines[i]);
       i += 1;
     }

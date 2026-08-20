@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="検索" description="このサイトの全ページを検索します。" showAsk={false}>
+  <article class="prose">
+    <h1>検索</h1>
+    <p>このサイトの全ページ（日本語）を検索します。</p>
+  </article>
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <div id="search" class="mt-6"></div>
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.PagefindUI) {
+        new window.PagefindUI({
+          element: '#search',
+          showSubResults: true,
+          autofocus: true,
+          translations: {
+            placeholder: '検索する言葉',
+            zero_results: '「[SEARCH_TERM]」は見つかりませんでした',
+          },
+        });
+      } else {
+        document.getElementById('search').textContent =
+          '検索の索引がまだありません。ビルド後に生成されます。';
+      }
+    });
+  </script>
+</BaseLayout>
