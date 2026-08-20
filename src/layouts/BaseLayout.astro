@@ -1,0 +1,70 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import AskBar from '../components/AskBar.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  rawPath?: string;
+  sources?: string[];
+  hermesVersion?: string;
+  confidence?: string;
+  showAsk?: boolean;
+}
+
+const {
+  title,
+  description,
+  rawPath,
+  sources = [],
+  hermesVersion,
+  confidence,
+  showAsk = true,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#ffffff" />
+  </head>
+  <body class="min-h-screen bg-bg text-fg">
+    <Nav />
+    <main class="mx-auto w-full max-w-3xl px-4 pb-36 pt-8 sm:px-6">
+      <slot />
+      {
+        (sources.length > 0 || hermesVersion) && (
+          <aside class="mt-12 border-t border-border pt-6 text-sm text-fg-muted">
+            {hermesVersion && (
+              <p>
+                Hermes Agent {hermesVersion}
+                {confidence && ` · 確度 ${confidence}`}
+              </p>
+            )}
+            {sources.length > 0 && (
+              <p class="mt-2">
+                正本:{' '}
+                {sources.map((url, i) => (
+                  <>
+                    {i > 0 && ' · '}
+                    <a href={url}>{url.replace('https://hermes-agent.nousresearch.com', '')}</a>
+                  </>
+                ))}
+              </p>
+            )}
+          </aside>
+        )
+      }
+    </main>
+    {showAsk && rawPath && <AskBar rawPath={rawPath} />}
+  </body>
+</html>

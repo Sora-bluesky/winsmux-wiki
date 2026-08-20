@@ -1,0 +1,18 @@
+# wrangler.toml — wiki.winsmux.dev
+# Cloudflare Workers Static Assets only.
+# Static asset requests are free and unlimited:
+# https://developers.cloudflare.com/workers/platform/pricing/#workers
+#
+# DO NOT add a `main` worker script.
+# DNS is created by custom_domain. Do not add CNAME / A by hand.
+
+name = "wiki"
+compatibility_date = "2026-05-01"
+
+routes = [
+  { pattern = "wiki.winsmux.dev", custom_domain = true }
+]
+
+[assets]
+directory = "./dist"
+not_found_handling = "404-page"

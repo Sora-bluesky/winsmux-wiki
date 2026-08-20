@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f6f7f9;
+  --color-bg-elevated: #f3f4f6;
+  --color-fg: #1b1b1b;
+  --color-fg-secondary: #3f3f46;
+  --color-fg-muted: #5c6370;
+  --color-border: #e5e7eb;
+  --color-border-strong: #d1d5db;
+  --color-accent: #1d4ed8;
+  --color-accent-hover: #1e40af;
+  --color-accent-soft: #eff6ff;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+:not(pre) > code {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--color-fg);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+pre {
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+}
+
+a {
+  color: var(--color-accent);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--color-accent-hover);
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+  font-weight: 650;
+}
+
+.prose h1 {
+  font-size: 1.85rem;
+  line-height: 1.25;
+  margin: 0 0 1rem;
+}
+
+.prose h2 {
+  font-size: 1.25rem;
+  line-height: 1.35;
+  margin: 2rem 0 0.75rem;
+  padding-top: 0.4rem;
+}
+
+.prose h3 {
+  font-size: 1.05rem;
+  margin: 1.4rem 0 0.5rem;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 0.75rem 0;
+  line-height: 1.75;
+  color: var(--color-fg-secondary);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.2rem;
+}
+
+.prose li {
+  margin: 0.3rem 0;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 2rem 0;
+}

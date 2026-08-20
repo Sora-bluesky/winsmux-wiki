@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  rawPath: string;
+  sources?: string[];
+  hermesVersion?: string;
+  confidence?: string;
+  html: string;
+}
+
+const { title, description, rawPath, sources, hermesVersion, confidence, html } = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  rawPath={rawPath}
+  sources={sources}
+  hermesVersion={hermesVersion}
+  confidence={confidence}
+>
+  <article class="prose" set:html={html} />
+</BaseLayout>

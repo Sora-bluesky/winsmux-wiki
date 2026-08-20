@@ -1,0 +1,27 @@
+---
+import src from '../../../raw/guide.md?raw';
+import { buildDoc } from '../../../lib/doc';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const doc = buildDoc('guide', src);
+---
+
+<BaseLayout
+  title={doc.title}
+  description={doc.description}
+  rawPath={doc.rawPath}
+  sources={doc.sources}
+  hermesVersion={doc.hermesVersion}
+  confidence={doc.confidence}
+>
+  <nav class="mb-6 flex gap-6 border-b border-border text-sm">
+    <a href="/hermes/guide/" class="border-b-2 border-fg pb-2 font-semibold text-fg no-underline">よく使う</a>
+    <a
+      href="https://hermes-agent.nousresearch.com/docs/llms.txt"
+      class="pb-2 text-fg-muted no-underline hover:text-fg"
+    >
+      すべて
+    </a>
+  </nav>
+  <article class="prose" set:html={doc.html} />
+</BaseLayout>

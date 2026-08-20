@@ -1,0 +1,17 @@
+---
+import src from '../../../raw/ops.md?raw';
+import { buildDoc } from '../../../lib/doc';
+import DocPage from '../../../components/DocPage.astro';
+
+const doc = buildDoc('ops', src);
+---
+
+<DocPage
+  title={doc.title}
+  description={doc.description}
+  rawPath={doc.rawPath}
+  sources={doc.sources}
+  hermesVersion={doc.hermesVersion}
+  confidence={doc.confidence}
+  html={doc.html}
+/>

@@ -1,0 +1,33 @@
+---
+const path = Astro.url.pathname;
+const installActive = path === '/hermes/' || path.startsWith('/hermes/start/') || path.startsWith('/hermes/live/');
+const guideActive = path.startsWith('/hermes/guide/') || path.startsWith('/hermes/ops/') || path.startsWith('/hermes/trust/');
+---
+
+<header class="border-b border-border bg-bg">
+  <div class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <a href="/hermes/" class="text-sm font-semibold text-fg no-underline hover:text-fg">
+      Hermes Agent
+    </a>
+    <nav class="flex gap-5 text-sm">
+      <a
+        href="/hermes/"
+        class:list={[
+          'no-underline',
+          installActive ? 'font-semibold text-fg' : 'text-fg-muted hover:text-fg',
+        ]}
+      >
+        インストールする
+      </a>
+      <a
+        href="/hermes/guide/"
+        class:list={[
+          'no-underline',
+          guideActive ? 'font-semibold text-fg' : 'text-fg-muted hover:text-fg',
+        ]}
+      >
+        Hermes Agentの使い方
+      </a>
+    </nav>
+  </div>
+</header>
