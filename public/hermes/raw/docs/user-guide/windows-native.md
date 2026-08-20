@@ -81,7 +81,7 @@ Windows らしいインストール体験がほしいときや、開発者では
 10. **`hermes setup` を実行します** — 通常の初回セットアップのウィザード（モデル、プロバイダ、ツールセット）です。`-SkipSetup` で省けます。
 
 :::tip Windows ではプロバイダ探しを省く
-Windows では、ツールごとの API キー設定（Firecrawl、FAL、Browser Use、OpenAI TTS）が、役に立つエージェントを用意するうえで一番の手間になります。[Nous Portal](https://hermes-agent.nousresearch.com/user-guide/features/tool-gateway) を契約すると、モデル**と**それらのツールが、1 回の OAuth ログインでまとめて使えます。インストーラが終わったら `hermes setup --portal` を実行して、まとめて設定してください。
+Windows では、ツールごとの API キー設定（Firecrawl、FAL、Browser Use、OpenAI TTS）が、役に立つエージェントを用意するうえで一番の手間になります。[Nous Portal](/hermes/docs/user-guide/features/tool-gateway/) を契約すると、モデル**と**それらのツールが、1 回の OAuth ログインでまとめて使えます。インストーラが終わったら `hermes setup --portal` を実行して、まとめて設定してください。
 :::
 
 ## 機能の対応表 {#feature-matrix}
@@ -325,4 +325,4 @@ Windows で UTF-8 ではないエディタ（古い Windows のメモ帳、一�
 - **[Windows（WSL2）ガイド](/hermes/docs/user-guide/windows-wsl-quickstart/)** — POSIX の挙動や、ダッシュボードのターミナルのペインが必要な場合。
 - **[CLI 早見表](/hermes/docs/reference/cli-commands/)** — `hermes` のすべてのサブコマンド。
 - **[よくある質問](/hermes/docs/reference/faq/)** — Windows に限らない、よく出る質問。
-- **[メッセージングのゲートウェイ](/hermes/docs/user-guide/messaging/index/)** — Windows で Telegram / Discord / Slack を動かす方法。
+- **[メッセージングのゲートウェイ](/hermes/docs/user-guide/messaging/)** — Windows で Telegram / Discord / Slack を動かす方法。

@@ -4,7 +4,7 @@ description: ""
 upstream_path: user-guide/secrets/index.md
 upstream_blob: 29c7df9e94e49874c284abb26c10140359f501bd
 sources:
-  - https://hermes-agent.nousresearch.com/docs/user-guide/secrets/index
+  - https://hermes-agent.nousresearch.com/docs/user-guide/secrets
 ---
 
 # シークレット {#secrets}
@@ -54,6 +54,6 @@ secrets:
 
 ## 自分で取得元を足す {#adding-your-own-backend}
 
-他社のシークレット管理サービスへの対応は、本体への PR ではなく単独のプラグインとして配布します。実装は `agent.secret_sources.base.SecretSource` を継承し（必須のメソッドは `fetch(cfg, home_path) -> FetchResult` の 1 つだけです）、プラグインの `register(ctx)` の中で `ctx.register_secret_source(MySource())` を呼んで登録します。優先順位、衝突の扱い、タイムアウト、出どころの記録は取りまとめ側が受け持つので、自分の取得元は値を取ってくることだけを考えれば済みます。守るべき決まりごと、サブプロセスを安全に扱うための補助、適合性の確認キットまで含めた手引きは [シークレット取得プラグインを作る](https://hermes-agent.nousresearch.com/developer-guide/secret-source-plugin) にあります。
+他社のシークレット管理サービスへの対応は、本体への PR ではなく単独のプラグインとして配布します。実装は `agent.secret_sources.base.SecretSource` を継承し（必須のメソッドは `fetch(cfg, home_path) -> FetchResult` の 1 つだけです）、プラグインの `register(ctx)` の中で `ctx.register_secret_source(MySource())` を呼んで登録します。優先順位、衝突の扱い、タイムアウト、出どころの記録は取りまとめ側が受け持つので、自分の取得元は値を取ってくることだけを考えれば済みます。守るべき決まりごと、サブプロセスを安全に扱うための補助、適合性の確認キットまで含めた手引きは [シークレット取得プラグインを作る](/hermes/docs/developer-guide/secret-source-plugin/) にあります。
 
 同梱するものは意図的に絞ってあります（メモリープロバイダーと同じ方針です）。本体に入るのは Bitwarden と 1Password だけです。Infisical、Proton Pass、HashiCorp Vault、AWS Secrets Manager、OS の鍵ストアなど、それ以外はプラグインのリポジトリに置くものと考えてください。作ったら Nous Research の Discord（`#plugins-skills-and-skins`）で共有してください。

@@ -102,7 +102,7 @@ updates:
 `updates.pre_update_backup` は 1 つの設定で 3 つのモードを切り替えます。`quick`（既定 — 前述の軽量な状態スナップショット）、`full`（quick のスナップショットに加えて `HERMES_HOME` 全体の zip も作成。ホームが大きいと数分かかることがあります）、`off`（更新前のバックアップを一切行わない。1 回の実行だけ無効にしたい場合は `--no-backup` でも同じです）です。従来の真偽値も引き続き使え、`true` は `full`、`false` は `off` を意味します。
 
 :::tip 別の端末へ移行したい場合
-更新時のバックアップは、その場での更新を守るためのものです。環境一式を別のハードウェアへ移行したい場合は、代わりに `hermes backup` と `hermes import` を使ってください。[Hermes を別の端末へ書き出す](https://hermes-agent.nousresearch.com/reference/faq#exporting-hermes-to-another-machine) と [`hermes backup` と `hermes profile export` の違い](https://hermes-agent.nousresearch.com/reference/faq#hermes-backup-vs-hermes-profile-export) を参照してください。
+更新時のバックアップは、その場での更新を守るためのものです。環境一式を別のハードウェアへ移行したい場合は、代わりに `hermes backup` と `hermes import` を使ってください。[Hermes を別の端末へ書き出す](/hermes/docs/reference/faq/#exporting-hermes-to-another-machine) と [`hermes backup` と `hermes profile export` の違い](/hermes/docs/reference/faq/#hermes-backup-vs-hermes-profile-export) を参照してください。
 :::
 
 ### Windows: 別の `hermes.exe` が動いている場合 {#windows-another-hermesexe-is-running}
@@ -279,7 +279,7 @@ hermes uninstall
 アンインストーラは、あとで入れ直すときのために設定ファイル（`~/.hermes/`）を残すかどうかを選ばせてくれます。
 
 :::tip 完全にやめるのではなく、別の端末へ移りたい場合
-何かを消す前に、環境を持ち出しておいてください。`hermes backup` は認証情報も含めた `~/.hermes` ディレクトリ全体を保存し、`hermes profile export` は 1 つのプロファイルをまとめますが、設計上そこに認証情報は含まれません（つまり書き出しだけでは完全なバックアップになりません）。[`hermes backup` と `hermes profile export` の違い](https://hermes-agent.nousresearch.com/reference/faq#hermes-backup-vs-hermes-profile-export) を参照してください。
+何かを消す前に、環境を持ち出しておいてください。`hermes backup` は認証情報も含めた `~/.hermes` ディレクトリ全体を保存し、`hermes profile export` は 1 つのプロファイルをまとめますが、設計上そこに認証情報は含まれません（つまり書き出しだけでは完全なバックアップになりません）。[`hermes backup` と `hermes profile export` の違い](/hermes/docs/reference/faq/#hermes-backup-vs-hermes-profile-export) を参照してください。
 :::
 
 ### 手動でのアンインストール {#manual-uninstall}

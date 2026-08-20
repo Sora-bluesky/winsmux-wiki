@@ -12,7 +12,7 @@ sources:
 Hermes Agent の CLI は、ウェブの画面ではなく、ターミナルの中で完結する本格的な操作画面（TUI）です。複数行の編集、スラッシュコマンドの補完、会話履歴、作業中の割り込みと軌道修正、ツール出力の逐次表示に対応しています。ターミナルで一日を過ごす人のために作られています。
 
 :::tip 初回のセットアップ
-`hermes setup --portal` を一度実行すれば、あとは `hermes chat` を叩くだけです。[Nous Portal](https://hermes-agent.nousresearch.com/integrations/nous-portal) を参照してください。
+`hermes setup --portal` を一度実行すれば、あとは `hermes chat` を叩くだけです。[Nous Portal](/hermes/docs/integrations/nous-portal/) を参照してください。
 :::
 
 :::tip
@@ -112,7 +112,7 @@ hermes plugins remove <plugin-name>
 
 持ち運びできるパッケージは、明示的に有効化するまで無効のままです。現在の Hermes が読み込むのは、
 持ち運びできる Agent Skills と stdio 方式の MCP のエントリです。対応している範囲と信頼の境界については
-[plugin developer guide](https://hermes-agent.nousresearch.com/developer-guide/plugins#portable-agent-plugins-v1-packages)
+[plugin developer guide](/hermes/docs/developer-guide/plugins/#portable-agent-plugins-v1-packages)
 を参照してください。
 
 ## 画面の構成 {#interface-layout}
@@ -250,7 +250,7 @@ quick_commands:
     target: /gateway restart
 ```
 
-あとは、どのチャットでも `/status`、`/gpu`、`/restart` と入力するだけです。ほかの例は [設定の解説](https://hermes-agent.nousresearch.com/user-guide/configuration#quick-commands) をご覧ください。
+あとは、どのチャットでも `/status`、`/gpu`、`/restart` と入力するだけです。ほかの例は [設定の解説](/hermes/docs/user-guide/configuration/#quick-commands) をご覧ください。
 
 ## 起動時にスキルを読み込んでおく {#preloading-skills-at-launch}
 
@@ -408,7 +408,7 @@ CLI は、エージェントが作業しているあいだ、動きのある表�
   ┊ 📄 web_extract (2.1s)
 ```
 
-`/verbose` を使うと、表示のしかたを `off → new → all → verbose` の順に切り替えられます。このコマンドは、メッセージングの各サービスでも使えるようにできます。[設定](https://hermes-agent.nousresearch.com/user-guide/configuration#display-settings) を参照してください。
+`/verbose` を使うと、表示のしかたを `off → new → all → verbose` の順に切り替えられます。このコマンドは、メッセージングの各サービスでも使えるようにできます。[設定](/hermes/docs/user-guide/configuration/#display-settings) を参照してください。
 
 ### ツールのプレビューの長さ {#tool-preview-length}
 

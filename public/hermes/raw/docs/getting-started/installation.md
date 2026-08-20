@@ -75,7 +75,7 @@ hermes setup          # Or run the full setup wizard to configure everything at 
 ```
 
 :::tip いちばん速い経路: Nous Portal
-1 つのサブスクリプションで 300 以上のモデルに加えて [Tool Gateway](https://hermes-agent.nousresearch.com/user-guide/features/tool-gateway)（ウェブ検索、画像生成、TTS、クラウドブラウザ）まで使えます。ツールごとに API キーをやりくりする手間はいりません。
+1 つのサブスクリプションで 300 以上のモデルに加えて [Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/)（ウェブ検索、画像生成、TTS、クラウドブラウザ）まで使えます。ツールごとに API キーをやりくりする手間はいりません。
 
 ```bash
 hermes setup --portal
@@ -85,7 +85,7 @@ hermes setup --portal
 :::
 
 :::tip すでに別のマシンで Hermes を動かしていますか？
-設定を一から作り直す必要はありません。`hermes import` でバックアップを丸ごと復元する（[Exporting Hermes to another machine](https://hermes-agent.nousresearch.com/reference/faq#exporting-hermes-to-another-machine) を参照）か、`hermes profile import` でエージェントを 1 つだけ移す（[Moving a single profile to another machine](https://hermes-agent.nousresearch.com/reference/faq#moving-a-single-profile-to-another-machine) を参照）ことができます。なお、プロファイルのエクスポートは設計上、認証情報を含みません。つまりエクスポートだけでは完全なバックアップになりません。どちらを使うべきかは [`hermes backup` vs `hermes profile export`](https://hermes-agent.nousresearch.com/reference/faq#hermes-backup-vs-hermes-profile-export) で説明されています。
+設定を一から作り直す必要はありません。`hermes import` でバックアップを丸ごと復元する（[Exporting Hermes to another machine](/hermes/docs/reference/faq/#exporting-hermes-to-another-machine) を参照）か、`hermes profile import` でエージェントを 1 つだけ移す（[Moving a single profile to another machine](/hermes/docs/reference/faq/#moving-a-single-profile-to-another-machine) を参照）ことができます。なお、プロファイルのエクスポートは設計上、認証情報を含みません。つまりエクスポートだけでは完全なバックアップになりません。どちらを使うべきかは [`hermes backup` vs `hermes profile export`](/hermes/docs/reference/faq/#hermes-backup-vs-hermes-profile-export) で説明されています。
 :::
 
 ---
@@ -157,7 +157,7 @@ Hermes を専用の非特権ユーザー（たとえば `hermes` という syste
    sudo loginctl enable-linger <service-user>
    ```
 
-   サービスそのもののセットアップは [メッセージングゲートウェイ](https://hermes-agent.nousresearch.com/user-guide/messaging/) をご覧ください。
+   サービスそのもののセットアップは [メッセージングゲートウェイ](/hermes/docs/user-guide/messaging/) をご覧ください。
 
 同じやり方は Arch（インストーラーは同じ sudo 検出ロジックで pacman を使います）、Fedora / RHEL、openSUSE でも通用します。これらのディストリビューションは `--with-deps` に対応していないため、システムライブラリは必ず管理者が別途入れることになります。該当する `dnf` / `zypper` のコマンドはインストーラーが表示します。
 

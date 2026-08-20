@@ -594,7 +594,7 @@ Total messages: 3847
 Database size: 12.4 MB
 ```
 
-トークンの使用量、費用の見積もり、ツールごとの内訳、活動の傾向といったもっと詳しい分析には、[`hermes insights`](https://hermes-agent.nousresearch.com/reference/cli-commands#hermes-insights) を使ってください。
+トークンの使用量、費用の見積もり、ツールごとの内訳、活動の傾向といったもっと詳しい分析には、[`hermes insights`](/hermes/docs/reference/cli-commands/#hermes-insights) を使ってください。
 
 ### 迷子になったゲートウェイのセッションを直す {#repair-stranded-gateway-sessions}
 

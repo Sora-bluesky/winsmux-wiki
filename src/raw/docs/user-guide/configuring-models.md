@@ -17,7 +17,7 @@ Hermes には 2 種類のモデル枠があります。
 このページでは、その両方をダッシュボードから設定する方法を説明します。設定ファイルや CLI で操作したい場合は、末尾の [別のやり方](#alternative-methods) へ進んでください。
 
 :::tip いちばん速いのは Nous Portal
-[Nous Portal](https://hermes-agent.nousresearch.com/user-guide/features/tool-gateway) なら、1 つのサブスクリプションで 300 以上のモデルを使えます。入れたばかりの環境では `hermes setup --portal` を実行すると、ログインと Nous をプロバイダーに設定する作業がコマンド 1 つで済みます。何がつながっているかは `hermes portal info` で確認できます。
+[Nous Portal](/hermes/docs/user-guide/features/tool-gateway/) なら、1 つのサブスクリプションで 300 以上のモデルを使えます。入れたばかりの環境では `hermes setup --portal` を実行すると、ログインと Nous をプロバイダーに設定する作業がコマンド 1 つで済みます。何がつながっているかは `hermes portal info` で確認できます。
 
 - Portal の契約者は、トークン課金型のプロバイダーが **10% 割引**になります。
 :::
@@ -309,7 +309,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 
 どちらの書き方も、読み込むのは同じ処理（`hermes_cli/model_switch.py`）です。同じ名前があった場合は、`model_aliases:` に書いたほうが `model.aliases:` より優先されます。
 
-あとはチャットで `/model fav` や `/model grok` と打つだけです。ユーザーが定義したエイリアスは、組み込みの短い名前（`sonnet`、`kimi`、`opus` など）より優先されます。詳しくは [独自のモデルエイリアス](https://hermes-agent.nousresearch.com/reference/slash-commands#custom-model-aliases) の一覧をご覧ください。
+あとはチャットで `/model fav` や `/model grok` と打つだけです。ユーザーが定義したエイリアスは、組み込みの短い名前（`sonnet`、`kimi`、`opus` など）より優先されます。詳しくは [独自のモデルエイリアス](/hermes/docs/reference/slash-commands/#custom-model-aliases) の一覧をご覧ください。
 
 ### `hermes model` サブコマンド {#hermes-model-subcommand}
 

@@ -253,7 +253,7 @@ hermes -c            # Short form
 hermes gateway setup    # Interactive platform configuration
 ```
 
-[Telegram](https://hermes-agent.nousresearch.com/user-guide/messaging/telegram)、[Discord](https://hermes-agent.nousresearch.com/user-guide/messaging/discord)、[Slack](https://hermes-agent.nousresearch.com/user-guide/messaging/slack)、[WhatsApp](https://hermes-agent.nousresearch.com/user-guide/messaging/whatsapp)、[Signal](https://hermes-agent.nousresearch.com/user-guide/messaging/signal)、[Email](https://hermes-agent.nousresearch.com/user-guide/messaging/email)、[Home Assistant](https://hermes-agent.nousresearch.com/user-guide/messaging/homeassistant)、または [Microsoft Teams](https://hermes-agent.nousresearch.com/user-guide/messaging/teams) に接続できます。
+[Telegram](/hermes/docs/user-guide/messaging/telegram/)、[Discord](/hermes/docs/user-guide/messaging/discord/)、[Slack](/hermes/docs/user-guide/messaging/slack/)、[WhatsApp](/hermes/docs/user-guide/messaging/whatsapp/)、[Signal](/hermes/docs/user-guide/messaging/signal/)、[Email](/hermes/docs/user-guide/messaging/email/)、[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/)、または [Microsoft Teams](/hermes/docs/user-guide/messaging/teams/) に接続できます。
 
 ### 自動化とツール {#automation-and-tools}
 
@@ -382,9 +382,9 @@ hermes acp
 
 - **[CLI Guide](/hermes/docs/user-guide/cli/)** — ターミナルインターフェースを使いこなす
 - **[Configuration](/hermes/docs/user-guide/configuration/)** — 自分好みに設定を調整する
-- **[Messaging Gateway](/hermes/docs/user-guide/messaging/index/)** — Telegram・Discord・Slack・WhatsApp・Signal・Email・Home Assistant・Teams などに接続する
+- **[Messaging Gateway](/hermes/docs/user-guide/messaging/)** — Telegram・Discord・Slack・WhatsApp・Signal・Email・Home Assistant・Teams などに接続する
 - **[Tools & Toolsets](/hermes/docs/user-guide/features/tools/)** — 利用できる機能を見てまわる
 - **[AI Providers](/hermes/docs/integrations/providers/)** — プロバイダーの全一覧と設定の詳細
 - **[Skills System](/hermes/docs/user-guide/features/skills/)** — 再利用できるワークフローと知識
 - **[Tips & Best Practices](/hermes/docs/guides/tips/)** — 使い込んだ人向けのコツ
-- **[Moving to another machine](https://hermes-agent.nousresearch.com/reference/faq#exporting-hermes-to-another-machine)** — `hermes backup` で環境をまるごと移行できます（[プロファイル1つだけ](https://hermes-agent.nousresearch.com/reference/faq#moving-a-single-profile-to-another-machine)の移行も可能）。一から作り直す必要はありません
+- **[Moving to another machine](/hermes/docs/reference/faq/#exporting-hermes-to-another-machine)** — `hermes backup` で環境をまるごと移行できます（[プロファイル1つだけ](/hermes/docs/reference/faq/#moving-a-single-profile-to-another-machine)の移行も可能）。一から作り直す必要はありません

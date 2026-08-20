@@ -67,7 +67,7 @@ Hermes は WSL1 では安定して動きません。WSL1 は Linux のシステ�
 
 ### ディストリビューションの選択 {#distro-choice}
 
-私たちが動作確認しているのは Ubuntu（LTS）です。Debian でも動きます。Arch や NixOS も、それを望む人には使えますが、1 行のインストーラは Debian 系の `apt` を前提にしています。その場合は [Nix セットアップガイド](https://hermes-agent.nousresearch.com/getting-started/nix-setup)を参照してください。
+私たちが動作確認しているのは Ubuntu（LTS）です。Debian でも動きます。Arch や NixOS も、それを望む人には使えますが、1 行のインストーラは Debian 系の `apt` を前提にしています。その場合は [Nix セットアップガイド](/hermes/docs/getting-started/nix-setup/)を参照してください。
 
 ### systemd を有効にする（おすすめ） {#enable-systemd-recommended}
 
@@ -107,7 +107,7 @@ source ~/.bashrc
 hermes
 ```
 
-インストーラは WSL2 をただの Linux として扱うので、WSL 向けの特別な作業は要りません。全体の構成は [インストール](https://hermes-agent.nousresearch.com/getting-started/installation)を参照してください。
+インストーラは WSL2 をただの Linux として扱うので、WSL 向けの特別な作業は要りません。全体の構成は [インストール](/hermes/docs/getting-started/installation/)を参照してください。
 
 ## ファイルシステム: Windows と WSL2 の境界をまたぐ {#filesystem-crossing-the-windows-wsl2-boundary}
 
@@ -190,7 +190,7 @@ dos2unix path/to/script.sh
 
 WSL の中です。特別な理由がないかぎり、いつでもそうしてください。ふだんの Hermes の使い方（`hermes chat`、リポジトリを `rg`／`ripgrep` で探すツールの呼び出し、ファイル監視、裏で動くゲートウェイ）は、`/mnt/c/Users/you/myrepo` よりも `~/code/myrepo` に対するほうが、はるかに速く確実です。
 
-例外が 1 つあります。**Windows のバイナリを起動する MCP のブリッジ**です。`cmd.exe` を通して `chrome-devtools-mcp` を使っている場合（[MCP ガイド: WSL から Windows の Chrome へ](https://hermes-agent.nousresearch.com/guides/use-mcp-with-hermes#wsl2-bridge-hermes-in-wsl-to-windows-chrome)を参照）、Hermes の作業ディレクトリが `~` だと Windows が `UNC` の警告を出すことがあります。その場合は、Windows のプロセスにドライブレターの作業ディレクトリを持たせるために、`/mnt/c/` の下のどこかから Hermes を起動してください。
+例外が 1 つあります。**Windows のバイナリを起動する MCP のブリッジ**です。`cmd.exe` を通して `chrome-devtools-mcp` を使っている場合（[MCP ガイド: WSL から Windows の Chrome へ](/hermes/docs/guides/use-mcp-with-hermes/#wsl2-bridge-hermes-in-wsl-to-windows-chrome)を参照）、Hermes の作業ディレクトリが `~` だと Windows が `UNC` の警告を出すことがあります。その場合は、Windows のプロセスにドライブレターの作業ディレクトリを持たせるために、`/mnt/c/` の下のどこかから Hermes を起動してください。
 
 ## ネットワーク: WSL と Windows {#networking-wsl-windows}
 
@@ -202,7 +202,7 @@ WSL2 は軽量な仮想マシンの中で、自分専用のネットワークを
 
 いちばん多いのは、**Windows で Ollama、LM Studio、llama-server を動かして**いて、WSL の中の Hermes からそこにつなぎたい、という場合です。
 
-この手順の正本はプロバイダのガイドにあります。**[ローカルモデルのための WSL2 のネットワーク →](https://hermes-agent.nousresearch.com/integrations/providers#wsl2-networking-windows-users)**
+この手順の正本はプロバイダのガイドにあります。**[ローカルモデルのための WSL2 のネットワーク →](/hermes/docs/integrations/providers/#wsl2-networking-windows-users)**
 
 要点だけ書くと、次のとおりです。
 
@@ -216,7 +216,7 @@ Ollama / LM Studio / vLLM / SGLang の待ち受けアドレス、ファイアウ
 こちらは逆向きで、他ではあまり説明されていませんが、次のようなときに必要になります。
 
 - Hermes の **Web ダッシュボード**を Windows のブラウザから使う。
-- **OpenAI 互換の API サーバ**（`API_SERVER_ENABLED=true` のときに `hermes gateway` が公開します）を Windows 側のツールから使う。[API サーバの機能ページ](https://hermes-agent.nousresearch.com/user-guide/features/api-server)を参照してください。
+- **OpenAI 互換の API サーバ**（`API_SERVER_ENABLED=true` のときに `hermes gateway` が公開します）を Windows 側のツールから使う。[API サーバの機能ページ](/hermes/docs/user-guide/features/api-server/)を参照してください。
 - **メッセージングのゲートウェイ**（Telegram、Discord など）を試す。プラットフォーム側が手元の webhook の URL を叩く形になりますが、たいていは素のポート転送ではなく `cloudflared` や `ngrok` を使います。
 
 #### 場合 2a: Windows のホスト自身から {#subcase-2a-from-the-windows-host-itself}
@@ -256,11 +256,11 @@ Ollama / LM Studio / vLLM / SGLang の待ち受けアドレス、ファイアウ
 
 NAT モードでは WSL の仮想マシンの IP が再起動のたびに変わるので、その場かぎりの規則は次の `wsl --shutdown` までしかもちません。ずっと使いたいなら、ミラーモードにするか、ポート転送の手順を Windows のログイン時に走るスクリプトに入れてください。
 
-クラウドのメッセージングのサービスからの webhook（Telegram の `setWebhook`、Slack のイベントなど）については、ポート転送と格闘せず `cloudflared` のトンネルを使ってください。[webhook のガイド](https://hermes-agent.nousresearch.com/user-guide/messaging/webhooks)を参照してください。
+クラウドのメッセージングのサービスからの webhook（Telegram の `setWebhook`、Slack のイベントなど）については、ポート転送と格闘せず `cloudflared` のトンネルを使ってください。[webhook のガイド](/hermes/docs/user-guide/messaging/webhooks/)を参照してください。
 
 ## Windows で Hermes のサービスを長く動かし続ける {#running-hermes-services-long-term-on-windows}
 
-Hermes の [Tool Gateway](https://hermes-agent.nousresearch.com/user-guide/features/tool-gateway) と API サーバは、長く動かし続けるプロセスです。WSL2 では、それを保つのにいくつかの選択肢があります。
+Hermes の [Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/) と API サーバは、長く動かし続けるプロセスです。WSL2 では、それを保つのにいくつかの選択肢があります。
 
 ### Hermes をすぐ開くためのデスクトップのショートカット {#desktop-shortcut-for-opening-hermes-quickly}
 
@@ -320,7 +320,7 @@ WSL2 の中の AMD ROCm と Intel Arc の対応はまだ発展途上で、Hermes
 ## よくあるつまずき {#common-pitfalls}
 
 **Windows で動かしている Ollama / LM Studio に「Connection refused」と出る。**
-[WSL2 のネットワーク](https://hermes-agent.nousresearch.com/integrations/providers#wsl2-networking-windows-users)を参照してください。9 割がた、サーバが `127.0.0.1` を待ち受けていて `0.0.0.0` にする必要があるか（Ollama なら `OLLAMA_HOST=0.0.0.0`）、ファイアウォールの規則が足りていません。
+[WSL2 のネットワーク](/hermes/docs/integrations/providers/#wsl2-networking-windows-users)を参照してください。9 割がた、サーバが `127.0.0.1` を待ち受けていて `0.0.0.0` にする必要があるか（Ollama なら `OLLAMA_HOST=0.0.0.0`）、ファイアウォールの規則が足りていません。
 
 **リポジトリの中で `git status` や `hermes chat` がとんでもなく遅い。**
 おそらく `/mnt/c/...` の下で作業しています。リポジトリを `~/code/...`（Linux 側）に移してください。桁違いに速くなります。
@@ -354,7 +354,7 @@ WSL2 は仮想マシンのディスクを、`%LOCALAPPDATA%\Packages\...` の下
 
 ## 次に読むもの {#where-to-go-next}
 
-- **[インストール](https://hermes-agent.nousresearch.com/getting-started/installation)** — 実際のインストール手順（Linux / WSL2 / Termux は同じインストーラを使います）。
-- **[統合 → プロバイダ → WSL2 のネットワーク](https://hermes-agent.nousresearch.com/integrations/providers#wsl2-networking-windows-users)** — 手元のモデルサーバのためのネットワークの、詳しい正本。
-- **[MCP ガイド → WSL から Windows の Chrome へ](https://hermes-agent.nousresearch.com/guides/use-mcp-with-hermes#wsl2-bridge-hermes-in-wsl-to-windows-chrome)** — ログイン済みの Windows の Chrome を、WSL の中の Hermes から操作する方法。
-- **[Tool Gateway](https://hermes-agent.nousresearch.com/user-guide/features/tool-gateway)** と **[Web ダッシュボード](https://hermes-agent.nousresearch.com/user-guide/features/web-dashboard)** — WSL からネットワークの他の場所に公開したくなることが一番多い、長く動かし続けるサービス。
+- **[インストール](/hermes/docs/getting-started/installation/)** — 実際のインストール手順（Linux / WSL2 / Termux は同じインストーラを使います）。
+- **[統合 → プロバイダ → WSL2 のネットワーク](/hermes/docs/integrations/providers/#wsl2-networking-windows-users)** — 手元のモデルサーバのためのネットワークの、詳しい正本。
+- **[MCP ガイド → WSL から Windows の Chrome へ](/hermes/docs/guides/use-mcp-with-hermes/#wsl2-bridge-hermes-in-wsl-to-windows-chrome)** — ログイン済みの Windows の Chrome を、WSL の中の Hermes から操作する方法。
+- **[Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/)** と **[Web ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/)** — WSL からネットワークの他の場所に公開したくなることが一番多い、長く動かし続けるサービス。

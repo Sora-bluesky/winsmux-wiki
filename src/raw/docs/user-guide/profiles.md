@@ -16,7 +16,7 @@ sources:
 プロファイルとは、Hermes のホームディレクトリを分けたものです。それぞれのプロファイルが自分のディレクトリを持ち、その中に `config.yaml`、`.env`、`SOUL.md`、記憶、セッション、スキル、cron ジョブ、状態のデータベースを持ちます。プロファイルを使えば、コーディングの相棒、個人用のボット、調べもの用のエージェントというように、目的の違うエージェントを Hermes の状態を混ぜずに動かせます。
 
 :::caution エージェントごとに 1 つのプロファイルを
-2 つのエージェントのプロセスを同じプロファイル（同じ Hermes のホーム）に向けてはいけません。どちらも自動的に記憶を書き込み、しかもセッションの開始時にお互いの書き込みをシステムプロンプトへ読み込みます。1 つのホームに書き手が 2 人いると、状態が互いに積み重なっていき、やがて自分で設定したものとは別物になります。プロファイルはまさにこれを防ぐためにあります。記憶を共有したいエージェントには、代わりに [外部のメモリープロバイダー](https://hermes-agent.nousresearch.com/user-guide/features/memory-providers) を使ってください。
+2 つのエージェントのプロセスを同じプロファイル（同じ Hermes のホーム）に向けてはいけません。どちらも自動的に記憶を書き込み、しかもセッションの開始時にお互いの書き込みをシステムプロンプトへ読み込みます。1 つのホームに書き手が 2 人いると、状態が互いに積み重なっていき、やがて自分で設定したものとは別物になります。プロファイルはまさにこれを防ぐためにあります。記憶を共有したいエージェントには、代わりに [外部のメモリープロバイダー](/hermes/docs/user-guide/features/memory-providers/) を使ってください。
 :::
 
 プロファイルを作ると、そのプロファイルは自動的に 1 つのコマンドになります。`coder` という名前のプロファイルを作れば、その時点で `coder chat`、`coder setup`、`coder gateway start` などが使えるようになります。
@@ -34,7 +34,7 @@ coder chat                        # start chatting
 ## プロファイルを作る {#creating-a-profile}
 
 :::tip
-いちばん手早いのは、新しいプロファイルの中で `hermes setup --portal` を実行することです。モデルとツールをまとめて設定できます。[Nous Portal](https://hermes-agent.nousresearch.com/integrations/nous-portal) をご覧ください。
+いちばん手早いのは、新しいプロファイルの中で `hermes setup --portal` を実行することです。モデルとツールをまとめて設定できます。[Nous Portal](/hermes/docs/integrations/nous-portal/) をご覧ください。
 :::
 
 ### 空のプロファイル {#blank-profile}
@@ -192,7 +192,7 @@ assistant gateway install     # creates hermes-gateway-assistant service
 プロファイルごとに別のサービス名が付き、それぞれ独立して動きます。
 
 :::note 公式 Docker イメージの中では
-プロファイルごとのゲートウェイは [s6-overlay](https://github.com/just-containers/s6-overlay)（コンテナ内の PID 1）が面倒を見ます。そのため `hermes profile create <name>` を実行すると、`/run/service/gateway-<name>/` に s6 のサービス枠が自動で登録されます。`hermes -p <name> gateway start/stop/restart` は素のプロセスを起こす代わりに `s6-svc` へ回されるので、落ちても自動で立ち上がり直しますし、`docker restart` をしても、それまで動いていたゲートウェイの組み合わせがそのまま復元されます。詳しくは [プロファイルごとのゲートウェイ管理](https://hermes-agent.nousresearch.com/user-guide/docker#per-profile-gateway-supervision) をご覧ください。
+プロファイルごとのゲートウェイは [s6-overlay](https://github.com/just-containers/s6-overlay)（コンテナ内の PID 1）が面倒を見ます。そのため `hermes profile create <name>` を実行すると、`/run/service/gateway-<name>/` に s6 のサービス枠が自動で登録されます。`hermes -p <name> gateway start/stop/restart` は素のプロセスを起こす代わりに `s6-svc` へ回されるので、落ちても自動で立ち上がり直しますし、`docker restart` をしても、それまで動いていたゲートウェイの組み合わせがそのまま復元されます。詳しくは [プロファイルごとのゲートウェイ管理](/hermes/docs/user-guide/docker/#per-profile-gateway-supervision) をご覧ください。
 :::
 
 ## プロファイルを設定する {#configuring-profiles}

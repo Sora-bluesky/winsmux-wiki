@@ -4,7 +4,7 @@ description: ""
 upstream_path: user-guide/egress/index.md
 upstream_blob: 90ccbb8a05e663ba816b4ac1e8bef7bca32eed5b
 sources:
-  - https://hermes-agent.nousresearch.com/docs/user-guide/egress/index
+  - https://hermes-agent.nousresearch.com/docs/user-guide/egress
 ---
 
 # Egress プロキシ {#egress-proxy}

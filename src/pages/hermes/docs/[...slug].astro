@@ -10,10 +10,10 @@ export function getStaticPaths() {
     eager: true,
   }) as Record<string, string>;
   const existing = new Set(
-    Object.keys(files).map((k) => k.split('raw/docs/')[1].replace(/\.md$/, '')),
+    Object.keys(files).map((k) => k.split('raw/docs/')[1].replace(/\.md$/, '').replace(/\/index$/, '')),
   );
   return Object.entries(files).map(([path, src]) => {
-    const slug = path.split('raw/docs/')[1].replace(/\.md$/, '');
+    const slug = path.split('raw/docs/')[1].replace(/\.md$/, '').replace(/\/index$/, '');
     return { params: { slug }, props: { src, existing: [...existing] } };
   });
 }
@@ -24,7 +24,7 @@ const existingSet = new Set(existing as string[]);
 const doc = buildDoc(`docs/${slug}`, src); // buildDoc resolves not-yet-translated mirror links
 
 // prev/next follow the official sidebar order, limited to translated pages.
-const order = (sidebar.order as string[]).filter((id) => existingSet.has(id));
+const order = (sidebar.order as string[]).map((id) => id.replace(/\/index$/, '')).filter((id) => existingSet.has(id));
 const idx = order.indexOf(slug as string);
 const label = (id: string) => id.split('/').pop() as string;
 const prev = idx > 0 ? { path: `/hermes/docs/${order[idx - 1]}/`, label: label(order[idx - 1]) } : null;

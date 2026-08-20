@@ -12,7 +12,7 @@ sources:
 設定はすべて `~/.hermes/` ディレクトリにまとめて保存されるので、すぐに手が届きます。
 
 :::tip 動く `config.yaml` にいちばん早くたどり着く方法
-`hermes setup --portal` を実行してください。OAuth を一度通すだけで、モデルプロバイダーと Tool Gateway の 4 つのツールが揃い、YAML を手で書く必要がありません。Portal のサブスクリプション契約者は、トークン課金のプロバイダーが 10% 割引になります。[Nous Portal](https://hermes-agent.nousresearch.com/integrations/nous-portal) を参照してください。
+`hermes setup --portal` を実行してください。OAuth を一度通すだけで、モデルプロバイダーと Tool Gateway の 4 つのツールが揃い、YAML を手で書く必要がありません。Portal のサブスクリプション契約者は、トークン課金のプロバイダーが 10% 割引になります。[Nous Portal](/hermes/docs/integrations/nous-portal/) を参照してください。
 :::
 
 ## ディレクトリ構成 {#directory-structure}
@@ -69,7 +69,7 @@ hermes config set OPENROUTER_API_KEY sk-or-...  # Saves to .env
 :::tip 組織での導入
 管理者は、システムレベルの管理ディレクトリを使って、一般ユーザーが
 上書きできない設定値や秘密情報の値を固定できます。
-[Managed Scope](https://hermes-agent.nousresearch.com/user-guide/managed-scope) を参照してください。
+[Managed Scope](/hermes/docs/user-guide/managed-scope/) を参照してください。
 :::
 
 ## ランタイムの上限 {#runtime-limits}
@@ -108,7 +108,7 @@ delegation:
 
 Cursor 形式の SecretRef 記法も受け付けます。`${env:VAR_NAME}` は `${VAR_NAME}` とまったく同じように解決され（`env:` の接頭辞は取り除かれます）、Cursor や Claude の設定からコピーしてきた MCP やプロバイダーの断片が、`config.yaml` でも `mcp_servers` ブロックでもそのまま動きます。それ以外の SecretRef のソース（`${file:...}`、`${vault:...}`、`${bitwarden:...}`）はその場では解決され**ません**。外部の秘密情報バックエンドは、`secrets:` ブロックを通じて起動時に値を環境変数へ流し込むので、代わりに `${env:NAME}` の形で参照してください。知らない接頭辞は一度だけ警告を出し、そのままの文字列で残ります。
 
-AI プロバイダーの設定（OpenRouter、Anthropic、Copilot、カスタムのエンドポイント、自前でホストする LLM、フォールバック用のモデルなど）については、[AI Providers](https://hermes-agent.nousresearch.com/integrations/providers) を参照してください。
+AI プロバイダーの設定（OpenRouter、Anthropic、Copilot、カスタムのエンドポイント、自前でホストする LLM、フォールバック用のモデルなど）については、[AI Providers](/hermes/docs/integrations/providers/) を参照してください。
 
 ### プロバイダーのタイムアウト {#provider-timeouts}
 
@@ -648,7 +648,7 @@ skills:
 hermes config set skills.config.myplugin.path ~/myplugin-data
 ```
 
-自分のスキルで設定項目を宣言する方法は、[Creating Skills — Config Settings](https://hermes-agent.nousresearch.com/developer-guide/creating-skills#config-settings-configyaml) を参照してください。
+自分のスキルで設定項目を宣言する方法は、[Creating Skills — Config Settings](/hermes/docs/developer-guide/creating-skills/#config-settings-configyaml) を参照してください。
 
 ### エージェントが作ったスキルの書き込みに対する見張り {#guard-on-agent-created-skill-writes}
 
@@ -670,7 +670,7 @@ skills:
   write_approval: false   # false = write freely (default) | true = stage every write for review
 ```
 
-有効にすると、スキルの書き込みは `~/.hermes/pending/skills/` に留め置かれ、`/skills pending`、`/skills diff <id>`、`/skills approve <id>`、`/skills reject <id>` で確認します。CLI からでも、どのメッセージ用のプラットフォームからでも操作できます。実行中に切り替えるには `/skills approval on|off` を使います。メモリにも同じ仕組みがあります（後述の `memory.write_approval`）。詳しい手順は [Gating agent skill writes](https://hermes-agent.nousresearch.com/user-guide/features/skills#gating-agent-skill-writes-skillswrite_approval) にあります。
+有効にすると、スキルの書き込みは `~/.hermes/pending/skills/` に留め置かれ、`/skills pending`、`/skills diff <id>`、`/skills approve <id>`、`/skills reject <id>` で確認します。CLI からでも、どのメッセージ用のプラットフォームからでも操作できます。実行中に切り替えるには `/skills approval on|off` を使います。メモリにも同じ仕組みがあります（後述の `memory.write_approval`）。詳しい手順は [Gating agent skill writes](/hermes/docs/user-guide/features/skills/#gating-agent-skill-writes-skillswrite_approval) にあります。
 
 ## メモリの設定 {#memory-configuration}
 
@@ -683,7 +683,7 @@ memory:
   write_approval: false     # true = require approval before any memory write
 ```
 
-`memory.write_approval: true` にすると、メモリへの書き込みは反映される前にあなたの承認が必要になります。CLI での対話的なやり取りではその場で確認が出ます。メッセージ用のセッションや、裏で走る自己改善のレビューでは、書き込みが留め置かれ、`/memory pending` → `/memory approve <id>` / `/memory reject <id>` で確認します。実行中に切り替えるには `/memory approval on|off` を使います。[Controlling memory writes](https://hermes-agent.nousresearch.com/user-guide/features/memory#controlling-memory-writes-write_approval) を参照してください。
+`memory.write_approval: true` にすると、メモリへの書き込みは反映される前にあなたの承認が必要になります。CLI での対話的なやり取りではその場で確認が出ます。メッセージ用のセッションや、裏で走る自己改善のレビューでは、書き込みが留め置かれ、`/memory pending` → `/memory approve <id>` / `/memory reject <id>` で確認します。実行中に切り替えるには `/memory approval on|off` を使います。[Controlling memory writes](/hermes/docs/user-guide/features/memory/#controlling-memory-writes-write_approval) を参照してください。
 
 ## コンテキストファイルの切り詰め {#context-file-truncation}
 
@@ -998,7 +998,7 @@ Agent cache pressure: anon RSS 6802MB over budget 6656MB — evicting 5 LRU sess
 
 ## コンテキストエンジン {#context-engine}
 
-コンテキストエンジンは、モデルのトークンの上限に近づいたときに会話をどう扱うかを決めます。組み込みの `compressor` エンジンは、内容を落としながらの要約を使います（[Context Compression](https://hermes-agent.nousresearch.com/developer-guide/context-compression-and-caching) を参照）。プラグインのエンジンで、別のやり方に差し替えることもできます。
+コンテキストエンジンは、モデルのトークンの上限に近づいたときに会話をどう扱うかを決めます。組み込みの `compressor` エンジンは、内容を落としながらの要約を使います（[Context Compression](/hermes/docs/developer-guide/context-compression-and-caching/) を参照）。プラグインのエンジンで、別のやり方に差し替えることもできます。
 
 ```yaml
 context:
@@ -1014,7 +1014,7 @@ context:
 
 プラグインのエンジンが**勝手に有効になることはありません**。`context.engine` にプラグインの名前を明示する必要があります。使えるエンジンは `hermes plugins` → Provider Plugins → Context Engine から見て選べます。
 
-メモリのプラグインについても、同じように 1 つだけ選ぶ仕組みがあります。[Memory Providers](https://hermes-agent.nousresearch.com/user-guide/features/memory-providers) を参照してください。
+メモリのプラグインについても、同じように 1 つだけ選ぶ仕組みがあります。[Memory Providers](/hermes/docs/user-guide/features/memory-providers/) を参照してください。
 
 ## 繰り返しの上限 {#iteration-budget}
 
@@ -1032,7 +1032,7 @@ agent:
 
 `agent.max_turns` は**デフォルトで無制限**です。回数の上限は、解決する問題より生み出す問題（作業の途中で黙って打ち切られること）のほうが多かったので、初期状態の Hermes は 1 回のやり取りを最後まで走らせます。上限を設けたい場合は正の整数を指定します。「無制限」と明示したいときは、大文字小文字を問わず次のどれでも使えます。`"none"`、`"null"`、`"unlimited"`、`"infinite"`、`"infinity"`、`"inf"`、`0`、`-1`（内部では `sys.maxsize` の目印に解決されるので、回数でループが終わることはありません）。
 
-`agent.api_max_retries` は、一時的なエラー（レート制限、接続の切断、5xx）が起きたときに、フォールバックのプロバイダーへの切り替えが始まる**前に**、Hermes がプロバイダーの API 呼び出しを何回やり直すかを決めます。デフォルトは `3` で、合計 4 回試します。[フォールバックのプロバイダー](https://hermes-agent.nousresearch.com/user-guide/features/fallback-providers) を設定していて、もっと早く切り替えたいなら `0` にしてください。主要なプロバイダーで最初の一時的なエラーが出た時点で、不安定なエンドポイントに再試行を重ねずに、すぐフォールバックへ渡します。
+`agent.api_max_retries` は、一時的なエラー（レート制限、接続の切断、5xx）が起きたときに、フォールバックのプロバイダーへの切り替えが始まる**前に**、Hermes がプロバイダーの API 呼び出しを何回やり直すかを決めます。デフォルトは `3` で、合計 4 回試します。[フォールバックのプロバイダー](/hermes/docs/user-guide/features/fallback-providers/) を設定していて、もっと早く切り替えたいなら `0` にしてください。主要なプロバイダーで最初の一時的なエラーが出た時点で、不安定なエンドポイントに再試行を重ねずに、すぐフォールバックへ渡します。
 
 ## 実時間の持ち時間 {#wall-clock-run-budget}
 
@@ -1070,7 +1070,7 @@ agent:
 
 `verify_on_stop` は `true`（どこでも有効）、`false`（無効。デフォルト）、`"auto"`（従来の、画面に応じた動作。CLI、TUI、デスクトップといった対話的なコーディングの画面とプログラムからの呼び出しでは有効、検証の説明がチャットの雑音に見えてしまう Telegram や Discord のようなメッセージの画面では無効）を受け付けます。どこでも無効がデフォルトです。新規にインストールすると `false` で始まり、設定の移行によって既存のインストールでも無効になったので、有効にするのは意識的な選択です。`HERMES_VERIFY_ON_STOP` の環境変数を設定すると、設定ファイルの値より優先されます。
 
-同じ場所にユーザーやプラグインの判断を挟み、自前の検査でエージェントを走らせ続けたい場合は、[`pre_verify` フック](https://hermes-agent.nousresearch.com/user-guide/features/hooks#pre_verify) を参照してください。
+同じ場所にユーザーやプラグインの判断を挟み、自前の検査でエージェントを走らせ続けたい場合は、[`pre_verify` フック](/hermes/docs/user-guide/features/hooks/#pre_verify) を参照してください。
 
 ## 継続する目標（`/goal`） {#standing-goals-goal}
 
@@ -1081,7 +1081,7 @@ goals:
   max_turns: 20   # Max continuation turns before Hermes auto-pauses the goal (default: 20)
 ```
 
-`max_turns` は、Hermes が目標を自動で一時停止してユーザーに `/goal resume` を促すまでに、目標が何回の継続のやり取りを引っ張れるかを決めます。判定の見落とし（実際は達成しているのに続けろと言われる）や、曖昧で達成しようのない目標にモデルの費用が際限なく吸われることを防ぎます。機能の全体は [Goals](https://hermes-agent.nousresearch.com/user-guide/features/goals) を参照してください。
+`max_turns` は、Hermes が目標を自動で一時停止してユーザーに `/goal resume` を促すまでに、目標が何回の継続のやり取りを引っ張れるかを決めます。判定の見落とし（実際は達成しているのに続けろと言われる）や、曖昧で達成しようのない目標にモデルの費用が際限なく吸われることを防ぎます。機能の全体は [Goals](/hermes/docs/user-guide/features/goals/) を参照してください。
 
 ### API のタイムアウト {#api-timeouts}
 
@@ -1137,7 +1137,7 @@ credential_pool_strategies:
   anthropic: least_used      # always pick the least-used key
 ```
 
-選べるのは `fill_first`（デフォルト）、`round_robin`、`least_used`、`random` です。詳しくは [Credential Pools](https://hermes-agent.nousresearch.com/user-guide/features/credential-pools) を参照してください。
+選べるのは `fill_first`（デフォルト）、`round_robin`、`least_used`、`random` です。詳しくは [Credential Pools](/hermes/docs/user-guide/features/credential-pools/) を参照してください。
 
 ## プロンプトのキャッシュ {#prompt-caching}
 
@@ -1145,7 +1145,7 @@ credential_pool_strategies:
 
 **ネイティブの Anthropic**、**OpenRouter**、**Nous Portal** 経由の Claude では、Hermes はシステムプロンプトとスキルのブロックに、1 時間の有効期間（`ttl: "1h"`）を指定した `cache_control` の区切りを付けます。新しい 1 時間の中で最初に送るときは通常の入力料金がかかり、同じ 1 時間のうちなら、どのセッションから送っても割安なキャッシュ読み出しの料金で済みます。つまり、システムプロンプト、読み込んだスキルの内容、長いコンテキストの前のほうの部分が、最初の 1 時間は `hermes` のセッションをまたいで、また分岐したサブエージェントをまたいで再利用されます。
 
-Qwen Cloud（Alibaba DashScope）の上流はキャッシュの有効期間を 5 分に制限しているので、そこでは Hermes も 5 分の区切りを使います。ほかのサードパーティ経由の Claude（AWS Bedrock、Azure Foundry）は、そのプロバイダー自身のキャッシュのデフォルトに従います。xAI の Grok は、セッションに紐づいた会話 ID という別の仕組みを使います。[xAI prompt caching](https://hermes-agent.nousresearch.com/integrations/providers#xai-grok--responses-api--prompt-caching) を参照してください。
+Qwen Cloud（Alibaba DashScope）の上流はキャッシュの有効期間を 5 分に制限しているので、そこでは Hermes も 5 分の区切りを使います。ほかのサードパーティ経由の Claude（AWS Bedrock、Azure Foundry）は、そのプロバイダー自身のキャッシュのデフォルトに従います。xAI の Grok は、セッションに紐づいた会話 ID という別の仕組みを使います。[xAI prompt caching](/hermes/docs/integrations/providers/#xai-grok--responses-api--prompt-caching) を参照してください。
 
 これを無効にするつまみはありません。キャッシュは常に有効で、1 往復だけの会話でもお金の節約になります。システムプロンプトだけでも、入力のトークン数のうち無視できない割合を占めるからです。
 
@@ -1228,7 +1228,7 @@ Hermes のモデルの枠 — 補助的な仕事、圧縮、フォールバッ�
 
 これは全体設定である `agent.reasoning_effort` の、仕事ごとの相棒です。主要なモデルが高価な推論モデルのとき、圧縮を `low` で、画像処理を `none` で走らせれば、会話そのものの振る舞いには触れずに脇の仕事の待ち時間と費用を削れます。すべての補助的な仕事のブロック（`vision`、`web_extract`、`compression`、`title_generation`、`curator`、`background_review` など）で、3 つの通信方式（chat completions、Codex Responses、Anthropic Messages）すべてに効きます。同じ仕事に `extra_body.reasoning` を明示した場合は、この簡易な書き方より優先されます。
 
-MoA だけは例外です。Mixture-of-Agents の思考の深さは、`moa_reference` や `moa_aggregator` の補助のブロックではなく、MoA のプリセットの中で**枠ごとに**設定します（`moa.presets.<name>.reference_models[].reasoning_effort` / `aggregator.reasoning_effort`）。[Mixture of Agents](https://hermes-agent.nousresearch.com/user-guide/features/mixture-of-agents) を参照してください。
+MoA だけは例外です。Mixture-of-Agents の思考の深さは、`moa_reference` や `moa_aggregator` の補助のブロックではなく、MoA のプリセットの中で**枠ごとに**設定します（`moa.presets.<name>.reference_models[].reasoning_effort` / `aggregator.reasoning_effort`）。[Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/) を参照してください。
 
 ```yaml
 auxiliary:
@@ -1240,7 +1240,7 @@ auxiliary:
 
 `base_url` を設定すると、Hermes はプロバイダーの指定を無視してそのエンドポイントを直接呼びます（認証には `api_key` か `OPENAI_API_KEY` を使います）。`provider` だけを設定した場合は、そのプロバイダーに組み込まれた認証とベース URL を使います。
 
-補助的な仕事で使えるプロバイダーは、`auto`、`main`、それに [プロバイダーの一覧](https://hermes-agent.nousresearch.com/reference/environment-variables) にあるものすべてです。`openrouter`、`nous`、`openai-codex`、`copilot`、`copilot-acp`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry`、あるいは `providers:` の辞書に自分で名前を付けたもの（たとえば `provider: "beans"`）です。
+補助的な仕事で使えるプロバイダーは、`auto`、`main`、それに [プロバイダーの一覧](/hermes/docs/reference/environment-variables/) にあるものすべてです。`openrouter`、`nous`、`openai-codex`、`copilot`、`copilot-acp`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry`、あるいは `providers:` の辞書に自分で名前を付けたもの（たとえば `provider: "beans"`）です。
 
 :::tip MiniMax の OAuth
 `minimax-oauth` は、ブラウザーでの OAuth によりログインします（API キーは要りません）。`hermes model` を実行して **MiniMax (OAuth)** を選ぶと認証できます。補助的な仕事には自動的に `MiniMax-M2.7-highspeed` が使われます。[MiniMax OAuth guide](/hermes/docs/guides/minimax-oauth/) を参照してください。
@@ -1251,7 +1251,7 @@ auxiliary:
 :::
 
 :::warning `"main"` は補助的な仕事専用です
-`"main"` というプロバイダーの指定は「主要なエージェントが使っているプロバイダーをそのまま使う」という意味で、`auxiliary:`、`compression:`、そして主要なフォールバックの項目（`fallback_providers:` や従来の `fallback_model:`）の中でのみ有効です。最上位の `model.provider` の値としては**使えません**。OpenAI 互換の独自エンドポイントを使う場合は、`model:` の節で `provider: custom` にしてください。主要なモデルのプロバイダーの選択肢は [AI Providers](https://hermes-agent.nousresearch.com/integrations/providers) を参照してください。
+`"main"` というプロバイダーの指定は「主要なエージェントが使っているプロバイダーをそのまま使う」という意味で、`auxiliary:`、`compression:`、そして主要なフォールバックの項目（`fallback_providers:` や従来の `fallback_model:`）の中でのみ有効です。最上位の `model.provider` の値としては**使えません**。OpenAI 互換の独自エンドポイントを使う場合は、`model:` の節で `provider: custom` にしてください。主要なモデルのプロバイダーの選択肢は [AI Providers](/hermes/docs/integrations/providers/) を参照してください。
 :::
 
 ### 補助モデルの設定の一覧 {#full-auxiliary-config-reference}
@@ -1363,7 +1363,7 @@ auxiliary:
 :::
 
 :::info
-コンテキストの圧縮は、閾値のための独自の `compression:` ブロックと、モデルやプロバイダーの設定のための `auxiliary.compression:` ブロックを持ちます。前述の [コンテキストの圧縮](#context-compression) を参照してください。主要なフォールバックの連鎖には、最上位の `fallback_providers:` のリストを使います。[Fallback Providers](https://hermes-agent.nousresearch.com/integrations/providers#fallback-providers) を参照してください。3 つとも同じ provider / model / base_url の型に従います。
+コンテキストの圧縮は、閾値のための独自の `compression:` ブロックと、モデルやプロバイダーの設定のための `auxiliary.compression:` ブロックを持ちます。前述の [コンテキストの圧縮](#context-compression) を参照してください。主要なフォールバックの連鎖には、最上位の `fallback_providers:` のリストを使います。[Fallback Providers](/hermes/docs/integrations/providers/#fallback-providers) を参照してください。3 つとも同じ provider / model / base_url の型に従います。
 :::
 
 ### 補助的な仕事ごとのフォールバックの連鎖 {#per-task-fallback-chain-for-auxiliary-tasks}
@@ -1415,7 +1415,7 @@ auxiliary:
 
 ### 補助的な仕事での OpenRouter の経路と Pareto Code {#openrouter-routing-pareto-code-for-auxiliary-tasks}
 
-補助的な仕事が OpenRouter に解決されるとき（明示した場合でも、主要なエージェントが OpenRouter を使っていて `provider: "main"` になった場合でも）、主要なエージェントの `provider_routing` や `openrouter.min_coding_score` の設定は**引き継がれません**。設計上、補助的な仕事はそれぞれ独立しています。特定の補助的な仕事に OpenRouter のプロバイダーの好みを設定したり、[Pareto Code のルーター](https://hermes-agent.nousresearch.com/integrations/providers#openrouter-pareto-code-router) を使ったりするには、仕事ごとに `extra_body` で指定してください。
+補助的な仕事が OpenRouter に解決されるとき（明示した場合でも、主要なエージェントが OpenRouter を使っていて `provider: "main"` になった場合でも）、主要なエージェントの `provider_routing` や `openrouter.min_coding_score` の設定は**引き継がれません**。設計上、補助的な仕事はそれぞれ独立しています。特定の補助的な仕事に OpenRouter のプロバイダーの好みを設定したり、[Pareto Code のルーター](/hermes/docs/integrations/providers/#openrouter-pareto-code-router) を使ったりするには、仕事ごとに `extra_body` で指定してください。
 
 ```yaml
 auxiliary:
@@ -2060,7 +2060,7 @@ stt:
   prompt: "Hermes, Teknium, Nous Research, kanban, Ollama"
 ```
 
-**組み立て方。** 設定した値が土台になります。[`pre_transcription`](https://hermes-agent.nousresearch.com/user-guide/features/hooks#pre_transcription) のフックを登録したプラグインは、その上に手を加えます。同じ項目については、最後に書いたものが残ります。複数のプラグインのヒントは決まった順で組み合わされます。プラグインの読み込みはプラグイン ID の順に行われ、各プラグインのコールバックはそのプラグイン内での登録順に走るので、同じプラグインの組み合わせなら、いつでも同じ最終的なプロンプトになります。フックが `prompt` に空の文字列を返すと、そのリクエストでは設定のプロンプトが消えます。フックは `language` と `model` も上書きできます。`file_path` は読み取り専用で、変えようとするとログに記録されて捨てられます。フックを登録せず `stt.prompt` も設定していなければ、送られるリクエストは以前のリリースとまったく同じです。
+**組み立て方。** 設定した値が土台になります。[`pre_transcription`](/hermes/docs/user-guide/features/hooks/#pre_transcription) のフックを登録したプラグインは、その上に手を加えます。同じ項目については、最後に書いたものが残ります。複数のプラグインのヒントは決まった順で組み合わされます。プラグインの読み込みはプラグイン ID の順に行われ、各プラグインのコールバックはそのプラグイン内での登録順に走るので、同じプラグインの組み合わせなら、いつでも同じ最終的なプロンプトになります。フックが `prompt` に空の文字列を返すと、そのリクエストでは設定のプロンプトが消えます。フックは `language` と `model` も上書きできます。`file_path` は読み取り専用で、変えようとするとログに記録されて捨てられます。フックを登録せず `stt.prompt` も設定していなければ、送られるリクエストは以前のリリースとまったく同じです。
 
 **プロバイダーの対応状況。**
 
@@ -2096,7 +2096,7 @@ voice:
   silence_duration: 3.0         # Seconds of silence before auto-stop
 ```
 
-CLI で `/voice on` と入力するとマイクのモードが有効になり、`record_key` で録音を開始・停止でき、`/voice tts` で読み上げの返答を切り替えられます。最初から最後までの手順とプラットフォームごとの動作は、[Voice Mode](https://hermes-agent.nousresearch.com/user-guide/features/voice-mode) を参照してください。
+CLI で `/voice on` と入力するとマイクのモードが有効になり、`record_key` で録音を開始・停止でき、`/voice tts` で読み上げの返答を切り替えられます。最初から最後までの手順とプラットフォームごとの動作は、[Voice Mode](/hermes/docs/user-guide/features/voice-mode/) を参照してください。
 
 ## ストリーミング {#streaming}
 
@@ -2174,7 +2174,7 @@ group_sessions_per_user: true  # true = per-user isolation in groups/channels, f
 - ダイレクトメッセージは影響を受けません。Hermes はこれまでどおり、チャットや DM の ID で振り分けます。
 - スレッドは、どちらの設定でも親のチャンネルから分かれたままです。`true` の場合は、スレッドの中でも参加者ごとに別のセッションになります。
 
-動作の詳細と例は、[Sessions](https://hermes-agent.nousresearch.com/user-guide/sessions) と [Discord のガイド](https://hermes-agent.nousresearch.com/user-guide/messaging/discord) を参照してください。
+動作の詳細と例は、[Sessions](/hermes/docs/user-guide/sessions/) と [Discord のガイド](/hermes/docs/user-guide/messaging/discord/) を参照してください。
 
 ## 許可のない DM への動作 {#unauthorized-dm-behavior}
 
@@ -2292,9 +2292,9 @@ web:
 | **Tavily** | `TAVILY_API_KEY`（任意 — 選べばキーなしでも使えます） | ✔ | ✔ |
 | **Exa** | `EXA_API_KEY`（任意 — キーなしの無料枠あり） | ✔ | ✔ |
 
-**バックエンドの選ばれ方:** 実行時には、保存された `web.backend` の選択が常に使われます（`hermes tools` で設定します。`nous` は運用済みの Tool Gateway を経由します）。Web のバックエンドを一度も選んでいない場合にだけ、使える API キーから自動で判別されます。`SEARXNG_URL` だけが設定されていれば SearXNG、`EXA_API_KEY` だけなら Exa、`TAVILY_API_KEY` だけなら Tavily、`PARALLEL_API_KEY` だけなら Parallel、`KEENABLE_API_KEY` だけなら Keenable です。**選択も認証情報もまったくない**場合、リクエストはキーなしの無料枠の輪（Exa / Parallel / Tavily / Firecrawl / Keenable）を順に回り、レート制限に当たれば自動で次へ移ります。詳しくは [Web Search のガイド](https://hermes-agent.nousresearch.com/user-guide/features/web-search) を参照してください。いったん選択が保存されると、`.env` にキーを足しても経路は変わりません。`hermes tools` で Tavily、Firecrawl、Keenable を選ぶ場合は、キーがなくても使えます。
+**バックエンドの選ばれ方:** 実行時には、保存された `web.backend` の選択が常に使われます（`hermes tools` で設定します。`nous` は運用済みの Tool Gateway を経由します）。Web のバックエンドを一度も選んでいない場合にだけ、使える API キーから自動で判別されます。`SEARXNG_URL` だけが設定されていれば SearXNG、`EXA_API_KEY` だけなら Exa、`TAVILY_API_KEY` だけなら Tavily、`PARALLEL_API_KEY` だけなら Parallel、`KEENABLE_API_KEY` だけなら Keenable です。**選択も認証情報もまったくない**場合、リクエストはキーなしの無料枠の輪（Exa / Parallel / Tavily / Firecrawl / Keenable）を順に回り、レート制限に当たれば自動で次へ移ります。詳しくは [Web Search のガイド](/hermes/docs/user-guide/features/web-search/) を参照してください。いったん選択が保存されると、`.env` にキーを足しても経路は変わりません。`hermes tools` で Tavily、Firecrawl、Keenable を選ぶ場合は、キーがなくても使えます。
 
-**SearXNG** は、無料で、自分でホストでき、プライバシーを尊重するメタ検索エンジンで、70 を超える検索エンジンに問い合わせます。API キーは不要で、`SEARXNG_URL` に自分のインスタンス（`http://localhost:8080` など）を設定するだけです。SearXNG は検索専用なので、`web_extract` には別の抽出のプロバイダーが必要です（`web.extract_backend` を設定してください）。Docker での構築の手順は [Web Search のセットアップガイド](https://hermes-agent.nousresearch.com/user-guide/features/web-search) を参照してください。
+**SearXNG** は、無料で、自分でホストでき、プライバシーを尊重するメタ検索エンジンで、70 を超える検索エンジンに問い合わせます。API キーは不要で、`SEARXNG_URL` に自分のインスタンス（`http://localhost:8080` など）を設定するだけです。SearXNG は検索専用なので、`web_extract` には別の抽出のプロバイダーが必要です（`web.extract_backend` を設定してください）。Docker での構築の手順は [Web Search のセットアップガイド](/hermes/docs/user-guide/features/web-search/) を参照してください。
 
 **自前でホストする Firecrawl:** `FIRECRAWL_API_URL` を自分のインスタンスに向けてください。独自の URL を設定すると、API キーは任意になります（サーバー側で認証を切るには `USE_DB_AUTHENTICATION=*** を設定します）。
 
@@ -2334,7 +2334,7 @@ browser:
 
 ダイアログの扱いの全体の流れは、[ブラウザーの機能のページ](/hermes/docs/user-guide/features/browser/#browser_dialog) を参照してください。
 
-ブラウザーのツールセットは複数のプロバイダーに対応しています。Browserbase、Browser Use、ローカルの Chromium 系ブラウザーへの CDP 接続の詳細は、[Browser の機能のページ](https://hermes-agent.nousresearch.com/user-guide/features/browser) を参照してください。
+ブラウザーのツールセットは複数のプロバイダーに対応しています。Browserbase、Browser Use、ローカルの Chromium 系ブラウザーへの CDP 接続の詳細は、[Browser の機能のページ](/hermes/docs/user-guide/features/browser/) を参照してください。
 
 ## タイムゾーン {#timezone}
 
@@ -2452,7 +2452,7 @@ approvals:
     - "*curl*|*sh*"
 ```
 
-パターンは大文字小文字を区別しない fnmatch の glob で、YAML では引用符で囲む必要があります（先頭の裸の `*` は構文エラーになります）。詳しくは [Security — User-Defined Deny Rules](https://hermes-agent.nousresearch.com/user-guide/security#user-defined-deny-rules-approvalsdeny) を参照してください。
+パターンは大文字小文字を区別しない fnmatch の glob で、YAML では引用符で囲む必要があります（先頭の裸の `*` は構文エラーになります）。詳しくは [Security — User-Defined Deny Rules](/hermes/docs/user-guide/security/#user-defined-deny-rules-approvalsdeny) を参照してください。
 
 ### 賢い承認の独自の方針 {#custom-smart-approval-policy}
 
@@ -2467,7 +2467,7 @@ approvals:
 
 ## チェックポイント {#checkpoints}
 
-ファイルを壊しかねない操作の前に、ファイルシステムを自動でスナップショットします。詳しくは [Checkpoints & Rollback](https://hermes-agent.nousresearch.com/user-guide/checkpoints-and-rollback) を参照してください。
+ファイルを壊しかねない操作の前に、ファイルシステムを自動でスナップショットします。詳しくは [Checkpoints & Rollback](/hermes/docs/user-guide/checkpoints-and-rollback/) を参照してください。
 
 ```yaml
 checkpoints:
@@ -2534,8 +2534,8 @@ Hermes は 2 種類のコンテキストの範囲を使います。
 - 読み込まれたコンテキストファイルは、すべて `context_file_max_chars` の文字数（デフォルト 20,000）を上限に、賢く切り詰められます。
 
 あわせて参照してください。
-- [Personality & SOUL.md](https://hermes-agent.nousresearch.com/user-guide/features/personality)
-- [Context Files](https://hermes-agent.nousresearch.com/user-guide/features/context-files)
+- [Personality & SOUL.md](/hermes/docs/user-guide/features/personality/)
+- [Context Files](/hermes/docs/user-guide/features/context-files/)
 
 ## 作業ディレクトリ {#working-directory}
 
@@ -2580,7 +2580,7 @@ onboarding:
 
 ## ダッシュボード {#dashboard}
 
-[Web のダッシュボード](https://hermes-agent.nousresearch.com/user-guide/features/web-dashboard) の設定です。見た目のテーマ、公開の URL、認証の方式を扱います。認証の方式（OAuth、ベーシック認証、drain）は Web ダッシュボードのページで詳しく説明しています。ここでは `config.yaml` の書き方を示します。
+[Web のダッシュボード](/hermes/docs/user-guide/features/web-dashboard/) の設定です。見た目のテーマ、公開の URL、認証の方式を扱います。認証の方式（OAuth、ベーシック認証、drain）は Web ダッシュボードのページで詳しく説明しています。ここでは `config.yaml` の書き方を示します。
 
 ```yaml
 dashboard:
@@ -2604,5 +2604,5 @@ dashboard:
 - `theme` — ダッシュボードの見た目のテーマです。
 - `show_token_analytics` — デフォルトでは無効です。Analytics のページとトークンや費用の数字は、**手元での控えめな見積もり**にすぎず（補助の呼び出し、再試行、フォールバック、キャッシュへの書き込みを含みません）、プロバイダーの請求よりずっと低く出ることがあります。請求額ではないと理解したうえでだけ `true` にしてください。
 - `public_url` — 設定すると、OAuth の `redirect_uri` はこの値（スキーム + ホスト + 任意のパスの接頭辞）をそのまま土台に組み立てられます。`X-Forwarded-*` のヘッダーを確実に転送しないリバースプロキシの後ろに置く場合に設定してください。空のままにすると、プロキシのヘッダーから組み立て直します。
-- `oauth` / `basic_auth` / `drain_auth` — 同梱のダッシュボードの認証プラグインが読む設定です。drain の秘密の値そのものはここには書きません。`HERMES_DASHBOARD_DRAIN_SECRET` の環境変数で渡します。認証の設定の全体は [Web Dashboard](https://hermes-agent.nousresearch.com/user-guide/features/web-dashboard) を参照してください。
+- `oauth` / `basic_auth` / `drain_auth` — 同梱のダッシュボードの認証プラグインが読む設定です。drain の秘密の値そのものはここには書きません。`HERMES_DASHBOARD_DRAIN_SECRET` の環境変数で渡します。認証の設定の全体は [Web Dashboard](/hermes/docs/user-guide/features/web-dashboard/) を参照してください。
 

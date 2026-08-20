@@ -137,9 +137,11 @@ function transform(rel, src) {
     let [path, frag] = url.split('#');
     frag = frag ? `#${frag}` : '';
     if (path.startsWith('/docs/')) path = path.slice('/docs/'.length);
+    else if (/^\/(getting-started|user-guide|guides|integrations|developer-guide|reference)\//.test(path))
+      path = path.slice(1); // docusaurus root-relative doc link
     else if (path.startsWith('/')) return `](${OFFICIAL}${url})`;
     else path = posix.normalize(posix.join(dir, path));
-    path = path.replace(/\.mdx?$/, '').replace(/\/$/, '');
+    path = path.replace(/\.mdx?$/, '').replace(/\/$/, '').replace(/\/index$/, '');
     if (!path || path === '.') return whole;
     return `](/hermes/docs/${path}/${frag})`;
   });
@@ -203,7 +205,7 @@ for (const rel of args) {
     failed++;
     continue;
   }
-  const urlPath = rel.replace(/\.mdx?$/, '');
+  const urlPath = rel.replace(/\.mdx?$/, '').replace(/\/index$/, '');
   const out = `---
 title: ${JSON.stringify(title || urlPath)}
 description: ${JSON.stringify(description)}

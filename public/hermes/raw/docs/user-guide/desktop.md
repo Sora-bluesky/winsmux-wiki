@@ -351,7 +351,7 @@ hermes serve --host 0.0.0.0 --port 9119
 
 デスクトップアプリから接続できるようにしておきたい間は、この `hermes serve` のプロセスを動かし続けてください。止まってしまうと、アプリはバックエンドに届かなくなります。ログアウトや再起動をまたいでも残るように、`systemd`、`tmux`、あるいは好みのプロセス管理の仕組みの下で動かしてください。
 
-これとは別に、メッセージングのチャンネルを使っているなら、リモートのホストで**ゲートウェイが動いている**ことも確認してください。デスクトップアプリがやり取りするのは `hermes serve` のバックエンドですが、Telegram / Discord / Slack のゲートウェイのセッションは別のプロセスで、こちらは自分で起動して動かし続けます。ゲートウェイの設定については[メッセージング](/hermes/docs/user-guide/messaging/index/)を参照してください。
+これとは別に、メッセージングのチャンネルを使っているなら、リモートのホストで**ゲートウェイが動いている**ことも確認してください。デスクトップアプリがやり取りするのは `hermes serve` のバックエンドですが、Telegram / Discord / Slack のゲートウェイのセッションは別のプロセスで、こちらは自分で起動して動かし続けます。ゲートウェイの設定については[メッセージング](/hermes/docs/user-guide/messaging/)を参照してください。
 
 パスワードを平文のまま置いておきたくない場合は、代わりに `HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH` に scrypt のハッシュを設定してください。ハッシュは `python -c "from plugins.dashboard_auth.basic import hash_password; print(hash_password('PW'))"` で計算できます。設定できる項目の全体（config.yaml のキー、すべての環境変数、レートの制限）は [Web ダッシュボード → ユーザー名とパスワードのプロバイダ](/hermes/docs/user-guide/features/web-dashboard/#usernamepassword-provider-no-oauth-idp)にあります。
 

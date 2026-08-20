@@ -12,7 +12,7 @@ const files = import.meta.glob('../raw/docs/**/*.md', {
 
 const titles = new Map<string, string>();
 for (const [k, src] of Object.entries(files)) {
-  const id = k.split('raw/docs/')[1].replace(/\.md$/, '');
+  const id = k.split('raw/docs/')[1].replace(/\.md$/, '').replace(/\/index$/, '');
   const raw = src.match(/^title:\s*(.+)$/m)?.[1]?.trim() ?? id;
   let title = raw;
   try {
@@ -29,7 +29,8 @@ function prune(nodes: Node[]): Node[] {
   const out: Node[] = [];
   for (const n of nodes) {
     if (n.id) {
-      if (titles.has(n.id)) out.push(n);
+      const nid = n.id.replace(/\/index$/, '');
+      if (titles.has(nid)) out.push({ id: nid });
     } else if (n.items) {
       const kept = prune(n.items);
       if (kept.length) out.push({ label: n.label, items: kept });
@@ -43,7 +44,7 @@ function esc(s: string): string {
 }
 
 function containsCurrent(n: Node): boolean {
-  if (n.id) return current === `/hermes/docs/${n.id}/`;
+  if (n.id) return current === `/hermes/docs/${n.id.replace(/\/index$/, '')}/`;
   return (n.items ?? []).some(containsCurrent);
 }
 

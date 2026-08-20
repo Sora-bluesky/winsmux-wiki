@@ -60,7 +60,7 @@ const catalog = [
 
 for (const f of copied) {
   if (f.startsWith('docs/')) {
-    const id = f.replace(/^docs\//, '').replace(/\.md$/, '');
+    const id = f.replace(/^docs\//, '').replace(/\.md$/, '').replace(/\/index$/, '');
     catalog.push([`/hermes/docs/${id}/`, `${id}（日本語版）`]);
   }
 }

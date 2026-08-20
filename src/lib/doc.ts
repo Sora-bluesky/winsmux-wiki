@@ -6,7 +6,7 @@ const mirrorFiles = import.meta.glob('../raw/docs/**/*.md', {
   eager: true,
 }) as Record<string, string>;
 const mirrorSet = new Set(
-  Object.keys(mirrorFiles).map((k) => k.split('raw/docs/')[1].replace(/\.md$/, '')),
+  Object.keys(mirrorFiles).map((k) => k.split('raw/docs/')[1].replace(/\.md$/, '').replace(/\/index$/, '')),
 );
 
 // Links to not-yet-translated mirror pages fall back to the official docs.
