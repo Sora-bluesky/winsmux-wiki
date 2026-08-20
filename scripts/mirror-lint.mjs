@@ -7,7 +7,9 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const STATE_PATH = join(root, 'data/mirror-state.json');
-const FORBIDDEN = /wiki|はじめる|編む|暮らす|入れところ|リファレンス|複数台|\/fleet/;
+// "wiki" only as a standalone word: upstream identifiers like code-wiki are
+// product names (contract rule 5), not vocabulary choices.
+const FORBIDDEN = /(?<![\w-])wiki(?![\w-])|はじめる|編む|暮らす|入れところ|リファレンス|複数台|\/fleet/;
 
 const FENCE_RE = /^[ \t]*```[^\n]*\n[\s\S]*?^[ \t]*```[ \t]*$/gm;
 function fences(md) {
