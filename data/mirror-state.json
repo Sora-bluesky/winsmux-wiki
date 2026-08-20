@@ -72,9 +72,9 @@
       "translatedAt": "2026-08-20T16:08:35.897Z"
     },
     "developer-guide/desktop-plugin-sdk.md": {
-      "blob": "5a4c0dc4ed2a9a82739cf30b8325cc793c459d35",
+      "blob": "82f34f115bce026f8819516627bc10ff27ea53f3",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.898Z"
+      "translatedAt": "2026-08-20T22:36:31.323Z"
     },
     "developer-guide/egress-internals.md": {
       "blob": "f84160788a0c1f02388748fa8d470717bca850b3",
@@ -2005,5 +2005,5 @@
       "status": "deleted"
     }
   },
-  "snapshotCommit": "f43eabee5f36e11448086ee8ee17c499958e81bf"
+  "snapshotCommit": "ee000768cef4dc9399f32c88b507104ce15400dd"
 }

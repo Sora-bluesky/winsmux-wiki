@@ -2,7 +2,7 @@
 title: "デスクトッププラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンド領域までを、import 1 行だけ、ビルドなしで扱えます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 5a4c0dc4ed2a9a82739cf30b8325cc793c459d35
+upstream_blob: 82f34f115bce026f8819516627bc10ff27ea53f3
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -275,6 +275,34 @@ ctx.registerMany([
 
 ctx.register({ id: 'noir', area: THEMES_AREA, data: myDesktopTheme })
 ```
+
+テーマを登録しても、選択肢に並ぶだけで、選ばれるわけではありません。`useTheme()` は、いま塗られている見た目（`theme`、`themeName`、`availableThemes`、`resolvedMode`）を読み、コンポーネントの中からそれを変えます（`setTheme`、`setMode`、`previewTheme`）。
+
+```javascript
+
+function ThemePicker() {
+  const { availableThemes, setTheme, themeName } = useTheme()
+
+  return availableThemes.map(t => (
+    <Button key={t.name} disabled={t.name === themeName} onClick={() => setTheme(t.name)}>
+      {t.label}
+    </Button>
+  ))
+}
+```
+
+描画以外のきっかけで切り替える場合、つまりゲートウェイの接続、ソケットのイベント、`host.onEvent` のコールバック全般では、フックを掛けるコンポーネントがありません。そこでは `requestTheme(name)` を使ってください。解決できない名前は既定の見た目に丸められるのではなく拒否されるので、戻り値がそのまま在否の確認になり、名前を間違えても利用者の見た目が黙って戻されることはありません。
+
+```javascript
+
+host.onEvent('gateway.ready', () => {
+  if (!requestTheme('noir')) {
+    host.notifyError('Connected, but the noir theme is not installed.')
+  }
+})
+```
+
+どちらの入口もプロフィールごとに残るので、プラグインからの切り替えも、手で選んだときとまったく同じように残ります。テーマを差し替えるのではなく**いま有効な**テーマに色味を足したいときは、`setAccentOverride(hex)` を使い、`ctx.onDispose` で戻してください。同梱の `accent` プラグインが実際の手本です。
 
 ### 入力欄の拡張 {#composer-extensions}
 
@@ -599,6 +627,7 @@ ctx.storage.remove('lastTab')
 | 場所を表す定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS` |
 | 場所ごとの中身 | `RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider` |
 | React と状態 | `useValue`、`atom`、`computed`、`useQuery`、`useMutation`、`useQueryClient`、`queryClient`、`Contribute` |
+| テーマまわり | `useTheme`、`requestTheme`、`setAccentOverride`、`$accentOverride`、`retintTheme`、`themeHue`、`DesktopTheme`、`DesktopThemeColors`、そして OKLCH の計算（`hexToOklch`、`oklchToHex`、`oklchToSrgb255`、`mixOklab`、`maxChroma`、`hueDelta`、`contrastRatio`、`readableOn`、`normalizeHex`） |
 | UI キット | `Button`、`Input`、`Textarea`、`Select*`、`Switch`、`Checkbox`、`SegmentedControl`、`Tabs*`、`Dialog*`、`ConfirmDialog`、`DropdownMenu*`、`ContextMenu*`、`Popover*`、`Tip`/`Tooltip*`、`Badge`、`Kbd`/`KbdGroup`、`SearchField`、`ScrollArea`、`Separator`、`Skeleton`、`GlyphSpinner`、`Loader`、`EmptyState`、`ErrorState`、`CopyButton`、`StatusDot`、`LogView`、`Codicon`、`DecodeText` |
 | 補助 | `cn`、`icons`、`haptic`、`useI18n`、`profileColor`、`profileColorSoft`、`relativeTime`、`fmtDateTime`、`fmtDayTime`、`coarseElapsed`、`evaluateRuntimeReadiness` |
 
