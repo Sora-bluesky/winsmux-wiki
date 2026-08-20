@@ -1002,271 +1002,338 @@
     },
     "user-guide/skills/bundled/apple/apple-apple-notes.md": {
       "blob": "ac3ecdfff6a1d58df78ef3c4a71b804bf2053f68",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:25.393Z"
     },
     "user-guide/skills/bundled/apple/apple-apple-reminders.md": {
       "blob": "9ab15d6b54785575a74314c816d585475cae2a3f",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:25.397Z"
     },
     "user-guide/skills/bundled/apple/apple-findmy.md": {
       "blob": "0d4647e4474214bd6eb1fc257eb81fb0a2def715",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:25.398Z"
     },
     "user-guide/skills/bundled/apple/apple-imessage.md": {
       "blob": "d29fab6ebc73a3802a0c68a41845699e1c024af3",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:25.399Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md": {
       "blob": "4310d1b074cffee28e43e04e77d86c8199acb543",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:25.402Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex.md": {
       "blob": "503774e55387d4d0db02749dc118426e1b39fcfb",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:25.403Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use.md": {
       "blob": "40cfe3ff6fe53d8803c3f10600b093674c1b9436",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:10:41.602Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md": {
       "blob": "ed894fba0bf5a913729381c4e7080eec1424f1f8",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:10:41.604Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode.md": {
       "blob": "37c6c1d15dcb04ac2d995121eadec778ff6d7093",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:10:41.606Z"
     },
     "user-guide/skills/bundled/creative/creative-architecture-diagram.md": {
       "blob": "ad816a370ad640226a08ac722b59c927fb2b669b",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:10:41.606Z"
     },
     "user-guide/skills/bundled/creative/creative-ascii-art.md": {
       "blob": "ba08d77c05947be5790b8b7e46fc776d6950a6c6",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:10:41.607Z"
     },
     "user-guide/skills/bundled/creative/creative-ascii-video.md": {
       "blob": "73eb134110af274c92f1c86bea7c6e012a0c4dcd",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:48.783Z"
     },
     "user-guide/skills/bundled/creative/creative-baoyu-infographic.md": {
       "blob": "e915f2ce63bd8ebd31e6bddd525a9fae8761ae0b",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:48.787Z"
     },
     "user-guide/skills/bundled/creative/creative-claude-design.md": {
       "blob": "c20dd7dceb7c13ac5922b358040c6903bd22bb0e",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:48.788Z"
     },
     "user-guide/skills/bundled/creative/creative-comfyui.md": {
       "blob": "5276ffaa0d03566e4b9bf8d30d158f6ecfc6bf40",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:08:18.593Z"
     },
     "user-guide/skills/bundled/creative/creative-design-md.md": {
       "blob": "2e83398a2c311e8f2cb639f0c7596c05f48dfb3e",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:08:18.598Z"
     },
     "user-guide/skills/bundled/creative/creative-excalidraw.md": {
       "blob": "682c75d2cf186e48c2907e11a96a3341bbbdc1ed",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:08:18.600Z"
     },
     "user-guide/skills/bundled/creative/creative-humanizer.md": {
       "blob": "4474c11114ebabfdda63138555c625f83c4e8990",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:41.081Z"
     },
     "user-guide/skills/bundled/creative/creative-manim-video.md": {
       "blob": "f22a7005d822b5d3be22fa74a882fbce5073e364",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:41.084Z"
     },
     "user-guide/skills/bundled/creative/creative-p5js.md": {
       "blob": "46ecfa9299f33589725a8bd1b6e33529ec705cc4",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:10:27.807Z"
     },
     "user-guide/skills/bundled/creative/creative-popular-web-designs.md": {
       "blob": "5352e475029381e10a0c0768f5ff294994b37304",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:10:27.814Z"
     },
     "user-guide/skills/bundled/creative/creative-pretext.md": {
       "blob": "59cdfc8773469c36dfde187bc5ba9c82ee14958c",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:10:27.815Z"
     },
     "user-guide/skills/bundled/creative/creative-sketch.md": {
       "blob": "b4f54f54170bafda83578d0367abe7452b3fe1af",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:11:04.155Z"
     },
     "user-guide/skills/bundled/creative/creative-songwriting-and-ai-music.md": {
       "blob": "db3781f7e6fe8231a7ec40e07600d67cc524482e",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:11:04.158Z"
     },
     "user-guide/skills/bundled/creative/creative-touchdesigner-mcp.md": {
       "blob": "8fff080b38368a8dfc7835ad3aba1cbe53899a9f",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:11:04.160Z"
     },
     "user-guide/skills/bundled/email/email-email-inbox-triage.md": {
       "blob": "a19dfed71f7712bbd097b48b70ea464535c0749a",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:11:04.161Z"
     },
     "user-guide/skills/bundled/email/email-himalaya.md": {
       "blob": "38768284682fc3f05188508ca21d6ca610091e37",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:11:04.162Z"
     },
     "user-guide/skills/bundled/github/github-codebase-inspection.md": {
       "blob": "f727c1cd311dc597047d9365924821fecd214684",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:11:04.163Z"
     },
     "user-guide/skills/bundled/github/github-github-auth.md": {
       "blob": "ba58277c4e96419f0f634c4ddbce1115d96ac853",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:21.216Z"
     },
     "user-guide/skills/bundled/github/github-github-code-review.md": {
       "blob": "50418869999859c2ca3cddea37e3003dd0ba3274",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:21.220Z"
     },
     "user-guide/skills/bundled/github/github-github-issue-to-pr.md": {
       "blob": "3d821e45b198222c106767118c32245c1d8bde7d",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:21.220Z"
     },
     "user-guide/skills/bundled/github/github-github-issues.md": {
       "blob": "e25ceb4cb24e57cd90192588559c276674781b19",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:21.221Z"
     },
     "user-guide/skills/bundled/github/github-github-pr-workflow.md": {
       "blob": "0536a0dd6a57cf0a35f4b3e4f85169908c0fa2fc",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:09:21.222Z"
     },
     "user-guide/skills/bundled/github/github-github-repo-management.md": {
       "blob": "f540d02eb264a9981b10697d311fa0fcb453e119",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:14:46.591Z"
     },
     "user-guide/skills/bundled/media/media-gif-search.md": {
       "blob": "31d0e03eb88298fe59401d3959079befc56b75e0",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:14:46.595Z"
     },
     "user-guide/skills/bundled/media/media-songsee.md": {
       "blob": "dd1e1d3d5eec34513c887adcc96e3cd123ea57ed",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:14:46.595Z"
     },
     "user-guide/skills/bundled/media/media-youtube-content.md": {
       "blob": "47cc4acc46baa131c5ce1b181fcacf6151aa67b5",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:14:46.596Z"
     },
     "user-guide/skills/bundled/mlops/mlops-evaluation-evaluating-llms-harness.md": {
       "blob": "96a5423450e279ea34c9a31dc277e349fff5d930",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:14:46.597Z"
     },
     "user-guide/skills/bundled/mlops/mlops-evaluation-weights-and-biases.md": {
       "blob": "c99938e6db182517613102167cc066fe45b20239",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:14:46.597Z"
     },
     "user-guide/skills/bundled/mlops/mlops-huggingface-hub.md": {
       "blob": "6e8f804079b072ee616e3ed6c405cd0f7d4b7edf",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:14:46.598Z"
     },
     "user-guide/skills/bundled/mlops/mlops-inference-llama-cpp.md": {
       "blob": "95997729c5779a8d19e1b5542eaafe9563c85d93",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:16:29.023Z"
     },
     "user-guide/skills/bundled/mlops/mlops-inference-serving-llms-vllm.md": {
       "blob": "7aaca4c2bdb302e0be3b9508c44bceb7f4ec02a3",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:16:29.027Z"
     },
     "user-guide/skills/bundled/note-taking/note-taking-obsidian.md": {
       "blob": "22e5178a68abd4800d103c7efd0d62a385d32cbb",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:16:29.028Z"
     },
     "user-guide/skills/bundled/productivity/productivity-airtable.md": {
       "blob": "05a3e13fba069c1e9bf3b78086031bee876db0ed",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:16:29.029Z"
     },
     "user-guide/skills/bundled/productivity/productivity-box.md": {
       "blob": "ed5f012031e5499b7ef67dd8b1f914702505c4d8",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:16:29.030Z"
     },
     "user-guide/skills/bundled/productivity/productivity-document-to-action-items.md": {
       "blob": "5ba166e1d78df4f2c028a7f538e579e109011489",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:16:29.031Z"
     },
     "user-guide/skills/bundled/productivity/productivity-docx.md": {
       "blob": "c00e2fc02329eb49ccbf02a17725bfc8b45a6e6e",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:18:02.632Z"
     },
     "user-guide/skills/bundled/productivity/productivity-google-workspace.md": {
       "blob": "23c1245764e998de2b19ed554e4cc38abb3a3e23",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:18:15.436Z"
     },
     "user-guide/skills/bundled/productivity/productivity-maps.md": {
       "blob": "7fdc002cc3001324b3570338eaa13ecb37ec2e70",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:17:35.103Z"
     },
     "user-guide/skills/bundled/productivity/productivity-meeting-action-items.md": {
       "blob": "ce07cee2bc516970096920166e39822a7362d024",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:18:02.636Z"
     },
     "user-guide/skills/bundled/productivity/productivity-nano-pdf.md": {
       "blob": "acd3b12ba9de7316755356ae245352fbc3088b3c",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:17:35.105Z"
     },
     "user-guide/skills/bundled/productivity/productivity-notion.md": {
       "blob": "985240ca41f5e2f30327d491f791f4b8116910e0",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:17:35.106Z"
     },
     "user-guide/skills/bundled/productivity/productivity-ocr-and-documents.md": {
       "blob": "9aed152a6f504bbe8e74e1aa3dc97e7f71d67413",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:17:35.107Z"
     },
     "user-guide/skills/bundled/productivity/productivity-pdf.md": {
       "blob": "20950d56e418afa716df8d3ece17eeb59b9bf2fb",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:19:07.519Z"
     },
     "user-guide/skills/bundled/productivity/productivity-powerpoint.md": {
       "blob": "fad7d26eaf086240ae1b1fd05b5f818c4acb8d1f",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:19:07.522Z"
     },
     "user-guide/skills/bundled/productivity/productivity-product-price-monitor.md": {
       "blob": "f0349effb980abe2321989dafd054cc298f092b8",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:19:07.524Z"
     },
     "user-guide/skills/bundled/productivity/productivity-session-librarian.md": {
       "blob": "d1992db21e2a4c73aba5e708c8c5e7b80568d2f9",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:19:07.525Z"
     },
     "user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline.md": {
       "blob": "60eb2d6a3cdc14e8fdaa567f3e285969c47a49f1",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:19:07.526Z"
     },
     "user-guide/skills/bundled/productivity/productivity-weekly-review-planning.md": {
       "blob": "1d932c05e2a5a0a20f3b8958994ddbb012be1213",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:19:07.526Z"
     },
     "user-guide/skills/bundled/productivity/productivity-xlsx.md": {
       "blob": "7315c346ec252b23a5fe3428407d0b9cfbbc31a3",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:19:07.527Z"
     },
     "user-guide/skills/bundled/research/research-arxiv.md": {
       "blob": "4425858d7472f473e8f76ce322becb077684247b",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:19:07.528Z"
     },
     "user-guide/skills/bundled/research/research-blocked-page-recovery.md": {
       "blob": "60ab28f809b451027bfd928fa82dabd92abbe9e2",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:20:36.301Z"
     },
     "user-guide/skills/bundled/research/research-blogwatcher.md": {
       "blob": "f0fcad76f76447b3235e898b780c81ce9e27247e",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:20:36.304Z"
     },
     "user-guide/skills/bundled/research/research-competitor-news-monitor.md": {
       "blob": "bc31b958ed9389bd763c4ec7d41e733f8a2cebb3",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:20:36.304Z"
     },
     "user-guide/skills/bundled/research/research-grounded-citations.md": {
       "blob": "487e06a6b6c61410a7e4cd106c412c802a99be66",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:20:36.305Z"
     },
     "user-guide/skills/bundled/research/research-llm-wiki.md": {
       "blob": "566c7378b9e859ff1767e73511041c86737bb7f8",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:20:36.306Z"
     },
     "user-guide/skills/bundled/research/research-research-paper-writing.md": {
       "blob": "d7677cac8e7a23ceec4b53a5b002ddfb73b437fb",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:20:09.344Z"
     },
     "user-guide/skills/bundled/smart-home/smart-home-openhue.md": {
       "blob": "3255b428e14af1574df85ac498772d7535b41f69",
@@ -1334,7 +1401,8 @@
     },
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok.md": {
       "blob": "a51590f761ad635dcf30cfd0ee1cb2d1be19e023",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T15:21:36.795Z"
     },
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho.md": {
       "blob": "4d3c1c1a452757767f84e290df9c2d09589bf833",
