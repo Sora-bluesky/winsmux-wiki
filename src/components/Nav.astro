@@ -1,4 +1,6 @@
 ---
+import { PAGES } from '../lib/pages.mjs';
+
 const path = Astro.url.pathname;
 const installActive = path === '/hermes/' || path.startsWith('/hermes/start/') || path.startsWith('/hermes/live/');
 const guideActive = path.startsWith('/hermes/guide/') || path.startsWith('/hermes/ops/') || path.startsWith('/hermes/trust/');
@@ -9,25 +11,85 @@ const guideActive = path.startsWith('/hermes/guide/') || path.startsWith('/herme
     <a href="/hermes/" class="text-sm font-semibold text-fg no-underline hover:text-fg">
       Hermes Agent
     </a>
-    <nav class="flex gap-5 text-sm">
-      <a
-        href="/hermes/"
-        class:list={[
-          'no-underline',
-          installActive ? 'font-semibold text-fg' : 'text-fg-muted hover:text-fg',
-        ]}
+    <div class="flex items-center gap-2">
+      <nav class="hidden gap-5 text-sm sm:flex">
+        <a
+          href="/hermes/"
+          class:list={[
+            'no-underline',
+            installActive ? 'font-semibold text-fg' : 'text-fg-muted hover:text-fg',
+          ]}
+        >
+          インストールする
+        </a>
+        <a
+          href="/hermes/guide/"
+          class:list={[
+            'no-underline',
+            guideActive ? 'font-semibold text-fg' : 'text-fg-muted hover:text-fg',
+          ]}
+        >
+          Hermes Agentの使い方
+        </a>
+      </nav>
+      <button
+        id="menu-button"
+        type="button"
+        class="flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:bg-bg-subtle hover:text-fg"
+        aria-label="メニューを開く"
+        aria-expanded="false"
+        aria-controls="site-menu"
       >
-        インストールする
-      </a>
-      <a
-        href="/hermes/guide/"
-        class:list={[
-          'no-underline',
-          guideActive ? 'font-semibold text-fg' : 'text-fg-muted hover:text-fg',
-        ]}
-      >
-        Hermes Agentの使い方
-      </a>
+        <svg id="menu-icon-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
+        <svg id="menu-icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="hidden"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+      </button>
+    </div>
+  </div>
+  <div id="site-menu" class="hidden border-t border-border bg-bg">
+    <nav class="mx-auto max-w-3xl px-4 py-3 sm:px-6" aria-label="全ページ">
+      <ul class="space-y-1 text-sm">
+        {
+          PAGES.map((p) => (
+            <li>
+              <a
+                href={p.path}
+                class:list={[
+                  'flex min-h-11 items-center rounded-lg px-3 no-underline',
+                  p.path === path
+                    ? 'bg-bg-subtle font-semibold text-fg'
+                    : 'text-fg-muted hover:bg-bg-subtle hover:text-fg',
+                ]}
+                aria-current={p.path === path ? 'page' : undefined}
+              >
+                {p.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </nav>
   </div>
 </header>
+
+<script>
+  const button = document.getElementById('menu-button');
+  const menu = document.getElementById('site-menu');
+  const iconOpen = document.getElementById('menu-icon-open');
+  const iconClose = document.getElementById('menu-icon-close');
+
+  function setOpen(open: boolean) {
+    if (!button || !menu || !iconOpen || !iconClose) return;
+    menu.classList.toggle('hidden', !open);
+    iconOpen.classList.toggle('hidden', open);
+    iconClose.classList.toggle('hidden', !open);
+    button.setAttribute('aria-expanded', String(open));
+    button.setAttribute('aria-label', open ? 'メニューを閉じる' : 'メニューを開く');
+  }
+
+  button?.addEventListener('click', () => {
+    setOpen(menu?.classList.contains('hidden') ?? false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
+  });
+</script>

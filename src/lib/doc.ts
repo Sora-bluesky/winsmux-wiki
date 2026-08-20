@@ -1,4 +1,4 @@
-import { renderMarkdown, stripFrontmatter } from './markdown';
+import { headingSlug, renderMarkdown } from './markdown';
 
 export type DocData = {
   id: string;
@@ -43,9 +43,28 @@ function parseFrontmatter(src: string): { data: Record<string, string | string[]
   return { data, body };
 }
 
+function tocHtml(body: string): string {
+  const heads = body
+    .split('\n')
+    .filter((l) => l.startsWith('## '))
+    .map((l) => l.slice(3).trim());
+  if (heads.length < 3) return '';
+  const items = heads
+    .map((h) => `<li><a href="#${headingSlug(h)}">${h.replace(/[`*]/g, '')}</a></li>`)
+    .join('');
+  return (
+    '<details class="toc my-6 rounded-lg border border-border bg-bg-subtle px-4 py-3 text-sm">' +
+    '<summary class="cursor-pointer select-none font-semibold">目次</summary>' +
+    `<ul class="mt-2 space-y-1">${items}</ul></details>`
+  );
+}
+
 export function buildDoc(id: string, src: string): DocData {
   const { data, body } = parseFrontmatter(src);
   const sources = Array.isArray(data.sources) ? data.sources : [];
+  const rendered = renderMarkdown(body);
+  const toc = tocHtml(body);
+  const html = toc ? rendered.replace(/<\/h1>/, '</h1>' + toc) : rendered;
   return {
     id,
     title: String(data.title ?? id),
@@ -54,7 +73,7 @@ export function buildDoc(id: string, src: string): DocData {
     hermesVersion: String(data.hermes_version ?? ''),
     confidence: String(data.confidence ?? ''),
     rawPath: String(data.raw ?? `/hermes/raw/${id}.md`),
-    html: renderMarkdown(stripFrontmatter(src).length >= 0 ? body : src),
+    html,
     markdown: src.replace(/\n$/, '') + '\n',
   };
 }

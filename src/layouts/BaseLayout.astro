@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import AskBar from '../components/AskBar.astro';
+import { PAGES } from '../lib/pages.mjs';
 
 interface Props {
   title: string;
@@ -24,6 +25,9 @@ const {
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const pageIndex = PAGES.findIndex((p) => p.path === Astro.url.pathname);
+const prev = pageIndex > 0 ? PAGES[pageIndex - 1] : null;
+const next = pageIndex >= 0 && pageIndex < PAGES.length - 1 ? PAGES[pageIndex + 1] : null;
 ---
 
 <!doctype html>
@@ -44,6 +48,38 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <Nav />
     <main class="mx-auto w-full max-w-3xl px-4 pb-36 pt-8 sm:px-6">
       <slot />
+      {
+        (prev || next) && (
+          <nav class="mt-12 flex items-stretch justify-between gap-3 border-t border-border pt-6 text-sm" aria-label="前後のページ">
+            {prev ? (
+              <a
+                href={prev.path}
+                class="flex min-h-11 max-w-[48%] items-center gap-2 rounded-lg border border-border px-4 py-2 text-fg no-underline hover:bg-bg-subtle"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+                <span>
+                  <span class="block text-xs text-fg-muted">前へ</span>
+                  {prev.label}
+                </span>
+              </a>
+            ) : (
+              <span />
+            )}
+            {next && (
+              <a
+                href={next.path}
+                class="flex min-h-11 max-w-[48%] items-center gap-2 rounded-lg border border-border px-4 py-2 text-right text-fg no-underline hover:bg-bg-subtle"
+              >
+                <span>
+                  <span class="block text-xs text-fg-muted">次へ</span>
+                  {next.label}
+                </span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+              </a>
+            )}
+          </nav>
+        )
+      }
       {
         (sources.length > 0 || hermesVersion) && (
           <aside class="mt-12 border-t border-border pt-6 text-sm text-fg-muted">

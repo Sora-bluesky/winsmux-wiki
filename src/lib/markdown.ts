@@ -13,6 +13,14 @@ function escapeHtml(s: string): string {
     .replace(/"/g, '&quot;');
 }
 
+export function headingSlug(s: string): string {
+  return s
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/[`*]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+}
+
 function inline(s: string): string {
   let out = escapeHtml(s);
   out = out.replace(/\[([^\]]+)\]\((https?:[^)]+|\/[^)]+)\)/g, '<a href="$2">$1</a>');
@@ -50,7 +58,7 @@ export function renderMarkdown(md: string): string {
       }
       const head = rows[0];
       const body = rows.slice(2);
-      html.push('<table class="w-full text-sm border-collapse my-4">');
+      html.push('<div class="my-4 overflow-x-auto"><table class="w-full text-sm border-collapse">');
       html.push('<thead><tr>');
       for (const c of head) html.push(`<th class="border border-border bg-bg-subtle px-3 py-2 text-left">${inline(c)}</th>`);
       html.push('</tr></thead><tbody>');
@@ -59,11 +67,11 @@ export function renderMarkdown(md: string): string {
         for (const c of row) html.push(`<td class="border border-border px-3 py-2 align-top">${inline(c)}</td>`);
         html.push('</tr>');
       }
-      html.push('</tbody></table>');
+      html.push('</tbody></table></div>');
       continue;
     }
     if (line.startsWith('## ')) {
-      html.push(`<h2>${inline(line.slice(3))}</h2>`);
+      html.push(`<h2 id="${headingSlug(line.slice(3))}">${inline(line.slice(3))}</h2>`);
       i += 1;
       continue;
     }
