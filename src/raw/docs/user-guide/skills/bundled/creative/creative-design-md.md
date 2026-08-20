@@ -24,7 +24,7 @@ Google の DESIGN.md トークン仕様ファイルを書く・検査する・�
 | タグ | `design`, `design-system`, `tokens`, `ui`, `accessibility`, `wcag`, `tailwind`, `dtcg`, `google` |
 | 関連 skill | [`popular-web-designs`](/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/), [`claude-design`](/hermes/docs/user-guide/skills/bundled/creative/creative-claude-design/), [`excalidraw`](/hermes/docs/user-guide/skills/bundled/creative/creative-excalidraw/), [`architecture-diagram`](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) |
 
-## 参照: SKILL.md 全文 {#reference-full-skillmd}
+## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
 :::info
 以下は、この skill が呼び出されたときに Hermes が読み込む定義の全文です。skill が有効なあいだ、エージェントはこれを指示として見ています。

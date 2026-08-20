@@ -24,7 +24,7 @@ sources:
 | タグ | `design`, `html`, `prototype`, `ux`, `ui`, `creative`, `artifact`, `deck`, `motion`, `design-system` |
 | 関連 skill | [`design-md`](/hermes/docs/user-guide/skills/bundled/creative/creative-design-md/), [`popular-web-designs`](/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/), [`excalidraw`](/hermes/docs/user-guide/skills/bundled/creative/creative-excalidraw/), [`architecture-diagram`](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) |
 
-## 参照: SKILL.md 全文 {#reference-full-skillmd}
+## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
 :::info
 以下は、この skill が呼び出されたときに Hermes が読み込む定義の全文です。skill が有効なあいだ、エージェントはこれを指示として見ています。

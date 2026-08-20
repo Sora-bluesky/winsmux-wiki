@@ -9,7 +9,7 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const STATE_PATH = join(root, 'data/mirror-state.json');
 // "wiki" only as a standalone word: upstream identifiers like code-wiki are
 // product names (contract rule 5), not vocabulary choices.
-const FORBIDDEN = /(?<![\w-])wiki(?![\w-])|はじめる|編む|暮らす|入れところ|リファレンス|複数台|\/fleet/;
+const FORBIDDEN = /(?<![\w\-/.])wiki(?![\w-])|はじめる|編む|暮らす|入れところ|リファレンス|複数台|\/fleet/;
 
 const FENCE_RE = /^[ \t]*```[^\n]*\n[\s\S]*?^[ \t]*```[ \t]*$/gm;
 function fences(md) {
@@ -32,7 +32,9 @@ function parts(md) {
     inlineCode: noFence
       .split(/\n\s*\n/)
       .flatMap((block) => {
-        const j = block.replace(/\n/g, ' ');
+        // double-backtick spans (``code with ` inside``) would desync the
+        // single-tick pairing below; drop them symmetrically first
+        const j = block.replace(/\n/g, ' ').replace(/``(?:[^`]|`(?!`))*``/g, '');
         if (((j.match(/`/g) ?? []).length) % 2 !== 0) return [];
         return [...j.matchAll(/`[^`]+`/g)].map((m) => m[0]);
       })

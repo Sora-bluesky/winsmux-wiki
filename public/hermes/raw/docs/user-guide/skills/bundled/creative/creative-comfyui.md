@@ -24,7 +24,7 @@ sources:
 | タグ | `comfyui`, `image-generation`, `stable-diffusion`, `flux`, `sd3`, `wan-video`, `hunyuan-video`, `creative`, `generative-ai`, `video-generation` |
 | 関連 skill | [`stable-diffusion`](/hermes/docs/user-guide/skills/optional/mlops/mlops-stable-diffusion/) |
 
-## 参照: SKILL.md 全文 {#reference-full-skillmd}
+## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
 :::info
 以下は、この skill が呼び出されたときに Hermes が読み込む定義の全文です。skill が有効なあいだ、エージェントはこれを指示として見ています。

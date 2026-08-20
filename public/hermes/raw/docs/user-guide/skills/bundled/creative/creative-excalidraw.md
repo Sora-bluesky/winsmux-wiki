@@ -23,7 +23,7 @@ sources:
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Excalidraw`, `Diagrams`, `Flowcharts`, `Architecture`, `Visualization`, `JSON` |
 
-## 参照: SKILL.md 全文 {#reference-full-skillmd}
+## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
 :::info
 以下は、この skill が呼び出されたときに Hermes が読み込む定義の全文です。skill が有効なあいだ、エージェントはこれを指示として見ています。

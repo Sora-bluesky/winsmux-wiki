@@ -63,7 +63,7 @@ const skills = files.map((path) => {
   return {
     name: front.sidebar_label || front.title || parts.at(-1),
     description: (front.description || '').replace(/\|/g, '\\|'),
-    url: `${SITE}/docs/${rel}`,
+    url: `/hermes/docs/${rel}/`,
     date: lastDate.get(path) ?? '',
     category: source === 'other' ? '' : parts[3],
     source,
@@ -82,7 +82,7 @@ const other = skills.filter((s) => s.source === 'other');
 
 const md = `---
 title: skill
-description: 公式 skill の同期索引。手訳しない。名前、概要、公式 URL、更新日。
+description: 公式 skill の同期索引。名前、概要、更新日。各行は日本語版ページへ。
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/skills-catalog
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
@@ -94,7 +94,7 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ ${skills.length} 件の索引です。概要は公式（英語）のまま載せます。訳しません。正本は各リンク先です。
+公式の skill ページ ${skills.length} 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
 上流 \`${headSha.slice(0, 7)}\`（${headDate}）時点。この一覧は上流の docs から機械生成しています。
 
@@ -106,7 +106,7 @@ ${table(bundled)}
 
 ## あとから入れる（${optional.length}）
 
-- 入れると使えるようになります。入れ方は [Work with Skills](${SITE}/docs/guides/work-with-skills) にあります。
+- 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
 ${table(optional)}
 ${
@@ -114,7 +114,7 @@ ${
     ? `\n## その他（${other.length}）\n\n${table(other)}\n`
     : ''
 }
-skill の仕組みは [Skills System](${SITE}/docs/user-guide/features/skills)、自作は [Creating Skills](${SITE}/docs/developer-guide/creating-skills) にあります。
+skill の仕組みは [Skills System](/hermes/docs/user-guide/features/skills/)、自作は [Creating Skills](/hermes/docs/developer-guide/creating-skills/) にあります。
 `;
 
 await writeFile(join(root, 'src/raw/skills.md'), md);
