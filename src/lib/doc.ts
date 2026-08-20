@@ -92,7 +92,7 @@ function tocHtml(body: string): string {
     )
     .join('');
   return (
-    '<details class="toc my-6 rounded-lg border border-border bg-bg-subtle px-4 py-3 text-sm 2xl:hidden">' +
+    '<details class="toc my-6 rounded-lg border border-border bg-bg-subtle px-4 py-3 text-sm min-[1800px]:hidden">' +
     '<summary class="cursor-pointer select-none font-semibold">目次</summary>' +
     `<ul class="mt-2 space-y-1">${items}</ul></details>`
   );
@@ -104,7 +104,7 @@ export function buildDoc(id: string, src: string): DocData {
   const rendered = renderMarkdown(body);
   const toc = tocHtml(body);
   const rail = toc
-    ? '<nav class="toc-rail fixed right-4 top-24 hidden max-h-[70vh] w-56 overflow-y-auto text-sm 2xl:block" aria-label="このページの目次">' +
+    ? '<nav class="toc-rail fixed right-4 top-24 hidden max-h-[70vh] w-56 overflow-y-auto text-sm min-[1800px]:block" aria-label="このページの目次">' +
       '<p class="pb-1 text-xs font-semibold text-fg-muted">目次</p>' +
       `<ul class="space-y-1 border-l border-border pl-3">${extractHeadings(body)
         .map(
