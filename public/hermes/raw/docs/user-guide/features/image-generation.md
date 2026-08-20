@@ -224,7 +224,7 @@ export IMAGE_TOOLS_DEBUG=true
 
 | つなぎ先 | 届き方 |
 |---|---|
-| **CLI** | 画像の URL が markdown の `![](/hermes/docs/user-guide/features/url/)` として出ます。押せば開きます |
+| **CLI** | 画像の URL が markdown の `![](url)` として出ます。押せば開きます |
 | **Telegram** | 写真として届き、指示した文が説明文になります |
 | **Discord** | メッセージの中に埋め込まれます |
 | **Slack** | Slack が URL を展開して見せます |

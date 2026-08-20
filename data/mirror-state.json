@@ -3,139 +3,173 @@
   "files": {
     "developer-guide/acp-internals.md": {
       "blob": "e739d808711894e590d3c1fce02ff1472050611e",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:36:02.344Z"
     },
     "developer-guide/adding-platform-adapters.md": {
       "blob": "870c6608dd03488244fd2ce1a44fbc8b70165dfc",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:50.382Z"
     },
     "developer-guide/adding-providers.md": {
       "blob": "203fd43d0e7d6a2e92b694a5cbfc378359f84d3c",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:50.379Z"
     },
     "developer-guide/adding-tools.md": {
       "blob": "975bdaca0603d6f961da0cbaff63f8a40f95ff00",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:27.327Z"
     },
     "developer-guide/agent-loop.md": {
       "blob": "24cee51082df7aa4672aa674621fe72a31b05215",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:37.572Z"
     },
     "developer-guide/architecture.md": {
       "blob": "6c1f6cafa412c399a73475da93127265b677f669",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:29:02.866Z"
     },
     "developer-guide/browser-provider-plugin.md": {
       "blob": "0f71b1684feb27c6244880bd3f1ca09b6c5ed501",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:36:22.010Z"
     },
     "developer-guide/browser-supervisor.md": {
       "blob": "a30abdbdaca5a6daaf0e9d85de2fb2d14f714fea",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:36:02.343Z"
     },
     "developer-guide/codebase-ownership.md": {
       "blob": "c6f85d7e1f81314183ef2c0191c62b43dc8c3c34",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:37.569Z"
     },
     "developer-guide/context-compression-and-caching.md": {
       "blob": "31e3c9a0cb751f16a579a59c5fb0c5160e550fc3",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:37.574Z"
     },
     "developer-guide/context-engine-plugin.md": {
       "blob": "6609158e076554fcac8ef905554fc317baee0936",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:34:42.474Z"
     },
     "developer-guide/contributing.md": {
       "blob": "4d3b00d5762e01e5e9867840bcc59489d1c1eadc",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:29:02.864Z"
     },
     "developer-guide/creating-skills.md": {
       "blob": "25d023ed57c826d473a451b83921103e4f465d56",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:36:22.011Z"
     },
     "developer-guide/cron-internals.md": {
       "blob": "13a342324cc96ea9f0845714221edc7113a5ab95",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:36:02.345Z"
     },
     "developer-guide/desktop-plugin-sdk.md": {
       "blob": "5a4c0dc4ed2a9a82739cf30b8325cc793c459d35",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:34:28.273Z"
     },
     "developer-guide/egress-internals.md": {
       "blob": "f84160788a0c1f02388748fa8d470717bca850b3",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:38:45.808Z"
     },
     "developer-guide/extending-the-cli.md": {
       "blob": "fbd6da6f946537b155f8db03af48d58fe40fca68",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:36:22.012Z"
     },
     "developer-guide/gateway-internals.md": {
       "blob": "30c8cb9e1f09cd13eb9cd7e880e9fa99ebdceda2",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:27.321Z"
     },
     "developer-guide/image-gen-provider-plugin.md": {
       "blob": "44b509029511de1a34bdb0a5abf280a87ec8bb14",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:34:42.480Z"
     },
     "developer-guide/memory-provider-plugin.md": {
       "blob": "40dc5ba3ef0a73e476d0098e0c1c02167a9c6c2a",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:34:28.276Z"
     },
     "developer-guide/model-provider-plugin.md": {
       "blob": "5127107fa3122304d55a856308491d78d72b5eac",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:34:42.479Z"
     },
     "developer-guide/plugin-llm-access.md": {
       "blob": "f6eeee09cdf25333823b87287697bea528ae079a",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:18.657Z"
     },
     "developer-guide/plugins/index.md": {
       "blob": "8688d181a3c2b23f489ca4fe0d6672fa828a4f63",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:55:16.225Z"
     },
     "developer-guide/programmatic-integration.md": {
       "blob": "42a603215e0a484a1cebf3bd8f29e6f75ef49dd9",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:27.326Z"
     },
     "developer-guide/prompt-assembly.md": {
       "blob": "e7d0497db3621f84723651143700af6296764a42",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:37.572Z"
     },
     "developer-guide/provider-runtime.md": {
       "blob": "9cfd90097dda8272f727a97a82a271691b383ba0",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:27.325Z"
     },
     "developer-guide/secret-source-plugin.md": {
       "blob": "3c0dd465e263a0b676d16156313a07e1f8b87da0",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:34:42.477Z"
     },
     "developer-guide/session-storage.md": {
       "blob": "0ff701d7f3c34d93df4cf97fb78bf27b14cb8382",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:27.324Z"
     },
     "developer-guide/subagent-lifecycle-api.md": {
       "blob": "7054afcdb7356a8da9966c1b1243085a26957a43",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:30:18.661Z"
     },
     "developer-guide/tools-runtime.md": {
       "blob": "7fcbb4d7cd0a844beee08814de36030da5b93c7d",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:36:02.340Z"
     },
     "developer-guide/trajectory-format.md": {
       "blob": "fbc46632305461a4e73d16f07d8e8846b5773401",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:38:45.812Z"
     },
     "developer-guide/video-gen-provider-plugin.md": {
       "blob": "4301b6bd261ea5ed17734e48e6ce88f58216cf0b",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:36:22.006Z"
     },
     "developer-guide/web-search-provider-plugin.md": {
       "blob": "4f880866c69966b6569c9365b665d700ec5d15c3",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:36:22.009Z"
     },
     "developer-guide/worktree-ui-dev.md": {
       "blob": "4f3ab1f847b4afd69b362d7009d99db3af398ba6",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:29:02.865Z"
     },
     "getting-started/installation.md": {
       "blob": "3689db72ac1b2c3faa07164e509200d8f64abdad",
@@ -174,155 +208,193 @@
     },
     "guides/agent-email-address.md": {
       "blob": "a879b8ace8d934265cd2bf7b4d5d8a8317ac90c8",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:26:53.426Z"
     },
     "guides/automate-with-cron.md": {
       "blob": "dec05e43fd466e0554aebaf819aba1cb39f1907b",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:24:20.599Z"
     },
     "guides/automation-blueprints.md": {
       "blob": "7bf861e8e22258438e08d3b5513bf647ae48f853",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:23:43.152Z"
     },
     "guides/aws-bedrock.md": {
       "blob": "ec7b1224fce534945ed289321fd19cfae4221147",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:27:51.366Z"
     },
     "guides/azure-foundry.md": {
       "blob": "76412937b0da0a1b2f5e091ec38145055df5b917",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:27:51.371Z"
     },
     "guides/cron-script-only.md": {
       "blob": "ae3f1f0ae0e69435e2bafacaae472ca674818b5a",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:23:43.149Z"
     },
     "guides/cron-troubleshooting.md": {
       "blob": "2f2cb43b34659c3226f9075201ab221a1c4c0fb4",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:23:43.153Z"
     },
     "guides/daily-briefing-bot.md": {
       "blob": "a4fda461be8feca8f3840ac77ec89719d9674408",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:22:05.700Z"
     },
     "guides/delegation-patterns.md": {
       "blob": "9f16bb34999f2dbf04b83721be0c85a16bec7301",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:26:53.423Z"
     },
     "guides/desktop-native-signin.md": {
       "blob": "186acec1540bbdc56d166ac77947e36253b9b0e2",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:51:21.940Z"
     },
     "guides/github-pr-review-agent.md": {
       "blob": "f45684973bd45028efc2c8e2291998a024705b71",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:26:53.426Z"
     },
     "guides/google-gemini.md": {
       "blob": "7a00eabf8dff2950d79df3a9a6fc2a8826b87be1",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:51:21.943Z"
     },
     "guides/google-vertex.md": {
       "blob": "54923db967d5a5c1965a45badddc32ff4efc8cbb",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:27:51.369Z"
     },
     "guides/local-llm-on-mac.md": {
       "blob": "a0a3a200bd9e2ff77dfbd3308f71af15929566be",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:22:05.698Z"
     },
     "guides/local-ollama-setup.md": {
       "blob": "5136cf5f71f81edc5e1d06baba7caa188215bd4a",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:51:21.944Z"
     },
     "guides/microsoft-graph-app-registration.md": {
       "blob": "70de0498cfedc9f9687eb0dc5961c80842f5304a",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:29:02.860Z"
     },
     "guides/migrate-from-openclaw.md": {
       "blob": "9680717dc3bdea33f8fe26f7ebdfc9ee653a02e0",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:26:53.429Z"
     },
     "guides/minimax-oauth.md": {
       "blob": "0c0770252a73182e3bbd24c773744735a98ed6d8",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:51:21.945Z"
     },
     "guides/oauth-over-ssh.md": {
       "blob": "c58aeb401d48f3666425d4ecf1ac4f3e196ec053",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:27:51.372Z"
     },
     "guides/operate-teams-meeting-pipeline.md": {
       "blob": "93c259cc15e72c26f956ba2abc735039dae8fbe6",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:29:02.863Z"
     },
     "guides/pipe-script-output.md": {
       "blob": "a58f408260767b4e7bda30d775643baadc4765ce",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:51:21.945Z"
     },
     "guides/python-library.md": {
       "blob": "1fb0387400e1c6541db395c7f0e4fabf7e23528b",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:23:52.142Z"
     },
     "guides/run-hermes-with-nous-portal.md": {
       "blob": "e4928ef6df3a612a04c8133b34bb01ba96d0cc4b",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:22:39.727Z"
     },
     "guides/run-nemotron-3-ultra-free.md": {
       "blob": "db613e79e99106b52a2519fd246a23e0e93e63a1",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:22:39.726Z"
     },
     "guides/secure-hermes-on-a-work-machine.md": {
       "blob": "280f26b4bd095b2489f5fe6d7b2f2fa695ac4204",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:51:21.946Z"
     },
     "guides/team-telegram-assistant.md": {
       "blob": "3b168eb4caf49527624672fadb5f3b716345f9f5",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:22:05.702Z"
     },
     "guides/tips.md": {
       "blob": "693bcaaf4208e0b449382af3d3f6282758192871",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:22:05.693Z"
     },
     "guides/troubleshooting-agent-quality.md": {
       "blob": "67a10953688c6e07ee0d2512809797664ecdd49e",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:55:16.227Z"
     },
     "guides/use-mcp-with-hermes.md": {
       "blob": "6b8eee4a5929b508b7bd80c5bdb3e2eda776986d",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:23:52.145Z"
     },
     "guides/use-soul-with-hermes.md": {
       "blob": "81a3680b0d6f0c6d531824646c80f610723f5889",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:23:52.146Z"
     },
     "guides/use-voice-mode-with-hermes.md": {
       "blob": "996f0167b0d04608a22ef78f2ec4076fd5b635e9",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:23:52.147Z"
     },
     "guides/webhook-github-pr-review.md": {
       "blob": "3f7ec74d2b66a10e8e43e54eca86eb5fbdee9458",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:26:53.427Z"
     },
     "guides/work-with-skills.md": {
       "blob": "2a011a2b7bf57d17652cec98eb4fa907b1307334",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:23:43.154Z"
     },
     "guides/xai-grok-oauth.md": {
       "blob": "6645229a0c1ebf523850c611aa591a67f786df44",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:27:51.371Z"
     },
     "integrations/buzz.md": {
       "blob": "c0514bf99e4721692207e653947214213559d2c5",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:20:43.993Z"
     },
     "integrations/index.md": {
       "blob": "eef508952a55b984b0719ba85b38d8b433a6b2b0",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:18:01.449Z"
     },
     "integrations/nous-portal.md": {
       "blob": "ffcbe49409bda3d58d89734ea58371842f6681e5",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:18:01.452Z"
     },
     "integrations/providers.md": {
       "blob": "0dd4911353a6cd71a54910f0cd9834521e1f326b",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:20:52.372Z"
     },
     "reference/automation-blueprints-catalog.mdx": {
       "blob": "820f5d8719950be69d0373a820c08e4fedfc122e",
@@ -330,27 +402,33 @@
     },
     "reference/cli-commands.md": {
       "blob": "7d434df6dbfebbc1f0a0471847edf8453105d17a",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:42:12.048Z"
     },
     "reference/cli-symbols.md": {
       "blob": "6876e87af084db0ddae469c1a3ceec971958e0d3",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:45:15.335Z"
     },
     "reference/environment-variables.md": {
       "blob": "e35fbcaf0a2f8b69f9812cc3e4f2d5fde7c5563c",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:47:22.626Z"
     },
     "reference/faq.md": {
       "blob": "fc199a509b72af19e25ce700b8963c8db27237b1",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:48:37.399Z"
     },
     "reference/mcp-config-reference.md": {
       "blob": "35bb31e64dc4758777fab04f94599349186df767",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:46:10.599Z"
     },
     "reference/model-catalog.md": {
       "blob": "4769a720c8f12c80d417f22f15bdb80ec8521633",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:46:10.601Z"
     },
     "reference/optional-skills-catalog.md": {
       "blob": "70f0c5897afe8bcc241fea4ef0fb12ef1e1d3031",
@@ -359,7 +437,8 @@
     },
     "reference/profile-commands.md": {
       "blob": "1f13d8e03b2785bc68292736d87f48aee38be208",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:43:05.847Z"
     },
     "reference/skills-catalog.md": {
       "blob": "419788352df6402d6326b6042f0b11320cbc0bda",
@@ -368,15 +447,18 @@
     },
     "reference/slash-commands.md": {
       "blob": "fb9fc5b2b5f42c8d07abbb0047a4615550cf77b0",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:43:05.843Z"
     },
     "reference/tools-reference.md": {
       "blob": "5363e351873b14ccec1dc3be6064e77b4db3198e",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:46:10.603Z"
     },
     "reference/toolsets-reference.md": {
       "blob": "5904f1a9f71890202c5f06562fc94f9917fdef79",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:45:15.333Z"
     },
     "user-guide/bot-mode.md": {
       "blob": "8b46b208add5fa2cc81ec9c9a70584c11ad25ad5",
@@ -425,7 +507,8 @@
     },
     "user-guide/features/acp.md": {
       "blob": "1424c427f0418d6f0b6c109367a42c367bb79647",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:20:43.998Z"
     },
     "user-guide/features/api-server.md": {
       "blob": "ccba76e104d1c5b3e196fd901da098375b6a6e0d",
@@ -474,7 +557,8 @@
     },
     "user-guide/features/credential-pools.md": {
       "blob": "f66f2a624a9165b31f084da837c3b2ba5577d023",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:22:39.725Z"
     },
     "user-guide/features/cron.md": {
       "blob": "56e31341cfcbc14e3a05ef16149f746ae7914654",
@@ -508,7 +592,8 @@
     },
     "user-guide/features/fallback-providers.md": {
       "blob": "2c3cdbc066d19cf2eac441e1df4a604972674491",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:22:39.724Z"
     },
     "user-guide/features/goals.md": {
       "blob": "b4a9f315858409f0432eff323fb377fbd8e95d0f",
@@ -532,7 +617,8 @@
     },
     "user-guide/features/image-generation.md": {
       "blob": "33c4abc7477c3d826b8c7baa64337d4247f51891",
-      "status": "stale"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:56:13.416Z"
     },
     "user-guide/features/kanban-tutorial.md": {
       "blob": "3e76e94da6a052627c446537462424ee3c4da1d9",
@@ -561,7 +647,8 @@
     },
     "user-guide/features/mcp.md": {
       "blob": "755941407aa7aa8cd41e813e7ba1829a29d644ed",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:20:43.997Z"
     },
     "user-guide/features/memory-providers.md": {
       "blob": "099d73b3ebeb0dcd87bd3eda3b0eba95a0d3dff2",
@@ -600,7 +687,8 @@
     },
     "user-guide/features/provider-routing.md": {
       "blob": "ff8a9ef56ccc23709cbf4ff900e82560332b350d",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:22:39.721Z"
     },
     "user-guide/features/skills.md": {
       "blob": "ec71205d0c7d0a39568f7d02cb0be50b0049869d",
@@ -679,7 +767,8 @@
     },
     "user-guide/import-from-other-agents.md": {
       "blob": "53f8d7b2304ec583c55a2f514c8b41d68a3677c8",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:55:16.228Z"
     },
     "user-guide/managed-scope.md": {
       "blob": "46f9654477fe5efaf25e095b7738f6fa39d49eb4",
@@ -693,11 +782,13 @@
     },
     "user-guide/messaging/bluebubbles.md": {
       "blob": "12efd3823bcde90ad642c0deb565d7314d9eb642",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:19:54.138Z"
     },
     "user-guide/messaging/buzz.md": {
       "blob": "848e21c0532e61b2b0ae68db25e06b25bbbc8452",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:19:54.141Z"
     },
     "user-guide/messaging/dingtalk.md": {
       "blob": "72ec3f2eadc0a5c50b30fce8fc341157cda28df4",
@@ -721,7 +812,8 @@
     },
     "user-guide/messaging/google_chat.md": {
       "blob": "e613331a4de8aeb941e9ea0304579ab019232b6a",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:19:54.143Z"
     },
     "user-guide/messaging/homeassistant.md": {
       "blob": "2079654305cfa15557c3e5a582fe13ac2fc1b018",
@@ -740,7 +832,8 @@
     },
     "user-guide/messaging/line.md": {
       "blob": "abed60427b38a534ad68fd9ef269755e02dfba2b",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:19:54.143Z"
     },
     "user-guide/messaging/matrix.md": {
       "blob": "c5406c87b05fbc01a8fb3f625762f612afe9bd5a",
@@ -769,7 +862,8 @@
     },
     "user-guide/messaging/photon.md": {
       "blob": "ee85f313e14d8532718d9c84411b1b60511234bc",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:19:54.142Z"
     },
     "user-guide/messaging/qqbot.md": {
       "blob": "e5050b304fc6d5b20acbf2ab9c793a5eba675cdf",
@@ -778,7 +872,8 @@
     },
     "user-guide/messaging/raft.md": {
       "blob": "0e62b1aa749150c29901eff39f7bfe10555fa936",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:55:16.228Z"
     },
     "user-guide/messaging/relay.md": {
       "blob": "d12ae3edc5669f9d4a3461979620a7d2b461162f",
@@ -792,7 +887,8 @@
     },
     "user-guide/messaging/simplex.md": {
       "blob": "cffff51fe0ad10a22492cef4288b599f02bd14b5",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:19:54.144Z"
     },
     "user-guide/messaging/slack.md": {
       "blob": "544ed727e9142f90e85fe2cb703c3966b0396872",
@@ -821,7 +917,8 @@
     },
     "user-guide/messaging/webhooks.md": {
       "blob": "dd1148b0fac12bfd9ec26b1f37d56431f4c9a1f2",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:18:01.446Z"
     },
     "user-guide/messaging/wecom-callback.md": {
       "blob": "f6cf5ed4a473f9555e0b40169fcc5bd57e33ab09",
@@ -880,7 +977,8 @@
     },
     "user-guide/secrets/command.md": {
       "blob": "04184eb95de5c9bc52cc09ca8a5faccec90f7799",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:55:16.229Z"
     },
     "user-guide/secrets/index.md": {
       "blob": "29c7df9e94e49874c284abb26c10140359f501bd",
@@ -1693,7 +1791,8 @@
     },
     "user-guide/which-file-does-what.md": {
       "blob": "153e2648db594190a59ff5f94d08b14c151a5ce1",
-      "status": "pending"
+      "status": "translated",
+      "translatedAt": "2026-08-20T14:55:16.229Z"
     },
     "user-guide/windows-native.md": {
       "blob": "4e0a48c0b060995b37f6763bc6ac7d64869e9e57",
