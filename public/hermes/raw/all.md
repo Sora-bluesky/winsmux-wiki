@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（206 件）です。リンク先はすべて公式（英語）。並びと区分は公式の llms.txt のままにしています。個別 skill のページは、この一覧には入っていません。skill の索引はあとから足します。
+公式 docs の全ページ（206 件）です。リンク先はすべて公式（英語）。並びと区分は公式の llms.txt のままにしています。個別 skill のページは、この一覧には入っていません。skill の索引は [skill](/hermes/guide/skills/) にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/start/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 

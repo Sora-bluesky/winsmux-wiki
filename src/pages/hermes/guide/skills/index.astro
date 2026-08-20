@@ -1,9 +1,9 @@
 ---
-import src from '../../../raw/guide.md?raw';
-import { buildDoc } from '../../../lib/doc';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
+import src from '../../../../raw/skills.md?raw';
+import { buildDoc } from '../../../../lib/doc';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
 
-const doc = buildDoc('guide', src);
+const doc = buildDoc('skills', src);
 ---
 
 <BaseLayout
@@ -15,9 +15,9 @@ const doc = buildDoc('guide', src);
   confidence={doc.confidence}
 >
   <nav class="mb-6 flex gap-6 border-b border-border text-sm">
-    <a href="/hermes/guide/" class="border-b-2 border-fg pb-2 font-semibold text-fg no-underline">よく使う</a>
+    <a href="/hermes/guide/" class="pb-2 text-fg-muted no-underline hover:text-fg">よく使う</a>
     <a href="/hermes/guide/all/" class="pb-2 text-fg-muted no-underline hover:text-fg">すべて</a>
-    <a href="/hermes/guide/skills/" class="pb-2 text-fg-muted no-underline hover:text-fg">skill</a>
+    <a href="/hermes/guide/skills/" class="border-b-2 border-fg pb-2 font-semibold text-fg no-underline">skill</a>
   </nav>
   <article class="prose" set:html={doc.html} />
 </BaseLayout>

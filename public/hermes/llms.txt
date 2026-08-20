@@ -16,6 +16,7 @@ Hermes Agent 0.20.4
 - [どこまで任せる](https://wiki.winsmux.dev/hermes/trust/)
 - [Hermes Agentの使い方（よく使う）](https://wiki.winsmux.dev/hermes/guide/)
 - [すべて（公式全URLの索引）](https://wiki.winsmux.dev/hermes/guide/all/)
+- [skill（公式skillの同期索引）](https://wiki.winsmux.dev/hermes/guide/skills/)
 
 ## 生 Markdown
 
@@ -26,6 +27,7 @@ Hermes Agent 0.20.4
 - https://wiki.winsmux.dev/hermes/raw/line.md
 - https://wiki.winsmux.dev/hermes/raw/live.md
 - https://wiki.winsmux.dev/hermes/raw/ops.md
+- https://wiki.winsmux.dev/hermes/raw/skills.md
 - https://wiki.winsmux.dev/hermes/raw/start.md
 - https://wiki.winsmux.dev/hermes/raw/telegram.md
 - https://wiki.winsmux.dev/hermes/raw/trust.md
