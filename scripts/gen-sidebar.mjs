@@ -31,10 +31,43 @@ body = body
 
 const parsed = JSON.parse(body); // fail loud on grammar drift
 
+// Japanese category labels. Unmapped labels keep the upstream text (skill
+// category slugs stay as-is on purpose).
+const LABELS_JA = {
+  'Getting Started': '導入',
+  'Using Hermes': 'Hermes を使う',
+  Secrets: 'シークレット',
+  'Egress proxy': 'Egress プロキシ',
+  Features: '機能',
+  Core: '中核',
+  Automation: '自動化',
+  'Media & Web': 'メディアと Web',
+  Management: '管理',
+  Skills: 'skill',
+  Bundled: '最初から入っている',
+  Optional: 'あとから入れる',
+  'Messaging Platforms': 'メッセージング',
+  Popular: 'よく使われる',
+  'Microsoft 365': 'Microsoft 365',
+  'Chinese platforms': '中国系プラットフォーム',
+  Other: 'その他',
+  Integrations: '連携',
+  'Guides & Tutorials': 'ガイド',
+  'Developer Guide': '開発者向け',
+  Architecture: 'アーキテクチャ',
+  Extending: '拡張する',
+  Plugins: 'プラグイン',
+  Internals: '内部のしくみ',
+  Reference: '早見表',
+  'Command Reference': 'コマンド早見表',
+  'Configuration Reference': '設定の早見表',
+  'Tools & Skills Reference': 'ツールと skill の早見表',
+};
+
 function normalize(node) {
   if (typeof node === 'string') return { id: node };
   if (node && node.type === 'category') {
-    return { label: node.label, items: (node.items ?? []).map(normalize) };
+    return { label: LABELS_JA[node.label] ?? node.label, items: (node.items ?? []).map(normalize) };
   }
   throw new Error(`sidebars.ts: unsupported node ${JSON.stringify(node).slice(0, 80)}`);
 }
