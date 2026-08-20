@@ -1,0 +1,22 @@
+---
+import src from '../../../../raw/all.md?raw';
+import { buildDoc } from '../../../../lib/doc';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+
+const doc = buildDoc('all', src);
+---
+
+<BaseLayout
+  title={doc.title}
+  description={doc.description}
+  rawPath={doc.rawPath}
+  sources={doc.sources}
+  hermesVersion={doc.hermesVersion}
+  confidence={doc.confidence}
+>
+  <nav class="mb-6 flex gap-6 border-b border-border text-sm">
+    <a href="/hermes/guide/" class="pb-2 text-fg-muted no-underline hover:text-fg">よく使う</a>
+    <a href="/hermes/guide/all/" class="border-b-2 border-fg pb-2 font-semibold text-fg no-underline">すべて</a>
+  </nav>
+  <article class="prose" set:html={doc.html} />
+</BaseLayout>

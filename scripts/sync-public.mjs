@@ -28,6 +28,7 @@ const catalog = [
   ['/hermes/ops/', '運用'],
   ['/hermes/trust/', 'どこまで任せる'],
   ['/hermes/guide/', 'Hermes Agentの使い方（よく使う）'],
+  ['/hermes/guide/all/', 'すべて（公式全URLの索引）'],
 ];
 
 const raws = copied.map((f) => `${site}/hermes/raw/${f}`);
