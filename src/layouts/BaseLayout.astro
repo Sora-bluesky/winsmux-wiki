@@ -83,12 +83,7 @@ const next = pageIndex >= 0 && pageIndex < PAGES.length - 1 ? PAGES[pageIndex + 
       {
         (sources.length > 0 || hermesVersion) && (
           <aside class="mt-12 border-t border-border pt-6 text-sm text-fg-muted">
-            {hermesVersion && (
-              <p>
-                Hermes Agent {hermesVersion}
-                {confidence && ` · 確度 ${confidence}`}
-              </p>
-            )}
+            {hermesVersion && <p>Hermes Agent {hermesVersion}</p>}
             {sources.length > 0 && (
               <p class="mt-2">
                 正本:{' '}
