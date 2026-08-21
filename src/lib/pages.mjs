@@ -1,7 +1,6 @@
 // Site-wide page order. Drives the hamburger menu and prev/next links.
 // group: menu section header (fixed nav vocabulary; '' = ungrouped).
 export const PAGES = [
-  { path: '/', label: '一覧', group: '' },
   { path: '/hermes/', label: 'Hermes Agent', group: 'インストールする' },
   { path: '/hermes/start/', label: 'Hermes Agentをインストールする', group: 'インストールする' },
   { path: '/hermes/start/line/', label: 'LINE', group: 'インストールする' },

@@ -30,7 +30,6 @@ for (const file of files) {
 
 const site = 'https://wiki.winsmux.dev';
 const catalog = [
-  ['/', '一覧'],
   ['/hermes/', '入口'],
   ['/hermes/start/', 'インストールする'],
   ['/hermes/start/line/', 'LINE'],

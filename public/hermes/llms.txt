@@ -6,7 +6,6 @@ Hermes Agent 0.20.4
 
 ## ページ
 
-- [一覧](https://wiki.winsmux.dev/)
 - [入口](https://wiki.winsmux.dev/hermes/)
 - [インストールする](https://wiki.winsmux.dev/hermes/start/)
 - [LINE](https://wiki.winsmux.dev/hermes/start/line/)

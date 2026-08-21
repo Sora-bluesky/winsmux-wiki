@@ -40,13 +40,23 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（${total} 件）です。リンク先はすべて公式（英語）。並びと区分は公式の llms.txt のままにしています。個別 skill のページは、この一覧には入っていません。skill の索引は [skill](/hermes/guide/skills/) にあります。
+公式 docs の全ページ（${total} 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/start/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 `;
 
+// Official doc URL -> in-site mirror path (buildDoc falls back to the
+// official page automatically when a target is not translated yet).
+const toSite = (u) =>
+  '/hermes/docs/' +
+  u
+    .replace('https://hermes-agent.nousresearch.com/docs/', '')
+    .replace(/\/$/, '')
+    .replace(/\/index$/, '') +
+  '/';
+
 const body = sections
-  .map((s) => `\n## ${s.name}（${s.items.length}）\n\n${s.items.map(([t, u]) => `- [${t}](${u})`).join('\n')}`)
+  .map((s) => `\n## ${s.name}（${s.items.length}）\n\n${s.items.map(([t, u]) => `- [${t}](${toSite(u)})`).join('\n')}`)
   .join('\n');
 
 await writeFile(join(root, 'src/raw/all.md'), head + body + '\n');
@@ -70,11 +80,11 @@ raw: /hermes/raw/dev.md
 
 # developer-guide
 
-Hermes Agent 本体を拡張したり、上流に貢献したりする人向けの公式ページ（${dev.items.length} 件）です。リンク先はすべて公式（英語）。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
+Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（${dev.items.length} 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
 
 ## Developer Guide（${dev.items.length}）
 
-${dev.items.map(([t, u]) => `- [${t}](${u})`).join('\n')}
+${dev.items.map(([t, u]) => `- [${t}](${toSite(u)})`).join('\n')}
 `;
 await writeFile(join(root, 'src/raw/dev.md'), devMd);
 console.log(`dev.md: ${dev.items.length} URLs`);

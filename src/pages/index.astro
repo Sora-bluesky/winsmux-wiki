@@ -1,27 +1,16 @@
 ---
-import homeSrc from '../raw/home.md?raw';
-import { buildDoc } from '../lib/doc';
-import Card from '../components/Card.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
-
-const doc = buildDoc('home', homeSrc);
+// トップは /hermes/ へ転送する（サイトの実体が Hermes 単一のため）。
 ---
 
-<BaseLayout
-  title={doc.title}
-  description={doc.description}
-  rawPath={doc.rawPath}
-  sources={doc.sources}
-  hermesVersion={doc.hermesVersion}
-  confidence={doc.confidence}
->
-  <h1 class="text-3xl font-semibold tracking-tight">wiki.winsmux.dev</h1>
-  <p class="mt-3 text-fg-secondary">いま公開しているものです。</p>
-  <div class="mt-8 grid gap-4">
-    <Card
-      href="/hermes/"
-      title="Hermes Agent"
-      body="公式 docs の Quickstart / Installation / Messaging の順を日本語にしたものです。"
-    />
-  </div>
-</BaseLayout>
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0; url=/hermes/" />
+    <link rel="canonical" href="https://wiki.winsmux.dev/hermes/" />
+    <title>Hermes Agent</title>
+  </head>
+  <body>
+    <p><a href="/hermes/">Hermes Agent へ移動する</a></p>
+  </body>
+</html>

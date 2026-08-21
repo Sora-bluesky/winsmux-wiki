@@ -9,7 +9,7 @@
     "developer-guide/adding-platform-adapters.md": {
       "blob": "870c6608dd03488244fd2ce1a44fbc8b70165dfc",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.889Z"
+      "translatedAt": "2026-08-21T00:30:27.061Z"
     },
     "developer-guide/adding-providers.md": {
       "blob": "203fd43d0e7d6a2e92b694a5cbfc378359f84d3c",
@@ -49,7 +49,7 @@
     "developer-guide/context-compression-and-caching.md": {
       "blob": "31e3c9a0cb751f16a579a59c5fb0c5160e550fc3",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.894Z"
+      "translatedAt": "2026-08-21T00:30:27.066Z"
     },
     "developer-guide/context-engine-plugin.md": {
       "blob": "6609158e076554fcac8ef905554fc317baee0936",
@@ -139,7 +139,7 @@
     "developer-guide/session-storage.md": {
       "blob": "0ff701d7f3c34d93df4cf97fb78bf27b14cb8382",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.907Z"
+      "translatedAt": "2026-08-21T00:30:27.068Z"
     },
     "developer-guide/subagent-lifecycle-api.md": {
       "blob": "7054afcdb7356a8da9966c1b1243085a26957a43",
@@ -588,7 +588,7 @@
     "user-guide/features/extending-the-dashboard.md": {
       "blob": "50f4958b12bf26d6f2b217570c51517c3314beca",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.973Z"
+      "translatedAt": "2026-08-21T00:30:27.087Z"
     },
     "user-guide/features/fallback-providers.md": {
       "blob": "2c3cdbc066d19cf2eac441e1df4a604972674491",
@@ -783,12 +783,12 @@
     "user-guide/messaging/bluebubbles.md": {
       "blob": "12efd3823bcde90ad642c0deb565d7314d9eb642",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.003Z"
+      "translatedAt": "2026-08-21T00:30:27.070Z"
     },
     "user-guide/messaging/buzz.md": {
       "blob": "848e21c0532e61b2b0ae68db25e06b25bbbc8452",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.004Z"
+      "translatedAt": "2026-08-21T00:30:27.072Z"
     },
     "user-guide/messaging/dingtalk.md": {
       "blob": "72ec3f2eadc0a5c50b30fce8fc341157cda28df4",
@@ -828,7 +828,7 @@
     "user-guide/messaging/irc.md": {
       "blob": "f9fa9d94ceef9cdd502c535bf5185a341ea8ffd3",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.010Z"
+      "translatedAt": "2026-08-21T00:30:27.073Z"
     },
     "user-guide/messaging/line.md": {
       "blob": "abed60427b38a534ad68fd9ef269755e02dfba2b",
@@ -853,7 +853,7 @@
     "user-guide/messaging/ntfy.md": {
       "blob": "c7895710fb0926cbe96430ba4344633dd76b1bb7",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.013Z"
+      "translatedAt": "2026-08-21T00:30:27.075Z"
     },
     "user-guide/messaging/open-webui.md": {
       "blob": "c3e88e82328e6cfa40826afb3fa855ca25ecdc6b",
@@ -863,12 +863,12 @@
     "user-guide/messaging/photon.md": {
       "blob": "ee85f313e14d8532718d9c84411b1b60511234bc",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.014Z"
+      "translatedAt": "2026-08-21T00:30:27.077Z"
     },
     "user-guide/messaging/qqbot.md": {
       "blob": "e5050b304fc6d5b20acbf2ab9c793a5eba675cdf",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.014Z"
+      "translatedAt": "2026-08-21T00:30:27.079Z"
     },
     "user-guide/messaging/raft.md": {
       "blob": "0e62b1aa749150c29901eff39f7bfe10555fa936",
@@ -888,7 +888,7 @@
     "user-guide/messaging/simplex.md": {
       "blob": "cffff51fe0ad10a22492cef4288b599f02bd14b5",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.016Z"
+      "translatedAt": "2026-08-21T00:30:27.080Z"
     },
     "user-guide/messaging/slack.md": {
       "blob": "544ed727e9142f90e85fe2cb703c3966b0396872",
@@ -923,7 +923,7 @@
     "user-guide/messaging/wecom-callback.md": {
       "blob": "f6cf5ed4a473f9555e0b40169fcc5bd57e33ab09",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.022Z"
+      "translatedAt": "2026-08-21T00:30:27.082Z"
     },
     "user-guide/messaging/wecom.md": {
       "blob": "2ac5bddb143568a30ca726a9a5574ca58831f8ff",
@@ -978,7 +978,7 @@
     "user-guide/secrets/command.md": {
       "blob": "04184eb95de5c9bc52cc09ca8a5faccec90f7799",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.029Z"
+      "translatedAt": "2026-08-21T00:30:27.084Z"
     },
     "user-guide/secrets/index.md": {
       "blob": "29c7df9e94e49874c284abb26c10140359f501bd",
