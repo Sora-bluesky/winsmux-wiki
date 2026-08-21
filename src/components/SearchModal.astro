@@ -1,0 +1,91 @@
+---
+// 全ページ共通の検索モーダル。ヘッダーの 🔍（.js-search-open）クリックか Ctrl/⌘+K で開く。
+// 中身は /hermes/search/ と同じ Pagefind UI を、初回オープン時に遅延ロードして使う。
+// JS 無効時は .js-search-open の href（/hermes/search/）がそのまま働く。
+---
+
+<div id="search-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-label="検索">
+  <div id="search-modal-backdrop" class="absolute inset-0 bg-black/40"></div>
+  <div class="relative mx-auto mt-[10vh] w-[min(640px,calc(100vw-2rem))] rounded-xl border border-border bg-bg p-4 shadow-2xl">
+    <div class="mb-2 flex items-center justify-between">
+      <p class="text-sm font-semibold text-fg">検索</p>
+      <button
+        id="search-modal-close"
+        type="button"
+        class="flex h-8 w-8 items-center justify-center rounded-lg text-fg-muted hover:bg-bg-subtle hover:text-fg"
+        aria-label="閉じる"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+      </button>
+    </div>
+    <div id="search-modal-body" class="max-h-[70vh] overflow-y-auto"></div>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('search-modal')!;
+  const body = document.getElementById('search-modal-body')!;
+  let loaded = false;
+
+  function loadPagefind(): Promise<void> {
+    return new Promise((resolve) => {
+      if (loaded) return resolve();
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = '/pagefind/pagefind-ui.css';
+      document.head.appendChild(css);
+      const js = document.createElement('script');
+      js.src = '/pagefind/pagefind-ui.js';
+      js.onload = () => resolve();
+      js.onerror = () => resolve();
+      document.head.appendChild(js);
+      loaded = true;
+    });
+  }
+
+  async function open() {
+    modal.classList.remove('hidden');
+    document.documentElement.style.overflow = 'hidden';
+    await loadPagefind();
+    const w = window as typeof window & { PagefindUI?: new (o: object) => unknown };
+    if (w.PagefindUI && !body.dataset.ready) {
+      new w.PagefindUI({
+        element: '#search-modal-body',
+        showSubResults: true,
+        autofocus: true,
+        translations: {
+          placeholder: '検索する言葉',
+          zero_results: '「[SEARCH_TERM]」は見つかりませんでした',
+        },
+      });
+      body.dataset.ready = '1';
+    } else if (!w.PagefindUI && !body.dataset.ready) {
+      body.textContent = '検索の索引がまだありません。ビルド後に生成されます。';
+    }
+    body.querySelector<HTMLInputElement>('input')?.focus();
+  }
+
+  function close() {
+    modal.classList.add('hidden');
+    document.documentElement.style.overflow = '';
+  }
+
+  document.addEventListener('click', (e) => {
+    const opener = (e.target as HTMLElement).closest('.js-search-open');
+    if (opener) {
+      e.preventDefault();
+      open();
+    }
+  });
+  document.getElementById('search-modal-close')!.addEventListener('click', close);
+  document.getElementById('search-modal-backdrop')!.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      if (modal.classList.contains('hidden')) open();
+      else close();
+    } else if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+      close();
+    }
+  });
+</script>

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import AskBar from '../components/AskBar.astro';
+import SearchModal from '../components/SearchModal.astro';
 import Sidebar from '../components/Sidebar.astro';
 import { PAGES } from '../lib/pages.mjs';
 
@@ -124,6 +125,7 @@ const next = hasOverride
       </main>
     </div>
     {showAsk && rawPath && <AskBar rawPath={rawPath} />}
+    <SearchModal />
     <script>
       // 右レール目次の現在地追従（scroll 位置から決定論的に計算）
       const rail = document.querySelector('.toc-rail');
