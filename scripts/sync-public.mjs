@@ -36,7 +36,7 @@ const catalog = [
   ['/hermes/start/telegram/', 'Telegram'],
   ['/hermes/live/', 'すでにインストールしている'],
   ['/hermes/ops/', '運用'],
-  ['/hermes/trust/', 'どこまで任せる'],
+  ['/hermes/trust/', 'どこまで任せるか'],
   ['/hermes/guide/', 'Hermes Agentの使い方（よく使う）'],
   ['/hermes/guide/all/', 'すべて（公式全URLの索引）'],
   ['/hermes/guide/skills/', 'skill（公式skillの同期索引）'],

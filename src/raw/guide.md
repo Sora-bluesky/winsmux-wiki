@@ -20,7 +20,7 @@ raw: /hermes/raw/guide.md
 - [LINE](/hermes/start/line/)
 - [Telegram](/hermes/start/telegram/)
 - [運用](/hermes/ops/)
-- [どこまで任せる](/hermes/trust/)
+- [どこまで任せるか](/hermes/trust/)
 
 ここから下のリンク先は公式 docs（英語）です。操作の結果を先に、公式ページの名前を後に書きます。
 

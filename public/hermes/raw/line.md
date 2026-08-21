@@ -93,4 +93,4 @@ hermes gateway
 
 常に動かしたいときは、公式どおり `hermes gateway install` でサービスにします。ノート PC を閉じる使い方では LINE は切れます。常時起動できるコンピュータに置いてください。
 
-つながったあとは [運用方法](/hermes/ops/) と [どこまで任せるか？](/hermes/trust/) です。
+つながったあとは [運用](/hermes/ops/) と [どこまで任せるか](/hermes/trust/) です。

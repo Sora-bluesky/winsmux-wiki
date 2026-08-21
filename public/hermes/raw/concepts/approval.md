@@ -24,4 +24,4 @@ raw: /hermes/raw/concepts/approval.md
 
 ## このサイトの関連
 
-- [どこまで任せる](/hermes/trust/)
+- [どこまで任せるか](/hermes/trust/)

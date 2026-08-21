@@ -12,7 +12,7 @@ Hermes Agent 0.20.4
 - [Telegram](https://wiki.winsmux.dev/hermes/start/telegram/)
 - [すでにインストールしている](https://wiki.winsmux.dev/hermes/live/)
 - [運用](https://wiki.winsmux.dev/hermes/ops/)
-- [どこまで任せる](https://wiki.winsmux.dev/hermes/trust/)
+- [どこまで任せるか](https://wiki.winsmux.dev/hermes/trust/)
 - [Hermes Agentの使い方（よく使う）](https://wiki.winsmux.dev/hermes/guide/)
 - [すべて（公式全URLの索引）](https://wiki.winsmux.dev/hermes/guide/all/)
 - [skill（公式skillの同期索引）](https://wiki.winsmux.dev/hermes/guide/skills/)

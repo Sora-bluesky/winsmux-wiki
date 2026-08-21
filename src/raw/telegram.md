@@ -58,4 +58,4 @@ hermes gateway
 
 グループで普通の発言も見せたいときは、BotFather の Group Privacy を Off にするか、ボットを管理者にします。設定を変えたあとは、グループから外して入れ直します。詳しい値は正本の Telegram ページです。
 
-つながったあとは [運用方法](/hermes/ops/) と [どこまで任せるか？](/hermes/trust/) です。
+つながったあとは [運用](/hermes/ops/) と [どこまで任せるか](/hermes/trust/) です。

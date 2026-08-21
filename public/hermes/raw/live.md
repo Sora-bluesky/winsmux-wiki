@@ -30,7 +30,7 @@ hermes setup --portal
 - [LINE](/hermes/start/line/) — 常時起動と公開 URL が要ります。ノート PC を閉じると切れます。
 - [Telegram](/hermes/start/telegram/) — LINE と同じ丁寧さです。
 
-つなぎ終わったら [運用方法](/hermes/ops/) と [どこまで任せるか？](/hermes/trust/) です。
+つなぎ終わったら [運用](/hermes/ops/) と [どこまで任せるか](/hermes/trust/) です。
 
 ## 毎日つかう
 

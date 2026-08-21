@@ -27,4 +27,4 @@ raw: /hermes/raw/entities/local.md
 ## このサイトの関連
 
 - [Hermes Agentをインストールする](/hermes/start/)
-- [どこまで任せる](/hermes/trust/)
+- [どこまで任せるか](/hermes/trust/)

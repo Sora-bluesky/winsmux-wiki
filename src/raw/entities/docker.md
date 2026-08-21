@@ -22,5 +22,5 @@ Docker はコンテナで隔離して動かす形です。Hermes がコマンド
 
 ## このサイトの関連
 
-- [どこまで任せる](/hermes/trust/)
+- [どこまで任せるか](/hermes/trust/)
 - [ローカル](/hermes/entities/local/)

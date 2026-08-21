@@ -1,5 +1,5 @@
 ---
-title: どこまで任せる
+title: どこまで任せるか
 description: 会話が通ってから、コマンド実行の許可をどうするかを決める。
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/quickstart
@@ -9,7 +9,7 @@ confidence: high
 raw: /hermes/raw/trust.md
 ---
 
-# どこまで任せる
+# どこまで任せるか
 
 導線の到達点であり、使い方のページでもあります。公式 Quickstart は、普通の会話が通るまで機能を足さない、としています。
 

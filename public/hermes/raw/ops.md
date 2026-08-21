@@ -54,4 +54,4 @@ curl -i https://あなたの公開ホスト/line/webhook/health
 
 `hermes gateway status` を見ます。ログは `~/.hermes/logs/gateway.log` です。直したあとに 1通送り、返事が返るかで確認します。
 
-どこまで任せるかは [どこまで任せる](/hermes/trust/) です。
+どこまで任せるかは [どこまで任せるか](/hermes/trust/) です。

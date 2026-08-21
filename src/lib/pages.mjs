@@ -7,7 +7,7 @@ export const PAGES = [
   { path: '/hermes/start/telegram/', label: 'Telegram', group: 'インストールする' },
   { path: '/hermes/live/', label: 'すでにインストールしている', group: 'インストールする' },
   { path: '/hermes/ops/', label: '運用', group: 'インストールする' },
-  { path: '/hermes/trust/', label: 'どこまで任せる', group: 'インストールする' },
+  { path: '/hermes/trust/', label: 'どこまで任せるか', group: 'インストールする' },
   { path: '/hermes/guide/', label: 'よく使う', group: 'Hermes Agentの使い方' },
   { path: '/hermes/guide/all/', label: 'すべて', group: 'Hermes Agentの使い方' },
   { path: '/hermes/guide/skills/', label: 'skill', group: 'Hermes Agentの使い方' },
