@@ -2,7 +2,7 @@
 title: "CLI コマンド一覧"
 description: "Hermes のターミナルコマンドとコマンド群についての公式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 7d434df6dbfebbc1f0a0471847edf8453105d17a
+upstream_blob: a75f2a6e91709098eed6a38e7a439296088c619f
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -118,7 +118,7 @@ hermes chat [options]
 | `--query-file PATH` | 一回きりのプロンプトをファイルから読みます（`-` は標準入力）。シェルによる解釈が一切入らないので、引用符や `$(...)`、バッククォートがそのまま届きます。プログラムから渡す本文や、信用できない本文にはこちらを使ってください（Bot モードのチームメイト DM もこれを使います）。`-q` とは併用できません。 |
 | `-m`, `--model <model>` | この実行で使うモデルを上書きします。 |
 | `-t`, `--toolsets <csv>` | ツールセットをカンマ区切りで有効にします。 |
-| `--provider <provider>` | プロバイダを固定します: `auto`, `openrouter`, `nous`, `openai-codex`, `copilot-acp`, `copilot`, `anthropic`, `gemini`, `huggingface`, `novita`（別名 `novita-ai`、`novitaai`）, `openai-api`, `zai`, `kimi-coding`, `kimi-coding-cn`, `minimax`, `minimax-cn`, `minimax-oauth`, `kilocode`, `xiaomi`, `arcee`, `gmi`, `upstage`（別名 `solar`）, `alibaba`, `alibaba-coding-plan`（別名 `alibaba_coding`）, `deepseek`, `nvidia`, `ollama-cloud`, `xai`（別名 `grok`）, `xai-oauth`（別名 `grok-oauth`）, `qwen-oauth`, `bedrock`, `opencode-zen`, `opencode-go`, `commandcode`, `commandcode-anthropic`, `ai-gateway`, `azure-foundry`, `lmstudio`, `stepfun`, `tencent-tokenhub`（別名 `tencent`、`tokenhub`）。 |
+| `--provider <provider>` | プロバイダを固定します: `auto`, `openrouter`, `nous`, `openai-codex`, `copilot-acp`, `copilot`, `anthropic`, `gemini`, `huggingface`, `novita`（別名 `novita-ai`、`novitaai`）, `openai-api`, `zai`, `kimi-coding`, `kimi-coding-cn`, `minimax`, `minimax-cn`, `minimax-oauth`, `kilocode`, `xiaomi`, `arcee`, `gmi`, `upstage`（別名 `solar`）, `alibaba`, `alibaba-coding-plan`（別名 `alibaba_coding`）, `deepseek`, `nvidia`, `ollama-cloud`, `xai`（別名 `grok`）, `xai-oauth`（別名 `grok-oauth`）, `qwen-oauth`, `bedrock`, `opencode-zen`, `opencode-go`, `opencode-free`（別名 `free`、`opencode_free`。キーは要りません）, `commandcode`, `commandcode-anthropic`, `ai-gateway`, `azure-foundry`, `lmstudio`, `stepfun`, `tencent-tokenhub`（別名 `tencent`、`tokenhub`）。 |
 | `-s`, `--skills <name>` | セッション開始時にスキルを読み込みます（繰り返し指定、またはカンマ区切りで複数指定できます）。 |
 | `-v`, `--verbose` | 詳しい出力を表示します。 |
 | `-Q`, `--quiet` | プログラムから使うためのモードです。バナー、スピナー、ツールの下準備表示を出しません。 |
@@ -568,8 +568,8 @@ hermes cron <list|create|edit|pause|resume|run|remove|status|tick>
 | サブコマンド | 説明 |
 |------------|-------------|
 | `list` | 予約されたジョブを表示します。 |
-| `create` / `add` | プロンプトから予約ジョブを作ります。`--skill` を繰り返し指定して、スキルを付けることもできます。 |
-| `edit` | ジョブの予定、プロンプト、名前、配信先、繰り返し回数、付けたスキルを変更します。`--clear-skills`、`--add-skill`、`--remove-skill` に対応します。 |
+| `create` / `add` | プロンプトから予約ジョブを作ります。`--skill` を繰り返し指定して、スキルを付けることもできます。ジョブごとに推論の深さを固定する `--reasoning-effort <none\|minimal\|low\|medium\|high\|xhigh\|max\|ultra>` にも対応します。 |
+| `edit` | ジョブの予定、プロンプト、名前、配信先、繰り返し回数、付けたスキルを変更します。`--clear-skills`、`--add-skill`、`--remove-skill` に加えて `--reasoning-effort` にも対応します（空の文字列を渡すと固定を解除します）。 |
 | `pause` | ジョブを削除せずに一時停止します。 |
 | `resume` | 停止中のジョブを再開し、次の実行時刻を計算します。 |
 | `run` | 次のスケジューラの刻みでジョブを実行させます。 |
@@ -889,7 +889,7 @@ hermes debug share --local      # Print report to terminal (no upload)
 hermes backup [options]
 ```
 
-Hermes の設定、スキル、セッション、データを zip 書庫にまとめます。hermes-agent のコード本体は含みません。
+Hermes の設定、スキル、セッション、データを zip 書庫にまとめます。hermes-agent のコード本体は含みません。また、以前のバックアップの成果物（`backups/`、`state-snapshots/`）を入れ子にすることもありません。どちらにもすでに `state.db` の写しが入っているためです。
 
 | オプション | 説明 |
 |--------|-------------|
@@ -1655,7 +1655,7 @@ hermes completion fish > ~/.config/fish/completions/hermes.fish
 ## `hermes update` {#hermes-update}
 
 ```bash
-hermes update [--gateway] [--check] [--no-backup] [--backup] [--yes]
+hermes update [--gateway] [--check] [--plan] [--no-backup] [--backup] [--yes]
 ```
 
 `hermes-agent` の最新のコードを取得し、管理下の venv に依存関係を入れ直したあと、インストール後のフック（MCP サーバー、スキルの同期、補完のインストール）を実行し直します。動作中のインストールに対して実行しても安全です。インストールせずに、手元が `origin/main` より遅れているかどうかだけを見たいときは `--check` を使ってください。
@@ -1666,6 +1666,7 @@ hermes update [--gateway] [--check] [--no-backup] [--backup] [--yes]
 |--------|-------------|
 | `--gateway` | メッセージング側の `/update` コマンドが使う内部向けのモードです。端末の標準入力を読む代わりに、ファイルを介したやり取りでプロンプトと進捗を流します。ゲートウェイを再起動するためのフラグではありません。 |
 | `--check` | 取得もインストールも再起動もせずに、更新があるかどうかだけを確認します。 |
+| `--plan` | 更新の計画を表示して、何も変えずに終了します。インストールの種類（git／Docker／Nix／apt）、すべてのプロファイルにまたがる動作中の Hermes のサービスとその管理役および動いているコードの版、そしてそれぞれをどう再起動するかがわかります。イメージやパッケージで管理されているインストールでは、代わりに外部で実行すべき正しい更新コマンドを知らせます。読み取りのみです。 |
 | `--no-backup` | `updates.pre_update_backup` の設定にかかわらず、この実行では更新前のバックアップ（手早い状態のスナップショットと、すべてを含む zip の両方）を取りません。 |
 | `--backup` | この実行では更新前の**すべてを含む**バックアップを必ず取ります。手早い状態のスナップショットに加えて、`HERMES_HOME`（設定、認証情報、セッション、スキル、ペアリングのデータ）まるごとの zip を作ります。既定は `quick` で、軽い状態のスナップショットだけです。恒久的な設定は `config.yaml` の `updates.pre_update_backup: quick | full | off` で決めます。 |
 | `--yes`, `-y` | 設定の移行や退避したものの復元といった、対話的なプロンプトにすべて「はい」と答えます。API キーの入力は飛ばされるので、それらは別途 `hermes config migrate` を実行してください。 |
@@ -1673,6 +1674,7 @@ hermes update [--gateway] [--check] [--no-backup] [--backup] [--yes]
 そのほかの振る舞い:
 
 - **ゲートウェイの再起動。** 更新に成功すると、新しいコードを取り込ませるために、Hermes は動作中のすべてのゲートウェイのプロファイルを自動で再起動しようとします。更新を伴わずにゲートウェイだけを再起動したいときは `hermes gateway restart` を使ってください。
+- **更新の控えと、端末全体の版の確認。** 実行のたびに、機械で読める控えが `~/.hermes/logs/update_receipts/` に書き出されます（更新前の端末全体の計画、実行した手順、飛ばした項目とその理由、再起動の結果が入り、`latest.json` が最新のものを指します）。再起動の段階のあと、更新するものは動作中の各ゲートウェイで動いているコードを更新後の手元のものと突き合わせて確かめ、プロファイルごとの版の一覧を表示します。更新前のコードのままのゲートウェイが残っていると更新は失敗し（終了コード 1）、実行すべき再起動のコマンドをそのまま示します。
 - **手元のソースの変更。** git でインストールしている場合、追跡中の変更済みファイルと未追跡のファイルは、ブランチの切り替えや取得の前に自動で退避されます（`git stash push --include-untracked`）。対話的な端末での更新では、退避したものを戻す前に確認します。対話できない更新では既定で戻します。取得に成功したあと、手元のソースの編集を捨ててよい管理下のインストールに限り、`updates.non_interactive_local_changes: discard` を設定してください。退避を戻す際に衝突した場合や取得に失敗した場合は、手で復旧できるよう退避したものはそのまま残ります。
 - **npm のロックファイルの揺れ。** 退避やブランチの切り替えの前に、Hermes は npm のインストールやビルドの手順で生じた、追跡中の `package-lock.json` の差分をできる範囲で片付けます。意図してロックファイルを編集した場合は、`hermes update` の前にコミットするか手動で退避してください。
 - **ペアリングのデータのスナップショット。** `--backup` が無効なときでも、`hermes update` は `git pull` の前に `~/.hermes/pairing/` と Feishu のコメントのルールについて軽いスナップショットを取ります。編集中だったファイルが取得によって書き換わった場合は、`hermes backup restore --state pre-update` で戻せます。

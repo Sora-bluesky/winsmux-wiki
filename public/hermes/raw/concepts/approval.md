@@ -3,7 +3,7 @@ title: 承認
 description: 危険な操作の前に人の確認を挟むしくみ。誰の指示を聞くかの認可もここに含まれる。
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
-hermes_version: "0.20.4"
+hermes_version: "0.20.5"
 confidence: high
 raw: /hermes/raw/concepts/approval.md
 ---

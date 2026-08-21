@@ -2,7 +2,7 @@
 title: "設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダー、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 13430b9ad4bb97dc02bbf773e21216dfa94319e3
+upstream_blob: 7e0f7ecbc9a241a41f81b416db404ae976c2b988
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -1240,7 +1240,7 @@ auxiliary:
 
 `base_url` を設定すると、Hermes はプロバイダーの指定を無視してそのエンドポイントを直接呼びます（認証には `api_key` か `OPENAI_API_KEY` を使います）。`provider` だけを設定した場合は、そのプロバイダーに組み込まれた認証とベース URL を使います。
 
-補助的な仕事で使えるプロバイダーは、`auto`、`main`、それに [プロバイダーの一覧](/hermes/docs/reference/environment-variables/) にあるものすべてです。`openrouter`、`nous`、`openai-codex`、`copilot`、`copilot-acp`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry`、あるいは `providers:` の辞書に自分で名前を付けたもの（たとえば `provider: "beans"`）です。
+補助的な仕事で使えるプロバイダーは、`auto`、`main`、それに [プロバイダーの一覧](/hermes/docs/reference/environment-variables/) にあるものすべてです。`openrouter`、`nous`、`openai-codex`、`copilot`、`copilot-acp`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`opencode-free`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry`、あるいは `providers:` の辞書に自分で名前を付けたもの（たとえば `provider: "beans"`）です。
 
 :::tip MiniMax の OAuth
 `minimax-oauth` は、ブラウザーでの OAuth によりログインします（API キーは要りません）。`hermes model` を実行して **MiniMax (OAuth)** を選ぶと認証できます。補助的な仕事には自動的に `MiniMax-M2.7-highspeed` が使われます。[MiniMax OAuth guide](/hermes/docs/guides/minimax-oauth/) を参照してください。

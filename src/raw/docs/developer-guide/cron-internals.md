@@ -2,7 +2,7 @@
 title: "定時実行の内部"
 description: "Hermes が定時実行の仕事を保存し、時刻を決め、編集し、止め、スキルを読み込み、結果を届けるしくみ"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: 13a342324cc96ea9f0845714221edc7113a5ab95
+upstream_blob: 427692eb92a7514bf7c7aeca9725249e66e8f47a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -178,7 +178,9 @@ Chronos の設定が誤っている場合や、エージェントが Nous にロ
 定時実行の仕事は、毎回まっさらなエージェントのセッションで動きます。
 
 - 前回までの会話は引き継ぎません
-- 前回までの定時実行の記憶もありません（記憶やファイルに残していれば別です）
+- 前回までの定時実行の記憶もありません（ただし MEMORY.md や USER.md といった
+  永続的な記憶は、他のエージェントの実行と同じように読み込まれるので、
+  長く残しておきたい好みや事実は引き継がれます。1 回ごとの会話の文脈は残りません）
 - プロンプトはそれだけで完結している必要があります。定時実行の仕事は、途中で聞き返せません
 - `cronjob` のツールセットは無効になります（入れ子を防ぐためです）
 
@@ -254,12 +256,15 @@ Create a daily funding report → attach "ai-funding-daily-report" skill
 | WeCom | `wecom` または `wecom:<chat_id>` | 名前だけなら WeCom へ |
 | BlueBubbles | `bluebubbles` または `bluebubbles:<chat_guid>` | 名前だけなら BlueBubbles 経由で iMessage へ |
 | QQ Bot | `qqbot` または `qqbot:<chat_id>` | 名前だけなら公式 API v2 経由で QQ（テンセント）へ |
+| Bot Chat | `bot-chat` または `bot-chat:<profile>` | 手元のプロファイルの正式な Bot Chat に流し込みます（その bot が返事をします） |
 
 上の方にあるプラットフォームは、宛先の書き方がはっきり決まっていて検証もされます。名前付きのチャンネル（`#channel`）、話題やスレッド、ルームや利用者の ID、グループの ID、電話番号などです。残りのプラットフォームは、汎用の `platform:<chat_id>` の形を受け付けます（コロンのあとの値が、そのまま宛先の ID として使われます）。プラットフォーム名だけを書いた場合は、必ず既定の届け先に届きます。
 
 **名前付きのチャンネル**（`slack:#engineering`、`discord:#engineering`、あるいは `slack:engineering` のような分かりやすい名前）は、ゲートウェイがつながっているアダプタから作るチャンネルの一覧と突き合わせて解決されます。そのため、名前で解決するには、ゲートウェイがそのチャンネルを見つけている必要があります。ID をそのまま書く形（`slack:C0123ABCD45`）なら常に使えます。
 
 **Telegram の話題** には `telegram:<chat_id>:<thread_id>` を使います（例えば `telegram:-1001234567890:17585`）。**Slack のスレッド** では、3 つ目の区切りが親のメッセージの `thread_ts` になります（例えば `slack:C0123ABCD45:1700000000.000100`）。そのため、既にあるメッセージへの返信として送るときにだけ使えます。
+
+**Bot Chat**（`bot-chat`、`bot-chat:<profile>`）は、ゲートウェイのアダプタではなく、その端末の中だけで完結する疑似的なプラットフォームです。スケジューラは `hermes [-p <profile>] chat --in ~ -c "Bot Chat" --create-if-missing -Q --query-file <tmp>` を実行して届けます。Bot モードのエージェント同士のメッセージと同じ経路なので、結果はそのプロファイルの正式な Bot Chat に本物の受信メッセージとして届き、bot はそれに対してエージェントの手番を丸ごと 1 回動かします（作りからして発言の順番が崩れません。これはチャットのコマンドの経路であって、記録の写しではありません）。名前を書かずに指定した場合は、その仕事自身のプロファイルが宛先になります。名前を書いた形は、作成時と実行時の両方で `~/.hermes/profiles/` と突き合わせて検証され、端末をまたいで解決されることはありません。bot-chat の宛先は、配信先をまとめて指す `all` の指定からも、配達前の事前確認からも外されます（ゲートウェイの認証情報を使わないためです）。1 回の配達ごとの子プロセスの制限時間は `cron.bot_chat_delivery_timeout_seconds` で決まります（既定は 600 秒）。
 
 ### 結果の包み方 {#response-wrapping}
 

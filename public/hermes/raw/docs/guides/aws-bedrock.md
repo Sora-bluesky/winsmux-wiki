@@ -1,15 +1,25 @@
 ---
 title: "AWS Bedrock"
-description: "Hermes Agent を Amazon Bedrock で使う — ネイティブの Converse API、IAM 認証、Guardrails、クロスリージョン推論"
+description: "Hermes Agent を Amazon Bedrock で使う — ネイティブの Converse API、Anthropic SDK 経由の振り分け、Bedrock Mantle 経由の OpenAI モデル、IAM 認証、Guardrails、クロスリージョン推論"
 upstream_path: guides/aws-bedrock.md
-upstream_blob: ec7b1224fce534945ed289321fd19cfae4221147
+upstream_blob: 4aed045cef8eef23f2b8d331f01aa81e7f64bc9d
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/aws-bedrock
 ---
 
 # AWS Bedrock {#aws-bedrock}
 
-Hermes Agent は Amazon Bedrock をネイティブのプロバイダーとして扱い、**Converse API** を使って接続します。OpenAI 互換エンドポイント経由ではありません。そのため Bedrock のエコシステムをそのまま使えます。IAM 認証、Guardrails、クロスリージョン推論プロファイル、そしてすべての基盤モデルが対象です。
+Hermes Agent は Amazon Bedrock をネイティブのプロバイダーとして扱います。そのため Bedrock のエコシステムをそのまま使えます。IAM 認証、Guardrails、クロスリージョン推論プロファイル、そしてすべての基盤モデルが対象です。
+
+Hermes は、モデルの系統ごとに最も適した API へ振り分けます。
+
+| モデルの系統 | 使う API | 理由 |
+|---|---|---|
+| Anthropic Claude | Anthropic SDK（`AnthropicBedrock`） | プロンプトキャッシュ、思考の予算、状況に応じた思考など、Converse では使えない機能があるため |
+| OpenAI GPT-5.5 / GPT-5.6（Sol、Terra、Luna） | Bedrock Mantle の **OpenAI Responses** エンドポイント（`bedrock-mantle.<region>.api.aws/openai/v1`） | これらは Mantle でしか動きません。モデルカードでも bedrock-runtime / Converse は非対応と書かれています |
+| それ以外すべて（Nova、DeepSeek、Llama、GPT-OSS など） | ネイティブの **Converse API**（`bedrock-runtime`） | Guardrails、推論プロファイル、逐次配信など Bedrock の機能を一通り使えるため |
+
+3 つの経路はどれも同じ AWS の認証情報チェーンとリージョンの決め方を共有するので、別々に設定する必要はありません。Mantle のエンドポイントへのリクエストは、`AWS_BEARER_TOKEN_BEDROCK` が設定されていればそれで認証され、なければ通常の boto3 の認証情報チェーンを使って SigV4 で署名されます。
 
 ## 事前に必要なもの {#prerequisites}
 
@@ -108,13 +118,17 @@ Bedrock のモデルは、オンデマンド呼び出しでは**推論プロフ�
 | Claude Sonnet 4.6 | `us.anthropic.claude-sonnet-4-6` | おすすめ。速度と能力のバランスが最も良い |
 | Claude Opus 4.6 | `us.anthropic.claude-opus-4-6-v1` | 最も高性能 |
 | Claude Haiku 4.5 | `us.anthropic.claude-haiku-4-5-20251001-v1:0` | Claude の中で最速 |
+| OpenAI GPT-5.6 Sol | `openai.gpt-5.6-sol` | OpenAI の最前線のモデル（Bedrock Mantle 経由） |
+| OpenAI GPT-5.6 Terra | `openai.gpt-5.6-terra` | バランス型（Bedrock Mantle 経由） |
+| OpenAI GPT-5.6 Luna | `openai.gpt-5.6-luna` | 高速で安価（Bedrock Mantle 経由） |
+| OpenAI GPT-5.5 | `openai.gpt-5.5` | 一世代前の OpenAI の主力（Bedrock Mantle 経由） |
 | Amazon Nova Pro | `us.amazon.nova-pro-v1:0` | Amazon の主力 |
 | Amazon Nova Micro | `us.amazon.nova-micro-v1:0` | 最速・最安 |
 | DeepSeek V3.2 | `deepseek.v3.2` | 性能の高いオープンモデル |
 | Llama 4 Scout 17B | `us.meta.llama4-scout-17b-instruct-v1:0` | Meta の最新モデル |
 
 :::info クロスリージョン推論
-`us.` で始まるモデルはクロスリージョン推論プロファイルを使い、AWS の複数リージョンにまたがって容量に余裕を持たせ、障害時は自動で切り替わります。`global.` で始まるモデルは、世界中の利用可能なリージョンへ振り分けられます。
+`us.` で始まるモデルはクロスリージョン推論プロファイルを使い、AWS の複数リージョンにまたがって容量に余裕を持たせ、障害時は自動で切り替わります。`global.` で始まるモデルは、世界中の利用可能なリージョンへ振り分けられます。OpenAI の `openai.*` というモデル ID は、設定したリージョンの Bedrock Mantle から提供されるので、推論プロファイルの接頭辞は付きません。
 :::
 
 ## 会話の途中でモデルを切り替える {#switching-models-mid-session}

@@ -1243,6 +1243,9 @@
           "id": "guides/use-mcp-with-hermes"
         },
         {
+          "id": "guides/manage-hermes-cloud-with-mcp"
+        },
+        {
           "id": "guides/use-soul-with-hermes"
         },
         {
@@ -1809,6 +1812,7 @@
     "guides/team-telegram-assistant",
     "guides/python-library",
     "guides/use-mcp-with-hermes",
+    "guides/manage-hermes-cloud-with-mcp",
     "guides/use-soul-with-hermes",
     "guides/use-voice-mode-with-hermes",
     "guides/automate-with-cron",

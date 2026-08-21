@@ -1,27 +1,27 @@
 ---
 title: "API サーバー"
-description: "hermes-agent を OpenAI 互換の API として公開し、好きなフロントエンドから使えるようにします。"
+description: "hermes-agent を OpenAI 互換の API として公開し、好きなフロントエンドから使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: ccba76e104d1c5b3e196fd901da098375b6a6e0d
+upstream_blob: 9d0d587ca4b3e87f8ea366416e80868ff956ab74
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
 
 # API サーバー {#api-server}
 
-API サーバーは、hermes-agent を OpenAI 互換の HTTP エンドポイントとして公開します。OpenAI の形式を話せるフロントエンドなら何でも接続できます。Open WebUI、LobeChat、LibreChat、NextChat、ChatBox をはじめ数百種類のクライアントが、hermes-agent を裏側の実行役として使えるようになります。
+API サーバーは、hermes-agent を OpenAI 互換の HTTP エンドポイントとして公開します。OpenAI 形式を話せるフロントエンドなら何でも — Open WebUI、LobeChat、LibreChat、NextChat、ChatBox、ほかにも数百種類 — hermes-agent につないでバックエンドとして使えます。
 
-エージェントは持っている道具（端末操作、ファイル操作、ウェブ検索、記憶、スキル）を全部使ってリクエストを処理し、最後の応答を返します。ストリーミングのときは、ツールの進行状況が途中に差し込まれるので、エージェントが今なにをしているかをフロントエンド側で見せられます。
+エージェントは持っている道具立てを全部使ってリクエストに応じ（ターミナル、ファイル操作、ウェブ検索、記憶、スキル）、最終的な返答を返します。ストリーミングのときは道具の進捗表示が本文に混ざって流れるので、フロントエンド側で「いま何をしているか」を見せられます。
 
-:::tip モデルもツールも、これひとつで
-API サーバーを役立てるには、Hermes 側にプロバイダーの設定とツールの実行先が要ります。[Nous Portal](/hermes/docs/user-guide/features/tool-gateway/) の契約はその両方を一度に片づけます。300 以上のモデルに加えて、ウェブ・画像・TTS・ブラウザが Tool Gateway 経由で使えます。API サーバーを起動する前に `hermes setup --portal` を一度実行しておけば、Open WebUI や LobeChat などのフロントエンドは、ツールがひととおりそろった状態のエージェントを裏側に持てます。
+:::tip 契約ひとつでモデルも道具もそろう
+API サーバーが役に立つには、Hermes 側にプロバイダーと道具のバックエンドが設定されている必要があります。[Nous Portal](/hermes/docs/user-guide/features/tool-gateway/) の契約なら両方まかなえます。300 以上のモデルに加えて、ウェブ・画像・TTS・ブラウザーが Tool Gateway 経由で使えます。API サーバーを起動する前に `hermes setup --portal` を一度実行しておけば、Open WebUI や LobeChat のようなフロントエンドから、道具のそろったバックエンドとして使えます。
 :::
 
-## 最短の手順 {#quick-start}
+## すぐ使い始める {#quick-start}
 
 ### 1. API サーバーを有効にする {#1-enable-the-api-server}
 
-`~/.hermes/.env` に次を追記します。
+`~/.hermes/.env` に次を追加します。
 
 ```bash
 API_SERVER_ENABLED=true
@@ -44,7 +44,7 @@ hermes gateway
 
 ### 3. フロントエンドをつなぐ {#3-connect-a-frontend}
 
-OpenAI 互換のクライアントを `http://localhost:8642/v1` に向けます。
+OpenAI 互換のクライアントの接続先を `http://localhost:8642/v1` に向けます。
 
 ```bash
 # Test with curl
@@ -54,13 +54,13 @@ curl http://localhost:8642/v1/chat/completions \
   -d '{"model": "hermes-agent", "messages": [{"role": "user", "content": "Hello!"}]}'
 ```
 
-Open WebUI や LobeChat など他のフロントエンドをつなぐこともできます。手順は [Open WebUI との連携ガイド](/hermes/docs/user-guide/messaging/open-webui/) にひとつずつ書いてあります。
+Open WebUI や LobeChat、そのほかのフロントエンドをつなぐこともできます。手順を追った説明は [Open WebUI 連携ガイド](/hermes/docs/user-guide/messaging/open-webui/) を見てください。
 
 ## エンドポイント {#endpoints}
 
 ### POST /v1/chat/completions {#post-v1chatcompletions}
 
-OpenAI の Chat Completions 標準形式です。状態を持たないので、会話の全文を毎回 `messages` 配列に入れて送ります。
+OpenAI の Chat Completions の標準形式です。状態を持たないので、会話の全体を毎回 `messages` 配列に入れて送ります。
 
 **リクエスト:**
 ```json
@@ -90,7 +90,7 @@ OpenAI の Chat Completions 標準形式です。状態を持たないので、�
 }
 ```
 
-**画像を本文に入れて送る:** ユーザーのメッセージでは、`content` を `text` と `image_url` の部品を並べた配列として送れます。外部の `http(s)` URL と `data:image/...` 形式の URL、どちらにも対応しています。
+**画像を本文に含めて渡す:** 利用者のメッセージでは、`content` を `text` と `image_url` の部品の配列として送れます。遠隔の `http(s)` URL と `data:image/...` URL のどちらにも対応しています。
 
 ```json
 {
@@ -109,15 +109,15 @@ OpenAI の Chat Completions 標準形式です。状態を持たないので、�
 
 アップロードしたファイル（`file` / `input_file` / `file_id`）と、画像以外の `data:` URL は `400 unsupported_content_type` を返します。
 
-**ストリーミング**（`"stream": true`）: Server-Sent Events（SSE）で、応答をトークン単位の断片として返します。**Chat Completions** では標準の `chat.completion.chunk` イベントに加えて、ツールの開始を見せるための Hermes 独自イベント `hermes.tool.progress` が流れます。**Responses** では `response.created`、`response.output_text.delta`、`response.output_item.added`、`response.output_item.done`、`response.completed` といった OpenAI Responses のイベント型を使います。
+**ストリーミング**（`"stream": true`）: Server-Sent Events（SSE）で、返答をトークンごとの断片として返します。**Chat Completions** では、標準の `chat.completion.chunk` イベントに加えて、道具の開始を見せるための Hermes 独自イベント `hermes.tool.progress` が流れます。**Responses** では、`response.created`、`response.output_text.delta`、`response.output_item.added`、`response.output_item.done`、`response.completed` といった OpenAI Responses のイベント種別を使います。
 
-**ストリームの中でのツールの進行状況**:
-- **Chat Completions**: Hermes は `event: hermes.tool.progress` を送り、保存される応答本文を汚さずにツールの開始を見せます。
-- **Responses**: Hermes は SSE ストリームの途中で仕様どおりの `function_call` と `function_call_output` の出力項目を送るので、クライアント側はツールの様子を構造化された形で即座に描けます。
+**ストリーム中の道具の進捗**:
+- **Chat Completions**: 保存される応答本文を汚さずに道具の開始を見せるため、Hermes は `event: hermes.tool.progress` を発行します。
+- **Responses**: SSE ストリームの途中で、仕様どおりの `function_call` と `function_call_output` の出力項目を発行するので、クライアント側で構造化した道具の画面をその場で描けます。
 
 ### POST /v1/responses {#post-v1responses}
 
-OpenAI Responses API の形式です。`previous_response_id` によるサーバー側での会話保持に対応しています。サーバーが会話の履歴（ツールの呼び出しと結果を含む）を丸ごと保存するので、クライアントが自分で管理しなくても複数回のやりとりの文脈が保たれます。
+OpenAI の Responses API 形式です。`previous_response_id` によるサーバー側の会話状態に対応しています。サーバーが会話の履歴を丸ごと（道具の呼び出しとその結果も含めて）保持するので、クライアントが管理しなくても複数ターンの文脈が保たれます。
 
 **リクエスト:**
 ```json
@@ -145,9 +145,9 @@ OpenAI Responses API の形式です。`previous_response_id` によるサーバ
 }
 ```
 
-`output` 配列に入っているツールの呼び出しは、Hermes のエージェントがサーバー側ですでに実行し終えたものです。構造化されたツール表示のために `"status": "completed"` を付けて再生しているだけで、クライアントが実行すべき未処理の呼び出しとして渡されることはありません。
+`output` 配列に入っている道具の呼び出しは、すでに Hermes エージェントがサーバー側で実行し終えたものです。構造化した道具の画面を描くために `"status": "completed"` として再生されるだけで、クライアントが実行すべき未処理の呼び出しとして返ることはありません。
 
-**画像を本文に入れて送る:** `input[].content` には `input_text` と `input_image` の部品を入れられます。外部の URL と `data:image/...` 形式の URL、どちらにも対応しています。
+**画像を本文に含めて渡す:** `input[].content` には `input_text` と `input_image` の部品を入れられます。遠隔の URL と `data:image/...` URL のどちらにも対応しています。
 
 ```json
 {
@@ -166,9 +166,9 @@ OpenAI Responses API の形式です。`previous_response_id` によるサーバ
 
 アップロードしたファイル（`input_file` / `file_id`）と、画像以外の `data:` URL は `400 unsupported_content_type` を返します。
 
-#### previous_response_id で会話を続ける {#multi-turn-with-previousresponseid}
+#### previous_response_id で複数ターンをつなぐ {#multi-turn-with-previousresponseid}
 
-応答を数珠つなぎにすると、ツールの呼び出しも含めて文脈を保ったままやりとりを続けられます。
+応答を数珠つなぎにすると、道具の呼び出しも含めた文脈がターンをまたいで保たれます。
 
 ```json
 {
@@ -177,11 +177,11 @@ OpenAI Responses API の形式です。`previous_response_id` によるサーバ
 }
 ```
 
-サーバーは、保存された応答のつながりから会話の全体を組み立て直します。それまでのツールの呼び出しと結果も残ります。つないだリクエストは同じセッションを共有するので、複数回のやりとりもダッシュボードやセッション履歴では 1 件としてまとまって見えます。
+サーバーは保存された応答の連なりから会話の全体を組み直します。それまでの道具の呼び出しと結果はすべて残ります。つないだリクエストは同じセッションを共有するので、複数ターンの会話もダッシュボードやセッション履歴では 1 件として並びます。
 
-#### 名前付きの会話 {#named-conversations}
+#### 名前を付けた会話 {#named-conversations}
 
-応答 ID を自分で追いかける代わりに、`conversation` を指定する手もあります。
+応答 ID を追いかける代わりに、`conversation` パラメーターを使えます。
 
 ```json
 {"input": "Hello", "conversation": "my-project"}
@@ -189,7 +189,7 @@ OpenAI Responses API の形式です。`previous_response_id` によるサーバ
 {"input": "Run the tests", "conversation": "my-project"}
 ```
 
-サーバーが、その会話の最新の応答へ自動でつなぎます。ゲートウェイのセッションでいう `/title` コマンドと同じ感覚です。
+サーバーがその会話の最新の応答へ自動でつなぎます。ゲートウェイのセッションにおける `/title` コマンドと同じ感覚です。
 
 ### GET /v1/responses/\{id\} {#get-v1responsesid}
 
@@ -201,13 +201,13 @@ OpenAI Responses API の形式です。`previous_response_id` によるサーバ
 
 ### GET /v1/models {#get-v1models}
 
-エージェントを、使えるモデルとして一覧に出します。表に出るモデル名は、既定では [プロファイル](/hermes/docs/user-guide/profiles/) の名前です（既定のプロファイルなら `hermes-agent`）。ほとんどのフロントエンドがモデルを見つけるために必要とします。
+エージェントを利用できるモデルとして並べます。名乗るモデル名は既定で [プロファイル](/hermes/docs/user-guide/profiles/) の名前になります（既定のプロファイルなら `hermes-agent`）。たいていのフロントエンドがモデルを見つけるために必要とします。
 
-`/v1/models` は、あえて軽い OpenAI 互換の窓口にしてあります。Hermes が振り分けられる認証済みのプロバイダーとモデルの組み合わせを**すべて**並べることはしませんし、料金や機能の情報を足すこともしません。
+`/v1/models` は、あくまで軽い OpenAI 互換の窓口として置いています。Hermes が経路を引ける認証済みのプロバイダーとモデルの組み合わせを **すべて** 並べるわけではなく、価格や機能の情報を足すこともしません。
 
 ### GET /api/model/options {#get-apimodeloptions}
 
-Hermes を前提に作られたクライアントであれば、ダッシュボードや TUI が使っているのと同じ、整理済みのプロバイダー／モデル一覧を取得できます。この経路は API サーバーの通常の bearer 認証を使い、OpenAI 互換の `/v1/models` には載せられないプロバイダーの行、モデルの機能の目安、料金の情報を返します。
+Hermes を前提に作られたクライアントは、ダッシュボードや TUI が使っているのと同じ、選りすぐりのプロバイダー／モデル一覧を要求できます。この経路は API サーバー通常の bearer 認証を使い、OpenAI 互換の `/v1/models` 応答には収まらないプロバイダーの行、モデルの機能の手がかり、価格の情報を返します。
 
 ```bash
 curl \
@@ -215,9 +215,9 @@ curl \
   "http://127.0.0.1:8642/api/model/options"
 ```
 
-この中身は、ダッシュボードの Models ページと TUI の `model.options` RPC が使っているものと同じ土台です。認証済みのプロバイダー、整理済みのモデル一覧、モデルごとの料金、モデルの機能の目安が返ります。
+この中身は、ダッシュボードの Models ページと TUI の `model.options` RPC が使っているものと同じ土台です。認証済みのプロバイダー、選りすぐったモデルの一覧、モデルごとの価格、モデルの機能の手がかりが返ります。
 
-独自プロバイダーについては、普段の呼び出しはあえて控えめにしてあります。Hermes が状態を確かめに行くのは**いま選ばれている**独自エンドポイントだけなので、保存済みの古いエンドポイントや落ちているエンドポイントが選択画面を止めてしまうことはありません。明示的に更新を指示すると、すべてを確かめに行き、プロバイダーのモデルの記憶も捨てます。
+普通に開いたときは、独自プロバイダーに対して意図的に控えめに動きます。保存済みのエンドポイントが古かったり落ちていたりしても選択画面が止まらないよう、Hermes は **いま選ばれている** 独自エンドポイントだけを叩きます。明示的に更新を指示すると、全件を叩きにいき、プロバイダーのモデルのキャッシュも捨てます。
 
 ```bash
 curl \
@@ -225,11 +225,11 @@ curl \
   "http://127.0.0.1:8642/api/model/options?refresh=1"
 ```
 
-OpenAI 互換のクライアントが、chat や responses のリクエストに載せ返すモデル名だけを必要としているなら `/v1/models` を使ってください。認証済みの画面で、Hermes ならではの選択用の細かい情報が要るなら `/api/model/options` を使ってください。
+OpenAI 互換のクライアントが、chat / responses のリクエストに載せ返すモデル名だけを必要としているなら `/v1/models` を使ってください。認証済みの画面で、Hermes 固有の詳しい選択情報が要るなら `/api/model/options` を使ってください。
 
 ### GET /v1/capabilities {#get-v1capabilities}
 
-外部の画面、指揮役の仕組み、プラグインの橋渡しに向けて、API サーバーの安定した窓口を機械が読める形で説明して返します。
+外部の画面、オーケストレーター、プラグインの橋渡しに向けて、API サーバーの安定した窓口を機械が読める形で説明します。
 
 ```json
 {
@@ -248,17 +248,65 @@ OpenAI 互換のクライアントが、chat や responses のリクエストに
 }
 ```
 
-ダッシュボード、ブラウザの画面、制御の仕組みをつなぎ込むときはこのエンドポイントを使ってください。動いている Hermes が run、ストリーミング、中断、セッションの引き継ぎに対応しているかどうかを、Python の内部実装に頼らずに調べられます。
+ダッシュボードやブラウザーの画面、制御系の仕組みをつなぐときは、このエンドポイントを使ってください。Python の内部実装に頼らずに、動いている Hermes のバージョンが run・ストリーミング・中断・セッションの継続に対応しているかを判定できます。
 
-## リクエストごとのモデル指定 {#per-request-model-selection}
+## ブラウザー拡張からの操作 {#browser-extension-control}
 
-認証済みのクライアントは、次の項目を送ることで、Hermes の既定のモデル選択をリクエストごとに上書きできます。
+Hermes は、いまの Hermes セッションにひもづくブラウザーのセッションを操る認証済みの拡張機能を通して、ブラウザーの道具を扱えます。この機能は既定では無効です。使うなら `browser.extension_control.enabled` を `true` にします。
 
-- `model` — この回で使いたいモデルの id
-- `provider` — この回の認証情報と実行環境を決めるための、Hermes 側のプロバイダー識別名
-- `model_options` — このリクエストだけに効く、推論の深さやサービス階層の指定
+```yaml
+browser:
+  extension_control:
+    enabled: true
+```
 
-同じ項目は、次のいずれでも受け付けます。
+ローカルの API 経路にも API サーバーの bearer キーが必要です。操作側が登録できるのは、すでに存在するサーバー側セッションに対してだけです。Hermes は操作側の主体を認証済みのサーバー状態から導きます。クライアントが送ってきた `principal_id` は無視します。
+
+いま有効な取り決めは `GET /v1/capabilities` で分かります。`browser_extension_control` オブジェクトが、機能が有効かどうか、プロトコルの版、通信路の名前、そして許可された能力の正確な一覧を返します。
+
+```text
+controller.noop
+browser_back
+browser_click
+browser_navigate
+browser_press
+browser_screenshot
+browser_scroll
+browser_snapshot
+browser_tab_activate
+browser_tabs
+browser_type
+```
+
+この一覧の外にある能力を要求しても取り除かれます。生の CDP、任意のスクリプト実行、コンソールへの接続、アップロード、画像の抽出、画像の読み取りは、操作側のプロトコルには含まれていません。
+
+リクエストに操作側の身元がひもづいていないとき、あるいは機能が無効なときは、Hermes はいままでのブラウザーのバックエンドをそのまま使います。ゲートウェイがリクエストに操作側の主体と通信路の系統をひもづけたら、その拡張機能の経路が正となります。操作側がいない・特定できない・切断されている・能力が足りない場合は、黙って別のローカル／クラウドのブラウザーへ切り替えたりせず、失敗として閉じます。ひとつの操作側が確定したあとは、その結果もエラーも正であり、Hermes が同じ操作を別のバックエンドで試し直すことはありません。
+
+### ローカル API での登録 {#local-api-registration}
+
+1. `protocol_version`、`session_id`、`controller_id`、`browser_profile_id`、要求する `capabilities` を添えて、認証済みの `POST /v1/browser-control/register` を送ります。
+2. Hermes は使い切りのチケット（有効期間 30 秒）と、絞り込み済みでサーバー側にひもづいた操作範囲を返します。
+3. `hermes-browser-control-v1` と `hermes-browser-control-ticket.<ticket>` の両方の WebSocket サブプロトコルを付けて `GET /v1/browser-control/ws` を開きます。
+
+チケットをクエリ文字列で渡すことは決してできません。知らないチケット、期限切れ、使い回し、形が壊れているものは、WebSocket への切り替え前に弾かれます。
+
+### 操作側とやり取りするフレーム {#controller-frames}
+
+Hermes は `browser.controller.command` フレームを送ります。中身は `command_id`、`action`、書き換え不可の `arguments`、ブラウザーと操作側の ID、そして発端となった `tool_call_id` です。操作側は `browser.controller.result` に、同じ `command_id`、真偽値そのままの `ok`、そして `result` か `error` のどちらかを載せて返します。取り消しと時間切れでは `browser.controller.cancel` が出ます。遅れて届いた結果は無視されます。
+
+思いがけず接続が切れた場合、操作側は切断中として印を付けられ、すでに進行中の作業はそれぞれの元の期限まで保たれます。主体・プロファイル・セッション・操作側 ID・ブラウザーのプロファイル・通信路の身元がすべて同じままつなぎ直せば、保留になっていた取り消しを流し切るまで新しい作業を受け付けずに、通信路だけが更新されます。つなぎ直しの際に取り決めた能力が変わることはありますが、これは身元を決める項目ではありません。同じ認証済みセッションの経路で操作側 ID やブラウザーのプロファイルが違う場合は、完全な置き換えとして扱われます。古い未処理の作業は、後継が経路に載る前に取り消されます。意図して完全に切り離したいときは、認証済みの操作側の通信路で `browser.controller.detach` を送ってください。未処理の作業がその場で取り消されます。ソケットを閉じただけなら、復帰できる切断として扱われます。
+
+認証済みのダッシュボードの通信路も、Gateway の RPC／イベントの経路を通して、同じ登録・結果・生存確認・能力・所有権の決まりを提供します。どちらの通信路でも、選ばれるには主体・プロファイル・セッション・操作側・ブラウザーのプロファイル・通信路の系統・能力について、あいまいさのない完全一致がひとつだけ必要です。いったん選ばれたら、操作側の失敗は正であり、別のブラウザーのバックエンドで試し直されることはありません。
+
+## リクエストごとにモデルを選ぶ {#per-request-model-selection}
+
+認証済みのクライアントは、次を送ることで Hermes の既定のモデル選択をリクエストごとに上書きできます。
+
+- `model` — このターンで使いたいモデルの id
+- `provider` — このターンの資格情報と実行環境を解決するための Hermes 側のプロバイダー識別子
+- `model_options` — そのリクエストの範囲だけに効く推論／サービス階層の指定
+
+同じリクエスト項目は、次で受け付けます。
 
 - `POST /v1/chat/completions`
 - `POST /v1/responses`
@@ -268,14 +316,14 @@ OpenAI 互換のクライアントが、chat や responses のリクエストに
 
 優先順位は決まっています。
 
-1. そのセッションにすでに `/model` の上書きがあれば、それ
-2. リクエストの `model` が設定済みの経路の別名に当たる場合、静的な `gateway.platforms.api_server.model_routes` の対応づけ
-3. 経路の別名に当たらない場合、リクエストが直接指定した `model` / `provider`
-4. ゲートウェイ全体の設定、または環境変数の既定値
+1. そのセッションにすでに `/model` の上書きがあるなら、それ
+2. リクエストの `model` が設定済みの経路の別名に当たるときに選ばれる、固定の `gateway.platforms.api_server.model_routes` の対応付け
+3. 経路の別名に当たらない場合は、リクエストの `model` / `provider` をそのまま
+4. ゲートウェイ全体の設定と環境の既定値
 
-どのモデルとプロバイダーが選ばれても、`model_options` はそのリクエストの中だけで効きます。設定済みの `model_routes` の別名と食い違う `provider` を送った場合、Hermes は経路の認証情報を別のプロバイダーと黙って混ぜたりせず、`400` で断ります。
+`model_options` は、どのモデルやプロバイダーが選ばれたかに関わらず、そのリクエストの範囲にとどまります。設定済みの `model_routes` の別名と食い違う `provider` を送ってきた場合、Hermes は経路の資格情報を別のプロバイダーと黙って混ぜたりせず、`400` で拒否します。
 
-**OpenAI 互換のエンドポイントでは、`model` だけを送る形は既定で無効です。** 一般的な OpenAI クライアントはモデル名（`gpt-4o` など）を決め打ちで書いてくることが多く、既存の運用はそれがゲートウェイの既定へ落ちることを当てにしています。そのため `POST /v1/chat/completions` と `POST /v1/responses` では、`provider` を伴わない `model` の値は、次を有効にしないかぎり無視されます。
+**OpenAI 互換のエンドポイントでは、`model` だけを送る形は既定では効きません。** 汎用の OpenAI クライアントはモデル名（`gpt-4o` など）を決め打ちで書いていることが多く、いまある構成はそれがゲートウェイの既定値に落ちることを前提にしています。そのため `POST /v1/chat/completions` と `POST /v1/responses` では、`provider` を伴わない `model` の値は、次を有効にしない限り無視されます。
 
 ```yaml
 gateway:
@@ -284,7 +332,7 @@ gateway:
       direct_model_requests: true
 ```
 
-`provider` を明示したリクエストと、Hermes 独自の `/v1/runs` およびセッション用の chat エンドポイントは、この設定に関係なく、指定されたモデルを必ず使います。
+`provider` を明示したリクエストと、Hermes 独自の `/v1/runs` およびセッションの chat エンドポイントは、この設定に関わらず常に要求どおりのモデルを使います。
 
 例:
 
@@ -304,21 +352,21 @@ gateway:
 
 ### GET /health {#get-health}
 
-生存確認です。`{"status": "ok"}` を返します。`/v1/` が付いていることを前提とする OpenAI 互換のクライアント向けに、**GET /v1/health** でも同じものを返します。
+生存確認です。`{"status": "ok"}` を返します。`/v1/` の接頭辞を期待する OpenAI 互換のクライアント向けに、**GET /v1/health** でも同じものが使えます。
 
 ### GET /health/detailed {#get-healthdetailed}
 
-監視や制御の仕組み向けの、認証が要る準備状況の確認です。動いているプロファイルの設定、状態データベース、設定されたモデル、ディスクの空き、ゲートウェイと各プラットフォームの状態、実行中の API run、待機中のプロセスの完了、動いている委任について、範囲を絞った状態を返します。返るのは状態と件数だけで、設定値、認証情報、パス、コマンド、待ち行列の中身、生のエラーは出しません。
+監視や制御の仕組み向けの、認証が要る準備状況の確認です。いま使っているプロファイルの設定、状態のデータベース、設定されたモデル、ディスクの空き、ゲートウェイとプラットフォームの状態、動いている API の run、完了待ちのプロセス、動いている委任について、範囲を絞った状況を返します。返るのは状況と件数であって、設定値・資格情報・パス・コマンド・待ち行列の中身・生のエラーではありません。
 
-公開されている `/health` のほうは軽い生存確認のままで、準備状況の確認は行いません。準備状況が悪化していても HTTP は 200 のままなので、いちばん外側の `status` と `readiness.checks` を見てください。
+公開されている `/health` の経路は軽い生存確認のままで、準備状況の確認は走りません。準備状況が芳しくない場合でも HTTP 200 が返るので、最上位の `status` と `readiness.checks` の項目を見てください。
 
-## Runs API（ストリーミングと相性のよいもうひとつの道） {#runs-api-streaming-friendly-alternative}
+## Runs API（ストリーミング向きの別の道） {#runs-api-streaming-friendly-alternative}
 
-`/v1/chat/completions` と `/v1/responses` に加えて、**runs** の API も用意しています。長いやりとりで、クライアントがストリーミングを自分で管理する代わりに、進行のイベントを受け取りたい場合に向いています。
+`/v1/chat/completions` と `/v1/responses` に加えて、サーバーは **runs** の API も持っています。ストリーミングを自分で捌く代わりに進捗のイベントを購読したい、長めのセッション向けです。
 
 ### POST /v1/runs {#post-v1runs}
 
-エージェントの run を新しく作ります。進行のイベントを受け取るために使う `run_id` が返ります。
+新しいエージェントの run を作ります。進捗のイベントを購読するのに使える `run_id` が返ります。
 
 ```json
 {
@@ -327,11 +375,11 @@ gateway:
 }
 ```
 
-run が受け取るのは、単純な `input` の文字列と、任意の `session_id`、`instructions`、`conversation_history`、`previous_response_id` です。`session_id` を渡すと、Hermes は run の状態にそれを出すので、外部の画面が自分の会話 ID と run を突き合わせられます。
+run は単純な `input` の文字列を受け取り、`session_id`、`instructions`、`conversation_history`、`previous_response_id` は任意です。`session_id` を渡すと Hermes が run の状況にそれを出すので、外部の画面が自分の会話 ID と run を突き合わせられます。
 
 ### GET /v1/runs/\{run_id\} {#get-v1runsrunid}
 
-run のいまの状態を取りに行きます。SSE の接続を開いたままにせず状態だけ欲しいダッシュボードや、画面遷移のあとにつなぎ直す画面に向いています。
+いまの run の状態を問い合わせます。SSE の接続を開いたままにせずに状況だけ知りたいダッシュボードや、画面遷移のあとにつなぎ直す画面に向いています。
 
 ```json
 {
@@ -345,78 +393,78 @@ run のいまの状態を取りに行きます。SSE の接続を開いたまま
 }
 ```
 
-終わった状態（`completed`、`failed`、`cancelled`）になったあとも、状態は少しのあいだ残ります。取りに行く処理や画面側の突き合わせのためです。
+終わった状態（`completed`、`failed`、`cancelled`）になったあとも、問い合わせと画面の整合のために状況はしばらく残ります。
 
 ### GET /v1/runs/\{run_id\}/events {#get-v1runsrunidevents}
 
-run のツール呼び出しの進行、トークンの差分、開始と終了のイベントを Server-Sent Events で流します。つないだり切ったりしても状態を見失いたくない、ダッシュボードや作り込んだクライアント向けです。
+run における道具呼び出しの進捗、トークンの差分、節目の出来事を Server-Sent Events で流します。状態を失わずにつないだり離れたりしたい、ダッシュボードや作り込んだクライアント向けです。
 
-エージェントが裏で動くサブエージェントに仕事を任せると、`subagent.start` と `subagent.complete` のイベントもこのストリームに流れます。おかげでクライアント側は、任せた仕事の結果（時間切れや失敗も含めて）を見られます。子が働いているあいだ run が黙り込むことはありません。`subagent.complete` の中身には、子の状態、要約、所要時間、トークンと費用の数字、突き合わせ用の `child_session_id` が入ります。自由記述の項目は、プロセスの外へ出る前に必ず秘密の伏せ字処理を通ります。子のツール単位のイベント（`subagent.tool` や進行の刻み）は、あえて転送**しません**。量が多くて画面の邪魔になるからです。逐一の様子を追いたいときは、子ごとの実況の記録ファイルを見てください。
+エージェントが裏で動く子エージェントに仕事を任せると、このストリームには `subagent.start` と `subagent.complete` の節目の出来事も流れます。子が働いているあいだ run が黙り込むのではなく、時間切れや失敗も含めて委任の顛末を見られます。`subagent.complete` の中身には、子の状況、要約、所要時間、トークンと費用の数字、そして突き合わせ用の `child_session_id` が入ります。自由記述の項目は、プロセスの外に出る前に必ず秘密の伏せ字処理を通ります。子の道具ごとの出来事（`subagent.tool` や進捗の刻み）は、意図して **転送していません**。量が多くて画面が騒がしくなるからです。逐一を追いたいときは、子ごとの実況の記録ファイルを見てください。
 
-読まれないまま残ったイベントの控えは 5 分で消えます。切断したクライアントのせいでメモリが無限に膨らまないようにするためです。消えるのは受け渡しの状態だけで、まだ動いている run は、実行の中身が本当に終わるまで、状態の確認・承認・停止の操作・同時実行数の勘定から見えたままです。つながっている SSE の受け手は、そのまま普通に受け取り続けます。
+読み取られなかったイベントの控えは 5 分で捨てられます。離れていったクライアントのせいでメモリーが際限なく膨らまないようにするためです。ここで消えるのは通信の状態だけです。まだ実行中の run は、実行の仕事が本当に終わるまで、状況の問い合わせ・承認・停止の操作・同時実行数の勘定からは見え続けます。つないでいる SSE の購読者は、そのまま普通に受け取り続けます。
 
 ### POST /v1/runs/\{run_id\}/stop {#post-v1runsrunidstop}
 
-エージェントの実行中の回を中断します。このエンドポイントはすぐに `{"status": "stopping"}` を返し、その裏で Hermes が、動いているエージェントに次の安全な切れ目で止まるよう伝えます。
-run は、実行の中身が終わるまで `stopping` として追跡され、そのあと `cancelled` に落ち着きます。停止を頼んだからといって、まだ動いている実行が見えなくなることはありません。
+動いているエージェントのターンを中断します。このエンドポイントはすぐ `{"status": "stopping"}` を返し、そのあいだに Hermes が、いま動いているエージェントへ次の安全な区切りで止まるよう頼みます。
+run は実行中の仕事が抜けるまで `stopping` として追われ、そのあと `cancelled` に落ち着きます。停止を頼んだからといって、まだ動いている働き手が隠されることはありません。
 
 ### POST /v1/runs/\{run_id\}/approval {#post-v1runsrunidapproval}
 
-人の判断を待っている run の承認を返します（承認の決まりで止められたツールの呼び出しなど）。本文に判断を載せて送ると、それが記録された時点で run が再開します。このエンドポイントは `/v1/capabilities` で `run_approval` という機能として告知されるので、外部の画面は承認の問いかけを出す前に対応状況を調べられます。
+人の判断待ちになっている run の承認を返します（たとえば、承認の方針で止められている道具の呼び出しなど）。本文に承認の判断を載せると、それが記録された時点で run が再開します。このエンドポイントは `/v1/capabilities` で `run_approval` の機能として名乗るので、外部の画面は承認を求める表示を出す前に対応の有無を確かめられます。
 
-## Jobs API（裏で動く予定実行） {#jobs-api-background-scheduled-work}
+## Jobs API（裏で動く予定作業） {#jobs-api-background-scheduled-work}
 
-離れたところにあるクライアントから、予定実行や裏で動くエージェントの run を扱えるよう、軽い jobs の CRUD の窓口を用意しています。どのエンドポイントも同じ bearer 認証で守られています。
+サーバーは、予定された裏方のエージェントの run を遠隔のクライアントから管理するための、軽い jobs の CRUD 窓口を持っています。どのエンドポイントも同じ bearer 認証で守られています。
 
 ### GET /api/jobs {#get-apijobs}
 
-予定されている job を全部並べます。
+予定されているジョブをすべて並べます。
 
 ### POST /api/jobs {#post-apijobs}
 
-新しい予定実行の job を作ります。本文の形は `hermes cron` と同じで、プロンプト、予定、スキル、プロバイダーの上書き、届け先を指定します。
+新しい予定ジョブを作ります。本文は `hermes cron` と同じ形を受け付けます。プロンプト、予定、スキル、プロバイダーの上書き、届け先です。
 
 ### GET /api/jobs/\{job_id\} {#get-apijobsjobid}
 
-job ひとつの定義と、前回の実行の状態を取ります。
+ひとつのジョブの定義と、直近の実行状態を取り出します。
 
 ### PATCH /api/jobs/\{job_id\} {#patch-apijobsjobid}
 
-既存の job の項目（プロンプト、予定など）を更新します。一部だけの更新は、元の内容に上書きされます。
+既存のジョブの項目（プロンプト、予定など）を更新します。部分的な更新は既存の内容に混ぜ込まれます。
 
 ### DELETE /api/jobs/\{job_id\} {#delete-apijobsjobid}
 
-job を消します。実行中の run があれば、それも取り消します。
+ジョブを削除します。実行中の run も取り消します。
 
 ### POST /api/jobs/\{job_id\}/pause {#post-apijobsjobidpause}
 
-job を消さずに休ませます。次の実行予定の時刻は、再開するまで止まります。
+ジョブを消さずに一時停止します。次に走る予定の時刻は、再開するまで止まります。
 
 ### POST /api/jobs/\{job_id\}/resume {#post-apijobsjobidresume}
 
-休ませていた job を再開します。
+一時停止していたジョブを再開します。
 
 ### POST /api/jobs/\{job_id\}/run {#post-apijobsjobidrun}
 
-予定を待たずに、その job をいますぐ動かします。
+予定を待たずに、そのジョブをいますぐ走らせます。
 
-## Sessions API（REST でのセッション操作） {#sessions-api-session-control-over-rest}
+## Sessions API（REST でセッションを操る） {#sessions-api-session-control-over-rest}
 
-外部の画面は、ダッシュボードを立てなくても REST から Hermes のセッションを扱えます。どのエンドポイントも `API_SERVER_KEY` で守られていて、`/api/sessions/*` の下にあります。
+外部の画面は、ダッシュボードを立てなくても REST で Hermes のセッションを扱えます。どのエンドポイントも `API_SERVER_KEY` で守られていて、`/api/sessions/*` の下にあります。
 
-| メソッド | パス | 内容 |
+| メソッド | パス | 説明 |
 |--------|------|-------------|
-| `GET` | `/api/sessions` | セッションを並べる（ページ分割 — `limit`、`offset`、`source`、`include_children`） |
+| `GET` | `/api/sessions` | セッションを並べる（ページ送り — `limit`、`offset`、`source`、`include_children`） |
 | `POST` | `/api/sessions` | 空のセッションを作る |
 | `GET` | `/api/sessions/{id}` | セッションの情報を読む |
-| `PATCH` | `/api/sessions/{id}` | 題名または `end_reason` を更新する |
+| `PATCH` | `/api/sessions/{id}` | 題名か `end_reason` を更新する |
 | `DELETE` | `/api/sessions/{id}` | セッションを削除する |
-| `GET` | `/api/sessions/{id}/messages` | そのセッションのやりとりの履歴 |
-| `POST` | `/api/sessions/{id}/fork` | `SessionDB` の系譜をたどってセッションを枝分かれさせる（CLI の `/branch` と同じ挙動） |
-| `POST` | `/api/sessions/{id}/chat` | エージェントの回を 1 回、同期で走らせる |
-| `POST` | `/api/sessions/{id}/chat/stream` | 1 回分を SSE で包んだもの — `assistant.delta`、`tool.started`、`tool.completed`、`run.completed` のイベントを流す |
+| `GET` | `/api/sessions/{id}/messages` | そのセッションのやり取りの履歴 |
+| `POST` | `/api/sessions/{id}/fork` | `SessionDB` の系譜をたどってセッションを枝分かれさせる（CLI の `/branch` と同じ意味） |
+| `POST` | `/api/sessions/{id}/chat` | エージェントのターンを 1 回、同期で走らせる |
+| `POST` | `/api/sessions/{id}/chat/stream` | 1 ターンを SSE で包んだもの — `assistant.delta`、`tool.started`、`tool.completed`、`run.completed` の出来事を流す |
 
-`/v1/capabilities` は、この窓口の全体を `session_*` の機能フラグと `endpoints.session_*` の項目で告知します。外部の画面は対応状況を調べて、安全に別の手へ切り替えられます。`chat` と `chat/stream` の本文では画像も扱えます（複数の形式に対応した経路です）。
+`/v1/capabilities` は `session_*` の機能フラグと `endpoints.session_*` の項目でこの窓口の全体を名乗るので、外部の画面は対応の有無を判定して安全に別の道へ逃げられます。`chat` と `chat/stream` の中身では画像も渡せます（複数の形式を理解する経路）。
 
 ```bash
 # fork a session and run one turn
@@ -430,9 +478,9 @@ curl -N -X POST http://localhost:8642/api/sessions/$ID/chat/stream \
   -d '{"input": "what files changed in the last hour?"}'
 ```
 
-## スキルとツールセットの照会 {#skills-and-toolsets-discovery}
+## スキルと道具立ての一覧を取る {#skills-and-toolsets-discovery}
 
-`GET /v1/skills` と `GET /v1/toolsets` を使うと、外部のクライアントがエージェントにできることを、モデルに尋ねるのではなく REST から確実に数え上げられます。どちらも読み取り専用で、`API_SERVER_KEY` で守られています。
+`GET /v1/skills` と `GET /v1/toolsets` を使うと、外部のクライアントがモデルに尋ねる代わりに、REST で確実にエージェントの能力を並べられます。どちらも読み取り専用で、`API_SERVER_KEY` で守られています。
 
 ```bash
 curl http://localhost:8642/v1/skills \
@@ -445,11 +493,11 @@ curl http://localhost:8642/v1/toolsets \
 #     "configured": true, "tools": ["read_file", "write_file", ...]}, ...]
 ```
 
-`/v1/skills` は、スキルの取りまとめが内部で使っているのと同じ情報を返します。`/v1/toolsets` は `api_server` のプラットフォーム向けに解決されたツールセットと、それぞれが実際に展開する `tools` の一覧を返します。どちらも `/v1/capabilities` の `endpoints.*` で告知されます。
+`/v1/skills` は、スキルの拠点が内部で使っているのと同じ情報を返します。`/v1/toolsets` は `api_server` のプラットフォーム向けに解決された道具立てと、それぞれが実際に展開される `tools` の一覧を返します。どちらも `/v1/capabilities` の `endpoints.*` の下で名乗っています。
 
-## 長期記憶の区切り方（`X-Hermes-Session-Key`） {#long-term-memory-scoping-x-hermes-session-key}
+## ずっと残る記憶の範囲を決める（`X-Hermes-Session-Key`） {#long-term-memory-scoping-x-hermes-session-key}
 
-Open WebUI のように複数の利用者が使うフロントエンドでは、長期記憶（Honcho など）のために、会話の入れ物ごとに変わらない目印が要ります。しかもそれは、`/new` のたびに変わってしまう、やりとりの記録に紐づいた `X-Hermes-Session-Id` とは**別物**でなければなりません。`/v1/chat/completions`、`/v1/responses`、`/v1/runs` に `X-Hermes-Session-Key` を付けて送ると、Hermes はそれを `AIAgent(gateway_session_key=...)` まで通し、Honcho の記憶の担当がそこから変わらない区切りを作ります。
+Open WebUI のような多人数向けのフロントエンドは、ずっと残る記憶（Honcho など）のために、会話ごとに安定した識別子を必要とします。それは、`/new` のたびに変わる会話単位の `X-Hermes-Session-Id` とは **別物** でなければなりません。`/v1/chat/completions`、`/v1/responses`、`/v1/runs` に `X-Hermes-Session-Key` を渡すと、Hermes はそれを `AIAgent(gateway_session_key=...)` まで通し、Honcho の記憶プロバイダーがそこから安定した範囲を導きます。
 
 ```http
 POST /v1/chat/completions HTTP/1.1
@@ -458,15 +506,15 @@ X-Hermes-Session-Id: transcript-alpha
 X-Hermes-Session-Key: agent:main:webui:dm:user-42
 ```
 
-決まりごと: 最大 256 文字、制御文字（`\r`、`\n`、`\x00`）は受け付けません。値は応答（JSON と SSE）にそのまま返します。`/v1/capabilities` は `"session_key_header": "X-Hermes-Session-Key"` として対応を告知します。この目印がないと、Honcho の `per-session` の方式では `session_id` ごとに別々の区切りができます。Hermes が以前そうだった挙動そのものです。
+決まりごと: 最大 256 文字、制御文字（`\r`、`\n`、`\x00`）は拒否、そして値は応答（JSON と SSE の両方）に返されます。`/v1/capabilities` は `"session_key_header": "X-Hermes-Session-Key"` で対応を名乗ります。このキーがないと、Honcho の `per-session` の方式は `session_id` ごとに違う範囲を作ります。これは Hermes が以前していた動きそのままです。
 
 ## システムプロンプトの扱い {#system-prompt-handling}
 
-フロントエンドが `system` のメッセージ（Chat Completions）や `instructions` の項目（Responses API）を送ってきたとき、hermes-agent はそれを自分の中心のシステムプロンプトの**上に重ねます**。エージェントは道具も記憶もスキルも全部持ったままで、フロントエンドのシステムプロンプトは追加の指示として効きます。
+フロントエンドが `system` のメッセージ（Chat Completions）や `instructions` の項目（Responses API）を送ってきたとき、hermes-agent はそれを自前のシステムプロンプトの **上に重ねます**。エージェントは道具も記憶もスキルもそのまま持ち続け、フロントエンドのシステムプロンプトは追加の指示として効きます。
 
-つまり、できることを削らずに、フロントエンドごとの味付けができます。
-- Open WebUI のシステムプロンプト: 「Python の専門家として答えてください。型注釈は必ず付けてください。」
-- それでもエージェントは端末操作、ファイルの道具、ウェブ検索、記憶などを持ったままです。
+つまり、能力を失わずにフロントエンドごとの振る舞いを調整できます。
+- Open WebUI のシステムプロンプト: 「あなたは Python の専門家です。必ず型注釈を付けてください」
+- それでもエージェントはターミナル、ファイルの道具、ウェブ検索、記憶などを持ったままです
 
 ## 認証 {#authentication}
 
@@ -476,40 +524,40 @@ X-Hermes-Session-Key: agent:main:webui:dm:user-42
 Authorization: Bearer ***
 ```
 
-鍵は `API_SERVER_KEY` の環境変数で設定します。ブラウザから Hermes を直接呼ぶ必要がある場合は、`API_SERVER_CORS_ORIGINS` にも許可する相手を明示的に並べてください。
+キーは `API_SERVER_KEY` の環境変数で設定します。ブラウザーから Hermes を直接呼ぶ必要があるなら、`API_SERVER_CORS_ORIGINS` に許可する相手を明示して設定してください。
 
-### プロファイルごとの経路（`/p/<profile>/…`） {#multi-profile-routing-pprofile}
+### 複数プロファイルの振り分け（`/p/<profile>/…`） {#multi-profile-routing-pprofile}
 
-[プロファイル別のゲートウェイ経路](/hermes/docs/user-guide/multi-profile-gateways/) を有効（`gateway.multiplex_profiles`）にすると、ひとつの待ち受け口が `/p/<profile>/` という接頭辞で全プロファイルを配ります。このとき**認証はその経路のプロファイルに結びつきます**。
+[複数プロファイルのゲートウェイ振り分け](/hermes/docs/user-guide/multi-profile-gateways/) を有効にすると（`gateway.multiplex_profiles`）、ひとつの待ち受けが `/p/<profile>/` の URL 接頭辞ですべてのプロファイルを提供します。そして **認証は振り分け先のプロファイルにひもづきます**。
 
-- `/p/<profile>/v1/...` へのリクエストには、そのプロファイル自身の `API_SERVER_KEY`（`~/.hermes/profiles/<profile>/.env` のもの）が要ります。既定の待ち受け口の鍵は、名前付きプロファイルの接頭辞では受け付けません。
-- 接頭辞のない経路と `/p/default/...` は、これまでどおり既定のプロファイルの鍵を使います。
-- 自分の `API_SERVER_KEY` を持たない名前付きプロファイルは、閉じた側に倒れます。鍵を設定するまで、その接頭辞へは入れません。
+- `/p/<profile>/v1/...` へのリクエストには、そのプロファイル自身の `API_SERVER_KEY`（`~/.hermes/profiles/<profile>/.env` のもの）が要ります。既定の待ち受けのキーは、名前付きプロファイルの接頭辞では拒否されます。
+- 接頭辞のない経路と `/p/default/...` は、これまでどおり既定のプロファイルのキーを使います。
+- 自分の `API_SERVER_KEY` を持たない名前付きプロファイルは、失敗として閉じます。設定するまで、その接頭辞には届きません。
 
 :::warning 互換性のない変更（2026 年 7 月）
-この修正の前は、既定プロファイルの正しい鍵が、どの `/p/<profile>/` 接頭辞でも通っていました。ひとつの鍵を接頭辞をまたいで使い回していた場合は、各プロファイルの `.env` にそれぞれ別の `API_SERVER_KEY` を設定してください。名前付きの接頭辞で既定の鍵を使い回すと、これからは `401` が返ります。
+この修正の前は、既定プロファイルの正しいキーがどの `/p/<profile>/` 接頭辞でも通っていました。プロファイルの接頭辞をまたいでキーを共有していた場合は、各プロファイルの `.env` に別々の `API_SERVER_KEY` を設定してください。名前付きの接頭辞で既定のキーを使い回すと、いまは `401` が返ります。
 :::
 
 :::warning セキュリティ
-API サーバーは hermes-agent の道具一式に、**端末コマンドも含めて**全部触れさせます。`API_SERVER_KEY` は、既定の `127.0.0.1` への待ち受けも含めて、**どんな構成でも必須**です。ブラウザからの呼び出しをあえて許すときは、`API_SERVER_CORS_ORIGINS` を狭く保って、どこから来るものを許すかを絞ってください。
+API サーバーは、**ターミナルのコマンドも含めて** hermes-agent の道具立てへの全権を渡します。`API_SERVER_KEY` は **どの構成でも必須** です。`127.0.0.1` にだけ待ち受ける既定の構成でも同じです。ブラウザーからの呼び出しをあえて許すときは、`API_SERVER_CORS_ORIGINS` を狭く保ってブラウザーからの接続を制御してください。
 :::
 
 ## 設定 {#configuration}
 
 ### 環境変数 {#environment-variables}
 
-| 変数 | 既定値 | 内容 |
+| 変数 | 既定値 | 説明 |
 |----------|---------|-------------|
 | `API_SERVER_ENABLED` | `false` | API サーバーを有効にする |
 | `API_SERVER_PORT` | `8642` | HTTP サーバーのポート |
-| `API_SERVER_HOST` | `127.0.0.1` | 待ち受けるアドレス（既定では自分の端末の中だけ） |
+| `API_SERVER_HOST` | `127.0.0.1` | 待ち受けるアドレス（既定では localhost のみ） |
 | `API_SERVER_KEY` | _(必須)_ | 認証用の bearer トークン |
-| `API_SERVER_CORS_ORIGINS` | _(なし)_ | ブラウザからの呼び出しを許す送り元をカンマ区切りで |
-| `API_SERVER_MODEL_NAME` | _(プロファイル名)_ | `/v1/models` に出るモデル名。既定はプロファイル名で、既定のプロファイルなら `hermes-agent`。 |
+| `API_SERVER_CORS_ORIGINS` | _(なし)_ | 許可するブラウザーの生成元をカンマ区切りで |
+| `API_SERVER_MODEL_NAME` | _(プロファイル名)_ | `/v1/models` で名乗るモデル名。既定ではプロファイル名、既定のプロファイルなら `hermes-agent`。 |
 
 ### config.yaml {#configyaml}
 
-同じ設定は、`~/.hermes/config.yaml` の `gateway.api_server:` という入れ子の節にも書けます。
+同じ設定は、`~/.hermes/config.yaml` の `gateway.api_server:` という入れ子の節にも置けます。
 
 ```yaml
 gateway:
@@ -523,56 +571,56 @@ gateway:
     max_concurrent_runs: 10   # concurrent-run cap; 0 disables the limit
 ```
 
-`port`、`key`、`host`、`cors_origins`、`model_name` は自動でプラットフォームの `extra` 設定へ橋渡しされるので、`API_SERVER_*` の環境変数とまったく同じように働きます。環境変数のほうが `config.yaml` の値より優先されます。この節は `gateway.platforms.api_server:` の下や、いちばん外側の `platforms.api_server:` の節に書いても受け付けます。
+`port`、`key`、`host`、`cors_origins`、`model_name` は自動でプラットフォームの `extra` 設定に橋渡しされるので、対応する `API_SERVER_*` の環境変数とまったく同じように動きます。環境変数のほうが `config.yaml` の値より優先されます。この節は `gateway.platforms.api_server:` の下や、最上位の `platforms.api_server:` の節でも受け付けます。
 
-### 同時実行数の上限 {#concurrent-run-cap}
+### 同時に走る run の上限 {#concurrent-run-cap}
 
-API サーバーは、OpenAI 互換のエンドポイントと Runs のエンドポイントを合わせて、エージェントの run を同時に何本まで走らせるかを制限します。上限は `gateway.api_server.max_concurrent_runs` から読みます（既定は **10**。`0` で制限なし、負の値は 0 に丸めます）。上限に達すると、新しく run を始めるリクエストは **HTTP 429** の `Too many concurrent runs (max N)` で断られます。クライアント側は間を置いてやり直してください。
+API サーバーは、OpenAI 互換のエンドポイントと Runs のエンドポイントを合わせて、同時に走れるエージェントの run の数を制限します。上限は `gateway.api_server.max_concurrent_runs` から読みます（既定は **10**。`0` で無制限、負の値は 0 に丸められます）。上限に達すると、run を新しく始めるリクエストは **HTTP 429** の `Too many concurrent runs (max N)` で拒否されます。クライアント側は間を置いて試し直してください。
 
-## セキュリティ用のヘッダー {#security-headers}
+## セキュリティのヘッダー {#security-headers}
 
-どの応答にも、次のヘッダーが付きます。
-- `X-Content-Type-Options: nosniff` — MIME タイプの推測を防ぎます
-- `Referrer-Policy: no-referrer` — 参照元が漏れるのを防ぎます
+すべての応答にセキュリティのヘッダーが付きます。
+- `X-Content-Type-Options: nosniff` — MIME 種別の推測を防ぐ
+- `Referrer-Policy: no-referrer` — 参照元の漏れを防ぐ
 
 ## CORS {#cors}
 
-API サーバーは、既定ではブラウザ向けの CORS を**有効にしません**。
+API サーバーは、ブラウザー向けの CORS を既定では **有効にしません**。
 
-ブラウザから直接つなぎたい場合は、許す送り元を明示的に並べてください。
+ブラウザーから直接つなぐなら、許可する相手を明示してください。
 
 ```bash
 API_SERVER_CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 ```
 
 CORS を有効にすると、次のようになります。
-- **事前確認の応答**に `Access-Control-Max-Age: 600`（10 分間の保持）が付きます
-- **SSE のストリーミング応答**にも CORS のヘッダーが付くので、ブラウザの EventSource が正しく動きます
-- **`Idempotency-Key`** を送ってよいヘッダーとして許します。クライアントは重複を避けるために送れます（応答は鍵ごとに 5 分間覚えておきます）
+- **事前確認への応答** に `Access-Control-Max-Age: 600` が付きます（10 分のキャッシュ）
+- **SSE のストリーミング応答** にも CORS のヘッダーが付くので、ブラウザーの EventSource のクライアントが正しく動きます
+- **`Idempotency-Key`** をリクエストのヘッダーとして許可します。クライアントは重複を避けるために送れます（応答はキーごとに 5 分間キャッシュされます）
 
-Open WebUI をはじめ、ここで案内しているフロントエンドのほとんどはサーバー同士でつなぐので、CORS はまったく要りません。
+ここで説明しているフロントエンドの多く、たとえば Open WebUI はサーバー同士でつなぐので、CORS はそもそも要りません。
 
 ## つながるフロントエンド {#compatible-frontends}
 
-OpenAI API の形式に対応したフロントエンドなら何でも動きます。動作を確かめて手順を書いてあるものは次のとおりです。
+OpenAI の API 形式に対応したフロントエンドなら何でも動きます。動作を確かめて説明があるものは次のとおりです。
 
-| フロントエンド | スター数 | つなぎ方 |
+| フロントエンド | Star 数 | つなぎ方 |
 |----------|-------|------------|
-| [Open WebUI](/hermes/docs/user-guide/messaging/open-webui/) | 126k | 手順書あり |
+| [Open WebUI](/hermes/docs/user-guide/messaging/open-webui/) | 126k | 詳しいガイドあり |
 | LobeChat | 73k | 独自プロバイダーのエンドポイント |
-| LibreChat | 34k | librechat.yaml に独自エンドポイントを書く |
+| LibreChat | 34k | librechat.yaml の独自エンドポイント |
 | AnythingLLM | 56k | 汎用の OpenAI プロバイダー |
 | NextChat | 87k | BASE_URL の環境変数 |
 | ChatBox | 39k | API Host の設定 |
-| Jan | 26k | リモートモデルの設定 |
+| Jan | 26k | 遠隔モデルの設定 |
 | HF Chat-UI | 8k | OPENAI_BASE_URL |
 | big-AGI | 7k | 独自エンドポイント |
 | OpenAI Python SDK | — | `OpenAI(base_url="http://localhost:8642/v1")` |
-| curl | — | HTTP を直接叩く |
+| curl | — | 直接 HTTP を叩く |
 
-## プロファイルで複数の利用者に配る {#multi-user-setup-with-profiles}
+## プロファイルで多人数に使わせる {#multi-user-setup-with-profiles}
 
-複数の利用者に、それぞれ独立した Hermes（設定・記憶・スキルが別々）を渡すには、[プロファイル](/hermes/docs/user-guide/profiles/) を使います。
+複数の人にそれぞれ独立した Hermes（設定・記憶・スキルが別々のもの）を渡すには、[プロファイル](/hermes/docs/user-guide/profiles/) を使います。
 
 ```bash
 # Create a profile per user
@@ -598,21 +646,21 @@ hermes -p alice gateway &
 hermes -p bob gateway &
 ```
 
-それぞれのプロファイルの API サーバーは、プロファイル名をそのままモデル ID として名乗ります。
+それぞれのプロファイルの API サーバーは、プロファイル名をモデルの ID として自動で名乗ります。
 
 - `http://localhost:8643/v1/models` → モデル `alice`
 - `http://localhost:8644/v1/models` → モデル `bob`
 
-Open WebUI では、それぞれを別の接続として登録します。モデルの一覧には `alice` と `bob` が別のモデルとして並び、その裏側はそれぞれ完全に切り離された Hermes です。詳しくは [Open WebUI のガイド](/hermes/docs/user-guide/messaging/open-webui/#multi-user-setup-with-profiles) を見てください。
+Open WebUI では、それぞれを別の接続として追加してください。モデルの一覧に `alice` と `bob` が別々のモデルとして並び、それぞれ完全に独立した Hermes が裏で動きます。詳しくは [Open WebUI のガイド](/hermes/docs/user-guide/messaging/open-webui/#multi-user-setup-with-profiles) を見てください。
 
-## できないこと {#limitations}
+## 制限 {#limitations}
 
-- **応答の保存** — `previous_response_id` のために保存する応答は SQLite に残るので、ゲートウェイを再起動しても消えません。保存できるのは最大 100 件です（古いものから順に捨てます）。
-- **ファイルのアップロードはできない** — 画像を本文に入れる形は `/v1/chat/completions` と `/v1/responses` の両方で使えますが、アップロードしたファイル（`file`、`input_file`、`file_id`）や画像以外の書類は、この API では扱えません。
-- **単純な OpenAI クライアントには別名しか見えない** — `/v1/models` に出るのは、Hermes の変わらない別名（`hermes-agent` か、動いているプロファイルの名前）です。もっと作り込んだクライアントなら、リクエストで `provider` や `model_options` を明示して上書きできます。
+- **応答の保存** — 保存された応答（`previous_response_id` 用）は SQLite に残るので、ゲートウェイを再起動しても消えません。保存できるのは最大 100 件です（古いものから捨てられます）。
+- **ファイルのアップロードはできない** — 画像を本文に含めて渡す形は `/v1/chat/completions` と `/v1/responses` の両方で使えますが、アップロードしたファイル（`file`、`input_file`、`file_id`）や画像以外の書類は、この API 経由では扱えません。
+- **単純な OpenAI クライアントには別名しか見えない** — `/v1/models` が名乗るのは Hermes の安定した別名（`hermes-agent` か、いま使っているプロファイル名）です。もっと作り込んだクライアントなら、リクエストで `provider` / `model_options` を明示して上書きできます。
 
-## 中継として使う {#proxy-mode}
+## 中継モード {#proxy-mode}
 
-API サーバーは、**ゲートウェイの中継**の受け手にもなります。別の Hermes のゲートウェイで `GATEWAY_PROXY_URL` をこの API サーバーに向けて設定すると、そちらは自分でエージェントを動かさず、すべてのメッセージをここへ転送します。おかげで役割を分けた構成が作れます。たとえば、Matrix の端末間暗号化を Docker のコンテナが担当し、本体の端末側にいるエージェントへ中継する、といった形です。
+API サーバーは、**ゲートウェイの中継モード** の受け手にもなります。別の Hermes ゲートウェイに `GATEWAY_PROXY_URL` を設定してこの API サーバーへ向けると、そのゲートウェイは自分でエージェントを動かさず、すべてのメッセージをここへ転送します。これで構成を分けられます。たとえば、Matrix の E2EE を担う Docker コンテナが、ホスト側のエージェントへ中継する、といった形です。
 
-詳しい手順は [Matrix の中継](/hermes/docs/user-guide/messaging/matrix/#proxy-mode-e2ee-on-macos) を見てください。
+設定の全手順は [Matrix の中継モード](/hermes/docs/user-guide/messaging/matrix/#proxy-mode-e2ee-on-macos) を見てください。

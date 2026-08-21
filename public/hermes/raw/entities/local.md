@@ -4,7 +4,7 @@ description: 手元のマシンで動かす形。いちばん簡単で、いち�
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
   - https://hermes-agent.nousresearch.com/docs/guides/secure-hermes-on-a-work-machine
-hermes_version: "0.20.4"
+hermes_version: "0.20.5"
 confidence: high
 raw: /hermes/raw/entities/local.md
 ---

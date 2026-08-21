@@ -2,7 +2,7 @@
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: 4b4b58feeffe7a12b6cbb557783ad925e906f7ae
+upstream_blob: 713f14958b5796468b4dfe68b51fdf1b7eb3d7ff
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -955,7 +955,7 @@ gateway:
 
 ## 表示: リッチメッセージ、表、リンクのプレビュー {#rendering-rich-messages-tables-and-link-previews}
 
-**リッチメッセージ（Bot API 10.1）。** 従来の MarkdownV2 の経路では表現が落ちてしまうもの、つまり表・チェックリスト・折りたためる `<details>`・ブロックの数式を含む最終的な返信は、エージェントの**生の markdown** のまま Telegram のネイティブな [`sendRichMessage`](https://core.telegram.org/bots/api#sendrichmessage) で送られます。クライアント側で平たくつぶされることなく、そのまま表示されます。個人チャットでは既定の `rich_drafts: false` により、アニメーションするプレビューは編集可能な従来のドラフトの経路のままにして、クライアントとの相性を保ちます。そのうえで、履歴に残る最終的なメッセージを `sendRichMessage` で送ります。`rich_drafts: true` にすると、その場で更新されるプレビューにも `sendRichMessageDraft` が使われます。編集によるストリーミングでは、`editMessageText` の `rich_message` パラメータを使って、既存のプレビューをその場で確定させることもできます。普通の返信（素の文章、太字/斜体、単純な箇条書き）は、クライアント間で文字の太さや間隔をそろえるために MarkdownV2 の経路のままです。
+**リッチメッセージ（Bot API 10.1）。** 従来の MarkdownV2 の経路では表現が落ちてしまうもの、つまり表・チェックリスト・折りたためる `<details>`・ブロックの数式を含む最終的な返信は、エージェントの**生の markdown** のまま Telegram のネイティブな [`sendRichMessage`](https://core.telegram.org/bots/api#sendrichmessage) で送られます。クライアント側で平たくつぶされることなく、そのまま表示されます。個人チャットでは、既定の `rich_drafts: false` によってストリーミング中のプレビューは飾りのない表示のままになります。Telegram の一時的なドラフトの経路を従来の表示方式で使うので、表などリッチな表示でしか表せないものは、プレビューでは生の markdown のまま出ます。そのうえで、できあがった応答を `sendRichMessage` で送って履歴に残します。`rich_drafts: true` にすると、その場で更新されるプレビューにも `sendRichMessageDraft` が使われます。編集によるストリーミングでは、`editMessageText` の `rich_message` パラメータを使って、既存のプレビューをその場で確定させることもできます。普通の返信（素の文章、太字/斜体、単純な箇条書き）は、クライアント間で文字の太さや間隔をそろえるために MarkdownV2 の経路のままです。
 
 内容が 32,768 文字というリッチテキストの上限を超えると、リッチの経路は自動的に飛ばされます。また Telegram からの拒否（古い `python-telegram-bot` で使えないエンドポイント、解析のエラー、大きすぎるブロックや列数）があった場合も、**何も意識させずに** MarkdownV2 の経路へ切り替わるので、メッセージが失われることはありません。一時的なエラーやネットワークのエラーでは黙って送り直すことは*しません*（最終メッセージが二重に届かないようにするためです）。
 
@@ -975,7 +975,7 @@ gateway:
         rich_drafts: false
 ```
 
-この設定は、クライアント側の表示やコピーのしやすさのためのものです。Telegram がリッチな API 呼び出しを拒否した場合には、Hermes がすでに自動で従来の経路へ切り替えます。`rich_drafts` は、Telegram の個人チャットでストリーミング中に使う、試験的なリッチのドラフトプレビューの経路を制御します。既定で無効なのは、Telegram のデスクトップ版や macOS 版では、チャットが描き直されるまでリッチなドラフトのフレームが重なって見えることがあるためです。リッチメッセージは有効にしたまま、表については従来の「常にコードブロック」の挙動だけを使いたい場合は、`config.yaml` で `telegram.pretty_tables: false` を設定して表の整形を切ってください（既定は `true`）。
+この設定は、クライアント側の表示やコピーのしやすさのためのものです。Telegram がリッチな API 呼び出しを拒否した場合には、Hermes がすでに自動で従来の経路へ切り替えます。`rich_drafts` は、個人チャットのストリーミング中のプレビューをリッチな見た目で*表示する*かどうか（`sendRichMessageDraft` を使うかどうか）を決めます。既定で無効なのは、Telegram のデスクトップ版や macOS 版では、チャットが描き直されるまでリッチなドラフトのフレームが重なって見えることがあるためです。無効のままなら、プレビューは飾りのない表示のまま流れ、最終的なメッセージはネイティブのリッチメッセージとして届きます。リッチメッセージは有効にしたまま、表については従来の「常にコードブロック」の挙動だけを使いたい場合は、`config.yaml` で `telegram.pretty_tables: false` を設定して表の整形を切ってください（既定は `true`）。
 
 **リンクのプレビュー。** Telegram はボットのメッセージに含まれる URL のプレビューを自動で作ります。これを抑えたい場合は（長い `/tools` の出力、リンクを 10 個並べたエージェントの返信など）:
 

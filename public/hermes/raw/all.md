@@ -4,14 +4,14 @@ description: 公式 docs の全 URL の索引。正本は公式。
 sources:
   - https://hermes-agent.nousresearch.com/docs/
   - https://hermes-agent.nousresearch.com/docs/llms.txt
-hermes_version: "0.20.4"
+hermes_version: "0.20.5"
 confidence: high
 raw: /hermes/raw/all.md
 ---
 
 # すべて
 
-公式 docs の全ページ（206 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（207 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -160,7 +160,7 @@ raw: /hermes/raw/all.md
 - [Buzz Integration](/hermes/docs/integrations/buzz/)
 - [Nous Portal](/hermes/docs/integrations/nous-portal/)
 
-## Guides & Tutorials（34）
+## Guides & Tutorials（35）
 
 - [Tips & Best Practices](/hermes/docs/guides/tips/)
 - [Local LLMs on Mac](/hermes/docs/guides/local-llm-on-mac/)
@@ -184,6 +184,7 @@ raw: /hermes/raw/all.md
 - [Google Gemini](/hermes/docs/guides/google-gemini/)
 - [Google Vertex AI](/hermes/docs/guides/google-vertex/)
 - [Run Hermes Locally with Ollama — Zero API Cost](/hermes/docs/guides/local-ollama-setup/)
+- [Manage Hermes Cloud with MCP](/hermes/docs/guides/manage-hermes-cloud-with-mcp/)
 - [Register a Microsoft Graph Application](/hermes/docs/guides/microsoft-graph-app-registration/)
 - [Migrate from OpenClaw](/hermes/docs/guides/migrate-from-openclaw/)
 - [MiniMax OAuth](/hermes/docs/guides/minimax-oauth/)

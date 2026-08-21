@@ -2,7 +2,7 @@
 
 > 公式 docs の Quickstart / Installation / Messaging の順を日本語にしたもの。独自手順は作らない。正本: https://hermes-agent.nousresearch.com/docs/
 
-Hermes Agent 0.20.4
+Hermes Agent 0.20.5
 
 ## ページ
 
@@ -87,6 +87,7 @@ Hermes Agent 0.20.4
 - [guides/google-vertex（日本語版）](https://wiki.winsmux.dev/hermes/docs/guides/google-vertex/)
 - [guides/local-llm-on-mac（日本語版）](https://wiki.winsmux.dev/hermes/docs/guides/local-llm-on-mac/)
 - [guides/local-ollama-setup（日本語版）](https://wiki.winsmux.dev/hermes/docs/guides/local-ollama-setup/)
+- [guides/manage-hermes-cloud-with-mcp（日本語版）](https://wiki.winsmux.dev/hermes/docs/guides/manage-hermes-cloud-with-mcp/)
 - [guides/microsoft-graph-app-registration（日本語版）](https://wiki.winsmux.dev/hermes/docs/guides/microsoft-graph-app-registration/)
 - [guides/migrate-from-openclaw（日本語版）](https://wiki.winsmux.dev/hermes/docs/guides/migrate-from-openclaw/)
 - [guides/minimax-oauth（日本語版）](https://wiki.winsmux.dev/hermes/docs/guides/minimax-oauth/)
@@ -497,6 +498,7 @@ Hermes Agent 0.20.4
 - https://wiki.winsmux.dev/hermes/raw/docs/guides/google-vertex.md
 - https://wiki.winsmux.dev/hermes/raw/docs/guides/local-llm-on-mac.md
 - https://wiki.winsmux.dev/hermes/raw/docs/guides/local-ollama-setup.md
+- https://wiki.winsmux.dev/hermes/raw/docs/guides/manage-hermes-cloud-with-mcp.md
 - https://wiki.winsmux.dev/hermes/raw/docs/guides/microsoft-graph-app-registration.md
 - https://wiki.winsmux.dev/hermes/raw/docs/guides/migrate-from-openclaw.md
 - https://wiki.winsmux.dev/hermes/raw/docs/guides/minimax-oauth.md

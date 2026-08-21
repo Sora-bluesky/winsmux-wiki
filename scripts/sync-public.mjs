@@ -70,7 +70,7 @@ const llms = `# Hermes Agent（日本語）
 
 > 公式 docs の Quickstart / Installation / Messaging の順を日本語にしたもの。独自手順は作らない。正本: https://hermes-agent.nousresearch.com/docs/
 
-Hermes Agent ${'0.20.4'}
+Hermes Agent ${'0.20.5'}
 
 ## ページ
 

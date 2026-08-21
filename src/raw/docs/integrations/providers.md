@@ -2,7 +2,7 @@
 title: "AI プロバイダー"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 0dd4911353a6cd71a54910f0cd9834521e1f326b
+upstream_blob: 042b5411181b6cb3e4be978d96001c7feaaf6296
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -44,6 +44,7 @@ LLM につなぐ手段が最低 1 つ必要です。`hermes model` を使うと�
 | **OpenCode Zen** | `~/.hermes/.env` に `OPENCODE_ZEN_API_KEY`（provider: `opencode-zen`） |
 | **CommandCode** | `~/.hermes/.env` に `COMMANDCODE_API_KEY`（provider: `commandcode`、別名: `commandcode-chat`。Claude のモデルは `commandcode-anthropic`、別名: `commandcode-claude`）。GOAT / Pro / Max / Provider の各プランで使えます（1 ドルの Go プランは API を使えないため対象外です）。 |
 | **OpenCode Go** | `~/.hermes/.env` に `OPENCODE_GO_API_KEY`（provider: `opencode-go`） |
+| **OpenCode Free** | キー不要で、API キーもアカウントも登録せずに使えます（provider: `opencode-free`、別名: `free`、`opencode_free`）。`hermes model` または `/model free` で選ぶと、リクエストは匿名で送られます |
 | **DeepSeek** | `~/.hermes/.env` に `DEEPSEEK_API_KEY`（provider: `deepseek`） |
 | **Hugging Face** | `~/.hermes/.env` に `HF_TOKEN`（provider: `huggingface`、別名: `hf`） |
 | **Google / Gemini** | `~/.hermes/.env` に `GOOGLE_API_KEY`（または `GEMINI_API_KEY`）（provider: `gemini`） |

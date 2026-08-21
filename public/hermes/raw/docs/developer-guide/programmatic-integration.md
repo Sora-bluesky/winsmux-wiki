@@ -2,7 +2,7 @@
 title: "プログラムからの連携"
 description: "外部プログラムから hermes-agent を動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 42a603215e0a484a1cebf3bd8f29e6f75ef49dd9
+upstream_blob: 7e9c1f6c3bae7f41c549bd4db70c9840ab0c5315
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -115,12 +115,19 @@ POST /v1/runs/{id}/approval      Resolve a pending approval
 POST /v1/runs/{id}/steer         Inject mid-run guidance at the next tool boundary
 POST /v1/runs/{id}/stop          Interrupt the run
 GET  /v1/capabilities            Machine-readable feature flags
+POST /v1/browser-control/register Register a browser controller
+GET  /v1/browser-control/ws       Browser-controller WebSocket
 GET  /v1/models                  Lists hermes-agent
 GET  /api/model/options          Provider-aware picker inventory
 GET  /health, /health/detailed
 ```
 
 セットアップ、ヘッダ（`X-Hermes-Session-Id`、`X-Hermes-Session-Key`）、フロントエンドとのつなぎ方は [API サーバー](/hermes/docs/user-guide/features/api-server/) を参照してください。
+
+ブラウザの拡張機能は、既定では無効になっているコントローラのプロトコルを有効にして、
+Hermes の会話を開いたそのブラウザセッションを直接操作できます。API と
+ダッシュボードのどちらの経路も、principal に紐づいた 1 つの仲介役と、明示的に
+許可した機能の一覧を共有します。[ブラウザ拡張からの操作](/hermes/docs/user-guide/features/api-server/#browser-extension-control) を参照してください。
 
 ### モデル一覧を返す口 {#model-catalog-surfaces}
 

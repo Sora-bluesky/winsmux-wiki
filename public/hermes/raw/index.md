@@ -3,7 +3,7 @@ title: Hermes Agent
 description: Hermes Agent Documentation 全ページの日本語版。導入から運用まで、ここから適切なページへ進めます。
 sources:
   - https://hermes-agent.nousresearch.com/docs/
-hermes_version: "0.20.4"
+hermes_version: "0.20.5"
 confidence: high
 raw: /hermes/raw/index.md
 ---

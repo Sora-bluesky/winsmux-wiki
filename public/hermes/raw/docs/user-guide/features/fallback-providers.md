@@ -1,37 +1,37 @@
 ---
-title: "フォールバックプロバイダー"
-description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
+title: "予備のプロバイダー"
+description: "主に使うモデルが応じないとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: 2c3cdbc066d19cf2eac441e1df4a604972674491
+upstream_blob: 6f64ee68349202427fb27502c558d219e551201f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
 
-# フォールバックプロバイダー {#fallback-providers}
+# 予備のプロバイダー {#fallback-providers}
 
-Hermes Agent には、プロバイダー側でトラブルが起きてもセッションを止めないための備えが三層あります。
+Hermes Agent には、プロバイダー側で問題が起きてもセッションを続けるための、3 つの層の粘り強さがあります。
 
-1. **[認証情報プール](/hermes/docs/user-guide/features/credential-pools/)** — *同じ* プロバイダーの API キーを複数持ち、順番に使い回します（最初に試されるのはここです）
-2. **メインモデルのフォールバック** — メインのモデルが失敗したとき、*別の* プロバイダーとモデルの組み合わせへ自動で切り替えます
-3. **補助タスクのフォールバック** — 画像認識・圧縮・ウェブ抽出といった脇のタスクについて、独立にプロバイダーを解決します
+1. **[資格情報のプール](/hermes/docs/user-guide/features/credential-pools/)** — *同じ* プロバイダーの複数の API キーを回して使う（最初に試されます）
+2. **主モデルの切り替え** — 主に使うモデルが失敗したとき、*別の* プロバイダーとモデルの組へ自動で切り替える
+3. **補助タスクの切り替え** — 画像の読み取り、圧縮、ウェブの抽出といった脇の仕事について、独立にプロバイダーを決める
 
-同じプロバイダー内での切り替え（OpenRouter のキーを複数持つ場合など）は認証情報プールが担当します。このページで扱うのは、プロバイダーをまたぐ切り替えのほうです。どちらも任意で、互いに独立して動きます。
+資格情報のプールは、同じプロバイダー内での持ち回りを引き受けます（OpenRouter のキーを複数持っている場合など）。このページで扱うのは、プロバイダーをまたぐ切り替えです。どちらも任意で、それぞれ独立に働きます。
 
-## メインモデルのフォールバック {#primary-model-fallback}
+## 主モデルの切り替え {#primary-model-fallback}
 
-メインの LLM プロバイダーでエラーが起きたとき——レート制限、サーバーの過負荷、認証の失敗、接続の切断など——Hermes は会話を保ったまま、セッションの途中で控えのプロバイダーとモデルの組へ自動的に切り替えられます。
+主に使っている LLM プロバイダーがエラーを返したとき — 利用制限、サーバーの過負荷、認証の失敗、接続の切断 — Hermes はセッションの途中でも、会話を失わずに控えのプロバイダーとモデルの組へ自動で切り替えられます。
 
 ### 設定 {#configuration}
 
-いちばん手軽なのは対話形式の管理画面です。
+いちばん楽なのは、対話式の管理画面です。
 
 ```bash
 hermes fallback
 ```
 
-`hermes fallback` は `hermes model` と同じプロバイダー選択画面を使い回します。プロバイダーの一覧も、認証情報の入力も、検証のしかたも同じです。切り替え先の並びを管理するには、サブコマンドの `add`、`list`（別名 `ls`）、`remove`（別名 `rm`）、`clear` を使います。変更内容は `config.yaml` の最上位にある `fallback_providers:` のリストへ保存されます。
+`hermes fallback` は `hermes model` のプロバイダー選択をそのまま使い回します。プロバイダーの一覧も、資格情報の入力も、確認の仕方も同じです。連なりを管理するには、サブコマンドの `add`、`list`（別名 `ls`）、`remove`（別名 `rm`）、`clear` を使います。変更は `config.yaml` の最上位にある `fallback_providers:` の一覧として残ります。
 
-YAML を自分で編集したい場合は、`~/.hermes/config.yaml` の最上位に `fallback_providers` のリストを足します。
+YAML を直に書きたければ、`~/.hermes/config.yaml` の最上位に `fallback_providers` の一覧を足してください。
 
 ```yaml
 fallback_providers:
@@ -39,13 +39,13 @@ fallback_providers:
     model: anthropic/claude-sonnet-4
 ```
 
-各エントリーには `provider` と `model` の両方が必要です。どちらかが欠けているエントリーは無視されます。
+各項目には `provider` と `model` の両方が要ります。どちらかが欠けている項目は無視されます。
 
-:::note `fallback_model` と `fallback_providers`
-`fallback_providers`（複数形・リスト）が現行の設定の形で、複数の切り替え先を順番に試せます。`fallback_model`（単数形）は切り替え先を 1 つだけ書く古い形式のキーです。Hermes は後方互換のためにこちらも読みますが、`hermes fallback` が書き出すのは現行の `fallback_providers` のほうで、書き込みのときに古い設定を移行します。両方が設定されている場合は `fallback_providers` が優先されます。
+:::note `fallback_model` と `fallback_providers` の違い
+`fallback_providers`（複数形の一覧）が今の設定の形で、順に試す控えを複数書けます。`fallback_model`（単数形）は控えをひとつだけ書く古いキーです。Hermes は後方互換のためにまだ受け付けますが、`hermes fallback` は今の `fallback_providers` のキーに書き、書き込みのときに古い設定を移し替えます。両方が設定されている場合は `fallback_providers` が優先されます。
 :::
 
-### 対応プロバイダー {#supported-providers}
+### 対応しているプロバイダー {#supported-providers}
 
 | プロバイダー | 値 | 必要なもの |
 |----------|-------|-------------|
@@ -54,8 +54,8 @@ fallback_providers:
 | Nous Portal | `nous` | `hermes setup --portal`（新規）または `hermes auth add nous`（OAuth） |
 | OpenAI Codex | `openai-codex` | `hermes model` → **ChatGPT or Codex Subscription**（ChatGPT の OAuth） |
 | GitHub Copilot | `copilot` | `COPILOT_GITHUB_TOKEN`、`GH_TOKEN`、`GITHUB_TOKEN` のいずれか |
-| GitHub Copilot ACP | `copilot-acp` | 外部プロセス（エディター連携） |
-| Anthropic | `anthropic` | `ANTHROPIC_API_KEY` または Claude Code の認証情報 |
+| GitHub Copilot ACP | `copilot-acp` | 外部のプロセス（エディター連携） |
+| Anthropic | `anthropic` | `ANTHROPIC_API_KEY` または Claude Code の資格情報 |
 | z.ai / GLM | `zai` | `GLM_API_KEY` |
 | Kimi / Moonshot | `kimi-coding` | `KIMI_API_KEY` |
 | MiniMax | `minimax` | `MINIMAX_API_KEY` |
@@ -69,18 +69,19 @@ fallback_providers:
 | Google AI Studio | `gemini` | `GOOGLE_API_KEY`（別名: `GEMINI_API_KEY`） |
 | xAI（Grok） | `xai`（別名 `grok`） | `XAI_API_KEY`（任意: `XAI_BASE_URL`） |
 | xAI Grok OAuth（SuperGrok） | `xai-oauth`（別名 `grok-oauth`） | `hermes model` → xAI Grok OAuth（ブラウザーでログイン。SuperGrok の契約が必要） |
-| AWS Bedrock | `bedrock` | boto3 の標準的な認証（`AWS_REGION` と `AWS_PROFILE` または `AWS_ACCESS_KEY_ID`） |
+| AWS Bedrock | `bedrock` | boto3 の標準の認証（`AWS_REGION` と `AWS_PROFILE`、または `AWS_ACCESS_KEY_ID`） |
 | Qwen Portal（OAuth） | `qwen-oauth` | `hermes model`（Qwen Portal の OAuth。任意: `HERMES_QWEN_BASE_URL`） |
-| MiniMax（OAuth） | `minimax-oauth` | `hermes model`（MiniMax ポータルの OAuth） |
+| MiniMax（OAuth） | `minimax-oauth` | `hermes model`（MiniMax portal の OAuth） |
 | OpenCode Zen | `opencode-zen` | `OPENCODE_ZEN_API_KEY` |
 | CommandCode | `commandcode`（別名 `commandcode-chat`。Claude は `commandcode-anthropic` 経由） | `COMMANDCODE_API_KEY` |
 | OpenCode Go | `opencode-go` | `OPENCODE_GO_API_KEY` |
+| OpenCode Free | `opencode-free` | —（キー不要、資格情報なし） |
 | Kilo Code | `kilocode` | `KILOCODE_API_KEY` |
 | Xiaomi MiMo | `xiaomi` | `XIAOMI_API_KEY` |
 | Arcee AI | `arcee` | `ARCEEAI_API_KEY` |
 | GMI Cloud | `gmi` | `GMI_API_KEY` |
 | Alibaba / DashScope | `alibaba` | `DASHSCOPE_API_KEY` |
-| Alibaba Coding Plan | `alibaba-coding-plan` | `ALIBABA_CODING_PLAN_API_KEY`（無ければ `DASHSCOPE_API_KEY` を使います） |
+| Alibaba Coding Plan | `alibaba-coding-plan` | `ALIBABA_CODING_PLAN_API_KEY`（なければ `DASHSCOPE_API_KEY`） |
 | Kimi / Moonshot（中国） | `kimi-coding-cn` | `KIMI_CN_API_KEY` |
 | StepFun | `stepfun` | `STEPFUN_API_KEY` |
 | Tencent TokenHub | `tencent-tokenhub` | `TOKENHUB_API_KEY` |
@@ -89,9 +90,9 @@ fallback_providers:
 | Hugging Face | `huggingface` | `HF_TOKEN` |
 | 独自エンドポイント | `custom` | `base_url` と `key_env`（下記参照） |
 
-### 独自エンドポイントへのフォールバック {#custom-endpoint-fallback}
+### 独自エンドポイントを控えにする {#custom-endpoint-fallback}
 
-OpenAI 互換の独自エンドポイントを使う場合は、`base_url` を書き、必要に応じて `key_env` も足します。
+OpenAI 互換の独自エンドポイントを使うなら、`base_url` を足し、必要なら `key_env` も書きます。
 
 ```yaml
 fallback_providers:
@@ -101,38 +102,38 @@ fallback_providers:
     key_env: MY_LOCAL_KEY            # env var name containing the API key
 ```
 
-### フォールバックが働く条件 {#when-fallback-triggers}
+### 切り替えが起きる条件 {#when-fallback-triggers}
 
-メインのモデルが次のような失敗をしたとき、フォールバックが自動的に働きます。
+主モデルが次のように失敗したとき、控えへの切り替えが自動で起きます。
 
-- **レート制限**（HTTP 429）— 再試行を使い切ったあと
-- **サーバーエラー**（HTTP 500、502、503）— 再試行を使い切ったあと
-- **認証の失敗**（HTTP 401、403）— 即座に（再試行しても意味がないため）
-- **見つからない**（HTTP 404）— 即座に
-- **不正な応答** — API が壊れた応答や空の応答を繰り返し返すとき
+- **利用制限**（HTTP 429） — 試し直しを使い切ったあと
+- **サーバーのエラー**（HTTP 500、502、503） — 試し直しを使い切ったあと
+- **認証の失敗**（HTTP 401、403） — 即座に（試し直す意味がないため）
+- **見つからない**（HTTP 404） — 即座に
+- **おかしな応答** — API が壊れた応答や空の応答を繰り返し返すとき
 
-働いたとき、Hermes は次のように動きます。
+切り替えが起きると、Hermes は次のように動きます。
 
-1. 切り替え先プロバイダーの認証情報を解決する
-2. 新しい API クライアントを組み立てる
-3. モデル・プロバイダー・クライアントをその場で差し替える
-4. 再試行のカウンターをリセットし、会話を続ける
+1. 控えのプロバイダーの資格情報を解決する
+2. 新しい API のクライアントを組み立てる
+3. モデル、プロバイダー、クライアントをその場で差し替える
+4. 試し直しの回数を戻し、会話を続ける
 
-切り替えは途切れなく行われます。会話の履歴もツール呼び出しも文脈もそのまま残ります。エージェントは中断した地点からそのまま続き、使うモデルだけが変わります。
+切り替えは滑らかです。会話の履歴、道具の呼び出し、文脈はそのまま残ります。エージェントは中断したところから、使うモデルだけを変えて続きを進めます。
 
-:::warning フォールバックするとプロンプトキャッシュが消えます
-プロンプトキャッシュは、リクエストを処理するモデル（そしてたいていのプロバイダーではアカウント）ごとに紐づいています。フォールバックが働くと、新しいプロバイダーとモデルの組にはその会話のキャッシュがないため、次のリクエストは履歴全体を、割引の効いたキャッシュ価格（およそ 75〜90% 引き）ではなく通常の入力トークン価格で読み直します。ターンが終わってメインに戻るときも同じで、メインに戻った最初のリクエストもまた全部の読み直しになります（メイン側のキャッシュの有効期限がまだ切れていない場合を除きます）。障害の最中でも動き続けるための代償なので避けようがありませんが、プロバイダーの間を行き来する長いセッションが、ずっと同じところに留まるセッションよりはっきり高くつくのはこのためです。
+:::warning 切り替えるとプロンプトのキャッシュは無効になります
+プロンプトのキャッシュは、そのリクエストを処理するモデル（そしてたいていのプロバイダーではアカウントも）にひもづいています。切り替えが起きると、新しいプロバイダーとモデルの組はその会話の前置きをキャッシュしていないので、次のリクエストは履歴の全体を、約 75〜90% 引きのキャッシュ料金ではなく、入力トークンの正価で読み直します。ターンが終わって主モデルに戻るときも同じで、主モデルへ戻った最初のリクエストもやはり全体の読み直しになります（主モデル側のキャッシュの有効期間がまだ切れていない場合を除きます）。これは避けられません。障害の最中でも動き続けるための代償です。ただし、プロバイダーの間を行き来する長いセッションが、居場所を変えないセッションよりはっきり高くつくのは、この理屈からです。
 :::
 
-:::info セッション単位ではなくターン単位です
-フォールバックは **ターン単位** です。ユーザーが新しくメッセージを送るたびに、メインのモデルへ戻った状態から始まります。ターンの途中でメインが失敗したら、そのターンのあいだだけフォールバックが働きます。次のメッセージでは、Hermes はまたメインを試します。1 つのターンの中でフォールバックが働くのは最大 1 回までで、切り替え先も失敗した場合は通常のエラー処理（再試行、それからエラーメッセージ）に移ります。こうすることで、ターンの中で切り替えが連鎖するのを防ぎつつ、メインのモデルには毎ターン新しい機会が与えられます。
+:::info セッション単位ではなくターン単位
+切り替えは **ターンの範囲** で効きます。新しいメッセージが来るたびに、主モデルに戻った状態から始まります。ターンの途中で主モデルが失敗したら、そのターンだけ控えが使われます。次のメッセージでは、Hermes はまた主モデルを試します。ひとつのターンの中で切り替えが起きるのは多くても 1 回です。控えも失敗した場合は、通常のエラー処理（試し直し、そしてエラーの表示）に引き継がれます。これでターンの中で切り替えが連鎖するのを防ぎつつ、主モデルには毎ターン新しい機会を与えられます。
 
-このターンごとの再試行は **リセット時刻を見ています**。メイン側の認証情報がレート制限の解除時刻を返していて、それがまだ来ていない場合（Claude Pro / Max の 5 時間枠や Codex の週次上限のような契約の枠は、解除まで数時間〜数日と返します）、Hermes は失敗が分かりきった再試行を飛ばし、解除時刻が過ぎるまでフォールバック側に留まります。1 ターンにつき無駄なプロバイダー切り替えが 2 回（つまりプロンプトキャッシュの破棄も 2 回）起きるのを避けるためです。解除時刻を過ぎた瞬間、次のターンから自動的にメインへ戻ります。解除時刻の付かない一時的な 429 は従来どおりの動きで、短い待機のあと毎ターン再試行します。
+このターンごとの試し直しは **回復の時刻を見ています**。主モデルの資格情報が、まだ過ぎていない利用制限の回復時刻を返してきた場合（Claude Pro / Max の 5 時間枠や Codex の週ごとの制限といった契約の枠は、これを時間や日の単位で返します）、Hermes は失敗が分かりきった試し直しを飛ばし、回復の時刻を過ぎるまで控えにとどまります。これで、1 ターンあたり無駄なプロバイダーの切り替え 2 回（そしてプロンプトのキャッシュの無効化 2 回）を避けられます。回復の時刻を過ぎた瞬間、次のターンから自動で主モデルに戻ります。回復時刻の付かない一時的な 429 は、これまでどおりです。短い間を置いてから、毎ターン試し直します。
 :::
 
 ### 例 {#examples}
 
-**Anthropic に直結しているときのフォールバックに OpenRouter を使う:**
+**Anthropic 直結の控えに OpenRouter を置く:**
 ```yaml
 model:
   provider: anthropic
@@ -143,7 +144,7 @@ fallback_providers:
     model: anthropic/claude-sonnet-4
 ```
 
-**OpenRouter のフォールバックに Nous Portal を使う:**
+**OpenRouter の控えに Nous Portal を置く:**
 ```yaml
 model:
   provider: openrouter
@@ -154,7 +155,7 @@ fallback_providers:
     model: nous-hermes-3
 ```
 
-**クラウドのフォールバックにローカルのモデルを使う:**
+**クラウドの控えに手元のモデルを置く:**
 ```yaml
 fallback_providers:
   - provider: custom
@@ -163,76 +164,76 @@ fallback_providers:
     key_env: LOCAL_API_KEY
 ```
 
-**Codex の OAuth をフォールバックに使う:**
+**Codex の OAuth を控えにする:**
 ```yaml
 fallback_providers:
   - provider: openai-codex
     model: gpt-5.3-codex
 ```
 
-### フォールバックが使える場所 {#where-fallback-works}
+### 切り替えが効く場所 {#where-fallback-works}
 
-| 場面 | フォールバックの対応 |
+| 場面 | 切り替えの対応 |
 |---------|-------------------|
 | CLI のセッション | ✔ |
-| メッセージングのゲートウェイ（Telegram、Discord など） | ✔ |
-| サブエージェントへの委任 | ✔（サブエージェントは親の切り替え先の並びを引き継ぎます） |
-| 定期実行のジョブ | ✔（定期実行のエージェントも設定済みの切り替え先を引き継ぎます） |
-| `provider: auto` の補助タスク | ✔（タスクごとの切り替え先、次にメインの切り替え先の並び、そのあとで組み込みの補助タスク探索の順に試します） |
+| メッセージのゲートウェイ（Telegram、Discord など） | ✔ |
+| 子エージェントへの委任 | ✔（子エージェントは親の控えの連なりを受け継ぎます） |
+| 定時ジョブ | ✔（定時のエージェントは設定された控えのプロバイダーを受け継ぎます） |
+| `provider: auto` の補助タスク | ✔（タスクごとの控え、次に主の控えの連なり、その後に組み込みの補助の探索の順で試します） |
 
 :::tip
-メインの切り替え先の並びを指定する環境変数はありません。設定するのは `config.yaml` か `hermes fallback` だけです。これは意図した設計で、フォールバックの設定は意識して選ぶものであり、シェルに残った古い環境変数に上書きされてよいものではないからです。
+主の控えの連なりには環境変数がありません。`config.yaml` か `hermes fallback` だけで設定してください。これは意図してそうしています。控えの設定は意識して選ぶものであって、古くなったシェルの export に上書きされていいものではないからです。
 :::
 
 ---
 
-## 補助タスクのフォールバック {#auxiliary-task-fallback}
+## 補助タスクの切り替え {#auxiliary-task-fallback}
 
-Hermes は脇のタスクに、それぞれ別の軽いモデルを使います。タスクごとに独自のプロバイダー解決の連なりがあり、それ自体が組み込みのフォールバックとして働きます。
+Hermes は脇の仕事に、別の軽いモデルを使います。それぞれの仕事は自前のプロバイダー解決の連なりを持っていて、それがそのまま組み込みの控えの仕組みとして働きます。
 
-### プロバイダーを独立に解決するタスク {#tasks-with-independent-provider-resolution}
+### プロバイダーを独立に決める仕事 {#tasks-with-independent-provider-resolution}
 
-| タスク | 何をするか | 設定キー |
+| 仕事 | 何をするか | 設定のキー |
 |------|-------------|-----------|
-| 画像認識 | 画像の解析、ブラウザーのスクリーンショット | `auxiliary.vision` |
-| ウェブ抽出 | ウェブページの要約 | `auxiliary.web_extract` |
+| 画像の読み取り | 画像の解析、ブラウザーのスクリーンショット | `auxiliary.vision` |
+| ウェブの抽出 | ウェブページの要約 | `auxiliary.web_extract` |
 | 圧縮 | 文脈を圧縮するための要約 | `auxiliary.compression` |
-| スキルハブ | スキルの検索と発見 | `auxiliary.skills_hub` |
-| MCP | MCP の補助的な処理 | `auxiliary.mcp` |
-| 承認 | コマンドの承認を賢く仕分ける処理 | `auxiliary.approval` |
-| タイトル生成 | セッションのタイトルの要約 | `auxiliary.title_generation` |
-| トリアージの具体化 | `hermes kanban specify` とダッシュボードの ✨ ボタン。一行のトリアージ項目をちゃんとした仕様に膨らませます | `auxiliary.triage_specifier` |
+| スキルの拠点 | スキルの検索と発見 | `auxiliary.skills_hub` |
+| MCP | MCP の補助的な操作 | `auxiliary.mcp` |
+| 承認 | コマンドの承認を賢く仕分ける | `auxiliary.approval` |
+| 題名の生成 | セッションの題名の要約 | `auxiliary.title_generation` |
+| 仕分けの肉付け | `hermes kanban specify` とダッシュボードの ✨ ボタン — 一行の仕分けタスクを、ちゃんとした仕様に膨らませます | `auxiliary.triage_specifier` |
 
-### 自動判別の連なり {#auto-detection-chain}
+### 自動で選ぶ連なり {#auto-detection-chain}
 
-タスクのプロバイダーが `"auto"`（既定値）のとき、Hermes はまずその補助タスクにメインのプロバイダーとメインのモデルを試します。それが使えない場合や、あとで容量不足系のエラーで失敗した場合、Hermes は組み込みの探索へ進む前に、利用者が設定したフォールバックの方針を尊重します。
+仕事のプロバイダーが `"auto"`（既定）のとき、Hermes はまずその補助タスクに主プロバイダーと主モデルを試します。その経路が使えないか、あとから容量に類するエラーで失敗した場合、Hermes は組み込みの探索の連なりを使う前に、利用者が設定した控えの方針を尊重します。
 
 ```text
 Main provider + main model → auxiliary.<task>.fallback_chain →
 fallback_providers / fallback_model → built-in auxiliary discovery chain
 ```
 
-タスクごとの並びがいちばん的確なので、設定されていればそれが勝ちます。最上位の `fallback_providers` の並びはメインのエージェントが使うのと同じ方針なので、無料のみに絞る・同じプロバイダーに留める、といったルールが `auto` の補助タスクにもそのまま適用されます。
+仕事ごとの連なりがいちばん細かく、書かれていればそれが勝ちます。最上位の `fallback_providers` の連なりは主エージェントが使う方針と同じものなので、無料だけ、あるいは同じプロバイダーだけ、といった控えの決まりは `auto` の補助タスクにも同じように効きます。
 
-**組み込みのテキスト系探索の連なり（圧縮、ウェブ抽出、タイトル生成など）:**
+**組み込みの、文章向けの探索の連なり（圧縮、ウェブの抽出、題名の生成など）:**
 
 ```text
 OpenRouter → Nous Portal → Custom endpoint → Codex OAuth →
 API-key providers (z.ai, Kimi, MiniMax, Xiaomi MiMo, Hugging Face, Anthropic) → give up
 ```
 
-**組み込みの画像認識の探索の連なり:**
+**組み込みの、画像の読み取り向けの探索の連なり:**
 
 ```text
 Main provider (if vision-capable) → OpenRouter → Nous Portal →
 Codex OAuth → Anthropic → Custom endpoint → give up
 ```
 
-これらの組み込みの連なりは、タスクごとの方針もメインの方針も書いていない利用者のための、いわば間に合わせの受け皿です。
+これらの組み込みの連なりは、仕事ごとの控えも主の控えも書いていない人のための、ありあわせの助けです。
 
-### 補助タスクのプロバイダーを設定する {#configuring-auxiliary-providers}
+### 補助のプロバイダーを設定する {#configuring-auxiliary-providers}
 
-タスクごとに `config.yaml` で個別に設定できます。
+それぞれの仕事は `config.yaml` で個別に設定できます。
 
 ```yaml
 auxiliary:
@@ -262,7 +263,7 @@ auxiliary:
     model: ""
 ```
 
-上のタスクはどれも同じ **provider / model / base_url** の形をしています。タスクごとに独自の `fallback_chain` を書くこともできます。書かなかった場合、`provider: auto` は Hermes の組み込みの補助タスク探索より先に、最上位の `fallback_providers` の並びを使います。
+上のどの仕事も、**provider / model / base_url** という同じ形に従います。それぞれの仕事は自前の `fallback_chain` も宣言できます。書かなかった場合、`provider: auto` は Hermes 組み込みの補助の探索の連なりより先に、最上位の `fallback_providers` の連なりを使います。
 
 文脈の圧縮は `auxiliary.compression` の下で設定します。
 
@@ -274,7 +275,7 @@ auxiliary:
     base_url: null                                    # Custom OpenAI-compatible endpoint
 ```
 
-メインの切り替え先の並びはこう書きます。
+そして主の控えの連なりは次のようにします。
 
 ```yaml
 fallback_providers:
@@ -283,24 +284,24 @@ fallback_providers:
     # base_url: http://localhost:8000/v1             # Optional custom endpoint
 ```
 
-補助タスク・圧縮・フォールバックの 3 つはどれも同じ考え方です。`provider` で誰に処理させるかを選び、`model` でどのモデルかを選び、`base_url` で独自のエンドポイントを指す（こちらがプロバイダーの指定より優先されます）。
+補助・圧縮・控えの 3 つは、どれも同じ仕組みです。`provider` で誰に処理させるかを選び、`model` でどのモデルかを選び、`base_url` で独自のエンドポイントを指します（プロバイダーの指定より優先されます）。
 
-### 補助タスクで指定できるプロバイダー {#provider-options-for-auxiliary-tasks}
+### 補助タスクで選べるプロバイダー {#provider-options-for-auxiliary-tasks}
 
-ここに挙げる値が使えるのは `auxiliary:`、`compression:`、`fallback_providers:` のエントリーだけです。最上位の `model.provider` に `"main"` は **書けません**。独自のエンドポイントを使いたい場合は、`model:` のセクションで `provider: custom` を指定してください（[AI プロバイダー](/hermes/docs/integrations/providers/) を参照）。
+ここに挙げる選択肢が効くのは `auxiliary:`、`compression:`、`fallback_providers:` の項目だけです。`"main"` は最上位の `model.provider` の値としては **使えません**。独自のエンドポイントを使うなら、`model:` の節で `provider: custom` を指定してください（[AI プロバイダー](/hermes/docs/integrations/providers/) を参照）。
 
 | プロバイダー | 説明 | 必要なもの |
 |----------|-------------|-------------|
-| `"auto"` | うまくいくものが見つかるまで順番に試します（既定値） | 少なくとも 1 つプロバイダーが設定してあること |
-| `"openrouter"` | OpenRouter に固定します | `OPENROUTER_API_KEY` |
-| `"nous"` | Nous Portal に固定します | `hermes auth` |
-| `"codex"` | Codex の OAuth に固定します | `hermes model` → ChatGPT or Codex Subscription |
-| `"main"` | メインのエージェントが使っているプロバイダーをそのまま使います（補助タスク専用） | メインのプロバイダーが設定済みで有効なこと |
-| `"anthropic"` | Anthropic に直結します | `ANTHROPIC_API_KEY` または Claude Code の認証情報 |
+| `"auto"` | どれかが通るまで順に試す（既定） | プロバイダーが少なくともひとつ設定されていること |
+| `"openrouter"` | OpenRouter を強制する | `OPENROUTER_API_KEY` |
+| `"nous"` | Nous Portal を強制する | `hermes auth` |
+| `"codex"` | Codex の OAuth を強制する | `hermes model` → ChatGPT or Codex Subscription |
+| `"main"` | 主エージェントが使っているプロバイダーをそのまま使う（補助タスク専用） | 主プロバイダーが設定されていること |
+| `"anthropic"` | Anthropic 直結を強制する | `ANTHROPIC_API_KEY` または Claude Code の資格情報 |
 
-### エンドポイントを直接指定して上書きする {#direct-endpoint-override}
+### エンドポイントを直に指定して上書きする {#direct-endpoint-override}
 
-どの補助タスクでも、`base_url` を書くとプロバイダーの解決を丸ごと飛ばして、そのエンドポイントへ直接リクエストを送ります。
+どの補助タスクでも、`base_url` を設定するとプロバイダーの解決を完全に飛ばして、そのエンドポイントへ直接リクエストを送ります。
 
 ```yaml
 auxiliary:
@@ -310,26 +311,26 @@ auxiliary:
     model: "qwen2.5-vl"
 ```
 
-`base_url` は `provider` より優先されます。認証には設定した `api_key` を使い、書かれていない場合は `OPENAI_API_KEY` を使います。独自のエンドポイントに `OPENROUTER_API_KEY` を流用することは **ありません**。
+`base_url` は `provider` より優先されます。Hermes は認証に、設定された `api_key` を使い、なければ `OPENAI_API_KEY` を使います。独自のエンドポイントに `OPENROUTER_API_KEY` を使い回すことは **ありません**。
 
 ---
 
-## 補助タスクの容量エラーによるフォールバック {#auxiliary-capacity-error-fallback}
+## 容量のエラーで起きる補助の切り替え {#auxiliary-capacity-error-fallback}
 
-補助タスクのプロバイダーを明示的に指定した場合（`auxiliary.vision.provider: glm` など）、Hermes はそれをあなたの希望として扱います。ただし、**容量エラー**（HTTP 402 の支払い要求、HTTP 429 の日次上限の使い切り、接続の失敗）でプロバイダーがそもそもリクエストを処理できないときは、黙って失敗するのではなく、段階を追った受け皿へ降りていきます。
+補助のプロバイダーを明示している場合（`auxiliary.vision.provider: glm` など）、Hermes はそれをあなたの希望として扱います。ただし、そのプロバイダーが **容量のエラー**（HTTP 402 の支払い要求、HTTP 429 の日次上限の使い切り、接続の失敗）で本当にリクエストを処理できない場合は、黙って失敗するのではなく、層になった連なりをたどって控えへ移ります。
 
-1. **指定した補助プロバイダー** — あなたが設定したもの（つねに最初に試します）
-2. **`auxiliary.<task>.fallback_chain`** — タスクごとの上書きリスト（書いていれば）
-3. **メインのエージェントのプロバイダーとモデル** — 最後の安全網（並びを書いていなくても、つねに試します）
-4. **警告して再送出** — どの段階も失敗した場合、Hermes は `Auxiliary <task>: ... all fallbacks exhausted` を WARNING レベルで記録し、元のエラーをそのまま投げ直します
+1. **主の補助プロバイダー** — あなたが設定したもの（常に最初に試されます）
+2. **`auxiliary.<task>.fallback_chain`** — 書いてあれば、その仕事ごとの上書きの一覧
+3. **主エージェントのプロバイダーとモデル** — 最後の受け皿（連なりを書いていなくても、常に試されます）
+4. **警告して投げ直す** — どの層も失敗したら、Hermes は WARNING の水準で `Auxiliary <task>: ... all fallbacks exhausted` を記録し、元のエラーを投げ直します
 
-一時的な HTTP 429 のレート制限（`Retry-After: ...` が付くもの）は、容量の問題ではなくリクエスト側の制約として扱われます。つまり明示的なプロバイダー指定がそのまま尊重され、上の受け皿の階段は **降りません**。この階段に進むのは、日次・月次の上限の使い切り、支払いのエラー、接続の失敗だけです。
+一時的な HTTP 429 の利用制限（`Retry-After: ...`）は、容量の問題ではなくリクエスト側の都合として扱われます。明示したプロバイダーの選択が尊重され、控えの階段は **降りません**。明示したプロバイダーの縛りを飛び越えるのは、日次や月次の上限の使い切り、支払いのエラー、接続の失敗だけです。
 
-`provider: auto`（補助プロバイダーを明示していない状態）の場合は、2 と 3 の代わりに従来の自動判別の連なりが走ります。その最初の段はもともとメインのエージェントのモデルなので、`auto` の利用者は何も設定しなくても同じ結果になります。
+`provider: auto` の人（補助のプロバイダーを明示していない人）には、手順 2〜3 の代わりに既存の自動の探索の連なりが走ります。その最初の一手はもともと主エージェントのモデルなので、`auto` の人は何も設定しなくても同じ結果になります。
 
-### 任意: タスクごとの切り替え先の並び {#optional-per-task-fallback-chain}
+### 任意: 仕事ごとの控えの連なり {#optional-per-task-fallback-chain}
 
-「まずメインのエージェントのモデル」以外の順番にしたい場合は、`fallback_chain` を明示的に設定します。各エントリーには最低限 `provider` が必要で、`model`、`base_url`、`api_key` は任意です。
+「まず主エージェントのモデル」とは違う順番にしたいなら、`fallback_chain` を明示して設定してください。各項目には少なくとも `provider` が要ります。`model`、`base_url`、`api_key` は任意です。
 
 ```yaml
 auxiliary:
@@ -350,25 +351,25 @@ auxiliary:
         timeout: 240            # optional — this candidate's own deadline (seconds)
 ```
 
-フォールバックを働かせるために `fallback_chain` を設定する必要は **ありません**。メインのエージェントという安全網は、書かなくても働きます。既定と違う順番にしたいときだけ使ってください。
+控えを効かせるために `fallback_chain` を設定する必要は **ありません**。主エージェントという受け皿は、どのみち働きます。既定とは違う順番にしたいときだけ使ってください。
 
-`fallback_chain` の各エントリーには、それぞれ独自の `timeout`（秒）を書くこともできます。書かない場合、切り替え先の候補はタスク全体の待ち時間の設定を引き継ぎますが、それはメインのプロバイダーに合わせて詰めてあるかもしれません。エントリーごとに `timeout` を書けば、遅いけれど確実な切り替え先（大きな文脈をまとめる要約モデルなど）に、メインの時計で息絶えずに済むだけの時間を与えられます。
+`fallback_chain` の各項目は、自分の `timeout`（秒）も宣言できます。書かなければ、控えの候補は仕事ごとの制限時間を受け継ぎます。それは主のプロバイダーに合わせて調整されているかもしれません。項目ごとに `timeout` を書いておけば、遅いが確実な控え（たとえば長い文脈をまとめる要約役）が、主のプロバイダーの時計で切られずに、実際に必要な時間をもらえます。
 
-### フォールバックの引き金になる、プロバイダー側の上限エラー {#provider-quota-errors-that-trigger-fallback}
+### 切り替えを引き起こす、プロバイダーの上限のエラー {#provider-quota-errors-that-trigger-fallback}
 
-Hermes は次のものを、一時的なレート制限ではなく、402 の残高切れと同じ容量の問題として扱います。
+Hermes は次を、402 の残高切れと同じ容量の問題として認識します（一時的な利用制限とは区別します）。
 
 - Bedrock / LiteLLM: `Too many tokens per day`、`daily limit`、`tokens per day`
 - Vertex AI / GCP: `quota exceeded`、`resource exhausted`、`RESOURCE_EXHAUSTED`
 - 一般的なもの: `daily quota`、`quota_exceeded`
 
-もし使っているプロバイダーが日次上限の使い切りを別の言い回しで返していて、Hermes がフォールバックしないなら、それは不具合です。エラー文字列をそのまま添えて issue を立ててください。
+日次の上限の使い切りに別の言い回しを返すプロバイダーがあって、Hermes が切り替えないなら、それは不具合です。エラーの文字列そのままを添えて issue を立ててください。
 
 ---
 
-## 文脈の圧縮のフォールバック {#context-compression-fallback}
+## 文脈の圧縮の切り替え {#context-compression-fallback}
 
-文脈の圧縮は、`auxiliary.compression` の設定ブロックで、どのモデルとプロバイダーが要約を担当するかを決めます。
+文脈の圧縮は、要約をどのモデルとプロバイダーが担うかを `auxiliary.compression` の設定の塊で決めます。
 
 ```yaml
 auxiliary:
@@ -377,17 +378,17 @@ auxiliary:
     model: "google/gemini-3-flash-preview"
 ```
 
-:::info 古い設定からの移行
-`compression.summary_model` / `compression.summary_provider` / `compression.summary_base_url` を使っている古い設定は、最初の読み込み時に `auxiliary.compression.*` へ自動的に移行されます（設定バージョン 17）。
+:::info 古い設定の移行
+`compression.summary_model` / `compression.summary_provider` / `compression.summary_base_url` を使っている古い設定は、最初に読み込むときに `auxiliary.compression.*` へ自動で移されます（設定の版 17）。
 :::
 
-圧縮に使えるプロバイダーが 1 つもない場合、Hermes はセッションを落とすかわりに、要約を作らないまま会話の中ほどのやり取りを捨てます。
+圧縮に使えるプロバイダーがひとつもない場合、Hermes はセッションを失敗させるのではなく、要約を作らずに会話の中ほどのやり取りを落とします。
 
 ---
 
-## 委任先のプロバイダーの上書き {#delegation-provider-override}
+## 委任のプロバイダーの上書き {#delegation-provider-override}
 
-`delegate_task` で生まれたサブエージェントは、親エージェントのメインの切り替え先の並びを引き継ぎます。そのうえで、費用を抑えるためにサブエージェントだけ別のプロバイダーとモデルの組に向けることもできます。
+`delegate_task` が生む子エージェントは、親エージェントの主の控えの連なりを受け継ぎます。費用を抑えるために、子エージェントだけ別の主プロバイダーとモデルの組へ回すこともできます。
 
 ```yaml
 delegation:
@@ -397,13 +398,13 @@ delegation:
   # api_key: "local-key"
 ```
 
-設定の詳しい内容は [サブエージェントへの委任](/hermes/docs/user-guide/features/delegation/) を参照してください。
+設定の詳しい内容は [子エージェントへの委任](/hermes/docs/user-guide/features/delegation/) を見てください。
 
 ---
 
-## 定期実行ジョブのプロバイダー {#cron-job-providers}
+## 定時ジョブのプロバイダー {#cron-job-providers}
 
-定期実行のジョブは、エージェントを作るときに、設定済みの `fallback_providers` の並び（または古い形式の `fallback_model`）を引き継ぎます。ジョブごとに別のメインプロバイダーを使いたい場合は、そのジョブ自身に `provider` と `model` の上書きを設定します。
+定時ジョブは、エージェントを作るときに、設定された `fallback_providers` の連なり（または古い `fallback_model`）を受け継ぎます。ある定時ジョブだけ別の主プロバイダーを使いたいときは、そのジョブ自身に `provider` と `model` の上書きを設定します。
 
 ```python
 cronjob(
@@ -415,24 +416,24 @@ cronjob(
 )
 ```
 
-設定の詳しい内容は [定期実行タスク（cron）](/hermes/docs/user-guide/features/cron/) を参照してください。
+設定の詳しい内容は [定時タスク（Cron）](/hermes/docs/user-guide/features/cron/) を見てください。
 
 ---
 
 ## まとめ {#summary}
 
-| 機能 | フォールバックの仕組み | 設定を書く場所 |
+| 機能 | 切り替えの仕組み | 設定の場所 |
 |---------|-------------------|----------------|
-| メインのエージェントのモデル | config.yaml の `fallback_providers`。エラー時にターン単位で切り替え（毎ターン、メインへ戻ります） | `fallback_providers:`（最上位のリスト） |
-| 補助タスク全般 — auto の利用者 | 容量エラーのとき、自動判別の連なりを丸ごと使います（まずメインのエージェントのモデル、続いてプロバイダーの連なり） | `auxiliary.<task>.provider: auto` |
-| 補助タスク全般 — プロバイダーを明示した場合 | 容量エラーのときだけ、`fallback_chain`（設定されていれば）→ メインのエージェントのモデル → 警告して送出 | `auxiliary.<task>.fallback_chain` |
-| 画像認識 | 上記の段階的な受け皿と、OpenRouter への内部的な再試行 | `auxiliary.vision` |
-| ウェブ抽出 | 上記の段階的な受け皿と、OpenRouter への内部的な再試行 | `auxiliary.web_extract` |
-| 文脈の圧縮 | 上記の段階的な受け皿。どの段階も使えなければ要約なしに落とします | `auxiliary.compression` |
-| スキルハブ | 上記の段階的な受け皿 | `auxiliary.skills_hub` |
-| MCP の補助処理 | 上記の段階的な受け皿 | `auxiliary.mcp` |
-| 承認の仕分け | 上記の段階的な受け皿 | `auxiliary.approval` |
-| タイトル生成 | 上記の段階的な受け皿 | `auxiliary.title_generation` |
-| トリアージの具体化 | 上記の段階的な受け皿 | `auxiliary.triage_specifier` |
-| 委任 | 親の `fallback_providers` の並びを引き継ぎます。プロバイダーとモデルの上書きも可能です | `delegation.provider` / `delegation.model` |
-| 定期実行ジョブ | 設定済みの `fallback_providers` の並びを引き継ぎます。ジョブごとの上書きも可能です | ジョブごとの `provider` / `model` |
+| 主エージェントのモデル | config.yaml の `fallback_providers` — エラー時にターン単位で切り替わる（毎ターン主モデルに戻る） | `fallback_providers:`（最上位の一覧） |
+| 補助タスク（すべて） — auto の人 | 容量のエラー時に、自動の探索の連なりを丸ごと使う（まず主エージェントのモデル、次にプロバイダーの連なり） | `auxiliary.<task>.provider: auto` |
+| 補助タスク（すべて） — プロバイダーを明示した人 | 容量のエラーのときだけ、`fallback_chain`（あれば）→ 主エージェントのモデル → 警告して投げ直す | `auxiliary.<task>.fallback_chain` |
+| 画像の読み取り | 層になった切り替え（上記）と、内部での OpenRouter の試し直し | `auxiliary.vision` |
+| ウェブの抽出 | 層になった切り替え（上記）と、内部での OpenRouter の試し直し | `auxiliary.web_extract` |
+| 文脈の圧縮 | 層になった切り替え（上記）。どの層も使えなければ要約なしに落とす | `auxiliary.compression` |
+| スキルの拠点 | 層になった切り替え（上記） | `auxiliary.skills_hub` |
+| MCP の補助 | 層になった切り替え（上記） | `auxiliary.mcp` |
+| 承認の仕分け | 層になった切り替え（上記） | `auxiliary.approval` |
+| 題名の生成 | 層になった切り替え（上記） | `auxiliary.title_generation` |
+| 仕分けの肉付け | 層になった切り替え（上記） | `auxiliary.triage_specifier` |
+| 委任 | 親の `fallback_providers` の連なりを受け継ぐ。プロバイダーとモデルの上書きは任意 | `delegation.provider` / `delegation.model` |
+| 定時ジョブ | 設定された `fallback_providers` の連なりを受け継ぐ。ジョブごとのプロバイダーの上書きは任意 | ジョブごとの `provider` / `model` |

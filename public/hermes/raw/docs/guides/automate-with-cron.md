@@ -2,7 +2,7 @@
 title: "cron で何でも自動化する"
 description: "Hermes の cron を使った実務的な自動化のパターン。監視、レポート、パイプライン、複数スキルの連携"
 upstream_path: guides/automate-with-cron.md
-upstream_blob: dec05e43fd466e0554aebaf819aba1cb39f1907b
+upstream_blob: 20bb490207bac3c9d2eee1783146d8a0dee337b3
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron
 ---
@@ -125,7 +125,7 @@ Otherwise, provide a concise summary of the activity." --name "Repo watcher" --d
 ```
 
 :::warning それだけで完結したプロンプトにする
-プロンプトの中で `gh` のコマンドをそのまま書いている点に注目してください。cron のエージェントは、前回の実行の記憶も利用者の好みも知りません。すべて明示的に書き出してください。
+プロンプトの中で `gh` のコマンドをそのまま書いている点に注目してください。cron のエージェントは、前回の実行までの会話を覚えていません。すべて明示的に書き出してください。（永続的な記憶は読み込まれるので、MEMORY.md に保存した長く使う好みは引き継がれます。ただしジョブの成否に関わる細かい情報をそれに頼るのはやめてください。）
 :::
 
 ---
@@ -248,6 +248,28 @@ cronjob(
 | `slack` | `--deliver slack` | 自分の Slack のホームチャンネル |
 | 特定のチャット | `--deliver telegram:-1001234567890` | Telegram の特定のグループ |
 | スレッド指定 | `--deliver telegram:-1001234567890:17585` | Telegram の特定のトピックのスレッド |
+| Bot Chat | `--deliver bot-chat` | このプロファイルの正となる Bot Chat に出力を流し込みます。ボットがそれを読んで応答します |
+| Bot Chat（名前を指定） | `--deliver bot-chat:research` | 同じ端末にある別のプロファイルの Bot Chat |
+
+### Bot Chat への配信 {#bot-chat-delivery}
+
+`bot-chat` を指定すると、ジョブの出力はプロファイルの正となる「Bot
+Chat」のセッションへ**実際のメッセージとして**届きます。ボットはそれを他の
+メッセージと同じように受け取り、対応が必要なものには対応し、そのチャットで
+返事をします。定期実行の出力を実行履歴に残すだけでなく、ボットに*見せて
+反応させたい*ときはこの配信先を使います。
+
+知っておきたい点は次のとおりです。
+
+- **その端末の中だけで完結します。** 指定するプロファイルは、スケジューラを
+  動かしている端末に存在している必要があります（`hermes profile list`）。名前は
+  作成時に検証され、別のゲートウェイや別の端末のプロファイルは指定できません。
+- **ボットのターンを 1 回消費します。** 配信のたびに、届け先のボットの Bot Chat で
+  エージェントのターンが 1 回まるごと動きます。頻度の高いジョブでは費用を見込んでおいてください。
+- **組み合わせられます。** `--deliver bot-chat,telegram` とすれば、ボットと自分の
+  Telegram のホームチャンネルの両方に届きます。`all` という指定が bot-chat を含むことはありません。
+- 届いたメッセージには印が付くので、ボットは利用者からではなく定期実行の
+  ジョブから来たものだと分かります。
 
 ---
 
