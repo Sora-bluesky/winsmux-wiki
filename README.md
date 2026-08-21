@@ -46,7 +46,7 @@ npm run build
 
 ## デプロイ
 
-`main` への push で GitHub Actions が Cloudflare Workers の Static Assets へデプロイします。ワーカースクリプトは置かず、静的配信のみです。カスタムドメインは wrangler 管理のため DNS を手で触らないでください。
+`main` への push で GitHub Actions が Cloudflare Workers の Static Assets へデプロイします（認証情報はリポジトリの Actions secrets）。ワーカースクリプトは置かず、静的配信のみです。カスタムドメイン `wiki.winsmux.dev` の DNS は wrangler の設定が宣言的に管理しています。
 
 ## フィードバック
 
