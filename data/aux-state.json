@@ -1,0 +1,8 @@
+{
+  "website/docs/user-stories.mdx": "6dc721dde819b7b1675f1a6f848b34d9857b1a01",
+  "website/docs/reference/automation-blueprints-catalog.mdx": "820f5d8719950be69d0373a820c08e4fedfc122e",
+  "website/src/components/UserStoriesCollage/index.tsx": "cb6a3ca4b463253b7e0b3a658c9b0d28ca4958de",
+  "website/src/components/UserStoriesCollage/styles.module.css": "42b9e6c7f934e562306cc8718a9ba3ec466dbaf4",
+  "website/src/components/AutomationBlueprintsCatalog/index.tsx": "7edeca2c705f7ff989f729f18b356f68ce96a368",
+  "website/src/components/AutomationBlueprintsCatalog/styles.module.css": "1da29d5b06d28beaa0192c8f9aa20ac33d3904f9"
+}

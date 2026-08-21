@@ -1,0 +1,139 @@
+---
+// 公式 /docs/reference/automation-blueprints-catalog の日本語版。
+// カタログデータは data/blueprints.ja.json（scripts/mirror-blueprints.mjs が公式サイトの
+// /docs/api/automation-blueprints-index.json に追随）。
+// 本文の殻は上流 website/docs/reference/automation-blueprints-catalog.mdx の訳
+// （upstream blob は data/aux-state.json が監視。変わったら手動で追随する）。
+import BaseLayout from '../../../../../layouts/BaseLayout.astro';
+import blueprints from '../../../../../../data/blueprints.ja.json';
+
+type Blueprint = {
+  key: string;
+  title: string;
+  description: string;
+  category: string;
+  tags: string[];
+  fields: { name: string; type: string; label: string; default: string | null; options: string[]; optional: boolean; help: string }[];
+  schedule: string;
+  scheduleHuman: string;
+  command: string;
+  appUrl: string;
+};
+const list = blueprints as Blueprint[];
+---
+
+<BaseLayout
+  title="Automation Blueprints カタログ"
+  description="すぐ動かせる自動化のひな形。dashboard・CLI・TUI・各メッセンジャー・デスクトップアプリのどこからでも設定できます。"
+  sources={['https://hermes-agent.nousresearch.com/docs/reference/automation-blueprints-catalog']}
+  showAsk={false}
+  prevOverride={null}
+  nextOverride={null}
+>
+  <article class="prose">
+    <h1>Automation Blueprints</h1>
+    <p>
+      Automation Blueprints は、すぐ動かせる自動化のひな形です。ひとつ選んでいくつかの欄を埋めるだけで、Hermes
+      が cron ジョブとして予約します — cron 構文の知識は要りません。
+    </p>
+    <p>どの blueprint も<strong>すべての入口</strong>から動きます:</p>
+    <ul>
+      <li>
+        <strong>dashboard / デスクトップアプリ</strong> — Cron ページを開いて <strong>Blueprints</strong>
+        タブに切り替え、フォームを埋めて <em>Schedule it</em> を押します。
+      </li>
+      <li>
+        <strong>CLI・TUI・メッセンジャー</strong> — <code>/blueprint &lt;name&gt;</code>（例:
+        <code>/blueprint morning-brief</code>）と打つと、Hermes が必要な項目を1つずつ聞いてから予約します。名前の照合はゆるく、前方一致や近い綴りでも解決します。慣れてきたら
+        <code>/blueprint morning-brief time=08:00</code> のように値をまとめて渡して質問を飛ばせます。
+      </li>
+      <li>
+        <strong>デスクトップアプリ</strong> — 各 blueprint の <strong>Send to App</strong>
+        を押すと、コマンドが入力欄にセットされた状態でアプリが開きます。
+      </li>
+    </ul>
+    <p>
+      blueprint が黙って何かを予約することはありません — ジョブが作られる前に必ず確認が入ります。作ったジョブは
+      <code>/cron</code> でいつでも管理できます。
+    </p>
+  </article>
+
+  <div class="bp-grid">
+    {
+      list.map((b) => (
+        <div class="bp-card">
+          <div class="bp-head">
+            <h3 class="bp-title">{b.title}</h3>
+            <span class="bp-schedule">{b.scheduleHuman}</span>
+          </div>
+          <p class="bp-desc">{b.description}</p>
+          <div class="bp-tags">
+            {b.tags.map((t) => (
+              <span class="bp-tag">{t}</span>
+            ))}
+          </div>
+          <div class="bp-cmd-row">
+            <code class="bp-cmd">{b.command}</code>
+            <button type="button" class="bp-copy" data-cmd={b.command} aria-label="コマンドをコピー">コピー</button>
+          </div>
+          <div class="bp-actions">
+            <a class="bp-app" href={b.appUrl}>Send to App ↗</a>
+            <span class="bp-hint">または CLI・TUI・メッセンジャーにコマンドを貼り付け</span>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <article class="prose mt-10">
+    <h2 id="writing-your-own">自分で作る</h2>
+    <p>
+      blueprint の実体は、<code>SKILL.md</code> の frontmatter に <code>metadata.hermes.blueprint</code>
+      ブロックを持つ skill です。slot のスキーマと公開のしかたは
+      <a href="/hermes/docs/developer-guide/creating-skills/">Creating Skills → Automation Blueprints</a>
+      を見てください。
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .bp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+  .bp-card {
+    border: 1px solid var(--color-border); border-radius: 10px; padding: 1.1rem 1.2rem;
+    background: var(--color-bg); display: flex; flex-direction: column; gap: 0.65rem;
+  }
+  .bp-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; }
+  .bp-title { margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--color-fg); }
+  .bp-schedule { font-size: 0.78rem; color: var(--color-fg-muted); white-space: nowrap; }
+  .bp-desc { margin: 0; color: var(--color-fg-muted); font-size: 0.9rem; line-height: 1.65; }
+  .bp-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .bp-tag { font-size: 0.7rem; padding: 0.1rem 0.5rem; border-radius: 999px; background: var(--color-bg-subtle); color: var(--color-fg-muted); }
+  .bp-cmd-row { display: flex; align-items: center; gap: 0.5rem; }
+  .bp-cmd { flex: 1; overflow-x: auto; white-space: nowrap; padding: 0.45rem 0.6rem; font-size: 0.8rem; border-radius: 6px; background: var(--color-bg-subtle); }
+  .bp-copy {
+    flex-shrink: 0; border: 1px solid var(--color-border); background: transparent; color: var(--color-fg-muted);
+    border-radius: 6px; padding: 0.35rem 0.7rem; font-size: 0.78rem; cursor: pointer;
+  }
+  .bp-copy:hover { background: var(--color-bg-subtle); color: var(--color-fg); }
+  .bp-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .bp-app {
+    display: inline-block; padding: 0.4rem 0.85rem; border-radius: 6px; background: var(--color-fg);
+    color: var(--color-bg); font-size: 0.82rem; font-weight: 600; text-decoration: none;
+  }
+  .bp-app:hover { opacity: 0.85; }
+  .bp-hint { font-size: 0.76rem; color: var(--color-fg-muted); }
+</style>
+
+<script>
+  document.addEventListener('click', async (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.bp-copy');
+    if (!btn) return;
+    try {
+      await navigator.clipboard.writeText(btn.dataset.cmd ?? '');
+      btn.textContent = 'コピーしました';
+    } catch {
+      btn.textContent = 'コピーできません';
+    }
+    setTimeout(() => (btn.textContent = 'コピー'), 1500);
+  });
+</script>

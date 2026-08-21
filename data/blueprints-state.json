@@ -1,0 +1,68 @@
+{
+  "entries": {
+    "morning-brief": {
+      "hash": "f72545e673e7a06d",
+      "status": "translated"
+    },
+    "important-mail": {
+      "hash": "d6a0f649cfcc68ad",
+      "status": "translated"
+    },
+    "weekly-review": {
+      "hash": "c4e7df9cc27f7acc",
+      "status": "translated"
+    },
+    "workday-start": {
+      "hash": "968935897f691873",
+      "status": "translated"
+    },
+    "custom-reminder": {
+      "hash": "b49f439c2294bbec",
+      "status": "translated"
+    },
+    "evening-winddown": {
+      "hash": "aa7411f75e9d995a",
+      "status": "translated"
+    },
+    "news-digest": {
+      "hash": "537817f4454e3e6d",
+      "status": "translated"
+    },
+    "bill-renewal-watch": {
+      "hash": "d677801a7a04ea82",
+      "status": "translated"
+    },
+    "price-watch": {
+      "hash": "5d58a530645746c6",
+      "status": "translated"
+    },
+    "competitor-watch": {
+      "hash": "d306d4b0baf347e2",
+      "status": "translated"
+    },
+    "habit-checkin": {
+      "hash": "ce4a5e3637951e8d",
+      "status": "translated"
+    },
+    "hydration-move": {
+      "hash": "3ae0b9627c98d21c",
+      "status": "translated"
+    },
+    "meal-plan": {
+      "hash": "7056d85a41afa80d",
+      "status": "translated"
+    },
+    "learn-daily": {
+      "hash": "44e783e3fadce6fe",
+      "status": "translated"
+    },
+    "gratitude-journal": {
+      "hash": "9e198dc9c3ca2700",
+      "status": "translated"
+    },
+    "on-this-day": {
+      "hash": "26581dded2a5d1c6",
+      "status": "translated"
+    }
+  }
+}

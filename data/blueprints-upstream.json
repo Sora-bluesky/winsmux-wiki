@@ -1,0 +1,1022 @@
+[
+  {
+    "key": "morning-brief",
+    "title": "Morning briefing",
+    "description": "A short daily briefing: today's calendar, weather, and anything urgent waiting on you.",
+    "category": "daily",
+    "tags": [
+      "daily",
+      "briefing"
+    ],
+    "fields": [
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "08:00",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * *",
+    "scheduleHuman": "daily at 08:00",
+    "command": "/blueprint morning-brief time=08:00 deliver=origin",
+    "appUrl": "hermes://blueprint/morning-brief?time=08%3A00&deliver=origin"
+  },
+  {
+    "key": "important-mail",
+    "title": "Important-mail monitor",
+    "description": "Check your inbox periodically and ping you ONLY about mail that actually needs attention.",
+    "category": "email",
+    "tags": [
+      "email",
+      "monitor"
+    ],
+    "fields": [
+      {
+        "name": "interval_min",
+        "type": "enum",
+        "label": "How often?",
+        "default": "30",
+        "options": [
+          "15",
+          "30",
+          "60"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": "minutes between checks"
+      },
+      {
+        "name": "criteria",
+        "type": "text",
+        "label": "Only notify me if the mail…",
+        "default": "needs a reply today, is from my manager or family, or mentions a deadline",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "*/{interval_min} * * * *",
+    "scheduleHuman": "every 30 minutes",
+    "command": "/blueprint important-mail interval_min=30 criteria=\"needs a reply today, is from my manager or family, or mentions a deadline\" deliver=origin",
+    "appUrl": "hermes://blueprint/important-mail?interval_min=30&criteria=needs+a+reply+today%2C+is+from+my+manager+or+family%2C+or+mentions+a+deadline&deliver=origin"
+  },
+  {
+    "key": "weekly-review",
+    "title": "Weekly review",
+    "description": "A weekly recap: what got done, what's still open, and what's coming up.",
+    "category": "weekly",
+    "tags": [
+      "weekly",
+      "review"
+    ],
+    "fields": [
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "18:00",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "day",
+        "type": "enum",
+        "label": "Which day?",
+        "default": "sunday",
+        "options": [
+          "sunday",
+          "monday",
+          "friday",
+          "saturday"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * {dow}",
+    "scheduleHuman": "sunday at 18:00",
+    "command": "/blueprint weekly-review time=18:00 day=sunday deliver=origin",
+    "appUrl": "hermes://blueprint/weekly-review?time=18%3A00&day=sunday&deliver=origin"
+  },
+  {
+    "key": "workday-start",
+    "title": "Workday start reminder",
+    "description": "A weekday nudge with your agenda and top priorities.",
+    "category": "daily",
+    "tags": [
+      "daily",
+      "focus"
+    ],
+    "fields": [
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "09:00",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * 1-5",
+    "scheduleHuman": "weekdays at 09:00",
+    "command": "/blueprint workday-start time=09:00 deliver=origin",
+    "appUrl": "hermes://blueprint/workday-start?time=09%3A00&deliver=origin"
+  },
+  {
+    "key": "custom-reminder",
+    "title": "Custom reminder",
+    "description": "A recurring reminder in your own words, on your schedule.",
+    "category": "general",
+    "tags": [
+      "reminder"
+    ],
+    "fields": [
+      {
+        "name": "what",
+        "type": "text",
+        "label": "Remind me to…",
+        "default": "take a break and stretch",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "14:00",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "recurrence",
+        "type": "weekdays",
+        "label": "Repeat on",
+        "default": "everyday",
+        "options": [
+          "everyday",
+          "weekdays",
+          "weekends"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * {dow}",
+    "scheduleHuman": "everyday at 14:00",
+    "command": "/blueprint custom-reminder what=\"take a break and stretch\" time=14:00 recurrence=everyday deliver=origin",
+    "appUrl": "hermes://blueprint/custom-reminder?what=take+a+break+and+stretch&time=14%3A00&recurrence=everyday&deliver=origin"
+  },
+  {
+    "key": "evening-winddown",
+    "title": "Evening wind-down",
+    "description": "An end-of-day check-in: tomorrow's calendar at a glance and anything you should prep tonight.",
+    "category": "daily",
+    "tags": [
+      "daily",
+      "evening"
+    ],
+    "fields": [
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "21:00",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * *",
+    "scheduleHuman": "daily at 21:00",
+    "command": "/blueprint evening-winddown time=21:00 deliver=origin",
+    "appUrl": "hermes://blueprint/evening-winddown?time=21%3A00&deliver=origin"
+  },
+  {
+    "key": "news-digest",
+    "title": "Topic news digest",
+    "description": "A recurring digest on a topic you care about — deduped against what was already sent, so only genuinely new items land.",
+    "category": "general",
+    "tags": [
+      "digest",
+      "research"
+    ],
+    "fields": [
+      {
+        "name": "topic",
+        "type": "text",
+        "label": "What topic?",
+        "default": "AI and technology",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "a subject, product, person, or search phrase"
+      },
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "18:00",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "recurrence",
+        "type": "weekdays",
+        "label": "Repeat on",
+        "default": "weekdays",
+        "options": [
+          "everyday",
+          "weekdays",
+          "weekends"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "count",
+        "type": "enum",
+        "label": "How many bullets?",
+        "default": "5",
+        "options": [
+          "3",
+          "5",
+          "8"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * {dow}",
+    "scheduleHuman": "weekdays at 18:00",
+    "command": "/blueprint news-digest topic=\"AI and technology\" time=18:00 recurrence=weekdays count=5 deliver=origin",
+    "appUrl": "hermes://blueprint/news-digest?topic=AI+and+technology&time=18%3A00&recurrence=weekdays&count=5&deliver=origin"
+  },
+  {
+    "key": "bill-renewal-watch",
+    "title": "Bills & renewals reminder",
+    "description": "A heads-up before a recurring payment, subscription renewal, or due date — so nothing auto-charges by surprise.",
+    "category": "general",
+    "tags": [
+      "reminder",
+      "finance"
+    ],
+    "fields": [
+      {
+        "name": "what",
+        "type": "text",
+        "label": "What's due?",
+        "default": "my streaming subscription renews soon",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "10:00",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "recurrence",
+        "type": "weekdays",
+        "label": "Repeat on",
+        "default": "everyday",
+        "options": [
+          "everyday",
+          "weekdays",
+          "weekends"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * {dow}",
+    "scheduleHuman": "everyday at 10:00",
+    "command": "/blueprint bill-renewal-watch what=\"my streaming subscription renews soon\" time=10:00 recurrence=everyday deliver=origin",
+    "appUrl": "hermes://blueprint/bill-renewal-watch?what=my+streaming+subscription+renews+soon&time=10%3A00&recurrence=everyday&deliver=origin"
+  },
+  {
+    "key": "price-watch",
+    "title": "Price & availability watch",
+    "description": "Watch an exact product, flight, hotel, or listing and alert when your price or availability condition is met.",
+    "category": "general",
+    "tags": [
+      "prices",
+      "shopping",
+      "travel",
+      "monitor"
+    ],
+    "fields": [
+      {
+        "name": "item",
+        "type": "text",
+        "label": "What exactly to watch?",
+        "default": "a product URL or exact flight/hotel/listing description",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "URL or precise description — variant, dates, seller"
+      },
+      {
+        "name": "condition",
+        "type": "text",
+        "label": "Alert me when…",
+        "default": "the all-in price drops below my target",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "threshold price (state the currency), availability, or terms change"
+      },
+      {
+        "name": "interval_h",
+        "type": "enum",
+        "label": "How often?",
+        "default": "6",
+        "options": [
+          "1",
+          "3",
+          "6",
+          "12",
+          "24"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": "hours between checks — be gentle with rate limits"
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "0 */{interval_h} * * *",
+    "scheduleHuman": "on a schedule",
+    "command": "/blueprint price-watch item=\"a product URL or exact flight/hotel/listing description\" condition=\"the all-in price drops below my target\" interval_h=6 deliver=origin",
+    "appUrl": "hermes://blueprint/price-watch?item=a+product+URL+or+exact+flight%2Fhotel%2Flisting+description&condition=the+all-in+price+drops+below+my+target&interval_h=6&deliver=origin"
+  },
+  {
+    "key": "competitor-watch",
+    "title": "Competitor news watch",
+    "description": "Track named companies for material news — launches, pricing, funding, filings — with a cited digest.",
+    "category": "general",
+    "tags": [
+      "competitors",
+      "news",
+      "monitor",
+      "research"
+    ],
+    "fields": [
+      {
+        "name": "companies",
+        "type": "text",
+        "label": "Which companies?",
+        "default": "two or three competitors, by canonical name",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "canonical names and domains; aliases help dedup"
+      },
+      {
+        "name": "categories",
+        "type": "text",
+        "label": "Which events matter?",
+        "default": "product launches, pricing changes, funding, partnerships, executive moves, incidents",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "09:00",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "recurrence",
+        "type": "weekdays",
+        "label": "Repeat on",
+        "default": "monday",
+        "options": [
+          "everyday",
+          "weekdays",
+          "weekends"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * {dow}",
+    "scheduleHuman": "monday at 09:00",
+    "command": "/blueprint competitor-watch companies=\"two or three competitors, by canonical name\" categories=\"product launches, pricing changes, funding, partnerships, executive moves, incidents\" time=09:00 recurrence=monday deliver=origin",
+    "appUrl": "hermes://blueprint/competitor-watch?companies=two+or+three+competitors%2C+by+canonical+name&categories=product+launches%2C+pricing+changes%2C+funding%2C+partnerships%2C+executive+moves%2C+incidents&time=09%3A00&recurrence=monday&deliver=origin"
+  },
+  {
+    "key": "habit-checkin",
+    "title": "Habit check-in",
+    "description": "A recurring nudge to keep a habit on track and reflect on whether you did it.",
+    "category": "general",
+    "tags": [
+      "habit",
+      "wellbeing"
+    ],
+    "fields": [
+      {
+        "name": "habit",
+        "type": "text",
+        "label": "Which habit?",
+        "default": "20 minutes of reading",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "20:00",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "recurrence",
+        "type": "weekdays",
+        "label": "Repeat on",
+        "default": "everyday",
+        "options": [
+          "everyday",
+          "weekdays",
+          "weekends"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * {dow}",
+    "scheduleHuman": "everyday at 20:00",
+    "command": "/blueprint habit-checkin habit=\"20 minutes of reading\" time=20:00 recurrence=everyday deliver=origin",
+    "appUrl": "hermes://blueprint/habit-checkin?habit=20+minutes+of+reading&time=20%3A00&recurrence=everyday&deliver=origin"
+  },
+  {
+    "key": "hydration-move",
+    "title": "Hydration & movement nudge",
+    "description": "A periodic nudge during the day to drink water, stand up, and stretch.",
+    "category": "general",
+    "tags": [
+      "wellbeing",
+      "focus"
+    ],
+    "fields": [
+      {
+        "name": "interval_hours",
+        "type": "enum",
+        "label": "How often?",
+        "default": "1",
+        "options": [
+          "1",
+          "2",
+          "3"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": "hours between nudges"
+      },
+      {
+        "name": "start_hour",
+        "type": "enum",
+        "label": "Start hour",
+        "default": "9",
+        "options": [
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": "first hour of the active window (24h)"
+      },
+      {
+        "name": "end_hour",
+        "type": "enum",
+        "label": "End hour",
+        "default": "17",
+        "options": [
+          "16",
+          "17",
+          "18",
+          "19"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": "last hour of the active window (24h)"
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "0 {start_hour}-{end_hour}/{interval_hours} * * 1-5",
+    "scheduleHuman": "weekdays, every hour",
+    "command": "/blueprint hydration-move interval_hours=1 start_hour=9 end_hour=17 deliver=origin",
+    "appUrl": "hermes://blueprint/hydration-move?interval_hours=1&start_hour=9&end_hour=17&deliver=origin"
+  },
+  {
+    "key": "meal-plan",
+    "title": "Weekly meal plan",
+    "description": "A weekly meal plan plus a consolidated grocery list, tuned to your diet and how much time you have to cook.",
+    "category": "weekly",
+    "tags": [
+      "weekly",
+      "food"
+    ],
+    "fields": [
+      {
+        "name": "diet",
+        "type": "enum",
+        "label": "Diet?",
+        "default": "no restrictions",
+        "options": [
+          "no restrictions",
+          "vegetarian",
+          "vegan",
+          "high-protein",
+          "low-carb"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "meals",
+        "type": "enum",
+        "label": "Meals per day?",
+        "default": "dinner only",
+        "options": [
+          "dinner only",
+          "lunch and dinner",
+          "all three"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "effort",
+        "type": "enum",
+        "label": "Cooking effort?",
+        "default": "quick",
+        "options": [
+          "quick",
+          "medium",
+          "ambitious"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "17:00",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "day",
+        "type": "enum",
+        "label": "Which day?",
+        "default": "sunday",
+        "options": [
+          "sunday",
+          "monday",
+          "friday",
+          "saturday"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * {dow}",
+    "scheduleHuman": "sunday at 17:00",
+    "command": "/blueprint meal-plan diet=\"no restrictions\" meals=\"dinner only\" effort=quick time=17:00 day=sunday deliver=origin",
+    "appUrl": "hermes://blueprint/meal-plan?diet=no+restrictions&meals=dinner+only&effort=quick&time=17%3A00&day=sunday&deliver=origin"
+  },
+  {
+    "key": "learn-daily",
+    "title": "Daily learning drip",
+    "description": "One bite-sized lesson a day on a topic you want to learn, building progressively over time.",
+    "category": "daily",
+    "tags": [
+      "learning",
+      "daily"
+    ],
+    "fields": [
+      {
+        "name": "topic",
+        "type": "text",
+        "label": "Learn about…",
+        "default": "Spanish vocabulary",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "08:30",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "recurrence",
+        "type": "weekdays",
+        "label": "Repeat on",
+        "default": "weekdays",
+        "options": [
+          "everyday",
+          "weekdays",
+          "weekends"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * {dow}",
+    "scheduleHuman": "weekdays at 08:30",
+    "command": "/blueprint learn-daily topic=\"Spanish vocabulary\" time=08:30 recurrence=weekdays deliver=origin",
+    "appUrl": "hermes://blueprint/learn-daily?topic=Spanish+vocabulary&time=08%3A30&recurrence=weekdays&deliver=origin"
+  },
+  {
+    "key": "gratitude-journal",
+    "title": "Gratitude & reflection prompt",
+    "description": "A gentle evening prompt to reflect on the day and note what went well.",
+    "category": "general",
+    "tags": [
+      "wellbeing",
+      "reflection"
+    ],
+    "fields": [
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "21:30",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "recurrence",
+        "type": "weekdays",
+        "label": "Repeat on",
+        "default": "everyday",
+        "options": [
+          "everyday",
+          "weekdays",
+          "weekends"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * {dow}",
+    "scheduleHuman": "everyday at 21:30",
+    "command": "/blueprint gratitude-journal time=21:30 recurrence=everyday deliver=origin",
+    "appUrl": "hermes://blueprint/gratitude-journal?time=21%3A30&recurrence=everyday&deliver=origin"
+  },
+  {
+    "key": "on-this-day",
+    "title": "On-this-day discovery",
+    "description": "A daily dose of curiosity: a notable historical event, fact, or word for the day.",
+    "category": "daily",
+    "tags": [
+      "daily",
+      "curiosity"
+    ],
+    "fields": [
+      {
+        "name": "flavor",
+        "type": "enum",
+        "label": "What kind?",
+        "default": "on this day in history",
+        "options": [
+          "on this day in history",
+          "word of the day",
+          "science fact",
+          "quote of the day"
+        ],
+        "optional": false,
+        "strict": true,
+        "help": ""
+      },
+      {
+        "name": "time",
+        "type": "time",
+        "label": "What time?",
+        "default": "07:30",
+        "options": [],
+        "optional": false,
+        "strict": true,
+        "help": "24h local time, e.g. 08:00"
+      },
+      {
+        "name": "deliver",
+        "type": "enum",
+        "label": "Where to deliver?",
+        "default": "origin",
+        "options": [
+          "origin",
+          "local",
+          "telegram",
+          "discord",
+          "email"
+        ],
+        "optional": false,
+        "strict": false,
+        "help": "origin = the chat you set this up from (or your configured home channel when created from the dashboard); local = save only, no message; or any connected platform name"
+      }
+    ],
+    "schedule": "{minute} {hour} * * *",
+    "scheduleHuman": "daily at 07:30",
+    "command": "/blueprint on-this-day flavor=\"on this day in history\" time=07:30 deliver=origin",
+    "appUrl": "hermes://blueprint/on-this-day?flavor=on+this+day+in+history&time=07%3A30&deliver=origin"
+  }
+]
