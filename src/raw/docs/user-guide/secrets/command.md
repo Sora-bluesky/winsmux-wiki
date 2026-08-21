@@ -1,5 +1,5 @@
 ---
-title: "user-guide/secrets/command"
+title: "コマンドヘルパーによる secret の取得"
 description: ""
 upstream_path: user-guide/secrets/command.md
 upstream_blob: 04184eb95de5c9bc52cc09ca8a5faccec90f7799

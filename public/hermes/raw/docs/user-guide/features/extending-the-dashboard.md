@@ -551,7 +551,7 @@ SDK.fetchJSON("/api/plugins/my-plugin/data")
 
 `fetchJSON` はセッションの認証トークンを添え、失敗は例外として投げ、JSON も自動で読み解きます。
 
-#### Hermes の組み込みの終端を呼ぶ {#calling-built-in-hermes-endpoints}
+#### Hermes の組み込みのエンドポイントを呼ぶ {#calling-built-in-hermes-endpoints}
 
 ```javascript
 // Agent status
@@ -872,16 +872,16 @@ cp -r hermes-example-plugins/strike-freedom-cockpit ~/.hermes/plugins/
 
 ## API の一覧 {#api-reference}
 
-### テーマの終端 {#theme-endpoints}
+### テーマのエンドポイント {#theme-endpoints}
 
-| 終端 | メソッド | 説明 |
+| エンドポイント | メソッド | 説明 |
 |----------|--------|-------------|
 | `/api/dashboard/themes` | GET | 使えるテーマの一覧といま有効な名前を返します。組み込みは `{name, label, description}` を返し、自分で作ったテーマにはさらに、整えられたテーマの中身が入った `definition` の項目が付きます。 |
 | `/api/dashboard/theme` | PUT | 有効なテーマを設定します。本文は `{"name": "midnight"}`。`config.yaml` の `dashboard.theme` に保存されます。 |
 
-### プラグインの終端 {#plugin-endpoints}
+### プラグインのエンドポイント {#plugin-endpoints}
 
-| 終端 | メソッド | 説明 |
+| エンドポイント | メソッド | 説明 |
 |----------|--------|-------------|
 | `/api/dashboard/plugins` | GET | 見つかったプラグインの一覧（マニフェスト付き。内部向けの項目は除きます）。 |
 | `/api/dashboard/plugins/rescan` | GET | 起動し直さずに、プラグインのディレクトリを探し直します。 |

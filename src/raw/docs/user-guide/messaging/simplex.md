@@ -1,5 +1,5 @@
 ---
-title: "user-guide/messaging/simplex"
+title: "SimpleX Chat"
 description: ""
 upstream_path: user-guide/messaging/simplex.md
 upstream_blob: cffff51fe0ad10a22492cef4288b599f02bd14b5

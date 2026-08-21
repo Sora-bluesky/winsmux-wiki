@@ -1,5 +1,5 @@
 ---
-title: "user-guide/messaging/buzz"
+title: "Buzz"
 description: ""
 upstream_path: user-guide/messaging/buzz.md
 upstream_blob: 848e21c0532e61b2b0ae68db25e06b25bbbc8452

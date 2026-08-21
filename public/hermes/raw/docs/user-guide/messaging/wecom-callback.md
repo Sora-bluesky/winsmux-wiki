@@ -1,5 +1,5 @@
 ---
-title: "user-guide/messaging/wecom-callback"
+title: "WeCom Callback（自社で作るアプリ）"
 description: ""
 upstream_path: user-guide/messaging/wecom-callback.md
 upstream_blob: f6cf5ed4a473f9555e0b40169fcc5bd57e33ab09

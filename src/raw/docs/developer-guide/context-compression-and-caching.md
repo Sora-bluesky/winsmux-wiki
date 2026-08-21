@@ -1,5 +1,5 @@
 ---
-title: "developer-guide/context-compression-and-caching"
+title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
 upstream_blob: 31e3c9a0cb751f16a579a59c5fb0c5160e550fc3

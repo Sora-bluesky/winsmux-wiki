@@ -1,5 +1,5 @@
 ---
-title: "user-guide/messaging/irc"
+title: "IRC"
 description: ""
 upstream_path: user-guide/messaging/irc.md
 upstream_blob: f9fa9d94ceef9cdd502c535bf5185a341ea8ffd3

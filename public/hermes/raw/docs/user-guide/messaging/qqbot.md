@@ -1,5 +1,5 @@
 ---
-title: "user-guide/messaging/qqbot"
+title: "QQ Bot"
 description: ""
 upstream_path: user-guide/messaging/qqbot.md
 upstream_blob: e5050b304fc6d5b20acbf2ab9c793a5eba675cdf

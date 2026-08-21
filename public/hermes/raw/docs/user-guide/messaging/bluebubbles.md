@@ -1,5 +1,5 @@
 ---
-title: "user-guide/messaging/bluebubbles"
+title: "BlueBubbles（iMessage）"
 description: ""
 upstream_path: user-guide/messaging/bluebubbles.md
 upstream_blob: 12efd3823bcde90ad642c0deb565d7314d9eb642
