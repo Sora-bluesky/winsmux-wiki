@@ -14,7 +14,7 @@ LINE のトークから、自分の Hermes に話しかける形です。ボッ�
 
 LINE は、メッセージを受け取るために公開 URL（LINE 側から届く先）が要ります。だから Hermes 側は常時起動と公開 URL が前提です。ノート PC を閉じると切れます。[VPS](/hermes/entities/vps/) と相性がいいのはこのためです。
 
-設定の手順は、このサイトの [LINE](/hermes/start/line/) に公式どおりの日本語版があります。
+設定の手順は、このサイトの [LINE](/hermes/docs/user-guide/messaging/line/) に公式どおりの日本語版があります。
 
 ## 公式で読む
 
@@ -22,5 +22,5 @@ LINE は、メッセージを受け取るために公開 URL（LINE 側から届
 
 ## このサイトの関連
 
-- [LINE の設定](/hermes/start/line/)
+- [LINE の設定](/hermes/docs/user-guide/messaging/line/)
 - [Gateway](/hermes/concepts/gateway/)

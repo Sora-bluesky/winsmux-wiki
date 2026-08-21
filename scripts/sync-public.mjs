@@ -31,10 +31,10 @@ for (const file of files) {
 const site = 'https://wiki.winsmux.dev';
 const catalog = [
   ['/hermes/', '入口'],
-  ['/hermes/start/', 'インストールする'],
-  ['/hermes/start/line/', 'LINE'],
-  ['/hermes/start/telegram/', 'Telegram'],
-  ['/hermes/live/', 'すでにインストールしている'],
+  ['/hermes/docs/getting-started/quickstart/', 'インストールする'],
+  ['/hermes/docs/user-guide/messaging/line/', 'LINE'],
+  ['/hermes/docs/user-guide/messaging/telegram/', 'Telegram'],
+  ['/hermes/', 'すでにインストールしている'],
   ['/hermes/ops/', '運用'],
   ['/hermes/trust/', 'どこまで任せるか'],
   ['/hermes/guide/', 'Hermes Agentの使い方（よく使う）'],

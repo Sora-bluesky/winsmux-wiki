@@ -15,10 +15,9 @@ raw: /hermes/raw/guide.md
 
 ## このサイトの中
 
-- [Hermes Agentをインストールする](/hermes/start/)
-- [すでにインストールしている](/hermes/live/)
-- [LINE](/hermes/start/line/)
-- [Telegram](/hermes/start/telegram/)
+- [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)
+- [LINE でつなぐ](/hermes/docs/user-guide/messaging/line/)
+- [Telegram でつなぐ](/hermes/docs/user-guide/messaging/telegram/)
 - [運用](/hermes/ops/)
 - [どこまで任せるか](/hermes/trust/)
 
@@ -46,7 +45,7 @@ raw: /hermes/raw/guide.md
 
 - Telegram / LINE / Discord など 21 以上の窓口の全体像 — [Messaging Overview](https://hermes-agent.nousresearch.com/docs/user-guide/messaging)
 
-日本語の手順は、このサイトの [LINE](/hermes/start/line/) と [Telegram](/hermes/start/telegram/) にあります。
+日本語の手順は、このサイトの [LINE](/hermes/docs/user-guide/messaging/line/) と [Telegram](/hermes/docs/user-guide/messaging/telegram/) にあります。
 
 ## コツ
 

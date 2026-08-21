@@ -24,5 +24,5 @@ Linux サーバーなら公式の `install.sh` で入ります。外に開いた
 ## このサイトの関連
 
 - [運用](/hermes/ops/)
-- [LINE から使う](/hermes/start/line/)
-- [Telegram から使う](/hermes/start/telegram/)
+- [LINE から使う](/hermes/docs/user-guide/messaging/line/)
+- [Telegram から使う](/hermes/docs/user-guide/messaging/telegram/)

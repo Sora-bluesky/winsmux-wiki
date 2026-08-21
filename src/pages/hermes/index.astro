@@ -5,6 +5,13 @@ import Card from '../../components/Card.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const doc = buildDoc('index', indexSrc);
+// 見出しより上のカード2枚が入口。本文(markdown)がガイドの本体。
+const [rawIntro, ...rest] = doc.html.split('<h2');
+// 入口では折りたたみ目次・右レールを出さない(カードとガイド本文が主役)
+const intro = rawIntro
+  .replace(/<details class="toc[\s\S]*?<\/details>/, '')
+  .replace(/<nav class="toc-rail[\s\S]*?<\/nav>/, '');
+const body = rest.length ? '<h2' + rest.join('<h2') : '';
 ---
 
 <BaseLayout
@@ -15,20 +22,12 @@ const doc = buildDoc('index', indexSrc);
   hermesVersion={doc.hermesVersion}
   confidence={doc.confidence}
 >
-  <h1 class="text-3xl font-semibold tracking-tight">Hermes Agent</h1>
-  <p class="mt-3 text-fg-secondary leading-7">
-    公式 docs の Quickstart / Installation / Messaging の順を日本語にしています。手順は公式と同じです。
-  </p>
-  <div class="mt-8 grid gap-4" id="lane-cards">
+  <article class="prose" set:html={intro} />
+  <div class="mt-8 grid gap-4">
     <Card
-      href="/hermes/start/"
+      href="/hermes/docs/getting-started/quickstart/"
       title="Hermes Agentをインストールする"
-      body="まだ入れていない人向けです。入れる場所から、一度会話するまで。"
-    />
-    <Card
-      href="/hermes/live/"
-      title="すでにインストールしている"
-      body="案内は出しません。LINE や Telegram へ進むか、運用へ進みます。"
+      body="公式クイックスタートの日本語版です。入れて、モデルを選び、最初の会話まで。"
     />
     <Card
       href="/hermes/docs/getting-started/learning-path/"
@@ -36,22 +35,5 @@ const doc = buildDoc('index', indexSrc);
       body="初級・中級・上級それぞれの、読む順番と所要時間の目安です。公式の学習パスの日本語版。"
     />
   </div>
-  <script>
-    // 前回選んだ入口を覚えて、次の訪問でそのカードを先頭にする（自動遷移はしない）
-    const KEY = 'hermes-lane';
-    const cards = document.getElementById('lane-cards');
-    const links = cards?.querySelectorAll<HTMLAnchorElement>('a[href^="/hermes/"]') ?? [];
-    for (const a of links) {
-      a.addEventListener('click', () => {
-        try {
-          localStorage.setItem(KEY, a.getAttribute('href') === '/hermes/live/' ? 'live' : 'start');
-        } catch {}
-      });
-    }
-    try {
-      if (localStorage.getItem(KEY) === 'live' && cards && cards.children.length === 2) {
-        cards.appendChild(cards.children[0]);
-      }
-    } catch {}
-  </script>
+  <article class="prose mt-10" set:html={body} />
 </BaseLayout>

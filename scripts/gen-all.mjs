@@ -42,7 +42,7 @@ raw: /hermes/raw/all.md
 
 公式 docs の全ページ（${total} 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
-日本語の導線は [Hermes Agentをインストールする](/hermes/start/)、よく使うページは [よく使う](/hermes/guide/) にあります。
+日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 `;
 
 // Official doc URL -> in-site mirror path (buildDoc falls back to the

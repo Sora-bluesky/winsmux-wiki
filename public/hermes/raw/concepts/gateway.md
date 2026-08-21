@@ -24,6 +24,6 @@ Gateway が動いている間だけ、外からのメッセージが届きます
 
 ## このサイトの関連
 
-- [LINE から使う](/hermes/start/line/)
-- [Telegram から使う](/hermes/start/telegram/)
+- [LINE から使う](/hermes/docs/user-guide/messaging/line/)
+- [Telegram から使う](/hermes/docs/user-guide/messaging/telegram/)
 - [運用](/hermes/ops/)

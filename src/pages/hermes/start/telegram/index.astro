@@ -1,17 +1,16 @@
 ---
-import src from '../../../../raw/telegram.md?raw';
-import { buildDoc } from '../../../../lib/doc';
-import DocPage from '../../../../components/DocPage.astro';
-
-const doc = buildDoc('telegram', src);
+// 旧導線ページ。公式ミラーの日本語版へ転送する(二重管理ゼロ・2026-08-21 sora 裁定)。
 ---
 
-<DocPage
-  title={doc.title}
-  description={doc.description}
-  rawPath={doc.rawPath}
-  sources={doc.sources}
-  hermesVersion={doc.hermesVersion}
-  confidence={doc.confidence}
-  html={doc.html}
-/>
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0; url=/hermes/docs/user-guide/messaging/telegram/" />
+    <link rel="canonical" href="https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/" />
+    <title>Hermes Agent</title>
+  </head>
+  <body>
+    <p><a href="/hermes/docs/user-guide/messaging/telegram/">移動する</a></p>
+  </body>
+</html>

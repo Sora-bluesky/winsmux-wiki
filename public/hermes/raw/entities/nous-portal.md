@@ -25,5 +25,5 @@ Portal を使わず、OpenRouter や OpenAI、Anthropic、手元のローカル�
 
 ## このサイトの関連
 
-- [Hermes Agentをインストールする](/hermes/start/)
+- [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)
 - [コストとモデル](/hermes/syntheses/cost-and-model/)

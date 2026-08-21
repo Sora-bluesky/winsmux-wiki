@@ -29,7 +29,7 @@ function prune(nodes: Node[]): Node[] {
   for (const n of nodes) {
     if (n.id) {
       const nid = n.id.replace(/\/index$/, '');
-      if (titles.has(nid)) out.push({ id: nid });
+      if (titles.has(nid) || EXTERNAL[nid]) out.push({ id: nid });
     } else if (n.items) {
       const kept = prune(n.items);
       if (kept.length) out.push({ label: n.label, items: kept });
@@ -47,10 +47,20 @@ function containsCurrent(n: Node): boolean {
   return (n.items ?? []).some(containsCurrent);
 }
 
+const EXTERNAL: Record<string, { href: string; label: string }> = {
+  'user-stories': {
+    href: 'https://hermes-agent.nousresearch.com/docs/user-stories',
+    label: 'User Stories（公式）',
+  },
+};
+
 function renderNodes(nodes: Node[]): string {
   let out = '<ul class="space-y-0.5">';
   for (const n of nodes) {
-    if (n.id) {
+    if (n.id && EXTERNAL[n.id]) {
+      const e = EXTERNAL[n.id];
+      out += `<li><a href="${e.href}" target="_blank" rel="noopener" class="block rounded px-2 py-1 text-fg-muted no-underline hover:bg-bg-subtle hover:text-fg">${esc(e.label)}</a></li>`;
+    } else if (n.id) {
       const href = `/hermes/docs/${n.id}/`;
       const active = current === href;
       out += `<li><a href="${href}" class="block rounded px-2 py-1 no-underline ${
@@ -68,37 +78,10 @@ function renderNodes(nodes: Node[]): string {
 const tree = prune(sidebarData.tree as Node[]);
 const docsHtml = tree.length ? renderNodes(tree) : '';
 
-// 公式ツリーと重複しない、このサイト独自の入口だけを置く
-// (導線ページは上部ナビ・入口カード・公式ツリーからたどれる)
-const siteLinks = [
-  { path: '/hermes/guide/', label: 'よく使う' },
-  { path: '/hermes/ops/', label: '運用' },
-  { path: '/hermes/trust/', label: 'どこまで任せるか' },
-];
 ---
 
 <aside class="hidden w-64 shrink-0 pt-8 lg:block" aria-label="サイドバー">
   <nav class="sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto pr-2 text-sm">
-    <ul class="space-y-0.5">
-      {
-        siteLinks.map((p) => (
-          <li>
-            <a
-              href={p.path}
-              class:list={[
-                'block rounded px-2 py-1 no-underline',
-                p.path === current
-                  ? 'bg-bg-subtle font-semibold text-fg'
-                  : 'text-fg-muted hover:bg-bg-subtle hover:text-fg',
-              ]}
-              aria-current={p.path === current ? 'page' : undefined}
-            >
-              {p.label}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
     {
       docsHtml && (
         <div class="mt-3 border-t border-border pt-3">

@@ -1,13 +1,10 @@
 // Site-wide page order. Drives the hamburger menu and prev/next links.
-// group: menu section header (fixed nav vocabulary; '' = ungrouped).
+// 導線ページは廃止済み(公式ミラーへ転送)。ここには独自ページと索引だけを置く。
+// group: menu section header ('' = ungrouped).
 export const PAGES = [
-  { path: '/hermes/', label: 'Hermes Agent', group: 'インストールする' },
-  { path: '/hermes/start/', label: 'Hermes Agentをインストールする', group: 'インストールする' },
-  { path: '/hermes/start/line/', label: 'LINE', group: 'インストールする' },
-  { path: '/hermes/start/telegram/', label: 'Telegram', group: 'インストールする' },
-  { path: '/hermes/live/', label: 'すでにインストールしている', group: 'インストールする' },
-  { path: '/hermes/ops/', label: '運用', group: 'インストールする' },
-  { path: '/hermes/trust/', label: 'どこまで任せるか', group: 'インストールする' },
+  { path: '/hermes/', label: 'Hermes Agent', group: '' },
+  { path: '/hermes/ops/', label: '運用', group: '' },
+  { path: '/hermes/trust/', label: 'どこまで任せるか', group: '' },
   { path: '/hermes/guide/', label: 'よく使う', group: 'Hermes Agentの使い方' },
   { path: '/hermes/guide/all/', label: 'すべて', group: 'Hermes Agentの使い方' },
   { path: '/hermes/guide/skills/', label: 'skill', group: 'Hermes Agentの使い方' },

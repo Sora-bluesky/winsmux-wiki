@@ -14,7 +14,7 @@ Telegram のチャットから、自分の Hermes に話しかける形です。
 
 Telegram は BotFather でトークンを作って渡すだけで、公開 URL は要りません。窓口の中ではいちばん手軽に始められます。それでも Hermes 側が動いている必要はあるので、常に使いたいなら置き場所は [VPS](/hermes/entities/vps/) が候補になります。
 
-設定の手順は、このサイトの [Telegram](/hermes/start/telegram/) に公式どおりの日本語版があります。
+設定の手順は、このサイトの [Telegram](/hermes/docs/user-guide/messaging/telegram/) に公式どおりの日本語版があります。
 
 ## 公式で読む
 
@@ -22,5 +22,5 @@ Telegram は BotFather でトークンを作って渡すだけで、公開 URL �
 
 ## このサイトの関連
 
-- [Telegram の設定](/hermes/start/telegram/)
+- [Telegram の設定](/hermes/docs/user-guide/messaging/telegram/)
 - [Gateway](/hermes/concepts/gateway/)

@@ -7,10 +7,10 @@ Hermes Agent 0.20.4
 ## ページ
 
 - [入口](https://wiki.winsmux.dev/hermes/)
-- [インストールする](https://wiki.winsmux.dev/hermes/start/)
-- [LINE](https://wiki.winsmux.dev/hermes/start/line/)
-- [Telegram](https://wiki.winsmux.dev/hermes/start/telegram/)
-- [すでにインストールしている](https://wiki.winsmux.dev/hermes/live/)
+- [インストールする](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
+- [LINE](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/line/)
+- [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
+- [すでにインストールしている](https://wiki.winsmux.dev/hermes/)
 - [運用](https://wiki.winsmux.dev/hermes/ops/)
 - [どこまで任せるか](https://wiki.winsmux.dev/hermes/trust/)
 - [Hermes Agentの使い方（よく使う）](https://wiki.winsmux.dev/hermes/guide/)
@@ -849,14 +849,10 @@ Hermes Agent 0.20.4
 - https://wiki.winsmux.dev/hermes/raw/guide.md
 - https://wiki.winsmux.dev/hermes/raw/home.md
 - https://wiki.winsmux.dev/hermes/raw/index.md
-- https://wiki.winsmux.dev/hermes/raw/line.md
-- https://wiki.winsmux.dev/hermes/raw/live.md
 - https://wiki.winsmux.dev/hermes/raw/ops.md
 - https://wiki.winsmux.dev/hermes/raw/skills.md
-- https://wiki.winsmux.dev/hermes/raw/start.md
 - https://wiki.winsmux.dev/hermes/raw/syntheses/cost-and-model.md
 - https://wiki.winsmux.dev/hermes/raw/syntheses/not-a-mirror.md
-- https://wiki.winsmux.dev/hermes/raw/telegram.md
 - https://wiki.winsmux.dev/hermes/raw/trust.md
 
 ## 正本

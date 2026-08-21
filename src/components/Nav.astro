@@ -2,7 +2,7 @@
 import { PAGES } from '../lib/pages.mjs';
 
 const path = Astro.url.pathname;
-const installActive = path === '/hermes/' || path.startsWith('/hermes/start/') || path.startsWith('/hermes/live/');
+const installActive = path === '/hermes/docs/getting-started/quickstart/';
 const guideActive = path.startsWith('/hermes/guide/') || path.startsWith('/hermes/ops/') || path.startsWith('/hermes/trust/');
 
 type Group = { name: string; items: typeof PAGES };
@@ -22,7 +22,7 @@ for (const p of PAGES) {
     <div class="flex items-center gap-2">
       <nav class="hidden items-center gap-5 text-sm sm:flex">
         <a
-          href="/hermes/"
+          href="/hermes/docs/getting-started/quickstart/"
           class:list={[
             'no-underline',
             installActive ? 'font-semibold text-fg' : 'text-fg-muted hover:text-fg',
