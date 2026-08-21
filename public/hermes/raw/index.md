@@ -1,6 +1,6 @@
 ---
 title: Hermes Agent
-description: 公式 docs 全ページの日本語版。導入から運用まで、ここから適切なページへ進めます。
+description: Hermes Agent Documentation 全ページの日本語版。導入から運用まで、ここから適切なページへ進めます。
 sources:
   - https://hermes-agent.nousresearch.com/docs/
 hermes_version: "0.20.4"
@@ -10,7 +10,7 @@ raw: /hermes/raw/index.md
 
 # Hermes Agent
 
-公式 docs の全ページ（約400）を日本語にしています。構成も手順も公式のまま、言葉だけ日本語です。正本は常に [公式 docs](https://hermes-agent.nousresearch.com/docs/) です。
+Hermes Agent Documentation の全ページを日本語にしています。構成も手順も公式のまま、日本語に翻訳しています。正本は常に [Hermes Agent Documentation](https://hermes-agent.nousresearch.com/docs/) です。
 
 ## メッセージアプリから使う
 
