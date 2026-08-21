@@ -1,0 +1,1052 @@
+{
+  "entries": {
+    "anthony-inbox-cron": {
+      "hash": "476639f20e6ab397",
+      "status": "translated"
+    },
+    "discord-salma-nextcloud-libreoffice": {
+      "hash": "5c8b9df4f3b9711f",
+      "status": "translated"
+    },
+    "discord-hackafterdark-reverie-core": {
+      "hash": "cd7ffc5e1bde0ab8",
+      "status": "translated"
+    },
+    "vectorize-hindsight": {
+      "hash": "9c6beb96e1a2cdea",
+      "status": "translated"
+    },
+    "captain-awesome-google-me-deploy": {
+      "hash": "26f9a97c845ecafd",
+      "status": "translated"
+    },
+    "discord-erhnysr-turkish-locale": {
+      "hash": "6760ec4d413647e2",
+      "status": "translated"
+    },
+    "deronin-weather": {
+      "hash": "248806576b63250a",
+      "status": "translated"
+    },
+    "discord-masonjames-meta-ads-kit": {
+      "hash": "d00830b77e1ff1a6",
+      "status": "translated"
+    },
+    "discord-flensbo-searxng-setup": {
+      "hash": "aa569d2815c1b89f",
+      "status": "translated"
+    },
+    "gkisokay-codex-watcher": {
+      "hash": "c84d7ac87cd78ead",
+      "status": "translated"
+    },
+    "discord-timmmie-voice-from-terminal": {
+      "hash": "b83dfcf1d7d48166",
+      "status": "translated"
+    },
+    "discord-ibrandis-converse-before-act": {
+      "hash": "0e7351f74272bc9e",
+      "status": "translated"
+    },
+    "gh-bichev-dashboard": {
+      "hash": "bd49e98404cfeefa",
+      "status": "translated"
+    },
+    "discord-megabyte0x-hermes-for-team": {
+      "hash": "b92d47690103f2b9",
+      "status": "translated"
+    },
+    "davidondrej-browser-harness": {
+      "hash": "d2d0c6919d1fb1ad",
+      "status": "translated"
+    },
+    "metics-weekly-cron": {
+      "hash": "01fd99b73cd48dde",
+      "status": "translated"
+    },
+    "gh-jgravelle-jmunch": {
+      "hash": "a4fbeedff68f0e31",
+      "status": "translated"
+    },
+    "discord-0xchauncy-reina-hackathons": {
+      "hash": "41d0561c3998e2cb",
+      "status": "translated"
+    },
+    "gh-oangelo-tasks": {
+      "hash": "7d7bfa7d918ee519",
+      "status": "translated"
+    },
+    "gh-edward-win": {
+      "hash": "945d88dfd15b6845",
+      "status": "translated"
+    },
+    "gh-kovern-bedtime": {
+      "hash": "2e34fa46638d7bcf",
+      "status": "translated"
+    },
+    "discord-jezza2463-daily-journal-kimi": {
+      "hash": "4c12e6b65c18517e",
+      "status": "translated"
+    },
+    "gh-2024fatwolf-qq": {
+      "hash": "7fb19ccaa23af2da",
+      "status": "translated"
+    },
+    "tooluse-hermes-won": {
+      "hash": "14b691850cbb601b",
+      "status": "translated"
+    },
+    "gh-austin-latex": {
+      "hash": "d69c79ec11c8672a",
+      "status": "translated"
+    },
+    "gh-iacker-discord-gate": {
+      "hash": "48d5217f31201e3e",
+      "status": "translated"
+    },
+    "reddit-sicklerunner-switching-between-hermes": {
+      "hash": "92a16ea948496417",
+      "status": "translated"
+    },
+    "discord-synextco-hermes-hud": {
+      "hash": "4afaca561a348283",
+      "status": "translated"
+    },
+    "discord-petllama-coding-after-20-years": {
+      "hash": "4dc097b483444d18",
+      "status": "translated"
+    },
+    "discord-dre108-gigaxity-research": {
+      "hash": "ea54b92c342a4108",
+      "status": "translated"
+    },
+    "discord-lauratom-brainstack-memory-kernel": {
+      "hash": "ad4404f346c259c4",
+      "status": "translated"
+    },
+    "discord-m05tr0-hermes-on-kubernetes": {
+      "hash": "0a6145f6c3483bda",
+      "status": "translated"
+    },
+    "discord-winterwarrior-pi5-247": {
+      "hash": "391e6e4a61c1975d",
+      "status": "translated"
+    },
+    "gh-yuga-line": {
+      "hash": "5c40455961acab04",
+      "status": "translated"
+    },
+    "gh-shloms-touchdesigner": {
+      "hash": "8659de6a8147a60d",
+      "status": "translated"
+    },
+    "discord-kouff-obsidian-calendar-signal": {
+      "hash": "a61d06e423ab7298",
+      "status": "translated"
+    },
+    "gh-prasad-vertex": {
+      "hash": "989a6351d34df4cf",
+      "status": "translated"
+    },
+    "discord-monty-13277-claude-hermes-mcp": {
+      "hash": "aa533d1d7de4c3a3",
+      "status": "translated"
+    },
+    "discord-tzep123-clanker-skin": {
+      "hash": "c664ba18d760153d",
+      "status": "translated"
+    },
+    "codewithimanshu-higgsfield": {
+      "hash": "c54d6568fa422fc4",
+      "status": "translated"
+    },
+    "discord-buray-mcp-server": {
+      "hash": "79cbcffc474b0d72",
+      "status": "translated"
+    },
+    "discord-cyberfarmacist-roofing-leadgen": {
+      "hash": "cbc10890a394c8d7",
+      "status": "translated"
+    },
+    "teknium-12-instances": {
+      "hash": "297d328bbe102071",
+      "status": "translated"
+    },
+    "discord-mayuronx-email-state-machine": {
+      "hash": "06d47f78135fce27",
+      "status": "translated"
+    },
+    "pfanis-companion": {
+      "hash": "0e023f4704753966",
+      "status": "translated"
+    },
+    "x-heyyanvi-hermes-designed-an": {
+      "hash": "efc1f2617c947335",
+      "status": "translated"
+    },
+    "gh-scotttrinh-vercel": {
+      "hash": "ac6d4fd37ec64612",
+      "status": "translated"
+    },
+    "gh-haoqi-feishu": {
+      "hash": "f5fc8a1ff7326bc4",
+      "status": "translated"
+    },
+    "hn-ethan-install-guide": {
+      "hash": "b27e6f6f9e88367e",
+      "status": "translated"
+    },
+    "discord-stefan171-hooks-for-context": {
+      "hash": "212d335dbd3b63b5",
+      "status": "translated"
+    },
+    "gh-tcollins-audit": {
+      "hash": "90ff12808e16a2e8",
+      "status": "translated"
+    },
+    "gh-autholykos-ccd": {
+      "hash": "f8c3e06804d296c3",
+      "status": "translated"
+    },
+    "discord-lauratom-sqlite-graph-kernel": {
+      "hash": "bfc006192f076879",
+      "status": "translated"
+    },
+    "gh-pypl0-ombre": {
+      "hash": "23471e8b61b23e1d",
+      "status": "translated"
+    },
+    "discord-modestmaoist-mapsos-life-os": {
+      "hash": "2abc178aa4a97223",
+      "status": "translated"
+    },
+    "discord-brennerspear-editing-internals": {
+      "hash": "e0c1aa53b1b9cb53",
+      "status": "translated"
+    },
+    "danfiru-convergence": {
+      "hash": "1852da408019507e",
+      "status": "translated"
+    },
+    "derek-supabase-crm": {
+      "hash": "4b9e2805c2373e8b",
+      "status": "translated"
+    },
+    "gh-manoj-pi4": {
+      "hash": "30ebe15a0f26cf74",
+      "status": "translated"
+    },
+    "x-vmiss33-human-guide": {
+      "hash": "e0f319964321f40a",
+      "status": "translated"
+    },
+    "reddit-birdinhandandbush-hermes": {
+      "hash": "5c917add35606e69",
+      "status": "translated"
+    },
+    "captain-awesome-life-changing": {
+      "hash": "2586ea868b89285f",
+      "status": "translated"
+    },
+    "discord-mayuronx-backup-hermes-github": {
+      "hash": "e1626e3e899d7c5e",
+      "status": "translated"
+    },
+    "gkisokay-research-brief": {
+      "hash": "83fba112e119355e",
+      "status": "translated"
+    },
+    "discord-ereid7-hermes-lab": {
+      "hash": "0d6f24dca0cda960",
+      "status": "translated"
+    },
+    "discord-salt555-skill-audit-on-itself": {
+      "hash": "ebab69aceffb4cd4",
+      "status": "translated"
+    },
+    "alexfinn-employee": {
+      "hash": "809beee82eeb779e",
+      "status": "translated"
+    },
+    "discord-sammcf-vps-tailscale": {
+      "hash": "b30ba66e04a68e7c",
+      "status": "translated"
+    },
+    "discord-justinalbrethsen-zeroid-subagents": {
+      "hash": "44b4ae7e1c3b3981",
+      "status": "translated"
+    },
+    "discord-fahdad-blunder-lens-chess": {
+      "hash": "da7ae22c0a396d3a",
+      "status": "translated"
+    },
+    "discord-muschi2396-voice-fitness-coach": {
+      "hash": "68cdc6c04b94aa24",
+      "status": "translated"
+    },
+    "discord-sergiparpal-meal-manager": {
+      "hash": "0ea0bc5e942087d9",
+      "status": "translated"
+    },
+    "technmak-10-days": {
+      "hash": "ad48263f286ec320",
+      "status": "translated"
+    },
+    "discord-lauratom-memory-kernel": {
+      "hash": "d085ee9f646b92c8",
+      "status": "translated"
+    },
+    "discord-drewsni-rust-weather-stack": {
+      "hash": "7a2daa21a548c771",
+      "status": "translated"
+    },
+    "discord-yodaaa-x-roast-poster": {
+      "hash": "40e485019e8c7a5b",
+      "status": "translated"
+    },
+    "discord-purkkaviritys-goban-kanban": {
+      "hash": "337d39ceba630832",
+      "status": "translated"
+    },
+    "jsong-llm-wiki": {
+      "hash": "916058995e615e51",
+      "status": "translated"
+    },
+    "discord-kysiv-hermes-control-interface": {
+      "hash": "3beeb73b93b80879",
+      "status": "translated"
+    },
+    "adiix-polymarket": {
+      "hash": "ea00a4cce80fc8dc",
+      "status": "translated"
+    },
+    "rumjahn-everything": {
+      "hash": "356fc8b386d925a1",
+      "status": "translated"
+    },
+    "gh-chrisr-horse-racing": {
+      "hash": "855f9ca02b3a401b",
+      "status": "translated"
+    },
+    "onlyterp-file-change": {
+      "hash": "fdd77f9bb6640b51",
+      "status": "translated"
+    },
+    "gh-arkka-legal": {
+      "hash": "2f52a3adaaac7073",
+      "status": "translated"
+    },
+    "discord-modest-maoist-cartographer-polycule": {
+      "hash": "b0daf9d4c151d9f1",
+      "status": "translated"
+    },
+    "discord-ajaylakhani-agent-dreams": {
+      "hash": "2e4578d6820b030c",
+      "status": "translated"
+    },
+    "gkisokay-autobuild": {
+      "hash": "4c06754b9666ae22",
+      "status": "translated"
+    },
+    "worldofai-shadcn-manim": {
+      "hash": "ae13ce9d05efff23",
+      "status": "translated"
+    },
+    "olaf-azure-patch": {
+      "hash": "47e2a01b3d9891c9",
+      "status": "translated"
+    },
+    "hn-flere-imsaho-im-using-hermes": {
+      "hash": "496eee44e75c832e",
+      "status": "translated"
+    },
+    "andrew-gordon-5-apps": {
+      "hash": "cf5e55236f8233f2",
+      "status": "translated"
+    },
+    "firecrawl-integration": {
+      "hash": "143c34602e0e5ca8",
+      "status": "translated"
+    },
+    "discord-bert-71849-audit-grafana": {
+      "hash": "3dd81c067a1d20de",
+      "status": "translated"
+    },
+    "discord-tonywhelan-memory-tools-workflow": {
+      "hash": "4f74774da9ff905d",
+      "status": "translated"
+    },
+    "dev-arsh-natural-cron": {
+      "hash": "75c60e54850b3f6e",
+      "status": "translated"
+    },
+    "discord-zmaxx-onchain-attest": {
+      "hash": "9ec181cde7fffedb",
+      "status": "translated"
+    },
+    "discord-omarlittle-matrix-skin": {
+      "hash": "9113af9df2b01f33",
+      "status": "translated"
+    },
+    "greg-isenberg-termux": {
+      "hash": "84b7179b0a2fb3ff",
+      "status": "translated"
+    },
+    "discord-dalekc72-hermes-managing-tickets": {
+      "hash": "5b7d53ecc723cacf",
+      "status": "translated"
+    },
+    "gh-alexferrari-checkin": {
+      "hash": "6b9aa0695108b65a",
+      "status": "translated"
+    },
+    "discord-alpaca1712-hermes-ships-with-vals": {
+      "hash": "e7fcd5072a81ab6e",
+      "status": "translated"
+    },
+    "gh-isak-hunter": {
+      "hash": "19bdca4ebd3f50bc",
+      "status": "translated"
+    },
+    "kristopher-codebase-memory": {
+      "hash": "d93157ae9ef3beab",
+      "status": "translated"
+    },
+    "reddit-ninjapapi-5-things-hermes": {
+      "hash": "9f375b8017d3416c",
+      "status": "translated"
+    },
+    "discord-nour-h-recall-memory": {
+      "hash": "7c95f01e2eea09fc",
+      "status": "translated"
+    },
+    "reddit-jonathan-rivera-obsidian-as-the": {
+      "hash": "ac8647fff0eb7804",
+      "status": "translated"
+    },
+    "nazt-mcp-hybrid": {
+      "hash": "fcb2da1d6c0d0546",
+      "status": "translated"
+    },
+    "discord-atomlib-vpn-control-panel": {
+      "hash": "d06c27d8ab805b99",
+      "status": "translated"
+    },
+    "discord-absolutegamer-minecraft-skill": {
+      "hash": "6e95e2db30ebc555",
+      "status": "translated"
+    },
+    "reddit-itsdodobitch-one-month-with": {
+      "hash": "efe9cc6bec13b363",
+      "status": "translated"
+    },
+    "0xmega-no-mac-mini": {
+      "hash": "f5cee89c80fd00ee",
+      "status": "translated"
+    },
+    "gh-zednik-slides": {
+      "hash": "42000fefc64342b1",
+      "status": "translated"
+    },
+    "discord-mulkproject-copilot-delegate-opencode": {
+      "hash": "8afc75d803731c64",
+      "status": "translated"
+    },
+    "reddit-suitable-currency440-hermes-very-good": {
+      "hash": "dc2157ca4d7bb517",
+      "status": "translated"
+    },
+    "discord-malaiwah-fork-watchtower": {
+      "hash": "687066927823aa3d",
+      "status": "translated"
+    },
+    "discord-anibal3608-adguard-plugin": {
+      "hash": "196ffe19c59500e7",
+      "status": "translated"
+    },
+    "gh-declan-webchat": {
+      "hash": "142c0702b2aaea44",
+      "status": "translated"
+    },
+    "discord-lauratom-memory-kernel-companion": {
+      "hash": "08f0e3d1d242a59b",
+      "status": "translated"
+    },
+    "x-brucexu-eth-hermes": {
+      "hash": "2420ce2d91a06976",
+      "status": "translated"
+    },
+    "discord-arm64be-personal-webpage-style": {
+      "hash": "c0a973f2c4d795e7",
+      "status": "translated"
+    },
+    "discord-modest-maoist-cartographer-brain": {
+      "hash": "ee4af03986883d13",
+      "status": "translated"
+    },
+    "saboo-monica": {
+      "hash": "31412dc74171ea99",
+      "status": "translated"
+    },
+    "discord-o-o-o-o000-adhd-cronjobs": {
+      "hash": "c407bc8e820ed526",
+      "status": "translated"
+    },
+    "nathanwilbanks-297-streak": {
+      "hash": "0426a2918ee7d42e",
+      "status": "translated"
+    },
+    "reddit-delicious-ease2595-hermes-more": {
+      "hash": "f5af0851ccd4efd7",
+      "status": "translated"
+    },
+    "discord-itsdodo21-hermes-desktop": {
+      "hash": "9dd471d4ca2389f6",
+      "status": "translated"
+    },
+    "discord-reyartage-operational-checkpoint": {
+      "hash": "b569244c55d8bfc0",
+      "status": "translated"
+    },
+    "captain-awesome-news-discord-cron": {
+      "hash": "c64b5437b64e7bfd",
+      "status": "translated"
+    },
+    "ken-huang-production": {
+      "hash": "9798911a51006715",
+      "status": "translated"
+    },
+    "gh-paultisl-tailscale": {
+      "hash": "09ca5bfdb46d48e7",
+      "status": "translated"
+    },
+    "discord-0xajpanda-validator-monitor": {
+      "hash": "bc30fb959a6fca89",
+      "status": "translated"
+    },
+    "discord-s0uthpaw-agentic-elevator-music": {
+      "hash": "c377838c062ec853",
+      "status": "translated"
+    },
+    "discord-ogiberstein-project-os": {
+      "hash": "77de20066d249acd",
+      "status": "translated"
+    },
+    "exm-family-whatsapp": {
+      "hash": "2707cd5796ad4e5f",
+      "status": "translated"
+    },
+    "discord-mibayy-hermes-memory": {
+      "hash": "4f40fc34db3eac0c",
+      "status": "translated"
+    },
+    "gh-rohit-agentmemory": {
+      "hash": "d401319a2814730f",
+      "status": "translated"
+    },
+    "discord-gwyntel-onstar-remote-start": {
+      "hash": "d8e029fb661935ca",
+      "status": "translated"
+    },
+    "gh-0xmrblue-computer-use": {
+      "hash": "6cea377f5f2e6bcc",
+      "status": "translated"
+    },
+    "discord-jerometao-38874-compiled-skills": {
+      "hash": "0bed331092dabff2",
+      "status": "translated"
+    },
+    "betterstack-tweets": {
+      "hash": "74f1f86040e2dd9f",
+      "status": "translated"
+    },
+    "gh-m1chael-jmap": {
+      "hash": "e5afd0bef5b04ba9",
+      "status": "translated"
+    },
+    "reddit-itsdodobitch-kanban-feature": {
+      "hash": "669d668c7f0c6be9",
+      "status": "translated"
+    },
+    "discord-mattbcool-monterey-otterbot": {
+      "hash": "224644f8d936e391",
+      "status": "translated"
+    },
+    "krynsky-switched": {
+      "hash": "375e224771019f6d",
+      "status": "translated"
+    },
+    "awesome-hermes": {
+      "hash": "9e8ab814d370907b",
+      "status": "translated"
+    },
+    "gh-trevor-imessage": {
+      "hash": "41ed2f5dd972b4a6",
+      "status": "translated"
+    },
+    "theo-hetzner": {
+      "hash": "c76914ffdad8db65",
+      "status": "translated"
+    },
+    "discord-lemoussel-vectorless-rag": {
+      "hash": "e0b4356804cb44f3",
+      "status": "translated"
+    },
+    "discord-0xchauncy-reina-soul-tone": {
+      "hash": "a5f93a854d5bfbdd",
+      "status": "translated"
+    },
+    "discord-jonmichaels-discord-read-plugin": {
+      "hash": "09ec29ddf7b04756",
+      "status": "translated"
+    },
+    "discord-name-name-workshop-news-briefing": {
+      "hash": "c4d319ef9d48ddb3",
+      "status": "translated"
+    },
+    "discord-quark2world-hermelin-skins": {
+      "hash": "9bb402a88899deeb",
+      "status": "translated"
+    },
+    "michael-security-eval": {
+      "hash": "77abd745e7405a94",
+      "status": "translated"
+    },
+    "yashica-linkedin": {
+      "hash": "d1ee5d79228f8afa",
+      "status": "translated"
+    },
+    "discord-liftaris-herm-tui": {
+      "hash": "7007208359e6628c",
+      "status": "translated"
+    },
+    "discord-codename11-hermes-relay-android": {
+      "hash": "f6a8714e37ce6f60",
+      "status": "translated"
+    },
+    "discord-lance960-rookery-llama-server": {
+      "hash": "82d50b9e94bf82b9",
+      "status": "translated"
+    },
+    "discord-jeyjay1245-bundled-api-endpoints": {
+      "hash": "d1cc0bb5b71c1831",
+      "status": "translated"
+    },
+    "discord-offendingcommit-honcho-memory-ui": {
+      "hash": "13aaf4fcec108c75",
+      "status": "translated"
+    },
+    "discord-denis-skripnik-nvda-translator": {
+      "hash": "173532eae5fd78b0",
+      "status": "translated"
+    },
+    "kisztof-modal": {
+      "hash": "31585aa9faf36a0d",
+      "status": "translated"
+    },
+    "reddit-yellow-green-bird-every-openclaw-update": {
+      "hash": "6a0691e4ad57b4e8",
+      "status": "translated"
+    },
+    "clawdi-builtwith": {
+      "hash": "95fc0b5f65c33756",
+      "status": "translated"
+    },
+    "reddit-hackrepair-my-hermes-journey": {
+      "hash": "e420716ecd8fa733",
+      "status": "translated"
+    },
+    "discord-renomg-voice-call-timeout": {
+      "hash": "c8edc72422896e21",
+      "status": "translated"
+    },
+    "reddit-windows-wrapper": {
+      "hash": "38a5bd87f67a5831",
+      "status": "translated"
+    },
+    "gh-xwm1234-factory": {
+      "hash": "284e3423d7941d9d",
+      "status": "translated"
+    },
+    "discord-splosh123-tidal-music-skills": {
+      "hash": "7510f5d37e83aef3",
+      "status": "translated"
+    },
+    "discord-dworfd-boltai-gateway": {
+      "hash": "dc49f19a78bab9f1",
+      "status": "translated"
+    },
+    "discord-francipenov-macos-control-center": {
+      "hash": "556817d9551fef31",
+      "status": "translated"
+    },
+    "hn-vessel-browser": {
+      "hash": "206191cd8ac40d2e",
+      "status": "translated"
+    },
+    "discord-glitchglitchglitch-hermes-on-nixos": {
+      "hash": "280289ef873ceddf",
+      "status": "translated"
+    },
+    "discord-awais-h-hermes-reads-internet": {
+      "hash": "e08484113d9d2640",
+      "status": "translated"
+    },
+    "discord-smantena-aws-google-workspace": {
+      "hash": "972af4b866accb3a",
+      "status": "translated"
+    },
+    "hn-rnxrx-obsidian": {
+      "hash": "dbf459da7c21e6ad",
+      "status": "translated"
+    },
+    "discord-anibal3608-ollama-multiagent": {
+      "hash": "2f7001f2bb91081b",
+      "status": "translated"
+    },
+    "discord-stefan171-dream-auto": {
+      "hash": "9426c921dd068f5e",
+      "status": "translated"
+    },
+    "captain-awesome-pm-standups-adhd": {
+      "hash": "002371120324e9ce",
+      "status": "translated"
+    },
+    "reddit-patbhakta-hermes-vs-openclaw": {
+      "hash": "8a71a6b4d90fb690",
+      "status": "translated"
+    },
+    "gkisokay-watchdog": {
+      "hash": "ec2bf378496924a7",
+      "status": "translated"
+    },
+    "discord-roach-jeong-h-ops-dashboard": {
+      "hash": "d8276121c196a8c1",
+      "status": "translated"
+    },
+    "ksimback-hermesatlas": {
+      "hash": "b5a1ade2c795ff51",
+      "status": "translated"
+    },
+    "discord-zedosplasticos-business-swarm": {
+      "hash": "f6bf6ae51de3ad0b",
+      "status": "translated"
+    },
+    "discord-vgallotti-rtk-token-savings": {
+      "hash": "e44970b2e0ca80ed",
+      "status": "translated"
+    },
+    "discord-wolframravenwolf-home-assistant": {
+      "hash": "7f61dcaa169a0d4a",
+      "status": "translated"
+    },
+    "reddit-suitable-currency440-hermes-is-openclaw": {
+      "hash": "574b69a5e8010c3d",
+      "status": "translated"
+    },
+    "discord-djbuck-ios-companion": {
+      "hash": "690b66fcef2c1a1f",
+      "status": "translated"
+    },
+    "discord-phillipd-agentbox-email": {
+      "hash": "b5936cb8090ede77",
+      "status": "translated"
+    },
+    "discord-jezza2463-standing-instructions-plugin": {
+      "hash": "59186ca78bb44115",
+      "status": "translated"
+    },
+    "discord-fathah-mobile-remote": {
+      "hash": "27129a94738880a5",
+      "status": "translated"
+    },
+    "discord-mikebirdtech-hermes-mini-doc": {
+      "hash": "760fc7f40f02d79b",
+      "status": "translated"
+    },
+    "x-hypepartners-why-of": {
+      "hash": "f36c27c42942e837",
+      "status": "translated"
+    },
+    "julian-meet-teams": {
+      "hash": "66bef4fa9a9d6bfa",
+      "status": "translated"
+    },
+    "discord-wysie-health-connect-receiver": {
+      "hash": "396da43d04cb7627",
+      "status": "translated"
+    },
+    "discord-ones07389-4-agents-on-laptop": {
+      "hash": "2a4fa23ded1e7b1c",
+      "status": "translated"
+    },
+    "discord-l-acie-skill-md-tool-calls": {
+      "hash": "7f8eb78cb35650fe",
+      "status": "translated"
+    },
+    "discord-visible-fix-natural-language-harness": {
+      "hash": "3d450b6d3a50c28f",
+      "status": "translated"
+    },
+    "discord-anibal3608-hermes-radar-spanish": {
+      "hash": "3bc8aace246d12ba",
+      "status": "translated"
+    },
+    "discord-jesus359-hermes-cardputer": {
+      "hash": "a880b80ad87bb2be",
+      "status": "translated"
+    },
+    "reddit-hermify": {
+      "hash": "76e725c87f606617",
+      "status": "translated"
+    },
+    "nickspisak-everything": {
+      "hash": "56567f11bfe43201",
+      "status": "translated"
+    },
+    "discord-kayp5780-webui-home-server": {
+      "hash": "36e4928ea3ecf15f",
+      "status": "translated"
+    },
+    "gh-enigma-merxex": {
+      "hash": "2c3f000ab68ed77a",
+      "status": "translated"
+    },
+    "discord-wysie-whoop-plugin": {
+      "hash": "0562003dd1e74ef4",
+      "status": "translated"
+    },
+    "discord-bennytimz-pharma-skills-africa": {
+      "hash": "84e658725915fe2e",
+      "status": "translated"
+    },
+    "gh-romanescu-skillfactory": {
+      "hash": "af2dbe451eb67f2d",
+      "status": "translated"
+    },
+    "gh-samdu-kubernetes": {
+      "hash": "0f8ec44c61d03803",
+      "status": "translated"
+    },
+    "wolfram-home-assistant-addon": {
+      "hash": "9fc5db6920a7f856",
+      "status": "translated"
+    },
+    "discord-lsof-hermes-chat-proxy": {
+      "hash": "795b0dee1fdef64c",
+      "status": "translated"
+    },
+    "gh-flyingcloud-migration": {
+      "hash": "372add3c18d4e7eb",
+      "status": "translated"
+    },
+    "discord-harrison07525-security-rule-skill": {
+      "hash": "293996d3255e53b1",
+      "status": "translated"
+    },
+    "gh-juan-email-pipeline": {
+      "hash": "bd7e64415ec77299",
+      "status": "translated"
+    },
+    "agentmail-inbox": {
+      "hash": "1a22f67c1a305dbd",
+      "status": "translated"
+    },
+    "x-exileai-0-hermes-iris": {
+      "hash": "d1bb566ec5479a28",
+      "status": "translated"
+    },
+    "discord-misswuhanliang-translator-extension": {
+      "hash": "3e3e119ae0c4b51f",
+      "status": "translated"
+    },
+    "discord-luminousix-claude-orchestrator": {
+      "hash": "bcc876483bd5048f",
+      "status": "translated"
+    },
+    "discord-arm64be-models-running": {
+      "hash": "adbbbbbbcfbd1473",
+      "status": "translated"
+    },
+    "gh-artile-zed": {
+      "hash": "b2b2dcc08cba3a17",
+      "status": "translated"
+    },
+    "gideon-trading-hetzner": {
+      "hash": "82162020572d72b8",
+      "status": "translated"
+    },
+    "discord-meatrition-conventional-commits-skill": {
+      "hash": "e20fb8b7bf245e4a",
+      "status": "translated"
+    },
+    "akashnet-inventory": {
+      "hash": "82a52ea6817dd2d5",
+      "status": "translated"
+    },
+    "discord-tranquilflow-docker-mode": {
+      "hash": "e9e36db712d586f3",
+      "status": "translated"
+    },
+    "gladiator-hackathon": {
+      "hash": "76de3026187325dc",
+      "status": "translated"
+    },
+    "discord-1tiger4u-dreamer-agent": {
+      "hash": "90f9db501dace3a7",
+      "status": "translated"
+    },
+    "discord-hanscnelson-xfce-browser": {
+      "hash": "afbc032185f2cecb",
+      "status": "translated"
+    },
+    "reddit-research-agent": {
+      "hash": "99abae04cd8b8ece",
+      "status": "translated"
+    },
+    "alexcovo-movies": {
+      "hash": "4fb0224b38a874fb",
+      "status": "translated"
+    },
+    "mvanhorn-business-ops": {
+      "hash": "71451b0377ee2db3",
+      "status": "translated"
+    },
+    "leon-amazon-titles": {
+      "hash": "a85ed01c0a121ec6",
+      "status": "translated"
+    },
+    "mishig-jarvis": {
+      "hash": "0a3af474d0078bfb",
+      "status": "translated"
+    },
+    "anup-5vps": {
+      "hash": "98108374c4ec4b0d",
+      "status": "translated"
+    },
+    "gh-bsxy-higress": {
+      "hash": "3af55869dcba96ff",
+      "status": "translated"
+    },
+    "discord-hugh1979-1969-teletype": {
+      "hash": "6ea903c7ed4e6524",
+      "status": "translated"
+    },
+    "discord-sprmn24-diff-review-plugin": {
+      "hash": "0795bcd2e2ed7aa1",
+      "status": "translated"
+    },
+    "anand-telegram-topics": {
+      "hash": "5af6525f6c5e6e69",
+      "status": "translated"
+    },
+    "discord-hypercubed-knowledge-starter-kit": {
+      "hash": "33593a053ccf90ee",
+      "status": "translated"
+    },
+    "gh-oleg-multi-role": {
+      "hash": "f1818f41b2507cf2",
+      "status": "translated"
+    },
+    "witcheer-macmini-24-7": {
+      "hash": "fc0bbc7f4683e927",
+      "status": "translated"
+    },
+    "cyrilxbt-tiktok-factory": {
+      "hash": "a925e87b13cff90f",
+      "status": "translated"
+    },
+    "ibuzovskyi-3-money-setups": {
+      "hash": "87845ca30212b1ff",
+      "status": "translated"
+    },
+    "akshay-hermes-folder-anatomy": {
+      "hash": "241fcbf2d552fae6",
+      "status": "translated"
+    },
+    "sudoingx-general-agent": {
+      "hash": "b37a07f7a6378f06",
+      "status": "translated"
+    },
+    "aakashgupta-pm-briefing": {
+      "hash": "66604e06065b6d4a",
+      "status": "translated"
+    },
+    "datachaz-nesquena-webui": {
+      "hash": "7c71514e2b995abf",
+      "status": "translated"
+    },
+    "kanika-daily-workflows": {
+      "hash": "7b06507d874a2959",
+      "status": "translated"
+    },
+    "tessakriesel-railway-telegram": {
+      "hash": "9d8afd54217e2fa4",
+      "status": "translated"
+    },
+    "defi0xjeff-30-skills": {
+      "hash": "ef1713efb3b28040",
+      "status": "translated"
+    },
+    "jahangir-stackademic-field-report": {
+      "hash": "d70e551008cf591b",
+      "status": "translated"
+    },
+    "sathishraju-switched-from-openclaw": {
+      "hash": "0895bab811d3dd23",
+      "status": "translated"
+    },
+    "avichawla-masterclass-three-agents": {
+      "hash": "c6f7814e935dc9ed",
+      "status": "translated"
+    },
+    "chintanonweb-smarter-and-the-bill": {
+      "hash": "214b7a6a8ad8cdfc",
+      "status": "translated"
+    },
+    "emmanuel-run-yourself": {
+      "hash": "0ae50093ba3d54e1",
+      "status": "translated"
+    },
+    "moonsat-polymarket-weather": {
+      "hash": "6e9c15c433f6a53b",
+      "status": "translated"
+    },
+    "tonbi-18-agent-kanban-fleet": {
+      "hash": "31c689cc29be7f9c",
+      "status": "translated"
+    },
+    "zsecurity-red-team-telegram": {
+      "hash": "6027e94523bd5a4c",
+      "status": "translated"
+    },
+    "sharbel-junior-operator": {
+      "hash": "643c5843d484c517",
+      "status": "translated"
+    },
+    "sharbel-polymarket-alerts": {
+      "hash": "ea02b5f020852de6",
+      "status": "translated"
+    },
+    "vivek-shetye-trip-memory": {
+      "hash": "ca63b7bfedcb36f1",
+      "status": "translated"
+    },
+    "codehead-daily-operator": {
+      "hash": "43ee94496ee60967",
+      "status": "translated"
+    },
+    "alexfinn-2am-microapp": {
+      "hash": "d6737cc56464b069",
+      "status": "translated"
+    },
+    "alexfinn-memory-wiki": {
+      "hash": "4d587f845e73336e",
+      "status": "translated"
+    },
+    "worldofai-recursive-crm": {
+      "hash": "57c76208fb0ffbb4",
+      "status": "translated"
+    }
+  }
+}

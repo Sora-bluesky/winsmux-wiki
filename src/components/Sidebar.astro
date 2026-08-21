@@ -29,7 +29,7 @@ function prune(nodes: Node[]): Node[] {
   for (const n of nodes) {
     if (n.id) {
       const nid = n.id.replace(/\/index$/, '');
-      if (titles.has(nid) || EXTERNAL[nid]) out.push({ id: nid });
+      if (titles.has(nid) || ASTRO_PAGES[nid]) out.push({ id: nid });
     } else if (n.items) {
       const kept = prune(n.items);
       if (kept.length) out.push({ label: n.label, items: kept });
@@ -47,25 +47,21 @@ function containsCurrent(n: Node): boolean {
   return (n.items ?? []).some(containsCurrent);
 }
 
-const EXTERNAL: Record<string, { href: string; label: string }> = {
-  'user-stories': {
-    href: 'https://hermes-agent.nousresearch.com/docs/user-stories',
-    label: 'User Stories（公式）',
-  },
+// raw/docs 外で実装した Astro ページ（JSX 由来の2ページ）。サイドバーには通常の内部リンクとして出す
+const ASTRO_PAGES: Record<string, string> = {
+  'user-stories': 'ユーザーストーリー',
+  'reference/automation-blueprints-catalog': 'Automation Blueprints カタログ',
 };
 
 function renderNodes(nodes: Node[]): string {
   let out = '<ul class="space-y-0.5">';
   for (const n of nodes) {
-    if (n.id && EXTERNAL[n.id]) {
-      const e = EXTERNAL[n.id];
-      out += `<li><a href="${e.href}" target="_blank" rel="noopener" class="block rounded px-2 py-1 text-fg-muted no-underline hover:bg-bg-subtle hover:text-fg">${esc(e.label)}</a></li>`;
-    } else if (n.id) {
+    if (n.id) {
       const href = `/hermes/docs/${n.id}/`;
       const active = current === href;
       out += `<li><a href="${href}" class="block rounded px-2 py-1 no-underline ${
         active ? 'bg-bg-subtle font-semibold text-fg' : 'text-fg-muted hover:bg-bg-subtle hover:text-fg'
-      }"${active ? ' aria-current="page"' : ''}>${esc(titles.get(n.id) ?? n.id)}</a></li>`;
+      }"${active ? ' aria-current="page"' : ''}>${esc(titles.get(n.id) ?? ASTRO_PAGES[n.id] ?? n.id)}</a></li>`;
     } else {
       out += `<li><details${containsCurrent(n) ? ' open' : ''}><summary class="cursor-pointer select-none rounded px-2 py-1 font-semibold text-fg">${esc(
         n.label ?? '',

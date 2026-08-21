@@ -1,0 +1,279 @@
+---
+// 公式 /docs/user-stories（UserStoriesCollage コンポーネント）の日本語版。
+// データは data/user-stories.ja.json（scripts/mirror-stories.mjs が上流 userStories.json に追随）。
+// レイアウト・配色は上流 website/src/components/UserStoriesCollage/ を移植（React → 静的 + インライン JS）。
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import stories from '../../../../../data/user-stories.ja.json';
+
+type Story = {
+  id: string;
+  source: string;
+  author: string;
+  url: string;
+  date: string;
+  category: string;
+  headline: string;
+  quote: string;
+  size: 'sm' | 'md' | 'lg';
+};
+const allStories = stories as Story[];
+
+const CATEGORIES: Record<string, { label: string; solid: string; soft: string; strip: string }> = {
+  'dev-workflow': { label: '開発ワークフロー', solid: '#60a5fa', soft: 'rgba(96, 165, 250, 0.14)', strip: 'linear-gradient(90deg, #3b82f6, #60a5fa, #a78bfa)' },
+  'personal-assistant': { label: 'パーソナルアシスタント', solid: '#34d399', soft: 'rgba(52, 211, 153, 0.14)', strip: 'linear-gradient(90deg, #10b981, #34d399, #a7f3d0)' },
+  'content-creation': { label: 'コンテンツ制作', solid: '#f472b6', soft: 'rgba(244, 114, 182, 0.14)', strip: 'linear-gradient(90deg, #ec4899, #f472b6, #fda4af)' },
+  'business-ops': { label: '業務オペレーション', solid: '#fb923c', soft: 'rgba(251, 146, 60, 0.14)', strip: 'linear-gradient(90deg, #f97316, #fb923c, #fcd34d)' },
+  trading: { label: 'トレード・マーケット', solid: '#facc15', soft: 'rgba(250, 204, 21, 0.16)', strip: 'linear-gradient(90deg, #eab308, #facc15, #fde047)' },
+  research: { label: 'リサーチ', solid: '#a78bfa', soft: 'rgba(167, 139, 250, 0.14)', strip: 'linear-gradient(90deg, #8b5cf6, #a78bfa, #c4b5fd)' },
+  creative: { label: 'クリエイティブ', solid: '#f87171', soft: 'rgba(248, 113, 113, 0.14)', strip: 'linear-gradient(90deg, #ef4444, #f87171, #fca5a5)' },
+  marketing: { label: 'マーケティング', solid: '#e879f9', soft: 'rgba(232, 121, 249, 0.14)', strip: 'linear-gradient(90deg, #d946ef, #e879f9, #f0abfc)' },
+  integrations: { label: '連携', solid: '#38bdf8', soft: 'rgba(56, 189, 248, 0.14)', strip: 'linear-gradient(90deg, #0ea5e9, #38bdf8, #7dd3fc)' },
+  enterprise: { label: 'エンタープライズ', solid: '#94a3b8', soft: 'rgba(148, 163, 184, 0.16)', strip: 'linear-gradient(90deg, #64748b, #94a3b8, #cbd5e1)' },
+  messaging: { label: 'メッセージング', solid: '#22d3ee', soft: 'rgba(34, 211, 238, 0.14)', strip: 'linear-gradient(90deg, #06b6d4, #22d3ee, #67e8f9)' },
+  privacy: { label: 'プライバシー・セルフホスト', solid: '#4ade80', soft: 'rgba(74, 222, 128, 0.14)', strip: 'linear-gradient(90deg, #16a34a, #4ade80, #86efac)' },
+  'cost-optimization': { label: 'コスト最適化', solid: '#fbbf24', soft: 'rgba(251, 191, 36, 0.16)', strip: 'linear-gradient(90deg, #f59e0b, #fbbf24, #fde68a)' },
+  meta: { label: 'メタ・エコシステム', solid: '#c084fc', soft: 'rgba(192, 132, 252, 0.14)', strip: 'linear-gradient(90deg, #a855f7, #c084fc, #d8b4fe)' },
+  general: { label: '一般', solid: '#9ca3af', soft: 'rgba(156, 163, 175, 0.16)', strip: 'linear-gradient(90deg, #6b7280, #9ca3af, #d1d5db)' },
+};
+
+const SOURCE_LABELS: Record<string, string> = {
+  x: 'X · Twitter',
+  hn: 'Hacker News',
+  reddit: 'Reddit',
+  github: 'GitHub',
+  youtube: 'YouTube',
+  blog: 'Blog',
+  podcast: 'Podcast',
+  linkedin: 'LinkedIn',
+  gist: 'GitHub Gist',
+  producthunt: 'Product Hunt',
+  discord: 'Discord',
+};
+
+function sourceColor(source: string): string {
+  return (
+    {
+      x: '#1d9bf0', hn: '#ff6600', reddit: '#ff4500', github: '#8b949e', youtube: '#ff0033',
+      blog: '#a78bfa', podcast: '#8b5cf6', linkedin: '#0a66c2', gist: '#8b949e',
+      producthunt: '#da552f', discord: '#5865f2',
+    }[source] ?? '#64748b'
+  );
+}
+
+const categoryCounts: Record<string, number> = {};
+const sourceCounts: Record<string, number> = {};
+for (const s of allStories) {
+  categoryCounts[s.category] = (categoryCounts[s.category] ?? 0) + 1;
+  sourceCounts[s.source] = (sourceCounts[s.source] ?? 0) + 1;
+}
+const categoryButtons = Object.entries(CATEGORIES)
+  .filter(([key]) => categoryCounts[key])
+  .sort((a, b) => (categoryCounts[b[0]] ?? 0) - (categoryCounts[a[0]] ?? 0));
+const sourceButtons = Object.entries(SOURCE_LABELS).filter(([key]) => sourceCounts[key]);
+---
+
+<BaseLayout
+  title="ユーザーストーリーと活用事例"
+  description="Hermes Agent のコミュニティが実際に作っているもの。すべてのカードが実在の投稿・issue・動画・gist へリンクしています。"
+  sources={['https://hermes-agent.nousresearch.com/docs/user-stories']}
+  showAsk={false}
+  prevOverride={null}
+  nextOverride={null}
+>
+  <div class="stories-wrap">
+    <div class="stories-hero">
+      <h1>ユーザーストーリーと活用事例</h1>
+      <p>
+        Hermes Agent のコミュニティが実際に作っているもの。下のカードはすべて、X・GitHub・Reddit・Hacker
+        News・YouTube・ブログ・ポッドキャストから集めた、Hermes の使いかたを語る実在の投稿へリンクしています。
+      </p>
+      <div class="stories-meta">
+        <span><strong>{allStories.length}</strong> 件のストーリー</span>
+        <span><strong>{Object.keys(categoryCounts).length}</strong> カテゴリ</span>
+        <span><strong>{Object.keys(sourceCounts).length}</strong> ソース</span>
+      </div>
+    </div>
+
+    <div class="stories-filters" id="cat-filters">
+      <button type="button" class="filter-btn filter-active" data-cat="all">
+        すべて<span class="filter-count">{allStories.length}</span>
+      </button>
+      {
+        categoryButtons.map(([key, meta]) => (
+          <button type="button" class="filter-btn" data-cat={key} data-solid={meta.solid}>
+            {meta.label}
+            <span class="filter-count">{categoryCounts[key]}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="stories-filters stories-filters-sub" id="src-filters">
+      <button type="button" class="filter-btn filter-active" data-src="all">全ソース</button>
+      {
+        sourceButtons.map(([key, label]) => (
+          <button type="button" class="filter-btn" data-src={key} data-solid={sourceColor(key)}>
+            {label}
+            <span class="filter-count">{sourceCounts[key]}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="stories-grid" id="stories-grid">
+      {
+        allStories.map((s) => {
+          const cat = CATEGORIES[s.category] ?? CATEGORIES.general;
+          return (
+            <a
+              class={`tile tile-${s.size}`}
+              href={s.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cat={s.category}
+              data-src={s.source}
+              style={`--tile-accent:${cat.strip};--tile-accent-solid:${cat.solid};--tile-accent-soft:${cat.soft}`}
+            >
+              <div class="badge-row">
+                <span class="source-badge">
+                  <span class="source-icon" style={`background:${sourceColor(s.source)}`} />
+                  {SOURCE_LABELS[s.source] ?? s.source}
+                </span>
+                <span class="cat-tag">{cat.label}</span>
+              </div>
+              <h3 class="tile-headline">{s.headline}</h3>
+              <p class="tile-quote">“{s.quote}”</p>
+              <span class="tile-author">
+                {s.author}
+                {s.date ? ` · ${s.date}` : ''}
+              </span>
+              <span class="tile-external" aria-hidden="true">↗</span>
+            </a>
+          );
+        })
+      }
+    </div>
+    <div class="stories-empty hidden" id="stories-empty">この絞り込みに合うストーリーはありません。</div>
+
+    <div class="stories-footer">
+      Hermes で何か作りましたか？
+      <a href="https://github.com/NousResearch/hermes-agent/edit/main/website/src/data/userStories.json" target="_blank" rel="noopener noreferrer">userStories.json を編集</a>
+      してあなたのストーリーを公式ページに載せるか、
+      <a href="https://discord.gg/NousResearch" target="_blank" rel="noopener noreferrer">Nous Research の Discord</a>
+      に投稿すれば拾ってもらえます。
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .stories-wrap { padding-bottom: 4rem; }
+  .stories-hero { padding: 1.5rem 0 1.5rem; text-align: center; }
+  .stories-hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.75rem);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(120deg, #7c3aed 0%, #2563eb 50%, #059669 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stories-hero p { max-width: 680px; margin: 0 auto; color: var(--color-fg-muted); font-size: 1rem; line-height: 1.7; }
+  .stories-meta { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1.25rem; flex-wrap: wrap; font-size: 0.85rem; color: var(--color-fg-muted); }
+  .stories-meta strong { color: var(--color-fg); font-weight: 600; }
+
+  .stories-filters { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center; margin: 1.5rem 0 1rem; }
+  .stories-filters-sub { margin-top: 0; margin-bottom: 2rem; }
+  .stories-filters-sub .filter-btn { font-size: 0.72rem; }
+  .filter-btn {
+    padding: 0.35rem 0.85rem; border-radius: 999px; border: 1px solid var(--color-border);
+    background: transparent; color: var(--color-fg-muted); font-size: 0.8rem; font-weight: 500;
+    cursor: pointer; transition: all 0.18s ease; white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: var(--color-fg-muted); color: var(--color-fg); transform: translateY(-1px); }
+  .filter-active { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+  .filter-active[data-solid] { background: var(--btn-solid); border-color: var(--btn-solid); color: #0f172a; }
+  .filter-count { margin-left: 0.35rem; opacity: 0.55; font-variant-numeric: tabular-nums; }
+
+  .stories-grid { column-count: 3; column-gap: 1rem; }
+  @media (max-width: 1200px) { .stories-grid { column-count: 2; } }
+  @media (max-width: 640px) { .stories-grid { column-count: 1; } }
+
+  .tile {
+    break-inside: avoid; margin-bottom: 1rem; position: relative; display: block;
+    padding: 1.1rem 1.2rem 1.15rem; border-radius: 14px; border: 1px solid var(--color-border);
+    background: var(--color-bg); color: inherit; text-decoration: none; overflow: hidden;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  }
+  .tile::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--tile-accent); opacity: 0.9; }
+  .tile:hover { transform: translateY(-3px); border-color: var(--tile-accent-solid); box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.25); }
+  .tile-sm { min-height: 120px; }
+  .tile-md { min-height: 170px; }
+  .tile-lg { min-height: 220px; padding: 1.35rem 1.45rem 1.45rem; }
+  .tile-lg .tile-headline { font-size: 1.25rem; }
+
+  .badge-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
+    margin-bottom: 0.75rem; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+  .source-badge { display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600; }
+  .source-icon { display: inline-block; width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0; }
+  .cat-tag {
+    display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px;
+    background: var(--tile-accent-soft); color: var(--tile-accent-solid); font-weight: 600; letter-spacing: 0.02em;
+  }
+  .tile-headline { font-size: 1rem; font-weight: 700; line-height: 1.4; margin: 0 0 0.5rem; color: var(--color-fg); }
+  .tile-quote {
+    font-size: 0.86rem; line-height: 1.65; color: var(--color-fg-muted); margin: 0;
+    display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .tile-lg .tile-quote { -webkit-line-clamp: 8; }
+  .tile-sm .tile-quote { -webkit-line-clamp: 4; }
+  .tile-author { display: block; margin-top: 0.7rem; font-size: 0.76rem; color: var(--color-fg-muted); font-weight: 500; }
+  .tile-external { position: absolute; top: 0.9rem; right: 0.9rem; opacity: 0; font-size: 0.85rem; color: var(--tile-accent-solid); transition: opacity 0.2s ease, transform 0.2s ease; }
+  .tile:hover .tile-external { opacity: 1; transform: translate(2px, -2px); }
+
+  .stories-footer {
+    margin: 3rem auto 0; padding: 1.5rem; text-align: center; max-width: 720px; border-radius: 14px;
+    background: var(--color-bg-subtle); font-size: 0.92rem; color: var(--color-fg-muted); line-height: 1.7;
+  }
+  .stories-empty { padding: 3rem 1rem; text-align: center; color: var(--color-fg-muted); font-size: 0.95rem; }
+  .stories-empty.hidden { display: none; }
+</style>
+
+<script>
+  // カテゴリ × ソースの二軸絞り込み（上流 UserStoriesCollage の useState 相当を素の JS で）
+  let activeCat = 'all';
+  let activeSrc = 'all';
+  const grid = document.getElementById('stories-grid')!;
+  const empty = document.getElementById('stories-empty')!;
+
+  function apply() {
+    let visible = 0;
+    for (const tile of grid.querySelectorAll<HTMLElement>('.tile')) {
+      const ok =
+        (activeCat === 'all' || tile.dataset.cat === activeCat) &&
+        (activeSrc === 'all' || tile.dataset.src === activeSrc);
+      tile.style.display = ok ? '' : 'none';
+      if (ok) visible++;
+    }
+    empty.classList.toggle('hidden', visible > 0);
+  }
+
+  function wire(containerId: string, attr: 'cat' | 'src', set: (v: string) => void) {
+    const box = document.getElementById(containerId)!;
+    box.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLElement>('.filter-btn');
+      if (!btn) return;
+      set(btn.dataset[attr] ?? 'all');
+      for (const b of box.querySelectorAll<HTMLElement>('.filter-btn')) {
+        const active = b === btn;
+        b.classList.toggle('filter-active', active);
+        b.style.setProperty('--btn-solid', active && b.dataset.solid ? b.dataset.solid : '');
+      }
+      apply();
+    });
+  }
+  wire('cat-filters', 'cat', (v) => (activeCat = v));
+  wire('src-filters', 'src', (v) => (activeSrc = v));
+</script>

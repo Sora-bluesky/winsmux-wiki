@@ -396,10 +396,6 @@
       "status": "translated",
       "translatedAt": "2026-08-20T16:08:35.935Z"
     },
-    "reference/automation-blueprints-catalog.mdx": {
-      "blob": "820f5d8719950be69d0373a820c08e4fedfc122e",
-      "status": "deleted"
-    },
     "reference/cli-commands.md": {
       "blob": "7d434df6dbfebbc1f0a0471847edf8453105d17a",
       "status": "translated",
@@ -1999,10 +1995,6 @@
       "blob": "2128b3be9147d810566c79c22701b8dabcb9cb5d",
       "status": "translated",
       "translatedAt": "2026-08-20T16:08:36.132Z"
-    },
-    "user-stories.mdx": {
-      "blob": "6dc721dde819b7b1675f1a6f848b34d9857b1a01",
-      "status": "deleted"
     }
   },
   "snapshotCommit": "8794e5a21c980a0f26532cb4883284b786cb3f25"
