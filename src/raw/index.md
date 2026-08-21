@@ -10,7 +10,7 @@ raw: /hermes/raw/index.md
 
 # Hermes Agent
 
-Hermes Agent Documentation の全ページを日本語にしています。構成も手順も公式のまま、日本語に翻訳しています。正本は常に [Hermes Agent Documentation](https://hermes-agent.nousresearch.com/docs/) です。
+Hermes Agent Documentation の全ページを日本語にしています。構成も手順も公式のまま、日本語に翻訳しています。本サイトは NousResearch とは無関係の**非公式**の翻訳サイトで、正本は常に [Hermes Agent Documentation](https://hermes-agent.nousresearch.com/docs/) です。
 
 ## メッセージアプリから使う
 

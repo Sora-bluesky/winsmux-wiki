@@ -6,7 +6,7 @@ Japanese mirror of the official Hermes Agent docs. Same structure, same commands
 
 ## これは何
 
-公式 [Hermes Agent docs](https://hermes-agent.nousresearch.com/docs/) の全ページ（本文 200+ / skill 196、計 400 ページ超）を日本語で読めるサイトです。
+公式 [Hermes Agent docs](https://hermes-agent.nousresearch.com/docs/) の全ページ（本文 200+ / skill 196、計 400 ページ超）を日本語で読めるサイトです。NousResearch とは無関係の**非公式**プロジェクトです。
 
 - **公式完全準拠**: ページ構成・見出し・コードブロック・リンクは公式とバイト一致で揃えています（機械照合）。独自の手順は作りません。正本は常に公式 docs で、各ページの末尾からたどれます
 - **毎日追随**: 上流の差分を日次で検出し、変わったページだけ再翻訳して公開します
