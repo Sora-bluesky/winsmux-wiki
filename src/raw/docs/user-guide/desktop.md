@@ -2,7 +2,7 @@
 title: "デスクトップアプリ"
 description: "ネイティブの Hermes デスクトップアプリ。ツール出力のストリーミング表示、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と対話するための作り込まれた環境です。macOS、Windows、Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: c6d7439a6ae635a04adb7ced242a168e5c53bff0
+upstream_blob: 0a4cf668a0af4bb236fac5be23daf9d1489873e1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -212,7 +212,7 @@ Bot Chat に直接届きます（`hermes -p <bot> chat`）。バックエンド�
 Bot Mode のセッション（各ボットの正規の Bot Chat と、グループチャットの
 メンバーごとのセッション）は、全体の Sessions サイドバーからは常に隠されます。
 自分の会話に混ざるのではなく、Bots ペイン（名簿の行、部屋のビュー、
-各ボットのセッション一覧）の中で暮らします。
+各ボットのセッション一覧）の中に置かれます。
 
 使っていないボットはしまっておけます。ボットの行を右クリックして **Hide
 Bot** を選びます。隠したボットは名簿から消えますが、働き続けます。@メンションは
@@ -422,6 +422,14 @@ git、project、pip、portable の各インストールが対象です。リポ�
   Cloud の接続では、このボタンは **Open Desktop logs** になります。失敗したターンの
   ゲートウェイやエージェントのログはリモートの端末にあるため、ローカルの
   Desktop 側のログ（通信の記録）を開きます。
+- **Send diagnostics** — 秘密情報を伏せたデバッグ用の一式を、明示的な同意の確認を
+  経てから Nous 社内のストレージへ送ります（`hermes debug share --nous` と同じ
+  仕組みです。秘密情報は必ず伏せられ、送ったものを見られるのは Nous のスタッフ
+  だけで、14 日で自動的に消えます）。送信できると、サポートのやり取りに貼り付け
+  られる非公開の閲覧用リンクに加えて、GitHub Issues・Nous Portal のサポート・
+  Discord への近道が表示されます。リモートや Cloud の接続では、バックエンド側が
+  自分のエージェントとゲートウェイのログをまとめ、そこにローカルの Desktop の
+  ログが添えられるので、サポートは両側をそろって見られます。
 - **Copy error details** — 短い平文の要約（層、コード、プロバイダ／モデル、
   エラーメッセージ）をコピーします。不具合の報告や Discord に貼り付けられます。
 

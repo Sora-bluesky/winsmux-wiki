@@ -457,9 +457,9 @@
       "translatedAt": "2026-08-20T16:08:35.949Z"
     },
     "user-guide/bot-mode.md": {
-      "blob": "bd9632dedecd1cf954e8d46671a35d64d8786857",
+      "blob": "8a9eb0c9a7858ec75b5e49d5e81d01304e4eb2b3",
       "status": "translated",
-      "translatedAt": "2026-08-21T22:48:12.902Z"
+      "translatedAt": "2026-08-22T22:43:56.665Z"
     },
     "user-guide/checkpoints-and-rollback.md": {
       "blob": "1a14d7c1be333740bcbc1dbbcf1d1275daa68552",
@@ -482,9 +482,9 @@
       "translatedAt": "2026-08-20T16:08:35.955Z"
     },
     "user-guide/desktop.md": {
-      "blob": "c6d7439a6ae635a04adb7ced242a168e5c53bff0",
+      "blob": "0a4cf668a0af4bb236fac5be23daf9d1489873e1",
       "status": "translated",
-      "translatedAt": "2026-08-21T22:48:12.901Z"
+      "translatedAt": "2026-08-22T22:43:56.661Z"
     },
     "user-guide/docker.md": {
       "blob": "fd0c047d4837c034dd3c7da8a440c29bdf042925",
@@ -2002,5 +2002,5 @@
       "translatedAt": "2026-08-21T22:48:12.929Z"
     }
   },
-  "snapshotCommit": "3bdc2165c3e82b203c43d0187ffa9bb929adf8f5"
+  "snapshotCommit": "987064caa4f8845f605ac7346fed5b72fddfb21c"
 }

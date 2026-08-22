@@ -99,7 +99,7 @@ BLUEBUBBLES_ALLOW_ALL_USERS=true
 hermes gateway run
 ```
 
-Hermes が BlueBubbles サーバーに接続し、Webhook を登録して、iMessage のメッセージを待ち受けはじめます。
+Hermes が BlueBubbles サーバーに接続し、Webhook を登録して、iMessage のメッセージを待ち受ける状態になります。
 
 ## 仕組み {#how-it-works}
 
