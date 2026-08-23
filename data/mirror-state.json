@@ -47,9 +47,9 @@
       "translatedAt": "2026-08-20T16:08:35.893Z"
     },
     "developer-guide/context-compression-and-caching.md": {
-      "blob": "31e3c9a0cb751f16a579a59c5fb0c5160e550fc3",
+      "blob": "18a70d97923ff0f47781efb5a04e1d3108d3f6d6",
       "status": "translated",
-      "translatedAt": "2026-08-21T00:30:27.066Z"
+      "translatedAt": "2026-08-23T22:48:38.623Z"
     },
     "developer-guide/context-engine-plugin.md": {
       "blob": "6609158e076554fcac8ef905554fc317baee0936",
@@ -202,9 +202,9 @@
       "translatedAt": "2026-08-20T16:08:35.914Z"
     },
     "getting-started/updating.md": {
-      "blob": "5859174c7f7e1e68e9e3cc08224aed37754967ec",
+      "blob": "0b3917f303f643f45cae21f82e776242988deda3",
       "status": "translated",
-      "translatedAt": "2026-08-21T22:48:12.899Z"
+      "translatedAt": "2026-08-23T22:48:38.616Z"
     },
     "guides/agent-email-address.md": {
       "blob": "a879b8ace8d934265cd2bf7b4d5d8a8317ac90c8",
@@ -457,9 +457,9 @@
       "translatedAt": "2026-08-20T16:08:35.949Z"
     },
     "user-guide/bot-mode.md": {
-      "blob": "8a9eb0c9a7858ec75b5e49d5e81d01304e4eb2b3",
+      "blob": "7a9e198cb53075430cb8e49b2c438eb50e3f4951",
       "status": "translated",
-      "translatedAt": "2026-08-22T22:43:56.665Z"
+      "translatedAt": "2026-08-23T22:48:38.619Z"
     },
     "user-guide/checkpoints-and-rollback.md": {
       "blob": "1a14d7c1be333740bcbc1dbbcf1d1275daa68552",
@@ -707,9 +707,9 @@
       "translatedAt": "2026-08-20T16:08:35.994Z"
     },
     "user-guide/features/tool-gateway.md": {
-      "blob": "247b4ed383b757b515c5e9020e9b259562a90224",
+      "blob": "ee828cbb46631b0a782bcd7701f479a3f7757b68",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.994Z"
+      "translatedAt": "2026-08-23T22:48:38.621Z"
     },
     "user-guide/features/tool-search.md": {
       "blob": "468989f787d07ed1effff5957c585f6dbc37d068",
@@ -732,9 +732,9 @@
       "translatedAt": "2026-08-20T16:08:35.997Z"
     },
     "user-guide/features/voice-mode.md": {
-      "blob": "7b51cdbf61bfe87bfc87b31547dda9ed52a5cc01",
+      "blob": "349b8936d2eda0f5aa421cf4a9523219340ce28f",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.997Z"
+      "translatedAt": "2026-08-23T22:48:38.622Z"
     },
     "user-guide/features/wake-word.md": {
       "blob": "622532cd5f6885a4b0a6b6a548edf01ea92e2ccf",
@@ -1987,9 +1987,9 @@
       "translatedAt": "2026-08-20T16:08:36.130Z"
     },
     "user-guide/windows-native.md": {
-      "blob": "4e0a48c0b060995b37f6763bc6ac7d64869e9e57",
+      "blob": "f703dfe286a24df5816c5e302fb5d16c4544fd10",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.131Z"
+      "translatedAt": "2026-08-23T22:48:38.620Z"
     },
     "user-guide/windows-wsl-quickstart.md": {
       "blob": "2128b3be9147d810566c79c22701b8dabcb9cb5d",
@@ -2002,5 +2002,5 @@
       "translatedAt": "2026-08-21T22:48:12.929Z"
     }
   },
-  "snapshotCommit": "987064caa4f8845f605ac7346fed5b72fddfb21c"
+  "snapshotCommit": "650cf3348f8b3912e09da43b8ab96c62d88de2df"
 }
