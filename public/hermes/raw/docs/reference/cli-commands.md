@@ -2,7 +2,7 @@
 title: "CLI コマンド一覧"
 description: "Hermes のターミナルコマンドとコマンド群についての公式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: a75f2a6e91709098eed6a38e7a439296088c619f
+upstream_blob: fe0ca434444fb8a18dcca006e8c628aa28022ff2
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -1552,6 +1552,8 @@ hermes serve [options]
 ```
 
 Hermes の**バックエンドサーバー**を起動します。これは[デスクトップアプリ](/hermes/docs/user-guide/desktop/)やリモートのクライアントが接続する JSON-RPC / WebSocket のゲートウェイです。`hermes dashboard` が動かすのと同じサーバーですが、**画面を持たず**、ブラウザの UI を開くことはありません。デスクトップアプリは自前の `hermes serve` のバックエンドを立ち上げます。このコマンドは、リモートのホストで画面なしのバックエンドを動かしたいときに直接使ってください。下の `hermes dashboard` と同じ `--host` / `--port` / `--insecure` / `--skip-build` / `--stop` / `--status` のオプションを受け付けます（ループバック以外に割り当てると、同じ認証の関門が働きます）。`[web]` の追加インストールが必要で、組み込みのチャットのソケットは POSIX のホストでさらに `[pty]` を必要とします。
+
+**ポートの取り合い:** 指定したポート（既定は `9119`）を別のプロセスがすでに握っている場合（たとえば二つ目の `hermes serve` やゲートウェイ）、このコマンドは機械が読み取れる目印の行 `BACKEND_PORT_IN_USE port=<port>` を標準出力に出し、握っていそうな相手を名指しする案内を添えたうえで、ありきたりのエラーではなく終了コード **75**（`EX_TEMPFAIL`）で終わります。これにより、スクリプトやデスクトップアプリは「ポートがふさがっている」のか「バックエンドが壊れている」のかを見分けられます。`--port 0` を渡すと、空いている一時的なポートに割り当てます（起動に成功すると、選ばれたポートを `HERMES_BACKEND_READY port=<port>` で知らせます）。
 
 ## `hermes dashboard` {#hermes-dashboard}
 

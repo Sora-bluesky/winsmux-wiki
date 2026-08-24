@@ -1,13 +1,13 @@
 ---
-title: "AI プロバイダー"
+title: "LLM とモデルのプロバイダー"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 042b5411181b6cb3e4be978d96001c7feaaf6296
+upstream_blob: c02d3b8a30bf3969e9018b7e5a490cfafc3aa4df
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
 
-# AI プロバイダー {#ai-providers}
+# LLM とモデルのプロバイダー {#llm-and-model-providers}
 
 このページでは、Hermes Agent で使う推論プロバイダーの設定方法を説明します。OpenRouter や Anthropic のようなクラウド API から、Ollama や vLLM のような自分で立てたエンドポイント、さらに高度なルーティングやフォールバックの設定まで扱います。Hermes を使うには、少なくとも 1 つのプロバイダーを設定しておく必要があります。
 

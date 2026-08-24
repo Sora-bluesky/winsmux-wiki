@@ -1,13 +1,13 @@
 ---
-title: "クイックスタート"
+title: "Hermes Agent クイックスタート"
 description: "Hermes Agent との最初の会話 — インストールからチャットまで5分以内で"
 upstream_path: getting-started/quickstart.md
-upstream_blob: 73c63a7e7ee6c003eb419b2fe5cffa3bec1ff868
+upstream_blob: 168609a006d21411ecef9f0a8baca02cb7d9101b
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/quickstart
 ---
 
-# クイックスタート {#quickstart}
+# Hermes Agent クイックスタート {#hermes-agent-quickstart}
 
 このガイドでは、何もない状態から、実際の利用に耐える Hermes の環境を作り上げます。インストールし、プロバイダーを選び、チャットが動くことを確認し、そして何かが壊れたときに何をすればよいかまで、はっきりと分かる形で進めます。
 

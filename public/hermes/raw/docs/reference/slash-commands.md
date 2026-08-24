@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージングのスラッシュコマンドをすべて集めた早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: fb9fc5b2b5f42c8d07abbb0047a4615550cf77b0
+upstream_blob: e1317c216bbcf84a80bbdc75215a656e7e63fcd7
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -58,6 +58,7 @@ CLI で `/` を打つと入力補完のメニューが開きます。組み込�
 | `/subgoal <text>` | ループの途中で、いまの目標に自分で条件を書き足します。継続用のプロンプトはすべての追加条件をそのままエージェントに見せ、判定役も DONE / CONTINUE の判断に織り込みます。つまり、元の目標**と**すべての追加条件がそろうまで達成扱いになりません。サブコマンドは `/subgoal`（一覧）、`/subgoal remove <N>`、`/subgoal clear`。`/goal` が動いている必要があります。 |
 | `/heartbeat every <interval> <prompt>`（別名: `/hb`） | 決めた間隔ごとに、**このセッション**へ通常のユーザーのターンとして入ってくる定期プロンプトを設定します（最短 60 秒。取りこぼした分はまとめて 1 回になります）。サブコマンドは `/heartbeat status`、`/heartbeat pause`、`/heartbeat resume`、`/heartbeat clear`。セッション内で完結する仕組みなので、独立して確実に回したいときは `hermes cron` を使ってください。[セッションのハートビート](/hermes/docs/user-guide/features/heartbeat/) も参照。 |
 | `/refine [focus]` | 記憶とスキルの自己改善レビューを、ターン後の自動実行を待たずに**その場で**走らせます。文章を添えるとレビューの重点を指定できます（例: `/refine save the deploy workflow as a skill`）。会話のスナップショットに対してバックグラウンドで分岐して動くので、進行中のセッションとプロンプトキャッシュには触れず、終わったら結果が報告されます。 |
+| `/review [instructions]` | いま話し合っていた作業を、独立した権限フル装備のレビュー役サブエージェントに見てもらいます。対象は PR でもコードでもドキュメントでも、直近 10 件のチャットで触れたものなら何でも構いません。バックグラウンドで PR を開き、差分を読み、コードを動かして調べ、そのレビュー全文がバックグラウンドのサブエージェントの完了報告としてこのセッションに戻ってくるので、メインのエージェントがそのまま対応できます。レビュー専用のモデルは config.yaml の `auxiliary.review` で固定できます（既定ではメインのモデルと同じものを使います）。[サブエージェントへの委任](/hermes/docs/user-guide/features/delegation/#the-review-command) も参照。 |
 | `/moa <prompt>` | プロンプトを 1 回だけ既定の [Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/) の設定で流し、そのあといまのモデルに戻します。その場限りで、セッションのモデルは変わりません。 |
 | `/resume [name]` | 名前を付けておいたセッションを再開します |
 | `/sessions`（TUI での別名: `/switch`） | 従来の CLI では、過去のセッションを選択画面で見て再開します。TUI では、いま開いている TUI セッションの切り替え画面を開きます。TUI で `/sessions new` を使うと、その場でもう一つセッションを立ち上げられます。 |
@@ -259,6 +260,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/subgoal <text>` | ループの途中で、いまの `/goal` に条件を書き足します（`/subgoal`、`/subgoal remove <N>`、`/subgoal clear`）。 |
 | `/heartbeat every <interval> <prompt>`（別名: `/hb`） | 空いているときにこのセッションへ入ってくる定期プロンプトを設定します。サブコマンドは `status`、`pause`、`resume`、`clear`。Slack では `/hermes heartbeat …` の形で使います。 |
 | `/refine [focus]` | 記憶とスキルの自己改善レビューをその場で走らせます。重点を指定することもできます。Slack では `/hermes refine …` の形で使います。 |
+| `/review [instructions]` | いま話し合っていた作業（PR、コード、ドキュメント）を、独立したレビュー役サブエージェントに見てもらいます。終わるとそのレビューがこのチャットに戻ってきます。Slack では `/hermes review …` の形で使います。 |
 | `/moa <prompt>` | プロンプトを 1 回だけ既定の [Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/) の設定で流し、そのあとセッションのモデルに戻します。 |
 | `/branch [name]`（別名: `/fork`） | いまのセッションを分岐させます（別の進め方を試すため）。 |
 | `/agents`（別名: `/tasks`） | 動いているエージェントとタスクを表示します。 |

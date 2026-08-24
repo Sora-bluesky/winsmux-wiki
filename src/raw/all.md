@@ -38,7 +38,7 @@ raw: /hermes/raw/all.md
 - [Security](/hermes/docs/user-guide/security/)
 - [Checkpoints & Rollback](/hermes/docs/user-guide/checkpoints-and-rollback/)
 - [Bot Mode](/hermes/docs/user-guide/bot-mode/)
-- [Desktop App](/hermes/docs/user-guide/desktop/)
+- [Hermes Desktop](/hermes/docs/user-guide/desktop/)
 - [Egress proxy](/hermes/docs/user-guide/egress/)
 - [Egress credential-injection proxy (iron-proxy)](/hermes/docs/user-guide/egress/iron-proxy/)
 - [Import from Other Agents](/hermes/docs/user-guide/import-from-other-agents/)
@@ -85,7 +85,7 @@ raw: /hermes/raw/all.md
 - [Nous Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/)
 - [Tool Search](/hermes/docs/user-guide/features/tool-search/)
 - [Wake Word](/hermes/docs/user-guide/features/wake-word/)
-- [Web Dashboard](/hermes/docs/user-guide/features/web-dashboard/)
+- [Hermes Web Dashboard](/hermes/docs/user-guide/features/web-dashboard/)
 - [Web Search & Extract](/hermes/docs/user-guide/features/web-search/)
 - [X (Twitter) Search](/hermes/docs/user-guide/features/x-search/)
 

@@ -2,7 +2,7 @@
 title: "モデルを設定する"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: 422cdc57a3ba2a5acef53717a654d294f2c8c624
+upstream_blob: 2ede0dba3ce29f5c6c822ed080adc527856bb98f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---
@@ -202,15 +202,15 @@ providers:
 
 探索を切ると、モデル選択画面（`hermes model`、`/model`）は実際に問い合わせた結果ではなく、設定に書いた一覧を表示します。
 
-Anthropic 互換のゲートウェイで、素のモデル別名をリクエストを受け取ってから
-解決するタイプの場合は、モデルごとの `prompt_caching` 機能で
-その別名をネイティブのプロンプトキャッシュ指定の対象にできます。
+素のモデル別名をリクエストを受け取ってから解決するタイプの
+ゲートウェイでは、モデルごとの `prompt_caching` 機能で
+その別名をプロンプトキャッシュ指定の対象にできます。
 
 ```yaml
 providers:
-  anthropic-proxy:
-    api: https://gateway.example.com/anthropic
-    transport: anthropic_messages
+  model-proxy:
+    api: https://gateway.example.com/v1
+    transport: openai_chat  # or anthropic_messages
     models:
       fable:
         context_length: 1000000
@@ -218,7 +218,10 @@ providers:
 ```
 
 Hermes はこの宣言を、プロバイダーの経路と実行時のモデル ID に正確に
-突き合わせます。別名を書き換えることはありません。`prompt_caching: false` にすれば、
+突き合わせます。別名を書き換えることも、プロバイダー名やホスト名、モデルの系統から
+対応の可否を推測することもありません。キャッシュ指定の書き方は、設定した transport に
+従います。`openai_chat` なら OpenAI 互換の外側の入れ物に書く形、`anthropic_messages` なら
+ネイティブの内側のブロックに書く形です。`prompt_caching: false` にすれば、
 そのモデルでキャッシュ指定を明示的に切れます。書かなかった場合、Hermes は
 いつもどおりプロバイダーとモデルの対応機能を自動判別します。
 

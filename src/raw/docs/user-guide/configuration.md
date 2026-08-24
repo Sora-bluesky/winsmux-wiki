@@ -1,13 +1,13 @@
 ---
-title: "設定"
+title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダー、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 7e0f7ecbc9a241a41f81b416db404ae976c2b988
+upstream_blob: 4feb4fb5cb63273ab5ea43f5d6d2e986a0865a39
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
 
-# 設定 {#configuration}
+# Hermes Agent の設定 {#hermes-agent-configuration}
 
 設定はすべて `~/.hermes/` ディレクトリにまとめて保存されるので、すぐに手が届きます。
 
@@ -1998,6 +1998,15 @@ privacy:
 
 ハッシュは決まった値になるので、同じユーザーは常に同じハッシュになり、グループチャットでもモデルはユーザーを区別できます。経路の振り分けと配信には、内部で元の値が使われます。
 
+### OpenAI Codex へのリクエストの名乗り {#openai-codex-request-identity}
+
+OpenAI は、Codex を組み込んだ他社製の実行環境に対して、自分が何であるかを名乗ることを求めています。
+ChatGPT のアカウントで認証して公式の Codex エンドポイントへ送るリクエストには、
+`originator: hermes-agent` と `User-Agent: HermesAgent/<version>` が自動で付きます。
+これまでどおり ChatGPT のアカウントのヘッダーもそのまま残ります。プロンプトの中身が増えることも、
+利用状況を送る通信が追加されることもありません。
+OpenAI の API を直接呼ぶ場合と、独自のプロキシのエンドポイントを使う場合は、これまでと変わりません。
+
 ## 音声の文字起こし（STT） {#speech-to-text-stt}
 
 ```yaml
@@ -2599,10 +2608,17 @@ dashboard:
   drain_auth:                 # Drain-control service-credential gate (dashboard_auth/drain plugin)
     scope: "drain"            # capability label on the verified principal
     min_secret_chars: 43      # entropy bar (url-safe-b64 chars; 43 ≈ 256 bits)
+  ws_ping_interval: 20.0      # Non-loopback WebSocket keepalive ping interval (seconds)
+  ws_ping_timeout: 20.0       # Non-loopback WebSocket keepalive pong timeout (seconds)
+  ws_orphan_reap_grace_s: 20.0 # Grace before a WS-detached session is reaped (seconds)
+  startup_orphan_sweep: true  # Close session rows orphaned by a dead gateway process at boot
 ```
 
 - `theme` — ダッシュボードの見た目のテーマです。
 - `show_token_analytics` — デフォルトでは無効です。Analytics のページとトークンや費用の数字は、**手元での控えめな見積もり**にすぎず（補助の呼び出し、再試行、フォールバック、キャッシュへの書き込みを含みません）、プロバイダーの請求よりずっと低く出ることがあります。請求額ではないと理解したうえでだけ `true` にしてください。
 - `public_url` — 設定すると、OAuth の `redirect_uri` はこの値（スキーム + ホスト + 任意のパスの接頭辞）をそのまま土台に組み立てられます。`X-Forwarded-*` のヘッダーを確実に転送しないリバースプロキシの後ろに置く場合に設定してください。空のままにすると、プロキシのヘッダーから組み立て直します。
 - `oauth` / `basic_auth` / `drain_auth` — 同梱のダッシュボードの認証プラグインが読む設定です。drain の秘密の値そのものはここには書きません。`HERMES_DASHBOARD_DRAIN_SECRET` の環境変数で渡します。認証の設定の全体は [Web Dashboard](/hermes/docs/user-guide/features/web-dashboard/) を参照してください。
+- `ws_ping_interval` / `ws_ping_timeout` — ループバック以外で待ち受けるときの WebSocket の生存確認の調整です（ループバックの接続では生存確認を送りません）。Tailscale や遠くまで伸ばした SSH トンネルのように遅延の大きい回線では、既定の 20 秒だと実際には切れていないのに 1006 の切断が起きることがあるので、値を大きくしてください。
+- `ws_orphan_reap_grace_s` — WebSocket が外れたセッションを回収役が片づけるまで、どれだけ待つかです。クライアントの再接続が遅い環境では、上の生存確認の値と一緒に大きくしてください（`HERMES_TUI_WS_ORPHAN_REAP_GRACE_S` は内部向けの上書きとして残っています）。
+- `startup_orphan_sweep`（既定は `true`）— 上に書いた WebSocket 切れの回収タイマーはプロセスの中で動いているので、それが動く前にゲートウェイが再起動すると（更新、クラッシュ、systemd）、セッションの記録が開いたまま永久に残ります。`/resume` やダッシュボードに、動いていない作業が動いているように見えてしまう状態です。そこでゲートウェイが起動するたびに、標準入出力の TUI（`entry.main`）でも、デスクトップやダッシュボード向けの WebSocket の受け口（`handle_ws`）でも、`tui` / `desktop` / `subagent` を出どころとする記録のうち、開始時刻**と**最新のメッセージの両方がセッションの保持時間（`HERMES_TUI_SESSION_TTL_S`、既定 6 時間）より古いものを、`end_reason: startup_orphan_reap` として閉じます。メッセージのプラットフォーム（Telegram、Discord など）のセッションには手を触れず、メモリ上で生きているセッション（すでに再開済みのクライアント）も対象外で、閉じたセッションはあとから再開できます。
 

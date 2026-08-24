@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の完全な一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: e35fbcaf0a2f8b69f9812cc3e4f2d5fde7c5563c
+upstream_blob: 6d77c33a2a0521f9b724050cc9d382c4832799fe
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -552,7 +552,7 @@ Anthropic のネイティブな認証では、Claude Code 自身の資格情報�
 | `HERMES_DASHBOARD_BASIC_AUTH_SECRET` | basic プロバイダーの、状態を持たないセッショントークンに署名する HMAC のキーです（32 バイト以上、base64 / 16 進数 / 生の値）。明示的に設定すると、再起動をまたいでもセッションが残り、複数のワーカーでも共有できます。空にすると、プロセスごとにランダムな値になり、再起動のたびにログアウトします。`dashboard.basic_auth.secret` より優先されます。 |
 | `HERMES_DASHBOARD_BASIC_AUTH_TTL_SECONDS` | basic プロバイダーのアクセストークンの有効期間です（既定は 12 時間）。`dashboard.basic_auth.session_ttl_seconds` より優先されます。 |
 | `HERMES_DASHBOARD_OAUTH_CLIENT_ID` | 認証付き・公開のダッシュボード向けの OAuth のクライアント ID（`agent:{instance_id}`）で、これを設定すると Nous のプロバイダー（`plugins/dashboard_auth/nous`）が有効になります。`dashboard.oauth.client_id` より優先されます。`hermes dashboard register` で発行してください。 |
-| `HERMES_DASHBOARD_PUBLIC_URL` | ダッシュボードに実際にアクセスするときの完全な公開 URL です。リバースプロキシの後ろで OAuth のコールバックを組み立てるために使います。`dashboard.public_url` より優先されます。 |
+| `HERMES_DASHBOARD_PUBLIC_URL` | リバースプロキシの後ろで、ダッシュボードに実際にアクセスするときの完全な公開 URL です。OAuth のコールバックの組み立て方を決めるほか、ここに書いたホスト名をそのまま HTTP の Host と WebSocket の Origin の照合先に加えます。さらに、バックエンドがループバックにだけ待ち受けている場合でも、ループバック以外の公開ホストには認証ゲートを必須にします。`dashboard.public_url` より優先されます。 |
 | `HERMES_DASHBOARD_OIDC_ISSUER` | 同梱の自前ホストの OIDC プロバイダー（`plugins/dashboard_auth/self_hosted`）の issuer の URL です。有効にするには必須です。`dashboard.oauth.self_hosted.issuer` より優先されます。 |
 | `HERMES_DASHBOARD_OIDC_CLIENT_ID` | 自前ホストの OIDC プロバイダー用の公開クライアント ID です（認可コード + PKCE）。有効にするには必須です。`dashboard.oauth.self_hosted.client_id` より優先されます。 |
 | `HERMES_DASHBOARD_OIDC_SCOPES` | 自前ホストの OIDC プロバイダーで要求するスコープです（既定値 `openid profile email`）。`dashboard.oauth.self_hosted.scopes` より優先されます。 |

@@ -1,13 +1,13 @@
 ---
-title: "Docker"
+title: "Hermes の Docker セットアップ"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: fd0c047d4837c034dd3c7da8a440c29bdf042925
+upstream_blob: cf63f4f6ebfba714ac5f40d08082aff2331d11e8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
 
-# Hermes Agent — Docker {#hermes-agent-docker}
+# Hermes の Docker セットアップ {#hermes-docker-setup}
 
 Docker と Hermes Agent の関わり方には、はっきり異なる 2 通りがあります。
 

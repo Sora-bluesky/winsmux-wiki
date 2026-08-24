@@ -2,7 +2,7 @@
 title: "定期実行がうまくいかないとき"
 description: "Hermes の定期実行でよくある困りごとを切り分けて直します。ジョブが動かない、配信が届かない、スキルが読み込めない、動きが遅いといった症状をあつかいます。"
 upstream_path: guides/cron-troubleshooting.md
-upstream_blob: 2f2cb43b34659c3226f9075201ab221a1c4c0fb4
+upstream_blob: b4cc65b6f0677bbadb24775727ef8fe3c1eafa17
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/cron-troubleshooting
 ---
@@ -42,6 +42,8 @@ hermes cron list
 定期実行のジョブは、ゲートウェイの裏で回っている時計係のスレッドが動かしています。この時計係は 60 秒ごとに時を刻みます。ふつうに CLI でチャットしているだけでは、ジョブは自動で動き**ません**。
 
 自動で動いてほしいなら、ゲートウェイを立ち上げておく必要があります（手元で動かすなら `hermes gateway`、サービスとして入れてあるなら `hermes gateway start`）。その場かぎりの確認なら、`hermes cron tick` で手動で一度時を刻ませることもできます。
+
+**デスクトップアプリの場合:** デスクトップの主となるバックエンドは自前の時計係を持っていて、**手元にあるすべてのプロファイル**の cron の保存先を刻みます。そのため、別のプロファイルのバックエンドが眠っている間も、そちらのプロファイルのジョブは動きつづけます（デスクトップは、使われていないプロファイルのバックエンドを 10 分ほどで眠らせます）。決まった時刻のジョブを動かすために、そのプロファイルを開いたままにしておく必要はありません。
 
 ### 確認 4: システムの時計とタイムゾーン {#check-4-check-the-system-clock-and-timezone}
 

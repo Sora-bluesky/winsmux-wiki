@@ -2,7 +2,7 @@
 title: "Bot モード"
 description: "Hermes のプロファイルを、名前を持った Bot の一覧に変えます。Bot はそれぞれ独自のチャット、役割、モデル、記憶、スキル、アバターを持ち、定期タスクをこなし、グループチャットを共有し、互いにメッセージを送り合います。"
 upstream_path: user-guide/bot-mode.md
-upstream_blob: 7a9e198cb53075430cb8e49b2c438eb50e3f4951
+upstream_blob: 35342ec968dd81b40b523c2a031119339545a556
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/bot-mode
 ---
@@ -112,6 +112,14 @@ agent:
 :::note
 Bot 同士の配送は、実行のたびに処理されます。受け取る側の Bot は、次に動いたときにメッセージを拾います。会話の途中で Bot に割り込む機能は、これからの課題です。
 :::
+
+### 失敗したターンは安全にやり直されます {#failed-turns-retry-safely}
+
+配送に失敗したターンは、やり直して意味があるときにかぎり、最大 1 回だけ再実行されます。一時的な失敗（相手のランタイムが止まっている、配送がタイムアウトした、プロバイダーのレート制限やサーバーエラー）なら、同じ Bot Chat のセッションをそのまま流し直します。文脈があふれて失敗した場合も同じセッションを流し直しますが、やり直すターンではモデルを呼ぶ前に、しきい値を超えた会話を通常の文脈圧縮で縮めてから送るので、元のターンでは入らなかったものが収まります。認証、利用枠、設定の誤りによる失敗は自動でやり直しません。もう一度試しても直らず利用枠を無駄にするだけなので、その場ですぐ失敗として知らせます。やり直すターンが新しいセッションを始めることはないので、Bot Chat の履歴と文脈はそのまま残ります。
+
+### 配送が失敗したとき: 分類された理由 {#when-a-delivery-fails-typed-reasons}
+
+Bot のターンや中継の配送が失敗すると、人が読むエラー文と一緒に、機械が読める `reason` コードが最後まで一貫して付いてきます。まず相手側のゲートウェイが失敗を分類し（`provider_auth_or_access`、`provider_quota_limit`、`provider_rate_limit`、`provider_server_error`、`context_overflow`、`missing_config`、`model_unavailable`、`runtime_offline`、`queued_expired`、`delivery_timeout`、`target_busy`、`unknown`）、デスクトップがそれを転送し、送った側のエージェントの完了通知にはエラー文の手前に `[reason: <code>]` という印が付きます。呼び出す側のエージェントは、プロバイダーの文章を読み解かなくても、このコードだけで「もう一度サインインする」のか「あとで試す」のかを分けられます。デスクトップの「対応が必要」バッジも同じコードを使っています。
 
 ### つないだ端末をまたぐメッセージ（デスクトップの中継） {#messaging-across-connected-machines-the-desktop-relay}
 
