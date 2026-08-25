@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（207 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（208 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -198,7 +198,7 @@ raw: /hermes/raw/all.md
 - [Automated GitHub PR Comments with Webhooks](/hermes/docs/guides/webhook-github-pr-review/)
 - [xAI Grok OAuth (SuperGrok / X Premium+)](/hermes/docs/guides/xai-grok-oauth/)
 
-## Developer Guide（34）
+## Developer Guide（35）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -229,6 +229,7 @@ raw: /hermes/raw/all.md
 - [Programmatic Integration](/hermes/docs/developer-guide/programmatic-integration/)
 - [Secret Source Plugins](/hermes/docs/developer-guide/secret-source-plugin/)
 - [Public Subagent Lifecycle API](/hermes/docs/developer-guide/subagent-lifecycle-api/)
+- [Terminal Environment Provider Plugins](/hermes/docs/developer-guide/terminal-environment-plugin/)
 - [Tools Runtime](/hermes/docs/developer-guide/tools-runtime/)
 - [Trajectory Format](/hermes/docs/developer-guide/trajectory-format/)
 - [Video Generation Provider Plugins](/hermes/docs/developer-guide/video-gen-provider-plugin/)

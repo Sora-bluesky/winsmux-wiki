@@ -97,9 +97,9 @@
       "translatedAt": "2026-08-20T16:08:35.900Z"
     },
     "developer-guide/memory-provider-plugin.md": {
-      "blob": "40dc5ba3ef0a73e476d0098e0c1c02167a9c6c2a",
+      "blob": "26a54b7fcb866273ec297936bb9cb71b7ff55650",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.901Z"
+      "translatedAt": "2026-08-25T22:45:13.087Z"
     },
     "developer-guide/model-provider-plugin.md": {
       "blob": "5127107fa3122304d55a856308491d78d72b5eac",
@@ -252,9 +252,9 @@
       "translatedAt": "2026-08-20T16:08:35.919Z"
     },
     "guides/desktop-native-signin.md": {
-      "blob": "186acec1540bbdc56d166ac77947e36253b9b0e2",
+      "blob": "f8402c8229d3c681ef6c2a6efdc1c1c9a63c353f",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.919Z"
+      "translatedAt": "2026-08-25T22:45:13.088Z"
     },
     "guides/github-pr-review-agent.md": {
       "blob": "f45684973bd45028efc2c8e2291998a024705b71",
@@ -262,9 +262,9 @@
       "translatedAt": "2026-08-20T16:08:35.920Z"
     },
     "guides/google-gemini.md": {
-      "blob": "7a00eabf8dff2950d79df3a9a6fc2a8826b87be1",
+      "blob": "c5d57fe40df15b43885d42b778c470117515804e",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.920Z"
+      "translatedAt": "2026-08-25T22:45:13.088Z"
     },
     "guides/google-vertex.md": {
       "blob": "54923db967d5a5c1965a45badddc32ff4efc8cbb",
@@ -407,9 +407,9 @@
       "translatedAt": "2026-08-20T16:08:35.938Z"
     },
     "reference/environment-variables.md": {
-      "blob": "6d77c33a2a0521f9b724050cc9d382c4832799fe",
+      "blob": "a2069f5ae8448c29ed91a8aca20c16ec6ed2cdf9",
       "status": "translated",
-      "translatedAt": "2026-08-24T22:53:52.818Z"
+      "translatedAt": "2026-08-25T23:18:41.591Z"
     },
     "reference/faq.md": {
       "blob": "fc199a509b72af19e25ce700b8963c8db27237b1",
@@ -472,9 +472,9 @@
       "translatedAt": "2026-08-20T16:08:35.951Z"
     },
     "user-guide/configuration.md": {
-      "blob": "4feb4fb5cb63273ab5ea43f5d6d2e986a0865a39",
+      "blob": "4bd432551b1dbec666f216122cd7e4d98cb1bd65",
       "status": "translated",
-      "translatedAt": "2026-08-24T22:53:52.825Z"
+      "translatedAt": "2026-08-25T23:18:41.583Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "2ede0dba3ce29f5c6c822ed080adc527856bb98f",
@@ -487,9 +487,9 @@
       "translatedAt": "2026-08-24T22:53:52.827Z"
     },
     "user-guide/docker.md": {
-      "blob": "cf63f4f6ebfba714ac5f40d08082aff2331d11e8",
+      "blob": "747e6b40edde70a5704b53e62ce4b8d89bf36756",
       "status": "translated",
-      "translatedAt": "2026-08-24T22:53:52.829Z"
+      "translatedAt": "2026-08-25T23:18:41.587Z"
     },
     "user-guide/egress/index.md": {
       "blob": "90ccbb8a05e663ba816b4ac1e8bef7bca32eed5b",
@@ -517,9 +517,9 @@
       "translatedAt": "2026-08-20T16:08:35.963Z"
     },
     "user-guide/features/browser.md": {
-      "blob": "f9687772011c83fa865a3d331411907a03907457",
+      "blob": "551537b28d99592fb8482918a93d603cc25d44ba",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.964Z"
+      "translatedAt": "2026-08-25T23:04:35.124Z"
     },
     "user-guide/features/built-in-plugins.md": {
       "blob": "ac18d4c925358a704e606ba1e8502f93c7de75fd",
@@ -537,9 +537,9 @@
       "translatedAt": "2026-08-20T16:08:35.966Z"
     },
     "user-guide/features/computer-use.md": {
-      "blob": "54fc0f8012336c0619813b63504fef2e60caa4cc",
+      "blob": "51b0552c84177f18f220836a0fff77e330d163e0",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.967Z"
+      "translatedAt": "2026-08-25T23:04:35.128Z"
     },
     "user-guide/features/context-files.md": {
       "blob": "b5c628213d4309c32f9a51cbcd6d3d845396a6cb",
@@ -557,9 +557,9 @@
       "translatedAt": "2026-08-20T16:08:35.969Z"
     },
     "user-guide/features/cron.md": {
-      "blob": "cb91709320f26b360bcb1bd623d0d9a919f23b44",
+      "blob": "7e8e477be5b5e7f5bb6ebe3b4ed8fe688573b0e0",
       "status": "translated",
-      "translatedAt": "2026-08-21T22:48:12.910Z"
+      "translatedAt": "2026-08-25T23:04:35.130Z"
     },
     "user-guide/features/curator.md": {
       "blob": "e6d8617f16645fcc41bcdfddb0fc88283e27a22f",
@@ -587,9 +587,9 @@
       "translatedAt": "2026-08-21T00:30:27.087Z"
     },
     "user-guide/features/fallback-providers.md": {
-      "blob": "dbd824954dae613b5c9ad86135321e3a1be8acc3",
+      "blob": "cf0610d0f0b23ee19a326c27116a97f4bb5f5613",
       "status": "translated",
-      "translatedAt": "2026-08-24T22:53:52.830Z"
+      "translatedAt": "2026-08-25T22:48:51.589Z"
     },
     "user-guide/features/goals.md": {
       "blob": "b4a9f315858409f0432eff323fb377fbd8e95d0f",
@@ -642,9 +642,9 @@
       "translatedAt": "2026-08-20T16:08:35.984Z"
     },
     "user-guide/features/mcp.md": {
-      "blob": "755941407aa7aa8cd41e813e7ba1829a29d644ed",
+      "blob": "274c2173c4ba1f21ca9933ab76dc76595fbe2461",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.986Z"
+      "translatedAt": "2026-08-25T23:04:35.131Z"
     },
     "user-guide/features/memory-providers.md": {
       "blob": "099d73b3ebeb0dcd87bd3eda3b0eba95a0d3dff2",
@@ -677,9 +677,9 @@
       "translatedAt": "2026-08-20T16:08:35.989Z"
     },
     "user-guide/features/plugins.md": {
-      "blob": "14c162f12370deb71967ceab9f488b0dce4d24d9",
+      "blob": "d487f2c5fa5dcd825efad12704de52470900f4d8",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.991Z"
+      "translatedAt": "2026-08-25T22:48:51.584Z"
     },
     "user-guide/features/provider-routing.md": {
       "blob": "ff8a9ef56ccc23709cbf4ff900e82560332b350d",
@@ -712,9 +712,9 @@
       "translatedAt": "2026-08-23T22:48:38.621Z"
     },
     "user-guide/features/tool-search.md": {
-      "blob": "468989f787d07ed1effff5957c585f6dbc37d068",
+      "blob": "09fff5651693ab23594dfc3590029d27b7137324",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.995Z"
+      "translatedAt": "2026-08-25T22:48:51.587Z"
     },
     "user-guide/features/tools.md": {
       "blob": "849e13783482ca936109915643291c42630e8a99",
@@ -747,9 +747,9 @@
       "translatedAt": "2026-08-24T22:53:52.832Z"
     },
     "user-guide/features/web-search.md": {
-      "blob": "32959102b77e9913c5b568c9d79ef108e083806d",
+      "blob": "ddacf7f4a86097718360dcb36783a4adb34c1dca",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.001Z"
+      "translatedAt": "2026-08-25T22:48:51.587Z"
     },
     "user-guide/features/x-search.md": {
       "blob": "ec06adde31ee7bb92e6c0d05d53f14f1da5be0d7",
@@ -877,9 +877,9 @@
       "translatedAt": "2026-08-20T16:08:36.015Z"
     },
     "user-guide/messaging/signal.md": {
-      "blob": "597a7fa30be28962cd909f7deff3b5bf2305393e",
+      "blob": "a435ed96b62b08ba5e8b87103612c5261dba18d7",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.016Z"
+      "translatedAt": "2026-08-25T22:45:13.089Z"
     },
     "user-guide/messaging/simplex.md": {
       "blob": "cffff51fe0ad10a22492cef4288b599f02bd14b5",
@@ -947,9 +947,9 @@
       "translatedAt": "2026-08-20T16:08:36.025Z"
     },
     "user-guide/multi-connection-desktop.md": {
-      "blob": "7029d7304227ead623baf3e446ff15f83341b47e",
+      "blob": "06262129799705a02eeb2b5804392b6cc6e3e536",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.025Z"
+      "translatedAt": "2026-08-25T23:18:41.592Z"
     },
     "user-guide/multi-profile-gateways.md": {
       "blob": "7feddd069a90e16db198363f5ffae115a9debcfe",
@@ -2000,7 +2000,12 @@
       "blob": "e7906b19b5bfe2e72e328c190fc9c42d96039985",
       "status": "translated",
       "translatedAt": "2026-08-21T22:48:12.929Z"
+    },
+    "developer-guide/terminal-environment-plugin.md": {
+      "blob": "dd102de46cc1ab90d20a6262612362188b5ecf0d",
+      "status": "translated",
+      "translatedAt": "2026-08-25T22:45:13.083Z"
     }
   },
-  "snapshotCommit": "41447a6d7063b2772b0c2f26a5b22d9bd444fb43"
+  "snapshotCommit": "62b2d78025c349996e753c6f7c748de035eb8048"
 }

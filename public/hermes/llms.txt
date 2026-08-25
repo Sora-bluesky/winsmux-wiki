@@ -60,6 +60,7 @@ Hermes Agent 0.20.5
 - [developer-guide/secret-source-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/secret-source-plugin/)
 - [developer-guide/session-storage（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
 - [developer-guide/subagent-lifecycle-api（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/subagent-lifecycle-api/)
+- [developer-guide/terminal-environment-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/terminal-environment-plugin/)
 - [developer-guide/tools-runtime（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/tools-runtime/)
 - [developer-guide/trajectory-format（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/trajectory-format/)
 - [developer-guide/video-gen-provider-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/video-gen-provider-plugin/)
@@ -471,6 +472,7 @@ Hermes Agent 0.20.5
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/secret-source-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/session-storage.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/subagent-lifecycle-api.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/terminal-environment-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/tools-runtime.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/trajectory-format.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/video-gen-provider-plugin.md

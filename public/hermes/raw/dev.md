@@ -11,9 +11,9 @@ raw: /hermes/raw/dev.md
 
 # developer-guide
 
-Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（34 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
+Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（35 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
 
-## Developer Guide（34）
+## Developer Guide（35）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -44,6 +44,7 @@ Hermes Agent 本体を拡張したり、上流に貢献したりする人向け�
 - [Programmatic Integration](/hermes/docs/developer-guide/programmatic-integration/)
 - [Secret Source Plugins](/hermes/docs/developer-guide/secret-source-plugin/)
 - [Public Subagent Lifecycle API](/hermes/docs/developer-guide/subagent-lifecycle-api/)
+- [Terminal Environment Provider Plugins](/hermes/docs/developer-guide/terminal-environment-plugin/)
 - [Tools Runtime](/hermes/docs/developer-guide/tools-runtime/)
 - [Trajectory Format](/hermes/docs/developer-guide/trajectory-format/)
 - [Video Generation Provider Plugins](/hermes/docs/developer-guide/video-gen-provider-plugin/)

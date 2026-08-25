@@ -2,20 +2,20 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダー、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 4feb4fb5cb63273ab5ea43f5d6d2e986a0865a39
+upstream_blob: 4bd432551b1dbec666f216122cd7e4d98cb1bd65
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
 
 # Hermes Agent の設定 {#hermes-agent-configuration}
 
-設定はすべて `~/.hermes/` ディレクトリにまとめて保存されるので、すぐに手が届きます。
+設定はすべて、すぐ手が届くように `~/.hermes/` のディレクトリに置かれています。
 
-:::tip 動く `config.yaml` にいちばん早くたどり着く方法
-`hermes setup --portal` を実行してください。OAuth を一度通すだけで、モデルプロバイダーと Tool Gateway の 4 つのツールが揃い、YAML を手で書く必要がありません。Portal のサブスクリプション契約者は、トークン課金のプロバイダーが 10% 割引になります。[Nous Portal](/hermes/docs/integrations/nous-portal/) を参照してください。
+:::tip 動く `config.yaml` にいちばん早くたどり着く道
+`hermes setup --portal` を実行してください。OAuth を1回通すだけで、モデルのプロバイダーと4つのツールのゲートウェイのツールが、YAML を手で書かずにそろいます。Portal を契約していると、トークン課金のプロバイダーが10%引きにもなります。[Nous Portal](/hermes/docs/integrations/nous-portal/) を参照してください。
 :::
 
-## ディレクトリ構成 {#directory-structure}
+## ディレクトリの構成 {#directory-structure}
 
 ```text
 ~/.hermes/
@@ -30,7 +30,7 @@ sources:
 └── logs/           # Logs (errors.log, gateway.log — secrets auto-redacted)
 ```
 
-## 設定を管理する {#managing-configuration}
+## 設定を扱う {#managing-configuration}
 
 ```bash
 hermes config              # View current configuration
@@ -50,49 +50,48 @@ hermes config set OPENROUTER_API_KEY sk-or-...  # Saves to .env
 ```
 
 :::tip
-`hermes config set` コマンドは、値を適切なファイルへ自動的に振り分けます。API キーは `.env` に、それ以外はすべて `config.yaml` に保存されます。
+`hermes config set` のコマンドは、値を正しいファイルへ自動で振り分けます。API キーは `.env` に、それ以外は `config.yaml` に保存されます。
 :::
 
 ## 設定の優先順位 {#configuration-precedence}
 
-設定は次の順序で解決されます（優先度の高い順）。
+設定は次の順で決まります（上にあるものほど優先されます）。
 
-1. **CLI 引数** — 例: `hermes chat --model anthropic/claude-sonnet-4`（その実行だけの上書き）
-2. **`~/.hermes/config.yaml`** — 秘密情報以外のすべての設定を書く、中心となる設定ファイル
-3. **`~/.hermes/.env`** — 環境変数のフォールバック。秘密情報（API キー、トークン、パスワード）には**必須**です
-4. **組み込みのデフォルト値** — ほかに何も設定されていないときに使われる、ハードコードされた安全な既定値
+1. **CLI の引数** — たとえば `hermes chat --model anthropic/claude-sonnet-4`（その実行だけの上書き）
+2. **`~/.hermes/config.yaml`** — 秘密ではない設定すべてにとっての主となるファイル
+3. **`~/.hermes/.env`** — 環境変数の受け皿。秘密の情報（API キー、トークン、パスワード）には**必須**です
+4. **組み込みの初期値** — ほかに何も設定されていないときに使う、安全な既定の値
 
 :::info 目安
-秘密情報（API キー、ボットのトークン、パスワード）は `.env` に入れます。それ以外（モデル、ターミナルのバックエンド、圧縮の設定、メモリの上限、ツールセット）は `config.yaml` に入れます。両方に設定がある場合、秘密情報以外の設定は `config.yaml` が優先されます。
+秘密の情報（API キー、ボットのトークン、パスワード）は `.env` に置きます。それ以外（モデル、ターミナルのバックエンド、圧縮の設定、記憶の上限、ツールセット）は `config.yaml` に置きます。両方に書かれているとき、秘密ではない設定は `config.yaml` が勝ちます。
 :::
 
 :::tip 組織での導入
-管理者は、システムレベルの管理ディレクトリを使って、一般ユーザーが
-上書きできない設定値や秘密情報の値を固定できます。
-[Managed Scope](/hermes/docs/user-guide/managed-scope/) を参照してください。
+管理者は、システム全体の管理用ディレクトリを使って、ふつうの利用者が上書きできない設定や秘密の値を固定できます。
+[管理された適用範囲](/hermes/docs/user-guide/managed-scope/)を参照してください。
 :::
 
-## ランタイムの上限 {#runtime-limits}
+## 実行時の上限 {#runtime-limits}
 
-長時間動き続ける Hermes のサーバー面（ゲートウェイや
-`hermes serve --isolated` を含みます）は、オペレーティングシステムが対応していれば、
-起動時に設定された `RLIMIT_NOFILE` のソフトリミットを適用します。
+長く動き続ける Hermes のサーバー（ゲートウェイや
+`hermes serve --isolated` を含みます）は、OS が対応していれば、起動時に設定された
+`RLIMIT_NOFILE` のソフトの上限を適用します。
 
 ```yaml
 runtime:
   nofile_soft_limit: 4096
 ```
 
-デフォルトは `4096` です。Hermes は目標値をオペレーティングシステムの
-ハードリミットの範囲に収め、すでにそれより高いソフトリミットを持つ
-プロセスの値を下げることはありません。この調整を
-無効にするには、値を `0`、`false`、`null` のいずれかにします。Windows や、上限を変更できない
+初期値は `4096` です。Hermes はこの値を OS のハードの上限に収め、すでにそれより高い
+ソフトの上限を持つプロセスの値を下げることはありません。この調整を止めるには、値を
+`0`、`false`、`null` のいずれかにしてください。Windows や、上限を変えられない
 サンドボックスでは、
-上限を変えないまま起動処理が続きます。
+上限を変えないまま起動が
+続きます。
 
-## 環境変数の展開 {#environment-variable-substitution}
+## 環境変数の差し込み {#environment-variable-substitution}
 
-`config.yaml` の中では、`${VAR_NAME}` という書き方で環境変数を参照できます。
+`config.yaml` の中では、`${VAR_NAME}` の書き方で環境変数を参照できます。
 
 ```yaml
 auxiliary:
@@ -104,21 +103,21 @@ delegation:
   api_key: ${DELEGATION_KEY}
 ```
 
-1 つの値の中で複数回参照することもできます（`url: "${HOST}:${PORT}"`）。参照した変数が設定されていない場合、プレースホルダーはそのままの文字列として残り（`${UNDEFINED_VAR}` は書いたまま）、警告がログに記録されます。`$VAR` のような裸の書き方は展開されません。
+1つの値の中で複数を参照することもできます: `url: "${HOST}:${PORT}"`。参照した変数が設定されていない場合、書いたものがそのまま残り（`${UNDEFINED_VAR}` は手つかずのままです）、警告が記録されます。`$VAR` のように括弧のない形は展開されません。
 
-Cursor 形式の SecretRef 記法も受け付けます。`${env:VAR_NAME}` は `${VAR_NAME}` とまったく同じように解決され（`env:` の接頭辞は取り除かれます）、Cursor や Claude の設定からコピーしてきた MCP やプロバイダーの断片が、`config.yaml` でも `mcp_servers` ブロックでもそのまま動きます。それ以外の SecretRef のソース（`${file:...}`、`${vault:...}`、`${bitwarden:...}`）はその場では解決され**ません**。外部の秘密情報バックエンドは、`secrets:` ブロックを通じて起動時に値を環境変数へ流し込むので、代わりに `${env:NAME}` の形で参照してください。知らない接頭辞は一度だけ警告を出し、そのままの文字列で残ります。
+Cursor 風の SecretRef の書き方も受け付けます。`${env:VAR_NAME}` は `${VAR_NAME}` とまったく同じように解決されます（`env:` の接頭辞は取り除かれます）。ですから Cursor や Claude の設定からコピーしてきた MCP やプロバイダーの断片が、`config.yaml` でも `mcp_servers` のまとまりでもそのまま動きます。SecretRef のほかの取得元（`${file:...}`、`${vault:...}`、`${bitwarden:...}`）はその場では解決**されません**。外部の秘密情報の仕組みは、`secrets:` のまとまりを通して起動時に値を環境へ入れるので、`${env:NAME}` の形で参照してください。知らない接頭辞は一度だけ警告を出し、そのまま残ります。
 
-AI プロバイダーの設定（OpenRouter、Anthropic、Copilot、カスタムのエンドポイント、自前でホストする LLM、フォールバック用のモデルなど）については、[AI Providers](/hermes/docs/integrations/providers/) を参照してください。
+AI のプロバイダーの設定（OpenRouter、Anthropic、Copilot、独自の接続先、自分で立てた LLM、予備のモデルなど）については、[AI のプロバイダー](/hermes/docs/integrations/providers/)を参照してください。
 
-### プロバイダーのタイムアウト {#provider-timeouts}
+### プロバイダーの待ち時間 {#provider-timeouts}
 
-`providers.<id>.request_timeout_seconds` を設定すると、そのプロバイダー全体のリクエストのタイムアウトを決められます。さらに `providers.<id>.models.<model>.timeout_seconds` で、モデルごとに上書きできます。これはすべての通信方式（OpenAI 互換、ネイティブの Anthropic、Anthropic 互換）における主要な会話用クライアント、フォールバックの連鎖、認証情報のローテーション後の再構築、そして（OpenAI 互換の場合）リクエストごとのタイムアウト引数に適用されます。つまり、設定した値が従来の `HERMES_API_TIMEOUT` 環境変数より優先されます。
+プロバイダー全体のリクエストの待ち時間の上限は `providers.<id>.request_timeout_seconds` で、モデルごとの上書きは `providers.<id>.models.<model>.timeout_seconds` で設定できます。これは、どの通信の形（OpenAI 形式、Anthropic 本来の形、Anthropic 互換）でも主となるやり取りのクライアントに効き、予備の連なりにも、認証情報を入れ替えたあとの作り直しにも、（OpenAI 形式では）リクエストごとの待ち時間の指定にも効きます。ですから、設定した値が従来の `HERMES_API_TIMEOUT` の環境変数より優先されます。
 
-また、ストリーミングを使わない呼び出しの停滞を検出するために `providers.<id>.stale_timeout_seconds` を設定でき、`providers.<id>.models.<model>.stale_timeout_seconds` でモデルごとに上書きできます。こちらは従来の `HERMES_API_CALL_STALE_TIMEOUT` 環境変数より優先されます。
+応答を少しずつ受け取らない呼び出しについて、止まったと判断するまでの時間は `providers.<id>.stale_timeout_seconds` で、モデルごとの上書きは `providers.<id>.models.<model>.stale_timeout_seconds` で設定できます。こちらは従来の `HERMES_API_CALL_STALE_TIMEOUT` の環境変数より優先されます。
 
-これらを未設定のままにすると、従来のデフォルト値（`HERMES_API_TIMEOUT=1800` 秒、`HERMES_API_CALL_STALE_TIMEOUT=90` 秒、ネイティブの Anthropic は 900 秒）が使われます。ストリーミングを使わない停滞検出は、明示的に設定しなければローカルのエンドポイントでは自動的に無効になり、非常に大きなコンテキストでは上向きに調整されることがあります。AWS Bedrock には現在つながっていません（`bedrock_converse` と AnthropicBedrock SDK のどちらの経路も boto3 を使い、boto3 自身のタイムアウト設定に従います）。[`cli-config.yaml.example`](https://github.com/NousResearch/hermes-agent/blob/main/cli-config.yaml.example) のコメント付きの例を参照してください。
+どれも設定しなければ、従来の初期値（`HERMES_API_TIMEOUT=1800` 秒、`HERMES_API_CALL_STALE_TIMEOUT=90` 秒、Anthropic 本来の形なら900秒）のままです。止まったかどうかの判断は、明示しなければ手元の接続先では自動的に無効になり、とても大きな文脈では長くなることもあります。いまのところ AWS Bedrock ではつながっていません（`bedrock_converse` と AnthropicBedrock の SDK のどちらの経路も、独自の待ち時間の設定を持つ boto3 を使います）。[`cli-config.yaml.example`](https://github.com/NousResearch/hermes-agent/blob/main/cli-config.yaml.example) にコメントで書かれた例を参照してください。
 
-## 更新時の動作 {#update-behavior}
+## 更新時の動き {#update-behavior}
 
 `hermes update` の設定は、`config.yaml` の `updates` の下にあります。
 
@@ -130,15 +129,15 @@ updates:
   auto_switch_parked_branch: true       # auto-switch a clean, fully merged parked branch back to main
 ```
 
-`pre_update_backup` は、更新前の安全策を切り替える唯一のつまみです。`quick`（デフォルト）は、重要な状態ファイル（ペアリングのデータ、cron のジョブ、設定、認証情報。1 GiB を超えるファイルは除外されます）を `state-snapshots/` へスナップショットします。`full` はそれに加えて `HERMES_HOME` 全体を `backups/` へ zip 圧縮するため、ホームが大きいと数分かかることがあります。`off` は両方を無効にします。従来の真偽値も受け付けます（`true` → `full`、`false` → `off`）。
+`pre_update_backup` は、更新前の備えを決める唯一の設定です。`quick`（初期値）は大事な状態のファイル（ペアリングの情報、cron のジョブ、設定、認証。1 GiB を越えるファイルは飛ばします）を `state-snapshots/` に控えます。`full` はそれに加えて `HERMES_HOME` のすべてを `backups/` に圧縮して保存するので、中身が大きいと数分かかることがあります。`off` は両方とも行いません。従来の真偽値も受け付けます（`true` → `full`、`false` → `off`）。
 
-git でインストールした場合、Hermes は更新用のブランチをチェックアウトしたり pull したりする前に、変更のある追跡済みファイルと未追跡ファイルを自動的に stash します。ターミナルでの対話的な更新では、その stash を戻す前に確認を求めます。対話的でない更新（デスクトップアプリやチャットアプリ、ゲートウェイ、`--yes` 指定）は `updates.non_interactive_local_changes` に従います。`stash` は pull が成功したあとにローカルのソース編集を復元し、`discard` は pull 成功後に更新処理が作った stash を捨てます。`discard` は、ローカルのソース編集を残すつもりがない管理されたインストールでのみ使ってください。
+git で入れている場合、Hermes は更新用のブランチに切り替えたり取り込んだりする前に、変更されている追跡中のファイルと追跡外のファイルを自動で退避します。端末での対話的な更新では、その退避を戻す前に確認が出ます。対話のない更新（デスクトップやチャットのアプリ、ゲートウェイ、`--yes`）では `updates.non_interactive_local_changes` に従います。`stash` なら取り込みに成功したあとで手元のソースの変更を戻し、`discard` なら成功したあとで更新のために作った退避を捨てます。`discard` は、手元のソースの変更を残すつもりがまったくない、管理された導入でだけ使ってください。
 
-その stash の手順の前に、Hermes は npm の install や build による揺れで残った、追跡済みの `package-lock.json` の差分も元に戻します。意図してロックファイルを編集した場合は、更新の前にコミットするか自分で stash してください。
+その退避の前に、Hermes は npm の導入やビルドで生じた、追跡中の `package-lock.json` の差分も元に戻します。ロックファイルを意図して直したのなら、更新の前にコミットするか自分で退避しておいてください。
 
-## ターミナルのバックエンド設定 {#terminal-backend-configuration}
+## ターミナルのバックエンドの設定 {#terminal-backend-configuration}
 
-Hermes は 7 種類のターミナルバックエンドに対応しています。どれを選ぶかで、エージェントのシェルコマンドが実際に走る場所が決まります。手元のマシン、Docker コンテナ、SSH 越しのリモートサーバー、Modal のクラウドサンドボックス（直接、または Nous が運用するゲートウェイ経由）、Daytona のワークスペース、Vercel Sandbox、Singularity/Apptainer のコンテナのいずれかです。
+Hermes は7つのターミナルのバックエンドに対応しています。どれを選ぶかで、エージェントのシェルのコマンドが実際に動く場所が決まります — 手元のマシン、Docker のコンテナ、SSH でつなぐリモートのサーバー、Modal のクラウドのサンドボックス（直接つなぐか、Nous が運用するゲートウェイ経由か）、Daytona の作業場所、Vercel Sandbox、Singularity / Apptainer のコンテナです。
 
 ```yaml
 terminal:
@@ -153,69 +152,69 @@ terminal:
   daytona_image: "nikolaik/python-nodejs:python3.11-nodejs20"               # Container image for Daytona backend
 ```
 
-`terminal.font_family` は、Hermes Desktop に組み込まれたターミナルの表示を制御します。ローカルにインストール済みのフォントファミリー名を 1 つ（たとえば `MesloLGS NF`）指定するか、CSS のフォントスタックを書けます。Hermes は同梱の JetBrains Mono のスタックをフォールバックとして後ろに足すので、値を空にしておけばデフォルトのままです。同じ設定はプロファイル単位で **Settings → Appearance → Terminal Font** からも編集できます。Google Fonts のダウンロードやシステムフォントの権限は必要ありません。
+`terminal.font_family` は、Hermes Desktop に組み込まれたターミナルの表示を決めます。手元に入っているフォントの名前を1つ（たとえば `MesloLGS NF`）書くか、CSS のフォントの並びを書けます。Hermes は同梱の JetBrains Mono の並びを後ろに足します。空にしておけば既定のままです。同じ設定は **Settings → Appearance → Terminal Font** からプロファイル単位で変えられます。Google Fonts の取得も、システムのフォントへの許可も要りません。
 
-Modal、Daytona、Vercel Sandbox のようなクラウドサンドボックスでは、`container_persistent: true` にすると、Hermes はサンドボックスを作り直してもファイルシステムの状態を保とうとします。ただし、同じサンドボックスの実体、PID 空間、バックグラウンドのプロセスが後からも生きていることを保証するものではありません。
+Modal、Daytona、Vercel Sandbox のようなクラウドのサンドボックスでは、`container_persistent: true` は、サンドボックスが作り直されてもファイルシステムの状態を保とうとする、という意味です。同じサンドボックスや PID の空間、裏で動いているプロセスがそのまま残る、という約束ではありません。
 
-### バックエンドの概要 {#backend-overview}
+### バックエンドの一覧 {#backend-overview}
 
-| バックエンド | コマンドが走る場所 | 隔離 | 向いている用途 |
+| バックエンド | コマンドが動く場所 | 隔たり | 向いている用途 |
 |---------|-------------------|-----------|----------|
-| **local** | 手元のマシンで直接 | なし | 開発、個人利用 |
-| **docker** | 常駐する 1 つの Docker コンテナ（セッション、`/new`、サブエージェントで共有） | 完全（名前空間、cap-drop） | 安全なサンドボックス化、CI/CD |
-| **ssh** | SSH 越しのリモートサーバー | ネットワーク境界 | リモート開発、高性能なハードウェア |
-| **modal** | Modal のクラウドサンドボックス | 完全（クラウド VM） | 使い捨てのクラウド計算、評価 |
-| **daytona** | Daytona のワークスペース | 完全（クラウドのコンテナ） | 運用まかせのクラウド開発環境 |
-| **vercel_sandbox** | Vercel Sandbox | 完全（クラウドの microVM） | スナップショットでファイルシステムを保てるクラウド実行 |
-| **singularity** | Singularity/Apptainer のコンテナ | 名前空間（--containall） | HPC クラスター、共用マシン |
+| **local** | 手元のマシンで直接 | なし | 開発、個人での利用 |
+| **docker** | 長く生きる1つの Docker のコンテナ（セッション、`/new`、サブエージェントで共有） | 完全（名前空間、権限の削除） | 安全な隔離、CI/CD |
+| **ssh** | SSH でつなぐリモートのサーバー | ネットワークの境界 | 離れた場所での開発、高性能なマシン |
+| **modal** | Modal のクラウドのサンドボックス | 完全（クラウドの仮想マシン） | 使い捨てのクラウドの計算、評価 |
+| **daytona** | Daytona の作業場所 | 完全（クラウドのコンテナ） | 運用込みのクラウドの開発環境 |
+| **vercel_sandbox** | Vercel Sandbox | 完全（クラウドのマイクロ VM） | ファイルシステムを控えで残せるクラウドでの実行 |
+| **singularity** | Singularity / Apptainer のコンテナ | 名前空間（--containall） | HPC のクラスタ、共有のマシン |
 
-### local バックエンド {#local-backend}
+### local のバックエンド {#local-backend}
 
-デフォルトです。コマンドは手元のマシンで直接、隔離なしに走ります。特別な準備は要りません。
+初期状態のバックエンドです。コマンドは手元のマシンで、何にも隔てられずに直接動きます。特別な準備は要りません。
 
 ```yaml
 terminal:
   backend: local
 ```
 
-デフォルトでは、ローカルのツールのサブプロセスは OS ユーザー本来の `HOME` をそのまま使います。
-これにより、`git`、`ssh`、`gh`、`az`、`npm`、Claude Code、Codex といった外部の CLI が、
-普段のシェルで使っている認証情報や設定をそのまま見つけられます。Hermes 自身の状態は
-`HERMES_HOME` によってプロファイルごとに分かれたままです。設定、メモリ、セッション、スキルの
-選択に `HOME` は関係しません。
+初期状態では、手元のツールの子プロセスは、実際の OS のユーザーの `HOME` をそのまま使います。
+そのため、`git`、`ssh`、`gh`、`az`、`npm`、Claude Code、Codex といった外部の CLI が、
+ふだんのシェルで使っている認証情報や設定をそのまま見つけられます。Hermes の
+状態は `HERMES_HOME` によってプロファイルごとに分かれたままです。プロファイルが設定、記憶、
+セッション、スキルを選ぶ仕組みは `HOME` ではありません。
 
-Hermes はシステム全体の `HOME` も、シェルの起動ファイルも、オペレーティングシステムの
-アカウントのホームディレクトリも**変更しません**。この設定が制御するのは、Hermes が
-`terminal` ツールやバックグラウンドのターミナルプロセス、`execute_code`、ACP のヘルパープロセスを
-通じて起動するサブプロセスに渡す環境だけです。
+Hermes はシステム全体の `HOME` も、シェルの起動時のファイルも、
+OS のアカウントのホームも**変えません**。この設定が決めるのは、`terminal` などのツール、
+裏で動くターミナルのプロセス、`execute_code`、ACP の補助のプロセスを通して
+Hermes が起動する子プロセスに渡される環境だけです。
 
 #### `terminal.home_mode` {#terminalhomemode}
 
-| モード | ホストへのインストール | コンテナ | トレードオフ |
+| 設定 | ホストに入れた場合 | コンテナの場合 | 兼ね合い |
 |---|---|---|---|
-| `auto` | OS ユーザー本来の `HOME` を維持 | `{HERMES_HOME}/home` を使う | 推奨のデフォルト。ホストの CLI はそのまま動き、コンテナの状態も残ります。 |
-| `real` | OS ユーザー本来の `HOME` を強制 | 見える場合は OS ユーザー本来の `HOME` を強制 | 親プロセスが誤って `HOME` をプロファイルのホームに向けたまま起動してしまった場合に役立ちます。 |
-| `profile` | `{HERMES_HOME}/home` があればそれを使う | `{HERMES_HOME}/home` があればそれを使う | プロファイルごとに CLI の設定を厳密に分けられますが、通常の `~/.ssh`、`~/.gitconfig`、`~/.azure`、`~/.config/gh`、Claude や Codex の認証情報、npm の状態などは、プロファイルのホームの中で自分で用意するかリンクしない限り見えません。 |
+| `auto` | 実際の OS のユーザーの `HOME` を使います | `{HERMES_HOME}/home` を使います | おすすめの初期値です。ホストの CLI はそのまま動き、コンテナの状態は残ります。 |
+| `real` | 実際の OS のユーザーの `HOME` を強制します | 見えていれば、実際の OS のユーザーの `HOME` を強制します | 親のプロセスが誤って `HOME` をプロファイルのホームに向けたまま起動した場合に役立ちます。 |
+| `profile` | `{HERMES_HOME}/home` があればそれを使います | `{HERMES_HOME}/home` があればそれを使います | プロファイルごとに CLI の設定をきっちり分けられますが、ふつうの `~/.ssh`、`~/.gitconfig`、`~/.azure`、`~/.config/gh`、Claude や Codex の認証、npm の状態などは、プロファイルのホームの中で自分で用意するかリンクしない限り見えません。 |
 
-デフォルトの弱点は、ホストのプロファイル同士が `~` の下にある同じユーザーレベルの
-CLI の認証情報・設定を共有してしまうことです。git の身元、SSH の鍵、GitHub CLI の
-ログイン、npm の設定、クラウド CLI のログインを分けたいプロファイルがあるなら、
-`home_mode: profile` にしたうえで、そのプロファイルのホームの中でそれらのツールを
-意識的に初期化してください。
+初期値の弱点は、ホストのプロファイルどうしが `~` の下にある、ふつうの
+ユーザー単位の CLI の認証情報や設定を共有してしまうことです。git の身元、SSH の鍵、
+GitHub CLI のログイン、npm の設定、クラウドの CLI のログインを分けたプロファイルが
+必要なら、`home_mode: profile` にして、そのプロファイルのホームの中で
+それらの道具を意識して用意してください。
 
-プロファイルごとにツールの設定を厳密に分けたい場合は、次のように設定します。
+プロファイルごとに道具の設定をきっちり分けたいなら、こう設定します。
 
 ```yaml
 terminal:
   home_mode: profile
 ```
 
-このモードでは、ツールのサブプロセスは `{HERMES_HOME}/home` を `HOME` として使います。Hermes は
-`HERMES_REAL_HOME` も設定するので、スクリプト側で本当のユーザーホームが必要なときは
-そちらから見つけられます。コンテナ系のバックエンドは `auto` モードでも `{HERMES_HOME}/home` を
-使い続けます。このディレクトリが Hermes の永続データボリューム上にあるからです。
+この設定では、ツールの子プロセスは `{HERMES_HOME}/home` を `HOME` として使います。Hermes は
+`HERMES_REAL_HOME` も設定するので、必要になったときにスクリプトから本当のユーザーのホームを
+たどれます。コンテナのバックエンドは `auto` でも `{HERMES_HOME}/home` を使い続けます。
+そのディレクトリが、残り続ける Hermes のデータのボリュームの上にあるからです。
 
-プロファイルの状態と本来のユーザーホームを区別したいスクリプトでは、Hermes のデータには
+プロファイルの状態と本当のユーザーのホームを見分けたいスクリプトは、Hermes のデータには
 `HERMES_HOME` を、アカウントのホームには `HERMES_REAL_HOME` を使ってください。
 
 ```python
@@ -226,16 +225,16 @@ real_home = Path(os.environ.get("HERMES_REAL_HOME", os.environ["HOME"]))
 ```
 
 :::warning
-エージェントは、あなたのユーザーアカウントとまったく同じ範囲でファイルシステムに触れます。使わせたくないツールは `hermes tools` で無効にするか、サンドボックス化のために Docker に切り替えてください。
+エージェントは、あなたのユーザーのアカウントと同じだけファイルシステムに触れます。使わせたくないツールは `hermes tools` で止めるか、隔離のために Docker に切り替えてください。
 :::
 
-### docker バックエンド {#docker-backend}
+### docker のバックエンド {#docker-backend}
 
-セキュリティを固めた Docker コンテナ（すべてのケーパビリティを落とし、権限昇格を禁止し、PID 数を制限）の中でコマンドを実行します。
+安全のための備え（すべての権限を落とし、権限の昇格を禁じ、プロセス数に上限を設けます）をした Docker のコンテナの中でコマンドを動かします。
 
-**常駐する 1 つのコンテナを、複数の Hermes プロセスで共有します。** Hermes は最初に使われたときに長生きするコンテナを 1 つだけ起動し、以後は `docker exec` でそのコンテナに、すべてのターミナル・ファイル・`execute_code` の呼び出しを流します。これはセッションをまたいでも、`/new`、`/reset`、`delegate_task` のサブエージェントでも同じです。作業ディレクトリの移動、インストールしたパッケージ、`/workspace` の中のファイル、そして**バックグラウンドのプロセス**は、次のツール呼び出しへ、さらには次の Hermes プロセスへと引き継がれます。TUI のセッションを閉じても、`/quit` を実行しても、新しく `hermes` を起動しても、コンテナは動いたままで、次の Hermes プロセスはラベル検索でそれを再利用します。片付けの正確な条件は、後述の **コンテナのライフサイクル** を参照してください。
+**長く生きる1つのコンテナを、Hermes のプロセスをまたいで共有します。** Hermes は最初に使うときに長く生きるコンテナを1つだけ起動し、ターミナル、ファイル、`execute_code` のすべての呼び出しを `docker exec` でその同じコンテナへ回します。セッションをまたいでも、`/new` や `/reset` をしても、`delegate_task` のサブエージェントでも同じです。作業ディレクトリの移動、入れたパッケージ、`/workspace` のファイル、そして**裏で動いているプロセス**が、次のツールの呼び出しへ、そして次の Hermes のプロセスへと引き継がれます。TUI のセッションを閉じても、`/quit` を実行しても、新しく `hermes` を起動しても、コンテナは動き続け、次の Hermes のプロセスはラベルを頼りにそれを見つけて使い回します。片付けの正確な決まりは、下の **コンテナの一生** を参照してください。
 
-**セッションごとに隔離するモード（`container_persistent: false`）。** Docker バックエンドで `container_persistent: false` にすると、**セッションごとに** 1 つのコンテナを使う方式に切り替わります。チャット（デスクトップアプリのセッション、ゲートウェイの会話、TUI のセッション）ごとに真新しいサンドボックスが作られ、最初のターミナル／ファイル呼び出しのときに生成され、セッションが閉じるか `lifetime_seconds` を超えて放置されると削除されます。セッション間には何も引き継がれません。ファイルシステムの状態も、マウントも、バックグラウンドのプロセスもです。`docker_mount_cwd_to_workspace: true` の場合、`/workspace` にマウントされるのは**そのセッションに結びついた**ワークスペースだけで、ディレクトリが結びついていない新しいセッションは、前のセッションのマウントを引き継ぐのではなく空のワークスペースになります。`delegate_task` のサブエージェントは、これまでどおり親セッションのコンテナを共有します。会話と会話のあいだにサンドボックスという安全境界を置きたいときはこのモードを、上で説明した長生きの共有コンテナが欲しいときはデフォルトの `true` を使ってください。
+**セッションごとに隔てる形（`container_persistent: false`）。** docker のバックエンドで `container_persistent: false` にすると、**セッションごとに**1つのコンテナを使う形に変わります。チャット（デスクトップアプリのセッション、ゲートウェイの会話、TUI のセッション）はそれぞれ自分専用の新しいサンドボックスを持ち、最初のターミナルやファイルの呼び出しで作られ、セッションが閉じるか `lifetime_seconds` を越えて放置されると取り除かれます。セッションのあいだで引き継がれるものは何もありません — ファイルシステムの状態も、マウントも、裏で動くプロセスもです。`docker_mount_cwd_to_workspace: true` のときは、**そのセッションに結び付いた**作業場所だけが `/workspace` にマウントされます。結び付いたディレクトリを持たない新しいセッションは、前のセッションのマウントを引き継ぐのではなく、空の作業場所を得ます。`delegate_task` のサブエージェントは、これまでどおり親のセッションのコンテナを共有します。会話と会話のあいだにサンドボックスという安全の境界を置きたいときは、この形を使ってください。上で説明した長く生きる共有のコンテナがほしいなら、初期値の `true` のままにします。
 
 ```yaml
 terminal:
@@ -265,6 +264,7 @@ terminal:
   # Cross-process container reuse (defaults match the "one long-lived
   # container shared across sessions" contract — see Container lifecycle).
   docker_persist_across_processes: true   # Reuse container across Hermes restarts
+  docker_shared_container_key: ""         # Opt in trusted profiles to one identity
   docker_orphan_reaper: true              # Sweep abandoned Exited containers at startup
 
   # Cross-backend lifecycle settings (apply to docker as well)
@@ -272,77 +272,79 @@ terminal:
   lifetime_seconds: 300            # Idle-reaper window; also feeds 2× orphan-reaper threshold
 ```
 
-**`docker_env`** と **`docker_forward_env`** の違いです。前者は設定に書いた `KEY=value` の組をそのまま注入します（値は `config.yaml` に書かれるか、`TERMINAL_DOCKER_ENV='{"DEBUG":"1"}'` のように JSON の辞書で渡されます）。後者はシェルや `~/.hermes/.env` から値を持ってくるので、実際の秘密情報が設定ファイルに現れません。トークンには `docker_forward_env` を、コンテナが必要とする固定の設定値には `docker_env` を使ってください。
+**`docker_env`** と **`docker_forward_env`** の違い: 前者は設定に書いた `KEY=value` の組をそのまま入れます（値は `config.yaml` に置くか、`TERMINAL_DOCKER_ENV='{"DEBUG":"1"}'` のように JSON の辞書で渡します）。後者はシェルや `~/.hermes/.env` から値を持ってくるので、本当の秘密の値が設定ファイルに現れません。トークンには `docker_forward_env` を、コンテナが必要とする固定の設定には `docker_env` を使ってください。
 
-**`terminal.docker_extra_args`**（`TERMINAL_DOCKER_EXTRA_ARGS='["--gpus=all"]'` でも上書きできます）を使うと、Hermes が専用のキーとして用意していない `docker run` のフラグを自由に渡せます。`--gpus`、`--network`、`--add-host`、`--security-opt` の別の指定などです。各要素は文字列でなければなりません。このリストは組み立てられた `docker run` の呼び出しの最後に足されるので、必要なら Hermes のデフォルトを上書きできます。使いすぎには注意してください。サンドボックスの固め方（ケーパビリティの削除、`--user`、ワークスペースのバインドマウント）とぶつかるフラグは、警告なく隔離を弱めます。
+**`terminal.docker_extra_args`**（`TERMINAL_DOCKER_EXTRA_ARGS='["--gpus=all"]'` でも上書きできます）を使うと、Hermes が独立した項目として用意していない `docker run` のフラグを自由に渡せます — `--gpus`、`--network`、`--add-host`、別の `--security-opt` の指定などです。それぞれの要素は文字列でなければなりません。この並びは組み立てた `docker run` のいちばん後ろに足されるので、必要なら Hermes の既定を上書きできます。使いすぎないでください — サンドボックスの備え（権限の削除、`--user`、作業場所のマウント）とぶつかるフラグは、黙って隔離を弱めます。
 
-**`terminal.docker_network`**（デフォルト `true`、環境変数は `TERMINAL_DOCKER_NETWORK`）— `false` にすると、サンドボックスのコンテナを `--network=none` で起動し、エージェントのコマンドからの外向き通信をすべて断ちます。これは `terminal`、`execute_code`、ファイル系ツールが使う実行用コンテナに適用されます。コンテナは Hermes プロセスをまたいで残るため、ネットワークありの古いコンテナがある状態でこれを `false` に切り替えると、そのコンテナは削除され、外部から切り離された新しいコンテナが起動します（警告がログに記録されます）。その中で動いていたバックグラウンドのプロセスは失われます。`docker_extra_args` で `--network=none` を渡すより、このキーを使ってください。
+**`terminal.docker_network`**（初期値は `true`。環境変数は `TERMINAL_DOCKER_NETWORK`） — `false` にすると、サンドボックスのコンテナを `--network=none` で動かし、エージェントのコマンドからの外向きの通信をすべて断ちます。これは `terminal`、`execute_code`、ファイルのツールが使う実行用のコンテナに効きます。コンテナは Hermes のプロセスをまたいで残るので、ネットワークにつながった古いコンテナがあるときにこれを `false` にすると、そのコンテナは取り除かれ、通信を断った新しいコンテナが作られます（警告が記録されます）。その中で裏で動いていたプロセスは失われます。`docker_extra_args` で `--network=none` を渡すより、この項目を使ってください。
 
-**必要なもの:** Docker Desktop か Docker Engine がインストールされ、動いていること。Hermes は `$PATH` に加えて macOS のよくあるインストール先（`/usr/local/bin/docker`、`/opt/homebrew/bin/docker`、Docker Desktop のアプリバンドル）も探します。Podman もそのまま使えます。両方入っている場合に Podman を使わせたいときは、`HERMES_DOCKER_BINARY=podman`（またはフルパス）を設定してください。
+**必要なもの:** Docker Desktop か Docker Engine が入っていて、動いていることです。Hermes は `$PATH` に加えて、macOS でよくある導入先（`/usr/local/bin/docker`、`/opt/homebrew/bin/docker`、Docker Desktop のアプリの中）も探します。Podman もそのまま使えます。両方入っている状態で Podman を使わせたいときは、`HERMES_DOCKER_BINARY=podman`（またはフルパス）を設定してください。
 
-#### コンテナのライフサイクル {#container-lifecycle}
+#### コンテナの一生 {#container-lifecycle}
 
-Hermes が管理するコンテナには 3 つのラベルが付き、あとから起動するプロセス（および孤児コンテナの掃除役）がそれを見分けられるようになっています。
+Hermes が管理するコンテナには、あとから起動したプロセス（と、取り残されたコンテナを片付ける仕組み）が見分けられるよう、3つのラベルが付きます。
 
-- `hermes-agent=1` — Hermes が管理していることを示す
-- `hermes-task-id=<sanitized task_id>` — タスクごとの再利用の判定に使う
-- `hermes-profile=<sanitized profile name>` — 再利用と掃除の範囲を、現在の Hermes プロファイルに限定する
+- `hermes-agent=1` — Hermes が管理していることを表します
+- `hermes-task-id=<sanitized task_id>` — 作業ごとの使い回しの判定に使います
+- `hermes-profile=<sanitized profile name>` — 初期状態では、使い回しと片付けを動いている Hermes のプロファイルの中に限ります。`docker_shared_container_key` が設定されているときは、その整えられた値が代わりに使われます
 
-起動時に Hermes は `docker ps --filter label=hermes-task-id=<id> --filter label=hermes-profile=<profile>` を実行し、見つかれば**既存のコンテナに接続します**。コンテナが `exited` の状態なら（Docker デーモンの再起動後など）、`docker start` して再利用します。ファイルシステムの状態やインストール済みのパッケージは残りますが、コンテナ内のバックグラウンドプロセスは残りません。
+Hermes は起動時に `docker ps --filter label=hermes-task-id=<id> --filter label=hermes-profile=<identity>` を実行し、見つかれば**すでにあるコンテナにつなぎます**。ここでいう身元は、`docker_shared_container_key` で信頼するプロファイルどうしを共通の値にまとめていない限り、動いているプロファイルです。コンテナが `exited` の状態なら（Docker のデーモンを再起動したあとなど）、`docker start` して使い回します。ファイルシステムの状態と入れたパッケージは残りますが、コンテナの中で裏で動いていたプロセスは残りません。
 
-Hermes のプロセスが終了したとき（`/quit`、TUI セッションを閉じる、ゲートウェイの停止、SIGKILL であっても）、**デフォルトのモードでは片付け処理はコンテナに対して何もしません**。コンテナは動き続けます。次の Hermes プロセスは、ラベル検索によってミリ秒でそこに接続します。「セッションをまたいで共有される長生きのコンテナが 1 つ」という約束を守るには、この動作が必要です。バックグラウンドのプロセス（npm のウォッチャー、開発サーバー、長く走る pytest）がセッションをまたいで生き残る道は、これしかありません。
+Hermes のプロセスが終わるとき — `/quit`、TUI のセッションを閉じる、ゲートウェイの停止、SIGKILL でさえ — 初期状態では、片付けの処理は**コンテナに対して何もしません**。コンテナは動き続けます。次の Hermes のプロセスは、ラベルを調べてミリ秒でつなぎ直します。「セッションをまたいで長く生きる1つのコンテナを共有する」という約束には、これが必要です。裏で動いているプロセス（npm の見張り、開発用のサーバー、長く走る pytest）がセッションをまたいで生き残る道は、これしかありません。
 
-**コンテナが実際に片付けられる（停止して `docker rm -f` される）のは、次の場合だけです。**
+**コンテナが片付けられる（停止して `docker rm -f` される）のは、次の場合だけです。**
 
-| きっかけ | 発動する条件 |
+| きっかけ | いつ起きるか |
 |---|---|
-| `docker_persist_across_processes: false` | プロセスごとに隔離すると明示した場合。`cleanup()` のたびに `stop` と `rm -f` を実行します。issue #20561 より前の動作と同じです。 |
-| アイドル時の掃除（`lifetime_seconds`、デフォルト 300 秒） | 環境が `persist_across_processes=false` のときだけ動きます。永続モードの環境では何もせず、コンテナはアイドル掃除を生き延びます。 |
-| 次回起動時の孤児コンテナ掃除 | `2 × lifetime_seconds`（デフォルト 600 秒 = 10 分）より古い、hermes のラベルが付いた **Exited** のコンテナを掃除します。対象は現在のプロファイルに限られます。**動作中のコンテナには決して手を出しません** — 同時に走る別プロセスを守るためです。無効にするには `docker_orphan_reaper: false` にします。 |
-| ユーザーの直接操作 | `docker rm -f`、`docker system prune`、Docker Desktop の再起動。`--restart=always` は設定していないので、ホストを再起動するとコンテナは `Exited` のまま残ります（CoW レイヤーは残り、次回起動時に再利用されますが、バックグラウンドのプロセスは消えます）。 |
+| `docker_persist_across_processes: false` | プロセスごとに明示的に隔てる設定です。`cleanup()` のたびに `stop` と `rm -f` を行います。issue #20561 より前の動きと同じです。 |
+| 放置を片付ける仕組み（`lifetime_seconds`、初期値300秒） | 環境が `persist_across_processes=false` のときだけです。残す設定の環境では何もせず、コンテナは片付けをすり抜けます。 |
+| 次の起動時の、取り残されたコンテナの片付け | `2 × lifetime_seconds`（初期値は600秒 = 10分）より古い、hermes のラベルが付いた **Exited** のコンテナを片付けます。対象はいまのプロファイルの中だけです。**動いているコンテナには決して触れません** — 隣のプロセスを壊さないためです。止めるには `docker_orphan_reaper: false` にします。 |
+| 利用者が自分で行う操作 | `docker rm -f`、`docker system prune`、Docker Desktop の再起動です。`--restart=always` は付けていないので、ホストを再起動するとコンテナは `Exited` のまま残ります（その書き込み層は残り、次の起動で使い回されますが、裏で動いていたプロセスは消えています）。 |
 
-知っておくとよい境界的なケースです。
+知っておきたい、きわどい場合もあります。
 
-- **コンテナ内の PID 1 が OOM で kill される**と、コンテナは `Exited` になります。次に使うときは `docker start` されます。ファイルシステムの状態は残りますが、バックグラウンドのプロセスは残りません。
-- **プロファイルを切り替える**と、コンテナ同士が隔離されます。`hermes-profile=work` のラベルが付いたコンテナは、`hermes-profile=research` で動く Hermes プロセスからは見えません。孤児コンテナの掃除もプロファイル単位なので、別プロファイルのコンテナが誤って掃除されることはありませんが、その代わり、元のプロファイルで Hermes を起動し直すまで自動的には片付きません。
+- **コンテナの中の PID 1 がメモリ不足で落とされる**と、コンテナは `Exited` になります。次に使うときは `docker start` されます。ファイルシステムの状態は残りますが、裏で動いていたプロセスは残りません。
+- **プロファイルを切り替える**と、コンテナどうしは互いに見えなくなります — `hermes-profile=work` のラベルが付いたコンテナは、`hermes-profile=research` で動いている Hermes のプロセスからは見えません。取り残されたコンテナの片付けもプロファイルの中だけなので、別のプロファイルのコンテナが誤って片付けられることはありません。ただしその代わり、もとのプロファイルで Hermes をもう一度動かすまで、自動では片付きません。
+- **プロファイルをまたいで意図的に共有する** — 1つの信頼できる作業場所で一緒に作業させたいプロファイルには、`terminal:` の下に同じ空でない `docker_shared_container_key` を設定してください。これが置き換えるのは、コンテナの身元のラベルだけです。作業、外向き通信、ネットワークの食い違いの確認は今までどおり行われます。この項目を持たないプロファイルは隔てられたままです。身元のラベルは、その値から短い要約を付けて作られるので、似た値（`team/workspace` と `team_workspace`）が1つのコンテナにまとまってしまうことはありません。**大事な点として、共有のコンテナは最初に起動したプロファイルによって一度だけ作られます** — そのプロファイルの `docker_image`、ボリューム、共有メモリの大きさ、そのほか後から変えられない Docker の設定が採用され、あとから来たプロファイルはそのままつなぎます。設定が違っていても、コンテナが取り除かれて作り直されるまでは無視されます。同じ値を共有するプロファイルどうしは、イメージとマウントについて合意しておくべきです。
 
-`delegate_task(tasks=[...])` で並列に立ち上がったサブエージェントは、この 1 つのコンテナを共有します。同時に `cd` したり環境を書き換えたり、同じパスに書き込んだりするとぶつかります。サブエージェントに独立したサンドボックスが必要な場合は、`register_task_env_overrides()` でタスクごとのイメージの上書きを登録しなければなりません。RL やベンチマークの環境（TerminalBench2、HermesSweEnv など）は、タスクごとの Docker イメージのためにこれを自動で行っています。
+`delegate_task(tasks=[...])` で並行に起動したサブエージェントは、この1つのコンテナを共有します — 同時に `cd` したり、環境を変えたり、同じ場所へ書き込んだりすればぶつかります。サブエージェントに隔てられたサンドボックスが必要なら、`register_task_env_overrides()` を使って作業ごとのイメージの上書きを登録しなければなりません。強化学習やベンチマークの環境（TerminalBench2、HermesSweEnv など）は、作業ごとの Docker のイメージのためにこれを自動で行っています。
 
-**セキュリティの強化:**
-- `--cap-drop ALL` のうえで、`DAC_OVERRIDE`、`CHOWN`、`FOWNER` だけを戻す
+**安全のための備え:**
+- `--cap-drop ALL` にしたうえで、`DAC_OVERRIDE`、`CHOWN`、`FOWNER` だけを戻します
 - `--security-opt no-new-privileges`
 - `--pids-limit 256`
-- `/tmp`（512MB）、`/var/tmp`（256MB）、`/run`（64MB）にサイズ制限付きの tmpfs
+- `/tmp`（512MB）、`/var/tmp`（256MB）、`/run`（64MB）に大きさを限った tmpfs
 
-**認証情報の受け渡し:** `docker_forward_env` に並べた環境変数は、まずシェルの環境から、次に `~/.hermes/.env` から解決されます。スキル側で `required_environment_variables` を宣言することもでき、それらは自動的に統合されます。
+**認証情報の受け渡し:** `docker_forward_env` に並べた環境変数は、まずシェルの環境から、次に `~/.hermes/.env` から探されます。スキルが `required_environment_variables` を宣言していれば、それらも自動で合わせて渡されます。
 
 #### 環境変数による上書き {#environment-variable-overrides}
 
-`terminal:` の下にあるすべてのキーには、`TERMINAL_<KEY_UPPERCASE>` という形の環境変数による上書きが用意されています。Docker バックエンドでとくに役立つものを挙げます。
+`terminal:` の下にあるすべての項目には、`TERMINAL_<KEY_UPPERCASE>` という形の環境変数による上書きがあります。docker のバックエンドでよく使うものを挙げます。
 
-| 環境変数 | 対応するキー | 補足 |
+| 環境変数 | 対応する項目 | 補足 |
 |---|---|---|
-| `TERMINAL_DOCKER_IMAGE` | `docker_image` | ベースイメージ |
+| `TERMINAL_DOCKER_IMAGE` | `docker_image` | 土台のイメージ |
 | `TERMINAL_DOCKER_FORWARD_ENV` | `docker_forward_env` | JSON の配列: `'["GITHUB_TOKEN","OPENAI_API_KEY"]'` |
 | `TERMINAL_DOCKER_ENV` | `docker_env` | JSON の辞書: `'{"DEBUG":"1"}'` |
-| `TERMINAL_DOCKER_VOLUMES` | `docker_volumes` | `"host:container[:ro]"` 形式の文字列の JSON 配列 |
+| `TERMINAL_DOCKER_VOLUMES` | `docker_volumes` | `"host:container[:ro]"` の文字列を並べた JSON の配列 |
 | `TERMINAL_DOCKER_EXTRA_ARGS` | `docker_extra_args` | JSON の配列 |
 | `TERMINAL_DOCKER_MOUNT_CWD_TO_WORKSPACE` | `docker_mount_cwd_to_workspace` | `true` / `false` |
 | `TERMINAL_DOCKER_RUN_AS_HOST_USER` | `docker_run_as_host_user` | `true` / `false` |
-| `TERMINAL_DOCKER_NETWORK` | `docker_network` | `true` / `false` — デフォルトは `true`。`false` は `--network=none` |
-| `TERMINAL_DOCKER_PERSIST_ACROSS_PROCESSES` | `docker_persist_across_processes` | `true` / `false` — デフォルトは `true` |
-| `TERMINAL_DOCKER_ORPHAN_REAPER` | `docker_orphan_reaper` | `true` / `false` — デフォルトは `true` |
+| `TERMINAL_DOCKER_NETWORK` | `docker_network` | `true` / `false` — 初期値は `true`。`false` は `--network=none` です |
+| `TERMINAL_DOCKER_PERSIST_ACROSS_PROCESSES` | `docker_persist_across_processes` | `true` / `false` — 初期値は `true` |
+| `TERMINAL_DOCKER_SHARED_CONTAINER_KEY` | `docker_shared_container_key` | 信頼するプロファイルどうしで共有する身元をはっきり指定します。初期状態では空です |
+| `TERMINAL_DOCKER_ORPHAN_REAPER` | `docker_orphan_reaper` | `true` / `false` — 初期値は `true` |
 | `TERMINAL_CONTAINER_CPU` | `container_cpu` | CPU のコア数 |
 | `TERMINAL_CONTAINER_MEMORY` | `container_memory` | MB |
 | `TERMINAL_CONTAINER_DISK` | `container_disk` | MB |
-| `TERMINAL_CONTAINER_PERSISTENT` | `container_persistent` | `true` / `false` — バインドマウントするワークスペースのディレクトリを制御します。`docker_persist_across_processes` とは別物です |
-| `TERMINAL_LIFETIME_SECONDS` | `lifetime_seconds` | アイドル掃除までの時間 |
-| `TERMINAL_TIMEOUT` | `timeout` | コマンドごとのタイムアウト |
-| `HERMES_DOCKER_BINARY` | _なし_ | 使う docker/podman のバイナリのパスを固定する |
+| `TERMINAL_CONTAINER_PERSISTENT` | `container_persistent` | `true` / `false` — バインドマウントする作業場所のディレクトリを決めます。`docker_persist_across_processes` とは別のものです |
+| `TERMINAL_LIFETIME_SECONDS` | `lifetime_seconds` | 放置を片付けるまでの時間の窓 |
+| `TERMINAL_TIMEOUT` | `timeout` | コマンドごとの待ち時間の上限 |
+| `HERMES_DOCKER_BINARY` | _なし_ | 使う docker / podman のバイナリの場所を指定します |
 
-### ssh バックエンド {#ssh-backend}
+### ssh のバックエンド {#ssh-backend}
 
-SSH 越しにリモートサーバーでコマンドを実行します。接続の再利用に ControlMaster を使います（アイドル時の保持は 5 分）。常駐シェルはデフォルトで有効なので、状態（作業ディレクトリ、環境変数）がコマンドをまたいで残ります。
+SSH 越しに、リモートのサーバーでコマンドを動かします。接続を使い回すために ControlMaster を使います（5分間は放置しても保たれます）。シェルを残す設定は初期状態で有効なので、状態（作業ディレクトリ、環境変数）はコマンドをまたいで残ります。
 
 ```yaml
 terminal:
@@ -350,7 +352,7 @@ terminal:
   persistent_shell: true           # Keep a long-lived bash session (default: true)
 ```
 
-**必須の環境変数:**
+**必要な環境変数:**
 
 ```bash
 TERMINAL_SSH_HOST=my-server.example.com
@@ -359,17 +361,17 @@ TERMINAL_SSH_USER=ubuntu
 
 **任意:**
 
-| 変数 | デフォルト | 説明 |
+| 変数 | 初期値 | 説明 |
 |----------|---------|-------------|
 | `TERMINAL_SSH_PORT` | `22` | SSH のポート |
-| `TERMINAL_SSH_KEY` | （システムのデフォルト） | SSH 秘密鍵のパス |
-| `TERMINAL_SSH_PERSISTENT` | `true` | 常駐シェルを有効にする |
+| `TERMINAL_SSH_KEY` | （システムの既定） | SSH の秘密鍵の場所 |
+| `TERMINAL_SSH_PERSISTENT` | `true` | シェルを残す設定を有効にします |
 
-**仕組み:** 初期化のときに `BatchMode=yes` と `StrictHostKeyChecking=accept-new` を付けて接続します。常駐シェルは、リモートホスト上で `bash -l` のプロセスを 1 つだけ生かしておき、一時ファイル経由でやり取りします。`stdin_data` や `sudo` が必要なコマンドは、自動的に 1 回きりの実行方式に切り替わります。
+**仕組み:** 最初に `BatchMode=yes` と `StrictHostKeyChecking=accept-new` を付けてつなぎます。シェルを残す設定では、リモートのホストで `bash -l` のプロセスを1つ生かしたまま、一時的なファイルを介してやり取りします。`stdin_data` や `sudo` が必要なコマンドは、自動的に1回かぎりの実行に切り替わります。
 
-### modal バックエンド {#modal-backend}
+### modal のバックエンド {#modal-backend}
 
-[Modal](https://modal.com) のクラウドサンドボックスでコマンドを実行します。タスクごとに独立した VM が与えられ、CPU・メモリ・ディスクを設定できます。ファイルシステムはセッションをまたいでスナップショットと復元ができます。
+[Modal](https://modal.com) のクラウドのサンドボックスでコマンドを動かします。作業ごとに、CPU・メモリ・ディスクを指定できる隔てられた仮想マシンが用意されます。ファイルシステムはセッションをまたいで控えを取り、戻せます。
 
 ```yaml
 terminal:
@@ -380,15 +382,15 @@ terminal:
   container_persistent: true       # Snapshot/restore filesystem
 ```
 
-**必須:** `MODAL_TOKEN_ID` と `MODAL_TOKEN_SECRET` の環境変数、または `~/.modal.toml` の設定ファイル。
+**必要なもの:** `MODAL_TOKEN_ID` と `MODAL_TOKEN_SECRET` の環境変数、または `~/.modal.toml` の設定ファイルのどちらかです。
 
-**永続化:** 有効にすると、片付けのときにサンドボックスのファイルシステムがスナップショットされ、次のセッションで復元されます。スナップショットは `~/.hermes/modal_snapshots.json` で管理されます。残るのはファイルシステムの状態だけで、動いていたプロセス、PID 空間、バックグラウンドのジョブは残りません。
+**残し方:** 有効にすると、片付けのときにサンドボックスのファイルシステムの控えを取り、次のセッションで戻します。控えは `~/.hermes/modal_snapshots.json` で管理されます。残るのはファイルシステムの状態だけで、動いているプロセスや PID の空間、裏で動いていたジョブは残りません。
 
-**認証情報のファイル:** `~/.hermes/` から自動的にマウントされ（OAuth のトークンなど）、コマンドを実行する前に毎回同期されます。
+**認証情報のファイル:** `~/.hermes/` から自動でマウントされ（OAuth のトークンなど）、コマンドのたびにそろえられます。
 
-### daytona バックエンド {#daytona-backend}
+### daytona のバックエンド {#daytona-backend}
 
-[Daytona](https://daytona.io) の管理されたワークスペースでコマンドを実行します。永続化のために停止と再開に対応しています。
+[Daytona](https://daytona.io) の運用込みの作業場所でコマンドを動かします。停止と再開によって状態を残せます。
 
 ```yaml
 terminal:
@@ -399,15 +401,15 @@ terminal:
   container_persistent: true       # Stop/resume instead of delete
 ```
 
-**必須:** `DAYTONA_API_KEY` の環境変数。
+**必要なもの:** `DAYTONA_API_KEY` の環境変数です。
 
-**永続化:** 有効にすると、片付けのときにサンドボックスは削除ではなく停止され、次のセッションで再開されます。サンドボックスの名前は `hermes-{task_id}` の形になります。
+**残し方:** 有効にすると、片付けのときにサンドボックスは削除ではなく停止され、次のセッションで再開されます。サンドボックスの名前は `hermes-{task_id}` の形になります。
 
-**ディスクの上限:** Daytona は最大 10 GiB という制限を課しています。これを超える指定は警告とともに切り詰められます。
+**ディスクの上限:** Daytona は 10 GiB を上限としています。それを越える指定は、警告とともにそこまで抑えられます。
 
-### vercel_sandbox バックエンド {#vercel-sandbox-backend}
+### vercel_sandbox のバックエンド {#vercel-sandbox-backend}
 
-[Vercel Sandbox](https://vercel.com/docs/vercel-sandbox) のクラウド microVM でコマンドを実行します。Hermes は通常のターミナルとファイルのツールをそのまま使うので、Vercel 専用のモデル向けツールはありません。
+[Vercel Sandbox](https://vercel.com/docs/vercel-sandbox) のクラウドのマイクロ VM でコマンドを動かします。Hermes はふだんどおりのターミナルとファイルのツールを使います。Vercel 専用のツールをモデルに見せることはありません。
 
 ```yaml
 terminal:
@@ -418,39 +420,39 @@ terminal:
   container_disk: 51200           # Shared default only; custom disk is unsupported
 ```
 
-**必要なインストール:** 追加の SDK を入れます。
+**必要な導入:** 任意の SDK を追加で入れてください。
 
 ```bash
 pip install 'hermes-agent[vercel]'
 ```
 
-**必要な認証:** `VERCEL_TOKEN`、`VERCEL_PROJECT_ID`、`VERCEL_TEAM_ID` の 3 つすべてを使ったアクセストークン認証を設定してください。これが、Render、Railway、Docker などのホストでデプロイしたり、Hermes のプロセスを長く動かしたりするときの正式な構成です。
+**必要な認証:** `VERCEL_TOKEN`、`VERCEL_PROJECT_ID`、`VERCEL_TEAM_ID` の3つをそろえて、アクセストークンによる認証を設定します。Render、Railway、Docker などのホストで長く動かす Hermes や、実際の運用ではこの形が正式なやり方です。
 
-ローカルでの一度きりの開発向けに、Hermes は短命の Vercel OIDC トークンも受け付けます。
+手元での使い捨ての開発なら、Hermes は短命な Vercel の OIDC のトークンも受け付けます。
 
 ```bash
 VERCEL_OIDC_TOKEN="$(vc project token <project-name>)" hermes chat
 ```
 
-Vercel プロジェクトとリンク済みのディレクトリからなら、プロジェクト名を省略できます。
+Vercel のプロジェクトに結び付いたディレクトリからなら、プロジェクト名を省けます。
 
 ```bash
 VERCEL_OIDC_TOKEN="$(vc project token)" hermes chat
 ```
 
-OIDC のトークンは短命なので、デプロイの正式な手順として使うべきではありません。
+OIDC のトークンは短命なので、正式な運用の道として使うべきではありません。
 
-**ランタイム:** `terminal.vercel_runtime` は `node24`、`node22`、`python3.13` に対応します。未設定なら、Hermes は `node24` を使います。
+**実行環境:** `terminal.vercel_runtime` は `node24`、`node22`、`python3.13` に対応します。設定しなければ、Hermes は `node24` を使います。
 
-**永続化:** `container_persistent: true` のとき、Hermes は片付けの最中にサンドボックスのファイルシステムをスナップショットし、同じタスクで後から作られるサンドボックスをそのスナップショットから復元します。スナップショットの中身には、Hermes が同期した認証情報、スキル、キャッシュのファイルなど、サンドボックスへコピーされたものが含まれることがあります。残るのはファイルシステムの状態だけで、サンドボックスの同一性、PID 空間、シェルの状態、動いているバックグラウンドのプロセスは残りません。
+**残し方:** `container_persistent: true` のとき、Hermes は片付けのあいだにサンドボックスのファイルシステムの控えを取り、同じ作業のためにあとから作るサンドボックスをその控えから戻します。控えの中には、Hermes がサンドボックスへ写した認証情報、スキル、キャッシュのファイルが含まれることがあります。残るのはファイルシステムの状態だけです。サンドボックスそのものの身元、PID の空間、シェルの状態、裏で動いていたプロセスは残りません。
 
-**バックグラウンドのコマンド:** `terminal(background=true)` は、ローカル以外のバックエンド向けの汎用のバックグラウンド処理の流れを使います。サンドボックスが生きているあいだは、通常のプロセスのツールを使って、起動、状態確認、待機、ログの閲覧、終了ができます。片付けや再起動のあとに、Vercel 側の切り離されたプロセスを復旧する仕組みは Hermes にはありません。
+**裏で動かすコマンド:** `terminal(background=true)` は、手元以外で裏の処理を動かすための Hermes 共通の仕組みを使います。サンドボックスが生きているあいだは、ふだんのプロセスのツールで起動・確認・待機・ログの表示・停止ができます。片付けや再起動のあと、Vercel の切り離されたプロセスを取り戻す仕組みは Hermes にはありません。
 
-**ディスクのサイズ指定:** Vercel Sandbox は今のところ Hermes の `container_disk` に対応していません。`container_disk` は未設定のままにするか、共通のデフォルトである `51200` にしてください。それ以外の値は黙って無視されるのではなく、診断とバックエンドの作成が失敗します。
+**ディスクの大きさ:** Vercel Sandbox は、いまのところ Hermes の `container_disk` の設定に対応していません。`container_disk` は設定しないままにするか、共通の初期値の `51200` にしてください。それ以外の値は黙って無視されるのではなく、点検とバックエンドの用意が失敗します。
 
-### singularity/apptainer バックエンド {#singularityapptainer-backend}
+### singularity / apptainer のバックエンド {#singularityapptainer-backend}
 
-[Singularity/Apptainer](https://apptainer.org) のコンテナでコマンドを実行します。Docker が使えない HPC クラスターや共用マシン向けに設計されています。
+[Singularity / Apptainer](https://apptainer.org) のコンテナでコマンドを動かします。Docker が使えない HPC のクラスタや共有のマシン向けの仕組みです。
 
 ```yaml
 terminal:
@@ -461,38 +463,38 @@ terminal:
   container_persistent: true       # Writable overlay persists across sessions
 ```
 
-**必要なもの:** `$PATH` に `apptainer` または `singularity` のバイナリがあること。
+**必要なもの:** `$PATH` に `apptainer` か `singularity` のバイナリがあることです。
 
-**イメージの扱い:** Docker の URL（`docker://...`）は自動的に SIF ファイルへ変換され、キャッシュされます。既存の `.sif` ファイルはそのまま使われます。
+**イメージの扱い:** Docker の URL（`docker://...`）は自動で SIF のファイルに変換され、キャッシュされます。すでにある `.sif` のファイルはそのまま使われます。
 
-**作業用ディレクトリ:** 次の順で解決されます。`TERMINAL_SCRATCH_DIR` → `TERMINAL_SANDBOX_DIR/singularity` → `/scratch/$USER/hermes-agent`（HPC の慣習）→ `~/.hermes/sandboxes/singularity`。
+**一時作業のディレクトリ:** 次の順で決まります。`TERMINAL_SCRATCH_DIR` → `TERMINAL_SANDBOX_DIR/singularity` → `/scratch/$USER/hermes-agent`（HPC の慣習）→ `~/.hermes/sandboxes/singularity`。
 
-**隔離:** `--containall --no-home` を使い、ホストのホームディレクトリをマウントせずに名前空間を完全に分けます。
+**隔たり:** `--containall --no-home` を使い、ホストのホームのディレクトリをマウントせずに名前空間を完全に隔てます。
 
-### ターミナルのバックエンドでよくある問題 {#common-terminal-backend-issues}
+### ターミナルのバックエンドでよくある困りごと {#common-terminal-backend-issues}
 
-ターミナルのコマンドがすぐに失敗する場合や、ターミナルのツールが無効だと表示される場合は、次を確認してください。
+ターミナルのコマンドがすぐ失敗する場合や、ターミナルのツールが無効と表示される場合は、次を確かめてください。
 
-- **local** — 特別な準備は不要です。使い始めるときにいちばん安全な選択です。
-- **Docker** — `docker version` を実行して Docker が動いているか確かめます。失敗するなら、Docker を直すか `hermes config set terminal.backend local` にします。
-- **SSH** — `TERMINAL_SSH_HOST` と `TERMINAL_SSH_USER` の両方が必要です。どちらかが欠けていれば、Hermes がはっきりしたエラーをログに残します。
-- **Modal** — `MODAL_TOKEN_ID` の環境変数か `~/.modal.toml` が必要です。`hermes doctor` を実行して確認できます。
-- **Daytona** — `DAYTONA_API_KEY` が必要です。サーバーの URL の設定は Daytona の SDK が面倒を見ます。
-- **Singularity** — `$PATH` に `apptainer` か `singularity` が必要です。HPC クラスターではよく入っています。
+- **local** — 特別に必要なものはありません。使い始めのときにいちばん安全な選択です。
+- **docker** — `docker version` を実行して、Docker が動いていることを確かめます。だめなら Docker を直すか、`hermes config set terminal.backend local` にします。
+- **ssh** — `TERMINAL_SSH_HOST` と `TERMINAL_SSH_USER` の両方が必要です。どちらかが足りなければ、Hermes がはっきりしたエラーを記録します。
+- **modal** — `MODAL_TOKEN_ID` の環境変数か `~/.modal.toml` が必要です。`hermes doctor` で確かめられます。
+- **daytona** — `DAYTONA_API_KEY` が必要です。サーバーの URL の設定は Daytona の SDK が受け持ちます。
+- **singularity** — `$PATH` に `apptainer` か `singularity` が必要です。HPC のクラスタではよく入っています。
 
-判断に迷ったら、`terminal.backend` を `local` に戻して、まずそこでコマンドが走ることを確かめてください。
+迷ったら、`terminal.backend` を `local` に戻して、まずそこでコマンドが動くことを確かめてください。
 
-### 片付け時のリモートからホストへの状態同期 {#remote-to-host-state-sync-on-teardown}
+### 片付けのときにリモートからホストへ状態を戻す {#remote-to-host-state-sync-on-teardown}
 
-**SSH**、**Modal**、**Daytona** の各バックエンドでは、Hermes はセッション中に `~/.hermes/` の状態（認証情報のファイル、スキル、キャッシュ）をリモートのサンドボックスへ送り込み、片付けのときに**変更された状態のファイルをホスト側へ戻します**。最初に送ったものと内容が異なるファイル（内容のハッシュで比較します）は、その場で書き戻されます。同期対象のディレクトリの下に新しくできたリモートのファイル（たとえばエージェントがリモートで作ったスキル）は、対応するホスト側のパスへ写されます。送るだけの認証情報のファイルが、ホスト側で上書きされることはありません。
+**ssh**、**modal**、**daytona** のバックエンドでは、Hermes はセッションのあいだ `~/.hermes/` の状態（認証情報のファイル、スキル、キャッシュ）をリモートのサンドボックスへ送り込み、片付けのときに**変わった状態のファイルをもとの場所へ戻します**。最初に送ったものと違うファイル（中身のハッシュで比べます）は、その場に書き戻されます。そろえたディレクトリの下に新しくできたリモートのファイル（たとえばエージェントがリモートで作ったスキル）は、対応するホストの場所へ写されます。送るだけの認証情報のファイルが、ホスト側で上書きされることはありません。
 
-- 書き戻しは最大 3 回まで、間隔を空けて再試行します。また、2 GiB を超えるリモートのアーカイブは展開を拒否します。
-- Docker と Singularity はバインドマウント（ホストのファイルシステムをそのまま見る方式）なので、この仕組みは要りません。
-- 対象は Hermes の状態（`~/.hermes/`）であって、サンドボックスの中の任意の作業ツリーのファイルでは**ありません**。大事な成果物は、サンドボックスが壊される前にエージェントに明示的にコピーさせてください（`scp`、`modal volume put` など）。
+- 書き戻しは待ち時間を置きながら最大3回まで試み、2 GiB を越えるリモートの書庫は展開しません。
+- docker と singularity はバインドマウント（ホストのファイルシステムをそのまま見る形）なので、この仕組みは要りません。
+- 対象になるのは Hermes の状態（`~/.hermes/`）で、サンドボックスの中の作業中のファイル全般では**ありません** — 大事な成果物は、サンドボックスが消される前にエージェントへはっきり運び出させてください（`scp`、`modal volume put` など）。
 
-### Docker のボリュームマウント {#docker-volume-mounts}
+### Docker のボリュームのマウント {#docker-volume-mounts}
 
-Docker バックエンドでは、`docker_volumes` でホストのディレクトリをコンテナと共有できます。各要素は Docker の `-v` と同じ書き方です。`host_path:container_path[:options]` の形になります。
+docker のバックエンドを使うとき、`docker_volumes` でホストのディレクトリをコンテナと共有できます。各項目は Docker の `-v` と同じ書き方です: `host_path:container_path[:options]`。
 
 ```yaml
 terminal:
@@ -503,32 +505,32 @@ terminal:
     - "/home/user/.hermes/cache/documents:/output" # Gateway-visible exports
 ```
 
-これは次のような場面で役立ちます。
-- エージェントに**ファイルを渡す**（データセット、設定、参考にするコード）
-- エージェントから**ファイルを受け取る**（生成されたコード、レポート、書き出したもの）
-- あなたとエージェントが同じファイルを扱う**共有のワークスペース**
+これは次のようなときに役立ちます。
+- エージェントに**ファイルを渡す**（データ、設定、参考にするコード）
+- エージェントから**ファイルを受け取る**（生成されたコード、報告書、書き出したもの）
+- 自分とエージェントが同じファイルを触る、**共有の作業場所**
 
-メッセージ用のゲートウェイを使っていて、生成したファイルを `MEDIA:/...` でエージェントに
-送らせたい場合は、`/home/user/.hermes/cache/documents:/output` のような、ホストから見える
-書き出し専用のマウントを用意するのが確実です。
+メッセージのゲートウェイを使っていて、生成したファイルを
+`MEDIA:/...` でエージェントに送らせたいなら、
+`/home/user/.hermes/cache/documents:/output` のような、ホストから見える専用の書き出し先を用意してください。
 
-- Docker の中では `/output/...` にファイルを書く
-- `MEDIA:` には**ホスト側のパス**を出す。たとえば
-  `MEDIA:/home/user/.hermes/cache/documents/report.txt`
-- ホスト上のゲートウェイのプロセスから見てもまったく同じパスが存在する場合を除き、
-  `/workspace/...` や `/output/...` を出しては**いけません**
+- Docker の中では `/output/...` にファイルを書きます
+- `MEDIA:` には**ホスト側の場所**を書きます。たとえば
+  `MEDIA:/home/user/.hermes/cache/documents/report.txt` のようにします
+- ホスト側のゲートウェイのプロセスから見ても同じ場所が存在するのでない限り、
+  `/workspace/...` や `/output/...` を**書かないでください**
 
 :::warning
-YAML では、同じキーが重複すると前のものが警告なく上書きされます。すでに
-`docker_volumes:` のブロックがあるなら、あとからもう 1 つ `docker_volumes:` のキーを
-足すのではなく、同じリストに新しいマウントをまとめてください。
+YAML では、同じ項目名が2度出てくると、あとのものが黙って前を上書きします。すでに
+`docker_volumes:` のまとまりがあるなら、あとから別の `docker_volumes:` を足すのではなく、
+同じ並びに新しいマウントを書き足してください。
 :::
 
-環境変数でも設定できます。`TERMINAL_DOCKER_VOLUMES='["/host:/container"]'`（JSON の配列）です。
+環境変数でも設定できます: `TERMINAL_DOCKER_VOLUMES='["/host:/container"]'`（JSON の配列）。
 
 ### Docker への認証情報の受け渡し {#docker-credential-forwarding}
 
-デフォルトでは、Docker のターミナルセッションがホストの認証情報を勝手に引き継ぐことはありません。特定のトークンをコンテナの中で使いたい場合は、`terminal.docker_forward_env` に追加してください。
+初期状態では、Docker のターミナルのセッションがホストの認証情報を勝手に受け継ぐことはありません。特定のトークンをコンテナの中で使いたいなら、`terminal.docker_forward_env` に足してください。
 
 ```yaml
 terminal:
@@ -538,15 +540,15 @@ terminal:
     - "NPM_TOKEN"
 ```
 
-Hermes は、並べた変数をまず現在のシェルから解決し、なければ `~/.hermes/.env`（`hermes config set` で保存したもの）を見にいきます。
+Hermes は並べた変数を、まずいまのシェルから探し、なければ `hermes config set` で保存された `~/.hermes/.env` を見ます。
 
 :::warning
-`docker_forward_env` に並べたものは、コンテナの中で走るコマンドから見えるようになります。ターミナルのセッションに晒しても構わない認証情報だけを渡してください。
+`docker_forward_env` に並べたものは、コンテナの中で動くコマンドから見えるようになります。ターミナルのセッションにさらしても構わない認証情報だけを渡してください。
 :::
 
 ### コンテナをホストのユーザーとして動かす {#running-the-container-as-your-host-user}
 
-デフォルトでは、Docker のコンテナは `root`（UID 0）として動きます。そのため `/workspace` やほかのバインドマウントの中で作られたファイルは、ホスト側では root の所有物になり、セッションのあとにホストのエディターで編集するには `sudo chown` が必要になります。`terminal.docker_run_as_host_user` はこれを解決します。
+初期状態では、Docker のコンテナは `root`（UID 0）として動きます。`/workspace` やほかのバインドマウントの中で作られたファイルは、ホスト側では root の持ち物になるので、セッションのあとで `sudo chown` しないと、ホストのエディタから直せません。`terminal.docker_run_as_host_user` はこれを解決します。
 
 ```yaml
 terminal:
@@ -554,13 +556,13 @@ terminal:
   docker_run_as_host_user: true   # default: false
 ```
 
-有効にすると、Hermes は `docker run` のコマンドに `--user $(id -u):$(id -g)` を足すので、バインドマウントしたディレクトリ（`/workspace`、`/root`、`docker_volumes` に書いたもの）に書き込まれたファイルは、root ではなくホストのユーザーの所有になります。引き換えに、コンテナの中で `apt install` したり、`/root/.npm` のような root 所有のパスへ書き込んだりはできなくなります。両方が必要なら、`HOME` が root 以外のユーザー所有になっているベースイメージを使うか、必要なツールをイメージのビルド時に入れておいてください。
+有効にすると、Hermes は `docker run` のコマンドに `--user $(id -u):$(id -g)` を足すので、バインドマウントしたディレクトリ（`/workspace`、`/root`、`docker_volumes` に書いたもの）へ書かれたファイルは root ではなく、自分のホストのユーザーの持ち物になります。引き換えに、コンテナはもう `apt install` したり、`/root/.npm` のような root が持つ場所へ書いたりできなくなります。両方が必要なら、`HOME` を root 以外のユーザーが持つ土台のイメージを使うか、必要な道具をイメージを作るときに入れておいてください。
 
-これまでどおりの動作でよければ、`false`（デフォルト）のままにしてください。作業の中心が「マウントしたホストのファイルを編集すること」で、`sudo chown -R` にうんざりしているなら、有効にする価値があります。
+互換のために、初期値の `false` のままにしておいて構いません。作業のほとんどが「マウントしたホストのファイルを直すこと」で、`sudo chown -R` にうんざりしているなら有効にしてください。
 
 ### 任意: 起動したディレクトリを `/workspace` にマウントする {#optional-mount-the-launch-directory-into-workspace}
 
-Docker のサンドボックスは、デフォルトでは隔離されたままです。明示的に有効にしない限り、Hermes がホストの現在の作業ディレクトリをコンテナに渡すことは**ありません**。
+Docker のサンドボックスは初期状態では隔てられたままです。はっきり有効にしない限り、Hermes がいまのホストの作業ディレクトリをコンテナへ渡すことは**ありません**。
 
 `config.yaml` で有効にします。
 
@@ -571,63 +573,63 @@ terminal:
 ```
 
 有効にすると、次のようになります。
-- `~/projects/my-app` から Hermes を起動した場合、そのホストのディレクトリが `/workspace` にバインドマウントされます
-- Docker バックエンドは `/workspace` で始まります
-- ファイル系のツールとターミナルのコマンドが、同じマウントされたプロジェクトを見ます
+- `~/projects/my-app` から Hermes を起動すると、そのホストのディレクトリが `/workspace` にバインドマウントされます
+- docker のバックエンドは `/workspace` から始まります
+- ファイルのツールもターミナルのコマンドも、同じマウントされたプロジェクトを見ます
 
-無効のままなら、`docker_volumes` で明示的に何かをマウントしない限り、`/workspace` はサンドボックスのものであり続けます。
+無効のままなら、`docker_volumes` ではっきり何かをマウントしない限り、`/workspace` はサンドボックスのものであり続けます。
 
-セキュリティ上のトレードオフです。
+安全との兼ね合いは次のとおりです。
 - `false` はサンドボックスの境界を保ちます
-- `true` は、Hermes を起動したディレクトリへの直接のアクセスをサンドボックスに与えます
+- `true` は、Hermes を起動したディレクトリにサンドボックスから直接触れるようにします
 
-コンテナにホストの生きたファイルを触らせたいと意図している場合にだけ、有効にしてください。
+コンテナにホストのファイルをそのまま触らせたいと意識して思ったときにだけ、有効にしてください。
 
-### 常駐シェル {#persistent-shell}
+### 残り続けるシェル {#persistent-shell}
 
-デフォルトでは、ターミナルのコマンドはそれぞれ別のサブプロセスで走るため、作業ディレクトリ、環境変数、シェル変数はコマンドごとにリセットされます。**常駐シェル**を有効にすると、長生きする bash のプロセスが 1 つ `execute()` の呼び出しをまたいで生かされ、状態がコマンド間で残ります。
+初期状態では、ターミナルのコマンドはそれぞれ自分の子プロセスで動きます — 作業ディレクトリ、環境変数、シェルの変数はコマンドごとに元に戻ります。**シェルを残す設定**を有効にすると、`execute()` の呼び出しをまたいで1つの長く生きる bash のプロセスが保たれるので、状態がコマンドのあいだで残ります。
 
-これがいちばん役立つのは **SSH バックエンド**で、コマンドごとの接続のオーバーヘッドもなくなります。常駐シェルは **SSH ではデフォルトで有効**、local バックエンドでは無効です。
+いちばん役に立つのは **ssh のバックエンド** で、コマンドごとの接続の手間もなくなります。シェルを残す設定は **ssh では初期状態で有効**で、local のバックエンドでは無効です。
 
 ```yaml
 terminal:
   persistent_shell: true   # default — enables persistent shell for SSH
 ```
 
-無効にするには、次のようにします。
+止めるには次のようにします。
 
 ```bash
 hermes config set terminal.persistent_shell false
 ```
 
 **コマンドをまたいで残るもの:**
-- 作業ディレクトリ（`cd /tmp` が次のコマンドにも効く）
-- エクスポートした環境変数（`export FOO=bar`）
-- シェル変数（`MY_VAR=hello`）
+- 作業ディレクトリ（`cd /tmp` は次のコマンドでも効いています）
+- 書き出した環境変数（`export FOO=bar`）
+- シェルの変数（`MY_VAR=hello`）
 
 **優先順位:**
 
-| 段階 | 変数 | デフォルト |
+| 段階 | 変数 | 初期値 |
 |-------|----------|---------|
-| 設定ファイル | `terminal.persistent_shell` | `true` |
-| SSH での上書き | `TERMINAL_SSH_PERSISTENT` | 設定ファイルに従う |
+| 設定 | `terminal.persistent_shell` | `true` |
+| ssh での上書き | `TERMINAL_SSH_PERSISTENT` | 設定に従います |
 | local での上書き | `TERMINAL_LOCAL_PERSISTENT` | `false` |
 
-バックエンドごとの環境変数がいちばん強く効きます。local バックエンドでも常駐シェルを使いたい場合は、次のようにします。
+バックエンドごとの環境変数がいちばん優先されます。local のバックエンドでもシェルを残したいなら、次のようにします。
 
 ```bash
 export TERMINAL_LOCAL_PERSISTENT=true
 ```
 
 :::note
-`stdin_data` や sudo が必要なコマンドは、自動的に 1 回きりの実行方式に切り替わります。常駐シェルの標準入力は、すでに内部の通信のために使われているからです。
+`stdin_data` や sudo が必要なコマンドは、自動的に1回かぎりの実行に切り替わります。残したシェルの標準入力は、すでにやり取りの仕組みが使っているからです。
 :::
 
-各バックエンドの詳細は、[Code Execution](/hermes/docs/user-guide/features/code-execution/) と [README のターミナルの節](/hermes/docs/user-guide/features/tools/) を参照してください。
+それぞれのバックエンドの詳しい説明は、[コードの実行](/hermes/docs/user-guide/features/code-execution/)と [README のターミナルの節](/hermes/docs/user-guide/features/tools/)を参照してください。
 
 ## スキルの設定 {#skill-settings}
 
-スキルは、SKILL.md のフロントマターで自分用の設定項目を宣言できます。これらは秘密ではない値（パス、好み、その分野に固有の設定）で、`config.yaml` の `skills.config` の名前空間の下に保存されます。
+スキルは、自分の SKILL.md の frontmatter で独自の設定の項目を宣言できます。これらは秘密ではない値（場所、好み、その分野の設定）で、`config.yaml` の `skills.config` の下に保存されます。
 
 ```yaml
 skills:
@@ -638,9 +640,9 @@ skills:
 
 **スキルの設定の仕組み:**
 
-- `hermes config migrate` は有効なスキルをすべて調べ、まだ設定されていない項目を見つけて、入力を促してくれます
-- `hermes config show` は、すべてのスキルの設定を「Skill Settings」の見出しの下に、どのスキルのものかとあわせて表示します
-- スキルが読み込まれるとき、解決された設定値はスキルのコンテキストへ自動的に渡されます
+- `hermes config migrate` は有効なスキルをすべて調べ、まだ設定されていない項目を見つけて、入力を促します
+- `hermes config show` はスキルの設定を「Skill Settings」の下に、どのスキルのものかとあわせて表示します
+- スキルが読み込まれると、解決された設定の値がスキルの文脈へ自動的に差し込まれます
 
 **値を手で設定する:**
 
@@ -648,31 +650,31 @@ skills:
 hermes config set skills.config.myplugin.path ~/myplugin-data
 ```
 
-自分のスキルで設定項目を宣言する方法は、[Creating Skills — Config Settings](/hermes/docs/developer-guide/creating-skills/#config-settings-configyaml) を参照してください。
+自分のスキルで設定の項目を宣言する方法については、[スキルを作る — 設定の項目](/hermes/docs/developer-guide/creating-skills/#config-settings-configyaml)を参照してください。
 
-### エージェントが作ったスキルの書き込みに対する見張り {#guard-on-agent-created-skill-writes}
+### エージェントが作るスキルの書き込みへの見張り {#guard-on-agent-created-skill-writes}
 
-エージェントが `skill_manage` でスキルを作成・編集・パッチ適用・削除するとき、Hermes は新しい内容や更新後の内容に危険なキーワードのパターン（認証情報の収集、あからさまなプロンプトインジェクション、情報の持ち出しの指示）がないか調べることができます。この検査は**デフォルトでは無効**です。`~/.ssh/` に正当に触れたり `$OPENAI_API_KEY` に言及したりする普通のエージェントの作業が、この経験則に引っかかりすぎたためです。エージェントによるスキルの書き込みが反映される前に確認を挟みたい場合は、次のように有効に戻してください。
+エージェントが `skill_manage` でスキルを作ったり、編集したり、直したり、消したりするとき、Hermes はその新しい内容に危険な言葉の並び（認証情報の収集、あからさまなプロンプトの注入、情報の持ち出しの指示）がないかを調べられます。この検査は**初期状態では止まっています** — `~/.ssh/` にきちんとした理由で触れたり、`$OPENAI_API_KEY` に言及したりする本物の作業が、あまりに頻繁に引っかかったためです。エージェントのスキルの書き込みが反映される前に確認を出してほしいなら、有効に戻してください。
 
 ```yaml
 skills:
   guard_agent_created: true   # default: false
 ```
 
-有効にすると、引っかかった `skill_manage` の書き込みは、検査が判断した理由とともに承認を求めるプロンプトとして出てきます。承認すれば反映され、拒否すればエージェントには説明付きのエラーが返ります。
+有効にすると、引っかかった `skill_manage` の書き込みは、検査がそう判断した理由とともに承認の確認として出てきます。承認すれば反映され、断ればエージェントに理由を添えたエラーが返ります。
 
-### スキルの書き込みの承認 {#write-approval-for-skill-writes}
+### スキルの書き込みへの承認 {#write-approval-for-skill-writes}
 
-上の内容検査とは別に、`skills.write_approval` は、エージェントによる**すべての**スキルの書き込み（作成／編集／パッチ／削除／付随ファイル）をあなたの明示的な承認の後ろに置きます。危険なコマンドと同じ承認・拒否の仕組みです。
+上の内容の検査とは別に、`skills.write_approval` はエージェントによる**すべての**スキルの書き込み（作成 / 編集 / 修正 / 削除 / 付属ファイル）を、自分の承認の後ろに置きます。危険なコマンドと同じ、承認と拒否の仕組みです。
 
 ```yaml
 skills:
   write_approval: false   # false = write freely (default) | true = stage every write for review
 ```
 
-有効にすると、スキルの書き込みは `~/.hermes/pending/skills/` に留め置かれ、`/skills pending`、`/skills diff <id>`、`/skills approve <id>`、`/skills reject <id>` で確認します。CLI からでも、どのメッセージ用のプラットフォームからでも操作できます。実行中に切り替えるには `/skills approval on|off` を使います。メモリにも同じ仕組みがあります（後述の `memory.write_approval`）。詳しい手順は [Gating agent skill writes](/hermes/docs/user-guide/features/skills/#gating-agent-skill-writes-skillswrite_approval) にあります。
+有効にすると、スキルの書き込みは `~/.hermes/pending/skills/` に控えられ、`/skills pending`、`/skills diff <id>`、`/skills approve <id>`、`/skills reject <id>` で確認します。CLI からでも、どのメッセージのプラットフォームからでも使えます。動かしたまま `/skills approval on|off` で切り替えられます。記憶にも同じ仕組みがあります（下の `memory.write_approval`）。詳しい流れは [エージェントのスキルの書き込みを関門にかける](/hermes/docs/user-guide/features/skills/#gating-agent-skill-writes-skillswrite_approval)を参照してください。
 
-## メモリの設定 {#memory-configuration}
+## 記憶の設定 {#memory-configuration}
 
 ```yaml
 memory:
@@ -683,31 +685,31 @@ memory:
   write_approval: false     # true = require approval before any memory write
 ```
 
-`memory.write_approval: true` にすると、メモリへの書き込みは反映される前にあなたの承認が必要になります。CLI での対話的なやり取りではその場で確認が出ます。メッセージ用のセッションや、裏で走る自己改善のレビューでは、書き込みが留め置かれ、`/memory pending` → `/memory approve <id>` / `/memory reject <id>` で確認します。実行中に切り替えるには `/memory approval on|off` を使います。[Controlling memory writes](/hermes/docs/user-guide/features/memory/#controlling-memory-writes-write_approval) を参照してください。
+`memory.write_approval: true` にすると、記憶への書き込みは反映される前に承認が必要になります。対話的な CLI のやり取りではその場で確認が出ます。メッセージのセッションや、裏で動く自己改善の見直しでは、書き込みが控えられ、`/memory pending` → `/memory approve <id>` / `/memory reject <id>` で確認します。動かしたまま `/memory approval on|off` で切り替えられます。[記憶への書き込みを制御する](/hermes/docs/user-guide/features/memory/#controlling-memory-writes-write_approval)を参照してください。
 
-## コンテキストファイルの切り詰め {#context-file-truncation}
+## 文脈のファイルの切り詰め {#context-file-truncation}
 
-自動で読み込まれるコンテキストファイルから、先頭と末尾を残す切り詰めをかける前に、どれだけの内容を Hermes が読み込むかを制御します。これは `SOUL.md`、`.hermes.md`、`AGENTS.md`、`CLAUDE.md`、`.cursorrules` のように、システムプロンプトへ差し込まれるファイルに効きます。`read_file` ツールには影響**しません**。
+自動で読み込む文脈のファイルについて、先頭と末尾を残す切り詰めをかける前に、Hermes がどれだけの中身を読むかを決めます。これはシステムのプロンプトへ差し込まれるファイル、たとえば `SOUL.md`、`.hermes.md`、`AGENTS.md`、`CLAUDE.md`、`.cursorrules` に効きます。`read_file` のツールには**効きません**。
 
 ```yaml
 context_file_max_chars: null  # default — dynamic cap scaled to the model's context window (floor 20K, ceiling 500K chars)
 ```
 
-自動で変わる動作ではなく固定の上限にしたい場合は、正の整数を設定します。
+自動で決めさせるかわりに固定の上限にしたいなら、正の整数を書きます。
 
 ```yaml
 context_file_max_chars: 25000
 ```
 
-## ファイル読み取りの安全装置 {#file-read-safety}
+## ファイルの読み込みの安全 {#file-read-safety}
 
-1 回の `read_file` の呼び出しが返せる内容の量を制御します。上限を超える読み取りは拒否され、`offset` と `limit` でもっと狭い範囲を読むよう促すエラーがエージェントに返ります。これにより、圧縮された JS のバンドルや大きなデータファイルを 1 回読んだだけでコンテキストウィンドウが埋まってしまう事態を防げます。
+`read_file` の1回の呼び出しが返せる中身の量を決めます。上限を越える読み込みは断られ、`offset` と `limit` で範囲を狭めるようエージェントに伝えるエラーが返ります。これによって、小さくまとめられた JS の一式や大きなデータのファイルを一度読んだだけで、文脈の窓があふれるのを防げます。
 
 ```yaml
 file_read_max_chars: 100000  # default — ~25-35K tokens
 ```
 
-コンテキストウィンドウの大きいモデルを使っていて、大きなファイルをよく読むなら上げてください。コンテキストの小さいモデルでは、読み取りを効率よく保つために下げてください。
+文脈の窓が大きいモデルを使っていて、大きなファイルをよく読むなら上げてください。文脈の小さいモデルでは、読み込みを効率よく保つために下げてください。
 
 ```yaml
 # Large context model (200K+)
@@ -717,11 +719,11 @@ file_read_max_chars: 200000
 file_read_max_chars: 30000
 ```
 
-エージェントはファイルの読み取りを自動的に重複排除もします。同じファイルの同じ範囲を 2 回読み、その間にファイルが変わっていなければ、内容を送り直す代わりに軽い代替の表示が返ります。これはコンテキストの圧縮でリセットされるので、内容が要約されて消えたあとにエージェントがファイルを読み直せます。
+エージェントは、ファイルの読み込みの重複も自動で省きます。同じファイルの同じ範囲を2度読み、そのあいだにファイルが変わっていなければ、中身を送り直すかわりに軽い目印だけが返ります。文脈の圧縮が起きると、この記録はいったん消えるので、中身が要約されて消えたあとでも、エージェントはファイルを読み直せます。
 
-## ツール出力の切り詰めの上限 {#tool-output-truncation-limits}
+## ツールの出力の切り詰めの上限 {#tool-output-truncation-limits}
 
-Hermes が切り詰めに入るまでに、ツールがどれだけの生の出力を返せるかを、関連する 3 つの上限が決めます。
+Hermes が切り詰める前に、ツールがそのまま返せる量を、3つの関連する上限で決めます。
 
 ```yaml
 tool_output:
@@ -730,11 +732,11 @@ tool_output:
   max_line_length: 2000   # per-line cap in read_file's line-numbered view
 ```
 
-- **`max_bytes`** — `terminal` のコマンドが標準出力と標準エラー出力を合わせてこの文字数を超える出力を出したとき、Hermes は先頭 40% と末尾 60% を残し、そのあいだに `[OUTPUT TRUNCATED]` の断りを挟みます。デフォルトは `50000`（よくあるトークナイザーで 12〜15K トークン程度）です。
-- **`max_lines`** — 1 回の `read_file` の呼び出しにおける `limit` の上限です。これを超える要求は切り詰められ、1 回の読み取りでコンテキストウィンドウが埋まらないようにします。デフォルトは `2000` です。
-- **`max_line_length`** — `read_file` が行番号付きの表示を出すときの、1 行あたりの上限です。これより長い行はこの文字数で切られ、`... [truncated]` が続きます。デフォルトは `2000` です。
+- **`max_bytes`** — `terminal` のコマンドの標準出力と標準エラー出力を合わせた文字数がこれを越えると、Hermes は最初の40%と最後の60%を残し、そのあいだに `[OUTPUT TRUNCATED]` の知らせを挟みます。初期値は `50000` です（よくある数え方でおよそ1万2千〜1万5千トークンにあたります）。
+- **`max_lines`** — `read_file` の1回の呼び出しの `limit` の上限です。これを越える指定は抑えられるので、一度の読み込みで文脈の窓があふれることはありません。初期値は `2000` です。
+- **`max_line_length`** — `read_file` が行番号付きで表示するときの、1行あたりの上限です。これより長い行はこの文字数で切られ、後ろに `... [truncated]` が付きます。初期値は `2000` です。
 
-コンテキストウィンドウが大きく、呼び出しごとに多くの生の出力を扱えるモデルなら、上限を上げてください。コンテキストの小さいモデルでは、ツールの結果をコンパクトに保つために下げてください。
+文脈の窓が大きく、1回あたりの出力に余裕のあるモデルでは上げてください。文脈の小さいモデルでは、ツールの結果を小さく保つために下げてください。
 
 ```yaml
 # Large context model (200K+)
@@ -748,25 +750,25 @@ tool_output:
   max_lines: 500
 ```
 
-### ツールの結果のあふれ分の予算 {#tool-result-spillover-budget}
+### ツールの結果のあふれ分の扱い {#tool-result-spillover-budget}
 
-切り詰めとは別に、大きすぎるツールの*結果*は切り捨てるのではなくディスクへあふれさせます。出力の全文が `$HERMES_HOME/cache/spillover/` に保存され、コンテキストの中身はプレビューと保存先のファイルのパスに置き換わります（`read_file` の `offset`／`limit` で読めますし、`execute_code` で処理することもできます）。結果 1 件あたりの一般的なあふれの閾値は 100,000 文字で、コンテキストの小さいモデルでは自動的に下げられます。
+切り詰めとは別に、大きすぎるツールの *結果* は切られるのではなくディスクへ逃がされます。全文が `$HERMES_HOME/cache/spillover/` に保存され、文脈に載る中身は、さわりの部分と保存先の場所に置き換わります（`offset` と `limit` を付けた `read_file` で読めますし、`execute_code` で処理することもできます）。結果1件あたりの一般的なしきい値は10万文字で、文脈の小さいモデルでは自動的に下がります。
 
-MCP のツールの結果（`mcp_*` という名前のツール）は、より厳しい **50,000 文字** をデフォルトの閾値とします。MCP のサーバーは、ページ分割されていない大きなデータ（ツールの一覧のカタログ、まとめて実行した結果）をしばしば返し、そのままでは一般的な閾値を下回ったまま、以後のやり取りのたびにコンテキストを膨らませてしまうからです。失われるものはありません。結果の全文はディスクに残ります。閾値は次のように上書きできます。
+MCP のツールの結果（名前が `mcp_*` のもの）は、より厳しい**5万文字**を初期値としています。MCP のサーバーは、ページに分かれていない大きな中身（ツールの一覧、まとめて実行した結果）をよく返すので、一般的なしきい値のままだと、以降のやり取りのたびに文脈を膨らませてしまうからです。失われるものはありません — 全文はディスクに残ります。しきい値は次のように上書きできます。
 
 ```yaml
 tool_budget:
   mcp_result_size_chars: 50000   # per-result spillover threshold for mcp_* tools
 ```
 
-MCP 用の閾値は、（コンテキストに応じて調整されうる）一般的な結果 1 件あたりの閾値を上限として常に切り詰められるので、上げても今のモデルのウィンドウが許す範囲を超えることはありません。
+MCP のしきい値は、（文脈に合わせて下がることもある）一般的なしきい値を越えないように必ず抑えられるので、上げてもいま使っているモデルの窓が許す以上にはなりません。
 
-Hermes は**プロバイダー側での省略**も知らせます。MCP や Web のツールの結果が、それ自身の切り詰めの印（`...N more items`、`"has_more": true`、「サンドボックスへ保存した」といった注記）を含んでいる場合、見えているデータは完全ではなく、列挙として扱う前にページをたどるか取得し直すべきだ、と警告する 1 行が結果の末尾に足されます。
+Hermes は、**送り手の側で省略されたこと**も知らせます。MCP やウェブのツールの結果に、それ自身の省略の目印（`...N more items`、`"has_more": true`、サンドボックスに保存した旨の注記）が含まれているとき、見えているデータが不完全であり、すべて出そろったと考える前にページをめくるか取り直すべきだという1行の注意が、結果の末尾に足されます。
 
-## ツールセットの全体的な無効化 {#global-toolset-disable}
+## ツールセットの全体的な停止 {#global-toolset-disable}
 
-特定のツールセットを、CLI とすべてのゲートウェイのプラットフォームにわたって一か所で
-止めたい場合は、その名前を `agent.disabled_toolsets` に並べます。
+CLI とすべてのゲートウェイのプラットフォームにまたがって、特定のツールセットを1か所で
+止めたいときは、その名前を `agent.disabled_toolsets` の下に並べます。
 
 ```yaml
 agent:
@@ -776,32 +778,32 @@ agent:
 ```
 
 これはプラットフォームごとのツールの設定（`hermes tools` が書く
-`platform_toolsets`）の**あとに**適用されるので、ここに並べたツールセットは
-必ず取り除かれます。プラットフォーム側の保存された設定にまだ載っていてもです。
-`hermes tools` の画面で 15 行以上あるプラットフォームを
-編集して回るのではなく、「どこでも X を切る」という 1 つのスイッチが欲しいときに使ってください。
+`platform_toolsets`）の**あと**に効くので、ここに並べたツールセットは必ず取り除かれます。
+プラットフォームの保存された設定にまだ載っていても同じです。`hermes tools` の画面で15行以上の
+プラットフォームを直していくかわりに、「これをどこでも止める」という1つの
+スイッチがほしいときに使ってください。
 
-リストを空のままにするか、キーごと省略した場合は、何も起きません。
+並びを空にしたり、この項目を書かなかったりした場合は、何も起こりません。
 
-## git worktree による隔離 {#git-worktree-isolation}
+## git の worktree による隔離 {#git-worktree-isolation}
 
-同じリポジトリで複数のエージェントを並行して動かすために、隔離された git の worktree を有効にできます。
+同じリポジトリで複数のエージェントを並行して動かすために、隔てられた git の worktree を有効にします。
 
 ```yaml
 worktree: true    # Always create a worktree (same as hermes -w)
 # worktree: false # Default — only when -w flag is passed
 ```
 
-有効にすると、CLI のセッションごとに `.worktrees/` の下へ新しい worktree が、それ専用のブランチとともに作られます。エージェントは互いに邪魔をせずに、ファイルを編集し、コミットし、push し、PR を作れます。きれいな worktree は終了時に削除され、変更が残っているものは手で復旧できるように残されます。
+有効にすると、CLI のセッションごとに `.worktrees/` の下へ、自分のブランチを持つ新しい worktree が作られます。エージェントどうしは互いを邪魔せずに、ファイルを直し、コミットし、push し、PR を作れます。きれいな worktree は終了時に取り除かれ、変更が残っているものは手で直せるように残されます。
 
-デフォルトでは、新しい worktree は**取得し直したリモートの先端**（現在のブランチの上流、なければリモートの既定のブランチ）から分岐します。ローカルのクローンの、古くなっているかもしれない `HEAD` からではなく、プロジェクトの最新の状態から始めるためです。こうすると、PR の差分がローカルのクローンの遅れを巻き込まず、実際の変更だけに収まります。ローカルの `HEAD` から分岐させたい場合は `worktree_sync: false` にします。オフラインのときや、クローンの今の状態をそのまま土台にしたいときに便利です。リモートに届かない場合は、自動的にローカルの `HEAD` へ切り替わります。
+初期状態では、新しい worktree は**取ってきたばかりのリモートの先端**（いまのブランチの上流、なければリモートの既定のブランチ）から枝分かれします。手元のクローンの、古いかもしれない `HEAD` からではなく、プロジェクトの現状から始めるためです。こうすると PR の差分が、手元のクローンが遅れていた分を巻き込まずに、実際の変更だけに収まります。手元の `HEAD` から枝分かれさせたいなら `worktree_sync: false` にしてください — オフラインのときや、クローンのいまの状態をそのまま土台にしたいときに役立ちます。リモートに届かない場合は、自動で手元の `HEAD` に切り替わります。
 
 ```yaml
 worktree_sync: true    # Default — branch from the fetched remote tip
 # worktree_sync: false # Branch from local HEAD (offline / pinned base)
 ```
 
-リポジトリのルートに `.worktreeinclude` を置けば、gitignore されているファイルのうち worktree へコピーしたいものを並べられます。
+リポジトリの根元に `.worktreeinclude` を置けば、git で無視しているファイルのうち worktree へ写したいものを並べられます。
 
 ```
 # .worktreeinclude
@@ -810,13 +812,13 @@ worktree_sync: true    # Default — branch from the fetched remote tip
 node_modules/
 ```
 
-## コンテキストの圧縮 {#context-compression}
+## 文脈の圧縮 {#context-compression}
 
-Hermes は、モデルのコンテキストウィンドウに収まるように、長い会話を自動的に圧縮します。圧縮の要約役は別の LLM の呼び出しなので、どのプロバイダーやエンドポイントに向けることもできます。
+Hermes は、モデルの文脈の窓に収まるよう、長い会話を自動で圧縮します。圧縮の要約は別の LLM の呼び出しなので、どのプロバイダーや接続先にでも向けられます。
 
 圧縮の設定はすべて `config.yaml` にあります（環境変数はありません）。
 
-### 設定の一覧 {#full-reference}
+### すべての項目 {#full-reference}
 
 ```yaml
 compression:
@@ -848,49 +850,49 @@ auxiliary:
     base_url: null                                  # Custom OpenAI-compatible endpoint (overrides provider)
 ```
 
-:::info 古い設定の移行
-`compression.summary_model`、`compression.summary_provider`、`compression.summary_base_url` を持つ古い設定は、最初に読み込まれたときに自動的に `auxiliary.compression.*` へ移されます（設定のバージョン 17）。手作業は要りません。
+:::info 従来の設定からの移行
+`compression.summary_model`、`compression.summary_provider`、`compression.summary_base_url` を使っていた古い設定は、最初に読み込むときに自動で `auxiliary.compression.*` へ移されます（設定のバージョン17）。手で行うことはありません。
 :::
 
-`progress_notices`（デフォルト `false`）は、圧縮の**日常的な**進捗の知らせをチャットのプラットフォーム（Telegram、Discord、Slack など）に届けるかどうかを決めます。設計上、自動の圧縮はチャットの画面では静かに行われ、裏で走ってサーバー側にログを残すだけです。`progress_notices: true` にすると、日常的な流れがチャットのプラットフォームにも見えるようになります。「Compacting context…」という開始の知らせ、事前チェックや API 呼び出し前の圧縮のきっかけ、放置による圧縮、再試行の進捗（「Compressed 30 → 12 messages, retrying…」）、そして「Context compaction complete」の知らせです。この切り替えが効くのは圧縮に関する知らせだけで、関係のない運用上のざわつき（補助モデルの失敗、プロバイダーのレート制限や再試行のやり取り）は、どちらにしても抑えられたままです。圧縮の**失敗**の知らせと、手動の `/compress` への反応は、この設定に関係なく常に表示されます。動いているゲートウェイでこの値を書き換えると、次のメッセージから効きます。
+`progress_notices`（初期値は `false`）は、**ふだんの**圧縮の進み具合が、チャットのプラットフォーム（Telegram、Discord、Slack など）に届くかどうかを決めます。設計として、自動の圧縮はチャットの画面では静かに行われます — 裏で走り、記録はサーバー側にだけ残ります。`progress_notices: true` にすると、ふだんの流れをチャットのプラットフォームで見られるようになります。「Compacting context…」の開始の知らせ、事前確認や API を呼ぶ前の圧縮のきっかけ、放置後の圧縮、やり直しの進み具合（「Compressed 30 → 12 messages, retrying…」）、そして「Context compaction complete」の知らせです。この関門は圧縮の状態だけに効きます — 関係のない運用上の雑音（補助のモデルの失敗、プロバイダーの回数制限ややり直しのやり取り）は、どちらにしても出ません。圧縮の**失敗**の知らせと、手で実行した `/compress` の反応は、この設定にかかわらず必ず表示されます。動いているゲートウェイでこの値を変えると、次のメッセージから効きます。
 
-`hygiene_hard_message_limit` は、ゲートウェイだけにある**圧縮前の安全弁**です。これは悪循環を断ち切るためにあります。大きくなりすぎたセッションで API の呼び出しが切れ続けると、ゲートウェイはトークン使用量のデータを受け取れないので、トークンを基準にした閾値が発動できず、そのため会話は伸び続け、切断はさらにひどくなります。この件数ベースの下限は、メッセージ数だけで発動し（API が失敗していても件数は必ず分かります）、圧縮を強制してセッションを立て直します。デフォルトは `5000` で、通常のセッションよりはるかに大きい値です。大きなコンテキスト（100 万トークン超）のモデルで短いやり取りを何千回もする場合でも、これより手前でトークンの閾値によって圧縮されます。変わったプラットフォームではさらに上げ、もっと積極的に圧縮させたいなら下げてください。動いているゲートウェイでこの値を書き換えると、次のメッセージから効きます（後述）。
+`hygiene_hard_message_limit` は、ゲートウェイだけにある**圧縮前の安全弁**です。悪循環を断つためにあります。大きくなりすぎたセッションで API の呼び出しが切れ続けると、ゲートウェイはトークンの使用量を受け取れず、トークンを基準にしたしきい値が働かず、記録はさらに伸びて、切断はもっとひどくなります。この件数を基準にした下限は、（API が失敗しても必ず分かる）メッセージの数だけで働き、圧縮を強いてセッションを立て直します。初期値は `5000` で、ふつうのセッションよりはるかに大きく、文脈が大きい（100万以上の）モデルで短いやり取りを何千回もする場合でも、これよりずっと前にトークンのしきい値で圧縮されます。変わったプラットフォームではもっと上げ、もっと積極的に圧縮させたいなら下げてください。動いているゲートウェイでこの値を変えると、次のメッセージから効きます（下を参照してください）。
 
-`hygiene_timeout_seconds` は、エージェントに渡す前のこの圧縮処理に対する、ゲートウェイの**無反応の許容時間**であって、全体の経過時間の上限ではありません。圧縮の要約の呼び出しはモデルからストリーミングで届き、トークンが 1 つ届くたびに前進とみなされます。つまり、ゆっくりでも生成を続けている推論モデルは自分で締め切りを延ばしていくので、遅いだけで健全な要約モデルが生成の途中で打ち切られることはありません。要約モデルがこの秒数のあいだまったく**出力を出さない**とき（バックエンドの停止、固まった接続、無反応のプロバイダー）にだけ、ゲートウェイはユーザーに警告し、届いたメッセージを圧縮せずに処理し、固まったように見せる代わりにセッションごとの一時的な失敗のクールダウンを記録します。
+`hygiene_timeout_seconds` は、この、エージェントの前で行う圧縮についてのゲートウェイの**何もしていない時間の上限**です。全体の経過時間の上限ではありません。圧縮の要約の呼び出しはモデルから少しずつ届き、届いたトークン1つ1つが前進とみなされます。ですから、じっくり考えて生成を続けている遅いモデルは自分で締め切りを延ばしていくので、遅くても健全な要約のモデルが生成の途中で打ち切られることはありません。要約のモデルがこの秒数のあいだ**何も出さなかった**とき（裏側が落ちている、接続が固まっている、送り手が黙っている）にだけ、ゲートウェイは利用者に警告し、圧縮せずに届いたメッセージの処理を続け、そのセッションについて一時的な失敗の待ち時間を記録します。固まったように見えることはありません。
 
-`hygiene_total_ceiling_seconds`（デフォルト `600`）は、トークンがまだ流れていても待ち時間の合計に上限を設けます。ちょろちょろとしか流れないおかしなストリームが、いつまでも 1 つのやり取りを人質に取れないようにするためです。この値は少なくとも `hygiene_timeout_seconds` 以上に切り上げられます。
+`hygiene_total_ceiling_seconds`（初期値は `600`）は、トークンがまだ動いていても全体の待ち時間を区切ります。ちょろちょろとしか届かない応答が、やり取りをいつまでも押さえ込むことがないようにするためです。この値は少なくとも `hygiene_timeout_seconds` 以上に収められます。
 
-`hygiene_failure_cooldown_seconds` は、この圧縮がタイムアウトしたり中断したりしたあとの、セッションごとのクールダウンを決めます。クールダウンのあいだ、ゲートウェイは同じ大きすぎるセッションに対する圧縮の再挑戦を飛ばすので、届くメッセージのすべてが同じ壊れた補助バックエンドで止まることはありません。`/compress`、`/reset`、あるいは後の健全なやり取りで、セッションを立て直せます。
+`hygiene_failure_cooldown_seconds` は、この圧縮が時間切れになったり中断したりしたあとの、セッションごとの待ち時間を決めます。待っているあいだ、ゲートウェイは同じ大きすぎるセッションについて繰り返しの試みを飛ばすので、届いたメッセージのすべてが同じ壊れた補助の裏側で止まることはありません。`/compress`、`/reset`、あるいはあとで健全なやり取りができれば、セッションは立て直せます。
 
-この値は固定の間隔ではなく、段階的に伸びるはしごの**最初の段**です。同じセッションで失敗が続くと、`1x`、`3x`、`9x` とこの値の倍数で待ち、上限は 1 時間です。要約モデルが完全に壊れているセッションは、固定の間隔で永遠に再挑戦するのではなく、間隔を広げていきます。実際に会話が縮んだ実行があれば、最初の段に戻ります。この段階の上がり下がりはセッションごとで、プロセスの中だけの話です。ゲートウェイを再起動すると最初の段に戻りますが、クールダウンの期限そのものは残ります。
+この値は決まった間隔ではなく、伸びていく段の**最初の1段**です。同じセッションで失敗が続くと、`1x`、`3x`、`9x` と待ち、上限は1時間です。要約のモデルが完全に壊れているセッションは、決まった間隔で永遠に試み続けるのではなく、少しずつ間を空けていきます。記録が実際に短くなれば、最初の段に戻ります。この段の上がり方はセッションごとで、プロセスの中だけの話です — ゲートウェイを再起動すると最初の段に戻りますが、待ち時間の期限そのものは残ります。
 
-`context_timeout_seconds`（デフォルト `120`）は、エージェントの中で走る `compress_context`（会話のループ、事前の圧縮、手動の `/compress`）に対する同じ**無反応の許容時間**で、固まった要約モデルがセッションをいつまでも止めないようにします。ストリーミングで届く要約のトークンは待ち時間を延ばし、まったく反応しないものだけが打ち切られます。タイムアウトすると Hermes は圧縮を飛ばし、今あるメッセージをそのまま保ち、ユーザーに警告します。`0` にすると無効になります。ゲートウェイのセッションの整理は独自の `hygiene_timeout_seconds` の経路を持っており、二重には包まれません。
+`context_timeout_seconds`（初期値は `120`）は、エージェントの中の `compress_context` — 会話のやり取り、事前の圧縮、手で実行する `/compress` — についての、同じ**何もしていない時間の上限**です。固まった要約のモデルが、セッションをいつまでも止めてしまわないようにします。届いた要約のトークンが待ち時間を延ばし、黙っているときだけ打ち切られます。時間切れになると Hermes は圧縮を飛ばし、いまのメッセージをそのまま保ち、利用者に警告します。`0` にすると止まります。ゲートウェイのセッションの手入れは自分の `hygiene_timeout_seconds` の経路を持っていて、二重に包まれることはありません。
 
-`context_total_ceiling_seconds`（デフォルト `600`）は、トークンがまだ流れていても、エージェント内の**確定前**の待ち時間（要約・ストリーミングの段階）に上限を設けます。この値は少なくとも `context_timeout_seconds` 以上に切り上げられます。正確な保証はこうです。**要約の段階はこの上限で区切られ、確定の段階は上限を超えたらログに記録され、表に出されます。** 処理が圧縮の確定の関門に入り、SessionDB の書き換えが進行中になったら、その確定が途中で捨てられることはありません。会話の記録が食い違う恐れがあるからです。ただし、その待ちはもう黙ったままではありません。確定が上限を超えたら、Hermes は超過をログに残し（WARNING、繰り返せば ERROR に上げます）、ユーザーに見える警告の経路で一度だけ警告を送り、確定が終わるまで区切られた間隔で待ち続けます。
+`context_total_ceiling_seconds`（初期値は `600`）は、トークンがまだ動いていても、エージェントの中の**確定前の**待ち時間（要約と受け取りの段）を区切ります。この値は少なくとも `context_timeout_seconds` 以上に収められます。正確に言うと、**要約の段はこの上限で区切られ、確定の段は上限を越えたら記録され知らされます。** いったん圧縮の確定の区切りに入って SessionDB への書き込みが始まったら、その確定が途中で捨てられることはありません — 記録が食い違うおそれがあるからです。ただし、待つあいだが黙ったままになることもありません。確定が上限を越えたら、Hermes はその超過を記録し（WARNING で、繰り返せば ERROR に上がります）、利用者に見える警告の経路で一度だけ知らせ、確定が終わるまで区切りながら待ち続けます。
 
-`protect_first_n` は、圧縮のたびに固定しておく**システム以外の**先頭のメッセージの数を決めます。デフォルトは `3` で、最初のユーザーとアシスタントのやり取りが毎回の要約を生き延び、当初の目的が見えたままになります。長く続いて何度も圧縮されるセッションで、最初のやり取りがもう関係なくなっているなら、`protect_first_n: 0` にして、システムプロンプトと要約と末尾だけを残してください。システムプロンプト自体は、この設定に関係なく常に保たれます。
+`protect_first_n` は、圧縮のたびに固定しておく**システム以外の**先頭のメッセージの数を決めます。初期値は `3` で、最初の利用者とアシスタントのやり取りが要約のたびに残るので、もともとの目的が見えたままになります。転がるように圧縮が続く長いセッションで、最初のやり取りがもう関係ないなら、`protect_first_n: 0` にして、システムのプロンプトと要約と末尾のほかは何も固定しないようにできます。システムのプロンプト自体は、この設定にかかわらず必ず残ります。
 
-`in_place`（デフォルト `true`）は、圧縮が起きたときにセッションの同一性がどうなるかを決めます。`true` のとき、圧縮はメッセージのリストを書き換えてシステムプロンプトを組み直しますが、**セッション ID は入れ替えません**。会話はその一生を通じて 1 つの安定した ID を持ち続けます（`parent_session_id` の連鎖も、セッション一覧での `name #2` / `#3` という番号の振り直しもありません）。圧縮は失われる操作ではありません。生きているコンテキストは縮みますが、圧縮前のやり取りは同じ ID の下にそっと保管され（非アクティブ／圧縮済みの印が付きます）、`session_search` で検索でき、取り戻せます。削除ではありません。フックは `session:compress` イベントの `in_place` フィールドでモードを知ることができます。`in_place: false` にすると、圧縮のたびに古いセッションと結び付いた新しいセッション ID へ移る、従来の動作に戻ります。
+`in_place`（初期値は `true`）は、圧縮が起きたときにセッションの身元がどうなるかを決めます。`true` のとき、圧縮はメッセージの並びを書き換えてシステムのプロンプトを組み直しますが、**セッションの id は入れ替えません** — その会話は一生を通して1つの変わらない id を持ちます（`parent_session_id` のつながりも、セッションの一覧での `name #2` や `#3` の番号付けもありません）。圧縮は失われるものがありません。いま使っている文脈は縮みますが、圧縮する前のやり取りは同じ id の下にそっと控えられ（動いていない・圧縮済みという印が付きます）、`session_search` で今も探せますし、取り戻せます。消されるわけではありません。フックは `session:compress` のできごとの `in_place` の項目でこの動きを知れます。`in_place: false` にすると、圧縮のたびに古いものと結び付いた新しいセッションの id へ移る、従来の動きに戻ります。
 
-`threshold_tokens` は、圧縮のきっかけに対する任意の**絶対的なトークン数の上限**を設定します。設定すると、比率ベースの `threshold` とこの絶対値のうち、早いほうで圧縮が起きます。つまり、どのモデルが動いていても、あなたが望むトークン数より遅く圧縮が始まることはありません。これは、コンテキストウィンドウの異なるモデルを行き来する（たとえば 100 万 → 40 万）と、絶対的なきっかけの位置がずれてしまう問題を解決します。この上限はモデルのコンテキスト長の範囲に収められるので、モデルが対応する値より大きく設定しても安全です（その場合は比率ベースの閾値が使われます）。デフォルトは `null`（無効。比率ベースの閾値だけ）です。この上限は、モデルの切り替えやフォールバックの発動をまたいで残ります。
+`threshold_tokens` は、圧縮のきっかけについて、任意の**絶対的なトークンの上限**を決めます。設定すると、割合で決まる `threshold` とこの絶対値のうち、早いほうで圧縮が起きます。ですから、どのモデルを使っていても、自分が決めたトークン数より遅く圧縮が起きることはありません。これは、文脈の窓の大きさが違うモデルを行き来する（たとえば100万から40万へ）と、実際のきっかけの位置がずれてしまう問題を解決します。この上限はモデルの文脈の長さに収められるので、モデルが対応する以上の値を書いても安全です — そのときは割合で決まるしきい値が使われます。初期値は `null`（無効。割合で決まるしきい値だけ）です。この上限は、モデルを切り替えても予備のモデルに移っても残ります。
 
-`idle_compact_after_seconds` は、サイズ基準の `threshold` を補う**任意の、時間ベースの**きっかけです。デフォルトは `0`（無効）です。0 より大きくすると、その秒数以上のあいだ動きがなかったセッションが再開したとき、最初の返信の前に、溜まった履歴をあらかじめ圧縮します。何時間か経ってから戻ってくる Telegram の会話のような、長く続くやり取りが、以後のたびに古いコンテキストを丸ごと読み直さずに済みます。コンテキストがすでに圧縮後の目標（`threshold × target_ratio`）以下なら発動しませんし、自動の圧縮と同じ失敗時のクールダウン、ばたつき防止、セッションごとのロックの守りに従います。例: `idle_compact_after_seconds: 1800` は、30 分放置されたあとに圧縮します。
+`idle_compact_after_seconds` は、大きさで決まる `threshold` を補う、**任意で有効にする時間の**きっかけです。初期値は `0`（無効）です。0 より大きくすると、その秒数以上何もされずに置かれたあと再開したセッションは、最初の返事の前にそれまでの履歴をまとめて縮めます。ですから長く続くやり取り（たとえば何時間かぶりに戻ってきた Telegram の会話）が、以降のやり取りのたびに古い文脈を丸ごと読み直すことはありません。文脈がすでに圧縮後の目標（`threshold × target_ratio`）以下なら決して働きませんし、失敗後の待ち時間、暴れ防止、セッションごとの錠といった、自動の圧縮と同じ守りに従います。例: `idle_compact_after_seconds: 1800` にすると、30分放置したあとに縮めます。
 
-`proactive_prune_tokens` は、古いツールの結果を、LLM を使わずに決まった手順で刈り込む処理を有効にします。これは `threshold` とは独立に動きます。ウィンドウの大きなモデルでは `threshold` による圧縮（ウィンドウの約 50%）がめったに起きないため、かさばるツールの出力（ターミナルの大量の出力、ファイルの読み取り、Web の抽出）が履歴に居座り、以後のやり取りのたびに送り直されます。送り直される履歴が `proactive_prune_tokens`（デフォルト `0` = 無効。有効にするなら `48000` あたりから）を超えると、この刈り込みは同一の結果を重複排除し、古くて大きなものを要約し、大きなツール呼び出しの引数を切り詰めます。直近の `protect_last_n` 件のメッセージは守られ、モデルは一切呼ばれません。出力の全文はセッションの保管場所から取り戻せます。`proactive_prune_min_result_chars`（デフォルト `8000`、200 以上に切り上げ）は、これより小さいツールの結果には手を付けない、という境目です。`proactive_prune_min_reclaim_tokens`（デフォルト `4096`）は、少なくともこの数のトークンを取り戻せない限り刈り込みを確定させません。確定した刈り込みは、すでに送った履歴を書き換え、プロバイダー側のプロンプトキャッシュの先頭部分を無効にしてしまうからです。この歯止めによって、キャッシュの切れ目はツールを呼ぶたびに起きるのではなく、意味のある切れ目（圧縮の境目のような）に集約されます。この処理は組み込みの `compressor` エンジンでのみ動き、ほかのコンテキストエンジンでは何もしません。
+`proactive_prune_tokens` は、`threshold` とは別に働く、LLM を使わない決まりきった古いツールの結果の刈り込みを有効にします。窓の大きいモデルでは `threshold` による圧縮（窓のおよそ50%）がめったに起きないので、かさばるツールの出力（ターミナルの吐き出し、ファイルの読み込み、ウェブの抽出）が履歴に居座り、以降のやり取りのたびに送り直されます。送り直される履歴が `proactive_prune_tokens`（初期値は `0` = 止まっています。有効にするなら `48000` あたりを試してください）を越えると、刈り込みは同じ結果の重複を省き、古くて大きなものを要約し、大きなツールの引数を切り詰めます。直近の `protect_last_n` のメッセージは守られ、モデルは呼ばれません。全文はセッションの保存先から取り戻せます。`proactive_prune_min_result_chars`（初期値は `8000`、200以上に収められます）は、これより小さいツールの結果には手を触れない、という大きさを決めます。`proactive_prune_min_reclaim_tokens`（初期値は `4096`）は、これだけのトークンを取り戻せないなら刈り込みを確定させません — 確定した刈り込みはすでに送った履歴を書き換え、送り手のプロンプトのキャッシュの前半を無効にします。この関門があることで、キャッシュが崩れるのはツールを呼ぶたびではなく、（圧縮の切れ目のような）意味のある1回だけに抑えられます。これは組み込みの `compressor` の仕組みでだけ動き、ほかの文脈の仕組みでは何も起こりません。
 
-:::tip ゲートウェイでの圧縮とコンテキスト長の即時反映
-最近のリリースからは、動いているゲートウェイで `config.yaml` の `model.context_length` や `compression.*` のキーを書き換えると、次のメッセージから効きます。ゲートウェイの再起動も、`/reset` も、セッションの入れ替えも要りません。キャッシュされたエージェントの識別情報にこれらのキーが含まれているので、変更を見つけるとゲートウェイが自動でエージェントを組み直します。API キーやツール／スキルの設定は、これまでどおりの再読み込みの手順が必要です。
+:::tip 圧縮と文脈の長さのゲートウェイでの読み直し
+最近の版では、動いているゲートウェイの `config.yaml` で `model.context_length` や `compression.*` のどの項目を変えても、次のメッセージから効きます — ゲートウェイの再起動も、`/reset` も、セッションの入れ替えも要りません。キャッシュしているエージェントの見分けにこれらの項目が含まれているので、変化に気づくとゲートウェイが黙ってエージェントを組み直します。API キーやツール・スキルの設定は、これまでどおりの読み直しの手順が必要です。
 :::
 
 ### よくある構成 {#common-setups}
 
-**デフォルト（自動判別）— 設定は不要です:**
+**初期値（自動で判断） — 設定は要りません:**
 ```yaml
 compression:
   enabled: true
   threshold: 0.50
 ```
-主要なプロバイダーと主要なモデルを使います。会話用のモデルより安いモデルで圧縮したい場合は、用途ごとに上書きしてください（たとえば `auxiliary.compression.provider: openrouter` と `model: google/gemini-2.5-flash`）。
+主のプロバイダーと主のモデルを使います。ふだんのチャットのモデルより安いモデルで圧縮したいなら、作業ごとに上書きしてください（たとえば `auxiliary.compression.provider: openrouter` と `model: google/gemini-2.5-flash`）。
 
 **特定のプロバイダーを指定する**（OAuth でも API キーでも）:
 ```yaml
@@ -899,49 +901,49 @@ auxiliary:
     provider: nous
     model: gemini-3-flash
 ```
-`nous`、`openrouter`、`codex`、`anthropic`、`main` など、どのプロバイダーでも使えます。
+どのプロバイダーでも使えます: `nous`、`openrouter`、`codex`、`anthropic`、`main` など。
 
-**独自のエンドポイント**（自前でホスト、Ollama、zai、DeepSeek など）:
+**独自の接続先**（自分で立てたもの、Ollama、zai、DeepSeek など）:
 ```yaml
 auxiliary:
   compression:
     model: glm-4.7
     base_url: https://api.z.ai/api/coding/paas/v4
 ```
-OpenAI 互換の独自エンドポイントに向けます。認証には `OPENAI_API_KEY` を使います。
+独自の OpenAI 互換の接続先を指します。認証には `OPENAI_API_KEY` を使います。
 
-### 3 つのつまみの関係 {#how-the-three-knobs-interact}
+### 3つの設定の組み合わせ {#how-the-three-knobs-interact}
 
 | `auxiliary.compression.provider` | `auxiliary.compression.base_url` | 結果 |
 |---------------------|---------------------|--------|
-| `auto`（デフォルト） | 未設定 | 使える中から最適なプロバイダーを自動で選ぶ |
-| `nous` / `openrouter` など | 未設定 | そのプロバイダーを指定し、その認証を使う |
-| 何でも | 設定あり | 指定したエンドポイントを直接使う（プロバイダーの指定は無視） |
+| `auto`（初期値） | 未設定 | 使えるいちばん良いプロバイダーを自動で選びます |
+| `nous` / `openrouter` など | 未設定 | そのプロバイダーを使い、その認証を使います |
+| どれでも | 設定あり | その接続先を直接使います（プロバイダーの指定は無視されます） |
 
-:::warning 要約モデルのコンテキスト長の条件
-要約に使うモデルは、主要なエージェントのモデルと同じかそれ以上のコンテキストウィンドウを持って**いなければなりません**。圧縮では、会話の中間部分を丸ごと要約モデルへ送ります。そのモデルのコンテキストウィンドウが主要なモデルより小さいと、要約の呼び出しはコンテキスト長のエラーで失敗します。そうなると中間のやり取りは**要約されないまま捨てられ**、会話の文脈が静かに失われます。モデルを上書きする場合は、そのコンテキスト長が主要なモデル以上であることを確かめてください。
+:::warning 要約のモデルに必要な文脈の長さ
+要約のモデルは、主のエージェントのモデルと同じか、それ以上の文脈の窓を**必ず**持っていなければなりません。圧縮の仕組みは、会話の真ん中の部分を丸ごと要約のモデルへ送ります。そのモデルの文脈の窓が主のモデルより小さいと、要約の呼び出しは文脈の長さのエラーで失敗します。そうなると真ん中のやり取りは**要約されないまま落とされ**、会話の文脈が気づかないうちに失われます。モデルを上書きするなら、その文脈の長さが主のモデル以上であることを確かめてください。
 :::
 
-## ゲートウェイのターンのリースのタイムアウト {#gateway-turn-lease-timeout}
+## ゲートウェイのやり取りの占有の待ち時間 {#gateway-turn-lease-timeout}
 
-ゲートウェイは、解決されたセッション ID ごとにやり取りを直列化するので、2 つの
-経路が同じ会話の記録を同時に読み書きすることはありません。リースを待つ最大の時間は、
-通常のエージェントの無反応のタイムアウトとは別に設定できます。
+ゲートウェイは、2つの経路が同じ記録を同時に読み書きしないよう、やり取りを
+解決されたセッション ID ごとに順番に並べます。占有を待つ最長の時間は、ふつうの
+エージェントの何もしていない時間の上限とは別に設定できます。
 
 ```yaml
 agent:
   gateway_turn_lease_timeout: 1800
 ```
 
-この持ち時間が尽きたときにまだ別のやり取りがセッションのリースを握っていた場合、
-Hermes は安全側に倒します。待っているメッセージのために会話の記録を読み込むことも、
-モデルを走らせることもしません。ユーザーには受け付けなかったという知らせが届き、
-送り直す必要があります。Hermes が自動で並べ直さないのは、順序の保証と冪等性のない再投入では、二重に処理されるおそれがあるからです。
-0 以下の値を指定すると、デフォルトの 1800 秒が使われます。
+この時間が尽きてもまだ別のやり取りがそのセッションを占有していると、Hermes は
+安全側に倒れて止まります。待っているメッセージについて、記録を読むことも、モデルを
+動かすこともしません。利用者には断りの知らせが届き、送り直す必要があります。Hermes が
+自動で並べ直さないのは、順番と重複しない仕組みがないままそうすると、二重に処理される
+おそれがあるからです。0 以下の値では、初期値の1800秒が使われます。
 
 ## セッションの停滞の見張り {#session-stall-watchdog}
 
-ゲートウェイは、知らせるだけの停滞の見張りを走らせます（`agent.session_stall_timeout`、デフォルト `300` 秒、`0` で無効）。処理中のセッションに**未処理の受信メッセージ**があり、エージェントの共有の活動時計がこの秒数以上動いていないとき、ゲートウェイは WARNING をログに残し、ユーザーへ一度だけ知らせを送ります。
+ゲートウェイは、知らせるだけの停滞の見張りを動かしています（`agent.session_stall_timeout`、初期値は `300` 秒、`0` で無効）。取り込み中のセッションに**まだ処理していない続きの入力**があり、エージェントが共有している活動の時計がこの時間以上動いていないとき、ゲートウェイは WARNING を記録し、利用者に一度だけ知らせます。
 
 ```
 ⚠️ Agent session appears stalled (last activity N min ago). Try /new to reset.
@@ -949,23 +951,23 @@ Hermes は安全側に倒します。待っているメッセージのために�
 
 意味は次のとおりです。
 
-- **知らせるだけです。** この見張りがやり取りを止めることはありません。長く反応がないときに実行を打ち切る `agent.gateway_timeout` とは対照的です。停滞の知らせは、エージェントが詰まっているように見えると伝えるだけで、どうするか（`/new`、`/stop`、あるいは待ち続ける）はあなたが決めます。
-- **停滞 1 回につき知らせは 1 度だけです。** 未処理の受信が捌けるか活動が再開すると掛け金が外れるので、いったん復帰してまた停滞すれば、あらためて知らせが届きます。
-- 前進とみなされるのは、共有の活動の記録（ツールの呼び出し、API のストリームの進み、圧縮の心拍）だけです。未処理の受信は知らせるかどうかの条件であって、前進を測る時計ではありません。
+- **知らせるだけです。** この見張りがやり取りを止めることはありません — 長く動きがないときに実行を取り消す `agent.gateway_timeout` とは違います。停滞の知らせは、エージェントが固まっているように見えると伝えるだけで、どうするか（`/new`、`/stop`、待ち続ける）は自分で決められます。
+- **1回の停滞につき1回だけ知らせます。** 待っていた入力がさばけるか、活動が戻ると印が消えるので、いったん立ち直ってまた停滞すれば、もう一度知らせます。
+- 前進とみなされるのは、共有している活動の記録（ツールの呼び出し、API の応答の進み、圧縮の鼓動）だけです。待っている入力は知らせるための条件であって、前進を測る時計ではありません。
 
 ```yaml
 agent:
   session_stall_timeout: 300   # seconds; 0 disables the watchdog
 ```
 
-## 再接続の注意喚起 {#reconnect-attention-escalation}
+## つなぎ直しの注意の引き上げ {#reconnect-attention-escalation}
 
-プラットフォームのアダプターが接続に失敗したとき（ネットワークの障害、失効したボットのトークン、壊れたサイドカー）、ゲートウェイは上限付きの指数バックオフで無期限に再試行します。再試行が止まらないので、一時的な障害は必ずひとりでに直り、運用者が手を出す必要はありません。困るのは、*恒久的な*失敗（失効した Telegram のトークン、足りない Discord の特権インテント）が、一瞬の不調とまったく同じに見えることです。どちらも「再試行中」のまま、いつまでも続きます。
+プラットフォームとの連携がつながらないとき（ネットワークの障害、取り消されたボットのトークン、壊れた補助のプロセス）、ゲートウェイは待ち時間を少しずつ延ばしながら、いつまでも試し続けます — 試みが止まることはないので、一時的な障害なら手を出さなくても自然に直ります。困るのは、*恒久的な* 失敗（取り消された Telegram のトークン、足りない Discord の特権的な権限）が、一時的な不調とまったく同じに見えることです。ずっと「試しています」のままになります。
 
-恒久的な失敗を見えるようにする仕組みが 2 つあります。
+恒久的な失敗を見えるようにする仕組みが2つあります。
 
-- **恒久的だと分類する。** 例外の*型*から、決してひとりでには直らないと分かる失敗 — 拒否・失効したトークン（`telegram_auth_error`、`discord_auth_error`、`email_auth_error`）、足りない特権インテント（`discord_intents_required`）、依存関係をインストールできない（`SIDECAR_DEPS_MISSING`）または node のバイナリが見つからない（`SIDECAR_NODE_MISSING`）Photon のサイドカー — は、再試行の列に入れずに致命的と印を付けます。分類は型だけを見て厳密に行い、判断のつかないエラーは常に再試行を続けます。
-- **注意が要るという知らせ。** `agent.reconnect_attention_after`（デフォルト `7200` 秒 = 2 時間、`0` で無効）を超えて再試行の列に居続けたプラットフォームには、ゲートウェイの状態（`hermes status`）で `needs_attention: true` と `retrying_since` のタイムスタンプが付き、WARNING がログに残ります。再試行はそのまま続きます。これは合図であって、遮断器ではありません。再接続に成功すると、この印は消えます。
+- **決して直らないものの見分け。** 例外の *種類* から自然に直らないと分かる失敗 — 拒否されたり取り消されたりしたトークン（`telegram_auth_error`、`discord_auth_error`、`email_auth_error`）、足りない特権的な権限（`discord_intents_required`）、依存を入れられない Photon の補助のプロセス（`SIDECAR_DEPS_MISSING`）や node のバイナリがないもの（`SIDECAR_NODE_MISSING`） — は、やり直しの列に入らず、致命的として印が付きます。この見分けは種類だけで行われ、はっきりしないエラーは今までどおり試し続けます。
+- **注意が必要という引き上げ。** `agent.reconnect_attention_after`（初期値は `7200` 秒 = 2時間、`0` で無効）を越えてやり直しの列に居続けたプラットフォームには、ゲートウェイの状態（`hermes status`）に `needs_attention: true` と `retrying_since` の時刻が付き、WARNING も記録されます。やり直し自体はそのまま続きます — これは合図であって、遮断する仕組みではありません。つなぎ直しに成功すると、この印は消えます。
 
 ```yaml
 agent:
@@ -974,7 +976,7 @@ agent:
 
 ## ゲートウェイのエージェントのキャッシュ {#gateway-agent-cache}
 
-ゲートウェイはセッションごとにエージェントを 1 つ保持するので、会話は毎回システムプロンプトを組み直す代わりに、キャッシュされたプロンプトの先頭部分を使い回せます。キャッシュされたエージェントは、そのセッションの会話の記録も丸ごと抱えています。ツールの出力も含むので、ツールを 100 回呼んだセッションでは数十メガバイトになります。そのため、忙しい複数プラットフォームのゲートウェイでは、このキャッシュがプロセスの中でいちばんメモリを食う存在になります。
+ゲートウェイはセッションごとにエージェントを1つ持ち続けるので、会話はやり取りのたびにシステムのプロンプトを組み直すのではなく、キャッシュされた前半を使い回せます。ただしそのキャッシュされたエージェントは、セッションの記録も丸ごと抱えています — ツールの出力も含むので、ツールを百回呼んだセッションでは数十メガバイトになります。ですから、たくさんのプラットフォームを抱えた忙しいゲートウェイでは、このキャッシュがプロセスの中でいちばんメモリを食う存在になります。
 
 ```yaml
 agent:
@@ -986,41 +988,41 @@ agent:
     protect_recent: 8
 ```
 
-`max_size` と `idle_ttl_secs` は、キャッシュを件数と時間で区切ります。どちらも何バイト抱えているかは知らないので、`memory_high_mb` が 3 つ目の区切りを足します。ゲートウェイ自身の無名の常駐メモリが予算を超えると、いちばん長く使われていない会話の記録から捨てられ、次のやり取りのときに保存済みのセッションから読み直されます。ゲートウェイがほかのサービスとメモリを取り合っているなら下げてください。どの先頭部分も温かいまま保ちたいなら上げるか、`0` にしてこの処理そのものを切ってください。
+`max_size` と `idle_ttl_secs` は、キャッシュを件数と時間で区切ります。どちらも何バイト抱えているかは知らないので、`memory_high_mb` が3つめの区切りを足します。ゲートウェイ自身が使っているメモリがこの目安を越えると、いちばん長く使われていない記録から手放していきます。手放した記録は、次のやり取りのときに保存されたセッションから読み直されます。ゲートウェイがほかのサービスとメモリを取り合っているなら下げてください。前半をすべて温めたままにしたいなら上げるか、`0` にしてこの処理を止めてください。
 
-`auto` は、ゲートウェイが実際に動いている環境のメモリの上限から予算を導きます。コンテナや systemd のユニットなら cgroup の上限、それ以外なら搭載メモリの総量です。こうすると、ユニットの `MemoryMax` / `MemoryHigh` が、もう 1 つ数値を合わせて管理しなくても尊重されます。
+`auto` は、ゲートウェイが実際に動いているメモリの上限から目安を導きます — コンテナや systemd のユニットなら cgroup の上限、そうでなければ全体の RAM です。ですからユニットの `MemoryMax` や `MemoryHigh` が、別の数字を同期させることなく尊重されます。
 
-やり取りの最中のセッション、`protect_recent` で指定した直近のもの、そして会話の記録をディスクへ書き終えていないセッションは、決して捨てられません。捨てたときは、測定した RSS と外したセッションとともに WARNING がログに残ります。
+やり取りの途中のセッション、`protect_recent` で決めた直近のもの、そして記録をまだディスクへ書き終えていないセッションは、決して手放されません。手放したときは、測ったメモリの量と落としたセッションが WARNING で記録されます。
 
 ```
 Agent cache pressure: anon RSS 6802MB over budget 6656MB — evicting 5 LRU session(s): ...
 ```
 
-## コンテキストエンジン {#context-engine}
+## 文脈の仕組み {#context-engine}
 
-コンテキストエンジンは、モデルのトークンの上限に近づいたときに会話をどう扱うかを決めます。組み込みの `compressor` エンジンは、内容を落としながらの要約を使います（[Context Compression](/hermes/docs/developer-guide/context-compression-and-caching/) を参照）。プラグインのエンジンで、別のやり方に差し替えることもできます。
+文脈の仕組みは、モデルのトークンの上限に近づいたときに会話をどう扱うかを決めます。組み込みの `compressor` は、要約によって一部を落とす形です（[文脈の圧縮](/hermes/docs/developer-guide/context-compression-and-caching/)を参照してください）。プラグインの仕組みに差し替えて、別のやり方にすることもできます。
 
 ```yaml
 context:
   engine: "compressor"    # default — built-in lossy summarization
 ```
 
-プラグインのエンジン（たとえば内容を落とさずに管理する LCM）を使うには、次のようにします。
+プラグインの仕組み（たとえば、何も失わずに文脈を扱う LCM）を使うには、次のようにします。
 
 ```yaml
 context:
   engine: "lcm"          # must match the plugin's name
 ```
 
-プラグインのエンジンが**勝手に有効になることはありません**。`context.engine` にプラグインの名前を明示する必要があります。使えるエンジンは `hermes plugins` → Provider Plugins → Context Engine から見て選べます。
+プラグインの仕組みが**自動で有効になることはありません** — `context.engine` にそのプラグインの名前をはっきり書く必要があります。使える仕組みは `hermes plugins` → Provider Plugins → Context Engine から見て選べます。
 
-メモリのプラグインについても、同じように 1 つだけ選ぶ仕組みがあります。[Memory Providers](/hermes/docs/user-guide/features/memory-providers/) を参照してください。
+記憶のプラグインについての、同じように1つだけ選ぶ仕組みは [記憶のプロバイダー](/hermes/docs/user-guide/features/memory-providers/)を参照してください。
 
 ## 繰り返しの上限 {#iteration-budget}
 
-エージェントがツールを何度も呼ぶ複雑な仕事に取り組んでいると、繰り返しの持ち分（デフォルト: 500 回）を使い切ることがあります。Hermes は作業の途中で急かす警告を差し込むことは**ありません**。以前のビルドでは持ち分の 70%／90% でモデルに警告していましたが、それが原因でモデルが複雑な仕事を途中で投げ出してしまい、2026 年 4 月に取り除かれました。
+エージェントがツールを何度も呼ぶ込み入った作業をしていると、繰り返しの上限（初期値は500回）を使い切ることがあります。Hermes は作業の途中で急かす警告を差し込むことは**ありません** — 以前の版では70%と90%の時点でモデルに警告していましたが、それが原因でモデルが込み入った作業を早々に投げ出すことがあったため、2026年4月に取り除かれました。
 
-代わりに、持ち分を実際に使い切ったとき（500/500）、Hermes はまとめに入るよう促すメッセージを 1 つ差し込み、最後の返答を出せるように **猶予の呼び出し** を 1 回だけ許します。その猶予の呼び出しでも文章が出てこなければ、何を成し遂げたかを要約するようエージェントに求めます。
+そのかわり、上限を本当に使い切ったとき（500/500）、Hermes はまとめに入るよう促すメッセージを1つ差し込み、最後の返事を出せるように**猶予の1回**を許します。その猶予の1回でも文章が出てこなければ、何を成し遂げたかをまとめるよう求めます。
 
 ```yaml
 agent:
@@ -1030,35 +1032,35 @@ agent:
   api_max_retries: 3           # Retries per provider before fallback engages (default: 3)
 ```
 
-`agent.max_turns` は**デフォルトで無制限**です。回数の上限は、解決する問題より生み出す問題（作業の途中で黙って打ち切られること）のほうが多かったので、初期状態の Hermes は 1 回のやり取りを最後まで走らせます。上限を設けたい場合は正の整数を指定します。「無制限」と明示したいときは、大文字小文字を問わず次のどれでも使えます。`"none"`、`"null"`、`"unlimited"`、`"infinite"`、`"infinity"`、`"inf"`、`0`、`-1`（内部では `sys.maxsize` の目印に解決されるので、回数でループが終わることはありません）。
+`agent.max_turns` は**初期状態では上限なし**です — 回数の上限は、解決する問題より生む問題のほうが多かったので（作業の途中で黙って打ち切られていました）、そのままの Hermes は会話のやり取りを最後までやりきります。上限を設けたいなら、正の整数を書いてください。「上限なし」をはっきり書きたいなら、大文字と小文字を問わず次のどれでも使えます: `"none"`、`"null"`、`"unlimited"`、`"infinite"`、`"infinity"`、`"inf"`、`0`、`-1`（これらは `sys.maxsize` の目印になるので、回数でやり取りが終わることはありません）。
 
-`agent.api_max_retries` は、一時的なエラー（レート制限、接続の切断、5xx）が起きたときに、フォールバックのプロバイダーへの切り替えが始まる**前に**、Hermes がプロバイダーの API 呼び出しを何回やり直すかを決めます。デフォルトは `3` で、合計 4 回試します。[フォールバックのプロバイダー](/hermes/docs/user-guide/features/fallback-providers/) を設定していて、もっと早く切り替えたいなら `0` にしてください。主要なプロバイダーで最初の一時的なエラーが出た時点で、不安定なエンドポイントに再試行を重ねずに、すぐフォールバックへ渡します。
+`agent.api_max_retries` は、一時的なエラー（回数の制限、接続の切断、5xx）のときに、予備のプロバイダーへ切り替える**前に** Hermes が何回やり直すかを決めます。初期値は `3` で、合わせて4回試みます。[予備のプロバイダー](/hermes/docs/user-guide/features/fallback-providers/)を設定していて、もっと早く切り替えたいなら `0` にしてください。主のプロバイダーで最初の一時的なエラーが出た時点で、不安定な接続先にやり直しを重ねずに、すぐ予備へ渡します。
 
-## 実時間の持ち時間 {#wall-clock-run-budget}
+## 実時間での実行の上限 {#wall-clock-run-budget}
 
-繰り返しの上限とは別に、1 回の会話の実行に**実時間**の持ち時間を任意で与えられます。これは、外から厳しい上限をかけられて動く一度きりの実行や、評価用の仕組み（たとえばタスクあたり 900 秒の制限）を想定しています。これがないと、作業が実質的に終わっているのに時間切れになりかねません。最後の答えを出す一歩手前だったり、固まったプロバイダーの呼び出し 1 つに引っかかっていたりする状態です。
+繰り返しの上限とは別に、会話の1回の実行に**実時間**の上限を持たせることもできます。これは、外から厳しい制限がかかる1回かぎりの実行や評価の仕組み（たとえば作業ごとに900秒という制限）のためのものです。これがないと、作業がほぼ終わっているのに時間切れになることがあります — 最後の答えを出す一歩手前だったり、送り手の1回の呼び出しが固まったままだったりします。
 
 ```yaml
 agent:
   run_budget_seconds: null     # Optional; unset/null = feature fully off (default)
 ```
 
-実行ごとに CLI から指定することもできます。
+CLI から、その実行だけに指定することもできます。
 
 ```bash
 hermes chat --run-budget 850 -q "..."
 ```
 
-持ち時間を設定すると、2 つのことが起きます。
+上限を決めると、2つのことが起こります。
 
-1. **80% でまとめに入る知らせ。** 持ち時間の 80% が過ぎたとき、Hermes は**一度だけ**の知らせを差し込み（キャッシュを壊さない形で、`/steer` のメッセージと同じく最新のツールの結果の末尾に付けます）、新しい調査や検証はやめて、いま手元にある情報から最終的な成果物を出すようモデルに伝えます。1 回の実行につき多くても 1 度しか出ず、既存の繰り返しの上限のまとめの仕組みと同じ形です。繰り返し急かす警告はありません。
-2. **締め切りに合わせた停滞のタイムアウト。** 明示していない、ストリーミングを使わない場合の停滞のタイムアウト（デフォルトの 90 秒や、推論モデル向けの下限、たとえば DeepSeek の推論モデルの 600 秒）は `max(60, remaining_budget × 0.5)` に抑えられ、黙って固まったプロバイダーの呼び出し 1 つが残り時間を食い尽くせないようにします。この上限はタイムアウトを*短くする*方向にしか働かず、伸ばすことはありません。また、明示的に設定した `stale_timeout_seconds`（プロバイダーやモデルの設定、あるいは `HERMES_API_CALL_STALE_TIMEOUT`）は、常にそのまま優先されます。
+1. **80%の時点でのまとめの知らせ。** 上限の80%が過ぎると、Hermes は**一度だけ**知らせを差し込み（キャッシュを壊さない形で、`/steer` のメッセージのようにいちばん新しいツールの結果に添えられます）、新しい調べものや確認をやめて、いま持っている情報から最終的な成果を出すようモデルに伝えます。1回の実行につき多くても1度しか出ず、すでにある繰り返しの上限のまとめの仕組みと同じ形です — 繰り返し急かすことはありません。
+2. **締め切りに合わせて縮む、止まったかどうかの判断の時間。** 明示していないときの、応答を少しずつ受け取らない呼び出しの判断の時間（初期値の90秒や、じっくり考えるモデルの下限、たとえば DeepSeek の推論モデルの600秒）は `max(60, remaining_budget × 0.5)` に抑えられるので、黙って固まった1回の呼び出しが実行の残りを食い尽くすことはありません。この抑えは待ち時間を*短くする*だけで、伸ばすことはありません。はっきり設定した `stale_timeout_seconds`（プロバイダーやモデルの設定、あるいは `HERMES_API_CALL_STALE_TIMEOUT`）は、いつでもそのまま優先されます。
 
-この持ち時間は `run_conversation` のやり取りごとのもので（ユーザーのメッセージごとにリセットされます）、未設定のときは機能そのものが完全に眠っています。時計を読むことも、何かを差し込むことも、タイムアウトを変えることもありません。
+この上限は `run_conversation` のやり取りごとのもので（利用者のメッセージのたびに数え直します）、設定しなければこの仕組みは完全に眠っています — 時計も読まず、何も差し込まず、待ち時間も変えません。
 
-## 停止前の検証（コーディングの確認） {#verify-on-stop-coding-verification}
+## 終わる前の確認（コードの検証） {#verify-on-stop-coding-verification}
 
-有効にすると、エージェントがワークスペースのコードを編集したのに、新しい検証の証拠（テストが通った、ビルドできた、lint が通ったなど）を出していないやり取りでは、Hermes は最終的な答えを受け付けません。検証するか、できない理由を説明するよう求める追いかけのメッセージを差し込みます。ドキュメントや markdown、スキルだけの編集では発動しませんし、ループには上限があるのでエージェントが閉じ込められることはありません。
+有効にすると Hermes は、エージェントが作業場所のコードを直したのに、新しい検証の証拠（テストが通った、ビルドできた、lint が通ったなど）を出していないやり取りで、最後の答えを受け入れません — 検証するか、できない理由を説明するよう求める続きのメッセージを差し込みます。文書やマークダウン、スキルだけの変更では決して働きませんし、繰り返しには上限があるのでエージェントが閉じ込められることはありません。
 
 ```yaml
 agent:
@@ -1068,68 +1070,68 @@ agent:
   coding_instructions: ""      # Standing project-wide coding rules appended to the coding brief
 ```
 
-`verify_on_stop` は `true`（どこでも有効）、`false`（無効。デフォルト）、`"auto"`（従来の、画面に応じた動作。CLI、TUI、デスクトップといった対話的なコーディングの画面とプログラムからの呼び出しでは有効、検証の説明がチャットの雑音に見えてしまう Telegram や Discord のようなメッセージの画面では無効）を受け付けます。どこでも無効がデフォルトです。新規にインストールすると `false` で始まり、設定の移行によって既存のインストールでも無効になったので、有効にするのは意識的な選択です。`HERMES_VERIFY_ON_STOP` の環境変数を設定すると、設定ファイルの値より優先されます。
+`verify_on_stop` は `true`（どこでも有効）、`false`（無効 — 初期値）、`"auto"`（従来の、画面に応じた動き: CLI、TUI、デスクトップといった対話的にコードを書く場面とプログラムからの呼び出しでは有効、検証の説明がチャットの雑音に見える Telegram や Discord のようなメッセージの画面では無効）のいずれかです。どこでも無効が初期値です。新しく入れると `false` で配られますし、設定の移行もすでに入っているものを無効にしたので、有効にするのははっきりした意思表示になります。`HERMES_VERIFY_ON_STOP` の環境変数を設定すると、設定の値より優先されます。
 
-同じ場所にユーザーやプラグインの判断を挟み、自前の検査でエージェントを走らせ続けたい場合は、[`pre_verify` フック](/hermes/docs/user-guide/features/hooks/#pre_verify) を参照してください。
+同じ場面で自分の検査を挟み、エージェントを続けさせたいなら、利用者やプラグイン向けの [`pre_verify` のフック](/hermes/docs/user-guide/features/hooks/#pre_verify)を参照してください。
 
-## 継続する目標（`/goal`） {#standing-goals-goal}
+## 立てておく目標（`/goal`） {#standing-goals-goal}
 
-継続する目標が有効なあいだ、Hermes はアシスタントの返答のたびに、それが目標を満たしているかを判定します。満たしていなければ、同じセッションへ続きを促すプロンプトを送り返し、目標が達成されるか、やり取りの持ち分が尽きるか、ユーザーが一時停止・解除するまで作業を続けます。実際の歯止めになるのはやり取りの持ち分です。判定に失敗したときは**続ける側**に倒れるので、判定が不安定でも前進が止まることはありません。
+目標を立てているあいだ、Hermes はアシスタントの返事のたびに、それが目標を満たしているかを判定します。満たしていなければ、同じセッションに続きの指示を戻し、目標が達成されるか、やり取りの上限が尽きるか、利用者が止めるか消すまで作業を続けます。本当の歯止めになるのはやり取りの上限です — 判定に失敗したときは**続ける側**に倒れるので、判定が不安定でも作業が止まることはありません。
 
 ```yaml
 goals:
   max_turns: 20   # Max continuation turns before Hermes auto-pauses the goal (default: 20)
 ```
 
-`max_turns` は、Hermes が目標を自動で一時停止してユーザーに `/goal resume` を促すまでに、目標が何回の継続のやり取りを引っ張れるかを決めます。判定の見落とし（実際は達成しているのに続けろと言われる）や、曖昧で達成しようのない目標にモデルの費用が際限なく吸われることを防ぎます。機能の全体は [Goals](/hermes/docs/user-guide/features/goals/) を参照してください。
+`max_turns` は、Hermes が自動で目標を一時停止して `/goal resume` を求めるまでに、目標が何回の続きのやり取りを引っ張れるかを決めます。判定の見落とし（本当は達成しているのに続けろと言われる）や、あいまいで達成できない目標にモデルを際限なく使うことを防ぎます。この機能の全体は [目標](/hermes/docs/user-guide/features/goals/)を参照してください。
 
-### API のタイムアウト {#api-timeouts}
+### API の待ち時間 {#api-timeouts}
 
-Hermes には、ストリーミング向けの複数の層のタイムアウトと、ストリーミングを使わない呼び出し向けの停滞の検出があります。停滞の検出は、暗黙のデフォルトのままにしている場合にだけ、ローカルのプロバイダー向けに自動で調整されます。
+Hermes は、応答を少しずつ受け取るときの待ち時間を層に分けて持っていて、それとは別に、少しずつ受け取らない呼び出しが止まったかどうかを見る仕組みがあります。止まったかどうかの判断は、明示せず初期値のままにしているときだけ、手元のプロバイダーに合わせて自動で調整されます。
 
-| タイムアウト | デフォルト | ローカルのプロバイダー | 設定 / 環境変数 |
+| 待ち時間 | 初期値 | 手元のプロバイダー | 設定 / 環境変数 |
 |---------|---------|----------------|--------------|
-| ソケットの読み取りのタイムアウト | 120 秒 | 自動で 1800 秒へ引き上げ | `HERMES_STREAM_READ_TIMEOUT` |
-| ストリームの停滞の検出 | 180 秒 | 900 秒を上限に引き上げ（`agent.local_stream_stale_timeout`） | `HERMES_STREAM_STALE_TIMEOUT` |
-| ストリームなしの停滞の検出 | 90 秒 | 暗黙のままなら自動で無効 | `providers.<id>.stale_timeout_seconds` または `HERMES_API_CALL_STALE_TIMEOUT` |
-| API の呼び出し（ストリーミングなし） | 1800 秒 | 変更なし | `providers.<id>.request_timeout_seconds` / `timeout_seconds` または `HERMES_API_TIMEOUT` |
+| ソケットの読み取りの上限 | 120秒 | 1800秒まで自動で上がります | `HERMES_STREAM_READ_TIMEOUT` |
+| 応答が止まったかの判断 | 180秒 | 900秒の上限まで上がります（`agent.local_stream_stale_timeout`） | `HERMES_STREAM_STALE_TIMEOUT` |
+| 少しずつ受け取らない呼び出しが止まったかの判断 | 90秒 | 明示しなければ自動で無効になります | `providers.<id>.stale_timeout_seconds` または `HERMES_API_CALL_STALE_TIMEOUT` |
+| API の呼び出し（少しずつ受け取らない場合） | 1800秒 | 変わりません | `providers.<id>.request_timeout_seconds` / `timeout_seconds` または `HERMES_API_TIMEOUT` |
 
-**ソケットの読み取りのタイムアウト**は、プロバイダーから次のデータの塊が届くのを httpx がどれだけ待つかを決めます。ローカルの LLM は、大きなコンテキストの前処理に何分もかかってから最初のトークンを出すことがあるので、Hermes はローカルのエンドポイントを見つけると 30 分へ引き上げます。`HERMES_STREAM_READ_TIMEOUT` を明示的に設定した場合は、エンドポイントの判別に関わらずその値が使われます。
+**ソケットの読み取りの上限**は、送り手からの次のかたまりを httpx がどれだけ待つかを決めます。手元の LLM は、大きな文脈の下ごしらえに何分もかかってから最初のトークンを出すことがあるので、手元の接続先だと分かると Hermes はこれを30分まで上げます。`HERMES_STREAM_READ_TIMEOUT` をはっきり設定していれば、接続先の判定にかかわらずその値が使われます。
 
-**ストリームの停滞の検出**は、SSE の生存確認の合図だけが届いて実際の内容が来ない接続を切ります。ローカルのプロバイダー（前処理のあいだ生存確認を送りません）では、基準の 180 秒ではなく 900 秒という有限の上限まで引き上げられます。`agent.local_stream_stale_timeout` か `HERMES_LOCAL_STREAM_STALE_TIMEOUT` の環境変数で調整できます。
+**応答が止まったかの判断**は、SSE の生存確認だけが届いて中身が来ない接続を切ります。（下ごしらえのあいだ生存確認を送らない）手元のプロバイダーでは、基本の180秒ではなく900秒という有限の上限まで上がります。これは `agent.local_stream_stale_timeout` か `HERMES_LOCAL_STREAM_STALE_TIMEOUT` の環境変数で設定できます。
 
-**ストリームなしの停滞の検出**は、長いあいだ応答を返さないストリーミングなしの呼び出しを切ります。デフォルトでは、長い前処理のあいだの誤検出を避けるため、Hermes はローカルのエンドポイントではこれを無効にします。`providers.<id>.stale_timeout_seconds`、`providers.<id>.models.<model>.stale_timeout_seconds`、`HERMES_API_CALL_STALE_TIMEOUT` を明示的に設定した場合は、ローカルのエンドポイントでもその値が尊重されます。
+**少しずつ受け取らない呼び出しが止まったかの判断**は、長く応答がない呼び出しを切ります。初期状態では、長い下ごしらえのあいだに誤って切らないよう、手元の接続先ではこれを無効にします。`providers.<id>.stale_timeout_seconds`、`providers.<id>.models.<model>.stale_timeout_seconds`、`HERMES_API_CALL_STALE_TIMEOUT` のどれかをはっきり設定していれば、手元の接続先でもその値が守られます。
 
-この持ち時間は、ストリーミングを使わないすべての呼び出しに効きます。cron のジョブや、委任されたサブエージェントがその場で走らせるものも含みます。リクエストを受け付けたあと黙り込むプロバイダー（接続は開いたまま、1 バイトも来ず、エラーも出ない）は、停滞のタイムアウトで打ち切られて再試行されます。はるかに長いソケットの読み取りのタイムアウトまで（あるいは、誰も見ていない cron の実行なら、外から何かがプロセスを止めるまで）ぶら下がり続けることはありません。
+この上限は、cron のジョブや任せたサブエージェントがその場で走らせるものも含めて、少しずつ受け取らないすべての呼び出しに効きます。リクエストを受け取っておきながら黙り込む送り手 — 接続は開いたまま、1バイトも来ず、エラーも出ない — は、この時間で打ち切られてやり直されます。はるかに長いソケットの読み取りの上限まで（あるいは、人が見ていない cron の実行なら、外から何かがプロセスを止めるまで）ぶら下がったままにはなりません。
 
-## コンテキストの逼迫の警告 {#context-pressure-warnings}
+## 文脈の逼迫の知らせ {#context-pressure-warnings}
 
-繰り返しの持ち分とは別に、コンテキストの逼迫は、会話が**圧縮の閾値**（古いメッセージを要約する圧縮が始まる地点）にどれだけ近づいているかを追いかけます。会話が長くなってきたことを、あなたにもエージェントにも分かるようにするものです。
+繰り返しの上限とは別に、文脈の逼迫は、会話が**圧縮のしきい値**にどれだけ近づいたかを追いかけます。しきい値とは、古いメッセージを要約するために文脈の圧縮が働く点のことです。これによって、会話が長くなってきたことが自分にもエージェントにも分かります。
 
-| 進み具合 | レベル | 起きること |
+| 進み具合 | 段階 | 何が起きるか |
 |----------|-------|-------------|
-| 閾値まで **60% 以上** | 情報 | CLI に水色の進捗バーが出る。ゲートウェイはお知らせを送る |
-| 閾値まで **85% 以上** | 警告 | CLI に太い黄色のバーが出る。ゲートウェイは圧縮が近いと警告する |
+| しきい値まで **60%以上** | お知らせ | CLI に水色の進み具合の帯が出ます。ゲートウェイはお知らせを送ります |
+| しきい値まで **85%以上** | 警告 | CLI に太い黄色の帯が出ます。ゲートウェイは圧縮が近いと警告します |
 
-CLI では、コンテキストの逼迫はツールの出力の流れの中に進捗バーとして現れます。
+CLI では、文脈の逼迫はツールの出力の流れの中に進み具合の帯として現れます。
 
 ```
   ◐ context ████████████░░░░░░░░ 62% to compaction  48k threshold (50%) · approaching compaction
 ```
 
-メッセージ用のプラットフォームでは、文字だけの知らせが届きます。
+メッセージのプラットフォームでは、素のテキストの知らせが送られます。
 
 ```
 ◐ Context: ████████████░░░░░░░░ 62% to compaction (threshold: 50% of window).
 ```
 
-自動の圧縮が無効になっている場合は、代わりにコンテキストが切り詰められるかもしれないと警告します。
+自動の圧縮を止めているときは、代わりに文脈が切り詰められるかもしれない、という警告になります。
 
-コンテキストの逼迫は自動で、設定は要りません。あくまでユーザーに向けた知らせとして出るだけで、メッセージの流れを変えたり、モデルのコンテキストに何かを差し込んだりはしません。
+文脈の逼迫の知らせは自動で働きます — 設定は要りません。これは利用者に見せる知らせとしてだけ働き、メッセージの流れを変えたり、モデルの文脈に何かを差し込んだりはしません。
 
-## 認証情報のプールの選び方 {#credential-pool-strategies}
+## 認証情報のまとまりの使い方 {#credential-pool-strategies}
 
-同じプロバイダーの API キーや OAuth のトークンを複数持っている場合、どう回すかを設定できます。
+同じプロバイダーの API キーや OAuth のトークンを複数持っているとき、どう順に使うかを設定できます。
 
 ```yaml
 credential_pool_strategies:
@@ -1137,45 +1139,44 @@ credential_pool_strategies:
   anthropic: least_used      # always pick the least-used key
 ```
 
-選べるのは `fill_first`（デフォルト）、`round_robin`、`least_used`、`random` です。詳しくは [Credential Pools](/hermes/docs/user-guide/features/credential-pools/) を参照してください。
+選べるのは `fill_first`（初期値）、`round_robin`、`least_used`、`random` です。詳しい説明は [認証情報のまとまり](/hermes/docs/user-guide/features/credential-pools/)を参照してください。
 
 ## プロンプトのキャッシュ {#prompt-caching}
 
-使っているプロバイダーが対応していれば、Hermes はセッションをまたぐプロンプトのキャッシュを自動的に有効にします。ユーザー側の設定は要りません。
+使っているプロバイダーが対応していれば、Hermes はセッションをまたいだプロンプトのキャッシュを自動で有効にします — 設定は要りません。
 
-**ネイティブの Anthropic**、**OpenRouter**、**Nous Portal** 経由の Claude では、Hermes はシステムプロンプトとスキルのブロックに、1 時間の有効期間（`ttl: "1h"`）を指定した `cache_control` の区切りを付けます。新しい 1 時間の中で最初に送るときは通常の入力料金がかかり、同じ 1 時間のうちなら、どのセッションから送っても割安なキャッシュ読み出しの料金で済みます。つまり、システムプロンプト、読み込んだスキルの内容、長いコンテキストの前のほうの部分が、最初の 1 時間は `hermes` のセッションをまたいで、また分岐したサブエージェントをまたいで再利用されます。
+**Anthropic 本来の API**、**OpenRouter**、**Nous Portal** で Claude を使う場合、Hermes はシステムのプロンプトとスキルのまとまりに、1時間有効（`ttl: "1h"`）の `cache_control` の区切りを付けます。新しい1時間の中で最初に送るときは入力の通常の料金がかかり、同じ1時間の中であれば、どのセッションからの以降の送信もキャッシュからの安い料金で読み出されます。つまり、システムのプロンプト、読み込んだスキルの中身、長い文脈の前半の部分が、`hermes` のセッションをまたいでも、枝分かれしたサブエージェントのあいだでも、最初の1時間は使い回されます。
 
-Qwen Cloud（Alibaba DashScope）の上流はキャッシュの有効期間を 5 分に制限しているので、そこでは Hermes も 5 分の区切りを使います。ほかのサードパーティ経由の Claude（AWS Bedrock、Azure Foundry）は、そのプロバイダー自身のキャッシュのデフォルトに従います。xAI の Grok は、セッションに紐づいた会話 ID という別の仕組みを使います。[xAI prompt caching](/hermes/docs/integrations/providers/#xai-grok--responses-api--prompt-caching) を参照してください。
+Qwen Cloud（Alibaba DashScope）の上流はキャッシュの有効期間を5分までとしているので、Hermes はそこでは5分の区切りを使います。第三者を経由するそのほかの Claude の経路（AWS Bedrock、Azure Foundry）は、それぞれのプロバイダーのキャッシュの既定に従います。xAI の Grok は、セッションに結び付けた会話の id という別の仕組みを使います — [xAI のプロンプトのキャッシュ](/hermes/docs/integrations/providers/#xai-grok--responses-api--prompt-caching)を参照してください。
 
-これを無効にするつまみはありません。キャッシュは常に有効で、1 往復だけの会話でもお金の節約になります。システムプロンプトだけでも、入力のトークン数のうち無視できない割合を占めるからです。
+これを止める設定はありません — キャッシュは常に働きますし、システムのプロンプトだけでも入力のトークン数のうち無視できない割合を占めるので、1回きりの会話でもお金の節約になります。
 
-唯一の明示的なつまみは、Anthropic 方式の区切りで Hermes が要求するキャッシュの有効期間の段階です。
+はっきり触れる設定は1つだけで、Anthropic 形式の区切りで Hermes が求めるキャッシュの有効期間の段階です。
 
 ```yaml
 prompt_caching:
   cache_ttl: "5m"   # "5m" or "1h" (Anthropic-supported tiers); other values are ignored
 ```
 
-`cache_ttl` は、ネイティブの Anthropic API、OpenRouter、Nous Portal 経由の Claude に対して Hermes が付ける区切りの有効期間を選びます。Anthropic が対応する 2 つの段階（`"5m"`、`"1h"`）だけが有効で、それ以外の値は無視されます。独自の上限を持つプロバイダー（最大 5 分の Qwen Cloud など）では、上流が許す範囲に切り詰められます。
+`cache_ttl` は、Anthropic 本来の API、OpenRouter、Nous Portal 経由の Claude について、Hermes が付ける区切りの有効期間を選びます。Anthropic が対応している2つの段階（`"5m"`、`"1h"`）だけが有効で、それ以外の値は無視されます。独自の上限を持つプロバイダー（たとえば最長5分の Qwen Cloud）では、上流が許す範囲まで抑えられます。
 
-## 補助モデル {#auxiliary-models}
+## 補助のモデル {#auxiliary-models}
 
-Hermes は、画像の解析、Web ページの要約、ブラウザーのスクリーンショットの解析、セッションのタイトルの生成、コンテキストの圧縮といった脇の仕事に「補助」モデルを使います。デフォルト（`auxiliary.*.provider: "auto"`）では、Hermes はすべての補助的な仕事を**主要な会話用モデル**、つまり `hermes model` で選んだのと同じプロバイダーとモデルへ回します。使い始めるのに設定は要りませんが、高価な推論モデル（Opus、MiniMax M2.7 など）では、補助的な仕事が無視できない費用になることは頭に置いてください。主要なモデルが何であれ脇の仕事は安く速く済ませたい場合は、`auxiliary.<task>.provider` と `auxiliary.<task>.model` を明示してください（たとえば、画像処理や Web の抽出に OpenRouter 経由の Gemini Flash を指定します）。
+Hermes は、画像の読み取り、ブラウザの画面の読み取り、セッションの表題の生成、文脈の圧縮といった脇の作業に「補助の」モデルを使います。初期状態（`auxiliary.*.provider: "auto"`）では、Hermes はすべての補助の作業を**主のチャットのモデル** — `hermes model` で選んだのと同じプロバイダーとモデル — へ回します。使い始めるのに設定は要りませんが、高価な推論のモデル（Opus、MiniMax M2.7 など）では、補助の作業が無視できない費用になることは知っておいてください。主のモデルが何であれ、脇の作業は安く速く済ませたいなら、`auxiliary.<task>.provider` と `auxiliary.<task>.model` をはっきり設定してください（たとえば画像には OpenRouter の Gemini Flash など）。（ウェブの抽出は補助の作業ではありません。`web_extract` とブラウザの画面の取り込みは、長い中身を決まった規則で切り詰め、全文は `read_file` でめくれるように保存します — LLM は関わりません。）
 
-:::note 「auto」が主要なモデルを使う理由
-以前のビルドでは、集約サービス（OpenRouter、Nous Portal）の利用者だけを、そのサービス側の安いデフォルトに振り分けていました。これは意外性がありました。集約サービスに料金を払っているのに、補助的な通信だけ別のモデルが処理していたのです。今の `auto` は誰にとっても主要なモデルを使います。`config.yaml` での仕事ごとの上書きは、これまでどおり優先されます（後述の [補助モデルの設定の一覧](#full-auxiliary-config-reference) を参照）。
+:::note 「auto」が主のモデルを使う理由
+以前の版では、まとめ役のサービス（OpenRouter、Nous Portal）の利用者だけを、送り手側の安いモデルへ振り分けていました。これは意外に感じられるものでした — まとめ役のサービスにお金を払っている人が、補助のやり取りだけ別のモデルに処理されるのを目にすることになるからです。いまは `auto` は誰にとっても主のモデルを使います。`config.yaml` での作業ごとの上書きは、これまでどおり優先されます（下の [補助の設定の一覧](#full-auxiliary-config-reference) を参照してください）。
 :::
 
-### 補助モデルを対話的に設定する {#configuring-auxiliary-models-interactively}
+### 補助のモデルを対話的に設定する {#configuring-auxiliary-models-interactively}
 
-YAML を手で書く代わりに、`hermes model` を実行してメニューから **「Configure auxiliary models」** を選んでください。仕事ごとに選べる画面が出ます。
+YAML を手で書く代わりに、`hermes model` を実行してメニューから **「Configure auxiliary models」** を選んでください。作業ごとに対話的に選べます。
 
 ```
 $ hermes model
 → Configure auxiliary models
 
 [ ] vision               currently: auto / main model
-[ ] web_extract          currently: auto / main model
 [ ] title_generation     currently: openrouter / google/gemini-3-flash-preview
 [ ] tts_audio_tags       currently: auto / main model
 [ ] compression          currently: auto / main model
@@ -1186,17 +1187,17 @@ $ hermes model
 [ ] delegation           currently: auto / inherit main agent
 ```
 
-仕事を選び、プロバイダーを選び（OAuth ならブラウザーが開き、API キーのプロバイダーなら入力を求められます）、モデルを選びます。変更は `config.yaml` の `auxiliary.<task>.*` に保存されます。主要なモデルを選ぶ画面と同じ仕組みなので、新しい書き方を覚える必要はありません。
+作業を選び、プロバイダーを選び（OAuth ならブラウザが開き、API キーのプロバイダーなら入力を求められます）、モデルを選びます。変更は `config.yaml` の `auxiliary.<task>.*` に保存されます。主のモデルを選ぶのと同じ仕組みなので、新しく覚える書き方はありません。
 
-**Delegation** の項目だけは特別です。これは `delegate_task` のサブエージェントが使うモデルを決め、`auxiliary.*` ではなく最上位の `delegation.*`（`delegation.provider` / `delegation.model`）に保存されます。サブエージェントは脇の LLM 呼び出しではなく、れっきとした子のエージェントだからです。ここでの `auto` は「親のエージェントのプロバイダー、モデル、認証情報を引き継ぐ」という意味です。
+**Delegation** の項目だけは特別です。これは `delegate_task` のサブエージェントが使うモデルを決め、`auxiliary.*` ではなく、いちばん上の階層の `delegation.*`（`delegation.provider` / `delegation.model`）に保存されます。サブエージェントは脇の LLM の呼び出しではなく、一人前の子のエージェントだからです。ここでの `auto` は「親のエージェントのプロバイダー、モデル、認証情報を受け継ぐ」という意味です。
 
-最初のやり取りのあとに Hermes がタイトルを自動生成しないようにしたい場合は、
+最初のやり取りのあとで Hermes に表題を自動で付けさせたくないなら、
 `auxiliary.title_generation.enabled: false` にしてください。`/title` や
-`hermes sessions rename` による手動のタイトル付けは、そのまま使えます。
+`hermes sessions rename` で手で付けることは、これまでどおりできます。
 
-### ストリーミング専用のエンドポイント {#stream-only-endpoints}
+### 少しずつ受け取ることしかできない接続先 {#stream-only-endpoints}
 
-OpenAI 互換のエンドポイントの中には、ストリーミングを使わない会話のリクエストをきっぱり拒むものがあります（たとえば Tencent Copilot は HTTP 400 で `"Non-stream chat request is currently not supported"` を返します）。対話的な会話はもともとストリーミングですが、補助的な仕事（タイトルの生成、圧縮、Web の抽出）はストリーミングを使わない呼び出しなので、毎回失敗してしまいます。Hermes は `copilot.tencent.com` を常にストリーミング専用として扱います。ほかにそういうエンドポイントがあれば、URL の一部を `auxiliary.stream_only_base_urls` に並べてください。
+OpenAI 互換の接続先の中には、まとめて返すやり取りをはっきり断るものがあります（たとえば Tencent Copilot は HTTP 400 で `"Non-stream chat request is currently not supported"` を返します）。対話的なチャットはもともと少しずつ受け取りますが、補助の作業（表題の生成、圧縮、画像の読み取り）はまとめて返すやり取りを使うので、毎回失敗してしまいます。Hermes は `copilot.tencent.com` を必ずこの種の接続先として扱います。ほかにそういう接続先があるなら、`auxiliary.stream_only_base_urls` の下に URL の一部を並べてください。
 
 ```yaml
 auxiliary:
@@ -1204,31 +1205,31 @@ auxiliary:
     - "my-stream-only-proxy.example.com"
 ```
 
-これに一致する補助的な呼び出しは `stream=True` で送られ、届いた断片（ツール呼び出しの差分も含みます）はクライアント側でまとめられます。ほかのエンドポイントの動作は変わりません。
+当てはまる補助の呼び出しは `stream=True` で送られ、届いたかたまり（ツールの呼び出しの差分も含みます）は手元で組み立て直されます。ほかの接続先での動きは何も変わりません。
 
-### 動画のチュートリアル {#video-tutorial}
+### 動画での説明 {#video-tutorial}
 
 [YouTube: https://www.youtube.com/embed/NoF-YajElIM](https://www.youtube.com/embed/NoF-YajElIM)
 
-### 共通の設定の型 {#the-universal-config-pattern}
+### すべてに共通する設定の形 {#the-universal-config-pattern}
 
-Hermes のモデルの枠 — 補助的な仕事、圧縮、フォールバック — は、すべて同じ 3 つのつまみを使います。
+Hermes のモデルの枠は — 補助の作業も、圧縮も、予備も — すべて同じ3つの項目を使います。
 
-| キー | 役割 | デフォルト |
+| 項目 | 何を決めるか | 初期値 |
 |-----|-------------|---------|
-| `provider` | 認証と経路に使うプロバイダー | `"auto"` |
-| `model` | 要求するモデル | プロバイダーのデフォルト |
-| `base_url` | OpenAI 互換の独自エンドポイント（プロバイダーの指定より優先） | 未設定 |
+| `provider` | 認証と振り分けにどのプロバイダーを使うか | `"auto"` |
+| `model` | どのモデルを求めるか | そのプロバイダーの既定 |
+| `base_url` | 独自の OpenAI 互換の接続先（プロバイダーの指定より優先されます） | 未設定 |
 
-補助的な仕事のブロックは、さらに `reasoning_effort` のつまみを受け付けます。
+補助の作業のまとまりでは、さらに `reasoning_effort` の項目も使えます。
 
-| キー | 役割 | デフォルト |
+| 項目 | 何を決めるか | 初期値 |
 |-----|-------------|---------|
-| `reasoning_effort` | その仕事の LLM 呼び出しでの思考の深さ: `none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max`、`ultra` | 未設定（プロバイダーのデフォルト） |
+| `reasoning_effort` | その作業の LLM の呼び出しで、どこまで考えさせるか: `none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max`、`ultra` | 未設定（プロバイダーの既定） |
 
-これは全体設定である `agent.reasoning_effort` の、仕事ごとの相棒です。主要なモデルが高価な推論モデルのとき、圧縮を `low` で、画像処理を `none` で走らせれば、会話そのものの振る舞いには触れずに脇の仕事の待ち時間と費用を削れます。すべての補助的な仕事のブロック（`vision`、`web_extract`、`compression`、`title_generation`、`curator`、`background_review` など）で、3 つの通信方式（chat completions、Codex Responses、Anthropic Messages）すべてに効きます。同じ仕事に `extra_body.reasoning` を明示した場合は、この簡易な書き方より優先されます。
+これは全体に効く `agent.reasoning_effort` の、作業ごとの対になるものです。主のモデルが高価な推論のモデルのとき、圧縮を `low` で、画像の読み取りを `none` で走らせれば、ふだんのチャットの動きを変えずに、脇の作業の待ち時間と費用を減らせます。これはどの補助の作業のまとまり（`vision`、`compression`、`title_generation`、`curator`、`background_review` など）でも、3つある補助の通信の形すべて（chat completions、Codex Responses、Anthropic Messages）で効きます。同じ作業に `extra_body.reasoning` をはっきり書いた場合は、そちらが勝ちます。
 
-MoA だけは例外です。Mixture-of-Agents の思考の深さは、`moa_reference` や `moa_aggregator` の補助のブロックではなく、MoA のプリセットの中で**枠ごとに**設定します（`moa.presets.<name>.reference_models[].reasoning_effort` / `aggregator.reasoning_effort`）。[Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/) を参照してください。
+MoA だけは例外です。Mixture-of-Agents でどこまで考えさせるかは、`moa_reference` や `moa_aggregator` の補助のまとまりではなく、MoA の設定の**枠ごと**に決めます（`moa.presets.<name>.reference_models[].reasoning_effort` / `aggregator.reasoning_effort`） — [Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/)を参照してください。
 
 ```yaml
 auxiliary:
@@ -1238,23 +1239,23 @@ auxiliary:
     reasoning_effort: "none"   # disable thinking for image description
 ```
 
-`base_url` を設定すると、Hermes はプロバイダーの指定を無視してそのエンドポイントを直接呼びます（認証には `api_key` か `OPENAI_API_KEY` を使います）。`provider` だけを設定した場合は、そのプロバイダーに組み込まれた認証とベース URL を使います。
+`base_url` を設定すると、Hermes はプロバイダーの指定を無視して、その接続先を直接呼びます（認証には `api_key` か `OPENAI_API_KEY` を使います）。`provider` だけを設定した場合は、そのプロバイダーに組み込まれた認証とベース URL を使います。
 
-補助的な仕事で使えるプロバイダーは、`auto`、`main`、それに [プロバイダーの一覧](/hermes/docs/reference/environment-variables/) にあるものすべてです。`openrouter`、`nous`、`openai-codex`、`copilot`、`copilot-acp`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`opencode-free`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry`、あるいは `providers:` の辞書に自分で名前を付けたもの（たとえば `provider: "beans"`）です。
+補助の作業で使えるプロバイダーは、`auto`、`main` に加えて、[プロバイダーの一覧](/hermes/docs/reference/environment-variables/)にあるすべてです — `openrouter`、`nous`、`openai-codex`、`copilot`、`copilot-acp`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`opencode-free`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry` — そして自分の `providers:` の辞書に名前を付けて書いたものも使えます（たとえば `provider: "beans"`）。
 
 :::tip MiniMax の OAuth
-`minimax-oauth` は、ブラウザーでの OAuth によりログインします（API キーは要りません）。`hermes model` を実行して **MiniMax (OAuth)** を選ぶと認証できます。補助的な仕事には自動的に `MiniMax-M2.7-highspeed` が使われます。[MiniMax OAuth guide](/hermes/docs/guides/minimax-oauth/) を参照してください。
+`minimax-oauth` は、ブラウザでの OAuth によってログインします（API キーは要りません）。`hermes model` を実行して **MiniMax (OAuth)** を選んで認証してください。補助の作業では自動的に `MiniMax-M2.7-highspeed` が使われます。[MiniMax の OAuth の案内](/hermes/docs/guides/minimax-oauth/)を参照してください。
 :::
 
 :::tip xAI Grok の OAuth
-`xai-oauth` は、SuperGrok や X Premium+ の契約者向けに、ブラウザーでの OAuth によりログインします（API キーは要りません）。`hermes model` を実行して **xAI Grok OAuth (SuperGrok / Premium+)** を選ぶと認証できます。同じ OAuth のトークンが、xAI へ直接つながるすべての場面（会話、補助的な仕事、TTS、画像生成、動画生成、文字起こし）で使い回されます。[xAI Grok OAuth guide](/hermes/docs/guides/xai-grok-oauth/) を参照してください。Hermes をリモートのホストで動かしている場合は、[OAuth over SSH / Remote Hosts](/hermes/docs/guides/oauth-over-ssh/) も参照してください。
+`xai-oauth` は、SuperGrok と X Premium+ の契約者向けに、ブラウザでの OAuth によってログインします（API キーは要りません）。`hermes model` を実行して **xAI Grok OAuth (SuperGrok / Premium+)** を選んで認証してください。同じ OAuth のトークンが、xAI へ直接つなぐすべての場面（チャット、補助の作業、読み上げ、画像の生成、動画の生成、文字起こし）で使い回されます。[xAI Grok の OAuth の案内](/hermes/docs/guides/xai-grok-oauth/)を参照してください。Hermes がリモートのホストにあるなら [SSH やリモートのホスト越しの OAuth](/hermes/docs/guides/oauth-over-ssh/)も参照してください。
 :::
 
-:::warning `"main"` は補助的な仕事専用です
-`"main"` というプロバイダーの指定は「主要なエージェントが使っているプロバイダーをそのまま使う」という意味で、`auxiliary:`、`compression:`、そして主要なフォールバックの項目（`fallback_providers:` や従来の `fallback_model:`）の中でのみ有効です。最上位の `model.provider` の値としては**使えません**。OpenAI 互換の独自エンドポイントを使う場合は、`model:` の節で `provider: custom` にしてください。主要なモデルのプロバイダーの選択肢は [AI Providers](/hermes/docs/integrations/providers/) を参照してください。
+:::warning `"main"` は補助の作業だけのものです
+`"main"` というプロバイダーの指定は「主のエージェントが使っているものをそのまま使う」という意味で、`auxiliary:` と `compression:` の中、そして主の予備の項目（`fallback_providers:` や従来の `fallback_model:`）でだけ使えます。いちばん上の階層の `model.provider` の値としては**使えません**。独自の OpenAI 互換の接続先を使うなら、`model:` の節に `provider: custom` と書いてください。主のモデルのプロバイダーの選択肢は [AI のプロバイダー](/hermes/docs/integrations/providers/)を参照してください。
 :::
 
-### 補助モデルの設定の一覧 {#full-auxiliary-config-reference}
+### 補助の設定の一覧 {#full-auxiliary-config-reference}
 
 ```yaml
 auxiliary:
@@ -1271,14 +1272,6 @@ auxiliary:
                                # CPU-bound encode step so a video-frame fan-out can't saturate
                                # every core and starve the event loop; LLM calls stay fully
                                # concurrent. Minimum 1; values < 1 are ignored.
-
-  # Web page summarization + browser page text extraction
-  web_extract:
-    provider: "auto"
-    model: ""                  # e.g. "google/gemini-2.5-flash"
-    base_url: ""
-    api_key: ""
-    timeout: 360               # seconds (6min) — per-attempt LLM summarization
 
   # Dangerous command approval classifier
   approval:
@@ -1359,16 +1352,16 @@ auxiliary:
 ```
 
 :::tip
-補助的な仕事にはそれぞれ設定可能な `timeout`（秒）があります。デフォルトは vision が 120 秒、web_extract が 360 秒、approval が 30 秒、compression が 120 秒です。補助的な仕事に遅いローカルのモデルを使うなら、これらを長くしてください。vision には、HTTP で画像をダウンロードするための `download_timeout`（デフォルト 30 秒）も別にあります。回線が遅い場合や、自前で立てた画像サーバーを使う場合は長くしてください。
+補助の作業にはそれぞれ `timeout`（秒）を設定できます。初期値は、画像の読み取りが120秒、承認の判定が30秒、圧縮が120秒です。補助の作業に遅い手元のモデルを使うなら、これらを増やしてください。画像の読み取りには、HTTP で画像を取ってくるための `download_timeout`（初期値は30秒）も別にあります。回線が遅いときや、自分で立てた画像のサーバーを使うときは、こちらを増やしてください。
 :::
 
 :::info
-コンテキストの圧縮は、閾値のための独自の `compression:` ブロックと、モデルやプロバイダーの設定のための `auxiliary.compression:` ブロックを持ちます。前述の [コンテキストの圧縮](#context-compression) を参照してください。主要なフォールバックの連鎖には、最上位の `fallback_providers:` のリストを使います。[Fallback Providers](/hermes/docs/integrations/providers/#fallback-providers) を参照してください。3 つとも同じ provider / model / base_url の型に従います。
+文脈の圧縮には、しきい値のための `compression:` のまとまりと、モデルやプロバイダーの設定のための `auxiliary.compression:` のまとまりがあります — 上の [文脈の圧縮](#context-compression)を参照してください。主の予備の連なりは、いちばん上の階層の `fallback_providers:` の並びを使います — [予備のプロバイダー](/hermes/docs/integrations/providers/#fallback-providers)を参照してください。3つとも、provider / model / base_url という同じ形に従います。
 :::
 
-### 補助的な仕事ごとのフォールバックの連鎖 {#per-task-fallback-chain-for-auxiliary-tasks}
+### 補助の作業ごとの予備の連なり {#per-task-fallback-chain-for-auxiliary-tasks}
 
-補助的な仕事にはそれぞれ、任意で `fallback_chain` を定義できます。これは、主要な補助のプロバイダーがレート制限、接続の問題、支払いの制限で失敗したときに Hermes が順に試す、プロバイダーとモデルの組のリストです。
+補助の作業にはそれぞれ、`fallback_chain` を書けます。主の補助のプロバイダーが、回数の制限、つながらない、支払いの制限といった理由で失敗したときに、Hermes が試すプロバイダーとモデルの並びです。
 
 ```yaml
 auxiliary:
@@ -1382,26 +1375,26 @@ auxiliary:
         model: google/gemini-2.5-flash
 ```
 
-主要な補助のプロバイダー（`openrouter` / `openai/gpt-4o-mini`）がレート制限、接続のタイムアウト、支払いが必要というエラーを返すと、Hermes は `fallback_chain` を順にたどります。すでに失敗したプロバイダーと同じものは飛ばし、残りの項目を 1 つずつ、どれかが成功するか、連鎖を使い切るまで試します。すべてのフォールバックが失敗した場合は、最後の安全網として主要なエージェントのモデルに戻ります。
+主の補助のプロバイダー（`openrouter` の `openai/gpt-4o-mini`）が、回数の制限、接続の時間切れ、支払いが必要というエラーを返すと、Hermes は `fallback_chain` を順にたどります。すでに失敗したプロバイダーと同じものは飛ばし、残りを1つずつ試して、どれかが成功するか、並びを使い切るまで続けます。すべての予備が失敗した場合、Hermes は最後の受け皿として主のエージェントのモデルに戻ります。
 
-各項目は、補助的な仕事の設定と同じ 3 つのつまみに対応します。
+各項目は、補助の作業の設定と同じ3つの項目を使えます。
 
-| キー | 説明 |
+| 項目 | 説明 |
 |-----|-------------|
-| `provider` | プロバイダー名（`nous`、`openrouter`、`anthropic`、`gemini`、`main` など） |
+| `provider` | プロバイダーの名前（`nous`、`openrouter`、`anthropic`、`gemini`、`main` など） |
 | `model` | そのプロバイダーでのモデル名 |
-| `base_url` | （任意）OpenAI 互換の独自エンドポイント |
+| `base_url` | （任意）独自の OpenAI 互換の接続先 |
 
-`fallback_chain` は、`compression`、`vision`、`web_extract`、`approval`、`skills_hub`、`mcp` など、どの補助的な仕事でも使えます。
+`fallback_chain` は、どの補助の作業でも使えます — `compression`、`vision`、`approval`、`skills_hub`、`mcp` などです。
 
-### 補助的な仕事の同時実行を絞る {#limiting-auxiliary-concurrency}
+### 補助の作業の同時実行を抑える {#limiting-auxiliary-concurrency}
 
-`max_concurrency` は、`compression` や `title_generation` のような補助的な仕事について、プロセス全体で同時に走る LLM の呼び出しの数に上限を設けます。`auxiliary.vision.max_concurrency` は対象外です。こちらは LLM のリクエストではなく、画像の変換やサイズ調整という CPU を使う処理の並列数だけを制御しているからです。これがとくに役立つのは次の場合です。
+`max_concurrency` は、`compression` や `title_generation` といった補助の作業について、プロセス全体で同時に走る LLM の呼び出しの数を抑えます。`auxiliary.vision.max_concurrency` は例外です。あちらはすでに、LLM への要求ではなく、画像の変換や縮小という CPU を使う処理の数だけを決めているからです。これが役に立つのは次のような場合です。
 
-- 多くのセッションが同時に裏の仕事を始めうるとき（Discord や Telegram のチャンネル、複数のターミナル）
-- プロバイダーがレート制限中だったり障害中だったりして、再試行が一気に押し寄せると悪化するとき
+- 多くのセッションが同時に裏の作業を始めうるとき（Discord や Telegram のチャンネル、複数のターミナル）
+- プロバイダーが回数を制限していたり障害中だったりして、やり直しが状況を悪くしそうなとき
 
-デフォルトは無制限です。安全のための典型的な上限は `2` です。
+初期値は上限なしです。安全のための値としては `2` あたりがよくあります。
 
 ```yaml
 auxiliary:
@@ -1411,11 +1404,11 @@ auxiliary:
     max_concurrency: 2
 ```
 
-この数の管理は再試行やフォールバックを含む呼び出し全体を包むので、1 回の遅い呼び出しが上限に対して二重に数えられることはありません。
+この仕組みは、やり直しや予備への切り替えを含めた呼び出し全体を包むので、1回の遅い呼び出しが上限に対して二重に数えられることはありません。
 
-### 補助的な仕事での OpenRouter の経路と Pareto Code {#openrouter-routing-pareto-code-for-auxiliary-tasks}
+### 補助の作業での OpenRouter の振り分けと Pareto Code {#openrouter-routing-pareto-code-for-auxiliary-tasks}
 
-補助的な仕事が OpenRouter に解決されるとき（明示した場合でも、主要なエージェントが OpenRouter を使っていて `provider: "main"` になった場合でも）、主要なエージェントの `provider_routing` や `openrouter.min_coding_score` の設定は**引き継がれません**。設計上、補助的な仕事はそれぞれ独立しています。特定の補助的な仕事に OpenRouter のプロバイダーの好みを設定したり、[Pareto Code のルーター](/hermes/docs/integrations/providers/#openrouter-pareto-code-router) を使ったりするには、仕事ごとに `extra_body` で指定してください。
+補助の作業が OpenRouter に行き着くとき（はっきり指定した場合でも、主のエージェントが OpenRouter で `provider: "main"` を使っている場合でも）、主のエージェントの `provider_routing` と `openrouter.min_coding_score` の設定は**引き継がれません** — 補助の作業はそれぞれ独立している、という設計です。特定の補助の作業について OpenRouter のプロバイダーの好みを決めたり、[Pareto Code の振り分け](/hermes/docs/integrations/providers/#openrouter-pareto-code-router)を使ったりするには、作業ごとに `extra_body` で設定してください。
 
 ```yaml
 auxiliary:
@@ -1433,11 +1426,11 @@ auxiliary:
           min_coding_score: 0.5            # 0.0–1.0; higher = stronger coders
 ```
 
-書き方は、OpenRouter が chat completions のリクエストの本文で受け付ける形をそのまま写したものです。Hermes は `extra_body` を丸ごとそのまま転送するので、[openrouter.ai/docs](https://openrouter.ai/docs) に載っているほかのリクエスト本文の項目も同じように使えます。
+この形は、OpenRouter が chat completions のリクエストの本体で受け付けるものと同じです。Hermes は `extra_body` の全体をそのまま渡すので、[openrouter.ai/docs](https://openrouter.ai/docs) に書かれているほかのリクエストの項目も、同じように使えます。
 
-### 画像処理のモデルを変える {#changing-the-vision-model}
+### 画像の読み取りのモデルを変える {#changing-the-vision-model}
 
-画像の解析に Gemini Flash ではなく GPT-4o を使うには、次のようにします。
+画像の読み取りに Gemini Flash ではなく GPT-4o を使うには、次のようにします。
 
 ```yaml
 auxiliary:
@@ -1445,7 +1438,7 @@ auxiliary:
     model: "openai/gpt-4o"
 ```
 
-環境変数でも指定できます（`~/.hermes/.env` に書きます）。
+環境変数（`~/.hermes/.env` の中）でも指定できます。
 
 ```bash
 AUXILIARY_VISION_MODEL=openai/gpt-4o
@@ -1453,19 +1446,19 @@ AUXILIARY_VISION_MODEL=openai/gpt-4o
 
 ### プロバイダーの選択肢 {#provider-options}
 
-ここに挙げる選択肢は、**補助的な仕事の設定**（`auxiliary:`、`compression:`）と主要なフォールバックの項目（`fallback_providers:` や従来の `fallback_model:`）に効くもので、主要な `model.provider` の設定には使えません。
+ここに挙げる選択肢は、**補助の作業の設定**（`auxiliary:`、`compression:`）と、主の予備の項目（`fallback_providers:` や従来の `fallback_model:`）に効きます。主の `model.provider` の設定には効きません。
 
 | プロバイダー | 説明 | 必要なもの |
 |----------|-------------|-------------|
-| `"auto"` | 使える中で最良のもの（デフォルト）。画像処理は OpenRouter → Nous → Codex の順に試します。 | — |
-| `"openrouter"` | OpenRouter を指定します。どのモデル（Gemini、GPT-4o、Claude など）へも回せます | `OPENROUTER_API_KEY` |
-| `"nous"` | Nous Portal を指定します | `hermes auth` |
-| `"codex"` | Codex の OAuth（ChatGPT のアカウント）を指定します。画像処理に対応します（gpt-5.3-codex）。 | `hermes model` → ChatGPT または Codex Subscription |
-| `"minimax-oauth"` | MiniMax の OAuth を指定します（ブラウザーでログイン、API キー不要）。補助的な仕事には MiniMax-M2.7-highspeed を使います。 | `hermes model` → MiniMax (OAuth) |
-| `"xai-oauth"` | xAI Grok の OAuth を指定します（SuperGrok や X Premium+ の契約者向けにブラウザーでログイン、API キー不要）。同じ OAuth のトークンが会話、TTS、画像、動画、文字起こしをまかないます。 | `hermes model` → xAI Grok OAuth (SuperGrok / Premium+) |
-| `"main"` | いま使っている独自・主要のエンドポイントを使います。`OPENAI_BASE_URL` と `OPENAI_API_KEY` から来ることも、`hermes model` や `config.yaml` に保存された独自エンドポイントから来ることもあります。OpenAI、ローカルのモデル、OpenAI 互換の API のいずれでも動きます。**補助的な仕事専用で、`model.provider` には使えません。** | 独自エンドポイントの認証情報とベース URL |
+| `"auto"` | 使えるいちばん良いもの（初期値）。画像の読み取りは OpenRouter → Nous → Codex の順に試します。 | — |
+| `"openrouter"` | OpenRouter を使います — どのモデルへも振り分けられます（Gemini、GPT-4o、Claude など） | `OPENROUTER_API_KEY` |
+| `"nous"` | Nous Portal を使います | `hermes auth` |
+| `"codex"` | Codex の OAuth（ChatGPT のアカウント）を使います。画像の読み取りにも対応します（gpt-5.3-codex）。 | `hermes model` → ChatGPT または Codex の契約 |
+| `"minimax-oauth"` | MiniMax の OAuth を使います（ブラウザでログイン、API キー不要）。補助の作業には MiniMax-M2.7-highspeed を使います。 | `hermes model` → MiniMax (OAuth) |
+| `"xai-oauth"` | xAI Grok の OAuth を使います（SuperGrok や X Premium+ の契約者向けのブラウザでのログイン、API キー不要）。同じ OAuth のトークンが、チャット、読み上げ、画像、動画、文字起こしをまかないます。 | `hermes model` → xAI Grok OAuth (SuperGrok / Premium+) |
+| `"main"` | いま使っている独自の接続先や主の接続先を使います。これは `OPENAI_BASE_URL` と `OPENAI_API_KEY` から来ることも、`hermes model` や `config.yaml` に保存した独自の接続先から来ることもあります。OpenAI でも、手元のモデルでも、OpenAI 互換の API なら何でも使えます。**補助の作業だけのもので、`model.provider` には使えません。** | 独自の接続先の認証情報とベース URL |
 
-主要なプロバイダーの一覧にある、API キー方式の直接のプロバイダーもここで使えます。既定のルーターを迂回して脇の仕事をさせたいときに便利です。たとえば `GMI_API_KEY` を設定すれば `gmi` が、`FIREWORKS_API_KEY` を設定すれば `fireworks` が使えます。
+主のプロバイダーの一覧にある、API キーを直接使うプロバイダーもここで使えます。脇の作業をふだんの振り分けの外へ出したいときに便利です。たとえば `GMI_API_KEY` を設定していれば `gmi` が使えますし、`FIREWORKS_API_KEY` を設定していれば `fireworks` が使えます。
 
 ```yaml
 auxiliary:
@@ -1474,11 +1467,11 @@ auxiliary:
     model: "anthropic/claude-opus-4.6"
 ```
 
-GMI を補助に使うときは、GMI の `/v1/models` エンドポイントが返す正確なモデル ID を指定してください。Fireworks のモデル ID は、`accounts/fireworks/models/glm-5p2` のように、そのプロバイダー本来のスラッシュ区切りの形を使います。
+GMI で補助の作業を振り分けるときは、GMI の `/v1/models` の接続先が返すモデル ID をそのまま使ってください。Fireworks のモデル ID は、そのサービス本来のスラッシュ区切りの形です。たとえば `accounts/fireworks/models/glm-5p2` のようになります。
 
 ### よくある構成 {#common-setups}
 
-**独自のエンドポイントを直接使う**（ローカルや自前でホストする API には `provider: "main"` より分かりやすい書き方です）:
+**独自の接続先を直接使う**（手元や自分で立てた API なら、`provider: "main"` よりこちらのほうが分かりやすいです）:
 ```yaml
 auxiliary:
   vision:
@@ -1487,9 +1480,9 @@ auxiliary:
     model: "qwen2.5-vl"
 ```
 
-`base_url` は `provider` より優先されるので、補助的な仕事を特定のエンドポイントへ向けるいちばん明確な方法です。エンドポイントを直接上書きした場合、Hermes は設定された `api_key` を使い、なければ `OPENAI_API_KEY` に頼ります。その独自エンドポイントに `OPENROUTER_API_KEY` を使い回すことはありません。
+`base_url` は `provider` より優先されるので、補助の作業を特定の接続先へ向けるいちばんはっきりしたやり方です。接続先を直接上書きするとき、Hermes は設定された `api_key` を使い、なければ `OPENAI_API_KEY` に落ちます。その独自の接続先に `OPENROUTER_API_KEY` を使い回すことはありません。
 
-**画像処理に OpenAI の API キーを使う:**
+**画像の読み取りに OpenAI の API キーを使う:**
 ```yaml
 # In ~/.hermes/.env:
 # OPENAI_BASE_URL=https://api.openai.com/v1
@@ -1501,7 +1494,7 @@ auxiliary:
     model: "gpt-4o"       # or "gpt-4o-mini" for cheaper
 ```
 
-**画像処理に OpenRouter を使う**（どのモデルへも回せます）:
+**画像の読み取りに OpenRouter を使う**（どのモデルへも振り分けられます）:
 ```yaml
 auxiliary:
   vision:
@@ -1509,7 +1502,7 @@ auxiliary:
     model: "openai/gpt-4o"      # or "google/gemini-2.5-flash", etc.
 ```
 
-**Codex の OAuth を使う**（ChatGPT の Pro / Plus のアカウント。API キーは不要）:
+**Codex の OAuth を使う**（ChatGPT の Pro / Plus のアカウント — API キーは要りません）:
 ```yaml
 auxiliary:
   vision:
@@ -1517,16 +1510,16 @@ auxiliary:
     # model defaults to gpt-5.3-codex (supports vision)
 ```
 
-**MiniMax の OAuth を使う**（ブラウザーでログイン、API キーは不要）:
+**MiniMax の OAuth を使う**（ブラウザでログイン、API キーは要りません）:
 ```yaml
 model:
   default: MiniMax-M2.7
   provider: minimax-oauth
   base_url: https://api.minimax.io/anthropic
 ```
-`hermes model` を実行して **MiniMax (OAuth)** を選ぶと、ログインしてこの設定が自動で書かれます。中国リージョンの場合、ベース URL は `https://api.minimaxi.com/anthropic` になります。手順の全体は [MiniMax OAuth guide](/hermes/docs/guides/minimax-oauth/) を参照してください。
+`hermes model` を実行して **MiniMax (OAuth)** を選べば、ログインしてこれが自動で設定されます。中国のリージョンでは、ベース URL は `https://api.minimaxi.com/anthropic` になります。手順の全体は [MiniMax の OAuth の案内](/hermes/docs/guides/minimax-oauth/)を参照してください。
 
-**ローカルや自前でホストするモデルを使う:**
+**手元や自分で立てたモデルを使う:**
 ```yaml
 auxiliary:
   vision:
@@ -1534,71 +1527,66 @@ auxiliary:
     model: "my-local-model"
 ```
 
-`provider: "main"` は、Hermes が普段の会話で使っているプロバイダーをそのまま使います。自分で名前を付けた独自のプロバイダー（たとえば `beans`）でも、`openrouter` のような組み込みのプロバイダーでも、従来の `OPENAI_BASE_URL` のエンドポイントでも構いません。
+`provider: "main"` は、Hermes がふだんのチャットで使っているプロバイダーをそのまま使います。名前を付けた独自のプロバイダー（たとえば `beans`）でも、`openrouter` のような組み込みのプロバイダーでも、従来の `OPENAI_BASE_URL` の接続先でも同じです。
 
 :::tip
-主要なモデルのプロバイダーとして Codex の OAuth を使っているなら、画像処理は自動的に動きます。追加の設定は要りません。Codex は画像処理の自動判別の連鎖に含まれています。
+主のモデルのプロバイダーに Codex の OAuth を使っているなら、画像の読み取りは自動で動きます — 追加の設定は要りません。Codex は、画像の読み取りを自動で選ぶときの候補に入っています。
 :::
 
 :::warning
-**画像処理にはマルチモーダルのモデルが必要です。** `provider: "main"` にする場合は、そのエンドポイントがマルチモーダル／画像に対応していることを確かめてください。そうでないと画像の解析は失敗します。
+**画像の読み取りには、複数の形式を扱えるモデルが必要です。** `provider: "main"` にするなら、その接続先が画像を扱えることを確かめてください。そうでないと画像の読み取りは失敗します。
 :::
 
 ### 環境変数（従来の方法） {#environment-variables-legacy}
 
-補助モデルは環境変数でも設定できます。ただし `config.yaml` のほうが望ましい方法です。管理しやすく、`base_url` や `api_key` を含むすべての選択肢に対応しています。
+補助のモデルは環境変数でも設定できます。ただし `config.yaml` のほうがおすすめです — 管理しやすく、`base_url` や `api_key` を含むすべての項目を扱えます。
 
 | 設定 | 環境変数 |
 |---------|---------------------|
-| 画像処理のプロバイダー | `AUXILIARY_VISION_PROVIDER` |
-| 画像処理のモデル | `AUXILIARY_VISION_MODEL` |
-| 画像処理のエンドポイント | `AUXILIARY_VISION_BASE_URL` |
-| 画像処理の API キー | `AUXILIARY_VISION_API_KEY` |
-| Web の抽出のプロバイダー | `AUXILIARY_WEB_EXTRACT_PROVIDER` |
-| Web の抽出のモデル | `AUXILIARY_WEB_EXTRACT_MODEL` |
-| Web の抽出のエンドポイント | `AUXILIARY_WEB_EXTRACT_BASE_URL` |
-| Web の抽出の API キー | `AUXILIARY_WEB_EXTRACT_API_KEY` |
+| 画像の読み取りのプロバイダー | `AUXILIARY_VISION_PROVIDER` |
+| 画像の読み取りのモデル | `AUXILIARY_VISION_MODEL` |
+| 画像の読み取りの接続先 | `AUXILIARY_VISION_BASE_URL` |
+| 画像の読み取りの API キー | `AUXILIARY_VISION_API_KEY` |
 
-圧縮とフォールバックのモデルの設定は、config.yaml でしか行えません。
+圧縮と予備のモデルの設定は config.yaml だけのものです。（`AUXILIARY_WEB_EXTRACT_*` の変数はもう使われません — ウェブの抽出は補助の LLM を使わなくなりました。）
 
 :::tip
-いまの補助モデルの設定を見るには `hermes config` を実行してください。上書きは、デフォルトと異なるときだけ表示されます。
+いまの補助のモデルの設定は `hermes config` で見られます。上書きは、初期値と違うときにだけ表示されます。
 :::
 
-## 推論の深さ {#reasoning-effort}
+## どこまで考えさせるか {#reasoning-effort}
 
-モデルが返答する前にどれだけ「考える」かを調整します。
+答える前にモデルがどれだけ「考える」かを決めます。
 
 ```yaml
 agent:
   reasoning_effort: ""   # empty = medium. Options: none, minimal, low, medium, high, xhigh, max, ultra
 ```
 
-未設定（デフォルト）の場合、推論の深さは "medium" になります。たいていの仕事にちょうどよい、釣り合いの取れた段階です。値を設定するとそれが優先されます。深くするほど複雑な仕事での結果は良くなりますが、トークンと待ち時間が増えます。
+設定しないとき（初期状態）は「medium」になります。ほとんどの作業にちょうどよい、釣り合いの取れた段階です。値を書くとそれが優先されます — 深く考えさせるほど、込み入った作業での結果はよくなりますが、トークンと待ち時間が増えます。
 
-:::note OpenRouter 経由の適応型思考モデル（Claude 4.6 以降、Fable / Mythos 系）
-これらのモデルは*適応型*の思考を使い、通常の `reasoning.effort` の項目を
-受け付けません。OpenRouter はこれらのモデルに対してその項目を無視します。Hermes は
-あなたが指定した `reasoning_effort` を、代わりに OpenRouter の `verbosity`
-パラメーター（Anthropic の `output_config.effort` に対応します）へ黙って回すので、
-選んだモデルが対応する段階の範囲で、同じつまみがそのまま働きます。`none`（または未設定）の
-場合は、モデル自身の適応型のデフォルトに任せます。
-ネイティブの Anthropic のプロバイダーは、もともと深さを直接制御しているので影響を受けません。
+:::note OpenRouter 経由の、自分で考える深さを決めるモデル（Claude 4.6 以降、Fable / Mythos の系統）
+これらのモデルは*自分で*考える深さを決めるので、ふつうの `reasoning.effort` の
+項目を受け付けません — OpenRouter もこれらのモデルについては無視します。Hermes は
+`reasoning_effort` を、代わりに OpenRouter の `verbosity` の項目へ黙って回します（これは
+Anthropic の `output_config.effort` に対応します）。ですから同じ設定が、選んだモデルが
+対応する段階のまま使い続けられます。`none`（または未設定）にすると、そのモデル自身の
+判断に任せます。
+Anthropic 本来のプロバイダーは、もともと深さを直接決めているので影響を受けません。
 :::
 
-:::note OpenRouter のモデルと対応する深さの段階
-OpenRouter 経由のほかのモデルについて、Hermes は最新のモデルの一覧にある
-推論のメタデータ（`supported_parameters` と、モデルごとの
-`reasoning.supported_efforts`）を読み、推論の指定をそもそも送るかどうかを決め、
-指定された深さを、その経路が実際に対応する最も近い段階へ丸めます（常に下方向です。
-たとえば `high` までしかない経路では `ultra` は `high` になります。黙って上げることは
-ありません）。推論に対応した新しいベンダーは、Hermes の更新を待たずに自動で使えます。
-一覧に届かないときや、モデルが載っていないときは、Hermes は
-組み込みのモデル系統のリストに頼り、
-指定された深さをそのまま渡します。
+:::note OpenRouter のモデルと、対応している深さの段階
+OpenRouter を通るほかのモデルについて、Hermes はモデルの一覧が持つ
+考える深さの情報（`supported_parameters` と、モデルごとの
+`reasoning.supported_efforts`）を読み、そもそも深さの指定を送るかどうかを決め、
+求めた深さを、その経路が実際に対応するいちばん近い段階に収めます
+（必ず下げる方向です — たとえば `high` までしか対応しない経路では `ultra` は
+`high` になり、黙って上がることはありません）。考える深さに対応した新しい提供元も、
+Hermes の更新を待たずに自動で使えます。一覧に届かないときや、そのモデルが載っていない
+ときは、Hermes は組み込みのモデルの系統の表に落ち、指定した深さをそのまま渡します。
 :::
 
-推論の深さは、`/reasoning` コマンドで実行中にも変えられます。
+考える深さは、`/reasoning` のコマンドで動かしたまま変えることもできます。
 
 ```
 /reasoning                # Show current effort level and display state
@@ -1609,12 +1597,12 @@ OpenRouter 経由のほかのモデルについて、Hermes は最新のモデ�
 /reasoning hide           # Hide model thinking
 ```
 
-深さの変更はデフォルトではそのセッションだけに効きます。`--global` を付けると、
-新しい段階が `agent.reasoning_effort` のデフォルトとして保存されます。
+深さの変更は、初期状態ではそのセッションの中だけのものです。`--global` を付けると、
+その段階が `agent.reasoning_effort` の既定として保存されます。
 
-#### モデルごとの推論の上書き {#per-model-reasoning-overrides}
+#### モデルごとの深さの上書き {#per-model-reasoning-overrides}
 
-モデルごとに違う推論の深さを設定できます。複雑なモデルには深い推論を、速いモデルには中くらいを、といった使い分けに便利です。
+モデルごとに違う深さを設定できます。込み入ったモデルには深く考えさせ、速いモデルは中くらいにしたいときに便利です。
 
 ```yaml
 agent:
@@ -1625,91 +1613,91 @@ agent:
     "claude-sonnet-4.6": "high"    # bare model name also works
 ```
 
-キーの照合は**表記の揺れに寛容**で、常識的な書き方ならどれでも一致します。
-- `claude-opus-4.5`、`claude-opus-4-5`、`claude-opus.4.5`（ドットとハイフンは互換です）
-- `anthropic/claude-opus-4.5`、`openrouter/anthropic/claude-opus-4.5`（プロバイダーの接頭辞は任意です）
-- 完全に一致するものが、揺れたものより優先されます
+書き方の**ゆれは吸収されます** — 無理のない書き方ならどれでも当てはまります。
+- `claude-opus-4.5`、`claude-opus-4-5`、`claude-opus.4.5`（ドットとハイフンは同じものとして扱われます）
+- `anthropic/claude-opus-4.5`、`openrouter/anthropic/claude-opus-4.5`（プロバイダーの接頭辞は省けます）
+- ぴったり一致するものが、ゆれた書き方より優先されます
 
 :::note
-`reasoning_overrides` のキーは `hermes config set` では設定できません。YAML のファイルを直接編集してください。モデル名にはドットが含まれることが多く（`claude-opus-4.5` など）、CLI のドット区切りのキーの書き方とぶつかるためです。
+`reasoning_overrides` の項目に `hermes config set` は使えません — YAML のファイルを直接直してください。モデル名にはよくドットが含まれるので（たとえば `claude-opus-4.5`）、CLI のドット区切りの書き方とぶつかるためです。
 :::
 
-**解決の優先順位:**
+**決まる順番:**
 
-1. セッション単位の `/reasoning --session` による上書き（ゲートウェイのみ）
-2. `agent.reasoning_overrides` によるモデルごとの上書き（表記の揺れに寛容）
+1. セッションの中だけの `/reasoning --session` の上書き（ゲートウェイのみ）
+2. `agent.reasoning_overrides` のモデルごとの上書き（書き方のゆれを吸収します）
 3. 全体の `agent.reasoning_effort`
-4. プロバイダーのデフォルト
+4. プロバイダーの既定
 
-この上書きはどこでも自動的に効きます。CLI の起動時、メッセージ用のゲートウェイ、デスクトップと TUI、cron のジョブ、セッションの途中での `/model` による切り替え、フォールバックのモデルの発動時です。
+この上書きは、どこでも自動的に効きます。CLI の起動時、メッセージのゲートウェイ、デスクトップと TUI、cron のジョブ、`/model` によるセッション途中の切り替え、予備のモデルへの切り替えのいずれでもです。
 
-## ツールを使わせる仕組み {#tool-use-enforcement}
+## ツールを使わせる働きかけ {#tool-use-enforcement}
 
-モデルによっては、ツールを呼ぶ代わりに、やろうとしていることを文章で書いてしまうことがあります（実際にターミナルを呼ぶ代わりに「テストを実行します……」と書く、といった具合です）。この仕組みは、実際にツールを呼ぶようモデルを引き戻す案内をシステムプロンプトに差し込みます。
+モデルによっては、ツールを呼ばずに、やろうとしていることを文章で書いてしまうことがあります（実際にターミナルを呼ばずに「テストを走らせます……」と言うなど）。ツールを使わせる働きかけは、実際にツールを呼ぶよう導く案内をシステムのプロンプトへ差し込みます。
 
 ```yaml
 agent:
   tool_use_enforcement: "auto"   # "auto" | true | false | ["model-substring", ...]
 ```
 
-| 値 | 動作 |
+| 値 | 動き |
 |-------|----------|
-| `"auto"`（デフォルト） | 次に一致するモデルで有効になります: `gpt`、`codex`、`gemini`、`gemma`、`grok`、`glm`、`qwen`、`deepseek`。それ以外（Claude など）では無効です。 |
-| `true` | モデルに関係なく常に有効です。いま使っているモデルが、動くのではなく動きを説明しているように感じるときに役立ちます。 |
-| `false` | モデルに関係なく常に無効です。 |
-| `["gpt", "codex", "qwen", "llama"]` | モデル名に、並べた文字列のどれかが含まれるときだけ有効になります（大文字小文字は区別しません）。 |
+| `"auto"`（初期値） | 名前に `gpt`、`codex`、`gemini`、`gemma`、`grok`、`glm`、`qwen`、`deepseek` を含むモデルで有効になります。それ以外（たとえば Claude）では無効です。 |
+| `true` | モデルにかかわらず、常に有効です。いま使っているモデルが、実行せずに説明ばかりしていると感じたときに便利です。 |
+| `false` | モデルにかかわらず、常に無効です。 |
+| `["gpt", "codex", "qwen", "llama"]` | モデル名に、並べた文字列のどれかが含まれるときだけ有効になります（大文字と小文字は区別しません）。 |
 
 ### 何が差し込まれるか {#what-it-injects}
 
-有効なとき、2 つの層の案内がシステムプロンプトに足されることがあります。
+有効にすると、システムのプロンプトに2段階の案内が足されることがあります。
 
-1. **一般的なツール使用の徹底**（一致したすべてのモデル）— 意図を説明する代わりにすぐツールを呼ぶこと、仕事が終わるまで手を動かし続けること、これからやると約束してやり取りを終えないことを、モデルに指示します。
+1. **ツールを使わせる一般的な案内**（当てはまるすべてのモデル） — やろうとしていることを述べるのではなく、すぐツールを呼ぶこと、作業が終わるまで続けること、これからやりますという約束でやり取りを終えないことを伝えます。
 
-2. **Google 向けの運用の案内**（Gemini と Gemma のモデルのみ）— 簡潔さ、絶対パス、ツールの並列呼び出し、編集前に確かめる型についての案内です。
+2. **Google 向けの運用の案内**（Gemini と Gemma のモデルのみ） — 簡潔に書くこと、絶対パスを使うこと、ツールを並行して呼ぶこと、直す前に確かめることを伝えます。
 
-これらはユーザーからは見えず、システムプロンプトにだけ影響します。Claude のように、もともとツールを確実に使うモデルにはこの案内は要りません。だから `"auto"` はそれらを除いています。
+これらは利用者からは見えず、システムのプロンプトにだけ効きます。もともとツールを確実に使うモデル（Claude など）にこの案内は要らないので、`"auto"` はそれらを外しています。
 
-### 有効にすべきとき {#when-to-turn-it-on}
+### いつ有効にするか {#when-to-turn-it-on}
 
-デフォルトの自動判別のリストにないモデルを使っていて、実際にやる代わりに*やるつもりのこと*をしばしば書いてしまうと感じたら、`tool_use_enforcement: true` にするか、そのモデルの文字列をリストに足してください。
+初期の自動の一覧に入っていないモデルを使っていて、実行するかわりに*やるつもり*を書いてばかりいると感じたら、`tool_use_enforcement: true` にするか、そのモデルの名前の一部を並びに足してください。
 
 ```yaml
 agent:
   tool_use_enforcement: ["gpt", "codex", "gemini", "grok", "my-custom-model"]
 ```
 
-## 実行の規律の案内 {#execution-discipline-guidance}
+## 実行の規律についての案内 {#execution-discipline-guidance}
 
-ツールを使わせる仕組みとは別に、Hermes は評価の記録から観察された、いくつかの共通のつまずき方を持つモデル系統に対して、**実行の規律**のブロックを差し込みます。つまずき方とは、計算をコードではなく文章で行う、外部へ書き込んだあとの読み戻しによる確認を飛ばす、形式の崩れた識別子を「直して」しまう、件数が合っていないのに揃っていると言い張る、受け入れ条件をすべて確かめないまま「完了」と宣言する、といったものです。
+ツールを使わせる働きかけとは別に、Hermes は**実行の規律**についてのまとまりを差し込みます。対象は、評価の記録の中で同じような失敗が見られたモデルの系統です。計算をコードではなく文章で行う、外部へ書き込んだあとに読み返して確かめない、形の崩れた識別子を「直して」しまう、数が合っていないのに全部そろったと言う、受け入れの条件をすべて確かめずに「終わった」と宣言する、といった失敗です。
 
 ```yaml
 agent:
   execution_guidance: "auto"   # "auto" | true | false | ["model-substring", ...]
 ```
 
-| 値 | 動作 |
+| 値 | 動き |
 |-------|----------|
-| `"auto"`（デフォルト） | 次に一致するモデルで有効になります: `gpt`、`codex`、`grok`、`deepseek`、`kimi`、`qwen`、`glm`、`minimax`、`mimo`、`mistral`。 |
-| `true` | モデルに関係なく常に有効です。 |
-| `false` | モデルに関係なく常に無効です。 |
-| `["deepseek", "my-custom-model"]` | モデル名に、並べた文字列のどれかが含まれるときだけ有効になります（大文字小文字は区別しません）。 |
+| `"auto"`（初期値） | 名前に `gpt`、`codex`、`grok`、`deepseek`、`kimi`、`qwen`、`glm`、`minimax`、`mimo`、`mistral` を含むモデルで有効になります。 |
+| `true` | モデルにかかわらず、常に有効です。 |
+| `false` | モデルにかかわらず、常に無効です。 |
+| `["deepseek", "my-custom-model"]` | モデル名に、並べた文字列のどれかが含まれるときだけ有効になります（大文字と小文字は区別しません）。 |
 
-差し込まれるブロックは、次のことを扱います。
+差し込まれるまとまりは、次のことを扱います。
 
-- **ツールを使い続けること** — 仕事が終わり、*かつ*確かめ終わるまでツールを呼び続けること。検索の結果が空、部分的、あるいは妙に狭いときは、結論を出す前に、もっと広いか別の問い方で試し直すこと。
-- **ツールを必ず使うこと** — 計算、ハッシュ、日付、システムの状態、ファイルに関する事実は、頭の中の計算ではなく必ずツールから得ること。
-- **外部への書き込みの読み戻し** — 外部のシステムの状態を変える書き込みのあとは、成功したと言う前に対象そのものを読み戻すこと（ツールがすでに確認した内部のファイルの編集は、もう一度確かめません）。
-- **件数の照合** — 申告された合計（`total`、`reply_count`、`has_more`）は動かせない主張として扱うこと。食い違ったら、取り直すかプログラムで解析し直すこと。
-- **文字どおり残すこと** — 決められた形式に合わない識別子を、正規化したり「直したり」しないこと。検索が成功したからといって、崩れた元の文字列が正しいことにはなりません。
-- **確認を通した完了** — 「完了」とは、名前の挙がった受け入れ条件をすべて確かめたという意味であって、もっともらしい一部ではありません。
+- **ツールを使い続けること** — 作業が終わり、*なおかつ*確かめられるまでツールを呼び続けること。空の結果、一部だけの結果、やけに狭い検索の結果は、結論を出す前に範囲を広げるか別の言葉で調べ直すこと。
+- **ツールを必ず使うこと** — 計算、ハッシュ、日付、システムの状態、ファイルの事実は、頭の中で出さず、必ずツールから得ること。
+- **外部へ書いたら読み返すこと** — 外部の仕組みの状態を変える書き込みをしたら、成功したと言う前に、その対象を読み返すこと（ツールがすでに確認した内部のファイルの編集は、確かめ直しません）。
+- **数を突き合わせること** — 申告された総数（`total`、`reply_count`、`has_more`）は動かせない主張として扱い、食い違ったら取り直すか、プログラムで数え直すこと。
+- **書かれたとおりを保つこと** — 決められた形に合わない識別子を、正規化したり「直したり」しないこと。検索がうまくいったからといって、形の崩れたもとの文字列が正しいことにはなりません。
+- **確かめてから終えること** — 「終わった」とは、挙げられた受け入れの条件をすべて確かめたということであって、もっともらしい一部ではありません。
 
-この切り替えは `tool_use_enforcement` とは独立しており、片方だけを有効にできます。案内はセッションの開始時にモデル名をもとに一度だけ選ばれるので、システムプロンプトは会話のあいだ 1 バイトも変わらず（プロンプトのキャッシュにも優しく）保たれます。Gemini と Gemma は、より具体的な Google 向けの運用の案内を受け取るので自動判別のリストから外れています。Claude は、これらのつまずき方を見せないので外れています。どのモデルでも、`true` か文字列のリストで対象に加えられます。
+この関門は `tool_use_enforcement` とは独立していて、どちらか一方だけを有効にできます。案内はセッションの初めにモデル名をもとに一度だけ決まるので、システムのプロンプトはその会話のあいだ1バイトも変わりません（キャッシュにも都合がよいということです）。Gemini と Gemma が自動の一覧から外れているのは、より的を絞った Google 向けの運用の案内を受け取るからです。Claude が外れているのは、こうした失敗をしないからです — どのモデルも `true` か文字列の並びで加えられます。
 
-## ツールのループの歯止め {#tool-loop-guardrails}
+## ツールのループへの備え {#tool-loop-guardrails}
 
-Hermes は、エージェントが実りのないツール呼び出しのループにはまったことを検出します。同じ呼び出しが繰り返し失敗する、同じツールが何度も失敗する、同じ結果しか返さない冪等な呼び出しが前進なしに続く、といった状況です。デフォルトでは、モデルが自分で立て直せるようにツールの結果へ**警告**を差し込むだけで、強制的には止めません。CLI や TUI を見ている人が割って入れるからです。
+Hermes は、エージェントが実りのないツールの呼び出しの繰り返しにはまったことを見つけます — 同じ呼び出しが何度も失敗する、同じツールが何度も失敗する、何度呼んでも同じ結果が返って前に進まない、といった状態です。初期状態では、モデルが自分で立て直せるように、ツールの結果に**警告**を差し込みます。強制的に止めることはしません。CLI や TUI を見ている人が手を出せるからです。
 
-誰も見ていないゲートウェイやサーバーでの運用では、はまったエージェントが繰り返しの持ち分を食い潰す代わりに遮断されるよう、強制停止を有効にしてください。
+人が見ていないゲートウェイやサーバーでの運用では、強制的に止める設定を有効にして、繰り返しの上限を使い切る前にはまった状態を断ち切ってください。
 
 ```yaml
 tool_loop_guardrails:
@@ -1728,28 +1716,28 @@ tool_loop_guardrails:
     max_subagents: 50          # max subagents spawned per turn (0 = unlimited)
 ```
 
-`hard_stop_enabled` のデフォルトが `false` なのは、対話的なセッションには人が付いているからです。誰も見ていない運用（ゲートウェイ、cron、かんばんの作業役）では `true` にして、繰り返す失敗を警告だけで済ませずに止めてください。[Docker / 無人での運用](/hermes/docs/user-guide/docker/) も参照してください。
+`hard_stop_enabled` の初期値が `false` なのは、対話的なセッションには人がいるからです。人が見ていない構成（ゲートウェイ、cron、カンバンのワーカー）では `true` にして、繰り返しの失敗を警告だけで済ませず、止めるようにしてください。[Docker と、人が見ていない構成](/hermes/docs/user-guide/docker/)も参照してください。
 
 ### やり取りごとの暴走の上限 {#per-turn-runaway-loop-caps}
 
-上の失敗を基準にした閾値とは別に、`loop_caps` は、1 回のエージェントのループ（やり取り）で許す `web_search` の呼び出しとサブエージェントの起動の数に、厳しい上限を設けます。カウンターはやり取りのたびにリセットされるので、正当な長いセッションが痩せることはありません。ただし、際限のない検索や委任のループへ落ち込んだ 1 回のやり取りは止まります。これは常に有効で、`hard_stop_enabled` に関係なく働きます。1 回のやり取りで何十回も Web を検索したり、何十ものサブエージェントを立てたりするのはすでに異常なので、デフォルトは低めです。上限に達すると、問題の呼び出しは説明付きで止められ、残りの持ち分を燃やす代わりにやり取りがきれいに終わります。どちらの値も `0` にすれば、その上限を完全に無効にできます。
+上の、失敗の回数を基準にしたしきい値とは別に、`loop_caps` は1回のエージェントのやり取りで `web_search` を何回呼べるか、サブエージェントを何体起動できるかに、はっきりした上限を設けます。数え直しはやり取りのたびに行われるので、何度もやり取りするまっとうなセッションが縛られることはありません。ただし、1回のやり取りが際限のない検索や委任の繰り返しに陥ったときは止まります。これは常に働き、`hard_stop_enabled` にかかわらず発動します。1回のやり取りでウェブ検索を何十回もしたり、サブエージェントを何十体も起動したりするのはすでに異常なので、初期値は低くしてあります。上限に達すると、その呼び出しは理由を添えて止められ、残りの余力を使い切ることなく、やり取りはきれいに終わります。どちらかの値を `0` にすると、その上限はなくなります。
 
-1 回の `delegate_task` のまとめ実行では、タスクの 1 つ 1 つが `max_subagents` に数えられます（3 件のまとめなら 3 消費します）。つまりこの上限は、`delegate_task` を呼んだ回数ではなく、実際に立ったサブエージェントの数を追いかけます。
+1回の `delegate_task` のまとまりでは、それぞれの作業が `max_subagents` に数えられます（3件のまとまりなら3消費します）。ですからこの上限は、`delegate_task` を呼んだ回数ではなく、実際に起動したサブエージェントの数を追いかけます。
 
-これは Claude Code のセッションごとの WebSearch とサブエージェントの上限（v2.1.212）と同じ考え方です。あちらもデフォルトは 200 で、`/clear` でリセットされます。
+これは Claude Code のセッションごとの WebSearch とサブエージェントの上限（v2.1.212）と同じ考え方で、あちらも初期値は200で、`/clear` で数え直しになります。
 
-### 実行中の停滞を防ぐ守り {#runtime-anti-stall-guards}
+### 実行時の停滞への備え {#runtime-anti-stall-guards}
 
-上の失敗を基準にした歯止めを補うものとして、`agent.stall_guards`（デフォルト `true`）は、無駄なやり取りを防ぐ 2 つの控えめな守りを有効にします。1 つ目は**同一の呼び出しのループを断つ守り**です。同じツールが同じ引数で 3 回以上続けて呼ばれ、*かつ*まったく同じ結果を返したとき、その結果の末尾に短い 1 行の注意が足され、同じ呼び出しを繰り返さないようモデルに伝えます。呼び出しそのものを止めることはなく、正当に繰り返す性質の状態確認（`process`、`*_get_result`、`*_poll`）は対象外です。2 つ目は**続けようとする意図の回収**です。モデルがツールを呼ばずにやり取りを終えたのに、短い返答が「では、ファイルを更新します……」のように動きを予告して途切れている場合、Hermes は、意図の取りこぼしの回収に使うのと同じ、回数の限られた継続の仕組みで動くよう促し直します（1 回のやり取りにつき最大 2 回）。どちらもキャッシュを壊しません（注意は結果を組み立てるときに足され、あとから遡って書き換えることはありません）。まとめて無効にできます。
+上の、失敗を基準にした備えを補うものとして、`agent.stall_guards`（初期値は `true`）は、無駄なやり取りを防ぐ控えめな2つの備えを有効にします。1つめは**同じ呼び出しの繰り返しを断つ仕組み**です。同じツールが同じ引数で3回以上続けて呼ばれ、*なおかつ*同じ結果を返したとき、その結果に「同じ呼び出しを繰り返さないように」と伝える短い1行が添えられます。呼び出しを止めることは決してありませんし、繰り返し呼ぶのが当たり前のもの（`process`、`*_get_result`、`*_poll`）は対象外です。2つめは**やりかけの意思の立て直し**です。モデルがツールを呼ばずにやり取りを終えたのに、短い返事がこれから何かをすると言い残している場合（「ではファイルを直します……」など）、Hermes は、意思の確認の立て直しと同じ、回数を区切った仕組みで動くよう促し直します（1回のやり取りにつき最大2回）。どちらもキャッシュを壊しません（案内は結果を作るときに足され、あとから書き換えることはありません）。まとめて止めることもできます。
 
 ```yaml
 agent:
   stall_guards: false
 ```
 
-同じ切り替えは、**結果の参照による置き換え**も有効にします。同じツールの呼び出しをやり直して、1 バイトも違わない新しい結果が返ってきたとき、重複する内容は全文をもう一度載せる代わりに、先の結果を指す短い参照（ツール名、`tool_call_id`、引数の要約、そして最初の結果がディスクに保存されていればそのあふれ先のパス）としてコンテキストに入ります。ツールは毎回きちんと実行されるので、状態確認の意味は保たれます。結果が変わっていれば、いつでも丸ごと流れてきます。512 文字未満の結果、エラーの結果、マルチモーダルの結果が置き換えられることはありません。一方、状態確認は置き換えの対象*です*（変化のない確認こそ、重複する内容が何の情報も持たない場面だからです）。
+同じ設定は、**結果を参照で置き換える仕組み**も有効にします。同じツールの呼び出しをやり直して、1バイトも変わらない新しい結果が返ったとき、その重なった中身は全文を繰り返すのではなく、前の結果を指す短い参照（ツール名、`tool_call_id`、引数の要約、そして最初の結果がディスクへ逃がされていればその場所）として文脈に入ります。ツールは毎回きちんと実行されるので、繰り返し確かめる意味は保たれます。結果が変わっていれば、いつでもそのまま全文が流れます。512文字に満たない結果、エラーの結果、複数の形式を含む結果が置き換えられることはありません。繰り返し確かめるためのものは置き換え*られます*（変わらない確認こそ、重なった中身に何の情報もない場面だからです）。
 
-## TTS の設定 {#tts-configuration}
+## 読み上げの設定 {#tts-configuration}
 
 ```yaml
 tts:
@@ -1790,9 +1778,9 @@ tts:
     device: cpu
 ```
 
-これは `text_to_speech` のツールと、音声モード（CLI やメッセージ用のゲートウェイでの `/voice tts`）での読み上げの両方を制御します。
+これは `text_to_speech` のツールと、音声モードでの話し声による返事（CLI やメッセージのゲートウェイでの `/voice tts`）の両方を決めます。
 
-**速度の優先順位:** プロバイダーごとの速度（`tts.edge.speed` など）→ 全体の `tts.speed` → デフォルトの `1.0`。全体の `tts.speed` を設定すると、すべてのプロバイダーに同じ速度が効きます。細かく調整したい場合は、プロバイダーごとに上書きしてください。
+**速さの決まる順番:** プロバイダーごとの速さ（たとえば `tts.edge.speed`）→ 全体の `tts.speed` → 初期値の `1.0`。すべてのプロバイダーで同じ速さにしたいなら全体の `tts.speed` を設定し、細かく決めたいならプロバイダーごとに上書きしてください。
 
 ## 表示の設定 {#display-settings}
 
@@ -1827,36 +1815,36 @@ display:
   language: en            # UI language for static messages (approval prompts, some gateway replies). en | zh | zh-hant | ja | de | es | fr | tr | uk | af | ko | it | ga | pt | ru | hu
 ```
 
-### やり取りごとの要約と、スピナーに流れるトークン数 {#per-turn-summary-and-spinner-token-flow}
+### やり取りごとのまとめと、待機表示のトークンの流れ {#per-turn-summary-and-spinner-token-flow}
 
-`display.turn_summary`（デフォルト `true`）は、**対話的な CLI** のやり取りのあとに、そのやり取りが実際に何をしたかをまとめた薄い色の 1 行を表示します。
+`display.turn_summary`（初期値は `true`）は、**対話的な CLI** のやり取りのあとに、そのやり取りが実際に何をしたかをまとめた、薄い色の1行を表示します。
 
 ```
 ⋯ 12.4s · edited 2 files +18 -3 · read 4 files · ran 3 commands
 ```
 
-集計は、CLI がもともと受け取っているツールの進捗の流れから読み取っているので、追加の費用はかかりません。細かい点は次のとおりです。
+数え上げは、CLI がもともと受け取っているツールの進み具合の流れから読み取るので、余計な費用はかかりません。細かい点は次のとおりです。
 
-- 経過時間はそのやり取りの実際の長さです（1 分を超えると `2m05s` のようになります）。
-- ツールの呼び出しは動詞（`edited`、`read`、`ran`、`searched` など）ごとにまとめられ、単数と複数も正しく書き分けられます。決まった動詞のないプラグインや MCP のツールは `called N tools` にまとまります。
-- `+X -Y` の行数の増減は、ツールの結果がもともと差分を報告している場合（今のところ `patch`）にだけ出ます。Hermes がこれを計算するために git を呼ぶことはないので、`write_file` による編集は増減なしで数えられます。
-- **失敗したツールの呼び出しは数えません。** 拒否された書き込みが、成功した編集として表示されることはありません（対になる警告は [ファイルの変更の検証](#file-mutation-verifier) を参照してください）。
-- 長いやり取りでは動詞の区切りは 4 つまでで、あとは `+N more` と付くので、行が折り返すことはありません。
-- ツールを 1 つも呼ばなかった短いやり取りでは、何も表示されません。
+- 時間は、そのやり取りの実際の長さです（1分を越えると `2m05s` のようになります）。
+- ツールの呼び出しは動詞ごとにまとめられ（`edited`、`read`、`ran`、`searched` など）、単数と複数も正しく書き分けられます。決まった動詞のないプラグインや MCP のツールは `called N tools` にまとまります。
+- `+X -Y` の行の増減は、ツールの結果がもともと差分を返すときにだけ出ます（いまのところ `patch` です）。Hermes がそれを計算するために git を呼ぶことはないので、`write_file` による編集は増減なしで数えられます。
+- **失敗したツールの呼び出しは数えません** — 断られた書き込みが、成功した編集として表示されることはありません（合わせて働く警告は [ファイルの変更を確かめる仕組み](#file-mutation-verifier)を参照してください）。
+- 長いやり取りでは、動詞のまとまりは4つまでで、そのあとに `+N more` が付くので、行が折り返すことはありません。
+- ツールを呼ばなかった短いやり取りでは、何も表示されません。
 
-`display.spinner_token_flow`（デフォルト `true`）は、CLI のスピナーの経過時間の表示に、そのやり取りで積み上がった出力のトークン数を足します。
+`display.spinner_token_flow`（初期値は `true`）は、CLI の待機表示の時計に、そのやり取りで積み上がった出力のトークン数を添えます。
 
 ```
   ⚡ Reading cli.py  (  2.3s · ↓ 1.2k tok)
 ```
 
-数はやり取りごとで（セッションの合計はやり取りの開始時点を基準に引き直されます）、そのやり取りの中の API 呼び出しが使用量を報告するたびに更新されます。最初の使用量の報告が届くまでは何も表示されないので、`↓ 0 tok` のような紛らわしい表示は出ません。
+数はやり取りごとで（セッションの合計はやり取りの初めを基準に数え直します）、そのやり取りの中で API の呼び出しが使用量を報告するたびに更新されます。最初の報告が届くまでは何も出ないので、紛らわしい `↓ 0 tok` を目にすることはありません。
 
-どちらのキーも表示だけの、CLI だけの設定です。静かなモード、`display.tool_progress` が `off` のとき、単発の問い合わせや `-Q` のまとめ実行、ゲートウェイやメッセージの画面では抑えられます（そちらは代わりに `display.runtime_footer` を使います）。どちらも `false` にすれば止められます。
+どちらの項目も表示だけのもので、CLI だけのものです。静かな動きのとき、`display.tool_progress` が `off` のとき、1回かぎりの問い合わせや `-Q` のまとめ実行のとき、そしてゲートウェイやメッセージの画面では出ません（そちらは `display.runtime_footer` を使います）。どちらも `false` にすれば止まります。
 
-### ファイルの変更の検証 {#file-mutation-verifier}
+### ファイルの変更を確かめる仕組み {#file-mutation-verifier}
 
-`display.file_mutation_verifier` が `true`（デフォルト）のとき、そのやり取りで `write_file` や `patch` の呼び出しが失敗し、同じパスへの書き込みが後から成功していない場合、Hermes はアシスタントの最終的な返答に注意の 1 行を足します。これによって、「並列のパッチをまとめて出し、半分が黙って失敗し、モデルは成功したと要約する」といった言いすぎを、編集のたびに手で `git status` を叩かなくても捕まえられます。
+`display.file_mutation_verifier` が `true`（初期値）のとき、そのやり取りの中で `write_file` や `patch` の呼び出しが失敗し、同じ場所への書き込みがそのあと成功しなかった場合、Hermes はアシスタントの最後の返事に1行の注意を添えます。これによって「まとめて直そうとして半分が黙って失敗し、モデルは成功したとまとめる」という言い過ぎを、編集のたびに自分で `git status` を打たなくても捕まえられます。
 
 添えられる文の例です。
 
@@ -1867,13 +1855,13 @@ display:
   • concepts/rag-pipeline.md — [patch] Could not find match for old_string
 ```
 
-この行を出さないようにするには、`file_mutation_verifier: false`（または `HERMES_FILE_MUTATION_VERIFIER=0`）にします。この検証は、やり取りの終わりに本当の失敗が残っているときにだけ働きます。失敗したパッチを同じやり取りの中でやり直して成功した場合、そのファイルについては何も出ません。
+`file_mutation_verifier: false`（または `HERMES_FILE_MUTATION_VERIFIER=0`）にすれば出なくなります。この仕組みが働くのは、やり取りの終わりに本当の失敗が残っているときだけです。失敗した修正を同じやり取りの中でやり直して成功していれば、そのファイルについては何も出ません。
 
-**モデルの要約より、この検証を信じてください。** この行が出たということは、アシスタントの締めくくりが「終わりました」と言っていても、挙がっているファイルはディスク上で**変わっていない**ということです。よくある原因は次のとおりです。
+**モデルのまとめより、この仕組みを信じてください。** この文が出たということは、挙げられたファイルがディスク上で**変わっていない**ということです。アシスタントの締めの言葉が終わったと言っていても同じです。よくある原因は次のとおりです。
 
-- **書き込みの拒否** — パスが認証情報の禁止リストにあるか、`HERMES_WRITE_SAFE_ROOT` の外にある（[ファイル書き込みの安全装置](/hermes/docs/user-guide/security/#file-write-safety) を参照）
-- **パッチの不一致** — `old_string` がディスク上のファイルと一致しなかった
-- **構文の関門** — 書き込みの前に、内容が JSON / YAML / TOML の検証に落ちた
+- **書き込みを断られた** — その場所が認証情報の禁止一覧に入っているか、`HERMES_WRITE_SAFE_ROOT` の外です（[ファイルへの書き込みの安全](/hermes/docs/user-guide/security/#file-write-safety)を参照してください）
+- **修正が合わなかった** — `old_string` がディスク上のファイルと一致しませんでした
+- **書式の関門** — 書く前の JSON / YAML / TOML の確認に通りませんでした
 
 書き込みが止められたときの例です。
 
@@ -1883,47 +1871,47 @@ display:
   • ~/.hermes/scripts/monitor.py — [write_file] Write denied: '…' is outside HERMES_WRITE_SAFE_ROOT (/path/to/project)
 ```
 
-Hermes の状態（cron のジョブ、スキル、`~/.hermes/` の下のスクリプト）への書き込みが失敗しているなら、環境に `HERMES_WRITE_SAFE_ROOT` が設定されていないか確かめてください。cron の変更には、`jobs.json` に直接パッチを当てるのではなく、`cronjob` ツールか `hermes cron edit` を使ってください。
+Hermes の状態（cron のジョブ、スキル、`~/.hermes/` の下のスクリプト）への書き込みが失敗しているなら、環境に `HERMES_WRITE_SAFE_ROOT` が設定されていないか確かめてください。cron を直すときは、`jobs.json` を直接いじるのではなく、`cronjob` のツールか `hermes cron edit` を使ってください。
 
-### 定型のメッセージの表示言語 {#ui-language-for-static-messages}
+### 決まり文句の表示に使う言語 {#ui-language-for-static-messages}
 
-`display.language` の設定は、ユーザーに見える定型のメッセージのうち、ごく一部を翻訳します。CLI の承認のプロンプトと、いくつかのゲートウェイのスラッシュコマンドの返答（再起動の待機の知らせ、「approval expired」、「goal cleared」など）です。エージェントの返答、ログの行、ツールの出力、エラーのトレースバック、スラッシュコマンドの説明は翻訳され**ません**。それらは英語のままです。エージェント自身に別の言語で返してほしい場合は、プロンプトやシステムメッセージでそう伝えるだけで済みます。
+`display.language` の設定は、利用者に見える決まり文句のうち、ごく一部を訳します — CLI の承認の確認と、ゲートウェイのいくつかのスラッシュコマンドの返事（再起動の待ちの知らせ、「approval expired」、「goal cleared」など）です。エージェントの返事、ログの行、ツールの出力、エラーの記録、スラッシュコマンドの説明は訳**しません** — それらは英語のままです。エージェント自身に別の言語で答えてほしいなら、プロンプトやシステムのメッセージでそう伝えてください。
 
-指定できる値は、`en`（デフォルト）、`zh`（簡体字中国語）、`zh-hant`（繁体字中国語）、`ja`（日本語）、`de`（ドイツ語）、`es`（スペイン語）、`fr`（フランス語）、`tr`（トルコ語）、`uk`（ウクライナ語）、`af`（アフリカーンス語）、`ko`（韓国語）、`it`（イタリア語）、`ga`（アイルランド語）、`pt`（ポルトガル語）、`ru`（ロシア語）、`hu`（ハンガリー語）です。知らない値は英語に戻ります。
+使える値は、`en`（初期値）、`zh`（簡体字中国語）、`zh-hant`（繁体字中国語）、`ja`（日本語）、`de`（ドイツ語）、`es`（スペイン語）、`fr`（フランス語）、`tr`（トルコ語）、`uk`（ウクライナ語）、`af`（アフリカーンス語）、`ko`（韓国語）、`it`（イタリア語）、`ga`（アイルランド語）、`pt`（ポルトガル語）、`ru`（ロシア語）、`hu`（ハンガリー語）です。知らない値は英語に戻ります。
 
-`HERMES_LANGUAGE` の環境変数でセッションごとに指定することもでき、こちらが設定ファイルの値より優先されます。
+`HERMES_LANGUAGE` の環境変数を使えば、セッションごとに設定することもできます。こちらが設定の値より優先されます。
 
 ```yaml
 display:
   language: zh   # CLI approval prompts appear in Chinese
 ```
 
-| モード | 見えるもの |
+| 設定 | 見えるもの |
 |------|-------------|
-| `off` | 何も出ません。最終的な返答だけです |
-| `new` | ツールが切り替わったときだけ、ツールの表示が出ます |
-| `all` | すべてのツールの呼び出しと短いプレビューが出ます（デフォルト） |
-| `verbose` | 引数と結果の全体、デバッグのログまで出ます |
+| `off` | 何も出ません — 最後の返事だけです |
+| `new` | ツールが変わったときだけ、その印が出ます |
+| `all` | すべてのツールの呼び出しが、短いさわりとともに出ます（初期値） |
+| `verbose` | 引数、結果、調査用のログがすべて出ます |
 
-CLI では、`/verbose` でこれらのモードを順に切り替えられます。メッセージ用のプラットフォーム（Telegram、Discord、Slack など）で `/verbose` を使うには、上の `display` の節で `tool_progress_command: true` にしてください。すると、このコマンドがモードを切り替えて設定に保存します。
+CLI では `/verbose` でこれらを順に切り替えられます。メッセージのプラットフォーム（Telegram、Discord、Slack など）で `/verbose` を使うには、上の `display` の節で `tool_progress_command: true` にしてください。そうすると、このコマンドが設定を順に切り替えて保存します。
 
-ツールの進捗の表示には、進捗の更新を安全に見せられるゲートウェイのアダプターが必要です。メッセージの編集に対応していないプラットフォーム（Signal を含みます）では、`/verbose` で `off` 以外のモードを保存しても、進捗の吹き出しは出ません。
+ツールの進み具合の表示には、その更新を安全に表示できるゲートウェイの連携が必要です。メッセージの編集に対応していないプラットフォーム（Signal を含みます）では、`/verbose` で `off` 以外を保存しても、進み具合の吹き出しは出ません。
 
-### フォーカス表示（`/focus`、CLI と TUI） {#focus-view-focus-cli-tui}
+### 集中表示（`/focus`、CLI と TUI） {#focus-view-focus-cli-tui}
 
-`display.focus_view: true` は**フォーカス表示**を有効にします。実況ではなく答えだけが欲しいときのための、出力を絞った表示モードです。別の抑制の経路ではなく、同じ `tool_progress` の仕組みの上に薄くかぶせたものです。
+`display.focus_view: true` にすると**集中表示**が有効になります。実況ではなく答えだけがほしいときのための、出力を減らした表示です。もう1つの抑え込みの経路ではなく、同じ `tool_progress` の仕組みの上に薄く載っています。
 
-- 有効にすると `tool_progress` は `off` に固定され、それまでのモードは `display.focus_saved_tool_progress` に控えられます
-- `/focus off` はそのモードをそのまま戻すので、`/verbose verbose` の設定は往復しても失われません
-- やり取りが終わるたびに、薄い色の復帰の案内が出ます — `⋯ 7 tool lines hidden · /focus off to show` — 数え方は*フォーカスに入る前*のモードを基準にするので、もともと切っていた行まで隠したと言うことはありません
-- ステータスバーには `◉ focus` の印が出続けるので（prompt_toolkit の CLI でも Ink の TUI でも）、絞られたモードが見えなくなることはありません
-- フォーカス中に `/verbose` で切り替えると、モードの主導権が `/verbose` に戻り、印は消えます
+- 有効にすると `tool_progress` が `off` に固定され、それまでの設定は `display.focus_saved_tool_progress` に控えられます
+- `/focus off` はその設定をそのまま戻すので、`/verbose verbose` にしていた状態も往復して残ります
+- やり取りが終わるたびに、薄い色の戻し方の1行が出ます — `⋯ 7 tool lines hidden · /focus off to show` — 数えるのは*集中表示に入る前*の設定に対してなので、もともと出していなかった行を隠したと言うことはありません
+- 状態の欄には `◉ focus` の印がずっと出ているので（prompt_toolkit の CLI でも Ink の TUI でも）、出力が減っていることが見えなくなることはありません
+- 集中表示のあいだに `/verbose` を切り替えると、設定は `/verbose` の側へ戻り、印は消えます
 
-フォーカス表示は**画面上だけのもの**です。会話の履歴、システムプロンプト、ツールの定義、リクエストの中身に手を入れることはありません。隠された詳細は画面で抑えられるだけで、捨てられてはいませんし、プロンプトのキャッシュにもまったく影響しません。
+集中表示は**表示だけのもの**です。会話の履歴、システムのプロンプト、ツールの定義、リクエストの中身に手を触れることは決してありません — 隠された細かい情報は画面に出ないだけで、捨てられてはいませんし、プロンプトのキャッシュにも一切影響しません。
 
 ### 実行時の情報の添え書き（ゲートウェイのみ） {#runtime-metadata-footer-gateway-only}
 
-`display.runtime_footer.enabled: true` にすると、Hermes はゲートウェイのやり取りの**最後の**メッセージに、実行時の情報を小さく添えます。今のところ、モデル、コンテキストウィンドウの使用率、現在の作業ディレクトリを出せます。デフォルトでは無効です。すべての返答に出どころを添えたいチームは、ゲートウェイごとに有効にしてください。
+`display.runtime_footer.enabled: true` のとき、Hermes はゲートウェイでのやり取りの**最後の**メッセージに、実行時の情報の短い添え書きを付けます。いまのところ、モデル、文脈の窓の使用率、いまの作業ディレクトリを出せます。初期状態では無効です。すべての返事にこの出どころを付けたいチームは、ゲートウェイごとに有効にしてください。
 
 ```yaml
 display:
@@ -1932,30 +1920,30 @@ display:
     fields: ["model", "context_pct", "cwd"]   # order shown; drop any to hide
 ```
 
-指定できる項目です。
+使える項目は次のとおりです。
 
 | 項目 | 表示されるもの | 例 |
 | --- | --- | --- |
-| `model` | ベンダーの接頭辞を落とした、モデル ID だけ | `gpt-5.4` |
-| `context_pct` | 直近の呼び出しでのコンテキストの占有率 | `5%` |
-| `latency` | そのやり取りの実際の所要時間 | `22s`、`1m05s` |
-| `cwd` | ホームからの相対で表した作業ディレクトリ | `~` |
+| `model` | モデルの id だけ。提供元の接頭辞は落とします | `gpt-5.4` |
+| `context_pct` | 最後の呼び出しでの文脈の使用率 | `5%` |
+| `latency` | そのやり取りにかかった実時間 | `22s`、`1m05s` |
+| `cwd` | ホームからの相対の作業ディレクトリ | `~` |
 
-デフォルトの項目は `["model", "context_pct", "cwd"]` です。`latency` は任意で、使うには `fields` に足します。データが得られない項目は、空欄を出す代わりに黙って飛ばされます。
+初期の項目は `["model", "context_pct", "cwd"]` です。`latency` は自分で加えるものです — 使いたいなら `fields` に足してください。値が得られない項目は、空欄を出さずに静かに飛ばされます。
 
-`/footer` のスラッシュコマンドで、どのセッションでも実行中に切り替えられます。
+`/footer` のスラッシュコマンドで、どのセッションでも動かしたまま切り替えられます。
 
-Telegram / Discord / Slack への返答に添えられる例です。
+Telegram / Discord / Slack の返事に添えられた例です。
 
 ```
 — claude-opus-4.7 · 12 tool calls · 2m 14s · $0.042
 ```
 
-添えられるのはやり取りの**最後の**メッセージだけで、途中の更新はそのままです。
+添え書きが付くのは、やり取りの**最後の**メッセージだけです。途中の更新はきれいなままです。
 
-### プラットフォームごとの進捗の上書き {#per-platform-progress-overrides}
+### プラットフォームごとの進み具合の上書き {#per-platform-progress-overrides}
 
-プラットフォームごとに、ちょうどよい詳しさは違います。`display.platforms` でプラットフォームごとのモードを設定できます。
+プラットフォームによって、どれだけ細かく出すべきかは違います。`display.platforms` で、プラットフォームごとに設定してください。
 
 ```yaml
 display:
@@ -1969,13 +1957,13 @@ display:
       tool_progress: 'off'    # quiet in shared Slack workspace
 ```
 
-上書きのないプラットフォームは、全体の `tool_progress` の値に従います。指定できるプラットフォームのキーは、`telegram`、`discord`、`slack`、`signal`、`whatsapp`、`matrix`、`mattermost`、`email`、`sms`、`homeassistant`、`dingtalk`、`feishu`、`wecom`、`weixin`、`bluebubbles`、`qqbot` です。従来の `display.tool_progress_overrides` のキーも、後方互換のためにまだ読み込まれますが、非推奨で、最初の読み込みのときに `display.platforms` へ移されます。
+上書きのないプラットフォームは、全体の `tool_progress` の値に従います。書けるプラットフォームの名前は `telegram`、`discord`、`slack`、`signal`、`whatsapp`、`matrix`、`mattermost`、`email`、`sms`、`homeassistant`、`dingtalk`、`feishu`、`wecom`、`weixin`、`bluebubbles`、`qqbot` です。従来の `display.tool_progress_overrides` の項目も互換のために今も読まれますが、非推奨で、最初に読み込むときに `display.platforms` へ移されます。
 
-Signal が有効なキーとして挙がっているのは、プラットフォームごとに設定を保存できるからですが、今の Signal のアダプターは送ったメッセージを編集できず、進捗の吹き出しを描けません。Signal の `tool_progress` は `off` のままにしてください。ツールの呼び出しを 1 つずつその場で見たいなら、CLI か、編集のできるメッセージのプラットフォームを使ってください。
+Signal が書けるプラットフォームとして挙がっているのは、設定をプラットフォームごとに保存できるからですが、いまの Signal の連携は送ったメッセージを編集できないので、進み具合の吹き出しは出ません。Signal の `tool_progress` は `off` のままにしてください。ツールの呼び出しをその場で見たいなら、CLI か、メッセージを編集できるプラットフォームを使ってください。
 
-`interim_assistant_messages` はゲートウェイだけの設定です。有効にすると、Hermes はやり取りの途中でまとまったアシスタントの更新を、別のチャットのメッセージとして送ります。これは `tool_progress` とは独立していて、ゲートウェイのストリーミングも必要ありません。
+`interim_assistant_messages` はゲートウェイだけのものです。有効にすると Hermes は、やり取りの途中でできあがったアシスタントの更新を、別のメッセージとして送ります。これは `tool_progress` とは独立していて、ゲートウェイで少しずつ受け取る設定も要りません。
 
-`show_commentary`（デフォルト `true`）は、Codex Responses のモデルの解説のチャンネル、つまりこれらのモデルが内部の推論とは別に生み出す、整えられた進行の語りを制御します。有効にすると、まとまった解説のメッセージが、やり取りの途中の見える更新として届きます（ゲートウェイでは `interim_assistant_messages` も必要です）。この語りが煩わしければ `false` にしてください。すると解説は推論のチャンネルに回り、`show_reasoning` が有効なときにだけ表示されます。
+`show_commentary`（初期値は `true`）は、Codex Responses のモデルの実況の経路 — これらのモデルが、自分の中の考えとは別に出す、整った進み具合の語り — を制御します。有効にすると、できあがった実況のメッセージが、やり取りの途中の更新として見える形で届きます（ゲートウェイでは `interim_assistant_messages` も必要です）。この語りが煩わしいなら `false` にしてください。そうすると実況は考えの経路へ回り、`show_reasoning` が有効なときにだけ表示されます。
 
 ## プライバシー {#privacy}
 
@@ -1984,30 +1972,30 @@ privacy:
   redact_pii: false  # Strip PII from LLM context (gateway only)
 ```
 
-`redact_pii` を `true` にすると、対応しているプラットフォームでは、ゲートウェイが LLM へ送る前にシステムプロンプトから個人を特定できる情報を伏せます。
+`redact_pii` が `true` のとき、ゲートウェイは対応しているプラットフォームについて、LLM へ送る前にシステムのプロンプトから個人を特定できる情報を伏せます。
 
 | 項目 | 扱い |
-|-------|-----------|
-| 電話番号（WhatsApp / Signal でのユーザー ID） | `user_<12-char-sha256>` にハッシュ化 |
-| ユーザー ID | `user_<12-char-sha256>` にハッシュ化 |
-| チャット ID | 数字の部分をハッシュ化し、プラットフォームの接頭辞は残す（`telegram:<hash>`） |
-| ホームチャンネルの ID | 数字の部分をハッシュ化 |
-| ユーザー名・表示名 | **影響を受けません**（本人が選んだもので、公開されています） |
+|-------|-------------|
+| 電話番号（WhatsApp と Signal でのユーザー ID） | `user_<12-char-sha256>` に置き換えます |
+| ユーザー ID | `user_<12-char-sha256>` に置き換えます |
+| チャット ID | 数字の部分を置き換え、プラットフォームの接頭辞は残します（`telegram:<hash>`） |
+| ホームのチャンネルの ID | 数字の部分を置き換えます |
+| 利用者の名前やユーザー名 | **手を触れません**（本人が決めたもので、誰にでも見えるものだからです） |
 
-**対応プラットフォーム:** 伏せ字は WhatsApp、Signal、Telegram に適用されます。Discord と Slack は対象外です。メンションの仕組み（`<@user_id>`）が LLM のコンテキストに本物の ID を必要とするからです。
+**対応しているプラットフォーム:** 伏せる処理が働くのは WhatsApp、Signal、Telegram です。Discord と Slack は対象外です。呼びかけの仕組み（`<@user_id>`）が、LLM の文脈に本物の ID を必要とするからです。
 
-ハッシュは決まった値になるので、同じユーザーは常に同じハッシュになり、グループチャットでもモデルはユーザーを区別できます。経路の振り分けと配信には、内部で元の値が使われます。
+置き換えの結果は決まっているので、同じ利用者はいつも同じ値になります。ですからモデルは、グループのチャットでも利用者を見分けられます。振り分けと配信には、内部でもとの値が使われます。
 
-### OpenAI Codex へのリクエストの名乗り {#openai-codex-request-identity}
+### OpenAI Codex への名乗り {#openai-codex-request-identity}
 
-OpenAI は、Codex を組み込んだ他社製の実行環境に対して、自分が何であるかを名乗ることを求めています。
-ChatGPT のアカウントで認証して公式の Codex エンドポイントへ送るリクエストには、
-`originator: hermes-agent` と `User-Agent: HermesAgent/<version>` が自動で付きます。
-これまでどおり ChatGPT のアカウントのヘッダーもそのまま残ります。プロンプトの中身が増えることも、
-利用状況を送る通信が追加されることもありません。
-OpenAI の API を直接呼ぶ場合と、独自のプロキシのエンドポイントを使う場合は、これまでと変わりません。
+OpenAI は、第三者の Codex の仕組みに名乗ることを求めています。
+ChatGPT で認証した公式の Codex の接続先へのリクエストには、自動的に
+`originator: hermes-agent` と `User-Agent: HermesAgent/<version>` が付きます。
+もともとの ChatGPT のアカウントのヘッダーはそのまま残ります。プロンプトの中身が
+足されたり、記録のためのリクエストが送られたりすることはありません。
+OpenAI の API を直接呼ぶ場合と、独自のプロキシの接続先では何も変わりません。
 
-## 音声の文字起こし（STT） {#speech-to-text-stt}
+## 文字起こし（STT） {#speech-to-text-stt}
 
 ```yaml
 stt:
@@ -2036,19 +2024,19 @@ stt:
   # model: "whisper-1"         # Legacy fallback key still respected
 ```
 
-言語の決まり方は、**どの** STT のプロバイダー（local、groq、openai、mistral、xai、elevenlabs、deepinfra、コマンド型のプロバイダー、プラグイン）でも同じです。`stt.<provider>.language` → `stt.language` → `HERMES_LOCAL_STT_LANGUAGE` の環境変数 → プロバイダーによる自動判別、の順です。**デフォルトは `stt.language: "en"`** です。Whisper の自動判別は、短い音声や訛りのある音声をしばしば取り違え、それが「音声メモが違う言語で文字起こしされる」という形で現れます。英語以外を話す人は、`stt.language` に自分の言語コードを一度設定してください（`"es"`、`"zh"`、`"uk"` など）。多言語で使うために自動判別へ戻したいときは `""` にします。
+言語の決まり方は、**どの**文字起こしのプロバイダーでも同じです（local、groq、openai、mistral、xai、elevenlabs、deepinfra、コマンド型のプロバイダー、プラグインのいずれも）。`stt.<provider>.language` → `stt.language` → `HERMES_LOCAL_STT_LANGUAGE` の環境変数 → プロバイダーの自動判定、の順です。**初期値は `stt.language: "en"` です** — Whisper の自動判定は、短い音声やなまりのある音声をよく取り違え、それが「音声メモが違う言語で文字起こしされる」という形で現れるからです。英語以外を話す人は、`stt.language` に自分の言語のコードを一度設定してください（たとえば `"es"`、`"zh"`、`"uk"`）。複数の言語を使うので自動判定に戻したいなら、`""` にしてください。
 
-ゲートウェイに音声メモをエージェント向けに文字起こしさせつつ、生の文字起こしをチャットへ投稿させたくない場合（たとえば顧客向けの WhatsApp のボット）は、`stt.echo_transcripts: false` にしてください。
+ゲートウェイに音声メモをエージェントのために文字起こしさせつつ、その文字起こしをチャットへ返させたくないときは（たとえば顧客と話す WhatsApp のボット）、`stt.echo_transcripts: false` にしてください。
 
-プロバイダーごとの動作です。
+プロバイダーごとの動きは次のとおりです。
 
-- `local` は、手元のマシンで動く `faster-whisper` を使います。`pip install faster-whisper` で別途インストールしてください。無音から幻の言葉が生まれるのを防ぐ仕組みは、デフォルトで有効です。Silero の VAD フィルターが無音や雑音を Whisper へ届かないようにし、窓をまたいだ条件付けを無効にし、モデル自身が「たぶん音声ではない」と判断し*かつ*確信度の低い区間を捨てます。音声以外（音楽や環境音）を素の動作で文字起こししたい場合は `stt.local.vad: false` にしてください。モデルは音声メッセージのあいだメモリに載ったままで、待ち時間の短い文字起こしができます。`stt.local.unload_after_idle_seconds`（たとえば 5 分なら `300`）を設定すると、使われていないときに自動でモデルを解放します。CUDA のホストでは GPU のメモリが空くので（ローカルの LLM が同じ GPU を使っている場合の大きな利点です）、CPU ではプロセスがそのメモリを再利用できるようになりますが、OS から見える使用量は、プロセスが別の用途でその領域を必要とするまで縮まないことがあります。次の音声メッセージが来ると、モデルは何ごともなく読み込み直されます。
-- `groq` は Groq の Whisper 互換のエンドポイントを使い、`GROQ_API_KEY` を読みます。`stt.groq.language`（またはグローバルな `HERMES_LOCAL_STT_LANGUAGE` の環境変数）を渡すと、自動判別を飛ばして待ち時間を減らせます。
-- `openai` は OpenAI の音声 API を使い、`VOICE_TOOLS_OPENAI_KEY` を読みます。
+- `local` は、手元のマシンで動く `faster-whisper` を使います。別途 `pip install faster-whisper` で入れてください。無音から言葉を作り出してしまうことへの備えは、初期状態で有効です。Silero の VAD の絞り込みが、無音や雑音を Whisper へ届かせません。窓をまたいだ条件付けは止めてあり、モデル自身が「たぶん言葉ではない」と判断し、*なおかつ*自信のない部分は落とされます。音楽や環境音のような言葉でない音を、そのまま文字起こししたいなら `stt.local.vad: false` にしてください。待ち時間を短くするため、モデルは音声メモのあいだメモリに残ります。使われていないときに自動で手放させたいなら、`stt.local.unload_after_idle_seconds` を設定してください（たとえば5分なら `300`）。CUDA のマシンでは GPU のメモリが空きます（手元の LLM が同じ GPU を使っている場合の大きな利点です）。CPU では、そのメモリはプロセスの中で再び使えるようになりますが、OS から見える使用量は、プロセスがほかのことに使うまで減らないことがあります。次の音声メモが来ると、モデルは意識せずとも読み直されます。
+- `groq` は Groq の Whisper 互換の接続先を使い、`GROQ_API_KEY` を読みます。`stt.groq.language`（または全体に効く `HERMES_LOCAL_STT_LANGUAGE` の環境変数）を渡せば、自動判定を飛ばして待ち時間を減らせます。
+- `openai` は OpenAI の音声の API を使い、`VOICE_TOOLS_OPENAI_KEY` を読みます。
 
-クラウドのプロバイダー（groq、openai、mistral、xai、elevenlabs、deepinfra）では、`ffmpeg` が入っていればデフォルトで**アップロード前の無音の切り詰め**が働きます。音声メモの長い間は、ファイルを送る前に手元でまとめられ、それぞれの間から `cloud_trim_keep_ms` の分だけ残るので、自然な間合いは保たれます。音声が短くなれば、アップロードは速くなり、音声の分単位の課金は安くなり、遠くのモデルが無音から幻の言葉を作る回数も減ります。12 秒未満の音声は切り詰めをまるごと飛ばします（そこでは節約の意味がありませんし、いくつかのプロバイダーはどのみちリクエストごとの最低額を課金します）。この切り詰めは最善を尽くすだけのもので、ffmpeg がない、切り詰めに失敗した、音声がほとんど無音だった、切り詰めても 10% ほどしか減らない、といった場合は元のファイルがそのまま送られます。常に元のファイルを送りたいときは `stt.cloud_trim_silence: false` にしてください（クラウドのプロバイダーで音楽や環境音を文字起こしする場合など）。コマンド型のプロバイダーとプラグインのプロバイダーには、切り詰めた音声が渡ることはありません。
+クラウドのプロバイダー（groq、openai、mistral、xai、elevenlabs、deepinfra）では、`ffmpeg` が入っていれば初期状態で**送る前に無音を刈り込みます**。音声メモの中の長い間は、ファイルを送る前に手元でつぶされ、それぞれの間から `cloud_trim_keep_ms` の分だけ残るので、自然な間合いは保たれます。音声が短くなれば、送信は速くなり、分単位の課金は下がり、遠くのモデルが無音から言葉を作り出すことも減ります。12秒に満たない音声は刈り込みを飛ばします（そこで節約しても意味がありませんし、いくつかのプロバイダーは1回あたりの最低額を取るからです）。刈り込みは、できるときにするだけのものです — ffmpeg がない、刈り込みに失敗した、ほとんど無音だった、刈り込んでも1割ほども縮まない、といった場合には、もとのファイルがそのまま送られます。いつでももとのまま送りたいなら（クラウドのプロバイダーで音楽や環境音を文字起こしするときなど）、`stt.cloud_trim_silence: false` にしてください。コマンド型やプラグインのプロバイダーには、刈り込んだ音声は渡りません。
 
-`stt.provider` を明示した場合、それは厳密に守られます。使えない場合は、プロバイダーを勝手に切り替えるのではなく、`hermes tools` を実行するよう案内するエラーになります。一度もプロバイダーを選んでいない場合にだけ、Hermes は `local` → `groq` → `openai` の順で自動判別します。
+`stt.provider` をはっきり選んだ場合、それは厳密に守られます — 使えないときは、別のプロバイダーへ切り替えるのではなく、`hermes tools` を実行するよう促すエラーになります。一度もプロバイダーを選んでいないときにだけ、Hermes は `local` → `groq` → `openai` の順に自動で選びます。
 
 Groq と OpenAI のモデルの上書きは、環境変数で行います。
 
@@ -2059,9 +2047,9 @@ GROQ_BASE_URL=https://api.groq.com/openai/v1
 STT_OPENAI_BASE_URL=https://api.openai.com/v1
 ```
 
-### 文字起こしのプロンプト（語彙のヒント） {#transcription-prompt-vocabulary-hints}
+### 文字起こしへの前置き（語彙の手がかり） {#transcription-prompt-vocabulary-hints}
 
-`stt.prompt` は、プロンプトを受け付ける STT のバックエンドへ渡す、任意の固定のヒントです。Whisper 系のモデルが聞き違えやすい固有名詞、製品名、専門用語に使ってください。
+`stt.prompt` は、前置きを受け付ける文字起こしの裏側へ渡す、任意の決まった手がかりです。Whisper 系のモデルが聞き間違えやすい固有名詞、製品名、専門用語に使ってください。
 
 ```yaml
 stt:
@@ -2069,27 +2057,27 @@ stt:
   prompt: "Hermes, Teknium, Nous Research, kanban, Ollama"
 ```
 
-**組み立て方。** 設定した値が土台になります。[`pre_transcription`](/hermes/docs/user-guide/features/hooks/#pre_transcription) のフックを登録したプラグインは、その上に手を加えます。同じ項目については、最後に書いたものが残ります。複数のプラグインのヒントは決まった順で組み合わされます。プラグインの読み込みはプラグイン ID の順に行われ、各プラグインのコールバックはそのプラグイン内での登録順に走るので、同じプラグインの組み合わせなら、いつでも同じ最終的なプロンプトになります。フックが `prompt` に空の文字列を返すと、そのリクエストでは設定のプロンプトが消えます。フックは `language` と `model` も上書きできます。`file_path` は読み取り専用で、変えようとするとログに記録されて捨てられます。フックを登録せず `stt.prompt` も設定していなければ、送られるリクエストは以前のリリースとまったく同じです。
+**組み立て方。** 設定の値が土台になります。[`pre_transcription`](/hermes/docs/user-guide/features/hooks/#pre_transcription) のフックを登録したプラグインが、その上に書き換えを重ねます。項目ごとに、最後に書いたものが残ります。複数のプラグインの手がかりは決まった順で重なります。プラグインは id の順に読み込まれ、それぞれのプラグインの処理は登録された順に走るので、同じプラグインの組み合わせなら、いつでも同じ最終的な前置きになります。フックが `prompt` に空の文字列を返すと、その回については設定の前置きが消えます。フックは `language` と `model` も上書きできます。`file_path` は読み取り専用で、変えようとしても記録されて捨てられます。フックが登録されておらず `stt.prompt` も設定されていなければ、送られるリクエストは以前の版とまったく同じです。
 
-**プロバイダーの対応状況。**
+**プロバイダーの対応。**
 
-| プロバイダー | プロンプトのパラメーター | 動作 |
+| プロバイダー | 前置きの項目 | 動き |
 |----------|-----------------|----------|
-| `local`（faster-whisper） | `initial_prompt` | そのままローカルのモデルへ渡されます |
-| `openai` | `prompt` | 文字起こしのリクエストにそのまま入ります |
-| `groq` | `prompt` | 文字起こしのリクエストにそのまま入ります |
-| `mistral` | `prompt` | 文字起こしのリクエストにそのまま入ります |
+| `local`（faster-whisper） | `initial_prompt` | 手元のモデルへそのまま渡されます |
+| `openai` | `prompt` | 文字起こしのリクエストにそのまま渡されます |
+| `groq` | `prompt` | 文字起こしのリクエストにそのまま渡されます |
+| `mistral` | `prompt` | 文字起こしのリクエストにそのまま渡されます |
 | `deepinfra` | `prompt` | OpenAI 互換の経路で、そのまま渡されます |
-| `xai` | 非対応 | DEBUG のログに残り、プロンプトなしでリクエストが進みます |
-| `elevenlabs` | 非対応 | DEBUG のログに残り、プロンプトなしでリクエストが進みます |
-| `local_command` | 非対応 | DEBUG のログに残り、プロンプトなしでリクエストが進みます |
-| `type: command` を指定した `stt.providers.<name>` | 非対応 | DEBUG のログに残り、プロンプトなしでリクエストが進みます |
-| プラグインが登録したプロバイダー | `transcribe(**extra)` の引数の `prompt` | プロンプトが設定されているときだけ送られるので、このキーより前からあるプロバイダーの呼び出しは変わりません |
+| `xai` | 対応していません | DEBUG で記録され、前置きなしでリクエストが進みます |
+| `elevenlabs` | 対応していません | DEBUG で記録され、前置きなしでリクエストが進みます |
+| `local_command` | 対応していません | DEBUG で記録され、前置きなしでリクエストが進みます |
+| `type: command` の `stt.providers.<name>` | 対応していません | DEBUG で記録され、前置きなしでリクエストが進みます |
+| プラグインが登録したプロバイダー | `transcribe(**extra)` の引数の `prompt` | 前置きが設定されているときだけ送られるので、この項目より前からあるプロバイダーへの呼び出しは変わりません |
 
-**長さ。** Whisper 系のモデルは、プロンプトの最後の 224 トークンほどしか手がかりにしません。Whisper 系のバックエンド（`local`、`openai`、`groq`、`deepinfra`）では、Hermes がこの上限を手元で守ります。長すぎる最終的なプロンプトは末尾だけに切り詰められ、警告がログに残ります。プロンプトの長さでリクエストがエラーになることはありません。ほかのバックエンド（`mistral`、プラグインのプロバイダー）にはそのまま渡され、検証はそちらに任されます。いずれにしても、ヒントは短く具体的に保ってください。
+**長さ。** Whisper 系のモデルが手がかりとして見るのは、前置きの末尾およそ224トークンだけです。whisper 系の裏側（`local`、`openai`、`groq`、`deepinfra`）については、Hermes が手元でこの上限を守ります。長すぎる前置きは末尾を残して切られ、警告が記録されます — 前置きの長さでリクエストが失敗することはありません。ほかの裏側（`mistral`、プラグインのプロバイダー）は前置きをそのまま受け取り、確認は自分で行います。いずれにしても、手がかりは短く具体的に保ってください。
 
-:::warning プロンプトは音声と一緒にアップロードされます
-最終的なプロンプトは、音声ファイルとあわせて、設定した STT のプロバイダーへ送られます。秘密情報やセッションから得た文脈を、`stt.prompt` にも、`pre_transcription` のフックが返すものにも入れないでください。ローカルの `faster-whisper` ではなく、外部の API を使っている場合はとくに気をつけてください。
+:::warning 前置きは音声と一緒に送られます
+できあがった前置きは、音声のファイルと一緒に、設定した文字起こしのプロバイダーへ送られます。秘密の情報や、そのセッションから来た情報を `stt.prompt` にも、`pre_transcription` のフックが返すものにも入れないでください。とくに、プロバイダーが手元の `faster-whisper` ではなく、外部の API のときは気をつけてください。
 :::
 
 ## 音声モード（CLI） {#voice-mode-cli}
@@ -2105,13 +2093,13 @@ voice:
   silence_duration: 3.0         # Seconds of silence before auto-stop
 ```
 
-CLI で `/voice on` と入力するとマイクのモードが有効になり、`record_key` で録音を開始・停止でき、`/voice tts` で読み上げの返答を切り替えられます。最初から最後までの手順とプラットフォームごとの動作は、[Voice Mode](/hermes/docs/user-guide/features/voice-mode/) を参照してください。
+CLI で `/voice on` と入力するとマイクが使えるようになり、`record_key` で録音の開始と停止をします。話し声での返事は `/voice tts` で切り替えます。ひととおりの準備とプラットフォームごとの動きは [音声モード](/hermes/docs/user-guide/features/voice-mode/)を参照してください。
 
-## ストリーミング {#streaming}
+## 少しずつ受け取る表示 {#streaming}
 
-返答が出そろうのを待たずに、届いたトークンからターミナルやメッセージのプラットフォームへ流します。
+返事がそろうのを待たずに、届いたトークンから順にターミナルやメッセージのプラットフォームへ流します。
 
-### CLI のストリーミング {#cli-streaming}
+### CLI での表示 {#cli-streaming}
 
 ```yaml
 display:
@@ -2119,9 +2107,9 @@ display:
   show_reasoning: true    # Also stream reasoning/thinking tokens (optional)
 ```
 
-有効にすると、返答は専用の枠の中に 1 トークンずつ現れます。ツールの呼び出しは、これまでどおり静かに記録されます。プロバイダーがストリーミングに対応していない場合は、自動的に通常の表示に戻ります。
+有効にすると、返事は枠の中に1トークンずつ現れます。ツールの呼び出しは、これまでどおり静かに記録されます。プロバイダーがこの形に対応していなければ、自動でふつうの表示に戻ります。
 
-### ゲートウェイのストリーミング（Telegram、Discord、Slack） {#gateway-streaming-telegram-discord-slack}
+### ゲートウェイでの表示（Telegram、Discord、Slack） {#gateway-streaming-telegram-discord-slack}
 
 ```yaml
 streaming:
@@ -2133,61 +2121,61 @@ streaming:
   fresh_final_after_seconds: 0    # Opt in to fresh final (Telegram) when preview is this old
 ```
 
-有効にすると、ボットは最初のトークンが出た時点でメッセージを送り、トークンが届くたびにそれを少しずつ編集していきます。メッセージの編集に対応していないプラットフォーム（Signal、メール、Home Assistant）は最初の試みで自動的に見分けられ、そのセッションではメッセージがあふれることなく、ストリーミングが穏やかに無効になります。
+有効にすると、ボットは最初のトークンでメッセージを送り、以降トークンが届くたびにそれを少しずつ編集していきます。メッセージの編集に対応していないプラットフォーム（Signal、メール、Home Assistant）は最初の試みで見分けられ、そのセッションではこの表示が静かに止まるので、メッセージがあふれることはありません。
 
-トークン単位の編集をせずに、やり取りの途中の自然なアシスタントの更新を別のメッセージとして送りたい場合は、`display.interim_assistant_messages: true` にしてください。
+少しずつ編集するのではなく、やり取りの途中でアシスタントの更新を自然な形で別々に送りたいなら、`display.interim_assistant_messages: true` にしてください。
 
-**あふれたときの扱い:** 流れる文章がプラットフォームのメッセージの長さの上限（4096 文字ほど）を超えると、今のメッセージはそこで確定し、自動的に新しいメッセージが始まります。
+**あふれたときの扱い:** 流している文章がプラットフォームのメッセージの長さの上限（およそ4096文字）を越えると、いまのメッセージはそこで確定し、新しいメッセージが自動で始まります。
 
-**新しいメッセージで締める（Telegram）:** Telegram の `editMessageText` は元のメッセージの時刻を保つので、長く流れ続けた返答は、完了後も最初のトークンの時刻のままになってしまいます。`fresh_final_after_seconds > 0` にすると、古くなった下書きを新しいメッセージとして届け、下書きのほうはできる範囲で削除します。デフォルトは `0` で、常にその場で確定させ、両方の操作が見えるクライアントで一瞬だけ「重複して消える」ような動きになるのを避けます。
+**新しいメッセージとして確定する（Telegram）:** Telegram の `editMessageText` は、もとのメッセージの時刻をそのまま残します。ですから長く流し続けた返事は、できあがったあとも最初のトークンの時刻のままになります。`fresh_final_after_seconds > 0` にすると、古くなった下書きを、まったく新しい最終のメッセージとして届け、下書きのほうはできる範囲で消します。初期値は `0` で、その場で確定するので、両方の操作が見えるクライアントで一瞬メッセージが重複して消える動きを避けられます。
 
-:::note プラットフォームごとのストリーミングの初期値
-大もとの `streaming.enabled` のスイッチは、デフォルトで `false` です。これを入れるまでは何も流れません。有効にしたあとは、ストリーミングは**プラットフォームごとに**決まります。Telegram は `display.platforms.telegram.streaming: true`（流す）、Discord は `display.platforms.discord.streaming: false`（流さない）で出荷されます。つまり、ストリーミングを有効にすると Telegram はそのまま流れ始め、Discord は切り替えるまでメッセージ全体での返答のままです。これらのプラットフォームごとのスイッチは、ダッシュボードの **Channels** の切り替えからでも、`~/.hermes/config.yaml` を直接編集してでも変えられます。
+:::note プラットフォームごとの初期値
+大もとの `streaming.enabled` は初期状態で `false` です — これを入れるまで何も流れません。有効にしたあとは、**プラットフォームごとに**決まります。Telegram は `display.platforms.telegram.streaming: true`（流します）、Discord は `display.platforms.discord.streaming: false`（流しません）で配られます。ですから有効にしたあと、Telegram はそのまま流れ、Discord は設定を変えるまでメッセージをまとめて返します。プラットフォームごとの切り替えは、ダッシュボードの **Channels** の切り替えからでも、`~/.hermes/config.yaml` から直接でも変えられます。
 :::
 
-## グループチャットでのセッションの分離 {#group-chat-session-isolation}
+## グループのチャットでのセッションの分け方 {#group-chat-session-isolation}
 
-CLI、TUI やダッシュボード、メッセージ用のゲートウェイをまたいで、同時に
-動かせるチャットのセッションの数を制限します。
+CLI、TUI とダッシュボード、メッセージのゲートウェイをまたいで、同時に開けるチャットの
+セッションの数を制限します。
 
 ```yaml
 max_concurrent_sessions: null  # null/0 = unlimited; positive integer = active session cap
 ```
 
-枠が埋まるのは、チャットの画面を開いたときではなく、セッションが**最初のやり取り**を
-実行したときです。チャットを開いたり、再開したり、つなぎ直したりするだけでは、
-メッセージを送るまで何も消費しません。ですから、開いたままのデスクトップのタブ（や、
-不安定なウェブソケットが裏で引き起こす再開）が、同じ上限を分け合うゲートウェイを飢えさせることはありません。
+枠が使われるのは、そのセッションが**最初のやり取り**を行ったときで、チャットの窓を
+開いたときではありません。チャットを開いたり、再開したり、つなぎ直したりするだけでは
+何も消費しないので、置きっぱなしのデスクトップのタブ（や、不安定な websocket が起こす
+裏での再開）が、この上限を分け合っているメッセージのゲートウェイを枯らすことはありません。
 
-上限に達すると、Hermes はどの画面が枠を握っているかを名指しした、はっきりした
-知らせを返します。すでに動いているセッションの動作は変わりません。
-`hermes status` を実行すると、今の枠の使用状況と、握っている相手がすべて見えます。
+上限に達すると Hermes は、どの画面が枠を持っているかを名指しした、はっきりした知らせを
+返します。すでに動いているセッションの動きは変わりません。
+いまの枠の使われ方と、それぞれの持ち主は `hermes status` で見られます。
 
-正式なキーは最上位の `max_concurrent_sessions` です。Hermes は
-`gateway.max_concurrent_sessions` もフォールバックとして受け付けますが、両方が
-設定されている場合は最上位のキーが優先されます。
+正式な項目は、いちばん上の階層の `max_concurrent_sessions` です。Hermes は
+`gateway.max_concurrent_sessions` も受け付けますが、両方に書かれているときは
+いちばん上の階層のほうが勝ちます。
 
-この上限は、ローカルの実行時のリースファイルで守られており、最善を尽くす程度のものです。
-一覧が読めなかったり、ロックできなかったりしたときは、ユーザーが立ち往生しないように
-Hermes は通す側に倒れます。想定しているのは 1 台のホスト・1 つのプロファイルでの実行であって、
-複数のマシンから共有マウントされた `$HERMES_HOME` ではありません。
+この上限は、手元の実行時の記録のファイルで守られ、できる範囲でのものです。その記録を
+読めなかったり錠を掛けられなかったりしたときは、利用者が締め出されないよう、Hermes は
+通す側に倒れます。想定しているのは1台のホストやプロファイルでの実行で、複数のマシンに
+またがってマウントした `$HERMES_HOME` を共有する使い方ではありません。
 
-共有のチャットで、会話を部屋ごとに 1 つにするか、参加者ごとに 1 つにするかを決められます。
+共有のチャットで、会話を部屋ごとに1つにするか、参加者ごとに1つにするかを決めます。
 
 ```yaml
 group_sessions_per_user: true  # true = per-user isolation in groups/channels, false = one shared session per chat
 ```
 
-- `true` がデフォルトで、おすすめの設定です。Discord のチャンネル、Telegram のグループ、Slack のチャンネルなど共有の場では、プラットフォームがユーザー ID を提供していれば、送信者ごとに別のセッションになります。
-- `false` は、部屋を共有する昔の動作に戻します。チャンネルを 1 つの共同作業の会話として扱わせたいときには役立ちますが、その分ユーザー同士が文脈も、トークンの費用も、割り込みの状態も共有することになります。
-- ダイレクトメッセージは影響を受けません。Hermes はこれまでどおり、チャットや DM の ID で振り分けます。
-- スレッドは、どちらの設定でも親のチャンネルから分かれたままです。`true` の場合は、スレッドの中でも参加者ごとに別のセッションになります。
+- `true` が初期値で、おすすめの設定です。Discord のチャンネル、Telegram のグループ、Slack のチャンネルのような共有の場では、プラットフォームがユーザー ID を渡してくれる限り、送信者ごとに自分のセッションを持ちます。
+- `false` は、部屋を共有する昔の動きに戻します。チャンネルを1つの共同の会話として扱わせたいなら役に立ちますが、その分、利用者どうしが文脈もトークンの費用も割り込みの状態も共有することになります。
+- 1対1のやり取りは変わりません。Hermes はこれまでどおり、チャットや DM の ID でそれらを分けます。
+- スレッドは、どちらの設定でも親のチャンネルから分かれたままです。`true` のときは、スレッドの中でも参加者ごとに自分のセッションを持ちます。
 
-動作の詳細と例は、[Sessions](/hermes/docs/user-guide/sessions/) と [Discord のガイド](/hermes/docs/user-guide/messaging/discord/) を参照してください。
+動きの詳しい説明と例は、[セッション](/hermes/docs/user-guide/sessions/)と [Discord の案内](/hermes/docs/user-guide/messaging/discord/)を参照してください。
 
-## 許可のない DM への動作 {#unauthorized-dm-behavior}
+## 許可していない相手からの1対1のやり取り {#unauthorized-dm-behavior}
 
-知らないユーザーからダイレクトメッセージが届いたときの動きを決めます。
+知らない相手が1対1でメッセージを送ってきたときの動きを決めます。
 
 ```yaml
 unauthorized_dm_behavior: pair
@@ -2196,14 +2184,14 @@ whatsapp:
   unauthorized_dm_behavior: ignore
 ```
 
-- `pair` は、チャット型の DM のプラットフォームでのデフォルトです。Hermes はアクセスを断ったうえで、DM で一度きりのペアリングのコードを返します。
-- `ignore` は、許可のない DM を黙って捨てます。
-- メールは、`platforms.email.unauthorized_dm_behavior: pair` を設定しない限り `ignore` がデフォルトです。受信箱には無関係な未読のメールが入っていることがあるからです。
-- プラットフォームごとの設定は全体のデフォルトを上書きするので、広くはペアリングを有効にしたまま、あるプラットフォームだけ静かにする、といったことができます。
+- `pair` は、チャット型の1対1のやり取りができるプラットフォームでの初期値です。Hermes は利用を断りますが、1対1のやり取りで一度きりのペアリングの符号を返します。
+- `ignore` は、許可していない相手からのメッセージを静かに捨てます。
+- メールは、`platforms.email.unauthorized_dm_behavior: pair` を設定しない限り `ignore` が初期値です。受信箱には関係のない未読のメールが入っていることがあるからです。
+- プラットフォームごとの設定は全体の初期値を上書きするので、全体ではペアリングを有効にしたまま、1つのプラットフォームだけ静かにできます。
 
-## クイックコマンド {#quick-commands}
+## 手早いコマンド {#quick-commands}
 
-LLM を呼ばずにシェルのコマンドを走らせる、あるいはあるスラッシュコマンドを別のものの別名にする、独自のコマンドを定義できます。exec のクイックコマンドはトークンを使わないので、メッセージのプラットフォーム（Telegram、Discord など）からサーバーの様子をさっと見たり、ちょっとしたスクリプトを走らせたりするのに便利です。
+LLM を呼ばずにシェルのコマンドを走らせる、あるいは1つのスラッシュコマンドを別のものの別名にする、自分だけのコマンドを決められます。exec の手早いコマンドはトークンを消費しないので、メッセージのプラットフォーム（Telegram、Discord など）からサーバーの様子を見たり、ちょっとしたスクリプトを走らせたりするのに便利です。
 
 ```yaml
 quick_commands:
@@ -2224,19 +2212,19 @@ quick_commands:
     target: /gateway restart
 ```
 
-使い方は、CLI でも、どのメッセージのプラットフォームでも、`/status`、`/disk`、`/update`、`/gpu`、`/restart` と入力するだけです。`exec` のコマンドはホスト上でそのまま走り、出力を直接返します。LLM の呼び出しはなく、トークンも消費しません。`alias` のコマンドは、設定したスラッシュコマンドへ書き換えられます。
+使い方: CLI でも、どのメッセージのプラットフォームでも、`/status`、`/disk`、`/update`、`/gpu`、`/restart` と入力します。`exec` のコマンドはホストの上で動き、その出力をそのまま返します — LLM の呼び出しはなく、トークンも使いません。`alias` のコマンドは、指定したスラッシュコマンドに置き換わります。
 
-- **30 秒のタイムアウト** — 長く走るコマンドは、エラーメッセージとともに止められます
-- **優先順位** — クイックコマンドはスキルのコマンドより先に照合されるので、スキルの名前を上書きできます
-- **補完** — クイックコマンドは呼び出しの時点で解決されるため、組み込みのスラッシュコマンドの補完の一覧には出ません
+- **30秒で打ち切ります** — 長く走るコマンドは、エラーの知らせとともに止められます
+- **優先順位** — 手早いコマンドはスキルのコマンドより先に調べられるので、スキルの名前を上書きできます
+- **入力の補完** — 手早いコマンドは実行のときに解決されるので、組み込みのスラッシュコマンドの補完の一覧には出ません
 - **種類** — 使えるのは `exec` と `alias` です。ほかの種類はエラーになります
 - **どこでも使えます** — CLI、Telegram、Discord、Slack、WhatsApp、Signal、メール、Home Assistant
 
-文字列だけのプロンプトの近道は、クイックコマンドとしては使えません。繰り返し使うプロンプトの流れは、スキルを作るか、既存のスラッシュコマンドの別名にしてください。
+文字列だけの、プロンプトの近道は手早いコマンドとして使えません。繰り返し使うプロンプトの流れには、スキルを作るか、すでにあるスラッシュコマンドの別名にしてください。
 
-## 人間らしい間 {#human-delay}
+## 人らしい間 {#human-delay}
 
-メッセージのプラットフォームで、人間らしい返答の間合いを真似ます。
+メッセージのプラットフォームで、人が返すような間合いをまねます。
 
 ```yaml
 human_delay:
@@ -2247,7 +2235,7 @@ human_delay:
 
 ## コードの実行 {#code-execution}
 
-`execute_code` ツールを設定します。
+`execute_code` のツールを設定します。
 
 ```yaml
 code_execution:
@@ -2256,16 +2244,16 @@ code_execution:
   max_tool_calls: 50           # Max tool calls within code execution
 ```
 
-**`mode`** は、スクリプトの作業ディレクトリと Python の実行環境を決めます。
+**`mode`** は、スクリプトの作業ディレクトリと Python の実行ファイルを決めます。
 
-- **`project`**（デフォルト）— スクリプトはセッションの作業ディレクトリで、有効になっている仮想環境や conda 環境の python で走ります。プロジェクトの依存（`pandas`、`torch`、プロジェクトのパッケージ）や相対パス（`.env`、`./data.csv`）が自然に解決され、`terminal()` から見える世界と一致します。
-- **`strict`** — スクリプトは一時的な作業ディレクトリで、`sys.executable`（Hermes 自身の python）で走ります。再現性は最大になりますが、プロジェクトの依存や相対パスは解決されません。
+- **`project`**（初期値） — スクリプトは、そのセッションの作業ディレクトリで、いま有効な virtualenv や conda の環境の python で動きます。プロジェクトの依存（`pandas`、`torch`、プロジェクトのパッケージ）や相対の場所（`.env`、`./data.csv`）が自然に解決され、`terminal()` から見えるものと合います。
+- **`strict`** — スクリプトは一時的な置き場で `sys.executable`（Hermes 自身の python）で動きます。同じ結果を再現しやすい代わりに、プロジェクトの依存や相対の場所は解決されません。
 
-環境変数の掃除（`*_API_KEY`、`*_TOKEN`、`*_SECRET`、`*_PASSWORD`、`*_CREDENTIAL`、`*_PASSWD`、`*_AUTH` を取り除きます）とツールの許可リストは、どちらのモードでもまったく同じように働きます。モードを変えても、安全性の構えは変わりません。
+環境の掃除（`*_API_KEY`、`*_TOKEN`、`*_SECRET`、`*_PASSWORD`、`*_CREDENTIAL`、`*_PASSWD`、`*_AUTH` を取り除きます）と、使えるツールの一覧は、どちらの設定でも同じように効きます — 設定を変えても安全の度合いは変わりません。
 
-## Web 検索のバックエンド {#web-search-backends}
+## ウェブ検索の裏側 {#web-search-backends}
 
-`web_search` と `web_extract` のツールは、5 つのバックエンドのプロバイダーに対応しています。バックエンドは `config.yaml` か `hermes tools` で設定します。
+`web_search` と `web_extract` のツールは、5つのプロバイダーに対応しています。`config.yaml` か `hermes tools` で設定してください。
 
 ```yaml
 web:
@@ -2293,27 +2281,27 @@ web:
     exa: paid
 ```
 
-| バックエンド | 環境変数 | 検索 | 抽出 |
+| 裏側 | 環境変数 | 検索 | 本文の取得 |
 |---------|---------|--------|---------|
-| **Firecrawl**（デフォルト） | `FIRECRAWL_API_KEY` | ✔ | ✔ |
+| **Firecrawl**（初期値） | `FIRECRAWL_API_KEY` | ✔ | ✔ |
 | **SearXNG** | `SEARXNG_URL` | ✔ | — |
-| **Parallel** | `PARALLEL_API_KEY`（任意 — キーなしの無料枠あり） | ✔ | ✔ |
+| **Parallel** | `PARALLEL_API_KEY`（任意 — キーなしの無料の枠があります） | ✔ | ✔ |
 | **Tavily** | `TAVILY_API_KEY`（任意 — 選べばキーなしでも使えます） | ✔ | ✔ |
-| **Exa** | `EXA_API_KEY`（任意 — キーなしの無料枠あり） | ✔ | ✔ |
+| **Exa** | `EXA_API_KEY`（任意 — キーなしの無料の枠があります） | ✔ | ✔ |
 
-**バックエンドの選ばれ方:** 実行時には、保存された `web.backend` の選択が常に使われます（`hermes tools` で設定します。`nous` は運用済みの Tool Gateway を経由します）。Web のバックエンドを一度も選んでいない場合にだけ、使える API キーから自動で判別されます。`SEARXNG_URL` だけが設定されていれば SearXNG、`EXA_API_KEY` だけなら Exa、`TAVILY_API_KEY` だけなら Tavily、`PARALLEL_API_KEY` だけなら Parallel、`KEENABLE_API_KEY` だけなら Keenable です。**選択も認証情報もまったくない**場合、リクエストはキーなしの無料枠の輪（Exa / Parallel / Tavily / Firecrawl / Keenable）を順に回り、レート制限に当たれば自動で次へ移ります。詳しくは [Web Search のガイド](/hermes/docs/user-guide/features/web-search/) を参照してください。いったん選択が保存されると、`.env` にキーを足しても経路は変わりません。`hermes tools` で Tavily、Firecrawl、Keenable を選ぶ場合は、キーがなくても使えます。
+**裏側の選び方:** 実行時には、必ず保存された `web.backend` の選択が使われます（`hermes tools` で設定します。`nous` は運用込みのツールのゲートウェイを通ります）。一度もウェブの裏側を選んでいないときにだけ、手持ちの API キーから自動で選ばれます。`SEARXNG_URL` だけなら SearXNG、`EXA_API_KEY` だけなら Exa、`TAVILY_API_KEY` だけなら Tavily、`PARALLEL_API_KEY` だけなら Parallel、`KEENABLE_API_KEY` だけなら Keenable です。**選択も認証情報もまったくない**ときは、キーなしの無料の枠の輪（Exa / Parallel / Tavily / Firecrawl / Keenable）を順に回り、回数の制限に当たったら自動で次へ移ります — 詳しくは [ウェブ検索の案内](/hermes/docs/user-guide/features/web-search/)を参照してください。いったん選択があると、`.env` にキーを足しても経路は変わりません。`hermes tools` で Tavily、Firecrawl、Keenable を選ぶのは、キーがなくてもできます。
 
-**SearXNG** は、無料で、自分でホストでき、プライバシーを尊重するメタ検索エンジンで、70 を超える検索エンジンに問い合わせます。API キーは不要で、`SEARXNG_URL` に自分のインスタンス（`http://localhost:8080` など）を設定するだけです。SearXNG は検索専用なので、`web_extract` には別の抽出のプロバイダーが必要です（`web.extract_backend` を設定してください）。Docker での構築の手順は [Web Search のセットアップガイド](/hermes/docs/user-guide/features/web-search/) を参照してください。
+**SearXNG** は、無料で自分で立てられる、プライバシーを守る横断検索の仕組みで、70以上の検索エンジンに問い合わせます。API キーは要りません — `SEARXNG_URL` に自分のインスタンスを設定するだけです（たとえば `http://localhost:8080`）。SearXNG は検索だけなので、`web_extract` には別の本文の取得のプロバイダーが必要です（`web.extract_backend` を設定してください）。Docker での立て方は [ウェブ検索の準備の案内](/hermes/docs/user-guide/features/web-search/)を参照してください。
 
-**自前でホストする Firecrawl:** `FIRECRAWL_API_URL` を自分のインスタンスに向けてください。独自の URL を設定すると、API キーは任意になります（サーバー側で認証を切るには `USE_DB_AUTHENTICATION=*** を設定します）。
+**自分で立てた Firecrawl:** `FIRECRAWL_API_URL` に自分のインスタンスを指定してください。独自の URL を設定すると、API キーは任意になります（サーバー側で認証を止めるには `USE_DB_AUTHENTICATION=*** を設定します)。
 
-**Parallel の検索モード:** `PARALLEL_SEARCH_MODE` で検索の動きを決めます。`fast`、`one-shot`、`agentic` のいずれかです（デフォルト: `agentic`）。
+**Parallel の検索の仕方:** `PARALLEL_SEARCH_MODE` で検索の動きを決めます — `fast`、`one-shot`、`agentic` のいずれかです（初期値は `agentic`）。
 
-**Exa:** `~/.hermes/.env` に `EXA_API_KEY` を設定してください。`category` による分類の絞り込み（`company`、`research paper`、`news`、`people`、`personal site`、`pdf`）と、ドメインや日付による絞り込みに対応しています。
+**Exa:** `~/.hermes/.env` に `EXA_API_KEY` を設定してください。`category` による絞り込み（`company`、`research paper`、`news`、`people`、`personal site`、`pdf`）と、ドメインや日付での絞り込みに対応します。
 
-## ブラウザー {#browser}
+## ブラウザ {#browser}
 
-ブラウザーの自動操作の動きを設定します。
+ブラウザの自動操作の動きを設定します。
 
 ```yaml
 browser:
@@ -2335,29 +2323,29 @@ browser:
     adopt_existing_tab: false    # Reuse an existing tab for this identity before creating one
 ```
 
-**ダイアログの扱い方:**
+**ダイアログへの向き合い方:**
 
-- `must_respond`（デフォルト）— ダイアログを受け止め、`browser_snapshot.pending_dialogs` に出し、エージェントが `browser_dialog(action=...)` を呼ぶのを待ちます。`dialog_timeout_s` 秒のあいだ返事がないと、ページの JS のスレッドがいつまでも止まらないよう、自動的に閉じられます。
-- `auto_dismiss` — 受け止めて、すぐ閉じます。エージェントは後から `browser_snapshot.recent_dialogs` で、`closed_by="auto_policy"` としてその記録を見られます。
-- `auto_accept` — 受け止めて、すぐ承諾します。`beforeunload` の確認をしつこく出すページに便利です。
+- `must_respond`（初期値） — ダイアログを受け止め、`browser_snapshot.pending_dialogs` に出して、エージェントが `browser_dialog(action=...)` を呼ぶのを待ちます。`dialog_timeout_s` 秒たっても返事がなければ、ページの JS がいつまでも止まらないよう、自動で閉じます。
+- `auto_dismiss` — 受け止めて、すぐ閉じます。エージェントはあとから `browser_snapshot.recent_dialogs` に `closed_by="auto_policy"` として記録を見られます。
+- `auto_accept` — 受け止めて、すぐ受け入れます。`beforeunload` の確認がしつこいページで役に立ちます。
 
-ダイアログの扱いの全体の流れは、[ブラウザーの機能のページ](/hermes/docs/user-guide/features/browser/#browser_dialog) を参照してください。
+ダイアログを扱う流れの全体は、[ブラウザの機能のページ](/hermes/docs/user-guide/features/browser/#browser_dialog)を参照してください。
 
-ブラウザーのツールセットは複数のプロバイダーに対応しています。Browserbase、Browser Use、ローカルの Chromium 系ブラウザーへの CDP 接続の詳細は、[Browser の機能のページ](/hermes/docs/user-guide/features/browser/) を参照してください。
+ブラウザのツールセットは複数のプロバイダーに対応しています。Browserbase、Browser Use、手元の Chromium 系の CDP の準備については、[ブラウザの機能のページ](/hermes/docs/user-guide/features/browser/)を参照してください。
 
 ## タイムゾーン {#timezone}
 
-サーバーのローカルのタイムゾーンを、IANA のタイムゾーン名で上書きします。ログのタイムスタンプ、cron のスケジュール、システムプロンプトへの時刻の差し込みに影響します。
+サーバーのタイムゾーンを、IANA のタイムゾーンの文字列で上書きします。ログの時刻、cron の予定、システムのプロンプトに差し込まれる時刻に効きます。
 
 ```yaml
 timezone: "America/New_York"   # IANA timezone (default: "" = server-local time)
 ```
 
-指定できるのは、IANA のタイムゾーン識別子です（`America/New_York`、`Europe/London`、`Asia/Kolkata`、`UTC` など）。空のままにするか、キーを省くとサーバーのローカル時刻になります。
+使えるのは、IANA のタイムゾーンの識別子ならどれでもです（たとえば `America/New_York`、`Europe/London`、`Asia/Kolkata`、`UTC`）。空にするか書かなければ、サーバーの時刻になります。
 
 ## Discord {#discord}
 
-メッセージ用のゲートウェイでの、Discord 固有の動きを設定します。
+メッセージのゲートウェイでの、Discord に固有の動きを設定します。
 
 ```yaml
 discord:
@@ -2366,13 +2354,13 @@ discord:
   auto_thread: true              # Auto-create threads on @mention in channels
 ```
 
-- `require_mention` — `true`（デフォルト）のとき、ボットはサーバーのチャンネルでは `@BotName` と呼ばれたときにだけ返します。DM は呼びかけなしでも常に動きます。
-- `free_response_channels` — カンマ区切りのチャンネル ID の一覧で、ここに挙げたチャンネルでは、呼びかけなしでもすべてのメッセージに返します。
-- `auto_thread` — `true`（デフォルト）のとき、チャンネルでの呼びかけは自動的に会話用のスレッドを作り、チャンネルをすっきり保ちます（Slack のスレッドと似た考え方です）。
+- `require_mention` — `true`（初期値）のとき、ボットはサーバーのチャンネルでは `@BotName` と呼びかけられたときにだけ応答します。1対1のやり取りでは、呼びかけなしでも必ず応答します。
+- `free_response_channels` — 呼びかけがなくてもすべてのメッセージに応答するチャンネルの ID を、カンマで区切って並べます。
+- `auto_thread` — `true`（初期値）のとき、チャンネルでの呼びかけは自動的に会話のスレッドを作るので、チャンネルがすっきり保たれます（Slack のスレッドと似た考え方です）。
 
 ## セキュリティ {#security}
 
-実行前のセキュリティの検査と、秘密情報の伏せ字です。
+実行の前の安全の検査と、秘密の情報を伏せる設定です。
 
 ```yaml
 security:
@@ -2387,15 +2375,15 @@ security:
     shared_files: []
 ```
 
-- `redact_secrets` — `true` のとき、ツールの出力が会話のコンテキストやログに入る前に、API キー、トークン、パスワードらしき並びを見つけて伏せます。**デフォルトで有効**です。デバッグや伏せ字の仕組みそのものの開発で、認証情報らしい生の文字列が必要なときにだけ `false` にしてください。
-- `tirith_enabled` — `true` のとき、ターミナルのコマンドは実行前に [Tirith](https://github.com/sheeki03/tirith) で検査され、危険かもしれない操作が見つけられます。
-- `tirith_path` — tirith のバイナリのパスです。標準でない場所に入れている場合に設定します。
-- `tirith_timeout` — tirith の検査を待つ最大の秒数です。検査がタイムアウトしても、コマンドはそのまま進みます。
-- `tirith_fail_open` — `true`（デフォルト）のとき、tirith が使えなかったり失敗したりしても、コマンドの実行は許されます。tirith が確かめられないときにコマンドを止めたい場合は `false` にしてください。
+- `redact_secrets` — `true` のとき、ツールの出力の中で API キー、トークン、パスワードらしき並びを自動で見つけ、会話の文脈やログに入る前に伏せます。**初期状態で有効です。** 認証情報らしき文字列をそのまま見たいとき（不具合を調べるときや、伏せる仕組み自体を作るとき）にだけ、はっきり `false` にしてください。
+- `tirith_enabled` — `true` のとき、ターミナルのコマンドは実行の前に [Tirith](https://github.com/sheeki03/tirith) で調べられ、危険かもしれない操作が見つけられます。
+- `tirith_path` — tirith のバイナリの場所です。ふつうと違う場所に入れているなら設定してください。
+- `tirith_timeout` — tirith の検査を待つ最長の秒数です。時間切れになったコマンドはそのまま進みます。
+- `tirith_fail_open` — `true`（初期値）のとき、tirith が使えなかったり失敗したりしても、コマンドは実行されます。tirith が確かめられないコマンドを止めたいなら `false` にしてください。
 
-## サイトの遮断リスト {#website-blocklist}
+## サイトの遮断の一覧 {#website-blocklist}
 
-エージェントの Web やブラウザーのツールから、特定のドメインへのアクセスを止めます。
+エージェントのウェブとブラウザのツールから、特定のドメインへ届かないようにします。
 
 ```yaml
 security:
@@ -2409,50 +2397,50 @@ security:
       - "/etc/hermes/blocked-sites.txt"
 ```
 
-有効にすると、遮断するドメインの形に一致した URL は、Web やブラウザーのツールが動く前にはねられます。これは `web_search`、`web_extract`、`browser_navigate`、そして URL にアクセスするすべてのツールに効きます。
+有効にすると、遮断するドメインの書き方に当てはまる URL は、ウェブやブラウザのツールが動く前に断られます。これは `web_search`、`web_extract`、`browser_navigate`、そのほか URL に触れるすべてのツールに効きます。
 
-ドメインの書き方は次のとおりです。
-- 完全なドメイン: `admin.example.com`
-- ワイルドカードのサブドメイン: `*.internal.company.com`（すべてのサブドメインを遮断します）
-- トップレベルのワイルドカード: `*.local`
+ドメインの書き方は次に対応します。
+- そのままのドメイン: `admin.example.com`
+- サブドメインをまとめて: `*.internal.company.com`（すべてのサブドメインを遮断します）
+- トップレベルドメインをまとめて: `*.local`
 
-共有のファイルには、1 行に 1 つずつドメインの規則を書きます（空行と `#` のコメントは無視されます）。ファイルがなかったり読めなかったりすると警告がログに残りますが、ほかの Web のツールが止まることはありません。
+共有のファイルには、1行に1つのドメインの決まりを書きます（空行と `#` で始まる注釈は無視されます）。ファイルがなかったり読めなかったりすると警告が記録されますが、ほかのウェブのツールが止まることはありません。
 
-この方針は 30 秒ごとにキャッシュされるので、設定の変更は再起動なしにすぐ効きます。
+この決まりは30秒だけ覚えられるので、設定を変えても再起動なしで、すぐに効きます。
 
 ## 賢い承認 {#smart-approvals}
 
-危険かもしれないコマンドを Hermes がどう扱うかを決めます。
+危険かもしれないコマンドの扱い方を決めます。
 
 ```yaml
 approvals:
   mode: smart   # smart | manual | off
 ```
 
-| モード | 動作 |
+| 設定 | 動き |
 |------|----------|
-| `smart`（デフォルト） | 補助の LLM を使って、引っかかったコマンドが本当に危険かどうかを判断します。危険度の低いコマンドは、そのコマンドに限って自動的に承認されます。本当に危ないものは拒否され、判断がつかないものはユーザーへ回されます。 |
-| `manual` | 引っかかったコマンドを実行する前に、必ずユーザーに確認します。CLI では対話的な承認の画面が出ます。メッセージのプラットフォームでは、承認の待ち行列に入ります。 |
-| `off` | 承認の検査をすべて飛ばします。`HERMES_YOLO_MODE=true` と同じです。**注意して使ってください。** |
+| `smart`（初期値） | 補助の LLM を使って、引っかかったコマンドが本当に危険かどうかを見極めます。危険の小さいコマンドは、そのコマンドについてだけ自動で承認されます。本当に危ないものは断られ、判断がつかないものは利用者に回されます。 |
+| `manual` | 引っかかったコマンドを実行する前に、必ず利用者に確認します。CLI では対話的な承認の画面が出ます。メッセージでは、承認待ちとして並びます。 |
+| `off` | 承認の確認をすべて飛ばします。`HERMES_YOLO_MODE=true` と同じです。**気をつけて使ってください。** |
 
-賢いモードは、承認疲れを減らすのにとくに役立ちます。安全な操作についてはエージェントがより自律的に動けるようにしつつ、本当に壊しかねないコマンドは捕まえます。
+smart の設定は、承認に疲れてしまうのを防ぐのにとくに役立ちます。安全な操作についてはエージェントがより自分で進められるようにしつつ、本当に壊してしまうコマンドは捕まえられます。
 
 :::warning
-`approvals.mode: off` にすると、ターミナルのコマンドに対する安全の検査がすべて無効になります。信頼できる、隔離された環境でだけ使ってください。
+`approvals.mode: off` にすると、ターミナルのコマンドに対する安全の検査がすべて止まります。信頼できる、隔てられた環境でだけ使ってください。
 :::
 
-### 拒否が続いたときの遮断 {#denial-circuit-breaker}
+### 断りが続いたときの遮断 {#denial-circuit-breaker}
 
-`approvals.denial_breaker_threshold`（デフォルト `3`）は、賢い承認の審査役が拒み続けているコマンドを、エージェントが少しずつ形を変えて試し続けるのを防ぎます。試すたびに、見張り役の LLM の呼び出しが 1 回消えていくからです。1 つのセッションでこの回数だけ拒否が続くと、拒否のメッセージは強い停止の指示に変わり、作業をやめ、止められた操作を報告し、手で実行するか `/approve` するようあなたに頼め、とエージェントに伝えます。1 度でも承認されれば数はリセットされます。`0` にすると無効になります。
+`approvals.denial_breaker_threshold`（初期値は `3`）は、賢い承認の判定が断り続けているコマンドの言い換えを、エージェントが何度も試すのを防ぎます — 試すたびに見張り役の LLM の呼び出しが1回増えるからです。1つのセッションでこの回数だけ続けて断られると、断りの知らせは強い指示に変わり、やめて、止められた操作を報告し、自分で実行するか `/approve` するよう利用者に頼め、と伝えます。1回でも承認されれば数え直しになります。`0` にすると止まります。
 
 ```yaml
 approvals:
   denial_breaker_threshold: 3   # 0 disables the breaker
 ```
 
-### 拒否の規則 {#deny-rules}
+### 断る決まり {#deny-rules}
 
-`approvals.deny` は、一致したターミナルのコマンドを無条件に止める、glob のパターンの一覧です。`--yolo`、`/yolo`、`mode: off` のときでも止まります。組み込みの厳格な遮断リストの、ユーザーが編集できる相棒です。
+`approvals.deny` は、当てはまるターミナルのコマンドを無条件に止める、書き方の並びです — `--yolo` でも、`/yolo` でも、`mode: off` でも止まります。組み込みの強い遮断の一覧に対する、利用者が書ける側の仕組みです。
 
 ```yaml
 approvals:
@@ -2461,11 +2449,11 @@ approvals:
     - "*curl*|*sh*"
 ```
 
-パターンは大文字小文字を区別しない fnmatch の glob で、YAML では引用符で囲む必要があります（先頭の裸の `*` は構文エラーになります）。詳しくは [Security — User-Defined Deny Rules](/hermes/docs/user-guide/security/#user-defined-deny-rules-approvalsdeny) を参照してください。
+書き方は大文字と小文字を区別しない fnmatch の形で、YAML では引用符で囲む必要があります（先頭の `*` を裸で書くと読み込みに失敗します）。詳しくは [セキュリティ — 利用者が決める断る決まり](/hermes/docs/user-guide/security/#user-defined-deny-rules-approvalsdeny)を参照してください。
 
-### 賢い承認の独自の方針 {#custom-smart-approval-policy}
+### 賢い承認の判断への追加の方針 {#custom-smart-approval-policy}
 
-`approvals.smart_policy` を使うと、賢い承認の審査役への指示に自分の規則を足せます。設定すると、そのテキストは見張り役の LLM のシステムプロンプト（信頼できる側の経路で、信頼できないコマンドの文字列と並ぶことはありません）に加わるので、コードを書き換えずに、自分の環境に合わせて判断を厳しくも緩くもできます。
+`approvals.smart_policy` を使うと、賢い承認の判定役への指示に、自分の決まりを書き足せます。設定すると、その文章は見張り役の LLM のシステムのプロンプト（信頼された経路であり、信頼できないコマンドの文章と並べられることは決してありません）に足されるので、コードを直さずに、自分の環境に合わせて判断を厳しくも緩くもできます。
 
 ```yaml
 approvals:
@@ -2474,9 +2462,9 @@ approvals:
     APPROVE docker compose restarts in ~/deploys — they are routine here.
 ```
 
-## チェックポイント {#checkpoints}
+## 控え {#checkpoints}
 
-ファイルを壊しかねない操作の前に、ファイルシステムを自動でスナップショットします。詳しくは [Checkpoints & Rollback](/hermes/docs/user-guide/checkpoints-and-rollback/) を参照してください。
+ファイルを壊す操作の前に、自動でファイルシステムの控えを取ります。詳しくは [控えと巻き戻し](/hermes/docs/user-guide/checkpoints-and-rollback/)を参照してください。
 
 ```yaml
 checkpoints:
@@ -2486,7 +2474,7 @@ checkpoints:
 
 ## 委任 {#delegation}
 
-委任のツールにおける、サブエージェントの動きを設定します。
+委任のツールで動くサブエージェントの振る舞いを設定します。
 
 ```yaml
 delegation:
@@ -2501,82 +2489,82 @@ delegation:
   orchestrator_enabled: true                # Global kill switch. When false, role="orchestrator" is ignored and every child is forced to leaf regardless of max_spawn_depth.
 ```
 
-**サブエージェントのプロバイダーとモデルの上書き:** デフォルトでは、サブエージェントは親のエージェントのプロバイダーとモデルを引き継ぎます。`delegation.provider` と `delegation.model` を設定すると、サブエージェントを別のプロバイダーとモデルの組へ回せます。たとえば、主要なエージェントは高価な推論モデルで動かしつつ、範囲の狭い作業には安くて速いモデルを使う、といった具合です。
+**サブエージェントのプロバイダーとモデルの上書き:** 初期状態では、サブエージェントは親のエージェントのプロバイダーとモデルを受け継ぎます。`delegation.provider` と `delegation.model` を設定すると、別の組み合わせへ回せます — たとえば、主のエージェントには高価な推論のモデルを使いつつ、範囲の狭い作業には安くて速いモデルを使う、といったことができます。
 
-**エンドポイントの直接指定:** 独自のエンドポイントを素直に指定したい場合は、`delegation.base_url`、`delegation.api_key`、`delegation.model` を設定してください。サブエージェントはその OpenAI 互換のエンドポイントへ直接送られ、`delegation.provider` より優先されます。`delegation.api_key` を省いた場合、Hermes は `OPENAI_API_KEY` だけに頼ります。
+**接続先を直接指定する:** 独自の接続先を分かりやすく使いたいなら、`delegation.base_url`、`delegation.api_key`、`delegation.model` を設定してください。サブエージェントはその OpenAI 互換の接続先へ直接送られ、この指定は `delegation.provider` より優先されます。`delegation.api_key` を書かなかった場合、Hermes は `OPENAI_API_KEY` だけに落ちます。
 
-**通信方式（`api_mode`）:** Hermes は `delegation.base_url` から通信方式を自動で判別します（たとえば `/anthropic` で終わるパスは `anthropic_messages`。Codex、ネイティブの Anthropic、Kimi-coding のホスト名は、これまでどおりの判別が働きます）。判別しきれないエンドポイント、たとえば Azure AI Foundry、MiniMax、Zhipu GLM、Anthropic 形式のバックエンドを前に置いた LiteLLM のプロキシなどでは、`delegation.api_mode` に `chat_completions`、`codex_responses`、`anthropic_messages` のいずれかを明示してください。空のまま（デフォルト）にすれば、自動判別が続きます。
+**通信の形（`api_mode`）:** Hermes は `delegation.base_url` から通信の形を自動で見分けます（たとえば `/anthropic` で終わる場所は `anthropic_messages` に、Codex や Anthropic 本来の形、Kimi-coding のホスト名はこれまでどおりの見分け方です）。この見分け方では判別できない接続先 — たとえば Azure AI Foundry、MiniMax、Zhipu GLM、Anthropic の形をした裏側の前に立つ LiteLLM のプロキシなど — では、`delegation.api_mode` に `chat_completions`、`codex_responses`、`anthropic_messages` のいずれかをはっきり書いてください。空のまま（初期値）にすれば自動の見分けが続きます。
 
-委任のプロバイダーは、CLI やゲートウェイの起動時とまったく同じ方法で認証情報を解決します。設定済みのプロバイダーはすべて使えます。`openrouter`、`nous`、`copilot`、`zai`、`kimi-coding`、`minimax`、`minimax-cn` です。プロバイダーを指定すると、正しいベース URL、API キー、通信方式が自動的に解決されるので、認証情報を手で配線する必要はありません。
+委任のプロバイダーは、CLI やゲートウェイの起動時と同じやり方で認証情報を解決します。設定できるプロバイダーはすべて使えます: `openrouter`、`nous`、`copilot`、`zai`、`kimi-coding`、`minimax`、`minimax-cn`。プロバイダーを設定すると、正しいベース URL、API キー、通信の形が自動で決まるので、認証情報を手でつなぐ必要はありません。
 
-**優先順位:** 設定の `delegation.base_url` → 設定の `delegation.provider` → 親のプロバイダー（引き継ぎ）。モデルは、設定の `delegation.model` → 親のモデル（引き継ぎ）です。`provider` を指定せず `model` だけを設定すると、親の認証情報を保ったままモデル名だけが変わります（OpenRouter のように、同じプロバイダーの中でモデルを切り替えるのに便利です）。
+**優先順位:** 設定の `delegation.base_url` → 設定の `delegation.provider` → 親のプロバイダー（受け継ぎ）。設定の `delegation.model` → 親のモデル（受け継ぎ）。`provider` を書かずに `model` だけを書くと、親の認証情報を保ったままモデル名だけが変わります（OpenRouter のように、同じプロバイダーの中でモデルを変えたいときに便利です）。
 
-**幅と深さ:** `max_concurrent_children` は、1 回のまとめ実行で並行して動くサブエージェントの数の上限です（デフォルト `3`、下限は 1、上限はありません）。`DELEGATION_MAX_CONCURRENT_CHILDREN` の環境変数でも設定できます。モデルが上限より長い `tasks` の配列を出した場合、`delegate_task` は黙って切り詰めるのではなく、制限を説明するツールのエラーを返します。`max_spawn_depth` は委任の木の深さを決めます（1 から 3 に収められます）。デフォルトの `1` では委任は平らで、子は孫を生めず、`role="orchestrator"` を渡しても黙って `leaf` に落ちます。`2` にすると、まとめ役の子が末端の孫を生めます。`3` なら 3 段の木になります。エージェントは呼び出しごとに `role="orchestrator"` でまとめ役を選びます。`orchestrator_enabled: false` にすると、それに関係なくすべての子が末端に戻されます。費用は掛け算で増えます。`max_spawn_depth: 3` と `max_concurrent_children: 3` なら、木は 3×3×3 = 27 の末端のエージェントが同時に動くところまで広がりえます。使い方は [Subagent Delegation → Depth Limit and Nested Orchestration](/hermes/docs/user-guide/features/delegation/#depth-limit-and-nested-orchestration) を参照してください。
+**幅と深さ:** `max_concurrent_children` は、1回のまとまりで並行して動くサブエージェントの数を抑えます（初期値は `3`、下限は1、上限なし）。`DELEGATION_MAX_CONCURRENT_CHILDREN` の環境変数でも設定できます。モデルが上限より長い `tasks` の並びを出したとき、`delegate_task` は黙って切り詰めるのではなく、上限を説明するツールのエラーを返します。`max_spawn_depth` は委任の木の深さを決めます（1〜3に収められます）。初期値の `1` では委任は平らで、子は孫を作れず、`role="orchestrator"` を渡しても静かに `leaf` に落ちます。`2` にすると、まとめ役の子が葉の孫を作れます。`3` にすると3段になります。エージェントは呼び出しごとに `role="orchestrator"` でまとめ役を選びます。`orchestrator_enabled: false` にすると、どの子も必ず葉になります。費用は掛け算で増えます — `max_spawn_depth: 3` と `max_concurrent_children: 3` では、木は 3×3×3 = 27 体の葉のエージェントが同時に動くところまで広がります。使い方は [サブエージェントへの委任 → 深さの上限と入れ子のまとめ役](/hermes/docs/user-guide/features/delegation/#depth-limit-and-nested-orchestration)を参照してください。
 
-## 聞き返し {#clarify}
+## 確認の問い返し {#clarify}
 
-聞き返しへの返事を、ゲートウェイがどれだけ待つかを設定します。正式なキーは `agent.clarify_timeout`（デフォルト `3600` 秒）です。従来の最上位の `clarify.timeout` も、明示的に設定されていれば尊重されます。
+ゲートウェイが、確認の問いへの返事をどれだけ待つかを決めます。正式な項目は `agent.clarify_timeout`（初期値は `3600` 秒）です。従来のいちばん上の階層の `clarify.timeout` も、はっきり設定されていれば今も守られます。
 
 ```yaml
 agent:
   clarify_timeout: 3600        # Seconds to wait for user clarification response (0 or less = unlimited)
 ```
 
-## コンテキストファイル（SOUL.md、AGENTS.md） {#context-files-soulmd-agentsmd}
+## 文脈のファイル（SOUL.md、AGENTS.md） {#context-files-soulmd-agentsmd}
 
-Hermes は 2 種類のコンテキストの範囲を使います。
+Hermes は2つの異なる範囲の文脈を使います。
 
-| ファイル | 目的 | 範囲 |
+| ファイル | 役割 | 範囲 |
 |------|---------|-------|
-| `SOUL.md` | **エージェントの中心となる人格** — エージェントが何者かを決めます（システムプロンプトの 1 番目の枠） | `~/.hermes/SOUL.md` または `$HERMES_HOME/SOUL.md` |
-| `.hermes.md` / `HERMES.md` | プロジェクト固有の指示（最優先） | git のルートまでさかのぼります |
-| `AGENTS.md` | プロジェクト固有の指示、コーディングの約束ごと | ディレクトリを再帰的にたどります |
-| `CLAUDE.md` | Claude Code のコンテキストファイル（これも読まれます） | 作業ディレクトリのみ |
-| `.cursorrules` | Cursor IDE の規則（これも読まれます） | 作業ディレクトリのみ |
-| `.cursor/rules/*.mdc` | Cursor の規則のファイル（これも読まれます） | 作業ディレクトリのみ |
+| `SOUL.md` | **エージェントの中心の人物像** — そのエージェントが何者かを決めます（システムのプロンプトの1番目） | `~/.hermes/SOUL.md` または `$HERMES_HOME/SOUL.md` |
+| `.hermes.md` / `HERMES.md` | そのプロジェクト固有の指示（いちばん優先されます） | git の根元までたどります |
+| `AGENTS.md` | そのプロジェクト固有の指示、コードの書き方の決まり | ディレクトリを再帰的にたどります |
+| `CLAUDE.md` | Claude Code の文脈のファイル（これも見つけます） | 作業ディレクトリだけ |
+| `.cursorrules` | Cursor IDE の決まり（これも見つけます） | 作業ディレクトリだけ |
+| `.cursor/rules/*.mdc` | Cursor の決まりのファイル（これも見つけます） | 作業ディレクトリだけ |
 
-- **SOUL.md** はエージェントの中心となる人格です。システムプロンプトの 1 番目の枠を占め、組み込みの既定の人格をまるごと置き換えます。エージェントが何者かを、自由に作り込むために編集してください。
-- SOUL.md がない、空、あるいは読み込めない場合、Hermes は組み込みの既定の人格に戻ります。
-- **プロジェクトのコンテキストファイルには優先順位があり**、読み込まれるのは 1 種類だけです（最初に見つかったものが勝ちます）。`.hermes.md` → `AGENTS.md` → `CLAUDE.md` → `.cursorrules` の順です。SOUL.md は、いつでもこれとは別に読み込まれます。
-- **AGENTS.md** は階層的です。サブディレクトリにも AGENTS.md があれば、すべてが組み合わされます。
-- Hermes は、`SOUL.md` がまだなければ既定のものを自動的に置きます。
-- 読み込まれたコンテキストファイルは、すべて `context_file_max_chars` の文字数（デフォルト 20,000）を上限に、賢く切り詰められます。
+- **SOUL.md** はエージェントの中心の人物像です。システムのプロンプトの1番目を占め、組み込みの既定の人物像を完全に置き換えます。エージェントが何者かを丸ごと作り込みたいなら、ここを直してください。
+- SOUL.md がない、空、読めないときは、Hermes は組み込みの既定の人物像に戻ります。
+- **プロジェクトの文脈のファイルには優先順位があります** — 読み込まれるのは1種類だけで、最初に見つかったものが使われます: `.hermes.md` → `AGENTS.md` → `CLAUDE.md` → `.cursorrules`。SOUL.md はいつでも別に読み込まれます。
+- **AGENTS.md** は階層になっています。下のディレクトリにも AGENTS.md があれば、すべてが合わさります。
+- `SOUL.md` がまだなければ、Hermes が既定のものを自動で用意します。
+- 読み込まれた文脈のファイルは、どれも `context_file_max_chars` 文字（初期値は2万）を上限に、うまく切り詰められます。
 
-あわせて参照してください。
-- [Personality & SOUL.md](/hermes/docs/user-guide/features/personality/)
-- [Context Files](/hermes/docs/user-guide/features/context-files/)
+あわせて次も参照してください。
+- [人格と SOUL.md](/hermes/docs/user-guide/features/personality/)
+- [文脈のファイル](/hermes/docs/user-guide/features/context-files/)
 
 ## 作業ディレクトリ {#working-directory}
 
-| 場面 | デフォルト |
+| 場面 | 初期値 |
 |---------|---------|
-| **CLI（`hermes`）** | コマンドを実行した、そのディレクトリ |
-| **メッセージ用のゲートウェイ** | `~/.hermes/config.yaml` の `terminal.cwd`。未設定ならホームディレクトリの `~` |
-| **Docker / Singularity / Modal / SSH** | コンテナやリモートのマシンの中の、ユーザーのホームディレクトリ |
+| **CLI（`hermes`）** | コマンドを実行したディレクトリ |
+| **メッセージのゲートウェイ** | `~/.hermes/config.yaml` の `terminal.cwd`。設定がなければホームのディレクトリ `~` |
+| **Docker / Singularity / Modal / SSH** | コンテナやリモートのマシンの中の、そのユーザーのホームのディレクトリ |
 
-作業ディレクトリを上書きするには、次のようにします。
+作業ディレクトリを上書きするには次のようにします。
 ```yaml
 # In ~/.hermes/config.yaml:
 terminal:
   cwd: /home/myuser/projects
 ```
 
-`~/.hermes/.env` に書く `MESSAGING_CWD` や `TERMINAL_CWD` は、従来との互換のためのフォールバックです。新しく設定するなら `terminal.cwd` を使ってください。
+`~/.hermes/.env` に書く `MESSAGING_CWD` や `TERMINAL_CWD` は、互換のために残された従来の受け皿です。新しく設定するなら `terminal.cwd` を使ってください。
 
 ## ネットワーク {#network}
 
-外向きの HTTP のための、接続の回避策です。
+外向きの HTTP がうまくいかないときの回避策です。
 
 ```yaml
 network:
   force_ipv4: false   # Force IPv4 for outbound connections (default: false)
 ```
 
-`force_ipv4` — IPv6 が壊れている、あるいは届かないサーバーでは、Python が先に AAAA レコードを引き、IPv4 に戻るまで TCP のタイムアウトいっぱい固まることがあります。`true` にすると IPv6 を完全に飛ばし、IPv4 で直接つなぎます。
+`force_ipv4` — IPv6 が壊れていたり届かなかったりするサーバーでは、Python が AAAA のレコードを先に引くので、IPv4 に落ちるまで TCP の待ち時間いっぱい固まることがあります。`true` にすると IPv6 を完全に飛ばして、IPv4 で直接つなぎます。
 
-## 導入時の案内 {#onboarding}
+## 最初の案内 {#onboarding}
 
-初回の案内と、プロフィールを組み立てる申し出についての設定です。
+初めて触れたときの案内と、人物像を組み立てる申し出の設定です。
 
 ```yaml
 onboarding:
@@ -2584,12 +2572,12 @@ onboarding:
   seen: {}               # internal latch — leave empty
 ```
 
-- `profile_build` — ゲートウェイでの一番最初のメッセージのときに出す、プロフィール作りの申し出を制御します。`"ask"`（デフォルト）はプロフィールを作りましょうかと尋ねます。この申し出は**同意を前提とした任意のもの**で、エージェントは調べる前に必ず尋ね、つながっているアカウントを黙って読むことはありません。`"off"` にすると、素っ気ない紹介だけになります。申し出が出るのは多くても 1 度きりです。
-- `seen` — 内部の状態です。Hermes は一度見せた案内をここに控えて、二度と出さないようにします。プロフィール作りの申し出も、出した時点でここに記録されます。手で編集しないでください。すべての案内をもう一度見たい場合は、`onboarding` の節ごと消してください。
+- `profile_build` — ゲートウェイでいちばん最初のメッセージを受け取ったときに出す、人物像を組み立てる申し出を決めます。`"ask"`（初期値）は、利用者の人物像を作りましょうかと申し出ます。この申し出は**同意を得てから進むもの**で、エージェントは調べる前に必ず尋ねますし、つないだアカウントを黙って読むことは決してありません。`"off"` にすると、素の紹介だけが出ます。この申し出は多くても1度きりです。
+- `seen` — 内部の状態です。Hermes は出した案内をここに記録して、二度と出さないようにします。人物像を組み立てる申し出も、一度出したらここに記録されます。手で直さないでください — すべての案内をもう一度見たいなら、`onboarding` の節ごと消してください。
 
 ## ダッシュボード {#dashboard}
 
-[Web のダッシュボード](/hermes/docs/user-guide/features/web-dashboard/) の設定です。見た目のテーマ、公開の URL、認証の方式を扱います。認証の方式（OAuth、ベーシック認証、drain）は Web ダッシュボードのページで詳しく説明しています。ここでは `config.yaml` の書き方を示します。
+[ウェブのダッシュボード](/hermes/docs/user-guide/features/web-dashboard/)の設定です — 見た目、公開の URL、認証のプロバイダーを決めます。認証のプロバイダー（OAuth、パスワード、drain）の詳しい説明はウェブのダッシュボードのページにあります。ここでは `config.yaml` での書き方を示します。
 
 ```yaml
 dashboard:
@@ -2614,11 +2602,10 @@ dashboard:
   startup_orphan_sweep: true  # Close session rows orphaned by a dead gateway process at boot
 ```
 
-- `theme` — ダッシュボードの見た目のテーマです。
-- `show_token_analytics` — デフォルトでは無効です。Analytics のページとトークンや費用の数字は、**手元での控えめな見積もり**にすぎず（補助の呼び出し、再試行、フォールバック、キャッシュへの書き込みを含みません）、プロバイダーの請求よりずっと低く出ることがあります。請求額ではないと理解したうえでだけ `true` にしてください。
-- `public_url` — 設定すると、OAuth の `redirect_uri` はこの値（スキーム + ホスト + 任意のパスの接頭辞）をそのまま土台に組み立てられます。`X-Forwarded-*` のヘッダーを確実に転送しないリバースプロキシの後ろに置く場合に設定してください。空のままにすると、プロキシのヘッダーから組み立て直します。
-- `oauth` / `basic_auth` / `drain_auth` — 同梱のダッシュボードの認証プラグインが読む設定です。drain の秘密の値そのものはここには書きません。`HERMES_DASHBOARD_DRAIN_SECRET` の環境変数で渡します。認証の設定の全体は [Web Dashboard](/hermes/docs/user-guide/features/web-dashboard/) を参照してください。
-- `ws_ping_interval` / `ws_ping_timeout` — ループバック以外で待ち受けるときの WebSocket の生存確認の調整です（ループバックの接続では生存確認を送りません）。Tailscale や遠くまで伸ばした SSH トンネルのように遅延の大きい回線では、既定の 20 秒だと実際には切れていないのに 1006 の切断が起きることがあるので、値を大きくしてください。
-- `ws_orphan_reap_grace_s` — WebSocket が外れたセッションを回収役が片づけるまで、どれだけ待つかです。クライアントの再接続が遅い環境では、上の生存確認の値と一緒に大きくしてください（`HERMES_TUI_WS_ORPHAN_REAP_GRACE_S` は内部向けの上書きとして残っています）。
-- `startup_orphan_sweep`（既定は `true`）— 上に書いた WebSocket 切れの回収タイマーはプロセスの中で動いているので、それが動く前にゲートウェイが再起動すると（更新、クラッシュ、systemd）、セッションの記録が開いたまま永久に残ります。`/resume` やダッシュボードに、動いていない作業が動いているように見えてしまう状態です。そこでゲートウェイが起動するたびに、標準入出力の TUI（`entry.main`）でも、デスクトップやダッシュボード向けの WebSocket の受け口（`handle_ws`）でも、`tui` / `desktop` / `subagent` を出どころとする記録のうち、開始時刻**と**最新のメッセージの両方がセッションの保持時間（`HERMES_TUI_SESSION_TTL_S`、既定 6 時間）より古いものを、`end_reason: startup_orphan_reap` として閉じます。メッセージのプラットフォーム（Telegram、Discord など）のセッションには手を触れず、メモリ上で生きているセッション（すでに再開済みのクライアント）も対象外で、閉じたセッションはあとから再開できます。
-
+- `theme` — ダッシュボードの見た目です。
+- `show_token_analytics` — 初期状態では無効です。Analytics のページとトークンや費用の数字は**手元での控えめな見積もり**で（補助の呼び出し、やり直し、予備への切り替え、キャッシュへの書き込みを含みません）、実際の請求よりかなり少なく出ることがあります。請求額ではないと分かったうえでだけ `true` にしてください。
+- `public_url` — 設定すると、OAuth の `redirect_uri` を組み立てる元になる完全な情報（スキーム、ホスト、必要ならパスの先頭）になります。`X-Forwarded-*` のヘッダーを確実に渡さないリバースプロキシの後ろに置くときに設定してください。空にすると、プロキシのヘッダーから組み立てます。
+- `oauth` / `basic_auth` / `drain_auth` — 同梱のダッシュボードの認証のプラグインが読む設定です。drain の秘密の値はここには**書きません**。`HERMES_DASHBOARD_DRAIN_SECRET` の環境変数で渡します。認証の準備の全体は [ウェブのダッシュボード](/hermes/docs/user-guide/features/web-dashboard/)を参照してください。
+- `ws_ping_interval` / `ws_ping_timeout` — ループバック以外に割り当てたときの WebSocket の生存確認の調整です（ループバックの接続では確認しません）。遅延の大きい回線（Tailscale、遠くの SSH のトンネル）では、20秒の初期値が偽の 1006 の切断を作ってしまうことがあるので、値を上げてください。
+- `ws_orphan_reap_grace_s` — WebSocket が外れたセッションが、取り残されたものとして片付けられるまでの待ち時間です。クライアントのつなぎ直しが遅いなら、上の生存確認の値と一緒に上げてください。（`HERMES_TUI_WS_ORPHAN_REAP_GRACE_S` は内部の上書きとして残っています。）
+- `startup_orphan_sweep`（初期値は `true`） — 上の、取り残されたものを片付ける時計はプロセスの中にあるので、それが働く前にゲートウェイが再起動すると（更新、異常終了、systemd）、そのセッションの記録は永遠に開いたままになります — `/resume` やダッシュボードに、幻の「動いている」作業が残るということです。ゲートウェイが起動するたびに — 標準入出力の TUI（`entry.main`）でも、デスクトップやダッシュボードの WebSocket の補助（`handle_ws`）でも — 出どころが `tui` / `desktop` / `subagent` で、開始の時刻**と**いちばん新しいメッセージのどちらもがセッションの有効期間（`HERMES_TUI_SESSION_TTL_S`、初期値は6時間）より古い記録は、`end_reason: startup_orphan_reap` として閉じられます。メッセージのプラットフォームのセッション（Telegram、Discord など）には決して触れませんし、メモリの上で生きているセッション（すでにつなぎ直したクライアント）も対象外で、片付けられたセッションもあとから再開できます。

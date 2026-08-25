@@ -1392,6 +1392,9 @@
                 },
                 {
                   "id": "developer-guide/browser-provider-plugin"
+                },
+                {
+                  "id": "developer-guide/terminal-environment-plugin"
                 }
               ]
             },
@@ -1857,6 +1860,7 @@
     "developer-guide/video-gen-provider-plugin",
     "developer-guide/web-search-provider-plugin",
     "developer-guide/browser-provider-plugin",
+    "developer-guide/terminal-environment-plugin",
     "developer-guide/creating-skills",
     "developer-guide/extending-the-cli",
     "developer-guide/tools-runtime",

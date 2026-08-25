@@ -1,29 +1,36 @@
 ---
-title: "Hermes の Docker セットアップ"
+title: "Hermes の Docker での動かし方"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: cf63f4f6ebfba714ac5f40d08082aff2331d11e8
+upstream_blob: 747e6b40edde70a5704b53e62ce4b8d89bf36756
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
 
-# Hermes の Docker セットアップ {#hermes-docker-setup}
+# Hermes の Docker での動かし方 {#hermes-docker-setup}
 
-Docker と Hermes Agent の関わり方には、はっきり異なる 2 通りがあります。
+Docker と Hermes Agent の関わり方には、はっきり異なる2つがあります。
 
-1. **Hermes を Docker のなかで動かす** — エージェント自体をコンテナのなかで動かします（このページで主に扱うのはこちらです）
-2. **Docker をターミナルのバックエンドとして使う** — エージェント自体はホスト側で動きますが、すべてのコマンドは 1 つの Docker サンドボックスコンテナのなかで実行されます。このコンテナは Hermes プロセスが生きているあいだ、ツール呼び出しをまたいでも `/new` を実行してもサブエージェントを起こしても保持されます（[設定 → Docker バックエンド](/hermes/docs/user-guide/configuration/#docker-backend) をご覧ください）
+1. **Hermes を Docker の中で動かす** — エージェント自身をコンテナの中で動かします（このページで主に説明するのはこちらです）
+2. **Docker をターミナルのバックエンドとして使う** — エージェントは手元のマシンで動きますが、コマンドはすべて1つの Docker のサンドボックスコンテナの中で実行されます。このコンテナは Hermes のプロセスが生きているあいだ、ツールの呼び出しをまたいでも `/new` をしてもサブエージェントを使っても残り続けます（[設定 → Docker バックエンド](/hermes/docs/user-guide/configuration/#docker-backend)を参照してください）
 
-このページで説明するのは 1 つめです。コンテナは利用者のデータ（設定、API キー、セッション、スキル、メモリ）をすべて、ホストから `/opt/data` にマウントした 1 つのディレクトリに保存します。イメージそのものは状態を持たないので、新しいバージョンを取得すれば設定を失わずに更新できます。
+このページで扱うのは1つめです。コンテナはユーザーのデータ（設定、API キー、セッション、スキル、記憶）をすべて、ホスト側から `/opt/data` にマウントした1つのディレクトリに置きます。イメージ自体は状態を持たないので、新しいバージョンを取ってくるだけで、設定を失わずに上げられます。
 
-## まずは試す {#quick-start}
+## すぐ試す {#quick-start}
 
-Hermes Agent を動かすのが初めてなら、ホストにデータ用のディレクトリを作り、対話モードでコンテナを起動してセットアップウィザードを実行します。
+Hermes Agent を動かすのが初めてなら、ホスト側にデータ用のディレクトリを作り、対話モードでコンテナを起動して設定ウィザードを走らせてください。
 
-:::caution インストール用のコマンドをブラウザ版の VPS コンソールで打たないでください
-VPS の事業者には、ホストを管理するためのブラウザ版コンソールを提供しているところがあります（Hetzner Cloud をはじめ、いくつもあります）。この種のコンソールは特殊文字を正しく送れません。`:` が `;` になって届いたり、`@` が化けたり、英語以外のキーボード配列だとさらにひどくなったりします。その結果、`-v ~/.hermes:/opt/data` や `-e KEY=value` のような `docker run` の引数や、貼り付けた API キーやトークンが、気づかないうちに壊れてしまいます。
+:::caution インストールのコマンドをブラウザ上の VPS コンソールで打たないでください
+VPS の事業者の中には（Hetzner Cloud をはじめ、いくつかあります）、ホストを管理するための
+ブラウザ上のコンソールを提供しているところがあります。こうしたコンソールは特殊な文字を
+正しく送れません。`:` が `;` になって届いたり、`@` が化けたり、英語以外の
+キーボード配列だともっとひどいことになります。その結果、`docker run` の引数、たとえば
+`-v ~/.hermes:/opt/data` や `-e KEY=value`、貼り付けた API キーやトークンが、
+気づかないうちに壊れます。
 
-**代わりに SSH で接続してください**（`ssh root@<host>`）。コピーと貼り付けが安全に使えます。どうしてもブラウザ版コンソールを使うのなら、貼り付けずに手で打ち込み、Enter を押す前に `:`、`@`、`=`、`/` をすべて見直してください。
+**代わりに SSH でつないでください**（`ssh root@<host>`）。コピーと貼り付けが安全に
+できます。どうしてもブラウザのコンソールを使うなら、貼り付けずに手で打ち込み、
+Enter を押す前に結果の `:`、`@`、`=`、`/` をすべて見直してください。
 :::
 
 ```sh
@@ -33,15 +40,15 @@ docker run -it --rm \
   nousresearch/hermes-agent setup
 ```
 
-これでセットアップウィザードが立ち上がり、API キーを尋ねられて、その内容が `~/.hermes/.env` に書き込まれます。この作業が必要なのは最初の一度だけです。この段階で、ゲートウェイと連携させるチャットのしくみもあわせて用意しておくことを強くおすすめします。
+これで設定ウィザードが開きます。ウィザードは API キーを尋ね、`~/.hermes/.env` に書き込みます。この作業が必要なのは一度だけです。この時点で、ゲートウェイが相手にするチャットの仕組みも合わせて設定しておくことを強くおすすめします。
 
 :::tip
-コンテナのなかで `hermes setup --portal` を一度実行しておいてください。更新用のトークンは、マウントした `~/.hermes` ボリュームに残ります。[Nous Portal](/hermes/docs/integrations/nous-portal/) をご覧ください。
+コンテナの中で `hermes setup --portal` を一度実行しておいてください。更新用のトークンはマウントした `~/.hermes` のボリュームに残ります。[Nous Portal](/hermes/docs/integrations/nous-portal/) を参照してください。
 :::
 
 ## ゲートウェイとして動かす {#running-in-gateway-mode}
 
-設定が済んだら、コンテナをバックグラウンドで動かして、常駐するゲートウェイ（Telegram、Discord、Slack、WhatsApp など）にします。
+設定が済んだら、コンテナを裏で動かし続けるゲートウェイとして起動します（Telegram、Discord、Slack、WhatsApp などが相手になります）。
 
 ```sh
 docker run -d \
@@ -52,22 +59,22 @@ docker run -d \
   nousresearch/hermes-agent gateway run
 ```
 
-ポート 8642 では、ゲートウェイの [OpenAI 互換 API サーバー](/hermes/docs/user-guide/features/api-server/) と稼働確認用のエンドポイントが公開されます。チャットのサービス（Telegram、Discord など）しか使わないのなら開けなくてもかまいませんが、ダッシュボードや外部のツールからゲートウェイに届かせたいのなら必要です。
+8642 番ポートは、ゲートウェイの [OpenAI 互換の API サーバー](/hermes/docs/user-guide/features/api-server/)と稼働確認用のエンドポイントを公開します。チャットのプラットフォーム（Telegram、Discord など）しか使わないなら開けなくても構いませんが、ダッシュボードや外部のツールからゲートウェイに届かせたいなら必要です。
 
 :::tip ゲートウェイは見守られながら動きます
-公式の Docker イメージのなかでは、`gateway run` は **s6-overlay によって自動的に見守られています**。ゲートウェイのプロセスが落ちても、コンテナごと巻き添えになることなく数秒で再起動します。ダッシュボード（`HERMES_DASHBOARD=1` を設定したとき）も同じしくみで見守られます。`gateway run` の CMD プロセス自体は `sleep infinity` による生存確認の役目で、コンテナを生かしたまま実際のゲートウェイプロセスは s6 が面倒を見ます。そのため `docker stop` でこれまでどおりきれいに全体を止められますが、`docker logs` に出てくるのは s6 が見守っているゲートウェイの出力です。
+公式の Docker イメージの中では、`gateway run` は **s6-overlay によって自動的に見守られています**。ゲートウェイのプロセスが落ちても、コンテナごと落ちることなく数秒で再起動します。`HERMES_DASHBOARD=1` が設定されているときは、ダッシュボードも同じように見守られます。`gateway run` の CMD のプロセス自身は `sleep infinity` の鼓動役で、コンテナを生かしておくだけです。実際のゲートウェイのプロセスは s6 が面倒を見ます。ですから `docker stop` はこれまでどおり全体をきれいに止めますが、`docker logs` に出るのは見守られている側のゲートウェイの出力です。
 
-`docker logs` には、この動きに切り替わったことを示す 1 行の手がかりが出ます。この動きをやめて、以前の「ゲートウェイがコンテナの主プロセスで、コンテナの終了＝ゲートウェイの終了」という挙動に戻したいときは、`--no-supervise` を渡すか `HERMES_GATEWAY_NO_SUPERVISE=1` を設定します。この切り替えは、ゲートウェイの終了コードでコンテナを終わらせたい CI の簡易テストでは役に立ちますが、本番の運用では見守りありの既定のほうが確実に優れています。
+`docker logs` には、この仕組みに切り替わったことを知らせる1行が出ます。使いたくない場合 — つまり「ゲートウェイがコンテナの主プロセスで、コンテナの終了＝ゲートウェイの終了」という従来の動きに戻したい場合 — は、`--no-supervise` を渡すか `HERMES_GATEWAY_NO_SUPERVISE=1` を設定してください。この打ち消しが役に立つのは、コンテナにゲートウェイの終了コードで終わってほしい CI の簡易テストなどです。本番の運用では、見守られる既定の動きのほうが明らかに優れています。
 
-この挙動は s6 版のイメージだけの話です。それ以前の（tini 版の）イメージでは、`gateway run` はこれまでどおり前面の主プロセスとして動きます。
+この動きは s6 を使ったイメージだけのものです。それより前の（tini を使った）イメージでは、`gateway run` は今も前面の主プロセスとして動きます。
 :::
 
 :::note ゲートウェイのログの行き先
-どこに何が出るかの全体像は、後半の [ログの行き先](#where-the-logs-go) の節をご覧ください（プロファイルごとのゲートウェイ、ダッシュボード、起動時の復元処理、コンテナ全体の `docker logs`）。
+プロファイルごとのゲートウェイ、ダッシュボード、起動時の調整役、コンテナ全体の `docker logs` を含めた行き先の全体像は、下の [ログはどこに出るか](#where-the-logs-go)の節を参照してください。
 :::
 
-:::note 人が見ていないゲートウェイでのツール呼び出しの強制停止
-`tool_loop_guardrails.hard_stop_enabled` の設定は既定で `false` です。人がツール呼び出しの警告を繰り返し目にできる対話型の CLI や TUI のセッションなら、これで妥当です。ただし人が見ていないゲートウェイやサーバーでの運用では、警告だけでは同じツール呼び出しを繰り返して抜け出せなくなったエージェントを止められないことがあります。安全装置として働かせたい運用者は、そのプロファイルの `config.yaml` で強制停止を明示的に有効にしてください。
+:::note 人が見ていないゲートウェイでのツールのループの強制停止
+`tool_loop_guardrails.hard_stop_enabled` の設定は初期値が `false` です。人が繰り返しのツール呼び出しの警告を目にできる、対話的な CLI や TUI のセッションではこれで問題ありません。しかし人が見ていないゲートウェイやサーバーでの運用では、警告だけでは、同じツールの呼び出しを繰り返して抜け出せなくなったエージェントを止められないことがあります。安全装置として強制的に止めたい場合は、プロファイルの `config.yaml` ではっきり有効にしてください。
 
 ```yaml
 tool_loop_guardrails:
@@ -78,7 +85,7 @@ tool_loop_guardrails:
 ```
 :::
 
-補足として、API サーバーは `API_SERVER_ENABLED=true` でなければ動きません。コンテナのなかの `127.0.0.1` の外まで公開するには、あわせて `API_SERVER_HOST=0.0.0.0` と `API_SERVER_KEY`（8 文字以上。`openssl rand -hex 32` で作れます）も設定します。例を挙げます。
+補足として、API サーバーは `API_SERVER_ENABLED=true` がないと動きません。コンテナの中の `127.0.0.1` を越えて公開するには、`API_SERVER_HOST=0.0.0.0` と `API_SERVER_KEY`（8文字以上。`openssl rand -hex 32` で作れます）も設定してください。例を挙げます。
 
 ```sh
 docker run -d \
@@ -93,11 +100,11 @@ docker run -d \
   nousresearch/hermes-agent gateway run
 ```
 
-インターネットに面したマシンでポートを開けることには、どのポートであれ安全面の危険が伴います。その危険を理解していないのなら、開けるべきではありません。
+インターネットに面したマシンでポートを開けることは、それだけでセキュリティ上の危険を伴います。危険を理解していないなら、開けるべきではありません。
 
 ## ダッシュボードを動かす {#running-the-dashboard}
 
-内蔵の Web ダッシュボードは、同じコンテナのなかでゲートウェイと並んで、s6-rc に見守られるサービスとして動きます。立ち上げるには `HERMES_DASHBOARD=1` を設定します。
+組み込みのウェブのダッシュボードは、同じコンテナの中でゲートウェイと並んで、s6-rc に見守られるサービスとして動きます。立ち上げるには `HERMES_DASHBOARD=1` を設定します。
 
 ```sh
 docker run -d \
@@ -110,41 +117,41 @@ docker run -d \
   nousresearch/hermes-agent gateway run
 ```
 
-ダッシュボードは s6 が見守っています。落ちても、`s6-supervise` が少し待ってから自動で再起動します。ダッシュボードの標準出力と標準エラー出力は `docker logs <container>` に流れます（接頭辞は付きません。ゲートウェイ自身の出力は、いまはプロファイルごとの s6-log のファイルに入るようになったので — 後半の [ログの行き先](#where-the-logs-go) をご覧ください — 2 つの流れが混ざりません）。
+ダッシュボードは s6 に見守られています。落ちても `s6-supervise` が少し待ってから自動で再起動します。ダッシュボードの標準出力と標準エラー出力は `docker logs <container>` に流れます（接頭辞は付きません。ゲートウェイ自身の出力は、いまはプロファイルごとの s6-log のファイルに入ります — 下の [ログはどこに出るか](#where-the-logs-go)を参照してください — ので、2つの流れがぶつかることはありません）。
 
-| 環境変数 | 説明 | 既定値 |
+| 環境変数 | 説明 | 初期値 |
 |---------------------|-------------|---------|
-| `HERMES_DASHBOARD` | `1`（または `true` / `yes`）にすると、見守り付きのダッシュボードのサービスが有効になります | *(未設定 — サービスは登録されるが停止したまま)* |
+| `HERMES_DASHBOARD` | `1`（または `true` / `yes`）にすると、見守られるダッシュボードのサービスが有効になります | *(未設定 — サービスは登録されるが起動しない)* |
 | `HERMES_DASHBOARD_HOST` | ダッシュボードの HTTP サーバーが待ち受けるアドレス | `0.0.0.0` |
 | `HERMES_DASHBOARD_PORT` | ダッシュボードの HTTP サーバーのポート | `9119` |
-| `HERMES_DASHBOARD_INSECURE` | **非推奨、いまは何もしません。** 以前は認証の関門を素通りさせるものでしたが、2026 年 6 月の安全強化以降、認証を無効にする働きはありません。ループバック以外で待ち受ける場合、認証のしくみは必ず必要です | *(無視されます — 代わりに認証のしくみを設定してください)* |
+| `HERMES_DASHBOARD_INSECURE` | **非推奨・何もしません。** 以前は認証の関門を素通りさせるものでしたが、2026年6月の安全強化以降、認証を無効にすることはなくなりました。ループバック以外に割り当てる場合は、必ず認証プロバイダーが必要です | *(無視されます — 代わりにプロバイダーを設定してください)* |
 
-コンテナのなかのダッシュボードは、既定で `0.0.0.0` で待ち受けます。そうでなければ、公開した `-p 9119:9119` のポートにホストから届きません。コンテナ内のループバックだけに限りたいとき（サイドカー構成やリバースプロキシ構成など）は、`HERMES_DASHBOARD_HOST=127.0.0.1` を設定します。
+コンテナの中のダッシュボードは、初期状態で `0.0.0.0` に割り当てられます。そうでないと、公開した `-p 9119:9119` のポートにホストから届きません。コンテナのループバックだけに絞りたい場合（サイドカーやリバースプロキシと組み合わせる構成など）は、`HERMES_DASHBOARD_HOST=127.0.0.1` を設定してください。
 
-ダッシュボードの認証の関門は、次の 2 つがどちらも満たされたときに自動で働きます。
+ダッシュボードの認証の関門は、次の2つが両方とも成り立つときに自動で働きます。
 
-1. 待ち受けるアドレスがループバック以外である（コンテナのなかの既定である `0.0.0.0` など）、**かつ**
-2. `DashboardAuthProvider` のプラグインが登録されている。
+1. 割り当て先がループバック以外であること（コンテナの中の初期値である `0.0.0.0` などです）。**そして**
+2. `DashboardAuthProvider` のプラグインが登録されていること。
 
-2 つめを満たす方法として、3 つが同梱されています。
+2つめを満たす方法は、はじめから3つ用意されています。
 
-- **ユーザー名とパスワード** — 信頼できるネットワークや VPN の内側にある、自分で立てた・社内の・自宅のコンテナには、これがいちばん手軽です。`HERMES_DASHBOARD_BASIC_AUTH_USERNAME` と `HERMES_DASHBOARD_BASIC_AUTH_PASSWORD` を設定します（再起動してもログイン状態を保ちたいなら `HERMES_DASHBOARD_BASIC_AUTH_SECRET` も）。インターネットに直接さらす用途には向きません。
-- **OAuth（Nous Portal）** — サービスとして提供する場合や公開する場合に使います。`HERMES_DASHBOARD_OAUTH_CLIENT_ID` が設定されていれば、`dashboard_auth/nous` のしくみが働きます。
-- **自前の OIDC** — 標準の OpenID Connect を使って、自分の ID 基盤で認証したい場合です。`HERMES_DASHBOARD_OIDC_ISSUER` と `HERMES_DASHBOARD_OIDC_CLIENT_ID` が設定されていれば、`dashboard_auth/self_hosted` のしくみが働きます。
+- **ユーザー名とパスワード** — 信頼できるネットワークの中や VPN の後ろで、自分で立てた社内や自宅のコンテナを使う場合にいちばん簡単です。`HERMES_DASHBOARD_BASIC_AUTH_USERNAME` と `HERMES_DASHBOARD_BASIC_AUTH_PASSWORD` を設定します（再起動してもセッションを保ちたいなら `HERMES_DASHBOARD_BASIC_AUTH_SECRET` も設定します）。インターネットに直接さらす用途には向きません。
+- **OAuth（Nous Portal）** — ホスト型や一般公開の構成向けです。`HERMES_DASHBOARD_OAUTH_CLIENT_ID` が設定されていれば `dashboard_auth/nous` のプロバイダーが有効になります。
+- **自前の OIDC** — 標準の OpenID Connect を使って、自分の認証基盤で認証します。`HERMES_DASHBOARD_OIDC_ISSUER` と `HERMES_DASHBOARD_OIDC_CLIENT_ID` が設定されていれば `dashboard_auth/self_hosted` のプロバイダーが有効になります。
 
-どれを選んでも、この関門は保護された経路に届く前にログイン画面へ誘導します。3 つのしくみのすべては [Web ダッシュボード → 認証](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode) をご覧ください。
+どれを選んでも、関門は保護された経路にたどり着く前に、呼び出し元をログイン画面へ送ります。3つのプロバイダーすべてについては [ウェブのダッシュボード → 認証](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)を参照してください。
 
-認証のしくみが 1 つも登録されておらず、待ち受けがループバック以外だった場合、ダッシュボードは **起動時に止まる側に倒れます**。足りない環境変数を名指しするエラーが出ます。公開されたアドレスで認証なしのダッシュボードを出す逃げ道は、もうありません。`HERMES_DASHBOARD_INSECURE=1` は非推奨で、いまは何もしません（警告を出して無視されます）。認証のしくみを設定するか、`HERMES_DASHBOARD_HOST=127.0.0.1` で待ち受けて SSH のトンネルや Tailscale 越しにダッシュボードへ届かせてください。
+プロバイダーが1つも登録されておらず、割り当て先がループバック以外の場合、ダッシュボードは**起動の時点で安全側に倒れて止まります**。足りない環境変数を名指しするエラーが出ます。公開された割り当て先で認証なしのダッシュボードを出す抜け道は、もうありません。`HERMES_DASHBOARD_INSECURE=1` はいまや非推奨で何もしません（警告を残して無視されます）。プロバイダーを設定するか、`HERMES_DASHBOARD_HOST=127.0.0.1` に割り当てて SSH のトンネルや Tailscale 越しにダッシュボードへ届かせてください。
 
 :::warning `--insecure` がなくなった理由
-認証のない公開ダッシュボードは、2026 年 6 月の MCP 設定への侵入活動で入口として使われました。インターネットを走査するしくみが、さらされたダッシュボード（と OpenAI の API サーバー）に到達し、エージェントを操って SSH の鍵による裏口を仕込ませたのです。認証の関門は、ループバック以外で待ち受けるすべての場合に必須になりました。信頼できる LAN や自宅の機器なら、同梱のユーザー名とパスワードのしくみ（`HERMES_DASHBOARD_BASIC_AUTH_USERNAME` と `_PASSWORD`）が、追加の仕組みなしで条件を満たせる方法です。
+認証のない公開ダッシュボードは、2026年6月に起きた MCP の設定を書き換えて居座る攻撃の入り口でした。インターネットを走査する側がさらされたダッシュボード（と OpenAI の API サーバー）にたどり着き、エージェントを操って SSH の鍵による裏口を仕込ませたのです。認証の関門は、ループバック以外に割り当てるすべての場合で必須になりました。信頼できる LAN の中や自宅のマシンなら、はじめから用意されているユーザー名とパスワードのプロバイダー（`HERMES_DASHBOARD_BASIC_AUTH_USERNAME` と `_PASSWORD`）が、追加の仕組みなしで条件を満たす方法です。
 :::
 
-ダッシュボードを別のコンテナで動かすことも、そのコンテナがホストの PID と network の名前空間を共有していれば **できます**（たとえばリポジトリ自身の `docker-compose.yml` がそうしているように `network_mode: host` を使う場合です。その `dashboard` サービスをご覧ください）。ゲートウェイが生きているかどうかの判定にはゲートウェイのプロセスと PID の名前空間を共有している必要があるので、この制限にかかるのは、PID の名前空間を共有しないブリッジネットワークの独立したコンテナでダッシュボードを動かす場合だけです。
+ダッシュボードを別のコンテナで動かすことは、そのコンテナがホストの PID とネットワークの名前空間を共有していれば**できます**（たとえば `network_mode: host` にする方法で、このリポジトリ自身の `docker-compose.yml` もそうしています — その `dashboard` のサービスを見てください）。ゲートウェイが生きているかどうかの判定には、ゲートウェイのプロセスと PID の名前空間を共有している必要があります。ですからこの制限が当てはまるのは、PID の名前空間を共有しない、独立したブリッジネットワークのコンテナでダッシュボードを動かす場合だけです。
 
-## 対話モードで動かす（CLI のチャット） {#running-interactively-cli-chat}
+## 対話モードで動かす（CLI でのチャット） {#running-interactively-cli-chat}
 
-すでにあるデータディレクトリに対して、対話的なチャットのセッションを開くには次のようにします。
+すでにあるデータのディレクトリを相手に、対話的なチャットのセッションを開くには次のようにします。
 
 ```sh
 docker run -it --rm \
@@ -152,58 +159,58 @@ docker run -it --rm \
   nousresearch/hermes-agent
 ```
 
-動いているコンテナのなかで（たとえば Docker Desktop から）すでにターミナルを開いているのなら、次を実行するだけです。
+すでに動いているコンテナの中でターミナルを開いているなら（Docker Desktop などから）、次のコマンドだけで済みます。
 
 ```sh
 /opt/hermes/.venv/bin/hermes
 ```
 
-## 消えないボリューム {#persistent-volumes}
+## データを残すボリューム {#persistent-volumes}
 
-`/opt/data` のボリュームは、Hermes のすべての状態にとって唯一の正本です。ホストの `~/.hermes/` ディレクトリに対応していて、次のものが入っています。
+`/opt/data` のボリュームは、Hermes のすべての状態にとって唯一の正本です。ホスト側の `~/.hermes/` ディレクトリに対応していて、次のものが入っています。
 
-| パス | 内容 |
+| パス | 中身 |
 |------|----------|
-| `.env` | API キーと秘密情報 |
+| `.env` | API キーと秘密の情報 |
 | `config.yaml` | Hermes のすべての設定 |
-| `SOUL.md` | エージェントの人格と人物像 |
+| `SOUL.md` | エージェントの人格や人物像 |
 | `sessions/` | 会話の履歴 |
-| `memories/` | 消えずに残るメモリの保管場所 |
+| `memories/` | 残り続ける記憶の置き場 |
 | `skills/` | 導入したスキル |
-| `home/` | Hermes のツールが起こす子プロセス（`git`、`ssh`、`gh`、`npm`、スキルの CLI）のための、プロファイルごとの HOME |
-| `cron/` | 定期実行の定義 |
-| `hooks/` | イベントに反応するフック |
+| `home/` | Hermes のツールが起動する子プロセス（`git`、`ssh`、`gh`、`npm`、スキルの CLI）のための、プロファイルごとの HOME |
+| `cron/` | 予定して動かすジョブの定義 |
+| `hooks/` | イベントのフック |
 | `logs/` | 実行時のログ |
-| `skins/` | CLI の見た目の設定 |
+| `skins/` | CLI の自作の見た目 |
 
 ### 書き換えられないインストール先 {#immutable-install-tree}
 
-サービスとして提供されるイメージと公開されている Docker イメージでは、`/opt/hermes` がアプリケーションのインストール先です。ここは root の持ち物で、実行時の `hermes` ユーザーからは読み取り専用です。そのため、エージェントのやり取り、ゲートウェイのセッション、ダッシュボードの操作、そして通常の `docker exec hermes hermes ...` のコマンドから、中核のソースや同梱の `.venv`、`node_modules`、TUI 一式をその場で書き換えることはできません。
+ホスト型や公開されている Docker のイメージでは、`/opt/hermes` がアプリケーションを入れた場所です。ここは root が所有していて、実行時の `hermes` ユーザーからは読み取り専用です。ですからエージェントのやり取り、ゲートウェイのセッション、ダッシュボードの操作、ふつうの `docker exec hermes hermes ...` のコマンドから、中核のソースや同梱の `.venv`、`node_modules`、TUI の一式をその場で書き換えることはできません。
 
-Hermes の書き換わる状態はすべて `/opt/data` の下に置きます。設定、`.env`、プロファイル、スキル、メモリ、セッション、ログ、ダッシュボードにアップロードしたもの、プラグイン、その他利用者が管理するファイルです。このイメージでは、実行時の `.pyc` の書き込みと、Hermes が必要になってから `/opt/hermes` へ依存関係を入れる動きも無効にしてあります。公開されたイメージで必要になる任意の依存関係は、イメージに焼き込むか、新しくイメージを組み直して入れてください。
+書き換わる Hermes の状態は、すべて `/opt/data` の下に置かれます。設定、`.env`、プロファイル、スキル、記憶、セッション、ログ、ダッシュボードにアップロードしたもの、プラグイン、そのほかユーザーが管理するファイルです。イメージは実行時の `.pyc` の書き出しと、Hermes が必要になったときに依存を `/opt/hermes` へ入れる動きも止めています。公開イメージで必要になる任意のプラットフォーム依存は、イメージに焼き込むか、新しいイメージを作り直すときに入れてください。
 
-サービスとして提供されるイメージと公開されているイメージでは、エージェントの自己改善は `/opt/data` の下のスキル、メモリ、プラグイン、設定に限られます。`/opt/hermes` の下にある中核のソースは書き換えられません。中核への変更はリポジトリへの PR で行い、イメージの更新として届けるものであって、動いているインストール先を直接いじって行うものではありません。
+ホスト型や公開されているイメージでは、エージェントの自己改善が及ぶ範囲は `/opt/data` の下にあるスキル、記憶、プラグイン、設定に限られます。`/opt/hermes` の下にある中核のソースは書き換えられません。中核の変更はリポジトリへの PR として行い、イメージを更新することで届けます。動いているインストール先をその場で書き換える形は取りません。
 
-運用者が `/opt/data` の外にあるファイルを直したり調べたりする必要があるときは、意識して root のシェルを使ってください。`hermes` の中継役は通常、`docker exec hermes hermes ...` を実行時のユーザーに落とします。root としての振る舞いが明確に必要な一回限りの実行では、`HERMES_DOCKER_EXEC_AS_ROOT=1` を設定します。
+`/opt/data` の外にあるファイルを直したり調べたりする必要があるときは、意図して root のシェルを使ってください。`hermes` のラッパーは、ふつう `docker exec hermes hermes ...` を実行時のユーザーに落とします。root として動かす必要がはっきりあるその一回だけ、`HERMES_DOCKER_EXEC_AS_ROOT=1` を設定してください。
 
-`~` の下に資格情報を保存するスキルの CLI は、データボリュームの直下ではなく、子プロセスの HOME に対して初期設定する必要があります。たとえば [xurl スキル](/hermes/docs/user-guide/skills/bundled/social-media/social-media-xurl/) は OAuth の情報を `~/.xurl` に保存しますが、公式の Docker の配置では Hermes のツール呼び出しはこれを `/opt/data/home/.xurl` として読みます。そのため、xurl の認証を手作業で行うときは `HOME=/opt/data/home` を付けて実行し、`HOME=/opt/data/home xurl auth status` で確認してください。
+`~` の下に認証情報を置くスキルの CLI は、データのボリュームの根元ではなく、子プロセスの HOME を相手に初期化する必要があります。たとえば [xurl のスキル](/hermes/docs/user-guide/skills/bundled/social-media/social-media-xurl/)は OAuth の状態を `~/.xurl` に置きますが、公式の Docker の配置では Hermes のツールの呼び出しはそれを `/opt/data/home/.xurl` として読みます。ですから xurl の認証を手で行うときは `HOME=/opt/data/home` を付けて実行し、`HOME=/opt/data/home xurl auth status` で確かめてください。
 
 :::warning
-同じデータディレクトリに対して、Hermes の **ゲートウェイ** のコンテナを 2 つ同時に動かさないでください。セッションのファイルやメモリの保管場所は、同時に書き込まれることを想定していません。
+同じデータのディレクトリに対して、Hermes の**ゲートウェイ**のコンテナを2つ同時に動かしてはいけません。セッションのファイルと記憶の置き場は、同時に書き込まれることを想定していません。
 :::
 
-## 複数プロファイルへの対応 {#multi-profile-support}
+## 複数のプロファイルへの対応 {#multi-profile-support}
 
-Hermes は [複数のプロファイル](/hermes/docs/reference/profile-commands/) に対応しています。`~/.hermes/` の下の別々のサブディレクトリで、1 つのインストールから独立したエージェント（SOUL、スキル、メモリ、セッション、資格情報がそれぞれ別）を動かせるしくみです。**公式の Docker イメージのなかでは、s6 の見守りのしくみが各プロファイルを一人前のサービスとして扱います**。そのため、おすすめの構成は **1 つのコンテナですべてのプロファイルを抱える** 形です。
+Hermes は[複数のプロファイル](/hermes/docs/reference/profile-commands/)に対応しています。`~/.hermes/` の下に分かれたサブディレクトリで、1つのインストールから独立したエージェント（SOUL、スキル、記憶、セッション、認証情報がそれぞれ別）を動かせます。**公式の Docker のイメージの中では、s6 の見守りの仕組みが各プロファイルを一人前のサービスとして扱います**。そのため、おすすめの構成は**1つのコンテナですべてのプロファイルを抱える**形です。
 
-`hermes profile create <name>` で作った各プロファイルには、次のものが備わります。
+`hermes profile create <name>` で作った各プロファイルには、次のものが用意されます。
 
-- `/run/service/gateway-<name>/` にある専用の s6 サービスの枠。実行時に動的に登録されるので、コンテナを組み直す必要はありません。
-- 落ちたときの自動再起動。待ち時間は `s6-supervise` が調整します。
-- `${HERMES_HOME}/logs/gateways/<name>/current` にある、プロファイルごとの入れ替え式のログ（1 MB のものを 10 世代）。
-- コンテナを再起動しても状態が残ること。起動時の復元処理が各プロファイルのディレクトリから `gateway_state.json` を読み、最後に記録された状態が `running` だったプロファイルの枠だけを立ち上げ直します。再起動をまたいで停止したままになるのは、自分で明示的に止めた（`hermes gateway stop`）ゲートウェイだけです。コンテナの再起動、イメージの更新、予期せぬ終了では記録上の状態が `running` のまま残るので、次の起動でゲートウェイは自動的に立ち上がります。
+- `/run/service/gateway-<name>/` にある専用の s6 のサービス枠。実行時に動的に登録されるので、コンテナを作り直す必要はありません。
+- 落ちたときの自動再起動。待ち時間の調整は `s6-supervise` が行います。
+- `${HERMES_HOME}/logs/gateways/<name>/current` にある、プロファイルごとの入れ替わるログ（1 MB のものを10世代分）。
+- コンテナを再起動しても残る状態。起動時の調整役が各プロファイルのディレクトリから `gateway_state.json` を読み、最後に記録された状態が `running` だったプロファイルの枠だけを立ち上げ直します。再起動をまたいで止まったままになるのは、自分ではっきり停止した（`hermes gateway stop`）ゲートウェイだけです。コンテナの再起動、イメージの更新、思わぬ終了では記録された状態は `running` のままなので、次の起動でゲートウェイは自動的に立ち上がります。
 
-ホストで実行するのと同じ操作のコマンドが、コンテナのなかからも同じように使えます。
+ホスト側で実行するのと同じ操作のコマンドが、コンテナの中からも同じように使えます。
 
 ```sh
 # Create a profile — registers the gateway-<name> s6 slot.
@@ -221,15 +228,15 @@ docker exec hermes hermes -p coder gateway status
 docker exec hermes hermes profile delete coder
 ```
 
-内部では、コンテナのなかの `hermes gateway start/stop/restart` は横取りされ、適切なサービスのディレクトリに対する `s6-svc` に振り分けられます。s6 のコマンドを直接覚える必要はありません。見守りのしくみの生の状態が知りたいときは `/command/s6-svstat /run/service/gateway-<name>` を使ってください（`/command/` が PATH に入っているのは見守りのしくみが起こしたプロセスだけなので、`docker exec` から呼ぶときは絶対パスで渡します）。
+内側では、コンテナの中での `hermes gateway start/stop/restart` は横取りされ、正しいサービスのディレクトリを相手にした `s6-svc` へ回されます。s6 のコマンドを直接覚える必要はありません。見守り役の生の状態を見たいときは `/command/s6-svstat /run/service/gateway-<name>` を使ってください（`/command/` が PATH に入るのは、見守りの仕組みが起動したプロセスだけです。`docker exec` から呼ぶときは絶対パスを渡してください）。
 
 ### コンテナの外から複数のプロファイルに届かせる {#reaching-more-than-one-profile-from-outside-the-container}
 
-コンテナの外からプロファイルのゲートウェイに届く経路は 2 つあり、振る舞いも違います。混同しないでください。
+外からプロファイルのゲートウェイに届く経路は2つあり、それぞれ動きが違います。混同しないでください。
 
-**Hermes Desktop（と Web ダッシュボード）。** Desktop アプリの **Remote Gateway** の接続先は `hermes dashboard` のバックエンド（既定は **ポート 9119**、`HERMES_DASHBOARD=1` で有効）であって、OpenAI の API サーバー *ではありません*。1 つのダッシュボードのバックエンドが、同じ場所にある **すべての** プロファイルに応えます。アプリのプロファイル切り替えが対象のプロファイルをリクエストごとに送り、バックエンドがディスク上のそのプロファイルの `HERMES_HOME` を開きます。つまり Desktop では、プロファイルごとに 2 つめのポートも 2 つめの接続も **必要ありません**。`:9119` への 1 つの接続と切り替えだけで、すべてをまかなえます。
+**Hermes Desktop（およびウェブのダッシュボード）。** デスクトップアプリの **Remote Gateway** の接続が話す相手は `hermes dashboard` のバックエンド（初期値は **9119 番ポート**。`HERMES_DASHBOARD=1` で有効になります）であって、OpenAI の API サーバーでは *ありません*。1つのダッシュボードのバックエンドが、同じ場所にある**すべての**プロファイルに応対します。アプリのプロファイル切り替えが、どのプロファイル宛かをリクエストごとに送り、バックエンドがディスク上のそのプロファイルの `HERMES_HOME` を開きます。ですからデスクトップ版のために、プロファイルごとに2つめのポートや2つめの接続を用意する必要は**ありません**。`:9119` への接続1つで、切り替えを通してすべてがまかなえます。
 
-**OpenAI 互換の API クライアント（Open WebUI、LobeChat、`/v1/...`）。** こちらは各プロファイルの **API サーバー** と話します。API サーバーは **どのプロファイルでもポート 8642** で待ち受けます（`API_SERVER_PORT` か `platforms.api_server.extra.port` から決まります。自動での割り当てはなく、`config.yaml` の `gateway.port` というキーもありません）。クライアントから *特定の* 2 つめのプロファイルに届かせたいなら、そのプロファイル **自身の** `.env` で別の `API_SERVER_PORT` を指定してください。そうしないと、そのゲートウェイも 8642 を取ろうとして、既定のプロファイルとぶつかります。
+**OpenAI 互換の API のクライアント（Open WebUI、LobeChat、`/v1/...`）。** こちらは各プロファイルの **API サーバー**と話します。API サーバーは**どのプロファイルでも 8642 番ポート**に割り当てられます（`API_SERVER_PORT` や `platforms.api_server.extra.port` から決まります。自動で空きを割り当てる仕組みはなく、`config.yaml` の `gateway.port` のような設定もありません）。クライアントから *特定の* 2つめのプロファイルに届かせたいなら、そのプロファイル**自身**の `.env` に別の `API_SERVER_PORT` を書いてください。そうしないと、そのゲートウェイも 8642 に割り当てようとして、既定のプロファイルとぶつかります。
 
 ```sh
 # Create the profile (registers its gateway-<name> s6 slot)
@@ -244,33 +251,33 @@ EOF
 docker exec hermes hermes -p work gateway restart
 ```
 
-`API_SERVER_PORT` は各プロファイル **自身の** `.env` に置き、コンテナ全体の `environment:` の欄には決して書かないでください。全体に効く値を書くと、すべてのプロファイルが同じポートに追いやられてぶつかります。ブリッジネットワークを使うなら、追加のポートを `docker-compose.yml` で公開します（`- "8643:8643"`）。`network_mode: host` なら、すでにホストから届きます。既定のプロファイルの 8642 への接続はそのままです。
+`API_SERVER_PORT` は各プロファイル**自身**の `.env` に置いてください。コンテナ全体の `environment:` のまとまりには決して書かないでください。全体に効く値にすると、すべてのプロファイルが同じポートに集まってぶつかります。ブリッジのネットワークを使うなら、追加のポートを `docker-compose.yml` で公開します（`- "8643:8643"`）。`network_mode: host` なら、すでにホストから届きます。既定のプロファイルの 8642 への接続はそのままです。
 
-### 多数のコンテナではなく、1 つのコンテナに多数のプロファイルを置く理由 {#why-one-container-with-many-profiles-not-many-containers}
+### コンテナを分けずに、1つで複数のプロファイルを抱える理由 {#why-one-container-with-many-profiles-not-many-containers}
 
-s6 へ移る前は、複数のゲートウェイを取りまとめる見守り役がコンテナのなかになかったため、「プロファイルごとに 1 つのコンテナ」がおすすめの形でした。s6 が PID 1 になったいま、それはもう必要なく、1 つのコンテナにまとめる形がほとんどの面で単純です。
+s6 に移る前は、コンテナの中に複数のゲートウェイを面倒みる仕組みがなかったので、「プロファイルごとに1コンテナ」がおすすめの形でした。s6 が PID 1 になったいま、それはもう必要ありません。1コンテナの構成のほうが、ほとんどすべての面で簡単です。
 
-| | 1 つのコンテナに多数のプロファイル | プロファイルごとに 1 つのコンテナ |
+| | 1コンテナに複数プロファイル | プロファイルごとに1コンテナ |
 |---|---|---|
-| ディスクの負担 | イメージ 1 つ、同梱の venv 1 つ、Playwright のキャッシュ 1 つ | N 個のイメージと N 個のキャッシュ |
-| メモリの負担 | Python のインタプリタのキャッシュと node_modules を共有 | コンテナごとに重複 |
-| プロファイルの作成 | `docker exec ... hermes profile create <name>`（数秒） | 新たな `docker run` の実行、ポートの割り当て、設定のバインドマウント |
-| プロファイルごとの復旧 | `s6-supervise` による自動再起動 | Docker の `--restart unless-stopped`（遅く、隣で動いている作業も巻き添えにする） |
-| ログ | `s6-log` によるプロファイルごとの入れ替え式のファイルと、コンテナ起動時の記録 | コンテナごとの `docker logs <name>` — 入れ替えのしくみはなし |
-| バックアップ | `~/.hermes` ディレクトリ 1 つ | 足並みをそろえる必要のある N 個のディレクトリ |
+| ディスクの消費 | イメージ1つ、同梱の venv 1つ、Playwright のキャッシュ1つ | イメージ N 個 / キャッシュ N 個 |
+| メモリの消費 | Python のインタプリタのキャッシュと node_modules を共有 | コンテナごとに重複 |
+| プロファイルの作成 | `docker exec ... hermes profile create <name>`（数秒） | 新しい `docker run` の実行 + ポートの割り当て + 設定のバインドマウント |
+| プロファイルごとの復旧 | `s6-supervise` による自動再起動 | Docker の `--restart unless-stopped`（遅く、隣の作業も巻き込む） |
+| ログ | `s6-log` によるプロファイルごとの入れ替わるファイルと、コンテナ起動時の記録 | コンテナごとの `docker logs <name>` — 入れ替えの仕組みはなし |
+| バックアップ | `~/.hermes` のディレクトリ1つ | 足並みをそろえる必要のあるディレクトリ N 個 |
 
-既定のプロファイル（`default`）は最初の起動時に必ず登録されるので、新しいコンテナには見守り付きのゲートウェイが最初から 1 つ入っています。追加のプロファイルは、実行時に足すだけのものです。
+既定のプロファイル（`default`）は最初の起動で必ず登録されるので、新しいコンテナには最初から見守られるゲートウェイが1つあります。追加のプロファイルは、実行時に足すだけのものです。
 
 ### コンテナを分けたほうがよい場合 {#when-you-do-want-a-separate-container}
 
-プロファイルをコンテナのなかに置くのが既定です。プロファイルごとにコンテナを分けるのは、はっきりした理由があるときだけにしてください。
+コンテナの中にプロファイルを置くのが既定です。プロファイルごとにコンテナを分けるのは、はっきりした理由があるときだけにしてください。
 
-- **処理ごとに資源を切り離したい** — たとえば、プロファイル A で暴走したブラウザのツールのセッションが、プロファイル B のメモリを食い潰さないようにしたい場合です。コンテナなら、プロファイルごとに `--memory` や `--cpus` を指定できます。
-- **イメージの版を別々に固定したい** — 処理ごとに、上流のイメージのタグを変えたい場合です。
-- **ネットワークを分けたい** — プロファイルごとに別々の Docker のネットワークを用意する場合です（たとえば一方はお客さま向け、もう一方は社内向け）。
-- **法令順守や被害の範囲** — 別々の資格情報が、OS のプロセスの系統を共有しないようにする場合です。
+- **仕事ごとに資源を隔てたい** — たとえばプロファイル A で暴走したブラウザのツールのセッションが、プロファイル B のメモリを食いつぶさないようにしたい場合です。コンテナならプロファイルごとに `--memory` や `--cpus` を決められます。
+- **イメージのバージョンを別々に固定したい** — 仕事ごとに違う上流のイメージのタグを使う場合です。
+- **ネットワークを分けたい** — プロファイルごとに別の Docker のネットワークを使う場合です（たとえば片方は顧客向け、もう片方は社内向け）。
+- **法令対応や被害範囲の限定** — 別々の認証情報が、OS のプロセスの木を共有しないようにしたい場合です。
 
-そうした場合は、`container_name`、`volumes`、`ports` をそれぞれ分けて、プロファイルごとに 1 つのサービスを書きます。
+そうした場合は、`container_name`、`volumes`、`ports` を別々にして、プロファイルごとに1つのサービスを書きます。
 
 ```yaml
 services:
@@ -295,27 +302,27 @@ services:
       - ~/.hermes-personal:/opt/data
 ```
 
-[消えないボリューム](#persistent-volumes) の警告はここでも生きています。2 つのコンテナを同じ `~/.hermes` ディレクトリに同時に向けないでください。各コンテナのなかの s6 の見守り役は、自分の持つプロファイルの一式を管理します。データのボリュームをコンテナをまたいで共有すると、セッションのファイルとメモリの保管場所が壊れます。
+[データを残すボリューム](#persistent-volumes)の警告はここでも当てはまります。2つのコンテナを同じ `~/.hermes` のディレクトリに同時に向けてはいけません。それぞれのコンテナの中の s6 の見守り役は自分のプロファイルの集まりを管理するので、データのボリュームをコンテナ間で共有すると、セッションのファイルと記憶の置き場が壊れます。
 
-## ログの行き先 {#where-the-logs-go}
+## ログはどこに出るか {#where-the-logs-go}
 
-s6 のコンテナにはログの出口が 4 つあり、「なぜ `docker logs` にゲートウェイの様子が何も出ないのか」はよくある戸惑いです。早見表を示します。
+s6 のコンテナには、はっきり異なる4つのログの出口があります。「`docker logs` にゲートウェイの様子が何も出ないのはなぜか」は、よくある戸惑いです。早見表を挙げます。
 
 | 出どころ | どこに出るか | 読み方 |
 |---|---|---|
-| **プロファイルごとのゲートウェイ**（`hermes gateway run` と、s6 の下で動くプロファイルごとのゲートウェイ） | 2 か所に同じ内容が流れます。`docker logs <container>`（そのとき、余計な接頭辞なし）**と** `${HERMES_HOME}/logs/gateways/<profile>/current`（入れ替え式、ISO-8601 の時刻付き、1 MB のものを 10 世代） | ホストで `docker logs -f hermes` または `tail -F ~/.hermes/logs/gateways/default/current` |
+| **プロファイルごとのゲートウェイ**（`hermes gateway run` と、s6 の下で動くプロファイルごとのゲートウェイ） | 2か所に同時に出ます。`docker logs <container>`（そのときすぐ見えます。余分な接頭辞は付きません）**と** `${HERMES_HOME}/logs/gateways/<profile>/current`（入れ替わる形式。ISO-8601 の時刻付きで、1 MB のものを10世代分） | ホストで `docker logs -f hermes` か `tail -F ~/.hermes/logs/gateways/default/current` |
 | **ダッシュボード**（`HERMES_DASHBOARD=1` のとき） | `docker logs <container>`（接頭辞なし） | `docker logs -f hermes` — ゲートウェイの行と混ざって出ます |
-| **起動時の復元処理**（コンテナが起動するたびに、どのプロファイルのゲートウェイを戻したかを記録します） | `${HERMES_HOME}/logs/container-boot.log`（追記だけの記録） | `tail -F ~/.hermes/logs/container-boot.log` |
-| **Hermes 全般のログ**（`agent.log`、`errors.log`） | `${HERMES_HOME}/logs/`（プロファイルを踏まえた場所） | `docker exec hermes hermes logs --follow [--level WARNING] [--session <id>]` |
+| **起動時の調整役**（コンテナが起動するたびに、どのプロファイルのゲートウェイを戻したかを記録します） | `${HERMES_HOME}/logs/container-boot.log`（追記だけの記録） | `tail -F ~/.hermes/logs/container-boot.log` |
+| **Hermes 全般のログ**（`agent.log`、`errors.log`） | `${HERMES_HOME}/logs/`（プロファイルを見分けます） | `docker exec hermes hermes logs --follow [--level WARNING] [--session <id>]` |
 
-実際に効いてくる点が 2 つあります。
+知っておくと役に立つ、実際の帰結が2つあります。
 
-- コンテナを再起動しても残るのは、`logs/gateways/<profile>/current` にあるファイルのほうです。`docker logs` が保持するのはいまのコンテナが生きているあいだの出力だけで（`docker rm` すると消えます）、入れ替え式のファイルはバインドマウントしたボリュームに残ります。
-- 起動時の復元処理が残す記録の形は `<iso-timestamp> profile=<name> prior_state=<state> action=<registered|started>` です。そのため `grep profile=coder ~/.hermes/logs/container-boot.log` とさっと打つだけで、そのプロファイルが最後に戻されたのはいつか、s6 が自動で起動したのかどうかが分かります。
+- コンテナの再起動をまたいで残るのは、`logs/gateways/<profile>/current` にあるファイルのほうです。`docker logs` が持っているのは、いまのコンテナが生きているあいだの出力だけで（`docker rm` すると消えます）、入れ替わるファイルのほうはバインドマウントしたボリュームの上に残ります。
+- 起動時の調整役が残す記録は `<iso-timestamp> profile=<name> prior_state=<state> action=<registered|started>` という形です。ですから `grep profile=coder ~/.hermes/logs/container-boot.log` とすれば、そのプロファイルが最後にいつ戻され、s6 が自動で起動したかどうかがすぐ分かります。
 
 ## 環境変数の受け渡し {#environment-variable-forwarding}
 
-API キーは、コンテナのなかの `/opt/data/.env` から読まれます。環境変数として直接渡すこともできます。
+API キーは、コンテナの中の `/opt/data/.env` から読まれます。環境変数を直接渡すこともできます。
 
 ```sh
 docker run -it --rm \
@@ -325,15 +332,15 @@ docker run -it --rm \
   nousresearch/hermes-agent
 ```
 
-`-e` で直接渡した値は、`.env` の値より優先されます。キーをディスクに置きたくない CI/CD や秘密情報の管理サービスとの連携では、これが役に立ちます。
+`-e` で直接渡した値は、`.env` の値より優先されます。キーをディスクに置きたくない CI/CD や、秘密情報の管理サービスと組み合わせるときに便利です。
 
-:::note Docker を **ターミナルのバックエンド** として使う話をお探しですか
-このページで扱っているのは、Hermes 自体を Docker のなかで動かす話です。エージェントの `terminal` や `execute_code` の呼び出しを Docker のサンドボックスコンテナのなかで実行させたい場合は（Hermes のプロセスをまたいで共有される、長く生きる 1 つのコンテナです。issue #20561 をご覧ください）、それは別の設定の一式になります。`terminal.backend: docker` に加えて、`terminal.docker_image`、`terminal.docker_volumes`、`terminal.docker_forward_env`、`terminal.docker_env`、`terminal.docker_run_as_host_user`、`terminal.docker_extra_args`、`terminal.docker_persist_across_processes`、`terminal.docker_orphan_reaper` です。コンテナの寿命の決まりを含む全体は [設定 → Docker バックエンド](/hermes/docs/user-guide/configuration/#docker-backend) をご覧ください。
+:::note Docker を**ターミナルのバックエンド**として使いたい場合は
+このページで扱っているのは、Hermes 自身を Docker の中で動かす話です。エージェントの `terminal` や `execute_code` の呼び出しを Docker のサンドボックスのコンテナの中で実行させたい場合（Hermes のプロセスをまたいで共有される、長く生きる1つのコンテナです — issue #20561 を参照してください）、それは別の設定のまとまりになります。`terminal.backend: docker` に加えて、`terminal.docker_image`、`terminal.docker_volumes`、`terminal.docker_forward_env`、`terminal.docker_env`、`terminal.docker_run_as_host_user`、`terminal.docker_extra_args`、`terminal.docker_persist_across_processes`、`terminal.docker_orphan_reaper` です。コンテナの寿命に関する決まりを含めた全体は [設定 → Docker バックエンド](/hermes/docs/user-guide/configuration/#docker-backend)を参照してください。
 :::
 
 ## Docker Compose の例 {#docker-compose-example}
 
-ゲートウェイとダッシュボードの両方を常駐させる形で動かすなら、`docker-compose.yaml` が便利です。
+ゲートウェイとダッシュボードの両方を動かし続ける構成には、`docker-compose.yaml` を使うと便利です。
 
 ```yaml
 services:
@@ -360,14 +367,14 @@ services:
           cpus: "2.0"
 ```
 
-`docker compose up -d` で起動し、`docker compose logs -f` でログを見ます。見守られているゲートウェイの標準出力は、ボリューム上の `${HERMES_HOME}/logs/gateways/<profile>/current` にも同じ内容が流れます。どこに何が出るかの全体像は [ログの行き先](#where-the-logs-go) をご覧ください。
+`docker compose up -d` で起動し、`docker compose logs -f` でログを見ます。見守られているゲートウェイの標準出力は、ボリュームの上の `${HERMES_HOME}/logs/gateways/<profile>/current` にも同時に書き出されます — 行き先の全体像は [ログはどこに出るか](#where-the-logs-go)を参照してください。
 
-## 任意: Linux デスクトップの音声の橋渡し {#optional-linux-desktop-audio-bridge}
+## 任意: Linux デスクトップの音声をつなぐ {#optional-linux-desktop-audio-bridge}
 
-Docker で音声モードを動かすには、別々の 2 つのことが必要です。Hermes がコンテナのなかで音声機器を調べられること、そしてコンテナからホストの音声のしくみに届くことです。以下の手順では、PulseAudio 互換のソケットを持つ Linux デスクトップ（多くの PipeWire の構成を含みます）について、ホスト側の音声の配線を扱います。
+Docker の中で音声モードを使うには、別々の2つのことが必要です。コンテナの中で Hermes が音声の機器を調べられるようになっていること、そしてコンテナからホストの音声のサーバーに届くことです。以下の手順は、PulseAudio 互換のソケットを出している Linux のデスクトップ（多くの PipeWire の構成を含みます）について、ホスト側の音声の配管を説明します。
 
 :::caution
-これは Linux デスクトップ向けの回避策であって、Docker Desktop 全般の機能ではありません。ホストの音声がすでに動いていて、Hermes のコンテナのなかで CLI の音声モードを使いたいときに役立ちます。それでも Hermes が `Running inside Docker container -- no audio devices` と言ってくる場合は、`PULSE_SERVER` / `PIPEWIRE_REMOTE` に対応した Docker 内の音声機器の検出を含むビルドを使ってください。
+これは Linux デスクトップ向けの回避策であって、Docker Desktop 全般の機能ではありません。すでにホストで音声が動いていて、Hermes のコンテナの中で CLI の音声モードを使いたいときに役立ちます。それでも Hermes が `Running inside Docker container -- no audio devices` と言う場合は、`PULSE_SERVER` / `PIPEWIRE_REMOTE` に対応した Docker での音声の検出を含むビルドを使ってください。
 :::
 
 まず、Compose のファイルの隣に ALSA の設定を作ります。
@@ -390,7 +397,7 @@ ctl.!default {
 }
 ```
 
-次に、ALSA の PulseAudio プラグインを入れた、小さな派生イメージを組み立てます。
+次に、ALSA の PulseAudio プラグインを入れた小さな派生イメージを作ります。
 
 ```dockerfile title="Dockerfile.audio"
 FROM nousresearch/hermes-agent:latest
@@ -401,7 +408,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 ```
 
-そのイメージを Compose で使い、ホストの利用者の PulseAudio のソケットと cookie を渡します。
+Compose でそのイメージを使い、ホストのユーザーの PulseAudio のソケットとクッキーを渡します。
 
 ```yaml
 services:
@@ -426,7 +433,7 @@ services:
       - PULSE_COOKIE=/tmp/pulse-cookie
 ```
 
-コンテナのプロセスが利用者ごとの音声のソケットに触れるよう、ホストの UID と GID を指定して起動します。
+コンテナのプロセスがユーザーごとの音声のソケットに触れるよう、ホストの UID と GID を渡して起動します。
 
 ```sh
 export HERMES_UID="$(id -u)"
@@ -434,7 +441,7 @@ export HERMES_GID="$(id -g)"
 docker compose up -d --build
 ```
 
-コンテナのなかから PortAudio に何が見えているかを確かめるには、次のようにします。
+コンテナの中で PortAudio が何を見ているかを確かめるには次のようにします。
 
 ```sh
 docker exec hermes /opt/hermes/.venv/bin/python -c "import sounddevice as sd; print(sd.query_devices())"
@@ -442,17 +449,17 @@ docker exec hermes /opt/hermes/.venv/bin/python -c "import sounddevice as sd; pr
 
 ## 資源の上限 {#resource-limits}
 
-Hermes のコンテナが必要とする資源はほどほどです。おすすめの下限を示します。
+Hermes のコンテナが必要とする資源は、ほどほどです。最低限の目安を挙げます。
 
-| 資源 | 最低 | 推奨 |
+| 資源 | 最低 | おすすめ |
 |----------|---------|-------------|
 | メモリ | 1 GB | 2〜4 GB |
 | CPU | 1 コア | 2 コア |
-| ディスク（データのボリューム） | 500 MB | 2 GB 以上（セッションやスキルとともに増えます） |
+| ディスク（データのボリューム） | 500 MB | 2 GB 以上（セッションやスキルが増えるほど大きくなります） |
 
-いちばんメモリを使うのは、ブラウザの自動操作（Playwright / Chromium）です。ブラウザのツールが要らないのなら 1 GB で足ります。ブラウザのツールを使うのなら、少なくとも 2 GB は割り当ててください。
+いちばんメモリを使うのは、ブラウザの自動操作（Playwright / Chromium）です。ブラウザのツールが要らないなら 1 GB で足ります。ブラウザのツールを使うなら、少なくとも 2 GB は割り当ててください。
 
-Docker で上限を設定します。
+Docker で上限を決めるには次のようにします。
 
 ```sh
 docker run -d \
@@ -463,73 +470,73 @@ docker run -d \
   nousresearch/hermes-agent gateway run
 ```
 
-## Dockerfile が行っていること {#what-the-dockerfile-does}
+## Dockerfile が何をしているか {#what-the-dockerfile-does}
 
-公式のイメージは `debian:13.4` を土台にしていて、次のものを含みます。
+公式のイメージは `debian:13.4` を土台にしていて、次のものが入っています。
 
-- Python 3.13。焼き込む追加機能（`all`、`messaging`、Anthropic / Bedrock / Azure の認証、Hindsight、Matrix）向けの依存関係を `uv sync --frozen --no-install-project` でロックファイルからそろえたうえで、Hermes 自体を依存関係なしの編集可能な形で入れています。
-- Node.js 26 と npm（ブラウザの自動操作、WhatsApp の橋渡し、TUI と Desktop の一式、ワークスペースの組み立て道具のため）
+- Python 3.13。焼き込む追加機能（`all`、`messaging`、Anthropic / Bedrock / Azure の認証、Hindsight、Matrix）については、`uv sync --frozen --no-install-project` でロックファイルどおりに依存をそろえ、そのあと Hermes 自身を依存なしの編集可能な形で入れています。
+- Node.js 26 と npm（ブラウザの自動操作、WhatsApp の橋渡し、TUI とデスクトップの一式、ワークスペースのビルド道具のために使います）
 - Chromium 入りの Playwright（`npx playwright install --with-deps chromium --only-shell`）
 - システムの道具として ripgrep、ffmpeg、git、`xz-utils`
-- **`docker-cli`** — コンテナのなかで動くエージェントが、ホストの Docker のしくみを動かせるようにするためのものです（`/var/run/docker.sock` をバインドマウントすると使えます）。`docker build`、`docker run`、コンテナの中身の確認などに使えます。
-- **`openssh-client`** — コンテナのなかから [SSH のターミナルのバックエンド](/hermes/docs/user-guide/configuration/#ssh-backend) を使えるようにします。SSH のバックエンドはシステムの `ssh` の実行ファイルを呼び出すので、これがないとコンテナでの導入では何も言わずに失敗していました。
+- **`docker-cli`** — コンテナの中で動くエージェントが、ホストの Docker のデーモンを操れるようにします（使うには `/var/run/docker.sock` をバインドマウントします）。`docker build` や `docker run`、コンテナの中身を調べる操作などに使えます。
+- **`openssh-client`** — コンテナの中から [SSH のターミナルのバックエンド](/hermes/docs/user-guide/configuration/#ssh-backend)を使えるようにします。SSH のバックエンドはシステムの `ssh` のバイナリを呼び出すので、これがないとコンテナで入れた場合に何も言わずに失敗していました。
 - WhatsApp の橋渡し（`scripts/whatsapp-bridge/`）
-- PID 1 としての **[`s6-overlay`](https://github.com/just-containers/s6-overlay) v3**（以前の `tini` に代わるものです）。ダッシュボードとプロファイルごとのゲートウェイを見守って落ちたら再起動し、残ってしまった子プロセスを片付け、シグナルを転送します。
+- PID 1 としての **[`s6-overlay`](https://github.com/just-containers/s6-overlay) v3**（以前の `tini` を置き換えました）。ダッシュボードとプロファイルごとのゲートウェイを見守って落ちたら自動で再起動し、取り残された子プロセスを片付け、シグナルを渡します。
 
-このイメージは、実行時の `/opt/hermes` を書き換えられないインストール先として扱います。Docker のなかで使えるようにしたい任意の Python の追加機能、Node のワークスペース、TUI の資材は、イメージを組み立てるときに焼き込む必要があります。実行時に必要になってから入れる動きは無効にしてあるので、見守られているゲートウェイや `docker exec hermes …` のコマンドが、読み取り専用のソースの置き場に依存関係の成果物を書き戻そうとすることはありません。
+イメージは実行時、`/opt/hermes` を書き換えられないインストール先として扱います。Docker の中で使えるようにしておきたい任意の Python の追加機能、Node のワークスペース、TUI の資材は、イメージを作るときに焼き込む必要があります。実行時に必要になってから入れる動きは止めてあるので、見守られているゲートウェイや `docker exec hermes …` のコマンドが、読み取り専用のソースの場所へ依存の成果物を書き戻そうとすることはありません。
 
-コンテナの `ENTRYPOINT` は小さな振り分け役（`docker/entrypoint-dispatch.sh`）です。コンテナが PID 1 を持っている場合（通常の Docker や Podman）は s6-overlay の `/init` を実行し、以下で説明する見守りのしくみが一式そろいます。プラットフォームがイメージの入口を自前の PID 1 の初期化のしくみで包んでいる場合（Fly.io Machines、`docker run --init`、一部の Nomad や Kubernetes の構成）、`/init` は `s6-overlay-suexec: fatal: can only run as pid 1` で止まってしまうため、振り分け役は代わりに 2 段目の初期化を直接実行し、s6 を使わずに主要な包み役を実行します。この代替の経路でも、指定したコマンドは動きます。ただし、見守られるサービス（ダッシュボード、プロファイルごとのゲートウェイ）は使えません。
+コンテナの `ENTRYPOINT` は小さな振り分け役（`docker/entrypoint-dispatch.sh`）です。コンテナが PID 1 を持っているとき（ふつうの Docker や Podman）は、s6-overlay の `/init` を exec するので、下で説明する見守りの仕組みが一式そろいます。プラットフォームがイメージのエントリーポイントを自前の PID 1 の init で包んでいるとき（Fly.io Machines、`docker run --init`、一部の Nomad や Kubernetes の構成）は、`/init` は `s6-overlay-suexec: fatal: can only run as pid 1` で止まってしまいます。そこで振り分け役は、代わりに stage2 の下準備を直接走らせ、s6 を使わずに主となるラッパーを exec します。この代替の経路でも指定したコマンドは動きますが、見守られるサービス（ダッシュボード、プロファイルごとのゲートウェイ）は使えません。
 
-PID 1 の経路では、`/init` は次のように動きます。
-1. `/etc/cont-init.d/01-hermes-setup`（＝ `docker/stage2-hook.sh`）を root として実行します。UID と GID の付け替え（任意）、ボリュームの持ち主の修正、最初の起動時の `.env` / `config.yaml` / `SOUL.md` の用意、`HERMES_SKIP_CONFIG_MIGRATION=1` でなければ対話なしでの設定の書式の移行、同梱スキルの同期を行います。
-2. `/etc/cont-init.d/02-reconcile-profiles`（＝ `hermes_cli.container_boot`）を実行します。`$HERMES_HOME/profiles/<name>/` をたどり、プロファイルごとのゲートウェイの s6 サービスの枠を `/run/service/gateway-<profile>/` に作り直し、最後に記録された状態が `running` だったものだけを自動で起動します（[プロファイルごとのゲートウェイの見守り](#per-profile-gateway-supervision) をご覧ください）。
-3. 固定の `main-hermes` と `dashboard` の s6-rc サービスを起動します。
-4. コンテナの CMD を主要なプログラムとして実行します（`/opt/hermes/docker/main-wrapper.sh`）。これが、利用者が `docker run` に渡した引数を次のように振り分けます。
+PID 1 の経路では、`/init` は次のことを行います。
+1. root として `/etc/cont-init.d/01-hermes-setup`（= `docker/stage2-hook.sh`）を実行します。必要なら UID と GID を割り当て直し、ボリュームの所有者を直し、初回の起動時に `.env` / `config.yaml` / `SOUL.md` の種を置き、`HERMES_SKIP_CONFIG_MIGRATION=1` でない限り設定の形式の移行を対話なしで行い、同梱のスキルをそろえます。
+2. `/etc/cont-init.d/02-reconcile-profiles`（= `hermes_cli.container_boot`）を実行します。`$HERMES_HOME/profiles/<name>/` をたどり、プロファイルごとのゲートウェイの s6 のサービス枠を `/run/service/gateway-<profile>/` に作り直し、最後に記録された状態が `running` だったものだけを自動で起動します（[プロファイルごとのゲートウェイの見守り](#per-profile-gateway-supervision)を参照してください）。
+3. 固定の `main-hermes` と `dashboard` の s6-rc のサービスを起動します。
+4. コンテナの CMD を主プログラムとして exec します（`/opt/hermes/docker/main-wrapper.sh`）。これは、ユーザーが `docker run` に渡した引数を次のように振り分けます。
    - 引数なし → `hermes`（既定）
-   - 最初の引数が PATH 上の実行ファイル（`sleep`、`bash` など）→ それを直接実行
+   - 最初の引数が PATH にある実行ファイル（`sleep`、`bash` など）→ それを直接 exec
    - それ以外 → `hermes <args>`（サブコマンドとしてそのまま渡す）
-   この主要なプログラムが終わるとコンテナも終わり、その終了コードを返します。
+   この主プログラムが終わるとコンテナも終わり、終了コードもそれに従います。
 
-:::warning s6 より前のイメージからの互換性のない変更
-コンテナの ENTRYPOINT は `/usr/bin/tini` ではなく、`entrypoint-dispatch.sh` という振り分け役になりました（PID 1 のもとでは s6-overlay の `/init` に引き継ぎます）。文書に載っている 5 通りの `docker run` の使い方（引数なし、`chat -q "…"`、`sleep infinity`、`bash`、`--tui`）は、tini 版のイメージとまったく同じように動きます。下流で使っている包み役が tini 固有のシグナルの挙動や、`/usr/bin/tini --` の書き込みに依存していたのなら、以前のイメージのタグに固定してください。
+:::warning s6 より前のイメージからの、互換性のない変更
+コンテナの ENTRYPOINT は `/usr/bin/tini` ではなく、`entrypoint-dispatch.sh` の振り分け役になりました（PID 1 のときは s6-overlay の `/init` に任せます）。文書に載っている5つの `docker run` の使い方（引数なし、`chat -q "…"`、`sleep infinity`、`bash`、`--tui`）は、tini を使ったイメージとまったく同じように動きます。tini 特有のシグナルの扱いや、`/usr/bin/tini --` を直接書いた呼び出しに頼った自前のラッパーがある場合は、前のイメージのタグに固定してください。
 :::
 
 :::warning 権限の考え方
-`/init`（または、同じ働きをする、2 段目の処理に引き継ぐ従来の `docker/entrypoint.sh` の中継役）をコマンドの連なりに残さないかぎり、イメージの入口を上書きしないでください。s6-overlay の `/init` は、最初の起動時にボリュームの持ち主を変えられるよう root として動き、そのあと `s6-setuidgid` を使って、見守られるすべてのサービスと主要なプログラムのために `hermes` ユーザーへ落とします。公式のイメージのなかで `hermes gateway run` を root として起動することは、既定では拒否されます。`/opt/data` に root の持ち物のファイルが残り、あとからダッシュボードやゲートウェイを起動できなくなる恐れがあるからです。その危険を承知のうえで受け入れるときだけ、`HERMES_ALLOW_ROOT_GATEWAY=1` を設定してください。
+`/init`（あるいは同じ働きをする、stage2 のフックへ渡す従来の `docker/entrypoint.sh` のラッパー）をコマンドの連なりに残すのでない限り、イメージのエントリーポイントを上書きしないでください。s6-overlay の `/init` は root として動き、初回の起動でボリュームの所有者を変えられるようにしています。そのあと、見守るすべてのサービスと主プログラムについて、`s6-setuidgid` で `hermes` ユーザーに降ります。公式のイメージの中で `hermes gateway run` を root として起動することは、初期状態で断られます。`/opt/data` に root が持つファイルが残り、あとからダッシュボードやゲートウェイを起動できなくなるおそれがあるからです。その危険をわかったうえで受け入れるときだけ、`HERMES_ALLOW_ROOT_GATEWAY=1` を設定してください。
 :::
 
-### `docker exec` は自動的に `hermes` ユーザーに落ちます {#docker-exec-automatically-drops-to-the-hermes-user}
+### `docker exec` は自動的に `hermes` ユーザーに降ります {#docker-exec-automatically-drops-to-the-hermes-user}
 
-`docker exec hermes <cmd>` は、既定ではコンテナのなかで root として動きます。ただしこのイメージには `/opt/hermes/bin/hermes` という薄い中継役が入っていて（PATH のいちばん先にあります）、root からの呼び出しを見つけると `s6-setuidgid hermes` を通して自分を実行し直します。そのため `docker exec hermes login`、`docker exec hermes profile create …`、`docker exec hermes setup` などはすべて、UID 10000 の持ち物としてファイルを書きます。つまり、見守られているゲートウェイから読めるファイルになり、`--user` の指定を足す必要はありません。root 以外からの呼び出し（見守られているプロセス自身、`docker exec --user hermes`、コンテナのなかのカンバンのサブエージェント）は近道に入って venv の実行ファイルを直接実行するので、よく通る経路に余計な負担はかかりません。
+`docker exec hermes <cmd>` は、そのままだとコンテナの中で root として動きます。しかしイメージには `/opt/hermes/bin/hermes` に薄いラッパーが入っていて（PATH の中でいちばん先に来ます）、root からの呼び出しを見つけると、そのまま `s6-setuidgid hermes` を通して呼び直します。ですから `docker exec hermes login`、`docker exec hermes profile create …`、`docker exec hermes setup` などは、どれも UID 10000 が所有するファイルを書きます。つまり見守られているゲートウェイから読めるファイルになり、`--user` の指定を足す必要はありません。root 以外からの呼び出し（見守られているプロセス自身、`docker exec --user hermes`、コンテナの中のカンバンのサブエージェント）は近道を通って venv のバイナリを直接 exec するので、よく通る道に余計な手間はかかりません。
 
-root としての振る舞いを保った `docker exec` がどうしても必要なとき（調査のためのセッション、root だけが見られる状態の確認、root の持ち物になっている `/opt/data` の外のファイル）は、実行ごとに切り替えます。
+診断のためのセッション、root だけが見られる状態の確認、`/opt/data` の外にあって root が持っているファイルの操作など、root のまま `docker exec` したい場合は、その呼び出しごとに打ち消せます。
 
 ```sh
 docker exec -e HERMES_DOCKER_EXEC_AS_ROOT=1 hermes <cmd>
 ```
 
-この中継役が受け付けるのは `1` / `true` / `yes` です（大文字と小文字は区別しません）。それ以外は — `=0` のような打ち間違いも含めて — 権限を落とす動きになるので、気づかないうちに切り替わってしまうことはありません。`s6-setuidgid` が使えない場合（s6-overlay を取り除いた独自のビルドなど）、この中継役は root としての実行を拒み、終了コード 126 で終わります。壊れた権限の仕組みを黙って見過ごすのではなく、はっきり表に出すためです。以前は、`docker exec hermes login` が `auth.json` を `root:root` として書いてしまい、見守られているゲートウェイの認証が、どのチャットのサービスからのメッセージでも壊れる落とし穴がありました。
+ラッパーが受け付けるのは `1` / `true` / `yes` です（大文字と小文字は区別しません）。それ以外は — `=0` のような打ち間違いも含めて — すべて降りる側に落ちるので、気づかないうちに打ち消されることはありません。`s6-setuidgid` が使えない場合（s6-overlay を削った独自のビルドなど）、ラッパーは root として動くことを断り、代わりに 126 で終了します。権限の仕組みが壊れていることを黙って見過ごすのではなく、はっきり知らせるためです。かつては `docker exec hermes login` が `auth.json` を `root:root` で書いてしまい、見守られているゲートウェイの認証がどのチャットのプラットフォームのメッセージでも壊れる、という落とし穴がありました。
 
 ### プロファイルごとのゲートウェイの見守り {#per-profile-gateway-supervision}
 
-`hermes profile create <name>` で作った各プロファイルには、s6 に見守られるゲートウェイのサービスが `/run/service/gateway-<name>/` に自動で登録され、コンテナを再起動しても状態を保ったまま自動で立ち上がります。利用者側の進め方と操作のコマンドは、前半の [複数プロファイルへの対応](#multi-profile-support) をご覧ください。
+`hermes profile create <name>` で作った各プロファイルには、`/run/service/gateway-<name>/` に登録された s6 に見守られるゲートウェイのサービスが自動で用意されます。コンテナの再起動をまたいで状態が残り、自動で起動し直します。使う側の流れと操作のコマンドについては、上の[複数のプロファイルへの対応](#multi-profile-support)を参照してください。
 
-**s6 より前のイメージと比べた、見守りの利点:**
+**s6 より前のイメージと比べて、見守りが良くなった点:**
 
-- ゲートウェイが落ちても、`s6-supervise` が約 1 秒待ってから自動で再起動します。
-- `HERMES_DASHBOARD=1` で有効にしたダッシュボードも、同じ見守りのしくみの下に置かれ、同じように自動で再起動します。
-- `docker restart`、イメージの更新（`docker compose up -d --force-recreate`）、予期せぬ終了があっても、動いていたゲートウェイは保たれます。起動時の復元処理が `$HERMES_HOME/profiles/<name>/gateway_state.json` を読み、最後に記録された状態が `running` なら枠を立ち上げ直します。`stopped` が記録され、再起動をまたいでゲートウェイが停止したままになるのは、明示的に `hermes gateway stop` を実行したときだけです。再起動や更新のときにコンテナや s6 が送る SIGTERM は「まだ動いている」として扱われ、自動で立ち上がります。
-- プロファイルごとのゲートウェイのログは `$HERMES_HOME/logs/gateways/<profile>/current` に残り（`s6-log` が入れ替えます）、復元処理が何をしたかは起動ごとに `$HERMES_HOME/logs/container-boot.log` に追記されます。どこに何が出るかの全体像は [ログの行き先](#where-the-logs-go) をご覧ください。
+- ゲートウェイが落ちても、`s6-supervise` が約1秒待ってから自動で起動し直します。
+- `HERMES_DASHBOARD=1` で有効にしたダッシュボードも、同じ見守りの仕組みの上に載り、同じように自動で起動し直します。
+- `docker restart`、イメージの更新（`docker compose up -d --force-recreate`）、思わぬ終了があっても、動いていたゲートウェイは保たれます。起動時の調整役が `$HERMES_HOME/profiles/<name>/gateway_state.json` を読み、最後に記録された状態が `running` なら枠を立ち上げ直すからです。`stopped` と記録され、再起動をまたいで止まったままになるのは、はっきり `hermes gateway stop` を実行したときだけです。再起動や更新のときにコンテナや s6 が送る SIGTERM は「まだ動いている」と見なされ、自動で起動し直します。
+- プロファイルごとのゲートウェイのログは `$HERMES_HOME/logs/gateways/<profile>/current` に残ります（`s6-log` が入れ替えます）。調整役が行ったことは、起動のたびに `$HERMES_HOME/logs/container-boot.log` に追記されます。行き先の全体像は [ログはどこに出るか](#where-the-logs-go)を参照してください。
 
-コンテナのなかで `hermes status` を実行すると、`Manager: s6 (container supervisor)` と表示されます。見守りのしくみの生の様子を見たいときは `/command/s6-svstat /run/service/gateway-<name>` を使ってください（`/command/` が PATH に入っているのは見守りのしくみが起こしたプロセスだけなので、`docker exec` から呼ぶときは絶対パスで渡します）。
+コンテナの中で `hermes status` を実行すると `Manager: s6 (container supervisor)` と表示されます。見守り役の生の状態を見るには `/command/s6-svstat /run/service/gateway-<name>` を使ってください（`/command/` が PATH に入るのは見守りの仕組みが動かすプロセスだけです。`docker exec` から呼ぶときは絶対パスを渡してください）。
 
-## 更新する {#upgrading}
+## 新しいバージョンに上げる {#upgrading}
 
-最新のイメージを取得して、コンテナを作り直します。データディレクトリはそのまま残り、
+最新のイメージを取ってきて、コンテナを作り直します。データのディレクトリはそのまま残り、
 コンテナはゲートウェイを起動する前に、マウントされた `$HERMES_HOME/config.yaml` に対して
-対話なしで設定の書式の移行を行います。
-移行が必要な場合、Hermes はまず `config.yaml` と `.env` の隣に、
-時刻の付いたバックアップを書き出します。
+設定の形式の移行を対話なしで行います。
+移行が必要なときは、Hermes がまず `config.yaml` と `.env` の隣に、
+時刻の付いたバックアップを書きます。
 
 ```sh
 docker pull nousresearch/hermes-agent:latest
@@ -549,33 +556,33 @@ docker compose up -d
 ```
 
 `HERMES_SKIP_CONFIG_MIGRATION=1` を設定するのは、新しいイメージに書き換えさせる前に、
-保存された設定を自分で確認したり移行したりする必要があるときだけにしてください。
+保存された設定を自分で確かめたり移行したりする必要があるときだけにしてください。
 
-## スキルと資格情報のファイル {#skills-and-credential-files}
+## スキルと認証情報のファイル {#skills-and-credential-files}
 
-Docker を実行の場として使う場合（上で説明した方法ではなく、エージェントが Docker のサンドボックスのなかでコマンドを実行する場合です。[設定 → Docker バックエンド](/hermes/docs/user-guide/configuration/#docker-backend) をご覧ください）、Hermes はすべてのツール呼び出しで長く生きる 1 つのコンテナを使い回し、スキルのディレクトリ（`~/.hermes/skills/`）と、スキルが宣言している資格情報のファイルを、読み取り専用のボリュームとしてそのコンテナへ自動でバインドマウントします。スキルのスクリプト、ひな形、参考資料は、手作業の設定なしにサンドボックスのなかで使えます。そしてコンテナは Hermes のプロセスが生きているあいだ残るので、入れた依存関係や書いたファイルは、次のツール呼び出しでもそのまま使えます。
+Docker を実行の場として使う場合（ここまでの方法ではなく、エージェントが Docker のサンドボックスの中でコマンドを動かす場合です — [設定 → Docker バックエンド](/hermes/docs/user-guide/configuration/#docker-backend)を参照してください）、Hermes はすべてのツールの呼び出しで長く生きる1つのコンテナを使い回し、スキルのディレクトリ（`~/.hermes/skills/`）と、スキルが必要だと宣言した認証情報のファイルを、読み取り専用のボリュームとして自動でそのコンテナにバインドマウントします。スキルのスクリプト、ひな形、参照用のファイルは、手で設定しなくてもサンドボックスの中から使えます。そしてコンテナは Hermes のプロセスが生きているあいだ残るので、入れた依存や書いたファイルは次のツールの呼び出しでもそのままです。
 
-同じ同期は SSH と Modal のバックエンドでも行われます。スキルと資格情報のファイルは、コマンドを実行するたびに rsync か Modal のマウント API を通して送られます。
+同じそろえ方は SSH と Modal のバックエンドでも行われます。スキルと認証情報のファイルは、コマンドを動かす前に rsync や Modal のマウント API で送られます。
 
-## コンテナに道具を追加する {#installing-more-tools-in-the-container}
+## コンテナにさらに道具を入れる {#installing-more-tools-in-the-container}
 
-公式のイメージには、選び抜かれた道具の一式が入っていますが（[Dockerfile が行っていること](#what-the-dockerfile-does) をご覧ください）、エージェントが使いたくなるすべての道具が最初から入っているわけではありません。おすすめの方法が 5 つあり、手間と長持ちする度合いの小さい順に並べます。
+公式のイメージには、選び抜かれた道具の一式が入っています（[Dockerfile が何をしているか](#what-the-dockerfile-does)を参照してください）。とはいえ、エージェントが使いたくなる道具がすべて入っているわけではありません。おすすめの方法が5つあり、手間と長持ちの度合いが小さいものから順に並べます。
 
 ### npm や Python の道具 — `npx` か `uvx` を使う {#npm-or-python-tools-use-npx-or-uvx}
 
-npm や PyPI に公開されている道具なら、`npx`（npm）か `uvx`（Python）で実行するよう Hermes に伝え、そのコマンドを消えないメモリに覚えておくよう指示します。設定のファイルや資格情報が必要な道具なら、それらを `/opt/data` の下に置くよう指示してください（たとえば `/opt/data/<tool>/config.yaml`）。
+npm や PyPI で公開されている道具なら、`npx`（npm）や `uvx`（Python）で動かすよう Hermes に指示し、そのコマンドを残り続ける記憶に覚えさせてください。設定のファイルや認証情報が要る道具なら、それらを `/opt/data` の下に置くよう指示します（たとえば `/opt/data/<tool>/config.yaml`）。
 
-依存関係は必要になったときに取得され、コンテナが生きているあいだキャッシュされます。`/opt/data` の下に書いた設定は、バインドマウントしたホストのディレクトリにあるので、コンテナを再起動しても残ります。パッケージのキャッシュそのものは `docker rm` のあとに作り直されますが、`npx` と `uvx` は次にその道具を動かすときに、意識させずに取り直します。
+依存は必要になったときに取ってきて、コンテナが生きているあいだキャッシュされます。`/opt/data` の下に書いた設定は、バインドマウントしたホストのディレクトリの上にあるので、コンテナを再起動しても残ります。パッケージのキャッシュ自体は `docker rm` のあとに作り直しになりますが、`npx` と `uvx` は次にその道具を動かすときに、意識せずとも取り直してくれます。
 
-### それ以外の道具（apt のパッケージ、実行ファイル） — 入れて覚えさせる {#other-tools-apt-packages-binaries-install-and-remember}
+### そのほかの道具（apt のパッケージ、バイナリ） — 入れて覚えさせる {#other-tools-apt-packages-binaries-install-and-remember}
 
-npm と PyPI の外にあるもの — `apt` のパッケージ、できあいの実行ファイル、イメージにまだ入っていない言語の実行環境 — については、入れ方を Hermes に伝え（たとえば `apt-get update && apt-get install -y <package>`）、そのコマンドを覚えておくよう指示します。その道具はコンテナが生きているあいだ残り、コンテナを再起動したあとで再びその道具が必要になったとき、Hermes は入れ直すコマンドを実行します。
+npm や PyPI の外にあるもの — `apt` のパッケージ、できあいのバイナリ、イメージに入っていない言語の実行環境 — については、入れ方を Hermes に教え（たとえば `apt-get update && apt-get install -y <package>`）、その導入のコマンドを覚えるように伝えてください。その道具はコンテナが生きているあいだ残り、コンテナを再起動したあとで再び必要になったとき、Hermes が導入のコマンドを実行し直します。
 
-これは、すぐ入れられて、たまにしか使わない道具に向いています。いつも使う道具には、次の方法のほうが向いています。
+すぐ入れられて、たまに使うくらいの道具にはこの方法が合っています。いつも使う道具なら、次の方法のほうがよいでしょう。
 
-### 長持ちさせる — 派生イメージを組み立てる {#durable-installs-build-a-derived-image}
+### 長く使う道具 — 派生イメージを作る {#durable-installs-build-a-derived-image}
 
-コンテナを起動したらすぐ、入れ直しの待ち時間なしで使えなければならない道具があるときは、`nousresearch/hermes-agent` を土台にして、その道具を層として入れた新しいイメージを組み立てます。
+コンテナを起動した瞬間から、入れ直しの待ち時間なしにその道具が使えている必要があるなら、`nousresearch/hermes-agent` を継いだ新しいイメージを作り、その道具を1つの層として入れてください。
 
 ```dockerfile
 FROM nousresearch/hermes-agent:latest
@@ -587,7 +594,7 @@ RUN apt-get update \
 USER hermes
 ```
 
-これを組み立てて、公式のイメージの代わりに使います。
+作ったら、公式のイメージの代わりに使います。
 
 ```sh
 docker build -t my-hermes:latest .
@@ -599,11 +606,11 @@ docker run -d \
   my-hermes:latest gateway run
 ```
 
-入口のスクリプトと `/opt/data` の扱いはそのまま引き継がれるので、このページの残りの内容もそのまま当てはまります。上流の `nousresearch/hermes-agent` の新しい版を取得したら、イメージを組み直すのを忘れないでください。
+エントリーポイントのスクリプトと `/opt/data` の扱いはそのまま引き継がれるので、このページの残りの内容もそのまま当てはまります。上流の `nousresearch/hermes-agent` の新しいものを取ってきたときは、イメージを作り直すのを忘れないでください。
 
-### 込み入った道具や複数のサービスの組み合わせ — 隣にコンテナを立てる {#complex-tools-or-multi-service-stacks-run-a-sidecar-container}
+### 込み入った道具や複数サービスの構成 — 隣にコンテナを立てる {#complex-tools-or-multi-service-stacks-run-a-sidecar-container}
 
-自分でサービスを持ち込む道具（データベース、Web サーバー、キュー、画面のないブラウザの集まり）や、Hermes のコンテナのなかに置くには重すぎる道具は、共有の Docker のネットワーク上で別のコンテナとして動かします。Hermes は、ローカルの推論サーバーに届くのと同じやり方で、コンテナ名を使って隣のコンテナに届きます（[ローカルの推論サーバーにつなぐ](#connecting-to-local-inference-servers-vllm-ollama-etc) をご覧ください）。
+自分でサービスを持ち込む道具（データベース、ウェブサーバー、キュー、画面なしのブラウザの群れ）や、Hermes のコンテナの中に置くには重すぎる道具は、共有した Docker のネットワークの上で別のコンテナとして動かしてください。Hermes はコンテナ名でその隣のコンテナに届きます。手元の推論サーバーに届くのと同じやり方です（[手元の推論サーバーにつなぐ](#connecting-to-local-inference-servers-vllm-ollama-etc)を参照してください）。
 
 ```yaml
 services:
@@ -631,15 +638,15 @@ networks:
     driver: bridge
 ```
 
-Hermes のコンテナのなかからは、隣のコンテナに `http://my-tool:<port>` で届きます（提供している通信方式に応じて変わります）。この形にすると、サービスごとに寿命、資源の上限、更新の間隔を切り離しておけますし、1 つの道具のためだけに必要な依存関係で Hermes のイメージを膨らませずに済みます。
+Hermes のコンテナの中からは、隣のコンテナに `http://my-tool:<port>` で届きます（そのコンテナが出しているプロトコルに合わせてください）。この形なら、サービスごとに寿命、資源の上限、更新の間隔を別々に保てますし、1つの道具のためだけに必要な依存で Hermes のイメージを膨らませずに済みます。
 
-### 広く役立つ道具 — issue か pull request を出す {#broadly-useful-tools-open-an-issue-or-pull-request}
+### 広く役に立つ道具 — issue か pull request を出す {#broadly-useful-tools-open-an-issue-or-pull-request}
 
-多くの Hermes Agent の利用者にとって役立ちそうな道具なら、自分だけの派生イメージで抱え込むのではなく、上流に提供することを考えてみてください。[hermes-agent リポジトリ](https://github.com/NousResearch/hermes-agent) に issue か pull request を出して、その道具と使いどころを説明します。公式のイメージに取り込まれた道具は、すべての利用者の役に立ちますし、下流の fork を保守し続ける負担もなくなります。
+その道具が Hermes Agent のほとんどの利用者にとって役立ちそうなら、自分だけの派生イメージで抱え込まずに、上流へ提案することを考えてください。[hermes-agent のリポジトリ](https://github.com/NousResearch/hermes-agent)で、その道具と使いどころを説明した issue か pull request を出しましょう。公式のイメージに取り込まれた道具は、すべての利用者の役に立ちますし、自分のフォークを保守し続ける手間もなくなります。
 
-## ローカルの推論サーバー（vLLM、Ollama など）につなぐ {#connecting-to-local-inference-servers-vllm-ollama-etc}
+## 手元の推論サーバーにつなぐ（vLLM、Ollama など） {#connecting-to-local-inference-servers-vllm-ollama-etc}
 
-Hermes を Docker で動かしていて、推論サーバー（vLLM、Ollama、text-generation-inference など）もホストか別のコンテナで動いている場合、ネットワークまわりには気を配る必要があります。
+Hermes を Docker で動かしていて、推論サーバー（vLLM、Ollama、text-generation-inference など）もホストや別のコンテナで動いている場合、ネットワークの設定に少し気を配る必要があります。
 
 ### Docker Compose（おすすめ） {#docker-compose-recommended}
 
@@ -682,7 +689,7 @@ networks:
     driver: bridge
 ```
 
-そのうえで `~/.hermes/config.yaml` では、ホスト名に **コンテナ名** を使います。
+そのうえで `~/.hermes/config.yaml` では、ホスト名として**コンテナ名**を使います。
 
 ```yaml
 model:
@@ -692,16 +699,16 @@ model:
   api_key: "none"
 ```
 
-:::tip 押さえどころ
-- ホスト名には **コンテナ名**（`vllm`）を使ってください。`localhost` や `127.0.0.1` は Hermes のコンテナ自身を指してしまいます。
+:::tip 押さえておきたい点
+- ホスト名には**コンテナ名**（`vllm`）を使ってください。`localhost` や `127.0.0.1` は Hermes のコンテナ自身を指してしまいます。
 - `model` の値は、vLLM に渡した `--served-model-name` と一致していなければなりません。
-- `api_key` には、空でない任意の文字列を設定します（vLLM はこのヘッダーを求めますが、既定では中身を確かめません）。
-- `base_url` の末尾にスラッシュを付け **ない** でください。
+- `api_key` には空でない文字列を何か入れてください（vLLM はこのヘッダーを必要としますが、初期状態では中身を確かめません）。
+- `base_url` の末尾にスラッシュを付けないでください。
 :::
 
-### Compose を使わず docker run だけで動かす {#standalone-docker-run-no-compose}
+### Compose を使わない単体の docker run {#standalone-docker-run-no-compose}
 
-推論サーバーが（Docker ではなく）ホストで直接動いている場合、macOS と Windows では `host.docker.internal` を、Linux では `--network host` を使います。
+推論サーバーがホストの上で直接動いている場合（Docker の中ではない場合）は、macOS と Windows では `host.docker.internal` を、Linux では `--network host` を使います。
 
 **macOS / Windows:**
 
@@ -741,26 +748,26 @@ model:
   api_key: "none"
 ```
 
-:::warning `--network host` を使うと `-p` の指定は無視され、コンテナのすべてのポートがそのままホストに出ます。
+:::warning `--network host` を使うと `-p` の指定は無視され、コンテナのポートはすべてそのままホストに出ます。
 :::
 
 ### つながっているか確かめる {#verifying-connectivity}
 
-Hermes のコンテナのなかから、推論サーバーに届くかどうかを確かめます。
+Hermes のコンテナの中から、推論サーバーに届いていることを確かめます。
 
 ```sh
 docker exec hermes curl -s http://vllm:8000/v1/models
 ```
 
-提供しているモデルが並んだ JSON の応答が返ってくるはずです。うまくいかない場合は、次を確かめてください。
+用意したモデルを並べた JSON が返ってくるはずです。うまくいかないときは、次を確かめてください。
 
-1. 両方のコンテナが同じ Docker のネットワークにいるか（`docker network inspect hermes-net`）
-2. 推論サーバーが `127.0.0.1` ではなく `0.0.0.0` で待ち受けているか
-3. ポート番号が合っているか
+1. 両方のコンテナが同じ Docker のネットワークにいること（`docker network inspect hermes-net`）
+2. 推論サーバーが `127.0.0.1` ではなく `0.0.0.0` で待ち受けていること
+3. ポート番号が合っていること
 
 ### Ollama {#ollama}
 
-Ollama も同じやり方で動きます。Ollama がホストで動いているなら、`host.docker.internal:11434`（macOS と Windows）か `127.0.0.1:11434`（Linux で `--network host` を使う場合）を指定します。Ollama が同じ Docker のネットワーク上の自分のコンテナで動いているなら、次のようにします。
+Ollama も同じやり方です。Ollama がホストで動いているなら `host.docker.internal:11434`（macOS / Windows）か `127.0.0.1:11434`（Linux で `--network host` を使う場合）を指定します。Ollama が同じ Docker のネットワークの中の自分のコンテナで動いているなら、次のようにします。
 
 ```yaml
 model:
@@ -774,19 +781,19 @@ model:
 
 ### コンテナがすぐ終了してしまう {#container-exits-immediately}
 
-`docker logs hermes` でログを確かめます。よくある原因は次のとおりです。
-- `.env` のファイルがない、または内容が正しくない — まず対話モードで動かして、セットアップを終わらせてください
-- ポートを公開して動かしている場合の、ポートの衝突
+`docker logs hermes` でログを見てください。よくある原因は次のとおりです。
+- `.env` のファイルがない、または内容が正しくない — まず対話モードで起動して設定を済ませてください
+- ポートを公開して動かしている場合の、ポートのぶつかり
 
-### 「Permission denied」のエラー {#permission-denied-errors}
+### 「Permission denied」のエラーが出る {#permission-denied-errors}
 
-コンテナの 2 段目の処理は、見守られる各サービスのなかで `s6-setuidgid` を使い、root ではない `hermes` ユーザー（UID 10000）へ権限を落とします。ホストの `~/.hermes/` が別の UID の持ち物になっているなら、`HERMES_UID` と `HERMES_GID`（LinuxServer.io や NAS 向けのイメージに合わせた別名である `PUID` と `PGID` でもかまいません）をホストの利用者に合わせるか、データディレクトリに書き込めるようにしてください。
+コンテナの stage2 のフックは、見守るサービスそれぞれの中で `s6-setuidgid` を使い、root ではない `hermes` ユーザー（UID 10000）に権限を落とします。ホスト側の `~/.hermes/` が別の UID の持ち物になっている場合は、`HERMES_UID` と `HERMES_GID` —— あるいは LinuxServer.io や NAS のイメージに合わせた別名の `PUID` と `PGID` —— をホストのユーザーに合わせて設定するか、データのディレクトリを書き込めるようにしてください。
 
 ```sh
 chmod -R 755 ~/.hermes
 ```
 
-NAS（UGOS、Synology、unRAID）では、データディレクトリはたいてい **バインドマウント** で、コンテナからは `chown` できないホストの UID の持ち物になっています。`PUID` と `PGID`（または `HERMES_UID` と `HERMES_GID`）をそのホストの利用者に合わせて、UID 10000 ではなくマウント元の持ち主として動かしてください。
+NAS（UGOS、Synology、unRAID）では、データのディレクトリはたいてい**バインドマウント**で、コンテナからは `chown` できないホストの UID が所有しています。`PUID` と `PGID`（または `HERMES_UID` と `HERMES_GID`）をそのホストのユーザーに設定し、UID 10000 ではなくマウントの持ち主として動くようにしてください。
 
 ```sh
 docker run -d \
@@ -796,11 +803,21 @@ docker run -d \
   nousresearch/hermes-agent gateway run
 ```
 
-`docker exec hermes <cmd>` も自動的に UID 10000 に落ちます。詳しい説明と実行ごとの切り替え方は [`docker exec` は自動的に `hermes` ユーザーに落ちます](#docker-exec-automatically-drops-to-the-hermes-user) をご覧ください。
+`docker exec hermes <cmd>` も自動で UID 10000 に降ります。詳しい説明と、呼び出しごとに打ち消す方法は [`docker exec` は自動的に `hermes` ユーザーに降ります](#docker-exec-automatically-drops-to-the-hermes-user)を参照してください。
+
+### `docker exec` のたびに「Permission denied」が出る（インストール先が 0700 に固まっている） {#permission-denied-on-every-docker-exec-install-dir-locked-to-0700}
+
+2026年8月下旬より前に作られたイメージには、`/opt/hermes` の直下に認証情報のファイルを書くと、そのディレクトリが `0700` に絞られてしまう不具合がありました。その結果、`hermes` ユーザー（UID 10000）がインストール先から締め出され、以降の `docker exec` はすべて `Permission denied` で失敗します。
+
+新しいイメージを取ってきてコンテナを作り直せば、恒久的に直ります（インストール先は `0755` で配られ、いまの版はもう絞りません）。作り直さずに、動いているコンテナをその場で回復させたい場合は次のようにします。
+
+```sh
+docker exec -u root hermes chmod 0755 /opt/hermes
+```
 
 ### ブラウザのツールが動かない {#browser-tools-not-working}
 
-Playwright には共有メモリが必要です。Docker の実行コマンドに `--shm-size=1g` を足してください。
+Playwright は共有メモリを必要とします。docker run のコマンドに `--shm-size=1g` を足してください。
 
 ```sh
 docker run -d \
@@ -810,9 +827,9 @@ docker run -d \
   nousresearch/hermes-agent gateway run
 ```
 
-### ネットワークの不調のあと、ゲートウェイがつながり直さない {#gateway-not-reconnecting-after-network-issues}
+### ネットワークの不調のあと、ゲートウェイがつなぎ直さない {#gateway-not-reconnecting-after-network-issues}
 
-`--restart unless-stopped` の指定が、一時的な不調のほとんどに対応します。ゲートウェイが固まってしまったときは、コンテナを再起動してください。
+`--restart unless-stopped` を付けておけば、一時的な不調のほとんどは自動で吸収されます。それでもゲートウェイが動かなくなっているときは、コンテナを再起動してください。
 
 ```sh
 docker restart hermes
