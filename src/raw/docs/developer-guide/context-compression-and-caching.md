@@ -2,7 +2,7 @@
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: 18a70d97923ff0f47781efb5a04e1d3108d3f6d6
+upstream_blob: 146b53b58a5d862ca6a832d10270cf3a88550906
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -93,7 +93,7 @@ compression:
   #   "glm-5.2": 0.40        # longest key wins). See "Per-model threshold
   #   "claude-sonnet": 0.35  # overrides" below.
   target_ratio: 0.20         # How much of threshold to keep as tail (default: 0.20)
-  tail_mode: legacy          # Tail retention policy: legacy | lean (default: legacy)
+  tail_mode: lean            # Tail retention policy: lean | legacy (default: lean)
   protect_last_n: 20         # Minimum protected tail messages (default: 20)
   min_tail_user_messages: 1  # Real user messages guaranteed in the tail (default: 1)
   codex_gpt55_autoraise: true  # gpt-5.5 on Codex OAuth: raise trigger to 85% (default: true)
@@ -118,7 +118,7 @@ auxiliary:
 | `threshold` | `0.50` | 0.0-1.0 | プロンプトのトークン数が `threshold × context_length` 以上になると圧縮が動きます |
 | `model_thresholds` | `{}` | 対応表 | モデルごとに `threshold` を上書きします。キーはモデル名との部分一致で照合し、いちばん長く一致したものが勝ちます。コンテキストが小さい場合の下限は、この上にさらに適用されます（後述） |
 | `target_ratio` | `0.20` | 0.10-0.80 | 末尾を守るためのトークンの枠を決めます: `threshold_tokens × target_ratio`（legacy のときだけ。`lean` は独自の上下限を使います） |
-| `tail_mode` | `legacy` | `legacy`, `lean` | 末尾をどれだけ残すかの方針です。`legacy` は `target_ratio` の大きさぶんを原文のまま残します（ウィンドウの大きいモデルでは 10 万トークン超になります）。`lean` は`2.5% × context window` に収めた末尾を残し（下限 1 万、上限 2.5 万トークン）、代わりに要約側で話のつながりを持たせます。圧縮した範囲を、識別子を保ったまま分割して要約し、機械的に抜き出した目印の索引（PR 番号、SHA、パス、エラー文字列。正規表現で抜き出し、言い換えは一切しません）を付け、実際の利用者の発言はすべて原文のまま引用し（新しいものから枠のぶんだけ）、要約に丸められたものへ戻れるように `session_search` の手がかりを添えます。50 万トークン規模の実セッションでの結果は、保持がおよそ 16.2 万トークンに対しておよそ 4.9 万トークンで、復元の手段と組み合わせると取り出せる情報はむしろ増えました（`evals/compaction/results/` を参照）。圧縮の境目で要約用の呼び出しが数回ぶん増えます。lean の末尾に含まれる古いツールの結果は、復元の手がかりだけを持つ1行の控えに置き換えられます |
+| `tail_mode` | `lean` | `lean`, `legacy` | 末尾をどれだけ残すかの方針です。`legacy` は `target_ratio` の大きさぶんを原文のまま残します（ウィンドウの大きいモデルでは 10 万トークン超になります）。`lean` は`2.5% × context window` に収めた末尾を残し（下限 1 万、上限 2.5 万トークン）、代わりに要約側で話のつながりを持たせます。圧縮した範囲を、識別子を保ったまま分割して要約し、機械的に抜き出した目印の索引（PR 番号、SHA、パス、エラー文字列。正規表現で抜き出し、言い換えは一切しません）を付け、実際の利用者の発言はすべて原文のまま引用し（新しいものから枠のぶんだけ）、要約に丸められたものへ戻れるように `session_search` の手がかりを添えます。50 万トークン規模の実セッションでの結果は、保持がおよそ 16.2 万トークンに対しておよそ 4.9 万トークンで、復元の手段と組み合わせると取り出せる情報はむしろ増えました（`evals/compaction/results/` を参照）。圧縮の境目で要約用の呼び出しが数回ぶん増えます。lean の末尾に含まれる古いツールの結果は、復元の手がかりだけを持つ1行の控えに置き換えられます |
 | `protect_last_n` | `20` | 1以上 | 直近のメッセージのうち、必ず残す最小の数です |
 | `min_tail_user_messages` | `1` | 1以上 | 圧縮しない末尾に必ず残す、実際の（意味のある）利用者の発言の最小数です。`1` はこれまでどおり直近1件を目印として残す動き（既存の挙動を保つ既定値）です。たとえば `3` にすると、大きなツールの出力が末尾の枠を埋めていても、直近3回の実際の発言が原文のまま残ります。中身のないサービス側の反響、圧縮の引き継ぎ、機械的に補われた継続の行は N に数えません。この保証は末尾のトークンの枠より優先され、目印のために切り取り位置が戻るぶん、末尾が枠を超えることがあります |
 | `protect_first_n` | `3` | （固定値） | システムプロンプトと最初のやりとりは常に残します |

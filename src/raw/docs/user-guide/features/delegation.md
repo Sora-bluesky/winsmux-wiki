@@ -2,7 +2,7 @@
 title: "サブエージェントへの委任"
 description: "delegate_task で子エージェントを切り離して立ち上げ、複数の作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: b0fade2579d3cd657553f7eed95a5e86cf329300
+upstream_blob: 6870d17c57734ce4175927ccdad83c8716526532
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -144,6 +144,25 @@ delegate_task(
 まだ動いている最中に持ち主のプロセスが消えた委任は `unknown` として
 記録されます。外部への影響が起きたのかどうかを、Hermes には示せないからです。
 保留中の記録も配り終えた記録も、件数に上限があり、プロファイルごとに閉じています。
+
+### 子が動かした裏側のプロセスの知らせ {#child-background-process-notifications}
+
+サブエージェントが動かした裏側のプロセス（たとえば `notify_on_complete` を付けた
+`npm ci`）は、しくみの上では完了の知らせも見張り文字列の知らせも **親** の会話へ
+流れます。子より長く生き残るものには、確実に受け取る相手が要るからです。ただし
+既定では、その知らせは親のチャットでは **伏せられます**。届けるべき成果は子が
+まとめた委任の結果であって、子の内部のビルドが会話の途中に出す「処理が終わりました」
+の壁は雑音だからです。伏せられた知らせは、プロセスのセッション ID とサブエージェントの
+タスク ID を添えて debug のレベルで記録されるので、あとから調べられます。
+
+委任の結果そのものが伏せられることはありません。子のプロセスの知らせも届くように
+戻したいときは、次のようにします（どの知らせにも「Started by subagent …」という
+出どころの行が付きます）。
+
+```yaml
+delegation:
+  surface_child_process_notifications: true   # default: false
+```
 
 ## 使うモデルの差し替え {#model-override}
 

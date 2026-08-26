@@ -2,7 +2,7 @@
 title: "Hermes デスクトップアプリ"
 description: "ネイティブの Hermes デスクトップアプリ。ツール出力のストリーミング表示、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と対話するための作り込まれた環境です。macOS、Windows、Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: ea59f042d718551dbdd843dc5a34dee9e2ed29c9
+upstream_blob: d86d31c0edcb2d2a53917bd6a1adf0faaaf325ba
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -538,19 +538,63 @@ macOS と Windows の署名および公証は、必要な資格情報が環境�
 
 ### macOS の権限とローカルでの再ビルド（TCC） {#macos-permissions-and-local-rebuilds-tcc}
 
+**フォルダごとの確認を、ひとつの設定でまとめて止められます。** macOS は、Hermes が
+フォルダに触れるたびに種類ごと（デスクトップ、次にダウンロード、次に書類……）に
+確認を出します。**フルディスクアクセス**をひとつ許可すればそのすべてを一度にまかなえ、
+Hermes の署名の識別子は変わらないので、更新をまたいでも許可は残り続けます。
+
+1. システム設定 → **プライバシーとセキュリティ → フルディスクアクセス**（または
+   `open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"` を実行します）
+2. 使っているターミナルアプリを有効にします。デスクトップ版を使うなら **Hermes.app** も
+   有効にします。
+3. どちらも一度完全に終了してから起動し直します。
+
+`hermes doctor` は、いま使っているターミナルがすでにこの許可を持っているかどうかを
+教えてくれます。持っていない場合は、macOS 上の `hermes setup` がこの案内を表示します。
+
 macOS は、権限の許可（フルディスクアクセス、デスクトップ／ダウンロード／書類、
 アクセシビリティ、オートメーション、マイク）を、アプリのパスではなく *コード署名の
 識別子* に紐づけて覚えています。ローカルでビルドしたアプリや自己更新したアプリには、
 識別子を固定した安定した ad-hoc 署名が付くので、更新をまたいでも許可はそのまま残ります。
 
+一度だけ気をつけたい点があります。識別子を固定する署名の修正（PR #73681）より*前*の
+ビルドに与えた許可は、古い cdhash に紐づいた条件を抱えたままです。macOS はそうした
+古い許可のスイッチをオンのまま表示しますが、保存されている許可が再ビルドされた
+実行ファイルと一致しないため、確認は出続けます。しかも今の確認画面には許可のボタンが
+ないので、確かめ直す場所がないように見えます。この状態になったら、古い許可を一度
+リセットしてから与え直してください。
+
+```bash
+tccutil reset ScreenCapture com.nousresearch.hermes   # repeat per service
+```
+
+そのうえで、システム設定に新しく現れた項目をオンにし、Hermes を完全に終了してから
+起動し直します。それ以降は安定します。
+
 いちばん確実にしたい場合は、証明書に裏打ちされた識別子を使います。yabai や skhd の
 利用者が頼っているのと同じ仕組みです。自己署名のコード署名証明書を一度作って、
-それを使うよう Hermes に伝えます。
+それを使うよう Hermes に伝えます。次のコマンドひとつで全部が終わります（ログイン
+キーチェーンに証明書を作り、`codesign` からの利用を許可し、設定を書き、
+パッケージ済みのアプリに署名し直します）。
+
+```bash
+hermes desktop --setup-tcc-identity
+```
+
+手作業で行う場合は次のとおりです。
 
 1. キーチェーンアクセス → 証明書アシスタント → **Create a Certificate…**
 2. Name: `Hermes Local Signing`、Identity Type: *Self-Signed Root*、
    Certificate Type: **Code Signing**。
-3. `hermes config set desktop.macos_signing_identity "Hermes Local Signing"`
+3. キーチェーンアクセスで新しい証明書をダブルクリックし、**Trust** で
+   **Code Signing** を *Always Trust* にします（読み込んだだけの自己署名証明書は、
+   コード署名について信頼するまで有効な署名の識別子になりません。設定後は
+   `security find-identity -v -p codesigning` の一覧に出てくるはずです）。
+4. `hermes config set desktop.macos_signing_identity "Hermes Local Signing"`
+
+コマンドに `--identity <name>` を付けると、別の名前の証明書を作って使えます
+（既定は `Hermes Local Signing` です）。何度実行しても同じ結果になるので、更新の
+あとに実行し直せば、設定を指し直して再ビルドされたアプリに署名し直せます。
 
 次の更新から、再ビルドされたアプリはその証明書で署名し直され、TCC の許可は
 すべて残ります。Apple Developer のアカウントは要りません。公証済みのリリース

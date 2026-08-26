@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダー、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 4bd432551b1dbec666f216122cd7e4d98cb1bd65
+upstream_blob: 50c84b1ac78bae569d67ea497eaaa97b8f9312fb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -827,7 +827,7 @@ compression:
   threshold: 0.50                                   # Compress at this % of context limit
   threshold_tokens: null                            # Absolute token cap (optional) — takes lower of ratio vs absolute
   target_ratio: 0.20                                # Fraction of threshold to preserve as recent tail
-  tail_mode: legacy                                 # Tail retention: "legacy" (0.20×window verbatim tail) or "lean" (clamped 2.5% tail, 10K-25K, with digests + anchor index + session_search recovery pointers in the summary — ~3x fewer retained tokens after compaction)
+  tail_mode: lean                                   # Tail retention: "lean" (default — clamped 2.5% tail, 10K-25K, with digests + anchor index + session_search recovery pointers in the summary; ~3x fewer retained tokens after compaction) or "legacy" (0.20×threshold verbatim tail)
   protect_last_n: 20                                # Min recent messages to keep uncompressed
   protect_first_n: 3                                # Non-system head messages pinned across compactions (0 = pin nothing)
   in_place: true                                    # Compact on the same session id (no rotation) — see below
@@ -2500,6 +2500,8 @@ delegation:
 **優先順位:** 設定の `delegation.base_url` → 設定の `delegation.provider` → 親のプロバイダー（受け継ぎ）。設定の `delegation.model` → 親のモデル（受け継ぎ）。`provider` を書かずに `model` だけを書くと、親の認証情報を保ったままモデル名だけが変わります（OpenRouter のように、同じプロバイダーの中でモデルを変えたいときに便利です）。
 
 **幅と深さ:** `max_concurrent_children` は、1回のまとまりで並行して動くサブエージェントの数を抑えます（初期値は `3`、下限は1、上限なし）。`DELEGATION_MAX_CONCURRENT_CHILDREN` の環境変数でも設定できます。モデルが上限より長い `tasks` の並びを出したとき、`delegate_task` は黙って切り詰めるのではなく、上限を説明するツールのエラーを返します。`max_spawn_depth` は委任の木の深さを決めます（1〜3に収められます）。初期値の `1` では委任は平らで、子は孫を作れず、`role="orchestrator"` を渡しても静かに `leaf` に落ちます。`2` にすると、まとめ役の子が葉の孫を作れます。`3` にすると3段になります。エージェントは呼び出しごとに `role="orchestrator"` でまとめ役を選びます。`orchestrator_enabled: false` にすると、どの子も必ず葉になります。費用は掛け算で増えます — `max_spawn_depth: 3` と `max_concurrent_children: 3` では、木は 3×3×3 = 27 体の葉のエージェントが同時に動くところまで広がります。使い方は [サブエージェントへの委任 → 深さの上限と入れ子のまとめ役](/hermes/docs/user-guide/features/delegation/#depth-limit-and-nested-orchestration)を参照してください。
+
+**子のプロセスからの通知:** サブエージェントが立ち上げたバックグラウンドのプロセスは、完了や監視の通知を親の会話へ送りますが、そこでは初期状態で**抑えられます**。受け取りたいのは、子がまとめ上げた結果のほうだからです。通知そのものを届けたい場合は `delegation.surface_child_process_notifications: true` を設定します（どのサブエージェントのものかが付きます）。委任の結果自体が抑えられることはありません。[サブエージェントへの委任 → 子のバックグラウンドプロセスからの通知](/hermes/docs/user-guide/features/delegation/#child-background-process-notifications)を参照してください。
 
 ## 確認の問い返し {#clarify}
 

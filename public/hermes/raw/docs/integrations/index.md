@@ -2,7 +2,7 @@
 title: "連携"
 description: ""
 upstream_path: integrations/index.md
-upstream_blob: eef508952a55b984b0719ba85b38d8b433a6b2b0
+upstream_blob: 8225c21d37b074f0298fe1ad1a2e65cb50cf1663
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations
 ---
@@ -55,8 +55,8 @@ web:
 
 Hermes には本格的なブラウザ操作機能があり、サイトの閲覧、フォームの入力、情報の取り出しを、いくつかのバックエンドから選んで実行できます。
 
-- **Browserbase** — ボット対策の回避、CAPTCHA の突破、住宅用プロキシまで備えたクラウド上のブラウザ
-- **Browser Use** — もうひとつのクラウドブラウザ提供元
+- **Browser Use Cloud** — 検知されにくい設定、住宅用プロキシ、CAPTCHA の突破、使い回せるブラウザプロファイルを備えた、管理型の Chromium
+- **Browserbase** — もうひとつのクラウドブラウザ提供元。管理型のブラウザ、ボット対策への対応、CAPTCHA の突破、住宅用プロキシを備えています
 - **手元の Chromium 系ブラウザ（CDP 接続）** — 起動中の Chrome、Brave、Chromium、Edge に `/browser connect` でつなぎます
 - **手元の Chromium** — `agent-browser` コマンドで動く、画面を出さないローカルブラウザ
 

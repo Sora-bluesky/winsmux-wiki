@@ -2,7 +2,7 @@
 title: "ツール検索"
 description: ""
 upstream_path: user-guide/features/tool-search.md
-upstream_blob: 09fff5651693ab23594dfc3590029d27b7137324
+upstream_blob: 8264594632c1331fe0f5d9bd30cb6e6b2f5e4283
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 ---
@@ -34,21 +34,38 @@ Hermes の中核機能を構成するツール（`terminal`、
 モデルには次の 3 つのツールが見えます。
 
 ```
-tool_search(query, limit?)     — search the deferred-tool catalog
-tool_describe(name)            — load the full schema for one tool
+tool_search(queries, limit?)   — search the deferred-tool catalog (one or more queries)
+tool_describe(names)           — load the full schemas for one or more tools
 tool_call(name, arguments)     — invoke a deferred tool
 ```
 
 やり取りは、たとえば次のように進みます。
 
 ```
-Model: tool_search("create a github issue")
-  → { matches: [{ name: "mcp_github_create_issue", ... }, ...] }
-Model: tool_describe("mcp_github_create_issue")
-  → { parameters: { type: "object", properties: { ... } } }
+Model: tool_search(["create a github issue", "send a slack message"])
+  → { results: [ { query: "create a github issue",
+                   matches: ["mcp_github_create_issue", ...] },
+                 { query: "send a slack message",
+                   matches: ["mcp_slack_post_message", ...] } ],
+      tools: { mcp_github_create_issue: { description: "...",
+                                          required: ["title"], ... },
+               mcp_slack_post_message: { ... } } }
+Model: tool_describe(["mcp_github_create_issue", "mcp_slack_post_message"])
+  → { tools: { mcp_github_create_issue: { parameters: { ... } },
+               mcp_slack_post_message: { parameters: { ... } } } }
 Model: tool_call("mcp_github_create_issue", { title: "...", body: "..." })
   → { ok: true, issue_number: 42 }
 ```
+
+`tool_search` に渡したクエリは、それぞれ独立に同じカタログへ照会されます
+（`limit` はクエリごとに効きます）。クエリごとのまとまりに載るのはツール名
+だけで、一致した各ツールの説明と必須パラメーター名は、共有の `tools` マップに
+一度だけ入ります。クエリは語幹に落として扱われるので、「issues」でも
+`create_issue` が見つかります。一致が 0 件だったクエリのまとまりには、
+つないでいるサーバーをまとめた `available_sources` が付きます。言葉が
+引っかからなかっただけなのに、その機能自体がないと取り違えないためです。
+`tool_describe` は、要求された名前をすべて 1 回の呼び出しで解決します。
+知らない名前は `not_found` に入れて報告され、残りの一括処理は失敗しません。
 
 モデルが `tool_call` を呼ぶと、Hermes は **橋渡しの層を外して**、
 モデルが直接呼んだ場合とまったく同じように本来のツールを実行します。
@@ -81,7 +98,7 @@ tools:
     enabled: auto       # auto (default), on, or off
     threshold_pct: 5    # listing budget as a percentage of context
     search_default_limit: 5
-    max_search_limit: 20
+    max_search_limit: 25
     listing: auto       # embed a grouped name+description catalog manifest
     listing_max_tokens: 4000
 ```
@@ -90,10 +107,13 @@ tools:
 | --- | --- | --- |
 | `enabled` | `auto` | `auto` と `on` は、後回しにできるツールが 1 つでもあれば有効にします。`off` は完全に無効にします（すべてそのまま読み込まれます）。`auto` は今のところ `on` の別名です。スキーマがコンテキストに収まるときは埋め込み、収まらないときだけ後回しにする将来のモードのために予約されています。今の挙動をアップグレード後も確実に保ちたいなら `on` か `off` を明示してください。 |
 | `threshold_pct` | `5` | 使用中モデルのコンテキスト長に対する、一覧の予算の割合。範囲は 0〜100 です。 |
-| `search_default_limit` | `5` | モデルが `limit` なしで `tool_search` を呼んだときに返る件数。 |
-| `max_search_limit` | `20` | モデルが `limit` で要求できる上限。範囲は 1〜50 です。 |
+| `search_default_limit` | `5` | モデルが `limit` なしで `tool_search` を呼んだときに、クエリごとに返る件数。 |
+| `max_search_limit` | `25` | モデルが `limit` で要求できる上限（クエリごと）。範囲は 1〜50 です。 |
 | `listing` | `auto` | 後回しツール全件のスキル風の目録（名前と説明の最初の 1 文、60 文字以内、MCP サーバーごとにまとめる）を `tool_search` の説明文に埋め込みます。`auto` は予算に収まるときだけ埋め込み（収まらなければ名前だけ、さらに段階 2 のサーバー要約へ落とします）、`on` と `off` はどちらかに固定します。 |
 | `listing_max_tokens` | `4000` | コンテキストの大きさに関係なく、埋め込む一覧にかける絶対の上限。範囲は 200〜60000 です。大きなカタログは名前だけ、あるいはサーバーごとの要約に落ちますが、完全なスキーマは検索から取り出せます。 |
+
+1 回の呼び出しで渡せる配列の上限は、設定ではなく内部の安全弁です。上限を
+超えた呼び出しはエラーを返すので、モデルは数を減らして呼び直せます。
 
 ### 一覧がある理由 {#why-the-listing-exists}
 
@@ -153,7 +173,9 @@ tools:
 - **検索:** ツール名、提供元の名前（そのツールが属する MCP サーバーや
   プラグインのツール群。おかげで `"linear"` で検索すれば、ツール名自体に
   サービス名が入っていなくてもそのサーバーのツールが見つかります）、説明、
-  パラメーター名をトークン化した上での BM25 です。どの検索語もどの文書にも
+  パラメーター名をトークン化した上での BM25 です。索引にも検索語にも
+  Snowball の語幹処理（英語）をかけるので、語形が変わっても一致します
+  （「issues」で `create_issue` が見つかります）。どの検索語もどの文書にも
   当たらないときは、ツール名に対する部分一致にフォールバックします
   （たとえばトークンが `github` のところを `"hub"` で検索した場合）。
 - **並列実行でも橋渡しの層は外れる。** 一括実行の計画は、`tool_call` の

@@ -2,7 +2,7 @@
 title: "ブラウザ自動操作"
 description: "複数のプロバイダー、CDP 経由のローカル Chromium 系ブラウザ、クラウドブラウザを使ってブラウザを操作し、Web の操作・フォーム入力・スクレイピングなどを行います。"
 upstream_path: user-guide/features/browser.md
-upstream_blob: 551537b28d99592fb8482918a93d603cc25d44ba
+upstream_blob: 9ca1f368637f7fabfb74f361d45d0f003c97fcae
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/browser
 ---
@@ -11,9 +11,9 @@ sources:
 
 Hermes Agent には、複数のバックエンドを選べる本格的なブラウザ自動操作ツール群が入っています。
 
-- **Browserbase クラウドモード** — [Browserbase](https://browserbase.com) のマネージドなクラウドブラウザと、ボット検出対策の機能を使います
-- **Browser Use クラウドモード** — もう一つのクラウドブラウザ提供元として [Browser Use](https://browser-use.com) を使います
-- **Browser Use モード** — [Browser Use CLI 3.0](https://github.com/browser-use/browser-use) を使います。Web 上の作業で最高水準の性能を持つ新しいブラウザ基盤で、手元の Chrome や Browser Use のクラウドブラウザを動かします
+- **Browser Use クラウドモード** — [Browser Use](https://browser-use.com) のマネージドな Chromium を使います。ステルス機能、住宅用プロキシ、CAPTCHA の突破、使い回せるブラウザプロファイルが付いています
+- **Browserbase クラウドモード** — もう一つのクラウドブラウザ提供元として [Browserbase](https://browserbase.com) を、ボット検出対策の機能ごと使います
+- **Browser Use モード** — [Browser Use CLI 3.0](https://github.com/browser-use/browser-use) を使います。手元の Chrome と Browser Use のクラウドブラウザを動かす、既定のブラウザドライバーです
 - **Firecrawl クラウドモード** — [Firecrawl](https://firecrawl.dev) のクラウドブラウザを、内蔵のスクレイピング機能ごと使います
 - **Camofox ローカルモード** — [Camofox](https://github.com/jo-inc/camofox-browser) で、検出されにくい閲覧をローカルで行います（Firefox ベースの指紋偽装）
 - **Lightpanda ローカルエンジン** — [Lightpanda](https://lightpanda.io) は、機械のためにゼロから Zig で書かれたヘッドレスブラウザです。起動が一瞬で、メモリ消費は Chrome の 16 分の 1、速度は 9 倍。まだ対応していない操作は自動で Chrome に回されます
@@ -28,9 +28,10 @@ Hermes Agent には、複数のバックエンドを選べる本格的なブラ�
 
 主な機能は次のとおりです。
 
-- **複数プロバイダーのクラウド実行** — Browserbase、Browser Use、Firecrawl のいずれか。手元にブラウザは要りません
+- **複数プロバイダーのクラウド実行** — Browser Use、Browserbase、Firecrawl のいずれか。手元にブラウザは要りません
 - **ローカル Chromium 系との連携** — 起動中の Chrome・Brave・Chromium・Edge に CDP でつなぎ、手を動かしながら閲覧できます
-- **内蔵のステルス機能** — 指紋のランダム化、CAPTCHA の突破、住宅用プロキシ（Browserbase）
+- **クラウド側のボット検出対策** — Browser Use Cloud には、ステルス機能・住宅用プロキシ・CAPTCHA の突破が含まれます
+- **クラウドのプロファイルを残す** — Browser Use Cloud なら、Cookie・localStorage・保存したパスワードをセッションをまたいで使い回せます
 - **セッションの分離** — タスクごとに専用のブラウザセッションが割り当てられます
 - **自動クリーンアップ** — 使われていないセッションは一定時間で閉じられます
 - **画像の解析** — スクリーンショットと AI の解析で、見た目の情報を理解します
@@ -40,6 +41,19 @@ Hermes Agent には、複数のバックエンドを選べる本格的なブラ�
 :::tip Nous のサブスクリプション契約者の方へ
 [Nous Portal](https://portal.nousresearch.com) の有料サブスクリプションがあれば、個別の API キーなしで **[Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/)** 経由のブラウザ自動操作が使えます。新規インストールなら `hermes setup --portal` でログインすれば、ゲートウェイのツールをまとめて有効にできます。すでに導入済みなら、`hermes model` または `hermes tools` でブラウザのプロバイダーとして **Nous Subscription** を選んでください。
 :::
+
+### Browser Use クラウドモード {#browser-use-cloud-mode}
+
+クラウドブラウザの提供元として Browser Use を使うには、次を追加します。
+
+```bash
+# Add to ~/.hermes/.env
+BROWSER_USE_API_KEY=***
+```
+
+API キーは [browser-use.com](https://browser-use.com) で取得できます。
+
+Browser Use Cloud は、[ステルス機能](https://docs.browser-use.com/cloud/browser/stealth) と [住宅用プロキシ](https://docs.browser-use.com/cloud/browser/proxies) を既定で有効にしたマネージドな Chromium を動かします。CAPTCHA の突破も含まれ、Cookie・localStorage・保存したパスワードを残す [プロファイルの保存](https://docs.browser-use.com/cloud/guides/authentication) にも対応しています。
 
 ### Browserbase クラウドモード {#browserbase-cloud-mode}
 
@@ -53,24 +67,13 @@ BROWSERBASE_PROJECT_ID=your-project-id-here
 
 認証情報は [browserbase.com](https://browserbase.com) で取得できます。
 
-### Browser Use クラウドモード {#browser-use-cloud-mode}
-
-クラウドブラウザの提供元として Browser Use を使うには、次を追加します。
-
-```bash
-# Add to ~/.hermes/.env
-BROWSER_USE_API_KEY=***
-```
-
-API キーは [browser-use.com](https://browser-use.com) で取得できます。
-
 :::note プロバイダーの選び方
 上の `.env` のキーが与えるのは **認証情報だけ** です。実際に使うクラウドブラウザは、`hermes tools` → Browser Automation が書き込む `browser.cloud_provider` の選択で決まります（`browserbase`、`browser-use`、`camofox`、または Nous Subscription なら `nous`）。いったん選択が保存されていれば、キーを足したり消したりしてもプロバイダーは切り替わりません。選ばれているプロバイダーのキーが無い場合は、黙って別の経路に回すのではなく、`hermes tools` を実行するよう案内してエラーになります。一度も設定したことがない環境では、手元にある認証情報から自動判定します。
 :::
 
 ### Browser Use モード（既定） {#browser-use-mode-default}
 
-Browser Use モードは、内蔵のブラウザツールの代わりに [Browser Use CLI 3.0](https://github.com/browser-use/browser-use) を使います。Web 上の作業で最高水準の性能を持つ、新しいブラウザ基盤です。エージェントはブラウザの中で Python を書いて実行し、クリック・入力・ドラッグ・スクレイピングなどページ上の操作を行います。
+Browser Use モードは、内蔵のブラウザツールの代わりに [Browser Use CLI 3.0](https://github.com/browser-use/browser-use) を使います。エージェントはブラウザの中で Python を書いて実行し、クリック・入力・ドラッグ・スクレイピングなどページ上の操作を行います。
 
 **これが既定のブラウザモードです**。`browser.backend` が未設定で、かつ `browser-use` CLI が実行できる状態（インストール済み、または `uvx` から使える）なら、エージェントには `browser_exec` という一つのツールが渡されます。CLI が動かせない場合、Hermes は自動的に内蔵のブラウザツールへ戻します。
 

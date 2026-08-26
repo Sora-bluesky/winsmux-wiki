@@ -2,7 +2,7 @@
 title: "メモリープロバイダー"
 description: "外部メモリープロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: 099d73b3ebeb0dcd87bd3eda3b0eba95a0d3dff2
+upstream_blob: 61b873a9f24049a3bd6976ae09994256cca23514
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
@@ -332,6 +332,8 @@ OpenViking サーバー側の設定は `ov.conf`（`--config`、
 
 `OPENVIKING_ACCOUNT` と `OPENVIKING_USER` は、手元・信頼済みのモードで使われます。
 `OPENVIKING_AGENT` は OpenViking のなかでの Hermes のピア ID で、ピア単位のメモリーに使われます。
+Hermes は OpenViking への要求に `User-Agent: openviking-memory-hermes/<version>` を付けて送ります。
+これはハーネスを表す標準的な識別子で、利用者ごとの識別子は含まれませんし、要求が余分に増えることもありません。
 
 ---
 

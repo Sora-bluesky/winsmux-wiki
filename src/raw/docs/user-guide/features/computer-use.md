@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: 51b0552c84177f18f220836a0fff77e330d163e0
+upstream_blob: d43f0584f7c92dd8e9d555fc746c99e52bd655e0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -153,6 +153,19 @@ computer_use:
 セッションの開始時にはっきり失敗します。そのセッションかぎりの YOLO は、bounded より
 優先されます。
 
+macOS では、専用セッションのデーモンは、インストールされた `CuaDriver.app` の
+バンドルを通して起動します（こうすると権限の許可が、Hermes をビルドし直すたびに
+消えるのではなく、ドライバー自身の名義に結び付きます）。しかも Hermes は起動する前に、
+そのバンドルのコード署名を確かめます。識別子が `com.trycua.driver` そのものであること、
+そして公式の署名チームであることの二つです。cua-driver をソースからビルドした場合
+（署名がありません）は、明示的に許可してください。
+
+```yaml
+# config.yaml
+computer_use:
+  allow_unsigned_driver: true   # local driver development only
+```
+
 MCP の各つなぎ口は、自分のランタイムの中に専用の生存管理セッションを持ちます。
 外から見えるセッション名は、カーソルの見分けとセッション単位の状態に付ける
 ただの札です。ランタイムを選んだり、共有したり、生かし続けたりはしません。
@@ -218,6 +231,15 @@ Hermes の実行ごとに、外から見える cua-driver の **セッション�
 のようなもの）が宣言されます。この名前はカーソルの見分けと関連する状態に付く札なので、
 同時に走る実行やサブエージェントには別々のカーソルが割り当てられます。ランタイムの中の
 生存管理セッションを持つのは MCP のつなぎ口であって、外から見える名前ではありません。
+
+重ね表示のカーソルは見た目だけのもので、これが無くても取り込み・クリック・入力は
+すべて動きます。Hermes は、不具合が起きると分かっている環境では自動的に切ります。
+macOS（何もしていなくても CPU を食い続けます）、画面の無い Linux / WSL2 / コンテナ、
+そして **Linux の X11 デスクトップ**（重ね表示は常に最前面に出る全画面の窓なので、
+セッションがきれいに終わらなかったあと、どの作業領域の上にも居座ってデスクトップの
+入力をふさいでしまうことがあります）です。Linux の Wayland と Windows では重ね表示を
+残します。どのプラットフォームでもカーソルを必ず出したいときは `config.yaml` に
+`computer_use.no_overlay: false` を設定してください（必ず消したいときは `true` です）。
 
 カーソルの見た目は `cua-driver` の CLI のオプションか、実行中の
 `set_agent_cursor_style` という MCP ツールで調整できます。選べるもの一式
