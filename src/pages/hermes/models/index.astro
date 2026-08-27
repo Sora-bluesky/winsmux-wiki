@@ -104,7 +104,11 @@ const typeLabel = { text: 'TEXT', embeddings: 'EMBEDDINGS', other: 'OTHER' } as 
               <td class="m-num">{m.free || m.listInPerM === null ? '—' : `入 ${fmt(m.listInPerM)} / 出 ${fmt(m.listOutPerM)}`}</td>
               <td>
                 {m.discount !== null && m.discount > 0 ? (
-                  <span class={`m-off${m.discount >= 50 ? ' m-off-big' : ''}`}>{m.discount}% OFF</span>
+                  m.discount >= 50 ? (
+                    <span class="m-off m-off-big">{m.discount}% OFF</span>
+                  ) : (
+                    <span class="m-off">{m.discount}%</span>
+                  )
                 ) : (
                   '—'
                 )}
