@@ -13,7 +13,7 @@ raw: /hermes/raw/about.md
 Hermes Agent Wiki は、[Hermes Agent](https://github.com/NousResearch/hermes-agent) の公式ドキュメントの日本語版と、逆引き・トラブル対処などの独自ページをのせた個人運営のサイトです。開発元の NousResearch とは無関係の**非公式**サイトで、正本は常に [公式ドキュメント](https://hermes-agent.nousresearch.com/docs/) です。
 
 - 運営者: そら（X: [@sora_biz](https://x.com/sora_biz) / GitHub: [Sora-bluesky](https://github.com/Sora-bluesky)）
-- 問い合わせ: 各ページ下部の「このページへの意見・要望」から（GitHub の Issue として届きます）
+- 問い合わせ: 各ページ下部（フッター）の「意見・要望」から（GitHub の Issue として届きます）
 
 ## データの扱い（プライバシーポリシー）
 

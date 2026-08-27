@@ -107,35 +107,20 @@ const next = hasOverride
           </nav>
         )
       }
-      <aside class="mt-12 border-t border-border pt-6 text-sm text-fg-muted">
-        <a
-          href={feedbackUrl}
-          target="_blank"
-          rel="noopener"
-          class="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border px-4 py-2 text-fg-secondary no-underline hover:bg-bg-subtle hover:text-fg"
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
-          このページへの意見・要望
-        </a>
-        <p class="mt-2 text-xs">GitHub の入力フォームが開きます（要 GitHub アカウント）。誤訳・古い情報・追加してほしい内容など、なんでもどうぞ。</p>
-      </aside>
       {
-        (sources.length > 0 || hermesVersion) && (
-          <aside class="mt-6 text-sm text-fg-muted">
-            {hermesVersion && <p>Hermes Agent {hermesVersion}</p>}
-            {sources.length > 0 && (
-              <p class="mt-2">
-                本サイトは非公式の日本語訳です。正本:{' '}
-                {sources.map((url, i) => (
-                  <>
-                    {i > 0 && ' · '}
-                    <a href={url} target="_blank" rel="noopener">
-                      {url.replace('https://hermes-agent.nousresearch.com', '')}
-                    </a>
-                  </>
-                ))}
-              </p>
-            )}
+        sources.length > 0 && (
+          <aside class="mt-12 border-t border-border pt-6 text-sm text-fg-muted">
+            <p>
+              このページの正本:{' '}
+              {sources.map((url, i) => (
+                <>
+                  {i > 0 && ' · '}
+                  <a href={url} target="_blank" rel="noopener">
+                    {url.replace('https://hermes-agent.nousresearch.com', '')}
+                  </a>
+                </>
+              ))}
+            </p>
           </aside>
         )
       }
@@ -144,9 +129,10 @@ const next = hasOverride
     <footer class="border-t border-border bg-bg-subtle">
       <div class="mx-auto flex w-full max-w-3xl flex-col gap-3 px-4 py-6 text-xs text-fg-muted sm:px-6 md:flex-row md:items-center md:justify-between lg:max-w-7xl">
         <p class="m-0">
-          Hermes Agent Wiki — 非公式の日本語サイトです。正本:
+          Hermes Agent Wiki — 非公式の日本語サイトです{hermesVersion && `（Hermes Agent ${hermesVersion} 時点）`}。正本:
           <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener">公式ドキュメント</a>
           · <a href="/hermes/about/">このサイトについて</a>
+          · <a href={feedbackUrl} target="_blank" rel="noopener" title="このページの URL 入りで GitHub の入力フォームが開きます">意見・要望</a>
         </p>
         <p class="m-0 flex items-center gap-4">
           <span>管理人: そら</span>
@@ -161,6 +147,14 @@ const next = hasOverride
         </p>
       </div>
     </footer>
+    <button
+      type="button"
+      id="back-to-top"
+      aria-label="ページの先頭へ戻る"
+      class="pointer-events-none fixed bottom-[4.75rem] right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-bg text-fg-muted opacity-0 shadow-lg transition-opacity duration-200 hover:bg-bg-subtle hover:text-fg"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6" /></svg>
+    </button>
     {showAsk && rawPath && <AskBar rawPath={rawPath} />}
     <SearchModal />
     <script>
@@ -199,6 +193,29 @@ const next = hasOverride
           { passive: true },
         );
         update();
+      }
+      // 上に戻るボタン（スクロールで出現）
+      const topBtn = document.getElementById('back-to-top');
+      if (topBtn) {
+        let topTicking = false;
+        const updateTop = () => {
+          topTicking = false;
+          const on = window.scrollY > 400;
+          topBtn.classList.toggle('opacity-0', !on);
+          topBtn.classList.toggle('pointer-events-none', !on);
+        };
+        addEventListener(
+          'scroll',
+          () => {
+            if (!topTicking) {
+              topTicking = true;
+              requestAnimationFrame(updateTop);
+            }
+          },
+          { passive: true },
+        );
+        topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        updateTop();
       }
       document.addEventListener('click', async (e) => {
         const btn = (e.target as HTMLElement).closest('.copy-code');
