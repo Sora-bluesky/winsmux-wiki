@@ -122,6 +122,17 @@ const docChips = [
       </div>
       <a href="/hermes/updates/" class="feed-more">更新の一覧を見る →</a>
       <a href="/hermes/community/" class="feed-more">コミュニティの動き（週次要約）→</a>
+
+      <div class="popular">
+        <h2>よく使うページ</h2>
+        <ul>
+          <li><a href="/hermes/docs/getting-started/quickstart/">インストールする</a></li>
+          <li><a href="/hermes/docs/user-guide/messaging/telegram/">Telegram でつなぐ</a></li>
+          <li><a href="/hermes/docs/user-guide/features/cron/">定時実行（Cron）</a></li>
+          <li><a href="/hermes/models/">モデルと料金</a></li>
+          <li><a href="/hermes/trouble/">トラブル</a></li>
+        </ul>
+      </div>
     </section>
   </div>
 
@@ -203,6 +214,11 @@ const docChips = [
   .feed-date { font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-fg-muted); }
   .feed-text { font-size: 0.82rem; line-height: 1.6; color: var(--color-fg); font-weight: 500; }
   .feed-more { display: block; margin-top: 0.55rem; font-size: 0.82rem; text-decoration: none; width: fit-content; }
+  .popular { margin-top: 1.4rem; border-top: 1px solid var(--color-border); padding-top: 1rem; }
+  .popular h2 { font-size: 0.95rem; margin: 0 0 0.5rem; }
+  .popular ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+  .popular a { font-size: 0.85rem; text-decoration: none; color: var(--color-fg-secondary); }
+  .popular a:hover { color: var(--color-accent); text-decoration: underline; }
   .feed-more:hover { text-decoration: underline; }
   .levels { margin-top: 2.5rem; }
   .levels h2 { font-size: 1.2rem; margin: 0 0 0.9rem; }
