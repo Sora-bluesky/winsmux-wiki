@@ -32,6 +32,29 @@ const {
 
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const feedbackUrl = `https://github.com/Sora-bluesky/winsmux-wiki/issues/new?template=feedback.yml&page=${encodeURIComponent(canonical)}`;
+
+// パンくず: /hermes/ 直下以外で表示。中間セグメントはラベル化（ページが無いのでテキスト）。
+const CRUMB_LABELS: Record<string, string> = {
+  docs: 'ドキュメント',
+  'getting-started': '導入',
+  'user-guide': 'Hermes を使う',
+  features: '機能',
+  messaging: 'メッセージング',
+  integrations: '連携',
+  guides: 'ガイド',
+  'developer-guide': '開発者向け',
+  reference: '早見表',
+  skills: 'skill',
+  bundled: '最初から入っている',
+  optional: 'あとから入れる',
+  guide: '使い方',
+  concepts: 'しくみ',
+  entities: '使う形',
+  syntheses: 'まとめ',
+};
+const crumbSegs = Astro.url.pathname.replace(/^\/hermes\/?/, '').replace(/\/$/, '').split('/').filter(Boolean);
+const crumbs = crumbSegs.slice(0, -1).map((s) => CRUMB_LABELS[s] ?? s);
+const showCrumbs = crumbSegs.length > 0;
 const pageIndex = PAGES.findIndex((p) => p.path === Astro.url.pathname);
 const hasOverride = 'prevOverride' in Astro.props || 'nextOverride' in Astro.props;
 const prev = hasOverride ? (Astro.props.prevOverride ?? null) : pageIndex > 0 ? PAGES[pageIndex - 1] : null;
@@ -74,6 +97,23 @@ const next = hasOverride
     <div class="mx-auto flex w-full max-w-3xl gap-8 px-4 sm:px-6 lg:max-w-7xl">
       <Sidebar />
       <main class="w-full min-w-0 flex-1 pb-16 pt-8 lg:max-w-5xl">
+      {
+        showCrumbs && (
+          <nav class="mb-4 flex flex-wrap items-center gap-1.5 text-xs text-fg-muted" aria-label="現在地">
+            <a href="/hermes/" class="text-fg-muted no-underline hover:text-fg hover:underline">
+              ホーム
+            </a>
+            {crumbs.map((label) => (
+              <>
+                <span aria-hidden="true">›</span>
+                <span>{label}</span>
+              </>
+            ))}
+            <span aria-hidden="true">›</span>
+            <span class="text-fg-secondary">{title}</span>
+          </nav>
+        )
+      }
       <slot />
       {
         (prev || next) && (

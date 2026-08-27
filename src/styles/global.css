@@ -21,6 +21,11 @@
   color-scheme: light;
 }
 
+html {
+  /* sticky ヘッダーの下にアンカーが隠れないように */
+  scroll-padding-top: 5rem;
+}
+
 html,
 body {
   background: var(--color-bg);
