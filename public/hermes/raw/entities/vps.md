@@ -4,7 +4,7 @@ description: 借りたサーバーに常駐させる形。24時間動くので�
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
-hermes_version: "0.20.5"
+hermes_version: "0.20.6"
 confidence: high
 raw: /hermes/raw/entities/vps.md
 ---

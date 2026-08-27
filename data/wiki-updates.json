@@ -2,6 +2,73 @@
   "generatedAt": "2026-08-27",
   "entries": [
     {
+      "date": "2026-08-28",
+      "sha": "9e67b58",
+      "upstream": "10b3883",
+      "pages": [
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes のプラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "reference/optional-skills-catalog",
+          "title": "オプションスキルの一覧",
+          "url": "/hermes/docs/reference/optional-skills-catalog/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/docker",
+          "title": "Hermes の Docker での動かし方",
+          "url": "/hermes/docs/user-guide/docker/"
+        },
+        {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザ自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/messaging/slack",
+          "title": "Slack",
+          "url": "/hermes/docs/user-guide/messaging/slack/"
+        },
+        {
+          "id": "user-guide/messaging/wecom",
+          "title": "WeCom（企業向け WeChat）",
+          "url": "/hermes/docs/user-guide/messaging/wecom/"
+        },
+        {
+          "id": "user-guide/skills/optional/email/email-agentmail",
+          "title": "Agentmail — エージェントに AgentMail CLI のメールボックスを持たせたいときに使います",
+          "url": "/hermes/docs/user-guide/skills/optional/email/email-agentmail/"
+        },
+        {
+          "id": "user-guide/skills/optional/web-development/web-development-publish-site",
+          "title": "Publish Site — サイトに版を付けて GitHub / Cloudflare / Netlify の Pages へ公開します",
+          "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/"
+        }
+      ]
+    },
+    {
       "date": "2026-08-27",
       "sha": "3c401aa",
       "upstream": "790e1eb",
@@ -416,5 +483,8 @@
       ]
     }
   ],
-  "digests": {}
+  "digests": {
+    "2026-W35": "6回の同期で、設定・Docker・環境変数まわりと、プラグイン開発（メモリプロバイダ、ターミナル環境プロバイダ、イベントフック）の解説が広く入れ替わった。ブラウザ自動操作、コンピュータ操作、定期実行タスク（cron）、サブエージェントへの委任、ツール検索といった実行系も更新されている。Slack・WeCom・Signal・Agentmail などの連携先と、Google Gemini やフォールバックプロバイダー、Nous Tool Gateway といったモデル側の記述も追随した。",
+    "2026-W34": "2回の同期で、Bot モードと Hermes デスクトップアプリを中心に更新が入った。定時実行の内部、cron での自動化、API サーバー、プログラムからの連携など、動かし続けるための記述が多い。AWS Bedrock やフォールバックプロバイダー、ずっと残る記憶、BlueBubbles・Telegram の連携も更新対象になっている。"
+  }
 }

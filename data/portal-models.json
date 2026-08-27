@@ -1,9 +1,9 @@
 {
   "fetchedAt": "2026-08-27",
   "source": "https://inference-api.nousresearch.com/v1/models",
-  "count": 372,
+  "count": 371,
   "counts": {
-    "text": 329,
+    "text": 328,
     "embeddings": 33,
     "other": 10
   },
@@ -789,18 +789,6 @@
       "free": false
     },
     {
-      "id": "moonshotai/kimi-k2.7-code:batch",
-      "name": "MoonshotAI: Kimi K2.7 Code (batch)",
-      "type": "text",
-      "ctx": 262144,
-      "inPerM": 0.76,
-      "outPerM": 3.2,
-      "listInPerM": 0.95,
-      "listOutPerM": 4,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "~anthropic/claude-fable-latest",
       "name": "Anthropic: Claude Fable Latest",
       "type": "text",
@@ -840,11 +828,11 @@
       "id": "nvidia/nemotron-3-ultra-550b-a55b",
       "name": "NVIDIA: Nemotron 3 Ultra",
       "type": "text",
-      "ctx": 512288,
-      "inPerM": 0.48,
-      "outPerM": 2.88,
-      "listInPerM": 0.6,
-      "listOutPerM": 3.6,
+      "ctx": 262144,
+      "inPerM": 0.4,
+      "outPerM": 1.76,
+      "listInPerM": 0.5,
+      "listOutPerM": 2.2,
       "discount": 20,
       "free": false
     },
@@ -1297,10 +1285,10 @@
       "name": "DeepSeek: DeepSeek V4 Flash 0423",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.0612,
-      "outPerM": 0.1223,
-      "listInPerM": 0.0765,
-      "listOutPerM": 0.1529,
+      "inPerM": 0.0599,
+      "outPerM": 0.1198,
+      "listInPerM": 0.0749,
+      "listOutPerM": 0.1498,
       "discount": 20,
       "free": false
     },

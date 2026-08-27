@@ -4,7 +4,7 @@ description: メッセージの窓口。Telegram や LINE からの受信を自�
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
-hermes_version: "0.20.5"
+hermes_version: "0.20.6"
 confidence: high
 raw: /hermes/raw/concepts/gateway.md
 ---

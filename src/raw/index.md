@@ -3,7 +3,7 @@ title: Hermes Agent Wiki
 description: Hermes Agent の日本語知識ベース。公式ドキュメント全ページの日本語版に、逆引き・トラブル対処・料金の早見をのせた非公式サイト。
 sources:
   - https://hermes-agent.nousresearch.com/docs/
-hermes_version: "0.20.5"
+hermes_version: "0.20.6"
 confidence: high
 raw: /hermes/raw/index.md
 ---

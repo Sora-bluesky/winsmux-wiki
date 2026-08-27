@@ -5,7 +5,7 @@ sources:
   - https://hermes-agent.nousresearch.com/docs/reference/skills-catalog
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
   - https://github.com/NousResearch/hermes-agent/tree/main/website/docs/user-guide/skills
-hermes_version: "0.20.5"
+hermes_version: "0.20.6"
 confidence: high
 raw: /hermes/raw/skills.md
 ---

@@ -4,7 +4,7 @@ description: あとから足せる知識。必要なときだけ読み込まれ�
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
   - https://hermes-agent.nousresearch.com/docs/guides/work-with-skills
-hermes_version: "0.20.5"
+hermes_version: "0.20.6"
 confidence: high
 raw: /hermes/raw/concepts/skills.md
 ---
