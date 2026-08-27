@@ -1,12 +1,30 @@
 ---
 // コミュニティの動き（Wiki 層 #10）。
 // データ: data/wiki/community.json（公開アーカイブ teknium1/nous-discord-archive の週次日本語要約）。
-// 上流アーカイブが止まると archiveUpdatedAt が古いまま残る設計（鮮度をそのまま見せる）。
+// 表示は「週 → チャンネルごとに1カード → 文単位の箇条書き」。段落の壁にしない（2026-08-27 sora UI 指摘）。
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import community from '../../../../data/wiki/community.json';
 
 type Week = { week: string; range: string; topics: { channel: string; summary: string }[] };
 const weeks = community.weeks as Week[];
+
+// 同一チャンネルの連続トピックを1カードへまとめ、要約文を文単位に割る
+const sentences = (s: string) =>
+  s
+    .split('。')
+    .map((x) => x.trim())
+    .filter(Boolean)
+    .map((x) => x + '。');
+
+const grouped = weeks.map((w) => {
+  const channels: { channel: string; items: string[] }[] = [];
+  for (const t of w.topics) {
+    const g = channels.find((c) => c.channel === t.channel);
+    if (g) g.items.push(...sentences(t.summary));
+    else channels.push({ channel: t.channel, items: sentences(t.summary) });
+  }
+  return { ...w, channels };
+});
 ---
 
 <BaseLayout
@@ -31,14 +49,21 @@ const weeks = community.weeks as Week[];
 
   <div class="cm-weeks">
     {
-      weeks.map((w) => (
+      grouped.map((w) => (
         <section class="cm-week">
-          <h2 class="cm-title">{w.range}</h2>
-          <div class="cm-topics">
-            {w.topics.map((t) => (
-              <div class="cm-topic">
-                <span class="cm-channel">#{t.channel}</span>
-                <p class="cm-summary">{t.summary}</p>
+          <div class="cm-week-head">
+            <h2 class="cm-title">{w.range}</h2>
+            <span class="cm-weekno">{w.week}</span>
+          </div>
+          <div class="cm-cards">
+            {w.channels.map((c) => (
+              <div class="cm-card">
+                <span class="cm-channel">#{c.channel}</span>
+                <ul class="cm-list">
+                  {c.items.map((s) => (
+                    <li>{s}</li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
@@ -63,10 +88,23 @@ const weeks = community.weeks as Week[];
     padding: 0.65rem 0.9rem;
     font-size: 0.85rem;
   }
-  .cm-weeks { display: flex; flex-direction: column; gap: 1.75rem; margin-top: 1.5rem; }
-  .cm-title { font-size: 1.05rem; font-weight: 650; margin: 0 0 0.6rem; }
-  .cm-topics { display: flex; flex-direction: column; gap: 0.6rem; }
-  .cm-topic { border: 1px solid var(--color-border); border-radius: 10px; padding: 0.8rem 1rem; background: var(--color-bg); }
-  .cm-channel { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-fg-muted); }
-  .cm-summary { margin: 0.3rem 0 0; font-size: 0.88rem; line-height: 1.7; color: var(--color-fg-secondary); }
+  .cm-weeks { display: flex; flex-direction: column; gap: 2.2rem; margin-top: 1.75rem; }
+  .cm-week-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem;
+    border-bottom: 1px solid var(--color-border-strong); padding-bottom: 0.5rem; margin-bottom: 0.9rem;
+  }
+  .cm-title { font-size: 1.05rem; font-weight: 650; margin: 0; }
+  .cm-weekno { font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-fg-muted); }
+  .cm-cards { display: flex; flex-direction: column; gap: 0.9rem; }
+  .cm-card {
+    border: 1px solid var(--color-border); border-radius: 12px; padding: 0.9rem 1.1rem 1rem;
+    background: var(--color-bg); display: flex; flex-direction: column; gap: 0.55rem;
+  }
+  .cm-channel {
+    align-self: flex-start; font-family: var(--font-mono); font-size: 0.74rem; font-weight: 500;
+    color: var(--color-accent); background: var(--color-accent-soft); border-radius: 999px; padding: 0.15rem 0.7rem;
+  }
+  .cm-list { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+  .cm-list li { font-size: 0.88rem; line-height: 1.7; color: var(--color-fg-secondary); }
+  .cm-list li::marker { color: var(--color-border-strong); }
 </style>

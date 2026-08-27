@@ -7,6 +7,7 @@ const NAV = [
   { href: '/hermes/howto/', label: '逆引き' },
   { href: '/hermes/trouble/', label: 'トラブル' },
   { href: '/hermes/models/', label: 'モデルと料金' },
+  { href: '/hermes/community/', label: 'コミュニティ' },
   { href: '/hermes/guide/', label: 'ドキュメント' },
 ];
 const isActive = (href: string) =>
@@ -30,7 +31,7 @@ for (const p of PAGES) {
       <span class="rounded-full border border-border px-2 py-px text-[10px] font-medium text-fg-muted">非公式・日本語</span>
     </a>
     <div class="flex items-center gap-2">
-      <nav class="hidden items-center gap-5 text-sm md:flex">
+      <nav class="hidden items-center gap-5 text-sm lg:flex">
         {
           NAV.map((n) => (
             <a
