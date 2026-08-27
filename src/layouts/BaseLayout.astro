@@ -68,8 +68,27 @@ const CRUMB_LABELS: Record<string, string> = {
   entities: '使う形',
   syntheses: 'まとめ',
 };
+// ミラーページの実在集合（キーだけ使うので eager 読み込みはしない）
+const docFiles = import.meta.glob('../raw/docs/**/*.md');
+const docIds = new Set(
+  Object.keys(docFiles).map((k) => k.split('raw/docs/')[1].replace(/\.md$/, '').replace(/\/index$/, '')),
+);
 const crumbSegs = Astro.url.pathname.replace(/^\/hermes\/?/, '').replace(/\/$/, '').split('/').filter(Boolean);
-const crumbs = crumbSegs.slice(0, -1).map((s) => CRUMB_LABELS[s] ?? s);
+// 中間階層は、実在するページにだけリンクを張る（無い階層はテキスト）
+const crumbHref = (i: number): string | null => {
+  const seg = crumbSegs[i];
+  if (i === 0) {
+    if (seg === 'docs') return '/hermes/guide/all/';
+    if (seg === 'guide') return '/hermes/guide/';
+    return null;
+  }
+  if (crumbSegs[0] !== 'docs') return null;
+  const prefix = crumbSegs.slice(1, i + 1).join('/');
+  if (prefix === 'user-guide/skills') return '/hermes/guide/skills/';
+  if (docIds.has(prefix)) return `/hermes/docs/${prefix}/`;
+  return null;
+};
+const crumbs = crumbSegs.slice(0, -1).map((s, i) => ({ label: CRUMB_LABELS[s] ?? s, href: crumbHref(i) }));
 const showCrumbs = crumbSegs.length > 0;
 const pageIndex = PAGES.findIndex((p) => p.path === Astro.url.pathname);
 const hasOverride = 'prevOverride' in Astro.props || 'nextOverride' in Astro.props;
@@ -119,10 +138,16 @@ const next = hasOverride
             <a href="/hermes/" class="text-fg-muted no-underline hover:text-fg hover:underline">
               ホーム
             </a>
-            {crumbs.map((label) => (
+            {crumbs.map((c) => (
               <>
                 <span aria-hidden="true">›</span>
-                <span>{label}</span>
+                {c.href ? (
+                  <a href={c.href} class="text-fg-muted no-underline hover:text-fg hover:underline">
+                    {c.label}
+                  </a>
+                ) : (
+                  <span>{c.label}</span>
+                )}
               </>
             ))}
             <span aria-hidden="true">›</span>
