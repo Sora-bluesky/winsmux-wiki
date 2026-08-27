@@ -1,6 +1,6 @@
 {
-  "sha": "1a66134",
-  "date": "2026-08-27",
+  "sha": "10b3883",
+  "date": "2026-08-28",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -909,9 +909,9 @@
     {
       "slug": "email-agentmail",
       "name": "Agentmail",
-      "description": "Give the agent its own inbox: send and receive email",
+      "description": "Use when an agent needs AgentMail CLI email inboxes",
       "url": "/hermes/docs/user-guide/skills/optional/email/email-agentmail/",
-      "date": "2026-08-08",
+      "date": "2026-08-27",
       "source": "optional"
     },
     {
@@ -1560,6 +1560,14 @@
       "description": "Embed an in-page natural-language GUI copilot in web apps",
       "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/",
       "date": "2026-07-23",
+      "source": "optional"
+    },
+    {
+      "slug": "web-development-publish-site",
+      "name": "Publish Site",
+      "description": "Versioned site deploys to GitHub/Cloudflare/Netlify Pages",
+      "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/",
+      "date": "2026-08-27",
       "source": "optional"
     },
     {

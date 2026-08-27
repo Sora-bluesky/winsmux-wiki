@@ -2,7 +2,7 @@
 title: "WeCom（企業向け WeChat）"
 description: "AI Bot の WebSocket ゲートウェイ経由で Hermes Agent を WeCom につなぎます"
 upstream_path: user-guide/messaging/wecom.md
-upstream_blob: 2ac5bddb143568a30ca726a9a5574ca58831f8ff
+upstream_blob: 3dec3bca94d2d1494d63a34a4772ebc7e4c10c02
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/wecom
 ---
@@ -99,9 +99,11 @@ hermes gateway
 - **自動での再接続** — 接続が切れたときは間隔を広げながらつなぎ直します
 
 :::note ストリーミングと入力中の表示について
-WeCom のアダプターは、応答をひとつの完成したメッセージとして届けます。トークンを少しずつ流す
-ストリーミングは**しません**し、入力中の表示も**出しません**。後述の「返信の対応づけ」は、
-応答を元の要求に結びつけるだけで、実況的なストリーミングではありません。
+WeCom のアダプターは、WeCom の `msgtype: "stream"` の仕組みをそのまま使って応答を流します。
+やり取りが始まるとすぐ、クライアントには考え中・入力中の吹き出しが出て、モデルが生成するそばから
+ひとつの吹き出しの中に応答が少しずつ描かれていきます。ツールを呼び出している途中経過も、同じ吹き出しに
+まとめられます。この流し込みは既定で有効です（`config.yaml` の `display.platforms.wecom.streaming: true`）。
+`false` にすると、これまでどおり応答を一度にまとめて届ける形に戻せます。
 :::
 
 ## 設定できる項目 {#configuration-options}
@@ -118,6 +120,9 @@ WeCom のアダプターは、応答をひとつの完成したメッセージ�
 | `allow_from` | `[]` | 個別チャットを許可する利用者 ID（dm_policy=allowlist のとき） |
 | `group_allow_from` | `[]` | 許可するグループ ID（group_policy=allowlist のとき） |
 | `groups` | `{}` | グループごとの設定（後述） |
+| `stream_keepalive_enabled` | `false` | 長いやり取りのとき、WeCom の約 6 分で切れる返信ストリームの枠を延ばすため、一定間隔でキープアライブのフレームを送ります |
+| `stream_keepalive_interval_seconds` | `120` | 有効にしたときの、キープアライブのフレームを送る間隔 |
+| `stream_safe_duration_seconds` | `330` | ストリームがこの秒数を過ぎると、締めくくりの送信では確実に届くこちらからの送信を優先します |
 
 ## アクセスの方針 {#access-policies}
 
@@ -239,7 +244,7 @@ WeCom は、受信するメディアの添付の一部を AES-256-CBC で暗号�
 
 WeCom のコールバック経由でメッセージを受け取ると、アダプターは届いた要求の ID を覚えておきます。その要求の文脈がまだ生きているうちに応答を送る場合、アダプターは WeCom の返信方式（`aibot_respond_msg`）を使い、応答を元のメッセージに直接結びつけます。WeCom のクライアント上で、より自然な会話に見えます。
 
-応答はひとつの完成したメッセージとして届きます。アダプターはトークンを少しずつ流すことはしません。届いた要求の文脈が期限切れになっているか使えない場合は、`aibot_send_msg` によるこちらからの送信に切り替えます。
+返信のストリームが生きている間、応答は返信方式の `msgtype: "stream"` フレームで少しずつ流れていきます。届いた要求の文脈が期限切れになっているか使えない場合（あるいはストリームのフレームの送信に失敗した場合）は、`aibot_send_msg` によるこちらからの送信に切り替えます。
 
 返信方式はメディアにも使えます。アップロードしたメディアも、元のメッセージへの返信として送れます。
 

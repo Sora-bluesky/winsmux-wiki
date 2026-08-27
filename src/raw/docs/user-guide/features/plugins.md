@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインのしくみを使って、独自のツール・フック・連携で Hermes を拡張します"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: d487f2c5fa5dcd825efad12704de52470900f4d8
+upstream_blob: 417850c1c7b1c4e4f836005a7b00097aac2110ac
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -156,6 +156,13 @@ plugins:
     - disk-cleanup
   disabled:       # optional deny-list — always wins if a name appears in both
     - noisy-plugin
+  # Optional: wall-clock cap (seconds) for timeout-bounded in-process Python
+  # plugin hook callbacks (hot-path observers + pre_tool_call). Default 30;
+  # set 0 to disable; values above 600 are clamped. Timed-out pre_tool_call
+  # callbacks fail closed (block the tool). Caller-thread hooks such as
+  # subagent_stop are never moved onto a timeout worker.
+  # Shell hooks keep their own per-entry timeout under the top-level hooks: key.
+  hook_callback_timeout: 30
 ```
 
 状態を切り替える方法は 3 つあります。

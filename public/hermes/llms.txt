@@ -436,6 +436,7 @@ Hermes Agent 0.20.5
 - [user-guide/skills/optional/software-development/software-development-subagent-driven-development（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/)
 - [user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy/)
 - [user-guide/skills/optional/web-development/web-development-page-agent（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/)
+- [user-guide/skills/optional/web-development/web-development-publish-site（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/)
 - [user-guide/skills/optional/yuanbao/yuanbao-yuanbao（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao/)
 - [user-guide/tui（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
 - [user-guide/which-file-does-what（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/which-file-does-what/)
@@ -850,6 +851,7 @@ Hermes Agent 0.20.5
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/web-development/web-development-page-agent.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/web-development/web-development-publish-site.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/tui.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/which-file-does-what.md

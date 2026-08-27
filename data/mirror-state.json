@@ -112,9 +112,9 @@
       "translatedAt": "2026-08-20T16:08:35.902Z"
     },
     "developer-guide/plugins/index.md": {
-      "blob": "8688d181a3c2b23f489ca4fe0d6672fa828a4f63",
+      "blob": "0a27acadef75d72d582e94dd9a7532d47c817516",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.904Z"
+      "translatedAt": "2026-08-27T21:51:11.432Z"
     },
     "developer-guide/programmatic-integration.md": {
       "blob": "7e9c1f6c3bae7f41c549bd4db70c9840ab0c5315",
@@ -427,9 +427,9 @@
       "translatedAt": "2026-08-20T16:08:35.943Z"
     },
     "reference/optional-skills-catalog.md": {
-      "blob": "70f0c5897afe8bcc241fea4ef0fb12ef1e1d3031",
+      "blob": "d6b904533fdecfb7cf656863c3c69d84e32ee4dd",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.944Z"
+      "translatedAt": "2026-08-27T21:33:42.539Z"
     },
     "reference/profile-commands.md": {
       "blob": "1f13d8e03b2785bc68292736d87f48aee38be208",
@@ -472,9 +472,9 @@
       "translatedAt": "2026-08-20T16:08:35.951Z"
     },
     "user-guide/configuration.md": {
-      "blob": "50c84b1ac78bae569d67ea497eaaa97b8f9312fb",
+      "blob": "c9dee244d321c023b167fc030297eaf7aba451c6",
       "status": "translated",
-      "translatedAt": "2026-08-26T22:47:16.300Z"
+      "translatedAt": "2026-08-27T21:36:11.858Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "2ede0dba3ce29f5c6c822ed080adc527856bb98f",
@@ -487,9 +487,9 @@
       "translatedAt": "2026-08-26T22:47:16.295Z"
     },
     "user-guide/docker.md": {
-      "blob": "747e6b40edde70a5704b53e62ce4b8d89bf36756",
+      "blob": "da737a4b17b4d37545977780d39d5dea597ae737",
       "status": "translated",
-      "translatedAt": "2026-08-25T23:18:41.587Z"
+      "translatedAt": "2026-08-27T21:33:42.536Z"
     },
     "user-guide/egress/index.md": {
       "blob": "90ccbb8a05e663ba816b4ac1e8bef7bca32eed5b",
@@ -517,9 +517,9 @@
       "translatedAt": "2026-08-20T16:08:35.963Z"
     },
     "user-guide/features/browser.md": {
-      "blob": "9ca1f368637f7fabfb74f361d45d0f003c97fcae",
+      "blob": "16a7e3cfbe6ebb0fccb027df23f60a28ddb996ee",
       "status": "translated",
-      "translatedAt": "2026-08-26T22:47:16.309Z"
+      "translatedAt": "2026-08-27T21:34:30.852Z"
     },
     "user-guide/features/built-in-plugins.md": {
       "blob": "ac18d4c925358a704e606ba1e8502f93c7de75fd",
@@ -607,9 +607,9 @@
       "translatedAt": "2026-08-20T16:08:35.976Z"
     },
     "user-guide/features/hooks.md": {
-      "blob": "ace2d2998c7418c2845c5d7130d98b8db4519e68",
+      "blob": "8ef9e7b180c826128f348790c138ed8ab5752a27",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.979Z"
+      "translatedAt": "2026-08-27T21:44:10.175Z"
     },
     "user-guide/features/image-generation.md": {
       "blob": "33c4abc7477c3d826b8c7baa64337d4247f51891",
@@ -677,9 +677,9 @@
       "translatedAt": "2026-08-20T16:08:35.989Z"
     },
     "user-guide/features/plugins.md": {
-      "blob": "d487f2c5fa5dcd825efad12704de52470900f4d8",
+      "blob": "417850c1c7b1c4e4f836005a7b00097aac2110ac",
       "status": "translated",
-      "translatedAt": "2026-08-25T22:48:51.584Z"
+      "translatedAt": "2026-08-27T21:32:48.711Z"
     },
     "user-guide/features/provider-routing.md": {
       "blob": "ff8a9ef56ccc23709cbf4ff900e82560332b350d",
@@ -742,9 +742,9 @@
       "translatedAt": "2026-08-20T16:08:35.998Z"
     },
     "user-guide/features/web-dashboard.md": {
-      "blob": "fb60a602809a4896c1ea03f7c561abf6c9dd573a",
+      "blob": "be4ed441d72a334b7e544ad6cb38fe114dbe4f94",
       "status": "translated",
-      "translatedAt": "2026-08-24T22:53:52.832Z"
+      "translatedAt": "2026-08-27T21:33:55.603Z"
     },
     "user-guide/features/web-search.md": {
       "blob": "ddacf7f4a86097718360dcb36783a4adb34c1dca",
@@ -887,9 +887,9 @@
       "translatedAt": "2026-08-21T00:30:27.080Z"
     },
     "user-guide/messaging/slack.md": {
-      "blob": "544ed727e9142f90e85fe2cb703c3966b0396872",
+      "blob": "d8c20f36f140b42869a902b3c2496a3b3ad23a2f",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.017Z"
+      "translatedAt": "2026-08-27T21:32:42.682Z"
     },
     "user-guide/messaging/sms.md": {
       "blob": "8878cc5f0ab5bac6e5741e2954c56248bd08ccc7",
@@ -922,9 +922,9 @@
       "translatedAt": "2026-08-21T00:30:27.082Z"
     },
     "user-guide/messaging/wecom.md": {
-      "blob": "2ac5bddb143568a30ca726a9a5574ca58831f8ff",
+      "blob": "3dec3bca94d2d1494d63a34a4772ebc7e4c10c02",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.022Z"
+      "translatedAt": "2026-08-27T21:34:30.855Z"
     },
     "user-guide/messaging/weixin.md": {
       "blob": "b38ee4a472da9e589ea45e357917dd1b8d093c37",
@@ -1562,9 +1562,9 @@
       "translatedAt": "2026-08-20T16:08:36.091Z"
     },
     "user-guide/skills/optional/email/email-agentmail.md": {
-      "blob": "e134da466747063894ce017e2c7c7e2fd7308cb6",
+      "blob": "5fb31dba0feb77358061b0095dde36a34a1689b1",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.091Z"
+      "translatedAt": "2026-08-27T21:56:28.262Z"
     },
     "user-guide/skills/optional/finance/finance-3-statement-model.md": {
       "blob": "d945e58e49a3a7b289f6ad5a0430b470184d38ee",
@@ -2005,7 +2005,12 @@
       "blob": "dd102de46cc1ab90d20a6262612362188b5ecf0d",
       "status": "translated",
       "translatedAt": "2026-08-25T22:45:13.083Z"
+    },
+    "user-guide/skills/optional/web-development/web-development-publish-site.md": {
+      "blob": "c1e418f65c38e080d7bb5342f305ed2ff25f3970",
+      "status": "translated",
+      "translatedAt": "2026-08-27T21:56:28.265Z"
     }
   },
-  "snapshotCommit": "790e1eb6bd576261e6b9e70fcfe4fbdf17f866bb"
+  "snapshotCommit": "10b388300a63d83857fac3ca4f8b05b64e01bc50"
 }

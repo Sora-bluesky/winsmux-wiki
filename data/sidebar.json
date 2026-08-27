@@ -1039,6 +1039,9 @@
                     },
                     {
                       "id": "user-guide/skills/optional/web-development/web-development-page-agent"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/web-development/web-development-publish-site"
                     }
                   ]
                 },
@@ -1763,6 +1766,7 @@
     "user-guide/skills/optional/software-development/software-development-subagent-driven-development",
     "user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy",
     "user-guide/skills/optional/web-development/web-development-page-agent",
+    "user-guide/skills/optional/web-development/web-development-publish-site",
     "user-guide/skills/optional/yuanbao/yuanbao-yuanbao",
     "user-guide/messaging/index",
     "user-guide/messaging/telegram",

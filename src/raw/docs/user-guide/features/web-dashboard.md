@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: fb60a602809a4896c1ea03f7c561abf6c9dd573a
+upstream_blob: be4ed441d72a334b7e544ad6cb38fe114dbe4f94
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -938,6 +938,8 @@ hermes dashboard --host 0.0.0.0 --port 9119 --no-open
 ```yaml
 dashboard:
   public_url: "https://dashboard.example.com/hermes"
+  trusted_proxies:
+    - "172.20.0.5"
 ```
 
 設定すると、OAuth の戻り先の URL はそのまま `<public_url>/auth/callback` になります。この道筋では `X-Forwarded-Prefix` は無視されます。運用者が公開 URL をはっきり宣言しているからです。これは意図してそうしています。上に前置きを重ねると、前置きがすでに `public_url` に入っている大多数の場合に、二重に付いてしまうからです。
@@ -953,8 +955,23 @@ loopback 以外の `public_url` を宣言すると、バックエンドが loopb
 つねに管理画面の認証の関門が働きます。先にパスワードか OAuth のしくみを
 設定してください。それがないと、Hermes は起動の時点で止まります。手元の SPA の
 セッションの合鍵が、中継を通して離れた場所からの認証の手段になってしまうのを防ぐためです。
-このとき Uvicorn は、信頼できる中継の見出しの処理も有効にするので、手元の TLS の
-終端が `X-Forwarded-Proto: https` を渡して安全な合鍵にできます。
+このとき Uvicorn は、中継の見出しの処理も有効にします。loopback の中継は
+自動で信頼されます。TLS を終端するものが別のコンテナや別の端末からつないでくる
+場合は、その正確な IP アドレスを `dashboard.trusted_proxies` に足してください。
+アドレスが決まらない場合は、中継専用のネットワークに絞った CIDR を足します。
+
+```yaml
+dashboard:
+  public_url: "https://dashboard.example.com/hermes"
+  trusted_proxies:
+    - "172.20.0.0/24"
+```
+
+`X-Forwarded-Proto` と `X-Forwarded-For` を渡せるのは、ここに並べた相手だけです。
+Hermes は loopback への信頼をつねに保ち、`*`、`0.0.0.0/0`、`::/0` は
+受け付けません。ネットワークごと信頼するということは、そこにいるコンテナや端末の
+どれもが中継の情報を渡せるということなので、中継の正確な IP か、中継だけのための
+ネットワークを選ぶほうが安全です。
 
 ```bash
 # Backend remains reachable only on this machine.
@@ -981,7 +998,7 @@ loopback 以外のブラウザ向けの出どころとして扱われるので�
 
 `http://` / `https://` の書き出しがない値、ホストのない値、引用符・不等号・空白・制御文字を含む値は受け付けられません。形の壊れた値は黙って見出しからの組み立てに落ちるので、利用者を危ない URL へ送り出す代わりに、ログインの流れがそのまま動き続けます。
 
-> **注:** `public_url` が上書きするのは OAuth の戻り先の URL だけです。合鍵の `Secure` の印は今も `request.url.scheme`（proxy_headers の下では X-Forwarded-Proto）で決まるので、TLS を終端した公開の導入で `public_url` に `http://` を書くと、Secure の付かない合鍵ができてしまいます。これは運用者が踏みやすい落とし穴です。`public_url` を使うときは、上流できちんと TLS を終端させてください。
+> **注:** `public_url` が上書きするのは OAuth の戻り先の URL だけです。合鍵の `Secure` の印は今も `request.url.scheme` で決まり、`X-Forwarded-Proto` を使うのは、つないできた相手が loopback か `trusted_proxies` に並んでいるときだけです。中継が loopback にないときは、HTTPS の `public_url` を、TLS の終端と、範囲を絞った信頼できる中継の記述とあわせて使ってください。
 
 ### OAuth の流れ {#oauth-flow}
 

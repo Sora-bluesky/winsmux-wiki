@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダー、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 50c84b1ac78bae569d67ea497eaaa97b8f9312fb
+upstream_blob: c9dee244d321c023b167fc030297eaf7aba451c6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -67,7 +67,8 @@ hermes config set OPENROUTER_API_KEY sk-or-...  # Saves to .env
 :::
 
 :::tip 組織での導入
-管理者は、システム全体の管理用ディレクトリを使って、ふつうの利用者が上書きできない設定や秘密の値を固定できます。
+管理者は、システム全体の管理用ディレクトリを使って、ふつうの利用者が上書きできない
+設定や秘密の値を固定できます。
 [管理された適用範囲](/hermes/docs/user-guide/managed-scope/)を参照してください。
 :::
 
@@ -84,10 +85,43 @@ runtime:
 
 初期値は `4096` です。Hermes はこの値を OS のハードの上限に収め、すでにそれより高い
 ソフトの上限を持つプロセスの値を下げることはありません。この調整を止めるには、値を
-`0`、`false`、`null` のいずれかにしてください。Windows や、上限を変えられない
-サンドボックスでは、
+`0`、`false`、`null` のいずれかにしてください。Windows や、
+上限を変えられないサンドボックスでは、
 上限を変えないまま起動が
 続きます。
+
+## データベースの設定 {#database-settings}
+
+`database:` のまとまりは、Hermes が状態を保存する SQLite のデータベース
+（`state.db`）をどう開くかを決めます。ここにはセッション、メッセージ、ゲートウェイの振り分けが入っています。
+
+```yaml
+database:
+  # Journal mode for state.db: wal (default) or delete.
+  # Use delete on filesystems where WAL is unsafe (network mounts, some
+  # virtiofs setups). Note: an existing on-disk WAL database is never
+  # live-downgraded — Hermes keeps WAL and logs an error telling you the
+  # configured delete did not apply. To convert an existing database, stop
+  # every process using it and run a one-time offline
+  # `PRAGMA journal_mode=DELETE` on the file.
+  journal_mode: wal
+
+  # Durability level for every state.db connection: OFF, NORMAL, FULL,
+  # EXTRA (or 0-3). Unset leaves SQLite's compile-time default, which
+  # differs between interpreter builds. On macOS this is a floor, not a
+  # pin: values below FULL are refused to protect against Darwin fsync
+  # reordering; EXTRA is honored.
+  # synchronous: FULL
+
+  # Optional WAL sizing pragmas (integers). Unset = SQLite defaults.
+  # wal_autocheckpoint: 1000     # pages between automatic checkpoints
+  # journal_size_limit: 67108864 # cap the WAL/journal size in bytes
+```
+
+Hermes は、すでにあるデータベースを開いたときに、ディスク上のジャーナルの方式が
+黙って WAL に入れ替わった場合にも警告します（プロセスごと・データベースごとに一度だけ）。
+たとえば運用者が手で `delete` に変換しておいたデータベースがこれにあたります。警告では、
+その選択を残すための設定として `database.journal_mode` の名前を示します。
 
 ## 環境変数の差し込み {#environment-variable-substitution}
 
@@ -225,7 +259,7 @@ real_home = Path(os.environ.get("HERMES_REAL_HOME", os.environ["HOME"]))
 ```
 
 :::warning
-エージェントは、あなたのユーザーのアカウントと同じだけファイルシステムに触れます。使わせたくないツールは `hermes tools` で止めるか、隔離のために Docker に切り替えてください。
+エージェントは、利用者のアカウントと同じだけファイルシステムに触れます。使わせたくないツールは `hermes tools` で止めるか、隔離のために Docker に切り替えてください。
 :::
 
 ### docker のバックエンド {#docker-backend}
@@ -866,7 +900,7 @@ auxiliary:
 
 この値は決まった間隔ではなく、伸びていく段の**最初の1段**です。同じセッションで失敗が続くと、`1x`、`3x`、`9x` と待ち、上限は1時間です。要約のモデルが完全に壊れているセッションは、決まった間隔で永遠に試み続けるのではなく、少しずつ間を空けていきます。記録が実際に短くなれば、最初の段に戻ります。この段の上がり方はセッションごとで、プロセスの中だけの話です — ゲートウェイを再起動すると最初の段に戻りますが、待ち時間の期限そのものは残ります。
 
-`context_timeout_seconds`（初期値は `120`）は、エージェントの中の `compress_context` — 会話のやり取り、事前の圧縮、手で実行する `/compress` — についての、同じ**何もしていない時間の上限**です。固まった要約のモデルが、セッションをいつまでも止めてしまわないようにします。届いた要約のトークンが待ち時間を延ばし、黙っているときだけ打ち切られます。時間切れになると Hermes は圧縮を飛ばし、いまのメッセージをそのまま保ち、利用者に警告します。`0` にすると止まります。ゲートウェイのセッションの手入れは自分の `hygiene_timeout_seconds` の経路を持っていて、二重に包まれることはありません。
+`context_timeout_seconds`（初期値は `120`）は、エージェントの中の `compress_context` — 会話のやり取り、事前の圧縮、手で実行する `/compress` — についての、同じ**何もしていない時間の上限**です。固まった要約のモデルが、セッションをいつまでも止めてしまわないようにします。届いた要約のトークンが待ち時間を延ばし、黙っているときだけ打ち切られます。時間切れになると Hermes は、`auxiliary.compression.fallback_chain` の最初の項目に対してもう一度だけ要約を試みます（その項目が `timeout` を持っていれば、その値を使います）— 止まった経路は例外を投げないので、補助のクライアントが自前で持つ予備への切り替えからは見えないからです。その試みも失敗したとき、あるいは予備の連なりを設定していないときにだけ、Hermes は圧縮を飛ばし、いまのメッセージをそのまま保ち、利用者に警告します。`0` にすると止まります。ゲートウェイのセッションの手入れは自分の `hygiene_timeout_seconds` の経路を持っていて、二重に包まれることはありません。
 
 `context_total_ceiling_seconds`（初期値は `600`）は、トークンがまだ動いていても、エージェントの中の**確定前の**待ち時間（要約と受け取りの段）を区切ります。この値は少なくとも `context_timeout_seconds` 以上に収められます。正確に言うと、**要約の段はこの上限で区切られ、確定の段は上限を越えたら記録され知らされます。** いったん圧縮の確定の区切りに入って SessionDB への書き込みが始まったら、その確定が途中で捨てられることはありません — 記録が食い違うおそれがあるからです。ただし、待つあいだが黙ったままになることもありません。確定が上限を越えたら、Hermes はその超過を記録し（WARNING で、繰り返せば ERROR に上がります）、利用者に見える警告の経路で一度だけ知らせ、確定が終わるまで区切りながら待ち続けます。
 
@@ -2586,6 +2620,7 @@ dashboard:
   theme: "default"            # "default" | "midnight" | "ember" | "mono" | "cyberpunk" | "rose"
   show_token_analytics: false # Re-enable the (local-estimate-only) token/cost analytics surfaces
   public_url: ""              # Full public authority for OAuth redirect_uri (env: HERMES_DASHBOARD_PUBLIC_URL)
+  trusted_proxies: []         # Proxy IPs/CIDRs allowed to supply X-Forwarded-* headers
   oauth:                      # Portal OAuth gate (engaged with --host and not --insecure)
     client_id: ""             # agent:{instance_id} — Portal provisions this
     portal_url: ""            # blank → plugin default (production Portal)
@@ -2607,6 +2642,7 @@ dashboard:
 - `theme` — ダッシュボードの見た目です。
 - `show_token_analytics` — 初期状態では無効です。Analytics のページとトークンや費用の数字は**手元での控えめな見積もり**で（補助の呼び出し、やり直し、予備への切り替え、キャッシュへの書き込みを含みません）、実際の請求よりかなり少なく出ることがあります。請求額ではないと分かったうえでだけ `true` にしてください。
 - `public_url` — 設定すると、OAuth の `redirect_uri` を組み立てる元になる完全な情報（スキーム、ホスト、必要ならパスの先頭）になります。`X-Forwarded-*` のヘッダーを確実に渡さないリバースプロキシの後ろに置くときに設定してください。空にすると、プロキシのヘッダーから組み立てます。
+- `trusted_proxies` — `X-Forwarded-Proto` と `X-Forwarded-For` を渡してよい IP アドレス、または範囲を限った CIDR のネットワークです。ループバックは、これまでどおり自動で信頼されます。TLS のリバースプロキシが別のコンテナやホストからつないでくるときに設定してください。できればプロキシの正確な IP を書き、アドレスが変わる場合にだけ、小さな専用のネットワークを使ってください。ワイルドカードや `/0` のネットワークは受け付けられません。
 - `oauth` / `basic_auth` / `drain_auth` — 同梱のダッシュボードの認証のプラグインが読む設定です。drain の秘密の値はここには**書きません**。`HERMES_DASHBOARD_DRAIN_SECRET` の環境変数で渡します。認証の準備の全体は [ウェブのダッシュボード](/hermes/docs/user-guide/features/web-dashboard/)を参照してください。
 - `ws_ping_interval` / `ws_ping_timeout` — ループバック以外に割り当てたときの WebSocket の生存確認の調整です（ループバックの接続では確認しません）。遅延の大きい回線（Tailscale、遠くの SSH のトンネル）では、20秒の初期値が偽の 1006 の切断を作ってしまうことがあるので、値を上げてください。
 - `ws_orphan_reap_grace_s` — WebSocket が外れたセッションが、取り残されたものとして片付けられるまでの待ち時間です。クライアントのつなぎ直しが遅いなら、上の生存確認の値と一緒に上げてください。（`HERMES_TUI_WS_ORPHAN_REAP_GRACE_S` は内部の上書きとして残っています。）

@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: 70f0c5897afe8bcc241fea4ef0fb12ef1e1d3031
+upstream_blob: d6b904533fdecfb7cf656863c3c69d84e32ee4dd
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -101,7 +101,7 @@ hermes skills uninstall <skill-name>
 
 | スキル | 説明 |
 |-------|-------------|
-| [**agentmail**](/hermes/docs/user-guide/skills/optional/email/email-agentmail/) | エージェント専用の受信箱を用意し、メールの送受信をできるようにします。 |
+| [**agentmail**](/hermes/docs/user-guide/skills/optional/email/email-agentmail/) | エージェントが AgentMail の CLI でメールの受信箱を扱いたいときに使います。 |
 
 ## finance {#finance}
 
@@ -214,7 +214,7 @@ hermes skills uninstall <skill-name>
 | [**osint-investigation**](/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/) | 公開記録と制裁リストから、お金の流れを追います。 |
 | [**parallel-cli**](/hermes/docs/user-guide/skills/optional/research/research-parallel-cli/) | エージェント向けのウェブ検索、深掘り調査、情報の肉付けを行います。 |
 | [**pinecone-research**](/hermes/docs/user-guide/skills/optional/research/research-pinecone-research/) | Pinecone を使い、エージェントの RAG と長期の記憶を実現します。 |
-| [**qmd**](/hermes/docs/user-guide/skills/optional/research/research-qmd/) | 手元のメモ、文書、書き起こしを横断して検索します。 |
+| [**qmd**](/hermes/docs/user-guide/skills/optional/research/research-qmd/) | 手元のメモ、文書、書き起こしを、複数の方式を組み合わせて横断検索します。 |
 | [**scrapling**](/hermes/docs/user-guide/skills/optional/research/research-scrapling/) | 目立たない閲覧と Cloudflare の回避でサイトを収集します。 |
 | [**searxng-search**](/hermes/docs/user-guide/skills/optional/research/research-searxng-search/) | 70 以上の検索エンジンをまとめて引く、鍵も費用も要らないメタ検索です。 |
 
@@ -243,6 +243,7 @@ hermes skills uninstall <skill-name>
 |-------|-------------|
 | [**cloudflare-temporary-deploy**](/hermes/docs/user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy/) | wrangler --temporary で、アカウントなしに Worker を公開します。 |
 | [**page-agent**](/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/) | ウェブアプリの画面に、言葉で操作できる相棒を組み込みます。 |
+| [**publish-site**](/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/) | GitHub / Cloudflare / Netlify Pages へ、版を管理しながらサイトを公開します。 |
 
 ## yuanbao {#yuanbao}
 

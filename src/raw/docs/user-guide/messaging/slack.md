@@ -2,7 +2,7 @@
 title: "Slack"
 description: "Socket Mode を使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: 544ed727e9142f90e85fe2cb703c3966b0396872
+upstream_blob: d8c20f36f140b42869a902b3c2496a3b3ad23a2f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -405,6 +405,12 @@ platforms:
       # Only the first chunk of the first reply is broadcast.
       reply_broadcast: false
 
+      # Control Slack's automatic link-preview cards without changing or
+      # removing clickable links from message text. Omit either key to keep
+      # Slack's default behavior for that preview type.
+      unfurl_links: false
+      unfurl_media: false
+
       # Render agent messages as Slack Block Kit blocks (default: false).
       # When true, the final agent message is sent with structured blocks —
       # section headers, dividers, true nested lists (via rich_text), and
@@ -453,6 +459,8 @@ platforms:
 | `platforms.slack.reply_to_mode` | `"first"` | 複数に分かれたメッセージをスレッドにする方式: `"off"`、`"first"`、`"all"` |
 | `platforms.slack.extra.reply_in_thread` | `true` | `false` にすると、チャンネルのメッセージにはスレッドではなく直接返します。既存スレッド内のメッセージには、これまでどおりスレッドで返します。 |
 | `platforms.slack.extra.reply_broadcast` | `false` | `true` にすると、スレッドの返信を元のチャンネルにも投稿します。流れるのは最初のひとかたまりだけです。 |
+| `platforms.slack.extra.unfurl_links` | Slack の既定 | `false` にすると、リンク先のウェブページの自動プレビューを止めつつ、リンクはクリックできるまま残せます。どちらかの unfurl のキーを設定した場合、ファイルの説明文はファイルより*前*に別のメッセージとして投稿され（Slack のアップロード API はプレビューの制御を運べないためです）、ネイティブの下書きストリーミングは編集方式での配信に切り替わります。 |
+| `platforms.slack.extra.unfurl_media` | Slack の既定 | `false` にすると、メディアの自動プレビューを止めつつ、リンクはクリックできるまま残せます。説明文の順番とストリーミングについての注意は `unfurl_links` と同じです。 |
 | `platforms.slack.extra.rich_blocks` | `false` | `true` にすると、エージェントのメッセージを [Block Kit](https://docs.slack.dev/block-kit/) のブロック（見出し、区切り線、本物の入れ子リスト、ネイティブの表）として表示します。プレーンテキストの控えも必ず同時に送られます。Slack の上限を超える表は、桁を揃えた等幅表示に切り替わります。アプリの再インストールは不要です。送る側だけの変更だからです。 |
 | `platforms.slack.extra.feedback_buttons` | `false` | `rich_blocks` と併せて `true` にすると、最後の返信に Slack ネイティブのフィードバック操作を付け足します。 |
 | `platforms.slack.extra.native_task_cards` | `false` | `true` にすると、実行中のツール呼び出しを Slack ネイティブのプラン／タスクカードとして表示します。これは Slack の既定である `tool_progress: off` とは別に、進捗表示を明示的に選ぶ設定です。ネイティブ API が失敗したときは、ひとつのメッセージを編集し続ける方式に切り替わります。 |

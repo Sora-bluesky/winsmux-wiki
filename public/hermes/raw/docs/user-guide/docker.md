@@ -2,7 +2,7 @@
 title: "Hermes の Docker での動かし方"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: 747e6b40edde70a5704b53e62ce4b8d89bf36756
+upstream_blob: da737a4b17b4d37545977780d39d5dea597ae737
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -140,6 +140,24 @@ docker run -d \
 - **自前の OIDC** — 標準の OpenID Connect を使って、自分の認証基盤で認証します。`HERMES_DASHBOARD_OIDC_ISSUER` と `HERMES_DASHBOARD_OIDC_CLIENT_ID` が設定されていれば `dashboard_auth/self_hosted` のプロバイダーが有効になります。
 
 どれを選んでも、関門は保護された経路にたどり着く前に、呼び出し元をログイン画面へ送ります。3つのプロバイダーすべてについては [ウェブのダッシュボード → 認証](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)を参照してください。
+
+Traefik や nginx のようなリバースプロキシを別のコンテナで動かしている場合、
+そのブリッジネットワーク上のアドレスは初期状態では信頼されません。マウントした
+`config.yaml` で、ダッシュボードの公開 URL を設定し、そのプロキシの正確な IP だけを、
+あるいはプロキシ専用のネットワークなら範囲を区切った CIDR だけを信頼させてください。
+
+```yaml
+dashboard:
+  public_url: "https://dashboard.example.com"
+  trusted_proxies:
+    - "172.20.0.5"
+    # Or, if the proxy address is dynamic on a dedicated network:
+    # - "172.20.0.0/24"
+```
+
+こうすると、そのプロキシが送る `X-Forwarded-Proto: https` が OAuth の安全なクッキーの扱いを
+決められるようになり、ほかの相手から届く転送用のヘッダーは信頼されないままになります。
+`*` や `0.0.0.0/0`、`::/0` は使わないでください。範囲を区切っていない指定を Hermes は拒みます。
 
 プロバイダーが1つも登録されておらず、割り当て先がループバック以外の場合、ダッシュボードは**起動の時点で安全側に倒れて止まります**。足りない環境変数を名指しするエラーが出ます。公開された割り当て先で認証なしのダッシュボードを出す抜け道は、もうありません。`HERMES_DASHBOARD_INSECURE=1` はいまや非推奨で何もしません（警告を残して無視されます）。プロバイダーを設定するか、`HERMES_DASHBOARD_HOST=127.0.0.1` に割り当てて SSH のトンネルや Tailscale 越しにダッシュボードへ届かせてください。
 

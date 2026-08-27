@@ -12,9 +12,9 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 196 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 197 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `1a66134`（2026-08-27）時点。この一覧は上流の docs から機械生成しています。
+上流 `10b3883`（2026-08-28）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（80）
 
@@ -103,7 +103,7 @@ raw: /hermes/raw/skills.md
 | [Systematic Debugging](/hermes/docs/user-guide/skills/bundled/software-development/software-development-systematic-debugging/) | 4-phase root cause debugging: understand bugs before fixing | 2026-07-29 |
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-07-29 |
 
-## あとから入れる（115）
+## あとから入れる（116）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -141,7 +141,7 @@ raw: /hermes/raw/skills.md
 | [Pinggy Tunnel](/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/) | Zero-install localhost tunnels over SSH via Pinggy | 2026-07-24 |
 | [Watchers](/hermes/docs/user-guide/skills/optional/devops/devops-watchers/) | Poll RSS, JSON APIs, and GitHub with watermark dedup | 2026-06-20 |
 | [Adversarial Ux Test](/hermes/docs/user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test/) | Roleplay a hostile user to find and triage UX pain points | 2026-07-23 |
-| [Agentmail](/hermes/docs/user-guide/skills/optional/email/email-agentmail/) | Give the agent its own inbox: send and receive email | 2026-08-08 |
+| [Agentmail](/hermes/docs/user-guide/skills/optional/email/email-agentmail/) | Use when an agent needs AgentMail CLI email inboxes | 2026-08-27 |
 | [3 Statement Model](/hermes/docs/user-guide/skills/optional/finance/finance-3-statement-model/) | Build integrated IS/BS/CF financial workbooks in Excel | 2026-07-23 |
 | [Comps Analysis](/hermes/docs/user-guide/skills/optional/finance/finance-comps-analysis/) | Build comparable-company valuation workbooks in Excel | 2026-07-23 |
 | [Dcf Model](/hermes/docs/user-guide/skills/optional/finance/finance-dcf-model/) | Build discounted cash flow valuation workbooks in Excel | 2026-07-23 |
@@ -223,6 +223,7 @@ raw: /hermes/raw/skills.md
 | [Subagent Driven Development](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) | Execute plans via delegate_task subagents (2-stage review) | 2026-06-04 |
 | [Cloudflare Temporary Deploy](/hermes/docs/user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy/) | Deploy a Worker live, no account, via wrangler --temporary | 2026-07-21 |
 | [Page Agent](/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/) | Embed an in-page natural-language GUI copilot in web apps | 2026-07-23 |
+| [Publish Site](/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/) | Versioned site deploys to GitHub/Cloudflare/Netlify Pages | 2026-08-27 |
 | [Yuanbao](/hermes/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao/) | Yuanbao (元宝) groups: @mention users, query info/members | 2026-08-08 |
 
 ## その他（1）

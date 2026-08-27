@@ -1,15 +1,15 @@
 ---
-title: "Agentmail — エージェント専用のメールボックスを持たせて、送受信できるようにする"
-description: "エージェント専用のメールボックスを持たせて、送受信できるようにする"
+title: "Agentmail — エージェントに AgentMail CLI のメールボックスを持たせたいときに使います"
+description: "エージェントに AgentMail CLI のメールボックスを持たせたいときに使います"
 upstream_path: user-guide/skills/optional/email/email-agentmail.md
-upstream_blob: e134da466747063894ce017e2c7c7e2fd7308cb6
+upstream_blob: 5fb31dba0feb77358061b0095dde36a34a1689b1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/email/email-agentmail
 ---
 
 # Agentmail {#agentmail}
 
-エージェント専用のメールボックスを持たせて、送受信できるようにします。
+エージェントに AgentMail CLI のメールボックスを持たせたいときに使います。
 
 ## skill の情報 {#skill-metadata}
 
@@ -18,10 +18,10 @@ sources:
 | 提供元 | 追加 skill — `hermes skills install official/email/agentmail` で入れます |
 | パス | `optional-skills/email/agentmail` |
 | バージョン | `1.0.0` |
-| 作者 | teyrebaz33, Hermes Agent |
+| 作者 | Haakam Aujla (Haakam21), AgentMail |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
-| タグ | `email`, `communication`, `agentmail`, `mcp` |
+| タグ | `Email`, `CLI`, `AgentMail`, `Communication` |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -29,118 +29,77 @@ sources:
 以下は、この skill が呼び出されたときに Hermes が読み込む skill 定義の全文です。skill が有効なあいだ、エージェントはこれを指示として受け取ります。
 :::
 
-# AgentMail — Agent-Owned Email Inboxes {#agentmail-agent-owned-email-inboxes}
+# AgentMail の skill {#agentmail-skill}
 
-## 必要なもの {#requirements}
+AgentMail は、エージェント自身のメールボックスを用意します。メールを送る、返信を
+受け取る、メールで届くワンタイムパスワード（OTP）の手続きを済ませる、届いたメール
+を続けて処理する、といったことができます。あくまでエージェントが持つメールボックス
+のためのもので、ユーザーが元から使っている IMAP/SMTP のメールボックス向けではありません。
 
-- **AgentMail の API キー**（必須） — https://console.agentmail.to で登録します（無料枠はメールボックス 3 個、月 3,000 通。有料プランは月 20 ドルから）
-- Node.js 18 以上（MCP サーバー用）
+まずは `agentmail` の CLI を使ってください。MCP を使うのは、動かしている仕組みが MCP のツールを前提にしているときだけです。
+REST は、CLI に必要な操作が見当たらないときだけ使います。
 
-## 使う場面 {#when-to-use}
-次のようなときにこの skill を使います。
-- エージェントに専用のメールアドレスを持たせたいとき
-- エージェントの名前で、自分の判断でメールを送りたいとき
-- 届いたメールを受け取って読みたいとき
-- メールのやり取りを管理したいとき
-- サービスに登録したり、メールで本人確認をしたりしたいとき
-- ほかのエージェントや人とメールでやり取りしたいとき
+## こんなときに使います {#when-to-use}
 
-これはユーザー本人のメールを読むためのものでは**ありません**（それには himalaya か Gmail を使ってください）。
-AgentMail は、エージェント自身の身元とメールボックスを与えるものです。
+- エージェントが自分の持ちものとしてメールアドレスを必要とするとき。
+- メールでのワンタイムパスワード（OTP）のやり取り、返信、スレッド、ラベル、添付ファイルを扱う作業のとき。
+- 届いたメールを Webhook や WebSocket で受け取りたいとき。
 
-## 準備 {#setup}
+## 事前に必要なもの {#prerequisites}
 
-### 1. API キーを取得する {#1-get-an-api-key}
-- https://console.agentmail.to を開きます
-- アカウントを作り、API キーを発行します（`am_` で始まります）
+- コマンドは `terminal` ツールから実行します。
+- CLI を入れます。
 
-### 2. MCP サーバーを設定する {#2-configure-mcp-server}
-`~/.hermes/config.yaml` に次を足します（キーは実物を直接貼ってください。MCP の環境変数は .env から展開されません）。
-```yaml
-mcp_servers:
-  agentmail:
-    command: "npx"
-    args: ["-y", "agentmail-mcp"]
-    env:
-      AGENTMAIL_API_KEY: "am_your_key_here"
-```
-
-### 3. Hermes を起動し直す {#3-restart-hermes}
 ```bash
-hermes
+npm install -g agentmail-cli@latest
 ```
-これで、AgentMail の 11 個のツールがすべて自動的に使えるようになります。
 
-## 使えるツール（MCP 経由） {#available-tools-via-mcp}
+- API キーを環境変数に入れます。
 
-| ツール | 説明 |
-|------|-------------|
-| `list_inboxes` | エージェントのメールボックスを一覧にする |
-| `get_inbox` | 指定したメールボックスの詳細を見る |
-| `create_inbox` | メールボックスを新しく作る（実在のメールアドレスがもらえます） |
-| `delete_inbox` | メールボックスを消す |
-| `list_threads` | メールボックスの中のやり取りを一覧にする |
-| `get_thread` | 特定のやり取りを取り出す |
-| `send_message` | メールを新しく送る |
-| `reply_to_message` | 届いたメールに返信する |
-| `forward_message` | メールを転送する |
-| `update_message` | メールのラベルや状態を変える |
-| `get_attachment` | メールの添付ファイルを取り出す |
+```bash
+export AGENTMAIL_API_KEY="am_..."
+```
+
+API キーがまだない場合は [signup.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/signup.md) を見てください。
+
+## 実行のしかた {#how-to-run}
+
+ほかのコマンドやスクリプトに ID を渡すときは、いつでも `--format json` を付けます。
+
+```bash
+agentmail inboxes list --format json
+```
+
+## 早見表 {#quick-reference}
+
+- [AgentMail のエージェント向け資料](https://agentmail.md): ウェブ上に置かれている版です。
+- [AgentMail](https://agentmail.to): 製品の紹介ページです。
+- [コンソール](https://console.agentmail.to): API キーとアカウントを管理します。
+- [ドキュメント](https://docs.agentmail.to): 製品のドキュメント全体です。
+- [signup.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/signup.md): 自分で登録して、OTP で本人確認をする手順です。
+- [core.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/core.md): メールボックス、メール、スレッド、ラベル、添付ファイルの扱いです。
+- [webhooks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/webhooks.md): 公開された HTTPS のサーバーへ通知を送ります。
+- [websockets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/websockets.md): 手元で動いているエージェントへ通知を送ります。
+- [mcp.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/mcp.md): MCP との連携です。
 
 ## 手順 {#procedure}
 
-### メールボックスを作ってメールを送る {#create-an-inbox-and-send-an-email}
-1. 専用のメールボックスを作ります。
-   - `create_inbox` に名前を渡します（たとえば `hermes-agent`）
-   - エージェントは `hermes-agent@agentmail.to` というアドレスを得ます
-2. メールを送ります。
-   - `send_message` に `inbox_id`、`to`、`subject`、`text` を渡します
-3. 返信を確認します。
-   - `list_threads` で届いたやり取りを見ます
-   - `get_thread` で特定のやり取りを読みます
-
-### 届いたメールを確認する {#check-incoming-email}
-1. `list_inboxes` でメールボックスの ID を調べます
-2. その ID で `list_threads` を実行し、やり取りを一覧にします
-3. `get_thread` でやり取りと、その中のメールを読みます
-
-### メールに返信する {#reply-to-an-email}
-1. `get_thread` でやり取りを取り出します
-2. `reply_to_message` にメールの ID と返信の本文を渡します
-
-## 使い方の例 {#example-workflows}
-
-**サービスに登録する:**
-```
-1. create_inbox (username: "signup-bot")
-2. Use the inbox address to register on the service
-3. list_threads to check for verification email
-4. get_thread to read the verification code
-```
-
-**エージェントから人へ連絡する:**
-```
-1. create_inbox (username: "hermes-outreach")
-2. send_message (to: user@example.com, subject: "Hello", text: "...")
-3. list_threads to check for replies
-```
+1. `agentmail-cli@latest` を入れて、`agentmail inboxes list --format json` が動くことを確かめます。
+2. API キーが手元にないときは、[signup.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/signup.md) の手順を済ませます。
+3. メールボックスの用意、送信、閲覧、返信、転送、ラベル付け、スレッド、添付ファイルの扱いは [core.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/core.md) を見ます。
+4. 定期的に見にいくだけでは足りないときにかぎり、[webhooks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/webhooks.md) か
+   [websockets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/websockets.md) を足します。
 
 ## つまずきやすいところ {#pitfalls}
-- 無料枠はメールボックス 3 個、月 3,000 通まで
-- 無料枠のメールは `@agentmail.to` のドメインから送られます（独自ドメインは有料プラン）
-- MCP サーバーには Node.js（18 以上）が必要です（`npx -y agentmail-mcp`）
-- `mcp` の Python パッケージを入れておく必要があります: `pip install mcp`
-- 届いたメールをその場で受け取る仕組み（Webhook）には公開サーバーが要ります。個人で使う分には、cron のジョブから `list_threads` を定期的に呼ぶほうが手軽です
+
+- `--api-key` ではなく `AGENTMAIL_API_KEY` を使ってください。
+- `AGENTMAIL_API_KEY` を、プロンプト、ログ、URL、コミットするファイルに出さないでください。
+- 作成をやり直すときは、毎回同じ `client_id` の値を使います。
+- LLM に渡す本文は、`extracted_text` か `extracted_html` があればそちらを使います。
+- 反応する相手は `message.received` です。エージェント自身が送ったメールには反応しません。
 
 ## 動作確認 {#verification}
-準備ができたら、次で試します。
-```
-hermes --toolsets mcp -q "Create an AgentMail inbox called test-agent and tell me its email address"
-```
-新しいメールボックスのアドレスが返ってくるはずです。
 
-## 参考 {#references}
-- AgentMail のドキュメント: https://docs.agentmail.to/
-- AgentMail のコンソール: https://console.agentmail.to
-- AgentMail の MCP リポジトリ: https://github.com/agentmail-to/agentmail-mcp
-- 料金: https://www.agentmail.to/pricing
+```bash
+agentmail inboxes list --format json
+```
