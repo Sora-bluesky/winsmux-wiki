@@ -122,4 +122,26 @@ await writeFile(
   join(root, 'data/upstream.json'),
   JSON.stringify({ ref: REF, sha: headSha, docsDate: headDate, skillPages: skills.length }, null, 2) + '\n',
 );
+
+// 索引ページ（/hermes/guide/skills/）のデータ駆動 UI 用。slug は URL 最終セグメント
+// （data/wiki/skill-tags.json のキーと同じ規約）。
+await writeFile(
+  join(root, 'data/skills-index.json'),
+  JSON.stringify(
+    {
+      sha: headSha.slice(0, 7),
+      date: headDate,
+      skills: skills.map((s) => ({
+        slug: s.url.replace(/\/$/, '').split('/').at(-1),
+        name: s.name,
+        description: s.description.replace(/\\\|/g, '|'),
+        url: s.url,
+        date: s.date,
+        source: s.source,
+      })),
+    },
+    null,
+    2,
+  ) + '\n',
+);
 console.log(`skills.md: ${skills.length} pages (bundled ${bundled.length} / optional ${optional.length} / other ${other.length}) @ ${headSha.slice(0, 7)}`);

@@ -1,23 +1,152 @@
 ---
-import src from '../../../../raw/skills.md?raw';
-import { buildDoc } from '../../../../lib/doc';
+// skill 索引（Wiki 層 #8: 用途タグ + 推し枠つき）。
+// データ: data/skills-index.json（sync-skills.mjs が上流から生成）
+//       + data/wiki/skill-tags.json（用途タグ。新 skill の未分類は sync が報告）。
+// 生テキスト版は従来どおり src/raw/skills.md（/hermes/raw/skills.md）。
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import index from '../../../../../data/skills-index.json';
+import tagData from '../../../../../data/wiki/skill-tags.json';
 
-const doc = buildDoc('skills', src);
+type Skill = { slug: string; name: string; description: string; url: string; date: string; source: string };
+type Tag = { id: string; label: string; picks: string[] };
+const skills = index.skills as Skill[];
+const tags = tagData.tags as Tag[];
+const tagOf = tagData.skills as Record<string, string[]>;
+
+const counts = Object.fromEntries(tags.map((t) => [t.id, 0]));
+for (const s of skills) for (const t of tagOf[s.slug] ?? []) counts[t]++;
+const pickTagsOf = (slug: string) => tags.filter((t) => t.picks.includes(slug)).map((t) => t.id);
+const labelOf = Object.fromEntries(tags.map((t) => [t.id, t.label]));
+const bundled = skills.filter((s) => s.source === 'bundled').length;
 ---
 
 <BaseLayout
-  title={doc.title}
-  description={doc.description}
-  rawPath={doc.rawPath}
-  sources={doc.sources}
-  hermesVersion={doc.hermesVersion}
-  confidence={doc.confidence}
+  title="skill"
+  description="公式 skill 全196件の索引。用途からさがせます。各行は日本語版ページへ。"
+  rawPath="/hermes/raw/skills.md"
+  sources={[
+    'https://hermes-agent.nousresearch.com/docs/reference/skills-catalog',
+    'https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog',
+  ]}
+  showAsk={false}
+  prevOverride={null}
+  nextOverride={null}
 >
   <nav class="mb-6 flex gap-6 border-b border-border text-sm">
     <a href="/hermes/guide/" class="pb-2 text-fg-muted no-underline hover:text-fg">よく使う</a>
     <a href="/hermes/guide/all/" class="pb-2 text-fg-muted no-underline hover:text-fg">すべて</a>
     <a href="/hermes/guide/skills/" class="border-b-2 border-fg pb-2 font-semibold text-fg no-underline">skill</a>
   </nav>
-  <article class="prose" set:html={doc.html} />
+
+  <article class="prose">
+    <h1>skill</h1>
+    <p>
+      公式の skill ページ {skills.length} 件の索引です。最初から入っているもの {bundled} 件、あとから入れるもの{' '}
+      {skills.length - bundled - 1} 件。用途タグはこのサイト独自の分類です。上流 <code>{index.sha}</code>（{index.date}）時点。
+    </p>
+  </article>
+
+  <div class="sk-controls">
+    <input id="sk-search" type="search" placeholder="名前・概要で絞り込み" aria-label="名前・概要で絞り込み" />
+    <div class="sk-chips" role="group" aria-label="用途で絞り込み">
+      <button type="button" class="sk-chip active" data-tag="all">すべて（{skills.length}）</button>
+      {tags.map((t) => (
+        <button type="button" class="sk-chip" data-tag={t.id}>{t.label}（{counts[t.id]}）</button>
+      ))}
+    </div>
+  </div>
+
+  <div class="sk-list">
+    {
+      skills.map((s) => (
+        <a
+          href={s.url}
+          class="sk-row"
+          data-name={`${s.name} ${s.description}`.toLowerCase()}
+          data-tags={(tagOf[s.slug] ?? []).join(' ')}
+          data-picks={pickTagsOf(s.slug).join(' ')}
+        >
+          <span class="sk-head">
+            <span class="sk-name">{s.name}</span>
+            <span class="sk-pick" hidden>まずこれ</span>
+            {s.source === 'bundled' && <span class="sk-src">最初から</span>}
+            <span class="sk-tags">{(tagOf[s.slug] ?? []).map((t) => labelOf[t]).join(' · ')}</span>
+          </span>
+          <span class="sk-desc">{s.description}</span>
+        </a>
+      ))
+    }
+    <p id="sk-empty" class="sk-empty" hidden>該当する skill がありません。</p>
+  </div>
+
+  <article class="prose mt-10">
+    <p>
+      skill の仕組みは <a href="/hermes/docs/user-guide/features/skills/">Skills System</a>、入れ方は{' '}
+      <a href="/hermes/docs/guides/work-with-skills/">Work with Skills</a>、自作は{' '}
+      <a href="/hermes/docs/developer-guide/creating-skills/">Creating Skills</a> にあります。
+    </p>
+  </article>
 </BaseLayout>
+
+<style>
+  .sk-controls { display: flex; flex-direction: column; gap: 0.75rem; margin: 1.25rem 0 1rem; }
+  #sk-search {
+    width: 100%; max-width: 420px; border: 1px solid var(--color-border-strong); border-radius: 8px;
+    padding: 0.6rem 0.9rem; font-size: 0.9rem; background: var(--color-bg); color: var(--color-fg);
+  }
+  .sk-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .sk-chip {
+    border: 1px solid var(--color-border); background: transparent; color: var(--color-fg-secondary);
+    border-radius: 999px; padding: 0.35rem 0.85rem; font-size: 0.8rem; cursor: pointer;
+  }
+  .sk-chip:hover { background: var(--color-bg-subtle); }
+  .sk-chip.active { background: var(--color-accent); border-color: var(--color-accent); color: #fff; font-weight: 600; }
+  .sk-list { display: flex; flex-direction: column; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; }
+  .sk-row {
+    display: flex; flex-direction: column; gap: 0.2rem; padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--color-border); text-decoration: none; background: var(--color-bg);
+  }
+  .sk-row:last-of-type { border-bottom: 0; }
+  .sk-row:hover { background: var(--color-bg-subtle); }
+  .sk-head { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; }
+  .sk-name { font-weight: 600; color: var(--color-fg); font-size: 0.92rem; }
+  .sk-pick {
+    font-size: 0.68rem; font-weight: 600; color: #9a3412; background: #fff7ed;
+    border: 1px solid #fed7aa; border-radius: 999px; padding: 0.05rem 0.5rem;
+  }
+  .sk-src { font-size: 0.68rem; color: var(--color-fg-muted); border: 1px solid var(--color-border); border-radius: 999px; padding: 0.05rem 0.5rem; }
+  .sk-tags { font-size: 0.72rem; color: var(--color-fg-muted); }
+  .sk-desc { font-size: 0.82rem; line-height: 1.55; color: var(--color-fg-secondary); }
+  .sk-empty { color: var(--color-fg-muted); font-size: 0.9rem; padding: 1rem; margin: 0; }
+</style>
+
+<script>
+  const search = document.getElementById('sk-search') as HTMLInputElement;
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.sk-chip')];
+  const rows = [...document.querySelectorAll<HTMLAnchorElement>('.sk-row')];
+  const empty = document.getElementById('sk-empty')!;
+  let tag = 'all';
+
+  function apply() {
+    const q = search.value.trim().toLowerCase();
+    let shown = 0;
+    for (const r of rows) {
+      const okQ = !q || (r.dataset.name ?? '').includes(q);
+      const okT = tag === 'all' || (r.dataset.tags ?? '').split(' ').includes(tag);
+      const on = okQ && okT;
+      r.hidden = !on;
+      if (on) shown++;
+      const pick = r.querySelector<HTMLElement>('.sk-pick');
+      if (pick) pick.hidden = tag === 'all' || !(r.dataset.picks ?? '').split(' ').includes(tag);
+    }
+    empty.hidden = shown > 0;
+  }
+  search.addEventListener('input', apply);
+  for (const c of chips) {
+    c.addEventListener('click', () => {
+      tag = c.dataset.tag ?? 'all';
+      for (const x of chips) x.classList.toggle('active', x === c);
+      apply();
+    });
+  }
+</script>

@@ -1,0 +1,149 @@
+---
+// トラブル（Wiki 層 #3）。症状 → 原因 → 対処の表。
+// データ: data/wiki/trouble.json（Opus 生成・全項目がミラーページの記述に対応、URL 実在照合済み）。
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import trouble from '../../../../data/wiki/trouble.json';
+
+type Item = { category: string; symptom: string; cause: string; fix: string; links: { title: string; url: string }[] };
+const categories = trouble.categories as string[];
+const items = trouble.items as Item[];
+const countOf = (c: string) => items.filter((i) => i.category === c).length;
+---
+
+<BaseLayout
+  title="トラブル"
+  description="症状から原因と対処を引く表。つながらない・鍵が通らない・ジョブが動かない。対処の詳細は公式ページへ。"
+  sources={[
+    'https://hermes-agent.nousresearch.com/docs/reference/faq',
+    'https://hermes-agent.nousresearch.com/docs/guides/cron-troubleshooting',
+    'https://hermes-agent.nousresearch.com/docs/guides/troubleshooting-agent-quality',
+  ]}
+  showAsk={false}
+  prevOverride={null}
+  nextOverride={null}
+>
+  <article class="prose">
+    <h1>トラブル</h1>
+    <p>
+      症状から原因と対処を引く表です。対処の詳細は各行のリンク先（公式準拠の日本語版ページ）にあります。ここに無い症状は
+      <a href="/hermes/docs/reference/faq/">よくある質問</a> へ。
+    </p>
+    <p class="wiki-note">
+      このページはこのサイト独自のまとめです。全項目が公式ドキュメントの記述に対応しています（推測の対処は載せていません）。
+    </p>
+  </article>
+
+  <div class="tb-controls">
+    <input id="tb-search" type="search" placeholder="症状・エラー文で絞り込み" aria-label="症状・エラー文で絞り込み" />
+    <div class="tb-chips" role="group" aria-label="分類で絞り込み">
+      <button type="button" class="tb-chip active" data-cat="all">すべて（{items.length}）</button>
+      {categories.map((c) => (
+        <button type="button" class="tb-chip" data-cat={c}>{c}（{countOf(c)}）</button>
+      ))}
+    </div>
+  </div>
+
+  <div class="tb-tablewrap">
+    <table class="tb-table">
+      <thead>
+        <tr>
+          <th style="width:27%">症状</th>
+          <th style="width:26%">よくある原因</th>
+          <th style="width:32%">対処</th>
+          <th>詳細</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          items.map((i) => (
+            <tr data-cat={i.category} data-text={`${i.symptom} ${i.cause} ${i.fix}`.toLowerCase()}>
+              <td class="tb-symptom">{i.symptom}</td>
+              <td>{i.cause}</td>
+              <td>{i.fix}</td>
+              <td class="tb-links">
+                {i.links.map((l) => (
+                  <a href={l.url}>{l.title}</a>
+                ))}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    <p id="tb-empty" class="tb-empty" hidden>
+      該当する症状がありません。<a href="/hermes/docs/reference/faq/">よくある質問</a> か <a href="/hermes/search/">全文検索</a> を試してください。
+    </p>
+  </div>
+
+  <article class="prose mt-10">
+    <p>
+      直らないときは、公式の <a href="/hermes/docs/reference/faq/">FAQ</a>・
+      <a href="/hermes/docs/guides/troubleshooting-agent-quality/">応答品質のトラブル対処</a>・
+      <a href="/hermes/docs/guides/cron-troubleshooting/">Cron のトラブル対処</a> に詳しい切り分けがあります。
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .wiki-note {
+    border: 1px solid #bfdbfe;
+    background: var(--color-accent-soft);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
+  }
+  .tb-controls { display: flex; flex-direction: column; gap: 0.75rem; margin: 1.25rem 0 1rem; }
+  #tb-search {
+    width: 100%; max-width: 420px; border: 1px solid var(--color-border-strong); border-radius: 8px;
+    padding: 0.6rem 0.9rem; font-size: 0.9rem; background: var(--color-bg); color: var(--color-fg);
+  }
+  .tb-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tb-chip {
+    border: 1px solid var(--color-border); background: transparent; color: var(--color-fg-secondary);
+    border-radius: 999px; padding: 0.35rem 0.85rem; font-size: 0.8rem; cursor: pointer;
+  }
+  .tb-chip:hover { background: var(--color-bg-subtle); }
+  .tb-chip.active { background: var(--color-accent); border-color: var(--color-accent); color: #fff; font-weight: 600; }
+  .tb-tablewrap { overflow-x: auto; }
+  .tb-table { border-collapse: collapse; width: 100%; font-size: 0.84rem; }
+  .tb-table th {
+    text-align: left; font-weight: 600; color: var(--color-fg-muted); font-size: 0.75rem;
+    border-bottom: 1px solid var(--color-border-strong); padding: 0.5rem 0.75rem;
+  }
+  .tb-table td {
+    border-bottom: 1px solid var(--color-border); padding: 0.6rem 0.75rem; vertical-align: top;
+    line-height: 1.6; color: var(--color-fg-secondary);
+  }
+  .tb-symptom { font-weight: 600; color: var(--color-fg); }
+  .tb-links { display: flex; flex-direction: column; gap: 0.2rem; }
+  .tb-links a { font-size: 0.78rem; white-space: nowrap; text-decoration: none; }
+  .tb-links a:hover { text-decoration: underline; }
+  .tb-empty { color: var(--color-fg-muted); font-size: 0.9rem; padding: 1rem 0; }
+</style>
+
+<script>
+  const search = document.getElementById('tb-search') as HTMLInputElement;
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.tb-chip')];
+  const rows = [...document.querySelectorAll<HTMLTableRowElement>('.tb-table tbody tr')];
+  const empty = document.getElementById('tb-empty')!;
+  let cat = 'all';
+
+  function apply() {
+    const q = search.value.trim().toLowerCase();
+    let shown = 0;
+    for (const r of rows) {
+      const on = (cat === 'all' || r.dataset.cat === cat) && (!q || (r.dataset.text ?? '').includes(q));
+      r.hidden = !on;
+      if (on) shown++;
+    }
+    empty.hidden = shown > 0;
+  }
+  search.addEventListener('input', apply);
+  for (const c of chips) {
+    c.addEventListener('click', () => {
+      cat = c.dataset.cat ?? 'all';
+      for (const x of chips) x.classList.toggle('active', x === c);
+      apply();
+    });
+  }
+</script>

@@ -1,0 +1,352 @@
+{
+  "categories": ["接続", "モデル・鍵", "自動化", "動作", "その他"],
+  "items": [
+    {
+      "category": "接続",
+      "symptom": "Telegram に送っても返事がない",
+      "cause": "ゲートウェイの停止。ボットトークンの設定ミス。許可一覧への未登録",
+      "fix": "`hermes gateway status` で稼働を確かめ、止まっていれば `hermes gateway start` で立ち上げます。`TELEGRAM_BOT_TOKEN` を見直し、`~/.hermes/logs/gateway.log` にエラーが出ていないかも確かめます。",
+      "links": [
+        { "title": "Telegram", "url": "/hermes/docs/user-guide/messaging/telegram/" },
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" }
+      ]
+    },
+    {
+      "category": "接続",
+      "symptom": "ボットが「unauthorized」と返す",
+      "cause": "自分のユーザー ID が `TELEGRAM_ALLOWED_USERS` に入っていない",
+      "fix": "@userinfobot で自分のユーザー ID を確かめ直し、`TELEGRAM_ALLOWED_USERS` に加えます。",
+      "links": [
+        { "title": "Telegram", "url": "/hermes/docs/user-guide/messaging/telegram/" }
+      ]
+    },
+    {
+      "category": "接続",
+      "symptom": "Telegram の個人チャットでは返事があるのにグループでは黙っている",
+      "cause": "BotFather のプライバシーモードが有効。グループ側の許可設定の漏れ",
+      "fix": "プライバシーモードを切るか、ボットをグループの管理者にします。設定を変えたらボットを一度外して追加し直し、`TELEGRAM_GROUP_ALLOWED_CHATS` などの許可設定も確かめます。",
+      "links": [
+        { "title": "Telegram", "url": "/hermes/docs/user-guide/messaging/telegram/" }
+      ]
+    },
+    {
+      "category": "接続",
+      "symptom": "Discord のボットはオンラインなのにメッセージへ応答しない",
+      "cause": "Message Content Intent が無効。アクセス方針が未設定で拒否側に倒れている",
+      "fix": "Developer Portal で Message Content Intent を有効にし、`DISCORD_ALLOWED_USERS` などのアクセス方針を設定します。そのあと `hermes gateway restart` で再起動します。",
+      "links": [
+        { "title": "Discord", "url": "/hermes/docs/user-guide/messaging/discord/" }
+      ]
+    },
+    {
+      "category": "接続",
+      "symptom": "Slack の DM では動くのにチャンネルでは動かない",
+      "cause": "`message.channels` / `message.groups` のイベント購読と履歴スコープの不足。チャンネルへの招待漏れ",
+      "fix": "イベント購読と `channels:history` などのスコープを足し、アプリをワークスペースへ再インストールします。そのうえで `/invite @Hermes Agent` でボットをチャンネルに招待します。",
+      "links": [
+        { "title": "Slack", "url": "/hermes/docs/user-guide/messaging/slack/" }
+      ]
+    },
+    {
+      "category": "接続",
+      "symptom": "WhatsApp のブリッジが落ちる、再接続を繰り返す",
+      "cause": "WhatsApp 側のプロトコル変更によるセッションの無効化",
+      "fix": "ゲートウェイを再起動して Hermes を更新します。それでも直らなければ `hermes whatsapp` で連携し直します。",
+      "links": [
+        { "title": "WhatsApp", "url": "/hermes/docs/user-guide/messaging/whatsapp/" }
+      ]
+    },
+    {
+      "category": "接続",
+      "symptom": "Signal の設定中に「Cannot reach signal-cli」と出る",
+      "cause": "signal-cli のデーモンが動いていない",
+      "fix": "`signal-cli --account +YOUR_NUMBER daemon --http 127.0.0.1:8080` でデーモンを立ち上げてから、設定をやり直します。",
+      "links": [
+        { "title": "Signal", "url": "/hermes/docs/user-guide/messaging/signal/" }
+      ]
+    },
+    {
+      "category": "接続",
+      "symptom": "メール連携の起動時に「IMAP connection failed」と出る",
+      "cause": "`EMAIL_IMAP_HOST` と `EMAIL_IMAP_PORT` の誤り。アカウント側で IMAP が無効",
+      "fix": "接続先とポート番号を確かめます。Gmail なら「設定 → メール転送と POP/IMAP」で IMAP を有効にします。",
+      "links": [
+        { "title": "メール", "url": "/hermes/docs/user-guide/messaging/email/" }
+      ]
+    },
+    {
+      "category": "接続",
+      "symptom": "ゲートウェイが起動しない",
+      "cause": "依存パッケージの不足。ポートの取り合い。トークンの設定ミス",
+      "fix": "`uv pip install -e \".[messaging]\"` で依存を入れ直し、`lsof -i :8080` でポートの重なりを見ます。`hermes config show` で設定も確かめます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "メッセージングゲートウェイ", "url": "/hermes/docs/user-guide/messaging/" }
+      ]
+    },
+    {
+      "category": "接続",
+      "symptom": "WSL でゲートウェイが切れ続ける、`hermes gateway start` が失敗する",
+      "cause": "WSL2 で systemd が有効になっていない。WSL の再起動や Windows のアイドル終了でサービスが落ちる",
+      "fix": "systemd のサービスにせず、`hermes gateway run` をそのまま動かすか tmux の中で動かします。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" }
+      ]
+    },
+    {
+      "category": "接続",
+      "symptom": "MCP サーバーにつながらない",
+      "cause": "サーバーの実行ファイルが見つからない。コマンドのパスの誤り。実行環境の不足",
+      "fix": "`node --version` などで実行環境を確かめ、サーバーのコマンドを手で動かして確認します。そのうえで `~/.hermes/config.yaml` の `mcp_servers` の記述を見直します。",
+      "links": [
+        { "title": "MCP（Model Context Protocol）", "url": "/hermes/docs/user-guide/features/mcp/" },
+        { "title": "Hermes で MCP を使う", "url": "/hermes/docs/guides/use-mcp-with-hermes/" },
+        { "title": "MCP 設定の早見表", "url": "/hermes/docs/reference/mcp-config-reference/" }
+      ]
+    },
+    {
+      "category": "接続",
+      "symptom": "Docker バックエンドにつながらない",
+      "cause": "Docker のデーモンが動いていない。ユーザーの権限不足",
+      "fix": "`docker info` で稼働を確かめ、`sudo usermod -aG docker $USER` と `newgrp docker` で権限を足します。",
+      "links": [
+        { "title": "Hermes の Docker での動かし方", "url": "/hermes/docs/user-guide/docker/" },
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" }
+      ]
+    },
+
+    {
+      "category": "モデル・鍵",
+      "symptom": "API キーが通らない",
+      "cause": "キーの未設定・期限切れ・書き間違い。別のプロバイダー用のキー",
+      "fix": "`hermes config show` で今の設定を確かめ、`hermes model` でプロバイダーを設定し直します。`~/.hermes/.env` に食い違う記述が残っていないかも見ます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "環境変数", "url": "/hermes/docs/reference/environment-variables/" }
+      ]
+    },
+    {
+      "category": "モデル・鍵",
+      "symptom": "モデルが見つからない、使えないと出る",
+      "cause": "モデル名の誤り。そのプロバイダーでは提供されていない",
+      "fix": "`hermes model` で使えるモデルを一覧し、正しい名前を設定します。`hermes chat --model <name>` でセッションごとに指定することもできます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "モデルカタログ", "url": "/hermes/docs/reference/model-catalog/" }
+      ]
+    },
+    {
+      "category": "モデル・鍵",
+      "symptom": "最初のチャットが Error 400 で失敗する",
+      "cause": "モデル名の食い違い。API キーにそのモデルを使う権限がない",
+      "fix": "`hermes config show` で設定中のモデルとプロバイダーを確かめ、`hermes model` で選び直します。OpenRouter を使っているなら残高も確かめます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" }
+      ]
+    },
+    {
+      "category": "モデル・鍵",
+      "symptom": "レート制限（429 エラー）が出る",
+      "cause": "プロバイダー側の利用制限",
+      "fix": "少し待ってから実行し直します。日常的に当たるなら、プランを上げるか、別のモデルやプロバイダーへ振り分けます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "LLM とモデルのプロバイダー", "url": "/hermes/docs/integrations/providers/" }
+      ]
+    },
+    {
+      "category": "モデル・鍵",
+      "symptom": "`/model` に 1 つのプロバイダーしか出てこない",
+      "cause": "設定済みのプロバイダーが 1 つだけ。`/model` は設定済みの範囲でしか切り替えられない",
+      "fix": "セッションを抜けて、ターミナルから `hermes model` を実行してプロバイダーを足します。そのあと新しいチャットを開きます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "モデルを設定する", "url": "/hermes/docs/user-guide/configuring-models/" }
+      ]
+    },
+    {
+      "category": "モデル・鍵",
+      "symptom": "選択画面に「No authenticated providers」と出る",
+      "cause": "使える認証情報のあるプロバイダーが 1 つもない",
+      "fix": "サイドバーの Keys で API キーや OAuth の登録を確かめます。無ければ `hermes setup` を実行して設定します。",
+      "links": [
+        { "title": "モデルを設定する", "url": "/hermes/docs/user-guide/configuring-models/" },
+        { "title": "モデルを選ぶ", "url": "/hermes/models/" }
+      ]
+    },
+    {
+      "category": "モデル・鍵",
+      "symptom": "モデルを選んだのにプロバイダーが切り替わっていた",
+      "cause": "集約サービスでは、素のモデル名がその集約サービスの内側で先に解決される",
+      "fix": "選択画面の先頭に出る現在のメインモデルとプロバイダーを見て、意図した組み合わせか確かめます。",
+      "links": [
+        { "title": "モデルを設定する", "url": "/hermes/docs/user-guide/configuring-models/" },
+        { "title": "LLM とモデルのプロバイダー", "url": "/hermes/docs/integrations/providers/" }
+      ]
+    },
+
+    {
+      "category": "自動化",
+      "symptom": "定期実行のジョブが動かない",
+      "cause": "ジョブが `[paused]` や `[completed]` になっている。ゲートウェイの停止",
+      "fix": "`hermes cron list` で状態と次の実行時刻を確かめます。ジョブは裏で回るゲートウェイが動かすので、`hermes gateway` を立ち上げておきます。",
+      "links": [
+        { "title": "定期実行がうまくいかないとき", "url": "/hermes/docs/guides/cron-troubleshooting/" },
+        { "title": "定期実行タスク（cron）", "url": "/hermes/docs/user-guide/features/cron/" }
+      ]
+    },
+    {
+      "category": "自動化",
+      "symptom": "ジョブは走るのに何も届かない",
+      "cause": "配信先の書き方の誤り。出力が空。返答に `[SILENT]` が入っている",
+      "fix": "配信先の綴りと、その宛先のサービスが設定してあるかを確かめます。`hermes cron list` の `last_error` の欄も見ます。",
+      "links": [
+        { "title": "定期実行がうまくいかないとき", "url": "/hermes/docs/guides/cron-troubleshooting/" }
+      ]
+    },
+    {
+      "category": "自動化",
+      "symptom": "定期実行で「Skill not found」と出る",
+      "cause": "スケジューラの動く端末にスキルが入っていない。スキル名とフォルダ名の食い違い",
+      "fix": "`hermes skills list` で正確な名前を確かめ、無ければ `hermes skills install <skill-name>` で入れます。",
+      "links": [
+        { "title": "定期実行がうまくいかないとき", "url": "/hermes/docs/guides/cron-troubleshooting/" },
+        { "title": "スキルの仕組み", "url": "/hermes/docs/user-guide/features/skills/" }
+      ]
+    },
+    {
+      "category": "自動化",
+      "symptom": "定期実行のジョブが止まったままになる、時間切れになる",
+      "cause": "動きが止まってからの時間が既定の 600 秒を超えた",
+      "fix": "環境変数 `HERMES_CRON_TIMEOUT` で上限を変えられます。長くかかる仕事は、データを集めるところをスクリプトに任せて結果だけを届けます。",
+      "links": [
+        { "title": "定期実行がうまくいかないとき", "url": "/hermes/docs/guides/cron-troubleshooting/" },
+        { "title": "スクリプトだけの定期実行（LLM なし）", "url": "/hermes/docs/guides/cron-script-only/" }
+      ]
+    },
+    {
+      "category": "自動化",
+      "symptom": "定期実行のジョブが遅れる、飛ばされる",
+      "cause": "ゲートウェイの二重起動による鍵の取り合い。同じ時刻へのジョブの集中",
+      "fix": "`ps aux | grep hermes` で重なって動いているゲートウェイを止め、1 つだけにします。ジョブの時刻も少しずつずらします。",
+      "links": [
+        { "title": "定期実行がうまくいかないとき", "url": "/hermes/docs/guides/cron-troubleshooting/" },
+        { "title": "cron で何でも自動化する", "url": "/hermes/docs/guides/automate-with-cron/" }
+      ]
+    },
+
+    {
+      "category": "動作",
+      "symptom": "コンテキスト長を超えたと出る",
+      "cause": "会話が長くなってモデルの枠を超えた。コンテキスト長の誤判定",
+      "fix": "`/compress` で会話を圧縮するか、新しいセッションを開きます。長い会話の 1 回目で出るなら、`config.yaml` の `model.context_length` に実際の値を書きます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "エージェントが前より賢くなくなった気がするとき", "url": "/hermes/docs/guides/troubleshooting-agent-quality/" },
+        { "title": "LLM とモデルのプロバイダー", "url": "/hermes/docs/integrations/providers/" }
+      ]
+    },
+    {
+      "category": "動作",
+      "symptom": "応答が遅い",
+      "cause": "モデルの大きさ。API サーバーまでの遠さ。ツールを盛り込んだシステムプロンプトの重さ",
+      "fix": "もっと速くて小さいモデルを試し、`hermes chat -t \"terminal\"` のように有効なツールセットを絞ります。ローカルモデルなら GPU の VRAM も確かめます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "コツとベストプラクティス", "url": "/hermes/docs/guides/tips/" }
+      ]
+    },
+    {
+      "category": "動作",
+      "symptom": "トークンを使いすぎる",
+      "cause": "会話の長さ。システムプロンプトとツール定義の膨らみ",
+      "fix": "`hermes prompt-size` で毎回送られる分の内訳を測り、使っていないツールセットとスキルを切ります。長いセッションでは `/compress` と `/usage` も併せて使います。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "CLI コマンド一覧", "url": "/hermes/docs/reference/cli-commands/" }
+      ]
+    },
+    {
+      "category": "動作",
+      "symptom": "エージェントが前より賢くなくなった気がする",
+      "cause": "思っているのと違うモデルでセッションが動いている",
+      "fix": "`/model` か `/status` で今のモデルとプロバイダーを確かめます。違っていれば `/model <name>` でそのセッションを直せます。",
+      "links": [
+        { "title": "エージェントが前より賢くなくなった気がするとき", "url": "/hermes/docs/guides/troubleshooting-agent-quality/" },
+        { "title": "モデルを設定する", "url": "/hermes/docs/user-guide/configuring-models/" }
+      ]
+    },
+    {
+      "category": "動作",
+      "symptom": "このセッションで覚えてと頼んだのに忘れている",
+      "cause": "記憶はセッションの開始時に固定された写しとしてシステムプロンプトへ入る",
+      "fix": "意図どおりの動きです。保存自体はすぐ済んでいて、システムプロンプトに現れるのは次のセッションからです。",
+      "links": [
+        { "title": "エージェントが前より賢くなくなった気がするとき", "url": "/hermes/docs/guides/troubleshooting-agent-quality/" },
+        { "title": "ずっと残る記憶", "url": "/hermes/docs/user-guide/features/memory/" }
+      ]
+    },
+    {
+      "category": "動作",
+      "symptom": "前にできたことを「できない」と言う",
+      "cause": "スキルが読み込まれていない。ツールセットが絞られている",
+      "fix": "`/skills` と `/tools list` で読み込まれているものを確かめます。`/reload-skills` で読み直し、`/tools enable` でツールを戻します。",
+      "links": [
+        { "title": "エージェントが前より賢くなくなった気がするとき", "url": "/hermes/docs/guides/troubleshooting-agent-quality/" },
+        { "title": "スキルの仕組み", "url": "/hermes/docs/user-guide/features/skills/" },
+        { "title": "組み込みツールの一覧", "url": "/hermes/docs/reference/tools-reference/" }
+      ]
+    },
+
+    {
+      "category": "その他",
+      "symptom": "インストールしたのに `hermes: command not found` になる",
+      "cause": "シェルが新しい PATH を読み直していない",
+      "fix": "`source ~/.bashrc`（zsh なら `~/.zshrc`）を実行するか、新しいターミナルを開きます。`which hermes` で入った場所も確かめます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "インストール", "url": "/hermes/docs/getting-started/installation/" }
+      ]
+    },
+    {
+      "category": "その他",
+      "symptom": "ターミナル操作で `node: command not found` になる",
+      "cause": "ログインシェルから写し取った環境に `nvm` や `pyenv` の設定が入っていない",
+      "fix": "`~/.hermes/config.yaml` の `terminal.shell_init_files` に、読み込ませたいファイルを並べます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "Hermes Agent の設定", "url": "/hermes/docs/user-guide/configuration/" }
+      ]
+    },
+    {
+      "category": "その他",
+      "symptom": "コマンドが危険と判断されて止まる",
+      "cause": "破壊的な可能性のあるコマンドの検出",
+      "fix": "意図した動きです。確認を求められたら中身を読み、問題なければ許可します。判断されるパターンはセキュリティのページに載っています。",
+      "links": [
+        { "title": "セキュリティ", "url": "/hermes/docs/user-guide/security/" },
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" }
+      ]
+    },
+    {
+      "category": "その他",
+      "symptom": "メッセージ経由だと `sudo` が使えない",
+      "cause": "メッセージゲートウェイに対話できるターミナルがなく、パスワードを尋ねられない",
+      "fix": "メッセージ経由では `sudo` を避け、別のやり方をエージェントに探してもらいます。管理作業は `hermes chat` に切り替えます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "メッセージングゲートウェイ", "url": "/hermes/docs/user-guide/messaging/" }
+      ]
+    },
+    {
+      "category": "その他",
+      "symptom": "端末を移したら設定や記憶が引き継がれない",
+      "cause": "`~/.hermes/` の中身を移していない",
+      "fix": "移す元の端末で `hermes backup` を実行して zip を作り、新しい端末で `hermes import` を実行します。そのあと `hermes setup` で API キーとプロバイダーの設定を確かめます。",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "プロファイル", "url": "/hermes/docs/user-guide/profiles/" }
+      ]
+    }
+  ]
+}

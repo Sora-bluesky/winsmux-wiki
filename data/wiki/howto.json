@@ -1,0 +1,417 @@
+{
+  "categories": ["導入", "つなぐ", "自動化", "モデル", "安全", "運用"],
+  "items": [
+    {
+      "category": "導入",
+      "want": "とにかくまず動かしてみたい",
+      "note": "インストールからチャットが返るまでを 5 分でたどる入口です",
+      "links": [{ "title": "クイックスタート", "url": "/hermes/docs/getting-started/quickstart/" }]
+    },
+    {
+      "category": "導入",
+      "want": "Mac や Linux に入れたい",
+      "note": "手早い導入コマンドと、OS ごとの対応状況の一覧です",
+      "links": [
+        { "title": "インストール", "url": "/hermes/docs/getting-started/installation/" },
+        { "title": "対応プラットフォーム", "url": "/hermes/docs/getting-started/platform-support/" }
+      ]
+    },
+    {
+      "category": "導入",
+      "want": "Windows で使いたい",
+      "note": "WSL なしでそのまま動きます。POSIX 環境が要る用途だけ WSL2 側を見てください",
+      "links": [
+        { "title": "Windows（ネイティブ）", "url": "/hermes/docs/user-guide/windows-native/" },
+        { "title": "Windows（WSL2）", "url": "/hermes/docs/user-guide/windows-wsl-quickstart/" }
+      ]
+    },
+    {
+      "category": "導入",
+      "want": "Android のスマホで動かしたい",
+      "note": "Termux 上で直接動かす手順です。ティア 2 の扱いで壊れることがあります",
+      "links": [{ "title": "Termux（Android）", "url": "/hermes/docs/getting-started/termux/" }]
+    },
+    {
+      "category": "導入",
+      "want": "何から読めばいいか知りたい",
+      "note": "経験の度合いと目的別に、読む順番が示されています",
+      "links": [{ "title": "学習パス", "url": "/hermes/docs/getting-started/learning-path/" }]
+    },
+    {
+      "category": "導入",
+      "want": "最新版に上げたい",
+      "note": "更新はコマンド 1 つです。アンインストールも同じページにあります",
+      "links": [{ "title": "更新とアンインストール", "url": "/hermes/docs/getting-started/updating/" }]
+    },
+    {
+      "category": "導入",
+      "want": "ターミナルの画面を使いやすくしたい",
+      "note": "マウスが使える新しい画面です。対話しながら使うならこちらが推奨です",
+      "links": [{ "title": "TUI", "url": "/hermes/docs/user-guide/tui/" }]
+    },
+    {
+      "category": "導入",
+      "want": "アプリや管理画面から使いたい",
+      "note": "どちらも CLI と同じ設定・セッション・記憶を共有します",
+      "links": [
+        { "title": "デスクトップアプリ", "url": "/hermes/docs/user-guide/desktop/" },
+        { "title": "管理画面", "url": "/hermes/docs/user-guide/features/web-dashboard/" }
+      ]
+    },
+    {
+      "category": "導入",
+      "want": "Claude Code や Codex の設定を引き継ぎたい",
+      "note": "指示・許可リスト・MCP サーバー・skill・記憶をコマンド 1 つで取り込みます",
+      "links": [{ "title": "他のエージェントから取り込む", "url": "/hermes/docs/user-guide/import-from-other-agents/" }]
+    },
+
+    {
+      "category": "つなぐ",
+      "want": "Telegram から話しかけたい",
+      "note": "BotFather でトークンを作って渡すだけです。公開 URL は要りません",
+      "links": [{ "title": "Telegram", "url": "/hermes/docs/user-guide/messaging/telegram/" }]
+    },
+    {
+      "category": "つなぐ",
+      "want": "Discord のサーバーで使いたい",
+      "note": "DM でもチャンネルでも動きます。返事をする条件の表が最初にあります",
+      "links": [{ "title": "Discord", "url": "/hermes/docs/user-guide/messaging/discord/" }]
+    },
+    {
+      "category": "つなぐ",
+      "want": "Slack のワークスペースで使いたい",
+      "note": "Socket Mode を使うので、動かす環境をインターネットに公開せずに済みます",
+      "links": [{ "title": "Slack", "url": "/hermes/docs/user-guide/messaging/slack/" }]
+    },
+    {
+      "category": "つなぐ",
+      "want": "LINE から話しかけたい",
+      "note": "公式の Messaging API を使います。同梱のプラグインを有効にするだけです",
+      "links": [{ "title": "LINE", "url": "/hermes/docs/user-guide/messaging/line/" }]
+    },
+    {
+      "category": "つなぐ",
+      "want": "メールでやりとりしたい",
+      "note": "IMAP / SMTP で受け取って返信します。Gmail や Outlook でも使えます",
+      "links": [{ "title": "メール", "url": "/hermes/docs/user-guide/messaging/email/" }]
+    },
+    {
+      "category": "つなぐ",
+      "want": "エージェント専用のメールアドレスを持たせたい",
+      "note": "エージェント側がメールを読み書きする形です。上のメール連携とは役割が違います",
+      "links": [{ "title": "エージェントに自分のメールアドレスを持たせる", "url": "/hermes/docs/guides/agent-email-address/" }]
+    },
+    {
+      "category": "つなぐ",
+      "want": "つながる先を一覧で見たい",
+      "note": "対応するメッセージアプリと、ゲートウェイの構成の全体像です",
+      "links": [{ "title": "メッセージングゲートウェイ", "url": "/hermes/docs/user-guide/messaging/" }]
+    },
+    {
+      "category": "つなぐ",
+      "want": "声で話しかけたい",
+      "note": "機能の全体像は前者、設定の手順は後者にあります",
+      "links": [
+        { "title": "音声モード", "url": "/hermes/docs/user-guide/features/voice-mode/" },
+        { "title": "音声モードを使う", "url": "/hermes/docs/guides/use-voice-mode-with-hermes/" }
+      ]
+    },
+    {
+      "category": "つなぐ",
+      "want": "Gmail やカレンダーを操作させたい",
+      "note": "OAuth2 でつなぎます。設定はエージェントが案内してくれます",
+      "links": [{ "title": "Google Workspace", "url": "/hermes/docs/user-guide/skills/google-workspace/" }]
+    },
+    {
+      "category": "つなぐ",
+      "want": "手持ちのツールを MCP でつなぎたい",
+      "note": "しくみは前者、実際の使い方と絞り込み方は後者にあります",
+      "links": [
+        { "title": "MCP", "url": "/hermes/docs/user-guide/features/mcp/" },
+        { "title": "MCP を使う", "url": "/hermes/docs/guides/use-mcp-with-hermes/" }
+      ]
+    },
+
+    {
+      "category": "自動化",
+      "want": "毎朝ニュースを届けさせたい",
+      "note": "テーマを調べて要約し、Telegram や Discord へ毎朝送る作例です",
+      "links": [{ "title": "毎朝のブリーフィングボット", "url": "/hermes/docs/guides/daily-briefing-bot/" }]
+    },
+    {
+      "category": "自動化",
+      "want": "決まった時刻に自動で走らせたい",
+      "note": "しくみは前者、監視やレポートなどの実務的な型は後者にあります",
+      "links": [
+        { "title": "定期実行タスク（cron）", "url": "/hermes/docs/user-guide/features/cron/" },
+        { "title": "cron で自動化する", "url": "/hermes/docs/guides/automate-with-cron/" }
+      ]
+    },
+    {
+      "category": "自動化",
+      "want": "定期実行が動かない原因を突き止めたい",
+      "note": "ジョブが走らない・配信が届かない・skill が読めないを症状別に切り分けます",
+      "links": [{ "title": "定期実行がうまくいかないとき", "url": "/hermes/docs/guides/cron-troubleshooting/" }]
+    },
+    {
+      "category": "自動化",
+      "want": "LLM を使わず監視スクリプトだけ回したい",
+      "note": "スクリプトを時間どおり走らせ、標準出力をそのままチャットへ届けます",
+      "links": [{ "title": "スクリプトだけの定期実行", "url": "/hermes/docs/guides/cron-script-only/" }]
+    },
+    {
+      "category": "自動化",
+      "want": "手元のスクリプトの出力をチャットへ流したい",
+      "note": "`hermes send` で Telegram・Discord・Slack などへ送ります",
+      "links": [{ "title": "スクリプトの出力を流す", "url": "/hermes/docs/guides/pipe-script-output/" }]
+    },
+    {
+      "category": "自動化",
+      "want": "GitHub の PR を自動でレビューさせたい",
+      "note": "定期的に見張る型が前者、Webhook で即座に反応する型が後者です",
+      "links": [
+        { "title": "PR レビューエージェント", "url": "/hermes/docs/guides/github-pr-review-agent/" },
+        { "title": "Webhook で PR にコメント", "url": "/hermes/docs/guides/webhook-github-pr-review/" }
+      ]
+    },
+    {
+      "category": "自動化",
+      "want": "作業を分担させて並行で進めたい",
+      "note": "子エージェントへの切り出しが前者、ボードで管理する形が後者です",
+      "links": [
+        { "title": "サブエージェントへの委任", "url": "/hermes/docs/user-guide/features/delegation/" },
+        { "title": "委任と並行作業", "url": "/hermes/docs/guides/delegation-patterns/" },
+        { "title": "カンバン", "url": "/hermes/docs/user-guide/features/kanban/" }
+      ]
+    },
+    {
+      "category": "自動化",
+      "want": "終わるまで追いかけさせたい",
+      "note": "目標を預けると、ターンをまたいで動き続けます",
+      "links": [{ "title": "持続する目標", "url": "/hermes/docs/user-guide/features/goals/" }]
+    },
+    {
+      "category": "自動化",
+      "want": "そのまま使える自動化の型を探したい",
+      "note": "考え方が前者、そのまま選べる型紙の一覧が後者です",
+      "links": [
+        { "title": "自動化の型紙", "url": "/hermes/docs/guides/automation-blueprints/" },
+        { "title": "自動化の型紙の一覧", "url": "/hermes/docs/reference/automation-blueprints-catalog/" }
+      ]
+    },
+
+    {
+      "category": "モデル",
+      "want": "使うモデルを切り替えたい",
+      "note": "モデルの指定方法と、用途ごとの使い分けの設定です",
+      "links": [{ "title": "モデルを設定する", "url": "/hermes/docs/user-guide/configuring-models/" }]
+    },
+    {
+      "category": "モデル",
+      "want": "使えるモデルと料金を見たい",
+      "note": "料金つきの一覧が前者、選択リストのしくみが後者です",
+      "links": [
+        { "title": "モデルと料金", "url": "/hermes/models/" },
+        { "title": "モデルカタログ", "url": "/hermes/docs/reference/model-catalog/" }
+      ]
+    },
+    {
+      "category": "モデル",
+      "want": "1 つの契約でまとめて使いたい",
+      "note": "モデルとツールのゲートウェイをまとめて用意する推奨構成です",
+      "links": [{ "title": "Nous Portal", "url": "/hermes/docs/integrations/nous-portal/" }]
+    },
+    {
+      "category": "モデル",
+      "want": "無料で試したい",
+      "note": "期間限定の無料モデルを使う道と、手元で動かして料金ゼロにする道があります",
+      "links": [
+        { "title": "Nemotron 3 Ultra を無料で動かす", "url": "/hermes/docs/guides/run-nemotron-3-ultra-free/" },
+        { "title": "Ollama でローカル実行", "url": "/hermes/docs/guides/local-ollama-setup/" }
+      ]
+    },
+    {
+      "category": "モデル",
+      "want": "手元の PC だけで動かしたい",
+      "note": "Ollama を使う形が前者、Mac で llama.cpp / MLX を立てる形が後者です",
+      "links": [
+        { "title": "Ollama でローカル実行", "url": "/hermes/docs/guides/local-ollama-setup/" },
+        { "title": "Mac でローカル LLM", "url": "/hermes/docs/guides/local-llm-on-mac/" }
+      ]
+    },
+    {
+      "category": "モデル",
+      "want": "料金を抑えたい",
+      "note": "使い方側の工夫が前者、コスト重視の振り分け設定が後者です",
+      "links": [
+        { "title": "コツとベストプラクティス", "url": "/hermes/docs/guides/tips/" },
+        { "title": "プロバイダールーティング", "url": "/hermes/docs/user-guide/features/provider-routing/" }
+      ]
+    },
+    {
+      "category": "モデル",
+      "want": "Gemini や Grok を使いたい",
+      "note": "Gemini は API キー、Grok は SuperGrok / X Premium+ のサインインでつなぎます",
+      "links": [
+        { "title": "Google Gemini", "url": "/hermes/docs/guides/google-gemini/" },
+        { "title": "xAI Grok OAuth", "url": "/hermes/docs/guides/xai-grok-oauth/" }
+      ]
+    },
+    {
+      "category": "モデル",
+      "want": "止まったとき自動で切り替えたい",
+      "note": "控えのプロバイダーへ逃がすのが前者、キーを束ねて回すのが後者です",
+      "links": [
+        { "title": "フォールバックプロバイダー", "url": "/hermes/docs/user-guide/features/fallback-providers/" },
+        { "title": "認証情報プール", "url": "/hermes/docs/user-guide/features/credential-pools/" }
+      ]
+    },
+    {
+      "category": "モデル",
+      "want": "受け答えの質が落ちた原因を調べたい",
+      "note": "モデルの切り替わり、コンテキストの逼迫、記憶の固着を順に確認します",
+      "links": [{ "title": "前より賢くなくなった気がするとき", "url": "/hermes/docs/guides/troubleshooting-agent-quality/" }]
+    },
+
+    {
+      "category": "安全",
+      "want": "承認なしで動く範囲を絞りたい",
+      "note": "危険なコマンドの承認、ファイル書き込みの安全策、利用者の認可をまとめて扱います",
+      "links": [{ "title": "セキュリティ", "url": "/hermes/docs/user-guide/security/" }]
+    },
+    {
+      "category": "安全",
+      "want": "API キーを平文で置かずに渡したい",
+      "note": "仕組みの全体像が前者、1Password から取り出す設定が後者です",
+      "links": [
+        { "title": "シークレット", "url": "/hermes/docs/user-guide/secrets/" },
+        { "title": "1Password", "url": "/hermes/docs/user-guide/secrets/onepassword/" }
+      ]
+    },
+    {
+      "category": "安全",
+      "want": "仕事用の端末で安全に使いたい",
+      "note": "既定で守られること、さらに締める設定、失敗の取り消し方を順に見ていきます",
+      "links": [{ "title": "個人や仕事の端末で動かす", "url": "/hermes/docs/guides/secure-hermes-on-a-work-machine/" }]
+    },
+    {
+      "category": "安全",
+      "want": "外に出る通信先を制限したい",
+      "note": "通信先の制限が前者、資格情報を差し込んで手元に残さない形が後者です",
+      "links": [
+        { "title": "Egress プロキシ", "url": "/hermes/docs/user-guide/egress/" },
+        { "title": "iron-proxy", "url": "/hermes/docs/user-guide/egress/iron-proxy/" }
+      ]
+    },
+    {
+      "category": "安全",
+      "want": "コンテナに閉じ込めて動かしたい",
+      "note": "Hermes 自体を Docker で動かす形と、端末の実行先だけを Docker にする形があります",
+      "links": [{ "title": "Docker で動かす", "url": "/hermes/docs/user-guide/docker/" }]
+    },
+    {
+      "category": "安全",
+      "want": "壊れたファイルを巻き戻したい",
+      "note": "裏側の git リポジトリに自動で残るスナップショットから戻します",
+      "links": [{ "title": "チェックポイントと /rollback", "url": "/hermes/docs/user-guide/checkpoints-and-rollback/" }]
+    },
+    {
+      "category": "安全",
+      "want": "作業中のリポジトリを汚さず任せたい",
+      "note": "git のワークツリーで作業場所を分け、同じリポジトリを安全に共有します",
+      "links": [{ "title": "Git ワークツリー", "url": "/hermes/docs/user-guide/git-worktrees/" }]
+    },
+    {
+      "category": "安全",
+      "want": "組織で設定を固定して配りたい",
+      "note": "管理者が決めた設定と秘密情報を、利用者側で変更できない形で配ります",
+      "links": [{ "title": "管理者による適用範囲", "url": "/hermes/docs/user-guide/managed-scope/" }]
+    },
+
+    {
+      "category": "運用",
+      "want": "サーバーに常駐させて動かし続けたい",
+      "note": "サービスとして入れる手順が前者にあります。ゲートウェイ自体の説明は後者です",
+      "links": [
+        { "title": "チームで使う Telegram アシスタント", "url": "/hermes/docs/guides/team-telegram-assistant/" },
+        { "title": "メッセージングゲートウェイ", "url": "/hermes/docs/user-guide/messaging/" }
+      ]
+    },
+    {
+      "category": "運用",
+      "want": "会話や好みを覚えさせたい",
+      "note": "記憶のしくみが前者、どのファイルが何を担うかの対応表が後者です",
+      "links": [
+        { "title": "ずっと残る記憶", "url": "/hermes/docs/user-guide/features/memory/" },
+        { "title": "どのファイルが何をするのか", "url": "/hermes/docs/user-guide/which-file-does-what/" }
+      ]
+    },
+    {
+      "category": "運用",
+      "want": "話し方や性格を決めたい",
+      "note": "設定の全体像が前者、SOUL.md に何を書くかの実践が後者です",
+      "links": [
+        { "title": "人格と SOUL.md", "url": "/hermes/docs/user-guide/features/personality/" },
+        { "title": "SOUL.md を使う", "url": "/hermes/docs/guides/use-soul-with-hermes/" }
+      ]
+    },
+    {
+      "category": "運用",
+      "want": "skill を自作したい",
+      "note": "SKILL.md の書式と公開までが前者、探し方や入れ方を含む全体が後者です",
+      "links": [
+        { "title": "スキルを作る", "url": "/hermes/docs/developer-guide/creating-skills/" },
+        { "title": "スキルを使いこなす", "url": "/hermes/docs/guides/work-with-skills/" }
+      ]
+    },
+    {
+      "category": "運用",
+      "want": "使える skill を探したい",
+      "note": "最初から入っているものが前者、コマンドで追加するものが後者です",
+      "links": [
+        { "title": "同梱スキルの一覧", "url": "/hermes/docs/reference/skills-catalog/" },
+        { "title": "オプションスキルの一覧", "url": "/hermes/docs/reference/optional-skills-catalog/" }
+      ]
+    },
+    {
+      "category": "運用",
+      "want": "用途ごとにエージェントを分けたい",
+      "note": "設定を分ける単位が前者、名前を持つ Bot の一覧に見せる形が後者です",
+      "links": [
+        { "title": "プロファイル", "url": "/hermes/docs/user-guide/profiles/" },
+        { "title": "Bot モード", "url": "/hermes/docs/user-guide/bot-mode/" }
+      ]
+    },
+    {
+      "category": "運用",
+      "want": "前の会話を探して再開したい",
+      "note": "セッションの保存・再開・検索と、プラットフォームごとの追跡の話です",
+      "links": [{ "title": "セッション", "url": "/hermes/docs/user-guide/sessions/" }]
+    },
+    {
+      "category": "運用",
+      "want": "コマンドや設定項目を調べたい",
+      "note": "端末のコマンド、対話中のスラッシュコマンド、config.yaml の書き方です",
+      "links": [
+        { "title": "CLI コマンド一覧", "url": "/hermes/docs/reference/cli-commands/" },
+        { "title": "スラッシュコマンド早見表", "url": "/hermes/docs/reference/slash-commands/" },
+        { "title": "設定", "url": "/hermes/docs/user-guide/configuration/" }
+      ]
+    },
+    {
+      "category": "運用",
+      "want": "困ったときに調べたい",
+      "note": "つまずきやすい箇所の対処が前者、うまく使うためのコツが後者です",
+      "links": [
+        { "title": "よくある質問とトラブル対処", "url": "/hermes/docs/reference/faq/" },
+        { "title": "コツとベストプラクティス", "url": "/hermes/docs/guides/tips/" }
+      ]
+    },
+    {
+      "category": "運用",
+      "want": "今週何が変わったか知りたい",
+      "note": "日次の同期から機械生成した更新の記録と、週ごとの要約です",
+      "links": [{ "title": "今週の更新", "url": "/hermes/updates/" }]
+    }
+  ]
+}

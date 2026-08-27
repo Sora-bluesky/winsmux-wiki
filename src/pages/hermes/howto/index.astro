@@ -1,0 +1,135 @@
+---
+// 逆引き（Wiki 層 #2）。「〜したい」から最短のページへ。
+// データ: data/wiki/howto.json（Opus 生成・全リンクはミラーページ実在照合済み）。
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import howto from '../../../../data/wiki/howto.json';
+
+type Item = { category: string; want: string; note: string; links: { title: string; url: string }[] };
+const categories = howto.categories as string[];
+const items = howto.items as Item[];
+const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.category === c) }));
+---
+
+<BaseLayout
+  title="逆引き"
+  description="「〜したい」から、いちばん短い道筋を引く索引。手順は公式準拠の日本語版ページへつながります。"
+  sources={['https://hermes-agent.nousresearch.com/docs/']}
+  showAsk={false}
+  prevOverride={null}
+  nextOverride={null}
+>
+  <article class="prose">
+    <h1>逆引き</h1>
+    <p>
+      「〜したい」から、いちばん短い道筋を引きます。手順そのものは公式準拠の日本語版ページにあります。ここに無いことは
+      <a href="/hermes/search/">検索</a> か <a href="/hermes/guide/all/">すべての索引</a> からどうぞ。
+    </p>
+    <p class="wiki-note">このページはこのサイト独自の索引です。正本は各リンク先の公式ページです。</p>
+  </article>
+
+  <div class="hw-controls">
+    <input id="hw-search" type="search" placeholder="やりたいことで絞り込み" aria-label="やりたいことで絞り込み" />
+    <div class="hw-chips" role="group" aria-label="カテゴリで絞り込み">
+      <button type="button" class="hw-chip active" data-cat="all">すべて（{items.length}）</button>
+      {byCat.map((c) => (
+        <button type="button" class="hw-chip" data-cat={c.name}>{c.name}（{c.items.length}）</button>
+      ))}
+    </div>
+  </div>
+
+  <div class="hw-groups">
+    {
+      byCat.map((c) => (
+        <section class="hw-group" data-cat={c.name}>
+          <h2 class="hw-cat">{c.name}</h2>
+          <div class="hw-list">
+            {c.items.map((i) => (
+              <div class="hw-row" data-want={`${i.want} ${i.note}`.toLowerCase()}>
+                <div class="hw-main">
+                  <span class="hw-want">{i.want}</span>
+                  <span class="hw-note">{i.note}</span>
+                </div>
+                <div class="hw-links">
+                  {i.links.map((l) => (
+                    <a href={l.url}>{l.title} →</a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+    <p id="hw-empty" class="hw-empty" hidden>該当する項目がありません。<a href="/hermes/search/">全文検索</a> を試してください。</p>
+  </div>
+</BaseLayout>
+
+<style>
+  .wiki-note {
+    border: 1px solid #bfdbfe;
+    background: var(--color-accent-soft);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
+  }
+  .hw-controls { display: flex; flex-direction: column; gap: 0.75rem; margin: 1.25rem 0 1.25rem; }
+  #hw-search {
+    width: 100%; max-width: 420px; border: 1px solid var(--color-border-strong); border-radius: 8px;
+    padding: 0.6rem 0.9rem; font-size: 0.9rem; background: var(--color-bg); color: var(--color-fg);
+  }
+  .hw-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .hw-chip {
+    border: 1px solid var(--color-border); background: transparent; color: var(--color-fg-secondary);
+    border-radius: 999px; padding: 0.35rem 0.85rem; font-size: 0.8rem; cursor: pointer;
+  }
+  .hw-chip:hover { background: var(--color-bg-subtle); }
+  .hw-chip.active { background: var(--color-accent); border-color: var(--color-accent); color: #fff; font-weight: 600; }
+  .hw-groups { display: flex; flex-direction: column; gap: 1.5rem; }
+  .hw-cat { font-size: 0.9rem; font-weight: 600; color: var(--color-fg-muted); margin: 0 0 0.5rem; }
+  .hw-list { display: flex; flex-direction: column; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; }
+  .hw-row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+    padding: 0.75rem 1.1rem; border-bottom: 1px solid var(--color-border); background: var(--color-bg);
+  }
+  .hw-row:last-of-type { border-bottom: 0; }
+  .hw-main { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+  .hw-want { font-weight: 600; color: var(--color-fg); font-size: 0.92rem; }
+  .hw-note { font-size: 0.8rem; color: var(--color-fg-muted); line-height: 1.55; }
+  .hw-links { display: flex; flex-direction: column; gap: 0.2rem; text-align: right; flex-shrink: 0; }
+  .hw-links a { font-size: 0.8rem; white-space: nowrap; text-decoration: none; }
+  .hw-links a:hover { text-decoration: underline; }
+  .hw-empty { color: var(--color-fg-muted); font-size: 0.9rem; margin: 0; }
+</style>
+
+<script>
+  const search = document.getElementById('hw-search') as HTMLInputElement;
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.hw-chip')];
+  const groups = [...document.querySelectorAll<HTMLElement>('.hw-group')];
+  const empty = document.getElementById('hw-empty')!;
+  let cat = 'all';
+
+  function apply() {
+    const q = search.value.trim().toLowerCase();
+    let shown = 0;
+    for (const g of groups) {
+      const okC = cat === 'all' || g.dataset.cat === cat;
+      let gShown = 0;
+      for (const r of g.querySelectorAll<HTMLElement>('.hw-row')) {
+        const on = okC && (!q || (r.dataset.want ?? '').includes(q));
+        r.hidden = !on;
+        if (on) gShown++;
+      }
+      g.hidden = gShown === 0;
+      shown += gShown;
+    }
+    empty.hidden = shown > 0;
+  }
+  search.addEventListener('input', apply);
+  for (const c of chips) {
+    c.addEventListener('click', () => {
+      cat = c.dataset.cat ?? 'all';
+      for (const x of chips) x.classList.toggle('active', x === c);
+      apply();
+    });
+  }
+</script>

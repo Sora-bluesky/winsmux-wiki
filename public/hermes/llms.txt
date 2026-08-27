@@ -33,6 +33,8 @@ Hermes Agent 0.20.5
 - [正本との差分](https://wiki.winsmux.dev/hermes/syntheses/not-a-mirror/)
 - [モデルと料金（Portal 全モデルの一覧・毎日更新）](https://wiki.winsmux.dev/hermes/models/)
 - [今週の更新（公式 docs への追随記録）](https://wiki.winsmux.dev/hermes/updates/)
+- [逆引き（やりたいことから探す索引）](https://wiki.winsmux.dev/hermes/howto/)
+- [トラブル（症状から対処を引く表）](https://wiki.winsmux.dev/hermes/trouble/)
 - [developer-guide/acp-internals（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/acp-internals/)
 - [developer-guide/adding-platform-adapters（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
 - [developer-guide/adding-providers（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-providers/)

@@ -1,0 +1,825 @@
+{
+  "tags": [
+    {
+      "id": "research",
+      "label": "調査・情報収集",
+      "picks": [
+        "research-arxiv",
+        "research-grounded-citations",
+        "research-duckduckgo-search"
+      ]
+    },
+    {
+      "id": "writing",
+      "label": "文章・執筆",
+      "picks": [
+        "creative-humanizer",
+        "research-research-paper-writing",
+        "creative-simple-english"
+      ]
+    },
+    {
+      "id": "coding",
+      "label": "開発・コード",
+      "picks": [
+        "software-development-systematic-debugging",
+        "github-github-pr-workflow",
+        "software-development-test-driven-development"
+      ]
+    },
+    {
+      "id": "ai-agent",
+      "label": "AIエージェント連携",
+      "picks": [
+        "autonomous-ai-agents-claude-code",
+        "autonomous-ai-agents-hermes-agent",
+        "mcp-mcporter"
+      ]
+    },
+    {
+      "id": "ai-model",
+      "label": "AIモデル開発・学習",
+      "picks": [
+        "mlops-inference-llama-cpp",
+        "mlops-training-unsloth",
+        "mlops-evaluation-evaluating-llms-harness"
+      ]
+    },
+    {
+      "id": "image-video",
+      "label": "画像・動画",
+      "picks": [
+        "creative-comfyui",
+        "mlops-stable-diffusion",
+        "media-youtube-content"
+      ]
+    },
+    {
+      "id": "design",
+      "label": "デザイン・図解",
+      "picks": [
+        "creative-architecture-diagram",
+        "creative-excalidraw",
+        "creative-claude-design"
+      ]
+    },
+    {
+      "id": "audio",
+      "label": "音声・音楽",
+      "picks": [
+        "mlops-whisper",
+        "media-songsee",
+        "creative-audiocraft-audio-generation"
+      ]
+    },
+    {
+      "id": "task",
+      "label": "予定・タスク管理",
+      "picks": [
+        "productivity-weekly-review-planning",
+        "apple-apple-reminders",
+        "productivity-meeting-action-items"
+      ]
+    },
+    {
+      "id": "message",
+      "label": "連絡・SNS",
+      "picks": [
+        "email-email-inbox-triage",
+        "email-himalaya",
+        "social-media-xurl"
+      ]
+    },
+    {
+      "id": "document",
+      "label": "文書・メモ",
+      "picks": [
+        "productivity-pdf",
+        "productivity-xlsx",
+        "note-taking-obsidian"
+      ]
+    },
+    {
+      "id": "automation",
+      "label": "自動化・定時実行",
+      "picks": [
+        "devops-watchers",
+        "productivity-product-price-monitor",
+        "autonomous-ai-agents-computer-use"
+      ]
+    },
+    {
+      "id": "life",
+      "label": "暮らしの実用",
+      "picks": [
+        "productivity-maps",
+        "health-fitness-nutrition",
+        "smart-home-openhue"
+      ]
+    },
+    {
+      "id": "finance",
+      "label": "金融・資産",
+      "picks": [
+        "finance-stocks",
+        "finance-dcf-model",
+        "blockchain-evm"
+      ]
+    },
+    {
+      "id": "sysops",
+      "label": "システム運用",
+      "picks": [
+        "devops-docker-management",
+        "devops-pinggy-tunnel",
+        "mlops-modal"
+      ]
+    },
+    {
+      "id": "security",
+      "label": "セキュリティ・プライバシー",
+      "picks": [
+        "security-1password",
+        "security-web-pentest",
+        "security-unbroker"
+      ]
+    }
+  ],
+  "skills": {
+    "apple-apple-notes": [
+      "document"
+    ],
+    "apple-apple-reminders": [
+      "task"
+    ],
+    "apple-findmy": [
+      "life"
+    ],
+    "apple-imessage": [
+      "message"
+    ],
+    "autonomous-ai-agents-claude-code": [
+      "ai-agent",
+      "coding"
+    ],
+    "autonomous-ai-agents-codex": [
+      "ai-agent",
+      "coding"
+    ],
+    "autonomous-ai-agents-computer-use": [
+      "automation",
+      "ai-agent"
+    ],
+    "autonomous-ai-agents-hermes-agent": [
+      "ai-agent",
+      "sysops"
+    ],
+    "autonomous-ai-agents-opencode": [
+      "ai-agent",
+      "coding"
+    ],
+    "creative-architecture-diagram": [
+      "design"
+    ],
+    "creative-ascii-art": [
+      "design"
+    ],
+    "creative-ascii-video": [
+      "image-video",
+      "design"
+    ],
+    "creative-baoyu-infographic": [
+      "design",
+      "image-video"
+    ],
+    "creative-claude-design": [
+      "design"
+    ],
+    "creative-comfyui": [
+      "image-video",
+      "ai-model"
+    ],
+    "creative-design-md": [
+      "design"
+    ],
+    "creative-excalidraw": [
+      "design"
+    ],
+    "creative-humanizer": [
+      "writing"
+    ],
+    "creative-manim-video": [
+      "image-video",
+      "design"
+    ],
+    "creative-p5js": [
+      "design",
+      "image-video"
+    ],
+    "creative-popular-web-designs": [
+      "design",
+      "coding"
+    ],
+    "creative-pretext": [
+      "design"
+    ],
+    "creative-sketch": [
+      "design"
+    ],
+    "creative-songwriting-and-ai-music": [
+      "audio",
+      "writing"
+    ],
+    "creative-touchdesigner-mcp": [
+      "image-video",
+      "design"
+    ],
+    "email-email-inbox-triage": [
+      "message"
+    ],
+    "email-himalaya": [
+      "message"
+    ],
+    "github-codebase-inspection": [
+      "coding"
+    ],
+    "github-github-auth": [
+      "coding",
+      "security"
+    ],
+    "github-github-code-review": [
+      "coding"
+    ],
+    "github-github-issue-to-pr": [
+      "coding"
+    ],
+    "github-github-issues": [
+      "coding",
+      "task"
+    ],
+    "github-github-pr-workflow": [
+      "coding"
+    ],
+    "github-github-repo-management": [
+      "coding"
+    ],
+    "media-gif-search": [
+      "image-video"
+    ],
+    "media-songsee": [
+      "audio"
+    ],
+    "media-youtube-content": [
+      "image-video",
+      "writing"
+    ],
+    "mlops-evaluation-evaluating-llms-harness": [
+      "ai-model"
+    ],
+    "mlops-evaluation-weights-and-biases": [
+      "ai-model"
+    ],
+    "mlops-huggingface-hub": [
+      "ai-model"
+    ],
+    "mlops-inference-llama-cpp": [
+      "ai-model"
+    ],
+    "mlops-inference-serving-llms-vllm": [
+      "ai-model",
+      "sysops"
+    ],
+    "note-taking-obsidian": [
+      "document"
+    ],
+    "productivity-airtable": [
+      "document"
+    ],
+    "productivity-box": [
+      "document"
+    ],
+    "productivity-document-to-action-items": [
+      "document",
+      "task"
+    ],
+    "productivity-docx": [
+      "document"
+    ],
+    "productivity-google-workspace": [
+      "message",
+      "document",
+      "task"
+    ],
+    "productivity-maps": [
+      "life"
+    ],
+    "productivity-meeting-action-items": [
+      "task",
+      "document"
+    ],
+    "productivity-nano-pdf": [
+      "document"
+    ],
+    "productivity-notion": [
+      "document"
+    ],
+    "productivity-ocr-and-documents": [
+      "document"
+    ],
+    "productivity-pdf": [
+      "document"
+    ],
+    "productivity-powerpoint": [
+      "document"
+    ],
+    "productivity-product-price-monitor": [
+      "automation",
+      "life"
+    ],
+    "productivity-session-librarian": [
+      "task"
+    ],
+    "productivity-teams-meeting-pipeline": [
+      "task",
+      "message"
+    ],
+    "productivity-weekly-review-planning": [
+      "task"
+    ],
+    "productivity-xlsx": [
+      "document"
+    ],
+    "research-arxiv": [
+      "research"
+    ],
+    "research-blocked-page-recovery": [
+      "research"
+    ],
+    "research-blogwatcher": [
+      "research",
+      "automation"
+    ],
+    "research-competitor-news-monitor": [
+      "research",
+      "automation"
+    ],
+    "research-grounded-citations": [
+      "research",
+      "writing"
+    ],
+    "research-llm-wiki": [
+      "document",
+      "research"
+    ],
+    "research-research-paper-writing": [
+      "writing",
+      "research"
+    ],
+    "smart-home-openhue": [
+      "life"
+    ],
+    "social-media-xurl": [
+      "message"
+    ],
+    "software-development-dogfood": [
+      "coding"
+    ],
+    "software-development-hermes-agent-skill-authoring": [
+      "coding",
+      "ai-agent"
+    ],
+    "software-development-inspecting-hermes-desktop-dom": [
+      "coding"
+    ],
+    "software-development-node-inspect-debugger": [
+      "coding"
+    ],
+    "software-development-plan": [
+      "coding",
+      "task"
+    ],
+    "software-development-python-debugpy": [
+      "coding"
+    ],
+    "software-development-requesting-code-review": [
+      "coding",
+      "security"
+    ],
+    "software-development-simplify-code": [
+      "coding"
+    ],
+    "software-development-spike": [
+      "coding"
+    ],
+    "software-development-systematic-debugging": [
+      "coding"
+    ],
+    "software-development-test-driven-development": [
+      "coding"
+    ],
+    "autonomous-ai-agents-antigravity-cli": [
+      "ai-agent",
+      "coding"
+    ],
+    "autonomous-ai-agents-blackbox": [
+      "ai-agent",
+      "coding"
+    ],
+    "autonomous-ai-agents-grok": [
+      "ai-agent",
+      "coding"
+    ],
+    "autonomous-ai-agents-honcho": [
+      "ai-agent"
+    ],
+    "autonomous-ai-agents-openhands": [
+      "ai-agent",
+      "coding"
+    ],
+    "blockchain-evm": [
+      "finance"
+    ],
+    "blockchain-hyperliquid": [
+      "finance"
+    ],
+    "blockchain-solana": [
+      "finance"
+    ],
+    "communication-one-three-one-rule": [
+      "writing"
+    ],
+    "creative-audiocraft-audio-generation": [
+      "audio",
+      "ai-model"
+    ],
+    "creative-baoyu-article-illustrator": [
+      "image-video",
+      "design"
+    ],
+    "creative-baoyu-comic": [
+      "image-video"
+    ],
+    "creative-concept-diagrams": [
+      "design"
+    ],
+    "creative-creative-ideation": [
+      "writing"
+    ],
+    "creative-draw-your-font": [
+      "design"
+    ],
+    "creative-heartmula": [
+      "audio",
+      "ai-model"
+    ],
+    "creative-hyperframes": [
+      "image-video"
+    ],
+    "creative-kanban-video-orchestrator": [
+      "image-video",
+      "automation"
+    ],
+    "creative-meme-generation": [
+      "image-video"
+    ],
+    "creative-pixel-art": [
+      "image-video",
+      "design"
+    ],
+    "creative-simple-english": [
+      "writing"
+    ],
+    "creative-social-media-content-calendar": [
+      "message",
+      "writing"
+    ],
+    "creative-tldraw-offline": [
+      "design"
+    ],
+    "creative-unreal-mcp": [
+      "image-video"
+    ],
+    "data-science-jupyter-notebook": [
+      "coding"
+    ],
+    "devops-actual-setup": [
+      "sysops",
+      "ai-model"
+    ],
+    "devops-docker-management": [
+      "sysops"
+    ],
+    "devops-hermes-s6-container-supervision": [
+      "sysops"
+    ],
+    "devops-inference-sh-cli": [
+      "image-video",
+      "ai-model"
+    ],
+    "devops-pinggy-tunnel": [
+      "sysops"
+    ],
+    "devops-watchers": [
+      "automation"
+    ],
+    "dogfood-adversarial-ux-test": [
+      "coding"
+    ],
+    "email-agentmail": [
+      "message"
+    ],
+    "finance-3-statement-model": [
+      "finance",
+      "document"
+    ],
+    "finance-comps-analysis": [
+      "finance"
+    ],
+    "finance-dcf-model": [
+      "finance"
+    ],
+    "finance-excel-author": [
+      "finance",
+      "document"
+    ],
+    "finance-lbo-model": [
+      "finance"
+    ],
+    "finance-merger-model": [
+      "finance"
+    ],
+    "finance-polymarket": [
+      "finance"
+    ],
+    "finance-pptx-author": [
+      "document",
+      "finance"
+    ],
+    "finance-stocks": [
+      "finance"
+    ],
+    "gaming-minecraft-modpack-server": [
+      "life",
+      "sysops"
+    ],
+    "gaming-pokemon-player": [
+      "life"
+    ],
+    "health-fitness-nutrition": [
+      "life"
+    ],
+    "health-neuroskill-bci": [
+      "life"
+    ],
+    "mcp-fastmcp": [
+      "coding",
+      "ai-agent"
+    ],
+    "mcp-mcp-oauth-remote-gateway": [
+      "ai-agent",
+      "sysops"
+    ],
+    "mcp-mcporter": [
+      "ai-agent"
+    ],
+    "migration-openclaw-migration": [
+      "ai-agent",
+      "sysops"
+    ],
+    "mlops-accelerate": [
+      "ai-model"
+    ],
+    "mlops-chroma": [
+      "ai-model",
+      "research"
+    ],
+    "mlops-clip": [
+      "ai-model",
+      "image-video"
+    ],
+    "mlops-faiss": [
+      "ai-model",
+      "research"
+    ],
+    "mlops-flash-attention": [
+      "ai-model"
+    ],
+    "mlops-guidance": [
+      "ai-model"
+    ],
+    "mlops-huggingface-tokenizers": [
+      "ai-model"
+    ],
+    "mlops-inference-outlines": [
+      "ai-model"
+    ],
+    "mlops-instructor": [
+      "ai-model",
+      "coding"
+    ],
+    "mlops-lambda-labs": [
+      "sysops",
+      "ai-model"
+    ],
+    "mlops-llava": [
+      "ai-model",
+      "image-video"
+    ],
+    "mlops-modal": [
+      "sysops",
+      "ai-model"
+    ],
+    "mlops-models-segment-anything-model": [
+      "ai-model",
+      "image-video"
+    ],
+    "mlops-nemo-curator": [
+      "ai-model"
+    ],
+    "mlops-obliteratus": [
+      "ai-model"
+    ],
+    "mlops-peft": [
+      "ai-model"
+    ],
+    "mlops-pinecone": [
+      "ai-model",
+      "research"
+    ],
+    "mlops-pytorch-fsdp": [
+      "ai-model"
+    ],
+    "mlops-pytorch-lightning": [
+      "ai-model"
+    ],
+    "mlops-qdrant": [
+      "ai-model",
+      "research"
+    ],
+    "mlops-research-dspy": [
+      "ai-model"
+    ],
+    "mlops-saelens": [
+      "ai-model"
+    ],
+    "mlops-simpo": [
+      "ai-model"
+    ],
+    "mlops-slime": [
+      "ai-model"
+    ],
+    "mlops-stable-diffusion": [
+      "image-video",
+      "ai-model"
+    ],
+    "mlops-tensorrt-llm": [
+      "ai-model",
+      "sysops"
+    ],
+    "mlops-torchtitan": [
+      "ai-model"
+    ],
+    "mlops-training-axolotl": [
+      "ai-model"
+    ],
+    "mlops-training-trl-fine-tuning": [
+      "ai-model"
+    ],
+    "mlops-training-unsloth": [
+      "ai-model"
+    ],
+    "mlops-whisper": [
+      "audio",
+      "ai-model"
+    ],
+    "payments-mpp-agent": [
+      "finance",
+      "ai-agent"
+    ],
+    "payments-stripe-link-cli": [
+      "finance"
+    ],
+    "payments-stripe-projects": [
+      "finance",
+      "sysops"
+    ],
+    "productivity-canvas": [
+      "life",
+      "task"
+    ],
+    "productivity-here-now": [
+      "sysops",
+      "document"
+    ],
+    "productivity-memento-flashcards": [
+      "life",
+      "document"
+    ],
+    "productivity-shop": [
+      "life",
+      "finance"
+    ],
+    "productivity-shopify": [
+      "finance",
+      "coding"
+    ],
+    "productivity-siyuan": [
+      "document"
+    ],
+    "productivity-telephony": [
+      "message",
+      "audio"
+    ],
+    "research-bioinformatics": [
+      "research"
+    ],
+    "research-darwinian-evolver": [
+      "ai-model",
+      "research"
+    ],
+    "research-domain-intel": [
+      "security",
+      "research"
+    ],
+    "research-drug-discovery": [
+      "research"
+    ],
+    "research-duckduckgo-search": [
+      "research"
+    ],
+    "research-gitnexus-explorer": [
+      "coding",
+      "research"
+    ],
+    "research-osint-investigation": [
+      "research",
+      "security"
+    ],
+    "research-parallel-cli": [
+      "research"
+    ],
+    "research-pinecone-research": [
+      "research",
+      "ai-agent"
+    ],
+    "research-qmd": [
+      "research",
+      "document"
+    ],
+    "research-scrapling": [
+      "research"
+    ],
+    "research-searxng-search": [
+      "research"
+    ],
+    "security-1password": [
+      "security"
+    ],
+    "security-godmode": [
+      "security",
+      "ai-model"
+    ],
+    "security-oss-forensics": [
+      "security",
+      "coding"
+    ],
+    "security-sherlock": [
+      "security",
+      "research"
+    ],
+    "security-unbroker": [
+      "security",
+      "automation"
+    ],
+    "security-web-pentest": [
+      "security"
+    ],
+    "software-development-code-wiki": [
+      "coding",
+      "design"
+    ],
+    "software-development-rest-graphql-debug": [
+      "coding"
+    ],
+    "software-development-subagent-driven-development": [
+      "ai-agent",
+      "coding"
+    ],
+    "web-development-cloudflare-temporary-deploy": [
+      "sysops",
+      "coding"
+    ],
+    "web-development-page-agent": [
+      "coding",
+      "ai-agent"
+    ],
+    "yuanbao-yuanbao": [
+      "message"
+    ],
+    "google-workspace": [
+      "message",
+      "task",
+      "document"
+    ]
+  }
+}

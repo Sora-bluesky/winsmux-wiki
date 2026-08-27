@@ -57,6 +57,8 @@ const catalog = [
   ['/hermes/syntheses/not-a-mirror/', '正本との差分'],
   ['/hermes/models/', 'モデルと料金（Portal 全モデルの一覧・毎日更新）'],
   ['/hermes/updates/', '今週の更新（公式 docs への追随記録）'],
+  ['/hermes/howto/', '逆引き（やりたいことから探す索引）'],
+  ['/hermes/trouble/', 'トラブル（症状から対処を引く表）'],
 ];
 
 for (const f of copied) {
