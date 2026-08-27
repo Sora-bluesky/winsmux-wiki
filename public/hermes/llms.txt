@@ -39,6 +39,7 @@ Hermes Agent 0.20.5
 - [Claude Code からの乗り換え（概念対応表）](https://wiki.winsmux.dev/hermes/from-claude-code/)
 - [日本語入力と日本語化の現在地](https://wiki.winsmux.dev/hermes/japanese/)
 - [コミュニティの動き（Discord の週次日本語要約）](https://wiki.winsmux.dev/hermes/community/)
+- [このサイトについて（運営者・データの扱い・免責）](https://wiki.winsmux.dev/hermes/about/)
 - [developer-guide/acp-internals（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/acp-internals/)
 - [developer-guide/adding-platform-adapters（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
 - [developer-guide/adding-providers（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-providers/)
@@ -443,6 +444,7 @@ Hermes Agent 0.20.5
 
 ## 生 Markdown
 
+- https://wiki.winsmux.dev/hermes/raw/about.md
 - https://wiki.winsmux.dev/hermes/raw/all.md
 - https://wiki.winsmux.dev/hermes/raw/concepts/approval.md
 - https://wiki.winsmux.dev/hermes/raw/concepts/config.md

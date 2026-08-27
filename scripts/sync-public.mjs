@@ -63,6 +63,7 @@ const catalog = [
   ['/hermes/from-claude-code/', 'Claude Code からの乗り換え（概念対応表）'],
   ['/hermes/japanese/', '日本語入力と日本語化の現在地'],
   ['/hermes/community/', 'コミュニティの動き（Discord の週次日本語要約）'],
+  ['/hermes/about/', 'このサイトについて（運営者・データの扱い・免責）'],
 ];
 
 for (const f of copied) {
