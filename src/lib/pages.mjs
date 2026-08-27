@@ -2,7 +2,16 @@
 // 導線ページは廃止済み(公式ミラーへ転送)。ここには独自ページと索引だけを置く。
 // group: menu section header ('' = ungrouped).
 export const PAGES = [
-  { path: '/hermes/', label: 'Hermes Agent', group: '' },
+  { path: '/hermes/', label: 'Hermes Agent Wiki', group: '' },
+  { path: '/hermes/first/', label: '初めての方へ', group: '調べる' },
+  { path: '/hermes/howto/', label: '逆引き', group: '調べる' },
+  { path: '/hermes/trouble/', label: 'トラブル', group: '調べる' },
+  { path: '/hermes/models/', label: 'モデルと料金', group: '調べる' },
+  { path: '/hermes/cost/', label: '料金の考え方', group: '調べる' },
+  { path: '/hermes/from-claude-code/', label: 'Claude Code からの乗り換え', group: '調べる' },
+  { path: '/hermes/japanese/', label: '日本語入力と日本語化', group: '調べる' },
+  { path: '/hermes/updates/', label: '今週の更新', group: '調べる' },
+  { path: '/hermes/community/', label: 'コミュニティの動き', group: '調べる' },
   { path: '/hermes/ops/', label: '運用', group: '' },
   { path: '/hermes/trust/', label: 'どこまで任せるか', group: '' },
   { path: '/hermes/guide/', label: 'よく使う', group: 'Hermes Agentの使い方' },
@@ -21,6 +30,5 @@ export const PAGES = [
   { path: '/hermes/entities/line/', label: 'LINE から使う', group: 'Hermes Agentの使い方' },
   { path: '/hermes/entities/telegram/', label: 'Telegram から使う', group: 'Hermes Agentの使い方' },
   { path: '/hermes/entities/nous-portal/', label: 'Nous Portal', group: 'Hermes Agentの使い方' },
-  { path: '/hermes/syntheses/cost-and-model/', label: 'コストとモデル', group: 'Hermes Agentの使い方' },
   { path: '/hermes/syntheses/not-a-mirror/', label: '正本との差分', group: 'Hermes Agentの使い方' },
 ];

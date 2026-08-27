@@ -2,8 +2,17 @@
 import { PAGES } from '../lib/pages.mjs';
 
 const path = Astro.url.pathname;
-const installActive = path === '/hermes/docs/getting-started/quickstart/';
-const guideActive = path.startsWith('/hermes/guide/') || path.startsWith('/hermes/ops/') || path.startsWith('/hermes/trust/');
+const NAV = [
+  { href: '/hermes/first/', label: '初めての方へ' },
+  { href: '/hermes/howto/', label: '逆引き' },
+  { href: '/hermes/trouble/', label: 'トラブル' },
+  { href: '/hermes/models/', label: 'モデルと料金' },
+  { href: '/hermes/guide/', label: 'ドキュメント' },
+];
+const isActive = (href: string) =>
+  href === '/hermes/guide/'
+    ? path.startsWith('/hermes/guide/') || path.startsWith('/hermes/docs/')
+    : path.startsWith(href);
 
 type Group = { name: string; items: typeof PAGES };
 const groups: Group[] = [];
@@ -21,25 +30,20 @@ for (const p of PAGES) {
       <span class="rounded-full border border-border px-2 py-px text-[10px] font-medium text-fg-muted">非公式・日本語</span>
     </a>
     <div class="flex items-center gap-2">
-      <nav class="hidden items-center gap-5 text-sm sm:flex">
-        <a
-          href="/hermes/docs/getting-started/quickstart/"
-          class:list={[
-            'no-underline',
-            installActive ? 'font-semibold text-fg' : 'text-fg-muted hover:text-fg',
-          ]}
-        >
-          インストールする
-        </a>
-        <a
-          href="/hermes/guide/"
-          class:list={[
-            'no-underline',
-            guideActive ? 'font-semibold text-fg' : 'text-fg-muted hover:text-fg',
-          ]}
-        >
-          Hermes Agentの使い方
-        </a>
+      <nav class="hidden items-center gap-5 text-sm md:flex">
+        {
+          NAV.map((n) => (
+            <a
+              href={n.href}
+              class:list={[
+                'no-underline',
+                isActive(n.href) ? 'font-semibold text-fg' : 'text-fg-muted hover:text-fg',
+              ]}
+            >
+              {n.label}
+            </a>
+          ))
+        }
       </nav>
       <a
         href="/hermes/search/"

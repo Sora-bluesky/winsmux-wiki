@@ -24,4 +24,4 @@ Hermes の設定は config.yaml というファイルが正本です。どのモ
 
 ## このサイトの関連
 
-- [コストとモデル](/hermes/syntheses/cost-and-model/)
+- [料金と実例](/hermes/cost/)

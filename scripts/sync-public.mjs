@@ -53,12 +53,16 @@ const catalog = [
   ['/hermes/entities/line/', 'LINEから使う'],
   ['/hermes/entities/telegram/', 'Telegramから使う'],
   ['/hermes/entities/nous-portal/', 'Nous Portal'],
-  ['/hermes/syntheses/cost-and-model/', 'コストとモデル'],
   ['/hermes/syntheses/not-a-mirror/', '正本との差分'],
   ['/hermes/models/', 'モデルと料金（Portal 全モデルの一覧・毎日更新）'],
   ['/hermes/updates/', '今週の更新（公式 docs への追随記録）'],
   ['/hermes/howto/', '逆引き（やりたいことから探す索引）'],
   ['/hermes/trouble/', 'トラブル（症状から対処を引く表）'],
+  ['/hermes/first/', '初めての方へ（段階式の道筋）'],
+  ['/hermes/cost/', '料金と実例（費用構造と価格の実例）'],
+  ['/hermes/from-claude-code/', 'Claude Code からの乗り換え（概念対応表）'],
+  ['/hermes/japanese/', '日本語入力と日本語化の現在地'],
+  ['/hermes/community/', 'コミュニティの動き（Discord の週次日本語要約）'],
 ];
 
 for (const f of copied) {

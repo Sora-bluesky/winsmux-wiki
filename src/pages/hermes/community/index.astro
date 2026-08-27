@@ -1,0 +1,72 @@
+---
+// コミュニティの動き（Wiki 層 #10）。
+// データ: data/wiki/community.json（公開アーカイブ teknium1/nous-discord-archive の週次日本語要約）。
+// 上流アーカイブが止まると archiveUpdatedAt が古いまま残る設計（鮮度をそのまま見せる）。
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import community from '../../../../data/wiki/community.json';
+
+type Week = { week: string; range: string; topics: { channel: string; summary: string }[] };
+const weeks = community.weeks as Week[];
+---
+
+<BaseLayout
+  title="コミュニティの動き"
+  description="公式 Discord の開発チャンネルの話題を、公開アーカイブから週ごとに日本語で要約しています。"
+  sources={['https://github.com/teknium1/nous-discord-archive']}
+  showAsk={false}
+  prevOverride={null}
+  nextOverride={null}
+>
+  <article class="prose">
+    <h1>コミュニティの動き</h1>
+    <p>
+      Hermes の話題は公式 Discord（<a href="https://discord.gg/nousresearch" target="_blank" rel="noopener">discord.gg/nousresearch</a>）が中心ですが、やり取りは英語です。ここでは、開発元が公開しているチャンネルのアーカイブから、週ごとの話題を日本語で要約しています。
+    </p>
+    <p class="wiki-note">
+      このページはこのサイト独自の要約です。原文は
+      <a href="https://github.com/teknium1/nous-discord-archive" target="_blank" rel="noopener">公開アーカイブ</a>
+      にあります。アーカイブの最終更新: <strong>{community.archiveUpdatedAt}</strong>（要約の生成日: {community.generatedAt}）
+    </p>
+  </article>
+
+  <div class="cm-weeks">
+    {
+      weeks.map((w) => (
+        <section class="cm-week">
+          <h2 class="cm-title">{w.range}</h2>
+          <div class="cm-topics">
+            {w.topics.map((t) => (
+              <div class="cm-topic">
+                <span class="cm-channel">#{t.channel}</span>
+                <p class="cm-summary">{t.summary}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <article class="prose mt-10">
+    <p>
+      参加すると原文をそのまま追えます。質問も歓迎されています（英語）。参加は
+      <a href="https://discord.gg/nousresearch" target="_blank" rel="noopener">こちら</a> から。
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .wiki-note {
+    border: 1px solid #bfdbfe;
+    background: var(--color-accent-soft);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
+  }
+  .cm-weeks { display: flex; flex-direction: column; gap: 1.75rem; margin-top: 1.5rem; }
+  .cm-title { font-size: 1.05rem; font-weight: 650; margin: 0 0 0.6rem; }
+  .cm-topics { display: flex; flex-direction: column; gap: 0.6rem; }
+  .cm-topic { border: 1px solid var(--color-border); border-radius: 10px; padding: 0.8rem 1rem; background: var(--color-bg); }
+  .cm-channel { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-fg-muted); }
+  .cm-summary { margin: 0.3rem 0 0; font-size: 0.88rem; line-height: 1.7; color: var(--color-fg-secondary); }
+</style>

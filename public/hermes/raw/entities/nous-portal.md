@@ -15,7 +15,7 @@ Nous Portal は、Hermes の開発元 Nous Research が公式に推奨するモ�
 
 Web 検索や画像生成などの道具をまとめて使える Tool Gateway も付きます。`hermes setup --portal` で最初につなぐのがこれです。
 
-Portal を使わず、OpenRouter や OpenAI、Anthropic、手元のローカルモデルにつなぐこともできます。選び方は [コストとモデル](/hermes/syntheses/cost-and-model/) にまとめました。
+Portal を使わず、OpenRouter や OpenAI、Anthropic、手元のローカルモデルにつなぐこともできます。選び方は [料金と実例](/hermes/cost/) にまとめました。
 
 ## 公式で読む
 
@@ -26,4 +26,4 @@ Portal を使わず、OpenRouter や OpenAI、Anthropic、手元のローカル�
 ## このサイトの関連
 
 - [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)
-- [コストとモデル](/hermes/syntheses/cost-and-model/)
+- [料金と実例](/hermes/cost/)

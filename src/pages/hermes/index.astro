@@ -1,39 +1,225 @@
 ---
-import indexSrc from '../../raw/index.md?raw';
-import { buildDoc } from '../../lib/doc';
-import Card from '../../components/Card.astro';
+// トップ（案A ポータル型・2026-08-27 sora 選定。design/canvas/Main.dc.html が設計正本）。
+// 「今週の更新」は data/wiki-updates.json の実データ最新3件。
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import updates from '../../../data/wiki-updates.json';
 
-const doc = buildDoc('index', indexSrc);
-// 見出しより上のカード2枚が入口。本文(markdown)がガイドの本体。
-const [rawIntro, ...rest] = doc.html.split('<h2');
-// 入口では折りたたみ目次・右レールを出さない(カードとガイド本文が主役)
-const intro = rawIntro
-  .replace(/<details class="toc[\s\S]*?<\/details>/, '')
-  .replace(/<nav class="toc-rail[\s\S]*?<\/nav>/, '');
-const body = rest.length ? '<h2' + rest.join('<h2') : '';
+type Entry = { date: string; pages: { id: string; title: string; url: string }[] };
+const recent = (updates.entries as Entry[]).slice(0, 3);
+const line = (e: Entry) =>
+  e.pages.length === 1 ? `「${e.pages[0].title}」を訳し直しました` : `${e.pages.length}ページを訳し直しました（${e.pages[0].title} など）`;
+
+const tiles = [
+  {
+    href: '/hermes/howto/',
+    title: '逆引き',
+    body: '「〜したい」から最短の手順ページへ。導入・つなぐ・自動化・モデル・安全・運用の6分類。',
+  },
+  {
+    href: '/hermes/trouble/',
+    title: 'トラブル',
+    body: '症状から原因と対処を引く表。つながらない・鍵が通らない・ジョブが動かない。',
+  },
+  {
+    href: '/hermes/models/',
+    title: 'モデルと料金',
+    body: 'Portal 掲載の全モデルの価格・割引・無料枠の一覧。毎日自動更新。',
+  },
+  {
+    href: '/hermes/from-claude-code/',
+    title: 'Claude Code からの乗り換え',
+    body: 'skills・memory・定時実行の対応表と、移行の考え方。',
+  },
+  {
+    href: '/hermes/japanese/',
+    title: '日本語入力と日本語化',
+    body: '日本語で使うときの設定と、入力まわりの既知問題の現在地。毎週追跡。',
+  },
+  {
+    href: '/hermes/community/',
+    title: 'コミュニティの動き',
+    body: '公式 Discord の開発チャンネルの話題を、週ごとに日本語で要約。',
+  },
+];
+
+const chips = [
+  { href: '/hermes/howto/?cat=つなぐ', label: 'スマホ・メッセージでつなぐ' },
+  { href: '/hermes/howto/?cat=自動化', label: '毎日の自動実行' },
+  { href: '/hermes/howto/?cat=モデル', label: 'モデルを選ぶ' },
+  { href: '/hermes/howto/?cat=安全', label: 'どこまで任せるか' },
+  { href: '/hermes/trouble/', label: 'うまく動かないとき' },
+  { href: '/hermes/cost/', label: '料金をおさえる' },
+];
+
+const docChips = [
+  { href: '/hermes/docs/getting-started/quickstart/', label: '導入' },
+  { href: '/hermes/docs/user-guide/messaging/', label: 'メッセージ窓口' },
+  { href: '/hermes/docs/user-guide/features/overview/', label: '機能' },
+  { href: '/hermes/guide/', label: 'よく使う' },
+  { href: '/hermes/guide/skills/', label: 'skill（196）' },
+  { href: '/hermes/guide/dev/', label: '開発者向け' },
+  { href: '/hermes/guide/all/', label: 'すべての索引' },
+];
 ---
 
 <BaseLayout
-  title={doc.title}
-  description={doc.description}
-  rawPath={doc.rawPath}
-  sources={doc.sources}
-  hermesVersion={doc.hermesVersion}
-  confidence={doc.confidence}
+  title="Hermes Agent Wiki"
+  description="Hermes Agent の日本語知識ベース。公式ドキュメント全ページの日本語版に、逆引き・トラブル対処・料金の早見をのせた非公式サイトです。"
+  rawPath="/hermes/raw/index.md"
+  sources={['https://hermes-agent.nousresearch.com/docs/']}
+  hermesVersion="0.20.5"
+  showAsk={true}
+  prevOverride={null}
+  nextOverride={null}
 >
-  <article class="prose" set:html={intro} />
-  <div class="mt-8 grid gap-4">
-    <Card
-      href="/hermes/docs/getting-started/quickstart/"
-      title="Hermes Agentをインストールする"
-      body="公式クイックスタートの日本語版です。入れて、モデルを選び、最初の会話まで。"
-    />
-    <Card
-      href="/hermes/docs/getting-started/learning-path/"
-      title="レベルごとの読みかた"
-      body="初級・中級・上級それぞれの、読む順番と所要時間の目安です。公式の学習パスの日本語版。"
-    />
+  <section class="hero">
+    <h1>Hermes Agent の日本語知識ベース</h1>
+    <p class="hero-lead">
+      公式ドキュメント全402ページの日本語版に、逆引き・トラブル対処・料金の早見をのせた<strong>非公式</strong>サイトです。毎日、公式の更新に追随しています。正本は常に
+      <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener">Hermes Agent Documentation</a> です。
+    </p>
+    <button type="button" class="hero-search js-search-open" aria-label="検索を開く（Ctrl+K）">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+      やりたいこと・エラー文で検索（Ctrl+K）
+    </button>
+    <div class="hero-chips">
+      {chips.map((c) => <a href={c.href}>{c.label}</a>)}
+    </div>
+  </section>
+
+  <div class="top-grid">
+    <section class="top-main">
+      <div class="sec-head">
+        <h2>調べる</h2>
+        <span class="sec-note">このサイト独自のページ</span>
+      </div>
+      <div class="tiles">
+        {
+          tiles.map((t) => (
+            <a href={t.href} class="tile">
+              <span class="tile-title">{t.title}</span>
+              <span class="tile-body">{t.body}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="top-side">
+      <div class="sec-head">
+        <h2>今週の更新</h2>
+        <span class="fresh"><span class="dot"></span>上流に追随中</span>
+      </div>
+      <div class="feed">
+        {
+          recent.map((e) => (
+            <a href="/hermes/updates/" class="feed-item">
+              <span class="feed-date">{e.date}</span>
+              <span class="feed-text">{line(e)}</span>
+            </a>
+          ))
+        }
+      </div>
+      <a href="/hermes/updates/" class="feed-more">更新の一覧を見る →</a>
+    </section>
   </div>
-  <article class="prose mt-10" set:html={body} />
+
+  <section class="levels">
+    <h2>レベルに合わせて読む</h2>
+    <div class="level-cards">
+      <a href="/hermes/first/" class="level-card">
+        <span class="level-step">STEP 1</span>
+        <span class="level-title">初めての方へ</span>
+        <span class="level-body">インストールから最初の会話まで。全部を読まずに、次の一歩だけ。</span>
+      </a>
+      <a href="/hermes/guide/" class="level-card">
+        <span class="level-step">STEP 2</span>
+        <span class="level-title">ふだんの使いかた</span>
+        <span class="level-body">スマホからの利用、定時実行、skill。よく使うページの案内。</span>
+      </a>
+      <a href="/hermes/trust/" class="level-card">
+        <span class="level-step">STEP 3</span>
+        <span class="level-title">任せかたと運用</span>
+        <span class="level-body">どこまで任せるか、承認と隔離、常時稼働。長く使うための設定。</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="docs-sec">
+    <div class="sec-head">
+      <h2>ドキュメント</h2>
+      <span class="sec-note">公式 docs 全402ページの日本語版・毎日更新</span>
+    </div>
+    <div class="doc-chips">
+      {docChips.map((c) => <a href={c.href}>{c.label}</a>)}
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .hero { display: flex; flex-direction: column; align-items: center; gap: 1.1rem; text-align: center; padding: 2.2rem 0 2.4rem; }
+  .hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.1rem); line-height: 1.25; margin: 0; }
+  .hero-lead { margin: 0; max-width: 40rem; font-size: 0.95rem; line-height: 1.8; color: var(--color-fg-secondary); }
+  .hero-search {
+    display: flex; align-items: center; gap: 0.75rem; width: 100%; max-width: 40rem;
+    border: 1px solid var(--color-border-strong); border-radius: 12px; background: var(--color-bg);
+    padding: 0.85rem 1.1rem; font-size: 0.95rem; color: var(--color-fg-muted); cursor: pointer;
+    box-shadow: 0 1px 2px rgb(27 27 27 / 0.04);
+  }
+  .hero-search:hover { border-color: var(--color-accent); color: var(--color-fg-secondary); }
+  .hero-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; max-width: 44rem; }
+  .hero-chips a {
+    font-size: 0.82rem; color: var(--color-accent); background: var(--color-accent-soft);
+    border-radius: 999px; padding: 0.45rem 0.9rem; text-decoration: none;
+  }
+  .hero-chips a:hover { background: #dbeafe; }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.9rem; }
+  .sec-head h2 { font-size: 1.2rem; margin: 0; }
+  .sec-note { font-size: 0.75rem; color: var(--color-fg-muted); }
+  .top-grid { display: grid; gap: 2rem; margin-top: 1rem; }
+  @media (min-width: 1024px) { .top-grid { grid-template-columns: 2fr 1fr; } }
+  .tiles { display: grid; gap: 0.85rem; }
+  @media (min-width: 640px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .tile {
+    display: flex; flex-direction: column; gap: 0.4rem; border: 1px solid var(--color-border);
+    border-radius: 12px; padding: 1.1rem 1.2rem; background: var(--color-bg); text-decoration: none; transition: 0.15s;
+  }
+  .tile:hover { border-color: var(--color-border-strong); background: var(--color-bg-subtle); }
+  .tile-title { font-weight: 600; color: var(--color-fg); font-size: 1rem; }
+  .tile-body { font-size: 0.82rem; line-height: 1.6; color: var(--color-fg-secondary); }
+  .fresh {
+    display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.72rem; color: #166534;
+    background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 999px; padding: 0.15rem 0.6rem;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 99px; background: #16a34a; }
+  .feed { display: flex; flex-direction: column; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; }
+  .feed-item {
+    display: flex; flex-direction: column; gap: 0.2rem; padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--color-border); text-decoration: none; background: var(--color-bg);
+  }
+  .feed-item:last-of-type { border-bottom: 0; }
+  .feed-item:hover { background: var(--color-bg-subtle); }
+  .feed-date { font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-fg-muted); }
+  .feed-text { font-size: 0.82rem; line-height: 1.6; color: var(--color-fg); font-weight: 500; }
+  .feed-more { display: inline-block; margin-top: 0.6rem; font-size: 0.82rem; text-decoration: none; }
+  .feed-more:hover { text-decoration: underline; }
+  .levels { margin-top: 2.5rem; }
+  .levels h2 { font-size: 1.2rem; margin: 0 0 0.9rem; }
+  .level-cards { display: grid; gap: 0.85rem; }
+  @media (min-width: 768px) { .level-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .level-card {
+    display: flex; flex-direction: column; gap: 0.35rem; border: 1px solid var(--color-border);
+    border-radius: 12px; padding: 1.2rem 1.3rem; background: var(--color-bg); text-decoration: none; transition: 0.15s;
+  }
+  .level-card:hover { border-color: var(--color-border-strong); background: var(--color-bg-subtle); }
+  .level-step { font-size: 0.7rem; font-weight: 600; color: var(--color-accent); letter-spacing: 0.04em; }
+  .level-title { font-weight: 600; color: var(--color-fg); font-size: 1rem; }
+  .level-body { font-size: 0.82rem; line-height: 1.6; color: var(--color-fg-secondary); }
+  .docs-sec { margin-top: 2.5rem; }
+  .doc-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .doc-chips a {
+    font-size: 0.85rem; color: var(--color-fg-secondary); border: 1px solid var(--color-border);
+    border-radius: 8px; padding: 0.5rem 0.9rem; text-decoration: none; background: var(--color-bg);
+  }
+  .doc-chips a:hover { background: var(--color-bg-subtle); color: var(--color-fg); }
+</style>

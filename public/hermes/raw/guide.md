@@ -63,7 +63,7 @@ raw: /hermes/raw/guide.md
 - [Cron](/hermes/concepts/cron/) — 定時実行
 - [承認](/hermes/concepts/approval/) — 危険な操作を止める
 - [設定](/hermes/concepts/config/) — config.yaml とモデル
-- [コストとモデル](/hermes/syntheses/cost-and-model/) — お金のかかりどころ
+- [料金と実例](/hermes/cost/) — お金のかかりどころ
 - [正本との差分](/hermes/syntheses/not-a-mirror/) — このサイトと公式の関係
 
 ## 置き場所とつなぎ先

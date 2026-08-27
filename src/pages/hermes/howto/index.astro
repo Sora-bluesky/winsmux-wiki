@@ -132,4 +132,16 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
       apply();
     });
   }
+  // トップの chips からの着地: /hermes/howto/?cat=つなぐ or ?q=検索語
+  const params = new URLSearchParams(location.search);
+  const pCat = params.get('cat');
+  const pQ = params.get('q');
+  if (pCat) {
+    const chip = chips.find((c) => c.dataset.cat === pCat);
+    if (chip) chip.click();
+  }
+  if (pQ) {
+    search.value = pQ;
+    apply();
+  }
 </script>
