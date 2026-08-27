@@ -33,5 +33,5 @@ Hermes Agent の日本語知識ベースです。公式ドキュメント全402�
 
 - [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)
 - [メッセージ窓口の一覧](/hermes/docs/user-guide/messaging/) — LINE、Telegram、Discord、Slack など
-- [skill の索引](/hermes/guide/skills/) — 196件を用途からさがせます
+- [skill の索引](/hermes/guide/skills/) — 用途からさがせます
 - [すべての索引](/hermes/guide/all/) — 公式全ページの日本語版一覧

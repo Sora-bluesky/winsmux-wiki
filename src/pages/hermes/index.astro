@@ -56,7 +56,7 @@ const docChips = [
   { href: '/hermes/docs/user-guide/messaging/', label: 'メッセージ窓口' },
   { href: '/hermes/docs/user-guide/features/overview/', label: '機能' },
   { href: '/hermes/guide/', label: 'よく使う' },
-  { href: '/hermes/guide/skills/', label: 'skill（196）' },
+  { href: '/hermes/guide/skills/', label: 'skill 一覧' },
   { href: '/hermes/guide/dev/', label: '開発者向け' },
   { href: '/hermes/guide/all/', label: 'すべての索引' },
 ];
@@ -75,7 +75,7 @@ const docChips = [
   <section class="hero">
     <h1>Hermes Agent Wiki</h1>
     <p class="hero-lead">
-      公式ドキュメント全402ページの日本語版に、逆引き・トラブル対処・料金の早見をのせた<strong>非公式</strong>サイトです。毎日、公式の更新に追随しています。正本は常に
+      公式ドキュメント全ページの日本語版に、逆引き・トラブル対処・料金の早見をのせた<strong>非公式</strong>サイトです。毎日、公式の更新に追随しています。正本は常に
       <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener">Hermes Agent Documentation</a> です。
     </p>
     <button type="button" class="hero-search js-search-open" aria-label="検索を開く（Ctrl+K）">
@@ -149,7 +149,7 @@ const docChips = [
   <section class="docs-sec">
     <div class="sec-head">
       <h2>ドキュメント</h2>
-      <span class="sec-note">公式 docs 全402ページの日本語版・毎日更新</span>
+      <span class="sec-note">公式 docs 全ページの日本語版・毎日更新</span>
     </div>
     <div class="doc-chips">
       {docChips.map((c) => <a href={c.href}>{c.label}</a>)}
