@@ -27,6 +27,19 @@ const doc = buildDoc(`docs/${slug}`, src); // buildDoc resolves not-yet-translat
 const order = (sidebar.order as string[]).map((id) => id.replace(/\/index$/, '')).filter((id) => existingSet.has(id));
 const idx = order.indexOf(slug as string);
 const label = (id: string) => id.split('/').pop() as string;
+// skill ページには「原文 SKILL.md（frontmatter 込み・そのまま使える実体）」の取得ボックスを出す。
+// パスはページ内の skill 情報テーブルから抽出（表形式195件 + 旧形式1件を実測カバー）。
+const skillPath = (slug as string).startsWith('user-guide/skills/')
+  ? (doc.markdown.match(/\| パス \| `([^`]+)` \|/)?.[1] ??
+      doc.markdown.match(/skill のパス:\*\*\s*`([^`]+)`/)?.[1])?.replace(/\/$/, '')
+  : undefined;
+const skillRawUrl = skillPath
+  ? `https://raw.githubusercontent.com/NousResearch/hermes-agent/main/${skillPath}/SKILL.md`
+  : '';
+const skillGhUrl = skillPath
+  ? `https://github.com/NousResearch/hermes-agent/blob/main/${skillPath}/SKILL.md`
+  : '';
+
 const prev = idx > 0 ? { path: `/hermes/docs/${order[idx - 1]}/`, label: label(order[idx - 1]) } : null;
 const next =
   idx >= 0 && idx < order.length - 1
@@ -45,5 +58,64 @@ const next =
   prevOverride={prev}
   nextOverride={next}
 >
+  {
+    skillPath && (
+      <div class="mb-6 rounded-lg border border-border bg-bg-subtle px-4 py-3 text-sm">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-medium text-fg">この skill をそのまま使う:</span>
+          <button
+            type="button"
+            id="skill-copy"
+            data-url={skillRawUrl}
+            class="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-bg px-3 text-sm text-fg hover:bg-bg-elevated"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+            原文 SKILL.md をコピー
+          </button>
+          <a
+            href={skillGhUrl}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex h-9 items-center rounded-md border border-border bg-bg px-3 text-sm text-fg no-underline hover:bg-bg-elevated"
+          >
+            GitHub で原文を見る
+          </a>
+          <span id="skill-copy-note" class="text-xs text-fg-muted"></span>
+        </div>
+        <p class="mb-0 mt-2 text-xs text-fg-muted">
+          英語原文・frontmatter 込みで、Hermes が読み込む実体そのままです（このページの本文は日本語版）。
+        </p>
+      </div>
+    )
+  }
   <article class="prose" set:html={doc.html} />
 </BaseLayout>
+
+<script>
+  const copyBtn = document.getElementById('skill-copy') as HTMLButtonElement | null;
+  const note = document.getElementById('skill-copy-note');
+  copyBtn?.addEventListener('click', async () => {
+    const url = copyBtn.dataset.url;
+    if (!url || !note) return;
+    note.textContent = '取得中…';
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(String(res.status));
+      const text = await res.text();
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      note.textContent = 'コピーしました';
+    } catch {
+      note.textContent = 'コピーできませんでした。GitHub から取得してください';
+    }
+    setTimeout(() => { if (note) note.textContent = ''; }, 4000);
+  });
+</script>
