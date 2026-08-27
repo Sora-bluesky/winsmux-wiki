@@ -1,0 +1,197 @@
+---
+// モデルと料金の一覧（Wiki 層 #9）。
+// データは data/portal-models.json（scripts/mirror-models.mjs が公開 API
+// https://inference-api.nousresearch.com/v1/models に追随。日次 sync 組込み）。
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import catalog from '../../../../data/portal-models.json';
+
+type M = {
+  id: string;
+  name: string;
+  type: 'text' | 'embeddings' | 'other';
+  ctx: number | null;
+  inPerM: number | null;
+  outPerM: number | null;
+  listInPerM: number | null;
+  listOutPerM: number | null;
+  discount: number | null;
+  free: boolean;
+};
+const models = catalog.models as M[];
+const counts = catalog.counts as { text: number; embeddings: number; other: number };
+
+const fmt = (n: number | null) => {
+  if (n === null) return '—';
+  if (n === 0) return '$0';
+  const s = n >= 1 ? n.toFixed(2) : n.toPrecision(2);
+  return `$${Number(s)}`;
+};
+const fmtCtx = (n: number | null) => {
+  if (!n) return '—';
+  if (n >= 1_000_000) return `${Math.round(n / 100_000) / 10}M`;
+  return `${Math.round(n / 1000)}K`;
+};
+const typeLabel = { text: 'TEXT', embeddings: 'EMBEDDINGS', other: 'OTHER' } as const;
+---
+
+<BaseLayout
+  title="モデルと料金"
+  description={`Nous Portal で使える全 ${catalog.count} モデルの価格・割引・無料枠・コンテキスト長の一覧。毎日自動更新。`}
+  sources={[
+    'https://portal.nousresearch.com/models',
+    'https://hermes-agent.nousresearch.com/docs/integrations/nous-portal',
+  ]}
+  showAsk={false}
+  prevOverride={null}
+  nextOverride={null}
+>
+  <article class="prose">
+    <h1>モデルと料金</h1>
+    <p>
+      Nous Portal で使える全 {catalog.count} モデル（TEXT {counts.text} / EMBEDDINGS {counts.embeddings} / OTHER{' '}
+      {counts.other}）の一覧です。価格は 100万トークンあたりの米ドルで、Portal 価格と定価の両方を載せています。データは
+      Portal と同じ公開 API から毎日取り直しています（取得日 {catalog.fetchedAt}）。
+    </p>
+    <p class="wiki-note">
+      このページはこのサイト独自のまとめです。正本は
+      <a href="https://portal.nousresearch.com/models" target="_blank" rel="noopener">portal.nousresearch.com/models</a>
+      、契約や使い方は <a href="/hermes/docs/integrations/nous-portal/">Nous Portal</a> を見てください。
+    </p>
+  </article>
+
+  <div class="m-controls">
+    <input id="m-search" type="search" placeholder="モデル名で絞り込み" aria-label="モデル名で絞り込み" />
+    <div class="m-chips" role="group" aria-label="種別で絞り込み">
+      <button type="button" class="m-chip active" data-filter="all">すべて（{catalog.count}）</button>
+      <button type="button" class="m-chip" data-filter="text">TEXT（{counts.text}）</button>
+      <button type="button" class="m-chip" data-filter="embeddings">EMBEDDINGS（{counts.embeddings}）</button>
+      <button type="button" class="m-chip" data-filter="other">OTHER（{counts.other}）</button>
+      <button type="button" class="m-chip" data-filter="free">無料（{models.filter((m) => m.free).length}）</button>
+      <button type="button" class="m-chip" data-filter="deal">割引 50%+（{models.filter((m) => (m.discount ?? 0) >= 50).length}）</button>
+    </div>
+  </div>
+
+  <div class="m-tablewrap">
+    <table class="m-table">
+      <thead>
+        <tr>
+          <th>モデル</th>
+          <th>種別</th>
+          <th>コンテキスト</th>
+          <th>Portal 価格（/1M）</th>
+          <th>定価（/1M）</th>
+          <th>割引</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          models.map((m) => (
+            <tr
+              data-name={`${m.name} ${m.id}`.toLowerCase()}
+              data-type={m.type}
+              data-free={m.free ? '1' : ''}
+              data-deal={(m.discount ?? 0) >= 50 ? '1' : ''}
+            >
+              <td>
+                <span class="m-name">{m.name}</span>
+                <span class="m-id">{m.id}</span>
+              </td>
+              <td><span class={`m-type m-type-${m.type}`}>{typeLabel[m.type]}</span></td>
+              <td class="m-num">{fmtCtx(m.ctx)}</td>
+              <td class="m-num">
+                {m.free ? <span class="m-free">無料</span> : `入 ${fmt(m.inPerM)} / 出 ${fmt(m.outPerM)}`}
+              </td>
+              <td class="m-num">{m.free || m.listInPerM === null ? '—' : `入 ${fmt(m.listInPerM)} / 出 ${fmt(m.listOutPerM)}`}</td>
+              <td>
+                {m.discount !== null && m.discount > 0 ? (
+                  <span class={`m-off${m.discount >= 50 ? ' m-off-big' : ''}`}>{m.discount}% OFF</span>
+                ) : (
+                  '—'
+                )}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    <p id="m-empty" class="m-empty" hidden>該当するモデルがありません。</p>
+  </div>
+
+  <article class="prose mt-10">
+    <p>
+      無料モデルは予告なく入れ替わります。モデルの選び方と切り替えの手順は
+      <a href="/hermes/docs/user-guide/configuring-models/">Configuring Models</a>、Portal を使わない構成（手元の
+      Ollama など）は <a href="/hermes/docs/guides/local-ollama-setup/">Local Ollama Setup</a> にあります。
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .wiki-note {
+    border: 1px solid #bfdbfe;
+    background: var(--color-accent-soft);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
+  }
+  .m-controls { display: flex; flex-direction: column; gap: 0.75rem; margin: 1.5rem 0 1rem; }
+  #m-search {
+    width: 100%; max-width: 420px; border: 1px solid var(--color-border-strong); border-radius: 8px;
+    padding: 0.6rem 0.9rem; font-size: 0.9rem; background: var(--color-bg); color: var(--color-fg);
+  }
+  .m-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .m-chip {
+    border: 1px solid var(--color-border); background: transparent; color: var(--color-fg-secondary);
+    border-radius: 999px; padding: 0.35rem 0.85rem; font-size: 0.8rem; cursor: pointer;
+  }
+  .m-chip:hover { background: var(--color-bg-subtle); }
+  .m-chip.active { background: var(--color-accent); border-color: var(--color-accent); color: #fff; font-weight: 600; }
+  .m-tablewrap { overflow-x: auto; }
+  .m-table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  .m-table th {
+    text-align: left; font-weight: 600; color: var(--color-fg-muted); font-size: 0.75rem;
+    border-bottom: 1px solid var(--color-border-strong); padding: 0.5rem 0.75rem; white-space: nowrap;
+  }
+  .m-table td { border-bottom: 1px solid var(--color-border); padding: 0.55rem 0.75rem; vertical-align: top; }
+  .m-name { display: block; font-weight: 600; color: var(--color-fg); }
+  .m-id { display: block; font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-fg-muted); }
+  .m-num { font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap; color: var(--color-fg-secondary); }
+  .m-type { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; color: var(--color-fg-muted); }
+  .m-free { color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 999px; padding: 0.1rem 0.55rem; font-size: 0.75rem; }
+  .m-off { color: var(--color-fg-muted); font-size: 0.78rem; white-space: nowrap; }
+  .m-off-big { color: #9a3412; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 999px; padding: 0.1rem 0.55rem; font-weight: 600; }
+  .m-empty { color: var(--color-fg-muted); font-size: 0.9rem; padding: 1.5rem 0; }
+</style>
+
+<script>
+  const search = document.getElementById('m-search') as HTMLInputElement;
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.m-chip')];
+  const rows = [...document.querySelectorAll<HTMLTableRowElement>('.m-table tbody tr')];
+  const empty = document.getElementById('m-empty')!;
+  let filter = 'all';
+
+  function apply() {
+    const q = search.value.trim().toLowerCase();
+    let shown = 0;
+    for (const r of rows) {
+      const okQ = !q || (r.dataset.name ?? '').includes(q);
+      const okF =
+        filter === 'all' ||
+        (filter === 'free' && r.dataset.free === '1') ||
+        (filter === 'deal' && r.dataset.deal === '1') ||
+        r.dataset.type === filter;
+      const on = okQ && okF;
+      r.hidden = !on;
+      if (on) shown++;
+    }
+    empty.hidden = shown > 0;
+  }
+  search.addEventListener('input', apply);
+  for (const c of chips) {
+    c.addEventListener('click', () => {
+      filter = c.dataset.filter ?? 'all';
+      for (const x of chips) x.classList.toggle('active', x === c);
+      apply();
+    });
+  }
+</script>

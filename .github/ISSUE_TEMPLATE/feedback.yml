@@ -1,0 +1,36 @@
+name: 意見・要望
+description: Hermes Agent Wiki への意見・要望・誤りの報告
+title: "[feedback] "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Hermes Agent Wiki への意見・要望をありがとうございます。わかる範囲で埋めてもらえれば十分です。
+  - type: input
+    id: page
+    attributes:
+      label: 対象ページ
+      description: ボタンから開いた場合は自動で入っています。別のページの話なら書き換えてください。
+      placeholder: https://wiki.winsmux.dev/hermes/...
+    validations:
+      required: false
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 種別
+      options:
+        - 誤訳・訳の改善
+        - 情報が古い・公式と食い違う
+        - 追加してほしい内容
+        - 表示の不具合
+        - その他
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: 内容
+      description: 具体的に書いてもらえると助かります。誤訳の場合は該当の文をそのまま貼ってください。
+    validations:
+      required: true

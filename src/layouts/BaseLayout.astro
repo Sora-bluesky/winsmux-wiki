@@ -31,6 +31,7 @@ const {
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const feedbackUrl = `https://github.com/Sora-bluesky/winsmux-wiki/issues/new?template=feedback.yml&page=${encodeURIComponent(canonical)}`;
 const pageIndex = PAGES.findIndex((p) => p.path === Astro.url.pathname);
 const hasOverride = 'prevOverride' in Astro.props || 'nextOverride' in Astro.props;
 const prev = hasOverride ? (Astro.props.prevOverride ?? null) : pageIndex > 0 ? PAGES[pageIndex - 1] : null;
@@ -50,7 +51,7 @@ const next = hasOverride
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="wiki.winsmux.dev" />
+    <meta property="og:site_name" content="Hermes Agent Wiki" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -106,9 +107,21 @@ const next = hasOverride
           </nav>
         )
       }
+      <aside class="mt-12 border-t border-border pt-6 text-sm text-fg-muted">
+        <a
+          href={feedbackUrl}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border px-4 py-2 text-fg-secondary no-underline hover:bg-bg-subtle hover:text-fg"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+          このページへの意見・要望
+        </a>
+        <p class="mt-2 text-xs">GitHub の入力フォームが開きます（要 GitHub アカウント）。誤訳・古い情報・追加してほしい内容など、なんでもどうぞ。</p>
+      </aside>
       {
         (sources.length > 0 || hermesVersion) && (
-          <aside class="mt-12 border-t border-border pt-6 text-sm text-fg-muted">
+          <aside class="mt-6 text-sm text-fg-muted">
             {hermesVersion && <p>Hermes Agent {hermesVersion}</p>}
             {sources.length > 0 && (
               <p class="mt-2">

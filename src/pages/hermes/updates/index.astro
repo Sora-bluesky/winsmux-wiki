@@ -1,0 +1,110 @@
+---
+// 今週の更新（Wiki 層 #7）。
+// データは data/wiki-updates.json（scripts/wiki-updates.mjs が日次 sync のコミット履歴から機械生成）。
+// digests は週次の日本語要約（Opus 生成・レビュー後に追記）。
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import updates from '../../../../data/wiki-updates.json';
+
+type Entry = {
+  date: string;
+  sha: string;
+  upstream: string | null;
+  pages: { id: string; title: string; url: string }[];
+};
+const entries = updates.entries as Entry[];
+const digests = updates.digests as Record<string, string>;
+
+// ISO 週キー（digests のキーと揃える）
+function weekOf(date: string) {
+  const d = new Date(date + 'T00:00:00Z');
+  const day = (d.getUTCDay() + 6) % 7;
+  d.setUTCDate(d.getUTCDate() - day + 3);
+  const jan4 = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+  const week = 1 + Math.round(((d.getTime() - jan4.getTime()) / 86400000 - 3 + ((jan4.getUTCDay() + 6) % 7)) / 7);
+  return `${d.getUTCFullYear()}-W${String(week).padStart(2, '0')}`;
+}
+
+const weeks: { week: string; digest: string | null; entries: Entry[] }[] = [];
+for (const e of entries) {
+  const w = weekOf(e.date);
+  const g = weeks.find((x) => x.week === w);
+  if (g) g.entries.push(e);
+  else weeks.push({ week: w, digest: digests[w] ?? null, entries: [e] });
+}
+---
+
+<BaseLayout
+  title="今週の更新"
+  description="公式ドキュメントの更新に毎日追随した記録。どのページがいつ変わったかを週ごとにまとめています。"
+  sources={['https://github.com/NousResearch/hermes-agent/commits/main/website/docs']}
+  showAsk={false}
+  prevOverride={null}
+  nextOverride={null}
+>
+  <article class="prose">
+    <h1>今週の更新</h1>
+    <p>
+      公式ドキュメントの変化に毎日1回追随し、変わったページだけを訳し直しています。ここはその記録です。リンクは訳し直した後の日本語版ページへ飛びます。
+    </p>
+    <p class="wiki-note">
+      このページはこのサイト独自の記録です。上流の変更そのものは
+      <a href="https://github.com/NousResearch/hermes-agent/commits/main/website/docs" target="_blank" rel="noopener">公式リポジトリの履歴</a>
+      で確認できます。
+    </p>
+  </article>
+
+  <div class="u-weeks">
+    {
+      weeks.map((w) => (
+        <section class="u-week">
+          <h2 class="u-week-title">{w.week.replace(/(\d+)-W(\d+)/, '$1年 第$2週')}</h2>
+          {w.digest && <p class="u-digest">{w.digest}</p>}
+          {w.entries.map((e) => (
+            <details class="u-day">
+              <summary>
+                <span class="u-date">{e.date}</span>
+                <span class="u-count">{e.pages.length}ページ更新</span>
+                {e.upstream && <code class="u-sha">upstream {e.upstream}</code>}
+              </summary>
+              <ul class="u-pages">
+                {e.pages.map((p) => (
+                  <li>
+                    <a href={p.url}>{p.title}</a>
+                    <span class="u-id">{p.id}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ))}
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .wiki-note {
+    border: 1px solid #bfdbfe;
+    background: var(--color-accent-soft);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
+  }
+  .u-weeks { display: flex; flex-direction: column; gap: 2rem; margin-top: 1.5rem; }
+  .u-week { display: flex; flex-direction: column; gap: 0.6rem; }
+  .u-week-title { font-size: 1.1rem; font-weight: 650; margin: 0; }
+  .u-digest { margin: 0; font-size: 0.9rem; line-height: 1.75; color: var(--color-fg-secondary); }
+  .u-day { border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-bg); }
+  .u-day summary {
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 1rem; cursor: pointer;
+    font-size: 0.88rem; list-style: none;
+  }
+  .u-day summary::-webkit-details-marker { display: none; }
+  .u-day[open] summary { border-bottom: 1px solid var(--color-border); }
+  .u-date { font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-fg-muted); }
+  .u-count { font-weight: 600; color: var(--color-fg); }
+  .u-sha { margin-left: auto; font-size: 0.7rem; color: var(--color-fg-muted); background: var(--color-bg-subtle); border: 0; }
+  .u-pages { margin: 0; padding: 0.6rem 1rem 0.8rem; list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+  .u-pages li { display: flex; align-items: baseline; gap: 0.6rem; font-size: 0.85rem; }
+  .u-id { font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-fg-muted); }
+</style>

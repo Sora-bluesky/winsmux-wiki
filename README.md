@@ -1,6 +1,6 @@
-# winsmux-wiki
+# Hermes Agent Wiki
 
-**https://wiki.winsmux.dev/** — [Hermes Agent](https://github.com/NousResearch/hermes-agent) 公式ドキュメントの日本語ミラー。
+**https://wiki.winsmux.dev/** — [Hermes Agent](https://github.com/NousResearch/hermes-agent) の非公式・日本語 wiki。公式ドキュメント全ページの日本語版（毎日自動追随）に、逆引き・トラブル対処・モデルと料金などの独自ページをのせています。
 
 Japanese mirror of the official Hermes Agent docs. Same structure, same commands, same links — only the language differs.
 

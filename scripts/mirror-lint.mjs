@@ -7,9 +7,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const STATE_PATH = join(root, 'data/mirror-state.json');
-// "wiki" only as a standalone word: upstream identifiers like code-wiki are
-// product names (contract rule 5), not vocabulary choices.
-const FORBIDDEN = /(?<![\w\-/.])wiki(?![\w-])|はじめる|編む|暮らす|入れところ|リファレンス|複数台|\/fleet/;
+// "wiki" は 2026-08-27 のサイト改称（Hermes Agent Wiki）で解禁（sora 裁定・docs/phase3-wiki-plan.md）。
+const FORBIDDEN = /はじめる|編む|暮らす|入れところ|リファレンス|複数台|\/fleet/;
 
 const FENCE_RE = /^[ \t]*```[^\n]*\n[\s\S]*?^[ \t]*```[ \t]*$/gm;
 function fences(md) {

@@ -1,0 +1,420 @@
+{
+  "generatedAt": "2026-08-27",
+  "entries": [
+    {
+      "date": "2026-08-27",
+      "sha": "3c401aa",
+      "upstream": "790e1eb",
+      "pages": [
+        {
+          "id": "reference/cli-commands",
+          "title": "CLI コマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-27",
+      "sha": "cc996ae",
+      "upstream": "2f8d6b5",
+      "pages": [
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "integrations",
+          "title": "連携",
+          "url": "/hermes/docs/integrations/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes デスクトップアプリ",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザ自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/features/computer-use",
+          "title": "コンピュータ操作",
+          "url": "/hermes/docs/user-guide/features/computer-use/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/kanban",
+          "title": "カンバン（マルチエージェント・ボード）",
+          "url": "/hermes/docs/user-guide/features/kanban/"
+        },
+        {
+          "id": "user-guide/features/memory-providers",
+          "title": "メモリープロバイダー",
+          "url": "/hermes/docs/user-guide/features/memory-providers/"
+        },
+        {
+          "id": "user-guide/features/tool-search",
+          "title": "ツール検索",
+          "url": "/hermes/docs/user-guide/features/tool-search/"
+        },
+        {
+          "id": "user-guide/multi-connection-desktop",
+          "title": "デスクトップ版を複数の Hermes につなぐ",
+          "url": "/hermes/docs/user-guide/multi-connection-desktop/"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-26",
+      "sha": "44e9b24",
+      "upstream": "62b2d78",
+      "pages": [
+        {
+          "id": "developer-guide/memory-provider-plugin",
+          "title": "メモリプロバイダプラグイン",
+          "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/terminal-environment-plugin",
+          "title": "ターミナル環境プロバイダプラグイン",
+          "url": "/hermes/docs/developer-guide/terminal-environment-plugin/"
+        },
+        {
+          "id": "guides/desktop-native-signin",
+          "title": "デスクトップアプリのネイティブサインイン（RFC 8252）",
+          "url": "/hermes/docs/guides/desktop-native-signin/"
+        },
+        {
+          "id": "guides/google-gemini",
+          "title": "Google Gemini",
+          "url": "/hermes/docs/guides/google-gemini/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/docker",
+          "title": "Hermes の Docker での動かし方",
+          "url": "/hermes/docs/user-guide/docker/"
+        },
+        {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザ自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/features/computer-use",
+          "title": "コンピュータ操作",
+          "url": "/hermes/docs/user-guide/features/computer-use/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
+          "id": "user-guide/features/mcp",
+          "title": "MCP（Model Context Protocol）",
+          "url": "/hermes/docs/user-guide/features/mcp/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/tool-search",
+          "title": "ツール検索",
+          "url": "/hermes/docs/user-guide/features/tool-search/"
+        },
+        {
+          "id": "user-guide/features/web-search",
+          "title": "Web 検索と抽出",
+          "url": "/hermes/docs/user-guide/features/web-search/"
+        },
+        {
+          "id": "user-guide/messaging/signal",
+          "title": "Signal",
+          "url": "/hermes/docs/user-guide/messaging/signal/"
+        },
+        {
+          "id": "user-guide/multi-connection-desktop",
+          "title": "デスクトップ版を複数の Hermes につなぐ",
+          "url": "/hermes/docs/user-guide/multi-connection-desktop/"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-25",
+      "sha": "1f47e0f",
+      "upstream": "41447a6",
+      "pages": [
+        {
+          "id": "getting-started/quickstart",
+          "title": "Hermes Agent クイックスタート",
+          "url": "/hermes/docs/getting-started/quickstart/"
+        },
+        {
+          "id": "guides/cron-troubleshooting",
+          "title": "定期実行がうまくいかないとき",
+          "url": "/hermes/docs/guides/cron-troubleshooting/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルのプロバイダー",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLI コマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot モード",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/configuring-models",
+          "title": "モデルを設定する",
+          "url": "/hermes/docs/user-guide/configuring-models/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes デスクトップアプリ",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/docker",
+          "title": "Hermes の Docker での動かし方",
+          "url": "/hermes/docs/user-guide/docker/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-24",
+      "sha": "5ca66ae",
+      "upstream": "650cf33",
+      "pages": [
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot モード",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/features/tool-gateway",
+          "title": "Nous Tool Gateway",
+          "url": "/hermes/docs/user-guide/features/tool-gateway/"
+        },
+        {
+          "id": "user-guide/features/voice-mode",
+          "title": "音声モード",
+          "url": "/hermes/docs/user-guide/features/voice-mode/"
+        },
+        {
+          "id": "user-guide/windows-native",
+          "title": "Windows（ネイティブ）ガイド",
+          "url": "/hermes/docs/user-guide/windows-native/"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-23",
+      "sha": "3d80660",
+      "upstream": "987064c",
+      "pages": [
+        {
+          "id": "guides/work-with-skills",
+          "title": "スキルを使いこなす",
+          "url": "/hermes/docs/guides/work-with-skills/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot モード",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes デスクトップアプリ",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/messaging/bluebubbles",
+          "title": "BlueBubbles（iMessage）",
+          "url": "/hermes/docs/user-guide/messaging/bluebubbles/"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-22",
+      "sha": "807eaaf",
+      "upstream": "3bdc216",
+      "pages": [
+        {
+          "id": "developer-guide/cron-internals",
+          "title": "定時実行の内部",
+          "url": "/hermes/docs/developer-guide/cron-internals/"
+        },
+        {
+          "id": "developer-guide/programmatic-integration",
+          "title": "プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "getting-started/nix-setup",
+          "title": "Nix と NixOS のセットアップ",
+          "url": "/hermes/docs/getting-started/nix-setup/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "guides/automate-with-cron",
+          "title": "cron で何でも自動化する",
+          "url": "/hermes/docs/guides/automate-with-cron/"
+        },
+        {
+          "id": "guides/aws-bedrock",
+          "title": "AWS Bedrock",
+          "url": "/hermes/docs/guides/aws-bedrock/"
+        },
+        {
+          "id": "guides/manage-hermes-cloud-with-mcp",
+          "title": "MCP で Hermes Cloud を管理する",
+          "url": "/hermes/docs/guides/manage-hermes-cloud-with-mcp/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルのプロバイダー",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLI コマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot モード",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes デスクトップアプリ",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/api-server",
+          "title": "API サーバー",
+          "url": "/hermes/docs/user-guide/features/api-server/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
+          "id": "user-guide/features/memory",
+          "title": "ずっと残る記憶",
+          "url": "/hermes/docs/user-guide/features/memory/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        }
+      ]
+    }
+  ],
+  "digests": {}
+}

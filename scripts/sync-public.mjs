@@ -55,6 +55,8 @@ const catalog = [
   ['/hermes/entities/nous-portal/', 'Nous Portal'],
   ['/hermes/syntheses/cost-and-model/', 'コストとモデル'],
   ['/hermes/syntheses/not-a-mirror/', '正本との差分'],
+  ['/hermes/models/', 'モデルと料金（Portal 全モデルの一覧・毎日更新）'],
+  ['/hermes/updates/', '今週の更新（公式 docs への追随記録）'],
 ];
 
 for (const f of copied) {
@@ -66,7 +68,7 @@ for (const f of copied) {
 
 const raws = copied.map((f) => `${site}/hermes/raw/${f.replace(/\\/g, '/')}`);
 
-const llms = `# Hermes Agent（日本語）
+const llms = `# Hermes Agent Wiki（非公式・日本語）
 
 > 公式 docs の Quickstart / Installation / Messaging の順を日本語にしたもの。独自手順は作らない。正本: https://hermes-agent.nousresearch.com/docs/
 
