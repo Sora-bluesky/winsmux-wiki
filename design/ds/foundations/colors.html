@@ -1,0 +1,25 @@
+<!-- @dsCard group="Foundations" -->
+<title>カラー</title>
+<style>
+  :root{--bg:#ffffff;--bg-subtle:#f6f7f9;--bg-elevated:#f3f4f6;--fg:#1b1b1b;--fg-secondary:#3f3f46;--fg-muted:#5c6370;--border:#e5e7eb;--border-strong:#d1d5db;--accent:#1d4ed8;--accent-hover:#1e40af;--accent-soft:#eff6ff}
+  body{margin:0;padding:24px;font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .sw{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .sw div{height:56px}
+  .sw p{margin:0;padding:8px 10px;font-size:12px;color:var(--fg-secondary)}
+  .sw code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--fg-muted)}
+</style>
+<div class="grid">
+  <div class="sw"><div style="background:#ffffff;border-bottom:1px solid var(--border)"></div><p>bg<br><code>#ffffff</code></p></div>
+  <div class="sw"><div style="background:#f6f7f9"></div><p>bg-subtle<br><code>#f6f7f9</code></p></div>
+  <div class="sw"><div style="background:#f3f4f6"></div><p>bg-elevated<br><code>#f3f4f6</code></p></div>
+  <div class="sw"><div style="background:#eff6ff"></div><p>accent-soft<br><code>#eff6ff</code></p></div>
+  <div class="sw"><div style="background:#1b1b1b"></div><p>fg<br><code>#1b1b1b</code></p></div>
+  <div class="sw"><div style="background:#3f3f46"></div><p>fg-secondary<br><code>#3f3f46</code></p></div>
+  <div class="sw"><div style="background:#5c6370"></div><p>fg-muted<br><code>#5c6370</code></p></div>
+  <div class="sw"><div style="background:#e5e7eb"></div><p>border<br><code>#e5e7eb</code></p></div>
+  <div class="sw"><div style="background:#1d4ed8"></div><p>accent<br><code>#1d4ed8</code></p></div>
+  <div class="sw"><div style="background:#1e40af"></div><p>accent-hover<br><code>#1e40af</code></p></div>
+  <div class="sw"><div style="background:#d1d5db"></div><p>border-strong<br><code>#d1d5db</code></p></div>
+  <div class="sw"><div style="background:#16a34a"></div><p>ok（鮮度: 追随中）<br><code>#16a34a</code></p></div>
+</div>

@@ -1,0 +1,21 @@
+<!-- @dsCard group="Components" -->
+<title>カード</title>
+<style>
+  body{margin:0;padding:24px;font-family:'Inter',system-ui,sans-serif;background:#fff;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  a.card{display:block;border:1px solid #e5e7eb;border-radius:12px;background:#fff;padding:20px;text-decoration:none;transition:.15s}
+  a.card:hover{border-color:#d1d5db;background:#f6f7f9}
+  .card h2{margin:0;font-size:18px;font-weight:600;color:#1b1b1b;letter-spacing:-0.02em}
+  .card p{margin:8px 0 0;font-size:14px;line-height:1.5;color:#3f3f46}
+  .chip{display:inline-block;font-size:12px;color:#1d4ed8;background:#eff6ff;border-radius:999px;padding:4px 12px;margin:0 6px 6px 0;text-decoration:none}
+</style>
+<a class="card" href="#">
+  <h2>初めての方へ</h2>
+  <p>インストールから最初の会話まで。全部を読まずに、次の一歩だけ進めます。</p>
+</a>
+<a class="card" href="#">
+  <h2>逆引き</h2>
+  <p>「〜したい」から探す最短ルート。手順は公式ページへつながります。</p>
+</a>
+<div style="grid-column:1/-1">
+  <span class="chip">スマホから使いたい</span><span class="chip">毎朝ニュースを届けたい</span><span class="chip">モデルを切り替えたい</span><span class="chip">つながらない</span><span class="chip">料金を抑えたい</span>
+</div>

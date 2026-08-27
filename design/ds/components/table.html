@@ -1,0 +1,19 @@
+<!-- @dsCard group="Components" -->
+<title>データ表</title>
+<style>
+  body{margin:0;padding:24px;font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1b1b1b}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th{text-align:left;font-weight:600;color:#5c6370;border-bottom:1px solid #d1d5db;padding:8px 12px;font-size:12px}
+  td{border-bottom:1px solid #e5e7eb;padding:9px 12px;color:#3f3f46}
+  td.num{font-family:'JetBrains Mono',monospace;font-size:12px}
+  .free{color:#166534;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:999px;padding:1px 8px;font-size:11px}
+  .off{color:#9a3412;background:#fff7ed;border:1px solid #fed7aa;border-radius:999px;padding:1px 8px;font-size:11px}
+</style>
+<table>
+  <thead><tr><th>モデル</th><th>種別</th><th>Portal 価格（/1M）</th><th>定価（/1M）</th><th>割引</th></tr></thead>
+  <tbody>
+    <tr><td>Tencent: Hy3</td><td>TEXT</td><td class="num"><span class="free">無料</span></td><td class="num">—</td><td>—</td></tr>
+    <tr><td>xAI: Grok 4.6</td><td>TEXT</td><td class="num">入 $1.00 / 出 $3.00</td><td class="num">入 $2.00 / 出 $6.00</td><td><span class="off">50% OFF</span></td></tr>
+    <tr><td>Claude Sonnet 5</td><td>OTHER</td><td class="num">入 $1.60 / 出 $8.00</td><td class="num">入 $2.00 / 出 $10.00</td><td><span class="off">20%</span></td></tr>
+  </tbody>
+</table>

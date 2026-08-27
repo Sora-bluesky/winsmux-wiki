@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+  <style>
+    body{margin:0;font-family:'Inter','Hiragino Sans','Noto Sans JP',system-ui,sans-serif;background:#ffffff;color:#1b1b1b;-webkit-font-smoothing:antialiased}
+    a{color:#1d4ed8;text-underline-offset:3px}a:hover{color:#1e40af}
+    h1,h2,h3{letter-spacing:-0.02em;font-weight:650;margin:0}
+    .mono{font-family:'JetBrains Mono',Consolas,monospace}
+  </style>
+</helmet>
+<div style="width:1440px;background:#ffffff">
+
+  <header style="border-bottom:1px solid #e5e7eb;background:#fff">
+    <div style="display:flex;align-items:center;justify-content:space-between;max-width:1024px;margin:0 auto;padding:13px 32px">
+      <a href="#" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#1b1b1b">
+        <span style="font-size:14px;font-weight:650">Hermes Agent Wiki</span>
+        <span style="font-size:11px;font-weight:500;color:#5c6370;border:1px solid #e5e7eb;border-radius:999px;padding:2px 9px">非公式・日本語</span>
+      </a>
+      <nav style="display:flex;align-items:center;gap:20px;font-size:14px">
+        <a href="#" style="color:#5c6370;text-decoration:none">インストールする</a>
+        <a href="#" style="color:#5c6370;text-decoration:none">使い方</a>
+        <a href="#" style="color:#5c6370;text-decoration:none">調べる</a>
+        <span style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:8px;color:#5c6370">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <div style="max-width:1024px;margin:0 auto;padding:44px 32px;display:flex;flex-direction:column;gap:36px">
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h1 style="font-size:30px">Hermes Agent Wiki</h1>
+      <p style="margin:0;font-size:15px;line-height:1.8;color:#3f3f46;max-width:760px">公式ドキュメント全ページの日本語版と、このサイト独自の逆引き・トラブル対処・料金早見をまとめた非公式サイトです。構成も手順も公式のまま。正本は常に <a href="#">Hermes Agent Documentation</a> です。</p>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#166534;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:999px;padding:3px 10px"><span style="width:6px;height:6px;border-radius:99px;background:#16a34a"></span>上流に追随中 · 毎日更新</span>
+        <span class="mono" style="font-size:12px;color:#5c6370">最終更新 2026-08-27</span>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px">
+      <a href="#" style="display:flex;flex-direction:column;gap:8px;border:1px solid #e5e7eb;border-radius:12px;padding:22px;text-decoration:none;background:#fff">
+        <span style="font-size:17px;font-weight:600;color:#1b1b1b">Hermes Agent をインストールする</span>
+        <span style="font-size:13.5px;line-height:1.65;color:#3f3f46">公式 Quickstart の日本語版。OS ごとの入れ方から最初の会話まで。</span>
+      </a>
+      <a href="#" style="display:flex;flex-direction:column;gap:8px;border:1px solid #e5e7eb;border-radius:12px;padding:22px;text-decoration:none;background:#fff">
+        <span style="font-size:17px;font-weight:600;color:#1b1b1b">初めての方へ</span>
+        <span style="font-size:13.5px;line-height:1.65;color:#3f3f46">全部を読まない段階式の道筋。入れる → 話す → スマホから → 任せ方。</span>
+      </a>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between">
+        <h2 style="font-size:19px">調べる</h2>
+        <span style="font-size:12px;color:#5c6370">このサイト独自のページ</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:2px;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#e5e7eb">
+        <a href="#" style="display:flex;flex-direction:column;gap:5px;padding:18px 20px;background:#fff;text-decoration:none">
+          <span style="font-size:14.5px;font-weight:600;color:#1b1b1b">逆引き</span>
+          <span style="font-size:12.5px;line-height:1.6;color:#5c6370">「〜したい」から最短手順へ</span>
+        </a>
+        <a href="#" style="display:flex;flex-direction:column;gap:5px;padding:18px 20px;background:#fff;text-decoration:none">
+          <span style="font-size:14.5px;font-weight:600;color:#1b1b1b">トラブル</span>
+          <span style="font-size:12.5px;line-height:1.6;color:#5c6370">症状から原因と対処を引く</span>
+        </a>
+        <a href="#" style="display:flex;flex-direction:column;gap:5px;padding:18px 20px;background:#fff;text-decoration:none">
+          <span style="font-size:14.5px;font-weight:600;color:#1b1b1b">モデルと料金</span>
+          <span style="font-size:12.5px;line-height:1.6;color:#5c6370">372 モデルの価格を毎日更新</span>
+        </a>
+        <a href="#" style="display:flex;flex-direction:column;gap:5px;padding:18px 20px;background:#fff;text-decoration:none">
+          <span style="font-size:14.5px;font-weight:600;color:#1b1b1b">Claude Code からの乗り換え</span>
+          <span style="font-size:12.5px;line-height:1.6;color:#5c6370">概念の対応表と移行手順</span>
+        </a>
+        <a href="#" style="display:flex;flex-direction:column;gap:5px;padding:18px 20px;background:#fff;text-decoration:none">
+          <span style="font-size:14.5px;font-weight:600;color:#1b1b1b">日本語入力と日本語化</span>
+          <span style="font-size:12.5px;line-height:1.6;color:#5c6370">IME 問題の現在地と回避策</span>
+        </a>
+        <a href="#" style="display:flex;flex-direction:column;gap:5px;padding:18px 20px;background:#fff;text-decoration:none">
+          <span style="font-size:14.5px;font-weight:600;color:#1b1b1b">コミュニティの動き</span>
+          <span style="font-size:12.5px;line-height:1.6;color:#5c6370">Discord の話題を週次で要約</span>
+        </a>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:32px">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <h2 style="font-size:19px">メッセージアプリから使う</h2>
+        <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px;font-size:14px;line-height:1.7">
+          <li><a href="#">LINE でつなぐ</a><span style="color:#5c6370"> — 常時起動と公開 URL が要ります</span></li>
+          <li><a href="#">Telegram でつなぐ</a><span style="color:#5c6370"> — いちばん手軽です</span></li>
+          <li><a href="#">その他の窓口の一覧</a><span style="color:#5c6370"> — Discord、Slack、メールなど</span></li>
+        </ul>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <h2 style="font-size:19px">今週の更新</h2>
+        <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px;font-size:14px;line-height:1.7">
+          <li><span class="mono" style="font-size:12px;color:#5c6370">08-27</span> <a href="#">CLI コマンドのページが更新</a></li>
+          <li><span class="mono" style="font-size:12px;color:#5c6370">08-26</span> <a href="#">14ページが更新。窓口まわりが中心</a></li>
+          <li><span class="mono" style="font-size:12px;color:#5c6370">08-25</span> <a href="#">skill が2件追加</a></li>
+        </ul>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <h2 style="font-size:19px">運用と任せかた</h2>
+        <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px;font-size:14px;line-height:1.7">
+          <li><a href="#">運用</a><span style="color:#5c6370"> — 常時稼働と置き場所</span></li>
+          <li><a href="#">どこまで任せるか</a><span style="color:#5c6370"> — 承認と隔離の考え方</span></li>
+        </ul>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <h2 style="font-size:19px">全体を見る</h2>
+        <ul style="margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px;font-size:14px;line-height:1.7">
+          <li><a href="#">すべての索引</a><span style="color:#5c6370"> — 公式全 URL の日本語版</span></li>
+          <li><a href="#">skill（196）</a><span style="color:#5c6370"> — 用途別に探せます</span></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <footer style="border-top:1px solid #e5e7eb;background:#fff;margin-top:12px">
+    <div style="max-width:1024px;margin:0 auto;padding:24px 32px;font-size:12.5px;color:#5c6370">
+      Hermes Agent Wiki — 非公式の日本語サイトです。正本: <a href="#">hermes-agent.nousresearch.com/docs</a>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+</body>
+</html>

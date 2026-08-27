@@ -1,0 +1,16 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "title": "案A ポータル型 — トップ", "x": 0, "y": 0, "w": 1440, "h": 1700 },
+    { "file": "A-Howto.dc.html", "title": "案A — 逆引き", "x": 1560, "y": 0, "w": 1440, "h": 1250 },
+    { "file": "A-Mobile.dc.html", "title": "案A — モバイル", "x": 3120, "y": 0, "w": 390, "h": 1250 },
+    { "file": "DirectionB.dc.html", "title": "案B docs+型 — トップ", "x": 0, "y": 1900, "w": 1440, "h": 1450 },
+    { "file": "B-Trouble.dc.html", "title": "案B — トラブル", "x": 1560, "y": 1900, "w": 1440, "h": 1200 },
+    { "file": "B-Mobile.dc.html", "title": "案B — モバイル", "x": 3120, "y": 1900, "w": 390, "h": 1100 }
+  ],
+  "annotations": [
+    { "id": "direction-a", "x": 0, "y": -170, "w": 560, "text": "案A ポータル型\n検索と逆引きを玄関に置く情報密度型。やりたいこと・トラブル・料金へ最短で届く。\nトレードオフ: 初見の情報量が多く、実装差分も大きい。" },
+    { "id": "direction-b", "x": 0, "y": 1730, "w": 560, "text": "案B docs+型\n現行のドキュメント調を保ち、「調べる」枠と今週の更新を静かに足す漸進案。信頼感があり実装差分が小さい。\nトレードオフ: 独自の価値が一目では伝わりにくい。" },
+    { "id": "note-tokens", "x": 640, "y": -170, "w": 480, "text": "共通: 現行サイトの実トークン（Inter / JetBrains Mono・accent #1d4ed8・slate 系）をそのまま使用。どちらの案も既存402ページのデザインと地続きです。文中の更新日・件数はサンプル値。" }
+  ],
+  "launch": { "view": "canvas" }
+}

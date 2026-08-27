@@ -10,3 +10,4 @@ npm-debug.log*
 .dev.vars
 package-lock.json
 .mirror/
+design/canvas/hermes-wiki-design.html
