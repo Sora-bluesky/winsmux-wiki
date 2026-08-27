@@ -56,7 +56,7 @@ const countOf = (c: string) => items.filter((i) => i.category === c).length;
       <tbody>
         {
           items.map((i) => (
-            <tr data-cat={i.category} data-text={`${i.symptom} ${i.cause} ${i.fix}`.toLowerCase()}>
+            <tr data-cat={i.category} data-text={`${i.symptom} ${i.cause} ${i.fix}`.toLowerCase()} data-href={i.links[0]?.url}>
               <td class="tb-symptom">{i.symptom}</td>
               <td>{i.cause}</td>
               <td>{i.fix}</td>
@@ -114,9 +114,11 @@ const countOf = (c: string) => items.filter((i) => i.category === c).length;
     border-bottom: 1px solid var(--color-border); padding: 0.6rem 0.75rem; vertical-align: top;
     line-height: 1.6; color: var(--color-fg-secondary);
   }
+  .tb-table tbody tr[data-href] { cursor: pointer; }
+  .tb-table tbody tr[data-href]:hover { background: var(--color-bg-subtle); }
   .tb-symptom { font-weight: 600; color: var(--color-fg); }
-  .tb-links { display: flex; flex-direction: column; gap: 0.2rem; }
-  .tb-links a { font-size: 0.78rem; white-space: nowrap; text-decoration: none; }
+  .tb-links a { display: block; font-size: 0.78rem; white-space: nowrap; text-decoration: none; }
+  .tb-links a + a { margin-top: 0.2rem; }
   .tb-links a:hover { text-decoration: underline; }
   .tb-empty { color: var(--color-fg-muted); font-size: 0.9rem; padding: 1rem 0; }
 </style>
@@ -144,6 +146,14 @@ const countOf = (c: string) => items.filter((i) => i.category === c).length;
       cat = c.dataset.cat ?? 'all';
       for (const x of chips) x.classList.toggle('active', x === c);
       apply();
+    });
+  }
+  // 行全体クリックで先頭の詳細ページへ（リンク自体のクリックはそのまま）
+  for (const r of rows) {
+    r.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) return;
+      const href = r.dataset.href;
+      if (href) location.href = href;
     });
   }
 </script>

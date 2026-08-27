@@ -50,8 +50,8 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
                   <span class="hw-note">{i.note}</span>
                 </div>
                 <div class="hw-links">
-                  {i.links.map((l) => (
-                    <a href={l.url}>{l.title} →</a>
+                  {i.links.map((l, li) => (
+                    <a href={l.url} class:list={[li === 0 ? 'hw-primary' : '']}>{l.title} →</a>
                   ))}
                 </div>
               </div>
@@ -88,10 +88,17 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
   .hw-cat { font-size: 0.9rem; font-weight: 600; color: var(--color-fg-muted); margin: 0 0 0.5rem; }
   .hw-list { display: flex; flex-direction: column; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; }
   .hw-row {
+    position: relative;
     display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
     padding: 0.75rem 1.1rem; border-bottom: 1px solid var(--color-border); background: var(--color-bg);
   }
   .hw-row:last-of-type { border-bottom: 0; }
+  /* 行全体をクリック可能に: 先頭リンクを行いっぱいに広げ、2本目以降は個別リンクとして上に載せる */
+  .hw-row { cursor: pointer; }
+  .hw-row:hover { background: var(--color-bg-subtle); }
+  .hw-links a { position: relative; z-index: 1; }
+  .hw-links a.hw-primary { position: static; }
+  .hw-links a.hw-primary::after { content: ''; position: absolute; inset: 0; z-index: 0; }
   .hw-main { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
   .hw-want { font-weight: 600; color: var(--color-fg); font-size: 0.92rem; }
   .hw-note { font-size: 0.8rem; color: var(--color-fg-muted); line-height: 1.55; }
