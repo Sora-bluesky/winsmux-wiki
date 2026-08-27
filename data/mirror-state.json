@@ -397,9 +397,9 @@
       "translatedAt": "2026-08-24T22:53:52.811Z"
     },
     "reference/cli-commands.md": {
-      "blob": "fe0ca434444fb8a18dcca006e8c628aa28022ff2",
+      "blob": "6771a80d20761b502eb14f492013d778532b0b87",
       "status": "translated",
-      "translatedAt": "2026-08-24T22:53:52.815Z"
+      "translatedAt": "2026-08-27T00:05:33.634Z"
     },
     "reference/cli-symbols.md": {
       "blob": "6876e87af084db0ddae469c1a3ceec971958e0d3",
@@ -2007,5 +2007,5 @@
       "translatedAt": "2026-08-25T22:45:13.083Z"
     }
   },
-  "snapshotCommit": "2f8d6b55523f52f70a9946035c08333cbf2889fe"
+  "snapshotCommit": "790e1eb6bd576261e6b9e70fcfe4fbdf17f866bb"
 }
