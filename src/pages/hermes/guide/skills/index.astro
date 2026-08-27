@@ -18,6 +18,7 @@ for (const s of skills) for (const t of tagOf[s.slug] ?? []) counts[t]++;
 const pickTagsOf = (slug: string) => tags.filter((t) => t.picks.includes(slug)).map((t) => t.id);
 const labelOf = Object.fromEntries(tags.map((t) => [t.id, t.label]));
 const bundled = skills.filter((s) => s.source === 'bundled').length;
+const optional = skills.filter((s) => s.source === 'optional').length;
 ---
 
 <BaseLayout
@@ -42,7 +43,7 @@ const bundled = skills.filter((s) => s.source === 'bundled').length;
     <h1>skill</h1>
     <p>
       公式の skill ページ {skills.length} 件の索引です。最初から入っているもの {bundled} 件、あとから入れるもの{' '}
-      {skills.length - bundled - 1} 件。用途タグはこのサイト独自の分類です。上流 <code>{index.sha}</code>（{index.date}）時点。
+      {optional} 件。用途タグはこのサイト独自の分類です。上流 <code>{index.sha}</code>（{index.date}）時点。
     </p>
   </article>
 
