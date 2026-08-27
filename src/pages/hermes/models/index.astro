@@ -168,6 +168,7 @@ const typeLabel = { text: 'TEXT', embeddings: 'EMBEDDINGS', other: 'OTHER' } as 
 </style>
 
 <script>
+  import { expandQuery, normalizeText } from '../../../lib/search-aliases';
   const search = document.getElementById('m-search') as HTMLInputElement;
   const chips = [...document.querySelectorAll<HTMLButtonElement>('.m-chip')];
   const rows = [...document.querySelectorAll<HTMLTableRowElement>('.m-table tbody tr')];
@@ -175,10 +176,11 @@ const typeLabel = { text: 'TEXT', embeddings: 'EMBEDDINGS', other: 'OTHER' } as 
   let filter = 'all';
 
   function apply() {
-    const q = search.value.trim().toLowerCase();
+    const variants = expandQuery(search.value);
     let shown = 0;
     for (const r of rows) {
-      const okQ = !q || (r.dataset.name ?? '').includes(q);
+      const text = normalizeText(r.dataset.name ?? '');
+      const okQ = !variants.length || variants.some((v) => text.includes(v));
       const okF =
         filter === 'all' ||
         (filter === 'free' && r.dataset.free === '1') ||

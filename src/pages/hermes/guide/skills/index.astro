@@ -23,7 +23,7 @@ const optional = skills.filter((s) => s.source === 'optional').length;
 
 <BaseLayout
   title="skill"
-  description="公式 skill 全196件の索引。用途からさがせます。各行は日本語版ページへ。"
+  description="公式 skill 全件の索引。用途からさがせます。各行は日本語版ページへ。"
   rawPath="/hermes/raw/skills.md"
   sources={[
     'https://hermes-agent.nousresearch.com/docs/reference/skills-catalog',
@@ -122,6 +122,7 @@ const optional = skills.filter((s) => s.source === 'optional').length;
 </style>
 
 <script>
+  import { expandQuery, normalizeText } from '../../../../lib/search-aliases';
   const search = document.getElementById('sk-search') as HTMLInputElement;
   const chips = [...document.querySelectorAll<HTMLButtonElement>('.sk-chip')];
   const rows = [...document.querySelectorAll<HTMLAnchorElement>('.sk-row')];
@@ -129,10 +130,11 @@ const optional = skills.filter((s) => s.source === 'optional').length;
   let tag = 'all';
 
   function apply() {
-    const q = search.value.trim().toLowerCase();
+    const variants = expandQuery(search.value);
     let shown = 0;
     for (const r of rows) {
-      const okQ = !q || (r.dataset.name ?? '').includes(q);
+      const text = normalizeText(r.dataset.name ?? '');
+      const okQ = !variants.length || variants.some((v) => text.includes(v));
       const okT = tag === 'all' || (r.dataset.tags ?? '').split(' ').includes(tag);
       const on = okQ && okT;
       r.hidden = !on;

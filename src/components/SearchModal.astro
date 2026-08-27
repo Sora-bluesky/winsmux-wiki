@@ -23,6 +23,7 @@
 </div>
 
 <script>
+  import { canonicalTerm } from '../lib/search-aliases';
   const modal = document.getElementById('search-modal')!;
   const body = document.getElementById('search-modal-body')!;
   let loaded = false;
@@ -53,6 +54,8 @@
         element: '#search-modal-body',
         showSubResults: true,
         autofocus: true,
+        // 表記揺れ対策: テレグラム→telegram 等のカタカナ語をカノニカル表記に写す
+        processTerm: (term: string) => canonicalTerm(term),
         translations: {
           placeholder: '検索する言葉',
           zero_results: '「[SEARCH_TERM]」は見つかりませんでした',

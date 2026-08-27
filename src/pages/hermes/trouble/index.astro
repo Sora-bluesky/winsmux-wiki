@@ -56,7 +56,7 @@ const countOf = (c: string) => items.filter((i) => i.category === c).length;
       <tbody>
         {
           items.map((i) => (
-            <tr data-cat={i.category} data-text={`${i.symptom} ${i.cause} ${i.fix}`.toLowerCase()} data-href={i.links[0]?.url}>
+            <tr data-cat={i.category} data-text={`${i.symptom} ${i.cause} ${i.fix} ${i.links.map((l) => l.title).join(' ')}`.toLowerCase()} data-href={i.links[0]?.url}>
               <td class="tb-symptom">{i.symptom}</td>
               <td>{i.cause}</td>
               <td>{i.fix}</td>
@@ -124,6 +124,7 @@ const countOf = (c: string) => items.filter((i) => i.category === c).length;
 </style>
 
 <script>
+  import { expandQuery, normalizeText } from '../../../lib/search-aliases';
   const search = document.getElementById('tb-search') as HTMLInputElement;
   const chips = [...document.querySelectorAll<HTMLButtonElement>('.tb-chip')];
   const rows = [...document.querySelectorAll<HTMLTableRowElement>('.tb-table tbody tr')];
@@ -131,10 +132,11 @@ const countOf = (c: string) => items.filter((i) => i.category === c).length;
   let cat = 'all';
 
   function apply() {
-    const q = search.value.trim().toLowerCase();
+    const variants = expandQuery(search.value);
     let shown = 0;
     for (const r of rows) {
-      const on = (cat === 'all' || r.dataset.cat === cat) && (!q || (r.dataset.text ?? '').includes(q));
+      const text = normalizeText(r.dataset.text ?? '');
+      const on = (cat === 'all' || r.dataset.cat === cat) && (!variants.length || variants.some((v) => text.includes(v)));
       r.hidden = !on;
       if (on) shown++;
     }

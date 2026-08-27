@@ -44,7 +44,7 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
           <h2 class="hw-cat">{c.name}</h2>
           <div class="hw-list">
             {c.items.map((i) => (
-              <div class="hw-row" data-want={`${i.want} ${i.note}`.toLowerCase()}>
+              <div class="hw-row" data-want={`${i.want} ${i.note} ${i.links.map((l) => l.title).join(' ')}`.toLowerCase()}>
                 <div class="hw-main">
                   <span class="hw-want">{i.want}</span>
                   <span class="hw-note">{i.note}</span>
@@ -109,6 +109,7 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
 </style>
 
 <script>
+  import { expandQuery, normalizeText } from '../../../lib/search-aliases';
   const search = document.getElementById('hw-search') as HTMLInputElement;
   const chips = [...document.querySelectorAll<HTMLButtonElement>('.hw-chip')];
   const groups = [...document.querySelectorAll<HTMLElement>('.hw-group')];
@@ -116,13 +117,14 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
   let cat = 'all';
 
   function apply() {
-    const q = search.value.trim().toLowerCase();
+    const variants = expandQuery(search.value);
     let shown = 0;
     for (const g of groups) {
       const okC = cat === 'all' || g.dataset.cat === cat;
       let gShown = 0;
       for (const r of g.querySelectorAll<HTMLElement>('.hw-row')) {
-        const on = okC && (!q || (r.dataset.want ?? '').includes(q));
+        const text = normalizeText(r.dataset.want ?? '');
+        const on = okC && (!variants.length || variants.some((v) => text.includes(v)));
         r.hidden = !on;
         if (on) gShown++;
       }
