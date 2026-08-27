@@ -5,6 +5,7 @@ import AskBar from '../components/AskBar.astro';
 import SearchModal from '../components/SearchModal.astro';
 import Sidebar from '../components/Sidebar.astro';
 import { PAGES } from '../lib/pages.mjs';
+import updatesData from '../../data/wiki-updates.json';
 
 type PageLink = { path: string; label: string } | null;
 
@@ -16,6 +17,7 @@ interface Props {
   hermesVersion?: string;
   confidence?: string;
   showAsk?: boolean;
+  tocRail?: string;
   prevOverride?: PageLink;
   nextOverride?: PageLink;
 }
@@ -28,7 +30,21 @@ const {
   hermesVersion,
   confidence,
   showAsk = true,
+  tocRail = '',
 } = Astro.props;
+
+// 共通右サイドバー（xl+）: 目次 / よく使うページ / 今週の更新ミニ
+const POPULAR: [string, string][] = [
+  ['/hermes/docs/getting-started/quickstart/', 'インストールする'],
+  ['/hermes/docs/user-guide/messaging/telegram/', 'Telegram でつなぐ'],
+  ['/hermes/docs/user-guide/features/cron/', '定時実行（Cron）'],
+  ['/hermes/models/', 'モデルと料金'],
+  ['/hermes/trouble/', 'トラブル'],
+];
+type UpdateEntry = { date: string; pages: { title: string }[] };
+const recentUpdates = (updatesData.entries as UpdateEntry[]).slice(0, 3);
+const updateLine = (e: UpdateEntry) =>
+  e.pages.length === 1 ? `「${e.pages[0].title}」を更新` : `${e.pages.length}ページを更新`;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const feedbackUrl = `https://github.com/Sora-bluesky/winsmux-wiki/issues/new?template=feedback.yml&page=${encodeURIComponent(canonical)}`;
@@ -94,9 +110,9 @@ const next = hasOverride
   </head>
   <body class="min-h-screen bg-bg text-fg">
     <Nav />
-    <div class="mx-auto flex w-full max-w-3xl gap-8 px-4 sm:px-6 lg:max-w-7xl">
+    <div class="mx-auto flex w-full max-w-3xl gap-8 px-4 sm:px-6 lg:max-w-7xl xl:max-w-[88rem] 2xl:max-w-[96rem]">
       <Sidebar />
-      <main class="w-full min-w-0 flex-1 pb-16 pt-8 lg:max-w-5xl">
+      <main class="w-full min-w-0 flex-1 pb-16 pt-8 lg:max-w-5xl xl:max-w-4xl 2xl:max-w-5xl">
       {
         showCrumbs && (
           <nav class="mb-4 flex flex-wrap items-center gap-1.5 text-xs text-fg-muted" aria-label="現在地">
@@ -165,6 +181,44 @@ const next = hasOverride
         )
       }
       </main>
+      <aside class="hidden w-60 shrink-0 pt-8 xl:block" aria-label="サイドの案内">
+        <div class="sticky top-[4.75rem] max-h-[calc(100vh-6rem)] overflow-y-auto pr-1 text-sm">
+          {
+            tocRail && (
+              <nav class="toc-rail" aria-label="このページの目次">
+                <p class="pb-1 text-xs font-semibold text-fg-muted">目次</p>
+                <div set:html={tocRail} />
+              </nav>
+            )
+          }
+          <div class:list={['border-border', tocRail ? 'mt-6 border-t pt-4' : '']}>
+            <p class="pb-1 text-xs font-semibold text-fg-muted">よく使うページ</p>
+            <ul class="space-y-1">
+              {POPULAR.map(([href, label]) => (
+                <li>
+                  <a class="text-fg-muted no-underline hover:text-fg" href={href}>
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div class="mt-6 border-t border-border pt-4">
+            <p class="pb-1 text-xs font-semibold text-fg-muted">今週の更新</p>
+            <ul class="space-y-2">
+              {recentUpdates.map((e) => (
+                <li>
+                  <a class="text-fg-muted no-underline hover:text-fg" href="/hermes/updates/">
+                    <span class="block font-mono text-[10px]">{e.date}</span>
+                    {updateLine(e)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a class="mt-2 inline-block text-xs no-underline hover:underline" href="/hermes/updates/">一覧を見る →</a>
+          </div>
+        </div>
+      </aside>
     </div>
     <footer class="border-t border-border bg-bg-subtle">
       <div class="mx-auto flex w-full max-w-3xl flex-col gap-3 px-4 py-6 text-xs text-fg-muted sm:px-6 md:flex-row md:items-center md:justify-between lg:max-w-7xl">

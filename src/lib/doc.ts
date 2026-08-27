@@ -29,6 +29,7 @@ export type DocData = {
   confidence: string;
   rawPath: string;
   html: string;
+  tocRail: string;
   markdown: string;
 };
 
@@ -103,39 +104,16 @@ export function buildDoc(id: string, src: string): DocData {
   const sources = Array.isArray(data.sources) ? data.sources : [];
   const rendered = renderMarkdown(body);
   const toc = tocHtml(body);
-  // よく使うページ（編集部選。実測の人気に昇格する場合は CF 統計から生成する）
-  const popular =
-    '<div class="mt-6 border-t border-border pt-4">' +
-    '<p class="pb-1 text-xs font-semibold text-fg-muted">よく使うページ</p>' +
-    '<ul class="space-y-1 pl-0">' +
-    [
-      ['/hermes/docs/getting-started/quickstart/', 'インストールする'],
-      ['/hermes/docs/user-guide/messaging/telegram/', 'Telegram でつなぐ'],
-      ['/hermes/docs/user-guide/features/cron/', '定時実行（Cron）'],
-      ['/hermes/models/', 'モデルと料金'],
-      ['/hermes/trouble/', 'トラブル'],
-    ]
-      .map(
-        ([href, label]) =>
-          `<li><a class="text-fg-muted no-underline hover:text-fg" href="${href}">${label}</a></li>`,
-      )
-      .join('') +
-    '</ul></div>';
-  const rail = toc
-    ? '<nav class="toc-rail fixed right-4 top-24 hidden max-h-[70vh] w-56 overflow-y-auto text-sm min-[1800px]:block" aria-label="このページの目次">' +
-      '<p class="pb-1 text-xs font-semibold text-fg-muted">目次</p>' +
-      `<ul class="space-y-1 border-l border-border pl-3">${extractHeadings(body)
+  // 右サイドバー用の目次リスト（BaseLayout が共通右カラム内に描画する）
+  const tocRail = toc
+    ? `<ul class="space-y-1 border-l border-border pl-3">${extractHeadings(body)
         .map(
           (h) =>
             `<li${h.depth === 3 ? ' class="ml-3"' : ''}><a class="text-fg-muted no-underline hover:text-fg" href="#${h.id}">${h.text}</a></li>`,
         )
-        .join('')}</ul>` +
-      popular +
-      '</nav>'
+        .join('')}</ul>`
     : '';
-  const html = resolveMirrorLinks(
-    toc ? rendered.replace(/<\/h1>/, '</h1>' + toc + rail) : rendered,
-  );
+  const html = resolveMirrorLinks(toc ? rendered.replace(/<\/h1>/, '</h1>' + toc) : rendered);
   return {
     id,
     title: String(data.title ?? id),
@@ -145,6 +123,7 @@ export function buildDoc(id: string, src: string): DocData {
     confidence: String(data.confidence ?? ''),
     rawPath: String(data.raw ?? `/hermes/raw/${id}.md`),
     html,
+    tocRail,
     markdown: src.replace(/\n$/, '') + '\n',
   };
 }

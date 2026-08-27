@@ -26,6 +26,7 @@ const doc = buildDoc(`entities/${slug}`, src);
   sources={doc.sources}
   hermesVersion={doc.hermesVersion}
   confidence={doc.confidence}
+  tocRail={doc.tocRail}
 >
   <article class="prose" set:html={doc.html} />
 </BaseLayout>

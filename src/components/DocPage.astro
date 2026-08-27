@@ -9,9 +9,10 @@ interface Props {
   hermesVersion?: string;
   confidence?: string;
   html: string;
+  tocRail?: string;
 }
 
-const { title, description, rawPath, sources, hermesVersion, confidence, html } = Astro.props;
+const { title, description, rawPath, sources, hermesVersion, confidence, html, tocRail } = Astro.props;
 ---
 
 <BaseLayout
@@ -21,6 +22,7 @@ const { title, description, rawPath, sources, hermesVersion, confidence, html } 
   sources={sources}
   hermesVersion={hermesVersion}
   confidence={confidence}
+  tocRail={tocRail}
 >
   <article class="prose" set:html={html} />
 </BaseLayout>
