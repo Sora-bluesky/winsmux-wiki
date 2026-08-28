@@ -172,9 +172,9 @@
       "translatedAt": "2026-08-20T16:08:35.910Z"
     },
     "getting-started/installation.md": {
-      "blob": "3689db72ac1b2c3faa07164e509200d8f64abdad",
+      "blob": "98b95c9d7f92172cdcb0b44748d38f55093a396f",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.910Z"
+      "translatedAt": "2026-08-28T22:43:49.912Z"
     },
     "getting-started/learning-path.md": {
       "blob": "0f6e9d85101cafaa5d88f09e56b6ebc1b10bac70",
@@ -397,9 +397,9 @@
       "translatedAt": "2026-08-24T22:53:52.811Z"
     },
     "reference/cli-commands.md": {
-      "blob": "6771a80d20761b502eb14f492013d778532b0b87",
+      "blob": "06bce66f8f190103c753fd4a8657e54b55371d9d",
       "status": "translated",
-      "translatedAt": "2026-08-27T00:05:33.634Z"
+      "translatedAt": "2026-08-28T22:43:49.924Z"
     },
     "reference/cli-symbols.md": {
       "blob": "6876e87af084db0ddae469c1a3ceec971958e0d3",
@@ -472,9 +472,9 @@
       "translatedAt": "2026-08-20T16:08:35.951Z"
     },
     "user-guide/configuration.md": {
-      "blob": "c9dee244d321c023b167fc030297eaf7aba451c6",
+      "blob": "9123a5cfdfe46873831a9c3c170e1d71472c1bec",
       "status": "translated",
-      "translatedAt": "2026-08-27T21:36:11.858Z"
+      "translatedAt": "2026-08-28T22:43:49.920Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "2ede0dba3ce29f5c6c822ed080adc527856bb98f",
@@ -2012,5 +2012,5 @@
       "translatedAt": "2026-08-27T21:56:28.265Z"
     }
   },
-  "snapshotCommit": "99c3cad8570732202907cf71f971fea9ec57df26"
+  "snapshotCommit": "3340bbbdad8368e7f3d9f6827d61692adbbd87d6"
 }

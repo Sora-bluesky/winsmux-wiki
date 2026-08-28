@@ -1,13 +1,25 @@
 {
   "fetchedAt": "2026-08-28",
   "source": "https://inference-api.nousresearch.com/v1/models",
-  "count": 335,
+  "count": 352,
   "counts": {
-    "text": 294,
+    "text": 311,
     "embeddings": 31,
     "other": 10
   },
   "models": [
+    {
+      "id": "tencent/hy4-preview",
+      "name": "Tencent: Hy4 preview",
+      "type": "text",
+      "ctx": 1048576,
+      "inPerM": 0.6672,
+      "outPerM": 2.0008,
+      "listInPerM": 0.834,
+      "listOutPerM": 2.501,
+      "discount": 20,
+      "free": false
+    },
     {
       "id": "qwen/qwen3.8-flash",
       "name": "Qwen: Qwen3.8 Flash",
@@ -29,6 +41,18 @@
       "outPerM": 0.2,
       "listInPerM": 0.075,
       "listOutPerM": 0.25,
+      "discount": 20,
+      "free": false
+    },
+    {
+      "id": "z-ai/glm-5.3-flash:batch",
+      "name": "Z.ai: GLM 5.3 Flash (batch)",
+      "type": "text",
+      "ctx": 1048575,
+      "inPerM": 0.12,
+      "outPerM": 0.4,
+      "listInPerM": 0.15,
+      "listOutPerM": 0.5,
       "discount": 20,
       "free": false
     },
@@ -60,10 +84,10 @@
       "id": "~z-ai/glm-latest",
       "name": "Z.ai: GLM Latest",
       "type": "text",
-      "ctx": 1048576,
-      "inPerM": 1.12,
+      "ctx": 1310720,
+      "inPerM": 1,
       "outPerM": 3.52,
-      "listInPerM": 1.4,
+      "listInPerM": 1.25,
       "listOutPerM": 4.4,
       "discount": 20,
       "free": false
@@ -72,7 +96,7 @@
       "id": "z-ai/glm-5.3",
       "name": "Z.ai: GLM 5.3",
       "type": "text",
-      "ctx": 1048576,
+      "ctx": 1310720,
       "inPerM": 1.12,
       "outPerM": 3.52,
       "listInPerM": 1.4,
@@ -97,10 +121,10 @@
       "name": "Google: Gemini 3.7 Flash",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.3,
-      "outPerM": 1.5,
-      "listInPerM": 0.375,
-      "listOutPerM": 1.875,
+      "inPerM": 0.6,
+      "outPerM": 3,
+      "listInPerM": 0.75,
+      "listOutPerM": 3.75,
       "discount": 20,
       "free": false
     },
@@ -153,6 +177,18 @@
       "free": false
     },
     {
+      "id": "qwen/qwen3.8-2.4t-a95b:batch",
+      "name": "Qwen: Qwen3.8 2.4T A95B (batch)",
+      "type": "text",
+      "ctx": 1010000,
+      "inPerM": 2,
+      "outPerM": 5,
+      "listInPerM": 2.5,
+      "listOutPerM": 6.25,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "bytedance-seed/seed-2.0-code",
       "name": "ByteDance Seed: Seed-2.0-Code",
       "type": "text",
@@ -177,14 +213,26 @@
       "free": false
     },
     {
+      "id": "deepseek/deepseek-v4-pro-0813:batch",
+      "name": "DeepSeek: DeepSeek V4 Pro 0813 (batch)",
+      "type": "text",
+      "ctx": 1048576,
+      "inPerM": 1.056,
+      "outPerM": 3.168,
+      "listInPerM": 1.32,
+      "listOutPerM": 3.96,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "nvidia/nemotron-3.5-lightning",
       "name": "NVIDIA: Nemotron 3.5 Lightning",
       "type": "text",
       "ctx": 262144,
-      "inPerM": 0.08,
-      "outPerM": 0.2,
-      "listInPerM": 0.1,
-      "listOutPerM": 0.25,
+      "inPerM": 0.064,
+      "outPerM": 0.16,
+      "listInPerM": 0.08,
+      "listOutPerM": 0.2,
       "discount": 20,
       "free": false
     },
@@ -215,6 +263,18 @@
     {
       "id": "meta/muse-glimmer-30b",
       "name": "Meta: Muse Glimmer 30B",
+      "type": "text",
+      "ctx": 131072,
+      "inPerM": 0.24,
+      "outPerM": 0.96,
+      "listInPerM": 0.3,
+      "listOutPerM": 1.2,
+      "discount": 20,
+      "free": false
+    },
+    {
+      "id": "meta/muse-glimmer-30b:batch",
+      "name": "Meta: Muse Glimmer 30B (batch)",
       "type": "text",
       "ctx": 131072,
       "inPerM": 0.28,
@@ -265,10 +325,22 @@
       "name": "DeepSeek: DeepSeek V4 Flash 0731",
       "type": "text",
       "ctx": 1310720,
-      "inPerM": 0.077,
-      "outPerM": 0.154,
+      "inPerM": 0.04,
+      "outPerM": 0.08,
       "listInPerM": 0.0963,
       "listOutPerM": 0.1925,
+      "discount": 58,
+      "free": false
+    },
+    {
+      "id": "deepseek/deepseek-v4-flash-0731:batch",
+      "name": "DeepSeek: DeepSeek V4 Flash 0731 (batch)",
+      "type": "text",
+      "ctx": 1048576,
+      "inPerM": 0.112,
+      "outPerM": 0.224,
+      "listInPerM": 0.14,
+      "listOutPerM": 0.28,
       "discount": 20,
       "free": false
     },
@@ -280,6 +352,18 @@
       "inPerM": 0.36,
       "outPerM": 0.96,
       "listInPerM": 0.45,
+      "listOutPerM": 1.2,
+      "discount": 20,
+      "free": false
+    },
+    {
+      "id": "thinkingmachines/inkling-small:batch",
+      "name": "Thinking Machines: Inkling Small (batch)",
+      "type": "text",
+      "ctx": 524288,
+      "inPerM": 0.4,
+      "outPerM": 0.96,
+      "listInPerM": 0.5,
       "listOutPerM": 1.2,
       "discount": 20,
       "free": false
@@ -489,6 +573,18 @@
       "free": false
     },
     {
+      "id": "moonshotai/kimi-k3:batch",
+      "name": "MoonshotAI: Kimi K3 (batch)",
+      "type": "text",
+      "ctx": 1048576,
+      "inPerM": 2.4,
+      "outPerM": 12,
+      "listInPerM": 3,
+      "listOutPerM": 15,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "kwaipilot/kat-coder-air-v2.5",
       "name": "Kwaipilot: KAT-Coder-Air V2.5",
       "type": "text",
@@ -625,10 +721,10 @@
       "name": "Tencent: Hy3",
       "type": "text",
       "ctx": 262144,
-      "inPerM": 0.1056,
-      "outPerM": 0.4224,
-      "listInPerM": 0.132,
-      "listOutPerM": 0.528,
+      "inPerM": 0.066,
+      "outPerM": 0.264,
+      "listInPerM": 0.0825,
+      "listOutPerM": 0.33,
       "discount": 20,
       "free": false
     },
@@ -1005,6 +1101,18 @@
       "free": false
     },
     {
+      "id": "mistralai/mistral-medium-3-5:batch",
+      "name": "Mistral: Mistral Medium 3.5 (batch)",
+      "type": "text",
+      "ctx": 262144,
+      "inPerM": 0.6,
+      "outPerM": 3,
+      "listInPerM": 0.75,
+      "listOutPerM": 3.75,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "~anthropic/claude-haiku-latest",
       "name": "Anthropic Claude Haiku Latest",
       "type": "text",
@@ -1057,10 +1165,10 @@
       "name": "Google Gemini Flash Latest",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.3,
-      "outPerM": 1.5,
-      "listInPerM": 0.375,
-      "listOutPerM": 1.875,
+      "inPerM": 0.6,
+      "outPerM": 3,
+      "listInPerM": 0.75,
+      "listOutPerM": 3.75,
       "discount": 20,
       "free": false
     },
@@ -1141,10 +1249,10 @@
       "name": "Qwen: Qwen3.6 27B",
       "type": "text",
       "ctx": 262144,
-      "inPerM": 0.256,
-      "outPerM": 2.56,
-      "listInPerM": 0.32,
-      "listOutPerM": 3.2,
+      "inPerM": 0.48,
+      "outPerM": 2.88,
+      "listInPerM": 0.6,
+      "listOutPerM": 3.6,
       "discount": 20,
       "free": false
     },
@@ -1177,10 +1285,10 @@
       "name": "DeepSeek: DeepSeek V4 Pro 0423",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.696,
-      "outPerM": 1.392,
-      "listInPerM": 0.87,
-      "listOutPerM": 1.74,
+      "inPerM": 0.5852,
+      "outPerM": 1.1704,
+      "listInPerM": 0.7315,
+      "listOutPerM": 1.463,
       "discount": 20,
       "free": false
     },
@@ -1189,10 +1297,10 @@
       "name": "DeepSeek: DeepSeek V4 Flash 0423",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.0709,
-      "outPerM": 0.1418,
-      "listInPerM": 0.0886,
-      "listOutPerM": 0.1773,
+      "inPerM": 0.0692,
+      "outPerM": 0.1384,
+      "listInPerM": 0.0865,
+      "listOutPerM": 0.173,
       "discount": 20,
       "free": false
     },
@@ -1317,6 +1425,18 @@
       "free": false
     },
     {
+      "id": "google/gemma-4-31b-it:batch",
+      "name": "Google: Gemma 4 31B (batch)",
+      "type": "text",
+      "ctx": 262144,
+      "inPerM": 0.312,
+      "outPerM": 0.776,
+      "listInPerM": 0.39,
+      "listOutPerM": 0.97,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "qwen/qwen3.6-plus",
       "name": "Qwen: Qwen3.6 Plus",
       "type": "text",
@@ -1437,6 +1557,18 @@
       "free": false
     },
     {
+      "id": "mistralai/mistral-small-2603:batch",
+      "name": "Mistral: Mistral Small 4 (batch)",
+      "type": "text",
+      "ctx": 262144,
+      "inPerM": 0.12,
+      "outPerM": 0.48,
+      "listInPerM": 0.15,
+      "listOutPerM": 0.6,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "perplexity/pplx-embed-v1-4b",
       "name": "Perplexity: Embed V1 4B",
       "type": "embeddings",
@@ -1505,6 +1637,18 @@
       "outPerM": 0.12,
       "listInPerM": 0.1,
       "listOutPerM": 0.15,
+      "discount": 20,
+      "free": false
+    },
+    {
+      "id": "qwen/qwen3.5-9b:batch",
+      "name": "Qwen: Qwen3.5-9B (batch)",
+      "type": "text",
+      "ctx": 262144,
+      "inPerM": 0.136,
+      "outPerM": 0.2,
+      "listInPerM": 0.17,
+      "listOutPerM": 0.25,
       "discount": 20,
       "free": false
     },
@@ -1597,10 +1741,10 @@
       "name": "Qwen: Qwen3.5-122B-A10B",
       "type": "text",
       "ctx": 262144,
-      "inPerM": 0.208,
-      "outPerM": 1.664,
-      "listInPerM": 0.26,
-      "listOutPerM": 2.08,
+      "inPerM": 0.232,
+      "outPerM": 1.92,
+      "listInPerM": 0.29,
+      "listOutPerM": 2.4,
       "discount": 20,
       "free": false
     },
@@ -2061,6 +2205,18 @@
       "free": false
     },
     {
+      "id": "mistralai/ministral-8b-2512:batch",
+      "name": "Mistral: Ministral 3 8B 2512 (batch)",
+      "type": "text",
+      "ctx": 262144,
+      "inPerM": 0.12,
+      "outPerM": 0.12,
+      "listInPerM": 0.15,
+      "listOutPerM": 0.15,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "mistralai/ministral-3b-2512",
       "name": "Mistral: Ministral 3 3B 2512",
       "type": "text",
@@ -2085,14 +2241,26 @@
       "free": false
     },
     {
+      "id": "mistralai/mistral-large-2512:batch",
+      "name": "Mistral: Mistral Large 3 2512 (batch)",
+      "type": "text",
+      "ctx": 262144,
+      "inPerM": 0.4,
+      "outPerM": 1.2,
+      "listInPerM": 0.5,
+      "listOutPerM": 1.5,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "deepseek/deepseek-v3.2",
       "name": "DeepSeek: DeepSeek V3.2",
       "type": "text",
       "ctx": 163840,
-      "inPerM": 0.208,
-      "outPerM": 0.304,
-      "listInPerM": 0.26,
-      "listOutPerM": 0.38,
+      "inPerM": 0.2152,
+      "outPerM": 0.32,
+      "listInPerM": 0.269,
+      "listOutPerM": 0.4,
       "discount": 20,
       "free": false
     },
@@ -2412,7 +2580,7 @@
       "id": "mistralai/voxtral-small-24b-2507",
       "name": "Mistral: Voxtral Small 24B 2507",
       "type": "text",
-      "ctx": 32000,
+      "ctx": 32768,
       "inPerM": 0.08,
       "outPerM": 0.24,
       "listInPerM": 0.1,
@@ -2533,10 +2701,10 @@
       "name": "Qwen: Qwen3 VL 30B A3B Instruct",
       "type": "text",
       "ctx": 262144,
-      "inPerM": 0.104,
-      "outPerM": 0.416,
-      "listInPerM": 0.13,
-      "listOutPerM": 0.52,
+      "inPerM": 0.12,
+      "outPerM": 0.48,
+      "listInPerM": 0.15,
+      "listOutPerM": 0.6,
       "discount": 20,
       "free": false
     },
@@ -2781,6 +2949,18 @@
       "free": false
     },
     {
+      "id": "mistralai/mistral-medium-3.1:batch",
+      "name": "Mistral: Mistral Medium 3.1 (batch)",
+      "type": "text",
+      "ctx": 131072,
+      "inPerM": 0.32,
+      "outPerM": 1.6,
+      "listInPerM": 0.4,
+      "listOutPerM": 2,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "z-ai/glm-4.5v",
       "name": "Z.ai: GLM 4.5V",
       "type": "text",
@@ -2841,6 +3021,18 @@
       "free": false
     },
     {
+      "id": "openai/gpt-oss-120b:batch",
+      "name": "OpenAI: gpt-oss-120b (batch)",
+      "type": "text",
+      "ctx": 131072,
+      "inPerM": 0.12,
+      "outPerM": 0.48,
+      "listInPerM": 0.15,
+      "listOutPerM": 0.6,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "openai/gpt-oss-20b",
       "name": "OpenAI: gpt-oss-20b",
       "type": "text",
@@ -2879,6 +3071,18 @@
     {
       "id": "mistralai/codestral-2508",
       "name": "Mistral: Codestral 2508",
+      "type": "text",
+      "ctx": 256000,
+      "inPerM": 0.24,
+      "outPerM": 0.72,
+      "listInPerM": 0.3,
+      "listOutPerM": 0.9,
+      "discount": 20,
+      "free": false
+    },
+    {
+      "id": "mistralai/codestral-2508:batch",
+      "name": "Mistral: Codestral 2508 (batch)",
       "type": "text",
       "ctx": 256000,
       "inPerM": 0.24,
@@ -3360,7 +3564,7 @@
       "id": "google/gemma-3-27b-it",
       "name": "Google: Gemma 3 27B",
       "type": "text",
-      "ctx": 262144,
+      "ctx": 131072,
       "inPerM": 0.064,
       "outPerM": 0.36,
       "listInPerM": 0.08,
@@ -3801,18 +4005,6 @@
       "free": false
     },
     {
-      "id": "tencent/hy3:free",
-      "name": "Tencent: Hy3",
-      "type": "text",
-      "ctx": 262144,
-      "inPerM": 0,
-      "outPerM": 0,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": true
-    },
-    {
       "id": "stepfun/step-3.7-flash:free",
       "name": "StepFun: Step 3.7 Flash",
       "type": "text",
@@ -3829,6 +4021,18 @@
       "name": "Upstage: Solar Pro 4",
       "type": "text",
       "ctx": 524288,
+      "inPerM": 0,
+      "outPerM": 0,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": true
+    },
+    {
+      "id": "tencent/hy3:free",
+      "name": "Tencent: Hy3",
+      "type": "text",
+      "ctx": 262144,
       "inPerM": 0,
       "outPerM": 0,
       "listInPerM": null,

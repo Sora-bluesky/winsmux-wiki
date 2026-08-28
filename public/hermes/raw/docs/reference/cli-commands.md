@@ -2,7 +2,7 @@
 title: "CLI コマンド一覧"
 description: "Hermes のターミナルコマンドとコマンド群についての公式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 6771a80d20761b502eb14f492013d778532b0b87
+upstream_blob: 06bce66f8f190103c753fd4a8657e54b55371d9d
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -114,8 +114,9 @@ hermes chat [options]
 
 | オプション | 説明 |
 |--------|-------------|
-| `-q`, `--query "..."` | 対話せずに一回だけ実行するプロンプトです。 |
-| `--query-file PATH` | 一回きりのプロンプトをファイルから読みます（`-` は標準入力）。シェルによる解釈が一切入らないので、引用符や `$(...)`、バッククォートがそのまま届きます。プログラムから渡す本文や、信用できない本文にはこちらを使ってください（Bot モードのチームメイト DM もこれを使います）。`-q` とは併用できません。 |
+| `-q`, `--query "..."` | セッションの最初の発言としてプロンプトを渡します。本物の TTY では、そのプロンプトが普通の対話セッションの1ターン目として**そのまま**送られ（スラッシュコマンドや `!` でのシェル呼び出しとして解釈されることはありません）、セッションは開いたまま続きます。OS のランチャーやデスクトップとの連携にうってつけです。`--oneshot` や `-Q` を付けたとき、あるいは標準入出力が TTY でないときは、答えを返して終了します。 |
+| `--query-file PATH` | 渡すプロンプトをファイルから読みます（`-` は標準入力）。シェルによる解釈が一切入らないので、引用符や `$(...)`、バッククォートがそのまま届きます。プログラムから渡す本文や、信用できない本文にはこちらを使ってください（Bot モードのチームメイト DM もこれを使います）。`-q` とは併用できません。 |
+| `--oneshot` | `-q` や `--query-file` と一緒に使うと、対話セッションを始めるのではなく、問いに答えてそのまま終了します（0.21 より前の、一回だけ実行する挙動です）。標準入出力が TTY でないときと、`-Q` を付けたときは、指定しなくてもこの動きになります。 |
 | `-m`, `--model <model>` | この実行で使うモデルを上書きします。 |
 | `-t`, `--toolsets <csv>` | ツールセットをカンマ区切りで有効にします。 |
 | `--provider <provider>` | プロバイダを固定します: `auto`, `openrouter`, `nous`, `openai-codex`, `copilot-acp`, `copilot`, `anthropic`, `gemini`, `huggingface`, `novita`（別名 `novita-ai`、`novitaai`）, `openai-api`, `zai`, `kimi-coding`, `kimi-coding-cn`, `minimax`, `minimax-cn`, `minimax-oauth`, `kilocode`, `xiaomi`, `arcee`, `gmi`, `upstage`（別名 `solar`）, `alibaba`, `alibaba-coding-plan`（別名 `alibaba_coding`）, `deepseek`, `nvidia`, `ollama-cloud`, `xai`（別名 `grok`）, `xai-oauth`（別名 `grok-oauth`）, `qwen-oauth`, `bedrock`, `opencode-zen`, `opencode-go`, `opencode-free`（別名 `free`、`opencode_free`。キーは要りません）, `commandcode`, `commandcode-anthropic`, `ai-gateway`, `azure-foundry`, `lmstudio`, `stepfun`, `tencent-tokenhub`（別名 `tencent`、`tokenhub`）。 |
@@ -138,7 +139,8 @@ hermes chat [options]
 
 ```bash
 hermes
-hermes chat -q "Summarize the latest PRs"
+hermes chat -q "Summarize the latest PRs"          # seeds an interactive session
+hermes chat --oneshot -q "Summarize the latest PRs"  # answer and exit
 hermes chat --provider openrouter --model anthropic/claude-sonnet-4.6
 hermes chat --toolsets web,terminal,skills
 hermes chat --quiet -q "Return only JSON"
@@ -173,7 +175,7 @@ hermes -z "…" --provider openrouter --model openai/gpt-5.5
 HERMES_INFERENCE_MODEL=anthropic/claude-sonnet-4.6 hermes -z "…"
 ```
 
-エージェントもツールもスキルも同じで、対話的な部分や見た目の飾りを取り除いただけです。会話の記録にツールの出力も残したいときは `hermes chat -q` を使ってください。`-z` は「最終的な答えだけがほしい」場面のためのものです。
+エージェントもツールもスキルも同じで、対話的な部分や見た目の飾りを取り除いただけです。会話の記録にツールの出力も残したいときは `hermes chat --oneshot -q` を使ってください。`-z` は「最終的な答えだけがほしい」場面のためのものです。
 
 #### `--usage-file` — パイプライン向けの JSON 利用状況レポート {#--usage-file-json-usage-report-for-pipelines}
 

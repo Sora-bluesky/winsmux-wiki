@@ -2,7 +2,7 @@
 title: "インストール"
 description: "Linux、macOS、WSL2、Windows ネイティブ、Android（Termux）に Hermes Agent を導入する手順"
 upstream_path: getting-started/installation.md
-upstream_blob: 3689db72ac1b2c3faa07164e509200d8f64abdad
+upstream_blob: 98b95c9d7f92172cdcb0b44748d38f55093a396f
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -96,7 +96,7 @@ hermes setup --portal
 
 - **uv**（高速な Python パッケージマネージャー）
 - **Python 3.11**（uv 経由で導入。sudo は不要）
-- **Node.js v22**（ブラウザ自動化と WhatsApp ブリッジ用）
+- **Node.js v26**（ブラウザ自動化と WhatsApp ブリッジ用。すでにシステムに Node 22.22 以降、24.11 以降、26 以降のいずれかが入っていれば、それをそのまま使います）
 - **ripgrep**（高速なファイル検索）
 - **ffmpeg**（TTS 用の音声フォーマット変換）
 

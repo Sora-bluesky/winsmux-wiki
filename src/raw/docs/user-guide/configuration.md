@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダー、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: c9dee244d321c023b167fc030297eaf7aba451c6
+upstream_blob: 9123a5cfdfe46873831a9c3c170e1d71472c1bec
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -177,6 +177,7 @@ Hermes は7つのターミナルのバックエンドに対応しています。
 terminal:
   backend: local    # local | docker | ssh | modal | daytona | vercel_sandbox | singularity
   cwd: "."          # Gateway/cron working directory (CLI always uses launch dir)
+  temp_dir: ""      # Session temp root; empty = TMPDIR, else ~/.hermes/cache/terminal
   font_family: ""   # Desktop terminal font; e.g. "MesloLGS NF"
   timeout: 180      # Per-command timeout in seconds
   home_mode: auto   # auto | real | profile — subprocess HOME policy
@@ -185,6 +186,8 @@ terminal:
   modal_image: "nikolaik/python-nodejs:python3.11-nodejs20"                 # Container image for Modal backend
   daytona_image: "nikolaik/python-nodejs:python3.11-nodejs20"               # Container image for Daytona backend
 ```
+
+`terminal.temp_dir` は、local のバックエンドで Hermes がセッションの一時的なファイルを置く場所を決めます — 裏で動かしたプロセスのログや pid、終了コードのファイル、コードを走らせるためのサンドボックス、書き出しきれずにあふれたツールの結果などです。空のまま（これが初期状態です）なら、環境変数に `TMPDIR` / `TMP` / `TEMP` が明示されていればそれに従い、無ければ `/tmp` ではなく、実際のストレージ上で Hermes が面倒を見る `~/.hermes/cache/terminal` を使います。多くのディストリビューション（とくに Arch 系の環境）では `/tmp` がメモリ上に置かれた小さな tmpfs で、負荷がかかると Hermes のセッションのファイルで埋まってしまうためです。Hermes が面倒を見るディレクトリは自動で片付きます。72 時間より古いファイルは、ゲートウェイの後片付けが1時間ごとに、CLI だけの導入ではプロセスごとに1回、まとめて掃き出します。`temp_dir` に既にある絶対パスを書けば、セッションの一時的なファイルの置き場所を好きなところへ移せます。自分で指定した場所は自動で片付けられません。
 
 `terminal.font_family` は、Hermes Desktop に組み込まれたターミナルの表示を決めます。手元に入っているフォントの名前を1つ（たとえば `MesloLGS NF`）書くか、CSS のフォントの並びを書けます。Hermes は同梱の JetBrains Mono の並びを後ろに足します。空にしておけば既定のままです。同じ設定は **Settings → Appearance → Terminal Font** からプロファイル単位で変えられます。Google Fonts の取得も、システムのフォントへの許可も要りません。
 
@@ -373,6 +376,7 @@ Hermes のプロセスが終わるとき — `/quit`、TUI のセッションを
 | `TERMINAL_CONTAINER_DISK` | `container_disk` | MB |
 | `TERMINAL_CONTAINER_PERSISTENT` | `container_persistent` | `true` / `false` — バインドマウントする作業場所のディレクトリを決めます。`docker_persist_across_processes` とは別のものです |
 | `TERMINAL_LIFETIME_SECONDS` | `lifetime_seconds` | 放置を片付けるまでの時間の窓 |
+| `TERMINAL_TEMP_DIR` | `temp_dir` | セッションの一時的なファイルの置き場所（local のバックエンド） |
 | `TERMINAL_TIMEOUT` | `timeout` | コマンドごとの待ち時間の上限 |
 | `HERMES_DOCKER_BINARY` | _なし_ | 使う docker / podman のバイナリの場所を指定します |
 
