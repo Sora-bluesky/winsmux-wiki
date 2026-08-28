@@ -237,9 +237,9 @@
       "translatedAt": "2026-08-20T16:08:35.917Z"
     },
     "guides/cron-troubleshooting.md": {
-      "blob": "b4cc65b6f0677bbadb24775727ef8fe3c1eafa17",
+      "blob": "b58d60d67d81a0a38371036579da919a6c172909",
       "status": "translated",
-      "translatedAt": "2026-08-24T22:53:52.809Z"
+      "translatedAt": "2026-08-28T05:03:20.817Z"
     },
     "guides/daily-briefing-bot.md": {
       "blob": "a4fda461be8feca8f3840ac77ec89719d9674408",
@@ -447,9 +447,9 @@
       "translatedAt": "2026-08-26T22:47:16.312Z"
     },
     "reference/tools-reference.md": {
-      "blob": "5363e351873b14ccec1dc3be6064e77b4db3198e",
+      "blob": "3a2ee0fe2d88dbc2c250fb877d223749f936c4b5",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.948Z"
+      "translatedAt": "2026-08-28T05:03:20.821Z"
     },
     "reference/toolsets-reference.md": {
       "blob": "5904f1a9f71890202c5f06562fc94f9917fdef79",
@@ -2012,5 +2012,5 @@
       "translatedAt": "2026-08-27T21:56:28.265Z"
     }
   },
-  "snapshotCommit": "10b388300a63d83857fac3ca4f8b05b64e01bc50"
+  "snapshotCommit": "99c3cad8570732202907cf71f971fea9ec57df26"
 }

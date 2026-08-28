@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-08-27",
+  "fetchedAt": "2026-08-28",
   "source": "https://inference-api.nousresearch.com/v1/models",
-  "count": 371,
+  "count": 335,
   "counts": {
-    "text": 328,
-    "embeddings": 33,
+    "text": 294,
+    "embeddings": 31,
     "other": 10
   },
   "models": [
@@ -169,10 +169,10 @@
       "name": "DeepSeek: DeepSeek V4 Pro 0813",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.8976,
-      "outPerM": 2.6928,
-      "listInPerM": 1.122,
-      "listOutPerM": 3.366,
+      "inPerM": 0.528,
+      "outPerM": 1.584,
+      "listInPerM": 0.66,
+      "listOutPerM": 1.98,
       "discount": 20,
       "free": false
     },
@@ -181,10 +181,10 @@
       "name": "NVIDIA: Nemotron 3.5 Lightning",
       "type": "text",
       "ctx": 262144,
-      "inPerM": 0.064,
-      "outPerM": 0.16,
-      "listInPerM": 0.08,
-      "listOutPerM": 0.2,
+      "inPerM": 0.08,
+      "outPerM": 0.2,
+      "listInPerM": 0.1,
+      "listOutPerM": 0.25,
       "discount": 20,
       "free": false
     },
@@ -504,7 +504,7 @@
       "id": "kwaipilot/kat-coder-pro-v2.5",
       "name": "Kwaipilot: KAT-Coder-Pro V2.5",
       "type": "text",
-      "ctx": 256000,
+      "ctx": 262144,
       "inPerM": 0.592,
       "outPerM": 2.368,
       "listInPerM": 0.74,
@@ -525,18 +525,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5.6-luna-pro:batch",
-      "name": "OpenAI: GPT-5.6 Luna Pro (batch)",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 0.08,
-      "outPerM": 0.48,
-      "listInPerM": 0.1,
-      "listOutPerM": 0.6,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5.6-luna",
       "name": "OpenAI: GPT-5.6 Luna",
       "type": "text",
@@ -549,18 +537,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5.6-luna:batch",
-      "name": "OpenAI: GPT-5.6 Luna (batch)",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 0.08,
-      "outPerM": 0.48,
-      "listInPerM": 0.1,
-      "listOutPerM": 0.6,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5.6-terra-pro",
       "name": "OpenAI: GPT-5.6 Terra Pro",
       "type": "text",
@@ -569,18 +545,6 @@
       "outPerM": 12,
       "listInPerM": 2.5,
       "listOutPerM": 15,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-5.6-terra-pro:batch",
-      "name": "OpenAI: GPT-5.6 Terra Pro (batch)",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 0.8,
-      "outPerM": 4.8,
-      "listInPerM": 1,
-      "listOutPerM": 6,
       "discount": 20,
       "free": false
     },
@@ -597,18 +561,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5.6-terra:batch",
-      "name": "OpenAI: GPT-5.6 Terra (batch)",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 0.8,
-      "outPerM": 4.8,
-      "listInPerM": 1,
-      "listOutPerM": 6,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5.6-sol-pro",
       "name": "OpenAI: GPT-5.6 Sol Pro",
       "type": "text",
@@ -621,18 +573,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5.6-sol-pro:batch",
-      "name": "OpenAI: GPT-5.6 Sol Pro (batch)",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 0.8,
-      "outPerM": 4,
-      "listInPerM": 1,
-      "listOutPerM": 5,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5.6-sol",
       "name": "OpenAI: GPT-5.6 Sol",
       "type": "text",
@@ -641,18 +581,6 @@
       "outPerM": 8,
       "listInPerM": 2,
       "listOutPerM": 10,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-5.6-sol:batch",
-      "name": "OpenAI: GPT-5.6 Sol (batch)",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 0.8,
-      "outPerM": 4,
-      "listInPerM": 1,
-      "listOutPerM": 5,
       "discount": 20,
       "free": false
     },
@@ -697,10 +625,10 @@
       "name": "Tencent: Hy3",
       "type": "text",
       "ctx": 262144,
-      "inPerM": 0.066,
-      "outPerM": 0.264,
-      "listInPerM": 0.0825,
-      "listOutPerM": 0.33,
+      "inPerM": 0.1056,
+      "outPerM": 0.4224,
+      "listInPerM": 0.132,
+      "listOutPerM": 0.528,
       "discount": 20,
       "free": false
     },
@@ -1213,10 +1141,10 @@
       "name": "Qwen: Qwen3.6 27B",
       "type": "text",
       "ctx": 262144,
-      "inPerM": 0.48,
-      "outPerM": 2.88,
-      "listInPerM": 0.6,
-      "listOutPerM": 3.6,
+      "inPerM": 0.256,
+      "outPerM": 2.56,
+      "listInPerM": 0.32,
+      "listOutPerM": 3.2,
       "discount": 20,
       "free": false
     },
@@ -1233,18 +1161,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5.5-pro:batch",
-      "name": "OpenAI: GPT-5.5 Pro (batch)",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 12,
-      "outPerM": 72,
-      "listInPerM": 15,
-      "listOutPerM": 90,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5.5",
       "name": "OpenAI: GPT-5.5",
       "type": "text",
@@ -1253,18 +1169,6 @@
       "outPerM": 24,
       "listInPerM": 5,
       "listOutPerM": 30,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-5.5:batch",
-      "name": "OpenAI: GPT-5.5 (batch)",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 2,
-      "outPerM": 12,
-      "listInPerM": 2.5,
-      "listOutPerM": 15,
       "discount": 20,
       "free": false
     },
@@ -1285,10 +1189,10 @@
       "name": "DeepSeek: DeepSeek V4 Flash 0423",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.0599,
-      "outPerM": 0.1198,
-      "listInPerM": 0.0749,
-      "listOutPerM": 0.1498,
+      "inPerM": 0.0709,
+      "outPerM": 0.1418,
+      "listInPerM": 0.0886,
+      "listOutPerM": 0.1773,
       "discount": 20,
       "free": false
     },
@@ -1509,18 +1413,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5.4-nano:batch",
-      "name": "OpenAI: GPT-5.4 Nano (batch)",
-      "type": "text",
-      "ctx": 400000,
-      "inPerM": 0.08,
-      "outPerM": 0.5,
-      "listInPerM": 0.1,
-      "listOutPerM": 0.625,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5.4-mini",
       "name": "OpenAI: GPT-5.4 Mini",
       "type": "text",
@@ -1529,18 +1421,6 @@
       "outPerM": 3.6,
       "listInPerM": 0.75,
       "listOutPerM": 4.5,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-5.4-mini:batch",
-      "name": "OpenAI: GPT-5.4 Mini (batch)",
-      "type": "text",
-      "ctx": 400000,
-      "inPerM": 0.3,
-      "outPerM": 1.8,
-      "listInPerM": 0.375,
-      "listOutPerM": 2.25,
       "discount": 20,
       "free": false
     },
@@ -1641,18 +1521,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5.4-pro:batch",
-      "name": "OpenAI: GPT-5.4 Pro (batch)",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 12,
-      "outPerM": 72,
-      "listInPerM": 15,
-      "listOutPerM": 90,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5.4",
       "name": "OpenAI: GPT-5.4",
       "type": "text",
@@ -1661,18 +1529,6 @@
       "outPerM": 12,
       "listInPerM": 2.5,
       "listOutPerM": 15,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-5.4:batch",
-      "name": "OpenAI: GPT-5.4 (batch)",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 1,
-      "outPerM": 6,
-      "listInPerM": 1.25,
-      "listOutPerM": 7.5,
       "discount": 20,
       "free": false
     },
@@ -2109,18 +1965,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5.2-pro:batch",
-      "name": "OpenAI: GPT-5.2 Pro (batch)",
-      "type": "text",
-      "ctx": 400000,
-      "inPerM": 8.4,
-      "outPerM": 67.2,
-      "listInPerM": 10.5,
-      "listOutPerM": 84,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5.2",
       "name": "OpenAI: GPT-5.2",
       "type": "text",
@@ -2129,18 +1973,6 @@
       "outPerM": 11.2,
       "listInPerM": 1.75,
       "listOutPerM": 14,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-5.2:batch",
-      "name": "OpenAI: GPT-5.2 (batch)",
-      "type": "text",
-      "ctx": 400000,
-      "inPerM": 0.7,
-      "outPerM": 5.6,
-      "listInPerM": 0.875,
-      "listOutPerM": 7,
       "discount": 20,
       "free": false
     },
@@ -2457,18 +2289,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5.1:batch",
-      "name": "OpenAI: GPT-5.1 (batch)",
-      "type": "text",
-      "ctx": 400000,
-      "inPerM": 0.5,
-      "outPerM": 4,
-      "listInPerM": 0.625,
-      "listOutPerM": 5,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5.1-codex",
       "name": "OpenAI: GPT-5.1-Codex",
       "type": "text",
@@ -2553,18 +2373,6 @@
       "free": false
     },
     {
-      "id": "openai/text-embedding-ada-002:batch",
-      "name": "OpenAI: Text Embedding Ada 002 (batch)",
-      "type": "embeddings",
-      "ctx": 8192,
-      "inPerM": 0.04,
-      "outPerM": 0,
-      "listInPerM": 0.05,
-      "listOutPerM": 0,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "mistralai/codestral-embed-2505",
       "name": "Mistral: Codestral Embed 2505",
       "type": "embeddings",
@@ -2584,18 +2392,6 @@
       "inPerM": 0.104,
       "outPerM": 0,
       "listInPerM": 0.13,
-      "listOutPerM": 0,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/text-embedding-3-large:batch",
-      "name": "OpenAI: Text Embedding 3 Large (batch)",
-      "type": "embeddings",
-      "ctx": 8192,
-      "inPerM": 0.052,
-      "outPerM": 0,
-      "listInPerM": 0.065,
       "listOutPerM": 0,
       "discount": 20,
       "free": false
@@ -2757,18 +2553,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5-pro:batch",
-      "name": "OpenAI: GPT-5 Pro (batch)",
-      "type": "text",
-      "ctx": 400000,
-      "inPerM": 6,
-      "outPerM": 48,
-      "listInPerM": 7.5,
-      "listOutPerM": 60,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "z-ai/glm-4.6",
       "name": "Z.ai: GLM 4.6",
       "type": "text",
@@ -2861,18 +2645,6 @@
       "outPerM": 2.6,
       "listInPerM": 0.65,
       "listOutPerM": 3.25,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-5-codex:batch",
-      "name": "OpenAI: GPT-5 Codex (batch)",
-      "type": "text",
-      "ctx": 400000,
-      "inPerM": 0.5,
-      "outPerM": 4,
-      "listInPerM": 0.625,
-      "listOutPerM": 5,
       "discount": 20,
       "free": false
     },
@@ -3033,18 +2805,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5:batch",
-      "name": "OpenAI: GPT-5 (batch)",
-      "type": "text",
-      "ctx": 400000,
-      "inPerM": 0.5,
-      "outPerM": 4,
-      "listInPerM": 0.625,
-      "listOutPerM": 5,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5-mini",
       "name": "OpenAI: GPT-5 Mini",
       "type": "text",
@@ -3057,18 +2817,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5-mini:batch",
-      "name": "OpenAI: GPT-5 Mini (batch)",
-      "type": "text",
-      "ctx": 400000,
-      "inPerM": 0.1,
-      "outPerM": 0.8,
-      "listInPerM": 0.125,
-      "listOutPerM": 1,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5-nano",
       "name": "OpenAI: GPT-5 Nano",
       "type": "text",
@@ -3077,18 +2825,6 @@
       "outPerM": 0.32,
       "listInPerM": 0.05,
       "listOutPerM": 0.4,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-5-nano:batch",
-      "name": "OpenAI: GPT-5 Nano (batch)",
-      "type": "text",
-      "ctx": 400000,
-      "inPerM": 0.02,
-      "outPerM": 0.16,
-      "listInPerM": 0.025,
-      "listOutPerM": 0.2,
       "discount": 20,
       "free": false
     },
@@ -3357,18 +3093,6 @@
       "free": false
     },
     {
-      "id": "openai/o3-pro:batch",
-      "name": "OpenAI: o3 Pro (batch)",
-      "type": "text",
-      "ctx": 200000,
-      "inPerM": 8,
-      "outPerM": 32,
-      "listInPerM": 10,
-      "listOutPerM": 40,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "google/gemini-2.5-pro-preview",
       "name": "Google: Gemini 2.5 Pro Preview 06-05",
       "type": "text",
@@ -3525,18 +3249,6 @@
       "free": false
     },
     {
-      "id": "openai/o4-mini-high:batch",
-      "name": "OpenAI: o4 Mini High (batch)",
-      "type": "text",
-      "ctx": 200000,
-      "inPerM": 0.44,
-      "outPerM": 1.76,
-      "listInPerM": 0.55,
-      "listOutPerM": 2.2,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/o3",
       "name": "OpenAI: o3",
       "type": "text",
@@ -3545,18 +3257,6 @@
       "outPerM": 6.4,
       "listInPerM": 2,
       "listOutPerM": 8,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/o3:batch",
-      "name": "OpenAI: o3 (batch)",
-      "type": "text",
-      "ctx": 200000,
-      "inPerM": 0.8,
-      "outPerM": 3.2,
-      "listInPerM": 1,
-      "listOutPerM": 4,
       "discount": 20,
       "free": false
     },
@@ -3573,18 +3273,6 @@
       "free": false
     },
     {
-      "id": "openai/o4-mini:batch",
-      "name": "OpenAI: o4 Mini (batch)",
-      "type": "text",
-      "ctx": 200000,
-      "inPerM": 0.44,
-      "outPerM": 1.76,
-      "listInPerM": 0.55,
-      "listOutPerM": 2.2,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-4.1",
       "name": "OpenAI: GPT-4.1",
       "type": "text",
@@ -3593,18 +3281,6 @@
       "outPerM": 6.4,
       "listInPerM": 2,
       "listOutPerM": 8,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-4.1:batch",
-      "name": "OpenAI: GPT-4.1 (batch)",
-      "type": "text",
-      "ctx": 1047576,
-      "inPerM": 0.8,
-      "outPerM": 3.2,
-      "listInPerM": 1,
-      "listOutPerM": 4,
       "discount": 20,
       "free": false
     },
@@ -3621,18 +3297,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-4.1-mini:batch",
-      "name": "OpenAI: GPT-4.1 Mini (batch)",
-      "type": "text",
-      "ctx": 1047576,
-      "inPerM": 0.16,
-      "outPerM": 0.64,
-      "listInPerM": 0.2,
-      "listOutPerM": 0.8,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-4.1-nano",
       "name": "OpenAI: GPT-4.1 Nano",
       "type": "text",
@@ -3641,18 +3305,6 @@
       "outPerM": 0.32,
       "listInPerM": 0.1,
       "listOutPerM": 0.4,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-4.1-nano:batch",
-      "name": "OpenAI: GPT-4.1 Nano (batch)",
-      "type": "text",
-      "ctx": 1047576,
-      "inPerM": 0.04,
-      "outPerM": 0.16,
-      "listInPerM": 0.05,
-      "listOutPerM": 0.2,
       "discount": 20,
       "free": false
     },
@@ -3741,18 +3393,6 @@
       "free": false
     },
     {
-      "id": "openai/o3-mini-high:batch",
-      "name": "OpenAI: o3 Mini High (batch)",
-      "type": "text",
-      "ctx": 200000,
-      "inPerM": 0.44,
-      "outPerM": 1.76,
-      "listInPerM": 0.55,
-      "listOutPerM": 2.2,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "qwen/qwen-plus",
       "name": "Qwen: Qwen-Plus",
       "type": "text",
@@ -3773,18 +3413,6 @@
       "outPerM": 3.52,
       "listInPerM": 1.1,
       "listOutPerM": 4.4,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/o3-mini:batch",
-      "name": "OpenAI: o3 Mini (batch)",
-      "type": "text",
-      "ctx": 200000,
-      "inPerM": 0.44,
-      "outPerM": 1.76,
-      "listInPerM": 0.55,
-      "listOutPerM": 2.2,
       "discount": 20,
       "free": false
     },
@@ -3821,18 +3449,6 @@
       "outPerM": 48,
       "listInPerM": 15,
       "listOutPerM": 60,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/o1:batch",
-      "name": "OpenAI: o1 (batch)",
-      "type": "text",
-      "ctx": 200000,
-      "inPerM": 6,
-      "outPerM": 24,
-      "listInPerM": 7.5,
-      "listOutPerM": 30,
       "discount": 20,
       "free": false
     },
@@ -4053,18 +3669,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-4o-mini:batch",
-      "name": "OpenAI: GPT-4o-mini (batch)",
-      "type": "text",
-      "ctx": 128000,
-      "inPerM": 0.06,
-      "outPerM": 0.24,
-      "listInPerM": 0.075,
-      "listOutPerM": 0.3,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "openai/gpt-4o",
       "name": "OpenAI: GPT-4o",
       "type": "text",
@@ -4089,18 +3693,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-4o:batch",
-      "name": "OpenAI: GPT-4o (batch)",
-      "type": "text",
-      "ctx": 128000,
-      "inPerM": 1,
-      "outPerM": 4,
-      "listInPerM": 1.25,
-      "listOutPerM": 5,
-      "discount": 20,
-      "free": false
-    },
-    {
       "id": "mistralai/mixtral-8x22b-instruct",
       "name": "Mistral: Mixtral 8x22B Instruct",
       "type": "text",
@@ -4121,18 +3713,6 @@
       "outPerM": 24,
       "listInPerM": 10,
       "listOutPerM": 30,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-4-turbo:batch",
-      "name": "OpenAI: GPT-4 Turbo (batch)",
-      "type": "text",
-      "ctx": 128000,
-      "inPerM": 4,
-      "outPerM": 12,
-      "listInPerM": 5,
-      "listOutPerM": 15,
       "discount": 20,
       "free": false
     },
@@ -4205,18 +3785,6 @@
       "outPerM": 1.2,
       "listInPerM": 0.5,
       "listOutPerM": 1.5,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-3.5-turbo:batch",
-      "name": "OpenAI: GPT-3.5 Turbo (batch)",
-      "type": "text",
-      "ctx": 16385,
-      "inPerM": 0.2,
-      "outPerM": 0.6,
-      "listInPerM": 0.25,
-      "listOutPerM": 0.75,
       "discount": 20,
       "free": false
     },
