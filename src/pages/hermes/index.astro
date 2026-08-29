@@ -157,6 +157,27 @@ const docChips = [
     </div>
   </section>
 
+  <section class="video-sec">
+    <div class="sec-head">
+      <h2>動画で学ぶ</h2>
+      <span class="sec-note">外部の解説動画</span>
+    </div>
+    <a
+      href="https://www.youtube.com/watch?v=BeWUUclCin0&list=PLmpUb_PWAkDx-VWjh00tVCji794xAa_IX"
+      target="_blank"
+      rel="noopener"
+      class="video-card"
+    >
+      <span class="video-play" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"></path></svg>
+      </span>
+      <span class="video-text">
+        <span class="video-title">Hermes Agent Masterclass（Tonbi's AI Garage）</span>
+        <span class="video-body">導入から実際に動かすところまでを YouTube の連続講座で解説。音声は英語ですが、プレーヤーの設定 → 音声トラック → 日本語 で日本語音声に切り替えられます。</span>
+      </span>
+    </a>
+  </section>
+
   <section class="docs-sec">
     <div class="sec-head">
       <h2>ドキュメント</h2>
@@ -237,6 +258,19 @@ const docChips = [
   .level-step { font-size: 0.7rem; font-weight: 600; color: var(--color-accent); letter-spacing: 0.04em; }
   .level-title { font-weight: 600; color: var(--color-fg); font-size: 1rem; }
   .level-body { font-size: 0.82rem; line-height: 1.6; color: var(--color-fg-secondary); }
+  .video-sec { margin-top: 2.5rem; }
+  .video-card {
+    display: flex; align-items: center; gap: 1rem; border: 1px solid var(--color-border);
+    border-radius: 12px; padding: 1.1rem 1.2rem; background: var(--color-bg); text-decoration: none; transition: 0.15s;
+  }
+  .video-card:hover { border-color: var(--color-border-strong); background: var(--color-bg-subtle); }
+  .video-play {
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 999px; background: var(--color-accent-soft); color: var(--color-accent);
+  }
+  .video-text { display: flex; flex-direction: column; gap: 0.35rem; }
+  .video-title { font-weight: 600; color: var(--color-fg); font-size: 1rem; }
+  .video-body { font-size: 0.82rem; line-height: 1.6; color: var(--color-fg-secondary); }
   .docs-sec { margin-top: 2.5rem; }
   .doc-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .doc-chips a {

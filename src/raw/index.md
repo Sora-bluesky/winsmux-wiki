@@ -29,6 +29,10 @@ Hermes Agent の日本語知識ベースです。公式ドキュメント全402�
 - [ふだんの使いかた](/hermes/guide/) — よく使うページの案内
 - [どこまで任せるか](/hermes/trust/) と [運用](/hermes/ops/) — 任せかたと常時稼働
 
+## 動画で学ぶ（外部の解説動画）
+
+- [Hermes Agent Masterclass（Tonbi's AI Garage）](https://www.youtube.com/watch?v=BeWUUclCin0&list=PLmpUb_PWAkDx-VWjh00tVCji794xAa_IX) — 導入から実際に動かすところまでを扱う YouTube の連続講座。音声は英語だが、プレーヤーの設定 → 音声トラック → 日本語 で日本語音声に切り替えられる
+
 ## ドキュメント（公式 docs の日本語版）
 
 - [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)
