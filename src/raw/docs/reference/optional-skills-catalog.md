@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: d6b904533fdecfb7cf656863c3c69d84e32ee4dd
+upstream_blob: 3a611a44e44d0e7d664508bcaf8aafdaf845f1a2
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -89,6 +89,7 @@ hermes skills uninstall <skill-name>
 | [**hermes-s6-container-supervision**](/hermes/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision/) | Hermes の Docker イメージにある s6 サービスを書き換え、不具合を追います。 |
 | [**inference-sh-cli**](/hermes/docs/user-guide/skills/optional/devops/devops-inference-sh-cli/) | inference.sh の CLI から 150 種類以上の AI アプリ（画像、動画、LLM）を動かします。 |
 | [**pinggy-tunnel**](/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/) | Pinggy を使い、SSH 越しに localhost を公開します。導入作業は不要です。 |
+| [**setup-wizard-generator**](/hermes/docs/user-guide/skills/optional/devops/devops-setup-wizard-generator/) | 手作業での準備を人に案内していく bash のウィザードを生成します。 |
 | [**watchers**](/hermes/docs/user-guide/skills/optional/devops/devops-watchers/) | RSS、JSON の API、GitHub を定期的に見に行き、既読位置で重複を省きます。 |
 
 ## dogfood {#dogfood}
@@ -194,6 +195,7 @@ hermes skills uninstall <skill-name>
 | スキル | 説明 |
 |-------|-------------|
 | [**canvas**](/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/) | API トークンで Canvas LMS の講義と課題を取得します。 |
+| [**decision-questionnaire**](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | 答えの出ない判断を、質問票の形の文書に組み替えます。 |
 | [**here-now**](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | &#123;slug&#125;.here.now にサイトを公開し、ファイルを Drives に保管します。 |
 | [**memento-flashcards**](/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/) | 間隔をあけて復習する単語カード。作成、復習、小テスト、書き出しに対応します。 |
 | [**shop**](/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/) | 商品の検索、購入手続き、配送状況の確認、返品まで扱います。 |
@@ -234,6 +236,7 @@ hermes skills uninstall <skill-name>
 | スキル | 説明 |
 |-------|-------------|
 | [**code-wiki**](/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/) | どんなコードベースからでも、解説文書と Mermaid の図を生成します。 |
+| [**grill-me**](/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/) | 実装に入る前に、計画を厳しく問いただす面談を行います。 |
 | [**rest-graphql-debug**](/hermes/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug/) | REST/GraphQL API の切り分け。状態コード、認証、スキーマ、再現手順。 |
 | [**subagent-driven-development**](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) | delegate_task のサブエージェントで計画を実行します（2 段階の点検つき）。 |
 

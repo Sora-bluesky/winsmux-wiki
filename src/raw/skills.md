@@ -12,9 +12,9 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 197 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 200 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `217ab2f`（2026-08-28）時点。この一覧は上流の docs から機械生成しています。
+上流 `4209d37`（2026-08-29）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（80）
 
@@ -103,7 +103,7 @@ raw: /hermes/raw/skills.md
 | [Systematic Debugging](/hermes/docs/user-guide/skills/bundled/software-development/software-development-systematic-debugging/) | 4-phase root cause debugging: understand bugs before fixing | 2026-07-29 |
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-07-29 |
 
-## あとから入れる（116）
+## あとから入れる（119）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -139,6 +139,7 @@ raw: /hermes/raw/skills.md
 | [Hermes S6 Container Supervision](/hermes/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision/) | Modify or debug s6 services in the Hermes Docker image | 2026-07-24 |
 | [Inference Sh Cli](/hermes/docs/user-guide/skills/optional/devops/devops-inference-sh-cli/) | Run 150+ AI apps (image, video, LLM) via inference.sh CLI | 2026-08-08 |
 | [Pinggy Tunnel](/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/) | Zero-install localhost tunnels over SSH via Pinggy | 2026-07-24 |
+| [Setup Wizard Generator](/hermes/docs/user-guide/skills/optional/devops/devops-setup-wizard-generator/) | Generate a bash wizard guiding a human through manual setup | 2026-08-29 |
 | [Watchers](/hermes/docs/user-guide/skills/optional/devops/devops-watchers/) | Poll RSS, JSON APIs, and GitHub with watermark dedup | 2026-06-20 |
 | [Adversarial Ux Test](/hermes/docs/user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test/) | Roleplay a hostile user to find and triage UX pain points | 2026-07-23 |
 | [Agentmail](/hermes/docs/user-guide/skills/optional/email/email-agentmail/) | Use when an agent needs AgentMail CLI email inboxes | 2026-08-27 |
@@ -194,6 +195,7 @@ raw: /hermes/raw/skills.md
 | [Stripe Link Cli](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/) | Agent payments via Stripe Link — cards, SPT, approvals | 2026-06-15 |
 | [Stripe Projects](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/) | Provision SaaS services + sync creds via Stripe Projects | 2026-06-20 |
 | [Canvas](/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/) | Fetch Canvas LMS courses and assignments via API token | 2026-07-23 |
+| [Decision Questionnaire](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | Turn an unanswerable decision into a questionnaire doc | 2026-08-29 |
 | [Here Now](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | Publish sites to {slug}.here.now and store files in Drives | 2026-08-08 |
 | [Memento Flashcards](/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/) | Spaced-repetition flashcards: create, review, quiz, export | 2026-08-08 |
 | [Shop](/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/) | Shop catalog search, checkout, order tracking, returns | 2026-06-16 |
@@ -219,6 +221,7 @@ raw: /hermes/raw/skills.md
 | [Unbroker](/hermes/docs/user-guide/skills/optional/security/security-unbroker/) | Autonomously remove your info from data-broker sites | 2026-07-21 |
 | [Web Pentest](/hermes/docs/user-guide/skills/optional/security/security-web-pentest/) | Authorized web pentest: recon, proof-based exploits, report | 2026-08-08 |
 | [Code Wiki](/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/) | Generate wiki docs + Mermaid diagrams for any codebase | 2026-08-08 |
+| [Grill Me](/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/) | Adversarial plan interview before implementation | 2026-08-29 |
 | [Rest Graphql Debug](/hermes/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug/) | Debug REST/GraphQL APIs: status codes, auth, schemas, repro | 2026-08-08 |
 | [Subagent Driven Development](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) | Execute plans via delegate_task subagents (2-stage review) | 2026-06-04 |
 | [Cloudflare Temporary Deploy](/hermes/docs/user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy/) | Deploy a Worker live, no account, via wrangler --temporary | 2026-07-21 |

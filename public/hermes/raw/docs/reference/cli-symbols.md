@@ -1,8 +1,8 @@
 ---
 title: "CLI の記号集"
-description: "Hermes の端末画面に出てくる記号の意味をまとめました。会話の流れに付く印、下段の表示、重ねて出る画面の記号、承認を求める画面まで扱います。"
+description: "Hermes の端末画面に出てくる記号の意味をすべてまとめました。会話の流れに付く印、下段に出る表示、重ねて出る画面の記号、承認を求める画面までを扱います。"
 upstream_path: reference/cli-symbols.md
-upstream_blob: 6876e87af084db0ddae469c1a3ceec971958e0d3
+upstream_blob: c3487f8e393eab74c96e9349900dddbe58542c50
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-symbols
 ---
@@ -46,7 +46,7 @@ TUI のいちばん下に出る一行です。各区画は必要なときだけ�
 | `⏱` | ひとつの指示にかかっている時間です。作業中に `⏱ 12s/3m 45s` のように出ます（この回の時間／セッション全体の時間）。 |
 | `⏲` | 同じ時計で、その回が終わったあとに止まったものです。 |
 | `cmp N` | このセッションが自動で N 回まとめ直されたことを表します。 |
-| `▶ N` | いま動いている `/background` の作業が N 件あります。 |
+| `▶ N` | いま動いている `/bg` の作業が N 件あります。 |
 | `⚠ YOLO` | YOLO の状態（自動で承認する）です。起動時の見出しにも出ます。 |
 | `⛓ N` | いま動いている下請けのエージェントが N 件あります。 |
 | `↩ resumes when subagent finishes` | 手が空いていても、任せた作業がまだ進んでいるときに出る知らせです。結果はひとりでに返ってきます。 |

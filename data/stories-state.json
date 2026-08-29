@@ -1,5 +1,261 @@
 {
   "entries": {
+    "reddit-riceinmybelly-solo-jobsite": {
+      "hash": "7493f85fc5c3c0aa",
+      "status": "translated"
+    },
+    "reddit-holmebengt-28-crons": {
+      "hash": "d764e45458920e6a",
+      "status": "translated"
+    },
+    "reddit-pacmanpill-french-smb": {
+      "hash": "488a6383d87ffa17",
+      "status": "translated"
+    },
+    "reddit-uzairansar-hermex": {
+      "hash": "47495b5fcd99515f",
+      "status": "translated"
+    },
+    "reddit-hermes-swarm-247-teams": {
+      "hash": "825ce11a62927488",
+      "status": "translated"
+    },
+    "reddit-hound-free-web-stack": {
+      "hash": "946a18150302744c",
+      "status": "translated"
+    },
+    "reddit-godzillaton-construction-whatsapp": {
+      "hash": "0f7bd2039375b2ba",
+      "status": "translated"
+    },
+    "reddit-kid-mode-jarvis": {
+      "hash": "82e6579d6323ff5c",
+      "status": "translated"
+    },
+    "reddit-przbadu-desktop-as-webapp": {
+      "hash": "93951fac3b5eaebd",
+      "status": "translated"
+    },
+    "reddit-kenmazaika-175-optiplex": {
+      "hash": "60ee5a6369fcf9a3",
+      "status": "translated"
+    },
+    "reddit-stan-frbd-cyber-analyst": {
+      "hash": "d1a18876c9f8dadc",
+      "status": "translated"
+    },
+    "reddit-rudr9-nine-role-dev-team": {
+      "hash": "9d04026dd64abdc5",
+      "status": "translated"
+    },
+    "reddit-barnet-pdf-skill-fts5": {
+      "hash": "67a6c8389b530ed6",
+      "status": "translated"
+    },
+    "reddit-brisket-fireboard": {
+      "hash": "4384c66cf0382996",
+      "status": "translated"
+    },
+    "reddit-kenmazaika-apartment-inbox": {
+      "hash": "d5892ff94263267d",
+      "status": "translated"
+    },
+    "reddit-rodgezee-twin-ai": {
+      "hash": "f8cde955d8b959d9",
+      "status": "translated"
+    },
+    "reddit-holmebengt-local-email-gatekeeper": {
+      "hash": "46645cf020ac5cf7",
+      "status": "translated"
+    },
+    "reddit-k8s-operator-team-agent": {
+      "hash": "5087521c91bf2ad5",
+      "status": "translated"
+    },
+    "reddit-superalfun-9-dollar-stack": {
+      "hash": "0406b00cd94de4ac",
+      "status": "translated"
+    },
+    "reddit-hermes-node-brain-and-arm": {
+      "hash": "d70c9bbf37794f0e",
+      "status": "translated"
+    },
+    "reddit-agency-client-deliverable": {
+      "hash": "a711f5323f372a66",
+      "status": "translated"
+    },
+    "reddit-kenmazaika-dictation-proof-docs": {
+      "hash": "036ef30751a4b560",
+      "status": "translated"
+    },
+    "reddit-kabira-cron-no-agent": {
+      "hash": "5dd133cf442715b0",
+      "status": "translated"
+    },
+    "reddit-hermes-pwa-dashboard-plugin": {
+      "hash": "d19d664d4ca3865d",
+      "status": "translated"
+    },
+    "reddit-onebrain-four-agents": {
+      "hash": "50f135811c8147fb",
+      "status": "translated"
+    },
+    "reddit-hermes-kanban-self-managing": {
+      "hash": "87ca900a5503a674",
+      "status": "translated"
+    },
+    "reddit-agent-install-monitor": {
+      "hash": "6d026f3e97d999e2",
+      "status": "translated"
+    },
+    "reddit-elaphe-non-coder-uses": {
+      "hash": "b216ce38ec234b28",
+      "status": "translated"
+    },
+    "reddit-synapse-hippocampus": {
+      "hash": "d916c3c9eb5d488e",
+      "status": "translated"
+    },
+    "reddit-cotal-tmux-coordination": {
+      "hash": "640636ac76a326dc",
+      "status": "translated"
+    },
+    "reddit-signal-triage-notify": {
+      "hash": "bf506a0bc7f7be8b",
+      "status": "translated"
+    },
+    "reddit-opentab-token-spend": {
+      "hash": "227acd7d546e487d",
+      "status": "translated"
+    },
+    "reddit-jinn-ai-org": {
+      "hash": "1dbce7c67d0e9c82",
+      "status": "translated"
+    },
+    "reddit-hermes-live2d": {
+      "hash": "27607ccb4b15e7e1",
+      "status": "translated"
+    },
+    "reddit-idleviber-game": {
+      "hash": "c7c3683b38caa829",
+      "status": "translated"
+    },
+    "reddit-termux-mobile-install": {
+      "hash": "b62962bc4eba85b8",
+      "status": "translated"
+    },
+    "reddit-even-realities-hermes-voice": {
+      "hash": "a805891a15905557",
+      "status": "translated"
+    },
+    "reddit-mobile-companion-ios": {
+      "hash": "d8020116302c5e1d",
+      "status": "translated"
+    },
+    "reddit-unblockable-web-stack": {
+      "hash": "3b9dcc078bed8f5a",
+      "status": "translated"
+    },
+    "reddit-cheapcharts-skill": {
+      "hash": "7b12c006e18e4ec8",
+      "status": "translated"
+    },
+    "reddit-music-library-spotify": {
+      "hash": "b175428f6f5d75e4",
+      "status": "translated"
+    },
+    "reddit-typeui-design-skills": {
+      "hash": "4d3da71a240487f9",
+      "status": "translated"
+    },
+    "reddit-qwen-3060-64k": {
+      "hash": "67a6fa2e0441a7fb",
+      "status": "translated"
+    },
+    "reddit-gemma4-7900xtx-free": {
+      "hash": "442e2b3fb3cc8f73",
+      "status": "translated"
+    },
+    "reddit-engram-teaches-you": {
+      "hash": "a9e828ef83065f5a",
+      "status": "translated"
+    },
+    "x-milesdeutscher-business-brain": {
+      "hash": "739e687503a5992d",
+      "status": "translated"
+    },
+    "x-scotty529-gumroad-gumclaw": {
+      "hash": "b7459c68d9d50136",
+      "status": "translated"
+    },
+    "x-pengsonal-android-cloudshell": {
+      "hash": "734ff133217bd20d",
+      "status": "translated"
+    },
+    "x-iamlukethedev-steer": {
+      "hash": "e3f478c0f95242e9",
+      "status": "translated"
+    },
+    "x-iamlukethedev-rollback": {
+      "hash": "08720401b125ddd7",
+      "status": "translated"
+    },
+    "x-alphabatcher-default-config-bite": {
+      "hash": "52fdf316c636b039",
+      "status": "translated"
+    },
+    "x-ksimback-hermes-atlas": {
+      "hash": "d5248811e51b96dc",
+      "status": "translated"
+    },
+    "x-monoperr0-glyph-protocol": {
+      "hash": "6cae0c83a2d6263f",
+      "status": "translated"
+    },
+    "x-akshay-moa-explained": {
+      "hash": "3a5ea29e81f05eb6",
+      "status": "translated"
+    },
+    "x-shannholmberg-prototype-to-production": {
+      "hash": "77eb7eeac0e1a8f7",
+      "status": "translated"
+    },
+    "x-shannholmberg-four-levels": {
+      "hash": "34db3d597aa019d9",
+      "status": "translated"
+    },
+    "x-juliangoldie-apollo-voice": {
+      "hash": "49d9f669c09899fd",
+      "status": "translated"
+    },
+    "x-ibuzovskyi-cross-agent-audit": {
+      "hash": "16882159df17dffb",
+      "status": "translated"
+    },
+    "x-holiprompt-chief-of-staff": {
+      "hash": "fafa904aa94d401c",
+      "status": "translated"
+    },
+    "x-fpostigo-busted-laptop": {
+      "hash": "aab472c0f7190f46",
+      "status": "translated"
+    },
+    "x-quxiaoyin-three-agent-split": {
+      "hash": "64a39d4a18e8e9a6",
+      "status": "translated"
+    },
+    "x-elvissun-source-code-study": {
+      "hash": "4ba74d784ff1e806",
+      "status": "translated"
+    },
+    "x-milesdeutscher-cut-costs": {
+      "hash": "374c337393fe380d",
+      "status": "translated"
+    },
+    "x-coderams-cofounder-checklist": {
+      "hash": "d22b2c4fd32eee4a",
+      "status": "translated"
+    },
     "anthony-inbox-cron": {
       "hash": "476639f20e6ab397",
       "status": "translated"

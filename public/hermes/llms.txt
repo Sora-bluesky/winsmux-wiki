@@ -352,6 +352,7 @@ Hermes Agent 0.20.6
 - [user-guide/skills/optional/devops/devops-hermes-s6-container-supervision（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision/)
 - [user-guide/skills/optional/devops/devops-inference-sh-cli（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-inference-sh-cli/)
 - [user-guide/skills/optional/devops/devops-pinggy-tunnel（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/)
+- [user-guide/skills/optional/devops/devops-setup-wizard-generator（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-setup-wizard-generator/)
 - [user-guide/skills/optional/devops/devops-watchers（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-watchers/)
 - [user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test/)
 - [user-guide/skills/optional/email/email-agentmail（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/email/email-agentmail/)
@@ -407,6 +408,7 @@ Hermes Agent 0.20.6
 - [user-guide/skills/optional/payments/payments-stripe-link-cli（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/)
 - [user-guide/skills/optional/payments/payments-stripe-projects（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/)
 - [user-guide/skills/optional/productivity/productivity-canvas（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/)
+- [user-guide/skills/optional/productivity/productivity-decision-questionnaire（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/)
 - [user-guide/skills/optional/productivity/productivity-here-now（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/)
 - [user-guide/skills/optional/productivity/productivity-memento-flashcards（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/)
 - [user-guide/skills/optional/productivity/productivity-shop（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/)
@@ -432,6 +434,7 @@ Hermes Agent 0.20.6
 - [user-guide/skills/optional/security/security-unbroker（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
 - [user-guide/skills/optional/security/security-web-pentest（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-web-pentest/)
 - [user-guide/skills/optional/software-development/software-development-code-wiki（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/)
+- [user-guide/skills/optional/software-development/software-development-grill-me（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/)
 - [user-guide/skills/optional/software-development/software-development-rest-graphql-debug（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug/)
 - [user-guide/skills/optional/software-development/software-development-subagent-driven-development（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/)
 - [user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy/)
@@ -767,6 +770,7 @@ Hermes Agent 0.20.6
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/devops/devops-inference-sh-cli.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/devops/devops-setup-wizard-generator.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/devops/devops-watchers.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/email/email-agentmail.md
@@ -822,6 +826,7 @@ Hermes Agent 0.20.6
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/payments/payments-stripe-link-cli.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/payments/payments-stripe-projects.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-canvas.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-here-now.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-shop.md
@@ -847,6 +852,7 @@ Hermes Agent 0.20.6
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/security/security-unbroker.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/security/security-web-pentest.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/software-development/software-development-code-wiki.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/software-development/software-development-grill-me.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy.md

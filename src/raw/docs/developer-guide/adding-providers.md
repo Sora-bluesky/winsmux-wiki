@@ -1,85 +1,86 @@
 ---
-title: "プロバイダを追加する"
-description: "Hermes Agent に新しい推論プロバイダを追加する手順。認証、ランタイム解決、CLI の導線、アダプター、テスト、ドキュメントまで"
+title: "プロバイダーの追加"
+description: "Hermes Agent に新しい推論プロバイダーを追加する方法 — 認証、実行時の解決、CLI の流れ、アダプター、テスト、ドキュメント"
 upstream_path: developer-guide/adding-providers.md
-upstream_blob: 203fd43d0e7d6a2e92b694a5cbfc378359f84d3c
+upstream_blob: ede1f622fd7a93921bb71ccb8e09bf30ab962f4e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-providers
 ---
 
-# プロバイダを追加する {#adding-providers}
+# プロバイダーの追加 {#adding-providers}
 
-Hermes は、カスタムプロバイダの経路を使えば OpenAI 互換のエンドポイントならどれとでもすでにやり取りできます。組み込みプロバイダを足すのは、そのサービス向けに一段上の使い心地を用意したいときだけにしてください。
+Hermes は独自プロバイダーの経路を使って、OpenAI 互換のエンドポイントならすでに何とでも話せます。組み込みのプロバイダーを追加するのは、そのサービスに一級の使い心地を用意したいときだけにしてください。
 
-- プロバイダ固有の認証やトークン更新
-- 選び抜いたモデルの一覧
-- setup や `hermes model` メニューへの項目追加
-- `provider:model` 記法で使えるプロバイダの別名
-- アダプターが必要な、OpenAI とは違う API の形
+- そのプロバイダー固有の認証やトークン更新がある
+- 厳選したモデルの一覧を持たせたい
+- セットアップや `hermes model` のメニューに項目を出したい
+- `provider:model` の書き方で使えるプロバイダーの別名を用意したい
+- OpenAI とは違う API の形をしていて、アダプターが必要
 
-そのプロバイダが「OpenAI 互換のベース URL と API キーがもう一組増えるだけ」なら、名前を付けたカスタムプロバイダで十分なこともあります。
+そのプロバイダーが「OpenAI 互換のベース URL と API キーがもう 1 つあるだけ」なら、名前を付けた独自プロバイダーで足りるかもしれません。
 
-## 全体像をつかむ {#the-mental-model}
+## 全体像 {#the-mental-model}
 
-組み込みプロバイダは、いくつかの層で足並みをそろえる必要があります。
+組み込みのプロバイダーは、いくつかの層にまたがって辻褄を合わせる必要があります。
 
-1. `hermes_cli/auth.py` が、資格情報をどう見つけるかを決めます。
-2. `hermes_cli/runtime_provider.py` が、それを実行時のデータに変換します。
+1. `hermes_cli/auth.py` が、認証情報をどう見つけるかを決めます。
+2. `hermes_cli/runtime_provider.py` が、それを実行時のデータに変えます。
    - `provider`
    - `api_mode`
    - `base_url`
    - `api_key`
    - `source`
 3. `run_agent.py` が `api_mode` を見て、リクエストの組み立て方と送り方を決めます。
-4. `hermes_cli/models.py` と `hermes_cli/main.py` が、そのプロバイダを CLI に登場させます。（`hermes_cli/setup.py` は自動で `main.py` に処理を任せるので、こちらに手を入れる必要はありません。）
-5. `agent/auxiliary_client.py` と `agent/model_metadata.py` が、補助タスクとトークン配分を動き続けさせます。
+4. `hermes_cli/models.py` と `hermes_cli/main.py` が、そのプロバイダーを CLI に出します（`hermes_cli/setup.py` は自動的に `main.py` へ委譲するので、こちらの変更は不要です）。
+5. `agent/auxiliary_client.py` と `agent/model_metadata.py` が、脇のタスクとトークンの見積もりを動かし続けます。
 
-肝心な抽象化は `api_mode` です。
+肝になる抽象は `api_mode` です。
 
-- ほとんどのプロバイダは `chat_completions` を使います。
-- Codex と Meta Model API（`api.meta.ai` — Muse Spark）は `codex_responses` を使います（プロンプトキャッシュのために `prompt_cache_retention: 24h` を自動で送ります。`api.meta.ai` で 93〜99% のキャッシュヒットが出るのは `/v1/responses` だけです）。
+- ほとんどのプロバイダーは `chat_completions` を使います。
+- Codex と Meta Model API（`api.meta.ai` — Muse Spark）は `codex_responses` を使います（プロンプトキャッシュのために `prompt_cache_retention: 24h` を自動で送ります。`api.meta.ai` が 93〜99% のキャッシュヒットを出せるのは `/v1/responses` だけです）。
+- Ramp Router（`api.router.com`）も `codex_responses` を使います。Responses が Router の本来の通信路で（`/v1/chat/completions` は最小限の互換層にすぎません）、しかもモデルごとに `reasoning.effort` を検証します。router のプロファイルは、稼働中のカタログから各モデルの語彙を宣言することでこれに対応しています（`ProviderProfile.supported_reasoning_efforts`）。
 - Anthropic は `anthropic_messages` を使います。
-- OpenAI 系ではない新しいプロトコルの場合、たいていは新しいアダプターと新しい `api_mode` の分岐を足すことになります。
+- OpenAI 以外の新しいプロトコルを足す場合はたいてい、新しいアダプターと新しい `api_mode` の分岐を追加することになります。
 
-### ツール呼び出しの通信フォーマット {#tool-call-wire-format}
+### ツール呼び出しの通信形式 {#tool-call-wire-format}
 
-Hermes は会話履歴を内部で OpenAI の chat completions 形式のまま保持しています。そのため `chat_completions` トランスポートの `convert_messages` / `convert_tools`（`agent/transports/chat_completions.py`）はほぼ素通しで、それ以外のトランスポートはすべて、この形式*から*各自のプロトコルへ変換します。この形式の正典 — JSON スキーマの `parameters` を持つ `tools` 定義、`function.arguments` を文字列化して持つアシスタントの `tool_calls` エントリ、`tool_call_id` で対応づける `role: "tool"` の結果メッセージ — は [OpenAI chat completions API の公式仕様](https://platform.openai.com/docs/api-reference/chat/create) にあります。ネイティブのアダプターを書くときは、そのページが変換元の側を定義し、プロバイダ側のドキュメントが変換先の側を定義します。
+Hermes は会話の履歴を内部的に OpenAI の chat-completions の形で保持しています。そのため `chat_completions` トランスポートの `convert_messages` / `convert_tools`（`agent/transports/chat_completions.py`）はほぼ恒等変換で、ほかのトランスポートはすべてこの形*から*それぞれのプロトコルへ変換します。この形の正典 — JSON スキーマの `parameters` を持つ `tools` の定義、`function.arguments` を文字列化して持つアシスタントの `tool_calls` の項目、`tool_call_id` を鍵にした `role: "tool"` の結果メッセージ — は [OpenAI chat completions API 早見表](https://platform.openai.com/docs/api-reference/chat/create)にあります。ネイティブのアダプターを書くときは、そのページが変換の入力側を定め、プロバイダーのドキュメントが出力側を定めることになります。
 
-## まず実装の道筋を選ぶ {#choose-the-implementation-path-first}
+## まず実装の道筋を決める {#choose-the-implementation-path-first}
 
-### 道筋 A — OpenAI 互換のプロバイダ {#path-a-openai-compatible-provider}
+### 道筋 A — OpenAI 互換のプロバイダー {#path-a-openai-compatible-provider}
 
-プロバイダが標準的な chat completions 形式のリクエストを受け付ける場合は、こちらを使います。
+プロバイダーが標準的な chat-completions 形式のリクエストを受け付ける場合は、こちらです。
 
-よくある作業は次のとおりです。
+よくある作業:
 
 - 認証のメタデータを足す
 - モデルの一覧と別名を足す
-- ランタイム解決を足す
-- CLI メニューへの結線を足す
+- 実行時の解決を足す
+- CLI のメニューにつなぐ
 - 補助モデルの既定値を足す
 - テストと利用者向けドキュメントを足す
 
-たいていは新しいアダプターも新しい `api_mode` も必要ありません。
+たいていの場合、新しいアダプターや新しい `api_mode` は不要です。
 
-### 道筋 B — ネイティブのプロバイダ {#path-b-native-provider}
+### 道筋 B — ネイティブのプロバイダー {#path-b-native-provider}
 
-プロバイダが OpenAI の chat completions のようには振る舞わない場合は、こちらを使います。
+プロバイダーが OpenAI の chat completions と同じようには振る舞わない場合は、こちらです。
 
-現在ツリーにある例は次のとおりです。
+いまツリーにある例:
 
-- `codex_responses`（OpenAI Codex、xAI Grok、そして `api.meta.ai` 経由の Meta Muse Spark。最後のものは `prompt_cache_retention: 24h` を自動で送ります）
+- `codex_responses`（OpenAI Codex、xAI Grok、`api.meta.ai` 経由の Meta Muse Spark — こちらは `prompt_cache_retention: 24h` を自動で送ります — および `api.router.com` 経由の Ramp Router）
 - `anthropic_messages`
 
-この道筋では、道筋 A の作業すべてに加えて次が必要です。
+この道筋では、道筋 A のすべてに加えて次が必要です。
 
-- `agent/` に置くプロバイダのアダプター
-- リクエストの組み立て、振り分け、使用量の取り出し、割り込み処理、レスポンスの正規化のための `run_agent.py` の分岐
+- `agent/` 配下のプロバイダー用アダプター
+- リクエストの組み立て、送出、使用量の取り出し、割り込みの処理、応答の正規化についての `run_agent.py` の分岐
 - アダプターのテスト
 
-## ファイルの一覧 {#file-checklist}
+## ファイルのチェックリスト {#file-checklist}
 
-### 組み込みプロバイダすべてで必要なもの {#required-for-every-built-in-provider}
+### 組み込みプロバイダーすべてに必要 {#required-for-every-built-in-provider}
 
 1. `hermes_cli/auth.py`
 2. `hermes_cli/models.py`
@@ -88,83 +89,83 @@ Hermes は会話履歴を内部で OpenAI の chat completions 形式のまま�
 5. `agent/auxiliary_client.py`
 6. `agent/model_metadata.py`
 7. テスト
-8. `website/docs/` 以下の利用者向けドキュメント
+8. `website/docs/` 配下の利用者向けドキュメント
 
 :::tip
-`hermes_cli/setup.py` に変更は**不要**です。セットアップウィザードはプロバイダとモデルの選択を `main.py` の `select_provider_and_model()` に任せているので、そこに足したプロバイダは `hermes setup` でも自動的に使えるようになります。
+`hermes_cli/setup.py` に変更は**不要**です。セットアップウィザードはプロバイダーとモデルの選択を `main.py` の `select_provider_and_model()` へ委譲するので、そこに追加したプロバイダーは `hermes setup` でも自動的に使えるようになります。
 :::
 
-### ネイティブ / 非 OpenAI のプロバイダで追加が必要なもの {#additional-for-native-non-openai-providers}
+### ネイティブ / OpenAI 以外のプロバイダーで追加が必要なもの {#additional-for-native-non-openai-providers}
 
 10. `agent/<provider>_adapter.py`
 11. `run_agent.py`
-12. プロバイダの SDK が必要なら `pyproject.toml`
+12. プロバイダーの SDK が必要なら `pyproject.toml`
 
-## 近道: API キーだけの単純なプロバイダ {#fast-path-simple-api-key-providers}
+## 近道: 単純な API キー方式のプロバイダー {#fast-path-simple-api-key-providers}
 
-追加したいプロバイダが、単一の API キーで認証する OpenAI 互換のエンドポイントにすぎないなら、`auth.py`、`runtime_provider.py`、`main.py` をはじめ、下の完全な一覧に出てくるファイルには一切触る必要がありません。
+追加したいプロバイダーが、API キー 1 本で認証する OpenAI 互換のエンドポイントにすぎない場合、`auth.py`、`runtime_provider.py`、`main.py` をはじめ、下の完全なチェックリストにあるファイルには一切触れる必要がありません。
 
 必要なのは次だけです。
 
-1. `plugins/model-providers/<your-provider>/` 以下に置くプラグインのディレクトリ。中身は次の2つです。
-   - `__init__.py` — モジュールの読み込み時に `register_provider(profile)` を呼びます
+1. `plugins/model-providers/<your-provider>/` 配下のプラグインディレクトリ。中身は次の 2 つです。
+   - `__init__.py` — モジュールの階層で `register_provider(profile)` を呼びます
    - `plugin.yaml` — マニフェスト（name、kind: model-provider、version、description）
-2. 以上です。プロバイダのプラグインは、`get_provider_profile()` か `list_providers()` が最初に呼ばれた時点で自動的に読み込まれます。同梱のプラグイン（このリポジトリのもの）も、`$HERMES_HOME/plugins/model-providers/` に置いた利用者のプラグインも、どちらも拾われます。
+2. 以上です。プロバイダーのプラグインは、何かが最初に `get_provider_profile()` か `list_providers()` を呼んだ時点で自動的に読み込まれます。同梱のプラグイン（このリポジトリ）も、`$HERMES_HOME/plugins/model-providers/` にある利用者のプラグインも、どちらも拾われます。
 
-プラグインを追加して `register_provider()` が呼ばれると、次の結線が自動で行われます。
+プラグインを追加してそれが `register_provider()` を呼ぶと、次の項目が自動的につながります。
 
-1. `auth.py` の `PROVIDER_REGISTRY` への登録（資格情報の解決、環境変数の参照）
-2. `api_mode` は `chat_completions` に設定されます
-3. `base_url` は設定ファイルか、宣言した環境変数から取られます
-4. `env_vars` が優先順に API キーとして参照されます
-5. そのプロバイダの `fallback_models` の一覧が登録されます
-6. `--provider` の CLI フラグがそのプロバイダ ID を受け付けます
-7. `hermes model` のメニューにそのプロバイダが並びます
-8. `hermes setup` ウィザードは自動で `main.py` に処理を任せます
-9. `provider:model` の別名記法が使えます
-10. ランタイムの解決処理が正しい `base_url` と `api_key` を返します
-11. `--provider <name>` の CLI フラグがそのプロバイダ ID を受け付けます
-12. フォールバックモデルの切り替えが、そのプロバイダへ問題なく移れます
+1. `auth.py` の `PROVIDER_REGISTRY` の項目（認証情報の解決、環境変数の参照）
+2. `api_mode` が `chat_completions` に設定される
+3. `base_url` が設定か、宣言された環境変数から取られる
+4. `env_vars` が API キーを探すときの優先順位どおりに調べられる
+5. そのプロバイダー用の `fallback_models` の一覧が登録される
+6. CLI の `--provider` フラグがそのプロバイダー ID を受け付ける
+7. `hermes model` のメニューにそのプロバイダーが並ぶ
+8. `hermes setup` のウィザードが自動的に `main.py` へ委譲する
+9. `provider:model` という別名の書き方が使える
+10. 実行時の解決器が正しい `base_url` と `api_key` を返す
+11. CLI の `--provider <name>` フラグがそのプロバイダー ID を受け付ける
+12. フォールバックモデルの起動が、そのプロバイダーへきれいに切り替わる
 
-`$HERMES_HOME/plugins/model-providers/<name>/` に置いた利用者のプラグインは、同名の同梱プラグインを上書きします（`register_provider()` は後に書いたものが勝ちます）。つまり第三者は、リポジトリを編集しなくても組み込みのプロフィールを差し替えたり手直ししたりできます。
+`$HERMES_HOME/plugins/model-providers/<name>/` にある利用者のプラグインは、同じ名前の同梱プラグインを上書きします（`register_provider()` は後勝ちです）。そのため第三者は、リポジトリを編集しなくても組み込みのプロファイルに手を入れたり、丸ごと差し替えたりできます。
 
-雛形としては `plugins/model-providers/nvidia/` か `plugins/model-providers/gmi/` を、項目の一覧・フックの書き方・通しの例については [Model Provider プラグインガイド](/hermes/docs/developer-guide/model-provider-plugin/) を見てください。
+雛形としては `plugins/model-providers/nvidia/` や `plugins/model-providers/gmi/` を見てください。項目の一覧、フックの書き方、通しの例は[モデルプロバイダープラグインのガイド](/hermes/docs/developer-guide/model-provider-plugin/)にあります。
 
-## 完全版: OAuth や複雑なプロバイダ {#full-path-oauth-and-complex-providers}
+## 本道: OAuth や込み入ったプロバイダー {#full-path-oauth-and-complex-providers}
 
-プロバイダに次のどれかが必要なときは、下の完全な一覧に従ってください。
+プロバイダーに次のどれかが必要な場合は、下の完全なチェックリストを使ってください。
 
-- OAuth やトークン更新（Nous Portal、Codex、Qwen Portal、Copilot）
+- OAuth やトークンの更新（Nous Portal、Codex、Qwen Portal、Copilot）
 - 新しいアダプターが要る、OpenAI とは違う API の形（Anthropic Messages、Codex Responses）
-- 独自のエンドポイント検出や複数リージョンの探索（z.ai、Kimi）
-- 選び抜いた静的なモデル一覧、あるいは `/models` の実時間取得
-- 独自の認証フローを持つ、プロバイダ固有の `hermes model` メニュー項目
+- 独自のエンドポイント判定や、複数リージョンの探索（z.ai、Kimi）
+- 厳選した静的なモデル一覧、または稼働中の `/models` の取得
+- 独自の認証フローを持つ、プロバイダー固有の `hermes model` メニュー項目
 
-## 手順1: 正典となるプロバイダ ID をひとつ決める {#step-1-pick-one-canonical-provider-id}
+## 手順 1: 正典となるプロバイダー ID を 1 つ決める {#step-1-pick-one-canonical-provider-id}
 
-プロバイダ ID をひとつ選び、どこでもそれを使います。
+プロバイダー ID を 1 つ選び、どこでもそれを使います。
 
-リポジトリにある例です。
+リポジトリにある例:
 
 - `openai-codex`
 - `kimi-coding`
 - `minimax-cn`
 
-同じ ID が次のすべてに現れるようにします。
+その同じ ID が、次の場所すべてに現れるはずです。
 
 - `hermes_cli/auth.py` の `PROVIDER_REGISTRY`
 - `hermes_cli/models.py` の `_PROVIDER_LABELS`
 - `hermes_cli/auth.py` と `hermes_cli/models.py` 両方の `_PROVIDER_ALIASES`
-- `hermes_cli/main.py` の CLI `--provider` の選択肢
-- setup / モデル選択の分岐
+- `hermes_cli/main.py` の CLI の `--provider` の選択肢
+- セットアップ / モデル選択の分岐
 - 補助モデルの既定値
 - テスト
 
-これらのファイルで ID が食い違うと、プロバイダは中途半端に結線された状態になります。認証は通るのに、`/model` や setup、ランタイム解決が黙って取りこぼす、といったことが起きます。
+これらのファイルの間で ID が食い違っていると、プロバイダーは中途半端につながった状態になります。認証は通るのに、`/model` やセットアップ、実行時の解決が黙って取りこぼす、といった具合です。
 
-## 手順2: `hermes_cli/auth.py` に認証のメタデータを足す {#step-2-add-auth-metadata-in-hermescliauthpy}
+## 手順 2: `hermes_cli/auth.py` に認証のメタデータを足す {#step-2-add-auth-metadata-in-hermescliauthpy}
 
-API キー方式のプロバイダなら、次を持つ `ProviderConfig` を `PROVIDER_REGISTRY` に足します。
+API キー方式のプロバイダーなら、`PROVIDER_REGISTRY` に `ProviderConfig` の項目を追加します。中身は次のとおりです。
 
 - `id`
 - `name`
@@ -175,35 +176,35 @@ API キー方式のプロバイダなら、次を持つ `ProviderConfig` を `PR
 
 あわせて `_PROVIDER_ALIASES` に別名も足します。
 
-既存のプロバイダを雛形として使ってください。
+既存のプロバイダーを雛形として使ってください。
 
-- 単純な API キーの経路: Z.AI、MiniMax
-- エンドポイント検出付きの API キーの経路: Kimi、Z.AI
-- ネイティブなトークン解決: Anthropic
-- OAuth / 認証ストアの経路: Nous、OpenAI Codex
+- 単純な API キーの道筋: Z.AI、MiniMax
+- エンドポイント判定つきの API キーの道筋: Kimi、Z.AI
+- ネイティブのトークン解決: Anthropic
+- OAuth / 認証情報ストアの道筋: Nous、OpenAI Codex
 
 ここで答えを出しておきたい問いは次のとおりです。
 
-- Hermes はどの環境変数を、どの優先順位で見るべきか
-- そのプロバイダにベース URL の上書きは要るか
-- エンドポイントの探索やトークン更新は要るか
-- 資格情報が見つからないとき、認証エラーは何と伝えるべきか
+- Hermes はどの環境変数を、どの優先順位で調べるべきか？
+- そのプロバイダーにはベース URL の上書きが必要か？
+- エンドポイントの探索やトークンの更新は要るか？
+- 認証情報がないとき、エラーは何と言うべきか？
 
-「API キーを引く」以上のことが必要なプロバイダなら、関係のない分岐にロジックを押し込まず、専用の資格情報リゾルバを足してください。
+「API キーを探す」だけでは済まないプロバイダーなら、関係のない分岐にロジックを押し込まず、専用の認証情報の解決処理を追加してください。
 
-## 手順3: `hermes_cli/models.py` にモデル一覧と別名を足す {#step-3-add-model-catalog-and-aliases-in-hermesclimodelspy}
+## 手順 3: `hermes_cli/models.py` にモデルの一覧と別名を足す {#step-3-add-model-catalog-and-aliases-in-hermesclimodelspy}
 
-メニューと `provider:model` 記法の両方でそのプロバイダが使えるよう、プロバイダの一覧を更新します。
+メニューと `provider:model` の書き方でそのプロバイダーが使えるように、プロバイダーの一覧を更新します。
 
-よくある編集箇所です。
+よくある編集箇所:
 
 - `_PROVIDER_MODELS`
 - `_PROVIDER_LABELS`
 - `_PROVIDER_ALIASES`
-- `list_available_providers()` の中のプロバイダの表示順
-- そのプロバイダが `/models` の実時間取得に対応しているなら `provider_model_ids()`
+- `list_available_providers()` の中のプロバイダーの表示順
+- 稼働中の `/models` の取得に対応するなら `provider_model_ids()`
 
-プロバイダがモデル一覧を実時間で公開しているなら、そちらを優先して使い、`_PROVIDER_MODELS` は静的なフォールバックとして残してください。
+プロバイダーがモデルの一覧を稼働中に返せるなら、そちらを優先し、`_PROVIDER_MODELS` は静的な受け皿として残しておきます。
 
 このファイルは、次のような入力を成立させているものでもあります。
 
@@ -212,13 +213,13 @@ anthropic:claude-sonnet-4-6
 kimi:model-name
 ```
 
-ここに別名がないと、認証はきちんと通るのに `/model` の解釈で失敗する、ということが起こります。
+ここに別名がないと、認証は正しく通るのに `/model` の解釈で失敗する、ということが起こります。
 
-## 手順4: `hermes_cli/runtime_provider.py` で実行時のデータを解決する {#step-4-resolve-runtime-data-in-hermescliruntimeproviderpy}
+## 手順 4: `hermes_cli/runtime_provider.py` で実行時のデータを解決する {#step-4-resolve-runtime-data-in-hermescliruntimeproviderpy}
 
-`resolve_runtime_provider()` は、CLI、ゲートウェイ、cron、ACP、補助クライアントが共通で通る経路です。
+`resolve_runtime_provider()` は、CLI、ゲートウェイ、cron、ACP、補助クライアントが共通して通る経路です。
 
-少なくとも次を含む辞書を返す分岐を足します。
+少なくとも次を含む dict を返す分岐を追加します。
 
 ```python
 {
@@ -231,102 +232,102 @@ kimi:model-name
 }
 ```
 
-プロバイダが OpenAI 互換なら、`api_mode` はふつう `chat_completions` のままにします。
+プロバイダーが OpenAI 互換なら、`api_mode` はたいてい `chat_completions` のままにしておきます。
 
-API キーの優先順位には気をつけてください。Hermes には、OpenRouter のキーが無関係なエンドポイントへ漏れるのを防ぐロジックがすでに入っています。新しいプロバイダも同じくらい明確に、どのキーをどのベース URL に渡すのかを決めておくべきです。
+API キーの優先順位には注意してください。Hermes には、OpenRouter のキーが無関係なエンドポイントへ漏れるのを防ぐ処理がすでに入っています。新しいプロバイダーも同じように、どのキーをどのベース URL へ渡すのかをはっきりさせるべきです。
 
-## 手順5: `hermes_cli/main.py` で CLI に結線する {#step-5-wire-the-cli-in-hermesclimainpy}
+## 手順 5: `hermes_cli/main.py` で CLI につなぐ {#step-5-wire-the-cli-in-hermesclimainpy}
 
-対話的な `hermes model` の流れに出てくるまで、そのプロバイダは見つけてもらえません。
+対話式の `hermes model` の流れに出てくるまで、そのプロバイダーは見つけてもらえません。
 
-`hermes_cli/main.py` の次を更新します。
+`hermes_cli/main.py` で次を更新します。
 
-- `provider_labels` の辞書
+- `provider_labels` の dict
 - `select_provider_and_model()` の中の `providers` の一覧
-- プロバイダの振り分け（`if selected_provider == ...`）
+- プロバイダーの振り分け（`if selected_provider == ...`）
 - `--provider` 引数の選択肢
-- そのプロバイダがログイン / ログアウトに対応しているなら、その選択肢
-- `_model_flow_<provider>()` 関数。合うなら `_model_flow_api_key_provider()` の使い回しでも構いません
+- そのプロバイダーがログイン・ログアウトに対応するなら、その選択肢
+- `_model_flow_<provider>()` の関数。当てはまるなら `_model_flow_api_key_provider()` を使い回してもかまいません
 
 :::tip
-`hermes_cli/setup.py` に変更は要りません。`main.py` の `select_provider_and_model()` を呼んでいるので、新しいプロバイダは `hermes model` と `hermes setup` の両方に自動で現れます。
+`hermes_cli/setup.py` に変更は要りません。`main.py` の `select_provider_and_model()` を呼んでいるので、新しいプロバイダーは `hermes model` と `hermes setup` の両方に自動的に現れます。
 :::
 
-## 手順6: 補助的な呼び出しを動く状態に保つ {#step-6-keep-auxiliary-calls-working}
+## 手順 6: 補助的な呼び出しを動かし続ける {#step-6-keep-auxiliary-calls-working}
 
-ここで関係するファイルは2つです。
+ここで関わるファイルは 2 つです。
 
 ### `agent/auxiliary_client.py` {#agentauxiliaryclientpy}
 
-API キーを直接使うプロバイダなら、安くて速い補助モデルの既定値を `_API_KEY_PROVIDER_AUX_MODELS` に足します。
+直接 API キーを使うプロバイダーなら、安くて速い補助モデルの既定値を `_API_KEY_PROVIDER_AUX_MODELS` に追加します。
 
 補助タスクには次のようなものがあります。
 
 - 画像の要約
-- Web から抜き出した内容の要約
+- Web 抽出の要約
 - コンテキスト圧縮の要約
 - セッション検索の要約
 - メモリの書き出し
 
-そのプロバイダに妥当な補助モデルの既定値がないと、補助タスクがまずいフォールバックをしたり、思いがけず高価な主モデルを使ったりすることがあります。
+そのプロバイダーに妥当な補助の既定値がないと、脇のタスクがまずい受け皿に落ちたり、思いがけず高価なメインのモデルを使ったりします。
 
 ### `agent/model_metadata.py` {#agentmodelmetadatapy}
 
-トークン配分、圧縮のしきい値、各種の上限が正気を保つよう、そのプロバイダのモデルのコンテキスト長を足します。
+トークンの見積もり、圧縮のしきい値、各種の上限が正気を保てるように、そのプロバイダーのモデルのコンテキスト長を追加します。
 
-## 手順7: ネイティブのプロバイダなら、アダプターと `run_agent.py` の対応を足す {#step-7-if-the-provider-is-native-add-an-adapter-and-runagentpy-support}
+## 手順 7: ネイティブのプロバイダーなら、アダプターと `run_agent.py` の対応を足す {#step-7-if-the-provider-is-native-add-an-adapter-and-runagentpy-support}
 
-プロバイダが素の chat completions でないなら、プロバイダ固有のロジックは `agent/<provider>_adapter.py` に閉じ込めます。
+素の chat completions でないプロバイダーなら、固有のロジックは `agent/<provider>_adapter.py` に閉じ込めます。
 
-`run_agent.py` は全体の進行役に徹させてください。アダプターの補助関数を呼ぶべきで、ファイルのあちこちでプロバイダのペイロードを直に組み立てるべきではありません。
+`run_agent.py` は取りまとめ役に徹させてください。アダプターの補助関数を呼ぶべきであって、ファイルのあちこちでプロバイダー用のペイロードを手組みするべきではありません。
 
-ネイティブのプロバイダでは、たいてい次の場所に手が要ります。
+ネイティブのプロバイダーではたいてい、次の場所に手が必要になります。
 
 ### 新しいアダプターのファイル {#new-adapter-file}
 
-よくある役割です。
+よくある役割:
 
 - SDK / HTTP クライアントを組み立てる
 - トークンを解決する
-- OpenAI 形式の会話メッセージを、そのプロバイダのリクエスト形式へ変換する
+- OpenAI 形式の会話メッセージを、そのプロバイダーのリクエスト形式へ変換する
 - 必要ならツールのスキーマを変換する
-- プロバイダの応答を、`run_agent.py` が期待する形へ正規化する
+- プロバイダーの応答を、`run_agent.py` が期待する形へ戻す
 - 使用量と終了理由のデータを取り出す
 
 ### `run_agent.py` {#runagentpy}
 
-`api_mode` を検索して、分岐点をひとつ残らず点検します。少なくとも次を確かめてください。
+`api_mode` を検索して、分岐点をひとつ残らず点検します。最低限、次を確かめてください。
 
 - `__init__` が新しい `api_mode` を選ぶこと
-- そのプロバイダでクライアントの生成が動くこと
+- そのプロバイダーでクライアントの構築が動くこと
 - `_build_api_kwargs()` がリクエストの整え方を知っていること
 - `_interruptible_api_call()` が正しいクライアント呼び出しへ振り分けること
-- 割り込みとクライアント再生成の経路が動くこと
-- 応答の検証がそのプロバイダの形を受け入れること
+- 割り込みとクライアントの作り直しの経路が動くこと
+- 応答の検証がそのプロバイダーの形を受け入れること
 - 終了理由の取り出しが正しいこと
 - トークン使用量の取り出しが正しいこと
-- フォールバックモデルの切り替えが、新しいプロバイダへ問題なく移れること
-- 要約の生成とメモリの書き出しの経路がこれまでどおり動くこと
+- フォールバックモデルの起動が、新しいプロバイダーへきれいに切り替わること
+- 要約の生成とメモリの書き出しの経路がなお動くこと
 
-あわせて `run_agent.py` の中を `self.client.` でも検索してください。標準の OpenAI クライアントが存在する前提のコード経路は、ネイティブのプロバイダが別のクライアントオブジェクトを使ったり `self.client = None` だったりすると壊れます。
+あわせて `run_agent.py` の `self.client.` も検索してください。標準の OpenAI クライアントがある前提のコード経路は、ネイティブのプロバイダーが別のクライアントオブジェクトを使ったり `self.client = None` になったりすると壊れます。
 
-### プロンプトキャッシュとプロバイダ固有のリクエスト項目 {#prompt-caching-and-provider-specific-request-fields}
+### プロンプトキャッシュとプロバイダー固有のリクエスト項目 {#prompt-caching-and-provider-specific-request-fields}
 
-プロンプトキャッシュとプロバイダ固有のつまみは、簡単に壊れて戻ってしまう部分です。
+プロンプトキャッシュとプロバイダー固有のつまみは、壊れやすい部分です。
 
-すでにツリーにある例です。
+すでにツリーにある例:
 
-- Anthropic にはネイティブなプロンプトキャッシュの経路があります
-- OpenRouter にはプロバイダのルーティング用の項目が付きます
-- すべてのプロバイダがすべてのリクエスト側オプションを受け取るべきではありません
+- Anthropic にはネイティブのプロンプトキャッシュの経路がある
+- OpenRouter にはプロバイダー振り分けの項目が渡される
+- リクエスト側の選択肢を、すべてのプロバイダーに渡してよいわけではない
 
-ネイティブのプロバイダを足すときは、そのプロバイダが実際に理解できる項目だけを Hermes が送っているか、念入りに確かめてください。
+ネイティブのプロバイダーを追加するときは、そのプロバイダーが実際に理解できる項目だけを Hermes が送っているかを、念入りに確かめてください。
 
-## 手順8: テスト {#step-8-tests}
+## 手順 8: テスト {#step-8-tests}
 
-最低限、プロバイダの結線を守っているテストには手を入れます。
+最低限、プロバイダーの結線を守っているテストには手を入れます。
 
-よくある場所です。
+よくある場所:
 
 - `tests/hermes_cli/test_runtime_provider_resolution.py`
 - `tests/cli/test_cli_provider_resolution.py`
@@ -334,41 +335,41 @@ API キーを直接使うプロバイダなら、安くて速い補助モデル�
 - `tests/hermes_cli/test_setup_model_provider.py`
 - `tests/run_agent/test_provider_parity.py`
 - `tests/run_agent/test_run_agent.py`
-- ネイティブのプロバイダなら `tests/test_<provider>_adapter.py`
+- ネイティブのプロバイダーなら `tests/test_<provider>_adapter.py`
 
-ドキュメント上の例なので、実際のファイルの組み合わせは違うかもしれません。大事なのは、次を覆うことです。
+ドキュメント上の例なので、実際のファイルの顔ぶれは違うかもしれません。大事なのは次を押さえることです。
 
 - 認証の解決
-- CLI メニュー / プロバイダの選択
-- ランタイムのプロバイダ解決
+- CLI のメニュー / プロバイダーの選択
+- 実行時のプロバイダーの解決
 - エージェントの実行経路
 - provider:model の解釈
-- アダプター固有のメッセージ変換
+- アダプター固有のメッセージ変換があるならそれ
 
-対象を絞ってテストを走らせます（各ファイルを別々の子プロセスで実行する `scripts/run_tests.sh` を使っても構いません）。
+対象を絞ったテストを実行します（各ファイルを別々のサブプロセスで走らせる `scripts/run_tests.sh` を使ってもかまいません）。
 
 ```bash
 source venv/bin/activate
 python -m pytest tests/hermes_cli/test_runtime_provider_resolution.py tests/cli/test_cli_provider_resolution.py tests/hermes_cli/test_setup_model_provider.py tests/run_agent/test_provider_parity.py -q
 ```
 
-もっと踏み込んだ変更をしたなら、push する前に全体を走らせます。
+もっと踏み込んだ変更なら、push の前に全体を走らせます。
 
 ```bash
 source venv/bin/activate
 python -m pytest tests/ -n0 -q
 ```
 
-## 手順9: 実際に動かして確かめる {#step-9-live-verification}
+## 手順 9: 実物での確認 {#step-9-live-verification}
 
-テストのあとは、本物のスモークテストを走らせます。
+テストのあとは、本物で軽く動かしてみます。
 
 ```bash
 source venv/bin/activate
 python -m hermes_cli.main chat -q "Say hello" --provider your-provider --model your-model
 ```
 
-メニューを変えたなら、対話的な流れも試します。
+メニューを変えたなら、対話式の流れも試してください。
 
 ```bash
 source venv/bin/activate
@@ -376,78 +377,78 @@ python -m hermes_cli.main model
 python -m hermes_cli.main setup
 ```
 
-ネイティブのプロバイダでは、ただのテキスト応答だけでなく、ツール呼び出しも最低ひとつは確かめてください。
+ネイティブのプロバイダーでは、ただのテキスト応答だけでなく、ツール呼び出しも最低 1 回は確かめます。
 
-## 手順10: 利用者向けドキュメントを更新する {#step-10-update-user-facing-docs}
+## 手順 10: 利用者向けドキュメントを更新する {#step-10-update-user-facing-docs}
 
-そのプロバイダを第一級の選択肢として出すつもりなら、利用者向けのドキュメントも更新します。
+そのプロバイダーを一級の選択肢として出すつもりなら、利用者向けドキュメントも更新します。
 
 - `website/docs/getting-started/quickstart.md`
 - `website/docs/user-guide/configuration.md`
 - `website/docs/reference/environment-variables.md`
 
-開発者が完璧に結線しても、必要な環境変数やセットアップの流れを利用者が見つけられないまま、ということは起こり得ます。
+開発者がプロバイダーを完璧に結線しても、利用者が必要な環境変数やセットアップの流れにたどり着けないまま、ということは起こり得ます。
 
-## OpenAI 互換プロバイダの確認項目 {#openai-compatible-provider-checklist}
+## OpenAI 互換プロバイダーのチェックリスト {#openai-compatible-provider-checklist}
 
-標準の chat completions なら、こちらを使います。
+標準の chat completions のプロバイダーなら、こちらを使ってください。
 
 - [ ] `hermes_cli/auth.py` に `ProviderConfig` を追加した
 - [ ] `hermes_cli/auth.py` と `hermes_cli/models.py` に別名を追加した
-- [ ] `hermes_cli/models.py` にモデル一覧を追加した
-- [ ] `hermes_cli/runtime_provider.py` にランタイムの分岐を追加した
-- [ ] `hermes_cli/main.py` に CLI の結線を追加した（setup.py は自動で引き継ぎます）
+- [ ] `hermes_cli/models.py` にモデルの一覧を追加した
+- [ ] `hermes_cli/runtime_provider.py` に実行時の分岐を追加した
+- [ ] `hermes_cli/main.py` に CLI の結線を追加した（setup.py は自動的に引き継ぎます）
 - [ ] `agent/auxiliary_client.py` に補助モデルを追加した
 - [ ] `agent/model_metadata.py` にコンテキスト長を追加した
-- [ ] ランタイム / CLI のテストを更新した
+- [ ] 実行時 / CLI のテストを更新した
 - [ ] 利用者向けドキュメントを更新した
 
-## ネイティブプロバイダの確認項目 {#native-provider-checklist}
+## ネイティブプロバイダーのチェックリスト {#native-provider-checklist}
 
-新しいプロトコルの経路が要るときは、こちらを使います。
+新しいプロトコルの経路が要るプロバイダーなら、こちらを使ってください。
 
-- [ ] OpenAI 互換の確認項目をすべて満たした
+- [ ] OpenAI 互換のチェックリストの全項目
 - [ ] `agent/<provider>_adapter.py` にアダプターを追加した
 - [ ] `run_agent.py` で新しい `api_mode` に対応した
-- [ ] 割り込み / 再生成の経路が動く
+- [ ] 割り込み / 作り直しの経路が動く
 - [ ] 使用量と終了理由の取り出しが動く
 - [ ] フォールバックの経路が動く
 - [ ] アダプターのテストを追加した
-- [ ] 実機のスモークテストが通る
+- [ ] 実物での軽い動作確認が通る
 
-## よくあるつまずき {#common-pitfalls}
+## つまずきやすいところ {#common-pitfalls}
 
-### 1. 認証には足したのに、モデルの解釈に足していない {#1-adding-the-provider-to-auth-but-not-to-model-parsing}
+### 1. 認証には追加したのに、モデルの解釈に追加していない {#1-adding-the-provider-to-auth-but-not-to-model-parsing}
 
-資格情報はきちんと解決されるのに、`/model` や `provider:model` の入力が失敗します。
+認証情報は正しく解決されるのに、`/model` や `provider:model` の入力が失敗します。
 
-### 2. `config["model"]` が文字列にも辞書にもなり得ることを忘れる {#2-forgetting-that-configmodel-can-be-a-string-or-a-dict}
+### 2. `config["model"]` が文字列にも dict にもなり得ることを忘れる {#2-forgetting-that-configmodel-can-be-a-string-or-a-dict}
 
-プロバイダ選択まわりのコードの多くは、その両方の形をならす必要があります。
+プロバイダー選択のコードの多くは、その両方の形を揃える必要があります。
 
-### 3. 組み込みプロバイダが必須だと思い込む {#3-assuming-a-built-in-provider-is-required}
+### 3. 組み込みプロバイダーが必要だと思い込む {#3-assuming-a-built-in-provider-is-required}
 
-そのサービスが単に OpenAI 互換なだけなら、カスタムプロバイダのほうが少ない手間で利用者の困りごとを解決できているかもしれません。
+そのサービスが単に OpenAI 互換なだけなら、独自プロバイダーで利用者の問題は解決していて、保守の手間も少なくて済むかもしれません。
 
-### 4. 補助的な経路を忘れる {#4-forgetting-auxiliary-paths}
+### 4. 補助の経路を忘れる {#4-forgetting-auxiliary-paths}
 
-補助側の振り分けを更新し忘れたせいで、主な対話の経路は動くのに、要約やメモリの書き出し、画像まわりの補助が落ちる、ということがあります。
+補助側の振り分けを更新し忘れると、メインのチャットは動くのに要約やメモリの書き出し、画像の補助処理だけが失敗する、ということが起こります。
 
-### 5. ネイティブのプロバイダの分岐が `run_agent.py` に埋もれている {#5-native-provider-branches-hiding-in-runagentpy}
+### 5. `run_agent.py` にネイティブプロバイダーの分岐が隠れている {#5-native-provider-branches-hiding-in-runagentpy}
 
-`api_mode` と `self.client.` を検索してください。目につくリクエストの経路だけが唯一の経路だとは考えないことです。
+`api_mode` と `self.client.` を検索してください。目に付くリクエストの経路が唯一のものだとは考えないでください。
 
-### 6. OpenRouter 専用のつまみを他のプロバイダに送る {#6-sending-openrouter-only-knobs-to-other-providers}
+### 6. OpenRouter だけのつまみを他のプロバイダーへ送る {#6-sending-openrouter-only-knobs-to-other-providers}
 
-プロバイダのルーティングのような項目は、それに対応しているプロバイダにだけ付けるものです。
+プロバイダー振り分けのような項目は、それに対応したプロバイダーにだけ渡すべきものです。
 
-### 7. `hermes model` は更新したが `hermes setup` は更新していない {#7-updating-hermes-model-but-not-hermes-setup}
+### 7. `hermes model` は更新したのに `hermes setup` は更新していない {#7-updating-hermes-model-but-not-hermes-setup}
 
-どちらの流れも、そのプロバイダを知っている必要があります。
+どちらの流れも、そのプロバイダーを知っている必要があります。
 
-## 実装中に検索すると役立つ手がかり {#good-search-targets-while-implementing}
+## 実装中に検索するとよい語 {#good-search-targets-while-implementing}
 
-プロバイダが関わる場所を洗い出したいときは、次のシンボルを検索してください。
+プロバイダーが触れている箇所をすべて洗い出したいときは、次のシンボルを検索してください。
 
 - `PROVIDER_REGISTRY`
 - `_PROVIDER_ALIASES`
@@ -461,6 +462,6 @@ python -m hermes_cli.main setup
 
 ## 関連ドキュメント {#related-docs}
 
-- [プロバイダのランタイム解決](/hermes/docs/developer-guide/provider-runtime/)
+- [プロバイダーの実行時解決](/hermes/docs/developer-guide/provider-runtime/)
 - [アーキテクチャ](/hermes/docs/developer-guide/architecture/)
 - [コントリビュート](/hermes/docs/developer-guide/contributing/)

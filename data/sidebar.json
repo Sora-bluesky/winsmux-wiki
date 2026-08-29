@@ -719,6 +719,9 @@
                       "id": "user-guide/skills/optional/devops/devops-pinggy-tunnel"
                     },
                     {
+                      "id": "user-guide/skills/optional/devops/devops-setup-wizard-generator"
+                    },
+                    {
                       "id": "user-guide/skills/optional/devops/devops-watchers"
                     }
                   ]
@@ -934,6 +937,9 @@
                       "id": "user-guide/skills/optional/productivity/productivity-canvas"
                     },
                     {
+                      "id": "user-guide/skills/optional/productivity/productivity-decision-questionnaire"
+                    },
+                    {
                       "id": "user-guide/skills/optional/productivity/productivity-here-now"
                     },
                     {
@@ -1022,6 +1028,9 @@
                   "items": [
                     {
                       "id": "user-guide/skills/optional/software-development/software-development-code-wiki"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/software-development/software-development-grill-me"
                     },
                     {
                       "id": "user-guide/skills/optional/software-development/software-development-rest-graphql-debug"
@@ -1682,6 +1691,7 @@
     "user-guide/skills/optional/devops/devops-hermes-s6-container-supervision",
     "user-guide/skills/optional/devops/devops-inference-sh-cli",
     "user-guide/skills/optional/devops/devops-pinggy-tunnel",
+    "user-guide/skills/optional/devops/devops-setup-wizard-generator",
     "user-guide/skills/optional/devops/devops-watchers",
     "user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test",
     "user-guide/skills/optional/email/email-agentmail",
@@ -1737,6 +1747,7 @@
     "user-guide/skills/optional/payments/payments-stripe-link-cli",
     "user-guide/skills/optional/payments/payments-stripe-projects",
     "user-guide/skills/optional/productivity/productivity-canvas",
+    "user-guide/skills/optional/productivity/productivity-decision-questionnaire",
     "user-guide/skills/optional/productivity/productivity-here-now",
     "user-guide/skills/optional/productivity/productivity-memento-flashcards",
     "user-guide/skills/optional/productivity/productivity-shop",
@@ -1762,6 +1773,7 @@
     "user-guide/skills/optional/security/security-unbroker",
     "user-guide/skills/optional/security/security-web-pentest",
     "user-guide/skills/optional/software-development/software-development-code-wiki",
+    "user-guide/skills/optional/software-development/software-development-grill-me",
     "user-guide/skills/optional/software-development/software-development-rest-graphql-debug",
     "user-guide/skills/optional/software-development/software-development-subagent-driven-development",
     "user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy",

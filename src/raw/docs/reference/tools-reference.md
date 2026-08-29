@@ -2,7 +2,7 @@
 title: "組み込みツールの一覧"
 description: "Hermes の組み込みツールを、ツールセットごとにまとめた正式な一覧です"
 upstream_path: reference/tools-reference.md
-upstream_blob: 3a2ee0fe2d88dbc2c250fb877d223749f936c4b5
+upstream_blob: 706f718a23bd74719038c3603433894282126b95
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -264,7 +264,7 @@ startTour([
 
 | ツール | 説明 | 必要な環境 |
 |------|-------------|----------------------|
-| `todo` | 今のセッションでやることの一覧を扱います。手順が 3 つ以上ある入り組んだ仕事や、利用者から複数の仕事を渡されたときに使います。引数なしで呼ぶと今の一覧を読めます。書き込みは、 - 'todos' の配列を渡して項目を作る／直す - merge=… | — |
+| `todo` | 今のセッションでやることの一覧を扱います。手順が 3 つ以上ある入り組んだ仕事や、利用者から複数の仕事を渡されたときに使います。引数なしで呼ぶと今の一覧を読めます。項目は入れ子にできます。項目に付けられる `parent` の欄に別の項目の id を書くと、それが下位の項目になり、画面では枝分かれが字下げで描かれます。 | — |
 
 ## `vision` ツールセット {#vision-toolset}
 
