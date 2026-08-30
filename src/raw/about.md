@@ -12,7 +12,8 @@ raw: /hermes/raw/about.md
 
 Hermes Agent Wiki は、[Hermes Agent](https://github.com/NousResearch/hermes-agent) の公式ドキュメントの日本語版と、逆引き・トラブル対処などの独自ページをのせた個人運営のサイトです。開発元の NousResearch とは無関係の**非公式**サイトで、正本は常に [公式ドキュメント](https://hermes-agent.nousresearch.com/docs/) です。
 
-- 運営者: そら（X: [@sora_biz](https://x.com/sora_biz) / GitHub: [Sora-bluesky](https://github.com/Sora-bluesky)）
+このサイトは、そら（X: [@sora_biz](https://x.com/sora_biz) / GitHub: [Sora-bluesky](https://github.com/Sora-bluesky)）が個人で運営しています。公式ドキュメント全400ページ超を毎日、自動で公式の更新に追随させています。Windows で AI コーディングエージェントを日常的に使っている、プロダクトマネージャーです。
+
 - 問い合わせ: 各ページ下部（フッター）の「意見・要望」から（GitHub の Issue として届きます）
 
 ## データの扱い（プライバシーポリシー）
@@ -22,7 +23,7 @@ Hermes Agent Wiki は、[Hermes Agent](https://github.com/NousResearch/hermes-ag
 - アクセス解析ツール・広告は使っていません
 - cookie は使っていません
 - 入力フォームはありません。意見・要望は GitHub 上の Issue フォームで受けており、そこでの入力には [GitHub のプライバシーステートメント](https://docs.github.com/ja/site-policy/privacy-policies/github-privacy-statement) が適用されます
-- 「AI に渡す」バーで選んだ送り先は、ブラウザ内（localStorage）にだけ保存されます。外部には送られません
+- 各ページの「ページをコピー」から AI サービスを開いたときの入力内容は、開いた先の各サービスの規約が適用されます。このサイト側には何も記録されません
 
 閲覧にともなって、次の外部サービスへ接続情報（IP アドレスなど）が送られます。
 
