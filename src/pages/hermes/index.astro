@@ -1,6 +1,7 @@
 ---
-// トップ（案A ポータル型・2026-08-27 sora 選定。design/canvas/Main.dc.html が設計正本）。
-// 「今週の更新」は data/wiki-updates.json の実データ最新3件。
+// トップ（sora 提供モック hermes-wiki-top-redesign.html 準拠・2026-08-30 採用）。
+// H1「Hermes Agent Wiki」とキャッチは現行のまま（sora 指示）。トップでは左右サイドバーを出さない。
+// 数値（項目数・モデル数・更新日）は JSON から動的に描画する。
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import updates from '../../../data/wiki-updates.json';
 import howto from '../../../data/wiki/howto.json';
@@ -8,35 +9,7 @@ import trouble from '../../../data/wiki/trouble.json';
 import catalog from '../../../data/portal-models.json';
 
 type Entry = { date: string; pages: { id: string; title: string; url: string }[] };
-const recent = (updates.entries as Entry[]).slice(0, 3);
-const latest = recent[0];
-const line = (e: Entry) =>
-  e.pages.length === 1 ? `「${e.pages[0].title}」を訳し直しました` : `${e.pages.length}ページを訳し直しました（${e.pages[0].title} など）`;
-
-const tiles = [
-  {
-    href: '/hermes/howto/',
-    title: '逆引き',
-    body: `「〜したい」から最短の手順ページへ。全${howto.items.length}項目・${howto.categories.length}分類。カタカナ・全角でも検索が当たります。`,
-  },
-  {
-    href: '/hermes/trouble/',
-    title: 'トラブル',
-    body: `症状から原因と対処を引く表。全${trouble.items.length}項目。つながらない・鍵が通らない・ジョブが動かない。`,
-  },
-  {
-    href: '/hermes/models/',
-    title: 'モデルと料金',
-    body: `Portal 掲載の全${catalog.count}モデルの価格・割引・無料枠の一覧。毎日自動更新。`,
-  },
-  {
-    href: '/hermes/guide/all/',
-    title: 'ドキュメント',
-    body: '公式 docs 全ページの日本語版の索引。構成・コード・リンクは公式とバイト一致。',
-  },
-];
-
-
+const latest = (updates.entries as Entry[])[0];
 ---
 
 <BaseLayout
@@ -48,173 +21,168 @@ const tiles = [
   prevOverride={null}
   nextOverride={null}
 >
-  <section class="hero-grid">
-    <div class="hero">
-      <h1>Hermes Agent Wiki</h1>
-      <p class="hero-catch">Hermes Agent の日本語ドキュメント。毎日更新、AI にも渡せる</p>
-      <p class="hero-lead">
-        公式ドキュメント全400ページ超の日本語版に、逆引き・トラブル対処・料金の早見をのせた<strong>非公式</strong>サイトです。<br />正本は常に
-        <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener">Hermes Agent Documentation</a> です。
-      </p>
-      <button type="button" class="hero-search js-search-open" aria-label="検索を開く（Ctrl+K）">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-        やりたいこと・エラー文で検索（Ctrl+K）
-      </button>
-      <div class="hero-ai" data-hero-ai>
-        <span class="hero-ai-label">このサイトを AI に渡して質問:</span>
-        <button type="button" data-hero-ai-open="chatgpt">ChatGPT</button>
-        <button type="button" data-hero-ai-open="claude">Claude</button>
-        <button type="button" data-hero-ai-open="gemini">Gemini</button>
-        <button type="button" data-hero-ai-open="grok">Grok</button>
-      </div>
+  <section class="hero">
+    <div class="kicker">非公式の日本語wiki · 毎日更新</div>
+    <h1>Hermes Agent Wiki</h1>
+    <p class="catch">Hermes Agent の日本語ドキュメント。毎日更新、AI にも渡せる</p>
+    <p class="lead">
+      公式ドキュメントの日本語版です。逆引きとトラブル表を足しています。正本は
+      <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener">公式ドキュメント</a>です。
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="/hermes/first/">初めての方へ</a>
+      <a class="btn btn-secondary" href="/hermes/docs/getting-started/quickstart/">インストールする</a>
+      <a class="btn btn-secondary" href="/hermes/trouble/">症状から探す</a>
     </div>
-    <aside class="ai-panel" aria-label="AI に渡す">
-      <div class="ai-panel-head">
-        <span class="ai-panel-title">AI に渡す</span>
-        <span class="ai-panel-badge">ChatGPT・Claude の回答生成に参照されています</span>
-      </div>
-      <button type="button" class="ai-panel-row" data-ai-copy="/hermes/llms.txt">
-        <span><span class="ai-row-title">llms.txt（サイト全体の索引）</span><span class="ai-row-note">AI 向けの全ページリンク集</span></span>
-        <code>クリックでコピー</code>
-      </button>
-      <button type="button" class="ai-panel-row" data-ai-copy="/hermes/raw/index.md">
-        <span><span class="ai-row-title">全ページの Markdown 版</span><span class="ai-row-note">各ページ右上の「ページをコピー」からも</span></span>
-        <code>クリックでコピー</code>
-      </button>
-      <button type="button" class="ai-panel-row" data-ai-copy="/hermes/raw/models.md">
-        <span><span class="ai-row-title">モデル{catalog.count}件の料金データ（毎日更新）</span><span class="ai-row-note">Portal と同じ公開 API から再取得</span></span>
-        <code>クリックでコピー</code>
-      </button>
-    </aside>
+    <button type="button" class="search js-search-open" aria-label="検索を開く（Ctrl+K）">
+      🔍 やりたいこと・エラー文で検索
+    </button>
+    <p class="note">例: Telegram がつながらない / cron を仕込みたい / Windows に入れたい</p>
   </section>
 
-  <div class="trust-strip">
-    <span class="trust-live"><span class="dot"></span>公式に毎日追随{latest ? `・最新 ${latest.date}・${latest.pages.length}ページを更新` : ''}</span>
-    <span class="trust-owner">運営: そら（<a href="https://x.com/sora_biz" target="_blank" rel="noopener">@sora_biz</a>）</span>
+  <section class="grid">
+    <a class="card start" href="/hermes/first/">
+      <b>初めて使う</b>
+      <p>入れる → 話す → スマホから。次の一歩だけ示す入口です。</p>
+      <span class="go">初めての方へ →</span>
+    </a>
+    <a class="card" href="/hermes/trouble/">
+      <b>動かない・繋がらない</b>
+      <p>つながらない、鍵が通らない、ジョブが動かない。症状から{trouble.items.length}項目。</p>
+      <span class="go">トラブル →</span>
+    </a>
+    <a class="card" href="/hermes/howto/">
+      <b>〜したいがある</b>
+      <p>最短手順への逆引き。導入・つなぐ・自動化など{howto.items.length}項目。</p>
+      <span class="go">逆引き →</span>
+    </a>
+    <a class="card" href="/hermes/models/">
+      <b>モデルと料金</b>
+      <p>Portal掲載の価格・割引・無料枠。{catalog.count}件を毎日更新。</p>
+      <span class="go">料金表 →</span>
+    </a>
+  </section>
+
+  <div class="status">
+    <span>● 公式に毎日追随{latest ? ` · 最新 ${latest.date} · ${latest.pages.length}ページを更新` : ''}</span>
+    <span>正本: <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener">Hermes Agent Documentation</a></span>
   </div>
 
-  <div class="tiles">
-    {
-      tiles.map((t) => (
-        <a href={t.href} class="tile">
-          <span class="tile-title">{t.title}</span>
-          <span class="tile-body">{t.body}</span>
-        </a>
-      ))
-    }
-  </div>
+  <section class="section">
+    <h2>よく使うページ</h2>
+    <div class="used">
+      <a class="chip" href="/hermes/docs/getting-started/quickstart/">インストールする</a>
+      <a class="chip" href="/hermes/docs/user-guide/messaging/telegram/">Telegram でつなぐ</a>
+      <a class="chip" href="/hermes/docs/user-guide/features/cron/">定時実行（Cron）</a>
+      <a class="chip" href="/hermes/japanese/">日本語入力</a>
+      <a class="chip" href="/hermes/from-claude-code/">Claude Code から乗り換え</a>
+    </div>
+  </section>
 
-  <nav class="more-links" aria-label="そのほかのページ">
-    <a href="/hermes/first/">初めての方へ</a>
-    <a href="/hermes/guide/">使いかた</a>
-    <a href="/hermes/trust/">任せかたと運用</a>
-    <a href="/hermes/from-claude-code/">乗り換え</a>
-    <a href="/hermes/japanese/">日本語入力</a>
-    <a href="/hermes/community/">コミュニティ</a>
-    <a href="/hermes/updates/">今週の更新</a>
-    <a href="https://www.youtube.com/watch?v=BeWUUclCin0&list=PLmpUb_PWAkDx-VWjh00tVCji794xAa_IX" target="_blank" rel="noopener">動画で学ぶ↗</a>
-    <a href="/hermes/about/">このサイトについて</a>
-  </nav>
+  <section class="section" data-hero-ai>
+    <details class="ai">
+      <summary>このサイトを AI に渡して質問する</summary>
+      <div class="ai-body">
+        ChatGPT / Claude の回答生成に、このwikiの索引が参照されています。
+        <div class="ai-row">
+          <button type="button" class="chip" data-hero-ai-open="chatgpt">ChatGPT で開く</button>
+          <button type="button" class="chip" data-hero-ai-open="claude">Claude で開く</button>
+          <button type="button" class="chip" data-hero-ai-open="gemini">Gemini で開く</button>
+          <button type="button" class="chip" data-hero-ai-open="grok">Grok で開く</button>
+        </div>
+        <button type="button" class="copy" data-ai-copy="/hermes/llms.txt"><span>llms.txt（サイト全体の索引）</span><code>コピー</code></button>
+        <button type="button" class="copy" data-ai-copy="/hermes/raw/index.md"><span>全ページの Markdown 版</span><code>コピー</code></button>
+        <button type="button" class="copy" data-ai-copy="/hermes/raw/models.md"><span>モデル{catalog.count}件の料金データ</span><code>コピー</code></button>
+      </div>
+    </details>
+  </section>
 </BaseLayout>
 
 <style>
-  :global(body) { display: flex; flex-direction: column; min-height: 100vh; }
-  :global(body > div.mx-auto) { flex: 1; }
-  :global(main) { padding-top: 0.9rem !important; padding-bottom: 0.6rem !important; display: flex; flex-direction: column; justify-content: space-between; row-gap: 0; }
+  /* トップ限定: サイドバー・ページをコピー行・正本欄を出さず、1080px に絞る */
+  :global(body > div > aside) { display: none; }
   :global([data-copy-page]) { display: none; }
   :global(main aside) { display: none; }
-  :global(footer > div) { padding-top: 0.8rem !important; padding-bottom: 0.8rem !important; }
-  .hero-grid { display: grid; gap: 1.6rem; padding: 0.6rem 0 1rem; align-items: start; }
-  @media (min-width: 1024px) { .hero-grid { grid-template-columns: 1.25fr 1fr; gap: 3rem; } }
-  .hero { display: flex; flex-direction: column; align-items: center; gap: 0.85rem; text-align: center; }
-  @media (min-width: 1024px) { .hero { align-items: flex-start; text-align: left; } }
-  .hero h1 { font-size: 2.4rem; line-height: 1.2; margin: 0; letter-spacing: -0.02em; }
-  .hero-catch { margin: -0.25rem 0 0; font-size: 1.02rem; font-weight: 600; color: var(--color-accent); }
-  .hero-lead { margin: 0; max-width: 42rem; font-size: 0.9rem; line-height: 1.8; color: var(--color-fg-secondary); }
-  .hero-search {
-    display: flex; align-items: center; gap: 0.75rem; width: 100%; max-width: 40rem;
-    border: 1px solid var(--color-border-strong); border-radius: 12px; background: var(--color-bg);
-    padding: 0.75rem 1.05rem; font-size: 0.92rem; color: var(--color-fg-muted); cursor: pointer;
-    box-shadow: 0 1px 2px rgb(27 27 27 / 0.04);
-  }
-  .hero-search:hover { border-color: var(--color-accent); color: var(--color-fg-secondary); }
-  .hero-ai { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem; }
-  @media (min-width: 1024px) { .hero-ai { justify-content: flex-start; } }
-  .hero-ai-label { font-size: 0.78rem; color: var(--color-fg-muted); }
-  .hero-ai button {
-    border: 1px solid var(--color-border); background: var(--color-bg); border-radius: 999px;
-    padding: 0.42rem 1rem; font-size: 0.82rem; font-weight: 500; color: var(--color-fg); cursor: pointer;
-  }
-  .hero-ai button:hover { border-color: var(--color-accent); color: var(--color-accent); }
-  .hero-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.45rem; max-width: 44rem; }
-  @media (min-width: 1024px) { .hero-chips { justify-content: flex-start; } }
-  .hero-chips a {
-    font-size: 0.8rem; color: var(--color-accent); background: var(--color-accent-soft);
-    border-radius: 999px; padding: 0.4rem 0.85rem; text-decoration: none;
-  }
-  .hero-chips a:hover { background: #dbeafe; }
-  .ai-panel {
-    display: flex; flex-direction: column; gap: 0.55rem; background: var(--color-bg-subtle);
-    border: 1px solid var(--color-border); border-radius: 16px; padding: 1.05rem 1.2rem;
-  }
-  .ai-panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
-  .ai-panel-title { font-size: 0.95rem; font-weight: 700; color: var(--color-fg); }
-  .ai-panel-badge { font-size: 0.7rem; color: #16a34a; font-weight: 600; }
-  .ai-panel-row {
-    display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; width: 100%;
-    background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px;
-    padding: 0.6rem 0.9rem; text-decoration: none; font-family: inherit; text-align: left; cursor: pointer;
-  }
-  .ai-panel-row:hover { border-color: var(--color-border-strong); }
-  .ai-row-title { display: block; font-size: 0.84rem; font-weight: 600; color: var(--color-fg); }
-  .ai-row-note { display: none; font-size: 0.74rem; color: var(--color-fg-muted); margin-top: 0.12rem; }
-  @media (min-height: 980px) { .ai-row-note { display: block; } }
-  .ai-panel-row code { font-family: var(--font-mono); font-size: 0.68rem; color: var(--color-accent); white-space: nowrap; }
-  .trust-strip {
-    display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;
-    background: var(--color-accent-soft); border-radius: 14px; padding: 0.7rem 1.2rem; margin-bottom: 1.1rem;
-  }
-  .trust-live { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.8rem; font-weight: 600; color: #166534; }
-  .dot { width: 6px; height: 6px; border-radius: 99px; background: #16a34a; }
-  .trust-owner { font-size: 0.78rem; color: var(--color-fg-muted); }
-  .tiles { display: grid; gap: 0.85rem; }
-  @media (min-width: 640px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (min-width: 1024px) { .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-  .tile {
-    display: flex; flex-direction: column; gap: 0.35rem; border: 1px solid var(--color-border);
-    border-radius: 12px; padding: 1rem 1.1rem; background: var(--color-bg); text-decoration: none; transition: 0.15s;
-  }
-  .tile:hover { border-color: var(--color-border-strong); background: var(--color-bg-subtle); }
-  .tile-title { font-weight: 600; color: var(--color-fg); font-size: 0.98rem; }
-  .tile-body { font-size: 0.8rem; line-height: 1.6; color: var(--color-fg-secondary); }
-  .more-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.9rem; padding-bottom: 0; }
-  .more-links a {
-    font-size: 0.78rem; color: var(--color-fg-secondary); border: 1px solid var(--color-border);
-    border-radius: 8px; padding: 0.4rem 0.7rem; text-decoration: none; background: var(--color-bg);
-  }
-  .more-links a:hover { background: var(--color-bg-subtle); color: var(--color-fg); }
+  :global(body > div.mx-auto) { max-width: 1080px !important; }
+  :global(main) { padding-top: 0 !important; }
 
-  @media (min-height: 980px) and (min-width: 1024px) {
-    .hero-grid { gap: 2.2rem; padding: 1.5rem 0 1.3rem; }
-    .hero { gap: 1.25rem; }
-    .hero h1 { font-size: 3.1rem; }
-    .hero-catch { font-size: 1.18rem; }
-    .hero-lead { font-size: 1rem; line-height: 1.9; }
-    .hero-search { padding: 1.02rem 1.25rem; font-size: 1rem; }
-    .trust-strip { padding: 0.9rem 1.3rem; margin-bottom: 1.5rem; }
-    .tiles { gap: 1.2rem; }
-    .tile { padding: 1.45rem 1.35rem; gap: 0.5rem; }
-    .tile-title { font-size: 1.05rem; }
-    .tile-body { font-size: 0.9rem; line-height: 1.75; }
-    .more-links { margin-top: 1.5rem; }
-    .more-links a { font-size: 0.84rem; padding: 0.5rem 0.9rem; }
-    .ai-panel { gap: 0.85rem; padding: 1.4rem 1.4rem; }
-    .ai-panel-row { padding: 0.88rem 1.05rem; }
+  .hero { padding: 2.2rem 0 0.5rem; }
+  .kicker { font-size: 0.82rem; color: var(--color-fg-muted); margin-bottom: 0.5rem; }
+  h1 { font-size: 2.1rem; letter-spacing: -0.03em; margin: 0 0 0.5rem; line-height: 1.2; }
+  .catch { margin: 0 0 0.6rem; font-size: 1.02rem; font-weight: 600; color: var(--color-accent); }
+  .lead { color: var(--color-fg-secondary); margin: 0 0 1.1rem; max-width: 36em; font-size: 0.95rem; line-height: 1.8; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 10px; padding: 0.62rem 1rem; font-weight: 700; font-size: 0.88rem; text-decoration: none;
+  }
+  .btn-primary { background: var(--color-accent); color: #fff; }
+  .btn-primary:hover { background: var(--color-accent-hover); }
+  .btn-secondary { background: var(--color-bg); color: var(--color-fg); border: 1px solid var(--color-border-strong); }
+  .btn-secondary:hover { background: var(--color-bg-subtle); }
+  .search {
+    display: flex; align-items: center; gap: 0.5rem; width: 100%;
+    border: 1px solid var(--color-border-strong); border-radius: 12px; padding: 0.75rem 0.9rem;
+    color: var(--color-fg-muted); margin-bottom: 0.6rem; background: var(--color-bg);
+    font-size: 0.92rem; cursor: pointer; text-align: left; font-family: inherit;
+  }
+  .search:hover { border-color: var(--color-accent); }
+  .note { font-size: 0.82rem; color: var(--color-fg-muted); margin: 0 0 1.4rem; }
+
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+  .card {
+    border: 1px solid var(--color-border); border-radius: 12px;
+    padding: 1rem; background: var(--color-bg); min-height: 148px; text-decoration: none;
+    display: flex; flex-direction: column;
+  }
+  .card:hover { border-color: #b9c4f5; background: #fafbff; }
+  .card b { display: block; font-size: 1rem; margin-bottom: 0.4rem; color: var(--color-fg); }
+  .card p { margin: 0; font-size: 0.82rem; color: var(--color-fg-secondary); line-height: 1.65; }
+  .card .go { display: inline-block; margin-top: auto; padding-top: 0.6rem; font-size: 0.82rem; font-weight: 700; color: var(--color-accent); }
+  .card.start { border-color: #c9d3ff; background: var(--color-accent-soft); }
+
+  .status {
+    display: flex; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;
+    background: #f3f7ff; color: #215; border-radius: 10px;
+    padding: 0.65rem 0.9rem; margin: 1.4rem 0; font-size: 0.82rem;
+  }
+  .section { padding: 0.5rem 0 1.6rem; }
+  .section h2 { font-size: 1rem; margin: 0 0 0.6rem; }
+  .used { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip {
+    border: 1px solid var(--color-border); border-radius: 999px; padding: 0.45rem 0.75rem;
+    font-size: 0.82rem; color: var(--color-fg); background: var(--color-bg); text-decoration: none;
+    font-family: inherit; cursor: pointer;
+  }
+  .chip:hover { background: var(--color-bg-subtle); }
+
+  details.ai {
+    border: 1px solid var(--color-border); border-radius: 12px;
+    padding: 0.75rem 0.9rem; background: var(--color-bg-subtle); margin-top: 0.5rem;
+  }
+  details.ai summary { cursor: pointer; font-weight: 700; font-size: 0.9rem; }
+  .ai-body { margin-top: 0.6rem; font-size: 0.82rem; color: var(--color-fg-secondary); }
+  .ai-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+  .copy {
+    display: flex; justify-content: space-between; gap: 0.5rem; align-items: center; width: 100%;
+    background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 8px;
+    padding: 0.5rem 0.65rem; margin-top: 0.4rem; font-family: inherit; font-size: 0.82rem;
+    color: var(--color-fg); cursor: pointer; text-align: left;
+  }
+  .copy:hover { border-color: var(--color-border-strong); }
+  .copy code { font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-accent); }
+
+  @media (max-width: 860px) {
+    h1 { font-size: 1.75rem; }
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: 1fr; }
   }
 </style>
 
 <script is:inline>
-  // ヒーローの AI ボタン: 公式 docs と同型（プロンプト入り URL。Gemini はコピーしてから開く）
+  // AI ボタン: 公式 docs と同型（プロンプト入り URL。Gemini はコピーしてから開く）
   (function () {
     var wrap = document.querySelector('[data-hero-ai]');
     if (!wrap) return;
@@ -228,7 +196,7 @@ const tiles = [
           .then(function (t) { return navigator.clipboard.writeText(t); })
           .then(function () { code.textContent = 'コピーしました'; })
           .catch(function () { code.textContent = 'コピーできませんでした'; })
-          .then(function () { setTimeout(function () { code.textContent = 'クリックでコピー'; }, 2500); });
+          .then(function () { setTimeout(function () { code.textContent = 'コピー'; }, 2500); });
       });
     });
     wrap.querySelectorAll('[data-hero-ai-open]').forEach(function (btn) {
@@ -236,11 +204,11 @@ const tiles = [
         var ai = btn.getAttribute('data-hero-ai-open');
         if (ai === 'gemini') {
           navigator.clipboard.writeText(text).then(
-            function () { btn.textContent = 'コピーしました'; },
+            function () { btn.textContent = 'コピーしました。貼り付けてください'; },
             function () {},
           ).then(function () {
             window.open('https://gemini.google.com/app', '_blank', 'noopener');
-            setTimeout(function () { btn.textContent = 'Gemini'; }, 3000);
+            setTimeout(function () { btn.textContent = 'Gemini で開く'; }, 3000);
           });
         } else {
           window.open(urls[ai] + encodeURIComponent(text), '_blank', 'noopener');
