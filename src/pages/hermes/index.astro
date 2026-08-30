@@ -104,6 +104,13 @@ const tiles = [
     }
   </div>
 
+  <div class="stats-band" aria-hidden="true">
+    <div class="stat"><span class="stat-v">400<small>ページ超</small></span><span class="stat-l">公式 docs の日本語版</span></div>
+    <div class="stat"><span class="stat-v">{howto.items.length}<small>項目</small></span><span class="stat-l">やりたいことから引ける逆引き</span></div>
+    <div class="stat"><span class="stat-v">{catalog.count}<small>モデル</small></span><span class="stat-l">料金一覧・毎日自動更新</span></div>
+    <div class="stat stat-green"><span class="stat-v">毎日</span><span class="stat-l">公式の更新に自動追随</span></div>
+  </div>
+
   <nav class="more-links" aria-label="そのほかのページ">
     <a href="/hermes/first/">初めての方へ</a>
     <a href="/hermes/guide/">使いかた</a>
@@ -120,7 +127,7 @@ const tiles = [
 <style>
   :global(body) { display: flex; flex-direction: column; min-height: 100vh; }
   :global(body > div.mx-auto) { flex: 1; }
-  :global(main) { padding-top: 0.9rem !important; padding-bottom: 0.6rem !important; display: flex; flex-direction: column; }
+  :global(main) { padding-top: 0.9rem !important; padding-bottom: 0.6rem !important; display: flex; flex-direction: column; justify-content: space-between; }
   :global([data-copy-page]) { display: none; }
   :global(main aside) { display: none; }
   :global(footer > div) { padding-top: 0.8rem !important; padding-bottom: 0.8rem !important; }
@@ -186,6 +193,16 @@ const tiles = [
   .tile:hover { border-color: var(--color-border-strong); background: var(--color-bg-subtle); }
   .tile-title { font-weight: 600; color: var(--color-fg); font-size: 0.98rem; }
   .tile-body { font-size: 0.8rem; line-height: 1.6; color: var(--color-fg-secondary); }
+  .stats-band { display: none; }
+  @media (min-height: 950px) and (min-width: 1024px) {
+    .stats-band { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.9rem; margin-top: 1rem; }
+  }
+  .stat { text-align: center; padding: 1rem 0; background: var(--color-bg-subtle); border-radius: 14px; display: flex; flex-direction: column; gap: 0.15rem; }
+  .stat-green { background: #f0fdf4; }
+  .stat-v { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; color: var(--color-fg); }
+  .stat-green .stat-v { color: #16a34a; }
+  .stat-v small { font-size: 0.85rem; font-weight: 600; color: var(--color-fg-muted); margin-left: 0.15rem; }
+  .stat-l { font-size: 0.74rem; color: var(--color-fg-muted); }
   .more-links { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.9rem; padding-bottom: 0; }
   .more-links a {
     font-size: 0.78rem; color: var(--color-fg-secondary); border: 1px solid var(--color-border);

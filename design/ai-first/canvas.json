@@ -1,7 +1,7 @@
 {
   "artboards": [
     { "file": "Main.dc.html", "x": 0, "y": 0, "w": 560, "h": 520, "title": "設計方針" },
-    { "file": "TopWeb.dc.html", "x": 660, "y": 0, "w": 1440, "h": 900, "title": "ウェブ（1440）" },
+    { "file": "TopWeb.dc.html", "x": 660, "y": 0, "w": 1440, "h": 1080, "title": "ウェブ（1440）" },
     { "file": "TopTablet.dc.html", "x": 2200, "y": 0, "w": 768, "h": 1024, "title": "タブレット（768）" },
     { "file": "TopMobile.dc.html", "x": 3070, "y": 0, "w": 390, "h": 844, "title": "スマホ（390）" }
   ],
