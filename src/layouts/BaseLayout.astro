@@ -355,10 +355,15 @@ const next = hasOverride
             var ai = btn.getAttribute('data-open-ai');
             var text = 'このページを読んで、内容について質問に答えて:\n' + rawUrl;
             if (ai === 'gemini') {
-              navigator.clipboard.writeText(text).catch(function () {});
-              window.open('https://gemini.google.com/app', '_blank', 'noopener');
-              label.textContent = 'コピーしました。貼り付けてください';
-              setTimeout(function () { label.textContent = 'ページをコピー'; }, 3000);
+              // Gemini はプロンプトを URL で受け取れない。フォーカスが移る前に
+              // コピーを完了させてから開く（先に open すると writeText が拒否される）
+              navigator.clipboard.writeText(text).then(
+                function () { label.textContent = 'コピーしました。Gemini に貼り付けてください'; },
+                function () { label.textContent = 'コピーできませんでした'; },
+              ).then(function () {
+                window.open('https://gemini.google.com/app', '_blank', 'noopener');
+                setTimeout(function () { label.textContent = 'ページをコピー'; }, 4000);
+              });
             } else {
               window.open(openUrls[ai] + encodeURIComponent(text), '_blank', 'noopener');
             }
