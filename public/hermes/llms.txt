@@ -450,6 +450,7 @@ Hermes Agent 0.20.6
 
 - https://wiki.winsmux.dev/hermes/raw/about.md
 - https://wiki.winsmux.dev/hermes/raw/all.md
+- https://wiki.winsmux.dev/hermes/raw/community.md
 - https://wiki.winsmux.dev/hermes/raw/concepts/approval.md
 - https://wiki.winsmux.dev/hermes/raw/concepts/config.md
 - https://wiki.winsmux.dev/hermes/raw/concepts/cron.md
@@ -873,12 +874,16 @@ Hermes Agent 0.20.6
 - https://wiki.winsmux.dev/hermes/raw/from-claude-code.md
 - https://wiki.winsmux.dev/hermes/raw/guide.md
 - https://wiki.winsmux.dev/hermes/raw/home.md
+- https://wiki.winsmux.dev/hermes/raw/howto.md
 - https://wiki.winsmux.dev/hermes/raw/index.md
 - https://wiki.winsmux.dev/hermes/raw/japanese.md
+- https://wiki.winsmux.dev/hermes/raw/models.md
 - https://wiki.winsmux.dev/hermes/raw/ops.md
 - https://wiki.winsmux.dev/hermes/raw/skills.md
 - https://wiki.winsmux.dev/hermes/raw/syntheses/not-a-mirror.md
+- https://wiki.winsmux.dev/hermes/raw/trouble.md
 - https://wiki.winsmux.dev/hermes/raw/trust.md
+- https://wiki.winsmux.dev/hermes/raw/updates.md
 
 ## 正本
 

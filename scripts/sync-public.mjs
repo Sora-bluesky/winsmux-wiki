@@ -2,6 +2,9 @@ import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+// データ駆動ページの raw md を先に生成してから src/raw を配る
+await import('./gen-raw-data.mjs');
+
 const root = fileURLToPath(new URL('..', import.meta.url));
 const srcDir = join(root, 'src/raw');
 const destDir = join(root, 'public/hermes/raw');
