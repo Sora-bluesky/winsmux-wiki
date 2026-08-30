@@ -73,18 +73,18 @@ const tiles = [
         <span class="ai-panel-title">AI に渡す</span>
         <span class="ai-panel-badge">ChatGPT・Claude の回答生成に参照されています</span>
       </div>
-      <a href="/hermes/llms.txt" class="ai-panel-row">
+      <button type="button" class="ai-panel-row" data-ai-copy="/hermes/llms.txt">
         <span class="ai-row-title">llms.txt（サイト全体の索引）</span>
-        <code>/hermes/llms.txt</code>
-      </a>
-      <a href="/hermes/raw/index.md" class="ai-panel-row">
+        <code>クリックでコピー</code>
+      </button>
+      <button type="button" class="ai-panel-row" data-ai-copy="/hermes/raw/index.md">
         <span class="ai-row-title">全ページの Markdown 版</span>
-        <code>/hermes/raw/…</code>
-      </a>
-      <a href="/hermes/raw/models.md" class="ai-panel-row">
+        <code>クリックでコピー</code>
+      </button>
+      <button type="button" class="ai-panel-row" data-ai-copy="/hermes/raw/models.md">
         <span class="ai-row-title">モデル{catalog.count}件の料金データ（毎日更新）</span>
-        <code>/hermes/raw/models.md</code>
-      </a>
+        <code>クリックでコピー</code>
+      </button>
     </aside>
   </section>
 
@@ -118,7 +118,9 @@ const tiles = [
 </BaseLayout>
 
 <style>
-  :global(main) { padding-top: 0.9rem !important; padding-bottom: 0.6rem !important; }
+  :global(body) { display: flex; flex-direction: column; min-height: 100vh; }
+  :global(body > div.mx-auto) { flex: 1; }
+  :global(main) { padding-top: 0.9rem !important; padding-bottom: 0.6rem !important; display: flex; flex-direction: column; justify-content: center; }
   :global([data-copy-page]) { display: none; }
   :global(main aside) { display: none; }
   :global(footer) { padding: 0 !important; margin-top: 0 !important; }
@@ -160,9 +162,9 @@ const tiles = [
   .ai-panel-title { font-size: 0.95rem; font-weight: 700; color: var(--color-fg); }
   .ai-panel-badge { font-size: 0.7rem; color: #16a34a; font-weight: 600; }
   .ai-panel-row {
-    display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
+    display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; width: 100%;
     background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px;
-    padding: 0.6rem 0.9rem; text-decoration: none;
+    padding: 0.6rem 0.9rem; text-decoration: none; font-family: inherit; text-align: left; cursor: pointer;
   }
   .ai-panel-row:hover { border-color: var(--color-border-strong); }
   .ai-row-title { display: block; font-size: 0.84rem; font-weight: 600; color: var(--color-fg); }
@@ -200,6 +202,17 @@ const tiles = [
     if (!wrap) return;
     var text = 'このサイトの索引 https://wiki.winsmux.dev/hermes/llms.txt を読んで、Hermes Agent について質問に答えて';
     var urls = { chatgpt: 'https://chatgpt.com/?q=', claude: 'https://claude.ai/new?q=', grok: 'https://grok.com/?q=' };
+    document.querySelectorAll('[data-ai-copy]').forEach(function (row) {
+      row.addEventListener('click', function () {
+        var code = row.querySelector('code');
+        fetch(row.getAttribute('data-ai-copy'))
+          .then(function (r) { return r.text(); })
+          .then(function (t) { return navigator.clipboard.writeText(t); })
+          .then(function () { code.textContent = 'コピーしました'; })
+          .catch(function () { code.textContent = 'コピーできませんでした'; })
+          .then(function () { setTimeout(function () { code.textContent = 'クリックでコピー'; }, 2500); });
+      });
+    });
     wrap.querySelectorAll('[data-hero-ai-open]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var ai = btn.getAttribute('data-hero-ai-open');
