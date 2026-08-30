@@ -2,7 +2,7 @@
 title: "Duckduckgo Search — ddgs でキー不要の無料 Web・ニュース・画像検索"
 description: "ddgs でキー不要の無料 Web・ニュース・画像検索"
 upstream_path: user-guide/skills/optional/research/research-duckduckgo-search.md
-upstream_blob: 466b8cc9aa5997059ea4638cf9c9b1aa2bf3a96d
+upstream_blob: a299c474520d5064470374df24cfc5b9643e75e0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-duckduckgo-search
 ---
@@ -16,7 +16,7 @@ ddgs を使って、キーなしで無料の Web・ニュース・画像検索�
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/research/duckduckgo-search` で導入します |
-| パス | `optional-skills/research/duckduckgo-search` |
+| パス | `optional-skills/research\duckduckgo-search` |
 | バージョン | `1.3.0` |
 | 作者 | gamedevCloudy |
 | ライセンス | MIT |

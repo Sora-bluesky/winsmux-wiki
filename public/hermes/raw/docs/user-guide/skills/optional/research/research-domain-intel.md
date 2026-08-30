@@ -2,7 +2,7 @@
 title: "Domain Intel — サブドメイン・SSL 証明書・WHOIS・DNS を受動的に調べる"
 description: "サブドメイン・SSL 証明書・WHOIS・DNS を受動的に調べる"
 upstream_path: user-guide/skills/optional/research/research-domain-intel.md
-upstream_blob: 62fdd42b4b6919d79b332370ff6dbedcf0cee267
+upstream_blob: f1d27f6fe505d2a76e2f824e72ef5e0e91bfe817
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-domain-intel
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/research/domain-intel` で導入します |
-| パス | `optional-skills/research/domain-intel` |
+| パス | `optional-skills/research\domain-intel` |
 | バージョン | `1.0.0` |
 | 作者 | FurkanL0, Hermes Agent |
 | ライセンス | MIT |
@@ -40,23 +40,23 @@ Python の標準ライブラリだけでドメインを受動的に調べます�
 
 ```bash
 # Subdomain discovery via Certificate Transparency logs
-python3 SKILL_DIR/scripts/domain_intel.py subdomains example.com
+python SKILL_DIR/scripts/domain_intel.py subdomains example.com
 
 # SSL certificate inspection (expiry, cipher, SANs, issuer)
-python3 SKILL_DIR/scripts/domain_intel.py ssl example.com
+python SKILL_DIR/scripts/domain_intel.py ssl example.com
 
 # WHOIS lookup (registrar, dates, name servers — 100+ TLDs)
-python3 SKILL_DIR/scripts/domain_intel.py whois example.com
+python SKILL_DIR/scripts/domain_intel.py whois example.com
 
 # DNS records (A, AAAA, MX, NS, TXT, CNAME)
-python3 SKILL_DIR/scripts/domain_intel.py dns example.com
+python SKILL_DIR/scripts/domain_intel.py dns example.com
 
 # Domain availability check (passive: DNS + WHOIS + SSL signals)
-python3 SKILL_DIR/scripts/domain_intel.py available coolstartup.io
+python SKILL_DIR/scripts/domain_intel.py available coolstartup.io
 
 # Bulk analysis — multiple domains, multiple checks in parallel
-python3 SKILL_DIR/scripts/domain_intel.py bulk example.com github.com google.com
-python3 SKILL_DIR/scripts/domain_intel.py bulk example.com github.com --checks ssl,dns
+python SKILL_DIR/scripts/domain_intel.py bulk example.com github.com google.com
+python SKILL_DIR/scripts/domain_intel.py bulk example.com github.com --checks ssl,dns
 ```
 
 `SKILL_DIR` は、この SKILL.md が置かれているディレクトリです。出力はすべて構造化された JSON です。

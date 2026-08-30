@@ -2,7 +2,7 @@
 title: "Ascii Video — ASCII 動画: 動画や音声を色付き ASCII の MP4/GIF に変換します"
 description: "ASCII 動画: 動画や音声を色付き ASCII の MP4/GIF に変換します"
 upstream_path: user-guide/skills/bundled/creative/creative-ascii-video.md
-upstream_blob: 73eb134110af274c92f1c86bea7c6e012a0c4dcd
+upstream_blob: 0a4214bdb8da28da9b42fb4a932399471e1fd8b6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-ascii-video
 ---
@@ -16,7 +16,7 @@ ASCII 動画: 動画や音声を色付き ASCII の MP4/GIF に変換します�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative/ascii-video` |
+| パス | `skills/creative\ascii-video` |
 | バージョン | `1.0.0` |
 | 作者 | SHL0MS, Hermes Agent |
 | ライセンス | MIT |

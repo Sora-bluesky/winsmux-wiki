@@ -2,7 +2,7 @@
 title: "Llava — 画像について話せるモデル: 質問応答、説明文づくり、対話"
 description: "画像について話せるモデル: 質問応答、説明文づくり、対話"
 upstream_path: user-guide/skills/optional/mlops/mlops-llava.md
-upstream_blob: bd50b50ab43dbd45d4d925df23b1f1b4ec6feac4
+upstream_blob: e70a25f4a4a06f93d4d2db6f9064ef88c1b2572a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-llava
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/llava` で導入します |
-| パス | `optional-skills/mlops/llava` |
+| パス | `optional-skills/mlops\llava` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

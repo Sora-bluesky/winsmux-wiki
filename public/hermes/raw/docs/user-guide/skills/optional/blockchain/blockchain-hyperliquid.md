@@ -2,7 +2,7 @@
 title: "Hyperliquid — Hyperliquid の相場データ、口座の履歴、取引の振り返り"
 description: "Hyperliquid の相場データ、口座の履歴、取引の振り返り"
 upstream_path: user-guide/skills/optional/blockchain/blockchain-hyperliquid.md
-upstream_blob: 177dfe36a10bf8bfe5b7b71517662dd22550fe09
+upstream_blob: 2dba79dc9a492c754d7f782d0f4f3ec2892a09e4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid
 ---
@@ -16,7 +16,7 @@ Hyperliquid の相場データ、口座の履歴、取引の振り返りです�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/blockchain/hyperliquid` で入れます |
-| パス | `optional-skills/blockchain/hyperliquid` |
+| パス | `optional-skills/blockchain\hyperliquid` |
 | バージョン | `0.1.0` |
 | 作者 | Hugo Sequier (Hugo-SEQUIER), Hermes Agent |
 | ライセンス | MIT |
@@ -73,7 +73,7 @@ Hyperliquid の相場データ、口座の履歴、取引の振り返りです�
 `terminal` ツール経由で呼び出します。
 
 ```bash
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py <command> [args]
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py <command> [args]
 ```
 
 どのコマンドでも `--json` を付ければ、機械で扱いやすい形で出力されます。
@@ -107,12 +107,12 @@ hyperliquid_client.py export <coin> [--interval 1h] [--hours N] [--output PATH]
 ### 1. DEX と市場を調べる {#1-discover-dexs-and-markets}
 
 ```bash
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py dexs
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py dexs
 
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   markets --limit 15 --sort volume
 
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   spots --limit 15
 ```
 
@@ -123,10 +123,10 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
 ### 2. 過去の相場データを取る {#2-pull-historical-market-data}
 
 ```bash
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   candles BTC --interval 1h --hours 72 --limit 48
 
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   funding BTC --hours 168 --limit 30
 ```
 
@@ -136,7 +136,7 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
 ### 3. いまの板を見る {#3-inspect-live-order-book}
 
 ```bash
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   l2 BTC --levels 10
 ```
 
@@ -145,10 +145,10 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
 ### 4. 口座を確認する {#4-review-an-account}
 
 ```bash
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   state 0xabc...
 
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   spot-balances
 ```
 
@@ -159,20 +159,20 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
 ### 5. 約定と注文を確認する {#5-review-fills-and-orders}
 
 ```bash
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   fills 0xabc... --hours 72 --limit 25
 
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   orders --limit 25
 ```
 
 ### 6. 取引の振り返りを作る {#6-generate-a-trade-review}
 
 ```bash
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   review 0xabc... --hours 72 --fills 50
 
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   review --coin BTC --hours 168
 ```
 
@@ -187,10 +187,10 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
 ### 7. 再利用できるデータを書き出す {#7-export-a-reusable-dataset}
 
 ```bash
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   export BTC --interval 1h --hours 168 --output ./btc-1h-7d.json
 
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   export BTC --interval 15m --hours 72 --end-time-ms 1760000000000
 ```
 
@@ -221,7 +221,7 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
 ## 動作の確認 {#verification}
 
 ```bash
-python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
+python ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   markets --limit 5
 ```
 

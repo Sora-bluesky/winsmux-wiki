@@ -2,7 +2,7 @@
 title: "MCP（Model Context Protocol）"
 description: "MCP を通して Hermes Agent を外部のツールサーバーにつなぎ、どの MCP ツールを読み込むかを細かく決めます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: 274c2173c4ba1f21ca9933ab76dc76595fbe2461
+upstream_blob: 3d2e82a85f328b7ec8b99db1db33d5ea1734be3c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -270,8 +270,9 @@ mcp_servers:
 
 最初につなぐとき、Hermes は認可の URL を表示し、可能ならブラウザを開き、手元のループバックのポートで OAuth の戻りを待ちます。トークンは `~/.hermes/mcp-tokens/<server>.json` に 0o600 の権限で保存され、次からは更新に失敗するまで黙って使い回されます。
 
-**リモートや画面の無いホストの場合。** Hermes がブラウザとは別の機械で動いていると、ループバックの戻りはあなたのノートパソコンに届きません。手順を終える方法は二つあります。
+**リモートや画面の無いホストの場合。** Hermes がブラウザとは別の機械で動いていると、ループバックの戻りはあなたのノートパソコンに届きません。手順を終える方法は次のとおりです。
 
+- **Hermes Desktop（自動）:** Desktop アプリの MCP 設定画面から、リモートのバックエンドに対して OAuth のサインインを実行すると、Desktop が*あなたの*機械で戻りを待ち受け、認可の結果をゲートウェイまで自動で中継します。トンネルも貼り付けも代理も要りません。Desktop アプリとバックエンドの両方が最新である必要があります。
 - **貼り戻し（準備不要）:** 対話できる端末なら、Hermes は認可の URL と一緒に「Or paste the redirect URL here…」と表示します。その URL をブラウザで開いて承認し、たどり着いた URL をまるごとコピーして（戻り先は接続エラーになりますが、それで正常です）、プロンプトに貼り付けてください。`?code=…&state=…` のクエリ文字列だけでも通ります。
 - **SSH のポート転送:** 別の端末で `ssh -N -L <port>:127.0.0.1:<port> user@host` を実行し、あとは戻りをそのまま流します。
 - **中継した戻り先（`redirect_uri`）:** 公開の HTTPS のエンドポイントがホストへ転送している場合（たとえば戻り先のポートに向けた Tailscale Funnel やリバースプロキシ）、`oauth.redirect_uri` を設定すれば、ブラウザの戻りがそのまま Hermes に届きます。トンネルも貼り付けも要りません。

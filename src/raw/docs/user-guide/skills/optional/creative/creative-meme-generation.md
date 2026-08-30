@@ -2,7 +2,7 @@
 title: "Meme Generation — 定型画像に Pillow で文字を重ねてミーム画像を作る"
 description: "定型画像に Pillow で文字を重ねてミーム画像を作る"
 upstream_path: user-guide/skills/optional/creative/creative-meme-generation.md
-upstream_blob: 605fe7ddc0b5abe672a244854ec1c972c0a4b04c
+upstream_blob: f7b61f10f981bb95cdbb29911c5447c5585b2ff3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-meme-generation
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/meme-generation` で入れます |
-| パス | `optional-skills/creative/meme-generation` |
+| パス | `optional-skills/creative\meme-generation` |
 | バージョン | `2.0.0` |
 | 作者 | adanaleycio |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `creative`, `memes`, `humor`, `images` |
-| 関連 skill | [`ascii-art`](/hermes/docs/user-guide/skills/bundled/creative/creative-ascii-art/) |
+| 関連 skill | [`ascii-art`](/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

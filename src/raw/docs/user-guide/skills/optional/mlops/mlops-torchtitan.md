@@ -2,7 +2,7 @@
 title: "Torchtitan — PyTorch の 4D 並列で LLM を大規模に事前学習する"
 description: "PyTorch の 4D 並列で LLM を大規模に事前学習する"
 upstream_path: user-guide/skills/optional/mlops/mlops-torchtitan.md
-upstream_blob: 40a7b94a8750f5c94f057feec782d19c2d4c1065
+upstream_blob: 9a814bf816b29d50f920370e4a566728febf0eca
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-torchtitan
 ---
@@ -16,7 +16,7 @@ PyTorch の 4D 並列で LLM を大規模に事前学習します。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/torchtitan` で導入します |
-| パス | `optional-skills/mlops/torchtitan` |
+| パス | `optional-skills/mlops\torchtitan` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -389,13 +389,13 @@ python -m torch.distributed.checkpoint.format_utils \
 
 ## さらに踏み込んだ話題 {#advanced-topics}
 
-**FSDP2 の設定**: FSDP2 と FSDP1 の詳しい比較や ZeRO との対応は [references/fsdp.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/fsdp.md) を参照してください。
+**FSDP2 の設定**: FSDP2 と FSDP1 の詳しい比較や ZeRO との対応は [references/fsdp.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\torchtitan/references/fsdp.md) を参照してください。
 
-**Float8 学習**: テンソル単位とロー単位のスケーリング方法は [references/float8.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/float8.md) を参照してください。
+**Float8 学習**: テンソル単位とロー単位のスケーリング方法は [references/float8.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\torchtitan/references/float8.md) を参照してください。
 
-**チェックポイント**: HuggingFace 形式への変換や非同期のチェックポイントは [references/checkpoint.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/checkpoint.md) を参照してください。
+**チェックポイント**: HuggingFace 形式への変換や非同期のチェックポイントは [references/checkpoint.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\torchtitan/references/checkpoint.md) を参照してください。
 
-**独自モデルの追加**: TrainSpec の仕組みは [references/custom-models.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/custom-models.md) を参照してください。
+**独自モデルの追加**: TrainSpec の仕組みは [references/custom-models.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\torchtitan/references/custom-models.md) を参照してください。
 
 ## 参考リンク {#resources}
 

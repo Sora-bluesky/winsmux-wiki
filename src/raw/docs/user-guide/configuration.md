@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダー、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: d5226ce2d6592524db9b3ac2e32f3a46f54d233b
+upstream_blob: 9c3cdb3bd8896b1953025d6b0cf7b6c5f6139132
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -845,7 +845,7 @@ compression:
   threshold: 0.50                                   # Compress at this % of context limit
   threshold_tokens: null                            # Absolute token cap (optional) — takes lower of ratio vs absolute
   target_ratio: 0.20                                # Fraction of threshold to preserve as recent tail
-  tail_mode: lean                                   # Tail retention: "lean" (default — clamped 2.5% tail, 10K-25K, with digests + anchor index + session_search recovery pointers in the summary; ~3x fewer retained tokens after compaction) or "legacy" (0.20×threshold verbatim tail)
+  tail_mode: lean                                   # Tail retention: "lean" (default — clamped 2.5% tail, 10K-25K, with a detailed session log + anchor index + session_search recovery pointers in the summary, all from ONE auxiliary summarizer call; ~3x fewer retained tokens after compaction) or "legacy" (0.20×threshold verbatim tail)
   protect_last_n: 20                                # Min recent messages to keep uncompressed
   protect_first_n: 3                                # Non-system head messages pinned across compactions (0 = pin nothing)
   in_place: true                                    # Compact on the same session id (no rotation) — see below
@@ -1819,6 +1819,8 @@ display:
   runtime_footer:         # Gateway: append a runtime-context footer to final replies
     enabled: false
     fields: ["model", "context_pct", "cwd"]
+  status_bar:             # CLI/TUI: choose which status-bar fields are visible
+    fields: []            # empty = show the default set; see below
   file_mutation_verifier: true    # Append an advisory footer when write_file/patch calls failed this turn
   credits_notices: true   # Nous credits status-bar notices (usage bands, grant-spent, depleted). false = silence them; /usage still works
   cli_rebuild_scrollback_on_redraw: false  # Classic CLI: also wipe terminal scrollback (CSI 3J) on /redraw / Ctrl+L / width-change resize recovery. Enable when a terminal/tmux stack stamps stale prompt chrome into scrollback on maximize/restore.
@@ -1918,6 +1920,28 @@ CLI では、`/verbose` でこれらのモードを順に切り替えられま�
 - 集中表示のあいだに `/verbose` を切り替えると、モードは `/verbose` に戻り、印は消えます
 
 集中表示は**表示だけ**のものです。会話の履歴、システムプロンプト、ツールのスキーマ、リクエストの中身を書き換えることはありません。隠れた細部は画面で抑えられるだけで、捨てられてはいませんし、プロンプトキャッシュにもまったく影響しません。
+
+### 状態の欄に出す項目の選択（CLI / TUI） {#status-bar-field-selection-clitui}
+
+CLI / TUI の下端にある対話用の状態の欄には、モデル、コンテキストの使用量、圧縮の回数、背後で動いているものの数、時間の計測、モードの印が出ます。`display.status_bar.fields` は、そのうちどれを見せるかを選ぶ設定です。最小限の欄（モデルと経過時間だけ）にしたいときや、既定では隠れているセッションの合計トークンを出したいときに役立ちます。
+
+```yaml
+display:
+  status_bar:
+    fields: ["model", "duration", "total_tokens"]   # visibility only; built-in order is preserved
+```
+
+使える項目: `model`、`context_detail`（使用トークンと上限トークン）、`context_pct`（割合とメーター）、`cache_hit`（プロンプトキャッシュのヒット率 — モデルの切り替えと圧縮でリセットされます）、`latency`（直近 10 回の API の平均応答時間）、`tps`（直近 10 回の出力トークン毎秒）、`compressions`、`bg_tasks`、`bg_processes`、`bg_subagents`、`goal`、`duration`、`prompt_elapsed`、`idle_since`、`focus`、`yolo`、`stash`、`battery`、`title`（右寄せのセッションの印）、`total_tokens`（セッションの合計 Σ — 自分で有効にしたときだけ出て、既定では出ません）。
+
+注意点:
+
+- 空のリスト（既定）なら標準の組み合わせのままです。`total_tokens` 以外がすべて出ます。
+- この設定が決めるのは**見せるかどうかであって、並び順ではありません**。項目は組み込みの位置に出ます。
+- 幅の狭い端末では、設定にかかわらず、広い表示のときだけ出る項目（`context_detail`、`cache_hit`、`latency`、`tps`、`prompt_elapsed`、`idle_since`）は落ちます（`cache_hit` は 52 桁以上の中くらいの段でも出ます）。
+- `latency` と `tps` は、API の呼び出しが記録されるまで出ません（たとえば Codex の app-server のバックエンドは応答時間を報告しません）。
+- ここでの `battery` と `title` の表示は、それぞれの切り替え（`/battery`、`/title`）と組み合わさります。区画が出るには、両方が有効になっている必要があります。
+- 同じキーは **Ink の TUI**（`hermes tui`）の状態の行にも効きます。そこでは `cache_hit`、`latency`、`tps` が、それぞれ 96 桁 / 104 桁 / 110 桁以上の端末で、幅に応じた末尾の区画（◎ / ◷ / ↑）として出ます。
+- 表示だけのものです。プロンプトキャッシュやリクエストの中身には影響しません。変更は次のセッションの開始から効きます。
 
 ### 実行時のメタデータの脚注（ゲートウェイのみ） {#runtime-metadata-footer-gateway-only}
 
@@ -2482,6 +2506,10 @@ delegation:
   # base_url: "http://localhost:1234/v1"    # Direct OpenAI-compatible endpoint (takes precedence over provider)
   # api_key: "local-key"                    # API key for base_url (falls back to OPENAI_API_KEY)
   # api_mode: ""                            # Wire protocol for base_url: "chat_completions", "codex_responses", or "anthropic_messages". Empty = auto-detect from URL (e.g. /anthropic suffix → anthropic_messages). Set explicitly for non-standard endpoints the heuristic can't detect.
+  # request_overrides:                      # Per-child request settings sent on every subagent API call (all resolution branches).
+  #   extra_body:                           # Merged into the request's extra_body — e.g. OpenRouter routing hints:
+  #     provider:
+  #       sort: throughput
   max_concurrent_children: 3                # Parallel children per batch (floor 1, no ceiling). Also via DELEGATION_MAX_CONCURRENT_CHILDREN env var.
   worktree_isolation: false                 # Give each child its own git worktree branched from HEAD (local backend + git repos only; inspired by Muse Code). See Subagent Delegation → Worktree Isolation.
   max_spawn_depth: 1                        # Delegation tree depth cap (1-3, clamped). 1 = flat (default): parent spawns leaves that cannot delegate. 2 = orchestrator children can spawn leaf grandchildren. 3 = three levels.
@@ -2490,7 +2518,20 @@ delegation:
 
 **サブエージェントの provider:model の上書き:** 既定では、サブエージェントは親のエージェントのプロバイダーとモデルを引き継ぎます。`delegation.provider` と `delegation.model` を設定すると、サブエージェントを別の provider:model の組み合わせへ回せます。たとえば、メインのエージェントは高価な推論モデルで動かしつつ、範囲の狭い作業には安くて速いモデルを使う、といった具合です。
 
-**エンドポイントの直接指定:** 独自エンドポイントを素直に使いたいなら、`delegation.base_url`、`delegation.api_key`、`delegation.model` を設定してください。サブエージェントはその OpenAI 互換のエンドポイントへ直接向かい、これは `delegation.provider` より優先されます。`delegation.api_key` を省いた場合、Hermes は `OPENAI_API_KEY` にだけ落ちます。
+**エンドポイントの直接指定:** 独自エンドポイントを素直に使いたいなら、`delegation.base_url`、`delegation.api_key`、`delegation.model` を設定してください。サブエージェントはその OpenAI 互換のエンドポイントへ直接向かい、これは `delegation.provider` より優先されます。`delegation.api_key` を省いた場合、Hermes は `OPENAI_API_KEY` にだけ落ちます。`delegation.base_url` と並べて `delegation.provider` も設定した場合、明示したエンドポイントとキーがそのまま優先されますが、そのプロバイダーのリクエストの設定（`custom_providers` の項目にある `extra_body` の上書きと、出力トークンの上限）はサブエージェントへ引き継がれます。
+
+**子ごとのリクエストの設定（`request_overrides`）:** `delegation.request_overrides` は、サブエージェントの API 呼び出しのたびに送られるリクエストの設定をまとめた辞書です。最上位のキーは API の引数（たとえば `service_tier`）で、`extra_body` の下位の辞書はリクエストの `extra_body` に統合されます。この設定は解決の**3 つの経路すべて**（`base_url` の直接指定、名前付きの `provider`、そのままの引き継ぎ）で働くので、このキーは必ず反映されます。優先順位としては、明示した `request_overrides` の値が、実行時や親から来た上書きの**上に**重なります。最上位で明示したキーが勝ち、`extra_body` は 1 段だけ深く統合されるので、実行時の `extra_body` のキー（たとえばプロバイダーの `thinking: {type: disabled}` という性格づけ）は、こちらのキーが定義し直さないかぎり残ります。代表的な使いどころは、委任した子に渡す OpenRouter の経路の指定です。
+
+```yaml
+delegation:
+  model: "deepseek/deepseek-v4-flash-0731"
+  base_url: "https://openrouter.ai/api/v1"
+  api_key: "sk-or-..."
+  request_overrides:
+    extra_body:
+      provider:
+        sort: throughput   # route children to the fastest OpenRouter provider
+```
 
 **通信の形式（`api_mode`）:** Hermes は `delegation.base_url` から通信の形式を自動で判定します（たとえば `/anthropic` で終わるパスは `anthropic_messages`。Codex、Anthropic ネイティブ、Kimi-coding のホスト名も、これまでどおりの判定が働きます）。この推測で分類できないエンドポイント — たとえば Azure AI Foundry、MiniMax、Zhipu GLM、Anthropic 形式のバックエンドの前に立つ LiteLLM のプロキシなど — では、`delegation.api_mode` に `chat_completions`、`codex_responses`、`anthropic_messages` のいずれかを明示してください。自動の判定に任せるなら、空のまま（既定）にします。
 

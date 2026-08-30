@@ -2,7 +2,7 @@
 title: "Google Workspace — gws CLI か Python で Gmail・Calendar・Drive・Docs・Sheets を扱う"
 description: "gws CLI か Python で Gmail・Calendar・Drive・Docs・Sheets を扱う"
 upstream_path: user-guide/skills/bundled/productivity/productivity-google-workspace.md
-upstream_blob: 23c1245764e998de2b19ed554e4cc38abb3a3e23
+upstream_blob: 9e8c327674b13178149dd86b2413ef68b0d9573e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-google-workspace
 ---
@@ -16,7 +16,7 @@ gws CLI か Python で Gmail・Calendar・Drive・Docs・Sheets を扱います�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity/google-workspace` |
+| パス | `skills/productivity\google-workspace` |
 | バージョン | `1.2.0` |
 | 作者 | Nous Research |
 | ライセンス | MIT |

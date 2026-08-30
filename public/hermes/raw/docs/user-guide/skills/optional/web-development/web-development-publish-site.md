@@ -2,7 +2,7 @@
 title: "Publish Site — サイトに版を付けて GitHub / Cloudflare / Netlify の Pages へ公開します"
 description: "サイトに版を付けて GitHub / Cloudflare / Netlify の Pages へ公開します"
 upstream_path: user-guide/skills/optional/web-development/web-development-publish-site.md
-upstream_blob: c1e418f65c38e080d7bb5342f305ed2ff25f3970
+upstream_blob: 731dc0c9e4ed6c829742cb28be0b404479b955de
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/web-development/web-development-publish-site
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/web-development/publish-site` で入れます |
-| パス | `optional-skills/web-development/publish-site` |
+| パス | `optional-skills/web-development\publish-site` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent (Nous Research) |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Inspecting Hermes Desktop Dom — 動いている Hermes デスクトップの DOM/CSS を CDP で読む"
 description: "動いている Hermes デスクトップの DOM/CSS を CDP で読む"
 upstream_path: user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom.md
-upstream_blob: 7779328dbe1504e216024ec8f9ab5459da31df0a
+upstream_blob: d3f5e423cda7a9110ae74be6991a00793c725652
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development/inspecting-hermes-desktop-dom` |
+| パス | `skills/software-development\inspecting-hermes-desktop-dom` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

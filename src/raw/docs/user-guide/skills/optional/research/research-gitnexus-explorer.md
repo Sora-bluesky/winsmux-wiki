@@ -2,7 +2,7 @@
 title: "Gitnexus Explorer — コードベースの知識グラフを対話的な Web UI で見る"
 description: "コードベースの知識グラフを対話的な Web UI で見る"
 upstream_path: user-guide/skills/optional/research/research-gitnexus-explorer.md
-upstream_blob: c5d3feed896336177d82d8416b95b4cb5472951b
+upstream_blob: 7829a4432744ac0588d4f602517a80d2a0d19ffd
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-gitnexus-explorer
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/research/gitnexus-explorer` で導入します |
-| パス | `optional-skills/research/gitnexus-explorer` |
+| パス | `optional-skills/research\gitnexus-explorer` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `gitnexus`, `code-intelligence`, `knowledge-graph`, `visualization` |
-| 関連 skill | [`hermes-agent`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/), [`codebase-inspection`](/hermes/docs/user-guide/skills/bundled/github/github-codebase-inspection/) |
+| 関連 skill | [`hermes-agent`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/), [`codebase-inspection`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

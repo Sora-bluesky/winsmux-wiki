@@ -2,7 +2,7 @@
 title: "Apple Reminders — remindctl で Apple リマインダーを操作する: 追加・一覧・完了"
 description: "remindctl で Apple リマインダーを操作する: 追加・一覧・完了"
 upstream_path: user-guide/skills/bundled/apple/apple-apple-reminders.md
-upstream_blob: 9ab15d6b54785575a74314c816d585475cae2a3f
+upstream_blob: d3aa2e1e8bb54396f4b513e5bdb2a0cacc75e077
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/apple/apple-apple-reminders
 ---
@@ -16,7 +16,7 @@ remindctl で Apple リマインダーを操作します。追加・一覧・完
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/apple/apple-reminders` |
+| パス | `skills/apple\apple-reminders` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

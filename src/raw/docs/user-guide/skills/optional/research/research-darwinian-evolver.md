@@ -2,7 +2,7 @@
 title: "Darwinian Evolver — Imbue の進化ループでプロンプト・正規表現・SQL・コードを進化させる"
 description: "Imbue の進化ループでプロンプト・正規表現・SQL・コードを進化させる"
 upstream_path: user-guide/skills/optional/research/research-darwinian-evolver.md
-upstream_blob: 6975bf22190208bd4ceaf9f6cd49122d4291b66b
+upstream_blob: edaa29f447eac41329d812e190aaef7ce0f27408
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-darwinian-evolver
 ---
@@ -16,7 +16,7 @@ Imbue の進化ループで、プロンプト・正規表現・SQL・コード�
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/research/darwinian-evolver` で導入します |
-| パス | `optional-skills/research/darwinian-evolver` |
+| パス | `optional-skills/research\darwinian-evolver` |
 | バージョン | `0.1.0` |
 | 作者 | Bihruze (Asahi0x), Hermes Agent |
 | ライセンス | MIT |

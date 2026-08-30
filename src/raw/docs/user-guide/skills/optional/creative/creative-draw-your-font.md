@@ -1,22 +1,22 @@
 ---
-title: "Draw Your Font — 手書き文字の写真から、そのまま入れて使えるフォント（TTF/WOFF）を作る"
-description: "手書き文字の写真から、そのまま入れて使えるフォント（TTF/WOFF）を作る"
+title: "Draw Your Font — 手書き文字の写真から、そのまま入れて使える TTF フォントを作る"
+description: "手書き文字の写真から、そのまま入れて使える TTF フォントを作る"
 upstream_path: user-guide/skills/optional/creative/creative-draw-your-font.md
-upstream_blob: 23a0596bc8ce5ee92b489c5a0e37220686441bb3
+upstream_blob: e5fcdda279f1ffc8f8f73a3d04b0c479e62cea64
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-draw-your-font
 ---
 
 # Draw Your Font {#draw-your-font}
 
-手書き文字の写真から、そのまま入れて使えるフォント（TTF/WOFF）を作ります。
+手書き文字の写真から、そのまま入れて使える TTF フォントを作ります。
 
 ## skill の情報 {#skill-metadata}
 
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/draw-your-font` で入れます |
-| パス | `optional-skills/creative/draw-your-font` |
+| パス | `optional-skills/creative\draw-your-font` |
 | バージョン | `0.1.0` |
 | 作者 | Danilo Znamerovszkij (https://github.com/danilo-znamerovszkij/draw-your-font)、Hermes Agent が移植 |
 | ライセンス | MIT |
@@ -131,7 +131,7 @@ macOS ならダブルクリックして「フォントをインストール」�
 
 ## 手直し（会話しながら詰める） {#refine-conversational-iteration}
 
-| User says | Do |
+| 利用者の言葉 | 対応 |
 |---|---|
 | 「もっとなめらかに／丸く」 | `build … --smooth 1.5`（最大 2） |
 | 「もっと太く」 | `build … --weight 1`（最大 2） |

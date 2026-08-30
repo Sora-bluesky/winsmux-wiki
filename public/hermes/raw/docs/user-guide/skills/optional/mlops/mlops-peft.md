@@ -2,7 +2,7 @@
 title: "Peft — 限られた GPU メモリで大きな LLM を LoRA でファインチューニングする"
 description: "限られた GPU メモリで大きな LLM を LoRA でファインチューニングする"
 upstream_path: user-guide/skills/optional/mlops/mlops-peft.md
-upstream_blob: f5ed6889a9865843e5ad62b512db43c8eb889b80
+upstream_blob: edf9294fc7c04a4fec5d606a651b0c65f2c7e8b5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-peft
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/peft` で導入します |
-| パス | `optional-skills/mlops/peft` |
+| パス | `optional-skills/mlops\peft` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -441,8 +441,8 @@ TrainingArguments(learning_rate=1e-4)
 
 ## 参考資料 {#references}
 
-- **[応用的な使い方](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/peft/references/advanced-usage.md)** - DoRA、LoftQ、ランクの安定化、独自モジュール
-- **[困ったとき](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/peft/references/troubleshooting.md)** - よくあるエラー、原因の調べ方、改善
+- **[応用的な使い方](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\peft/references/advanced-usage.md)** - DoRA、LoftQ、ランクの安定化、独自モジュール
+- **[困ったとき](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\peft/references/troubleshooting.md)** - よくあるエラー、原因の調べ方、改善
 
 ## 関連情報 {#resources}
 

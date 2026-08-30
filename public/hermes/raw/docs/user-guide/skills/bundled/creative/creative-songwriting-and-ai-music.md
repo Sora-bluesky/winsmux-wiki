@@ -2,7 +2,7 @@
 title: "Songwriting And Ai Music — 作詞作曲の技法と Suno の AI 音楽プロンプト"
 description: "作詞作曲の技法と Suno の AI 音楽プロンプト"
 upstream_path: user-guide/skills/bundled/creative/creative-songwriting-and-ai-music.md
-upstream_blob: db3781f7e6fe8231a7ec40e07600d67cc524482e
+upstream_blob: f2270be8e25d11e7d8ca6d0d9f18630f4ca10947
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-songwriting-and-ai-music
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative/songwriting-and-ai-music` |
+| パス | `skills/creative\songwriting-and-ai-music` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |

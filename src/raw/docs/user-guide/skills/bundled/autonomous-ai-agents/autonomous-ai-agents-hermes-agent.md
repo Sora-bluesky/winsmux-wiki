@@ -2,7 +2,7 @@
 title: "Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 description: "Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md
-upstream_blob: ed894fba0bf5a913729381c4e7080eec1424f1f8
+upstream_blob: 6e31b32dc99c0d93bdab14328544415ff8bac26d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent
 ---
@@ -16,12 +16,12 @@ Hermes Agent を使う、設定する、見た目を変える、拡張する、�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/autonomous-ai-agents/hermes-agent` |
-| バージョン | `3.1.0` |
+| パス | `skills/autonomous-ai-agents\hermes-agent` |
+| バージョン | `3.2.0` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
-| タグ | `hermes`, `setup`, `configuration`, `multi-agent`, `spawning`, `cli`, `gateway`, `themes`, `skins`, `desktop-plugins`, `tui-widgets`, `petdex`, `development` |
+| タグ | `hermes`, `setup`, `configuration`, `multi-agent`, `spawning`, `cli`, `gateway`, `bots`, `bot-mode`, `features`, `themes`, `skins`, `desktop-plugins`, `tui-widgets`, `petdex`, `development` |
 | 関連 skill | [`claude-code`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/), [`codex`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/), [`opencode`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
@@ -52,11 +52,13 @@ Hermes ならではの点は次のとおりです。
 
 この skill は簡潔な操作の手引きであって、Hermes のすべての機能についての完全な正本ではありません。ある機能・コマンド・設定がここにも参照ファイルにも書かれていなくても、それを「存在しない証拠」として扱わないでください。「ありません」と答える前に、動いているリポジトリと公式ドキュメントを確かめてください。
 
-裏を取るのに向いている先は次のとおりです。
+裏を取るのに向いている先を、手軽な順に挙げます。
 
+- **出荷済みの機能を 1 行ずつ並べたもの: https://hermes-agent.nousresearch.com/docs/llms.txt。** 「Hermes で X はできるか」「X はどうやるのか」という問いは、まずここから始めてください。ドキュメント全体の索引になっていて、答えが載っているページへのリンクが付いています。ビルドのたびにドキュメントの木から生成されるので、製品の実態から遅れることがありません。取得には `web_extract` を使うか、Web 系のツールを切っているときは `curl -s https://hermes-agent.nousresearch.com/docs/llms.txt` を使ってください。ドキュメント全体を 1 つのファイルにまとめたものは `/docs/llms-full.txt` にあります。
 - CLI のコマンド: `hermes --help`、`hermes <command> --help`、`hermes_cli/main.py`
-- 利用者向けドキュメント: https://hermes-agent.nousresearch.com/docs/
 - ソースツリー: https://github.com/NousResearch/hermes-agent
+
+記憶だけを頼りに「Hermes にそれはできません」と答えてはいけません。Hermes には、この skill の本文が書いている以上のものがずっと多く入っています。否定の答えをいつでも確かめられるように、あの索引があります。
 
 ## 使い始める {#quick-start}
 
@@ -104,6 +106,8 @@ $HERMES_HOME/skills/        Installed skills
 
 | 利用者が知りたいこと | 読み込むもの |
 |---|---|
+| **下に載っていないこと全部 — 「Hermes で X はできるか」「X はどう設定するのか」** | **https://hermes-agent.nousresearch.com/docs/llms.txt** |
+| 会話したり、決まった処理を回したり、互いにやり取りしたりするボット。Bots タブ | docs: `/user-guide/bot-mode` |
 | CLI のコマンド、サブコマンド、フラグ、「X はどう実行するのか」 | `references/cli-reference.md` |
 | セッション中に使うスラッシュコマンド | `references/slash-commands.md` |
 | プロバイダの設定、API キー、OAuth | `references/providers-and-models.md` |
@@ -122,6 +126,11 @@ $HERMES_HOME/skills/        Installed skills
 | コードで貢献する: ツール、スラッシュコマンド、テストの追加 | `references/contributor-guide.md` |
 | delegate_task が「N 件で頭打ちになる」という報告 | `references/delegate-task-concurrency-diagnosis.md` |
 | 「アプリ X から Nous Portal のサブスクや OAuth を使えるか」 | `references/portal-auth-for-third-party-apps.md` |
+| メッセージ系のプラットフォームをつなぐ（Telegram、Discord、Slack、WhatsApp など） | docs: `/user-guide/messaging` |
+
+上の参照ファイルの一覧は、機能の一覧ではありません。それぞれのドキュメントのページだけでは
+足りない話題を集めたものです。Hermes が備えるそのほかのものについては、
+`llms.txt` を取ってくれば、問いから答えの載ったページへたどり着けます。
 
 見た目まわりには、参照ファイルを読み込まなくても常に成り立つ決まりが 2 つあります。**スキンはエージェント自身が適用します**（`hermes config set display.skin <name>`。すべての画面が 1 秒ほどで塗り替わります。`/skin` を実行するよう利用者に言わないでください）。そして **色を 1 つだけ変えたいときは、いま有効なスキンを編集します**（`hermes skin set <key> <hex>`）。`default` を複製して作り直してはいけません。配色が失われ、背景も初期状態に戻ります。
 

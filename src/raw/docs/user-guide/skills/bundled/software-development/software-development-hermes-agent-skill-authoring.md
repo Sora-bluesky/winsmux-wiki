@@ -2,7 +2,7 @@
 title: "Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成"
 description: "リポジトリ内の SKILL.md を書く: フロントマターと構成"
 upstream_path: user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring.md
-upstream_blob: 8953ec3d863442de809b29a4652dd90f8dba1d28
+upstream_blob: c1d6299dfaf929d19d55a79bb7650ebfabb1e947
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development/hermes-agent-skill-authoring` |
+| パス | `skills/software-development\hermes-agent-skill-authoring` |
 | バージョン | `2.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `skills`, `authoring`, `hermes-agent`, `conventions`, `skill-md` |
-| 関連 skill | [`plan`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-plan/), [`requesting-code-review`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/) |
+| 関連 skill | [`requesting-code-review`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -167,7 +167,7 @@ skill があるのは、エージェントの進め方をぶれにくくする�
 ## テストとドキュメント（リポジトリ内 skill では必須） {#tests-and-docs-required-for-repo-skills}
 
 1. **テスト**は `tests/skills/test_<skill>_skill.py` に置きます。標準ライブラリ + pytest + `unittest.mock` だけで、ネットワークにはつなぎません。実行は `scripts/run_tests.sh tests/skills/test_<skill>_skill.py -q` です。（共通の `tests/tools/test_skill_manager_tool.py` が通っても、自分の skill については何も証明しません。）
-2. **ドキュメントの再生成:** `python3 website/scripts/generate-skill-docs.py` を実行したあと、範囲を厳しく絞ります。生成器は自動生成のページをすべて書き換えてしまいます。自分のもの以外は `git checkout --` で戻してください。最終的な差分に出てよいのは、自分の SKILL.md、自分の skill のドキュメントページ1枚、カタログの1行、`website/sidebars.ts` への1行の追加だけです（`search_files(pattern='<your-slug>', path='website/sidebars.ts')` で確認し、ヒットがちょうど1件でなければページは迷子になっています）。
+2. **ドキュメントの再生成:** `python website/scripts/generate-skill-docs.py` を実行したあと、範囲を厳しく絞ります。生成器は自動生成のページをすべて書き換えてしまいます。自分のもの以外は `git checkout --` で戻してください。最終的な差分に出てよいのは、自分の SKILL.md、自分の skill のドキュメントページ1枚、カタログの1行、`website/sidebars.ts` への1行の追加だけです（`search_files(pattern='<your-slug>', path='website/sidebars.ts')` で確認し、ヒットがちょうど1件でなければページは迷子になっています）。
 3. **`.env.example`**（新しい環境変数が必要な場合のみ）: コメントで明確に区切った1ブロックだけを足し、ファイル内のほかの部分には触れません。
 
 ## 進め方 {#workflow}

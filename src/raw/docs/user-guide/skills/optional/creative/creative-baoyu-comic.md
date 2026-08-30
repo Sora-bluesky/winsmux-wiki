@@ -2,7 +2,7 @@
 title: "Baoyu Comic — 知識まんが（知识漫画）。学習向け、伝記、手引き"
 description: "知識まんが（知识漫画）。学習向け、伝記、手引き"
 upstream_path: user-guide/skills/optional/creative/creative-baoyu-comic.md
-upstream_blob: 88fdc93af6a3f9927cd5139319d1c79a0c24a9e8
+upstream_blob: 6a41cf8589fbdb26c9f970feff3db8153a587788
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-baoyu-comic
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/creative/baoyu-comic` で導入します |
-| パス | `optional-skills/creative/baoyu-comic` |
+| パス | `optional-skills/creative\baoyu-comic` |
 | バージョン | `1.56.1` |
 | 作者 | 宝玉 (JimLiu) |
 | ライセンス | MIT |
@@ -90,7 +90,7 @@ references:
 | 画像だけ | すでにあるプロンプトのフォルダから画像を作ります |
 | N ページ目を作り直す | 指定したページだけ作り直します（たとえば `3` や `2,5,8`） |
 
-詳しくはこちら: [references/partial-workflows.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/partial-workflows.md)
+詳しくはこちら: [references/partial-workflows.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-comic/references/partial-workflows.md)
 
 ### 絵柄・雰囲気・まとめ指定の一覧 {#art-tone-preset-catalogue}
 
@@ -108,7 +108,7 @@ references:
 
   詳しい決まりは `references/presets/<preset>.md` にあります。まとめ指定を選んだら、そのファイルを読み込んでください。
 
-- **組み合わせの相性表**と、**内容から見たまとめ指定の選び方**は [references/auto-selection.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/auto-selection.md) にあります。手順 2 で組み合わせをすすめる前に、ここを読んでください。
+- **組み合わせの相性表**と、**内容から見たまとめ指定の選び方**は [references/auto-selection.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-comic/references/auto-selection.md) にあります。手順 2 で組み合わせをすすめる前に、ここを読んでください。
 
 ## ファイルの並び {#file-structure}
 
@@ -186,7 +186,7 @@ Input → Analyze → [Check Existing?] → [Confirm: Style + Reviews] → Story
 
 ### 利用者への質問 {#user-questions}
 
-`clarify` ツールで希望を確かめます。`clarify` は一度にひとつしか質問できないので、いちばん大事なことから順に聞いていきます。手順 2 の質問一式は [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/workflow.md) にあります。
+`clarify` ツールで希望を確かめます。`clarify` は一度にひとつしか質問できないので、いちばん大事なことから順に聞いていきます。手順 2 の質問一式は [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-comic/references/workflow.md) にあります。
 
 **返事がないときの扱い（重要）**: `clarify` は `"The user did not provide a response within the time limit. Use your best judgement to make the choice and proceed."` を返すことがあります。これは、すべてを既定のまま進めてよいという承諾ではありません。
 
@@ -222,15 +222,15 @@ Input → Analyze → [Check Existing?] → [Confirm: Style + Reviews] → Story
 
 **古いものを残す決まり**: すでにある `prompts/…md` や `…png` は、作り直す前に `-backup-YYYYMMDD-HHMMSS` を後ろに付けた名前に変えておきます。
 
-一手ずつの詳しい進め方（読み解き、絵コンテ、確認の関門、作り直しのやり方）はこちら: [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/workflow.md)。
+一手ずつの詳しい進め方（読み解き、絵コンテ、確認の関門、作り直しのやり方）はこちら: [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-comic/references/workflow.md)。
 
 ## 参考資料 {#references}
 
 **基本のひな型**:
-- [analysis-framework.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/analysis-framework.md) - 内容を深く読み解く
-- [character-template.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/character-template.md) - 登場人物の書き方
-- [storyboard-template.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/storyboard-template.md) - 絵コンテの組み立て
-- [ohmsha-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/ohmsha-guide.md) - オーム社まんがのつくり
+- [analysis-framework.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-comic/references/analysis-framework.md) - 内容を深く読み解く
+- [character-template.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-comic/references/character-template.md) - 登場人物の書き方
+- [storyboard-template.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-comic/references/storyboard-template.md) - 絵コンテの組み立て
+- [ohmsha-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-comic/references/ohmsha-guide.md) - オーム社まんがのつくり
 
 **絵柄などの定義**:
 - `references/art-styles/` - 絵柄（ligne-claire, manga, realistic, ink-brush, chalk, minimalist）
@@ -239,9 +239,9 @@ Input → Analyze → [Check Existing?] → [Confirm: Style + Reviews] → Story
 - `references/layouts/` - コマ割り（standard, cinematic, dense, splash, mixed, webtoon, four-panel）
 
 **進め方**:
-- [workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/workflow.md) - 進め方の詳細
-- [auto-selection.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/auto-selection.md) - 内容から手がかりを読み取る
-- [partial-workflows.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/partial-workflows.md) - 途中まででやめたいとき
+- [workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-comic/references/workflow.md) - 進め方の詳細
+- [auto-selection.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-comic/references/auto-selection.md) - 内容から手がかりを読み取る
+- [partial-workflows.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-comic/references/partial-workflows.md) - 途中まででやめたいとき
 
 ## ページを直したいとき {#page-modification}
 

@@ -2,7 +2,7 @@
 title: "Design Md — Google の DESIGN.md トークン仕様ファイルを書く・検査する・書き出す"
 description: "Google の DESIGN.md トークン仕様ファイルを書く・検査する・書き出す"
 upstream_path: user-guide/skills/bundled/creative/creative-design-md.md
-upstream_blob: 2e83398a2c311e8f2cb639f0c7596c05f48dfb3e
+upstream_blob: d85492d8fd5163787d0cc8ac8456ca6e27bd4b7d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-design-md
 ---
@@ -16,13 +16,13 @@ Google の DESIGN.md トークン仕様ファイルを書く・検査する・�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative/design-md` |
+| パス | `skills/creative\design-md` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `design`, `design-system`, `tokens`, `ui`, `accessibility`, `wcag`, `tailwind`, `dtcg`, `google` |
-| 関連 skill | [`popular-web-designs`](/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/), [`claude-design`](/hermes/docs/user-guide/skills/bundled/creative/creative-claude-design/), [`excalidraw`](/hermes/docs/user-guide/skills/bundled/creative/creative-excalidraw/), [`architecture-diagram`](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) |
+| 関連 skill | [`popular-web-designs`](/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/), [`claude-design`](/hermes/docs/user-guide/skills/bundled/creative/creative-claude-design/), [`excalidraw`](/hermes/docs/user-guide/skills/optional/creative/creative-excalidraw/), [`architecture-diagram`](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

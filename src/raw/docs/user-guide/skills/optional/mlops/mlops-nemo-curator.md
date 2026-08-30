@@ -2,7 +2,7 @@
 title: "Nemo Curator — LLM の学習データを整える: 重複除去・絞り込み・個人情報の伏せ字化"
 description: "LLM の学習データを整える: 重複除去・絞り込み・個人情報の伏せ字化"
 upstream_path: user-guide/skills/optional/mlops/mlops-nemo-curator.md
-upstream_blob: 84eeca4bb6f54aedabbde2d49249df62faa76826
+upstream_blob: 40f9c2b7acb44b3240310f55c72d0dcff7b12f82
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-nemo-curator
 ---
@@ -16,7 +16,7 @@ LLM の学習データを整えます。重複除去・絞り込み・個人情�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/nemo-curator` で導入します |
-| パス | `optional-skills/mlops/nemo-curator` |
+| パス | `optional-skills/mlops\nemo-curator` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -402,8 +402,8 @@ cluster.close()
 
 ## 参考資料 {#references}
 
-- **[絞り込みのガイド](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/nemo-curator/references/filtering.md)** - 30 種類以上の品質フィルタと判定の目安
-- **[重複除去のガイド](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/nemo-curator/references/deduplication.md)** - 完全一致・あいまい・意味的な手法
+- **[絞り込みのガイド](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\nemo-curator/references/filtering.md)** - 30 種類以上の品質フィルタと判定の目安
+- **[重複除去のガイド](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\nemo-curator/references/deduplication.md)** - 完全一致・あいまい・意味的な手法
 
 ## 関連情報 {#resources}
 

@@ -2,7 +2,7 @@
 title: "Opencode — コーディングを OpenCode CLI に任せる（機能追加、PR レビュー）"
 description: "コーディングを OpenCode CLI に任せる（機能追加、PR レビュー）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode.md
-upstream_blob: 37c6c1d15dcb04ac2d995121eadec778ff6d7093
+upstream_blob: e8a027d382ac4d40c6d520763873ac074e7aed68
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/autonomous-ai-agents/opencode` |
+| パス | `skills/autonomous-ai-agents\opencode` |
 | バージョン | `1.2.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

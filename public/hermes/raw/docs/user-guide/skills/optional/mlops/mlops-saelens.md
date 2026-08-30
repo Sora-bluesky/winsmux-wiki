@@ -2,7 +2,7 @@
 title: "Saelens — スパースオートエンコーダを学習させてモデルの特徴を読み解く"
 description: "スパースオートエンコーダを学習させてモデルの特徴を読み解く"
 upstream_path: user-guide/skills/optional/mlops/mlops-saelens.md
-upstream_blob: ce0def00c52e55e1ca265901b61f39d15f8b6cb2
+upstream_blob: f58ccda19a45f5c0128cbeb610cf6e33882ab523
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-saelens
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/saelens` で導入します |
-| パス | `optional-skills/mlops/saelens` |
+| パス | `optional-skills/mlops\saelens` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -401,9 +401,9 @@ cfg = LanguageModelSAERunnerConfig(
 
 | ファイル | 内容 |
 |------|----------|
-| [references/README.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/saelens/references/README.md) | 全体像とすぐ試すための案内 |
-| [references/api.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/saelens/references/api.md) | SAE、TrainingSAE、各設定の API 全一覧 |
-| [references/tutorials.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/saelens/references/tutorials.md) | 学習・分析・誘導の手順つきチュートリアル |
+| [references/README.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\saelens/references/README.md) | 全体像とすぐ試すための案内 |
+| [references/api.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\saelens/references/api.md) | SAE、TrainingSAE、各設定の API 全一覧 |
+| [references/tutorials.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\saelens/references/tutorials.md) | 学習・分析・誘導の手順つきチュートリアル |
 
 ## 外部の情報 {#external-resources}
 

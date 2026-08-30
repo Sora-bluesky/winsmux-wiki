@@ -2,7 +2,7 @@
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、一つの cron ツールで管理し、スキルを一つ以上ひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: 74be2ab3f2b59d240ea80c7316236c43f67fabce
+upstream_blob: b82353d3f30fe54dd25188e4500696358e050a37
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -31,6 +31,8 @@ cron のジョブでできることは次のとおりです。
 - **`cron.model` / `cron.model_provider`** — cron 全体の既定です。固定されていないジョブはすべてこのモデルで動き、チャットで使うモデルとは切り離されます。一度設定しておけば（`hermes config set cron.model <name>`）、`hermes model` や `/model` でチャットのモデルを切り替えても cron 側には影響しません。
 - **全体の既定** — 上のどちらも設定されていないときだけ、ジョブは `hermes model` に従います。この場合、Hermes は作成時にプロバイダーとモデルを **記録** しておき、あとで全体の既定が変わるとジョブは **安全側に倒れて失敗** します。つまりその回の実行を飛ばし、推論の呼び出しは行わず、**一度だけ** 知らせます。あなたが対応するか設定が元に戻るまで、以降の周期でもジョブは飛ばされたまま（そして静かなまま）です（#44585）。繰り返すジョブや再実行できるジョブでは、プロバイダーとモデルを明示的に固定して（`hermes cron edit <job_id> --provider <provider> --model <model>`）先へ進めてください。使い切った一度きりのジョブは更新できないので、プロバイダーとモデルを明示した新しい一度きりのジョブを未来に向けて作ってください。これは、見ていないジョブが有料のプロバイダーやモデルへの切り替えを黙って引き継いでしまうのを防ぐためです。`cron.model`（またはジョブごとの固定）を設定するのが、cron の費用を意図して振り分ける正しいやり方で、それでカバーされている軸には、このずれの防止は働きません。固定していないジョブに、変わっていく全体の既定を追わせたい運用者は、[ずれの防止を無効にできます](#letting-unpinned-jobs-track-global-defaults)。
 
+ジョブがどのプロバイダーに落ち着いたとしても、そのプロバイダー固有のリクエスト設定（独自プロバイダー向けの `extra_body` / `extra_headers` といった `request_overrides` など）は、対話中のセッションと同じように予定された実行にも引き継がれます。
+
 見ていないところで動かすなら、OAuth の更新が自動で行われる `hermes setup --portal` が一番手間がかかりません。[Nous Portal](/hermes/docs/integrations/nous-portal/) を参照してください。
 :::
 
@@ -47,7 +49,7 @@ cron から実行されたセッションが、さらに cron のジョブを作
 ### チャットで `/cron` を使う {#in-chat-with-cron}
 
 ```bash
-/cron add 30m "Remind me to check the build"
+/cron add "in 30m" "Remind me to check the build"
 /cron add "every 2h" "Check server status"
 /cron add "every 1h" "Summarize new feed items" --skill blogwatcher
 /cron add "every 1h" "Use both skills and combine the result" --skill blogwatcher --skill maps
@@ -778,24 +780,40 @@ cron:
 ### 相対的な遅らせ方（一度きり） {#relative-delays-one-shot}
 
 ```text
-30m     → Run once in 30 minutes
-2h      → Run once in 2 hours
-1d      → Run once in 1 day
+in 30m  → Run once in 30 minutes
+in 2h   → Run once in 2 hours
+in 1d   → Run once in 1 day
 ```
 
 ### 間隔（繰り返し） {#intervals-recurring}
 
 ```text
+30m          → Every 30 minutes (bare durations are recurring)
 every 30m    → Every 30 minutes
 every 2h     → Every 2 hours
 every 1d     → Every day
+every hour   → Every hour (bare unit = 1)
 ```
+
+### 曜日や時刻を自然な言葉で書く（繰り返し） {#natural-daytime-schedules-recurring}
+
+```text
+every monday 9am         → Weekly, Mondays at 9:00 AM
+every day at 9am         → Daily at 9:00 AM
+weekdays at 9am          → Weekdays at 9:00 AM
+weekends at 10am         → Saturdays and Sundays at 10:00 AM
+daily at 7am             → Daily at 7:00 AM
+monday, wednesday at 9am → Mondays and Wednesdays at 9:00 AM
+```
+
+時刻は `9am`、`9:30pm`、`14:00`、24 時間表記の時だけを書いた形（`at 7`）、`noon`、`midnight` を受け付けます。これらの書き方は内部で cron の式に変換されます（変換には `croniter` パッケージが必要で、既定で導入済みです）。
 
 ### cron の式 {#cron-expressions}
 
 ```text
 0 9 * * *       → Daily at 9:00 AM
 0 9 * * 1-5     → Weekdays at 9:00 AM
+0 9 * * MON-FRI → Weekdays at 9:00 AM (named weekdays/months accepted)
 0 */6 * * *     → Every 6 hours
 30 8 1 * *      → First of every month at 8:30 AM
 0 0 * * 0       → Every Sunday at midnight
@@ -811,7 +829,7 @@ every 1d     → Every day
 
 | 予定の種類 | 既定の繰り返し | 挙動 |
 |--------------|----------------|----------|
-| 一度きり（`30m`、時刻） | 1 | 一度だけ実行します |
+| 一度きり（`in 30m`、時刻） | 1 | 一度だけ実行します |
 | 間隔（`every 2h`） | 無期限 | 削除するまで実行します |
 | cron の式 | 無期限 | 削除するまで実行します |
 

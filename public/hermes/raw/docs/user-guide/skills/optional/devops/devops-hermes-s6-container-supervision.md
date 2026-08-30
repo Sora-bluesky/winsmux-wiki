@@ -2,7 +2,7 @@
 title: "Hermes S6 Container Supervision — Hermes の Docker イメージで s6 サービスを直したり調べたりする"
 description: "Hermes の Docker イメージで s6 サービスを直したり調べたりする"
 upstream_path: user-guide/skills/optional/devops/devops-hermes-s6-container-supervision.md
-upstream_blob: 6bcadfa0acb9365f594b7913b308fc9e9b5d6b70
+upstream_blob: 76b34e9c3e7a4d13c073c51eefc5ec0ff0196157
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision
 ---
@@ -16,7 +16,7 @@ Hermes の Docker イメージで s6 サービスを直したり調べたりし�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/devops/hermes-s6-container-supervision` で入れます |
-| パス | `optional-skills/devops/hermes-s6-container-supervision` |
+| パス | `optional-skills/devops\hermes-s6-container-supervision` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -83,7 +83,8 @@ Hermes Agent をただ動かしたくて Docker を使いたいだけなら、�
 
 | パス | 役割 |
 |---|---|
-| `Dockerfile` | s6-overlay の導入、cont-init.d の組み込み、`ENTRYPOINT ["/init", "/opt/hermes/docker/main-wrapper.sh"]` |
+| `Dockerfile` | s6-overlay の導入、cont-init.d の組み込み、`ENTRYPOINT ["/opt/hermes/docker/entrypoint-dispatch.sh"]` |
+| `docker/entrypoint-dispatch.sh` | PID 1 の振り分け役。イメージ自身が PID 1 を持つときは `/init` と main-wrapper を exec します。PID 1 が別に用意される環境（Fly Machines、`docker run --init`）では、s6 の補助コマンドの PATH を先に戻したうえで、stage2-hook と main-wrapper を直に呼ぶ経路に切り替えます（#38349）。 |
 | `docker/stage2-hook.sh` | 「以前の entrypoint の処理」そのもの — UID の付け替え、chown、初期配置、skill の同期。cont-init.d/01-hermes-setup として動きます。 |
 | `docker/cont-init.d/02-reconcile-profiles` | 起動のたびに `hermes_cli.container_boot` を呼び、永続ボリュームからプロファイルの gateway の枠を復元します。 |
 | `docker/main-wrapper.sh` | コンテナの CMD。ユーザーの引数を振り分け、`s6-setuidgid` で hermes に切り替え、選ばれたプログラムを exec します。 |
@@ -101,7 +102,7 @@ Hermes Agent をただ動かしたくて Docker を使いたいだけなら、�
 1. **cont-init.d のスクリプトには CMD の引数が渡ってこない** — そのため stage2 のフックでは `docker run <image> chat -q "hi"` を解釈して、サービスの `run` スクリプトが読む `HERMES_ARGS` を組み立てられません。
 2. **`/run/s6/basedir/bin/halt` は、`/run/s6-linux-init-container-results/exitcode` に書かれた終了コードを引き継ぎません。** コンテナは何であれ 143（SIGTERM）で終了してしまいます。これは s6 の作者である skarnet が [issue #477](https://github.com/just-containers/s6-overlay/issues/477) で確認しています。_「コンテナを終了させたいなら、CMD を終了させるか、CMD がないなら望む終了コードを書いてから halt を呼ぶ必要がある」_
 
-そこで、s6-overlay 本来の CMD パターンを使っています。`ENTRYPOINT ["/init", "/opt/hermes/docker/main-wrapper.sh"]` です。/init はユーザーの引数の前にこのラッパーを自動で足すので、`docker run <image> --version` は `/init main-wrapper.sh --version` になり、`--version` が /init 側の POSIX シェルに横取りされません。ラッパーは `s6-setuidgid` で hermes に切り替えてから、選ばれたプログラムを exec します。そのプログラムの終了コードがそのままコンテナの終了コードになり、s6 導入前の tini と同じ約束事が保たれます。
+そこで、振り分け役を通して s6-overlay 本来の CMD パターンを使っています。`ENTRYPOINT ["/opt/hermes/docker/entrypoint-dispatch.sh"]` を置き、PID 1 のときはそこから `/init /opt/hermes/docker/main-wrapper.sh "$@"` を exec します。ユーザーの引数の前にこのラッパーが自動で足されるので、`docker run <image> --version` は `/init main-wrapper.sh --version` になり、`--version` が /init 側の POSIX シェルに横取りされません。ラッパーは `s6-setuidgid` で hermes に切り替えてから、選ばれたプログラムを exec します。そのプログラムの終了コードがそのままコンテナの終了コードになり、s6 導入前の tini と同じ約束事が保たれます。entrypoint が PID 1 でないとき（Fly Machines、`docker run --init`）は、振り分け役が `/init` をまるごと飛ばし（そのままでは `can only run as pid 1` で止まってしまいます）、s6 の補助コマンドの PATH を戻し、stage2-hook.sh を実行してから main-wrapper.sh を直に exec します。この経路では監視サービスは動きません（#38349）。
 
 代わりに手放したもの: 本体の hermes は s6 の監視下にありません。これは tini だった頃（s6 導入前のイメージ）の挙動とまったく同じです。**新しく**保証されたのはダッシュボードの監視だけで、`/run/service/` 配下のプロファイルごとの gateway は完全に監視されます。
 

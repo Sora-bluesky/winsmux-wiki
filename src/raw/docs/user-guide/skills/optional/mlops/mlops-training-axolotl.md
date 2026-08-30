@@ -2,7 +2,7 @@
 title: "Axolotl — Axolotl: YAML で LLM をファインチューニングする（LoRA、DPO、GRPO）"
 description: "Axolotl: YAML で LLM をファインチューニングする（LoRA、DPO、GRPO）"
 upstream_path: user-guide/skills/optional/mlops/mlops-training-axolotl.md
-upstream_blob: a23fb70816dc3c09f28293b14f92db20170ade03
+upstream_blob: 040caac478a895885a63ea88d6b593ee6d863583
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-training-axolotl
 ---
@@ -16,7 +16,7 @@ Axolotl: YAML で LLM をファインチューニングします（LoRA、DPO、
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/axolotl` で導入します |
-| パス | `optional-skills/mlops/training/axolotl` |
+| パス | `optional-skills/mlops\training\axolotl` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

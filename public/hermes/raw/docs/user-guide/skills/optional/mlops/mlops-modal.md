@@ -2,7 +2,7 @@
 title: "Modal — ML の処理やモデル API を、サーバー管理なしで GPU に載せる"
 description: "ML の処理やモデル API を、サーバー管理なしで GPU に載せる"
 upstream_path: user-guide/skills/optional/mlops/mlops-modal.md
-upstream_blob: 4fce9a4c9da36c00f3f34913303c6af02df5103d
+upstream_blob: 9b744da7c55c649eaeea3224c1a1fd283d13d78a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-modal
 ---
@@ -16,7 +16,7 @@ ML の処理やモデルの API を、サーバーの管理なしで GPU に載�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/modal` で導入します |
-| パス | `optional-skills/mlops/modal` |
+| パス | `optional-skills/mlops\modal` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -356,8 +356,8 @@ if __name__ == "__main__":
 
 ## 参考資料 {#references}
 
-- **[Advanced Usage](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/modal/references/advanced-usage.md)** - 複数 GPU、分散学習、費用の最適化
-- **[Troubleshooting](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/modal/references/troubleshooting.md)** - よくある症状と対処
+- **[Advanced Usage](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\modal/references/advanced-usage.md)** - 複数 GPU、分散学習、費用の最適化
+- **[Troubleshooting](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\modal/references/troubleshooting.md)** - よくある症状と対処
 
 ## 参考リンク {#resources}
 

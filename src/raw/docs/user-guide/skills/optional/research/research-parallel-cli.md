@@ -2,7 +2,7 @@
 title: "Parallel Cli — エージェント向けのウェブ検索・深い調査・情報の補完"
 description: "エージェント向けのウェブ検索・深い調査・情報の補完"
 upstream_path: user-guide/skills/optional/research/research-parallel-cli.md
-upstream_blob: 07e55f9b80347718d80d79de50753f3ae121063c
+upstream_blob: 844c62a2136ef74a80611019bd01a2bbcd00c6c0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-parallel-cli
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加の skill です。`hermes skills install official/research/parallel-cli` で入れられます |
-| パス | `optional-skills/research/parallel-cli` |
+| パス | `optional-skills/research\parallel-cli` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

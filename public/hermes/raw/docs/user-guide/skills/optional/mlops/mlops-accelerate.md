@@ -2,7 +2,7 @@
 title: "Accelerate — PyTorch の学習を、ほとんど書き換えずに複数の GPU で走らせる"
 description: "PyTorch の学習を、ほとんど書き換えずに複数の GPU で走らせる"
 upstream_path: user-guide/skills/optional/mlops/mlops-accelerate.md
-upstream_blob: ef74ff473a946d106cdb74242c666e2e36cfac0c
+upstream_blob: 13745edf3e0c5e05c307aa416986638ef45316c2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-accelerate
 ---
@@ -16,7 +16,7 @@ PyTorch の学習を、ほとんど書き換えずに複数の GPU で走らせ�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/accelerate` で導入します |
-| パス | `optional-skills/mlops/accelerate` |
+| パス | `optional-skills/mlops\accelerate` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -335,11 +335,11 @@ set_seed(42)
 
 ## さらに踏み込む {#advanced-topics}
 
-**Megatron との連携**: テンソル並列、パイプライン並列、シーケンス並列の設定は [references/megatron-integration.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/accelerate/references/megatron-integration.md) を見てください。
+**Megatron との連携**: テンソル並列、パイプライン並列、シーケンス並列の設定は [references/megatron-integration.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\accelerate/references/megatron-integration.md) を見てください。
 
-**独自のプラグイン**: 独自の分散プラグインを作る方法や、込み入った設定は [references/custom-plugins.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/accelerate/references/custom-plugins.md) を見てください。
+**独自のプラグイン**: 独自の分散プラグインを作る方法や、込み入った設定は [references/custom-plugins.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\accelerate/references/custom-plugins.md) を見てください。
 
-**性能の調整**: プロファイリング、メモリの節約、うまくやるこつは [references/performance.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/accelerate/references/performance.md) を見てください。
+**性能の調整**: プロファイリング、メモリの節約、うまくやるこつは [references/performance.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\accelerate/references/performance.md) を見てください。
 
 ## 必要なハードウェア {#hardware-requirements}
 

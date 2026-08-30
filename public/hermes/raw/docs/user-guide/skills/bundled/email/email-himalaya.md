@@ -2,7 +2,7 @@
 title: "Himalaya — Himalaya CLI: ターミナルから IMAP/SMTP のメールを扱う"
 description: "Himalaya CLI: ターミナルから IMAP/SMTP のメールを扱う"
 upstream_path: user-guide/skills/bundled/email/email-himalaya.md
-upstream_blob: 38768284682fc3f05188508ca21d6ca610091e37
+upstream_blob: 4289ccfd18fc6fedf801e7b4b047d5135b997704
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/email/email-himalaya
 ---
@@ -16,7 +16,7 @@ Himalaya CLI です。ターミナルから IMAP/SMTP のメールを扱いま�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/email/himalaya` |
+| パス | `skills/email\himalaya` |
 | バージョン | `1.1.0` |
 | 作者 | community |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Xlsx — Excel の .xlsx ブックと CSV を作る・読む・直す"
 description: "Excel の .xlsx ブックと CSV を作る・読む・直す"
 upstream_path: user-guide/skills/bundled/productivity/productivity-xlsx.md
-upstream_blob: 7315c346ec252b23a5fe3428407d0b9cfbbc31a3
+upstream_blob: e0d51ec0b99e41f8204ce6b49436798571102116
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-xlsx
 ---
@@ -16,8 +16,8 @@ Excel の .xlsx ブックと CSV を作り、読み、直します。
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity/xlsx` |
-| バージョン | `1.0.0` |
+| パス | `skills/productivity\xlsx` |
+| バージョン | `1.1.0` |
 | 作者 | Nous Research |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
@@ -42,11 +42,15 @@ Python と openpyxl を使って Excel の .xlsx ブックを扱います。数�
 
 - .xlsx の報告書を作るとき: 複数シート、数値の書式、体裁、
   セルの結合、ウィンドウ枠の固定、フィルター、条件付き書式、
-  グラフ、入力規則のドロップダウン。
+  グラフ、入力規則のドロップダウン、Excel 本来のテーブル、
+  名前の定義、リンク、セルのメモ、シートの保護。
 - ブックを読むとき: シートの一覧、データを JSON や CSV として
-  書き出すこと、数式と計算済みの値の一覧。
+  書き出すこと、数式と計算済みの値の一覧、メモ、名前の定義、テーブル。
 - 既存のファイルを直すとき: セルの設定、行の追加、行や列の
-  挿入と削除、シートの複製と名前の変更。
+  挿入と削除（`xlsx_restructure.py` を使えば参照も追従します）、
+  シートの複製と名前の変更、テーブル、名前、メモ、保護。
+- LibreOffice を使い、画面なしで数式を計算し直すとき
+  （`xlsx_recalc.py`）。
 - 型の推測や UTF-8 以外の文字コードを含む、CSV とのやり取り。
 - 古い .xls のバイナリー形式には使いません（先に LibreOffice で
   変換してください: `soffice --headless --convert-to xlsx old.xls`）。
@@ -69,6 +73,8 @@ python scripts/xlsx_read.py report.xlsx --sheets      # inventory
 python scripts/xlsx_read.py report.xlsx --json --sheet Data
 python scripts/xlsx_read.py report.xlsx --formulas
 python scripts/xlsx_edit.py report.xlsx --sheet Data --set B2=42 --recalc
+python scripts/xlsx_restructure.py report.xlsx --sheet Data --insert-rows 3:2
+python scripts/xlsx_recalc.py report.xlsx
 python scripts/csv_to_xlsx.py data.csv out.xlsx --encoding utf-8
 python scripts/xlsx_to_csv.py report.xlsx out.csv --sheet Data
 ```
@@ -87,7 +93,17 @@ JSON の指定は `write_file` で書き、スクリプトが出す JSON は
 | 数式と計算済みの値を並べる | `xlsx_read.py f.xlsx --formulas` |
 | セルや数式を設定する | `xlsx_edit.py f.xlsx --set "A1==SUM(B:B)"` |
 | 行を追加する | `xlsx_edit.py f.xlsx --append '[1,"x",true]'` |
-| 3 行目の前に 2 行挿入する | `xlsx_edit.py f.xlsx --insert-rows 3:2` |
+| 2 行挿入する（参照はずれたまま） | `xlsx_edit.py f.xlsx --insert-rows 3:2` |
+| 2 行挿入する（参照も追従） | `xlsx_restructure.py f.xlsx --insert-rows 3:2` |
+| 列を削除する（参照も追従） | `xlsx_restructure.py f.xlsx --delete-cols B` |
+| Excel 本来のテーブルを作る | `xlsx_edit.py f.xlsx --add-table Sales:A1:C9` |
+| テーブルの中に行を足す | `--table-append 'Sales=["West",5]'` |
+| テーブルを一覧する | `xlsx_edit.py f.xlsx --list-tables` |
+| 名前の定義 | `--define-name "Rates='Data'!$B$2:$B$9"` / `--delete-name Rates` / `xlsx_read.py f.xlsx --names` |
+| リンク | `--hyperlink "A1=https://example.com|Docs"` |
+| セルのメモ | `--note "B2=Check this|Reviewer"`。読むときは `xlsx_read.py f.xlsx --notes` |
+| シートを保護する（つまずきやすいところを参照） | `--protect your-password --unlock B2:B9` |
+| LibreOffice で再計算する | `xlsx_recalc.py f.xlsx` |
 | シートを複製 / 名前を変更 | `--copy-sheet Src:New --rename-sheet Old:New` |
 | 開いたときに再計算させる | `xlsx_edit.py f.xlsx --recalc` |
 | CSV から体裁付きの xlsx へ | `csv_to_xlsx.py in.csv out.xlsx` |
@@ -101,8 +117,11 @@ JSON の指定は `write_file` で書き、スクリプトが出す JSON は
    上書きする `cells`、`column_widths`、`row_heights`、`merges`、
    `freeze_panes`、`autofilter`、`conditional_formats`（cell_is の
    条件とカラースケール）、`charts`（セル範囲からの棒・折れ線・円）、
-   `validations`（ドロップダウン）を指定できます。型のある値は、
-   JSON の数値と真偽値がそのまま通り、日付は
+   `validations`（ドロップダウン）、`tables`（スタイル名を付けた
+   Excel 本来のテーブル）、`protection` を指定できます。ブック全体の
+   `defined_names` は、名前と参照先の対応を表します。セルの指定には
+   `hyperlink` と `note` も書けます。型のある値は、JSON の数値と
+   真偽値がそのまま通り、日付は
    `{"value": "2026-01-31", "type": "date"}` の形にします。
    数値の書式は Excel の書式文字列です。通貨は `"$#,##0.00"`、
    百分率は `"0.0%"`、日付は `"yyyy-mm-dd"` のように書きます。
@@ -112,24 +131,49 @@ JSON の指定は `write_file` で書き、スクリプトが出す JSON は
    付けてください。これでブックの `fullCalcOnLoad` フラグが立ち、
    Excel や LibreOffice が開いたときにすべて計算し直します。
    openpyxl 自体は数式を決して計算しません。
-3. **読みます**: 一覧（名前、大きさ、結合された範囲、グラフの数）は
-   `--sheets`、データは `--json`/`--csv`、数式の文字列と計算済みの
-   結果を並べて見るには `--formulas` を使います。計算済みの結果は、
-   そのファイルを最後に本物の表計算ソフトが保存したときだけ入って
-   います。openpyxl で作ったばかりのファイルでは `null` が返ります。
-   画面なしで結果を出したいときは、
-   `soffice --headless --convert-to xlsx file.xlsx` を実行してから
-   `--data-only` で読み直してください。
+3. **読みます**: 一覧（名前、大きさ、結合された範囲、グラフの数、
+   テーブル、保護、名前の定義）は `--sheets`、データは
+   `--json`/`--csv`、数式の文字列と計算済みの結果を並べて見るには
+   `--formulas`、セルのコメントは `--notes`、名前の定義は
+   `--names` を使います。計算済みの結果は、そのファイルを最後に
+   本物の表計算ソフトが保存したときだけ入っています。openpyxl で
+   作ったばかりのファイルでは `null` が返ります。画面なしで結果を
+   出したいときは `xlsx_recalc.py file.xlsx` を実行し（LibreOffice を
+   使います。`soffice` が無いときは `{"recalculated": false, ...}` を
+   表示して 0 で終了します）、そのあと `--data-only` で読み直して
+   ください。
 4. **直します**: `xlsx_edit.py` は、名前の変更と複製を先に行い、次に
    行や列の構造の変更、最後に `--set`/`--append` を行います。`--out` を
    指定しない限りその場で書き換えるので、元のファイルが必要なら
    先にコピーしてください。
-5. **CSV とのやり取り**: `csv_to_xlsx.py` はセルごとに整数・小数・
+5. **構造を組み替えます**: 数式・結合・テーブル・フィルターのある
+   シートで行や列を挿入・削除するときは、`xlsx_edit.py` ではなく
+   `xlsx_restructure.py` を使ってください。すべてのシートの数式の
+   参照（`$` 付きの絶対参照、範囲、他シートへの参照）を書き換え、
+   結合・フィルター・ウィンドウ枠の固定・入力規則と条件付き書式の
+   範囲・テーブルの参照・名前の定義・行と列の寸法をずらしたうえで、
+   `not_shifted` の一覧を含む JSON の報告を表示します。決まりごとと
+   限界は `references/restructuring.md` にあります。
+6. **CSV とのやり取り**: `csv_to_xlsx.py` はセルごとに整数・小数・
    真偽値・ISO 形式の日付を推測し、見出しの行に体裁を付けます。
    `xlsx_to_csv.py` は ISO 形式の日付を書き、空のセルは空文字にします。
    どちらも既定は UTF-8 で、`--encoding` を受け付けます（Excel と
    相性のよい BOM 付きなら `utf-8-sig`、古い Windows の書き出しなら
    `cp1252` など）。
+
+## PDF に変換する {#converting-to-pdf}
+
+LibreOffice は画面なしで変換できます（シート 1 枚を CSV で書き出す
+のにも使えます）:
+
+```bash
+soffice --headless --convert-to pdf report.xlsx --outdir out/
+soffice --headless --convert-to csv report.xlsx --outdir out/  # 1st sheet only
+```
+
+CSV に入るのは最初のシートだけです。ほかのシートは
+`xlsx_to_csv.py --sheet NAME` を使ってください。`soffice` が無い
+ときは、LibreOffice を入れるか、変換しないままファイルを渡します。
 
 ## つまずきやすいところ {#pitfalls}
 
@@ -137,11 +181,16 @@ JSON の指定は `write_file` で書き、スクリプトが出す JSON は
   `load_workbook(path, data_only=True)` を使ったときだけで、しかも
   そのファイルを以前に Excel か LibreOffice が保存していた場合に
   限られます。そうでなければ `None` が返ります。
-- **挿入と削除では参照がずれません。** `insert_rows` や
-  `delete_cols` などはセルの値を動かしますが、結合したセルの範囲、
-  数式の参照、グラフの位置、条件付き書式の範囲は更新しません。
-  結合や数式のあるシートで構造を変えたあとは、`--sheets` と
-  `--formulas` で見直して手で直してください。
+- **`xlsx_edit.py` の挿入と削除では参照がずれません**（openpyxl
+  そのままの動きです）。参照を追従させるには `xlsx_restructure.py`
+  を使ってください。ただしそれでも、グラフの位置、画像、条件付き
+  書式の条件そのものの数式は動かせません。JSON の報告にある
+  `not_shifted` の一覧と `references/restructuring.md` を読んでください。
+- **シートの保護は安全対策ではありません。** `--protect` は xlsx の
+  標準的なシート保護のハッシュを設定するだけで、行儀のよいアプリに
+  「ここは編集しないで」と伝える以上のことはしません。zip の中の XML を
+  直したり、LibreOffice でチェックを外したりすれば誰でも解除できます。
+  秘密や改ざん防止を、これに頼ってはいけません。暗号化は一切しません。
 - **`data_only=True` で読んでから保存すると**、数式がすべて何も
   言わずに消えます（計算済みの値に置き換わります）。それが目的で
   ない限り、そうやって読んだブックを保存してはいけません。
@@ -166,6 +215,9 @@ JSON の指定は `write_file` で書き、スクリプトが出す JSON は
 - `--json` でデータを書き出し、元の値と比べます。
 - 直したあと: 触った範囲をもう一度書き出します。数式を書いたなら、
   `--formulas` に並ぶことと `--recalc` を付けたことを確かめます。
+- `xlsx_restructure.py` のあと: JSON の報告を読み、`--formulas` と
+  `--sheets` をもう一度実行して、参照と範囲が思ったところに収まって
+  いるか確かめます。
 - 見た目までしっかり確かめたいときは LibreOffice で開きます:
   `soffice --headless --convert-to pdf out.xlsx` を実行し、その PDF を
   見てください。

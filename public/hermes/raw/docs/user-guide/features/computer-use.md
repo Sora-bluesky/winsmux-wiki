@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: d43f0584f7c92dd8e9d555fc746c99e52bd655e0
+upstream_blob: d1d2983c3fe5c7e0bc4556bc9ac21117d7b2397d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -101,35 +101,19 @@ hermes -t computer_use chat
 ## 権限のモードと、ログイン済みのブラウザプロファイル {#permission-modes-and-logged-in-browser-profiles}
 
 Hermes は、これまでの承認の使い勝手を cua-driver の変更できないランタイムの
-モードに対応づけます。権限のモード、機能マニフェストの承認、既存プロファイルの
-許可は、いずれも起動時の設定です。ランタイムが動き出したあとは変えられません。
+モードに対応づけます。権限のモードと機能マニフェストの承認は、起動時の設定です。
+ランタイムが動き出したあとは変えられません。
 
-| Hermes のセッション | cua-driver のモード | 人の介入 | `existing_profile` |
-|---|---|---|---|
-| 手動または smart の承認（既定） | `standard` | 通常の Hermes の承認。Cua は自身の保護された境界で止まります | `computer_use.grant_existing_profile: true`（設定での 1 回きりの許可）が無ければ拒否します |
-| `computer_use.permission_mode: bounded` と、確認済みのマニフェスト | 専用の `bounded` デーモン | 起動時に一度だけ、機能マニフェストを読んで承認します | マニフェストに書かれたプロファイル・オリジン・ツールの中でだけ許され、それ以外は遮断されます |
-| `--yolo`、`/yolo`、または `approvals.mode: off` | 専用の `unrestricted` デーモン | Hermes 側で危険を承知したことを一度明示するだけ。実行中に Cua が確認を求めることはありません | `computer_use.grant_existing_profile: true` が無ければ拒否します。YOLO はこの許可の代わりにはなりません |
+| Hermes のセッション | cua-driver のモード | 人の介入 |
+|---|---|---|
+| 手動または smart の承認（既定） | `standard` | 通常の Hermes の承認。Cua は自身の保護された境界で止まります |
+| `computer_use.permission_mode: bounded` と、確認済みのマニフェスト | 専用の `bounded` デーモン | 起動時に一度だけ、機能マニフェストを読んで承認します |
+| `--yolo`、`/yolo`、または `approvals.mode: off` | 専用の `unrestricted` デーモン | Hermes 側で危険を承知したことを一度明示するだけ。実行中に Cua が確認を求めることはありません |
 
-### ログイン済みのブラウザにつなぐ {#attaching-to-your-signed-in-browser}
-
-エージェントは、すでに開いている Chrome や Edge の窓を、ログイン済みの
-プロファイルごと動かせます。しかも **ブラウザを再起動したり、プロファイルを
-複製したり、開いているタブに触れたりせずに** です。DevTools でつなぐと
-そのプロファイルの生きたページ・Cookie・ストレージが見えてしまうため、
-cua-driver は人による明示的な許可を求めます。通常のツール承認では代わりになりません。
-config.yaml で一度だけ許可します。
-
-```yaml
-computer_use:
-  grant_existing_profile: true
-```
-
-すると Hermes は、信頼された起動元からの許可（`--grant existing-profile`）を付けて
-cua-driver のランタイムを立ち上げ、
-既存プロファイルを指定した `cua_browser_prepare` が、エージェントが示した
-`(pid, window_id)` に対して成功するようになります。`false`（既定）のままなら、
-既存プロファイルへの接続は遮断されます。ドライバーが持つ分離されたプロファイルは
-どちらの設定でも使え、エージェントもそちらを好みます。
+ブラウザでの作業は、ログイン済みのプロファイルで開いているページも含めて、
+`computer_use` ではなく `browser` のツール群（`browser_exec`）が受け持ちます。
+かつてあった `computer_use.grant_existing_profile` の許可設定は、
+専用のブラウザ経路もろとも無くなりました。config.yaml に残っていても無視されます。
 
 ### 繰り返しの自動処理には bounded モード {#bounded-mode-for-repeatable-automation}
 
@@ -170,15 +154,14 @@ MCP の各つなぎ口は、自分のランタイムの中に専用の生存管�
 外から見えるセッション名は、カーソルの見分けとセッション単位の状態に付ける
 ただの札です。ランタイムを選んだり、共有したり、生かし続けたりはしません。
 `/yolo` を切る、Hermes のセッションを初期化または終了する、中断時の後片付け、
-プロセスの終了。いずれでもそのつなぎ口のセッションは閉じます。Hermes は、bounded・
-unrestricted・既存プロファイルへの接続のために自分で起動した専用ランタイムも止めます。
-ある Hermes の会話が、別のランタイムのモードや許可を変えることはできません。macOS では、
-既存プロファイルの許可を持つ標準ランタイムは、専用のソケット上に新しい CuaDriver.app の
-デーモンを立てます。bounded と unrestricted のモードは、Hermes ホストの名義で動く
+プロセスの終了。いずれでもそのつなぎ口のセッションは閉じます。Hermes は、bounded や
+unrestricted のために自分で起動した専用ランタイムも止めます。
+ある Hermes の会話が、別のランタイムのモードや許可を変えることはできません。
+bounded と unrestricted のモードは、Hermes ホストの名義で動く
 専用の組み込みサービスを使います。
 
-`smart` の承認は `standard` のままです。LLM による分類が、確認済みのマニフェストや
-起動時の許可の代わりになることはありません。
+`smart` の承認は `standard` のままです。LLM による分類が、確認済みの
+マニフェストの代わりになることはありません。
 
 :::warning
 YOLO や unrestricted のモードは、プロンプトインジェクションや意図しない入力を防いでは
@@ -442,7 +425,6 @@ Hermes は何重にも歯止めをかけています。
 computer_use:
   permission_mode: standard        # standard (default) | bounded
   capability_manifest: ""          # capability manifest path, required for bounded
-  grant_existing_profile: false    # opt-in: attach in standard or unrestricted mode
 ```
 
 ドライバーのバイナリの場所を上書きする（テスト / CI / 自前ビルド向け）:

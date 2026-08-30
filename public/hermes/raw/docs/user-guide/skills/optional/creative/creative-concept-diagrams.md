@@ -2,7 +2,7 @@
 title: "Concept Diagrams — フラットで最小限の教材向け SVG を HTML として作る"
 description: "フラットで最小限の教材向け SVG を HTML として作る"
 upstream_path: user-guide/skills/optional/creative/creative-concept-diagrams.md
-upstream_blob: 09ac135f4ae369651cbf3d2eedcf223e215ba629
+upstream_blob: cc0bc64a8b847fc74b7b1a3a63e7b8154448ac3d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-concept-diagrams
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/concept-diagrams` で入れます |
-| パス | `optional-skills/creative/concept-diagrams` |
+| パス | `optional-skills/creative\concept-diagrams` |
 | バージョン | `0.1.0` |
 | 作者 | v1k22（もとの PR）、hermes-agent へ移植 |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `diagrams`, `svg`, `visualization`, `education`, `physics`, `chemistry`, `engineering` |
-| 関連 skill | [`architecture-diagram`](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/), [`excalidraw`](/hermes/docs/user-guide/skills/bundled/creative/creative-excalidraw/) |
+| 関連 skill | [`architecture-diagram`](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/), [`excalidraw`](/hermes/docs/user-guide/skills/optional/creative/creative-excalidraw/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -318,7 +318,7 @@ mkdir -p .diagrams/sn2-mechanism
 # ...write .diagrams/sn2-mechanism/index.html...
 
 # Serve on loopback only, free port
-cd .diagrams && python3 -c "
+cd .diagrams && python -c "
 
 with socketserver.TCPServer(('127.0.0.1', 0), http.server.SimpleHTTPRequestHandler) as s:
     print(f'Serving at http://127.0.0.1:{s.server_address[1]}/')

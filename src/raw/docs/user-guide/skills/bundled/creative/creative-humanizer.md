@@ -2,7 +2,7 @@
 title: "Humanizer — テキストを人間らしくする: AI 特有の言い回しを取り除き、本物の声を足す"
 description: "テキストを人間らしくする: AI 特有の言い回しを取り除き、本物の声を足す"
 upstream_path: user-guide/skills/bundled/creative/creative-humanizer.md
-upstream_blob: 4474c11114ebabfdda63138555c625f83c4e8990
+upstream_blob: e36d984c0d8f34fb2cdd2fb4b4ca1cc7e8d9b458
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-humanizer
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative/humanizer` |
+| パス | `skills/creative\humanizer` |
 | バージョン | `2.5.1` |
 | 作者 | Siqi Chen (@blader, https://github.com/blader/humanizer)、Hermes Agent が移植 |
 | ライセンス | MIT |

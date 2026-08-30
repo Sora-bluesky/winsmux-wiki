@@ -2,7 +2,7 @@
 title: "Baoyu Article Illustrator — 記事の挿絵。型 × 画風 × 配色をそろえて作る"
 description: "記事の挿絵。型 × 画風 × 配色をそろえて作る"
 upstream_path: user-guide/skills/optional/creative/creative-baoyu-article-illustrator.md
-upstream_blob: 2fbe498b784c20e8cd678742051d6fa730d83b21
+upstream_blob: f6a7395b28b3fbf81defdda9a7838eed9d83b640
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/creative/baoyu-article-illustrator` で導入します |
-| パス | `optional-skills/creative/baoyu-article-illustrator` |
+| パス | `optional-skills/creative\baoyu-article-illustrator` |
 | バージョン | `1.57.0` |
 | 作者 | 宝玉 (JimLiu) |
 | ライセンス | MIT |
@@ -49,7 +49,7 @@ sources:
 
 自由に組み合わせられます: `type=infographic, style=vector-illustration, palette=macaron`。
 
-まとめ指定もできます。`edu-visual` のように、型・画風・配色を一度に決められます。[style-presets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/style-presets.md) を見てください。
+まとめ指定もできます。`edu-visual` のように、型・画風・配色を一度に決められます。[style-presets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/style-presets.md) を見てください。
 
 ## 型 {#types}
 
@@ -64,7 +64,7 @@ sources:
 
 ## 画風 {#styles}
 
-主な画風、全体の見本、型 × 画風の相性は [references/styles.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/styles.md) にあります。
+主な画風、全体の見本、型 × 画風の相性は [references/styles.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/styles.md) にあります。
 
 ## 出力の構成 {#output-structure}
 
@@ -117,7 +117,7 @@ sources:
 2. `write_file` や `read_file` で画像そのものを写そうとしては**いけません**。これらは文字しか扱えません。手元に控えを置きたいときは `terminal` を使います（`cp "$src" "{output-dir}/references/NN-ref-{slug}.{ext}"`）。この skill 自体は画像そのものを読む必要がなく、見て書き起こした説明だけで動きます。
 3. `image_generate` は画像を入力として受け取らないので、手順 5 でプロンプトに埋め込まれるのは、この書き起こした説明です。
 
-詳しい手順: [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/workflow.md#step-1-detect-reference-images)。
+詳しい手順: [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/workflow.md#step-1-detect-reference-images)。
 
 ### 手順 2: 読み解く {#step-2-analyze}
 
@@ -130,7 +130,7 @@ sources:
 
 元の内容を読み（ファイルの場所なら `read_file`、貼り付けた本文ならそのまま）、読み解いた結果を `write_file` で `{output-dir}/analysis.md` に書きます。
 
-詳しい手順: [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/workflow.md#step-2-analyze)。
+詳しい手順: [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/workflow.md#step-2-analyze)。
 
 ### 手順 3: 設定を確かめる {#step-3-confirm-settings}
 
@@ -146,7 +146,7 @@ sources:
 
 `clarify` の質問を続けざまに 2〜3 個より多く出さないでください。依頼にすでに書かれているなら、まるごと飛ばします。
 
-詳しい手順: [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/workflow.md#step-3-confirm-settings)。
+詳しい手順: [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/workflow.md#step-3-confirm-settings)。
 
 ### 手順 4: 構成を作る → `outline.md` {#step-4-generate-outline-outlinemd}
 
@@ -160,7 +160,7 @@ sources:
 **Filename**: 01-infographic-concept-name.png
 ```
 
-ひな型の全文: [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/workflow.md#step-4-generate-outline)。
+ひな型の全文: [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/workflow.md#step-4-generate-outline)。
 
 ### 手順 5: プロンプトを作る {#step-5-generate-prompts}
 
@@ -168,7 +168,7 @@ sources:
 
 挿絵ごとに、こうします。
 
-1. [references/prompt-construction.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/prompt-construction.md) に沿ってプロンプトのファイルを作ります。
+1. [references/prompt-construction.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/prompt-construction.md) に沿ってプロンプトのファイルを作ります。
 2. `write_file` で `{output-dir}/prompts/NN-{type}-{slug}.md` に、先頭を YAML にして保存します。
 3. プロンプトは型ごとのひな型を必ず使い、節（ZONES / LABELS / COLORS / STYLE / ASPECT）に分けて書きます。
 4. LABELS には記事そのものの内容を必ず入れます。実際の数字、用語、指標、引用です。
@@ -187,7 +187,7 @@ sources:
 
 ### 手順 7: 仕上げる {#step-7-finalize}
 
-対応する段落のうしろに `![description](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/{relative-path}/NN-{type}-{slug}.png)` を差し込みます。代替テキストは、記事と同じ言語で短く書きます。
+対応する段落のうしろに `![description](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/{relative-path}/NN-{type}-{slug}.png)` を差し込みます。代替テキストは、記事と同じ言語で短く書きます。
 
 報告はこうします。
 
@@ -209,11 +209,11 @@ Images: X/N generated
 
 | ファイル | 中身 |
 |------|---------|
-| [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/workflow.md) | 詳しい手順 |
-| [references/usage.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/usage.md) | 呼び出し方の例 |
-| [references/styles.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/styles.md) | 画風の見本と配色の見本 |
-| [references/style-presets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/style-presets.md) | まとめ指定（型 + 画風 + 配色） |
-| [references/prompt-construction.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-article-illustrator/references/prompt-construction.md) | プロンプトのひな型 |
+| [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/workflow.md) | 詳しい手順 |
+| [references/usage.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/usage.md) | 呼び出し方の例 |
+| [references/styles.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/styles.md) | 画風の見本と配色の見本 |
+| [references/style-presets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/style-presets.md) | まとめ指定（型 + 画風 + 配色） |
+| [references/prompt-construction.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\baoyu-article-illustrator/references/prompt-construction.md) | プロンプトのひな型 |
 
 ## つまずきやすいところ {#pitfalls}
 

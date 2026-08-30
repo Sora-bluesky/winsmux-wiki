@@ -2,7 +2,7 @@
 title: "Clip — 学習なしでの画像の分類と、画像と文章での検索"
 description: "学習なしでの画像の分類と、画像と文章での検索"
 upstream_path: user-guide/skills/optional/mlops/mlops-clip.md
-upstream_blob: e9266e443b29d3f229ce6d1fa26bac387efa465e
+upstream_blob: d0fded797ef763af98631b9c90bea83b270b866f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-clip
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/clip` で導入します |
-| パス | `optional-skills/mlops/clip` |
+| パス | `optional-skills/mlops\clip` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

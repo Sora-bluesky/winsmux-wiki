@@ -2,7 +2,7 @@
 title: "Outlines — Outlines: JSON・正規表現・Pydantic で形を決めた LLM の生成"
 description: "Outlines: JSON・正規表現・Pydantic で形を決めた LLM の生成"
 upstream_path: user-guide/skills/optional/mlops/mlops-inference-outlines.md
-upstream_blob: 6e247586b9e242ef3d39826401fc99cc3d81bf46
+upstream_blob: 2e0e076e9195babd009e68d24e479d323b6e8f52
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-inference-outlines
 ---
@@ -16,7 +16,7 @@ Outlines: JSON・正規表現・Pydantic で形を決めた LLM の生成を行�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/outlines` で導入します |
-| パス | `optional-skills/mlops/inference/outlines` |
+| パス | `optional-skills/mlops\inference\outlines` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

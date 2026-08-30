@@ -2,7 +2,7 @@
 title: "Heartmula — HeartMuLa: 歌詞とタグから Suno のように曲を作る"
 description: "HeartMuLa: 歌詞とタグから Suno のように曲を作る"
 upstream_path: user-guide/skills/optional/creative/creative-heartmula.md
-upstream_blob: 052970f3bb63ed25218d550d4644c44ee2cd90db
+upstream_blob: ed2182277042bb08f6cd780de80e996504c924a3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-heartmula
 ---
@@ -16,7 +16,7 @@ HeartMuLa: 歌詞とタグから Suno のように曲を作ります。
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/heartmula` で入れます |
-| パス | `optional-skills/creative/heartmula` |
+| パス | `optional-skills/creative\heartmula` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium (teknium1)、Hermes Agent |
 | ライセンス | MIT |

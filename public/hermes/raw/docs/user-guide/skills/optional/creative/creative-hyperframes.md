@@ -2,7 +2,7 @@
 title: "Hyperframes — HTML の composition から MP4/WebM の動画を書き出す"
 description: "HTML の composition から MP4/WebM の動画を書き出す"
 upstream_path: user-guide/skills/optional/creative/creative-hyperframes.md
-upstream_blob: 3f453acd8db8989ff97889785e40d00f670b6098
+upstream_blob: 1a8afaa9e1d7c9201f6f80f0e0d49066ab095275
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-hyperframes
 ---
@@ -16,7 +16,7 @@ HTML の composition から MP4/WebM の動画を書き出します。
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/hyperframes` で入れます |
-| パス | `optional-skills/creative/hyperframes` |
+| パス | `optional-skills/creative\hyperframes` |
 | バージョン | `1.0.0` |
 | 作者 | heygen-com |
 | ライセンス | Apache-2.0 |
@@ -58,14 +58,16 @@ HTML の composition から MP4/WebM の動画を書き出します。
 npx hyperframes init my-video               # scaffold a project
 cd my-video
 npx hyperframes lint                        # validate before preview/render
-npx hyperframes preview                     # live-reload browser preview (port 3002)
+npx hyperframes preview                     # live-reload preview (long-lived server, port 3002)
 npx hyperframes render --output final.mp4   # render to MP4
 npx hyperframes doctor                      # diagnose environment issues
 ```
 
+`preview` は**動かしっぱなしになる** Next.js のサーバーで、書き出し用の Chrome のワーカーを開いたまま保ちます。使い終わったら必ず止めてください（[片づけ](#cleanup) を参照）。止め忘れると、何もしていない `chrome-headless-shell` のワーカーが残り続け、GPU のない環境（WSL、コンテナ、CI）ではソフトウェアの WebGL（swiftshader）で 1 つにつき CPU のコアを 1 つ、いつまでも使い続けます。
+
 書き出しのフラグ: `--quality draft|standard|high` · `--fps 24|30|60` · `--format mp4|webm` · `--docker`（毎回同じ結果になります）· `--strict`。
 
-CLI の全体は [references/cli.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/cli.md) を参照してください。
+CLI の全体は [references/cli.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/cli.md) を参照してください。
 
 ## 準備（最初の 1 回だけ） {#setup-one-time}
 
@@ -79,7 +81,7 @@ bash "$(dirname "$(find ~/.hermes/skills -path '*/hyperframes/SKILL.md' 2>/dev/n
 3. Puppeteer 経由で `chrome-headless-shell` をあらかじめ用意します。Chrome の `HeadlessExperimental.beginFrame` を使ういちばん品質のよい取り込み方法には、これが**必要**です。
 4. `npx hyperframes doctor` を実行して結果を表示します。
 
-準備がうまくいかない場合は [references/troubleshooting.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/troubleshooting.md) を参照してください。
+準備がうまくいかない場合は [references/troubleshooting.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/troubleshooting.md) を参照してください。
 
 ## 手順 {#procedure}
 
@@ -116,7 +118,7 @@ npx hyperframes init my-video --non-interactive
 
 主役のコマの見た目が整ってから、`gsap.from()` で登場（CSS で決めた位置**へ**動かします）と `gsap.to()` で退場（その位置**から**動かします）を足します。
 
-data 属性の一覧と composition の決まりは [references/composition.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/composition.md) を参照してください。
+data 属性の一覧と composition の決まりは [references/composition.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/composition.md) を参照してください。
 
 ### 4. GSAP で動かす {#4-animate-with-gsap}
 
@@ -127,7 +129,7 @@ data 属性の一覧と composition の決まりは [references/composition.md](
 - 毎回同じ結果になるようにする。`Math.random()`、`Date.now()`、時計に頼る処理は使いません。ばらつきが要る場合は、種を固定した疑似乱数を使ってください
 - 同期的に組み立てる。タイムラインを作るところに `async`／`await`、`setTimeout`、Promise を使ってはいけません
 
-GSAP の中心的な使い方（tween、イージング、stagger、タイムライン）は [references/gsap.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/gsap.md) を参照してください。
+GSAP の中心的な使い方（tween、イージング、stagger、タイムライン）は [references/gsap.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/gsap.md) を参照してください。
 
 ### 5. 場面のあいだの転換 {#5-transitions-between-scenes}
 
@@ -163,11 +165,26 @@ npx hyperframes render --quality high --output final.mp4     # final delivery
 
 ### 8. Web サイトから動画へ（URL をもらった場合） {#8-website-to-video-if-the-user-gives-a-url}
 
-[references/website-to-video.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/website-to-video.md) にある、取り込みから動画までの 7 段階の手順を使ってください。取り込み → DESIGN.md → SCRIPT.md → 絵コンテ → composition → 書き出し → 受け渡し、の順です。
+[references/website-to-video.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/website-to-video.md) にある、取り込みから動画までの 7 段階の手順を使ってください。取り込み → DESIGN.md → SCRIPT.md → 絵コンテ → composition → 書き出し → 受け渡し、の順です。
+
+## 片づけ {#cleanup}
+
+`render` は 1 回きりです（終わるとワーカーも終了します）。`preview` は**そうではありません**。裏で Next.js のサーバーが動き続け、止めるまで Chrome のワーカーを常駐させます。動かしたままにしないでください。GPU のない環境では、何もしていないワーカーの swiftshader が CPU のコアを 1 つ占有し続け、何日も開きっぱなしにするとそれが積み重なります。
+
+利用者が確認し終わったら（あるいは次の preview を始める前に）止めてください:
+
+```bash
+pkill -f "hyperframes.*preview"     # the Studio server (frees port 3002)
+pkill -f chrome-headless-shell      # its render workers; only safe if nothing else uses them
+```
+
+ほかのツールが `chrome-headless-shell` を使っているかどうか分からないときは、先に確かめてください: `pgrep -af chrome-headless-shell`。何もしていないワーカーがたくさん残って CPU を使い続け、端末が重くなったときも同じ手順で戻せます。[references/troubleshooting.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/troubleshooting.md#runaway-cpu-from-leftover-preview-workers) を参照してください。
 
 ## つまずきやすいところ {#pitfalls}
 
-- **`HeadlessExperimental.beginFrame' wasn't found`** — Chromium 147 以降でこの仕組みがなくなりました。`hyperframes@>=0.4.2` を使っていることを確かめてください（自動で判断して、スクリーンショット方式に切り替わります）。逃げ道は `export PRODUCER_FORCE_SCREENSHOT=true` です。[hyperframes#294](https://github.com/heygen-com/hyperframes/issues/294) と [references/troubleshooting.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/troubleshooting.md) を参照してください。
+- **`preview` を動かしっぱなしにする** — これは Chrome のワーカーを抱えたまま動き続けるサーバーです。WSL やコンテナ、CI では、何もしていないワーカーがそれぞれ CPU のコアを 1 つ使います（ソフトウェアの WebGL）。使い終わったら止めてください。[片づけ](#cleanup) を参照してください。
+
+- **`HeadlessExperimental.beginFrame' wasn't found`** — Chromium 147 以降でこの仕組みがなくなりました。`hyperframes@>=0.4.2` を使っていることを確かめてください（自動で判断して、スクリーンショット方式に切り替わります）。逃げ道は `export PRODUCER_FORCE_SCREENSHOT=true` です。[hyperframes#294](https://github.com/heygen-com/hyperframes/issues/294) と [references/troubleshooting.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/troubleshooting.md) を参照してください。
 - **端末の Chrome を使ってしまう（`chrome-headless-shell` ではなく）** — 書き出しが 120 秒止まったあと時間切れになります。`npx puppeteer browsers install chrome-headless-shell` を実行してください（setup.sh がこれをします）。どちらが使われるかは `hyperframes doctor` が教えてくれます。
 - **どこかに `repeat: -1` がある** — 取り込みのしくみが壊れます。必ず有限の繰り返し回数を計算してください。
 - **あとから登場する clip の要素への `gsap.set()`** — ページの読み込み時点ではその要素がありません。代わりにタイムラインの中で `tl.set(selector, vars, timePosition)` を、その clip の `data-start` 以降の位置に置いてください。
@@ -198,9 +215,9 @@ npx hyperframes render --quality high --output final.mp4     # final delivery
 
 ## 参考資料 {#references}
 
-- [composition.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/composition.md) — data 属性、タイムラインの約束ごと、動かせない決まり、文字と素材の決まり
-- [cli.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/cli.md) — すべての CLI コマンド（init、capture、lint、validate、inspect、preview、render、transcribe、tts、doctor、browser、info、upgrade、benchmark）
-- [gsap.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/gsap.md) — HyperFrames のための GSAP の基本（tween、イージング、stagger、タイムライン、matchMedia）
-- [features.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/features.md) — 字幕、音声合成、音への反応、マーカーふうの強調、転換（必要なときに読み込みます）
-- [website-to-video.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/website-to-video.md) — 取り込みから動画までの 7 段階の手順
-- [troubleshooting.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/hyperframes/references/troubleshooting.md) — OpenClaw の対処、環境変数、よくある書き出しエラー
+- [composition.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/composition.md) — data 属性、タイムラインの約束ごと、動かせない決まり、文字と素材の決まり
+- [cli.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/cli.md) — すべての CLI コマンド（init、capture、lint、validate、inspect、preview、render、transcribe、tts、doctor、browser、info、upgrade、benchmark）
+- [gsap.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/gsap.md) — HyperFrames のための GSAP の基本（tween、イージング、stagger、タイムライン、matchMedia）
+- [features.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/features.md) — 字幕、音声合成、音への反応、マーカーふうの強調、転換（必要なときに読み込みます）
+- [website-to-video.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/website-to-video.md) — 取り込みから動画までの 7 段階の手順
+- [troubleshooting.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\hyperframes/references/troubleshooting.md) — OpenClaw の対処、環境変数、よくある書き出しエラー

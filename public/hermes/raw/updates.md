@@ -25,7 +25,7 @@ raw: /hermes/raw/updates.md
 
 ## 2026-08-27
 
-- [CLI コマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [CLI コマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 
 ## 2026-08-27
 
@@ -69,7 +69,7 @@ raw: /hermes/raw/updates.md
 - [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
 - [定期実行がうまくいかないとき](https://wiki.winsmux.dev/hermes/docs/guides/cron-troubleshooting/)
 - [LLM とモデルのプロバイダー](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
-- [CLI コマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [CLI コマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
 - [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
 - [Bot モード](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
@@ -107,7 +107,7 @@ raw: /hermes/raw/updates.md
 - [AWS Bedrock](https://wiki.winsmux.dev/hermes/docs/guides/aws-bedrock/)
 - [MCP で Hermes Cloud を管理する](https://wiki.winsmux.dev/hermes/docs/guides/manage-hermes-cloud-with-mcp/)
 - [LLM とモデルのプロバイダー](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
-- [CLI コマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [CLI コマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - [Bot モード](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
 - [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - [Hermes デスクトップアプリ](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)

@@ -2,7 +2,7 @@
 title: "カンバン（マルチエージェント・ボード）"
 description: "複数の Hermes プロファイルを協調させるための、SQLite に永続化されたタスクボード"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: eacc539e1656a016768d556959acdc44f567851b
+upstream_blob: fccda51c1b0dce4a6ee2093db39b02fe5565c64e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -957,7 +957,7 @@ EOF
 自分の側を捨てます。代わりに、**第三の中立なプロファイル** に割り当てた収拾のカードを作り、
 ぶつかった **両方の** カードを親としてリンクします。親のリンクが両者の完了の要約を
 収拾役の文脈へ運ぶので、両方の差分 *と* 両方の意図が届きます。同梱の
-[`merge-reconciler` スキル](https://github.com/NousResearch/hermes-agent/blob/main/skills/autonomous-ai-agents/merge-reconciler/SKILL.md)
+[`agent-merge-conflict-arbiter` 追加スキル](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/autonomous-ai-agents/agent-merge-conflict-arbiter/SKILL.md)
 は、そのワーカーに手順一式を渡します。ぶつかった箇所を種類ごとに分け、
 どちらにも肩入れせずに解決し、確かめ、下したすべての判断を挙げた要約を返す、という流れです。
 
@@ -980,7 +980,7 @@ hotspot: hermes_cli/kanban_db.py — third conflicting edit to the dispatch loop
 そのファイルに触れる作業をこれ以上並べる **前に**、そのファイル専用の整理・分解の
 カードを作ってください。的になっているファイルを割るほうが、そこから生まれる
 将来の衝突をすべて収めるより安く済みます。*すでに* 起きてしまった衝突には、
-上の収拾のカードのパターンと `merge-reconciler` スキルを使ってください。hotspot の
+上の収拾のカードのパターンと `agent-merge-conflict-arbiter` 追加スキルを使ってください。hotspot の
 印は、収拾役が常設の担当になってしまうのを防ぐ、上流側の手当てです。
 
 ## 複数テナントでの使い方 {#multi-tenant-usage}

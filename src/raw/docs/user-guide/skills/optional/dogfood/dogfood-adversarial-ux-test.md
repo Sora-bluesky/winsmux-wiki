@@ -2,7 +2,7 @@
 title: "Adversarial Ux Test — 意地の悪い利用者を演じて、使いにくさを見つけて仕分ける"
 description: "意地の悪い利用者を演じて、使いにくさを見つけて仕分ける"
 upstream_path: user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test.md
-upstream_blob: 2a552a58464e36992789e533873aacc1574cbe5b
+upstream_blob: 4bef37dab10befa5c6108a6a31084ccef5b2eaf0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/dogfood/adversarial-ux-test` で入れます |
-| パス | `optional-skills/dogfood/adversarial-ux-test` |
+| パス | `optional-skills/dogfood\adversarial-ux-test` |
 | バージョン | `1.0.0` |
 | 作者 | Omni @ Comelse |
 | ライセンス | MIT |

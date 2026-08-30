@@ -2,7 +2,7 @@
 title: "3 Statement Model — Excel で IS/BS/CF が連動する財務ブックを作る"
 description: "Excel で IS/BS/CF が連動する財務ブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-3-statement-model.md
-upstream_blob: d945e58e49a3a7b289f6ad5a0430b470184d38ee
+upstream_blob: 250d7fadf49b5ddd047afd304b6d7277cac2d293
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-3-statement-model
 ---
@@ -16,7 +16,7 @@ Excel で IS/BS/CF が連動する財務ブックを作ります。
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/finance/3-statement-model` で入れます |
-| パス | `optional-skills/finance/3-statement-model` |
+| パス | `optional-skills/finance\3-statement-model` |
 | バージョン | `1.0.0` |
 | 作者 | Anthropic（Nous Research が移植） |
 | ライセンス | Apache-2.0 |
@@ -195,7 +195,7 @@ Assumptions タブにシナリオ切替（ドロップダウン）を置き、CH
 
 ## SEC 提出書類からのデータ抽出 {#sec-filings-data-extraction}
 
-テンプレートが SEC 提出書類（10-K、10-Q）からのデータ取得を明確に必要とする場合は、抽出の詳しい手順を [references/sec-filings.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/finance/3-statement-model/references/sec-filings.md) で確認してください。この参照が要るのは、規制当局への提出書類にある上場企業のデータでテンプレートを埋めるときだけです。
+テンプレートが SEC 提出書類（10-K、10-Q）からのデータ取得を明確に必要とする場合は、抽出の詳しい手順を [references/sec-filings.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/finance\3-statement-model/references/sec-filings.md) で確認してください。この参照が要るのは、規制当局への提出書類にある上場企業のデータでテンプレートを埋めるときだけです。
 
 ## モデルのテンプレートを仕上げる {#completing-model-templates}
 
@@ -328,7 +328,7 @@ Assumptions タブにシナリオ切替（ドロップダウン）を置き、CH
 
 ### 常に成り立つべき中核のリンク {#core-linkages-must-always-hold}
 
-数式の詳細は [references/formulas.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/finance/3-statement-model/references/formulas.md) にすべて載っています。
+数式の詳細は [references/formulas.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/finance\3-statement-model/references/formulas.md) にすべて載っています。
 
 | チェック | 計算式 | 期待される結果 |
 |-------|---------|-----------------|

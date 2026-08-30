@@ -2,7 +2,7 @@
 title: "Jupyter Notebook — 動いている Jupyter カーネルで Python を少しずつ試す（hamelnb）"
 description: "動いている Jupyter カーネルで Python を少しずつ試す（hamelnb）"
 upstream_path: user-guide/skills/optional/data-science/data-science-jupyter-notebook.md
-upstream_blob: a869a968d218f28b9f31dcb8768cdd78cf949863
+upstream_blob: 3d5f5780ff75f0414daad20c5e4160c791fabea5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/data-science/data-science-jupyter-notebook
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/data-science/jupyter-notebook` で導入します |
-| パス | `optional-skills/data-science/jupyter-notebook` |
+| パス | `optional-skills/data-science\jupyter-notebook` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -91,7 +91,7 @@ mkdir -p ~/notebooks
 ```
 curl -s -X POST http://127.0.0.1:8888/api/sessions \
   -H "Content-Type: application/json" \
-  -d '{"path":"scratch.ipynb","type":"notebook","name":"scratch.ipynb","kernel":{"name":"python3"}}'
+  -d '{"path":"scratch.ipynb","type":"notebook","name":"scratch.ipynb","kernel":{"name":"python"}}'
 ```
 
 ## 基本の流れ {#core-workflow}

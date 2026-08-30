@@ -2,7 +2,7 @@
 title: "One Three One Rule — 1-3-1 形式の提案書。課題ひとつ、選択肢三つ、推す案ひとつ"
 description: "1-3-1 形式の提案書。課題ひとつ、選択肢三つ、推す案ひとつ"
 upstream_path: user-guide/skills/optional/communication/communication-one-three-one-rule.md
-upstream_blob: c0471b16ee73a4056d98f7b8d1935368e1f7338f
+upstream_blob: ff2a994e8616addbf4c1ce029cc02e197c716dc9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/communication/communication-one-three-one-rule
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/communication/one-three-one-rule` で導入します |
-| パス | `optional-skills/communication/one-three-one-rule` |
+| パス | `optional-skills/communication\one-three-one-rule` |
 | バージョン | `1.0.0` |
 | 作者 | Willard Moore |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: 146b53b58a5d862ca6a832d10270cf3a88550906
+upstream_blob: 2234289af44127404d060cb357c1f43efbcd6f6b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -100,7 +100,7 @@ compression:
   codex_gpt55_autoraise_notice: true  # Show the one-time autoraise notice (default: true)
   codex_app_server_auto: native  # native|hermes|off for Codex app-server thread compaction
   codex_responses_native: false  # gpt-5.6 on direct OpenAI/Codex: server-side compaction (opt-in)
-  codex_responses_compact_threshold: 200000  # Server-side compaction trigger (input tokens)
+  codex_responses_compact_threshold: null  # Automatic server compaction trigger
   in_place: true             # Compact on the same session id, no rotation (default: true)
 
 # Summarization model/provider configured under auxiliary:
@@ -127,7 +127,7 @@ auxiliary:
 | `codex_gpt55_autoraise_notice` | `true` | 真偽値 | Codex の gpt-5.5 で引き上げが起きたときの一度きりのお知らせを表示します。`false` にすると 85% への引き上げは保ったまま、表示だけを止めます |
 | `codex_app_server_auto` | `native` | `native`, `hermes`, `off` | Codex app-server のセッションでのスレッド圧縮の方式です（後述） |
 | `codex_responses_native` | `false` | 真偽値 | OpenAI の Responses API によるサーバー側の圧縮を使います。OpenAI の API を直接使う場合か ChatGPT Codex の契約で、gpt-5.6 系のモデルのときだけ働きます（後述） |
-| `codex_responses_compact_threshold` | `200000` | 1トークン以上 | サーバー側の圧縮が動き出す入力トークン数です。リクエストの時点で手元の圧縮のしきい値より下に抑えられ、サーバー側が先に圧縮するようになっています |
+| `codex_responses_compact_threshold` | `null` | `null` または正の整数 | `null` の場合は、手元で決まった圧縮の起動点から 8,192 トークンの余裕を引いた値に従います。正の整数を入れるとその値がそのまま使われ、必要なときだけ下方向に抑えられます。おかしな値を入れたときは自動の動きになります。自動のときに使える手元の起動点がなければ `200000` に戻ります |
 | `in_place` | `true` | 真偽値 | 新しいセッション ID に移らず、同じセッション ID のまま圧縮します（後述） |
 
 ### 同じ場所での圧縮（セッション ID をひとつに保つ） {#in-place-compaction-single-stable-session-id}
@@ -269,6 +269,14 @@ OpenAI の Responses API はサーバー側の圧縮に対応しています。�
 そのセッションでの標準の圧縮を止め、項目を外してリクエストをやり直します。
 セッションを対象外のモデルや経路に切り替えた場合は、単に項目が送られなくなります。
 取り込んだ途中経過は、接続先が変わった時点で、発行元をまたぐことを防ぐ既存の仕組みによって再送から外されます。
+
+既定では `compression.codex_responses_compact_threshold: null` になっていて、
+サーバー側のしきい値は手元で決まった起動点から導かれます。たとえば手元の起動点が
+76 万 5000 なら 75 万 6808 が選ばれます。20 万のような決まった値をそのまま使いたい
+ときは、正の整数を設定します。おかしな値を入れたときは自動の動きになります。
+使える手元の起動点がなければ、自動のときは 20 万を使います。提供元が受け付ける
+最小は 1,024 トークンなので、手元の起動点がその下限と同じか下回るほど小さい場合は、
+サーバー側を必ず先に動かす順序を保てません。
 
 ### 計算された値（既定の設定で、コンテキストが 20 万トークンのモデルの場合） {#computed-values-for-a-200k-context-model-at-defaults}
 

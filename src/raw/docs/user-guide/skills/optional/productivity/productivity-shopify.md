@@ -2,7 +2,7 @@
 title: "Shopify — curl で Shopify の Admin / Storefront GraphQL API を使う"
 description: "curl で Shopify の Admin / Storefront GraphQL API を使う"
 upstream_path: user-guide/skills/optional/productivity/productivity-shopify.md
-upstream_blob: a552bc5bfdbd9e979ca7d1a90e0abd3d2c303ea4
+upstream_blob: 622860fe727179e76fa5ae98adc62b56b93a06a0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-shopify
 ---
@@ -16,7 +16,7 @@ curl で Shopify の Admin / Storefront GraphQL API を使います。
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/productivity/shopify` で導入します |
-| パス | `optional-skills/productivity/shopify` |
+| パス | `optional-skills/productivity\shopify` |
 | バージョン | `1.0.0` |
 | 作者 | community |
 | ライセンス | MIT |

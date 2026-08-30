@@ -2,7 +2,7 @@
 title: "繰り返しのループ"
 description: "セッションの中で、決まった間隔ごとにプロンプトを流し直す — Claude Code の /loop に対する Hermes なりの答え"
 upstream_path: user-guide/features/loops.md
-upstream_blob: 7b066b44ba0a2071ca524c108a0c966830086c3b
+upstream_blob: dfd0acb58952c2776c41408e2fdfc5a43722fbb9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/loops
 ---
@@ -31,8 +31,8 @@ sources:
 こう見えます。
 
 1. **ループが受け付けられる** — `↻ Loop set (every 5m): check the deploy status…`
-2. **5分後に最初の目覚め** — セッションが手空きの間に、Hermes が目覚めの合図を差し込み、そのときの状態に対して普通のターンを動かします。
-3. **繰り返し** — 5分ごとに、止まる条件が満たされるか、あなたが止めるまで続きます。
+2. **最初の目覚めはすぐに来ます** — 次に手空きを見に行った時点（窓口の場合は、次の15秒ごとの見回り）で、Hermes が目覚めの合図を差し込み、そのときの状態に対して普通のターンを動かします。
+3. **繰り返し** — そのあとは5分ごとに、止まる条件が満たされるか、あなたが止めるまで続きます。
 
 スラッシュコマンドも同じ手軽さで繰り返せます。
 
@@ -79,7 +79,7 @@ sources:
 
 | コマンド | 働き |
 |---|---|
-| `/loop [interval] <prompt> [--times N] [--until <cond>]` | このセッションのループを始めます（すでにあれば置き換えます）。 |
+| `/loop [interval] <prompt> [--times N] [--until <cond>]` | このセッションのループを始めます（すでにあれば置き換えます）。最初の目覚めはすぐに来て、そのあとは決めた間合いに従います。 |
 | `/loop` または `/loop status` | 間合い・目覚めた回数・次の目覚めまでの時間を表示します。 |
 | `/loop pause` | ループを失わずに、流れるのだけ止めます。 |
 | `/loop resume` | 続きから動かします。 |

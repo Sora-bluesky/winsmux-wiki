@@ -2,7 +2,7 @@
 title: "Lbo Model — IRR / MOIC 付きの LBO ワークブックを Excel で作る"
 description: "IRR / MOIC 付きの LBO ワークブックを Excel で作る"
 upstream_path: user-guide/skills/optional/finance/finance-lbo-model.md
-upstream_blob: 052cf588096d904e839d550e1fdbab678e218d4c
+upstream_blob: 27460107291d674f219fda21049b88971122f7b0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-lbo-model
 ---
@@ -16,7 +16,7 @@ IRR / MOIC 付きの LBO（レバレッジド・バイアウト）ワークブ�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/finance/lbo-model` で入れます |
-| パス | `optional-skills/finance/lbo-model` |
+| パス | `optional-skills/finance\lbo-model` |
 | バージョン | `1.0.0` |
 | 作者 | Anthropic（Nous Research が改変） |
 | ライセンス | Apache-2.0 |

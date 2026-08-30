@@ -2,7 +2,7 @@
 title: "Guidance — 文法で LLM の出力を縛り、必ず妥当な JSON を得る"
 description: "文法で LLM の出力を縛り、必ず妥当な JSON を得る"
 upstream_path: user-guide/skills/optional/mlops/mlops-guidance.md
-upstream_blob: d8f7de7512a1f21224c9067aed93f14d32bd62f9
+upstream_blob: 56556cbce89863112f504e8d3d25e91b32c345cc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-guidance
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/guidance` で導入します |
-| パス | `optional-skills/mlops/guidance` |
+| パス | `optional-skills/mlops\guidance` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

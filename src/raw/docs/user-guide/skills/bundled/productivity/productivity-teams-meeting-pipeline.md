@@ -2,7 +2,7 @@
 title: "Teams Meeting Pipeline — Teams の会議のまとめ、ジョブの再実行、Graph の購読"
 description: "Teams の会議のまとめ、ジョブの再実行、Graph の購読"
 upstream_path: user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline.md
-upstream_blob: 60eb2d6a3cdc14e8fdaa567f3e285969c47a49f1
+upstream_blob: ff5476a0536866b9cd13dab810baeb6f594c1e57
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline
 ---
@@ -16,7 +16,7 @@ Teams の会議のまとめ、ジョブの再実行、Graph の購読を扱い�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity/teams-meeting-pipeline` |
+| パス | `skills/productivity\teams-meeting-pipeline` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |

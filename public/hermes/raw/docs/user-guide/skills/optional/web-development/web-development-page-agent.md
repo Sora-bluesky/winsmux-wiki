@@ -2,7 +2,7 @@
 title: "Page Agent — Web アプリの中に、自然言語で操作できる相棒を組み込む"
 description: "Web アプリの中に、自然言語で操作できる相棒を組み込む"
 upstream_path: user-guide/skills/optional/web-development/web-development-page-agent.md
-upstream_blob: f8332ab3dd5a9e110460e4f30d90eeeab06abdff
+upstream_blob: ea48d0a2b6f631f842b8e668fc3eb8fdcd033633
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/web-development/web-development-page-agent
 ---
@@ -16,7 +16,7 @@ Web アプリの中に、自然言語で操作できる相棒を組み込みま�
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/web-development/page-agent` で導入します |
-| パス | `optional-skills/web-development/page-agent` |
+| パス | `optional-skills/web-development\page-agent` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

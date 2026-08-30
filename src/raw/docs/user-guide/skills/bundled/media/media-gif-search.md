@@ -2,7 +2,7 @@
 title: "Gif Search — Tenor の GIF を curl + jq で検索・ダウンロードする"
 description: "Tenor の GIF を curl + jq で検索・ダウンロードする"
 upstream_path: user-guide/skills/bundled/media/media-gif-search.md
-upstream_blob: 31d0e03eb88298fe59401d3959079befc56b75e0
+upstream_blob: 8d71c12184c5c1c1d3d4d26eaf08abd81bd0505f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/media/media-gif-search
 ---
@@ -16,7 +16,7 @@ Tenor の GIF を curl + jq で検索・ダウンロードします。
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/media/gif-search` |
+| パス | `skills/media\gif-search` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -104,4 +104,4 @@ curl -s "https://tenor.googleapis.com/v2/search?q=cat&limit=3&key=${TENOR_API_KE
 
 - 検索語は URL エンコードしてください。スペースは `+`、特殊文字は `%XX` です
 - チャットに送るなら、`tinygif` の URL のほうが軽くて扱いやすいです
-- GIF の URL はマークダウンにそのまま書けます: `![alt](https://github.com/NousResearch/hermes-agent/blob/main/skills/media/gif-search/url)`
+- GIF の URL はマークダウンにそのまま書けます: `![alt](https://github.com/NousResearch/hermes-agent/blob/main/skills/media\gif-search/url)`

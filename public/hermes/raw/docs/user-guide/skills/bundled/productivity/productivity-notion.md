@@ -2,7 +2,7 @@
 title: "Notion — Notion API と ntn CLI: ページ、データベース、Markdown、Workers"
 description: "Notion API と ntn CLI: ページ、データベース、Markdown、Workers"
 upstream_path: user-guide/skills/bundled/productivity/productivity-notion.md
-upstream_blob: 985240ca41f5e2f30327d491f791f4b8116910e0
+upstream_blob: 1bfcdec70011c52eccaa809f9e6a14fcdcd10341
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-notion
 ---
@@ -16,7 +16,7 @@ Notion API と ntn CLI で、ページ、データベース、Markdown、Workers
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity/notion` |
+| パス | `skills/productivity\notion` |
 | バージョン | `2.0.0` |
 | 作者 | community |
 | ライセンス | MIT |

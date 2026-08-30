@@ -2,7 +2,7 @@
 title: "Agentmail — エージェントに AgentMail CLI のメールボックスを持たせたいときに使います"
 description: "エージェントに AgentMail CLI のメールボックスを持たせたいときに使います"
 upstream_path: user-guide/skills/optional/email/email-agentmail.md
-upstream_blob: 5fb31dba0feb77358061b0095dde36a34a1689b1
+upstream_blob: 26c682c3817386ecc46852b73ff87a3d011dac23
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/email/email-agentmail
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/email/agentmail` で入れます |
-| パス | `optional-skills/email/agentmail` |
+| パス | `optional-skills/email\agentmail` |
 | バージョン | `1.0.0` |
 | 作者 | Haakam Aujla (Haakam21), AgentMail |
 | ライセンス | MIT |
@@ -60,7 +60,7 @@ npm install -g agentmail-cli@latest
 export AGENTMAIL_API_KEY="am_..."
 ```
 
-API キーがまだない場合は [signup.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/signup.md) を見てください。
+API キーがまだない場合は [signup.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email\agentmail/references/signup.md) を見てください。
 
 ## 実行のしかた {#how-to-run}
 
@@ -76,19 +76,19 @@ agentmail inboxes list --format json
 - [AgentMail](https://agentmail.to): 製品の紹介ページです。
 - [コンソール](https://console.agentmail.to): API キーとアカウントを管理します。
 - [ドキュメント](https://docs.agentmail.to): 製品のドキュメント全体です。
-- [signup.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/signup.md): 自分で登録して、OTP で本人確認をする手順です。
-- [core.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/core.md): メールボックス、メール、スレッド、ラベル、添付ファイルの扱いです。
-- [webhooks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/webhooks.md): 公開された HTTPS のサーバーへ通知を送ります。
-- [websockets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/websockets.md): 手元で動いているエージェントへ通知を送ります。
-- [mcp.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/mcp.md): MCP との連携です。
+- [signup.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email\agentmail/references/signup.md): 自分で登録して、OTP で本人確認をする手順です。
+- [core.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email\agentmail/references/core.md): メールボックス、メール、スレッド、ラベル、添付ファイルの扱いです。
+- [webhooks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email\agentmail/references/webhooks.md): 公開された HTTPS のサーバーへ通知を送ります。
+- [websockets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email\agentmail/references/websockets.md): 手元で動いているエージェントへ通知を送ります。
+- [mcp.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email\agentmail/references/mcp.md): MCP との連携です。
 
 ## 手順 {#procedure}
 
 1. `agentmail-cli@latest` を入れて、`agentmail inboxes list --format json` が動くことを確かめます。
-2. API キーが手元にないときは、[signup.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/signup.md) の手順を済ませます。
-3. メールボックスの用意、送信、閲覧、返信、転送、ラベル付け、スレッド、添付ファイルの扱いは [core.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/core.md) を見ます。
-4. 定期的に見にいくだけでは足りないときにかぎり、[webhooks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/webhooks.md) か
-   [websockets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email/agentmail/references/websockets.md) を足します。
+2. API キーが手元にないときは、[signup.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email\agentmail/references/signup.md) の手順を済ませます。
+3. メールボックスの用意、送信、閲覧、返信、転送、ラベル付け、スレッド、添付ファイルの扱いは [core.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email\agentmail/references/core.md) を見ます。
+4. 定期的に見にいくだけでは足りないときにかぎり、[webhooks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email\agentmail/references/webhooks.md) か
+   [websockets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/email\agentmail/references/websockets.md) を足します。
 
 ## つまずきやすいところ {#pitfalls}
 

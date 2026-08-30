@@ -2,7 +2,7 @@
 title: "Dcf Model — Excel で DCF 法の企業価値評価ワークブックを作る"
 description: "Excel で DCF 法の企業価値評価ワークブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-dcf-model.md
-upstream_blob: 34a847d2db7da9773657f194b08bd54de9ecd090
+upstream_blob: 689df50dd321847dba2d0956e60519e207a80663
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-dcf-model
 ---
@@ -16,7 +16,7 @@ Excel で DCF 法（割引キャッシュフロー法）の企業価値評価ワ
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/finance/dcf-model` で入れます |
-| パス | `optional-skills/finance/dcf-model` |
+| パス | `optional-skills/finance\dcf-model` |
 | バージョン | `1.0.0` |
 | 作者 | Anthropic（Nous Research が移植） |
 | ライセンス | Apache-2.0 |
@@ -1207,7 +1207,7 @@ WACC = (Cost of Equity × Equity Weight) + (After-tax Cost of Debt × Debt Weigh
 
 ## 困ったとき {#troubleshooting}
 
-**エラーが出たり、結果がどうもおかしいときは、[TROUBLESHOOTING.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/finance/dcf-model/TROUBLESHOOTING.md) に詳しい切り分け方があります。**
+**エラーが出たり、結果がどうもおかしいときは、[TROUBLESHOOTING.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/finance\dcf-model/TROUBLESHOOTING.md) に詳しい切り分け方があります。**
 
 ## 作業の流れへの組み込み {#workflow-integration}
 
@@ -1245,7 +1245,7 @@ WACC = (Cost of Equity × Equity Weight) + (After-tax Cost of Debt × Debt Weigh
 
 3. **出力を確かめます**:
    - `status` が `"success"` なら → 手順 4 へ進みます
-   - `status` が `"errors_found"` なら → `error_summary` を見て、[TROUBLESHOOTING.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/finance/dcf-model/TROUBLESHOOTING.md) の切り分け方を読みます
+   - `status` が `"errors_found"` なら → `error_summary` を見て、[TROUBLESHOOTING.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/finance\dcf-model/TROUBLESHOOTING.md) の切り分け方を読みます
 
 4. **エラーを直して recalc.py を回し直します**（状態が "success" になるまで）
 

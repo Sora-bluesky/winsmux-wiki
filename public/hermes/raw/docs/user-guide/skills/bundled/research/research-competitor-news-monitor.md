@@ -2,7 +2,7 @@
 title: "Competitor News Monitor — 指定した企業を見張って重要な動きだけを集め、出典付きのまとめにする"
 description: "指定した企業を見張って重要な動きだけを集め、出典付きのまとめにする"
 upstream_path: user-guide/skills/bundled/research/research-competitor-news-monitor.md
-upstream_blob: bc31b958ed9389bd763c4ec7d41e733f8a2cebb3
+upstream_blob: dd756be8a93cf67fdd2c3644162485b03fd5bfb4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-competitor-news-monitor
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/research/competitor-news-monitor` |
+| パス | `skills/research\competitor-news-monitor` |
 | バージョン | `0.1.0` |
 | 作者 | Ben Barclay (benbarclay), Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Competitors`, `News`, `Market-Research`, `Monitoring` |
-| 関連 skill | [`blogwatcher`](/hermes/docs/user-guide/skills/bundled/research/research-blogwatcher/) |
+| 関連 skill | [`blogwatcher`](/hermes/docs/user-guide/skills/optional/research/research-blogwatcher/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

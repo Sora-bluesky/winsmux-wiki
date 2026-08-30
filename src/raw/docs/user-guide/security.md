@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、ユーザー認可、コンテナの隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: e63199af0b5fc34d99dc4e83a3def242cf23453f
+upstream_blob: 4397fcac6bb62cf22f1be690019d750fff5e7531
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -38,6 +38,7 @@ approvals:
   timeout: 300                    # seconds to wait for user response (default: 300)
   cron_mode: deny                 # deny | approve — what cron jobs do when they hit a dangerous command
   single_query_mode: deny         # deny | approve — what single-query (-q) sessions do on a dangerous command
+  unattended_mode: deny           # deny | approve — what webhook/API sessions do on a dangerous command
   mcp_reload_confirm: true        # /reload-mcp asks before invalidating the MCP tool cache
   destructive_slash_confirm: true # /clear, /new, /reset, /undo prompt before discarding state
 ```
@@ -50,6 +51,7 @@ approvals:
 | `timeout` | `300` | 承認の返事を待つ秒数です。これを過ぎるとタイムアウトします。 |
 | `cron_mode` | `deny` | [cron ジョブ](/hermes/docs/user-guide/features/cron/) が誰も見ていない状態で危険なコマンドの確認に当たったときの動きです。`deny` はコマンドを止めます（エージェントは別の方法を探すことになります）。`approve` は cron の文脈ですべて自動的に承認します。 |
 | `single_query_mode` | `deny` | 一度きりの [`hermes chat -q`](/hermes/docs/user-guide/cli/) セッションが危険なコマンドの確認に当たったときの動きです。`-q` のセッションは 1 ターンだけ実行して終了するため、確認に答えるユーザーがいません。`deny` はコマンドを止め（エージェントは別の方法を探すことになります）、`approve` は単発クエリの文脈ですべて自動的に承認します。`cron_mode` と同じ考え方です。 |
+| `unattended_mode` | `deny` | 人が見ていないプログラム経由の窓口（webhook、msgraph_webhook、api_server）のセッションが危険なコマンドの確認に当たったときの動きです。こうした窓口には `/approve` に答えられる人がいないため、承認のタイムアウトいっぱい待たせるのではなく、`deny` はコマンドをその場で止め（エージェントは別の方法を探すことになります）、`approve` は人が見ていない文脈ですべて自動的に承認します。`cron_mode` と同じ考え方です。 |
 | `mcp_reload_confirm` | `true` | true のとき、`/reload-mcp` は MCP のツール一式を作り直す前に確認します。作り直すとプロバイダのプロンプトキャッシュが無効になり（ツールのスキーマはシステムプロンプトに入っています）、次のメッセージで入力トークンを丸ごと送り直すことになります。**Always Approve** を選ぶと、このキーは `false` になります。 |
 | `destructive_slash_confirm` | `true` | true のとき、会話の状態を捨てるスラッシュコマンド（`/clear`、`/new`、`/reset`、`/undo`）は実行前に確認します。3 択のダイアログ（Approve Once / Always Approve / Cancel）で、Telegram・Discord・Slack ではプラットフォーム標準の yes/no ボタン、それ以外ではテキストで表示されます。**Always Approve** を選ぶと、このキーは `false` になります。TUI も `/clear`、`/new`、`/reset` のモーダルでこの設定に従います。`HERMES_TUI_NO_CONFIRM=1` を指定すると、設定値にかかわらずそのモーダルを飛ばします。 |
 

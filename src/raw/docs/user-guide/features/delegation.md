@@ -2,7 +2,7 @@
 title: "サブエージェントへの委任"
 description: "delegate_task で子エージェントを切り離して立ち上げ、複数の作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: 6870d17c57734ce4175927ccdad83c8716526532
+upstream_blob: 52db42d89501042edd83683296b1fce65af61a74
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -190,7 +190,7 @@ delegation:
   provider: "openrouter"             # optional: route children to a different provider
 ```
 
-決まる順番はこうです。まず `delegation.base_url`（直接つなぐ接続先）が優先され、次に `delegation.provider`（実行時のプロバイダのしくみを通して認証情報一式が解決されます）、どちらも設定されていなければ子は親のプロバイダと認証情報を引き継ぎます。`delegation.model` はどの場合でも効き、空のときは子が親のモデルを引き継ぎます。
+決まる順番はこうです。まず `delegation.base_url`（直接つなぐ接続先）が優先され、次に `delegation.provider`（実行時のプロバイダのしくみを通して認証情報一式が解決されます）、どちらも設定されていなければ子は親のプロバイダと認証情報を引き継ぎます。`delegation.model` はどの場合でも効き、空のときは子が親のモデルを引き継ぎます。`delegation.base_url` と並べて `delegation.provider` を設定すると、接続先は明示したものが使われたまま、そのプロバイダのリクエスト指定と出力トークンの上限が子に持ち込まれます。`delegation.request_overrides` を明示した辞書はどの経路でも尊重され、実行時に決まったそれらの値の上に重なります（下の[設定](#configuration)を参照）。
 
 この指定は全体に効くという点に注意してください。`delegate_task` には作業ごとにモデルを選ぶ引数がないので、まとめ渡しの子はすべて同じ委任用モデルで動きます。品質を落とせない作業に強いモデルを使いたいときは、そのセッションだけ `delegation.model` を空にしておくか、作業ごとのモデル指定に対応している[かんばんボード](/hermes/docs/user-guide/features/kanban/#per-task-model-override)に渡してください。
 
@@ -513,9 +513,22 @@ delegation:
   base_url: "http://localhost:1234/v1"
   api_key: "local-key"
   # api_mode: "anthropic_messages"  # Optional. Wire protocol override for base_url ("chat_completions", "codex_responses", or "anthropic_messages"). Empty = auto-detect from URL (e.g. /anthropic suffix). Set explicitly for endpoints the heuristic can't classify (Azure AI Foundry, MiniMax, Zhipu GLM, LiteLLM proxies, …).
+
+# Send per-child request settings on every subagent API call — e.g. OpenRouter
+# routing hints when delegating straight to openrouter.ai via base_url:
+delegation:
+  model: "deepseek/deepseek-v4-flash-0731"
+  base_url: "https://openrouter.ai/api/v1"
+  api_key: "sk-or-..."
+  request_overrides:
+    extra_body:
+      provider:
+        sort: throughput   # children route to the fastest OpenRouter provider
 ```
 
 `base_url` が Anthropic 互換の接続先を指しているとき（たとえば末尾が `/anthropic` のパス、Azure Foundry の Claude 経路、MiniMax の `/anthropic` 中継など）は、`api_mode` が `anthropic_messages` だと自動で判別されるので、何も設定しなくてもサブエージェントは正しい通信形式を使います。自動判別が外れたとき（まれです）だけ、`api_mode` を明示してください。
+
+`delegation.request_overrides` は**3 つ**の解決経路すべて（`base_url` の直接指定、名前付きの `provider`、そして純粋な引き継ぎ）で効くので、必ず反映されます。最上位のキーは API の引数として渡され（たとえば `service_tier`）、`extra_body` の下位辞書はリクエストの `extra_body` に混ぜ込まれます。明示した値は、実行時や親から渡された指定より**優先**されます。最上位のキーは明示したものが勝ち、`extra_body` は一段深くまで混ぜ合わされるので、プロバイダ側が持つリクエストの癖（たとえば `thinking: {type: disabled}`）は、こちらのキーで上書きしないかぎり残ります。詳しくは [設定 → 委任](/hermes/docs/user-guide/configuration/#delegation) をご覧ください。
 
 :::tip
 エージェントは作業の込み入り具合を見て、委任するかどうかを自分で決めます。委任してほしいとわざわざ頼む必要はありません。そうしたほうがよい場面では、自分でそうします。

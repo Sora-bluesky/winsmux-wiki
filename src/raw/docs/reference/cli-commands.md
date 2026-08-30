@@ -2,7 +2,7 @@
 title: "CLI コマンド早見表"
 description: "Hermes のターミナル コマンドとコマンド群をまとめた決定版の早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: 473c753074090cf02f9686d47668400a88b89d5d
+upstream_blob: 8a0fe76233a759526aa5f5d522b8364f8ea60d99
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -119,7 +119,7 @@ hermes chat [options]
 | `--oneshot` | `-q` や `--query-file` と一緒に使うと、対話セッションを始めずに答えて終了します（0.21 より前の 1 回だけの動きです）。端末でない入出力のときと `-Q` のときは自動でこうなります。 |
 | `-m`、`--model <model>` | この実行のモデルを上書きします。 |
 | `-t`、`--toolsets <csv>` | カンマ区切りで指定したツールセットを有効にします。 |
-| `--provider <provider>` | プロバイダーを指定します。`auto`、`openrouter`、`nous`、`openai-codex`、`copilot-acp`、`copilot`、`anthropic`、`gemini`、`huggingface`、`novita`（別名 `novita-ai`、`novitaai`）、`openai-api`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`kilocode`、`xiaomi`、`arcee`、`gmi`、`upstage`（別名 `solar`）、`alibaba`、`alibaba-coding-plan`（別名 `alibaba_coding`）、`deepseek`、`nvidia`、`ollama-cloud`、`xai`（別名 `grok`）、`xai-oauth`（別名 `grok-oauth`）、`qwen-oauth`、`bedrock`、`opencode-zen`、`opencode-go`、`opencode-free`（別名 `free`、`opencode_free`。キー不要）、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry`、`lmstudio`、`stepfun`、`tencent-tokenhub`（別名 `tencent`、`tokenhub`）、`router`（別名 `ramp-router`、`ramp`）、`nebius-token-factory`（別名 `nebius`、`nebius-tf`、`tokenfactory`）、`tencent-tokenplan`（別名 `tokenplan`、`tencent-lkeap`）。 |
+| `--provider <provider>` | プロバイダーを指定します。`auto`、`openrouter`、`nous`、`openai-codex`、`copilot-acp`、`copilot`、`anthropic`、`gemini`、`huggingface`、`novita`（別名 `novita-ai`、`novitaai`）、`openai-api`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`kilocode`、`xiaomi`、`arcee`、`gmi`、`upstage`（別名 `solar`）、`alibaba`、`alibaba-cn`、`alibaba-coding-plan`（別名 `alibaba_coding`）、`alibaba-coding-plan-cn`、`alibaba-token-plan`、`alibaba-token-plan-cn`、`deepseek`、`nvidia`、`ollama-cloud`、`xai`（別名 `grok`）、`xai-oauth`（別名 `grok-oauth`）、`qwen-oauth`、`bedrock`、`opencode-zen`、`opencode-go`、`opencode-free`（別名 `free`、`opencode_free`。キー不要）、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry`、`lmstudio`、`stepfun`、`tencent-tokenhub`（別名 `tencent`、`tokenhub`）、`router`（別名 `ramp-router`、`ramp`）、`nebius-token-factory`（別名 `nebius`、`nebius-tf`、`tokenfactory`）、`tencent-tokenplan`（別名 `tokenplan`、`tencent-lkeap`）。 |
 | `-s`、`--skills <name>` | このセッションであらかじめ読み込むスキルを指定します（繰り返しでも、カンマ区切りでも書けます）。 |
 | `-v`、`--verbose` | 詳しく表示します。 |
 | `-Q`、`--quiet` | プログラム向けのモード。見出し、待機表示、ツールの下見を出しません。 |
@@ -1480,7 +1480,7 @@ Cua の生の MCP ツールを登録するのは、Cua の低い水準の道具�
 代わりの手です。`cua-driver skills install` は Hermes を見つけて、Cua の
 スキル一式を Hermes のスキルのディレクトリへ自動でつなぎます。
 
-権限の扱い方、権限のマニフェストの承認、既存のプロファイルへの許可は、実行時の
+権限の扱い方と権限のマニフェストの承認は、実行時の
 起動に属します。範囲を絞ったモードでは、Hermes が Cua の正式な
 `--capability-manifest` と `--approve-capability-manifest` を渡します。どの MCP の
 経路も、自分の実行環境の中に専用の生存期間のセッションを持ちます。公開のセッション名は

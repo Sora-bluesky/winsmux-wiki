@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-29",
+  "generatedAt": "2026-08-30",
   "entries": [
     {
       "date": "2026-08-28",
@@ -75,7 +75,7 @@
       "pages": [
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         }
       ]
@@ -271,7 +271,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -437,7 +437,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {

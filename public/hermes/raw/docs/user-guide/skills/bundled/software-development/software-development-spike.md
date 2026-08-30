@@ -2,7 +2,7 @@
 title: "Spike — 作り込む前に、使い捨ての試作で見込みを確かめます"
 description: "作り込む前に、使い捨ての試作で見込みを確かめます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-spike.md
-upstream_blob: 56c0954b6980d2aa228e81335fe4f9409d23916e
+upstream_blob: b2d6342723f781d6270d2159b11348f6caad0415
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-spike
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development/spike` |
+| パス | `skills/software-development\spike` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent（gsd-build/get-shit-done を元にしています） |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `spike`, `prototype`, `experiment`, `feasibility`, `throwaway`, `exploration`, `research`, `planning`, `mvp`, `proof-of-concept` |
-| 関連 skill | [`sketch`](/hermes/docs/user-guide/skills/bundled/creative/creative-sketch/), [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/), [`plan`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-plan/) |
+| 関連 skill | [`sketch`](/hermes/docs/user-guide/skills/optional/creative/creative-sketch/), [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -139,7 +139,7 @@ spikes/
 terminal("mkdir -p spikes/001-websocket-streaming")
 write_file("spikes/001-websocket-streaming/README.md", "# 001: websocket-streaming\n\n...")
 write_file("spikes/001-websocket-streaming/main.py", "...")
-terminal("cd spikes/001-websocket-streaming && python3 main.py")
+terminal("cd spikes/001-websocket-streaming && python main.py")
 # Observe output, iterate.
 ```
 

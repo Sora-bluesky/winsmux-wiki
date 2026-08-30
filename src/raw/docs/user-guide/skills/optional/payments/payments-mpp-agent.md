@@ -2,7 +2,7 @@
 title: "Mpp Agent — Machine Payments Protocol (MPP) で HTTP 402 の API に支払う"
 description: "Machine Payments Protocol (MPP) で HTTP 402 の API に支払う"
 upstream_path: user-guide/skills/optional/payments/payments-mpp-agent.md
-upstream_blob: ee2ff286e2566eb537ef1ad155b20a505a058fbe
+upstream_blob: c20c9d84e556a2ee1bb648f7c21a7d87337bd8c2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/payments/payments-mpp-agent
 ---
@@ -16,7 +16,7 @@ Machine Payments Protocol (MPP) で HTTP 402 の API に支払います。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/payments/mpp-agent` で導入します |
-| パス | `optional-skills/payments/mpp-agent` |
+| パス | `optional-skills/payments\mpp-agent` |
 | バージョン | `0.1.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |

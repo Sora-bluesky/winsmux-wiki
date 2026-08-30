@@ -2,7 +2,7 @@
 title: "Telephony — Twilio の電話番号の取得、SMS / MMS、AI による発信"
 description: "Twilio の電話番号の取得、SMS / MMS、AI による発信"
 upstream_path: user-guide/skills/optional/productivity/productivity-telephony.md
-upstream_blob: d3f6b81adaf806f5d3896fb7ebb51ae101dc7170
+upstream_blob: db27beb31c88d79219223fc312b52bdf129a27dc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-telephony
 ---
@@ -16,7 +16,7 @@ Twilio の電話番号の取得、SMS / MMS、AI による発信をあつかい�
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/productivity/telephony` で導入します |
-| パス | `optional-skills/productivity/telephony` |
+| パス | `optional-skills/productivity\telephony` |
 | バージョン | `1.0.0` |
 | 作者 | Nous Research |
 | ライセンス | MIT |
@@ -172,33 +172,33 @@ hermes skills install official/productivity/telephony
 そのうえで、認証情報を Hermes に保存します。
 
 ```bash
-python3 "$SCRIPT" save-twilio ACXXXXXXXXXXXXXXXXXXXXXXXXXXXX your_auth_token_here
+python "$SCRIPT" save-twilio ACXXXXXXXXXXXXXXXXXXXXXXXXXXXX your_auth_token_here
 ```
 
 空いている番号を探します。
 
 ```bash
-python3 "$SCRIPT" twilio-search --country US --area-code 702 --limit 5
+python "$SCRIPT" twilio-search --country US --area-code 702 --limit 5
 ```
 
 番号を買って覚えさせます。
 
 ```bash
-python3 "$SCRIPT" twilio-buy "+17025551234" --save-env
+python "$SCRIPT" twilio-buy "+17025551234" --save-env
 ```
 
 持っている番号を一覧します。
 
 ```bash
-python3 "$SCRIPT" twilio-owned
+python "$SCRIPT" twilio-owned
 ```
 
 あとから、そのうちの 1 つを既定にします。
 
 ```bash
-python3 "$SCRIPT" twilio-set-default "+17025551234" --save-env
+python "$SCRIPT" twilio-set-default "+17025551234" --save-env
 # or
-python3 "$SCRIPT" twilio-set-default PNXXXXXXXXXXXXXXXXXXXXXXXXXXXX --save-env
+python "$SCRIPT" twilio-set-default PNXXXXXXXXXXXXXXXXXXXXXXXXXXXX --save-env
 ```
 
 ### Bland.ai — AI に発信させるいちばん簡単な方法 {#blandai-easiest-outbound-ai-calling}
@@ -209,7 +209,7 @@ python3 "$SCRIPT" twilio-set-default PNXXXXXXXXXXXXXXXXXXXXXXXXXXXX --save-env
 設定を保存します。
 
 ```bash
-python3 "$SCRIPT" save-bland your_bland_api_key --voice mason
+python "$SCRIPT" save-bland your_bland_api_key --voice mason
 ```
 
 ### Vapi — 対話の音声品質が高い方法 {#vapi-better-conversational-voice-quality}
@@ -220,19 +220,19 @@ python3 "$SCRIPT" save-bland your_bland_api_key --voice mason
 まず API キーを保存します。
 
 ```bash
-python3 "$SCRIPT" save-vapi your_vapi_api_key
+python "$SCRIPT" save-vapi your_vapi_api_key
 ```
 
 持っている Twilio の番号を Vapi に取り込み、返ってきた電話番号 ID を保存します。
 
 ```bash
-python3 "$SCRIPT" vapi-import-twilio --save-env
+python "$SCRIPT" vapi-import-twilio --save-env
 ```
 
 Vapi の電話番号 ID がすでにわかっているなら、そのまま保存します。
 
 ```bash
-python3 "$SCRIPT" save-vapi your_vapi_api_key --phone-number-id vapi_phone_number_id_here
+python "$SCRIPT" save-vapi your_vapi_api_key --phone-number-id vapi_phone_number_id_here
 ```
 
 ## いまの状態を調べる {#diagnose-current-state}
@@ -240,7 +240,7 @@ python3 "$SCRIPT" save-vapi your_vapi_api_key --phone-number-id vapi_phone_numbe
 いつでも、この skill が把握している内容を確かめられます。
 
 ```bash
-python3 "$SCRIPT" diagnose
+python "$SCRIPT" diagnose
 ```
 
 日をあらためて作業を再開するときは、まずこれを実行してください。
@@ -251,35 +251,35 @@ python3 "$SCRIPT" diagnose
 
 1. Twilio の認証情報を保存します。
 ```bash
-python3 "$SCRIPT" save-twilio AC... auth_token_here
+python "$SCRIPT" save-twilio AC... auth_token_here
 ```
 
 2. 番号を探します。
 ```bash
-python3 "$SCRIPT" twilio-search --country US --area-code 702 --limit 10
+python "$SCRIPT" twilio-search --country US --area-code 702 --limit 10
 ```
 
 3. 買って、`${HERMES_HOME:-~/.hermes}/.env` と状態ファイルに保存します。
 ```bash
-python3 "$SCRIPT" twilio-buy "+17025551234" --save-env
+python "$SCRIPT" twilio-buy "+17025551234" --save-env
 ```
 
 4. 次のセッションで、次を実行します。
 ```bash
-python3 "$SCRIPT" diagnose
+python "$SCRIPT" diagnose
 ```
 覚えている既定の番号と、受信の確認位置が表示されます。
 
 ### B. エージェントの番号から SMS を送る {#b-send-a-text-from-the-agent-number}
 
 ```bash
-python3 "$SCRIPT" twilio-send-sms "+15551230000" "Your deployment completed successfully."
+python "$SCRIPT" twilio-send-sms "+15551230000" "Your deployment completed successfully."
 ```
 
 画像などを添える場合は次のとおりです。
 
 ```bash
-python3 "$SCRIPT" twilio-send-sms "+15551230000" "Here is the chart." --media-url "https://example.com/chart.png"
+python "$SCRIPT" twilio-send-sms "+15551230000" "Here is the chart." --media-url "https://example.com/chart.png"
 ```
 
 ### C. webhook のサーバーなしで、あとから受信 SMS を確かめる {#c-check-inbound-texts-later-with-no-webhook-server}
@@ -287,13 +287,13 @@ python3 "$SCRIPT" twilio-send-sms "+15551230000" "Here is the chart." --media-ur
 既定の Twilio の番号あてに届いたものを取りに行きます。
 
 ```bash
-python3 "$SCRIPT" twilio-inbox --limit 20
+python "$SCRIPT" twilio-inbox --limit 20
 ```
 
 前回の確認位置より後に届いたものだけを表示し、読み終えたら位置を進めます。
 
 ```bash
-python3 "$SCRIPT" twilio-inbox --since-last --mark-seen
+python "$SCRIPT" twilio-inbox --since-last --mark-seen
 ```
 
 「次にこの skill を読み込んだとき、その番号に届いたメッセージをどう見るのか」への答えが、これです。
@@ -301,7 +301,7 @@ python3 "$SCRIPT" twilio-inbox --since-last --mark-seen
 ### D. Twilio 内蔵の読み上げで直接発信する {#d-make-a-direct-twilio-call-with-built-in-tts}
 
 ```bash
-python3 "$SCRIPT" twilio-call "+15551230000" --message "Hello! This is Hermes calling with your status update." --voice Polly.Joanna
+python "$SCRIPT" twilio-call "+15551230000" --message "Hello! This is Hermes calling with your status update." --voice Polly.Joanna
 ```
 
 ### E. 録音済みの音声で発信する {#e-call-with-a-prerecorded-custom-voice-message}
@@ -316,7 +316,7 @@ Hermes に元からある `text_to_speech` を使い回すなら、これが本�
 音声は別に用意して置いておき、そのうえで次のようにします。
 
 ```bash
-python3 "$SCRIPT" twilio-call "+155****0000" --audio-url "https://example.com/briefing.mp3"
+python "$SCRIPT" twilio-call "+155****0000" --audio-url "https://example.com/briefing.mp3"
 ```
 
 Hermes の読み上げから Twilio の Play につなぐ、おすすめの流れは次のとおりです。
@@ -346,7 +346,7 @@ MP3 の置き場所としては、次が向いています。
 Twilio では `w` が短い待ち時間になります。
 
 ```bash
-python3 "$SCRIPT" twilio-call "+18005551234" --message "Connecting to billing now." --send-digits "ww1w2w3"
+python "$SCRIPT" twilio-call "+18005551234" --message "Connecting to billing now." --send-digits "ww1w2w3"
 ```
 
 人につないだり短い連絡を届けたりする前に、目当てのメニューまで進みたいときに役立ちます。
@@ -354,36 +354,36 @@ python3 "$SCRIPT" twilio-call "+18005551234" --message "Connecting to billing no
 ### G. Bland.ai で AI に発信させる {#g-outbound-ai-phone-call-with-blandai}
 
 ```bash
-python3 "$SCRIPT" ai-call "+15551230000" "Call the dental office, ask for a cleaning appointment on Tuesday afternoon, and if they do not have Tuesday availability, ask for Wednesday or Thursday instead." --provider bland --voice mason --max-duration 3
+python "$SCRIPT" ai-call "+15551230000" "Call the dental office, ask for a cleaning appointment on Tuesday afternoon, and if they do not have Tuesday availability, ask for Wednesday or Thursday instead." --provider bland --voice mason --max-duration 3
 ```
 
 状況を確かめます。
 
 ```bash
-python3 "$SCRIPT" ai-status <call_id> --provider bland
+python "$SCRIPT" ai-status <call_id> --provider bland
 ```
 
 終わったあと、Bland に内容を尋ねます。
 
 ```bash
-python3 "$SCRIPT" ai-status <call_id> --provider bland --analyze "Was the appointment confirmed?,What date and time?,Any special instructions?"
+python "$SCRIPT" ai-status <call_id> --provider bland --analyze "Was the appointment confirmed?,What date and time?,Any special instructions?"
 ```
 
 ### H. 自分の番号を使って Vapi で AI に発信させる {#h-outbound-ai-phone-call-with-vapi-on-your-owned-number}
 
 1. Twilio の番号を Vapi に取り込みます。
 ```bash
-python3 "$SCRIPT" vapi-import-twilio --save-env
+python "$SCRIPT" vapi-import-twilio --save-env
 ```
 
 2. 発信します。
 ```bash
-python3 "$SCRIPT" ai-call "+15551230000" "You are calling to make a dinner reservation for two at 7:30 PM. If that is unavailable, ask for the nearest time between 6:30 and 8:30 PM." --provider vapi --max-duration 4
+python "$SCRIPT" ai-call "+15551230000" "You are calling to make a dinner reservation for two at 7:30 PM. If that is unavailable, ask for the nearest time between 6:30 and 8:30 PM." --provider vapi --max-duration 4
 ```
 
 3. 結果を確かめます。
 ```bash
-python3 "$SCRIPT" ai-status <call_id> --provider vapi
+python "$SCRIPT" ai-status <call_id> --provider vapi
 ```
 
 ## エージェントに勧める進め方 {#suggested-agent-procedure}

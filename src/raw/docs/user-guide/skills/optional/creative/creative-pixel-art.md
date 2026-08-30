@@ -2,7 +2,7 @@
 title: "Pixel Art — 時代ごとの色数でドット絵を作る（NES、Game Boy、PICO-8）"
 description: "時代ごとの色数でドット絵を作る（NES、Game Boy、PICO-8）"
 upstream_path: user-guide/skills/optional/creative/creative-pixel-art.md
-upstream_blob: c2f3d20b24e9eff466b3691d981b9a38fed2f439
+upstream_blob: 065496394c6b64893ee71a708060e5fc8e54131c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-pixel-art
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/pixel-art` で入れます |
-| パス | `optional-skills/creative/pixel-art` |
+| パス | `optional-skills/creative\pixel-art` |
 | バージョン | `2.0.0` |
 | 作者 | dodo-reach |
 | ライセンス | MIT |
@@ -151,7 +151,7 @@ pixel_art("in.png", "out.png", preset="snes", palette="PICO_8", block=6)
 
 ```python
 
-sys.path.insert(0, "/home/teknium/.hermes/skills/creative/pixel-art/scripts")
+sys.path.insert(0, os.path.expanduser("~/.hermes/skills/creative/pixel-art/scripts"))
 from pixel_art import pixel_art
 from pixel_art_video import pixel_art_video
 
@@ -173,7 +173,7 @@ pixel_art_video(
 ### CLI {#cli}
 
 ```bash
-cd /home/teknium/.hermes/skills/creative/pixel-art/scripts
+cd ~/.hermes/skills/creative/pixel-art/scripts
 
 python pixel_art.py in.jpg out.png --preset gameboy
 python pixel_art.py in.jpg out.png --preset snes --palette PICO_8 --block 6

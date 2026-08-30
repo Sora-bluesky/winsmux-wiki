@@ -2,7 +2,7 @@
 title: "Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 description: "Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 upstream_path: user-guide/skills/bundled/software-development/software-development-python-debugpy.md
-upstream_blob: 4f7c4c37e3d83dd0e181b88fccfd6725c596ccaf
+upstream_blob: e6f1120e0835cac46386cb7033401d7f01a00dd4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy
 ---
@@ -16,7 +16,7 @@ Python のデバッグです。pdb の REPL と、debugpy のリモート接続�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development/python-debugpy` |
+| パス | `skills/software-development\python-debugpy` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

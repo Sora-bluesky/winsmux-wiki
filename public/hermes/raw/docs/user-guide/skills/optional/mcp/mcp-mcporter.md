@@ -2,7 +2,7 @@
 title: "Mcporter — MCP のサーバーやツールを、端末から一覧・認証・呼び出しする"
 description: "MCP のサーバーやツールを、端末から一覧・認証・呼び出しする"
 upstream_path: user-guide/skills/optional/mcp/mcp-mcporter.md
-upstream_blob: 0bc09c9a4f1dd96fde4821c24c1a9df153a05226
+upstream_blob: cf48fc4297c5b198a3768ba7720804cf831a854f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mcp/mcp-mcporter
 ---
@@ -16,7 +16,7 @@ MCP のサーバーやツールを、端末から一覧・認証・呼び出し�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mcp/mcporter` で導入します |
-| パス | `optional-skills/mcp/mcporter` |
+| パス | `optional-skills/mcp\mcporter` |
 | バージョン | `1.0.0` |
 | 作者 | community |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Bioinformatics — ゲノム解析と計算生物学の 400 以上の skill への入口"
 description: "ゲノム解析と計算生物学の 400 以上の skill への入口"
 upstream_path: user-guide/skills/optional/research/research-bioinformatics.md
-upstream_blob: 084d596c7d43d464f4fd1a5e14d2a1d64a770628
+upstream_blob: dae339a0490b268e0424afd16068ed5e1b5cbfde
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-bioinformatics
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/research/bioinformatics` で導入します |
-| パス | `optional-skills/research/bioinformatics` |
+| パス | `optional-skills/research\bioinformatics` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium（teknium1）、Hermes Agent |
 | ライセンス | MIT |

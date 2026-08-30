@@ -2,7 +2,7 @@
 title: "人格と SOUL.md"
 description: "グローバルな SOUL.md、組み込みの人格、独自のペルソナ定義で Hermes Agent の人格を自分好みにします"
 upstream_path: user-guide/features/personality.md
-upstream_blob: a1ca34a5356b5ea2d290c957ebe0eee9185cae60
+upstream_blob: 1cb64ac7b23e779df43db323f9aabc7b50b1dc0d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/personality
 ---
@@ -127,7 +127,7 @@ You optimize for truth, clarity, and usefulness over politeness theater.
 - プロンプトインジェクションの検査
 - 大きすぎる場合の切り詰め
 
-ファイルが空、空白だけ、あるいは読み取れない場合、Hermes は組み込みの既定の人格（「You are Hermes Agent, an intelligent AI assistant created by Nous Research...」）に戻ります。この動きは `skip_context_files` が設定されているとき（サブエージェントや委任の場面など）にも当てはまります。
+ファイルが空、空白だけ、あるいは読み取れない場合、Hermes は組み込みの既定の人格（「You are Hermes Agent, built by Nous Research. Be direct: match the length of your reply to the weight of the ask...」）に戻ります。この動きは `skip_context_files` が設定されているとき（サブエージェントや委任の場面など）にも当てはまります。
 
 ## セキュリティ検査 {#security-scanning}
 

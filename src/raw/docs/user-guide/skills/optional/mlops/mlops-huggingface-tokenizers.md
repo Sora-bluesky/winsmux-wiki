@@ -2,7 +2,7 @@
 title: "Huggingface Tokenizers — 高速な BPE/WordPiece のトークン分割と、独自語彙の学習"
 description: "高速な BPE/WordPiece のトークン分割と、独自語彙の学習"
 upstream_path: user-guide/skills/optional/mlops/mlops-huggingface-tokenizers.md
-upstream_blob: 723cf707a7f70671d76eb38c5fcc8314366560c0
+upstream_blob: b627c762ecc75ad71b46dc4e32f1b3013f4ec95e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-huggingface-tokenizers
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/huggingface-tokenizers` で導入します |
-| パス | `optional-skills/mlops/huggingface-tokenizers` |
+| パス | `optional-skills/mlops\huggingface-tokenizers` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -540,10 +540,10 @@ with Pool(8) as pool:
 
 ## 関連ドキュメント {#references}
 
-- **[学習の手引き](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/huggingface-tokenizers/references/training.md)** - 独自のトークナイザの学習、トレーナーの設定、大きなデータの扱い方
-- **[アルゴリズムの詳細](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/huggingface-tokenizers/references/algorithms.md)** - BPE、WordPiece、Unigram のくわしい解説
-- **[流れを構成する部品](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/huggingface-tokenizers/references/pipeline.md)** - 正規化、事前分割、後処理、復元
-- **[transformers との組み合わせ](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/huggingface-tokenizers/references/integration.md)** - AutoTokenizer、PreTrainedTokenizerFast、特別なトークン
+- **[学習の手引き](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\huggingface-tokenizers/references/training.md)** - 独自のトークナイザの学習、トレーナーの設定、大きなデータの扱い方
+- **[アルゴリズムの詳細](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\huggingface-tokenizers/references/algorithms.md)** - BPE、WordPiece、Unigram のくわしい解説
+- **[流れを構成する部品](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\huggingface-tokenizers/references/pipeline.md)** - 正規化、事前分割、後処理、復元
+- **[transformers との組み合わせ](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\huggingface-tokenizers/references/integration.md)** - AutoTokenizer、PreTrainedTokenizerFast、特別なトークン
 
 ## 参考資料 {#resources}
 

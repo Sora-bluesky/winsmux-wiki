@@ -2,7 +2,7 @@
 title: "Chroma — RAG と意味検索のための埋め込みデータベース"
 description: "RAG と意味検索のための埋め込みデータベース"
 upstream_path: user-guide/skills/optional/mlops/mlops-chroma.md
-upstream_blob: 1dafc4cc54bcb635f8ed5757b0b031b649a26e01
+upstream_blob: 0feb394e007fd05779bc9607cd74a35de5bc8795
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-chroma
 ---
@@ -16,7 +16,7 @@ RAG と意味検索のための埋め込みデータベースです。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/chroma` で導入します |
-| パス | `optional-skills/mlops/chroma` |
+| パス | `optional-skills/mlops\chroma` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Unsloth — Unsloth: LoRA/QLoRA のファインチューニングが 2〜5 倍速く、VRAM も少なくて済む"
 description: "Unsloth: LoRA/QLoRA のファインチューニングが 2〜5 倍速く、VRAM も少なくて済む"
 upstream_path: user-guide/skills/optional/mlops/mlops-training-unsloth.md
-upstream_blob: 28b70227971ef81d50345281da1ddee763f7e309
+upstream_blob: 9ca4ae0800aa9c840356713cd5085626d6a18054
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-training-unsloth
 ---
@@ -16,7 +16,7 @@ Unsloth: LoRA/QLoRA のファインチューニングが 2〜5 倍速く、VRAM 
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/unsloth` で導入します |
-| パス | `optional-skills/mlops/training/unsloth` |
+| パス | `optional-skills/mlops\training\unsloth` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Simpo — 参照モデルなしで好みに合わせる、DPO より手軽な手法"
 description: "参照モデルなしで好みに合わせる、DPO より手軽な手法"
 upstream_path: user-guide/skills/optional/mlops/mlops-simpo.md
-upstream_blob: 5897175df0843f4ec2663d066301adb1e891109f
+upstream_blob: a7736fd510761e3fb4d463f6f3da9796b230ba37
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-simpo
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/simpo` で導入します |
-| パス | `optional-skills/mlops/simpo` |
+| パス | `optional-skills/mlops\simpo` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -209,11 +209,11 @@ gradient_checkpointing: true
 
 ## 進んだ話題 {#advanced-topics}
 
-**損失関数**: sigmoid と hinge の違い、数式、どちらをいつ使うかは [references/loss-functions.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/simpo/references/loss-functions.md) を参照してください。
+**損失関数**: sigmoid と hinge の違い、数式、どちらをいつ使うかは [references/loss-functions.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\simpo/references/loss-functions.md) を参照してください。
 
-**ハイパーパラメータの調整**: beta、gamma、学習率の選び方と、モデルの大きさごとのおすすめは [references/hyperparameters.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/simpo/references/hyperparameters.md) を参照してください。
+**ハイパーパラメータの調整**: beta、gamma、学習率の選び方と、モデルの大きさごとのおすすめは [references/hyperparameters.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\simpo/references/hyperparameters.md) を参照してください。
 
-**データの準備**: 好みデータの形式、質でのふるい分け、自前のデータセットの作り方は [references/datasets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/simpo/references/datasets.md) を参照してください。
+**データの準備**: 好みデータの形式、質でのふるい分け、自前のデータセットの作り方は [references/datasets.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\simpo/references/datasets.md) を参照してください。
 
 ## 必要なハードウェア {#hardware-requirements}
 

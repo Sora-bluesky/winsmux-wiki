@@ -2,7 +2,7 @@
 title: "Codex — OpenAI Codex CLI にコーディングを任せる（機能追加、PR）"
 description: "OpenAI Codex CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex.md
-upstream_blob: 503774e55387d4d0db02749dc118426e1b39fcfb
+upstream_blob: 359743a65e53e3956f44cae84bca6f608b73deb6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex
 ---
@@ -16,7 +16,7 @@ OpenAI Codex CLI にコーディングを任せます（機能追加、PR）。
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/autonomous-ai-agents/codex` |
+| パス | `skills/autonomous-ai-agents\codex` |
 | バージョン | `1.0.1` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

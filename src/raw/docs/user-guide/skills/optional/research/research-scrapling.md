@@ -2,7 +2,7 @@
 title: "Scrapling — 目立たないブラウザ操作と Cloudflare 回避でサイトを収集する"
 description: "目立たないブラウザ操作と Cloudflare 回避でサイトを収集する"
 upstream_path: user-guide/skills/optional/research/research-scrapling.md
-upstream_blob: 7d916178d962b8d1cae7c196857ebb7f407e7680
+upstream_blob: 778906aa9468b43aa3052c8c56c1cc0e3d5c54ba
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-scrapling
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加の skill です。`hermes skills install official/research/scrapling` で入れられます |
-| パス | `optional-skills/research/scrapling` |
+| パス | `optional-skills/research\scrapling` |
 | バージョン | `1.0.0` |
 | 作者 | FEUAZUR |
 | ライセンス | MIT |

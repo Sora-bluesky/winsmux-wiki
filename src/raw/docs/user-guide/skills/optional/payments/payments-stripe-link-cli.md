@@ -2,7 +2,7 @@
 title: "Stripe Link Cli — Stripe Link を使ったエージェントの支払い — カード、SPT、承認"
 description: "Stripe Link を使ったエージェントの支払い — カード、SPT、承認"
 upstream_path: user-guide/skills/optional/payments/payments-stripe-link-cli.md
-upstream_blob: fdabbab6cb146e10fc242cff6555d2ec8fc33263
+upstream_blob: 569ad6f420af06025b8fd1449180b9cf9dcee2dc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/payments/payments-stripe-link-cli
 ---
@@ -16,7 +16,7 @@ Stripe Link を使ったエージェントの支払いです — カード、SPT
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/payments/stripe-link-cli` で導入します |
-| パス | `optional-skills/payments/stripe-link-cli` |
+| パス | `optional-skills/payments\stripe-link-cli` |
 | バージョン | `0.1.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |

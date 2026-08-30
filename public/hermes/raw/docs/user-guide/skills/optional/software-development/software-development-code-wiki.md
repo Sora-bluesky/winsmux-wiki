@@ -2,7 +2,7 @@
 title: "Code Wiki — どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する"
 description: "どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する"
 upstream_path: user-guide/skills/optional/software-development/software-development-code-wiki.md
-upstream_blob: 89033235d1f71e6998028302a47a05f420686026
+upstream_blob: 1ee750b2a700b4f3b5687a3d17454de053505070
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-code-wiki
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/software-development/code-wiki` で導入します |
-| パス | `optional-skills/software-development/code-wiki` |
+| パス | `optional-skills/software-development\code-wiki` |
 | バージョン | `0.1.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Documentation`, `Mermaid`, `Architecture`, `Diagrams`, `Wiki`, `Code-Analysis` |
-| 関連 skill | [`codebase-inspection`](/hermes/docs/user-guide/skills/bundled/github/github-codebase-inspection/), [`github-repo-management`](/hermes/docs/user-guide/skills/bundled/github/github-github-repo-management/) |
+| 関連 skill | [`codebase-inspection`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection/), `github-repo-management` |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -166,24 +166,24 @@ reader has the source README.>
 
 ## Entry Points
 
-- [`path/to/main.py`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/<link>) — <what runs when you start it>
-- [`path/to/cli.py`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/<link>) — <CLI surface>
+- [`path/to/main.py`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/<link>) — <what runs when you start it>
+- [`path/to/cli.py`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/<link>) — <CLI surface>
 
 ## High-Level Architecture
 
 <2-3 sentences. Detail goes in architecture.md.>
 
-See [architecture.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/architecture.md).
+See [architecture.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/architecture.md).
 
 ## Module Map
 
 | Module | Purpose |
 |---|---|
-| [`<module>`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/modules/<module>.md) | <one-line purpose> |
+| [`<module>`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/modules/<module>.md) | <one-line purpose> |
 
 ## Getting Started
 
-See [getting-started.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/getting-started.md).
+See [getting-started.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/getting-started.md).
 ````
 
 For link targets in local mode use relative paths. For cloned repos use `https://github.com/<owner>/<repo>/blob/<sha>/<path>` so links survive future commits.
@@ -198,7 +198,7 @@ where it exits, where state lives.>
 
 ## Components
 
-- **<Component>** — <1-2 sentences>. See [`modules/<module>.md`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/modules/<module>.md).
+- **<Component>** — <1-2 sentences>. See [`modules/<module>.md`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/modules/<module>.md).
 
 ## System Diagram
 
@@ -212,8 +212,8 @@ flowchart TD
 
 ## Data Flow {#data-flow}
 
-1. **<Step>** — [`<file>`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/<link>)
-2. **<Step>** — [`<file>`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/<link>)
+1. **<Step>** — [`<file>`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/<link>)
+2. **<Step>** — [`<file>`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/<link>)
 
 ## Key Design Decisions {#key-design-decisions}
 
@@ -245,7 +245,7 @@ For each selected module, inspect its layout with `ls`, identify 3–5 most impo
 
 ## Key Files
 
-- [`<module>/<file>`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/<link>) — <what it does>
+- [`<module>/<file>`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/<link>) — <what it does>
 
 ## Public API
 
@@ -326,8 +326,8 @@ sequenceDiagram
 
 ### Walkthrough {#walkthrough}
 
-1. **User input** — [`cli.py:HermesCLI.run_session`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/<link>)
-2. **Message dispatch** — [`run_agent.py:AIAgent.chat`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/<link>)
+1. **User input** — [`cli.py:HermesCLI.run_session`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/<link>)
+2. **Message dispatch** — [`run_agent.py:AIAgent.chat`](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/<link>)
 ````
 
 Don't invent participants. Every box must correspond to a real component the reader can find in the code.
@@ -365,8 +365,8 @@ Don't invent participants. Every box must correspond to a real component the rea
 
 ## Where to Go Next {#where-to-go-next}
 
-- Architecture: [architecture.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/architecture.md)
-- Module reference: [README.md#module-map](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development/code-wiki/README.md#module-map)
+- Architecture: [architecture.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/architecture.md)
+- Module reference: [README.md#module-map](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/software-development\code-wiki/README.md#module-map)
 ````
 
 ### 10. Write `api.md` (skip if not applicable)

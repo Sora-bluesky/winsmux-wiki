@@ -2,7 +2,7 @@
 title: "Dogfood — Web アプリを探索的にテストする: バグ、証拠、報告書"
 description: "Web アプリを探索的にテストする: バグ、証拠、報告書"
 upstream_path: user-guide/skills/bundled/software-development/software-development-dogfood.md
-upstream_blob: 953add5b009d89dd030d8db8d9f22a265f52e6e0
+upstream_blob: ea01fcc03b7669c1f76cc6f945d545556c9ec8f0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-dogfood
 ---
@@ -16,7 +16,7 @@ Web アプリを探索的にテストします。バグを見つけ、証拠を�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development/dogfood` |
+| パス | `skills/software-development\dogfood` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Email Inbox Triage — 受信箱を仕分ける: スレッドに優先順位を付け、安全に返信案を書く"
 description: "受信箱を仕分ける: スレッドに優先順位を付け、安全に返信案を書く"
 upstream_path: user-guide/skills/bundled/email/email-email-inbox-triage.md
-upstream_blob: a19dfed71f7712bbd097b48b70ea464535c0749a
+upstream_blob: 3c68833eec6408db2c447fb2cda2921eab9e989d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/email/email-email-inbox-triage
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/email/email-inbox-triage` |
+| パス | `skills/email\email-inbox-triage` |
 | バージョン | `0.1.0` |
 | 作者 | Ben Barclay (benbarclay), Hermes Agent |
 | ライセンス | MIT |

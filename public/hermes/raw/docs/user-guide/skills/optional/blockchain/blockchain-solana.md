@@ -2,7 +2,7 @@
 title: "Solana — Solana のウォレット・トークン・取引・NFT を米ドル建てで調べる"
 description: "Solana のウォレット・トークン・取引・NFT を米ドル建てで調べる"
 upstream_path: user-guide/skills/optional/blockchain/blockchain-solana.md
-upstream_blob: f2c293ef7c32294bbd7dd66dde38f407eaa0815c
+upstream_blob: a9b4c55b7ed12a6ddf4664119bae092bfbd0ab5f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/blockchain/blockchain-solana
 ---
@@ -16,7 +16,7 @@ Solana のウォレット・トークン・取引・NFT を米ドル建てで調
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/blockchain/solana` で導入します |
-| パス | `optional-skills/blockchain/solana` |
+| パス | `optional-skills/blockchain\solana` |
 | バージョン | `0.2.0` |
 | 作者 | Deniz Alagoz (gizdusum), enhanced by Hermes Agent |
 | ライセンス | MIT |
@@ -70,14 +70,14 @@ RPC のアドレス（既定）: https://api.mainnet-beta.solana.com
 補助スクリプトの場所: ~/.hermes/skills/blockchain/solana/scripts/solana_client.py
 
 ```
-python3 solana_client.py wallet   <address> [--limit N] [--all] [--no-prices]
-python3 solana_client.py tx       <signature>
-python3 solana_client.py token    <mint_address>
-python3 solana_client.py activity <address> [--limit N]
-python3 solana_client.py nft      <address>
-python3 solana_client.py whales   [--min-sol N]
-python3 solana_client.py stats
-python3 solana_client.py price    <mint_or_symbol>
+python solana_client.py wallet   <address> [--limit N] [--all] [--no-prices]
+python solana_client.py tx       <signature>
+python solana_client.py token    <mint_address>
+python solana_client.py activity <address> [--limit N]
+python solana_client.py nft      <address>
+python solana_client.py whales   [--min-sol N]
+python solana_client.py stats
+python solana_client.py price    <mint_or_symbol>
 ```
 
 ---
@@ -87,13 +87,13 @@ python3 solana_client.py price    <mint_or_symbol>
 ### 0. 動く状態か確かめる {#0-setup-check}
 
 ```bash
-python3 --version
+python --version
 
 # Optional: set a private RPC for better rate limits
 export SOLANA_RPC_URL="https://api.mainnet-beta.solana.com"
 
 # Confirm connectivity
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py stats
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py stats
 ```
 
 ### 1. ウォレットの資産一覧 {#1-wallet-portfolio}
@@ -103,7 +103,7 @@ SOL の残高、SPL トークンの保有量と米ドル換算、NFT の数、�
 名前で表示されます。
 
 ```bash
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
   wallet 9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM
 ```
 
@@ -120,7 +120,7 @@ NFT のまとめ、資産の合計額（米ドル）が含まれます。
 base58 の署名を指定して、取引の全体を見ます。残高の増減は SOL と米ドルの両方で表示されます。
 
 ```bash
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
   tx 5j7s8K...your_signature_here
 ```
 
@@ -132,7 +132,7 @@ SPL トークンの基本情報、現在の価格、時価総額、発行量、�
 発行・凍結の権限、そして上位 5 名の保有者を調べます。
 
 ```bash
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
   token DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263
 ```
 
@@ -144,7 +144,7 @@ python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
 あるアドレスの直近の取引を並べます（既定は 10 件、最大 25 件）。
 
 ```bash
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
   activity 9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM --limit 25
 ```
 
@@ -153,7 +153,7 @@ python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
 ウォレットが持っている NFT を並べます（数量 1・小数点以下 0 桁の SPL トークンを NFT とみなす方法です）。
 
 ```bash
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
   nft 9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM
 ```
 
@@ -164,7 +164,7 @@ python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
 いちばん新しいブロックを調べて、大口の SOL 送金を米ドル換算つきで拾います。
 
 ```bash
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py \
   whales --min-sol 500
 ```
 
@@ -176,7 +176,7 @@ Solana ネットワークの今の状態です。スロット、エポック、T
 バージョン、SOL の価格、時価総額が分かります。
 
 ```bash
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py stats
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py stats
 ```
 
 ### 8. 価格の確認 {#8-price-lookup}
@@ -184,10 +184,10 @@ python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py stats
 ミントアドレスか、よく知られたシンボルを指定して、手早く価格を確かめます。
 
 ```bash
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py price BONK
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py price JUP
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py price SOL
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py price DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py price BONK
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py price JUP
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py price SOL
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py price DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263
 ```
 
 名前で指定できるシンボル: SOL, USDC, USDT, BONK, JUP, WETH, JTO, mSOL, stSOL,
@@ -220,5 +220,5 @@ PYTH, HNT, RNDR, WEN, W, TNSR, DRIFT, bSOL, JLP, WIF, MEW, BOME, PENGU。
 
 ```bash
 # Should print current Solana slot, TPS, and SOL price
-python3 ~/.hermes/skills/blockchain/solana/scripts/solana_client.py stats
+python ~/.hermes/skills/blockchain/solana/scripts/solana_client.py stats
 ```

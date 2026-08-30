@@ -2,7 +2,7 @@
 title: "Canvas — API トークンで Canvas LMS の講座と課題を取得する"
 description: "API トークンで Canvas LMS の講座と課題を取得する"
 upstream_path: user-guide/skills/optional/productivity/productivity-canvas.md
-upstream_blob: 90f44f1a61895e171d45d07300e7d6f8e2144106
+upstream_blob: 33a09987dc0266a45291485fb4b29e50411fc3bf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-canvas
 ---
@@ -16,7 +16,7 @@ API トークンで Canvas LMS の講座と課題を取得します。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/productivity/canvas` で入れます |
-| パス | `optional-skills/productivity/canvas` |
+| パス | `optional-skills/productivity\canvas` |
 | バージョン | `1.0.0` |
 | 作者 | community |
 | ライセンス | MIT |

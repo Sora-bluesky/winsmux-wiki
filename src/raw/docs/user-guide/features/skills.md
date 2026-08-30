@@ -2,7 +2,7 @@
 title: "スキルの仕組み"
 description: "必要なときだけ読み込む知識のドキュメント — 段階的な読み込み、エージェントによる管理、スキルハブ"
 upstream_path: user-guide/features/skills.md
-upstream_blob: ec71205d0c7d0a39568f7d02cb0be50b0049869d
+upstream_blob: 105c7da7a27e92b58635275f4e601ce058a1c8fc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -59,7 +59,7 @@ hermes skills opt-in --sync      # undo: remove the marker and re-seed now
 /gif-search funny cats
 /axolotl help me fine-tune Llama 3 on my dataset
 /github-pr-workflow create a PR for the auth refactor
-/plan design a rollout for migrating our auth provider
+/songsee analyze the frequency spread of this mix
 
 # Just the skill name loads it and lets the agent ask what you need:
 /excalidraw
@@ -85,7 +85,7 @@ hermes skills opt-in --sync      # undo: remove the marker and re-seed now
 いつも同じ組み合わせで使うなら、[スキルのバンドル](#skill-bundles) のほうが向いています。
 短いコマンド 1 つで同じことができます。
 
-同梱の `plan` スキルがわかりやすい例です。`/plan [request]` を実行するとそのスキルの手順が読み込まれ、Hermes は必要に応じて状況を調べたうえで、作業をその場で実行する代わりに実装の計画を markdown で書き、いま使っているワークスペースやバックエンドの作業ディレクトリからの相対で `.hermes/plans/` の下に保存します。
+（プランモードも同じ形で呼び出せますが、いまは組み込みのコマンドになっています。`/plan [request]` と書くと、Hermes は必要に応じて状況を調べたうえで、作業をその場で実行する代わりに実装の計画を markdown で書き、いま使っているワークスペースやバックエンドの作業ディレクトリからの相対で `.hermes/plans/` の下に保存します。）
 
 ふつうの会話の中でスキルに触れることもできます:
 

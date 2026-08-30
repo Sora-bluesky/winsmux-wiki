@@ -323,6 +323,9 @@
                       "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent"
                     },
                     {
+                      "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-merge-reconciler"
+                    },
+                    {
                       "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode"
                     }
                   ]
@@ -334,9 +337,6 @@
                       "id": "user-guide/skills/bundled/creative/creative-architecture-diagram"
                     },
                     {
-                      "id": "user-guide/skills/bundled/creative/creative-ascii-art"
-                    },
-                    {
                       "id": "user-guide/skills/bundled/creative/creative-ascii-video"
                     },
                     {
@@ -346,13 +346,7 @@
                       "id": "user-guide/skills/bundled/creative/creative-claude-design"
                     },
                     {
-                      "id": "user-guide/skills/bundled/creative/creative-comfyui"
-                    },
-                    {
                       "id": "user-guide/skills/bundled/creative/creative-design-md"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/creative/creative-excalidraw"
                     },
                     {
                       "id": "user-guide/skills/bundled/creative/creative-humanizer"
@@ -367,16 +361,15 @@
                       "id": "user-guide/skills/bundled/creative/creative-popular-web-designs"
                     },
                     {
-                      "id": "user-guide/skills/bundled/creative/creative-pretext"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/creative/creative-sketch"
-                    },
-                    {
                       "id": "user-guide/skills/bundled/creative/creative-songwriting-and-ai-music"
-                    },
+                    }
+                  ]
+                },
+                {
+                  "label": "devops",
+                  "items": [
                     {
-                      "id": "user-guide/skills/bundled/creative/creative-touchdesigner-mcp"
+                      "id": "user-guide/skills/bundled/devops/devops-sdlc-review"
                     }
                   ]
                 },
@@ -392,32 +385,6 @@
                   ]
                 },
                 {
-                  "label": "github",
-                  "items": [
-                    {
-                      "id": "user-guide/skills/bundled/github/github-codebase-inspection"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/github/github-github-auth"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/github/github-github-code-review"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/github/github-github-issue-to-pr"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/github/github-github-issues"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/github/github-github-pr-workflow"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/github/github-github-repo-management"
-                    }
-                  ]
-                },
-                {
                   "label": "media",
                   "items": [
                     {
@@ -428,26 +395,6 @@
                     },
                     {
                       "id": "user-guide/skills/bundled/media/media-youtube-content"
-                    }
-                  ]
-                },
-                {
-                  "label": "mlops",
-                  "items": [
-                    {
-                      "id": "user-guide/skills/bundled/mlops/mlops-evaluation-evaluating-llms-harness"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/mlops/mlops-huggingface-hub"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/mlops/mlops-inference-llama-cpp"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/mlops/mlops-inference-serving-llms-vllm"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/mlops/mlops-evaluation-weights-and-biases"
                     }
                   ]
                 },
@@ -484,13 +431,7 @@
                       "id": "user-guide/skills/bundled/productivity/productivity-meeting-action-items"
                     },
                     {
-                      "id": "user-guide/skills/bundled/productivity/productivity-nano-pdf"
-                    },
-                    {
                       "id": "user-guide/skills/bundled/productivity/productivity-notion"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/productivity/productivity-ocr-and-documents"
                     },
                     {
                       "id": "user-guide/skills/bundled/productivity/productivity-pdf"
@@ -500,9 +441,6 @@
                     },
                     {
                       "id": "user-guide/skills/bundled/productivity/productivity-product-price-monitor"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/productivity/productivity-session-librarian"
                     },
                     {
                       "id": "user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline"
@@ -522,12 +460,6 @@
                       "id": "user-guide/skills/bundled/research/research-arxiv"
                     },
                     {
-                      "id": "user-guide/skills/bundled/research/research-blocked-page-recovery"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/research/research-blogwatcher"
-                    },
-                    {
                       "id": "user-guide/skills/bundled/research/research-competitor-news-monitor"
                     },
                     {
@@ -535,17 +467,6 @@
                     },
                     {
                       "id": "user-guide/skills/bundled/research/research-llm-wiki"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/research/research-research-paper-writing"
-                    }
-                  ]
-                },
-                {
-                  "label": "smart-home",
-                  "items": [
-                    {
-                      "id": "user-guide/skills/bundled/smart-home/smart-home-openhue"
                     }
                   ]
                 },
@@ -561,7 +482,13 @@
                   "label": "software-development",
                   "items": [
                     {
+                      "id": "user-guide/skills/bundled/software-development/software-development-codebase-inspection"
+                    },
+                    {
                       "id": "user-guide/skills/bundled/software-development/software-development-dogfood"
+                    },
+                    {
+                      "id": "user-guide/skills/bundled/software-development/software-development-github"
                     },
                     {
                       "id": "user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring"
@@ -571,9 +498,6 @@
                     },
                     {
                       "id": "user-guide/skills/bundled/software-development/software-development-node-inspect-debugger"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/software-development/software-development-plan"
                     },
                     {
                       "id": "user-guide/skills/bundled/software-development/software-development-python-debugpy"
@@ -592,6 +516,14 @@
                     },
                     {
                       "id": "user-guide/skills/bundled/software-development/software-development-test-driven-development"
+                    }
+                  ]
+                },
+                {
+                  "label": "web",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/bundled/web/web-blocked-page-recovery"
                     }
                   ]
                 }
@@ -646,6 +578,9 @@
                   "label": "creative",
                   "items": [
                     {
+                      "id": "user-guide/skills/optional/creative/creative-ascii-art"
+                    },
+                    {
                       "id": "user-guide/skills/optional/creative/creative-audiocraft-audio-generation"
                     },
                     {
@@ -653,6 +588,9 @@
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-baoyu-comic"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-comfyui"
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-concept-diagrams"
@@ -664,10 +602,16 @@
                       "id": "user-guide/skills/optional/creative/creative-draw-your-font"
                     },
                     {
+                      "id": "user-guide/skills/optional/creative/creative-excalidraw"
+                    },
+                    {
                       "id": "user-guide/skills/optional/creative/creative-heartmula"
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-hyperframes"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-impeccable"
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-kanban-video-orchestrator"
@@ -679,13 +623,22 @@
                       "id": "user-guide/skills/optional/creative/creative-pixel-art"
                     },
                     {
+                      "id": "user-guide/skills/optional/creative/creative-pretext"
+                    },
+                    {
                       "id": "user-guide/skills/optional/creative/creative-simple-english"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-sketch"
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-social-media-content-calendar"
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-tldraw-offline"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-touchdesigner-mcp"
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-unreal-mcp"
@@ -837,6 +790,9 @@
                       "id": "user-guide/skills/optional/mlops/mlops-research-dspy"
                     },
                     {
+                      "id": "user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness"
+                    },
+                    {
                       "id": "user-guide/skills/optional/mlops/mlops-faiss"
                     },
                     {
@@ -846,6 +802,9 @@
                       "id": "user-guide/skills/optional/mlops/mlops-guidance"
                     },
                     {
+                      "id": "user-guide/skills/optional/mlops/mlops-models-huggingface-hub"
+                    },
+                    {
                       "id": "user-guide/skills/optional/mlops/mlops-huggingface-tokenizers"
                     },
                     {
@@ -853,6 +812,9 @@
                     },
                     {
                       "id": "user-guide/skills/optional/mlops/mlops-lambda-labs"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-inference-llama-cpp"
                     },
                     {
                       "id": "user-guide/skills/optional/mlops/mlops-llava"
@@ -891,6 +853,9 @@
                       "id": "user-guide/skills/optional/mlops/mlops-models-segment-anything-model"
                     },
                     {
+                      "id": "user-guide/skills/optional/mlops/mlops-inference-serving-llms-vllm"
+                    },
+                    {
                       "id": "user-guide/skills/optional/mlops/mlops-simpo"
                     },
                     {
@@ -910,6 +875,9 @@
                     },
                     {
                       "id": "user-guide/skills/optional/mlops/mlops-training-unsloth"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases"
                     },
                     {
                       "id": "user-guide/skills/optional/mlops/mlops-whisper"
@@ -966,6 +934,9 @@
                       "id": "user-guide/skills/optional/research/research-bioinformatics"
                     },
                     {
+                      "id": "user-guide/skills/optional/research/research-blogwatcher"
+                    },
+                    {
                       "id": "user-guide/skills/optional/research/research-darwinian-evolver"
                     },
                     {
@@ -991,6 +962,9 @@
                     },
                     {
                       "id": "user-guide/skills/optional/research/research-qmd"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/research/research-research-paper-writing"
                     },
                     {
                       "id": "user-guide/skills/optional/research/research-scrapling"
@@ -1024,8 +998,19 @@
                   ]
                 },
                 {
+                  "label": "smart-home",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/smart-home/smart-home-openhue"
+                    }
+                  ]
+                },
+                {
                   "label": "software-development",
                   "items": [
+                    {
+                      "id": "user-guide/skills/optional/software-development/software-development-ast-grep"
+                    },
                     {
                       "id": "user-guide/skills/optional/software-development/software-development-code-wiki"
                     },
@@ -1045,6 +1030,9 @@
                   "items": [
                     {
                       "id": "user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/web-development/web-development-har-derived-api-client"
                     },
                     {
                       "id": "user-guide/skills/optional/web-development/web-development-page-agent"
@@ -1589,40 +1577,24 @@
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex",
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use",
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent",
+    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-merge-reconciler",
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode",
     "user-guide/skills/bundled/creative/creative-architecture-diagram",
-    "user-guide/skills/bundled/creative/creative-ascii-art",
     "user-guide/skills/bundled/creative/creative-ascii-video",
     "user-guide/skills/bundled/creative/creative-baoyu-infographic",
     "user-guide/skills/bundled/creative/creative-claude-design",
-    "user-guide/skills/bundled/creative/creative-comfyui",
     "user-guide/skills/bundled/creative/creative-design-md",
-    "user-guide/skills/bundled/creative/creative-excalidraw",
     "user-guide/skills/bundled/creative/creative-humanizer",
     "user-guide/skills/bundled/creative/creative-manim-video",
     "user-guide/skills/bundled/creative/creative-p5js",
     "user-guide/skills/bundled/creative/creative-popular-web-designs",
-    "user-guide/skills/bundled/creative/creative-pretext",
-    "user-guide/skills/bundled/creative/creative-sketch",
     "user-guide/skills/bundled/creative/creative-songwriting-and-ai-music",
-    "user-guide/skills/bundled/creative/creative-touchdesigner-mcp",
+    "user-guide/skills/bundled/devops/devops-sdlc-review",
     "user-guide/skills/bundled/email/email-email-inbox-triage",
     "user-guide/skills/bundled/email/email-himalaya",
-    "user-guide/skills/bundled/github/github-codebase-inspection",
-    "user-guide/skills/bundled/github/github-github-auth",
-    "user-guide/skills/bundled/github/github-github-code-review",
-    "user-guide/skills/bundled/github/github-github-issue-to-pr",
-    "user-guide/skills/bundled/github/github-github-issues",
-    "user-guide/skills/bundled/github/github-github-pr-workflow",
-    "user-guide/skills/bundled/github/github-github-repo-management",
     "user-guide/skills/bundled/media/media-gif-search",
     "user-guide/skills/bundled/media/media-songsee",
     "user-guide/skills/bundled/media/media-youtube-content",
-    "user-guide/skills/bundled/mlops/mlops-evaluation-evaluating-llms-harness",
-    "user-guide/skills/bundled/mlops/mlops-huggingface-hub",
-    "user-guide/skills/bundled/mlops/mlops-inference-llama-cpp",
-    "user-guide/skills/bundled/mlops/mlops-inference-serving-llms-vllm",
-    "user-guide/skills/bundled/mlops/mlops-evaluation-weights-and-biases",
     "user-guide/skills/bundled/note-taking/note-taking-obsidian",
     "user-guide/skills/bundled/productivity/productivity-airtable",
     "user-guide/skills/bundled/productivity/productivity-box",
@@ -1631,36 +1603,31 @@
     "user-guide/skills/bundled/productivity/productivity-google-workspace",
     "user-guide/skills/bundled/productivity/productivity-maps",
     "user-guide/skills/bundled/productivity/productivity-meeting-action-items",
-    "user-guide/skills/bundled/productivity/productivity-nano-pdf",
     "user-guide/skills/bundled/productivity/productivity-notion",
-    "user-guide/skills/bundled/productivity/productivity-ocr-and-documents",
     "user-guide/skills/bundled/productivity/productivity-pdf",
     "user-guide/skills/bundled/productivity/productivity-powerpoint",
     "user-guide/skills/bundled/productivity/productivity-product-price-monitor",
-    "user-guide/skills/bundled/productivity/productivity-session-librarian",
     "user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline",
     "user-guide/skills/bundled/productivity/productivity-weekly-review-planning",
     "user-guide/skills/bundled/productivity/productivity-xlsx",
     "user-guide/skills/bundled/research/research-arxiv",
-    "user-guide/skills/bundled/research/research-blocked-page-recovery",
-    "user-guide/skills/bundled/research/research-blogwatcher",
     "user-guide/skills/bundled/research/research-competitor-news-monitor",
     "user-guide/skills/bundled/research/research-grounded-citations",
     "user-guide/skills/bundled/research/research-llm-wiki",
-    "user-guide/skills/bundled/research/research-research-paper-writing",
-    "user-guide/skills/bundled/smart-home/smart-home-openhue",
     "user-guide/skills/bundled/social-media/social-media-xurl",
+    "user-guide/skills/bundled/software-development/software-development-codebase-inspection",
     "user-guide/skills/bundled/software-development/software-development-dogfood",
+    "user-guide/skills/bundled/software-development/software-development-github",
     "user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring",
     "user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom",
     "user-guide/skills/bundled/software-development/software-development-node-inspect-debugger",
-    "user-guide/skills/bundled/software-development/software-development-plan",
     "user-guide/skills/bundled/software-development/software-development-python-debugpy",
     "user-guide/skills/bundled/software-development/software-development-requesting-code-review",
     "user-guide/skills/bundled/software-development/software-development-simplify-code",
     "user-guide/skills/bundled/software-development/software-development-spike",
     "user-guide/skills/bundled/software-development/software-development-systematic-debugging",
     "user-guide/skills/bundled/software-development/software-development-test-driven-development",
+    "user-guide/skills/bundled/web/web-blocked-page-recovery",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok",
@@ -1670,20 +1637,27 @@
     "user-guide/skills/optional/blockchain/blockchain-hyperliquid",
     "user-guide/skills/optional/blockchain/blockchain-solana",
     "user-guide/skills/optional/communication/communication-one-three-one-rule",
+    "user-guide/skills/optional/creative/creative-ascii-art",
     "user-guide/skills/optional/creative/creative-audiocraft-audio-generation",
     "user-guide/skills/optional/creative/creative-baoyu-article-illustrator",
     "user-guide/skills/optional/creative/creative-baoyu-comic",
+    "user-guide/skills/optional/creative/creative-comfyui",
     "user-guide/skills/optional/creative/creative-concept-diagrams",
     "user-guide/skills/optional/creative/creative-creative-ideation",
     "user-guide/skills/optional/creative/creative-draw-your-font",
+    "user-guide/skills/optional/creative/creative-excalidraw",
     "user-guide/skills/optional/creative/creative-heartmula",
     "user-guide/skills/optional/creative/creative-hyperframes",
+    "user-guide/skills/optional/creative/creative-impeccable",
     "user-guide/skills/optional/creative/creative-kanban-video-orchestrator",
     "user-guide/skills/optional/creative/creative-meme-generation",
     "user-guide/skills/optional/creative/creative-pixel-art",
+    "user-guide/skills/optional/creative/creative-pretext",
     "user-guide/skills/optional/creative/creative-simple-english",
+    "user-guide/skills/optional/creative/creative-sketch",
     "user-guide/skills/optional/creative/creative-social-media-content-calendar",
     "user-guide/skills/optional/creative/creative-tldraw-offline",
+    "user-guide/skills/optional/creative/creative-touchdesigner-mcp",
     "user-guide/skills/optional/creative/creative-unreal-mcp",
     "user-guide/skills/optional/data-science/data-science-jupyter-notebook",
     "user-guide/skills/optional/devops/devops-actual-setup",
@@ -1717,12 +1691,15 @@
     "user-guide/skills/optional/mlops/mlops-chroma",
     "user-guide/skills/optional/mlops/mlops-clip",
     "user-guide/skills/optional/mlops/mlops-research-dspy",
+    "user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness",
     "user-guide/skills/optional/mlops/mlops-faiss",
     "user-guide/skills/optional/mlops/mlops-flash-attention",
     "user-guide/skills/optional/mlops/mlops-guidance",
+    "user-guide/skills/optional/mlops/mlops-models-huggingface-hub",
     "user-guide/skills/optional/mlops/mlops-huggingface-tokenizers",
     "user-guide/skills/optional/mlops/mlops-instructor",
     "user-guide/skills/optional/mlops/mlops-lambda-labs",
+    "user-guide/skills/optional/mlops/mlops-inference-llama-cpp",
     "user-guide/skills/optional/mlops/mlops-llava",
     "user-guide/skills/optional/mlops/mlops-modal",
     "user-guide/skills/optional/mlops/mlops-nemo-curator",
@@ -1735,6 +1712,7 @@
     "user-guide/skills/optional/mlops/mlops-qdrant",
     "user-guide/skills/optional/mlops/mlops-saelens",
     "user-guide/skills/optional/mlops/mlops-models-segment-anything-model",
+    "user-guide/skills/optional/mlops/mlops-inference-serving-llms-vllm",
     "user-guide/skills/optional/mlops/mlops-simpo",
     "user-guide/skills/optional/mlops/mlops-slime",
     "user-guide/skills/optional/mlops/mlops-stable-diffusion",
@@ -1742,6 +1720,7 @@
     "user-guide/skills/optional/mlops/mlops-torchtitan",
     "user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning",
     "user-guide/skills/optional/mlops/mlops-training-unsloth",
+    "user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases",
     "user-guide/skills/optional/mlops/mlops-whisper",
     "user-guide/skills/optional/payments/payments-mpp-agent",
     "user-guide/skills/optional/payments/payments-stripe-link-cli",
@@ -1755,6 +1734,7 @@
     "user-guide/skills/optional/productivity/productivity-siyuan",
     "user-guide/skills/optional/productivity/productivity-telephony",
     "user-guide/skills/optional/research/research-bioinformatics",
+    "user-guide/skills/optional/research/research-blogwatcher",
     "user-guide/skills/optional/research/research-darwinian-evolver",
     "user-guide/skills/optional/research/research-domain-intel",
     "user-guide/skills/optional/research/research-drug-discovery",
@@ -1764,6 +1744,7 @@
     "user-guide/skills/optional/research/research-parallel-cli",
     "user-guide/skills/optional/research/research-pinecone-research",
     "user-guide/skills/optional/research/research-qmd",
+    "user-guide/skills/optional/research/research-research-paper-writing",
     "user-guide/skills/optional/research/research-scrapling",
     "user-guide/skills/optional/research/research-searxng-search",
     "user-guide/skills/optional/security/security-1password",
@@ -1772,11 +1753,14 @@
     "user-guide/skills/optional/security/security-sherlock",
     "user-guide/skills/optional/security/security-unbroker",
     "user-guide/skills/optional/security/security-web-pentest",
+    "user-guide/skills/optional/smart-home/smart-home-openhue",
+    "user-guide/skills/optional/software-development/software-development-ast-grep",
     "user-guide/skills/optional/software-development/software-development-code-wiki",
     "user-guide/skills/optional/software-development/software-development-grill-me",
     "user-guide/skills/optional/software-development/software-development-rest-graphql-debug",
     "user-guide/skills/optional/software-development/software-development-subagent-driven-development",
     "user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy",
+    "user-guide/skills/optional/web-development/web-development-har-derived-api-client",
     "user-guide/skills/optional/web-development/web-development-page-agent",
     "user-guide/skills/optional/web-development/web-development-publish-site",
     "user-guide/skills/optional/yuanbao/yuanbao-yuanbao",

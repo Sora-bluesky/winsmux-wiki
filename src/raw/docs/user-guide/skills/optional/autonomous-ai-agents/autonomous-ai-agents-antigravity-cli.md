@@ -2,7 +2,7 @@
 title: "Antigravity Cli — Antigravity CLI（agy）を使いこなします。プラグイン、認証、サンドボックス"
 description: "Antigravity CLI（agy）を使いこなします。プラグイン、認証、サンドボックス"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli.md
-upstream_blob: bb6e19904fde4a50b0fd0825a1083aa144d66138
+upstream_blob: d4e2f48b971a0b05fe8e49c31f754bd46a50dad0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli
 ---
@@ -16,7 +16,7 @@ Antigravity CLI（agy）を使いこなします。プラグイン、認証、�
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/autonomous-ai-agents/antigravity-cli` で導入します |
-| パス | `optional-skills/autonomous-ai-agents/antigravity-cli` |
+| パス | `optional-skills/autonomous-ai-agents\antigravity-cli` |
 | バージョン | `0.2.0` |
 | 作者 | Tony Simons（asimons81）、Hermes Agent |
 | ライセンス | MIT |

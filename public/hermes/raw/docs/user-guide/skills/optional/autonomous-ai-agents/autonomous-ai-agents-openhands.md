@@ -2,7 +2,7 @@
 title: "Openhands — OpenHands CLI にコーディングを任せる（モデルを選ばない、LiteLLM）"
 description: "OpenHands CLI にコーディングを任せる（モデルを選ばない、LiteLLM）"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands.md
-upstream_blob: 9774fe25b0279e1ddda5b76dc87689310ad49d90
+upstream_blob: b222bdecf7a1f57e9dc78bbbaa54281ce897d8b0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands
 ---
@@ -16,7 +16,7 @@ OpenHands CLI にコーディングを任せます（モデルを選ばない、
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/autonomous-ai-agents/openhands` で入れます |
-| パス | `optional-skills/autonomous-ai-agents/openhands` |
+| パス | `optional-skills/autonomous-ai-agents\openhands` |
 | バージョン | `0.1.0` |
 | 作者 | Tim Koepsel (xzessmedia), Hermes Agent |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Manim Video — Manim CE のアニメーション: 3Blue1Brown 風の数学・アルゴリズム動画"
 description: "Manim CE のアニメーション: 3Blue1Brown 風の数学・アルゴリズム動画"
 upstream_path: user-guide/skills/bundled/creative/creative-manim-video.md
-upstream_blob: f22a7005d822b5d3be22fa74a882fbce5073e364
+upstream_blob: 272a08fed71fd494c3d5c50cb87486e7ddc4a5f9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-manim-video
 ---
@@ -16,7 +16,7 @@ Manim CE のアニメーションで、3Blue1Brown 風の数学・アルゴリ�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative/manim-video` |
+| パス | `skills/creative\manim-video` |
 | バージョン | `1.0.0` |
 | 作者 | SHL0MS, Hermes Agent |
 | ライセンス | MIT |

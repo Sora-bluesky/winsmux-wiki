@@ -2,7 +2,7 @@
 title: "Llm Wiki — Karpathy の LLM Wiki: 相互にリンクした markdown のナレッジベースを作り、問い合わせる"
 description: "Karpathy の LLM Wiki: 相互にリンクした markdown のナレッジベースを作り、問い合わせる"
 upstream_path: user-guide/skills/bundled/research/research-llm-wiki.md
-upstream_blob: 566c7378b9e859ff1767e73511041c86737bb7f8
+upstream_blob: 6d97ac289371363624f4054a2d43b2d3ba70c35c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-llm-wiki
 ---
@@ -16,7 +16,7 @@ Karpathy の LLM Wiki です。相互にリンクした markdown のナレッジ
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/research/llm-wiki` |
+| パス | `skills/research\llm-wiki` |
 | バージョン | `2.1.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

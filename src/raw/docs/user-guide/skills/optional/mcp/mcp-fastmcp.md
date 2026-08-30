@@ -2,7 +2,7 @@
 title: "Fastmcp — Python で MCP サーバーを作り、試し、公開する"
 description: "Python で MCP サーバーを作り、試し、公開する"
 upstream_path: user-guide/skills/optional/mcp/mcp-fastmcp.md
-upstream_blob: 8012434d42d1316285fa2786a132232f9182097c
+upstream_blob: 2665417067edfce0b55c73946e50a63c7a6fc975
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mcp/mcp-fastmcp
 ---
@@ -16,7 +16,7 @@ Python で MCP サーバーを作り、試し、公開します。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mcp/fastmcp` で入れます |
-| パス | `optional-skills/mcp/fastmcp` |
+| パス | `optional-skills/mcp\fastmcp` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）"
 description: "Claude Code CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md
-upstream_blob: 4310d1b074cffee28e43e04e77d86c8199acb543
+upstream_blob: a46b7045def4678b993c3cb725874c47f20fe058
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code
 ---
@@ -16,7 +16,7 @@ Claude Code CLI にコーディングを任せます（機能追加、PR）。
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/autonomous-ai-agents/claude-code` |
+| パス | `skills/autonomous-ai-agents\claude-code` |
 | バージョン | `2.2.1` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |
@@ -231,7 +231,7 @@ terminal(command="claude -p 'List all functions in src/' --output-format json --
 terminal(command="claude -p 'Start refactoring the database layer' --output-format json --max-turns 10 > /tmp/session.json", workdir="/project", timeout=180)
 
 # Resume with session ID
-terminal(command="claude -p 'Continue and add connection pooling' --resume $(cat /tmp/session.json | python3 -c 'import json,sys; print(json.load(sys.stdin)[\"session_id\"])') --max-turns 5", workdir="/project", timeout=120)
+terminal(command="claude -p 'Continue and add connection pooling' --resume $(cat /tmp/session.json | python -c 'import json,sys; print(json.load(sys.stdin)[\"session_id\"])') --max-turns 5", workdir="/project", timeout=120)
 
 # Or resume the most recent session in the same directory
 terminal(command="claude -p 'What did you do last time?' --continue --max-turns 1", workdir="/project", timeout=30)
@@ -741,7 +741,7 @@ terminal(command="tmux capture-pane -t dev -p -S -10")
 2. **`--dangerously-skip-permissions` のダイアログは「No, exit」が最初に選ばれています。** 受け入れるには下へ移動してから Enter を送ってください。プリントモード（`-p`）ならこのダイアログ自体が出ません。
 3. **`--max-budget-usd` の下限はおよそ $0.05 です。** システムプロンプトのキャッシュ生成だけでこれくらいかかるため、それより低くするとすぐエラーになります。
 4. **`--max-turns` はプリントモード専用です。** 対話セッションでは無視されます。
-5. **Claude が `python3` ではなく `python` を使うことがあります。** `python` へのシンボリックリンクがない環境では最初のコマンドが失敗しますが、Claude が自分で直します。
+5. **Claude が `python` ではなく `python` を使うことがあります。** `python` へのシンボリックリンクがない環境では、Claude の bash コマンドが最初は失敗しますが、Claude が自分で直します。
 6. **セッションを再開するには同じディレクトリにいる必要があります。** `--continue` は、いまの作業ディレクトリでの直近のセッションを探します。
 7. **`--json-schema` には十分な `--max-turns` が要ります。** 構造化された出力を作る前にファイルを読む必要があり、何往復かかかるためです。
 8. **信頼のダイアログはディレクトリごとに一度だけです。** 初回のあとは記録され、二度と出ません。

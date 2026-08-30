@@ -2,7 +2,7 @@
 title: "Claude Design — 単発の HTML 成果物をデザインします（ランディングページ、スライド、プロトタイプ）"
 description: "単発の HTML 成果物をデザインします（ランディングページ、スライド、プロトタイプ）"
 upstream_path: user-guide/skills/bundled/creative/creative-claude-design.md
-upstream_blob: c20dd7dceb7c13ac5922b358040c6903bd22bb0e
+upstream_blob: 95fdaac6e7c3ea6ca3451e5376b5833d5e438bb4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-claude-design
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative/claude-design` |
+| パス | `skills/creative\claude-design` |
 | バージョン | `1.1.0` |
 | 作者 | BadTechBandit |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `design`, `html`, `prototype`, `ux`, `ui`, `creative`, `artifact`, `deck`, `motion`, `design-system` |
-| 関連 skill | [`design-md`](/hermes/docs/user-guide/skills/bundled/creative/creative-design-md/), [`popular-web-designs`](/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/), [`excalidraw`](/hermes/docs/user-guide/skills/bundled/creative/creative-excalidraw/), [`architecture-diagram`](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) |
+| 関連 skill | [`design-md`](/hermes/docs/user-guide/skills/bundled/creative/creative-design-md/), [`popular-web-designs`](/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/), [`excalidraw`](/hermes/docs/user-guide/skills/optional/creative/creative-excalidraw/), [`architecture-diagram`](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

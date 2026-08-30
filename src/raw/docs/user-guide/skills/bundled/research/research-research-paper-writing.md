@@ -2,7 +2,7 @@
 title: "Research Paper Writing — NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる"
 description: "NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる"
 upstream_path: user-guide/skills/bundled/research/research-research-paper-writing.md
-upstream_blob: d7677cac8e7a23ceec4b53a5b002ddfb73b437fb
+upstream_blob: 3514a6d73f28a23dc7ecaecaf5af63e944864d4a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-research-paper-writing
 ---
@@ -23,7 +23,7 @@ NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上
 | 依存関係 | `semanticscholar`, `arxiv`, `habanero`, `requests`, `scipy`, `numpy`, `matplotlib`, `SciencePlots` |
 | 対応プラットフォーム | linux, macos |
 | タグ | `Research`, `Paper Writing`, `Experiments`, `ML`, `AI`, `NeurIPS`, `ICML`, `ICLR`, `ACL`, `AAAI`, `COLM`, `LaTeX`, `Citations`, `Statistical Analysis` |
-| 関連 skill | [`arxiv`](/hermes/docs/user-guide/skills/bundled/research/research-arxiv/), [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/), [`plan`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-plan/) |
+| 関連 skill | [`arxiv`](/hermes/docs/user-guide/skills/bundled/research/research-arxiv/), [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/), `plan`（いまは組み込みの `/plan` コマンドです） |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

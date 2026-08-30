@@ -2,7 +2,7 @@
 title: "Slime — Megatron と SGLang による LLM の強化学習後処理"
 description: "Megatron と SGLang による LLM の強化学習後処理"
 upstream_path: user-guide/skills/optional/mlops/mlops-slime.md
-upstream_blob: 27df63be800f3dc69a8d7e1b2384775127e0f937
+upstream_blob: 3b5f5592df61183fbc58e15db4f158a8c76f672e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-slime
 ---
@@ -16,7 +16,7 @@ Megatron と SGLang を使って、LLM を強化学習で仕上げます。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/slime` で導入します |
-| パス | `optional-skills/mlops/slime` |
+| パス | `optional-skills/mlops\slime` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

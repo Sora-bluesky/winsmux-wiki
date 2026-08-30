@@ -2,7 +2,7 @@
 title: "Minecraft Modpack Server — MOD 入りの Minecraft サーバーを立てる（CurseForge、Modrinth）"
 description: "MOD 入りの Minecraft サーバーを立てる（CurseForge、Modrinth）"
 upstream_path: user-guide/skills/optional/gaming/gaming-minecraft-modpack-server.md
-upstream_blob: 4b8f0ec356c9f1fcb9fb26d9ca52f40ff9703df9
+upstream_blob: 2f0e925f2305cb6df7711a5cbe51afa458bef712
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server
 ---
@@ -16,7 +16,7 @@ MOD 入りの Minecraft サーバーを立てます（CurseForge、Modrinth）�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/gaming/minecraft-modpack-server` で入れます |
-| パス | `optional-skills/gaming/minecraft-modpack-server` |
+| パス | `optional-skills/gaming\minecraft-modpack-server` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |

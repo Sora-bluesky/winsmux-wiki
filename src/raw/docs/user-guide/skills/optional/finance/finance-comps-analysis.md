@@ -2,7 +2,7 @@
 title: "Comps Analysis — Excel で類似企業比較の評価ブックを作る"
 description: "Excel で類似企業比較の評価ブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-comps-analysis.md
-upstream_blob: 192f0f98e5e3e56c37041a209a247a1e5a7c6cec
+upstream_blob: de8d1aa2e43ae9775e93699b70fc5b49207bd13d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-comps-analysis
 ---
@@ -16,7 +16,7 @@ Excel で類似企業比較の評価ブックを作ります。
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/finance/comps-analysis` で入れます |
-| パス | `optional-skills/finance/comps-analysis` |
+| パス | `optional-skills/finance\comps-analysis` |
 | バージョン | `1.0.0` |
 | 作者 | Anthropic（Nous Research が移植） |
 | ライセンス | Apache-2.0 |
@@ -574,7 +574,7 @@ Revenue Growth (YoY) % | EBITDA Margin | FCF Margin | Rule of 40
 
 ### 比較可能性の問題 {#comparability-issues}
 🚩 決算期がばらばら（時期のずれが問題になります）  
-🚩ixing pure-play and conglomerates  
+🚩 専業企業とコングロマリットを混ぜている  
 🚩 事業モデルが大きく違うのに「比較対象」と呼んでいる
 
 **迷ったらその企業は外してください。** 怪しい比較対象6社より、確かな3社のほうが良い結果になります。

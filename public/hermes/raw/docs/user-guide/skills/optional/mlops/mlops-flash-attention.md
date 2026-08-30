@@ -2,7 +2,7 @@
 title: "Flash Attention — 長い系列を扱う Transformer の学習と推論を速くする"
 description: "長い系列を扱う Transformer の学習と推論を速くする"
 upstream_path: user-guide/skills/optional/mlops/mlops-flash-attention.md
-upstream_blob: 5269e41af2c77ea3b81bb417250638f01fc6b30e
+upstream_blob: 52b717fee5023c18494c9d78ba50b8f6b1443dce
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-flash-attention
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/flash-attention` で導入します |
-| パス | `optional-skills/mlops/flash-attention` |
+| パス | `optional-skills/mlops\flash-attention` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -372,9 +372,9 @@ Flash Attention は速さのために float16/bfloat16 を使います。float32
 
 ## さらに踏み込む {#advanced-topics}
 
-**HuggingFace Transformers との組み合わせ**: BERT、GPT、Llama で Flash Attention を有効にする方法は [references/transformers-integration.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/flash-attention/references/transformers-integration.md) を参照してください。
+**HuggingFace Transformers との組み合わせ**: BERT、GPT、Llama で Flash Attention を有効にする方法は [references/transformers-integration.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\flash-attention/references/transformers-integration.md) を参照してください。
 
-**性能の測定結果**: GPU と系列長ごとの速さとメモリの比較は [references/benchmarks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/flash-attention/references/benchmarks.md) にまとまっています。
+**性能の測定結果**: GPU と系列長ごとの速さとメモリの比較は [references/benchmarks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\flash-attention/references/benchmarks.md) にまとまっています。
 
 ## ハードウェアの条件 {#hardware-requirements}
 

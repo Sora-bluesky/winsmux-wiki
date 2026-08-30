@@ -2,7 +2,7 @@
 title: "Simple English — 技術文書を ASD-STE100 の簡易技術英語に書き直す"
 description: "技術文書を ASD-STE100 の簡易技術英語に書き直す"
 upstream_path: user-guide/skills/optional/creative/creative-simple-english.md
-upstream_blob: 9c35b2de880c4b79d008bda3de421f172959a52b
+upstream_blob: a00e0623c8811a9e3f42a871023b375c764ab34e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-simple-english
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/simple-english` で入れます |
-| パス | `optional-skills/creative/simple-english` |
+| パス | `optional-skills/creative\simple-english` |
 | バージョン | `1.2.0` |
 | 作者 | AminBlg (https://github.com/AminBlg/SimpleEnglish), ported by Hermes Agent |
 | ライセンス | MIT |
@@ -256,7 +256,7 @@ Rule 8.6 はソフトウェアの文章で効いてきます。バッククォ�
 | leverage, utilize | use |
 | in order to | to |
 | prior to | before |
-| ensure | make sure that |
+| ensure | make sure that（厳格な構え。実用重視の構えでは、check に当たる動詞として ensure を 1 つに選んだのなら、そのまま使ってかまいません） |
 | it is worth noting that | （削る） |
 | it's important to, crucially | （削って、事実だけを言う） |
 | simply, just, easily, seamlessly, effortlessly | （削る） |

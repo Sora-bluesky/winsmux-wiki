@@ -2,7 +2,7 @@
 title: "Requesting Code Review — コミット前のレビュー: セキュリティ検査、品質の関門、自動修正"
 description: "コミット前のレビュー: セキュリティ検査、品質の関門、自動修正"
 upstream_path: user-guide/skills/bundled/software-development/software-development-requesting-code-review.md
-upstream_blob: 66100e83fd0223c3a312cd3480f3ec980906ec85
+upstream_blob: dfdfb42622ad852213b576d63300982062e34ed4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development/requesting-code-review` |
+| パス | `skills/software-development\requesting-code-review` |
 | バージョン | `2.0.0` |
 | 作者 | Hermes Agent（obra/superpowers と MorAlekss を元にしています） |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `code-review`, `security`, `verification`, `quality`, `pre-commit`, `auto-fix` |
-| 関連 skill | [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/), [`plan`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-plan/), [`test-driven-development`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/), [`github-code-review`](/hermes/docs/user-guide/skills/bundled/github/github-github-code-review/) |
+| 関連 skill | [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/), [`test-driven-development`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/), [`github`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-github/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -46,8 +46,8 @@ sources:
 
 **省いてよい場面:** ドキュメントだけの変更、設定のちょっとした調整、利用者が「検証はいらない」と言ったときです。
 
-**この skill と github-code-review の違い:** この skill は、コミット前に自分の変更を検証します。
-`github-code-review` は、GitHub 上で他の人の PR にコメントを付けながらレビューするものです。
+**この skill と github の違い:** この skill は、コミット前に自分の変更を検証します。
+`github` は、GitHub 上で他の人の PR にコメントを付けながらレビューするものです。
 
 ## ステップ 1 — 差分を取る {#step-1-get-the-diff}
 

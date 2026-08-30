@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使う環境変数をすべて集めた早見表"
 upstream_path: reference/environment-variables.md
-upstream_blob: 135da4e864bb3d131f8cfc76c41d7584cebfb580
+upstream_blob: 11eaa30a15527d70623e7e5a60479651666b5fc7
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -85,8 +85,13 @@ Hermes は環境変数をプロセスの環境から読み、自分で管理す�
 | `ANTHROPIC_TOKEN` | Anthropic の OAuth / セットアップ トークンを手動または従来の形で上書きします |
 | `DASHSCOPE_API_KEY` | Qwen のモデル向けの Qwen Cloud（Alibaba DashScope）の API キー（[modelstudio.console.alibabacloud.com](https://modelstudio.console.alibabacloud.com/)） |
 | `DASHSCOPE_BASE_URL` | DashScope のベース URL を自分で指定します（既定: `https://dashscope-intl.aliyuncs.com/compatible-mode/v1`。中国本土のリージョンでは `https://dashscope.aliyuncs.com/compatible-mode/v1` を使います） |
-| `ALIBABA_CODING_PLAN_API_KEY` | Qwen Coding Plan の API キー（`alibaba-coding-plan` プロバイダー） |
-| `ALIBABA_CODING_PLAN_BASE_URL` | Qwen Coding Plan のベース URL を上書きします |
+| `DASHSCOPE_CN_BASE_URL` | 中国本土向け `alibaba-cn` の DashScope ベース URL を上書きします |
+| `ALIBABA_CODING_PLAN_API_KEY` | Qwen Coding Plan の API キー（`alibaba-coding-plan` / `alibaba-coding-plan-cn` プロバイダー） |
+| `ALIBABA_CODING_PLAN_BASE_URL` | Qwen Coding Plan のベース URL を上書きします（国際版） |
+| `ALIBABA_CODING_PLAN_CN_BASE_URL` | Qwen Coding Plan のベース URL を上書きします（中国本土） |
+| `ALIBABA_TOKEN_PLAN_API_KEY` | Alibaba Model Studio Token Plan の API キー（`alibaba-token-plan` / `alibaba-token-plan-cn` プロバイダー） |
+| `ALIBABA_TOKEN_PLAN_BASE_URL` | Token Plan のベース URL を上書きします（国際版） |
+| `ALIBABA_TOKEN_PLAN_CN_BASE_URL` | Token Plan のベース URL を上書きします（中国本土） |
 | `DEEPSEEK_API_KEY` | DeepSeek に直接つなぐための API キー（[platform.deepseek.com](https://platform.deepseek.com/api_keys)） |
 | `DEEPSEEK_BASE_URL` | DeepSeek API のベース URL を自分で指定します |
 | `DEEPINFRA_API_KEY` | DeepInfra の API キー（[deepinfra.com](https://deepinfra.com/dash/api_keys)） |

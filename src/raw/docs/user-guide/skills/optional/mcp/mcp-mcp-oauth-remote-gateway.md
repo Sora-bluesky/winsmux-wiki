@@ -2,7 +2,7 @@
 title: "Mcp Oauth Remote Gateway — 画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す"
 description: "画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す"
 upstream_path: user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway.md
-upstream_blob: 935382b96fc70858a3e54ac203efc4dfee307950
+upstream_blob: 6e43ce44d116e057f2ee6d44c88cde25dcb8d436
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mcp/mcp-oauth-remote-gateway` で入れます |
-| パス | `optional-skills/mcp/mcp-oauth-remote-gateway` |
+| パス | `optional-skills/mcp\mcp-oauth-remote-gateway` |
 | バージョン | `1.0.0` |
 | 作者 | Ben Barclay (benbarclay), Hermes Agent |
 | ライセンス | MIT |

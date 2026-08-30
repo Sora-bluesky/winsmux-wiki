@@ -2,7 +2,7 @@
 title: "Memento Flashcards — 間隔反復の暗記カード: 作成・復習・クイズ・書き出し"
 description: "間隔反復の暗記カード: 作成・復習・クイズ・書き出し"
 upstream_path: user-guide/skills/optional/productivity/productivity-memento-flashcards.md
-upstream_blob: 71caeb2607b9c15c793dc93c826d0d8470e3656f
+upstream_blob: f2d0df28d33a4178b9f06327039be19705511bf7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/productivity/memento-flashcards` で入れます |
-| パス | `optional-skills/productivity/memento-flashcards` |
+| パス | `optional-skills/productivity\memento-flashcards` |
 | バージョン | `1.0.0` |
 | 作者 | Memento AI |
 | ライセンス | MIT |
@@ -130,7 +130,6 @@ python3 ~/.hermes/skills/productivity/memento-flashcards/scripts/memento_cards.p
 ### 手動でカードを作る {#manual-card-creation}
 
 カードを作ってほしいとはっきり言われたときは、次を聞きます。
-
 1. 質問（カードの表）
 2. 答え（カードの裏）
 3. まとまりの名前（任意。既定は `"General"`）

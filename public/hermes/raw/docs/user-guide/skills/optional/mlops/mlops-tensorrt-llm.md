@@ -2,7 +2,7 @@
 title: "Tensorrt Llm — NVIDIA の GPU で LLM の推論を高い処理量で動かす"
 description: "NVIDIA の GPU で LLM の推論を高い処理量で動かす"
 upstream_path: user-guide/skills/optional/mlops/mlops-tensorrt-llm.md
-upstream_blob: 9ef46ce0fbaa37b65dbe0bac2864f059f4f21db5
+upstream_blob: 727812c1c8d7fa0526979788ec47601086c77053
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-tensorrt-llm
 ---
@@ -16,7 +16,7 @@ NVIDIA の GPU で、LLM の推論を高い処理量で動かします。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/tensorrt-llm` で導入します |
-| パス | `optional-skills/mlops/tensorrt-llm` |
+| パス | `optional-skills/mlops\tensorrt-llm` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -198,9 +198,9 @@ outputs = llm.generate(
 
 ## 参考ドキュメント {#references}
 
-- **[Optimization Guide](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/tensorrt-llm/references/optimization.md)** - 量子化、まとめ処理、KV キャッシュの調整
-- **[Multi-GPU Setup](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/tensorrt-llm/references/multi-gpu.md)** - テンソル並列とパイプライン並列、複数ノード
-- **[Serving Guide](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/tensorrt-llm/references/serving.md)** - 本番での運用、監視、自動での増減
+- **[Optimization Guide](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\tensorrt-llm/references/optimization.md)** - 量子化、まとめ処理、KV キャッシュの調整
+- **[Multi-GPU Setup](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\tensorrt-llm/references/multi-gpu.md)** - テンソル並列とパイプライン並列、複数ノード
+- **[Serving Guide](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\tensorrt-llm/references/serving.md)** - 本番での運用、監視、自動での増減
 
 ## 参考情報 {#resources}
 

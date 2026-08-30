@@ -2,7 +2,7 @@
 title: "Oss Forensics — GitHub サプライチェーンのフォレンジック: 復元・IOC・報告"
 description: "GitHub サプライチェーンのフォレンジック: 復元・IOC・報告"
 upstream_path: user-guide/skills/optional/security/security-oss-forensics.md
-upstream_blob: 8c331a4ddcfb2070402642c545b1971f850562aa
+upstream_blob: 5b70a7f1641e22ba0357cecf44a19abc0781fa3e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-oss-forensics
 ---
@@ -16,7 +16,7 @@ GitHub のサプライチェーン・フォレンジック: 復元・IOC・報�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/security/oss-forensics` で導入します |
-| パス | `optional-skills/security/oss-forensics` |
+| パス | `optional-skills/security\oss-forensics` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |
@@ -75,7 +75,7 @@ RAPTOR のフォレンジックシステムを応用しています。GitHub Arc
    ```
 2. 証拠ストアを初期化します:
    ```bash
-   python3 SKILL_DIR/scripts/evidence-store.py --store evidence.json list
+   python SKILL_DIR/scripts/evidence-store.py --store evidence.json list
    ```
 3. フォレンジックレポートのテンプレートをコピーします:
    ```bash
@@ -105,7 +105,7 @@ RAPTOR のフォレンジックシステムを応用しています。GitHub Arc
 - 値
 - 出所（ユーザー提供、推定）
 
-**参照**: IOC の分類については [evidence-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/evidence-types.md) を参照してください。
+**参照**: IOC の分類については [evidence-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/references/evidence-types.md) を参照してください。
 
 ---
 
@@ -145,13 +145,13 @@ git log --all --diff-filter=A --name-only --format="%H %ai" -- "*.so" "*.dll" "*
 git log --show-signature --format="%H %ai %aN" > ../signature_check.txt 2>&1
 ```
 
-**収集する証拠**（`python3 SKILL_DIR/scripts/evidence-store.py add` で追加します）:
+**収集する証拠**（`python SKILL_DIR/scripts/evidence-store.py add` で追加します）:
 - 各 dangling コミットの SHA → 種別: `git`
 - force-push の証拠（履歴の書き換えを示す reflog）→ 種別: `git`
 - 検証済み貢献者からの未署名コミット → 種別: `git`
 - 不審なバイナリファイルの追加 → 種別: `git`
 
-**参照**: force-push されたコミットへのアクセスについては [recovery-techniques.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/recovery-techniques.md) を参照してください。
+**参照**: force-push されたコミットへのアクセスについては [recovery-techniques.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/references/recovery-techniques.md) を参照してください。
 
 ---
 
@@ -191,7 +191,7 @@ curl -s "https://api.github.com/repos/OWNER/REPO/commits/SHA" | jq .sha
 - 貢献者がアーカイブのイベントには現れるが貢献者リストにはいない → 権限剥奪の証拠
 - コミットがアーカイブの PushEvent にはあるが API のコミットリストにはない → force-push／削除の証拠
 
-**参照**: GH のイベント種別については [evidence-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/evidence-types.md) を参照してください。
+**参照**: GH のイベント種別については [evidence-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/references/evidence-types.md) を参照してください。
 
 ---
 
@@ -228,7 +228,7 @@ curl -s "https://web.archive.org/cdx/search/cdx?url=github.com/OWNER/REPO/wiki/*
 - 変更を示す README の過去バージョン
 - アーカイブには存在するが、現在の GitHub の状態にはない内容の証拠
 
-**参照**: CDX API のパラメータについては [github-archive-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/github-archive-guide.md) を参照してください。
+**参照**: CDX API のパラメータについては [github-archive-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/references/github-archive-guide.md) を参照してください。
 
 ---
 
@@ -277,7 +277,7 @@ LIMIT 200
 - 不審な CI/CD 自動化を示す WorkflowRunEvent
 - git ログの「空白」に先立つ PushEvent（書き換えの証拠）
 
-**参照**: 12 種類のイベントすべてとクエリパターンについては [github-archive-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/github-archive-guide.md) を参照してください。
+**参照**: 12 種類のイベントすべてとクエリパターンについては [github-archive-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/references/github-archive-guide.md) を参照してください。
 
 ---
 
@@ -290,7 +290,7 @@ LIMIT 200
 - 各ドメイン／IP について: パッシブ DNS と WHOIS 記録を確認します（公開 WHOIS サービスに対する `web_extract` 経由）。
 - 各パッケージ名について: 一致する悪意あるパッケージの報告がないか、npm／PyPI を確認します。
 - 各アクターのユーザー名について: GitHub のプロフィール、貢献履歴、アカウント作成からの経過を確認します。
-- force-push されたコミットを 3 つの方法で復元します（[recovery-techniques.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/recovery-techniques.md) を参照）。
+- force-push されたコミットを 3 つの方法で復元します（[recovery-techniques.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/references/recovery-techniques.md) を参照）。
 
 ---
 
@@ -298,7 +298,7 @@ LIMIT 200
 
 すべての調査担当が完了したら:
 
-1. `python3 SKILL_DIR/scripts/evidence-store.py --store evidence.json list` を実行して、収集した証拠をすべて確認します。
+1. `python SKILL_DIR/scripts/evidence-store.py --store evidence.json list` を実行して、収集した証拠をすべて確認します。
 2. 各証拠について、`content_sha256` ハッシュが元のソースと一致することを確認します。
 3. 証拠を次のようにグループ化します:
    - **タイムライン**: タイムスタンプ付きの証拠をすべて時系列に並べます。
@@ -317,7 +317,7 @@ LIMIT 200
 - それを反証するにはどんな証拠が必要かを示す
 - 検証されるまでは `[HYPOTHESIS]` の印を付ける
 
-**よくある仮説テンプレート**（[investigation-templates.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/investigation-templates.md) を参照）:
+**よくある仮説テンプレート**（[investigation-templates.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/references/investigation-templates.md) を参照）:
 - メンテナ侵害: 正規のアカウントが乗っ取り後に使われ、悪意あるコードが注入される
 - 依存関係の混同: パッケージ名のスクワッティングでインストールを横取りする
 - CI/CD インジェクション: ビルド中にコードを実行させる悪意あるワークフロー変更
@@ -349,7 +349,7 @@ LIMIT 200
 
 ## フェーズ 6: 最終レポートの生成 {#phase-6-final-report-generation}
 
-[forensic-report.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/templates/forensic-report.md) のテンプレートを使って `investigation-report.md` を作成します。
+[forensic-report.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/templates/forensic-report.md) のテンプレートを使って `investigation-report.md` を作成します。
 
 **必須のセクション**:
 - エグゼクティブサマリー: 1 段落の結論（侵害あり／問題なし／判定不能）と確信度
@@ -369,7 +369,7 @@ LIMIT 200
 
 ## フェーズ 7: 完了 {#phase-7-completion}
 
-1. 最終的な証拠件数を数えます: `python3 SKILL_DIR/scripts/evidence-store.py --store evidence.json list`
+1. 最終的な証拠件数を数えます: `python SKILL_DIR/scripts/evidence-store.py --store evidence.json list`
 2. 調査ディレクトリ全体をアーカイブします。
 3. 侵害が確定した場合:
    - 即時の緩和策を挙げます（認証情報のローテーション、依存関係のハッシュ固定、影響を受けたユーザーへの通知）
@@ -419,9 +419,9 @@ GitHub REST API にはレート制限があり、管理しないと大規模な�
 
 ## 参照資料 {#reference-materials}
 
-- [github-archive-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/github-archive-guide.md) — BigQuery クエリ、CDX API、12 種類のイベント
-- [evidence-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/evidence-types.md) — IOC の分類、証拠のソース種別、観測の種別
-- [recovery-techniques.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/recovery-techniques.md) — 削除されたコミット・PR・issue の復元
-- [investigation-templates.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/investigation-templates.md) — 攻撃タイプ別のあらかじめ用意された仮説テンプレート
-- [evidence-store.py](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/scripts/evidence-store.py) — 証拠 JSON ストアを管理する CLI ツール
-- [forensic-report.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/templates/forensic-report.md) — 構造化されたレポートテンプレート
+- [github-archive-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/references/github-archive-guide.md) — BigQuery クエリ、CDX API、12 種類のイベント
+- [evidence-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/references/evidence-types.md) — IOC の分類、証拠のソース種別、観測の種別
+- [recovery-techniques.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/references/recovery-techniques.md) — 削除されたコミット・PR・issue の復元
+- [investigation-templates.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/references/investigation-templates.md) — 攻撃タイプ別のあらかじめ用意された仮説テンプレート
+- [evidence-store.py](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/scripts/evidence-store.py) — 証拠 JSON ストアを管理する CLI ツール
+- [forensic-report.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security\oss-forensics/templates/forensic-report.md) — 構造化されたレポートテンプレート

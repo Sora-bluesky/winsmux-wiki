@@ -2,7 +2,7 @@
 title: "Grounded Citations — 回答や文書を、たどれる出典に結び付ける"
 description: "回答や文書を、たどれる出典に結び付ける"
 upstream_path: user-guide/skills/bundled/research/research-grounded-citations.md
-upstream_blob: 487e06a6b6c61410a7e4cd106c412c802a99be66
+upstream_blob: 938e223a68a7c876b4f8a0870f360879a297761e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-grounded-citations
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/research/grounded-citations` |
+| パス | `skills/research\grounded-citations` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Research`, `Citations`, `Grounding`, `Sources`, `Web`, `Reports` |
-| 関連 skill | [`research-paper-writing`](/hermes/docs/user-guide/skills/bundled/research/research-research-paper-writing/), [`arxiv`](/hermes/docs/user-guide/skills/bundled/research/research-arxiv/), [`ocr-and-documents`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-ocr-and-documents/) |
+| 関連 skill | [`arxiv`](/hermes/docs/user-guide/skills/bundled/research/research-arxiv/), [`arxiv`](/hermes/docs/user-guide/skills/bundled/research/research-arxiv/), `ocr-and-documents` |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -44,7 +44,7 @@ sources:
 
 この skill は、チャットでの回答、書き上げる文書（markdown、PDF、docx、スライド）、
 調査報告のすべてを対象にします。学術用の BibTeX の流れは対象外です。学会論文には
-`research-paper-writing` の skill を使ってください。この skill はそちらへ橋渡しをします
+`arxiv` の skill を使ってください。この skill はそちらへ橋渡しをします
 （`references/citation-formats.md` を参照）。
 
 ## こんなときに使います {#when-to-use}
@@ -76,12 +76,12 @@ Python 3 です。取得には、設定してあるもの——`web_search`、`w
 ```bash
 S=~/.hermes/skills/research/grounded-citations/scripts/sources.py
 
-python3 "$S" reset                                  # start a clean ledger
-python3 "$S" add https://example.com/a --title "A"  # prints: [1]
-python3 "$S" add https://example.com/b --title "B"  # prints: [2]
-python3 "$S" list                                   # ledger table
-python3 "$S" render                                 # Sources: block
-python3 "$S" verify draft.md                        # catch bad citations
+python "$S" reset                                  # start a clean ledger
+python "$S" add https://example.com/a --title "A"  # prints: [1]
+python "$S" add https://example.com/b --title "B"  # prints: [2]
+python "$S" list                                   # ledger table
+python "$S" render                                 # Sources: block
+python "$S" verify draft.md                        # catch bad citations
 ```
 
 `add` は何度実行しても同じ結果になり、URL は正規化されます。同じページなら 1 つの台帳の中で
@@ -149,7 +149,7 @@ Sources のかたまりが台帳と食い違うとき、（`--min-coverage` を�
 ファイルに保存し、主張を支えている文を結び付けてください。
 
 ```bash
-python3 "$S" quote 1 --text "Ice is about 9% less dense than liquid water." --from page1.txt
+python "$S" quote 1 --text "Ice is about 9% less dense than liquid water." --from page1.txt
 ```
 
 引用文は、根拠となる本文にそのまま現れないかぎり受け付けられません（空白、大文字小文字、
@@ -178,8 +178,8 @@ The refactor likely predates the 2.0 release.[unverified]
 ④ **根拠の関門で点検し、根拠付きの一覧を組み立てます。**
 
 ```bash
-python3 "$S" verify report.md --evidence --min-coverage 0.5
-python3 "$S" render --style evidence --replace-in report.md
+python "$S" verify report.md --evidence --min-coverage 0.5
+python "$S" render --style evidence --replace-in report.md
 ```
 
 `--evidence` は、引用した情報源のどれかに引用文が結び付いていなければ原稿をはじきます。
@@ -230,7 +230,7 @@ python3 "$S" render --style evidence --replace-in report.md
 ## 確かめかた {#verification}
 
 ```bash
-python3 "$S" verify report.md --strict --min-coverage 0.5
+python "$S" verify report.md --strict --min-coverage 0.5
 ```
 
 通れば、原稿の `[n]` がすべて台帳にあり、Sources のかたまりが引用した番号を台帳の URL

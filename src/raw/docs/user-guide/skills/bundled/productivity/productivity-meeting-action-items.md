@@ -2,7 +2,7 @@
 title: "Meeting Action Items — 会議メモから、根拠付きの決定事項・担当者・チケットを起こす"
 description: "会議メモから、根拠付きの決定事項・担当者・チケットを起こす"
 upstream_path: user-guide/skills/bundled/productivity/productivity-meeting-action-items.md
-upstream_blob: ce07cee2bc516970096920166e39822a7362d024
+upstream_blob: 1a595783f4275a40944b3dd9257d315ea9536f89
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity/meeting-action-items` |
+| パス | `skills/productivity\meeting-action-items` |
 | バージョン | `0.1.0` |
 | 作者 | Ben Barclay (benbarclay), Hermes Agent |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Faiss — 10 億件規模でも速い、ベクトルの類似検索"
 description: "10 億件規模でも速い、ベクトルの類似検索"
 upstream_path: user-guide/skills/optional/mlops/mlops-faiss.md
-upstream_blob: e83bc5a59be3fbee511f771d7b657232b0ae024c
+upstream_blob: a082372372100e3449ecd2090cfea7a3163f510c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-faiss
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/faiss` で導入します |
-| パス | `optional-skills/mlops/faiss` |
+| パス | `optional-skills/mlops\faiss` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Popular Web Designs — 実在する 54 のデザインシステム（Stripe、Linear、Vercel）を HTML/CSS で"
 description: "実在する 54 のデザインシステム（Stripe、Linear、Vercel）を HTML/CSS で"
 upstream_path: user-guide/skills/bundled/creative/creative-popular-web-designs.md
-upstream_blob: 5352e475029381e10a0c0768f5ff294994b37304
+upstream_blob: f4c1e1256a1b8fdfc863ef9c5d211f8ae3aaa581
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-popular-web-designs
 ---
@@ -16,16 +16,16 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative/popular-web-designs` |
+| パス | `skills/creative\popular-web-designs` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent + Teknium（デザインシステムの出典は VoltAgent/awesome-design-md） |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 
-## 早見表: SKILL.md の全文 {#reference-full-skillmd}
+## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
 :::info
-以下は、この skill が呼び出されたときに Hermes が読み込む skill 定義の全文です。skill が有効なあいだ、エージェントはこれを指示として見ています。
+以下は、この skill が呼び出されたときに Hermes が読み込む skill 定義の全文です。skill が有効なあいだ、エージェントはこれを指示として受け取ります。
 :::
 
 # Popular Web Designs {#popular-web-designs}

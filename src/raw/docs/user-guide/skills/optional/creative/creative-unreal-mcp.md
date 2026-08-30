@@ -2,7 +2,7 @@
 title: "Unreal Mcp — Unreal Engine のエディタでシーン・アクター・レンダリングを自動化する"
 description: "Unreal Engine のエディタでシーン・アクター・レンダリングを自動化する"
 upstream_path: user-guide/skills/optional/creative/creative-unreal-mcp.md
-upstream_blob: 65aa94e9e1815c746be6c37b433fd360ba172c34
+upstream_blob: 6e8ccc000e8f0f8ed21bf9d6a29ffde978e39f9d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-unreal-mcp
 ---
@@ -16,7 +16,7 @@ Unreal Engine のエディタでシーン・アクター・レンダリングを
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/creative/unreal-mcp` で導入します |
-| パス | `optional-skills/creative/unreal-mcp` |
+| パス | `optional-skills/creative\unreal-mcp` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Lambda Labs — ML の学習用に、必要なときだけ GPU を借りるクラウド"
 description: "ML の学習用に、必要なときだけ GPU を借りるクラウド"
 upstream_path: user-guide/skills/optional/mlops/mlops-lambda-labs.md
-upstream_blob: 1dfee1330448c0c2689cea387ef48fe5966f6fa0
+upstream_blob: 416a9962727d19569f1b13d8511a32296e6e0a39
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-lambda-labs
 ---
@@ -16,7 +16,7 @@ ML の学習用に、必要なときだけ GPU を借りるクラウドです。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/lambda-labs` で導入します |
-| パス | `optional-skills/mlops/lambda-labs` |
+| パス | `optional-skills/mlops\lambda-labs` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -554,8 +554,8 @@ python inference.py \
 
 ## 参考資料 {#references}
 
-- **[Advanced Usage](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/lambda-labs/references/advanced-usage.md)** - 複数ノードでの学習、API による自動化
-- **[Troubleshooting](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/lambda-labs/references/troubleshooting.md)** - よくある症状と対処
+- **[Advanced Usage](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\lambda-labs/references/advanced-usage.md)** - 複数ノードでの学習、API による自動化
+- **[Troubleshooting](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\lambda-labs/references/troubleshooting.md)** - よくある症状と対処
 
 ## 参考リンク {#resources}
 

@@ -2,7 +2,7 @@
 title: "Baoyu Infographic — インフォグラフィック: 21 種類のレイアウト × 21 種類のスタイル (信息图, 可视化)"
 description: "インフォグラフィック: 21 種類のレイアウト × 21 種類のスタイル (信息图, 可视化)"
 upstream_path: user-guide/skills/bundled/creative/creative-baoyu-infographic.md
-upstream_blob: e915f2ce63bd8ebd31e6bddd525a9fae8761ae0b
+upstream_blob: fc09379e3eec6249de1b628ebb5f4c75706bb0a9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-baoyu-infographic
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative/baoyu-infographic` |
+| パス | `skills/creative\baoyu-infographic` |
 | バージョン | `1.56.1` |
 | 作者 | 宝玉 (JimLiu) |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Arxiv — arXiv の論文をキーワード・著者・分野・ID で探す"
 description: "arXiv の論文をキーワード・著者・分野・ID で探す"
 upstream_path: user-guide/skills/bundled/research/research-arxiv.md
-upstream_blob: 4425858d7472f473e8f76ce322becb077684247b
+upstream_blob: f41cfcbfc9556f596f107a0ecbe930b87bbf0996
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-arxiv
 ---
@@ -16,13 +16,13 @@ arXiv の論文をキーワード・著者・分野・ID で探します。
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/research/arxiv` |
+| パス | `skills/research\arxiv` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Research`, `Arxiv`, `Papers`, `Academic`, `Science`, `API` |
-| 関連 skill | [`ocr-and-documents`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-ocr-and-documents/) |
+| 関連 skill | `ocr-and-documents` |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -45,7 +45,7 @@ arXiv の無料の REST API から、学術論文を探して取ってきます�
 
 ## 論文を探す {#searching-papers}
 
-API は Atom 形式の XML を返します。`grep`/`sed` で処理するか、`python3` に流し込んで読みやすい形にしてください。
+API は Atom 形式の XML を返します。`grep`/`sed` で処理するか、`python` に流し込んで読みやすい形にしてください。
 
 ### 基本の検索 {#basic-search}
 
@@ -56,7 +56,7 @@ curl -s "https://export.arxiv.org/api/query?search_query=all:GRPO+reinforcement+
 ### 読みやすい形にする（XML を整えて表示する） {#clean-output-parse-xml-to-readable-format}
 
 ```bash
-curl -s "https://export.arxiv.org/api/query?search_query=all:GRPO+reinforcement+learning&max_results=5&sortBy=submittedDate&sortOrder=descending" | python3 -c "
+curl -s "https://export.arxiv.org/api/query?search_query=all:GRPO+reinforcement+learning&max_results=5&sortBy=submittedDate&sortOrder=descending" | python -c "
 
 ns = {'a': 'http://www.w3.org/2005/Atom'}
 root = ET.parse(sys.stdin).getroot()
@@ -136,7 +136,7 @@ curl -s "https://export.arxiv.org/api/query?id_list=2402.03300,2401.12345,2403.0
 
 &#123;% raw %&#125;
 ```bash
-curl -s "https://export.arxiv.org/api/query?id_list=1706.03762" | python3 -c "
+curl -s "https://export.arxiv.org/api/query?id_list=1706.03762" | python -c "
 
 ns = {'a': 'http://www.w3.org/2005/Atom', 'arxiv': 'http://arxiv.org/schemas/atom'}
 root = ET.parse(sys.stdin).getroot()
@@ -216,7 +216,7 @@ arXiv は引用のデータやおすすめを出してくれません。そこ�
 
 ```bash
 # By arXiv ID
-curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:2402.03300?fields=title,authors,citationCount,referenceCount,influentialCitationCount,year,abstract" | python3 -m json.tool
+curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:2402.03300?fields=title,authors,citationCount,referenceCount,influentialCitationCount,year,abstract" | python -m json.tool
 
 # By Semantic Scholar paper ID or DOI
 curl -s "https://api.semanticscholar.org/graph/v1/paper/DOI:10.1234/example?fields=title,citationCount"
@@ -225,19 +225,19 @@ curl -s "https://api.semanticscholar.org/graph/v1/paper/DOI:10.1234/example?fiel
 ### その論文を引用している論文を取る {#get-citations-of-a-paper-who-cited-it}
 
 ```bash
-curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:2402.03300/citations?fields=title,authors,year,citationCount&limit=10" | python3 -m json.tool
+curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:2402.03300/citations?fields=title,authors,year,citationCount&limit=10" | python -m json.tool
 ```
 
 ### その論文が引用している論文を取る {#get-references-from-a-paper-what-it-cites}
 
 ```bash
-curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:2402.03300/references?fields=title,authors,year,citationCount&limit=10" | python3 -m json.tool
+curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:2402.03300/references?fields=title,authors,year,citationCount&limit=10" | python -m json.tool
 ```
 
 ### 論文を探す（arXiv 検索の代わり。JSON が返ります） {#search-papers-alternative-to-arxiv-search-returns-json}
 
 ```bash
-curl -s "https://api.semanticscholar.org/graph/v1/paper/search?query=GRPO+reinforcement+learning&limit=5&fields=title,authors,year,citationCount,externalIds" | python3 -m json.tool
+curl -s "https://api.semanticscholar.org/graph/v1/paper/search?query=GRPO+reinforcement+learning&limit=5&fields=title,authors,year,citationCount,externalIds" | python -m json.tool
 ```
 
 ### おすすめの論文を取る {#get-paper-recommendations}
@@ -245,13 +245,13 @@ curl -s "https://api.semanticscholar.org/graph/v1/paper/search?query=GRPO+reinfo
 ```bash
 curl -s -X POST "https://api.semanticscholar.org/recommendations/v1/papers/" \
   -H "Content-Type: application/json" \
-  -d '{"positivePaperIds": ["arXiv:2402.03300"], "negativePaperIds": []}' | python3 -m json.tool
+  -d '{"positivePaperIds": ["arXiv:2402.03300"], "negativePaperIds": []}' | python -m json.tool
 ```
 
 ### 著者の情報 {#author-profile}
 
 ```bash
-curl -s "https://api.semanticscholar.org/graph/v1/author/search?query=Yann+LeCun&fields=name,hIndex,citationCount,paperCount" | python3 -m json.tool
+curl -s "https://api.semanticscholar.org/graph/v1/author/search?query=Yann+LeCun&fields=name,hIndex,citationCount,paperCount" | python -m json.tool
 ```
 
 ### Semantic Scholar でよく使う項目 {#useful-semantic-scholar-fields}
@@ -280,7 +280,7 @@ curl -s "https://api.semanticscholar.org/graph/v1/author/search?query=Yann+LeCun
 ## 補足 {#notes}
 
 - arXiv は Atom 形式の XML を返します。読みやすくするには補助スクリプトか、上の処理の書き方を使ってください
-- Semantic Scholar は JSON を返します。`python3 -m json.tool` に流すと読みやすくなります
+- Semantic Scholar は JSON を返します。`python -m json.tool` に流すと読みやすくなります
 - arXiv の ID には、古い形式（`hep-th/0601001`）と新しい形式（`2402.03300`）があります
 - PDF は `https://arxiv.org/pdf/{id}`、要旨は `https://arxiv.org/abs/{id}` です
 - HTML があるときは `https://arxiv.org/html/{id}` です

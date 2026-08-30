@@ -2,7 +2,7 @@
 title: "Fitness Nutrition — wger / USDA を使ったトレーニング計画・マクロ栄養素・身体指標の計算"
 description: "wger / USDA を使ったトレーニング計画・マクロ栄養素・身体指標の計算"
 upstream_path: user-guide/skills/optional/health/health-fitness-nutrition.md
-upstream_blob: feb2a450498fb15a0d6f7cf61cc2aa37dcd457b8
+upstream_blob: 1ff5827959027f87731bc131dd7491453ed2e22a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/health/health-fitness-nutrition
 ---
@@ -16,7 +16,7 @@ wger / USDA を使って、トレーニング計画・マクロ栄養素・身�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/health/fitness-nutrition` で入れます |
-| パス | `optional-skills/health/fitness-nutrition` |
+| パス | `optional-skills/health\fitness-nutrition` |
 | バージョン | `1.0.0` |
 | 作者 | Hailey Marshall (haileymarshall), Hermes Agent |
 | ライセンス | MIT |
@@ -119,9 +119,9 @@ wger の公開エンドポイントはすべて JSON を返し、認証は要り
 ```bash
 # Search exercises by name
 QUERY="$1"
-ENCODED=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$QUERY")
+ENCODED=$(python -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$QUERY")
 curl -s "https://wger.de/api/v2/exercise/search/?term=${ENCODED}&language=english&format=json" \
-  | python3 -c "
+  | python -c "
 
 data=json.load(sys.stdin)
 for s in data.get('suggestions',[])[:10]:
@@ -134,7 +134,7 @@ for s in data.get('suggestions',[])[:10]:
 # Get full details for a specific exercise
 EXERCISE_ID="$1"
 curl -s "https://wger.de/api/v2/exerciseinfo/${EXERCISE_ID}/?format=json" \
-  | python3 -c "
+  | python -c "
 
 data=json.load(sys.stdin)
 trans=[t for t in data.get('translations',[]) if t.get('language')==2]
@@ -156,7 +156,7 @@ if imgs: print(f\"Image     : {imgs[0].get('image','')}\")
 # Combine filters as needed: ?muscles=4&equipment=1&language=2&status=2
 FILTER="$1"  # e.g. "muscles=4" or "category=11" or "equipment=3"
 curl -s "https://wger.de/api/v2/exercise/?${FILTER}&language=2&status=2&limit=20&format=json" \
-  | python3 -c "
+  | python -c "
 
 data=json.load(sys.stdin)
 print(f'Found {data.get(\"count\",0)} exercises.')
@@ -174,9 +174,9 @@ DEMO_KEY は 1 時間あたり 30 リクエストまで、無料登録した鍵�
 # Search foods by name
 FOOD="$1"
 API_KEY="${USDA_API_KEY:-DEMO_KEY}"
-ENCODED=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$FOOD")
+ENCODED=$(python -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$FOOD")
 curl -s "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${API_KEY}&query=${ENCODED}&pageSize=5&dataType=Foundation,SR%20Legacy" \
-  | python3 -c "
+  | python -c "
 
 data=json.load(sys.stdin)
 foods=data.get('foods',[])
@@ -197,7 +197,7 @@ for f in foods:
 FDC_ID="$1"
 API_KEY="${USDA_API_KEY:-DEMO_KEY}"
 curl -s "https://api.nal.usda.gov/fdc/v1/food/${FDC_ID}?api_key=${API_KEY}" \
-  | python3 -c "
+  | python -c "
 
 d=json.load(sys.stdin)
 print(f\"Food: {d.get('description','N/A')}\")
@@ -215,11 +215,11 @@ for x in sorted(d.get('foodNutrients',[]),key=lambda x:x.get('nutrient',{}).get(
 まとめて処理したいときは `scripts/` にある補助スクリプトを使い、
 1 件だけならその場で実行します。
 
-- `python3 scripts/body_calc.py bmi <weight_kg> <height_cm>`
-- `python3 scripts/body_calc.py tdee <weight_kg> <height_cm> <age> <M|F> <activity 1-5>`
-- `python3 scripts/body_calc.py 1rm <weight> <reps>`
-- `python3 scripts/body_calc.py macros <tdee_kcal> <cut|maintain|bulk>`
-- `python3 scripts/body_calc.py bodyfat <M|F> <neck_cm> <waist_cm> [hip_cm] <height_cm>`
+- `python scripts/body_calc.py bmi <weight_kg> <height_cm>`
+- `python scripts/body_calc.py tdee <weight_kg> <height_cm> <age> <M|F> <activity 1-5>`
+- `python scripts/body_calc.py 1rm <weight> <reps>`
+- `python scripts/body_calc.py macros <tdee_kcal> <cut|maintain|bulk>`
+- `python scripts/body_calc.py bodyfat <M|F> <neck_cm> <waist_cm> [hip_cm] <height_cm>`
 
 それぞれの式の根拠は `references/FORMULAS.md` にまとめてあります。
 
@@ -258,4 +258,4 @@ for x in sorted(d.get('foodNutrients',[]),key=lambda x:x.get('nutrient',{}).get(
 | 筋肉の一覧を見る | wger | `GET /api/v2/muscle/` |
 | 食品を検索する | USDA | `GET /fdc/v1/foods/search?query=&dataType=Foundation,SR Legacy` |
 | 食品の詳細を見る | USDA | `GET /fdc/v1/food/{fdcId}` |
-| BMI / TDEE / 1RM / マクロ栄養素 | オフライン | `python3 scripts/body_calc.py` |
+| BMI / TDEE / 1RM / マクロ栄養素 | オフライン | `python scripts/body_calc.py` |

@@ -2,7 +2,7 @@
 title: "Maps — OpenStreetMap と OSRM で位置検索・周辺施設・経路・タイムゾーンを調べる"
 description: "OpenStreetMap と OSRM で位置検索・周辺施設・経路・タイムゾーンを調べる"
 upstream_path: user-guide/skills/bundled/productivity/productivity-maps.md
-upstream_blob: 7fdc002cc3001324b3570338eaa13ecb37ec2e70
+upstream_blob: d6ff985af39f671e3366c5cd9e0d273f18c06d26
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-maps
 ---
@@ -16,7 +16,7 @@ OpenStreetMap と OSRM で位置検索・周辺施設・経路・タイムゾー
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity/maps` |
+| パス | `skills/productivity\maps` |
 | バージョン | `1.2.0` |
 | 作者 | Mibayy |
 | ライセンス | MIT |
@@ -67,8 +67,8 @@ MAPS=~/.hermes/skills/maps/scripts/maps_client.py
 ### search — 地名から座標を調べる {#search-geocode-a-place-name}
 
 ```bash
-python3 $MAPS search "Eiffel Tower"
-python3 $MAPS search "1600 Pennsylvania Ave, Washington DC"
+python $MAPS search "Eiffel Tower"
+python $MAPS search "1600 Pennsylvania Ave, Washington DC"
 ```
 
 返ってくるもの: 緯度、経度、表示用の名前、種別、範囲を表す四角形、重要度のスコア。
@@ -76,7 +76,7 @@ python3 $MAPS search "1600 Pennsylvania Ave, Washington DC"
 ### reverse — 座標から住所を調べる {#reverse-coordinates-to-address}
 
 ```bash
-python3 $MAPS reverse 48.8584 2.2945
+python $MAPS reverse 48.8584 2.2945
 ```
 
 返ってくるもの: 住所の内訳一式（通り、市、州、国、郵便番号）。
@@ -85,15 +85,15 @@ python3 $MAPS reverse 48.8584 2.2945
 
 ```bash
 # By coordinates (from a Telegram location pin, for example)
-python3 $MAPS nearby 48.8584 2.2945 restaurant --limit 10
-python3 $MAPS nearby 40.7128 -74.0060 hospital --radius 2000
+python $MAPS nearby 48.8584 2.2945 restaurant --limit 10
+python $MAPS nearby 40.7128 -74.0060 hospital --radius 2000
 
 # By address / city / zip / landmark — --near auto-geocodes
-python3 $MAPS nearby --near "Times Square, New York" --category cafe
-python3 $MAPS nearby --near "90210" --category pharmacy
+python $MAPS nearby --near "Times Square, New York" --category cafe
+python $MAPS nearby --near "90210" --category pharmacy
 
 # Multiple categories merged into one query
-python3 $MAPS nearby --near "downtown austin" --category restaurant --category bar --limit 10
+python $MAPS nearby --near "downtown austin" --category restaurant --category bar --limit 10
 ```
 
 分類は 46 種類です: restaurant, cafe, bar, hospital, pharmacy, hotel, guest_house,
@@ -112,9 +112,9 @@ stadium, nightclub。
 ### distance — 移動の距離と時間 {#distance-travel-distance-and-time}
 
 ```bash
-python3 $MAPS distance "Paris" --to "Lyon"
-python3 $MAPS distance "New York" --to "Boston" --mode driving
-python3 $MAPS distance "Big Ben" --to "Tower Bridge" --mode walking
+python $MAPS distance "Paris" --to "Lyon"
+python $MAPS distance "New York" --to "Boston" --mode driving
+python $MAPS distance "Big Ben" --to "Tower Bridge" --mode walking
 ```
 
 移動手段は driving（既定）、walking、cycling です。道路をたどった距離と所要時間に
@@ -123,8 +123,8 @@ python3 $MAPS distance "Big Ben" --to "Tower Bridge" --mode walking
 ### directions — 曲がり角ごとの案内 {#directions-turn-by-turn-navigation}
 
 ```bash
-python3 $MAPS directions "Eiffel Tower" --to "Louvre Museum" --mode walking
-python3 $MAPS directions "JFK Airport" --to "Times Square" --mode driving
+python $MAPS directions "Eiffel Tower" --to "Louvre Museum" --mode walking
+python $MAPS directions "JFK Airport" --to "Times Square" --mode driving
 ```
 
 番号の付いた手順が返ります。各手順には案内文、距離、所要時間、道路名、動作の
@@ -133,8 +133,8 @@ python3 $MAPS directions "JFK Airport" --to "Times Square" --mode driving
 ### timezone — 座標のタイムゾーン {#timezone-timezone-for-coordinates}
 
 ```bash
-python3 $MAPS timezone 48.8584 2.2945
-python3 $MAPS timezone 35.6762 139.6503
+python $MAPS timezone 48.8584 2.2945
+python $MAPS timezone 35.6762 139.6503
 ```
 
 タイムゾーン名、UTC からのずれ、その場所の現在時刻が返ります。
@@ -142,8 +142,8 @@ python3 $MAPS timezone 35.6762 139.6503
 ### area — 場所の範囲と面積 {#area-bounding-box-and-area-for-a-place}
 
 ```bash
-python3 $MAPS area "Manhattan, New York"
-python3 $MAPS area "London"
+python $MAPS area "Manhattan, New York"
+python $MAPS area "London"
 ```
 
 範囲を表す四角形の座標、幅と高さ（km）、おおよその面積が返ります。bbox コマンドの
@@ -152,7 +152,7 @@ python3 $MAPS area "London"
 ### bbox — 四角い範囲の中を探す {#bbox-search-within-a-bounding-box}
 
 ```bash
-python3 $MAPS bbox 40.75 -74.00 40.77 -73.98 restaurant --limit 20
+python $MAPS bbox 40.75 -74.00 40.77 -73.98 restaurant --limit 20
 ```
 
 四角く区切った範囲の中にある施設を探します。地名から範囲の座標を出すには、
@@ -165,7 +165,7 @@ python3 $MAPS bbox 40.75 -74.00 40.77 -73.98 restaurant --limit 20
 
 ```bash
 # User sent a pin at 36.17, -115.14 and asked "find cafes nearby"
-python3 $MAPS nearby 36.17 -115.14 cafe --radius 1500
+python $MAPS nearby 36.17 -115.14 cafe --radius 1500
 ```
 
 結果は、名前と距離、それに `maps_url` を添えた番号付きの一覧で示してください。
@@ -204,9 +204,9 @@ python3 $MAPS nearby 36.17 -115.14 cafe --radius 1500
 ## 確かめかた {#verification}
 
 ```bash
-python3 ~/.hermes/skills/maps/scripts/maps_client.py search "Statue of Liberty"
+python ~/.hermes/skills/maps/scripts/maps_client.py search "Statue of Liberty"
 # Should return lat ~40.689, lon ~-74.044
 
-python3 ~/.hermes/skills/maps/scripts/maps_client.py nearby --near "Times Square" --category restaurant --limit 3
+python ~/.hermes/skills/maps/scripts/maps_client.py nearby --near "Times Square" --category restaurant --limit 3
 # Should return a list of restaurants within ~500m of Times Square
 ```

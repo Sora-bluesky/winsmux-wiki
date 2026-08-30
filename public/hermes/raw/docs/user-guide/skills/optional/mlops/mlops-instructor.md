@@ -2,7 +2,7 @@
 title: "Instructor — LLM の出力を Pydantic で検証しながら決まった形で受け取る"
 description: "LLM の出力を Pydantic で検証しながら決まった形で受け取る"
 upstream_path: user-guide/skills/optional/mlops/mlops-instructor.md
-upstream_blob: 323b03847d9124ef34ba84d23654738cb3cea38b
+upstream_blob: aa1331168925c87042bb3f4036e3188526873521
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-instructor
 ---
@@ -16,7 +16,7 @@ LLM の出力を Pydantic で検証しながら、決まった形で受け取り
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/instructor` で導入します |
-| パス | `optional-skills/mlops/instructor` |
+| パス | `optional-skills/mlops\instructor` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

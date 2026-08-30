@@ -2,7 +2,7 @@
 title: "Pytorch Fsdp — 大きなモデルを完全シャーディングでデータ並列に学習する"
 description: "大きなモデルを完全シャーディングでデータ並列に学習する"
 upstream_path: user-guide/skills/optional/mlops/mlops-pytorch-fsdp.md
-upstream_blob: 48fb4118a15b9dd6b54ce53f8547aac94db789fc
+upstream_blob: 023d06742f9067b8594e738c563b952ba47ad2ba
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-pytorch-fsdp
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/pytorch-fsdp` で導入します |
-| パス | `optional-skills/mlops/pytorch-fsdp` |
+| パス | `optional-skills/mlops\pytorch-fsdp` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

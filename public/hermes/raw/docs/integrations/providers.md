@@ -2,7 +2,7 @@
 title: "LLM とモデルのプロバイダー"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 3a3985cc7a5980987532f9f012ec32df4c912156
+upstream_blob: 0d4569accd7739dfa16af5c99b79bbc4f1cd294b
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -38,8 +38,9 @@ LLM につながる手段が最低 1 つ必要です。`hermes model` を使え�
 | **MiniMax China** | `~/.hermes/.env` の `MINIMAX_CN_API_KEY`（provider: `minimax-cn`） |
 | **xAI（Grok） — Responses API** | `~/.hermes/.env` の `XAI_API_KEY`（provider: `xai`） |
 | **xAI Grok OAuth（SuperGrok）** | `hermes model` → "xAI Grok OAuth (SuperGrok / Premium+)" — ブラウザーでログインし、API キーは不要です。[ガイド](/hermes/docs/guides/xai-grok-oauth/)を参照 |
-| **Qwen Cloud（Alibaba DashScope）** | `~/.hermes/.env` の `DASHSCOPE_API_KEY`（provider: `alibaba`） |
-| **Alibaba Cloud（Coding Plan）** | `DASHSCOPE_API_KEY`（provider: `alibaba-coding-plan`、別名: `alibaba_coding`） — 課金の区分が別で、エンドポイントも異なります |
+| **Qwen Cloud（Alibaba DashScope）** | `~/.hermes/.env` の `DASHSCOPE_API_KEY`（provider: `alibaba`。中国本土向けのエンドポイントは `alibaba-cn`） |
+| **Alibaba Cloud（Coding Plan）** | `ALIBABA_CODING_PLAN_API_KEY`（無ければ `DASHSCOPE_API_KEY` を使います）（provider: `alibaba-coding-plan`、別名: `alibaba_coding`。中国本土向けのエンドポイントは `alibaba-coding-plan-cn`） — 課金の区分が別で、エンドポイントも異なります |
+| **Alibaba Cloud（Token Plan）** | `~/.hermes/.env` の `ALIBABA_TOKEN_PLAN_API_KEY`（provider: `alibaba-token-plan`。中国本土向けのエンドポイントは `alibaba-token-plan-cn`） — Model Studio の定額トークンの区分です |
 | **Kilo Code** | `~/.hermes/.env` の `KILOCODE_API_KEY`（provider: `kilocode`） |
 | **Xiaomi MiMo** | `~/.hermes/.env` の `XIAOMI_API_KEY`（provider: `xiaomi`、別名: `mimo`、`xiaomi-mimo`） |
 | **Tencent TokenHub** | `~/.hermes/.env` の `TOKENHUB_API_KEY`（provider: `tencent-tokenhub`、別名: `tencent`、`tokenhub`、`tencentmaas`） |
@@ -1349,6 +1350,8 @@ extra_body:
   chat_template_kwargs:
     enable_thinking: false
 ```
+
+設定した `extra_body` は、そのプロバイダーにどこまでもついてきます。エージェントを組み立てるときに混ぜ込まれ、**ゲートウェイのどのターンでも残り**（`/fast` が `service_tier`/`speed` の上書きを重ねるターンでも、それらは `extra_body` を置き換えるのではなく上に重ねられます）、**`/model` を切り替えるたびに導き直されます**。名前付きの独自プロバイダーへ切り替えるとそのプロバイダーの `extra_body` が効き、そこから離れると外れるので、別のプロバイダーへ漏れることはありません。
 
 `hermes model` → Custom Endpoint のウィザードは、API のモードを明示的に尋ねて、その答えを `config.yaml` に保存するようになりました（プロバイダーのエントリーの `transport` として保存されます）。この項目を空のままにした場合は、URL からの自動判定（たとえば `/anthropic` を含むパス → `anthropic_messages`）が引き続き受け皿として働きます。
 

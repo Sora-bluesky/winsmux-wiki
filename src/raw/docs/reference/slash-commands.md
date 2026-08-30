@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージングのスラッシュコマンドをすべて集めた早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 608eb80b158e796c1293c9a77e0f095c542d7505
+upstream_blob: 1dcc916782449a097070c3b4ff533ee508eee15f
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -14,7 +14,7 @@ Hermes のスラッシュコマンドには 2 つの入口があり、どちら�
 - **対話型 CLI のスラッシュコマンド** — `cli.py` が受け持ち、登録内容から補完候補が出ます
 - **メッセージングのスラッシュコマンド** — `gateway/run.py` が受け持ち、ヘルプ文とプラットフォームのメニューが登録内容から作られます
 
-インストール済みのスキルも、両方の入口で動的なスラッシュコマンドとして出てきます。同梱の `/plan` もそのひとつで、プラン モードを開き、作業中のワークスペースやバックエンドの作業ディレクトリを基準に `.hermes/plans/` へマークダウンの計画を保存します。
+インストール済みのスキルも、両方の入口で動的なスラッシュコマンドとして出てきます。（`/plan` も以前はそのひとつでしたが、いまは組み込みのコマンドです。下のセッションの表を見てください。）
 
 ## 権限と管理者・一般ユーザーの分け方 {#permissions-and-adminuser-split}
 
@@ -111,6 +111,7 @@ CLI で `/` と打つと補完メニューが開きます。組み込みコマ�
 | `/memory [pending\|approve\|reject\|approval]` | 書き込み承認のゲート（`memory.write_approval`）で保留になっている記憶の書き込みを確認し、ゲート自体の入切もできます。[記憶の書き込みを管理する](/hermes/docs/user-guide/features/memory/#controlling-memory-writes-write_approval) も参照してください。 |
 | `/bundles` | 設定済みのスキル束を一覧表示します。複数のスキルをまとめて読み込む `/<name>` 形式の別名です。`~/.hermes/config.yaml` の `bundles:` で設定します。[スキル束](/hermes/docs/user-guide/features/skills/#skill-bundles) も参照してください。 |
 | `/learn <what to learn from>` | 説明したものから、使い回せるスキルを絞り出します。ディレクトリでも、URL でも、いまエージェントと一緒にやった手順でも、貼り付けたメモでも構いません。形は自由で、エージェントが自分のツールで材料を集め、決められた作法に沿って `SKILL.md` を書きます。CLI、メッセージング ゲートウェイ、TUI、ダッシュボードのスキル ページで使えます。 |
+| `/plan [task]` | 作業中のワークスペースの `.hermes/plans/` に、マークダウンの実装計画を書き出します。計画を立てるだけで、実行はしません。引数を省くと、会話の流れから作業内容を読み取ります。（以前は同梱の `plan` スキルでしたが、Telegram や Discord のコマンド メニューの上限に消されないよう、組み込みになりました。） |
 | `/init [notes]` | リポジトリを調べて `AGENTS.md` のプロジェクト向け指示を作成、または更新します（Codex の `/init` の移植です）。エージェントが読み取り専用のツールでマニフェスト、構成、ツールチェーンの設定を見たうえで、簡潔な `AGENTS.md` を書きます。すでにある場合は、書いてあった内容を残したまま統合して更新します。メモを添えると、どこに重きを置くかを促せます。CLI、メッセージング ゲートウェイ、TUI で使えます。 |
 | `/cron` | 予定した作業を管理します（一覧、追加・作成、編集、一時停止、再開、実行、削除） |
 | `/suggestions [accept\|dismiss N\|catalog\|clear]`（別名: `/suggest`） | 提案された自動化を確認します。`/suggestions` で保留中の提案を一覧、`/suggestions accept <id>` で提案どおりの自動化を作成、`/suggestions dismiss <id>` で却下、`/suggestions catalog` で選りすぐりの入門用自動化を追加、`/suggestions clear` で処理済みの提案の記録を消します。受け入れた作業は、いまいる場所を届け先として引き継ぎます。 |
@@ -271,6 +272,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/egress [status]` | Docker の送信プロキシの状態を表示します。 |
 | `/init [notes]` | リポジトリを調べて `AGENTS.md` を作成、または更新します。 |
 | `/learn <what to learn from>` | 説明したものから、使い回せるスキルを絞り出します。 |
+| `/plan [task]` | `.hermes/plans/` にマークダウンの実装計画を書き出します。実行はしません。 |
 | `/bundles` | 設定済みのスキル束を一覧表示します（複数のスキルをまとめて読み込む `/<name>` 形式の別名です）。 |
 | `/reload-skills`（別名: `/reload_skills`） | `~/.hermes/skills/` を調べ直して、追加や削除されたスキルを反映します。 |
 | `/footer [on\|off\|status]` | 最終返答に付く実行情報（モデル、文脈の使用率、作業ディレクトリ）の表示を切り替えます。 |

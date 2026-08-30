@@ -2,7 +2,7 @@
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: 9aa51384bb849ac3f6a041d56ff5d6b273131158
+upstream_blob: cd651d7df50fe6a19e953ed5c157f81cd11e822d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -83,7 +83,7 @@ gateway:
 
 Hermes は Telegram のゲートウェイが起動するときに、コマンドメニューを自動で登録します。メニューは中心となるスラッシュコマンドの登録簿と、条件を満たすプラグイン／スキルのコマンドから組み立てられ、Telegram が確実に受け付けられるように件数を制限します。既定の上限は 60 件で、組み込みコマンドすべてに加えてよく使うスキルのコマンドが表示に残る程度の数です。
 
-Telegram の `/` の候補に必ず出したいローカルのコマンドやプラグインのコマンドがある場合は、`~/.hermes/config.yaml` で優先度を指定します。
+Telegram の `/` の候補に出したままにしたい skill・プラグイン・組み込みのコマンドがある場合は、`~/.hermes/config.yaml` で優先度を指定します。
 
 ```yaml
 platforms:
@@ -94,6 +94,7 @@ platforms:
         priority_mode: prepend  # prepend | append | replace
         priority:
           - my_plugin_command
+          - songsee          # skill commands work here too
 ```
 
 `priority_mode` は、指定した一覧を Hermes の組み込みの優先リストとどう組み合わせるかを決めます。
@@ -102,7 +103,25 @@ platforms:
 - `append`: Hermes の既定を先に置き、そのあとに自分のコマンドを並べる
 - `replace`: 優先順位には自分の一覧だけを使う
 
+優先度は、上限で切る前の**まとめた**候補の一覧（中心のコマンド、プラグインのコマンド、skill のコマンド）に対して効きます。そのため、中心のコマンドだけでメニューが埋まってしまう場合でも、優先に指定した skill のコマンドには必ず枠が残ります。以前は skill が常に先に、しかもアルファベット順で切られていたため、名前が後ろのほうにある skill は `priority` を指定しても出てきませんでした。
+
 Telegram は BotCommand を 100 件まで受け付けますが、量が多いと登録に失敗することがあります。Hermes は確実さを優先して既定を 60 件にし、設定値は `1..100` に収めます。コマンドの全体は `/commands` で確認してください。
+
+### インラインの候補検索: すべてのコマンドを探せます（上限なし） {#inline-command-picker-search-every-command-no-cap}
+
+`/` のメニューには上限がありますが、Telegram の**インラインモード**にはありません。有効にすると、どのチャットでも `@yourbotname` に続けて語句を打つだけで、Hermes の**すべて**のコマンドと導入済みの skill をその場で検索できます。候補は 1 文字打つごとに計算され、ページ送りされるので、切り落とされるものはありません:
+
+```
+@yourbotname plan            → tap the /plan result to send it
+@yourbotname plan migrate auth to OIDC   → sends /plan migrate auth to OIDC
+@yourbotname pdf             → finds skills matching "pdf" by name or description
+```
+
+最初の語で一覧を絞り込み、それより後ろは、送られるコマンドの引数としてそのまま渡ります。候補をタップすると自分からの通常のメッセージとしてコマンドが送られるので、いつものコマンドの経路で処理されます（コマンドで始まるメッセージは、プライバシーモードが有効でもボットに届きます）。
+
+**最初に一度だけ必要な設定:** インラインモードは、どの Telegram のボットでも既定では無効です。[@BotFather](https://t.me/BotFather) で `/setinline` を実行して有効にしてください（対象のボットを選び、入力欄に出す案内文を決めます。たとえば `Search commands and skills...`）。それまでは Telegram がインラインの問い合わせを送ってこないので、この検索は動きません。
+
+候補が返るのは、ゲートウェイの許可リストを通ったユーザーだけです。許可されていないユーザーには空の一覧が返るため、導入済みの skill の一覧が見知らぬ相手に見えることはありません（インラインの問い合わせは、ボットが入っていないチャットからでも送られてきます）。
 
 ## 手順 3: プライバシーモード（グループでは重要） {#step-3-privacy-mode-critical-for-groups}
 

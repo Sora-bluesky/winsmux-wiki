@@ -2,7 +2,7 @@
 title: "Whisper — 99 の言語で音声を文字にし、翻訳する"
 description: "99 の言語で音声を文字にし、翻訳する"
 upstream_path: user-guide/skills/optional/mlops/mlops-whisper.md
-upstream_blob: 458316b67c1a106dea1d93020c31c421dd185ff3
+upstream_blob: d4a279bad13d8da28510cf07a55664ccfaa5a833
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-whisper
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/whisper` で導入します |
-| パス | `optional-skills/mlops/whisper` |
+| パス | `optional-skills/mlops\whisper` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

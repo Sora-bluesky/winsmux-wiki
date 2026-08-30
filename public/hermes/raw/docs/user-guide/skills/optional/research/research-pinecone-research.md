@@ -2,7 +2,7 @@
 title: "Pinecone Research — Pinecone でエージェントの RAG と長期記憶を作る"
 description: "Pinecone でエージェントの RAG と長期記憶を作る"
 upstream_path: user-guide/skills/optional/research/research-pinecone-research.md
-upstream_blob: dd6a9eb0796dbb9745d557f7f991b3dbcce50c4a
+upstream_blob: 75f57717ced72553cdebf343eaf91d37413ca964
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-pinecone-research
 ---
@@ -16,7 +16,7 @@ Pinecone でエージェントの RAG と長期記憶を作ります。
 | | |
 |---|---|
 | 提供元 | 追加の skill です。`hermes skills install official/research/pinecone-research` で入れられます |
-| パス | `optional-skills/research/pinecone-research` |
+| パス | `optional-skills/research\pinecone-research` |
 | バージョン | `1.0.0` |
 | 作者 | immuhammadfurqan |
 | ライセンス | MIT |

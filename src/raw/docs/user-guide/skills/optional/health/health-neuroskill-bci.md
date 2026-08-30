@@ -2,7 +2,7 @@
 title: "Neuroskill Bci — NeuroSkill から認知状態と気分のデータをそのまま受け取る"
 description: "NeuroSkill から認知状態と気分のデータをそのまま受け取る"
 upstream_path: user-guide/skills/optional/health/health-neuroskill-bci.md
-upstream_blob: d011ca445536944c2b69bcb7ef0fa1b28b43ca97
+upstream_blob: 1f381393d93c6c8bdf4a79f779cada757fedfe8d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/health/health-neuroskill-bci
 ---
@@ -16,7 +16,7 @@ NeuroSkill から認知状態と気分のデータをそのまま受け取りま
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/health/neuroskill-bci` で入れます |
-| パス | `optional-skills/health/neuroskill-bci` |
+| パス | `optional-skills/health\neuroskill-bci` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent + Nous Research |
 | ライセンス | MIT |

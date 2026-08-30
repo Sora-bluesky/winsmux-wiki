@@ -2,7 +2,7 @@
 title: "Apple Notes — memo CLI で Apple メモを操作する: 作成・検索・編集"
 description: "memo CLI で Apple メモを操作する: 作成・検索・編集"
 upstream_path: user-guide/skills/bundled/apple/apple-apple-notes.md
-upstream_blob: ac3ecdfff6a1d58df78ef3c4a71b804bf2053f68
+upstream_blob: 31587b5e9fb3a56733f17d94880ab28e2d7b8d38
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/apple/apple-apple-notes
 ---
@@ -16,7 +16,7 @@ memo CLI で Apple メモを操作します。作成・検索・編集ができ�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/apple/apple-notes` |
+| パス | `skills/apple\apple-notes` |
 | バージョン | `1.0.1` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

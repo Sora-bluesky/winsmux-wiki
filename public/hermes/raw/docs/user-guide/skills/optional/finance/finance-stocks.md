@@ -2,7 +2,7 @@
 title: "Stocks — Yahoo 経由の株価、履歴、検索、比較、暗号資産"
 description: "Yahoo 経由の株価、履歴、検索、比較、暗号資産"
 upstream_path: user-guide/skills/optional/finance/finance-stocks.md
-upstream_blob: 7c43dea3065e2de4a97a8af42b6cb9c27892fbcf
+upstream_blob: b855ca4ac35ee7148e07dd9c5d67b36c22202718
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-stocks
 ---
@@ -16,7 +16,7 @@ Yahoo 経由で株価、履歴、検索、比較、暗号資産の情報を取�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/finance/stocks` で入れます |
-| パス | `optional-skills/finance/stocks` |
+| パス | `optional-skills/finance\stocks` |
 | バージョン | `0.1.0` |
 | 作者 | Mibay (Mibayy), Hermes Agent |
 | ライセンス | MIT |
@@ -57,7 +57,7 @@ Yahoo 側の crumb 保護がかかったフィールドが null で返るとき�
 
 ```
 SCRIPT=~/.hermes/skills/finance/stocks/scripts/stocks_client.py
-python3 $SCRIPT quote AAPL
+python $SCRIPT quote AAPL
 ```
 
 出力はすべて標準出力への JSON です。切り出したいときは `jq` に通してください。
@@ -65,12 +65,12 @@ python3 $SCRIPT quote AAPL
 ## 早見表 {#quick-reference}
 
 ```
-python3 $SCRIPT quote AAPL
-python3 $SCRIPT quote AAPL MSFT GOOGL TSLA
-python3 $SCRIPT search "Tesla"
-python3 $SCRIPT history NVDA --range 6mo
-python3 $SCRIPT compare AAPL MSFT GOOGL
-python3 $SCRIPT crypto BTC ETH SOL
+python $SCRIPT quote AAPL
+python $SCRIPT quote AAPL MSFT GOOGL TSLA
+python $SCRIPT search "Tesla"
+python $SCRIPT history NVDA --range 6mo
+python $SCRIPT compare AAPL MSFT GOOGL
+python $SCRIPT crypto BTC ETH SOL
 ```
 
 ## コマンド {#commands}
@@ -108,7 +108,7 @@ python3 $SCRIPT crypto BTC ETH SOL
 ## 確認 {#verification}
 
 ```
-python3 ~/.hermes/skills/finance/stocks/scripts/stocks_client.py quote AAPL
+python ~/.hermes/skills/finance/stocks/scripts/stocks_client.py quote AAPL
 ```
 
 `symbol: "AAPL"` と、数値の `price` フィールドを持つ JSON オブジェクトが返ります。

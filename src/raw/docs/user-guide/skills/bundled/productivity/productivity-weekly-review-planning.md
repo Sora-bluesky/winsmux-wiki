@@ -2,7 +2,7 @@
 title: "Weekly Review Planning — 週ごとの仕切り直し: 約束、止まっている仕事、来週の計画"
 description: "週ごとの仕切り直し: 約束、止まっている仕事、来週の計画"
 upstream_path: user-guide/skills/bundled/productivity/productivity-weekly-review-planning.md
-upstream_blob: 1d932c05e2a5a0a20f3b8958994ddbb012be1213
+upstream_blob: 353389b4ae23b5a6b265ec41b35035a9ef3082e2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity/weekly-review-planning` |
+| パス | `skills/productivity\weekly-review-planning` |
 | バージョン | `0.1.0` |
 | 作者 | Ben Barclay (benbarclay), Hermes Agent |
 | ライセンス | MIT |

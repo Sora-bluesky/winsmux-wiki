@@ -2,7 +2,7 @@
 title: "Findmy — macOS の FindMy.app で Apple 製端末や AirTag の位置を調べる"
 description: "macOS の FindMy.app で Apple 製端末や AirTag の位置を調べる"
 upstream_path: user-guide/skills/bundled/apple/apple-findmy.md
-upstream_blob: 0d4647e4474214bd6eb1fc257eb81fb0a2def715
+upstream_blob: 6637f08a9dd276177bd701344bc187c9253b9d37
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/apple/apple-findmy
 ---
@@ -16,7 +16,7 @@ macOS の FindMy.app で、Apple 製端末や AirTag の位置を調べます。
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/apple/findmy` |
+| パス | `skills/apple\findmy` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

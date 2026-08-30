@@ -2,7 +2,7 @@
 title: "P5Js — p5.js のスケッチ。ジェネラティブアート、シェーダー、インタラクティブ、3D"
 description: "p5.js のスケッチ。ジェネラティブアート、シェーダー、インタラクティブ、3D"
 upstream_path: user-guide/skills/bundled/creative/creative-p5js.md
-upstream_blob: 46ecfa9299f33589725a8bd1b6e33529ec705cc4
+upstream_blob: f819e3c69ef1cb97d50f637aea71c34b9b4bfd49
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-p5js
 ---
@@ -16,13 +16,13 @@ p5.js のスケッチ。ジェネラティブアート、シェーダー、イ�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative/p5js` |
+| パス | `skills/creative\p5js` |
 | バージョン | `1.0.0` |
 | 作者 | SHL0MS, Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `creative-coding`, `generative-art`, `p5js`, `canvas`, `interactive`, `visualization`, `webgl`, `shaders`, `animation` |
-| 関連 skill | [`ascii-video`](/hermes/docs/user-guide/skills/bundled/creative/creative-ascii-video/), [`manim-video`](/hermes/docs/user-guide/skills/bundled/creative/creative-manim-video/), [`excalidraw`](/hermes/docs/user-guide/skills/bundled/creative/creative-excalidraw/) |
+| 関連 skill | [`ascii-video`](/hermes/docs/user-guide/skills/bundled/creative/creative-ascii-video/), [`manim-video`](/hermes/docs/user-guide/skills/bundled/creative/creative-manim-video/), [`excalidraw`](/hermes/docs/user-guide/skills/optional/creative/creative-excalidraw/) |
 
 ## 早見表: SKILL.md の全文 {#reference-full-skillmd}
 
@@ -280,7 +280,7 @@ function windowResized() { resizeCanvas(windowWidth, windowHeight); }
 ### ステップ 4: 確認して手を入れる {#step-4-preview-iterate}
 
 - HTML ファイルをブラウザーで直接開きます。単純なスケッチならサーバーは要りません
-- ローカルのファイルを `loadImage()` や `loadFont()` で読むときは、`scripts/serve.sh` か `python3 -m http.server` を使います
+- ローカルのファイルを `loadImage()` や `loadFont()` で読むときは、`scripts/serve.sh` か `python -m http.server` を使います
 - Chrome DevTools の Performance タブで 60fps 出ているか確かめます
 - ウィンドウの大きさではなく、書き出す解像度で確認します
 - ステップ 1 のコンセプトどおりの見え方になるまで、パラメーターを調整します
@@ -512,7 +512,7 @@ p5.js のスケッチを作るときの流れです。
 
 1. **HTML ファイルを書く** — 単体で完結する 1 ファイルに、コードをすべてインラインで入れます
 2. **ブラウザーで開く** — macOS なら `open sketch.html`、Linux なら `xdg-open sketch.html`
-3. **ローカルの素材**（フォント、画像）にはサーバーが要ります。プロジェクトのディレクトリで `python3 -m http.server 8080` を実行し、`http://localhost:8080/sketch.html` を開きます
+3. **ローカルの素材**（フォント、画像）にはサーバーが要ります。プロジェクトのディレクトリで `python -m http.server 8080` を実行し、`http://localhost:8080/sketch.html` を開きます
 4. **PNG／GIF の書き出し** — 上のように `keyPressed()` のショートカットを入れ、どのキーを押せばよいか利用者に伝えます
 5. **ヘッドレスの書き出し** — フレームを自動で取り込むには `node scripts/export-frames.js sketch.html --frames 300` を実行します（スケッチ側で `noLoop()` と `_p5Ready` が必要です）
 6. **MP4 の描画** — `bash scripts/render.sh sketch.html output.mp4 --duration 30` を実行します

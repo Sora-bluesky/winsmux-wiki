@@ -2,7 +2,7 @@
 title: "Airtable — curl で使う Airtable REST API"
 description: "curl で使う Airtable REST API"
 upstream_path: user-guide/skills/bundled/productivity/productivity-airtable.md
-upstream_blob: 05a3e13fba069c1e9bf3b78086031bee876db0ed
+upstream_blob: f0363db1fb694610b370e908d56ab1d56eed2cb6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-airtable
 ---
@@ -16,7 +16,7 @@ curl で Airtable の REST API を使います。レコードの作成・取得�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity/airtable` |
+| パス | `skills/productivity\airtable` |
 | バージョン | `1.1.0` |
 | 作者 | community |
 | ライセンス | MIT |
@@ -59,10 +59,10 @@ Airtable の REST API を、`terminal` ツールから `curl` で直接たたき
 curl の基本形は次のとおりです。
 ```bash
 curl -s "https://api.airtable.com/v0/$BASE_ID/$TABLE?maxRecords=5" \
-  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python3 -m json.tool
+  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python -m json.tool
 ```
 
-`-s` は curl の進捗表示を消します。Hermes に渡る出力をきれいに保つため、毎回付けてください。読みやすい JSON にするには `python3 -m json.tool`（どの環境にもあります）か `jq`（入っていれば）に通します。
+`-s` は curl の進捗表示を消します。Hermes に渡る出力をきれいに保つため、毎回付けてください。読みやすい JSON にするには `python -m json.tool`（どの環境にもあります）か `jq`（入っていれば）に通します。
 
 ## フィールドの型（本文の書き方） {#field-types-request-body-shapes}
 
@@ -88,35 +88,35 @@ curl -s "https://api.airtable.com/v0/$BASE_ID/$TABLE?maxRecords=5" \
 ### トークンから見えるベースを一覧する {#list-bases-the-token-can-see}
 ```bash
 curl -s "https://api.airtable.com/v0/meta/bases" \
-  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python3 -m json.tool
+  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python -m json.tool
 ```
 
 ### ベースのテーブルとスキーマを一覧する {#list-tables-schema-for-a-base}
 ```bash
 curl -s "https://api.airtable.com/v0/meta/bases/$BASE_ID/tables" \
-  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python3 -m json.tool
+  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python -m json.tool
 ```
 書き換えを始める前に、これを実行します。フィールドの正確な名前と ID が分かり、選択肢のフィールドなら `options.choices` も見えて、主フィールドの名前も確認できます。
 
 ### レコードを一覧する（先頭 10 件） {#list-records-first-10}
 ```bash
 curl -s "https://api.airtable.com/v0/$BASE_ID/$TABLE?maxRecords=10" \
-  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python3 -m json.tool
+  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python -m json.tool
 ```
 
 ### レコードを 1 件取得する {#get-a-single-record}
 ```bash
 curl -s "https://api.airtable.com/v0/$BASE_ID/$TABLE/$RECORD_ID" \
-  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python3 -m json.tool
+  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python -m json.tool
 ```
 
 ### レコードを絞り込む (filterByFormula) {#filter-records-filterbyformula}
 Airtable の式は URL エンコードが必要です。手で書かず、Python の標準ライブラリに任せます。
 ```bash
 FORMULA="{Status}='Todo'"
-ENC=$(python3 -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$FORMULA")
+ENC=$(python -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$FORMULA")
 curl -s "https://api.airtable.com/v0/$BASE_ID/$TABLE?filterByFormula=$ENC&maxRecords=20" \
-  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python3 -m json.tool
+  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python -m json.tool
 ```
 
 よく使う式の形は次のとおりです。
@@ -130,14 +130,14 @@ curl -s "https://api.airtable.com/v0/$BASE_ID/$TABLE?filterByFormula=$ENC&maxRec
 ### 並べ替えとフィールドの指定 {#sort-select-specific-fields}
 ```bash
 curl -s "https://api.airtable.com/v0/$BASE_ID/$TABLE?sort%5B0%5D%5Bfield%5D=Priority&sort%5B0%5D%5Bdirection%5D=asc&fields%5B%5D=Name&fields%5B%5D=Status" \
-  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python3 -m json.tool
+  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python -m json.tool
 ```
 クエリパラメータの角かっこは必ず URL エンコードします（`%5B` と `%5D`）。
 
 ### 名前の付いたビューを使う {#use-a-named-view}
 ```bash
 curl -s "https://api.airtable.com/v0/$BASE_ID/$TABLE?view=Grid%20view&maxRecords=50" \
-  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python3 -m json.tool
+  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python -m json.tool
 ```
 ビューは、保存された絞り込みと並べ替えをサーバー側で適用します。
 
@@ -148,7 +148,7 @@ curl -s "https://api.airtable.com/v0/$BASE_ID/$TABLE?view=Grid%20view&maxRecords
 curl -s -X POST "https://api.airtable.com/v0/$BASE_ID/$TABLE" \
   -H "Authorization: Bearer $AIRTABLE_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"fields":{"Name":"New task","Status":"Todo","Priority":"High"}}' | python3 -m json.tool
+  -d '{"fields":{"Name":"New task","Status":"Todo","Priority":"High"}}' | python -m json.tool
 ```
 
 ### 1 回の呼び出しで最大 10 件作る {#create-up-to-10-records-in-one-call}
@@ -162,7 +162,7 @@ curl -s -X POST "https://api.airtable.com/v0/$BASE_ID/$TABLE" \
       {"fields": {"Name": "Task A", "Status": "Todo"}},
       {"fields": {"Name": "Task B", "Status": "In progress"}}
     ]
-  }' | python3 -m json.tool
+  }' | python -m json.tool
 ```
 まとめて扱えるエンドポイントは **1 回につき 10 件** までです。それ以上入れたいときは、10 件ずつのループにして、毎秒 5 リクエストの制限を守るために少し待ちを入れます。
 
@@ -171,7 +171,7 @@ curl -s -X POST "https://api.airtable.com/v0/$BASE_ID/$TABLE" \
 curl -s -X PATCH "https://api.airtable.com/v0/$BASE_ID/$TABLE/$RECORD_ID" \
   -H "Authorization: Bearer $AIRTABLE_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"fields":{"Status":"Done"}}' | python3 -m json.tool
+  -d '{"fields":{"Status":"Done"}}' | python -m json.tool
 ```
 
 ### 突き合わせ用のフィールドで upsert する（ID は不要） {#upsert-by-a-merge-field-no-id-needed}
@@ -184,20 +184,20 @@ curl -s -X PATCH "https://api.airtable.com/v0/$BASE_ID/$TABLE" \
     "records": [
       {"fields": {"Email": "user@example.com", "Status": "Active"}}
     ]
-  }' | python3 -m json.tool
+  }' | python -m json.tool
 ```
 `performUpsert` は、突き合わせ用フィールドの値が新しければレコードを作り、すでにあれば更新します。何度実行しても同じ結果になる同期に向いています。
 
 ### レコードを削除する {#delete-a-record}
 ```bash
 curl -s -X DELETE "https://api.airtable.com/v0/$BASE_ID/$TABLE/$RECORD_ID" \
-  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python3 -m json.tool
+  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python -m json.tool
 ```
 
 ### 1 回の呼び出しで最大 10 件削除する {#delete-up-to-10-records-in-one-call}
 ```bash
 curl -s -X DELETE "https://api.airtable.com/v0/$BASE_ID/$TABLE?records%5B%5D=rec1&records%5B%5D=rec2" \
-  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python3 -m json.tool
+  -H "Authorization: Bearer $AIRTABLE_API_KEY" | python -m json.tool
 ```
 
 ## ページ送り {#pagination}
@@ -210,8 +210,8 @@ while :; do
   URL="https://api.airtable.com/v0/$BASE_ID/$TABLE?pageSize=100"
   [ -n "$OFFSET" ] && URL="$URL&offset=$OFFSET"
   RESP=$(curl -s "$URL" -H "Authorization: Bearer $AIRTABLE_API_KEY")
-  echo "$RESP" | python3 -c 'import json,sys; d=json.load(sys.stdin); [print(r["id"], r["fields"].get("Name","")) for r in d["records"]]'
-  OFFSET=$(echo "$RESP" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("offset",""))')
+  echo "$RESP" | python -c 'import json,sys; d=json.load(sys.stdin); [print(r["id"], r["fields"].get("Name","")) for r in d["records"]]'
+  OFFSET=$(echo "$RESP" | python -c 'import json,sys; d=json.load(sys.stdin); print(d.get("offset",""))')
   [ -z "$OFFSET" ] && break
 done
 ```
@@ -238,7 +238,7 @@ done
 
 - **必ず `terminal` ツールから `curl` を使います。** `web_extract`（認証ヘッダーを送れません）や `browser_navigate`（画面での認証が必要で遅いです）は使わないでください。
 - **`AIRTABLE_API_KEY` は `${HERMES_HOME:-~/.hermes}/.env` から子プロセスへ自動で渡ります。** この skill が読み込まれていれば、`curl` を呼ぶたびに export し直す必要はありません。
-- **式の中の波かっこの扱いに気をつけます。** ヒアドキュメントの本文では `{Status}` はそのままの文字です。シェルの引数でも、`{...}` のブレース展開の文脈でなければ `{Status}` は安全です。ただし、動的な文字列を URL に差し込むときは `python3 urllib.parse.quote` を通してください。
-- **整形には `jq`（入っていないこともあります）より `python3 -m json.tool`（どの環境にもあります）を使います。** 絞り込みや項目の取り出しが必要なときだけ `jq` を持ち出します。
+- **式の中の波かっこの扱いに気をつけます。** ヒアドキュメントの本文では `{Status}` はそのままの文字です。シェルの引数でも、`{...}` のブレース展開の文脈でなければ `{Status}` は安全です。ただし、動的な文字列を URL に差し込むときは `python urllib.parse.quote` を通してください。
+- **整形には `jq`（入っていないこともあります）より `python -m json.tool`（どの環境にもあります）を使います。** 絞り込みや項目の取り出しが必要なときだけ `jq` を持ち出します。
 - **ページ送りはページ単位で、全体をまとめて取ることはできません。** Airtable の 100 件という上限は変えられません。`offset` の項目が出てこなくなるまでループします。
 - **2xx 以外の応答では `errors` の配列を読みます。** Airtable は `AUTHENTICATION_REQUIRED`、`INVALID_PERMISSIONS`、`MODEL_ID_NOT_FOUND`、`INVALID_MULTIPLE_CHOICE_OPTIONS` のような構造化されたエラーコードを返すので、何が起きているかがはっきり分かります。

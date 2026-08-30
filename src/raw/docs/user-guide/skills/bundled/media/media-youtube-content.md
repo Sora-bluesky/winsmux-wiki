@@ -2,7 +2,7 @@
 title: "Youtube Content — YouTube の文字起こしを要約・スレッド・ブログ記事にする"
 description: "YouTube の文字起こしを要約・スレッド・ブログ記事にする"
 upstream_path: user-guide/skills/bundled/media/media-youtube-content.md
-upstream_blob: 47cc4acc46baa131c5ce1b181fcacf6151aa67b5
+upstream_blob: 6324aca0419150294365acbd8a7f23d68d4fce26
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/media/media-youtube-content
 ---
@@ -16,7 +16,7 @@ YouTube の文字起こしを要約・スレッド・ブログ記事にします
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/media/youtube-content` |
+| パス | `skills/media\youtube-content` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |
@@ -51,16 +51,16 @@ uv pip install youtube-transcript-api
 
 ```bash
 # JSON output with metadata
-uv run python3 SKILL_DIR/scripts/fetch_transcript.py "https://youtube.com/watch?v=VIDEO_ID"
+uv run python SKILL_DIR/scripts/fetch_transcript.py "https://youtube.com/watch?v=VIDEO_ID"
 
 # Plain text (good for piping into further processing)
-uv run python3 SKILL_DIR/scripts/fetch_transcript.py "URL" --text-only
+uv run python SKILL_DIR/scripts/fetch_transcript.py "URL" --text-only
 
 # With timestamps
-uv run python3 SKILL_DIR/scripts/fetch_transcript.py "URL" --timestamps
+uv run python SKILL_DIR/scripts/fetch_transcript.py "URL" --timestamps
 
 # Specific language with fallback chain
-uv run python3 SKILL_DIR/scripts/fetch_transcript.py "URL" --language tr,en
+uv run python SKILL_DIR/scripts/fetch_transcript.py "URL" --language tr,en
 ```
 
 ## 出力形式 {#output-formats}
@@ -86,7 +86,7 @@ uv run python3 SKILL_DIR/scripts/fetch_transcript.py "URL" --language tr,en
 
 ## 進め方 {#workflow}
 
-1. **取得**: 補助スクリプトに `--text-only --timestamps` を付け、`uv run python3` 経由で文字起こしを取ります。
+1. **取得**: 補助スクリプトに `--text-only --timestamps` を付け、`uv run python` 経由で文字起こしを取ります。
 2. **確認**: 出力が空でないこと、想定した言語であることを確かめます。空だった場合は `--language` を外して再実行し、取得できるものを取ります。それでも空なら、その動画はおそらく文字起こしが無効になっていることを伝えます。
 3. **必要なら分割**: 文字起こしが 5 万文字ほどを超える場合は、重なりを持たせて分割し（4 万文字ずつ、2 千文字の重なり）、それぞれを要約してからまとめます。
 4. **変換**: 頼まれた出力形式に整えます。形式の指定がなければ要約にします。

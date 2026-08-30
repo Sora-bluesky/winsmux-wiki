@@ -2,7 +2,7 @@
 title: "Subagent Driven Development — delegate_task のサブエージェントで計画を実行する（2 段階レビュー）"
 description: "delegate_task のサブエージェントで計画を実行する（2 段階レビュー）"
 upstream_path: user-guide/skills/optional/software-development/software-development-subagent-driven-development.md
-upstream_blob: e773edd76cd5205a4ce847a35f815de9961aec33
+upstream_blob: 5e42f93712faf4aebf07e22df6e93b1cb11e6289
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development
 ---
@@ -16,13 +16,13 @@ delegate_task のサブエージェントで計画を実行します（2 段階�
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/software-development/subagent-driven-development` で導入します |
-| パス | `optional-skills/software-development/subagent-driven-development` |
+| パス | `optional-skills/software-development\subagent-driven-development` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent (adapted from obra/superpowers) |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `delegation`, `subagent`, `implementation`, `workflow`, `parallel` |
-| 関連 skill | [`plan`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-plan/), [`requesting-code-review`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/), [`test-driven-development`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) |
+| 関連 skill | [`requesting-code-review`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/), [`test-driven-development`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

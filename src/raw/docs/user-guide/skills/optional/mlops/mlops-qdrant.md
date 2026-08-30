@@ -2,7 +2,7 @@
 title: "Qdrant — 本番の RAG システムのためのベクトル検索エンジン"
 description: "本番の RAG システムのためのベクトル検索エンジン"
 upstream_path: user-guide/skills/optional/mlops/mlops-qdrant.md
-upstream_blob: c167093093087e04da877eb1cba431e1a30e3b45
+upstream_blob: 80c171381c8a8b771af2cf25992e0714395e2db4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-qdrant
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/qdrant` で導入します |
-| パス | `optional-skills/mlops/qdrant` |
+| パス | `optional-skills/mlops\qdrant` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -510,8 +510,8 @@ client = QdrantClient(
 
 ## 参照資料の一覧 {#references}
 
-- **[Advanced Usage](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/qdrant/references/advanced-usage.md)** - 分散モード、ハイブリッド検索、おすすめ機能
-- **[Troubleshooting](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/qdrant/references/troubleshooting.md)** - よくあるつまずき、原因の調べ方、性能の調整
+- **[Advanced Usage](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\qdrant/references/advanced-usage.md)** - 分散モード、ハイブリッド検索、おすすめ機能
+- **[Troubleshooting](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\qdrant/references/troubleshooting.md)** - よくあるつまずき、原因の調べ方、性能の調整
 
 ## 参考リンク {#resources}
 

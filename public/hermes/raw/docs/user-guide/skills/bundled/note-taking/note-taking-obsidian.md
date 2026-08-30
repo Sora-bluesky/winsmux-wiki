@@ -2,7 +2,7 @@
 title: "Obsidian — Obsidian の保管庫にあるノートを読む・探す・作る・直す"
 description: "Obsidian の保管庫にあるノートを読む・探す・作る・直す"
 upstream_path: user-guide/skills/bundled/note-taking/note-taking-obsidian.md
-upstream_blob: 22e5178a68abd4800d103c7efd0d62a385d32cbb
+upstream_blob: 34d311f2062cac912e3be794fdf9d520131e3401
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/note-taking/note-taking-obsidian
 ---
@@ -16,7 +16,7 @@ Obsidian の保管庫にあるノートを読む・探す・作る・直すた�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/note-taking/obsidian` |
+| パス | `skills/note-taking\obsidian` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |

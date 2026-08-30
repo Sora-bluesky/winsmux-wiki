@@ -2,7 +2,7 @@
 title: "Songsee — 音声のスペクトログラムや特徴量（mel, chroma, MFCC）を CLI で作る"
 description: "音声のスペクトログラムや特徴量（mel, chroma, MFCC）を CLI で作る"
 upstream_path: user-guide/skills/bundled/media/media-songsee.md
-upstream_blob: dd1e1d3d5eec34513c887adcc96e3cd123ea57ed
+upstream_blob: b0d86f2ab6089b6b5082ae4978e2c92b9b6a813f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/media/media-songsee
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/media/songsee` |
+| パス | `skills/media\songsee` |
 | バージョン | `1.0.0` |
 | 作者 | community |
 | ライセンス | MIT |

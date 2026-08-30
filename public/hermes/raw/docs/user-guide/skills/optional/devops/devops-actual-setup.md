@@ -2,7 +2,7 @@
 title: "Actual Setup — Actual Computer（actual.inc）の推論を Hermes に設定する"
 description: "Actual Computer（actual.inc）の推論を Hermes に設定する"
 upstream_path: user-guide/skills/optional/devops/devops-actual-setup.md
-upstream_blob: d7fa4bd756a3b7ce300029dfeb3856b04ea84535
+upstream_blob: 450eb93bc9125da47a16fe0aeec1a171a72d34bc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-actual-setup
 ---
@@ -16,7 +16,7 @@ Actual Computer（actual.inc）の推論を Hermes に設定します。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/devops/actual-setup` で導入します |
-| パス | `optional-skills/devops/actual-setup` |
+| パス | `optional-skills/devops\actual-setup` |
 | バージョン | `2.0.0` |
 | 作者 | shl0ms + Hermes Agent |
 | ライセンス | MIT |

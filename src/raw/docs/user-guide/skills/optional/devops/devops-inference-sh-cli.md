@@ -2,7 +2,7 @@
 title: "Inference Sh Cli — inference.sh の CLI から 150 以上の AI アプリ（画像・動画・LLM）を動かす"
 description: "inference.sh の CLI から 150 以上の AI アプリ（画像・動画・LLM）を動かす"
 upstream_path: user-guide/skills/optional/devops/devops-inference-sh-cli.md
-upstream_blob: 0fe5f1dfa702c8bae9347f5f21582c5a840946a5
+upstream_blob: 295c14b0cc8926b23e7a64578f82dada6a8b196e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-inference-sh-cli
 ---
@@ -16,7 +16,7 @@ inference.sh の CLI から 150 以上の AI アプリ（画像・動画・LLM�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/devops/inference-sh-cli` で入れます |
-| パス | `optional-skills/devops/inference-sh-cli` |
+| パス | `optional-skills/devops\inference-sh-cli` |
 | バージョン | `1.0.0` |
 | 作者 | okaris |
 | ライセンス | MIT |

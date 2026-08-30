@@ -2,7 +2,7 @@
 title: "Imessage — macOS の imsg CLI で iMessage / SMS を送受信する"
 description: "macOS の imsg CLI で iMessage / SMS を送受信する"
 upstream_path: user-guide/skills/bundled/apple/apple-imessage.md
-upstream_blob: d29fab6ebc73a3802a0c68a41845699e1c024af3
+upstream_blob: 0b84453616c61df4461ea64df5aed46f4d3ae65d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/apple/apple-imessage
 ---
@@ -16,7 +16,7 @@ macOS の imsg CLI で iMessage / SMS を送受信します。
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/apple/imessage` |
+| パス | `skills/apple\imessage` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

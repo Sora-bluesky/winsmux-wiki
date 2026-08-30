@@ -2,7 +2,7 @@
 title: "Unbroker — データブローカーサイトから自分の情報を自動で削除する"
 description: "データブローカーサイトから自分の情報を自動で削除する"
 upstream_path: user-guide/skills/optional/security/security-unbroker.md
-upstream_blob: 4125826689ad8c35fc4d8981388665793ee87492
+upstream_blob: 3e8ea8d8fadd51edded627a965fc539d187e7047
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-unbroker
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/security/unbroker` で導入します |
-| パス | `optional-skills/security/unbroker` |
+| パス | `optional-skills/security\unbroker` |
 | バージョン | `1.0.0` |
 | 作者 | SHL0MS (github.com/SHL0MS) |
 | ライセンス | MIT |
@@ -77,7 +77,7 @@ Python の CLI（`scripts/pdd.py`）が、決定論的な状態を一手に管�
 
 ## 事前に必要なもの {#prerequisites}
 
-- `python3`（標準ライブラリのみ。コアエンジンに追加パッケージは不要）。
+- `python`（標準ライブラリのみ。コアエンジンに追加パッケージは不要）。
 - **任意の強化**（これらがなくても skill は設定ゼロで動きます。`setup --auto` は検出したものをすべて
   有効にし、認証情報をシェルの環境変数**と `$HERMES_HOME/.env`** から読み取るため、Hermes が自分の
   ツール用にすでに読み込んでいるキーは再エクスポートなしで拾われます。どれも、人向けタスクの一類を
@@ -116,7 +116,7 @@ Python の CLI（`scripts/pdd.py`）が、決定論的な状態を一手に管�
 すべて `terminal` ツールを通して実行します。この skill のディレクトリから次のようにします。
 
 ```bash
-PDD="python3 scripts/pdd.py"
+PDD="python scripts/pdd.py"
 ```
 
 エンジンはデータを `$PDD_DATA_DIR`（既定は `$HERMES_HOME/unbroker`）の下に、`0600` で書き込みます。
@@ -333,7 +333,7 @@ PDD="python3 scripts/pdd.py"
 ## 検証 {#verification}
 
 - `scripts/run_tests.sh tests/skills/test_unbroker_skill.py`（自己完結。ネットワーク不要）、または
-  依存関係なしのランナー `python3 tests/skills/test_unbroker_skill.py`。
+  依存関係なしのランナー `python tests/skills/test_unbroker_skill.py`。
 - 動作確認: `$PDD setup --auto && $PDD doctor && SID=$($PDD intake --full-name "Test Person"
-  --email t@example.com --consent | python3 -c 'import sys,json;print(json.load(sys.stdin)["subject_id"])')
+  --email t@example.com --consent | python -c 'import sys,json;print(json.load(sys.stdin)["subject_id"])')
   && $PDD next "$SID"` を実行し、準備状況の要約と、順序どおりのアクションキューが出ることを確認します。

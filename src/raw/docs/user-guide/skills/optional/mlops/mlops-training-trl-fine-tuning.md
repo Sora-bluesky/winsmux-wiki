@@ -2,7 +2,7 @@
 title: "Trl Fine Tuning — TRL: LLM の RLHF に使う SFT、DPO、GRPO、RLOO と報酬モデリング"
 description: "TRL: LLM の RLHF に使う SFT、DPO、GRPO、RLOO と報酬モデリング"
 upstream_path: user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning.md
-upstream_blob: d46746137ad327c1289134659272e02c0482f576
+upstream_blob: 57072aab119a771aa768ba7bf113ab39ad6d1686
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning
 ---
@@ -16,7 +16,7 @@ TRL: LLM の RLHF に使う SFT、DPO、GRPO、RLOO と報酬モデリングで�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/trl-fine-tuning` で導入します |
-| パス | `optional-skills/mlops/training/trl-fine-tuning` |
+| パス | `optional-skills/mlops\training\trl-fine-tuning` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -304,7 +304,7 @@ trl dpo \
 
 わずかなメモリで強化学習をします。
 
-報酬関数の設計、学習で押さえておくべき勘所（損失の動き、モード崩壊、調整の仕方）、多段の高度な進め方など、GRPO を掘り下げた内容は **[references/grpo-training.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/training/trl-fine-tuning/references/grpo-training.md)** にあります。そのまま実運用に使える学習スクリプトは **[templates/basic_grpo_training.py](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/training/trl-fine-tuning/templates/basic_grpo_training.py)** です。
+報酬関数の設計、学習で押さえておくべき勘所（損失の動き、モード崩壊、調整の仕方）、多段の高度な進め方など、GRPO を掘り下げた内容は **[references/grpo-training.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\training\trl-fine-tuning/references/grpo-training.md)** にあります。そのまま実運用に使える学習スクリプトは **[templates/basic_grpo_training.py](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\training\trl-fine-tuning/templates/basic_grpo_training.py)** です。
 
 次のチェックリストをそのまま使ってください:
 
@@ -476,15 +476,15 @@ config = RLOOConfig(
 
 ## さらに踏み込んだ話題 {#advanced-topics}
 
-**SFT の手引き**: データの形式、チャットテンプレート、パッキングの方針、複数 GPU での学習は [references/sft-training.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/training/trl-fine-tuning/references/sft-training.md) を参照してください。
+**SFT の手引き**: データの形式、チャットテンプレート、パッキングの方針、複数 GPU での学習は [references/sft-training.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\training\trl-fine-tuning/references/sft-training.md) を参照してください。
 
-**DPO の派生手法**: IPO、cDPO、RPO などの DPO 系の損失関数と、推奨されるハイパーパラメータは [references/dpo-variants.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/training/trl-fine-tuning/references/dpo-variants.md) を参照してください。
+**DPO の派生手法**: IPO、cDPO、RPO などの DPO 系の損失関数と、推奨されるハイパーパラメータは [references/dpo-variants.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\training\trl-fine-tuning/references/dpo-variants.md) を参照してください。
 
-**報酬モデリング**: 結果に対する報酬と過程に対する報酬の違い、Bradley-Terry の損失、報酬モデルの評価は [references/reward-modeling.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/training/trl-fine-tuning/references/reward-modeling.md) を参照してください。
+**報酬モデリング**: 結果に対する報酬と過程に対する報酬の違い、Bradley-Terry の損失、報酬モデルの評価は [references/reward-modeling.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\training\trl-fine-tuning/references/reward-modeling.md) を参照してください。
 
-**オンライン RL の手法**: PPO、GRPO、RLOO、OnlineDPO の詳しい設定は [references/online-rl.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/training/trl-fine-tuning/references/online-rl.md) を参照してください。
+**オンライン RL の手法**: PPO、GRPO、RLOO、OnlineDPO の詳しい設定は [references/online-rl.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\training\trl-fine-tuning/references/online-rl.md) を参照してください。
 
-**GRPO の掘り下げ**: 報酬関数の設計の考え方、学習の勘所（損失が増える理由、モード崩壊の見つけ方）、ハイパーパラメータの調整、多段での学習、困ったときの対処など、踏み込んだ内容は [references/grpo-training.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/training/trl-fine-tuning/references/grpo-training.md) を参照してください。そのまま実運用に使えるひな形は [templates/basic_grpo_training.py](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/training/trl-fine-tuning/templates/basic_grpo_training.py) にあります。
+**GRPO の掘り下げ**: 報酬関数の設計の考え方、学習の勘所（損失が増える理由、モード崩壊の見つけ方）、ハイパーパラメータの調整、多段での学習、困ったときの対処など、踏み込んだ内容は [references/grpo-training.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\training\trl-fine-tuning/references/grpo-training.md) を参照してください。そのまま実運用に使えるひな形は [templates/basic_grpo_training.py](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\training\trl-fine-tuning/templates/basic_grpo_training.py) にあります。
 
 ## 必要なハードウェア {#hardware-requirements}
 

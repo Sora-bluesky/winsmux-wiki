@@ -2,7 +2,7 @@
 title: "ブラウザ自動操作"
 description: "複数のプロバイダー、CDP 経由のローカル Chromium 系ブラウザ、クラウドブラウザを使ってブラウザを操作し、Web の操作・フォーム入力・スクレイピングなどを行います。"
 upstream_path: user-guide/features/browser.md
-upstream_blob: 16a7e3cfbe6ebb0fccb027df23f60a28ddb996ee
+upstream_blob: 43ed89309228b21a39ed58f714b2de44923c2199
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/browser
 ---
@@ -170,14 +170,39 @@ browser:
   use_real_profile: true
 ```
 
-有効にすると、Hermes は既定のブラウザで **実際に使っている** プロファイル（`Local State → profile.last_used` が指すもの）を、
-Cookie・保存したログイン・各種設定ごと `~/.hermes/browser-profile/<browser>/` の下の管理された複製へ取り込み、
-その複製を同梱の Chromium で動かします。生きているブラウザのプロファイルが **直接開かれることはありません**。
+有効にすると、Hermes は既定のブラウザで **実際に使っている** プロファイル（`Local State → profile.last_used` が指すもので、
+Cookie・保存したログイン・各種設定を含みます）を `~/.hermes/browser-profile/<browser>/` の下の管理された複製へ取り込み、
+その複製に対して **本物のブラウザの実行ファイル** を起動して、ブラウジングエンジンをそこへ接続します。
+同梱の Chromium を mock-keychain のスイッチ付きで起動するのではなく本物の実行ファイルを起動することが、
+OS に暗号化された Cookie を復号できる状態に保つ鍵です。macOS では Chrome の Cookie は Keychain 越しに
+暗号化されているため、mock-keychain で起動すると Cookie が一つ残らず黙って落ち、サインアウトした状態で
+開いてしまいます。生きているブラウザのプロファイルが **直接開かれることはありません**。
 複製は別のディレクトリなので、動作中のブラウザとプロファイルのロックを奪い合うこともなく、既定のプロファイルディレクトリ
 ではリモートデバッグを許さない Chrome 136 以降の制限も避けられます。認証まわりのファイル（Cookie・ログイン・設定）は
 新しいセッションが立ち上がるたびに実際のプロファイルから同期し直されるので、自分のブラウザで済ませたログインが
 エージェントのセッションにも反映されます。複製されるのは実際に使っているプロファイルだけで、他の Chrome の
 プロファイルが取り込まれることはありません。
+
+複製を動かすブラウザは **ヘッドレス** で動作します。窓を出さず背景で自分のプロファイルを操作し、フォーカスを
+奪うこともないので、エージェントが代わりに投稿したりフォームを埋めたり情報を集めたりしている間も、こちらは
+そのまま作業を続けられます（ここでのヘッドレスは Chrome の *新しい* ヘッドレスモードで、普段の Cookie の
+保管場所を読むため、ログイン状態はそのまま引き継がれます）。動いているところを見たいときは、
+[窓を出すモード](#headed-mode-visible-browser-window) の切り替えがここでも使えます。
+`browser.headed: true`（または `AGENT_BROWSER_HEADED=1`）にすれば、普段のプロファイルの閲覧でも
+見える窓が開きます。画面のないホスト（サーバーや CI）では、設定にかかわらず常にヘッドレスで動きます。
+
+ブラウザに複数のプロファイル（仕事用と個人用など）があり、「最後に触ったプロファイル」でエージェントの
+身元が決まってしまうのが困る場合は、複製の取得元をはっきり指定できます。
+
+```yaml
+# ~/.hermes/config.yaml
+browser:
+  use_real_profile: true
+  real_profile_pin: "Profile 2"   # directory name under the browser's user-data dir
+```
+
+存在しないプロファイルのディレクトリを指定した場合は、直し方のわかるメッセージを出して安全側で止まります。
+黙って最後に使ったプロファイルに戻ることはありません。
 
 この設定を切り戻すと、Hermes は次にブラウザを使うときに複製の保管場所（`~/.hermes/browser-profile/`）を削除します。
 許可を取り消したあとに、複製された認証情報が残り続けることはありません。
@@ -199,7 +224,7 @@ Windows で普段のプロファイルの閲覧を使うには、ブラウザを
 繰り返したり、もう一度終了させにいったりはしません。
 :::
 
-- **対応するブラウザ:** Chrome、Edge、Brave、Chromium（OS の既定になっているもの）。既定が Chromium 系でない場合
+- **対応するブラウザ:** Chrome、Edge、Brave、Brave Origin、Chromium（OS の既定になっているもの）。既定が Chromium 系でない場合
   （Firefox など）は、当て推量をせず、はっきりしたメッセージを出して安全側で止まります。
 - **どのバックエンドでも動きます。** ローカルのバックエンドなら、この設定を有効にするだけで自動的に使われます。
   **クラウド** のブラウザバックエンドの下でも、エージェントは `browser_exec` ツールの `local` 引数で、
@@ -208,7 +233,8 @@ Windows で普段のプロファイルの閲覧を使うには、ブラウザを
 - **安全面の位置づけ:** これは許可を前提にした便利機能であって、隔離の境界ではありません。エージェントが開いた
   ページは本物のログイン状態で動くので、エージェントに自分の代わりを務めさせたいときだけ有効にしてください。
   既定では無効です。
-- **デスクトップ版:** **Settings → Browser → Use My Real Browser Profile** で切り替えます。
+- **デスクトップ版:** **Capabilities → Tools → Browser → Use My Real Browser Profile** で切り替えます
+  （この切り替えはバックエンドの選択肢の上にあります）。Settings → Config の `browser` の節からでも設定できます。
 
 ### Camofox ローカルモード {#camofox-local-mode}
 
@@ -433,7 +459,7 @@ CLI では次のように使います。
 /browser disconnect              # Detach and return to cloud/local mode
 ```
 
-リモートデバッグを有効にしたブラウザがまだ動いていない場合、Hermes は対応する Chromium 系のブラウザを `--remote-debugging-port=9222` 付きで自動起動しようとします。検出の対象は Brave、Google Chrome、Chromium、Microsoft Edge で、`/opt/brave-bin/brave` や `/snap/bin/brave` といった Linux でよくあるインストール先も見ます。
+リモートデバッグを有効にしたブラウザがまだ動いていない場合、Hermes は対応する Chromium 系のブラウザを `--remote-debugging-port=9222` 付きで自動起動しようとします。検出の対象は Brave、Brave Origin / Nightly、Google Chrome、Chromium、Microsoft Edge で、`brave-origin`、`brave-origin-nightly`、`/opt/brave.com/brave-origin/brave-origin`、`/opt/brave.com/brave-origin-nightly/brave-origin`、`/opt/brave-bin/brave`、`/snap/bin/brave` といった Linux でよくあるインストール先や実行ファイル名も見ます。
 
 :::tip
 Chromium 系のブラウザを手動で CDP 有効のまま起動するときは、専用の user-data-dir を指定してください。そうしないと、普段のプロファイルでブラウザがすでに動いている場合にデバッグ用のポートが開きません。
@@ -495,7 +521,7 @@ Hermes が WSL2 の中で動いていて、操作したい Chrome の窓は Wind
 
 ### ローカルブラウザモード {#local-browser-mode}
 
-クラウドの認証情報を一つも設定せず、`/browser connect` も使わない場合でも、Hermes は `agent-browser` が動かすローカルの Chromium を通してブラウザツールを使えます。
+クラウドの認証情報を **一つも** 設定せず、`/browser connect` も使わない場合でも、Hermes は `agent-browser` が動かすローカルの Chromium を通してブラウザツールを使えます。
 
 ### 任意の環境変数 {#optional-environment-variables}
 

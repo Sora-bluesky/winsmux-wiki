@@ -2,7 +2,7 @@
 title: "Sherlock — 400 以上のサービスからユーザー名でアカウントを探す"
 description: "400 以上のサービスからユーザー名でアカウントを探す"
 upstream_path: user-guide/skills/optional/security/security-sherlock.md
-upstream_blob: ad50f1a6eb73ea4ead70bfbf37de4da7ee4593c1
+upstream_blob: 53caae367ffc3a10fded889cf70314c7112e09e0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-sherlock
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/security/sherlock` で導入します |
-| パス | `optional-skills/security/sherlock` |
+| パス | `optional-skills/security\sherlock` |
 | バージョン | `1.0.0` |
 | 作者 | unmodeled-tyler |
 | ライセンス | MIT |

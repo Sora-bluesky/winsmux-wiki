@@ -2,7 +2,7 @@
 title: "Merger Model — M&A の EPS 増加・希薄化ワークブックを Excel で作る"
 description: "M&A の EPS 増加・希薄化ワークブックを Excel で作る"
 upstream_path: user-guide/skills/optional/finance/finance-merger-model.md
-upstream_blob: c7876caac8449ad51a1f9b3c14347bf37cefa890
+upstream_blob: 89c34a2cf1da4f4a2d6408f109dbb692bebc17b5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-merger-model
 ---
@@ -16,7 +16,7 @@ M&A の EPS 増加・希薄化（アクリーション / ダイリューショ�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/finance/merger-model` で入れます |
-| パス | `optional-skills/finance/merger-model` |
+| パス | `optional-skills/finance\merger-model` |
 | バージョン | `1.0.0` |
 | 作者 | Anthropic（Nous Research が改変） |
 | ライセンス | Apache-2.0 |

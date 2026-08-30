@@ -2,7 +2,7 @@
 title: "Polymarket — Polymarket を調べる: 市場、価格、板、履歴"
 description: "Polymarket を調べる: 市場、価格、板、履歴"
 upstream_path: user-guide/skills/optional/finance/finance-polymarket.md
-upstream_blob: 78f370685af25cb7a83c5a0ee5612e5a3db003ee
+upstream_blob: f320f55dfa7b9d4686cd51cdfe3243b094b12cca
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-polymarket
 ---
@@ -16,7 +16,7 @@ Polymarket を調べます。市場、価格、板、履歴を取得できます
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/finance/polymarket` で入れます |
-| パス | `optional-skills/finance/polymarket` |
+| パス | `optional-skills/finance\polymarket` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Pytorch Lightning — 分散学習まで組み込まれた、すっきりした学習ループ"
 description: "分散学習まで組み込まれた、すっきりした学習ループ"
 upstream_path: user-guide/skills/optional/mlops/mlops-pytorch-lightning.md
-upstream_blob: dac2b7e6132cbb2b25f8f221c3b8296746dbd950
+upstream_blob: dbf67607574dd4b94a31de349b2fa536764f46f5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-pytorch-lightning
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/pytorch-lightning` で導入します |
-| パス | `optional-skills/mlops/pytorch-lightning` |
+| パス | `optional-skills/mlops\pytorch-lightning` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -334,11 +334,11 @@ trainer = L.Trainer(accelerator='gpu', devices=1)
 
 ## もう一歩踏み込む {#advanced-topics}
 
-**コールバック**: EarlyStopping、ModelCheckpoint、自作のコールバック、コールバックのフックについては [references/callbacks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/pytorch-lightning/references/callbacks.md) を見てください。
+**コールバック**: EarlyStopping、ModelCheckpoint、自作のコールバック、コールバックのフックについては [references/callbacks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\pytorch-lightning/references/callbacks.md) を見てください。
 
-**分散のやり方**: DDP、FSDP、DeepSpeed ZeRO との連携、複数ノードの設定については [references/distributed.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/pytorch-lightning/references/distributed.md) を見てください。
+**分散のやり方**: DDP、FSDP、DeepSpeed ZeRO との連携、複数ノードの設定については [references/distributed.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\pytorch-lightning/references/distributed.md) を見てください。
 
-**ハイパーパラメータの調整**: Optuna、Ray Tune、WandB sweeps との連携については [references/hyperparameter-tuning.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/pytorch-lightning/references/hyperparameter-tuning.md) を見てください。
+**ハイパーパラメータの調整**: Optuna、Ray Tune、WandB sweeps との連携については [references/hyperparameter-tuning.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\pytorch-lightning/references/hyperparameter-tuning.md) を見てください。
 
 ## 必要なハードウェア {#hardware-requirements}
 

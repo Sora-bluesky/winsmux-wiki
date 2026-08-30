@@ -2,7 +2,7 @@
 title: "Cloudflare Temporary Deploy — アカウントなしで Worker を公開する（wrangler --temporary）"
 description: "アカウントなしで Worker を公開する（wrangler --temporary）"
 upstream_path: user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy.md
-upstream_blob: 835e5e0bd687fd17c06b36afbe9456c45aac7f40
+upstream_blob: 3650a0bda8405a12ea0bdeb3c52ba4b4123d0e70
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy
 ---
@@ -16,7 +16,7 @@ wrangler --temporary を使って、アカウントなしで Worker を公開し
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/web-development/cloudflare-temporary-deploy` で導入します |
-| パス | `optional-skills/web-development/cloudflare-temporary-deploy` |
+| パス | `optional-skills/web-development\cloudflare-temporary-deploy` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -90,7 +90,7 @@ wrangler --temporary を使って、アカウントなしで Worker を公開し
 
 3. **その出力から URL を取り出します。** 目で拾わず、付属のスクリプトで確実に抜き出してください:
    ```
-   npx wrangler@latest deploy --temporary 2>&1 | python3 scripts/parse_deploy_output.py
+   npx wrangler@latest deploy --temporary 2>&1 | python scripts/parse_deploy_output.py
    ```
    （`scripts/parse_deploy_output.py` は、この skill の絶対パスに読み替えてください。）`{"live_url", "claim_url", "account", "account_state", "expires_minutes", "deployed"}` という JSON が出力されます。
 
@@ -109,7 +109,7 @@ wrangler --temporary を使って、アカウントなしで Worker を公開し
 |---|---|
 | 版を確かめる（4.102.0 以上が必要） | `npx wrangler@latest --version` |
 | 公開する（アカウント不要） | `npx wrangler@latest deploy --temporary` |
-| 公開して URL を取り出す | `npx wrangler@latest deploy --temporary 2>&1 \| python3 scripts/parse_deploy_output.py` |
+| 公開して URL を取り出す | `npx wrangler@latest deploy --temporary 2>&1 \| python scripts/parse_deploy_output.py` |
 | 公開できたか確かめる | `curl -sS <live_url>` |
 | 使い回している一時アカウントを消す | `npx wrangler@latest logout` |
 
@@ -142,4 +142,4 @@ wrangler --temporary を使って、アカウントなしで Worker を公開し
 - `npx wrangler@latest deploy --temporary` が `workers.dev` の公開 URL と、`claim-preview?claimToken=` を含む引き取り用の URL を表示する。
 - `curl -sS <live_url>` が、Worker のコードどおりの本文を返す。
 - 2 回目の公開で `Account: <name> (reused)` と表示され、公開 URL が変わらない。
-- 取り出し用スクリプトの自己確認が通る: `python3 scripts/parse_deploy_output.py --selftest`。
+- 取り出し用スクリプトの自己確認が通る: `python scripts/parse_deploy_output.py --selftest`。

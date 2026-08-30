@@ -2,7 +2,7 @@
 title: "Dspy — DSPy: 宣言的に言語モデルのプログラムを書き、プロンプトを自動で最適化し、RAG を作る"
 description: "DSPy: 宣言的に言語モデルのプログラムを書き、プロンプトを自動で最適化し、RAG を作る"
 upstream_path: user-guide/skills/optional/mlops/mlops-research-dspy.md
-upstream_blob: a7f4ca9d8cba7d99c7466100d262660dcb46b301
+upstream_blob: 07abb63dcd4681896c4f2e83c693093695b38f6e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-research-dspy
 ---
@@ -16,7 +16,7 @@ DSPy: 宣言的に言語モデルのプログラムを書き、プロンプト�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/dspy` で導入します |
-| パス | `optional-skills/mlops/research/dspy` |
+| パス | `optional-skills/mlops\research\dspy` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

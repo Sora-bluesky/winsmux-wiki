@@ -2,7 +2,7 @@
 title: "Watchers — RSS・JSON API・GitHub を定期的に見に行き、既読の印で重複を省く"
 description: "RSS・JSON API・GitHub を定期的に見に行き、既読の印で重複を省く"
 upstream_path: user-guide/skills/optional/devops/devops-watchers.md
-upstream_blob: 9d2fc7f7523baaad78fc64fd2c957fe43ce194db
+upstream_blob: b1860772f7b217648a161850b8a2ddf47f4e6823
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-watchers
 ---
@@ -16,7 +16,7 @@ RSS・JSON API・GitHub を定期的に見に行き、既読の印で重複を�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/devops/watchers` で入れます |
-| パス | `optional-skills/devops/watchers` |
+| パス | `optional-skills/devops\watchers` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

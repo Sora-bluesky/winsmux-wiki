@@ -2,7 +2,7 @@
 title: "Pinecone — 本番の RAG と検索のためのマネージド型ベクトルデータベース"
 description: "本番の RAG と検索のためのマネージド型ベクトルデータベース"
 upstream_path: user-guide/skills/optional/mlops/mlops-pinecone.md
-upstream_blob: d9e57578dde69f352442c4a7a2ee908e8123f547
+upstream_blob: c6cf88b25d4d9cad94b2ed1db11601e610262688
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-pinecone
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/pinecone` で導入します |
-| パス | `optional-skills/mlops/pinecone` |
+| パス | `optional-skills/mlops\pinecone` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

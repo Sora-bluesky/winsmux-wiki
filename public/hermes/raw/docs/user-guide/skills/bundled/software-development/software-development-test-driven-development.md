@@ -2,7 +2,7 @@
 title: "Test Driven Development — TDD: RED-GREEN-REFACTOR を守り、コードより先にテストを書きます"
 description: "TDD: RED-GREEN-REFACTOR を守り、コードより先にテストを書きます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-test-driven-development.md
-upstream_blob: bdf88a6620a1e2266c63c5a1bf5132ebe8d1462b
+upstream_blob: 805782c463766bd7614ee59caf65b13b64b2eb4a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development
 ---
@@ -16,13 +16,13 @@ TDD: RED-GREEN-REFACTOR を守り、コードより先にテストを書きま�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development/test-driven-development` |
+| パス | `skills/software-development\test-driven-development` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent（obra/superpowers から取り入れています） |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `testing`, `tdd`, `development`, `quality`, `red-green-refactor` |
-| 関連 skill | [`systematic-debugging`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-systematic-debugging/), [`plan`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-plan/), [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) |
+| 関連 skill | [`systematic-debugging`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-systematic-debugging/), [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

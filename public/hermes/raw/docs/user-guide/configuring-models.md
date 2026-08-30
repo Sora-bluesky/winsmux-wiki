@@ -2,7 +2,7 @@
 title: "モデルを設定する"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: 2ede0dba3ce29f5c6c822ed080adc527856bb98f
+upstream_blob: 3e8db68c3121802a519d3e989643e88747fea9aa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---
@@ -172,7 +172,7 @@ auxiliary:
 
 ## プロバイダーごとのリクエスト設定 {#per-provider-request-options}
 
-プロバイダーの項目（`providers:` 辞書の中の `providers.<name>`、または旧形式の `custom_providers` リストの各項目）では、Hermes がそのエンドポイントとどう話すかを決める設定を 2 つ指定できます。
+プロバイダーの項目（`providers:` 辞書の中の `providers.<name>`、または旧形式の `custom_providers` リストの各項目）では、Hermes がそのエンドポイントとどう話すかを決める設定を指定できます。
 
 **`extra_headers`** — そのプロバイダーのベース URL へ向かうすべての LLM リクエストに付ける、追加の HTTP ヘッダーの対応表です。URL やプロファイル由来の既定値、ユーザーによるヘッダー上書きよりも後に適用されるので、認証情報を差し替えてもクライアントを作り直しても残ります。Cloudflare Access のサービストークン、プロキシの認証、独自のベアラー方式などに使えます。
 
@@ -201,6 +201,16 @@ providers:
 ```
 
 探索を切ると、モデル選択画面（`hermes model`、`/model`）は実際に問い合わせた結果ではなく、設定に書いた一覧を表示します。
+
+**`openai_native_compaction`** — この機能を `true` にしてよいのは、会話の内容を預けても差し支えないと判断できる OpenAI 互換のエンドポイントだけです。ネイティブの圧縮では、そのプロバイダーに設定した `base_url` へ中身がそのまま送られます。
+
+```yaml
+providers:
+  trusted-proxy:
+    api: https://llm.internal.example.com/v1
+    capabilities:
+      openai_native_compaction: true
+```
 
 素のモデル別名をリクエストを受け取ってから解決するタイプの
 ゲートウェイでは、モデルごとの `prompt_caching` 機能で

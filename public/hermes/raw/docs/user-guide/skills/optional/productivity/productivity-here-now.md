@@ -2,7 +2,7 @@
 title: "Here Now — {slug}.here.now にサイトを公開し、Drive にファイルを置く"
 description: "{slug}.here.now にサイトを公開し、Drive にファイルを置く"
 upstream_path: user-guide/skills/optional/productivity/productivity-here-now.md
-upstream_blob: 7240ecac1da4971c029408b353eb4719ff7df169
+upstream_blob: 4e41830d18f68159c03cb1804672210120d86c9f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-here-now
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/productivity/here-now` で入れます |
-| パス | `optional-skills/productivity/here-now` |
+| パス | `optional-skills/productivity\here-now` |
 | バージョン | `1.15.3` |
 | 作者 | here.now |
 | ライセンス | MIT |

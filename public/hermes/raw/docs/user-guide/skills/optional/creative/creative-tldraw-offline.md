@@ -2,7 +2,7 @@
 title: "Tldraw Offline — tldraw のオフラインキャンバスをエージェントで操作・スクリプト化する"
 description: "tldraw のオフラインキャンバスをエージェントで操作・スクリプト化する"
 upstream_path: user-guide/skills/optional/creative/creative-tldraw-offline.md
-upstream_blob: 59cc602b93e685e32658790a1ff5d9a3c0b8e8cd
+upstream_blob: 737d51391205f927c60c0089c72b923c3a3f1258
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-tldraw-offline
 ---
@@ -16,7 +16,7 @@ tldraw のオフラインキャンバスをエージェントで操作・スク�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/creative/tldraw-offline` で導入します |
-| パス | `optional-skills/creative/tldraw-offline` |
+| パス | `optional-skills/creative\tldraw-offline` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium + Hermes Agent |
 | ライセンス | MIT |
@@ -81,11 +81,11 @@ tldraw のオフライン版デスクトップアプリ（offline.tldraw.com）�
 
 ```bash
 BASE=http://localhost:7236
-TOKEN=$(python3 -c "import json;print(json.load(open('$HOME/.config/tldraw/server.json'))['token'])")
+TOKEN=$(python -c "import json;print(json.load(open('$HOME/.config/tldraw/server.json'))['token'])")
 # find the focused document id
 DOC=$(curl -s "$BASE/api/search" -X POST -H 'content-type: application/json' \
   -H "Authorization: Bearer $TOKEN" \
-  -d '{"code":"return (await api.getFocusedDoc()).id"}' | python3 -c "import sys,json;print(json.load(sys.stdin)['result'])")
+  -d '{"code":"return (await api.getFocusedDoc()).id"}' | python -c "import sys,json;print(json.load(sys.stdin)['result'])")
 # run code with the live `editor` + `helpers` in scope
 curl -s "$BASE/api/doc/$DOC/exec" -X POST -H 'content-type: application/json' \
   -H "Authorization: Bearer $TOKEN" \

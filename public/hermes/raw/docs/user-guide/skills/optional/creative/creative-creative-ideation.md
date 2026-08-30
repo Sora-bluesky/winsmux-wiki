@@ -2,7 +2,7 @@
 title: "Creative Ideation — 創作の現場で名前の付いた手法を使ってアイデアを出す"
 description: "創作の現場で名前の付いた手法を使ってアイデアを出す"
 upstream_path: user-guide/skills/optional/creative/creative-creative-ideation.md
-upstream_blob: 698b105eaab0e39278d04b33ff3d18d53f73646d
+upstream_blob: 2c023074c2b554894a0aaab59061512180a39cc6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-creative-ideation
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/creative-ideation` で入れます |
-| パス | `optional-skills/creative/creative-ideation` |
+| パス | `optional-skills/creative\creative-ideation` |
 | バージョン | `2.1.0` |
 | 作者 | SHL0MS |
 | ライセンス | MIT |

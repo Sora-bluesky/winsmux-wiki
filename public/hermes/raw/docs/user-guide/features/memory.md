@@ -2,7 +2,7 @@
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: 205f3e493b43418e3d60f59749294da626c76b15
+upstream_blob: b8c79dbc77d538edc46592a85523463c86b2f45e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---
@@ -308,6 +308,19 @@ auxiliary:
 `enabled: false` にすると、ターンのあとの自動の枝分かれは生まれません。手動の `/refine` はそのまま使えます。
 
 枝分かれの使用量は `session_model_usage` に `task='background_review'` として残り、完了の行が `agent.log` に書かれます（`Background review complete: thread=bg-review calls=… in=… out=… result=…`）。
+
+### 絞り込んだ道具を振り返りに足す（`extra_tools`） {#allowing-a-narrowly-scoped-extra-review-tool-extratools}
+
+振り返りの枝分かれは、既定では記憶とスキル管理、それに読み取り専用のファイルの道具を使えます。プロファイルがほかにも、人が見ていない振り返りで使って安全な道具を備えているなら、名前を挙げて使えるようにします。
+
+```yaml
+auxiliary:
+  background_review:
+    extra_tools:
+      - propose_shared_memory
+```
+
+その道具は、親のエージェントがすでに使える状態でなければなりません。この設定がするのは、振り返りの枝分かれが実行時に使ってよい道具の一覧へ、それを加えることだけです。好きな道具を何でも使えるようにするわけではなく、ここに並んでいない道具は拒まれたままです。一覧は狭く保ち、外部への変更や取り返しのつかない変更をそのまま加える道具よりも、人の確認を待つ形で提案を積んでおく道具を選んでください。既定では空の一覧です。
 
 ## スキルの書き込みを抑える（`skills.write_approval`） {#controlling-skill-writes-skillswriteapproval}
 

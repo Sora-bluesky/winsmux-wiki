@@ -2,7 +2,7 @@
 title: "Systematic Debugging — 4 つの段階で根本原因を突き止めます。直す前に、まず不具合を理解します"
 description: "4 つの段階で根本原因を突き止めます。直す前に、まず不具合を理解します"
 upstream_path: user-guide/skills/bundled/software-development/software-development-systematic-debugging.md
-upstream_blob: 09c9e3c2680db08f11e052cfe148f17147a6184f
+upstream_blob: 684cbdb5bf91855d44b5412ecb08b08dd69e74f3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-systematic-debugging
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development/systematic-debugging` |
+| パス | `skills/software-development\systematic-debugging` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent（obra/superpowers から取り入れています） |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `debugging`, `troubleshooting`, `problem-solving`, `root-cause`, `investigation` |
-| 関連 skill | [`test-driven-development`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/), [`plan`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-plan/), [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) |
+| 関連 skill | [`test-driven-development`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/), [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

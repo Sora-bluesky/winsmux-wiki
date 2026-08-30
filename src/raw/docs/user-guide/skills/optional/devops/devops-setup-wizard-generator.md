@@ -2,7 +2,7 @@
 title: "Setup Wizard Generator — 手作業のセットアップを人に案内する bash ウィザードを作る"
 description: "手作業のセットアップを人に案内する bash ウィザードを作る"
 upstream_path: user-guide/skills/optional/devops/devops-setup-wizard-generator.md
-upstream_blob: ec89593a37fea72f2a05b0cf8204f30b607ee12e
+upstream_blob: 077235163e6685f1a572dd728ca493b70a8947f1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-setup-wizard-generator
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/devops/setup-wizard-generator` で導入します |
-| パス | `optional-skills/devops/setup-wizard-generator` |
+| パス | `optional-skills/devops\setup-wizard-generator` |
 | バージョン | `1.0.0` |
 | 作者 | Matt Pocock (mattpocock/skills, wizard) + Hermes Agent |
 | ライセンス | MIT |

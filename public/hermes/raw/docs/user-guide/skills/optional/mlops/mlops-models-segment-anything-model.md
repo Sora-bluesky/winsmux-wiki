@@ -2,7 +2,7 @@
 title: "Segment Anything Model — SAM: 点・ボックス・マスクで指示するゼロショット画像セグメンテーション"
 description: "SAM: 点・ボックス・マスクで指示するゼロショット画像セグメンテーション"
 upstream_path: user-guide/skills/optional/mlops/mlops-models-segment-anything-model.md
-upstream_blob: f18118c370e0f72a35e89b3947d3aee7d6dc4e31
+upstream_blob: 21405cb5a48c0efe5339dafe603080062da162ec
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-models-segment-anything-model
 ---
@@ -16,7 +16,7 @@ SAM は、点・ボックス・マスクで指示するゼロショット画像�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/segment-anything-model` で導入します |
-| パス | `optional-skills/mlops/models/segment-anything-model` |
+| パス | `optional-skills/mlops\models\segment-anything-model` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -93,7 +93,7 @@ wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
 from segment_anything import sam_model_registry, SamPredictor
 
 # Load model
-sam = sam_model_registry["vit_h"](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/models/segment-anything-model/checkpoint="sam_vit_h_4b8939.pth")
+sam = sam_model_registry["vit_h"](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\models\segment-anything-model/checkpoint="sam_vit_h_4b8939.pth")
 sam.to(device="cuda")
 
 # Create predictor
@@ -477,7 +477,7 @@ decoded_mask = mask_utils.decode(rle)
 
 ```python
 # Use smaller model for limited VRAM
-sam = sam_model_registry["vit_b"](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/models/segment-anything-model/checkpoint="sam_vit_b_01ec64.pth")
+sam = sam_model_registry["vit_b"](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\models\segment-anything-model/checkpoint="sam_vit_b_01ec64.pth")
 
 # Process images in batches
 # Clear CUDA cache between large batches
@@ -512,8 +512,8 @@ mask_generator = SamAutomaticMaskGenerator(
 
 ## 参考資料 {#references}
 
-- **[応用的な使い方](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/models/segment-anything-model/references/advanced-usage.md)** - バッチ処理、ファインチューニング、他ツールとの連携
-- **[困ったとき](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/models/segment-anything-model/references/troubleshooting.md)** - よくある問題と対処
+- **[応用的な使い方](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\models\segment-anything-model/references/advanced-usage.md)** - バッチ処理、ファインチューニング、他ツールとの連携
+- **[困ったとき](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\models\segment-anything-model/references/troubleshooting.md)** - よくある問題と対処
 
 ## 関連情報 {#resources}
 

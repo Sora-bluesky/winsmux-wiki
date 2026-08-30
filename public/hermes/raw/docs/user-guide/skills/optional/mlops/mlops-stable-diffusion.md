@@ -2,7 +2,7 @@
 title: "Stable Diffusion — 文章からの画像生成、部分の描き直し、画像からの画像生成"
 description: "文章からの画像生成、部分の描き直し、画像からの画像生成"
 upstream_path: user-guide/skills/optional/mlops/mlops-stable-diffusion.md
-upstream_blob: 8bc55a8d88c5c0b138a5a1ebe24525a4fe07f76e
+upstream_blob: 3a91f19f2a0f1d0370f56db11ddd7fdca3d0e88d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-stable-diffusion
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/stable-diffusion` で導入します |
-| パス | `optional-skills/mlops/stable-diffusion` |
+| パス | `optional-skills/mlops\stable-diffusion` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -526,8 +526,8 @@ image = pipe(prompt, num_inference_steps=20).images[0]
 
 ## 参考ドキュメント {#references}
 
-- **[Advanced Usage](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/stable-diffusion/references/advanced-usage.md)** - 自前のパイプライン、微調整、公開まで
-- **[Troubleshooting](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/stable-diffusion/references/troubleshooting.md)** - よくある問題と対処
+- **[Advanced Usage](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\stable-diffusion/references/advanced-usage.md)** - 自前のパイプライン、微調整、公開まで
+- **[Troubleshooting](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\stable-diffusion/references/troubleshooting.md)** - よくある問題と対処
 
 ## 参考情報 {#resources}
 

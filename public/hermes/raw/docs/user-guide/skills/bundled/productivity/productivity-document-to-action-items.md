@@ -2,7 +2,7 @@
 title: "Document To Action Items — 書類から、出典付きの義務・期限・作業を取り出す"
 description: "書類から、出典付きの義務・期限・作業を取り出す"
 upstream_path: user-guide/skills/bundled/productivity/productivity-document-to-action-items.md
-upstream_blob: 5ba166e1d78df4f2c028a7f538e579e109011489
+upstream_blob: f0a886f02e117a2ad567ab4f62f11f47ad7276f7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity/document-to-action-items` |
+| パス | `skills/productivity\document-to-action-items` |
 | バージョン | `0.1.0` |
 | 作者 | Ben Barclay (benbarclay), Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Documents`, `OCR`, `Action-Items`, `Deadlines`, `Extraction` |
-| 関連 skill | [`ocr-and-documents`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-ocr-and-documents/), [`pdf`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/), [`docx`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-docx/), [`notion`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/) |
+| 関連 skill | [`pdf`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/), [`pdf`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/), [`docx`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-docx/), [`notion`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -32,7 +32,7 @@ sources:
 
 # 書類から作業項目へ {#document-to-action-items}
 
-書類を、出典の付いた事実と、提案としての作業に変えます。ここで取り出したものは法的な助言ではありません。読み取りの確からしさが低い箇所や、言い回しがあいまいな箇所は、そのまま見える形で残す必要があります。取り出す仕組みそのものは `ocr-and-documents` / `pdf` / `docx` の skill が担い、この skill は取り出したあとの扱いを担います。
+書類を、出典の付いた事実と、提案としての作業に変えます。ここで取り出したものは法的な助言ではありません。読み取りの確からしさが低い箇所や、言い回しがあいまいな箇所は、そのまま見える形で残す必要があります。取り出す仕組みそのものは `pdf` / `pdf` / `docx` の skill が担い、この skill は取り出したあとの扱いを担います。
 
 ## 使いどころ {#when-to-use}
 
@@ -41,7 +41,7 @@ sources:
 - 「この読み取った書類を読んで、データとして整えて」
 - 「この添付から、リスク・担当・追いかけるべきことを見つけて」
 
-向かない場面: 取り出したあと構造化する必要がないただのテキスト抽出（その場合は `ocr-and-documents` を直接読み込みます）。
+向かない場面: 取り出したあと構造化する必要がないただのテキスト抽出（その場合は `pdf` を直接読み込みます）。
 
 ## 手順 {#procedure}
 
@@ -51,7 +51,7 @@ sources:
 
 ### 2. 出どころを保ったまま取り出す {#2-extract-with-provenance}
 
-`ocr-and-documents`、`pdf`、`docx` のいずれかを読み込みます。テキストや表を取り出しつつ、ファイルとページ・節の位置を保ちます。読み取った書類では、OCR の確からしさや、目に見える品質の問題を記録します。取り出したどの項目についても出どころを示せるようになったら、この手順は終わりです。
+`pdf`、`pdf`、`docx` のいずれかを読み込みます。テキストや表を取り出しつつ、ファイルとページ・節の位置を保ちます。読み取った書類では、OCR の確からしさや、目に見える品質の問題を記録します。取り出したどの項目についても出どころを示せるようになったら、この手順は終わりです。
 
 ### 3. 根拠を分類する {#3-classify-evidence}
 

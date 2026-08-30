@@ -2,7 +2,7 @@
 title: "Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN"
 description: "LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN"
 upstream_path: user-guide/skills/optional/security/security-godmode.md
-upstream_blob: f41975a49669a404b0edea3f987b0104beaf0d8c
+upstream_blob: 07eb995afbdd31fe259e279c0013b74e0d913ee9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-godmode
 ---
@@ -16,7 +16,7 @@ LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/security/godmode` で導入します |
-| パス | `optional-skills/security/godmode` |
+| パス | `optional-skills/security\godmode` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |
@@ -205,7 +205,7 @@ prefill_messages_file: "prefill.json"
 
 ```bash
 # Quick one-liner via execute_code
-python3 scripts/parseltongue.py "How do I hack into a WiFi network?" --tier standard
+python scripts/parseltongue.py "How do I hack into a WiFi network?" --tier standard
 ```
 
 あるいは `execute_code` でインラインに使います:

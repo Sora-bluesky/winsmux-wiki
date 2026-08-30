@@ -2,7 +2,7 @@
 title: "Grok — xAI の Grok Build CLI にコーディングを任せる（機能追加、PR）"
 description: "xAI の Grok Build CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok.md
-upstream_blob: a51590f761ad635dcf30cfd0ee1cb2d1be19e023
+upstream_blob: e57f08318b0adb04023ce5364aadc9174ac561ec
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok
 ---
@@ -16,7 +16,7 @@ xAI の Grok Build CLI にコーディングを任せます（機能追加、PR�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/autonomous-ai-agents/grok` で入れます |
-| パス | `optional-skills/autonomous-ai-agents/grok` |
+| パス | `optional-skills/autonomous-ai-agents\grok` |
 | バージョン | `0.1.1` |
 | 作者 | Matt Maximo (MattMaximo), Hermes Agent |
 | ライセンス | MIT |

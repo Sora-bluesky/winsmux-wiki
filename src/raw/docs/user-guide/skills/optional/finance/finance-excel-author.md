@@ -2,7 +2,7 @@
 title: "Excel Author — openpyxl でヘッドレスに監査できる財務ワークブックを作る"
 description: "openpyxl でヘッドレスに監査できる財務ワークブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-excel-author.md
-upstream_blob: 732080ee06dd39cb5216279acfef204cda6b7ab5
+upstream_blob: 50e1e36f80d44d0584bbd3b551694505c10c39c5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-excel-author
 ---
@@ -16,7 +16,7 @@ openpyxl でヘッドレスに、監査できる財務ワークブックを作�
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/finance/excel-author` で入れます |
-| パス | `optional-skills/finance/excel-author` |
+| パス | `optional-skills/finance\excel-author` |
 | バージョン | `1.0.0` |
 | 作者 | Anthropic（Nous Research が移植） |
 | ライセンス | Apache-2.0 |

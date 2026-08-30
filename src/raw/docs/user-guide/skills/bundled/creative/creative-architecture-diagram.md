@@ -2,7 +2,7 @@
 title: "Architecture Diagram — 暗い配色の SVG で構成図・クラウド図・インフラ図を HTML として作る"
 description: "暗い配色の SVG で構成図・クラウド図・インフラ図を HTML として作る"
 upstream_path: user-guide/skills/bundled/creative/creative-architecture-diagram.md
-upstream_blob: ad816a370ad640226a08ac722b59c927fb2b669b
+upstream_blob: a4bf8cfc18299d05c8e3d6930bd59b3541c3629a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-architecture-diagram
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative/architecture-diagram` |
+| パス | `skills/creative\architecture-diagram` |
 | バージョン | `1.0.0` |
 | 作者 | Cocoon AI (hello@cocoon-ai.com), ported by Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `architecture`, `diagrams`, `SVG`, `HTML`, `visualization`, `infrastructure`, `cloud` |
-| 関連 skill | [`concept-diagrams`](/hermes/docs/user-guide/skills/optional/creative/creative-concept-diagrams/), [`excalidraw`](/hermes/docs/user-guide/skills/bundled/creative/creative-excalidraw/) |
+| 関連 skill | [`concept-diagrams`](/hermes/docs/user-guide/skills/optional/creative/creative-concept-diagrams/), [`excalidraw`](/hermes/docs/user-guide/skills/optional/creative/creative-excalidraw/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

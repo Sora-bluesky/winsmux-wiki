@@ -2,7 +2,7 @@
 title: "Simplify Code — 直近のコード変更を、4 つのエージェントで並行して片づけます"
 description: "直近のコード変更を、4 つのエージェントで並行して片づけます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-simplify-code.md
-upstream_blob: 49e3d0143d2d6ddd36aa71de84451cb70643015c
+upstream_blob: 59e22aa1f6a200394a20eb291103625945d0c680
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-simplify-code
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development/simplify-code` |
+| パス | `skills/software-development\simplify-code` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent（Claude Code の /simplify に着想を得ています） |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `code-review`, `cleanup`, `refactor`, `delegation`, `subagent`, `parallel`, `simplify` |
-| 関連 skill | [`requesting-code-review`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/), [`test-driven-development`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/), [`plan`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-plan/) |
+| 関連 skill | [`requesting-code-review`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/), [`test-driven-development`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

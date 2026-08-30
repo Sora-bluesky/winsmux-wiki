@@ -2,7 +2,7 @@
 title: "Pokemon Player — ヘッドレスのエミュレーターと RAM 読み取りでポケモンを遊ぶ"
 description: "ヘッドレスのエミュレーターと RAM 読み取りでポケモンを遊ぶ"
 upstream_path: user-guide/skills/optional/gaming/gaming-pokemon-player.md
-upstream_blob: 3a98d97a751da22200b75499416753a3e505d587
+upstream_blob: c7cde4080a2c6db44262a20eb0e9797c332fd25b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/gaming/gaming-pokemon-player
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/gaming/pokemon-player` で入れます |
-| パス | `optional-skills/gaming/pokemon-player` |
+| パス | `optional-skills/gaming\pokemon-player` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |
@@ -44,7 +44,7 @@ sources:
 リポジトリは GitHub の NousResearch/pokemon-agent です。クローンしたあと、
 Python 3.10 以上の仮想環境を用意します。venv の作成とパッケージの
 インストール（editable モード、pyboy の extra 付き）には uv を使うのが
-速くておすすめです。uv が使えない環境なら python3 -m venv と pip で代用します。
+速くておすすめです。uv が使えない環境なら python -m venv と pip で代用します。
 
 すでにチェックアウトがある場合（venv まで整った ~/pokemon-agent など）は、
 クローンし直さず、そこへ cd して .venv/bin/activate を source するだけで済みます。

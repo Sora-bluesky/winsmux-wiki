@@ -2,7 +2,7 @@
 title: "Pinggy Tunnel — Pinggy 経由の SSH で、何も入れずに手元のサーバーを外へ公開する"
 description: "Pinggy 経由の SSH で、何も入れずに手元のサーバーを外へ公開する"
 upstream_path: user-guide/skills/optional/devops/devops-pinggy-tunnel.md
-upstream_blob: ff7ec24d22917f3d5951c95784b9c87feb852711
+upstream_blob: de59598e06c27f96f9c7d5e0baae059c580d383a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel
 ---
@@ -16,7 +16,7 @@ Pinggy 経由の SSH で、何も入れずに手元のサーバーを外へ公�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/devops/pinggy-tunnel` で入れます |
-| パス | `optional-skills/devops/pinggy-tunnel` |
+| パス | `optional-skills/devops\pinggy-tunnel` |
 | バージョン | `0.1.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |
@@ -97,7 +97,7 @@ curl -sI http://127.0.0.1:8000/ | head -1
 # expect HTTP/1.x 200 (or any non-connection-refused response)
 ```
 
-まだ何も待ち受けていなければ、先に起動します（たとえば `python3 -m http.server 8000 --bind 127.0.0.1`）。Pinggy は中身がなくても平気で URL を返すので、手元のサービスが上がるまで見に来た人には 502 が見えます。
+まだ何も待ち受けていなければ、先に起動します（たとえば `python -m http.server 8000 --bind 127.0.0.1`）。Pinggy は中身がなくても平気で URL を返すので、手元のサービスが上がるまで見に来た人には 502 が見えます。
 
 ### 2. トンネルをバックグラウンドで起動する {#2-launch-the-tunnel-as-a-background-process}
 
@@ -221,7 +221,7 @@ class H(http.server.BaseHTTPRequestHandler):
     def log_message(self,*a,**k): pass
 http.server.HTTPServer(("127.0.0.1", 18080), H).serve_forever()
 PY
-nohup python3 /tmp/webhook-server.py >/tmp/webhook-server.log 2>&1 &
+nohup python /tmp/webhook-server.py >/tmp/webhook-server.log 2>&1 &
 echo $! >/tmp/webhook-server.pid
 
 # 2. Tunnel — bearer-token-gate so randos can't pollute the capture log
@@ -246,7 +246,7 @@ tail -f /tmp/webhook-hits.log
 
 ```bash
 # 1. Start the MCP server in HTTP mode (example: a FastMCP server on port 8765)
-nohup python3 my_mcp_server.py --transport http --port 8765 \
+nohup python my_mcp_server.py --transport http --port 8765 \
     >/tmp/mcp-server.log 2>&1 &
 echo $! >/tmp/mcp-server.pid
 
@@ -307,7 +307,7 @@ ssh -p 443 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
 
 ```bash
 # End-to-end: spin up a trivial origin, tunnel it, hit it, tear down
-python3 -m http.server 18000 --bind 127.0.0.1 >/tmp/origin.log 2>&1 &
+python -m http.server 18000 --bind 127.0.0.1 >/tmp/origin.log 2>&1 &
 ORIGIN_PID=$!
 
 nohup ssh -p 443 \

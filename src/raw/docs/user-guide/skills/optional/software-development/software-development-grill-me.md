@@ -2,7 +2,7 @@
 title: "Grill Me — 実装に入る前に、計画を厳しく問いただす"
 description: "実装に入る前に、計画を厳しく問いただす"
 upstream_path: user-guide/skills/optional/software-development/software-development-grill-me.md
-upstream_blob: fef5deb6eeff37f4a92316af6ef302764087c77d
+upstream_blob: 1890f819a5570d38c6b036aff42b7c81f38deb4e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-grill-me
 ---
@@ -16,13 +16,13 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/software-development/grill-me` で導入します |
-| パス | `optional-skills/software-development/grill-me` |
+| パス | `optional-skills/software-development\grill-me` |
 | バージョン | `2.0.0` |
 | 作者 | Rafael Zendron (rafaumeu) + Matt Pocock (mattpocock/skills, grilling) + Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `planning`, `adversarial`, `interview`, `decision-tree`, `pre-implementation`, `review`, `alignment` |
-| 関連 skill | [`plan`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-plan/), [`requesting-code-review`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/), [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/), [`test-driven-development`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) |
+| 関連 skill | [`requesting-code-review`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/), [`subagent-driven-development`](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/), [`test-driven-development`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
