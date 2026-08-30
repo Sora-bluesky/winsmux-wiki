@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: #1b1b1b; }
+    a { color: #1d4ed8; text-decoration: none; }
+  </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+</helmet>
+<div style="width: 560px; background: #ffffff; padding: 34px 36px; display: flex; flex-direction: column; gap: 16px">
+  <h1 style="margin: 0; font-size: 22px; font-weight: 800">AI ファースト・トップ 設計方針</h1>
+  <p style="margin: 0; font-size: 13px; line-height: 1.9; color: #3f3f46">
+    このキャンバスは wiki.winsmux.dev のトップページ再設計案（ウェブ / タブレット / スマホ）。
+    「AI に検索させ、読ませ、渡せる」を主役に、人間用 UI は最小限。SEO が要求するテキスト量と E-E-A-T は保つ。
+  </p>
+  <div style="display: flex; flex-direction: column; gap: 9px; font-size: 12.5px; line-height: 1.7; color: #3f3f46">
+    <div style="border-left: 3px solid #1d4ed8; padding-left: 12px"><b>結論ファースト</b>: 見出し1行でサイトの正体を言い切る（LLM の抽出単位）</div>
+    <div style="border-left: 3px solid #1d4ed8; padding-left: 12px"><b>一次情報の数字</b>: 「週58回 ChatGPT の回答生成に参照」等、実測値だけを使う</div>
+    <div style="border-left: 3px solid #1d4ed8; padding-left: 12px"><b>AI に渡す動線を一等地に</b>: llms.txt・raw Markdown・4 AI ボタンをヒーロー直下に</div>
+    <div style="border-left: 3px solid #1d4ed8; padding-left: 12px"><b>E-E-A-T</b>: 毎日追随の証明（緑ドット + 日付）と運営者名を常時表示</div>
+    <div style="border-left: 3px solid #1d4ed8; padding-left: 12px"><b>人間用は4導線だけ</b>: 検索・逆引き・トラブル・モデルと料金</div>
+  </div>
+  <p style="margin: 0; font-size: 11.5px; color: #5c6370">数字はすべて 2026-08-30 時点の実測。実装時は JSON から動的に描画する。</p>
+</div>
+</x-dc>
+</body>
+</html>

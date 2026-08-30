@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: #1b1b1b; }
+    a { color: #1d4ed8; text-decoration: none; }
+  </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+</helmet>
+<div style="width: 390px; height: 844px; background: #ffffff; display: flex; flex-direction: column; overflow: hidden">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid #e5e7eb">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <span style="font-weight: 700; font-size: 15px; color: #1d4ed8">Hermes Agent Wiki</span>
+      <span style="font-size: 10px; color: #5c6370; border: 1px solid #e5e7eb; border-radius: 999px; padding: 2px 8px">非公式</span>
+    </div>
+    <span style="font-size: 18px">☰</span>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px; padding: 24px 18px 0">
+    <h1 style="margin: 0; font-size: 26px; line-height: 1.3; font-weight: 800; letter-spacing: -0.01em">Hermes Agent Wiki</h1>
+    <p style="margin: -4px 0 0; font-size: 13px; font-weight: 600; color: #1d4ed8">Hermes Agent の日本語ドキュメント。毎日更新、AI にも渡せる</p>
+    <p style="margin: 0; font-size: 12.5px; line-height: 1.8; color: #3f3f46">公式 docs 全400ページ超の日本語版。毎日自動追随。全ページに AI へ渡せる Markdown 版つき。</p>
+    <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #d1d5db; border-radius: 12px; padding: 13px 14px; color: #5c6370; font-size: 13px; box-shadow: 0 1px 3px rgb(27 27 27 / 0.05)">🔍 やりたいことで検索</div>
+    <div style="display: flex; gap: 8px; overflow: hidden">
+      <span style="border: 1px solid #e5e7eb; border-radius: 999px; padding: 7px 14px; font-size: 12px; font-weight: 500; white-space: nowrap">ChatGPT に渡す</span>
+      <span style="border: 1px solid #e5e7eb; border-radius: 999px; padding: 7px 14px; font-size: 12px; font-weight: 500; white-space: nowrap">Claude</span>
+      <span style="border: 1px solid #e5e7eb; border-radius: 999px; padding: 7px 14px; font-size: 12px; font-weight: 500; white-space: nowrap">Gemini</span>
+      <span style="border: 1px solid #e5e7eb; border-radius: 999px; padding: 7px 14px; font-size: 12px; font-weight: 500; white-space: nowrap">Grok</span>
+    </div>
+  </div>
+
+  <div style="margin: 18px 18px 0; background: #f6f7f9; border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px 16px; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <span style="font-size: 13.5px; font-weight: 700">AI に渡す</span>
+      <span style="font-size: 10px; color: #16a34a; font-weight: 600">回答生成に週58回参照</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px">
+      <span style="font-size: 12px; font-weight: 600">llms.txt（全体索引）</span>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: #1d4ed8">/hermes/llms.txt</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px">
+      <span style="font-size: 12px; font-weight: 600">全ページの Markdown 版</span>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: #1d4ed8">/hermes/raw/…</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 18px 0">
+    <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center">
+      <div><div style="font-size: 13.5px; font-weight: 700">逆引き</div><div style="font-size: 11px; color: #5c6370">「〜したい」から探す・56項目</div></div><span style="color: #5c6370">›</span>
+    </div>
+    <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center">
+      <div><div style="font-size: 13.5px; font-weight: 700">トラブル</div><div style="font-size: 11px; color: #5c6370">症状から対処を引く・35項目</div></div><span style="color: #5c6370">›</span>
+    </div>
+    <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center">
+      <div><div style="font-size: 13.5px; font-weight: 700">モデルと料金</div><div style="font-size: 11px; color: #5c6370">351件・毎日更新</div></div><span style="color: #5c6370">›</span>
+    </div>
+    <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center">
+      <div><div style="font-size: 13.5px; font-weight: 700">ドキュメント</div><div style="font-size: 11px; color: #5c6370">公式 docs の日本語版・毎日更新</div></div><span style="color: #5c6370">›</span>
+    </div>
+  </div>
+
+  <div style="margin: 18px 18px 0; padding: 12px 14px; background: #eff6ff; border-radius: 12px; display: flex; flex-direction: column; gap: 4px">
+    <span style="display: inline-flex; align-items: center; gap: 6px; color: #16a34a; font-weight: 600; font-size: 11.5px"><span style="width: 6px; height: 6px; border-radius: 99px; background: #16a34a; display: inline-block"></span>今日も公式に追随済み（2026-08-30）</span>
+    <span style="font-size: 10.5px; color: #5c6370">正本は Hermes Agent Documentation ／ 運営: そら（@sora_biz）</span>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

@@ -10,7 +10,9 @@ raw: /hermes/raw/index.md
 
 # Hermes Agent Wiki
 
-Hermes Agent の日本語知識ベースです。公式ドキュメント全402ページの日本語版に、逆引き・トラブル対処・料金の早見をのせています。本サイトは NousResearch とは無関係の**非公式**サイトで、正本は常に [Hermes Agent Documentation](https://hermes-agent.nousresearch.com/docs/) です。毎日、公式の更新に追随しています。
+**Hermes Agent の日本語ドキュメント。毎日更新、AI にも渡せる。**
+
+公式ドキュメント全400ページ超の日本語版に、逆引き・トラブル対処・料金の早見をのせています。全ページに AI へ渡せる Markdown 版（/hermes/raw/…）があります。本サイトは NousResearch とは無関係の**非公式**サイトで、正本は常に [Hermes Agent Documentation](https://hermes-agent.nousresearch.com/docs/) です。毎日、公式の更新に追随しています。
 
 ## 調べる（このサイト独自のページ）
 
