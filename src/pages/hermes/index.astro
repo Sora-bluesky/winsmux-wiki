@@ -22,11 +22,11 @@ const latest = (updates.entries as Entry[])[0];
   nextOverride={null}
 >
   <section class="hero">
-    <div class="kicker">非公式の日本語wiki · 毎日更新</div>
+    <div class="kicker">非公式の日本語wiki · 毎日更新{latest ? `（最新 ${latest.date}・${latest.pages.length}ページ）` : ''}</div>
     <h1>Hermes Agent Wiki</h1>
     <p class="catch">Hermes Agent の日本語ドキュメント。毎日更新、AI にも渡せる</p>
     <p class="lead">
-      公式ドキュメントの日本語版です。逆引きとトラブル表を足しています。正本は
+      公式ドキュメントの日本語版です。逆引きとトラブル表を足しています。<br />正本は
       <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener">公式ドキュメント</a>です。
     </p>
     <div class="cta-row">
@@ -62,11 +62,6 @@ const latest = (updates.entries as Entry[])[0];
       <span class="go">料金表 →</span>
     </a>
   </section>
-
-  <div class="status">
-    <span>● 公式に毎日追随{latest ? ` · 最新 ${latest.date} · ${latest.pages.length}ページを更新` : ''}</span>
-    <span>正本: <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener">Hermes Agent Documentation</a></span>
-  </div>
 
   <section class="section">
     <h2>よく使うページ</h2>
@@ -106,7 +101,7 @@ const latest = (updates.entries as Entry[])[0];
   :global(body > div.mx-auto) { max-width: 1080px !important; }
   :global(main) { padding-top: 0 !important; }
 
-  .hero { padding: 2.2rem 0 0.5rem; }
+  .hero { padding: 1.4rem 0 0.4rem; }
   .kicker { font-size: 0.82rem; color: var(--color-fg-muted); margin-bottom: 0.5rem; }
   h1 { font-size: 2.1rem; letter-spacing: -0.03em; margin: 0 0 0.5rem; line-height: 1.2; }
   .catch { margin: 0 0 0.6rem; font-size: 1.02rem; font-weight: 600; color: var(--color-accent); }
@@ -127,12 +122,12 @@ const latest = (updates.entries as Entry[])[0];
     font-size: 0.92rem; cursor: pointer; text-align: left; font-family: inherit;
   }
   .search:hover { border-color: var(--color-accent); }
-  .note { font-size: 0.82rem; color: var(--color-fg-muted); margin: 0 0 1.4rem; }
+  .note { font-size: 0.82rem; color: var(--color-fg-muted); margin: 0 0 1.2rem; }
 
-  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.1rem; }
   .card {
     border: 1px solid var(--color-border); border-radius: 12px;
-    padding: 1rem; background: var(--color-bg); min-height: 148px; text-decoration: none;
+    padding: 1rem; background: var(--color-bg); min-height: 128px; text-decoration: none;
     display: flex; flex-direction: column;
   }
   .card:hover { border-color: #b9c4f5; background: #fafbff; }
@@ -141,12 +136,7 @@ const latest = (updates.entries as Entry[])[0];
   .card .go { display: inline-block; margin-top: auto; padding-top: 0.6rem; font-size: 0.82rem; font-weight: 700; color: var(--color-accent); }
   .card.start { border-color: #c9d3ff; background: var(--color-accent-soft); }
 
-  .status {
-    display: flex; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;
-    background: #f3f7ff; color: #215; border-radius: 10px;
-    padding: 0.65rem 0.9rem; margin: 1.4rem 0; font-size: 0.82rem;
-  }
-  .section { padding: 0.5rem 0 1.6rem; }
+  .section { padding: 0.5rem 0 1rem; }
   .section h2 { font-size: 1rem; margin: 0 0 0.6rem; }
   .used { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .chip {
