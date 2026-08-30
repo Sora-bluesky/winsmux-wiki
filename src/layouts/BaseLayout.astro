@@ -87,6 +87,36 @@ const crumbHref = (i: number): string | null => {
 };
 const crumbs = crumbSegs.slice(0, -1).map((s, i) => ({ label: CRUMB_LABELS[s] ?? s, href: crumbHref(i) }));
 const showCrumbs = crumbSegs.length > 0;
+// JSON-LD（標準スキーマのみ。WebSite + パンくず、about は運営者の Person）
+const jsonLd: Record<string, unknown>[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Hermes Agent Wiki',
+    url: 'https://wiki.winsmux.dev/hermes/',
+    inLanguage: 'ja',
+  },
+];
+if (crumbSegs.length > 0) {
+  const items = [{ name: 'ホーム', item: 'https://wiki.winsmux.dev/hermes/' } as { name: string; item?: string }]
+    .concat(crumbs.map((c) => ({ name: c.label, ...(c.href ? { item: `https://wiki.winsmux.dev${c.href}` } : {}) })))
+    .concat([{ name: title }]);
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((it, i) => ({ '@type': 'ListItem', position: i + 1, ...it })),
+  });
+}
+if (Astro.url.pathname === '/hermes/about/') {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'そら',
+    url: 'https://wiki.winsmux.dev/hermes/about/',
+    jobTitle: 'プロダクトマネージャー',
+    sameAs: ['https://x.com/sora_biz', 'https://github.com/Sora-bluesky'],
+  });
+}
 const pageIndex = PAGES.findIndex((p) => p.path === Astro.url.pathname);
 const hasOverride = 'prevOverride' in Astro.props || 'nextOverride' in Astro.props;
 const prev = hasOverride ? (Astro.props.prevOverride ?? null) : pageIndex > 0 ? PAGES[pageIndex - 1] : null;
@@ -123,6 +153,7 @@ const next = hasOverride
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#ffffff" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body class="min-h-screen bg-bg text-fg">
     <Nav />

@@ -8,6 +8,16 @@ type Item = { category: string; symptom: string; cause: string; fix: string; lin
 const categories = trouble.categories as string[];
 const items = trouble.items as Item[];
 const countOf = (c: string) => items.filter((i) => i.category === c).length;
+// FAQPage 構造化データ（症状=質問・原因+対処=回答。data/wiki/trouble.json が単一ソース）
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((i) => ({
+    '@type': 'Question',
+    name: i.symptom,
+    acceptedAnswer: { '@type': 'Answer', text: `原因: ${i.cause} 対処: ${i.fix}` },
+  })),
+};
 ---
 
 <BaseLayout
@@ -22,6 +32,7 @@ const countOf = (c: string) => items.filter((i) => i.category === c).length;
   prevOverride={null}
   nextOverride={null}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
   <article class="prose">
     <h1>トラブル</h1>
     <p>
