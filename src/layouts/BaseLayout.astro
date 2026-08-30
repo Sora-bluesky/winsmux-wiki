@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
-import AskBar from '../components/AskBar.astro';
 import SearchModal from '../components/SearchModal.astro';
 import Sidebar from '../components/Sidebar.astro';
 import { PAGES } from '../lib/pages.mjs';
@@ -16,7 +15,6 @@ interface Props {
   sources?: string[];
   hermesVersion?: string;
   confidence?: string;
-  showAsk?: boolean;
   tocRail?: string;
   prevOverride?: PageLink;
   nextOverride?: PageLink;
@@ -29,7 +27,6 @@ const {
   sources = [],
   hermesVersion,
   confidence,
-  showAsk = true,
   tocRail = '',
 } = Astro.props;
 
@@ -181,10 +178,11 @@ const next = hasOverride
                 <span class="text-sm font-medium text-fg">マークダウンで表示</span>
                 <span class="text-xs text-fg-muted">このページをプレーンテキストで表示</span>
               </a>
-              <button type="button" id="copy-page-claude" class="flex w-full flex-col items-start gap-0.5 rounded-lg px-3 py-2 text-left hover:bg-bg-subtle">
-                <span class="text-sm font-medium text-fg">Claude で開く</span>
-                <span class="text-xs text-fg-muted">このページについて質問する</span>
-              </button>
+              <div class="mx-3 my-1 border-t border-border" role="separator"></div>
+              <button type="button" data-open-ai="chatgpt" class="flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-medium text-fg hover:bg-bg-subtle">ChatGPT で開く</button>
+              <button type="button" data-open-ai="claude" class="flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-medium text-fg hover:bg-bg-subtle">Claude で開く</button>
+              <button type="button" data-open-ai="gemini" class="flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-medium text-fg hover:bg-bg-subtle">Gemini で開く</button>
+              <button type="button" data-open-ai="grok" class="flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-medium text-fg hover:bg-bg-subtle">Grok で開く</button>
             </div>
           </div>
         )
@@ -308,7 +306,6 @@ const next = hasOverride
     >
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6" /></svg>
     </button>
-    {showAsk && rawPath && <AskBar rawPath={rawPath} />}
     <script is:inline>
       (function () {
         var wrap = document.querySelector('[data-copy-page]');
@@ -345,10 +342,24 @@ const next = hasOverride
               setTimeout(function () { label.textContent = 'ページをコピー'; }, 2000);
             });
         });
-        document.getElementById('copy-page-claude').addEventListener('click', function () {
-          var q = encodeURIComponent('このページを読んで、内容について質問に答えて:\n' + rawUrl);
-          window.open('https://claude.ai/new?q=' + q, '_blank', 'noopener');
-          setOpen(false);
+        var openUrls = {
+          chatgpt: 'https://chatgpt.com/?q=',
+          claude: 'https://claude.ai/new?q=',
+          grok: 'https://grok.com/?q=',
+        };
+        wrap.querySelectorAll('[data-open-ai]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var ai = btn.getAttribute('data-open-ai');
+            var text = 'このページを読んで、内容について質問に答えて:\n' + rawUrl;
+            if (ai === 'gemini') {
+              // Gemini はプロンプトを URL で受け取れないため、コピーしてから開く
+              navigator.clipboard.writeText(text).catch(function () {});
+              window.open('https://gemini.google.com/app', '_blank', 'noopener');
+            } else {
+              window.open(openUrls[ai] + encodeURIComponent(text), '_blank', 'noopener');
+            }
+            setOpen(false);
+          });
         });
       })();
     </script>

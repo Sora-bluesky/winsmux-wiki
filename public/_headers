@@ -1,0 +1,5 @@
+/hermes/raw/*
+  Content-Type: text/markdown; charset=utf-8
+
+/hermes/llms.txt
+  Content-Type: text/plain; charset=utf-8
