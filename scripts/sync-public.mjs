@@ -107,7 +107,7 @@ await writeFile(join(root, 'public/hermes/llms.txt'), llms);
 const robots = `User-agent: *
 Allow: /
 
-Sitemap: ${site}/hermes/llms.txt
+Sitemap: ${site}/sitemap-index.xml
 `;
 await writeFile(join(root, 'public/robots.txt'), robots);
 

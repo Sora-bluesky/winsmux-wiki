@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://wiki.winsmux.dev/hermes/llms.txt
+Sitemap: https://wiki.winsmux.dev/sitemap-index.xml
