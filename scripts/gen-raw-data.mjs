@@ -52,7 +52,7 @@ ${rows.join('\n')}
   });
   const body =
     front('逆引き', `「〜したい」から最短の手順ページへ引く索引（全 ${h.items.length} 項目）`, 'howto.md') +
-    `# 逆引き\n\n「〜したい」から最短の手順ページへ。全 ${h.items.length} 項目。\n\n${sections.join('\n\n')}\n`;
+    `# 逆引き\n\n「〜したい」から最短の手順ページへ。全 ${h.items.length} 項目・${h.categories.length} 分類。サイト上の検索はカタカナ・全角の表記揺れにも対応。\n\n${sections.join('\n\n')}\n`;
   await write('howto.md', body);
 }
 
@@ -67,7 +67,7 @@ ${rows.join('\n')}
   });
   const body =
     front('トラブル', `症状から原因と対処を引く表（全 ${t.items.length} 項目）`, 'trouble.md') +
-    `# トラブル\n\n症状から原因と対処を引く表。全 ${t.items.length} 項目。\n\n${sections.join('\n\n')}\n`;
+    `# トラブル\n\n症状から原因と対処を引く表。全 ${t.items.length} 項目・${t.categories.length} 分類。推測の対処は載せず、全項目が公式ドキュメントの記述に対応。\n\n${sections.join('\n\n')}\n`;
   await write('trouble.md', body);
 }
 

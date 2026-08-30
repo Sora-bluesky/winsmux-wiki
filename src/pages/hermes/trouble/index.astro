@@ -25,7 +25,8 @@ const countOf = (c: string) => items.filter((i) => i.category === c).length;
   <article class="prose">
     <h1>トラブル</h1>
     <p>
-      症状から原因と対処を引く表です。対処の詳細は各行のリンク先（公式準拠の日本語版ページ）にあります。ここに無い症状は
+      症状から原因と対処を引く表です。全 {trouble.items.length} 項目・{trouble.categories.length}{' '}
+      分類。対処の詳細は各行のリンク先（公式準拠の日本語版ページ）にあります。ここに無い症状は
       <a href="/hermes/docs/reference/faq/">よくある質問</a> へ。
     </p>
     <p class="wiki-note">
