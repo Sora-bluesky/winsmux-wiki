@@ -94,11 +94,9 @@ const latest = (updates.entries as Entry[])[0];
 </BaseLayout>
 
 <style>
-  /* トップ限定: サイドバー・ページをコピー行・正本欄を出さず、1080px に絞る */
-  :global(body > div > aside) { display: none; }
+  /* トップ限定: ページをコピー行・右の目次だけ出さない（左サイドバーは表示する） */
   :global([data-copy-page]) { display: none; }
   :global(main aside) { display: none; }
-  :global(body > div.mx-auto) { max-width: 1080px !important; }
   :global(main) { padding-top: 0 !important; }
 
   .hero { padding: 1.4rem 0 0.4rem; }
