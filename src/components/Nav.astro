@@ -10,6 +10,7 @@ const NAV = [
   { href: '/hermes/community/', label: 'コミュニティ' },
   { href: '/hermes/guide/', label: 'ドキュメント' },
 ];
+const feedbackUrl = `https://github.com/Sora-bluesky/winsmux-wiki/issues/new?template=feedback.yml&page=${encodeURIComponent(new URL(path, Astro.site ?? 'https://wiki.winsmux.dev').href)}`;
 const isActive = (href: string) =>
   href === '/hermes/guide/'
     ? path.startsWith('/hermes/guide/') || path.startsWith('/hermes/docs/')
@@ -47,6 +48,15 @@ for (const p of PAGES) {
         }
       </nav>
       <a
+        href={feedbackUrl}
+        target="_blank"
+        rel="noopener"
+        class="hidden items-center rounded-lg border border-border-strong px-3 py-1.5 text-sm text-fg no-underline hover:bg-bg-subtle lg:inline-flex"
+        title="このページの URL 入りで GitHub の入力フォームが開きます"
+      >
+        意見・要望
+      </a>
+      <a
         href="/hermes/search/"
         class="js-search-open flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:bg-bg-subtle hover:text-fg"
         aria-label="検索（Ctrl+K）"
@@ -74,6 +84,14 @@ for (const p of PAGES) {
         class="js-search-open mb-1 flex min-h-11 items-center rounded-lg px-3 text-sm text-fg-muted no-underline hover:bg-bg-subtle hover:text-fg"
       >
         検索
+      </a>
+      <a
+        href={feedbackUrl}
+        target="_blank"
+        rel="noopener"
+        class="mb-1 flex min-h-11 items-center rounded-lg px-3 text-sm text-fg-muted no-underline hover:bg-bg-subtle hover:text-fg"
+      >
+        意見・要望
       </a>
       {
         groups.map((g) => (

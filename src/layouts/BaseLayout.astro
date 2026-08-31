@@ -44,7 +44,6 @@ const updateLine = (e: UpdateEntry) =>
   e.pages.length === 1 ? `「${e.pages[0].title}」を更新` : `${e.pages.length}ページを更新`;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
-const feedbackUrl = `https://github.com/Sora-bluesky/winsmux-wiki/issues/new?template=feedback.yml&page=${encodeURIComponent(canonical)}`;
 
 // パンくず: /hermes/ 直下以外で表示。中間セグメントはラベル化（ページが無いのでテキスト）。
 const CRUMB_LABELS: Record<string, string> = {
@@ -315,7 +314,6 @@ const next = hasOverride
           Hermes Agent Wiki — 非公式の日本語サイトです{hermesVersion && `（Hermes Agent ${hermesVersion} 時点）`}。<br />正本:
           <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener">公式ドキュメント</a>
           · <a href="/hermes/about/">このサイトについて</a>
-          · <a href={feedbackUrl} target="_blank" rel="noopener" title="このページの URL 入りで GitHub の入力フォームが開きます">意見・要望</a>
         </p>
         <p class="m-0 flex shrink-0 items-center gap-4 whitespace-nowrap">
           <span>管理人: そら</span>
