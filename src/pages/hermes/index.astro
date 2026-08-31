@@ -96,6 +96,7 @@ const latest = (updates.entries as Entry[])[0];
 <style>
   /* トップ限定: ページをコピー行・右の目次だけ出さない（左サイドバーは表示する） */
   :global([data-copy-page]) { display: none; }
+  :global([data-rail-popular]) { display: none; }
   :global(main aside) { display: none; }
   :global(main) { padding-top: 0 !important; }
 
