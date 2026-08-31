@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram、Discord、Slack、WhatsApp、Signal、SMS、メール、Home Assistant、Mattermost、Matrix、DingTalk、Yuanbao、Microsoft Teams、LINE、Raft、Webhook、あるいは API サーバー経由の OpenAI 互換フロントエンドから Hermes と会話する — 構成とセットアップの概要"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: ef253030251d74e5ffa6a73a262afeadbeb9bfb0
+upstream_blob: a0aaf6b5e42b6126ff3779a39de9b876b26e54dd
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -228,7 +228,7 @@ hermes gateway install --force
 
 ### 過去のセッションを探す（`/sessions`） {#finding-past-sessions-sessions}
 
-`/sessions` は今のチャットにひもづく過去のセッションを一覧し、`/sessions <name>` でそのひとつを再開します（`/resume` の短縮形です）。一覧が長くなったら、`/sessions search <query>`（別名 `find`）でタイトルやセッション ID を絞り込めます。並び順は直近に使ったものからです。`/sessions all` による他の場所のセッションの一覧は管理者だけが使えます。通常のユーザーには自分のチャット由来のセッションしか見えません。
+`/sessions` は今のチャットにひもづく過去のセッションを一覧します。いま話しているセッションも `(current)` の印を付けて並びます。`/sessions <name>` でそのひとつを再開します（`/resume` の短縮形です）。一覧が長くなったら、`/sessions search <query>`（別名 `find`）でタイトルやセッション ID を絞り込めます。並び順は直近に使ったものからです。`/sessions all` による他の場所のセッションの一覧は管理者だけが使えます。通常のユーザーには、一覧がこのチャットの範囲にとどまったことを知らせるメッセージが出て、自分のチャット由来のセッションしか見えません。
 
 ### `/model` の変更が残る仕組み {#persistent-model-overrides}
 

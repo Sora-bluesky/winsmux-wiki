@@ -7,7 +7,7 @@ sources:
   - https://hermes-agent.nousresearch.com/docs/guides/tips
   - https://hermes-agent.nousresearch.com/docs/guides/local-ollama-setup
   - https://portal.nousresearch.com/models
-hermes_version: "0.20.6"
+hermes_version: "0.21.0"
 confidence: medium
 raw: /hermes/raw/cost.md
 ---

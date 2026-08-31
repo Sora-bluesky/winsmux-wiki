@@ -4,7 +4,7 @@ description: 公式推奨のモデル契約。1つのサブスクで 300 以上�
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/nous-portal
   - https://hermes-agent.nousresearch.com/docs/guides/run-hermes-with-nous-portal
-hermes_version: "0.20.6"
+hermes_version: "0.21.0"
 confidence: high
 raw: /hermes/raw/entities/nous-portal.md
 ---

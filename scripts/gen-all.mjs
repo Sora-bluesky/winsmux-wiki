@@ -33,7 +33,7 @@ description: 公式 docs の全 URL の索引。正本は公式。
 sources:
   - https://hermes-agent.nousresearch.com/docs/
   - https://hermes-agent.nousresearch.com/docs/llms.txt
-hermes_version: "0.20.6"
+hermes_version: "0.21.0"
 confidence: high
 raw: /hermes/raw/all.md
 ---
@@ -73,7 +73,7 @@ description: 公式 developer-guide の索引。Hermes 本体を拡張・貢献�
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/architecture
   - https://hermes-agent.nousresearch.com/docs/llms.txt
-hermes_version: "0.20.6"
+hermes_version: "0.21.0"
 confidence: high
 raw: /hermes/raw/dev.md
 ---

@@ -4,7 +4,7 @@ description: config.yaml が正本。使うモデル、API キー、窓口の設
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
-hermes_version: "0.20.6"
+hermes_version: "0.21.0"
 confidence: high
 raw: /hermes/raw/concepts/config.md
 ---

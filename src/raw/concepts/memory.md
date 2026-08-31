@@ -4,7 +4,7 @@ description: 会話をまたぐ記憶。MEMORY.md と USER.md に残り、過去
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
   - https://hermes-agent.nousresearch.com/docs/user-guide/which-file-does-what
-hermes_version: "0.20.6"
+hermes_version: "0.21.0"
 confidence: high
 raw: /hermes/raw/concepts/memory.md
 ---

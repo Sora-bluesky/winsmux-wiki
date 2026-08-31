@@ -2,7 +2,7 @@
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、好きなフロントエンドから使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: 9d0d587ca4b3e87f8ea366416e80868ff956ab74
+upstream_blob: 47c03736139ca79674680e985aa34a58ccfcf8eb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -376,6 +376,10 @@ gateway:
 ```
 
 run は単純な `input` の文字列を受け取り、`session_id`、`instructions`、`conversation_history`、`previous_response_id` は任意です。`session_id` を渡すと Hermes が run の状況にそれを出すので、外部の画面が自分の会話 ID と run を突き合わせられます。
+
+作成を安全にやり直せるようにしたいときは、`Idempotency-Key` ヘッダー（表示できる ASCII 文字で 1〜255 文字）を送ります。Hermes は仕事を始める前に、このキーを消えない形で確保します。まったく同じ内容で送り直すと、元の `run_id` が HTTP 202 と `Idempotency-Replayed: true` を伴って返ります。ゲートウェイを再起動したあとでも、その run が完了・失敗・取り消しになったあとでも同じです。同じキーで違う JSON の中身を送ると、HTTP 409 と `idempotency_key_conflict` のコードが返ります。キーは認証された API のプロファイルと資格情報ごとに分けて扱われ、状態が最後に更新されてから 24 時間は残ります。クライアント側は推測されにくい一意のキーを使い、関係のない操作で使い回さないでください。ヘッダーを付けないリクエストはこれまでどおりの動きで、必ず新しい run を作ります。
+
+`session_id` が既存の Hermes のセッションを指していて、`conversation_history` も `previous_response_id` も明示していない場合、run はそのセッションのいま生きているやり取りの記録を読み込みます。セッションのターンごとの占有権が、同時に書き込もうとする側を順番に並べ、順番待ちのあとは記録を取り直します。
 
 ### GET /v1/runs/\{run_id\} {#get-v1runsrunid}
 

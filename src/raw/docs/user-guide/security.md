@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、ユーザー認可、コンテナの隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: 4397fcac6bb62cf22f1be690019d750fff5e7531
+upstream_blob: 97b1d7cf435d5e0585a178f963575290f24f66a0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -522,6 +522,8 @@ terminal:
 ## 環境変数の受け渡し {#environment-variable-passthrough}
 
 `execute_code` と `terminal` はどちらも、LLM が生成したコードによる資格情報の持ち出しを防ぐため、子プロセスから重要な環境変数を取り除きます。とはいえ、`required_environment_variables` を宣言しているスキルは、それらの変数を正当に必要としています。
+
+自社プラットフォームの資格情報、つまり Buzz というメッセージングプラットフォームが使う `BUZZ_*` の変数は、**そのセッションが実際に Buzz のエージェントとして動いているときにかぎり** `terminal` の子プロセス（前面での実行と、バックグラウンド / PTY での起動の両方）へ渡されます。具体的には、そのプロセスが Buzz-ACP の管理下にあるエージェントであるか（Buzz Desktop のしくみが `BUZZ_MANAGED_AGENT` を設定します）、動いているゲートウェイのセッションのプラットフォームが `buzz` である場合です。これにより、Buzz のプラットフォームのエージェントは、そのプラットフォームで使うことになっている CLI（たとえば `buzz`）をターミナルツールから呼び出せます。一方で、同じホスト上の Telegram / CLI / cron のセッションでは、これらの変数は取り除かれたままです。`_sanitize_subprocess_env` は検索のワーカー（ddgs による web 検索のサブプロセスなど）、コンピュータ操作のドライバのバイナリ、ユーザーのスクリプトを走らせるしくみ（`!` で始まるコマンド、クイックコマンド、cron のスクリプト、webhook のフィルタスクリプト）にも使われているため、Buzz のセッションから起動したこれらの子プロセスにも同じ変数が渡ります。この例外は **ターミナルに限られます**。`execute_code`、ブラウザや TUI のホストの起動（`hermes_subprocess_env`）、Docker / Modal の子プロセス、`env_passthrough` への登録には適用されず、そちらは閉じたままです。
 
 ### しくみ {#how-it-works}
 

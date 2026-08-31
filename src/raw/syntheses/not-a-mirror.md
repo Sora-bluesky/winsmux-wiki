@@ -4,7 +4,7 @@ description: このサイトは公式 docs の日本語版。何が同じで、�
 sources:
   - https://hermes-agent.nousresearch.com/docs/
   - https://hermes-agent.nousresearch.com/docs/llms.txt
-hermes_version: "0.20.6"
+hermes_version: "0.21.0"
 confidence: high
 raw: /hermes/raw/syntheses/not-a-mirror.md
 ---
