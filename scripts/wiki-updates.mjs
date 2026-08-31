@@ -54,7 +54,7 @@ if (cleaned.length === 0) throw new Error('no sync entries found — check git h
 
 const prev = fs.existsSync(OUT_FILE) ? JSON.parse(fs.readFileSync(OUT_FILE, 'utf8')) : {};
 const out = {
-  generatedAt: new Date().toISOString().slice(0, 10),
+  generatedAt: new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10), // JST
   entries: cleaned,
   digests: prev.digests ?? {},
 };

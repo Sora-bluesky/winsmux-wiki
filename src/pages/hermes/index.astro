@@ -22,7 +22,7 @@ const latest = (updates.entries as Entry[])[0];
   nextOverride={null}
 >
   <section class="hero">
-    <div class="kicker">非公式の日本語wiki · 毎日更新{latest ? `（最新 ${latest.date}・${latest.pages.length}ページ）` : ''}</div>
+    <div class="kicker">非公式の日本語wiki · 毎日更新{updates.generatedAt ? `（最終同期 ${updates.generatedAt}）` : ''}</div>
     <h1>Hermes Agent Wiki</h1>
     <p class="catch">Hermes Agent の日本語ドキュメント。毎日更新、AI にも渡せる</p>
     <p class="lead">
