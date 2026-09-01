@@ -9,5 +9,9 @@ export default defineConfig({
   output: 'static',
   site: 'https://wiki.winsmux.dev',
   trailingSlash: 'always',
-  integrations: [sitemap()],
+  integrations: [
+    // ルートは /hermes/ を canonical に指している。正規化先ではない URL を
+    // サイトマップに載せるとクロールの一枠を無駄にするので外す
+    sitemap({ filter: (page) => page !== 'https://wiki.winsmux.dev/' }),
+  ],
 });
