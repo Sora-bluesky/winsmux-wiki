@@ -31,6 +31,11 @@ export const ALIASES: Record<string, string> = {
   ブラウザー: 'ブラウザ',
   メモリー: 'memory',
   ダッシュボード: 'dashboard',
+  メモリ: 'memory',
+  日本語化: '日本語',
+  ローカルモデル: 'ローカル',
+  ローカルllm: 'ローカル',
+  常駐: 'gateway',
 };
 
 // 全角→半角(NFKC) + 小文字化
