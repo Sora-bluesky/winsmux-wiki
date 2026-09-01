@@ -2,12 +2,20 @@
 title: "Mac でローカル LLM を動かす"
 description: "llama.cpp または MLX を使って macOS 上に OpenAI 互換のローカル LLM サーバーを立てる手順。モデルの選び方、メモリの節約、Apple Silicon での実測ベンチマークまで"
 upstream_path: guides/local-llm-on-mac.md
-upstream_blob: a0a3a200bd9e2ff77dfbd3308f71af15929566be
+upstream_blob: f35e8ef2cf1ed1bea912746071815501697e9082
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/local-llm-on-mac
 ---
 
 # Mac でローカル LLM を動かす {#run-local-llms-on-mac}
+
+:::tip デスクトップ版にはワンクリックの近道があります
+Hermes のデスクトップアプリなら、**設定 → プロバイダ → ローカルモデル** から
+llama.cpp のローカルサーバーを入れて管理できます。モデルのダウンロード、メモリに収まる
+設定、コンテキスト長の調整までまとめて任せられます。[ローカルモデル](/hermes/docs/user-guide/local-models/) を見てください。
+このページは手作業で組み立てる場合の説明です。MLX を使う、自分でビルドする、
+サーバーを自分で動かす、といったときに読んでください。
+:::
 
 このガイドでは、OpenAI 互換の API を備えたローカル LLM サーバーを macOS で動かすところまでを順に説明します。データは手元から出ず、API の費用はゼロ、そして Apple Silicon では意外なほどよく動きます。
 

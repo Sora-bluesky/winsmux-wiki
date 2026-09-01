@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールを、ツールセットごとにまとめた決定版の一覧です"
 upstream_path: reference/tools-reference.md
-upstream_blob: a0775b8f61f1a448ab2f68990ae51a6b94b8192b
+upstream_blob: 17750665533eaff0e8bec1c819d149db19f8a9ef
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -266,13 +266,18 @@ startTour([
 どちらの対象指定にも使えます。画面に出るチップは一度に 1 つで、新しいものが出ると
 前のものは消えます。
 
-アプリ自身も、組み込みの機能の一覧を順に紹介するチップを出せます。こちらは既定で有効で、
-Settings → Appearance で切れます。出し方は通知というより、ゲームのロード画面のひとことに
-近い調子です。起動して数分は経ってから、そのあとも 6 時間に 1 回まで、しかも本当に手が
-空いている場面でだけ出ます。✕ でそのチップを閉じると、そのチップは二度と出なくなり、
-同じ設定の行から戻せます。ツールのほうはこの切り替えの影響を受けません。`tour` と同じで、
-手の空いた時間ではなく会話に応えて動くからです。ただし待ち時間は共有しているので、
-Hermes が出したチップも、利用者にとっては巡回からの 6 時間の静けさになります。
+アプリ自身も、組み込みの機能の一覧を順にたどってチップを出せます。出し方は通知というより、
+ゲームのロード画面のひとことに近い調子です。起動して早くても数分は経ってから、そのあとも
+6 時間に 1 回まで、しかも本当に手が空いている場面でだけ出ます。Hermes が出したチップも
+この待ち時間を共有するので、利用者にとっては巡回からの 6 時間の静けさにもなります。
+✕ で巡回のチップを閉じると、そのチップは二度と出なくなり、同じ設定の行から戻せます。
+
+チップも案内もどちらも既定で有効で、Settings → Appearance
+（`display.in_app_tips`、`display.in_app_tours`）で切れます。切ると、アプリだけでなく
+Hermes 側にも及びます。この切り替えはつながっているゲートウェイの設定にまで届き、ツールが
+モデルのスキーマから外れるので、使ってはいけない機能をエージェントが知らされることはありません。
+スキーマの変更はどれもそうですが、効くのは次のセッションからです。動いている会話は始めたときの
+道具立てのままで、その間はアプリ側が呼び出しを断ります。
 
 ## `todo` ツールセット {#todo-toolset}
 
@@ -315,8 +320,8 @@ Hermes が出したチップも、利用者にとっては巡回からの 6 時�
 
 | ツール | 説明 | 必要な環境 |
 |------|-------------|----------------------|
-| `web_search` | Web で情報を検索します。既定では最大 5 件の結果を、表題・URL・説明付きで返します。任意で `limit`（1〜100、既定は 5）を指定できます。クエリは設定したバックエンドへそのまま渡されるので、`site:domain`、`filetype:pdf`、`intitle:word`、`-term`、`"exact phrase"` といった書き方は、バックエンドが対応していれば効きます。 | EXA_API_KEY / PARALLEL_API_KEY / FIRECRAWL_API_KEY / KEENABLE_API_KEY のいずれか |
-| `web_extract` | Web ページの URL から内容を抜き出します。整形されたページの内容を markdown やテキストで返します（LLM による要約はしないので高速です）。PDF の URL（arXiv の論文や各種文書）にも使えるので、PDF のリンクをそのまま渡してください。文字数の予算（既定は 15000）以内のページはまるごと返り、それより大きいページは先頭と末尾の窓に、ディスクへ保存した全文を指すフッターが付いて返ります。1 回の呼び出しで URL は最大 5 個です。 | EXA_API_KEY / PARALLEL_API_KEY / FIRECRAWL_API_KEY / KEENABLE_API_KEY のいずれか |
+| `web_search` | Web で情報を検索します。既定では最大 5 件の結果を、表題・URL・説明付きで返します。任意で `limit`（1〜100、既定は 5）を指定できます。クエリは設定したバックエンドへそのまま渡されるので、`site:domain`、`filetype:pdf`、`intitle:word`、`-term`、`"exact phrase"` といった書き方は、バックエンドが対応していれば効きます。 | EXA_API_KEY / PARALLEL_API_KEY / FIRECRAWL_API_KEY / TAVILY_API_KEY / KEENABLE_API_KEY のいずれか |
+| `web_extract` | Web ページの URL から内容を抜き出します。整形されたページの内容を markdown やテキストで返します（LLM による要約はしないので高速です）。PDF の URL（arXiv の論文や各種文書）にも使えるので、PDF のリンクをそのまま渡してください。文字数の予算（既定は 15000）以内のページはまるごと返り、それより大きいページは先頭と末尾の窓に、ディスクへ保存した全文を指すフッターが付いて返ります。1 回の呼び出しで URL は最大 5 個です。 | EXA_API_KEY / PARALLEL_API_KEY / FIRECRAWL_API_KEY / TAVILY_API_KEY / KEENABLE_API_KEY のいずれか |
 
 ## `x_search` ツールセット {#xsearch-toolset}
 

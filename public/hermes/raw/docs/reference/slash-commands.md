@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 5405230994df1b3014d213fd4ed060731a2ae8c7
+upstream_blob: 41dd223b7f3b90cb1728a8ecbc298645e6442dfa
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -182,7 +182,7 @@ quick_commands:
 
 ### モデルの別名を自分で決める {#custom-model-aliases}
 
-よく使うモデルに自分で短い名前を付けておくと、CLI でもどのメッセージングプラットフォームでも `/model <alias>` で呼び出せます。別名はどちらでも同じように動き、セッション限り（既定）でも `--global` の切り替えでも使えます。
+よく使うモデルに自分で短い名前を付けておくと、動いているセッションの中では `/model <alias>`、起動時には `hermes chat --model <alias>`、あるいはどのメッセージングプラットフォームからでも呼び出せます。別名はどの経路でも同じように動き、セッション限り（既定）でも `--global` の切り替えでも使えます。
 
 設定の書き方は 2 通りあります。
 

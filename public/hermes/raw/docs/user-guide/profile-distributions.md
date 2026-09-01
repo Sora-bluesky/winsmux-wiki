@@ -2,7 +2,7 @@
 title: "プロファイル配布: エージェントまるごと共有する"
 description: ""
 upstream_path: user-guide/profile-distributions.md
-upstream_blob: 46f0660210962cb7a48b106a2336344557e7526f
+upstream_blob: 14bbba02f75c94188185b5d2b194b2359df976bf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profile-distributions
 ---
@@ -629,10 +629,12 @@ hermes profile install ~/.hermes/profiles/research-bot --name research-bot-test
 CLI、TUI、デスクトップのチャットのいずれでも:
 
 ```
-/export                          # the active profile → <name>.tar.gz
+/export                          # the active profile → managed profile-exports/<name>-<timestamp>.tar.gz
 /export research-bot             # a named profile
 /export research-bot -o ~/Desktop/research-bot.tar.gz
 ```
+
+`-o` を指定しない場合、CLI と TUI はアーカイブを、いまいる作業ディレクトリではなく、既定の Hermes ホームの下にある Hermes 管理の `profile-exports/` ディレクトリへ置きます。こうしておけば、普段の書き出しがソースの作業コピーの中に紛れ込まず、生成されたプロファイルのスナップショットをリポジトリのソースファイルと取り違えることもありません。Hermes ホーム自体が Git の作業コピーの中にある場合（Docker や独自構成の環境ではそうなることがあります）、アーカイブは `~/.hermes-profile-exports/` に、それも無理なら OS の一時ディレクトリ配下のユーザーごとのディレクトリに置かれます。作業コピーの中に入ることはありません。安全な自動の置き場所がどこにも見つからない場合（候補がすべて Git の作業コピーの中にある場合）、書き出しは "No safe automatic export destination" と告げて中止するので、作業コピーの外を指す `-o` を渡してください。保存先を自分で決めたいときは、明示した `-o` のパスがこれまでどおり使われます。
 
 シェルからでも、同じ仕組みが使えます。
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01",
+  "generatedAt": "2026-09-02",
   "entries": [
     {
       "date": "2026-08-31",
@@ -53,12 +53,12 @@
         },
         {
           "id": "user-guide/configuring-models",
-          "title": "モデルを設定する",
+          "title": "モデルの設定",
           "url": "/hermes/docs/user-guide/configuring-models/"
         },
         {
           "id": "user-guide/features/browser",
-          "title": "ブラウザ自動操作",
+          "title": "ブラウザの自動操作",
           "url": "/hermes/docs/user-guide/features/browser/"
         },
         {
@@ -1135,7 +1135,7 @@
         },
         {
           "id": "user-guide/features/browser",
-          "title": "ブラウザ自動操作",
+          "title": "ブラウザの自動操作",
           "url": "/hermes/docs/user-guide/features/browser/"
         },
         {
@@ -1224,7 +1224,7 @@
         },
         {
           "id": "user-guide/features/browser",
-          "title": "ブラウザ自動操作",
+          "title": "ブラウザの自動操作",
           "url": "/hermes/docs/user-guide/features/browser/"
         },
         {
@@ -1249,7 +1249,7 @@
         },
         {
           "id": "user-guide/features/memory-providers",
-          "title": "メモリープロバイダー",
+          "title": "記憶プロバイダ",
           "url": "/hermes/docs/user-guide/features/memory-providers/"
         },
         {
@@ -1271,7 +1271,7 @@
       "pages": [
         {
           "id": "developer-guide/memory-provider-plugin",
-          "title": "メモリプロバイダプラグイン",
+          "title": "記憶プロバイダプラグイン",
           "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
         },
         {
@@ -1306,7 +1306,7 @@
         },
         {
           "id": "user-guide/features/browser",
-          "title": "ブラウザ自動操作",
+          "title": "ブラウザの自動操作",
           "url": "/hermes/docs/user-guide/features/browser/"
         },
         {
@@ -1341,7 +1341,7 @@
         },
         {
           "id": "user-guide/features/web-search",
-          "title": "Web 検索と抽出",
+          "title": "Web 検索と本文抽出",
           "url": "/hermes/docs/user-guide/features/web-search/"
         },
         {
@@ -1393,7 +1393,7 @@
         },
         {
           "id": "user-guide/bot-mode",
-          "title": "Bot モード",
+          "title": "Bot Mode",
           "url": "/hermes/docs/user-guide/bot-mode/"
         },
         {
@@ -1403,7 +1403,7 @@
         },
         {
           "id": "user-guide/configuring-models",
-          "title": "モデルを設定する",
+          "title": "モデルの設定",
           "url": "/hermes/docs/user-guide/configuring-models/"
         },
         {
@@ -1450,7 +1450,7 @@
         },
         {
           "id": "user-guide/bot-mode",
-          "title": "Bot モード",
+          "title": "Bot Mode",
           "url": "/hermes/docs/user-guide/bot-mode/"
         },
         {
@@ -1482,7 +1482,7 @@
         },
         {
           "id": "user-guide/bot-mode",
-          "title": "Bot モード",
+          "title": "Bot Mode",
           "url": "/hermes/docs/user-guide/bot-mode/"
         },
         {
@@ -1549,7 +1549,7 @@
         },
         {
           "id": "user-guide/bot-mode",
-          "title": "Bot モード",
+          "title": "Bot Mode",
           "url": "/hermes/docs/user-guide/bot-mode/"
         },
         {

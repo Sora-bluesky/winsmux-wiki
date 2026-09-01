@@ -195,6 +195,7 @@ Hermes Agent 0.21.0
 - [user-guide/features/x-search（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/x-search/)
 - [user-guide/git-worktrees（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/git-worktrees/)
 - [user-guide/import-from-other-agents（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/import-from-other-agents/)
+- [user-guide/local-models（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/local-models/)
 - [user-guide/managed-scope（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/managed-scope/)
 - [user-guide/messaging/a2a（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/a2a/)
 - [user-guide/messaging/bluebubbles（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/bluebubbles/)
@@ -635,6 +636,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/x-search.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/git-worktrees.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/import-from-other-agents.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/local-models.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/managed-scope.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/messaging/a2a.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/messaging/bluebubbles.md

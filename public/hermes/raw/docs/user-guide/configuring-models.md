@@ -2,7 +2,7 @@
 title: "モデルの設定"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: 4c5b750291deda81c9367fc4585244178d50a141
+upstream_blob: e67e85d5c3d3e06a5b90554c123e63e1cc5dbd6a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---
@@ -14,7 +14,7 @@ Hermes には、モデルを割り当てる枠が 2 種類あります。
 - **メインモデル** — エージェントが考えるのに使うモデルです。利用者のメッセージ、ツール呼び出しの繰り返し、逐次表示される応答は、すべてこのモデルを通ります。
 - **補助モデル** — エージェントが脇に逃がす、小さめの仕事です。コンテキストの圧縮、画像の解析、Web ページの要約、承認の判定、MCP のツール振り分け、セッション名の生成、スキルの検索が該当します。それぞれに専用の枠があり、個別に上書きできます。
 
-このページでは、その両方をダッシュボードから設定する方法を説明します。設定ファイルや CLI のほうがよければ、末尾の[別のやり方](#alternative-methods)へ飛んでください。
+このページでは、その両方をダッシュボードから設定する方法を説明します。設定ファイルや CLI のほうがよければ、末尾の[別のやり方](#alternative-methods)へ飛んでください。クラウドの提供元ではなく自分の端末でモデルを動かしたい場合は、[ローカルモデル](/hermes/docs/user-guide/local-models/)をご覧ください。
 
 :::tip いちばん手早い道: Nous Portal
 [Nous Portal](/hermes/docs/user-guide/features/tool-gateway/) では、1 つの契約で 300 を超えるモデルが使えます。まっさらな環境なら `hermes setup --portal` を実行すれば、ログインと Nous のプロバイダ設定が 1 つのコマンドで済みます。何がつながったかは `hermes portal info` で確認できます。
@@ -291,7 +291,7 @@ OpenRouter（や、そうしたまとめ役のサービス）では、素のモ�
 
 ### 独自の別名 {#custom-aliases}
 
-よく使うモデルに自分で短い名前を付けておき、CLI やメッセージアプリで `/model <alias>` と打って呼び出せます。書き方は 2 通りあり、どちらでも同じことができるので、自分のやり方に合うほうを選んでください。
+よく使うモデルに自分で短い名前を付けておき、動いているセッションのなかで `/model <alias>` と打つか、起動時に `hermes chat --model <alias>` と指定して呼び出せます。書き方は 2 通りあり、どちらでも同じことができるので、自分のやり方に合うほうを選んでください。
 
 **正式な書き方（最上位の `model_aliases:`）** — プロバイダと base_url まで細かく指定できます。
 

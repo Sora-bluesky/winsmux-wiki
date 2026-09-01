@@ -2,7 +2,7 @@
 title: "Android / Termux"
 description: "Termux を使って Android スマートフォン上で Hermes Agent を直接動かす"
 upstream_path: getting-started/termux.md
-upstream_blob: 6b31efb30c47f843ea32a668b8790855cb528907
+upstream_blob: df94ba957089ea08cf12a17125ae29e31469e77c
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/termux
 ---
@@ -113,6 +113,22 @@ pkg install -y git python clang rust make pkg-config libffi openssl nodejs ripgr
 これらのパッケージが必要な理由は次のとおりです。
 
 - `python` — 実行環境と venv のサポート
+
+:::warning 対応している Python の範囲
+Hermes が必要とするのは **Python >=3.11,&lt;3.14** です。いまの Termux が配布している `python`
+は 3.14.x で、この範囲から外れています。インストーラはそれを見つけると、対応するバージョンを
+[Termux ユーザーリポジトリ（TUR）](https://github.com/termux-user-repository/tur)
+から入れようと自動で試みます。手作業で入れる場合は、自分で次のように用意してください。
+
+```bash
+pkg install tur-repo
+pkg install python3.13
+```
+
+このあとのコマンドでは `python` の代わりに `python3.13` を使ってください
+（例: `python3.13 -m venv venv`）。
+:::
+
 - `git` — リポジトリの clone / 更新
 - `clang`、`rust`、`make`、`pkg-config`、`libffi`、`openssl` — Android 上でいくつかの Python の依存関係をビルドするために必要
 - `nodejs` — 検証済みの中心的な手順を超えて試すための、任意の Node 実行環境

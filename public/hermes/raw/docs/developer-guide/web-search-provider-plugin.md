@@ -2,14 +2,14 @@
 title: "Web 検索プロバイダのプラグイン"
 description: "Hermes Agent 向けに Web 検索・抽出・クロールのバックエンドプラグインを作る方法"
 upstream_path: developer-guide/web-search-provider-plugin.md
-upstream_blob: 98bd98f17427c3db566f386150117c32c75efd1f
+upstream_blob: 257df89548d2e1503f2747ebd5ec36253ef429fc
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/web-search-provider-plugin
 ---
 
 # Web 検索プロバイダのプラグインを作る {#building-a-web-search-provider-plugin}
 
-Web 検索プロバイダのプラグインは、`web_search`、`web_extract`、そして必要なら深いクロールのツール呼び出しを担当するバックエンドを登録します。組み込みのプロバイダ（Firecrawl、SearXNG、Exa、Parallel、Keenable、Brave Search の無料枠、xAI、DDGS）はすべて `plugins/web/<name>/` の下にプラグインとして入っています。その隣にディレクトリを置くだけで、新しいものを足したり、同梱のものを差し替えたりできます。
+Web 検索プロバイダのプラグインは、`web_search`、`web_extract`、そして必要なら深いクロールのツール呼び出しを担当するバックエンドを登録します。組み込みのプロバイダ（Firecrawl、SearXNG、Tavily、Exa、Parallel、Keenable、Brave Search の無料枠、xAI、DDGS）はすべて `plugins/web/<name>/` の下にプラグインとして入っています。その隣にディレクトリを置くだけで、新しいものを足したり、同梱のものを差し替えたりできます。
 
 :::tip
 Web 検索は、Hermes が対応している **バックエンドプラグイン** のうちの 1 つです。それぞれ独自の ABC を持つ仲間として、[画像生成プロバイダのプラグイン](/hermes/docs/developer-guide/image-gen-provider-plugin/)、[動画生成プロバイダのプラグイン](/hermes/docs/developer-guide/video-gen-provider-plugin/)、[記憶プロバイダのプラグイン](/hermes/docs/developer-guide/memory-provider-plugin/)、[コンテキストエンジンのプラグイン](/hermes/docs/developer-guide/context-engine-plugin/)、[モデルプロバイダのプラグイン](/hermes/docs/developer-guide/model-provider-plugin/) があります。一般的なツール・フック・CLI のプラグインについては [Hermes のプラグインを作る](/hermes/docs/developer-guide/plugins/) を見てください。
@@ -157,7 +157,7 @@ requires_env:
 | `search(query, limit)` | 条件付き | 例外を投げます | `supports_search()` が `True` を返すなら必須です |
 | `extract(urls, **kwargs)` | 条件付き | 例外を投げます | `supports_extract()` が `True` を返すなら必須です |
 
-プロバイダは 1 つのクラスで複数の機能を名乗れます。Firecrawl、Keenable、Exa、Parallel はどれも検索と抽出の両方を実装しています。Brave Search と DDGS は検索専用です。SearXNG も検索専用で、「抽出のプロバイダと組み合わせて使う」という進め方がドキュメントに書かれています。
+プロバイダは 1 つのクラスで複数の機能を名乗れます。Firecrawl、Tavily、Keenable、Exa、Parallel はどれも検索と抽出の両方を実装しています。Brave Search と DDGS は検索専用です。SearXNG も検索専用で、「抽出のプロバイダと組み合わせて使う」という進め方がドキュメントに書かれています。
 
 ## 応答の形 {#response-shape}
 

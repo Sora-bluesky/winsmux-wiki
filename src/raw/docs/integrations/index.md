@@ -2,7 +2,7 @@
 title: "連携"
 description: ""
 upstream_path: integrations/index.md
-upstream_blob: 51555976eebab8b68d30f42068f824f9e822284a
+upstream_blob: 37bac9d8bfcc7766118fc62982f88d56ecc4d320
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations
 ---
@@ -45,7 +45,7 @@ Hermes は、はじめから複数の AI 推論プロバイダに対応してい
 
 ```yaml
 web:
-  backend: firecrawl    # firecrawl | searxng | brave-free | ddgs | keenable | exa | parallel | xai
+  backend: firecrawl    # firecrawl | searxng | brave-free | ddgs | tavily | keenable | exa | parallel | xai
 ```
 
 `web.backend` を設定していない場合、使える API キーからバックエンドが自動で判別されます。`FIRECRAWL_API_URL` を使えば、自分で立てた Firecrawl も使えます。

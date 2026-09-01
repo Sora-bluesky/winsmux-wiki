@@ -2,7 +2,7 @@
 title: "Hermes デスクトップアプリ"
 description: "ネイティブの Hermes デスクトップアプリ。ツール出力のストリーミング表示、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と対話するための作り込まれた環境です。macOS、Windows、Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: d86d31c0edcb2d2a53917bd6a1adf0faaaf325ba
+upstream_blob: b1b81df9c4116181cc379a3e9c42155012549cce
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -159,7 +159,7 @@ desktop:
 
 プロバイダ・モデル・ツール・認証情報を、YAML を編集する代わりに実際の UI から管理できます。初回起動時の案内に沿えば、数秒で最初のメッセージまでたどり着けます。設定画面はプロバイダとキー、モデルの選択、ツールセットの設定、MCP サーバー、ゲートウェイ、セッション管理をひととおり扱います。
 
-- **プロバイダ設定の画面** — 推論プロバイダを管理する専用の場所で、サインインとプロバイダごとの認証情報の保存を Accounts / API キーの形で扱います。
+- **プロバイダ設定の画面** — 推論プロバイダを管理する専用の場所で、サインインとプロバイダごとの認証情報の保存を Accounts / API キーの形で扱います。この中の **Local Models** の画面では、端末上で動く llama.cpp の実行環境を導入して管理できます。[ローカルモデル](/hermes/docs/user-guide/local-models/)をご覧ください。
 - **メニューにはすべてのプロバイダとモデルが並びます** — GUI は `hermes model` が知っているプロバイダとモデルをすべて表示するので、抜粋ではなく CLI と同じ一覧から選べます。
 - **xAI Grok の OAuth** — Grok はランチャーで一級の OAuth プロバイダとして扱われます。ほかの OAuth プロバイダと同じくブラウザの流れでサインインします。
 - **GUI からのツールバックエンドのインストール** — ツールバックエンドのセットアップ後の導入手順を、ターミナルに降りずにアプリから直接実行できます。

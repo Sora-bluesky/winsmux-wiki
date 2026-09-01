@@ -2,12 +2,20 @@
 title: "Ollama で Hermes をローカルで動かす — API 料金ゼロ"
 description: "Gemma 4 などのオープンウェイトモデルと Ollama を使い、クラウドの API キーも有料サブスクも使わずに Hermes Agent を自分の端末だけで動かす手順です"
 upstream_path: guides/local-ollama-setup.md
-upstream_blob: 5136cf5f71f81edc5e1d06baba7caa188215bd4a
+upstream_blob: 2bb4b7cc31155c865f528087c44f82879700d9b5
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/local-ollama-setup
 ---
 
 # Ollama で Hermes をローカルで動かす — API 料金ゼロ {#run-hermes-locally-with-ollama-zero-api-cost}
+
+:::tip デスクトップ版にはワンクリックの近道があります
+Hermes のデスクトップアプリなら、**設定 → プロバイダ → ローカルモデル** から
+llama.cpp のローカルサーバーを入れて管理できます。モデルのダウンロード、メモリに収まる
+設定、コンテキスト長の調整までまとめて任せられます。[ローカルモデル](/hermes/docs/user-guide/local-models/) を見てください。
+このページは手作業で組み立てる場合の説明です。Ollama を使う、CLI を中心に進める、
+サーバーを自分で動かす、といったときに読んでください。
+:::
 
 ## 何が問題か {#the-problem}
 

@@ -2,7 +2,7 @@
 title: "Web 検索と本文抽出"
 description: "複数のバックエンドプロバイダで Web を検索し、ページ本文を抽出します。無料で自前運用できる SearXNG にも対応しています。"
 upstream_path: user-guide/features/web-search.md
-upstream_blob: 44911dc5ab0689898251e633164c6d29fa4c5938
+upstream_blob: 100c6e50e87d2920710e00fc69c4d5a0b51ed20b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-search
 ---
@@ -26,10 +26,11 @@ Hermes Agent には、複数のプロバイダを背後に持つ、モデルか�
 | **DDGS（DuckDuckGo）** | —（キー不要） | ✔ | — | ✔ 無料 |
 | **Exa** | `EXA_API_KEY`（任意） | ✔ | ✔ | ✔ キーなしリングの参加先 · キーありで月 1 000 検索 |
 | **Parallel** | `PARALLEL_API_KEY`（任意） | ✔ | ✔ | ✔ キーなしリングの参加先 · キーありは有料 |
+| **Tavily** | `TAVILY_API_KEY`（任意） | ✔ | ✔ | ✔ 選択時はオプトインでキーなし利用可 |
 | **Keenable** | `KEENABLE_API_KEY`（任意） | ✔ | ✔ | ✔ キーなしリングの参加先 · キーありは有料 |
 | **xAI（Grok）** | `XAI_API_KEY` または `hermes auth add xai-oauth` | ✔ | — | 有料（SuperGrok またはトークン従量） |
 
-Brave Search・DDGS・xAI は **検索専用** です。`web_extract` も使いたい場合は、これらのどれかと Firecrawl / Keenable / Exa / Parallel を組み合わせてください。DDGS は内部で [`ddgs` Python パッケージ](https://pypi.org/project/ddgs/)を使います。未インストールなら `pip install ddgs` を実行するか、初回使用時に Hermes が遅延インストールするのに任せてください。xAI は Responses API 上で Grok のサーバー側 `web_search` ツールを動かします。結果は索引に基づくものではなく LLM が生成したもので、タイトル・説明・URL の選択がすべてモデルの出力になります（後述の[信頼モデルの注意](#xai-grok)を参照）。
+Brave Search・DDGS・xAI は **検索専用** です。`web_extract` も使いたい場合は、これらのどれかと Firecrawl / Tavily / Keenable / Exa / Parallel を組み合わせてください。DDGS は内部で [`ddgs` Python パッケージ](https://pypi.org/project/ddgs/)を使います。未インストールなら `pip install ddgs` を実行するか、初回使用時に Hermes が遅延インストールするのに任せてください。xAI は Responses API 上で Grok のサーバー側 `web_search` ツールを動かします。結果は索引に基づくものではなく LLM が生成したもので、タイトル・説明・URL の選択がすべてモデルの出力になります（後述の[信頼モデルの注意](#xai-grok)を参照）。
 
 **機能ごとの分割:** 検索と抽出で別々のプロバイダを使えます。たとえば検索は SearXNG（無料）、抽出は Firecrawl といった具合です。後述の[機能ごとの設定](#per-capability-configuration)を参照してください。
 
@@ -268,10 +269,24 @@ SearXNG が担当するのは検索だけなので、`web_extract` には別の�
 # ~/.hermes/config.yaml
 web:
   search_backend: "searxng"
-  extract_backend: "firecrawl"   # or keenable, exa, parallel
+  extract_backend: "firecrawl"   # or tavily, keenable, exa, parallel
 ```
 
 この設定なら、Hermes は検索クエリをすべて SearXNG に、URL の本文抽出を Firecrawl に投げます。無料の検索と質の高い抽出を組み合わせられます。
+
+---
+
+### Tavily {#tavily}
+
+AI 向けに最適化された検索と抽出です。`hermes tools` で Tavily を選ぶ（または `web.backend: tavily` を設定する）と、アカウントなしの **キーなし**（レート制限あり）で使えます。上限を上げたい場合は API キーを設定してください。
+
+```bash
+# optional — skip this for keyless access after selecting Tavily
+# ~/.hermes/.env
+TAVILY_API_KEY=tvly-your-key-here
+```
+
+キーは [app.tavily.com](https://app.tavily.com/home) で取得します。[Tavily keyless](https://docs.tavily.com/documentation/keyless) も参照してください。
 
 ---
 
@@ -340,10 +355,10 @@ web:
     timeout: 90                  # seconds (default)
 ```
 
-**検索専用** です。`web_extract` も必要なら Firecrawl / Keenable / Exa / Parallel と組み合わせてください。401 が返ったときは、OAuth トークンの強制更新を 1 回だけ行って再試行します（有効期間の途中で失効した場合や、事前の期限チェックでは中身を読めない不透明なトークンに対応するためです）。環境変数による認証情報の場合、この再試行は行いません。
+**検索専用** です。`web_extract` も必要なら Firecrawl / Tavily / Keenable / Exa / Parallel と組み合わせてください。401 が返ったときは、OAuth トークンの強制更新を 1 回だけ行って再試行します（有効期間の途中で失効した場合や、事前の期限チェックでは中身を読めない不透明なトークンに対応するためです）。環境変数による認証情報の場合、この再試行は行いません。
 
 :::caution 信頼モデル
-索引に基づくプロバイダ（Brave・Keenable・Exa）が検索エンジンの結果をそのまま返すのに対し、xAI では LLM がどの URL を出すかを選び、タイトルと説明も自分で書きます。クエリの *内容* が出力に影響するため、悪意をもって作られたクエリ（たとえばエージェントが拾った信用できない入力から注入されたもの）が、原理的には Grok を誘導して攻撃者の狙った URL を出させることがあり得ます。返ってきた URL は、モデルが生成したリンク全般と同じように扱ってください。とくにクエリが信用できない入力に由来する場合は、取得する前に検証してください。
+索引に基づくプロバイダ（Brave・Tavily・Exa）が検索エンジンの結果をそのまま返すのに対し、xAI では LLM がどの URL を出すかを選び、タイトルと説明も自分で書きます。クエリの *内容* が出力に影響するため、悪意をもって作られたクエリ（たとえばエージェントが拾った信用できない入力から注入されたもの）が、原理的には Grok を誘導して攻撃者の狙った URL を出させることがあり得ます。返ってきた URL は、モデルが生成したリンク全般と同じように扱ってください。とくにクエリが信用できない入力に由来する場合は、取得する前に検証してください。
 :::
 
 ---
@@ -357,7 +372,7 @@ Web 系のすべての機能に、1 つのプロバイダを設定します。
 ```yaml
 # ~/.hermes/config.yaml
 web:
-  backend: "searxng"   # firecrawl | searxng | brave-free | ddgs | keenable | exa | parallel | xai
+  backend: "searxng"   # firecrawl | searxng | brave-free | ddgs | tavily | keenable | exa | parallel | xai
 ```
 
 ### 機能ごとの設定 {#per-capability-configuration}
@@ -384,6 +399,7 @@ web:
 
 | 存在する認証情報 | 自動で選ばれるバックエンド |
 |--------------------|-----------------------|
+| `TAVILY_API_KEY` | tavily |
 | `EXA_API_KEY` | exa |
 | `PARALLEL_API_KEY` | parallel |
 | `FIRECRAWL_API_KEY` または `FIRECRAWL_API_URL`（あるいは Nous Tool Gateway が使える状態） | firecrawl |
@@ -440,7 +456,7 @@ SearXNG は URL の本文を抽出できません。`web.extract_backend` に、
 ```yaml
 web:
   search_backend: "searxng"
-  extract_backend: "firecrawl"  # or keenable / exa / parallel
+  extract_backend: "firecrawl"  # or tavily / keenable / exa / parallel
 ```
 
 ### SearXNG の結果が 0 件になる {#searxng-returns-0-results}

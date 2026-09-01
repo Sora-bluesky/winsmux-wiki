@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダ、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 7e087add374bf11a956a3227b9fc188e9101b9b9
+upstream_blob: b6654defeac2321b05e3647abd43ad4243301128
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -2343,7 +2343,7 @@ code_execution:
 
 ```yaml
 web:
-  backend: firecrawl    # firecrawl | searxng | parallel | keenable | exa
+  backend: firecrawl    # firecrawl | searxng | parallel | tavily | keenable | exa
 
   # Or use per-capability keys to mix providers (e.g. free search + paid extract):
   search_backend: "searxng"
@@ -2372,9 +2372,10 @@ web:
 | **Firecrawl**（既定） | `FIRECRAWL_API_KEY` | ✔ | ✔ |
 | **SearXNG** | `SEARXNG_URL` | ✔ | — |
 | **Parallel** | `PARALLEL_API_KEY`（任意 — キーなしの無料枠あり） | ✔ | ✔ |
+| **Tavily** | `TAVILY_API_KEY`（任意 — 選んだ場合はキーなしでも動きます） | ✔ | ✔ |
 | **Exa** | `EXA_API_KEY`（任意 — キーなしの無料枠あり） | ✔ | ✔ |
 
-**バックエンドの選び方:** 実行時には、保存された `web.backend` の選択が必ず使われます（`hermes tools` で設定します。`nous` は管理された Tool Gateway を経由します）。web のバックエンドを一度も選んでいないときにだけ、手元の API キーから自動で決まります。`SEARXNG_URL` だけがあれば SearXNG、`EXA_API_KEY` だけなら Exa、`PARALLEL_API_KEY` だけなら Parallel、`KEENABLE_API_KEY` だけなら Keenable です。**選択も認証情報もまったくない**場合、リクエストはキーなしの無料枠の輪（Exa / Parallel / Firecrawl / Keenable）を順に回り、回数制限に当たると自動で次へ移ります。詳しくは [Web Search guide](/hermes/docs/user-guide/features/web-search/) を参照してください。いったん選択があると、`.env` にキーを足しても経路は変わりません。`hermes tools` で Firecrawl か Keenable を選ぶ場合は、キーがなくても動きます。
+**バックエンドの選び方:** 実行時には、保存された `web.backend` の選択が必ず使われます（`hermes tools` で設定します。`nous` は管理された Tool Gateway を経由します）。web のバックエンドを一度も選んでいないときにだけ、手元の API キーから自動で決まります。`SEARXNG_URL` だけがあれば SearXNG、`EXA_API_KEY` だけなら Exa、`TAVILY_API_KEY` だけなら Tavily、`PARALLEL_API_KEY` だけなら Parallel、`KEENABLE_API_KEY` だけなら Keenable です。**選択も認証情報もまったくない**場合、リクエストはキーなしの無料枠の輪（Exa / Parallel / Firecrawl / Keenable）を順に回り、回数制限に当たると自動で次へ移ります。詳しくは [Web Search guide](/hermes/docs/user-guide/features/web-search/) を参照してください。いったん選択があると、`.env` にキーを足しても経路は変わりません。`hermes tools` で Tavily、Firecrawl、Keenable のいずれかを選ぶ場合は、キーがなくても動きます。
 
 **SearXNG** は、70 以上の検索エンジンに問い合わせる、無料で自前ホストできる、プライバシーを尊重するメタ検索エンジンです。API キーは要らず、`SEARXNG_URL` に自分のインスタンス（たとえば `http://localhost:8080`）を設定するだけです。SearXNG は検索専用なので、`web_extract` には別の抽出のプロバイダが要ります（`web.extract_backend` を設定してください）。Docker での準備の手順は [Web Search setup guide](/hermes/docs/user-guide/features/web-search/) を参照してください。
 
@@ -2703,6 +2704,7 @@ dashboard:
   ws_ping_interval: 20.0      # Non-loopback WebSocket keepalive ping interval (seconds)
   ws_ping_timeout: 20.0       # Non-loopback WebSocket keepalive pong timeout (seconds)
   ws_orphan_reap_grace_s: 20.0 # Grace before a WS-detached session is reaped (seconds)
+  ws_orphan_activity_stale_s: 600.0 # Activity idle bound before a detached RUNNING turn is interrupted (seconds)
   startup_orphan_sweep: true  # Close session rows orphaned by a dead gateway process at boot
 ```
 
@@ -2713,4 +2715,5 @@ dashboard:
 - `oauth` / `basic_auth` / `drain_auth` — 同梱のダッシュボードの認証のプラグインが読む、認証のプロバイダの設定です。切り離しのシークレットそのものはここには設定**しません**。`HERMES_DASHBOARD_DRAIN_SECRET` の環境変数で渡します。認証の準備の全体は [Web Dashboard](/hermes/docs/user-guide/features/web-dashboard/) を参照してください。
 - `ws_ping_interval` / `ws_ping_timeout` — ループバック以外での待ち受けに対する、WebSocket の生存確認の調整です（ループバックの接続では確認を送りません）。20 秒の既定が誤った 1006 の切断を生んでしまう、遅延の大きい経路（Tailscale、遠くの SSH のトンネル）では上げてください。
 - `ws_orphan_reap_grace_s` — WebSocket が外れたセッションを、孤児の回収が引き取るまでの待ち時間です。クライアントのつなぎ直しが遅い場合は、生存確認の値と一緒に上げてください。（`HERMES_TUI_WS_ORPHAN_REAP_GRACE_S` は内部の上書きとして残っています。）
+- `ws_orphan_activity_stale_s`（既定 `600`） — WebSocket が外れた**実行中**のターンについて、その活動の時計（`agent.turn_liveness` の見張りが見るのと同じ時計です。API の待ち、ストリームのトークン、ツールの生存信号）がどれだけ止まっていたら、孤児の回収が割り込むかを決めます。クライアントがいなくても中身が進んでいるターンは、外れたまま最後まで走りきります。ノートパソコンを閉じても、スマートフォンのアプリを裏に回しても、デスクトップが更新されても、健全な長いターンが取り消されることはもうありません。割り込まれるのは、本当に固まったターンだけです。`0` にすると、活動にかかわらず待ち時間の経過で割り込みます（以前のふるまいです）。
 - `startup_orphan_sweep`（既定 `true`） — 上の WebSocket の孤児の回収のタイマーはプロセスの中にあるので、発動する前に gateway が再起動すると（更新、異常終了、systemd）、セッションの行が永遠に開いたまま残ります。`/resume` やダッシュボードに、まぼろしの「作業中」が現れます。gateway が起動するたびに — 標準入出力の TUI（`entry.main`）でも、デスクトップ／ダッシュボードの WebSocket のサイドカー（`handle_ws`）でも — 出所が `tui` / `desktop` / `subagent` で、開始時刻**と**最新のメッセージのどちらもセッションの有効期限（`HERMES_TUI_SESSION_TTL_S`、既定 6 時間）より古い行は、`end_reason: startup_orphan_reap` を付けて閉じられます。メッセージングのプラットフォームのセッション（Telegram、Discord、…）には決して触れません。メモリ上で生きているセッション（すでに再開したクライアント）は対象外で、一掃されたセッションもあとから再開できます。

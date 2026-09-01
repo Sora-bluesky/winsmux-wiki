@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 17eb492b49238326602b3cec30b94e196591a57d
+upstream_blob: e3a8bbff75c2889a1d7b9beb5d9af394896903ac
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -238,12 +238,11 @@ curl -s http://VM_IP:9119/api/status | jq '.auth_required, .auth_providers'
 API キーや資格情報を収めている `.env` を扱います。キーは種類ごとにまとめられています。
 
 - **LLM の提供元** — OpenRouter、Anthropic、OpenAI、DeepSeek など
-- **ツールの API キー** — Browserbase、Firecrawl、Keenable、ElevenLabs など
+- **ツールの API キー** — Browserbase、Firecrawl、Tavily、Keenable、ElevenLabs など
 - **メッセージ連携のプラットフォーム** — Telegram、Discord、Slack のボットの合鍵など
 - **エージェントの設定** — `API_SERVER_ENABLED` のような、秘密ではない環境変数
 
 キーごとに次のものが見えます。
-
 - いま設定されているかどうか（値は伏せた形で少しだけ見えます）
 - 何のためのものかの説明
 - 提供元の登録・キー発行のページへのリンク
