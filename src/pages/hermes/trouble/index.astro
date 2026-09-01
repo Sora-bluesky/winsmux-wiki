@@ -136,7 +136,7 @@ const faqLd = {
 </style>
 
 <script>
-  import { expandQuery, normalizeText } from '../../../lib/search-aliases';
+  import { matchesQuery, normalizeText } from '../../../lib/search-aliases';
   const search = document.getElementById('tb-search') as HTMLInputElement;
   const chips = [...document.querySelectorAll<HTMLButtonElement>('.tb-chip')];
   const rows = [...document.querySelectorAll<HTMLTableRowElement>('.tb-table tbody tr')];
@@ -144,11 +144,10 @@ const faqLd = {
   let cat = 'all';
 
   function apply() {
-    const variants = expandQuery(search.value);
     let shown = 0;
     for (const r of rows) {
       const text = normalizeText(r.dataset.text ?? '');
-      const on = (cat === 'all' || r.dataset.cat === cat) && (!variants.length || variants.some((v) => text.includes(v)));
+      const on = (cat === 'all' || r.dataset.cat === cat) && (matchesQuery(text, search.value));
       r.hidden = !on;
       if (on) shown++;
     }

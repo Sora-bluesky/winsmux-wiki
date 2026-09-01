@@ -122,7 +122,7 @@ const optional = skills.filter((s) => s.source === 'optional').length;
 </style>
 
 <script>
-  import { expandQuery, normalizeText } from '../../../../lib/search-aliases';
+  import { matchesQuery, normalizeText } from '../../../../lib/search-aliases';
   const search = document.getElementById('sk-search') as HTMLInputElement;
   const chips = [...document.querySelectorAll<HTMLButtonElement>('.sk-chip')];
   const rows = [...document.querySelectorAll<HTMLAnchorElement>('.sk-row')];
@@ -130,11 +130,10 @@ const optional = skills.filter((s) => s.source === 'optional').length;
   let tag = 'all';
 
   function apply() {
-    const variants = expandQuery(search.value);
     let shown = 0;
     for (const r of rows) {
       const text = normalizeText(r.dataset.name ?? '');
-      const okQ = !variants.length || variants.some((v) => text.includes(v));
+      const okQ = matchesQuery(text, search.value);
       const okT = tag === 'all' || (r.dataset.tags ?? '').split(' ').includes(tag);
       const on = okQ && okT;
       r.hidden = !on;

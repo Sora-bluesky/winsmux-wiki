@@ -4,7 +4,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import howto from '../../../../data/wiki/howto.json';
 
-type Item = { category: string; want: string; note: string; links: { title: string; url: string }[] };
+type Item = { category: string; want: string; note: string; tags?: string[]; links: { title: string; url: string }[] };
 const categories = howto.categories as string[];
 const items = howto.items as Item[];
 const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.category === c) }));
@@ -13,7 +13,7 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
 <BaseLayout
   rawPath="/hermes/raw/howto.md"
   title="逆引き"
-  description="「〜したい」から、いちばん短い道筋を引く索引。手順は公式準拠の日本語版ページへつながります。"
+  description="やりたいことから該当ページを絞り込む索引。リンク先は公式ドキュメントの日本語版です。"
   sources={['https://hermes-agent.nousresearch.com/docs/']}
   prevOverride={null}
   nextOverride={null}
@@ -21,9 +21,9 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
   <article class="prose">
     <h1>逆引き</h1>
     <p>
-      「〜したい」から、いちばん短い道筋を引きます。全 {howto.items.length} 項目・{howto.categories.length}{' '}
-      分類で、カタカナや全角の表記（テレグラム・ｃｒｏｎ など）でも検索が当たります。手順そのものは公式準拠の日本語版ページにあります。ここに無いことは
-      <a href="/hermes/search/">検索</a> か <a href="/hermes/guide/all/">すべての索引</a> からどうぞ。
+      やりたいことを入力すると、そのためのページに絞り込まれます。全 {howto.items.length} 項目を{howto.categories.length}{' '}
+      つに分けています。日本語でも英語でも、「テレグラム」のようなカタカナでも引けます。ここに無いことは
+      <a href="/hermes/search/">検索</a> か <a href="/hermes/guide/all/">すべての索引</a> から探せます。
     </p>
     <p class="wiki-note">このページはこのサイト独自の索引です。正本は各リンク先の公式ページです。</p>
   </article>
@@ -45,7 +45,7 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
           <h2 class="hw-cat">{c.name}</h2>
           <div class="hw-list">
             {c.items.map((i) => (
-              <div class="hw-row" data-want={`${i.want} ${i.note} ${i.links.map((l) => l.title).join(' ')}`.toLowerCase()}>
+              <div class="hw-row" data-want={`${i.want} ${i.note} ${i.links.map((l) => l.title).join(' ')} ${(i.tags ?? []).join(' ')}`.toLowerCase()}>
                 <div class="hw-main">
                   <span class="hw-want">{i.want}</span>
                   <span class="hw-note">{i.note}</span>
@@ -110,28 +110,30 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
 </style>
 
 <script>
-  import { expandQuery, normalizeText } from '../../../lib/search-aliases';
+  import { filterByQuery, normalizeText } from '../../../lib/search-aliases';
   const search = document.getElementById('hw-search') as HTMLInputElement;
   const chips = [...document.querySelectorAll<HTMLButtonElement>('.hw-chip')];
   const groups = [...document.querySelectorAll<HTMLElement>('.hw-group')];
   const empty = document.getElementById('hw-empty')!;
   let cat = 'all';
 
+  const allRows = groups.flatMap((g) => [...g.querySelectorAll<HTMLElement>('.hw-row')].map((r) => ({ g, r })));
+
   function apply() {
-    const variants = expandQuery(search.value);
+    // 全語一致を先に試し、1件も無ければどれか1語一致に緩める（filterByQuery が判断する）
+    const hit = filterByQuery(allRows.map(({ r }) => normalizeText(r.dataset.want ?? '')), search.value);
     let shown = 0;
-    for (const g of groups) {
+    const perGroup = new Map<HTMLElement, number>();
+    allRows.forEach(({ g, r }, i) => {
       const okC = cat === 'all' || g.dataset.cat === cat;
-      let gShown = 0;
-      for (const r of g.querySelectorAll<HTMLElement>('.hw-row')) {
-        const text = normalizeText(r.dataset.want ?? '');
-        const on = okC && (!variants.length || variants.some((v) => text.includes(v)));
-        r.hidden = !on;
-        if (on) gShown++;
+      const on = okC && hit[i];
+      r.hidden = !on;
+      if (on) {
+        shown++;
+        perGroup.set(g, (perGroup.get(g) ?? 0) + 1);
       }
-      g.hidden = gShown === 0;
-      shown += gShown;
-    }
+    });
+    for (const g of groups) g.hidden = (perGroup.get(g) ?? 0) === 0;
     empty.hidden = shown > 0;
   }
   search.addEventListener('input', apply);

@@ -17,6 +17,9 @@
           "title": "クイックスタート",
           "url": "/hermes/docs/getting-started/quickstart/"
         }
+      ],
+      "tags": [
+        "quickstart"
       ]
     },
     {
@@ -32,6 +35,11 @@
           "title": "対応プラットフォーム",
           "url": "/hermes/docs/getting-started/platform-support/"
         }
+      ],
+      "tags": [
+        "installation",
+        "platform",
+        "support"
       ]
     },
     {
@@ -47,6 +55,12 @@
           "title": "Windows（WSL2）",
           "url": "/hermes/docs/user-guide/windows-wsl-quickstart/"
         }
+      ],
+      "tags": [
+        "native",
+        "quickstart",
+        "windows",
+        "wsl"
       ]
     },
     {
@@ -58,6 +72,9 @@
           "title": "Termux（Android）",
           "url": "/hermes/docs/getting-started/termux/"
         }
+      ],
+      "tags": [
+        "termux"
       ]
     },
     {
@@ -69,6 +86,10 @@
           "title": "学習パス",
           "url": "/hermes/docs/getting-started/learning-path/"
         }
+      ],
+      "tags": [
+        "learning",
+        "path"
       ]
     },
     {
@@ -80,6 +101,9 @@
           "title": "更新とアンインストール",
           "url": "/hermes/docs/getting-started/updating/"
         }
+      ],
+      "tags": [
+        "updating"
       ]
     },
     {
@@ -91,6 +115,9 @@
           "title": "TUI",
           "url": "/hermes/docs/user-guide/tui/"
         }
+      ],
+      "tags": [
+        "tui"
       ]
     },
     {
@@ -106,6 +133,11 @@
           "title": "管理画面",
           "url": "/hermes/docs/user-guide/features/web-dashboard/"
         }
+      ],
+      "tags": [
+        "dashboard",
+        "desktop",
+        "web"
       ]
     },
     {
@@ -117,6 +149,12 @@
           "title": "他のエージェントから取り込む",
           "url": "/hermes/docs/user-guide/import-from-other-agents/"
         }
+      ],
+      "tags": [
+        "agents",
+        "from",
+        "import",
+        "other"
       ]
     },
     {
@@ -128,6 +166,10 @@
           "title": "Telegram",
           "url": "/hermes/docs/user-guide/messaging/telegram/"
         }
+      ],
+      "tags": [
+        "messaging",
+        "telegram"
       ]
     },
     {
@@ -139,6 +181,10 @@
           "title": "Discord",
           "url": "/hermes/docs/user-guide/messaging/discord/"
         }
+      ],
+      "tags": [
+        "discord",
+        "messaging"
       ]
     },
     {
@@ -150,6 +196,10 @@
           "title": "Slack",
           "url": "/hermes/docs/user-guide/messaging/slack/"
         }
+      ],
+      "tags": [
+        "messaging",
+        "slack"
       ]
     },
     {
@@ -161,6 +211,10 @@
           "title": "LINE",
           "url": "/hermes/docs/user-guide/messaging/line/"
         }
+      ],
+      "tags": [
+        "line",
+        "messaging"
       ]
     },
     {
@@ -172,6 +226,10 @@
           "title": "メール",
           "url": "/hermes/docs/user-guide/messaging/email/"
         }
+      ],
+      "tags": [
+        "email",
+        "messaging"
       ]
     },
     {
@@ -183,6 +241,11 @@
           "title": "エージェントに自分のメールアドレスを持たせる",
           "url": "/hermes/docs/guides/agent-email-address/"
         }
+      ],
+      "tags": [
+        "address",
+        "agent",
+        "email"
       ]
     },
     {
@@ -194,6 +257,9 @@
           "title": "メッセージングゲートウェイ",
           "url": "/hermes/docs/user-guide/messaging/"
         }
+      ],
+      "tags": [
+        "messaging"
       ]
     },
     {
@@ -209,6 +275,12 @@
           "title": "音声モードを使う",
           "url": "/hermes/docs/guides/use-voice-mode-with-hermes/"
         }
+      ],
+      "tags": [
+        "mode",
+        "use",
+        "voice",
+        "with"
       ]
     },
     {
@@ -220,6 +292,11 @@
           "title": "Google Workspace",
           "url": "/hermes/docs/user-guide/skills/google-workspace/"
         }
+      ],
+      "tags": [
+        "google",
+        "skills",
+        "workspace"
       ]
     },
     {
@@ -235,6 +312,11 @@
           "title": "MCP を使う",
           "url": "/hermes/docs/guides/use-mcp-with-hermes/"
         }
+      ],
+      "tags": [
+        "mcp",
+        "use",
+        "with"
       ]
     },
     {
@@ -246,6 +328,11 @@
           "title": "毎朝のブリーフィングボット",
           "url": "/hermes/docs/guides/daily-briefing-bot/"
         }
+      ],
+      "tags": [
+        "bot",
+        "briefing",
+        "daily"
       ]
     },
     {
@@ -261,6 +348,11 @@
           "title": "cron で自動化する",
           "url": "/hermes/docs/guides/automate-with-cron/"
         }
+      ],
+      "tags": [
+        "automate",
+        "cron",
+        "with"
       ]
     },
     {
@@ -272,6 +364,10 @@
           "title": "定期実行がうまくいかないとき",
           "url": "/hermes/docs/guides/cron-troubleshooting/"
         }
+      ],
+      "tags": [
+        "cron",
+        "troubleshooting"
       ]
     },
     {
@@ -283,6 +379,11 @@
           "title": "スクリプトだけの定期実行",
           "url": "/hermes/docs/guides/cron-script-only/"
         }
+      ],
+      "tags": [
+        "cron",
+        "only",
+        "script"
       ]
     },
     {
@@ -294,6 +395,11 @@
           "title": "スクリプトの出力を流す",
           "url": "/hermes/docs/guides/pipe-script-output/"
         }
+      ],
+      "tags": [
+        "output",
+        "pipe",
+        "script"
       ]
     },
     {
@@ -309,6 +415,13 @@
           "title": "Webhook で PR にコメント",
           "url": "/hermes/docs/guides/webhook-github-pr-review/"
         }
+      ],
+      "tags": [
+        "agent",
+        "github",
+        "pr",
+        "review",
+        "webhook"
       ]
     },
     {
@@ -328,6 +441,11 @@
           "title": "カンバン",
           "url": "/hermes/docs/user-guide/features/kanban/"
         }
+      ],
+      "tags": [
+        "delegation",
+        "kanban",
+        "patterns"
       ]
     },
     {
@@ -339,6 +457,9 @@
           "title": "持続する目標",
           "url": "/hermes/docs/user-guide/features/goals/"
         }
+      ],
+      "tags": [
+        "goals"
       ]
     },
     {
@@ -354,6 +475,11 @@
           "title": "自動化の型紙の一覧",
           "url": "/hermes/docs/reference/automation-blueprints-catalog/"
         }
+      ],
+      "tags": [
+        "automation",
+        "blueprints",
+        "catalog"
       ]
     },
     {
@@ -365,6 +491,9 @@
           "title": "ブラウザ操作（普段のプロファイル）",
           "url": "/hermes/docs/user-guide/features/browser/"
         }
+      ],
+      "tags": [
+        "browser"
       ]
     },
     {
@@ -376,6 +505,10 @@
           "title": "モデルを設定する",
           "url": "/hermes/docs/user-guide/configuring-models/"
         }
+      ],
+      "tags": [
+        "configuring",
+        "models"
       ]
     },
     {
@@ -391,6 +524,11 @@
           "title": "モデルカタログ",
           "url": "/hermes/docs/reference/model-catalog/"
         }
+      ],
+      "tags": [
+        "catalog",
+        "model",
+        "models"
       ]
     },
     {
@@ -402,6 +540,11 @@
           "title": "Nous Portal",
           "url": "/hermes/docs/integrations/nous-portal/"
         }
+      ],
+      "tags": [
+        "integrations",
+        "nous",
+        "portal"
       ]
     },
     {
@@ -417,6 +560,15 @@
           "title": "Ollama でローカル実行",
           "url": "/hermes/docs/guides/local-ollama-setup/"
         }
+      ],
+      "tags": [
+        "free",
+        "local",
+        "nemotron",
+        "ollama",
+        "run",
+        "setup",
+        "ultra"
       ]
     },
     {
@@ -432,6 +584,14 @@
           "title": "Mac でローカル LLM",
           "url": "/hermes/docs/guides/local-llm-on-mac/"
         }
+      ],
+      "tags": [
+        "llm",
+        "local",
+        "mac",
+        "ollama",
+        "on",
+        "setup"
       ]
     },
     {
@@ -447,6 +607,10 @@
           "title": "プロバイダールーティング",
           "url": "/hermes/docs/user-guide/features/provider-routing/"
         }
+      ],
+      "tags": [
+        "provider",
+        "routing"
       ]
     },
     {
@@ -462,6 +626,13 @@
           "title": "xAI Grok OAuth",
           "url": "/hermes/docs/guides/xai-grok-oauth/"
         }
+      ],
+      "tags": [
+        "gemini",
+        "google",
+        "grok",
+        "oauth",
+        "xai"
       ]
     },
     {
@@ -477,6 +648,12 @@
           "title": "認証情報プール",
           "url": "/hermes/docs/user-guide/features/credential-pools/"
         }
+      ],
+      "tags": [
+        "credential",
+        "fallback",
+        "pools",
+        "providers"
       ]
     },
     {
@@ -488,6 +665,11 @@
           "title": "前より賢くなくなった気がするとき",
           "url": "/hermes/docs/guides/troubleshooting-agent-quality/"
         }
+      ],
+      "tags": [
+        "agent",
+        "quality",
+        "troubleshooting"
       ]
     },
     {
@@ -499,6 +681,9 @@
           "title": "セキュリティ",
           "url": "/hermes/docs/user-guide/security/"
         }
+      ],
+      "tags": [
+        "security"
       ]
     },
     {
@@ -514,6 +699,10 @@
           "title": "1Password",
           "url": "/hermes/docs/user-guide/secrets/onepassword/"
         }
+      ],
+      "tags": [
+        "onepassword",
+        "secrets"
       ]
     },
     {
@@ -525,6 +714,13 @@
           "title": "個人や仕事の端末で動かす",
           "url": "/hermes/docs/guides/secure-hermes-on-a-work-machine/"
         }
+      ],
+      "tags": [
+        "a",
+        "machine",
+        "on",
+        "secure",
+        "work"
       ]
     },
     {
@@ -540,6 +736,11 @@
           "title": "iron-proxy",
           "url": "/hermes/docs/user-guide/egress/iron-proxy/"
         }
+      ],
+      "tags": [
+        "egress",
+        "iron",
+        "proxy"
       ]
     },
     {
@@ -551,6 +752,9 @@
           "title": "Docker で動かす",
           "url": "/hermes/docs/user-guide/docker/"
         }
+      ],
+      "tags": [
+        "docker"
       ]
     },
     {
@@ -562,6 +766,11 @@
           "title": "チェックポイントと /rollback",
           "url": "/hermes/docs/user-guide/checkpoints-and-rollback/"
         }
+      ],
+      "tags": [
+        "and",
+        "checkpoints",
+        "rollback"
       ]
     },
     {
@@ -573,6 +782,10 @@
           "title": "Git ワークツリー",
           "url": "/hermes/docs/user-guide/git-worktrees/"
         }
+      ],
+      "tags": [
+        "git",
+        "worktrees"
       ]
     },
     {
@@ -584,6 +797,10 @@
           "title": "管理者による適用範囲",
           "url": "/hermes/docs/user-guide/managed-scope/"
         }
+      ],
+      "tags": [
+        "managed",
+        "scope"
       ]
     },
     {
@@ -599,6 +816,12 @@
           "title": "メッセージングゲートウェイ",
           "url": "/hermes/docs/user-guide/messaging/"
         }
+      ],
+      "tags": [
+        "assistant",
+        "messaging",
+        "team",
+        "telegram"
       ]
     },
     {
@@ -614,6 +837,13 @@
           "title": "どのファイルが何をするのか",
           "url": "/hermes/docs/user-guide/which-file-does-what/"
         }
+      ],
+      "tags": [
+        "does",
+        "file",
+        "memory",
+        "what",
+        "which"
       ]
     },
     {
@@ -629,6 +859,12 @@
           "title": "SOUL.md を使う",
           "url": "/hermes/docs/guides/use-soul-with-hermes/"
         }
+      ],
+      "tags": [
+        "personality",
+        "soul",
+        "use",
+        "with"
       ]
     },
     {
@@ -644,6 +880,12 @@
           "title": "スキルを使いこなす",
           "url": "/hermes/docs/guides/work-with-skills/"
         }
+      ],
+      "tags": [
+        "creating",
+        "skills",
+        "with",
+        "work"
       ]
     },
     {
@@ -659,6 +901,11 @@
           "title": "オプションスキルの一覧",
           "url": "/hermes/docs/reference/optional-skills-catalog/"
         }
+      ],
+      "tags": [
+        "catalog",
+        "optional",
+        "skills"
       ]
     },
     {
@@ -674,6 +921,11 @@
           "title": "Bot モード",
           "url": "/hermes/docs/user-guide/bot-mode/"
         }
+      ],
+      "tags": [
+        "bot",
+        "mode",
+        "profiles"
       ]
     },
     {
@@ -685,6 +937,9 @@
           "title": "セッション",
           "url": "/hermes/docs/user-guide/sessions/"
         }
+      ],
+      "tags": [
+        "sessions"
       ]
     },
     {
@@ -704,6 +959,12 @@
           "title": "設定",
           "url": "/hermes/docs/user-guide/configuration/"
         }
+      ],
+      "tags": [
+        "cli",
+        "commands",
+        "configuration",
+        "slash"
       ]
     },
     {
@@ -719,6 +980,9 @@
           "title": "コツとベストプラクティス",
           "url": "/hermes/docs/guides/tips/"
         }
+      ],
+      "tags": [
+        "faq"
       ]
     },
     {
@@ -730,6 +994,9 @@
           "title": "今週の更新",
           "url": "/hermes/updates/"
         }
+      ],
+      "tags": [
+        "updates"
       ]
     },
     {
@@ -741,6 +1008,9 @@
           "title": "日本語入力",
           "url": "/hermes/japanese/"
         }
+      ],
+      "tags": [
+        "japanese"
       ]
     }
   ],
