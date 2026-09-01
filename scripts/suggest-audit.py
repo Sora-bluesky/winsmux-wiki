@@ -4,13 +4,21 @@
 # 2. 採取した語を、ページと同じ照合ロジック（expandQuery 相当）で逆引きに当てる
 # 3. 0 件になる語を「穴」として一覧化する
 #
-# 実行: $env:SERPER_API_KEY='op://AI-Provider-Keys/Serper - personal dev API key/credential'
-#       op run -- python scripts/suggest-audit.py
+# 既定では **API を叩かない**。前回採取したサジェスト（data/wiki/suggest-cache.json）で判定し直すだけ。
+# サジェストは日々ほとんど変わらないのに、1回の採取で 225 クレジット使う。照合ロジックを直すたびに
+# 取り直して 2026-09-01 に無料枠 2,500 の 2/3 を溶かした。取り直しは明示的に指示したときだけ。
+#
+# 判定だけやり直す（無料）:  python scripts/suggest-audit.py
+# サジェストを採り直す（225クレジット）:
+#   $env:SERPER_API_KEY='op://AI-Provider-Keys/Serper - personal dev API key/credential'
+#   op run -- python scripts/suggest-audit.py --refresh
 import json, os, re, sys, time, unicodedata, urllib.request
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-KEY = os.environ["SERPER_API_KEY"]
+REFRESH = "--refresh" in sys.argv
+CACHE = None  # 後で ROOT 確定後に設定
+KEY = os.environ.get("SERPER_API_KEY")
 
 SEEDS = [
     "hermes agent", "hermes agent 使い方", "hermes agent 設定", "hermes agent エラー",
@@ -85,26 +93,37 @@ def hits(q, rows, aliases):
     return sum(1 for t in rows if any(any(w in t for w in ws) for ws in groups))
 
 
-# --- 1) 採取 ---
-seen, queries = set(), []
-calls = 0
-for seed in SEEDS:
-    for tail in TAILS:
-        q = seed + tail
-        try:
-            for s in suggest(q):
-                k = norm(s)
-                if k not in seen:
-                    seen.add(k)
-                    queries.append(s.strip())
-            calls += 1
-        except Exception as e:
-            print("ERR", q, repr(e)[:60], file=sys.stderr)
-        time.sleep(0.15)
-
-# hermes と無関係な語（エルメス本家・別サービス）を落とす
-queries = [q for q in queries if "hermes" in norm(q) or "エージェント" in q]
-print(f"# サジェスト採取: {len(queries)} 語 / API 呼び出し {calls} 回")
+# --- 1) サジェストを用意する（既定はキャッシュ・--refresh のときだけ採取） ---
+CACHE = os.path.join(ROOT, "data/wiki/suggest-cache.json")
+if REFRESH:
+    if not KEY:
+        sys.exit("--refresh には SERPER_API_KEY が要ります")
+    seen, queries = set(), []
+    calls = 0
+    for seed in SEEDS:
+        for tail in TAILS:
+            q = seed + tail
+            try:
+                for s in suggest(q):
+                    k = norm(s)
+                    if k not in seen:
+                        seen.add(k)
+                        queries.append(s.strip())
+                calls += 1
+            except Exception as e:
+                print("ERR", q, repr(e)[:60], file=sys.stderr)
+            time.sleep(0.15)
+    queries = [q for q in queries if "hermes" in norm(q) or "エージェント" in q]
+    with open(CACHE, "w", encoding="utf-8") as f:
+        json.dump({"fetched_at": time.strftime("%Y-%m-%dT%H:%M:%S+09:00"),
+                   "calls": calls, "queries": queries}, f, ensure_ascii=False, indent=1)
+    print(f"# サジェスト採取: {len(queries)} 語 / API 呼び出し {calls} 回（消費クレジット ≒ {calls}）")
+else:
+    if not os.path.exists(CACHE):
+        sys.exit("キャッシュがありません。最初の1回だけ --refresh を付けて実行してください")
+    c = json.load(open(CACHE, encoding="utf-8"))
+    queries = c["queries"]
+    print(f"# キャッシュを使用（採取 {c['fetched_at'][:10]}・{len(queries)} 語・API 呼び出し 0 回）")
 
 # --- 2) 逆引きに当てる ---
 rows, aliases = load_wiki()
