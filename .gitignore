@@ -11,3 +11,4 @@ npm-debug.log*
 package-lock.json
 .mirror/
 design/canvas/hermes-wiki-design.html
+.indexnow-state.json
