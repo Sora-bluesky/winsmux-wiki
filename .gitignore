@@ -12,3 +12,6 @@ package-lock.json
 .mirror/
 design/canvas/hermes-wiki-design.html
 .indexnow-state.json
+
+# python バイトコード（scripts/indexnow.py 等）
+__pycache__/
