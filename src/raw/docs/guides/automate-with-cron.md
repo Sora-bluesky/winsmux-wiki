@@ -1,34 +1,34 @@
 ---
-title: "cron で何でも自動化する"
-description: "Hermes の cron を使った実務的な自動化のパターン。監視、レポート、パイプライン、複数スキルの連携"
+title: "cron であらゆる作業を自動化する"
+description: "Hermes の cron を使った実践的な自動化パターン — 監視、レポート、パイプライン、複数スキルの組み合わせ"
 upstream_path: guides/automate-with-cron.md
-upstream_blob: 20bb490207bac3c9d2eee1783146d8a0dee337b3
+upstream_blob: c73d9b39ea328d0b18c2699ffe7acca2749193cb
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron
 ---
 
-# cron で何でも自動化する {#automate-anything-with-cron}
+# cron であらゆる作業を自動化する {#automate-anything-with-cron}
 
-基本は[毎日のブリーフィングボットのチュートリアル](/hermes/docs/guides/daily-briefing-bot/)で扱っています。このガイドはその先の話です。自分の作業に合わせて応用できる、実務的な自動化のパターンを 5 つ紹介します。
+基本は[毎朝のブリーフィング bot チュートリアル](/hermes/docs/guides/daily-briefing-bot/)で説明しています。ここではもう一歩進んで、自分の作業に合わせて応用できる実践的な自動化パターンを5つ紹介します。
 
 機能の全体像は[定期実行タスク（cron）](/hermes/docs/user-guide/features/cron/)を参照してください。
 
-:::info 押さえておきたいこと
-cron のジョブは、今のチャットの記憶を持たない新しいエージェントのセッションで動きます。プロンプトは**それだけで完結している**必要があります。エージェントが知っておくべきことをすべて書き込んでください。
+:::info 重要な考え方
+cron ジョブは真新しいエージェントのセッションで動くため、いま話しているチャットの内容は一切覚えていません。プロンプトは**それ単体で完結**させ、エージェントが知っておくべきことをすべて書き込んでください。
 :::
 
-:::tip LLM が不要なら、トークンを使わない方法が 2 つあります。
-- **定期的な見張り**で、スクリプトが送るべき文面をすでにそのまま出している場合（メモリの警告、ディスクの警告、生存確認など）は、[スクリプトだけの cron ジョブ](/hermes/docs/guides/cron-script-only/)を使います。スケジューラは同じで、LLM は使いません。チャットで Hermes に用意してもらうこともできます。`cronjob` ツールは `no_agent=True` を選ぶべき場面を判断し、スクリプトも書いてくれます。
-- **すでに動いているスクリプトからの単発の通知**（CI の 1 ステップ、コミット後のフック、デプロイのスクリプト、外部でスケジュールされた監視など）には、[`hermes send`](/hermes/docs/guides/pipe-script-output/) を使います。cron の登録をしなくても、標準出力やファイルをそのまま Telegram / Discord / Slack などへ流し込めます。
+:::tip LLM が要らない場合は、トークンを使わない方法が2つあります
+- **繰り返しの見張り役**で、送りたい文面をスクリプトがすでに作れている場合（メモリ不足の警告、ディスク容量の警告、生存確認など）は、[スクリプトだけの cron ジョブ](/hermes/docs/guides/cron-script-only/)を使います。スケジューラは同じで、LLM は動きません。チャットで Hermes に頼めば設定してもらえます。`cronjob` ツールは `no_agent=True` を選ぶべき場面を判断でき、スクリプトも書いてくれます。
+- **すでに動いているスクリプトから1回だけ送りたい**場合（CI の1ステップ、コミット後のフック、デプロイ用スクリプト、外部でスケジュールされた監視など）は、[`hermes send`](/hermes/docs/guides/pipe-script-output/) を使って標準出力やファイルをそのまま Telegram / Discord / Slack などへ流します。cron に登録する必要はありません。
 :::
 
 ---
 
-## パターン 1: Web ページの変更監視 {#pattern-1-website-change-monitor}
+## パターン1: サイトの変更を見張る {#pattern-1-website-change-monitor}
 
-URL を見張り、何かが変わったときにだけ知らせを受け取ります。
+URL を監視して、内容が変わったときだけ知らせてもらいます。
 
-ここで効いてくるのが `script` のパラメータです。実行のたびに事前に Python のスクリプトが走り、その標準出力がエージェントへのコンテキストになります。取得や差分の検出といった機械的な作業はスクリプトが受け持ち、「この変更は注目に値するか」という判断はエージェントが受け持ちます。
+ここで効いてくるのが `script` パラメータです。実行のたびに Python スクリプトが先に動き、その標準出力がエージェントへの材料になります。取得や差分の検出といった機械的な部分はスクリプトが引き受け、「この変更は気にする価値があるか」という判断はエージェントが担当します。
 
 監視用のスクリプトを作ります。
 
@@ -66,21 +66,25 @@ else:
     print("NO_CHANGE")
 ```
 
-cron のジョブを登録します。
+cron ジョブを登録します。次のコマンドは、1時間ごとにスクリプトを走らせて結果を Telegram へ届ける設定を作ります。
 
 ```bash
 /cron add "every 1h" "If the script output says CHANGE DETECTED, summarize what changed on the page and why it might matter. If it says NO_CHANGE, respond with just [SILENT]." --script ~/.hermes/scripts/watch-site.py --name "Pricing monitor" --deliver telegram
 ```
 
 :::tip [SILENT] という小技
-cron で監視するジョブでは、何も変わっていないときは `[SILENT]` とだけ答えるようにエージェントへ指示します。cron の配信は `[SILENT]` を「黙っていろ」の印として扱うので、実際に何かが起きたときにだけ通知が届き、静かな時間帯に無駄な連絡が来ることもありません。
+監視の cron ジョブでは、変化がなかったときは `[SILENT]` とだけ返すようエージェントに指示しておきます。cron の配信は `[SILENT]` を「黙っていろ」の合図として扱うので、実際に何か起きたときだけ通知が届き、静かな時間帯に無駄な通知が飛びません。
+:::
+
+:::tip 失敗のお知らせを共有チャンネルに流さない
+`[SILENT]` が効くのは成功した実行だけです。ジョブが完全に失敗すると、エンジンはそのジョブの配信先へ `⚠️ Cron 'X' failed…` という通知を投げます。人の多い共有チャンネルへ届けているジョブなら、`--failure-deliver local` を付けるとその通知を出さずに済みます（実行の状態は `hermes cron list` と実行履歴で確認できます）。運用向けチャンネルへ回したいときは `--failure-deliver slack:C_OPS` のように指定します。書き方は `--deliver` と同じで、省略した場合は従来どおり失敗も `--deliver` の宛先へ届きます。
 :::
 
 ---
 
-## パターン 2: 週次のレポート {#pattern-2-weekly-report}
+## パターン2: 週次レポート {#pattern-2-weekly-report}
 
-複数の情報源をまとめて、体裁の整った要約にします。これは週に 1 回動いて、自分のホームのチャンネルに届きます。
+複数の情報源をまとめて、体裁の整った要約にします。これは週に1回動いて、ホームチャンネルへ届きます。
 
 ```bash
 /cron add "0 9 * * 1" "Generate a weekly report covering:
@@ -93,7 +97,7 @@ Format as a clean summary with sections for each source. Include links.
 Keep it under 500 words — highlight only what matters." --name "Weekly AI digest" --deliver telegram
 ```
 
-CLI からは次のようにします。
+CLI から登録する場合は次のようにします。
 
 ```bash
 hermes cron create "0 9 * * 1" \
@@ -102,13 +106,13 @@ hermes cron create "0 9 * * 1" \
   --deliver telegram
 ```
 
-`0 9 * * 1` は標準的な cron の書式で、毎週月曜の午前 9 時を意味します。
+`0 9 * * 1` は標準的な cron の書き方で、毎週月曜の午前9時という意味です。
 
 ---
 
-## パターン 3: GitHub リポジトリの見張り {#pattern-3-github-repository-watcher}
+## パターン3: GitHub リポジトリの見張り {#pattern-3-github-repository-watcher}
 
-リポジトリの新しい issue、PR、リリースを監視します。
+リポジトリを監視して、新しい issue・PR・リリースを拾います。
 
 ```bash
 /cron add "every 6h" "Check the GitHub repository NousResearch/hermes-agent for:
@@ -124,15 +128,15 @@ Filter to only items from the last 6 hours. If nothing new, respond with [SILENT
 Otherwise, provide a concise summary of the activity." --name "Repo watcher" --deliver discord
 ```
 
-:::warning それだけで完結したプロンプトにする
-プロンプトの中で `gh` のコマンドをそのまま書いている点に注目してください。cron のエージェントは、前回の実行までの会話を覚えていません。すべて明示的に書き出してください。（永続的な記憶は読み込まれるので、MEMORY.md に保存した長く使う好みは引き継がれます。ただしジョブの成否に関わる細かい情報をそれに頼るのはやめてください。）
+:::warning プロンプトは単体で完結させる
+このプロンプトには `gh` コマンドがそのまま書き込まれている点に注目してください。cron のエージェントには前回までの会話が残っていないので、何もかも書き下します。（永続メモリは読み込まれるので、MEMORY.md に保存した長く使う好みは引き継がれます。ただしジョブの成否に関わる情報をそこに頼らせないでください。）
 :::
 
 ---
 
-## パターン 4: データ収集のパイプライン {#pattern-4-data-collection-pipeline}
+## パターン4: データ収集のパイプライン {#pattern-4-data-collection-pipeline}
 
-一定の間隔でデータを集めてファイルに保存し、時間の経過による傾向を捉えます。このパターンは、収集を担うスクリプトと分析を担うエージェントを組み合わせます。
+一定の間隔でデータを取得してファイルに保存し、時間の経過とともに傾向をつかみます。このパターンは収集を担うスクリプトと、分析を担うエージェントを組み合わせます。
 
 ```python title="~/.hermes/scripts/collect-prices.py"
 
@@ -163,6 +167,8 @@ for r in recent[-6:]:
     print(f"  {r['timestamp']}: BTC=${r['prices']['bitcoin']['usd']}, ETH=${r['prices']['ethereum']['usd']}")
 ```
 
+次のコマンドは、そのスクリプトを1時間ごとに走らせ、出力の分析をエージェントに任せる設定を作ります。
+
 ```bash
 /cron add "every 1h" "Analyze the price data from the script output. Report:
 1. Current prices
@@ -176,13 +182,13 @@ If there's a significant move, explain what happened." \
   --deliver telegram
 ```
 
-機械的な収集はスクリプトが担い、その上に判断の層をエージェントが足します。
+機械的な収集はスクリプトが行い、そこに考える層をエージェントが足す形です。
 
 ---
 
-## パターン 5: 複数のスキルを組み合わせる {#pattern-5-multi-skill-workflow}
+## パターン5: 複数スキルの組み合わせ {#pattern-5-multi-skill-workflow}
 
-込み入った定期タスクでは、スキルを数珠つなぎにします。スキルはプロンプトの実行前に、指定した順で読み込まれます。
+複雑な定期タスクは、スキルをつないで組み立てます。スキルはプロンプトが実行される前に、指定した順で読み込まれます。
 
 ```bash
 # Use the arxiv skill to find papers, then the obsidian skill to save notes
@@ -192,7 +198,7 @@ If there's a significant move, explain what happened." \
   --name "Paper digest"
 ```
 
-ツールから直接指定する場合は次のようにします。
+ツールから直接呼ぶ場合は次のようになります。
 
 ```python
 cronjob(
@@ -205,11 +211,13 @@ cronjob(
 )
 ```
 
-スキルは順に読み込まれます。まず `arxiv`（論文の探し方をエージェントに教える）、次に `obsidian`（メモの書き方を教える）です。その 2 つをつなぐのがプロンプトの役目です。
+スキルは順番に読み込まれます。まず `arxiv` が論文の探し方をエージェントに教え、次に `obsidian` がノートの書き方を教えます。その2つをつなぐのがプロンプトです。
 
 ---
 
-## ジョブを管理する {#managing-your-jobs}
+## ジョブの管理 {#managing-your-jobs}
+
+次のコマンドで、一覧の確認から即時実行、一時停止、内容の編集、削除までひととおり行えます。
 
 ```bash
 # List all active jobs
@@ -237,54 +245,56 @@ cronjob(
 
 ## 配信先 {#delivery-targets}
 
-結果をどこへ届けるかは `--deliver` のフラグで決めます。
+`--deliver` フラグで結果の届け先を決めます。
 
-| 配信先 | 書き方 | 用途 |
+| 宛先 | 例 | 使いどころ |
 |--------|---------|----------|
-| `origin` | `--deliver origin` | ジョブを作ったのと同じチャット（既定） |
+| `origin` | `--deliver origin` | ジョブを作ったチャットと同じ場所（既定） |
 | `local` | `--deliver local` | ローカルのファイルに保存するだけ |
-| `telegram` | `--deliver telegram` | 自分の Telegram のホームチャンネル |
-| `discord` | `--deliver discord` | 自分の Discord のホームチャンネル |
-| `slack` | `--deliver slack` | 自分の Slack のホームチャンネル |
+| `telegram` | `--deliver telegram` | 自分の Telegram ホームチャンネル |
+| `discord` | `--deliver discord` | 自分の Discord ホームチャンネル |
+| `slack` | `--deliver slack` | 自分の Slack ホームチャンネル |
 | 特定のチャット | `--deliver telegram:-1001234567890` | Telegram の特定のグループ |
-| スレッド指定 | `--deliver telegram:-1001234567890:17585` | Telegram の特定のトピックのスレッド |
-| Bot Chat | `--deliver bot-chat` | このプロファイルの正となる Bot Chat に出力を流し込みます。ボットがそれを読んで応答します |
-| Bot Chat（名前を指定） | `--deliver bot-chat:research` | 同じ端末にある別のプロファイルの Bot Chat |
+| スレッド指定 | `--deliver telegram:-1001234567890:17585` | Telegram の特定のトピックスレッド |
+| Bot Chat | `--deliver bot-chat` | このプロファイルの正規の Bot Chat へ流し込む。bot がそれを読んで応答する |
+| Bot Chat（名前つき） | `--deliver bot-chat:research` | 別のローカルプロファイルの Bot Chat |
 
 ### Bot Chat への配信 {#bot-chat-delivery}
 
-`bot-chat` を指定すると、ジョブの出力はプロファイルの正となる「Bot
-Chat」のセッションへ**実際のメッセージとして**届きます。ボットはそれを他の
-メッセージと同じように受け取り、対応が必要なものには対応し、そのチャットで
-返事をします。定期実行の出力を実行履歴に残すだけでなく、ボットに*見せて
-反応させたい*ときはこの配信先を使います。
+`bot-chat` を宛先にすると、ジョブの出力が**そのプロファイルの正規の「Bot
+Chat」セッションへ、本物のメッセージとして**届きます。bot は他のメッセージと
+同じように受け取り、対応が必要なことがあれば手を動かし、そのチャットで返事を
+します。定期実行の結果を実行履歴にしまっておくだけでなく、bot に*見せて反応
+させたい*ときは、この宛先を選びます。
 
-知っておきたい点は次のとおりです。
+知っておきたいことは次のとおりです。
 
-- **その端末の中だけで完結します。** 指定するプロファイルは、スケジューラを
-  動かしている端末に存在している必要があります（`hermes profile list`）。名前は
-  作成時に検証され、別のゲートウェイや別の端末のプロファイルは指定できません。
-- **ボットのターンを 1 回消費します。** 配信のたびに、届け先のボットの Bot Chat で
-  エージェントのターンが 1 回まるごと動きます。頻度の高いジョブでは費用を見込んでおいてください。
-- **組み合わせられます。** `--deliver bot-chat,telegram` とすれば、ボットと自分の
-  Telegram のホームチャンネルの両方に届きます。`all` という指定が bot-chat を含むことはありません。
-- 届いたメッセージには印が付くので、ボットは利用者からではなく定期実行の
-  ジョブから来たものだと分かります。
+- **その端末の中だけで完結します。** 対象のプロファイルは、スケジューラが動いて
+  いる端末に存在している必要があります（`hermes profile list`）。名前は作成時に
+  検証され、別のゲートウェイや端末にあるプロファイルは指定できません。
+- **bot の1ターン分を消費します。** 配信のたびに、対象の bot の Bot Chat で
+  エージェントのターンがまるごと1回動きます。頻度の高いジョブでは予算を意識して
+  ください。
+- **組み合わせられます。** `--deliver bot-chat,telegram` なら bot と自分の
+  Telegram ホームチャンネルの両方へ届きます。`all` という指定が bot-chat 宛てに
+  広がることはありません。
+- 届いたメッセージには接頭辞が付き、あなたからではなく定期実行のジョブから来た
+  ものだと bot にわかるようになっています。
 
 ---
 
 ## コツ {#tips}
 
-**プロンプトはそれだけで完結させる。** cron のジョブの中のエージェントは、これまでの会話を覚えていません。URL、リポジトリ名、体裁の好み、配信の指示は、すべてプロンプトに直接書いてください。
+**プロンプトはそれ単体で完結させます。** cron ジョブのエージェントは、これまでの会話を覚えていません。URL、リポジトリ名、書式の希望、届け方の指示を、プロンプトの中に直接書き込んでください。
 
-**`[SILENT]` を意識して使う。** 監視のジョブでは「何も変わっていなければ `[SILENT]` とだけ答えること」のように指示します。静かな場合にこの印を説明させてはいけません。cron は `[SILENT]` を配信を止めるための印として扱います。
+**`[SILENT]` を意識して使います。** 監視のジョブでは「変化がなければ `[SILENT]` とだけ返すこと」といった指示を入れておきます。静かなときにこの合図の意味を説明させてはいけません。cron は `[SILENT]` を配信を止める印として扱います。
 
-**データ収集にはスクリプトを使う。** `script` のパラメータを使えば、HTTP のリクエスト、ファイルの読み書き、状態の記録といった退屈な部分を Python のスクリプトに任せられます。エージェントが見るのはスクリプトの標準出力だけで、そこに判断を加えます。取得までエージェントにやらせるより安く、確実です。
+**データの収集はスクリプトに任せます。** `script` パラメータを使えば、HTTP のリクエスト、ファイルの読み書き、状態の保持といった退屈な部分を Python スクリプトが引き受けます。エージェントが見るのはスクリプトの標準出力だけで、そこに判断を加えます。エージェント自身に取得させるより安く、しかも確実です。
 
-**`/cron run` で試す。** スケジュールが来るのを待つ前に、`/cron run <job_id>` ですぐ実行し、出力が期待どおりか確かめてください。
+**`/cron run` で試します。** スケジュールが来るのを待つ前に、`/cron run <job_id>` で即座に実行し、出力が期待どおりかを確かめます。
 
-**スケジュールの書き方。** 対応している形式は、相対的な遅延（`30m`）、間隔（`every 2h`）、標準的な cron の書式（`0 9 * * *`）、ISO 形式の時刻（`2025-06-15T09:00:00`）です。`daily at 9am` のような自然言語には対応していないので、代わりに `0 9 * * *` と書いてください。
+**スケジュールの書き方。** 使えるのは、相対的な待ち時間（`30m`）、間隔の指定（`every 2h`）、標準的な cron 式（`0 9 * * *`）、ISO 形式の日時（`2025-06-15T09:00:00`）です。`daily at 9am` のような自然な言い回しには対応していないので、代わりに `0 9 * * *` と書いてください。
 
 ---
 
-*cron の全体像（すべてのパラメータ、例外的なケース、内部の仕組み）については、[定期実行タスク（cron）](/hermes/docs/user-guide/features/cron/)を参照してください。*
+*パラメータの全種類、例外的なふるまい、内部の仕組みまで含めた cron の詳細は、[定期実行タスク（cron）](/hermes/docs/user-guide/features/cron/)を参照してください。*

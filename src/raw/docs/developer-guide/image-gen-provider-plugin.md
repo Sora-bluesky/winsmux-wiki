@@ -1,33 +1,33 @@
 ---
-title: "画像生成プロバイダプラグイン"
-description: "Hermes Agent 用の画像生成バックエンドプラグインの作り方"
+title: "画像生成プロバイダのプラグイン"
+description: "Hermes Agent 向けに画像生成のバックエンドのプラグインを作る方法"
 upstream_path: developer-guide/image-gen-provider-plugin.md
-upstream_blob: 44b509029511de1a34bdb0a5abf280a87ec8bb14
+upstream_blob: a42aa3c97459ba07d622d9659faab085f854ca70
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/image-gen-provider-plugin
 ---
 
-# 画像生成プロバイダプラグインを作る {#building-an-image-generation-provider-plugin}
+# 画像生成プロバイダのプラグインを作る {#building-an-image-generation-provider-plugin}
 
-画像生成プロバイダプラグインは、`image_generate` ツールの呼び出しをすべて引き受けるバックエンドを登録します。DALL·E、gpt-image、Grok、Flux、Imagen、Stable Diffusion、fal、Replicate、手元の ComfyUI 環境など、何でもかまいません。組み込みのプロバイダ（OpenAI、OpenAI-Codex、xAI、FAL、Krea、DeepInfra、OpenRouter）もすべてプラグインとして同梱されています。`plugins/image_gen/<name>/` にディレクトリを置くだけで、新しいものを足すことも、同梱のものを差し替えることもできます。
+画像生成プロバイダのプラグインは、`image_generate` ツールの呼び出しをすべて受け持つバックエンドを登録します。DALL·E、gpt-image、Grok、Flux、Imagen、Stable Diffusion、fal、Replicate、手元の ComfyUI の構成など、何でもかまいません。組み込みのプロバイダ（OpenAI、OpenAI-Codex、xAI、FAL、Krea、DeepInfra、OpenRouter、Meta Model API）もすべてプラグインの形で入っています。新しく足すのも、同梱のものを差し替えるのも、`plugins/image_gen/<name>/` にディレクトリを置くだけです。
 
 :::tip
-画像生成は、Hermes が対応している **バックエンドプラグイン** のひとつです。ほかには（より専用の抽象基底クラスを持つ）[メモリプロバイダプラグイン](/hermes/docs/developer-guide/memory-provider-plugin/)、[コンテキストエンジンプラグイン](/hermes/docs/developer-guide/context-engine-plugin/)、[モデルプロバイダプラグイン](/hermes/docs/developer-guide/model-provider-plugin/) があります。汎用のツール・フック・CLI のプラグインについては [Hermes プラグインを作る](/hermes/docs/developer-guide/plugins/) を参照してください。
+画像生成は、Hermes が対応している**バックエンドのプラグイン**の1つです。ほかには（より専用の基底クラスを持つものとして）[メモリプロバイダのプラグイン](/hermes/docs/developer-guide/memory-provider-plugin/)、[コンテキストエンジンのプラグイン](/hermes/docs/developer-guide/context-engine-plugin/)、[モデルプロバイダのプラグイン](/hermes/docs/developer-guide/model-provider-plugin/) があります。ツールやフック、CLI を足す一般的なプラグインについては [Hermes のプラグインを作る](/hermes/docs/developer-guide/plugins/) にあります。
 :::
 
-## 探索のしくみ {#how-discovery-works}
+## 見つけ方の仕組み {#how-discovery-works}
 
-Hermes は画像生成のバックエンドを次の 3 か所から探します。
+Hermes は画像生成のバックエンドを次の3か所から探します。
 
-1. **同梱** — `<repo>/plugins/image_gen/<name>/`（`kind: backend` として自動で読み込まれ、常に使えます）
-2. **利用者** — `~/.hermes/plugins/image_gen/<name>/`（`plugins.enabled` に加えて有効にします）
-3. **pip** — `hermes_agent.plugins` エントリポイントを宣言したパッケージ
+1. **同梱** — `<repo>/plugins/image_gen/<name>/`（`kind: backend` として自動で読み込まれ、いつでも使えます）
+2. **利用者** — `~/.hermes/plugins/image_gen/<name>/`（`plugins.enabled` で明示的に有効にします）
+3. **pip** — `hermes_agent.plugins` のエントリポイントを宣言しているパッケージ
 
-各プラグインの `register(ctx)` 関数が `ctx.register_image_gen_provider(...)` を呼ぶと、`agent/image_gen_registry.py` のレジストリに登録されます。実際に使うプロバイダは `config.yaml` の `image_gen.provider` で決まり、`hermes tools` が選び方を案内してくれます。
+各プラグインの `register(ctx)` 関数が `ctx.register_image_gen_provider(...)` を呼ぶと、`agent/image_gen_registry.py` の登録簿に載ります。どれを使うかは `config.yaml` の `image_gen.provider` で決まり、`hermes tools` が選ぶ手順を案内してくれます。
 
-`image_generate` ツールの受け口はレジストリに現在のプロバイダを尋ね、そこへ処理を回します。プロバイダが 1 つも登録されていなければ、ツールは `hermes tools` を案内する分かりやすいエラーを返します。
+`image_generate` ツールの外側は、登録簿に「いま使うプロバイダ」を尋ねてそこへ渡します。プロバイダが1つも登録されていない場合は、`hermes tools` を案内する分かりやすいエラーを返します。
 
-## ディレクトリ構成 {#directory-structure}
+## ディレクトリの構成 {#directory-structure}
 
 ```
 plugins/image_gen/my-backend/
@@ -35,11 +35,11 @@ plugins/image_gen/my-backend/
 └── plugin.yaml      # Manifest with kind: backend
 ```
 
-同梱のプラグインならこれで完成です。`~/.hermes/plugins/image_gen/<name>/` に置く利用者のプラグインは、`config.yaml` の `plugins.enabled` に加える（または `hermes plugins enable <name>` を実行する）必要があります。
+同梱のプラグインならこれで完成です。`~/.hermes/plugins/image_gen/<name>/` に置く利用者のプラグインは、`config.yaml` の `plugins.enabled` に足す（または `hermes plugins enable <name>` を実行する）必要があります。
 
-## ImageGenProvider 抽象基底クラス {#the-imagegenprovider-abc}
+## ImageGenProvider の基底クラス {#the-imagegenprovider-abc}
 
-`agent.image_gen_provider.ImageGenProvider` を継承します。必須なのは `name` プロパティと `generate()` メソッドだけで、ほかは妥当な既定の動きが用意されています。
+`agent.image_gen_provider.ImageGenProvider` を継承します。必ず用意するのは `name` プロパティと `generate()` メソッドだけで、それ以外にはちょうどよい既定値が入っています。
 
 ```python
 # plugins/image_gen/my-backend/__init__.py
@@ -219,27 +219,27 @@ requires_env:
   - MY_BACKEND_API_KEY
 ```
 
-プラグインを画像生成の登録経路へ振り分ける目印が `kind: backend` です。`requires_env` は `hermes plugins install` の途中で入力を求められます。
+プラグインを画像生成の登録の経路へ振り分けているのが `kind: backend` です。`requires_env` は `hermes plugins install` の途中で入力を促されます。
 
-## 抽象基底クラスの一覧 {#abc-reference}
+## 基底クラスの一覧 {#abc-reference}
 
-完全な取り決めは `agent/image_gen_provider.py` にあります。よく上書きするメソッドは次のとおりです。
+取り決めの全文は `agent/image_gen_provider.py` にあります。よく差し替えることになるものは次のとおりです。
 
-| 要素 | 必須 | 既定 | 用途 |
+| メンバー | 必須 | 既定値 | 役割 |
 |---|---|---|---|
-| `name` | ✅ | — | `image_gen.provider` の設定で使う固定の id |
-| `display_name` | — | `name.title()` | `hermes tools` に出す表示名 |
-| `is_available()` | — | `True` | 認証情報や依存が足りないときの門番 |
-| `list_models()` | — | `[]` | `hermes tools` のモデル選択画面に出すカタログ |
+| `name` | ✅ | — | `image_gen.provider` の設定で使う変わらない id |
+| `display_name` | — | `name.title()` | `hermes tools` に表示される名前 |
+| `is_available()` | — | `True` | 資格情報や依存が足りないときの入口の判定 |
+| `list_models()` | — | `[]` | `hermes tools` のモデル選択画面に出す一覧 |
 | `default_model()` | — | `list_models()` の先頭 | モデルが設定されていないときの受け皿 |
-| `get_setup_schema()` | — | 最小限 | 選択画面向けの情報と、環境変数の入力案内 |
-| `generate(prompt, aspect_ratio, **kwargs)` | ✅ | — | 呼び出しの本体 |
+| `get_setup_schema()` | — | 最小限 | 選択画面の情報と、環境変数の入力の案内 |
+| `generate(prompt, aspect_ratio, **kwargs)` | ✅ | — | 実際の呼び出し |
 
-## 返す値の形 {#response-format}
+## 戻り値の形 {#response-format}
 
-`generate()` は `success_response()` か `error_response()` で組み立てた辞書を返さなければなりません。どちらも `agent/image_gen_provider.py` にあります。
+`generate()` は `success_response()` または `error_response()` で作った辞書を返す必要があります。どちらも `agent/image_gen_provider.py` にあります。
 
-**成功:**
+**成功したとき:**
 ```python
 success_response(
     image=<url-or-absolute-path>,
@@ -251,7 +251,7 @@ success_response(
 )
 ```
 
-**失敗:**
+**失敗したとき:**
 ```python
 error_response(
     error="human-readable message",
@@ -263,17 +263,17 @@ error_response(
 )
 ```
 
-ツールの受け口はこの辞書を JSON にして LLM へ渡します。エラーもツールの実行結果としてそのまま伝わり、それをどう説明するかは LLM が判断します。
+ツールの外側はこの辞書を JSON にして LLM へ渡します。エラーもツールの結果としてそのまま渡され、それを利用者にどう説明するかは LLM が決めます。
 
-## base64 と URL、どちらの出力にも対応する {#handling-base64-vs-url-output}
+## base64 と URL のどちらで返るか {#handling-base64-vs-url-output}
 
-画像の URL を返すバックエンド（fal、Replicate）もあれば、base64 のデータを返すバックエンド（OpenAI の gpt-image-2）もあります。base64 の場合は `save_b64_image()` を使ってください。`$HERMES_HOME/cache/images/<prefix>_<timestamp>_<uuid>.<ext>` に書き出し、絶対パスの `Path` を返します。それを `str` にして `success_response()` の `image=` に渡します。ゲートウェイ側の配信（Telegram の写真吹き出し、Discord の添付）は URL と絶対パスのどちらも認識します。
+画像の URL を返すバックエンド（fal、Replicate）もあれば、base64 のデータを返すもの（OpenAI の gpt-image-2）もあります。base64 の場合は `save_b64_image()` を使ってください。`$HERMES_HOME/cache/images/<prefix>_<timestamp>_<uuid>.<ext>` に書き出し、絶対パスの `Path` を返します。それを（`str` にして）`success_response()` の `image=` に渡します。ゲートウェイからの配信（Telegram の写真の吹き出し、Discord の添付）は URL と絶対パスのどちらも扱えます。
 
 ## 利用者による上書き {#user-overrides}
 
-同梱のものと同じ `name` プロパティを持つ利用者のプラグインを `~/.hermes/plugins/image_gen/<name>/` に置き、`hermes plugins enable <name>` で有効にしてください。レジストリは後から書いたほうが勝つので、自分の実装が組み込みを置き換えます。`openai` のプラグインを自前のプロキシに向けたいときや、独自のモデルカタログに差し替えたいときに便利です。
+同梱のものと同じ `name` プロパティを持つ利用者のプラグインを `~/.hermes/plugins/image_gen/<name>/` に置き、`hermes plugins enable <name>` で有効にします。登録簿は最後に書いたものが勝つので、自分の版が組み込みを置き換えます。`openai` のプラグインを社内のプロキシへ向けたいときや、モデルの一覧を独自のものに差し替えたいときに便利です。
 
-## テスト {#testing}
+## 試す {#testing}
 
 ```bash
 export HERMES_HOME=/tmp/hermes-imggen-test
@@ -291,15 +291,15 @@ echo "  provider: my-backend" >> $HERMES_HOME/config.yaml
 hermes -z "Generate an image of a corgi in a spacesuit"
 ```
 
-対話的に行うなら、`hermes tools` →「Image Generation」→ `my-backend` を選ぶ → 求められたら API キーを入力、という流れです。
+画面から操作する場合は `hermes tools` →「Image Generation」→ `my-backend` を選ぶ → 求められたら API キーを入力、という流れです。
 
-## 実装の参考 {#reference-implementations}
+## 実装の見本 {#reference-implementations}
 
-- **`plugins/image_gen/openai/__init__.py`** — gpt-image-2 を low／medium／high の 3 段階として、1 つの API モデルに `quality` の値だけ変えた 3 つの仮想モデル ID を割り当てています。1 つのバックエンドで段階の異なるモデルを扱う例、そして config.yaml の優先順位の連鎖の例として良い題材です。
-- **`plugins/image_gen/xai/__init__.py`** — xAI 経由の Grok Imagine。形がだいぶ違います（URL を返し、カタログもより単純）。
-- **`plugins/image_gen/openai-codex/__init__.py`** — Codex 形式の Responses API 版で、OpenAI SDK をそのまま使い、振り分け先のベース URL だけを変えています。
+- **`plugins/image_gen/openai/__init__.py`** — gpt-image-2 を low / medium / high の3段階に分け、`quality` の指定だけを変えて1つの API モデルを共有する3つの仮想モデル ID として見せています。1つのバックエンドの中で段階を分ける書き方と、config.yaml の優先順位の連なりの良い例です。
+- **`plugins/image_gen/xai/__init__.py`** — xAI 経由の Grok Imagine。形はだいぶ違います（URL で返り、一覧も単純です）。
+- **`plugins/image_gen/openai-codex/__init__.py`** — Codex 形式の Responses API 版。OpenAI の SDK をそのまま使い、振り分け先のベース URL だけを変えています。
 
-## pip で配布する {#distribute-via-pip}
+## pip で配る {#distribute-via-pip}
 
 ```toml
 # pyproject.toml
@@ -307,10 +307,10 @@ hermes -z "Generate an image of a corgi in a spacesuit"
 my-backend-imggen = "my_backend_imggen_package"
 ```
 
-`my_backend_imggen_package` はトップレベルに `register` 関数を公開する必要があります。設定全体については、汎用のプラグインの説明にある [pip で配布する](/hermes/docs/developer-guide/plugins/#distribute-via-pip) を参照してください。
+`my_backend_imggen_package` は最上位に `register` 関数を持つ必要があります。設定の全体は、プラグイン全般の案内にある [pip で配る](/hermes/docs/developer-guide/plugins/#distribute-via-pip) を見てください。
 
-## 関連ページ {#related-pages}
+## 関連するページ {#related-pages}
 
 - [画像生成](/hermes/docs/user-guide/features/image-generation/) — 利用者向けの機能の説明
-- [プラグインの概要](/hermes/docs/user-guide/features/plugins/) — プラグインの種類がひととおり分かります
-- [Hermes プラグインを作る](/hermes/docs/developer-guide/plugins/) — 汎用のツール・フック・スラッシュコマンドの説明
+- [プラグインの概要](/hermes/docs/user-guide/features/plugins/) — プラグインの種類がひと目で分かります
+- [Hermes のプラグインを作る](/hermes/docs/developer-guide/plugins/) — ツール、フック、スラッシュコマンドの一般的な案内

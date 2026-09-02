@@ -1,34 +1,34 @@
 ---
 title: "ゲートウェイの内部構造"
-description: "メッセージングゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまでの流れ"
+description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: 30c8cb9e1f09cd13eb9cd7e880e9fa99ebdceda2
+upstream_blob: a96c3d930d3885bb530d6cb8ef7430e713c60996
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
 
 # ゲートウェイの内部構造 {#gateway-internals}
 
-メッセージングゲートウェイは常駐し続けるプロセスで、統一されたアーキテクチャを通じて Hermes を 20 以上の外部メッセージングプラットフォームにつなぎます。
+メッセージングのゲートウェイは、Hermes を20を超える外部のメッセージング基盤へ、ひとつの共通した仕組みでつなぐ常駐プロセスです。
 
-## 主要なファイル {#key-files}
+## 主なファイル {#key-files}
 
 | ファイル | 役割 |
 |------|---------|
-| `gateway/run.py` | `GatewayRunner` — メインループ、スラッシュコマンド、メッセージの振り分け（大きなファイルです。現在の行数は git で確認してください） |
-| `gateway/session.py` | `SessionStore` — 会話の永続化とセッションキーの組み立て |
-| `gateway/delivery.py` | 送信先のプラットフォームやチャンネルへの送信処理 |
+| `gateway/run.py` | `GatewayRunner` — 主となるループ、スラッシュコマンド、メッセージの振り分け（大きなファイルです。現在の行数は git で確認してください） |
+| `gateway/session.py` | `SessionStore` — 会話の保存と、セッションキーの組み立て |
+| `gateway/delivery.py` | 送信先の基盤やチャンネルへのメッセージの配信 |
 | `gateway/pairing.py` | 利用者を認可するための DM ペアリングの流れ |
-| `gateway/channel_directory.py` | cron の配信先として、チャット ID を人が読める名前に対応づけます |
-| `gateway/hooks.py` | フックの検出、読み込み、ライフサイクルイベントの配信 |
-| `gateway/mirror.py` | `send_message` のためのセッションをまたいだメッセージのミラーリング |
-| `gateway/status.py` | プロファイル単位のゲートウェイインスタンスに対するトークンロックの管理 |
-| `gateway/builtin_hooks/` | 常に登録されるフックの拡張ポイント（同梱のものはありません） |
-| `gateway/platform_registry.py` | アダプタのレジストリ、ファクトリ、同梱プラットフォームプラグインの遅延ローダー |
-| `plugins/platforms/<name>/` | 同梱のメッセージングアダプタ（ほとんどのプラットフォームは `adapter.py` + `plugin.yaml`） |
-| `gateway/platforms/` | 共通の `base.py` と、旧来の直接アダプタ（Signal、API サーバー、Webhook など） |
+| `gateway/channel_directory.py` | cron の配信のために、チャット ID を人が読める名前に対応づける |
+| `gateway/hooks.py` | フックの発見、読み込み、ライフサイクルの出来事の振り分け |
+| `gateway/mirror.py` | `send_message` のための、セッションをまたいだメッセージの写し |
+| `gateway/status.py` | プロファイル単位のゲートウェイのためのトークンのロック管理 |
+| `gateway/builtin_hooks/` | 常に登録されるフックの置き場（同梱のものはありません） |
+| `gateway/platform_registry.py` | アダプタの登録簿、生成の仕組み、同梱の基盤プラグインを必要になってから読み込む仕掛け |
+| `plugins/platforms/<name>/` | 同梱のメッセージング用アダプタ（ほとんどの基盤は `adapter.py` と `plugin.yaml`） |
+| `gateway/platforms/` | 共通の `base.py` と、従来からの直接のアダプタ（Signal、API サーバー、webhook など） |
 
-## アーキテクチャの全体像 {#architecture-overview}
+## 全体の構成 {#architecture-overview}
 
 ```text
 ┌─────────────────────────────────────────────────┐
@@ -56,23 +56,23 @@ sources:
 
 ## メッセージの流れ {#message-flow}
 
-どのプラットフォームからメッセージが届いた場合も、次のように処理されます。
+どの基盤からメッセージが届いたときも、次のように進みます。
 
-1. **プラットフォームアダプタ** が生のイベントを受け取り、`MessageEvent` に正規化します
-2. **ベースアダプタ** が実行中セッションのガードを確認します:
-   - このセッションでエージェントが動作中なら → メッセージをキューに入れ、割り込みイベントを立てます
-   - `/approve`、`/deny`、`/stop` なら → ガードを迂回します（その場で処理されます）
-3. **GatewayRunner._handle_message()** がイベントを受け取ります:
-   - `_session_key_for_source()` でセッションキーを決めます（形式: `agent:main:{platform}:{chat_type}:{chat_id}`）
-   - 認可を確認します（下記の「認可」を参照）
-   - スラッシュコマンドかどうかを確認し、そうならコマンドハンドラへ渡します
-   - エージェントがすでに動作中かを確認し、`/stop` や `/status` などのコマンドを横取りします
-   - それ以外なら → `AIAgent` のインスタンスを作り、会話を実行します
-4. **応答** はプラットフォームアダプタを通して返されます
+1. **基盤ごとのアダプタ**が生の出来事を受け取り、`MessageEvent` の形に整えます
+2. **共通のアダプタ**が、動いているセッションの見張りを確かめます。
+   - そのセッションでエージェントが動いていれば → メッセージを待ち行列に入れ、割り込みの合図を立てる
+   - `/approve`、`/deny`、`/stop` なら → 見張りを通り抜けてその場で処理する
+3. **GatewayRunner._handle_message()** が出来事を受け取ります。
+   - `_session_key_for_source()` でセッションキーを決める（形式は `agent:main:{platform}:{chat_type}:{chat_id}`）
+   - 認可を確かめる（後述の「認可」を参照）
+   - スラッシュコマンドかどうかを見て、そうならコマンドの処理へ回す
+   - エージェントがすでに動いていないかを見て、`/stop` や `/status` といったコマンドを横取りする
+   - どれでもなければ → `AIAgent` を作って会話を進める
+4. **応答**が、その基盤のアダプタを通って返されます
 
 ### セッションキーの形式 {#session-key-format}
 
-セッションキーには、振り分けに必要な情報がすべて入っています。
+セッションキーには、振り分けに必要な情報がひととおり入っています。
 
 ```
 agent:main:{platform}:{chat_type}:{chat_id}
@@ -80,27 +80,27 @@ agent:main:{platform}:{chat_type}:{chat_id}
 
 たとえば `agent:main:telegram:private:123456789` のようになります。
 
-スレッドを持つプラットフォーム（Telegram のフォーラムトピック、Discord のスレッド、Slack のスレッド）では、chat_id の部分にスレッド ID が含まれることがあります。**セッションキーを自分で組み立てないでください** — 必ず `gateway/session.py` の `build_session_key()` を使ってください。
+スレッドを持つ基盤（Telegram のフォーラムのトピック、Discord のスレッド、Slack のスレッド）では、chat_id の部分にスレッドの ID が含まれることがあります。**セッションキーを手で組み立ててはいけません**。必ず `gateway/session.py` の `build_session_key()` を使ってください。
 
-### 2 段構えのメッセージガード {#two-level-message-guard}
+### 2段構えのメッセージの見張り {#two-level-message-guard}
 
-エージェントが動作している間、届いたメッセージは 2 つのガードを順に通ります。
+エージェントが動いているあいだ、届いたメッセージは2つの見張りを順に通ります。
 
-1. **1 段目 — ベースアダプタ**（`gateway/platforms/base.py`）: `_active_sessions` を確認します。そのセッションが動作中なら、メッセージを `_pending_messages` に入れて割り込みイベントを立てます。これでゲートウェイランナーに届く *前* にメッセージを捕まえられます。
+1. **1段目 — 共通のアダプタ**（`gateway/platforms/base.py`）: `_active_sessions` を確かめます。そのセッションが動いていれば、メッセージを `_pending_messages` に入れて割り込みの合図を立てます。ここで、ゲートウェイの本体へ届く*前*に捕まえます。
 
-2. **2 段目 — ゲートウェイランナー**（`gateway/run.py`）: `_running_agents` を確認します。特定のコマンド（`/stop`、`/new`、`/queue`、`/status`、`/approve`、`/deny`）を横取りし、それぞれ適切に処理します。それ以外はすべて `running_agent.interrupt()` を呼び出します。
+2. **2段目 — ゲートウェイの本体**（`gateway/run.py`）: `_running_agents` を確かめます。特定のコマンド（`/stop`、`/new`、`/queue`、`/status`、`/approve`、`/deny`）を横取りして、それぞれの処理へ回します。それ以外はすべて `running_agent.interrupt()` を起こします。
 
-エージェントが処理中でもランナーに届く必要のあるコマンド（`/approve` など）は、`await self._message_handler(event)` で **その場で** 処理されます。競合状態を避けるため、バックグラウンドタスクの仕組みを通しません。
+エージェントが塞がっているあいだにも本体へ届かなければならないコマンド（`/approve` など）は、`await self._message_handler(event)` によって**その場で**処理されます。競合を避けるため、背後の処理の仕組みを通しません。
 
 ## 認可 {#authorization}
 
-ゲートウェイは複数の層からなる認可を、次の順序で確認します。
+ゲートウェイは何段階かの確認を、次の順に行います。
 
-1. **プラットフォームごとの全員許可フラグ**（例: `TELEGRAM_ALLOW_ALL_USERS`）— 設定されていれば、そのプラットフォームの利用者は全員認可されます
-2. **プラットフォームの許可リスト**（例: `TELEGRAM_ALLOWED_USERS`）— カンマ区切りのユーザー ID
-3. **DM ペアリング** — 認証済みの利用者が、ペアリングコードで新しい利用者を追加できます
-4. **全体の全員許可**（`GATEWAY_ALLOW_ALL_USERS`）— 設定されていれば、すべてのプラットフォームの利用者が認可されます
-5. **既定: 拒否** — 認可されていない利用者は拒否されます
+1. **基盤ごとの全員許可の指定**（たとえば `TELEGRAM_ALLOW_ALL_USERS`）— 設定されていれば、その基盤の利用者は全員が認可されます
+2. **基盤ごとの許可リスト**（たとえば `TELEGRAM_ALLOWED_USERS`）— 利用者 ID をカンマ区切りで並べます
+3. **DM ペアリング** — 認可済みの利用者が、合言葉を使って新しい利用者を通せます
+4. **全体の全員許可**（`GATEWAY_ALLOW_ALL_USERS`）— 設定されていれば、すべての基盤の利用者が認可されます
+5. **既定は拒否** — 認可されていない利用者は弾かれます
 
 ### DM ペアリングの流れ {#dm-pairing-flow}
 
@@ -111,20 +111,20 @@ New user: ABC123
 Gateway: "Paired! You're now authorized."
 ```
 
-ペアリングの状態は `gateway/pairing.py` が保存し、再起動しても残ります。
+ペアリングの状態は `gateway/pairing.py` に保存され、再起動しても残ります。
 
 ## スラッシュコマンドの振り分け {#slash-command-dispatch}
 
-ゲートウェイのスラッシュコマンドは、すべて同じ解決の流れを通ります。
+ゲートウェイのスラッシュコマンドは、すべて同じ道筋で解決されます。
 
-1. `hermes_cli/commands.py` の `resolve_command()` が、入力を正式な名前に対応づけます（別名や前方一致にも対応します）
-2. その正式な名前が `GATEWAY_KNOWN_COMMANDS` に含まれるかを確認します
-3. `_handle_message()` のハンドラが、正式な名前をもとに処理を振り分けます
-4. 一部のコマンドは設定によって有効・無効が決まります（`CommandDef` の `gateway_config_gate`）
+1. `hermes_cli/commands.py` の `resolve_command()` が、入力を正式な名前に直します（別名や、途中まで打った場合にも対応します）
+2. その正式な名前が `GATEWAY_KNOWN_COMMANDS` にあるかを確かめます
+3. `_handle_message()` の中の処理が、正式な名前に応じて振り分けます
+4. 一部のコマンドは設定によって使えるかどうかが決まります（`CommandDef` の `gateway_config_gate`）
 
-### 実行中エージェントのガード {#running-agent-guard}
+### エージェントが動いているときの見張り {#running-agent-guard}
 
-エージェントが処理している間に実行してはいけないコマンドは、早い段階で拒否されます。
+エージェントが処理をしているあいだに実行してはいけないコマンドは、早い段階で弾かれます。
 
 ```python
 if _quick_key in self._running_agents:
@@ -132,23 +132,23 @@ if _quick_key in self._running_agents:
         return "⏳ Agent is running — wait for it to finish or /stop first."
 ```
 
-迂回できるコマンド（`/stop`、`/new`、`/approve`、`/deny`、`/queue`、`/status`）には特別な処理があります。
+見張りを通り抜けるコマンド（`/stop`、`/new`、`/approve`、`/deny`、`/queue`、`/status`）には、専用の扱いがあります。
 
 ## 設定の読み込み元 {#config-sources}
 
-ゲートウェイは複数の場所から設定を読みます。
+ゲートウェイは、いくつかの場所から設定を読みます。
 
-| 読み込み元 | 何が入っているか |
+| 読み込み元 | そこから得るもの |
 |--------|-----------------|
-| `~/.hermes/.env` | API キー、ボットのトークン、プラットフォームの認証情報 |
-| `~/.hermes/config.yaml` | モデルの設定、ツールの設定、表示に関する設定 |
-| 環境変数 | 上記のいずれも上書きします |
+| `~/.hermes/.env` | API キー、bot のトークン、各基盤の認証情報 |
+| `~/.hermes/config.yaml` | モデルの設定、ツールの設定、表示の好み |
+| 環境変数 | 上のどれでも上書きできます |
 
-CLI が既定値をコードに持つ `load_cli_config()` を使うのに対し、ゲートウェイは YAML ローダーで `config.yaml` を直接読みます。そのため、CLI の既定値には存在するが利用者の設定ファイルには書かれていないキーは、CLI とゲートウェイで挙動が変わることがあります。
+CLI が `load_cli_config()` で組み込みの既定値を使うのに対して、ゲートウェイは YAML の読み込みで `config.yaml` を直接読みます。そのため、CLI の既定値の辞書にはあるが利用者の設定ファイルには書かれていないキーは、CLI とゲートウェイでふるまいが違うことがあります。
 
-## プラットフォームアダプタ {#platform-adapters}
+## 基盤ごとのアダプタ {#platform-adapters}
 
-ほとんどのメッセージングプラットフォームは、`plugins/platforms/<name>/adapter.py` にプラグインのアダプタとして同梱されています。一部の旧来のアダプタは今も `gateway/platforms/` に直接置かれています。いずれも `gateway/platforms/base.py` の `BasePlatformAdapter` を継承します。
+ほとんどのメッセージング基盤は、`plugins/platforms/<name>/adapter.py` の下にプラグインのアダプタとして同梱されています。従来からのアダプタのいくつかは、今も `gateway/platforms/` に直接置かれています。どれも `gateway/platforms/base.py` の `BasePlatformAdapter` を継承しています。
 
 ```text
 plugins/platforms/                  # plugin-packaged adapters (one dir each)
@@ -181,56 +181,58 @@ gateway/platforms/                  # core base + legacy direct adapters
 └── api_server.py        # REST API server adapter
 ```
 
-**遅延読み込み:** 同梱の `kind: platform` プラグインは、`gateway/platform_registry.py` に軽い `register_deferred` ローダーを登録します（`hermes_cli/plugins.py` 経由）。これにより、プラットフォームの SDK はゲートウェイの起動時、送信時、セットアップや状態確認の実行時にだけ読み込まれ、単なる `hermes chat` では読み込まれません。名前を引いたときに該当するアダプタだけが読み込まれ、すべてのプラットフォームを必要とする処理でのみ、待機中のローダーが一括で実行されます。
+**必要になってから読み込む:** 同梱の `kind: platform` のプラグインは、`gateway/platform_registry.py` に軽い `register_deferred` の読み込み口を登録します（`hermes_cli/plugins.py` を通します）。そのため各基盤の SDK は、ゲートウェイが起動するとき、配信するとき、設定や状態の確認を行うときにだけ読み込まれ、ただの `hermes chat` では読み込まれません。名前を引いたときは、そのアダプタ1つだけが読み込まれます。すべての基盤が必要な処理のときだけ、残りの読み込みがまとめて走ります。
 
-コネクタを介する実験的なプラットフォームは、専用のプラットフォームモジュールではなく `gateway/relay/` の汎用リレーアダプタを使います。`GATEWAY_RELAY_URL` または `gateway.relay_url` が設定されていると、ゲートウェイは `relay` プラットフォームを登録し、外向きの WebSocket でコネクタに接続して、同じソケット上で `descriptor`、`inbound`、`interrupt_inbound` のフレームを受け取ります。コネクタは `CapabilityDescriptor` を提示します。Hermes 側からは通常の応答の送信に加えて、トークンを伴わない `follow_up` 操作や割り込みフレームをリレー経由で返せます。ソースに基づいた通信仕様は [`docs/relay-connector-contract.md`](https://github.com/NousResearch/hermes-agent/blob/main/docs/relay-connector-contract.md) にあります。
+試験的な、コネクタを介する基盤は、専用の基盤モジュールではなく `gateway/relay/` の汎用の中継アダプタを使います。`GATEWAY_RELAY_URL` か `gateway.relay_url` が設定されていると、ゲートウェイは `relay` という基盤を登録し、外向きの WebSocket でコネクタにつなぎ、同じ接続の上で `descriptor`、`inbound`、`interrupt_inbound` のフレームを受け取ります。コネクタは `CapabilityDescriptor` で自分にできることを知らせます。Hermes は通常の外向きの返信、トークンを使わない `follow_up` の操作、割り込みのフレームを、この中継を通して返せます。ソースに裏づけられた通信の取り決めは [`docs/relay-connector-contract.md`](https://github.com/NousResearch/hermes-agent/blob/main/docs/relay-connector-contract.md) にあります。
 
 アダプタは共通のインターフェースを実装します。
-- `connect()` / `disconnect()` — 接続の開始と終了
-- `send()` — 外向きのメッセージ送信
-- 受信したイベントは `MessageEvent` に正規化され、`handle_message()` を通じて渡されます
+- `connect()` / `disconnect()` — 接続と切断の管理
+- `send()` — 外向きのメッセージの送信
+- 受け取った出来事は `MessageEvent` の形に整えられ、`handle_message()` を通して渡されます
 
-### トークンロック {#token-locks}
+### トークンのロック {#token-locks}
 
-固有の認証情報で接続するアダプタは、`connect()` で `acquire_scoped_lock()` を、`disconnect()` で `release_scoped_lock()` を呼びます。これにより、2 つのプロファイルが同じボットトークンを同時に使うことを防ぎます。
+固有の認証情報でつなぐアダプタは、`connect()` の中で `acquire_scoped_lock()` を、`disconnect()` の中で `release_scoped_lock()` を呼びます。これで、2つのプロファイルが同じ bot のトークンを同時に使ってしまうのを防ぎます。
 
-## 送信の経路 {#delivery-path}
+ロックがぶつかると `{scope}_lock` が `retryable=True` 付きで出るので、**動作中**の再接続なら、先に持っていた側が抜けたところで回復できます。ただし**起動時**に他所が生きたまま持っている場合は、設定の食い違いです。`gateway/restart.py::is_global_startup_conflict()` が `*_lock` と `lock_conflict` の系統のコードを見分け、起動時の振り分けはその基盤を再試行の列に入れず `fatal` として止めます。他に何もつながっていなければ、ゲートウェイは `78`（`EX_CONFIG`、`gateway_state=startup_failed`）で終了し、監視役が再起動を繰り返さないようにします。本当に一時的な失敗をした相手が他にいる場合は、ゲートウェイは生き続け、その相手だけが再試行します。
 
-外向きの送信（`gateway/delivery.py`）では、次を扱います。
+## 配信の道筋 {#delivery-path}
 
-- **直接の返信** — 送信元のチャットに応答を返します
-- **ホームチャンネルへの配信** — cron ジョブの出力やバックグラウンド処理の結果を、設定したホームチャンネルに送ります
-- **送信先を指定した配信** — 送信エンジンが `telegram:-1001234567890` のように指定するもので、シェルスクリプト向けには [`hermes send` CLI](/hermes/docs/guides/pipe-script-output/) から、cron からは `deliver:` の送信先として使えます
-- **プラットフォームをまたぐ配信** — 元のメッセージとは別のプラットフォームに届けます
+外向きの配信（`gateway/delivery.py`）が受け持つのは次のとおりです。
 
-cron ジョブの配信内容は、ゲートウェイのセッション履歴にはミラーされません。cron 自身のセッションだけに残ります。これはメッセージの交互配置の規則を壊さないための、意図した設計です。
+- **そのまま返信** — 送信元のチャットへ応答を返す
+- **ホームチャンネルへの配信** — cron ジョブの出力や、背後で動いた結果を、決めておいたホームチャンネルへ回す
+- **宛先を指定した配信** — 送信の仕組みに `telegram:-1001234567890` のように指定するもの。シェルスクリプト向けには [`hermes send` の CLI](/hermes/docs/guides/pipe-script-output/) から、cron からは `deliver:` の宛先から使えます
+- **基盤をまたいだ配信** — 元のメッセージとは別の基盤へ届ける
+
+cron ジョブの配信は、ゲートウェイのセッションの履歴には写されません。cron 自身のセッションの中だけに残ります。これは、メッセージの役割が交互に並ぶという決まりを崩さないための、意図した設計です。
 
 ## フック {#hooks}
 
-ゲートウェイのフックは、ライフサイクルイベントに反応する Python モジュールです。
+ゲートウェイのフックは、ライフサイクルの出来事に反応する Python のモジュールです。
 
-### ゲートウェイのフックイベント {#gateway-hook-events}
+### ゲートウェイのフックの出来事 {#gateway-hook-events}
 
-| イベント | 発火するタイミング |
+| 出来事 | 起きるとき |
 |-------|-----------|
 | `gateway:startup` | ゲートウェイのプロセスが起動したとき |
-| `session:start` | 新しい会話セッションが始まったとき |
-| `session:end` | セッションが終わった、または時間切れになったとき |
-| `session:reset` | 利用者が `/new` でセッションをリセットしたとき |
+| `session:start` | 新しい会話のセッションが始まったとき |
+| `session:end` | セッションが終わるか、時間切れになったとき |
+| `session:reset` | 利用者が `/new` でセッションをやり直したとき |
 | `agent:start` | エージェントがメッセージの処理を始めたとき |
-| `agent:step` | エージェントがツール呼び出しの 1 周を終えたとき |
+| `agent:step` | エージェントがツールを呼ぶ1周を終えたとき |
 | `agent:end` | エージェントが処理を終えて応答を返したとき |
-| `command:*` | いずれかのスラッシュコマンドが実行されたとき |
+| `command:*` | スラッシュコマンドが実行されたとき |
 
-フックは `gateway/builtin_hooks/`（拡張ポイントで、配布物では現在は空です。`_register_builtin_hooks()` は何もしないスタブです）と `~/.hermes/hooks/`（利用者が入れたもの）から見つけられます。各フックは `HOOK.yaml` マニフェストと `handler.py` を持つディレクトリです。
+フックは `gateway/builtin_hooks/`（拡張のための置き場です。配布物では今のところ空で、`_register_builtin_hooks()` は何もしない土台だけです）と `~/.hermes/hooks/`（利用者が入れたもの）から見つけられます。フックはそれぞれ、`HOOK.yaml` という定義と `handler.py` を持つディレクトリです。
 
-## メモリプロバイダとの連携 {#memory-provider-integration}
+## メモリのプロバイダとの連携 {#memory-provider-integration}
 
-メモリプロバイダのプラグイン（Honcho など）が有効なとき、次のように動きます。
+メモリのプロバイダのプラグイン（たとえば Honcho）が有効なときは、次のように動きます。
 
-1. ゲートウェイはメッセージごとに、セッション ID を持つ `AIAgent` を作ります
-2. `MemoryManager` が、そのセッションの文脈でプロバイダを初期化します
-3. プロバイダのツール（`honcho_profile`、`viking_search` など）は次の経路で呼ばれます:
+1. ゲートウェイが、セッション ID を添えてメッセージごとに `AIAgent` を作ります
+2. `MemoryManager` が、そのセッションの情報を渡してプロバイダを初期化します
+3. プロバイダのツール（たとえば `honcho_profile`、`viking_search`）は次の道筋で呼ばれます
 
 ```text
 AIAgent._invoke_tool()
@@ -238,39 +240,39 @@ AIAgent._invoke_tool()
     → provider.handle_tool_call(name, args)
 ```
 
-4. セッションの終了やリセット時には `on_session_end()` が発火し、後片付けと最後のデータ書き出しを行います
+4. セッションが終わったりやり直されたりすると、後始末と最後の書き出しのために `on_session_end()` が動きます
 
-### メモリ書き出しのライフサイクル {#memory-flush-lifecycle}
+### メモリの書き出しの流れ {#memory-flush-lifecycle}
 
-セッションがリセット、再開、または時間切れになったとき:
-1. 組み込みのメモリがディスクに書き出されます
-2. メモリプロバイダの `on_session_end()` フックが発火します
-3. 一時的な `AIAgent` が、メモリのためだけの会話を 1 ターン実行します
-4. その文脈は破棄されるか、保管されます
+セッションがやり直され、再開され、あるいは時間切れになったときは次のように進みます。
+1. 組み込みのメモリがディスクへ書き出されます
+2. メモリのプロバイダの `on_session_end()` フックが動きます
+3. 一時的な `AIAgent` が、メモリのためだけの1ターンを走らせます
+4. そのあとコンテキストは捨てられるか、保管されます
 
-## バックグラウンドの保守処理 {#background-maintenance}
+## 背後で動く手入れ {#background-maintenance}
 
-ゲートウェイは、メッセージの処理と並行して定期的な保守を行います。
+ゲートウェイは、メッセージの処理と並行して定期的な手入れを行います。
 
-- **cron の刻み** — ジョブのスケジュールを確認し、時間になったジョブを実行します
-- **セッションの期限切れ** — 放置されたセッションを時間切れ後に片付けます
-- **メモリの書き出し** — セッションが期限切れになる前に、先回りしてメモリを書き出します
-- **キャッシュの更新** — モデル一覧とプロバイダの状態を取り直します
+- **cron の刻み** — ジョブの予定を確かめ、時間の来たものを動かす
+- **セッションの期限切れ** — 放置されたセッションを、時間切れのあとに片づける
+- **メモリの書き出し** — セッションが切れる前に、先回りしてメモリを書き出す
+- **キャッシュの更新** — モデルの一覧とプロバイダの状態を取り直す
 
 ## プロセスの管理 {#process-management}
 
-ゲートウェイは常駐プロセスとして動き、次の方法で管理します。
+ゲートウェイは常駐のプロセスとして動き、次の方法で管理します。
 
-- `hermes gateway start` / `hermes gateway stop` — 手動での操作
-- `systemctl`（Linux）や `launchctl`（macOS）— サービスとしての管理
-- `~/.hermes/gateway.pid` の PID ファイル — プロファイル単位のプロセス管理
+- `hermes gateway start` / `hermes gateway stop` — 手で操作する
+- `systemctl`（Linux）や `launchctl`（macOS）— サービスとして管理する
+- `~/.hermes/gateway.pid` の PID ファイル — プロファイル単位でプロセスを把握する
 
-**プロファイル単位と全体の違い**: `start_gateway()` はプロファイル単位の PID ファイルを使います。`hermes gateway stop` は現在のプロファイルのゲートウェイだけを止めます。`hermes gateway stop --all` は全体を対象に `ps aux` で走査し、すべてのゲートウェイプロセスを止めます（更新時に使われます）。
+**プロファイル単位か全体か**: `start_gateway()` はプロファイル単位の PID ファイルを使います。`hermes gateway stop` は、いま使っているプロファイルのゲートウェイだけを止めます。`hermes gateway stop --all` は全体を対象に `ps aux` で走査し、すべてのゲートウェイのプロセスを止めます（更新のときに使います）。
 
-## 関連ドキュメント {#related-docs}
+## 関連する文書 {#related-docs}
 
-- [セッションストレージ](/hermes/docs/developer-guide/session-storage/)
+- [セッションの保存](/hermes/docs/developer-guide/session-storage/)
 - [cron の内部構造](/hermes/docs/developer-guide/cron-internals/)
 - [ACP の内部構造](/hermes/docs/developer-guide/acp-internals/)
 - [エージェントループの内部構造](/hermes/docs/developer-guide/agent-loop/)
-- [メッセージングゲートウェイ（利用ガイド）](/hermes/docs/user-guide/messaging/)
+- [メッセージングのゲートウェイ（利用者向け）](/hermes/docs/user-guide/messaging/)

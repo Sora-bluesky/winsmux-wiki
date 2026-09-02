@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（208 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（209 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -25,7 +25,7 @@ raw: /hermes/raw/all.md
 - [Nix Setup](/hermes/docs/getting-started/nix-setup/)
 - [Platform Support](/hermes/docs/getting-started/platform-support/)
 
-## Using Hermes（27）
+## Using Hermes（28）
 
 - [CLI](/hermes/docs/user-guide/cli/)
 - [TUI (Ink terminal UI)](/hermes/docs/user-guide/tui/)
@@ -42,6 +42,7 @@ raw: /hermes/raw/all.md
 - [Egress proxy](/hermes/docs/user-guide/egress/)
 - [Egress credential-injection proxy (iron-proxy)](/hermes/docs/user-guide/egress/iron-proxy/)
 - [Import from Other Agents](/hermes/docs/user-guide/import-from-other-agents/)
+- [Local Models](/hermes/docs/user-guide/local-models/)
 - [Managed Scope](/hermes/docs/user-guide/managed-scope/)
 - [Connecting Desktop to Many Hermes Instances](/hermes/docs/user-guide/multi-connection-desktop/)
 - [Running Many Gateways at Once](/hermes/docs/user-guide/multi-profile-gateways/)

@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 41dd223b7f3b90cb1728a8ecbc298645e6442dfa
+upstream_blob: 0bcdcb52cb446a16b4b45eda53d84d381e4293ad
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -79,12 +79,12 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | コマンド | 説明 |
 |---------|-------------|
 | `/config` | 今の設定を表示します |
-| `/model [model-name]` | 今のモデルを表示、または変更します。`/model claude-sonnet-4`、`/model provider:model`（プロバイダの切り替え）、`/model custom:model`（独自のエンドポイント）、`/model custom:name:model`（名前を付けた独自プロバイダ）、`/model custom`（エンドポイントから自動判別）、そしてユーザーが決めた別名（`/model fav`、`/model grok`。[モデルの別名を自分で決める](#custom-model-aliases) を参照）に対応します。フラグは、`--global` で config.yaml に変更を残す、`--session` でセッション限りにする、`--once` で次のターンだけに適用する、`--refresh` でプロバイダのモデル一覧を取り直す、`--provider <name>` でバックエンドを切り替える（`--global` がなければセッション限り）です。単に `/model <name>` と書いた場合は、`model.persist_switch_by_default: true` を設定していない限りセッション限りです。**対話的なピッカー:** 引数なしで `/model` を実行するとプロバイダ→モデルのピッカーが開きます。モデルの一覧では**入力してあいまい検索で絞り込め**（たとえば `grok` と打つと該当するモデルだけになります）、Backspace で絞り込みを縮め、Esc で消せます（またはピッカーを閉じます）。選択は必ず 1 つの具体的なモデルに落ち着きます。絞り込みは一覧を狭めるだけで、推測はしません。**注意:** `/model` は、すでに設定済みのプロバイダの間でしか切り替えられません。新しいプロバイダを追加するには、セッションを抜けてターミナルから `hermes model` を実行してください。**費用に関する注意:** 会話の途中でモデルを切り替えるとプロンプトキャッシュがリセットされます。キャッシュのキーにモデルが含まれるので、次のターンは会話全体を、約 75% 割引のキャッシュ料金ではなく入力の全額で読み直すことになります。想定どおりの挙動で避けようがありませんが、長いセッションでは知っておく価値があります。 |
+| `/model [model-name]` | 今のモデルを表示、または変更します。`/model claude-sonnet-4`、`/model provider:model`（プロバイダの切り替え）、`/model custom:model`（独自のエンドポイント）、`/model custom:name:model`（名前を付けた独自プロバイダ）、`/model custom`（エンドポイントから自動判別）、そしてユーザーが決めた別名（`/model fav`、`/model grok`。[モデルの別名を自分で決める](#custom-model-aliases) を参照）に対応します。フラグは、`--global` で config.yaml に変更を残す、`--session` でセッション限りにする、`--once` で次のターンだけに適用する、`--refresh` でプロバイダのモデル一覧を取り直す、`--provider <name>` でバックエンドを切り替える（`--global` がなければセッション限り）です。単に `/model <name>` と書いた場合は、`model.persist_switch_by_default: true` を設定していない限りセッション限りです。ただし `model.default` や `model.provider` をまだ設定していない場合は例外で、最初に選んだものがそのまま残り、プロファイルにきちんとした既定値ができます。デスクトップの入力欄のピッカーも同じ規則で動きます。**対話的なピッカー:** 引数なしで `/model` を実行するとプロバイダ→モデルのピッカーが開きます。モデルの一覧では**入力してあいまい検索で絞り込め**（たとえば `grok` と打つと該当するモデルだけになります）、Backspace で絞り込みを縮め、Esc で消せます（またはピッカーを閉じます）。選択は必ず 1 つの具体的なモデルに落ち着きます。絞り込みは一覧を狭めるだけで、推測はしません。**注意:** `/model` は、すでに設定済みのプロバイダの間でしか切り替えられません。新しいプロバイダを追加するには、セッションを抜けてターミナルから `hermes model` を実行してください。**費用に関する注意:** 会話の途中でモデルを切り替えるとプロンプトキャッシュがリセットされます。キャッシュのキーにモデルが含まれるので、次のターンは会話全体を、約 75% 割引のキャッシュ料金ではなく入力の全額で読み直すことになります。想定どおりの挙動で避けようがありませんが、長いセッションでは知っておく価値があります。 |
 | `/codex-runtime [auto\|codex_app_server\|on\|off]` | OpenAI / Codex のモデル向けに、任意で使える [Codex app-server ランタイム](/hermes/docs/user-guide/features/codex-app-server-runtime/) を切り替えます。`auto`（既定）は Hermes の標準のチャット補完を使い、`codex_app_server` は `codex app-server` のサブプロセスにターンを渡して、ネイティブのシェル、apply_patch、ChatGPT のサブスクリプション認証、移行済みの Codex プラグインを使えるようにします。次のセッションから有効になります。 |
 | `/personality` | あらかじめ用意された人格を設定します。`/personality none`（または `default` / `neutral`）で重ねた人格を外し、素の振る舞いに戻します。 |
 | `/verbose` | ツールの進捗表示を切り替えます。off → new → all → verbose と順に回ります。設定によって[メッセージングでも有効にできます](#notes)。 |
 | `/focus [on\|off\|status]` | **フォーカス表示**を切り替えます。表示だけを絞るモードで、自分のプロンプトと最終的な返答だけを見せます。`/verbose` と組み合わさり、有効にするとツールの進捗表示が `off` に固定され、それまでのモードを覚えておきます。`/focus off` で元に戻ります。各ターンの終わりに戻し方を示す薄い 1 行（`⋯ 7 tool lines hidden · /focus off to show`）が出て、ステータスバーには `◉ focus` のバッジが出続けるので、絞り込み表示中であることが常にわかります。モデルへの送信内容は何も変わりません。詳細は隠れるだけで、捨てられることはありません。 |
-| `/fast [normal\|fast\|status]` | 高速モード（OpenAI の Priority Processing、Anthropic の Fast Mode）を切り替えます。選べるのは `normal`、`fast`、`status` です。 |
+| `/fast [normal\|fast\|auto\|cold\|status]` | 高速モードです（OpenAI の Priority Processing、Anthropic の Fast Mode）。`fast` はすべてのリクエストが対象、`auto` は各ターンの最初の `agent.fast_auto_seconds`（既定は 60 秒）に出したリクエストだけ、`cold` はセッションの最初のターンに限って同じ時間だけ効きます。既定は `normal`（オフ）です。[高速モード](/hermes/docs/user-guide/configuration/#fast-mode) も見てください。 |
 | `/reasoning [level\|show\|hide\|full\|clamp] [--global]` | 推論の深さと表示を管理します。レベルには `none` / `minimal` / `low` / `medium` / `high` / `xhigh` / `max` / `ultra` があります。`show` / `hide`（または `on` / `off`）で推論の表示を切り替え、`full` と `clamp` で見せ方を調整します。`--global` を付けると深さの設定を config に残します。 |
 | `/skin` | 表示のスキン・テーマを表示、または変更します |
 | `/export [profile] [-o out.tar.gz]` | **CLI 専用。** プロファイルを共有できる `.tar.gz` にまとめます。スキル、記憶、ペルソナ、cron、プラグイン、設定、そして（デスクトップからなら）テーマとレイアウトが入ります。認証情報（`auth.json`、`.env`）は取り除かれます。既定では今使っているプロファイルを対象にし、今のディレクトリに `<name>.tar.gz` を作ります。`hermes profile export` と同じ書庫です。版を管理して更新もできる共有をしたい場合は、代わりに[プロファイル配布](/hermes/docs/user-guide/profile-distributions/)を使ってください。 |
@@ -118,7 +118,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/blueprint [name] [slot=value ...]`（別名: `/bp`） | ひな形から自動化を設定します。引数なしの `/blueprint` はカタログを一覧表示し、`/blueprint <name>` は次のエージェントのターンで案内付きの入力の流れを始め、`/blueprint <name> slot=value ...` はジョブを直接作ります。 |
 | `/curator` | バックグラウンドでのスキルの手入れです。`status`、`run`、`pin`、`archive` があります。[Curator](/hermes/docs/user-guide/features/curator/) も見てください。 |
 | `/kanban <action>` | 複数のプロファイル・複数のプロジェクトにまたがる共同作業ボードを、チャットから離れずに操作します。`hermes kanban` でできることはひととおり使えます: `/kanban list`、`/kanban show t_abc`、`/kanban create "title" --assignee X`、`/kanban comment t_abc "text"`、`/kanban unblock t_abc`、`/kanban dispatch` など。複数ボードにも対応しています: `/kanban boards list`、`/kanban boards create <slug>`、`/kanban boards switch <slug>`、`/kanban --board <slug> <action>`。[Kanban のスラッシュコマンド](/hermes/docs/user-guide/features/kanban/#kanban-slash-command) も見てください。 |
-| `/reload-mcp`（別名: `/reload_mcp`） | config.yaml から MCP サーバーを読み直します |
+| `/reload-mcp`（別名: `/reload_mcp`） | config.yaml から MCP サーバーを読み直し、ツールが使えるかどうかを調べ直します（セッションの途中で用意できた認証情報やデーモンを拾えます） |
 | `/reload-skills`（別名: `/reload_skills`） | `~/.hermes/skills/` を走査し直して、新しく入れたスキルや消したスキルを反映します |
 | `/reload` | `.env` の変数を動いているセッションに読み直します（再起動せずに新しい API キーを拾えます） |
 | `/plugins` | インストール済みのプラグインとその状態を一覧表示します |
@@ -248,7 +248,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/model [provider:model]` | モデルを表示、または変更します。プロバイダの切り替え（`/model zai:glm-5`）、独自のエンドポイント（`/model custom:model`）、名前を付けた独自プロバイダ（`/model custom:local:qwen`）、自動判別（`/model custom`）、ユーザーが決めた別名（`/model fav`、`/model grok`。[モデルの別名を自分で決める](#custom-model-aliases) を参照）に対応します。`--global` を付けると変更を config.yaml に残します。**注意:** `/model` は、すでに設定済みのプロバイダの間でしか切り替えられません。新しいプロバイダを足したり API キーを設定したりするには、チャットの外のターミナルで `hermes model` を使ってください。**費用に関する注意:** セッションの途中でモデルを切り替えるとプロンプトキャッシュがリセットされるので（キャッシュのキーにモデルが含まれます）、次のメッセージは会話全体を入力の全額で読み直すことになります。 |
 | `/codex-runtime [auto\|codex_app_server\|on\|off]` | 任意で使える [Codex app-server ランタイム](/hermes/docs/user-guide/features/codex-app-server-runtime/) を切り替えます。設定は config.yaml の `model.openai_runtime` に残り、キャッシュされたエージェントを破棄するので、次のメッセージから新しいランタイムが使われます。次のセッションから有効になります。 |
 | `/personality [name]` | このセッションに重ねる人格を設定します。`/personality none`（または `default` / `neutral`）で外します。 |
-| `/fast [normal\|fast\|status]` | 高速モード（OpenAI の Priority Processing、Anthropic の Fast Mode）を切り替えます。 |
+| `/fast [normal\|fast\|auto\|cold\|status]` | 高速モードです（OpenAI の Priority Processing、Anthropic の Fast Mode）。`auto` と `cold` は、ターンごと・セッションごとに区切られた高速の時間帯を開きます。 |
 | `/retry` | 直前のメッセージを送り直します。 |
 | `/undo` | 直前のやり取りを取り消します。 |
 | `/sethome`（別名: `/set-home`） | 今のチャットを、配信先となるプラットフォームのホームチャンネルに設定します。 |
@@ -293,7 +293,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/skills [pending\|approve\|reject\|diff\|approval]` | 書き込み承認ゲート（`skills.write_approval`）が保留にした**スキル**の書き込みを確認します。保留中の書き込みごとに 1 行の要点を表示します。`/skills diff <id>` はチャット向けに切り詰められるので、差分の全文は CLI か `~/.hermes/pending/skills/<id>.json` で読んでください。ゲートが有効なとき（または保留中の書き込みが残っているとき）だけ現れます。検索とインストールは CLI 専用のままです。 |
 | `/kanban <action>` | 複数のプロファイル・複数のプロジェクトにまたがる共同作業ボードをチャットから操作します。引数の使い方は CLI とまったく同じです。エージェントが動いている場合の制限を回り込むので、`/kanban unblock t_abc`、`/kanban comment t_abc "…"`、`/kanban list --mine`、`/kanban boards switch <slug>` などはターンの途中でも動きます。`/kanban create …` を使うと、実行元のチャットが新しいタスクのターミナルイベントに自動で登録されます。[Kanban のスラッシュコマンド](/hermes/docs/user-guide/features/kanban/#kanban-slash-command) も見てください。 |
 | `/platform <list\|pause\|resume> [name]` | 動いているゲートウェイのプラットフォームをチャットからそのまま操作します。`/platform list` はすべてのアダプタとその状態（動作中、遮断器による停止中、手動での停止中）を表示し、`/platform pause <name>` はアダプタを外さずに新しいメッセージの配送だけを止め、`/platform resume <name>` は再開して、接続先が正常に戻っていれば作動した遮断器も解除します。 |
-| `/reload-mcp`（別名: `/reload_mcp`） | 設定から MCP サーバーを読み直します。 |
+| `/reload-mcp`（別名: `/reload_mcp`） | 設定から MCP サーバーを読み直し、ツールが使えるかどうかを調べ直します。 |
 | `/verbose` | ツールの進捗表示を順に切り替えます。**メッセージングでは既定で off** です。`config.yaml` で `display.tool_progress_command: true` にすると有効になります。 |
 | `/yolo` | YOLO モードを切り替えます。危険なコマンドの承認確認をすべて飛ばします。 |
 | `/commands [page]` | すべてのコマンドとスキルをページ送りで眺めます。 |

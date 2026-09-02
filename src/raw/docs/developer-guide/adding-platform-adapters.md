@@ -1,41 +1,41 @@
 ---
-title: "プラットフォームアダプターを追加する"
+title: "プラットフォームアダプタを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: 870c6608dd03488244fd2ce1a44fbc8b70165dfc
+upstream_blob: 9572c684a56fbee3985ee32c35d4584835197516
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
 
-# プラットフォームアダプターを追加する {#adding-a-platform-adapter}
+# プラットフォームアダプタを追加する {#adding-a-platform-adapter}
 
-このガイドでは、Hermes のゲートウェイに新しいメッセージングのプラットフォームを足す方法を扱います。プラットフォームアダプターは、Hermes を外部のメッセージングサービス（Telegram、Discord、WeCom など）につなぎ、利用者がそのサービス越しにエージェントとやり取りできるようにするものです。
+このページでは、Hermes のゲートウェイに新しいメッセージングのプラットフォームを足す方法を説明します。プラットフォームアダプタは Hermes を外部のメッセージングサービス（Telegram、Discord、WeCom など）につなぐもので、これがあると利用者はそのサービスからエージェントとやり取りできます。
 
 :::tip
-プラットフォームを足すやり方は2つあります。
-- **プラグイン**（コミュニティ / 第三者にはこちらを勧めます）: プラグインのディレクトリを `~/.hermes/plugins/` に置くだけで、中核のコードには一切手を入れません。下の [プラグインの道筋](#plugin-path-recommended) を見てください。
-- **組み込み**: コード、設定、ドキュメントにまたがる20以上のファイルを書き換えます。下の [組み込みの確認項目](#step-by-step-checklist-built-in-path) を使ってください。
+プラットフォームを足す方法は2つあります。
+- **プラグイン**（第三者や利用者コミュニティにはこちらがおすすめ）: `~/.hermes/plugins/` にプラグインのディレクトリを置くだけです。コア側の書き換えはいりません。下の [プラグインで足す](#plugin-path-recommended) を見てください。
+- **組み込み**: コード、設定、ドキュメントにまたがる20以上のファイルに手を入れます。下の [組み込みで足すときの手順表](#step-by-step-checklist-built-in-path) を使ってください。
 :::
 
-## アーキテクチャの概観 {#architecture-overview}
+## 全体の構造 {#architecture-overview}
 
 ```
 User ↔ Messaging Platform ↔ Platform Adapter ↔ Gateway Runner ↔ AIAgent
 ```
 
-どのアダプターも `gateway/platforms/base.py` の `BasePlatformAdapter` を継承し、次を実装します。
+どのアダプタも `gateway/platforms/base.py` の `BasePlatformAdapter` を継承し、次のものを実装します。
 
-- **`connect()`** — 接続を確立します（WebSocket、ロングポーリング、HTTP サーバーなど）*（抽象メソッド）*
-- **`disconnect()`** — きれいに終了します *（抽象メソッド）*
-- **`send()`** — チャットへテキストのメッセージを送ります *（抽象メソッド）*
-- **`send_typing()`** — 入力中の表示を出します（任意の上書き）
-- **`get_chat_info()`** — チャットのメタデータを返します（任意の上書き）
+- **`connect()`** — 接続を確立します（WebSocket、ロングポーリング、HTTP サーバーなど）*（必須）*
+- **`disconnect()`** — きれいに切断します *（必須）*
+- **`send()`** — チャットへテキストのメッセージを送ります *（必須）*
+- **`send_typing()`** — 入力中の表示を出します（任意で差し替え）
+- **`get_chat_info()`** — チャットの情報を返します（任意で差し替え）
 
-受信したメッセージはアダプターが受け取り、`self.handle_message(event)` を通じて渡します。基底クラスがそれをゲートウェイのランナーへ振り分けます。
+受け取ったメッセージはアダプタが受け止め、`self.handle_message(event)` に渡します。そこから先は基底クラスがゲートウェイのランナーへ流してくれます。
 
-## プラグインの道筋（推奨） {#plugin-path-recommended}
+## プラグインで足す（おすすめ） {#plugin-path-recommended}
 
-プラグインの仕組みを使えば、Hermes の中核のコードを書き換えずにプラットフォームアダプターを足せます。プラグインは、2つのファイルを含むディレクトリです。
+プラグインの仕組みを使えば、Hermes のコードに一切触れずにプラットフォームアダプタを足せます。プラグインは、ファイル2つが入ったディレクトリです。
 
 ```
 ~/.hermes/plugins/my-platform/
@@ -45,7 +45,7 @@ User ↔ Messaging Platform ↔ Platform Adapter ↔ Gateway Runner ↔ AIAgent
 
 ### plugin.yaml {#pluginyaml}
 
-プラグインのメタデータです。`requires_env` と `optional_env` のブロックは、`hermes config` の UI 項目を自動で埋めます（下の [環境変数を出す](#surfacing-env-vars-in-hermes-config) を参照）。
+プラグインの情報を書きます。`requires_env` と `optional_env` の欄は `hermes config` の入力項目を自動で埋めてくれます（下の [環境変数を設定画面に出す](#surfacing-env-vars-in-hermes-config) を見てください）。
 
 ```yaml
 name: my-platform
@@ -68,12 +68,12 @@ optional_env:
 
 #### 送信側のクライアントツール: `provides_tools` {#outbound-client-tools-providestools}
 
-`kind: platform` のプラグインは**遅延読み込み**です。アダプターのモジュール（とその SDK の
-import）が読み込まれるのは、ゲートウェイ、cron、`send_message` のいずれかの経路が
-プラットフォームレジストリにそのプラットフォームを最初に問い合わせたときだけです。プラグインが、
-どのセッションからでもエージェントが呼べる送信側の*クライアントツール*（同梱の `a2a`
-プラグインの `a2a_call` / `a2a_discover` など）も出すなら、それらは専用の `tools.py` に
-`register_tools(ctx)` 関数として置き、マニフェストで宣言してください。
+`kind: platform` のプラグインは**あとまわしで読み込まれます**。アダプタのモジュール（とその
+SDK の読み込み）は、ゲートウェイや cron、`send_message` の経路が
+プラットフォームの登録簿にそのプラットフォームを尋ねた時点で初めて読み込まれます。
+どのセッションからでもエージェントが呼べる送信側の*クライアントツール*も一緒に配りたい場合は
+（同梱の `a2a` プラグインの `a2a_call` や `a2a_discover` などがそれにあたります）、
+それらを専用の `tools.py` に置いて `register_tools(ctx)` 関数を用意し、マニフェストに宣言します。
 
 ```yaml
 provides_tools:
@@ -81,18 +81,18 @@ provides_tools:
   - my_platform_list
 ```
 
-`provides_tools` を宣言すると、Hermes はプラグインの探索時に `tools.py` だけを import し、
-クライアントツールをすべてのプロセス — CLI と TUI を含みます — に登録します。その間も
-アダプターは遅延読み込みのままです。パッケージの `__init__.py` は import を軽く保ち、
-アダプターは `register()` の中から引き込んでください。そうすれば eager
+`provides_tools` を宣言しておくと、Hermes はプラグインを探す段階で `tools.py` だけを
+読み込み、クライアントツールをすべてのプロセス（CLI と TUI を含む）に登録します。
+アダプタのほうはあとまわしのままです。パッケージの `__init__.py` は読み込みを軽く保ち、
+アダプタは `register()` の中から引き込んでください。そうすれば先読みされる側も
 
-遅延読み込み。
+あとまわしのままです。
 
-利用者は他のツールセットと同じ要領で、プラットフォームごとに有効にします。たとえば
-`hermes tools enable my_platform --platform cli` のようにするか、`config.yaml` の
-`platform_toolsets` の下にそのツールセットのキーを並べます。プラグインの
-プラットフォーム名も `--platform` の対象として有効なので、そのプラットフォームで受けた
-セッションに、そこ自身の送信側ツールを与えることもできます。
+ツール群を有効にする手順はほかと同じで、プラットフォームごとに指定します。たとえば
+`hermes tools enable my_platform --platform cli` を実行するか、`config.yaml` の
+`platform_toolsets` の下にツール群のキーを並べます。プラグインのプラットフォーム名も
+`--platform` の指定先として使えるので、そのプラットフォームから始まったセッションに
+送信用のツールを持たせることもできます。
 
 ### adapter.py {#adapterpy}
 
@@ -205,42 +205,42 @@ gateway:
         channel: "#general"
 ```
 
-環境変数でも構いません（アダプターが `__init__` で読みます）。
+環境変数でもかまいません（アダプタが `__init__` の中で読みます）。
 
 ### プラグインの仕組みが自動でやってくれること {#what-the-plugin-system-handles-automatically}
 
-`ctx.register_platform()` を呼ぶと、次の連携部分が自動で面倒を見られます。中核のコードに変更は要りません。
+`ctx.register_platform()` を呼ぶと、次のつなぎ込みは自動で済みます。コア側の書き換えはいりません。
 
-| 連携する部分 | どう動くか |
+| つなぎ込む場所 | 仕組み |
 |---|---|
-| ゲートウェイのアダプター生成 | 組み込みの if/elif の連なりより先にレジストリが参照されます |
-| 設定の読み取り | `Platform._missing_()` がどんなプラットフォーム名も受け付けます |
-| 接続済みプラットフォームの検証 | レジストリの `validate_config()` が呼ばれます |
-| 利用者の認可 | `allowed_users_env` / `allow_all_env` が参照されます |
+| ゲートウェイでのアダプタの生成 | 組み込みの if / elif の並びより先に登録簿を見ます |
+| 設定の読み取り | `Platform._missing_()` がどんなプラットフォーム名でも受け付けます |
+| つながっているプラットフォームの検証 | 登録簿の `validate_config()` が呼ばれます |
+| 利用者の認可 | `allowed_users_env` と `allow_all_env` を見ます |
 | 環境変数だけでの自動有効化 | `env_enablement_fn` が `PlatformConfig.extra` と `home_channel` を埋めます |
-| YAML 設定の橋渡し | `apply_yaml_config_fn` が `config.yaml` のキーを環境変数や extras に翻訳します |
-| cron での配信 | `cron_deliver_env_var` によって `deliver=<name>` が使えます |
-| `hermes config` の UI 項目 | `plugin.yaml` の `requires_env` / `optional_env` が自動で埋めます |
-| 送信エンジン（`tools/send_message_tool.py`） | 稼働中のゲートウェイのアダプター経由で送ります |
-| Webhook でのプラットフォームをまたぐ配信 | 既知のプラットフォームかどうかレジストリが参照されます |
-| `/update` コマンドの利用可否 | `allow_update_command` のフラグ |
-| チャンネルの一覧 | 列挙にプラグインのプラットフォームも含まれます |
-| システムプロンプトへの補足 | `platform_hint` が LLM のコンテキストに差し込まれます |
-| メッセージの分割 | 賢く分けるための `max_message_length` |
-| 個人情報の伏せ字化 | `pii_safe` のフラグ |
+| YAML の設定との橋渡し | `apply_yaml_config_fn` が `config.yaml` のキーを環境変数や extras へ移します |
+| cron からの配信 | `cron_deliver_env_var` があれば `deliver=<name>` が使えます |
+| `hermes config` の入力項目 | `plugin.yaml` の `requires_env` と `optional_env` から自動で埋まります |
+| 送信の仕組み（`tools/send_message_tool.py`） | 動いているゲートウェイのアダプタ経由で送ります |
+| Webhook からのプラットフォームをまたぐ配信 | 既知のプラットフォームとして登録簿が参照されます |
+| `/update` コマンドの許可 | `allow_update_command` のフラグ |
+| チャンネルの一覧 | プラグインのプラットフォームも列挙に含まれます |
+| システムプロンプトへの補足 | `platform_hint` が LLM の文脈に差し込まれます |
+| メッセージの分割 | `max_message_length` を見て賢く分けます |
+| 個人情報の伏せ字 | `pii_safe` のフラグ |
 | `hermes status` | プラグインのプラットフォームを `(plugin)` の印付きで表示します |
-| `hermes gateway setup` | セットアップのメニューにプラグインのプラットフォームが並びます |
-| `hermes tools` / `hermes skills` | プラットフォームごとの設定にプラグインのプラットフォームが入ります |
-| トークンのロック（複数プロフィール） | `connect()` の中で `acquire_scoped_lock()` を使ってください |
-| 設定だけ残ったときの警告 | プラグインが見つからないとき、事情のわかるログが出ます |
+| `hermes gateway setup` | 設定のメニューにプラグインのプラットフォームが並びます |
+| `hermes tools` と `hermes skills` | プラットフォームごとの設定にプラグインのものが出ます |
+| トークンのロック（プロファイルが複数のとき） | 自分の `connect()` の中で `acquire_scoped_lock()` を使ってください |
+| 取り残された設定への警告 | プラグインが見つからないときに分かりやすいログを出します |
 
-## 単体で動く送信経路の拡張 {#standalone-send-path-extensions}
+## 単独で動く送信の口を足す {#standalone-send-path-extensions}
 
-単体で動くプラットフォームも、`ctx.register_platform()` が作る同じ `PlatformEntry` に送信の
-振る舞いを宣言しておけば、`hermes send --to ...` の直接送信や cron の
-`deliver=platform:...` といった、ホスト側が主導する送信に参加できます。
-`send_message` は意図的にエージェントが呼べるモデルのツールにはしていません。プラグインは、
-エージェントが自分から送信を始められるような等価のモデル側の窓口を登録してはいけません。
+単独で動くプラットフォームでも、`ctx.register_platform()` が作る同じ `PlatformEntry` に
+送信の振る舞いを宣言しておけば、`hermes send --to ...` の直接送信や cron の
+`deliver=platform:...` といった、ホスト側から始まる送信に参加できます。
+`send_message` は意図的にエージェントが呼べるモデル用のツールにはしていません。
+エージェントが自分から送信を始められるような同等の口をプラグインが登録してはいけません。
 
 ```python
 async def _send_request(args, chat_id, platform_name, pconfig):
@@ -280,16 +280,16 @@ def register(ctx):
     )
 ```
 
-宛先の解決は、3つの送信の窓口すべてで共通です。まずパーサーの出力が正規化され、チャンネル
-一覧に載っている ID は信頼されます。プラグインのパーサーは、そのプラットフォーム独自の宛先表記を
-明示的に受け入れる必要があります。解決できなかった文字列が、中身を見ないまま素通しされることは
-ありません。知らないプラットフォームや検証に失敗した宛先は、黙って配信を試みる代わりに、事情の
-わかる情報を返します。プラグインの強制再読み込みやプロフィールの切り替えでは、そのプラグインが
-持っていた登録が解除されるので、パーサーやハンドラーが次のプロフィールへ漏れ出すことはありません。
+宛先の解決は、送信の3つの口すべてで共通です。まず解析の結果がそろえられ、チャンネル一覧に
+ある ID はそのまま信頼されます。プラグイン側の解析は、そのプラットフォーム独自の書き方を
+自分ではっきり受け入れる必要があります。解決できなかった文字列が中身を見ないまま素通りする
+ことはありません。知らないプラットフォームや検証に落ちた場合は、黙って送ろうとするのではなく
+理由を返します。プラグインを読み込み直したときやプロファイルを切り替えたときは、そのプラグインが
+持っていた登録が外れるので、解析や処理の関数が次のプロファイルへ漏れることもありません。
 
 ## 環境変数からの自動設定 {#env-driven-auto-configuration}
 
-たいていの利用者は、`config.yaml` を編集するのではなく `~/.hermes/.env` に環境変数を置いてプラットフォームを用意します。`env_enablement_fn` のフックを使うと、アダプターが組み立てられる**前**にプラグインがその環境変数を拾えるので、`hermes gateway status`、`get_connected_platforms()`、cron での配信が、プラットフォームの SDK を読み込まずに正しい状態を見られます。
+多くの利用者は、`config.yaml` を書き換えるのではなく `~/.hermes/.env` に環境変数を置いてプラットフォームを設定します。`env_enablement_fn` というフックを使うと、アダプタが作られる**前**にプラグインがその環境変数を拾えます。おかげで `hermes gateway status`、`get_connected_platforms()`、cron からの配信は、プラットフォームの SDK を読み込まなくても正しい状態を見られます。
 
 ```python
 def _env_enablement() -> dict | None:
@@ -330,7 +330,7 @@ def register(ctx):
 
 ## YAML から環境変数への橋渡し {#yamlenv-config-bridge}
 
-環境変数よりも `config.yaml` のキー（`my_platform.require_mention`、`my_platform.allowed_channels` など）で設定したい利用者もいます。`apply_yaml_config_fn` のフックを使うと、中核の `gateway/config.py` にそのプラットフォームの YAML の構造を覚えさせる代わりに、プラグイン自身がこの翻訳を担えます。
+環境変数よりも `config.yaml` のキー（`my_platform.require_mention`、`my_platform.allowed_channels` など）で設定したい利用者もいます。`apply_yaml_config_fn` というフックを使うと、この読み替えをプラグイン側で受け持てます。コアの `gateway/config.py` に自分のプラットフォームの YAML の形を教え込まずに済みます。
 
 ```python
 
@@ -361,13 +361,13 @@ def register(ctx):
     )
 ```
 
-このフックは `load_gateway_config()` の中で、共通キーをまとめて処理するループ（`unauthorized_dm_behavior`、`notice_delivery`、`reply_prefix`、`require_mention` といったよくあるキーを扱います）のあと、`_apply_env_overrides()` の前に呼ばれます。ですからプラグインが橋渡しすべきなのは、**そのプラットフォーム固有の**キーだけです。
+このフックが呼ばれるのは `load_gateway_config()` の途中で、共通のキーをまとめて処理する部分（`unauthorized_dm_behavior`、`notice_delivery`、`reply_prefix`、`require_mention` などを扱います）の後、`_apply_env_overrides()` の前です。つまりプラグインが橋渡しするのは**そのプラットフォーム固有**のキーだけで済みます。
 
-フックが投げた例外は握りつぶされ、デバッグ用のログに記録されます。行儀の悪いプラグインが、ゲートウェイの設定読み込みを止めてしまうことはありません。
+このフックが投げた例外は握りつぶされ、デバッグの記録に残るだけです。行儀の悪いプラグインがあっても、ゲートウェイの設定の読み込みが止まることはありません。
 
-## cron での配信 {#cron-delivery}
+## cron からの配信 {#cron-delivery}
 
-`deliver=my_platform` の cron ジョブを、設定済みのホームチャンネルへ届けたいときは、既定のチャット / ルーム / チャンネルの ID を持つ環境変数の名前を `cron_deliver_env_var` に設定します。
+`deliver=my_platform` と書いた cron ジョブを、設定してあるホームチャンネルへ届けたい場合は、既定のチャット・ルーム・チャンネルの ID が入っている環境変数の名前を `cron_deliver_env_var` に指定します。
 
 ```python
 ctx.register_platform(
@@ -377,11 +377,11 @@ ctx.register_platform(
 )
 ```
 
-スケジューラは、`deliver=my_platform` のジョブでホームの宛先を決めるときにこの環境変数を読み、あわせて `_KNOWN_DELIVERY_PLATFORMS` のような確認でも、そのプラットフォームを妥当な cron の宛先として扱います。`env_enablement_fn` が `home_channel` の辞書を埋めているなら（上を参照）そちらが優先され、`cron_deliver_env_var` は環境変数からの設定より前に走る cron ジョブのためのフォールバックになります。
+スケジューラは `deliver=my_platform` のジョブでホームの宛先を決めるときにこの環境変数を読み、`_KNOWN_DELIVERY_PLATFORMS` に類する確認でも、そのプラットフォームを正しい宛先として扱います。`env_enablement_fn` が `home_channel` の辞書を用意している場合（前述）はそちらが優先されます。`cron_deliver_env_var` は、環境変数からの設定が入る前に走る cron ジョブのための受け皿です。
 
-### 別プロセスからの cron 配信 {#out-of-process-cron-delivery}
+### ゲートウェイとは別のプロセスからの cron 配信 {#out-of-process-cron-delivery}
 
-`cron_deliver_env_var` は、そのプラットフォームを `deliver=` の宛先として認識させます。cron ジョブがゲートウェイとは別のプロセスで走るとき（つまり `hermes cron run` を `hermes gateway` と別に動かすとき）に実際の送信まで成功させるには、`standalone_sender_fn` を登録してください。
+`cron_deliver_env_var` を指定すると、そのプラットフォームは `deliver=` の宛先として認識されます。さらに、cron のジョブがゲートウェイとは別のプロセスで動く場合（`hermes gateway` とは別に `hermes cron run` を回す場合）にも実際の送信を成功させるには、`standalone_sender_fn` を登録します。
 
 ```python
 async def _standalone_send(
@@ -406,13 +406,13 @@ ctx.register_platform(
 )
 ```
 
-このフックが要る理由はこうです。組み込みのプラットフォーム（Telegram、Discord、Slack など）は `tools/send_message_tool.py` に REST の直接呼び出しを備えているので、ゲートウェイを同じプロセスに抱えなくても cron から配信できます。一方プラグインのプラットフォームは、これまで `_gateway_runner_ref()` に頼っていました。これはゲートウェイのプロセスの外では `None` を返すため、`standalone_sender_fn` がないと cron 側の送信は `No live adapter for platform '<name>'` で失敗します。
+このフックが要る理由は次のとおりです。組み込みのプラットフォーム（Telegram、Discord、Slack など）は `tools/send_message_tool.py` に REST を直接叩く補助を持っているので、ゲートウェイを同じプロセスに抱えていなくても cron から配信できます。プラグインのプラットフォームはこれまで `_gateway_runner_ref()` に頼っていて、これはゲートウェイのプロセスの外では `None` を返します。そのため `standalone_sender_fn` がないと、cron 側の送信は `No live adapter for platform '<name>'` で失敗します。
 
-この関数は、稼働中のアダプターが受け取るのと同じ `pconfig` と `chat_id` に加えて、任意のキーワード引数 `thread_id`、`media_files`、`force_document` を受け取ります。`{"success": True, "message_id": ...}` を返せば配信成功として扱われ、`{"error": "..."}` を返すとそのメッセージが cron の `delivery_errors` に現れます。関数の中で投げられた例外は振り分け側が捕まえ、`Plugin standalone send failed: <reason>` として報告されます。実装の見本は `plugins/platforms/{irc,teams,google_chat}/adapter.py` にあります。
+この関数には、動いているアダプタが受け取るのと同じ `pconfig` と `chat_id` に加えて、任意のキーワード引数として `thread_id`、`media_files`、`force_document` が渡されます。`{"success": True, "message_id": ...}` を返せば配信できたものとして扱われ、`{"error": "..."}` を返すとその文言が cron の `delivery_errors` に現れます。関数の中で投げた例外は呼び出し側が受け止め、`Plugin standalone send failed: <reason>` として報告します。実装の見本は `plugins/platforms/{irc,teams,google_chat}/adapter.py` にあります。
 
-## 環境変数を `hermes config` に出す {#surfacing-env-vars-in-hermes-config}
+## `hermes config` に環境変数を出す {#surfacing-env-vars-in-hermes-config}
 
-`hermes_cli/config.py` は import の時点で `plugins/platforms/*/plugin.yaml` を走査し、`requires_env` と（任意の）`optional_env` のブロックから `OPTIONAL_ENV_VARS` を自動で埋めます。辞書の詳しい書き方を使えば、説明文、入力の促し、パスワード扱いのフラグ、URL をきちんと渡せます。CLI のセットアップ画面がそれを勝手に拾ってくれます。
+`hermes_cli/config.py` は読み込みの時点で `plugins/platforms/*/plugin.yaml` を走査し、`requires_env` と（あれば）`optional_env` の欄から `OPTIONAL_ENV_VARS` を自動で埋めます。辞書の形で書けば、説明文、入力を促す文言、伏せ字にするかどうか、URL まで渡せます。CLI の設定画面はそれをそのまま使ってくれます。
 
 ```yaml
 # plugins/platforms/my_platform/plugin.yaml
@@ -444,23 +444,23 @@ optional_env:
     password: false
 ```
 
-**使える辞書のキー:** `name`（必須）、`description`、`prompt`、`url`、`password`（真偽値。省略すると `*_TOKEN` / `*_SECRET` / `*_KEY` / `*_PASSWORD` / `*_JSON` の語尾から自動で判定します）、`category`（既定は `"messaging"`）。
+**辞書で使えるキー:** `name`（必須）、`description`、`prompt`、`url`、`password`（真偽値。省くと `*_TOKEN` / `*_SECRET` / `*_KEY` / `*_PASSWORD` / `*_JSON` という末尾から自動で判定します）、`category`（既定は `"messaging"`）。
 
-素の文字列で書く形（`- MY_PLATFORM_TOKEN`）も引き続き使えます。その場合はプラグインの `label` から一般的な説明文が自動で作られます。同じ変数がすでに `OPTIONAL_ENV_VARS` に直接書かれているなら、そちらが勝ちます（従来の動きを保つため）。plugin.yaml の形はフォールバックとして働きます。
+文字列だけを書く形（`- MY_PLATFORM_TOKEN`）も使えます。その場合はプラグインの `label` から一般的な説明が自動で作られます。同じ変数が `OPTIONAL_ENV_VARS` に直接書かれている場合はそちらが勝ち（従来との互換のため）、plugin.yaml の内容は受け皿になります。
 
-## LLM が遅いときのプラットフォーム別の見せ方 {#platform-specific-slow-llm-ux}
+## LLM が遅いときの、プラットフォームごとの見せ方 {#platform-specific-slow-llm-ux}
 
-プラットフォームによっては、LLM の応答が遅いときの見せ方を変えざるを得ない制約があります。
+プラットフォームによっては、LLM の応答が遅いときの見せ方を変えなければならない制約があります。
 
-- **LINE** は、受信したイベントからおよそ60秒で期限切れになる、1回しか使えない*返信トークン*を発行します。そのトークンを使った返信は無料ですが、従量課金の Push API に切り替えると無料ではありません。期限までに LLM が終わらなければ、「有料の Push の枠を使う」か「期限切れの前に返信トークンでもっと気の利いたことをする」かの選択になります。
-- **WhatsApp** は24時間でセッションを非アクティブと見なし、それ以降はテンプレートのメッセージしか受け付けません。
-- **SMS** には入力中の表示や途中経過という概念がないので、長い応答はボットが落ちているようにしか見えません。
+- **LINE** はメッセージを受け取ってからおよそ60秒で切れる、1回だけ使える*返信用トークン*を発行します。このトークンでの返信は無料ですが、代わりに従量課金の Push API を使うと有料です。締め切りまでに LLM が終わらなければ、「有料の Push の枠を使う」か「切れる前に返信用トークンをもっとうまく使う」かの選択になります。
+- **WhatsApp** は24時間で会話を非活性にし、それ以降はテンプレートのメッセージしか受け付けません。
+- **SMS** には入力中の表示も、途中経過の更新もありません。応答が長いと、ボットが落ちているようにしか見えません。
 
-これらは、基底の `BasePlatformAdapter` には先読みできない現実の制約です。プラグインの窓口は、キーワード引数を増やさずに、基底の入力中ループの上へプラットフォーム固有の見せ方を重ねられる余地を、意図的に残しています。
+これらは実在する制約で、基底の `BasePlatformAdapter` の側からは見通せません。プラグインの口は、引数を増やすことなく、基本の入力中表示のループの上にプラットフォームごとの見せ方を重ねられるよう、あえて余地を残してあります。
 
-### 型: `_keep_typing` を継承して途中の見せ方を重ねる {#pattern-subclass-keeptyping-to-layer-mid-flight-ux}
+### 手法: `_keep_typing` を継承して途中の見せ方を重ねる {#pattern-subclass-keeptyping-to-layer-mid-flight-ux}
 
-`BasePlatformAdapter._keep_typing` は入力中の表示を保つ心拍です。LLM が生成している間はバックグラウンドのタスクとして走り、応答が届いた時点で取り消されます。あるしきい値でプラットフォーム固有の振る舞いを重ねたいとき（たとえば45秒で「まだ考えています」の吹き出しを送るとき）は、アダプターで `_keep_typing` を上書きし、`super()._keep_typing()` と並べて自前のタスクを走らせ、`finally` で片付けます。
+`BasePlatformAdapter._keep_typing` は入力中の表示を出し続ける心拍のような処理で、LLM が生成しているあいだ背景の処理として動き、応答を届けた時点で打ち切られます。ある時間を超えたときにプラットフォーム固有の動きを足したい場合（たとえば45秒で「まだ考えています」の吹き出しを出す場合）は、自分のアダプタで `_keep_typing` を差し替え、`super()._keep_typing()` と並べて自前の処理を走らせ、`finally` で片付けます。
 
 ```python
 class LineAdapter(BasePlatformAdapter):
@@ -492,19 +492,19 @@ class LineAdapter(BasePlatformAdapter):
                     pass
 ```
 
-要点です。
+大事なところは次の3つです。
 
-- **必ず `await super()._keep_typing(...)` を呼ぶこと。** 入力中の心拍はそれ自体に価値があります。置き換えるのではなく、上に重ねてください。
-- **付け足したタスクは `finally` で片付けること。** LLM が終わったとき（あるいは `/stop` で走行が取り消されたとき）、ゲートウェイは入力中のタスクを取り消します。付け足したタスクもその取り消しを受け取らないと、居残って、応答をすでに届けたあとに動いてしまいます。
-- **`interrupt_session_activity` と組にして**、利用者が `/stop` を出したときに宙に浮いた表示を片付けます。LINE なら、ポストバックのキャッシュの項目を `PENDING` から `ERROR` へ移すことで、残っている「Get answer」のボタンが堂々巡りせず「走行は中断されました」と伝えるようになります。
+- **必ず `await super()._keep_typing(...)` を呼んでください。** 入力中の表示はそれ自体が役に立ちます。置き換えるのではなく、その上に重ねます。
+- **自前の処理は `finally` で片付けてください。** LLM が終わったとき（あるいは `/stop` で打ち切られたとき）、ゲートウェイは入力中の表示の処理を止めます。自前の処理もその打ち切りを受け取らないと居残ってしまい、応答をすでに届けた後で動いてしまうことがあります。
+- **`interrupt_session_activity` と組み合わせてください。** 利用者が `/stop` を打ったときに、取り残された表示の状態を片付けるためです。LINE の場合は、キャッシュの項目を `PENDING` から `ERROR` に移し、残っている「Get answer」のボタンが堂々巡りにならず「実行は中断されました」と返すようにします。
 
-### 型: `send` を継承して、すぐ送らずキャッシュに回す {#pattern-subclass-send-to-route-through-a-cache-instead-of-sending-immediately}
+### 手法: `send` を継承して、すぐ送らずキャッシュを通す {#pattern-subclass-send-to-route-through-a-cache-instead-of-sending-immediately}
 
-応答が遅いときの見せ方として、あとから取り出せるように応答をキャッシュするなら（LINE のポストバックの流れです）、上書きした `send` は3つの状況を見分ける必要があります。
+遅い応答の見せ方として、応答をいったん貯めておいて後から取り出させる場合（LINE のポストバックの流れ）、差し替えた `send` は次の3つを見分ける必要があります。
 
-1. **そのチャットでポストバックが保留中** → request_id のもとに応答をキャッシュし、目に見えるものは送りません。
-2. **システムからの受領の合図**（`⚡ Interrupting`、`⏳ Queued`、`⏩ Steered`） → キャッシュを迂回して目に見える形で送り、自分の入力にゲートウェイが応えたことを利用者に伝えます。
-3. **ふつうの応答** → いつもどおり返信トークンか Push で送ります。
+1. **そのチャットで待機中のポストバックがある** → 応答を request_id のもとに貯め、目に見えるものは何も送りません。
+2. **仕組み側の受付の合図**（`⚡ Interrupting`、`⏳ Queued`、`⏩ Steered`）→ キャッシュを通さずそのまま送り、自分の入力にゲートウェイが反応したことが利用者に見えるようにします。
+3. **通常の応答** → いつもどおり返信用トークンか Push で送ります。
 
 ```python
 async def send(self, chat_id: str, content: str, **kw) -> SendResult:
@@ -517,41 +517,41 @@ async def send(self, chat_id: str, content: str, **kw) -> SendResult:
     return await self._send_text_chunks(chat_id, content, force_push=False)
 ```
 
-`_SYSTEM_BYPASS_PREFIXES` は、ゲートウェイ自身が受領を知らせるときの接頭辞（`⚡`、`⏳`、`⏩`、`💾`）です。キャッシュ側の状態がどうであれ、これらは必ず目に見える形で通してください。
+`_SYSTEM_BYPASS_PREFIXES` は、ゲートウェイ自身が受付の合図に使う接頭辞です（`⚡`、`⏳`、`⏩`、`💾`）。貯めておく仕組みの状態がどうであれ、これらは必ず目に見える形で通してください。
 
-### この型が向いている場面 {#when-this-pattern-is-appropriate}
+### この手法が向いている場面 {#when-this-pattern-is-appropriate}
 
-入力中ループを上書きするやり方が向くのは、次の両方が当てはまるときです。
+入力中の表示を差し替えるやり方が向いているのは、次の両方が当てはまるときです。
 
-- そのプラットフォームの送信 API に、厳しい時間の制約がある（1回きりの返信トークン、期限のあるセッションなど）。かつ
-- 途中で*目に見える吹き出し*を出すことが、そのプラットフォームで受け入れられる。
+- そのプラットフォームの送信の口に、動かせない時間の制限がある（1回だけ使える返信用トークン、期限切れのある会話など）。かつ
+- 途中で*目に見える吹き出し*が出ても、そのプラットフォームの作法として受け入れられる。
 
-もっと単純な、`slow_response_threshold = 0` で常に Push を使う経路が向くのは、次のいずれかのときです。
+もっと単純な `slow_response_threshold = 0`（つねに Push）でよいのは、次のどちらかのときです。
 
 - そのプラットフォームに、無料と有料の意味のある区別がない。あるいは
-- 途中で対話的な吹き出しを出すより、「読み込み中… 読み込み中… 完了」と黙って待って一気に返すほうを利用者たちが好む。
+- 途中で吹き出しを挟むより、黙って待って一度に返すほうを利用者が好む。
 
-LINE はどちらにも対応できます。しきい値は無料でポストバックを取りに行くために既定で45秒、`LINE_SLOW_RESPONSE_THRESHOLD=0` にすると「常に Push へフォールバック」に戻ります。
+LINE はどちらにも対応しています。無料でポストバックから取り出す前提で既定は45秒、`LINE_SLOW_RESPONSE_THRESHOLD=0` にすると「つねに Push で返す」に戻ります。
 
-### 参考実装 {#reference-implementation}
+### 実装の見本 {#reference-implementation}
 
-LINE のポストバックの実装は `plugins/platforms/line/adapter.py` にひととおりあります。`RequestCache` の状態遷移（`PENDING → READY → DELIVERED` に、`/stop` 用の `ERROR` を加えたもの）、しきい値で Template Buttons の吹き出しを出す `_keep_typing` の上書き、キャッシュに回す `send` の上書き、宙に浮いた PENDING を片付ける `interrupt_session_activity` の上書きが揃っています。
+LINE のポストバックの実装の全体は `plugins/platforms/line/adapter.py` にあります。`RequestCache` という状態遷移（`PENDING → READY → DELIVERED` と、`/stop` 用の `ERROR`）、時間を超えたときにテンプレートのボタンの吹き出しを出す `_keep_typing` の差し替え、キャッシュを通す `send` の差し替え、取り残された PENDING の項目を片付ける `interrupt_session_activity` の差し替えが入っています。
 
-### 参考実装（プラグインの道筋） {#reference-implementations-plugin-path}
+### 実装の見本（プラグインで足す場合） {#reference-implementations-plugin-path}
 
-動く完全な例としては、リポジトリの `plugins/platforms/irc/` を見てください。外部の依存が一切ない、本格的な非同期の IRC アダプターです。`plugins/platforms/teams/` は Bot Framework / Adaptive Cards を、`plugins/platforms/google_chat/` は OAuth を使う REST API を、`plugins/platforms/line/` は Webhook 駆動の Messaging API と、LLM が遅いときのプラットフォーム固有の見せ方を扱っています。
+丸ごと動く例としては、リポジトリの `plugins/platforms/irc/` を見てください。外部の依存が一切ない、非同期の IRC アダプタ一式です。`plugins/platforms/teams/` は Bot Framework と Adaptive Cards、`plugins/platforms/google_chat/` は OAuth を使う REST API、`plugins/platforms/line/` は Webhook で受ける Messaging API と、LLM が遅いときの独自の見せ方を扱っています。
 
 ---
 
-## 手順ごとの確認項目（組み込みの道筋） {#step-by-step-checklist-built-in-path}
+## 手順表（組み込みで足す場合） {#step-by-step-checklist-built-in-path}
 
 :::note
-この確認項目は、Hermes の中核のコードベースに直接プラットフォームを足すためのものです。ふつうは公式に対応するプラットフォームのために、中核の開発者が行います。コミュニティや第三者のプラットフォームは、上の [プラグインの道筋](#plugin-path-recommended) を使ってください。
+この手順表は、Hermes のコア側に直接プラットフォームを足す場合のものです。公式に対応するプラットフォームを、コアの開発者が足すときに使います。第三者や利用者コミュニティのプラットフォームは、上の [プラグインで足す](#plugin-path-recommended) を使ってください。
 :::
 
 ### 1. Platform の列挙 {#1-platform-enum}
 
-`gateway/config.py` の `Platform` の列挙にプラットフォームを足します。
+`gateway/config.py` の `Platform` の列挙に自分のプラットフォームを足します。
 
 ```python
 class Platform(Enum):
@@ -559,7 +559,7 @@ class Platform(Enum):
     NEWPLAT = "newplat"
 ```
 
-### 2. アダプターのファイル {#2-adapter-file}
+### 2. アダプタのファイル {#2-adapter-file}
 
 `plugins/platforms/newplat/adapter.py` を作ります。
 
@@ -597,7 +597,7 @@ class NewPlatAdapter(BasePlatformAdapter):
         return {"name": chat_id, "type": "dm"}
 ```
 
-受信したメッセージについては、`MessageEvent` を組み立てて `self.handle_message(event)` を呼びます。
+受け取ったメッセージについては、`MessageEvent` を組み立てて `self.handle_message(event)` を呼びます。
 
 ```python
 source = self.build_source(
@@ -618,50 +618,50 @@ await self.handle_message(event)
 
 ### 3. ゲートウェイの設定（`gateway/config.py`） {#3-gateway-config-gatewayconfigpy}
 
-触る場所は3つです。
+手を入れるのは3か所です。
 
-1. **`get_connected_platforms()`** — そのプラットフォームに必要な資格情報の確認を足します
+1. **`get_connected_platforms()`** — 自分のプラットフォームに必要な資格情報の確認を足します
 2. **`load_gateway_config()`** — トークンの環境変数の対応を足します: `Platform.NEWPLAT: "NEWPLAT_TOKEN"`
-3. **`_apply_env_overrides()`** — `NEWPLAT_*` の環境変数をすべて設定に対応づけます
+3. **`_apply_env_overrides()`** — `NEWPLAT_*` の環境変数をすべて設定へ対応づけます
 
 ### 4. ゲートウェイのランナー（`gateway/run.py`） {#4-gateway-runner-gatewayrunpy}
 
-触る場所は6つです。
+手を入れるのは6か所です。
 
-1. **`_create_adapter()`** — `elif platform == Platform.NEWPLAT:` の分岐を足します
-2. **`_is_user_authorized()` の allowed_users の対応** — `Platform.NEWPLAT: "NEWPLAT_ALLOWED_USERS"`
-3. **`_is_user_authorized()` の allow_all の対応** — `Platform.NEWPLAT: "NEWPLAT_ALLOW_ALL_USERS"`
-4. **起動時の環境変数の確認 `_any_allowlist` のタプル** — `"NEWPLAT_ALLOWED_USERS"` を足します
-5. **起動時の環境変数の確認 `_allow_all` のタプル** — `"NEWPLAT_ALLOW_ALL_USERS"` を足します
-6. **`_UPDATE_ALLOWED_PLATFORMS` の frozenset** — `Platform.NEWPLAT` を足します
+1. **`_instantiate_adapter()`** — `elif platform == Platform.NEWPLAT:` の分岐を足します。うまく作れたアダプタは `_create_adapter()` の側でゲートウェイのランナーに結び付けられます。
+2. **`_is_user_authorized()` の allowed_users の対応表** — `Platform.NEWPLAT: "NEWPLAT_ALLOWED_USERS"`
+3. **`_is_user_authorized()` の allow_all の対応表** — `Platform.NEWPLAT: "NEWPLAT_ALLOW_ALL_USERS"`
+4. **起動時の環境変数の確認の `_any_allowlist`** — `"NEWPLAT_ALLOWED_USERS"` を足します
+5. **起動時の環境変数の確認の `_allow_all`** — `"NEWPLAT_ALLOW_ALL_USERS"` を足します
+6. **`_UPDATE_ALLOWED_PLATFORMS`** — `Platform.NEWPLAT` を足します
 
 ### 5. プラットフォームをまたぐ配信 {#5-cross-platform-delivery}
 
-1. **`gateway/platforms/webhook.py`** — 配信の種類のタプルに `"newplat"` を足します
-2. **`cron/scheduler.py`** — `_KNOWN_DELIVERY_PLATFORMS` の frozenset と `_deliver_result()` のプラットフォームの対応に足します
+1. **`gateway/platforms/webhook.py`** — 配信の種類の並びに `"newplat"` を足します
+2. **`cron/scheduler.py`** — `_KNOWN_DELIVERY_PLATFORMS` と `_deliver_result()` の対応表に足します
 
-### 6. CLI との連携 {#6-cli-integration}
+### 6. CLI とのつなぎ込み {#6-cli-integration}
 
 1. **`hermes_cli/config.py`** — `NEWPLAT_*` の変数をすべて `_EXTRA_ENV_KEYS` に足します
-2. **`hermes_cli/gateway.py`** — key、label、emoji、token_var、setup_instructions、vars を持つ項目を `_PLATFORMS` の一覧に足します
-3. **`hermes_cli/platforms.py`** — label と default_toolset を持つ `PlatformInfo` の項目を足します（`skills_config` と `tools_config` の TUI が使います）
-4. **`hermes_cli/setup.py`** — `_setup_newplat()` 関数を足し（`gateway.py` に任せても構いません）、メッセージングのプラットフォームの一覧にタプルを足します
-5. **`hermes_cli/status.py`** — プラットフォームの検出の項目を足します: `"NewPlat": ("NEWPLAT_TOKEN", "NEWPLAT_HOME_CHANNEL")`
-6. **`hermes_cli/dump.py`** — プラットフォーム検出の辞書に `"newplat": "NEWPLAT_TOKEN"` を足します
+2. **`hermes_cli/gateway.py`** — `_PLATFORMS` の一覧に、key、label、emoji、token_var、setup_instructions、vars を書いた項目を足します
+3. **`hermes_cli/platforms.py`** — label と default_toolset を書いた `PlatformInfo` の項目を足します（`skills_config` と `tools_config` の画面が使います）
+4. **`hermes_cli/setup.py`** — `_setup_newplat()` 関数を足し（中身は `gateway.py` に任せてもかまいません）、メッセージングのプラットフォームの一覧にも足します
+5. **`hermes_cli/status.py`** — 検出のための項目を足します: `"NewPlat": ("NEWPLAT_TOKEN", "NEWPLAT_HOME_CHANNEL")`
+6. **`hermes_cli/dump.py`** — 検出用の辞書に `"newplat": "NEWPLAT_TOKEN"` を足します
 
 ### 7. ツール {#7-tools}
 
-1. **`tools/send_message_tool.py`** — プラットフォームの対応に `"newplat": Platform.NEWPLAT` を足します
-2. **`tools/cronjob_tools.py`** — 配信先を説明する文字列に `newplat` を足します
+1. **`tools/send_message_tool.py`** — プラットフォームの対応表に `"newplat": Platform.NEWPLAT` を足します
+2. **`tools/cronjob_tools.py`** — 配信先の説明文に `newplat` を足します
 
-### 8. ツールセット {#8-toolsets}
+### 8. ツール群 {#8-toolsets}
 
-1. **`toolsets.py`** — `_HERMES_CORE_TOOLS` を持つ `"hermes-newplat"` のツールセットの定義を足します
-2. **`toolsets.py`** — `"hermes-gateway"` の includes の一覧に `"hermes-newplat"` を足します
+1. **`toolsets.py`** — `_HERMES_CORE_TOOLS` を使って `"hermes-newplat"` のツール群を定義します
+2. **`toolsets.py`** — `"hermes-gateway"` の includes に `"hermes-newplat"` を足します
 
-### 9. 任意: プラットフォームへの補足 {#9-optional-platform-hints}
+### 9. 任意: プラットフォームごとの補足 {#9-optional-platform-hints}
 
-**`agent/prompt_builder.py`** — そのプラットフォームに表示上の制約（markdown が使えない、メッセージ長の上限があるなど）があるなら、`PLATFORM_HINTS` の辞書に項目を足します。これでプラットフォーム固有の案内がシステムプロンプトに差し込まれます。
+**`agent/prompt_builder.py`** — 表示のうえで固有の制限がある場合（マークダウンが使えない、メッセージの長さに上限があるなど）は、`PLATFORM_HINTS` の辞書に項目を足します。これによりシステムプロンプトへプラットフォームごとの補足が差し込まれます。
 
 ```python
 PLATFORM_HINTS = {
@@ -673,33 +673,33 @@ PLATFORM_HINTS = {
 }
 ```
 
-すべてのプラットフォームに補足が要るわけではありません。エージェントの振る舞いを変えるべきときだけ足してください。
+すべてのプラットフォームに補足が要るわけではありません。エージェントの振る舞いを変えるべきときにだけ足してください。
 
 ### 10. テスト {#10-tests}
 
-`tests/gateway/test_newplat.py` を作り、次を覆います。
+`tests/gateway/test_newplat.py` を作り、次を確かめます。
 
-- 設定からのアダプターの生成
-- メッセージイベントの組み立て
-- send メソッド（外部の API はモックにします）
+- 設定からアダプタを組み立てられること
+- メッセージのイベントを組み立てられること
+- 送信のメソッド（外部の API はモックにします）
 - そのプラットフォーム固有の機能（暗号化、振り分けなど）
 
 ### 11. ドキュメント {#11-documentation}
 
 | ファイル | 足すもの |
 |------|-------------|
-| `website/docs/user-guide/messaging/newplat.md` | プラットフォームのセットアップのページ一式 |
-| `website/docs/user-guide/messaging/index.md` | プラットフォームの比較表、アーキテクチャの図、ツールセットの表、セキュリティの節、次の一歩へのリンク |
+| `website/docs/user-guide/messaging/newplat.md` | そのプラットフォームの設定方法のページ一式 |
+| `website/docs/user-guide/messaging/index.md` | プラットフォームの比較表、構成図、ツール群の表、安全性の節、次に読むページへのリンク |
 | `website/docs/reference/environment-variables.md` | NEWPLAT_* の環境変数すべて |
-| `website/docs/reference/toolsets-reference.md` | hermes-newplat のツールセット |
+| `website/docs/reference/toolsets-reference.md` | hermes-newplat のツール群 |
 | `website/docs/integrations/index.md` | プラットフォームへのリンク |
 | `website/sidebars.ts` | ドキュメントのページへのサイドバーの項目 |
-| `website/docs/developer-guide/architecture.md` | アダプターの数と一覧 |
-| `website/docs/developer-guide/gateway-internals.md` | アダプターのファイルの一覧 |
+| `website/docs/developer-guide/architecture.md` | アダプタの数と一覧 |
+| `website/docs/developer-guide/gateway-internals.md` | アダプタのファイルの一覧 |
 
-## 抜けの監査 {#parity-audit}
+## 抜けの点検 {#parity-audit}
 
-新しいプラットフォームの PR を完了とする前に、すでにあるプラットフォームと突き合わせて抜けがないか監査します。
+新しいプラットフォームの PR を仕上げる前に、すでにあるプラットフォームと見比べて抜けがないかを点検します。
 
 ```bash
 # Find every .py file mentioning the reference platform
@@ -711,13 +711,13 @@ search_files "newplat" output_mode="files_only" file_glob="*.py"
 # Any file in the first set but not the second is a potential gap
 ```
 
-`.md` と `.ts` のファイルでも同じことを繰り返します。見つかった差はひとつずつ確かめてください。プラットフォームを並べているところ（更新が要る）なのか、そのプラットフォーム固有の記述（飛ばしてよい）なのか、という判断です。
+`.md` と `.ts` のファイルについても同じことをします。差が出たファイルは1つずつ確かめてください。プラットフォームを列挙している場所（足す必要があります）なのか、そのプラットフォーム固有の記述（足さなくてよい）なのか、という見分けです。
 
-## よくある型 {#common-patterns}
+## よくある形 {#common-patterns}
 
-### ロングポーリングのアダプター {#long-poll-adapters}
+### ロングポーリングのアダプタ {#long-poll-adapters}
 
-アダプターがロングポーリングを使うなら（Telegram や Weixin のように）、ポーリングのループをタスクにします。
+Telegram や Weixin のようにロングポーリングを使う場合は、ポーリングのループを走らせます。
 
 ```python
 async def connect(self):
@@ -731,9 +731,9 @@ async def _poll_loop(self):
             await self.handle_message(self._build_event(msg))
 ```
 
-### コールバック / Webhook のアダプター {#callbackwebhook-adapters}
+### コールバックや Webhook のアダプタ {#callbackwebhook-adapters}
 
-プラットフォーム側がこちらのエンドポイントへメッセージを押し込んでくるなら（WeCom のコールバックのように）、HTTP サーバーを走らせます。
+WeCom のコールバックのように、プラットフォーム側からこちらのエンドポイントへ送ってくる場合は、HTTP のサーバーを動かします。
 
 ```python
 async def connect(self):
@@ -748,11 +748,11 @@ async def _handle_callback(self, request):
     return web.Response(text="success")  # Acknowledge immediately
 ```
 
-応答の期限が厳しいプラットフォーム（たとえば WeCom の5秒の上限）では、必ずその場ですぐ受領だけ返し、エージェントの返事はあとから API 経由で自分から届けてください。エージェントのセッションは3〜30分走ります。コールバックの応答の枠内で返事まで済ませるのは現実的ではありません。
+応答までの猶予が短いプラットフォーム（たとえば WeCom の5秒）では、必ずその場で受領だけを返し、エージェントの返事は後から API で送ってください。エージェントの処理は3〜30分かかります。コールバックの応答の中で返すのは現実的ではありません。
 
 ### トークンのロック {#token-locks}
 
-アダプターが固有の資格情報で接続を張り続けるなら、2つのプロフィールが同じ資格情報を使わないよう、範囲を限ったロックを足します。
+アダプタが1つしかない資格情報でつなぎっぱなしにする場合は、2つのプロファイルが同じ資格情報を使わないようロックを取ります。
 
 ```python
 from gateway.status import acquire_scoped_lock, release_scoped_lock
@@ -768,11 +768,11 @@ async def disconnect(self):
     release_scoped_lock("newplat", self._token)
 ```
 
-## 参考実装 {#reference-implementations}
+## 実装の見本 {#reference-implementations}
 
-| アダプター | 型 | 難しさ | 参考になる点 |
+| アダプタ | 形 | 手間 | 参考になる点 |
 |---------|---------|------------|-------------------|
-| `bluebubbles.py` | REST + Webhook | 中 | 素直な REST API との連携 |
-| `weixin.py` | ロングポーリング + CDN | 高 | メディアの扱い、暗号化 |
-| `plugins/platforms/wecom/callback_adapter.py` | コールバック / Webhook | 中 | HTTP サーバー、AES の暗号化、複数アプリ |
-| `plugins/platforms/irc/adapter.py` | ロングポーリング + IRC のプロトコル | 高 | 範囲を限ったトークンのロックを備えた、機能の揃ったプラグインのアダプター |
+| `bluebubbles.py` | REST と Webhook | 中 | 単純な REST API とのつなぎ込み |
+| `weixin.py` | ロングポーリングと CDN | 高 | 添付の扱い、暗号化 |
+| `plugins/platforms/wecom/callback_adapter.py` | コールバックと Webhook | 中 | HTTP サーバー、AES の暗号処理、複数アプリ |
+| `plugins/platforms/irc/adapter.py` | ロングポーリングと IRC の手順 | 高 | 機能のそろったプラグインのアダプタと、範囲を区切ったトークンのロック |

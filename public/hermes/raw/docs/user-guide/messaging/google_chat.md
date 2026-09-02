@@ -2,152 +2,151 @@
 title: "Google Chat"
 description: "Cloud Pub/Sub を使って Hermes Agent を Google Chat のボットとして設定する"
 upstream_path: user-guide/messaging/google_chat.md
-upstream_blob: e613331a4de8aeb941e9ea0304579ab019232b6a
+upstream_blob: e47e5a495a1673d70125d3555348ad5246cc1866
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/google_chat
 ---
 
 # Google Chat の設定 {#google-chat-setup}
 
-Hermes Agent を Google Chat のボットとしてつなぎます。受信には Cloud Pub/Sub の
-プル型の購読を、送信には Chat の REST API を使います。使い勝手は Slack の Socket Mode や
-Telegram のロングポーリングと同じで、Hermes を動かしている側に外から届く URL も、
-トンネルも、TLS の証明書も要りません。接続して認証し、購読を待ち受けるだけです。
-Telegram のボットがトークンで待ち受けるのと同じ考え方です。
+Hermes Agent を Google Chat のボットとしてつなぎます。受け取り側は Cloud Pub/Sub の
+プル型サブスクリプション、送り出し側は Chat の REST API を使います。
+使い勝手は Slack のソケットモードや Telegram のロングポーリングと同じで、Hermes の
+プロセスに公開 URL もトンネルも TLS 証明書も要りません。つないで、認証して、
+サブスクリプションを聞いているだけです。Telegram のボットがトークンひとつで待ち受けるのと同じ形です。
 
-> `hermes gateway setup` を動かして **Google Chat** を選ぶと、手順に沿って設定できます。
+> `hermes gateway setup` を実行して **Google Chat** を選ぶと、案内に沿って進められます。
 
 :::note Workspace の種類について
-Google Chat は Google Workspace の一部です。この連携は、個人で契約した Workspace
-（Google で登録した `@yourdomain.com` のもの）でも、アプリを公開できる管理者権限を
-持っている職場の Workspace でも使えます。Gmail だけのアカウントでは Chat のアプリを
+Google Chat は Google Workspace の一部です。この連携は、個人で取った Workspace
+（Google に登録した `@yourdomain.com`）でも、アプリを公開できる管理権限を持っている
+仕事用の Workspace でも使えます。Gmail だけのアカウントでは Chat アプリを
 動かせません。
 :::
 
 ## 全体像 {#overview}
 
-| 構成要素 | 内容 |
+| 項目 | 内容 |
 |-----------|-------|
 | **ライブラリ** | `google-cloud-pubsub`、`google-api-python-client`、`google-auth` |
-| **受信の経路** | Cloud Pub/Sub のプル型の購読（外から届く受け口は不要） |
-| **送信の経路** | Chat の REST API（`chat.googleapis.com`） |
-| **認証** | 購読に対して `roles/pubsub.subscriber` を持つサービスアカウントの JSON |
-| **相手の見分け方** | Chat のリソース名（`users/{id}`）とメールアドレス |
+| **受け取りの経路** | Cloud Pub/Sub のプル型サブスクリプション（公開の受け口は不要） |
+| **送り出しの経路** | Chat の REST API（`chat.googleapis.com`） |
+| **認証** | サブスクリプションに `roles/pubsub.subscriber` を持つサービスアカウントの JSON |
+| **利用者の見分け方** | Chat のリソース名（`users/{id}`）とメールアドレス |
 
 ---
 
-## ステップ 1: GCP のプロジェクトを作る、または選ぶ {#step-1-create-or-pick-a-gcp-project}
+## 手順 1: GCP のプロジェクトを作るか選ぶ {#step-1-create-or-pick-a-gcp-project}
 
-Pub/Sub のトピックを置くために、Google Cloud のプロジェクトが必要です。まだなければ
-[console.cloud.google.com](https://console.cloud.google.com) で作ります。
-個人のアカウントにも無料枠があり、ボットの通信量なら十分まかなえます。
+Pub/Sub のトピックを置くために Google Cloud のプロジェクトが要ります。まだなければ
+[console.cloud.google.com](https://console.cloud.google.com) で作ってください。
+個人のアカウントにも無料枠があり、ボット程度の通信量なら十分まかなえます。
 
-プロジェクト ID（例: `my-chat-bot-123`）を控えておきます。このあとの手順でずっと
-使います。
+プロジェクト ID（例: `my-chat-bot-123`）を控えておきます。これ以降のすべての手順で使います。
 
 ---
 
-## ステップ 2: 二つの API を有効にする {#step-2-enable-two-apis}
+## 手順 2: 二つの API を有効にする {#step-2-enable-two-apis}
 
-コンソールで **APIとサービス → ライブラリ** を開き、次を有効にします。
+コンソールで **APIs & Services → Library** を開き、次を有効にします。
 
 - **Google Chat API**
 - **Cloud Pub/Sub API**
 
-個人のボットが出すくらいの量なら、どちらも無料の範囲に収まります。
+個人のボットが出す程度の量なら、どちらも無料です。
 
 ---
 
-## ステップ 3: サービスアカウントを作る {#step-3-create-a-service-account}
+## 手順 3: サービスアカウントを作る {#step-3-create-a-service-account}
 
-**IAM と管理 → サービス アカウント → サービス アカウントを作成** と進みます。
+**IAM & Admin → Service Accounts → Create Service Account** と進みます。
 
 - 名前: `hermes-chat-bot`
-- 「このサービス アカウントにプロジェクトへのアクセスを許可する」の手順は飛ばします。
-  必要なのは特定の購読に対する IAM の権限だけです。プロジェクト全体に Pub/Sub の役割を
-  与えては **いけません**。
+- 「このサービスアカウントにプロジェクトへのアクセスを許可する」の手順は飛ばします。必要なのは
+  個別のサブスクリプションに対する IAM だけです。プロジェクト全体の Pub/Sub 権限は**与えないでください**。
 
-作成できたらそのサービスアカウントを開き、**キー → 鍵を追加 → 新しい鍵を作成 → JSON**
-からファイルをダウンロードします。Hermes だけが読める場所に保存してください（例:
-`~/.hermes/google-chat-sa.json` に置き、`chmod 600` を設定）。
+作成したらそのサービスアカウントを開き、**Keys → Add Key → Create new key → JSON** から
+ファイルをダウンロードします。Hermes だけが読める場所に保存してください（例:
+`~/.hermes/google-chat-sa.json` に置いて `chmod 600`）。
 
 :::caution 「Chat Bot Caller」という役割は存在しません
-よくある間違いは、Chat 専用の IAM の役割を探してプロジェクト全体に与えてしまうことです。
-そんな役割はありません。Chat のボットとしての権限は、IAM ではなく space に導入されている
-ことから来ます。サービスアカウントに要るのは、次の手順で作る購読に対する Pub/Sub の
-購読者の権限だけです。
+よくある勘違いが、Chat 専用の IAM 役割を探してプロジェクト全体に付けようとすることです。
+そんな役割はありません。Chat のボットとしての権限は IAM ではなく、スペースに
+導入されていることから来ます。サービスアカウントに要るのは、次の手順で作る
+サブスクリプションに対する Pub/Sub の購読権限だけです。
 :::
 
 ---
 
-## ステップ 4: Pub/Sub のトピックと購読を作る {#step-4-create-the-pubsub-topic-and-subscription}
+## 手順 4: Pub/Sub のトピックとサブスクリプションを作る {#step-4-create-the-pubsub-topic-and-subscription}
 
-**Pub/Sub → トピック → トピックを作成** と進みます。
+**Pub/Sub → Topics → Create topic** と進みます。
 
 - トピック ID: `hermes-chat-events`
-- ほかはすべて初期値のままにします。
+- ほかはすべて既定のままにします。
 
-作成すると、トピックの詳細ページに **サブスクリプション** のタブが出ます。ここで一つ作ります。
+作成すると、トピックの詳細ページに **Subscriptions** のタブが出ます。ここで一つ作ります。
 
 - サブスクリプション ID: `hermes-chat-events-sub`
-- 配信タイプ: **プル**
-- メッセージの保持期間: **7 日**（Hermes を再起動しても、たまった分が残ります）
-- ほかは初期値のままにします。
+- 配信の方式: **Pull**
+- メッセージの保持期間: **7 日**（hermes を再起動しても溜まった分が残ります）
+- ほかは既定のままにします。
 
 ---
 
-## ステップ 5: トピックへの IAM の設定（ここが要です） {#step-5-iam-binding-on-the-topic-critical}
+## 手順 5: トピック側の IAM 設定（ここが要です） {#step-5-iam-binding-on-the-topic-critical}
 
-購読ではなく **トピック** のほうに、IAM のプリンシパルを追加します。
+サブスクリプションではなく**トピック**の方に、IAM のプリンシパルを足します。
 
 - プリンシパル: `chat-api-push@system.gserviceaccount.com`
-- ロール: `Pub/Sub Publisher`
+- 役割: `Pub/Sub Publisher`
 
-これがないと、Google Chat はトピックにイベントを流せず、ボットには何も届きません。
+これがないと Google Chat はトピックにイベントを流せず、ボットには何も届きません。
 
 ---
 
-## ステップ 6: 購読への IAM の設定 {#step-6-iam-binding-on-the-subscription}
+## 手順 6: サブスクリプション側の IAM 設定 {#step-6-iam-binding-on-the-subscription}
 
-**購読** のほうに、自分のサービスアカウントをプリンシパルとして追加します。
+**サブスクリプション**の方に、自分のサービスアカウントをプリンシパルとして足します。
 
 - プリンシパル: `hermes-chat-bot@<your-project>.iam.gserviceaccount.com`
-- ロール: `Pub/Sub Subscriber`
+- 役割: `Pub/Sub Subscriber`
 
-同じ購読に `Pub/Sub Viewer` も与えてください。Hermes は起動時に
-`subscription.get()` を呼んで、そこへ届くかを確かめます。
+同じサブスクリプションに `Pub/Sub Viewer` も付けてください。Hermes は起動時に
+`subscription.get()` を呼んで、そこへ届くかどうかを確かめます。
 
 ---
 
-## ステップ 7: Chat のアプリを設定する {#step-7-configure-the-chat-app}
+## 手順 7: Chat アプリを設定する {#step-7-configure-the-chat-app}
 
-**APIとサービス → Google Chat API → 構成** を開きます。
+**APIs & Services → Google Chat API → Configuration** を開きます。
 
-- **アプリ名**: 相手に見せたい名前を入れます（「Hermes」あたりが無難です）。
-- **アバターの URL**: 公開されている PNG なら何でもかまいません（Google が用意したものもあります）。
-- **説明**: アプリの一覧に出る短い一文です。
-- **機能**: **1:1 のメッセージを受信する** と **スペースとグループの会話に参加する** を有効にします。
-- **接続設定**: **Cloud Pub/Sub** を選び、トピック名
+- **App name**: 利用者に見せたい名前を入れます（「Hermes」で十分です）。
+- **Avatar URL**: 公開されている PNG なら何でも構いません（Google が用意した既定のものもあります）。
+- **Description**: アプリの一覧に出る短い説明文です。
+- **Functionality**: **Receive 1:1 messages** と **Join spaces and group
+  conversations** を有効にします。
+- **Connection settings**: **Cloud Pub/Sub** を選び、トピック名
   `projects/<your-project>/topics/hermes-chat-events` を入れます。
-- **公開設定**: 自分の Workspace（または特定の相手）に限定します。試している最中に
-  全員へ公開しないでください。
+- **Visibility**: 自分の Workspace（または特定の利用者）に限定します。試している間は
+  全員に公開しないでください。
 
 保存します。
 
 ---
 
-## ステップ 8: 試す space にボットを入れる {#step-8-install-the-bot-in-a-test-space}
+## 手順 8: 試し用のスペースにボットを入れる {#step-8-install-the-bot-in-a-test-space}
 
-ブラウザで Google Chat を開きます。**+ 新しいチャット** のメニューでアプリの名前を
-検索し、個別のやり取りを始めます。最初にメッセージを送ると、Google から
-`ADDED_TO_SPACE` というイベントが届きます。Hermes はこれを使ってボット自身の
-`users/{id}` を覚え、自分の発言を取り除くのに使います。
+ブラウザで Google Chat を開きます。**+ New Chat** のメニューでアプリ名を検索し、
+そのアプリとの DM を始めます。最初にメッセージを送ったとき、Google が
+`ADDED_TO_SPACE` というイベントを送ってきて、Hermes はそこからボット自身の `users/{id}` を
+覚えます。これで自分の発言を拾わずに済みます。
 
 ---
 
-## ステップ 9: Hermes を設定する {#step-9-configure-hermes}
+## 手順 9: Hermes を設定する {#step-9-configure-hermes}
 
-`~/.hermes/.env` に Google Chat の項目を書き足します。
+`~/.hermes/.env` に Google Chat の項目を足します。
 
 ```bash
 # Required
@@ -164,38 +163,46 @@ GOOGLE_CHAT_MAX_MESSAGES=1                      # Pub/Sub FlowControl; 1 seriali
 GOOGLE_CHAT_MAX_BYTES=16777216                  # 16 MiB — cap on in-flight message bytes
 ```
 
-プロジェクト ID は `GOOGLE_CLOUD_PROJECT` からも読み取れますし、サービスアカウントの
-ファイルの場所は `GOOGLE_APPLICATION_CREDENTIALS` からも読み取れます。使い慣れたほうを
-選んでください。
+プロジェクト ID は `GOOGLE_CLOUD_PROJECT` からも読めます。サービスアカウントの置き場所も
+`GOOGLE_APPLICATION_CREDENTIALS` から読めます。好きな書き方を選んでください。
 
-Google Chat のアダプターが必要とするものは、専用のインストーラーから入れます。
-実行時の確認と同じく、安全のために決めたバージョンの下限がそのまま適用されます。
+[複数プロファイルのゲートウェイ](/hermes/docs/user-guide/multi-profile-gateways/) では、
+`GOOGLE_CHAT_*` の設定はすべて振り分け先のプロファイル自身の `.env` から読まれます。
+二つめ以降のプロファイルが既定プロファイルのプロジェクト・サブスクリプション・
+サービスアカウントを受け継ぐことはありません。あるプロファイルにサービスアカウントの設定がなく、
+プロセスの環境変数には別プロファイル用のものが入っている場合、アダプターは
+アプリケーションのデフォルト認証情報に頼ることを拒み（それでは別のプロファイルとして
+認証してしまうためです）、はっきりとエラーを記録します。そのプロファイルの `.env` に
+`GOOGLE_CHAT_SERVICE_ACCOUNT_JSON` を書いてください。
+
+Google Chat のアダプターが必要とするものは、専用の導入コマンドから入れます。
+実行時の検査と同じく、安全のために固定した下限のバージョンが適用されます。
 
 ```bash
 python -m plugins.platforms.google_chat.oauth --install-deps
 ```
 
-ゲートウェイを動かします。
+ゲートウェイを起動します。
 
 ```bash
 hermes gateway
 ```
 
-次のような記録が出るはずです。
+次のようなログが出れば成功です。
 
 ```
 [GoogleChat] Connected; project=my-chat-bot-123, subscription=<redacted>,
              bot_user_id=users/XXXX, flow_control(msgs=1, bytes=16777216)
 ```
 
-試しているやり取りで「hola」と送ってみてください。ボットはまず
-「Hermes is thinking…」という目印を出し、そのメッセージ自体を本当の返事に
-書き換えます。「メッセージが削除されました」の跡は残りません。
+試し用の DM に「hola」と送ってみてください。ボットはまず「Hermes is thinking…」という
+目印を投稿し、その同じメッセージを実際の返答で書き換えます。「メッセージは削除されました」の
+痕跡は残りません。
 
 ### 考え中の目印を変える {#customizing-the-working-state-marker}
 
-目印の文章は、`~/.hermes/config.yaml` の `typing_status_text` で変えられます。
-たとえば Ada という名前の子猫のアシスタントなら、こうなります。
+目印の文言は `~/.hermes/config.yaml` の `typing_status_text` で変えられます。
+たとえば Ada という名前の子猫のアシスタントならこうです。
 
 ```yaml
 platforms:
@@ -204,66 +211,65 @@ platforms:
     typing_status_text: "is pouncing… 🐾"
 ```
 
-Slack のようにその人にだけ見える一行ではなく、これは **実際に投稿されるメッセージ** で、
-あとから返事に書き換えられます。ここに書いた文章は、ふつうのメッセージとして
-少しのあいだチャットに現れます。目印そのものをやめたいときは
-`typing_indicator: false` にします。
+Slack の一時的なステータス行とは違い、これは**実際に投稿されるメッセージ**で、
+あとから返答に書き換えられます。ここに設定した文言は、ふつうのメッセージとして
+一瞬チャットに現れます。目印そのものをやめたいときは `typing_indicator: false` にします。
 
 ---
 
-## 表示のしかたと、できること {#formatting-and-capabilities}
+## 表示のしかたとできること {#formatting-and-capabilities}
 
-Google Chat が表示できる Markdown は限られています。
+Google Chat が解釈できるマークダウンは限られています。
 
 | 使えるもの | 使えないもの |
 |-----------|---------------|
-| `*bold*`, `_italic_`, `~strike~`, `` `code` `` | 見出し、箇条書き |
-| URL による画像の埋め込み | 対話できる Card v2 のボタン（このゲートウェイの v1 では未対応） |
-| Chat そのもののファイル添付（`/setup-files` のあと。ステップ 10 を参照） | 音声メモや丸い動画メモ |
+| `*bold*`、`_italic_`、`~strike~`、`` `code` `` | 見出し、箇条書き |
+| URL で貼る画像 | 操作できる Card v2 のボタン（このゲートウェイの v1 では未対応） |
+| Chat 本来のファイル添付（`/setup-files` のあと。手順 10 を参照） | Chat 本来の音声メモや丸い動画メモ |
 
-エージェントのシステムプロンプトには Google Chat 向けの案内が入っているので、
-この制限を踏まえ、表示できない書き方を避けるようになっています。
+エージェントのシステムプロンプトには Google Chat 向けの注意書きが入っていて、
+表示されない書式を避けるようになっています。
 
-一通あたりの長さの上限は 4000 文字です。長い返事は自動で複数のメッセージに分けて
-送られます。
+1 通あたりの文字数の上限は 4000 文字です。返答がこれより長いときは、
+自動的に複数のメッセージに分けて送られます。
 
-スレッドにも対応しています。スレッドの中で返信すると、Hermes は `thread.name` を
-見て同じスレッドに返事を投稿します。スレッドごとに別の Hermes のセッションになります。
+スレッドにも対応しています。利用者がスレッドの中で返信すると、Hermes は
+`thread.name` を見て同じスレッドに返します。スレッドごとに別々の Hermes のセッションになります。
 
-### 聞き返しを対話できるカードで出す {#clarify-questions-as-interactive-cards}
+### 聞き返しを操作できるカードで出す {#clarify-questions-as-interactive-cards}
 
-エージェントが選択肢つきで聞き返すとき、アダプターはそれを番号つきの文字の一覧では
-なく、Chat の **Card v2** として表示します。選択肢ごとのボタンに加えて
-**「Other / type answer」** のボタンも並びます。ボタンを押せばそのまま答えになります
-（`CARD_CLICKED` のイベントが、待っているセッションへ選んだ内容を返します）。
-カードを送れなかったときや、決まった選択肢がない質問のときは、これまでどおり文字での
-聞き返しに戻ります。設定は要りません。
+エージェントが選択肢つきの聞き返しをするとき、アダプターは番号付きの文字列ではなく、
+Chat 本来の **Card v2** として表示します。選択肢ごとにボタンが並び、
+**「Other / type answer」** のボタンも付きます。
+ボタンを押せばそのまま答えになります（`CARD_CLICKED` のイベントが、待っているセッションへ
+選択内容を返します）。カードの送信に失敗したときや、決まった選択肢がない質問のときは、
+これまでどおり文字での聞き返しに戻ります。設定は要りません。
 
 ---
 
-## ステップ 10: Chat そのもののファイル添付（任意） {#step-10-native-attachment-delivery-optional}
+## 手順 10: Chat 本来の添付で届ける（任意） {#step-10-native-attachment-delivery-optional}
 
-そのままでもボットは、文章、URL による画像の埋め込み、音声・動画・書類のダウンロード
-カードを投稿できます。人がファイルをドラッグして落としたときと同じ **Chat そのものの**
-添付として届けたい場合は、利用者ごとに一度だけ OAuth の認可をしてもらいます。
+そのままでもボットは文字を投稿し、URL で画像を貼り、音声・動画・書類のダウンロード用カードを
+出せます。人がファイルをドラッグして貼ったときと同じ **Chat 本来の**添付として届けたい場合は、
+利用者ごとに一度だけ OAuth の許可をします。
 
 ### なぜ別の手続きが要るのか {#why-a-separate-flow}
 
-Google Chat の `media.upload` は、サービスアカウントでの認証をはっきり断ります。
+Google Chat の `media.upload` は、サービスアカウントでの認証をはっきり拒みます。
 
 > This method doesn't support app authentication with a service account.
 > Authenticate with a user account.
 
-これを回避できる IAM の役割やスコープはありません。この受け口は利用者本人の資格情報
-しか受け付けないのです。そのためボットは、ファイルをアップロードするときだけ
-*利用者として* ふるまう必要があります。具体的には、そのファイルを頼んだ本人としてです。
+これを解決する IAM の役割やスコープはありません。この受け口は利用者本人の認証情報しか
+受け付けないのです。そのためファイルを送るときだけ、ボットは*利用者として*ふるまう必要があります。
+具体的には、そのファイルを頼んだ本人としてです。
 
-### 一度だけの設定（プロファイルごと） {#one-time-setup-per-profile}
+### 一度だけの準備（プロファイルごと） {#one-time-setup-per-profile}
 
-1. 同じ GCP のプロジェクトで **APIとサービス → 認証情報** を開きます。
-2. **認証情報を作成 → OAuth クライアント ID → デスクトップ アプリ** と進みます。
-3. JSON をダウンロードし、Hermes を動かしているホストへ移します。
-4. そのクライアントを Hermes に登録します（登録したいプロファイルで動かします）。
+1. 同じ GCP プロジェクトで **APIs & Services → Credentials** を開きます。
+2. **Create credentials → OAuth client ID → Desktop app** と進みます。
+3. JSON をダウンロードし、Hermes を動かしている端末へ移します。
+4. そのクライアントを Hermes に登録します（対象にしたいプロファイルで実行します）。
 
 ```bash
 # Default profile:
@@ -275,95 +281,94 @@ hermes -p <profile> python -m plugins.platforms.google_chat.oauth \
     --client-secret /path/to/client_secret.json
 ```
 
-これで、いま使っているプロファイルの Hermes のホームにクライアントの秘密の値が
-書き込まれます（初期のプロファイルなら `~/.hermes/google_chat_user_client_secret.json`
-です）。この値は **プロファイルごとに分かれていて、共有されません**。プロファイルごとに
-登録します。これは意図した作りで、プロファイルは認証の境界として切り離されており、
-二つのプロファイルが別々の Google の OAuth アプリやアカウントを向けます。Google Chat の
-ファイル添付を使うプロファイルごとに、一度ずつ登録してください。
+これで、いま使っているプロファイルの Hermes ホームにクライアントシークレットが書き込まれます
+（既定のプロファイルなら `~/.hermes/google_chat_user_client_secret.json` です）。
+クライアントシークレットは**プロファイルごとに分かれていて、共有されません**。
+それぞれのプロファイルが自分の分を登録します。これは意図した設計です。プロファイルは
+認証の境界として切り離されているので、二つのプロファイルが別々の Google の OAuth アプリや
+アカウントを向けます。Google Chat の添付を使うプロファイルごとに、一度ずつ登録してください。
 
-### 利用者ごとの認可（チャットの中で行います） {#per-user-authorization-in-chat}
+### 利用者ごとの許可（チャットの中で） {#per-user-authorization-in-chat}
 
-それぞれの利用者が、ボットとの個別のやり取りの中で一度だけ手続きをします。
+利用者はそれぞれ、ボットとの DM で一度だけこの手続きをします。
 
 1. ボットに `/setup-files` と送ります。いまの状態と次にすることが返ってきます。
 2. `/setup-files start` と送ります。ボットが OAuth の URL を返します。
-3. その URL を開いて **許可** を押すと、ブラウザが
-   `http://localhost:1/?...&code=...` を開こうとして失敗します。これは想定どおりで、
-   認可コードはアドレス欄に入っています。
-4. 失敗した URL（あるいは `code=...` の値だけ）をコピーして、
-   `/setup-files <PASTED_URL>` の形でチャットに貼り付けます。ボットがそれを
-   引き換えてリフレッシュトークンを受け取ります。
+3. その URL を開いて **Allow** を押すと、ブラウザは
+   `http://localhost:1/?...&code=...` を読み込めずに失敗します。これは想定どおりで、
+   必要な認証コードはアドレス欄の中にあります。
+4. 失敗した URL（または `code=...` の値だけ）をコピーし、
+   `/setup-files <PASTED_URL>` の形でチャットに貼り戻します。ボットがそれを
+   リフレッシュトークンと引き換えます。
 
-トークンは `~/.hermes/google_chat_user_tokens/<sanitized_email>.json` に保存されます。
-以降、その人との個別のやり取りでファイルを頼まれたときは *その人の* トークンを使うので、
-ボットはその人としてアップロードし、ファイルはその人の space に届きます。
+トークンは `~/.hermes/google_chat_user_tokens/<sanitized_email>.json` に置かれます。
+以降、その利用者の DM でファイルを頼むと*その人の*トークンが使われるので、
+ボットはその人として送り、メッセージもその人のスペースに届きます。
 
-あとで取り消すには `/setup-files revoke` と送ります。消えるのはその人のトークンだけで、
-ほかの人のものはそのまま残ります。
+あとで取り消したいときは `/setup-files revoke` を使います。消えるのはその人のトークンだけで、
+ほかの利用者のものはそのままです。
 
-### スコープ {#scope}
+### 求める権限の範囲 {#scope}
 
-この手続きで求めるスコープは `chat.messages.create` の一つだけです。これで
-`media.upload` と、アップロードした `attachmentDataRef` を指す `messages.create` の
-両方をまかなえます。Drive も、Chat の広いスコープも使いません。必要最小限にとどめる
-ための作りです。
+この手続きが求めるスコープはただ一つ、`chat.messages.create` です。これで
+`media.upload` と、送ったファイルの `attachmentDataRef` を参照する `messages.create` の
+両方をまかなえます。Drive も、より広い Chat のスコープも求めません。
+必要最小限にとどめる、という考えでこうしてあります。
 
 ### 複数の利用者がいるとき {#multi-user-behavior}
 
-頼んだ人のトークンがまだない場合、ボットは以前の作りで使っていた一人ぶんのトークン
-`~/.hermes/google_chat_user_token.json` に戻ります（複数の利用者に対応する前から
-入っていた場合です）。どちらもないときは、`/setup-files` を実行するよう伝える
-はっきりした文章を投稿します。
+頼んだ人のトークンがまだないときは、以前の一人用のトークン
+`~/.hermes/google_chat_user_token.json` に頼ります（複数利用者に対応する前の状態から
+残っていた場合です）。どちらもないときは、ボットが `/setup-files` を実行するよう
+はっきり文字で知らせます。
 
-誰かが取り消しても、消えるのはその人のぶんだけです。ある人のトークンで 401 や 403 が
-返っても、消えるのはその人ぶんの保持だけです。利用者どうしが邪魔をすることはありません。
+誰かが取り消しても、消えるのはその人の分だけです。ある利用者のトークンで 401 や 403 が
+返ってきたときも、その人の分だけが破棄されます。利用者どうしが互いの邪魔をすることはありません。
 
 ---
 
-## 困ったときは {#troubleshooting}
+## うまくいかないとき {#troubleshooting}
 
-**「hola」と送ってもボットが黙ったままです。**
+**「hola」と送ってもボットが黙ったまま。**
 
-1. コンソールで、Pub/Sub の購読に未配信のメッセージがたまっていないか確かめます。
-   たまっているなら Hermes の認証が通っていません。`GOOGLE_CHAT_SERVICE_ACCOUNT_JSON`
-   と、そのサービスアカウントが購読の `Pub/Sub Subscriber` に入っているかを見直します。
-2. 購読にメッセージが一件もないなら、Google Chat 側が流せていません。
-   **トピック** の IAM をもう一度確かめてください。
+1. コンソールで、Pub/Sub のサブスクリプションに未配信のメッセージが溜まっていないか見ます。
+   溜まっているなら Hermes 側の認証が通っていません。`GOOGLE_CHAT_SERVICE_ACCOUNT_JSON` と、
+   そのサービスアカウントがサブスクリプションの `Pub/Sub Subscriber` に入っているかを確かめます。
+2. サブスクリプションが空なら、Google Chat 側が流していません。
+   **トピック**側の IAM 設定をもう一度見てください。
    `chat-api-push@system.gserviceaccount.com` に `Pub/Sub Publisher` が要ります。
-3. `hermes gateway` の記録に `[GoogleChat] Connected` が出ているかを見ます。
-   `[GoogleChat] Config validation failed` と出ていれば、直すべき環境変数が
-   そのメッセージに書かれています。
+3. `hermes gateway` のログに `[GoogleChat] Connected` があるか見ます。
+   `[GoogleChat] Config validation failed` が出ていれば、どの環境変数を直せばよいかが
+   メッセージに書かれています。
 
-**返事は来るのに、エージェントの答えではなくエラーが出ます。**
+**返事は来るが、エージェントの答えではなくエラーが出る。**
 
-記録に `[GoogleChat] Pub/Sub stream died` がないか確かめます。これが繰り返し出るなら、
-サービスアカウントの資格情報が入れ替わったか、購読が消えている可能性があります。
-10 回試してだめだと、アダプターは自分を停止と見なします。
+ログに `[GoogleChat] Pub/Sub stream died` がないか見てください。繰り返し出ているなら、
+サービスアカウントの認証情報が入れ替わったか、サブスクリプションが消されています。
+10 回試して駄目なら、アダプターは自分を致命的な状態として扱います。
 
-**送るたびに「403 Forbidden」になります。**
+**送るメッセージがすべて「403 Forbidden」になる。**
 
-ボットが space から外されたか、Chat API のコンソールで取り消されています。もう一度
-space に入れてください（次の `ADDED_TO_SPACE` のイベントで、自動的にまた送れるようになります）。
+ボットがスペースから外されたか、Chat API のコンソールで無効にされています。
+スペースに入れ直してください（次の `ADDED_TO_SPACE` のイベントで送信が自動的に戻ります）。
 
-**「Rate limit hit」の警告が多すぎます。**
+**「Rate limit hit」の警告が多すぎる。**
 
-Chat API の初期の上限は、space ごとに一分あたり 60 通です。エージェントが長い返事を
-流し続けてこれを超えると、アダプターは間隔を空けながらやり直しますが、その分だけ
-相手を待たせることになります。返事を短くするか、GCP のコンソールで上限を上げることを
-検討してください。
+Chat API の既定の上限は、スペースごとに 1 分あたり 60 通です。エージェントが長い返答を
+少しずつ送ってこれを超えると、アダプターは間隔を空けながら送り直しますが、
+利用者から見て遅くはなります。返答を短くするか、GCP のコンソールで上限を引き上げてください。
 
-**ファイルではなく「/setup-files」の案内ばかり返ってきます。**
+**ファイルではなく「/setup-files」の案内ばかり出る。**
 
-頼んだ人の OAuth のトークンがなく、以前の作りのトークンもありません。その人との
-個別のやり取りで `/setup-files` を実行し、ステップ 10 に従ってもらってください。
-引き換えが終われば、次に頼まれたときからゲートウェイを再起動せずに添付できます。
+頼んだ人の OAuth トークンがなく、以前の一人用のトークンもない状態です。
+その人の DM で `/setup-files` を実行し、手順 10 に沿って進めてください。
+引き換えが終われば、ゲートウェイを再起動しなくても次からは Chat 本来の添付で送られます。
 
-**`/setup-files start` が「No client credentials stored.」と返します。**
+**`/setup-files start` が「No client credentials stored.」と返す。**
 
-一度だけの設定が *このプロファイルでは* 済んでいません（クライアントの秘密の値は
-プロファイルごとなので、別のプロファイルで登録しても見えません）。端末から、
-ゲートウェイが使っているプロファイルで動かします。
+一度だけの準備が*このプロファイルでは*済んでいません（クライアントシークレットは
+プロファイルごとなので、別のプロファイルでの登録は見えません）。
+ターミナルから、ゲートウェイが使っているプロファイルで実行してください。
 
 ```bash
 # Default profile:
@@ -377,32 +382,33 @@ hermes -p <profile> python -m plugins.platforms.google_chat.oauth \
 
 そのうえで、もう一度 `/setup-files start` と送ります。
 
-**`/setup-files <PASTED_URL>` が「Token exchange failed.」と返します。**
+**`/setup-files <PASTED_URL>` が「Token exchange failed.」と返す。**
 
-認可コードは一度きりで、有効な時間も短めです（ふつうは数分）。`/setup-files start` で
-新しい URL を出し直して、やり直してください。
+認証コードは一度きりで、有効な時間も短めです（たいてい数分）。
+`/setup-files start` で新しい URL を出し直してからやり直してください。
 
 ---
 
-## 安全のための覚え書き {#security-notes}
+## 安全に使うために {#security-notes}
 
-- **サービスアカウントのスコープ**: アダプターは `chat.bot` と `pubsub` のスコープを
-  求めます。実際に効かせるのは IAM のほうにしてください。サービスアカウントには
-  最小限（購読に対する `roles/pubsub.subscriber` と `roles/pubsub.viewer`）だけを
-  与え、プロジェクト全体や組織全体の Pub/Sub の役割は与えないでください。
-- **添付をダウンロードするときの守り**: Hermes がサービスアカウントのトークンを付けて
-  取りにいくのは、Google が持つ短い許可の一覧に載ったホストだけです
+- **サービスアカウントのスコープ**: アダプターは `chat.bot` と `pubsub` のスコープを求めます。
+  実際に効かせる仕組みは IAM の側に置いてください。サービスアカウントには最小限
+  （サブスクリプションに対する `roles/pubsub.subscriber` と `roles/pubsub.viewer`）だけを与え、
+  プロジェクト全体や組織全体の Pub/Sub 権限は与えないでください。
+- **添付を取ってくるときの守り**: Hermes がサービスアカウントのトークンを添えるのは、
+  Google が持つドメインの短い許可リストに一致するホストだけです
   （`googleapis.com`、`drive.google.com`、`lh[3-6].googleusercontent.com` など）。
-  それ以外のホストは HTTP の要求を出す前にはねます。細工したイベントでトークンを
-  GCE のメタデータの受け口へ向けさせる、といった攻撃を防ぐためです。
-- **伏せ字**: サービスアカウントのメールアドレス、購読のパス、トピックのパスは
-  `agent/redact.py` が記録から取り除きます。中身をそのまま出す確認用の表示
-  （`GOOGLE_CHAT_DEBUG_RAW=1`）も同じ伏せ字の仕組みを通り、DEBUG の水準で記録されます。
-- **社内規程**: 決まりのある Workspace（データの置き場所や AI の扱いに方針がある職場）に
-  このボットをつなぐつもりなら、最初に入れる前に承認を取ってください。
-- **利用者ごとの OAuth のスコープ**: 添付のための手続きが求めるのは
-  `chat.messages.create` *だけ* です。`media.upload` とそれに続く `messages.create` を
-  まかなう最小限です。トークンはそのままの JSON として
-  `~/.hermes/google_chat_user_tokens/<sanitized_email>.json` に保存されます
-  （守りはファイルの権限で、サービスアカウントの鍵ファイルと同じ考え方です）。
-  それぞれのトークンの持ち主はただ一人で、取り消しもその人だけに効きます。
+  それ以外のホストは HTTP の通信をする前にはじかれます。細工されたイベントで
+  トークンが GCE のメタデータサービスへ送られてしまう、といった事態を防ぐためです。
+- **記録からの伏せ字**: サービスアカウントのメールアドレス、サブスクリプションのパス、
+  トピックのパスは `agent/redact.py` によってログから取り除かれます。
+  デバッグ用の生データの書き出し（`GOOGLE_CHAT_DEBUG_RAW=1`）も同じ伏せ字の処理を通り、
+  DEBUG のレベルで記録されます。
+- **社内規定との兼ね合い**: 規制のかかった Workspace（データの保管場所や AI の扱いに
+  方針があるところ）につなぐつもりなら、最初に導入する前に承認を取ってください。
+- **利用者側の OAuth スコープ**: 利用者ごとの添付の手続きが求めるのは
+  `chat.messages.create` *だけ*です。`media.upload` と、そのあとの `messages.create` を
+  まかなう最小限です。トークンは
+  `~/.hermes/google_chat_user_tokens/<sanitized_email>.json` にそのままの JSON で保存されます
+  （守っているのはファイルの権限です。サービスアカウントの鍵ファイルと同じ考え方です）。
+  トークンはちょうど一人の利用者のものであり、取り消しもその人の範囲にとどまります。

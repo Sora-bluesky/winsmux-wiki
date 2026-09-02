@@ -1,189 +1,209 @@
 ---
 title: "Slack"
-description: "ソケットモードを使って Hermes Agent を Slack のボットとして動かす"
+description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: 4bc66f5a30743fa92c0b8ca1ef921515091be756
+upstream_blob: 6a0a39657129c555bf63656d7c7a30903f1bbb07
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
 
 # Slack の設定 {#slack-setup}
 
-ソケットモードを使って、Hermes Agent を Slack のボットとしてつなぎます。ソケットモードは公開された HTTP のエンドポイントではなく WebSocket を使うので、Hermes を動かしている機械が外から見える必要はありません。ファイアウォールの内側でも、手元のノートパソコンでも、非公開のサーバーでも動きます。
+ソケットモードを使って、Hermes Agent を Slack のボットとしてつなぎます。ソケットモードは
+公開の HTTP の受け口ではなく WebSocket を使うので、Hermes を外から見える場所に置く必要はありません。
+ファイアウォールの内側でも、手元のノート PC でも、社内のサーバーでも動きます。
 
 :::warning 旧来の Slack アプリは廃止されました
-旧来の Slack アプリ（RTM API を使うもの）は **2025 年 3 月に完全に廃止されました**。Hermes は今の Bolt SDK をソケットモードで使います。古い形式のアプリを持っている場合は、下の手順にしたがって新しく作り直す必要があります。
+RTM API を使う旧来の Slack アプリは **2025 年 3 月に完全に廃止されました**。Hermes は
+いまどきの Bolt SDK をソケットモードで使います。古いアプリを持っている場合は、
+以下の手順で新しく作り直してください。
 :::
 
 ## 全体像 {#overview}
 
-| 構成要素 | 内容 |
+| 項目 | 内容 |
 |-----------|-------|
 | **ライブラリ** | Python 向けの `slack-bolt` / `slack_sdk`（ソケットモード） |
-| **接続方式** | WebSocket — 公開の URL は不要 |
-| **必要な認証トークン** | ボットトークン（`xoxb-`）とアプリレベルトークン（`xapp-`） |
-| **利用者の識別** | Slack のメンバー ID（たとえば `U01ABC2DEF3`） |
+| **接続のしかた** | WebSocket。公開 URL は要りません |
+| **必要なトークン** | ボットトークン（`xoxb-`）とアプリレベルトークン（`xapp-`） |
+| **利用者の見分け方** | Slack のメンバー ID（例: `U01ABC2DEF3`） |
 
 ---
 
 ## 手順 1: Slack アプリを作る {#step-1-create-a-slack-app}
 
-いちばん早いのは、Hermes が作ってくれるマニフェストを貼り付ける方法です。このマニフェストには、組み込みのスラッシュコマンド（`/btw`、`/stop`、`/model` など）、必要な OAuth のスコープ、購読するイベントがすべて書かれており、ソケットモードも有効になります。これらが一度にそろいます。
+いちばん早いのは、Hermes が作ってくれるマニフェストを貼り付ける方法です。組み込みの
+スラッシュコマンド（`/btw`、`/stop`、`/model` など）、必要な OAuth の権限、
+受け取るイベントをすべて書き出したうえで、ソケットモードも有効にしてくれます。
+これが一度に済みます。
 
-### 方法 A: Hermes が作ったマニフェストから作る（おすすめ） {#option-a-from-a-hermes-generated-manifest-recommended}
+### 方法 A: Hermes が作るマニフェストから（おすすめ） {#option-a-from-a-hermes-generated-manifest-recommended}
 
-1. マニフェストを作ります。新しい Slack アプリでは Agent ビューを使う必要があります。
+1. マニフェストを作ります。新しく作る Slack アプリでは Agent 表示を使う必要があります。
    ```bash
    hermes slack manifest --agent-view --write
    ```
-   これで `~/.hermes/slack-manifest.json` が書き出され、貼り付けの手順が表示されます。Slack の旧来の Assistant ビューをまだ使っている既存のアプリでは、移行の準備が整うまで `--agent-view` を省けます。
+   これで `~/.hermes/slack-manifest.json` が書き出され、貼り付けの手順が表示されます。
+   Slack の旧来の Assistant 表示を使い続けている既存のアプリは、移行の準備ができるまで
+   `--agent-view` を省いて構いません。
 
-   Slack の長い説明文を、手元の UTF-8 のテキストや Markdown のファイルから埋めたいときは `--long-description-file` を足します。
+   Slack の長い説明文を、手元の UTF-8 のテキストや Markdown のファイルから入れたいときは
+   `--long-description-file` を足します。
 
    ```bash
    hermes slack manifest --agent-view \
      --long-description-file AGENTS.md --write
    ```
 
-   ファイルの中身は、Slack の 175〜4,000 文字の範囲でそのまま使われます。文章を直に渡したいときは `--long-description "..."` を使います。直に渡す方法とファイルを渡す方法は同時に使えず、どちらも `--slashes-only` とは組み合わせられません。
-2. [https://api.slack.com/apps](https://api.slack.com/apps) を開き、**Create New App** → **From an app manifest** と進みます
-3. ワークスペースを選び、JSON の中身を貼り付けて内容を確認し、**Next** → **Create** をクリックします
-4. **手順 6: アプリをワークスペースに入れる** まで飛ばして構いません。スコープ、イベント、スラッシュコマンドはマニフェストが済ませてくれています。
+   ファイルの中身は、Slack が定める 175〜4,000 文字の範囲でそのまま使われます。
+   その場で文章を書くなら `--long-description "..."` を使います。この二つは同時に使えず、
+   `--slashes-only` と組み合わせることもできません。
+2. [https://api.slack.com/apps](https://api.slack.com/apps) を開き、
+   **Create New App** → **From an app manifest** と進みます
+3. ワークスペースを選び、JSON の中身を貼り、内容を確かめて **Next**
+   → **Create** を押します
+4. **手順 6: アプリをワークスペースに導入する**まで飛ばして構いません。権限もイベントも
+   スラッシュコマンドも、マニフェストが済ませています。
 
-### 方法 B: 一から作る（手作業） {#option-b-from-scratch-manual}
+### 方法 B: ゼロから作る（手作業） {#option-b-from-scratch-manual}
 
 1. [https://api.slack.com/apps](https://api.slack.com/apps) を開きます
-2. **Create New App** をクリックします
+2. **Create New App** を押します
 3. **From scratch** を選びます
-4. アプリの名前（たとえば「Hermes Agent」）を入れ、ワークスペースを選びます
-5. **Create App** をクリックします
+4. アプリ名（例: 「Hermes Agent」）を入れ、ワークスペースを選びます
+5. **Create App** を押します
 
-アプリの **Basic Information** のページに移ります。このあとの手順 2 〜 6 に進んでください。
+アプリの **Basic Information** のページに移ります。以下の手順 2〜6 に進んでください。
 
 ---
 
-## 手順 2: ボットトークンのスコープを設定する {#step-2-configure-bot-token-scopes}
+## 手順 2: ボットトークンの権限を設定する {#step-2-configure-bot-token-scopes}
 
-サイドバーの **Features → OAuth & Permissions** を開きます。**Scopes → Bot Token Scopes** までスクロールして、次のスコープを足します。
+左のメニューから **Features → OAuth & Permissions** を開きます。**Scopes → Bot Token Scopes** まで下がり、次を足します。
 
-| スコープ | 用途 |
+| 権限 | 用途 |
 |-------|---------|
 | `chat:write` | ボットとしてメッセージを送る |
-| `app_mentions:read` | チャンネルで @メンションされたことを検知する |
+| `app_mentions:read` | チャンネルで @ で呼ばれたことに気づく |
 | `channels:history` | ボットが入っている公開チャンネルのメッセージを読む |
-| `channels:read` | 公開チャンネルの一覧と情報を取得する |
-| `groups:history` | ボットが招待された非公開チャンネルのメッセージを読む |
+| `channels:read` | 公開チャンネルの一覧と情報を取る |
+| `groups:history` | 招かれた非公開チャンネルのメッセージを読む |
 | `im:history` | ダイレクトメッセージの履歴を読む |
-| `im:read` | ダイレクトメッセージの基本情報を見る |
-| `im:write` | ダイレクトメッセージを開いて扱う |
-| `mpim:history` | 複数人のダイレクトメッセージ（グループ DM）の履歴を読む |
-| `mpim:read` | グループ DM の基本情報を見る |
+| `im:read` | DM の基本的な情報を見る |
+| `im:write` | DM を開いて扱う |
+| `mpim:history` | 複数人の DM（グループ DM）の履歴を読む |
+| `mpim:read` | グループ DM の基本的な情報を見る |
 | `users:read` | 利用者の情報を調べる |
-| `files:read` | 添付されたファイル（ボイスメモや音声を含む）を読んでダウンロードする |
-| `files:write` | ファイル（画像・音声・文書）をアップロードする |
+| `files:read` | 添付ファイル（音声メモを含む）を読んで取ってくる |
+| `files:write` | ファイル（画像・音声・書類）を送る |
 
-:::caution スコープが足りないと機能も欠けます
-`channels:history` と `groups:history` がないと、ボットは **チャンネルのメッセージを受け取れません**。ダイレクトメッセージでしか動かなくなります。`files:read` がないと、Hermes は会話はできても **利用者がアップロードした添付を確実に読むことができません**。この 2 つはとくに忘れられがちなスコープです。
+:::caution 権限が足りないと、その分の機能が動きません
+`channels:history` と `groups:history` がないと、ボットは**チャンネルのメッセージを受け取れず**、
+DM でしか動きません。`files:read` がないと、会話はできても**利用者が上げたファイルを確実には読めません**。
+この二つが、いちばん忘れられがちな権限です。
 :::
 
-**任意のスコープ:**
+**任意の権限:**
 
-| スコープ | 用途 |
+| 権限 | 用途 |
 |-------|---------|
-| `groups:read` | 非公開チャンネルの一覧と情報を取得する |
-| `assistant:write` | メッセージの処理中に、ボット名の横に作業中の状態表示（「is thinking…」）を出します。このスコープがないと `assistant.threads.setStatus` の呼び出しが黙って失敗し、Slack が自前の当たりさわりのない文言（「Finding answers…」「Reviewing findings…」など）を順に出します。この場合、文言は Hermes の管理下にありません。`typing_status_text` が目に見える形で効くには、このスコープが必要です。 |
+| `groups:read` | 非公開チャンネルの一覧と情報を取る |
+| `assistant:write` | メッセージを処理している間、ボット名の横に作業中の状態（「is thinking…」）を出します。この権限がないと `assistant.threads.setStatus` の呼び出しが黙って失敗し、Slack が用意した文言（「Finding answers…」「Reviewing findings…」など）が代わりに出ます。Hermes 側から文言を決めることはできません。`typing_status_text` を効かせるには必須です。 |
 
 ---
 
 ## 手順 3: ソケットモードを有効にする {#step-3-enable-socket-mode}
 
-ソケットモードを使うと、公開の URL を用意せずに WebSocket でつなげます。
+ソケットモードを使うと、公開 URL を用意しなくても WebSocket でつなげます。
 
-1. サイドバーの **Settings → Socket Mode** を開きます
+1. 左のメニューから **Settings → Socket Mode** を開きます
 2. **Enable Socket Mode** をオンにします
-3. **アプリレベルトークン** を作るよう促されます。
-   - 名前は `hermes-socket` のように付けます（名前は何でも構いません）
-   - **`connections:write`** のスコープを足します
-   - **Generate** をクリックします
-4. **トークンを控えます**。`xapp-` で始まる文字列で、これが `SLACK_APP_TOKEN` になります
+3. **アプリレベルトークン**を作るよう促されます:
+   - 名前は `hermes-socket` のような分かりやすいもので構いません（何でも動きます）
+   - **`connections:write`** の権限を足します
+   - **Generate** を押します
+4. **表示されたトークンを控えます**。`xapp-` で始まるもので、これが `SLACK_APP_TOKEN` です
 
 :::tip
-アプリレベルトークンは、**Settings → Basic Information → App-Level Tokens** からいつでも確認・再発行できます。
+アプリレベルトークンは、あとからでも **Settings → Basic Information → App-Level Tokens** で確かめたり作り直したりできます。
 :::
 
 ---
 
-## 手順 4: イベントを購読する {#step-4-subscribe-to-events}
+## 手順 4: 受け取るイベントを選ぶ {#step-4-subscribe-to-events}
 
-ここは肝心なところです。ボットがどのメッセージを見られるかが、この設定で決まります。
+ここが要です。ボットがどのメッセージを見られるかが、この設定で決まります。
 
-1. サイドバーの **Features → Event Subscriptions** を開きます
+1. 左のメニューから **Features → Event Subscriptions** を開きます
 2. **Enable Events** をオンにします
-3. **Subscribe to bot events** を開いて、次を足します。
+3. **Subscribe to bot events** を開いて、次を足します
 
 | イベント | 必須か | 用途 |
 |-------|-----------|---------|
-| `message.im` | **必須** | ダイレクトメッセージを受け取る |
-| `message.mpim` | **必須** | 追加された **グループ DM**（複数人のダイレクトメッセージ）のメッセージを受け取る |
-| `message.channels` | **必須** | 追加された **公開** チャンネルのメッセージを受け取る |
-| `message.groups` | **推奨** | 招待された **非公開** チャンネルのメッセージを受け取る |
-| `app_mention` | **必須** | @メンションされたときの Bolt SDK のエラーを防ぐ |
+| `message.im` | **はい** | ダイレクトメッセージを受け取る |
+| `message.mpim` | **はい** | 招かれた**グループ DM**（複数人の DM）のメッセージを受け取る |
+| `message.channels` | **はい** | 招かれた**公開**チャンネルのメッセージを受け取る |
+| `message.groups` | **おすすめ** | 招かれた**非公開**チャンネルのメッセージを受け取る |
+| `app_mention` | **はい** | @ で呼ばれたときに Bolt SDK がエラーを出すのを防ぐ |
 
-4. ページ下部の **Save Changes** をクリックします
+4. ページの下にある **Save Changes** を押します
 
-:::danger イベントの購読漏れが、つまずきの第 1 位です
-ダイレクトメッセージでは動くのに **チャンネルでは動かない** 場合、`message.channels`（公開チャンネル用）や `message.groups`（非公開チャンネル用）の追加を忘れているとみて、まず間違いありません。これらのイベントがないと、Slack はチャンネルのメッセージをそもそもボットに届けません。
+:::danger イベントの設定漏れが、いちばん多いつまずきです
+DM では動くのに**チャンネルでは動かない**なら、まず `message.channels`（公開チャンネル用）や
+`message.groups`（非公開チャンネル用）の足し忘れを疑ってください。
+これがないと、Slack はチャンネルのメッセージをボットに届けません。
 :::
 
 ---
 
 ## 手順 5: メッセージタブを有効にする {#step-5-enable-the-messages-tab}
 
-これはボットへのダイレクトメッセージを使えるようにする手順です。有効にしていないと、ボットに個人チャットを送ろうとした利用者に **「Sending messages to this app has been turned off」** と表示されます。
+これでボットに DM を送れるようになります。設定しないと、DM を送ろうとした人に **「Sending messages to this app has been turned off」** と表示されます。
 
-1. サイドバーの **Features → App Home** を開きます
-2. **Show Tabs** までスクロールします
+1. 左のメニューから **Features → App Home** を開きます
+2. **Show Tabs** まで下がります
 3. **Messages Tab** をオンにします
 4. **「Allow users to send Slash commands and messages from the messages tab」** にチェックを入れます
 
-:::danger この手順を飛ばすと、個人チャットは完全に塞がれます
-スコープとイベントの購読をすべて正しく設定していても、メッセージタブを有効にしない限り、Slack は利用者からボットへのダイレクトメッセージを通しません。これは Slack 側の決まりであって、Hermes の設定の問題ではありません。
+:::danger これをしないと DM は完全に塞がれます
+権限もイベントもすべて正しく設定しても、メッセージタブが有効でなければ Slack は DM を通しません。これは Slack 側の決まりで、Hermes の設定の問題ではありません。
 :::
 
 ---
 
-## 手順 6: アプリをワークスペースに入れる {#step-6-install-app-to-workspace}
+## 手順 6: アプリをワークスペースに導入する {#step-6-install-app-to-workspace}
 
-1. サイドバーの **Settings → Install App** を開きます
-2. **Install to Workspace** をクリックします
-3. 権限の内容を確認して **Allow** をクリックします
-4. 承認が終わると、`xoxb-` で始まる **Bot User OAuth Token** が表示されます
-5. **このトークンを控えます**。これが `SLACK_BOT_TOKEN` になります
+1. 左のメニューから **Settings → Install App** を開きます
+2. **Install to Workspace** を押します
+3. 権限の内容を確かめて **Allow** を押します
+4. 許可すると、`xoxb-` で始まる **Bot User OAuth Token** が表示されます
+5. **このトークンを控えます**。これが `SLACK_BOT_TOKEN` です
 
 :::tip
-あとからスコープやイベントの購読を変えたときは、変更を反映させるために **アプリを入れ直す必要があります**。Install App のページに、その旨の案内が出ます。
+あとから権限やイベントの設定を変えたときは、**アプリを入れ直さないと**反映されません。
+Install App のページに、そのことを知らせる帯が出ます。
 :::
 
 ---
 
-## 手順 7: 許可リストに載せる利用者 ID を調べる {#step-7-find-user-ids-for-the-allowlist}
+## 手順 7: 許可リストに載せるメンバー ID を調べる {#step-7-find-user-ids-for-the-allowlist}
 
-Hermes は許可リストに Slack の **メンバー ID** を使います（ユーザー名や表示名ではありません）。
+Hermes の許可リストは、ユーザー名や表示名ではなく Slack の**メンバー ID** で指定します。
 
-メンバー ID の調べ方は次のとおりです。
+メンバー ID の調べ方:
 
-1. Slack でその人の名前かアイコンをクリックします
-2. **View full profile** をクリックします
-3. **⋮**（その他）のボタンをクリックします
+1. Slack で相手の名前かアイコンを押します
+2. **View full profile** を押します
+3. **⋮**（その他）のボタンを押します
 4. **Copy member ID** を選びます
 
-メンバー ID は `U01ABC2DEF3` のような形です。少なくとも自分のメンバー ID は必要です。
+メンバー ID は `U01ABC2DEF3` のような形です。最低でも自分のメンバー ID が要ります。
 
 ---
 
 ## 手順 8: Hermes を設定する {#step-8-configure-hermes}
 
-`~/.hermes/.env` ファイルに次を書き足します。
+`~/.hermes/.env` に次を足します。
 
 ```bash
 # Required
@@ -196,13 +216,13 @@ SLACK_HOME_CHANNEL=C01234567890              # Default channel for cron/schedule
 SLACK_HOME_CHANNEL_NAME=general              # Human-readable name for the home channel (optional)
 ```
 
-対話式の設定を使うこともできます。
+対話形式で設定することもできます。
 
 ```bash
 hermes gateway setup    # Select Slack when prompted
 ```
 
-続いてゲートウェイを起動します。
+そのうえでゲートウェイを起動します。
 
 ```bash
 hermes gateway              # Foreground
@@ -211,108 +231,153 @@ sudo hermes gateway install --system   # Linux only: boot-time system service
 ```
 
 :::tip Codex の推論の強さについて
-Codex を使う Slack のエージェント同士のチャンネルでは、`agent.reasoning_effort: high` かそれ以下をおすすめします。`xhigh` では、やり取りの丸ごとが見えない推論に費やされて、目に見えるアシスタントの文章が出ないことがあります。Hermes は今、そうした「やり取りが完結しなかった」旨の警告をスレッドには出さず、ゲートウェイのログに残すようにしています。
+Codex を使う Slack のエージェント同士のチャンネルでは、`agent.reasoning_effort: high` かそれ以下をおすすめします。`xhigh` だと
+考えている時間だけで一巡が終わり、目に見える返答が出ないことがあります。Hermes はこの
+「途中で終わった一巡」の警告をスレッドには出さず、ゲートウェイのログに残すようになりました。
 :::
 
 ---
 
-## 手順 9: ボットをチャンネルに招待する {#step-9-invite-the-bot-to-channels}
+## 手順 9: ボットをチャンネルに招く {#step-9-invite-the-bot-to-channels}
 
-ゲートウェイを起動したら、ボットに返事をしてほしいチャンネルごとに **招待** する必要があります。
+ゲートウェイを起動したら、応じてほしいチャンネルごとに**ボットを招く**必要があります。
 
 ```
 /invite @Hermes Agent
 ```
 
-ボットが自分からチャンネルに参加することは **ありません**。チャンネルごとに招待してください。
+ボットが自分からチャンネルに入ることは**ありません**。一つずつ招いてください。
 
 ---
 
 ## スラッシュコマンド {#slash-commands}
 
-Hermes のコマンド（`/btw`、`/stop`、`/new`、`/model`、`/help` など）は、すべて Slack 本来のスラッシュコマンドとして使えます。Telegram や Discord での使い勝手とまったく同じです。Slack で `/` と打つと、入力補助の一覧に Hermes のコマンドが説明つきで並びます。
+Hermes のコマンド（`/btw`、`/stop`、`/new`、`/model`、`/help` など）は、
+すべて Slack 本来のスラッシュコマンドとして使えます。Telegram や Discord での
+使い勝手とまったく同じです。Slack で `/` と打てば、Hermes のコマンドが説明つきで
+候補に並びます。
 
-裏側では、Hermes が Slack アプリのマニフェストを生成し（手順 1 の方法 A を見てください）、[`COMMAND_REGISTRY`](https://github.com/NousResearch/hermes-agent/blob/main/hermes_cli/commands.py) にあるコマンドをすべてスラッシュコマンドとして宣言しています。ソケットモードでは、マニフェストの `url` の項目に関わらず、Slack はコマンドのイベントを WebSocket 経由で届けます。
+裏側では、Hermes に同梱のマニフェスト（手順 1 の方法 A）が
+[`COMMAND_REGISTRY`](https://github.com/NousResearch/hermes-agent/blob/main/hermes_cli/commands.py)
+にあるコマンドをすべてスラッシュコマンドとして宣言しています。ソケットモードでは、
+マニフェストの `url` の項目に関係なく、Slack が WebSocket 越しにコマンドのイベントを届けます。
 
-### Agent のメッセージ体験 {#agent-messaging-experience}
+### Agent としてのやりとり {#agent-messaging-experience}
 
-新しい Slack アプリは、Slack の **Agent** のメッセージ体験を使います。すでに Assistant として作った Hermes のアプリは、`--agent-view` を付けてマニフェストを作り直せば移行できます。
+新しい Slack アプリは Slack の **Agent** としてのやりとりを使います。すでにある
+Assistant 版の Hermes アプリは、`--agent-view` を付けてマニフェストを作り直せば移行できます。
 
 ```bash
 hermes slack manifest --agent-view --write
 ```
 
-**Features → App Manifest** でマニフェストを更新し、Slack から求められたらアプリを入れ直します。Agent ビューから Assistant ビューへ戻すことはできません。切り替えたあと、利用者は Slack の再読み込みが必要になることがあります。生成された Agent 向けのマニフェストは `message.im`、`app_home_opened`、`app_context_changed` を購読するので、Hermes はメッセージタブでの個人チャットを見分けられ、そのやり取りとあわせて利用者が今見ている Slack の文脈も受け取れます。Hermes がその文脈として扱うのは目印だけで、見ているチャンネルの履歴を読むことはありません。
+**Features → App Manifest** でマニフェストを更新し、Slack から求められたらアプリを入れ直します。
+Agent 表示から Assistant 表示へ戻すことはできません。切り替えたあと、利用者は Slack を
+強制的に読み込み直す必要があるかもしれません。作られる Agent 版のマニフェストは
+`message.im`、`app_home_opened`、`app_context_changed` を受け取るので、Hermes は
+メッセージタブでの DM を見分けられ、そのときに利用者が Slack で開いている場所も一巡ごとに受け取れます。
+Hermes はそれを目印として渡すだけで、開いているチャンネルの履歴までは読みません。
 
-### 更新後にスラッシュコマンドを取り込み直す {#refreshing-slash-commands-after-updates}
+### 更新後にスラッシュコマンドを入れ直す {#refreshing-slash-commands-after-updates}
 
-Hermes に新しいコマンドが増えたとき（`hermes update` のあとなど）は、マニフェストを作り直して Slack アプリを更新します。
+Hermes に新しいコマンドが入ったとき（`hermes update` のあとなど）は、
+マニフェストを作り直して Slack アプリを更新します。
 
 ```bash
 hermes slack manifest --write
 ```
 
-そのうえで Slack 側の操作です。
-1. [https://api.slack.com/apps](https://api.slack.com/apps) を開き、Hermes のアプリを選びます
+そのうえで Slack 側で次を行います。
+1. [https://api.slack.com/apps](https://api.slack.com/apps) を開いて
+   Hermes のアプリを選びます
 2. **Features → App Manifest → Edit** と進みます
-3. `~/.hermes/slack-manifest.json` の新しい中身を貼り付けます
-4. **Save** します。スコープやスラッシュコマンドが変わっていれば、Slack がアプリの入れ直しを求めてきます。
+3. 新しい `~/.hermes/slack-manifest.json` の中身を貼ります
+4. **Save** を押します。権限やスラッシュコマンドが変わっていれば、アプリを入れ直すよう
+   Slack から促されます。
 
-### 従来の `/hermes <subcommand>` も使えます {#legacy-hermes-subcommand-still-works}
+### 昔ながらの `/hermes <subcommand>` も使えます {#legacy-hermes-subcommand-still-works}
 
-古いマニフェストとの互換のため、`/hermes bg run the tests` のような書き方も残っています。Hermes はこれを `/bg run the tests` と同じように扱います。自由な質問文も使えて、`/hermes what's the weather?` はふつうのメッセージとして扱われます。
+古いマニフェストとの互換のため、いまでも
+`/hermes bg run the tests` と打てます。Hermes はこれを `/bg
+run the tests` と同じように扱います。自由な質問も通ります。`/hermes what's the
+weather?` はふつうのメッセージとして扱われます。
 
-### スレッドのなかでコマンドを使う（`!cmd` の書き方） {#using-commands-inside-threads-the-cmd-prefix}
+### スレッドの中でコマンドを使う（`!cmd` の書き方） {#using-commands-inside-threads-the-cmd-prefix}
 
-Slack 自身が、スレッドの返信のなかでは本来のスラッシュコマンドを受け付けません。スレッドで `/queue` と打つと、Slack が *「/queue is not supported in threads. Sorry!」* と返します。アプリ側の設定で使えるようにする方法はなく、Slack はそれを Hermes に届けません。
+Slack はスレッドの返信の中では本来のスラッシュコマンドを受け付けません。スレッドで
+`/queue` と打つと、Slack が *「/queue is not supported
+in threads. Sorry!」* と返します。これを有効に戻すアプリ側の設定はなく、
+Slack が Hermes まで届けてくれません。
 
-その代わりとして、Hermes は先頭の `!` をコマンドの別の書き方として認識します。これはスレッドでも、それ以外の場所でも使えます。ふつうのスレッドの返信として `!queue`、`!stop`、`!model gpt-5.4` などと打てば、Hermes はスラッシュの形とまったく同じに扱い、同じスレッドで返事をします。
+その代わりに、Hermes は先頭の `!` を別のコマンドの目印として認めます。これはスレッドの中でも
+（それ以外の場所でも）使えます。ふつうのスレッドの返信として
+`!queue`、`!stop`、`!model gpt-5.4` などと打つだけです。Hermes はスラッシュの形と
+まったく同じに扱い、同じスレッドに返します。
 
-コマンドかどうかを見るのは先頭の 1 語だけなので、`!nice work` のような何気ないメッセージはそのままエージェントに渡ります。この書き方はメンションのあと（`@Hermes !stop`）でも、先頭に空白があっても効き、どちらもスレッド内でコマンドとして動きます。
+コマンドかどうかを見るのは先頭の語だけなので、`!nice work` のような気軽な文はそのまま
+エージェントへ渡ります。この書き方はメンションのうしろ（`@Hermes !stop`）でも、
+先頭に空白があっても通ります。どちらもスレッドの中でコマンドとして扱われます。
 
-承認を求める表示（危険なコマンドや `execute_code` の承認）は、ふだんは押せるボタンとして出ます。ボタンを出せず、Hermes が文章での確認に切り替えたときは、その文面が `!approve` / `!deny` で返すよう案内します。これがスレッドのなかでも通じる書き方です。
+危ない操作や `execute_code` の確認は、ふだんは押せるボタンとして出ます。
+ボタンを出せずに Hermes が文字での確認に切り替えたときは、
+`!approve` / `!deny` で答えるよう案内されます。スレッドの中で通る書き方だからです。
 
-### スラッシュコマンドへの返事は本人にだけ見えます {#slash-replies-are-ephemeral}
+### スラッシュコマンドへの返事は自分にだけ見えます {#slash-replies-are-ephemeral}
 
-本来のスラッシュコマンド（`/status`、`/help` など）への返事は **本人にだけ見える形** で届きます（「Only visible to you」）。コマンドの出力でチャンネルが荒れることはありません。「Running /cmd…」という仮の表示は本当の返事に置き換わり、長い返事は続きのメッセージに分けて、やはり本人にだけ見える形で送られます。Slack はこの流れを 5 通までに制限しているので、極端に長い出力は黙って切られるのではなく、途中で打ち切った旨をはっきり添えて終わります。本人だけに見せる経路が失敗したときは、Hermes が別の同じ仕組みの API 経路で送り直します。代わりにチャンネルへ公開で投稿することはありません。（ふつうのメッセージとして打ったコマンド、つまりスレッドでの `!cmd` や `@Hermes /cmd` は、ふだんどおり全員に見えるメッセージで返します。）
+本来のスラッシュコマンド（`/status`、`/help` など）への返事は、
+**自分にだけ見える形**（「あなただけに表示されています」）で届きます。コマンドの出力で
+チャンネルが埋まることはありません。「Running /cmd…」の仮表示は本当の返事に置き換わり、
+長い返事は続きの見えないメッセージに分けられます。Slack 側の都合で 1 回のやりとりは 5 通までなので、
+極端に長い出力は黙って切られるのではなく、切ったことをはっきり知らせて終わります。
+最初の経路がうまくいかないときは、Hermes は別の「自分にだけ見える」経路で送り直します。
+チャンネルに公開で投稿することは決してありません。（ふつうのメッセージとして打ったコマンド、
+つまりスレッドでの `!cmd` や `@Hermes /cmd` には、いつもどおり全員に見える形で返します。）
 
-### 確認の問いかけ（ワンタップのボタン） {#clarify-prompts-one-tap-buttons}
+### 聞き返しを一押しのボタンで {#clarify-prompts-one-tap-buttons}
 
-エージェントが選択式の質問をする必要があるとき（`clarify` のツール）、Slack では **Block Kit のボタン** として表示されます。選択肢ごとに 1 タップで答えられ、さらに「✏️ Other…」のボタンで自由入力に切り替えられます（次に打ったメッセージが答えになります）。タップすると、そのメッセージがその場で書き換わり、誰が何を選んだかが表示されます。同じ問いかけをもう一度押しても無視されます。ボタンの操作にも、メッセージと同じ利用者の権限の判定がかかります。期限切れの問いかけ（ゲートウェイの再起動や時間切れ）は、押した操作を黙って飲み込まずに、もう一度尋ねるよう案内します。答えの決まっていない問いかけは、ふつうの質問文として表示され、次に打った返事を受け取ります。設定は要りません。`rich_blocks` の設定に関わらず動きます。
+エージェントが選択肢つきの質問をする必要があるとき（`clarify` の道具）、Slack では
+**Block Kit のボタン**として表示されます。選択肢ごとに一押しで答えられ、
+「✏️ Other…」のボタンを押すと自由記入に切り替わります（次に打ったメッセージが答えになります）。
+押したあと、そのメッセージは誰が何を選んだかを示す形に書き換わります。同じ質問を
+もう一度押しても無視されます。ボタンを押せるのはメッセージと同じ許可を持つ人だけで、
+期限切れの質問（ゲートウェイの再起動や時間切れ）には、押しても黙って飲み込まずに
+聞き直すよう案内が出ます。選択肢のない自由回答の聞き返しは、ふつうの質問として表示され、
+次に打った返事を受け取ります。設定は要りません。`rich_blocks` の設定に関係なく動きます。
 
-### 上級者向け: スラッシュコマンドの配列だけを出力する {#advanced-emit-only-the-slash-commands-array}
+### 応用: スラッシュコマンドの配列だけを出す {#advanced-emit-only-the-slash-commands-array}
 
-Slack のマニフェストを自分で管理していて、スラッシュコマンドの一覧だけがほしい場合の書き方です。
+Slack のマニフェストを手で管理していて、スラッシュコマンドの一覧だけが欲しいときは
+こうします。
 
 ```bash
 hermes slack manifest --slashes-only > /tmp/slashes.json
 ```
 
-出てきた配列を、今のマニフェストの `features.slash_commands` の項目に貼り付けます。
+出てきた配列を、いま使っているマニフェストの `features.slash_commands` の項目に貼ります。
 
 ---
 
-## ボットの返事の仕方 {#how-the-bot-responds}
+## ボットはどう応じるか {#how-the-bot-responds}
 
-場面ごとの Hermes の振る舞いをまとめます。
+場面ごとの Hermes のふるまいはこうなっています。
 
-| 場面 | 振る舞い |
+| 場面 | ふるまい |
 |---------|----------|
-| **個人チャット** | すべてのメッセージに返事をします。@メンションは要りません |
-| **チャンネル** | **@メンションされたときだけ返事をします**（たとえば `@Hermes Agent what time is it?`）。チャンネルでは、Hermes はそのメッセージにぶら下がるスレッドで返します。 |
-| **スレッド** | すでにあるスレッドのなかで Hermes に @メンションすると、同じスレッドで返します。ボットがそのスレッドでやり取りを始めたあとは、**続く返信に @メンションは要りません**。会話の流れをそのまま追いかけます。 |
+| **DM** | すべてのメッセージに応じます。@ で呼ぶ必要はありません |
+| **チャンネル** | **@ で呼ばれたときだけ**応じます（例: `@Hermes Agent what time is it?`）。チャンネルでは、そのメッセージにぶら下がるスレッドの中で返します。 |
+| **スレッド** | すでにあるスレッドの中で @ で呼ぶと、同じスレッドの中で返します。ボットがそのスレッドで動いている間は、**続く返信で @ を付ける必要はありません**。会話の流れをそのまま追いかけます。 |
 
 :::tip
-チャンネルでは、会話を始めるときに必ずボットへ @メンションしてください。ボットがスレッドで動き始めたあとは、メンションなしでそのスレッドに返信できます。スレッドの外では、にぎやかなチャンネルが騒がしくならないよう、@メンションのないメッセージは無視されます。
+チャンネルでは、まず @ で呼んで会話を始めてください。ボットがスレッドで動き出したあとは、そのスレッドの中では @ なしで返せます。スレッドの外では、@ のないメッセージは無視されます。人の多いチャンネルで騒がしくならないようにするためです。
 :::
 
 ---
 
-## 設定できる項目 {#configuration-options}
+## 設定できること {#configuration-options}
 
-手順 8 で入れた必須の環境変数のほかに、`~/.hermes/config.yaml` で Slack のボットの振る舞いを細かく決められます。
+手順 8 で入れた必須の環境変数のほかに、`~/.hermes/config.yaml` で Slack ボットのふるまいを細かく決められます。
 
-### スレッドと返信の振る舞い {#thread-reply-behavior}
+### スレッドと返信のしかた {#thread-reply-behavior}
 
 ```yaml
 platforms:
@@ -383,26 +448,32 @@ platforms:
       cron_continuable_surface: thread
 ```
 
-| 項目 | 初期値 | 説明 |
+| 項目 | 既定値 | 説明 |
 |-----|---------|-------------|
-| `platforms.slack.reply_to_mode` | `"first"` | 複数に分かれたメッセージのスレッドの付け方: `"off"`、`"first"`、`"all"` のいずれか |
-| `platforms.slack.extra.reply_in_thread` | `true` | `false` にすると、チャンネルのメッセージにはスレッドではなくその場で返します。すでにあるスレッド内のメッセージには、これまでどおりスレッドで返します。 |
-| `platforms.slack.extra.reply_broadcast` | `false` | `true` にすると、スレッドの返信をチャンネル本体にも流します。流れるのは最初のひとかたまりだけです。 |
-| `platforms.slack.extra.unfurl_links` | Slack の初期値 | `false` にすると、リンクは押せるまま、リンク先のページの自動プレビューだけを止めます。どちらかの unfurl の項目を設定した場合、メディアの説明文はファイルの *前* に別のメッセージとして投稿され（Slack のアップロード API はプレビューの制御を運べないためです）、下書きを直接流す方式は編集による配信に切り替わります。 |
-| `platforms.slack.extra.unfurl_media` | Slack の初期値 | `false` にすると、リンクは押せるまま、メディアの自動プレビューだけを止めます。説明文の順序と配信についての注意は `unfurl_links` と同じです。 |
-| `platforms.slack.extra.rich_blocks` | `false` | `true` にすると、エージェントのメッセージが [Block Kit](https://docs.slack.dev/block-kit/) の部品（見出し、区切り線、本物の入れ子の箇条書き、Slack 本来の表）として表示されます。通知や読み上げのために、素のテキスト版もあわせて送られます。Slack の上限を超える表は、桁をそろえた等幅の表示に切り替わります。アプリの入れ直しは要りません。送る側だけの変更です。 |
-| `platforms.slack.extra.feedback_buttons` | `false` | `rich_blocks` とあわせて `true` にすると、最後の返信に Slack 本来の評価のボタンが付きます。 |
-| `platforms.slack.extra.native_task_cards` | `false` | `true` にすると、実行中のツールの呼び出しが Slack 本来の計画・作業のカードとして表示されます。これは Slack での初期値である `tool_progress: off` とは別に、進捗表示を自分で選んで有効にするものです。Slack 本来の仕組みが失敗したときは、編集され続ける 1 つのテキストの更新に切り替わります。 |
-| `platforms.slack.extra.suggested_prompts` | `[]` | Agent / Assistant の個人チャットの入口に出す `{title, message}` の候補（最大 4 件）。一覧の形でも `{title, prompts}` の形でも書けます。 |
-| `platforms.slack.extra.assistant_thread_titles` | `true` | `true` にすると、Agent / Assistant の個人チャットのスレッドに、最初の利用者のメッセージから名前を付けます。 |
-| `platforms.slack.extra.allow_bots` | `"none"` | ほかの Slack のボットからのメッセージの扱い: `"none"` は無視、`"mentions"` は **そのメッセージ自体** が Hermes に @メンションしているときだけ受け取る、`"all"` はすべて受け取る。ボット同士の連携をいちばん安全に行うなら `"mentions"` を使います。[ほかのボットからのメッセージを受け取る](#accepting-messages-from-other-bots-allow_bots) も見てください。 |
-| `platforms.slack.extra.cron_continuable_surface` | `"thread"` | [続きを話せる定期実行](/hermes/docs/user-guide/features/cron/#flat-in-channel-continuation-slack)の届け先。`"thread"` は届けるたびに専用のスレッドを開きます（初期値）。`"in_channel"` はチャンネルの流れに直接届けます。`in_channel` を使うときは `reply_in_thread: false`（と `require_mention: false`）を組み合わせて、ふつうのチャンネルの返信で続きを進められるようにします。 |
+| `platforms.slack.reply_to_mode` | `"first"` | 分割されたメッセージのスレッドの付け方: `"off"`、`"first"`、`"all"` のいずれか |
+| `platforms.slack.extra.reply_in_thread` | `true` | `false` にすると、チャンネルのメッセージにはスレッドではなくその場で返します。すでにあるスレッドの中では、これまでどおりスレッド内で返します。 |
+| `platforms.slack.extra.reply_broadcast` | `false` | `true` にすると、スレッドの返信をチャンネル本体にも流します。流れるのは最初の一つ分だけです。 |
+| `platforms.slack.extra.unfurl_links` | Slack の既定 | `false` にすると、押せるリンクは残したまま、リンク先の自動プレビューを止めます。どちらかの unfurl の項目を設定すると、メディアの説明文はファイルとは別のメッセージとして*先に*投稿され（Slack の送信 API がプレビューの指定を運べないためです）、下書きを流し込む送り方は書き換え方式に切り替わります。 |
+| `platforms.slack.extra.unfurl_media` | Slack の既定 | `false` にすると、押せるリンクは残したまま、メディアの自動プレビューを止めます。説明文の順序と送り方についての注意は `unfurl_links` と同じです。 |
+| `platforms.slack.extra.rich_blocks` | `false` | `true` にすると、エージェントのメッセージが [Block Kit](https://docs.slack.dev/block-kit/) の部品（見出し、区切り線、本物の入れ子の箇条書き、Slack 本来の表）として表示されます。通知や読み上げのために、文字だけの代替もいつも一緒に送られます。Slack の上限を超える表は、桁の揃った等幅の文字に戻ります。アプリを入れ直す必要はありません。送る側だけの変更です。 |
+| `platforms.slack.extra.feedback_buttons` | `false` | `rich_blocks` と一緒に `true` にすると、最後の返信に Slack 本来の評価ボタンが付きます。 |
+| `platforms.slack.extra.native_task_cards` | `false` | `true` にすると、進行中の道具の呼び出しが Slack 本来の計画・作業カードとして表示されます。これは Slack の既定である `tool_progress: off` とは別に、進み具合を出すことを自分で選ぶ設定です。Slack 側の呼び出しが失敗したときは、書き換え続ける文字のメッセージ一つに切り替わります。 |
+| `platforms.slack.extra.suggested_prompts` | `[]` | Agent / Assistant の DM の入口に出す `{title, message}` を最大 4 つまで。配列でも `{title, prompts}` でも書けます。 |
+| `platforms.slack.extra.assistant_thread_titles` | `true` | `true` にすると、Agent / Assistant の DM のスレッド名を最初の発言から付けます。 |
+| `platforms.slack.extra.allow_bots` | `"none"` | ほかの Slack ボットからのメッセージの扱い: `"none"` は無視、`"mentions"` は**そのメッセージ自身**が Hermes を @ で呼んでいるときだけ受け付け、`"all"` はすべて受け付けます。ボット同士で組むなら `"mentions"` がいちばん安全です。[ほかのボットからのメッセージを受け付ける](#accepting-messages-from-other-bots-allow_bots) を参照してください。 |
+| `platforms.slack.extra.api_human_users` | `[]` | **Web API（利用者トークン）からの投稿を人によるものとして扱う** Slack の利用者 ID。この種の投稿には投稿元の `app_id` が付き `client_msg_id` が付かないため、既定ではアプリからの通信として落とされます。`allow_bots: all` にする代わりに、自作の入口を使う人をここに並べてください。[自作アプリの利用者トークンによる投稿を人として扱う](#treating-your-own-apps-user-token-posts-as-human-api_human_users) を参照してください。 |
+| `platforms.slack.extra.cron_continuable_surface` | `"thread"` | [続きを話せる cron ジョブ](/hermes/docs/user-guide/features/cron/#flat-in-channel-continuation-slack) の届け先。`"thread"` は届けるたびに専用のスレッドを開きます（既定）。`"in_channel"` はチャンネルの流れにそのまま届けます。`in_channel` を使うときは `reply_in_thread: false`（と `require_mention: false`）を組み合わせると、ふつうの返信で仕事を続けられます。 |
 
-同じ設定は環境変数 `SLACK_ALLOW_BOTS=none|mentions|all` でも書けます。両方を設定した場合は `platforms.slack.extra.allow_bots` が優先されます。相手のボットが明示的なメンションなしでも答えてしまう場合、`all` は避けてください。相手側の返信の決まりしだいで堂々巡りになり得ます。
+環境変数では `SLACK_ALLOW_BOTS=none|mentions|all` が同じ働きをします。
+両方を設定した場合は `platforms.slack.extra.allow_bots` が優先されます。相手のボットが
+はっきり呼ばれなくても答えてしまう場合、`all` は避けてください。相手側の返信の決まりしだいで
+堂々巡りが起きます。
 
 ### 作業中の状態表示 {#working-state-status-line}
 
-エージェントがメッセージを処理している間、Slack はスレッドのボット名の横に状態表示を出します。初期状態では Hermes が `is thinking...` と表示します。これは `typing_status_text` で変えられます。たとえば Ada という名前の子猫の助手なら次のようになります。
+エージェントがメッセージを処理している間、Slack はスレッドのボット名の横に状態を出します。
+Hermes は既定で `is thinking...` にしています。`typing_status_text` で変えられます。
+たとえば Ada という名前の子猫のアシスタントならこうです。
 
 ```yaml
 platforms:
@@ -411,21 +482,30 @@ platforms:
     typing_status_text: "is pouncing… 🐾"
 ```
 
-| 項目 | 初期値 | 説明 |
+| 項目 | 既定値 | 説明 |
 |-----|---------|-------------|
-| `platforms.slack.typing_status_text` | `"is thinking..."` | エージェントがメッセージを処理している間に出る、作業中の状態表示の文言。`assistant:write` のスコープが必要です。これがないと状態を伝える呼び出しが黙って失敗し、ここに何を書いても Slack が自前の当たりさわりのない文言を表示します。状態表示そのものをやめるには `typing_indicator: false` にします。 |
+| `platforms.slack.typing_status_text` | `"is thinking..."` | エージェントがメッセージを処理している間に出る、作業中の状態の文言です。`assistant:write` の権限が要ります。これがないと状態の設定が黙って失敗し、ここに何を書いても Slack が用意した文言が出ます。状態表示そのものをやめたいときは `typing_indicator: false` にします。 |
 
-:::note 状態表示が出る場所
-自分で決めた文言は、**返信の入力欄の下のところ**（「*BotName* is thinking…」）に出ます。メッセージの一覧のなかに出るわけではありません。AI のアプリが動いている間にメッセージ欄へ出る「Generating response…」「Finding answers…」といった行は **Slack が自前で順に出しているもの** です。`assistant.threads.setStatus` はそれらを操作できず、両方が同時に出ることもあります。
+:::note どこに表示されるか
+自分で決めた文言が出るのは、**返信の入力欄の下**（「*BotName* is thinking…」）です。メッセージの並びの中ではありません。AI のアプリが動いている間にメッセージの領域に出る「Generating response…」「Finding answers…」といった行は、**Slack が自分で入れ替えて出している表示**です。`assistant.threads.setStatus` からは操作できず、両方が同時に出ることもあります。
 :::
 
-同じ項目は、Google Chat で目に見える作業中の印のメッセージ（`platforms.google_chat.typing_status_text`、初期値は `"Hermes is thinking…"`）にも使えます。ただし Google Chat では、消えていく状態表示ではなく、実際に投稿されたメッセージが返信へ書き換わる形になります。
+同じ項目で、Google Chat の作業中の目印のメッセージも変えられます
+（`platforms.google_chat.typing_status_text`、既定は `"Hermes is thinking…"`）。
+ただし Google Chat では、これは実際に投稿されて返答に書き換えられるメッセージで、
+一時的な状態表示ではありません。
 
-### 実行中の状態表示（ツールごと） {#live-status-per-tool}
+### 進み具合のこまかい表示（道具ごと） {#live-status-per-tool}
 
-初期状態では、状態表示は **エージェントの作業に合わせてその場で変わります**。固定の `is thinking...` ではなく、いま何をしているか、たとえば `is running pytest tests/…`、`is reading docs/api.md…`、`is searching the web for slack api limits…` のように出ます。ツールの呼び出しの合間には、固定の文言に戻ります。これは今までの状態更新の間隔に乗るだけなので、Slack の API を余分に呼びません。Slack の初期値である `tool_progress: off` のままでも動きます。進捗の吹き出しと違って、状態表示は消えるものなので、チャンネルには何も残りません。
+既定では、状態の行は**エージェントの作業に合わせて動きます**。ずっと `is thinking...` と
+出したままにせず、いま何をしているかを見せます。`is
+running pytest tests/…`、`is reading docs/api.md…`、`is searching the web for
+slack api limits…` といった具合です。道具と道具の間では、決まった文言に戻ります。
+もともとの状態更新の間隔に乗っているだけなので、Slack への呼び出しは増えません。
+`tool_progress: off`（Slack の既定）でも動きます。進み具合の吹き出しとは違い、
+状態の行は一時的なもので、チャンネルには何も残しません。
 
-これは `display.live_status` で決めます（全体でも、サービスごとでも設定できます）。
+`display.live_status`（全体でも、プラットフォームごとでも）で決められます。
 
 ```yaml
 display:
@@ -438,28 +518,39 @@ display:
       live_status: full
 ```
 
-| 項目 | 初期値 | 説明 |
+| 項目 | 既定値 | 説明 |
 |-----|---------|-------------|
-| `display.live_status` | `"full"` | ツールごとの実行中の状態表示。`full` は動作と対象の両方を出します。`verb` は動作だけを出します（ファイルのパスやコマンドを共有のチャンネルに出しません）。`off` は固定の文言に戻します。固定の状態表示と同じく、`assistant:write` のスコープが必要です。 |
+| `display.live_status` | `"full"` | 道具ごとの状態表示です。`full` は動作とその中身まで出し、`verb` は動作だけを出します（ファイルのパスやコマンドを共有の場に出しません）。`off` は決まった文言に戻します。決まった文言の場合と同じく `assistant:write` の権限が要ります。 |
 
-### Slack 本来の逐次表示（打っているように見える返信） {#native-streaming-live-typing-replies}
+### Slack 本来の流し込み（打っているように見える返信） {#native-streaming-live-typing-replies}
 
-Slack の [Agents & AI Apps](https://docs.slack.dev/ai/) の機能には、返信をその場で打っているように見せる仕組み（`chat.startStream` / `chat.appendStream` / `chat.stopStream`）があります。ほかの場合に使う、編集を重ねる更新よりもずっとなめらかです。`streaming.enabled` が有効なら（transport が `auto` か `draft`）、Hermes は使える場面で自動的にこの仕組みを使います。
+Slack の [Agents & AI Apps](https://docs.slack.dev/ai/) には、返答をその場で打っているように
+見せる仕組み（`chat.startStream` / `chat.appendStream` /
+`chat.stopStream`）があります。書き換えを重ねるやり方より、ずっと滑らかです。
+`streaming.enabled` が有効（transport が `auto` か `draft`）なら、Hermes は使える場面で
+自動的にこの仕組みを使います。
 
-- 最初のひとかたまりで送信を始め、以降は差分だけを足していきます（この API は追記しかできません）。流して送ったメッセージが **そのまま** 最後のメッセージになります。Hermes は `chat.stopStream` で締めくくり、同じ内容をもう一度投稿することはしません。
-- Slack アプリで AI の機能が有効になっていない場合（または `assistant:write` のスコープがない場合）、最初の失敗を覚えておき、Hermes は編集を重ねる方式に切り替えます。そのとき、直し方を書いた警告をログに 1 行だけ出します。
-- 自分で選んで有効にした Block Kit（`rich_blocks: true`）は、締めくくったメッセージにも適用されます。編集を重ねる方式で仕上げるときと同じです。
+- 最初の一片で流し始め、あとは差分だけを足していきます（この API は足すことしかできません）。
+  流し込まれたメッセージが**そのまま**最終のメッセージになります。Hermes は `chat.stopStream` で
+  それを締めるだけで、同じ内容をもう一度投稿することはありません。
+- Slack アプリ側で AI の機能が有効になっていない（または `assistant:write` の権限がない）ときは、
+  最初の失敗を覚えておき、書き換え方式に切り替えます。直し方を書いたログが一度だけ出ます。
+- 自分で選んだ Block Kit（`rich_blocks: true`）は、締めたメッセージにも適用されます。
+  書き換え方式で仕上げるときと同じです。
 
-逐次表示を有効にする以外に、特別な設定は要りません。
+流し込みを有効にすること以外に、設定は要りません。
 
 ```yaml
 streaming:
   enabled: true       # transport auto/draft lights up Slack native streaming
 ```
 
-### Slack 本来の作業カード（ツールの進捗をその場で表示） {#native-task-cards-live-tool-progress}
+### Slack 本来の作業カード（道具の進み具合） {#native-task-cards-live-tool-progress}
 
-`platforms.slack.extra.native_task_cards: true` にすると、実行中のツールの呼び出しが、文字の進捗の吹き出しではなく Slack 本来の **計画・作業のカード**（Slack 自身の AI 機能が使っているのと同じ見た目）として表示されます。やり取りごとにカードが 1 枚、ツールの呼び出しごとに 1 行が並び、実行中・完了・エラーの状態がその場で更新されます。
+`platforms.slack.extra.native_task_cards: true` にすると、進行中の道具の呼び出しが
+文字の吹き出しではなく Slack 本来の**計画・作業カード**（Slack 自身の AI 機能と同じ見た目）として
+表示されます。一巡につきカード一つ、道具の呼び出しごとに行が一つ並び、
+実行中・完了・エラーの状態がその場で書き換わります。
 
 ```yaml
 platforms:
@@ -468,23 +559,27 @@ platforms:
       native_task_cards: true
 ```
 
-- これは自分で選んで有効にする進捗表示です。Slack での初期値が `tool_progress: off` であっても動きます（文字の吹き出しはチャンネルを騒がせますが、Slack 本来のカードはそうなりません）。
-- 同じツールを同時に呼んだ場合も、本物のツール呼び出しの ID で結び付けるので、並行する `web_search` の呼び出しはそれぞれ自分の行に正しい状態が出ます。
-- Slack 本来の送信を始められない、または更新できないときは、Hermes は編集を重ねる 1 つのテキストのメッセージに切り替えて、そのやり取りの間じゅう進捗を出し続けます。
-- カードの送信は、やり取りが終わるときにちょうど一度だけ止まります。中断や切断のときも同じなので、動いたままの表示が残ることはありません。
+- これは進み具合を出すことを自分で選ぶ設定です。Slack の既定が `tool_progress: off` でも動きます
+  （文字の吹き出しはチャンネルを埋めますが、このカードは埋めません）。
+- 同じ道具を同時に呼んだときも、本物の呼び出し ID で結び付けられます。並行して走る
+  `web_search` は、それぞれが自分の行と正しい状態を持ちます。
+- 流し込みを始められない、または更新できないときは、書き換え続ける文字のメッセージ一つに
+  切り替わるので、その一巡の間も進み具合は見え続けます。
+- カードの流し込みは、一巡が終わるときにちょうど一度だけ止まります。途中で止めたときや
+  接続が切れたときも同じで、動いたままの表示が残ることはありません。
 
-### セッションの分離 {#session-isolation}
+### セッションの切り分け {#session-isolation}
 
 ```yaml
 # Global setting — applies to Slack and all other platforms
 group_sessions_per_user: true
 ```
 
-`true`（初期値）のときは、共有のチャンネルにいる利用者それぞれが、自分だけの会話のセッションを持ちます。`#general` で 2 人が Hermes と話しても、履歴と文脈は別々になります。
+`true`（既定）のときは、共有のチャンネルでも利用者ごとに別々の会話になります。`#general` で二人が Hermes に話しかけても、履歴も文脈も別々です。
 
-チャンネル全体で 1 つの会話のセッションを共有する、共同作業の形にしたいときは `false` にします。この場合、文脈の膨らみとトークンの費用を全員で分け合うことになり、誰か 1 人の `/reset` が全員のセッションを消してしまう点にも注意してください。
+チャンネル全体で一つの会話を共有したいときは `false` にします。その場合、文脈の伸びもトークンの費用も皆で分け合うことになり、誰か一人の `/reset` で全員のセッションが消えます。
 
-### メンションときっかけの振る舞い {#mention-trigger-behavior}
+### 呼びかけと反応のしかた {#mention-trigger-behavior}
 
 ```yaml
 slack:
@@ -536,39 +631,39 @@ slack:
 ```
 
 :::tip `strict_mention` を使う場面
-Slack の初期の振る舞い、つまり「ボットがこのスレッドを覚えている」動きが利用者を驚かせるような、にぎやかなワークスペースでは `true` にします。たとえば技術サポートの長いスレッドで、ボットが最初のほうだけ手伝ったあとは、あらためて呼ばれない限り黙っていてほしい場合です。個人チャットと、やり取りが続いているセッションには影響しません。
+人の多いワークスペースで、Slack の既定である「ボットがこのスレッドを覚えている」ふるまいが驚かれるときは `true` にしてください。たとえば、長く続いた技術サポートのスレッドで、最初のうちボットが手伝ったあとは、もう一度はっきり呼ばれるまで黙っていてほしい、という場面です。DM と、いま動いているやりとりには影響しません。
 :::
 
 :::tip `ignore_other_user_mentions` を使う場面
-スレッドの自動追従や `free_response_channels` によってボットがにぎやかなスレッドを追いかけ、人どうしのやり取りに割り込んでしまうときに `true` にします。これは `strict_mention` より狭い範囲の手当てです。動いているスレッドでのふつうの続きの発言には引き続き答え、別の人への @メンションで始まるメッセージだけを見送ります。**1 対 1 の個人チャットには影響しません**。グループ DM（MPIM）とチャンネルには適用され、下にある共有の場についての方針と同じ扱いになります。`@here` や `@channel` のような全員向けの呼びかけやチャンネルへの言及は、人ではなく場に向けたものなので、見送りの対象にはなりません。
+ボットが人の多いスレッドを追いかけていて（スレッドの自動参加や `free_response_channels` によって）、人どうしのやりとりに割り込んでしまうときは `true` にしてください。`strict_mention` より狭い道具です。参加しているスレッドでのふつうの続きには、これまでどおり答えます。飛ばされるのは、ほかの人を @ で呼んで始まるメッセージだけです。**1 対 1 の DM には影響しません**。グループ DM（MPIM）とチャンネルにはどちらも適用され、下に書いた共有の場としての扱いに合わせてあります。`@here` や `@channel` のような全体への呼びかけやチャンネルの参照は、人ではなく場に向けたものなので、飛ばされることはありません。
 :::
 
 :::info
-Slack ではどちらの使い方もできます。初期状態では会話を始めるのに `@mention` が必要ですが、`SLACK_FREE_RESPONSE_CHANNELS`（カンマ区切りのチャンネル ID）か `config.yaml` の `slack.free_response_channels` で、特定のチャンネルだけ対象から外せます。ボットがスレッドでやり取りを始めたあとは、そのスレッドの続きの返信にメンションは要りません。**1 対 1 の個人チャット** では、ボットはメンションなしでいつでも返事をします。
+Slack ではどちらのやり方も使えます。既定では会話を始めるのに `@mention` が要りますが、`SLACK_FREE_RESPONSE_CHANNELS`（チャンネル ID をカンマ区切りで）か `config.yaml` の `slack.free_response_channels` で、特定のチャンネルだけ外せます。ボットがスレッドで動き出したあとは、続く返信に呼びかけは要りません。**1 対 1 の DM** では、呼びかけなしでいつも応じます。
 :::
 
-:::caution グループ DM（MPIM）は共有の場であり、1 対 1 の個人チャットではありません
-**1 対 1 のダイレクトメッセージ** は 1 人だけとの内輪のやり取りなので、メンションは要りません。**グループ DM（MPIM、複数人のダイレクトメッセージ）** は *共有の場* です。複数の人が見て、ボットを動かせます。そのためチャンネルと同じ管理の設定にしたがいます。`require_mention`、`strict_mention`、`free_response_channels`、`allowed_channels` がいずれも効き、ボットが `:eyes:` や `:white_check_mark:` のリアクションを付けるのは、実際に `@mentioned` されたときだけです。特定のグループ DM でボットに自由に返事をさせたいときは、そのチャンネル ID（`G` で始まります）を `free_response_channels` に足します。
+:::caution グループ DM（MPIM）は共有の場であり、1 対 1 の DM ではありません
+**1 対 1 のダイレクトメッセージ**は相手が一人の私的な会話なので、呼びかけは免除されます。**グループ DM（MPIM・複数人の DM）**は*共有の場*です。複数の人がボットを見られ、動かせるので、チャンネルと同じ設定に従います。`require_mention`、`strict_mention`、`free_response_channels`、`allowed_channels` はすべて効きますし、`:eyes:` や `:white_check_mark:` の反応を付けるのも実際に `@mentioned` されたときだけです。特定のグループ DM で自由に応じさせたいときは、そのチャンネル ID（`G` で始まります）を `free_response_channels` に足してください。
 :::
 
-#### どのメンションの設定を使えばいいか {#which-mention-option-do-i-want}
+#### どの呼びかけの設定を選ぶか {#which-mention-option-do-i-want}
 
-これらの関門は組み合わせて働き、それぞれ別の問いに答えます。
+これらの設定は組み合わせて使えます。それぞれが別の問いに答えます。
 
-| 設定 | 答える問い | 初期値 | 効く範囲 |
+| 設定 | 答える問い | 既定値 | 効く範囲 |
 |--------|--------------------|---------|-------|
-| `require_mention` | **チャンネルの通常のメッセージ** に @メンションが要るか？ | `true` | すべてのチャンネル |
-| `free_response_channels` | どのチャンネルを `require_mention` の対象から外すか？ | なし | 並べたチャンネル |
-| `require_mention_channels` | `require_mention` が `false` でも、あるいはメンション不要のチャンネルでも、どのチャンネルで必ず @メンションを求めるか？ どちらよりも優先されます。 | なし | 並べたチャンネル |
-| `thread_require_mention` | 通常のメッセージには要らなくても、**スレッドの返信** に @メンションが要るか？ メンションされたスレッドを覚えておくことはしません。 | `false` | スレッドのみ |
-| `strict_mention` | 通常のメッセージもスレッドも含め、**すべての** チャンネルのメッセージに、そのつど @メンションが要るか？ 自動での追従（メンションされたスレッドの記憶、ボットの発言への続き、動いているセッションの再開）をすべて止めます。 | `false` | すべてのチャンネルとスレッド |
-| `ignore_other_user_mentions` | **別の人への @メンションで始まる** メッセージ（`@rasha can you take this?`）を見送るか？ メンション不要の設定やスレッドの自動追従より優先されます。文の途中での言及は、これまでどおりボットに届きます。 | `false` | チャンネルとグループ DM |
+| `require_mention` | **チャンネルの通常のメッセージ**に @ が要るか | `true` | すべてのチャンネル |
+| `free_response_channels` | どのチャンネルを `require_mention` から外すか | なし | 挙げたチャンネル |
+| `require_mention_channels` | `require_mention` が `false` でも、自由応答のチャンネルでも、どこは必ず @ を要るようにするか。両方に優先します。 | なし | 挙げたチャンネル |
+| `thread_require_mention` | 通常のメッセージには要らなくても、**スレッドの返信**には @ を要るようにするか。呼ばれたスレッドを覚えません。 | `false` | スレッドだけ |
+| `strict_mention` | **すべての**チャンネルのメッセージ（通常もスレッドも）に、その都度 @ を要るようにするか。自動で追いかける動きをすべて止めます。呼ばれたスレッドの記憶、ボットの発言への続き、動いているセッションの再開、いずれもです。 | `false` | すべてのチャンネルとスレッド |
+| `ignore_other_user_mentions` | **ほかの人を @ で呼んで始まる**メッセージ（`@rasha can you take this?`）を飛ばすか。自由応答とスレッドの自動追跡に優先します。文の途中での言及はこれまでどおり届きます。 | `false` | チャンネルとグループ DM |
 
-目安としては、`strict_mention` がいちばん大づかみな手段です。`thread_require_mention` は通常のメッセージの扱いに触れずに、にぎやかなスレッドだけを静かにします。`require_mention_channels` は、ふだんメンション不要にしているボットで、特定のチャンネルだけ締め直します。`ignore_other_user_mentions` は、はっきり別の人に宛てたメッセージだけを見送ります。1 対 1 の個人チャットではいつでも返事をし、これらの設定の影響を受けません。
+目安はこうです。`strict_mention` がいちばん大きな手当てで、`thread_require_mention` は通常のメッセージの扱いを変えずに賑やかなスレッドだけを静かにします。`require_mention_channels` は、ふだんは自由に応じるボットの中で特定のチャンネルだけ引き締めます。`ignore_other_user_mentions` が飛ばすのは、ほかの人にはっきり向けられたメッセージだけです。1 対 1 の DM はいつも応じ、これらの設定の影響を受けません。
 
-### ほかのボットからのメッセージを受け取る（`allow_bots`） {#accepting-messages-from-other-bots-allowbots}
+### ほかのボットからのメッセージを受け付ける（`allow_bots`） {#accepting-messages-from-other-bots-allowbots}
 
-初期状態では、Hermes はほかの Slack のボットやアプリが書いたメッセージ（Workflow Builder の投稿も含みます）をすべて無視します。複数のエージェントが並ぶワークスペース、つまり複数の Hermes や相手側のボットが 1 つのチャンネルで協力する場合は、`allow_bots` で受け取るようにします。
+既定では、Hermes はほかの Slack ボットやアプリが書いたメッセージをすべて無視します（Workflow Builder の投稿も含みます）。エージェントが何体もいるワークスペース、たとえば複数の Hermes や相手のボットが一つのチャンネルで組む場合は、`allow_bots` で受け付けるようにします。
 
 ```yaml
 platforms:
@@ -581,21 +676,55 @@ platforms:
       allow_bots: mentions
 ```
 
-環境変数では `SLACK_ALLOW_BOTS=none|mentions|all` にあたります（両方を設定した場合は設定ファイル側が優先されます）。知らない値は `none` として扱われます。
+環境変数では `SLACK_ALLOW_BOTS=none|mentions|all` です（両方あるときは設定ファイルが勝ちます）。知らない値は `none` として扱われます。
 
-`mentions` のときの判定は次のとおりです。
+`mentions` はこう働きます。
 
-- 相手のボットのメッセージを受け取るのは、**そのメッセージ自体に、このボットへの今の `@mention` が入っているときだけ** です。本文でも Block Kit の部品のなかでも構いません。スレッドの履歴は判定に入りません。そのスレッドで前にメンションされていたこと、ボット自身の発言への返信、動いているスレッドのセッションのいずれも、あとから来るメンションなしの相手ボットのメッセージを通しません。これは意図してそうしています。エージェント同士が「了解」「状況」と返し合う堂々巡りは、これで止まります。
-- 人のメッセージには影響しません。そちらにはふだんどおりメンションの判定がかかります。
-- どの設定でも、Hermes は自分自身のメッセージを常に無視します。自分の声がこだまして回り続けるのを防ぐためです。
+- 相手のボットのメッセージを受け付けるのは、**そのメッセージ自身が、いまこのボットを `@mention` しているときだけ**です。本文でも Block Kit の部品の中でも構いません。スレッドの履歴は数に入りません。そのスレッドで前に呼ばれていたこと、ボット自身の発言への返信、動いているスレッドのセッション、いずれも、あとから来た呼びかけのないボットのメッセージを通す理由には**なりません**。これは意図した設計で、エージェント同士が確認と状態報告を延々と繰り返すのを断ち切るためです。
+- 人のメッセージには影響しません。そちらはふつうの呼びかけの決まりに従います。
+- Hermes はどの設定でも自分の発言を必ず無視します。自分の声を拾って回り続けないためです。
 
-ボット同士の連携では `mentions` をおすすめします。エージェントはやり取りのたびに、相手をはっきり呼ぶ必要があります。相手のボットの返信の決まりが堂々巡りを起こさないと確かめられない限り、`all` は避けてください。何にでも答える 2 台のボットは、いつまでも返し合います。判定の対象には、ボット印の付いたメッセージ（`bot_id`、`subtype: bot_message`）、アプリから発生したイベント、印の付いていないボットの *利用者*（`users.info` で確かめます）が含まれるので、相手側の Hermes もワークスペースをまたいで同じように選り分けられます。
+ボット同士で組むなら `mentions` がおすすめです。一巡ごとに、相手をはっきり呼ぶ必要があるからです。相手のボットの返信の決まりが堂々巡りを起こさないと分かっているとき以外、`all` は避けてください。何にでも答える二体は、永遠に答え合い続けます。見分けの対象は、印の付いたボットのメッセージ（`bot_id`、`subtype: bot_message`）、アプリから来たイベント、印のないボットの*利用者*（`users.info` で確かめます）まで及ぶので、相手が Hermes でもワークスペースをまたいで同じように扱われます。
 
-複数のボットを厳しく運用するなら、`require_mention: true` と `strict_mention: true` を組み合わせます。下の動作確認のひな形も見てください。
+複数のボットを厳しく運用するなら、`require_mention: true` と `strict_mention: true` を組み合わせてください。下の点検用の設定を参照してください。
 
-### リアクションをきっかけにする（`reaction_triggers`） {#reaction-triggers-reactiontriggers}
+### 自作アプリの利用者トークンによる投稿を人として扱う（`api_human_users`） {#treating-your-own-apps-user-token-posts-as-human-apihumanusers}
 
-初期状態では、絵文字のリアクションは受け取ったことだけ確認して捨てられます。ボットのメッセージに 👍 を付けても何も起きません。リアクションをエージェントの処理に流したいときは `slack.reaction_triggers` を設定します（`reactions:read` のスコープと、Slack アプリのマニフェストでの `reaction_added` / `reaction_removed` のボットイベントの購読が必要です。`hermes slack manifest` で作り直してください）。
+**利用者トークン**（`xoxp-`）を使って Web API から投稿されたメッセージは、
+実際には人が書いたものですが、投稿元の `app_id` が付き `client_msg_id` が付きません。
+これは Hermes がアプリからの投稿を見分けるときの印と同じなので、ボットの通信として落とされます。
+そのせいで、よくある使い方が塞がれます。自作の入口（社内のダッシュボード、モバイルの外側、
+受付端末など）から、ログインしている本人*として* Hermes にメッセージを送る、という形です。
+
+`allow_bots: all` にすればこれらは通りますが、そのチャンネルにいるすべてのボットにも道を開き、
+堂々巡りへの備えが弱くなります。代わりに、自作の入口を使う人だけを並べてください。
+
+```yaml
+platforms:
+  slack:
+    extra:
+      api_human_users: ["U0AAAAAAA", "U0BBBBBBB"]
+```
+
+環境変数では `SLACK_API_HUMAN_USERS` が同じ働きをします（カンマ区切りです）。
+
+効く範囲と安全について:
+
+- 並べられるのは**利用者だけ**です。アプリ ID を並べる書き方は、あえて用意していません。
+  いまどきのボットトークン（`xoxb-`）も同じ `user` と `app_id` の形で投稿するので、
+  アプリを信頼するとそのボット自身の投稿まで通ってしまい、堂々巡りへの備えが崩れます。
+- `bot_id` や `subtype: bot_message` を持つイベント、`user` がまったくないイベントは、
+  この一覧に関係なくいつもボットの投稿として扱われます。
+- そのあとの流れは変わりません。呼びかけの決まり、`allowed_channels`、
+  `SLACK_ALLOWED_USERS` は、（人として扱われるようになった）差出人にもそのまま効きます。
+
+### 絵文字の反応で動かす（`reaction_triggers`） {#reaction-triggers-reactiontriggers}
+
+既定では、絵文字の反応は受け取ったうえで捨てられます。ボットのメッセージに 👍 を付けても
+何も起きません。反応をエージェントへ渡したいときは `slack.reaction_triggers` を設定します
+（`reactions:read` の権限と、Slack アプリのマニフェストでの
+`reaction_added` / `reaction_removed` の受け取り設定が要ります。`hermes slack manifest` で
+作り直してください）。
 
 ```yaml
 slack:
@@ -610,19 +739,28 @@ slack:
   # reaction_trigger_target: C0123456789
 ```
 
-環境変数では `SLACK_REACTION_TRIGGERS`（`true` / `all` またはカンマ区切りの一覧）と `SLACK_REACTION_TRIGGER_TARGET` にあたります。
+環境変数では `SLACK_REACTION_TRIGGERS`（`true` / `all` かカンマ区切りの一覧）と
+`SLACK_REACTION_TRIGGER_TARGET` が同じ働きをします。
 
-振る舞いは次のとおりです。
+どう動くか:
 
-- リアクションは、`reaction:added:👍` / `reaction:removed:👍` という本文のふつうのやり取りとしてエージェントに届きます（よくある Slack の名前は絵文字に置き換えられ、知らない名前は `reaction:added:custom-emoji` のようにそのまま渡されます）。リアクションされたメッセージにぶら下げて届くので、エージェントは何に対するリアクションかを把握でき、そのやり取りは返信のときと同じセッションに入ります。
-- リアクションを付けた人がそのメッセージの送り主として扱われるので、**利用者の権限の判定と `allowed_channels` の絞り込みが、打ったメッセージとまったく同じようにかかります**。無関係な人のリアクションが、その人のメッセージでは動かせない場所でエージェントを動かすことはできません。
-- `reaction_triggers: true` のときに流れるのは、ボット **自身の** メッセージに付いたリアクションだけです（承認や確認の流れを想定しています）。絵文字を並べて指定した場合は、その絵文字がどのメッセージからでも流れます。
-- ボット自身が付ける処理状況のリアクション（`:eyes:` など）が戻ってくることはありません。
-- この設定とは別に、人が付けたリアクションはすべて `reaction:added` / `reaction:removed` の[ゲートウェイのフック](/hermes/docs/user-guide/features/hooks/#available-events)を呼びます。エージェントのやり取りを必要としない見張り役のための仕組みです。
+- 反応は、`reaction:added:👍` / `reaction:removed:👍` という本文のふつうの一巡として届きます
+  （よく使われる Slack の名前は絵文字に置き換えられ、知らない名前はそのまま渡ります。
+  たとえば `reaction:added:custom-emoji` です）。反応が付いたメッセージの下に
+  ぶら下がるので、エージェントは何に対する反応かが分かり、返信と同じセッションに収まります。
+- 反応した人がそのメッセージの発言者として扱われるので、**利用者の許可と
+  `allowed_channels` の絞り込みが、打ったメッセージとまったく同じように効きます**。
+  たまたま見かけた人の反応で、その人が発言できない場所のエージェントが動くことはありません。
+- `reaction_triggers: true` のときに渡されるのは、ボット**自身**のメッセージへの反応だけです
+  （承認や確認の流れ向けです）。絵文字を並べて指定したときは、その絵文字ならどのメッセージからでも渡されます。
+- ボット自身が付ける動作の反応（`:eyes:` など）が返ってくることはありません。
+- この設定とは別に、人が付けた反応はすべて
+  `reaction:added` / `reaction:removed` の [ゲートウェイのフック](/hermes/docs/user-guide/features/hooks/#available-events)
+  を呼びます。エージェントを動かさずに見ているだけの用途に使えます。
 
-### エージェント同士の動作確認 {#peer-agent-smoke-check}
+### エージェント同士の点検 {#peer-agent-smoke-check}
 
-やり取りごとの厳密なメンションを前提にした、複数ボットの Slack 環境では、次のひな形を保ってください。
+一巡ごとの呼びかけを厳しくして複数のボットを動かす場合は、次の設定をそのまま使ってください。
 
 ```yaml
 slack:
@@ -632,28 +770,28 @@ slack:
   allowed_channels: ""
 ```
 
-ゲートウェイの設定変更、配備、再起動のあとには、次の合成イベントによる動作確認を走らせます。
+ゲートウェイの設定変更・配備・再起動のあとは、この点検を実行します。
 
 ```bash
 uv run --frozen pytest -q tests/gateway/test_slack_peer_agent_smoke.py -o addopts=''
 ```
 
-この確認はプロセス内で作った擬似的な Slack のイベントだけを使います。実際に Slack へメッセージを送ることはなく、初期状態では本物のボットトークンも要りません。
+この点検は、その場で作った疑似的な Slack のイベントだけを使います。実際に Slack へメッセージを送ることはなく、既定では本物のボットトークンも要りません。
 
-失敗の種類は次のとおりです。
+失敗したときの読み方:
 
-- `config:` `test_peer_agent_smoke_preflight_contract` がひな形とのずれ（`require_mention`、`strict_mention`、`allow_bots`、`allowed_channels`）を見つけた場合。
-- `platform_connectivity:` アダプターやクライアントが初期化されておらず、振り分けの確認結果をまだ信用できない場合。
-- `bot_identity:` アダプターが自分のボットの利用者 ID を得られておらず、今のメッセージのメンションの判定ができない場合。
-- `routing_logic:` Slack のアダプターが、エージェント同士のやり取りで守るべき決まりのどれか（人のメンションの振り分け、相手ボットの無視、はっきりメンションされた相手ボットの受け入れ、受け身の了解・状況・エラーの抑制）を壊してしまった場合。
+- `config:` — `test_peer_agent_smoke_preflight_contract` が設定の食い違い（`require_mention`、`strict_mention`、`allow_bots`、`allowed_channels`）を見つけました。
+- `platform_connectivity:` — アダプターやクライアントが立ち上がっておらず、振り分けの点検結果はまだ当てになりません。
+- `bot_identity:` — アダプターがボット自身の利用者 ID を解決できておらず、いまのメッセージに対する呼びかけの判定ができません。
+- `routing_logic:` — Slack のアダプターが、エージェント同士の前提のどれかを壊しました（人からの呼びかけの振り分け、相手のボットの無視、はっきり呼ばれた相手のボットの受け入れ、受け身の確認・状態・エラーの抑制）。
 
-この確認が通るのに実際のワークスペースでは振り分けがおかしいときは、振り分けの処理そのものではなく、Slack のトークンやワークスペースとの接続、動かしている環境の状態を調べてください。
+これが通るのに実際のワークスペースでメッセージの行き先がおかしいなら、振り分けの仕組みそのものではなく、Slack のトークンやワークスペースへの接続、配備の状態を調べてください。
 
 ### チャンネルの許可リスト（`allowed_channels`） {#channel-allowlist-allowedchannels}
 
-ボットが動くチャンネルを、決められたものだけに絞れます。多くのチャンネルに招待されているけれど、返事をしてほしいのは一部だけ、というときに便利です。設定すると、一覧にないチャンネルのメッセージは、`@mentioned` されていても **黙って無視** されます。
+ボットが応じるチャンネルを決まった範囲に絞ります。たくさんのチャンネルに招かれているけれど、応じてほしいのは一部だけ、という場合に役立ちます。設定すると、この一覧にないチャンネルからのメッセージは、たとえ `@mentioned` されていても**黙って無視されます**。
 
-**1 対 1 の個人チャットはこの絞り込みの対象外です**。許可された利用者はいつでもダイレクトメッセージでボットに届きます。**グループ DM（MPIM）は対象外ではありません**。チャンネルと同じで、MPIM も許可リストに載っていなければ（ID は `G` で始まります）、そのメッセージは捨てられます。
+**1 対 1 の DM はこの絞り込みの対象外**なので、許可された人はいつでも DM でボットに話しかけられます。**グループ DM（MPIM）は対象外ではありません**。チャンネルと同じく、その ID（`G` で始まります）が一覧になければメッセージは落とされます。
 
 ```yaml
 slack:
@@ -662,21 +800,21 @@ slack:
     - "C0987654321"   # #incident-response
 ```
 
-環境変数（カンマ区切り）で書くこともできます。
+環境変数でも書けます（カンマ区切りです）。
 
 ```bash
 SLACK_ALLOWED_CHANNELS="C0123456789,C0987654321"
 ```
 
-振る舞いは次のとおりです。
+どう動くか:
 
-- 空、または未設定 → 制限なし（これまでの動きと完全に同じです）。
-- 中身がある → チャンネル ID が一覧に載っている必要があります。載っていないメッセージは、ほかのどの関門（メンションの要否、`free_response_channels` など）よりも先に捨てられます。
-- Slack のチャンネル ID は `C`（公開）、`G`（非公開）、`D`（個人チャット）で始まります。Slack の画面で「Open channel details」→「About」を開くか、API で調べられます。
+- 空か未設定 → 絞り込みなし（これまでどおりに動きます）。
+- 中身がある → チャンネル ID が一覧になければ、ほかのどの判定（呼びかけの要否、`free_response_channels` など）よりも先に落とされます。
+- Slack のチャンネル ID は `C`（公開）、`G`（非公開）、`D`（DM）で始まります。Slack の画面で「チャンネル詳細を開く」→「概要」から、または API から調べられます。
 
-あわせて読む: [管理者用と利用者用のスラッシュコマンドの分け方](/hermes/docs/reference/slash-commands/#permissions-and-adminuser-split)。
+あわせて読む: [管理者と利用者のスラッシュコマンドの分け方](/hermes/docs/reference/slash-commands/#permissions-and-adminuser-split)。
 
-### 許可していない利用者への対応 {#unauthorized-user-handling}
+### 許可していない人への応じ方 {#unauthorized-user-handling}
 
 ```yaml
 slack:
@@ -686,24 +824,24 @@ slack:
   unauthorized_dm_behavior: "pair"
 ```
 
-すべてのサービスに共通の設定として書くこともできます。
+すべてのプラットフォームに対してまとめて決めることもできます。
 
 ```yaml
 unauthorized_dm_behavior: "pair"
 ```
 
-`slack:` の下にあるサービスごとの設定は、共通の設定より優先されます。
+`slack:` の下に書いた個別の設定は、全体の設定より優先されます。
 
-### 音声の書き起こし {#voice-transcription}
+### 音声の文字起こし {#voice-transcription}
 
 ```yaml
 # Global setting — enable/disable automatic transcription of incoming voice messages
 stt_enabled: true
 ```
 
-`true`（初期値）のときは、届いた音声のメッセージが、エージェントの処理に回る前に、設定した書き起こしのサービスで自動的に文字にされます。
+`true`（既定）のときは、届いた音声のメッセージが、エージェントに渡される前に設定済みの文字起こしの提供元で自動的に文字になります。
 
-### 設定の全体例 {#full-example}
+### 設定のひととおりの例 {#full-example}
 
 ```yaml
 # Global gateway settings
@@ -729,43 +867,44 @@ platforms:
 
 ## ホームチャンネル {#home-channel}
 
-`SLACK_HOME_CHANNEL` にチャンネル ID を設定すると、Hermes は予定されたメッセージ、定期実行の結果、そのほか自分から送る通知をそのチャンネルに届けます。チャンネル ID の調べ方は次のとおりです。
+`SLACK_HOME_CHANNEL` にチャンネル ID を設定すると、Hermes は予定していたメッセージ、
+cron ジョブの結果、そのほか自分から出す知らせをそこへ届けます。チャンネル ID の調べ方:
 
 1. Slack でチャンネル名を右クリックします
-2. **View channel details** をクリックします
-3. いちばん下までスクロールすると、チャンネル ID が表示されています
+2. **View channel details** を押します
+3. いちばん下まで下がると、チャンネル ID が書かれています
 
 ```bash
 SLACK_HOME_CHANNEL=C01234567890
 ```
 
-そのチャンネルに **ボットを招待してある** ことを確かめてください（`/invite @Hermes Agent`）。
+そのチャンネルに**ボットを招いてある**か確かめてください（`/invite @Hermes Agent`）。
 
-### 定期実行の届け先の指定 {#cron-delivery-targeting}
+### cron の届け先を決める {#cron-delivery-targeting}
 
-定期実行のジョブ（[定期実行の案内](/hermes/docs/user-guide/features/cron/#delivery-options)を見てください）では、Slack への届け先を 3 通りで指定できます。
+cron ジョブ（[cron の案内](/hermes/docs/user-guide/features/cron/#delivery-options) を参照）は、Slack への届け方を三つから選べます。
 
 | `deliver:` の値 | 届く先 |
 |------------------|----------------|
 | `slack` | ホームチャンネル（`SLACK_HOME_CHANNEL`） |
-| `slack:C0123456789` | ID で指定した特定のチャンネル |
-| `slack:U0123456789` | その利用者との **個人チャット**。利用者 ID だけを書くと、自動で個人チャットのやり取りに読み替えられます（`im:write` のスコープが必要です） |
+| `slack:C0123456789` | ID で指定したチャンネル |
+| `slack:U0123456789` | その人の **DM**。利用者 ID だけを書けば、自動で DM の会話に解決されます（`im:write` の権限が要ります） |
 
-定期実行の処理がゲートウェイと同じ場所で動いていなくても届きます。Hermes は `SLACK_BOT_TOKEN` を使う単独の Web API の送信に切り替えます。定期実行の出力にある `MEDIA:` の添付は、同じ届け先へ Slack 本来のファイル共有としてアップロードされます。
+cron の処理がゲートウェイと同じ場所で動いていなくても届きます。Hermes は `SLACK_BOT_TOKEN` を使う単独の Web API の送り手に切り替えます。cron の出力に `MEDIA:` の添付があれば、同じ届け先に Slack 本来のファイルとして上がります。
 
-### メッセージとメディアを送る（`send_message`） {#sending-messages-and-media-sendmessage}
+### メッセージとファイルを送る（`send_message`） {#sending-messages-and-media-sendmessage}
 
-エージェントの `send_message` のツールも同じ形の届け先を受け取ります。チャンネル ID（`C…` / `G…`）、個人チャットのやり取り（`D…`）、利用者 ID だけ（`U…` / `W…`）のいずれでも構いません。利用者 ID は、テキストでもメディアでも問いかけでも、どの送信経路でもその人との個人チャットに読み替えられます。`MEDIA:<path>` の添付（画像・PDF・文書）は Slack 本来のファイル共有としてアップロードされ、添付が 1 つで短いメッセージが添えられている場合は、別のメッセージではなくファイルの説明文として付きます。見つからないファイルは、送信全体を失敗させるのではなく、ファイルごとの警告として報告されます。
+エージェントの `send_message` という道具も、同じ形の届け先を受け付けます。チャンネル ID（`C…` / `G…`）、DM の会話（`D…`）、利用者 ID だけ（`U…` / `W…`）のいずれかです。最後のものは、文字・ファイル・確認の問いかけのどの送り方でも、その人の DM に解決されます。`MEDIA:<path>` の添付（画像・PDF・書類）は Slack 本来のファイルとして上がります。添付が一つで、短い文が添えられているときは、別のメッセージにせずファイルの説明文として一緒に届きます。見つからないファイルは、送信全体を失敗させずに、そのファイルごとの注意として知らされます。
 
 ---
 
-## 複数のワークスペースへの対応 {#multi-workspace-support}
+## 複数のワークスペースに対応する {#multi-workspace-support}
 
-Hermes は、1 つのゲートウェイで **複数の Slack ワークスペース** に同時につなげます。ワークスペースごとに、それぞれのボットの利用者 ID で別々に認証します。
+Hermes は、一つのゲートウェイから**複数の Slack ワークスペース**に同時につなげます。ワークスペースごとに別々のボット利用者 ID で認証されます。
 
 ### 設定 {#configuration}
 
-`SLACK_BOT_TOKEN` に、複数のボットトークンを **カンマ区切りの一覧** で渡します。
+`SLACK_BOT_TOKEN` に複数のボットトークンを**カンマ区切り**で並べます。
 
 ```bash
 # Multiple bot tokens — one per workspace
@@ -775,7 +914,7 @@ SLACK_BOT_TOKEN=xoxb-workspace1-token,xoxb-workspace2-token,xoxb-workspace3-toke
 SLACK_APP_TOKEN=xapp-your-app-token
 ```
 
-`~/.hermes/config.yaml` に書くこともできます。
+`~/.hermes/config.yaml` でも書けます。
 
 ```yaml
 platforms:
@@ -785,13 +924,13 @@ platforms:
 
 ### OAuth のトークンファイル {#oauth-token-file}
 
-環境変数や設定ファイルのトークンに加えて、Hermes は次の場所にある **OAuth のトークンファイル** からもトークンを読み込みます。
+環境変数や設定ファイルのトークンに加えて、Hermes は次の場所にある **OAuth のトークンファイル**からもトークンを読みます。
 
 ```
 ~/.hermes/slack_tokens.json
 ```
 
-このファイルは、チーム ID とトークンの情報を対応させた JSON のオブジェクトです。
+このファイルは、チーム ID とトークンの情報を結び付けた JSON です。
 
 ```json
 {
@@ -802,29 +941,29 @@ platforms:
 }
 ```
 
-このファイルのトークンは、`SLACK_BOT_TOKEN` で指定したトークンとまとめて扱われます。重複するトークンは自動で取り除かれます。
+ここのトークンは `SLACK_BOT_TOKEN` で指定したものと合わせて使われます。重なったトークンは自動的にまとめられます。
 
-### しくみ {#how-it-works}
+### どう動くか {#how-it-works}
 
-- 一覧の **最初のトークン** が主のトークンで、ソケットモードの接続（AsyncApp）に使われます。
-- 起動時に、それぞれのトークンが `auth.test` で認証されます。ゲートウェイは `team_id` ごとに専用の `WebClient` と `bot_user_id` を対応させます。
-- メッセージが届くと、Hermes はそのワークスペースに合ったクライアントを使って返事をします。
-- 主の `bot_user_id`（最初のトークンのもの）は、ボットの身元が 1 つであることを前提にした機能との互換のために使われます。
+- 並べたうちの**最初のトークン**が主のトークンで、ソケットモードの接続（AsyncApp）に使われます。
+- 起動時に、それぞれのトークンが `auth.test` で認証されます。ゲートウェイは `team_id` ごとに専用の `WebClient` と `bot_user_id` を持ちます。
+- メッセージが届くと、Hermes はそのワークスペースに合ったクライアントを使って返します。
+- 主の `bot_user_id`（最初のトークンのもの）は、ボットが一つであることを前提にした機能との互換のために使われます。
 
 ---
 
-## ボイスメッセージ {#voice-messages}
+## 音声のメッセージ {#voice-messages}
 
-Hermes は Slack でも音声に対応しています。
+Hermes は Slack でも音声を扱えます。
 
-- **受け取り:** 音声のメッセージは、設定した書き起こしのサービスで自動的に文字にされます。手元で動く `faster-whisper`、Groq の Whisper（`GROQ_API_KEY`）、OpenAI の Whisper（`VOICE_TOOLS_OPENAI_KEY`）が使えます
-- **送り出し:** 読み上げの応答は、音声ファイルの添付として送られます
+- **受け取り:** 音声のメッセージは、設定済みの文字起こしの提供元で自動的に文字になります。手元で動く `faster-whisper`、Groq の Whisper（`GROQ_API_KEY`）、OpenAI の Whisper（`VOICE_TOOLS_OPENAI_KEY`）のいずれかです
+- **送り出し:** 読み上げの返答は、音声ファイルの添付として送られます
 
 ---
 
 ## チャンネルごとの指示 {#per-channel-prompts}
 
-特定の Slack チャンネルに、その場限りのシステムの指示を割り当てられます。この指示はやり取りのたびに実行時に差し込まれ、会話の記録には残らないので、変更はすぐに効きます。
+特定の Slack チャンネルに、その場限りのシステムの指示を割り当てられます。指示は一巡ごとに実行時に差し込まれ、会話の記録には残りません。書き換えればすぐに効きます。
 
 ```yaml
 slack:
@@ -837,13 +976,13 @@ slack:
       performance implications.
 ```
 
-見出しにあたるのは Slack のチャンネル ID です（チャンネルの詳細 →「About」を開いて下までスクロールすると分かります）。そのチャンネルのすべてのメッセージに、この指示がその場限りのシステムの指示として差し込まれます。
+見出しに書くのは Slack のチャンネル ID です（チャンネル詳細 →「概要」の下の方で調べられます）。そのチャンネルのすべてのメッセージに、その場限りのシステムの指示として差し込まれます。
 
 ## チャンネルごとのスキルの割り当て {#per-channel-skill-bindings}
 
-特定のチャンネルや個人チャットで新しいセッションが始まるたびに、スキルを自動で読み込ませられます。やり取りのたびに差し込まれるチャンネルごとの指示とは違い、スキルの割り当てはスキルの内容を **セッションの開始時に** 利用者のメッセージとして差し込みます。それが会話の履歴の一部になるので、以降のやり取りで読み込み直す必要はありません。
+特定のチャンネルや DM で新しいセッションが始まるたびに、スキルを自動で読み込ませられます。一巡ごとに差し込まれるチャンネルごとの指示とは違い、こちらはスキルの中身を**セッションの始まり**に利用者の発言として差し込みます。会話の履歴の一部になるので、次の一巡から読み直す必要はありません。
 
-用途がはっきり決まっている個人チャットやチャンネル（暗記カード、特定分野の質問応答、サポートの一次受けなど）で、短い返信のたびにモデル自身の判断で読み込むかどうかを決めさせたくない場合に向いています。
+用途がはっきりした DM やチャンネル（単語カード、特定分野の質問応答、問い合わせの振り分けなど）で、短い返信のたびにモデル自身にスキルを読むかどうか決めさせたくないときに向いています。
 
 ```yaml
 slack:
@@ -862,50 +1001,52 @@ slack:
       skill: hubspot-on-demand
 ```
 
-補足です。
-- 割り当てはチャンネル ID で判定します。割り当てのあるチャンネルのスレッドのメッセージは、親のチャンネルの割り当てを引き継ぎます。
-- スキルが読み込まれるのはセッションの開始時（新しいセッション、または自動でのリセットのあと）だけです。割り当てを変えたときは、`/new` を実行するか、セッションが自動でリセットされるのを待つと反映されます。
-- スキルの指示に加えて、チャンネルごとの口調や制約を足したいときは `channel_prompts` と組み合わせてください。
+覚えておくこと:
+- 割り当てはチャンネル ID で決まります。割り当てのあるチャンネルのスレッドは、親のチャンネルの割り当てを引き継ぎます。
+- スキルが読まれるのはセッションの始まりだけです（新しいセッション、または自動でやり直したあと）。割り当てを変えたときは、`/new` を実行するか、セッションが自動でやり直されるのを待つと効きます。
+- `channel_prompts` と組み合わせると、スキルの指示の上にチャンネルごとの口調や制約を重ねられます。
 
-## 困ったときは {#troubleshooting}
+## うまくいかないとき {#troubleshooting}
 
 | 症状 | 対処 |
 |---------|----------|
-| 個人チャットに返事をしない | イベントの購読に `message.im` が入っているか、アプリを入れ直したかを確かめます |
-| 個人チャットでは動くのにチャンネルでは動かない | **いちばん多い症状です。** イベントの購読に `message.channels` と `message.groups` を足し、アプリを入れ直し、`/invite @Hermes Agent` でボットをチャンネルに招待します |
-| チャンネルでの @メンションに返事をしない | 1) `message.channels` のイベントを購読しているか確かめます。2) ボットをそのチャンネルに招待する必要があります。3) `channels:history` のスコープが入っているか確かめます。4) スコープやイベントを変えたらアプリを入れ直します |
-| 非公開チャンネルのメッセージを無視する | `message.groups` のイベントの購読と `groups:history` のスコープの両方を足し、アプリを入れ直して `/invite` でボットを招待します |
-| グループ DM（複数人のダイレクトメッセージ）で返事をしない | `message.mpim` のイベントの購読と `mpim:history` のスコープ（あわせて `mpim:read` も）を足し、アプリを **入れ直します**。`message.mpim` がないと、1 対 1 の個人チャットが動いていても、Slack はグループ DM のメッセージをボットに届けません。 |
-| 個人チャットで「Sending messages to this app has been turned off」と出る | App Home の設定で **メッセージタブ** を有効にします（手順 5 を見てください） |
-| 「not_authed」「invalid_auth」のエラーが出る | ボットトークンとアプリトークンを作り直し、`.env` を更新します |
-| 返事はするのにチャンネルへ投稿できない | `/invite @Hermes Agent` でボットをそのチャンネルに招待します |
-| 会話はできるのにアップロードされた画像やファイルを読めない | `files:read` を足して、アプリを **入れ直します**。Slack がスコープや認証、権限の失敗を返したときは、Hermes が添付の読み取りについての診断をチャット上に出すようになりました。 |
-| `missing_scope` のエラーが出る | OAuth & Permissions で必要なスコープを足し、アプリを **入れ直します** |
-| ソケットの接続がひんぱんに切れる | ネットワークを確かめます。Bolt は自動でつなぎ直しますが、接続が不安定だと反応が遅れます |
-| スコープやイベントを変えたのに何も変わらない | スコープやイベントの購読を変えたら、アプリをワークスペースに **入れ直す必要があります** |
+| DM に応じない | 受け取るイベントに `message.im` が入っているか、アプリを入れ直したかを確かめます |
+| DM では動くのにチャンネルで動かない | **いちばん多いつまずきです。** 受け取るイベントに `message.channels` と `message.groups` を足し、アプリを入れ直したうえで、`/invite @Hermes Agent` でチャンネルに招きます |
+| チャンネルで @ で呼んでも応じない | 1) `message.channels` のイベントを受け取る設定になっているか。2) ボットがそのチャンネルに招かれているか。3) `channels:history` の権限があるか。4) 権限やイベントを変えたあとにアプリを入れ直したか |
+| 非公開チャンネルのメッセージを無視する | `message.groups` のイベントと `groups:history` の権限を両方足し、アプリを入れ直して `/invite` で招きます |
+| グループ DM（複数人の DM）で応じない | `message.mpim` のイベントと `mpim:history` の権限（それに `mpim:read`）を足し、アプリを**入れ直します**。`message.mpim` がないと、1 対 1 の DM が動いていても、Slack はグループ DM のメッセージをボットに届けません。 |
+| DM で「Sending messages to this app has been turned off」と出る | App Home の設定で**メッセージタブ**を有効にします（手順 5） |
+| 「not_authed」や「invalid_auth」のエラーが出る | ボットトークンとアプリトークンを作り直し、`.env` を更新します |
+| 応じるのにチャンネルへ投稿できない | `/invite @Hermes Agent` でボットをチャンネルに招きます |
+| 会話はできるのに上げた画像やファイルを読めない | `files:read` を足して、アプリを**入れ直します**。Slack が権限や認証の失敗を返したときは、添付を読めない理由がチャットの中に出るようになりました。 |
+| `missing_scope` のエラーが出る | OAuth & Permissions で足りない権限を足し、アプリを**入れ直します** |
+| ソケットがよく切れる | ネットワークを確かめてください。Bolt は自動でつなぎ直しますが、不安定な回線では遅れが出ます |
+| 権限やイベントを変えたのに何も変わらない | 権限やイベントの設定を変えたら、ワークスペースにアプリを**入れ直す必要があります** |
 
-### チェックリスト {#quick-checklist}
+### 手早い確認 {#quick-checklist}
 
-チャンネルでボットが動かないときは、次の **すべて** を確かめてください。
+チャンネルでボットが動かないときは、次を**すべて**確かめてください。
 
-1. ✅ `message.channels` のイベントを購読している（公開チャンネル用）
-2. ✅ `message.groups` のイベントを購読している（非公開チャンネル用）
-3. ✅ `app_mention` のイベントを購読している
-4. ✅ `channels:history` のスコープを足している（公開チャンネル用）
-5. ✅ `groups:history` のスコープを足している（非公開チャンネル用）
-6. ✅ スコープやイベントを足したあとにアプリを **入れ直した**
-7. ✅ ボットをチャンネルに **招待した**（`/invite @Hermes Agent`）
-8. ✅ メッセージでボットに **@メンションしている**
+1. ✅ `message.channels` のイベントを受け取る設定になっている（公開チャンネル用）
+2. ✅ `message.groups` のイベントを受け取る設定になっている（非公開チャンネル用）
+3. ✅ `app_mention` のイベントを受け取る設定になっている
+4. ✅ `channels:history` の権限を足してある（公開チャンネル用）
+5. ✅ `groups:history` の権限を足してある（非公開チャンネル用）
+6. ✅ 権限やイベントを足したあとにアプリを**入れ直した**
+7. ✅ ボットをチャンネルに**招いた**（`/invite @Hermes Agent`）
+8. ✅ メッセージの中でボットを **@ で呼んでいる**
 
 ---
 
 ## 安全に使うために {#security}
 
 :::warning
-**`SLACK_ALLOWED_USERS` は必ず設定してください**。許可する利用者のメンバー ID を書きます。この設定がないと、ゲートウェイは安全のため初期状態で **すべてのメッセージを拒否** します。ボットのトークンは決して人に渡さないでください。パスワードと同じ扱いをします。
+**`SLACK_ALLOWED_USERS` は必ず設定してください。**許可する人のメンバー ID を並べます。設定しないと、
+安全のためにゲートウェイは**すべてのメッセージを拒みます**。ボットのトークンは決して人に渡さないでください。
+パスワードと同じ扱いです。
 :::
 
-- トークンは `~/.hermes/.env`（ファイルの権限は `600`）に置きます
-- Slack アプリの設定から、トークンを定期的に入れ替えます
+- トークンは `~/.hermes/.env` に保存します（ファイルの権限は `600`）
+- Slack アプリの設定から、ときどきトークンを作り直します
 - Hermes の設定ディレクトリに誰が触れるかを見直します
-- ソケットモードでは公開のエンドポイントを出さずに済むので、攻撃されうる面がひとつ減ります
+- ソケットモードなら公開の受け口を持たずに済みます。狙われる面が一つ減ります

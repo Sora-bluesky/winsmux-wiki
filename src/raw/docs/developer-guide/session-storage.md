@@ -1,21 +1,21 @@
 ---
-title: "セッションストレージ"
+title: "セッションの保存"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: 0ff701d7f3c34d93df4cf97fb78bf27b14cb8382
+upstream_blob: 0f80accfde87d3ddb92fc913ecc8c62f4b47b59b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
 
-# セッションストレージ {#session-storage}
+# セッションの保存 {#session-storage}
 
 Hermes Agent は SQLite のデータベース（`~/.hermes/state.db`）を使って、セッションの
-メタデータ、メッセージ履歴の全文、モデル設定を、CLI とゲートウェイのセッションを
-またいで保存します。これは以前のセッションごとの JSONL ファイル方式に代わるものです。
+付随情報、メッセージの履歴、モデルの設定を、CLI とゲートウェイの両方にまたがって
+残しています。以前はセッションごとの JSONL ファイルでしたが、それを置き換えたものです。
 
-ソースファイル: `hermes_state.py`
+対象のソース: `hermes_state.py`
 
-## アーキテクチャの全体像 {#architecture-overview}
+## 全体の構成 {#architecture-overview}
 
 ```
 ~/.hermes/state.db (SQLite, WAL mode)
@@ -29,25 +29,31 @@ Hermes Agent は SQLite のデータベース（`~/.hermes/state.db`）を使っ
 ├── gateway_routing       — Gateway routing metadata
 ├── compression_locks     — Cross-process compression locking
 ├── async_delegations     — Async delegation bookkeeping
+├── delivery_obligations  — Gateway outbox (owed replies); created lazily by gateway/delivery_ledger.py
 └── schema_version        — Single-row table tracking migration state
 ```
 
-設計上の要点は次のとおりです。
-- **WAL モード** により、読み手が複数いても書き手が 1 つなら同時に動けます（ゲートウェイの複数プラットフォーム運用向け）
-- **FTS5 の仮想テーブル** により、全セッションのメッセージを高速に全文検索できます
-- **セッションの系譜** を `parent_session_id` の連なりで表します（圧縮による分割で発生します）
-- **送信元のタグ付け**（`cli`、`telegram`、`discord` など）でプラットフォーム別に絞り込めます
-- バッチランナーと RL の軌跡はここには保存されません（別の仕組みです）
+`hermes sessions recover` は、上の行を持つテーブルを復旧先のデータベースへ写します
+（全文検索の索引と `schema_version` は作り直されます）。必要になってから作られる
+`delivery_obligations` の台帳も、元のデータベースにあれば一緒に写り、その行数は
+`sessions` や `messages` と同じように検証されます。
 
-## SQLite のスキーマ {#sqlite-schema}
+設計上の要点は次のとおりです。
+- 読み手が複数、書き手がひとつという形（基盤をまたぐゲートウェイ）のための **WAL モード**
+- すべてのセッションのメッセージを素早く探すための **FTS5 の仮想テーブル**
+- `parent_session_id` の連なりによる**セッションの系譜**（圧縮によって分かれた場合）
+- 基盤で絞り込むための**出どころの記録**（`cli`、`telegram`、`discord` など）
+- まとめて動かす仕組みと強化学習の記録は、ここには保存されません（別の仕組みです）
+
+## SQLite の構造 {#sqlite-schema}
 
 ### sessions テーブル {#sessions-table}
 
-抜粋です。現在の全カラムは `hermes_state.py` の `SCHEMA_SQL` を参照してください
+抜粋です。現在の列の全体は `hermes_state.py` の `SCHEMA_SQL` を見てください
 （`session_key`、`chat_id`、`chat_type`、`thread_id`、`display_name`、`origin_json`、
-`expiry_finalized` といったゲートウェイの経路情報、`cwd` / `git_branch` /
-`git_repo_root` の作業環境フィールド、引き継ぎと圧縮失敗のフィールド、
-`profile_name`、`rewind_count`、`archived`、`pinned` も含まれます）。
+`expiry_finalized` といったゲートウェイの振り分けの情報、作業場所の
+`cwd` / `git_branch` / `git_repo_root`、引き継ぎと圧縮の失敗に関する列、
+`profile_name`、`rewind_count`、`archived`、`pinned` も含みます）。
 
 ```sql
 CREATE TABLE IF NOT EXISTS sessions (
@@ -91,7 +97,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_sessions_title_unique
 
 ### messages テーブル {#messages-table}
 
-抜粋です。実際のスキーマには `effect_disposition`、
+抜粋です。実際の構造には `effect_disposition`、
 `platform_message_id`、`observed`、`active`、`compacted`、`api_content`、
 `display_kind`、`display_metadata` も含まれます。
 
@@ -119,12 +125,12 @@ CREATE INDEX IF NOT EXISTS idx_messages_session ON messages(session_id, timestam
 CREATE INDEX IF NOT EXISTS idx_messages_session_id ON messages(session_id, id);
 ```
 
-補足:
-- `tool_calls` は JSON 文字列として保存されます（ツール呼び出しオブジェクトのリストを直列化したもの）
-- `reasoning_details`、`codex_reasoning_items`、`codex_message_items` も JSON 文字列として保存されます
-- `reasoning` には、推論内容を返すプロバイダの生テキストが入ります
-- `api_content` はバイト単位で忠実さを保つための控えです。このメッセージで実際に API へ送られた内容が `content` と異なる場合（一時的なメモリやプラグインの差し込み、上書き保存など）に、その文字列を保持します。プロンプトキャッシュを崩さずに再送するために送信時のバイト列をそのまま残しますが、単独のサロゲートだけは例外です（sqlite3 がバインドできず、会話ループも送信内容から必ず取り除きます）。`NULL` は `content` がそのまま送られたことを意味します
-- タイムスタンプは Unix エポック秒の浮動小数点値です（`time.time()`）
+補足です。
+- `tool_calls` は JSON の文字列として保存されます（ツールの呼び出しを並べたものを直列化したもの）
+- `reasoning_details`、`codex_reasoning_items`、`codex_message_items` も JSON の文字列として保存されます
+- `reasoning` には、それを見せてくれるプロバイダの場合に、推論の生の文面が入ります
+- `api_content` は、バイト単位で忠実に残すための控えです。そのメッセージについて API へ実際に送った文字列が `content` と違うとき（その場かぎりのメモリやプラグインの差し込み、保存内容の上書きなど）に入ります。プロンプトキャッシュを崩さずに再送できるよう、送ったときのバイトをそのまま保ちます。例外は対になっていないサロゲートで、これは sqlite3 が受け付けられず、会話のループもすべての送信内容から取り除いています。`NULL` は、`content` をそのまま送ったという意味です
+- 時刻は Unix エポックの浮動小数点数です（`time.time()`）
 
 ### FTS5 による全文検索 {#fts5-full-text-search}
 
@@ -138,53 +144,54 @@ CREATE VIRTUAL TABLE IF NOT EXISTS messages_fts USING fts5(
 );
 ```
 
-FTS5 のテーブルは、`messages` テーブルの INSERT、UPDATE、DELETE で発火する
-3 つのトリガーによって同期されます。現在のトリガーは `state_meta` にある
-`fts_rebuild_high_water` / `fts_rebuild_progress` のマーカーで制御されており
-（バックグラウンドで FTS を作り直しても二重に索引付けされないようにするためです）、
-索引対象の 3 カラムすべてを扱います。正確な SQL は `hermes_state.py` の `SCHEMA_SQL` を参照してください。
+FTS5 のテーブルは、`messages` テーブルの INSERT・UPDATE・DELETE で動く3つの
+トリガーによって同期が保たれます。今のトリガーは `state_meta` にある
+`fts_rebuild_high_water` / `fts_rebuild_progress` の印を見て働くので
+（背後で索引を作り直しているあいだ、二重に索引されずに済みます）、索引の対象となる
+3つの列すべてを扱います。実際の SQL は `hermes_state.py` の `SCHEMA_SQL` を見てください。
 
-## スキーマのバージョンと移行 {#schema-version-and-migrations}
+## 構造の版と移行 {#schema-version-and-migrations}
 
-現在のスキーマバージョン: **23**
+現在の構造の版: **23**
 
-`schema_version` テーブルには整数が 1 つだけ入っています。単純なカラム追加は `_reconcile_columns()` が宣言的に処理します（実際のカラムと `SCHEMA_SQL` を突き合わせ、足りないものを ADD します）。バージョンで管理する処理の連なりは、宣言的には表せないデータ移行や索引・FTS の変更のために取ってあります。
+`schema_version` テーブルには整数がひとつだけ入っています。単純な列の追加は `_reconcile_columns()` が宣言的に扱います（実際の列と `SCHEMA_SQL` を突き合わせ、足りないものを ADD します）。版で区切られた移行の連なりは、宣言では書けないデータの移行や、索引・全文検索の変更のために取ってあります。
 
-| バージョン | 変更内容 |
+| 版 | 変更の内容 |
 |---------|--------|
-| 1 | 最初のスキーマ（sessions、messages、FTS5） |
-| 2 | messages に `finish_reason` カラムを追加 |
-| 3 | sessions に `title` カラムを追加 |
-| 4 | `title` に一意索引を追加（NULL は許可、NULL 以外は一意） |
-| 5 | 課金関連のカラムを追加: `cache_read_tokens`、`cache_write_tokens`、`reasoning_tokens`、`billing_provider`、`billing_base_url`、`billing_mode`、`estimated_cost_usd`、`actual_cost_usd`、`cost_status`、`cost_source`、`pricing_version` |
-| 6 | messages に推論関連のカラムを追加: `reasoning`、`reasoning_details`、`codex_reasoning_items` |
-| 7 | messages に `reasoning_content` カラムを追加 |
-| 8 | sessions に `api_call_count` カラムを追加 |
-| 9 | Codex Responses のメッセージ ID と段階を再現するため、messages に `codex_message_items` カラムを追加 |
-| 10 | `messages_fts_trigram` の仮想テーブルを追加（CJK と部分一致検索のための trigram トークナイザ）し、既存の行を埋め直し |
-| 11 | `messages_fts` と `messages_fts_trigram` を作り直して `tool_name` と `tool_calls` も対象に含め、外部コンテンツ方式からインライン方式へ変更。古いトリガーを削除し、全メッセージ行を埋め直し |
-| 16 | 委任したサブエージェントの行に `model_config` でタグを付け（`$._delegate_from`）、親の削除で孤立した後もセッション選択の一覧が乱れないように |
-| 18 | ゲートウェイのメタデータを統合 — `display_name` / `origin_json` / `expiry_finalized` を `sessions.json` から埋め直し |
-| 20 | モデル別の使用量の集計 — 過去のセッションごとの合計値から `session_model_usage` の行を作成 |
-| 22 | タスク軸での使用量の集計 — `task` カラムを PRIMARY KEY に含める形で `session_model_usage` を作り直し |
-| 23 | FTS の保存方式の見直し — v11 のインライン方式の複製を外部コンテンツ方式の FTS テーブルに置き換え（既存 DB では任意で移行） |
+| 1 | 最初の構造（sessions、messages、FTS5） |
+| 2 | messages に `finish_reason` の列を追加 |
+| 3 | sessions に `title` の列を追加 |
+| 4 | `title` に一意の索引を追加（NULL は許し、NULL でないものは重複させない） |
+| 5 | 課金に関する列を追加: `cache_read_tokens`、`cache_write_tokens`、`reasoning_tokens`、`billing_provider`、`billing_base_url`、`billing_mode`、`estimated_cost_usd`、`actual_cost_usd`、`cost_status`、`cost_source`、`pricing_version` |
+| 6 | messages に推論の列を追加: `reasoning`、`reasoning_details`、`codex_reasoning_items` |
+| 7 | messages に `reasoning_content` の列を追加 |
+| 8 | sessions に `api_call_count` の列を追加 |
+| 9 | Codex の Responses でメッセージの ID と段階を再現するため、messages に `codex_message_items` の列を追加 |
+| 10 | `messages_fts_trigram` の仮想テーブルを追加し（日本語などの言語や部分一致の検索のための trigram の区切り方）、既存の行を埋め直す |
+| 11 | `messages_fts` と `messages_fts_trigram` の索引を作り直して `tool_name` と `tool_calls` を対象に加え、外部の内容を参照する方式から中に持つ方式へ切り替える。古いトリガーを捨て、すべてのメッセージの行を埋め直す |
+| 16 | 委任した副エージェントの行に `model_config` で印を付け（`$._delegate_from`）、親が消えて迷子になってもセッションの選択画面が散らからないようにする |
+| 18 | ゲートウェイの情報の集約 — `sessions.json` から `display_name` / `origin_json` / `expiry_finalized` を埋め直す |
+| 20 | モデルごとの利用量の記録 — これまでのセッション単位の合計から `session_model_usage` の行を作る |
+| 22 | 作業の種類も含めた利用量の記録 — `task` の列が主キーに加わるよう `session_model_usage` を作り直す |
+| 23 | 全文検索の保存方法の見直し — v11 で中に持つ方式にした写しを、外部の内容を参照する方式のテーブルに置き換える（既存のデータベースでは任意で移ります） |
 
-上記に挙がっていないバージョンは、`_reconcile_columns()` が処理した宣言的なカラム追加です（バージョンを上げるだけで、データ移行はありません）。
+上に挙がっていない版は、`_reconcile_columns()` が扱う宣言的な列の追加でした（版の番号が上がるだけで、データの移行はありません）。
 
-宣言的なカラム追加では `ALTER TABLE ADD COLUMN` を try/except で囲み、すでにカラムがある場合にも対応します（何度実行しても同じ結果になります）。バージョン番号は、移行の処理が成功するたびに上がります。
+宣言的な列の追加は `ALTER TABLE ADD COLUMN` を try/except で包み、すでにその列がある場合に備えます（何度実行しても同じ結果になります）。版の番号は、移行の各段落が成功するたびに上がります。
 
 ## 書き込みの競合への対処 {#write-contention-handling}
 
-複数の hermes プロセス（ゲートウェイ、CLI のセッション、worktree のエージェント）が
-1 つの `state.db` を共有します。`SessionDB` クラスは書き込みの競合を次のように扱います。
+複数の hermes のプロセス（ゲートウェイ、CLI のセッション、worktree のエージェント）が
+ひとつの `state.db` を共有します。`SessionDB` クラスは、書き込みの競合に次のように
+対処します。
 
-- **SQLite のタイムアウトを短くする**（既定の 30 秒ではなく 1 秒）
-- **アプリ側での再試行** をランダムな揺らぎ付きで行う（20〜150 ミリ秒、最大 15 回）
-- **BEGIN IMMEDIATE** のトランザクションで、ロックの競合を開始時点で表面化させる
-- **定期的な WAL のチェックポイント** を書き込み 50 回ごとに行う（PASSIVE モード）
+- **SQLite の待ち時間を短くする**（既定の30秒ではなく1秒）
+- **アプリ側での再試行**を、ばらつきを持たせて行う（20〜150ミリ秒、最大15回）
+- **BEGIN IMMEDIATE** のトランザクションで、ロックの競合を開始時に表に出す
+- 書き込みが50回成功するたびに **WAL の点検**を行う（PASSIVE モード）
 
-これにより、SQLite の内部的な待ち時間が決まった値であるために競合する書き手が
-同じ間隔で一斉に再試行してしまう「行列効果」を避けられます。
+これによって、SQLite の内部の待ち時間が決まりきっているために、競合する書き手が
+そろって同じ間隔で再試行してしまう「行列の効果」を避けられます。
 
 ```
 _WRITE_MAX_RETRIES = 15
@@ -204,7 +211,7 @@ db = SessionDB()                           # Default: ~/.hermes/state.db
 db = SessionDB(db_path=Path("/tmp/test.db"))  # Custom path
 ```
 
-### セッションの作成と管理 {#create-and-manage-sessions}
+### セッションを作る・管理する {#create-and-manage-sessions}
 
 ```python
 # Create a new session
@@ -223,7 +230,7 @@ db.end_session("sess_abc123", end_reason="user_exit")
 db.reopen_session("sess_abc123")
 ```
 
-### メッセージの保存 {#store-messages}
+### メッセージを保存する {#store-messages}
 
 ```python
 msg_id = db.append_message(
@@ -237,7 +244,7 @@ msg_id = db.append_message(
 )
 ```
 
-### メッセージの取り出し {#retrieve-messages}
+### メッセージを取り出す {#retrieve-messages}
 
 ```python
 # Raw messages with all metadata
@@ -248,7 +255,7 @@ conversation = db.get_messages_as_conversation("sess_abc123")
 # Returns: [{"role": "user", "content": "..."}, {"role": "assistant", ...}]
 ```
 
-### セッションのタイトル {#session-titles}
+### セッションの題名 {#session-titles}
 
 ```python
 # Set a title (must be unique among non-NULL titles)
@@ -264,8 +271,8 @@ next_title = db.get_next_title_in_lineage("Fix Docker Build")
 
 ## 全文検索 {#full-text-search}
 
-`search_messages()` メソッドは FTS5 のクエリ構文に対応しており、利用者の入力は
-自動的に無害化されます。
+`search_messages()` は FTS5 の書き方に対応していて、利用者の入力は自動的に
+安全な形へ整えられます。
 
 ### 基本の検索 {#basic-search}
 
@@ -273,17 +280,17 @@ next_title = db.get_next_title_in_lineage("Fix Docker Build")
 results = db.search_messages("docker deployment")
 ```
 
-### FTS5 のクエリ構文 {#fts5-query-syntax}
+### FTS5 の書き方 {#fts5-query-syntax}
 
-| 構文 | 例 | 意味 |
+| 書き方 | 例 | 意味 |
 |--------|---------|---------|
-| キーワード | `docker deployment` | 両方の語を含む（暗黙の AND） |
-| 引用符で囲んだ語句 | `"exact phrase"` | 語句がそのまま一致 |
-| 論理和 OR | `docker OR kubernetes` | どちらかの語 |
-| 否定 NOT | `python NOT java` | その語を除く |
-| 前方一致 | `deploy*` | 前方一致 |
+| 語を並べる | `docker deployment` | どちらの語も含む（暗黙の AND） |
+| 引用符で囲む | `"exact phrase"` | その並びのまま一致する |
+| OR | `docker OR kubernetes` | どちらかの語を含む |
+| NOT | `python NOT java` | その語を除く |
+| 前方一致 | `deploy*` | 先頭が一致する |
 
-### 絞り込み検索 {#filtered-search}
+### 絞り込んだ検索 {#filtered-search}
 
 ```python
 # Search only CLI sessions
@@ -296,25 +303,25 @@ results = db.search_messages("bug", exclude_sources=["telegram", "discord"])
 results = db.search_messages("help", role_filter=["user"])
 ```
 
-### 検索結果の形式 {#search-results-format}
+### 検索結果の形 {#search-results-format}
 
-各結果には次が含まれます。
+結果にはそれぞれ次のものが入ります。
 - `id`、`session_id`、`role`、`timestamp`
-- `snippet` — FTS5 が生成した抜粋で、一致箇所が `>>>match<<<` で囲まれます
-- `context` — 一致した前後 1 件ずつのメッセージ（本文は 200 文字で切られます）
-- `source`、`model`、`session_started` — 親セッションの情報
+- `snippet` — FTS5 が作る抜粋。一致した箇所に `>>>match<<<` の印が付きます
+- `context` — 一致した前後1件ずつのメッセージ（中身は200文字までに切られます）
+- `source`、`model`、`session_started` — 親のセッションから取ったもの
 
-`_sanitize_fts5_query()` メソッドは、次のような際どい入力を整えます。
-- 対になっていない引用符や特殊文字を取り除きます
-- ハイフンを含む語を引用符で囲みます（`chat-send` → `"chat-send"`）
-- 宙に浮いた論理演算子を取り除きます（`hello AND` → `hello`）
+`_sanitize_fts5_query()` は、扱いに困る入力を次のように始末します。
+- 対になっていない引用符と特殊な文字を取り除く
+- ハイフンを含む語を引用符で包む（`chat-send` → `"chat-send"`）
+- 宙に浮いた論理演算子を取り除く（`hello AND` → `hello`）
 
 ## セッションの系譜 {#session-lineage}
 
-セッションは `parent_session_id` によって連なりを作れます。これは文脈の圧縮が
-ゲートウェイでセッションの分割を引き起こしたときに起こります。
+セッションは `parent_session_id` でつながり、連なりを作れます。ゲートウェイで
+コンテキストの圧縮がセッションを分けたときに、これが起きます。
 
-### クエリ: セッションの系譜をたどる {#query-find-session-lineage}
+### 問い合わせ: セッションの系譜をたどる {#query-find-session-lineage}
 
 ```sql
 -- Find all ancestors of a session
@@ -336,7 +343,7 @@ WITH RECURSIVE descendants AS (
 SELECT id, title, started_at FROM descendants;
 ```
 
-### クエリ: 最近のセッションと冒頭の抜粋 {#query-recent-sessions-with-preview}
+### 問い合わせ: 最近のセッションと冒頭の抜粋 {#query-recent-sessions-with-preview}
 
 ```sql
 SELECT s.*,
@@ -356,7 +363,7 @@ ORDER BY s.started_at DESC
 LIMIT 20;
 ```
 
-### クエリ: トークン使用量の統計 {#query-token-usage-statistics}
+### 問い合わせ: トークンの使用量の集計 {#query-token-usage-statistics}
 
 ```sql
 -- Total tokens by model
@@ -378,7 +385,7 @@ ORDER BY total_tokens DESC
 LIMIT 10;
 ```
 
-## 書き出しと後片付け {#export-and-cleanup}
+## 書き出しと片づけ {#export-and-cleanup}
 
 ```python
 # Export a single session with messages
@@ -398,12 +405,12 @@ db.clear_messages("sess_abc123")
 db.delete_session("sess_abc123")
 ```
 
-## データベースの場所 {#database-location}
+## データベースの置き場所 {#database-location}
 
 既定のパス: `~/.hermes/state.db`
 
-これは `hermes_constants.get_hermes_home()` から導かれ、既定では `~/.hermes/`、
-環境変数 `HERMES_HOME` が設定されていればその値になります。
+これは `hermes_constants.get_hermes_home()` から決まります。既定では
+`~/.hermes/` に、あるいは環境変数 `HERMES_HOME` の値に解決されます。
 
-データベース本体、WAL ファイル（`state.db-wal`）、共有メモリのファイル
-（`state.db-shm`）は、いずれも同じディレクトリに作られます。
+データベースのファイル、WAL のファイル（`state.db-wal`）、共有メモリのファイル
+（`state.db-shm`）は、すべて同じディレクトリに作られます。

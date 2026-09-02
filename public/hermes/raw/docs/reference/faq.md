@@ -2,7 +2,7 @@
 title: "よくある質問とトラブル対処"
 description: "Hermes Agent でよくある質問と、つまずきやすい箇所の対処法"
 upstream_path: reference/faq.md
-upstream_blob: fc199a509b72af19e25ce700b8963c8db27237b1
+upstream_blob: 7dfc0d3ebdbd177c6e1aa4103eae652c9741a87e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/faq
 ---
@@ -321,6 +321,8 @@ hermes chat --model openrouter/google/gemini-3-flash-preview
 長い会話の 1 回目でこれが出るなら、Hermes がそのモデルのコンテキスト長を誤って判定している可能性があります。何と認識しているか確認してください。
 
 CLI の起動時の行に、検出したコンテキスト長が出ます（例: `📊 Context limit: 128000 tokens`）。セッション中なら `/usage` でも確認できます。
+
+**エラーを返さずに黙り込むローカルサーバー（llama.cpp、Ollama）の場合:** リクエストが大きすぎるとプロバイダーに拒否されると、Hermes は会話を圧縮してリクエストを組み立て直します。再試行の前に、組み立て直した*リクエスト全体*（システムプロンプト + ツールスキーマ + メッセージ）を測り直し、まだしきい値を超えていれば、回数を区切った圧縮をさらに走らせます。それでも収まらない場合は、llama.cpp が黙って切り詰めてしまうような特大のリクエストを送る代わりに、`Context length exceeded: compression could not reduce the rebuilt request below the safe threshold` を出してそのターンを終えます（切り詰められると、サーバーのログに `stop processing: n_tokens = 65535, truncated = 1` と出ます）。このメッセージが出たときは、ほぼ確実に上に挙げた `context_length` の設定が原因です。サーバー側で実際に指定している `-c` / `--ctx-size` に合わせてください。
 
 判定を直すには、明示的に指定します。
 

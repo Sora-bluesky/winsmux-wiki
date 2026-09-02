@@ -1,42 +1,42 @@
 ---
-title: "定時実行の内部"
-description: "Hermes が定時実行の仕事を保存し、時刻を決め、編集し、止め、スキルを読み込み、結果を届けるしくみ"
+title: "cron の内部構造"
+description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: 427692eb92a7514bf7c7aeca9725249e66e8f47a
+upstream_blob: 968af066cdf9b94a2f883d9d4ac5c2f42b7019f0
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
 
-# 定時実行の内部 {#cron-internals}
+# cron の内部構造 {#cron-internals}
 
-定時実行のしくみは、決まった時刻に仕事を走らせます。単純に一度だけ時間をおいて動かすものから、cron 式で繰り返し、スキルを差し込み、複数のプラットフォームへ結果を届けるものまで扱えます。
+cron のサブシステムは、決まった時刻にタスクを実行する仕組みです。単純な一回きりの遅延実行から、スキルを差し込んでプラットフォームをまたいで結果を届ける繰り返しジョブまでを受け持ちます。
 
-## 主なファイル {#key-files}
+## 主要なファイル {#key-files}
 
 | ファイル | 役割 |
 |------|---------|
-| `cron/jobs.py` | 仕事のデータ構造、保存、`jobs.json` への安全な読み書き |
-| `cron/scheduler.py` | スケジューラのループ — 実行時刻が来た仕事の検出、実行、繰り返しの管理 |
-| `tools/cronjob_tools.py` | モデルに見える `cronjob` ツールの登録とハンドラ |
-| `gateway/run.py` | ゲートウェイとの連携 — 常駐ループの中での定時実行の刻み |
+| `cron/jobs.py` | ジョブのモデル、保存、`jobs.json` への不可分な読み書き |
+| `cron/scheduler.py` | スケジューラのループ。実行時刻が来たジョブの検出、実行、繰り返し回数の管理 |
+| `tools/cronjob_tools.py` | モデルから見える `cronjob` ツールの登録とハンドラ |
+| `gateway/run.py` | ゲートウェイとの連携。常駐ループの中で cron を刻む |
 | `hermes_cli/cron.py` | CLI の `hermes cron` サブコマンド |
 
-## 時刻の決め方 {#scheduling-model}
+## スケジュールの指定方法 {#scheduling-model}
 
-指定のしかたは 4 通りあります。
+指定できる形式は4つです。
 
-| 形式 | 例 | 動き |
+| 形式 | 例 | 動作 |
 |--------|---------|----------|
-| **時間をおく** | `30m`、`2h`、`1d` | 一度だけ。指定した時間が経つと動きます |
-| **一定の間隔** | `every 2h`、`every 30m` | 繰り返し。決まった間隔ごとに動きます |
-| **cron 式** | `0 9 * * *` | 標準的な 5 つの欄の cron 式（分、時、日、月、曜日） |
-| **ISO 形式の時刻** | `2025-01-15T09:00:00` | 一度だけ。ちょうどその時刻に動きます |
+| **相対的な遅延** | `30m`, `2h`, `1d` | 一回きり。指定した時間が過ぎたら実行します |
+| **間隔** | `every 2h`, `every 30m` | 繰り返し。一定の間隔で実行します |
+| **cron 式** | `0 9 * * *` | 標準的な5フィールドの cron 記法（分、時、日、月、曜日） |
+| **ISO 形式の時刻** | `2025-01-15T09:00:00` | 一回きり。指定した時刻ちょうどに実行します |
 
-モデルに見えるのは `cronjob` ツール 1 つだけで、その中で `create`、`list`、`update`、`pause`、`resume`、`run`、`remove` という操作を選びます。
+モデルから見えるのは `cronjob` ツール1つだけで、その中で操作を切り替えます。`create`、`list`、`update`、`pause`、`resume`、`run`、`remove` があります。
 
-## 仕事の保存 {#job-storage}
+## ジョブの保存先 {#job-storage}
 
-仕事は `~/.hermes/cron/jobs.json` に保存されます。書き込みは安全な手順（一時ファイルに書いてから名前を変える）で行われます。1 件ごとの中身は次のとおりです。
+ジョブは `~/.hermes/cron/jobs.json` に保存されます。書き込みは一時ファイルへ書いてから名前を変える方式で、途中の状態が読まれないようにしています。1件のジョブは次のような内容です。
 
 ```json
 {
@@ -66,24 +66,38 @@ sources:
 }
 ```
 
-### 仕事の状態 {#job-lifecycle-states}
+### `last_status` に入る値 {#laststatus-literals}
+
+`last_status` に入る値は決まっていて、書き込むのは `cron.jobs.mark_job_run` だけです。表示する側
+（`hermes cron list` と `doctor`、`cronjob` ツール、Web ダッシュボードのバッジ、
+デスクトップの定期実行インスペクタ）はどれも値ごとに意味を明示的に対応づけます。
+「利用者の手元に結果が届いた」の判定を `== "ok"` で済ませてはいけません。
+
+| 値 | 意味 | 詳細が入るフィールド |
+|---------|---------|--------------|
+| `ok` | エージェントの実行が成功し、宛先がある場合は配信も確認できた | — |
+| `error` | エージェントの実行が失敗した | `last_error` |
+| `delivery_failed` | エージェントの実行は成功したが、出力が宛先まで届かなかった | `last_delivery_error`（`last_error` は `null`） |
+| `blocked_config` | 実行前の検証で弾き、無駄な実行を防いだ | `last_error` |
+
+### ジョブの状態 {#job-lifecycle-states}
 
 | 状態 | 意味 |
 |-------|---------|
-| `scheduled` | 有効。次の予定時刻に動きます |
-| `paused` | 一時停止中。再開するまで動きません |
-| `completed` | 繰り返しの回数を使い切ったか、一度きりの仕事が済んだ状態 |
+| `scheduled` | 有効。次の予定時刻に実行されます |
+| `paused` | 停止中。再開するまで実行されません |
+| `completed` | 繰り返し回数を使い切ったか、一回きりのジョブが実行済み |
 | `running` | 実行中（一時的な状態） |
 
 ### 古い形式との互換 {#backward-compatibility}
 
-古い仕事は、`skills` の配列ではなく `skill` という 1 つの項目を持っていることがあります。スケジューラは読み込み時にこれを揃え、1 つの `skill` を `skills: [skill]` に直します。
+以前のジョブには `skills` の配列ではなく `skill` という単一のフィールドが入っていることがあります。スケジューラは読み込み時にこれをそろえ、単一の `skill` を `skills: [skill]` に置き換えます。
 
-## スケジューラの動き {#scheduler-runtime}
+## スケジューラの動作 {#scheduler-runtime}
 
-### 1 回の刻み {#tick-cycle}
+### 1回分の処理 {#tick-cycle}
 
-スケジューラは決まった間隔（既定では 60 秒ごと）で動きます。
+スケジューラは一定間隔（既定では60秒ごと）で動きます。
 
 ```text
 tick()
@@ -105,46 +119,45 @@ tick()
 
 ### ゲートウェイとの連携 {#gateway-integration}
 
-ゲートウェイモードでは、定時実行の **引き金** の部分（実行時刻が来た仕事を *いつ* 動かすかを
-決める部分。「軸 B」）が、差し替えのできる `CronScheduler` のしくみを通して選ばれます。
-ゲートウェイは `resolve_cron_scheduler()`（`cron/scheduler_provider.py`）を呼び、選ばれたものの
-`start()` を専用のバックグラウンドスレッドで動かします。その隣では、ゲートウェイの
-片づけ用のスレッドが別に動きます。
+ゲートウェイモードでは、cron の**引き金**（実行時刻が来たジョブを*いつ*動かすかを決める部分、
+いわゆる「Axis B」）を差し替え可能な `CronScheduler` プロバイダから選びます。
+ゲートウェイは `resolve_cron_scheduler()`（`cron/scheduler_provider.py`）を呼び、選ばれたプロバイダの
+`start()` を専用のバックグラウンドスレッドで動かします。ゲートウェイの後片付け用スレッドはそれとは別に走ります。
 
-どれを使うかは `cron.provider` の設定で決まります。
+どのプロバイダを使うかは `cron.provider` という設定キーで決まります。
 
-- **空（既定）** → 組み込みの `InProcessCronScheduler`。これまでどおり同じプロセスの中で
-  ループを回し、60 秒ごとに `scheduler.tick()` を呼びます。差し替えのしくみが入る前と
-  まったく同じ動きです。
-- **名前を指定したとき**（例えば、待機中は止まる構成向けの管理型の定時実行である
-  `chronos` など）→ `plugins/cron_providers/<name>/` または
-  `$HERMES_HOME/plugins/<name>/` から探し出されます。
+- **空（既定）** の場合は組み込みの `InProcessCronScheduler` が使われ、従来どおり
+  プロセス内のループが60秒ごとに `scheduler.tick()` を呼びます。プロバイダ機構が入る前と
+  まったく同じ挙動です。
+- **プロバイダ名を書いた場合**（たとえばゼロまで縮退させる構成向けのマネージド cron プロバイダ
+  `chronos`）は、`plugins/cron_providers/<name>/` または
+  `$HERMES_HOME/plugins/<name>/` から探して読み込みます。
 
-指定した名前のものが見つからない、読み込みに失敗する、`is_available() ==
-False` を返す、のいずれかの場合は、警告を出したうえで組み込みのものに戻ります。**定時実行が
-引き金を失うことはありません。** 組み込みのものは `plugins/` ではなくコア側
+指定したプロバイダが見つからない、読み込みに失敗する、あるいは `is_available() ==
+False` を返す場合は、警告を出したうえで組み込みのものに戻します。**cron から引き金が
+なくなることはありません。** 組み込みのプロバイダは `plugins/` ではなくコア側
 （`cron/scheduler_provider.py`）にあるので、うっかり消してしまうこともありません。
 
-「動く」という言葉の中身（仕事の実行と結果の配達）は変わっておらず、どのしくみを選んでも
-共通です。これは `scheduler.run_job()` と `scheduler._deliver_result()` にあります。
-差し替えられるのは引き金だけで、実行そのものではありません。
+「実行する」とは何をすることか（ジョブの実行と結果の配信）は変わらず、どのプロバイダでも共通です。
+`scheduler.run_job()` と `scheduler._deliver_result()` が受け持ちます。
+プロバイダが握るのは引き金だけで、実行そのものには手を出しません。
 
-CLI モードでは、定時実行の仕事は `hermes cron` のコマンドを実行したときか、CLI のセッションが動いている間だけ発火します。
+CLI モードでは、cron ジョブは `hermes cron` のコマンドを実行したときか、CLI のセッションが動いている間だけ実行されます。
 
-### 待機中は止まる構成のための管理型の定時実行（Chronos） {#managed-cron-chronos-for-scale-to-zero}
+### ゼロまで縮退させるためのマネージド cron（Chronos） {#managed-cron-chronos-for-scale-to-zero}
 
-ホスティングされたゲートウェイでは、組み込みの刻みの代わりに **Chronos**
-（`cron.provider: chronos`）を使えます。Chronos を使うと、何もしていないゲートウェイを
-**完全に止めた** まま定時実行の仕事を動かせます。60 秒ごとのループ（これがあるとプロセスは
-眠れません）ではなく、**仕事ごとに、その仕事が本当に次に動く時刻へ一度きりの予約を 1 つ**
-Nous の基盤に入れてもらうからです。時刻が来ると Nous が認証付きの Webhook
-（`POST /api/cron/fire`）でゲートウェイを呼び出し、ゲートウェイは組み込みのときと同じ
-`run_one_job` の道筋で仕事を走らせ、次の一度きりの予約を入れ直します。その間、プロセスは
-完全に止まっていて構いません。目を覚ますのは本当に動く時だけで、定期的なタイマーでは
-起きません。
+ホスト型のゲートウェイでは、組み込みのティッカーの代わりに **Chronos** プロバイダ
+（`cron.provider: chronos`）を使えます。Chronos を使うと、待機中のゲートウェイを
+**ゼロまで縮退**させたまま cron ジョブを動かせます。60秒ごとにプロセス内でループを回す
+（つまりプロセスを起こしっぱなしにする）のではなく、Nous の基盤に対して
+**ジョブごとに、実際の次回実行時刻ちょうどの一回きりの予約を1つだけ**入れてもらいます。
+時刻が来ると Nous が認証付きの Webhook（`POST /api/cron/fire`）でゲートウェイを呼び出し、
+ゲートウェイは組み込みの場合と同じ `run_one_job` の経路でジョブを実行し、次の一回きりの予約を入れ直します。
+実行と実行のあいだはプロセスを完全に止めておけます。起きるのは本当に実行するときだけで、
+定期タイマーで起こされることはありません。
 
-流れは次のとおりです（管理側のスケジューラは Nous が用意し、エージェント側は
-その認証情報を持ちません）。
+流れは次のとおりです（マネージドのスケジューラは Nous 側が提供し、エージェントは
+スケジューラの資格情報を持ちません）。
 
 ```
 create/update a cron job
@@ -157,51 +170,51 @@ create/update a cron job
     one-shot
 ```
 
-設定はすべて秘密ではない値です（ホスティングされたエージェントでは、Nous が用意の時点で設定します）。
+設定はすべて秘密情報ではありません（ホスト型のエージェントでは Nous が用意の段階で設定します）。
 
 | キー | 意味 |
 |---|---|
-| `cron.provider` | `chronos` にすると有効になります（空なら組み込みの刻み） |
-| `cron.chronos.portal_url` | Nous の基点となる URL（予約の投入先であり、発火用トークンの発行元） |
-| `cron.chronos.callback_url` | 呼び出しを受けるゲートウェイ自身の公開 URL |
-| `cron.chronos.expected_audience` | このエージェント向けの発火用トークンの宛先 |
-| `cron.chronos.nas_jwks_url` | 届いた発火用トークンを検証するための鍵の一覧 |
+| `cron.provider` | `chronos` にすると有効になります（空なら組み込みのティッカー） |
+| `cron.chronos.portal_url` | Nous のベース URL（予約の投入と、実行用トークンの発行元） |
+| `cron.chronos.callback_url` | 実行の呼び出しを受けるゲートウェイ自身の公開ベース URL |
+| `cron.chronos.expected_audience` | このエージェント向けの実行用トークンの audience |
+| `cron.chronos.nas_jwks_url` | 受け取った実行用トークンを検証するための鍵セット |
 
 Chronos の設定が誤っている場合や、エージェントが Nous にログインしていない場合は、
-`resolve_cron_scheduler()` が組み込みの刻みに戻します（警告がログに残ります）。定時実行が
-引き金を失うことはありません。繰り返しの仕事は動くたびに次の予約を入れ直し、`repeat` で
-回数を決めた仕事は、その回数を使い切るときれいに止まります（予約だけが取り残されることは
-ありません）。エージェントと Nous のやり取りの取り決めは `docs/chronos-managed-cron-contract.md` に全文があります。
+`resolve_cron_scheduler()` が警告を残したうえで組み込みのティッカーに戻します。
+cron が引き金を失うことはありません。繰り返しのジョブは実行のたびに次の予約を入れ直し、
+`repeat` に回数を指定したジョブは回数を使い切った時点できれいに止まります（予約が取り残されることはありません）。
+エージェントと Nous のあいだのやり取りの取り決めは `docs/chronos-managed-cron-contract.md` にすべて書かれています。
 
 ### まっさらなセッションで動かす {#fresh-session-isolation}
 
-定時実行の仕事は、毎回まっさらなエージェントのセッションで動きます。
+cron ジョブは毎回まっさらなエージェントセッションで動きます。
 
 - 前回までの会話は引き継ぎません
-- 前回までの定時実行の記憶もありません（ただし MEMORY.md や USER.md といった
-  永続的な記憶は、他のエージェントの実行と同じように読み込まれるので、
-  長く残しておきたい好みや事実は引き継がれます。1 回ごとの会話の文脈は残りません）
-- プロンプトはそれだけで完結している必要があります。定時実行の仕事は、途中で聞き返せません
-- `cronjob` のツールセットは無効になります（入れ子を防ぐためです）
+- 前回までの cron の実行内容も覚えていません（MEMORY.md や USER.md といった
+  永続的な記憶は、ほかのエージェントの実行と同じように読み込まれるので、
+  長く残る好みや事実は引き継がれます。1回ごとの会話の文脈は引き継がれません）
+- プロンプトはそれだけで完結している必要があります。cron ジョブは聞き返せません
+- `cronjob` のツール群は無効になります（再帰の防止）
 
-## スキルを付けた仕事 {#skill-backed-jobs}
+## スキルを付けたジョブ {#skill-backed-jobs}
 
-定時実行の仕事には、`skills` の項目で 1 つ以上のスキルを付けられます。実行時には次のように動きます。
+cron ジョブには `skills` フィールドで1つ以上のスキルを付けられます。実行時には次のように進みます。
 
 1. 指定した順にスキルを読み込みます
-2. それぞれのスキルの SKILL.md の内容が文脈として差し込まれます
-3. その仕事のプロンプトが、やることの指示として後ろに足されます
-4. エージェントは、スキルの文脈とプロンプトを合わせたものを処理します
+2. 各スキルの SKILL.md の内容が文脈として差し込まれます
+3. ジョブのプロンプトが、やるべきことの指示として最後に足されます
+4. エージェントはスキルの文脈とプロンプトをまとめて処理します
 
-こうすると、長い指示を定時実行のプロンプトに貼り付けなくても、使い回しの利く、試し済みの手順をそのまま使えます。例を挙げます。
+これにより、手順の全文を cron のプロンプトに貼り付けなくても、作り込んで動作を確かめた手順をそのまま使い回せます。たとえば次のようになります。
 
 ```
 Create a daily funding report → attach "ai-funding-daily-report" skill
 ```
 
-### スクリプトを付けた仕事 {#script-backed-jobs}
+### スクリプトを付けたジョブ {#script-backed-jobs}
 
-仕事には `script` の項目で Python のスクリプトも付けられます。スクリプトはエージェントが動く *前* に実行され、その標準出力がプロンプトへ文脈として差し込まれます。データを集めて変化を見つける、といった使い方ができます。
+ジョブには `script` フィールドで Python のスクリプトを付けることもできます。スクリプトはエージェントの各ターンの*前*に走り、その標準出力がプロンプトへ文脈として差し込まれます。データの収集や変化の検出といった使い方ができます。
 
 ```python
 # ~/.hermes/scripts/check_competitors.py
@@ -210,88 +223,89 @@ Create a daily funding report → attach "ai-funding-daily-report" skill
 # Print summary to stdout — agent analyzes and reports
 ```
 
-スクリプトの制限時間は既定で 3600 秒（1 時間）です。`_get_script_timeout()` は、次の 3 段構えでこの上限を決めます。
+スクリプトの制限時間は既定で3600秒（1時間）です。`_get_script_timeout()` は次の3層をたどって値を決めます。
 
 1. **モジュールレベルの上書き** — `_SCRIPT_TIMEOUT`（テストや差し替え用）。既定値と違うときだけ使われます。
 2. **環境変数** — `HERMES_CRON_SCRIPT_TIMEOUT`
-3. **設定ファイル** — `config.yaml` の `cron.script_timeout_seconds`（`load_config()` で読み込みます）
-4. **既定値** — 3600 秒（1 時間）
+3. **設定** — `config.yaml` の `cron.script_timeout_seconds`（`load_config()` 経由で読み込みます）
+4. **既定値** — 3600秒（1時間）
 
-この制限時間がかかるのは **実行前のスクリプトだけ** で、エージェント自体にはかかりません。スキルを使う仕事や LLM が動かす仕事には、別に *何もしていない時間* を基準にした持ち時間があります（`HERMES_CRON_TIMEOUT`、既定は 600 秒の待ち時間、`0` で無制限）。ツールを呼び続けたりトークンを流し続けたりしているかぎり何時間でも動けて、設定した時間だけ何も起きなかったときにはじめて止められます。スクリプトは常設のスレッドプールに渡され（刻みのロックを持ったままにはなりません）、長く動くスクリプトがあっても、他の実行時刻が来た仕事は動けます。
+この制限時間がかかるのは**実行前のスクリプトだけ**で、エージェント側にはかかりません。スキルや LLM で動くジョブは、*無操作*の時間を基準にした別の制限（`HERMES_CRON_TIMEOUT`、既定は無操作600秒、`0` で無制限）で動きます。ツールを呼び続けたりトークンを出し続けたりしているかぎり何時間でも動き、何も起きない時間が設定分だけ続いたときに初めて打ち切られます。スクリプトは常駐のスレッドプールに投げられ、1回分の処理のロックを握ったままにはしないので、長く走るスクリプトがほかのジョブの実行を止めることはありません。
 
-### プロバイダの立て直し {#provider-recovery}
+### プロバイダの切り替えによる復帰 {#provider-recovery}
 
-`run_job()` は、利用者が設定した予備のプロバイダと認証情報の束を `AIAgent` に渡します。
+`run_job()` は、利用者が設定した予備のプロバイダと資格情報のプールを `AIAgent` のインスタンスへ渡します。
 
-- **予備のプロバイダ** — `config.yaml` から `fallback_providers`（リスト）または `fallback_model`（旧来の辞書形式）を読みます。ゲートウェイの `_load_fallback_model()` と同じやり方です。`AIAgent.__init__` に `fallback_model=` として渡され、そこで両方の形式が予備の連なりに整えられます。
-- **認証情報の束** — 解決された実行時のプロバイダ名を使い、`agent.credential_pool` の `load_pool(provider)` で読み込みます。束に認証情報があるとき（`pool.has_credentials()`）だけ渡されます。これにより、429 や回数制限のエラーが出たときに同じプロバイダ内で鍵を切り替えられます。
+- **予備のプロバイダ** — `config.yaml` から `fallback_providers`（リスト）または `fallback_model`（旧来の辞書）を読み、ゲートウェイの `_load_fallback_model()` と同じやり方に合わせます。`fallback_model=` として `AIAgent.__init__` に渡され、どちらの形式も予備の連なりへとそろえられます。
+- **資格情報のプール** — 実行時に決まったプロバイダ名を使い、`agent.credential_pool` の `load_pool(provider)` で読み込みます。渡すのはプールに資格情報があるとき（`pool.has_credentials()`）だけです。429 や利用制限のエラーが出たときに、同じプロバイダの別の鍵へ切り替えられます。
 
-これはゲートウェイと同じ動きです。これがないと、定時実行のエージェントは回数制限に当たった時点で、立て直しを試みることなく失敗してしまいます。
+これはゲートウェイと同じ振る舞いです。これがないと、cron のエージェントは利用制限にぶつかった時点で、立て直しを試みないまま失敗してしまいます。
 
 ## 結果の届け方 {#delivery-model}
 
-定時実行の仕事の結果は、対応しているどのプラットフォームにも届けられます。
+cron ジョブの結果は、対応しているどのプラットフォームにも届けられます。
 
-プラットフォーム名だけを書くと（`slack`、`telegram` など）、そのプラットフォームで設定された **既定の届け先** に届きます。**特定の** 宛先を指したいときは、コロンのあとに宛先を足して `platform:<target>` と書きます。宛先は仕事を作ったときではなく動く時点で解決されるので、まだつながっていないプラットフォームの宛先を書いておき、つながった時点から届き始める、という使い方ができます。
+プラットフォーム名だけを書くと（`slack`、`telegram` など）、そのプラットフォームで設定してある**ホームチャンネル**へ届きます。**特定の**宛先を指すときは、コロンに続けて宛先を書きます（`platform:<target>`）。宛先が解決されるのはジョブを作ったときではなく実行するときなので、まだつないでいないプラットフォームの宛先を先に書いておき、つながった時点から届き始める、という使い方もできます。
 
-多くのプラットフォームでは、3 つ目の区切りとしてスレッドや話題も指定できます（`platform:<chat_id>:<thread_id>`）。
+多くのプラットフォームでは、3つ目の区切りとしてスレッドやトピックも指定できます（`platform:<chat_id>:<thread_id>`）。
 
 | 宛先 | 書き方 | 例 |
 |--------|--------|---------|
-| もとのチャット | `origin` | 仕事を作ったチャットへ届けます |
+| 発生元のチャット | `origin` | ジョブを作ったチャットへ届けます |
 | ローカルのファイル | `local` | `~/.hermes/cron/output/` に保存します |
-| Telegram | `telegram`、`telegram:<chat_id>`、`telegram:<chat_id>:<thread_id>`、`telegram:@username` | `telegram:-1001234567890:17585` |
-| Discord | `discord`、`discord:#channel`、`discord:<channel_id>`、`discord:<channel_id>:<thread_id>` | `discord:#engineering` |
-| Slack | `slack`、`slack:#channel`、`slack:<channel_id>`、`slack:<channel_id>:<thread_ts>` | `slack:#engineering` |
-| Matrix | `matrix`、`matrix:<!room_id:server>`、`matrix:<@user:server>` | `matrix:!abc123:example.org` |
-| Feishu | `feishu`、`feishu:<chat_id>`、`feishu:<chat_id>:<thread_id>` | `feishu:oc_abc123def` |
-| WhatsApp | `whatsapp`、`whatsapp:<jid>`、`whatsapp:+<E.164>` | `whatsapp:123456@g.us` |
-| Signal | `signal`、`signal:group:<id>`、`signal:+<E.164>` | `signal:group:aBcD==` |
-| SMS | `sms`、`sms:+<E.164>` | `sms:+<E.164 number>` |
-| メール | `email`、`email:<address>` | `email:alerts@example.com` |
-| Weixin | `weixin`、`weixin:<wxid>` | `weixin:wxid_abc123` |
-| Mattermost | `mattermost` または `mattermost:<channel_id>` | 名前だけなら Mattermost の既定の届け先へ |
-| Home Assistant | `homeassistant` または `homeassistant:<conversation>` | 名前だけなら HA の会話へ |
-| DingTalk | `dingtalk` または `dingtalk:<chat_id>` | 名前だけなら DingTalk へ |
-| WeCom | `wecom` または `wecom:<chat_id>` | 名前だけなら WeCom へ |
-| BlueBubbles | `bluebubbles` または `bluebubbles:<chat_guid>` | 名前だけなら BlueBubbles 経由で iMessage へ |
-| QQ Bot | `qqbot` または `qqbot:<chat_id>` | 名前だけなら公式 API v2 経由で QQ（テンセント）へ |
-| Bot Chat | `bot-chat` または `bot-chat:<profile>` | 手元のプロファイルの正式な Bot Chat に流し込みます（その bot が返事をします） |
+| Telegram | `telegram`, `telegram:<chat_id>`, `telegram:<chat_id>:<thread_id>`, `telegram:@username` | `telegram:-1001234567890:17585` |
+| Discord | `discord`, `discord:#channel`, `discord:<channel_id>`, `discord:<channel_id>:<thread_id>` | `discord:#engineering` |
+| Slack | `slack`, `slack:#channel`, `slack:<channel_id>`, `slack:<channel_id>:<thread_ts>` | `slack:#engineering` |
+| Matrix | `matrix`, `matrix:<!room_id:server>`, `matrix:<@user:server>` | `matrix:!abc123:example.org` |
+| Feishu | `feishu`, `feishu:<chat_id>`, `feishu:<chat_id>:<thread_id>` | `feishu:oc_abc123def` |
+| WhatsApp | `whatsapp`, `whatsapp:<jid>`, `whatsapp:+<E.164>` | `whatsapp:123456@g.us` |
+| Signal | `signal`, `signal:group:<id>`, `signal:+<E.164>` | `signal:group:aBcD==` |
+| SMS | `sms`, `sms:+<E.164>` | `sms:+<E.164 number>` |
+| メール | `email`, `email:<address>` | `email:alerts@example.com` |
+| Weixin | `weixin`, `weixin:<wxid>` | `weixin:wxid_abc123` |
+| Mattermost | `mattermost` または `mattermost:<channel_id>` | 名前だけなら Mattermost のホームへ届きます |
+| Home Assistant | `homeassistant` または `homeassistant:<conversation>` | 名前だけなら HA の会話へ届きます |
+| DingTalk | `dingtalk` または `dingtalk:<chat_id>` | 名前だけなら DingTalk へ届きます |
+| WeCom | `wecom` または `wecom:<chat_id>` | 名前だけなら WeCom へ届きます |
+| BlueBubbles | `bluebubbles` または `bluebubbles:<chat_guid>` | 名前だけなら BlueBubbles 経由で iMessage へ届きます |
+| QQ Bot | `qqbot` または `qqbot:<chat_id>` | 名前だけなら公式 API v2 経由で QQ（Tencent）へ届きます |
+| Bot Chat | `bot-chat` または `bot-chat:<profile>` | 手元のプロファイルの正規の Bot Chat へ流し込みます（ボットが応答します） |
 
-上の方にあるプラットフォームは、宛先の書き方がはっきり決まっていて検証もされます。名前付きのチャンネル（`#channel`）、話題やスレッド、ルームや利用者の ID、グループの ID、電話番号などです。残りのプラットフォームは、汎用の `platform:<chat_id>` の形を受け付けます（コロンのあとの値が、そのまま宛先の ID として使われます）。プラットフォーム名だけを書いた場合は、必ず既定の届け先に届きます。
+前半のプラットフォームには、名前付きチャンネル（`#channel`）、トピックやスレッド、ルームや利用者の ID、グループ ID、電話番号といった、検証つきの書き方が用意されています。残りのプラットフォームは汎用の `platform:<chat_id>` の形を受け付けます（コロンの後ろの値はそのまま宛先の ID として使われます）。プラットフォーム名だけを書いた場合は、いつでもホームチャンネルへ届きます。
 
-**名前付きのチャンネル**（`slack:#engineering`、`discord:#engineering`、あるいは `slack:engineering` のような分かりやすい名前）は、ゲートウェイがつながっているアダプタから作るチャンネルの一覧と突き合わせて解決されます。そのため、名前で解決するには、ゲートウェイがそのチャンネルを見つけている必要があります。ID をそのまま書く形（`slack:C0123ABCD45`）なら常に使えます。
+**名前付きチャンネル**（`slack:#engineering`、`discord:#engineering`、あるいは `slack:engineering` のような読みやすい名前）は、ゲートウェイがつながっているアダプタから作るチャンネル一覧に照らして解決されます。したがって名前で指すには、ゲートウェイがそのチャンネルを見つけている必要があります。ID をそのまま書く形（`slack:C0123ABCD45`）はいつでも使えます。
 
-**Telegram の話題** には `telegram:<chat_id>:<thread_id>` を使います（例えば `telegram:-1001234567890:17585`）。**Slack のスレッド** では、3 つ目の区切りが親のメッセージの `thread_ts` になります（例えば `slack:C0123ABCD45:1700000000.000100`）。そのため、既にあるメッセージへの返信として送るときにだけ使えます。
+**Telegram のトピック**には `telegram:<chat_id>:<thread_id>` を使います（例: `telegram:-1001234567890:17585`）。**Slack のスレッド**の場合、3つ目の区切りは親メッセージの `thread_ts` です（例: `slack:C0123ABCD45:1700000000.000100`）。つまり既存のメッセージにぶら下げて返すときにだけ使えます。
 
-**Bot Chat**（`bot-chat`、`bot-chat:<profile>`）は、ゲートウェイのアダプタではなく、その端末の中だけで完結する疑似的なプラットフォームです。スケジューラは `hermes [-p <profile>] chat --in ~ -c "Bot Chat" --create-if-missing -Q --query-file <tmp>` を実行して届けます。Bot モードのエージェント同士のメッセージと同じ経路なので、結果はそのプロファイルの正式な Bot Chat に本物の受信メッセージとして届き、bot はそれに対してエージェントの手番を丸ごと 1 回動かします（作りからして発言の順番が崩れません。これはチャットのコマンドの経路であって、記録の写しではありません）。名前を書かずに指定した場合は、その仕事自身のプロファイルが宛先になります。名前を書いた形は、作成時と実行時の両方で `~/.hermes/profiles/` と突き合わせて検証され、端末をまたいで解決されることはありません。bot-chat の宛先は、配信先をまとめて指す `all` の指定からも、配達前の事前確認からも外されます（ゲートウェイの認証情報を使わないためです）。1 回の配達ごとの子プロセスの制限時間は `cron.bot_chat_delivery_timeout_seconds` で決まります（既定は 600 秒）。
+**Bot Chat**（`bot-chat`、`bot-chat:<profile>`）はゲートウェイのアダプタではなく、その端末の中だけで完結する疑似プラットフォームです。スケジューラは `hermes [-p <profile>] chat --in ~ -c "Bot Chat" --create-if-missing -Q --query-file <tmp>` を走らせて届けます。これはボットモードでエージェント同士がやり取りするときと同じ経路なので、出力は本物の受信ターンとしてプロファイルの正規の Bot Chat に現れ、ボットはそれに対して丸ごと1ターン分の処理を行います（作りの上で発言の順番が崩れません。これはチャットコマンドの経路であって、会話の写しではありません）。名前を書かない場合はジョブ自身のプロファイルが宛先になります。プロファイル名を書いた形は、作成時と実行時の両方で `~/.hermes/profiles/` に照らして検証され、別の端末をまたぐことはありません。bot-chat の宛先は `all` という一括指定の対象から外れ、配信前の事前確認からも外れます（ゲートウェイの資格情報を使わないためです）。1回の配信ごとのサブプロセスの制限時間は `cron.bot_chat_delivery_timeout_seconds` です（既定は600）。
 
-### 結果の包み方 {#response-wrapping}
+### 結果に添える定型文 {#response-wrapping}
 
-既定（`cron.wrap_response: true`）では、定時実行の結果は次のもので包まれて届きます。
-- 仕事の名前とやることを示す見出し
-- 届けたメッセージをエージェント自身は会話の中で見られない、と断る末尾の一文
+既定（`cron.wrap_response: true`）では、cron の配信に次のものが添えられます。
+- cron ジョブの名前とやったことを示す見出し
+- 届けたメッセージをエージェント自身は会話として見られない、という断り書き
 
-定時実行の結果の先頭に `[SILENT]` を付けると、配達そのものが止まります。ファイルへの書き込みなど、裏で処理するだけの仕事に便利です。
+cron の応答の先頭に `[SILENT]` を付けると、配信そのものを止められます。ファイルへ書くだけ、あるいは何か別の処理をするだけのジョブに向いています。
 
-### 会話との切り分け {#session-isolation}
+### セッションの切り分け {#session-isolation}
 
-定時実行の結果は、ゲートウェイのセッションの会話履歴には写されません。あくまで、その定時実行の仕事自身のセッションの中だけに存在します。これにより、届け先のチャットの会話で、発言の順番の決まりが崩れるのを防ぎます。
+cron の配信は、ゲートウェイのセッションの会話履歴には写されません。cron ジョブ自身のセッションの中にだけ存在します。こうすることで、届け先のチャットの会話で発言の順番が崩れるのを防いでいます。
 
-## 入れ子を防ぐしくみ {#recursion-guard}
+## 再帰の防止 {#recursion-guard}
 
-定時実行で動くセッションでは `cronjob` のツールセットが無効になります。これで次のことを防ぎます。
-- 予定された仕事が、新しい定時実行の仕事を作ってしまうこと
-- 入れ子の予定が増え続けて、トークンの消費が膨れ上がること
-- 仕事の中から、その仕事の予定をうっかり書き換えてしまうこと
+cron から実行されたセッションでは `cronjob` のツール群が無効になります。これにより次のことを防いでいます。
+
+- 予定されたジョブが新しい cron ジョブを作ってしまうこと
+- 再帰的に予定が増えてトークンの消費が跳ね上がること
+- ジョブの中から、そのジョブ自身の予定をうっかり書き換えてしまうこと
 
 ## ロック {#locking}
 
-スケジューラは、プロセスをまたいだファイルによるロック（Unix では `fcntl.flock`、Windows では `msvcrt.locking`）を使い、刻みが重なって同じ一群の仕事を二度実行してしまうのを防ぎます。ゲートウェイの中で動く刻みと、単独の `hermes cron` や手動の `tick()` の間でも同じです。ロックを取れなかった場合、`tick()` はすぐに 0 を返します。
+スケジューラはプロセスをまたぐファイルロック（Unix では `fcntl.flock`、Windows では `msvcrt.locking`）を使い、処理が重なって同じジョブの束が二重に実行されるのを防ぎます。ゲートウェイのプロセス内ティッカーと、単独で動かした `hermes cron` や手動の `tick()` のあいだでも同じです。ロックを取れなかった場合、`tick()` はすぐに 0 を返します。
 
-## CLI での操作 {#cli-interface}
+## CLI からの操作 {#cli-interface}
 
-`hermes cron` の CLI から、仕事を直接扱えます。
+`hermes cron` の CLI からジョブを直接扱えます。
 
 ```bash
 hermes cron list                    # Show all jobs
@@ -303,8 +317,8 @@ hermes cron run <job_id>            # Trigger immediate execution
 hermes cron remove <job_id>         # Delete a job
 ```
 
-## 関連ページ {#related-docs}
+## 関連するページ {#related-docs}
 
-- [定時実行の使い方](/hermes/docs/user-guide/features/cron/)
-- [ゲートウェイの内部](/hermes/docs/developer-guide/gateway-internals/)
-- [エージェントループの内部](/hermes/docs/developer-guide/agent-loop/)
+- [cron の機能ガイド](/hermes/docs/user-guide/features/cron/)
+- [ゲートウェイの内部構造](/hermes/docs/developer-guide/gateway-internals/)
+- [エージェントループの内部構造](/hermes/docs/developer-guide/agent-loop/)

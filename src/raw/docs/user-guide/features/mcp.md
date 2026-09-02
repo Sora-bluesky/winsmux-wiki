@@ -1,35 +1,35 @@
 ---
-title: "MCP（Model Context Protocol）"
-description: "MCP を通して Hermes Agent を外部のツールサーバーにつなぎ、どの MCP ツールを読み込むかを細かく決めます"
+title: "MCP (Model Context Protocol)"
+description: "MCP で Hermes Agent を外部のツールサーバーにつなぎ、読み込む MCP ツールを細かく選ぶ"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: 3d2e82a85f328b7ec8b99db1db33d5ea1734be3c
+upstream_blob: a3fe5f0802bba5bad55dc222257ae891d9ce6664
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
 
-# MCP（Model Context Protocol） {#mcp-model-context-protocol}
+# MCP (Model Context Protocol) {#mcp-model-context-protocol}
 
-MCP を使うと、Hermes Agent は外部のツールサーバーにつながり、Hermes の外にあるツールを使えるようになります。GitHub、データベース、ファイルシステム、ブラウザの仕組み、社内の API など、いろいろなものが対象です。
+MCP を使うと、Hermes Agent を外部のツールサーバーにつないで、Hermes の外にあるツールを使わせられます。GitHub、データベース、ファイルシステム、ブラウザ環境、社内の API など、対象はさまざまです。
 
-すでにどこかにあるツールを Hermes に使わせたい、と思ったことがあるなら、たいていは MCP が一番きれいな方法です。
+すでにどこかにあるツールを Hermes に使わせたいと思ったことがあるなら、たいていは MCP がいちばん素直な方法です。
 
-:::tip Claude Code から来た方へ
-`~/.claude.json` の `mcpServers` の部分は、Hermes の `config.yaml` では `mcp_servers` にあたります。`hermes import-agent claude-code` を実行すれば、スキルや指示ごと自動で移せます。[他のエージェントからの取り込み](/hermes/docs/user-guide/import-from-other-agents/) を参照してください。
+:::tip Claude Code から移ってきた場合
+`~/.claude.json` の `mcpServers` は、Hermes の `config.yaml` では `mcp_servers` にあたります。`hermes import-agent claude-code` を実行すれば、スキルや指示ファイルもろとも自動で移してくれます。[他のエージェントから取り込む](/hermes/docs/user-guide/import-from-other-agents/)を参照してください。
 :::
 
-## MCP で得られるもの {#what-mcp-gives-you}
+## MCP でできること {#what-mcp-gives-you}
 
-- Hermes 独自のツールを先に書かなくても、外部のツール群を使えます
-- ローカルの stdio サーバーと、リモートの HTTP MCP サーバーを同じ設定にまとめられます
+- Hermes 用のツールを自分で書かなくても、外部のツール群をそのまま使えます
+- ローカルの stdio サーバーとリモートの HTTP MCP サーバーを、同じ設定ファイルにまとめて書けます
 - 起動時にツールを自動で見つけて登録します
-- サーバーが対応していれば、MCP のリソースとプロンプトを包む補助ツールも用意します
-- サーバーごとの絞り込みができるので、本当に Hermes に見せたい MCP のツールだけを出せます
+- サーバーが対応していれば、MCP のリソースやプロンプトを包んだ補助ツールも用意されます
+- サーバーごとに絞り込めるので、Hermes に見せたい MCP ツールだけを出せます
 
-## 手早く始める {#quick-start}
+## すぐに使い始める {#quick-start}
 
-1. MCP の対応は標準のインストールに含まれています。追加の手順は要りません。
+1. MCP は標準の導入手順に含まれています。追加の作業は要りません。
 
-2. `~/.hermes/config.yaml` に MCP サーバーを足します。
+2. `~/.hermes/config.yaml` に MCP サーバーを書き足します。
 
 ```yaml
 mcp_servers:
@@ -44,9 +44,9 @@ mcp_servers:
 hermes chat
 ```
 
-4. MCP に支えられた機能を Hermes に頼みます。
+4. その MCP でできることを Hermes に頼みます。
 
-たとえば次のように頼みます。
+たとえばこう伝えます。
 
 ```text
 List the files in /home/user/projects and summarize the repo structure.
@@ -54,10 +54,9 @@ List the files in /home/user/projects and summarize the repo structure.
 
 Hermes は MCP サーバーのツールを見つけ、他のツールと同じように使います。
 
-## カタログ: Nous が確認した MCP をワンクリックで入れる {#catalog-one-click-install-for-nous-approved-mcps}
+## カタログ：Nous が承認した MCP をワンクリックで入れる {#catalog-one-click-install-for-nous-approved-mcps}
 
-Hermes には、Nous のスタッフが確認して取り込んだ MCP サーバーのカタログが
-付いています。既定ではどれも無効なので、本当に使いたいものだけを入れてください。
+Hermes には、Nous のスタッフが確認して取り込んだ MCP サーバーのカタログが同梱されています。既定ではどれも無効なので、自分が使いたいものだけを入れてください。
 
 ```bash
 hermes mcp                # interactive picker (default)
@@ -65,7 +64,7 @@ hermes mcp catalog        # plain-text list, scriptable
 hermes mcp install n8n    # install a catalog entry by name
 ```
 
-選択画面では、それぞれの項目がいまの状態とともに並びます。
+一覧では、各項目が現在の状態とともに表示されます。
 
 ```
 n8n          available              Manage and inspect n8n workflows from Hermes
@@ -73,24 +72,17 @@ linear       enabled                Linear issue/project management (remote OAut
 github       installed (disabled)   GitHub repo + PR tools
 ```
 
-行の上で `Enter` を押すと、インストール（必要な認証情報の入力も含めて進みます）、
-有効化、無効化、削除ができます。カタログの項目は hermes-agent のリポジトリの
-`optional-mcps/` の下にあり、そのディレクトリに入っていること自体が Nous の
-承認を意味します。コミュニティからの投稿枠はなく、項目は PR を取り込む形で追加されます。
+行の上で `Enter` を押すと、導入（必要な認証情報の入力も含む）、有効化、無効化、削除ができます。カタログの項目は hermes-agent リポジトリの `optional-mcps/` 以下に置かれており、そこに入っていること自体が Nous の承認を意味します。コミュニティ投稿枠のようなものはなく、項目の追加は PR のマージによって行われます。
 
-カタログの項目が求めるものは、次のいずれかです。
+カタログの項目が求めるものは次のとおりです。
 
-- **API キー** — Hermes がインストール時に尋ね、その値を `~/.hermes/.env` に
-  書きます。秘密でない値（ベースの URL など）も同じファイルに入ります。
-- **OAuth**（リモートの MCP） — 設定には `auth: oauth` として書かれ、MCP の
-  クライアントが最初の接続でブラウザを開きます。
-- **OAuth**（Google や GitHub などの第三者のサービス） — まだ認証していなければ、
-  Hermes が `hermes auth <provider>` を案内します。
+- **API キー** — 導入時に Hermes が入力を促し、値を `~/.hermes/.env` に書き込みます。秘密でない値（ベース URL など）も同じファイルに入ります。
+- **OAuth**（リモートの MCP） — 設定には `auth: oauth` と書かれ、MCP クライアントが最初の接続時にブラウザを開きます。
+- **OAuth**（Google や GitHub などの外部サービス） — まだ認証していなければ、Hermes が `hermes auth <provider>` を案内します。
 
-### インストール時のツールの選択 {#tool-selection-at-install-time}
+### 導入時にツールを選ぶ {#tool-selection-at-install-time}
 
-認証情報の設定が済むと、Hermes は MCP サーバーに問い合わせて、そこにあるツールを
-すべて並べたチェック欄を出します。
+認証情報の設定が済むと、Hermes は MCP サーバーに問い合わせて公開されているツールを列挙し、チェックリストを出します。
 
 ```
 Select tools for 'linear' (SPACE toggle, ENTER confirm)
@@ -101,76 +93,35 @@ Select tools for 'linear' (SPACE toggle, ENTER confirm)
   ...
 ```
 
-あらかじめチェックが入っている行は、次の順で決まります。
+あらかじめチェックが入る行は、次の順で決まります。
 
-1. **前回のあなたの選択**。この項目を以前に入れたことがある場合です（入れ直しても
-   前の選択が残り、マニフェストの既定に上書きされません）
-2. **マニフェストの `tools.default_enabled`**。項目がそれを宣言している場合です
-   （カタログの項目によっては、状態を変えるツールやめったに使わないツールを
-   あらかじめ外してあります）
-3. どちらにも当てはまらなければ **すべて**
+1. **前回の選択** — この項目を以前に入れたことがあれば、その内容が引き継がれます（入れ直しても、マニフェストの既定値で上書きされることはありません）
+2. **マニフェストの `tools.default_enabled`** — 項目が宣言していればそれに従います（カタログの中には、状態を書き換えるツールや出番の少ないツールをあらかじめ外してあるものもあります）
+3. **すべて** — 上のどちらにも当てはまらない場合
 
-自動生成でツールが非常に多い項目（たとえば `cloudflare` は OpenAPI の
-エンドポイントのツールがおよそ 3,300 個あります）は、代わりに `tools.default_excluded`
-を宣言します。名前とグロブの型を選んで並べた拒否の一覧です。こうした項目を
-インストールするときはチェック欄が出ず、`tools.exclude` が書かれます。当てはまらな
-かったものはすべて有効なままで、サーバーがあとから足したツールも含まれます。
-まとめて有効に戻したいときは、config.yaml の
-`mcp_servers.<name>.tools.exclude` を編集してください。
+自動生成されたツールが極端に多い項目（たとえば `cloudflare` は OpenAPI のエンドポイントが約 3,300 個）では、代わりに `tools.default_excluded` を宣言しています。これは名前とグロブパターンをまとめた除外リストです。こうした項目を入れるときはチェックリストが省かれ、`tools.exclude` が書き込まれます。パターンに当たらないものはすべて有効のままで、あとからサーバーが増やしたツールも含まれます。まとめて元に戻したいときは、config.yaml の `mcp_servers.<name>.tools.exclude` を編集してください。
 
-チェック欄は ENTER で確定します。チェックしたツールだけが
-`mcp_servers.<name>.tools.include` に入ります。すべてを選んだ場合は絞り込みが
-書かれません（設定が一番すっきりし、動きは同じです）。
+チェックリストは ENTER で確定します。チェックの入ったツールだけが `mcp_servers.<name>.tools.include` に入ります。すべて選んだ場合は絞り込みが書かれません（設定がいちばんすっきりし、動きは同じです）。
 
-**問い合わせに失敗した場合**（サーバーに届かない、OAuth がまだ済んでいない、
-裏側のサービスが動いていない）も、インストール自体は成功します。マニフェストの
-`tools.default_enabled` がそのまま適用されるか（宣言されていれば）、絞り込みが
-書かれません（宣言が無ければ）。サーバーに届くようになったら
-`hermes mcp configure <name>` をもう一度実行して調整してください。
+**問い合わせに失敗したとき**（サーバーに届かない、OAuth がまだ済んでいない、裏のサービスが動いていない、など）も導入自体は成功します。マニフェストに `tools.default_enabled` があればそれをそのまま適用し、なければ絞り込みを書きません。サーバーに届くようになってから `hermes mcp configure <name>` をやり直して調整してください。
 
-### 信頼の考え方 {#trust-model}
+### 信頼のしくみ {#trust-model}
 
-カタログの項目を入れると、マニフェストに書かれたものがそのまま実行されます。`git clone`、
-その項目の `bootstrap` のコマンド（`pip install`、`npm install` など）、そして最終的には
-MCP サーバー自身のコードです。マニフェストは hermes-agent リポジトリへの PR レビューを
-通っているので、公開前に Nous が各項目を確認しています。とはいえ
-**入れる前に自分でもマニフェストを読むべきです**。とくに
-`source:` の項目にあるリポジトリ、`install.bootstrap:` のコマンド、そして
-`transport.command:` の呼び出しです。
+カタログの項目を入れると、マニフェストに書かれたことがそのまま実行されます。`git clone`、その項目の `bootstrap` コマンド（`pip install`、`npm install` など）、そして最終的には MCP サーバー自身のコードです。マニフェストは hermes-agent リポジトリへの PR レビューを経ているので、公開前に Nous が各項目を確認しています。**それでも、入れる前にマニフェストには目を通してください**。とくに `source:` に書かれたリポジトリ、`install.bootstrap:` のコマンド、`transport.command:` で何が起動されるかを見てください。
 
-マニフェストは GitHub の
-[`optional-mcps/<name>/manifest.yaml`](https://github.com/NousResearch/hermes-agent/tree/main/optional-mcps)
-にあります。選択画面もインストール時にマニフェストの `source:` の URL を表示するので、
-上流のリポジトリをすぐ確かめられます。Web のダッシュボードの MCP のページでも、
-カタログの項目ごとに同じ内容が見られます。通信の方式、認証の種類、エンドポイントの
-URL（HTTP の場合）またはコマンドと引数（stdio の場合）、git のインストール元と参照先、
-bootstrap のコマンド、設定の注意点までが並び、`source:` はクリックできるリンクとして
-表示されるので、Install を押す前に、その項目が何につなぎ何を実行するのかを正確に
-確かめられます。
+マニフェストは GitHub の [`optional-mcps/<name>/manifest.yaml`](https://github.com/NousResearch/hermes-agent/tree/main/optional-mcps) にあります。導入時には一覧画面がマニフェストの `source:` の URL も表示するので、上流のリポジトリをその場で確かめられます。Web ダッシュボードの MCP ページでも、カタログの項目ごとに同じ内容を確認できます。通信方式、認証の種類、エンドポイントの URL（HTTP の場合）またはコマンドと引数（stdio の場合）、git の取得元と参照、bootstrap のコマンド、設定の補足まで並び、`source:` はリンクとして表示されます。Install を押す前に、その項目が何につなぎ何を実行するのかを正確に確かめられます。
 
-### マニフェストの版の互換性 {#manifest-version-compatibility}
+### マニフェストのバージョン互換性 {#manifest-version-compatibility}
 
-マニフェストは `manifest_version` を固定しています。カタログは新しい版にも耐える
-作りです。あなたの入れている Hermes が理解するより新しい `manifest_version` の項目が
-PR で追加された場合、選択画面はその項目を黙って隠すのではなく、警告
-（`⚠ '<name>' requires a newer Hermes`）を出します。これが見えたら `hermes update` で
-最新の Hermes を入れてください。
+マニフェストには `manifest_version` が固定で書かれています。カタログは新しい版に対して前向きに作られており、手元の Hermes が理解できるより新しい `manifest_version` の項目が PR で追加された場合、その項目は黙って隠されるのではなく警告（`⚠ '<name>' requires a newer Hermes`）が表示されます。これが出たら `hermes update` で最新の Hermes を入れてください。
 
-### 実行時の `${ENV_VAR}` の置き換え {#runtime-envvar-substitution}
+### 実行時の `${ENV_VAR}` 置き換え {#runtime-envvar-substitution}
 
-項目の `transport.command`、`transport.args`、`transport.url`、`headers` の中では、
-`${VAR}` の書き方がサーバーへの接続時に環境変数から解決されます（`~/.hermes/.env` の
-中身もすべて含みます）。これは、カタログの項目が、利用者が別のところで設定した値を
-参照したいときに便利です。たとえば `${HOME}/foo` や `${MY_PROVIDER_TOKEN}` です。
+項目の `transport.command`、`transport.args`、`transport.url`、`headers` の中では、`${VAR}` という書き方が接続時に環境変数（`~/.hermes/.env` の内容も含みます）から解決されます。カタログの項目が、別の場所で設定した値を参照したいときに便利です。たとえば `${HOME}/foo` や `${MY_PROVIDER_TOKEN}` のように書けます。
 
-Cursor 風の文脈の変数も置き換えられます（大文字と小文字を区別します）。
-`${userHome}`（ホームディレクトリ）、`${workspaceFolder}`（セッションの作業場所の
-起点）、`${workspaceFolderBasename}`、そして `${pathSeparator}` / `${/}`
-（OS のパスの区切り文字）です。詳しくは
-[MCP 設定の詳しい説明](/hermes/docs/reference/mcp-config-reference/) を参照してください。
+Cursor 風の文脈変数も置き換えられます（大文字と小文字は区別されます）。`${userHome}`（ホームディレクトリ）、`${workspaceFolder}`（セッションの作業ディレクトリの起点）、`${workspaceFolderBasename}`、`${pathSeparator}` / `${/}`（OS のパス区切り文字）です。詳しくは [MCP 設定の早見表](/hermes/docs/reference/mcp-config-reference/)を参照してください。
 
-これは、カタログのマニフェストで使う `${INSTALL_DIR}` とは別ものです。あちらは
-インストール時に、カタログがその項目のリポジトリを複製した場所に置き換えられます。
+これはカタログのマニフェストに出てくる `${INSTALL_DIR}` とは別物である点に注意してください。あちらは導入時に、その項目のリポジトリを取得した先のパスへ置き換えられます。
 
 ### あとからツールの選択を変える {#updating-tool-selection-later}
 
@@ -178,38 +129,25 @@ Cursor 風の文脈の変数も置き換えられます（大文字と小文字�
 hermes mcp configure linear
 ```
 
-いまの選択にチェックが入った状態で、同じチェック欄がもう一度開きます。もっと多くの
-ツールを有効にしたいときや、サーバーが新しいツールを足したので使いたいときに使います。
+同じチェックリストが、今の選択にチェックが入った状態で開きます。使えるツールを増やしたいときや、サーバーが追加した新しいツールを取り込みたいときに使ってください。
 
 ### カタログのマニフェストを更新する {#updating-the-catalog-manifest}
 
-MCP が自動で更新されることはありません。Hermes を更新したあと、マニフェストの版が
-変わっていたら、`hermes mcp install <name>` をもう一度実行して入れ直してください。
+MCP が自動で更新されることはありません。Hermes を更新したあとにマニフェストの版が変わっていたら、`hermes mcp install <name>` をやり直して反映してください。
 
-カタログに MCP を追加するには、
-[`optional-mcps/`](https://github.com/NousResearch/hermes-agent/tree/main/optional-mcps) に PR を出してください。
+カタログに MCP を追加したい場合は、[`optional-mcps/`](https://github.com/NousResearch/hermes-agent/tree/main/optional-mcps) に対して PR を出してください。
 
-### 提案の情報（`suggest:`） {#suggestion-metadata-suggest}
+### 提案用の情報（`suggest:`） {#suggestion-metadata-suggest}
 
-マニフェストには、`keywords:` や `hosts:` の並びを持つ任意の `suggest:` の部分を
-書けます。画面の側（いまのところデスクトップアプリの入力欄）はこれを使って、
-書きかけの文にその語が単語として現れたときや、貼り付けたリンクのホスト名が挙げられた
-接尾辞で終わるときに、ワンクリックの「Add &lt;server&gt;」のボタンを出します。
-これはあくまで助言で、インストールは同じ検証済みのカタログや設定の経路を通ります。
-ホスト型のリモートの項目のほとんど（Atlassian、Sentry、Notion、Stripe、Vercel、
-Supabase など）がこれを宣言しています。
+マニフェストには、`keywords:` や `hosts:` のリストを持つ `suggest:` ブロックを任意で書けます。画面側（今のところデスクトップアプリの入力欄）はこれを使い、書きかけの文にキーワードが単語として含まれていたり、貼り付けたリンクのホスト名が指定の末尾に一致したりしたときに、ワンクリックの「Add &lt;server&gt;」ボタンを出します。これはあくまで案内で、実際の導入は同じ検証済みのカタログと設定の経路を通ります。ホスト型のリモート項目（Atlassian、Sentry、Notion、Stripe、Vercel、Supabase など）の多くがこれを宣言しています。
 
-GitHub はあえてカタログに入れて **いません**。ホスト型の MCP はクライアントごとに
-自前の OAuth アプリを求め（一般的な動的クライアント登録は拒否されます）、しかも
-Hermes に同梱されている `github/*` のスキルが `gh` CLI を動かすほうが、より多くのことを
-できるからです。デスクトップでは、GitHub に言及すると、まだ `gh` にサインインして
-いない場合に `github-auth` のスキルを勧めます。
+GitHub は意図的にカタログへ入れていません。ホスト型の MCP がクライアントごとに自前の OAuth アプリを要求し（一般的な動的クライアント登録は拒否されます）、また `gh` CLI を動かす Hermes 同梱の `github/*` スキルのほうが機能面で優れているためです。デスクトップでは、GitHub に触れると代わりに `github-auth` スキルが提案されます（`gh` にまだサインインしていない場合）。
 
-## MCP サーバーの二つの形 {#two-kinds-of-mcp-servers}
+## MCP サーバーの 2 つの種類 {#two-kinds-of-mcp-servers}
 
 ### stdio サーバー {#stdio-servers}
 
-stdio のサーバーは、手元の子プロセスとして動き、標準入出力でやり取りします。
+stdio サーバーは手元の子プロセスとして動き、標準入出力でやり取りします。
 
 ```yaml
 mcp_servers:
@@ -220,14 +158,14 @@ mcp_servers:
       GITHUB_PERSONAL_ACCESS_TOKEN: "***"
 ```
 
-stdio のサーバーが向いているのは、次のときです。
-- サーバーが手元にインストールされている
-- 手元の資源に待ち時間少なく触りたい
-- 参照している MCP サーバーの説明が `command`、`args`、`env` を示している
+stdio サーバーが向いているのは次の場合です。
+- サーバーを手元に入れてある
+- 手元のリソースへ遅延を抑えて触りたい
+- 参照している MCP サーバーの説明が `command`、`args`、`env` の形で書かれている
 
 ### HTTP サーバー {#http-servers}
 
-HTTP の MCP サーバーは、Hermes が直接つなぎに行くリモートのエンドポイントです。
+HTTP の MCP サーバーは、Hermes が直接つなぎにいくリモートのエンドポイントです。
 
 ```yaml
 mcp_servers:
@@ -237,19 +175,19 @@ mcp_servers:
       Authorization: "Bearer ***"
 ```
 
-HTTP のサーバーが向いているのは、次のときです。
+HTTP サーバーが向いているのは次の場合です。
 - MCP サーバーが別の場所で動いている
-- 組織が社内向けの MCP のエンドポイントを出している
-- その連携のために Hermes に子プロセスを起動させたくない
+- 組織が社内向けの MCP エンドポイントを公開している
+- その連携のために Hermes に子プロセスを立ち上げさせたくない
 
 ### OAuth で認証する HTTP サーバー {#oauth-authenticated-http-servers}
 
-ホスト型の MCP サーバーの多く（Cloudflare、Linear、Sentry、Atlassian、Asana、Figma、Stripe など）は、固定のトークンではなく OAuth 2.1 を求めます。`auth: oauth` を設定すれば、あとは Hermes が MCP の Python SDK を通して、情報の取得、クライアントの識別、PKCE、トークンの交換、更新、追加認証までを扱います。
+ホスト型の MCP サーバー（Cloudflare、Linear、Sentry、Atlassian、Asana、Figma、Stripe など）の多くは、固定のベアラートークンではなく OAuth 2.1 を求めます。`auth: oauth` と書いておけば、探索、クライアントの識別、PKCE、トークンの交換と更新、追加認証まで、Hermes が MCP の Python SDK を通して面倒を見ます。
 
-Hermes は、対応しているサーバーには [Client ID Metadata Document](/hermes/docs/reference/mcp-config-reference/#client-identification-cimd-and-dcr) で自分を名乗り、対応していないサーバーでは動的クライアント登録に切り替えます。どちらも自動なので、設定することはありません。
+Hermes は、対応しているサーバーに対しては [Client ID Metadata Document](/hermes/docs/reference/mcp-config-reference/#client-identification-cimd-and-dcr) で自分を名乗り、対応していないサーバーには動的クライアント登録で切り替えます。どちらも自動なので、設定することはありません。
 
 :::tip Figma のリモート MCP
-Figma のホスト型のエンドポイント（`https://mcp.figma.com/mcp`）は、動的クライアント登録を **`client_name` の完全一致** で許可します。素の `"Hermes Agent"` は 403 になり、`"Claude Code"` と `"Codex"` は通ります。Hermes は `mcp.figma.com` に対して `oauth.client_name: "Claude Code"` を自動で設定するので、特別な小細工なしにインストールとログインができます。
+Figma のホスト型エンドポイント（`https://mcp.figma.com/mcp`）は、動的クライアント登録を **`client_name` の完全一致**で許可しています。素の `"Hermes Agent"` は 403 になり、`"Claude Code"` や `"Codex"` は通ります。Hermes は `mcp.figma.com` に対して `oauth.client_name: "Claude Code"` を自動で設定するので、小細工なしに導入とログインができます。
 
 ```yaml
 mcp_servers:
@@ -258,7 +196,7 @@ mcp_servers:
     auth: oauth
 ```
 
-あるいは `hermes mcp install figma` のあと `hermes mcp login figma` です。
+あるいは `hermes mcp install figma` を実行してから `hermes mcp login figma` としてください。
 :::
 
 ```yaml
@@ -268,14 +206,14 @@ mcp_servers:
     auth: oauth
 ```
 
-最初につなぐとき、Hermes は認可の URL を表示し、可能ならブラウザを開き、手元のループバックのポートで OAuth の戻りを待ちます。トークンは `~/.hermes/mcp-tokens/<server>.json` に 0o600 の権限で保存され、次からは更新に失敗するまで黙って使い回されます。
+最初につなぐとき、Hermes は認可用の URL を表示し、可能ならブラウザを開いて、ローカルのループバックポートで OAuth のコールバックを待ちます。トークンは `~/.hermes/mcp-tokens/<server>.json` に 0o600 の権限で保存され、更新に失敗するまでは次回以降も黙って再利用されます。
 
-**リモートや画面の無いホストの場合。** Hermes がブラウザとは別の機械で動いていると、ループバックの戻りはあなたのノートパソコンに届きません。手順を終える方法は次のとおりです。
+**リモートや画面のないホストの場合。** Hermes がブラウザとは別の端末で動いていると、ループバックのコールバックは手元のパソコンに届きません。手立ては次のとおりです。
 
-- **Hermes Desktop（自動）:** Desktop アプリの MCP 設定画面から、リモートのバックエンドに対して OAuth のサインインを実行すると、Desktop が*あなたの*機械で戻りを待ち受け、認可の結果をゲートウェイまで自動で中継します。トンネルも貼り付けも代理も要りません。Desktop アプリとバックエンドの両方が最新である必要があります。
-- **貼り戻し（準備不要）:** 対話できる端末なら、Hermes は認可の URL と一緒に「Or paste the redirect URL here…」と表示します。その URL をブラウザで開いて承認し、たどり着いた URL をまるごとコピーして（戻り先は接続エラーになりますが、それで正常です）、プロンプトに貼り付けてください。`?code=…&state=…` のクエリ文字列だけでも通ります。
-- **SSH のポート転送:** 別の端末で `ssh -N -L <port>:127.0.0.1:<port> user@host` を実行し、あとは戻りをそのまま流します。
-- **中継した戻り先（`redirect_uri`）:** 公開の HTTPS のエンドポイントがホストへ転送している場合（たとえば戻り先のポートに向けた Tailscale Funnel やリバースプロキシ）、`oauth.redirect_uri` を設定すれば、ブラウザの戻りがそのまま Hermes に届きます。トンネルも貼り付けも要りません。
+- **Hermes Desktop（自動）：** デスクトップアプリの MCP 設定画面からリモートのバックエンドに対して OAuth のサインインを行うと、デスクトップ側が*手元の*端末でコールバックを待ち受け、認可の結果を自動でゲートウェイへ渡します。トンネルも貼り付けもプロキシも要りません。デスクトップアプリとバックエンドの両方が最新である必要があります。
+- **貼り付けで戻す（準備不要）：** 対話できる端末では、Hermes が認可用の URL と一緒に「Or paste the redirect URL here…」と表示します。その URL をブラウザで開いて承認し、最後に表示された URL を丸ごとコピーして（リダイレクト先は接続エラーになりますが、それで正常です）、プロンプトに貼り付けてください。`?code=…&state=…` のクエリ文字列だけでも通ります。
+- **SSH のポート転送：** 別の端末で `ssh -N -L <port>:127.0.0.1:<port> user@host` を実行しておき、あとは普通にリダイレクトさせます。
+- **プロキシ経由のコールバック（`redirect_uri`）：** 公開された HTTPS のエンドポイントがホストへ転送してくれる場合（Tailscale Funnel やコールバックのポートに向けたリバースプロキシなど）、`oauth.redirect_uri` を設定すればブラウザのリダイレクトがそのまま Hermes に届きます。トンネルも貼り付けも要りません。
 
 ```yaml
 mcp_servers:
@@ -287,13 +225,13 @@ mcp_servers:
       redirect_uri: "https://oauth.example.ts.net/callback"
 ```
 
-完全に画面の無いゲートウェイ（メッセージのボットで、対話できる端末がまったく無い場合）では、任意で入れられる [`mcp-oauth-remote-gateway` スキル](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/) が、手順を自分でこなしてトークンを Hermes の期待する場所に書くところまで、エージェントを導いてくれます。
+対話できる端末がまったくない、完全に無人のゲートウェイ（メッセージングのボットなど）については、任意で入れられる [`mcp-oauth-remote-gateway` スキル](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/)が、手作業で認証を終わらせてトークンを所定の場所に書くところまでエージェントを導いてくれます。
 
-**落とし穴 — WAF が `127.0.0.1` の戻り先を拒否する。** 認可サーバーの前に WAF を置いていて、クエリ文字列に `127.0.0.1` がそのまま含まれる認可の要求を 403 にしてしまう提供元がいくつかあります（Reclaim.ai の AWS API Gateway が知られた例で、OAuth アプリに届く前にすべて `{"message":"Forbidden"}` が返ります）。`oauth.redirect_host: localhost` を設定して `http://localhost:<port>/callback` を使ってください。どちらにしても、戻りを待ち受ける側は `127.0.0.1` に結びついたままです。
+**落とし穴 — WAF が `127.0.0.1` のリダイレクト先を弾く。** 認可サーバーの前段に置いた WAF が、クエリ文字列に `127.0.0.1` という文字列を含む認可リクエストを一律 403 にする提供元がいくつかあります（Reclaim.ai の AWS API Gateway が知られた例で、OAuth アプリまで届く前にすべて `{"message":"Forbidden"}` が返ります）。`oauth.redirect_host: localhost` を設定して `http://localhost:<port>/callback` を使ってください。どちらにしても、コールバックの待ち受け自体は `127.0.0.1` に結びつけられます。
 
-DCR に対応しないサーバー（Slack など）、あらかじめ登録した `client_id` と `client_secret`、権限の範囲の調整、`hermes mcp login <server>` での再認証まで含めた通しの手順は、[SSH 越し / リモートホストでの OAuth](/hermes/docs/guides/oauth-over-ssh/#mcp-servers) を参照してください。
+動的クライアント登録に対応しないサーバー（Slack など）、あらかじめ登録済みの `client_id` / `client_secret`、スコープの調整、`hermes mcp login <server>` による再認証まで含めた手順は、[SSH 越しの OAuth / リモートホスト](/hermes/docs/guides/oauth-over-ssh/#mcp-servers)にすべて載っています。
 
-**落とし穴 — 自動登録に対応しない提供元（Google Drive、Atlassian）。** 素の `auth: oauth` が頼っている動的クライアント登録の手順（RFC 7591）を拒否するサーバーがあります。Google 公式の Drive のサーバー（`https://drivemcp.googleapis.com/mcp/v1`）は `400 Bad Request` を返すので、OAuth のクライアントは作られず、トークンも手に入りません。症状は分かりにくく、こうしたサーバーは認証なしでも `tools/list` に応えるため、`hermes mcp login` がツールを並べてうまくいったように見えてしまいます。しかし、あとで実際にツールを呼ぶと必ず時間切れになります。いまの `hermes mcp login` はこれを検出し（トークンが本当にディスクに落ちたかを確かめます）、自分の OAuth クライアントを用意するよう伝えます。提供元の管理画面で作って、設定に足してください。
+**落とし穴 — 自動登録に対応しない提供元（Google ドライブ、Atlassian）。** サーバーによっては、素の `auth: oauth` が前提にしている動的クライアント登録（RFC 7591）を拒否します。Google 公式のドライブ用サーバー（`https://drivemcp.googleapis.com/mcp/v1`）は `400 Bad Request` を返すので、OAuth クライアントが作られず、トークンも手に入りません。この症状は分かりにくいところがあります。こうしたサーバーは認証*なしでも* `tools/list` に応じるため、`hermes mcp login` がツールを列挙できてしまい、うまくいったように見えるのです。実際にツールを呼ぶ段になって、ことごとくタイムアウトします。現在の `hermes mcp login` はこれを検出し（トークンが本当にディスクに書かれたかを確かめます）、自分の OAuth クライアントを用意するよう案内します。提供元のコンソールで作成し、設定に書き足してください。
 
 ```yaml
 mcp_servers:
@@ -305,17 +243,17 @@ mcp_servers:
       client_secret: "<your-oauth-client-secret>"
 ```
 
-そのうえで `hermes mcp login googledrive` を実行します。あらかじめ登録したクライアントがあるので、Hermes は登録の手順を飛ばし、通常のブラウザでの認可を進めます。
+そのうえで `hermes mcp login googledrive` を実行します。登録済みのクライアントがあれば、Hermes は登録の手順を飛ばして通常のブラウザ認可へ進みます。
 
-**落とし穴 — 設定の自動再読み込みとの競合。** Hermes のセッションを動かしたまま `~/.hermes/config.yaml` を編集すると、CLI は 30 秒の制限時間で MCP の接続を読み直します。対話式の OAuth の手順には、これでは足りません。項目を足したら、別の端末から `hermes mcp login <server>` を実行してください。こちらは認証を終えるのを 5 分まで待ちます。
+**落とし穴 — 設定の自動再読み込みとの競合。** Hermes のセッションを動かしたまま `~/.hermes/config.yaml` を編集すると、CLI は 30 秒の制限つきで MCP の接続を自動的に張り直します。対話的な OAuth にはこれでは足りません。項目を書き足したら、別の端末から `hermes mcp login <server>` を実行してください。こちらは認証が終わるまで 5 分まるまる待ちます。
 
 ## mTLS とクライアント証明書 {#mtls-client-certificates}
 
-相互 TLS（クライアント証明書による認証）を求めるリモートの HTTP MCP サーバーには、`client_cert` と `client_key` で対応します。Hermes は解決した証明書を、TLS の握手のために下位の HTTP クライアントへ渡します。
+相互 TLS（クライアント証明書による認証）を求めるリモートの HTTP MCP サーバーには、`client_cert` / `client_key` で対応できます。Hermes は解決した証明書を、TLS のやり取りのために下層の HTTP クライアントへ渡します。
 
-`client_cert` は三つの形を受け付けます。
+`client_cert` は 3 通りの書き方を受け付けます。
 
-- **一つにまとめた PEM のパス** — 証明書と秘密鍵の両方を持つ一つのファイルです。
+- **1 つにまとめた PEM のパス** — 証明書と秘密鍵を 1 ファイルに収めたもの。
 
 ```yaml
 mcp_servers:
@@ -324,7 +262,7 @@ mcp_servers:
     client_cert: "~/.certs/mcp-client.pem"
 ```
 
-- **`[cert, key]` の 2 要素** — 証明書と鍵が別のファイルにある場合です（`client_cert` と `client_key` を設定するのと同じです）。
+- **`[cert, key]` の 2 要素** — 証明書と鍵を別ファイルに分けたもの（`client_cert` と `client_key` を両方書くのと同じです）。
 
 ```yaml
 mcp_servers:
@@ -333,7 +271,7 @@ mcp_servers:
     client_cert: ["~/.certs/mcp-client.crt", "~/.certs/mcp-client.key"]
 ```
 
-- **`[cert, key, password]` の 3 要素** — 秘密鍵が暗号化されている場合で、三つめが鍵の合言葉です。
+- **`[cert, key, password]` の 3 要素** — 秘密鍵が暗号化されている場合、3 つ目が鍵のパスフレーズになります。
 
 ```yaml
 mcp_servers:
@@ -342,11 +280,11 @@ mcp_servers:
     client_cert: ["~/.certs/mcp-client.crt", "~/.certs/mcp-client.key", "${MCP_KEY_PASSWORD}"]
 ```
 
-`client_cert`（まとめた PEM）と、明示的な `client_key` を使って、証明書と鍵を完全に分けたままにもできます。パスは `~` の展開に対応しています。ファイルが無い場合は、意味の分からない TLS の握手の失敗ではなく、どのサーバーの話かが分かるはっきりしたエラーになります。
+`client_cert`（まとめた PEM）と明示的な `client_key` を組み合わせて、証明書と鍵を完全に分けておくこともできます。パスでは `~` が展開されます。ファイルが見つからない場合は、意味の分からない TLS のエラーではなく、どのサーバーの話かが分かるはっきりしたエラーになります。
 
 ## 利用者ごとの識別ヘッダー {#per-user-identity-header}
 
-呼び出し元の識別によって振る舞いを変えるリモートの HTTP / SSE の MCP サーバー（利用者ごとの回数制限、監査の記録、複数の顧客の振り分けなど）には、`identity_header` を使って毎回の要求に識別のヘッダーを付けられます。
+呼び出し元の識別に応じて動きを変えるリモートの HTTP / SSE MCP サーバー（利用者ごとのレート制限、監査記録、テナントごとの振り分けなど）には、`identity_header` で毎回のリクエストに識別用のヘッダーを付けられます。
 
 ```yaml
 mcp_servers:
@@ -358,36 +296,36 @@ mcp_servers:
       value: "alice"         # required for static
 ```
 
-- `value_from: static` は、config.yaml に書いた `value` をそのまま送ります。
-- `value_from: profile` は、いま動いている Hermes のプロファイル名を、接続時に一度だけ解決して送ります。一つの機械にある複数のプロファイルが同じサーバーと話していて、サーバー側で見分けたいときに便利です。
+- `value_from: static` は config.yaml に書いた `value` をそのまま送ります。
+- `value_from: profile` は現在の Hermes プロファイル名を送ります。接続時に一度だけ解決されるので、1 台の端末にある複数のプロファイルが同じサーバーに接続し、サーバー側で区別する必要があるときに役立ちます。
 
-サーバーの `headers` に同じ名前（大文字と小文字は問いません）の項目が明示されていれば、常にそちらが勝ちます。識別のヘッダーが、あなたのヘッダーの設定を上書きすることはありません。`identity_header` の書き方が正しくない場合は、警告のうえ無視されます。それでサーバーへの接続が止まることはありません。stdio のサーバーでは、この項目は警告とともに無視されます（stdio にはヘッダーがありません）。
+サーバーの `headers` に同じ名前（大文字小文字は問いません）が書かれている場合は、そちらが必ず優先されます。識別ヘッダーが自分で書いたヘッダー設定を上書きすることはありません。`identity_header` の書き方が正しくない場合は警告のうえ無視され、接続そのものが止まることはありません。stdio サーバーでは警告とともに無視されます（stdio の通信方式にヘッダーの概念がないためです）。
 
-## 設定の基本項目 {#basic-configuration-reference}
+## 基本の設定早見表 {#basic-configuration-reference}
 
-Hermes は `~/.hermes/config.yaml` の `mcp_servers` の下から MCP の設定を読みます。
+Hermes は MCP の設定を `~/.hermes/config.yaml` の `mcp_servers` の下から読みます。
 
-### よく使う項目 {#common-keys}
+### よく使うキー {#common-keys}
 
-| 項目 | 型 | 意味 |
+| キー | 型 | 意味 |
 |---|---|---|
-| `command` | 文字列 | stdio の MCP サーバーの実行ファイル |
-| `args` | 配列 | stdio のサーバーに渡す引数 |
-| `env` | 対応表 | stdio のサーバーに渡す環境変数 |
-| `url` | 文字列 | HTTP の MCP のエンドポイント |
-| `headers` | 対応表 | リモートのサーバーに送る HTTP のヘッダー |
-| `client_cert` | 文字列 \| 配列 | mTLS 用のクライアント証明書。まとめた PEM のパス、または `[cert, key]` / `[cert, key, password]` |
-| `client_key` | 文字列 | クライアントの秘密鍵の PEM のパス（`client_cert` と分ける場合） |
-| `identity_header` | 対応表 | HTTP / SSE のサーバー向けの、任意の利用者ごとの識別ヘッダー。`{name, value_from: static\|profile, value}` |
-| `timeout` | 数値 | ツール呼び出しの制限時間 |
-| `connect_timeout` | 数値 | 最初の接続の制限時間（MCP の `initialize` の握手にも効きます） |
-| `idle_timeout_seconds` | 数値 | ツールの呼び出しがこの秒数だけ無かったら、stdio のサーバーを作り直します（`0` は作り直さない。これが既定）。次にツールが呼ばれたとき、裏で自動的に立ち上がり直します。 |
-| `max_lifetime_seconds` | 数値 | 通算でこの年齢を超えたら、stdio のサーバーを作り直します（`0` は作り直さない。これが既定）。次に使うとき、裏で立ち上がり直します。 |
-| `enabled` | 真偽値 | `false` なら、Hermes はそのサーバーをまるごと飛ばします |
-| `supports_parallel_tool_calls` | 真偽値 | `true` なら、このサーバーのツールを同時に走らせてよいことになります |
-| `tools` | 対応表 | サーバーごとのツールの絞り込みと、補助ツールの扱い |
+| `command` | string | stdio の MCP サーバーを起動する実行ファイル |
+| `args` | list | stdio サーバーに渡す引数 |
+| `env` | mapping | stdio サーバーに渡す環境変数 |
+| `url` | string | HTTP の MCP エンドポイント |
+| `headers` | mapping | リモートのサーバーに送る HTTP ヘッダー |
+| `client_cert` | string \| list | mTLS 用のクライアント証明書。まとめた PEM のパス、または `[cert, key]` / `[cert, key, password]` |
+| `client_key` | string | クライアントの秘密鍵 PEM のパス（`client_cert` と分けている場合） |
+| `identity_header` | mapping | HTTP / SSE サーバー向けの、利用者ごとの識別ヘッダー（任意）。`{name, value_from: static\|profile, value}` |
+| `timeout` | number | ツール呼び出しの制限時間 |
+| `connect_timeout` | number | 最初の接続の制限時間（MCP の `initialize` のやり取りにも効きます） |
+| `idle_timeout_seconds` | number | ツール呼び出しがないまま この秒数が過ぎたら stdio サーバーを作り直します（`0` は作り直さない。既定値）。次にツールが呼ばれた時点で、意識せずに再起動されます。 |
+| `max_lifetime_seconds` | number | 起動からこの秒数が過ぎたら stdio サーバーを作り直します（`0` は作り直さない。既定値）。次に使うときに、意識せずに再起動されます。 |
+| `enabled` | bool | `false` なら、そのサーバーをまるごと飛ばします |
+| `supports_parallel_tool_calls` | bool | `true` なら、このサーバーのツールを同時に動かすことがあります |
+| `tools` | mapping | サーバーごとのツールの絞り込みと、補助ツールの扱い |
 
-### stdio の最小の例 {#minimal-stdio-example}
+### 最小の stdio 設定 {#minimal-stdio-example}
 
 ```yaml
 mcp_servers:
@@ -396,13 +334,9 @@ mcp_servers:
     args: ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"]
 ```
 
-### メモリを多く使う stdio のサーバーを作り直す {#recycling-memory-heavy-stdio-servers}
+### メモリを食う stdio サーバーを作り直す {#recycling-memory-heavy-stdio-servers}
 
-ブラウザを使う MCP サーバー（たとえば `@playwright/mcp`）は、最初にツールを
-呼んだあと Chromium をまるごと常駐させます。数百 MB が解放されないままです。
-自動での作り直しを有効にすると、放置の時間や寿命の上限を過ぎたところでサーバーは
-畳まれ、次にそのツールが呼ばれたときに裏で立ち上がり直します（その間もツールは
-登録されたままです）。
+ブラウザを使う MCP サーバー（`@playwright/mcp` など）は、最初にツールを呼んだあと Chromium を丸ごと常駐させ続けます。数百 MB が解放されないままです。自動での作り直しを有効にすると、待機時間や寿命の上限を超えたところでサーバーが片付けられ、次にそのツールが呼ばれたときに意識せず再起動されます（その間もツールは登録されたままです）。
 
 ```yaml
 mcp_servers:
@@ -413,7 +347,7 @@ mcp_servers:
     max_lifetime_seconds: 86400   # and at least once a day regardless
 ```
 
-### HTTP の最小の例 {#minimal-http-example}
+### 最小の HTTP 設定 {#minimal-http-example}
 
 ```yaml
 mcp_servers:
@@ -423,20 +357,20 @@ mcp_servers:
       Authorization: "Bearer ***"
 ```
 
-## 内蔵の定型設定 {#built-in-presets}
+## 組み込みのプリセット {#built-in-presets}
 
-よく知られた MCP サーバーについては、`hermes mcp add` に `--preset` を渡すと、通信の詳細が埋まるので、コマンドや引数を調べる必要がありません。定型設定が与えるのは既定値だけなので、同じコマンドラインで渡した他のもの（環境変数、ヘッダー、絞り込み）はそのまま優先されます。
+よく知られた MCP サーバーについては、`hermes mcp add` に `--preset` を付けると通信方式の詳細が埋まるので、コマンドや引数を調べなくて済みます。プリセットが与えるのは既定値だけなので、同じコマンドラインで指定したもの（環境変数、ヘッダー、絞り込みなど）はそちらが優先されます。
 
-| 定型設定 | つなぐもの |
+| プリセット | 何が設定されるか |
 |---|---|
-| `codex` | Codex CLI の MCP サーバー（stdio 越しの `codex mcp-server`）。PATH に `codex` CLI が必要です。 |
+| `codex` | Codex CLI の MCP サーバー（stdio で `codex mcp-server` を起動）。PATH に `codex` CLI が必要です。 |
 
 ```bash
 # Add Codex CLI as an MCP server in one line
 hermes mcp add codex --preset codex
 ```
 
-これは、次と同じ内容を書き込みます。
+これは次と同じ内容を書き込みます。
 
 ```yaml
 mcp_servers:
@@ -445,17 +379,17 @@ mcp_servers:
     args: ["mcp-server"]
 ```
 
-手元での名前は自由に付けられます（`hermes mcp add my-codex --preset codex` でも構いません）。定型設定が与えるのは `command` と `args` の既定値だけです。
+手元での名前は自由に決められます（`hermes mcp add my-codex --preset codex` でも構いません）。プリセットが与えるのは `command` と `args` の既定値だけです。
 
-## Hermes は MCP のツールをどう登録するか {#how-hermes-registers-mcp-tools}
+## Hermes が MCP ツールを登録するしくみ {#how-hermes-registers-mcp-tools}
 
-Hermes は、内蔵のツール名とぶつからないように、MCP のツールに接頭辞を付けます。
+組み込みのツール名とぶつからないよう、Hermes は MCP のツール名に接頭辞を付けます。
 
 ```text
 mcp_<server_name>_<tool_name>
 ```
 
-例:
+例を挙げます。
 
 | サーバー | MCP のツール | 登録される名前 |
 |---|---|---|
@@ -463,42 +397,42 @@ mcp_<server_name>_<tool_name>
 | `github` | `create-issue` | `mcp_github_create_issue` |
 | `my-api` | `query.data` | `mcp_my_api_query_data` |
 
-実際のところ、接頭辞の付いた名前を自分で呼ぶ必要はほとんどありません。Hermes はそのツールを認識し、普通に考えながら選びます。
+実際のところ、接頭辞付きの名前を自分で呼ぶ必要はほとんどありません。Hermes はそのツールを認識し、普通に考えたうえで選びます。
 
-### ツールの結果の掃除と `_meta` {#tool-result-sanitization-and-meta}
+### ツールの結果の無害化と `_meta` {#tool-result-sanitization-and-meta}
 
-モデルが目にする前に、すべての MCP のツールの結果に対して二つのことが行われます。
+モデルが目にする前に、すべての MCP ツールの結果に対して 2 つの処理が行われます。
 
-- **見えない Unicode の TAG 文字が取り除かれます。** U+E0000〜U+E007F の範囲の文字は、端末やチャットの画面では何も表示されないのに、モデルには完全に見えています。悪意のある、あるいは乗っ取られたサーバーが、プロンプトインジェクションを忍び込ませる古典的な経路です。Hermes はこれを、ツールの結果、リソースの内容、ツールの説明から取り除きます。正当な絵文字のタグの並び（🏴󠁧󠁢󠁳󠁣󠁴󠁿 のような地域の旗）はそのまま残ります。
-- **提供元の `_meta` は渡し、プロトコルが予約している鍵は渡しません。** サーバーがツールの結果に `_meta` の対応表を付けている場合（`com.example/handoff` のような提供元の名前空間）、Hermes はそれを結果の内容とともにモデルへ渡します。プロトコルが予約している接頭辞の下にある鍵、つまり `modelcontextprotocol` か `mcp` というラベルにさらにラベルが続くもの、たとえば `modelcontextprotocol.io/...` や `tools.mcp.com/...` は、MCP の仕様の鍵の名前の規則に従って落とされます。モデルに見せるものが何も残らなければ、`_meta` の項目自体が省かれます。
+- **見えない Unicode のタグ文字を取り除きます。** U+E0000〜U+E007F の範囲の文字は、端末やチャットの画面では何も表示されないのに、モデルからは完全に読めてしまいます。悪意のあるサーバーや乗っ取られたサーバーが指示を紛れ込ませる、よく知られた経路です。Hermes はこれをツールの結果、リソースの内容、ツールの説明から取り除きます。絵文字として正当なタグの並び（🏴󠁧󠁢󠁳󠁣󠁴󠁿 のような地域旗）は残します。
+- **提供元独自の `_meta` は渡し、プロトコルが予約したキーは渡しません。** サーバーがツールの結果に `_meta` を付けてきた場合（`com.example/handoff` のような独自の名前空間）、Hermes はそれを結果の中身と一緒にモデルへ渡します。プロトコルが予約している接頭辞の下にあるキー、つまり `modelcontextprotocol` または `mcp` というラベルにもう 1 つラベルが続くもの（`modelcontextprotocol.io/...` や `tools.mcp.com/...` など）は、MCP 仕様のキー名の規則に従って落とされます。モデルに渡すものが何も残らなければ、`_meta` の項目そのものが省かれます。
 
 ## MCP の補助ツール {#mcp-utility-tools}
 
-サーバーが対応していれば、Hermes は MCP のリソースとプロンプトを扱う補助ツールも登録します。
+サーバーが対応している場合、Hermes は MCP のリソースとプロンプトを扱う補助ツールも登録します。
 
 - `list_resources`
 - `read_resource`
 - `list_prompts`
 - `get_prompt`
 
-これらはサーバーごとに、同じ接頭辞の形で登録されます。たとえば次のようになります。
+これらもサーバーごとに、同じ接頭辞の付け方で登録されます。たとえば次のようになります。
 
 - `mcp_github_list_resources`
 - `mcp_github_get_prompt`
 
-### 大切な点 {#important}
+### 大事な点 {#important}
 
-これらの補助ツールは、いまはサーバーの能力を見て登録されます。
-- MCP のセッションが実際にリソースの操作に対応しているときだけ、リソース向けの補助ツールを登録します
-- MCP のセッションが実際にプロンプトの操作に対応しているときだけ、プロンプト向けの補助ツールを登録します
+これらの補助ツールは、サーバーの対応状況を見て登録されるようになりました。
+- MCP のセッションが実際にリソース操作に対応しているときだけ、リソース関連の補助ツールを登録します
+- MCP のセッションが実際にプロンプト操作に対応しているときだけ、プロンプト関連の補助ツールを登録します
 
-そのため、呼べるツールはあってもリソースやプロンプトを持たないサーバーには、これらの包みは付きません。
+そのため、呼び出せるツールはあってもリソースやプロンプトを持たないサーバーには、これらの補助ツールは付きません。
 
 ## サーバーごとの絞り込み {#per-server-filtering}
 
-それぞれの MCP サーバーが Hermes にどのツールを提供するかを決められるので、ツールの名前の空間を細かく管理できます。
+各 MCP サーバーが Hermes に渡すツールを選べます。ツール名の空間を細かく管理できます。
 
-### サーバーをまるごと無効にする {#disable-a-server-entirely}
+### サーバーをまるごと止める {#disable-a-server-entirely}
 
 ```yaml
 mcp_servers:
@@ -507,9 +441,9 @@ mcp_servers:
     enabled: false
 ```
 
-`enabled: false` なら、Hermes はそのサーバーを完全に飛ばし、接続すら試みません。
+`enabled: false` にすると、Hermes はそのサーバーを完全に飛ばし、接続すら試みません。
 
-### サーバーのツールを許可する形で選ぶ {#whitelist-server-tools}
+### 使うツールだけを挙げる {#whitelist-server-tools}
 
 ```yaml
 mcp_servers:
@@ -522,15 +456,11 @@ mcp_servers:
       include: [create_issue, list_issues]
 ```
 
-その MCP サーバーのツールのうち、挙げたものだけが登録されます。
+挙げた MCP サーバーのツールだけが登録されます。
 
-`include` と `exclude` の項目には、グロブの型（`*`、`?`、`[...]`。大文字と小文字は
-区別します）も書けます。`include: ["*_dns_*"]` と書けば、名前に `_dns_` を含む
-ツールがすべて登録されます。特殊な文字を含まない項目は、これまでどおり完全一致です。
-自動生成のエンドポイントのツールを何千個も出すサーバーを、製品の系統ごとに絞り込むには、
-グロブが現実的な手立てです。
+`include` と `exclude` の項目にはグロブパターン（`*`、`?`、`[...]`。大文字と小文字は区別されます）も書けます。`include: ["*_dns_*"]` と書けば、名前に `_dns_` を含むツールがすべて登録されます。特殊文字を含まない項目は、これまでどおり完全一致です。自動生成されたエンドポイントのツールを何千個も公開するサーバーを、製品の系統ごとに絞り込むにはグロブが実用的です。
 
-### サーバーのツールを拒否する形で選ぶ {#blacklist-server-tools}
+### 使わないツールを挙げる {#blacklist-server-tools}
 
 ```yaml
 mcp_servers:
@@ -540,14 +470,11 @@ mcp_servers:
       exclude: [delete_customer]
 ```
 
-除いたもの以外、そのサーバーのツールはすべて登録されます。
+挙げたもの以外、サーバーのツールがすべて登録されます。
 
-### グロブの型 {#glob-patterns}
+### グロブパターン {#glob-patterns}
 
-どちらの並びも、正確な名前に加えて fnmatch 風のグロブを受け付けます。Cloudflare の
-API の MCP（`?codemode=false` でおよそ 3,300 個のツール）のように、平たく巨大な
-ものでは、製品の領域をエンドポイント一つずつ除いていくのは現実的ではないので、
-これが欠かせません。
+どちらのリストも、正確な名前と並べて fnmatch 形式のグロブを受け付けます。Cloudflare の API MCP（`?codemode=false` で約 3,300 個のツール）のように平坦で巨大な面を相手にするとき、製品の領域をエンドポイント 1 つずつ除いていくのは現実的ではないので、これが要になります。
 
 ```yaml
 mcp_servers:
@@ -558,12 +485,11 @@ mcp_servers:
       exclude: ["*_radar_*", "*_accounts_dlp_*", "*_zones_web3_*"]
 ```
 
-グロブの特殊な文字（`*`、`?`、`[`）を含まない項目は完全一致です。`docs` は
-`docs` という名前のツールだけを除き、`docs_search` は決して除きません。
+グロブの特殊文字（`*`、`?`、`[`）を含まない項目は完全一致です。`docs` と書けば `docs` という名前のツールだけが除かれ、`docs_search` は除かれません。
 
-### 優先の規則 {#precedence-rule}
+### どちらが優先されるか {#precedence-rule}
 
-両方が書かれている場合は、次のようになります。
+両方が書かれている場合は次のようになります。
 
 ```yaml
 tools:
@@ -575,7 +501,7 @@ tools:
 
 ### 補助ツールも絞り込む {#filter-utility-tools-too}
 
-Hermes が足す補助的な包みだけを、別に無効にすることもできます。
+Hermes が足す補助ツールだけを、個別に止めることもできます。
 
 ```yaml
 mcp_servers:
@@ -586,11 +512,11 @@ mcp_servers:
       resources: false
 ```
 
-つまり、次のようになります。
-- `tools.resources: false` は `list_resources` と `read_resource` を無効にします
-- `tools.prompts: false` は `list_prompts` と `get_prompt` を無効にします
+意味はこうです。
+- `tools.resources: false` は `list_resources` と `read_resource` を止めます
+- `tools.prompts: false` は `list_prompts` と `get_prompt` を止めます
 
-### すべてを盛り込んだ例 {#full-example}
+### まとめた例 {#full-example}
 
 ```yaml
 mcp_servers:
@@ -616,64 +542,64 @@ mcp_servers:
     enabled: false
 ```
 
-## すべて絞り込まれてしまったらどうなるか {#what-happens-if-everything-is-filtered-out}
+## すべて絞り込みで消えたらどうなる？ {#what-happens-if-everything-is-filtered-out}
 
-設定で呼べるツールがすべて除かれ、対応している補助ツールもすべて無効か省かれている場合、Hermes はそのサーバーのために空のツール群を作りません。
+呼び出せるツールがすべて絞り込みで消え、対応している補助ツールもすべて止めるか書かないままにした場合、Hermes はそのサーバーのために空のツール群を実行時に作ることはしません。
 
-そのおかげで、ツールの一覧がすっきり保たれます。
+ツールの一覧がすっきり保たれます。
 
 ## 実行時の動き {#runtime-behavior}
 
 ### いつ見つけるか {#discovery-time}
 
-Hermes は起動時に MCP のサーバーを見つけ、そのツールを通常のツールの登録簿に加えます。
+Hermes は起動時に MCP サーバーを見つけ、そのツールを通常のツール登録簿へ登録します。
 
-### ツールの動的な発見 {#dynamic-tool-discovery}
+### 実行中のツール変更の検出 {#dynamic-tool-discovery}
 
-MCP のサーバーは、動作中に使えるツールが変わったとき、`notifications/tools/list_changed` の通知を送って Hermes に知らせられます。この通知を受け取ると、Hermes は自動でそのサーバーのツールの一覧を取り直し、登録簿を更新します。手作業の `/reload-mcp` は要りません。
+MCP サーバーは、使えるツールが実行中に変わったことを `notifications/tools/list_changed` という通知で Hermes に知らせられます。この通知を受け取ると、Hermes はそのサーバーのツール一覧を自動で取り直し、登録簿を更新します。`/reload-mcp` を手で叩く必要はありません。
 
-これは、能力が動的に変わる MCP サーバーに便利です（たとえば、新しいデータベースの構造が読み込まれるとツールが増えるサーバーや、サービスが落ちるとツールが減るサーバーです）。
+これは、できることが動的に変わる MCP サーバーで役に立ちます。たとえば新しいデータベーススキーマを読み込んだときにツールが増えるサーバーや、サービスが落ちたときにツールが減るサーバーです。
 
-取り直しはロックで守られているので、同じサーバーから通知が立て続けに来ても、取り直しが重なることはありません。プロンプトとリソースの変更の通知（`prompts/list_changed`、`resources/list_changed`）は受け取りますが、まだ対応する動きはしていません。
+取り直しはロックで守られているので、同じサーバーから通知が立て続けに来ても処理が重なりません。プロンプトとリソースの変更通知（`prompts/list_changed`、`resources/list_changed`）は受け取りますが、今のところ動作には反映していません。
 
-### 読み直す {#reloading}
+### 読み込み直す {#reloading}
 
-MCP の設定を変えたら、次を使ってください。
+MCP の設定を変えたときは、次を使います。
 
 ```text
 /reload-mcp
 ```
 
-これで設定から MCP のサーバーを読み直し、使えるツールの一覧が更新されます。サーバー自身が動作中にツールの変更を送ってくる場合については、上の [ツールの動的な発見](#dynamic-tool-discovery) を参照してください。
+これで設定から MCP サーバーを読み込み直し、使えるツールの一覧を更新します。また、利用できるかどうかで出し分けられるツール（Docker、`HASS_TOKEN`、OAuth など）を調べ直す明示的な手段でもあります。セッションのツール構成はそれ以外では固定されるので、途中で用意された認証情報やデーモンは `/reload-mcp`、`/new`、または文脈の圧縮のタイミングでしか拾われません。サーバー側から通知される実行中の変更については、上の[実行中のツール変更の検出](#dynamic-tool-discovery)を参照してください。
 
 ### ツール群 {#toolsets}
 
-設定した MCP サーバーは、登録されたツールを一つ以上提供していれば、実行時のツール群も作ります。
+設定した MCP サーバーは、登録されたツールを 1 つ以上持つ場合、実行時のツール群も作ります。
 
 ```text
 mcp-<server>
 ```
 
-これで、MCP のサーバーをツール群の単位で考えやすくなります。
+これにより、MCP サーバーをツール群の単位で捉えやすくなります。
 
-## セキュリティの考え方 {#security-model}
+## セキュリティのしくみ {#security-model}
 
 ### stdio の環境変数の絞り込み {#stdio-env-filtering}
 
-stdio のサーバーに対して、Hermes はあなたのシェルの環境をそのまま丸ごと渡したりはしません。
+stdio サーバーに対して、Hermes はシェルの環境変数をそのまま丸ごと渡すことはしません。
 
-明示的に設定した `env` と、安全な最小限のものだけが渡されます。これで、秘密がうっかり漏れることを減らせます。
+明示的に設定した `env` と、安全な最低限のものだけが渡されます。うっかり秘密情報が漏れる余地を減らすためです。
 
-### 設定による見せ方の管理 {#config-level-exposure-control}
+### 設定による公開範囲の制御 {#config-level-exposure-control}
 
-新しい絞り込みの仕組みは、セキュリティの手立てでもあります。
-- モデルに見せたくない危ないツールを無効にする
-- 機微なサーバーについては、最小限の許可の一覧だけを出す
-- その面を見せたくないときは、リソースとプロンプトの包みを無効にする
+新しくなった絞り込みは、セキュリティ上の制御でもあります。
+- モデルに見せたくない危険なツールを止められます
+- 機微なサーバーについては、最小限の許可リストだけを見せられます
+- リソースやプロンプトの面を出したくないときは、その補助ツールを止められます
 
 ## 使い方の例 {#example-use-cases}
 
-### issue の管理だけに絞った GitHub のサーバー {#github-server-with-a-minimal-issue-management-surface}
+### イシュー管理だけに絞った GitHub サーバー {#github-server-with-a-minimal-issue-management-surface}
 
 ```yaml
 mcp_servers:
@@ -688,13 +614,13 @@ mcp_servers:
       resources: false
 ```
 
-こんなふうに使います。
+こう使います。
 
 ```text
 Show me open issues labeled bug, then draft a new issue for the flaky MCP reconnection behavior.
 ```
 
-### 危ない操作を外した Stripe のサーバー {#stripe-server-with-dangerous-actions-removed}
+### 危険な操作を外した Stripe サーバー {#stripe-server-with-dangerous-actions-removed}
 
 ```yaml
 mcp_servers:
@@ -706,13 +632,13 @@ mcp_servers:
       exclude: [delete_customer, refund_payment]
 ```
 
-こんなふうに使います。
+こう使います。
 
 ```text
 Look up the last 10 failed payments and summarize common failure reasons.
 ```
 
-### プロジェクト一つに絞ったファイルシステムのサーバー {#filesystem-server-for-a-single-project-root}
+### プロジェクト 1 つに絞ったファイルシステムサーバー {#filesystem-server-for-a-single-project-root}
 
 ```yaml
 mcp_servers:
@@ -721,7 +647,7 @@ mcp_servers:
     args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/my-project"]
 ```
 
-こんなふうに使います。
+こう使います。
 
 ```text
 Inspect the project root and explain the directory layout.
@@ -729,9 +655,9 @@ Inspect the project root and explain the directory layout.
 
 ## 困ったときは {#troubleshooting}
 
-### MCP のサーバーにつながらない {#mcp-server-not-connecting}
+### MCP サーバーにつながらない {#mcp-server-not-connecting}
 
-確かめること:
+次を確認します。
 
 ```bash
 # Verify MCP deps are installed (already included in standard install)
@@ -741,30 +667,30 @@ node --version
 npx --version
 ```
 
-そのうえで設定を見直し、Hermes を再起動してください。
+そのうえで設定を見直し、Hermes を起動し直してください。
 
-### ツールが現れない {#tools-not-appearing}
+### ツールが出てこない {#tools-not-appearing}
 
 考えられる原因は次のとおりです。
 - サーバーへの接続に失敗した
-- 発見に失敗した
-- 絞り込みの設定でそのツールが除かれていた
-- そのサーバーに、その補助的な能力が無い
-- `enabled: false` でサーバーが無効になっている
+- ツールの検出に失敗した
+- 設定の絞り込みでそのツールが外れている
+- そのサーバーに補助ツールの元になる機能がない
+- サーバーが `enabled: false` で止められている
 
-意図して絞り込んでいるなら、それが正しい結果です。
+意図して絞り込んでいるなら、これは想定どおりの動きです。
 
-### リソースやプロンプトの補助ツールが現れないのはなぜか {#why-didnt-resource-or-prompt-utilities-appear}
+### リソースやプロンプトの補助ツールが出ないのはなぜ？ {#why-didnt-resource-or-prompt-utilities-appear}
 
-いまの Hermes は、次の二つがどちらも満たされたときにだけ、それらの包みを登録するからです。
-1. 設定が許している
-2. サーバーのセッションが実際にその能力に対応している
+現在の Hermes は、次の 2 つがどちらも成り立つときだけ、それらの補助ツールを登録するからです。
+1. 設定がそれを許している
+2. サーバーのセッションが実際にその機能に対応している
 
-これは意図した動きで、ツールの一覧を正直に保つためのものです。
+これは意図した動きで、ツールの一覧を実態に合ったものに保ちます。
 
-## ツールの並列呼び出し {#parallel-tool-calls}
+## ツールの同時呼び出し {#parallel-tool-calls}
 
-既定では、MCP のツールは一つずつ順番に動きます。同時に動かしても安全なツールを MCP サーバーが出しているなら（たとえば読み取りだけの問い合わせや、互いに独立した API の呼び出し）、並列の実行を選べます。
+既定では、MCP のツールは 1 つずつ順番に実行されます。同時に動かしても安全なツール（読み取り専用の問い合わせ、互いに独立した API 呼び出しなど）を MCP サーバーが公開しているなら、同時実行を選べます。
 
 ```yaml
 mcp_servers:
@@ -773,17 +699,17 @@ mcp_servers:
     supports_parallel_tool_calls: true
 ```
 
-`supports_parallel_tool_calls` が `true` のとき、Hermes はそのサーバーの複数のツールを、一回のツール呼び出しのまとまりの中で同時に実行することがあります。内蔵の読み取り専用のツール（web_search、read_file など）と同じ扱いです。
+`supports_parallel_tool_calls` が `true` のとき、Hermes は 1 回のツール呼び出しのまとまりの中で、そのサーバーの複数のツールを同時に実行することがあります。組み込みの読み取り専用ツール（web_search、read_file など）と同じ扱いです。
 
 :::caution
-並列の呼び出しを有効にするのは、ツールを同時に動かしても安全な MCP サーバーだけにしてください。ツールが共有の状態、ファイル、データベース、外部の資源を読み書きする場合は、この設定を入れる前に読み書きの競合を確かめてください。
+同時に動かしても安全なツールを持つ MCP サーバーにだけ、この設定を入れてください。ツールが共有の状態、ファイル、データベース、外部のリソースを読み書きする場合は、有効にする前に読み書きの競合を確かめてください。
 :::
 
 ## MCP のサンプリング対応 {#mcp-sampling-support}
 
-MCP のサーバーは、`sampling/createMessage` のプロトコルを通して、Hermes に LLM の推論を頼めます。これにより MCP のサーバーは、自分の代わりに文章を作ってほしいと Hermes に依頼できます。LLM の力は必要だけれど自前のモデルを持たないサーバーに便利です。
+MCP サーバーは `sampling/createMessage` というプロトコルを通じて、Hermes に LLM の推論を頼めます。つまり MCP サーバーが Hermes に代理で文章を作らせられるということで、LLM の力は必要だが自前のモデルを持たないサーバーに向いています。
 
-サンプリングは、すべての MCP サーバーで **既定で有効** です（MCP の SDK が対応している場合）。サーバーごとの設定は `sampling` の下に書きます。
+サンプリングは、すべての MCP サーバーで**既定で有効**です（MCP の SDK が対応している場合）。設定はサーバーごとに `sampling` キーの下で行います。
 
 ```yaml
 mcp_servers:
@@ -800,9 +726,9 @@ mcp_servers:
       log_level: "info"        # Audit log level: debug, info, or warning (default: info)
 ```
 
-サンプリングを受け持つ部分には、時間の窓をずらしながら数える回数制限、要求ごとの制限時間、ツールの繰り返しの深さの上限があり、使いすぎを防ぎます。件数・エラー・使ったトークンといった数値は、サーバーの実体ごとに記録されます。
+サンプリングの処理には、時間窓をずらしながら数えるレート制限、リクエストごとの制限時間、ツール呼び出しの入れ子の深さの上限が組み込まれており、使いすぎに歯止めがかかります。指標（リクエスト数、エラー、使ったトークン数）はサーバーの実体ごとに記録されます。
 
-特定のサーバーでサンプリングを止めるには、次のようにします。
+特定のサーバーでサンプリングを止めるにはこう書きます。
 
 ```yaml
 mcp_servers:
@@ -812,11 +738,11 @@ mcp_servers:
       enabled: false
 ```
 
-## MCP の問い合わせ（elicitation）対応 {#mcp-elicitation-support}
+## MCP の追加入力（elicitation）対応 {#mcp-elicitation-support}
 
-MCP のサーバーは、`elicitation/create` のプロトコル（mcp の Python SDK 1.11.0 以降）を通して、ツールの実行の途中で、決まった形の入力を利用者に尋ねられます。Hermes は **フォーム形式** の問い合わせを、いまある承認の窓口へ流します。CLI や TUI では対話的な確認、Telegram や Slack などゲートウェイのプラットフォームでは承認のボタンです。だから、セッションがどこにあっても要求はあなたに届きます。**URL 形式** の問い合わせ（サーバーが外部の URL を示すもの）は、対応していないものとして断ります。
+MCP サーバーは `elicitation/create` というプロトコルを通じて、ツールの実行中に決まった形式の入力を利用者へ求められます（mcp の Python SDK 1.11.0 以上）。Hermes は**フォーム形式**の要求を既存の承認画面へ流します。CLI や TUI では対話的なプロンプト、Telegram や Slack などのゲートウェイでは承認ボタンとして出るので、セッションがどこにあっても要求が届きます。**URL 形式**の要求（外部の URL に誘導するもの）は、未対応として断ります。
 
-問い合わせは、サーバーごとに **既定で有効** です。設定は `elicitation` の下に書きます。
+追加入力はサーバーごとに**既定で有効**です。設定は `elicitation` キーの下で行います。
 
 ```yaml
 mcp_servers:
@@ -827,29 +753,29 @@ mcp_servers:
       timeout: 300     # seconds to wait for your answer (default: 300)
 ```
 
-既定の 5 分という制限時間は、ゲートウェイの承認の既定に合わせたものです。すぐには見られない場所にいる利用者でも、サーバーがあきらめる前に答えられます。サーバーごとの数値（要求、承認、拒否、エラー）は、受け持つ部分で記録されます。
+既定の 5 分という制限時間は、ゲートウェイの承認の既定値に合わせたものです。すぐに反応できない場所にいても、サーバーがあきらめる前に答える余裕があります。サーバーごとの指標（要求、承認、拒否、エラー）も記録されます。
 
 ## Hermes を MCP サーバーとして動かす {#running-hermes-as-an-mcp-server}
 
-MCP サーバーに **つなぐ** だけでなく、Hermes 自身が MCP サーバーに **なる** こともできます。これにより、MCP を扱える他のエージェント（Claude Code、Cursor、Codex、その他どんな MCP のクライアントでも）が、Hermes のメッセージ機能を使えます。会話の一覧、履歴の読み取り、そしてつながっているすべてのプラットフォームへのメッセージ送信です。
+Hermes は MCP サーバーへ**つなぐ**だけでなく、自分が MCP サーバーに**なる**こともできます。これにより、MCP に対応した他のエージェント（Claude Code、Cursor、Codex、その他の MCP クライアント）が Hermes のメッセージ機能を使えます。会話の一覧、履歴の読み取り、つないである全サービスへの送信です。
 
-### どんなときに使うか {#when-to-use-this}
+### こんなときに使う {#when-to-use-this}
 
-- Claude Code、Cursor、その他のコーディングのエージェントに、Hermes を通して Telegram / Discord / Slack のメッセージを送り書きさせたい
-- Hermes につながっているメッセージのプラットフォームすべてに、一つの MCP サーバーで橋を架けたい
-- すでにプラットフォームがつながった Hermes のゲートウェイが動いている
+- Claude Code や Cursor などのコーディングエージェントから、Hermes 経由で Telegram / Discord / Slack のメッセージを読み書きしたい
+- Hermes につないだメッセージングサービス全部への橋渡しを、MCP サーバー 1 つで済ませたい
+- すでにサービスをつないだ Hermes のゲートウェイを動かしている
 
-### 手早く始める {#quick-start}
+### すぐに使い始める {#quick-start}
 
 ```bash
 hermes mcp serve
 ```
 
-これで stdio の MCP サーバーが立ち上がります。プロセスの面倒を見るのは、あなたではなく MCP のクライアントです。
+これで stdio の MCP サーバーが立ち上がります。プロセスの管理は利用者ではなく MCP クライアント側が行います。
 
-### MCP のクライアント側の設定 {#mcp-client-configuration}
+### MCP クライアント側の設定 {#mcp-client-configuration}
 
-MCP のクライアントの設定に Hermes を足します。たとえば Claude Code の `~/.claude/claude_desktop_config.json` では次のようになります。
+MCP クライアントの設定に Hermes を書き足します。たとえば Claude Code の `~/.claude/claude_desktop_config.json` ではこうなります。
 
 ```json
 {
@@ -862,7 +788,7 @@ MCP のクライアントの設定に Hermes を足します。たとえば Clau
 }
 ```
 
-Hermes を特定の場所にインストールしている場合は、次のようになります。
+特定の場所に Hermes を入れている場合はこうします。
 
 ```json
 {
@@ -877,24 +803,24 @@ Hermes を特定の場所にインストールしている場合は、次のよ�
 
 ### 使えるツール {#available-tools}
 
-この MCP サーバーは 10 個のツールを出します。OpenClaw のチャンネルの橋渡しと同じ範囲に、Hermes 独自のチャンネル閲覧を加えたものです。
+この MCP サーバーは 10 個のツールを公開します。OpenClaw のチャンネルブリッジと同じ内容に、Hermes 独自のチャンネル閲覧を加えたものです。
 
 | ツール | 説明 |
 |------|-------------|
-| `conversations_list` | 動いているメッセージの会話を並べます。プラットフォームで絞ったり、名前で探したりできます。 |
-| `conversation_get` | セッションの鍵を指定して、一つの会話の詳しい情報を取ります。 |
-| `messages_read` | 会話の最近のメッセージの履歴を読みます。 |
-| `attachments_fetch` | 特定のメッセージから、文字以外の添付（画像や動画など）を取り出します。 |
-| `events_poll` | ある位置以降に起きた、新しい会話のできごとを取りに行きます。 |
-| `events_wait` | 次のできごとが来るまで待ちます（ほぼその場で分かります）。 |
-| `messages_send` | プラットフォームを通してメッセージを送ります（たとえば `telegram:123456`、`discord:#general`）。 |
-| `channels_list` | すべてのプラットフォームにわたって、送り先として使えるものを並べます。 |
-| `permissions_list_open` | この橋渡しのセッション中に見えた、未処理の承認の要求を並べます。 |
-| `permissions_respond` | 未処理の承認の要求を、許可または拒否します。 |
+| `conversations_list` | 動いている会話を一覧します。サービスで絞ったり、名前で検索したりできます。 |
+| `conversation_get` | セッションキーを指定して、1 つの会話の詳しい情報を取ります。 |
+| `messages_read` | ある会話の最近のメッセージ履歴を読みます。 |
+| `attachments_fetch` | 特定のメッセージから、文字以外の添付（画像、動画など）を取り出します。 |
+| `events_poll` | ある位置以降に起きた会話の出来事を取りにいきます。 |
+| `events_wait` | 次の出来事が来るまで待ちます（ほぼリアルタイム）。 |
+| `messages_send` | サービスを指定してメッセージを送ります（`telegram:123456`、`discord:#general` など）。 |
+| `channels_list` | 全サービスにまたがる送信先の候補を一覧します。 |
+| `permissions_list_open` | この橋渡しのセッション中に見つかった、未処理の承認要求を一覧します。 |
+| `permissions_respond` | 未処理の承認要求を許可するか拒否します。 |
 
-### できごとの仕組み {#event-system}
+### 出来事のしくみ {#event-system}
 
-この MCP サーバーには、Hermes のセッションのデータベースを見て新しいメッセージを拾う、生きた橋渡しが入っています。これで MCP のクライアントは、届いた会話をほぼその場で知ることができます。
+この MCP サーバーには、Hermes のセッションのデータベースを見て新しいメッセージを拾う、生きた橋渡しが組み込まれています。これにより MCP クライアントは、届いた会話をほぼリアルタイムに把握できます。
 
 ```
 # Poll for new events (non-blocking)
@@ -904,33 +830,33 @@ events_poll(after_cursor=0)
 events_wait(after_cursor=42, timeout_ms=30000)
 ```
 
-できごとの種類は、`message`、`approval_requested`、`approval_resolved` です。
+出来事の種類は `message`、`approval_requested`、`approval_resolved` です。
 
-できごとの待ち行列はメモリの上にあり、橋渡しがつながった時点から始まります。それより前のメッセージは `messages_read` から取れます。
+出来事の待ち行列はメモリ上にあり、橋渡しがつながった時点から始まります。それより前のメッセージは `messages_read` から読めます。
 
-### 起動時の指定 {#options}
+### オプション {#options}
 
 ```bash
 hermes mcp serve              # Normal mode
 hermes mcp serve --verbose    # Debug logging on stderr
 ```
 
-### 仕組み {#how-it-works}
+### どう動いているか {#how-it-works}
 
-この MCP サーバーは、会話のデータを Hermes のセッションの保管庫から直接読みます。主となるのは `~/.hermes/state.db` で、`sessions.json` は古い形式のための予備としてだけ残しています。背後のスレッドがデータベースを見て新しいメッセージを拾い、メモリ上のできごとの待ち行列を保ちます。メッセージの送信には、cron の配送や `hermes send` の CLI を支えているのと同じ内部の送信の仕組み（`tools/send_message_tool.py`）を使います。
+この MCP サーバーは、会話のデータを Hermes のセッション保管場所から直接読みます。主な取得元は `~/.hermes/state.db` で、`sessions.json` は旧来の予備として残っているだけです。裏で動くスレッドがデータベースを見て新しいメッセージを拾い、メモリ上の待ち行列を保ちます。送信には、定時配信や `hermes send` コマンドを支えているのと同じ内部の送信エンジン（`tools/send_message_tool.py`）を使います。
 
-読み取りの操作（会話の一覧、履歴の読み取り、できごとの取得）では、ゲートウェイが動いている必要はありません。送信の操作では動いている必要があります。プラットフォームのアダプターに生きた接続が要るからです。
+読み取りの操作（会話の一覧、履歴の読み取り、出来事の取得）にゲートウェイは要りません。送信の操作には要ります。各サービスへの接続が生きている必要があるためです。
 
-### いまの制限 {#current-limits}
+### 現在の制限 {#current-limits}
 
-- 組み込みの `hermes mcp serve` が出すのは、いまのところ **stdio だけ** の MCP サーバーです。HTTP の MCP サーバーが必要なら、別に橋渡しを走らせるか、もっとよくある選択として、すでに stdio と HTTP の両方を話せる Hermes の MCP の **クライアント** 側を使ってください（`mcp_servers.yaml` や `config.yaml` の `url` と `headers`。上の [HTTP サーバー](#http-servers) を参照）。
-- できごとの取得は、更新時刻を見て無駄を省いたデータベースの確認により、およそ 200 ミリ秒ごとに行われます（ファイルが変わっていなければ何もしません）
-- `claude/channel` の通知を押し出すプロトコルには、まだ対応していません
-- 送れるのは文字だけです（`messages_send` から動画や添付は送れません）
+- 組み込みの `hermes mcp serve` が公開するのは、今のところ **stdio だけ**の MCP サーバーです。HTTP の MCP サーバーが必要なら、別に中継を立ててください。もっとよくある形としては、Hermes の MCP **クライアント**側を使う手があります。こちらは stdio と HTTP の両方を話せます（`mcp_servers.yaml` / `config.yaml` の `url` と `headers`。上の [HTTP サーバー](#http-servers)を参照してください）。
+- 出来事の取得は約 200ms 間隔で、更新時刻を見て無駄を省いたデータベースの走査によります（変わっていなければ何もしません）
+- `claude/channel` のプッシュ通知プロトコルにはまだ対応していません
+- 送信は文字だけです（`messages_send` で画像や添付は送れません）
 
-## 関連する文書 {#related-docs}
+## 関連ドキュメント {#related-docs}
 
 - [Hermes で MCP を使う](/hermes/docs/guides/use-mcp-with-hermes/)
-- [CLI のコマンド一覧](/hermes/docs/reference/cli-commands/)
-- [スラッシュコマンド一覧](/hermes/docs/reference/slash-commands/)
+- [CLI コマンド](/hermes/docs/reference/cli-commands/)
+- [スラッシュコマンド](/hermes/docs/reference/slash-commands/)
 - [よくある質問](/hermes/docs/reference/faq/)
