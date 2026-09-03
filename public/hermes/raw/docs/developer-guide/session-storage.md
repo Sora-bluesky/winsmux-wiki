@@ -2,7 +2,7 @@
 title: "セッションの保存"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: 0f80accfde87d3ddb92fc913ecc8c62f4b47b59b
+upstream_blob: 4627b0ffa640f07d32b9a82963bd1f46cc6ee096
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -174,6 +174,8 @@ FTS5 のテーブルは、`messages` テーブルの INSERT・UPDATE・DELETE �
 | 20 | モデルごとの利用量の記録 — これまでのセッション単位の合計から `session_model_usage` の行を作る |
 | 22 | 作業の種類も含めた利用量の記録 — `task` の列が主キーに加わるよう `session_model_usage` を作り直す |
 | 23 | 全文検索の保存方法の見直し — v11 で中に持つ方式にした写しを、外部の内容を参照する方式のテーブルに置き換える（既存のデータベースでは任意で移ります） |
+| 29 | cron のセッションを trigram（部分一致や日本語などの言語向け）の索引から外す。`messages_fts_trigram_src` のビューとトリガーが `sessions.source` で絞り込み、一度だけ索引を作り直して過去の行を取り除く |
+| 30 | 委任した子（副エージェント）のセッションも trigram の索引から外す。判定は `source='subagent'` か `$._delegate_from` の印（`FTS_TRIGRAM_SESSION_SQL`）。行そのものは `messages` にも通常の単語索引 `messages_fts` にも残るので `session_search` では見つかり、およそ 2.6 倍の大きさになる trigram の陰のテーブルだけが小さくなる。v29 と同じく、作り直しは一度だけ |
 
 上に挙がっていない版は、`_reconcile_columns()` が扱う宣言的な列の追加でした（版の番号が上がるだけで、データの移行はありません）。
 

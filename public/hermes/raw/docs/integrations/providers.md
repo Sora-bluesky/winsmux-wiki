@@ -2,7 +2,7 @@
 title: "LLM とモデルの提供元"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 5ede871815d174d7631805ec06bb45a171f4e822
+upstream_blob: d9de727acd6995064ced22b1fc604ae37769af87
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -63,6 +63,8 @@ LLM につなぐ手段が少なくとも 1 つ要ります。`hermes model` を�
 | **StepFun** | `~/.hermes/.env` に `STEPFUN_API_KEY`（provider: `stepfun`） |
 | **LM Studio** | `hermes model` → 「LM Studio」（provider: `lmstudio`。任意で `LM_API_KEY`） |
 | **独自エンドポイント** | `hermes model` → 「Custom endpoint」を選びます（`config.yaml` に保存されます） |
+
+OpenCode 系の 3 つの提供元は、いずれもリクエストごとに会話ごとの不透明な `x-opencode-session` ヘッダーを送ります（どの通信経路の本編のやり取りにも、圧縮や表題づけのような補助的な呼び出しにも付きます）。OpenCode 側はこれを使って 1 つの会話を同じバックエンドに固定し、プロンプトのキャッシュが温まったままになるようにします。値は Hermes のセッション ID から導かれるもので、個人を特定する情報は含みません。
 
 公式の API キーを使う手順は、専用の [Google Gemini の手引き](/hermes/docs/guides/google-gemini/)を参照してください。
 
@@ -327,7 +329,7 @@ model:
 ベース URL は、環境変数 `NOVITA_BASE_URL`、`GLM_BASE_URL`、`KIMI_BASE_URL`、`MINIMAX_BASE_URL`、`MINIMAX_CN_BASE_URL`、`DASHSCOPE_BASE_URL`、`XIAOMI_BASE_URL`、`GMI_BASE_URL`、`META_BASE_URL`、`TOKENHUB_BASE_URL` で上書きできます。
 
 :::note Meta の貢献者向け枠
-`muse-spark-1.2-contributor` は Meta の割引枠です。Meta が入力と出力を学習に使う可能性があるため、使う前に[対話的なモデル選択で確認を求めます](/hermes/docs/user-guide/configuring-models/)。秘密を扱う作業には `muse-spark-1.2`（通常料金、学習に使われません）を選んでください。
+`muse-spark-1.2-contributor` と `muse-spark-1.3-contributor` は Meta の貢献者向けの枠です。Meta が入力と出力を学習に使う可能性があるため、どちらを使う場合も、その前に[対話的なモデル選択で確認を求めます](/hermes/docs/user-guide/configuring-models/)。現在の料金と利用回数の上限は [Meta Model API の料金と上限](https://dev.meta.ai/docs/pricing-rate-limits/)を参照してください。秘密を扱う作業には、学習に使われない通常の `muse-spark-1.2` / `muse-spark-1.3` を選んでください。
 :::
 
 :::note Z.AI のエンドポイントの自動判別

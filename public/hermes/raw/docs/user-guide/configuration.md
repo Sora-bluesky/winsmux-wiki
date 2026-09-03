@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダー、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: e1f0942447c40da087b8ec97c6b0fb7202acb646
+upstream_blob: 95668e8f15423ff6e32420a27526b476bba95374
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -1732,7 +1732,7 @@ agent:
 
 | 値 | 動き |
 |-------|----------|
-| `"auto"`（既定） | 次に一致するモデルで有効になります: `gpt`、`codex`、`gemini`、`gemma`、`grok`、`glm`、`qwen`、`deepseek`。ほかは無効です（Claude など）。 |
+| `"auto"`（既定） | 次に一致するモデルで有効になります: `gpt`、`codex`、`gemini`、`gemma`、`grok`、`glm`、`qwen`、`deepseek`、`muse`。ほかは無効です（Claude など）。 |
 | `true` | モデルにかかわらず常に有効です。いま使っているモデルが、実行せずに説明ばかりしていると気づいたときに役立ちます。 |
 | `false` | モデルにかかわらず常に無効です。 |
 | `["gpt", "codex", "qwen", "llama"]` | モデル名に、並べた文字列のどれかが含まれるときだけ有効です（大文字小文字は区別しません）。 |
@@ -1767,7 +1767,7 @@ agent:
 
 | 値 | 動き |
 |-------|----------|
-| `"auto"`（既定） | 次に一致するモデルで有効になります: `gpt`、`codex`、`grok`、`deepseek`、`kimi`、`qwen`、`glm`、`minimax`、`mimo`、`mistral`。 |
+| `"auto"`（既定） | 次に一致するモデルで有効になります: `gpt`、`codex`、`grok`、`deepseek`、`kimi`、`qwen`、`glm`、`minimax`、`mimo`、`mistral`、`muse`。 |
 | `true` | モデルにかかわらず常に有効です。 |
 | `false` | モデルにかかわらず常に無効です。 |
 | `["deepseek", "my-custom-model"]` | モデル名に、並べた文字列のどれかが含まれるときだけ有効です（大文字小文字は区別しません）。 |

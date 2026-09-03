@@ -2,7 +2,7 @@
 title: "CLI コマンド早見表"
 description: "Hermes のターミナルコマンドとコマンド群の公式な早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: 0d107524e73760fe36763fc1fbcf7a4f7ed242a2
+upstream_blob: 63734a2d6a3b8ec77c3a84d948611f2855a7dbbc
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -975,6 +975,21 @@ hermes import <zipfile> [options]
 :::warning
 動いているプロセスとぶつからないよう、取り込みの前にゲートウェイを止めてください。
 :::
+
+### SQLite のデータベース {#sqlite-databases}
+
+`.db` で終わるもの（`state.db`、`kanban.db`、`response_store.db` など）は、ふつうのファイルのように名前を付け替える形では反映されません。名前を付け替えるとファイルの inode が入れ替わりますが、ゲートウェイやダッシュボード、WebUI のプロセスが古いほうを開いたままだと、そのプロセスは取り込み前のページを読み続け、ほかの誰からも見えないセッションを書き続けます。そしてそのセッションは、次にみんなが開くデータベースには単に存在しません。しかも、何も記録に残りません。そのため取り込んだページは、`/snapshot restore` と同じやり方で**いま使われているデータベースのファイルの中へ**書き込まれ、開いているすべての接続が取り込んだ内容に揃うようにしています。
+
+動いているデータベースを安全に置き換えられないとき（ページの複写に失敗し、なおかつ別のプロセスがそのファイルを開いたままのとき）は、取り込みはそのデータベースには手を触れず、`Warnings (N files skipped)` の下に並べます。掴んでいるプロセスを止めてから、もう一度実行してください。
+
+新しい作業の上に古いバックアップを取り込むこと自体は今も許されていますが、黙って進むことはなくなりました。取り込んだ `state.db` が、置き換える前のものよりメッセージの数が少ないときは、まとめの中でその旨を知らせます。
+
+```
+  ⚠ Session data replaced by older backup contents:
+    state.db: 12 session(s) / 8912 message(s) -> 3 / 24
+    Anything recorded after the backup was taken is not in it.
+    Recover from a newer backup or snapshot: hermes snapshot list
+```
 
 ### 例 {#examples}
 ```bash

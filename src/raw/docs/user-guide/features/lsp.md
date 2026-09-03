@@ -2,7 +2,7 @@
 title: "LSP — 意味を読み取る診断"
 description: "本物の言語サーバー（pyright、gopls、rust-analyzer など）を、write_file と patch の書き込み後チェックにつなぎます。"
 upstream_path: user-guide/features/lsp.md
-upstream_blob: 8f5830f47914631f574953b3072115c3310f569a
+upstream_blob: c34ac0e9c01db906d473971dac08e32790bb9667
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/lsp
 ---
@@ -239,6 +239,13 @@ pyright や tsserver なら数十ミリ秒、索引を作っている最中の r
 サーバーは、次にファイルを扱うときに自動でまた立ち上がります。
 `idle_timeout: 0` にすれば片付けをやめて、プロセスが生きている間ずっと
 すべてのサーバーの索引を温かいまま保てます。
+
+複数のルートを持つワークスペースに対応しているサーバー（いまのところ
+pyright）は、Hermes のプロセスごとに **1 つのプロセス**として動きます。
+最初の Python のプロジェクトがそれを立ち上げ、そのあとのプロジェクトの
+ルート — たとえば、並行して動くサブエージェントが編集している、隣り合った
+git の作業ツリーなど — は、もう一つ立ち上げるのではなく、同じサーバーに
+ワークスペースのフォルダーとして足されます。
 
 ## 止めるには {#disabling}
 

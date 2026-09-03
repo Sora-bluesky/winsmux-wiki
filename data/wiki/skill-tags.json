@@ -824,6 +824,48 @@
       "message",
       "task",
       "document"
+    ],
+    "autonomous-ai-agents-merge-reconciler": [
+      "ai-agent",
+      "coding"
+    ],
+    "devops-sdlc-review": [
+      "coding",
+      "task"
+    ],
+    "software-development-codebase-inspection": [
+      "coding"
+    ],
+    "software-development-github": [
+      "coding"
+    ],
+    "web-blocked-page-recovery": [
+      "research"
+    ],
+    "creative-impeccable": [
+      "design",
+      "coding"
+    ],
+    "devops-setup-wizard-generator": [
+      "sysops",
+      "automation"
+    ],
+    "mlops-models-huggingface-hub": [
+      "ai-model"
+    ],
+    "productivity-decision-questionnaire": [
+      "document",
+      "task"
+    ],
+    "software-development-ast-grep": [
+      "coding"
+    ],
+    "software-development-grill-me": [
+      "coding",
+      "task"
+    ],
+    "web-development-har-derived-api-client": [
+      "coding"
     ]
   }
 }

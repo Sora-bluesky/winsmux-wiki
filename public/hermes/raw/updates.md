@@ -469,6 +469,10 @@ raw: /hermes/raw/updates.md
 
 - [デスクトッププラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 
+## 週次まとめ 2026-W36
+
+同梱スキルとオプションスキルの一覧が入れ替わり、Apple 製ツールの操作、コーディング CLI への委任、資料作成、機械学習まわりといった個別の説明が並んだ。手元で動かす話も更新され、Ollama、Termux（Android）、Mac でのローカル LLM、プロファイルの配布が加わっている。設定と環境変数、スラッシュコマンドの早見表、モデルの設定、メッセージングのゲートウェイ（Slack・Telegram・Google Chat・メール）も追従した。
+
 ## 週次まとめ 2026-W35
 
 設定・Docker・環境変数まわりと、プラグイン開発（メモリプロバイダ、ターミナル環境プロバイダ、イベントフック）の解説が広く入れ替わった。ブラウザ自動操作、コンピュータ操作、定期実行タスク（cron）、サブエージェントへの委任、ツール検索といった実行系も更新されている。Slack・WeCom・Signal・Agentmail などの連携先と、Google Gemini やフォールバックプロバイダー、Nous Tool Gateway といったモデル側の記述も追随した。

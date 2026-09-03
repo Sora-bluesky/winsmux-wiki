@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: d1d2983c3fe5c7e0bc4556bc9ac21117d7b2397d
+upstream_blob: 1148e2949a008d16f4d673408b3ce10fb0dc6c09
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -426,6 +426,18 @@ computer_use:
   permission_mode: standard        # standard (default) | bounded
   capability_manifest: ""          # capability manifest path, required for bounded
 ```
+
+Linux では、Wayland にそのまま対応する動きは、自分から明示的に選ぶものの
+ままです。Hermes がこの選択を cua-driver の各プロセス（ゲートウェイの
+セッションも含みます）へ渡すのは、そのプロセスにも `WAYLAND_DISPLAY` が
+あるときだけです:
+
+```yaml
+computer_use:
+  native_wayland: true
+```
+
+この設定を変えたら、動いているゲートウェイを立ち上げ直してください。
 
 ドライバーのバイナリの場所を上書きする（テスト / CI / 自前ビルド向け）:
 

@@ -2,7 +2,7 @@
 title: "モデルの設定"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: e67e85d5c3d3e06a5b90554c123e63e1cc5dbd6a
+upstream_blob: 0456c391e4ab837d3c795fb2057b00ee6998cafe
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---
@@ -62,7 +62,7 @@ Main model の行で **Change** をクリックします。
 
 ### 無人運転とデータ学習の料金帯 {#unattended-data-training-tiers}
 
-`muse-spark-1.2-contributor` のようなモデルが安いのは、提供元があなたのプロンプトと応答を学習に使う可能性があるからです。対話的にモデルを選ぶときは、必ず確認の問いかけが出ます。Kanban のワーカーや cron のエージェントのように、対話しない起動経路では、その問いかけができないため、安全側に倒して起動を止めます。
+末尾に `-contributor` が付いたモデル（たとえば `muse-spark-1.2-contributor`、`muse-spark-1.3-contributor`）が安いのは、提供元があなたのプロンプトと応答を学習に使う可能性があるからです。対話的にモデルを選ぶときは、必ず確認の問いかけが出ます。Kanban のワーカーや cron のエージェントのように、対話しない起動経路では、その問いかけができないため、安全側に倒して起動を止めます。
 
 無人で動かす仕事のデータが学習に使われても構わないなら、了解した旨を残しておきます。
 
