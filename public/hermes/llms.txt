@@ -31,7 +31,7 @@ Hermes Agent 0.21.0
 - [Nous Portal](https://wiki.winsmux.dev/hermes/entities/nous-portal/)
 - [正本との差分](https://wiki.winsmux.dev/hermes/syntheses/not-a-mirror/)
 - [モデルと料金（Portal 全モデルの一覧・毎日更新）](https://wiki.winsmux.dev/hermes/models/)
-- [今週の更新（公式 docs への追随記録）](https://wiki.winsmux.dev/hermes/updates/)
+- [更新履歴（公式 docs への追随記録）](https://wiki.winsmux.dev/hermes/updates/)
 - [逆引き（やりたいことから探す索引）](https://wiki.winsmux.dev/hermes/howto/)
 - [トラブル（症状から対処を引く表）](https://wiki.winsmux.dev/hermes/trouble/)
 - [初めての方へ（段階式の道筋）](https://wiki.winsmux.dev/hermes/first/)

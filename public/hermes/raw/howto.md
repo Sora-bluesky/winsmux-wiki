@@ -136,6 +136,6 @@ raw: /hermes/raw/howto.md
 - **困ったときに調べたい** — つまずきやすい箇所の対処が前者、うまく使うためのコツが後者です
   - [よくある質問とトラブル対処](https://wiki.winsmux.dev/hermes/docs/reference/faq/) / [コツとベストプラクティス](https://wiki.winsmux.dev/hermes/docs/guides/tips/)
 - **今週何が変わったか知りたい** — 日次の同期から機械生成した更新の記録と、週ごとの要約です
-  - [今週の更新](https://wiki.winsmux.dev/hermes/updates/)
+  - [更新履歴](https://wiki.winsmux.dev/hermes/updates/)
 - **日本語入力で変換を確定すると送信されてしまう** — 変換の確定と送信が同じキーになる問題と、その回避のしかた
   - [日本語入力](https://wiki.winsmux.dev/hermes/japanese/)

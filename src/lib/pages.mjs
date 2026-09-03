@@ -10,7 +10,7 @@ export const PAGES = [
   { path: '/hermes/cost/', label: '料金の考え方', group: '調べる' },
   { path: '/hermes/from-claude-code/', label: 'Claude Code からの乗り換え', group: '調べる' },
   { path: '/hermes/japanese/', label: '日本語入力と日本語化', group: '調べる' },
-  { path: '/hermes/updates/', label: '今週の更新', group: '調べる' },
+  { path: '/hermes/updates/', label: '更新履歴', group: '調べる' },
   { path: '/hermes/community/', label: 'コミュニティの動き', group: '調べる' },
   { path: '/hermes/ops/', label: '運用', group: '' },
   { path: '/hermes/trust/', label: 'どこまで任せるか', group: '' },

@@ -1,5 +1,5 @@
-// 「今週の更新」（/hermes/updates/）のデータ生成。
-// 正本はこのリポの git 履歴: 日次 sync のコミット（subject が "sync: mirror upstream" で始まる）と、
+// 「更新履歴」（/hermes/updates/）のデータ生成。
+// 正本はこのリポの git 履歴: 日次 sync のコミットと、
 // その中で変わった src/raw/docs/*.md を機械的に集計する。
 // - entries は毎回 git から再生成（決定的）。digests（週次の日本語要約）は手書き/Opus 生成の持ち越しで、
 //   このスクリプトは消さない。
@@ -9,6 +9,12 @@ import { execFileSync } from 'node:child_process';
 
 const OUT_FILE = 'data/wiki-updates.json';
 const SINCE = '2026-08-20'; // ミラー完成日以降のみ
+
+// sync コミットの subject の書き方は何度も変わっている
+// （"sync: mirror upstream <sha>" → "sync: retranslate ..." → "sync mirror with upstream <sha>"）。
+// 文面で照合すると書き方が変わるたびに無音で拾えなくなるので、変わらない先頭の型だけを見る。
+// feat / fix / chore / revert は入らない。パス限定（-- src/raw/docs）と後段の空判定が二重の絞り。
+const SYNC_SUBJECT = /^sync\b/;
 
 function git(...args) {
   return execFileSync('git', args, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
@@ -23,7 +29,7 @@ for (const line of log.split('\n')) {
     const [sha, date, ...rest] = line.slice(1).split('|');
     const subject = rest.join('|');
     cur = null;
-    if (subject.startsWith('sync: mirror upstream')) {
+    if (SYNC_SUBJECT.test(subject)) {
       const up = subject.match(/upstream ([0-9a-f]{7,})/)?.[1] ?? null;
       cur = { date, sha, upstream: up, pages: [] };
       entries.push(cur);

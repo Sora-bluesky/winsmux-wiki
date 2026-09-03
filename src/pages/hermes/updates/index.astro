@@ -1,5 +1,5 @@
 ---
-// 今週の更新（Wiki 層 #7）。
+// 更新履歴（Wiki 層 #7）。
 // データは data/wiki-updates.json（scripts/wiki-updates.mjs が日次 sync のコミット履歴から機械生成）。
 // digests は週次の日本語要約（Opus 生成・レビュー後に追記）。
 import BaseLayout from '../../../layouts/BaseLayout.astro';
@@ -35,14 +35,14 @@ for (const e of entries) {
 
 <BaseLayout
   rawPath="/hermes/raw/updates.md"
-  title="今週の更新"
+  title="更新履歴"
   description="公式ドキュメントの更新に毎日追随した記録。どのページがいつ変わったかを週ごとにまとめています。"
   sources={['https://github.com/NousResearch/hermes-agent/commits/main/website/docs']}
   prevOverride={null}
   nextOverride={null}
 >
   <article class="prose">
-    <h1>今週の更新</h1>
+    <h1>更新履歴</h1>
     <p>
       公式ドキュメントの変化に毎日1回追随し、変わったページだけを訳し直しています。ここはその記録です。リンクは訳し直した後の日本語版ページへ飛びます。
     </p>

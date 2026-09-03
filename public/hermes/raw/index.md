@@ -22,7 +22,7 @@ raw: /hermes/raw/index.md
 - [料金と実例](/hermes/cost/) — 費用構造と価格の実例
 - [Claude Code からの乗り換え](/hermes/from-claude-code/) — 概念の対応表と移行の考え方
 - [日本語入力と日本語化](/hermes/japanese/) — 日本語で使う設定と既知問題の現在地
-- [今週の更新](/hermes/updates/) — 公式 docs への追随記録
+- [更新履歴](/hermes/updates/) — 公式 docs への追随記録
 - [コミュニティの動き](/hermes/community/) — 公式 Discord の話題の週次日本語要約
 
 ## レベルに合わせて読む

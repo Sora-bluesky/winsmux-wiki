@@ -93,8 +93,8 @@ ${rows.join('\n')}
   });
   const digests = Object.entries(u.digests || {}).map(([wk, text]) => `## 週次まとめ ${wk}\n\n${text}`);
   const body =
-    front('今週の更新', '公式 docs への追随記録（日次の再翻訳ページ一覧と週次まとめ）', 'updates.md') +
-    `# 今週の更新\n\n公式 docs への追随記録。\n\n${entries.join('\n\n')}\n\n${digests.join('\n\n')}\n`;
+    front('更新履歴', '公式 docs への追随記録（日次の再翻訳ページ一覧と週次まとめ）', 'updates.md') +
+    `# 更新履歴\n\n公式 docs への追随記録。\n\n${entries.join('\n\n')}\n\n${digests.join('\n\n')}\n`;
   await write('updates.md', body);
 }
 
