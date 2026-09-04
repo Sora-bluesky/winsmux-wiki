@@ -2,7 +2,7 @@
 title: "認証情報プール"
 description: "プロバイダごとに複数の API キーや OAuth トークンをまとめておき、自動で切り替えてレート制限から復帰します。"
 upstream_path: user-guide/features/credential-pools.md
-upstream_blob: 05c0e988b6195cd5887f4d9f79ee48661f9e009b
+upstream_blob: 83d525b3d93a39e45fb39d7406bfc649e911fc57
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/credential-pools
 ---
@@ -221,7 +221,7 @@ Hermes は起動時にいくつもの場所から認証情報を見つけ出し�
 1. **`agent/credential_pool.py`** — プールの管理。保存、選択、切り替え、待機時間
 2. **`hermes_cli/auth_commands.py`** — CLI のコマンドと対話式ウィザード
 3. **`hermes_cli/runtime_provider.py`** — プールを踏まえた認証情報の解決
-4. **`run_agent.py`** — エラーからの復帰。429 / 402 / 401 → プール内での切り替え → フォールバック
+4. **`agent/turn_api_error.py`** — エラーからの復帰。429 / 402 / 401 → プール内での切り替え → フォールバック
 
 ## 保存先 {#storage}
 

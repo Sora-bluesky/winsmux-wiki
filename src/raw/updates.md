@@ -8,6 +8,16 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-09-04
+
+- [セッションの保存](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
+- [LLM とモデルの提供元](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [CLI コマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
+- [コンピュータ操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/computer-use/)
+- [LSP — 意味を読み取る診断](https://wiki.winsmux.dev/hermes/docs/user-guide/features/lsp/)
+
 ## 2026-09-03
 
 - [プラットフォームアダプタを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)

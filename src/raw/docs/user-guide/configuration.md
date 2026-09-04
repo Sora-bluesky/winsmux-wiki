@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダー、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 95668e8f15423ff6e32420a27526b476bba95374
+upstream_blob: a663d1b317304221cb80c29ea9aee8c88dd5dadb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -2399,7 +2399,7 @@ code_execution:
 
 ```yaml
 web:
-  backend: firecrawl    # firecrawl | searxng | parallel | tavily | keenable | exa
+  backend: firecrawl    # firecrawl | searxng | parallel | tavily | perplexity | keenable | exa
 
   # Or use per-capability keys to mix providers (e.g. free search + paid extract):
   search_backend: "searxng"
@@ -2429,9 +2429,10 @@ web:
 | **SearXNG** | `SEARXNG_URL` | ✔ | — |
 | **Parallel** | `PARALLEL_API_KEY`（任意 — 鍵なしの無料枠あり） | ✔ | ✔ |
 | **Tavily** | `TAVILY_API_KEY`（任意 — 選んだ場合は鍵なしでも動きます） | ✔ | ✔ |
+| **Perplexity** | `PERPLEXITY_API_KEY` | ✔ | ✔（問い合わせに沿った抜粋） |
 | **Exa** | `EXA_API_KEY`（任意 — 鍵なしの無料枠あり） | ✔ | ✔ |
 
-**バックエンドの選ばれ方:** 実行時には、常に保存された `web.backend` の選択が使われます（`hermes tools` で設定します。`nous` は管理された Tool Gateway を通します）。Web のバックエンドを一度も選んでいない場合にだけ、使える API キーから自動で判定されます。`SEARXNG_URL` だけがあれば SearXNG、`EXA_API_KEY` だけなら Exa、`TAVILY_API_KEY` だけなら Tavily、`PARALLEL_API_KEY` だけなら Parallel、`KEENABLE_API_KEY` だけなら Keenable が使われます。**選択も認証情報もまったくない** 場合、リクエストは鍵なしの無料枠の輪（Exa / Parallel / Firecrawl / Keenable）を順に回り、流量制限に当たったら自動で次へ移ります。詳しくは [Web 検索の案内](/hermes/docs/user-guide/features/web-search/) をご覧ください。いったん選択があると、`.env` にキーを足しても経路は変わりません。`hermes tools` で Tavily、Firecrawl、Keenable を選ぶ場合は、キーがなくても動きます。
+**バックエンドの選ばれ方:** 実行時には、常に保存された `web.backend` の選択が使われます（`hermes tools` で設定します。`nous` は管理された Tool Gateway を通します）。Web のバックエンドを一度も選んでいない場合にだけ、使える API キーから自動で判定されます。`SEARXNG_URL` だけがあれば SearXNG、`EXA_API_KEY` だけなら Exa、`TAVILY_API_KEY` だけなら Tavily、`PERPLEXITY_API_KEY` だけなら Perplexity、`PARALLEL_API_KEY` だけなら Parallel、`KEENABLE_API_KEY` だけなら Keenable が使われます。**選択も認証情報もまったくない** 場合、リクエストは鍵なしの無料枠の輪（Exa / Parallel / Firecrawl / Keenable）を順に回り、流量制限に当たったら自動で次へ移ります。詳しくは [Web 検索の案内](/hermes/docs/user-guide/features/web-search/) をご覧ください。いったん選択があると、`.env` にキーを足しても経路は変わりません。`hermes tools` で Tavily、Firecrawl、Keenable を選ぶ場合は、キーがなくても動きます。
 
 **SearXNG** は、70 以上の検索エンジンに問い合わせる、無料で自前に置けるプライバシー重視のまとめ検索です。API キーは要りません。`SEARXNG_URL` に自分の環境を指定するだけです（たとえば `http://localhost:8080`）。SearXNG は検索だけなので、`web_extract` には別の抽出のプロバイダーが要ります（`web.extract_backend` を設定してください）。Docker での準備の手順は [Web 検索の設定の案内](/hermes/docs/user-guide/features/web-search/) をご覧ください。
 

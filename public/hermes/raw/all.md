@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（209 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（210 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -199,7 +199,7 @@ raw: /hermes/raw/all.md
 - [Automated GitHub PR Comments with Webhooks](/hermes/docs/guides/webhook-github-pr-review/)
 - [xAI Grok OAuth (SuperGrok / X Premium+)](/hermes/docs/guides/xai-grok-oauth/)
 
-## Developer Guide（35）
+## Developer Guide（36）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -217,6 +217,7 @@ raw: /hermes/raw/all.md
 - [ACP Internals](/hermes/docs/developer-guide/acp-internals/)
 - [Browser Provider Plugins](/hermes/docs/developer-guide/browser-provider-plugin/)
 - [Browser CDP Supervisor](/hermes/docs/developer-guide/browser-supervisor/)
+- [CLI Internals](/hermes/docs/developer-guide/cli-internals/)
 - [Codebase Ownership Map](/hermes/docs/developer-guide/codebase-ownership/)
 - [Context Engine Plugins](/hermes/docs/developer-guide/context-engine-plugin/)
 - [Cron Internals](/hermes/docs/developer-guide/cron-internals/)

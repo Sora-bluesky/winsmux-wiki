@@ -1,44 +1,44 @@
 ---
-title: "ツールの追加"
-description: "Hermes Agent に新しいツールを追加する方法 — スキーマ、ハンドラ、登録、ツールセット"
+title: "ツールを追加する"
+description: "Hermes Agent に新しいツールを追加する方法 — スキーマ、ハンドラー、登録、ツールセット"
 upstream_path: developer-guide/adding-tools.md
-upstream_blob: 975bdaca0603d6f961da0cbaff63f8a40f95ff00
+upstream_blob: 2219d738010c02e2aff9771643e753056bfd79cf
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools
 ---
 
-# ツールの追加 {#adding-tools}
+# ツールを追加する {#adding-tools}
 
-ツールを書き始める前に、いちど考えてみてください。**それは [スキル](/hermes/docs/developer-guide/creating-skills/) で足りませんか?**
+ツールを書き始める前に、一度立ち止まって考えてみてください。**それは[スキル](/hermes/docs/developer-guide/creating-skills/)で足りるものではありませんか？**
 
-:::warning 組み込みのコアツール専用です
-このページは、リポジトリ本体に **Hermes の組み込みツール** を追加するためのものです。
-Hermes の中核に手を入れずに、個人用・プロジェクト用・その他の独自ツールを
-作りたい場合は、代わりにプラグインの方法を使ってください。
+:::warning 組み込みのコアツール専用
+このページは、リポジトリそのものに**組み込みの Hermes ツール**を追加するための説明です。
+個人用・プロジェクト限定・その他の独自ツールを、Hermes 本体に手を入れずに用意したい場合は、
+プラグインの経路を使ってください。
 
 - [プラグイン](/hermes/docs/user-guide/features/plugins/)
 - [Hermes プラグインを作る](/hermes/docs/developer-guide/plugins/)
 
-独自のツールを作るときは、まずプラグインを検討してください。`tools/` と
-`toolsets.py` に新しい組み込みツールを載せると決めたときだけ、このページに従ってください。
+独自ツールを作るときは、まずプラグインを選んでください。新しい組み込みツールを `tools/` と
+`toolsets.py` に載せて配布したいと自分で決めているときだけ、このページの手順に進みます。
 :::
 
-指示とシェルコマンドと既存のツールの組み合わせで表せるなら、**スキル** にしてください（arXiv の検索、git の作業手順、Docker の管理、PDF の処理など）。
+指示とシェルコマンドと既存のツールの組み合わせで表現できる機能なら、**スキル**にします（arXiv 検索、git の作業手順、Docker の管理、PDF の処理など）。
 
-API キーを使った一連の連携、独自の処理、バイナリデータの扱い、逐次配信が必要なら、**ツール** にしてください（ブラウザの自動操作、音声合成、画像の解析など）。
+API キーを使った端から端までの連携、独自の処理ロジック、バイナリデータの取り扱い、ストリーミングが必要なら、**ツール**にします（ブラウザ操作、音声合成、画像の解析など）。
 
 ## 全体像 {#overview}
 
-ツールの追加で触るのは **2 つのファイル** です。
+ツールを 1 つ追加すると、触るファイルは**2 つ**です。
 
-1. **`tools/your_tool.py`** — ハンドラ、スキーマ、利用可否の判定関数、`registry.register()` の呼び出し
-2. **`toolsets.py`** — ツール名を `_HERMES_CORE_TOOLS`（または特定のツールセット）に追加
+1. **`tools/your_tool.py`** — ハンドラー、スキーマ、利用可否のチェック関数、`registry.register()` の呼び出し
+2. **`toolsets.py`** — ツール名を `_HERMES_CORE_TOOLS`（または個別のツールセット）に追加する
 
-`tools/*.py` のうち、トップレベルで `registry.register()` を呼んでいるファイルは起動時に自動で見つかります。import の一覧を手で管理する必要はありません。
+`tools/*.py` のうち、トップレベルで `registry.register()` を呼んでいるファイルは起動時に自動で見つかります。読み込むファイルの一覧を手で管理する必要はありません。
 
-## 手順 1: 組み込みツールのファイルを作る {#step-1-create-the-built-in-tool-file}
+## ステップ 1: 組み込みツールのファイルを作る {#step-1-create-the-built-in-tool-file}
 
-ツールのファイルは、どれも同じ構成です。
+ツールのファイルは、どれも同じ形をしています。
 
 ```python
 # tools/weather_tool.py
@@ -107,15 +107,15 @@ registry.register(
 ### 守るべき決まり {#key-rules}
 
 :::danger 重要
-- ハンドラは **必ず** JSON 文字列を返してください（`json.dumps()` を使います）。生の辞書を返してはいけません
-- エラーは **必ず** `{"error": "message"}` の形で返してください。例外として投げてはいけません
-- `check_fn` はツールの定義を組み立てるときに呼ばれます。`False` を返すと、そのツールは黙って外されます
-- `handler` は `(args: dict, **kwargs)` を受け取ります。`args` には LLM がツールを呼ぶときに渡した引数が入ります
+- ハンドラーは `json.dumps()` を通した JSON 文字列を返さ**なければなりません**。dict をそのまま返してはいけません
+- エラーは `{"error": "message"}` の形で返さ**なければなりません**。例外として送出してはいけません
+- `check_fn` はツール定義を組み立てるときに呼ばれます。`False` を返すと、そのツールは何も表示せずに除外されます
+- `handler` は `(args: dict, **kwargs)` を受け取ります。`args` には LLM がツール呼び出しに渡した引数が入っています
 :::
 
-## 手順 2: 組み込みツールをツールセットに追加する {#step-2-add-the-built-in-tool-to-a-toolset}
+## ステップ 2: 組み込みツールをツールセットに追加する {#step-2-add-the-built-in-tool-to-a-toolset}
 
-`toolsets.py` にツール名を追加します。
+`toolsets.py` に、ツール名を書き足します。
 
 ```python
 # If it should be available on all platforms (CLI + messaging):
@@ -132,13 +132,13 @@ _HERMES_CORE_TOOLS = [
 },
 ```
 
-## ~~手順 3: 検出用の import を追加する~~（不要になりました） {#step-3-add-discovery-import-no-longer-needed}
+## ~~ステップ 3: 読み込み用の import を書く~~（現在は不要） {#step-3-add-discovery-import-no-longer-needed}
 
-トップレベルで `registry.register()` を呼んでいるツールのモジュールは、`tools/registry.py` の `discover_builtin_tools()` が自動で見つけます。import の一覧を保守する必要はありません。`tools/` にファイルを作れば、起動時に拾われます。
+トップレベルで `registry.register()` を呼んでいるツールのモジュールは、`tools/registry.py` の `discover_builtin_tools()` が自動で見つけます。import の一覧を手入れする必要はありません。`tools/` にファイルを置けば、起動時にそのまま拾われます。
 
-## 非同期のハンドラ {#async-handlers}
+## 非同期のハンドラー {#async-handlers}
 
-ハンドラで非同期の処理が必要なら、`is_async=True` を指定します。
+ハンドラーの中で非同期のコードを動かしたいときは、`is_async=True` を付けます。
 
 ```python
 async def weather_tool_async(location: str) -> str:
@@ -156,11 +156,11 @@ registry.register(
 )
 ```
 
-非同期の橋渡しはレジストリが引き受けます。自分で `asyncio.run()` を呼ぶことはありません。
+同期と非同期の橋渡しはレジストリ側が引き受けます。自分で `asyncio.run()` を呼ぶ場面はありません。
 
-## task_id が必要なハンドラ {#handlers-that-need-taskid}
+## task_id が必要なハンドラー {#handlers-that-need-taskid}
 
-セッションごとの状態を扱うツールは、`**kwargs` 経由で `task_id` を受け取ります。
+セッションごとの状態を扱うツールには、`task_id` が `**kwargs` 経由で渡ってきます。
 
 ```python
 def _handle_weather(args, **kw):
@@ -176,11 +176,11 @@ registry.register(
 
 ## エージェントループが横取りするツール {#agent-loop-intercepted-tools}
 
-一部のツール（`todo`、`memory`、`session_search`、`delegate_task`）は、セッションごとのエージェントの状態にアクセスする必要があります。これらはレジストリに届く前に `run_agent.py` が横取りします。スキーマ自体はレジストリが持っていますが、横取りを通らなかった場合は `dispatch()` が予備のエラーを返します。
+一部のツール（`todo`、`memory`、`session_search`、`delegate_task`）は、セッションごとのエージェントの状態にアクセスする必要があります。これらはレジストリに届く前に、エージェントループ（`agent/tool_executor.py`。`agent/conversation_loop.py` から呼ばれます）が横取りします。スキーマ自体はレジストリが持ったままですが、この横取りを通らずに来た場合、`dispatch()` は予備のエラーを返します。
 
 ## 任意: セットアップウィザードへの組み込み {#optional-setup-wizard-integration}
 
-ツールが API キーを必要とするなら、`hermes_cli/config.py` に追加します。
+作ったツールに API キーが必要なら、`hermes_cli/config.py` に書き足します。
 
 ```python
 OPTIONAL_ENV_VARS = {
@@ -197,10 +197,10 @@ OPTIONAL_ENV_VARS = {
 
 ## チェックリスト {#checklist}
 
-- [ ] ハンドラ、スキーマ、利用可否の判定関数、登録を含むツールのファイルを作った
+- [ ] ハンドラー、スキーマ、チェック関数、登録処理を書いたツールのファイルを作った
 - [ ] `toolsets.py` の適切なツールセットに追加した
-- [ ] プラグインではなく、本当に組み込みのコアツールにすべきか確認した
-- [ ] ハンドラが JSON 文字列を返し、エラーは `{"error": "..."}` で返している
+- [ ] プラグインではなく組み込みのコアツールにすべきものか、あらためて確かめた
+- [ ] ハンドラーが JSON 文字列を返し、エラーは `{"error": "..."}` で返っている
 - [ ] 任意: `hermes_cli/config.py` の `OPTIONAL_ENV_VARS` に API キーを追加した
-- [ ] 任意: バッチ処理のために `toolset_distributions.py` に追加した
-- [ ] `hermes chat -q "Use the weather tool for London"` で動作を確認した
+- [ ] 任意: 一括処理のために `toolset_distributions.py` に追加した
+- [ ] `hermes chat -q "Use the weather tool for London"` で動かして確かめた

@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の完全な一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 82f7983f9664361be420ad765e63dd6db34a5449
+upstream_blob: 76edd5cb223428a183173d2cea4855688bf51928
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -158,6 +158,8 @@ Anthropic のネイティブ認証では、Claude Code 自身の認証情報フ�
 | `FIRECRAWL_API_URL` | セルフホストの Firecrawl のエンドポイントを独自に指定します（任意） |
 | `TAVILY_API_KEY` | 検索と本文取得の上限を上げるための Tavily の API キー（任意）。ウェブのバックエンドに Tavily を選んだあとは、キーがなくても使えます（[app.tavily.com](https://app.tavily.com/home)、[キーなしの説明](https://docs.tavily.com/documentation/keyless)） |
 | `TAVILY_BASE_URL` | Tavily の API のエンドポイントを差し替えます。社内のプロキシや、自分で立てた Tavily 互換の検索バックエンドに向いています。`GROQ_BASE_URL` と同じ考え方です。 |
+| `PERPLEXITY_API_KEY` | `perplexity` ウェブバックエンドで使う Perplexity Search API のキー。順位付きの検索結果に加えて、抽出向けにクエリと関連の深いページ断片が返ります（[perplexity.ai/account/api](https://www.perplexity.ai/account/api)） |
+| `PERPLEXITY_BASE_URL` | プロキシ経由にする場合などに、Perplexity API の接続先（既定は `https://api.perplexity.ai`）を差し替えます（任意） |
 | `SEARXNG_URL` | セルフホストで無料のウェブ検索に使う SearXNG インスタンスの URL。API キーは要りません（[searxng.github.io](https://searxng.github.io/searxng/)） |
 | `EXA_API_KEY` | AI 向けのウェブ検索と本文取得に使う Exa の API キー（[exa.ai](https://exa.ai/)） |
 | `BRAVE_SEARCH_API_KEY` | ウェブ検索に使う Brave Search API のサブスクリプショントークン（無料枠あり）（[brave.com/search/api](https://brave.com/search/api/)） |

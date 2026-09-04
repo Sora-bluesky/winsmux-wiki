@@ -1,6 +1,48 @@
 {
-  "generatedAt": "2026-09-04",
+  "generatedAt": "2026-09-05",
   "entries": [
+    {
+      "date": "2026-09-04",
+      "sha": "85cb1cc",
+      "upstream": "6327930",
+      "pages": [
+        {
+          "id": "developer-guide/session-storage",
+          "title": "セッションの保存",
+          "url": "/hermes/docs/developer-guide/session-storage/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルの提供元",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLI コマンド早見表",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/configuring-models",
+          "title": "モデルの設定",
+          "url": "/hermes/docs/user-guide/configuring-models/"
+        },
+        {
+          "id": "user-guide/features/computer-use",
+          "title": "コンピュータ操作",
+          "url": "/hermes/docs/user-guide/features/computer-use/"
+        },
+        {
+          "id": "user-guide/features/lsp",
+          "title": "LSP — 意味を読み取る診断",
+          "url": "/hermes/docs/user-guide/features/lsp/"
+        }
+      ]
+    },
     {
       "date": "2026-09-03",
       "sha": "0a280b8",

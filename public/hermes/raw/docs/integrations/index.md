@@ -1,71 +1,71 @@
 ---
-title: "連携"
+title: "外部サービス連携"
 description: ""
 upstream_path: integrations/index.md
-upstream_blob: 37bac9d8bfcc7766118fc62982f88d56ecc4d320
+upstream_blob: 370309310c97092ace8b2bcfe252c267c8ed37fc
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations
 ---
 
-# 連携 {#integrations}
+# 外部サービス連携 {#integrations}
 
-Hermes Agent は、AI の推論、ツールのサーバー、IDE での作業、プログラムからの利用など、いろいろな外部の仕組みとつながります。こうした連携は、Hermes にできることと、Hermes が動ける場所を広げてくれます。
+Hermes Agent は、AI 推論、ツールサーバー、エディタでの作業、プログラムからの呼び出しなど、さまざまな外部システムとつながります。連携を足すほど、Hermes にできることと動かせる場所が広がります。
 
 :::tip まずはここから
-連携をひとつだけ設定する時間しかないなら、[Nous Portal](/hermes/docs/integrations/nous-portal/) にしてください。OAuth のログイン 1 回で 300 を超えるモデルと、Tool Gateway の 4 つのツール（Web 検索、画像生成、TTS、ブラウザの自動操作）が使えるようになります。
+どれか 1 つだけ設定する時間しかないなら、[Nous Portal](/hermes/docs/integrations/nous-portal/) を選んでください。OAuth のログイン 1 回で 300 以上のモデルと、Tool Gateway の 4 つのツール（Web 検索、画像生成、音声合成、ブラウザ操作）がまとめて使えます。
 :::
 
-## AI のプロバイダと振り分け {#ai-providers-routing}
+## AI プロバイダーと経路制御 {#ai-providers-routing}
 
-Hermes は、はじめから複数の AI 推論プロバイダに対応しています。対話的に設定するなら `hermes model` を使い、そうでなければ `config.yaml` に書きます。
+Hermes は複数の AI 推論プロバイダーに最初から対応しています。`hermes model` を使えば対話形式で設定でき、`config.yaml` に直接書くこともできます。
 
-- **[AI のプロバイダ](/hermes/docs/integrations/providers/)** — OpenRouter、Anthropic、OpenAI、Google、そして OpenAI 互換のエンドポイントならどれでも使えます。画像の読み取り、逐次の応答、ツールの利用といった対応状況は、プロバイダごとに Hermes が自動で判別します。
-- **[プロバイダの振り分け](/hermes/docs/user-guide/features/provider-routing/)** — OpenRouter への要求を、その下のどのプロバイダが処理するかを細かく決められます。並べ替え、許可リスト、除外リスト、優先順位の明示によって、費用、速さ、品質のどれを重んじるかを調整できます。
-- **[代わりのプロバイダ](/hermes/docs/user-guide/features/fallback-providers/)** — 主に使っているモデルでエラーが出たとき、控えの LLM のプロバイダへ自動で切り替えます。メインのモデルの切り替えに加え、画像の読み取り、圧縮、Web からの抽出といった補助のタスクについても、独立して切り替えられます。
+- **[AI プロバイダー](/hermes/docs/integrations/providers/)** — OpenRouter、Anthropic、OpenAI、Google、そして OpenAI 互換のエンドポイント全般です。画像認識・ストリーミング・ツール利用といった機能に対応しているかどうかを、Hermes がプロバイダーごとに自動で判別します。
+- **[プロバイダーの経路制御](/hermes/docs/user-guide/features/provider-routing/)** — OpenRouter へのリクエストを実際にどのプロバイダーが処理するかを細かく指定できます。並び替え、許可リスト、拒否リスト、優先順位の明示によって、費用・速度・品質のどれを取るかを調整できます。
+- **[予備のプロバイダー](/hermes/docs/user-guide/features/fallback-providers/)** — 主に使うモデルでエラーが出たとき、控えの LLM プロバイダーへ自動的に切り替えます。メインのモデルの切り替えに加えて、画像認識・圧縮・Web 抽出といった補助処理だけを別に切り替えることもできます。
 
-## ツールのサーバー（MCP） {#tool-servers-mcp}
+## ツールサーバー（MCP） {#tool-servers-mcp}
 
-- **[MCP のサーバー](/hermes/docs/user-guide/features/mcp/)** — Model Context Protocol を通して、Hermes を外部のツールのサーバーにつなぎます。GitHub、データベース、ファイルシステム、ブラウザ関連、社内の API などのツールを、Hermes 本体のツールを書かずに使えます。stdio と SSE の両方の通信方式、サーバーごとのツールの絞り込み、対応状況を踏まえたリソースやプロンプトの登録に対応します。
+- **[MCP サーバー](/hermes/docs/user-guide/features/mcp/)** — Model Context Protocol を使って、Hermes を外部のツールサーバーにつなぎます。GitHub、データベース、ファイルシステム、ブラウザ基盤、社内 API などのツールを、Hermes 用のツールを書かずに呼び出せます。stdio と SSE の両方の通信方式に対応し、サーバーごとのツールの絞り込みや、機能に応じたリソース・プロンプトの登録もできます。
 
 ## Web 検索のバックエンド {#web-search-backends}
 
-`web_search` と `web_extract` のツールは 8 つのバックエンドのプロバイダに対応しており、`config.yaml` か `hermes tools` で設定します。
+`web_search` と `web_extract` の 2 つのツールは 8 種類のバックエンドに対応していて、`config.yaml` か `hermes tools` で設定します。
 
 | バックエンド | 環境変数 | 検索 | 抽出 | クロール |
 |---------|---------|--------|---------|-------|
 | **Firecrawl**（既定） | `FIRECRAWL_API_KEY` | ✔ | ✔ | ✔ |
 | **SearXNG** | `SEARXNG_URL` | ✔ | — | — |
 | **Brave**（無料枠） | `BRAVE_SEARCH_API_KEY` | ✔ | — | — |
-| **DuckDuckGo**（ddgs） | _(なし)_ | ✔ | — | — |
+| **DuckDuckGo**（ddgs） | _(不要)_ | ✔ | — | — |
 | **Exa** | `EXA_API_KEY` | ✔ | ✔ | — |
 | **Parallel** | `PARALLEL_API_KEY` | ✔ | ✔ | — |
 | **xAI** | `XAI_API_KEY` | ✔ | — | — |
 
-手早い設定の例です。
+設定の例です。
 
 ```yaml
 web:
-  backend: firecrawl    # firecrawl | searxng | brave-free | ddgs | tavily | keenable | exa | parallel | xai
+  backend: firecrawl    # firecrawl | searxng | brave-free | ddgs | tavily | perplexity | keenable | exa | parallel | xai
 ```
 
-`web.backend` を設定していない場合、使える API キーからバックエンドが自動で判別されます。`FIRECRAWL_API_URL` を使えば、自分で立てた Firecrawl も使えます。
+`web.backend` を書かなかった場合は、用意されている API キーからバックエンドを自動で判別します。自分で立てた Firecrawl も `FIRECRAWL_API_URL` で使えます。
 
-## ブラウザの自動操作 {#browser-automation}
+## ブラウザ操作 {#browser-automation}
 
-Hermes には、サイトをたどり、フォームを埋め、情報を取り出すためのブラウザの自動操作がひととおり入っており、バックエンドをいくつかから選べます。
+Hermes にはブラウザを操作する機能が一式そろっていて、サイトの閲覧・フォームの入力・情報の取り出しを、次のいずれかの方式で行えます。
 
-- **Browser Use Cloud** — 検知されにくい設定、住宅用のプロキシ、CAPTCHA の突破、使い回せるブラウザのプロファイルを備えた、運用込みの Chromium です
-- **Browserbase** — もうひとつのクラウドのブラウザのプロバイダです。運用込みのブラウザ、ボット検知への対策、CAPTCHA の突破、住宅用のプロキシを備えています
-- **ローカルの Chromium 系の CDP** — 動いている Chrome、Brave、Chromium、Edge に `/browser connect` でつなぎます
-- **ローカルの Chromium** — `agent-browser` の CLI を使った、画面のないローカルのブラウザです
+- **Browser Use Cloud** — 検出されにくい設定の Chromium を提供するサービスです。住宅用プロキシ、CAPTCHA の突破、使い回せるブラウザプロファイルが付きます
+- **Browserbase** — もう 1 つのクラウドブラウザです。管理されたブラウザ、ボット検出対策、CAPTCHA の突破、住宅用プロキシがそろっています
+- **手元の Chromium 系ブラウザ（CDP 接続）** — いま動かしている Chrome、Brave、Chromium、Edge に `/browser connect` でつなぎます
+- **手元の Chromium** — `agent-browser` コマンドで画面を出さずに動かします
 
-設定と使い方は [ブラウザの自動操作](/hermes/docs/user-guide/features/browser/) を見てください。
+設定と使い方は [ブラウザ操作](/hermes/docs/user-guide/features/browser/) を見てください。
 
-## 音声と TTS のプロバイダ {#voice-tts-providers}
+## 音声と読み上げのプロバイダー {#voice-tts-providers}
 
-どのメッセージングプラットフォームでも、文章の読み上げと音声の文字起こしが使えます。
+読み上げ（TTS）と文字起こし（STT）は、すべてのメッセージングサービスで使えます。
 
-| プロバイダ | 品質 | 費用 | API キー |
+| プロバイダー | 品質 | 費用 | API キー |
 |----------|---------|------|---------|
 | **Edge TTS**（既定） | 良好 | 無料 | 不要 |
 | **ElevenLabs** | 非常に良い | 有料 | `ELEVENLABS_API_KEY` |
@@ -74,56 +74,56 @@ Hermes には、サイトをたどり、フォームを埋め、情報を取り�
 | **xAI TTS** | 良好 | 有料 | `XAI_API_KEY` |
 | **NeuTTS** | 良好 | 無料 | 不要 |
 
-音声の文字起こしは 8 つのプロバイダに対応します。ローカルの faster-whisper（無料で、手元の端末で動きます）、ローカルのコマンドを包んだもの、Groq、OpenAI Whisper API、Mistral、xAI、ElevenLabs Scribe、DeepInfra です。音声メッセージの文字起こしは、Telegram、Discord、WhatsApp をはじめ、どのメッセージングプラットフォームでも使えます。詳しくは [音声と TTS](/hermes/docs/user-guide/features/tts/) と [音声モード](/hermes/docs/user-guide/features/voice-mode/) を見てください。
+文字起こしは 8 つのプロバイダーに対応しています。手元で動く faster-whisper（無料・端末内で処理）、任意のコマンドを呼び出す方式、Groq、OpenAI Whisper API、Mistral、xAI、ElevenLabs Scribe、DeepInfra です。音声メッセージの文字起こしは Telegram、Discord、WhatsApp などのメッセージングサービスで使えます。詳しくは [音声と読み上げ](/hermes/docs/user-guide/features/tts/) と [音声モード](/hermes/docs/user-guide/features/voice-mode/) を見てください。
 
-## IDE・エディタとの連携 {#ide-editor-integration}
+## エディタとの連携 {#ide-editor-integration}
 
-- **[IDE との連携（ACP）](/hermes/docs/user-guide/features/acp/)** — VS Code、Zed、JetBrains など、ACP に対応したエディタの中で Hermes Agent を使えます。Hermes は ACP のサーバーとして動き、チャットのメッセージ、ツールの動き、ファイルの差分、ターミナルのコマンドをエディタの中に表示します。
+- **[エディタ連携（ACP）](/hermes/docs/user-guide/features/acp/)** — VS Code、Zed、JetBrains など ACP に対応したエディタの中で Hermes Agent を使えます。Hermes が ACP サーバーとして動き、会話のやりとり、ツールの実行状況、ファイルの差分、ターミナルのコマンドをエディタ内に表示します。
 
 ## プログラムからの利用 {#programmatic-access}
 
-- **[API サーバー](/hermes/docs/user-guide/features/api-server/)** — Hermes を OpenAI 互換の HTTP のエンドポイントとして公開します。OpenAI の形式を話せるフロントエンドなら何でも — Open WebUI、LobeChat、LibreChat、NextChat、ChatBox — つないで、道具立てをそのまま備えた Hermes をバックエンドとして使えます。
+- **[API サーバー](/hermes/docs/user-guide/features/api-server/)** — Hermes を OpenAI 互換の HTTP エンドポイントとして公開します。OpenAI の形式を扱えるフロントエンド（Open WebUI、LobeChat、LibreChat、NextChat、ChatBox）なら、そのまま接続して Hermes を全ツール付きのバックエンドとして使えます。
 
-## 記憶と個人化 {#memory-personalization}
+## 記憶と個人向けの調整 {#memory-personalization}
 
-- **[組み込みの記憶](/hermes/docs/user-guide/features/memory/)** — `MEMORY.md` と `USER.md` のファイルによる、手入れの行き届いた消えない記憶です。エージェントは、個人的なメモとユーザーの情報を、大きさの決まった置き場で管理し、セッションをまたいで保ちます。
-- **[記憶のプロバイダ](/hermes/docs/user-guide/features/memory-providers/)** — もっと深く個人化するために、外部の記憶のバックエンドを差し込めます。対応しているのは 8 つです。Honcho（対話的な推論）、OpenViking（段階的な取り出し）、Mem0（クラウドでの抽出）、Hindsight（知識のグラフ）、Holographic（ローカルの SQLite）、RetainDB（複合的な検索）、ByteRover（CLI を土台にしたもの）、Supermemory です。
+- **[組み込みのメモリ](/hermes/docs/user-guide/features/memory/)** — `MEMORY.md` と `USER.md` に、選び抜いた内容を残していく仕組みです。エージェントが個人的なメモと利用者の情報を上限付きで管理し、セッションをまたいで持ち越します。
+- **[メモリのプロバイダー](/hermes/docs/user-guide/features/memory-providers/)** — 外部の記憶サービスをつないで、より深く個人に合わせられます。対応は 8 つで、Honcho（対話的な推論）、OpenViking（段階的な検索）、Mem0（クラウドでの抽出）、Hindsight（知識グラフ）、Holographic（手元の SQLite）、RetainDB（ハイブリッド検索）、ByteRover（コマンド方式）、Supermemory です。
 
-## メッセージングプラットフォーム {#messaging-platforms}
+## メッセージングサービス {#messaging-platforms}
 
-Hermes は 27 を超えるメッセージングプラットフォームでゲートウェイのボットとして動き、どれも同じ `gateway` の仕組みで設定します。
+Hermes は 27 以上のメッセージングサービスでボットとして動きます。設定はすべて同じ `gateway` の仕組みで行います。
 
-- **[Telegram](/hermes/docs/user-guide/messaging/telegram/)**、**[Discord](/hermes/docs/user-guide/messaging/discord/)**、**[Slack](/hermes/docs/user-guide/messaging/slack/)**、**[WhatsApp](/hermes/docs/user-guide/messaging/whatsapp/)**、**[Signal](/hermes/docs/user-guide/messaging/signal/)**、**[Matrix](/hermes/docs/user-guide/messaging/matrix/)**、**[Mattermost](/hermes/docs/user-guide/messaging/mattermost/)**、**[メール](/hermes/docs/user-guide/messaging/email/)**、**[SMS](/hermes/docs/user-guide/messaging/sms/)**、**[DingTalk](/hermes/docs/user-guide/messaging/dingtalk/)**、**[Feishu/Lark](/hermes/docs/user-guide/messaging/feishu/)**、**[WeCom](/hermes/docs/user-guide/messaging/wecom/)**、**[WeCom Callback](/hermes/docs/user-guide/messaging/wecom-callback/)**、**[Weixin](/hermes/docs/user-guide/messaging/weixin/)**、**[BlueBubbles](/hermes/docs/user-guide/messaging/bluebubbles/)**、**[Buzz](/hermes/docs/user-guide/messaging/buzz/)**、**[QQ Bot](/hermes/docs/user-guide/messaging/qqbot/)**、**[Yuanbao](/hermes/docs/user-guide/messaging/yuanbao/)**、**[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/)**、**[Microsoft Teams](/hermes/docs/user-guide/messaging/teams/)**、**[Microsoft Teams Meetings](/hermes/docs/user-guide/messaging/teams-meetings/)**、**[Microsoft Graph Webhook](/hermes/docs/user-guide/messaging/msgraph-webhook/)**、**[Google Chat](/hermes/docs/user-guide/messaging/google_chat/)**、**[LINE](/hermes/docs/user-guide/messaging/line/)**、**[ntfy](/hermes/docs/user-guide/messaging/ntfy/)**、**[SimpleX](/hermes/docs/user-guide/messaging/simplex/)**、**[Open WebUI](/hermes/docs/user-guide/messaging/open-webui/)**、**[Webhooks](/hermes/docs/user-guide/messaging/webhooks/)**
+- **[Telegram](/hermes/docs/user-guide/messaging/telegram/)**, **[Discord](/hermes/docs/user-guide/messaging/discord/)**, **[Slack](/hermes/docs/user-guide/messaging/slack/)**, **[WhatsApp](/hermes/docs/user-guide/messaging/whatsapp/)**, **[Signal](/hermes/docs/user-guide/messaging/signal/)**, **[Matrix](/hermes/docs/user-guide/messaging/matrix/)**, **[Mattermost](/hermes/docs/user-guide/messaging/mattermost/)**, **[メール](/hermes/docs/user-guide/messaging/email/)**, **[SMS](/hermes/docs/user-guide/messaging/sms/)**, **[DingTalk](/hermes/docs/user-guide/messaging/dingtalk/)**, **[Feishu/Lark](/hermes/docs/user-guide/messaging/feishu/)**, **[WeCom](/hermes/docs/user-guide/messaging/wecom/)**, **[WeCom コールバック](/hermes/docs/user-guide/messaging/wecom-callback/)**, **[Weixin](/hermes/docs/user-guide/messaging/weixin/)**, **[BlueBubbles](/hermes/docs/user-guide/messaging/bluebubbles/)**, **[Buzz](/hermes/docs/user-guide/messaging/buzz/)**, **[QQ Bot](/hermes/docs/user-guide/messaging/qqbot/)**, **[Yuanbao](/hermes/docs/user-guide/messaging/yuanbao/)**, **[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/)**, **[Microsoft Teams](/hermes/docs/user-guide/messaging/teams/)**, **[Microsoft Teams 会議](/hermes/docs/user-guide/messaging/teams-meetings/)**, **[Microsoft Graph Webhook](/hermes/docs/user-guide/messaging/msgraph-webhook/)**, **[Google Chat](/hermes/docs/user-guide/messaging/google_chat/)**, **[LINE](/hermes/docs/user-guide/messaging/line/)**, **[ntfy](/hermes/docs/user-guide/messaging/ntfy/)**, **[SimpleX](/hermes/docs/user-guide/messaging/simplex/)**, **[Open WebUI](/hermes/docs/user-guide/messaging/open-webui/)**, **[Webhook](/hermes/docs/user-guide/messaging/webhooks/)**
 
-プラットフォームの比較表と設定の手引きは [メッセージングゲートウェイの概要](/hermes/docs/user-guide/messaging/) を見てください。
+サービスごとの比較表と設定手順は [メッセージングゲートウェイの概要](/hermes/docs/user-guide/messaging/) にまとめてあります。
 
-### 手早くつなぐためのリンク {#quick-connect-links}
+### 作成画面への近道 {#quick-connect-links}
 
-大きなプラットフォームには「ボットやアプリを作る」ための決まった URL があり、一部は正しいフォームを最初から開くための引数も受け取れます。管理画面を探し回らず、直接そこへ行きましょう。
+主要なサービスには「ボットやアプリを作る」ための決まった URL があり、パラメータを付けると目的のフォームが開いた状態で始められるものもあります。管理画面を探し回らずに、ここから直接どうぞ。
 
-| プラットフォーム | 直接のリンク | 何が開くか |
+| サービス | 直リンク | 開く画面 |
 |----------|-------------|---------------|
-| **Telegram** | [t.me/BotFather](https://t.me/BotFather) | BotFather とのチャット。`/newbot` を送るとボットのトークンが作られます |
-| **Discord** | [discord.com/developers/applications?new_application=true](https://discord.com/developers/applications?new_application=true) | **New Application** のダイアログが開いた状態の開発者ポータル |
-| **Slack** | [api.slack.com/apps?new_app=1](https://api.slack.com/apps?new_app=1) | **Create New App** のダイアログ。*From an app manifest* を選び、`hermes slack manifest --agent-view` が出力するマニフェストを貼り付けます |
-| **LINE** | [developers.line.biz/console](https://developers.line.biz/console/) | Messaging API のチャンネルを作るための LINE Developers Console |
-| **Feishu/Lark** | [open.feishu.cn/app](https://open.feishu.cn/app) | 独自アプリを作るための Feishu のオープンプラットフォームの管理画面 |
+| **Telegram** | [t.me/BotFather](https://t.me/BotFather) | BotFather とのチャットです。`/newbot` を送るとボットのトークンが発行されます |
+| **Discord** | [discord.com/developers/applications?new_application=true](https://discord.com/developers/applications?new_application=true) | 開発者ポータルが **New Application** のダイアログを開いた状態で表示されます |
+| **Slack** | [api.slack.com/apps?new_app=1](https://api.slack.com/apps?new_app=1) | **Create New App** のダイアログです。*From an app manifest* を選び、`hermes slack manifest --agent-view` が出力するマニフェストを貼り付けます |
+| **LINE** | [developers.line.biz/console](https://developers.line.biz/console/) | Messaging API のチャネルを作る LINE Developers Console です |
+| **Feishu/Lark** | [open.feishu.cn/app](https://open.feishu.cn/app) | 独自アプリを作る Feishu のオープンプラットフォーム管理画面です |
 
-そこへ着いたあと何をするかは、プラットフォームごとの設定のページが案内します。
+たどり着いたあとの手順は、サービスごとの設定ページで説明しています。
 
 ## 共同作業の場 {#collaboration-workspaces}
 
-- **[Buzz](/hermes/docs/integrations/buzz/)** — Block による、Nostr を土台にした人とエージェントの作業の場です。つなぎ方は 3 通りあります。Buzz Desktop が Hermes を管理下の ACP の実行環境として立ち上げる方法、`buzz-acp` の中継の橋渡しがサーバー側で Hermes の身元をもたせる方法、そしてゲートウェイのプラットフォームがそのまま Buzz のチャンネルに参加し、Hermes の記憶・スキル・承認・cron をすべて持ち込む方法です。概要のページで 3 つを比べています。
+- **[Buzz](/hermes/docs/integrations/buzz/)** — Block が作った、Nostr をもとにした人とエージェントの共同作業スペースです。つなぎ方は 3 通りあります。Buzz Desktop が Hermes を ACP のランタイムとして起動する方法、`buzz-acp` の中継ブリッジがサーバー側で Hermes の身元を持つ方法、そしてメッセージングの仕組みとして Buzz のチャンネルに参加し、Hermes のメモリ・スキル・承認・定期実行をそのまま使う方法です。概要ページで 3 つを比べています。
 
-## 家の自動化 {#home-automation}
+## 家電の操作 {#home-automation}
 
-- **[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/)** — 4 つの専用のツール（`ha_list_entities`、`ha_get_state`、`ha_list_services`、`ha_call_service`）でスマートホームの機器を操作します。`HASS_TOKEN` を設定すると、Home Assistant のツールセットが自動で有効になります。
+- **[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/)** — 4 つの専用ツール（`ha_list_entities`、`ha_get_state`、`ha_list_services`、`ha_call_service`）でスマート家電を操作します。`HASS_TOKEN` を設定すると Home Assistant のツール一式が自動で有効になります。
 
 ## プラグイン {#plugins}
 
-- **[プラグインの仕組み](/hermes/docs/user-guide/features/plugins/)** — 本体のコードに手を入れずに、独自のツール、動作の節目に挟むフック、CLI のコマンドで Hermes を広げられます。プラグインは `~/.hermes/plugins/`、プロジェクトごとの `.hermes/plugins/`、そして pip で入れたエントリーポイントから見つかります。
-- **[プラグインを作る](/hermes/docs/developer-guide/plugins/)** — ツール、フック、CLI のコマンドを備えた Hermes のプラグインを作るための、順を追った手引きです。
+- **[プラグインの仕組み](/hermes/docs/user-guide/features/plugins/)** — 本体のコードに手を入れずに、独自のツール・ライフサイクルのフック・コマンドを足せます。プラグインは `~/.hermes/plugins/`、プロジェクト内の `.hermes/plugins/`、pip で入れたエントリポイントから読み込まれます。
+- **[プラグインを作る](/hermes/docs/developer-guide/plugins/)** — ツール・フック・コマンドを備えた Hermes のプラグインを、順を追って作っていく手引きです。
 
 ## 学習と評価 {#training-evaluation}
 
-- **[まとめての処理](/hermes/docs/user-guide/features/batch-processing/)** — 何百というプロンプトに対してエージェントを並行して走らせ、学習データの生成や評価に使える ShareGPT 形式の行動記録を整った形で作ります。
+- **[一括処理](/hermes/docs/user-guide/features/batch-processing/)** — 何百件ものプロンプトに対してエージェントを並列で走らせ、ShareGPT 形式の実行記録を作ります。学習データの生成や評価に使えます。

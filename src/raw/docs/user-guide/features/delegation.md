@@ -2,7 +2,7 @@
 title: "サブエージェントへの委任"
 description: "delegate_task で切り離した子エージェントを起こし、複数の作業を並行して進める"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: 95c7f94985425cad1c6bf84cefa43712b0843bb8
+upstream_blob: a4ce8aba3b32e268ab5b97de36a533d0dc2a2a5f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -366,7 +366,7 @@ Background delegations: 1 running
 
 ### TUI やゲートウェイから（セッション側の操作） {#from-the-tui-gateway-session-facing}
 
-`tools/delegate_tool.py` の `steer_subagent(subagent_id, text)` は、`interrupt_subagent()` の、向きを変える側の対になるものです。[`/steer`](/hermes/docs/reference/slash-commands/) と同じ仕組みで、生きている子へテキストを流し込みます。テキストは次の区切りで子の直前のツールの結果に付け足され、実行中のツール呼び出しが切られることはなく、子はそれを会話の外から来たユーザーのメッセージとして受け取ります。プログラムから使う側は、`subagent.interrupt` の隣にある、セッション単位の `subagent.steer` というゲートウェイの RPC を通じて呼び出します。
+`tools/delegate_tool_registry.py` の `steer_subagent(subagent_id, text)` は、`interrupt_subagent()` の、向きを変える側の対になるものです。[`/steer`](/hermes/docs/reference/slash-commands/) と同じ仕組みで、生きている子へテキストを流し込みます。テキストは次の区切りで子の直前のツールの結果に付け足され、実行中のツール呼び出しが切られることはなく、子はそれを会話の外から来たユーザーのメッセージとして受け取ります。プログラムから使う側は、`subagent.interrupt` の隣にある、セッション単位の `subagent.steer` というゲートウェイの RPC を通じて呼び出します。
 
 ```json
 {"method": "subagent.steer", "params": {"session_id": "owning-ui-session", "subagent_id": "sa-0-1a2b3c4d", "text": "focus on pricing instead"}}

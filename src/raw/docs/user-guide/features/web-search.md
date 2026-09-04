@@ -2,7 +2,7 @@
 title: "Web 検索と本文抽出"
 description: "複数のバックエンドプロバイダで Web を検索し、ページ本文を抽出します。無料で自前運用できる SearXNG にも対応しています。"
 upstream_path: user-guide/features/web-search.md
-upstream_blob: 100c6e50e87d2920710e00fc69c4d5a0b51ed20b
+upstream_blob: bcd6b34255a488fc5b07d7028c7f0df1d0416222
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-search
 ---
@@ -27,10 +27,11 @@ Hermes Agent には、複数のプロバイダを背後に持つ、モデルか�
 | **Exa** | `EXA_API_KEY`（任意） | ✔ | ✔ | ✔ キーなしリングの参加先 · キーありで月 1 000 検索 |
 | **Parallel** | `PARALLEL_API_KEY`（任意） | ✔ | ✔ | ✔ キーなしリングの参加先 · キーありは有料 |
 | **Tavily** | `TAVILY_API_KEY`（任意） | ✔ | ✔ | ✔ 選択時はオプトインでキーなし利用可 |
+| **Perplexity** | `PERPLEXITY_API_KEY` | ✔ | ✔（クエリに関わる抜粋） | 有料（Search API のリクエスト従量） |
 | **Keenable** | `KEENABLE_API_KEY`（任意） | ✔ | ✔ | ✔ キーなしリングの参加先 · キーありは有料 |
 | **xAI（Grok）** | `XAI_API_KEY` または `hermes auth add xai-oauth` | ✔ | — | 有料（SuperGrok またはトークン従量） |
 
-Brave Search・DDGS・xAI は **検索専用** です。`web_extract` も使いたい場合は、これらのどれかと Firecrawl / Tavily / Keenable / Exa / Parallel を組み合わせてください。DDGS は内部で [`ddgs` Python パッケージ](https://pypi.org/project/ddgs/)を使います。未インストールなら `pip install ddgs` を実行するか、初回使用時に Hermes が遅延インストールするのに任せてください。xAI は Responses API 上で Grok のサーバー側 `web_search` ツールを動かします。結果は索引に基づくものではなく LLM が生成したもので、タイトル・説明・URL の選択がすべてモデルの出力になります（後述の[信頼モデルの注意](#xai-grok)を参照）。
+Brave Search・DDGS・xAI は **検索専用** です。`web_extract` も使いたい場合は、これらのどれかと Firecrawl / Tavily / Perplexity / Keenable / Exa / Parallel を組み合わせてください。DDGS は内部で [`ddgs` Python パッケージ](https://pypi.org/project/ddgs/)を使います。未インストールなら `pip install ddgs` を実行するか、初回使用時に Hermes が遅延インストールするのに任せてください。xAI は Responses API 上で Grok のサーバー側 `web_search` ツールを動かします。結果は索引に基づくものではなく LLM が生成したもので、タイトル・説明・URL の選択がすべてモデルの出力になります（後述の[信頼モデルの注意](#xai-grok)を参照）。
 
 **機能ごとの分割:** 検索と抽出で別々のプロバイダを使えます。たとえば検索は SearXNG（無料）、抽出は Firecrawl といった具合です。後述の[機能ごとの設定](#per-capability-configuration)を参照してください。
 
@@ -269,7 +270,7 @@ SearXNG が担当するのは検索だけなので、`web_extract` には別の�
 # ~/.hermes/config.yaml
 web:
   search_backend: "searxng"
-  extract_backend: "firecrawl"   # or tavily, keenable, exa, parallel
+  extract_backend: "firecrawl"   # or tavily, perplexity, keenable, exa, parallel
 ```
 
 この設定なら、Hermes は検索クエリをすべて SearXNG に、URL の本文抽出を Firecrawl に投げます。無料の検索と質の高い抽出を組み合わせられます。
@@ -287,6 +288,19 @@ TAVILY_API_KEY=tvly-your-key-here
 ```
 
 キーは [app.tavily.com](https://app.tavily.com/home) で取得します。[Tavily keyless](https://docs.tavily.com/documentation/keyless) も参照してください。
+
+---
+
+### Perplexity {#perplexity}
+
+[Perplexity の Search API](https://docs.perplexity.ai/docs/search/quickstart) は、Perplexity 自身の索引から、順位付けされ日付の入った結果を返します（`web_search`）。`web_extract` では、公式の `pplx` CLI と同じ「クエリに関わる *抜粋*」の経路を使います。つまりページ全文をそのまま写し取るのではなく、そのページのうち意味のある一節だけが、省略箇所を `…` で示した形で返ります。ページ全体が必要なときは、`web.extract_backend` に Firecrawl / Exa / Parallel を選んでください。キーが必須で、匿名で使える枠はありません。
+
+```bash
+# ~/.hermes/.env
+PERPLEXITY_API_KEY=pplx-your-key-here
+```
+
+キーは [perplexity.ai/account/api](https://www.perplexity.ai/account/api) で取得します。プロキシ経由にしたい場合は `PERPLEXITY_BASE_URL` を設定します。
 
 ---
 
@@ -372,7 +386,7 @@ Web 系のすべての機能に、1 つのプロバイダを設定します。
 ```yaml
 # ~/.hermes/config.yaml
 web:
-  backend: "searxng"   # firecrawl | searxng | brave-free | ddgs | tavily | keenable | exa | parallel | xai
+  backend: "searxng"   # firecrawl | searxng | brave-free | ddgs | tavily | perplexity | keenable | exa | parallel | xai
 ```
 
 ### 機能ごとの設定 {#per-capability-configuration}
@@ -400,6 +414,7 @@ web:
 | 存在する認証情報 | 自動で選ばれるバックエンド |
 |--------------------|-----------------------|
 | `TAVILY_API_KEY` | tavily |
+| `PERPLEXITY_API_KEY` | perplexity |
 | `EXA_API_KEY` | exa |
 | `PARALLEL_API_KEY` | parallel |
 | `FIRECRAWL_API_KEY` または `FIRECRAWL_API_URL`（あるいは Nous Tool Gateway が使える状態） | firecrawl |
@@ -456,7 +471,7 @@ SearXNG は URL の本文を抽出できません。`web.extract_backend` に、
 ```yaml
 web:
   search_backend: "searxng"
-  extract_backend: "firecrawl"  # or tavily / keenable / exa / parallel
+  extract_backend: "firecrawl"  # or tavily / perplexity / keenable / exa / parallel
 ```
 
 ### SearXNG の結果が 0 件になる {#searxng-returns-0-results}

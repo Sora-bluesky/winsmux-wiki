@@ -1,17 +1,17 @@
 ---
-title: "ツールの実行のしくみ"
-description: "ツールのレジストリ、ツールセット、ディスパッチ、ターミナル環境が実行時にどう動くか"
+title: "ツールの実行基盤"
+description: "ツールの登録簿、ツールセット、振り分け、ターミナル環境の動き"
 upstream_path: developer-guide/tools-runtime.md
-upstream_blob: 7fcbb4d7cd0a844beee08814de36030da5b93c7d
+upstream_blob: c863219eb26447ad0a0998fa661b142d493a0520
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime
 ---
 
-# ツールの実行のしくみ {#tools-runtime}
+# ツールの実行基盤 {#tools-runtime}
 
-Hermes のツールは自分で自分を登録する関数で、ツールセットにまとめられ、中央のレジストリとディスパッチのしくみを通して実行されます。
+Hermes のツールは自分自身を登録する関数で、ツールセットにまとめられ、中央の登録簿と振り分けの仕組みを通して実行されます。
 
-主なファイルは次のとおりです。
+主なファイル:
 
 - `tools/registry.py`
 - `model_tools.py`
@@ -21,13 +21,13 @@ Hermes のツールは自分で自分を登録する関数で、ツールセッ�
 
 ## ツールの登録のしかた {#tool-registration-model}
 
-それぞれのツールのモジュールは、import された時点で `registry.register(...)` を呼びます。
+各ツールのモジュールは、読み込まれた時点で `registry.register(...)` を呼びます。
 
-`model_tools.py` は、ツールのモジュールを import して見つけ出し、モデルに渡すスキーマの一覧を組み立てる役割を持ちます。
+ツールのモジュールを読み込んで見つけ出し、モデルに渡すスキーマの一覧を組み立てるのは `model_tools.py` の役目です。
 
 ### `registry.register()` の動き {#how-registryregister-works}
 
-`tools/` にあるツールのファイルは、モジュールの一番外側で `registry.register()` を呼んで自分を宣言します。関数の書き方は次のとおりです。
+`tools/` にあるツールのファイルは、モジュールの最上位で `registry.register()` を呼んで自分を宣言します。関数の書き方は次のとおりです。
 
 ```python
 registry.register(
@@ -43,13 +43,13 @@ registry.register(
 )
 ```
 
-呼び出すたびに `ToolEntry` が作られ、シングルトンの `ToolRegistry._tools` という辞書に、ツール名をキーとして保存されます。**別の** ツールセットにある既存のツールを上書きしてしまう登録は、呼び出し側が `override=True` を渡さないかぎり拒否されます（エラーログが出ます）。プラグインが組み込みツールを上書きする場合は、それに加えて `config.yaml` で `plugins.entries.<plugin_id>.allow_tool_override: true` と運用者が明示的に許可する必要があります。
+呼び出すたびに `ToolEntry` が作られ、シングルトンの `ToolRegistry._tools` 辞書にツール名をキーとして入ります。**別の**ツールセットにある既存のツールを覆い隠すような登録は拒否されます（エラーログが出ます）。ただし呼び出し側が `override=True` を渡した場合は別で、さらにプラグインが組み込みツールを上書きするときは、`config.yaml` に `plugins.entries.<plugin_id>.allow_tool_override: true` という運用者の明示的な許可も必要です。
 
-モデルに見える説明として正となるのは `schema["description"]` です。引数として別に渡す `description=` の方は `ToolEntry.description` に入り、省略したときはレジストリ側のメタデータがスキーマの説明を引き継ぎます。`get_definitions()` は `entry.schema` から OpenAI 形式の関数定義を組み立てるだけで、`description` を持たないスキーマに `entry.description` を写し込むことはしません。つまり `description=` だけを書いてもモデルへの説明にはならず、両方の値が違っているときにモデルが見るのはスキーマ側の値です。レジストリを読む側があえて違うメタデータを必要とする場合を除いて、説明はスキーマに一度だけ書くようにしてください。
+モデルに対する説明として正となるのは `schema["description"]` です。引数の `description=` が埋めるのは `ToolEntry.description` のほうで、`get_definitions()` は `entry.schema` から OpenAI 形式の関数定義を組み立て、`description` を持たないスキーマに `entry.description` を写すことはしません。したがって `description=` を書いただけではモデルへの説明にはならず、両者が食い違えばモデルが見るのはスキーマ側の値です。登録簿の利用者があえて別のメタデータを必要とする場合を除き、説明はスキーマに一度だけ書くのが安全です。
 
-### 見つけ方: `discover_builtin_tools()` {#discovery-discoverbuiltintools}
+### 探索: `discover_builtin_tools()` {#discovery-discoverbuiltintools}
 
-`model_tools.py` が import されると、`tools/registry.py` の `discover_builtin_tools()` が呼ばれます。この関数は `tools/*.py` のファイルを AST 解析ですべて調べ、一番外側で `registry.register()` を呼んでいるモジュールを見つけて import します。
+`model_tools.py` が読み込まれると、`tools/registry.py` の `discover_builtin_tools()` が呼ばれます。この関数は `tools/*.py` のファイルを AST 解析で走査し、最上位に `registry.register()` の呼び出しがあるモジュールを見つけて読み込みます。
 
 ```python
 # tools/registry.py (simplified)
@@ -62,24 +62,24 @@ def discover_builtin_tools(tools_dir=None):
             importlib.import_module(f"tools.{path.stem}")
 ```
 
-この自動検出のおかげで、新しいツールのファイルは置くだけで拾われます。import の一覧を手で管理する必要はありません。AST の検査が対象にするのは一番外側の `registry.register()` の呼び出しだけ（関数の中の呼び出しは対象外）なので、`tools/` にある補助用のモジュールが import されることはありません。
+この自動探索のおかげで、新しいツールのファイルは何もしなくても拾われます。手で一覧を保守する必要はありません。AST の判定は最上位の `registry.register()` だけを対象にする（関数の中の呼び出しは見ない）ので、`tools/` にある補助モジュールが読み込まれることはありません。
 
-import されるたびに、そのモジュールの `registry.register()` が実行されます。必須ではないツールで起きたエラー（画像生成用の `fal_client` が入っていない、など）は捕まえてログに残すだけなので、他のツールの読み込みは止まりません。
+読み込みのたびに、そのモジュールの `registry.register()` が実行されます。任意扱いのツールで起きたエラー（画像生成に必要な `fal_client` が無い場合など）は捕まえてログに残すだけで、ほかのツールの読み込みは止まりません。
 
-コアのツールを見つけたあとは、MCP のツールとプラグインのツールも順に見つけていきます。
+中心となるツールの探索が終わると、MCP のツールとプラグインのツールも探されます。
 
-1. **MCP のツール** — `tools.mcp_tool.discover_mcp_tools()` が MCP サーバーの設定を読み、外部サーバーのツールを登録します。
-2. **プラグインのツール** — `hermes_cli.plugins.discover_plugins()` が、ユーザー用・プロジェクト用・pip 由来のプラグインを読み込みます。プラグインが追加のツールを登録することがあります。
+1. **MCP のツール** — `tools.mcp_tool_discovery.discover_mcp_tools()`（窓口の `tools.mcp_tool` から再公開）が MCP サーバーの設定を読み、外部サーバーのツールを登録します。
+2. **プラグインのツール** — `hermes_cli.plugins.discover_plugins()` が利用者・プロジェクト・pip のプラグインを読み込み、その中にツールを登録するものがあれば加わります。
 
 ## ツールが使えるかの判定（`check_fn`） {#tool-availability-checking-checkfn}
 
-それぞれのツールは、必要なら `check_fn` を用意できます。これは、そのツールが使えるときに `True`、使えないときに `False` を返す関数です。よくある判定は次のとおりです。
+各ツールは任意で `check_fn` を持てます。使えるときに `True`、そうでなければ `False` を返す呼び出し可能なものです。よくある判定は次のとおりです。
 
-- **API キーがあるか** — 例えば Web 検索なら `lambda: bool(os.environ.get("SERP_API_KEY"))`
-- **サービスが動いているか** — 例えば Honcho のサーバーが設定されているかを確かめる
-- **実行ファイルが入っているか** — 例えばブラウザ系のツール向けに `playwright` が使えるかを確かめる
+- **API キーがあるか** — ウェブ検索なら `lambda: bool(os.environ.get("SERP_API_KEY"))` など
+- **サービスが動いているか** — Honcho のサーバーが設定されているかを確かめる、など
+- **実行ファイルが入っているか** — ブラウザ操作のツール向けに `playwright` があるかを確かめる、など
 
-`registry.get_definitions()` がモデル向けのスキーマ一覧を組み立てるとき、各ツールの `check_fn()` が実行されます。
+`registry.get_definitions()` がモデルに渡すスキーマの一覧を組み立てるとき、各ツールの `check_fn()` を実行します。
 
 ```python
 # Simplified from registry.py
@@ -92,50 +92,50 @@ if entry.check_fn:
         continue            # Skip this tool entirely
 ```
 
-主な挙動は次のとおりです。
-- 判定の結果は **呼び出しごとにキャッシュ** されます。複数のツールが同じ `check_fn` を使っていても、実行は一度だけです。
-- `check_fn()` の中で例外が起きたときは「使えない」とみなします（安全側に倒す）。
-- `is_toolset_available()` は、ツールセットの `check_fn` が通るかどうかを調べるもので、画面表示とツールセットの解決に使われます。
+押さえておきたい動きは次のとおりです。
+- 判定の結果は**呼び出しごとにキャッシュ**されます。複数のツールが同じ `check_fn` を共有していれば、実行は 1 回だけです。
+- `check_fn()` の中で例外が出た場合は「使えない」とみなします（安全側に倒します）。
+- `is_toolset_available()` メソッドは、そのツールセットの `check_fn` が通るかを確かめます。画面表示とツールセットの解決に使われます。
 
 ## ツールセットの解決 {#toolset-resolution}
 
-ツールセットは、ツールに名前を付けて束ねたものです。Hermes は次の材料から解決します。
+ツールセットは名前の付いたツールの束です。Hermes は次を通してこれを解決します。
 
-- 明示的に有効・無効にしたツールセットの一覧
+- 有効・無効のツールセットの明示的な一覧
 - プラットフォームごとの既定の組み合わせ（`hermes-cli`、`hermes-telegram` など）
-- MCP から動的に作られるツールセット
-- `hermes-acp` のような用途を絞って選び抜かれた組み合わせ
+- 動的な MCP のツールセット
+- `hermes-acp` のような、用途を絞って選び抜かれた束
 
-### `get_tool_definitions()` の絞り込み {#how-gettooldefinitions-filters-tools}
+### `get_tool_definitions()` による絞り込み {#how-gettooldefinitions-filters-tools}
 
-主な入り口は `model_tools.get_tool_definitions(enabled_toolsets, disabled_toolsets, quiet_mode)` です。
+入口となるのは `model_tools.get_tool_definitions(enabled_toolsets, disabled_toolsets, quiet_mode)` です。
 
-1. **`enabled_toolsets` が渡されたとき** — そのツールセットに属するツールだけを対象にします。それぞれのツールセット名は `resolve_toolset()` が解決し、複合のツールセットは個々のツール名に展開されます。
+1. **`enabled_toolsets` が渡された場合** — そのツールセットのツールだけが対象になります。各ツールセット名は `resolve_toolset()` で解決され、複合のツールセットは個々のツール名に展開されます。
 
-2. **`disabled_toolsets` が渡されたとき** — まず全ツールセットから始めて、無効にしたものを差し引きます。
+2. **`disabled_toolsets` が渡された場合** — すべてのツールセットから始めて、無効にしたものを差し引きます。
 
-3. **どちらもないとき** — 分かっているツールセットをすべて対象にします。
+3. **どちらも無い場合** — 知られているツールセットをすべて含めます。
 
-4. **レジストリ側の絞り込み** — こうして決まったツール名の集合が `registry.get_definitions()` に渡され、`check_fn` による絞り込みをかけたうえで OpenAI 形式のスキーマが返ります。
+4. **登録簿での絞り込み** — 解決したツール名の集合が `registry.get_definitions()` に渡され、そこで `check_fn` による絞り込みが行われ、OpenAI 形式のスキーマが返ります。
 
-5. **スキーマの動的な差し替え** — 絞り込みのあと、`execute_code` と `browser_navigate` のスキーマは、実際に残ったツールだけを参照するように書き換えられます（使えないツールをモデルが勝手に思い浮かべるのを防ぐためです）。
+5. **スキーマの動的な書き換え** — 絞り込みのあと、`execute_code` と `browser_navigate` のスキーマが調整され、実際に絞り込みを通過したツールだけを指すようになります（使えないツールをモデルが思い込みで呼ぶのを防ぎます）。
 
-### 古いツールセット名 {#legacy-toolset-names}
+### 昔のツールセット名 {#legacy-toolset-names}
 
-`_tools` が付いた古いツールセット名（`web_tools`、`terminal_tools` など）は、`_LEGACY_TOOLSET_MAP` によって今のツール名に対応づけられ、そのまま使い続けられるようになっています。
+`_tools` が末尾に付く古いツールセット名（`web_tools`、`terminal_tools` など）は、後方互換のために `_LEGACY_TOOLSET_MAP` を通して今のツール名へ対応づけられます。
 
-## ディスパッチ {#dispatch}
+## 振り分け {#dispatch}
 
-実行時、ツールは中央のレジストリを通して振り分けられます。ただし、メモリ・TODO・セッション検索のように、エージェントのループ側で扱うツールは例外です。
+実行時、ツールは中央の登録簿を通して振り分けられます。ただし、メモリ・todo・セッション検索の処理のように、エージェントの階層で扱うツールは例外です。
 
 ### 振り分けの流れ: モデルの tool_call からハンドラの実行まで {#dispatch-flow-model-toolcall-handler-execution}
 
-モデルが `tool_call` を返したあとの流れは次のとおりです。
+モデルが `tool_call` を返したとき、流れは次のようになります。
 
 ```
 Model response with tool_call
     ↓
-run_agent.py agent loop
+agent loop (`agent/conversation_loop.py`, via `run_agent.py`'s `AIAgent` facade)
     ↓
 model_tools.handle_function_call(name, args, task_id, user_task)
     ↓
@@ -159,58 +159,58 @@ Return result string (or JSON error)
 
 ツールの実行は、二段構えでエラー処理に包まれています。
 
-1. **`registry.dispatch()`** — ハンドラから出た例外をすべて捕まえ、`{"error": "Tool execution failed: ExceptionType: message"}` を JSON として返します。
+1. **`registry.dispatch()`** — ハンドラから出たあらゆる例外を捕まえ、`{"error": "Tool execution failed: ExceptionType: message"}` を JSON として返します。
 
-2. **`handle_function_call()`** — その振り分け全体をもう一段の try/except で包み、`{"error": "Error executing tool_name: message"}` を返します。
+2. **`handle_function_call()`** — 振り分け全体をもう一段の try/except で包み、`{"error": "Error executing tool_name: message"}` を返します。
 
-こうすることで、モデルが受け取るのは必ず形の整った JSON の文字列になり、処理されないままの例外が届くことはありません。
+これにより、モデルが受け取るのは常に整った JSON の文字列になり、処理されないままの例外が渡ることはありません。
 
-### エージェントのループ側で扱うツール {#agent-loop-tools}
+### エージェントループが扱うツール {#agent-loop-tools}
 
-次の 4 つのツールは、エージェント側の状態（TodoStore、MemoryStore など）を必要とするため、レジストリに振り分ける前に横取りされます。
+次の 4 つは、エージェントの階層の状態（TodoStore、MemoryStore など）を必要とするため、登録簿での振り分けより前に横取りされます。
 
-- `todo` — 計画づくりと作業の追跡
-- `memory` — 残しておく記憶の書き込み
-- `session_search` — セッションをまたいだ思い出し
-- `delegate_task` — サブエージェントのセッションを立ち上げる
+- `todo` — 計画とタスクの管理
+- `memory` — 残しておくメモリへの書き込み
+- `session_search` — セッションをまたいだ想起
+- `delegate_task` — 副エージェントのセッションを起こす
 
-これらのツールのスキーマもレジストリには登録されていますが（`get_tool_definitions` のためです）、万一そのまま振り分けが届いた場合、ハンドラはスタブのエラーを返します。
+これらのツールのスキーマも登録簿には登録されていますが（`get_tool_definitions` のため）、万一そのまま振り分けに届いた場合、ハンドラはエラーの雛形を返します。
 
-### 非同期の橋渡し {#async-bridging}
+### 非同期のつなぎ {#async-bridging}
 
-ツールのハンドラが非同期のとき、`_run_async()` がそれを同期の振り分けの流れにつなぎます。
+ツールのハンドラが非同期の場合、`_run_async()` が同期の振り分け経路へつなぎます。
 
-- **CLI の経路（動いているループがない）** — 常設のイベントループを使い、キャッシュされた非同期クライアントを生かしたままにします
-- **ゲートウェイの経路（動いているループがある）** — 使い捨てのスレッドを立てて `asyncio.run()` を実行します
-- **ワーカースレッド（ツールの並列実行）** — スレッドローカルに置いた、スレッドごとの常設ループを使います
+- **CLI の経路（動いているループが無い）** — 常設のイベントループを使い、キャッシュした非同期クライアントを生かしておきます
+- **ゲートウェイの経路（ループが動いている）** — 使い捨てのスレッドを立てて `asyncio.run()` を実行します
+- **ワーカースレッド（ツールの並列実行）** — スレッドごとの常設ループをスレッドローカルに持たせます
 
 ## DANGEROUS_PATTERNS による承認の流れ {#the-dangerouspatterns-approval-flow}
 
-ターミナルのツールには、`tools/approval.py` で定義された、危険なコマンドを承認にかけるしくみが組み込まれています。
+ターミナルのツールには、`tools/approval.py` で定義された危険なコマンドの承認の仕組みが組み込まれています。
 
-1. **パターンの定義** — `DANGEROUS_PATTERNS` は `(regex, description)` の組の一覧で、次のような壊れる操作を対象にします。
+1. **パターンの定義** — `DANGEROUS_PATTERNS` は `(regex, description)` の組の一覧で、壊す方向の操作を網羅します。
    - 再帰的な削除（`rm -rf`）
    - ファイルシステムの初期化（`mkfs`、`dd`）
-   - 中身が消える SQL 操作（`DROP TABLE`、`WHERE` のない `DELETE FROM`）
+   - SQL の破壊的な操作（`DROP TABLE`、`WHERE` の無い `DELETE FROM`）
    - システム設定の上書き（`> /etc/`）
    - サービスの操作（`systemctl stop`）
    - 遠隔からのコード実行（`curl | sh`）
-   - フォーク爆弾、プロセスの強制終了など
+   - フォーク爆弾、プロセスの強制終了、ほか
 
-2. **検出** — ターミナルのコマンドを実行する前に、`detect_dangerous_command(command)` がすべてのパターンと照らし合わせます。
+2. **検出** — ターミナルのコマンドを実行する前に、`detect_dangerous_command(command)` がすべてのパターンと照合します。
 
-3. **承認の問いかけ** — 当てはまるものがあった場合は、次のようになります。
-   - **CLI モード** — その場で、許可するか、拒否するか、以後ずっと許可するかを尋ねます
-   - **ゲートウェイモード** — 非同期の承認コールバックが、メッセージングのプラットフォームへ依頼を送ります
-   - **賢い承認** — 必要なら、補助の LLM がパターンに当てはまるだけの危険度の低いコマンドを自動で許可することもできます（例えば `rm -rf node_modules/` は「再帰的な削除」に当てはまりますが、実際には安全です）
+3. **承認の問い合わせ** — 一致するものがあった場合:
+   - **CLI のとき** — 対話的に、承認する・拒否する・以後ずっと許可する、を利用者に尋ねます
+   - **ゲートウェイのとき** — 非同期の承認コールバックが、依頼をメッセージのプラットフォームへ送ります
+   - **賢い承認** — 任意で、補助の LLM がパターンに当たっただけの危険度の低いコマンドを自動承認できます（たとえば `rm -rf node_modules/` は安全ですが「再帰的な削除」に一致します）
 
-4. **セッションごとの状態** — 承認はセッション単位で覚えられます。あるセッションで「再帰的な削除」を一度許可すれば、以後の `rm -rf` では改めて尋ねられません。
+4. **セッションの状態** — 承認はセッションごとに記録されます。そのセッションで一度「再帰的な削除」を承認すれば、以後の `rm -rf` では聞き直しません。
 
 5. **恒久的な許可リスト** — 「以後ずっと許可する」を選ぶと、そのパターンが `config.yaml` の `command_allowlist` に書き込まれ、セッションをまたいで残ります。
 
 ## ターミナルと実行環境 {#terminalruntime-environments}
 
-ターミナルのしくみは、複数の実行基盤に対応しています。
+ターミナルの仕組みは複数の実行先に対応しています。
 
 - local
 - docker
@@ -220,20 +220,20 @@ Return result string (or JSON error)
 - daytona
 - vercel_sandbox
 
-さらに、次のこともできます。
+さらに次にも対応します。
 
-- 作業ディレクトリをタスクごとに上書きする
-- バックグラウンドのプロセスを管理する
-- PTY モードで動かす
-- 危険なコマンドに対する承認のコールバックを使う
+- タスクごとの作業ディレクトリの上書き
+- 背後で動くプロセスの管理
+- PTY モード
+- 危険なコマンドの承認コールバック
 
-## 同時実行 {#concurrency}
+## 並行実行 {#concurrency}
 
-ツールの呼び出しは、組み合わせと、やり取りが必要かどうかによって、順番に実行されることも同時に実行されることもあります。
+ツールの呼び出しは、ツールの組み合わせや対話の要件に応じて、順番に実行されることも同時に実行されることもあります。
 
-## 関連ページ {#related-docs}
+## 関連するページ {#related-docs}
 
 - [ツールセット早見表](/hermes/docs/reference/toolsets-reference/)
 - [組み込みツール早見表](/hermes/docs/reference/tools-reference/)
-- [エージェントループの内部](/hermes/docs/developer-guide/agent-loop/)
-- [ACP の内部](/hermes/docs/developer-guide/acp-internals/)
+- [エージェントループの内側](/hermes/docs/developer-guide/agent-loop/)
+- [ACP の内側](/hermes/docs/developer-guide/acp-internals/)

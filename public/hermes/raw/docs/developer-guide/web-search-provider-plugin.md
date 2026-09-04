@@ -1,37 +1,37 @@
 ---
-title: "Web 検索プロバイダのプラグイン"
-description: "Hermes Agent 向けに Web 検索・抽出・クロールのバックエンドプラグインを作る方法"
+title: "ウェブ検索プロバイダのプラグイン"
+description: "Hermes Agent 向けに、ウェブ検索・本文抽出・巡回のバックエンドとなるプラグインを作る方法"
 upstream_path: developer-guide/web-search-provider-plugin.md
-upstream_blob: 257df89548d2e1503f2747ebd5ec36253ef429fc
+upstream_blob: 2cce42ac6c3ab1f391f0049c2e35999de7750ff0
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/web-search-provider-plugin
 ---
 
-# Web 検索プロバイダのプラグインを作る {#building-a-web-search-provider-plugin}
+# ウェブ検索プロバイダのプラグインを作る {#building-a-web-search-provider-plugin}
 
-Web 検索プロバイダのプラグインは、`web_search`、`web_extract`、そして必要なら深いクロールのツール呼び出しを担当するバックエンドを登録します。組み込みのプロバイダ（Firecrawl、SearXNG、Tavily、Exa、Parallel、Keenable、Brave Search の無料枠、xAI、DDGS）はすべて `plugins/web/<name>/` の下にプラグインとして入っています。その隣にディレクトリを置くだけで、新しいものを足したり、同梱のものを差し替えたりできます。
+ウェブ検索プロバイダのプラグインは、`web_search`、`web_extract`、そして必要なら深い巡回のツール呼び出しを引き受けるバックエンドを登録します。組み込みのプロバイダ（Firecrawl、SearXNG、Tavily、Perplexity、Exa、Parallel、Keenable、Brave Search の無料枠、xAI、DDGS）は、すべて `plugins/web/<name>/` の下のプラグインとして同梱されています。その隣にディレクトリを置くだけで、新しいものを足したり、同梱のものを上書きしたりできます。
 
 :::tip
-Web 検索は、Hermes が対応している **バックエンドプラグイン** のうちの 1 つです。それぞれ独自の ABC を持つ仲間として、[画像生成プロバイダのプラグイン](/hermes/docs/developer-guide/image-gen-provider-plugin/)、[動画生成プロバイダのプラグイン](/hermes/docs/developer-guide/video-gen-provider-plugin/)、[記憶プロバイダのプラグイン](/hermes/docs/developer-guide/memory-provider-plugin/)、[コンテキストエンジンのプラグイン](/hermes/docs/developer-guide/context-engine-plugin/)、[モデルプロバイダのプラグイン](/hermes/docs/developer-guide/model-provider-plugin/) があります。一般的なツール・フック・CLI のプラグインについては [Hermes のプラグインを作る](/hermes/docs/developer-guide/plugins/) を見てください。
+ウェブ検索は、Hermes が対応する**バックエンドのプラグイン**のひとつです。ほかにも（それぞれ独自の抽象基底クラスを持つものとして）[画像生成プロバイダのプラグイン](/hermes/docs/developer-guide/image-gen-provider-plugin/)、[動画生成プロバイダのプラグイン](/hermes/docs/developer-guide/video-gen-provider-plugin/)、[メモリプロバイダのプラグイン](/hermes/docs/developer-guide/memory-provider-plugin/)、[コンテキストエンジンのプラグイン](/hermes/docs/developer-guide/context-engine-plugin/)、[モデルプロバイダのプラグイン](/hermes/docs/developer-guide/model-provider-plugin/)があります。一般的なツール・フック・CLI のプラグインについては [Hermes プラグインを作る](/hermes/docs/developer-guide/plugins/)をご覧ください。
 :::
 
 ## 見つけ方の仕組み {#how-discovery-works}
 
-Hermes は次の 3 か所で Web 検索のバックエンドを探します。
+Hermes は、ウェブ検索のバックエンドを 3 か所から探します。
 
 1. **同梱** — `<repo>/plugins/web/<name>/`（`kind: backend` として自動で読み込まれ、常に使えます）
-2. **ユーザー** — `~/.hermes/plugins/web/<name>/`（`plugins.enabled` か `hermes plugins enable <name>` で自分で有効にします）
-3. **pip** — `hermes_agent.plugins` のエントリーポイントを宣言しているパッケージ
+2. **利用者ごと** — `~/.hermes/plugins/web/<name>/`（`plugins.enabled` か `hermes plugins enable <name>` で自分で有効にします）
+3. **pip** — `hermes_agent.plugins` のエントリポイントを宣言したパッケージ
 
-各プラグインの `register(ctx)` 関数が `ctx.register_web_search_provider(...)` を呼ぶと、そのインスタンスが `agent/web_search_registry.py` のレジストリに入ります。機能ごとにどのプロバイダを使うかは設定で決まります。
+各プラグインの `register(ctx)` 関数が `ctx.register_web_search_provider(...)` を呼ぶと、そのインスタンスが `agent/web_search_registry.py` の登録簿に入ります。どの機能にどのプロバイダを使うかは設定で決まります。
 
-| 機能 | 設定キー | 未設定なら参照するもの |
+| 機能 | 設定キー | 未設定なら参照する先 |
 |---|---|---|
 | `web_search` | `web.search_backend` | `web.backend` |
 | `web_extract` | `web.extract_backend` | `web.backend` |
-| `web_extract` の中の深いクロールのモード | `web.extract_backend` | `web.backend` |
+| `web_extract` の中で動く深い巡回 | `web.extract_backend` | `web.backend` |
 
-どちらのキーも設定されていない場合、Hermes は環境にある API キーや URL からバックエンドを自動で判別します。`hermes tools` が選択の手順を案内してくれます。
+どちらのキーも設定されていない場合、Hermes は環境にある API キーや URL からバックエンドを自動で判定します。`hermes tools` を実行すれば、選ぶところまで案内してくれます。
 
 ## ディレクトリの構成 {#directory-structure}
 
@@ -42,11 +42,11 @@ plugins/web/my-backend/
 └── plugin.yaml     # Manifest with kind: backend and provides_web_providers
 ```
 
-リポジトリ内で一番小さい参考例は `brave_free/` と `ddgs/` です。`brave_free` は API キーが要る検索専用のプロバイダ、`ddgs` はキーが要らず SDK を遅延インストールするプロバイダです。
+同梱のもので最も小さいお手本は `brave_free/` と `ddgs/` です。`brave_free` は API キーを要する検索専用のプロバイダ、`ddgs` はキー不要で SDK を必要になったときに入れるプロバイダです。
 
-## WebSearchProvider の ABC {#the-websearchprovider-abc}
+## WebSearchProvider の抽象基底クラス {#the-websearchprovider-abc}
 
-`agent.web_search_provider.WebSearchProvider` を継承します。必ず用意しなければならないのは `name`、`is_available()`、そして実装するほうの `search()` / `extract()` だけです。（深いクロールは別のメソッドではなく、`extract()` のモードの 1 つです。）
+`agent.web_search_provider.WebSearchProvider` を継承します。必ず用意するのは `name`、`is_available()`、それに実装するほうの `search()` か `extract()` だけです。（深い巡回は別のメソッドではなく、`extract()` の動作モードのひとつです。）
 
 ```python
 # plugins/web/my-backend/provider.py
@@ -139,29 +139,29 @@ requires_env:
 
 | キー | 役割 |
 |---|---|
-| `kind: backend` | プラグインをバックエンド読み込みの経路に回します |
-| `provides_web_providers` | このプラグインが登録するプロバイダの `name` の一覧です。`register()` が走る前でも `hermes tools` にプラグインを載せるために、ローダーがこれを使います |
-| `requires_env` | `hermes plugins install` の途中で、認証情報を対話的に尋ねます（詳しい書き方は [Hermes のプラグインを作る](/hermes/docs/developer-guide/plugins/#gate-on-environment-variables) を見てください） |
+| `kind: backend` | プラグインをバックエンド読み込みの経路に載せます |
+| `provides_web_providers` | このプラグインが登録するプロバイダの `name` の一覧です。`register()` が走る前でも `hermes tools` にプラグインを出せるよう、読み込み側が使います |
+| `requires_env` | `hermes plugins install` の途中で、認証情報を対話的に尋ねます（詳しい書き方は [Hermes プラグインを作る](/hermes/docs/developer-guide/plugins/#gate-on-environment-variables)をご覧ください） |
 
-## ABC の一覧 {#abc-reference}
+## 抽象基底クラスの一覧 {#abc-reference}
 
-取り決めの全文は `agent/web_search_provider.py` にあります。上書きできるメソッドは次のとおりです。
+契約の全体は `agent/web_search_provider.py` にあります。上書きできるメソッドは次のとおりです。
 
-| メンバー | 必須 | 既定 | 役割 |
+| メンバー | 必須 | 既定値 | 役割 |
 |---|---|---|---|
-| `name` | ✅ | — | `web.*_backend` の設定で使う、変わらない ID |
-| `display_name` | — | `name` | `hermes tools` に表示される名前 |
-| `is_available()` | ✅ | — | 環境変数や任意の依存パッケージを見る、軽い利用可否の判定 |
-| `supports_search()` | — | `True` | `web_search` を振り分けるための機能フラグ |
-| `supports_extract()` | — | `False` | `web_extract` を振り分けるための機能フラグ |
-| `search(query, limit)` | 条件付き | 例外を投げます | `supports_search()` が `True` を返すなら必須です |
-| `extract(urls, **kwargs)` | 条件付き | 例外を投げます | `supports_extract()` が `True` を返すなら必須です |
+| `name` | ✅ | — | `web.*_backend` の設定で使う、変わらない識別子 |
+| `display_name` | — | `name` | `hermes tools` に出す表示名 |
+| `is_available()` | ✅ | — | 使えるかどうかの軽い判定。環境変数や任意の依存の有無 |
+| `supports_search()` | — | `True` | `web_search` の振り分けに使う対応機能のフラグ |
+| `supports_extract()` | — | `False` | `web_extract` の振り分けに使う対応機能のフラグ |
+| `search(query, limit)` | 条件付き | 例外を出す | `supports_search()` が `True` を返すなら必須 |
+| `extract(urls, **kwargs)` | 条件付き | 例外を出す | `supports_extract()` が `True` を返すなら必須 |
 
-プロバイダは 1 つのクラスで複数の機能を名乗れます。Firecrawl、Tavily、Keenable、Exa、Parallel はどれも検索と抽出の両方を実装しています。Brave Search と DDGS は検索専用です。SearXNG も検索専用で、「抽出のプロバイダと組み合わせて使う」という進め方がドキュメントに書かれています。
+1 つのクラスが複数の機能に対応してもかまいません。Firecrawl、Tavily、Perplexity、Keenable、Exa、Parallel は検索と抽出の両方を実装しています。Brave Search と DDGS は検索のみ、SearXNG も検索のみで、抽出用のプロバイダと組み合わせる使い方が案内されています。
 
-## 応答の形 {#response-shape}
+## 返す値の形 {#response-shape}
 
-ツール側のラッパーは、バックエンドごとの違いを吸収せずに済むよう、決まった形の入れ物を期待します。
+ツール側の包み込みがバックエンドごとの違いを吸収せずに済むよう、返す値の外側の形は決まっています。
 
 **検索が成功したとき:**
 
@@ -202,11 +202,11 @@ requires_env:
 {"success": False, "error": "human-readable message"}
 ```
 
-`search()` と `extract()` はどちらも `async def` にできます。ディスパッチャが `inspect.iscoroutinefunction` でコルーチン関数かどうかを見分け、必要なら await します。ブロッキングする I/O（HTTP や SDK の呼び出し）を行う同期の実装でも、小さなバックエンドなら問題ありません。スレッドの扱いはディスパッチャが引き受けます。
+`search()` と `extract()` はどちらも `async def` にできます。呼び出し側は `inspect.iscoroutinefunction` でコルーチン関数かどうかを見分け、必要なら await します。小さなバックエンドなら、同期の実装がブロックする入出力（HTTP や SDK の呼び出し）をしてもかまいません。スレッドの扱いは呼び出し側が引き受けます。
 
-## 機能フラグ {#capability-flags}
+## 対応機能のフラグ {#capability-flags}
 
-Hermes は `supports_*` のフラグを見て、呼び出しを適切なプロバイダへ振り分けます。複数のプロバイダを組み合わせるよくある構成は次のとおりです。
+Hermes は `supports_*` のフラグを見て、呼び出しを適切なプロバイダへ振り分けます。複数のプロバイダを組み合わせる、よくある設定はこうです。
 
 ```yaml
 # ~/.hermes/config.yaml
@@ -215,33 +215,33 @@ web:
   extract_backend: "firecrawl"     # extract + crawl, paid quota
 ```
 
-`web.search_backend` や `web.extract_backend` を設定していない場合、どちらも `web.backend` に落ちます。それも未設定なら、Hermes は環境変数の有無を見て、求められた機能に対応している最初のプロバイダを選びます。
+`web.search_backend` や `web.extract_backend` が設定されていない場合、どちらも `web.backend` を見にいきます。それも未設定なら、Hermes は環境変数の有無を手がかりに、求められた機能に対応していて使えるプロバイダのうち最初のものを選びます。
 
-作ったプロバイダが片方の機能にしか対応していないなら、もう片方のフラグは既定（`False`）のままにしてください。そうすればレジストリはそのツールの候補からそのプロバイダを外します。検索にだけ X を使っているユーザーがエージェントに抽出を頼んだとき、「プロバイダ X が失敗しました」という紛らわしいエラーを見せずに済みます。
+自分のプロバイダが片方の機能にしか対応しないなら、もう片方のフラグは既定の `False` のままにしておいてください。登録簿がそのツールでは対象外として扱うので、検索だけに使っているプロバイダに抽出を頼んで「プロバイダ X が失敗しました」という紛らわしいエラーを見せずに済みます。
 
 ## Hermes がツールにつなぐ流れ {#how-hermes-wires-it-into-the-tools}
 
-`web_search` と `web_extract` のツールは `tools/web_tools.py` にあります。呼び出し時にこう動きます。
+`web_search` と `web_extract` のツールは `tools/web_tools.py` にあります。呼ばれたとき、次の順に進みます。
 
-1. 該当する設定キーを読みます（`web_search` なら `web.search_backend`、`web_extract` なら `web.extract_backend`）
-2. その `name` を持つプロバイダをレジストリに問い合わせます
-3. `is_available()` と、対応する `supports_*()` のフラグを確認します
-4. `search()` / `extract()` を呼びます（深いクロールは `extract()` の中のモードとして動きます）。メソッドがコルーチンなら await します
-5. 応答の入れ物を JSON にして LLM へ返します
+1. 対応する設定キーを読む（`web_search` なら `web.search_backend`、`web_extract` なら `web.extract_backend`）
+2. その `name` を持つプロバイダを登録簿に問い合わせる
+3. `is_available()` と、対応する `supports_*()` のフラグを確かめる
+4. `search()` または `extract()` へ渡す（深い巡回は `extract()` の中のモードとして走ります）。メソッドがコルーチンなら await する
+5. 返ってきた値を JSON にして LLM へ戻す
 
-エラーはツールの結果として表に出て、それをどう説明するかは LLM が決めます。プロバイダが 1 つも登録されていない場合（または使えるものがすべて機能の条件を満たさない場合）、ツールは `hermes tools` を案内する分かりやすいエラーを返します。
+エラーはツールの結果としてそのまま表に出て、どう説明するかは LLM が決めます。プロバイダが 1 つも登録されていない場合（または使えるものがすべて機能の判定に落ちた場合）、ツールは `hermes tools` を案内するエラーを返します。
 
-## 任意の依存パッケージを遅延インストールする {#lazy-installing-optional-dependencies}
+## 任意の依存を必要になってから入れる {#lazy-installing-optional-dependencies}
 
-DDGS が `ddgs` パッケージに対してそうしているように、プロバイダがサードパーティの SDK を包む場合は、モジュールの先頭で `import` しないでください。`is_available()` や `search()` の中で `tools.lazy_deps.ensure(...)` を使えば、Hermes が最初の利用時にパッケージを入れます。この動きは `security.allow_lazy_installs` で制御されます。安全性の考え方は [Hermes のプラグインを作る → 遅延インストール](/hermes/docs/developer-guide/plugins/#lazy-install-optional-python-dependencies) を見てください。
+DDGS が `ddgs` パッケージを使うように、外部の SDK を包むプロバイダを書くときは、モジュールの先頭で `import` しないでください。`is_available()` や `search()` の中で `tools.lazy_deps.ensure(...)` を使えば、Hermes が最初に使うときにパッケージを入れます。動くかどうかは `security.allow_lazy_installs` で制御されます。安全上の考え方は [Hermes プラグインを作る → 必要になってから入れる](/hermes/docs/developer-guide/plugins/#lazy-install-optional-python-dependencies)をご覧ください。
 
-## 参考になる実装 {#reference-implementations}
+## 手本になる実装 {#reference-implementations}
 
-- **`plugins/web/brave_free/`** — 小さく、API キーが要る、検索専用の HTTP プロバイダです。出発点のひな形に向いています。
-- **`plugins/web/ddgs/`** — キーが要らず、SDK を遅延インストールするプロバイダです。Python のパッケージを包むバックエンドで参考になります。
-- **`plugins/web/firecrawl/`** — 複数の機能をひととおり備えたプロバイダ（検索 + 抽出 + クロール）で、出力形式のモードも複数あります。
-- **`plugins/web/searxng/`** — 自分で立てて URL で設定する、認証なしのバックエンドです。
-- **`plugins/web/xai/`** — Grok のサーバー側の `web_search` ツールを使った、LLM を土台にした検索です。新しい環境変数を足さずに既存の OAuth・環境変数の認証まわり（`tools/xai_http.py`）を再利用する方法と、ネットワークを使わないという取り決めを守った軽い `is_available()` の書き方を示しています。
+- **`plugins/web/brave_free/`** — 小さく、API キーを要する、検索専用の HTTP プロバイダ。出発点として最適です。
+- **`plugins/web/ddgs/`** — キー不要で、SDK を必要になってから入れるプロバイダ。Python のパッケージを包むバックエンドの型として役立ちます。
+- **`plugins/web/firecrawl/`** — 検索・抽出・巡回のすべてに対応し、出力形式のモードも複数持つプロバイダ。
+- **`plugins/web/searxng/`** — 自分で立てたサーバーを URL で指す、認証なしのバックエンド。
+- **`plugins/web/xai/`** — Grok のサーバー側 `web_search` ツールを使う、LLM 由来の検索。新しい環境変数を増やさずに既存の OAuth や環境変数の口（`tools/xai_http.py`）を使い回す書き方と、ネットワークに出ない約束を守る軽い `is_available()` の書き方が分かります。
 
 ## pip で配布する {#distribute-via-pip}
 
@@ -251,10 +251,10 @@ DDGS が `ddgs` パッケージに対してそうしているように、プロ�
 my-backend-web = "my_backend_web_package"
 ```
 
-`my_backend_web_package` はトップレベルに `register` 関数を用意する必要があります。ひととおりの手順は、一般的なプラグインの手引きの [pip で配布する](/hermes/docs/developer-guide/plugins/#distribute-via-pip) を見てください。
+`my_backend_web_package` は、最上位に `register` 関数を公開している必要があります。設定の全体は、一般的なプラグインの案内にある [pip で配布する](/hermes/docs/developer-guide/plugins/#distribute-via-pip)をご覧ください。
 
-## 関連ページ {#related-pages}
+## 関連するページ {#related-pages}
 
-- [Web 検索](/hermes/docs/user-guide/features/web-search/) — 使う側から見た機能の説明と、バックエンドごとの設定
-- [プラグインの概要](/hermes/docs/user-guide/features/plugins/) — プラグインの種類をひととおり
-- [Hermes のプラグインを作る](/hermes/docs/developer-guide/plugins/) — 一般的なツール・フック・スラッシュコマンドの手引き
+- [ウェブ検索](/hermes/docs/user-guide/features/web-search/) — 利用者向けの機能の説明と、バックエンドごとの設定
+- [プラグインの概要](/hermes/docs/user-guide/features/plugins/) — プラグインの種類を一望する
+- [Hermes プラグインを作る](/hermes/docs/developer-guide/plugins/) — 一般的なツール・フック・スラッシュコマンドの案内

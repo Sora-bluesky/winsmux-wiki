@@ -1,38 +1,38 @@
 ---
-title: "トラジェクトリ形式"
+title: "developer-guide/trajectory-format"
 description: ""
 upstream_path: developer-guide/trajectory-format.md
-upstream_blob: fbc46632305461a4e73d16f07d8e8846b5773401
+upstream_blob: e0fbfb319c1bcf499f64e6705d53f50e26e8d90b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/trajectory-format
 ---
 
-# トラジェクトリ形式 {#trajectory-format}
+# 軌跡の形式 {#trajectory-format}
 
-Hermes Agent は、会話のトラジェクトリ（やり取りの記録）を ShareGPT 互換の JSONL 形式で保存します。
-学習データ、不具合を追うための記録、強化学習用のデータセットとして使えます。
+Hermes Agent は会話の軌跡を ShareGPT 互換の JSONL 形式で保存します。学習データ、
+不具合を調べるための記録、強化学習のデータセットとして使えます。
 
-該当するソースファイル: `agent/trajectory.py`、`run_agent.py`（`_save_trajectory` を検索してください）、`batch_runner.py`
+ソースファイル: `agent/trajectory.py`、`agent/session_persistence.py`（`_save_trajectory` を検索してください）、`batch_runner.py`
 
 ## ファイル名の決まり {#file-naming-convention}
 
-トラジェクトリは、現在の作業ディレクトリに次のファイルとして書き出されます:
+軌跡は、現在の作業ディレクトリにあるファイルへ書き込まれます。
 
-| ファイル | 書き出される場面 |
+| ファイル | 書き込まれるとき |
 |------|------|
-| `trajectory_samples.jsonl` | 最後まで完了した会話（`completed=True`） |
-| `failed_trajectories.jsonl` | 失敗した、または途中で中断された会話（`completed=False`） |
+| `trajectory_samples.jsonl` | 会話が最後まで終わったとき（`completed=True`） |
+| `failed_trajectories.jsonl` | 会話が失敗したか、途中で止まったとき（`completed=False`） |
 
-バッチ実行（`batch_runner.py`）は、バッチごとに指定した出力ファイル
-（たとえば `batch_001_output.jsonl`）へ、追加のメタデータ項目とともに書き出します。
+バッチ実行の仕組み（`batch_runner.py`）は、バッチごとに指定した出力ファイル
+（`batch_001_output.jsonl` など）へ書き込み、メタデータの項目がいくつか増えます。
 
-ファイル名は `save_trajectory()` の `filename` 引数で変更できます。
+ファイル名は `save_trajectory()` の `filename` 引数で変えられます。
 
-## JSONL の 1 件の形式 {#jsonl-entry-format}
+## JSONL 1 行の形式 {#jsonl-entry-format}
 
-ファイルの各行が、それ単体で完結した JSON オブジェクトです。形は 2 種類あります:
+ファイルの各行が、それだけで完結した JSON オブジェクトです。形は 2 種類あります。
 
-### CLI・対話利用の形式（`_save_trajectory` から） {#cliinteractive-format-from-savetrajectory}
+### CLI・対話時の形式（`_save_trajectory` から） {#cliinteractive-format-from-savetrajectory}
 
 ```json
 {
@@ -67,13 +67,13 @@ Hermes Agent は、会話のトラジェクトリ（やり取りの記録）を 
 }
 ```
 
-`tool_stats` と `tool_error_counts` の辞書は、あり得るすべてのツール
-（`model_tools.TOOL_TO_TOOLSET_MAP` に載っているもの）を 0 を既定値として含む形にそろえられます。
-これにより各行のスキーマが同じになり、HuggingFace のデータセットとして読み込めます。
+`tool_stats` と `tool_error_counts` の辞書は、あり得るツールをすべて
+（`model_tools.TOOL_TO_TOOLSET_MAP` から）並べ、値が無いものは 0 で埋めて正規化されます。
+これにより行ごとのスキーマが揃い、HuggingFace のデータセットとして読み込めます。
 
 ## conversations 配列（ShareGPT 形式） {#conversations-array-sharegpt-format}
 
-`conversations` 配列は、ShareGPT の役割の呼び方に従います:
+`conversations` 配列は、ShareGPT の役割の呼び方に従います。
 
 | API での役割 | ShareGPT の `from` |
 |----------|-----------------|
@@ -116,27 +116,27 @@ Hermes Agent は、会話のトラジェクトリ（やり取りの記録）を 
 
 ## 正規化の決まり {#normalization-rules}
 
-### 思考内容の書き方 {#reasoning-content-markup}
+### 推論内容の書き方 {#reasoning-content-markup}
 
-トラジェクトリの変換処理は、モデルがもともとどんな形で出力したかによらず、
-思考の内容をすべて `<think>` タグにそろえます:
+軌跡の変換処理は、モデルがどんな形で推論を出したかによらず、すべてを
+`<think>` タグに揃えます。
 
-1. **モデル自身の思考トークン**（Anthropic や OpenAI の o 系など、提供元が返す
-   `msg["reasoning"]` の項目）: `<think>\n{reasoning}\n</think>\n` で包み、
+1. **モデルが直接出す思考トークン**（Anthropic や OpenAI の o シリーズなどが返す
+   `msg["reasoning"]` の項目）: `<think>\n{reasoning}\n</think>\n` の形で包み、
    本文の前に置きます。
 
-2. **REASONING_SCRATCHPAD の XML**（モデル自身の思考機能を切り、システムプロンプトの
-   指示で XML を使って考えさせた場合）: `<REASONING_SCRATCHPAD>` タグを
-   `convert_scratchpad_to_think()` で `<think>` に変換します。
+2. **REASONING_SCRATCHPAD の XML**（直接の思考出力を無効にし、システムプロンプトの
+   指示に従ってモデルが XML で推論した場合）: `<REASONING_SCRATCHPAD>` タグは
+   `convert_scratchpad_to_think()` によって `<think>` へ変換されます。
 
-3. **空の think ブロック**: `gpt` の各ターンには必ず `<think>` ブロックが付きます。
-   思考が出力されなかった場合は、空のブロックを差し込みます:
-   `<think>\n</think>\n` — 学習データとして形をそろえるためです。
+3. **空の think ブロック**: `gpt` の発言には必ず `<think>` ブロックが付きます。
+   推論が出なかった場合は空のブロックが差し込まれます:
+   `<think>\n</think>\n` — 学習データとして形を揃えるためです。
 
 ### ツール呼び出しの正規化 {#tool-call-normalization}
 
-API の形式によるツール呼び出し（`tool_call_id`、関数名、JSON 文字列としての引数を持つもの）は、
-XML で包んだ JSON に変換されます:
+API の形式によるツール呼び出し（`tool_call_id`、関数名、JSON 文字列の引数を持つもの）は、
+XML で包んだ JSON に変換されます。
 
 ```
 <tool_call>
@@ -144,16 +144,16 @@ XML で包んだ JSON に変換されます:
 </tool_call>
 ```
 
-- 引数は JSON 文字列からオブジェクトへ戻して展開します（二重にエンコードしません）
-- JSON の解析に失敗した場合（会話中に検証しているので、本来は起きません）は、
-  空の `{}` を使い、警告をログに残します
-- 1 回のアシスタントのターンで複数のツールを呼び出した場合は、1 つの `gpt` メッセージの中に
+- 引数は JSON 文字列からオブジェクトに戻されます（二重にエンコードされません）
+- JSON の解析に失敗した場合は（会話中に検証済みなので起きないはずですが）、
+  警告をログに残したうえで空の `{}` が使われます
+- 1 回のアシスタントの発言に複数のツール呼び出しがあれば、1 つの `gpt` メッセージの中に
   `<tool_call>` ブロックが複数並びます
 
 ### ツール応答の正規化 {#tool-response-normalization}
 
-アシスタントのメッセージに続くツールの結果は、まとめて 1 つの `tool` のターンにされ、
-XML で包んだ JSON の応答になります:
+アシスタントの発言に続くツールの結果は、XML で包んだ JSON として 1 つの `tool` の
+発言にまとめられます。
 
 ```
 <tool_response>
@@ -161,27 +161,27 @@ XML で包んだ JSON の応答になります:
 </tool_response>
 ```
 
-- ツールの結果が JSON らしい見た目（`{` か `[` で始まる）なら解析され、content の項目には
-  文字列ではなく JSON のオブジェクトや配列が入ります
-- 複数のツール結果は、改行でつないで 1 つのメッセージにまとめます
-- ツール名は、親にあたるアシスタントの `tool_calls` 配列と並び順で突き合わせます
+- ツールの内容が JSON らしい場合（`{` か `[` で始まる場合）は解析され、content の項目は
+  文字列ではなく JSON のオブジェクトや配列になります
+- ツールの結果が複数あるときは、改行でつないで 1 つのメッセージにまとめます
+- ツール名は、親であるアシスタントの `tool_calls` 配列と位置で突き合わせます
 
 ### システムメッセージ {#system-message}
 
-システムメッセージは会話から取り出すのではなく、保存する時点で生成されます。
-Hermes の関数呼び出し用プロンプトのひな形に沿っており、次のものを含みます:
+システムメッセージは保存時に生成されます（会話から取ってくるのではありません）。
+Hermes の関数呼び出し用プロンプトの雛形に沿っており、次を含みます。
 
 - 関数呼び出しの手順を説明する前置き
-- ツール定義の JSON を収めた `<tools>` の XML ブロック
-- `FunctionCall` オブジェクトのスキーマの提示
+- JSON のツール定義を収めた `<tools>` の XML ブロック
+- `FunctionCall` オブジェクトのスキーマの説明
 - `<tool_call>` の例
 
-ツール定義には `name`、`description`、`parameters`、`required` が含まれます
-（最後の項目は、本来の形式に合わせて `null` にしてあります）。
+ツール定義には `name`、`description`、`parameters`、`required` が入ります
+（元の形式に合わせて `null` を入れます）。
 
-## トラジェクトリを読み込む {#loading-trajectories}
+## 軌跡の読み込み {#loading-trajectories}
 
-トラジェクトリはごく普通の JSONL なので、JSON Lines を読めるものなら何でも使えます:
+軌跡はふつうの JSONL です。JSON Lines を読めるものなら何でも読み込めます。
 
 ```python
 
@@ -203,7 +203,7 @@ successful = [e for e in load_trajectories("trajectory_samples.jsonl")
 training_data = [e["conversations"] for e in successful]
 ```
 
-### HuggingFace Datasets で読み込む {#loading-for-huggingface-datasets}
+### HuggingFace Datasets での読み込み {#loading-for-huggingface-datasets}
 
 ```python
 from datasets import load_dataset
@@ -211,23 +211,23 @@ from datasets import load_dataset
 ds = load_dataset("json", data_files="trajectory_samples.jsonl")
 ```
 
-`tool_stats` のスキーマをそろえてあるので、すべての行が同じ列を持ち、
-データセットの読み込み時に Arrow のスキーマ不一致エラーが起きません。
+`tool_stats` を正規化してあるおかげで、どの行も同じ列を持ちます。データセットを
+読み込むときの Arrow のスキーマ不一致のエラーを防げます。
 
-## トラジェクトリの保存を切り替える {#controlling-trajectory-saving}
+## 軌跡の保存を切り替える {#controlling-trajectory-saving}
 
-トラジェクトリの保存は `run_agent.py` やライブラリの側で切り替えるもので、`hermes` の CLI には
-そのための設定キーやフラグはありません:
+軌跡の保存は `run_agent.py` すなわちライブラリの層にある切り替えで、`hermes` の
+CLI には設定キーもフラグも用意されていません。
 
 ```bash
 python run_agent.py --save_trajectories --query='your question here'
 ```
 
-プログラムから使う場合は `AIAgent(..., save_trajectories=True)` や
-`initialize_agent(..., save_trajectories=True)` です。有効にすると、会話のターンが終わるたびに
-`_save_trajectory()` が呼ばれます。
+プログラムから使う場合は `AIAgent(..., save_trajectories=True)` または
+`initialize_agent(..., save_trajectories=True)` です。有効にすると、会話のやり取りが
+1 往復終わるたびに `_save_trajectory()` メソッドが呼ばれます。
 
-バッチ実行は常にトラジェクトリを保存します（それが本来の目的だからです）。
+バッチ実行の仕組みは常に軌跡を保存します（それが本来の目的だからです）。
 
-どのターンにも思考が含まれないサンプルは、思考のない例で学習データが薄まらないよう、
-バッチ実行が自動的に捨てます。
+どの発言にも推論が無かったサンプルは、推論のない例で学習データを濁さないよう、
+バッチ実行の仕組みが自動で捨てます。

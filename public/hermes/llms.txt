@@ -48,6 +48,7 @@ Hermes Agent 0.21.0
 - [developer-guide/architecture（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)
 - [developer-guide/browser-provider-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-provider-plugin/)
 - [developer-guide/browser-supervisor（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-supervisor/)
+- [developer-guide/cli-internals（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/cli-internals/)
 - [developer-guide/codebase-ownership（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/codebase-ownership/)
 - [developer-guide/context-compression-and-caching（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
 - [developer-guide/context-engine-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-engine-plugin/)
@@ -489,6 +490,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/architecture.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/browser-provider-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/browser-supervisor.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/cli-internals.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/codebase-ownership.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/context-compression-and-caching.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/context-engine-plugin.md

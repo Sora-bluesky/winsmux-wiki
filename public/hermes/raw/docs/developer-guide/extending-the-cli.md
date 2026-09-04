@@ -1,31 +1,31 @@
 ---
 title: "CLI を拡張する"
-description: "Hermes の TUI に独自のウィジェット・キー割り当て・配置の変更を足す、ラッパー CLI の作り方"
+description: "Hermes の TUI に独自のウィジェット・キーバインド・レイアウト変更を足すラッパー CLI を作る"
 upstream_path: developer-guide/extending-the-cli.md
-upstream_blob: fbd6da6f946537b155f8db03af48d58fe40fca68
+upstream_blob: c1a2cafd3039cf5bf189665c07b8ec231951c9a7
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/extending-the-cli
 ---
 
 # CLI を拡張する {#extending-the-cli}
 
-Hermes は `HermesCLI` に protected な拡張用のフックを用意しています。おかげで、包み込む側の CLI は 1000 行を超える `run()` を上書きしなくても、ウィジェット、キー割り当て、配置の変更を足せます。こうしておけば、内部が変わっても自分の拡張が巻き込まれずに済みます。
+Hermes は `HermesCLI` に保護された拡張フックを用意しています。おかげでラッパー CLI 側は、`run()` メソッドや `hermes_cli/cli_tui_mixin.py` の中の TUI 組み立て処理を上書きしなくても、ウィジェット・キーバインド・レイアウトの調整を足せます (フックはこのファイルで定義されていて、`cli.py` の `HermesCLI` がそれを取り込んでいます)。この作りなら、内部の変更に拡張が引きずられません。
 
-## 拡張できるところ {#extension-points}
+## 拡張のポイント {#extension-points}
 
-つなぎ目は 5 つあります。
+使える拡張の継ぎ目は 5 つあります。
 
-| フック | 役割 | 上書きするのはこんなとき |
+| フック | 用途 | 上書きするのはこんなとき |
 |------|---------|------------------|
-| `_get_extra_tui_widgets()` | ウィジェットを配置に差し込みます | 常に出ている画面部品（パネル、状態表示、小さなプレーヤーなど）が欲しいとき |
-| `_register_extra_tui_keybindings(kb, *, input_area)` | キーの操作を足します | ホットキーが欲しいとき（パネルの開閉、再生の操作、ダイアログの呼び出しなど） |
-| `_build_tui_layout_children(**widgets)` | ウィジェットの並び順をすべて自分で決めます | 既存のウィジェットを並べ替えたり包んだりしたいとき（めったにありません） |
-| `process_command()` | 独自のスラッシュコマンドを足します | `/mycommand` を扱いたいとき（以前からあるフックです） |
-| `_build_tui_style_dict()` | prompt_toolkit の見た目を変えます | 色や装飾を自分で決めたいとき（以前からあるフックです） |
+| `_get_extra_tui_widgets()` | レイアウトにウィジェットを差し込む | 常に出しておきたい UI 要素 (パネル、ステータス行、ミニプレーヤー) が要るとき |
+| `_register_extra_tui_keybindings(kb, *, input_area)` | キーボードショートカットを足す | ホットキー (パネルの開閉、再生操作、モーダルのショートカット) が要るとき |
+| `_build_tui_layout_children(**widgets)` | ウィジェットの並び順を完全に握る | 既存のウィジェットを並べ替えたり包んだりしたいとき (まれです) |
+| `process_command()` | 独自のスラッシュコマンドを足す | `/mycommand` を処理したいとき (以前からあるフック) |
+| `_build_tui_style_dict()` | prompt_toolkit のスタイルを自作する | 独自の色やスタイルが要るとき (以前からあるフック) |
 
-このうち上の 3 つが新しく用意された protected なフックです。下の 2 つは以前からありました。
+最初の 3 つが新しく入った保護フックです。あとの 2 つはもともとありました。
 
-## まずは動かす: ラッパー CLI {#quick-start-a-wrapper-cli}
+## さっそく試す: ラッパー CLI {#quick-start-a-wrapper-cli}
 
 ```python
 #!/usr/bin/env python3
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     cli.run()
 ```
 
-動かしてみます。
+次のように実行します。
 
 ```bash
 cd ~/.hermes/hermes-agent
@@ -86,14 +86,14 @@ python my_cli.py
 
 ### `_get_extra_tui_widgets()` {#getextratuiwidgets}
 
-TUI の配置に差し込む prompt_toolkit のウィジェットを、リストで返します。ウィジェットが入るのは**余白と状態表示のあいだ**、つまり入力欄より上、本文の出力より下です。
+TUI のレイアウトへ差し込む prompt_toolkit ウィジェットのリストを返します。ウィジェットは **スペーサーとステータスバーのあいだ** に出ます。つまり入力欄より上、メインの出力より下です。
 
 ```python
 def _get_extra_tui_widgets(self) -> list:
     return []  # default: no extra widgets
 ```
 
-それぞれのウィジェットは prompt_toolkit のコンテナ（`Window`、`ConditionalContainer`、`HSplit` など）にします。出したり隠したりしたいときは、`ConditionalContainer` か `filter=Condition(...)` を使います。
+それぞれのウィジェットは prompt_toolkit のコンテナ (`Window`、`ConditionalContainer`、`HSplit` など) にしてください。表示を切り替えられるようにするには `ConditionalContainer` か `filter=Condition(...)` を使います。
 
 ```python
 from prompt_toolkit.layout import ConditionalContainer, Window, FormattedTextControl
@@ -110,7 +110,7 @@ def _get_extra_tui_widgets(self):
 
 ### `_register_extra_tui_keybindings(kb, *, input_area)` {#registerextratuikeybindingskb-inputarea}
 
-Hermes が自前のキー割り当てを登録したあと、配置が組み立てられる前に呼ばれます。自分のキー割り当てを `kb` に足してください。
+Hermes が自前のキーバインドを登録したあと、レイアウトが組み立てられる前に呼ばれます。自分のキーバインドは `kb` に足してください。
 
 ```python
 def _register_extra_tui_keybindings(self, kb, *, input_area):
@@ -118,9 +118,8 @@ def _register_extra_tui_keybindings(self, kb, *, input_area):
 ```
 
 引数は次のとおりです。
-
-- **`kb`** — prompt_toolkit のアプリケーション用の `KeyBindings` のインスタンス
-- **`input_area`** — 入力欄の `TextArea` ウィジェット。利用者の入力を読んだり書き換えたりしたいときに使います
+- **`kb`** — prompt_toolkit アプリケーション用の `KeyBindings` インスタンス
+- **`input_area`** — メインの `TextArea` ウィジェット。入力内容を読んだり書き換えたりしたいときに使います
 
 ```python
 def _register_extra_tui_keybindings(self, kb, *, input_area):
@@ -135,11 +134,11 @@ def _register_extra_tui_keybindings(self, kb, *, input_area):
         input_area.text = "/search "
 ```
 
-元からあるキー割り当てと**ぶつからないように**してください。`Enter`（送信）、`Escape Enter`（改行）、`Ctrl-C`（中断）、`Ctrl-D`（終了）、`Tab`（入力候補の確定）です。F2 以降のファンクションキーと Ctrl の組み合わせは、たいてい空いています。
+組み込みのキーバインドとは **ぶつからないように** してください。`Enter` (送信)、`Escape Enter` (改行)、`Ctrl-C` (中断)、`Ctrl-D` (終了)、`Tab` (入力候補の確定) が使われています。F2 以降のファンクションキーと Ctrl の組み合わせなら、だいたい安全です。
 
 ### `_build_tui_layout_children(**widgets)` {#buildtuilayoutchildrenwidgets}
 
-ウィジェットの並び順をすべて自分で決めたいときにだけ上書きします。たいていの拡張は `_get_extra_tui_widgets()` で足ります。
+ウィジェットの並び順を全部自分で決めたいときだけ、これを上書きしてください。たいていの拡張は `_get_extra_tui_widgets()` で足ります。
 
 ```python
 def _build_tui_layout_children(self, *, sudo_widget, secret_widget,
@@ -149,7 +148,7 @@ def _build_tui_layout_children(self, *, sudo_widget, secret_widget,
     completions_menu) -> list:
 ```
 
-既定の実装が返すのは次のとおりです（`None` のウィジェットは取り除かれます）。
+既定の実装は次を返します (`None` のウィジェットは取り除かれます)。
 
 ```python
 [
@@ -172,23 +171,23 @@ def _build_tui_layout_children(self, *, sudo_widget, secret_widget,
 ]
 ```
 
-## 画面の並び {#layout-diagram}
+## レイアウトの図 {#layout-diagram}
 
-既定の並びを、上から順に挙げます。
+既定のレイアウトを上から順に並べると、こうなります。
 
-1. **本文の出力** — 流れていく会話の記録
-2. **余白**
-3. **足したウィジェット** — `_get_extra_tui_widgets()` が返したもの
-4. **状態表示** — モデル、コンテキストの使用率、経過時間
-5. **画像の表示** — 添えた画像の枚数
-6. **入力欄** — 自分が打ち込むところ
-7. **音声の状態** — 録音中かどうかの表示
-8. **入力候補** — 補完の一覧
+1. **出力エリア** — スクロールする会話の履歴
+2. **スペーサー**
+3. **追加ウィジェット** — `_get_extra_tui_widgets()` が返したもの
+4. **ステータスバー** — モデル、コンテキストの使用率、経過時間
+5. **画像バー** — 添付した画像の枚数
+6. **入力エリア** — こちらが打ち込む文章
+7. **音声ステータス** — 録音中かどうかの表示
+8. **入力候補メニュー** — 補完の候補
 
-## こつ {#tips}
+## コツ {#tips}
 
-- **画面を描き直させる:** 状態を変えたら `self._invalidate()` を呼んで、prompt_toolkit に描き直させます。
-- **エージェントの状態を見る:** `self.agent`、`self.model`、`self.conversation_history` はどれも使えます。
-- **見た目を変える:** `_build_tui_style_dict()` を上書きして、自分のスタイル名の項目を足します。
-- **スラッシュコマンド:** `process_command()` を上書きして自分のコマンドを扱い、それ以外は `super().process_command(cmd)` に渡します。
-- **`run()` は上書きしない:** どうしようもないとき以外は避けてください。そのために、この拡張用のフックが用意されています。
+- **表示を更新する**: 状態を変えたあとは `self._invalidate()` を呼ぶと、prompt_toolkit が描き直します。
+- **エージェントの状態にさわる**: `self.agent`、`self.model`、`self.conversation_history` はどれも使えます。
+- **独自のスタイル**: `_build_tui_style_dict()` を上書きして、自作のスタイルクラスの分を足してください。
+- **スラッシュコマンド**: `process_command()` を上書きし、自分のコマンドを処理して、それ以外は `super().process_command(cmd)` に渡します。
+- **`run()` は上書きしない**: どうしても必要なとき以外は避けてください。拡張フックは、まさにその結びつきを避けるために用意されています。

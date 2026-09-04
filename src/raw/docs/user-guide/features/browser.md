@@ -2,7 +2,7 @@
 title: "ブラウザの自動操作"
 description: "いくつものプロバイダ、CDP でつなぐ手元の Chromium 系ブラウザ、あるいはクラウドのブラウザでブラウザを操り、ウェブとのやり取り、フォームの入力、情報の取り出しなどを行います。"
 upstream_path: user-guide/features/browser.md
-upstream_blob: 97b5e4ca4a60d0693b246fa0da544235b8d29fef
+upstream_blob: 0a5dbf5bb55018bc0d7f88fdfc86554ce67170d9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/browser
 ---
@@ -77,9 +77,11 @@ Browser Use モードは、組み込みのブラウザの道具の代わりに [
 
 **これが既定のブラウザモードです。** `browser.backend` が設定されておらず、`browser-use` の CLI が動かせる（入っているか、`uvx` から使える）とき、エージェントには `browser_exec` という道具が1つ渡されます。CLI が動かせないときは、Hermes が自動で組み込みのブラウザの道具に戻します。
 
-このモードは**ドライバ**で、設定したブラウザの裏方と組み合わせて動きます。手元の Chrome、Nous の購読で使えるクラウドのブラウザ、Browserbase、Firecrawl、Browser Use のクラウドブラウザ — `hermes tools` → Browser Automation で選んだブラウザの出どころなら、どれでも動かします。唯一の例外は Camofox で、こちらは仕組みがつなぎに行ける CDP の口を持ちません。Camofox の設定では、自動的に組み込みのブラウザの道具のままになります。
+このモードは**ドライバ**で、設定したブラウザの裏方と組み合わせて動きます。Hermes 自身の画面なしの Chromium、Nous の購読で使えるクラウドのブラウザ、Browserbase、Firecrawl、Browser Use のクラウドブラウザ — `hermes tools` → Browser Automation で選んだブラウザの出どころなら、どれでも動かします。唯一の例外は Camofox で、こちらは仕組みがつなぎに行ける CDP の口を持ちません。Camofox の設定では、自動的に組み込みのブラウザの道具のままになります。
 
-**同時に走るセッション:** `browser_exec` は `session=<name>` という引数を受け取り、どの裏方でも名前ごとにブラウザの作業を切り分けます。名前ごとに専用の仕組みの常駐（専用の IPC ソケット、ログ、状態）が付き、クラウドの裏方では専用のブラウザも付きます。並列のサブエージェントや同時のチャットが、1つの共有された接続を奪い合うことはもうありません。`session` を省くと共有の既定の常駐を使います。1つずつ見て回るならこれで十分です。
+**手元で見て回るときに使うのは同梱の Chromium で、こちらの Chrome ではありません。** クラウドのプロバイダも `/browser connect` の接続先も設定していないときは、Hermes は組み込みの道具が使うのと同じ Chromium を立ち上げ（`hermes tools` → Browser Automation で入れて、agent-browser 経由で動かします）、そこへ Browser Use の CLI を向けます。入れてある Chrome に手が触れることはないので、`chrome://inspect` でリモートデバッグを有効にする必要も、「リモートデバッグを許可しますか」の確認が出ることもありません。Chrome がまったく入っていない画面なしの機械でも動きます。このブラウザは組み込みの一式と寿命を共にし、`browser.inactivity_timeout` の時間が過ぎたとき、終了するとき、迷子の掃除のときに閉じられます。自分がログイン済みのブラウザを動かしたいときは、`/browser connect` か[本物のプロファイルの切り替え](#real-profile-browsing-use-your-own-logins)を使ってください。
+
+**同時に走るセッション:** `browser_exec` は `session=<name>` という引数を受け取り、どの裏方でも名前ごとにブラウザの作業を切り分けます。名前ごとに専用の仕組みの常駐（専用の IPC ソケット、ログ、状態）が付き、専用のブラウザも付きます（手元では別々の同梱 Chromium、クラウドの裏方では別々のクラウドブラウザ）。並列のサブエージェントや同時のチャットが、1つの共有された接続を奪い合うことはもうありません。`session` を省くと共有の既定の常駐を使います。1つずつ見て回るならこれで十分です。
 
 これをやめて組み込みのブラウザの道具を強いるには、`/browser use off` を使うか、次のようにします。
 

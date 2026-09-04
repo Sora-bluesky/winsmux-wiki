@@ -2,7 +2,7 @@
 title: "出来事のフック"
 description: "節目ごとに自分のコードを走らせます — 動きの記録、通知、webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: e30b3b0d397cff7afa842f5335e9a468b1656822
+upstream_blob: 75c28a6407a3b0eaf019c2ad52938046bfbe83df
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -652,7 +652,7 @@ def my_callback(session_id: str, user_message: str, conversation_history: list,
 | `model` | `str` | モデルの識別子（たとえば `"anthropic/claude-sonnet-4.6"`） |
 | `platform` | `str` | セッションが動いている場所: `"cli"`、`"telegram"`、`"discord"` など |
 
-**発火する場所:** `run_agent.py` の `run_conversation()` の中、文脈の圧縮のあと、本体の `while` の輪の前です。`run_conversation()` の呼び出しごと（つまり利用者のターンごと）に一度発火し、道具の輪の中の API 呼び出しごとではありません。
+**発火する場所:** `agent/turn_context.py`（`agent/conversation_loop.py` の `run_conversation()` に向けたターンの準備）の中、文脈の圧縮のあと、本体の `while` の輪の前です。`run_conversation()` の呼び出しごと（つまり利用者のターンごと）に一度発火し、道具の輪の中の API 呼び出しごとではありません。
 
 **戻り値:** 呼び出しが `"context"` の鍵を持つ辞書か、空でない素の文字列を返すと、その文章がこのターンの利用者のメッセージの後ろに足されます。差し込まないなら `None` を返してください。
 
@@ -733,7 +733,7 @@ def my_callback(session_id: str, user_message: str, assistant_response: str,
 | `model` | `str` | モデルの識別子 |
 | `platform` | `str` | セッションが動いている場所 |
 
-**発火する場所:** `run_agent.py` の `run_conversation()` の中、道具の輪が最後の返事とともに抜けたあとです。`if final_response and not interrupted` で守られているので、利用者がターンの途中で割り込んだときや、エージェントが返事を作れないまま周回の上限に当たったときは発火**しません**。
+**発火する場所:** `agent/turn_finalizer.py`（`agent/conversation_loop.py` の `run_conversation()` から呼ばれる `finalize_turn()`）の中、道具の輪が最後の返事とともに抜けたあとです。`if final_response and not interrupted` で守られているので、利用者がターンの途中で割り込んだときや、エージェントが返事を作れないまま周回の上限に当たったときは発火**しません**。
 
 **戻り値:** 無視されます。
 
@@ -873,7 +873,7 @@ def my_callback(session_id: str, model: str, platform: str, **kwargs):
 | `model` | `str` | モデルの識別子 |
 | `platform` | `str` | セッションが動いている場所 |
 
-**発火する場所:** `run_agent.py` の `run_conversation()` の中、新しいセッションの最初のターンで、正確にはシステムプロンプトが組み上がったあと、道具の輪が始まる前です。判定は `if not conversation_history`（前のメッセージがなければ新しいセッション）です。
+**発火する場所:** `agent/conversation_loop.py` の `run_conversation()` の中、新しいセッションの最初のターンで、正確にはシステムプロンプトが組み上がったあと、道具の輪が始まる前です。判定は `if not conversation_history`（前のメッセージがなければ新しいセッション）です。
 
 **戻り値:** 無視されます。
 
@@ -918,7 +918,7 @@ def my_callback(session_id: str, completed: bool, interrupted: bool,
 | `platform` | `str` | セッションが動いている場所 |
 
 **発火する場所:** 2か所です。
-1. **`run_agent.py`** — `run_conversation()` の呼び出しの最後、片づけがすべて済んだあと。ターンがエラーになっても、必ず発火します。
+1. **`agent/turn_finalizer.py`** — `run_conversation()`（`agent/conversation_loop.py`）の呼び出しの最後、片づけがすべて済んだあと。ターンがエラーになっても、必ず発火します。
 2. **`cli.py`** — CLI の atexit の処理役の中。ただし、終了が起きたときにエージェントがターンの途中だった（`_agent_running=True`）ときに**だけ**です。処理中の Ctrl+C や `/exit` がこれに当たります。このとき `completed=False`、`interrupted=True` になります。
 
 **戻り値:** 無視されます。
