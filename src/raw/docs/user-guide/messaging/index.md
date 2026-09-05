@@ -2,7 +2,7 @@
 title: "メッセージングのゲートウェイ"
 description: "Telegram、Discord、Slack、WhatsApp、Signal、SMS、メール、Home Assistant、Mattermost、Matrix、DingTalk、Yuanbao、Microsoft Teams、LINE、Raft、Webhook、あるいは API サーバー経由の OpenAI 互換フロントエンドから Hermes と話せます。仕組みと設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 72fc4288eb15b27f8c35566540424ae4c3f17e96
+upstream_blob: a4cfe2592d3282ebeeab0d15f46e973abebf5584
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---

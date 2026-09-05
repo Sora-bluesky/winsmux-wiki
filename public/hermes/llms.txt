@@ -312,7 +312,9 @@ Hermes Agent 0.21.0
 - [user-guide/skills/bundled/research/research-grounded-citations（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/)
 - [user-guide/skills/bundled/research/research-llm-wiki（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-llm-wiki/)
 - [user-guide/skills/bundled/research/research-research-paper-writing（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-research-paper-writing/)
+- [user-guide/skills/bundled/research/research-rss-feeds（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/)
 - [user-guide/skills/bundled/smart-home/smart-home-openhue（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/smart-home/smart-home-openhue/)
+- [user-guide/skills/bundled/social-media/social-media-reddit-reading（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/)
 - [user-guide/skills/bundled/social-media/social-media-xurl（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/social-media/social-media-xurl/)
 - [user-guide/skills/bundled/software-development/software-development-codebase-inspection（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection/)
 - [user-guide/skills/bundled/software-development/software-development-dogfood（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/software-development/software-development-dogfood/)
@@ -754,7 +756,9 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/research/research-grounded-citations.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/research/research-llm-wiki.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/research/research-research-paper-writing.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/research/research-rss-feeds.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/smart-home/smart-home-openhue.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/social-media/social-media-xurl.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/software-development/software-development-dogfood.md

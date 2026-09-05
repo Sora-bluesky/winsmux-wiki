@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダー、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: a663d1b317304221cb80c29ea9aee8c88dd5dadb
+upstream_blob: 4d21bc3df8d71c420e9f744b8814123a43ad6660
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -290,6 +290,7 @@ terminal:
   docker_image: "nikolaik/python-nodejs:python3.11-nodejs20"
   docker_mount_cwd_to_workspace: false  # Mount launch dir into /workspace
   docker_run_as_host_user: false   # See "Running container as host user" below
+  docker_snap_compat: false        # See "Snap-packaged Docker (AppArmor)" below
   docker_forward_env:              # Host env vars to forward into container
     - "GITHUB_TOKEN"
   docker_env:                      # Literal env vars to inject (KEY=value)
@@ -378,6 +379,7 @@ Hermes のプロセスが終了したとき — `/quit`、TUI のセッション
 | `TERMINAL_DOCKER_EXTRA_ARGS` | `docker_extra_args` | JSON の配列 |
 | `TERMINAL_DOCKER_MOUNT_CWD_TO_WORKSPACE` | `docker_mount_cwd_to_workspace` | `true` / `false` |
 | `TERMINAL_DOCKER_RUN_AS_HOST_USER` | `docker_run_as_host_user` | `true` / `false` |
+| `TERMINAL_DOCKER_SNAP_COMPAT` | `docker_snap_compat` | `true` / `false` — 既定は `false` |
 | `TERMINAL_DOCKER_NETWORK` | `docker_network` | `true` / `false` — 既定は `true`。`false` は `--network=none` |
 | `TERMINAL_DOCKER_PERSIST_ACROSS_PROCESSES` | `docker_persist_across_processes` | `true` / `false` — 既定は `true` |
 | `TERMINAL_DOCKER_SHARED_CONTAINER_KEY` | `docker_shared_container_key` | 信頼できるプロファイル向けの共有の識別子。既定は空 |
@@ -417,6 +419,14 @@ TERMINAL_SSH_USER=ubuntu
 | `TERMINAL_SSH_PERSISTENT` | `true` | 持続シェルを有効にします |
 
 **仕組み:** 初期化のときに `BatchMode=yes` と `StrictHostKeyChecking=accept-new` で接続します。持続シェルは、離れたホスト上で `bash -l` のプロセスを 1 つ生かし続け、一時ファイルを介してやり取りします。`stdin_data` や `sudo` が必要なコマンドは、自動で 1 回きりの実行に切り替わります。
+
+**スキルや設定からの環境変数の受け渡し:** スキルが `required_environment_variables` に宣言した変数と、`terminal.env_passthrough` に並べた変数は、OpenSSH の `SendEnv` で転送されます。名前は `ssh` のコマンドラインに載り、値はクライアントの環境を通って渡るので、離れたホストで実行するコマンドの文字列には決して現れません。受け取る側の `sshd` がそれを許可している必要があります。サーバーの `/etc/ssh/sshd_config` に次を足して、sshd を読み込み直してください。
+
+```
+AcceptEnv NEXTCLOUD_URL NEXTCLOUD_*      # or the names your skills need
+```
+
+対応する `AcceptEnv` がないと、サーバーは黙って変数を捨て、離れたホストのシェルからは未設定に見えます。Hermes のプロバイダーの認証情報（`OPENAI_API_KEY` など）は、並べても転送されません。[環境変数の受け渡し](/hermes/docs/user-guide/security/#environment-variable-passthrough) を参照してください。
 
 ### modal のバックエンド {#modal-backend}
 
@@ -608,6 +618,24 @@ terminal:
 有効にすると、Hermes は `docker run` のコマンドに `--user $(id -u):$(id -g)` を足すので、バインドマウントしたディレクトリ（`/workspace`、`/root`、`docker_volumes` にあるもの）へ書かれたファイルは、root ではなくホストのあなたの持ち物になります。引き換えに、コンテナの中では `apt install` ができなくなり、`/root/.npm` のような root の持ち物のパスへ書けなくなります。両方が必要なら、`HOME` が root 以外の利用者の持ち物になっている元イメージを使うか、必要なツールをイメージのビルド時に入れておいてください。
 
 従来どおりの動きが必要なら、`false`（既定）のままにします。作業のほとんどが「マウントしたホストのファイルを編集する」ことで、`sudo chown -R` にうんざりしているなら、有効にしてください。
+
+### snap で入れた Docker（AppArmor） {#snap-packaged-docker-apparmor}
+
+Docker を snap として入れたホスト（Ubuntu のクラウドイメージ、たとえば Azure の VM でよくあります）では、snap の AppArmor による閉じ込めが、サンドボックスを固めるフラグのうち 2 つを拒み、コンテナが起動時に死にます。
+
+```
+exec /sbin/docker-init: operation not permitted     # --init
+exec /usr/bin/sleep: operation not permitted        # --security-opt no-new-privileges
+```
+
+これは snapd 側の制約（[LP#1908448](https://bugs.launchpad.net/snapd/+bug/1908448)）で、Hermes が調べて回避できるものではありません。snap ではなく Docker の apt リポジトリから Docker を入れるか（こちらが望ましく、固める設定はすべて残ります）、次のように明示的に選んでください。
+
+```yaml
+terminal:
+  docker_snap_compat: true   # drops --init and no-new-privileges; cap-drop, tmpfs, PID limits stay
+```
+
+有効にすると、サンドボックスの中のゾンビプロセスが init に片付けられなくなり、コンテナの中の setuid のバイナリが権限を取り戻せるようになります。コンテナの起動時には警告がログに出ます。
 
 ### 任意: 起動したディレクトリを `/workspace` にマウントする {#optional-mount-the-launch-directory-into-workspace}
 
@@ -2762,6 +2790,7 @@ dashboard:
   ws_ping_interval: 20.0      # Non-loopback WebSocket keepalive ping interval (seconds)
   ws_ping_timeout: 20.0       # Non-loopback WebSocket keepalive pong timeout (seconds)
   ws_orphan_reap_grace_s: 20.0 # Grace before a WS-detached session is reaped (seconds)
+  ssh_isolated_idle_grace_s: 900.0 # Desktop-over-SSH backend exits after this long with no client and no running turn
   ws_orphan_activity_stale_s: 600.0 # Activity idle bound before a detached RUNNING turn is interrupted (seconds)
   startup_orphan_sweep: true  # Close session rows orphaned by a dead gateway process at boot
 ```
@@ -2772,6 +2801,7 @@ dashboard:
 - `trusted_proxies` — `X-Forwarded-Proto` と `X-Forwarded-For` を渡してよい IP アドレスか、範囲を限った CIDR のネットワークです。ループバックは自動的に信頼されたままです。TLS のリバースプロキシが別のコンテナやホストからつないでくる場合に設定してください。プロキシの正確な IP が望ましく、そのアドレスが変わる場合にだけ、小さな専用のネットワークを使ってください。ワイルドカードと `/0` のネットワークは拒まれます。
 - `oauth` / `basic_auth` / `drain_auth` — 同梱のダッシュボードの認証プラグインが読む、認証のプロバイダーの設定です。drain の秘密情報そのものは、ここでは設定 **しません**。環境変数 `HERMES_DASHBOARD_DRAIN_SECRET` で与えます。認証の設定の全体は [Web ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/) をご覧ください。
 - `ws_ping_interval` / `ws_ping_timeout` — ループバック以外への接続での、WebSocket の生存確認の調整です（ループバックの接続では確認しません）。既定の 20 秒では見せかけの 1006 の切断が起きてしまう、待ち時間の長い経路（Tailscale、遠くの SSH のトンネル）では上げてください。
+- `ssh_isolated_idle_grace_s`（既定は `900`） — SSH 越しに届くデスクトップ持ちの `hermes serve --isolated` のバックエンドは、あえて SSH のセッションから切り離されています。接続の途中でノート PC が眠っても落とせないようにするためですが、その代わり、暗いまま目を覚ますたびのつなぎ直しが `state.db` を握ったバックエンドをもう 1 つ残していました。いまは、クライアントの WebSocket がこの時間つながらず、エージェントのやり取りも走っていなければ、バックエンドが自分で退きます（やり取りが走っていれば生き続けます。やり取りの状態が読めない場合も生き続けます）。ノート PC が眠ったあとも、切り離されたバックエンドに長い作業を終わらせてほしいなら、大きくしてください。こうしたバックエンドは、ゆっくりした WebSocket の生存確認（60 秒ごと、10 分で時間切れ）も送るので、片側だけ切れたトンネルに気づけます。
 - `ws_orphan_reap_grace_s` — WebSocket から切り離されたセッションが、置き去りの片付けに回収されるまでの猶予です。クライアントのつなぎ直しが遅いなら、生存確認の値と一緒に上げてください。（`HERMES_TUI_WS_ORPHAN_REAP_GRACE_S` は、内部の上書きとして残っています。）
 - `ws_orphan_activity_stale_s`（既定は `600`） — 切り離された **実行中の** やり取りについて、その活動の時計（`agent.turn_liveness` の見張りが見るのと同じ時計。API の待ち、逐次受信のトークン、ツールの生存信号）がどれだけ止まったら、置き去りの片付けが割り込むかを決めます。クライアントがいなくても実際に進んでいるやり取りは、切り離されたまま最後まで走ります。ノート PC を閉じても、スマートフォンのアプリを裏へ回しても、デスクトップを更新しても、健全な長いやり取りが打ち切られることはもうありません。本当に詰まったやり取りだけが割り込まれます。活動にかかわらず猶予の時間で割り込ませたい場合（従来の動き）は `0` にしてください。
 - `startup_orphan_sweep`（既定は `true`） — 上の置き去りの片付けの時計はプロセスの中にあるので、それが働く前にゲートウェイが再起動すると（更新、異常終了、systemd）、そのセッションの行は永遠に開いたまま残り、`/resume` やダッシュボードに幻の「実行中」の作業として現れます。ゲートウェイが起動するたびに — 標準入出力の TUI（`entry.main`）でも、デスクトップやダッシュボードの WebSocket の補助プロセス（`handle_ws`）でも — 元が `tui` / `desktop` / `subagent` の行のうち、開始の時刻 **と** 最新のメッセージの両方がセッションの保持期間（`HERMES_TUI_SESSION_TTL_S`、既定は 6 時間）より古いものは、`end_reason: startup_orphan_reap` として閉じられます。メッセージングの経路のセッション（Telegram、Discord など）には決して触れません。メモリー上で生きているセッション（すでに再開したクライアント）は対象外で、片付けられたセッションもあとから再開できます。

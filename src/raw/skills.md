@@ -12,11 +12,11 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 221 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 223 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `71f8c60`（2026-09-04）時点。この一覧は上流の docs から機械生成しています。
+上流 `ee5b5ec`（2026-09-05）時点。この一覧は上流の docs から機械生成しています。
 
-## 最初から入っている（84）
+## 最初から入っている（86）
 
 - 何もしなくても使えます。
 
@@ -87,11 +87,13 @@ raw: /hermes/raw/skills.md
 | [Arxiv](/hermes/docs/user-guide/skills/bundled/research/research-arxiv/) | Search arXiv papers by keyword, author, category, or ID | 2026-08-30 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/research/research-blocked-page-recovery/) | Recover blocked/paywalled/WAF'd pages via archive snapshots and reader fallbacks | 2026-08-12 |
 | [Blogwatcher](/hermes/docs/user-guide/skills/bundled/research/research-blogwatcher/) | Monitor blogs and RSS/Atom feeds via blogwatcher-cli tool | 2026-05-09 |
-| [Competitor News Monitor](/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/) | Watch named companies for material news; cited digests | 2026-08-30 |
-| [Grounded Citations](/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/) | Ground answers and documents in cited, verifiable sources | 2026-08-30 |
+| [Competitor News Monitor](/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/) | Watch named companies for material news; cited digests | 2026-09-05 |
+| [Grounded Citations](/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/) | Ground answers and documents in cited, verifiable sources | 2026-09-05 |
 | [Llm Wiki](/hermes/docs/user-guide/skills/bundled/research/research-llm-wiki/) | Karpathy's LLM Wiki: build/query interlinked markdown KB | 2026-08-30 |
 | [Research Paper Writing](/hermes/docs/user-guide/skills/bundled/research/research-research-paper-writing/) | Write ML papers for NeurIPS/ICML/ICLR: design→submit | 2026-08-29 |
+| [Rss Feeds](/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/) | Read RSS, Atom, JSON feeds; discover feeds behind a page | 2026-09-05 |
 | [Openhue](/hermes/docs/user-guide/skills/bundled/smart-home/smart-home-openhue/) | Control Philips Hue lights, scenes, rooms via OpenHue CLI | 2026-07-29 |
+| [Reddit Reading](/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/) | Read Reddit: subreddits, search, threads, users | 2026-09-05 |
 | [Xurl](/hermes/docs/user-guide/skills/bundled/social-media/social-media-xurl/) | X/Twitter via xurl CLI: raw post search, posting, DM, media | 2026-08-30 |
 | [Codebase Inspection](/hermes/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection/) | Inspect codebases w/ pygount: LOC, languages, ratios | 2026-08-30 |
 | [Dogfood](/hermes/docs/user-guide/skills/bundled/software-development/software-development-dogfood/) | Exploratory QA of web apps: find bugs, evidence, reports | 2026-08-30 |
@@ -219,7 +221,7 @@ raw: /hermes/raw/skills.md
 | [Siyuan](/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/) | Query and edit a SiYuan knowledge base via its API | 2026-08-30 |
 | [Telephony](/hermes/docs/user-guide/skills/optional/productivity/productivity-telephony/) | Provision Twilio numbers, SMS/MMS, and AI outbound calls | 2026-08-30 |
 | [Bioinformatics](/hermes/docs/user-guide/skills/optional/research/research-bioinformatics/) | Gateway to 400+ genomics and computational biology skills | 2026-08-30 |
-| [Blogwatcher](/hermes/docs/user-guide/skills/optional/research/research-blogwatcher/) | Monitor blogs and RSS/Atom feeds via blogwatcher-cli tool | 2026-08-30 |
+| [Blogwatcher](/hermes/docs/user-guide/skills/optional/research/research-blogwatcher/) | Monitor blogs and RSS/Atom feeds via blogwatcher-cli tool | 2026-09-05 |
 | [Darwinian Evolver](/hermes/docs/user-guide/skills/optional/research/research-darwinian-evolver/) | Evolve prompts/regex/SQL/code with Imbue's evolution loop | 2026-08-30 |
 | [Domain Intel](/hermes/docs/user-guide/skills/optional/research/research-domain-intel/) | Passive recon of subdomains, SSL certs, WHOIS, and DNS | 2026-08-30 |
 | [Drug Discovery](/hermes/docs/user-guide/skills/optional/research/research-drug-discovery/) | Drug discovery: ChEMBL search, drug-likeness, interactions | 2026-08-30 |

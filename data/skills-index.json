@@ -1,6 +1,6 @@
 {
-  "sha": "71f8c60",
-  "date": "2026-09-04",
+  "sha": "ee5b5ec",
+  "date": "2026-09-05",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -527,7 +527,7 @@
       "name": "Competitor News Monitor",
       "description": "Watch named companies for material news; cited digests",
       "url": "/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/",
-      "date": "2026-08-30",
+      "date": "2026-09-05",
       "source": "bundled"
     },
     {
@@ -535,7 +535,7 @@
       "name": "Grounded Citations",
       "description": "Ground answers and documents in cited, verifiable sources",
       "url": "/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/",
-      "date": "2026-08-30",
+      "date": "2026-09-05",
       "source": "bundled"
     },
     {
@@ -555,11 +555,27 @@
       "source": "bundled"
     },
     {
+      "slug": "research-rss-feeds",
+      "name": "Rss Feeds",
+      "description": "Read RSS, Atom, JSON feeds; discover feeds behind a page",
+      "url": "/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/",
+      "date": "2026-09-05",
+      "source": "bundled"
+    },
+    {
       "slug": "smart-home-openhue",
       "name": "Openhue",
       "description": "Control Philips Hue lights, scenes, rooms via OpenHue CLI",
       "url": "/hermes/docs/user-guide/skills/bundled/smart-home/smart-home-openhue/",
       "date": "2026-07-29",
+      "source": "bundled"
+    },
+    {
+      "slug": "social-media-reddit-reading",
+      "name": "Reddit Reading",
+      "description": "Read Reddit: subreddits, search, threads, users",
+      "url": "/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/",
+      "date": "2026-09-05",
       "source": "bundled"
     },
     {
@@ -1535,7 +1551,7 @@
       "name": "Blogwatcher",
       "description": "Monitor blogs and RSS/Atom feeds via blogwatcher-cli tool",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-blogwatcher/",
-      "date": "2026-08-30",
+      "date": "2026-09-05",
       "source": "optional"
     },
     {

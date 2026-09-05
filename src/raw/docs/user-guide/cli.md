@@ -2,7 +2,7 @@
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md
-upstream_blob: 756038b8baefd48e36a5d91c5c04b4648b926d62
+upstream_blob: a0176b8ec92c70a0825a19491193c8d8088a52af
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/cli
 ---
@@ -420,7 +420,9 @@ display:
 
 `"queue"` モードは、別の後続ターンを用意します。`"steer"` は必ず次のツール結果の区切りを
 待ちます。既定の `"interrupt"` モードは、実行中のツールを打ち切らずに、モデルの生成中に
-より早く反応します。ターンとその前面の作業ごと取り消したいときは `/stop` を使ってください。
+より早く反応します。前面で長く動いている `terminal` のコマンド（ビルドや監視など）は背面へ
+回されるので、コマンドが終わるのを待たずに、エージェントがすぐメッセージを受け取ります。
+ターンとその前面の作業ごと取り消したいときは `/stop` を使ってください。
 知らない値が入っていた場合は `"interrupt"` に戻ります。
 
 `"steer"` には自動的な代替が2つあります。エージェントがまだ動き出していないとき、または

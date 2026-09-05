@@ -1,6 +1,148 @@
 {
-  "generatedAt": "2026-09-05",
+  "generatedAt": "2026-09-06",
   "entries": [
+    {
+      "date": "2026-09-05",
+      "sha": "c77a153",
+      "upstream": "71f8c60",
+      "pages": [
+        {
+          "id": "developer-guide/adding-platform-adapters",
+          "title": "developer-guide/adding-platform-adapters",
+          "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
+        },
+        {
+          "id": "developer-guide/adding-providers",
+          "title": "プロバイダーを追加する",
+          "url": "/hermes/docs/developer-guide/adding-providers/"
+        },
+        {
+          "id": "developer-guide/adding-tools",
+          "title": "ツールを追加する",
+          "url": "/hermes/docs/developer-guide/adding-tools/"
+        },
+        {
+          "id": "developer-guide/agent-loop",
+          "title": "エージェントループの内部",
+          "url": "/hermes/docs/developer-guide/agent-loop/"
+        },
+        {
+          "id": "developer-guide/architecture",
+          "title": "アーキテクチャ",
+          "url": "/hermes/docs/developer-guide/architecture/"
+        },
+        {
+          "id": "developer-guide/cli-internals",
+          "title": "CLI の内部構造",
+          "url": "/hermes/docs/developer-guide/cli-internals/"
+        },
+        {
+          "id": "developer-guide/codebase-ownership",
+          "title": "コードベース所有マップ",
+          "url": "/hermes/docs/developer-guide/codebase-ownership/"
+        },
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/egress-internals",
+          "title": "送信プロキシの内部構造",
+          "url": "/hermes/docs/developer-guide/egress-internals/"
+        },
+        {
+          "id": "developer-guide/extending-the-cli",
+          "title": "CLI を拡張する",
+          "url": "/hermes/docs/developer-guide/extending-the-cli/"
+        },
+        {
+          "id": "developer-guide/gateway-internals",
+          "title": "ゲートウェイの内部",
+          "url": "/hermes/docs/developer-guide/gateway-internals/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes のプラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/provider-runtime",
+          "title": "実行時のプロバイダー解決",
+          "url": "/hermes/docs/developer-guide/provider-runtime/"
+        },
+        {
+          "id": "developer-guide/session-storage",
+          "title": "developer-guide/session-storage",
+          "url": "/hermes/docs/developer-guide/session-storage/"
+        },
+        {
+          "id": "developer-guide/tools-runtime",
+          "title": "ツールの実行基盤",
+          "url": "/hermes/docs/developer-guide/tools-runtime/"
+        },
+        {
+          "id": "developer-guide/trajectory-format",
+          "title": "developer-guide/trajectory-format",
+          "url": "/hermes/docs/developer-guide/trajectory-format/"
+        },
+        {
+          "id": "developer-guide/web-search-provider-plugin",
+          "title": "ウェブ検索プロバイダのプラグイン",
+          "url": "/hermes/docs/developer-guide/web-search-provider-plugin/"
+        },
+        {
+          "id": "integrations",
+          "title": "外部サービス連携",
+          "url": "/hermes/docs/integrations/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/tools-reference",
+          "title": "組み込みツール一覧",
+          "url": "/hermes/docs/reference/tools-reference/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザの自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/features/credential-pools",
+          "title": "認証情報プール",
+          "url": "/hermes/docs/user-guide/features/credential-pools/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "出来事のフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "スキルの仕組み",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
+          "id": "user-guide/features/web-search",
+          "title": "Web 検索と本文抽出",
+          "url": "/hermes/docs/user-guide/features/web-search/"
+        }
+      ]
+    },
     {
       "date": "2026-09-04",
       "sha": "85cb1cc",
@@ -8,7 +150,7 @@
       "pages": [
         {
           "id": "developer-guide/session-storage",
-          "title": "セッションの保存",
+          "title": "developer-guide/session-storage",
           "url": "/hermes/docs/developer-guide/session-storage/"
         },
         {
@@ -50,7 +192,7 @@
       "pages": [
         {
           "id": "developer-guide/adding-platform-adapters",
-          "title": "プラットフォームアダプタを追加する",
+          "title": "developer-guide/adding-platform-adapters",
           "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
         },
         {
@@ -65,7 +207,7 @@
         },
         {
           "id": "developer-guide/gateway-internals",
-          "title": "ゲートウェイの内部構造",
+          "title": "ゲートウェイの内部",
           "url": "/hermes/docs/developer-guide/gateway-internals/"
         },
         {
@@ -80,7 +222,7 @@
         },
         {
           "id": "developer-guide/session-storage",
-          "title": "セッションの保存",
+          "title": "developer-guide/session-storage",
           "url": "/hermes/docs/developer-guide/session-storage/"
         },
         {
@@ -257,7 +399,7 @@
       "pages": [
         {
           "id": "developer-guide/web-search-provider-plugin",
-          "title": "Web 検索プロバイダのプラグイン",
+          "title": "ウェブ検索プロバイダのプラグイン",
           "url": "/hermes/docs/developer-guide/web-search-provider-plugin/"
         },
         {
@@ -277,7 +419,7 @@
         },
         {
           "id": "integrations",
-          "title": "連携",
+          "title": "外部サービス連携",
           "url": "/hermes/docs/integrations/"
         },
         {
@@ -354,7 +496,7 @@
         },
         {
           "id": "developer-guide/web-search-provider-plugin",
-          "title": "Web 検索プロバイダのプラグイン",
+          "title": "ウェブ検索プロバイダのプラグイン",
           "url": "/hermes/docs/developer-guide/web-search-provider-plugin/"
         },
         {
@@ -364,7 +506,7 @@
         },
         {
           "id": "integrations",
-          "title": "連携",
+          "title": "外部サービス連携",
           "url": "/hermes/docs/integrations/"
         },
         {
@@ -1578,7 +1720,7 @@
       "pages": [
         {
           "id": "developer-guide/adding-providers",
-          "title": "プロバイダーの追加",
+          "title": "プロバイダーを追加する",
           "url": "/hermes/docs/developer-guide/adding-providers/"
         },
         {
@@ -1823,7 +1965,7 @@
         },
         {
           "id": "integrations",
-          "title": "連携",
+          "title": "外部サービス連携",
           "url": "/hermes/docs/integrations/"
         },
         {

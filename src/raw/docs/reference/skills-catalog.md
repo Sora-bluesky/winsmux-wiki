@@ -2,7 +2,7 @@
 title: "同梱スキルの一覧"
 description: "Hermes Agent に最初から入っているスキルの一覧です。"
 upstream_path: reference/skills-catalog.md
-upstream_blob: b6ab7f5c21a95a8cfe67eb3b5c443d99aa620146
+upstream_blob: d56a104fa95147e2931ff5a90156ea9da8205163
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/skills-catalog
 ---
@@ -104,11 +104,13 @@ Hermes には大きな組み込みのスキル集が付いていて、インス�
 | [`competitor-news-monitor`](/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/) | 指定した企業の重要な報道を見張り、出典つきでまとめます。 | `research\competitor-news-monitor` |
 | [`grounded-citations`](/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/) | 回答や書類を、出典が示せて確かめられる情報に裏づけます。 | `research\grounded-citations` |
 | [`llm-wiki`](/hermes/docs/user-guide/skills/bundled/research/research-llm-wiki/) | Karpathy の LLM Wiki。相互に結んだ markdown の知識の土台を作って引きます。 | `research\llm-wiki` |
+| [`rss-feeds`](/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/) | RSS、Atom、JSON のフィードを読みます。ページの裏に隠れたフィードも見つけます。 | `research/rss-feeds` |
 
 ## social-media {#social-media}
 
 | スキル | 内容 | パス |
 |-------|-------------|------|
+| [`reddit-reading`](/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/) | Reddit を読みます。subreddit、検索、スレッド、ユーザー。ブラウザ不要です。 | `social-media/reddit-reading` |
 | [`xurl`](/hermes/docs/user-guide/skills/bundled/social-media/social-media-xurl/) | xurl CLI で X / Twitter を扱います。投稿のそのままの検索、投稿、DM、画像や動画。 | `social-media\xurl` |
 
 ## software-development {#software-development}
