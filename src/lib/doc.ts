@@ -99,6 +99,68 @@ function tocHtml(body: string): string {
   );
 }
 
+/**
+ * description が空のときの補い。本文の最初の「日本語の散文行」を 110 字で切る。
+ * 見出し・コード・表・リスト・HTML・:::ボックスは飛ばす。日本語を含まない行は
+ * 取らない（frontmatter が壊れてコードが流れ込んだ原稿で英文コードを拾わない）。
+ * 見つからなければ空のまま返す。文を作って埋めない。
+ */
+export function fallbackDescription(body: string, max = 110): string {
+  // 原稿は行折り返しされているので、空行までを1段落として結合してから判定する
+  const paragraphs: string[] = [];
+  let buf: string[] = [];
+  let inFence = false;
+  let inBox = false; // :::note 〜 ::: のボックスは本文ごと飛ばす
+  const cjk = /[぀-ヿ一-鿿]/;
+  const flush = () => {
+    if (buf.length) {
+      // 折り返しの継ぎ目は、両端が日本語なら空白を入れない
+      let text = buf[0];
+      for (const next of buf.slice(1)) {
+        text += cjk.test(text.slice(-1)) && cjk.test(next[0]) ? next : ' ' + next;
+      }
+      paragraphs.push(text);
+    }
+    buf = [];
+  };
+  for (const raw of body.split('\n')) {
+    const l = raw.trim();
+    if (l.startsWith('```')) {
+      inFence = !inFence;
+      flush();
+      continue;
+    }
+    if (inFence) continue;
+    if (l.startsWith(':::')) {
+      inBox = l.length > 3 ? true : !inBox;
+      flush();
+      continue;
+    }
+    if (inBox) continue;
+    if (!l || /^(#|>|\||[-*+] |\d+\. |<|!\[|\[!)/.test(l)) {
+      flush();
+      continue;
+    }
+    buf.push(l);
+  }
+  flush();
+  for (const p of paragraphs) {
+    if (!/[぀-ヿ一-鿿]/.test(p)) continue;
+    const text = p
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+      .replace(/[`*~]/g, '') // `_` は識別子（OPENROUTER_API_KEY 等）に入るので消さない
+      .replace(/<[^>]+>/g, '')
+      .replace(/\s+/g, ' ')
+      .replace(/([぀-ヿ一-鿿]) (?=[぀-ヿ一-鿿])/g, '$1') // **強調** の両脇に入った空白
+      .trim();
+    if ([...text].length < 20) continue;
+    const chars = [...text];
+    return chars.length > max ? chars.slice(0, max - 1).join('') + '…' : text;
+  }
+  return '';
+}
+
 export function buildDoc(id: string, src: string): DocData {
   const { data, body } = parseFrontmatter(src);
   const sources = Array.isArray(data.sources) ? data.sources : [];
@@ -117,7 +179,7 @@ export function buildDoc(id: string, src: string): DocData {
   return {
     id,
     title: String(data.title ?? id),
-    description: String(data.description ?? ''),
+    description: String(data.description ?? '').trim() || fallbackDescription(body),
     sources,
     hermesVersion: String(data.hermes_version ?? ''),
     confidence: String(data.confidence ?? ''),

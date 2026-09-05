@@ -30,6 +30,10 @@ const {
   tocRail = '',
 } = Astro.props;
 
+// <title> だけサイト名を後置する（指名検索で「Hermes Agent Wiki」が結果に出るように）。
+// og:title / twitter:title / H1 はページ名のまま。
+const SITE_NAME = 'Hermes Agent Wiki';
+
 // 共通右サイドバー（xl+）: 目次 / よく使うページ / 更新ミニ
 const POPULAR: [string, string][] = [
   ['/hermes/docs/getting-started/quickstart/', 'インストールする'],
@@ -131,7 +135,7 @@ const next = hasOverride
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
+    <title>{title === SITE_NAME ? title : `${title} | ${SITE_NAME}`}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="article" />
