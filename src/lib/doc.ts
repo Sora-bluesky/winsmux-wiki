@@ -152,7 +152,7 @@ export function fallbackDescription(body: string, max = 110): string {
       .replace(/[`*~]/g, '') // `_` は識別子（OPENROUTER_API_KEY 等）に入るので消さない
       .replace(/<[^>]+>/g, '')
       .replace(/\s+/g, ' ')
-      .replace(/([぀-ヿ一-鿿]) (?=[぀-ヿ一-鿿])/g, '$1') // **強調** の両脇に入った空白
+      .replace(/([　-〿぀-ヿ一-鿿]) (?=[　-〿぀-ヿ一-鿿])/g, '$1') // **強調** の両脇に入った空白（句読点も含む）
       .trim();
     if ([...text].length < 20) continue;
     const chars = [...text];
