@@ -1,6 +1,63 @@
 {
-  "generatedAt": "2026-09-06",
+  "generatedAt": "2026-09-07",
   "entries": [
+    {
+      "date": "2026-09-06",
+      "sha": "4da50a3",
+      "upstream": "ee5b5ec",
+      "pages": [
+        {
+          "id": "reference/skills-catalog",
+          "title": "同梱スキルの一覧",
+          "url": "/hermes/docs/reference/skills-catalog/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングのゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/skills/bundled/research/research-competitor-news-monitor",
+          "title": "Competitor News Monitor — 指定した企業を見張って重要な動きだけを集め、出典付きのまとめにする",
+          "url": "/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/"
+        },
+        {
+          "id": "user-guide/skills/bundled/research/research-grounded-citations",
+          "title": "Grounded Citations — 回答や文書を、出典を示せる形で裏付ける",
+          "url": "/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/"
+        },
+        {
+          "id": "user-guide/skills/bundled/research/research-rss-feeds",
+          "title": "Rss Feeds — RSS・Atom・JSON のフィードを読み、ページの裏にあるフィードを見つける",
+          "url": "/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/"
+        },
+        {
+          "id": "user-guide/skills/bundled/social-media/social-media-reddit-reading",
+          "title": "Reddit Reading — Reddit を読む: サブレディット、検索、スレッド、ユーザー",
+          "url": "/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-blogwatcher",
+          "title": "Blogwatcher — blogwatcher-cli を使ってブログや RSS/Atom フィードの更新を追いかける",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-blogwatcher/"
+        }
+      ]
+    },
     {
       "date": "2026-09-05",
       "sha": "c77a153",
@@ -948,7 +1005,7 @@
         },
         {
           "id": "user-guide/skills/bundled/research/research-grounded-citations",
-          "title": "Grounded Citations — 回答や文書を、たどれる出典に結び付ける",
+          "title": "Grounded Citations — 回答や文書を、出典を示せる形で裏付ける",
           "url": "/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/"
         },
         {
@@ -1568,7 +1625,7 @@
         },
         {
           "id": "user-guide/skills/optional/research/research-blogwatcher",
-          "title": "Blogwatcher — blogwatcher-cli でブログと RSS/Atom フィードを監視する",
+          "title": "Blogwatcher — blogwatcher-cli を使ってブログや RSS/Atom フィードの更新を追いかける",
           "url": "/hermes/docs/user-guide/skills/optional/research/research-blogwatcher/"
         },
         {

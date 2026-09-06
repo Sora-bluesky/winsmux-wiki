@@ -1,30 +1,30 @@
 ---
-title: "スキルの仕組み"
-description: "必要なときだけ読み込む知識のドキュメント — 段階的な読み込み、エージェントによる管理、スキルハブ"
+title: "skill のしくみ"
+description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェントが自分で育てる skill、Skills Hub"
 upstream_path: user-guide/features/skills.md
-upstream_blob: 6246190fc2c901072df8c3a02d76546b23315d65
+upstream_blob: cf856f44956cefbcab0e9a33c419fbcb2bce5d27
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
 
-# スキルの仕組み {#skills-system}
+# skill のしくみ {#skills-system}
 
-スキルとは、エージェントが必要になったときだけ読み込める知識のドキュメントです。トークンの消費を抑えるために **段階的な読み込み** という形をとっていて、[agentskills.io](https://agentskills.io/specification) のオープンな仕様とも互換があります。
+skill は、エージェントが必要になったときに読み込む知識の文書です。トークンの消費を抑えるために**段階的な開示**という考え方に沿っていて、[agentskills.io](https://agentskills.io/specification) のオープンな仕様にも合わせてあります。
 
-スキルはすべて **`~/.hermes/skills/`** に置かれます。ここが本来の置き場所であり、正本でもあります。新しく入れたときは、リポジトリから同梱のスキルがここへコピーされます。ハブから入れたスキルや、エージェントが自分で作ったスキルもここへ入ります。エージェントはどのスキルでも書き換えたり消したりできます。
+skill はすべて **`~/.hermes/skills/`** に置かれます。ここが主のディレクトリであり、正本です。新しく入れたときは、同梱の skill がリポジトリからここへ写されます。Hub から入れた skill も、エージェントが作った skill もここに入ります。エージェントはどの skill も書き換えたり消したりできます。
 
-Hermes に **外部のスキルディレクトリ** を見に行かせることもできます。ローカルのディレクトリと並べて読み込まれる別のフォルダのことです。下の [外部のスキルディレクトリ](#external-skill-directories) を見てください。
+Hermes に**外部の skill ディレクトリ**を教えることもできます。ローカルのものと並べて読まれる追加のフォルダーです。後述の[外部の skill ディレクトリ](#external-skill-directories)を参照してください。
 
-あわせてどうぞ:
+あわせて次も参照してください。
 
-- [同梱スキルの一覧](/hermes/docs/reference/skills-catalog/)
-- [公式の追加スキル一覧](/hermes/docs/reference/optional-skills-catalog/)
+- [同梱 skill の一覧](/hermes/docs/reference/skills-catalog/)
+- [公式の追加 skill の一覧](/hermes/docs/reference/optional-skills-catalog/)
 
-## まっさらな状態から使い始める {#starting-with-a-blank-slate}
+## まっさらな状態から使う {#starting-with-a-blank-slate}
 
-既定では、どのプロファイルにも同梱スキルの一式が最初から入り、`hermes update` のたびに新しく同梱されたスキルが足されていきます。**同梱スキルを一切持たない** プロファイルにしたい、しかも更新してもその状態を保ちたい、という場合は 2 つのやり方があります。
+既定では、どのプロファイルにも同梱の skill 一式が入り、`hermes update` のたびに新しく同梱されたものが足されます。**同梱の skill を入れない**プロファイルにしたい、しかも更新しても空のままにしたい場合は、2 つのやり方があります。
 
-**入れるとき**（既定の `~/.hermes` プロファイルが対象です）:
+**インストールのとき**（既定の `~/.hermes` のプロファイルが対象です）:
 
 ```bash
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --no-skills
@@ -36,7 +36,7 @@ curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --no-sk
 hermes profile create research --no-skills
 ```
 
-**すでに入れてあるプロファイル**（既定でも名前付きでも）なら、動かしたまま切り替えられます:
+**すでに入れてあるプロファイル**（既定でも名前付きでも）では、動作中に切り替えられます。
 
 ```bash
 hermes skills opt-out            # stop future seeding — nothing on disk is touched
@@ -44,15 +44,15 @@ hermes skills opt-out --remove   # also delete UNMODIFIED bundled skills (confir
 hermes skills opt-in --sync      # undo: remove the marker and re-seed now
 ```
 
-どのやり方でも、プロファイルのディレクトリに `.no-bundled-skills` という目印のファイルが書かれます。この目印がある間は、インストーラーも `hermes update` もスキルの同期も、そのプロファイルへの同梱スキルの配置をすべて飛ばします。目印を消すか `hermes skills opt-in` を実行すれば、また入るようになります。
+どのやり方でも、プロファイルのディレクトリに `.no-bundled-skills` という目印が書かれます。この目印がある間は、インストーラーも `hermes update` も skill の同期も、そのプロファイルへの同梱 skill の配置を飛ばします。目印を消すか、`hermes skills opt-in` を実行すれば元に戻ります。
 
-:::note そのままで安全です
-`hermes skills opt-out` が止めるのは *これから先* の配置だけで、すでにディスクにあるものには一切手をつけません。任意の `--remove` を付けた場合でも、消えるのは手を加えていない同梱スキル（Hermes が入れたものとバイト単位で同じもの）**だけ** です。自分で編集したスキル、ハブから入れたスキル、自分で書いたスキルは必ず残ります。
+:::note 既定で安全です
+`hermes skills opt-out` が止めるのは*これから*の配置だけで、すでにディスクにあるものを消すことはありません。任意の `--remove` を付けたときに消えるのは、手を加えていない同梱 skill（Hermes が入れた版と 1 バイトも違わないもの）**だけ**です。自分で編集した skill、hub から入れた skill、自分で書いた skill は必ず残ります。
 :::
 
-## スキルを使う {#using-skills}
+## skill を使う {#using-skills}
 
-入っているスキルは、どれも自動でスラッシュコマンドとして使えます:
+入っている skill はすべて、自動でスラッシュコマンドとして使えます。
 
 ```bash
 # In the CLI or any messaging platform:
@@ -65,43 +65,41 @@ hermes skills opt-in --sync      # undo: remove the marker and re-seed now
 /excalidraw
 ```
 
-### 1 つのコマンドで複数のスキルを重ねる {#stacking-multiple-skills-in-one-command}
+### 1 つのコマンドで複数の skill を重ねる {#stacking-multiple-skills-in-one-command}
 
-メッセージの先頭にスラッシュコマンドを並べれば、1 通で複数のスキルを呼び出せます。
-先頭に並んだ `/skill` の形をしたもの（最大 5 つ）がすべて読み込まれ、残りが
-指示の文になります:
+メッセージの先頭にスラッシュコマンドを並べれば、1 通で複数の skill を呼び出せます。
+先頭に続く `/skill` は（5 つまで）すべて読み込まれ、残りが指示になります。
 
 ```bash
 /github-pr-workflow /test-driven-development fix issue #123 and open a PR
 ```
 
-入っているスキルではない語が出てきた時点で読み取りが止まるので、たまたま `/` で
-始まる引数（ファイルのパスなど）が飲み込まれることはありません:
+読み取りは、入っている skill ではない語が出た時点で止まります。ファイルのパスのように
+たまたま `/` で始まる引数が飲み込まれることはありません。
 
 ```bash
 /ocr-and-documents /tmp/scan.pdf extract the tables   # loads one skill; /tmp/scan.pdf is the argument
 ```
 
-いつも同じ組み合わせで使うなら、[スキルのバンドル](#skill-bundles) のほうが向いています。
+いつも同じ組み合わせで使うなら、[skill のまとめ](#skill-bundles)のほうが向いています。
 短いコマンド 1 つで同じことができます。
 
-（プランモードも同じ形で呼び出せますが、いまは組み込みのコマンドになっています。`/plan [request]` と書くと、Hermes は必要に応じて状況を調べたうえで、作業をその場で実行する代わりに実装の計画を markdown で書き、いま使っているワークスペースやバックエンドの作業ディレクトリからの相対で `.hermes/plans/` の下に保存します。）
+（計画モードも同じ書き方ですが、いまは組み込みのコマンドです。`/plan [request]` と書くと、Hermes は必要に応じて状況を調べ、作業を実行する代わりに Markdown の実装計画を書き、その結果を、動いている作業場所やバックエンドの作業ディレクトリからの相対で `.hermes/plans/` の下に保存します。）
 
-ふつうの会話の中でスキルに触れることもできます:
+普通の会話の中で skill に触れることもできます。
 
 ```bash
 hermes chat --toolsets skills -q "What skills do you have?"
 hermes chat --toolsets skills -q "Show me the axolotl skill"
 ```
 
-## 元になる資料からスキルを学ばせる（`/learn`） {#learning-a-skill-from-sources-learn}
+## 資料から skill を覚えさせる（`/learn`） {#learning-a-skill-from-sources-learn}
 
-`/learn` は、すでに知っていることや手元に積み上がった資料を、`SKILL.md` を
-手書きせずに再利用できるスキルへ変える近道です。対象は何でもかまいません。
-*言葉で説明できるもの* を指し示せば、エージェントが手持ちの道具で材料を集め、
-[この場所の書き方の決まり](#skillmd-format)（説明は 60 文字以内、決まった節の
-並び、Hermes の道具を前提にした書き方、勝手なコマンドを作らないこと）に沿った
-スキルを書き上げます。
+`/learn` は、自分がすでに知っていることや、手元の資料の山を、`SKILL.md` を手書きせずに
+使い回せる skill に変えるための近道です。使い道は限定されていません。*言葉で説明できるもの*なら
+何でも指させば、エージェントが手持ちのツールで材料を集め、[この場所の書き方の決まり](#skillmd-format)
+（説明は 60 文字以内、決まった節の順、Hermes のツールに沿った書き方、存在しないコマンドを
+作らないこと）に沿って skill を書き上げます。
 
 ```bash
 # A local SDK or doc directory — read with read_file / search_files
@@ -120,38 +118,35 @@ hermes chat --toolsets skills -q "Show me the axolotl skill"
 /learn ~/books/designing-data-intensive-applications.pdf
 ```
 
-### 大きな資料は知識ベース型のスキルになる {#large-sources-become-knowledge-base-skills}
+### 大きな資料は知識ベースの skill になります {#large-sources-become-knowledge-base-skills}
 
-元になるものが本や論文の束、仕様書、大きなドキュメントのフォルダだった場合、
-エージェントはそれを 1 つのファイルに詰め込んだり、抜け落ちの多い要約にまとめ
-たりはしません。代わりに **広がりのある知識ベース型のスキル** を書きます。
-中心になる考え方と目次を持った軽い `SKILL.md` があり、章やテーマごとに
-まとめ直したファイルが `references/` の下に 1 つずつ置かれます（元の資料に
-値するなら用語集や早見表も付きます）。参照ファイルは、実際に必要になる質問が
-来るまで何の負担にもなりません。エージェントが `skill_view` でその場で読み込む
-ので、かかるコストは元の資料の大きさではなく答えの大きさに比例します。同じ
-テーマで新しい材料を足して `/learn` をもう一度実行すると、別のスキルが増える
-のではなく既存のスキルに取り込まれます。
+材料が 1 冊の本、論文の束、仕様書、あるいは大きなドキュメントのフォルダーの場合、
+エージェントはそれを 1 ファイルに詰め込んだり、削ぎ落とした要約にしたりはしません。
+代わりに**広がりのある知識ベースの skill** を書きます。中心となる考え方と目次を載せた
+軽い `SKILL.md` に、章や話題ごとに 1 ファイルずつまとめたものを `references/` の下に置きます
+（材料に見合うなら用語集や早見表も足します）。参照用のファイルは、質問が必要とするまで
+費用がかかりません。エージェントが `skill_view` で必要なときだけ読むので、費用は材料の量では
+なく答えの大きさに見合います。同じ話題で新しい材料を使って `/learn` をもう一度実行すると、
+別の skill を作るのではなく、いまある skill に取り込みます。
 
-まとめ直すときに作られるのは構造そのもの（枠組み、定義、判断の基準、やっては
-いけない型）で、元の文章をそのまま写すことはありません。
+まとめ直しでは構造——枠組み、定義、判断の決まり、やってはいけない形——を組み立てるだけで、
+もとの文章をそのまま写すことはありません。
 
-材料集めをするのが動いているエージェント自身なので、`/learn` は CLI でも、
-メッセージのゲートウェイでも、TUI でも、ダッシュボードでも同じように動きます。
-取り込み専用のエンジンが別にあるわけではないため、どのターミナルのバックエンド
-（ローカル、Docker、リモート）でも同じです。**ダッシュボード** では、スキルの
-ページに **Learn a skill** ボタンがあり、押すとディレクトリの入力欄、URL の
-入力欄、自由に書けるテキスト欄が並んだパネルが開きます。ここで `/learn` の
-リクエストが組み立てられ、チャットで実行されます。
+材料集めをするのが動いているエージェント自身なので、`/learn` は CLI でも、メッセージングの
+ゲートウェイでも、TUI でも、ダッシュボードでも同じように動きます。取り込み専用のしくみが
+別にあるわけではないので、どのターミナルのバックエンド（ローカル、Docker、リモート）でも同じです。
+**ダッシュボード**では、Skills のページに **Learn a skill** のボタンがあり、ディレクトリの欄、
+URL の欄、自由に書ける入力欄が並んだ画面が開きます。そこから `/learn` の依頼を組み立てて
+チャットで実行します。
 
-モデル側の道具は一切増えません。`/learn` は決まりに沿ったプロンプトを組み立てて、
-ふつうの 1 ターンとしてエージェントに渡すだけです。結果は `skill_manage` ツール
-で保存されるので、[書き込みの承認](#gating-agent-skill-writes-skillswrite_approval)
-を有効にしていればそれが効きます。
+モデルのツールとしての痕跡は残りません。`/learn` は決まりに沿ったプロンプトを組み立て、
+普通のターンとしてエージェントに渡すだけです。エージェントは結果を `skill_manage` ツールで
+保存するので、[書き込みの承認](#gating-agent-skill-writes-skillswrite_approval)を有効にしていれば
+そちらが効きます。
 
-## 段階的な読み込み {#progressive-disclosure}
+## 段階的な開示 {#progressive-disclosure}
 
-スキルは、トークンを無駄にしない読み込み方をします:
+skill は、トークンを無駄にしない読み込み方をします。
 
 ```
 Level 0: skills_list()           → [{name, description, category}, ...]   (~3k tokens)
@@ -159,9 +154,9 @@ Level 1: skill_view(name)        → Full content + metadata       (varies)
 Level 2: skill_view(name, path)  → Specific reference file       (varies)
 ```
 
-エージェントは、本当に必要になったときだけスキルの中身を丸ごと読み込みます。
+エージェントは、本当に必要になったときだけ skill の本文を読み込みます。
 
-## SKILL.md の書式 {#skillmd-format}
+## SKILL.md の書き方 {#skillmd-format}
 
 ```markdown
 ---
@@ -198,9 +193,9 @@ Trigger conditions for this skill.
 How to confirm it worked.
 ```
 
-### プラットフォームを限定したスキル {#platform-specific-skills}
+### OS を限定した skill {#platform-specific-skills}
 
-`platforms` の項目を使うと、スキルが動く OS を限定できます:
+`platforms` の項目を使うと、skill を特定の OS に限定できます。
 
 | 値 | 対象 |
 |-------|---------|
@@ -213,19 +208,19 @@ platforms: [macos]            # macOS only (e.g., iMessage, Apple Reminders, Fin
 platforms: [macos, linux]     # macOS and Linux
 ```
 
-これを書いておくと、合わない OS ではシステムプロンプトからも `skills_list()` からもスラッシュコマンドからも自動で隠れます。書かなければ、どの OS でも読み込まれます。
+これを書くと、合わない OS ではシステムプロンプト、`skills_list()`、スラッシュコマンドから自動的に隠れます。省略した場合は、どの OS でも読み込まれます。
 
-## スキルの出力とメディアの配信 {#skill-output-and-media-delivery}
+## skill の出力とメディアの届け方 {#skill-output-and-media-delivery}
 
-スキルの応答（に限らずエージェントの応答）の中に、メディアファイルの絶対パスがそのまま含まれていた場合 — たとえば `/home/user/screenshots/diagram.png` のような形です — ゲートウェイがそれを見つけて表示される文からは取り除き、そのファイル自体をチャットへ届けます（Telegram なら写真、Discord なら添付ファイル、といった具合です）。生のパスがメッセージに残ることはありません。
+skill の応答（あるいはエージェントのどの応答でも）に、メディアファイルの絶対パスがそのまま含まれていると——たとえば `/home/user/screenshots/diagram.png`——ゲートウェイがそれを見つけて表示上の文章から取り除き、パスを文面に残す代わりに、ファイルそのものをチャットへ届けます（Telegram なら写真、Discord なら添付ファイルという具合です）。
 
-音声については、`[[audio_as_voice]]` という指示を書くと、対応しているプラットフォーム（Telegram、WhatsApp）でボイスメッセージの吹き出しとして送られます。
+音声については、`[[audio_as_voice]]` と書くと、対応しているプラットフォーム（Telegram、WhatsApp）でボイスメッセージの形になります。
 
-### ファイル添付での配信を強制する: `[[as_document]]` {#forcing-document-style-delivery-asdocument}
+### ファイルとして届けさせる: `[[as_document]]` {#forcing-document-style-delivery-asdocument}
 
-その場でプレビューするのとは **逆** のことをしたい場合もあります。画像の吹き出しとして再圧縮されるのではなく、そのままダウンロードできる添付ファイルとして届けたい、というときです。よくあるのが高解像度のスクリーンショットや図で、Telegram の `sendPhoto` は 1280 px・200 KB ほどまで圧縮してしまい、読めなくなります。1〜2 MB の PNG を `sendDocument` で送れば、元のデータのまま届きます。
+その場で見えるプレビューではなく、**その逆**がほしいこともあります。つまり、再圧縮された画像の吹き出しではなく、ダウンロードできる添付ファイルとして届けたい場合です。典型的なのは高解像度のスクリーンショットや図です。Telegram の `sendPhoto` は 1280 px・約 200 KB に再圧縮するので、読めなくなってしまいます。1〜2 MB の PNG を `sendDocument` で送れば、もとのバイト列のまま届きます。
 
-応答（またはその中のどこか、ふつうは最後の行）に `[[as_document]]` という文字列がそのまま入っていると、その応答から取り出されたメディアのパスはすべて、画像の吹き出しではなくファイルの添付として届きます:
+応答（またはその中のどこか、たいていは最後の行）に `[[as_document]]` という記述があると、その応答から取り出されたメディアのパスはすべて、画像の吹き出しではなく文書・ファイルの添付として届きます。
 
 ```
 Here is your rendered chart:
@@ -235,18 +230,18 @@ Here is your rendered chart:
 [[as_document]]
 ```
 
-この指示は届ける前に取り除かれるので、受け取る側の目に触れることはありません。効き方は応答ごとに全部か全くなしかで、これは意図した設計です。`[[as_document]]` を 1 回書けば、同じ応答の中の画像のパスはすべてファイルとして届きます。`[[audio_as_voice]]` と同じ考え方です。
+この記述は届ける前に取り除かれるので、受け取る側の目に触れることはありません。効き方は応答ごとに全部かゼロかで、あえてそうしています。`[[as_document]]` を 1 回書けば、同じ応答の中のすべての画像のパスが文書として届きます。`[[audio_as_voice]]` と同じ範囲の考え方です。
 
-スキルからこれを使うのは、たとえばこんなときです:
+skill から使うのは、次のような場面です。
 
-- 受け取る側がファイルとして必要とするスクリーンショットや図を作るとき（別のツールで編集する、保存しておく、そのままの形で渡す、といった用途です）。
-- 既定の圧縮されたプレビューでは細部が潰れてしまうとき（小さな文字、1 ドットまで正確な図、色が重要な描画など）。
+- スクリーンショットや図を、相手がファイルとして受け取る必要があるとき（別のツールで編集する、保管する、そのままの形で共有する）。
+- 既定の圧縮されたプレビューでは細部が失われるとき（小さな文字、画素単位で正確な図、色の再現が大事な描画）。
 
-ファイル添付の仕組みを別に持たないプラットフォーム（SMS など）では、そこにある添付の手段にそのまま落ちます。
+文書として送るしくみが別にないプラットフォーム（SMS など）では、そのプラットフォームにある添付の方法にそのまま落ちます。
 
-### 条件付きの有効化（フォールバックのスキル） {#conditional-activation-fallback-skills}
+### 条件付きの表示（控えの skill） {#conditional-activation-fallback-skills}
 
-スキルは、いまのセッションで使える道具に応じて自分を出したり隠したりできます。いちばん役に立つのは **フォールバックのスキル** です。有料の道具が使えないときにだけ現れる、無料またはローカルの代替手段のことです。
+skill は、いまのセッションで使えるツールに応じて、自分を出したり隠したりできます。これがいちばん役立つのは**控えの skill**、つまり有料のツールが使えないときにだけ出したい、無料またはローカルの代わりの手段です。
 
 ```yaml
 metadata:
@@ -257,20 +252,20 @@ metadata:
     requires_tools: [terminal]        # Show ONLY when these specific tools are available
 ```
 
-| 項目 | ふるまい |
+| 項目 | 挙動 |
 |-------|----------|
-| `fallback_for_toolsets` | 並べたツールセットが使えるとき、スキルは **隠れます**。使えないときに現れます。 |
-| `fallback_for_tools` | 同じですが、ツールセットではなく個々の道具を見ます。 |
-| `requires_toolsets` | 並べたツールセットが使えないとき、スキルは **隠れます**。使えるときに現れます。 |
-| `requires_tools` | 同じですが、個々の道具を見ます。 |
+| `fallback_for_toolsets` | 挙げたツールセットが使えるとき、skill は**隠れ**ます。使えないときに出ます。 |
+| `fallback_for_tools` | 同じですが、ツールセットではなく個々のツールを見ます。 |
+| `requires_toolsets` | 挙げたツールセットが使えないとき、skill は**隠れ**ます。使えるときに出ます。 |
+| `requires_tools` | 同じですが、個々のツールを見ます。 |
 
-**例:** 同梱の `duckduckgo-search` スキルは `fallback_for_toolsets: [web]` を使っています。`FIRECRAWL_API_KEY` を設定していれば web のツールセットが使えるので、エージェントは `web_search` を使い、DuckDuckGo のスキルは隠れたままです。API キーがなければ web のツールセットは使えないので、DuckDuckGo のスキルが代わりとして自動的に現れます。
+**例:** 組み込みの `duckduckgo-search` skill は `fallback_for_toolsets: [web]` を使っています。`FIRECRAWL_API_KEY` を設定していれば web のツールセットが使えるので、エージェントは `web_search` を使い、DuckDuckGo の skill は隠れたままです。API キーがなければ web のツールセットは使えないので、DuckDuckGo の skill が控えとして自動的に出てきます。
 
-条件の項目を何も書かないスキルは、これまでどおり常に表示されます。
+条件の項目を書いていない skill は、これまでどおり常に表示されます。
 
 ## 読み込み時の安全な設定 {#secure-setup-on-load}
 
-スキルは、必要な環境変数を宣言しても一覧から消えることはありません:
+skill は、必要な環境変数を宣言しても、一覧から消えることはありません。
 
 ```yaml
 required_environment_variables:
@@ -280,13 +275,13 @@ required_environment_variables:
     required_for: full functionality
 ```
 
-値が足りないことがわかったとき、Hermes はそのスキルが実際に読み込まれた時点で、ローカルの CLI に限って安全に入力を求めます。設定を飛ばして、そのままスキルを使い続けることもできます。メッセージ経由の画面で秘密の値を聞くことは決してなく、代わりにローカルで `hermes setup` を使うか `~/.hermes/.env` に書くよう案内します。
+値がないことに気づいたとき、Hermes は、その skill が手元の CLI で実際に読み込まれた場合に限り、安全な方法で入力を求めます。設定を飛ばしてそのまま skill を使うこともできます。メッセージングの画面で秘密の値をチャットに入力させることは決してありません。代わりに、手元で `hermes setup` か `~/.hermes/.env` を使うよう案内します。
 
-いったん設定すると、宣言された環境変数は `execute_code` と `terminal` のサンドボックスへ **自動で引き渡されます**。スキルのスクリプトはそのまま `$TENOR_API_KEY` を使えます。スキル以外の環境変数には `terminal.env_passthrough` の設定を使ってください。詳しくは [環境変数の引き渡し](/hermes/docs/user-guide/security/#environment-variable-passthrough) を見てください。
+設定した環境変数は、`execute_code` と `terminal` のサンドボックスへ**自動的に渡されます**。skill のスクリプトはそのまま `$TENOR_API_KEY` を使えます。skill と関係のない環境変数には、`terminal.env_passthrough` の設定を使ってください。詳しくは[環境変数の受け渡し](/hermes/docs/user-guide/security/#environment-variable-passthrough)を参照してください。
 
-### スキルの設定項目 {#skill-config-settings}
+### skill の設定項目 {#skill-config-settings}
 
-スキルは、秘密ではない設定項目（パスや好みなど）を `config.yaml` に置く形で宣言することもできます:
+skill は、秘密ではない設定（パスや好み）を `config.yaml` に置く形で宣言することもできます。
 
 ```yaml
 metadata:
@@ -298,11 +293,11 @@ metadata:
         prompt: Plugin data directory path
 ```
 
-設定は config.yaml の `skills.config` の下に保存されます。`hermes config migrate` は未設定の項目を尋ね、`hermes config show` は設定内容を表示します。スキルが読み込まれると、解決済みの設定値がそのまま文脈に差し込まれるので、エージェントは設定された値をひとりでに把握できます。
+設定は config.yaml の `skills.config` の下に保存されます。`hermes config migrate` は未設定の項目について入力を求め、`hermes config show` は設定内容を表示します。skill が読み込まれると、その設定値が文脈に差し込まれるので、エージェントは設定された値を自動的に知ることができます。
 
-詳しくは [スキルの設定](/hermes/docs/user-guide/configuration/#skill-settings) と [スキルを作る — 設定項目](/hermes/docs/developer-guide/creating-skills/#config-settings-configyaml) を見てください。
+詳しくは [skill の設定](/hermes/docs/user-guide/configuration/#skill-settings)と [skill を作る — 設定項目](/hermes/docs/developer-guide/creating-skills/#config-settings-configyaml)を参照してください。
 
-## スキルのディレクトリ構成 {#skill-directory-structure}
+## skill のディレクトリ構成 {#skill-directory-structure}
 
 ```text
 ~/.hermes/skills/                  # Single source of truth
@@ -327,34 +322,33 @@ metadata:
 └── .bundled_manifest              # Tracks seeded bundled skills
 ```
 
-URL や GitHub から入れた第三者のスキルには、`SKILL.md` と、そこから実際に
-参照されているローカルのファイルが `references/`、`templates/`、`scripts/`、
-`assets/`、`examples/` の下に含まれます。参照されていないリポジトリのファイルは
-コピーされません。Hermes は隔離した一式をすべてスキャンし、取得元の URL、内容の
-ハッシュ、スキャナーのバージョン、見つかった事柄、日時、その場で調べたのか
-キャッシュを使ったのかを
+第三者の URL や GitHub から入れる場合に含まれるのは、`SKILL.md` と、それが
+`references/`、`templates/`、`scripts/`、`assets/`、`examples/` の下で実際に参照している
+ファイルだけです。参照されていないリポジトリのファイルは写されません。Hermes は
+隔離した束の全体を検査し、取得元の URL、内容のハッシュ、検査するプログラムの版、
+見つかったこと、時刻、その場で取得したか手元の控えかを
 `skills/.hub/lock.json` に記録します。
 
-### 参考情報としての SkillEvaluator スキャン {#advisory-skillevaluator-scan}
+### 参考としての SkillEvaluator の検査 {#advisory-skillevaluator-scan}
 
-上の導入ポリシーを実際に効かせている内蔵のセキュリティスキャナーとは別に、
-Hermes はハブからの導入のたびに [NVIDIA SkillEvaluator](https://github.com/NVIDIA/SkillEvaluator)
-の Tier 1 の検査を second opinion として走らせられます。Tier 1 は結果が
-一定でキーも要りません。個人情報の検出（漏れたメールアドレス、個人のパス、
-接続文字列）、Unicode を使った隠し文字の検出、スクリプトの静的チェック、
-ライセンスの適合性、そして
-[NVIDIA SkillSpector](https://github.com/NVIDIA/SkillSpector) によるセキュリティの静的スキャンです。
+上のインストール方針を強制する組み込みの検査に加えて、Hermes は
+hub からのインストールのたびに [NVIDIA SkillEvaluator](https://github.com/NVIDIA/SkillEvaluator)
+の Tier 1 の検査を、もう一つの意見として実行できます。Tier 1 は
+結果が毎回同じで、鍵も要りません。個人情報の検出（漏れたメールアドレス、
+個人のパス、接続文字列）、unicode を使った紛れ込ませの検出、スクリプトの検査、
+ライセンスの確認、そして
+[NVIDIA SkillSpector](https://github.com/NVIDIA/SkillSpector) による静的な安全検査です。
 
-このスキャンは **あくまで参考** です。見つかった事柄はファイル名と行番号つきで
-導入の確認の前に表示され、導入はそのまま続きます。本物の認証情報らしきもの
-（秘密鍵、クラウドのアクセスキー、トークン、認証情報を含む接続文字列）は
-赤で強調されるので、決める前にその行を確かめられます。個人情報の類は
-参考情報の扱いです。元のスキャナーには誤検出しやすいものが知られていて
-（`git@github.com` という SSH の書き方、ドキュメントの例のメールアドレスなど）、
-これらが何かを止めることはありません。
+この検査は**参考にすぎません**。見つかったことはインストールの確認の前に
+ファイル名と行番号付きで表示され、インストールはそのまま進みます。本物の
+認証情報らしきもの（秘密鍵、クラウドのアクセスキー、トークン、認証情報付きの
+接続文字列）は赤で強調されるので、決める前にその行を確かめられます。
+個人情報の種類のものはお知らせにすぎません。上流の検査には誤って引っかかる
+既知の形（`git@github.com` の SSH の書き方、ドキュメントの例のメールアドレスなど）が
+あるので、これで何かが止まることはありません。
 
-有効にするには、任意のスキャナーの実行ファイルを入れてください（2 つめは
-`security` の検査に使われ、これがないとその検査は「実行されませんでした」と出るだけです）:
+使うには、任意の検査プログラムを入れてください（2 つめは
+`security` の検査に使われます。入っていない場合、その検査は「not run」と表示されます）。
 
 ```bash
 uv tool install --python 3.13 \
@@ -362,22 +356,22 @@ uv tool install --python 3.13 \
 uv tool install "git+https://github.com/NVIDIA/SkillSpector.git@v2.9.5"
 ```
 
-実行ファイルが PATH になければ、スキャンは黙って飛ばされます。完全に切るには、
-こう書きます:
+PATH にプログラムがなければ、検査は黙って飛ばされます。完全に止めたい場合は
+次のようにします。
 
 ```yaml
 skills:
   tier1_advisory: false
 ```
 
-ダッシュボードのハブを見るスキャンのボタンも、内蔵スキャナーの判定とあわせて
-同じ参考情報を応答（`tier1` の項目）で返します。
+ダッシュボードの Browse-hub の検査ボタンも、組み込みの検査の判定と並べて
+同じ参考のデータを応答（`tier1` の項目）に返します。
 
-## 外部のスキルディレクトリ {#external-skill-directories}
+## 外部の skill ディレクトリ {#external-skill-directories}
 
-Hermes の外でスキルを管理している場合 — たとえば、いくつもの AI ツールで共用している `~/.agents/skills/` のようなディレクトリがある場合 — そこも読み込むよう Hermes に伝えられます。
+Hermes の外で skill を管理しているなら——たとえば複数の AI ツールで共有している `~/.agents/skills/` のようなディレクトリ——Hermes にそこも読むよう伝えられます。
 
-`~/.hermes/config.yaml` の `skills` の節に `external_dirs` を足します:
+`~/.hermes/config.yaml` の `skills` の節に `external_dirs` を足します。
 
 ```yaml
 skills:
@@ -387,15 +381,15 @@ skills:
     - ${SKILLS_REPO}/skills
 ```
 
-パスには `~` の展開と `${VAR}` による環境変数の置き換えが使えます。
+パスでは `~` の展開と、`${VAR}` による環境変数の置き換えが使えます。
 
-### 動きかた {#how-it-works}
+### しくみ {#how-it-works}
 
-- **作るのはローカル、書き換えはその場で**: エージェントが新しく作ったスキルは `~/.hermes/skills/`（設定していれば `skills.create_dir` — 下で説明します）に書かれます。すでにあるスキルは見つかった場所で書き換えられ、これは `external_dirs` の下にあるスキルも同じです（エージェントが `skill_manage` の `patch`、`edit`、`write_file`、`remove_file`、`delete` といった操作を使ったとき）。
-- **外部ディレクトリは書き込みを止める境界ではありません**: 外部のスキルディレクトリが Hermes のプロセスから書き込める場所にあるなら、エージェントによるスキルの更新はそのディレクトリのファイルを変えられます。共用の外部スキルを読み取り専用に保ちたいなら、ファイルシステムの権限を使うか、プロファイルやツールセットを分けて設定してください。
-- **ローカルが優先されます**: 同じ名前のスキルがローカルのディレクトリと外部のディレクトリの両方にある場合、ローカルのものが勝ちます。
-- **扱いは完全に同じです**: 外部のスキルも、システムプロンプトの一覧、`skills_list`、`skill_view`、そして `/skill-name` のスラッシュコマンドに、ローカルのスキルとまったく同じように現れます。
-- **存在しないパスは黙って飛ばされます**: 設定したディレクトリがなくても、Hermes はエラーを出さずに無視します。端末によってはない共用ディレクトリを、任意で足しておきたいときに便利です。
+- **作るのはローカル、更新はその場で**: エージェントが新しく作る skill は `~/.hermes/skills/`（設定していれば `skills.create_dir`。後述します）に書かれます。すでにある skill は見つかった場所で書き換えられ、エージェントが `skill_manage` の `patch`、`edit`、`write_file`、`remove_file`、`delete` といった操作を使えば、`external_dirs` にある skill も対象になります。
+- **外部ディレクトリは書き込み禁止の境界ではありません**: 外部の skill ディレクトリが Hermes のプロセスから書き込める状態なら、エージェントによる skill の更新はそのディレクトリのファイルを変えられます。共有している外部の skill を読み取り専用に保ちたいなら、ファイルシステムの権限か、別のプロファイル・ツールセットの構成を使ってください。
+- **ローカルが優先**: 同じ名前の skill がローカルと外部の両方にあるときは、ローカルのほうが使われます。
+- **同じように扱われます**: 外部の skill も、システムプロンプトの目次、`skills_list`、`skill_view`、`/skill-name` のスラッシュコマンドに現れます。ローカルの skill と何も変わりません。
+- **存在しないパスは黙って飛ばされます**: 設定したディレクトリがなくても、Hermes はエラーを出さずに無視します。端末によってあったりなかったりする共有ディレクトリを書いておくときに便利です。
 
 ### 例 {#example}
 
@@ -413,46 +407,46 @@ skills:
     └── SKILL.md
 ```
 
-この 4 つのスキルはすべて一覧に出てきます。`my-custom-workflow` という名前のスキルをローカルに新しく作れば、そちらが外部のものを覆い隠します。
+この 4 つの skill はすべて目次に出ます。`my-custom-workflow` という名前の skill をローカルに作れば、外部のほうは覆い隠されます。
 
-## スキル作成先を変える（`skills.create_dir`） {#redirecting-skill-creation-skillscreatedir}
+## skill を作る場所を変える（`skills.create_dir`） {#redirecting-skill-creation-skillscreatedir}
 
-既定では、エージェントが新しく作るスキルはプロファイル内の `~/.hermes/skills/` に書かれます。エージェントが作ったスキルを別の場所に置きたい場合 — 共用の「brain」ディレクトリ、git で管理しているリポジトリ、複数の端末で共有するスキルの置き場など — は、`skills` の節で `create_dir` を設定します:
+既定では、エージェントが作る新しい skill はプロファイル内の `~/.hermes/skills/` に書かれます。別の場所へ置きたい場合——共有の「頭脳」ディレクトリ、git で管理しているリポジトリ、端末群で共有する skill の置き場——は、`skills` の節に `create_dir` を設定します。
 
 ```yaml
 skills:
   create_dir: /opt/brain/skills
 ```
 
-これで変わること:
+これで変わるのは次の点です。
 
-- **`skill_manage` の create はそこに書き込みます。** 新しいスキル（カテゴリのサブディレクトリを含みます）は、ローカルのスキルディレクトリの代わりに `create_dir` の下に作られます。ディレクトリがまだなければ、最初の書き込み時に作られます。
-- **エージェントへの指示は設定に従います。** スキル作成先のパスを示すエージェント向けの指示 — `skill_manage` ツールの説明や関連するプロンプトの文言 — はすべて、設定したディレクトリをその場で反映して表示されます。エージェントにはそこへスキルを作るよう伝わり、システムプロンプトの上書きやファイルシステムの小細工は要りません。
-- **ディレクトリは完全に統合されます。** `create_dir` の下のスキルはローカルのディレクトリと並んでスキャンされ、スキルの一覧、`skills_list`、`skill_view`、スラッシュコマンドに現れ、ほかのローカルのスキルと同じように直したり消したりできます。
-- **それ以外はローカルのままです。** すでにあるスキルは、どこにあってもその場で書き換えられます。同梱スキルの同期、ハブ、キュレーターは引き続きプロファイル内のディレクトリで動きます。
+- **`skill_manage` の create がそこへ書きます。** 新しい skill（分類のためのサブディレクトリも含めて）は、ローカルの skill ディレクトリではなく `create_dir` の下に作られます。ディレクトリがなければ最初の書き込み時に作られます。
+- **エージェントへの指示も設定に従います。** skill を作る場所を示すエージェント向けの記述——`skill_manage` ツールの説明や関連するプロンプトの文——は、設定したディレクトリをその場で反映するので、エージェントはそこへ作るよう伝えられます。システムプロンプトの上書きも、ファイルシステムの小細工も要りません。
+- **そのディレクトリも同じように扱われます。** `create_dir` の下の skill はローカルのディレクトリと並べて読まれ、目次、`skills_list`、`skill_view`、スラッシュコマンドに現れ、ローカルの skill と同じように書き換えたり消したりできます。
+- **それ以外はローカルのままです。** すでにある skill はある場所で書き換えられますし、同梱 skill の同期、hub、整理の処理はプロファイル内のディレクトリを対象に動き続けます。
 
-パスには `~` の展開と `${VAR}` の置き換えが使えます。相対パスは Hermes のホームディレクトリを起点に解決されます。`create_dir` をローカルのスキルディレクトリに設定するのは、何も設定しないのと同じです。
+パスでは `~` の展開と `${VAR}` の置き換えが使えます。相対パスは Hermes のホームを基準に解決されます。`create_dir` にローカルの skill ディレクトリを指定するのは、設定しないのと同じです。
 
-## プロジェクト内のスキル {#project-local-skills}
+## プロジェクトに置く skill {#project-local-skills}
 
-リポジトリは自分専用のスキルを持てます。そのプロジェクトの中で始めたセッションでだけ効くもので、他のエージェント環境がリポジトリごとの設定に使っているのと同じ考え方です。git のチェックアウトの中で Hermes を起動すると、次の場所からスキルを探します:
+リポジトリは自分専用の skill を持てます。これはそのプロジェクトの中で始めたセッションでだけ効きます。他のエージェント環境がリポジトリごとの設定に使っているのと同じやり方です。git のチェックアウトの中で Hermes を起動すると、次の場所から skill を探します。
 
 ```text
 <project-root>/.hermes/skills/    # Hermes-native location
 <project-root>/.agents/skills/    # cross-tool convention (shared with other agent CLIs)
 ```
 
-プロジェクトのルートとは、`.git` を持つ一番近い親ディレクトリのことです（worktree や submodule も対象になります）。
+プロジェクトのルートは、`.git` を含むいちばん近い親ディレクトリです（worktree と submodule も含みます）。
 
 ### プロジェクトを信頼する {#trusting-a-project}
 
-スキルはエージェントがそのとおりに動く手順書なので、Hermes はどこかから clone してきたリポジトリのスキルを勝手に読み込むことは **しません**。プロジェクトのスキルを持つリポジトリで初めて Hermes を動かすと、起動時の表示にこんな案内が出ます:
+skill はエージェントが従う手順の文書なので、Hermes はどこかからクローンしただけのリポジトリからそれを**自動では読み込みません**。プロジェクトの skill があるリポジトリで初めて Hermes を実行すると、起動時の表示にお知らせが出ます。
 
 ```text
 ◆ 3 project skill(s) found in /home/you/myproject but not loaded — run `hermes skills trust` to enable them.
 ```
 
-そのリポジトリを一度だけ信頼します（中に入って実行するか、パスを渡します）:
+そのリポジトリを一度だけ信頼します（中で実行するか、パスを渡します）。
 
 ```bash
 hermes skills trust             # trust the current repo
@@ -460,25 +454,25 @@ hermes skills trust ~/myproject # or explicitly
 hermes skills untrust           # revoke
 ```
 
-信頼したルートは `~/.hermes/config.yaml` の `skills.trusted_project_dirs` に保存されます。`skills.project_discovery: false` にすれば、この仕組みそのものを切れます（探索も案内も出なくなります）。
+信頼したルートは `~/.hermes/config.yaml` の `skills.trusted_project_dirs` に保存されます。`skills.project_discovery: false` にすれば、この機能そのものを止められます（探索もお知らせもなくなります）。
 
-### 優先順位 {#precedence}
+### 優先の順 {#precedence}
 
-プロジェクトのスキルは **いちばん強い段** です。`project → local (~/.hermes/skills/) → external_dirs` の順になります。`deploy` という名前のプロジェクトスキルは、そのリポジトリの中のセッションでは同名のプロファイルのスキルや同梱スキルを上書きします。これは狙いどおりで、リポジトリに置いたスキルは自分の陣地では必ず勝ち、しかも全体のプロファイルには手を触れません。プロジェクトのスキルはエージェントの一覧で `[project]` と印が付くので、出どころが見てわかります。
+プロジェクトの skill が**いちばん優先されます**。順は `project → local (~/.hermes/skills/) → external_dirs` です。`deploy` という名前のプロジェクト skill は、そのリポジトリの中のセッションでは同名のプロファイルの skill や同梱の skill を上書きします。それが狙いです。リポジトリに同梱された skill は自分の土俵で勝ち、全体のプロファイルには手を触れません。プロジェクトの skill はエージェントの目次で `[project]` の印が付くので、どこから来たものかが見えます。
 
-外部のディレクトリと同じく、プロジェクトのスキルのディレクトリはリポジトリのものとして扱われます。自動でスキルを手入れする仕組み（キュレーター）がそこを書き換えることはなく、エージェントが新しく作るスキルは必ず `~/.hermes/skills/` へ入ります。
+外部ディレクトリと同じく、プロジェクトの skill ディレクトリはリポジトリのものとして扱われます。自動での skill の手入れ（整理の処理）が手を加えることはなく、エージェントが新しく作る skill は必ず `~/.hermes/skills/` へ行きます。
 
-### スキャン時の隔離 {#scan-time-quarantine}
+### 検査による隔離 {#scan-time-quarantine}
 
-信頼するかどうかはリポジトリ単位で決めますが、リポジトリの中身は `git pull` のたびに変わります。その隙間を埋めるため、プロジェクトのスキルはすべて、一覧に載る前にスキルハブの導入と同じセキュリティスキャンにかけられます。判定が **危険** だったスキル（プロンプトへの仕込み、認証情報を持ち出すコマンド、隠し文字を使った細工など）は隔離されます。一覧にも `skills_list` にもスラッシュコマンドにも出てこず、名前を指定して読み込もうとしても理由を添えて断られます。スキャンの結果は内容のハッシュをキーに `~/.hermes/cache/project_skill_scans/` に保存され（リポジトリの中には決して置きません）、スキルの中身が変われば自動でやり直されます。
+信頼はリポジトリ単位の判断ですが、リポジトリの skill の中身は `git pull` のたびに変わります。その隙を埋めるため、プロジェクトの skill はどれも、Skills Hub からのインストールと同じ検査を通ってから目次に入ります。検査の判定が**危険**（プロンプトへの注入の指示、認証情報を持ち出すコマンド、隠し文字の細工）だった skill は隔離されます。目次にも `skills_list` にもスラッシュコマンドにも現れず、名前を指定して読み込もうとしても理由を示して断ります。検査の結果は内容のハッシュをキーに `~/.hermes/cache/project_skill_scans/` に控えられ（自分のリポジトリの中には決して置かれません）、skill の中身が変われば自動でやり直されます。
 
-### 対話しない経路（cron、API、ACP） {#non-interactive-surfaces-cron-api-acp}
+### 対話しない場面（cron、API、ACP） {#non-interactive-surfaces-cron-api-acp}
 
-cron のジョブなど、対話しない経路は、対話のときに決めた信頼をそのまま引き継ぎます。自分から尋ねることも、勝手に信頼することもありません。プロジェクトのルートはその経路の作業ディレクトリ（cron のジョブなら `workdir`）から決まり、これはターミナルの道具が使うのと同じ仕組みです。以前に信頼したリポジトリの中を `workdir` にした cron のジョブは、そのリポジトリのプロジェクトスキルを読み込みます。信頼していない、あるいはまだ決めていないリポジトリのジョブは、何も読み込みません。
+cron の処理をはじめ、対話のない場面は、対話時に下した信頼の判断を受け継ぎます。自分から尋ねることも、勝手に信頼することもありません。プロジェクトのルートは、その場面の作業ディレクトリ（cron なら `workdir`。ターミナルのツールと同じしくみです）から決まります。`workdir` が以前に信頼したリポジトリの中にある cron の処理は、そのリポジトリのプロジェクト skill を読み込みます。信頼していない、あるいはまだ決めていないリポジトリの処理は何も読み込みません。
 
-## スキルのバンドル {#skill-bundles}
+## skill のまとめ {#skill-bundles}
 
-スキルのバンドルとは、複数のスキルを 1 つのスラッシュコマンドにまとめる小さな YAML のファイルです。`/<bundle-name>` を実行すると、そのバンドルに並べたスキルが一度にすべて読み込まれます。ある種の作業でいつも同じ組み合わせが効く、というときに便利です。
+skill のまとめは、複数の skill を 1 つのスラッシュコマンドに束ねる小さな YAML ファイルです。`/<bundle-name>` を実行すると、そこに並べた skill が一度に読み込まれます。ある作業ではいつも同じ組み合わせが効く、というときに便利です。
 
 ### 手早い例 {#quick-example}
 
@@ -491,17 +485,17 @@ hermes bundles create backend-dev \
   -d "Backend feature work — review, test, PR workflow"
 ```
 
-あとは CLI でも、どのゲートウェイのプラットフォームでも:
+そのあと、CLI でもゲートウェイのどのプラットフォームでも、次のように使います。
 
 ```
 /backend-dev refactor the auth middleware
 ```
 
-エージェントは 3 つのスキルを 1 通のユーザーメッセージにまとめて受け取り、スラッシュコマンドのあとに書いた文はそのまま指示として添えられます。
+エージェントは 3 つの skill を 1 通のユーザーメッセージとして受け取り、スラッシュコマンドのあとに書いた文章が指示として添えられます。
 
-### YAML の書式 {#yaml-schema}
+### YAML の書き方 {#yaml-schema}
 
-バンドルは **`~/.hermes/skill-bundles/<slug>.yaml`** に置き、こんな形をしています:
+まとめは **`~/.hermes/skill-bundles/<slug>.yaml`** に置き、次のような形です。
 
 ```yaml
 name: backend-dev
@@ -515,13 +509,14 @@ instruction: |
   Open the PR through the standard workflow with co-author tags.
 ```
 
-項目は次のとおりです:
-- `name`（任意 — 省略するとファイル名がそのまま使われます）— バンドルの表示名です。スラッシュコマンド用にハイフンつなぎへ整えられます（`Backend Dev` → `/backend-dev`）。
-- `description`（任意）— `/bundles` と `hermes bundles list` に出る短い説明です。
-- `skills`（必須、空にできない一覧）— スキルの名前か、スキルのディレクトリからの相対パスです。`/<skill-name>` に渡すのと同じ書き方をします。
-- `instruction`（任意）— 読み込んだスキルの中身の前に足される、追加の案内です。「この組み合わせをいつもこう使う」という決まりを書き残すのに向いています。
+項目は次のとおりです。
 
-### バンドルを管理する {#managing-bundles}
+- `name`（任意。省略するとファイル名がそのまま使われます）— 表示に使う名前。スラッシュコマンド用にハイフン区切りへ整えられます（`Backend Dev` → `/backend-dev`）。
+- `description`（任意）— `/bundles` と `hermes bundles list` に出る短い説明。
+- `skills`（必須。空にはできません）— skill 名、または skill ディレクトリからの相対パス。`/<skill-name>` に渡すのと同じ書き方をします。
+- `instruction`（任意）— 読み込んだ skill の内容の前に置かれる追加の案内。「この組み合わせはいつもこう使う」を書き留めるのに向いています。
+
+### まとめを管理する {#managing-bundles}
 
 ```bash
 # List all installed bundles
@@ -543,78 +538,94 @@ hermes bundles delete backend-dev
 hermes bundles reload
 ```
 
-チャットのセッションの中では、`/bundles` で入っているバンドルとその中身のスキルが一覧できます。
+チャットのセッションの中では、`/bundles` で入っているまとめとその skill が一覧できます。
 
-### ふるまい {#behavior}
+### 挙動 {#behavior}
 
-- **名前がぶつかったらバンドルが優先されます**。`research` という名前のバンドルを作り、同時に `research` というスキルも持っている場合、`/research` はバンドルを呼びます。これは意図した動きです。その名前を付けた時点で、そちらを選んだことになります。
-- **ないスキルは飛ばされるだけで、止まりません。** バンドルに `skill-foo` と書いてあってそれを入れていなくても、バンドルは見つかったスキルを読み込み、飛ばしたものをエージェントに書き添えて伝えます。
-- **バンドルはどの経路でも動きます** — 対話式の CLI、TUI、ダッシュボードのチャット、そしてすべてのゲートウェイのプラットフォーム（Telegram、Discord、Slack、…）。個々のスキルのコマンドと同じ場所で振り分けているからです。
-- **バンドルはプロンプトのキャッシュを壊しません。** `/<skill-name>` と同じように、呼ばれた時点で新しいユーザーメッセージを作るだけで、システムプロンプトには手を触れません。
+- 名前がぶつかったときは、**まとめのほうが個々の skill より優先されます**。`research` という名前のまとめを作り、`research` という skill も持っている場合、`/research` はまとめを呼びます。これは意図した動きです。その名前を選んだのはあなただからです。
+- **足りない skill は飛ばされるだけで、失敗にはなりません。** まとめに `skill-foo` と書いてあってそれが入っていなくても、見つかった skill は読み込まれ、飛ばしたものの一覧がエージェントに伝えられます。
+- **まとめはどの場面でも使えます** — 対話形式の CLI、TUI、ダッシュボードのチャット、ゲートウェイのすべてのプラットフォーム（Telegram、Discord、Slack など）。個々の skill コマンドと同じ場所で振り分けているからです。
+- **まとめはプロンプトの控えを無効にしません。** `/<skill-name>` と同じように、呼び出したときに新しいユーザーメッセージを作るだけで、システムプロンプトは書き換えません。
 
-### 個別に呼ぶよりバンドルが向く場面 {#when-bundles-beat-installing-each-skill-manually}
+### 個別に入れるよりまとめが向く場面 {#when-bundles-beat-installing-each-skill-manually}
 
-こんなときにバンドルを使ってください:
-- 決まった作業でいつも同じスキルを組み合わせている（`/backend-dev`、`/release-prep`、`/incident-response`）。
-- `/skill` を何度も打ち込むより、頭の中で扱いやすい形にしたい。
-- バンドルの YAML を共用の dotfiles のリポジトリに入れて `~/.hermes/skill-bundles/` へシンボリックリンクを張り、チーム共通の「作業の型」として配りたい。
+次のようなときにまとめを使います。
 
-バンドルはあくまで YAML の別名で、スキルそのものを入れてくれるわけではありません。スキルは先に手元にある必要があります（`~/.hermes/skills/` か、外部のスキルディレクトリの中）。なければ、バンドルを呼んでもその分が飛ばされるだけです。
+- 繰り返す作業でいつも同じ skill を組み合わせている（`/backend-dev`、`/release-prep`、`/incident-response`）。
+- `/skill` を何度も打つより、頭の中の手数を減らしたい。
+- まとめの YAML を共有の dotfiles リポジトリに入れて `~/.hermes/skill-bundles/` からリンクし、チーム共通の「作業の型」として配りたい。
 
-## エージェントが自分で管理するスキル（skill_manage ツール） {#agent-managed-skills-skillmanage-tool}
+まとめはただの YAML の別名で、skill を入れてくれるわけではありません。skill そのものが先にある必要があります（`~/.hermes/skills/` か、外部の skill ディレクトリに）。なければ、まとめを呼んでも足りないものは飛ばされるだけです。
 
-エージェントは `skill_manage` ツールを使って、自分のスキルを作り、直し、消せます。これはエージェントにとっての **手順の記憶** です。ひと筋縄ではいかない進め方を見つけたら、その方法をスキルとして残し、次回また使います。
+## エージェントが管理する skill（skill_manage ツール） {#agent-managed-skills-skillmanage-tool}
 
-スキルと記憶は、自分で良くなっていく流れの中で組みになって働きます。記憶はいつも文脈に置いておきたい小さくて変わらない事実を持ち、スキルは関係があるときだけ読み込みたい長めの手順を持ちます。裏で走る振り返りはセッションのあとでスキルの変更を提案したり下書きしたりできますが、下に書いた書き込みの承認を使えば、それが実際に反映される前に人が目を通すようにできます。
+エージェントは `skill_manage` ツールを使って、自分の skill を作り、更新し、消せます。これはエージェントの**手順の記憶**です。込み入った進め方を編み出したら、あとでまた使えるよう skill として保存します。
 
-### エージェントがスキルを作るとき {#when-the-agent-creates-skills}
+skill と記憶は、自分を良くしていく流れの中で組みになって働きます。記憶は常に文脈にあるべき
+小さくて変わらない事実を、skill は必要なときだけ読み込むべき長めの手順を保存します。
+セッションのあとに走る裏側の見直しが skill の変更を提案したり下書きしたりできますが、
+下に書く書き込みの承認を使えば、その変更が反映される前に人の目を通させられます。
 
-システムプロンプトは、ひと筋縄ではいかない進め方を `skill_manage` で残して次に使えるようにするよう、エージェントに求めています。実際には次のような場面です:
+### エージェントが skill を作るとき {#when-the-agent-creates-skills}
 
-- 何度も使えそうな、いくつもの手順を踏むやり方を組み立てたとき
-- エラーや行き止まりにぶつかって、通る道を見つけたとき
-- こちらがやり方を正したとき
+システムプロンプトは、込み入った進め方をあとで使えるよう `skill_manage` で記録するようエージェントに求めています。
+実際には次のような場面です。
 
-### スキル1件はどんな中身になるか {#what-a-skill-entry-looks-like}
+- 繰り返す価値のある多段の進め方を組み立てたとき
+- 失敗や行き止まりに当たって、うまくいく道を見つけたとき
+- 利用者にやり方を正されたとき
 
-スキルとは、ある種類の仕事を、いちばん無駄がなく正しいやり方で、しかもこちらの流儀どおりに進めるための手引きです。順を追った手順、実際に通るコマンドと道具の呼び出し、仕上がりをどうしたいか、そして時間を奪う落とし穴が書かれます。目の前のターンで書かれたものでも、裏で走る見直しが書いたものでも、まとめ役が整理し直したものでも、残るのは **記録ではなく学び** です。落とし穴は、他の場面にも当てはまる一文の決まりごとに、*なぜ* そうなるのか（仕組み）をひと言添えたもので、それが効く手順のところに、一度だけ書きます。出来事の顛末、PR や issue の番号、日付、やり取りの引用は、スキルの中身ではありません。決まりごとは、その背景の話がなくても独りで立てる必要があります。いつでも効かせたい決まりごとは `SKILL.md` 本体に置き、`references/` には話題ごとに名前を付けた少数のファイル（判断の表、手順書、プロバイダごとの癖）を置いて、セッションごとにファイルを増やすのではなく、その場で書き足していきます。毎ターン必ず読み込まれるもの（そのリポジトリの `AGENTS.md`、道具の定義）を、スキルで言い直すこともしません。
+### skill の中身はどういうものか {#what-a-skill-entry-looks-like}
 
-`skill_manage` は `create` のときと `references/` への書き込みのときに助言のための検査を走らせ、気づいた点を道具の結果に載せて返します。この形のために用意された決まりごとが2つあり、`incident-log-shape`（PR や issue の番号だらけの本文）と `references-sprawl`（参照ファイルが60件を超える）です。どちらも注意を出すだけで、書き込みを止めることはありません。
+skill とは、ある種類の作業を、いちばん効率よく正しく、あなたのやり方どおりに進めるための
+指示です。順を追った手順、実際に動くコマンドとツールの呼び出し、結果をどんな形にしたいか、
+そして時間を奪う落とし穴。表のターンで書かれたものでも、裏側の見直しが書いたものでも、
+整理の処理がまとめ直したものでも、そこに残すのは**教訓であって記録ではありません**。落とし穴とは、
+一般化できる決まりに、*なぜ*そうなるか（そのしくみ）を一節だけ添えて、影響する手順のところに
+一度だけ書いたものです。出来事の語り、PR や issue の番号、日付、引用したチャットは skill の
+中身ではありません。決まりは、その背景の話がなくても成り立つ必要があります。常に効く決まりは
+`SKILL.md` そのものに置きます。`references/` には話題ごとに名前を付けた少数のファイル
+（判断の表、手順書、提供元ごとの癖）を置き、セッションごとにファイルを増やすのではなく、
+その場に書き足していきます。また skill には、毎ターン読み込まれるもの（リポジトリの `AGENTS.md`、
+ツールの定義）を書き直す必要はありません。
 
-### 操作の一覧 {#actions}
+`skill_manage` は `create` のときと `references/` への書き込みのときに参考としての検査を走らせ、
+その結果をツールの結果に返します。この形のためだけにある決まりが 2 つあります。
+`incident-log-shape`（PR や issue の番号だらけの本文）と `references-sprawl`（参照ファイルが
+60 を超える）です。どちらも注意を出すだけで、書き込みを止めることはありません。
 
-| 操作 | 使いどころ | 主な引数 |
+### 操作 {#actions}
+
+| 操作 | 用途 | 主な引数 |
 |--------|---------|------------|
-| `create` | スキルをゼロから作る | `name`、`content`（SKILL.md 全文）、任意で `category` |
-| `patch` | 狙いを定めた直し（おすすめ） | `name`、`old_string`、`new_string` |
-| `edit` | 構成から書き直す大きな変更 | `name`、`content`（SKILL.md 全文の置き換え） |
-| `delete` | スキルを丸ごと消す | `name` |
-| `write_file` | 付属のファイルを足す・直す | `name`、`file_path`、`file_content` |
-| `remove_file` | 付属のファイルを消す | `name`、`file_path` |
+| `create` | 新しい skill を一から作る | `name`、`content`（SKILL.md の全文）、任意で `category` |
+| `patch` | 狙いを絞った修正（こちらが望ましい） | `name`、`old_string`、`new_string` |
+| `edit` | 構成から大きく書き直す | `name`、`content`（SKILL.md の全文の差し替え） |
+| `delete` | skill をまるごと消す | `name` |
+| `write_file` | 補助のファイルを足す・更新する | `name`、`file_path`、`file_content` |
+| `remove_file` | 補助のファイルを消す | `name`、`file_path` |
 
 :::tip
-直すときは `patch` が向いています。変わった部分だけがツールの呼び出しに現れるので、`edit` よりトークンを使いません。
+更新には `patch` が向いています。変わった部分だけがツールの呼び出しに現れるので、`edit` よりトークンを使いません。
 :::
 
-### エージェントのスキル書き込みに承認を挟む（`skills.write_approval`） {#gating-agent-skill-writes-skillswriteapproval}
+### エージェントの skill 書き込みに承認を挟む（`skills.write_approval`） {#gating-agent-skill-writes-skillswriteapproval}
 
-既定では、エージェントは自由にスキルを書き込みます。ターンのあとに走る
-[裏の自己改善の振り返り](/hermes/docs/user-guide/features/memory/#controlling-memory-writes-write_approval)
-からの書き込みも含みます。スキルの書き込みを毎回自分で承認したいなら
-（学んだ内容を取り違えがちな小さいモデルを使っている、安全性の求められる環境、
-あるいは単に自己改善の流れに目を通しておきたい場合）、書き込みの承認を入にします:
+既定では、エージェントは自由に skill を書きます。ターンのあとに走る[裏側の自己改善の見直し](/hermes/docs/user-guide/features/memory/#controlling-memory-writes-write_approval)
+からの書き込みも含みます。書き込みのたびに先に承認したい場合（学んだことを見誤りやすい
+小さなモデルを使っている、厳しい環境にいる、あるいは自己改善の流れに目を通しておきたい）は、
+書き込みの承認を有効にします。
 
 ```yaml
 skills:
   write_approval: false     # false = write freely (default) | true = require approval
 ```
 
-`write_approval: true` のとき、`skill_manage` の書き込み（create / edit /
-patch / delete / write_file / remove_file）は反映されずに **保留** されます。
-SKILL.md はその場で読み切るには大きすぎるので、前面のターンから来た書き込みでも
-裏の振り返りから来た書き込みでも、等しく保留になります。
-保留された書き込みは再起動しても `~/.hermes/pending/skills/` の下に残り、
-危険なコマンドのときと同じ、見慣れた承認・却下の流れで確かめられます:
+`write_approval: true` にすると、`skill_manage` のすべての書き込み（create / edit /
+patch / delete / write_file / remove_file）は、反映される代わりに**下書きとして置かれます**。
+SKILL.md はその場で読むには大きすぎるので、表のターンからの書き込みでも裏側の見直しからの
+ものでも、同じように下書きになります。下書きは `~/.hermes/pending/skills/` の下で
+再起動をまたいで残り、危険なコマンドと同じおなじみの承認・却下の流れで確認します。
 
 ```
 /skills pending             # list staged skill writes + a one-line gist each
@@ -624,18 +635,18 @@ SKILL.md はその場で読み切るには大きすぎるので、前面のタ�
 /skills approval on         # turn the gate on (or 'off') and persist it
 ```
 
-この確認の画面は、対話式の CLI でもメッセージのプラットフォームでも使えます
-（チャットの吹き出しに収めるため差分は途中で切られます。全文は CLI か保留中の
-JSON ファイルで読んでください）。記憶の書き込みにも `memory.write_approval`
-という同じ仕組みがあります。[記憶の書き込みを制御する](/hermes/docs/user-guide/features/memory/#controlling-memory-writes-write_approval) を見てください。
+確認の画面は、対話形式の CLI でもメッセージングプラットフォームでも使えます
+（チャットの吹き出しでは差分が切り詰められます。全体は CLI か、下書きの JSON ファイルで
+読んでください）。記憶の書き込みにも `memory.write_approval` として同じしくみがあります。
+[記憶の書き込みを制御する](/hermes/docs/user-guide/features/memory/#controlling-memory-writes-write_approval)を参照してください。
 
-> これとは別の `skills.guard_agent_created` という設定は中身を調べるスキャナー
-> （危険なパターンを見つける仕組み）であって、承認の関門ではありません。2 つは
-> それぞれ独立しています。[エージェントが作ったスキルの書き込みを見張る](/hermes/docs/user-guide/configuration/#guard-on-agent-created-skill-writes) を見てください。
+> これとは別の `skills.guard_agent_created` は内容を検査するもの
+> （危険な形かどうかの見当を付ける）で、承認のしくみではありません。この 2 つは
+> 互いに関係ありません。[エージェントが作る skill の書き込みを見張る](/hermes/docs/user-guide/configuration/#guard-on-agent-created-skill-writes)を参照してください。
 
-## スキルハブ {#skills-hub}
+## Skills Hub {#skills-hub}
 
-オンラインの登録先、`skills.sh`、well-known のスキル配信先、そして公式の追加スキルから、スキルを探し、検索し、導入し、管理できます。
+オンラインの登録所、`skills.sh`、well-known の入口を直接指定する形、そして公式の追加 skill から、skill を探し、検索し、入れ、管理できます。
 
 ### よく使うコマンド {#common-commands}
 
@@ -664,26 +675,26 @@ hermes skills snapshot export setup.json          # Export skill config
 hermes skills tap add myorg/skills-repo           # Add a custom GitHub source
 ```
 
-### 対応している配布元 {#supported-hub-sources}
+### 使える hub の取得元 {#supported-hub-sources}
 
-| 配布元 | 例 | 補足 |
+| 取得元 | 例 | 補足 |
 |--------|---------|-------|
-| `official` | `official/security/1password` | Hermes に同梱されている、任意で入れるスキルです。 |
-| `skills-sh` | `skills-sh/vercel-labs/agent-skills/vercel-react-best-practices` | `hermes skills search <query> --source skills-sh` で検索できます。skills.sh 側の slug がリポジトリのフォルダ名と違う場合も、Hermes が別名として解決します。 |
-| `well-known` | `well-known:https://mintlify.com/docs/.well-known/skills/mintlify` | サイトの `/.well-known/skills/index.json` から直接配られているスキルです。サイトやドキュメントの URL で検索します。 |
-| `url` | `https://sharethis.chat/SKILL.md` | `SKILL.md` とそこから明示的に参照されている付属ファイルへの、直接の HTTP(S) URL です。名前の決め方は frontmatter → URL の slug → 対話での入力 → `--name` の指定、の順です。 |
-| `github` | `openai/skills/k8s` | GitHub のリポジトリやパスからの直接の導入と、独自の tap です。 |
-| `clawhub`、`lobehub`、`browse-sh` | 配布元ごとの識別子 | コミュニティやマーケットプレイスとの連携です。 |
+| `official` | `official/security/1password` | Hermes と一緒に配られる追加の skill。 |
+| `skills-sh` | `skills-sh/vercel-labs/agent-skills/vercel-react-best-practices` | `hermes skills search <query> --source skills-sh` で検索できます。skills.sh の名前とリポジトリのフォルダー名が違う場合、Hermes が別名として解決します。 |
+| `well-known` | `well-known:https://mintlify.com/docs/.well-known/skills/mintlify` | サイトの `/.well-known/skills/index.json` から直接配られる skill。サイトやドキュメントの URL で検索します。 |
+| `url` | `https://sharethis.chat/SKILL.md` | `SKILL.md` の HTTP(S) の URL と、そこで明示的に参照されている補助ファイル。名前の決め方は、frontmatter → URL の末尾 → 対話での入力 → `--name` の指定、の順です。 |
+| `github` | `openai/skills/k8s` | GitHub のリポジトリやパスからの直接のインストールと、独自の取得元。 |
+| `clawhub`、`lobehub`、`browse-sh` | 取得元ごとの識別子 | コミュニティやマーケットプレイスとの連携。 |
 
-### 連携しているハブと登録先 {#integrated-hubs-and-registries}
+### つながっている hub と登録所 {#integrated-hubs-and-registries}
 
-Hermes はいま、次のスキルの生態系や見つけ方と連携しています:
+Hermes はいま、次の skill のしくみと探索の経路につながっています。
 
-#### 1. 公式の追加スキル（`official`） {#1-official-optional-skills-official}
+#### 1. 公式の追加 skill（`official`） {#1-official-optional-skills-official}
 
-Hermes のリポジトリそのもので手入れされていて、最初から信頼された状態で入ります。
+Hermes のリポジトリ自身で管理されているもので、最初から信頼された扱いで入ります。
 
-- 一覧: [公式の追加スキル一覧](/hermes/docs/reference/optional-skills-catalog/)
+- 一覧: [公式の追加 skill の一覧](/hermes/docs/reference/optional-skills-catalog/)
 - リポジトリ内の場所: `optional-skills/`
 - 例:
 
@@ -694,11 +705,11 @@ hermes skills install official/security/1password
 
 #### 2. skills.sh（`skills-sh`） {#2-skillssh-skills-sh}
 
-Vercel が公開しているスキルのディレクトリです。Hermes はここを直接検索し、スキルの詳細ページを覗き、別名の slug を解決し、元のリポジトリから導入できます。
+Vercel が公開している skill のディレクトリです。Hermes はそこを直接検索し、skill の詳細ページを見て、別名の解決をして、もとのリポジトリからインストールできます。
 
 - ディレクトリ: [skills.sh](https://skills.sh/)
-- CLI・ツールのリポジトリ: [vercel-labs/skills](https://github.com/vercel-labs/skills)
-- Vercel 公式のスキルのリポジトリ: [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)
+- CLI とツールのリポジトリ: [vercel-labs/skills](https://github.com/vercel-labs/skills)
+- Vercel 公式の skill リポジトリ: [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)
 - 例:
 
 ```bash
@@ -707,12 +718,12 @@ hermes skills inspect skills-sh/vercel-labs/json-render/json-render-react
 hermes skills install skills-sh/vercel-labs/json-render/json-render-react --force
 ```
 
-#### 3. well-known のスキル配信先（`well-known`） {#3-well-known-skill-endpoints-well-known}
+#### 3. well-known の skill の入口（`well-known`） {#3-well-known-skill-endpoints-well-known}
 
-`/.well-known/skills/index.json` を公開しているサイトから、URL で見つける方法です。中央に集まったハブが 1 つあるわけではなく、Web 上の取り決めです。
+`/.well-known/skills/index.json` を公開しているサイトから、URL で見つける方法です。中央に 1 つの hub があるわけではなく、Web の取り決めです。
 
-- 実際に動いている例: [Mintlify のドキュメントのスキル一覧](https://mintlify.com/docs/.well-known/skills/index.json)
-- 実装の見本となるサーバー: [vercel-labs/skills-handler](https://github.com/vercel-labs/skills-handler)
+- 実際に動いている入口の例: [Mintlify のドキュメントの skill 目次](https://mintlify.com/docs/.well-known/skills/index.json)
+- 参考になるサーバーの実装: [vercel-labs/skills-handler](https://github.com/vercel-labs/skills-handler)
 - 例:
 
 ```bash
@@ -723,13 +734,14 @@ hermes skills install well-known:https://mintlify.com/docs/.well-known/skills/mi
 
 #### 4. GitHub から直接（`github`） {#4-direct-github-skills-github}
 
-Hermes は GitHub のリポジトリや、GitHub をもとにした tap から直接導入できます。リポジトリとパスがすでにわかっているときや、自分の配布元を足したいときに便利です。
+Hermes は GitHub のリポジトリや、GitHub をもとにした取得元から直接インストールできます。リポジトリとパスがすでに分かっているときや、自分の取得元を足したいときに便利です。
 
-最初から見られる既定の tap:
+すぐに見られる既定の取得元は次のとおりです。
+
 - [openai/skills](https://github.com/openai/skills)
 - [anthropics/skills](https://github.com/anthropics/skills)
 - [huggingface/skills](https://github.com/huggingface/skills)
-- [NVIDIA/skills](https://github.com/NVIDIA/skills) — NVIDIA が検証したスキルです（署名付きの `skill.oms.sig` と、取り扱いを示す `skill-card.md` が付きます）
+- [NVIDIA/skills](https://github.com/NVIDIA/skills) — NVIDIA が検証した skill（署名付きの `skill.oms.sig` と、運用方針を書いた `skill-card.md` が付きます）
 - [garrytan/gstack](https://github.com/garrytan/gstack)
 
 - 例:
@@ -739,15 +751,13 @@ hermes skills install openai/skills/k8s
 hermes skills tap add myorg/skills-repo
 ```
 
-**カテゴリのまとめ方（`skills.sh.json`）。** GitHub の tap は、リポジトリの
-直下に [skills.sh の書式](https://skills.sh/schemas/skills.sh.schema.json)
-に沿った `skills.sh.json` を置けます。その中の
-`groupings`（それぞれ `title` とスキル名の並びを持ちます）が一覧を作るときに
-読まれ、
-[スキルハブ](https://hermes-agent.nousresearch.com/docs) のページに出る
-カテゴリの名前になります。タグからの推測ではなくなる、ということです。これは
-どの tap にも共通で、このファイルを置けば正しく分類されます。Hermes 側に手を
-入れる必要はありません。
+**分類のまとまり（`skills.sh.json`）。** GitHub の取得元は、リポジトリの直下に
+[skills.sh の仕様](https://skills.sh/schemas/skills.sh.schema.json)に沿った
+`skills.sh.json` を置けます。その `groupings`（それぞれ `title` と skill 名の並び）は
+目次を作るときに読まれ、[Skills Hub](https://hermes-agent.nousresearch.com/docs) の
+ページに出る分類の名前になります。タグからの推測より正確です。これは特定の相手向けの
+しくみではありません。このファイルを置いた取得元なら、Hermes 側を変えなくても
+きちんと分類されます。
 
 ```json
 {
@@ -761,28 +771,28 @@ hermes skills tap add myorg/skills-repo
 
 #### 5. ClawHub（`clawhub`） {#5-clawhub-clawhub}
 
-コミュニティの配布元として連携している、第三者のスキルのマーケットプレイスです。
+コミュニティの取得元としてつながっている、第三者の skill のマーケットプレイスです。
 
 - サイト: [clawhub.ai](https://clawhub.ai/)
-- Hermes での配布元 id: `clawhub`
+- Hermes での取得元 id: `clawhub`
 
 #### 6. LobeHub（`lobehub`） {#6-lobehub-lobehub}
 
-Hermes は LobeHub が公開している一覧を検索し、そこにあるエージェントの項目を Hermes に入れられるスキルへ変換できます。
+Hermes は LobeHub が公開している目録のエージェントの項目を検索し、Hermes に入れられる skill へ変換できます。
 
 - サイト: [LobeHub](https://lobehub.com/)
-- 公開エージェントの一覧: [chat-agents.lobehub.com](https://chat-agents.lobehub.com/)
-- 元のリポジトリ: [lobehub/lobe-chat-agents](https://github.com/lobehub/lobe-chat-agents)
-- Hermes での配布元 id: `lobehub`
+- 公開エージェントの目次: [chat-agents.lobehub.com](https://chat-agents.lobehub.com/)
+- もとになっているリポジトリ: [lobehub/lobe-chat-agents](https://github.com/lobehub/lobe-chat-agents)
+- Hermes での取得元 id: `lobehub`
 
 #### 7. browse.sh（`browse-sh`） {#7-browsesh-browse-sh}
 
-Hermes は [browse.sh](https://browse.sh) と連携しています。Browserbase が集めた、サイトごとのブラウザ操作を書いた 200 以上の SKILL.md の一覧です（Airbnb、Amazon、arXiv、12306.cn、Etsy、Xero、その他たくさん）。それぞれのスキルが 1 つのサイトを最初から最後まで動かす方法を書いていて、Hermes のブラウザの道具や、すでに入れてあるブラウザ操作のスキルと組み合わせて使えます。
+Hermes は [browse.sh](https://browse.sh) とつながっています。これは Browserbase が集めた、サイトごとのブラウザー操作の SKILL.md が 200 以上ある目録です（Airbnb、Amazon、arXiv、12306.cn、Etsy、Xero など）。それぞれの skill は 1 つのサイトを最初から最後まで操作する方法を書いたもので、Hermes のブラウザーのツールや、すでに入れてあるブラウザー操作の skill と組み合わせて使えます。
 
 - サイト: [browse.sh](https://browse.sh/)
-- 一覧の API: `https://browse.sh/api/skills`
-- Hermes での配布元 id: `browse-sh`
-- 信頼レベル: `community`
+- 目録の API: `https://browse.sh/api/skills`
+- Hermes での取得元 id: `browse-sh`
+- 信頼の水準: `community`
 
 ```bash
 hermes skills search airbnb --source browse-sh
@@ -790,26 +800,27 @@ hermes skills inspect browse-sh/airbnb.com/search-listings-ddgioa
 hermes skills install browse-sh/airbnb.com/search-listings-ddgioa
 ```
 
-識別子は `browse-sh/<hostname>/<task-id>` という形で、browse.sh の一覧が出している slug と同じです。中身は一覧の GitHub の `sourceUrl` ではなく、スキルごとの詳細の配信先（`/api/skills/<slug>` → `skillMdUrl`）から取り出されます。
+識別子は `browse-sh/<hostname>/<task-id>` の形で、browse.sh の目録が公開している名前と同じです。中身は目録の GitHub の `sourceUrl` ではなく、skill ごとの詳細の入口（`/api/skills/<slug>` → `skillMdUrl`）から取ってきます。
 
-#### 8. URL から直接（`url`） {#8-direct-url-url}
+#### 8. URL を直接指定（`url`） {#8-direct-url-url}
 
-`SKILL.md` を HTTP(S) の URL から直接入れられます。作者が自分のサイトでスキルを配っているときに便利です（ハブに載っていない、GitHub のパスを打ち込む必要もない、という場合です）。Hermes は `references/`、`templates/`、`scripts/`、`assets/`、`examples/` の下から明示的に参照されているファイルもあわせて取ってきて、一式をスキャンしてから導入します。
+HTTP(S) の URL から `SKILL.md` を直接入れられます。作者が自分のサイトで skill を公開している（hub に載っていない、GitHub のパスもない）ときに便利です。Hermes は `references/`、`templates/`、`scripts/`、`assets/`、`examples/` の下で明示的に参照されているファイルも取得し、束の全体を検査してから入れます。
 
-- Hermes での配布元 id: `url`
-- 識別子: URL そのもの（前に何も付けません）
-- 範囲: `SKILL.md` と、許された上のディレクトリにある、実際に参照されている付属ファイルだけです。Hermes がその配信元の関係ないファイルを数え上げたりコピーしたりすることはありません。
+- Hermes での取得元 id: `url`
+- 識別子: URL そのもの（前置きは不要です）
+- 範囲: `SKILL.md` と、許可されたディレクトリの下で実際に参照されている補助ファイルだけ。Hermes が配布元の関係ないファイルを一覧したり写したりすることはありません。
 
 ```bash
 hermes skills install https://sharethis.chat/SKILL.md
 hermes skills install https://example.com/my-skill/SKILL.md --category productivity
 ```
 
-名前は次の順で決まります:
-1. SKILL.md の YAML frontmatter の `name:` の項目（これがおすすめです。きちんと書かれたスキルには必ずあります）。
-2. URL のパスの親ディレクトリの名前（たとえば `.../my-skill/SKILL.md` → `my-skill`、`.../my-skill.md` → `my-skill`）。ただし識別子として使える形（`^[a-z][a-z0-9_-]*$`）のときだけです。
-3. TTY のあるターミナルでの入力。
-4. 対話しない経路（TUI の中の `/skills install` スラッシュコマンド、ゲートウェイのプラットフォーム、スクリプト）では、`--name` で指定するよう促すはっきりしたエラーになります。
+名前は次の順で決まります。
+
+1. SKILL.md の YAML frontmatter の `name:`（これが望ましく、きちんと書かれた skill には必ずあります）。
+2. URL のパスの親ディレクトリ名（例: `.../my-skill/SKILL.md` → `my-skill`、`.../my-skill.md` → `my-skill`）。ただし名前として使える形（`^[a-z][a-z0-9_-]*$`）のときだけです。
+3. TTY のある端末での対話での入力。
+4. 対話しない場面（TUI の中の `/skills install` スラッシュコマンド、ゲートウェイのプラットフォーム、スクリプト）では、`--name` で指定するよう促す分かりやすいエラー。
 
 ```bash
 # Frontmatter has no name and the URL slug is unhelpful — supply one:
@@ -819,43 +830,45 @@ hermes skills install https://example.com/SKILL.md --name sharethis-chat
 /skills install https://example.com/SKILL.md --name sharethis-chat
 ```
 
-信頼レベルは必ず `community` で、他のどの配布元とも同じセキュリティスキャンが走ります。URL は導入時の識別子として保存されるので、更新したくなったら `hermes skills update` が同じ URL から取り直してくれます。
+信頼の水準は必ず `community` で、他の取得元と同じ安全の検査が走ります。URL はインストールの識別子として保存されるので、`hermes skills update` で最新にしたいときは同じ URL から自動で取り直されます。
 
-### セキュリティスキャンと `--force` {#security-scanning-and---force}
+### 安全の検査と `--force` {#security-scanning-and---force}
 
-ハブから入れたスキルはすべて **セキュリティスキャナー** を通り、データの持ち出し、プロンプトへの仕込み、壊しにかかるコマンド、供給網の怪しい兆候、その他の脅威がないか調べられます。
+hub から入れる skill はすべて、**安全の検査**を通ります。データの持ち出し、プロンプトへの注入、破壊的なコマンド、供給網の危うい兆候などを調べます。
 
-`hermes skills inspect ...` は、取れる場合には配布元の情報もあわせて見せます:
+`hermes skills inspect ...` は、取得できる場合に上流の情報も見せるようになりました。
+
 - リポジトリの URL
 - skills.sh の詳細ページの URL
-- 導入のコマンド
-- 週あたりの導入数
-- 配布元でのセキュリティ監査の状況
-- well-known の一覧や配信先の URL
+- インストールのコマンド
+- 週あたりのインストール数
+- 上流での安全確認の状態
+- well-known の目次や入口の URL
 
-第三者のスキルを自分で確かめたうえで、危険とまではいかない判定による停止を越えて進めたいときは `--force` を使います:
+第三者の skill を自分で確かめたうえで、危険とまでは言えない方針上の停止を押し切りたいときは `--force` を使います。
 
 ```bash
 hermes skills install skills-sh/anthropics/skills/pdf --force
 ```
 
-押さえておきたい点:
-- `--force` は、注意や警告どまりの指摘による停止を越えられます。
-- `--force` は `dangerous` という判定を越えることは **できません**。
-- 公式の追加スキル（`official/...`）は最初から信頼されたものとして扱われ、第三者向けの警告の画面は出ません。
+大事な点は次のとおりです。
 
-### 信頼レベル {#trust-levels}
+- `--force` は、注意や警告の水準の指摘による停止を押し切れます。
+- `--force` は、検査の判定が `dangerous` の場合には**効きません**。
+- 公式の追加 skill（`official/...`）は最初から信頼された扱いなので、第三者向けの警告の画面は出ません。
 
-| レベル | 配布元 | 扱い |
+### 信頼の水準 {#trust-levels}
+
+| 水準 | 取得元 | 方針 |
 |-------|--------|--------|
 | `builtin` | Hermes に同梱 | 常に信頼されます |
 | `official` | リポジトリの `optional-skills/` | 最初から信頼され、第三者向けの警告は出ません |
-| `trusted` | `openai/skills`、`anthropics/skills`、`huggingface/skills`、`NVIDIA/skills` のような信頼された登録先・リポジトリ | コミュニティの配布元より緩やかに扱われます |
-| `community` | それ以外すべて（`skills.sh`、well-known の配信先、独自の GitHub リポジトリ、たいていのマーケットプレイス） | 危険とまではいかない指摘は `--force` で越えられます。`dangerous` の判定は止められたままです |
+| `trusted` | `openai/skills`、`anthropics/skills`、`huggingface/skills`、`NVIDIA/skills` のような信頼された登録所・リポジトリ | コミュニティの取得元より緩やかな方針です |
+| `community` | それ以外すべて（`skills.sh`、well-known の入口、独自の GitHub リポジトリ、たいていのマーケットプレイス） | 危険とまでは言えない指摘は `--force` で押し切れます。`dangerous` の判定は止まったままです |
 
 ### 更新の流れ {#update-lifecycle}
 
-ハブは、入れたスキルの配布元をもう一度確かめられるだけの出どころの情報を持つようになりました:
+hub は、入れてある skill の上流の版をもう一度調べられるだけの出どころを記録するようになりました。
 
 ```bash
 hermes skills check          # Report which installed hub skills changed upstream
@@ -864,21 +877,21 @@ hermes skills update react   # Update one specific installed hub skill
 hermes skills update react --force   # Overwrite a skill you've edited locally
 ```
 
-これには、保存してある配布元の識別子と、いまの配布元の一式の内容のハッシュを使って、ずれを見つけています。
+保存された取得元の識別子と、いまの上流の束の内容のハッシュを使って、ずれを見つけます。
 
-自分で手を入れたスキル（ディスク上の中身が、導入したときに記録したハッシュと合わなくなったもの）は `hermes skills update` から **飛ばされる** ので、変更が黙って上書きされることはありません。それでも配布元のもので置き換えたいときは `--force` を付けてください。
+自分で編集した skill（ディスク上の内容が、インストール時に記録したハッシュと合わなくなったもの）は、`hermes skills update` の対象から**外されます**。変更が黙って上書きされることはありません。それでも上流の版に置き換えたいときは `--force` を渡します。
 
-:::tip GitHub の回数制限
-スキルハブの操作は GitHub の API を使っていて、認証しない場合は 1 時間あたり 60 回までという制限があります。導入や検索の途中で回数制限のエラーが出たら、`.env` に `GITHUB_TOKEN` を設定すると 1 時間あたり 5,000 回まで増えます。この場合、エラーのメッセージにも次にすべきことが書かれます。
+:::tip GitHub の流量制限
+skill の hub の操作は GitHub の API を使います。認証していない場合の上限は 1 時間あたり 60 リクエストです。インストールや検索のときに上限のエラーが出たら、`.env` に `GITHUB_TOKEN` を設定すれば 1 時間あたり 5,000 リクエストまで増えます。エラーのメッセージにも、そのときに何をすればよいかが書かれています。
 :::
 
-### 独自の tap を公開する {#publishing-a-custom-skill-tap}
+### 自分の skill の取得元を公開する {#publishing-a-custom-skill-tap}
 
-自分で選んだスキルの一式を、チームや組織、あるいは広く公開したいなら、**tap** として出せます。他の Hermes 利用者が `hermes skills tap add <owner/repo>` で足せる GitHub のリポジトリのことです。サーバーも、登録先への申し込みも、公開のための仕組みも要りません。`SKILL.md` の入ったディレクトリがあるだけです。
+選んだ skill をまとめて共有したい——チーム内、組織内、あるいは広く公開——という場合、**tap** として公開できます。tap とは、他の Hermes の利用者が `hermes skills tap add <owner/repo>` で足せる GitHub のリポジトリのことです。サーバーも、登録所への登録も、リリースの仕組みも要りません。`SKILL.md` を置いたディレクトリがあれば十分です。
 
 #### リポジトリの構成 {#repo-layout}
 
-tap は、こんな形に整えた GitHub のリポジトリなら何でもかまいません（公開でも非公開でも。非公開の場合は `GITHUB_TOKEN` が要ります）:
+tap は、次のように並べた GitHub のリポジトリなら何でも構いません（公開でも非公開でも。非公開なら `GITHUB_TOKEN` が必要です）。
 
 ```
 owner/repo
@@ -895,16 +908,17 @@ owner/repo
 └── README.md                     # optional but helpful
 ```
 
-決まりごと:
-- スキルはそれぞれ、tap の起点となるパス（既定では `skills/`）の下に自分のディレクトリを持ちます。
-- ディレクトリの名前が、そのまま導入時の slug になります。
-- 各スキルのディレクトリには、決まった形の [SKILL.md の frontmatter](#skillmd-format)（`name`、`description`、必要に応じて `metadata.hermes.tags`、`version`、`author`、`platforms`、`metadata.hermes.config`）を持つ `SKILL.md` が必要です。
-- `references/`、`templates/`、`scripts/`、`assets/` といったサブディレクトリは、導入のときに `SKILL.md` と一緒に取ってこられます。
-- ディレクトリ名が `.` か `_` で始まるスキルは無視されます。
+決まりは次のとおりです。
 
-Hermes は、tap のパスの下にあるサブディレクトリをすべて並べ、それぞれに `SKILL.md` があるかを確かめてスキルを見つけます。
+- skill はそれぞれ、tap のルートのパス（既定は `skills/`）の下の自分のディレクトリに置きます。
+- ディレクトリ名が、そのまま skill のインストール名になります。
+- 各 skill のディレクトリには、標準の [SKILL.md の frontmatter](#skillmd-format)（`name`、`description`、任意で `metadata.hermes.tags`、`version`、`author`、`platforms`、`metadata.hermes.config`）を持つ `SKILL.md` が必要です。
+- `references/`、`templates/`、`scripts/`、`assets/` のようなサブディレクトリは、インストール時に `SKILL.md` と一緒に取得されます。
+- ディレクトリ名が `.` または `_` で始まる skill は無視されます。
 
-#### 最小の tap の例 {#minimal-tap-example}
+Hermes は、tap のパスの下のサブディレクトリをすべて並べ、それぞれに `SKILL.md` があるかを見て skill を見つけます。
+
+#### いちばん小さい tap の例 {#minimal-tap-example}
 
 ```
 my-org/hermes-skills
@@ -931,7 +945,7 @@ metadata:
 Step 1: ...
 ```
 
-これを GitHub に push すれば、どの Hermes 利用者でも登録して導入できます:
+これを GitHub へ push すれば、どの Hermes の利用者も購読してインストールできます。
 
 ```bash
 hermes skills tap add my-org/hermes-skills
@@ -941,7 +955,7 @@ hermes skills install my-org/hermes-skills/deploy-runbook
 
 #### 既定と違うパス {#non-default-paths}
 
-スキルが `skills/` の下にない場合（既存のプロジェクトに `skills/` を後から足したときによくあります）、`~/.hermes/skills/.hub/taps.json` の該当する tap を書き換えます:
+skill が `skills/` の下にない場合（すでにあるプロジェクトに `skills/` の一部を足したときによくあります）、`~/.hermes/skills/.hub/taps.json` の tap の項目を編集します。
 
 ```json
 {
@@ -951,21 +965,21 @@ hermes skills install my-org/hermes-skills/deploy-runbook
 }
 ```
 
-`hermes skills tap add` は新しい tap を `path: "skills/"` として足します。違うパスにしたいときは、このファイルを直接書き換えてください。`hermes skills tap list` を実行すると、tap ごとの実際のパスが見られます。
+`hermes skills tap add` は、新しい tap を既定で `path: "skills/"` にします。別のパスが必要なときはファイルを直接編集してください。`hermes skills tap list` は tap ごとに実際に使われるパスを表示します。
 
-#### tap を追加せずに 1 つずつ入れる {#installing-individual-skills-directly-without-adding-a-tap}
+#### tap を足さずに 1 つだけ入れる {#installing-individual-skills-directly-without-adding-a-tap}
 
-リポジトリ全体を tap として足さなくても、公開されている GitHub のリポジトリから 1 つのスキルだけを入れることもできます:
+公開されている GitHub のリポジトリから、リポジトリ全体を tap として足さずに、skill を 1 つだけ入れることもできます。
 
 ```bash
 hermes skills install owner/repo/skills/my-workflow
 ```
 
-自分の配布元をまるごと登録してもらわずに、スキルを 1 つだけ渡したいときに便利です。
+登録所ごと購読してもらわずに、skill を 1 つだけ共有したいときに便利です。
 
-#### tap の信頼レベル {#trust-levels-for-taps}
+#### tap の信頼の水準 {#trust-levels-for-taps}
 
-新しく足した tap には、既定で `community` の信頼が与えられます。そこから入れたスキルは通常のセキュリティスキャンを通り、最初の導入では第三者向けの警告の画面が出ます。自分の組織や広く信頼されている配布元にもっと高い信頼を与えたい場合は、`tools/skills_guard.py` の `TRUSTED_REPOS` にそのリポジトリを足します（Hermes 本体への PR が必要です）。
+新しい tap は既定で `community` の信頼になります。そこから入れた skill は通常の安全の検査を通り、最初のインストール時には第三者向けの警告の画面が出ます。自分の組織や広く信頼されている取得元をもっと高い水準にしたい場合は、`tools/skills_guard.py` の `TRUSTED_REPOS` にそのリポジトリを足します（Hermes 本体への PR が必要です）。
 
 #### tap の管理 {#tap-management}
 
@@ -975,7 +989,7 @@ hermes skills tap add myorg/skills-repo               # add (default path: skill
 hermes skills tap remove myorg/skills-repo            # remove
 ```
 
-セッションを動かしている中では:
+セッションの中では次のように使います。
 
 ```
 /skills tap list
@@ -983,20 +997,22 @@ hermes skills tap remove myorg/skills-repo            # remove
 /skills tap remove myorg/skills-repo
 ```
 
-tap は `~/.hermes/skills/.hub/taps.json` に保存されます（必要になった時点で作られます）。
+tap は `~/.hermes/skills/.hub/taps.json` に保存されます（必要になったときに作られます）。
 
-## 同梱スキルの更新（`hermes skills reset`） {#bundled-skill-updates-hermes-skills-reset}
+## 同梱 skill の更新（`hermes skills reset`） {#bundled-skill-updates-hermes-skills-reset}
 
-Hermes はリポジトリの `skills/` の中に、同梱のスキルを一式持っています。導入のときと `hermes update` のたびに、それらが `~/.hermes/skills/` へコピーされ、`~/.hermes/skills/.bundled_manifest` に、そのときの各スキルの名前と内容のハッシュ（**もとのハッシュ**）の対応が記録されます。
+Hermes は、リポジトリの `skills/` に同梱の skill を持っています。インストール時と `hermes update` のたびに、同期の処理がそれらを `~/.hermes/skills/` へ写し、`~/.hermes/skills/.bundled_manifest` に、各 skill 名と、同期した時点の内容のハッシュ（**もとのハッシュ**）の対応を記録します。
 
-同期のたびに、Hermes は手元のコピーのハッシュを計算し直して、もとのハッシュと比べます:
+同期のたびに、Hermes は手元の写しのハッシュを計算し直し、もとのハッシュと比べます。
 
-- **変わっていない** → 配布元の変更を取り込んでよい、と判断して新しい同梱版をコピーし、新しいもとのハッシュを記録します。
-- **変わっている** → **手を加えたもの** とみなして、以後ずっと飛ばします。編集した内容が踏み潰されることはありません。
+- **変わっていない** → 上流の変更を取り込んで問題ないので、新しい同梱の版を写し、新しいもとのハッシュを記録します。
+- **変わっている** → **利用者が手を入れたもの**として、以後ずっと対象外にします。編集が踏み潰されることはありません。
 
-守り方としてはよくできていますが、ひとつ引っかかる点があります。同梱スキルを編集したあとで、その変更をやめて同梱版に戻したくなり、`~/.hermes/hermes-agent/skills/` からコピーして貼り付けただけの場合、manifest には最後に同期が成功したときの *古い* もとのハッシュが残ったままです。貼り付けた中身（いまの同梱版のハッシュ）はその古いハッシュと合わないので、同期はいつまでも「手を加えたもの」として扱い続けます。
+skill の中に作られる実行時の一時ファイル（`__pycache__/`、`.pytest_cache/`、`.mypy_cache/`、`.ruff_cache/`、`.py` の隣にある `.pyc`）はハッシュに含まれないので、skill の補助スクリプトを動かしただけで手を入れた扱いになったり、`hermes skills list-modified` や `diff` から消えたりすることはありません。
 
-`hermes skills reset` はその抜け道です:
+この守りはよくできていますが、ひとつ厄介な角があります。同梱の skill を編集したあとで、その変更をやめて `~/.hermes/hermes-agent/skills/` からコピー＆ペーストして同梱の版に戻した場合、記録には最後に同期が成功したときの*古い*もとのハッシュが残ったままです。貼り付けた中身（いまの同梱のハッシュ）はその古いハッシュと合わないので、同期は手を入れたものとして印を付け続けます。
+
+`hermes skills reset` はそのための逃げ道です。
 
 ```bash
 # Safe: clears the manifest entry for this skill. Your current copy is preserved,
@@ -1011,20 +1027,20 @@ hermes skills reset google-workspace --restore
 hermes skills reset google-workspace --restore --yes
 ```
 
-同じコマンドは、チャットの中でもスラッシュコマンドとして使えます:
+同じコマンドは、チャットではスラッシュコマンドとして使えます。
 
 ```text
 /skills reset google-workspace
 /skills reset google-workspace --restore
 ```
 
-:::note プロファイルについて
-プロファイルはそれぞれ自分の `HERMES_HOME` の下に自分の `.bundled_manifest` を持つので、`hermes -p coder skills reset <name>` はそのプロファイルにしか効きません。
+:::note プロファイル
+プロファイルごとに、それぞれの `HERMES_HOME` の下に自分の `.bundled_manifest` があります。`hermes -p coder skills reset <name>` は、そのプロファイルにだけ効きます。
 :::
 
-### チャットの中のスラッシュコマンド {#slash-commands-inside-chat}
+### スラッシュコマンド（チャットの中） {#slash-commands-inside-chat}
 
-同じコマンドはすべて `/skills` でも使えます:
+同じコマンドはすべて `/skills` でも使えます。
 
 ```text
 /skills browse
@@ -1038,4 +1054,4 @@ hermes skills reset google-workspace --restore --yes
 /skills list
 ```
 
-公式の追加スキルは、いまも `official/security/1password` や `official/migration/openclaw-migration` のような識別子で指定します。
+公式の追加 skill は、いまも `official/security/1password` や `official/migration/openclaw-migration` のような識別子を使います。

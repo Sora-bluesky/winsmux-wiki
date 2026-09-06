@@ -8,6 +8,19 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-09-06
+
+- [同梱スキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/skills-catalog/)
+- [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [メッセージングのゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
+- [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
+- [Competitor News Monitor — 指定した企業を見張って重要な動きだけを集め、出典付きのまとめにする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/)
+- [Grounded Citations — 回答や文書を、出典を示せる形で裏付ける](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/)
+- [Rss Feeds — RSS・Atom・JSON のフィードを読み、ページの裏にあるフィードを見つける](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/)
+- [Reddit Reading — Reddit を読む: サブレディット、検索、スレッド、ユーザー](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/)
+- [Blogwatcher — blogwatcher-cli を使ってブログや RSS/Atom フィードの更新を追いかける](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-blogwatcher/)
+
 ## 2026-09-05
 
 - [developer-guide/adding-platform-adapters](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
@@ -206,7 +219,7 @@ raw: /hermes/raw/updates.md
 - [Xlsx — Excel の .xlsx ブックと CSV を作る・読む・直す](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/productivity/productivity-xlsx/)
 - [Arxiv — arXiv の論文をキーワード・著者・分野・ID で探す](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-arxiv/)
 - [Competitor News Monitor — 指定した企業を見張って重要な動きだけを集め、出典付きのまとめにする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/)
-- [Grounded Citations — 回答や文書を、たどれる出典に結び付ける](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/)
+- [Grounded Citations — 回答や文書を、出典を示せる形で裏付ける](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/)
 - [Llm Wiki — Karpathy の LLM Wiki: 相互にリンクした markdown のナレッジベースを作り、問い合わせる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-llm-wiki/)
 - [Research Paper Writing — NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-research-paper-writing/)
 - [Xurl — xurl CLI で X/Twitter を扱う: 投稿の生データ検索、投稿、DM、メディア](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/social-media/social-media-xurl/)
@@ -330,7 +343,7 @@ raw: /hermes/raw/updates.md
 - [Siyuan — SiYuan のナレッジベースを API から読み書きする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/)
 - [Telephony — Twilio の電話番号の取得、SMS / MMS、AI による発信](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-telephony/)
 - [Bioinformatics — ゲノム解析と計算生物学の 400 以上の skill への入口](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-bioinformatics/)
-- [Blogwatcher — blogwatcher-cli でブログと RSS/Atom フィードを監視する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-blogwatcher/)
+- [Blogwatcher — blogwatcher-cli を使ってブログや RSS/Atom フィードの更新を追いかける](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-blogwatcher/)
 - [Darwinian Evolver — Imbue の進化ループでプロンプト・正規表現・SQL・コードを進化させる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-darwinian-evolver/)
 - [Domain Intel — サブドメイン・SSL 証明書・WHOIS・DNS を受動的に調べる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-domain-intel/)
 - [Drug Discovery — 創薬研究: ChEMBL 検索、薬らしさ、相互作用](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-drug-discovery/)

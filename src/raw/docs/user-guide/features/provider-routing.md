@@ -1,25 +1,25 @@
 ---
-title: "プロバイダールーティング"
-description: "OpenRouter や Nous Portal のプロバイダー優先順位を設定し、コスト・速度・品質のどれを重視するか決めます。"
+title: "提供元の振り分け"
+description: "OpenRouter の提供元の優先設定を書いて、費用・速度・品質のどれを重く見るかを決めます。"
 upstream_path: user-guide/features/provider-routing.md
-upstream_blob: ff8a9ef56ccc23709cbf4ff900e82560332b350d
+upstream_blob: 3cd2c5c75c9a172705eb2fa46a1672fb0fd74ce9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/provider-routing
 ---
 
-# プロバイダールーティング {#provider-routing}
+# 提供元の振り分け {#provider-routing}
 
-LLM プロバイダーとして [OpenRouter](https://openrouter.ai) や [Nous Portal](/hermes/docs/integrations/nous-portal/) を使っているとき、Hermes Agent は **プロバイダールーティング** に対応します。リクエストを実際に処理する AI プロバイダーはどれか、どういう優先順位で選ぶかを細かく指定できる仕組みです。
+LLM の窓口に [OpenRouter](https://openrouter.ai) を使っているとき、Hermes Agent は**提供元の振り分け**に対応します。要求を実際にさばく AI の提供元をどれにするか、どの順で優先するかを細かく決められます。
 
-OpenRouter は多数のプロバイダー（Anthropic、Google、AWS Bedrock、Together AI など）へリクエストを振り分けます。プロバイダールーティングを使えば、コスト重視・速度重視・品質重視に寄せたり、特定のプロバイダーだけを使う条件を強制したりできます。
+OpenRouter は要求を多くの提供元（Anthropic、Google、AWS Bedrock、Together AI など）へ渡します。提供元の振り分けを使うと、費用・速度・品質のどれを重く見るかを決めたり、この提供元でなければならないという条件を通したりできます。
 
-:::tip
-Nous Portal を経由するトラフィックにも同じプロバイダー設定が効きます。しかも Portal の契約者は、トークン課金のプロバイダーが 10% 割引になります。
+:::note
+[Nous Portal](/hermes/docs/integrations/nous-portal/) は振り分けをモデルごとに自分の側で決めていて、呼び出し側から渡された提供元の希望を受け取りません。Hermes は Portal へ `provider` の項目を送らないので、`provider_routing` はそこでは単に無視されます。
 :::
 
 ## 設定 {#configuration}
 
-`~/.hermes/config.yaml` に `provider_routing` セクションを追加します。
+`~/.hermes/config.yaml` に `provider_routing` の節を足します。
 
 ```yaml
 provider_routing:
@@ -32,20 +32,20 @@ provider_routing:
 ```
 
 :::info
-プロバイダールーティングが効くのは OpenRouter か Nous Portal を使うときだけです。プロバイダーへ直接つなぐ場合（Anthropic の API に直結する場合など）には何の影響もありません。
+提供元の振り分けが効くのは OpenRouter を使うときだけです。Nous Portal や、提供元へ直接つなぐ場合（Anthropic の API に直接つなぐなど）には影響しません。
 :::
 
-## オプション {#options}
+## 設定項目 {#options}
 
 ### `sort` {#sort}
 
-リクエストに対して、利用できるプロバイダーを OpenRouter がどう並べるかを決めます。
+その要求について、OpenRouter が使える提供元をどの順で並べるかを決めます。
 
 | 値 | 説明 |
 |-------|-------------|
-| `"price"` | 最も安いプロバイダーを先に使う |
-| `"throughput"` | 毎秒のトークン数が最も速いプロバイダーを先に使う |
-| `"latency"` | 最初のトークンが返るまでが最も短いプロバイダーを先に使う |
+| `"price"` | 安い提供元から |
+| `"throughput"` | 1 秒あたりのトークン数が多い提供元から |
+| `"latency"` | 最初のトークンが返るまでが短い提供元から |
 
 ```yaml
 provider_routing:
@@ -54,7 +54,7 @@ provider_routing:
 
 ### `only` {#only}
 
-プロバイダー識別子（slug）のホワイトリストです。指定すると、ここに挙げたプロバイダー **だけ** を使い、それ以外はすべて除外します。各プロバイダーについて OpenRouter が表示する小文字の slug を書いてください。
+使ってよい提供元の名前（slug）を並べます。指定すると、**ここに書いた提供元だけ**を使い、ほかはすべて外れます。名前は OpenRouter が提供元ごとに示している小文字の slug を使います。
 
 ```yaml
 provider_routing:
@@ -65,7 +65,7 @@ provider_routing:
 
 ### `ignore` {#ignore}
 
-プロバイダー名のブラックリストです。ここに挙げたプロバイダーは、たとえ最も安くても最も速くても **絶対に** 使われません。
+使わない提供元の名前を並べます。ここに書いた提供元は、いちばん安くても速くても**使われません**。
 
 ```yaml
 provider_routing:
@@ -76,7 +76,7 @@ provider_routing:
 
 ### `order` {#order}
 
-優先順位を明示的に指定します。先に書いたプロバイダーほど優先されます。書かなかったプロバイダーは、行き先がないときの受け皿として使われます。
+優先の順番をそのまま書きます。先に書いた提供元ほど優先され、書かなかった提供元は控えとして使われます。
 
 ```yaml
 provider_routing:
@@ -88,7 +88,7 @@ provider_routing:
 
 ### `require_parameters` {#requireparameters}
 
-`true` にすると、OpenRouter はリクエストに含まれるパラメーター（`temperature`、`top_p`、`tools` など）を **すべて** サポートするプロバイダーにしか振り分けません。パラメーターが黙って捨てられるのを防げます。
+`true` にすると、OpenRouter は要求に含まれるパラメータ（`temperature`、`top_p`、`tools` など）を**すべて**扱える提供元にだけ渡します。パラメータが黙って落とされるのを防げます。
 
 ```yaml
 provider_routing:
@@ -97,45 +97,70 @@ provider_routing:
 
 ### `data_collection` {#datacollection}
 
-プロバイダーがあなたのプロンプトを学習に使ってよいかどうかを決めます。値は `"allow"` か `"deny"` です。
+自分のプロンプトを提供元が学習に使ってよいかを決めます。値は `"allow"` か `"deny"` です。
 
 ```yaml
 provider_routing:
   data_collection: "deny"
 ```
 
-## 実用的な例 {#practical-examples}
+### モデルごとの上書き（`models`） {#per-model-overrides-models}
 
-### コスト重視にする {#optimize-for-cost}
+モデルごとに別の提供元の組み合わせを固定できます。`models` の下の鍵はモデル ID で、それぞれに
+`sort` / `only` / `ignore` / `order` / `require_parameters` / `data_collection` を同じように書けて、そのモデルについてだけ
+上の共通の値を上書きします。モデルごとに書かなかったものは、共通の既定値がそのまま使われます。
 
-そのとき利用できる最安のプロバイダーへ振り分けます。大量に使う場合や開発中に向いています。
+```yaml
+provider_routing:
+  sort: "price"                      # applies to every model
+  models:
+    "openai/gpt-6-astra":
+      only: ["openai"]               # never let a reseller serve this one
+    "anthropic/claude-fable-5.1":
+      only: ["anthropic"]
+    "moonshotai/kimi-k2.6":
+      order: ["moonshotai", "together"]
+      sort: "throughput"
+```
+
+名前の照合は `agent.reasoning_overrides` と同じく表記のゆれを吸収します（`claude-fable-5.1` と `claude-fable-5-1`、
+`openrouter/` を付けても付けなくても構いません）。上書きは、エージェントが*そのとき*使っているモデルに付いていきます。つまり
+`/model` での切り替え、控えのモデルへの切り替わり、cron ジョブ、別のモデルで動く委任先のエージェントは、それぞれ自分の
+指定を受け取ります。これらの鍵は `config.yaml` を直に編集してください。モデル ID にはドットが入っていて、`hermes config set`
+はドットを階層の区切りとして読んでしまいます。
+
+## 実際の書き方 {#practical-examples}
+
+### 費用を抑える {#optimize-for-cost}
+
+使える中でいちばん安い提供元へ渡します。量を多く使うときや、開発中に向いています。
 
 ```yaml
 provider_routing:
   sort: "price"
 ```
 
-### 速度重視にする {#optimize-for-speed}
+### 速さを優先する {#optimize-for-speed}
 
-対話的に使う場面で、応答が返り始めるまでの短いプロバイダーを優先します。
+対話しながら使うために、返り始めるまでが短い提供元を優先します。
 
 ```yaml
 provider_routing:
   sort: "latency"
 ```
 
-### スループット重視にする {#optimize-for-throughput}
+### 出る量の多さを優先する {#optimize-for-throughput}
 
-長い文章を生成させるときなど、毎秒のトークン数が効いてくる場面に向いています。
+長い文章を書かせるなど、1 秒あたりのトークン数がものを言うときに向いています。
 
 ```yaml
 provider_routing:
   sort: "throughput"
 ```
 
-### 特定のプロバイダーに固定する {#lock-to-specific-providers}
+### 提供元を 1 つに固定する {#lock-to-specific-providers}
 
-結果を安定させたいときに、すべてのリクエストを特定のプロバイダーだけに通します。
+結果を揃えたいときに、すべての要求を決まった提供元に通します。
 
 ```yaml
 provider_routing:
@@ -143,9 +168,9 @@ provider_routing:
     - "anthropic"
 ```
 
-### 特定のプロバイダーを避ける {#avoid-specific-providers}
+### 特定の提供元を避ける {#avoid-specific-providers}
 
-使いたくないプロバイダーを外します（データの取り扱いが気になる場合など）。
+使いたくない提供元を外します（データの扱いが気になる場合など）。
 
 ```yaml
 provider_routing:
@@ -155,9 +180,9 @@ provider_routing:
   data_collection: "deny"
 ```
 
-### 優先順位を決めつつ受け皿も残す {#preferred-order-with-fallbacks}
+### 優先順を決めつつ、控えも用意する {#preferred-order-with-fallbacks}
 
-まず好みのプロバイダーを試し、使えないときは他のプロバイダーに回します。
+まず希望の提供元を試して、使えなければほかへ回します。
 
 ```yaml
 provider_routing:
@@ -169,12 +194,12 @@ provider_routing:
 
 ## 仕組み {#how-it-works}
 
-プロバイダールーティングの設定は、エージェントのチャットリクエストと、繰り返し上限に達したときの要約リクエストで、`extra_body.provider` フィールドを通じて OpenRouter や Nous Portal へ渡されます（`extra_body` は OpenAI Python SDK の引数名で、JSON リクエストでは最上位の `provider` オブジェクトになります）。圧縮やタイトル生成といった補助タスクは、`auxiliary.<task>.extra_body` の下で個別に設定します。
+提供元の振り分けの設定は、エージェントとの会話の要求と、反復の上限に達したときの要約の要求に、`extra_body.provider` の項目として付いて OpenRouter へ渡ります。（`extra_body` は OpenAI の Python SDK の引数名で、JSON の要求では最上位の `provider` という項目になります。）圧縮やタイトル生成といった補助的な処理は、`auxiliary.<task>.extra_body` の下で別に設定します。
 
-- **CLI モード** — `~/.hermes/config.yaml` で設定し、起動時に読み込まれます
-- **ゲートウェイモード** — 同じ設定ファイルを、ゲートウェイの起動時に読み込みます
+- **CLI で使うとき** — `~/.hermes/config.yaml` に書き、起動時に読み込まれます
+- **ゲートウェイで使うとき** — 同じ設定ファイルを、ゲートウェイの起動時に読み込みます
 
-ルーティング設定は `config.yaml` から読み込まれ、`AIAgent` を作るときのパラメーターとして渡されます。
+振り分けの設定は `config.yaml` から読まれ、`AIAgent` を作るときの引数として渡されます。
 
 ```
 providers_allowed  ← from provider_routing.only
@@ -186,7 +211,7 @@ provider_data_collection    ← from provider_routing.data_collection
 ```
 
 :::tip
-複数のオプションを組み合わせられます。たとえば、値段の安い順に並べつつ、特定のプロバイダーを除外し、パラメーターへの対応を必須にする、といった設定です。
+いくつかの項目を組み合わせられます。たとえば、安い順に並べたうえで、ある提供元を外し、パラメータへの対応を必須にする、といった書き方です。
 
 ```yaml
 provider_routing:
@@ -197,10 +222,10 @@ provider_routing:
 ```
 :::
 
-## 何も設定しないときの動き {#default-behavior}
+## 何も書かないときの動き {#default-behavior}
 
-`provider_routing` セクションを書かない場合（既定の状態）は、集約側が持つ独自のルーティング処理が働き、だいたいコストと空き具合のバランスを自動で取ってくれます。
+`provider_routing` の節を書かない場合（既定の状態）は、取りまとめ役が自前の振り分けの決まりを使い、だいたいのところ費用と使えるかどうかを自動で釣り合わせます。
 
-:::tip プロバイダールーティングとフォールバックモデルの違い
-プロバイダールーティングが決めるのは、**OpenRouter や Nous Portal の裏側にいるプロバイダー** のうちどれがリクエストを処理するか、です。メインのモデルが失敗したときに、まったく別のプロバイダーへ自動で切り替えたい場合は、[フォールバックプロバイダー](/hermes/docs/user-guide/features/fallback-providers/) を参照してください。
+:::tip 提供元の振り分けと、控えのモデルの違い
+提供元の振り分けが決めるのは、**OpenRouter の後ろにいる提供元**のうちどれが要求をさばくかです。主に使うモデルが失敗したときに、まったく別の提供元へ自動で切り替えたい場合は、[控えの提供元](/hermes/docs/user-guide/features/fallback-providers/)をご覧ください。
 :::

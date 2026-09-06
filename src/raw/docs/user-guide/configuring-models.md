@@ -2,7 +2,7 @@
 title: "モデルの設定"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: 0456c391e4ab837d3c795fb2057b00ee6998cafe
+upstream_blob: 2378ea231a392ba1a7183f18a416d2b783b167c0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---
@@ -33,7 +33,7 @@ Hermes には、モデルを割り当てる枠が 2 種類あります。
 1. **Model Settings** — 上のパネルで、ここで各枠にモデルを割り当てます。
 2. **Usage analytics** — 選んだ期間にセッションを動かしたモデルを順位付きのカードで並べ、トークン数・費用・対応機能のバッジを表示します。
 
-![Models page overview](https://hermes-agent.nousresearch.com/img/docs/dashboard-models/overview.png)
+![モデルページの全体像](https://hermes-agent.nousresearch.com/img/docs/dashboard-models/overview.png)
 
 いちばん上のカードが **Model Settings** のパネルです。メインの行には、新しいセッションでエージェントが立ち上げるモデルが常に表示されます。**Change** をクリックすると選択画面が開きます。
 
@@ -41,7 +41,7 @@ Hermes には、モデルを割り当てる枠が 2 種類あります。
 
 Main model の行で **Change** をクリックします。
 
-![Model picker dialog](https://hermes-agent.nousresearch.com/img/docs/dashboard-models/picker-dialog.png)
+![モデル選択ダイアログ](https://hermes-agent.nousresearch.com/img/docs/dashboard-models/picker-dialog.png)
 
 選択画面は 2 列になっています。
 
@@ -76,7 +76,7 @@ hermes config set security.allow_data_training_tiers_noninteractive true
 
 **Show auxiliary** をクリックすると、11 個の仕事の枠が現れます。
 
-![Auxiliary panel expanded](https://hermes-agent.nousresearch.com/img/docs/dashboard-models/auxiliary-expanded.png)
+![補助モデルのパネルを開いたところ](https://hermes-agent.nousresearch.com/img/docs/dashboard-models/auxiliary-expanded.png)
 
 補助の仕事はどれも既定が `auto` で、Hermes はその仕事にもメインモデルを使おうとします。その経路が使えない場合や、容量に類する失敗が起きた場合、`auto` はまず仕事ごとの `auxiliary.<task>.fallback_chain` をたどり、次にメインの `fallback_providers` / `fallback_model` の連鎖、最後に Hermes 組み込みの補助モデル探索の連鎖をたどります。脇の仕事に安いモデルや速いモデルを使いたいときは、その仕事だけ上書きしてください。
 
@@ -108,7 +108,7 @@ hermes config set security.allow_data_training_tiers_noninteractive true
 
 このページのモデルカードには、どれにも **Use as** のドロップダウンが付いています。これがいちばん速い道で、利用状況の欄で見かけたモデルを選び、**Use as** をクリックすれば、メインの枠か特定の補助の仕事にワンクリックで割り当てられます。
 
-![Use as dropdown](https://hermes-agent.nousresearch.com/img/docs/dashboard-models/use-as-dropdown.png)
+![「Use as」ドロップダウン](https://hermes-agent.nousresearch.com/img/docs/dashboard-models/use-as-dropdown.png)
 
 ドロップダウンの中身は次のとおりです。
 
@@ -238,6 +238,19 @@ Hermes はこの宣言を、プロバイダの経路と実行時のモデル ID 
 :::note 以前の形式
 古い設定では、最上位に `custom_providers:` の一覧を使っていました（`api` ではなく `base_url` を書く形です）。いまも動きますし、`hermes update` の際に `providers:` の辞書へ自動で移行されます（設定の v12）。
 :::
+
+### Nous Portal: Claude をどの経路で運ぶか {#nous-portal-which-wire-carries-claude}
+
+Nous Portal は `anthropic/*` のモデルを 2 つの経路で提供しています。OpenAI 互換の `/v1/chat/completions` と、Anthropic Messages のネイティブ経路である `/v1/messages` です。どちらを使うかは `nous.anthropic_wire` で選びます。
+
+```yaml
+nous:
+  anthropic_wire: chat     # default. "native" = the Anthropic Messages wire; "auto" = decide per session
+```
+
+いまのところ既定は `chat` です。輸送路としては、ネイティブのほうが優れています（署名付きの思考ブロックがそのまま通り、`cache_control` の適用範囲もネイティブに扱えます）。ただし Portal が OpenRouter 経由で配信している経路では、ツール呼び出しを並行して回すときに、連続した呼び出しの 14〜20% で前のターンのプロンプトキャッシュが書き直されており、これは並列に広げたときのキャッシュ書き込み料金の 15〜20% にあたります。同じ試験で chat の経路は 0 でした。もう一度ネイティブを使いたい場合は `native` を指定してください（たとえば Portal 側の修正が出たあとに）。影響を受けるのは `anthropic/*` のモデルだけで、Nous のそれ以外はすでに chat/completions を使っています。
+
+`auto` は、Portal が同じモデルを複数の上流から提供している場合のためのものです。セッションは chat で始まり、Hermes は最初の呼び出しにどの上流が応答したかを読み取って、ネイティブでも問題ないと分かっている上流のときだけ、そのセッションをネイティブへ切り替えます（切り替えは呼び出しの合間に起きるので、処理中の応答も、温まったキャッシュも失われません）。いまのところ問題なしと確認できた上流はないため、`auto` は `chat` とまったく同じ動きをします。設定を変えるのではなく実測で切り替えられるように、という趣旨で用意されています。
 
 ## いつ反映されるか {#when-does-it-take-effect}
 

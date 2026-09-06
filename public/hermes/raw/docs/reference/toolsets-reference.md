@@ -2,7 +2,7 @@
 title: "ツールセット一覧"
 description: "Hermes の中核・複合・プラットフォーム・動的の各ツールセットをまとめた一覧です。"
 upstream_path: reference/toolsets-reference.md
-upstream_blob: 5904f1a9f71890202c5f06562fc94f9917fdef79
+upstream_blob: c6925facb009835a4bcc466c2e8e1cb6c1dd5319
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 ---
@@ -135,7 +135,7 @@ mcp_servers:
     args: ["-y", "@modelcontextprotocol/server-github"]
 ```
 
-こうしてできた `mcp-github` は、`--toolsets` やプラットフォームの設定から名指しできます。
+こうしてできた `mcp-github` は、`--toolsets` やプラットフォームの設定から名指しできます。サーバー名をそのまま書いた `github` も、別名として使えます。初めから入っているツールセットと同じ名前（`homeassistant`、`browser`）をサーバーに付けた場合、その名前は、初めから入っているツールと、そのサーバーの `mcp__<server>__*` のツールの**両方**を指します。どちらか一方がもう一方を隠すことはありません。
 
 ### プラグインのツールセット {#plugin-toolsets}
 
