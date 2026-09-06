@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # sitemap の lastmod を git 履歴から取るため（shallow だと全ページが同じ日付になる）
 
       - uses: actions/setup-node@v4
         with:

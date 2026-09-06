@@ -1,0 +1,8 @@
+# meta refresh のスタブを 301 に置き換える（GSC「ページにリダイレクトがあります」対策・2026-09-07）。
+# 行き先は従来の meta refresh と同じ。Cloudflare Workers Static Assets はこのファイルを静的ファイルより先に評価する。
+/                                  /hermes/                                        301
+/hermes/live/                      /hermes/                                        301
+/hermes/start/                     /hermes/docs/getting-started/quickstart/        301
+/hermes/start/line/                /hermes/docs/user-guide/messaging/line/         301
+/hermes/start/telegram/            /hermes/docs/user-guide/messaging/telegram/     301
+/hermes/syntheses/cost-and-model/  /hermes/cost/                                   301

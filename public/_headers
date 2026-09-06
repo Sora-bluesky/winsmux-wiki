@@ -1,5 +1,7 @@
 /hermes/raw/*
   Content-Type: text/markdown; charset=utf-8
+  # HTML 版と同内容の原文。Google の索引からは外し（重複排除）、取得は妨げない（llms.txt の参照先）
+  X-Robots-Tag: noindex
 
 /hermes/llms.txt
   Content-Type: text/plain; charset=utf-8
