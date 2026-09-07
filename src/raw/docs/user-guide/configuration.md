@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダー、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: cccec83cfb00ce2d4f2aa862777fa09bbaa13f26
+upstream_blob: a61127455383cab11a988f55bd50b1aaf403c3b6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -153,6 +153,14 @@ AI のプロバイダーの設定（OpenRouter、Anthropic、Copilot、独自の
 これらを設定しないままにすると、従来の既定値（`HERMES_API_TIMEOUT=1800` 秒、`HERMES_API_CALL_STALE_TIMEOUT=90` 秒、Anthropic のネイティブは 900 秒）が使われます。逐次通信でない場合の停止検出は、明示していないときは手元のエンドポイントに対して自動で無効になり、とても大きな文脈に対しては上向きに伸びることがあります。AWS Bedrock にはまだ結線されていません（`bedrock_converse` と AnthropicBedrock SDK のどちらの経路も、独自のタイムアウト設定を持つ boto3 を使うためです）。コメント付きの例は [`cli-config.yaml.example`](https://github.com/NousResearch/hermes-agent/blob/main/cli-config.yaml.example) にあります。
 
 ## 更新時の動き {#update-behavior}
+
+### 裏側での確認と SSH の認証 {#background-checks-and-ssh-authentication}
+
+起動時の更新の確認は、通信に使うのと同じ、切り離された Git の設定で origin の URL を読みます。そのため、全体に効く `url.*.insteadOf` の書き換えがあっても、公式の SSH のリモートを、公開されている HTTPS 側の確認から隠すことはできません。
+
+Hermes が内部で使う、切り離された Git のコマンドは、既定で `ssh -o BatchMode=yes` を使います。知らないホストの鍵、パスワード、合言葉が要る暗号化された鍵は、端末で入力を求めるのではなく、その場で失敗します。信頼済みのホストで、使える鍵か SSH の代理を持っていれば、これまでどおり認証されます。この動きは、ディスク上の Git や SSH の設定にも、端末のツールで自分が実行するコマンドにも影響しません。
+
+この内部の既定は、リポジトリの `core.sshCommand` の設定より優先されます。環境変数の `GIT_SSH_COMMAND` を明示した場合はそちらが勝つので、独自の身元や通信のコマンドはそこに残せます。入力を求めない状態を保ちたいなら、その指定にも `-o BatchMode=yes` を入れてください。入力を許す指定のままだと、裏側での確認が止まってしまうことがあります。
 
 `hermes update` の設定は、`config.yaml` の `updates` の下にあります。
 
@@ -1114,10 +1122,13 @@ agent:
   max_turns: none              # Iterations per conversation turn (default: none = unlimited)
                                # Set a positive integer to cap; "none"/"null"/
                                # "unlimited"/"inf"/"infinity"/"infinite"/0/-1 = no limit
+  budget_warning_ratio: null   # Optional one-time checkpoint warning, e.g. 0.75
   api_max_retries: 3           # Retries per provider before fallback engages (default: 3)
 ```
 
 `agent.max_turns` は **既定で無制限** です。回数の上限は、解決するより多くの問題（作業の途中で黙って打ち切られること）を生んだので、そのままの Hermes は会話のやり取りを最後まで走らせます。上限を設けたい場合は正の整数を設定してください。「上限なし」を明示したい場合は、大文字小文字を問わず次のどの書き方でも通ります。`"none"`、`"null"`、`"unlimited"`、`"infinite"`、`"infinity"`、`"inf"`、`0`、`-1` です（これらは `sys.maxsize` の目印に解決されるので、回数で処理が終わることはありません）。
+
+`agent.budget_warning_ratio` は、ふつうの会話でも委任された会話でも既定では無効です。`0` より大きく `1` より小さい値を設定し、あわせて `max_turns` に有限の値を置くと、その割合を超えたあとで、モデルから見える区切りの知らせが最新のツールの結果に 1 度だけ添えられます。この知らせは会話のやり取りごとに仕掛け直され、エージェントそれぞれの回数の持ち分を見ます。添えられるのはいまのツールの結果の末尾だけで、過去のやり取りには付きません。利用者やシステムからの偽のメッセージを増やすこともなく、回数を使い切ったときの猶予の呼び出しを変えることもありません。差配役が持つ Kanban の作業者には、既定で 90% の時点で完了の区切りが届きます（割合を明示すればその閾値が変わります）。このときもツールは使えるままです。この区切りが求めるのは、確かめたうえでの完了か、あとに残る形での進み具合の書き込みであって、早すぎる成功の宣言ではありません。
 
 `agent.api_max_retries` は、一時的なエラー（流量制限、接続断、5xx）が起きたときに、代替プロバイダーへの切り替えが働く **前** に、Hermes がプロバイダーの API 呼び出しを何回やり直すかを決めます。既定は `3` で、合わせて 4 回試みます。[代替プロバイダー](/hermes/docs/user-guide/features/fallback-providers/) を設定していて、もっと早く切り替えたい場合は `0` にしてください。主のプロバイダーで最初に一時的なエラーが起きた時点で、不安定なエンドポイントに再試行を重ねずに、すぐ代替へ渡ります。
 
@@ -1188,6 +1199,8 @@ Hermes は逐次通信に対して段階の違う時間切れをいくつか持�
 **逐次通信でない場合の停止検出** は、いつまでも応答を返さない、逐次通信でない呼び出しを切ります。既定では、長い下準備の間に誤って切らないよう、Hermes は手元のエンドポイントに対してこれを無効にします。`providers.<id>.stale_timeout_seconds`、`providers.<id>.models.<model>.stale_timeout_seconds`、`HERMES_API_CALL_STALE_TIMEOUT` を明示的に設定した場合は、手元のエンドポイントでもその値が使われます。
 
 この上限は、逐次通信でないすべての呼び出しに効きます。リクエストを受け取ってから黙り込むプロバイダー — 接続は開いたまま、1 バイトも来ず、エラーも出ない — は、この停止検出の時点で打ち切られてやり直されます。ずっと長いソケットの読み取りの時間切れまで（あるいは、人の見ていない cron の実行では、外から何かがプロセスを止めるまで）ぶら下がり続けることはありません。
+
+プロバイダーを待っていることを知らせる定期的な表示は、**60 秒以上の沈黙** が続いてから初めて出ます。Codex Responses の **待機状態** の表示が示すのは沈黙であって、生成にかかった全体の時間ではありません。推論も含めて、逐次通信のイベントが動いているあいだは静かなままです。イベントが止まったときは、「返答が来ていない」と言うのではなく、イベントが途絶えている時間を伝えます。イベントが再び届けば、この表示は消えます。つなぎ直しによって、最初のイベントを待つ見張りの段階がやり直しになったときは、待機状態の表示もその段階に従います。この表示の動きが、別に用意されている実時間での停止検出の上限を延ばすことも、見張りの時間切れを変えることもありません。チャット補完の逐次通信でも同じで、塊が再び届けば沈黙の警告はすぐ消え、手元のモデルの読み込み中の表示を置き換えることもありません。
 
 cron のジョブと委任したサブエージェントも逐次通信を使います。それらはリクエストを自分のスレッドの中で直接実行しますが（ほかのセッションが使う割り込み用の作業スレッドは、ゲートウェイの入れ子になったスレッドの束の中で詰まってしまいます）、通信そのものは `stream: true` のままなので、上の **逐次通信の停止検出** の上限が効きます。トークンが 1 つ届くたびに生きていると見なされるので、何分も考える推論型のモデルが固まったプロバイダーと間違われることはなく、黙った接続を切る中継装置にも、常にバイトが届き続けます。
 
@@ -1323,9 +1336,11 @@ Hermes のモデルの枠 — 補助の作業、圧縮、代替 — は、どれ
 |-----|-------------|---------|
 | `reasoning_effort` | その作業の LLM の呼び出しでどれだけ考えさせるか: `none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max`、`ultra` | 未設定（プロバイダーの既定） |
 
-これは全体に効く `agent.reasoning_effort` の、作業ごとの相棒です。主モデルが費用のかかる推論型のモデルのとき、圧縮を `low` で、画像を `none` で走らせれば、主のチャットの動きに触れずに脇の作業の待ち時間と費用を減らせます。これはすべての補助の作業のかたまり（`vision`、`compression`、`title_generation`、`curator`、`background_review` など）で、3 つの補助の通信方式（chat completions、Codex の Responses、Anthropic の Messages）すべてに効きます。同じ作業に `extra_body.reasoning` を明示した場合は、そちらがこの短い書き方より優先されます。
+これは全体に効く `agent.reasoning_effort` の、作業ごとの相棒です。主モデルが費用のかかる推論型のモデルのとき、圧縮を `low` で、画像を `none` で走らせれば、主のチャットの動きに触れずに脇の作業の待ち時間と費用を減らせます。これは `vision`、`compression`、`title_generation`、`curator` といった補助のクライアントが行う作業に効き、3 つの補助の通信方式（chat completions、Codex の Responses、Anthropic の Messages）すべてが対象です。同じ作業に `extra_body.reasoning` を明示した場合は、そちらがこの短い書き方より優先されます。
 
-MoA だけは例外です。Mixture-of-Agents の考える深さは、`moa_reference` や `moa_aggregator` の補助のかたまりではなく、MoA の設定の中で **枠ごと** に指定します（`moa.presets.<name>.reference_models[].reasoning_effort` / `aggregator.reasoning_effort`）。[Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/) をご覧ください。
+**裏側での見直しは別です。** 同じモデルで枝分かれさせる見直しは、必ず親の推論の深さを受け継ぎます。この経路では `auxiliary.background_review.reasoning_effort` は無視されます。親のプロバイダーやモデルを明示して選んだ場合も同じです。こうすることで、推論の設定、システムプロンプト、会話の全体の写し、ツールの定義が 1 バイトも違わないまま保たれ、プロンプトのキャッシュがそのまま効きます。同じモデルでの見直しについて、深さだけを別に切り替える手立てはありません。[裏側での見直しの推論](/hermes/docs/user-guide/features/memory/#same-model-review-reasoning) をご覧ください。別のモデルへ振り分けて枝分かれさせた場合の深さの扱いは、[#94825](https://github.com/NousResearch/hermes-agent/issues/94825) で扱われています。
+
+**MoA も別の指定の仕方をします。** Mixture-of-Agents の考える深さは、`moa_reference` や `moa_aggregator` の補助のかたまりではなく、MoA の設定の中で **枠ごと** に指定します（`moa.presets.<name>.reference_models[].reasoning_effort` / `aggregator.reasoning_effort`）。[Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/) をご覧ください。
 
 ```yaml
 auxiliary:
@@ -2042,6 +2057,8 @@ CLI では `/verbose` でこれらのモードを順に切り替えられます�
 
 ツールの進み具合の表示には、それを安全に出せるゲートウェイのアダプターが要ります。メッセージの編集に対応していない経路（Signal を含みます）は、`/verbose` が `off` 以外のモードを保存しても、進み具合の吹き出しを出しません。
 
+`off` が隠すのは、ツール呼び出しの *装飾* だけです。デスクトップアプリや TUI に自分の表示場所を持っているアプリ側の状態 — やることリスト（`todo_list`）、サブエージェントの進み具合、確認の問いかけ、MCP の同意のカード — は、この設定にかかわらず流れ続けます。
+
 ### 集中表示（`/focus`、CLI と TUI） {#focus-view-focus-cli-tui}
 
 `display.focus_view: true` は **集中表示** を有効にします。実況ではなく答えが欲しいときのための、出力を減らした表示のモードです。これは別の抑制の経路ではなく、同じ `tool_progress` の仕組みに薄く被せたものです。
@@ -2667,6 +2684,8 @@ delegation:
 
 **サブエージェントのプロバイダーとモデルの上書き:** 既定では、サブエージェントは親のエージェントのプロバイダーとモデルを引き継ぎます。`delegation.provider` と `delegation.model` を設定すると、別のプロバイダーとモデルの組み合わせへ振り分けられます。たとえば、主のエージェントが費用のかかる推論型のモデルで動いている間、狭い範囲の下請けの作業には安くて速いモデルを使う、といったことができます。
 
+**サブエージェントの代替の並び:** `delegation.fallback_providers` を設定すると、作業役にも自分用の並びを持たせられます（項目の書き方は上位の一覧と同じです）。プロバイダー・エンドポイント・モデルのいずれかで行き先を固定した子は、この並びが書かれているときだけそれを使い、書かれていなければ、親のエージェントの経路を借りるのではなく、はっきり失敗します。行き先を固定していない子では、この設定が無いか `null` のときに、親の並びの引き継ぎがそのまま保たれます。子の代替をまったく使わせたくないときは、`delegation:` の下で `fallback_providers: []` としてください。
+
 **エンドポイントの直接の上書き:** 独自のエンドポイントをはっきり指定したい場合は、`delegation.base_url`、`delegation.api_key`、`delegation.model` を設定します。これでサブエージェントはその OpenAI 互換のエンドポイントへ直接向かい、`delegation.provider` より優先されます。`delegation.api_key` を書かない場合、Hermes が頼るのは `OPENAI_API_KEY` だけです。`delegation.base_url` と一緒に `delegation.provider` も設定されている場合、明示したエンドポイントとキーが優先されますが、そのプロバイダーのリクエストの設定（`custom_providers` の項目にある `extra_body` の上書きと出力トークンの上限）はサブエージェントへ引き継がれます。
 
 **子ごとのリクエストの設定（`request_overrides`）:** `delegation.request_overrides` は、サブエージェントの API の呼び出しごとに送られるリクエストの設定の辞書です。最上位のキーは API の引数（たとえば `service_tier`）で、`extra_body` の下位の辞書はリクエストの `extra_body` に合わせられます。これは **3 つすべて** の決まり方 — `base_url` の直接指定、名前付きの `provider`、まるごと引き継ぎ — で尊重されるので、このキーは必ず効きます。優先の順は、明示した `request_overrides` の値が、実行時や親から来た上書きの **上に** 重なります。最上位の明示したキーが勝ち、`extra_body` は 1 段階だけ深く合わせられるので、実行時の `extra_body` のキー（たとえばプロバイダーの `thinking: {type: disabled}` の性格付け）は、あなたのキーがそれを書き換えない限り残ります。典型的な使い道は、委任した子への OpenRouter の振り分けの指定です。
@@ -2803,6 +2822,6 @@ dashboard:
 - `oauth` / `basic_auth` / `drain_auth` — 同梱のダッシュボードの認証プラグインが読む、認証のプロバイダーの設定です。drain の秘密情報そのものは、ここでは設定 **しません**。環境変数 `HERMES_DASHBOARD_DRAIN_SECRET` で与えます。認証の設定の全体は [Web ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/) をご覧ください。
 - `ws_ping_interval` / `ws_ping_timeout` — ループバック以外への接続での、WebSocket の生存確認の調整です（ループバックの接続では確認しません）。既定の 20 秒では見せかけの 1006 の切断が起きてしまう、待ち時間の長い経路（Tailscale、遠くの SSH のトンネル）では上げてください。
 - `ssh_isolated_idle_grace_s`（既定は `900`） — SSH 越しに届くデスクトップ持ちの `hermes serve --isolated` のバックエンドは、あえて SSH のセッションから切り離されています。接続の途中でノート PC が眠っても落とせないようにするためですが、その代わり、暗いまま目を覚ますたびのつなぎ直しが `state.db` を握ったバックエンドをもう 1 つ残していました。いまは、クライアントの WebSocket がこの時間つながらず、エージェントのやり取りも走っていなければ、バックエンドが自分で退きます（やり取りが走っていれば生き続けます。やり取りの状態が読めない場合も生き続けます）。ノート PC が眠ったあとも、切り離されたバックエンドに長い作業を終わらせてほしいなら、大きくしてください。こうしたバックエンドは、ゆっくりした WebSocket の生存確認（60 秒ごと、10 分で時間切れ）も送るので、片側だけ切れたトンネルに気づけます。
-- `ws_orphan_reap_grace_s` — WebSocket から切り離されたセッションが、置き去りの片付けに回収されるまでの猶予です。クライアントのつなぎ直しが遅いなら、生存確認の値と一緒に上げてください。（`HERMES_TUI_WS_ORPHAN_REAP_GRACE_S` は、内部の上書きとして残っています。）
+- `ws_orphan_reap_grace_s` — WebSocket から切り離されたセッションが、置き去りの片付けに回収されるまでの猶予です。クライアントのつなぎ直しが遅いなら、生存確認の値と一緒に上げてください。定期的なセッションの手入れも、閉じた接続の後片付けを最後まで行い、失われた置き去りの計測を仕掛け直すので、切り離されたチャットが、最初の後片付けや計測を落としただけで持ち主としての権利を握り続けることはありません。つなぎ直せばその計測は取り消され、進行中の委任した作業や、健全に動いているやり取りは、これまでどおり置き去りの片付け側の確認で守られます。（`HERMES_TUI_WS_ORPHAN_REAP_GRACE_S` は、内部の上書きとして残っています。）
 - `ws_orphan_activity_stale_s`（既定は `600`） — 切り離された **実行中の** やり取りについて、その活動の時計（`agent.turn_liveness` の見張りが見るのと同じ時計。API の待ち、逐次受信のトークン、ツールの生存信号）がどれだけ止まったら、置き去りの片付けが割り込むかを決めます。クライアントがいなくても実際に進んでいるやり取りは、切り離されたまま最後まで走ります。ノート PC を閉じても、スマートフォンのアプリを裏へ回しても、デスクトップを更新しても、健全な長いやり取りが打ち切られることはもうありません。本当に詰まったやり取りだけが割り込まれます。活動にかかわらず猶予の時間で割り込ませたい場合（従来の動き）は `0` にしてください。
 - `startup_orphan_sweep`（既定は `true`） — 上の置き去りの片付けの時計はプロセスの中にあるので、それが働く前にゲートウェイが再起動すると（更新、異常終了、systemd）、そのセッションの行は永遠に開いたまま残り、`/resume` やダッシュボードに幻の「実行中」の作業として現れます。ゲートウェイが起動するたびに — 標準入出力の TUI（`entry.main`）でも、デスクトップやダッシュボードの WebSocket の補助プロセス（`handle_ws`）でも — 元が `tui` / `desktop` / `subagent` の行のうち、開始の時刻 **と** 最新のメッセージの両方がセッションの保持期間（`HERMES_TUI_SESSION_TTL_S`、既定は 6 時間）より古いものは、`end_reason: startup_orphan_reap` として閉じられます。メッセージングの経路のセッション（Telegram、Discord など）には決して触れません。メモリー上で生きているセッション（すでに再開したクライアント）は対象外で、片付けられたセッションもあとから再開できます。

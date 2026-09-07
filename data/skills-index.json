@@ -1,5 +1,5 @@
 {
-  "sha": "693641a",
+  "sha": "2237be3",
   "date": "2026-09-07",
   "skills": [
     {
@@ -959,7 +959,7 @@
       "name": "Actual Setup",
       "description": "Set up Actual Computer (actual.inc) inference in Hermes",
       "url": "/hermes/docs/user-guide/skills/optional/devops/devops-actual-setup/",
-      "date": "2026-08-30",
+      "date": "2026-09-07",
       "source": "optional"
     },
     {

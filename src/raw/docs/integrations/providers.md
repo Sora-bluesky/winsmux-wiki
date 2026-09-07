@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 006b04c50322c14d44282dbcb2be2d74741ad16f
+upstream_blob: dfeeda226f00f9a72d6e7d902146cff326ea12a6
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -144,6 +144,12 @@ Hermes には目的の違う **2 つ**のモデル関連コマンドがありま
 ### Anthropic（ネイティブ） {#anthropic-native}
 
 Claude のモデルを Anthropic API 経由で直接使います。OpenRouter を挟む必要はありません。3 つの認証方法に対応しています。
+
+環境変数の認証情報を明示的に選んでいない場合、認証情報のプールにある Hermes 自身の OAuth の
+許可が、借りてきた Claude Code のログインより優先されます。自前の OAuth の許可が無いときだけ、
+借りてきたログインが控えとして使われます。補助的な認証の復旧処理は、失敗したリクエストで使った
+認証情報を更新するだけで、無関係な周辺のログインには触りません。借りてきたログインを回すと、
+その持ち主のリフレッシュトークンを無効にしてしまうおそれがあるからです。
 
 :::caution Claude Max の「追加利用」クレジットが必要です
 `hermes model` → Anthropic の OAuth（または `hermes auth add anthropic --type oauth`）で認証すると、Hermes は Anthropic アカウントに対して Claude Code として通ります。**これは Claude Max プランに加入していて、かつ追加利用クレジットを購入している場合にだけ動きます。** Max プランの基本枠（既定で Claude Code に含まれる利用分）は Hermes には使われず、上乗せした追加 / 超過分のクレジットだけが減ります。Claude Pro の契約者はこの経路を使えません。
@@ -862,7 +868,7 @@ hermes model
 **ツール呼び出し:** `--tool-call-parser` に、モデルの系統に合ったパーサーを指定します。`qwen`（Qwen 2.5）、`llama3`、`llama4`、`deepseekv3`、`mistral`、`glm` です。このフラグが無いと、ツール呼び出しはただのテキストとして返ってきます。
 
 :::caution SGLang の既定の出力上限は 128 トークン
-応答が途中で切れているようなら、リクエストに `max_tokens` を足すか、サーバー側で `--default-max-tokens` を設定してください。リクエストで指定しない場合、SGLang の既定は 1 回の応答あたり 128 トークンしかありません。
+応答が途中で切れているようなら、サーバー側の生成の既定値を確認し、サーバーで設定してください（SGLang なら `--default-max-tokens` です）。Hermes に出力トークンの上限を決める設定はありません。
 :::
 
 ---
@@ -1131,7 +1137,7 @@ model:
 #### 応答が文の途中で切れる {#responses-get-cut-off-mid-sentence}
 
 **考えられる原因:**
-1. **サーバー側の出力上限（`max_tokens`）が小さい** — SGLang の既定は 1 応答あたり 128 トークンです。サーバーで `--default-max-tokens` を設定するか、config.yaml の `model.max_tokens` で Hermes 側を設定してください。なお `max_tokens` が制御するのは応答の長さだけで、会話履歴をどれだけ長く保てるか（そちらは `context_length`）とは無関係です。
+1. **サーバー側の出力の上限が小さい** — サーバー側の生成の既定値を設定してください（SGLang なら `--default-max-tokens` です）。Hermes に出力トークンの上限を決める設定はありません。応答の長さと、会話のコンテキストウィンドウ（`context_length`）は別の話です。
 2. **コンテキストの枯渇** — モデルがコンテキストウィンドウを使い切りました。`model.context_length` を増やすか、Hermes の[コンテキスト圧縮](/hermes/docs/user-guide/configuration/#context-compression)を有効にしてください。
 
 ---
@@ -1227,13 +1233,23 @@ model:
 
 ### コンテキスト長の検出 {#context-length-detection}
 
-:::note 混同しやすい 2 つの設定
+:::note コンテキストウィンドウと出力の上限は別物です
 **`context_length`** は**コンテキストウィンドウの総量**で、入力トークンと出力トークンを合わせた枠です（たとえば Claude Opus 4.6 なら 200,000）。Hermes はこれを見て、履歴をいつ圧縮するかを決め、API リクエストを検証します。
 
-**`model.max_tokens`** は**出力の上限**で、モデルが*1 回の応答*で生成してよいトークン数の最大値です。会話履歴をどれだけ長く保てるかとは関係ありません。業界で標準的な `max_tokens` という名前は混乱のもとになりやすく、Anthropic のネイティブ API はその後わかりやすさのために `max_output_tokens` へ改名しました。
+出力の上限が決めるのは 1 回の応答の長さであって、会話履歴の長さではありません。
+Hermes はもう `model.max_tokens`、`HERMES_MAX_TOKENS`、プロバイダ側の出力上限の設定、
+`model_overrides.*.*.max_output_tokens` を読みません。これらの古い設定は消してください。
+独自の OpenAI 互換エンドポイントには、カタログのサイズに合わせた出力上限を自動では付けません。
+サーバー側の既定がそのまま効くので、モデルの最大値より小さいこともあります。
+
+ネイティブの Anthropic Messages（ネイティブの Anthropic Bedrock の経路も含みます）は
+`max_tokens` を必須とするので、Hermes が内部の値を渡します。Bedrock Converse は別のプロトコルで、
+任意項目の `inferenceConfig.maxTokens` を既定では送りません。これは
+[AWS がモデルの最大値だと説明している](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html)ふるまいです。
+内部で上限を決めているタスクや、プロバイダごとのプロトコル上の要件は実装の詳細のままです。送らないことが、どこでもモデルの最大出力を選ぶという意味になるわけではありません。
 
 自動検出がウィンドウのサイズを取り違えたときは `context_length` を設定してください。
-個々の応答の長さを制限したいときだけ `model.max_tokens` を設定してください。
+
 :::
 
 Hermes は、モデルとプロバイダに合ったコンテキストウィンドウを見つけるために、複数の情報源をたどる解決の連鎖を使います。
@@ -1304,6 +1320,14 @@ providers:
 各エントリが受け付けるのは、`api`（エンドポイントのベース URL。`base_url`/`url` も別名として使えます）、`name`（任意の表示名。既定は辞書のキー）、`key_env` かインラインの `api_key` か `key_cmd`（後述）、`transport`（`chat_completions` / `anthropic_messages` / `codex_responses`）、`default_model`、`models`、`context_length`、`discover_models`、`extra_body`、`extra_headers`、`ssl_ca_cert` / `ssl_verify`、そしてエントリを消さずに隠すための `enabled: false` です。
 
 #### コマンドで発行する認証情報（`key_cmd`） {#command-minted-credentials-keycmd}
+
+画像認識、思考、ネイティブのローカルモデルの機能確認では、認証ヘッダーを組み立てる前に、
+チャットで使うのと同じ呼び出し可能な認証情報を用意します。チャット側の呼び出しを差し替えることなく、
+コマンドが返したトークンのキャッシュを使い回します。コマンドが文字列のトークンを発行できない場合、
+これらのできる範囲での確認は、オブジェクトの表現や優先度の低い設定済みの認証情報を送るのではなく、
+ベアラーを付けずに送ります。ネイティブのローカルモデルの確認では、明示的に指定した呼び出しが失敗したとき、
+引き継いだ Authorization を外し、それ以外の設定済みヘッダーはそのまま残します。チャット側の
+エラー処理は今までどおりです。
 
 企業向けのゲートウェイでは、静的な API キーではなく短命のベアラートークンを発行することがよくあります（SSO/OIDC のブローカー、クラウドの IAM、社内の認証プロキシなど）。そのため `.env` にコピーしたトークンはセッションの途中で期限切れになり、リクエストが 401 を返し始めます。`key_cmd` には、トークンを*表示する*コマンドを指定します。Hermes はそれを実行し、期限の少し前まで結果をキャッシュするので、長いセッションでも再起動なしで動き続けます。
 

@@ -2,7 +2,7 @@
 title: "認証情報プール"
 description: "プロバイダごとに複数の API キーや OAuth トークンをまとめておき、自動で切り替えてレート制限から復帰します。"
 upstream_path: user-guide/features/credential-pools.md
-upstream_blob: 83d525b3d93a39e45fb39d7406bfc649e911fc57
+upstream_blob: fd3ce5e663a741503ed66f9acebcb402f4572524
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/credential-pools
 ---
@@ -67,16 +67,18 @@ hermes auth list
 出力はこうなります。
 ```
 openrouter (2 credentials):
-  #1  OPENROUTER_API_KEY   api_key env:OPENROUTER_API_KEY ←
-  #2  backup-key           api_key manual
+  #1  OPENROUTER_API_KEY   api_key id=ab12cd34 priority=0 env:OPENROUTER_API_KEY ←
+  #2  backup-key           api_key id=ef56gh78 priority=1 manual
 
 anthropic (3 credentials):
-  #1  hermes_pkce          oauth   hermes_pkce ←
-  #2  claude_code          oauth   claude_code
-  #3  ANTHROPIC_API_KEY    api_key env:ANTHROPIC_API_KEY
+  #1  hermes_pkce          oauth   id=ab12cd34 priority=0 hermes_pkce ←
+  #2  claude_code          oauth   id=cd34ef56 priority=1 claude_code
+  #3  ANTHROPIC_API_KEY    api_key id=ef56gh78 priority=2 env:ANTHROPIC_API_KEY
 ```
 
-`←` が現在選ばれている認証情報を指しています。
+`←` が現在選ばれている認証情報を指しています。`id=` は項目の ID で、ラベルだけではどれを指すか決められないときに
+`hermes auth remove <provider> <target>` へ渡せます。`priority=` は `fill_first` の方針のもとで
+プールが認証情報を試す順番です。
 
 ## 対話式の管理 {#interactive-management}
 
@@ -116,10 +118,30 @@ Type [1/2]:
 | `hermes auth add <provider>` | 認証情報を追加します（種類とキーを尋ねられます） |
 | `hermes auth add <provider> --type api-key --api-key <key>` | 対話なしで API キーを追加します |
 | `hermes auth add <provider> --type oauth` | ブラウザでのログインを通して OAuth の認証情報を追加します |
+| `hermes auth add <provider> --priority 0` | 認証情報を追加し、`fill_first` の順番で先頭に置きます |
+| `hermes auth priority <provider> <target> <n>` | 認証情報を優先度 `n`（0 が最初に試されます）へ移します。残りは番号を付け直します |
 | `hermes auth remove <provider> <index>` | 1 から数えた番号で認証情報を削除します |
 | `hermes auth reset <provider>` | 待機時間と使い切り扱いをすべて解除します |
+| `hermes auth reset <provider> <target>` | 番号・ID・ラベルのいずれかで、認証情報 1 つの待機時間を解除します |
+| `hermes auth refresh <provider> [target]` | OAuth の認証情報 1 つのトークンを更新し、切り替えの輪に戻します（許可が生きていることを確かめる操作で、使える量は次のリクエストで改めて見直されます） |
+
+Nous では `auth refresh` が使えるのは、ログインで作られる `device_code` の 1 つだけです。
+別立ての Nous アカウントは更新の前に断られ、そのトークンと待機時間はそのまま保たれます。
+1 つだけのものを更新したいときは `hermes auth add nous --type oauth` で認証し直します。これで別立てのアカウントが更新されるわけではありません。
+他のプロバイダは、これまでどおりの取得元ごとの更新に対応します。
 
 ## 切り替えの方針 {#rotation-strategies}
+
+優先度の位置は 0 から数え、プールの端を超える値は端に丸められます。画面で指定する対象は
+1 から数えた番号、項目の ID、または他と見分けられる完全一致のラベルです。`auth add --priority` は、
+認証し直して更新された既存の項目を置くときにも使えます。Anthropic では手で追加した認証情報を
+自動で取り込んだものより前に置くため、この規則で位置が変わったときは実際の位置が報告されます。他の方針では
+優先度よりそちらが優先されることがあり、並べ直しても、すでに動いているセッションが持っている認証情報は割り当て直されません。
+
+プールからの選択が成功するたびに、方針に関係なく `request_count` が 1 増えます。更新だけの参照や下見は数えません。
+これは選択の回数であって、課金の合計でも、推論リクエストをすべて数えたものでもありません。手元に保持された認証情報は
+複数のリクエストをまかなえるからです。数は、次にプールへ書き込む機会（切り替え、使い切り、更新、管理上の変更など）まで
+メモリに置かれます。選択のたびにディスクへ書くことはありません。
 
 `hermes auth` の「Set rotation strategy」から、または `config.yaml` で設定します。
 
@@ -131,7 +153,7 @@ credential_pool_strategies:
 
 | 方針 | 動き |
 |----------|----------|
-| `fill_first`（既定） | 最初の健全なキーを使い切るまで使い、それから次へ移ります |
+| `fill_first`（既定） | 最初の健全なキーを使い切るまで使い、それから次へ移ります。順番は各認証情報の `priority` で、`hermes auth priority` で変えられます |
 | `round_robin` | 選ぶたびに次のキーへ移り、均等に回します |
 | `least_used` | 常にリクエスト数が最も少ないキーを選びます |
 | `random` | 健全なキーの中からランダムに選びます |
@@ -218,7 +240,7 @@ Hermes は起動時にいくつもの場所から認証情報を見つけ出し�
 
 認証情報プールは、プロバイダを解決する層に組み込まれています。
 
-1. **`agent/credential_pool.py`** — プールの管理。保存、選択、切り替え、待機時間
+1. **`agent/credential_pool.py`** — プールの管理。保存、選択、切り替え、待機時間。**`agent/credential_pool_admin.py`** が、ロックを取った上での対象の特定、解除、追加、削除、優先度の変更を受け持ちます
 2. **`hermes_cli/auth_commands.py`** — CLI のコマンドと対話式ウィザード
 3. **`hermes_cli/runtime_provider.py`** — プールを踏まえた認証情報の解決
 4. **`agent/turn_api_error.py`** — エラーからの復帰。429 / 402 / 401 → プール内での切り替え → フォールバック

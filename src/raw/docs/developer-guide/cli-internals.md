@@ -2,7 +2,7 @@
 title: "CLI の内部構造"
 description: "hermes_cli の成り立ち — スラッシュコマンドの振り分け、設定の読み込み、スキンエンジン、トランザクション方式の更新パイプライン、プロセス同定のルール"
 upstream_path: developer-guide/cli-internals.md
-upstream_blob: 8742ad36230b9b47e9da44baff40e2aedd3b14b0
+upstream_blob: 58792e4e51dd51773c8701b1ab4edbe700ccb810
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cli-internals
 ---
@@ -16,6 +16,22 @@ sources:
 段階ごとの取り決め（`plan → snapshot → apply → restart-per-kind → verify → report`）と、各段階が
 防いでいる現場の失敗は `hermes_cli/AGENTS.md` に書かれています。利用者から見た挙動
 （レシート、`--plan`、スナップショットの各モード）は [更新する](/hermes/docs/getting-started/updating/) にあります。
+
+systemd で力ずくの再起動に切り替えたときは、そのユニットの `TimeoutStopUSec` と
+`TimeoutStartUSec` を足した時間に、クライアント側の余裕として 15 秒を加えた分だけ待ちます。
+対象のユニットは再起動と同じマネージャーの範囲から読み取ります。最初の試行も再試行も
+この持ち時間を使い、更新が中断されたあとの追いかけ再起動も同じです。
+穏やかに処理を止めきったあとの起動では、起動側の持ち時間と余裕だけを使います。
+値が無い、読み取れない、無限、のいずれかだった段階は 90 秒に読み替えるので、
+無人で走る更新が終わらなくなることはありません。`systemctl` クライアント側が時間切れになっても、
+マネージャー側の処理が取り消されるわけでは**ありません**。停止処理を複数のコマンドでつないでいる場合や
+`EXTEND_TIMEOUT_USEC` を使っている場合は、この見積もりを超えることがあります。本当に時間切れになれば
+再起動は未完了のままですし、コマンドが成功しても、これまでどおりサービスの健全性と
+版の突き合わせによる確認は必要です。数値のままの `*USec` はマイクロ秒で、整形済みの値は
+日・週・月・年を含む systemd の決まった単位で書かれます。合計の持ち時間には、符号付き 32 ビットの
+ミリ秒で表せるポーリング上限を（丸めの余裕を見たうえで）下回る上限を設けてあるので、
+極端に長いユニット側の設定でも子プロセスの待機があふれることはありません。0・不明・無限の段階は
+先ほどの読み替えを使います。応答中の処理を止めきるときの設定は、これによって変わりません。
 
 ## プロセスの同定: argv の部分文字列から推測しない {#process-identity-never-infer-it-from-argv-substrings}
 

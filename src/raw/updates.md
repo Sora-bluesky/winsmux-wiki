@@ -8,6 +8,26 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-09-07
+
+- [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [Google Gemini](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/)
+- [Google Vertex AI](https://wiki.winsmux.dev/hermes/docs/guides/google-vertex/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
+- [作業の委任（サブエージェント）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [続く目標（Goal）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/goals/)
+- [セッションの定期確認（Heartbeat）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/heartbeat/)
+- [提供元の振り分け](https://wiki.winsmux.dev/hermes/docs/user-guide/features/provider-routing/)
+- [skill のしくみ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
+- [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
+- [Webhook](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/webhooks/)
+- [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
+
 ## 2026-09-06
 
 - [同梱スキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/skills-catalog/)
@@ -34,7 +54,7 @@ raw: /hermes/raw/updates.md
 - [送信プロキシの内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/egress-internals/)
 - [CLI を拡張する](https://wiki.winsmux.dev/hermes/docs/developer-guide/extending-the-cli/)
 - [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
-- [Hermes のプラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
 - [実行時のプロバイダー解決](https://wiki.winsmux.dev/hermes/docs/developer-guide/provider-runtime/)
 - [developer-guide/session-storage](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
 - [ツールの実行基盤](https://wiki.winsmux.dev/hermes/docs/developer-guide/tools-runtime/)
@@ -46,15 +66,15 @@ raw: /hermes/raw/updates.md
 - [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - [ブラウザの自動操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/browser/)
 - [認証情報プール](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-pools/)
-- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [作業の委任（サブエージェント）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
 - [出来事のフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
-- [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
+- [skill のしくみ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
 - [Web 検索と本文抽出](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-search/)
 
 ## 2026-09-04
 
 - [developer-guide/session-storage](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
-- [LLM とモデルの提供元](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 - [CLI コマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
@@ -73,7 +93,7 @@ raw: /hermes/raw/updates.md
 - [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
 - [cron であらゆる作業を自動化する](https://wiki.winsmux.dev/hermes/docs/guides/automate-with-cron/)
 - [Nous Portal](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
-- [LLM とモデルの提供元](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 - [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
 - [よくある質問とトラブル対処](https://wiki.winsmux.dev/hermes/docs/reference/faq/)
 - [モデルカタログ](https://wiki.winsmux.dev/hermes/docs/reference/model-catalog/)
@@ -87,7 +107,7 @@ raw: /hermes/raw/updates.md
 - [コンテキストファイル](https://wiki.winsmux.dev/hermes/docs/user-guide/features/context-files/)
 - [認証情報プール](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-pools/)
 - [定期タスク（Cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
-- [続いていく目的](https://wiki.winsmux.dev/hermes/docs/user-guide/features/goals/)
+- [続く目標（Goal）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/goals/)
 - [出来事のフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
 - [画像生成](https://wiki.winsmux.dev/hermes/docs/user-guide/features/image-generation/)
 - [かんばん（複数エージェントの盤）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/kanban/)
@@ -118,7 +138,7 @@ raw: /hermes/raw/updates.md
 - [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
 - [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
 - [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
-- [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
+- [skill のしくみ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
 - [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
 - [Web 検索と本文抽出](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-search/)
 - [ローカルモデル](https://wiki.winsmux.dev/hermes/docs/user-guide/local-models/)
@@ -126,7 +146,7 @@ raw: /hermes/raw/updates.md
 
 ## 2026-09-01
 
-- [記憶プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
+- [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
 - [ウェブ検索プロバイダのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/web-search-provider-plugin/)
 - [委任と並行作業](https://wiki.winsmux.dev/hermes/docs/guides/delegation-patterns/)
 - [外部サービス連携](https://wiki.winsmux.dev/hermes/docs/integrations/)
@@ -141,7 +161,7 @@ raw: /hermes/raw/updates.md
 - [API サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
 - [ブラウザの自動操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/browser/)
 - [定期タスク（Cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
-- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [作業の委任（サブエージェント）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
 - [記憶プロバイダ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
 - [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
 - [Web 検索と本文抽出](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-search/)
@@ -154,7 +174,7 @@ raw: /hermes/raw/updates.md
 
 - [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
 - [プロンプトの組み立て](https://wiki.winsmux.dev/hermes/docs/developer-guide/prompt-assembly/)
-- [LLM とモデルの提供元](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 - [CLI コマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
 - [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
@@ -166,13 +186,13 @@ raw: /hermes/raw/updates.md
 - [コンピュータ操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/computer-use/)
 - [定期タスク（Cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
 - [キュレーター](https://wiki.winsmux.dev/hermes/docs/user-guide/features/curator/)
-- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [作業の委任（サブエージェント）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
 - [かんばん（複数エージェントの盤）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/kanban/)
 - [繰り返しのループ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/loops/)
 - [MCP (Model Context Protocol)](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
 - [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
 - [人格と SOUL.md](https://wiki.winsmux.dev/hermes/docs/user-guide/features/personality/)
-- [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
+- [skill のしくみ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
 - [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
 - [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
 - [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
@@ -377,7 +397,7 @@ raw: /hermes/raw/updates.md
 
 - [プロバイダーを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-providers/)
 - [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
-- [LLM とモデルの提供元](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 - [CLI コマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - [CLI の記号集](https://wiki.winsmux.dev/hermes/docs/reference/cli-symbols/)
 - [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
@@ -411,7 +431,7 @@ raw: /hermes/raw/updates.md
 
 ## 2026-08-28
 
-- [Hermes のプラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
 - [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
 - [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
@@ -439,7 +459,7 @@ raw: /hermes/raw/updates.md
 - [ブラウザの自動操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/browser/)
 - [コンピュータ操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/computer-use/)
 - [定期タスク（Cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
-- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [作業の委任（サブエージェント）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
 - [かんばん（複数エージェントの盤）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/kanban/)
 - [記憶プロバイダ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
 - [ツール検索](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-search/)
@@ -447,7 +467,7 @@ raw: /hermes/raw/updates.md
 
 ## 2026-08-26
 
-- [記憶プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
+- [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
 - [ターミナル環境プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/terminal-environment-plugin/)
 - [デスクトップアプリのネイティブサインイン（RFC 8252）](https://wiki.winsmux.dev/hermes/docs/guides/desktop-native-signin/)
 - [Google Gemini](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/)
@@ -469,7 +489,7 @@ raw: /hermes/raw/updates.md
 
 - [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
 - [定期実行がうまくいかないとき](https://wiki.winsmux.dev/hermes/docs/guides/cron-troubleshooting/)
-- [LLM とモデルの提供元](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 - [CLI コマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
 - [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
@@ -478,7 +498,7 @@ raw: /hermes/raw/updates.md
 - [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
 - [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
 - [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
-- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [作業の委任（サブエージェント）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
 - [フォールバックプロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/fallback-providers/)
 - [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
 
@@ -507,7 +527,7 @@ raw: /hermes/raw/updates.md
 - [cron であらゆる作業を自動化する](https://wiki.winsmux.dev/hermes/docs/guides/automate-with-cron/)
 - [AWS Bedrock](https://wiki.winsmux.dev/hermes/docs/guides/aws-bedrock/)
 - [MCP で Hermes Cloud を管理する](https://wiki.winsmux.dev/hermes/docs/guides/manage-hermes-cloud-with-mcp/)
-- [LLM とモデルの提供元](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 - [CLI コマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
 - [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)

@@ -2,7 +2,7 @@
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: 968af066cdf9b94a2f883d9d4ac5c2f42b7019f0
+upstream_blob: d68f676ed92c00dee2f5ef67397eae0f67d7b770
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -231,6 +231,15 @@ Create a daily funding report → attach "ai-funding-daily-report" skill
 4. **既定値** — 3600秒（1時間）
 
 この制限時間がかかるのは**実行前のスクリプトだけ**で、エージェント側にはかかりません。スキルや LLM で動くジョブは、*無操作*の時間を基準にした別の制限（`HERMES_CRON_TIMEOUT`、既定は無操作600秒、`0` で無制限）で動きます。ツールを呼び続けたりトークンを出し続けたりしているかぎり何時間でも動き、何も起きない時間が設定分だけ続いたときに初めて打ち切られます。スクリプトは常駐のスレッドプールに投げられ、1回分の処理のロックを握ったままにはしないので、長く走るスクリプトがほかのジョブの実行を止めることはありません。
+
+制限時間を超えたとき、あるいは所有権が取り消されたときは、`cron.scheduler_script` が共通の
+`agent.deadline.kill_process_tree` による強制終了の経路を使います。POSIX ではいったん動きを止めてから、
+生きているツリーを調べ直したうえで、子孫とその親へシグナルを送ります。別のセッションにいて出力パイプを
+受け継いでいない子も対象です。これで、調べたあとに新しく分岐したプロセスを取りこぼす問題がなくなります。
+停止を待つ時間には上限があります。調査や権限で失敗した場合は、これまでどおりグループ単位の後始末を最善努力で
+行うだけで、サンドボックスのような保証にはなりません。後始末で止めた相手は、終了に失敗した場合には元に戻します。
+もともと止まっていた相手は、その状態のままです。明示的に穏やかなシグナルを送るときは、相手を止めません。
+Windows では引き続き `taskkill /F /T` を使います。
 
 ### プロバイダの切り替えによる復帰 {#provider-recovery}
 

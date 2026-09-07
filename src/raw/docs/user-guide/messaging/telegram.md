@@ -2,7 +2,7 @@
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: deb60b4e727348f53da2a6ee2cf1efc4fb43451b
+upstream_blob: 720217ec7effb55ffd413e0791414e1dac08a64b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -733,7 +733,7 @@ platforms:
 
 `skill` の項目を持つトピックでは、そのトピックで新しいセッションが始まったときに、その skill が自動で読み込まれます。会話の最初に `/skill-name` と打つのとまったく同じで、skill の内容が最初のメッセージに差し込まれ、以降のメッセージからは会話の履歴として見えます。
 
-たとえば `skill: arxiv` のトピックでは、セッションが作り直されるたび（放置による時間切れ、毎日のリセット、手動の `/reset`）に arxiv の skill が先に読み込まれます。
+たとえば `skill: arxiv` のトピックでは、セッションが作り直されるたび（自分で `/new` か `/reset` を実行したあと）に arxiv の skill が先に読み込まれます。
 
 :::tip
 設定の外で作ったトピック（Telegram の API を手で呼んだ場合など）は、`forum_topic_created` のサービスメッセージが届いたときに自動で見つかります。ゲートウェイが動いている間に設定へトピックを足すこともできます。次に控えが外れたときに拾われます。

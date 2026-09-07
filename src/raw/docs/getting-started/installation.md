@@ -2,7 +2,7 @@
 title: "インストール"
 description: "Linux、macOS、WSL2、Windows ネイティブ、Android（Termux）に Hermes Agent を導入する手順"
 upstream_path: getting-started/installation.md
-upstream_blob: 98b95c9d7f92172cdcb0b44748d38f55093a396f
+upstream_blob: 352f88aa2c80d9bf06acdd077f349572aee5ff23
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -172,6 +172,25 @@ Hermes を専用の非特権ユーザー（たとえば `hermes` という syste
 | 更新後に設定が失われた | `hermes config check` を実行してから `hermes config migrate` を実行する |
 
 さらに詳しく調べたいときは `hermes doctor` を実行してください。何が足りないのか、どう直せばよいのかを具体的に教えてくれます。
+
+### シンボリックリンクにしたホームディレクトリと外部ストレージ {#symlinked-home-directories-and-external-storage}
+
+Hermes は、`HERMES_HOME` 自体をシンボリックリンクにする使い方にも、`hooks`・`skills`・`sessions`・`logs`
+といったホーム直下のディレクトリだけをリンクにする使い方にも対応しています。ホームの初期化では、
+すでにあるディレクトリのリンクはそのまま残り、リンク先のディレクトリ（および `logs/curator` のような
+その配下）の権限は持ち主の設定に任せます。
+
+リンク先が見つからない、アクセスできない、ディレクトリではない、のいずれかだった場合、初期化は止まり、
+パスとリンク先を書いたストレージのエラーになります。Hermes はリンクを差し替えたり、足りないリンク先を
+作ったりは**しません**。外付けや NAS のボリュームが外れているときにそれをやると、ローカルのディスクへ
+データを書いてしまうからです。表示されたリンクを確かめ、マウントし直すかリンク先を直し、アクセス権を
+確認してからやり直してください。意図してドットファイルの置き場を新しくするなら、目的のストレージが
+使える状態だと確かめたうえで、自分で作ってください。
+
+`hermes doctor` はこの失敗を、YAML の不備ではなくストレージの問題として報告します。いまの `config.yaml`
+はそのまま残してください。ディレクトリが使えない状態は `hermes setup` では直りません。これは
+ディレクトリが使えるかどうかの確認であって、マウントの監視ではありません。ディレクトリが存在することは、
+目的のボリュームがマウントされている証拠にはならないからです。
 
 ## インストール方法の自動判別 {#install-method-auto-detection}
 

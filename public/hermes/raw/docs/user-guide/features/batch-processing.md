@@ -2,7 +2,7 @@
 title: "まとめて処理する"
 description: "エージェントの軌跡を大量に生成する — 並列処理、途中経過の保存、ツールセットの配分"
 upstream_path: user-guide/features/batch-processing.md
-upstream_blob: 87bbf03af162883671a24d8b58b26cde684b50de
+upstream_blob: 5a0cbacb908a9cfa5c770a6d83c846d977220562
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/batch-processing
 ---
@@ -72,7 +72,6 @@ python batch_runner.py --list_distributions
 | `--resume` | `false` | 途中経過から再開する |
 | `--verbose` | `false` | 詳しいログを出す |
 | `--max_samples` | すべて | データセットの先頭 N 件だけを処理する |
-| `--max_tokens` | モデルの既定値 | モデルの応答1回あたりのトークン上限 |
 
 ### 提供元の振り分け（OpenRouter） {#provider-routing-openrouter}
 

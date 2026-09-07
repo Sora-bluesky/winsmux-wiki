@@ -2,7 +2,7 @@
 title: "ACP ホスト連携"
 description: "ACP に対応したエディタや共同作業ツールの中で Hermes Agent を使う"
 upstream_path: user-guide/features/acp.md
-upstream_blob: 1424c427f0418d6f0b6c109367a42c367bb79647
+upstream_blob: aff86e2a32b1778ff5de4e46319f9ce1e9fda942
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/acp
 ---
@@ -321,8 +321,16 @@ ACP のセッションは、サーバーが動いている間、ACP アダプタ
 - 現在の会話履歴
 - 中断用のイベント
 
-内部の `AIAgent` は Hermes の通常の保存やログの仕組みをそのまま使いますが、ACP の
-`list/load/resume/fork` が対象にするのは、いま動いている ACP サーバープロセスの分だけです。
+会話は Hermes のセッションデータベースに保存されるので、ACP サーバーを再起動したあとでも
+一覧に出したり、読み込んだり、再開したり、分岐させたりできます。指示文を出さずに新しい
+セッションを開いた場合はメモリ上に留まり、モデルを探すための問い合わせだけで空の履歴が
+作られることはありません。中身のある分岐はその場で保存され、履歴が空のセッションでも
+付随する情報の更新はできます。
+
+古い版で作られた空の行が自動で消えることはありません。ACP の行が開いたままでも、その
+接続先が切れている証拠にはなりません。関係するエディタのセッションを閉じてから、
+`hermes sessions show <id>` で中身を確かめ、不要だと確認できたものだけを
+`hermes sessions delete <id>` で削除してください。
 
 ## 作業ディレクトリの扱い {#working-directory-behavior}
 

@@ -2,7 +2,7 @@
 title: "続く目標（Goal）"
 description: "目標をひとつ立てておくと、Hermes が終わるまで応答をまたいで作業を続けます。Ralph ループの Hermes 版です。"
 upstream_path: user-guide/features/goals.md
-upstream_blob: 40949e6493d376180cc483821ebdcbc4abc5c1f5
+upstream_blob: 4c4ab772185795c4af86dbe8f2bfc2565c101ad1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/goals
 ---
@@ -74,7 +74,11 @@ sources:
 | `/goal gate remove <N>` | N 番目（1 から数えます）の関門を外します。 |
 | `/goal gate clear` | すべての関門を外します。 |
 
-CLI でも、どのプラットフォーム連携（Telegram、Discord、Slack、Matrix、Signal、WhatsApp、SMS、iMessage、Webhook、API サーバー、ウェブのダッシュボード）でも、同じように使えます。
+従来の CLI、TUI、デスクトップアプリ、ダッシュボードのチャット、メッセージ連携は、どれも同じ `/goal` の処理を共有しています。下書きと表示、その場で書く取り決め、待ちと待ちの解除、品質の関門、clear / stop / done の言い換えも同じです。デスクトップアプリの目標の操作も、同じ処理を使います。ACP は今のところ `/goal` を出しても実装してもいません。
+
+`/goal draft <text>` は、目標を作るのと 1 回目の応答を始めるのを両方やります。下書きが使えず、Hermes がふつうの自由な形の目標に切り替えたときも同じです。`draft` は語として丸ごと一致したときだけ効きます。`/goal drafting docs` と書けば、`drafting docs` がそのまま目的の文になり、下書き用のモデルは呼ばれません。
+
+メッセージ連携の側の権限の決まりはそのままです。`/goal gate add` を使えるのは、連携の管理者として明示的に設定された人だけです。関門の一覧、削除、全消しは、立て直しのためにいつでも使えます。画面への出し方や応答の回し方は入口ごとに違いますが、コマンドの読み取りと、保存される目標の変更は共通です。
 
 ## 完了の取り決め {#completion-contracts}
 

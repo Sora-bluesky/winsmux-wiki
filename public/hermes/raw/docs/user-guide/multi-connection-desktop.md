@@ -2,7 +2,7 @@
 title: "デスクトップ版を複数の Hermes につなぐ"
 description: ""
 upstream_path: user-guide/multi-connection-desktop.md
-upstream_blob: 13ce2e88b61da6cdfe37884e04d80ab6131f7ef5
+upstream_blob: 9746d02cdc5873a864ae74d9aa879a8e7bc576f4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-connection-desktop
 ---
@@ -161,6 +161,13 @@ instance itself is not touched — you can add it again any time.」*（イン�
 これらはローカルのプロファイルごとのバックエンドと同じように、使われていないものから
 片付けられていきます。別のゲートウェイを見ているあいだも、裏のエージェントは応答を
 返し続けます。
+
+承認のボタンは、そのときに選んでいるプロファイルではなく、セッションを持っている
+バックエンドへ戻ります。ローカルの二番目以降のプロファイルでは、セッションの結び付きが
+控えに残っていなくても、要求を運んできたソケットをデスクトップがそのまま使えます。
+保存されたセッションの持ち主のほうが優先されますし、そのローカルのプロファイルを消したり
+名前を変えたりすると、この一時的な経路は消えるので、古くなったバックエンドにつなぎ直して
+しまうことはありません。
 
 ### 切り替えと適用範囲 {#switching-and-scoping}
 

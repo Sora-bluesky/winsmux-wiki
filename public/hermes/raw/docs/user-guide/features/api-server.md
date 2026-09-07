@@ -2,7 +2,7 @@
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: 36b6e1c7c039fb3adfb01fbe5d664b6e63c73113
+upstream_blob: 6b9acf6dcd69caa24d6dc3454fb71bc42f8ecb5e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -689,6 +689,7 @@ API_SERVER_CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 CORS を有効にすると、こうなります。
 - **事前確認のレスポンス**に `Access-Control-Max-Age: 600` が入ります（10 分のキャッシュ）
 - **SSE の逐次送りのレスポンス**にも CORS のヘッダーが入るので、ブラウザの EventSource のクライアントがきちんと動きます
+- **`X-Hermes-Session-Id`** が許されるリクエストのヘッダーになります。許可した出どころのブラウザから、会話の続きを求められるようになります。
 - **`Idempotency-Key`** が許されるリクエストのヘッダーになります。重複を避けるために送れます（レスポンスは鍵ごとに 5 分キャッシュされます）
 
 Open WebUI をはじめ、ここで説明しているフロントエンドの多くはサーバー同士でつながるので、そもそも CORS は要りません。

@@ -2,7 +2,7 @@
 title: "CLI コマンド早見表"
 description: "Hermes のターミナルコマンドとコマンド群の公式な早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: 63734a2d6a3b8ec77c3a84d948611f2855a7dbbc
+upstream_blob: b5e6093e6e548fefeae756ba1148e13e079f6a91
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -547,14 +547,18 @@ hermes auth list                                         # Show all pools
 hermes auth list openrouter                              # Show specific provider
 hermes auth add openrouter --api-key sk-or-v1-xxx        # Add API key
 hermes auth add anthropic --type oauth                   # Add OAuth credential
+hermes auth add openai-codex --type oauth --priority 0   # Add an account and try it first
 hermes auth remove openrouter 2                          # Remove by index
+hermes auth priority openrouter backup-key 0             # Move a credential to the front of fill_first order
 hermes auth reset openrouter                             # Clear cooldowns
+hermes auth reset openrouter 2                           # Clear the cooldown on one credential
+hermes auth refresh openai-codex work                    # Refresh one OAuth credential and clear its cooldown
 hermes auth status anthropic                             # Show auth status for a provider
 hermes auth logout anthropic                             # Log out and clear stored auth state
 hermes auth spotify                                      # Authenticate Hermes with Spotify via PKCE
 ```
 
-サブコマンド: `add`、`list`、`remove`、`reset`、`status`、`logout`、`spotify`。サブコマンドなしで実行すると、対話形式の管理ウィザードが立ち上がります。
+サブコマンド: `add`、`list`、`remove`、`reset`、`priority`、`refresh`、`status`、`logout`、`spotify`。サブコマンドなしで実行すると、対話形式の管理ウィザードが立ち上がります。
 
 ## `hermes status` {#hermes-status}
 

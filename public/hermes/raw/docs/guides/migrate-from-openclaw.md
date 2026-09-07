@@ -2,7 +2,7 @@
 title: "OpenClaw から移ってくる"
 description: "OpenClaw / Clawdbot の環境を Hermes Agent へ移すための案内です。何が移るのか、設定がどう対応するのか、移したあとに何を確かめるのかをまとめます。"
 upstream_path: guides/migrate-from-openclaw.md
-upstream_blob: 9680717dc3bdea33f8fe26f7ebdfc9ee653a02e0
+upstream_blob: 3a729ee75f17ee4f20a3954359ce6253a20afa8e
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/migrate-from-openclaw
 ---
@@ -99,15 +99,9 @@ hermes claw migrate --preset full --migrate-secrets --yes
 | Docker の隔離 | `agents.defaults.sandbox.backend` | `terminal.backend` | "docker" → "docker" |
 | Docker のイメージ | `agents.defaults.sandbox.docker.image` | `terminal.docker_image` | そのままコピー |
 
-### セッションを区切る決まり {#session-reset-policies}
+### セッションの寿命 {#session-lifetime}
 
-| OpenClaw の設定パス | Hermes の設定パス | 補足 |
-|---------------------|-------------------|-------|
-| `session.reset.mode` | `session_reset.mode` | "daily"、"idle"、またはその両方 |
-| `session.reset.atHour` | `session_reset.at_hour` | 毎日の区切りの時刻（0〜23） |
-| `session.reset.idleMinutes` | `session_reset.idle_minutes` | 何も起きなかった分数 |
-
-補足: OpenClaw には `session.resetTriggers`（`["daily", "idle"]` のような素朴な文字列の配列）もあります。構造のある `session.reset` が無い場合、移行はこの `resetTriggers` から推し量ります。
+何も起きなかったときのタイマーや、毎日決まった時刻のタイマーは取り込みません。Hermes の会話は、`/new` か `/reset` を自分で実行するまで残り続けます。込み入ったセッションの設定（本人確認のひも付け、スレッドとの結び付け、保守、扱う範囲と送信の決まり）は、あとで見返せるように保管したままにします。
 
 ### MCP のサーバー {#mcp-servers}
 
@@ -236,7 +230,7 @@ OpenClaw の設定では、トークンや API キーの値を 3 通りの形で
 
 5. **メッセージ連携を試す** — プラットフォームのトークンを移したなら、ゲートウェイを再起動します: `systemctl --user restart hermes-gateway`
 
-6. **セッションの決まりを確かめる** — `hermes config show` を実行して、`session_reset` の値が思ったとおりか見てください。
+6. **保管されたセッションの設定を確かめる** — 保管された込み入った設定に目を通してください。何も起きなかったときのタイマーと毎日のタイマーは、意図して取り込んでいません。
 
 7. **WhatsApp を紐づけ直す** — WhatsApp はトークンではなく QR コードでの紐づけ（Baileys）です。`hermes whatsapp` を実行して紐づけてください。
 

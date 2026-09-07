@@ -2,7 +2,7 @@
 title: "developer-guide/adding-platform-adapters"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: 6415baa6b1f4d9758580e4ad3646e35b1c100b23
+upstream_blob: 7ae1f1567d94be3f06784c8f0029919052586803
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -98,9 +98,8 @@ provides_tools:
 
 ```python
 
-from gateway.platforms.base import (
-    BasePlatformAdapter, SendResult, MessageEvent, MessageType,
-)
+from gateway.platforms.base import BasePlatformAdapter, SendResult
+from gateway.platforms.event import MessageEvent, MessageType
 from gateway.config import Platform, PlatformConfig
 
 class MyPlatformAdapter(BasePlatformAdapter):
@@ -565,9 +564,8 @@ class Platform(Enum):
 
 ```python
 from gateway.config import Platform, PlatformConfig
-from gateway.platforms.base import (
-    BasePlatformAdapter, MessageEvent, MessageType, SendResult,
-)
+from gateway.platforms.base import BasePlatformAdapter, SendResult
+from gateway.platforms.event import MessageEvent, MessageType
 
 def check_newplat_requirements() -> bool:
     """Return True if dependencies are available."""

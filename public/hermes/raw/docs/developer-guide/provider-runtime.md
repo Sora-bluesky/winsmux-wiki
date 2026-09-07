@@ -2,7 +2,7 @@
 title: "実行時のプロバイダー解決"
 description: "Hermes が実行時にプロバイダー・資格情報・API モード・補助モデルをどう決めているか"
 upstream_path: developer-guide/provider-runtime.md
-upstream_blob: 3e2c723a6b96f35e088a6b2b8775fcbed83ee4bc
+upstream_blob: 5cb620a6d1eb4964f737b2007dcc66305d81ac62
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/provider-runtime
 ---
@@ -29,6 +29,16 @@ Hermes には、共通のプロバイダー解決処理があり、次のどこ�
 `providers/` の `get_provider_profile()` は、プロバイダー ID を渡すと `ProviderProfile` を返します。`runtime_provider.py` は解決のたびにこれを呼び、正式な `base_url`、優先順つきの `env_vars`、`api_mode`、`fallback_models` を受け取ります。同じ情報をあちこちのファイルに書き写さずに済むわけです。`plugins/model-providers/<your-provider>/` (または `$HERMES_HOME/plugins/model-providers/<your-provider>/`) に新しいプラグインを置いて `register_provider()` を呼べば、それだけで `runtime_provider.py` が拾ってくれます。解決処理そのものに分岐を足す必要はありません。
 
 新しいプロバイダーを一級市民として足したい場合は、このページと合わせて [プロバイダーを追加する](/hermes/docs/developer-guide/adding-providers/) と [モデルプロバイダープラグインの手引き](/hermes/docs/developer-guide/model-provider-plugin/) も読んでください。
+
+## chat completions が返す reasoning の形 {#chat-completions-reasoning-shapes}
+
+OpenAI 互換のリレーは、`reasoning` や `reasoning_content` を文字列で返すこともあれば、
+テキストパートの辞書、あるいはテキストパートと文字列断片が混じった配列で返すこともあります。
+Hermes はこうしたフィールドを、メインのストリーム、Relay の記録、同期・非同期の補助ストリーム、
+完了したレスポンスからの reasoning 抽出のどれでも、文字列として扱う前に平坦化します。
+断片がもともと持っている空白はそのまま残り、平坦化のときにフィールドの中へ区切りを足すことはありません。
+メインのストリームと Relay の記録では、太字の reasoning 見出しがそろっている箇所の段落の切れ目は
+これまでどおり残ります。reasoning は目に見える回答とは分けたままです。
 
 ## 解決の優先順位 {#resolution-precedence}
 

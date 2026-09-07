@@ -1,6 +1,98 @@
 {
-  "generatedAt": "2026-09-07",
+  "generatedAt": "2026-09-08",
   "entries": [
+    {
+      "date": "2026-09-07",
+      "sha": "425d0e1",
+      "upstream": "693641a",
+      "pages": [
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/memory-provider-plugin",
+          "title": "メモリープロバイダープラグイン",
+          "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "guides/google-gemini",
+          "title": "Google Gemini",
+          "url": "/hermes/docs/guides/google-gemini/"
+        },
+        {
+          "id": "guides/google-vertex",
+          "title": "Google Vertex AI",
+          "url": "/hermes/docs/guides/google-vertex/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/toolsets-reference",
+          "title": "ツールセット一覧",
+          "url": "/hermes/docs/reference/toolsets-reference/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/configuring-models",
+          "title": "モデルの設定",
+          "url": "/hermes/docs/user-guide/configuring-models/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "作業の委任（サブエージェント）",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/goals",
+          "title": "続く目標（Goal）",
+          "url": "/hermes/docs/user-guide/features/goals/"
+        },
+        {
+          "id": "user-guide/features/heartbeat",
+          "title": "セッションの定期確認（Heartbeat）",
+          "url": "/hermes/docs/user-guide/features/heartbeat/"
+        },
+        {
+          "id": "user-guide/features/provider-routing",
+          "title": "提供元の振り分け",
+          "url": "/hermes/docs/user-guide/features/provider-routing/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "skill のしくみ",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/messaging/webhooks",
+          "title": "Webhook",
+          "url": "/hermes/docs/user-guide/messaging/webhooks/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        }
+      ]
+    },
     {
       "date": "2026-09-06",
       "sha": "4da50a3",
@@ -120,7 +212,7 @@
         },
         {
           "id": "developer-guide/plugins",
-          "title": "Hermes のプラグインを作る",
+          "title": "Hermes プラグインを作る",
           "url": "/hermes/docs/developer-guide/plugins/"
         },
         {
@@ -180,7 +272,7 @@
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "サブエージェントへの委任",
+          "title": "作業の委任（サブエージェント）",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -190,7 +282,7 @@
         },
         {
           "id": "user-guide/features/skills",
-          "title": "スキルの仕組み",
+          "title": "skill のしくみ",
           "url": "/hermes/docs/user-guide/features/skills/"
         },
         {
@@ -212,7 +304,7 @@
         },
         {
           "id": "integrations/providers",
-          "title": "LLM とモデルの提供元",
+          "title": "LLM とモデルプロバイダ",
           "url": "/hermes/docs/integrations/providers/"
         },
         {
@@ -299,7 +391,7 @@
         },
         {
           "id": "integrations/providers",
-          "title": "LLM とモデルの提供元",
+          "title": "LLM とモデルプロバイダ",
           "url": "/hermes/docs/integrations/providers/"
         },
         {
@@ -369,7 +461,7 @@
         },
         {
           "id": "user-guide/features/goals",
-          "title": "続いていく目的",
+          "title": "続く目標（Goal）",
           "url": "/hermes/docs/user-guide/features/goals/"
         },
         {
@@ -516,7 +608,7 @@
         },
         {
           "id": "user-guide/features/skills",
-          "title": "スキルの仕組み",
+          "title": "skill のしくみ",
           "url": "/hermes/docs/user-guide/features/skills/"
         },
         {
@@ -548,7 +640,7 @@
       "pages": [
         {
           "id": "developer-guide/memory-provider-plugin",
-          "title": "記憶プロバイダプラグイン",
+          "title": "メモリープロバイダープラグイン",
           "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
         },
         {
@@ -623,7 +715,7 @@
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "サブエージェントへの委任",
+          "title": "作業の委任（サブエージェント）",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -680,7 +772,7 @@
         },
         {
           "id": "integrations/providers",
-          "title": "LLM とモデルの提供元",
+          "title": "LLM とモデルプロバイダ",
           "url": "/hermes/docs/integrations/providers/"
         },
         {
@@ -740,7 +832,7 @@
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "サブエージェントへの委任",
+          "title": "作業の委任（サブエージェント）",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -770,7 +862,7 @@
         },
         {
           "id": "user-guide/features/skills",
-          "title": "スキルの仕組み",
+          "title": "skill のしくみ",
           "url": "/hermes/docs/user-guide/features/skills/"
         },
         {
@@ -1787,7 +1879,7 @@
         },
         {
           "id": "integrations/providers",
-          "title": "LLM とモデルの提供元",
+          "title": "LLM とモデルプロバイダ",
           "url": "/hermes/docs/integrations/providers/"
         },
         {
@@ -1933,7 +2025,7 @@
       "pages": [
         {
           "id": "developer-guide/plugins",
-          "title": "Hermes のプラグインを作る",
+          "title": "Hermes プラグインを作る",
           "url": "/hermes/docs/developer-guide/plugins/"
         },
         {
@@ -2057,7 +2149,7 @@
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "サブエージェントへの委任",
+          "title": "作業の委任（サブエージェント）",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -2089,7 +2181,7 @@
       "pages": [
         {
           "id": "developer-guide/memory-provider-plugin",
-          "title": "記憶プロバイダプラグイン",
+          "title": "メモリープロバイダープラグイン",
           "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
         },
         {
@@ -2191,7 +2283,7 @@
         },
         {
           "id": "integrations/providers",
-          "title": "LLM とモデルの提供元",
+          "title": "LLM とモデルプロバイダ",
           "url": "/hermes/docs/integrations/providers/"
         },
         {
@@ -2236,7 +2328,7 @@
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "サブエージェントへの委任",
+          "title": "作業の委任（サブエージェント）",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -2357,7 +2449,7 @@
         },
         {
           "id": "integrations/providers",
-          "title": "LLM とモデルの提供元",
+          "title": "LLM とモデルプロバイダ",
           "url": "/hermes/docs/integrations/providers/"
         },
         {

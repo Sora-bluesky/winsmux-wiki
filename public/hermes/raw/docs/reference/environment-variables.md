@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の完全な一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 76edd5cb223428a183173d2cea4855688bf51928
+upstream_blob: 0849306b17ae706a167ef57d57e407f619091a56
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -887,8 +887,6 @@ export HERMES_WRITE_SAFE_ROOT=/path/to/project:/home/you/.hermes
 
 | 変数 | 説明 |
 |----------|-------------|
-| `SESSION_IDLE_MINUTES` | 無操作が N 分続いたらセッションをリセットします（既定値: 1440） |
-| `SESSION_RESET_HOUR` | 毎日リセットする時刻を 24 時間表記で指定します（既定値: 4 = 午前 4 時） |
 | `HERMES_SESSION_ID` | Hermes が起動する**すべてのツールのサブプロセスに自動で渡されます**（`terminal`、`execute_code`、常駐シェル、Docker / Singularity のバックエンド、委譲したサブエージェントの実行）。エージェントが現在のセッション ID を設定するので、ツールから呼ばれる利用者のスクリプトはこれを読んで、自分の出力や計測、副作用を元の Hermes のセッションと結び付けられます。**自分で設定しないでください** — 親のシェルから上書きしてもエージェントの実行の外でしか効かず、エージェントがセッションを始めた瞬間に上書きされます。 |
 | `AI_AGENT` | **CLI とゲートウェイの入口が `hermes-agent` に設定し**（外側のハーネスがすでに設定している場合を除きます）、ターミナルツールのすべてのシェルに渡されます。リモートのバックエンド（Docker、SSH、Modal、Daytona、Singularity、Vercel）も含みます。子プロセスの帰属を示す、エージェント横断で広まりつつある標準です。汎用のツール（たとえば huggingface_hub のエージェント検出）はこれを読んで AI エージェントの下で動いていることを知ります。値は公開されているエージェントのハーネスのレジストリでの Hermes の ID と一致します。手動で設定しないでください。 |
 | `HERMES_AGENT` | **CLI とゲートウェイの入口が `true` に設定し**、ターミナルツールのすべてのシェルに渡されるので、子プロセスは自分が Hermes の中で動いていると分かります。手動で設定しないでください。 |

@@ -2,7 +2,7 @@
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: 2b7b5b378c482f14331b0c93c5be554047c020ac
+upstream_blob: 5b92103db34bddb00aa632b5a2b67bea5062cdfd
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -186,6 +186,16 @@ gateway/platforms/                  # core base + legacy direct adapters
 - `send()` — メッセージを送り出す
 - 受け取ったイベントは `MessageEvent` に整えられ、`handle_message()` へ渡されます
 
+
+内部からの起こしは `gateway.wake.admit_internal_event` を通ります。公開されている
+`handle_message()` は今までどおり `None` を返しますが、そのイベントのプロセス内の受領記録
+`_gateway_accepted` が立つのは、実際に処理を予約するかキューへ入れたあとだけです。処理役がいない場合、
+明示されたセッションキーが合わない場合、キューの上限で捨てられた場合は、受け付けたことになりません。
+入口を差し替える独自アダプターは、内部イベントを `BasePlatformAdapter.handle_message()` へ委ねるか、
+実際に受け付けたことを自分で記録してください。コールバックを消費した・捨てたことを、受け付けたことと
+同じ扱いにしてはいけません。この受領記録はハートビートの実行の集計とは別のもので、認可・緊急停止・
+そのあとのターン準備の関門を迂回するものでもありません。
+
 ### トークンロック {#token-locks}
 
 固有の資格情報でつなぐアダプターは、`connect()` で `acquire_scoped_lock()` を、`disconnect()` で `release_scoped_lock()` を呼びます。こうすると、2 つのプロファイルが同じボットのトークンを同時に使ってしまうことがなくなります。
@@ -240,11 +250,12 @@ AIAgent._invoke_tool()
 
 ### メモリー書き出しの流れ {#memory-flush-lifecycle}
 
-セッションを作り直したとき、再開したとき、時間切れになったときは、次のように進みます。
-1. 組み込みのメモリーがディスクへ書き出されます
-2. メモリープロバイダーの `on_session_end()` フックが動きます
-3. 一時的な `AIAgent` が、メモリーだけの会話を 1 ターン走らせます
-4. そのあとコンテキストは捨てられるか、保管されます
+会話の区切りをはっきり指示したとき（`/new`、`/reset`、`/resume` など）は、出ていくセッションの内容を
+書き出して締めくくります。何もしないまま時間が経ったときや、日付が変わったときには、締めくくりません。
+
+資源の都合だけで起きる追い出し（TTL、しばらく使われていないものから外す仕組み、メモリー逼迫時）は、
+エージェントのクライアントを手放す前に、控えていたやり取りを設定済みのメモリープロバイダーへ書き込みます。
+保存された会話そのものを閉じるわけではありません。次のターンでは、同じやり取りと同じ人格が読み直されます。
 
 ## 裏で動く手入れ {#background-maintenance}
 

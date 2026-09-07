@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: 6a0a39657129c555bf63656d7c7a30903f1bbb07
+upstream_blob: 85f1f817ff401ea1b6ab412f261e8de9008618b6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -1003,7 +1003,7 @@ slack:
 
 覚えておくこと:
 - 割り当てはチャンネル ID で決まります。割り当てのあるチャンネルのスレッドは、親のチャンネルの割り当てを引き継ぎます。
-- スキルが読まれるのはセッションの始まりだけです（新しいセッション、または自動でやり直したあと）。割り当てを変えたときは、`/new` を実行するか、セッションが自動でやり直されるのを待つと効きます。
+- スキルが読まれるのはセッションの始まりだけです（新しいセッション）。割り当てを変えたときは、`/new` を実行すると効きます。
 - `channel_prompts` と組み合わせると、スキルの指示の上にチャンネルごとの口調や制約を重ねられます。
 
 ## うまくいかないとき {#troubleshooting}

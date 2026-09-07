@@ -2,7 +2,7 @@
 title: "定期タスク（Cron）"
 description: "自然な言葉で定期タスクを組み、ひとつの cron ツールで管理し、スキルをいくつでも付けられます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: e9a24600c1febb89d6b420e1f2bc92832c221c6c
+upstream_blob: 0db4cf022b9ea9a4f1ced152bdae0f6ecee98a9c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -269,6 +269,28 @@ hermes cron tick
 
 **名前でも指せます。** 中身を変える 4 つの操作（`pause`、`resume`、`run`、`remove`、`edit`）と、エージェントの `cronjob` ツールは、16 進数の ID の代わりにジョブの **名前** も受け付けます（大文字小文字は区別しません）。エージェントも CLI も、ID がぴたりと一致するものがあればそちらを優先します。名前が複数のジョブに当てはまる場合は、候補の ID を全部並べたうえで実行を断るので、こちらではっきり選べます。名前は一意ではないので、この守りは効いています。同じ名前のジョブが 2 つあるときに、黙って違うほうを書き換えてしまうのを防ぎます。
 
+### 止めた状態でジョブを作る（安全な試し撃ち） {#creating-a-job-paused-safe-canary}
+
+作ってから止めるまでの隙に走ってしまうことなく、試し撃ち用のジョブを作れます。
+
+```bash
+hermes cron create "every 1h" "Post the digest" --paused --paused-reason "Awaiting review"
+hermes cron resume <job_id>
+```
+
+`--paused` を付けると、最初のロック付きの書き込みで `enabled: false`、`state: paused`、
+`next_run_at: null` と、止めた時刻、そして後から確かめられる理由が保存され、発火の登録はされません。
+理由を省くと "Created paused; awaiting operator approval." が入ります。`--paused` を付けなければ、
+これまでどおり有効な状態で作られます。`--paused-reason` は `--paused` と一緒でないと使えません。
+おかしな値は保存の前にはねられます。
+
+同じ `paused` の真偽値と、任意の `paused_reason` の文字列は、`cron.jobs.create_job`、
+cron 管理ツールの `create` の操作、ゲートウェイの `POST /api/jobs`、ダッシュボードの
+`POST /api/cron/jobs` でも受け付けます。再開すると、次の実行が先の時刻に組まれます。止めるのは
+自動の発火を防ぐためのもので、人の手による上書きまでは止めません。これまでどおりの **Run now** や
+強制実行はそのまま使えて、そこからジョブを再開して走らせることもできます。ジョブを動かせる人に対する
+守りの線ではありません。
+
 ## エージェントに予定を任せる（cron ジョブが cron ジョブを扱う） {#agent-managed-scheduling-cron-jobs-that-manage-cron-jobs}
 
 既定では、スケジューラ *から* 立ち上がったエージェントは `cronjob` ツールを
@@ -339,6 +361,17 @@ Hermes が `unknown` と印を付けるのは、元の PID とプロセス起動
 最近の試行は `hermes cron runs [job-id] --limit 20`（別名は `history`）で
 見られます。終わった履歴には上限がありますが、まだ動いている試行が消される
 ことはありません。この台帳は、手早いバックアップにも含まれます。
+
+予定された試行は、取りかかった時刻とは別に、予定されていた正確な時刻も記録します。
+古い `jobs.json` の写しが、台帳では完了として残っている回を改めて発火させようとした場合、
+Hermes はその走り直しを飛ばし、繰り返しのジョブの基準を取り直します。写しが発送の記録より
+古いときや、もとの実行が遅れて始まったときでも同じように働きます。手で明示的に走らせた分は、
+予定された回の身元を使い切ってしまうことはありません。
+
+これは、副作用がちょうど一度だけ起きると約束するものではありません。身元を持たない古い行、
+間引かれた履歴、読めない台帳、途中で切れた試行は、完了したことを示せません。台帳そのものを
+古いバックアップへ戻した場合も、その証拠は失われます。外から届く発火の合図が指すのは、
+そのとき受け付けられている保管側の取り分であって、合図に含まれていない上流の予定枠ではありません。
 
 ### 失敗が続いたときの見直しの合図 {#repeated-failure-review-nudge}
 
@@ -449,8 +482,8 @@ doctor がジョブや状態を書き換えることはありません。報告�
 
 実行と配信は別々に記録されます。エージェントの実行はうまくいったのに出力が
 届かなかったとき（プラットフォームの 5xx、流量制限、古くなったセッション、
-送れた確かな証拠を返さないアダプタ）、そのジョブには `last_status:
-delivery_failed` が残ります。ただの `ok` にはなりません。理由は
+送れた確かな証拠を返さないアダプタ）、そのジョブには `last_status: delivery_failed` が残ります。
+ただの `ok` にはなりません。理由は
 `last_delivery_error` に入ります。`hermes cron list` は黄色で
 `delivery_failed: <reason>` と出し、`hermes cron doctor` は配信の問題として
 報告し、手動の `cronjob run` は配信のエラーを添えて `success: false` を返します。
@@ -808,7 +841,7 @@ cronjob(
 )
 ```
 
-初回は前回の出力が無いので、プロンプトはそのまま走ります。2 回目以降は、前回の出力が「すでに報告したことは繰り返さない」という言い添えとともに前に付きます。上流のジョブとも自由に組み合わせられ（`context_from=["<other_job_id>"]` と `continuity=true` を併用）、更新のときに `continuity=false` にすると、ほかの `context_from` の指定は残したままこれだけを切れます。内部では、このフラグは `context_from` の中の予約された `self` という項目として保存されます。
+初回は前回の出力が無いので、プロンプトはそのまま走ります。何も起きなかった見張りのティック（`no_change`）、空の出力、`wakeAgent=false` の記録は、渡す文脈を選ぶときに飛ばされるので、静かな時期が続いても中身のある直近の出力が残ります。記録のファイル自体はディスクに残ります。エラーの記録は、次の実行に立て直しの手がかりを与えるものとして引き続き選ばれます。うまくいったものだけを残す仕掛けではありません。2 回目以降は、前回の出力が「すでに報告したことは繰り返さない」という言い添えとともに前に付きます。上流のジョブとも自由に組み合わせられ（`context_from=["<other_job_id>"]` と `continuity=true` を併用）、更新のときに `continuity=false` にすると、ほかの `context_from` の指定は残したままこれだけを切れます。内部では、このフラグは `context_from` の中の予約された `self` という項目として保存されます。
 
 CLI からは `hermes cron create "every 6h" "Scan for news" --continuity` で作れ、既にあるジョブは `hermes cron edit <job_id> --continuity` と `--no-continuity` で切り替えられます。同じ切り替えは、ダッシュボードの cron 編集画面と、デスクトップの Bot Mode の定型作業のダイアログにもあります。
 
@@ -827,6 +860,19 @@ cron ジョブは、設定してある控えのプロバイダーと、認証情
 - 同じプロバイダーの[認証情報の束](/hermes/docs/user-guide/configuration/#credential-pool-strategies)の中で、**次の認証情報へ回す**
 
 おかげで、頻繁に走る cron ジョブや、混み合う時間帯のジョブも粘り強くなります。ひとつのキーが流量制限に掛かっただけで実行がまるごと失敗することはありません。
+
+## 実行の失敗（`last_error`） {#run-failures-lasterror}
+
+エージェントの実行が失敗すると、短くまとめた `last_error` が記録されます。ジョブの一覧と `/cron list` から見られ、
+認証情報らしき文字列と URL に埋め込まれた認証情報は伏せられます（前に保存されたエラーについても同じです）。
+これは `last_fire_error`（スケジューラからの受け渡し）や `last_delivery_error`（配信）とは別のものです。
+エージェント自身が失敗したときには、そちらの項目が空のままでも正しい姿です。
+
+接続の失敗を調べるときは、今使っている Hermes のホームの `cron/output/<job_id>/` にある実行の記録を開いてください。
+その `## Error` の節に、つながったトレースバックが入っています。ここでも認証情報らしき文字列と URL の認証情報は伏せられます。
+ファイルは、これまでどおり本人だけが読める権限で作られ、トレースバックの局所変数は取られません。配信の通知と `last_error` に
+残るのは短くまとめたエラーのほうで、トレースバック全体ではありません。人に渡す前に中身を確かめてください。伏せる処理は、
+アプリケーションが扱うどんなデータでも安全になると約束するものではありません。
 
 ## 発火の取りこぼし（`last_fire_error`） {#missed-scheduled-fires-lastfireerror}
 

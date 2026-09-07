@@ -2,7 +2,7 @@
 title: "コンテキストエンジンプラグイン"
 description: "組み込みの ContextCompressor を置き換えるコンテキストエンジンプラグインの作り方"
 upstream_path: developer-guide/context-engine-plugin.md
-upstream_blob: 6609158e076554fcac8ef905554fc317baee0936
+upstream_blob: 6d33638ddbe0dbab2ec3c443b5bdc5c6e40a3c15
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-engine-plugin
 ---
@@ -193,7 +193,7 @@ def register(ctx):
 3. update_from_response() — after each API call
 4. should_compress() — checked each turn
 5. compress() — called when should_compress() returns True
-6. on_session_end() — session boundary (CLI exit, /reset, gateway expiry)
+6. on_session_end() — session boundary (CLI exit, /reset, gateway shutdown)
 ```
 
 `on_session_reset()` は `/new` や `/reset` のときに呼ばれ、完全に終了させることなくセッションごとの状態を消します。

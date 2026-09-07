@@ -2,7 +2,7 @@
 title: "SSH / リモートホスト越しの OAuth"
 description: "Hermes をリモートのマシンやコンテナ、踏み台の向こうで動かしているときに、ブラウザを使う OAuth（Spotify、MCP サーバー）を完了させる方法"
 upstream_path: guides/oauth-over-ssh.md
-upstream_blob: c58aeb401d48f3666425d4ecf1ac4f3e196ec053
+upstream_blob: 258f1d13244f95377889b39b148f9fdefbe33367
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/oauth-over-ssh
 ---
@@ -46,6 +46,14 @@ Hermes は実際に使ったポートを `Waiting for callback on ...` の行に
 この表にないプロバイダーなら、トンネルは要りません。
 
 ## MCP サーバー {#mcp-servers}
+
+**デスクトップアプリの Skills → MCP:** ネイティブアプリが手元のコンピューターで
+コールバックを受け取り、選んだ接続とプロファイルへ渡します。そのためこの流れでは、
+SSH のコールバック用トンネルも `dashboard.public_url` も要りません。トークンは、
+持ち主であるバックエンドのプロファイルに留まります。MCP のタブから離れたり、その
+範囲を変えたりすると、進行中のサインインは取り消されます。デスクトップアプリから
+バックエンドの更新を促されたら、やり直す前に更新してください。リモートの HTTP
+コールバックへ切り替わることはありません。以下の端末での手順は今までどおりです。
 
 リモートの MCP サーバー（Linear、Sentry、Atlassian、Asana、Figma など）も、同じループバック転送の方式を使います。Hermes はサーバーごとに空いているポートを自動で選び、OAuth が始まったところで認可用の URL を表示します。表示されるのは、`mcp_servers:` に新しいサーバーが増えたときの起動時か、`hermes mcp login <server>` を実行したときです。
 

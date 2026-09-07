@@ -2,7 +2,7 @@
 title: "Actual Setup — Actual Computer（actual.inc）の推論を Hermes に設定する"
 description: "Actual Computer（actual.inc）の推論を Hermes に設定する"
 upstream_path: user-guide/skills/optional/devops/devops-actual-setup.md
-upstream_blob: 450eb93bc9125da47a16fe0aeec1a171a72d34bc
+upstream_blob: e4e9b6dd4174bf184a0599d5dbd475314ee19499
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-actual-setup
 ---
@@ -140,8 +140,8 @@ Actual はユーザー自身のハードウェアを自分だけの推論クラ�
    `repo/QUANT` を取り、量子化を明示しないと 409 になります。`actual models load` は
    `actual models list` に出るインストール後の名前を取ります。
 4. **reasoning 系のモデルが本文を返さない。** GLM や Qwen の reasoning 版は、思考を別の
-   `reasoning` フィールドに出すため、`max_tokens` が小さいとそれだけで使い切ることがあります。
-   失敗と決めつける前に、max_tokens をたっぷり取ってください。
+   `reasoning` フィールドに出すため、出力に使える枠が小さいとそれだけで使い切ってしまうことが
+   あります。失敗と決めつける前に、サーバー側の出力の既定値を確かめてください。
 5. **`actual` という名前の独自プロバイダを作らないでください。** 正式対応の前に書かれた古い
    手引きは `providers.actual.*` の設定ブロックを書かせていました。今の Hermes では組み込みの
    提供元がこの名前を取るので、古い独自ブロックは無視されるか、ぶつかります。消したうえで、

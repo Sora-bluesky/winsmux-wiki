@@ -2,7 +2,7 @@
 title: "MCP 設定の早見表"
 description: "Hermes Agent の MCP 設定キー、絞り込みの動き、ユーティリティツールの方針をまとめた早見表です。"
 upstream_path: reference/mcp-config-reference.md
-upstream_blob: 35bb31e64dc4758777fab04f94599349186df767
+upstream_blob: f1e4fbdba8d12ab364f4a0d691bd27c1be6048a3
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
 ---
@@ -349,6 +349,38 @@ mcp_servers:
 - トークンは `~/.hermes/mcp-tokens/<server>.json` に保存され、次のセッションでも使い回されます
 - トークンの更新は自動です。更新に失敗したときだけ、もう一度承認を求めます
 - HTTP/StreamableHTTP でつなぐサーバー（`url` を書いたもの）だけが対象です
+
+### デバイスコードでのログイン（RFC 8628） {#device-code-login-rfc-8628}
+
+`device_authorization_endpoint` を知らせている認可サーバーに対しては、Hermes を動かしている
+端末のターミナルから、デバイス認可をはっきり選んで実行します。
+
+```bash
+hermes mcp login protected_api --flow device
+```
+
+表示された確認用の URL をどの端末でもよいので開き、画面に出たユーザーコードを入れてください。
+Hermes は承認されるまで問い合わせを続け、`authorization_pending` と `slow_down` に従い、
+断られたときや期限が切れたときは止まります。ブラウザーは開かず、折り返しを受ける待ち受けも要りません。
+承認を待つ時間の上限は `oauth.timeout` で決まり（既定は 300 秒）、コード自体の有効期限でも制限されます。
+
+サーバーに `oauth.flow: device` を書いておくと、`hermes mcp login` と `hermes mcp reauth`
+（`reauth --all` を含みます）がデバイス認可を使うようになります。`login --flow browser` は、その
+設定を 1 回のログインだけ上書きします。既定は引き続きブラウザーの PKCE です。対応していない
+メタデータのときは、黙って別の流れに切り替わるのではなく、手掛かりのあるエラーが出ます。
+
+デバイスでのログインは、動的なクライアント登録の際にデバイス許可と更新用の許可を求めるか、
+設定してある `oauth.client_id`、`oauth.client_secret`、`oauth.token_endpoint_auth_method` を使います。
+登録したクライアントがデバイス認可を許している必要があります。ブラウザー向けの CIMD 文書は使いません。
+`oauth.scope` はデバイス認可の要求に付いて送られ、`oauth.user_agent` はトークンの問い合わせにも効きます。
+トークン、登録内容、発行元のメタデータは、動いているプロファイルの MCP トークン置き場に残り、
+これまでどおりの更新の仕組みが再起動後もそれらを使い回します。
+失敗したデバイス許可が、すでに保存してある認証情報を置き換えることはありません。
+
+最初のデバイスログインはターミナルからだけです。ダッシュボードやブラウザーからの折り返し、
+裏側での再接続では、デバイス認可は始まりません。ログインのコマンドは、ゲートウェイと
+**同じプロファイル・同じホスト** に対して実行してください。使える更新用トークンがないまま
+デバイス許可の期限が切れたり断られたりした場合は、もう一度はっきりログインし直す必要があります。
 
 ### クライアントの識別: CIMD と DCR {#client-identification-cimd-and-dcr}
 
