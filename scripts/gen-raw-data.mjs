@@ -21,6 +21,16 @@ raw: /hermes/raw/${page}
 const abs = (u) => (u.startsWith('/') ? site + u : u);
 const linkList = (links) => (links || []).map((l) => `[${l.title}](${abs(l.url)})`).join(' / ');
 
+// ISO 週キー（digests のキーと揃える）
+function weekOf(date) {
+  const d = new Date(date + 'T00:00:00Z');
+  const day = (d.getUTCDay() + 6) % 7;
+  d.setUTCDate(d.getUTCDate() - day + 3);
+  const jan4 = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+  const week = 1 + Math.round(((d.getTime() - jan4.getTime()) / 86400000 - 3 + ((jan4.getUTCDay() + 6) % 7)) / 7);
+  return `${d.getUTCFullYear()}-W${String(week).padStart(2, '0')}`;
+}
+
 // models
 {
   const c = await readJson('data/portal-models.json');
@@ -96,6 +106,77 @@ ${rows.join('\n')}
     front('更新履歴', '公式 docs への追随記録（日次の再翻訳ページ一覧と週次まとめ）', 'updates.md') +
     `# 更新履歴\n\n公式 docs への追随記録。\n\n${entries.join('\n\n')}\n\n${digests.join('\n\n')}\n`;
   await write('updates.md', body);
+
+  // generatedAt と各 entry の date は、JST の暦日を YYYY-MM-DD で表したもの。
+  const [year, month, day] = u.generatedAt.split('-').map(Number);
+  const windowStart = new Date(Date.UTC(year, month - 1, day - 6)).toISOString().slice(0, 10);
+  const recentEntries = u.entries
+    .filter((e) => e.date >= windowStart && e.date <= u.generatedAt)
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  const seenUrls = new Set();
+  const weeklyPages = [];
+  for (const e of recentEntries) {
+    for (const p of e.pages) {
+      if (seenUrls.has(p.url)) continue;
+      seenUrls.add(p.url);
+      weeklyPages.push(`- ${e.date} [${p.title}](${abs(p.url)})`);
+    }
+  }
+
+  const changedPages = weeklyPages.length
+    ? weeklyPages.join('\n')
+    : 'この期間に変わったページはありません。';
+
+  const digestMap = u.digests || {};
+  const currentWeek = weekOf(u.generatedAt);
+  let digestEntry = null;
+  if (Object.prototype.hasOwnProperty.call(digestMap, currentWeek)) {
+    digestEntry = [currentWeek, digestMap[currentWeek]];
+  } else {
+    digestEntry =
+      Object.entries(digestMap)
+        .filter(
+          ([week]) =>
+            /^\d{4}-W(?:0[1-9]|[1-4]\d|5[0-3])$/.test(week) &&
+            week <= currentWeek,
+        )
+        .sort(([a], [b]) => b.localeCompare(a))[0] || null;
+  }
+
+  const digestSection = digestEntry
+    ? `\n\n## 週次まとめ\n\n対象週: ${digestEntry[0]}\n\n${digestEntry[1]}`
+    : '';
+
+  const agentPrompt =
+    'https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設定と使い方に関係のある更新だけを 3 行以内で教えて。関係が無ければ「無し」と答えて。';
+
+  const weeklyBody =
+    front(
+      '今週の更新',
+      '直近 7 日に変わったページの一覧。あなたの Hermes に読ませる用',
+      'updates-weekly.md',
+    ) +
+    `# 今週の更新（Hermes Agent Wiki）
+
+生成日 = ${u.generatedAt}、対象期間 = ${windowStart} 〜 ${u.generatedAt}（JST）
+
+## あなたの Hermes への頼み方
+
+\`\`\`
+${agentPrompt}
+\`\`\`
+
+## 変わったページ
+
+${changedPages}${digestSection}
+
+## 正本
+
+- https://wiki.winsmux.dev/hermes/updates/
+- https://github.com/NousResearch/hermes-agent/commits/main/website/docs
+`;
+  await write('updates-weekly.md', weeklyBody);
 }
 
-console.log('gen-raw-data: wrote models.md howto.md trouble.md community.md updates.md');
+console.log('gen-raw-data: wrote models.md howto.md trouble.md community.md updates.md updates-weekly.md');

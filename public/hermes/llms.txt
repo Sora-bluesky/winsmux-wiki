@@ -471,6 +471,10 @@ Hermes Agent 0.21.0
 - [user-guide/windows-native（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
 - [user-guide/windows-wsl-quickstart（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-wsl-quickstart/)
 
+## 今週の更新（エージェント向け）
+
+- https://wiki.winsmux.dev/hermes/raw/updates-weekly.md
+
 ## 生 Markdown
 
 - https://wiki.winsmux.dev/hermes/raw/about.md
@@ -933,6 +937,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/syntheses/not-a-mirror.md
 - https://wiki.winsmux.dev/hermes/raw/trouble.md
 - https://wiki.winsmux.dev/hermes/raw/trust.md
+- https://wiki.winsmux.dev/hermes/raw/updates-weekly.md
 - https://wiki.winsmux.dev/hermes/raw/updates.md
 
 ## 正本

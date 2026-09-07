@@ -13,6 +13,8 @@ type Entry = {
 };
 const entries = updates.entries as Entry[];
 const digests = updates.digests as Record<string, string>;
+const agentPrompt =
+  'https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設定と使い方に関係のある更新だけを 3 行以内で教えて。関係が無ければ「無し」と答えて。';
 
 // ISO 週キー（digests のキーと揃える）
 function weekOf(date: string) {
@@ -51,6 +53,16 @@ for (const e of entries) {
       <a href="https://github.com/NousResearch/hermes-agent/commits/main/website/docs" target="_blank" rel="noopener">公式リポジトリの履歴</a>
       で確認できます。
     </p>
+    <div class="u-agent">
+      <h2>あなたの Hermes に読ませる</h2>
+      <p>直近 7 日の変更を 1 ファイルにまとめてあります。あなたの Hermes にこう頼むと、関係のある更新だけ返します。</p>
+      <pre><code id="u-agent-prompt">{agentPrompt}</code></pre>
+      <div class="u-agent-actions">
+        <button type="button" class="u-copy" data-copy-agent-prompt>コピー</button>
+        <a href="/hermes/raw/updates-weekly.md">今週の更新を開く</a>
+        <span class="u-copy-status" role="status" aria-live="polite" data-copy-status></span>
+      </div>
+    </div>
   </article>
 
   <div class="u-weeks">
@@ -82,6 +94,31 @@ for (const e of entries) {
   </div>
 </BaseLayout>
 
+<script is:inline>
+  const copyButton = document.querySelector('[data-copy-agent-prompt]');
+  const promptNode = document.getElementById('u-agent-prompt');
+  const statusNode = document.querySelector('[data-copy-status]');
+
+  copyButton?.addEventListener('click', async () => {
+    if (!promptNode) return;
+
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard API unavailable');
+      await navigator.clipboard.writeText(promptNode.textContent ?? '');
+      if (statusNode) statusNode.textContent = 'コピーしました。';
+    } catch {
+      const range = document.createRange();
+      range.selectNodeContents(promptNode);
+      const selection = window.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+        selection.addRange(range);
+        if (statusNode) statusNode.textContent = '選択しました。コピーしてください。';
+      }
+    }
+  });
+</script>
+
 <style>
   .wiki-note {
     border: 1px solid #bfdbfe;
@@ -90,6 +127,53 @@ for (const e of entries) {
     padding: 0.65rem 0.9rem;
     font-size: 0.85rem;
   }
+  .u-agent {
+    border: 1px solid #bfdbfe;
+    background: var(--color-accent-soft);
+    border-radius: 8px;
+    padding: 0.8rem 0.9rem;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+  }
+  .u-agent h2 { margin: 0; font-size: 1rem; }
+  .u-agent p { margin: 0.45rem 0 0.7rem; }
+  .u-agent pre {
+    margin: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 0.65rem 0.75rem;
+    background: var(--color-bg);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .u-agent pre code {
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    white-space: inherit;
+    font-size: 0.78rem;
+  }
+  .u-agent-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 0.65rem;
+  }
+  .u-copy {
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-fg);
+    border-radius: 6px;
+    padding: 0.25rem 0.55rem;
+    font: inherit;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    cursor: pointer;
+  }
+  .u-agent-actions a,
+  .u-copy-status { font-size: 0.78rem; }
+  .u-copy-status { color: var(--color-fg-secondary); }
   .u-weeks { display: flex; flex-direction: column; gap: 2rem; margin-top: 1.5rem; }
   .u-week { display: flex; flex-direction: column; gap: 0.6rem; }
   .u-week-title { font-size: 1.1rem; font-weight: 650; margin: 0; }

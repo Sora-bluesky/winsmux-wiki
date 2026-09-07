@@ -88,6 +88,10 @@ Hermes Agent ${'0.21.0'}
 
 ${catalog.map(([path, label]) => `- [${label}](${site}${path})`).join('\n')}
 
+## 今週の更新（エージェント向け）
+
+- https://wiki.winsmux.dev/hermes/raw/updates-weekly.md
+
 ## 生 Markdown
 
 ${raws.map((url) => `- ${url}`).join('\n')}
