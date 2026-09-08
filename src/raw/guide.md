@@ -20,6 +20,7 @@ raw: /hermes/raw/guide.md
 - [Telegram でつなぐ](/hermes/docs/user-guide/messaging/telegram/)
 - [運用](/hermes/ops/)
 - [どこまで任せるか](/hermes/trust/)
+- [Hermes 自身に聞く](/hermes/ask/)
 
 ここから下も、すべてこのサイト内の日本語版ページです。やりたい操作を先に、ページ名を後に書いています。
 

@@ -480,6 +480,7 @@ Hermes Agent 0.21.0
 
 - https://wiki.winsmux.dev/hermes/raw/about.md
 - https://wiki.winsmux.dev/hermes/raw/all.md
+- https://wiki.winsmux.dev/hermes/raw/ask.md
 - https://wiki.winsmux.dev/hermes/raw/community.md
 - https://wiki.winsmux.dev/hermes/raw/concepts/approval.md
 - https://wiki.winsmux.dev/hermes/raw/concepts/config.md
