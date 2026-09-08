@@ -60,7 +60,6 @@ raw: /hermes/raw/updates.md
 - [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
 - [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
 - [Actual Setup — Actual Computer（actual.inc）の推論を Hermes に設定する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-actual-setup/)
-- [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
 
 ## 2026-09-07
 
