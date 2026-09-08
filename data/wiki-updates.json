@@ -2,6 +2,263 @@
   "generatedAt": "2026-09-08",
   "entries": [
     {
+      "date": "2026-09-08",
+      "sha": "ab59cb0",
+      "upstream": "2237be3",
+      "pages": [
+        {
+          "id": "developer-guide/adding-platform-adapters",
+          "title": "プラットフォームアダプターを追加する",
+          "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
+        },
+        {
+          "id": "developer-guide/cli-internals",
+          "title": "CLI の内部構造",
+          "url": "/hermes/docs/developer-guide/cli-internals/"
+        },
+        {
+          "id": "developer-guide/completion-backlog-delivery",
+          "title": "たまったバックグラウンド完了通知",
+          "url": "/hermes/docs/developer-guide/completion-backlog-delivery/"
+        },
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/context-engine-plugin",
+          "title": "コンテキストエンジンプラグイン",
+          "url": "/hermes/docs/developer-guide/context-engine-plugin/"
+        },
+        {
+          "id": "developer-guide/cron-internals",
+          "title": "cron の内部構造",
+          "url": "/hermes/docs/developer-guide/cron-internals/"
+        },
+        {
+          "id": "developer-guide/gateway-internals",
+          "title": "ゲートウェイの内部",
+          "url": "/hermes/docs/developer-guide/gateway-internals/"
+        },
+        {
+          "id": "developer-guide/prompt-assembly",
+          "title": "プロンプトの組み立て",
+          "url": "/hermes/docs/developer-guide/prompt-assembly/"
+        },
+        {
+          "id": "developer-guide/provider-runtime",
+          "title": "実行時のプロバイダー解決",
+          "url": "/hermes/docs/developer-guide/provider-runtime/"
+        },
+        {
+          "id": "developer-guide/session-storage",
+          "title": "セッションの保存領域",
+          "url": "/hermes/docs/developer-guide/session-storage/"
+        },
+        {
+          "id": "developer-guide/tools-runtime",
+          "title": "ツールの実行基盤",
+          "url": "/hermes/docs/developer-guide/tools-runtime/"
+        },
+        {
+          "id": "getting-started/installation",
+          "title": "インストール",
+          "url": "/hermes/docs/getting-started/installation/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "guides/migrate-from-openclaw",
+          "title": "OpenClaw から移ってくる",
+          "url": "/hermes/docs/guides/migrate-from-openclaw/"
+        },
+        {
+          "id": "guides/oauth-over-ssh",
+          "title": "SSH / リモートホスト越しの OAuth",
+          "url": "/hermes/docs/guides/oauth-over-ssh/"
+        },
+        {
+          "id": "guides/tips",
+          "title": "コツとベストプラクティス",
+          "url": "/hermes/docs/guides/tips/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLI コマンド早見表",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/mcp-config-reference",
+          "title": "MCP 設定の早見表",
+          "url": "/hermes/docs/reference/mcp-config-reference/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/acp",
+          "title": "ACP ホスト連携",
+          "url": "/hermes/docs/user-guide/features/acp/"
+        },
+        {
+          "id": "user-guide/features/api-server",
+          "title": "API サーバー",
+          "url": "/hermes/docs/user-guide/features/api-server/"
+        },
+        {
+          "id": "user-guide/features/batch-processing",
+          "title": "まとめて処理する",
+          "url": "/hermes/docs/user-guide/features/batch-processing/"
+        },
+        {
+          "id": "user-guide/features/credential-pools",
+          "title": "認証情報プール",
+          "url": "/hermes/docs/user-guide/features/credential-pools/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期タスク（Cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/curator",
+          "title": "キュレーター",
+          "url": "/hermes/docs/user-guide/features/curator/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "作業の委任（サブエージェント）",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
+          "id": "user-guide/features/goals",
+          "title": "続く目標（Goal）",
+          "url": "/hermes/docs/user-guide/features/goals/"
+        },
+        {
+          "id": "user-guide/features/heartbeat",
+          "title": "セッションの定期確認（Heartbeat）",
+          "url": "/hermes/docs/user-guide/features/heartbeat/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "出来事のフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/kanban-worker-lanes",
+          "title": "カンバンの作業レーン",
+          "url": "/hermes/docs/user-guide/features/kanban-worker-lanes/"
+        },
+        {
+          "id": "user-guide/features/kanban",
+          "title": "かんばん（複数エージェントの盤）",
+          "url": "/hermes/docs/user-guide/features/kanban/"
+        },
+        {
+          "id": "user-guide/features/loops",
+          "title": "繰り返しのループ",
+          "url": "/hermes/docs/user-guide/features/loops/"
+        },
+        {
+          "id": "user-guide/features/memory",
+          "title": "ずっと残る記憶",
+          "url": "/hermes/docs/user-guide/features/memory/"
+        },
+        {
+          "id": "user-guide/features/mixture-of-agents",
+          "title": "Mixture of Agents",
+          "url": "/hermes/docs/user-guide/features/mixture-of-agents/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "skill のしくみ",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
+          "id": "user-guide/features/tools",
+          "title": "ツールとツールセット",
+          "url": "/hermes/docs/user-guide/features/tools/"
+        },
+        {
+          "id": "user-guide/features/tts",
+          "title": "音声と読み上げ",
+          "url": "/hermes/docs/user-guide/features/tts/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングのゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/slack",
+          "title": "Slack",
+          "url": "/hermes/docs/user-guide/messaging/slack/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/multi-connection-desktop",
+          "title": "デスクトップ版を複数の Hermes につなぐ",
+          "url": "/hermes/docs/user-guide/multi-connection-desktop/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        },
+        {
+          "id": "user-guide/skills/optional/devops/devops-actual-setup",
+          "title": "Actual Setup — Actual Computer（actual.inc）の推論を Hermes に設定する",
+          "url": "/hermes/docs/user-guide/skills/optional/devops/devops-actual-setup/"
+        }
+      ]
+    },
+    {
       "date": "2026-09-07",
       "sha": "425d0e1",
       "upstream": "693641a",
@@ -157,7 +414,7 @@
       "pages": [
         {
           "id": "developer-guide/adding-platform-adapters",
-          "title": "developer-guide/adding-platform-adapters",
+          "title": "プラットフォームアダプターを追加する",
           "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
         },
         {
@@ -222,7 +479,7 @@
         },
         {
           "id": "developer-guide/session-storage",
-          "title": "developer-guide/session-storage",
+          "title": "セッションの保存領域",
           "url": "/hermes/docs/developer-guide/session-storage/"
         },
         {
@@ -232,7 +489,7 @@
         },
         {
           "id": "developer-guide/trajectory-format",
-          "title": "developer-guide/trajectory-format",
+          "title": "軌跡の形式",
           "url": "/hermes/docs/developer-guide/trajectory-format/"
         },
         {
@@ -299,7 +556,7 @@
       "pages": [
         {
           "id": "developer-guide/session-storage",
-          "title": "developer-guide/session-storage",
+          "title": "セッションの保存領域",
           "url": "/hermes/docs/developer-guide/session-storage/"
         },
         {
@@ -341,7 +598,7 @@
       "pages": [
         {
           "id": "developer-guide/adding-platform-adapters",
-          "title": "developer-guide/adding-platform-adapters",
+          "title": "プラットフォームアダプターを追加する",
           "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
         },
         {
@@ -371,7 +628,7 @@
         },
         {
           "id": "developer-guide/session-storage",
-          "title": "developer-guide/session-storage",
+          "title": "セッションの保存領域",
           "url": "/hermes/docs/developer-guide/session-storage/"
         },
         {
@@ -526,12 +783,12 @@
         },
         {
           "id": "user-guide/multi-profile-gateways",
-          "title": "user-guide/multi-profile-gateways",
+          "title": "複数のゲートウェイを同時に動かす",
           "url": "/hermes/docs/user-guide/multi-profile-gateways/"
         },
         {
           "id": "user-guide/profiles",
-          "title": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
           "url": "/hermes/docs/user-guide/profiles/"
         },
         {
@@ -735,7 +992,7 @@
         },
         {
           "id": "user-guide/messaging/buzz",
-          "title": "user-guide/messaging/buzz",
+          "title": "Buzz",
           "url": "/hermes/docs/user-guide/messaging/buzz/"
         },
         {
@@ -745,7 +1002,7 @@
         },
         {
           "id": "user-guide/messaging/photon",
-          "title": "user-guide/messaging/photon",
+          "title": "Photon iMessage",
           "url": "/hermes/docs/user-guide/messaging/photon/"
         },
         {

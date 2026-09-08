@@ -7,7 +7,7 @@ import updates from '../../../../data/wiki-updates.json';
 
 type Entry = {
   date: string;
-  sha: string;
+  sha: string | null;
   upstream: string | null;
   pages: { id: string; title: string; url: string }[];
 };
