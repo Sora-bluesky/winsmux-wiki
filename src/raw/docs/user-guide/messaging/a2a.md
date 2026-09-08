@@ -1,5 +1,5 @@
 ---
-title: "user-guide/messaging/a2a"
+title: "A2A（エージェント間連携）"
 description: ""
 upstream_path: user-guide/messaging/a2a.md
 upstream_blob: 92d98d19d94086a0d772e07bf6ac2def31a4012d

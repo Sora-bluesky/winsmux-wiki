@@ -53,7 +53,16 @@ function parseFrontmatter(src: string): { data: Record<string, string | string[]
     if (!m) continue;
     listKey = null;
     const key = m[1];
-    const val = m[2].trim().replace(/^"|"$/g, '');
+    const raw = m[2].trim();
+    // JSON.stringify で書かれた値（"Using \"coder\"" 等）は JSON として戻す。壊れていれば外側の引用符だけ剥がす
+    let val = raw;
+    if (raw.length >= 2 && raw.startsWith('"') && raw.endsWith('"')) {
+      try {
+        val = String(JSON.parse(raw));
+      } catch {
+        val = raw.slice(1, -1);
+      }
+    }
     if (val === '') {
       data[key] = [];
       listKey = key;

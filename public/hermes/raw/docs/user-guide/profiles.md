@@ -1,5 +1,5 @@
 ---
-title: "user-guide/profiles"
+title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
 upstream_blob: ca3349defd7f224cc66fb52445d783300ceb76e2

@@ -1,5 +1,5 @@
 ---
-title: "user-guide/multi-profile-gateways"
+title: "複数のゲートウェイを同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
 upstream_blob: 9825f4d047840daaf3f703b6b1329a7f0a398428

@@ -1,5 +1,5 @@
 ---
-title: "developer-guide/trajectory-format"
+title: "軌跡の形式"
 description: ""
 upstream_path: developer-guide/trajectory-format.md
 upstream_blob: e0fbfb319c1bcf499f64e6705d53f50e26e8d90b

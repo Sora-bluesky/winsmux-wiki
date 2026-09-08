@@ -1,5 +1,5 @@
 ---
-title: "user-guide/messaging/photon"
+title: "Photon iMessage"
 description: ""
 upstream_path: user-guide/messaging/photon.md
 upstream_blob: 04e79d5d4447267f4f34f3be80abd8dc9fee48a6

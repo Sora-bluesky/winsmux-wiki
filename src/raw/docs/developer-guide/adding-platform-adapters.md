@@ -1,5 +1,5 @@
 ---
-title: "developer-guide/adding-platform-adapters"
+title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
 upstream_blob: 7ae1f1567d94be3f06784c8f0029919052586803

@@ -1,5 +1,5 @@
 ---
-title: "developer-guide/session-storage"
+title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
 upstream_blob: 23cdb2b412a59014a90632c83240d93fce1f9f78
