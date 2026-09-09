@@ -2,7 +2,7 @@
 title: "同梱のプラグイン"
 description: "Hermes Agent に最初から入っていて、節目ごとのフックで自動的に動くプラグイン群 — disk-cleanup とその仲間たち"
 upstream_path: user-guide/features/built-in-plugins.md
-upstream_blob: ac18d4c925358a704e606ba1e8502f93c7de75fd
+upstream_blob: 21149634027772146f8f542e1f3693ed6c61a8ea
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins
 ---
@@ -63,7 +63,7 @@ hermes plugins disable disk-cleanup
 | `teams_pipeline` | 単体 | Microsoft Teams の会議向けの一連の処理 — Graph を使い、書き起こしを起点に会議をまとめる |
 | `spotify` | バックエンド（ツール7個） | Spotify の再生・再生待ち・検索・プレイリスト・アルバム・ライブラリをそのまま扱う |
 | `google_meet` | 単体 | Meet の通話に参加し、字幕をその場で書き起こし、必要なら音声で双方向にやり取りする |
-| `image_gen/openai` | 画像バックエンド | OpenAI の `gpt-image-2` による画像生成のバックエンド（FAL の代わり） |
+| `image_gen/openai` | 画像バックエンド | OpenAI の GPT Image 2 と 2.5 Flare／Sunburst による画像の生成と編集（API キーが要ります） |
 | `image_gen/openai-codex` | 画像バックエンド | Codex の OAuth を通した OpenAI の画像生成 |
 | `image_gen/xai` | 画像バックエンド | xAI の `grok-2-image` バックエンド |
 | `hermes-achievements` | ダッシュボードのタブ | 実際の Hermes のセッション履歴から作られる、Steam 風の収集バッジ |

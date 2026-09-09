@@ -2,7 +2,7 @@
 title: "よくある質問とトラブル対処"
 description: "Hermes Agent でよくある質問と、つまずきやすい箇所の対処法"
 upstream_path: reference/faq.md
-upstream_blob: 7dfc0d3ebdbd177c6e1aa4103eae652c9741a87e
+upstream_blob: 2e7d31b5a6455a8ca3143dbd5f329704ec52782a
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/faq
 ---
@@ -287,7 +287,7 @@ hermes config set OPENROUTER_API_KEY sk-or-v1-xxxxxxxxxxxx
 hermes model
 
 # Set a valid model
-hermes config set HERMES_MODEL anthropic/claude-opus-4.7
+hermes config set model.default anthropic/claude-opus-4.7
 
 # Or specify per-session
 hermes chat --model openrouter/meta-llama/llama-3.1-70b-instruct

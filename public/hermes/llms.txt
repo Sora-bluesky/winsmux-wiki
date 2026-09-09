@@ -179,6 +179,7 @@ Hermes Agent 0.21.0
 - [user-guide/features/overview（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/overview/)
 - [user-guide/features/personality（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/personality/)
 - [user-guide/features/pets（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/pets/)
+- [user-guide/features/plugin-catalog（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
 - [user-guide/features/plugins（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
 - [user-guide/features/provider-routing（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/provider-routing/)
 - [user-guide/features/skills（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
@@ -313,9 +314,7 @@ Hermes Agent 0.21.0
 - [user-guide/skills/bundled/research/research-grounded-citations（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/)
 - [user-guide/skills/bundled/research/research-llm-wiki（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-llm-wiki/)
 - [user-guide/skills/bundled/research/research-research-paper-writing（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-research-paper-writing/)
-- [user-guide/skills/bundled/research/research-rss-feeds（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/)
 - [user-guide/skills/bundled/smart-home/smart-home-openhue（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/smart-home/smart-home-openhue/)
-- [user-guide/skills/bundled/social-media/social-media-reddit-reading（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/)
 - [user-guide/skills/bundled/social-media/social-media-xurl（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/social-media/social-media-xurl/)
 - [user-guide/skills/bundled/software-development/software-development-codebase-inspection（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection/)
 - [user-guide/skills/bundled/software-development/software-development-dogfood（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/software-development/software-development-dogfood/)
@@ -432,6 +431,7 @@ Hermes Agent 0.21.0
 - [user-guide/skills/optional/productivity/productivity-decision-questionnaire（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/)
 - [user-guide/skills/optional/productivity/productivity-here-now（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/)
 - [user-guide/skills/optional/productivity/productivity-memento-flashcards（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/)
+- [user-guide/skills/optional/productivity/productivity-property-listings（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/)
 - [user-guide/skills/optional/productivity/productivity-shop（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/)
 - [user-guide/skills/optional/productivity/productivity-shopify（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/)
 - [user-guide/skills/optional/productivity/productivity-siyuan（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/)
@@ -448,6 +448,7 @@ Hermes Agent 0.21.0
 - [user-guide/skills/optional/research/research-pinecone-research（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-pinecone-research/)
 - [user-guide/skills/optional/research/research-qmd（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-qmd/)
 - [user-guide/skills/optional/research/research-research-paper-writing（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/)
+- [user-guide/skills/optional/research/research-rss-feeds（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/)
 - [user-guide/skills/optional/research/research-scrapling（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-scrapling/)
 - [user-guide/skills/optional/research/research-searxng-search（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-searxng-search/)
 - [user-guide/skills/optional/security/security-1password（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-1password/)
@@ -457,6 +458,7 @@ Hermes Agent 0.21.0
 - [user-guide/skills/optional/security/security-unbroker（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
 - [user-guide/skills/optional/security/security-web-pentest（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-web-pentest/)
 - [user-guide/skills/optional/smart-home/smart-home-openhue（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/smart-home/smart-home-openhue/)
+- [user-guide/skills/optional/social-media/social-media-reddit-reading（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/)
 - [user-guide/skills/optional/software-development/software-development-ast-grep（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/)
 - [user-guide/skills/optional/software-development/software-development-code-wiki（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/)
 - [user-guide/skills/optional/software-development/software-development-grill-me（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/)
@@ -629,6 +631,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/overview.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/personality.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/pets.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/plugin-catalog.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/plugins.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/provider-routing.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/skills.md
@@ -763,9 +766,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/research/research-grounded-citations.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/research/research-llm-wiki.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/research/research-research-paper-writing.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/research/research-rss-feeds.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/smart-home/smart-home-openhue.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/social-media/social-media-xurl.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/software-development/software-development-dogfood.md
@@ -882,6 +883,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-here-now.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-property-listings.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-shop.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-shopify.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-siyuan.md
@@ -898,6 +900,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-pinecone-research.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-qmd.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-research-paper-writing.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-rss-feeds.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-scrapling.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-searxng-search.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/security/security-1password.md
@@ -907,6 +910,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/security/security-unbroker.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/security/security-web-pentest.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/smart-home/smart-home-openhue.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/social-media/social-media-reddit-reading.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/software-development/software-development-ast-grep.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/software-development/software-development-code-wiki.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/software-development/software-development-grill-me.md

@@ -1,56 +1,56 @@
 ---
 title: "画像生成"
-description: "FAL.ai を通じて画像を生成します。FLUX 2、GPT Image（1.5 と 2）、Nano Banana Pro、Ideogram、Recraft V4 Pro、Krea 2 など 11 モデルに対応していて、`hermes tools` で切り替えられます。"
+description: "FAL.ai 経由で画像を生成します。FLUX 2、GPT Image（1.5 と 2）、Nano Banana Pro、Ideogram、Recraft V4 Pro、Krea 2 など 11 モデルに対応し、`hermes tools` で選べます。"
 upstream_path: user-guide/features/image-generation.md
-upstream_blob: f9ad545524938f9b56bea4a1acd2f7ef25f44ecf
+upstream_blob: 862ee885d19f831ee240261eee53ec7867ba78e3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/image-generation
 ---
 
 # 画像生成 {#image-generation}
 
-Hermes Agent は FAL.ai を通じて、文章の指示から画像を作ります。最初から 11 のモデルが使えて、速度・品質・料金の兼ね合いがそれぞれ違います。どのモデルを使うかは `hermes tools` で選べて、選んだ内容は `config.yaml` に残ります。
+Hermes Agent は FAL.ai を通して、文章のプロンプトから画像を作ります。最初から 11 のモデルが使えて、速さ・品質・料金のバランスがそれぞれ違います。どのモデルを使うかは `hermes tools` で選べて、選んだ内容は `config.yaml` に残ります。
 
 ## 対応モデル {#supported-models}
 
-| モデル | 速度 | 得意なこと | 価格 |
+| モデル | 速さ | 得意なこと | 料金 |
 |---|---|---|---|
-| `fal-ai/flux-2/klein/9b` *(既定)* | `<1s` | 速く、文字がくっきり出ます | $0.006/MP |
-| `fal-ai/flux-2-pro` | 約6秒 | スタジオ撮影のような写実性 | $0.03/MP |
-| `fal-ai/z-image/turbo` | 約2秒 | 英語と中国語の二言語対応、6B パラメータ | $0.005/MP |
-| `fal-ai/nano-banana-pro` | 約8秒 | Gemini 3 Pro ベース、考えの深さ、文字の描画 | $0.15/画像（1K） |
-| `fal-ai/gpt-image-1.5` | 約15秒 | 指示への忠実さ | $0.034/画像 |
-| `fal-ai/gpt-image-2` | 約20秒 | 最高水準の文字描画と日中韓文字、現実を踏まえた写実性 | $0.04〜0.06/画像 |
-| `fal-ai/ideogram/v3` | 約5秒 | 文字組みが最も得意 | $0.03〜0.09/画像 |
-| `fal-ai/recraft/v4/pro/text-to-image` | 約8秒 | デザイン、ブランドの体系、そのまま使える仕上がり | $0.25/画像 |
-| `fal-ai/qwen-image` | 約12秒 | LLM ベース、込み入った文字 | $0.02/MP |
-| `fal-ai/krea/v2/medium/text-to-image` | 約15〜25秒 | イラスト、アニメ、絵画、表情豊かで芸術的な作風 | $0.030〜0.035/画像 |
-| `fal-ai/krea/v2/large/text-to-image` | 約25〜60秒 | 写実性、粗い質感（ブレ、粒状感、フィルム調） | $0.060〜0.065/画像 |
+| `fal-ai/flux-2/klein/9b` *(既定)* | `<1s` | 高速で、文字がくっきり出る | $0.006/MP |
+| `fal-ai/flux-2-pro` | 約 6 秒 | スタジオ撮影のような写実性 | $0.03/MP |
+| `fal-ai/z-image/turbo` | 約 2 秒 | 英語と中国語の二言語対応、60 億パラメータ | $0.005/MP |
+| `fal-ai/nano-banana-pro` | 約 8 秒 | Gemini 3 Pro ベース。じっくり考えた構図と文字の描画 | $0.15/枚（1K） |
+| `fal-ai/gpt-image-1.5` | 約 15 秒 | 指示への忠実さ | $0.034/枚 |
+| `fal-ai/gpt-image-2` | 約 20 秒 | 最高水準の文字描画（日本語などの表意文字も）と、現実感のある写実表現 | $0.04〜0.06/枚 |
+| `fal-ai/ideogram/v3` | 約 5 秒 | 文字組みが一番きれい | $0.03〜0.09/枚 |
+| `fal-ai/recraft/v4/pro/text-to-image` | 約 8 秒 | デザイン、ブランドの統一、そのまま使える仕上がり | $0.25/枚 |
+| `fal-ai/qwen-image` | 約 12 秒 | 大規模言語モデル方式。込み入った文字に強い | $0.02/MP |
+| `fal-ai/krea/v2/medium/text-to-image` | 約 15〜25 秒 | イラスト、アニメ、絵画、表情豊かな画風 | $0.030〜0.035/枚 |
+| `fal-ai/krea/v2/large/text-to-image` | 約 25〜60 秒 | 写実表現、質感を残した絵作り（ブレ、粒状感、フィルム調） | $0.060〜0.065/枚 |
 
-価格は執筆時点の FAL のものです。最新の数字は [fal.ai](https://fal.ai/) で確かめてください。
+料金は執筆時点の FAL のものです。最新の数字は [fal.ai](https://fal.ai/) で確かめてください。
 
-## 設定 {#setup}
+## 準備 {#setup}
 
-:::tip Nous の購読者の方へ
-有料の [Nous Portal](https://portal.nousresearch.com) を購読していれば、FAL の API キーがなくても **[ツールゲートウェイ](/hermes/docs/user-guide/features/tool-gateway/)** から画像生成を使えます。選んだモデルはどちらの経路でも共通で残ります。新しく入れる場合は `hermes setup --portal` でログインすれば、ゲートウェイのツールをまとめて有効にできます。すでに入れてある場合は `hermes tools` で画像生成のバックエンドとして **Nous Subscription** を選んでください。
+:::tip Nous のサブスク利用者へ
+有料の [Nous Portal](https://portal.nousresearch.com) サブスクリプションを使っている場合は、FAL の API キーがなくても **[Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/)** 経由で画像生成が使えます。選んだモデルはどちらの経路でも共通で保たれます。新しく入れる場合は `hermes setup --portal` でログインすれば、ゲートウェイの道具をまとめて有効にできます。すでに入れてある場合は `hermes tools` で画像生成の接続先として **Nous Subscription** を選んでください。
 
-managed ゲートウェイが特定のモデルで `HTTP 4xx` を返したときは、そのモデルがまだポータル側で中継されていないということです。エージェントがその旨と対処法（`hermes tools` で FAL.ai に切り替えて自分の `FAL_KEY` で直接つなぐか、別のモデルを選ぶ）を教えてくれます。
+管理型のゲートウェイが特定のモデルで `HTTP 4xx` を返すときは、そのモデルがまだポータル側で中継されていないということです。その場合はエージェントがそう伝えたうえで、直す手順も示します（`hermes tools` で FAL.ai に切り替えて自分の `FAL_KEY` で直接つなぐか、別のモデルを選ぶ）。
 :::
 
-### FAL の API キーを取得する {#get-a-fal-api-key}
+### FAL の API キーを取る {#get-a-fal-api-key}
 
 1. [fal.ai](https://fal.ai/) で登録します
 2. ダッシュボードから API キーを発行します
 
 ### 設定してモデルを選ぶ {#configure-and-pick-a-model}
 
-ツールのコマンドを実行します。
+道具の設定コマンドを実行します。
 
 ```bash
 hermes tools
 ```
 
-**🎨 Image Generation** に進んでバックエンド（Nous Subscription か FAL.ai）を選ぶと、対応モデルが列の揃った表で並びます。矢印キーで移動し、Enter で決定します。
+**🎨 Image Generation** を開いて接続先（Nous Subscription か FAL.ai）を選ぶと、対応モデルが桁のそろった表で並びます。矢印キーで移動し、Enter で決定します。
 
 ```
   Model                          Speed    Strengths                    Price
@@ -69,26 +69,29 @@ image_gen:
   max_parallel_requests: 4      # concurrent images in one tool-call batch
 ```
 
-選択を決めているのは `image_gen.provider` の一箇所だけです。`nous` なら managed のツールゲートウェイ経由、ベンダー名（`fal`、`openai`、`xai`、`krea` など）なら自分のキーで直接つなぎます。実行時は必ずこの保存された選択に従います。`provider: nous` のあいだは `.env` の `FAL_KEY` は読まれませんし、`provider: fal` なのに `FAL_KEY` がなければ黙って別経路に回すことはせず、`image_gen is configured to use fal (set via hermes tools), but FAL_KEY is not set. Run 'hermes tools' to change it.` というエラーになります。切り替えはキーを足したり消したりするのではなく、`hermes tools` から行ってください。（古い `use_gateway` の真偽値は名残です。`true` のときは `nous` として読みますが、もう書き込まれることはありません。）
+接続先を決めるのは `image_gen.provider` だけです。`nous` なら管理型の Tool Gateway を通り、事業者名（`fal`、`openai`、`xai`、`krea` など）なら自分のキーで直接つながります。実行時は常にこの保存された選択に従います。`provider: nous` のあいだは `.env` の `FAL_KEY` は無視されますし、`provider: fal` なのに `FAL_KEY` がないときは黙って別の経路に回さず、`image_gen is configured to use fal (set via hermes tools), but FAL_KEY is not set. Run 'hermes tools' to change it.` というエラーで止まります。接続先を変えるときはキーを足したり消したりせず、`hermes tools` で切り替えてください。（古い `use_gateway` の真偽値は過去の名残です。`true` のときは今も `nous` として読みますが、新しく書き込まれることはありません。）
 
-`max_parallel_requests` の既定は `4` です。Hermes はこの値を最低 1 に、上はツールワーカー全体の上限に収めます。おかげで画像の生成先には限度のある数の並列リクエストだけが届き、画像のまとめ生成がエージェント全体の同時実行の上限を飛び越えることもありません。
+`max_parallel_requests` の既定値は `4` です。Hermes はこの値を最低 1 に、
+上限は全体の道具ワーカー数に収めます。画像の事業者に送る同時リクエスト数が
+青天井にならず、まとめて画像を作るときもエージェント全体の同時実行の上限を
+すり抜けないようにするためです。
 
-### OpenRouter：Image API のカタログ全部 {#openrouter-the-full-image-api-catalog}
+### OpenRouter: 画像 API のカタログを丸ごと {#openrouter-the-full-image-api-catalog}
 
-`image_gen.provider: openrouter` にすると、モデル選択の画面に OpenRouter の
-画像カタログが丸ごと並びます。専用の
+`image_gen.provider: openrouter` にすると、モデルの選択画面に OpenRouter の
+画像カタログが丸ごと出てきます。専用の
 [Image API](https://openrouter.ai/docs/guides/overview/multimodal/image-generation)
 のモデル（Seedream、FLUX.2、Recraft、Qwen Image、MAI、Krea、Riverflow、Grok
-Imagine ほか 40 以上）と、チャット補完側の画像モデルを合わせたものです。
+Imagine など 40 種類以上の ID）と、チャット補完で動く画像モデルが一緒に並びます。
 カタログは `GET /images/models` と `GET /models` からその場で取ってくるので、
-OpenRouter が新しいモデルを出せばすぐ画面に現れます。Hermes を更新する必要は
-ありません。生成のときは、そのモデルを提供している側（専用の
-`POST /images/generations` か、チャット補完か）へ自動で振り分けます。
-Nous Portal が中継するのはチャット補完の方式だけなので、こちらの選択画面には
-チャット経由のモデルが並びます。
+OpenRouter が新しいモデルを出せばすぐ選択肢に現れます。Hermes の更新は要りません。
+生成のときは、そのモデルを扱う窓口（専用の `POST /images/generations` か、
+チャット補完か）へ自動で振り分けます。
+Nous Portal が中継するのはチャット補完の方式だけなので、そちらの選択画面には
+チャット経由で動くモデルが並びます。
 
-Image API のモデルにリクエストごとの細かい指定をしたいときは、専用の設定欄
-（または `OPENROUTER_IMAGE_API_*` の環境変数）に書きます。
+Image API のモデル向けに、リクエストごとの細かい調整をしたいときは、
+専用の設定欄（または `OPENROUTER_IMAGE_API_*` の環境変数）を使います。
 
 ```yaml
 image_gen:
@@ -100,20 +103,20 @@ image_gen:
     output_format: png
 ```
 
-### GPT-Image の品質 {#gpt-image-quality}
+### GPT Image の品質 {#gpt-image-quality}
 
-`fal-ai/gpt-image-1.5` と `fal-ai/gpt-image-2` へのリクエストは、品質を `medium` に固定しています（1024×1024 でおよそ $0.034〜$0.06/画像）。`low` と `high` の段階を選べるようにしていないのは、Nous Portal の請求額を誰にとっても見通しやすく保つためです。段階ごとの費用差は 3〜22 倍にもなります。もっと安く済ませたいなら Klein 9B か Z-Image Turbo を、もっと品質を上げたいなら Nano Banana Pro か Recraft V4 Pro を選んでください。
+`fal-ai/gpt-image-1.5` と `fal-ai/gpt-image-2` のリクエスト品質は `medium` に固定しています（1024×1024 で 1 枚あたり約 $0.034〜$0.06）。`low` と `high` を利用者が選べるようにしていないのは、Nous Portal の請求額が誰にとっても予測できる範囲に収まるようにするためです。段階の間で費用が 3〜22 倍も開いてしまいます。もっと安く済ませたいときは Klein 9B か Z-Image Turbo を、もっと品質を上げたいときは Nano Banana Pro か Recraft V4 Pro を選んでください。
 
-### Meta Model API：Muse Image {#meta-model-api-muse-image}
+### Meta Model API: Muse Image {#meta-model-api-muse-image}
 
 `image_gen.provider: meta-ai` にすると、画像は
-[Meta Model API](https://api.meta.ai)（`https://api.meta.ai/v1`）で生成されます。
-Muse Spark のチャットモデルを提供しているのと同じ、OpenAI 互換の
-エンドポイントです。同梱の `meta-ai` チャットプロバイダの、画像生成版にあたります。
+[Meta Model API](https://api.meta.ai)（`https://api.meta.ai/v1`）で作られます。
+Muse Spark のチャットモデルを提供しているのと同じ、OpenAI 互換の窓口です。
+同梱の `meta-ai` チャット事業者と対になる、画像生成側の入口にあたります。
 
-| モデル | 速度 | 得意なこと | 価格 |
+| モデル | 速さ | 得意なこと | 料金 |
 |---|---|---|---|
-| `muse-image-1.0` *(既定)* | 約10秒 | Meta Model API による画像生成 | $0.01/画像 |
+| `muse-image-1.0` *(既定)* | 約 10 秒 | Meta Model API による画像生成 | $0.01/枚 |
 
 ```yaml
 image_gen:
@@ -121,14 +124,77 @@ image_gen:
   model: muse-image-1.0
 ```
 
-認証は Meta のチャットプロバイダと同じ環境変数を使い回します。Meta が文書で挙げている名前は
-`MODEL_API_KEY` で、別名として `META_API_KEY` と `META_MODEL_API_KEY` も受け付けます。
-プロキシや別のホストに向けたいときは `META_BASE_URL` を設定します。いまのところ
-文章からの画像生成のみで、返ってきた画像は `$HERMES_HOME/cache/images/` に保存されます。
+認証には Meta のチャット事業者と同じ環境変数を使い回します。`MODEL_API_KEY`
+（Meta の資料に載っている名前）が基本で、`META_API_KEY` と `META_MODEL_API_KEY`
+も別名として受け付けます。プロキシや別のホストにつなぐときは `META_BASE_URL` を
+指定します。今のところ文章から画像を作る方向だけで、できあがったものは
+`$HERMES_HOME/cache/images/` に保存されます。
+
+## FAL: GPT Image 2.5 {#fal-gpt-image-25}
+
+`hermes tools` → Image Generation → FAL.ai から **GPT Image 2.5 Flare** か
+**GPT Image 2.5 Sunburst** を選びます。モデル ID は次のとおりです。
+
+- `openai/gpt-image-2.5/flare/text-to-image`
+- `openai/gpt-image-2.5/sunburst/text-to-image`
+
+たとえば次のように設定します。
+
+```bash
+hermes config set image_gen.provider fal
+hermes config set image_gen.model openai/gpt-image-2.5/flare/text-to-image
+```
+
+`image_url` や参考画像を渡すと、対応する
+`openai/gpt-image-2.5/flare/edit` または `openai/gpt-image-2.5/sunburst/edit` の窓口が自動で選ばれます。
+どちらも元になる画像を 16 枚まで受け取れます。Hermes は品質を `medium` に固定していて、
+FAL の既定である高価な `high` ではなく、これまでの FAL GPT Image の方針に合わせています。
+横長と縦長は、必要な画素数の下限を満たすために 4:3 のプリセットを使います。
+正方形は `square_hd` です。拡大処理は、頼まれない限り動きません。
+
+FAL の請求は 1 枚いくらではなくトークン単位です。文章の入力が 100 万トークンあたり $5、
+キャッシュ済みの文章入力が $1.25、文章の出力が $10、画像の入力が $8、
+キャッシュ済みの画像入力が $2、画像の出力が $30 で、リクエストごとに $0.0001 単位で
+切り上げられます。
+[Flare](https://fal.ai/models/openai/gpt-image-2.5/flare/text-to-image) と
+[Sunburst](https://fal.ai/models/openai/gpt-image-2.5/sunburst/text-to-image)
+のページも見てください。FAL に直接つなぐ場合は残高のある `FAL_KEY` が必要です。
+管理型ゲートウェイで使えるかどうかはそのゲートウェイ側の許可一覧しだいで、FAL で使えることが
+そのまま保証にはなりません。今までの事業者とモデルの既定値は変わっていません。
+
+## OpenAI API: GPT Image 2.5 {#openai-api-gpt-image-25}
+
+**OpenAI** の事業者では、GPT Image 2.5 Flare（日常づかいの速い生成）と
+Sunburst（緻密な生成と編集）を `OPENAI_API_KEY` で使えます。
+`hermes tools` → Image Generation → OpenAI から選ぶか、次のように設定します。
+
+```bash
+hermes config set image_gen.provider openai
+hermes config set image_gen.openai.model gpt-image-2.5-flare
+```
+
+`gpt-image-2.5-flare` と `gpt-image-2.5-sunburst` は品質を自動で決めます。
+品質を固定したいときは `-low`、`-medium`、`-high`、`-xhigh`、`-max` を後ろに付けます。
+たとえば `gpt-image-2.5-sunburst-high` です。どちらも生成と編集の両方に対応し、
+参考画像を 16 枚まで使えます。今までの GPT Image 2 の選択と、既定の
+`gpt-image-2-medium` は変わりません。
+
+これは ChatGPT や Codex のサブスクリプションとは別枠の、有料 API の利用です。
+どちらのモデルも文章の入力が 100 万トークンあたり $5、画像の入力が $8、
+画像の出力が $30 です（キャッシュ済みの入力はそれぞれ $1.25 と $2）。
+1 枚あたりの費用は使い方で変わります。GPT Image 2 の計算機では 2.5 のトークン消費は
+見積もれません。公式の
+[Flare](https://developers.openai.com/api/docs/models/gpt-image-2.5-flare) と
+[Sunburst](https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst) の資料を見てください。
+
+**OpenAI (Codex auth)** の事業者は別扱いのままです。こちらの裏側は画像モデルの指定を
+受け取っても、その指定どおりに動くとは限りません。画像が 1 枚うまくできたからといって、
+Flare や Sunburst に振り分けられた証拠にはならないということです。この 2 つは OpenAI API 直結の
+事業者と FAL で提供していて、Codex 認証で確認済みの選択肢としては出していません。
 
 ## 使い方 {#usage}
 
-エージェントから見えるスキーマは、あえて最小限にしてあります。設定した内容はモデル側が拾ってくれます。
+エージェントから見える指定はあえて最小限にしてあります。設定した内容はモデルの側が読み取ります。
 
 ```
 Generate an image of a serene mountain landscape with cherry blossoms
@@ -142,12 +208,12 @@ Create a square portrait of a wise old owl — use the typography model
 Make me a futuristic cityscape, landscape orientation
 ```
 
-## 画像から画像へ（編集） {#image-to-image-editing}
+## 画像から画像へ / 編集 {#image-to-image-editing}
 
-同じ `image_generate` ツールは、選んでいるモデルが対応していれば**すでにある画像を編集**もします。
-元になる画像を渡せば、バックエンドが編集用のエンドポイントへ自動で振り分けます
-（`video_generate` が画像から動画を作るときと同じ考え方です）。
-元画像を渡さなければ、ふつうの文章からの画像生成になります。
+同じ `image_generate` の道具は、使っているモデルが対応していれば
+**すでにある画像を編集**もします。元になる画像を渡せば、裏側で編集用の
+窓口に自動で振り分けられます（`video_generate` が画像から動画を作るときと同じ流れです）。
+元画像を渡さなければ、ふつうの文章から画像を作る動きになります。
 
 ```
 Take this photo and make it a rainy Tokyo street at night → <image>
@@ -157,126 +223,126 @@ Take this photo and make it a rainy Tokyo street at night → <image>
 Blend these two product shots into one hero image → <image1> <image2>
 ```
 
-編集を動かすのは、次の 2 つの入力です。
+編集を動かす入力は 2 つあります。
 
-- **`image_url`** — 編集・変換のもとになる主な画像です（公開 URL かローカルのパス）。
-- **`reference_image_urls`** — 作風や構図の参考にする追加の画像です（上限はモデルごとに決まっています）。
+- **`image_url`** — 編集・変換のもとになる主役の画像です（公開 URL か、手元のファイルの場所）。
+- **`reference_image_urls`** — 画風や構図の参考に足す画像です（枚数の上限はモデルごとに決まっています）。
 
-### 編集に対応しているバックエンド {#which-backends-support-editing}
+### どの接続先が編集に対応しているか {#which-backends-support-editing}
 
-| バックエンド | 画像から画像へ | 参考画像の上限 | やり方 |
+| 接続先 | 画像から画像へ | 参考画像の上限 | 仕組み |
 |---|---|---|---|
-| **FAL.ai**（下に挙げた編集対応モデル） | ✓ | 9 枚まで | そのモデルの `/edit` エンドポイントへ回します |
-| **OpenAI**（`gpt-image-2`） | ✓ | 16 枚まで | `images.edit()` |
-| **xAI**（Grok Imagine） | ✓ | 1 | `/v1/images/edits`（`grok-imagine-image-quality`） |
-| **Krea**（`Krea 2`） | ✓ | 10 枚まで | 参考画像に沿った生成（`image_style_references`） |
-| **OpenAI（Codex 認証）** | ✓ | 16 枚まで | Codex Responses の `image_generation` ツールに `input_image` の内容部分を渡します |
-| **OpenRouter**（Image API のモデル） | ✓ | 14〜16 枚まで（モデルによる） | `POST /images/generations` の `input_references`。チャット経由のモデルは `image_url` の内容部分を使います（3 枚まで） |
+| **FAL.ai**（下に挙げた編集対応モデル） | ✓ | 最大 16 枚（モデルによる） | そのモデルの `/edit` の窓口に振り分けます |
+| **OpenAI**（GPT Image 2 / 2.5 Flare / Sunburst） | ✓ | 最大 16 枚 | `images.edit()` |
+| **xAI**（Grok Imagine） | ✓ | 1 枚 | `/v1/images/edits`（`grok-imagine-image-quality`） |
+| **Krea**（`Krea 2`） | ✓ | 最大 10 枚 | 参考画像にならった生成（`image_style_references`） |
+| **OpenAI (Codex auth)** | ✓ | 最大 16 枚 | Codex Responses の `image_generation` 道具に `input_image` の内容を渡します |
+| **OpenRouter**（Image API のモデル） | ✓ | 最大 14〜16 枚（モデルによる） | `POST /images/generations` の `input_references`。チャット経由のモデルは `image_url` の内容を使います（3 枚まで） |
 
-編集エンドポイントを持つ FAL のモデルは `flux-2/klein/9b`、`flux-2-pro`、
+編集の窓口を持つ FAL のモデルは `flux-2/klein/9b`、`flux-2-pro`、
 `nano-banana-pro`、`gpt-image-1.5`、`gpt-image-2`、`ideogram/v3`、
-`qwen-image` です。文章から画像を作るだけの FAL のモデル（`z-image/turbo`、`recraft`、
-`krea/*`）は画像の入力を受け付けず、編集できるモデルを案内するはっきりした
-エラーを返します。
+`qwen-image` に、上で触れた GPT Image 2.5 Flare と Sunburst を加えたものです。文章から画像を作ることしかできない FAL のモデル（`z-image/turbo`、`recraft`、
+`krea/*`）は画像の入力を受け付けず、編集できるモデルを使うよう
+はっきり示すエラーを返します。
 
-:::note OpenAI（Codex 認証）はうまくいけば動く、という位置づけです
+:::note OpenAI (Codex auth) は「うまくいけば」の扱いです
 
-Codex 側（`chatgpt.com/backend-api/codex`）は `image_generation` を
-チャットモデルが呼べるツールとして持っていますが、Hermes からその呼び出しを
-強制はできません。ホストされたツールに対しては、バックエンドがどんな形の
-`tool_choice` も受け付けないためで、指示によってモデルを誘導するしかありません。
-ホスト側のモデルがツールを呼ばないと判断した場合、その呼び出しは
-`empty_response` で失敗します。そもそもホストされた画像ツールに届くかどうかも、
-アカウントによって違うという報告があります。画像生成を確実に動かしたいなら、
+Codex の窓口（`chatgpt.com/backend-api/codex`）では `image_generation` が
+チャットモデルの側から呼び出せる道具として置かれていて、Hermes からその呼び出しを
+強制できません。ホスト側の道具に対しては `tool_choice` のどの書き方も裏側が受け付けないので、
+指示文でモデルを誘導するしかないのです。モデルが道具を呼ばずに終えると、
+その呼び出しは `empty_response` で失敗します。そもそもこのホスト側の画像の道具に
+届くかどうかも、アカウントによって違うという報告があります。画像生成を確実に動かしたいなら、
 **OpenAI**（API キー）、**FAL**、**xAI** のいずれかを設定してください。
 
 :::
 
-いま選んでいるモデルが編集できるかどうかは、実行時のツール説明に出ます。
-だからエージェントは、ツールを呼ぶ前に `image_url` が効くかどうかを知っています。
+いま使っているモデルが編集に対応しているかどうかは、実行時に道具の説明文へ
+書き出されます。エージェントは道具を呼ぶ前に `image_url` が効くかどうかを知ることができます。
 
 ## 縦横比 {#aspect-ratios}
 
-エージェントから見ると、どのモデルも同じ 3 つの縦横比を受け付けます。内部では、モデルごとの本来のサイズ指定が自動で埋められます。
+エージェントから見ると、どのモデルでも同じ 3 つの縦横比を指定できます。裏側では、モデルごとの本来のサイズ指定が自動で埋められます。
 
-| エージェントの入力 | image_size（flux/z-image/qwen/recraft/ideogram） | aspect_ratio（nano-banana-pro） | image_size（gpt-image-1.5） | image_size（gpt-image-2） |
+| エージェントの指定 | image_size（flux/z-image/qwen/recraft/ideogram） | aspect_ratio（nano-banana-pro） | image_size（gpt-image-1.5） | image_size（gpt-image-2） |
 |---|---|---|---|---|
 | `landscape` | `landscape_16_9` | `16:9` | `1536x1024` | `landscape_4_3`（1024×768） |
 | `square` | `square_hd` | `1:1` | `1024x1024` | `square_hd`（1024×1024） |
 | `portrait` | `portrait_16_9` | `9:16` | `1024x1536` | `portrait_4_3`（768×1024） |
 
-GPT Image 2 が 16:9 ではなく 4:3 の設定に対応づけられているのは、最小の画素数が 655,360 だからです。`landscape_16_9`（1024×576 = 589,824）では拒否されてしまいます。
+GPT Image 2 で 16:9 ではなく 4:3 のプリセットに割り当てているのは、必要な画素数の下限が 655,360 だからです。`landscape_16_9` のプリセット（1024×576 = 589,824）では受け付けてもらえません。
 
-この読み替えは `_build_fal_payload()` の中で起こります。エージェント側のコードは、モデルごとのスキーマの違いを知らずに済みます。
+この読み替えは `_build_fal_payload()` の中で起きます。エージェント側のコードは、モデルごとの指定の違いを知らずに済みます。
 
 ## 拡大 {#upscaling}
 
-### 頼んだときだけ動きます {#opt-in-only}
+### 頼んだときだけ動く {#opt-in-only}
 
-既定で拡大するモデルはありません。いまどきの画像モデルはそのままでも最良の品質を
-出しますし、使える拡大処理はどれも*創作寄り*の加工（拡散モデルによる描き直し）で、
-中身をわずかに描き変えてしまうことがあります。描かれた文字や顔、細かいところが
-損なわれるのはそのためです。拡大は、エージェントがはっきり求めたときだけ走ります。
+どのモデルも、黙って拡大することはありません。最近の画像モデルはそのままの解像度で
+いちばん良い絵を出しますし、用意されている拡大処理は*創作寄り*の
+仕上げ（拡散処理をもう一度かけるもの）なので、描かれた内容がわずかに書き換わり、
+文字や顔、細かい部分がかえって崩れることがあります。拡大はエージェントが
+はっきり頼んだときだけ動きます。
 
-### `upscale` パラメータ（呼び出しごとに指定します） {#the-upscale-parameter-per-call-opt-in}
+### `upscale` の指定（呼び出しごとの申し込み） {#the-upscale-parameter-per-call-opt-in}
 
-- `upscale: true` — 生成のあとに高解像度化の工程をつなげます。
+- `upscale: true` — 生成のあとに高解像度化をつなげます。
 
-| バックエンド | 拡大処理 |
+| 接続先 | 拡大処理 |
 |---|---|
 | **FAL.ai** | Clarity Upscaler（2 倍、+$0.03/MP） |
-| **Krea** | Krea Enhance（2 倍、上限は 8K） |
-| その他のバックエンド | 拡大処理なし。そのままの解像度で返ります |
+| **Krea** | Krea Enhance（2 倍、上限 8K まで） |
+| その他の接続先 | 拡大処理なし。そのままの解像度で返ります |
 
-- `upscale: false` または省略 — そのままの解像度です（既定）
+- `upscale: false` / 指定なし — そのままの解像度です（既定）
 
-`video_generate` も FAL のバックエンドで `upscale: true` を受け付け、生成のあとに
+`video_generate` も FAL の接続先で `upscale: true` を受け付けます。生成のあとに
 ByteDance の **SeedVR2** という動画の拡大処理（2 倍、出力動画の $0.001/MP）をつなげます。
 
-FAL の画像拡大が走るときは、次の設定を使います。
+FAL の画像の拡大処理が動くときは、次の設定が使われます。
 
-| 設定 | 値 |
+| 項目 | 値 |
 |---|---|
-| 拡大倍率 | 2 倍 |
+| 拡大の倍率 | 2 倍 |
 | Creativity | 0.35 |
 | Resemblance | 0.6 |
 | Guidance scale | 4 |
-| 推論ステップ数 | 18 |
+| Inference steps | 18 |
 
-拡大に失敗したとき（通信の不調やレート制限）は、もとの画像がそのまま返ります。応答には `upscaled: true/false` が入るので、エージェントはどちらの解像度を受け取ったか分かります。
+拡大に失敗したとき（通信の不調や利用制限）は、もとの画像が自動で返ります。応答には `upscaled: true/false` が入るので、エージェントはどちらの解像度を受け取ったか分かります。
 
-## 内部での動き {#how-it-works-internally}
+## 内部でどう動いているか {#how-it-works-internally}
 
-1. **モデルの決定** — `_resolve_fal_model()` が `config.yaml` の `image_gen.model` を読み、なければ環境変数 `FAL_IMAGE_MODEL`、それもなければ `fal-ai/flux-2/klein/9b` に落ちます。
-2. **リクエストの組み立て** — `_build_fal_payload()` が指定された `aspect_ratio` をモデル本来の形式（プリセットの列挙値、縦横比の列挙値、GPT のリテラル）に読み替え、モデルの既定パラメータを混ぜ、呼び出し側の上書きを当て、最後にモデルの `supports` の許可一覧で絞り込みます。対応していないキーが送られることはありません。
-3. **送信** — `_submit_fal_request()` が、保存されている `image_gen.provider` の選択に従って、FAL の資格情報で直接つなぐか managed の Nous ゲートウェイを通すかを決めます。
-4. **拡大** — エージェントが `upscale: true` を渡したときだけ走ります。カタログ上の既定は全モデルで無効です。
-5. **受け渡し** — 最終的な画像 URL がエージェントに返り、エージェントは `MEDIA:<url>` というタグを出します。これを各プラットフォームのアダプタが、その場に合った形のメディアに変換します。
+1. **モデルの決定** — `_resolve_fal_model()` が `config.yaml` の `image_gen.model` を読み、なければ環境変数 `FAL_IMAGE_MODEL`、それもなければ `fal-ai/flux-2/klein/9b` を使います。
+2. **リクエストの組み立て** — `_build_fal_payload()` が `aspect_ratio` の指定をモデル本来の書き方（プリセットの列挙、縦横比の列挙、GPT のリテラル）に置き換え、そのモデルの既定値をまとめ、呼び出し側の上書きを反映してから、モデルの `supports` の一覧で絞り込みます。対応していない項目が送られることはありません。
+3. **送信** — `_submit_fal_request()` が、保存された `image_gen.provider` の選択に従って、FAL の資格情報で直接送るか、管理型の Nous ゲートウェイを通すかを決めます。
+4. **拡大** — エージェントが `upscale: true` を渡したときだけ動きます。どのモデルもカタログ上の既定は「切」です。
+5. **受け渡し** — できあがった画像の URL がエージェントに返り、エージェントが `MEDIA:<url>` というタグを出します。各サービスのつなぎ役が、それをそのサービスのメディア表示に変えます。
 
-## デバッグ {#debugging}
+## 不具合を調べる {#debugging}
 
-デバッグログを有効にします。
+デバッグ用のログを有効にします。
 
 ```bash
 export IMAGE_TOOLS_DEBUG=true
 ```
 
-デバッグログは `./logs/image_tools_debug_<session_id>.json` に出て、呼び出しごとの詳細（モデル、パラメータ、所要時間、エラー）が記録されます。
+デバッグのログは `./logs/image_tools_debug_<session_id>.json` に出て、呼び出しごとの詳細（モデル、指定した値、所要時間、エラー）が残ります。
 
-## プラットフォームごとの届き方 {#platform-delivery}
+## サービスごとの届き方 {#platform-delivery}
 
-| プラットフォーム | 届き方 |
+| サービス | 届き方 |
 |---|---|
-| **CLI** | 画像 URL がマークダウンの `![](url)` として表示されます。クリックで開きます |
-| **Telegram** | 指示文をキャプションに付けた写真メッセージ |
+| **CLI** | 画像の URL がマークダウンの `![](url)` として表示されます。押すと開きます |
+| **Telegram** | プロンプトを説明文にした写真メッセージとして届きます |
 | **Discord** | メッセージに埋め込まれます |
-| **Slack** | Slack が URL を展開します |
-| **WhatsApp** | メディアメッセージ |
-| **その他** | ただの文字列としての URL |
+| **Slack** | Slack が URL を展開して表示します |
+| **WhatsApp** | メディアのメッセージとして届きます |
+| **その他** | ただの文字列として URL が届きます |
 
-## 制限 {#limitations}
+## できないこと {#limitations}
 
-- 選んでいるバックエンドの**資格情報が要ります**（FAL の `FAL_KEY` か Nous のサブスクリプション、`OPENAI_API_KEY`、xAI の OAuth、`KREA_API_KEY`）
-- **編集できるかはモデル次第です** — 画像から画像への変換は編集に対応したモデルでしか動きません（上の表を参照）。文章から画像を作るだけのモデルは、画像の入力をはっきりしたエラーで断ります
-- **URL は一時的です** — バックエンドが返す URL は数時間から数日で切れます。Hermes はそれをローカルのキャッシュに落とすので、期限が切れたあとでも届けられます
-- **モデルごとの制約があります** — `seed` や `num_inference_steps` などに対応していないモデルもあります。`supports` と `edit_supports` の絞り込みが、対応していないパラメータを黙って落とします。これは想定どおりの動きです
+- 使っている接続先の**資格情報が必要です**（FAL の `FAL_KEY` か Nous Subscription、`OPENAI_API_KEY`、xAI の OAuth、`KREA_API_KEY`）
+- **編集はモデルしだいです** — 画像から画像への変換は、編集に対応したモデルでしか動きません（上の表を見てください）。文章から画像を作るだけのモデルは、画像の入力をはっきりしたエラーで断ります
+- **URL は一時的です** — 接続先が返す URL は数時間から数日で切れます。Hermes は手元のキャッシュに実体を落とすので、切れたあとでも届けられます
+- **モデルごとの制約** — `seed` や `num_inference_steps` などに対応していないモデルもあります。`supports` と `edit_supports` の絞り込みが、対応していない項目を黙って落とします。これは想定どおりの動きです

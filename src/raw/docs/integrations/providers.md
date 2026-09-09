@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: dfeeda226f00f9a72d6e7d902146cff326ea12a6
+upstream_blob: 1038f33bae46fcc0c9152be39dc7764b94845bec
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -94,6 +94,21 @@ hermes portal info        # inspect login + routing at any time
 OpenAI Codex プロバイダはデバイスコードで認証します（URL を開いてコードを入力する方式です）。Hermes は得られた認証情報を自前の認証ストア `~/.hermes/auth.json` に保存し、既存の Codex CLI の認証情報が `~/.codex/auth.json` にあればそれを取り込めます。Codex CLI のインストールは不要です。
 
 トークンの更新が回復不能なエラー（HTTP 4xx、`invalid_grant`、権限の失効など）で失敗した場合、Hermes はそのリフレッシュトークンを無効と判断して再送をやめるので、同じ認証エラーが延々と出ることはありません。次のリクエストでは、代わりに再認証を促すメッセージが出ます。`hermes auth add openai-codex`（または `hermes model` → **ChatGPT or Codex Subscription**）を実行してデバイスコードのログインをやり直してください。隔離は次に交換が成功した時点で解除されます。
+
+Python / OpenSSL 3.5 以降では、途中の通信機器が X25519MLKEM768 のような耐量子の鍵交換グループを拒否すると、デバイスログインが `[SSL: UNEXPECTED_EOF_WHILE_READING]` や TLS ハンドシェイクのタイムアウトで失敗することがあります（curl では通ることもあります）。Hermes は既定の TLS の方針を変えません。`hermes model` を実行する前に、`Groups` を従来の曲線だけに絞った設定を `OPENSSL_CONF` で指し示すか、TLS 1.2 で切り分けてください。
+
+```ini
+openssl_conf = openssl_init
+
+[openssl_init]
+ssl_conf = ssl_sect
+
+[ssl_sect]
+system_default = system_default_sect
+
+[system_default_sect]
+Groups = x25519:secp256r1:secp384r1:x448
+```
 :::
 
 :::warning
@@ -354,7 +369,7 @@ xAI をプロバイダとして使っているとき（ベース URL に `x.ai` 
 
 xAI は専用の TTS エンドポイント（`/v1/tts`）も提供しています。`hermes tools` → Voice & TTS で **xAI TTS** を選ぶか、設定については [Voice & TTS](/hermes/docs/user-guide/features/tts/#text-to-speech) のページを参照してください。
 
-**廃止される xAI モデルの移行（2026 年 5 月 15 日）:** xAI は `grok-4*`、`grok-3`、`grok-code-fast-1`、`grok-imagine-image-pro` を 2026-05-15 に廃止します。`hermes doctor` と `hermes chat` の起動時のどちらでも、廃止される参照を指したままの設定を検出し、推奨される置き換え先を表示します。設定を一度に書き換えるには `hermes migrate xai` を使ってください。既定はドライランで、`--apply` を付けると変更が書き込まれます（タイムスタンプ付きの `config.yaml.bak-pre-migrate-xai-*` のバックアップが自動で作られます）。
+**廃止される xAI モデルの移行（2026 年 5 月 15 日）:** xAI は `grok-4*`、`grok-3`、`grok-code-fast-1`、`grok-imagine-image-pro` を 2026-05-15 に廃止します。`hermes doctor` と `hermes chat` の起動時のどちらでも、廃止される参照を指したままの設定を検出し、推奨される置き換え先を表示します。設定を一度に書き換えるには `hermes migrate xai` を使ってください。既定はドライランで、`--apply` を付けると変更が書き込まれます（書き込みの前に、直前の設定のタイムスタンプ付きの控えが `backups/config/` に置かれます）。
 
 ```bash
 hermes migrate xai          # preview replacements
@@ -1344,6 +1359,8 @@ providers:
 コマンドは標準出力にトークン**だけ**を出す必要があります。素のトークンか、`access_token` フィールドを持つ JSON のどちらかです（`expires_in` は考慮されます。`expiry`/`expiresOn` の絶対時刻の ISO タイムスタンプも同様です）。複数行の出力は推測せずに拒否されます。期限が示されていない場合、トークンは一定の間隔で発行し直されます。
 
 優先順位: 明示的な `--api-key` フラグが常に勝ちます。それ以外では、同じエントリ内では `key_cmd` が静的な `api_key`/`key_env` より優先されます。発行された認証情報は、メインのエージェントのやり取りにも、補助タスク（タイトル生成、圧縮、画像認識、埋め込み）にも同じように使われます。
+
+モデルの検出も、`providers:` と旧来の `custom_providers:` の両方のエントリで `key_cmd` を尊重します。`hermes model` での設定時も同じです。補助コマンドが動くのは、認証付きでカタログをその場に問い合わせる必要があるときだけです。検出を無効にしている場合や、温まったカタログのキャッシュを読むだけの場合は、トークンを発行しません。カタログはコマンドの身元ごとに分けて持つので、ベアラートークンを入れ替えてもカタログは無効になりません。問い合わせ用の補助コマンドは、推論クライアントのトークンキャッシュではなく、自前の短命なトークンを使います。発行されたベアラートークンが `config.yaml` に保存されることはありません。補助コマンドが失敗した場合、検出は設定済みのモデルへ戻り、補助コマンドの出力を表に出すことはありません。
 
 `secrets.command` とは別物です。あちらは**起動時に一度だけ**補助コマンドを実行して、プロセス全体の環境変数を用意するものです。多くのシークレットをまとめて返す vault / キーチェーンの補助にはあちらを、1 つのプロバイダの認証情報をセッションの*途中で*発行し直す必要があるときには `key_cmd` を使ってください。
 

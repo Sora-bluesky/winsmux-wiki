@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 0bcdcb52cb446a16b4b45eda53d84d381e4293ad
+upstream_blob: 005be52a9a4a02ea09113eec397a7c0cbbda825a
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -18,7 +18,7 @@ Hermes のスラッシュコマンドには 2 つの入り口があり、どち�
 
 ## 権限と管理者・一般ユーザーの切り分け {#permissions-and-adminuser-split}
 
-ユーザーごとの許可リストに対応しているメッセージングプラットフォーム（Telegram、Discord、Slack、Matrix、Mattermost、Signal など）は、スラッシュコマンドを二段階に分ける仕組みにも対応しています。**管理者**は登録済みのコマンドをすべて使え、**一般ユーザー**は `user_allowed_commands` に挙げた名前だけを使えます（これに加えて常に許可される最低ラインとして `/help` と `/whoami` があります）。設定は `~/.hermes/gateway-config.yaml` の各プラットフォームの `extra:` ブロックの中で、`allow_admin_from` と `user_allowed_commands`（グループ向けの対応物である `group_allow_admin_from` / `group_user_allowed_commands`）を書きます。
+ユーザーごとの許可リストに対応しているメッセージングプラットフォーム（Telegram、Discord、Slack、Matrix、Mattermost、Signal など）は、スラッシュコマンドを二段階に分ける仕組みにも対応しています。**管理者**は登録済みのコマンドをすべて使え、**一般ユーザー**は `user_allowed_commands` に挙げた名前だけを使えます（これに加えて常に許可される最低ラインとして `/help` と `/whoami` があります）。設定は `~/.hermes/config.yaml` の各プラットフォームの `extra:` ブロックの中で、`allow_admin_from` と `user_allowed_commands`（グループ向けの対応物である `group_allow_admin_from` / `group_user_allowed_commands`）を書きます。
 
 例はプラットフォームごとのドキュメントを見てください。構造はどのプラットフォームでも同じです。
 

@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: bd9768d5ec7c61266c19f507b48a9f348d77f8e6
+upstream_blob: 3943dcf93a2589eda9474b63a6bdd4ef0ab9e5b5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -956,5 +956,5 @@ hermes sessions prune --older-than 30 --yes
 ```
 
 :::tip
-データベースが大きくなる速さは緩やかで（目安として、数百のセッションで 10〜15 MB）、セッションの履歴は `session_search` で過去の会話を思い出すもとになるので、自動の整理は無効の状態で配られています。ゲートウェイや cron を重く使っていて、`state.db` が性能に実際に響いているなら有効にしてください（実際に起きた例: セッション約 1000 件で 384 MB の state.db が、FTS5 への書き込みと `/resume` の一覧表示を遅くしました）。自動の整理を有効にせず一度だけ片付けたいときは、`hermes sessions prune` を使います。
+自動の整理は**既定で有効**です。終了したセッションのうち `sessions.retention_days`（既定 90）の間なにも起きていないものが起動時に消され、動いているセッションには手が付きません（上の [自動の後片付け](#automatic-cleanup) を参照）。セッションの履歴は `session_search` で過去の会話を思い出すもとになるので、終了したセッションもすべて残しておきたい場合は、`config.yaml` で `sessions.auto_prune: false` にするか、`retention_days` を大きくしてください。自動の整理を切っていても、一度だけ片付けたいときは `hermes sessions prune` が使えます（まったく整理しなかった場合に実際に起きた例: セッション約 1000 件で 384 MB になった `state.db` が、FTS5 への書き込みと `/resume` の一覧表示を遅くしました）。
 :::

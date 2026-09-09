@@ -1,31 +1,31 @@
 ---
-title: "プログラムからの連携"
-description: "外部プログラムから hermes-agent を動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
+title: "外部プログラムからの連携"
+description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 7e9c1f6c3bae7f41c549bd4db70c9840ab0c5315
+upstream_blob: 050ae6ff4a9c35f1fbbf3668d033c8fd63eaf6f4
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
 
-# プログラムからの連携 {#programmatic-integration}
+# 外部プログラムからの連携 {#programmatic-integration}
 
-Hermes には、外部のプログラム（IDE のプラグイン、独自の UI、CI のパイプライン、組み込みのサブエージェントなど）からエージェントを動かすためのプロトコルが 3 つあります。通信方式と使う側に合うものを選んでください。
+Hermes には、エージェントを外部のプログラム（IDE プラグイン、自作の UI、CI パイプライン、組み込みのサブエージェントなど）から動かすためのプロトコルが 3 つ用意されています。使っている通信方式と、動かす側のプログラムに合うものを選んでください。
 
-| プロトコル | 通信方式 | 向いている用途 | 定義されている場所 |
+| プロトコル | 通信方式 | 向いている用途 | 実装場所 |
 |----------|-----------|----------|------------|
-| **ACP** | stdio 上の JSON-RPC | すでに [Agent Client Protocol](https://github.com/zed-industries/agent-client-protocol) を話す IDE クライアント（VS Code、Zed、JetBrains） | `acp_adapter/` |
-| **TUI ゲートウェイ** | stdio（または WebSocket）上の JSON-RPC | セッション、スラッシュコマンド、承認、イベントの逐次配信を細かく制御したい独自のホスト | `tui_gateway/server.py` |
+| **ACP** | stdio 上の JSON-RPC | すでに [Agent Client Protocol](https://github.com/zed-industries/agent-client-protocol) を話せる IDE クライアント（VS Code、Zed、JetBrains） | `acp_adapter/` |
+| **TUI ゲートウェイ** | stdio 上の JSON-RPC（または WebSocket） | セッション、スラッシュコマンド、承認、ストリーミングイベントを細かく制御したい自作のホスト | `tui_gateway/server.py` |
 | **API サーバー** | HTTP + Server-Sent Events | OpenAI 互換のフロントエンド（Open WebUI、LobeChat、LibreChat など）や、言語を問わない Web クライアント | `gateway/platforms/api_server.py` |
 
-3 つとも同じ `AIAgent` の中核を動かします。違うのは通信の形式と、公開している機能の範囲だけです。
+3 つとも動かしているのは同じ `AIAgent` の中核です。違うのは通信の形式と、どこまでの機能を外に見せるかだけです。
 
 ---
 
 ## ACP（Agent Client Protocol） {#acp-agent-client-protocol}
 
-`hermes acp` は、ACP を話す stdio の JSON-RPC サーバーを起動します。VS Code（Zed Industries の ACP 拡張）、Zed、ACP プラグインを入れた JetBrains 系 IDE で実際に使われています。
+`hermes acp` を実行すると、ACP を話す stdio の JSON-RPC サーバーが起動します。VS Code（Zed Industries の ACP 拡張）、Zed、ACP プラグインを入れた JetBrains 系 IDE で実際に使われています。
 
-公開している機能は、セッションの作成、プロンプトの送信、エージェントのメッセージを少しずつ流すこと、ツール呼び出しのイベント、権限の確認、セッションの分岐、中断、認証です。ツールの出力は、IDE が解釈できる ACP の `Diff` / `ToolCall` のコンテンツブロックとして描画されます。
+外に見せている機能は、セッションの作成、プロンプトの送信、エージェントのメッセージの逐次配信、ツール呼び出しのイベント、許可の要求、セッションの分岐、中断、そして認証です。ツールの出力は、IDE が解釈できる ACP の `Diff` / `ToolCall` の内容ブロックとして描画されます。
 
 ライフサイクル、イベントの橋渡し、承認の流れの全体は [ACP の内部構造](/hermes/docs/developer-guide/acp-internals/) を参照してください。
 
@@ -39,9 +39,9 @@ hermes acp --setup          # interactive provider/model setup for ACP terminal 
 
 ## TUI ゲートウェイの JSON-RPC {#tui-gateway-json-rpc}
 
-`tui_gateway/server.py` は、Ink 製の TUI（`hermes --tui`）と、埋め込みダッシュボードの PTY ブリッジが話すプロトコルです。外部のホストも stdio（または `tui_gateway/ws.py` による WebSocket）で同じプロトコルを話せます。
+`tui_gateway/server.py` は、Ink 製の TUI（`hermes --tui`）と、ダッシュボードに組み込まれた PTY ブリッジが話している相手です。外部のホストからでも、stdio 越し（または `tui_gateway/ws.py` を使った WebSocket 越し）に同じプロトコルで話しかけられます。
 
-### メソッドの一覧（抜粋） {#method-catalog-selected}
+### メソッド一覧（抜粋） {#method-catalog-selected}
 
 ```
 prompt.submit           prompt.background       session.steer
@@ -58,38 +58,40 @@ spawn_tree.save / list / load
 terminal.resize         clipboard.paste         image.attach
 ```
 
-`session.active_list`、`session.activate`、`session.close` は、TUI のセッション切り替えで使う、プロセス内の実行中セッション向けの操作です。保存済みの会話記録を探すときは `session.list` や `/resume` を使い、実行中セッション向けのメソッドは、TUI ゲートウェイのプロセスで今まさに開いているセッションにだけ使ってください。
+`session.active_list`、`session.activate`、`session.close` は、TUI のセッション切り替えが使う「そのプロセスの中で今動いているセッション」を操作するためのものです。保存済みの記録を探すときは `session.list` や `/resume` を使い、これらのメソッドは TUI ゲートウェイのプロセスで現在開いているセッションにだけ使ってください。
+
+同じ認証済みゲートウェイの中では、動いているセッションを再開したり呼び出したりしても、前の接続が置き換わるのではなく、イベントの受け取り手がもう一つ増えるだけです。ストリーミングと端末のイベントは接続中のすべてのクライアントに届き、片方のクライアントが切断しても、別のクライアントが見ているセッションは終わりません。送信の排他制御と、設定された「実行中の入力の扱い」の方針はそのまま生きています。接続しているクライアントはそのセッションのサブエージェントに指示を差し込めますが、ブラウザーコントローラーの結果を受け取れるのは、そのコントローラーを登録した接続だけです。これは、別々のゲートウェイのプロセスが同じセッションに書き込めるようになるという意味ではありませんし、持ち主のプロセスを再起動してもプロンプトの受け付けが残るという意味でもありません。
 
 ### `prompt.submit` で履歴を巻き戻す {#rewinding-history-on-promptsubmit}
 
-巻き戻し・編集・再生成は、保存済みの会話記録の一部を消してから新しいターンを実行する `prompt.submit` です。この書き込みは永続化された行を壊す形の書き換えなので、ゲートウェイはクライアントが意図を明示したときにだけ受け付けます。
+巻き戻し・編集・やり直しは、保存済みの記録の一部を捨ててから新しいターンを走らせる `prompt.submit` です。この書き込みはセッションの永続的な行を壊す書き換えになるので、ゲートウェイはクライアントがその意図を明示したときにだけ受け付けます。
 
-| パラメータ | 意味 |
+| パラメーター | 意味 |
 |-----------|---------|
-| `truncate_before_user_ordinal` | 切り取る位置となる利用者のターンを 0 起点で数えた番号。そのターン以降がすべて消えます。表示専用のタイムライン行（`display_kind`）は数に含まれません。整数でなければならず、JSON の真偽値はコード `4004` で拒否されます。 |
-| `truncate_before_row_id` | 切り取る対象となる利用者のターンの SQLite の行 ID（`messages.id` / `row_id`）。永続的な指定方法としてはこちらが推奨です。番号と行 ID の両方を渡した場合、ゲートウェイは一致するかを確認します（一致しなければ `4030` を返します）。存在しない、または古い行 ID は `4018` で拒否され、番号に **フォールバックしません**。 |
-| `confirm_truncate` | 番号、メッセージ ID、行 ID のいずれかを送るときは必須です。この送信が本当に巻き戻しであり、パラメータが残ったままの通常の送信ではないことを宣言します。対象を指定せずにこれだけ送るとコード `4004` で拒否されます。 |
-| `confirm_empty_truncate` | 切り取りによって会話記録が空になる場合（番号が `0`）に、さらに必要になります。 |
+| `truncate_before_user_ordinal` | どのユーザーのターンで切るかを 0 始まりで指定します。そのターン以降はすべて捨てられます。表示専用のタイムラインの行（`display_kind`）は数に入りません。必ず整数で指定してください。JSON の真偽値を渡すとコード `4004` で拒否されます。 |
+| `truncate_before_row_id` | 切る対象のユーザーのターンを指す SQLite の整数の行 ID（`messages.id` / `row_id`）です。永続的な指定方法としてはこちらが望ましい形です。序数と行 ID の両方が渡された場合、ゲートウェイは両者が一致するか確認します（食い違えば `4030` を返します）。存在しない行 ID や古い行 ID は `4018` で拒否され、序数へ**戻ることはありません**。 |
+| `confirm_truncate` | 序数、メッセージ ID、行 ID のいずれかを送るときは必ず必要です。この送信が本当に巻き戻しであって、残っていたパラメーターをたまたま抱えたままの通常の送信ではないことを宣言します。対象を指定せずにこれだけ送るとコード `4004` で拒否されます。 |
+| `confirm_empty_truncate` | 切った結果、記録が空になる場合（序数 `0`）に追加で必要です。 |
 
-`confirm_truncate` を伴わない切り取りのパラメータは、コード `4004` または `4029` で拒否され、何も書き込まれません。巻き戻しを実装するホストは、利用者がそれを求めた時点でこのフラグを立てる必要があり、通常の送信をまたいで切り取りのパラメータを保持し続けてはいけません。番号よりも `truncate_before_row_id`（再開時の `row_id` / `_row_id` から得られます）を使い、永続的な ID がまだ手元にない場合の後方互換や暫定の手段としてのみ番号を残してください。
+`confirm_truncate` の付いていない切り詰めのパラメーターはコード `4004` または `4029` で拒否され、何も書き込まれません。巻き戻しを実装するホストは、利用者がそれを求めたその瞬間にフラグを立てる必要があり、通常の送信をまたいで切り詰めのパラメーターを状態として持ち越してはいけません。序数よりも `truncate_before_row_id`（再開時の `row_id` / `_row_id` から取れます）を優先し、序数は永続的な ID がまだ得られないときの互換用・暫定用の経路としてだけ残してください。
 
-永続化されたセッションに対して切り取りを伴う送信が成功すると、`prompt.submit` の結果には `survivor_user_row_ids` も含まれます。これは書き換え後に残った利用者のターンの新しい行 ID を、画面上の並び順で並べたものです。書き換えでは残す部分を新しい行として入れ直すため、巻き戻し前にホストが覚えていた行 ID はすべて古くなります。この一覧で覚えている ID を結び直してください（`null` の要素は、そのターンに永続的な ID がないことを意味するので、覚えている ID は捨てます）。そうしないと、次に古いターンを対象に巻き戻したときに `4018` で拒否されます。
+永続的なセッションに対して切り詰めを伴う送信が成功すると、`prompt.submit` の結果には `survivor_user_row_ids` も付いてきます。これは、残ったユーザーのターンの書き換え後の新しい行 ID を、画面に見えるユーザーの順番どおりに並べたものです。書き換えでは残す前半部分を新しい行として入れ直すため、巻き戻しの前にホストが覚えていた行 ID はすべて古くなります。このリストで覚え直してください（`null` の項目はそのターンに永続的な ID がないという意味なので、覚えていたものを捨てます）。そうしないと、次にもっと古い残存ターンを狙って巻き戻したときに `4018` で拒否されます。
 
 ### 返ってくるイベント {#events-streamed-back}
 
-`message.delta`、`message.complete`、`tool.start`、`tool.progress`、`tool.complete`、`approval.request`、`clarify.request`、`sudo.request`、`sudo.expire`、`secret.request`、`secret.expire`、`gateway.ready` のほか、セッションのライフサイクルとエラーのイベントがあります。期限切れのイベントには元の `{ request_id }` が付くので、外部のホストは対応する保留中の要求だけを消してください。
+`message.delta`、`message.complete`、`tool.start`、`tool.progress`、`tool.complete`、`approval.request`、`clarify.request`、`sudo.request`、`sudo.expire`、`secret.request`、`secret.expire`、`gateway.ready` に加えて、セッションのライフサイクルとエラーのイベントが流れてきます。期限切れのイベントには元の `{ request_id }` が入っているので、外部のホストは対応する保留中の要求だけを消してください。
 
-### Pi 形式の RPC との対応 {#pi-style-rpc-mapping}
+### Pi 方式の RPC との対応 {#pi-style-rpc-mapping}
 
-Pi-mono の RPC 仕様（[issue #360](https://github.com/NousResearch/hermes-agent/issues/360)）にあるコマンドは、すべて TUI ゲートウェイに対応するものがあります。
+Pi-mono の RPC 仕様（[issue #360](https://github.com/NousResearch/hermes-agent/issues/360)）にあるコマンドには、すべて TUI ゲートウェイ側の対応物があります。
 
 | Pi のコマンド | Hermes での対応 |
 |------------|-------------------|
 | `prompt` | `prompt.submit`（または ACP の `session/prompt`） |
 | `steer` | `session.steer` |
-| `follow_up` | 現在のターンの後ろに積まれる `prompt.submit` |
+| `follow_up` | 今のターンの後ろに並べる `prompt.submit` |
 | `abort` | `session.interrupt` |
-| `set_model` | `/model <provider:model>` の `command.dispatch`（セッションの途中で切り替わり、以後も保持されます） |
+| `set_model` | `/model <provider:model>` を渡す `command.dispatch`（セッションの途中で切り替わり、以後も残ります） |
 | `compact` | `session.compress` |
 | `get_state` | `session.status` |
 | `get_messages` | `session.history` |
@@ -101,7 +103,7 @@ Pi-mono の RPC 仕様（[issue #360](https://github.com/NousResearch/hermes-age
 
 ## OpenAI 互換の API サーバー {#openai-compatible-api-server}
 
-`gateway/platforms/api_server.py` は、すでに OpenAI の形式を話すクライアント向けに、hermes を HTTP で公開します。Web のフロントエンド、curl で動かす CI ランナー、Python 以外から使いたい場合に便利です。
+`gateway/platforms/api_server.py` は、すでに OpenAI の形式を話せるクライアントのために、hermes を HTTP で公開します。Web のフロントエンドを付けたいとき、curl で回す CI のランナーを作りたいとき、Python 以外から使いたいときに便利です。
 
 エンドポイントは次のとおりです。
 
@@ -122,67 +124,67 @@ GET  /api/model/options          Provider-aware picker inventory
 GET  /health, /health/detailed
 ```
 
-セットアップ、ヘッダ（`X-Hermes-Session-Id`、`X-Hermes-Session-Key`）、フロントエンドとのつなぎ方は [API サーバー](/hermes/docs/user-guide/features/api-server/) を参照してください。
+準備の手順、ヘッダー（`X-Hermes-Session-Id`、`X-Hermes-Session-Key`）、フロントエンドとのつなぎ方は [API サーバー](/hermes/docs/user-guide/features/api-server/) にあります。
 
-ブラウザの拡張機能は、既定では無効になっているコントローラのプロトコルを有効にして、
-Hermes の会話を開いたそのブラウザセッションを直接操作できます。API と
-ダッシュボードのどちらの経路も、principal に紐づいた 1 つの仲介役と、明示的に
-許可した機能の一覧を共有します。[ブラウザ拡張からの操作](/hermes/docs/user-guide/features/api-server/#browser-extension-control) を参照してください。
+ブラウザーの拡張機能は、既定では無効になっているコントローラーのプロトコルを
+自分から有効にして、Hermes の会話を開いたそのブラウザーのセッションを操作できます。API と
+ダッシュボードは、principal に結び付いた 1 つの仲介役と、明示的に許可された
+機能の一覧を共有しています。[ブラウザー拡張機能からの操作](/hermes/docs/user-guide/features/api-server/#browser-extension-control) を参照してください。
 
-### モデル一覧を返す口 {#model-catalog-surfaces}
+### モデル一覧が見られる場所 {#model-catalog-surfaces}
 
-OpenAI 互換の API では、`GET /v1/models` をあえて最小限にとどめています。これは
-フロントエンドが期待する互換のためのエンドポイントであって、Hermes の
-プロバイダ・モデル選択の一覧そのものではありません。
+OpenAI 互換の API では、`GET /v1/models` はあえて最小限にしてあります。ここは
+フロントエンドが期待する互換用のエンドポイントであって、Hermes の
+プロバイダーとモデルを選ぶための全一覧ではありません。
 
-外部の管理画面などから Hermes が用意したプロバイダの一覧、モデルごとの
-価格、対応機能の情報が必要な場合は、認証付きの次のいずれかを使ってください。
+外部の管理側で、Hermes が整えたプロバイダーの行、モデルごとの料金、
+機能のヒントが必要なときは、認証付きの次のいずれかを使ってください。
 
-- API サーバーの REST: API サーバーのベアラーキーを付けた `GET /api/model/options`
+- API サーバーの REST: API サーバーの bearer キーを付けた `GET /api/model/options`
 - ダッシュボードのバックエンドの REST: `X-Hermes-Session-Token` を付けた `GET /api/model/options`
 - TUI ゲートウェイの RPC: `model.options`
 
-これらはどれも同じ組み立て処理を共有し、独自プロバイダの
-探索の方針も共通です。
+これらは同じ組み立て処理と、同じ独自プロバイダーの
+探索方針を共有しています。
 
-- 通常の表示: 現在の独自プロバイダだけを確認します。保存済みでも
-  接続できないエンドポイントで一覧が止まらないようにするためです。
-- 明示的な更新（`refresh=1` または `refresh: true`）: プロバイダのモデル
-  キャッシュを破棄し、保存済みの独自プロバイダをすべて確認して、最新の一覧を取り直します。
+- 通常の表示: 今の独自プロバイダーだけを探索します。オフラインで保存された
+  接続先が選択画面を止めてしまわないようにするためです。
+- 明示的な再読み込み（`refresh=1` または `refresh: true`）: プロバイダーのモデルの
+  キャッシュを捨て、保存済みの独自プロバイダーをすべて探索して、最新の一覧を丸ごと入れ直します。
 
-OpenAI のクライアントとの互換のためには `/v1/models` を、Hermes を前提としたモデル選択画面を作るときは `/api/model/options` または
+OpenAI のクライアントとの互換のためには `/v1/models` を、Hermes を前提としたモデルの選択画面を作るときは `/api/model/options` か
 `model.options` を使ってください。
 
-`POST /v1/runs/{id}/steer` は Hermes の `/steer` を HTTP にしたものです。新しい利用者のターンを作ることも、すでに生成中のアシスタントの出力をその場で書き換えることもしません。送ったテキストは実行中の処理に追加され、次のツールの区切りでエージェントから見えるようになります。今動いているツール呼び出しのループを捨てずに、進む方向を直せます。
+`POST /v1/runs/{id}/steer` は Hermes の `/steer` を HTTP にしたものです。新しいユーザーのターンを作るわけでも、すでに流れ始めているエージェントの出力をその場で書き換えるわけでもありません。渡した文章は動いている実行に追加され、次にツールの区切りが来たところでエージェントの目に入ります。今のツール呼び出しの流れを捨てずに、進む方向を直せるということです。
 
-`/v1/runs/{id}/steer` は、実行の状態が `running` のときだけ受け付けます。待機中、承認待ちで止まっている、停止処理中、取り消し済み、失敗、完了の状態では `409 run_not_accepting_steer` を返します。協調的な終了処理の途中でサーバー内部にエージェントの参照が残っていても同じです。
+`/v1/runs/{id}/steer` を受け付けるのは、実行の状態が `running` のあいだだけです。待機中、承認待ちで止まっている、停止処理中、取り消し済み、失敗、完了の実行は `409 run_not_accepting_steer` を返します。行儀よく終了している途中で、サーバーがまだ内部的にエージェントへの参照を持っていても同じです。
 
-`200`（および `run.steered` イベント）は、テキストが **積まれた** ことを意味するだけで、エージェントがそれを受け取ったという意味ではありません。エージェントの最終応答の後に届いてしまい、渡せるツールの区切りがもう無い場合、渡せなかったテキストは終了時の `run.completed` イベントと実行状態に `pending_steer` として返されます。クライアントはそれを失わずに、次の利用者のターンとして送り直せます。
-
----
-
-## どれを使えばよいか {#which-one-should-i-use}
-
-- **IDE のプラグインを書いていて、その IDE がすでに ACP を話す** → ACP。IDE 側でプロトコルの実装は要りません。
-- **独自のデスクトップ / Web / TUI ホストを書いていて、Hermes の機能をすべて使いたい**（スラッシュコマンド、承認、確認の問い合わせ、マルチエージェント、セッションの分岐）→ TUI ゲートウェイの JSON-RPC。
-- **OpenAI 互換のフロントエンド、言語を問わない HTTP クライアント、curl による自動化を使いたい** → API サーバー。
-- **サブプロセスを挟まずに Python へ直接組み込みたい** → `run_agent.AIAgent` をそのまま import してください。[エージェントループ](/hermes/docs/developer-guide/agent-loop/) を参照してください。
+`200` が返り `run.steered` のイベントが出たということは、その文章が**列に並んだ**という意味であって、エージェントが読んだという意味ではありません。エージェントの最終応答より後に届いてしまい、渡すためのツールの区切りがもう来ない場合、届かなかった文章は終了時の `run.completed` イベントと実行の状態に `pending_steer` として返ります。クライアントはそれを捨てずに、次のユーザーのターンとして送り直せます。
 
 ---
 
-## 実行中のモデル切り替え {#model-hot-swapping}
+## どれを使えばよいのか {#which-one-should-i-use}
 
-セッションの途中でモデルを切り替える機能は、どの経路でも使えます。中身は `/model` スラッシュコマンドです。
+- **IDE プラグインを書いていて、その IDE がすでに ACP を話す** → ACP。IDE 側でプロトコルの実装は要りません。
+- **自作のデスクトップ / Web / TUI ホストを書いていて、Hermes の機能を全部使いたい**（スラッシュコマンド、承認、確認の問い返し、マルチエージェント、セッションの分岐） → TUI ゲートウェイの JSON-RPC。
+- **OpenAI 互換のフロントエンド、言語を問わない HTTP クライアント、curl で回す自動化を使いたい** → API サーバー。
+- **別プロセスを立てずに Python の中へ直接組み込みたい** → `run_agent.AIAgent` をそのまま import します。[エージェントのループ](/hermes/docs/developer-guide/agent-loop/) を参照してください。
+
+---
+
+## モデルを動かしたまま切り替える {#model-hot-swapping}
+
+セッションの途中でのモデル切り替えは、どの入口でも使えます。中身はどれも `/model` のスラッシュコマンドです。
 
 - **CLI / TUI:** `/model claude-sonnet-4` または `/model openrouter:anthropic/claude-sonnet-4.6`
-- **TUI ゲートウェイの RPC:** `{"command": "/model claude-sonnet-4"}` を付けた `command.dispatch`
-- **ACP:** IDE がスラッシュコマンドをプロンプトとして送り、エージェントがそれを処理します
-- **API サーバー:** リクエストの本文に `model` フィールドを含めます
+- **TUI ゲートウェイの RPC:** `{"command": "/model claude-sonnet-4"}` を渡した `command.dispatch`
+- **ACP:** IDE がスラッシュコマンドをプロンプトとして送り、エージェントがそれを実行します
+- **API サーバー:** リクエストの本文に `model` の項目を入れます
 
-プロバイダを意識した解決（同じモデル名から、今使っているプロバイダに合った形式を選ぶ）も組み込まれています。`hermes_cli/model_switch.py` を参照してください。
+プロバイダーを踏まえた解決（同じモデル名を書けば、今のプロバイダーに合った形式が選ばれる仕組み）も入っています。`hermes_cli/model_switch.py` を参照してください。
 
 ---
 
 ## `--mode rpc` について {#a-note-on---mode-rpc}
 
-Hermes に `--mode rpc` というフラグはありません。上の 3 つのプロトコルで用途はすでにまかなえます。IDE のプロトコルを話すクライアントには ACP、stdio の JSON-RPC ホストには TUI ゲートウェイ、HTTP には API サーバーです。どれでも足りない場面が本当にあれば、作ろうとしている具体的な利用者像を添えて issue を立ててください。
+Hermes に `--mode rpc` というフラグはありません。上の 3 つのプロトコルで用途は足りているからです。IDE のプロトコルを話すクライアントには ACP、stdio の JSON-RPC ホストには TUI ゲートウェイ、HTTP には API サーバーです。どれでも埋まらない穴が本当に見つかったら、作ろうとしている具体的な使い道を添えて issue を立ててください。

@@ -1,6 +1,6 @@
 {
-  "sha": "2237be3",
-  "date": "2026-09-07",
+  "sha": "b88e677",
+  "date": "2026-09-09",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -527,7 +527,7 @@
       "name": "Competitor News Monitor",
       "description": "Watch named companies for material news; cited digests",
       "url": "/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/",
-      "date": "2026-09-05",
+      "date": "2026-09-08",
       "source": "bundled"
     },
     {
@@ -535,7 +535,7 @@
       "name": "Grounded Citations",
       "description": "Ground answers and documents in cited, verifiable sources",
       "url": "/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/",
-      "date": "2026-09-05",
+      "date": "2026-09-08",
       "source": "bundled"
     },
     {
@@ -555,27 +555,11 @@
       "source": "bundled"
     },
     {
-      "slug": "research-rss-feeds",
-      "name": "Rss Feeds",
-      "description": "Read RSS, Atom, JSON feeds; discover feeds behind a page",
-      "url": "/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/",
-      "date": "2026-09-05",
-      "source": "bundled"
-    },
-    {
       "slug": "smart-home-openhue",
       "name": "Openhue",
       "description": "Control Philips Hue lights, scenes, rooms via OpenHue CLI",
       "url": "/hermes/docs/user-guide/skills/bundled/smart-home/smart-home-openhue/",
       "date": "2026-07-29",
-      "source": "bundled"
-    },
-    {
-      "slug": "social-media-reddit-reading",
-      "name": "Reddit Reading",
-      "description": "Read Reddit: subreddits, search, threads, users",
-      "url": "/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/",
-      "date": "2026-09-05",
       "source": "bundled"
     },
     {
@@ -1507,6 +1491,14 @@
       "source": "optional"
     },
     {
+      "slug": "productivity-property-listings",
+      "name": "Property Listings",
+      "description": "Present property and rental listings as desktop cards",
+      "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/",
+      "date": "2026-09-08",
+      "source": "optional"
+    },
+    {
       "slug": "productivity-shop",
       "name": "Shop",
       "description": "Shop catalog search, checkout, order tracking, returns",
@@ -1635,6 +1627,14 @@
       "source": "optional"
     },
     {
+      "slug": "research-rss-feeds",
+      "name": "Rss Feeds",
+      "description": "Read RSS, Atom, JSON feeds; discover feeds behind a page",
+      "url": "/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/",
+      "date": "2026-09-08",
+      "source": "optional"
+    },
+    {
       "slug": "research-scrapling",
       "name": "Scrapling",
       "description": "Scrape sites with stealth browsing and Cloudflare bypass",
@@ -1704,6 +1704,14 @@
       "description": "Control Philips Hue lights, scenes, rooms via OpenHue CLI",
       "url": "/hermes/docs/user-guide/skills/optional/smart-home/smart-home-openhue/",
       "date": "2026-08-30",
+      "source": "optional"
+    },
+    {
+      "slug": "social-media-reddit-reading",
+      "name": "Reddit Reading",
+      "description": "Read Reddit: subreddits, search, threads, users",
+      "url": "/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/",
+      "date": "2026-09-08",
       "source": "optional"
     },
     {

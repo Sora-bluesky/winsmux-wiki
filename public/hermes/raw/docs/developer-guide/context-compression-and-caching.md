@@ -2,7 +2,7 @@
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: 0d08bdcc57a1c8c3415b41274ea3628ce27f727c
+upstream_blob: 9221b2ccfffff3641a52cf0186dec3dd363f2882
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -215,6 +215,10 @@ auxiliary:
 - ゲートウェイは ID の変化の差分ではなく、エージェント側のローテーションに依存しない `_last_compaction_in_place` フラグを見て、やり取りの扱いを引き直します。
 
 `in_place: false` にすると、従来のローテーションする経路に戻ります。この場合、圧縮のたびに新しいセッション ID が作られ、`parent_session_id` で前のものとつながります。
+
+### 補助モデルでの実現可能性と、末尾をどれだけ残すか {#auxiliary-feasibility-and-tail-retention}
+
+補助側の圧縮モデルが小さいと、実際に圧縮が始まる点は下がりますが、選ばれる末尾の方針そのものは変わりません。`lean` モードでは、末尾を選ぶための予算は**メインモデルのコンテキストウィンドウ**を基準にしたままです。その 2.5% を取り、10K〜25K トークンの範囲に収めます。たとえばメインが 1M、補助が 512K のモデルなら、実現可能性の判定で発動点が 850K から 512K へ下がっても、末尾の予算は 25K のままです。明示的に `legacy` を指定した場合は、代わりに `threshold_tokens × target_ratio` を計算し直します（512K × 0.20 で 102,400 トークン）。これらは末尾を選ぶための予算であって、圧縮後のコンテキスト全体に対する厳密な上限ではありません。保護されたメッセージ、境界の位置合わせ、要約、アンカーの分だけトークンが増えることがあります。
 
 ### モデルごとのしきい値の上書き {#per-model-threshold-overrides}
 

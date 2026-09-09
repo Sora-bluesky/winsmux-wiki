@@ -2,7 +2,7 @@
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: d68f676ed92c00dee2f5ef67397eae0f67d7b770
+upstream_blob: 29b2b42e6c92c58b13211c59199fca122b8ba00c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -286,7 +286,7 @@ cron ジョブの結果は、対応しているどのプラットフォームに
 
 **Telegram のトピック**には `telegram:<chat_id>:<thread_id>` を使います（例: `telegram:-1001234567890:17585`）。**Slack のスレッド**の場合、3つ目の区切りは親メッセージの `thread_ts` です（例: `slack:C0123ABCD45:1700000000.000100`）。つまり既存のメッセージにぶら下げて返すときにだけ使えます。
 
-**Bot Chat**（`bot-chat`、`bot-chat:<profile>`）はゲートウェイのアダプタではなく、その端末の中だけで完結する疑似プラットフォームです。スケジューラは `hermes [-p <profile>] chat --in ~ -c "Bot Chat" --create-if-missing -Q --query-file <tmp>` を走らせて届けます。これはボットモードでエージェント同士がやり取りするときと同じ経路なので、出力は本物の受信ターンとしてプロファイルの正規の Bot Chat に現れ、ボットはそれに対して丸ごと1ターン分の処理を行います（作りの上で発言の順番が崩れません。これはチャットコマンドの経路であって、会話の写しではありません）。名前を書かない場合はジョブ自身のプロファイルが宛先になります。プロファイル名を書いた形は、作成時と実行時の両方で `~/.hermes/profiles/` に照らして検証され、別の端末をまたぐことはありません。bot-chat の宛先は `all` という一括指定の対象から外れ、配信前の事前確認からも外れます（ゲートウェイの資格情報を使わないためです）。1回の配信ごとのサブプロセスの制限時間は `cron.bot_chat_delivery_timeout_seconds` です（既定は600）。
+**Bot Chat**（`bot-chat`、`bot-chat:<profile>`）はゲートウェイのアダプタではなく、その端末の中だけで完結する疑似プラットフォームです。メールボックスを備えた正規の常駐の持ち主がいれば、手が空いていても塞がっていても、その相手がすぐに確実な受け取りとして受理し、届いたターンを実行するのはその持ち主だけです。`scheduler_delivery._deliver_to_bot_chat` は宛先を `get_profile_dir`、またはジョブが今使っている `get_hermes_home` から割り出し、送り元のホーム・ジョブの ID・消えずに残る `execution_id`・宛先のホームから受領票の ID を組み立て、持ち主を探す前にその受領票を確かめます。受領票がすでにあるときは、CLI へ落とす経路は決して使われません。メールボックスを持つ持ち主がいない場合は、これまでどおり `hermes [-p <profile>] chat --in ~ -c "Bot Chat" --create-if-missing -Q --query-file <tmp>` と通常の所有権の締め出しを使います。どちらの経路でも届くのは本物の受信ターンであって、会話の写しではありません。受理されて確保された受領票は、その ID を `last_delivery_queued` に記録します。配信の集約は、受理の知らせを本当のエラーから除いたうえで、実行結果に `delivery_outcome=queued` を記録します。成功したジョブは `last_status=delivery_queued` になります。宛先が混ざっている場合、本当のエラーがあればそちらが優先されて失敗として扱われ、受理済みの受領票の情報は残ります。最後まで終わったかどうかを決める正は、宛先のプロファイル側に残る受領票です。受理はその時点で受け付けられたという記録であって、届いたことの証拠ではありません。cron の履歴上の状態が、あとから受領票の完了を自動で追いかけることもありません。bot-chat の宛先は `all` という一括指定の対象から外れ、配信前の資格情報の事前確認からも外れます。宛先が bot-chat だけの外部ワーカーはゲートウェイの配信待ち行列を通らず、ほかの宛先が混ざる場合はこれまでどおりゲートウェイへ引き渡します。`cron.bot_chat_delivery_timeout_seconds`（既定は600）が上限を与えるのは、従来のサブプロセスの経路だけです。
 
 ### 結果に添える定型文 {#response-wrapping}
 

@@ -2,7 +2,7 @@
 title: "デスクトップ版を複数の Hermes につなぐ"
 description: ""
 upstream_path: user-guide/multi-connection-desktop.md
-upstream_blob: 9746d02cdc5873a864ae74d9aa879a8e7bc576f4
+upstream_blob: e8c3ddcafb4f7760c2d8b0f10364abbfee944b16
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-connection-desktop
 ---
@@ -84,6 +84,31 @@ every Hermes gateway it can reach through remote, SSH, or Cloud connections.」*
 メッセージ、cron はそのゲートウェイの中だけで完結します。アプリが管理するウィンドウ側の
 バックエンドは、これまでどおり上の接続モードの設定で決まります。**Primary** は名指しが
 ないときの受け皿で、いま開いている作業場所を切り替えるものではありません。
+
+## セッションのまとまりを整理する {#organizing-session-groups}
+
+すべてのプロファイルを表示した状態で、Sessions サイドバーの表示メニューから
+**Gateway & profile** を選びます。ゲートウェイごとに折りたたみできるまとまりができ、
+その中にプロファイルごとの小見出しとセッションが並びます。`default` という同じ名前の
+プロファイルを持つゲートウェイが2つあっても、混ざらずに別々のまま扱われます。
+ゲートウェイの見出しには保存した接続の名前が、プロファイルの見出しにはプロファイル名が出ます。
+
+ゲートウェイやプロファイルのまとまりのメニューからは、**Rename group**、**Reset name**、
+**Move up**、**Move down** を選べます。名前を変えてもサイドバーの表示が変わるだけで、
+ゲートウェイやプロファイルそのものは変わりません。ゲートウェイはまとまりごと動き、
+プロファイルは自分が属するゲートウェイの中で動きます。並べ替えは、まとまりの先頭にある
+アイコンをドラッグするか、そのつまみにフォーカスを合わせて Space、矢印キー、
+もう一度 Space の順に押して置きます。名前と並び順、どこを折りたたんでいたかは、
+この端末に記憶されます。ゲートウェイを折りたたんでも、中のプロファイルそれぞれの
+開閉状態はそのまま残ります。プロファイルごとの新しいセッションを作る操作は、
+そのプロファイルが載っているゲートウェイに対して行われます。
+
+Hermes Cloud のパネルには、ポータルでの探索からサインアウトしているときに
+**Saved Cloud gateways** も並びます。**Use gateway** は、既定のゲートウェイを変えずに
+保存済みの接続を選ぶためのもので、**Active in this window** はいま使っているものを
+示します。新しいインスタンスを足すときは Cloud 側の分かりやすい名前が使われ、
+自分で付けた接続名はそのまま残ります。保存した接続でも、ゲートウェイ側の認証は
+有効である必要があります。サインインの管理は、登録済みの接続の操作から行ってください。
 
 ## 接続を追加する手順 {#adding-a-connection-step-by-step}
 

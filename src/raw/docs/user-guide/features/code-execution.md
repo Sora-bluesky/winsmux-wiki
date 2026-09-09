@@ -2,7 +2,7 @@
 title: "コードの実行"
 description: "RPC でツールを呼べる Python の実行環境。何手もかかる作業を1ターンに畳み込みます"
 upstream_path: user-guide/features/code-execution.md
-upstream_blob: 1585f415a24f5636bfae7288d2970c0819d1ccb3
+upstream_blob: 9cf28e5f48495c356735c8e23b533fd3437596ec
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/code-execution
 ---
@@ -160,7 +160,7 @@ code_execution:
 | 資源 | 上限 | 補足 |
 |----------|-------|-------|
 | **制限時間** | 5分（300秒） | 台本は SIGTERM で止められ、5秒の猶予のあと SIGKILL されます |
-| **標準出力** | 50 KB | `[output truncated at 50KB]` の断りとともに切られます |
+| **標準出力** | 50 KB | 冒頭と末尾を抜き出してその場に出します。全文は `~/.hermes/cache/exec/` に保存され、その置き場所が結果に添えられます |
 | **標準エラー** | 10 KB | 終了コードが0でないとき、原因を追えるよう出力に含まれます |
 | **ツールの呼び出し** | 1回の実行につき50回 | 上限に達するとエラーが返ります |
 
@@ -173,6 +173,29 @@ code_execution:
   timeout: 300       # Max seconds per script (default: 300)
   max_tool_calls: 50 # Max tool calls per execution (default: 50)
 ```
+
+## 呼び出しをまたいで残る状態（セッションのカーネル） {#state-between-calls-the-session-kernel}
+
+手元のターミナルで動かしているとき、`execute_code` は呼び出しのたびに新しい実行系を立ち上げるわけではありません。セッションごとに Python のカーネルが1つ居座り、ある呼び出しで作った変数や取り込んだモジュール、読み込んだデータを次の呼び出しでもそのまま使えます。データの一式を一度読み込んでおけば、毎回読み直さずに何ターンにもわたって問い合わせられます。子エージェントは自分のカーネルを持ち、カーネルがセッションをまたいで共有されることはありません。
+
+カーネルが終わるのは、次のときです。
+
+- **時間切れか割り込み。** 制限時間に達した（あるいは割り込まれた）実行はカーネルのプロセスごと止められ、その状態はわざと失われます。結果にその旨が書かれ、次の呼び出しは新しいカーネルで始まります。
+- **`reset=true`。** エージェントは `reset: true` を渡してカーネルの状態を捨て、まっさらから始められます。環境の変更を取り込む方法でもあります。カーネルの環境は立ち上がった時点で固定されるので、新しく許可名簿に加えた受け渡しの変数は、カーネルを作り直すまで見えません。
+- **放置による時間切れと追い出し。** カーネルはセッションとともに終わるほか、`code_execution.kernel_idle_timeout` 秒（既定は 1800）何もしないままだと終わります。また `code_execution.max_session_kernels`（既定は4）を超えて生きていると、いちばん古いものが追い出されます。
+
+守りの範囲は1回きりの台本と同じです。環境の洗い落とし、ツールの許可名簿、1回あたりのツールの呼び出しの上限は、どの実行にも当てはまります。ツールを呼ぶ権限（承認、セッション、許可名簿）は実行のたびに結び直されます。
+
+```yaml
+# ~/.hermes/config.yaml
+code_execution:
+  kernel_idle_timeout: 1800   # seconds a kernel may sit idle before it is reaped
+  max_session_kernels: 4      # kernels kept alive at once; oldest is evicted past this
+```
+
+**離れた場所で動かす場合**（Docker、SSH、Modal）も、向こう側で同じ約束のセッションのカーネルが動きます。実行先でカーネルを立ち上げられないときは、Hermes が呼び出しごとに単発の台本として走らせる形に切り替え、そのことを結果に書きます。
+
+**出力が大きいとき。** 50 KB を超える標準出力は冒頭と末尾を抜き出してその場に出し、全文は `~/.hermes/cache/exec/` に保存して置き場所を結果に添えます。台本を走らせ直さなくても、エージェントは `read_file` で順に読み進められます。
 
 ## 台本の中でツールの呼び出しがどう働くか {#how-tool-calls-work-inside-scripts}
 

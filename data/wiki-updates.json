@@ -1,6 +1,188 @@
 {
-  "generatedAt": "2026-09-08",
+  "generatedAt": "2026-09-10",
   "entries": [
+    {
+      "date": "2026-09-10",
+      "sha": null,
+      "upstream": "b88e677",
+      "pages": [
+        {
+          "id": "developer-guide/architecture",
+          "title": "アーキテクチャ",
+          "url": "/hermes/docs/developer-guide/architecture/"
+        },
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/cron-internals",
+          "title": "cron の内部構造",
+          "url": "/hermes/docs/developer-guide/cron-internals/"
+        },
+        {
+          "id": "developer-guide/programmatic-integration",
+          "title": "外部プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "developer-guide/prompt-assembly",
+          "title": "プロンプトの組み立て",
+          "url": "/hermes/docs/developer-guide/prompt-assembly/"
+        },
+        {
+          "id": "getting-started/quickstart",
+          "title": "Hermes Agent クイックスタート",
+          "url": "/hermes/docs/getting-started/quickstart/"
+        },
+        {
+          "id": "guides/delegation-patterns",
+          "title": "委任と並行作業",
+          "url": "/hermes/docs/guides/delegation-patterns/"
+        },
+        {
+          "id": "guides/google-gemini",
+          "title": "Google Gemini",
+          "url": "/hermes/docs/guides/google-gemini/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/faq",
+          "title": "よくある質問とトラブル対処",
+          "url": "/hermes/docs/reference/faq/"
+        },
+        {
+          "id": "reference/optional-skills-catalog",
+          "title": "オプションスキルの一覧",
+          "url": "/hermes/docs/reference/optional-skills-catalog/"
+        },
+        {
+          "id": "reference/skills-catalog",
+          "title": "同梱スキルの一覧",
+          "url": "/hermes/docs/reference/skills-catalog/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザの自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/features/built-in-plugins",
+          "title": "同梱のプラグイン",
+          "url": "/hermes/docs/user-guide/features/built-in-plugins/"
+        },
+        {
+          "id": "user-guide/features/code-execution",
+          "title": "コードの実行",
+          "url": "/hermes/docs/user-guide/features/code-execution/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/image-generation",
+          "title": "画像生成",
+          "url": "/hermes/docs/user-guide/features/image-generation/"
+        },
+        {
+          "id": "user-guide/features/mcp",
+          "title": "MCP（Model Context Protocol）",
+          "url": "/hermes/docs/user-guide/features/mcp/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/irc",
+          "title": "IRC",
+          "url": "/hermes/docs/user-guide/messaging/irc/"
+        },
+        {
+          "id": "user-guide/multi-connection-desktop",
+          "title": "デスクトップ版を複数の Hermes につなぐ",
+          "url": "/hermes/docs/user-guide/multi-connection-desktop/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        },
+        {
+          "id": "user-guide/skills/bundled/research/research-competitor-news-monitor",
+          "title": "Competitor News Monitor — 指定した企業の重要なニュースを見張り、出典付きのダイジェストにまとめる",
+          "url": "/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/"
+        },
+        {
+          "id": "user-guide/skills/bundled/research/research-grounded-citations",
+          "title": "Grounded Citations — 回答や文書を、出典を示せる形に裏付ける",
+          "url": "/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/"
+        },
+        {
+          "id": "user-guide/tui",
+          "title": "TUI",
+          "url": "/hermes/docs/user-guide/tui/"
+        },
+        {
+          "id": "user-guide/windows-native",
+          "title": "Windows（ネイティブ）ガイド",
+          "url": "/hermes/docs/user-guide/windows-native/"
+        },
+        {
+          "id": "user-guide/skills/optional/productivity/productivity-property-listings",
+          "title": "Property Listings — 物件や賃貸の情報をデスクトップのカードとして見せる",
+          "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-rss-feeds",
+          "title": "Rss Feeds — RSS・Atom・JSON のフィードを読み、ページの裏にあるフィードを見つける",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/"
+        },
+        {
+          "id": "user-guide/skills/optional/social-media/social-media-reddit-reading",
+          "title": "Reddit Reading — Reddit を読む。サブレディット、検索、スレッド、ユーザー",
+          "url": "/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/"
+        }
+      ]
+    },
     {
       "date": "2026-09-08",
       "sha": "ab59cb0",
@@ -148,7 +330,7 @@
         },
         {
           "id": "user-guide/features/cron",
-          "title": "定期タスク（Cron）",
+          "title": "定期実行タスク（cron）",
           "url": "/hermes/docs/user-guide/features/cron/"
         },
         {
@@ -158,7 +340,7 @@
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "作業の委任（サブエージェント）",
+          "title": "サブエージェントへの委任",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -223,7 +405,7 @@
         },
         {
           "id": "user-guide/messaging",
-          "title": "メッセージングのゲートウェイ",
+          "title": "メッセージングゲートウェイ",
           "url": "/hermes/docs/user-guide/messaging/"
         },
         {
@@ -310,7 +492,7 @@
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "作業の委任（サブエージェント）",
+          "title": "サブエージェントへの委任",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -372,7 +554,7 @@
         },
         {
           "id": "user-guide/messaging",
-          "title": "メッセージングのゲートウェイ",
+          "title": "メッセージングゲートウェイ",
           "url": "/hermes/docs/user-guide/messaging/"
         },
         {
@@ -382,22 +564,22 @@
         },
         {
           "id": "user-guide/skills/bundled/research/research-competitor-news-monitor",
-          "title": "Competitor News Monitor — 指定した企業を見張って重要な動きだけを集め、出典付きのまとめにする",
+          "title": "Competitor News Monitor — 指定した企業の重要なニュースを見張り、出典付きのダイジェストにまとめる",
           "url": "/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/"
         },
         {
           "id": "user-guide/skills/bundled/research/research-grounded-citations",
-          "title": "Grounded Citations — 回答や文書を、出典を示せる形で裏付ける",
+          "title": "Grounded Citations — 回答や文書を、出典を示せる形に裏付ける",
           "url": "/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/"
         },
         {
           "id": "user-guide/skills/bundled/research/research-rss-feeds",
-          "title": "Rss Feeds — RSS・Atom・JSON のフィードを読み、ページの裏にあるフィードを見つける",
+          "title": "user-guide/skills/bundled/research/research-rss-feeds",
           "url": "/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/"
         },
         {
           "id": "user-guide/skills/bundled/social-media/social-media-reddit-reading",
-          "title": "Reddit Reading — Reddit を読む: サブレディット、検索、スレッド、ユーザー",
+          "title": "user-guide/skills/bundled/social-media/social-media-reddit-reading",
           "url": "/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/"
         },
         {
@@ -529,7 +711,7 @@
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "作業の委任（サブエージェント）",
+          "title": "サブエージェントへの委任",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -713,7 +895,7 @@
         },
         {
           "id": "user-guide/features/cron",
-          "title": "定期タスク（Cron）",
+          "title": "定期実行タスク（cron）",
           "url": "/hermes/docs/user-guide/features/cron/"
         },
         {
@@ -743,7 +925,7 @@
         },
         {
           "id": "user-guide/features/mcp",
-          "title": "MCP (Model Context Protocol)",
+          "title": "MCP（Model Context Protocol）",
           "url": "/hermes/docs/user-guide/features/mcp/"
         },
         {
@@ -768,7 +950,7 @@
         },
         {
           "id": "user-guide/messaging",
-          "title": "メッセージングのゲートウェイ",
+          "title": "メッセージングゲートウェイ",
           "url": "/hermes/docs/user-guide/messaging/"
         },
         {
@@ -967,12 +1149,12 @@
         },
         {
           "id": "user-guide/features/cron",
-          "title": "定期タスク（Cron）",
+          "title": "定期実行タスク（cron）",
           "url": "/hermes/docs/user-guide/features/cron/"
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "作業の委任（サブエージェント）",
+          "title": "サブエージェントへの委任",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -997,7 +1179,7 @@
         },
         {
           "id": "user-guide/messaging",
-          "title": "メッセージングのゲートウェイ",
+          "title": "メッセージングゲートウェイ",
           "url": "/hermes/docs/user-guide/messaging/"
         },
         {
@@ -1079,7 +1261,7 @@
         },
         {
           "id": "user-guide/features/cron",
-          "title": "定期タスク（Cron）",
+          "title": "定期実行タスク（cron）",
           "url": "/hermes/docs/user-guide/features/cron/"
         },
         {
@@ -1089,7 +1271,7 @@
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "作業の委任（サブエージェント）",
+          "title": "サブエージェントへの委任",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -1104,7 +1286,7 @@
         },
         {
           "id": "user-guide/features/mcp",
-          "title": "MCP (Model Context Protocol)",
+          "title": "MCP（Model Context Protocol）",
           "url": "/hermes/docs/user-guide/features/mcp/"
         },
         {
@@ -1349,12 +1531,12 @@
         },
         {
           "id": "user-guide/skills/bundled/research/research-competitor-news-monitor",
-          "title": "Competitor News Monitor — 指定した企業を見張って重要な動きだけを集め、出典付きのまとめにする",
+          "title": "Competitor News Monitor — 指定した企業の重要なニュースを見張り、出典付きのダイジェストにまとめる",
           "url": "/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/"
         },
         {
           "id": "user-guide/skills/bundled/research/research-grounded-citations",
-          "title": "Grounded Citations — 回答や文書を、出典を示せる形で裏付ける",
+          "title": "Grounded Citations — 回答や文書を、出典を示せる形に裏付ける",
           "url": "/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/"
         },
         {
@@ -2191,7 +2373,7 @@
         },
         {
           "id": "user-guide/messaging",
-          "title": "メッセージングのゲートウェイ",
+          "title": "メッセージングゲートウェイ",
           "url": "/hermes/docs/user-guide/messaging/"
         },
         {
@@ -2401,12 +2583,12 @@
         },
         {
           "id": "user-guide/features/cron",
-          "title": "定期タスク（Cron）",
+          "title": "定期実行タスク（cron）",
           "url": "/hermes/docs/user-guide/features/cron/"
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "作業の委任（サブエージェント）",
+          "title": "サブエージェントへの委任",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -2483,7 +2665,7 @@
         },
         {
           "id": "user-guide/features/cron",
-          "title": "定期タスク（Cron）",
+          "title": "定期実行タスク（cron）",
           "url": "/hermes/docs/user-guide/features/cron/"
         },
         {
@@ -2493,7 +2675,7 @@
         },
         {
           "id": "user-guide/features/mcp",
-          "title": "MCP (Model Context Protocol)",
+          "title": "MCP（Model Context Protocol）",
           "url": "/hermes/docs/user-guide/features/mcp/"
         },
         {
@@ -2585,7 +2767,7 @@
         },
         {
           "id": "user-guide/features/delegation",
-          "title": "作業の委任（サブエージェント）",
+          "title": "サブエージェントへの委任",
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
@@ -2676,7 +2858,7 @@
         },
         {
           "id": "developer-guide/programmatic-integration",
-          "title": "プログラムからの連携",
+          "title": "外部プログラムからの連携",
           "url": "/hermes/docs/developer-guide/programmatic-integration/"
         },
         {
@@ -2736,7 +2918,7 @@
         },
         {
           "id": "user-guide/features/cron",
-          "title": "定期タスク（Cron）",
+          "title": "定期実行タスク（cron）",
           "url": "/hermes/docs/user-guide/features/cron/"
         },
         {

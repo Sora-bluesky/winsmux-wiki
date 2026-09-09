@@ -2,7 +2,7 @@
 title: "アーキテクチャ"
 description: "Hermes Agent の内部構造 — 主要なサブシステム、実行経路、データの流れ、次に読むべき場所"
 upstream_path: developer-guide/architecture.md
-upstream_blob: 3640103c3de97ed7c01a3862b76b35371f9d5f06
+upstream_blob: 8b826980e7d783a182e43b214d52246fe4c8583b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/architecture
 ---
@@ -43,7 +43,7 @@ sources:
            ▼                                    ▼
 ┌───────────────────┐              ┌──────────────────────┐
 │ Session Storage   │              │ Tool Backends         │
-│ (SQLite + FTS5)   │              │ Terminal (6 backends) │
+│ (SQLite + FTS5)   │              │ Terminal (7 backends) │
 │ hermes_state.py   │              │ Browser (5 backends)  │
 │ gateway/session.py│              │ Web (4 backends)      │
 └───────────────────┘              │ MCP (dynamic)         │

@@ -173,6 +173,9 @@
             },
             {
               "id": "user-guide/features/built-in-plugins"
+            },
+            {
+              "id": "user-guide/features/plugin-catalog"
             }
           ]
         },
@@ -467,18 +470,12 @@
                     },
                     {
                       "id": "user-guide/skills/bundled/research/research-llm-wiki"
-                    },
-                    {
-                      "id": "user-guide/skills/bundled/research/research-rss-feeds"
                     }
                   ]
                 },
                 {
                   "label": "social-media",
                   "items": [
-                    {
-                      "id": "user-guide/skills/bundled/social-media/social-media-reddit-reading"
-                    },
                     {
                       "id": "user-guide/skills/bundled/social-media/social-media-xurl"
                     }
@@ -920,6 +917,9 @@
                       "id": "user-guide/skills/optional/productivity/productivity-memento-flashcards"
                     },
                     {
+                      "id": "user-guide/skills/optional/productivity/productivity-property-listings"
+                    },
+                    {
                       "id": "user-guide/skills/optional/productivity/productivity-shop"
                     },
                     {
@@ -973,6 +973,9 @@
                       "id": "user-guide/skills/optional/research/research-research-paper-writing"
                     },
                     {
+                      "id": "user-guide/skills/optional/research/research-rss-feeds"
+                    },
+                    {
                       "id": "user-guide/skills/optional/research/research-scrapling"
                     },
                     {
@@ -1008,6 +1011,14 @@
                   "items": [
                     {
                       "id": "user-guide/skills/optional/smart-home/smart-home-openhue"
+                    }
+                  ]
+                },
+                {
+                  "label": "social-media",
+                  "items": [
+                    {
+                      "id": "user-guide/skills/optional/social-media/social-media-reddit-reading"
                     }
                   ]
                 },
@@ -1547,6 +1558,7 @@
     "user-guide/features/skins",
     "user-guide/features/plugins",
     "user-guide/features/built-in-plugins",
+    "user-guide/features/plugin-catalog",
     "user-guide/features/cron",
     "reference/automation-blueprints-catalog",
     "user-guide/features/delegation",
@@ -1623,8 +1635,6 @@
     "user-guide/skills/bundled/research/research-competitor-news-monitor",
     "user-guide/skills/bundled/research/research-grounded-citations",
     "user-guide/skills/bundled/research/research-llm-wiki",
-    "user-guide/skills/bundled/research/research-rss-feeds",
-    "user-guide/skills/bundled/social-media/social-media-reddit-reading",
     "user-guide/skills/bundled/social-media/social-media-xurl",
     "user-guide/skills/bundled/software-development/software-development-codebase-inspection",
     "user-guide/skills/bundled/software-development/software-development-dogfood",
@@ -1740,6 +1750,7 @@
     "user-guide/skills/optional/productivity/productivity-decision-questionnaire",
     "user-guide/skills/optional/productivity/productivity-here-now",
     "user-guide/skills/optional/productivity/productivity-memento-flashcards",
+    "user-guide/skills/optional/productivity/productivity-property-listings",
     "user-guide/skills/optional/productivity/productivity-shop",
     "user-guide/skills/optional/productivity/productivity-shopify",
     "user-guide/skills/optional/productivity/productivity-siyuan",
@@ -1756,6 +1767,7 @@
     "user-guide/skills/optional/research/research-pinecone-research",
     "user-guide/skills/optional/research/research-qmd",
     "user-guide/skills/optional/research/research-research-paper-writing",
+    "user-guide/skills/optional/research/research-rss-feeds",
     "user-guide/skills/optional/research/research-scrapling",
     "user-guide/skills/optional/research/research-searxng-search",
     "user-guide/skills/optional/security/security-1password",
@@ -1765,6 +1777,7 @@
     "user-guide/skills/optional/security/security-unbroker",
     "user-guide/skills/optional/security/security-web-pentest",
     "user-guide/skills/optional/smart-home/smart-home-openhue",
+    "user-guide/skills/optional/social-media/social-media-reddit-reading",
     "user-guide/skills/optional/software-development/software-development-ast-grep",
     "user-guide/skills/optional/software-development/software-development-code-wiki",
     "user-guide/skills/optional/software-development/software-development-grill-me",

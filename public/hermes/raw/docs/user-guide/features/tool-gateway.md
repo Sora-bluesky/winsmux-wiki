@@ -1,45 +1,45 @@
 ---
 title: "Nous Tool Gateway"
-description: "契約はひとつで、ツールはひとそろい。ウェブ検索・画像生成・読み上げ音声・クラウドのブラウザを、追加の API キーなしで Nous Portal 経由で使えます。"
+description: "サブスクリプション 1 つで、すべてのツールを。Web 検索、画像生成、音声読み上げ、クラウドブラウザーを、追加の API キー無しで Nous Portal 経由に束ねます。"
 upstream_path: user-guide/features/tool-gateway.md
-upstream_blob: ee828cbb46631b0a782bcd7701f479a3f7757b68
+upstream_blob: 4dbbc6874399ceb47779e03fa6fe1430bceab860
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-gateway
 ---
 
 # Nous Tool Gateway {#nous-tool-gateway}
 
-**契約はひとつ。ツールはすべて内蔵。**
+**サブスクリプションは 1 つ。ツールは全部入り。**
 
-Tool Gateway は、有料の [Nous Portal](https://portal.nousresearch.com) 契約すべてに含まれています。Hermes のツール呼び出し（ウェブ検索、画像生成、読み上げ音声、クラウドのブラウザ自動操作）を Nous がすでに運用している基盤へ通すので、エージェントを使いものにするためだけに Firecrawl、FAL、OpenAI、Browser Use などへ個別に登録する必要がありません。
+Tool Gateway は、有料の [Nous Portal](https://portal.nousresearch.com) サブスクリプションすべてに含まれています。Hermes のツール呼び出し（Web 検索、画像生成、音声読み上げ、クラウドブラウザーの自動操作）を、Nous がすでに運用している基盤へ通してくれます。エージェントを使いものにするためだけに、Firecrawl や FAL、OpenAI、Browser Use などへ個別に登録する必要はありません。
 
-[契約の開始・管理はこちら →](https://portal.nousresearch.com/manage-subscription)
+[サブスクリプションを始める・管理する →](https://portal.nousresearch.com/manage-subscription)
 
 ## 含まれるもの {#whats-included}
 
 | | ツール | できること |
 |---|---|---|
-| 🔍 | **ウェブ検索と抽出** | Firecrawl による、エージェント向けのウェブ検索とページ全文の抽出です。レート制限を気にする必要はありません。規模の調整はゲートウェイ側が引き受けます。 |
-| 🎨 | **画像生成** | ひとつの窓口で9つのモデルを使えます。**FLUX 2 Klein 9B**、**FLUX 2 Pro**、**Z-Image Turbo**、**Nano Banana Pro**（Gemini 3 Pro Image）、**GPT Image 1.5**、**GPT Image 2**、**Ideogram V3**、**Recraft V4 Pro**、**Qwen Image**。生成のたびにフラグで選ぶことも、Hermes の既定である FLUX 2 Klein に任せることもできます。 |
-| 🔊 | **読み上げ音声** | OpenAI TTS の声が `text_to_speech` ツールにつながっています。Telegram にボイスメモを投げる、処理の流れに音声を組み込む、文章を読み上げさせる、といった使い方ができます。 |
-| 🌐 | **クラウドのブラウザ自動操作** | Browser Use による画面表示なしの Chromium セッションです。`browser_navigate`、`browser_click`、`browser_type`、`browser_vision` といった、エージェントがブラウザを動かすための基本動作がひととおりそろい、Browserbase のアカウントは要りません。 |
+| 🔍 | **Web 検索と本文抽出** | Firecrawl によるエージェント向けの Web 検索と、ページ全文の抽出。スケーリングはゲートウェイ側が引き受けるので、レート制限を気にする必要はありません。 |
+| 🎨 | **画像生成** | 1 つのエンドポイントに 9 つのモデル。**FLUX 2 Klein 9B**、**FLUX 2 Pro**、**Z-Image Turbo**、**Nano Banana Pro**（Gemini 3 Pro Image）、**GPT Image 1.5**、**GPT Image 2**、**Ideogram V3**、**Recraft V4 Pro**、**Qwen Image**。生成ごとにフラグで選ぶことも、Hermes の既定である FLUX 2 Klein に任せることもできます。 |
+| 🔊 | **音声読み上げ** | OpenAI の TTS 音声が `text_to_speech` ツールにつながっています。Telegram にボイスメモを投げる、パイプライン用の音声を作る、何かを読み上げさせる、といった使い方ができます。 |
+| 🌐 | **クラウドブラウザーの自動操作** | Browser Use 経由のヘッドレス Chromium セッション。`browser_navigate`、`browser_click`、`browser_type`、`browser_vision` といったエージェント操作の基本部品が、Browserbase のアカウント無しで使えます。 |
 
-4つとも、使った分だけ Nous の契約に請求されます。組み合わせは自由です。ウェブと画像はゲートウェイに任せつつ TTS だけ手持ちの ElevenLabs のキーを使う、あるいはすべてを Nous 経由にする、どちらもできます。
+4 つとも、Nous のサブスクリプションに対する従量課金です。組み合わせは自由で、Web と画像はゲートウェイに任せつつ TTS だけ自前の ElevenLabs キーを使う、あるいは全部を Nous 経由にする、どちらもできます。
 
 ## なぜこれがあるのか {#why-its-here}
 
-実際に*仕事をする*エージェントを作ろうとすると、5つ以上の API 契約をつなぎ合わせることになります。それぞれに登録手続き、レート制限、請求、そして独自のクセがあります。ゲートウェイは、それをアカウントひとつにまとめます。
+実際に*何かをこなせる*エージェントを組もうとすると、5 つ以上の API サブスクリプションをつなぎ合わせることになります。それぞれに登録があり、レート制限があり、請求があり、癖があります。ゲートウェイはそれをアカウント 1 つにまとめます。
 
-- **請求はひとつ。** Nous に支払えば、あとはこちらで処理します。
-- **登録はひとつ。** Firecrawl、FAL、Browser Use、OpenAI の音声アカウントを個別に管理する必要はありません。
-- **キーはひとつ。** Nous Portal の OAuth がすべてのツールをまかないます。
-- **品質は同じ。** キーを直接使う場合と同じ基盤を、こちらが前面で受けているだけです。
+- **請求は 1 つ。** Nous に払えば、あとはこちらで面倒を見ます。
+- **登録は 1 回。** Firecrawl も FAL も Browser Use も OpenAI の音声アカウントも、管理する必要がありません。
+- **キーは 1 つ。** Nous Portal の OAuth が、すべてのツールをカバーします。
+- **品質は同じ。** 直接キーを使う経路と同じバックエンドを、こちらが前面で受けているだけです。
 
 自分のキーはいつでも持ち込めます。ツール単位で、好きなときに切り替えられます。ゲートウェイは囲い込みではなく、近道です。
 
 ## 使い始める {#get-started}
 
-入り口は3つあります。いまの状況に合うものを選んでください。
+入り口は 3 つあります。今の状況に合うものを選んでください。
 
 ```bash
 hermes setup --portal     # Fresh install: Nous OAuth + set Nous as provider + turn on the Tool Gateway in one go
@@ -53,11 +53,11 @@ hermes model              # Switch your inference provider to Nous Portal — He
 hermes tools              # Enable the gateway per-tool — pick "Nous Subscription" for any tool you want
 ```
 
-`hermes setup --portal` と `hermes model` は一度にまとめて済ませる道です。一度ログインすれば、必要に応じてすべてのツールをゲートウェイ経由に切り替えられます。`hermes tools` は選び取る道で、使いたいツールだけをひとつずつ有効にします。
+`hermes setup --portal` と `hermes model` は一気に済ませる経路です。一度ログインすれば、必要に応じてすべてのツールをゲートウェイへ切り替えられます。`hermes tools` は単品で選ぶ経路で、欲しいツールだけを 1 つずつ有効にします。
 
-**先にログインしておく必要はありません。** `hermes tools` では、Nous が管理する基盤（ウェブ検索、画像、動画、TTS、ブラウザ）が常に一覧に出ます。Nous Portal に一度もログインしたことがなくても表示されます。選ぶとその場で Portal のログインが走り、まだ認証していなければそこで済ませられます。事前に `hermes model` を実行する必要はありません。Nous の OAuth がすでに有効なら、基盤を選んだ時点で追加の確認なしに有効になります。この道で行われるのはログインと、選んだツール1つを有効にすることだけです。推論の提供元は切り替わりませんし、ほかのツールについてゲートウェイを有効にするか尋ねられることもありません。
+**先にログインしておく必要はありません。** `hermes tools` では、Nous が運用するバックエンド（Web 検索、画像、動画、TTS、ブラウザー）が常に一覧に出ます。Nous Portal に一度もサインインしたことがなくても表示されます。選んだ時点でまだ認証されていなければ、Hermes がその場で Portal のログインを走らせます。事前に `hermes model` を実行する必要はありません。Nous の OAuth がすでに有効なら、バックエンドを選んだ時点で追加のプロンプト無しに有効になります。この経路でログインと、選んだ 1 つのツールの有効化だけが行われます。推論プロバイダーは切り替わり**ませんし**、他のすべてのツールについてゲートウェイを有効にするかを聞かれることも**ありません**。
 
-いまどれが有効かは、いつでも確認できます。
+いま何が有効かは、いつでも確認できます。
 
 ```bash
 hermes portal info        # Portal auth + Tool Gateway routing summary
@@ -65,7 +65,7 @@ hermes portal tools       # Gateway catalog with current routing per tool
 hermes status             # Full system status (Tool Gateway is one section)
 ```
 
-`hermes portal info` は、次のような一節を表示します。
+`hermes portal info` は次のような欄を表示します。
 
 ```
 ◆ Nous Tool Gateway
@@ -76,66 +76,66 @@ hermes status             # Full system status (Tool Gateway is one section)
   Browser         ○ active via Browser Use key
 ```
 
-「active via Nous subscription」と付いているツールは、ゲートウェイを通っています。それ以外は自分のキーを使っています。
+「active via Nous subscription」と付いているツールがゲートウェイ経由です。それ以外は自分のキーを使っています。
 
-## 使える条件 {#eligibility}
+## 利用条件 {#eligibility}
 
-Tool Gateway は**有料契約**向けの機能です。無料枠の Nous アカウントでも Portal を推論に使えますが、管理されたツールは含まれません。ゲートウェイを使うには[プランをアップグレード](https://portal.nousresearch.com/manage-subscription)してください。
+Tool Gateway は**有料サブスクリプション**の機能です。無料枠の Nous アカウントでも Portal を推論には使えますが、運用ツールは含まれません。ゲートウェイを解放するには[プランをアップグレード](https://portal.nousresearch.com/manage-subscription)してください。
 
-アカウントによっては、**無料のツール枠**が付いていることもあります。これは管理されたツールを少しだけ使える枠で、有料契約がなくてもゲートウェイのツール呼び出しをまかないます。無料枠がある場合、ゲートウェイがそれを知らせ、最初に使うときに設定の案内を出すので、その場で受け取ってすぐ使い始められます。
+一部のアカウントには**無料のツール枠**も付いています。これは少量の運用ツール用の割り当てで、有料サブスクリプション無しでもゲートウェイのツール呼び出しをまかなえます。無料枠が使える場合、ゲートウェイがそれを提示し、初回利用時に設定のプロンプトを出すので、そのまま運用ツールを使い始められます。
 
 ## 有効化のチェックリスト {#the-enablement-checklist}
 
-Nous のモデルを選ぶ（`hermes model`）と、ゲートウェイの基盤をツールごとに選ぶチェックリストが出ます。その動きは、いまの設定を尊重します。
+Nous のモデルを選ぶ（`hermes model`）と、ゲートウェイのバックエンドをツール単位で選ぶチェックリストが出ます。その動きは、いまの設定を尊重します。
 
-- 別の基盤を明示的に指定してあるツール（例: `web.backend: searxng`、`browser.cloud_provider: camofox`）は**一覧に出ません**。自分の選択がうっかり上書きされることはありません。
-- 環境変数だけで設定してあるツール（例: `SEARXNG_URL`、`CAMOFOX_URL`）は**チェックを外した状態**で出ます。自分の基盤をそのまま使う旨の説明が付きます。
-- 何も設定していないツールだけが、最初からチェック済みで出ます。
-- 断った選択は残ります。チェックを外したままチェックリストを確定すると、次回以降 Nous のモデルへ切り替えたときも最初からチェックされません（`config.yaml` の `tool_gateway_declined_tools` に記録されます。あとでチェックを入れれば、この記録は消えます）。
+- 別のバックエンドを明示的に指定してあるツール（例: `web.backend: searxng`、`browser.cloud_provider: camofox`）は**そもそも提示されません**。選択がうっかり上書きされることはありません。
+- 環境変数だけで設定されているツール（例: `SEARXNG_URL`、`CAMOFOX_URL`）は、自分のバックエンドを保つという注記付きで、**チェックが外れた状態**で提示されます。
+- 本当に未設定のツールだけが、あらかじめチェックされた状態になります。
+- 断った選択は残ります。チェックを外したままチェックリストを確定すると、その後 Nous のモデルに切り替えたときにも、あらかじめチェックされることはありません（`config.yaml` の `tool_gateway_declined_tools` に保存されます。あとでチェックを入れれば、その記録は消えます）。
 
-## 組み合わせて使う {#mix-and-match}
+## 好きに組み合わせる {#mix-and-match}
 
-ゲートウェイはツール単位です。使いたいものだけ有効にできます。
+ゲートウェイはツール単位です。欲しいところだけ有効にできます。
 
-- **すべてのツールを Nous 経由にする** — いちばん簡単です。契約ひとつで完了します。
-- **ウェブと画像はゲートウェイ、TTS は自前** — ElevenLabs の声はそのままに、残りを Nous に任せます。
-- **キーを持っていないものだけゲートウェイ** — 「Browserbase にはすでに払っているが、Firecrawl のアカウントは作りたくない」といった使い方ができます。
+- **すべてを Nous 経由に** — いちばん簡単です。サブスクリプション 1 つで完了します。
+- **Web と画像はゲートウェイ、TTS は自前** — ElevenLabs の声はそのままに、残りを Nous に任せます。
+- **キーを持っていないものだけゲートウェイ経由に** — 「Browserbase にはすでに払っているが、Firecrawl のアカウントは作りたくない」といった使い方もできます。
 
-どのツールも、次のコマンドでいつでも切り替えられます。
+どのツールも、いつでも次のコマンドで切り替えられます。
 
 ```bash
 hermes tools          # Interactive picker for each tool category
 ```
 
-ツールを選び、提供元として **Nous Subscription**（あるいは好みの直接の提供元）を選びます。設定ファイルを編集する必要はありません。まだ Nous Portal にログインしていない場合、**Nous Subscription** を選んだ時点で Portal のログインがその場で始まります。先に `hermes model` で認証しておく必要はありません。
+ツールを選び、プロバイダーとして **Nous Subscription**（または好みの直接プロバイダー）を選びます。設定ファイルを編集する必要はありません。まだ Nous Portal にログインしていない場合は、**Nous Subscription** を選んだ時点で Portal のログインがその場で始まります。先に `hermes model` で認証しておく必要はありません。
 
 ## 画像モデルを個別に使う {#using-individual-image-models}
 
-画像生成は速度を優先して FLUX 2 Klein 9B を既定にしています。呼び出しごとに変えたい場合は、`image_generate` ツールにモデル ID を渡します。
+画像生成は速さを優先して FLUX 2 Klein 9B を既定にしています。呼び出しごとに変えたい場合は、`image_generate` ツールにモデル ID を渡してください。
 
 | モデル | ID | 向いている用途 |
 |---|---|---|
-| FLUX 2 Klein 9B | `fal-ai/flux-2/klein/9b` | 速く、既定として扱いやすい |
-| FLUX 2 Pro | `fal-ai/flux-2-pro` | より緻密な FLUX |
-| Z-Image Turbo | `fal-ai/z-image/turbo` | 様式化された絵を速く |
+| FLUX 2 Klein 9B | `fal-ai/flux-2/klein/9b` | 高速。既定として使いやすい |
+| FLUX 2 Pro | `fal-ai/flux-2-pro` | より忠実度の高い FLUX |
+| Z-Image Turbo | `fal-ai/z-image/turbo` | 様式的で高速 |
 | Nano Banana Pro | `fal-ai/nano-banana-pro` | Google Gemini 3 Pro Image |
-| GPT Image 1.5 | `fal-ai/gpt-image-1.5` | OpenAI の画像生成、文字と画像 |
+| GPT Image 1.5 | `fal-ai/gpt-image-1.5` | OpenAI の画像生成。テキストと画像の両方 |
 | GPT Image 2 | `fal-ai/gpt-image-2` | OpenAI の最新版 |
-| Ideogram V3 | `fal-ai/ideogram/v3` | 指示への忠実さと文字組み |
-| Recraft V4 Pro | `fal-ai/recraft/v4/pro/text-to-image` | ベクター調、グラフィックデザイン |
+| Ideogram V3 | `fal-ai/ideogram/v3` | プロンプトへの忠実さと文字組みに強い |
+| Recraft V4 Pro | `fal-ai/recraft/v4/pro/text-to-image` | ベクター調、グラフィックデザイン向け |
 | Qwen Image | `fal-ai/qwen-image` | Alibaba のマルチモーダル |
 
-顔ぶれは移り変わります。`hermes tools` から Image Generation を開くと、そのときの一覧が出ます。
+顔ぶれは移り変わります。`hermes tools` → Image Generation で、現在の一覧を確認できます。
 
 ---
 
 ## 設定の早見表 {#configuration-reference}
 
-ほとんどの人はここに触れずに済みます。`hermes model` と `hermes tools` が、対話形式であらゆる手順をまかないます。この節は、config.yaml を直接書く場合や、設定を自動化する場合のためのものです。
+ほとんどの人はここを触る必要がありません。`hermes model` と `hermes tools` が、対話形式ですべての操作をカバーします。この節は、config.yaml を直接書く場合や、設定をスクリプト化する場合のためのものです。
 
-### ツール分類ごとに選択キーはひとつ {#one-selection-key-per-tool-category}
+### ツール分類ごとに選択キーは 1 つ {#one-selection-key-per-tool-category}
 
-ツールの分類ごとに、提供元を選ぶキーがひとつあります。書き込むのは `hermes tools` の選択画面（またはデスクトップの画面）です。**Nous Subscription** の行を選ぶと値 `nous` が保存され、その分類は管理された Tool Gateway を通ります。自分のキーを使う行を選ぶと提供元の名前（`fal`、`openai`、`firecrawl`、`browser-use` など）が保存され、自分の資格情報で直接つながります。
+ツールの分類それぞれに、プロバイダーを選ぶキーが 1 つだけあります。書き込むのは `hermes tools` のピッカー（またはデスクトップアプリの画面）です。**Nous Subscription** の行を選ぶと値 `nous` が保存され、その分類は運用型の Tool Gateway 経由になります。自前キー（BYOK）の行を選ぶとベンダー名（`fal`、`openai`、`firecrawl`、`browser-use` など）が保存され、自分の認証情報で直接つながります。
 
 ```yaml
 web:
@@ -154,13 +154,13 @@ browser:
   cloud_provider: nous   # cloud browser via the Tool Gateway
 ```
 
-実行時は**保存された選択を常に使います**。資格情報があるかどうかで分類の経路が選ばれたり、切り替わったりすることはありません。`image_gen.provider: nous` のあいだ、`.env` に置かれた `FAL_KEY` は無視されます。逆に `image_gen.provider: fal` なのに `FAL_KEY` がない場合は、黙ってゲートウェイに戻るのではなく、はっきりしたエラーが出ます。
+実行時は**常に保存された選択が使われます**。認証情報があるかどうかで分類が選ばれたり、経路が変わったりすることはありません。`image_gen.provider: nous` のあいだ、`.env` に置かれた `FAL_KEY` は無視されます。逆に `image_gen.provider: fal` なのに `FAL_KEY` が設定されていなければ、黙ってゲートウェイへ落ちるのではなく、はっきりしたエラーが出ます。
 
 ```
 image_gen is configured to use fal (set via hermes tools), but FAL_KEY is not set. Run 'hermes tools' to change it.
 ```
 
-**一度も設定していない**分類（選択キーがまだ書かれていないもの）は、これまでどおり、使える資格情報から自動で判別します。ただし選択がいったん保存されると、`.env` にキーを足しても経路は変わりません。変えられるのは `hermes tools`（または選択キーの編集）だけです。
+**一度も設定したことがない**分類（選択キーが書かれたことのない分類）は、これまでどおり利用できる認証情報から自動判定します。ただし選択がいったん存在すると、`.env` にキーを足しても経路は変わりません。変えられるのは `hermes tools`（または選択キーの編集）だけです。
 
 ### 自分のキーに戻す {#switching-back-to-your-own-keys}
 
@@ -168,48 +168,56 @@ image_gen is configured to use fal (set via hermes tools), but FAL_KEY is not se
 hermes tools    # pick the tool → choose a direct provider (e.g. Firecrawl)
 ```
 
-選択キーを直接書いても構いません。
+あるいは、選択キーを直接書きます。
 
 ```yaml
 web:
   backend: firecrawl   # Hermes now uses FIRECRAWL_API_KEY from .env
 ```
 
-### 古い `use_gateway` フラグ（非推奨） {#legacy-usegateway-flag-deprecated}
+### 旧来の `use_gateway` フラグ（非推奨） {#legacy-usegateway-flag-deprecated}
 
-以前の Hermes は、ゲートウェイを通すためにツールごとの `use_gateway: true` という真偽値を使っていました。このフラグは**過去のもの**です。もう書き込まれることはなく、`hermes tools` の選択画面が選択を書き直す際に、その分類の設定から取り除きます。`use_gateway: true` が残っている古い設定は、読み込み時に `nous` の選択として解釈されるので、いまの環境はそのまま動きます。新しい設定に `use_gateway` を書かないでください。代わりに `hermes tools` で提供元を選びます。
+古い Hermes では、ツールごとの `use_gateway: true` という真偽値でゲートウェイ経由にしていました。このフラグは**旧来のもの**です。今は書き込まれることがなく、`hermes tools` のピッカーが選択を書き直すときに、その分類の設定から取り除きます。`use_gateway: true` がまだ残っている古い設定は、読み込み時に `nous` の選択として解釈されるので、既存の環境はそのまま動きます。新しい設定に `use_gateway` を書かないでください。代わりに `hermes tools` でプロバイダーを選んでください。
 
 ### 自前で動かすゲートウェイ（上級者向け） {#self-hosted-gateway-advanced}
 
-Nous 互換のゲートウェイを自分で動かしていますか。その場合は `~/.hermes/.env` で接続先を上書きします。
+Nous 互換のゲートウェイを自分で運用していますか。その場合は `~/.hermes/.env` でエンドポイントを上書きします。
 
 ```bash
 TOOL_GATEWAY_DOMAIN=your-domain.example.com
 TOOL_GATEWAY_SCHEME=https
 TOOL_GATEWAY_USER_TOKEN=your-token        # normally auto-populated from Portal login
 FIRECRAWL_GATEWAY_URL=https://...         # override one endpoint specifically
+TOOL_GATEWAY_URL=http://127.0.0.1:3009    # pin the shared managed origin exactly
+CONNECTOR_GATEWAY_URL=http://127.0.0.1:3009 # pin the connectors origin exactly
 ```
 
-これらのつまみは、独自の基盤を組む場合（企業での導入、開発環境など）のためにあります。通常の契約者が設定することはありません。
+ホスト名はすべて `{label}-gateway.<domain>` の形で、`TOOL_GATEWAY_DOMAIN` と `TOOL_GATEWAY_SCHEME` は**そのすべて**を作り変えます。`{LABEL}_GATEWAY_URL` は 1 つのホストを厳密に固定し、この組み立てを飛ばします。
+
+- `{vendor}-gateway.<domain>` — ベンダーごとの中継（Firecrawl、BFL など）。
+- `tool-gateway.<domain>` — 共有の運用オリジン。ゲートウェイ自身でホストしているベンダーと、メディアのアップロードが通ります。
+- `connector-gateway.<domain>` — コネクター API（`/v1/connectors/*`）。これ自体が別のデプロイです。[ツール検索 → コネクター](/hermes/docs/user-guide/features/tool-search/#connectors-remote-tools)を参照してください。
+
+これらのつまみは、独自基盤（企業向けの配備や開発環境）のためにあります。通常の契約者が設定することはありません。
 
 ## よくある質問 {#faq}
 
-### Telegram や Discord など、ほかのメッセージ連携でも使えますか {#does-it-work-with-telegram-discord-the-other-messaging-gateways}
+### Telegram や Discord など、他のメッセージ連携でも動きますか {#does-it-work-with-telegram-discord-the-other-messaging-gateways}
 
-使えます。Tool Gateway が働くのはツールを実行する層で、CLI に限りません。ツールを呼べる窓口であれば、CLI、Telegram、Discord、Slack、IRC、Teams、API サーバーなど、どれでもそのまま恩恵を受けられます。
+動きます。Tool Gateway は CLI ではなく、ツール実行の層で働きます。ツールを呼べるすべての窓口（CLI、Telegram、Discord、Slack、IRC、Teams、API サーバー、そのほか何でも）が、意識しないまま恩恵を受けます。
 
-### 契約が切れたらどうなりますか {#what-happens-if-my-subscription-expires}
+### サブスクリプションが切れたらどうなりますか {#what-happens-if-my-subscription-expires}
 
-ゲートウェイ経由のツールは、更新するか、`hermes tools` で直接の API キーに差し替えるまで動かなくなります。Hermes は Portal を案内する、わかりやすいエラーを表示します。
+ゲートウェイ経由のツールは、更新するか `hermes tools` で直接の API キーに差し替えるまで動かなくなります。Hermes はポータルを指し示す分かりやすいエラーを表示します。
 
-### ツールごとの使用量や費用は見られますか {#can-i-see-usage-or-costs-per-tool}
+### ツールごとの利用量やコストは見られますか {#can-i-see-usage-or-costs-per-tool}
 
-見られます。[Nous Portal のダッシュボード](https://portal.nousresearch.com)が使用量をツール別に分けて示すので、何が費用を押し上げているかがわかります。
+見られます。[Nous Portal のダッシュボード](https://portal.nousresearch.com)が利用量をツール別に分解して表示するので、何が請求額を押し上げているのか分かります。
 
-### Modal（サーバーレスの端末）は含まれますか {#is-modal-serverless-terminal-included}
+### Modal（サーバーレスのターミナル）は含まれますか {#is-modal-serverless-terminal-included}
 
-Modal は Nous の契約を通じた**追加オプション**で、既定の Tool Gateway の組み合わせには入っていません。シェルの実行を離れた場所の隔離環境で行いたいときは、`hermes setup terminal` か `config.yaml` で直接設定します。
+Modal は Nous のサブスクリプションを通じた**任意の追加オプション**で、既定の Tool Gateway 一式には含まれません。シェル実行のためのリモートサンドボックスが欲しくなったら、`hermes setup terminal` か `config.yaml` を直接編集して設定してください。
 
-### ゲートウェイを有効にしたら、いまある API キーは消すべきですか {#do-i-need-to-delete-my-existing-api-keys-when-i-enable-the-gateway}
+### ゲートウェイを有効にしたら、いま持っている API キーは消すべきですか {#do-i-need-to-delete-my-existing-api-keys-when-i-enable-the-gateway}
 
-消す必要はありません。`.env` に置いたままで構いません。そのツールの選択が **Nous Subscription** のあいだ、直接のキーは単に無視されます。`hermes tools` で直接の提供元を選び直せば、また自分のキーが使われます。ゲートウェイは囲い込みではありません。
+いいえ、`.env` に残しておいてください。ツールの選択が **Nous Subscription** のあいだ、そのツールの直接キーはただ無視されます。`hermes tools` でもう一度直接プロバイダーを選べば、キーがまた使われるようになります。ゲートウェイは囲い込みではありません。

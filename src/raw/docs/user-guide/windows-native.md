@@ -2,7 +2,7 @@
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: f703dfe286a24df5816c5e302fb5d16c4544fd10
+upstream_blob: 69c2726a9de10402a380374cbe5235a1e4073df6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -178,8 +178,8 @@ hermes gateway install
 
 裏側では次のことが起きます。
 
-1. `schtasks /Create /SC ONLOGON /RL LIMITED /TN HermesGateway` — ログイン時に、昇格していない通常の権限で動くタスクを登録します。UAC の確認は出ません。
-2. グループポリシーで schtasks が禁じられている場合は、`start /min cmd.exe /d /c <wrapper>` のショートカットを `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup` に書き出す方式に切り替えます。効果は同じで、作りが少し素朴なだけです。
+1. `schtasks /Create /SC ONLOGON /RL LIMITED /TN Hermes_Gateway` — ログイン時に、昇格していない通常の権限で動くタスクを登録します。UAC の確認は出ません。
+2. グループポリシーで schtasks が禁じられている場合は、小さな `Hermes_Gateway.vbs` という起動用のファイル（`wscript.exe` で画面に出さずに実行されます）を `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup` に書き出す方式に切り替えます。効果は同じで、作りが少し素朴なだけです。`cmd.exe` のショートカットではなく VBScript を使うのは、ログイン時に割り当てられたコンソールが閉じる合図を受け取ると、ゲートウェイが起動し終わる前に落ちてしまうことがあるからです。
 3. ゲートウェイは `python.exe` ではなく **`pythonw.exe` で切り離して起動します**。`pythonw.exe` にはコンソールが結び付かないため、同じ立場のプロセスから飛んでくる `CTRL_C_EVENT` の影響を受けません（同じプロセスグループで何かを Ctrl+C したときにゲートウェイが落ちる、という実際に起きていた問題への対策です）。
 
 起動時に使うフラグは `DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB` です。
@@ -299,7 +299,7 @@ Linux と macOS では、POSIX の慣用句である `os.kill(pid, 0)` は何も
 ダウンロードした `install.ps1` に UTF-8 の BOM が混ざっています。`irm | iex` の形は BOM を自動で取り除きますが、`[scriptblock]::Create((irm ...))` は取り除きません。単純な `irm | iex` の形で実行し直すか、スクリプトを手作業でダウンロードし、`[IO.File]::WriteAllText($path, $text, (New-Object Text.UTF8Encoding $false))` で BOM なしとして保存してください。
 
 **再起動後にゲートウェイが動き続けてくれない。**
-`hermes gateway status` を確認してください。schtasks の登録、（使っていれば）スタートアップフォルダのショートカット、稼働中の PID をまとめて表示します。schtasks が登録されているのに動いていない場合、グループポリシーが `ONLOGON` の起動条件を禁じている可能性があります。`schtasks /Query /TN HermesGateway /V /FO LIST` を実行するとタスクが失敗した理由が分かります。あるいは、いったんアンインストールし、`HERMES_GATEWAY_FORCE_STARTUP=1` を付けて入れ直すことで、スタートアップフォルダの方式に切り替えられます。
+`hermes gateway status` を確認してください。schtasks の登録、（使っていれば）スタートアップフォルダのショートカット、稼働中の PID をまとめて表示します。schtasks が登録されているのに動いていない場合、グループポリシーが `ONLOGON` の起動条件を禁じている可能性があります。`schtasks /Query /TN Hermes_Gateway /V /FO LIST`（プロファイルに名前を付けている場合は `Hermes_Gateway_<profile>`）を実行すると、タスクが失敗した理由が分かります。スタートアップフォルダを使う方式に切り替わるのは、`schtasks` そのものがタスクの登録に失敗したときだけです。これを強制するための環境変数や指定はありません。
 
 **`$env:EDITOR` を設定しても `/edit` が何もしない。**
 いま動いているプロセスにだけ設定した状態です。シェルを閉じて開き直すか、システムのプロパティ → 環境変数でユーザーの範囲に設定してください。新しい PowerShell のウィンドウで `echo $env:EDITOR` を実行すると確認できます。

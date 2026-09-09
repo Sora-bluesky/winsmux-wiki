@@ -1,27 +1,27 @@
 ---
 title: "プロンプトの組み立て"
-description: "Hermes がシステムプロンプトをどう組み立て、キャッシュの安定を保ち、その場限りの層を差し込むか"
+description: "Hermes がシステムプロンプトをどう組み立て、キャッシュの安定性をどう保ち、その場限りの層をどう差し込むか"
 upstream_path: developer-guide/prompt-assembly.md
-upstream_blob: aeae73d6a028709b51521c7eb34710665b72ccc1
+upstream_blob: 4ab98f582c95ea3839b8bb3f8a00ca57f413ab68
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/prompt-assembly
 ---
 
 # プロンプトの組み立て {#prompt-assembly}
 
-Hermes は次の 2 つを意識して分けています。
+Hermes は、次の 2 つを意図的に分けています。
 
 - **キャッシュされるシステムプロンプトの状態**
-- **API を呼ぶそのときだけ足される、その場限りの内容**
+- **API を呼ぶそのときだけ足される、その場限りの部分**
 
-これはこのプロジェクトでもっとも大事な設計判断のひとつです。次のことに効いてくるからです。
+これはこのプロジェクトでもっとも重要な設計判断の一つです。次のすべてに効いてくるからです。
 
-- トークンの使用量
-- プロンプトキャッシュの効きやすさ
-- セッションの連続性
-- メモリの正しさ
+- トークンの消費量
+- プロンプトキャッシュの効き具合
+- セッションのつながり
+- 記憶の正しさ
 
-主なファイルです。
+主なファイルは次のとおりです。
 
 - `run_agent.py`
 - `agent/prompt_builder.py`
@@ -29,39 +29,40 @@ Hermes は次の 2 つを意識して分けています。
 
 ## キャッシュされるシステムプロンプトの層 {#cached-system-prompt-layers}
 
-キャッシュされるシステムプロンプトは、順番の決まった 3 つの段に組み立てられます（`agent/system_prompt.py` を参照）。
+キャッシュされるシステムプロンプトは、順番の決まった 3 つの段として組み立てられます（`agent/system_prompt.py` を参照）。
 
-1. **stable** — 人格（`SOUL.md`、なければ既定のもの）、ツールとモデルの手引き、コーディングの作業方針
-2. **context** — 呼び出し側が渡した `system_message`、プロジェクトのコンテキストファイル（`.hermes.md` / `AGENTS.md` / `CLAUDE.md` / `.cursorrules`）、続いて作業ツリーごとに変わる git ワークスペースのスナップショット、運用者からの指示、プラットフォームのヒント
-3. **volatile** — スキルの索引、組み込みメモリのスナップショット（`MEMORY.md`）、利用者プロフィールのスナップショット（`USER.md`）、外部メモリ提供元のブロック、日時・セッション・モデル・プロバイダの行、そして実行環境のヒント（ホスト / ホームディレクトリ / **現在の作業ディレクトリ**）
+1. **stable** — 人格（`SOUL.md`、なければ既定のもの）、ツールとモデルの使い方の指針、コーディング時の行動指針
+2. **context** — 呼び出し側が渡した `system_message`、プロジェクトの文脈ファイル（`.hermes.md` / `AGENTS.md` / `CLAUDE.md` / `.cursorrules`）、続いて作業ツリーごとに変わる git のワークスペースの様子、運用者からの指示、実行環境のヒント
+3. **volatile** — スキルの索引、組み込みの記憶の写し（`MEMORY.md`）、利用者のプロフィールの写し（`USER.md`）、外部の記憶プロバイダーのブロック、時刻・セッション・モデル・プロバイダーの行、そして実行時の環境のヒント（ホスト / ホームディレクトリー / **今の作業ディレクトリー**）
 
-最終的なシステムプロンプトは、`stable` → `context` → `volatile` の順につなげられます。
+最終的なシステムプロンプトは、`stable` → `context` → `volatile` の順につなげたものになります。
 
-この順番は、どちらが優先されるかを考えるときに効いてきます。
-- スキルは **stable** の段に入る
-- メモリとプロフィールのスナップショットは **volatile** の段に入る
-- どちらもキャッシュされるシステムプロンプトの一部である（ターンの途中で場当たり的に重ねられるものではない）
+この順番は、どれが優先されるかを話すときに効いてきます。
+- スキルは **stable** の段に入ります
+- 記憶とプロフィールの写しは **volatile** の段に入ります
+- どちらもキャッシュされるシステムプロンプトの中にあります（ターンの途中で場当たりに重ねているわけではありません）
 
-context の段では、プロジェクト共通のファイルが、いまの作業ツリーを名指しする情報より**先**に置かれます。
-こうしておくと、同じプロジェクトを別々の git worktree で動かしているセッション同士が、作業ディレクトリに
-依存する行が最初に出たところで打ち切られるのではなく、context ブロック全体にわたって同じ前置きを共有できます。
-プロバイダ側の「いちばん長く一致する前置き」を再利用するキャッシュが効くのは、この部分です。ワークスペースの
-スナップショットを持たないセッションでは、末尾の手引きは stable の段に残ります。実行環境のブロックは、
-必ず volatile の段の最後に来ます。
+context の段の中では、共有されるプロジェクトのファイルが、今の作業ツリーの名前が出てくるものより**先**に来ます。
+そうすると、同じプロジェクトを別々の git の作業ツリーで動かしているセッション同士が、最初に作業ディレクトリー依存の行が出たところで止まらずに、
+文脈のブロック全体にわたって同じ前半部分を共有できます。最長一致でキャッシュを効かせるプロバイダーが再利用するのは、この前半部分です。
+ワークスペースの様子を持たないセッションでは、末尾の案内が stable の段に残ります。実行環境のブロックは、常に volatile の段の最後に来ます。
 
-保存済みのプロンプトへの影響もあります。`_stored_prompt_matches_runtime()`（`agent/conversation_loop.py`）は、
-描画された `# Hermes runtime environment` の区切りより後ろにある、最初のホスト情報の段落を読みます。いちばん
-末尾に閉じの目印が入るので、見出しを引用しただけの以前の書き方とは見分けがつきます。この実行環境の区切りは、
-プロジェクト・運用者・メモリ・プラグインのテキストすべてより後ろにあるため、それらのブロックに書かれた例が
-実行時の作業ディレクトリのふりをすることはありません。モデル・プロバイダ・プラットフォームは区切りより前で
-読み取られ、埋め込みモデルの説明は対象から外れます。以前の形式のプロンプトは、ホスト情報が context より前に
-あるという元の目印をそのまま持っているので、並び替え前に保存されたものも変わらず検証を通ります。
+保存されたプロンプトへの影響もあります。`_stored_prompt_matches_runtime()`（`agent/conversation_loop.py`）は、
+描画された `# Hermes runtime environment` の区切りより後にある最初のホスト情報の段落を読みます。
+末尾には終わりを示す印があり、見出しを引用しているだけの古い文章とこの並びを見分けられるようになっています。
+実行環境の区切りは、プロジェクト・運用者・記憶・プラグインの文章のすべてより後に来るので、それらのブロックの中の例が
+実行時の作業ディレクトリーのふりをすることはありません。モデルとプロバイダーは、この区切りより前で読み取り、
+埋め込みモデルの説明は除外します。`Platform:` は、あえて同一性を判定する項目に入れていません。入口が切り替わっても
+（デスクトップ ↔ TUI）保存されているバイト列はそのままで、今の入口向けの案内はターンごとのユーザーメッセージの経路に
+一度だけ流します（`agent/surface_switch.py`）。こうしてキャッシュされる前半部分が生き残ります（#104414）。
+古いプロンプトは元どおり「ホストが文脈より前」という印を持ったままなので、
+並べ替えの前に保存されたプロンプトも問題なく通ります。
 
-`skip_context_files` が指定されているとき（子エージェントへの委任など）は SOUL.md を読み込まず、コードに書かれた `DEFAULT_AGENT_IDENTITY` が代わりに使われます。
+`skip_context_files` が指定されているとき（たとえばサブエージェントへの委任）は、SOUL.md は読み込まれず、コードに直接書かれた `DEFAULT_AGENT_IDENTITY` が使われます。
 
-### 具体例: 組み上がったシステムプロンプト {#concrete-example-assembled-system-prompt}
+### 実例: 組み上がったシステムプロンプト {#concrete-example-assembled-system-prompt}
 
-すべての層がそろったときに、最終的なシステムプロンプトがどう見えるかを簡単にした例です（コメントは各部分の出どころを示しています）。
+すべての層がそろったときに、最終的なシステムプロンプトがどう見えるかを簡略化したものです（コメントは各部分の出どころを示しています）。
 
 ```
 # Layer 1: Agent Identity (from ~/.hermes/SOUL.md)
@@ -71,10 +72,10 @@ You value correctness, clarity, and efficiency.
 ...
 
 # Layer 2: Tool-aware behavior guidance
-You have persistent memory across sessions. Save durable facts using
-the memory tool: user preferences, environment details, tool quirks,
-and stable conventions. Memory is injected into every turn, so keep
-it compact and focused on facts that will still matter later.
+Task-learned procedures, pitfalls, and task-specific preferences belong
+in skills. Memory is the narrow exception for facts that apply to EVERY
+session regardless of task. Skill-writing instructions appear here only
+when skill_manage is available; its absence does not widen memory's scope.
 ...
 When the user references something from a past conversation or you
 suspect relevant cross-session context exists, use session_search
@@ -134,17 +135,16 @@ You are a CLI AI Agent. Try not to use markdown but simple text
 renderable inside a terminal.
 ```
 
-## プラットフォームのヒントを変える {#customizing-platform-hints}
+## 環境ごとのヒントを変える {#customizing-platform-hints}
 
-プラットフォームのヒント（上の Layer 10）は、Telegram、WhatsApp、Slack、CLI
-などの窓口ごとに Hermes が差し込む案内文です。たとえば「今は端末の上にいるので
-Markdown は控えめに」といったものです。組み込みの既定値は
-`PLATFORM_HINTS`（`agent/system_prompt.py`）にあり、プラグインが提供する
-プラットフォームは、プラットフォームのレジストリを通して自前のヒントを渡します。
+環境ごとのヒント（上の Layer 10）は、Telegram、WhatsApp、Slack、CLI などの
+入口ごとに Hermes が差し込む案内です。たとえば
+「今は端末の上なので Markdown は避けて」といったものです。組み込みの既定値は
+`PLATFORM_HINTS`（`agent/system_prompt.py`）にあります。プラグインが足した
+入口は、環境の登録先を通して自分のヒントを渡します。
 
-管理する人は、`config.yaml` のトップレベルにある `platform_hints` キーから、
-ほかのプラットフォームに触れることなく、特定のプラットフォームのヒントだけを
-足したり置き換えたりできます。
+管理者は `config.yaml` の最上位の `platform_hints` を使って、ほかの入口には
+一切触れずに、特定の入口のヒントだけを付け足したり丸ごと差し替えたりできます。
 
 ```yaml
 platform_hints:
@@ -157,17 +157,22 @@ platform_hints:
   telegram: "Prefer short messages; split long answers."   # shorthand = append
 ```
 
-- `append` — 組み込みのヒントを残し、そのうしろに文章を足します。
-- `replace` — 組み込みのヒントをまるごと差し替えます。
-- 文字列をそのまま書いた場合 — `append` の省略記法です。
-- 両方が書かれているときは `replace` が `append` に勝ちます。
-- 書き方が壊れている項目は安全側に倒して無視され、手を加えていない既定値に戻ります。設定値が悪くても、プロンプトの組み立てが壊れたり、別のプラットフォームに漏れ出したりすることはありません。
+- `append` — 組み込みのヒントを残し、その後ろに文章を足します。
+- `replace` — 組み込みのヒントを丸ごと置き換えます。
+- 文字列だけを書いた場合 — `append` の略記です。
+- 両方が書かれているときは、`append` より `replace` が勝ちます。
+- 書き方が壊れている項目は安全側に倒して無視され、手を加えていない
+  既定値に戻ります。設定の値がおかしくても、プロンプトの組み立てが壊れたり、
+  ほかの入口に漏れたりすることはありません。
 
-この上書きは、システムプロンプトを組み立てるとき（セッションの開始時と、プロンプトを組み直す圧縮のとき）に解決されます。設定が同じなら毎回同じバイト列のヒントになるので、組み込みのヒントと並んで **stable** の段に置かれ、プロンプトキャッシュを壊しません。凍結済みのプロンプトをセッションの途中で書き換えるものではないからです。
+この上書きは、システムプロンプトを組み立てるとき（セッションの開始時と、
+プロンプトを組み直す圧縮のとき）に解決されます。設定が同じなら毎回同じ内容になるので、
+組み込みのヒントと並んで **stable** の段に置かれ、プロンプトキャッシュを壊しません。
+固まったプロンプトをセッションの途中で書き換えるものではないということです。
 
-## SOUL.md がプロンプトにどう現れるか {#how-soulmd-appears-in-the-prompt}
+## SOUL.md はプロンプトのどこに出るのか {#how-soulmd-appears-in-the-prompt}
 
-`SOUL.md` は `~/.hermes/SOUL.md` に置かれ、エージェントの人格として働きます。システムプロンプトのいちばん最初の部分です。`prompt_builder.py` での読み込みは次のようになっています。
+`SOUL.md` は `~/.hermes/SOUL.md` に置かれ、エージェントの人格として使われます。システムプロンプトのいちばん最初の部分です。`prompt_builder.py` の読み込み処理は次のようになっています。
 
 ```python
 # From agent/prompt_builder.py (simplified)
@@ -181,9 +186,9 @@ def load_soul_md() -> Optional[str]:
     return content
 ```
 
-`load_soul_md()` が中身を返したときは、それがコードに書かれた `DEFAULT_AGENT_IDENTITY` に取って代わります。続いて `build_context_files_prompt()` が `skip_soul=True` 付きで呼ばれ、SOUL.md が二重に現れること（人格として 1 回、コンテキストファイルとして 1 回）を防ぎます。
+`load_soul_md()` が中身を返したときは、コードに直接書かれた `DEFAULT_AGENT_IDENTITY` の代わりにそれが使われます。続いて `build_context_files_prompt()` が `skip_soul=True` を付けて呼ばれ、SOUL.md が二重に出ないようにします（人格として一度、文脈ファイルとしてもう一度、とならないためです）。
 
-`SOUL.md` が存在しない場合は、次の文章に落ちます。
+`SOUL.md` が無い場合は、次の内容に落ちます。
 
 ```
 You are Hermes Agent, built by Nous Research. Be direct: match the length
@@ -198,9 +203,9 @@ is earned — give it when the user asks for detail, teaches, or the
 stakes demand it, not by default.
 ```
 
-## コンテキストファイルの差し込み方 {#how-context-files-are-injected}
+## 文脈ファイルはどう差し込まれるのか {#how-context-files-are-injected}
 
-`build_context_files_prompt()` は **優先順位のしくみ** を使います。プロジェクトのコンテキストは 1 種類だけが読み込まれ、最初に見つかったものが勝ちます。
+`build_context_files_prompt()` は**優先順位の仕組み**を使っていて、プロジェクトの文脈は 1 種類だけが読み込まれます（最初に見つかったものが勝ちます）。
 
 ```python
 # From agent/prompt_builder.py (simplified)
@@ -236,90 +241,89 @@ def build_context_files_prompt(cwd=None, skip_soul=False):
     )
 ```
 
-### コンテキストファイルの探し方の細かいところ {#context-file-discovery-details}
+### 文脈ファイルの探し方 {#context-file-discovery-details}
 
-| 優先順位 | ファイル | 探す範囲 | 補足 |
+| 優先順位 | ファイル | 探す範囲 | 備考 |
 |----------|-------|-------------|-------|
-| 1 | `.hermes.md`, `HERMES.md` | 作業ディレクトリから git のルートまで | Hermes 独自のプロジェクト設定 |
-| 2 | `AGENTS.md` | 作業ディレクトリのみ | 広く使われているエージェント向け指示ファイル |
-| 3 | `CLAUDE.md` | 作業ディレクトリのみ | Claude Code との互換 |
-| 4 | `.cursorrules`, `.cursor/rules/*.mdc` | 作業ディレクトリのみ | Cursor との互換 |
+| 1 | `.hermes.md`、`HERMES.md` | 作業ディレクトリーから git のルートまで | Hermes 本来のプロジェクト設定 |
+| 2 | `AGENTS.md` | 作業ディレクトリーのみ | 広く使われているエージェント向けの指示ファイル |
+| 3 | `CLAUDE.md` | 作業ディレクトリーのみ | Claude Code との互換のため |
+| 4 | `.cursorrules`、`.cursor/rules/*.mdc` | 作業ディレクトリーのみ | Cursor との互換のため |
 
-コンテキストファイルはすべて、次の扱いを受けます。
-
-- **安全性の検査** — プロンプトインジェクションの型（見えない Unicode 文字、「これまでの指示を無視せよ」、資格情報を持ち出そうとする文言）が調べられます
-- **切り詰め** — `context_file_max_chars` 文字を上限に、先頭 70 / 末尾 20 の割合で残し、切り詰めた印を挟みます。上限はモデルのコンテキストウィンドウに合わせて伸び縮みします（下限 20,000 文字、上限 500K）。`config.yaml` に `context_file_max_chars` を書いた場合は必ずそちらが優先されます。
-- **YAML フロントマターの除去** — `.hermes.md` のフロントマターは取り除かれます（将来の設定上書きのために予約されています）
+文脈ファイルはすべて、次の扱いを受けます。
+- **安全性の検査** — プロンプトへの攻撃の型（見えない Unicode 文字、「これまでの指示を無視しろ」、認証情報を持ち出そうとする記述）が無いか調べます
+- **切り詰め** — `context_file_max_chars` 文字を上限に、先頭 70 / 末尾 20 の割合で残し、切り詰めた印を入れます。上限はモデルの文脈の広さに応じて変わります（下限 20,000 文字、上限 500K）。`config.yaml` に `context_file_max_chars` が明示されていれば必ずそちらが優先されます。
+- **YAML の前書きの除去** — `.hermes.md` の前書きは取り除かれます（将来の設定の上書き用に予約されています）
 
 ## API を呼ぶときだけの層 {#api-call-time-only-layers}
 
-これらは意図的に、キャッシュされるシステムプロンプトには *残しません*。
+次のものは、キャッシュされるシステムプロンプトの一部として保存され *ない* ようにしてあります。
 
 - `ephemeral_system_prompt`
-- 先頭に差し込むメッセージ
-- ゲートウェイ由来のセッションコンテキストの重ね書き
-- 後続のターンで、その回の利用者メッセージに差し込まれる Honcho や外部からの想起
+- あらかじめ差し込むメッセージ
+- ゲートウェイ由来のセッションの文脈の重ね書き
+- 後のターンで、今のターンのユーザーメッセージに差し込まれる Honcho や外部からの想起
 
-プラグインの `pre_llm_call` が返すコンテキストも、この「API を呼ぶときだけ」の経路に乗ります。キャッシュされるシステムプロンプトに書き込まれるのではなく、そのターンの **利用者メッセージ** のうしろに足されます。複数のプラグインがコンテキストを返したときは、Hermes がそれらのブロックをつなげます（[フック → `pre_llm_call`](/hermes/docs/user-guide/features/hooks/#pre_llm_call) を参照）。
+`pre_llm_call` プラグインの文脈も、この「API を呼ぶときだけ」の経路に入ります。今のターンの**ユーザーメッセージ**に足されるのであって、キャッシュされるシステムプロンプトには書き込まれません。複数のプラグインが文脈を返したときは、Hermes がそれらのブロックをつなげます（[フック → `pre_llm_call`](/hermes/docs/user-guide/features/hooks/#pre_llm_call) を参照）。
 
-この切り分けによって、キャッシュのもとになる前半部分が安定したまま保たれます。
+この切り分けによって、キャッシュのための安定した前半部分が安定したままになります。
 
-## メモリのスナップショット {#memory-snapshots}
+## 記憶の写し {#memory-snapshots}
 
-手元のメモリと利用者プロフィールのデータは、システムプロンプトの **volatile** の段に取り込まれます。セッション途中の書き込みはディスク上の状態を更新しますが、組み立て済みのキャッシュされたシステムプロンプトは、組み直しの経路（新しいセッション、あるいは圧縮をきっかけにした組み直しなど、明示的な無効化・再構築の流れ）が走るまで書き換わりません。
+手元の記憶と利用者のプロフィールは、システムプロンプトの **volatile の段**に取り込まれます。セッションの途中で書き込むとディスク上の状態は変わりますが、すでに組み上がったキャッシュ済みのシステムプロンプトは、組み直しが走るまで変わりません（新しいセッション、あるいは圧縮をきっかけにした組み直しなど、明示的に無効化して作り直す流れです）。
 
-## コンテキストファイル {#context-files}
+## 文脈ファイル {#context-files}
 
-`agent/prompt_builder.py` は **優先順位のしくみ** でプロジェクトのコンテキストファイルを読み取り、危険な内容を取り除きます。読み込まれるのは 1 種類だけで、最初に見つかったものが勝ちます。
+`agent/prompt_builder.py` は、**優先順位の仕組み**でプロジェクトの文脈ファイルを探して安全に整えます。読み込まれるのは 1 種類だけです（最初に見つかったものが勝ちます）。
 
-1. `.hermes.md` / `HERMES.md`（git のルートまでさかのぼって探す）
-2. `AGENTS.md`（起動時の作業ディレクトリ。サブディレクトリは `agent/subdirectory_hints.py` によってセッション中に少しずつ見つかります）
-3. `CLAUDE.md`（作業ディレクトリのみ）
-4. `.cursorrules` / `.cursor/rules/*.mdc`（作業ディレクトリのみ）
+1. `.hermes.md` / `HERMES.md`（git のルートまでさかのぼります）
+2. `AGENTS.md`（起動時の作業ディレクトリー。下位のディレクトリーは、セッションの途中で `agent/subdirectory_hints.py` によって少しずつ見つかります）
+3. `CLAUDE.md`（作業ディレクトリーのみ）
+4. `.cursorrules` / `.cursor/rules/*.mdc`（作業ディレクトリーのみ）
 
-`SOUL.md` は人格の枠のために `load_soul_md()` で別途読み込まれます。読み込みに成功したときは `build_context_files_prompt(skip_soul=True)` によって、二重に現れないようにします。
+`SOUL.md` は人格の枠のために `load_soul_md()` で別に読み込まれます。読み込みに成功したときは、`build_context_files_prompt(skip_soul=True)` が二重に出るのを防ぎます。
 
 長いファイルは、差し込む前に切り詰められます。
 
 ## スキルの索引 {#skills-index}
 
-スキルのしくみは、スキル関連のツールが使えるときに、簡潔なスキルの索引をプロンプトに足します。
+スキルの仕組みは、スキル用のツールが使える状態のときに、コンパクトなスキルの索引をプロンプトに足します。
 
-## 用意されているプロンプト調整の口 {#supported-prompt-customization-surfaces}
+## プロンプトを変えるための正式な入口 {#supported-prompt-customization-surfaces}
 
-ほとんどの利用者にとって、`agent/prompt_builder.py` は設定の場所ではなく実装コードだと考えるのが正しい見方です。用意されている調整のしかたは、Python のテンプレートをその場で書き換えるのではなく、Hermes がもともと読み込んでいるプロンプトの材料のほうを変えることです。
+ほとんどの利用者にとって、`agent/prompt_builder.py` は設定の入口ではなく実装コードだと思ってください。正式なやり方は、Python のテンプレートをその場で書き換えるのではなく、Hermes がすでに読み込んでいるプロンプトの材料のほうを変えることです。
 
-### まずはこれらの口を使う {#use-these-surfaces-first}
+### まずこの入口を使う {#use-these-surfaces-first}
 
-- `~/.hermes/SOUL.md` — 組み込みの既定の人格ブロックを、自分のエージェント像と普段の振る舞いに置き換えます。
-- `~/.hermes/MEMORY.md` と `~/.hermes/USER.md` — セッションをまたいで残したい事実や、利用者プロフィールのデータを置きます。新しいセッションにスナップショットとして取り込まれます。
-- `.hermes.md`、`HERMES.md`、`AGENTS.md`、`CLAUDE.md`、`.cursorrules` といったプロジェクトのコンテキストファイル — そのリポジトリでの作業のきまりを差し込みます。
-- スキル — 中核のプロンプトのコードに触れずに、繰り返し使う手順や資料をひとまとめにします。
-- 任意のシステムプロンプト設定や API からの上書き — Hermes を分岐させずに、その環境ならではの指示文を足します。
-- `HERMES_EPHEMERAL_SYSTEM_PROMPT` や先頭に差し込むメッセージのような、その場限りの重ね書き — キャッシュされる前半部分に残したくない、そのターンだけの案内を足します。
+- `~/.hermes/SOUL.md` — 組み込みの既定の人格のブロックを、自分のエージェント像と普段の振る舞いに置き換えます。
+- `~/.hermes/MEMORY.md` と `~/.hermes/USER.md` — セッションをまたいで持ち続けたい事実と、新しいセッションに写しておきたい利用者のプロフィールを書きます。
+- `.hermes.md`、`HERMES.md`、`AGENTS.md`、`CLAUDE.md`、`.cursorrules` といったプロジェクトの文脈ファイル — そのリポジトリー固有の作業ルールを差し込みます。
+- スキル — 中核のプロンプトのコードに触らずに、繰り返し使う手順や参照先をまとめます。
+- 任意のシステムプロンプトの設定や API からの上書き — Hermes を fork せずに、その導入先に固有の指示文を足します。
+- `HERMES_EPHEMERAL_SYSTEM_PROMPT` やあらかじめ差し込むメッセージのような、その場限りの重ね書き — キャッシュされる前半部分に含めたくない、そのターンだけの案内を足します。
 
-### コードのほうを直すべきとき {#when-to-edit-code-instead}
+### コードを直すべきとき {#when-to-edit-code-instead}
 
-`agent/prompt_builder.py` に手を入れてよいのは、意図して分岐版を保守しているか、上流に動作の変更を提案する場合だけです。このファイルは、すべてのセッションについてプロンプトの配管、キャッシュの境目、差し込む順番を決めています。ここを直接いじるのは、利用者ごとのプロンプト調整ではなく、製品全体の変更です。
+`agent/prompt_builder.py` を直すのは、意図して fork を維持している場合か、上流に振る舞いの変更を出す場合だけにしてください。このファイルは、すべてのセッションのプロンプトの配管、キャッシュの境目、差し込みの順番を組み立てています。ここを直接いじるのは、利用者ごとのプロンプトの調整ではなく、製品全体を変える行為です。
 
-言い換えると、こうなります。
+言い換えると、次のようになります。
 
-- 助手の人格を変えたいなら `SOUL.md` を書き換える
-- リポジトリのきまりを変えたいならプロジェクトのコンテキストファイルを書き換える
-- 繰り返し使う手順がほしいならスキルを足すか直す
-- Hermes がみんなのためにプロンプトを組み立てる方法そのものを変えたいなら、Python を書き換え、コードへの貢献として扱う
+- 別の人格にしたいなら `SOUL.md` を直します
+- リポジトリーのルールを変えたいなら、プロジェクトの文脈ファイルを直します
+- 繰り返し使える手順がほしいなら、スキルを足すか直します
+- 全員に対する Hermes のプロンプトの組み立て方を変えたいなら、Python を変えて、コードへの貢献として扱います
 
-## プロンプトの組み立てをこう分けている理由 {#why-prompt-assembly-is-split-this-way}
+## なぜこう分けているのか {#why-prompt-assembly-is-split-this-way}
 
-この作りは、次のことを狙って組まれています。
+この構造は、次のことを狙って意図的に最適化されています。
 
-- プロバイダ側のプロンプトキャッシュを保つ
-- 履歴をむやみに書き換えない
-- メモリの意味づけを分かりやすく保つ
-- ゲートウェイ・ACP・CLI が、永続するプロンプトの状態を汚さずにコンテキストを足せるようにする
+- プロバイダー側のプロンプトキャッシュを効かせ続ける
+- 必要もなく履歴を書き換えない
+- 記憶の意味を分かりやすく保つ
+- ゲートウェイ・ACP・CLI が、永続的なプロンプトの状態を汚さずに文脈を足せるようにする
 
 ## 関連するドキュメント {#related-docs}
 
-- [コンテキスト圧縮とプロンプトキャッシュ](/hermes/docs/developer-guide/context-compression-and-caching/)
+- [文脈の圧縮とプロンプトキャッシュ](/hermes/docs/developer-guide/context-compression-and-caching/)
 - [セッションの保存](/hermes/docs/developer-guide/session-storage/)
 - [ゲートウェイの内部構造](/hermes/docs/developer-guide/gateway-internals/)

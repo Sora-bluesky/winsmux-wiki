@@ -12,11 +12,11 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 223 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 224 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `2237be3`（2026-09-07）時点。この一覧は上流の docs から機械生成しています。
+上流 `b88e677`（2026-09-09）時点。この一覧は上流の docs から機械生成しています。
 
-## 最初から入っている（86）
+## 最初から入っている（84）
 
 - 何もしなくても使えます。
 
@@ -87,13 +87,11 @@ raw: /hermes/raw/skills.md
 | [Arxiv](/hermes/docs/user-guide/skills/bundled/research/research-arxiv/) | Search arXiv papers by keyword, author, category, or ID | 2026-08-30 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/research/research-blocked-page-recovery/) | Recover blocked/paywalled/WAF'd pages via archive snapshots and reader fallbacks | 2026-08-12 |
 | [Blogwatcher](/hermes/docs/user-guide/skills/bundled/research/research-blogwatcher/) | Monitor blogs and RSS/Atom feeds via blogwatcher-cli tool | 2026-05-09 |
-| [Competitor News Monitor](/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/) | Watch named companies for material news; cited digests | 2026-09-05 |
-| [Grounded Citations](/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/) | Ground answers and documents in cited, verifiable sources | 2026-09-05 |
+| [Competitor News Monitor](/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/) | Watch named companies for material news; cited digests | 2026-09-08 |
+| [Grounded Citations](/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/) | Ground answers and documents in cited, verifiable sources | 2026-09-08 |
 | [Llm Wiki](/hermes/docs/user-guide/skills/bundled/research/research-llm-wiki/) | Karpathy's LLM Wiki: build/query interlinked markdown KB | 2026-08-30 |
 | [Research Paper Writing](/hermes/docs/user-guide/skills/bundled/research/research-research-paper-writing/) | Write ML papers for NeurIPS/ICML/ICLR: design→submit | 2026-08-29 |
-| [Rss Feeds](/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/) | Read RSS, Atom, JSON feeds; discover feeds behind a page | 2026-09-05 |
 | [Openhue](/hermes/docs/user-guide/skills/bundled/smart-home/smart-home-openhue/) | Control Philips Hue lights, scenes, rooms via OpenHue CLI | 2026-07-29 |
-| [Reddit Reading](/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/) | Read Reddit: subreddits, search, threads, users | 2026-09-05 |
 | [Xurl](/hermes/docs/user-guide/skills/bundled/social-media/social-media-xurl/) | X/Twitter via xurl CLI: raw post search, posting, DM, media | 2026-08-30 |
 | [Codebase Inspection](/hermes/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection/) | Inspect codebases w/ pygount: LOC, languages, ratios | 2026-08-30 |
 | [Dogfood](/hermes/docs/user-guide/skills/bundled/software-development/software-development-dogfood/) | Exploratory QA of web apps: find bugs, evidence, reports | 2026-08-30 |
@@ -109,7 +107,7 @@ raw: /hermes/raw/skills.md
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-08-30 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/) | Use when a fetch fails: 403/429, paywall, WAF, bot wall | 2026-08-30 |
 
-## あとから入れる（136）
+## あとから入れる（139）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -216,6 +214,7 @@ raw: /hermes/raw/skills.md
 | [Decision Questionnaire](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | Turn an unanswerable decision into a questionnaire doc | 2026-08-30 |
 | [Here Now](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | Publish sites to {slug}.here.now and store files in Drives | 2026-08-30 |
 | [Memento Flashcards](/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/) | Spaced-repetition flashcards: create, review, quiz, export | 2026-08-30 |
+| [Property Listings](/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/) | Present property and rental listings as desktop cards | 2026-09-08 |
 | [Shop](/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/) | Shop catalog search, checkout, order tracking, returns | 2026-08-30 |
 | [Shopify](/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/) | Query Shopify Admin/Storefront GraphQL APIs via curl | 2026-08-30 |
 | [Siyuan](/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/) | Query and edit a SiYuan knowledge base via its API | 2026-08-30 |
@@ -232,6 +231,7 @@ raw: /hermes/raw/skills.md
 | [Pinecone Research](/hermes/docs/user-guide/skills/optional/research/research-pinecone-research/) | Agent RAG and long-term memory with Pinecone | 2026-08-30 |
 | [Qmd](/hermes/docs/user-guide/skills/optional/research/research-qmd/) | Hybrid local search over notes, docs, and transcripts | 2026-08-30 |
 | [Research Paper Writing](/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/) | Write ML papers for NeurIPS/ICML/ICLR: design→submit | 2026-08-30 |
+| [Rss Feeds](/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/) | Read RSS, Atom, JSON feeds; discover feeds behind a page | 2026-09-08 |
 | [Scrapling](/hermes/docs/user-guide/skills/optional/research/research-scrapling/) | Scrape sites with stealth browsing and Cloudflare bypass | 2026-08-30 |
 | [Searxng Search](/hermes/docs/user-guide/skills/optional/research/research-searxng-search/) | Free keyless meta-search aggregating 70+ engines | 2026-08-30 |
 | [1Password](/hermes/docs/user-guide/skills/optional/security/security-1password/) | Set up op CLI, sign in, and read or inject secrets | 2026-08-30 |
@@ -241,6 +241,7 @@ raw: /hermes/raw/skills.md
 | [Unbroker](/hermes/docs/user-guide/skills/optional/security/security-unbroker/) | Autonomously remove your info from data-broker sites | 2026-08-30 |
 | [Web Pentest](/hermes/docs/user-guide/skills/optional/security/security-web-pentest/) | Authorized web pentest: recon, proof-based exploits, report | 2026-08-30 |
 | [Openhue](/hermes/docs/user-guide/skills/optional/smart-home/smart-home-openhue/) | Control Philips Hue lights, scenes, rooms via OpenHue CLI | 2026-08-30 |
+| [Reddit Reading](/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/) | Read Reddit: subreddits, search, threads, users | 2026-09-08 |
 | [Ast Grep](/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/) | AST-aware structural code search and rewrite via ast-grep | 2026-08-30 |
 | [Code Wiki](/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/) | Generate wiki docs + Mermaid diagrams for any codebase | 2026-08-30 |
 | [Grill Me](/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/) | Adversarial plan interview before implementation | 2026-08-30 |

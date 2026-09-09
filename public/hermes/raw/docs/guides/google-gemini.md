@@ -2,7 +2,7 @@
 title: "Google Gemini"
 description: "Hermes Agent を Google Gemini で使う方法。ネイティブの AI Studio API、API キーの設定、ツール呼び出し、ストリーミング、割り当ての考え方まで"
 upstream_path: guides/google-gemini.md
-upstream_blob: 001c3cb7101744d3e7bb1fca66c46837bb97b4af
+upstream_blob: d047916b7d354ff76165ee73fe376b807a415724
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/google-gemini
 ---
@@ -78,6 +78,8 @@ Hermes はこのエンドポイントを検出すると、ネイティブの Gem
 - ツールのスキーマ → Gemini の `functionDeclarations`
 - ツールの実行結果 → Gemini の `functionResponse` パート
 - ストリーミング応答 → Hermes のやり取り用に OpenAI 形式のストリームチャンクへ
+
+ツールのパラメータで `"type": ["number", "null"]` のように型を配列で書いたものは、Gemini のスカラー型と `nullable` を組み合わせた形へ変換されます。複数の型を並べたユニオンは、入れ子のプロパティや配列の要素も含めて、`anyOf` ですべての候補を残します。これは自動で行われるので、MCP サーバーやプロバイダの設定を変える必要はありません。
 
 :::note Gemini 3 の thought signature
 Gemini 3 でツールを使うとき、Hermes は関数呼び出しのパートに付く `thoughtSignature` の値を保持し、次のツール往復で送り直します。これにより、複数手順にわたるエージェントの流れで検証上どうしても必要になる経路をカバーします。

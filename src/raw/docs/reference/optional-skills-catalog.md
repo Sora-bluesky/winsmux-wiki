@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: 48c8959d4cfba9fe27f5b08333d22007840a49a7
+upstream_blob: ea74ac0976d56ba90ff2498c582611e85904b3c4
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -210,6 +210,7 @@ hermes skills uninstall <skill-name>
 | [**decision-questionnaire**](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | 答えの出ない判断を、質問票の形の文書に組み替えます。 |
 | [**here-now**](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | &#123;slug&#125;.here.now にサイトを公開し、ファイルを Drives に保管します。 |
 | [**memento-flashcards**](/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/) | 間隔をあけて復習する単語カード。作成、復習、小テスト、書き出しに対応します。 |
+| [**property-listings**](/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/) | 物件や賃貸の情報を、デスクトップのカードとして並べて見せます。 |
 | [**shop**](/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/) | 商品の検索、購入手続き、配送状況の確認、返品まで扱います。 |
 | [**shopify**](/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/) | curl で Shopify の Admin/Storefront GraphQL API を呼び出します。 |
 | [**siyuan**](/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/) | SiYuan のノートを API 経由で検索し、編集します。 |
@@ -231,6 +232,7 @@ hermes skills uninstall <skill-name>
 | [**pinecone-research**](/hermes/docs/user-guide/skills/optional/research/research-pinecone-research/) | Pinecone を使い、エージェントの RAG と長期の記憶を実現します。 |
 | [**qmd**](/hermes/docs/user-guide/skills/optional/research/research-qmd/) | 手元のメモ、文書、書き起こしを、複数の方式を組み合わせて横断検索します。 |
 | [**research-paper-writing**](/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/) | NeurIPS/ICML/ICLR 向けの機械学習論文を、構想から投稿まで書き上げます。 |
+| [**rss-feeds**](/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/) | RSS、Atom、JSON のフィードを読みます。ページの裏に隠れたフィードも見つけます。 |
 | [**scrapling**](/hermes/docs/user-guide/skills/optional/research/research-scrapling/) | 目立たない閲覧と Cloudflare の回避でサイトを収集します。 |
 | [**searxng-search**](/hermes/docs/user-guide/skills/optional/research/research-searxng-search/) | 70 以上の検索エンジンをまとめて引く、鍵も費用も要らないメタ検索です。 |
 
@@ -250,6 +252,12 @@ hermes skills uninstall <skill-name>
 | スキル | 説明 |
 |-------|-------------|
 | [**openhue**](/hermes/docs/user-guide/skills/optional/smart-home/smart-home-openhue/) | OpenHue CLI で Philips Hue の照明、シーン、部屋を操作します。 |
+
+## social-media {#social-media}
+
+| スキル | 説明 |
+|-------|-------------|
+| [**reddit-reading**](/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/) | Reddit を読みます。subreddit、検索、スレッド、ユーザー。ブラウザ不要です。 |
 
 ## software-development {#software-development}
 

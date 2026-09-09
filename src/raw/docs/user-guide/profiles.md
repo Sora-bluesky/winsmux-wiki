@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: ca3349defd7f224cc66fb52445d783300ceb76e2
+upstream_blob: 6eda1f11e9c10c125ddde253c5452c955a6555f0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -67,7 +67,7 @@ hermes profile create work --clone
 hermes profile create backup --clone-all
 ```
 
-設定・API キー・人格・すべての記憶・スキル・cron ジョブ・プラグインまで、**まるごと**コピーします。動く状態のスナップショットです。プロファイルごとの履歴（セッション履歴、`state.db`、`backups/`、`state-snapshots/`、`checkpoints/`）は対象外です。これらは元のプロファイルに属するもので、数十 GB に達することもあります。履歴まで含めた完全なバックアップが必要なら、`hermes profile export` か `hermes backup` を使ってください。
+設定・API キー・人格・すべての記憶・スキル・プラグインまで、**まるごと**コピーします。動く状態のスナップショットです。プロファイルごとの履歴（セッション履歴、`state.db`、`backups/`、`state-snapshots/`、`checkpoints/`）は対象外です。これらは元のプロファイルに属するもので、数十 GB に達することもあります。**cron ジョブも複製されません**。cron ジョブは元のプロファイルとその配信チャンネルに結びついた予定作業なので、複製先がそれを引き継ぐと同じジョブが二重に走ってしまいます（ゲートウェイが 2 つ、ジョブ ID は同じ）。新しいプロファイルの `cron/` は空の状態から始まります。履歴と cron ジョブまで含めた完全なバックアップが必要なら、`hermes profile export` か `hermes backup` を使ってください。
 
 :::note OAuth ログインはコピーされず、共有されます
 Anthropic（Claude Pro/Max）、OpenAI Codex、xAI の OAuth ログインは**使い捨てのリフレッシュトークン**を使います。コピーしても 2 つ目の資格情報にはならず、1 つの資格情報を 2 人で持っている状態になり、どちらかが先に更新した時点で他方のコピーは失効します。そのため `--clone-all`（およびダッシュボードによる資格情報のミラーリング）は、複製先から OAuth の行を落とします。新しいプロファイルはルートの `~/.hermes/auth.json` からログイン情報を読み続け、どのプロファイルでトークンを更新してもルートへ書き戻されるので、すべてのプロファイルがログインしたままになります。静的な API キーは従来どおりコピーされます。プロファイルに専用の OAuth ログインを持たせたいときは、その中で `hermes -p <name> auth add <provider>` を実行してください。
