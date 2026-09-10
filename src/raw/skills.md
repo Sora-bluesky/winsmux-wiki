@@ -12,9 +12,9 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 224 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 225 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `b88e677`（2026-09-09）時点。この一覧は上流の docs から機械生成しています。
+上流 `4bdd64b`（2026-09-11）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（84）
 
@@ -107,7 +107,7 @@ raw: /hermes/raw/skills.md
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-08-30 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/) | Use when a fetch fails: 403/429, paywall, WAF, bot wall | 2026-08-30 |
 
-## あとから入れる（139）
+## あとから入れる（140）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -122,6 +122,7 @@ raw: /hermes/raw/skills.md
 | [Hyperliquid](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid/) | Hyperliquid market data, account history, trade review | 2026-08-30 |
 | [Solana](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-solana/) | Query Solana wallets, tokens, txs, and NFTs in USD | 2026-08-30 |
 | [One Three One Rule](/hermes/docs/user-guide/skills/optional/communication/communication-one-three-one-rule/) | 1-3-1 decision briefs: problem, three options, one pick | 2026-08-30 |
+| [Archify](/hermes/docs/user-guide/skills/optional/creative/creative-archify/) | Validated interactive HTML diagrams, upstream-maintained | 2026-09-10 |
 | [Ascii Art](/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/) | ASCII art: pyfiglet, cowsay, boxes, image-to-ascii | 2026-08-30 |
 | [Audiocraft Audio Generation](/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/) | AudioCraft: MusicGen text-to-music, AudioGen text-to-sound | 2026-08-30 |
 | [Baoyu Article Illustrator](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/) | Article illustrations: type × style × palette consistency | 2026-08-30 |

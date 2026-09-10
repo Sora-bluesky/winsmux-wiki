@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 1038f33bae46fcc0c9152be39dc7764b94845bec
+upstream_blob: 286abcee2a2eb4b3e3af65d75e8ab33227874a01
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -33,7 +33,7 @@ LLM につなぐ手段が少なくとも 1 つ必要です。`hermes model` を�
 | **Arcee AI** | `~/.hermes/.env` に `ARCEEAI_API_KEY`（provider: `arcee`、別名: `arcee-ai`、`arceeai`） |
 | **GMI Cloud** | `~/.hermes/.env` に `GMI_API_KEY`（provider: `gmi`、別名: `gmi-cloud`、`gmicloud`） |
 | **Nebius Token Factory** | `~/.hermes/.env` に `NEBIUS_API_KEY`（provider: `nebius-token-factory`、別名: `nebius`、`nebius-tf`、`tokenfactory`） |
-| **Actual Computer** | ホスト型リレーを使うなら `~/.hermes/.env` に `ACTUAL_API_KEY`、ローカルのデーモンを使うなら `ACTUAL_BASE_URL=http://127.0.0.1:8080`（ループバックならキーは不要）（provider: `actual`、別名: `actual-computer`、`actualcomputer`、`aci`） |
+| **Actual Computer** | ホスト型リレーを使うなら `~/.hermes/.env` に `ACTUAL_API_KEY` を書きます。ローカルのデーモンを使うなら `config.yaml` の `model.base_url` を設定します（ループバックならキーは不要です）。provider: `actual`、別名: `actual-computer`、`actualcomputer`、`aci`。 |
 | **MiniMax** | `~/.hermes/.env` に `MINIMAX_API_KEY`（provider: `minimax`） |
 | **MiniMax China** | `~/.hermes/.env` に `MINIMAX_CN_API_KEY`（provider: `minimax-cn`） |
 | **xAI（Grok）— Responses API** | `~/.hermes/.env` に `XAI_API_KEY`（provider: `xai`） |
@@ -601,7 +601,7 @@ model:
 
 ### Actual Computer {#actual-computer}
 
-自分のハードウェアを private な推論クラスタとして使えるようにするのが [Actual Computer](https://actual.inc) です。提供方式は 2 つあり、どちらも OpenAI 互換です（Hermes は Responses API のトランスポートを使います）。
+自分のハードウェアを private な推論クラスタとして使えるようにするのが [Actual Computer](https://actual.inc) です。提供方式は 2 つあり、どちらも Chat Completions を使うので、推論の過程と最終的な回答が一緒に返ってきます。
 
 - **ホスト型リレー** — `https://api.actual.inc`。エンドツーエンドで暗号化され、*自分の*クラスタへ振り分けられます。[actual.inc/user/keys](https://actual.inc/user/keys) の `ac_` で始まる推論キーで認証します。
 - **ローカルデーモン** — 端末上の `http://127.0.0.1:8080` で動き、完全にオフラインです。API キーは不要で、Hermes はループバックのベース URL を検出して内部のプレースホルダで自動的に認証します。
@@ -610,20 +610,22 @@ model:
 # Hosted relay (ACTUAL_API_KEY in ~/.hermes/.env)
 hermes chat --provider actual --model <model-id-from-your-cluster>
 
-# Local daemon (ACTUAL_BASE_URL=http://127.0.0.1:8080 in ~/.hermes/.env, no key)
+# Local daemon (model.base_url in ~/.hermes/config.yaml, no key)
 hermes chat --provider actual --model <installed-model-name>
 ```
 
-`config.yaml` で恒久的に設定する場合は次のとおりです。
+プロバイダの設定は `~/.hermes/config.yaml` に書きます。`.env` に置くのはホスト型の API キーだけです。
 ```yaml
 model:
   provider: "actual"
   default: "<model-id>"
+  base_url: "http://127.0.0.1:8080/v1" # Omit for the hosted relay.
 ```
 
 補足:
 - モデル ID はクラスタの `GET /v1/models` から得られます。`hermes model` か `curl -s https://api.actual.inc/v1/models -H "Authorization: Bearer $ACTUAL_API_KEY"` で確認できます。
-- ホスト名だけの指定は正規化されます。`ACTUAL_BASE_URL=http://127.0.0.1:8080` は自動的に `http://127.0.0.1:8080/v1` になります。
+- `model.base_url` にホスト名だけを書いた場合は正規化されます。`http://127.0.0.1:8080` は自動的に `http://127.0.0.1:8080/v1` になります。以前からある環境変数 `ACTUAL_BASE_URL` は、YAML に Actual の URL が設定されていないときの控えとして使われます。
+- Actual では、チャット、圧縮（compaction）、タイトル生成をはじめ、あらゆる補助タスクで `/v1/chat/completions` を使います。これは `api.actual.inc` を宛先にした独自プロバイダ、モデルの切り替え、フォールバックにも当てはまります。メインのモデル、独自プロバイダ、補助タスクの設定に古い Responses の設定が残っていても、自動的に上書きされます。
 - 推論の effort は Actual が対応する範囲（`none/low/medium/high/max`）に丸められるので、全体設定が `xhigh`/`ultra` でもリクエストが 400 になることはありません。
 - 小さなローカルモデルの場合: Hermes の既定のツールセット一式とシステムプロンプトを合わせると 32k のコンテキストを超えることがあり、llama.cpp 系のサーバーでは空のストリームのエラーになります。ツールセットを絞る（`-t file,web`）か、コンテキストを大きくしてモデルを読み込んでください。任意の `actual-setup` スキル（`hermes skills install official/devops/actual-setup`）が設定とトラブルシューティングを詳しく扱っています。
 - 別名: `actual-computer`、`actualcomputer`、`aci`。

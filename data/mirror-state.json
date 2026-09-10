@@ -72,9 +72,9 @@
       "translatedAt": "2026-09-09T00:06:38.684Z"
     },
     "developer-guide/desktop-plugin-sdk.md": {
-      "blob": "82f34f115bce026f8819516627bc10ff27ea53f3",
+      "blob": "619923bc177b6f62914d4447c0f2c6812c2813bd",
       "status": "translated",
-      "translatedAt": "2026-08-20T22:36:31.323Z"
+      "translatedAt": "2026-09-10T22:40:18.127Z"
     },
     "developer-guide/egress-internals.md": {
       "blob": "50852a8a36d8274b0a62f769e4f88b0fbcf789a7",
@@ -392,14 +392,14 @@
       "translatedAt": "2026-09-02T23:14:59.921Z"
     },
     "integrations/providers.md": {
-      "blob": "1038f33bae46fcc0c9152be39dc7764b94845bec",
+      "blob": "286abcee2a2eb4b3e3af65d75e8ab33227874a01",
       "status": "translated",
-      "translatedAt": "2026-09-09T22:57:26.072Z"
+      "translatedAt": "2026-09-10T22:40:18.132Z"
     },
     "reference/cli-commands.md": {
-      "blob": "c70aa7bc2d6a2e7c06d0782e5ea183715c5e2b0d",
+      "blob": "4fbeef440afe8c4b9b4dab71fc742e545b19861a",
       "status": "translated",
-      "translatedAt": "2026-09-09T22:57:26.076Z"
+      "translatedAt": "2026-09-10T22:40:18.135Z"
     },
     "reference/cli-symbols.md": {
       "blob": "c3487f8e393eab74c96e9349900dddbe58542c50",
@@ -407,9 +407,9 @@
       "translatedAt": "2026-08-29T22:38:16.564Z"
     },
     "reference/environment-variables.md": {
-      "blob": "b78efdd7e96780c454ff2e8afcaaca216f5d5210",
+      "blob": "1296aa2c03061049c8f023feb42d7eef494a7685",
       "status": "translated",
-      "translatedAt": "2026-09-09T22:57:26.080Z"
+      "translatedAt": "2026-09-10T22:40:18.139Z"
     },
     "reference/faq.md": {
       "blob": "2e7d31b5a6455a8ca3143dbd5f329704ec52782a",
@@ -427,9 +427,9 @@
       "translatedAt": "2026-09-02T23:14:59.947Z"
     },
     "reference/optional-skills-catalog.md": {
-      "blob": "ea74ac0976d56ba90ff2498c582611e85904b3c4",
+      "blob": "cb7034f20396d3fe0fa02776916f77cbaa6717d5",
       "status": "translated",
-      "translatedAt": "2026-09-09T00:04:19.650Z"
+      "translatedAt": "2026-09-10T22:40:18.140Z"
     },
     "reference/profile-commands.md": {
       "blob": "47e6bda4480498fe84b81858ab44d569361c8047",
@@ -442,14 +442,14 @@
       "translatedAt": "2026-09-09T00:04:19.651Z"
     },
     "reference/slash-commands.md": {
-      "blob": "005be52a9a4a02ea09113eec397a7c0cbbda825a",
+      "blob": "8e92c56f334954136ce5b0f5c1644cec921e30a6",
       "status": "translated",
-      "translatedAt": "2026-09-09T00:04:19.653Z"
+      "translatedAt": "2026-09-10T22:40:18.142Z"
     },
     "reference/tools-reference.md": {
-      "blob": "44db9c8993ec000e370a990a574e91e38cbf1ead",
+      "blob": "94f8518c5ce20cb81a96278f280218bbe9f1c3b9",
       "status": "translated",
-      "translatedAt": "2026-09-04T22:42:29.877Z"
+      "translatedAt": "2026-09-10T22:40:18.143Z"
     },
     "reference/toolsets-reference.md": {
       "blob": "c6925facb009835a4bcc466c2e8e1cb6c1dd5319",
@@ -457,9 +457,9 @@
       "translatedAt": "2026-09-06T22:56:40.886Z"
     },
     "user-guide/bot-mode.md": {
-      "blob": "7c086535b03509c7ef5ad886f1e4b681dac52ca7",
+      "blob": "c5a5a15a6cfc1ed5bad0dc40265a4f9a15a08180",
       "status": "translated",
-      "translatedAt": "2026-09-09T00:05:04.159Z"
+      "translatedAt": "2026-09-10T22:40:18.144Z"
     },
     "user-guide/checkpoints-and-rollback.md": {
       "blob": "1a14d7c1be333740bcbc1dbbcf1d1275daa68552",
@@ -477,14 +477,14 @@
       "translatedAt": "2026-09-09T22:57:26.086Z"
     },
     "user-guide/configuring-models.md": {
-      "blob": "2378ea231a392ba1a7183f18a416d2b783b167c0",
+      "blob": "c200d46b813b97dfb333ac858af61344be8cb260",
       "status": "translated",
-      "translatedAt": "2026-09-06T22:56:40.892Z"
+      "translatedAt": "2026-09-10T22:40:18.145Z"
     },
     "user-guide/desktop.md": {
-      "blob": "dc594334cf523f67ff130ae5ebaf7aee1e5dc985",
+      "blob": "14e7c7f456e5e24f4aaa23da054b60a33e0567f2",
       "status": "translated",
-      "translatedAt": "2026-09-09T22:57:26.087Z"
+      "translatedAt": "2026-09-10T22:40:18.147Z"
     },
     "user-guide/docker.md": {
       "blob": "dbdb77cb215cee4668b532e26b117e8f9b966a9b",
@@ -557,9 +557,9 @@
       "translatedAt": "2026-09-07T22:55:52.601Z"
     },
     "user-guide/features/cron.md": {
-      "blob": "bd929fc094590d81c0c3e9c34c57ae14cf24eda3",
+      "blob": "c20852630d9ae97e9a6d40f6893b26fba878cf57",
       "status": "translated",
-      "translatedAt": "2026-09-09T22:57:26.090Z"
+      "translatedAt": "2026-09-10T22:40:18.148Z"
     },
     "user-guide/features/curator.md": {
       "blob": "94b610d6e8aafffb10e516b0b233f5ab223a17a1",
@@ -587,9 +587,9 @@
       "translatedAt": "2026-08-21T00:30:27.087Z"
     },
     "user-guide/features/fallback-providers.md": {
-      "blob": "82dc096324fb471ac4ce85e54bf6b17448acb9d9",
+      "blob": "50d465f65543941bae96da7622a133a7fe25f293",
       "status": "translated",
-      "translatedAt": "2026-09-07T22:55:52.605Z"
+      "translatedAt": "2026-09-10T22:40:18.149Z"
     },
     "user-guide/features/goals.md": {
       "blob": "4c4ab772185795c4af86dbe8f2bfc2565c101ad1",
@@ -602,9 +602,9 @@
       "translatedAt": "2026-09-07T22:55:52.606Z"
     },
     "user-guide/features/honcho.md": {
-      "blob": "31d8391383072c9f98161fbbb1b5720b30fbb543",
+      "blob": "eeaa2e99e9e58278a628f23ef41f188514a42ec7",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:35.976Z"
+      "translatedAt": "2026-09-10T22:40:18.150Z"
     },
     "user-guide/features/hooks.md": {
       "blob": "cecfd57856a8e637c461f4f6bf34cbe1b93df822",
@@ -677,9 +677,9 @@
       "translatedAt": "2026-08-20T16:08:35.989Z"
     },
     "user-guide/features/plugins.md": {
-      "blob": "c208f76bb76f82d6ba842a6f2c71a679bb102cf8",
+      "blob": "7e82894346745333afdee2a7dbe4f01f64ef47e8",
       "status": "translated",
-      "translatedAt": "2026-09-09T22:57:26.093Z"
+      "translatedAt": "2026-09-10T22:40:18.152Z"
     },
     "user-guide/features/provider-routing.md": {
       "blob": "3cd2c5c75c9a172705eb2fa46a1672fb0fd74ce9",
@@ -792,9 +792,9 @@
       "translatedAt": "2026-08-20T16:08:36.004Z"
     },
     "user-guide/messaging/discord.md": {
-      "blob": "609ab4391875888750ee0c334356efd9bb517a06",
+      "blob": "dfad0cc25b560dc75c902d8c1e304ed89602e03e",
       "status": "translated",
-      "translatedAt": "2026-08-29T22:51:26.698Z"
+      "translatedAt": "2026-09-10T22:40:18.153Z"
     },
     "user-guide/messaging/email.md": {
       "blob": "71f932d6e927131e66887698730c1e61f6440ecb",
@@ -907,9 +907,9 @@
       "translatedAt": "2026-08-20T16:08:36.019Z"
     },
     "user-guide/messaging/telegram.md": {
-      "blob": "d638d4c1f7afd5f11caae275826be3d3da10d2f5",
+      "blob": "d9d7b26bc12af930661ef1275362d3aaa20edd4b",
       "status": "translated",
-      "translatedAt": "2026-09-09T22:57:26.098Z"
+      "translatedAt": "2026-09-10T22:40:18.155Z"
     },
     "user-guide/messaging/webhooks.md": {
       "blob": "d9acdb8918fd1e742f5a5bcc9f0770ef2306f801",
@@ -2094,7 +2094,7 @@
     "user-guide/skills/optional/creative/creative-excalidraw.md": {
       "blob": "15da2dbebc4ac31ecfc5c9bd6e45da5672f8d790",
       "status": "translated",
-      "translatedAt": "2026-08-30T23:05:25.095Z"
+      "translatedAt": "2026-09-10T22:37:44.082Z"
     },
     "user-guide/skills/optional/research/research-blogwatcher.md": {
       "blob": "e929ea0863ca182e0136b7757d5dff412dfa8d80",
@@ -2179,7 +2179,22 @@
       "blob": "1f5c66fab8c1b437c03e25b69e698eaf9ab2fbb1",
       "status": "translated",
       "translatedAt": "2026-09-09T22:57:26.099Z"
+    },
+    "user-guide/features/credential-vault.md": {
+      "blob": "d003990d1bc2bd552c2abdb6d8e670985b79d77b",
+      "status": "translated",
+      "translatedAt": "2026-09-10T22:40:18.156Z"
+    },
+    "user-guide/free-tier.md": {
+      "blob": "c03e502406b34d7e0a09fa2c9915aa4eb6494f99",
+      "status": "translated",
+      "translatedAt": "2026-09-10T22:40:18.156Z"
+    },
+    "user-guide/skills/optional/creative/creative-archify.md": {
+      "blob": "fca04006e468a0155c27400ee4f753aaa8902cae",
+      "status": "translated",
+      "translatedAt": "2026-09-10T22:40:18.157Z"
     }
   },
-  "snapshotCommit": "b88e6776f429db90e245257cc8d8eab179e0f17f"
+  "snapshotCommit": "4bdd64b334adce2c071a1828fd2e195837fcc178"
 }

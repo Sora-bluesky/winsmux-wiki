@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: b78efdd7e96780c454ff2e8afcaaca216f5d5210
+upstream_blob: 1296aa2c03061049c8f023feb42d7eef494a7685
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -49,7 +49,7 @@ Hermes は、プロセスの環境変数と、利用者が管理する秘密に�
 | `GMI_API_KEY` | GMI Cloud の API キー（[gmicloud.ai](https://www.gmicloud.ai/)） |
 | `GMI_BASE_URL` | GMI Cloud のベース URL を上書きします（既定: `https://api.gmi-serving.com/v1`） |
 | `ACTUAL_API_KEY` | Actual Computer の推論キー（`ac_...`。[actual.inc/user/keys](https://actual.inc/user/keys)）。手元のデーモンには不要です。 |
-| `ACTUAL_BASE_URL` | Actual Computer のベース URL を上書きします（既定: `https://api.actual.inc/v1`）。手元のオフラインのデーモンを使うなら `http://127.0.0.1:8080` にしてください。ループバックのホストに API キーは要りません。 |
+| `ACTUAL_BASE_URL` | Actual のベース URL を指定する、旧来の予備の手段です。代わりに `config.yaml` で `model.provider: actual` と `model.base_url` を設定してください。YAML に書いた URL のほうが優先されます。既定は `https://api.actual.inc/v1` です。 |
 | `MINIMAX_API_KEY` | MiniMax の API キー（全世界向けエンドポイント。[minimax.io](https://www.minimax.io)）。**`minimax-oauth` では使いません**（OAuth ではブラウザでのログインを使います）。 |
 | `MINIMAX_BASE_URL` | MiniMax のベース URL を上書きします（既定: `https://api.minimax.io/anthropic` — Hermes は MiniMax の Anthropic Messages 互換エンドポイントを使います）。**`minimax-oauth` では使いません**。 |
 | `MINIMAX_CN_API_KEY` | MiniMax の API キー（中国向けエンドポイント。[minimaxi.com](https://www.minimaxi.com)）。**`minimax-oauth` では使いません**（OAuth ではブラウザでのログインを使います）。 |

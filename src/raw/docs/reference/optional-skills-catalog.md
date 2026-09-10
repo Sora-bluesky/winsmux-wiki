@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: ea74ac0976d56ba90ff2498c582611e85904b3c4
+upstream_blob: cb7034f20396d3fe0fa02776916f77cbaa6717d5
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -58,6 +58,7 @@ hermes skills uninstall <skill-name>
 
 | スキル | 説明 |
 |-------|-------------|
+| [**archify**](/hermes/docs/user-guide/skills/optional/creative/creative-archify/) | 検証済みの対話型 HTML ダイアグラムを作ります。上流で保守されています。 |
 | [**ascii-art**](/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/) | アスキーアート。pyfiglet、cowsay、boxes、画像からの変換に対応します。 |
 | [**audiocraft-audio-generation**](/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/) | AudioCraft。MusicGen で文章から音楽を、AudioGen で文章から効果音を作ります。 |
 | [**baoyu-article-illustrator**](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/) | 記事の挿絵。種類 × 画風 × 配色をそろえて描きます。 |

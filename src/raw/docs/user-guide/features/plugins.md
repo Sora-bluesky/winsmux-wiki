@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: c208f76bb76f82d6ba842a6f2c71a679bb102cf8
+upstream_blob: 7e82894346745333afdee2a7dbe4f01f64ef47e8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -184,6 +184,29 @@ hermes plugins install owner/repo --ref 0123456789abcdef0123456789abcdef01234567
 Hermes はそのコミットを切り離した状態でチェックアウトし、`HEAD` が要求した SHA とぴったり一致することを確かめ、正規の出どころ、導入したリビジョン、固定の有無を、いまのプロファイルに記録します。`hermes plugins update` は固定されたプラグインを動かすことを拒みます。新しいコミットへ移すときは
 `hermes plugins install <source> --force --ref <new-commit>` で明示的に指定してください。プロファイル内に置かれる導入の記録には、設定の値も、環境の値も、秘密情報も、権限の付与も含まれません。
 
+同じ固定は Hermes Desktop でもできます。**Skills → Plugins → Install from
+Git** に *Pin to commit* という欄があり、40 文字の完全な SHA を入れられます。プラグインの一覧では、
+固定して導入したものすべてに `pinned @ <sha8>` の印が付くので、チームの全員が同じコミットで
+動かしているかを確かめられます。`hermes plugins list` でも、Source の列に固定が表示されます
+（`git pinned@<sha8>`）。固定は非公開のリポジトリでも使えます。資格情報は、下で説明する保存済みのものが同じように使われます。
+
+### 非公開のリポジトリから導入する {#installing-from-a-private-repository}
+
+`hermes plugins install` は対話なしでクローンします（ユーザー名やパスワードを尋ねることはありません）。
+そのため非公開のリポジトリには、Hermes が自分で見つけられる資格情報が要ります。`https://` の
+出どころでは、次の順に試します。
+
+1. `.env` にある `GITHUB_TOKEN` または `GH_TOKEN`（GitHub のホストのみ）。
+2. `gh` CLI のログイン（`gh auth login`）。GitHub のホストのみ。
+3. そのホストに対する git の資格情報ヘルパー（`git credential fill`）。資格情報がすでに保存されていれば、
+   GitLab、Bitbucket、自前で立てたサーバーでも使えます。
+
+資格情報は、その導入や更新のときだけ使う HTTP ヘッダーとして 1 回だけ送られます。
+プラグインの `.git/config` にも導入の記録にも書き込まれません。
+SSH の出どころ（`git@host:owner/repo.git`）は、これまでどおり ssh-agent で認証します。
+同じ探し方は `hermes plugins update`、カタログからの git 経由の MCP の導入、
+git の URL から取り寄せるプロファイルの配布物にも使われます。
+
 ### 許可リストが門にしないもの {#what-the-allow-list-does-not-gate}
 
 いくつかの種類のプラグインは `plugins.enabled` を通りません。Hermes の内蔵の機能面の一部であり、既定で止めてしまうと基本的な動作が壊れるためです。
@@ -362,8 +385,8 @@ Python）、**デスクトップのプラグイン**（アプリの画面）、�
 通ります。
 
 エージェント側とデスクトップ側の両方が 1 つのリポジトリに入っている場合も、リンク 1 つ、ダイアログ 1 つで
-済みます。同じダイアログは、リンクを使わずに **Settings → Plugins →
-Install from Git** からも開けます。以前からの `hermes://plugin-agent/…` と
+済みます。同じダイアログは、リンクを使わずに **Capabilities →
+Plugins → Install from Git** からも開けます。以前からの `hermes://plugin-agent/…` と
 `hermes://plugin-desktop/…` の URL も、同じダイアログへつながります。開発版
 （`npm run dev`）では形式が `hermes-dev://` になります。
 

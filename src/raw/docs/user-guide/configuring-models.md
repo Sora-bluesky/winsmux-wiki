@@ -2,7 +2,7 @@
 title: "モデルの設定"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: 2378ea231a392ba1a7183f18a416d2b783b167c0
+upstream_blob: c200d46b813b97dfb333ac858af61344be8cb260
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---
@@ -78,7 +78,7 @@ hermes config set security.allow_data_training_tiers_noninteractive true
 
 ![補助モデルのパネルを開いたところ](https://hermes-agent.nousresearch.com/img/docs/dashboard-models/auxiliary-expanded.png)
 
-補助の仕事はどれも既定が `auto` で、Hermes はその仕事にもメインモデルを使おうとします。その経路が使えない場合や、容量に類する失敗が起きた場合、`auto` はまず仕事ごとの `auxiliary.<task>.fallback_chain` をたどり、次にメインの `fallback_providers` / `fallback_model` の連鎖、最後に Hermes 組み込みの補助モデル探索の連鎖をたどります。脇の仕事に安いモデルや速いモデルを使いたいときは、その仕事だけ上書きしてください。
+補助の仕事はどれも既定が `auto` で、Hermes はその仕事にもメインモデルを使おうとします。その経路が使えない場合や、容量に類する失敗が起きた場合、`auto` はまず仕事ごとの `auxiliary.<task>.fallback_chain` をたどり、次にメインの `fallback_providers` / `fallback_model` の連鎖をたどります。設定していないプロバイダを推測で使うことはありません。メインのプロバイダを選んでいて切り替え先を宣言していない場合、その脇の仕事は、たまたまログインしている別のアカウントに課金されるのではなく、警告を出したうえで飛ばされます（Hermes 組み込みの探索の連鎖が動くのは、メインのプロバイダがまったく選ばれていないときだけです）。脇の仕事に安いモデルや速いモデルを使いたいときは、その仕事だけ上書きしてください。
 
 ### よくある上書きの型 {#common-override-patterns}
 
@@ -168,7 +168,7 @@ auxiliary:
         model: inclusionai/ring-2.6-1t:free
 ```
 
-`fallback_chain` がない場合、`auto` は組み込みの補助モデル探索の連鎖より先に、最上位の `fallback_providers` の連鎖を使います。
+`fallback_chain` がない場合、`auto` は最上位の `fallback_providers` の連鎖を使います。それもなく、メインのプロバイダが呼び出しをさばけない場合、その仕事は警告を出したうえで飛ばされます。Hermes が、ログイン済みのほかのプロバイダへ流れることはありません。
 
 ## プロバイダごとのリクエストの調整 {#per-provider-request-options}
 

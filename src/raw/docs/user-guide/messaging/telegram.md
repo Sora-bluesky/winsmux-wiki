@@ -2,7 +2,7 @@
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: d638d4c1f7afd5f11caae275826be3d3da10d2f5
+upstream_blob: d9d7b26bc12af930661ef1275362d3aaa20edd4b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -10,6 +10,10 @@ sources:
 # Telegram の設定 {#telegram-setup}
 
 Hermes Agent は、Telegram の会話ボットとしてひととおりの機能を備えた形で連携します。つないでしまえば、どの端末からでもエージェントと話せますし、送った音声メモは自動で文字起こしされ、決まった時刻の作業の結果を受け取ったり、グループのトークでエージェントを使ったりもできます。この連携は [python-telegram-bot](https://python-telegram-bot.org/) の上に作られており、テキスト・音声・画像・添付ファイルに対応します。
+
+## 手早い設定（ダッシュボードとデスクトップアプリ） {#quick-setup-dashboard-and-desktop-app}
+
+[ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/)と[デスクトップアプリ](/hermes/docs/user-guide/desktop/)の **Messaging → Telegram** のページには、**Create with QR** のボタンがあります。表示されたコードを Telegram で読み取る（またはリンクを開く）と、Hermes がボットを作り、Telegram のユーザー ID を見つけ、`TELEGRAM_BOT_TOKEN` と `TELEGRAM_ALLOWED_USERS` をプロファイルの `.env` に書き込み、ゲートウェイを再起動します。ボットを自分で作りたい場合は、下の手作業の手順に従ってください。
 
 ## 手順 1: BotFather でボットを作る {#step-1-create-a-bot-via-botfather}
 
@@ -578,6 +582,19 @@ telegram:
 この設定なら、グループでの `@research_bot @ops_bot summarize this` のようなメッセージを処理するのは `research_bot` と `ops_bot` だけです。グループにいるほかの Hermes のボットは、そのメッセージが自分の以前のメッセージへの返信であっても、共通の呼びかけ語に一致していても黙っています。
 
 互いの引用返信に答え合う 2 つの Hermes のボットは、`TELEGRAM_ALLOW_BOTS=all` のままだと永遠にやり取りを続けることがあります。ボットへの返信は必ず `require_mention` の関門を通ってしまうからです。`telegram.bots_require_mention: true`（環境変数は `TELEGRAM_BOTS_REQUIRE_MENTION`）を設定するとその経路が閉じます。ほかのボットからのメッセージは、このボットをはっきり `@mentions` したときだけ反応の対象になり、人からの返信はこれまでどおり動きます。
+
+ボットどうしの往復を止める見張りも、ボットが書いたメッセージを受け付けるすべてのトーク（`TELEGRAM_ALLOW_BOTS` が `mentions` か `all` のとき）で数を数えています。1 つのトークに 5 分のうちにボットのメッセージが 20 件届くと、そのトークでのそれ以降のボットのメッセージは 10 分間捨てられ、警告が 1 回ログに残ります。人からのメッセージは数えられることも捨てられることもありません。設定は `config.yaml` にあります。
+
+```yaml
+gateway:
+  bot_loop_guard:
+    enabled: true        # false turns the guard off
+    max_events: 20       # bot messages per chat per window
+    window_seconds: 300
+    cooldown_seconds: 600
+```
+
+正当な理由で 1 つのトークに 5 分で 20 件を超えて投稿するボットも、この見張りに引っかかります。そのゲートウェイでは `max_events` を引き上げてください。
 
 グループでの会話の文とメディアの説明文は、メッセージがほかの参加者にも呼びかけている場合、すべてのメンションを残したまま届きます（`@research_bot , @ops_bot are you both listening?` は `research_bot` にそのままの形で届きます）。このボットだけが呼ばれている場合は、これまでどおり自分の名前だけが取り除かれるので、`@hermes_bot 2` のような短い返しも通ります。グループでのやり取りには、そのトークごとの文脈にボット自身の Telegram のユーザー名も添えられるので、残っているメンションのどれが自分宛てかをモデルが判断できます。スラッシュコマンドは、これまでどおりコマンドの呼び出しとしての整理が行われます。
 

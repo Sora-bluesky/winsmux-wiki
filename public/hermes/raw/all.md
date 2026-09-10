@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（212 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（214 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -25,7 +25,7 @@ raw: /hermes/raw/all.md
 - [Nix Setup](/hermes/docs/getting-started/nix-setup/)
 - [Platform Support](/hermes/docs/getting-started/platform-support/)
 
-## Using Hermes（28）
+## Using Hermes（29）
 
 - [CLI](/hermes/docs/user-guide/cli/)
 - [TUI (Ink terminal UI)](/hermes/docs/user-guide/tui/)
@@ -41,6 +41,7 @@ raw: /hermes/raw/all.md
 - [Hermes Desktop](/hermes/docs/user-guide/desktop/)
 - [Egress proxy](/hermes/docs/user-guide/egress/)
 - [Egress credential-injection proxy (iron-proxy)](/hermes/docs/user-guide/egress/iron-proxy/)
+- [Free tier and signing in](/hermes/docs/user-guide/free-tier/)
 - [Import from Other Agents](/hermes/docs/user-guide/import-from-other-agents/)
 - [Local Models](/hermes/docs/user-guide/local-models/)
 - [Managed Scope](/hermes/docs/user-guide/managed-scope/)
@@ -56,7 +57,7 @@ raw: /hermes/raw/all.md
 - [Windows (Native) Guide](/hermes/docs/user-guide/windows-native/)
 - [Windows (WSL2) Guide](/hermes/docs/user-guide/windows-wsl-quickstart/)
 
-## Core Features（32）
+## Core Features（33）
 
 - [Features Overview](/hermes/docs/user-guide/features/overview/)
 - [Tools](/hermes/docs/user-guide/features/tools/)
@@ -71,6 +72,7 @@ raw: /hermes/raw/all.md
 - [Built-in Plugins](/hermes/docs/user-guide/features/built-in-plugins/)
 - [Codex App-Server Runtime (optional)](/hermes/docs/user-guide/features/codex-app-server-runtime/)
 - [Computer Use](/hermes/docs/user-guide/features/computer-use/)
+- [Passwords & Logins](/hermes/docs/user-guide/features/credential-vault/)
 - [Deliverable Mode (Artifacts in Chat)](/hermes/docs/user-guide/features/deliverable-mode/)
 - [Document Extraction](/hermes/docs/user-guide/features/document-extraction/)
 - [Extending the Dashboard](/hermes/docs/user-guide/features/extending-the-dashboard/)

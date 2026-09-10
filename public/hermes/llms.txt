@@ -155,6 +155,7 @@ Hermes Agent 0.21.0
 - [user-guide/features/context-files（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/context-files/)
 - [user-guide/features/context-references（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/context-references/)
 - [user-guide/features/credential-pools（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-pools/)
+- [user-guide/features/credential-vault（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-vault/)
 - [user-guide/features/cron（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
 - [user-guide/features/curator（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/curator/)
 - [user-guide/features/delegation（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
@@ -196,6 +197,7 @@ Hermes Agent 0.21.0
 - [user-guide/features/web-dashboard（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
 - [user-guide/features/web-search（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-search/)
 - [user-guide/features/x-search（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/x-search/)
+- [user-guide/free-tier（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/free-tier/)
 - [user-guide/git-worktrees（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/git-worktrees/)
 - [user-guide/import-from-other-agents（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/import-from-other-agents/)
 - [user-guide/local-models（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/local-models/)
@@ -339,6 +341,7 @@ Hermes Agent 0.21.0
 - [user-guide/skills/optional/blockchain/blockchain-hyperliquid（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid/)
 - [user-guide/skills/optional/blockchain/blockchain-solana（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/blockchain/blockchain-solana/)
 - [user-guide/skills/optional/communication/communication-one-three-one-rule（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/communication/communication-one-three-one-rule/)
+- [user-guide/skills/optional/creative/creative-archify（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-archify/)
 - [user-guide/skills/optional/creative/creative-ascii-art（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/)
 - [user-guide/skills/optional/creative/creative-audiocraft-audio-generation（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/)
 - [user-guide/skills/optional/creative/creative-baoyu-article-illustrator（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/)
@@ -607,6 +610,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/context-files.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/context-references.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/credential-pools.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/credential-vault.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/cron.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/curator.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/delegation.md
@@ -648,6 +652,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/web-dashboard.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/web-search.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/x-search.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/free-tier.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/git-worktrees.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/import-from-other-agents.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/local-models.md
@@ -791,6 +796,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/blockchain/blockchain-solana.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/communication/communication-one-three-one-rule.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-archify.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-ascii-art.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator.md

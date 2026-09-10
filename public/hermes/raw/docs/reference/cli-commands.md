@@ -2,7 +2,7 @@
 title: "CLI コマンド一覧"
 description: "Hermes のターミナルコマンドとコマンド群の公式な早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: c70aa7bc2d6a2e7c06d0782e5ea183715c5e2b0d
+upstream_blob: 4fbeef440afe8c4b9b4dab71fc742e545b19861a
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -148,6 +148,27 @@ hermes chat --worktree -q "Review this repo and open a PR"
 hermes chat --ignore-user-config --ignore-rules -q "Repro without my personal setup"
 hermes chat --safe-mode -q "Is this bug mine or Hermes'?"
 ```
+
+#### 答えて終わるチャットでの委任 {#delegation-in-finite-chat-runs}
+
+チャットが答えを返してそのまま終了する場合（`-Q`、`chat --oneshot`、または
+標準入出力が TTY でない状態での問いかけ）、`delegate_task` は子のエージェントの終了を待ち、
+その結果を同じターンのうちに親へ返します。まとめて渡した子は、これまでどおり並行して動き、
+同時に動く数は `delegation.max_concurrent_children` の上限に従います。親はその結果を
+使って最終的な応答を組み立ててから、CLI を終了できます。
+
+- **自動で合流します:** 事前の有効化も、バックグラウンド動作の上書きも要りません。
+  TTY で対話するチャットとメッセージングのセッションでは、これまでどおり委任はバックグラウンドで動きます。
+- **既存の安全策はそのままです:** 委任の上限、タイムアウト、取り消し、
+  `approvals.single_query_mode` は引き続き効きます。合流したからといってコマンドが自動で承認されるわけでも、
+  子の処理が必ず成功するわけでもありません。結果を確かめ、できあがったものを検証してください。
+- **ターミナルの完了通知:** バックグラウンドのターミナルの通知の動きは変わりません。
+  終了前に上限つきで待つ `terminal.oneshot_completion_wait_seconds` も同じです。
+  この設定は委任のタイムアウトではありません。
+
+委任は、あくまで同じプロセスの中で完結します。親を中断したり終了させたりすると、
+終わっていない子も取り消されることがあります。起動したプロセスが終わっても残す必要のある作業には、
+永続的なスケジューラーを使ってください。
 
 ### `hermes -z <prompt>` — スクリプト向けの一問一答 {#hermes--z-prompt-scripted-one-shot}
 

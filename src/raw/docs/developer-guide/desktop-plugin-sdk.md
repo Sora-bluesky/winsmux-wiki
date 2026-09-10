@@ -2,7 +2,7 @@
 title: "デスクトッププラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンド領域までを、import 1 行だけ、ビルドなしで扱えます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 82f34f115bce026f8819516627bc10ff27ea53f3
+upstream_blob: 619923bc177b6f62914d4447c0f2c6812c2813bd
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -35,11 +35,11 @@ Hermes では「プラグイン」という言葉がいくつかの別ものを�
 | **ひとまとめのパッケージ** | `$HERMES_HOME/plugins/<id>/desktop/plugin.js` | エージェント側のコードも一緒に配るプラグイン | 不要 — ディスク方式と同じ経路です |
 | **同梱** | `apps/desktop/src/plugins/<id>/plugin.tsx` | ツリー内、アプリと一緒に配られるもの | アプリ自身の Vite ビルド |
 
-3 つとも同じ `HermesPlugin` の約束事に従い、**設定 → プラグイン**に並び、その場で有効・無効を切り替えられます。ひとまとめのパッケージは、エージェント用プラグインのフォルダの中をディスク方式の入口が覗きに行くだけのものです。[1 つのパッケージで両方の SDK](#one-package-both-sdks) を参照してください。このページの内容はすべてディスク方式（あなたやエージェントが書くもの）を前提に書いてあり、[同梱プラグイン](#bundled-plugins) に 2 点だけ違いを記しています。今のところ中核のツリーにデスクトッププラグインは 1 つも入っていません。手本になるデモは、別リポジトリの [`hermes-example-plugins`](https://github.com/NousResearch/hermes-example-plugins) にあります。
+3 つとも同じ `HermesPlugin` の約束事に従い、**Capabilities → Plugins** に並び、その場で有効・無効を切り替えられます。ひとまとめのパッケージは、エージェント用プラグインのフォルダの中をディスク方式の入口が覗きに行くだけのものです。[1 つのパッケージで両方の SDK](#one-package-both-sdks) を参照してください。このページの内容はすべてディスク方式（あなたやエージェントが書くもの）を前提に書いてあり、[同梱プラグイン](#bundled-plugins) に 2 点だけ違いを記しています。Radio は、SDK だけで作られた同梱プラグインとして配られていて、既定ではオフです。**Capabilities → Plugins** で有効にすると、無料のライブ配信、放送局の検索、ステータスバーからの再生操作が使えるようになり、音に合わせて動く波形も出ます。いつものプラグインの切り替えスイッチを使うもので、無効のあいだは何も加えません。手本になるデモは、別リポジトリの [`hermes-example-plugins`](https://github.com/NousResearch/hermes-example-plugins) にあります。
 
 ## 手早く試す — 最初のプラグイン {#quick-start-your-first-plugin}
 
-`$HERMES_HOME/desktop-plugins/hello/plugin.js` を作ります（既定では `~/.hermes/...`、名前付きプロファイルなら `~/.hermes/profiles/<name>/...` です）。フォルダ名はプラグインの `id` と同じでなければいけません。
+`$HERMES_HOME/desktop-plugins/hello/plugin.js` を作ります（既定では `~/.hermes/...` です）。デスクトッププラグインはアプリ単位のものです。ウィンドウがつなぐプロファイル、ゲートウェイ、離れた端末がいくつあっても、置き場所は 1 つだけです。フォルダ名はプラグインの `id` と同じでなければいけません。
 
 ```javascript
 // ~/.hermes/desktop-plugins/hello/plugin.js
@@ -106,7 +106,7 @@ interface HermesPlugin {
   /** Human name for Settings / about UI. Defaults to `id`. */
   name?: string
   /** Registers on load when the user hasn't chosen (default true). Set false
-   *  for opt-in plugins: they inventory in Settings ▸ Plugins, off until the
+   *  for opt-in plugins: they inventory in Capabilities ▸ Plugins, off until the
    *  user flips the switch. */
   defaultEnabled?: boolean
   /** Called once at load; wire contributions through `ctx`. */
@@ -195,7 +195,7 @@ data: {
 
 `dock.pane` には任意のペイン id を指定します（`workspace` は会話の本体で、ほかに `sessions`、`terminal`、`files`、`review`、`logs` があります）。`dock.pos` は `'top' | 'bottom' | 'left' | 'right' | 'center'` です。ペインがその区画の半分を占めてしまわないよう、`width` か `height` を宣言しておいてください。
 
-プラグインが出しているペインが 1 つだけのとき、それを閉じるとプラグイン自体が無効になります。**設定 → プラグイン**から戻せます。複数のペインを出しているプラグインなら、1 つ閉じてもそのペインが消えるだけで、残りのペインもコマンドも中間処理も動いたままです。**レイアウトをリセット**すると、閉じた寄与ペインが元に戻ります。
+プラグインが出しているペインが 1 つだけのとき、それを閉じるとプラグイン自体が無効になります。**Capabilities → Plugins** から戻せます。複数のペインを出しているプラグインなら、1 つ閉じてもそのペインが消えるだけで、残りのペインもコマンドも中間処理も動いたままです。**レイアウトをリセット**すると、閉じた寄与ペインが元に戻ります。
 
 ### ページとサイドバーのナビ {#pages-and-sidebar-nav}
 
@@ -302,7 +302,7 @@ host.onEvent('gateway.ready', () => {
 })
 ```
 
-どちらの入口もプロフィールごとに残るので、プラグインからの切り替えも、手で選んだときとまったく同じように残ります。テーマを差し替えるのではなく**いま有効な**テーマに色味を足したいときは、`setAccentOverride(hex)` を使い、`ctx.onDispose` で戻してください。同梱の `accent` プラグインが実際の手本です。
+どちらの入口もプロフィールごとに残るので、プラグインからの切り替えも、手で選んだときとまったく同じように残ります。テーマを差し替えるのではなく**いま有効な**テーマに色味を足したいときは、`setAccentOverride(hex)` を使い、`ctx.onDispose` で戻してください。単体で配られている [Accent Picker](https://github.com/NousResearch/hermes-desktop-accent-picker) プラグインが実際の手本です（そのままインストールできる、完成したディスクプラグインでもあります）。
 
 ### 入力欄の拡張 {#composer-extensions}
 
@@ -491,7 +491,7 @@ ctx.socket('/events', () => {
 
 ### 1 つのパッケージで両方の SDK {#one-package-both-sdks}
 
-デスクトップの UI **と**エージェント側のコード（Python のプラグイン、そのバックエンドの経路、スキル）の両方が要る機能でも、互いに依存する 2 つのインストール物に分ける必要はありません。デスクトップアプリは、通常のエージェント用プラグインの置き場所である `$HERMES_HOME/plugins/<id>/` も見に行って、そこに `desktop/plugin.js` があれば、単体のディスク方式とまったく同じ経路で読み込みます（保存のたびに反映されるのも同じです）。
+デスクトップの UI **と**エージェント側のコード（Python のプラグイン、そのバックエンドの経路、スキル）の両方が要る機能でも、互いに依存する 2 つのインストール物に分ける必要はありません。エージェント用のパッケージの中に `desktop/plugin.js` を入れておきます。パッケージがローカルのどの `plugins/` の置き場所（既定のホームでもプロファイルでも）に入っても、Electron のメインプロセスがその半分を `$HERMES_HOME/desktop-plugins/<id>/` へ写し、隣に `.hermes-package.json` という目印のファイルを置きます。画面側はそれを、単体のディスク方式とまったく同じ経路で読み込みます（保存のたびに反映されるのも同じです）。
 
 ```
 ~/.hermes/plugins/<id>/           # ONE installable folder
@@ -504,12 +504,12 @@ ctx.socket('/events', () => {
     └── plugin.js                 # the desktop half: panes, commands, ctx.rest
 ```
 
-`desktop/plugin.js` の側は、ごく普通のディスクプラグインです。約束事も、import できるものも、隣に置いた `plugin_api.py` へ届く `ctx.rest('/…')` も同じです。インストールも、人に渡すのも、消すのも、フォルダ 1 つで済みます。
+`desktop/plugin.js` の側は、ごく普通のディスクプラグインです。約束事も、import できるものも、隣に置いた `plugin_api.py` へ届く `ctx.rest('/…')` も同じです。インストールも、人に渡すのも、消すのも、フォルダ 1 つで済みます。アプリ側の写しは、元の `plugin.js` が変わると更新され（`hermes plugins update` か **Rescan**）、パッケージのフォルダが無くなると消されます。デスクトップ側が**アプリ単位**になるのは、この写しがあるからです。そのパッケージを持つプロファイルがいくつあっても写しは 1 つだけで、利用者が Capabilities のプロファイル選択を切り替えても、現れたり消えたりしません。画面側が自分で `plugins/` を探しに行くことはありません。目印のファイルにはパッケージの名前と出どころ（カタログの付属情報か git のリモート）が記録されていて、Plugins のページにある **Install here** のボタンは、これを使ってエージェント側を別のプロファイルにインストールします。
 
-有効化のスイッチが 2 つあるのはわざとで、どちらも既定は**オフ**です。デスクトップ側は入れただけでは動かず、**設定 → プラグイン**に並ぶものの、利用者が切り替えるまで無効のままです。これは Python 側が `config.yaml` の `plugins.enabled` で守られているのと揃えたものです（安全の線引きについては後述します）。`~/.hermes/plugins` にパッケージを置いただけでは、どこでも何も動きません。利用者がそう言うまでは動かないのです。バックエンド側が無効なときも、デスクトップ側は静かに縮退します。`ctx.rest` はエラーを返すだけで、落ちることはありません。
+有効化のスイッチが 2 つあるのはわざとで、どちらも既定は**オフ**です。デスクトップ側は入れただけでは動かず、**Capabilities → Plugins** に並ぶものの、利用者が切り替えるまで無効のままです。これは Python 側が `config.yaml` の `plugins.enabled` で守られているのと揃えたものです（安全の線引きについては後述します）。`~/.hermes/plugins` にパッケージを置いただけでは、どこでも何も動きません。利用者がそう言うまでは動かないのです。バックエンド側が無効なときも、デスクトップ側は静かに縮退します。`ctx.rest` はエラーを返すだけで、落ちることはありません。
 
 :::note
-探しに行くのは、デスクトップアプリが動いている端末の中だけです。離れたバックエンドにつないでいる場合、向こうの `~/.hermes/plugins` はファイルとしては見えないので、デスクトップ側が加わるのはその端末に入っているパッケージだけです（単体のディスク方式と同じ決まりです）。
+写しを作るのは、デスクトップアプリが動いている端末の中だけです。離れたバックエンドにつないでいる場合、向こうの `~/.hermes/plugins` はファイルとしては見えないので、この方法でデスクトップ側が加わるのはその端末に入っているパッケージだけです。離れたバックエンドのときは、インストールの画面がデスクトップ側を別に `desktop-plugins/` へ clone します。デスクトップ専用のリポジトリと同じ扱いです。
 :::
 
 ### インストール用のリンクで配る {#install-link}
@@ -551,7 +551,7 @@ async def action(body: dict):
 経路は `/api/plugins/<id>/` の下に取り付けられます（`GET /api/plugins/<id>/board` など）。バックエンドのコードはゲートウェイのプロセスの中で動くので、hermes-agent のコードベースから直接 import できます（`hermes_state`、`hermes_cli.config` など）。バックエンド側の詳しい説明は [ダッシュボードを拡張する → バックエンドの API 経路](/hermes/docs/user-guide/features/extending-the-dashboard/#backend-api-routes) を参照してください。取り付け口は同じものです。
 
 :::caution Python のバックエンドは別に守られています
-デスクトップの**設定 → プラグイン**でプラグインを有効にするのは画面側の話で、Python を読み込むわけでは**ありません**。利用者が入れたプラグインの `plugin_api.py` が読み込まれるのは、そのプラグインが `config.yaml` の `plugins.enabled` の許可一覧に入っている（かつ `plugins.disabled` に入っていない）ときだけです。プロジェクトのプラグイン（`./.hermes/`）が Python を自動で読み込むことはありません。これは見落としではなく、安全のための線引きです（GHSA-mcfc-hp25-cjv7）。
+デスクトップの **Capabilities → Plugins** の画面でプラグインを有効にするのは画面側の話で、Python を読み込むわけでは**ありません**。利用者が入れたプラグインの `plugin_api.py` が読み込まれるのは、そのプラグインが `config.yaml` の `plugins.enabled` の許可一覧に入っている（かつ `plugins.disabled` に入っていない）ときだけです。プロジェクトのプラグイン（`./.hermes/`）が Python を自動で読み込むことはありません。これは見落としではなく、安全のための線引きです（GHSA-mcfc-hp25-cjv7）。
 :::
 
 ### プラグインから呼ぶ {#calling-it-from-the-plugin}
@@ -577,7 +577,7 @@ register(ctx) {
 
 ## 設定、有効・無効の状態、保存 {#settings-enable-state-and-storage}
 
-有効かどうかによらず、すべてのプラグインが**設定 → プラグイン**に並びます。ここで利用者は、アプリを再起動せずに切り替えたり、フォルダを開いたり、探し直させたりできます。選んだ内容は覚えられます。
+有効かどうかによらず、すべてのプラグインが**Capabilities → Plugins** に並びます。ここで利用者は、アプリを再起動せずに切り替えたり、フォルダを開いたり、探し直させたりできます。選んだ内容は覚えられます。
 
 - まだ選んでいなければ、そのプラグインの `defaultEnabled`（既定は `true`）に従います。`defaultEnabled: false` にすれば、利用者が入れるまで暗いままの、選んで使う形のプラグインにできます。
 - はっきり選ばれた場合は保存され、再起動しても守られます。無効にされたプラグインは無効のままです。抗わないでください。利用者があなたを切ったのです。

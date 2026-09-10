@@ -2,7 +2,7 @@
 title: "Honcho メモリー"
 description: "Honcho による AI 前提の永続メモリー — 対話的な推論、マルチエージェントのユーザーモデリング、深い個別化"
 upstream_path: user-guide/features/honcho.md
-upstream_blob: 31d8391383072c9f98161fbbb1b5720b30fbb543
+upstream_blob: eeaa2e99e9e58278a628f23ef41f188514a42ec7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/honcho
 ---
@@ -135,6 +135,7 @@ Honcho の設定は `~/.honcho/config.json`（全体）または `$HERMES_HOME/h
 | `pinUserPeer` | `false` | ゲートウェイ専用。`true` にすると、プラットフォームの利用者はすべて `peerName` にまとめられます |
 | `userPeerAliases` | `{}` | ゲートウェイ専用。実行時 ID とピアの対応表（`{"7654321": "alice"}`）。複数を 1 つにまとめられます |
 | `runtimePeerPrefix` | `""` | ゲートウェイ専用。別名に当てはまらない実行時 ID に名前空間を付けます（`telegram_7654321`） |
+| `a2aSessions` | `true` | ほかのボットからの DM を、人間のセッションではなく、送ってきたボットごとに専用の Honcho セッションへ書き込みます。`false` にすると、ボットが書いたターンは丸ごと書き込みません |
 
 **セッションの持ち方**は、Honcho のセッションを自分の作業にどう対応させるかを決めます。
 - `per-session` — `hermes` を実行するたびに新しいセッションになります。まっさらな状態から始まり、記憶はツールで取り出します。使い始めたばかりの人におすすめです。
@@ -175,6 +176,8 @@ Honcho の設定は `~/.honcho/config.json`（全体）または `$HERMES_HOME/h
 質問のところで `[e]` を選ぶと、3 つのキーを直接設定できます。
 
 解決の処理はキーを上から順に試し、最初に当たったものを使います。`pinUserPeer` → `userPeerAliases[id]` → `runtimePeerPrefix + id` → 生の実行時 ID → `peerName` → セッションキーでの代替、の順です。
+
+各ターンは書いた本人のピアの下に書き込まれるので、共有のチャットで最初に話しかけた人が、ほかの全員についての事実まで抱え込むことはもうありません。ほかのボットからのターン（`bot:<profile>` のタグが付いた Bot Mode の DM や、アダプターがボットと判定したプラットフォームのアカウント）は、常にそれ専用のピアを持ちます。`pinUserPeer` がまとめるのは 1 人の人のアカウントであって、ボットは決してまとめません。そのターンは送り手ごとの `a2a` セッションに入り（`a2aSessions` を参照）、そうしたターンの処理中は `honcho_conclude` / `honcho_profile` が書き込みを拒みます。結論やカードは人間について記すものだからです。
 
 :::warning 固定を外すとまとめた記憶が取り残されます
 `pinUserPeer` を `true` から `false` に変えても、データは移りません。`peerName` の下に積み上がった記憶はそこに残ったままで、プラットフォームの利用者は新しい空のピアに行き着きます。自分のぶんの連続性を保つには、自分の実行時 ID が `peerName` に対応づく**まとめる**やり方を選んでください。この切り替えを見つけると、ウィザードが自動でそちらを勧めます。

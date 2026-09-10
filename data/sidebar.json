@@ -55,6 +55,9 @@
           "id": "user-guide/configuration"
         },
         {
+          "id": "user-guide/free-tier"
+        },
+        {
           "id": "user-guide/managed-scope"
         },
         {
@@ -240,6 +243,9 @@
             },
             {
               "id": "user-guide/features/browser"
+            },
+            {
+              "id": "user-guide/features/credential-vault"
             },
             {
               "id": "user-guide/features/computer-use"
@@ -582,6 +588,9 @@
                   "items": [
                     {
                       "id": "user-guide/skills/optional/creative/creative-ascii-art"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-archify"
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-audiocraft-audio-generation"
@@ -1524,6 +1533,7 @@
     "user-guide/windows-native",
     "user-guide/windows-wsl-quickstart",
     "user-guide/configuration",
+    "user-guide/free-tier",
     "user-guide/managed-scope",
     "user-guide/configuring-models",
     "user-guide/secrets/index",
@@ -1577,6 +1587,7 @@
     "user-guide/features/web-search",
     "user-guide/features/x-search",
     "user-guide/features/browser",
+    "user-guide/features/credential-vault",
     "user-guide/features/computer-use",
     "user-guide/features/vision",
     "user-guide/features/image-generation",
@@ -1659,6 +1670,7 @@
     "user-guide/skills/optional/blockchain/blockchain-solana",
     "user-guide/skills/optional/communication/communication-one-three-one-rule",
     "user-guide/skills/optional/creative/creative-ascii-art",
+    "user-guide/skills/optional/creative/creative-archify",
     "user-guide/skills/optional/creative/creative-audiocraft-audio-generation",
     "user-guide/skills/optional/creative/creative-baoyu-article-illustrator",
     "user-guide/skills/optional/creative/creative-baoyu-comic",

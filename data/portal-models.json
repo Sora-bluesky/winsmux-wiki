@@ -1,13 +1,25 @@
 {
-  "fetchedAt": "2026-09-09",
+  "fetchedAt": "2026-09-10",
   "source": "https://inference-api.nousresearch.com/v1/models",
-  "count": 391,
+  "count": 397,
   "counts": {
-    "text": 347,
+    "text": 352,
     "embeddings": 34,
-    "other": 10
+    "other": 11
   },
   "models": [
+    {
+      "id": "deepseek/deepseek-v4.1-flash",
+      "name": "DeepSeek: DeepSeek V4.1 Flash",
+      "type": "text",
+      "ctx": 1048576,
+      "inPerM": 0.12,
+      "outPerM": 0.96,
+      "listInPerM": 0.15,
+      "listOutPerM": 1.2,
+      "discount": 20,
+      "free": false
+    },
     {
       "id": "inception/mercury-2.5",
       "name": "Inception: Mercury 2.5",
@@ -15,21 +27,9 @@
       "ctx": 260000,
       "inPerM": 0.032,
       "outPerM": 0.12,
-      "listInPerM": 0.04,
-      "listOutPerM": 0.15,
-      "discount": 20,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-6-astra",
-      "name": "OpenAI: GPT-6 Astra",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 8,
-      "outPerM": 40,
-      "listInPerM": 10,
-      "listOutPerM": 50,
-      "discount": 20,
+      "listInPerM": 0.2,
+      "listOutPerM": 0.75,
+      "discount": 84,
       "free": false
     },
     {
@@ -111,9 +111,9 @@
       "ctx": 1048576,
       "inPerM": 0.6,
       "outPerM": 3,
-      "listInPerM": 0.75,
-      "listOutPerM": 3.75,
-      "discount": 20,
+      "listInPerM": 1.5,
+      "listOutPerM": 7.5,
+      "discount": 60,
       "free": false
     },
     {
@@ -231,9 +231,9 @@
       "ctx": 1310720,
       "inPerM": 0.06,
       "outPerM": 0.2,
-      "listInPerM": 0.075,
-      "listOutPerM": 0.25,
-      "discount": 20,
+      "listInPerM": 0.15,
+      "listOutPerM": 0.5,
+      "discount": 60,
       "free": false
     },
     {
@@ -277,10 +277,10 @@
       "name": "Z.ai: GLM Latest",
       "type": "text",
       "ctx": 1310720,
-      "inPerM": 0.8904,
-      "outPerM": 2.7984,
-      "listInPerM": 1.113,
-      "listOutPerM": 3.498,
+      "inPerM": 0.56,
+      "outPerM": 1.76,
+      "listInPerM": 0.7,
+      "listOutPerM": 2.2,
       "discount": 20,
       "free": false
     },
@@ -289,11 +289,11 @@
       "name": "Z.ai: GLM 5.3",
       "type": "text",
       "ctx": 1310720,
-      "inPerM": 0.8904,
-      "outPerM": 2.7984,
-      "listInPerM": 1.113,
-      "listOutPerM": 3.498,
-      "discount": 20,
+      "inPerM": 0.56,
+      "outPerM": 1.76,
+      "listInPerM": 1.4,
+      "listOutPerM": 4.4,
+      "discount": 60,
       "free": false
     },
     {
@@ -315,9 +315,9 @@
       "ctx": 1000000,
       "inPerM": 0.12,
       "outPerM": 1.6,
-      "listInPerM": 0.15,
-      "listOutPerM": 2,
-      "discount": 20,
+      "listInPerM": 0.425,
+      "listOutPerM": 2.55,
+      "discount": 72,
       "free": false
     },
     {
@@ -327,9 +327,9 @@
       "ctx": 1048576,
       "inPerM": 0.6,
       "outPerM": 3,
-      "listInPerM": 0.75,
-      "listOutPerM": 3.75,
-      "discount": 20,
+      "listInPerM": 1.5,
+      "listOutPerM": 7.5,
+      "discount": 60,
       "free": false
     },
     {
@@ -411,9 +411,9 @@
       "ctx": 1048576,
       "inPerM": 0.4636,
       "outPerM": 1.3908,
-      "listInPerM": 0.5795,
-      "listOutPerM": 1.7385,
-      "discount": 20,
+      "listInPerM": 0.66,
+      "listOutPerM": 1.98,
+      "discount": 30,
       "free": false
     },
     {
@@ -447,9 +447,9 @@
       "ctx": 524288,
       "inPerM": 0.024,
       "outPerM": 0.096,
-      "listInPerM": 0.03,
-      "listOutPerM": 0.12,
-      "discount": 20,
+      "listInPerM": 0.3,
+      "listOutPerM": 1.2,
+      "discount": 92,
       "free": false
     },
     {
@@ -498,18 +498,6 @@
       "listInPerM": 0.05,
       "listOutPerM": 0.16,
       "discount": 20,
-      "free": false
-    },
-    {
-      "id": "deepseek/deepseek-v4-flash-0731",
-      "name": "DeepSeek: DeepSeek V4 Flash 0731",
-      "type": "text",
-      "ctx": 1310720,
-      "inPerM": 0.04,
-      "outPerM": 0.128,
-      "listInPerM": 0.07,
-      "listOutPerM": 0.14,
-      "discount": 43,
       "free": false
     },
     {
@@ -639,9 +627,9 @@
       "ctx": 1048576,
       "inPerM": 0.072,
       "outPerM": 0.144,
-      "listInPerM": 0.09,
-      "listOutPerM": 0.18,
-      "discount": 20,
+      "listInPerM": 0.1,
+      "listOutPerM": 0.2,
+      "discount": 28,
       "free": false
     },
     {
@@ -747,9 +735,9 @@
       "ctx": 1048576,
       "inPerM": 1.92,
       "outPerM": 9.6,
-      "listInPerM": 2.4,
-      "listOutPerM": 12,
-      "discount": 20,
+      "listInPerM": 3,
+      "listOutPerM": 15,
+      "discount": 36,
       "free": false
     },
     {
@@ -781,11 +769,11 @@
       "name": "OpenAI: GPT-5.6 Luna Pro",
       "type": "text",
       "ctx": 1050000,
-      "inPerM": 0.2,
-      "outPerM": 1.2,
-      "listInPerM": 1,
-      "listOutPerM": 6,
-      "discount": 80,
+      "inPerM": 0.16,
+      "outPerM": 0.96,
+      "listInPerM": 0.2,
+      "listOutPerM": 1.2,
+      "discount": 20,
       "free": false
     },
     {
@@ -805,11 +793,11 @@
       "name": "OpenAI: GPT-5.6 Luna",
       "type": "text",
       "ctx": 1050000,
-      "inPerM": 0.2,
-      "outPerM": 1.2,
-      "listInPerM": 1,
-      "listOutPerM": 6,
-      "discount": 80,
+      "inPerM": 0.16,
+      "outPerM": 0.96,
+      "listInPerM": 0.2,
+      "listOutPerM": 1.2,
+      "discount": 20,
       "free": false
     },
     {
@@ -829,10 +817,10 @@
       "name": "OpenAI: GPT-5.6 Terra Pro",
       "type": "text",
       "ctx": 1050000,
-      "inPerM": 2,
-      "outPerM": 12,
-      "listInPerM": 2.5,
-      "listOutPerM": 15,
+      "inPerM": 1.6,
+      "outPerM": 9.6,
+      "listInPerM": 2,
+      "listOutPerM": 12,
       "discount": 20,
       "free": false
     },
@@ -853,10 +841,10 @@
       "name": "OpenAI: GPT-5.6 Terra",
       "type": "text",
       "ctx": 1050000,
-      "inPerM": 2,
-      "outPerM": 12,
-      "listInPerM": 2.5,
-      "listOutPerM": 15,
+      "inPerM": 1.6,
+      "outPerM": 9.6,
+      "listInPerM": 2,
+      "listOutPerM": 12,
       "discount": 20,
       "free": false
     },
@@ -879,9 +867,9 @@
       "ctx": 1050000,
       "inPerM": 1.6,
       "outPerM": 8,
-      "listInPerM": 2,
-      "listOutPerM": 10,
-      "discount": 20,
+      "listInPerM": 4,
+      "listOutPerM": 20,
+      "discount": 60,
       "free": false
     },
     {
@@ -903,9 +891,9 @@
       "ctx": 1050000,
       "inPerM": 1.6,
       "outPerM": 8,
-      "listInPerM": 2,
-      "listOutPerM": 10,
-      "discount": 20,
+      "listInPerM": 4,
+      "listOutPerM": 20,
+      "discount": 60,
       "free": false
     },
     {
@@ -975,9 +963,9 @@
       "ctx": 262144,
       "inPerM": 0.048,
       "outPerM": 0.096,
-      "listInPerM": 0.06,
-      "listOutPerM": 0.12,
-      "discount": 20,
+      "listInPerM": 0.1,
+      "listOutPerM": 0.2,
+      "discount": 52,
       "free": false
     },
     {
@@ -1107,9 +1095,9 @@
       "ctx": 1048576,
       "inPerM": 0.184,
       "outPerM": 0.768,
-      "listInPerM": 0.23,
-      "listOutPerM": 0.96,
-      "discount": 20,
+      "listInPerM": 0.3,
+      "listOutPerM": 1.2,
+      "discount": 39,
       "free": false
     },
     {
@@ -1131,9 +1119,9 @@
       "ctx": 262144,
       "inPerM": 0.128,
       "outPerM": 0.736,
-      "listInPerM": 0.16,
-      "listOutPerM": 0.92,
-      "discount": 20,
+      "listInPerM": 0.2,
+      "listOutPerM": 1.15,
+      "discount": 36,
       "free": false
     },
     {
@@ -1443,9 +1431,9 @@
       "ctx": 262144,
       "inPerM": 0.24,
       "outPerM": 1.6,
-      "listInPerM": 0.3,
-      "listOutPerM": 2,
-      "discount": 20,
+      "listInPerM": 0.45,
+      "listOutPerM": 2.7,
+      "discount": 47,
       "free": false
     },
     {
@@ -1513,10 +1501,10 @@
       "name": "DeepSeek: DeepSeek V4 Flash 0423",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.0542,
-      "outPerM": 0.1084,
-      "listInPerM": 0.0678,
-      "listOutPerM": 0.1355,
+      "inPerM": 0.0543,
+      "outPerM": 0.1344,
+      "listInPerM": 0.0679,
+      "listOutPerM": 0.168,
       "discount": 20,
       "free": false
     },
@@ -1539,9 +1527,9 @@
       "ctx": 1050000,
       "inPerM": 0.2436,
       "outPerM": 0.4872,
-      "listInPerM": 0.3045,
-      "listOutPerM": 0.609,
-      "discount": 20,
+      "listInPerM": 0.435,
+      "listOutPerM": 0.87,
+      "discount": 44,
       "free": false
     },
     {
@@ -1551,9 +1539,9 @@
       "ctx": 1050000,
       "inPerM": 0.0952,
       "outPerM": 0.1904,
-      "listInPerM": 0.119,
-      "listOutPerM": 0.238,
-      "discount": 20,
+      "listInPerM": 0.14,
+      "listOutPerM": 0.28,
+      "discount": 32,
       "free": false
     },
     {
@@ -1575,9 +1563,9 @@
       "ctx": 262144,
       "inPerM": 0.4636,
       "outPerM": 1.952,
-      "listInPerM": 0.5795,
-      "listOutPerM": 2.44,
-      "discount": 20,
+      "listInPerM": 0.95,
+      "listOutPerM": 4,
+      "discount": 51,
       "free": false
     },
     {
@@ -1611,9 +1599,9 @@
       "ctx": 204800,
       "inPerM": 0.7717,
       "outPerM": 2.4253,
-      "listInPerM": 0.9646,
-      "listOutPerM": 3.0316,
-      "discount": 20,
+      "listInPerM": 1.4,
+      "listOutPerM": 4.4,
+      "discount": 45,
       "free": false
     },
     {
@@ -1623,9 +1611,9 @@
       "ctx": 262144,
       "inPerM": 0.0336,
       "outPerM": 0.176,
-      "listInPerM": 0.042,
-      "listOutPerM": 0.22,
-      "discount": 20,
+      "listInPerM": 0.15,
+      "listOutPerM": 0.6,
+      "discount": 78,
       "free": false
     },
     {
@@ -1793,6 +1781,18 @@
       "outPerM": 0.48,
       "listInPerM": 0.15,
       "listOutPerM": 0.6,
+      "discount": 20,
+      "free": false
+    },
+    {
+      "id": "mistralai/mistral-small-2603:batch",
+      "name": "Mistral: Mistral Small 4 (batch)",
+      "type": "text",
+      "ctx": 262144,
+      "inPerM": 0.06,
+      "outPerM": 0.24,
+      "listInPerM": 0.075,
+      "listOutPerM": 0.3,
       "discount": 20,
       "free": false
     },
@@ -1971,9 +1971,9 @@
       "ctx": 262144,
       "inPerM": 0.064,
       "outPerM": 0.6,
-      "listInPerM": 0.08,
-      "listOutPerM": 0.75,
-      "discount": 20,
+      "listInPerM": 0.1625,
+      "listOutPerM": 1.3,
+      "discount": 61,
       "free": false
     },
     {
@@ -2127,9 +2127,9 @@
       "ctx": 204800,
       "inPerM": 0.48,
       "outPerM": 1.536,
-      "listInPerM": 0.6,
-      "listOutPerM": 1.92,
-      "discount": 20,
+      "listInPerM": 1,
+      "listOutPerM": 3.2,
+      "discount": 52,
       "free": false
     },
     {
@@ -2163,9 +2163,9 @@
       "ctx": 262144,
       "inPerM": 0.096,
       "outPerM": 0.64,
-      "listInPerM": 0.12,
-      "listOutPerM": 0.8,
-      "discount": 20,
+      "listInPerM": 0.3,
+      "listOutPerM": 1.5,
+      "discount": 68,
       "free": false
     },
     {
@@ -2232,7 +2232,7 @@
       "id": "z-ai/glm-4.7-flash",
       "name": "Z.ai: GLM 4.7 Flash",
       "type": "text",
-      "ctx": 202752,
+      "ctx": 200000,
       "inPerM": 0.048,
       "outPerM": 0.32,
       "listInPerM": 0.06,
@@ -2295,9 +2295,9 @@
       "ctx": 204800,
       "inPerM": 0.32,
       "outPerM": 1.4,
-      "listInPerM": 0.4,
-      "listOutPerM": 1.75,
-      "discount": 20,
+      "listInPerM": 0.6,
+      "listOutPerM": 2.2,
+      "discount": 47,
       "free": false
     },
     {
@@ -2481,6 +2481,18 @@
       "free": false
     },
     {
+      "id": "mistralai/ministral-8b-2512:batch",
+      "name": "Mistral: Ministral 3 8B 2512 (batch)",
+      "type": "text",
+      "ctx": 262144,
+      "inPerM": 0.06,
+      "outPerM": 0.06,
+      "listInPerM": 0.075,
+      "listOutPerM": 0.075,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "mistralai/ministral-3b-2512",
       "name": "Mistral: Ministral 3 3B 2512",
       "type": "text",
@@ -2501,6 +2513,18 @@
       "outPerM": 1.2,
       "listInPerM": 0.5,
       "listOutPerM": 1.5,
+      "discount": 20,
+      "free": false
+    },
+    {
+      "id": "mistralai/mistral-large-2512:batch",
+      "name": "Mistral: Mistral Large 3 2512 (batch)",
+      "type": "text",
+      "ctx": 262144,
+      "inPerM": 0.2,
+      "outPerM": 0.6,
+      "listInPerM": 0.25,
+      "listOutPerM": 0.75,
       "discount": 20,
       "free": false
     },
@@ -2931,9 +2955,9 @@
       "ctx": 204800,
       "inPerM": 0.204,
       "outPerM": 0.816,
-      "listInPerM": 0.255,
-      "listOutPerM": 1.02,
-      "discount": 20,
+      "listInPerM": 0.3,
+      "listOutPerM": 1.2,
+      "discount": 32,
       "free": false
     },
     {
@@ -3039,9 +3063,9 @@
       "ctx": 204800,
       "inPerM": 0.344,
       "outPerM": 1.4,
-      "listInPerM": 0.43,
-      "listOutPerM": 1.75,
-      "discount": 20,
+      "listInPerM": 0.6,
+      "listOutPerM": 2.2,
+      "discount": 43,
       "free": false
     },
     {
@@ -3099,9 +3123,9 @@
       "ctx": 262144,
       "inPerM": 0.16,
       "outPerM": 0.704,
-      "listInPerM": 0.2,
-      "listOutPerM": 0.88,
-      "discount": 20,
+      "listInPerM": 0.26,
+      "listOutPerM": 1.04,
+      "discount": 38,
       "free": false
     },
     {
@@ -3233,6 +3257,18 @@
       "outPerM": 1.6,
       "listInPerM": 0.4,
       "listOutPerM": 2,
+      "discount": 20,
+      "free": false
+    },
+    {
+      "id": "mistralai/mistral-medium-3.1:batch",
+      "name": "Mistral: Mistral Medium 3.1 (batch)",
+      "type": "text",
+      "ctx": 131072,
+      "inPerM": 0.16,
+      "outPerM": 0.8,
+      "listInPerM": 0.2,
+      "listOutPerM": 1,
       "discount": 20,
       "free": false
     },
@@ -3393,15 +3429,27 @@
       "free": false
     },
     {
+      "id": "mistralai/codestral-2508:batch",
+      "name": "Mistral: Codestral 2508 (batch)",
+      "type": "text",
+      "ctx": 256000,
+      "inPerM": 0.12,
+      "outPerM": 0.36,
+      "listInPerM": 0.15,
+      "listOutPerM": 0.45,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "qwen/qwen3-coder-30b-a3b-instruct",
       "name": "Qwen: Qwen3 Coder 30B A3B Instruct",
       "type": "text",
       "ctx": 262144,
       "inPerM": 0.056,
       "outPerM": 0.216,
-      "listInPerM": 0.07,
-      "listOutPerM": 0.27,
-      "discount": 20,
+      "listInPerM": 0.2925,
+      "listOutPerM": 1.4625,
+      "discount": 81,
       "free": false
     },
     {
@@ -3411,9 +3459,9 @@
       "ctx": 262144,
       "inPerM": 0.0385,
       "outPerM": 0.1544,
-      "listInPerM": 0.0481,
-      "listOutPerM": 0.193,
-      "discount": 20,
+      "listInPerM": 0.13,
+      "listOutPerM": 0.52,
+      "discount": 70,
       "free": false
     },
     {
@@ -3435,9 +3483,9 @@
       "ctx": 131072,
       "inPerM": 0.104,
       "outPerM": 0.68,
-      "listInPerM": 0.13,
-      "listOutPerM": 0.85,
-      "discount": 20,
+      "listInPerM": 0.2,
+      "listOutPerM": 1.1,
+      "discount": 48,
       "free": false
     },
     {
@@ -3459,9 +3507,9 @@
       "ctx": 262144,
       "inPerM": 0.176,
       "outPerM": 1.44,
-      "listInPerM": 0.22,
-      "listOutPerM": 1.8,
-      "discount": 20,
+      "listInPerM": 0.975,
+      "listOutPerM": 4.875,
+      "discount": 82,
       "free": false
     },
     {
@@ -3495,9 +3543,9 @@
       "ctx": 262144,
       "inPerM": 0.07,
       "outPerM": 0.28,
-      "listInPerM": 0.0875,
-      "listOutPerM": 0.35,
-      "discount": 20,
+      "listInPerM": 0.1495,
+      "listOutPerM": 0.598,
+      "discount": 53,
       "free": false
     },
     {
@@ -3675,9 +3723,9 @@
       "ctx": 131072,
       "inPerM": 0.096,
       "outPerM": 0.4,
-      "listInPerM": 0.12,
-      "listOutPerM": 0.5,
-      "discount": 20,
+      "listInPerM": 0.13,
+      "listOutPerM": 0.52,
+      "discount": 26,
       "free": false
     },
     {
@@ -3699,9 +3747,9 @@
       "ctx": 131072,
       "inPerM": 0.08,
       "outPerM": 0.176,
-      "listInPerM": 0.1,
-      "listOutPerM": 0.22,
-      "discount": 20,
+      "listInPerM": 0.2275,
+      "listOutPerM": 0.91,
+      "discount": 65,
       "free": false
     },
     {
@@ -4605,6 +4653,18 @@
       "free": false
     },
     {
+      "id": "openai/gpt-6-astra",
+      "name": "GPT-6-Astra",
+      "type": "other",
+      "ctx": 1050000,
+      "inPerM": 8,
+      "outPerM": 40,
+      "listInPerM": 10,
+      "listOutPerM": 50,
+      "discount": 20,
+      "free": false
+    },
+    {
       "id": "meta/muse-spark-1.1",
       "name": "meta/muse-spark-1.1",
       "type": "other",
@@ -4698,6 +4758,18 @@
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
+      "free": false
+    },
+    {
+      "id": "deepseek/deepseek-v4-flash-0731",
+      "name": "DeepSeek: DeepSeek V4 Flash",
+      "type": "text",
+      "ctx": 1048576,
+      "inPerM": 0.056,
+      "outPerM": 0.112,
+      "listInPerM": 0.07,
+      "listOutPerM": 0.14,
+      "discount": 20,
       "free": false
     }
   ]

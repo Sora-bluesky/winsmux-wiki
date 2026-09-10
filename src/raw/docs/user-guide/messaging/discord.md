@@ -2,7 +2,7 @@
 title: "Discord"
 description: "Hermes Agent を Discord のボットとして設定する"
 upstream_path: user-guide/messaging/discord.md
-upstream_blob: 609ab4391875888750ee0c334356efd9bb517a06
+upstream_blob: dfad0cc25b560dc75c902d8c1e304ed89602e03e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/discord
 ---
@@ -325,7 +325,7 @@ Discord の振る舞いは 2 つのファイルで決まります。認証情報
 :::warning ボットどうしの会話には対応していません
 `DISCORD_ALLOW_BOTS` は、信頼できる特定のボット（中継用や Webhook のボットなど）からの入力を受け付けるためのもので、2 つの Hermes のプロファイルを会話させるためのものではありません。既定の `"none"` はほかのボットをすべて無視する、安全な設定です。
 
-複数の Hermes のプロファイルに `"mentions"` や `"all"` を設定して、共有のチャンネルで互いに返信させる構成は対応していません。Discord は返信のたびに返信先の投稿者を自動で `@mentions` するため、`"mentions"` では 2 つのボットが互いのメンションの条件をいつまでも満たし合い、応答が止まらなくなります。これを止める仕組みはありません。対応している設定は `DISCORD_ALLOW_BOTS` を `"none"` のままにしておくことだけだからです。どうしても特定のボットを受け付けるなら、対象を狭く絞り、自動で返信するエージェントは決して相手にしないでください。
+複数の Hermes のプロファイルに `"mentions"` や `"all"` を設定して、共有のチャンネルで互いに返信させる構成は対応していません。Discord は返信のたびに返信先の投稿者を自動で `@mentions` するため、`"mentions"` では 2 つのボットが互いのメンションの条件を満たし合い、応答が止まらなくなります。ゲートウェイのボットのループ対策は、これを防ぐものではなく被害を抑えるものです。1 つのチャンネルでボットが書いたメッセージが 5 分以内に 20 件に達すると、そのチャンネルでのボットのメッセージはその後 10 分間捨てられます（`config.yaml` の `gateway.bot_loop_guard` で調整できます。人間のメッセージは数えません）。それでも、対応している設定は `DISCORD_ALLOW_BOTS` を `"none"` のままにしておくことです。どうしても特定のボットを受け付けるなら、対象を狭く絞り、自動で返信するエージェントは決して相手にしないでください。
 :::
 
 ### 設定ファイル（`config.yaml`） {#config-file-configyaml}

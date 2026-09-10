@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-10",
+  "generatedAt": "2026-09-11",
   "entries": [
     {
       "date": "2026-09-10",
-      "sha": null,
-      "upstream": "b88e677",
+      "sha": "235531f",
+      "upstream": null,
       "pages": [
         {
           "id": "developer-guide/architecture",
@@ -52,6 +52,16 @@
           "url": "/hermes/docs/integrations/providers/"
         },
         {
+          "id": "reference/cli-commands",
+          "title": "CLI コマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
           "id": "reference/faq",
           "title": "よくある質問とトラブル対処",
           "url": "/hermes/docs/reference/faq/"
@@ -60,6 +70,11 @@
           "id": "reference/optional-skills-catalog",
           "title": "オプションスキルの一覧",
           "url": "/hermes/docs/reference/optional-skills-catalog/"
+        },
+        {
+          "id": "reference/profile-commands",
+          "title": "プロファイルのコマンド早見表",
+          "url": "/hermes/docs/reference/profile-commands/"
         },
         {
           "id": "reference/skills-catalog",
@@ -82,9 +97,19 @@
           "url": "/hermes/docs/user-guide/cli/"
         },
         {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
           "id": "user-guide/desktop",
           "title": "Hermes Desktop",
           "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/api-server",
+          "title": "API サーバー",
+          "url": "/hermes/docs/user-guide/features/api-server/"
         },
         {
           "id": "user-guide/features/browser",
@@ -122,9 +147,29 @@
           "url": "/hermes/docs/user-guide/features/mcp/"
         },
         {
+          "id": "user-guide/features/memory-providers",
+          "title": "記憶プロバイダー",
+          "url": "/hermes/docs/user-guide/features/memory-providers/"
+        },
+        {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
           "id": "user-guide/features/plugins",
           "title": "プラグイン",
           "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/tool-gateway",
+          "title": "Nous Tool Gateway",
+          "url": "/hermes/docs/user-guide/features/tool-gateway/"
+        },
+        {
+          "id": "user-guide/features/tool-search",
+          "title": "ツール検索",
+          "url": "/hermes/docs/user-guide/features/tool-search/"
         },
         {
           "id": "user-guide/messaging",
@@ -137,9 +182,29 @@
           "url": "/hermes/docs/user-guide/messaging/irc/"
         },
         {
+          "id": "user-guide/messaging/line",
+          "title": "LINE",
+          "url": "/hermes/docs/user-guide/messaging/line/"
+        },
+        {
+          "id": "user-guide/messaging/matrix",
+          "title": "Matrix",
+          "url": "/hermes/docs/user-guide/messaging/matrix/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
           "id": "user-guide/multi-connection-desktop",
           "title": "デスクトップ版を複数の Hermes につなぐ",
           "url": "/hermes/docs/user-guide/multi-connection-desktop/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
         },
         {
           "id": "user-guide/sessions",
@@ -157,14 +222,14 @@
           "url": "/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/"
         },
         {
-          "id": "user-guide/tui",
-          "title": "TUI",
-          "url": "/hermes/docs/user-guide/tui/"
+          "id": "user-guide/skills/bundled/research/research-rss-feeds",
+          "title": "user-guide/skills/bundled/research/research-rss-feeds",
+          "url": "/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/"
         },
         {
-          "id": "user-guide/windows-native",
-          "title": "Windows（ネイティブ）ガイド",
-          "url": "/hermes/docs/user-guide/windows-native/"
+          "id": "user-guide/skills/bundled/social-media/social-media-reddit-reading",
+          "title": "user-guide/skills/bundled/social-media/social-media-reddit-reading",
+          "url": "/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/"
         },
         {
           "id": "user-guide/skills/optional/productivity/productivity-property-listings",
@@ -180,6 +245,16 @@
           "id": "user-guide/skills/optional/social-media/social-media-reddit-reading",
           "title": "Reddit Reading — Reddit を読む。サブレディット、検索、スレッド、ユーザー",
           "url": "/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/"
+        },
+        {
+          "id": "user-guide/tui",
+          "title": "TUI",
+          "url": "/hermes/docs/user-guide/tui/"
+        },
+        {
+          "id": "user-guide/windows-native",
+          "title": "Windows（ネイティブ）ガイド",
+          "url": "/hermes/docs/user-guide/windows-native/"
         }
       ]
     },
@@ -275,7 +350,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLI コマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -748,7 +823,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLI コマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -1099,7 +1174,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLI コマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -1159,7 +1234,7 @@
         },
         {
           "id": "user-guide/features/memory-providers",
-          "title": "記憶プロバイダ",
+          "title": "記憶プロバイダー",
           "url": "/hermes/docs/user-guide/features/memory-providers/"
         },
         {
@@ -1216,7 +1291,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLI コマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -2323,7 +2398,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLI コマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -2430,7 +2505,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLI コマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -2531,7 +2606,7 @@
       "pages": [
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLI コマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         }
       ]
@@ -2598,7 +2673,7 @@
         },
         {
           "id": "user-guide/features/memory-providers",
-          "title": "記憶プロバイダ",
+          "title": "記憶プロバイダー",
           "url": "/hermes/docs/user-guide/features/memory-providers/"
         },
         {
@@ -2727,7 +2802,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLI コマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -2893,7 +2968,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLI コマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -2952,6 +3027,7 @@
     }
   ],
   "digests": {
+    "2026-W37": "内部構造の解説が広く入れ替わり、コンテキストの圧縮とキャッシュ、プロンプトの組み立て、cron やゲートウェイ、ツールの実行基盤が新しい内容に揃いました。使う側では、続く目標（Goal）、セッションの定期確認、かんばん、フォールバックプロバイダー、Hermes Desktop とデスクトップ向けプラグイン SDK、Bot Mode、Telegram や Discord との連携が更新されています。新しいページとして、認証情報の保管庫、無料枠、Archify スキルの説明が加わりました。",
     "2026-W36": "同梱スキルとオプションスキルの一覧が入れ替わり、Apple 製ツールの操作、コーディング CLI への委任、資料作成、機械学習まわりといった個別の説明が並んだ。手元で動かす話も更新され、Ollama、Termux（Android）、Mac でのローカル LLM、プロファイルの配布が加わっている。設定と環境変数、スラッシュコマンドの早見表、モデルの設定、メッセージングのゲートウェイ（Slack・Telegram・Google Chat・メール）も追従した。",
     "2026-W35": "設定・Docker・環境変数まわりと、プラグイン開発（メモリプロバイダ、ターミナル環境プロバイダ、イベントフック）の解説が広く入れ替わった。ブラウザ自動操作、コンピュータ操作、定期実行タスク（cron）、サブエージェントへの委任、ツール検索といった実行系も更新されている。Slack・WeCom・Signal・Agentmail などの連携先と、Google Gemini やフォールバックプロバイダー、Nous Tool Gateway といったモデル側の記述も追随した。",
     "2026-W34": "Bot モードと Hermes デスクトップアプリを中心に更新が入った。定時実行の内部、cron での自動化、API サーバー、プログラムからの連携など、動かし続けるための記述が多い。AWS Bedrock やフォールバックプロバイダー、ずっと残る記憶、BlueBubbles・Telegram の連携も更新対象になっている。"

@@ -2,7 +2,7 @@
 title: "フォールバックプロバイダー"
 description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: 82dc096324fb471ac4ce85e54bf6b17448acb9d9
+upstream_blob: 50d465f65543941bae96da7622a133a7fe25f293
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
@@ -216,11 +216,11 @@ Hermes は脇のタスクに、別の軽量なモデルを使います。タス�
 
 ### 自動判定の連鎖 {#auto-detection-chain}
 
-タスクのプロバイダーが `"auto"`（既定値）になっている場合、Hermes はまずその補助タスクにメインのプロバイダーとメインのモデルを試します。その経路が使えないか、あとで容量系のエラーで失敗した場合、Hermes は組み込みの探索連鎖を使う前に、利用者が設定したフォールバックの方針を尊重します。
+タスクのプロバイダーが `"auto"`（既定値）になっている場合、Hermes はまずその補助タスクにメインのプロバイダーとメインのモデルを試します。その経路が使えないか、あとで容量系のエラーで失敗した場合、Hermes は利用者が設定したフォールバックの方針に従い、そこで止まります。
 
 ```text
 Main provider + main model → auxiliary.<task>.fallback_chain →
-fallback_providers / fallback_model → built-in auxiliary discovery chain
+fallback_providers / fallback_model → skip the task (warn)
 ```
 
 課金や使用量で失敗したときに一時的に外されるのは、失敗したその独自エンドポイントだけで、補助タスクの健全性のクールダウンの間だけです。`custom` として登録された経路がまとめて外れるわけではありません。ベース URL の違う健全なローカルのエンドポイントは、引き続き控えとしても、そのあとの自動の割り振りの先としても選ばれます。同じ独自エンドポイントの別名どうしは、健全性の状態を共有します。組み込みのプロバイダーは、これまでどおりアカウントを共有する形の健全性の確認を行います。
@@ -241,7 +241,7 @@ Main provider (if vision-capable) → OpenRouter → Nous Portal →
 Codex OAuth → Anthropic → Custom endpoint → give up
 ```
 
-これらの組み込みの連鎖は、タスクごとの方針もメインのフォールバック方針も宣言していない人のための、便宜的な受け皿です。
+これらの組み込みの連鎖が動くのは、**メインのプロバイダーが選ばれていないときだけ**です（`model.provider: auto` または未設定）。メインのプロバイダーを選んだあとは、メインの経路が使えず `fallback_chain` / `fallback_providers` も無い場合、補助タスクは警告を出して飛ばされます。たまたまログインしている別のプロバイダーを推測して使うことはしません。期限切れの xAI や Codex のセッションが、知らないうちに Nous Portal や OpenRouter の残高で課金されることがあってはならないからです。フォールバックが必要なら宣言してください。
 
 ### 補助プロバイダーの設定 {#configuring-auxiliary-providers}
 
@@ -271,7 +271,7 @@ auxiliary:
     model: ""
 ```
 
-上のタスクはどれも同じ **provider / model / base_url** のかたちに従います。各タスクは自前の `fallback_chain` を宣言することもできます。省略した場合、`provider: auto` は Hermes の組み込みの補助用探索連鎖より前に、トップレベルの `fallback_providers` の連鎖を使います。
+上のタスクはどれも同じ **provider / model / base_url** のかたちに従います。各タスクは自前の `fallback_chain` を宣言することもできます。省略した場合、`provider: auto` はトップレベルの `fallback_providers` の連鎖を使います（組み込みの探索連鎖が使われるのは、メインのプロバイダーが選ばれていないときだけです）。
 
 コンテキスト圧縮は `auxiliary.compression` の下で設定します。
 

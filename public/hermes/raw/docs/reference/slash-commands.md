@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 005be52a9a4a02ea09113eec397a7c0cbbda825a
+upstream_blob: 8e92c56f334954136ce5b0f5c1644cec921e30a6
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -136,6 +136,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/usage` | トークンの使用量、費用の内訳、セッションの経過時間を表示し、使っているプロバイダが対応していれば、そのプロバイダの API から取ってきた残りの利用枠・クレジット・プランの消費を示す **Account limits** の節も出します。 |
 | `/topup` | Nous の残高を表示し、ポータルで支払いを管理します（以前の `/credits` と `/billing` を置き換えたものです）。 |
 | `/subscription`（別名: `/upgrade`） | **CLI 専用。** Nous のプランを確認し、ブラウザで変更します。 |
+| `/login` | Nous のアカウントでサインインします。会話のターンとは別に動き、同意用のリンクとコードがセッションに届きます。ブラウザで承認した時点でサインインが完了します。詳しくは [Nous の無料枠](/hermes/docs/user-guide/free-tier/) を見てください。 |
 | `/insights` | 使用状況の分析結果を表示します（直近 30 日） |
 | `/update` | Hermes Agent を最新版に更新します。 |
 | `/platforms`（別名: `/gateway`） | ゲートウェイとメッセージングプラットフォームの状態を表示します（CLI 専用のまとめ表示です）。 |
@@ -259,6 +260,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/sessions [all] [search <query>]` | このチャットの過去のセッションを一覧表示します。今使っているセッションには `(current)` の印が付きます。`/sessions search <query>` はタイトルや ID の一致で絞り込みます（最近使ったものが先に出ます）。`/sessions all` は発生元をまたいで一覧表示します（管理者専用。管理者でない場合は案内が出て、チャットの範囲の一覧が返ります）。 |
 | `/usage` | トークンの使用量、費用の内訳の見積もり（入力・出力）、コンテキストウィンドウの状態、セッションの経過時間を表示し、使っているプロバイダが対応していれば、そのプロバイダの API から取ってきた残りの利用枠・クレジットを示す **Account limits** の節も出します。 |
 | `/topup` | Nous の残高を表示し、ポータルで支払いを管理します。 |
+| `/login` | Nous のアカウントでサインインします。**ペアリング済みのダイレクトメッセージ限定**です。グループ、チャンネル、一斉配信型のプラットフォームでは Hermes が受け付けません。Slack では `/hermes login` を使います。詳しくは [Nous の無料枠](/hermes/docs/user-guide/free-tier/) を見てください。 |
 | `/whoami` | 自分のスラッシュコマンドの権限（管理者 / 一般ユーザー）を表示します。 |
 | `/insights [days]` | 使用状況の分析結果を表示します。 |
 | `/reasoning [level\|show\|hide\|full\|clamp] [--global]` | 推論の深さを変える（レベルは `max` / `ultra` まであります）、または推論の表示を切り替えます（`full` / `clamp` も含みます）。`--global` を付けると config に残します。 |
@@ -312,7 +314,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 - `/verbose` は**既定では CLI 専用**ですが、`config.yaml` で `display.tool_progress_command: true` にするとメッセージングプラットフォームでも使えます。有効にすると `display.tool_progress` のモードを順に切り替え、設定に保存します。
 - `/focus` と `/verbose` は同じ抑制の経路（`display.tool_progress`）を共有するので、互いに矛盾することはありません。`/focus on` はツールの進捗表示を `off` に固定し、それまでのモードを `display.focus_saved_tool_progress` に控えておきます。`/focus off` でそれを戻します。フォーカス中に `/verbose` で切り替えると、モードの主導権が戻ってフォーカスのバッジは消えます。フォーカス表示は見た目だけのもので、会話の履歴もシステムプロンプトもモデルへ送るものも一切変えないので、プロンプトキャッシュへの影響はゼロです。
 - `/sethome`、`/restart`、`/approve`、`/deny`、`/topic`、`/platform`、`/commands` は**メッセージング専用**のコマンドです。
-- `/status`、`/egress`、`/version`、`/whoami`、`/bg`、`/btw`、`/queue`、`/steer`、`/voice`、`/reload-mcp`、`/reload-skills`、`/rollback`、`/diff`、`/debug`、`/fast`、`/approvals`、`/busy`、`/footer`、`/curator`、`/kanban`、`/topup`、`/suggestions`、`/blueprint`、`/learn`、`/init`、`/sessions`、`/yolo` は、CLI とメッセージングゲートウェイの**どちらでも**動きます。
+- `/status`、`/egress`、`/version`、`/whoami`、`/bg`、`/btw`、`/queue`、`/steer`、`/voice`、`/reload-mcp`、`/reload-skills`、`/rollback`、`/diff`、`/debug`、`/fast`、`/approvals`、`/busy`、`/footer`、`/curator`、`/kanban`、`/topup`、`/login`、`/suggestions`、`/blueprint`、`/learn`、`/init`、`/sessions`、`/yolo` は、CLI とメッセージングゲートウェイの**どちらでも**動きます。
 - `/voice join`、`/voice channel`、`/voice leave` は Discord でしか意味がありません。
 - TUI では、`/sessions` は今の TUI プロセスで動いているセッションを表示します。保存済みや閉じたあとの記録には `/resume [name]` か `hermes --tui --resume <id-or-title>` を使ってください。
 

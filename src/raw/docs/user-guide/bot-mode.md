@@ -2,7 +2,7 @@
 title: "Bot Mode"
 description: "Hermes のプロファイルを、名前を持つ Bot の一覧に変えます。それぞれが自分のチャット、役割、モデル、記憶、スキル、アバターを持ちます。Bot は定期タスクをこなし、グループチャットを共有し、互いにメッセージを送り合います。"
 upstream_path: user-guide/bot-mode.md
-upstream_blob: 7c086535b03509c7ef5ad886f1e4b681dac52ca7
+upstream_blob: c5a5a15a6cfc1ed5bad0dc40265a4f9a15a08180
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/bot-mode
 ---
@@ -265,7 +265,7 @@ Tailscale や VPN でネットワークをつないでください。
 
 ## 無効にする {#turning-it-off}
 
-Bot Mode は同梱のデスクトッププラグインです。**Settings → Plugins → Bots** で切ると、一覧、Routines ペイン、入力欄の中間処理がその場で解除されます。再起動は要りません。どちらの状態でも、プロファイル、セッション、cron ジョブには手が付きません。Bot Mode があなたのデータを所有することはなく、それを表示しているだけです。
+Bot Mode は同梱のデスクトッププラグインです。**Capabilities → Plugins → Bots** で **Desktop** のスイッチを切ると、一覧、Routines ペイン、入力欄の中間処理がその場で解除されます。再起動は要りません。どちらの状態でも、プロファイル、セッション、cron ジョブには手が付きません。Bot Mode があなたのデータを所有することはなく、それを表示しているだけです。
 
 唯一の Bot Chat を通常のサイドバーのセッション一覧から隠す設定もあります。こうすると、Bots ペインの中だけに現れます。（本体の「セッションを隠す」フラグを使います。古いゲートウェイでは、そのまま表示されたままになります。）
 
