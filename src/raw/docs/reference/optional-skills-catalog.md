@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: cb7034f20396d3fe0fa02776916f77cbaa6717d5
+upstream_blob: 6d348df87c8fce9283eebe9b5e7ed16cb7cd45df
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -36,6 +36,7 @@ hermes skills uninstall <skill-name>
 |-------|-------------|
 | [**antigravity-cli**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli/) | Antigravity CLI（agy）を操作します。プラグイン、認証、サンドボックスに対応。 |
 | [**blackbox**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/) | 複数モデルを使う Blackbox AI の CLI にコーディング作業を任せます。 |
+| [**dynamic-workflow**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/) | 計画をコードで書いて並列に展開し、敵対的な検証と段階的な実行を行います。 |
 | [**grok**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/) | xAI Grok Build CLI にコーディングを任せます（機能追加、PR 作成）。 |
 | [**honcho**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/) | Hermes 向けに Honcho の記憶機能を設定し、不具合を切り分けます。 |
 | [**openhands**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/) | OpenHands CLI にコーディングを任せます（モデルを選ばず、LiteLLM 対応）。 |
@@ -79,7 +80,6 @@ hermes skills uninstall <skill-name>
 | [**sketch**](/hermes/docs/user-guide/skills/optional/creative/creative-sketch/) | 使い捨ての HTML モックアップ。見比べるための案を 2〜3 通り作ります。 |
 | [**social-media-content-calendar**](/hermes/docs/user-guide/skills/optional/creative/creative-social-media-content-calendar/) | 複数の SNS をまたぐ施策を、企画書から投稿まで計画します。 |
 | [**tldraw-offline**](/hermes/docs/user-guide/skills/optional/creative/creative-tldraw-offline/) | オフラインの tldraw キャンバスをエージェントから操作し、自動化します。 |
-| [**touchdesigner-mcp**](/hermes/docs/user-guide/skills/optional/creative/creative-touchdesigner-mcp/) | twozero の MCP 経由で TouchDesigner を操作します。 |
 | [**unreal-mcp**](/hermes/docs/user-guide/skills/optional/creative/creative-unreal-mcp/) | Unreal Engine のエディタでシーン、アクター、レンダリングを自動化します。 |
 
 ## data-science {#data-science}

@@ -2,7 +2,7 @@
 title: "出来事のフック"
 description: "節目ごとに自分のコードを走らせます — 動きの記録、通知、webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 182b045920a3f3cdcc6589c4d867bbdcfc9cd76b
+upstream_blob: e5562398080d7093a8089e852ad977ab22be666e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -444,6 +444,7 @@ def register(ctx):
 | `pre_command` | 見張り役 | 見分けの付いたスラッシュコマンドが振り分けられる直前、処理役が動く前に、CLI とゲートウェイの冷たい経路の振り分けで。v1 では戻り値は無視されます（指示の形をした辞書は debug で記録されます）。ゲートウェイで動いているエージェントに割り込むコマンド（動いている最中の `/stop`、`/approve`）はわざと外してあります。制御側の逃げ道は、プラグインの手の届かないところに置く必要があるからです。 | `surface`（`"cli"` \| `"gateway"`）、`command`（決まった名前）、`alias_used`、`args_raw`、`session_key`、`platform` | `args_raw` に、コマンドのあとに打たれた利用者の中身や秘密が入りえます。 |
 | `pre_approval_request` | 見張り役 | 尋ねる形の承認や賢い承認の前。戻り値は無視されます。 | `command`、`description`、`pattern_key`、`pattern_keys`、`session_key`、`surface`、`turn_id`、`tool_call_id` | コマンドに秘密が入りえます。賢い見張りの下ごしらえでは伏せ字が強いられますが、どの面でも同じ伏せ方というわけではありません。 |
 | `post_approval_response` | 見張り役 | 判断、時間切れ、あるいはゲートウェイの通知の失敗のあと。戻り値は無視されます。 | `command`、`description`、`pattern_key`、`pattern_keys`、`session_key`、`surface`、`turn_id`、`tool_call_id`、`choice`。賢い経路では `decided_by` が足されることがあります | コマンドの機微さは同じで、そこに判断の情報が加わります。 |
+| `on_room_member_activity` | 見張り役 | Bot モードのゲートウェイで、ホストしている Group Chat のメンバーのターンが動いているあいだ、メンバーのセッションが出す実行時の出来事（道具の開始と完了、承認の依頼、メッセージや推論の差分、エラー）ごとに 1 回。受け手ごとにトークンの経路の外で待ち行列に積まれます。戻り値は無視されます。 | `room_id`、`thread_id`、`member_id`、`turn_id`、`task_id`、`execution_generation`、`kind`、`seq`、`payload` | `payload` はクライアントに渡してよいセッションの出来事の中身です。道具の引数と結果、伏せ字にした承認のコマンド、流れてくるメンバーの文章が入ります。 |
 | `kanban_task_claimed` | 見張り役 | 取得が確定したあと、振り分け役のプロセスで、働き手が生まれる前。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id` | 板・仕事・プロファイル・担当の識別子。 |
 | `kanban_task_completed` | 見張り役 | 完了と片づけのあと、たいていは働き手のプロセスで。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id`、`summary` | まとめに案件や利用者の中身が入りえます。 |
 | `kanban_task_blocked` | 見張り役 | 止まったことへ移ったあと。依存待ちの経路では、その取引が終わる前に発火します。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id`、`reason` | 理由に案件や利用者の中身が入りえます。 |
@@ -1328,6 +1329,51 @@ def log_decision(command, choice, session_key, **kwargs):
 
 def register(ctx):
     ctx.register_hook("post_approval_response", log_decision)
+```
+
+---
+
+### `on_room_member_activity` {#onroommemberactivity}
+
+ホストしている [Group Chat](/hermes/docs/user-guide/bot-mode/#groups-and-group-chats) のメンバーのターンが動いているあいだに発火します。メンバーは、どのクライアントもつながっていない隠れた `Group: <room>` セッションの上で動きます。そのため部屋のログの `turn.started` から `turn.settled` までのあいだ、ターンの中身は外から見えません。このフックは、そのセッションがもともと出している実行時の出来事（道具の開始と完了、承認の依頼、流れてくる文章と推論、エラー）に部屋の座標を刻んで外へ映します。これでクライアント（Hermes Crew、ダッシュボード、監査ログ）は、文章から何かを推し量らなくても、道具のカード、承認の問いかけ、メンバーのいまの状態を描けます。実行、段取り、残り続けるログの持ち主は Group Chat の実行側のままで、プラグインは見るだけです。
+
+**呼び出しの形:**
+
+```python
+def my_callback(
+    room_id: str,
+    thread_id: str,
+    member_id: str,
+    turn_id: str,
+    task_id: str,
+    execution_generation: int,
+    kind: str,
+    seq: int | None,
+    payload: dict,
+    **kwargs,
+):
+```
+
+| 引数 | 型 | 説明 |
+|-----------|------|-------------|
+| `room_id`、`thread_id`、`turn_id`、`task_id` | `str` | 部屋のログの `turn.*` と `message.member` の出来事が持つのと同じ座標です。これで突き合わせます。 |
+| `member_id` | `str` | 席に着いているメンバー（`groups.state` の `members[].member_id`）。 |
+| `execution_generation` | `int` | 同じ仕事をやり直すたびに増えます。取って代わられた試みからの出来事は、古い値を持っています。 |
+| `kind` | `str` | `tool.started`、`tool.completed`、`tool.output_risk`、`request.opened`（承認）、`message.delta`、`message.interim`、`reasoning.delta`、`turn.error`。種類は足されていくだけです。 |
+| `seq` | `int \| None` | メンバーのセッションの、プロセスごとの出来事の通し番号（`session.events.since` と同じ番号の振り方）。1 つのゲートウェイのプロセスの中では単調に増え、再起動で振り出しに戻ります。 |
+| `payload` | `dict` | 元になったセッションの出来事の、クライアントに渡してよい中身（`tool_id`、`name`、`args`、`result`、`request_id`、`choices`、`text` など）。承認のコマンドは、認証情報がすでに伏せ字になっています。 |
+
+**届け方:** 登録したコールバックごとに、上限のある専用の待ち行列と働き手のスレッドが付きます（`on_stream_*` と同じ仕組み）。遅いコールバックは、待っている出来事のうちいちばん古いものを捨てるので、メンバーのターンを遅らせることはありません。部屋のログには何も書かれません。差分は残らず、あとから再生もされないので、残しておきたいクライアントは受け取ったものを自分で保存します。対象は手元のメンバーだけです。別の端末から席に着いたメンバーはその端末のゲートウェイで動き、そちらのプラグインから見えます。
+
+**戻り値:** 無視されます。
+
+```python
+def on_member_activity(room_id, member_id, turn_id, kind, payload, **kwargs):
+    if kind == "request.opened":
+        notify(f"{member_id} in {room_id} needs approval: {payload['command']}")
+
+def register(ctx):
+    ctx.register_hook("on_room_member_activity", on_member_activity)
 ```
 
 ---

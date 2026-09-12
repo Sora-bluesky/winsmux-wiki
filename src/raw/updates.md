@@ -8,6 +8,20 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-09-12
+
+- [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- [シークレットソースプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/secret-source-plugin/)
+- [AWS Bedrock](https://wiki.winsmux.dev/hermes/docs/guides/aws-bedrock/)
+- [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [出来事のフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
+- [画像を見せる・貼り付ける](https://wiki.winsmux.dev/hermes/docs/user-guide/features/vision/)
+- [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- [ローカルモデル](https://wiki.winsmux.dev/hermes/docs/user-guide/local-models/)
+- [Hermes Relay](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/relay/)
+- [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
+
 ## 2026-09-11
 
 - [デスクトッププラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
@@ -248,7 +262,7 @@ raw: /hermes/raw/updates.md
 - [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
 - [Slack](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/slack/)
 - [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
-- [複数のゲートウェイを同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
+- [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
 - [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
 - [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
 

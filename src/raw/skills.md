@@ -12,11 +12,11 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 225 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 224 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `1021a03`（2026-09-11）時点。この一覧は上流の docs から機械生成しています。
+上流 `d595e63`（2026-09-12）時点。この一覧は上流の docs から機械生成しています。
 
-## 最初から入っている（84）
+## 最初から入っている（83）
 
 - 何もしなくても使えます。
 
@@ -47,7 +47,6 @@ raw: /hermes/raw/skills.md
 | [Pretext](/hermes/docs/user-guide/skills/bundled/creative/creative-pretext/) | Build creative browser demos with DOM-free text layout | 2026-07-23 |
 | [Sketch](/hermes/docs/user-guide/skills/bundled/creative/creative-sketch/) | Throwaway HTML mockups: 2-3 design variants to compare | 2026-07-29 |
 | [Songwriting And Ai Music](/hermes/docs/user-guide/skills/bundled/creative/creative-songwriting-and-ai-music/) | Songwriting craft and Suno AI music prompts | 2026-08-30 |
-| [Touchdesigner Mcp](/hermes/docs/user-guide/skills/bundled/creative/creative-touchdesigner-mcp/) | Control TouchDesigner via twozero MCP | 2026-07-24 |
 | [Sdlc Review](/hermes/docs/user-guide/skills/bundled/devops/devops-sdlc-review/) | Review Kanban handoffs and route verified outcomes | 2026-08-30 |
 | [Email Inbox Triage](/hermes/docs/user-guide/skills/bundled/email/email-email-inbox-triage/) | Triage an inbox: prioritize threads, draft replies safely | 2026-08-30 |
 | [Himalaya](/hermes/docs/user-guide/skills/bundled/email/email-himalaya/) | Himalaya CLI: IMAP/SMTP email from terminal | 2026-08-30 |
@@ -115,6 +114,7 @@ raw: /hermes/raw/skills.md
 |---|---|---|
 | [Antigravity Cli](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli/) | Operate the Antigravity CLI (agy): plugins, auth, sandbox | 2026-08-30 |
 | [Blackbox](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/) | Delegate coding tasks to the Blackbox AI multi-model CLI | 2026-08-30 |
+| [Dynamic Workflow](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/) | Plan-in-code fan-outs, adversarial verification, waves | 2026-09-12 |
 | [Grok](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/) | Delegate coding to xAI Grok Build CLI (features, PRs) | 2026-08-30 |
 | [Honcho](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/) | Configure and troubleshoot Honcho memory for Hermes | 2026-08-30 |
 | [Openhands](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/) | Delegate coding to OpenHands CLI (model-agnostic, LiteLLM) | 2026-08-30 |
@@ -135,7 +135,7 @@ raw: /hermes/raw/skills.md
 | [Heartmula](/hermes/docs/user-guide/skills/optional/creative/creative-heartmula/) | HeartMuLa: Suno-like song generation from lyrics + tags | 2026-08-30 |
 | [Hyperframes](/hermes/docs/user-guide/skills/optional/creative/creative-hyperframes/) | Render MP4/WebM videos from HTML compositions | 2026-08-30 |
 | [Impeccable](/hermes/docs/user-guide/skills/optional/creative/creative-impeccable/) | Frontend design guidance, upstream-maintained (impeccable) | 2026-08-30 |
-| [Kanban Video Orchestrator](/hermes/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator/) | Plan and run multi-agent video production pipelines | 2026-08-30 |
+| [Kanban Video Orchestrator](/hermes/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator/) | Plan and run multi-agent video production pipelines | 2026-09-12 |
 | [Meme Generation](/hermes/docs/user-guide/skills/optional/creative/creative-meme-generation/) | Create meme PNGs from templates with Pillow text overlay | 2026-08-30 |
 | [Pixel Art](/hermes/docs/user-guide/skills/optional/creative/creative-pixel-art/) | Pixel art w/ era palettes (NES, Game Boy, PICO-8) | 2026-08-30 |
 | [Pretext](/hermes/docs/user-guide/skills/optional/creative/creative-pretext/) | Build creative browser demos with DOM-free text layout | 2026-08-30 |
@@ -143,7 +143,6 @@ raw: /hermes/raw/skills.md
 | [Sketch](/hermes/docs/user-guide/skills/optional/creative/creative-sketch/) | Throwaway HTML mockups: 2-3 design variants to compare | 2026-08-30 |
 | [Social Media Content Calendar](/hermes/docs/user-guide/skills/optional/creative/creative-social-media-content-calendar/) | Plan multi-platform social campaigns: briefs to posting | 2026-08-30 |
 | [Tldraw Offline](/hermes/docs/user-guide/skills/optional/creative/creative-tldraw-offline/) | Drive and script tldraw offline canvases with an agent | 2026-08-30 |
-| [Touchdesigner Mcp](/hermes/docs/user-guide/skills/optional/creative/creative-touchdesigner-mcp/) | Control TouchDesigner via twozero MCP | 2026-08-30 |
 | [Unreal Mcp](/hermes/docs/user-guide/skills/optional/creative/creative-unreal-mcp/) | Automate Unreal Engine editor scenes, actors, and renders | 2026-08-30 |
 | [Jupyter Notebook](/hermes/docs/user-guide/skills/optional/data-science/data-science-jupyter-notebook/) | Iterative Python via live Jupyter kernel (hamelnb) | 2026-08-30 |
 | [Actual Setup](/hermes/docs/user-guide/skills/optional/devops/devops-actual-setup/) | Set up Actual Computer (actual.inc) inference in Hermes | 2026-09-07 |

@@ -55,9 +55,6 @@
           "id": "user-guide/configuration"
         },
         {
-          "id": "user-guide/free-tier"
-        },
-        {
           "id": "user-guide/managed-scope"
         },
         {
@@ -551,6 +548,9 @@
                       "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox"
                     },
                     {
+                      "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow"
+                    },
+                    {
                       "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok"
                     },
                     {
@@ -648,9 +648,6 @@
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-tldraw-offline"
-                    },
-                    {
-                      "id": "user-guide/skills/optional/creative/creative-touchdesigner-mcp"
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-unreal-mcp"
@@ -1533,7 +1530,6 @@
     "user-guide/windows-native",
     "user-guide/windows-wsl-quickstart",
     "user-guide/configuration",
-    "user-guide/free-tier",
     "user-guide/managed-scope",
     "user-guide/configuring-models",
     "user-guide/secrets/index",
@@ -1662,6 +1658,7 @@
     "user-guide/skills/bundled/web/web-blocked-page-recovery",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox",
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands",
@@ -1690,7 +1687,6 @@
     "user-guide/skills/optional/creative/creative-sketch",
     "user-guide/skills/optional/creative/creative-social-media-content-calendar",
     "user-guide/skills/optional/creative/creative-tldraw-offline",
-    "user-guide/skills/optional/creative/creative-touchdesigner-mcp",
     "user-guide/skills/optional/creative/creative-unreal-mcp",
     "user-guide/skills/optional/data-science/data-science-jupyter-notebook",
     "user-guide/skills/optional/devops/devops-actual-setup",

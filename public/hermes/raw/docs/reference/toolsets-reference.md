@@ -2,7 +2,7 @@
 title: "ツールセット一覧"
 description: "Hermes の中核・複合・プラットフォーム・動的の各ツールセットをまとめた一覧です。"
 upstream_path: reference/toolsets-reference.md
-upstream_blob: c6925facb009835a4bcc466c2e8e1cb6c1dd5319
+upstream_blob: eb6476e4f732418176cfdf84b7558d50ef9e7709
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 ---
@@ -72,7 +72,7 @@ hermes tools                            # curses UI to enable/disable per platfo
 | `context_engine` | (varies) | いま動いている context-engine のプラグインが出すツールです（プラグインが中身を入れるまでは空です）。 |
 | `image_gen` | `image_generate` | FAL.ai を使った、文章からの画像づくりです（希望すれば OpenAI や xAI も使えます）。 |
 | `video_gen` | `video_generate`, `xai_video_edit`, `xai_video_extend` | プラグインが登録した基盤（xAI Grok-Imagine、FAL.ai の Veo 3.1／Pixverse v6／Kling O3）を使い、文章や画像から動画を作ります。画像を動かしたいときは `image_url` を渡し、文章から作るときは省きます。`xai_video_edit` と `xai_video_extend` は提供元に固有の編集・延長のツールで、xAI Imagine の資格情報があるときだけ使えます。 |
-| `kanban` | `kanban_attach`, `kanban_attach_url`, `kanban_attachments`, `kanban_block`, `kanban_comment`, `kanban_complete`, `kanban_create`, `kanban_heartbeat`, `kanban_link`, `kanban_list`, `kanban_request_changes`, `kanban_request_review`, `kanban_show`, `kanban_unblock` | 複数のエージェントで足並みをそろえるためのツールです。差配役が起こした作業係（`HERMES_KANBAN_TASK`）と、`kanban` ツールセットを名指しで並べたプロファイルに登録されます（`all`／`*` のまとめ指定では**有効になりません**）。作業係は仕事を終わりにする、正式な見直しを頼む、止まっていると伝える、生きていると知らせる、コメントする、続きの仕事を作ってつなげる、といったことができます。差配側のプロファイルには、これに加えて一覧や止め解除といった板を回すためのツールが付きます。`delegate_task` で生まれた子は板の持ち主にはなりません。子の側ではこのツールセットが定義から外されて無効になり、親から `HERMES_KANBAN_*` の環境変数が渡っていても、板を直に書き換える操作は実行時に弾かれます。 |
+| `kanban` | `kanban_attach`, `kanban_attach_url`, `kanban_attachments`, `kanban_block`, `kanban_comment`, `kanban_complete`, `kanban_create`, `kanban_heartbeat`, `kanban_link`, `kanban_list`, `kanban_request_changes`, `kanban_request_review`, `kanban_show`, `kanban_unblock` | 複数のエージェントで足並みをそろえるためのツールです。差配役が起こした作業係（`HERMES_KANBAN_TASK`）と、保存済みの選択に `kanban` が含まれるプラットフォームに登録されます（`hermes tools enable kanban --platform <p>`。`all`／`*` のまとめ指定では**有効になりません**）。作業係は仕事を終わりにする、正式な見直しを頼む、止まっていると伝える、生きていると知らせる、コメントする、続きの仕事を作ってつなげる、といったことができます。差配側のプロファイルには、これに加えて一覧や止め解除といった板を回すためのツールが付きます。`delegate_task` で生まれた子は板の持ち主にはなりません。子の側ではこのツールセットが定義から外されて無効になり、親から `HERMES_KANBAN_*` の環境変数が渡っていても、板を直に書き換える操作は実行時に弾かれます。 |
 | `memory` | `memory` | セッションをまたいで残る記憶の管理です。 |
 | `desktop_ui` | `annotate_preview`, `close_preview`, `close_terminal`, `drive_preview`, `focus_pane`, `open_preview`, `react_to_message`, `read_preview`, `read_terminal`, `read_window_below`, `tour` | Hermes のデスクトップアプリそのものに働きかける機能です。組み込みの端末ペインを読む・閉じる、アプリ内のブラウザを開く・読む・閉じる・操作する・書き込みを添える、アプリの背後にある OS の窓を見分ける、ペインを表に出す、メッセージにリアクションを付ける、案内を流す（アプリや下見のペインで画面の要素を光らせながら説明する）といったことができます。デスクトップアプリから始まったセッションで有効になり、つなぎ先が手元でも SSH でも URL でも Hermes Cloud でも変わりません。CLI、TUI、メッセージ、定時実行のセッションには決して現れません。 |
 | `project` | `project_create`, `project_list`, `project_switch` | デスクトップの[プロジェクト](/hermes/docs/user-guide/cli/)（名前を付けた、複数のフォルダーをまとめた作業場）を作って切り替えます。画面のある、デスクトップのセッション専用です。 |

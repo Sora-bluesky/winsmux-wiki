@@ -2,7 +2,7 @@
 title: "音声モード"
 description: "Hermes Agent とリアルタイムで音声のやりとりをする — CLI、Telegram、Discord（DM、テキストチャンネル、ボイスチャンネル）"
 upstream_path: user-guide/features/voice-mode.md
-upstream_blob: 349b8936d2eda0f5aa421cf4a9523219340ce28f
+upstream_blob: 8750029e2bd0c9f401ac8d0a6b8db57f816bd110
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/voice-mode
 ---
@@ -195,6 +195,24 @@ voice:
 ```
 
 クライアント直結に対応している通信の形は、OpenAI（Nous が管理する音声を含む）、Groq、Mistral、DeepInfra の OpenAI 互換の形、xAI Grok の STT、そして ElevenLabs の STT と TTS です。OAuth で設定した xAI は中継のままになります（OAuth の認証情報はサーバー側で更新されるためです）。
+
+### デスクトップ: GPT-Live の音声会話モード（全二重、Hermes に任せる） {#desktop-gpt-live-voice-chat-mode-full-duplex-delegates-to-hermes}
+
+上で説明した処理をつなげる流れは、デスクトップアプリにある 2 つの音声会話モードのうちの 1 つです。もう 1 つは、STT → ターン → TTS というつながり全体を、**全二重の音声モデル 1 つ**、OpenAI の `gpt-live-1` に置き換えます。このモデルは話しながら聞き、割り込みや相づち、周りの雑音も自分でさばきます。そして**自分のツールは持っていません**。実際の作業を頼まれると、そのたびに Hermes へ*任せます*。Hermes はいつもどおり答え（セッションで選んでいるモデルとプロバイダー、すべてのツール、記憶、承認を使います）、音声側がその答えを言い換えて読み上げます。
+
+```yaml
+voice:
+  voice_chat_mode: gpt-live     # chained (default) | gpt-live
+  gpt_live:
+    voice: marin                # marin, cedar, quartz, ripple, vesper, willow, stone, gleam, meridian, …
+    instructions: ""            # optional extra persona sentences (tone, pace, language)
+```
+
+必要なもの: OpenAI の API キー（`OPENAI_API_KEY`、`VOICE_TOOLS_OPENAI_KEY`、または `voice.gpt_live.api_key`）。音声の部分は OpenAI から**セッション時間 1 分あたり $0.05** で請求されます（何もしていない時間も数えられます）。Hermes のターンは、これまでどおりそのプロバイダー側で別に請求されます。このモードは Settings → Voice → *Voice Chat Mode* でも選べます。
+
+仕組み: 音声ボタンを押すと、デスクトップから GPT-Live への WebRTC セッションが開きます。デスクトップが受け取るのはセッション ID と SDP の応答だけで、キーはゲートウェイのホストに残り、セッションを作るのもそのホストです（`POST /api/audio/voice-live/session`）。`session.delegation.created` が来るたびに、開いている会話でふつうのターンが 1 回動きます（吹き出しには話した内容が表示されます。直近の音声のやりとりは、システムプロンプトではなく、ターンごとの注記としてモデルへの入力に添えられるので、返事は読み上げやすい文章になります）。ツールの動きは「Hermes is working: terminal」のような控えめな文脈として音声側に渡されるので、尋ねれば何が起きているかを教えてくれます。最終的な答えは 1 文ずつ流れて返ってきます。止めるための言葉を言うと会話が終わります。`gpt-live` を選んでいてもキーが見つからないときは、知らせを出したうえで、ボタンが処理をつなげるモードに戻ります。
+
+このモードで使えないもの: Nous が管理する音声の中継（キーを直接使う場合だけです）、CLI/TUI（`/voice` は処理をつなげる流れのままです）、`tts` ツール（引き続き `tts.provider` を使います）。
 
 ### 割り込み {#barge-in}
 

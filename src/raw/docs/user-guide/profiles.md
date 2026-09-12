@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: 6eda1f11e9c10c125ddde253c5452c955a6555f0
+upstream_blob: e5e084f7a13a8f61ea4adba8df7332ad4b09ce9f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -59,7 +59,7 @@ hermes profile create researcher --description "Reads source code and external d
 hermes profile create work --clone
 ```
 
-いま使っているプロファイルの `config.yaml`、`.env`、`SOUL.md`、スキルを新しいプロファイルへコピーします。API キーもモデルもできることも同じで、セッションと記憶だけが新品になります。API キーを変えたいときは `~/.hermes/profiles/work/.env` を、人格を変えたいときは `~/.hermes/profiles/work/SOUL.md` を編集してください。
+いま使っているプロファイルの `config.yaml`、`.env`、`SOUL.md`、スキル、そして整理された記憶のファイル `memories/MEMORY.md` と `memories/USER.md` を新しいプロファイルへコピーします。記憶は `SOUL.md` と同じく、エージェントの人となりの一部として扱われます。セッション、`state.db`、cron ジョブをはじめ、ほかのものはすべて空から始まります。記憶も白紙にしたいときは、`--clone` を付けずにプロファイルを作るか、あとからこの 2 つのファイルを削除してください。ファイルがなくても、エージェントが別のプロファイルの記憶を代わりに読むことはありません。API キーを変えたいときは `~/.hermes/profiles/work/.env` を、人格を変えたいときは `~/.hermes/profiles/work/SOUL.md` を編集してください。
 
 ### まるごと複製する（`--clone-all`） {#clone-everything---clone-all}
 

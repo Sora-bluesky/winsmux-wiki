@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 8e92c56f334954136ce5b0f5c1644cec921e30a6
+upstream_blob: 61d5c3af2b9636f6aaba49161610c26fb482489b
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -136,7 +136,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/usage` | トークンの使用量、費用の内訳、セッションの経過時間を表示し、使っているプロバイダが対応していれば、そのプロバイダの API から取ってきた残りの利用枠・クレジット・プランの消費を示す **Account limits** の節も出します。 |
 | `/topup` | Nous の残高を表示し、ポータルで支払いを管理します（以前の `/credits` と `/billing` を置き換えたものです）。 |
 | `/subscription`（別名: `/upgrade`） | **CLI 専用。** Nous のプランを確認し、ブラウザで変更します。 |
-| `/login` | Nous のアカウントでサインインします。会話のターンとは別に動き、同意用のリンクとコードがセッションに届きます。ブラウザで承認した時点でサインインが完了します。詳しくは [Nous の無料枠](/hermes/docs/user-guide/free-tier/) を見てください。 |
+| `/login` | Nous のアカウントでサインインします。会話のターンとは別に動き、同意用のリンクとコードがセッションに届きます。ブラウザで承認した時点でサインインが完了します。 |
 | `/insights` | 使用状況の分析結果を表示します（直近 30 日） |
 | `/update` | Hermes Agent を最新版に更新します。 |
 | `/platforms`（別名: `/gateway`） | ゲートウェイとメッセージングプラットフォームの状態を表示します（CLI 専用のまとめ表示です）。 |
@@ -260,7 +260,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/sessions [all] [search <query>]` | このチャットの過去のセッションを一覧表示します。今使っているセッションには `(current)` の印が付きます。`/sessions search <query>` はタイトルや ID の一致で絞り込みます（最近使ったものが先に出ます）。`/sessions all` は発生元をまたいで一覧表示します（管理者専用。管理者でない場合は案内が出て、チャットの範囲の一覧が返ります）。 |
 | `/usage` | トークンの使用量、費用の内訳の見積もり（入力・出力）、コンテキストウィンドウの状態、セッションの経過時間を表示し、使っているプロバイダが対応していれば、そのプロバイダの API から取ってきた残りの利用枠・クレジットを示す **Account limits** の節も出します。 |
 | `/topup` | Nous の残高を表示し、ポータルで支払いを管理します。 |
-| `/login` | Nous のアカウントでサインインします。**ペアリング済みのダイレクトメッセージ限定**です。グループ、チャンネル、一斉配信型のプラットフォームでは Hermes が受け付けません。Slack では `/hermes login` を使います。詳しくは [Nous の無料枠](/hermes/docs/user-guide/free-tier/) を見てください。 |
+| `/login` | Nous のアカウントでサインインします。**ペアリング済みのダイレクトメッセージ限定**です。グループ、チャンネル、一斉配信型のプラットフォームでは Hermes が受け付けません。Slack では `/hermes login` を使います。 |
 | `/whoami` | 自分のスラッシュコマンドの権限（管理者 / 一般ユーザー）を表示します。 |
 | `/insights [days]` | 使用状況の分析結果を表示します。 |
 | `/reasoning [level\|show\|hide\|full\|clamp] [--global]` | 推論の深さを変える（レベルは `max` / `ultra` まであります）、または推論の表示を切り替えます（`full` / `clamp` も含みます）。`--global` を付けると config に残します。 |

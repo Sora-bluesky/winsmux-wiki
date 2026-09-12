@@ -2,14 +2,14 @@
 title: "動画生成プロバイダプラグイン"
 description: "Hermes Agent 向けの動画生成バックエンドプラグインを作る方法"
 upstream_path: developer-guide/video-gen-provider-plugin.md
-upstream_blob: 4301b6bd261ea5ed17734e48e6ce88f58216cf0b
+upstream_blob: ddb4a8aa31e54c4ab835fc832ac39bb7ad5d3950
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/video-gen-provider-plugin
 ---
 
 # 動画生成プロバイダプラグインを作る {#building-a-video-generation-provider-plugin}
 
-動画生成プロバイダプラグインは、`video_generate` ツールの呼び出しをすべて引き受けるバックエンドを登録します。組み込みのプロバイダ（xAI、FAL、DeepInfra）もプラグインとして同梱されています。新しいものを足したい場合も、同梱のものを差し替えたい場合も、`plugins/video_gen/<name>/` にディレクトリを 1 つ置くだけです。
+動画生成プロバイダプラグインは、`video_generate` ツールの呼び出しをすべて引き受けるバックエンドを登録します。組み込みのプロバイダ（xAI、FAL、OpenRouter、DeepInfra）もプラグインとして同梱されています。新しいものを足したい場合も、同梱のものを差し替えたい場合も、`plugins/video_gen/<name>/` にディレクトリを 1 つ置くだけです。
 
 :::tip
 動画生成は [画像生成プロバイダプラグイン](/hermes/docs/developer-guide/image-gen-provider-plugin/) とほぼ 1 行ずつ対応した作りになっています。画像生成のバックエンドを作ったことがあるなら、形はもう分かっているはずです。違うのは主に 2 点で、対応するモダリティ・アスペクト比・尺を伝える `capabilities()` メソッドがあることと、振り分けの決まりごと（`image_url` を渡せば画像から動画、渡さなければテキストから動画。どちらのエンドポイントを使うかはプロバイダが内部で選びます）があることです。

@@ -2,7 +2,7 @@
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: 41b7d5c94e80a31115caac2662ea0f2cfecf3fbb
+upstream_blob: b3045093bdcb467f84ad316b8a248f85054ff037
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -131,12 +131,25 @@ profile 'coder'. ...
 
 この拒否はサービス管理のしくみに触れる前に CLI のなかで起きるので、受け持たれて
 いるプロファイルが systemd の失敗した単位を抱え込んだり、launchd の再起動の輪に
-はまったりすることはありません。デスクトップアプリのプロファイルごとの
-「Start gateway」も同じように断られます。「受け持っている」かどうかは動いている
+はまったりすることはありません。coder が自前のゲートウェイを持たないときは、
+`hermes -p coder gateway stop` も同じように断られます（終了コード 78）。止める対象は
+多重化のプロセスしかなく、それを止めるのは既定プロファイルでの
+`hermes gateway stop` で、受け持っているすべてのプロファイルがまとめて止まります。
+ダッシュボードとデスクトップアプリも CLI に従います。受け持たれているプロファイルでは、
+ゲートウェイの「Start」と「Stop」は同じ説明を添えて `409` を返し（System のページに
+その場の知らせとして表示されます）、「Restart」は失敗するしかない
+`-p coder gateway restart` を立ち上げるのではなく、多重化のプロセス（実際にその
+プロファイルを受け持っているプロセス）を再起動します。この再起動はその端末のすべての
+ボットをつなぎ直すので、どちらのアプリも先に *"Restart the shared gateway? All bots on this device reconnect: default,
+coder, research"* と確認し（並ぶのは動いているゲートウェイの `served_profiles` です）、
+終わると *"Shared gateway restarted (3 bots)"* と知らせます。単独のプロファイルは
+これまでどおりの再起動のままです。`/api/status?profile=coder` も同じ一覧を
+`gateway_shared_with` として持ちます（単独のゲートウェイなら null）。
+「受け持っている」かどうかは動いている
 ゲートウェイ自身の記録（既定のホームの `gateway_state.json` にある
 `served_profiles`）から読むので、多重化を既定プロファイルの環境変数
 `GATEWAY_MULTIPLEX_PROFILES` だけで有効にした場合や、ゲートウェイの起動後に
-受け持ちの一覧を書き換えた場合でも正しいままです。
+プロファイルが足された場合でも正しいままです。
 
 多重化は唯一の受け口です。2 つめのプロファイルのゲートウェイが立つと、その
 プロファイルのプラットフォームを二重に掴んでしまいます。`--force`（`run`、
@@ -147,8 +160,8 @@ profile 'coder'. ...
 
 #### 2. HTTP で受けるプラットフォームは `/p/<profile>/` の接頭辞で届く {#2-http-inbound-platforms-are-reached-via-a-pprofile-url-prefix}
 
-従属側のプロファイル宛ての Webhook（ほか HTTP で受ける通信）は、2 つめのポート
-**ではなく**、既定の待ち受けにプロファイルの接頭辞を付けて届きます。
+従属側のプロファイル宛ての HTTP で受ける通信は、2 つめのポート **ではなく**、
+既定プロファイルの **1 つの** 待ち受けにプロファイルの接頭辞を付けて届きます。
 
 ```
 # default profile
@@ -158,23 +171,21 @@ POST http://host:8644/p/coder/webhooks/<route>
 ```
 
 接頭辞に知らないプロファイルや未設定のプロファイルを書くと `404` が返ります。
-1 つの待ち受けがこの形ですでに全プロファイルを受け持っているので、**従属側の
-プロファイルがポートを掴むプラットフォームを自分で有効にしてはいけません**。
-有効にすると設定の誤りとして扱われ、その従属プロファイル全体が飛ばされます
-（既定プロファイルとほかの健全なプロファイルは動き続けます）。警告には飛ばした
-プロファイル名と、ぶつかっているプラットフォームがすべて出ます。
+共有の待ち受けは既定プロファイルの `api_server` のポート（API サーバーが有効で
+なければ `webhook` のポート）で、プロファイルの接頭辞付きの宛先を 3 種類受け持ちます。
 
-```
-Skipping secondary profile 'coder' due to port-binding config error: Profile
-'coder' enables port-binding platform(s) webhook, but gateway.multiplex_profiles
-is on. ... Remove these platform entries from profile 'coder's config.yaml or
-configure them only on the default profile.
-```
-
-この決まりの対象になる、ポートを掴むプラットフォームは次のとおりです。`webhook`、
-`api_server`、`msgraph_webhook`、`feishu`、`wecom_callback`、`bluebubbles`、`sms`、
-`whatsapp_cloud`、`line`、`teams`。これらは **既定プロファイルにだけ** 設定して
-ください。どのプロファイルにも `/p/<profile>/` の接頭辞で届きます。
+- **`api_server` と `webhook` は映し出されるだけで**、二重には立ちません。
+  `/p/coder/v1/...` と `/p/coder/webhooks/<route>` には、既定プロファイル自身の
+  アダプタが coder の範囲で応えます。そのため従属側は `api_server` や `webhook` を
+  自分で有効にしては **いけません**（ダッシュボードは `409` で断ります。従属側の
+  `.env` にある `API_SERVER_KEY` や `WEBHOOK_ENABLED` は、待ち受けを立てずに
+  認証情報だけを結び付けます）。
+- **ほかの受信ポート型のプラットフォームは、すべて共有の待ち受けの形で動きます。**
+  Twilio SMS、LINE、Teams、BlueBubbles、Microsoft Graph、WhatsApp Cloud、WeCom の
+  呼び返し、飛書の Webhook の形を設定した従属側は、ポートを持たずに作られた **自分の**
+  アダプタを持ちます。既定の待ち受けは
+  `/p/<profile>/<the adapter's usual path>` をそのアダプタへ渡します。
+  [多重化のもとでの受信ポート型のプラットフォーム](#inbound-port-platforms-under-the-multiplexer)を見てください。
 
 認証は URL に書かれたプロファイルに従います。接頭辞のない宛先は、これまでどおり
 既定の待ち受けの認証情報を使います。
@@ -182,8 +193,7 @@ configure them only on the default profile.
 - `/p/coder/...` への API サーバーの要求では、`~/.hermes/profiles/coder/.env` の
   `API_SERVER_KEY` を使う必要があります。既定の待ち受けの鍵は拒否されます。
   多重化のもとでは、この鍵は接頭辞の認証にだけ効きます。従属側で 2 つめの
-  `api_server` の待ち受けが立つわけではないので（立てば、下で説明するポートの
-  ぶつかりになります）、従属側の `config.yaml` に
+  `api_server` の待ち受けが立つわけではないので、従属側の `config.yaml` に
   `platforms.api_server.enabled: false` を書いて押さえておく必要はありません。
 - `coder` 宛ての Webhook の経路は、既定プロファイルの `config.yaml` で、経路ごとの
   `secret` の隣に `profile: coder` と書く必要があります。その合言葉は
@@ -201,17 +211,73 @@ configure them only on the default profile.
 - `/p/coder/api/platforms/<platform>/events` への呼び返しは coder のアダプタが検証し、
   さばきます。coder にアダプタが無ければ、その呼び返しは 503 になります。
 
-従属側のプロファイルの設定では、ポートを掴むプラットフォームを無効のままに
-しておいてください。共有の待ち受けと経路の定義は既定プロファイルに置いたままにし、
-認証を通った Webhook の経路をどのプロファイルで実行するかは、プロファイルへの
-結び付けで決めます。プロファイル名付きの API の要求は、宛先のプロファイルに
-`API_SERVER_KEY` が無ければ、通さない側に倒れます。
-
-プロファイルが飛ばされるだけで済むのは、この共有の待ち受けのぶつかりだけです。
-安全にかかわる設定の誤りは、これまでどおり致命的です。たとえば、方針が `open` の
+プロファイル名付きの API の要求は、宛先のプロファイルに
+`API_SERVER_KEY` が無ければ、通さない側に倒れます。安全にかかわる設定の誤りは、
+これまでどおり致命的です。たとえば、方針が `open` の
 プラットフォームに `GATEWAY_ALLOW_ALL_USERS` もプラットフォーム固有の全員許可の
 指定も無い場合は、危うい設定のプロファイルを黙って落とすのではなく、ゲートウェイの
 起動そのものを中止します。
+
+#### 多重化のもとでの受信ポート型のプラットフォーム {#inbound-port-platforms-under-the-multiplexer}
+
+単独の `hermes -p coder gateway run` は、coder の Twilio、LINE、Teams などの Webhook の
+サーバーをそれぞれ自分のポートで立てます。多重化のもとでも、それらのアダプタは
+coder のものです。`profiles/coder/.env` の同じ認証情報、同じ `config.yaml` を使い、
+返信も coder のチャンネルから出ますが、ポートは **1 つも** 掴みません。
+既定プロファイルの共有の待ち受けが `/p/coder/<path>` をそれらへ渡します。
+`<path>` は、そのアダプタが単独で受け持つときとまったく同じ宛先です。要求は
+**coder の** アダプタが **coder の** 合言葉（Twilio の認証トークン、LINE のチャンネルの
+シークレット、Teams のアプリの認証情報、BlueBubbles のパスワードなど）で検証し、
+coder の実行時の範囲で動きます。既定プロファイル自身の `/path` には影響がなく、
+その宛先のアダプタを持たないプロファイルには `404` が返ります。ほかのプロファイルの
+ボットに届くことはありません。
+
+| プラットフォーム | 共有の待ち受けでの従属側プロファイルの呼び返し URL | 名指しされたプロファイルの何で検証するか |
+|---|---|---|
+| Twilio SMS（`sms`） | `https://<host>/p/<profile>/webhooks/twilio` | `TWILIO_AUTH_TOKEN` の署名（`SMS_WEBHOOK_URL` はこの URL にする） |
+| LINE（`line`） | `https://<host>/p/<profile>/line/webhook`（メディア: `/p/<profile>/line/media/...`） | `LINE_CHANNEL_SECRET` |
+| Microsoft Teams（`teams`） | `https://<host>/p/<profile>/api/messages` | `TEAMS_CLIENT_ID` の Bot Framework のトークン |
+| BlueBubbles（`bluebubbles`） | `http://<host>/p/<profile>/bluebubbles-webhook`（サーバーへ自動で登録される） | `BLUEBUBBLES_PASSWORD` |
+| Microsoft Graph（`msgraph_webhook`） | `https://<host>/p/<profile>/msgraph/webhook` | `extra.client_state` |
+| WhatsApp Cloud（`whatsapp_cloud`） | `https://<host>/p/<profile>/whatsapp/webhook` | `WHATSAPP_CLOUD_APP_SECRET` / 検証トークン |
+| WeCom の呼び返し（`wecom_callback`） | `https://<host>/p/<profile>/wecom/callback` | アプリの呼び返しのトークン / AES の鍵 |
+| 飛書の Webhook の形（`feishu`） | `https://<host>/p/<profile>/feishu/webhook` | `FEISHU_VERIFICATION_TOKEN` / `FEISHU_ENCRYPT_KEY` |
+
+`<host>` は、既定プロファイルの待ち受けの前に置いた公開のホスト名（トンネルや
+リバースプロキシ）です。プロファイルの設定で `webhook_path` を独自に書くと、
+`/p/<profile>` のあとの宛先もそれに合わせて変わります。ゲートウェイは起動時に
+正確な URL を記録します。
+
+```
+[sms] profile 'coder' is served on the default profile's shared listener:
+http://127.0.0.1:8642/p/coder/webhooks/twilio (point the vendor's callback URL at this path ...)
+```
+
+状態を見せるどの画面も同じ URL を繰り返すので、提供元の管理画面に何を貼ればよいかが
+わかります。
+
+```
+$ hermes -p coder gateway status
+✓ Gateway is running via the default-profile multiplexer
+  Manage it from the default profile: hermes gateway status
+
+Inbound callback URLs on the shared listener:
+  line: http://127.0.0.1:8642/p/coder/line/webhook
+  sms: http://127.0.0.1:8642/p/coder/webhooks/twilio
+```
+
+既定プロファイルでの `hermes gateway status` と `hermes status` は、受け持っている
+プロファイルごとに同じ URL を並べます。ダッシュボードの Channels のページと
+デスクトップの Messaging のページも、そのプロファイルを見ているときは各プラット
+フォームの `ingress_url` として表示します。既定プロファイル自身の `api_server` と
+`webhook` も、受け持たれているプロファイルについては同じように報告されます。
+`ingress_url` が
+`http://127.0.0.1:8642/p/coder/v1`（後者なら `.../p/coder/webhooks/<route>`）の
+**接続済み** として出ます。そのプロファイルはそれらのアダプタを自分では持たず、
+`/p/coder/` の接頭辞で応えているのは既定の待ち受けだからです。従属側の `.env` に
+プロファイルごとの `SMS_WEBHOOK_PORT`、`LINE_PORT`、`TEAMS_PORT` などを書いても、
+多重化のもとでは無視されます（何も掴まないからです）。そのプロファイルが自前の
+ゲートウェイを単独で動かした時点で、また効くようになります。
 
 #### 3. 認証情報ごとのプラットフォームは、プロファイルごとにトークンが要る {#3-per-credential-platforms-still-need-their-own-token-per-profile}
 
@@ -251,7 +317,10 @@ configure them only on the default profile.
 プロセスのもの）。既定プロファイルでの `hermes status` は多重化のプロセスを報告し、
 受け持っているプロファイルを並べます（`Serves: coder, research`）。
 `hermes -p coder status`、`hermes -p coder gateway status`、`hermes -p coder cron status`
-はいずれも「停止中」ではなく「既定プロファイルの多重化を通して動作中」と報告します。
+はいずれも「停止中」ではなく「既定プロファイルの多重化を通して動作中」と報告し、
+ダッシュボードの `/api/status?profile=coder` と Channels のページは、多重化のプロセスを
+coder の動いているゲートウェイとして報告します（プラットフォームには coder 自身の
+アダプタが並びます）。
 唯一の `gateway_state.json` は既定のホームの下にあり、従属側のアダプタはそこに
 `served_profiles` と並んで `<profile>:<platform>` の項目として現れます。従属側の
 プロファイルのホームには何も書かれません。
@@ -343,48 +412,61 @@ Hindsight の URL —— なので、あるプロファイルの鍵がほかの�
 | プロバイダーの鍵、ボットトークン、`config.yaml` の `${VAR}` 参照 | そのプロファイル自身の `.env`（自分の秘密情報の範囲） | 未解決、またはアダプタ無し。既定プロファイルの値が使われることはない |
 | 権限（`GATEWAY_ALLOW_ALL_USERS`、`GATEWAY_ALLOWED_USERS`、プラットフォームごとの許可一覧と全員許可の指定） | 持ち主のプロファイルの `.env` と `config.yaml` | 閉じたまま。既定プロファイルで開いても従属側のボットは開かない |
 | HTTP の宛先（`/p/<profile>/api/...`、`/p/<profile>/webhooks/...`、プラットフォームの出来事の呼び返し） | 名指しされたプロファイルの `API_SERVER_KEY`、`profile:` で結び付けた Webhook の経路、そのプロファイル自身のアダプタ | `401` か `404`。アダプタが無いままの送付は `502` か `503` で、ほかのプロファイルのボットは使われない |
+| 受信ポート型のプラットフォーム（`/p/<profile>/webhooks/twilio`、`/p/<profile>/line/webhook`、`/p/<profile>/api/messages` など） | 名指しされたプロファイル自身のアダプタとその合言葉（Twilio の認証トークン、LINE のチャンネルのシークレット、Teams のアプリ、BlueBubbles のパスワードなど）。返信もそのアダプタから出る | 合言葉が違えば `401` か `403`、そのアダプタを持たないプロファイルなら `404`。既定プロファイルのアダプタが使われることはない |
+| アダプタの設定（`*_REQUIRE_MENTION`、`*_REACTIONS`、`*_PROXY`、Webhook のホスト・ポート・URL、Matrix のスレッド・セッション・E2EE の方針、Discord の遡り取得と添付の上限、Buzz の返信の形、A2A のエージェントカード） | 持ち主のプロファイルの `.env` と `config.yaml` | そのアダプタの文書どおりの既定。既定プロファイルの設定が使われることはない |
 | `MEDIA:` の添付の拒否一覧 | `profiles/` の下のすべてのホームと既定のホーム（確認のたびに数え上げる） | どのやり取りも、ほかのプロファイルの `.env`、`auth.json`、`state.db`、セッション、トークンの保管庫を添付できない |
 | stdio の MCP の子プロセスの環境 | 安全な土台 + 秘密情報の供給元の名前についてそのプロファイルの範囲の値 + サーバー自身の `env:` | そのプロファイルに無い名前は子プロセスにも無い。既定プロファイルへ落ちることはない |
 | 外向きの送信（`send_message`、停止・再起動・`/update` のお知らせ、`/loop` の呼び出し、`profile:` で結び付けた Webhook の送付、`github_comment` のトークン） | そのプロファイル自身のつながっているアダプタと `.env` | はっきり失敗する。既定プロファイルのボットから投稿されることはない |
 | セッションの名前空間 | `agent:<profile>:…`（既定は `agent:main:…` のまま） | 同じチャットにいる 2 つのプロファイルが履歴を共有することはない |
 | ログ | そのプロファイル自身のホームの下の `agent.log` / `errors.log` / `gateway.log` | — |
 | 端末の隔離の設定（`terminal.*`、SSH の接続先） | そのプロファイルの `config.yaml` | 文書どおりの既定。読み取れない設定なら実行を断る |
+| やり取りの作業ディレクトリ（`terminal.cwd` が未設定のとき） | 単独のゲートウェイと同じ決まり。ローカルの実行先なら `$HOME`、それ以外は隔離環境の既定 | 多重化のプロセスを起動したディレクトリになることはない |
+| コマンドの承認（`command_allowlist`、「always」の選択） | そのプロファイル自身の `config.yaml` | 既定プロファイルの「always」が従属側のコマンドを前もって承認することはない。従属側の選択はその自分の設定に保存される |
+| 隔離環境への認証情報ファイルのマウント（`terminal.credential_files`）、`security.redact_secrets`、`browser.*` のエンジンと画面表示の指定、`lsp.*`、補助のプロバイダーの健康状態の印、`logs/mcp-stderr.log` | そのプロファイル自身の `config.yaml` / `.env` | 文書どおりの既定。起動元のプロファイルでキャッシュした値が使われることはない |
+| クラウド SDK の認証情報のクライアント（Bedrock の boto3 クライアントとモデルの探索、Azure Entra の認証情報）、認証情報で取ってくる一覧（DeepInfra、Copilot の文脈の上限、Nous の推論の上限、Ramp Router の effort、xAI / OpenRouter の画像モデル、独自エンドポイントの `/models`）、Camofox の VNC のアドレス、computer-use の補助の視覚の振り分け、スキルの同期の送り出し、リモートの実行先の確認の文面、学習した画像のトークンの費用、`display.skin`、ゲストの発行の待ち、バナーのスキル、元宝の「使用中」のアダプタ、Langfuse のクライアント | そのプロファイル自身の `.env` / `config.yaml` / `<home>/cache` | 文書どおりの既定。起動元のプロファイルでキャッシュした値やその認証情報が使われることはない |
+| セッション検索のつまみ（`sessions.cjk_fts`、`sessions.search_slow_ms`） | そのプロファイルの `config.yaml` | 文書どおりの既定。既定プロファイルから橋渡しされた値が使われることはない |
+| プラットフォームのプロキシ（`TELEGRAM_PROXY`、`DISCORD_PROXY`、`HTTPS_PROXY` など） | そのプロファイル自身の `.env` | 直接つなぐ。既定プロファイルのプロキシが使われることはない |
+| デスクトップやダッシュボードの裏側での MCP の探索 | 受け持つプロファイルのホームごとに 1 回 | ほかのプロファイルがすでにエージェントを作ったあとで選ばれたプロファイルも、自分の `mcp_servers` を探索する |
+| ダッシュボードの操作（デスクトップやダッシュボードが立ち上げる `hermes -p <name> …`） | そのプロファイルの `HERMES_HOME` に固定した、掃除済みの子プロセスの環境 | 子プロセスは自分の `.env` を読む。ダッシュボードのプロファイルのトークンやポートは引き継がれない |
+| cron の `.env` での調整（`HERMES_CRON_TIMEOUT`、`HERMES_MODEL` の代替、`HERMES_CRON_MAX_PARALLEL`、事前入力のファイル）、作業役や Bot Chat の子プロセスの環境 | そのプロファイル自身の `.env`。子プロセスが既定プロファイルの `.env` の設定や橋渡しされた `TERMINAL_*` の方針を引き継ぐことはない | cron の既定、またはモデルの拒否。単独の `hermes -p <name> gateway run` とまったく同じ |
+| プロファイルのタスクのかんばんの作業役と知らせ | 担当者の `.env` + `config.yaml`（道具一式の固定、端末の実行先、メディアの方針、表示の言語） | — |
+| `/loop` の刻み、`background_process_notifications` の関門、`notice_delivery`、裏で動くプロセスのチェックポイントからの復帰 | 持ち主のプロファイルの `state.db` / `config.yaml` / `processes.json` | — |
 
 設計上 **共有される** もの: プロセス本体、その PID と錠と `gateway_state.json`
 （既定のホーム）、1 つの HTTP の待ち受け、そして `profile_routes` の表
 （既定プロファイルで宣言します）。
 
-### 受け持つプロファイルを選ぶ {#serving-selected-profiles}
+### どのプロファイルが受け持たれるか {#which-profiles-are-served}
 
-既定では、`gateway.multiplex_profiles: true` はそのホスト上の有効な名前付き
-プロファイルをすべて受け持ちます。関係のないプロファイルを入れたままアダプタも
-cron も動かしたくない場合は、`gateway.multiplex_profile_allowlist` を設定します。
+`gateway.multiplex_profiles: true` は、既定プロファイルに加えて `profiles/` の下にある
+生きている名前付きプロファイルを **すべて** 受け持ちます。プロファイルごとに外す
+一覧はありません。（以前の `gateway.multiplex_profile_allowlist` の設定は廃止されました。
+設定の移行で `config.yaml` から取り除かれます。受け持たせたくないプロファイルは、
+代わりに保管へ回すか削除します。`hermes profile delete <name>` を使うか、そのディレクトリを
+`profiles/` の外へ移してください。）削除したプロファイルは墓標を残し、数え上げられる
+ことはありません。ディレクトリの無くなったプロファイルが、受け持ちのやり取り、
+cron の刻み役、ログの振り分けによって作り直されることもありません。
 
-```yaml
-gateway:
-  multiplex_profiles: true
-  multiplex_profile_allowlist:
-    - worker
-    - guest
-```
-
-既定プロファイルは常に受け持たれるので、書く必要はありません。この一覧を書かなければ
-従来どおり全部を受け持ちます。空の一覧なら既定プロファイルだけを受け持ちます。
-名前は正規化され、重複は取り除かれます。一覧の項目が不正なもの、入っていない名前は
-警告付きで飛ばされます。一覧の形になっていない値は、安全側に倒れて既定だけになります。
-
-こうして決まった受け持ちの範囲は、`/p/<profile>/` の API と Webhook の接頭辞、実行中の
-状態表示、プロファイルへの振り分けの対象、そしてプロセス内の cron の並べ役がどの
-プロファイルを刻むかも決めます（デスクトップの裏側の刻み役も同じ一覧に従い、動いて
-いる多重化がすでに受け持っているプロファイルからは手を引きます）。
+受け持ちの範囲は、`/p/<profile>/` の API と Webhook の接頭辞、実行中の状態表示、
+プロファイルへの振り分けの対象、そしてプロセス内の cron の並べ役がどのプロファイルを
+刻むかを決めます（デスクトップの裏側の刻み役も同じ範囲を数え上げ、動いている多重化か
+そのプロファイル自前のゲートウェイがすでに受け持っているプロファイルからは手を引きます）。
 `hermes -p <name> gateway run` として起動した多重化は、自分のプロファイルの cron の
-保管庫も必ず刻みます。一覧に入っていない名前付きプロファイルは、自前のゲートウェイを
-単独で動かすことができます。
+保管庫も必ず刻みます。
 
-ひとつ注意があります。受け持ちの範囲は **起動時に切り取った写し** です。多重化が
-動いている間に作られたプロファイルや、一覧に足されたプロファイルは、
-`hermes gateway restart` をするまで拾われません（動作中に削除されたプロファイルは、
-cron の刻みからは自動で外れます）。
+受け持ちの範囲は **その場で追随** します。多重化が動いている間に作られたプロファイル
+（`hermes profile create`、ダッシュボード、デスクトップ、TUI のどれで作っても）は、
+すぐに受け持たれます。作る側が制御用のソケットで多重化に知らせ、多重化のほうも
+念のため 30 秒ごとに `profiles/` を見直すからです。新しいプロファイルのアダプタは、
+その `config.yaml` か `.env` にボットトークンが入った時点で作られます（作る側はたいてい、
+先にプロファイルを作ってからトークンを足します）。既定プロファイルの
+`gateway_state.json` の `served_profiles` が更新され、`hermes -p <name> gateway
+status` は受け持ち中と報告します。再起動は要らず、ほかのプロファイルのアダプタや
+進行中のやり取りにも影響しません。プロファイルを削除すると、同じようにそのアダプタが
+止まり、振り分けからも外れます。認証情報 1 つにつき問い合わせ役は 1 つ、という決まりは
+変わりません。ほかのプロファイルのトークンを使い回して後から足されたプロファイルは、
+`duplicate_credential` のエラーで止め置かれ、2 つめの問い合わせ役として動き出すことは
+ありません。
 
 ### 共有のボットのチャットをプロファイルへ振り分ける（`profile_routes`） {#routing-shared-bot-chats-to-profiles-profileroutes}
 
@@ -468,7 +550,7 @@ LID（`…@lid`）は、橋渡しがそれらを結び付けたあとは同じ�
 
 `profile_routes` には `gateway.multiplex_profiles: true` が要ります。多重化が無効なら
 振り分けは無視されます。明示した振り分けに当たったものの、その宛先のプロファイルが
-入っていない、あるいは `multiplex_profile_allowlist` の外にある場合、ゲートウェイは
+入っていない（または削除された）場合、ゲートウェイは
 その受信を拒否し、振り分けと宛先を記録に残します。既定プロファイルで動かすことは
 しません。どの振り分けにも当たらない通信は、これまでどおり既定プロファイルの
 振る舞いのままです。
@@ -709,6 +791,97 @@ grep -H 'TELEGRAM_BOT_TOKEN\|DISCORD_BOT_TOKEN' \
      ~/.hermes/.env ~/.hermes/profiles/*/.env
 ```
 
+## プロファイルごとのゲートウェイから移行する {#migrating-from-per-profile-gateways}
+
+いまプロファイルごとに自前のゲートウェイを動かしている（プロファイル 1 つにつき
+systemd の単位か launchd のエージェントが 1 つ）なら、コマンド 1 つでそれらを多重化した
+既定のゲートウェイ 1 つにまとめられ、別のコマンド 1 つで元に戻せます。プロファイルごとの
+単独のゲートウェイも引き続き完全に使えます。これは選んで行う移行で、廃止ではありません。
+
+```bash
+hermes gateway migrate --multiplex --dry-run   # print the plan and any blockers; changes nothing
+hermes gateway migrate --multiplex             # apply (asks for confirmation on a TTY; -y skips)
+hermes gateway migrate --standalone            # roll back to per-profile gateways
+```
+
+### `hermes update` がすること {#what-hermes-update-does}
+
+更新がうまくいったあと、プロファイルが 2 つ以上あり、少なくとも 1 つの従属側
+プロファイルが自前のゲートウェイ（動いているプロセスか、入っているサービス）を持ち、
+`gateway.multiplex_profiles` が無効なら、`hermes update` は同じ事前確認を走らせます。
+
+- **妨げるものが無い** → 移行が自動で走り（`hermes gateway migrate --multiplex --yes` と
+  同じ処理の道筋です）、何をしたかを表示します。結果は決まっていて確認を求めることも
+  ないので、画面の無い環境や cron での更新でも走ります。
+- **妨げるものがある** → 警告の欄に、妨げるものそれぞれの正確な直し方と、あとで
+  実行する 1 行のコマンドが並びます。何も変更されません。
+
+プロファイルが 1 つだけの環境は移行されません（得るものが無いからです）。すでに
+多重化している環境もそのままです。
+
+### 移行ですること {#what-the-migration-does}
+
+1. 従属側のプロファイルそれぞれの単独のゲートウェイを止め、そのサービス（systemd の
+   ユーザー単位かシステム単位、または launchd のエージェント）を外します。外したものは、
+   元に戻すために `~/.hermes/gateway_migration.json` に記録されます。
+2. **既定** プロファイルの `config.yaml` に `gateway.multiplex_profiles: true` を設定します。
+3. 既定のゲートウェイを再起動します。あるいは従属側が使っていたのと同じサービス管理の
+   しくみに入れて起動するので、systemd で管理していた一式は systemd の管理のままです。
+4. 既定のゲートウェイがすべてのプロファイルを含む `served_profiles` を記録するまで待ち、
+   まとめを表示します。
+
+### 妨げるものと直し方 {#blockers-and-fixes}
+
+| 妨げるもの | 理由 | 直し方 |
+|---|---|---|
+| 2 つのプロファイルが同じプラットフォームの認証情報を設定している（たとえば同じ `TELEGRAM_BOT_TOKEN`） | 1 つのプロセスのなかでは、ボットトークン 1 つにつき問い合わせは 1 回しかできません。多重化は重複したほうを止め置き、そのプロファイルのボットは黙ってしまいます | 2 つめのプロファイルからトークンを外すか、`default` に置いたまま、そのプロファイルのチャットを [`profile_routes`](#routing-shared-bot-chats-to-profiles-profile_routes) で振り分けます |
+| 従属側のプロファイルが、既定の待ち受けに `/p/<profile>/` の入口を **持たない**、ポートを掴むプラットフォームを有効にしている | 多重化はそのプロファイル全体を飛ばします（[決まり 2](#2-http-inbound-platforms-are-reached-via-a-pprofile-url-prefix) を見てください） | そのプロファイルでプラットフォームを無効にする（`platforms.<name>.enabled: false`）か、`hermes -p <name> gateway start --force` でそのプロファイルを単独のゲートウェイのままにします |
+
+認証情報の確認はゲートウェイ自身のぶつかりの検出を使い回すので、その判定は多重化が
+起動時にすることと一致します。どのポートを掴むプラットフォームが `/p/<profile>/` の
+入口を持つかはアダプタ自身から読み取る（それぞれが `serves_profile_prefix` を
+宣言します）ので、HTTP で受ける新しいアダプタが接頭辞に対応しても、事前確認は
+正しいままです。
+
+### 受信ポート型のプロファイルで変わること {#what-changes-for-inbound-port-profiles}
+
+`api_server` や `webhook` を自分のポートで使っていた従属側のプロファイルは、移行を
+**妨げません**。ただし URL が変わります。事前確認は新しい正確な URL を表示します。
+たとえば次のとおりです。
+
+```
+Profile 'coder': api_server moves onto the default listener at
+http://127.0.0.1:8642/p/coder/v1/... (its key/secret is unchanged; update
+clients that call the old per-profile port).
+```
+
+そのプロファイル自身の `API_SERVER_KEY` や Webhook の合言葉は、接頭辞付きの URL でも
+引き続き認証に使えます。鍵について変わることはほかにありません。
+
+### 移行後に作ったプロファイル {#profiles-created-after-the-migration}
+
+多重化が動いている間に作ったプロファイルは、再起動なしで受け持たれます（上を見て
+ください）。`hermes profile create` は、動いている多重化がプロファイルを拾ったときは
+そのことを確かめて伝えます。`hermes gateway restart` を促す表示が出るのは、多重化に
+届かなかったとき（たとえば古い版から起動したゲートウェイ）だけです。
+
+### 元に戻す {#rollback}
+
+```bash
+hermes gateway migrate --standalone
+```
+
+は `gateway_migration.json` を読み、`gateway.multiplex_profiles` を前の値に戻し、既定の
+ゲートウェイを再起動し、記録されたプロファイルごとのサービスをすべて入れ直して起動します。
+すべて戻ると、記録のファイルは消されます。記録のファイルが無い（多重化を手で有効にした）
+場合は、`hermes config set gateway.multiplex_profiles false && hermes gateway restart`
+で多重化を抜け、必要なプロファイルごとのサービスを入れ直してください。
+
+自動では扱わないもの: s6 で監督しているコンテナ（既定プロファイルでフラグを設定して
+コンテナを再起動します）と、Windows のタスク スケジューラのタスク（フラグを設定し、
+プロファイルごとのタスクを止めて、`hermes gateway restart`）。事前確認で移行できる環境と
+わかったときは、ダッシュボードの System のページにも同じ移行がボタンとして出ます。
+
 ## コードを更新する {#updating-the-code}
 
 `hermes update` は最新のコードを 1 回取ってきて、新しく同梱されたスキルを
@@ -718,6 +891,11 @@ grep -H 'TELEGRAM_BOT_TOKEN\|DISCORD_BOT_TOKEN' \
 hermes update
 hermes-gateways restart
 ```
+
+動いているゲートウェイは更新そのものが再起動します。まだプロファイルごとに
+ゲートウェイを 1 つずつ動かしている環境では、続けて更新が
+[多重化したゲートウェイ 1 つへの移行](#migrating-from-per-profile-gateways)を持ちかけます。
+妨げるものが無ければ自動で行い、あれば直し方を添えた警告として出します。
 
 手を入れたスキルが上書きされることはありません。
 

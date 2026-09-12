@@ -197,7 +197,6 @@ Hermes Agent 0.21.0
 - [user-guide/features/web-dashboard（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
 - [user-guide/features/web-search（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-search/)
 - [user-guide/features/x-search（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/x-search/)
-- [user-guide/free-tier（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/free-tier/)
 - [user-guide/git-worktrees（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/git-worktrees/)
 - [user-guide/import-from-other-agents（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/import-from-other-agents/)
 - [user-guide/local-models（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/local-models/)
@@ -272,7 +271,6 @@ Hermes Agent 0.21.0
 - [user-guide/skills/bundled/creative/creative-pretext（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/creative/creative-pretext/)
 - [user-guide/skills/bundled/creative/creative-sketch（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/creative/creative-sketch/)
 - [user-guide/skills/bundled/creative/creative-songwriting-and-ai-music（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/creative/creative-songwriting-and-ai-music/)
-- [user-guide/skills/bundled/creative/creative-touchdesigner-mcp（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/creative/creative-touchdesigner-mcp/)
 - [user-guide/skills/bundled/devops/devops-sdlc-review（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/devops/devops-sdlc-review/)
 - [user-guide/skills/bundled/email/email-email-inbox-triage（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/email/email-email-inbox-triage/)
 - [user-guide/skills/bundled/email/email-himalaya（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/email/email-himalaya/)
@@ -334,6 +332,7 @@ Hermes Agent 0.21.0
 - [user-guide/skills/google-workspace（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/google-workspace/)
 - [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli/)
 - [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/)
+- [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/)
 - [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/)
 - [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/)
 - [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/)
@@ -362,7 +361,6 @@ Hermes Agent 0.21.0
 - [user-guide/skills/optional/creative/creative-sketch（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-sketch/)
 - [user-guide/skills/optional/creative/creative-social-media-content-calendar（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-social-media-content-calendar/)
 - [user-guide/skills/optional/creative/creative-tldraw-offline（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-tldraw-offline/)
-- [user-guide/skills/optional/creative/creative-touchdesigner-mcp（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-touchdesigner-mcp/)
 - [user-guide/skills/optional/creative/creative-unreal-mcp（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-unreal-mcp/)
 - [user-guide/skills/optional/data-science/data-science-jupyter-notebook（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/data-science/data-science-jupyter-notebook/)
 - [user-guide/skills/optional/devops/devops-actual-setup（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-actual-setup/)
@@ -652,7 +650,6 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/web-dashboard.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/web-search.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/x-search.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/free-tier.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/git-worktrees.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/import-from-other-agents.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/local-models.md
@@ -727,7 +724,6 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/creative/creative-pretext.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/creative/creative-sketch.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/creative/creative-songwriting-and-ai-music.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/creative/creative-touchdesigner-mcp.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/devops/devops-sdlc-review.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/email/email-email-inbox-triage.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/email/email-himalaya.md
@@ -789,6 +785,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/google-workspace.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands.md
@@ -817,7 +814,6 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-sketch.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-social-media-content-calendar.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-tldraw-offline.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-touchdesigner-mcp.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-unreal-mcp.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/data-science/data-science-jupyter-notebook.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/devops/devops-actual-setup.md

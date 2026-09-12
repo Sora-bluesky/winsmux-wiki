@@ -1,6 +1,68 @@
 {
-  "generatedAt": "2026-09-12",
+  "generatedAt": "2026-09-13",
   "entries": [
+    {
+      "date": "2026-09-12",
+      "sha": "506d2ef",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/secret-source-plugin",
+          "title": "シークレットソースプラグイン",
+          "url": "/hermes/docs/developer-guide/secret-source-plugin/"
+        },
+        {
+          "id": "guides/aws-bedrock",
+          "title": "AWS Bedrock",
+          "url": "/hermes/docs/guides/aws-bedrock/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "出来事のフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/vision",
+          "title": "画像を見せる・貼り付ける",
+          "url": "/hermes/docs/user-guide/features/vision/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/local-models",
+          "title": "ローカルモデル",
+          "url": "/hermes/docs/user-guide/local-models/"
+        },
+        {
+          "id": "user-guide/messaging/relay",
+          "title": "Hermes Relay",
+          "url": "/hermes/docs/user-guide/messaging/relay/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        }
+      ]
+    },
     {
       "date": "2026-09-11",
       "sha": "2599706",
@@ -1142,7 +1204,7 @@
         },
         {
           "id": "user-guide/multi-profile-gateways",
-          "title": "複数のゲートウェイを同時に動かす",
+          "title": "ゲートウェイをいくつも同時に動かす",
           "url": "/hermes/docs/user-guide/multi-profile-gateways/"
         },
         {

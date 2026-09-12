@@ -1,6 +1,6 @@
 {
-  "sha": "1021a03",
-  "date": "2026-09-11",
+  "sha": "d595e63",
+  "date": "2026-09-12",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -200,14 +200,6 @@
       "description": "Songwriting craft and Suno AI music prompts",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-songwriting-and-ai-music/",
       "date": "2026-08-30",
-      "source": "bundled"
-    },
-    {
-      "slug": "creative-touchdesigner-mcp",
-      "name": "Touchdesigner Mcp",
-      "description": "Control TouchDesigner via twozero MCP",
-      "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-touchdesigner-mcp/",
-      "date": "2026-07-24",
       "source": "bundled"
     },
     {
@@ -699,6 +691,14 @@
       "source": "optional"
     },
     {
+      "slug": "autonomous-ai-agents-dynamic-workflow",
+      "name": "Dynamic Workflow",
+      "description": "Plan-in-code fan-outs, adversarial verification, waves",
+      "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/",
+      "date": "2026-09-12",
+      "source": "optional"
+    },
+    {
       "slug": "autonomous-ai-agents-grok",
       "name": "Grok",
       "description": "Delegate coding to xAI Grok Build CLI (features, PRs)",
@@ -863,7 +863,7 @@
       "name": "Kanban Video Orchestrator",
       "description": "Plan and run multi-agent video production pipelines",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator/",
-      "date": "2026-08-30",
+      "date": "2026-09-12",
       "source": "optional"
     },
     {
@@ -919,14 +919,6 @@
       "name": "Tldraw Offline",
       "description": "Drive and script tldraw offline canvases with an agent",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-tldraw-offline/",
-      "date": "2026-08-30",
-      "source": "optional"
-    },
-    {
-      "slug": "creative-touchdesigner-mcp",
-      "name": "Touchdesigner Mcp",
-      "description": "Control TouchDesigner via twozero MCP",
-      "url": "/hermes/docs/user-guide/skills/optional/creative/creative-touchdesigner-mcp/",
       "date": "2026-08-30",
       "source": "optional"
     },

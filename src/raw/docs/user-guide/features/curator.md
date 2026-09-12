@@ -2,7 +2,7 @@
 title: "キュレーター"
 description: "エージェントが作ったスキルを裏で手入れする仕組み — 利用状況の記録、古びの判定、書庫入れ、そして LLM による見直し"
 upstream_path: user-guide/features/curator.md
-upstream_blob: 94b610d6e8aafffb10e516b0b233f5ab223a17a1
+upstream_blob: 1827bc7ad65d346ddee10b7372a7b232769b2cb2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/curator
 ---
@@ -38,7 +38,7 @@ sources:
 
 一度の実行には二つの段階があります。
 
-1. **自動の切り替え**（決まりきった処理で、LLM は使いません）。`stale_after_days`（30）の間使われなかったスキルは `stale` になり、`archive_after_days`（90）の間使われなかったスキルは `~/.hermes/skills/.archive/` へ移ります。これは常に働く整理の動きで、キュレーターが有効なら必ず走り、補助モデルの費用はかかりません。
+1. **自動の切り替え**（決まりきった処理で、LLM は使いません）。`stale_after_days`（14）の間使われなかったスキルは `stale` になり、`archive_after_days`（30）の間使われなかったスキルは `~/.hermes/skills/.archive/` へ移ります。これは常に働く整理の動きで、キュレーターが有効なら必ず走り、補助モデルの費用はかかりません。
    - **固定したスキル**と、**どれかの cron ジョブから参照されているスキル**（一時停止中や無効のジョブも含みます）は、まるごと対象から外れます。自動の切り替えについては固定と同じ扱いなので、動きの遅い予定や止めてある予定のせいで、ジョブの足元からスキルが書庫入りしてしまうことはありません。まとめ直しの際も、傘となるスキルへ統合したときは cron 側のスキル参照を書き換えます。
    - **一度も使われていないスキル**（`use_count == 0`）には猶予の底が用意してあります。作られてから少なくとも `stale_after_days` 経つまでは書庫入りしません。使われた記録がないことは、証拠がないというだけで、捨ててよい証拠ではありません。
 2. **LLM によるまとめ直し**（補助モデルを 1 回だけ使い、反復の上限は高めです。ひととおりの手入れで API 呼び出しはだいたい 50〜100 回になります）— こちらは**初期状態では切ってあります**。`curator.consolidate: true` にすると、分身のエージェントがエージェント作のスキルを見渡し、必要なら `skill_view` でどれでも読み、スキルごとに、そのまま残す／`skill_manage` で手を入れる／重なっているものを種類ごとの傘にまとめる／ターミナルのツールで書庫へ移す、を決めます。まとめ直しでは、スキルを一式のまとまりとして扱います。スキルが `references/`、`templates/`、`scripts/`、`assets/` を持っていたり、それらへの相対リンクを持っていたりする場合、キュレーターは単独のまま残すか、必要な補助ファイルを引っ越させてパスを書き換えるか、その一式ごと手つかずで書庫へ入れるかのどれかを選ばなければなりません。`SKILL.md` だけを別のスキルの `references/` に平たく押し込むことは許されていません。
@@ -58,8 +58,8 @@ curator:
   enabled: true
   interval_hours: 168          # 7 days
   min_idle_hours: 2
-  stale_after_days: 30
-  archive_after_days: 90
+  stale_after_days: 14
+  archive_after_days: 30
   consolidate: false           # LLM umbrella-building pass — opt-in (prune-only by default)
   prune_builtins: true         # archive unused bundled built-in skills too (hub skills always exempt)
 ```
@@ -118,7 +118,7 @@ hermes curator list-unmanaged   # itemize skills with no provenance marker
 hermes curator restore <skill>  # move an archived skill back to active
 hermes curator list-archived    # list skills currently in ~/.hermes/skills/.archive/
 hermes curator archive <skill>  # manually archive a single skill now
-hermes curator prune [--days N] # bulk-archive agent-created skills idle >= N days (default 90)
+hermes curator prune [--days N] # bulk-archive agent-created skills idle >= N days (default: `archive_after_days`, 30)
 hermes curator ledger           # list the per-mutation audit ledger (all actors)
 hermes curator ledger --skill <name> --limit 50  # filter/paginate ledger entries
 hermes curator rollback <entry-id>  # undo a single mutation from the ledger

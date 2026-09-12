@@ -2,7 +2,7 @@
 title: "Nous Tool Gateway"
 description: "サブスクリプション 1 つで、すべてのツールを。Web 検索、画像生成、音声読み上げ、クラウドブラウザーを、追加の API キー無しで Nous Portal 経由に束ねます。"
 upstream_path: user-guide/features/tool-gateway.md
-upstream_blob: 4dbbc6874399ceb47779e03fa6fe1430bceab860
+upstream_blob: 5c5024806ca47afab2293984611a7c90c74ddd1f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-gateway
 ---
@@ -80,7 +80,7 @@ hermes status             # Full system status (Tool Gateway is one section)
 
 ## 利用条件 {#eligibility}
 
-Tool Gateway は**有料サブスクリプション**の機能です。無料枠の Nous アカウントでも Portal を推論には使えますが、運用ツールは含まれません。ゲートウェイを解放するには[プランをアップグレード](https://portal.nousresearch.com/manage-subscription)してください。
+Tool Gateway は**有料サブスクリプション**の機能です。ゲートウェイを解放するには[プランをアップグレード](https://portal.nousresearch.com/manage-subscription)してください。
 
 一部のアカウントには**無料のツール枠**も付いています。これは少量の運用ツール用の割り当てで、有料サブスクリプション無しでもゲートウェイのツール呼び出しをまかなえます。無料枠が使える場合、ゲートウェイがそれを提示し、初回利用時に設定のプロンプトを出すので、そのまま運用ツールを使い始められます。
 

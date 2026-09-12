@@ -2,7 +2,7 @@
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md
-upstream_blob: 7887e61a1e42352f71a35dbe179ecae4cddc9386
+upstream_blob: 6c4ed6526a1447ac3445b04dc549a3c7ffbd0a46
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/cli
 ---
@@ -140,7 +140,7 @@ hermes plugins remove <plugin-name>
 入力欄の上には、常に表示され、リアルタイムで更新されるステータスバーがあります。
 
 ```
- ⚕ claude-sonnet-4-20250514 │ 12.4K/200K │ [██████░░░░] 6% │ $0.06 │ 15m
+ ☤ claude-sonnet-4-20250514 │ 12.4K/200K │ [██████░░░░] 6% │ $0.06 │ 15m
 ```
 
 | 項目 | 説明 |
@@ -604,7 +604,7 @@ Hermes はすぐに受け付けを知らせ、入力欄をあなたに返しま�
 バックグラウンドタスクが終わると、結果がターミナルにパネルとして現れます。
 
 ```
-╭─ ⚕ Hermes (background #1) ──────────────────────────────────╮
+╭─ ☤ Hermes (background #1) ──────────────────────────────────╮
 │ Found 3 errors in syslog from today:                         │
 │ 1. OOM killer invoked at 03:22 — killed process nginx        │
 │ 2. Disk I/O error on /dev/sda1 at 07:15                      │

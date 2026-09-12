@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールを、ツールセットごとにまとめた決定版の早見表"
 upstream_path: reference/tools-reference.md
-upstream_blob: 94f8518c5ce20cb81a96278f280218bbe9f1c3b9
+upstream_blob: 58296c96402c7877fb7f2e21dc85da4aebbadb88
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -301,6 +301,8 @@ Hermes が出すヒントもこの間隔を共有するので、1 つ出れば 6
 
 - **xAI Grok-Imagine** — 文章からの動画生成と、画像からの動画生成に対応（SuperGrok の OAuth か `XAI_API_KEY` が必要）。
 - **FAL.ai** — Veo 3.1、Pixverse v6、Kling O3（`FAL_KEY` が必要）。
+- **OpenRouter** — OpenRouter の動画 API にあるすべての生成モデル（Veo 3.1、Sora 2 Pro、Kling 3、Seedance 2、Wan 3、Hailuo 3、Grok Imagine、FLUX 3 Video など）。文章からの動画生成、画像からの動画生成、参照からの動画生成に対応し、一覧とモデルごとの上限はその場で取得します（`OPENROUTER_API_KEY` が必要で、料金は OpenRouter のクレジットから引かれます）。
+- **DeepInfra** — OpenAI 互換の動画エンドポイントを通じた、その場で取得する `video-gen` の一覧（`DEEPINFRA_API_KEY` が必要）。
 
 どちらの生成方法も `video_generate` の 1 つでまかなえます。静止画を動かすなら `image_url` を渡し、文章だけから作るなら省きます。有効なバックエンドに応じて適切なエンドポイントへ自動で振り分けられます。ツールの説明文はセッション開始時に組み立て直され、そのバックエンドで実際にできること（生成方法、縦横比、解像度、長さの範囲、参考画像の最大数、音声の可否）が反映されます。バックエンドの作り方は [動画生成プロバイダーのプラグイン](/hermes/docs/developer-guide/video-gen-provider-plugin/) を見てください。
 

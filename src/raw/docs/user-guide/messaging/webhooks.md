@@ -2,7 +2,7 @@
 title: "Webhook"
 description: "GitHub や GitLab などのサービスからイベントを受け取り、Hermes のエージェント実行を起こす"
 upstream_path: user-guide/messaging/webhooks.md
-upstream_blob: d9acdb8918fd1e742f5a5bcc9f0770ef2306f801
+upstream_blob: 3a2b3aafb5efa8fcc7105a07c41bd95a72a49433
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks
 ---
@@ -67,7 +67,7 @@ curl http://localhost:8644/health
 
 ## ルートの設定 {#configuring-routes}
 
-ルートは、webhook の送信元ごとの扱い方を決めるものです。それぞれのルートは `config.yaml` の `platforms.webhook.extra.routes` の下に名前付きの項目として書きます。
+ルートは、webhook の送信元ごとの扱い方を決めるものです。それぞれのルートは `config.yaml` の `platforms.webhook.extra.routes` の下に名前付きの項目として書きます。アダプターの設定（`port`、`host`、`secret`、`routes`）は `platforms.webhook:` の直下に書くこともできます。どちらの書き方でもアダプターに届き、同じキーが両方にあれば `extra:` の下に入れた値が優先されます。
 
 ### ルートの項目 {#route-properties}
 

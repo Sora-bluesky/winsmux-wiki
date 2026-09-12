@@ -2,7 +2,7 @@
 title: "モデルカタログ"
 description: "OpenRouter と Nous Portal のモデル選択リストを組み立てる、遠隔に置かれた一覧ファイルです。"
 upstream_path: reference/model-catalog.md
-upstream_blob: b26a1399f0c8688c82c5464a72be1efdbfb80b4c
+upstream_blob: 740404a5a174c3c39c2897130be18cf1a4fe0fb7
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/model-catalog
 ---
@@ -53,7 +53,7 @@ https://hermes-agent.nousresearch.com/docs/api/model-catalog.json
 
 - **`version`** — スキーマの版を表す整数です。将来スキーマが変わるとこの数字が上がります。Hermes は自分が解釈できない版の一覧を受け付けず、埋め込みの控えに戻ります。
 - **`metadata`** — 一覧全体、プロバイダー、モデルのそれぞれの階層に置ける自由な辞書です。どんなキーでも書けます。Hermes は知らない項目を無視するので、スキーマの変更を待たずに注記(`"tier": "paid"`、`"tags": [...]` など)を足せます。
-- **`description`** — OpenRouter だけで使います。選択画面のバッジの文字(`"recommended"`、`"free"`、`"default"`、または空)になります。Nous Portal では使いません。無料枠かどうかは、Portal の価格のエンドポイントからその場で判断します。
+- **`description`** — OpenRouter だけで使います。選択画面のバッジの文字(`"recommended"`、`"free"`、`"default"`、または空)になります。Nous Portal では使いません。
 - **`default`** — プロバイダーごとに、`"default": true` を付けられるのはちょうど 1 つです。そのモデルが **黙って選ばれる既定** になります。つまり、利用者がモデルを一度も選んでいないとき(GUI の初期設定の確認カード、`provider` は設定したが `model` は書いていないとき、`model.default` が空のとき)に Hermes が落ち着く先です。実行時はディスクの控えだけを見るので(`get_default_model_from_cache`)、頻繁に通る解決の経路が通信をすることはありません。控えが一つもないときは、リポジトリ内の定数 `PREFERRED_SILENT_DEFAULT_MODEL` に戻ります。この定数は、印の付いた項目と一致していなければなりません。こうしておくと、保守する側は新しい版を出さずに、黙って選ばれる既定を入れ替えられます。ここには、値段のいちばん高い旗艦ではなく、費用が安くて力のあるモデルを意図して置いています。
 - **価格と文脈の長さ** は、この一覧には入っていません。取得のたびに、各プロバイダーの実際の API(`/v1/models` のエンドポイントや models.dev)から得ます。
 

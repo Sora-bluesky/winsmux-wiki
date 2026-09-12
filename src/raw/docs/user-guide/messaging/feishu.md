@@ -2,7 +2,7 @@
 title: "Feishu / Lark"
 description: "Hermes Agent を Feishu または Lark の Bot として設定します"
 upstream_path: user-guide/messaging/feishu.md
-upstream_blob: 1c5a66543e4318f20cc38e404b3cabf32850520b
+upstream_blob: 7e7bbbde49382135fea545ae8669be715f69ef78
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu
 ---
@@ -85,8 +85,9 @@ Feishu の開発者コンソールで **Permission Management** を開き、次�
 **Events and Callbacks** で次のように設定します。
 
 1. 接続方式を **Long Connection (WebSocket)**（おすすめ）にするか、Webhook の URL を設定します
-2. **Event Configuration** の欄で、次のイベントを購読します。
+2. **Event Configuration** のタブで、次のイベントを購読します。
    - `im.message.receive_v1` — メッセージを受け取るために必須です
+3. **Callback Configuration** のタブ（イベントとは別のタブです）で同じ接続方式を選び、`card.action.trigger` のコールバックを追加します。承認や更新確認のボタンを使うために必須です。[Feishu アプリ側で必要な設定](#required-feishu-app-configuration)を参照してください。
 
 ### アプリを公開する {#publish-the-app}
 
@@ -294,20 +295,25 @@ Bot が送った対話型カードのボタンを押すなどの操作がある�
 
 ### Feishu アプリ側で必要な設定 {#required-feishu-app-configuration}
 
-対話型カードには、Feishu Developer Console で **3 つ**の設定が要ります。どれか 1 つでも欠けていると、カードのボタンを押したときにエラー **200340** が出ます。
+対話型カードには、Feishu Developer Console で次の設定が要ります。ここに抜けがあると、たいていはカードのボタンを押したときにエラー **200340** が出ます。
 
-1. **カード操作のイベントを購読する:**
-   **Event Subscriptions** で、購読するイベントに `card.action.trigger` を追加します。
+1. **カード操作のコールバックを購読する（イベントではありません）:**
+   **Development Configuration > Events and Callbacks** で **Callback Configuration** のタブを開き（`im.message.receive_v1` を登録する **Event Configuration** のタブとは別です）、*Subscribed Callbacks* に `card.action.trigger` を追加します。イベントとして追加しても、ボタンを押した操作は届きません。
 
-2. **対話型カードの機能を有効にする:**
-   **App Features > Bot** で **Interactive Card** のスイッチが入っていることを確かめます。これで、アプリがカード操作のコールバックを受け取れると Feishu に伝わります。
+2. **コールバックの届け方を決める:**
+   同じタブで、Hermes を `websocket` 方式で動かしているなら **Long Connection** を選びます（Lark SDK がいまある接続でコールバックを受け取ります）。Webhook 方式なら、リクエスト URL を入力します（イベント用の Webhook と同じエンドポイントで、例: `https://your-server:8765/feishu/webhook`）。Feishu からその URL に接続でき、名前解決もできる必要があります。できないと、ボタンを押したときに 200342 や 200343 で失敗します。
 
-3. **カードのリクエスト URL を設定する（Webhook 方式のみ）:**
-   **App Features > Bot > Message Card Request URL** に、イベント用の Webhook と同じエンドポイント（例: `https://your-server:8765/feishu/webhook`）を設定します。WebSocket 方式では SDK が自動で処理します。
+3. **対話型カードの機能を有効にする:**
+   **App Features > Bot** で **Interactive Card** のスイッチが入っていることを確かめます。
+
+4. **アプリの新しいバージョンを公開する:**
+   コールバックの変更は、**Version Management > Create version** で作ったバージョンを公開して（企業向けアプリでは承認も受けて）初めて反映されます。Feishu 自身は 200340 を「アプリにカードのコールバック先が設定されていないか、設定された先が無効です……アプリの最新バージョンを作成して公開したことを確かめてください」と説明しています。
 
 :::warning
-この 3 つが揃っていなくても、Feishu は対話型カードの*送信*には成功します（送るだけなら `im:message:send` の権限で足ります）。ただし、ボタンを押すとエラー 200340 が返ります。見た目には動いているようで、利用者が触った瞬間に初めてエラーが表に出ます。
+カードのコールバックが公開されていなくても、Feishu は対話型カードの*送信*には成功します（送るだけなら `im:message:send` の権限で足ります）。ただし、ボタンを押すとエラー 200340 が返ります。見た目には動いているようで、利用者が触った瞬間に初めてエラーが表に出ます。しかも Feishu がコールバックを届ける前に断るので、押した操作は Hermes まで届かず、ログにも何も残りません。
 :::
+
+エラーコード 200672 / 200673 は、コールバックが Hermes まで*届いた*うえで、Feishu がその応答を受け付けなかったことを示します。これが出たときは、該当する `gateway.log` の行を添えて issue を立ててください。
 
 ## ドキュメントのコメントへの自動返信 {#document-comment-intelligent-reply}
 
@@ -585,7 +591,8 @@ WebSocket とグループごとのアクセス制御の設定は、`config.yaml`
 | Bot 自身の識別情報が自動取得できない | たいていは Feishu の Bot 情報のエンドポイントに届かない一時的なネットワークの問題です。当面の対処として `FEISHU_BOT_OPEN_ID` と `FEISHU_BOT_NAME` を手で設定してください。 |
 | `FEISHU_ALLOW_BOTS` を有効にしても相手の Bot のメッセージが無視される | Hermes がまだ自分を識別できていません。`FEISHU_BOT_OPEN_ID`（アプリが `sender_id_type=user_id` を使うなら `FEISHU_BOT_USER_ID` も）を設定してください。 |
 | 相手の Bot が名前でなく `ou_xxxxxx` と表示される | `application:bot.basic_info:read` のスコープを与えます。 |
-| 承認のボタンを押すとエラー 200340 が出る | Feishu Developer Console で **Interactive Card** の機能を有効にし、**Card Request URL** を設定します。上の [Feishu アプリ側で必要な設定](#required-feishu-app-configuration)を参照してください。 |
+| 承認のボタンを押すとエラー 200340（220340 と出ることもあります）が出る | 公開中のアプリのバージョンに、有効なカードのコールバックがありません。**Callback Configuration** のタブ（Event Configuration ではありません）で `card.action.trigger` を追加し、Long Connection かリクエスト URL を選び、**Interactive Card** を有効にしてから、新しいバージョンを公開します。[Feishu アプリ側で必要な設定](#required-feishu-app-configuration)を参照してください。押した操作は Hermes まで届かないので、`gateway.log` には何も出ません。 |
+| 承認のボタンを押すとエラー 200342 / 200343 が出る | Webhook 方式で、Feishu がコールバックのリクエスト URL に接続できないか、名前解決できていません。URL を直すか、Long Connection に切り替えてください。 |
 | `Webhook rate limit exceeded` | 同じ IP から 1 分あたり 120 回を超えています。たいていは設定の誤りか、処理が回り続けているのが原因です。 |
 
 ## ツール群 {#toolset}

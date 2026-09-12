@@ -2,7 +2,7 @@
 title: "スキンとテーマ"
 description: "組み込みのスキンと自分で作ったスキンで Hermes CLI の見た目を変えます"
 upstream_path: user-guide/features/skins.md
-upstream_blob: 75353479f12cc87c64c473cc33acf5ea4dc1fc89
+upstream_blob: d4841eb699de24be079d97b49df5cde9db26b723
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skins
 ---
@@ -97,8 +97,8 @@ CLI の画面のあちこちで使われる文字列です。
 |-----|-------------|---------|
 | `agent_name` | バナーのタイトルと状態表示に出る名前 | `Hermes Agent` |
 | `welcome` | CLI の起動時に出るあいさつ | `Welcome to Hermes Agent! Type your message or /help for commands.` |
-| `goodbye` | 終了時に出るメッセージ | `Goodbye! ⚕` |
-| `response_label` | 応答ボックスの見出しのラベル | ` ⚕ Hermes ` |
+| `goodbye` | 終了時に出るメッセージ | `Goodbye! ☤` |
+| `response_label` | 応答ボックスの見出しのラベル | ` ☤ Hermes ` |
 | `prompt_symbol` | 入力プロンプトの前に出る記号（記号だけを書きます。後ろの空白は表示側が付けます） | `❯` |
 | `help_header` | `/help` コマンドの出力の見出し | `(^_^)? Available Commands` |
 

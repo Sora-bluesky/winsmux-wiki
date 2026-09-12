@@ -2,7 +2,7 @@
 title: "ブラウザの自動操作"
 description: "いくつものプロバイダ、CDP でつなぐ手元の Chromium 系ブラウザ、あるいはクラウドのブラウザでブラウザを操り、ウェブとのやり取り、フォームの入力、情報の取り出しなどを行います。"
 upstream_path: user-guide/features/browser.md
-upstream_blob: 7026169fbbb28bf4a2ae93f944a91c3bac77b369
+upstream_blob: 0285b9a81bf35babb50cb03382d6b2cf1ce1cb32
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/browser
 ---
@@ -448,7 +448,9 @@ google-chrome \
 
 **なぜ `--user-data-dir` が要るのか。** これがないと、普通のブラウザがすでに動いている状態で Chromium 系のブラウザを立ち上げても、たいていは今あるプロセスの上に新しい窓が開くだけです。そのプロセスは `--remote-debugging-port` 付きで立ち上げられていないので、9222 番のポートは決して開きません。専用の user-data-dir を渡すと、デバッグ用のポートがちゃんと待ち受ける、新しいブラウザのプロセスが立ち上がります。`--no-first-run --no-default-browser-check` は、新しいプロファイルでの初回起動の案内を飛ばします。
 
-**Chrome 136 以降では、専用のプロファイルが必須になりました。** 安全を固める変更として、Chrome 136 以降は `--remote-debugging-port` が*既定の* user-data-dir と一緒に使われると、ほかに Chrome が動いていない冷えた状態からの起動であっても、黙ってリモートデバッグのポートを開きません。ブラウザは普通に立ち上がるのに 9222 番では誰も待ち受けないので、`/browser connect`（および手で打つ `curl http://127.0.0.1:9222/json/version`）は接続を断られて失敗します。エラーのメッセージは出ません。直し方はまさに上のコマンドで、既定のプロファイルのディレクトリではない場所（たとえば `$HOME/.hermes/chrome-debug`）を指す `--user-data-dir` を必ず渡すことです。これは、この変更を取り込んだ Chrome、Chromium、Edge、Brave のビルドに当てはまります。
+**Chrome 136 以降では、専用のプロファイルが必須になりました。** ここでは別々の 2 つのしくみが働いていて、既定ではない `--user-data-dir` を渡せば、どちらも当てはまらなくなります。1 つ目は、[Chrome 136](https://developer.chrome.com/blog/remote-debugging-port) 以降、`--remote-debugging-port` と `--remote-debugging-pipe` が「既定の Chrome のデータディレクトリをデバッグしようとする場合は、もう尊重されない」ことです。フラグは黙って無視され、ダイアログも出ず、ほかに Chrome が動いていない冷えた状態からの起動であっても、`/browser connect`（または `curl http://127.0.0.1:9222/json/version`）は接続を断られます。2 つ目は、[Chrome 144 以降](https://developer.chrome.com/blog/chrome-devtools-mcp-debug-your-browser-session)に加わった、本物のプロファイルのデバッグを許すための任意の*承認*の流れです。`chrome://inspect/#remote-debugging` で有効にすると、Chrome は起動ごとに 1 回ではなく**接続が来るたびに**「**Allow remote debugging?**」のダイアログを出し、**Allow** を押すまで何も待ち受けません。このダイアログが出たなら、フラグの経路ではなく承認の経路に乗っています。直し方はまさに上のコマンドで、`--user-data-dir` を既定のプロファイルのディレクトリではない場所（たとえば `$HOME/.hermes/chrome-debug`）に向けることです。そうすれば切り替えもダイアログも要りません。これは、この変更を取り込んだ Chrome、Chromium、Edge、Brave のビルドに当てはまります。
+
+専用のプロファイルは、どこにもログインしていない状態から始まります。いまのログインを使ったまま、承認のダイアログも出さずにエージェントに見て回らせたいなら、代わりに [`browser.use_real_profile`](#real-profile-browsing-use-your-own-logins) を使ってください。使っているプロファイルを写しに取り、その写しを操るので、既定ではない user-data-dir となり、どちらのしくみも働きません。
 :::
 
 CDP でつないでいるあいだ、ブラウザの道具（`browser_navigate`、`browser_click` など）はクラウドのセッションを立ち上げる代わりに、動いているこちらのブラウザを相手に働きます。

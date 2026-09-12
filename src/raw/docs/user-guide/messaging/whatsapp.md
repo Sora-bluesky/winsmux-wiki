@@ -2,7 +2,7 @@
 title: "WhatsApp"
 description: "内蔵の Baileys ブリッジを使って Hermes Agent を WhatsApp のボットとして設定する"
 upstream_path: user-guide/messaging/whatsapp.md
-upstream_blob: 17d89e968d41eadc0761c967d5613821c3fa56ca
+upstream_blob: 7fb088085f4d68bc861c9bc7f46425f675a4ff97
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/whatsapp
 ---
@@ -170,7 +170,7 @@ Hermes は WhatsApp の音声にも対応しています。
 
 - **受け取る側:** 音声メッセージ（`.ogg` の opus）は、設定した音声認識の提供元で自動的に文字に起こされます。手元で動く `faster-whisper`、Groq の Whisper（`GROQ_API_KEY`）、OpenAI の Whisper（`VOICE_TOOLS_OPENAI_KEY`）のいずれかです
 - **送る側:** 音声合成の返事は MP3 の音声ファイルとして添付されます
-- エージェントの返事には初期状態で「⚕ **Hermes Agent**」が先頭に付きます。これは `config.yaml` で変えたり、なくしたりできます。
+- エージェントの返事には初期状態で「☤ **Hermes Agent**」が先頭に付きます。これは `config.yaml` で変えたり、なくしたりできます。
 
 ```yaml
 # ~/.hermes/config.yaml
@@ -201,7 +201,7 @@ AI の返事に含まれる通常のマークダウンは、WhatsApp 本来の�
 | `**bold**` | `*bold*` | **bold** |
 | `~~strikethrough~~` | `~strikethrough~` | ~~strikethrough~~ |
 | `# Heading` | `*Heading*` | 太字（見出しの機能はありません） |
-| `[link text](/hermes/docs/user-guide/messaging/url/)` | `link text (url)` | 文中の URL |
+| `[link text](url)` | `link text (url)` | 文中の URL |
 
 コードブロックと文中のコードは、WhatsApp がバッククォート三つの書式にもとから対応しているため、そのまま残ります。
 
@@ -234,6 +234,10 @@ gateway:
 ```
 
 `text_batch_delay_seconds: 0` にすると、メッセージごとにすぐ渡されます（まとめ送りは無効になります）。
+
+### 引用した返信 {#quoted-replies}
+
+以前のメッセージに返信する（引用する）と、エージェントは引用された文面を文脈として受け取ります。画像、ボイスメモ、動画、文書を引用すると、そのファイルもそのターンに添えられるので、引用した画像の下に「これは何？」と書けば通じます。添付がほかの人から届いたものでも、ボット自身が送ったもの（cron で届いたグラフや生成した画像）でも同じです。WhatsApp が引用に付けて送るのはサムネイルの切れ端だけなので、ファイルはブリッジのダウンロードのキャッシュ（受け取ったメディア。ブリッジが動いているあいだだけメモリに保持）か、ボット自身が送ったものを記録した手元の索引（直近 1000 件）から引き当てます。それより古いものを引用しても、ファイルは添えられません。
 
 ---
 

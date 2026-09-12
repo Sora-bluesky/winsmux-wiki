@@ -2,7 +2,7 @@
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: dbdb77cb215cee4668b532e26b117e8f9b966a9b
+upstream_blob: 11ad58a2371e60ab23ff75ac3fffa579d7efb83e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -813,6 +813,10 @@ docker run -d \
 ```
 
 `docker exec hermes <cmd>` も自動で UID 10000 へ落ちます。詳しいことと、実行ごとに外す方法は [`docker exec` は自動で `hermes` ユーザーへ落ちます](#docker-exec-automatically-drops-to-the-hermes-user)を参照してください。
+
+### 共有したデータディレクトリが何度も `0700` に戻る {#shared-data-directory-keeps-resetting-to-0700}
+
+コンテナの外では、Hermes は起動するたびに `HERMES_HOME`（とその中の `cron/`、`sessions/`、`logs/`、`memories/` のサブディレクトリ）を持ち主だけが使える `0700` に固めます。コンテナの中ではディレクトリの権限に手を付けないので、別の UID で動く隣のコンテナ（Web UI や権限を直す係など）と共有しているバインドマウントは、ホスト側で設定した権限と ACL がそのまま保たれます。それでも特定のディレクトリ権限を強制したいときは、`HERMES_HOME_MODE` を設定してください（8 進数で、たとえば `HERMES_HOME_MODE=0755`）。この設定はコンテナの中でも適用されます。
 
 ### どの `docker exec` でも「Permission denied」になる（インストール先が 0700 で閉じている） {#permission-denied-on-every-docker-exec-install-dir-locked-to-0700}
 

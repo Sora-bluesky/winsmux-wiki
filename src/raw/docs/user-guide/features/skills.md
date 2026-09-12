@@ -2,7 +2,7 @@
 title: "skill のしくみ"
 description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェントが自分で育てる skill、Skills Hub"
 upstream_path: user-guide/features/skills.md
-upstream_blob: a380826956fba34b3eb695b74b049f542a0c58fe
+upstream_blob: 34a6d7c47b192e738ffbfa6ee84ee5c07cb0b03f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -668,6 +668,7 @@ Hermes は GitHub のリポジトリと、GitHub をもとにした取り出し�
 - [huggingface/skills](https://github.com/huggingface/skills)
 - [NVIDIA/skills](https://github.com/NVIDIA/skills) — NVIDIA が検めた skill です（署名された `skill.oms.sig` と、取り決めを書いた `skill-card.md` が付きます）
 - [garrytan/gstack](https://github.com/garrytan/gstack)
+- [K-Dense-AI/scientific-agent-skills](https://github.com/K-Dense-AI/scientific-agent-skills) と [synthetic-sciences/openscience](https://github.com/synthetic-sciences/openscience) — 科学研究の skill が約 480 個（バイオインフォマティクス、化学、物理、ML の学習、学術向けの道具）で、1 つの `science` カテゴリにまとめられています。信頼度はコミュニティで、インストールのたびにセキュリティの検査がかかります。多くはそれぞれ独自のライセンスを持つ外部の道具を包んでいるので（GPL のものもあり、KEGG は学術以外の用途に商用ライセンスが要ります）、各 skill の前提条件を確かめてください。
 
 - 例:
 

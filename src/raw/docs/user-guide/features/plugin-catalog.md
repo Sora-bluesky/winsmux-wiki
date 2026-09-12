@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みで SHA 固定された Hermes のプラグインを、厳選カタログから探して導入する"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 1f5c66fab8c1b437c03e25b69e698eaf9ab2fbb1
+upstream_blob: bf6fd831e2c6741b970c0ed370b1c99314a22158
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -77,6 +77,28 @@ hermes plugins enable <name>
 
 導入時のプロンプトには、クローンが始まる前にそのエントリの機能一覧（宣言されたツール、
 フック、必要な環境変数）が表示されます。
+
+カタログでの名前と、プラグイン自身のマニフェストにある名前は違うことがあります。`hermes
+plugins install` は入れたあとの名前を表示し、`enable` にはそちらの名前を渡します。
+たとえば `touchdesigner` のエントリ（twozero の MCP サーバーと `touchdesigner-mcp` スキルを
+ひとまとめにした、持ち運べる Agent Plugins v1 のパッケージ）は `td` という名前で入ります。
+名前を短くしてあるのは、そこから作られる MCP ツールの名前が、プロバイダーの関数名の長さの
+上限を超えないようにするためです。
+
+```bash
+hermes plugins install touchdesigner
+hermes plugins enable td
+```
+
+持ち運べるパッケージには、stdio の MCP サーバーを入れることもできます。`snyk` のエントリは
+Snyk CLI の版を固定し（`npx -y snyk@<version> mcp`）、`snyk-security-scan` スキルを
+同梱しています。1 回入れるだけで、Hermes はコード、依存関係、コンテナ、IaC をスキャンできる
+ようになり、その使い方の手順も手に入ります。カタログでの名前とマニフェストの名前は同じです。
+
+```bash
+hermes plugins install snyk
+hermes plugins enable snyk
+```
 
 ### カタログ経由で入れたものを更新する {#updating-a-catalog-install}
 

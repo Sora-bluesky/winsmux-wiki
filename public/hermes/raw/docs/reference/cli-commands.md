@@ -2,7 +2,7 @@
 title: "CLI コマンド一覧"
 description: "Hermes のターミナルコマンドとコマンド群の公式な早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: 4fbeef440afe8c4b9b4dab71fc742e545b19861a
+upstream_blob: a76ba93fe3ba70fe4fb3987bba84095d9ef052af
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -276,6 +276,7 @@ hermes gateway <subcommand>
 | `install` | systemd（Linux）または launchd（macOS）のバックグラウンドサービスとして導入します。 |
 | `uninstall` | 導入したサービスを削除します。 |
 | `setup` | メッセージングのプラットフォーム設定を対話的に行います。 |
+| `migrate` | プロファイルごとに独立して動いているゲートウェイを、多重化した既定のゲートウェイ 1 つに移します（`--multiplex`、既定）。記録済みのマニフェストから元に戻すこともできます（`--standalone`）。事前確認（重複した Bot トークン、`/p/<profile>/` の受け口を持たずにポートを使っている 2 番目以降のプロファイル）を行い、妨げがあれば何も変更しません。フラグ: `--dry-run`、`-y` / `--yes`。詳しくは [プロファイルごとのゲートウェイからの移行](/hermes/docs/user-guide/multi-profile-gateways/#migrating-from-per-profile-gateways) をご覧ください。 |
 | `migrate-legacy` | 改名前のインストールが残した古い `hermes.service` ユニットを削除します。プロファイル用のユニット（`hermes-gateway-<profile>.service`）や無関係なサービスには一切触れません。フラグ: `--dry-run`、`-y` / `--yes`。 |
 | `enroll` | 試験的な機能です。このゲートウェイをリレーコネクタに登録し、コネクタ経由のプラットフォーム向けにリレーの認証情報を保存します。[Hermes Relay](/hermes/docs/user-guide/messaging/relay/) をご覧ください。 |
 
@@ -950,6 +951,9 @@ Hermes の設定、スキル、セッション、データを zip にまとめ�
 
 - `*.db-wal`、`*.db-shm`、`*.db-journal` — SQLite の WAL / 共有メモリ / ジャーナルの付随ファイル。`*.db` 本体は `sqlite3.backup()` で一貫したスナップショットを取っているので、動作中の付随ファイルを一緒に持っていくと、復元したときに中途半端な状態が見えてしまいます。
 - `checkpoints/` — セッションごとの経過のキャッシュ。ハッシュを鍵にしてセッションごとに作り直されるもので、そもそも別の環境へきれいに移せません。
+- `~/.hermes` 直下（および各 `profiles/<name>/` 直下）の `models/`、`runtimes/`、`node/` — 作り直せる実行用のダウンロードで、数十 GB になることもよくあります。もっと深い場所にある同じ名前のディレクトリ（スキルの `models/` など）は残します。
+- 同じ直下にある `cache/` のうち、作り直せる項目 — モデルやプラグインの一覧、スタンプ、ブラウザのプロファイル、ツール出力のあふれ分などです。残しておくべき成果物は含めます: `cache/images`、`cache/audio`、`cache/videos`、`cache/documents`、`cache/screenshots`（届けたメディアや受け取ったメディア）と `cache/citations`（根拠付き引用の台帳）。もっと深い場所にある `cache/`（スキルの中など）は丸ごと残します。
+- Unix ソケット、デバイス、シンボリックリンク — zip には入れられません。除外される前は、紛れ込んだ `gateway.sock` のせいで、フルバックアップのたびに `Backup incomplete` と報告されていました。
 - `hermes-agent` のコード自体（これは利用者のデータのバックアップであって、リポジトリのスナップショットではありません）。
 
 ### 例 {#examples}
@@ -1713,7 +1717,7 @@ hermes profile <subcommand>
 |------------|-------------|
 | `list` | すべてのプロファイルを並べます。 |
 | `use <name>` | 既定のプロファイルを決めて、そのまま使い続けます。 |
-| `create <name> [--clone] [--clone-all] [--clone-from <source>] [--no-alias]` | 新しいプロファイルを作ります。`--clone` は、いま有効なプロファイルから設定・`.env`・`SOUL.md`・スキルを写します。`--clone-all` は状態をすべて写します。`--clone-from` は写し元のプロファイルを指定し、`--clone-all` と併用しない限り設定の複製を含みます。 |
+| `create <name> [--clone] [--clone-all] [--clone-from <source>] [--no-alias]` | 新しいプロファイルを作ります。`--clone` は、いま有効なプロファイルから設定・`.env`・`SOUL.md`・スキル、そして手入れされた記憶ファイルの `MEMORY.md`/`USER.md` を写します。`--clone-all` は状態をすべて写します。`--clone-from` は写し元のプロファイルを指定し、`--clone-all` と併用しない限り設定の複製を含みます。 |
 | `delete <name> [-y]` | プロファイルを削除します。 |
 | `show <name>` | プロファイルの詳細（ホームディレクトリ、設定など）を表示します。 |
 | `alias <name> [--remove] [--name NAME]` | プロファイルへ手早く入るためのラッパースクリプトを管理します。 |

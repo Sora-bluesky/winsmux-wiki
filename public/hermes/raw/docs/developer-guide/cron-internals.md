@@ -2,7 +2,7 @@
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: 29b2b42e6c92c58b13211c59199fca122b8ba00c
+upstream_blob: a8bab0a297fdc050cdb4ca938dffb9102812c862
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -116,6 +116,42 @@ tick()
   5. Write updated jobs back to jobs.json
   6. Release scheduler lock
 ```
+
+### 逃した回についての取り決め（再起動のすき間） {#missed-occurrence-contract-restart-gaps}
+
+繰り返しのジョブは**1 回の予定につき多くても 1 回だけ実行され、しかもすべての予定の行方が
+説明できます**。予定は実行される（その `scheduled_instant` を持つ実行の行が 1 つできる）か、
+理由を付けて飛ばしたことがログに残るかのどちらかです。予定が黙って消えることはありません。
+仕組みは次のとおりで、実行時刻の走査（`cron/jobs.py::_evaluate_due_job`）が当てはめる順に並べています。
+
+1. **振り分け前の前進は仮のものです。** `tick()` は振り分けの*前に*、実行時刻の来た予定より先へ
+   `next_run_at` を進めます。実行の途中で落ちても、再起動のたびに同じ回が走り直さないようにするためです。
+   ただしそれだと、進めたのに実行の確保がまだない、というすき間ができます（インタプリタの終了処理中、
+   実行役が仕事を断った、`SIGKILL`）。そこで実行時刻の走査は、同じ保存の中で記録に
+   `pending_slot = {scheduled_at, at, by}` を刻みます。`claim_job_for_fire`（これより後は副作用が
+   ありうる地点）と `mark_job_run` がこれを消し、`schedule` / `next_run_at` /
+   `enabled` / `state` を明示的に書き換える操作（編集、一時停止、再開、いますぐ実行）でも消えます。
+2. **戻すのは 1 回だけです。** あとの走査で `pending_slot` が見つかり、その持ち主がいなくなったと
+   確かに言える場合（このプロセスで、そのジョブが実行中の集合にない。あるいは別のプロセスで、300 秒の
+   実行確保の期限を過ぎているか pid が死んでいる）、`scheduled_at` を `next_run_at` に戻し、
+   刻印を消して WARNING をログに出します（`cron/occurrences.py::unclaimed_pending_slot`）。これは
+   失われた予定 1 つにつき多くても 1 回です。戻した時刻はそのあと、ほかの遅れた回と同じく下の
+   ふつうの規則に当てはめられるので、N 回分がまとめて再生されることはありません。
+3. **実行済みなら二度と走りません。** `completed_occurrence()` は、何かを実行時刻とみなす前に、
+   実行台帳からちょうどその `scheduled_instant` を持つ `completed` の行を探します。再起動の前に
+   走った回は、実行されずに先へ進みます。`failed` / `unknown` の行は完了とみなしません。
+4. **猶予の内側の遅れなら、遅れて実行します。** 猶予は周期の半分を
+   `[120 s, 2 h]` に収めたもの（`_compute_grace_seconds`）で、振り分けには
+   `last_dispatch.kind = late` が刻まれます。
+5. **猶予を過ぎたら、たまった分をまとめて 1 回実行します**（`kind = catch_up`）。ただし運用者が
+   `cron.catch_up_missed: false` を設定している場合（計画した停止）は、理由をログに残して飛ばします。
+   120 秒の猶予を過ぎた 1 回きりのジョブは、診断を添えて引退させ、生き返らせることはありません。
+6. **一時停止中・無効・終わった状態のジョブは追いかけません。** 実行時刻の走査は、上のどれよりも前に
+   それらを外します。一時停止や再開をすると、残っている予定の刻印も消えます。
+
+どの構成でも、同じ保存の項目が動きを決めます。単独の `hermes -p X gateway
+run` も、既定の多重化役が受け持つプロファイル（`_start_multiplex` は
+それぞれのホームを `_profile_cron_scope` の下でティックします）も、まったく同じ記録を評価します。
 
 ### ゲートウェイとの連携 {#gateway-integration}
 

@@ -2,7 +2,7 @@
 title: "かんばん（複数エージェントの盤）"
 description: "複数の Hermes プロファイルをまとめて動かすための、SQLite に残るタスクの盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: 01012f9ff8db303a803fff1d9cbc98794ffa0b47
+upstream_blob: f6bc009e4585d5db134050542f4a4167a83b4621
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -339,6 +339,30 @@ hermes kanban block    t_abc "need input" --ids t_def t_hij
 できない相談）。輪ができるのが織り込み済みなら、`BLOCK_RECURRENCE_LIMIT` を
 上げてください。
 :::
+
+## 会話用のプロファイルでツールを有効にする {#enabling-tools-for-a-chat-profile}
+
+デスクトップアプリのかんばんプラグインは盤を表示するだけで、会話しているエージェントに
+タスクを管理する権限を与えるものではありません。仕事を差配させたいプロファイルと
+プラットフォームで、`kanban` ツール群を有効にしてください。
+
+```bash
+hermes -p planner tools enable kanban                      # CLI / TUI / Desktop chats
+hermes -p planner tools enable kanban --platform telegram  # a gateway platform
+```
+
+どのツール群を使うかはプラットフォームごとに別々に選び、`config.yaml` の
+`platform_toolsets.<platform>` に保存されます。このツール群は `hermes tools` とダッシュボードでも
+チェックボックスとして選べます。これを持つゲートウェイのエージェントは、会話の中から
+`kanban_create` でタスクを作れ、そのタスクが完了したり止まったりしたときの知らせも
+同じスレッドで自動的に受け取ります。この設定を変えたら、新しい会話を始めてください。
+すでにある会話は、ツールの定義とプロンプトのキャッシュを変えずに持ち続けます。
+`agent.disabled_toolsets` の指定はこれまでどおり優先されます。古い書き方である最上位の
+`toolsets: [kanban]` は、プラットフォームごとの選択が保存されていないときに限り、代わりとして
+受け付けられます。`all` だけを書いても、かんばんを有効にしたことにはなりません。
+
+差配役が立ち上げた作業役には、タスクを進めるためのツールが自動で渡されます。
+`delegate_task` で生まれた子エージェントが、盤を書き換える権限を得ることはありません。
 
 ## 作業役はどう盤とやり取りするか {#how-workers-interact-with-the-board}
 

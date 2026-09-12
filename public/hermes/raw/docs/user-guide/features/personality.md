@@ -2,7 +2,7 @@
 title: "人格と SOUL.md"
 description: "グローバルな SOUL.md、組み込みの人格、独自のペルソナ定義で Hermes Agent の人格を自分好みにします"
 upstream_path: user-guide/features/personality.md
-upstream_blob: 1cb64ac7b23e779df43db323f9aabc7b50b1dc0d
+upstream_blob: e8b2beb01ed4e91a0b8fa76bcb7c85a9e5b720a1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/personality
 ---
@@ -214,7 +214,7 @@ Hermes には、`/personality` で切り替えられる人格があらかじめ�
 
 ## 設定ファイルで人格を作る {#custom-personalities-in-config}
 
-組み込みの人格は、どの画面（CLI、メッセージングのプラットフォーム、TUI、デスクトップアプリ）でも常に使えます。自分で作った人格を加えることも、同じ名前を使って組み込みのものを上書きすることもできます。書き場所は `~/.hermes/config.yaml` の `agent.personalities` です。
+組み込みの人格は、どの画面（CLI、メッセージングのプラットフォーム、TUI、デスクトップアプリ）でも常に使えます。自分で作った人格を加えることも、同じ名前を使って組み込みのものを上書きすることもできます。書き場所は `~/.hermes/config.yaml` の `agent.personalities` です（最上位の `personalities:` のまとまりでも使えます。同じ名前が両方にあれば `agent.personalities` が優先されます）。
 
 ```yaml
 agent:
