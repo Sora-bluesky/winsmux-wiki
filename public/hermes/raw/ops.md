@@ -3,7 +3,7 @@ title: 運用
 description: 自分の Hermes を常に動かし、LINE や Telegram から届く状態を保つ。
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/
-hermes_version: "0.21.1"
+hermes_version: "0.21.2"
 confidence: high
 raw: /hermes/raw/ops.md
 ---

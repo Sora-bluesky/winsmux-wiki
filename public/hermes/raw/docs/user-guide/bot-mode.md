@@ -2,7 +2,7 @@
 title: "Bot Mode"
 description: "Hermes のプロファイルを、名前を持つ Bot の一覧に変えます。それぞれが自分のチャット、役割、モデル、記憶、スキル、アバターを持ちます。Bot は定期タスクをこなし、グループチャットを共有し、互いにメッセージを送り合います。"
 upstream_path: user-guide/bot-mode.md
-upstream_blob: c5a5a15a6cfc1ed5bad0dc40265a4f9a15a08180
+upstream_blob: 007d2da2f223fcf5ef31244e1675897ee4727108
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/bot-mode
 ---
@@ -262,6 +262,12 @@ Tailscale や VPN でネットワークをつないでください。
 接続先の Bot をクリックしても、ウィンドウがその端末へ移ることは **ありません**。いまのチャットにいたまま `@mention` で呼びかけ、グループチャットに座らせ、**Create on** の選択欄で直接その端末に新しいエージェントを作れます。クラウドと手元のエージェントは、こうして 1 つの一覧を共有します。Hermes Cloud の環境とデスクトップを（たとえば Tailscale や SSH 経由で）登録すれば、そこにいる Bot 同士がメッセージを送り合い、同じ部屋に座れます。それぞれの作業は自分の端末で動きます。それらの端末をまたぐ Bot 同士の個別メッセージは、デスクトップの中継を自動的に通ります（上の *接続した端末をまたぐメッセージ* をご覧ください）。
 
 複数接続についての詳しい案内は [デスクトップを複数の Hermes 環境につなぐ](/hermes/docs/user-guide/multi-connection-desktop/) をご覧ください。
+
+## Warm Bot Backends（同時に動く Bot の数） {#warm-bot-backends-how-many-bots-run-at-once}
+
+ローカルの Bot はそれぞれ独立したバックエンドのプロセスで動き、デスクトップが同時に生かしておくのは **Settings → Advanced → Warm Bot Backends** で指定した数までです（既定は 3 つ、1 つあたり 60 MB ほど）。使われていないバックエンドは、その設定の隣にある待機時間を過ぎると片づけられます（既定は 10 分）。待機切れの記録に続いて `desktop.log` に出る `Hermes backend for profile "<name>" exited (1)` という行は、この後片づけであって異常終了ではありません。空きがない状態で Bot を開くと、最大 30 秒だけ空きを待ち、それでも空かなければ *timed out waiting for a free local slot* という表示で失敗します。
+
+他の Bot の会話履歴を読むことや、裏側で会話の記録を取り直すことでは、この枠は **消費されません**。枠を使うのは、実際に開いて操作するときと、返答の処理が走っているときだけです。たくさんの Bot を同時に動かす使い方（メンバーの多いグループチャットや、多数のプロファイルにまたがるカンバンの割り振りなど）をするなら、Warm Bot Backends の値を、同時に動かすつもりの Bot の数に近づけたうえで、それに見合うメモリを端末に用意してください。実際に使うプロファイルより大きな値にしても、起動の手間が増えるだけです。
 
 ## 無効にする {#turning-it-off}
 

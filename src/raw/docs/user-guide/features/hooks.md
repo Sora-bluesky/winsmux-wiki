@@ -2,7 +2,7 @@
 title: "出来事のフック"
 description: "節目ごとに自分のコードを走らせます — 動きの記録、通知、webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: cecfd57856a8e637c461f4f6bf34cbe1b93df822
+upstream_blob: 182b045920a3f3cdcc6589c4d867bbdcfc9cd76b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -1601,11 +1601,15 @@ hooks_auto_accept: false         # See "Consent model" below
   "tool_input":      {"command": "rm -rf /"},
   "session_id":      "sess_abc123",
   "cwd":             "/home/user/project",
+  "profile":         "default",
   "extra":           {"task_id": "...", "tool_call_id": "..."}
 }
 ```
 
-道具に関わらない出来事（`pre_llm_call`、`subagent_stop`、セッションの節目）では、`tool_name` と `tool_input` は `null` になります。`extra` の辞書は、その出来事に固有のキーワード引数（`user_message`、`conversation_history`、`child_role`、`duration_ms`、…）をすべて運びます。そのままでは形にできない値は、省かれるのではなく文字列にされます。
+`profile` は、その仕掛けを走らせた Hermes のプロファイルの名前です（プロファイルを
+使っていなければ `"default"`）。1 本のスクリプトで、多重化されたゲートウェイの背後に
+いるどのプロファイルの分もまかなえます。子プロセスは、そのプロファイルの
+`HERMES_HOME` で動きます。道具に関わらない出来事（`pre_llm_call`、`subagent_stop`、セッションの節目）では、`tool_name` と `tool_input` は `null` になります。`extra` の辞書は、その出来事に固有のキーワード引数（`user_message`、`conversation_history`、`child_role`、`duration_ms`、…）をすべて運びます。そのままでは形にできない値は、省かれるのではなく文字列にされます。
 
 **標準出力 — 任意の返事:**
 

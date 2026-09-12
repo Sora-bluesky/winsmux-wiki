@@ -2,7 +2,7 @@
 title: "画像を見せる・貼り付ける"
 description: "クリップボードの画像を Hermes の CLI に貼り付けて、画像を読ませます。"
 upstream_path: user-guide/features/vision.md
-upstream_blob: 44352af392d9a6851cdecf39d6323876ae90137b
+upstream_blob: 628c7ab69e93ac8932034f005a60c18c09a0aff9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/vision
 ---
@@ -202,8 +202,8 @@ powershell.exe -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms;
 
 | 使っているモデル | 画像がどう扱われるか |
 |---|---|
-| **画像を読める**（GPT-4V、画像を読める Claude、Gemini、Qwen-VL、MiMo-VL など） | 上に書いた各社の形式で、**画像そのもの**が送られます。文字での要約をはさみません。 |
-| **文字だけ**（DeepSeek V3、小さめの公開モデル、会話専用の古い接続先など） | 補助の道具である `vision_analyze` を通します。補助の画像モデルが画像を説明し、その文章が会話に差し込まれます。 |
+| **画像を読める**（GPT-4V、画像を読める Claude、Gemini、Qwen-VL、MiMo-VL、DeepSeek Flash / V4.1-Flash など） | 上に書いた各社の形式で、**画像そのもの**が送られます。文字での要約をはさみません。 |
+| **文字だけ**（DeepSeek V4 Pro、DeepSeek V3、小さめの公開モデル、会話専用の古い接続先など） | 補助の道具である `vision_analyze` を通します。補助の画像モデルが画像を説明し、その文章が会話に差し込まれます。 |
 
 この切り替えを設定する必要はありません。Hermes が、いま使っているモデルの能力を提供元の情報から調べて、自動で正しい経路を選びます。実際のところ、途中で画像を読めるモデルと読めないモデルを行き来しても、やり方を変えずに画像の扱いがそのまま通ります。文字だけのモデルにも、受け取れない形の画像を投げつけるのではなく、画像についての筋の通った説明が届きます。
 

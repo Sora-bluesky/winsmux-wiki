@@ -2,7 +2,7 @@
 title: "AWS Bedrock"
 description: "Hermes Agent を Amazon Bedrock で使う — ネイティブの Converse API、Anthropic SDK 経由の振り分け、Bedrock Mantle 経由の OpenAI モデル、IAM 認証、Guardrails、クロスリージョン推論"
 upstream_path: guides/aws-bedrock.md
-upstream_blob: 4aed045cef8eef23f2b8d331f01aa81e7f64bc9d
+upstream_blob: 348dd17306b5d0f071e4217a39a46cc0129cbc0b
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/aws-bedrock
 ---
@@ -88,6 +88,10 @@ bedrock:
     stream_processing_mode: "async"       # "sync" or "async"
     trace: "disabled"                     # "enabled", "disabled", or "enabled_full"
 ```
+
+ガードレールは、Converse の経路では `guardrailConfig` として、Claude の経路では Anthropic Bedrock SDK 経由の InvokeModel ヘッダーとして渡されます（そのためプロンプトキャッシュと思考はそのまま使えます）。ガードレールに引っかかったリクエストは、モデルの文章としてではなく、内容フィルターによる拒否として返ってきます。`stream_processing_mode` が効くのは Converse だけです。
+
+AWS は、`openai.gpt-5.x` 系のモデルが使う Mantle の Responses エンドポイントにはガードレールを適用しません（[AWS のドキュメント](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html)）。ガードレールが必要な場面では、Converse から提供されるモデルを選んでください。
 
 ### モデルの自動検出 {#model-discovery}
 

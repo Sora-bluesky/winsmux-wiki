@@ -4,7 +4,7 @@ description: 会話が通ってから、コマンド実行の許可をどうす�
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/quickstart
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/
-hermes_version: "0.21.1"
+hermes_version: "0.21.2"
 confidence: high
 raw: /hermes/raw/trust.md
 ---

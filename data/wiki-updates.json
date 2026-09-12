@@ -1,6 +1,108 @@
 {
-  "generatedAt": "2026-09-11",
+  "generatedAt": "2026-09-12",
   "entries": [
+    {
+      "date": "2026-09-11",
+      "sha": "2599706",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトッププラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLI コマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/optional-skills-catalog",
+          "title": "オプションスキルの一覧",
+          "url": "/hermes/docs/reference/optional-skills-catalog/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "reference/tools-reference",
+          "title": "組み込みツール一覧",
+          "url": "/hermes/docs/reference/tools-reference/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/configuring-models",
+          "title": "モデルの設定",
+          "url": "/hermes/docs/user-guide/configuring-models/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/credential-vault",
+          "title": "パスワードとログイン",
+          "url": "/hermes/docs/user-guide/features/credential-vault/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
+          "id": "user-guide/features/honcho",
+          "title": "Honcho メモリー",
+          "url": "/hermes/docs/user-guide/features/honcho/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/free-tier",
+          "title": "無料枠とサインイン",
+          "url": "/hermes/docs/user-guide/free-tier/"
+        },
+        {
+          "id": "user-guide/messaging/discord",
+          "title": "Discord",
+          "url": "/hermes/docs/user-guide/messaging/discord/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-archify",
+          "title": "Archify — 検証済みのインタラクティブな HTML 図（本体は上流で管理）",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-archify/"
+        }
+      ]
+    },
     {
       "date": "2026-09-10",
       "sha": "235531f",

@@ -2,7 +2,7 @@
 title: "シークレットソースプラグイン"
 description: "Hermes Agent 用のシークレットマネージャ連携プラグインの作り方"
 upstream_path: developer-guide/secret-source-plugin.md
-upstream_blob: 3c0dd465e263a0b676d16156313a07e1f8b87da0
+upstream_blob: b6e5f93da769dae43e00781fde100b3a1ca3f489
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/secret-source-plugin
 ---
@@ -144,7 +144,7 @@ def register(ctx):
 次の場合、登録は（クラッシュではなくログの警告とともに）拒否されます。`SecretSource` でないインスタンス、名前が不正または重複している、`scheme` を別のソースがすでに持っている、`api_version` が違う、`shape` が `mapped`／`bulk` のどちらでもない。
 
 :::note タイミング
-プラグインの探索は、最初の `load_hermes_dotenv()` 呼び出しより起動処理の後ろで走ります。探索の直後に Hermes は有効なプラグインのシークレットソースを取り直すので（`reset_secret_source_cache()` と `load_hermes_dotenv()`）、探索を行ったプロセス *でも* きちんと反映されます — 上の [最初のプロセスでの起動タイミング](#first-process-bootstrap-timing) を参照してください（#64177）。取り直しは失敗しても素通りし、プラグインのソースがどれも有効でなければ実行されません。プラグインのモジュールを読み込む段階や `register(ctx)` の中で `os.environ` を読むコードは、依然として取り直しより前に走るため、そのソース自身が渡す認証情報を当てにはできません。認証情報が要る処理は `fetch()` の中に置いてください。ゲートウェイ、cron、サブエージェントの各プロセスも、同じ探索と取り直しの流れをたどります。
+プラグインの探索は、最初の `load_hermes_dotenv()` 呼び出しより起動処理の後ろで走ります。探索の直後に Hermes は有効なプラグインのシークレットソースを取り直すので（`reset_secret_source_cache()` と `load_hermes_dotenv()`）、探索を行ったプロセス *でも* きちんと反映されます — 上の [最初のプロセスでの起動タイミング](#first-process-bootstrap-timing) を参照してください（#64177）。取り直しは失敗しても素通りし、プラグインのソースがどれも有効でなければ実行されません。プラグインのモジュールを読み込む段階や `register(ctx)` の中で `os.environ` を読むコードは、依然として取り直しより前に走るため、そのソース自身が渡す認証情報を当てにはできません。認証情報が要る処理は `fetch()` の中に置いてください。ゲートウェイ、cron、サブエージェントの各プロセスも、同じ探索と取り直しの流れをたどります。取り直し（および cron の発火ごとの取り直し）がリセットするのは、解決を担当している home のキャッシュだけです。そのため多重化したゲートウェイのもとでも、隣り合うプロファイルは読み込み済みの内容をそのまま保ちます。また、取り直しの時点でキーがすでにプロセスの環境に入っている場合（`skipped_existing`。たとえば直前の適用が自分で書き戻した値）でも、その home の実効値はきちんと記録されます。したがって、取り直しを乗り切るためだけに `override_existing` を指定する必要はありません。
 :::
 
 ## 利用者から見れば他のソースと同じように設定できる {#users-configure-it-like-any-other-source}

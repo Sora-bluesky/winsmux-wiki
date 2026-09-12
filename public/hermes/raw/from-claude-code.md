@@ -18,7 +18,7 @@ sources:
   - https://code.claude.com/docs/en/memory
   - https://code.claude.com/docs/en/mcp
   - https://code.claude.com/docs/en/settings
-hermes_version: "0.21.1"
+hermes_version: "0.21.2"
 confidence: medium
 raw: /hermes/raw/from-claude-code.md
 ---

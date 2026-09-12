@@ -8,6 +8,28 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-09-11
+
+- [デスクトッププラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [CLI コマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
+- [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
+- [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
+- [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
+- [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [パスワードとログイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-vault/)
+- [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+- [フォールバックプロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/fallback-providers/)
+- [Honcho メモリー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/honcho/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [無料枠とサインイン](https://wiki.winsmux.dev/hermes/docs/user-guide/free-tier/)
+- [Discord](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/discord/)
+- [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
+- [Archify — 検証済みのインタラクティブな HTML 図（本体は上流で管理）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-archify/)
+
 ## 2026-09-10
 
 - [アーキテクチャ](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)

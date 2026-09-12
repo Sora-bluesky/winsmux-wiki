@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: e3a8bbff75c2889a1d7b9beb5d9af394896903ac
+upstream_blob: 8a38239e446f7f1180da581a41f10b0f80da51a7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -587,7 +587,7 @@ MCP、経路、Webhook、紐付け、システムの各ページを支えてい�
 | `GET /api/ops/checkpoints` · `POST .../prune` | `/rollback` の記録を見る・片づける |
 | `POST /api/ops/hooks` · `DELETE /api/ops/hooks` | シェルのフックを作る・外す（同意が要ります） |
 | `GET /api/system/stats` | 端末の様子 — OS、CPU、メモリ、ディスク、稼働時間 |
-| `GET /api/hermes/update/check` | 更新があるか（何コミット遅れか、どう入れたか）を、あてずに伝えます。git で入れていて遅れている場合は、何が変わったかの `commits` の一覧（`sha`、`summary`、`author`、`at`）も返します。`?force=1` で6時間の一時記憶を無視します |
+| `GET /api/hermes/update/check` | 更新があるか（何コミット遅れか、どう入れたか）を、あてずに伝えます。git で入れていて遅れている場合は、何が変わったかの `commits` の一覧（`sha`、`summary`、`author`、`at`）も返します。`?force=1` で 24 時間の一時記憶を無視します（このチェックは GitHub の API を通り、`git fetch` は使いません） |
 | `GET /api/curator` · `PUT .../paused` · `POST .../run` | スキルの世話役の状態と、休止・再開と、実行 |
 | `GET /api/portal` | Nous Portal の認証とツールゲートウェイの割り振り（読むだけ） |
 | `POST /api/ops/prompt-size` · `/dump` · `/config-migrate` | 診断（裏で走ります） |

@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダ、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 49ee09fa1700ac7bda9ad60f810a702b3f8dc3f8
+upstream_blob: 003e76d1fa00599e1e979501deb998b9d3aebbbf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -135,7 +135,7 @@ delegation:
 
 1 つの値の中に複数の参照を書くこともできます: `url: "${HOST}:${PORT}"`。参照された変数が設定されていない場合、プレースホルダはそのままの文字列として残り（`${UNDEFINED_VAR}` はそのまま）、警告がログに記録されます。裸の `$VAR` は展開されません。
 
-[多重化されたマルチプロファイルのゲートウェイ](/hermes/docs/user-guide/multi-profile-gateways/) では、あるプロファイルの `config.yaml` に書かれた参照は、プロセス共通の環境ではなく **そのプロファイル自身の** `.env`（そのプロファイルの秘密のスコープ）に対して解決されます。プロファイル B の `${MATRIX_ACCESS_TOKEN}` は、B 自身がその変数を定義していない限り未解決のままです。プロファイルが 1 つだけの実行では、動きは今までと変わりません。
+[多重化されたマルチプロファイルのゲートウェイ](/hermes/docs/user-guide/multi-profile-gateways/) では、あるプロファイルの `config.yaml` に書かれた参照は、プロセス共通の環境ではなく **そのプロファイル自身の** `.env`（そのプロファイルの秘密のスコープ）に対して解決されます。プロファイル B の `${MATRIX_ACCESS_TOKEN}` は、B 自身がその変数を定義していない限り未解決のまま（書かれたそのままの文字列で残り、警告がログに出ます）です。これは多重化の中でプロファイル B の設定が読み込まれる場面すべてに当てはまります。振り分けられたゲートウェイのターン、B のアダプタの起動、B の cron ジョブのどれでも同じです。プロファイルが 1 つだけの実行では、動きは今までと変わりません。分かれるものの全体は [プロファイルごとに分かれるもの](/hermes/docs/user-guide/multi-profile-gateways/#what-is-isolated-per-profile) をご覧ください。
 
 Cursor 形式の SecretRef 記法も受け付けます。`${env:VAR_NAME}` は `${VAR_NAME}` とまったく同じように解決されます（`env:` の接頭辞が取り除かれます）。そのため Cursor や Claude の設定からコピーしてきた MCP やプロバイダの断片が、`config.yaml` でも `mcp_servers` ブロックでも、そのまま動きます。他の SecretRef のソース（`${file:...}`、`${vault:...}`、`${bitwarden:...}`）は、その場では解決され**ません**。外部の秘密管理バックエンドは、`secrets:` ブロックを通じて起動時に値を環境へ注入するので、代わりに `${env:NAME}` として参照してください。知らない接頭辞は 1 回警告を出し、そのままの文字列で残ります。
 
@@ -151,11 +151,22 @@ AI プロバイダの設定（OpenRouter、Anthropic、Copilot、独自エンド
 
 ## 更新のふるまい {#update-behavior}
 
-### バックグラウンドのチェックと SSH 認証 {#background-checks-and-ssh-authentication}
+### バックグラウンドのチェック {#background-checks}
+
+裏側で動く更新チェック（CLI のバナー、TUI のバッジ、ダッシュボード、デスクトップ
+アプリ）は、GitHub の REST API に `main` の先端を尋ね、手元のチェックアウトと違って
+いれば compare のエンドポイントで正確な件数と変更内容を取ります。`git fetch` は
+一切実行せず、どのインストールでも尋ねるのは **24 時間に 1 回まで** です（チェックに
+失敗した場合は 1 時間後に試し直します）。更新を実際に当てるとき（`hermes update`、
+またはデスクトップの Update ボタン）は必ず取り直し、覚えていた答えを捨てます。
+自分から行うチェック（`hermes update --check`、デスクトップの「Check for Updates…」
+メニュー、Settings → About の「Check now」）は、覚えていた答えを使いません。
+
+### SSH 認証 {#ssh-authentication}
 
 起動時の更新チェックは、ネットワーク呼び出しに使うのと同じ隔離された Git 設定で
 origin の URL を読みます。そのため、グローバルの `url.*.insteadOf` による書き換えで
-公式の SSH リモートを公開 HTTPS のチェックから隠すことはできません。
+公式の SSH リモートを公開 HTTPS の経路から隠すことはできません。
 
 Hermes の隔離された内部 Git コマンドは、既定で `ssh -o BatchMode=yes` を使います。
 未知のホスト鍵、パスワード、パスフレーズが必要な暗号化鍵は、
