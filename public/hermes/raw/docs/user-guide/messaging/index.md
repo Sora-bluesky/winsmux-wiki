@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 96446f46e042fdd32ac941453603b357841de9e6
+upstream_blob: ea9a505e80a77de790bf6067873b02368fb94ee2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -520,9 +520,9 @@ display:
 | モード | 受け取るもの |
 |------|-----------------|
 | `concise` | 完了時に 1 行の状態メッセージ。失敗したときは出力の末尾を少し添える（既定値） |
-| `all` | 動作中の出力の更新**と**、最後の生の出力のメッセージ |
-| `result` | 最後の生の出力の完了メッセージだけ（終了コードにかかわらず） |
-| `error` | 終了コードが 0 以外のときだけ、最後の生の出力のメッセージ |
+| `all` | 動作中の出力の更新**と**、出力の末尾を添えた最後の状態メッセージ |
+| `result` | 出力の末尾を添えた最後の状態メッセージだけ（終了コードにかかわらず） |
+| `error` | 終了コードが 0 以外のときだけ、出力の末尾を添えた最後の状態メッセージ |
 | `off` | プロセスの監視メッセージを一切送らない |
 
 環境変数でも設定できます。

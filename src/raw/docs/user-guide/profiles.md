@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: e5e084f7a13a8f61ea4adba8df7332ad4b09ce9f
+upstream_blob: 251de3a771f9c00daa07b22f2a96cc09de5409e9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -84,6 +84,57 @@ hermes profile create work --clone-from coder
 ```bash
 hermes profile create work-backup --clone-from coder --clone-all
 ```
+
+### メッセージのチャンネルは複製されません（含めたいときは `--clone-channels`） {#messaging-channels-are-never-cloned---clone-channels-to-opt-in}
+
+どの複製も（`--clone`、`--clone-from`、`--clone-all`、それにダッシュボード / Desktop / TUI の
+「プロファイルから複製」も）、元のプロファイルを**メッセージのチャンネル抜きで**写します。抜けるのは、
+ボットのトークンと許可リスト（`TELEGRAM_BOT_TOKEN`、`DISCORD_ALLOWED_USERS`、`WHATSAPP_ENABLED`、
+`API_SERVER_KEY`、`WEBHOOK_SECRET` など）、`config.yaml` の `platforms:` / `telegram:` / `discord:` の節、
+`gateway.multiplex_profiles` / `profile_routes`、そして（`--clone-all` のときは）ペアリングの記録、
+WhatsApp のセッション、そのほかボットごとの状態です。プロバイダやツールの API キー、モデルの設定、
+メモリの設定、スキル、`SOUL.md` はこれまでどおり写されます。どのプラットフォームを置いてきたかは、
+コマンドが表示します。
+
+こうしているのは、ひとつのボットはひとつのプロファイルにしか属せないからです。同じトークンを持つ
+独立したゲートウェイが 2 つあると、ロングポーリングを取り合います。[多重化したゲートウェイ](/hermes/docs/user-guide/multi-profile-gateways/)
+では重複したアダプターが待機に回されます（`hermes gateway migrate --multiplex` も、プラットフォームごとに
+「認証情報の重複」を理由に止まります）。新しいプロファイル専用のボットは、
+`hermes -p <name> setup` かダッシュボードの Messaging ページで設定してください。
+
+```bash
+hermes profile create twin --clone --clone-channels   # keep the source's bots anyway
+```
+
+元のプロファイルを、動いている多重化ゲートウェイがすでに受け持っている場合、`--clone-channels` は
+拒否されます（写しはすぐに待機へ回されてしまうからです）。CLI でも、ダッシュボードでも、TUI でも同じです。
+それ以外の場合は、元のプロファイルと共有することになったプラットフォームを挙げて警告を出します。
+複製のフラグなしで使うとエラーになります。`hermes profile list` も、ボットの認証情報が既定のプロファイルと
+バイト単位で同じプロファイルに同じ警告を出すので、以前に作った複製が問題を起こす前に見つかります。
+
+**何がチャンネルの設定に当たるか** — 一覧は「どのアダプターの持ち物か」で決まり、*元の*プロファイルの
+プラグインの範囲（そのプロファイル専用の `plugins/` のアダプターも含む）で判定します。
+
+- アダプターが宣言しているすべてのキー（トークン、アプリ / クライアントの ID、許可リスト、全員許可の
+  切り替え、ホームチャンネル）と、その `<PLATFORM>_` の接頭辞が付くすべてのキー。昔の別名
+  （`WECOM_*`、`SMS_*`/`TWILIO_*`、`QQ_*`、`HASS_*`、`EMAIL_*`）も含みます。
+- ゲートウェイ全体のチャンネルの方針 `GATEWAY_ALLOW_ALL_USERS` / `GATEWAY_ALLOWED_USERS` と、
+  中継の登録に使う身元 `GATEWAY_RELAY_ID` / `GATEWAY_RELAY_SECRET` / `GATEWAY_RELAY_DELIVERY_KEY`。
+- `--clone-all` のときは、ボットごとの状態のファイル**とディレクトリ**（`platforms/`、ペアリングの台帳、
+  `google_chat_user_tokens/`、`<platform>_*`）。
+
+メッセージのアダプターが、チャンネル以外の機能と共有している認証情報もあります。`HASS_TOKEN`/`HASS_URL`
+（Home Assistant のツールも使う）、`TWILIO_*`（電話のスキルも使う）、`EMAIL_*`（メール送信の
+スクリプトも使う）です。これらを取り除くのは、**元のプロファイルのゲートウェイがそのアダプターを動かす場合だけ**
+です（`config.yaml` でそのプラットフォームが有効になっているか、認証情報がそろっていて明示的に無効に
+されていない場合）。`platforms.homeassistant.enabled: false` の元プロファイルは `HASS_TOKEN`
+をツールのキーとして使っているので、複製にも残ります。これらの接頭辞の下にある許可リストやポートは、
+つねにチャンネル専用なので、つねに取り除かれます。
+
+複製は `profiles/` の隣にある隠れた準備用ディレクトリで組み立て、取り除きが済んでから名前の変更 1 回で
+公開します。そのため、動いている多重化の仕組み（作成時に `profiles/` を読み直します）が、写しかけの
+ツリーでアダプターを立ち上げてしまうことはありません。元の `.env`/`config.yaml` がシンボリックリンクなら、
+まず専用の写しとして実体化します。複製が元のファイルへ書き込んでしまうことはありません。
 
 :::tip Honcho の記憶とプロファイル
 Honcho を有効にしていると、複製の操作にあわせて新しいプロファイル専用の AI ピアが自動で作られ、ユーザーのワークスペースは共有されます。プロファイルごとに独自の観察と人物像が育っていきます。詳しくは [Honcho -- Multi-agent / Profiles](/hermes/docs/user-guide/features/memory-providers/#honcho) を参照してください。

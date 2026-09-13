@@ -2,7 +2,7 @@
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: a8bab0a297fdc050cdb4ca938dffb9102812c862
+upstream_blob: ca39feb6bc71172f9a68360df34deba6dbb19507
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -220,7 +220,7 @@ Chronos の設定が誤っている場合や、エージェントが Nous にロ
 `resolve_cron_scheduler()` が警告を残したうえで組み込みのティッカーに戻します。
 cron が引き金を失うことはありません。繰り返しのジョブは実行のたびに次の予約を入れ直し、
 `repeat` に回数を指定したジョブは回数を使い切った時点できれいに止まります（予約が取り残されることはありません）。
-エージェントと Nous のあいだのやり取りの取り決めは `docs/chronos-managed-cron-contract.md` にすべて書かれています。
+エージェントと Nous のあいだのやり取りの取り決めは [Chronos managed-cron contract](/hermes/docs/developer-guide/chronos-managed-cron-contract/) にすべて書かれています。
 
 ### まっさらなセッションで動かす {#fresh-session-isolation}
 

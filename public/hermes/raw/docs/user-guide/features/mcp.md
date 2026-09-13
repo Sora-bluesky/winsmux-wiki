@@ -2,7 +2,7 @@
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: 150753f1fa520e490bbb9f42be00a1199a543f1e
+upstream_blob: e33d42b98bf81dabf995d14675dfed60b7aac3d4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -643,6 +643,10 @@ MCP の設定を変えたら、次を使ってください。
 ```
 
 設定から MCP サーバーを読み込み直し、使える道具の一覧を作り直します。使える条件が揃ってから出てくる道具（Docker、`HASS_TOKEN`、OAuth など）を調べ直す、はっきりしたやり方でもあります。ふだんセッションの道具立ては固定なので、途中で資格情報や常駐プロセスが現れても、`/reload-mcp`、`/new`、文脈の圧縮のいずれかがないと拾われません。サーバー側から知らされる道具の変化については、上の[動いている最中に道具を見つける](#dynamic-tool-discovery)を見てください。
+
+動いているメッセージングのゲートウェイ（`hermes gateway run`）は、`config.yaml` を自分でも見張っています。`mcp_servers` の項目を消すか `enabled: false` にすると、1 分ほどでそのサーバーとの接続が切られ、新しく足した項目は接続されます。編集を反映させるのに、再起動も `/reload-mcp` も要りません。
+
+**裏で OAuth のトークンが期限切れになったとき。** ゲートウェイ、`/reload-mcp`、待機中のサーバーの定期的な自己確認は、ブラウザーを開きません。手続きを終わらせる人がその場にいないからです。更新トークンが使えなくなると、サーバーは `gateway.log` に警告を残して待機に入ります。`hermes mcp login <server>`（または Desktop やダッシュボードの *Authorize* ボタン）で一度だけ認可し直してください。待機中のサーバーは、次の確認で新しいトークンを拾います。
 
 ### 道具の束 {#toolsets}
 

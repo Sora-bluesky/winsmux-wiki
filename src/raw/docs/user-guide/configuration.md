@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダ、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 003e76d1fa00599e1e979501deb998b9d3aebbbf
+upstream_blob: 52cfa284031887955ecb8ab134084c473864a408
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -192,7 +192,7 @@ updates:
 
 `pre_update_backup` は、更新前の安全策を決める唯一のつまみです。`quick`（既定）は、重要な状態ファイル（ペアリングのデータ、cron ジョブ、設定、認証情報。1 GiB を超えるファイルは飛ばします）を `state-snapshots/` へスナップショットします。`full` はさらに `HERMES_HOME` 全体を `backups/` へ zip 化するので、ホームが大きいと数分かかることがあります。`off` は両方とも無効にします。従来の真偽値も受け付けます（`true` → `full`、`false` → `off`）。
 
-`config.yaml` そのもののある時点のコピー（`hermes setup` が書き換える前、`hermes migrate` が編集する前、そしてファイルの解析に失敗したとき）は `backups/config/config.yaml.<reason>.<timestamp>` へ入ります。同じ内容の繰り返しは飛ばされ、理由ごとに新しい 5 件だけが残るので、`config.yaml` の隣に積み上がることはありません。
+`config.yaml` そのもののある時点のコピー（`hermes setup` が書き換える前、`hermes migrate` が編集する前、ファイルの解析に成功するたび、そして解析に失敗したとき）は `backups/config/config.yaml.<reason>.<timestamp>` へ入ります。同じ内容の繰り返しは飛ばされ、理由ごとに新しい 5 件だけが残るので、`config.yaml` の隣に積み上がることはありません。`config.yaml` が壊れている場合、Hermes は組み込みの既定値ではなく最も新しい `good` のコピーを使い、YAML が直るまで起動のたびに警告を出します。壊れたファイル自体には手を加えません。
 
 git で入れた場合、Hermes は更新用ブランチをチェックアウトしたり pull したりする前に、変更のある追跡ファイルと未追跡ファイルを自動で stash します。対話的な端末での更新は、その stash を戻す前に確認します。非対話の更新（デスクトップ／チャットアプリ、ゲートウェイ、`--yes`）は `updates.non_interactive_local_changes` に従います。`stash` は pull が成功したあとにローカルのソース編集を戻し、`discard` は pull が成功したあとに更新で作られた stash を捨てます。`discard` を使うのは、ローカルのソース編集を残すつもりがまったくない管理下のインストールだけにしてください。
 
@@ -1980,6 +1980,7 @@ display:
   show_reasoning: true    # Show model reasoning/thinking above each response (default: true; toggle with /reasoning show|hide)
   streaming: false        # Stream tokens to terminal as they arrive (real-time output)
   show_cost: false        # Show estimated $ cost in the CLI status bar
+  vim_mode: false         # CLI only: vi/vim keybindings in the input composer (Esc → NORMAL, i → INSERT). The live NORMAL/INSERT/REPLACE mode shows at the right of the status bar. Config-only, read at startup.
   timestamps: false       # When true, prefixes user and assistant labels with timestamps in the CLI / TUI transcript
   timestamp_format: "%H:%M"  # strftime format for those timestamps (e.g. "%b-%d %H:%M" for month-day)
   tool_preview_length: 0  # Max chars for tool call previews (0 = no limit, show full paths/commands)
@@ -2102,11 +2103,11 @@ display:
     fields: ["model", "duration", "total_tokens"]   # visibility only; built-in order is preserved
 ```
 
-使える項目: `model`、`context_detail`（使用／全体のトークン）、`context_pct`（パーセントとメーター）、`cache_hit`（プロンプトのキャッシュのヒット率。モデルの切り替えと圧縮でリセットされます）、`latency`（直近 10 回の API の平均の待ち時間）、`tps`（直近 10 回の毎秒の出力トークン）、`compressions`、`bg_tasks`、`bg_processes`、`bg_subagents`、`goal`、`duration`、`prompt_elapsed`、`idle_since`、`focus`、`yolo`、`stash`、`battery`、`title`（右寄せのセッションのバッジ）、`total_tokens`（セッションの合計。任意で出すもので、既定では決して出ません）。
+使える項目: `model`、`context_detail`（使用／全体のトークン）、`context_pct`（パーセントとメーター）、`cache_hit`（プロンプトのキャッシュのヒット率。モデルの切り替えと圧縮でリセットされます）、`latency`（直近 10 回の API の平均の待ち時間）、`tps`（直近 10 回の毎秒の出力トークン）、`compressions`、`bg_tasks`、`bg_processes`、`bg_subagents`、`goal`、`git_branch`（⎇ 作業ディレクトリの現在の git ブランチ。任意で出すもので、既定では決して出ません。detached HEAD のときは短縮したコミットを表示します）、`duration`、`prompt_elapsed`、`idle_since`、`focus`、`yolo`、`stash`、`battery`、`title`（右寄せのセッションのバッジ）、`total_tokens`（セッションの合計。任意で出すもので、既定では決して出ません）。
 
 補足:
 
-- 空のリスト（既定）は、標準の組み合わせ（`total_tokens` 以外すべて）を保ちます。
+- 空のリスト（既定）は、標準の組み合わせ（`total_tokens` と `git_branch` 以外すべて）を保ちます。
 - この設定が決めるのは **見せるかどうかであって、並び順ではありません**。項目は組み込みの位置に描かれます。
 - 狭い端末では、設定にかかわらず幅の広いモード専用の項目（`context_detail`、`cache_hit`、`latency`、`tps`、`prompt_elapsed`、`idle_since`）が落ちます（`cache_hit` は 52 桁以上の中くらいの段でも出ます）。
 - `latency`／`tps` は、API の呼び出しが記録されるまで隠れたままです（たとえば Codex の app-server のバックエンドは待ち時間を報告しません）。

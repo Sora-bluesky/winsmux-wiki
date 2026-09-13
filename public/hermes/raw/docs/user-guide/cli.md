@@ -2,7 +2,7 @@
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md
-upstream_blob: 6c4ed6526a1447ac3445b04dc549a3c7ffbd0a46
+upstream_blob: 2ca8cf6a700d005c6cd18b08d69b10308189a90c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/cli
 ---
@@ -222,7 +222,7 @@ hermes plugins remove <plugin-name>
 ```
 > !git status
 > !ls -la
-> !pytest -x tests/cli
+> !pytest -x tests/hermes_cli
 ```
 
 - **費用はゼロ。** モデルは一切呼ばれません。API 呼び出しも、トークンも、待ち時間もありません。

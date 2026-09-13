@@ -2,7 +2,7 @@
 title: "Matrix"
 description: "Hermes Agent を Matrix のボットとして設定する"
 upstream_path: user-guide/messaging/matrix.md
-upstream_blob: f8505fac6d45094fe779c5723dfdc94632a5e13b
+upstream_blob: cc17a72702c1eb065842426e1ed813425f5eca97
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/matrix
 ---
@@ -411,17 +411,9 @@ E2EE が有効なとき、Hermes は次のように動きます。
 
 ### Matrix 用のツールと操作 {#matrix-tools-and-controls}
 
-Matrix での会話では、Hermes は Matrix 専用のツールをエージェントに渡します。
+Hermes は Matrix 専用のエージェント用ツール（ルームの作成、招待、メッセージの取り消しなど）を渡しません。エージェントは通常のメッセージの配信を通して Matrix とやり取りします。アダプターは内部でリアクションと取り消しを使い、承認の確認や選択肢の表示を実現しています。
 
-- `matrix_send_reaction`
-- `matrix_redact_message`
-- `matrix_create_room`
-- `matrix_invite_user`
-- `matrix_fetch_history`
-- `matrix_set_presence`
-
-これらのツールは Matrix の文脈に限られ、Matrix 以外のツール一式には出てきません。管理者寄りのツールは既定で無効です。メッセージの取り消しには `MATRIX_TOOLS_ALLOW_REDACTION=true`、招待には `MATRIX_TOOLS_ALLOW_INVITES=true`、ルームの作成には `MATRIX_TOOLS_ALLOW_ROOM_CREATE=true` が要ります。公開ルームを作るには、さらに `MATRIX_ALLOW_PUBLIC_ROOMS=true` も要ります。
-`MATRIX_ALLOWED_ROOMS` を設定している場合、Matrix のツールが対象にできるのはそのルームだけです。
+`MATRIX_ALLOWED_ROOMS` を設定している場合、Hermes はそのルームでだけ応答します（DM は対象外です）。
 
 リアクションによる操作は次のとおりです。
 

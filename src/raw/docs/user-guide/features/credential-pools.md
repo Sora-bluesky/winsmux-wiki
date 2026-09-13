@@ -2,7 +2,7 @@
 title: "認証情報プール"
 description: "プロバイダごとに複数の API キーや OAuth トークンをまとめておき、自動で切り替えてレート制限から復帰します。"
 upstream_path: user-guide/features/credential-pools.md
-upstream_blob: fd3ce5e663a741503ed66f9acebcb402f4572524
+upstream_blob: 477fb3aef3d4b2dccbf7d44f032d9b4bba0d4411
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/credential-pools
 ---
@@ -49,6 +49,9 @@ Your request
 ```bash
 # Add a second OpenRouter key
 hermes auth add openrouter --api-key sk-or-v1-your-second-key
+
+# ...or let a browser login mint one (OpenRouter OAuth PKCE; stored as a plain API key)
+hermes auth add openrouter --type oauth
 
 # Add a second Anthropic key
 hermes auth add anthropic --type api-key --api-key sk-ant-api03-your-second-key

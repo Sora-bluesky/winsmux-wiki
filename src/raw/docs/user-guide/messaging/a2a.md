@@ -2,7 +2,7 @@
 title: "A2A（エージェント間連携）"
 description: ""
 upstream_path: user-guide/messaging/a2a.md
-upstream_blob: 92d98d19d94086a0d772e07bf6ac2def31a4012d
+upstream_blob: 24b716fa56d7d94f77d1ef8c2ad3a4507609a709
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/a2a
 ---
@@ -111,7 +111,7 @@ a2a_agents:
 | `A2A_ALLOW_ALL_USERS` | `false` | 認証さえ通れば誰でも許可します（開発時のみ） |
 | `A2A_RATE_LIMIT` | `60` | 識別名ごとの 1 分あたりのリクエスト数 |
 | `A2A_MAX_PINGPONG_TURNS` | `5` | コンテキストごとのループ防止のターン上限（最大 20） |
-| `A2A_REPLY_TIMEOUT` | `300` | エージェントの返事を待つ秒数 |
+| `A2A_REPLY_TIMEOUT` | `300` | エージェントの返事を待つ秒数です。取り残されたタスクの掃除は、この時間が過ぎるまで（下限は 300 秒）タスクを失敗扱いにせず、リクエストがまだそのタスクを待っている間も失敗扱いにしません |
 | `A2A_PUSH_SECRET` | ベアラートークン | プッシュ通知の署名に使う HMAC の秘密鍵 |
 | `A2A_ADVERTISED_TOOLSETS` | 登録済みのすべて | Agent Card に載せるスキルを絞ります |
 
@@ -136,4 +136,4 @@ curl -X POST http://your-host:9900/ \
 - **相手がカードの URL にたどり着けない** — カードが待ち受け用のアドレスを掲げていたのが原因です。外からつながる URL を `A2A_PUBLIC_URL` に設定してください。
 - **`401 Unauthorized`** — トークンが一致していません。サーバー側の `A2A_PEER_TOKENS`/`A2A_BEARER_TOKEN` と、相手の `auth:` の設定を確認してください。
 - **localhost 以外を待ち受けてくれない** — そういう作りです。先にベアラートークンを設定してから `A2A_HOST=0.0.0.0` にしてください。
-- **長い処理で返事がタイムアウトする** — `A2A_REPLY_TIMEOUT` を延ばすか、呼び出し元にプッシュ通知の設定を登録してもらい `GetTask` で確認してもらってください。
+- **長い処理で返事がタイムアウトする** — `A2A_REPLY_TIMEOUT` を延ばすか（取り残されたタスクの掃除もこの値に従うので、遅れて届いた返事は捨てられずに保存されます）、呼び出し元にプッシュ通知の設定を登録してもらい `GetTask` で確認してもらってください。

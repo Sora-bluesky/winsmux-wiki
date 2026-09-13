@@ -2,7 +2,7 @@
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: b3045093bdcb467f84ad316b8a248f85054ff037
+upstream_blob: a3b45cb85de0975fb2473b802414aee43bf08dea
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -199,7 +199,12 @@ POST http://host:8644/p/coder/webhooks/<route>
   `secret` の隣に `profile: coder` と書く必要があります。その合言葉は
   `/p/coder/webhooks/<route>` でだけ通り、ほかのプロファイルの接頭辞では拒否されます。
 - `profile` の書かれていない Webhook の経路は既定プロファイルの経路のままで、
-  プロファイル名付きの接頭辞からは届きません。
+  プロファイル名付きの接頭辞からは届きません。動的な登録も同じように結び付きます。
+  `hermes webhook subscribe <name> --route-profile coder` を実行すると、既定のゲートウェイの
+  `webhook_subscriptions.json` に `profile: coder` が書き込まれ、`/p/coder/webhooks/<name>` の
+  URL が表示されます（結び付きは `hermes webhook ls` で確かめられます）。全体オプションの
+  `-p coder` ではなく `--route-profile` を使ってください。`-p` を使うと、登録は coder 自身の
+  登録ファイルに書き込まれますが、既定のゲートウェイの Webhook アダプタはそのファイルを読みません。
 - 送り返しも同じ結び付きに従います。`profile: coder` の経路の返信（または
   `deliver_only` のメッセージ）は、`deliver` のプラットフォームについて **coder の**
   アダプタから出ていき、`deliver_extra.chat_id` が未設定なら **coder の** 定位置の
@@ -302,7 +307,9 @@ Inbound callback URLs on the shared listener:
 不要で、行き場を失う履歴もありません。鍵を読み戻すゲートウェイの経路はすべて
 —— 再起動後の委任の完了通知、停止のお知らせ、利用者ごとのスレッドで兄弟の実行を
 `/stop` すること、`/undo`、QQ の承認ボタン —— `agent:<profile>:…` の形も受け付けるので、
-従属側のプロファイルも既定と同じように振る舞います。
+従属側のプロファイルも既定と同じように振る舞います。既定の名前空間とぶつかる
+唯一のプロファイル名、つまり文字どおり `main` という名前のプロファイルは、`agent:main~:…` を
+鍵にするので、自分のセッションと自分の `profiles/main/state.db` を保ちます。
 
 各プロファイルの行は **それぞれの** `state.db` に入ります。名前付きプロファイルは
 `profiles/<name>/state.db`、既定プロファイルは起動時のホームの下です。ほかの
@@ -336,9 +343,13 @@ coder の動いているゲートウェイとして報告します（プラッ�
 何も受け取りません。既定プロファイルの値が渡ることはありません。MCP サーバーは
 **プロファイルごとに** つながります。2 つのプロファイルがどちらも `github` という
 名前のサーバーを自分のトークンで持っていれば接続は 2 本になり、それぞれ自分の
-道具しか見えません。`mcp_servers` の項目が同一（経路 *も* 認証情報も同じ）の
-プロファイル同士は 1 本の接続を分け合い、持ち主が `/reload-mcp` すると、相乗りして
-いる側は読み直さずに道具が登録し直されます。端末まわりの設定（`terminal.backend`、
+道具しか見えません。`mcp_servers` の項目が同一（経路 *も* 認証情報も同じ。mTLS の
+`client_cert`/`client_key` も含みます）のプロファイル同士は 1 本の接続を分け合い、持ち主が
+`/reload-mcp` すると、相乗りしている側は読み直さずに道具が登録し直されます。`auth: oauth`
+のサーバーは、プロファイルをまたいで分け合うことがありません。プロファイルごとに自分の
+`mcp-tokens/` の下へ自分のトークンを持ち、自分の接続を開きます。信頼の方針はプロファイルごとのままです。
+`trust: full` のプロファイルの接続を相乗りしている `trust: untrusted` のプロファイルは、書き込みのできる
+呼び出しのたびに引き続き確認を求められ、`supports_parallel_tool_calls` もそれを設定したプロファイルにだけ効きます。端末まわりの設定（`terminal.backend`、
 `terminal.cwd`、`terminal.docker_volumes`、`terminal.docker_shared_container_key`、
 SSH の接続先など）も、振り分けられたやり取りごとにプロファイル単位で解決されます。
 端末の設定を書いていないプロファイルには文書どおりの既定が使われ、起動元の
@@ -413,7 +424,7 @@ Hindsight の URL —— なので、あるプロファイルの鍵がほかの�
 | 権限（`GATEWAY_ALLOW_ALL_USERS`、`GATEWAY_ALLOWED_USERS`、プラットフォームごとの許可一覧と全員許可の指定） | 持ち主のプロファイルの `.env` と `config.yaml` | 閉じたまま。既定プロファイルで開いても従属側のボットは開かない |
 | HTTP の宛先（`/p/<profile>/api/...`、`/p/<profile>/webhooks/...`、プラットフォームの出来事の呼び返し） | 名指しされたプロファイルの `API_SERVER_KEY`、`profile:` で結び付けた Webhook の経路、そのプロファイル自身のアダプタ | `401` か `404`。アダプタが無いままの送付は `502` か `503` で、ほかのプロファイルのボットは使われない |
 | 受信ポート型のプラットフォーム（`/p/<profile>/webhooks/twilio`、`/p/<profile>/line/webhook`、`/p/<profile>/api/messages` など） | 名指しされたプロファイル自身のアダプタとその合言葉（Twilio の認証トークン、LINE のチャンネルのシークレット、Teams のアプリ、BlueBubbles のパスワードなど）。返信もそのアダプタから出る | 合言葉が違えば `401` か `403`、そのアダプタを持たないプロファイルなら `404`。既定プロファイルのアダプタが使われることはない |
-| アダプタの設定（`*_REQUIRE_MENTION`、`*_REACTIONS`、`*_PROXY`、Webhook のホスト・ポート・URL、Matrix のスレッド・セッション・E2EE の方針、Discord の遡り取得と添付の上限、Buzz の返信の形、A2A のエージェントカード） | 持ち主のプロファイルの `.env` と `config.yaml` | そのアダプタの文書どおりの既定。既定プロファイルの設定が使われることはない |
+| アダプタの設定（`*_REQUIRE_MENTION`、`*_REACTIONS`、`*_ALLOW_BOTS`、`*_PROXY`、Discord の `allow_mentions`、Matrix の `allowed_users` / `ignore_user_patterns`、Webhook のホスト・ポート・URL、Matrix のスレッド・セッション・E2EE の方針、Discord の遡り取得と添付の上限、Buzz の返信の形、A2A のエージェントカードと公開 URL、WhatsApp のブリッジの方針、Yuanbao のホームチャンネル） | 持ち主のプロファイル。明示した `.env` の値 → そのプロファイルの `config.yaml` → アダプタの既定、の順 | そのアダプタの文書どおりの既定。既定プロファイルの設定が使われることはない。プロファイルが 1 つだけの環境では、各プラットフォームのページに書かれているとおり、環境変数が YAML より勝つ決まりがそのまま保たれる |
 | `MEDIA:` の添付の拒否一覧 | `profiles/` の下のすべてのホームと既定のホーム（確認のたびに数え上げる） | どのやり取りも、ほかのプロファイルの `.env`、`auth.json`、`state.db`、セッション、トークンの保管庫を添付できない |
 | stdio の MCP の子プロセスの環境 | 安全な土台 + 秘密情報の供給元の名前についてそのプロファイルの範囲の値 + サーバー自身の `env:` | そのプロファイルに無い名前は子プロセスにも無い。既定プロファイルへ落ちることはない |
 | 外向きの送信（`send_message`、停止・再起動・`/update` のお知らせ、`/loop` の呼び出し、`profile:` で結び付けた Webhook の送付、`github_comment` のトークン） | そのプロファイル自身のつながっているアダプタと `.env` | はっきり失敗する。既定プロファイルのボットから投稿されることはない |
@@ -463,7 +474,9 @@ cron の刻み役、ログの振り分けによって作り直されることも
 `gateway_state.json` の `served_profiles` が更新され、`hermes -p <name> gateway
 status` は受け持ち中と報告します。再起動は要らず、ほかのプロファイルのアダプタや
 進行中のやり取りにも影響しません。プロファイルを削除すると、同じようにそのアダプタが
-止まり、振り分けからも外れます。認証情報 1 つにつき問い合わせ役は 1 つ、という決まりは
+止まり、振り分けからも外れます。`hermes profile rename` では、ディレクトリを動かす前に
+古い名前を振り分けから外し、新しい名前を再起動なしで受け持ちます（古い名前に結び付いたままだった
+アダプタや cron の刻み役が、その名前を生き返らせることはありません）。認証情報 1 つにつき問い合わせ役は 1 つ、という決まりは
 変わりません。ほかのプロファイルのトークンを使い回して後から足されたプロファイルは、
 `duplicate_credential` のエラーで止め置かれ、2 つめの問い合わせ役として動き出すことは
 ありません。
@@ -817,7 +830,56 @@ hermes gateway migrate --standalone            # roll back to per-profile gatewa
   実行する 1 行のコマンドが並びます。何も変更されません。
 
 プロファイルが 1 つだけの環境は移行されません（得るものが無いからです）。すでに
-多重化している環境もそのままです。
+多重化している環境もそのままです。ほかのプロファイルが自分のゲートウェイを動かしていないときも、
+`hermes update` は何もしません。何も動いていなかった環境でモードを切り替えることはありません。
+
+### `hermes update` が自分からは越えない境目 {#boundaries-hermes-update-never-crosses-on-its-own}
+
+無人で動くフックがまとめるのは、**UNIX ユーザーが 1 つ、サービスの管理範囲が 1 つ、`profiles/` の
+ツリーが 1 つ** のプロファイルだけです。`hermes profile create` で作るとこの形になります。
+独立して動くほかのプロファイルが、次のいずれかの境目の向こうにあると、自動の移行は止まります。
+
+| 境目 | 例 |
+|---|---|
+| サービスの管理役や範囲が違う | 既定はユーザーの systemd、ほかのプロファイルは**システム**の systemd（または launchd）。あるいは既定は切り離して動かし、ほかのプロファイルはサービスの管理下 |
+| UNIX ユーザーが違う | 自分の `User=` を持つシステムのユニット、または別の uid が持ち主の動いているゲートウェイ |
+| `HERMES_HOME` が `<default home>/profiles/` の外にある | `HERMES_HOME=/opt/hermes/profiles/emma` を固定したユニット |
+
+この場合、`hermes update` は見つけた境目と `hermes gateway migrate --multiplex` を表示するだけで、
+何も変えません。ユニットは消されず、`gateway.multiplex_profiles` も切られたままです。こうした構成を
+ひとつにまとめると、カーネルが守る境目（ファイルの持ち主、`User=`）を、プロセスの中での分離に
+置き換えることになります。それを決めるのは運用する人です。はっきりしたコマンドなら、それでも移行できます。
+同じ発見は `hermes gateway migrate --multiplex --dry-run` に**注意**として出るので、先に読めます。
+確認したうえで `--multiplex` を実行すれば進みます。
+
+### 自動の移行を断る {#opting-out-of-the-automatic-migration}
+
+この環境で自動のまとめを一切走らせたくないときは、**既定の**プロファイルで
+`gateway.auto_multiplex_migration: false` を設定します。
+
+```bash
+hermes config set gateway.auto_multiplex_migration false
+```
+
+こうすると `hermes update` は、環境がどれほど移行の条件に合って見えても、プロファイルごとの
+ゲートウェイをそのまま残し、何も表示せず、何も変えません。この設定は config に残るので、
+更新しても消えません。決めるのは一度きりで、リリースのたびに蒸し返されることはありません。
+効くのは**自動の**経路だけです。`hermes gateway migrate --multiplex` ははっきりした依頼なので、
+それでも移行します（断ったあとで改めて移行するときも、これを使うのが正式なやり方です）。
+設定が無いか `true` なら、上で説明した既定のふるまいのままです。
+
+はっきりしたコマンドのほうは違います。プロファイルが 2 つ以上あり、独立して動くほかのゲートウェイが
+**1 つも無い**ときに `hermes gateway migrate --multiplex` を実行すると、残っているひと手間だけを
+行います。`gateway.multiplex_profiles: true` を設定し、既定のゲートウェイを（再）起動し、同じ
+巻き戻し用の記録（`secondaries` の一覧は空）を書き出すので、`--standalone` で元に戻せます。
+多重化を頼んだのだから、多重化になる、ということです。
+
+:::tip 複製はチャンネルを持ち込みません
+`hermes profile create --clone` は、元のプロファイルのボットトークンと許可リストを置いていきます
+（[プロファイル → メッセージのチャンネルは複製されません](/hermes/docs/user-guide/profiles/#messaging-channels-are-never-cloned---clone-channels-to-opt-in) を見てください）。
+そのため、複製をいくつ並べても、下で説明する「認証情報の重複」の足止めには引っかからなくなりました。
+まだそれらを持っている以前の複製は、`hermes profile list` が指摘します。
+:::
 
 ### 移行ですること {#what-the-migration-does}
 

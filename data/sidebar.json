@@ -82,6 +82,9 @@
             },
             {
               "id": "user-guide/egress/iron-proxy"
+            },
+            {
+              "id": "user-guide/egress/network-isolation"
             }
           ]
         },
@@ -202,6 +205,9 @@
             },
             {
               "id": "user-guide/features/kanban-worker-lanes"
+            },
+            {
+              "id": "user-guide/features/kanban-multi-gateway"
             },
             {
               "id": "user-guide/features/goals"
@@ -614,6 +620,9 @@
                       "id": "user-guide/skills/optional/creative/creative-draw-your-font"
                     },
                     {
+                      "id": "user-guide/skills/optional/creative/creative-dream-loop"
+                    },
+                    {
                       "id": "user-guide/skills/optional/creative/creative-excalidraw"
                     },
                     {
@@ -632,6 +641,9 @@
                       "id": "user-guide/skills/optional/creative/creative-meme-generation"
                     },
                     {
+                      "id": "user-guide/skills/optional/creative/creative-mono-color"
+                    },
+                    {
                       "id": "user-guide/skills/optional/creative/creative-pixel-art"
                     },
                     {
@@ -645,6 +657,9 @@
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-social-media-content-calendar"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/creative/creative-system-atlas"
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-tldraw-offline"
@@ -1041,6 +1056,9 @@
                       "id": "user-guide/skills/optional/software-development/software-development-grill-me"
                     },
                     {
+                      "id": "user-guide/skills/optional/software-development/software-development-pr-lens"
+                    },
+                    {
                       "id": "user-guide/skills/optional/software-development/software-development-rest-graphql-debug"
                     },
                     {
@@ -1355,13 +1373,25 @@
               "id": "developer-guide/context-compression-and-caching"
             },
             {
+              "id": "developer-guide/micro-compaction"
+            },
+            {
               "id": "developer-guide/gateway-internals"
+            },
+            {
+              "id": "developer-guide/gateway-session-lifecycle"
+            },
+            {
+              "id": "developer-guide/multiplexing-gateway"
             },
             {
               "id": "developer-guide/completion-backlog-delivery"
             },
             {
               "id": "developer-guide/session-storage"
+            },
+            {
+              "id": "developer-guide/state-db-recovery"
             },
             {
               "id": "developer-guide/provider-runtime"
@@ -1388,6 +1418,12 @@
               "items": [
                 {
                   "id": "developer-guide/plugin-llm-access"
+                },
+                {
+                  "id": "developer-guide/observer-hooks"
+                },
+                {
+                  "id": "developer-guide/middleware"
                 },
                 {
                   "id": "developer-guide/subagent-lifecycle-api"
@@ -1448,7 +1484,25 @@
               "id": "developer-guide/cron-internals"
             },
             {
+              "id": "developer-guide/chronos-managed-cron-contract"
+            },
+            {
               "id": "developer-guide/egress-internals"
+            },
+            {
+              "id": "developer-guide/gateway-monitoring"
+            },
+            {
+              "id": "developer-guide/relay-connector-contract"
+            },
+            {
+              "id": "developer-guide/relay-shared-metrics"
+            },
+            {
+              "id": "developer-guide/streaming-tts"
+            },
+            {
+              "id": "developer-guide/billing-lifecycle"
             },
             {
               "id": "developer-guide/trajectory-format"
@@ -1537,6 +1591,7 @@
     "user-guide/secrets/onepassword",
     "user-guide/egress/index",
     "user-guide/egress/iron-proxy",
+    "user-guide/egress/network-isolation",
     "user-guide/sessions",
     "user-guide/profiles",
     "user-guide/profile-distributions",
@@ -1572,6 +1627,7 @@
     "user-guide/features/codex-app-server-runtime",
     "user-guide/features/kanban-tutorial",
     "user-guide/features/kanban-worker-lanes",
+    "user-guide/features/kanban-multi-gateway",
     "user-guide/features/goals",
     "user-guide/features/heartbeat",
     "user-guide/features/loops",
@@ -1675,17 +1731,20 @@
     "user-guide/skills/optional/creative/creative-concept-diagrams",
     "user-guide/skills/optional/creative/creative-creative-ideation",
     "user-guide/skills/optional/creative/creative-draw-your-font",
+    "user-guide/skills/optional/creative/creative-dream-loop",
     "user-guide/skills/optional/creative/creative-excalidraw",
     "user-guide/skills/optional/creative/creative-heartmula",
     "user-guide/skills/optional/creative/creative-hyperframes",
     "user-guide/skills/optional/creative/creative-impeccable",
     "user-guide/skills/optional/creative/creative-kanban-video-orchestrator",
     "user-guide/skills/optional/creative/creative-meme-generation",
+    "user-guide/skills/optional/creative/creative-mono-color",
     "user-guide/skills/optional/creative/creative-pixel-art",
     "user-guide/skills/optional/creative/creative-pretext",
     "user-guide/skills/optional/creative/creative-simple-english",
     "user-guide/skills/optional/creative/creative-sketch",
     "user-guide/skills/optional/creative/creative-social-media-content-calendar",
+    "user-guide/skills/optional/creative/creative-system-atlas",
     "user-guide/skills/optional/creative/creative-tldraw-offline",
     "user-guide/skills/optional/creative/creative-unreal-mcp",
     "user-guide/skills/optional/data-science/data-science-jupyter-notebook",
@@ -1789,6 +1848,7 @@
     "user-guide/skills/optional/software-development/software-development-ast-grep",
     "user-guide/skills/optional/software-development/software-development-code-wiki",
     "user-guide/skills/optional/software-development/software-development-grill-me",
+    "user-guide/skills/optional/software-development/software-development-pr-lens",
     "user-guide/skills/optional/software-development/software-development-rest-graphql-debug",
     "user-guide/skills/optional/software-development/software-development-subagent-driven-development",
     "user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy",
@@ -1874,15 +1934,21 @@
     "developer-guide/agent-loop",
     "developer-guide/prompt-assembly",
     "developer-guide/context-compression-and-caching",
+    "developer-guide/micro-compaction",
     "developer-guide/gateway-internals",
+    "developer-guide/gateway-session-lifecycle",
+    "developer-guide/multiplexing-gateway",
     "developer-guide/completion-backlog-delivery",
     "developer-guide/session-storage",
+    "developer-guide/state-db-recovery",
     "developer-guide/provider-runtime",
     "developer-guide/programmatic-integration",
     "developer-guide/adding-tools",
     "developer-guide/adding-providers",
     "developer-guide/adding-platform-adapters",
     "developer-guide/plugin-llm-access",
+    "developer-guide/observer-hooks",
+    "developer-guide/middleware",
     "developer-guide/subagent-lifecycle-api",
     "developer-guide/desktop-plugin-sdk",
     "developer-guide/memory-provider-plugin",
@@ -1900,7 +1966,13 @@
     "developer-guide/browser-supervisor",
     "developer-guide/acp-internals",
     "developer-guide/cron-internals",
+    "developer-guide/chronos-managed-cron-contract",
     "developer-guide/egress-internals",
+    "developer-guide/gateway-monitoring",
+    "developer-guide/relay-connector-contract",
+    "developer-guide/relay-shared-metrics",
+    "developer-guide/streaming-tts",
+    "developer-guide/billing-lifecycle",
     "developer-guide/trajectory-format",
     "reference/cli-commands",
     "reference/slash-commands",

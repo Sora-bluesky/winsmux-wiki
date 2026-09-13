@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: 1148e2949a008d16f4d673408b3ce10fb0dc6c09
+upstream_blob: 514f5b3aee45c18ef041d88bb945b64dfeab58b8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -339,8 +339,15 @@ CLI には添付の経路が無いので、代わりに保存されたファイ�
 Hermes は何重にも歯止めをかけています。
 
 - 取り返しのつかない操作（click、type、drag、scroll、key、focus_app）には
-  承認が要ります。CLI の確認画面か、メッセージ用のプラットフォームの承認ボタンで
-  行います。
+  危険なシェルコマンドと同じ関門で承認が要ります。CLI の確認画面か、
+  メッセージ用のプラットフォームの承認ボタンで行います。1 回だけ・セッション中・常に
+  の許可は
+  `cua:<action>:<background|foreground>` をキーにして、
+  セッションと `command_allowlist` で共有する保存先に置かれます（背景での許可は、
+  画面に見える前面での操作には及びません）。誰も答えられない場面 — cron
+  （`approvals.cron_mode`）、1 回だけの問い合わせ、人のいないプラットフォーム、あらゆる
+  画面なしの実行 — では、自動で承認せずに操作を断ります。
+  `--yolo` / `/yolo` なら従来どおり確認を飛ばせます。
 - ツールの層で完全に止めるキーの組み合わせ: ごみ箱を空にする、強制削除、
   画面ロック、ログアウト、強制ログアウト。
 - 完全に止める入力の型: `curl | bash`、`sudo rm -rf /`、フォーク

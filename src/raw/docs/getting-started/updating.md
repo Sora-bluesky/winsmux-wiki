@@ -2,7 +2,7 @@
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: c843f8491706cac9c98a7d1b979fa66e9acf2d50
+upstream_blob: 85ef1a7de48d0278ec6b8ca2790b6c929c65b6a9
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -45,6 +45,20 @@ hermes config set updates.check false
 6. **デスクトップアプリの再ビルド（ステージしてから入れ替え）** — Hermes Desktop アプリがこのチェックアウトからビルドされていた場合、GUI が新しいコードに合うよう再ビルドします。再ビルドはまず `apps/desktop/release/` の隣にある一時的なステージング用ディレクトリに書き出し、そこで検証してから、前のビルドに上書きする形で名前を付け替えます。Electron のダウンロード破損、依存関係の不足、ディスク不足など、途中で失敗した場合は前のアプリがそのまま残り、起動できます。このとき更新は `⚠ Update partially complete` と報告し、`hermes desktop` が再ビルドを試み直します。
 7. **ゲートウェイの自動再起動** — 更新の完了後、動作中のゲートウェイを入れ替えて新しいコードをすぐ反映します。サービスとして管理されているゲートウェイ（Linux なら systemd、macOS なら launchd）は、サービスマネージャー経由で再起動します。手動で起動したゲートウェイは、動作中の PID をプロファイルに紐付けられた場合に自動で立ち上げ直します。手動で起動した `hermes serve` / `hermes dashboard` のバックエンド（たとえばリモートのデスクトップアプリ向けにネットワークへ公開している serve）も同じ扱いです。各バックエンドは起動時に自分のバインドアドレスをインストールの spawn 台帳へ記録するので、更新はコード入れ替えの前に停止し、そのあと **同じホストとポート** で立ち上げ直します。その接続先を見ているリモートのデスクトップアプリは、取り残されずに再接続できます。動作中のデスクトップアプリが持っているバックエンドは、アプリ自身の再起動処理に任せます。
 8. **多重化への移行（複数プロファイルのインストール）** — 新しいコードでの動作が一通り確認できたあと、プロファイルが 2 つ以上あり、いまも **プロファイルごとに 1 つのゲートウェイ** を動かしているインストールは、妨げになるものがなければ、多重化した既定のゲートウェイ 1 つにまとめられます（`hermes gateway migrate --multiplex --yes` と同じです）。妨げになるもの（2 つのプロファイルで同じ Bot トークンを使っている、`/p/<profile>/` の受け口を持たない 2 番目以降のプロファイルがポートを使っている、など）がある場合は、その内容と直し方を表示するだけで、何も変更しません。プロファイルが 1 つだけのインストールには一切手を加えません。詳しくは [プロファイルごとのゲートウェイからの移行](/hermes/docs/user-guide/multi-profile-gateways/#migrating-from-per-profile-gateways) をご覧ください。
+
+### ゲートウェイの再起動に時間がかかることがある理由 {#why-the-gateway-restart-can-take-a-while}
+
+再起動は、処理を出し切ってから行います。動いているゲートウェイは新しいターンを受け付けなくなり、進行中の作業（チャットのターン、cron のジョブ、API の実行）が終わるのを待ってから終了します。待つ時間の上限は `agent.restart_after_turn_timeout`（既定は 30 分）で、長く走るジョブが途中で打ち切られることはありません。待っている間、アップデーターは 30 秒ごとに、ゲートウェイがまだ何を待っているかを表示します。たとえば次のとおりです。
+
+```
+  → hermes-gateway: draining (up to 1875s)...
+  ⏳ still draining — 1560s left before the forced restart
+     waiting on 1 active work unit(s):
+       • cron job 6ba19dab68df (nightly-scout) in external worker pid 573597, running 6m40s
+     finish or kill the work above to release the drain now; agent.restart_after_turn_timeout in config.yaml caps this wait
+```
+
+チャットのターンにはセッションのキー、モデル、いま使っているツールが出ます。cron のジョブにはジョブの ID、名前、それを動かしているプロセス（systemd のインストールでは再起動に耐える外部のワーカー、それ以外ではゲートウェイ自身）が出ます。ゲートウェイが処理を出し切っている間は、`hermes gateway status` でも同じ作業の一覧を見られます。待つのをやめたいときは、一覧に出ている作業を終わらせるか止めるか、`config.yaml` の `agent.restart_after_turn_timeout` を小さくしてください（`0` にすると、すぐに強制的な出し切りに入ります）。
 
 ### Windows で更新用のファイルが見つからないとき {#missing-windows-updater-files}
 

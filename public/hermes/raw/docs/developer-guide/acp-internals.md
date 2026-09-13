@@ -2,7 +2,7 @@
 title: "ACP の内部"
 description: "ACP アダプタのしくみ — 起動から終了まで、セッション、イベントの橋渡し、承認、ツールの表示"
 upstream_path: developer-guide/acp-internals.md
-upstream_blob: e739d808711894e590d3c1fce02ff1472050611e
+upstream_blob: a9cd83b748b4cdfd71dc5a0ca6d5d701b5108dbc
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/acp-internals
 ---
@@ -178,7 +178,7 @@ ACP は、プロンプトの実行中だけターミナルのツールに承認�
 
 ## 関連するファイル {#related-files}
 
-- `tests/acp/` — ACP のテスト一式
+- `tests/acp_adapter/` — ACP のテスト一式
 - `toolsets.py` — `hermes-acp` ツールセットの定義
 - `hermes_cli/main.py` — `hermes acp` のサブコマンド
 - `pyproject.toml` — `[acp]` の追加依存と `hermes-acp` のスクリプト

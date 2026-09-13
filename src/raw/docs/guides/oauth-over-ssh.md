@@ -2,7 +2,7 @@
 title: "SSH / リモートホスト越しの OAuth"
 description: "Hermes をリモートのマシンやコンテナ、踏み台の向こうで動かしているときに、ブラウザを使う OAuth（Spotify、MCP サーバー）を完了させる方法"
 upstream_path: guides/oauth-over-ssh.md
-upstream_blob: 258f1d13244f95377889b39b148f9fdefbe33367
+upstream_blob: 83ce2048eea75f4586b17efbd4334d3b3effd5d3
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/oauth-over-ssh
 ---
@@ -42,6 +42,7 @@ Hermes は実際に使ったポートを `Waiting for callback on ...` の行に
 | `anthropic`（Claude Pro/Max） | 該当なし | 不要。コードを貼る方式 |
 | `openai-codex`（ChatGPT Plus/Pro） | 該当なし | 不要。デバイスコード方式 |
 | `minimax`、`nous-portal` | 該当なし | 不要。デバイスコード方式 |
+| `openrouter` (`hermes auth add openrouter --type oauth`) | OS が割り当てる（ローカルのみ） | 不要。SSH 越しでは Hermes が OpenRouter のヘッドレス方式に切り替え、ブラウザーに表示されたコードを貼り付けるよう求めます |
 
 この表にないプロバイダーなら、トンネルは要りません。
 

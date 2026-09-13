@@ -2,7 +2,7 @@
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: bda90a9decd3a37e89e912c6ee66c0753ddf1b95
+upstream_blob: 86b1f60de534c944bd86e58a78a3cffa2e9da036
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -300,9 +300,11 @@ hooks:
 
 ## スレッドの取り決め {#threading-contract}
 
-**`sync_turn()` は処理をせき止めてはいけません。** バックエンドに待ち時間がある場合（API 呼び出しや LLM の処理など）は、デーモンスレッドで実行してください。
+**`sync_turn()` は処理をせき止めてはいけません。** バックエンドに待ち時間がある場合（API 呼び出しや LLM の処理など）は、デーモンスレッドで実行してください。スレッドは `agent.memory_provider.spawn_context_thread` で起動し、素の `threading.Thread` は決して使いません。プロファイルの分離（有効な `HERMES_HOME` や、ターンごとのシークレットの範囲）は `contextvars` に入っていますが、素のスレッドは空のコンテキストで始まります。そのため、複数のプロファイルを同時に扱う構成では、*既定の*プロファイルの保存先へ気づかないうちに書き込んでしまい、そこでは `get_secret()` が安全側に倒れて失敗します。
 
 ```python
+from agent.memory_provider import spawn_context_thread
+
 def sync_turn(self, user_content, assistant_content, *, session_id="", messages=None):
     def _sync():
         try:
@@ -312,9 +314,11 @@ def sync_turn(self, user_content, assistant_content, *, session_id="", messages=
 
     if self._sync_thread and self._sync_thread.is_alive():
         self._sync_thread.join(timeout=5.0)
-    self._sync_thread = threading.Thread(target=_sync, daemon=True)
+    self._sync_thread = spawn_context_thread(_sync, name="myprovider-sync")
     self._sync_thread.start()
 ```
+
+同じことは、先読み（prefetch）用や書き込み用のスレッドにも当てはまります。小さな JSON の設定ファイル（`$HERMES_HOME/<provider>.json`）は、`utils.read_json_or_empty` で読み、`utils.atomic_json_write` で書きます。`config.yaml` の中身はすべて `hermes_cli.config.save_config(..., merge_existing=True)` を通して書き込みます。
 
 `messages` は任意で、ターンが終わった時点での OpenAI 形式の会話内容です。渡される
 場合は、ユーザーとアシスタントのメッセージ、アシスタントのツール呼び出し、ツールの
@@ -341,7 +345,7 @@ data_dir = Path("~/.hermes/my-provider").expanduser()
 
 ## テスト {#testing}
 
-通しの書き方は、`tests/agent/test_memory_provider.py` と、その周辺のメモリー関連テスト（`tests/agent/test_memory_session_switch.py`、`tests/agent/test_memory_user_id.py`、`tests/run_agent/test_memory_provider_init.py`）を参照してください。
+通しの書き方は、`tests/agent/test_memory_provider.py` と、その周辺のメモリー関連テスト（`tests/agent/test_memory_session_switch.py`、`tests/agent/test_memory_user_id.py`、`tests/agent/test_memory_provider_init.py`）を参照してください。
 
 ```python
 from agent.memory_manager import MemoryManager

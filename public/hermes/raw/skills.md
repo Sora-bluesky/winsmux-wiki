@@ -12,9 +12,9 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 224 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 228 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `d595e63`（2026-09-12）時点。この一覧は上流の docs から機械生成しています。
+上流 `a7254e2`（2026-09-13）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（83）
 
@@ -106,7 +106,7 @@ raw: /hermes/raw/skills.md
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-08-30 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/) | Use when a fetch fails: 403/429, paywall, WAF, bot wall | 2026-08-30 |
 
-## あとから入れる（140）
+## あとから入れる（144）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -131,17 +131,20 @@ raw: /hermes/raw/skills.md
 | [Concept Diagrams](/hermes/docs/user-guide/skills/optional/creative/creative-concept-diagrams/) | Generate flat, minimal educational SVG visuals as HTML | 2026-08-30 |
 | [Creative Ideation](/hermes/docs/user-guide/skills/optional/creative/creative-creative-ideation/) | Generate ideas via named methods from creative practice | 2026-08-30 |
 | [Draw Your Font](/hermes/docs/user-guide/skills/optional/creative/creative-draw-your-font/) | Turn a handwriting photo into an installable TTF font | 2026-08-30 |
+| [Dream Loop](/hermes/docs/user-guide/skills/optional/creative/creative-dream-loop/) | Build stunning 3D scenes via a concept-art fidelity loop | 2026-09-12 |
 | [Excalidraw](/hermes/docs/user-guide/skills/optional/creative/creative-excalidraw/) | Hand-drawn Excalidraw JSON diagrams (arch, flow, seq) | 2026-08-30 |
 | [Heartmula](/hermes/docs/user-guide/skills/optional/creative/creative-heartmula/) | HeartMuLa: Suno-like song generation from lyrics + tags | 2026-08-30 |
 | [Hyperframes](/hermes/docs/user-guide/skills/optional/creative/creative-hyperframes/) | Render MP4/WebM videos from HTML compositions | 2026-08-30 |
 | [Impeccable](/hermes/docs/user-guide/skills/optional/creative/creative-impeccable/) | Frontend design guidance, upstream-maintained (impeccable) | 2026-08-30 |
 | [Kanban Video Orchestrator](/hermes/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator/) | Plan and run multi-agent video production pipelines | 2026-09-12 |
 | [Meme Generation](/hermes/docs/user-guide/skills/optional/creative/creative-meme-generation/) | Create meme PNGs from templates with Pillow text overlay | 2026-08-30 |
+| [Mono Color](/hermes/docs/user-guide/skills/optional/creative/creative-mono-color/) | Generate one- or two-ink editorial print poster images | 2026-09-12 |
 | [Pixel Art](/hermes/docs/user-guide/skills/optional/creative/creative-pixel-art/) | Pixel art w/ era palettes (NES, Game Boy, PICO-8) | 2026-08-30 |
 | [Pretext](/hermes/docs/user-guide/skills/optional/creative/creative-pretext/) | Build creative browser demos with DOM-free text layout | 2026-08-30 |
 | [Simple English](/hermes/docs/user-guide/skills/optional/creative/creative-simple-english/) | Rewrite text to ASD-STE100 Simplified Technical English | 2026-08-30 |
 | [Sketch](/hermes/docs/user-guide/skills/optional/creative/creative-sketch/) | Throwaway HTML mockups: 2-3 design variants to compare | 2026-08-30 |
 | [Social Media Content Calendar](/hermes/docs/user-guide/skills/optional/creative/creative-social-media-content-calendar/) | Plan multi-platform social campaigns: briefs to posting | 2026-08-30 |
+| [System Atlas](/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/) | Build explorable isometric architecture atlases as HTML | 2026-09-12 |
 | [Tldraw Offline](/hermes/docs/user-guide/skills/optional/creative/creative-tldraw-offline/) | Drive and script tldraw offline canvases with an agent | 2026-08-30 |
 | [Unreal Mcp](/hermes/docs/user-guide/skills/optional/creative/creative-unreal-mcp/) | Automate Unreal Engine editor scenes, actors, and renders | 2026-08-30 |
 | [Jupyter Notebook](/hermes/docs/user-guide/skills/optional/data-science/data-science-jupyter-notebook/) | Iterative Python via live Jupyter kernel (hamelnb) | 2026-08-30 |
@@ -245,6 +248,7 @@ raw: /hermes/raw/skills.md
 | [Ast Grep](/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/) | AST-aware structural code search and rewrite via ast-grep | 2026-08-30 |
 | [Code Wiki](/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/) | Generate wiki docs + Mermaid diagrams for any codebase | 2026-08-30 |
 | [Grill Me](/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/) | Adversarial plan interview before implementation | 2026-08-30 |
+| [Pr Lens](/hermes/docs/user-guide/skills/optional/software-development/software-development-pr-lens/) | Draw code changes as animated architecture/data-flow SVGs | 2026-09-12 |
 | [Rest Graphql Debug](/hermes/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug/) | Debug REST/GraphQL APIs: status codes, auth, schemas, repro | 2026-08-30 |
 | [Subagent Driven Development](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) | Execute plans via delegate_task subagents (2-stage review) | 2026-08-30 |
 | [Cloudflare Temporary Deploy](/hermes/docs/user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy/) | Deploy a Worker live, no account, via wrangler --temporary | 2026-08-30 |

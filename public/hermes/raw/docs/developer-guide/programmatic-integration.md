@@ -2,7 +2,7 @@
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 050ae6ff4a9c35f1fbbf3668d033c8fd63eaf6f4
+upstream_blob: 449c009d79aad6b5cc9101b6f50f4f9d9d16bffc
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -79,7 +79,7 @@ terminal.resize         clipboard.paste         image.attach
 
 ### 返ってくるイベント {#events-streamed-back}
 
-`message.delta`、`message.complete`、`tool.start`、`tool.progress`、`tool.complete`、`approval.request`、`clarify.request`、`sudo.request`、`sudo.expire`、`secret.request`、`secret.expire`、`gateway.ready` に加えて、セッションのライフサイクルとエラーのイベントが流れてきます。期限切れのイベントには元の `{ request_id }` が入っているので、外部のホストは対応する保留中の要求だけを消してください。
+`message.delta`、`message.complete`、`tool.start`、`tool.generating`、`tool.complete`、`approval.request`、`clarify.request`、`sudo.request`、`sudo.expire`、`secret.request`、`secret.expire`、`gateway.ready` に加えて、セッションのライフサイクルとエラーのイベントが流れてきます。期限切れのイベントには元の `{ request_id }` が入っているので、外部のホストは対応する保留中の要求だけを消してください。
 
 ### Pi 方式の RPC との対応 {#pi-style-rpc-mapping}
 

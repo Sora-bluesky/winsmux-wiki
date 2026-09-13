@@ -2,7 +2,7 @@
 title: "実行時のプロバイダー解決"
 description: "Hermes が実行時にプロバイダー・資格情報・API モード・補助モデルをどう決めているか"
 upstream_path: developer-guide/provider-runtime.md
-upstream_blob: 5cb620a6d1eb4964f737b2007dcc66305d81ac62
+upstream_blob: 203965c83326cc6b6440e2a549e5d3288172ec0a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/provider-runtime
 ---
@@ -214,7 +214,7 @@ cron のジョブでは予備が **働きます**。`run_job()` が `config.yaml
 
 予備の動きは、いくつかのテスト一式で確かめています。
 
-- `tests/run_agent/test_fallback_credential_isolation.py` — メインと予備のあいだで資格情報が混ざらないこと
+- `tests/agent/test_fallback_credential_isolation.py` — メインと予備のあいだで資格情報が混ざらないこと
 - `tests/hermes_cli/test_fallback_cmd.py` — CLI の `/fallback` コマンド
 - `tests/gateway/test_fallback_eviction.py` — ゲートウェイが失敗したプロバイダーを外すこと
 

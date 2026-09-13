@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、ユーザーの認可、コンテナの隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: f809dcb09db02383197868fbf29fe54980d3c958
+upstream_blob: a3927fba12d6573f9c15f623b0ed833278e4afd8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -275,6 +275,13 @@ command_allowlist:
 
 :::tip
 恒久の許可リストを見直したり、そこからパターンを外したりするには `hermes config edit` を使ってください。
+:::
+
+:::caution
+このリストは Hermes の起動時に読み込まれます。セッションが動いている間にパターンを外しても、
+そのセッションでは、次にファイルが書き込まれるとき（次に確認へ `always` と答えたとき）か
+Hermes を再起動するまで、承認されたままです。安全のために外したのであれば、
+再起動してください。
 :::
 
 ### 承認の履歴から掘り出す（`hermes approvals suggest`） {#mining-approval-history-hermes-approvals-suggest}

@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 1296aa2c03061049c8f023feb42d7eef494a7685
+upstream_blob: 4844ab579cc15bd169093228693a148db1a5a126
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -524,9 +524,6 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `MATRIX_IGNORE_USER_PATTERNS` | 無視する Matrix のブリッジ / アプリサービスの分身のユーザー ID の正規表現をカンマ区切りで指定します |
 | `MATRIX_PROCESS_NOTICES` | 受信した Matrix の `m.notice` の出来事を処理します（既定: `false`） |
 | `MATRIX_SESSION_SCOPE` | プロジェクトの部屋での Matrix のセッションの区切り: `auto`、`room`、`thread`（既定: `auto`） |
-| `MATRIX_TOOLS_ALLOW_REDACTION` | Matrix のメッセージ取り消しのツールの実行を許可します（既定: `false`） |
-| `MATRIX_TOOLS_ALLOW_INVITES` | Matrix の招待のツールの実行を許可します（既定: `false`） |
-| `MATRIX_TOOLS_ALLOW_ROOM_CREATE` | Matrix の部屋を作るツールの実行を許可します（既定: `false`） |
 | `MATRIX_ALLOW_ROOM_MENTIONS` | 部屋のメンバー全員に知らせる `@room` のメンションの送信を許可します（既定: `false`） |
 | `MATRIX_AUTO_THREAD` | 部屋のメッセージで自動的にスレッドを作ります（既定: `true`） |
 | `MATRIX_DM_AUTO_THREAD` | Matrix の DM のメッセージで自動的にスレッドを作ります（既定: `false`） |

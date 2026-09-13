@@ -2,7 +2,7 @@
 title: "Discord"
 description: "Hermes Agent を Discord のボットとして設定する"
 upstream_path: user-guide/messaging/discord.md
-upstream_blob: dfad0cc25b560dc75c902d8c1e304ed89602e03e
+upstream_blob: bcf8de0faf3d63563acfb37002d1a9a62b898399
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/discord
 ---
@@ -102,6 +102,8 @@ discord:
 ```
 
 以前の `liveness_interval_seconds` と `liveness_failure_threshold` という名前は互換のための別名として残っているだけで、REST での確認を意味しなくなりました。
+
+どれか 1 つでも `0` にすると、WebSocket の生存確認そのものが止まります。正の数として読めない値（`15s`、`nan`、`true`、`-1` など）でも止まり、アダプターが起動するたびに警告がログに出ます。確認が働いていないように見えるときは `gateway.log` を見てください。
 
 ## 手順 1: Discord のアプリケーションを作る {#step-1-create-a-discord-application}
 

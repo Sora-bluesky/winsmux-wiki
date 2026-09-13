@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 286abcee2a2eb4b3e3af65d75e8ab33227874a01
+upstream_blob: 759aed3dac49d15bc9b80916ea9d371c60ba4639
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -22,7 +22,7 @@ LLM につなぐ手段が少なくとも 1 つ必要です。`hermes model` を�
 | **GitHub Copilot** | `hermes model`（OAuth デバイスコードフロー、`COPILOT_GITHUB_TOKEN`、`GH_TOKEN`、または `gh auth token`） |
 | **GitHub Copilot ACP** | `hermes model`（ローカルで `copilot --acp --stdio` を起動します） |
 | **Anthropic** | `hermes model`（Claude Max + 追加利用クレジットを OAuth で。Anthropic の API キーや手動の setup-token にも対応 — 下の注記を参照） |
-| **OpenRouter** | `~/.hermes/.env` に `OPENROUTER_API_KEY` |
+| **OpenRouter** | `~/.hermes/.env` に `OPENROUTER_API_KEY`、または `hermes auth add openrouter --type oauth`（OpenRouter の PKCE 方式でブラウザーからログインし、キーを資格情報プールに保存します） |
 | **Ramp Router** | `~/.hermes/.env` に `RAMP_ROUTER_API_KEY`（provider: `router`、別名: `ramp-router`、`ramp`、`router.com`。Responses ネイティブのゲートウェイで、アカウント単位の最新カタログを持ちます） |
 | **Fireworks AI** | `~/.hermes/.env` に `FIREWORKS_API_KEY`（provider: `fireworks`、別名: `fireworks-ai`、`fw`） |
 | **NovitaAI** | `~/.hermes/.env` に `NOVITA_API_KEY`（provider: `novita`、200 以上のモデル、Model API、Agent Sandbox、GPU Cloud） |

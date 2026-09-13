@@ -2,7 +2,7 @@
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、スキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: a49dc7ec03345552572d90110da0f9d66efeda79
+upstream_blob: f53001f17e04c5fc5d9dcc045776ceda2f3b4769
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -29,7 +29,7 @@ cron ジョブでできることは次のとおりです。
 
 - **ジョブごとの固定** — これを設定するのは*あなた*で、ダッシュボード、`hermes cron create/edit --model … --provider …`、または `~/.hermes/cron/jobs.json` の編集で行います。いちど設定すれば、変更するまで固定されたままです。エージェントの `cronjob` ツールからジョブごとのモデルを設定・変更することはできません。推論の固定は利用者が持つ権限です。
 - **`cron.model` / `cron.model_provider`** — cron 全体の既定値です。固定していないジョブはすべてこのモデルで動き、チャットで使うモデルとは切り離されます。一度設定しておけば（`hermes config set cron.model <name>`）、`hermes model` や `/model` でチャットのモデルを切り替えても cron 側にはいっさい影響しません。
-- **全体の既定値** — 上のどちらも設定していないときだけ、ジョブは `hermes model` に従います。この場合 Hermes は作成時のプロバイダとモデルを**スナップショット**として控え、それがそのジョブの実質的な固定になります。あとで全体の既定値を切り替えると（`hermes model`、`/model`、`hermes config set model.default …`）、ジョブは**作成したときのモデルとプロバイダのまま動き続け**、実行ごとに差分を記した INFO 行を 1 行ログへ残します。全体のモデルを変えても予約実行が止まることはなく、無人で動くジョブが有料のプロバイダ・モデルへの切り替えを黙って引き継ぐこともありません（#44585）。新しい既定値へジョブを移したいときは、固定して明示するか（`hermes cron edit <job_id> --provider <provider> --model <model>`）、`cron.model` を設定して cron 全体をいちどに移してください。スナップショットの仕組みができる前に作られたジョブは、いまも動いている全体の既定値に従い続けます。
+- **全体の既定値** — 上のどちらも設定していないときだけ、ジョブは `hermes model` に従います。この場合 Hermes は作成時のプロバイダとモデルを**スナップショット**として控え、それがそのジョブの実質的な固定になります。あとで全体の既定値を切り替えると（`hermes model`、`/model`、`hermes config set model.default …`）、ジョブは**作成したときのモデルとプロバイダのまま動き続け**、実行ごとに差分を記した INFO 行を 1 行ログへ残します。全体のモデルを変えても予約実行が止まることはなく、無人で動くジョブが有料のプロバイダ・モデルへの切り替えを黙って引き継ぐこともありません（#44585）。新しい既定値へジョブを移したいときは、**撮り直す**（`hermes cron resnap <job_id>`。固定していないジョブをまとめてなら `--all`）と、固定しないまま今の既定値に乗り換えます。ほかに、固定して明示するか（`hermes cron edit <job_id> --provider <provider> --model <model>`）、`cron.model` を設定して cron 全体をいちどに移す方法もあります。スナップショットの仕組みができる前に作られたジョブは、いまも動いている全体の既定値に従い続けます。
 
 どのプロバイダに解決されたとしても、そのプロバイダ固有のリクエスト設定（たとえば独自プロバイダ向けの `extra_body` / `extra_headers` といった `request_overrides`）は、対話セッションと同じように予約実行にも引き継がれます。
 
@@ -117,6 +117,17 @@ hermes config set cron.model <model>                               # every unpin
 `hermes config set model.default …` や Desktop のモデル選択画面には、元のモデルのまま
 残る、固定していないジョブの一覧が出るので、意図して決められます。控えてあるスナップショット
 は、ジョブのプロバイダ・モデル・base URL を編集するたびに更新されます。
+
+撮り直し（resnap）は、固定していないジョブが控えているスナップショットを、固定はせずに
+いまの全体の既定値へ更新します。そのため、この先の変更にも引き続き追従します。
+
+```bash
+hermes cron resnap <job_id>   # one job
+hermes cron resnap --all      # every unpinned agent job
+```
+
+エージェントが使う `cronjob` ツールでも同じ操作ができます（`action=resnap job_id=<id>` または
+`action=resnap all=true`）。固定してある項目と、`no_agent` のスクリプトジョブには手を付けません。
 
 ## スキルを付けた cron ジョブ {#skill-backed-cron-jobs}
 
@@ -384,6 +395,26 @@ Hermes はその再実行を飛ばし、繰り返すジョブの起点を取り�
 ```yaml
 cron:
   failure_nudge_threshold: 3   # default; 0 disables the nudge
+```
+
+### モデルにつながらなかったときの自動の再実行 {#automatic-re-runs-when-the-model-was-unreachable}
+
+繰り返しジョブの実行が、モデルを一度も呼ばないうちに、一時的なネットワークや DNS のエラーで
+失敗することがあります。典型的なのは、パソコンがスリープから復帰した直後、VPN や Wi-Fi が
+つなぎ直している最中に実行が始まる場合です。こうしたとき、次の周期まで丸ごと待つことはありません。
+スケジューラーは **5 分後、15 分後、30 分後** に自動で再実行し（Claude Cowork の予約タスクの再実行に
+ならったものです）、それでもだめなら通常の予定に戻ります。API の呼び出しはゼロなので、再実行しても
+費用はかからず、副作用が二重に起きることもありません。
+
+再実行を待っているあいだは、途中の失敗の知らせは出しません。再実行が成功すれば本来の結果が届き、
+再実行を使い切ったら通常の失敗の知らせが届きます。モデルまで届いた実行があれば（成功でも失敗でも）、
+再実行の段取りは最初からやり直しになります。一回きりのジョブは対象外です。一回きりのジョブは
+実行回数を上限までしか数えない作りで、使い終えた実行を生き返らせることはないからです。
+予定どおりの次の実行のほうが早く来るときは、それを越えて再実行することはありません。
+
+```yaml
+cron:
+  retry_unreachable: false   # default true; disables the automatic re-runs
 ```
 
 ### 失敗の記録: 分かっている失敗に了解を出す {#failure-incidents-acknowledge-a-known-failure}

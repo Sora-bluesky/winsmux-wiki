@@ -2,7 +2,7 @@
 title: "出来事のフック"
 description: "節目ごとに自分のコードを走らせます — 動きの記録、通知、webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: e5562398080d7093a8089e852ad977ab22be666e
+upstream_blob: 67add32eae881991457eedeb81ff960c2b4decac
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -436,6 +436,7 @@ def register(ctx):
 | `on_session_end` | 見張り役 | 決まりとしてはターンの締めくくりごとに。CLI や TUI の終了では、項目の減った古い形もあります。戻り値は無視されます。 | 決まりの形: `session_id`、`task_id`、`turn_id`、`completed`、`failed`、`interrupted`、`turn_exit_reason`、`model`、`platform`。終了の経路では `reason` や `api_request_id` が足され、項目が欠けることもあります。 | ID、モデルと場、結末。決まりの形にメッセージの本文はありません。 |
 | `on_session_finalize` | 見張り役 | `finalize_session` を通した CLI／TUI／ゲートウェイの片づけ。ゲートウェイの終了や期限切れでは、作り直しなしで締められることもあります。戻り値は無視されます。 | 面によって変わる `session_id`、`platform`、場合により `reason`、`old_session_id`、`new_session_id` | セッションと経路の識別子。 |
 | `on_session_reset` | 見張り役 | CLI／TUI のセッションの切れ目と、ゲートウェイで入れ替わりのセッションができたあと。戻り値は無視されます。 | CLI: `session_id`、`platform`、`reason`。TUI: `session_id`、`platform`。ゲートウェイ: それらに加えて `reason`、`old_session_id`、`new_session_id` | セッションと経路の識別子。 |
+| `agent_loop_stopped` | 見張り役 | 実際に走っているエージェントが中断された直後。ゲートウェイの `_interrupt_and_clear_session`、または TUI／デスクトップの `session.interrupt` から。戻り値は無視されます。 | `session_key`、`platform`、`reason`、`invalidation_reason` | セッションと経路の識別子、中断の理由。メッセージ本文は含みません。 |
 | `on_skill_lifecycle` | 見張り役 | スキルの使用の状態が正式に変わったあと。戻り値は無視されます。 | `action`、`skill_name`、`provenance`、`task_id`、`session_id`、`use_count`、`reused`、`reuse_after_patch` | 手元のスキルの名前と出どころが見えます。 |
 | `subagent_start` | 見張り役 | 子が作られ、これから走るとき。戻り値は無視されます。 | `parent_session_id`、`parent_turn_id`、`parent_subagent_id`、`child_session_id`、`child_subagent_id`、`child_role`、`child_goal` | 子の目的に、利用者や案件の中身が入りえます。 |
 | `subagent_stop` | 見張り役 | 子の終了。戻り値は無視されます。 | `parent_session_id`、`parent_turn_id`、`child_session_id`、`child_role`、`child_summary`、`child_status`、`tool_call_history`、`duration_ms` | まとめと、伏せ字にした道具の履歴の情報から、案件の構造が知れることがあります。 |
@@ -1017,6 +1018,33 @@ def my_callback(session_id: str, platform: str, **kwargs):
 ---
 
 道具の設計図、処理役、進んだフックの形まで含めた通しの説明は、**[プラグインを作る手引き](/hermes/docs/developer-guide/plugins/)**を見てください。
+
+---
+
+### `agent_loop_stopped` {#agentloopstopped}
+
+ゲートウェイが**走っているエージェントのターンを中断した**ときに発火します。ループが動いている最中に利用者が `/stop` を実行した場合や、`/new` の中の「エージェントが走っているとき用の近道」が、セッションを入れ替える前に進行中の実行を片付けた場合です。`on_session_finalize` と違い、ターンの途中というもっと早い時点で発火するので、プラグインは、エージェントのループがもう使うことのないターンごとの外部資源（たとえば、ツールの結果を待っていた外向きの RPC）を手放せます。
+
+中断が起きる 2 つの入口のどちらでも発火します。メッセージの**ゲートウェイ**（`/stop`、`/new` の近道）と、**TUI／デスクトップ**の `session.interrupt` の経路です（プラットフォームは `"tui"` として報告されます）。素の CLI では発火しません。CLI には同じような中断の入口がないためです。
+
+**呼び出しの形:**
+
+```python
+def my_callback(session_key: str, platform: str, reason: str, invalidation_reason: str, **kwargs):
+```
+
+| 引数 | 型 | 説明 |
+|-----------|------|-------------|
+| `session_key` | `str` | 実行が中断されたセッション。 |
+| `platform` | `str` | メッセージのプラットフォーム名（`"telegram"`、`"discord"` など）。分からないときは空文字列です。 |
+| `reason` | `str` | エージェントが中断された理由（たとえば `"user_stop"` や、リセット／新規作成の理由）。 |
+| `invalidation_reason` | `str` | 待ち行列にあったセッションの状態を無効にした理由（たとえば `"stop_command"`、`"stop_command_thread_sibling"`、`"reset_command"`）。 |
+
+**発火する場所:** `gateway/run.py::_interrupt_and_clear_session` の中で、`request_hard_interrupt()` が走っているエージェントを中断した直後です。実際にエージェントが走っていたときだけ発火します。保留中の目印に対する `/stop` の経路（エージェントのループがまだ始まっていない）では、手放すべき進行中の作業がないので、このフックは発火**しません**。時間のかかる `/new` のリセットの経路では、代わりにあとから `_handle_reset_command` の中で `on_session_finalize` が発火します。
+
+**戻り値:** 無視されます。
+
+**使いどころ:** ループがもう使うことのないツールの結果を待って止まっている外部へのリクエストの取り消し、つながっている音声／リアルタイムのクライアントへの「ツールの呼び出しが打ち切られた」という通知、動いているターンのあいだだけ持っていたターンごとの認証情報やロックの解放。
 
 ---
 

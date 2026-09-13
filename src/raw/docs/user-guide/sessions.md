@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 3943dcf93a2589eda9474b63a6bdd4ef0ab9e5b5
+upstream_blob: 5b8d70245cb7325c47c98c8982e6e6b90163bc32
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -369,6 +369,10 @@ hermes sessions export telegram-history.jsonl --source telegram
 # Export a single session
 hermes sessions export session.jsonl --session-id 20250305_091523_a1b2c3d4
 
+# Point at a directory (existing, or ending in /) and the file is named for you:
+# ~/exports/hermes_session_20250305_091523_a1b2c3d4.jsonl
+hermes sessions export ~/exports/ --session-id 20250305_091523_a1b2c3d4
+
 # Redact API keys/tokens/credentials from the exported content
 hermes sessions export backup.jsonl --redact
 ```
@@ -645,8 +649,9 @@ hermes sessions repair-routing --max-gap-seconds 300
 ## Claude Code や Codex CLI からセッションを取り込む {#importing-sessions-from-claude-code-and-codex-cli}
 
 別のエージェント CLI で始めた会話も、Hermes に取り込んでここで続けられます。
-Hermes は Claude Code のセッションログ（`~/.claude/projects/`）と Codex CLI の
-rollout（`~/.codex/sessions/`）を読みます。外部のファイルは読むだけで、
+Hermes は Claude Code のセッションログ（`~/.claude/projects/`。Claude Code の設定ディレクトリを
+移しているときは `$CLAUDE_CONFIG_DIR/projects/`）と Codex CLI の rollout（`~/.codex/sessions/`、
+または `$CODEX_HOME/sessions/`）を読みます。外部のファイルは読むだけで、
 書き換えることはありません。
 
 ```bash
@@ -804,6 +809,29 @@ group_sessions_per_user: false
 キャッシュしてあるエージェントが解放されることはありますが、それで永続的な会話が
 置き換わるわけではありません。再起動からの復旧における「新しさ」の条件が制限するのは
 自動で続けるかどうかであって、メッセージを送ったときに読み込まれる履歴ではありません。
+
+### セッションの手入れ：それでも `/new` を使うべき理由 {#session-hygiene-why-you-should-still-run-new}
+
+ゲートウェイの会話はひとりでに切れることがないので、ひとつのセッションを何週間も使い続けがちです。
+それでも動きはしますが、学習の仕組みが知らないうちに働かなくなり、費用もふくらみます。
+
+- **メモリが効くのは区切りのときだけです。** `MEMORY.md` / `USER.md` はセッションの始まりに
+  差し込まれ、`session_search` は文脈からこぼれたことを思い出すためにあります。終わらない
+  セッションでは何もかもがまだ文脈の*中*にあるので、エージェントがメモリを見にいく理由がなく、
+  「自分で学ぶ」仕組みはほとんど動きません。メモリの抽出（リセット前の保存）も、セッションが
+  ほんとうに終わったときにしか起きません。
+- **費用は履歴に比例して増えます。** 圧縮すれば長いセッションも動き続けますが、1 回ごとの
+  やりとりに、（圧縮済みとはいえ）大きな前置きが毎回付いてきます。抽出したメモリを持って新しく
+  始めたセッションのほうが、ひと月続いたスレッドよりもほぼ必ず安く済みます。
+
+実際の目安は、タスクや話題がひと区切りしたらセッションを終えることです。自然な切れ目で `/new`
+（名前を付けてもかまいません。例: `/new payments-refactor`）を実行してください。1 日ごとでも、
+プロジェクトごとでもうまくいきます。作業の中で、この先も使える好みや手順が見えてきたなら、
+リセットの前にエージェントへ「残しておく価値のあることを覚えておいて」と頼んでください。
+終わるセッションからメモリやスキルは自動で保存されますが、はっきり促すと確実です。機械や
+ゲートウェイを再起動しても区切りには**なりません**。同じセッションがそのまま再開します。
+
+区切りをまたいで何が引き継がれるかは、[メモリ](/hermes/docs/user-guide/features/memory/) を見てください。
 
 ### 落ちたときや再起動したあとの続き方 {#continuity-after-crashes-and-restarts}
 

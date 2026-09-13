@@ -2,7 +2,7 @@
 title: "Webhook"
 description: "GitHub や GitLab などのサービスからイベントを受け取り、Hermes のエージェント実行を起こす"
 upstream_path: user-guide/messaging/webhooks.md
-upstream_blob: 3a2b3aafb5efa8fcc7105a07c41bd95a72a49433
+upstream_blob: 71c5774a9e4156f414b31b9a315e875098fdc025
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks
 ---
@@ -75,7 +75,7 @@ curl http://localhost:8644/health
 |----------|----------|-------------|
 | `events` | いいえ | 受け付けるイベント種別のリスト（例: `["pull_request"]`）。空にすると、すべてのイベントを受け付けます。イベント種別は `X-GitHub-Event`、`X-GitLab-Event`、またはペイロード内の `event_type` から読み取ります。 |
 | `secret` | **はい** | 署名検証に使う HMAC シークレット。ルートに書かなければ全体の `secret` が使われます。`"INSECURE_NO_AUTH"` にすると検証を飛ばしますが、これはテスト専用です。 |
-| `profile` | いいえ | `gateway.multiplex_profiles` を有効にしているとき、このルートを実行できるプロファイル。省略すると既定プロファイル専用のルートになります。プロファイル名（たとえば `coder`）を指定すると、そのルートとシークレットが `/p/coder/webhooks/<route>` に結び付きます。 |
+| `profile` | いいえ | `gateway.multiplex_profiles` を有効にしているとき、このルートを実行できるプロファイル。省略すると既定プロファイル専用のルートになります。プロファイル名（たとえば `coder`）を指定すると、そのルートとシークレットが `/p/coder/webhooks/<route>` に結び付きます。動的な登録では `hermes webhook subscribe <name> --route-profile coder` で設定します。 |
 | `prompt` | いいえ | ペイロードにドット記法でアクセスできるテンプレート文字列（例: `{pull_request.title}`）。省略すると、JSON ペイロード全体がプロンプトに書き出されます。ペイロードの中身は信頼できません。[認証済みは信頼済みではありません](#authenticated-does-not-mean-trusted)を参照してください。 |
 | `filters` | いいえ | 宣言的なペイロードのふるい分け。認証・本文・イベントによる絞り込みのあと、エージェント実行や直接配信の前に評価されます。条件に合わない場合は HTTP 200 で `{"status":"ignored","reason":"filter"}` を返します。 |
 | `script` | いいえ | `~/.hermes/scripts/` に置いた、ふるい分けや変換のためのスクリプト。webhook のペイロードは JSON として標準入力に渡されます。標準出力が JSON オブジェクトならテンプレート展開前にペイロードを差し替え、テキストなら `script_output` として使えるようになります。標準出力が空、`[SILENT]`、または終了コードが 0 以外のときは、その webhook を無視します。 |

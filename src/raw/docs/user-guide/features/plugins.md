@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 7e82894346745333afdee2a7dbe4f01f64ef47e8
+upstream_blob: e0785ccaaac0877a5bb5b7ab9d9ec3bb9a8acc7c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -280,13 +280,13 @@ security:
 
 ## 使えるフック {#available-hooks}
 
-プラグインは、いま `hermes_cli.plugins.VALID_HOOKS` が受け付ける 26 個のライフサイクルの出来事を登録できます。正確な発火の時機、戻り値の扱い、送られる値の項目、プライバシー上の注意については、**[イベントフックの一覧](/hermes/docs/user-guide/features/hooks/#shipped-plugin-hook-catalog)**が正本です。
+プラグインは、いま `hermes_cli.plugins.VALID_HOOKS` が受け付ける 27 個のライフサイクルの出来事を登録できます。正確な発火の時機、戻り値の扱い、送られる値の項目、プライバシー上の注意については、**[イベントフックの一覧](/hermes/docs/user-guide/features/hooks/#shipped-plugin-hook-catalog)**が正本です。
 
 | 説明のための分類 | 出荷されているフック |
 |---|---|
 | **指示・制御** | `pre_tool_call`、`pre_llm_call`、`pre_verify`、`pre_gateway_dispatch` |
 | **変換** | `transform_tool_result`、`transform_terminal_output`、`transform_llm_output`、`pre_transcription` |
-| **観測** | `post_tool_call`、`post_llm_call`、`pre_api_request`、`post_api_request`、`api_request_error`、`on_stream_start`、`on_stream_delta`、`on_stream_end`、`on_interim_message`、`on_session_start`、`on_session_end`、`on_session_finalize`、`on_session_reset`、`on_skill_lifecycle`、`subagent_start`、`subagent_stop`、`pre_approval_request`、`post_approval_response`、`pre_command`、`kanban_task_claimed`、`kanban_task_completed`、`kanban_task_blocked` |
+| **観測** | `post_tool_call`、`post_llm_call`、`pre_api_request`、`post_api_request`、`api_request_error`、`on_stream_start`、`on_stream_delta`、`on_stream_end`、`on_interim_message`、`on_session_start`、`on_session_end`、`on_session_finalize`、`on_session_reset`、`agent_loop_stopped`、`on_skill_lifecycle`、`subagent_start`、`subagent_stop`、`pre_approval_request`、`post_approval_response`、`pre_command`、`kanban_task_claimed`、`kanban_task_completed`、`kanban_task_blocked` |
 
 この分類は今の挙動を説明するもので、将来の命名の決まりを定めるものではありません。プラグインのミドルウェアは、これとは別の登録の仕組みです。
 ## プラグインの種類 {#plugin-types}
@@ -620,6 +620,13 @@ hermes plugins pack export --enabled-only       # only plugins.enabled
 
 `hermes plugins update` で、更新後のツリーが dangerous と判定された場合、そのプラグインは
 無効にされます。見つかった点を確認して、自分で有効にし直してください。
+dangerous で止めたときは、その原因になった重大な指摘を名前で示します（例:
+`1 critical of 42 findings (destructive_root_rm)`）。そのため、止める理由になった 1 行が合計件数の陰に隠れることはありません。
+
+プラグインの最上位にあるテスト用のツリー（プラグインのルート直下の `tests/`、`test/`、`testing/`、`spec/`、`specs/`、
+`fixtures/`）も検査されます。プラグインの `__init__.py` はそこから import できるので、実行時に動くコードだからです。
+ただし、そこで見つかった重大な指摘は **caution** 止まりになります。これらのフィクスチャは、プラグインが悪意のある文字列をはじくことを確かめるために、あえてそうした文字列を持っているからです。
+そのため導入を頭から止めるのではなく、確認を求め、`--force` で通せます。同じ指摘がほかのファイル（`setup.sh`、`src/spec/…`）にあれば、これまでどおり **dangerous** です。
 
 検査は既定で有効です。`config.yaml` で無効にできます。
 

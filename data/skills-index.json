@@ -1,6 +1,6 @@
 {
-  "sha": "d595e63",
-  "date": "2026-09-12",
+  "sha": "a7254e2",
+  "date": "2026-09-13",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -827,6 +827,14 @@
       "source": "optional"
     },
     {
+      "slug": "creative-dream-loop",
+      "name": "Dream Loop",
+      "description": "Build stunning 3D scenes via a concept-art fidelity loop",
+      "url": "/hermes/docs/user-guide/skills/optional/creative/creative-dream-loop/",
+      "date": "2026-09-12",
+      "source": "optional"
+    },
+    {
       "slug": "creative-excalidraw",
       "name": "Excalidraw",
       "description": "Hand-drawn Excalidraw JSON diagrams (arch, flow, seq)",
@@ -875,6 +883,14 @@
       "source": "optional"
     },
     {
+      "slug": "creative-mono-color",
+      "name": "Mono Color",
+      "description": "Generate one- or two-ink editorial print poster images",
+      "url": "/hermes/docs/user-guide/skills/optional/creative/creative-mono-color/",
+      "date": "2026-09-12",
+      "source": "optional"
+    },
+    {
       "slug": "creative-pixel-art",
       "name": "Pixel Art",
       "description": "Pixel art w/ era palettes (NES, Game Boy, PICO-8)",
@@ -912,6 +928,14 @@
       "description": "Plan multi-platform social campaigns: briefs to posting",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-social-media-content-calendar/",
       "date": "2026-08-30",
+      "source": "optional"
+    },
+    {
+      "slug": "creative-system-atlas",
+      "name": "System Atlas",
+      "description": "Build explorable isometric architecture atlases as HTML",
+      "url": "/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/",
+      "date": "2026-09-12",
       "source": "optional"
     },
     {
@@ -1736,6 +1760,14 @@
       "description": "Adversarial plan interview before implementation",
       "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/",
       "date": "2026-08-30",
+      "source": "optional"
+    },
+    {
+      "slug": "software-development-pr-lens",
+      "name": "Pr Lens",
+      "description": "Draw code changes as animated architecture/data-flow SVGs",
+      "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-pr-lens/",
+      "date": "2026-09-12",
       "source": "optional"
     },
     {

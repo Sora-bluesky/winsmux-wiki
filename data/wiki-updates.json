@@ -1,6 +1,193 @@
 {
-  "generatedAt": "2026-09-13",
+  "generatedAt": "2026-09-14",
   "entries": [
+    {
+      "date": "2026-09-13",
+      "sha": "52ea80f",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/cron-internals",
+          "title": "cron の内部構造",
+          "url": "/hermes/docs/developer-guide/cron-internals/"
+        },
+        {
+          "id": "developer-guide/video-gen-provider-plugin",
+          "title": "動画生成プロバイダプラグイン",
+          "url": "/hermes/docs/developer-guide/video-gen-provider-plugin/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLI コマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/cli-symbols",
+          "title": "CLI の記号集",
+          "url": "/hermes/docs/reference/cli-symbols/"
+        },
+        {
+          "id": "reference/model-catalog",
+          "title": "モデルカタログ",
+          "url": "/hermes/docs/reference/model-catalog/"
+        },
+        {
+          "id": "reference/optional-skills-catalog",
+          "title": "オプションスキルの一覧",
+          "url": "/hermes/docs/reference/optional-skills-catalog/"
+        },
+        {
+          "id": "reference/profile-commands",
+          "title": "プロファイルのコマンド早見表",
+          "url": "/hermes/docs/reference/profile-commands/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "reference/tools-reference",
+          "title": "組み込みツール一覧",
+          "url": "/hermes/docs/reference/tools-reference/"
+        },
+        {
+          "id": "reference/toolsets-reference",
+          "title": "ツールセット一覧",
+          "url": "/hermes/docs/reference/toolsets-reference/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/docker",
+          "title": "Hermes の Docker 設定",
+          "url": "/hermes/docs/user-guide/docker/"
+        },
+        {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザの自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/curator",
+          "title": "キュレーター",
+          "url": "/hermes/docs/user-guide/features/curator/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "出来事のフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/kanban",
+          "title": "かんばん（複数エージェントの盤）",
+          "url": "/hermes/docs/user-guide/features/kanban/"
+        },
+        {
+          "id": "user-guide/features/personality",
+          "title": "人格と SOUL.md",
+          "url": "/hermes/docs/user-guide/features/personality/"
+        },
+        {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "skill のしくみ",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
+          "id": "user-guide/features/skins",
+          "title": "スキンとテーマ",
+          "url": "/hermes/docs/user-guide/features/skins/"
+        },
+        {
+          "id": "user-guide/features/tool-gateway",
+          "title": "Nous Tool Gateway",
+          "url": "/hermes/docs/user-guide/features/tool-gateway/"
+        },
+        {
+          "id": "user-guide/features/voice-mode",
+          "title": "音声モード",
+          "url": "/hermes/docs/user-guide/features/voice-mode/"
+        },
+        {
+          "id": "user-guide/free-tier",
+          "title": "user-guide/free-tier",
+          "url": "/hermes/docs/user-guide/free-tier/"
+        },
+        {
+          "id": "user-guide/messaging/feishu",
+          "title": "Feishu / Lark",
+          "url": "/hermes/docs/user-guide/messaging/feishu/"
+        },
+        {
+          "id": "user-guide/messaging/webhooks",
+          "title": "Webhook",
+          "url": "/hermes/docs/user-guide/messaging/webhooks/"
+        },
+        {
+          "id": "user-guide/messaging/whatsapp-cloud",
+          "title": "WhatsApp Business（Cloud API）",
+          "url": "/hermes/docs/user-guide/messaging/whatsapp-cloud/"
+        },
+        {
+          "id": "user-guide/messaging/whatsapp",
+          "title": "WhatsApp",
+          "url": "/hermes/docs/user-guide/messaging/whatsapp/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        },
+        {
+          "id": "user-guide/skills/bundled/creative/creative-touchdesigner-mcp",
+          "title": "user-guide/skills/bundled/creative/creative-touchdesigner-mcp",
+          "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-touchdesigner-mcp/"
+        },
+        {
+          "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow",
+          "title": "Dynamic Workflow — 計画をコードに持たせた並列展開、反証による検証、段階ごとの投入",
+          "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-kanban-video-orchestrator",
+          "title": "Kanban Video Orchestrator — 複数エージェントによる動画制作の流れを設計して動かす",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-touchdesigner-mcp",
+          "title": "user-guide/skills/optional/creative/creative-touchdesigner-mcp",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-touchdesigner-mcp/"
+        }
+      ]
+    },
     {
       "date": "2026-09-12",
       "sha": "506d2ef",
@@ -145,7 +332,7 @@
         },
         {
           "id": "user-guide/free-tier",
-          "title": "無料枠とサインイン",
+          "title": "user-guide/free-tier",
           "url": "/hermes/docs/user-guide/free-tier/"
         },
         {
@@ -2010,7 +2197,7 @@
         },
         {
           "id": "user-guide/skills/optional/creative/creative-touchdesigner-mcp",
-          "title": "Touchdesigner Mcp — twozero MCP 経由で TouchDesigner を操作する",
+          "title": "user-guide/skills/optional/creative/creative-touchdesigner-mcp",
           "url": "/hermes/docs/user-guide/skills/optional/creative/creative-touchdesigner-mcp/"
         },
         {

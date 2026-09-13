@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（213 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（227 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -25,7 +25,7 @@ raw: /hermes/raw/all.md
 - [Nix Setup](/hermes/docs/getting-started/nix-setup/)
 - [Platform Support](/hermes/docs/getting-started/platform-support/)
 
-## Using Hermes（28）
+## Using Hermes（29）
 
 - [CLI](/hermes/docs/user-guide/cli/)
 - [TUI (Ink terminal UI)](/hermes/docs/user-guide/tui/)
@@ -41,6 +41,7 @@ raw: /hermes/raw/all.md
 - [Hermes Desktop](/hermes/docs/user-guide/desktop/)
 - [Egress proxy](/hermes/docs/user-guide/egress/)
 - [Egress credential-injection proxy (iron-proxy)](/hermes/docs/user-guide/egress/iron-proxy/)
+- [Network Egress Isolation (Docker)](/hermes/docs/user-guide/egress/network-isolation/)
 - [Import from Other Agents](/hermes/docs/user-guide/import-from-other-agents/)
 - [Local Models](/hermes/docs/user-guide/local-models/)
 - [Managed Scope](/hermes/docs/user-guide/managed-scope/)
@@ -56,7 +57,7 @@ raw: /hermes/raw/all.md
 - [Windows (Native) Guide](/hermes/docs/user-guide/windows-native/)
 - [Windows (WSL2) Guide](/hermes/docs/user-guide/windows-wsl-quickstart/)
 
-## Core Features（33）
+## Core Features（34）
 
 - [Features Overview](/hermes/docs/user-guide/features/overview/)
 - [Tools](/hermes/docs/user-guide/features/tools/)
@@ -76,6 +77,7 @@ raw: /hermes/raw/all.md
 - [Document Extraction](/hermes/docs/user-guide/features/document-extraction/)
 - [Extending the Dashboard](/hermes/docs/user-guide/features/extending-the-dashboard/)
 - [Session Heartbeats](/hermes/docs/user-guide/features/heartbeat/)
+- [Kanban Multi-Gateway Deployment](/hermes/docs/user-guide/features/kanban-multi-gateway/)
 - [Kanban worker lanes](/hermes/docs/user-guide/features/kanban-worker-lanes/)
 - [Recurring Loops](/hermes/docs/user-guide/features/loops/)
 - [LSP — Semantic Diagnostics](/hermes/docs/user-guide/features/lsp/)
@@ -201,7 +203,7 @@ raw: /hermes/raw/all.md
 - [Automated GitHub PR Comments with Webhooks](/hermes/docs/guides/webhook-github-pr-review/)
 - [xAI Grok OAuth (SuperGrok / X Premium+)](/hermes/docs/guides/xai-grok-oauth/)
 
-## Developer Guide（37）
+## Developer Guide（49）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -217,8 +219,10 @@ raw: /hermes/raw/all.md
 - [Creating Skills](/hermes/docs/developer-guide/creating-skills/)
 - [Extending the CLI](/hermes/docs/developer-guide/extending-the-cli/)
 - [ACP Internals](/hermes/docs/developer-guide/acp-internals/)
+- [Billing Lifecycle (TUI)](/hermes/docs/developer-guide/billing-lifecycle/)
 - [Browser Provider Plugins](/hermes/docs/developer-guide/browser-provider-plugin/)
 - [Browser CDP Supervisor](/hermes/docs/developer-guide/browser-supervisor/)
+- [Chronos Managed-Cron Contract](/hermes/docs/developer-guide/chronos-managed-cron-contract/)
 - [CLI Internals](/hermes/docs/developer-guide/cli-internals/)
 - [Codebase Ownership Map](/hermes/docs/developer-guide/codebase-ownership/)
 - [Background completion backlogs](/hermes/docs/developer-guide/completion-backlog-delivery/)
@@ -226,13 +230,23 @@ raw: /hermes/raw/all.md
 - [Cron Internals](/hermes/docs/developer-guide/cron-internals/)
 - [Desktop Plugin SDK (@hermes/plugin-sdk)](/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - [Egress proxy internals](/hermes/docs/developer-guide/egress-internals/)
+- [Gateway Monitoring](/hermes/docs/developer-guide/gateway-monitoring/)
+- [Gateway Session Lifecycle](/hermes/docs/developer-guide/gateway-session-lifecycle/)
 - [Image Generation Provider Plugins](/hermes/docs/developer-guide/image-gen-provider-plugin/)
 - [Memory Provider Plugins](/hermes/docs/developer-guide/memory-provider-plugin/)
+- [Micro-compaction](/hermes/docs/developer-guide/micro-compaction/)
+- [Middleware](/hermes/docs/developer-guide/middleware/)
 - [Model Provider Plugins](/hermes/docs/developer-guide/model-provider-plugin/)
+- [Multiplexing Gateway Internals](/hermes/docs/developer-guide/multiplexing-gateway/)
+- [Observer Hooks](/hermes/docs/developer-guide/observer-hooks/)
 - [Plugin LLM Access](/hermes/docs/developer-guide/plugin-llm-access/)
 - [Build a Hermes Plugin](/hermes/docs/developer-guide/plugins/)
 - [Programmatic Integration](/hermes/docs/developer-guide/programmatic-integration/)
+- [Relay ↔ Connector Contract](/hermes/docs/developer-guide/relay-connector-contract/)
+- [Relay Shared Metrics](/hermes/docs/developer-guide/relay-shared-metrics/)
 - [Secret Source Plugins](/hermes/docs/developer-guide/secret-source-plugin/)
+- [State DB Recovery](/hermes/docs/developer-guide/state-db-recovery/)
+- [Streaming TTS Internals](/hermes/docs/developer-guide/streaming-tts/)
 - [Public Subagent Lifecycle API](/hermes/docs/developer-guide/subagent-lifecycle-api/)
 - [Terminal Environment Provider Plugins](/hermes/docs/developer-guide/terminal-environment-plugin/)
 - [Tools Runtime](/hermes/docs/developer-guide/tools-runtime/)

@@ -2,7 +2,7 @@
 title: "MCP 設定の早見表"
 description: "Hermes Agent の MCP 設定キー、絞り込みの動き、ユーティリティツールの方針をまとめた早見表です。"
 upstream_path: reference/mcp-config-reference.md
-upstream_blob: f1e4fbdba8d12ab364f4a0d691bd27c1be6048a3
+upstream_blob: 103fcbc2f50b4d220ef80bee9c6a474cb3eebf9a
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
 ---
@@ -346,9 +346,10 @@ mcp_servers:
 
 - Hermes は MCP SDK の OAuth 2.1 PKCE の流れ（メタデータの探索、クライアントの識別、トークンの取得、更新）を使います
 - 最初に接続するとき、承認のためにブラウザーの画面が開きます
-- トークンは `~/.hermes/mcp-tokens/<server>.json` に保存され、次のセッションでも使い回されます
+- トークンは `~/.hermes/mcp-tokens/<server>.json`（名前付きのプロファイルでは `~/.hermes/profiles/<name>/mcp-tokens/`）に保存され、次のセッションでも使い回されます
 - トークンの更新は自動です。更新に失敗したときだけ、もう一度承認を求めます
 - HTTP/StreamableHTTP でつなぐサーバー（`url` を書いたもの）だけが対象です
+- [多重化したゲートウェイ](/hermes/docs/user-guide/multi-profile-gateways/) のもとでは、OAuth の接続がプロファイルをまたいで共有されることはありません。`mcp_servers` の設定がまったく同じでも、プロファイルごとに自分のトークンで認証し、自分の接続を開きます
 
 ### デバイスコードでのログイン（RFC 8628） {#device-code-login-rfc-8628}
 

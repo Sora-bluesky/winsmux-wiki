@@ -2,7 +2,7 @@
 title: "Web 検索と本文抽出"
 description: "複数のバックエンドプロバイダで Web を検索し、ページ本文を抽出します。無料で自前運用できる SearXNG にも対応しています。"
 upstream_path: user-guide/features/web-search.md
-upstream_blob: bcd6b34255a488fc5b07d7028c7f0df1d0416222
+upstream_blob: 19618423e9b909770ad393df7fd21d8641d8840a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-search
 ---
@@ -58,6 +58,8 @@ Web 系の認証情報が **まったくない** まっさらな環境でも、`
 | 2 000 000 を超える場合 | 保存するテキストは 2 MB で頭打ちになります |
 
 1 ページあたりの予算は `config.yaml` の `web.extract_char_limit` で変更できます（既定は `15000`、2 000〜500 000 の範囲に丸められます）。エージェントはツールの `char_limit` 引数で呼び出しごとに引き上げることもできます。
+
+プロバイダーへの問い合わせにも、1 回ごとに実時間の制限がかかります（`config.yaml` の `web.extract_timeout`。既定は `120` 秒で、`0` にすると制限なし）。応答を開いたまま終わらせないバックエンドがあっても、ツールの呼び出しがいつまでも止まることはなく、URL ごとのタイムアウトエラーが返ります。
 
 ### 切り詰めが邪魔になるとき {#when-truncation-gets-in-the-way}
 

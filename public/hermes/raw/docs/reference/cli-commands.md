@@ -2,7 +2,7 @@
 title: "CLI コマンド一覧"
 description: "Hermes のターミナルコマンドとコマンド群の公式な早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: a76ba93fe3ba70fe4fb3987bba84095d9ef052af
+upstream_blob: 1eca44ed404ee78aef4a632ec757b2edff4d514f
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -574,6 +574,7 @@ hermes auth                                              # Interactive wizard
 hermes auth list                                         # Show all pools
 hermes auth list openrouter                              # Show specific provider
 hermes auth add openrouter --api-key sk-or-v1-xxx        # Add API key
+hermes auth add openrouter --type oauth                  # Browser login (OpenRouter PKCE) mints a key for you
 hermes auth add anthropic --type oauth                   # Add OAuth credential
 hermes auth add openai-codex --type oauth --priority 0   # Add an account and try it first
 hermes auth remove openrouter 2                          # Remove by index
@@ -694,7 +695,7 @@ hermes kanban boards rm atm10-server --delete
 
 どの操作もゲートウェイのスラッシュコマンド（`/kanban …`）として使えます。引数の書き方も同じで、`boards` サブコマンドと `--board` フラグも含みます。
 
-設計の全体像 — Cline Kanban / Paperclip / NanoClaw / Gemini Enterprise との比較、8 つの共同作業の型、4 つのユーザーストーリー、同時実行の正しさの証明 — については、リポジトリの `docs/hermes-kanban-v1-spec.pdf` か [かんばんの手引き](/hermes/docs/user-guide/features/kanban/) をご覧ください。
+設計の全体像 — Cline Kanban / Paperclip / NanoClaw / Gemini Enterprise との比較、8 つの共同作業の型、4 つのユーザーストーリー、同時実行の正しさの証明 — については、[かんばんの手引き](/hermes/docs/user-guide/features/kanban/) をご覧ください。
 
 ## `hermes egress` {#hermes-egress}
 
@@ -811,8 +812,9 @@ hermes webhook subscribe <name> [options]
 | `--secret` | 独自の HMAC の秘密鍵。省略すると自動生成されます。 |
 | `--deliver-only` | エージェントを動かさず、組み立てた `--prompt` をそのままメッセージとして配信します。LLM の費用はゼロで、1 秒未満で届きます。`--deliver` に `log` 以外の実際の配信先を指定する必要があります。 |
 | `--script` | `~/.hermes/scripts/` に置いた絞り込み・変換用のスクリプト。webhook のペイロードが JSON として標準入力に渡され、標準出力の JSON がペイロードを置き換えます。標準出力が空、`[SILENT]`、または終了コードがゼロ以外の場合、その webhook は無視されます。[スクリプトによる絞り込みと変換](/hermes/docs/user-guide/messaging/webhooks/#script-filters-and-transforms) をご覧ください。 |
+| `--route-profile` | ルートを多重化されたプロファイルに結び付けます。結び付けたルートには `/p/<profile>/webhooks/<name>` からしか届かなくなり、エージェントはそのプロファイルとして動きます。指定した名前は既存のプロファイルと照らし合わせて確かめられます。更新時に省略すると、それまでの結び付きがそのまま残ります。全体オプションの `-p/--profile` とは別物です。あちらは、どのゲートウェイの登録ファイルに書き込むかを選ぶものです。[ゲートウェイをいくつも同時に動かす](/hermes/docs/user-guide/multi-profile-gateways/) をご覧ください。 |
 
-登録内容は `~/.hermes/webhook_subscriptions.json` に保存され、ゲートウェイを再起動しなくても webhook のアダプタが読み直します。
+登録内容は `~/.hermes/webhook_subscriptions.json` に保存され、ゲートウェイを再起動しなくても webhook のアダプタが読み直します。すでにある名前で `subscribe` をもう一度実行した場合、`--secret` / `--route-profile` を渡さない限り、シークレットとプロファイルの結び付きはそのまま引き継がれます。
 
 ## `hermes doctor` {#hermes-doctor}
 

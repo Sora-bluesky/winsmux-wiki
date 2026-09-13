@@ -2,7 +2,7 @@
 title: "プロバイダーを追加する"
 description: "Hermes Agent に新しい推論プロバイダーを追加する方法 — 認証、実行時の解決、CLI の導線、アダプター、テスト、ドキュメント"
 upstream_path: developer-guide/adding-providers.md
-upstream_blob: 5d11383b698f4d8fa2546fec77ada463ffaa147d
+upstream_blob: ba8e276bd5e521e5d46ec9bf8c692c595aa6c17d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-providers
 ---
@@ -330,12 +330,12 @@ API キーを直接使うプロバイダーなら、安くて速い補助モデ�
 よく触るのは次のあたりです。
 
 - `tests/hermes_cli/test_runtime_provider_resolution.py`
-- `tests/cli/test_cli_provider_resolution.py`
+- `tests/hermes_cli/test_cli_provider_resolution.py`
 - `tests/hermes_cli/test_model_switch_custom_providers.py`（および隣にある `tests/hermes_cli/test_model_switch_*.py`）
 - `tests/hermes_cli/test_setup_model_provider.py`
-- `tests/run_agent/test_provider_parity.py`
-- `tests/run_agent/test_run_agent.py`
-- 独自形式のプロバイダーなら `tests/test_<provider>_adapter.py`
+- `tests/agent/test_provider_parity.py`
+- `tests/agent/test_run_agent.py`
+- 独自形式のプロバイダーなら `tests/agent/test_<provider>_adapter.py`
 
 ドキュメント上の例なので、実際に触るファイルは違うかもしれません。大事なのは、次を押さえることです。
 
@@ -350,7 +350,7 @@ API キーを直接使うプロバイダーなら、安くて速い補助モデ�
 
 ```bash
 source venv/bin/activate
-python -m pytest tests/hermes_cli/test_runtime_provider_resolution.py tests/cli/test_cli_provider_resolution.py tests/hermes_cli/test_setup_model_provider.py tests/run_agent/test_provider_parity.py -q
+python -m pytest tests/hermes_cli/test_runtime_provider_resolution.py tests/hermes_cli/test_cli_provider_resolution.py tests/hermes_cli/test_setup_model_provider.py tests/agent/test_provider_parity.py -q
 ```
 
 変更が深いところに及ぶなら、push の前に全体を走らせます。

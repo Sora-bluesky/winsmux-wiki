@@ -2,7 +2,7 @@
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: 5b92103db34bddb00aa632b5a2b67bea5062cdfd
+upstream_blob: 2e5361b1fbd319b03f846e0332b0c4e830c77edd
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -179,7 +179,7 @@ gateway/platforms/                  # core base + legacy direct adapters
 
 **遅れて読み込む仕組み:** 同梱の `kind: platform` プラグインは、`gateway/platform_registry.py` に軽い `register_deferred` のローダーを登録します (`hermes_cli/plugins.py` 経由)。おかげで各サービスの SDK は、ゲートウェイが起動したとき、メッセージを送るとき、セットアップや状態確認を走らせたときにだけ読み込まれます。ふつうに `hermes chat` を使うぶんには読み込まれません。名前を引いたときは、そのアダプターだけを読み込みます。全部を並べる必要がある場面でだけ、残りのローダーもまとめて動きます。
 
-試験的なコネクター経由のサービスは、専用のモジュールではなく `gateway/relay/` の汎用リレーアダプターを使います。`GATEWAY_RELAY_URL` か `gateway.relay_url` が設定されていると、ゲートウェイは `relay` というサービスを登録し、外向きの WebSocket でコネクターにつなぎ、その同じ接続で `descriptor`、`inbound`、`interrupt_inbound` のフレームを受け取ります。コネクター側は `CapabilityDescriptor` を名乗ります。Hermes からは、ふつうの返信、トークンの要らない `follow_up` 操作、割り込みのフレームを、リレー越しに送り返せます。実装に即した通信の取り決めは [`docs/relay-connector-contract.md`](https://github.com/NousResearch/hermes-agent/blob/main/docs/relay-connector-contract.md) にあります。
+試験的なコネクター経由のサービスは、専用のモジュールではなく `gateway/relay/` の汎用リレーアダプターを使います。`GATEWAY_RELAY_URL` か `gateway.relay_url` が設定されていると、ゲートウェイは `relay` というサービスを登録し、外向きの WebSocket でコネクターにつなぎ、その同じ接続で `descriptor`、`inbound`、`interrupt_inbound` のフレームを受け取ります。コネクター側は `CapabilityDescriptor` を名乗ります。Hermes からは、ふつうの返信、トークンの要らない `follow_up` 操作、割り込みのフレームを、リレー越しに送り返せます。実装に即した通信の取り決めは [Relay ↔ Connector contract](/hermes/docs/developer-guide/relay-connector-contract/) にあります。
 
 アダプターは共通の作法を実装します。
 - `connect()` と `disconnect()` — つなぐ・切るの管理

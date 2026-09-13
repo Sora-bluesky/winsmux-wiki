@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: 85f1f817ff401ea1b6ab412f261e8de9008618b6
+upstream_blob: 37f98e8c9c89b11d1a5c5680cf063b2c7925bf47
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -108,7 +108,7 @@ DM でしか動きません。`files:read` がないと、会話はできても*
 | 権限 | 用途 |
 |-------|---------|
 | `groups:read` | 非公開チャンネルの一覧と情報を取る |
-| `assistant:write` | メッセージを処理している間、ボット名の横に作業中の状態（「is thinking…」）を出します。この権限がないと `assistant.threads.setStatus` の呼び出しが黙って失敗し、Slack が用意した文言（「Finding answers…」「Reviewing findings…」など）が代わりに出ます。Hermes 側から文言を決めることはできません。`typing_status_text` を効かせるには必須です。 |
+| `assistant:write` | メッセージを処理している間、ボット名の横に作業中の状態（「is thinking…」）を出します。この権限がないと状態の呼び出し（slack-sdk 3.44 以降は `agents.sessions.setStatus`、それより古い SDK では `assistant.threads.setStatus`）が黙って失敗し、Slack が用意した文言（「Finding answers…」「Reviewing findings…」など）が代わりに出ます。Hermes 側から文言を決めることはできません。`typing_status_text` を効かせるには必須です。 |
 
 ---
 
@@ -465,7 +465,8 @@ platforms:
 | `platforms.slack.extra.cron_continuable_surface` | `"thread"` | [続きを話せる cron ジョブ](/hermes/docs/user-guide/features/cron/#flat-in-channel-continuation-slack) の届け先。`"thread"` は届けるたびに専用のスレッドを開きます（既定）。`"in_channel"` はチャンネルの流れにそのまま届けます。`in_channel` を使うときは `reply_in_thread: false`（と `require_mention: false`）を組み合わせると、ふつうの返信で仕事を続けられます。 |
 
 環境変数では `SLACK_ALLOW_BOTS=none|mentions|all` が同じ働きをします。
-両方を設定した場合は `platforms.slack.extra.allow_bots` が優先されます。相手のボットが
+両方を設定した場合は、明示した環境変数のほうが優先されます（ほかのすべての設定と同じ、
+環境変数が YAML より勝つという決まりです）。相手のボットが
 はっきり呼ばれなくても答えてしまう場合、`all` は避けてください。相手側の返信の決まりしだいで
 堂々巡りが起きます。
 
@@ -487,7 +488,7 @@ platforms:
 | `platforms.slack.typing_status_text` | `"is thinking..."` | エージェントがメッセージを処理している間に出る、作業中の状態の文言です。`assistant:write` の権限が要ります。これがないと状態の設定が黙って失敗し、ここに何を書いても Slack が用意した文言が出ます。状態表示そのものをやめたいときは `typing_indicator: false` にします。 |
 
 :::note どこに表示されるか
-自分で決めた文言が出るのは、**返信の入力欄の下**（「*BotName* is thinking…」）です。メッセージの並びの中ではありません。AI のアプリが動いている間にメッセージの領域に出る「Generating response…」「Finding answers…」といった行は、**Slack が自分で入れ替えて出している表示**です。`assistant.threads.setStatus` からは操作できず、両方が同時に出ることもあります。
+自分で決めた文言が出るのは、**返信の入力欄の下**（「*BotName* is thinking…」）です。メッセージの並びの中ではありません。AI のアプリが動いている間にメッセージの領域に出る「Generating response…」「Finding answers…」といった行は、**Slack が自分で入れ替えて出している表示**です。状態の API（`agents.sessions.setStatus` / `assistant.threads.setStatus`）からは操作できず、両方が同時に出ることもあります。
 :::
 
 同じ項目で、Google Chat の作業中の目印のメッセージも変えられます

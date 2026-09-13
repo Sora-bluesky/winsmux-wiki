@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: 6d348df87c8fce9283eebe9b5e7ed16cb7cd45df
+upstream_blob: ced57f8f301eb22fe9f15990ef9f66429773d33c
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -36,9 +36,11 @@ hermes skills uninstall <skill-name>
 |-------|-------------|
 | [**antigravity-cli**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli/) | Antigravity CLI（agy）を操作します。プラグイン、認証、サンドボックスに対応。 |
 | [**blackbox**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/) | 複数モデルを使う Blackbox AI の CLI にコーディング作業を任せます。 |
+| [**dream-loop**](/hermes/docs/user-guide/skills/optional/creative/creative-dream-loop/) | コンセプトアートとの忠実度を確かめるループで、見栄えのする 3D シーンを作ります。 |
 | [**dynamic-workflow**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/) | 計画をコードで書いて並列に展開し、敵対的な検証と段階的な実行を行います。 |
 | [**grok**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/) | xAI Grok Build CLI にコーディングを任せます（機能追加、PR 作成）。 |
 | [**honcho**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/) | Hermes 向けに Honcho の記憶機能を設定し、不具合を切り分けます。 |
+| [**mono-color**](/hermes/docs/user-guide/skills/optional/creative/creative-mono-color/) | 1 色または 2 色刷りの、雑誌風ポスター画像を生成します。 |
 | [**openhands**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/) | OpenHands CLI にコーディングを任せます（モデルを選ばず、LiteLLM 対応）。 |
 
 ## blockchain {#blockchain}
@@ -47,6 +49,7 @@ hermes skills uninstall <skill-name>
 |-------|-------------|
 | [**evm**](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-evm/) | 読み取り専用の EVM クライアント。8 つのチェーンでウォレット、トークン、ガス代を確認します。 |
 | [**hyperliquid**](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid/) | Hyperliquid の相場データ、口座の履歴、取引の振り返りに使います。 |
+| [**pr-lens**](/hermes/docs/user-guide/skills/optional/software-development/software-development-pr-lens/) | コードの変更を、動くアーキテクチャ図やデータフロー図の SVG として描きます。 |
 | [**solana**](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-solana/) | Solana のウォレット、トークン、取引、NFT を米ドル建てで調べます。 |
 
 ## communication {#communication}
@@ -79,6 +82,7 @@ hermes skills uninstall <skill-name>
 | [**simple-english**](/hermes/docs/user-guide/skills/optional/creative/creative-simple-english/) | 技術文書を ASD-STE100 の簡易技術英語に書き直します。 |
 | [**sketch**](/hermes/docs/user-guide/skills/optional/creative/creative-sketch/) | 使い捨ての HTML モックアップ。見比べるための案を 2〜3 通り作ります。 |
 | [**social-media-content-calendar**](/hermes/docs/user-guide/skills/optional/creative/creative-social-media-content-calendar/) | 複数の SNS をまたぐ施策を、企画書から投稿まで計画します。 |
+| [**system-atlas**](/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/) | 見て回れるアイソメトリックなアーキテクチャ図鑑を HTML で作ります。 |
 | [**tldraw-offline**](/hermes/docs/user-guide/skills/optional/creative/creative-tldraw-offline/) | オフラインの tldraw キャンバスをエージェントから操作し、自動化します。 |
 | [**unreal-mcp**](/hermes/docs/user-guide/skills/optional/creative/creative-unreal-mcp/) | Unreal Engine のエディタでシーン、アクター、レンダリングを自動化します。 |
 
