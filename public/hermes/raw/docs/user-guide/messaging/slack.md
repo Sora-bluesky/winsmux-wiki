@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: 37f98e8c9c89b11d1a5c5680cf063b2c7925bf47
+upstream_blob: 104d4a318f98a794345ed143edea11b74e502c70
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -418,10 +418,12 @@ platforms:
       # Requires rich_blocks: true. Default: false.
       feedback_buttons: false
 
-      # Render live tool calls as Slack-native plan/task cards. This explicit
-      # opt-in activates native progress even when text tool_progress is off.
-      # If Slack rejects the native stream, Hermes keeps one editable text
-      # fallback current for the rest of the turn.
+      # Render live tool calls as Slack-native plan/task cards. Works with
+      # Slack's built-in tool_progress: off default; a tool_progress: off you
+      # write yourself disables cards too. Cards need a thread: an un-threaded
+      # chat shows no tool progress (text progress if you wrote new/all).
+      # Recoverable native API failures keep one
+      # editable text fallback current for the rest of the turn.
       native_task_cards: false
 
       # Suggested prompts pinned at the top of Agent view's Messages tab.
@@ -457,7 +459,7 @@ platforms:
 | `platforms.slack.extra.unfurl_media` | Slack の既定 | `false` にすると、押せるリンクは残したまま、メディアの自動プレビューを止めます。説明文の順序と送り方についての注意は `unfurl_links` と同じです。 |
 | `platforms.slack.extra.rich_blocks` | `false` | `true` にすると、エージェントのメッセージが [Block Kit](https://docs.slack.dev/block-kit/) の部品（見出し、区切り線、本物の入れ子の箇条書き、Slack 本来の表）として表示されます。通知や読み上げのために、文字だけの代替もいつも一緒に送られます。Slack の上限を超える表は、桁の揃った等幅の文字に戻ります。アプリを入れ直す必要はありません。送る側だけの変更です。 |
 | `platforms.slack.extra.feedback_buttons` | `false` | `rich_blocks` と一緒に `true` にすると、最後の返信に Slack 本来の評価ボタンが付きます。 |
-| `platforms.slack.extra.native_task_cards` | `false` | `true` にすると、進行中の道具の呼び出しが Slack 本来の計画・作業カードとして表示されます。これは Slack の既定である `tool_progress: off` とは別に、進み具合を出すことを自分で選ぶ設定です。Slack 側の呼び出しが失敗したときは、書き換え続ける文字のメッセージ一つに切り替わります。 |
+| `platforms.slack.extra.native_task_cards` | `false` | `true` にすると、進行中の道具の呼び出しが Slack 本来の計画・作業カードとして表示されます。カードは Slack 組み込みの既定 `tool_progress: off` のままで動きます。ただし `display.tool_progress: off` を明示的に設定すると（全体でも `display.platforms.slack` でも同じです。`/verbose` も同じキーに書き込みます）、カードも出なくなります。カードにはスレッドが必要です。カード表示が有効で、会話に結び付けるスレッドがない場合（`reply_in_thread: false` のときのトップレベルの DM）は、文字の吹き出しの代わりに進み具合を何も表示しません。ただし `tool_progress: new`/`all` を明示的に設定していれば、そこでは書き換えできる文字の進み具合に切り替わります。Slack 側の呼び出しが立て直せる理由で失敗したときは、書き換え続ける文字のメッセージ一つに切り替わります。 |
 | `platforms.slack.extra.suggested_prompts` | `[]` | Agent / Assistant の DM の入口に出す `{title, message}` を最大 4 つまで。配列でも `{title, prompts}` でも書けます。 |
 | `platforms.slack.extra.assistant_thread_titles` | `true` | `true` にすると、Agent / Assistant の DM のスレッド名を最初の発言から付けます。 |
 | `platforms.slack.extra.allow_bots` | `"none"` | ほかの Slack ボットからのメッセージの扱い: `"none"` は無視、`"mentions"` は**そのメッセージ自身**が Hermes を @ で呼んでいるときだけ受け付け、`"all"` はすべて受け付けます。ボット同士で組むなら `"mentions"` がいちばん安全です。[ほかのボットからのメッセージを受け付ける](#accepting-messages-from-other-bots-allow_bots) を参照してください。 |
@@ -560,12 +562,24 @@ platforms:
       native_task_cards: true
 ```
 
-- これは進み具合を出すことを自分で選ぶ設定です。Slack の既定が `tool_progress: off` でも動きます
-  （文字の吹き出しはチャンネルを埋めますが、このカードは埋めません）。
+- カードは、道具の進み具合を Slack 流に表示したものです。Slack 組み込みの既定
+  `tool_progress: off` のままで動きます。`tool_progress: off` を自分で書くと
+  （全体でも、`display.platforms.slack` の下でも、`/verbose` を切り替えて off にした場合も）
+  カードも止まります。`new` か `all` ならカードは残ります。`null` の値は上位を引き継ぐだけで、
+  「off」ではありません。また null のときは、どの YAML の層も null 以外の値を設定していなければ、
+  既存の環境変数の橋渡しがモードを渡せます。変更は、次の一巡が表示設定を決めるときに反映されます。
+- カードにはスレッドが必要です。カード表示が有効なとき、結び付けるスレッドがない会話
+  （`reply_in_thread: false` のときのトップレベルの DM）では、Slack の既定 `tool_progress: off` の
+  もとでは文字の吹き出しを出さず、進み具合を何も表示しません。
+  `new` か `all` を書いていれば、その会話には求めたとおり書き換えできる文字の進み具合が出ます。
+  既存のスレッドの中での返信には、引き続きカードが出ます。
 - 同じ道具を同時に呼んだときも、本物の呼び出し ID で結び付けられます。並行して走る
   `web_search` は、それぞれが自分の行と正しい状態を持ちます。
-- 流し込みを始められない、または更新できないときは、書き換え続ける文字のメッセージ一つに
-  切り替わるので、その一巡の間も進み具合は見え続けます。
+- Hermes は公開を試みる前にスレッドに出せるかを確かめます。そのため、接続切れや時間切れが
+  あっても、スレッドのない宛先が文字の代替表示に変わることはありません。
+- 対応しているスレッドの宛先で、流し込みが立て直せる理由（API のエラーや回数制限）で失敗したときは、
+  書き換え続ける文字のメッセージ一つに切り替わるので、その一巡の間も進み具合は見え続けます。
+  中継の送信側が宛先を拒んだ場合は立て直せないので、その一巡の進み具合は表示されません。
 - カードの流し込みは、一巡が終わるときにちょうど一度だけ止まります。途中で止めたときや
   接続が切れたときも同じで、動いたままの表示が残ることはありません。
 

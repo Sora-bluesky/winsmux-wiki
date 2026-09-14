@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、ユーザーの認可、コンテナの隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: a3927fba12d6573f9c15f623b0ed833278e4afd8
+upstream_blob: 8a69a1684b5dd448f4abe3745ab5bba68fd2edb0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -142,6 +142,8 @@ KeepAlive を使っているとか、Hermes を制御しているという意味
 | ルートファイルシステムの最上位で、信用できない URL を `sh` に流し込む | リモートからコードを実行される入口で、承認して通せる範囲を超えています |
 
 このリストに当たると、ツールの呼び出しは理由を書いたエラーをエージェントに返し、何も実行されません。もし正当な作業でこうしたコマンドが要るなら（消して入れ直す仕組みを運用している場合など）、エージェントの外で実行してください。
+
+この最低ラインは、シェルの引用符を解釈できないコマンド（`grep 'unterminated`）でも閉じる側に倒れ、エラーには `malformed executable payload` と出ます。引用符の判定は書かれたとおりのコマンドに対して行うので、引用符で囲んだパターンの中のシェルとして正しいエスケープ（`grep -o "[^\"]*" file`）は不正と見なされません。また区切り記号の前にあるエスケープした引用符（`echo "a\"b"; reboot`）で、その後ろのコマンドが隠れることもありません。
 
 ### 利用者が決める拒否ルール（`approvals.deny`） {#user-defined-deny-rules-approvalsdeny}
 

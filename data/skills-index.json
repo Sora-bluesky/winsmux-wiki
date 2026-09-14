@@ -1,6 +1,6 @@
 {
-  "sha": "a7254e2",
-  "date": "2026-09-13",
+  "sha": "40f2702",
+  "date": "2026-09-14",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -752,6 +752,14 @@
       "description": "1-3-1 decision briefs: problem, three options, one pick",
       "url": "/hermes/docs/user-guide/skills/optional/communication/communication-one-three-one-rule/",
       "date": "2026-08-30",
+      "source": "optional"
+    },
+    {
+      "slug": "creative-ai-presenter-video",
+      "name": "Ai Presenter Video",
+      "description": "Make a verified AI presenter video from script + image",
+      "url": "/hermes/docs/user-guide/skills/optional/creative/creative-ai-presenter-video/",
+      "date": "2026-09-13",
       "source": "optional"
     },
     {
@@ -1816,6 +1824,14 @@
       "description": "Versioned site deploys to GitHub/Cloudflare/Netlify Pages",
       "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/",
       "date": "2026-08-30",
+      "source": "optional"
+    },
+    {
+      "slug": "web-development-scrollcraft",
+      "name": "Scrollcraft",
+      "description": "Premium scroll-driven landing pages; scroll = timeline",
+      "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-scrollcraft/",
+      "date": "2026-09-13",
       "source": "optional"
     },
     {

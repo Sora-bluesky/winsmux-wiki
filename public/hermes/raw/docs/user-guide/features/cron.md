@@ -2,7 +2,7 @@
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、スキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: f53001f17e04c5fc5d9dcc045776ceda2f3b4769
+upstream_blob: 73d96cdd54bebc4b3a0aab889f5c582d4917f072
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -21,6 +21,7 @@ cron ジョブでできることは次のとおりです。
 - 結果を、作成元のチャット、ローカルのファイル、設定済みのプラットフォームへ届けられます
 - 通常の固定ツール一覧を持った、新しいエージェントセッションとして実行されます
 - **no-agent モード**で実行できます。スクリプトを時刻どおりに走らせ、その標準出力をそのまま届ける、LLM をいっさい使わない動き方です（後述の [no-agent モード](#no-agent-mode-script-only-jobs)の節を参照）
+- **外部のできごと**をきっかけに動かせます。`cron_job` を設定した webhook の経路は、次の予約時刻を待たず、何かが起きた瞬間（PR にフィードバックが付いた、サービスが警報を送ってきた、など）にジョブを動かします。[イベントで動く cron ジョブ](/hermes/docs/user-guide/messaging/webhooks/#event-triggered-cron-jobs)を参照してください。
 
 これらはすべて `cronjob` ツールを通じて Hermes 自身からも使えます。つまり、ふつうの言葉で頼むだけでジョブの作成・一時停止・編集・削除ができ、CLI は必須ではありません。
 
@@ -425,17 +426,22 @@ cron:
 
 ```bash
 hermes cron incidents                 # list incidents (newest activity first)
-hermes cron incidents --state alerted # filter: detected | alerted | closed
+hermes cron incidents --state alerted # filter: detected | alerted | resolved | closed
 hermes cron incidents ack <id>        # acknowledge — stop re-pinging
 ```
 
 インシデントに了解を出すと、その特徴とまったく同じ失敗についてだけ、実行ごとの呼び出しが
 静かになります。ほかは何も変わりません。実行履歴はすべての失敗を記録し続け、連続失敗回数も
 数え続け、*別の*エラーで失敗し始めた瞬間に新しいインシデントが作られて、また知らせが飛びます。
-成功してもインシデントには触れません。インシデントはジョブごとではなく、特徴ごとだからです。
+
+実行が成功すると、そのジョブの開いているインシデントはすべて `resolved` になります。そのため一覧には、
+ジョブがこれまでに起こしたすべての失敗ではなく、いまの健康状態が映ります。あとでジョブが*同じ*エラーで
+ふたたび失敗すると、解決済みのインシデントは `detected` として開き直り、また知らせが届きます。
+了解を出した（`closed` の）インシデントだけは例外で、成功しても手を付けられず、同じ失敗が繰り返しても静かなままです。
 
 インシデントの流れは、`detected`（失敗を記録した）→ `alerted`（失敗の知らせが少なくとも
-1 回は配信まで届いた）→ `closed`（了解が出た。その特徴についてはここで終わり）です。
+1 回は配信まで届いた）→ `resolved`（そのあとジョブが正常に動いた。同じ失敗が繰り返すと開き直る）
+または `closed`（了解が出た。その特徴についてはここで終わり）です。
 保存されるエラー文は、書き込む前に秘密の部分が伏せられ、長さも切り詰められます。
 
 記録はつねに行われ、放っておいても費用はかかりません。あなたが明示的に `ack` を出すまで、

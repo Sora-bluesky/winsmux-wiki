@@ -3,7 +3,7 @@ title: LINE から使う
 description: LINE のトークから自分の Hermes に話しかける形。常時起動と公開 URL が前提。
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/line
-hermes_version: "0.21.2"
+hermes_version: "0.21.3"
 confidence: high
 raw: /hermes/raw/entities/line.md
 ---

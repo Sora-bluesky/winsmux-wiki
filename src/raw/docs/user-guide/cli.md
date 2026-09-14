@@ -2,7 +2,7 @@
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md
-upstream_blob: 2ca8cf6a700d005c6cd18b08d69b10308189a90c
+upstream_blob: de96e94bee504fe60f24c1dbce23d854d861d274
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/cli
 ---
@@ -71,11 +71,19 @@ hermes -w -z "Fix issue #123"     # Single query in worktree
 
 ```bash
 hermes worktree list              # audit: age, size, verdict, reason per tree
+hermes worktree list --json       # machine-readable audit (trees, external trees, branches)
 hermes worktree prune             # remove safe trees + delete merged branches
 hermes worktree prune --dry-run   # show the plan without changing anything
+hermes worktree prune --older-than 7   # only reap trees idle for 7+ days
 hermes worktree prune --trees-only     # leave local branches alone
 hermes worktree prune --branches-only  # leave worktrees alone
 ```
+
+`.worktrees/` の**外**に登録された作業ツリー（手で作ったものや、別のツールが作ったもの）は、
+`list` の出力に読み取り専用として表示されるだけで、消されることはありません。唯一の例外は
+管理情報です。ディレクトリがもう存在しない登録は `git worktree prune` で取り除かれます
+（ファイルには一切触りません）。`--older-than DAYS` は回収の対象を絞り込む方向にしか働きません。
+実際の作業が残っているツリーは、この指定にかかわらず、どれだけ古くても残ります。
 
 セッションの中では `/worktree prune [--dry-run]` が同じことをします（そのセッション自身が
 動いているツリーには決して触りません）。

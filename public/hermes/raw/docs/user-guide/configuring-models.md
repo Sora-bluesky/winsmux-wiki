@@ -2,7 +2,7 @@
 title: "モデルの設定"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: c200d46b813b97dfb333ac858af61344be8cb260
+upstream_blob: e2f501c8f0d5202cd203d64fae101162a630dc04
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---
@@ -59,6 +59,17 @@ Main model の行で **Change** をクリックします。
 :::warning 途中で切り替えるとプロンプトキャッシュが失われます
 プロンプトのキャッシュはリクエストを処理するモデルに紐づいています。そのため会話の途中でモデルが変わると — 明示的な `/model` での切り替えでも、[自動の切り替え](/hermes/docs/user-guide/features/fallback-providers/)でも、[認証情報プール](/hermes/docs/user-guide/features/credential-pools/)による別アカウントへの持ち回りでも — 次のメッセージは会話全体を、キャッシュ時の割引価格（およそ 75〜90% 引き）ではなく、入力トークンの正規料金で読み直すことになります。長いセッションでは、この一度きりの読み直しが、2 つのモデルのトークン単価の差をはるかに上回ることがあります。必要なときは切り替えて構いませんが、会話の早いうちか、新しいセッションを始めた直後にするのがおすすめです。
 :::
+
+この一度きりの読み直しの費用があるため、動いているセッションがすでに大きなコンテキストを抱えている場合（既定は **100,000 トークン**。プロバイダーが直近に課金したプロンプトの大きさで測ります）、Hermes はセッションの途中での切り替えを反映する前に **明示的な確認** を求めます。この確認は、高価なモデルやデータ学習の警告と同じ選択時の確認プロンプトで、動いているセッションを切り替えるすべての場面に出ます。CLI と TUI の `/model` コマンドと選択画面、そしてエージェントが動いているチャットでゲートウェイに打ち込んだ `/model` です。`config.yaml` で調整したり無効にしたりできます。
+
+```yaml
+model:
+  # Ask before mid-session switches when the session exceeds this many
+  # context tokens (the next reply re-reads them uncached). 0 disables.
+  switch_context_confirm_tokens: 100000
+```
+
+いま使っているモデルを選び直したときは確認が出ません（キャッシュは温まったままです）。また、コンテキストを測っていないセッション（新しいセッションや、動いているセッションではない画面）は対象外です。
 
 ### 無人運転とデータ学習の料金帯 {#unattended-data-training-tiers}
 
@@ -362,7 +373,9 @@ hermes config set model.aliases.grok x-ai/grok-4
 hermes model            # Interactive provider + model picker (the canonical way to switch defaults)
 ```
 
-`hermes model` は、プロバイダを選び、認証を済ませ（OAuth ならブラウザが開き、API キーのプロバイダならキーの入力を求められます）、そのプロバイダの厳選された一覧から具体的なモデルを選ぶまでを案内します。選んだ内容は `~/.hermes/config.yaml` の `model.provider` と `model.default` に書かれます。
+`hermes model` は、プロバイダを選び、認証を済ませ（OAuth ならブラウザが開き、API キーのプロバイダならキーの入力を求められます）、そのプロバイダの厳選された一覧から具体的なモデルを選ぶまでを案内します。選んだ内容は `~/.hermes/config.yaml` の `model.provider` と `model.default` に書かれます。新しいモデルを保存すると、続いて推論の強さを決める手順に進みます（`minimal` から `ultra` までの段階、**Disable reasoning**、または今の値を保つ **Skip**）。選んだ値は `agent.reasoning_effort` に書かれます。カタログで推論の調整ができないとされているモデルでは、この手順は飛ばされます。プロバイダの一覧には、強さだけを変える **Reasoning effort for the current model...** の行もあります。
+
+**Configure auxiliary models...** を選ぶと、仕事ごとに脇で使うモデルの選択画面（画像の読み取り、圧縮、承認、委任など）が開きます。どの仕事でも、プロバイダ → モデルを選んだ最後に同じ強さの手順が続き、`auxiliary.<task>.reasoning_effort`（委任なら `delegation.reasoning_effort`）に保存されます。ここには、段階の判断をプロバイダに任せる **Provider default** の行が加わります。設計上 `reasoning_effort` のキーを持たない仕事（MoA の枠、記憶検索の問い合わせの書き換え）では、この手順は飛ばされます。
 
 選択画面を出さずにプロバイダやモデルを一覧したい場合は、ダッシュボードか、後述の REST エンドポイントを使ってください。いま CLI が実際に使う設定を確かめるには `hermes config get model --json` と `hermes status` を実行します。
 

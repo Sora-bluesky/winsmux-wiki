@@ -1,6 +1,303 @@
 {
-  "generatedAt": "2026-09-14",
+  "generatedAt": "2026-09-15",
   "entries": [
+    {
+      "date": "2026-09-14",
+      "sha": "26ec2c7",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/acp-internals",
+          "title": "ACP の内部",
+          "url": "/hermes/docs/developer-guide/acp-internals/"
+        },
+        {
+          "id": "developer-guide/adding-platform-adapters",
+          "title": "プラットフォームアダプターを追加する",
+          "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
+        },
+        {
+          "id": "developer-guide/adding-providers",
+          "title": "プロバイダーを追加する",
+          "url": "/hermes/docs/developer-guide/adding-providers/"
+        },
+        {
+          "id": "developer-guide/billing-lifecycle",
+          "title": "課金のライフサイクル（TUI）",
+          "url": "/hermes/docs/developer-guide/billing-lifecycle/"
+        },
+        {
+          "id": "developer-guide/chronos-managed-cron-contract",
+          "title": "Chronos managed-cron の契約",
+          "url": "/hermes/docs/developer-guide/chronos-managed-cron-contract/"
+        },
+        {
+          "id": "developer-guide/cron-internals",
+          "title": "cron の内部構造",
+          "url": "/hermes/docs/developer-guide/cron-internals/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトッププラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/egress-internals",
+          "title": "送信プロキシの内部構造",
+          "url": "/hermes/docs/developer-guide/egress-internals/"
+        },
+        {
+          "id": "developer-guide/gateway-internals",
+          "title": "ゲートウェイの内部",
+          "url": "/hermes/docs/developer-guide/gateway-internals/"
+        },
+        {
+          "id": "developer-guide/gateway-monitoring",
+          "title": "ゲートウェイの監視",
+          "url": "/hermes/docs/developer-guide/gateway-monitoring/"
+        },
+        {
+          "id": "developer-guide/gateway-session-lifecycle",
+          "title": "ゲートウェイのセッションライフサイクル",
+          "url": "/hermes/docs/developer-guide/gateway-session-lifecycle/"
+        },
+        {
+          "id": "developer-guide/memory-provider-plugin",
+          "title": "メモリープロバイダープラグイン",
+          "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/micro-compaction",
+          "title": "マイクロ圧縮",
+          "url": "/hermes/docs/developer-guide/micro-compaction/"
+        },
+        {
+          "id": "developer-guide/middleware",
+          "title": "ミドルウェア",
+          "url": "/hermes/docs/developer-guide/middleware/"
+        },
+        {
+          "id": "developer-guide/multiplexing-gateway",
+          "title": "Multiplexing Gateway の内部構造",
+          "url": "/hermes/docs/developer-guide/multiplexing-gateway/"
+        },
+        {
+          "id": "developer-guide/observer-hooks",
+          "title": "オブザーバーフック",
+          "url": "/hermes/docs/developer-guide/observer-hooks/"
+        },
+        {
+          "id": "developer-guide/programmatic-integration",
+          "title": "外部プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "developer-guide/provider-runtime",
+          "title": "実行時のプロバイダー解決",
+          "url": "/hermes/docs/developer-guide/provider-runtime/"
+        },
+        {
+          "id": "developer-guide/relay-connector-contract",
+          "title": "Relay ↔ Connector 契約",
+          "url": "/hermes/docs/developer-guide/relay-connector-contract/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "developer-guide/state-db-recovery",
+          "title": "state.db の復旧",
+          "url": "/hermes/docs/developer-guide/state-db-recovery/"
+        },
+        {
+          "id": "developer-guide/streaming-tts",
+          "title": "ストリーミング TTS の内部構造",
+          "url": "/hermes/docs/developer-guide/streaming-tts/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "guides/oauth-over-ssh",
+          "title": "SSH / リモートホスト越しの OAuth",
+          "url": "/hermes/docs/guides/oauth-over-ssh/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLI コマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/mcp-config-reference",
+          "title": "MCP 設定の早見表",
+          "url": "/hermes/docs/reference/mcp-config-reference/"
+        },
+        {
+          "id": "reference/optional-skills-catalog",
+          "title": "オプションスキルの一覧",
+          "url": "/hermes/docs/reference/optional-skills-catalog/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/egress/network-isolation",
+          "title": "外向き通信の分離（Docker）",
+          "url": "/hermes/docs/user-guide/egress/network-isolation/"
+        },
+        {
+          "id": "user-guide/features/computer-use",
+          "title": "コンピュータ操作",
+          "url": "/hermes/docs/user-guide/features/computer-use/"
+        },
+        {
+          "id": "user-guide/features/credential-pools",
+          "title": "認証情報プール",
+          "url": "/hermes/docs/user-guide/features/credential-pools/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "出来事のフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/kanban-multi-gateway",
+          "title": "Kanban を複数ゲートウェイで運用する",
+          "url": "/hermes/docs/user-guide/features/kanban-multi-gateway/"
+        },
+        {
+          "id": "user-guide/features/kanban",
+          "title": "かんばん（複数エージェントの盤）",
+          "url": "/hermes/docs/user-guide/features/kanban/"
+        },
+        {
+          "id": "user-guide/features/mcp",
+          "title": "MCP（Model Context Protocol）",
+          "url": "/hermes/docs/user-guide/features/mcp/"
+        },
+        {
+          "id": "user-guide/features/memory",
+          "title": "ずっと残る記憶",
+          "url": "/hermes/docs/user-guide/features/memory/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/web-search",
+          "title": "Web 検索と本文抽出",
+          "url": "/hermes/docs/user-guide/features/web-search/"
+        },
+        {
+          "id": "user-guide/messaging/a2a",
+          "title": "A2A（エージェント間連携）",
+          "url": "/hermes/docs/user-guide/messaging/a2a/"
+        },
+        {
+          "id": "user-guide/messaging/discord",
+          "title": "Discord",
+          "url": "/hermes/docs/user-guide/messaging/discord/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/matrix",
+          "title": "Matrix",
+          "url": "/hermes/docs/user-guide/messaging/matrix/"
+        },
+        {
+          "id": "user-guide/messaging/slack",
+          "title": "Slack",
+          "url": "/hermes/docs/user-guide/messaging/slack/"
+        },
+        {
+          "id": "user-guide/messaging/webhooks",
+          "title": "Webhook",
+          "url": "/hermes/docs/user-guide/messaging/webhooks/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-dream-loop",
+          "title": "Dream Loop — コンセプトアートに近づける反復で、見事な 3D シーンを作る",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-dream-loop/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-mono-color",
+          "title": "Mono Color — 1色または2色刷りの、編集デザイン調の印刷ポスター画像を作る",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-mono-color/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-system-atlas",
+          "title": "System Atlas — 見て回れるアイソメトリックの構成アトラスを HTML で作る",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/"
+        },
+        {
+          "id": "user-guide/skills/optional/software-development/software-development-pr-lens",
+          "title": "Pr Lens — コードの変更を、動く構成図・データフロー図の SVG として描く",
+          "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-pr-lens/"
+        }
+      ]
+    },
     {
       "date": "2026-09-13",
       "sha": "52ea80f",

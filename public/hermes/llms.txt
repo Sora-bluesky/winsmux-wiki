@@ -354,6 +354,7 @@ Hermes Agent 0.21.0
 - [user-guide/skills/optional/blockchain/blockchain-hyperliquid（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid/)
 - [user-guide/skills/optional/blockchain/blockchain-solana（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/blockchain/blockchain-solana/)
 - [user-guide/skills/optional/communication/communication-one-three-one-rule（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/communication/communication-one-three-one-rule/)
+- [user-guide/skills/optional/creative/creative-ai-presenter-video（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-ai-presenter-video/)
 - [user-guide/skills/optional/creative/creative-archify（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-archify/)
 - [user-guide/skills/optional/creative/creative-ascii-art（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/)
 - [user-guide/skills/optional/creative/creative-audiocraft-audio-generation（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/)
@@ -487,6 +488,7 @@ Hermes Agent 0.21.0
 - [user-guide/skills/optional/web-development/web-development-har-derived-api-client（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client/)
 - [user-guide/skills/optional/web-development/web-development-page-agent（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/)
 - [user-guide/skills/optional/web-development/web-development-publish-site（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/)
+- [user-guide/skills/optional/web-development/web-development-scrollcraft（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-scrollcraft/)
 - [user-guide/skills/optional/yuanbao/yuanbao-yuanbao（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao/)
 - [user-guide/tui（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
 - [user-guide/which-file-does-what（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/which-file-does-what/)
@@ -825,6 +827,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/blockchain/blockchain-solana.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/communication/communication-one-three-one-rule.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-ai-presenter-video.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-archify.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-ascii-art.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation.md
@@ -958,6 +961,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/web-development/web-development-page-agent.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/web-development/web-development-publish-site.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/web-development/web-development-scrollcraft.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/tui.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/which-file-does-what.md

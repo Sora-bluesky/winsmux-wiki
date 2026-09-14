@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: ced57f8f301eb22fe9f15990ef9f66429773d33c
+upstream_blob: 9e0121e03a9ac37ec20a04fb22395ef7020f85ad
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -62,6 +62,7 @@ hermes skills uninstall <skill-name>
 
 | スキル | 説明 |
 |-------|-------------|
+| [**ai-presenter-video**](/hermes/docs/user-guide/skills/optional/creative/creative-ai-presenter-video/) | 台本と画像から、検証済みの AI プレゼンター動画を作ります。 |
 | [**archify**](/hermes/docs/user-guide/skills/optional/creative/creative-archify/) | 検証済みの対話型 HTML ダイアグラムを作ります。上流で保守されています。 |
 | [**ascii-art**](/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/) | アスキーアート。pyfiglet、cowsay、boxes、画像からの変換に対応します。 |
 | [**audiocraft-audio-generation**](/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/) | AudioCraft。MusicGen で文章から音楽を、AudioGen で文章から効果音を作ります。 |
@@ -282,6 +283,7 @@ hermes skills uninstall <skill-name>
 | [**har-derived-api-client**](/hermes/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client/) | サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こします。 |
 | [**page-agent**](/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/) | ウェブアプリの画面に、言葉で操作できる相棒を組み込みます。 |
 | [**publish-site**](/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/) | GitHub / Cloudflare / Netlify Pages へ、版を管理しながらサイトを公開します。 |
+| [**scrollcraft**](/hermes/docs/user-guide/skills/optional/web-development/web-development-scrollcraft/) | スクロールで動く上質なランディングページを作ります。スクロールがそのままタイムラインになります。 |
 
 ## yuanbao {#yuanbao}
 

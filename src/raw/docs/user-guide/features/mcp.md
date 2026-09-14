@@ -2,7 +2,7 @@
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: e33d42b98bf81dabf995d14675dfed60b7aac3d4
+upstream_blob: 45d7364f0c7bb5974be0aa4f4445a8f7241a0052
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -58,6 +58,11 @@ Hermes は MCP サーバーの道具を見つけて、ほかの道具と同じ�
 
 Hermes には、Nous のスタッフが目を通して取り込んだ MCP サーバーの一覧が
 付いています。最初はどれも無効なので、本当に使いたいものだけ入れてください。
+
+デスクトップアプリなら、「Linear の MCP を追加して」と頼むこともできます。エージェントが
+`mcp: true` を対象にして `manage_connections` を呼ぶと、チャットに承認のカードが表示され、
+インストールを押すと CLI と同じ設定が書き込まれます。CLI やメッセージアプリでは、エージェントが
+代わりに下のコマンドを案内します。
 
 ```bash
 hermes mcp                # interactive picker (default)
@@ -267,6 +272,8 @@ mcp_servers:
 ```
 
 最初につなぐとき、Hermes は認可の URL を表示し、できればブラウザを開いて、手元のループバックのポートで OAuth の戻りを待ちます。トークンは `~/.hermes/mcp-tokens/<server>.json` に 0o600 の権限で保存され、更新に失敗するまでは次回以降そのまま静かに使い回されます。
+
+更新トークンは、それを発行した認可サーバーにひも付けられます。Hermes はキャッシュしたトークンと一緒に、見つけた発行元（issuer）を記録します。サーバーが案内する認可サーバーが変わった場合（サーバーの移転、メタデータの書き換え、乗っ取りなど）、保存していた更新トークンは新しい発行元へ送らずに捨てます。いまのアクセストークンは期限が切れるまでそのまま使え、そのあと新しい発行元に対してふつうの認可をやり直します。
 
 **遠隔のホストや、画面のないホストの場合。** Hermes がブラウザとは別の端末で動いているときは、ループバックの戻り先が手元のパソコンに届きません。それでも認証を終える方法があります。
 

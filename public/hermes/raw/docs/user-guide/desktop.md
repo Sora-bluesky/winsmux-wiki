@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "Hermes のネイティブなデスクトップアプリ。ツール出力のストリーミング、横並びのプレビュー、ファイルブラウザー、音声、cron、プロファイル、スキル、設定を備えた、作り込まれた対話環境です。macOS、Windows、Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: bee47e4c6e20e93ef7e292ffb7b3efd65c8f9f66
+upstream_blob: d360173c6698c791728fef9e75e6b4b70fef6e2a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -11,7 +11,7 @@ sources:
 
 Hermes のデスクトップアプリは、CLI やゲートウェイで使うのと**同じ**エージェントを中心に作られたネイティブアプリです。設定も、API キーも、セッションも、スキルも、記憶も同じものを使います。別製品でも軽量な複製でもありません。同じ Hermes Agent の中核と設定をそのまま使い、現代的で丁寧に設計された画面から動かします。ターミナルで `hermes` を使ったことがあるなら、そこで整えたものはすでにここにありますし、ここでやったことはあちらにも現れます。
 
-**macOS、Windows、Linux** で動きます。
+**macOS（Apple Silicon）、Windows、Linux** で動きます。対応状況の全体は[プラットフォームの対応状況](/hermes/docs/getting-started/platform-support/)を参照してください。
 
 :::tip どの窓口がどれなのか
 Hermes には、同じエージェントにつながる窓口がいくつかあります。
@@ -71,6 +71,13 @@ hermes desktop
 - **表示項目のカスタマイズ** — ステータスバーを右クリック（**Show in status bar**）して、何を出すかを選べます。コンテキストのメーター、キャッシュ命中率、1 秒あたりのトークン数、作業スペース、モデル、承認、ターンとセッションの時間、ターミナル、Command Center、バックエンドのバージョン、ほか多数です。バー自体を隠すこともできます（**Cmd/Ctrl+Shift+S** で切り替わります）。
 
 同梱の手元バックエンドではなく、別の端末で動く Hermes に対して対話しますか。下の[リモートのバックエンドにつなぐ](#connecting-to-a-remote-backend)を参照してください。リモートで動かすダッシュボードへの接続のしくみ全体（認証の関門、`/api/ws` の対話用ソケット、WebSocket の切断コードの切り分け）については、[Web ダッシュボード → Hermes Desktop をリモートのバックエンドにつなぐ](/hermes/docs/user-guide/features/web-dashboard/#connecting-hermes-desktop-to-a-remote-backend)を参照してください。
+
+#### フォント {#fonts}
+
+**Settings → Appearance** には、互いに独立した 2 つのフォント設定があります。どちらもプロファイルごとに `config.yaml` へ保存されます。
+
+- **Chat Font**（`desktop.font_family`）— 対話と、アプリのそれ以外の画面に使われます。OpenDyslexic や Atkinson Hyperlegible のような読みやすさを重視した書体は、システムに導入すればすぐに使えます。選んだ書体の後ろには使用中のテーマのフォント指定が控えているので、足りない文字も表示されます。空欄にするとテーマのフォントになります。
+- **Terminal Font**（`terminal.font_family`）— 組み込みのターミナルのペインに使われます。Nerd Font なら、ここでシェルのアイコンが描画されます。空欄にすると同梱の JetBrains Mono になります。
 
 #### リポジトリの検出 {#repository-discovery}
 
@@ -187,6 +194,7 @@ desktop:
 - **ターミナルのフォント選択** — **Settings → Appearance** で、導入済みのフォントを選べます。`MesloLGS NF` のような Nerd Font なら、対話用とエージェント用のどちらのターミナルでも Powerlevel10k の区切りやアイコンが描画されます。この設定はプロファイルごとに保存されます。
 - **起動時に前回の対話を開く** — 既定では、冷えた状態からの起動でも前回の続きから始まります。常に新しい対話で始めたい場合は **Settings → Appearance** で切るか、`config.yaml` に `display.resume_last_session: false` を設定してください。ディープリンクや明示的な行き先は、どちらの設定でも上書きされません。
 - **補助モデルの警告** — 補助タスク（題名付け、要約などの手伝い）が別のプロバイダーに固定されたまま、主モデルを新しいプロバイダーへ切り替えようとすると、アプリが警告します。知らないうちに 2 つのプロバイダーへ仕事が分かれてしまうのを防ぐためです。
+- **仕事ごとの推論の強さ** — **Settings → Model → Auxiliary models** の各行には、プロバイダーとモデルの選択の隣に推論の選択欄があります。段階を選ぶか、**Off**、または **inherit · main model effort**（既定値で、その仕事の上書きを取り除きます）を選べます。`config.yaml` の `auxiliary.<task>.reasoning_effort` に保存され、`hermes model` が書くのと同じキーです。設定すると行の要約にも表示されます。圧縮や題名付けのように頻繁に動く手伝いは推論を低くするか切り、主エージェントは高いままにする、といった使い方ができます。
 - **VS Code Marketplace のテーマ** — 内蔵のテーマの組み合わせに加えて、外観の設定から VS Code Marketplace をその場で検索できます。好きな配色テーマを選ぶと、アプリがダウンロードして変換し、デスクトップ用のテーマとして導入します。同じ取り込み機能はコマンドパレット（*Install theme*）からも使え、取り込んだテーマは外観の設定から削除できます。
 - **コンピューターを起こしたままにする** — **Settings → Advanced → Keep computer awake** は、端末がスリープに入るのを止めるので、長時間や夜通しのエージェントの実行が続きます（画面は暗くなることがあります）。これは端末ごとの設定です。
 

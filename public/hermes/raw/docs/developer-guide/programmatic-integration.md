@@ -2,7 +2,7 @@
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 449c009d79aad6b5cc9101b6f50f4f9d9d16bffc
+upstream_blob: 434489b1075a641cf73985b3e7b19f288b9b9e8b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -49,8 +49,7 @@ session.create          session.list            session.active_list
 session.activate        session.close           session.interrupt
 session.history         session.compress        session.branch
 session.title           session.usage           session.status
-clarify.respond         sudo.respond            secret.respond
-approval.respond        config.set / config.get commands.catalog
+clarify.lock            config.set / config.get commands.catalog
 command.resolve         command.dispatch        cli.exec
 reload.mcp              reload.env              process.stop
 delegation.status       subagent.interrupt      subagent.steer
@@ -79,7 +78,20 @@ terminal.resize         clipboard.paste         image.attach
 
 ### 返ってくるイベント {#events-streamed-back}
 
-`message.delta`、`message.complete`、`tool.start`、`tool.generating`、`tool.complete`、`approval.request`、`clarify.request`、`sudo.request`、`sudo.expire`、`secret.request`、`secret.expire`、`gateway.ready` に加えて、セッションのライフサイクルとエラーのイベントが流れてきます。期限切れのイベントには元の `{ request_id }` が入っているので、外部のホストは対応する保留中の要求だけを消してください。
+`message.delta`、`message.complete`、`tool.start`、`tool.generating`、`tool.complete`、`gateway.ready`、`request.cancel` に加えて、セッションのライフサイクルとエラーのイベントが流れてきます。
+
+### サーバーからクライアントへの要求（エージェントからの質問） {#serverclient-requests-questions-the-agent-asks-you}
+
+承認、確認の質問、sudo やシークレットの入力、保管庫のロック解除、MCP の設定、デスクトップの読み取り・操作の橋渡しは、イベントではなく **ゲートウェイからクライアントへ送られる JSON-RPC の要求** です。フレームには文字列の id が入っていて、クライアントは同じ id を付けた通常の JSON-RPC 応答で答えます。
+
+```
+← {"jsonrpc":"2.0","id":"srq-7","method":"approval","params":{"session_id":"…","request_id":"…","command":"rm -rf build","description":"…"}}
+→ {"jsonrpc":"2.0","id":"srq-7","result":{"choice":"once"}}
+```
+
+メソッドと返す値は次のとおりです。`approval` → `{choice}`。`clarify` → `{answer}`（単一の質問）、または `{answers}` / 取り消しなら `{}`（まとめて聞く場合。`clarify.lock` で答えを 1 つ先に確定できます）。`sudo`、`secret`、`vault.code`、`vault.unlock` → `{value}`。`connection` → `{settled_by, targets}`（`manage_connections` のカードで、対象ごとに結果が 1 つ）。`terminal.read`、`window.read`、`preview.act`、`tour` → `{value}`（JSON のテキスト）。ホストが実装していないメソッドには JSON-RPC のエラー（`-32601`）を返してください。そうすればエージェントはタイムアウトまで待たずにすぐ失敗を受け取れます。
+
+ゲートウェイが質問を取り下げたとき（タイムアウト、中断、別の画面で回答済みなど）は `request.cancel` `{ id, method, reason }` が送られてきます。対応する質問だけを消してください。`session.resume` / `session.activate` の結果と `session.events.since` には、まだ開いているフレームの一覧 `open_requests` が入っているので、再接続したクライアントはそれを表示し直し、そのまま答えることもできます。
 
 ### Pi 方式の RPC との対応 {#pi-style-rpc-mapping}
 
@@ -97,7 +109,7 @@ Pi-mono の RPC 仕様（[issue #360](https://github.com/NousResearch/hermes-age
 | `get_messages` | `session.history` |
 | `switch_session` | `session.resume` |
 | `fork` | `session.branch` |
-| `ui_request` / `ui_response` | `clarify.respond` / `sudo.respond` / `secret.respond` / `approval.respond` |
+| `ui_request` / `ui_response` | サーバーからクライアントへの要求 `clarify` / `sudo` / `secret` / `approval` に、JSON-RPC の応答フレームで答える |
 
 ---
 

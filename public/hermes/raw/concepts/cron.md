@@ -4,7 +4,7 @@ description: 定時実行。「毎朝7時にニュースをまとめて」のよ
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
   - https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron
-hermes_version: "0.21.2"
+hermes_version: "0.21.3"
 confidence: high
 raw: /hermes/raw/concepts/cron.md
 ---

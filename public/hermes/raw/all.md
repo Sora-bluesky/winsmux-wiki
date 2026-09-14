@@ -4,7 +4,7 @@ description: 公式 docs の全 URL の索引。正本は公式。
 sources:
   - https://hermes-agent.nousresearch.com/docs/
   - https://hermes-agent.nousresearch.com/docs/llms.txt
-hermes_version: "0.21.2"
+hermes_version: "0.21.3"
 confidence: high
 raw: /hermes/raw/all.md
 ---

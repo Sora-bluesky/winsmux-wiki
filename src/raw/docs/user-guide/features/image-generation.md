@@ -2,7 +2,7 @@
 title: "画像生成"
 description: "FAL.ai 経由で画像を生成します。FLUX 2、GPT Image（1.5 と 2）、Nano Banana Pro、Ideogram、Recraft V4 Pro、Krea 2 など 11 モデルに対応し、`hermes tools` で選べます。"
 upstream_path: user-guide/features/image-generation.md
-upstream_blob: 862ee885d19f831ee240261eee53ec7867ba78e3
+upstream_blob: c5a753eb425119e7db3192c8996629643dfad903
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/image-generation
 ---
@@ -187,10 +187,10 @@ hermes config set image_gen.openai.model gpt-image-2.5-flare
 [Flare](https://developers.openai.com/api/docs/models/gpt-image-2.5-flare) と
 [Sunburst](https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst) の資料を見てください。
 
-**OpenAI (Codex auth)** の事業者は別扱いのままです。こちらの裏側は画像モデルの指定を
-受け取っても、その指定どおりに動くとは限りません。画像が 1 枚うまくできたからといって、
-Flare や Sunburst に振り分けられた証拠にはならないということです。この 2 つは OpenAI API 直結の
-事業者と FAL で提供していて、Codex 認証で確認済みの選択肢としては出していません。
+**OpenAI (Codex auth)** の事業者では 2.5 を選べません。Codex の裏側は、どんな `model` の値でも
+（存在しない ID でさえ）受け付けたうえで、サーバー側が管理する自前の仕組みで画像を作ります。
+そのため Flare や Sunburst を「選んだ」としても、名前が付くだけで何の効果もありません。
+2.5 を使うなら、OpenAI API 直結の事業者か FAL を選んでください。
 
 ## 使い方 {#usage}
 
@@ -236,7 +236,7 @@ Blend these two product shots into one hero image → <image1> <image2>
 | **OpenAI**（GPT Image 2 / 2.5 Flare / Sunburst） | ✓ | 最大 16 枚 | `images.edit()` |
 | **xAI**（Grok Imagine） | ✓ | 1 枚 | `/v1/images/edits`（`grok-imagine-image-quality`） |
 | **Krea**（`Krea 2`） | ✓ | 最大 10 枚 | 参考画像にならった生成（`image_style_references`） |
-| **OpenAI (Codex auth)** | ✓ | 最大 16 枚 | Codex Responses の `image_generation` 道具に `input_image` の内容を渡します |
+| **OpenAI (Codex auth)** | ✓ | 最大 16 枚 | `POST /backend-api/codex/images/edits` に、`images[]` の data URL を直接埋め込んで送ります（リモートの URL は手元で取得してから渡します） |
 | **OpenRouter**（Image API のモデル） | ✓ | 最大 14〜16 枚（モデルによる） | `POST /images/generations` の `input_references`。チャット経由のモデルは `image_url` の内容を使います（3 枚まで） |
 
 編集の窓口を持つ FAL のモデルは `flux-2/klein/9b`、`flux-2-pro`、
@@ -245,14 +245,15 @@ Blend these two product shots into one hero image → <image1> <image2>
 `krea/*`）は画像の入力を受け付けず、編集できるモデルを使うよう
 はっきり示すエラーを返します。
 
-:::note OpenAI (Codex auth) は「うまくいけば」の扱いです
+:::note OpenAI (Codex auth): 画質とサイズは裏側が決めます
 
-Codex の窓口（`chatgpt.com/backend-api/codex`）では `image_generation` が
-チャットモデルの側から呼び出せる道具として置かれていて、Hermes からその呼び出しを
-強制できません。ホスト側の道具に対しては `tool_choice` のどの書き方も裏側が受け付けないので、
-指示文でモデルを誘導するしかないのです。モデルが道具を呼ばずに終えると、
-その呼び出しは `empty_response` で失敗します。そもそもこのホスト側の画像の道具に
-届くかどうかも、アカウントによって違うという報告があります。画像生成を確実に動かしたいなら、
+Hermes は Codex の裏側にある専用の
+`images/generations` / `images/edits` の窓口へ直接送ります（公式の Codex クライアントと同じ経路です）。
+そのためチャットモデルは間に入らず、ChatGPT のプランでいまどのチャットモデルが使えるかにも左右されません。
+ただし裏側は `model`、`quality`、`size` を目安としてしか扱わず、頼んだものとは違う画質の段階や
+縦横の形で返してくることがあります（縦長を頼んでも正方形で返ることがあります）。結果には、頼んだ値と並べて
+`reported_quality`、`reported_size`、`pixel_size` が入り、OpenAI のサポートに問い合わせるための
+`imagegen_request_id` も付きます。画質とサイズをきっちり決めたいなら、
 **OpenAI**（API キー）、**FAL**、**xAI** のいずれかを設定してください。
 
 :::

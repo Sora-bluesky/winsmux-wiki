@@ -2,7 +2,7 @@
 title: "画像生成プロバイダのプラグイン"
 description: "Hermes Agent 向けに画像生成のバックエンドのプラグインを作る方法"
 upstream_path: developer-guide/image-gen-provider-plugin.md
-upstream_blob: a42aa3c97459ba07d622d9659faab085f854ca70
+upstream_blob: ea4dc7051607aab902e54f3805c6ee507aad75ad
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/image-gen-provider-plugin
 ---
@@ -297,7 +297,7 @@ hermes -z "Generate an image of a corgi in a spacesuit"
 
 - **`plugins/image_gen/openai/__init__.py`** — gpt-image-2 を low / medium / high の3段階に分け、`quality` の指定だけを変えて1つの API モデルを共有する3つの仮想モデル ID として見せています。1つのバックエンドの中で段階を分ける書き方と、config.yaml の優先順位の連なりの良い例です。
 - **`plugins/image_gen/xai/__init__.py`** — xAI 経由の Grok Imagine。形はだいぶ違います（URL で返り、一覧も単純です）。
-- **`plugins/image_gen/openai-codex/__init__.py`** — Codex 形式の Responses API 版。OpenAI の SDK をそのまま使い、振り分け先のベース URL だけを変えています。
+- **`plugins/image_gen/openai-codex/__init__.py`** — カタログは `openai` と同じですが、ChatGPT/Codex の OAuth トークンで認証し、素の `httpx` で Codex バックエンド本来の `images/generations` / `images/edits` エンドポイントへ送信します。参照元のリモート画像をクライアント側で取得して data URL として埋め込む例、そしてバックエンドが返したメタデータをリクエストとは分けて報告する例として参考になります。
 
 ## pip で配る {#distribute-via-pip}
 

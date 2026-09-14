@@ -2,7 +2,7 @@
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: 3d2c49bd66ae46bf3dde1611d3ba50c7c1fe8a14
+upstream_blob: 51f7bb1121e2a489e6a835d98b86d861babc35d2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -105,6 +105,26 @@ delegate_task(
 ```
 
 サブエージェントは、あなたの goal と context から組み立てられた、焦点の絞られたシステムプロンプトを受け取ります。そこには、タスクを終わらせたうえで、何をしたか、何が分かったか、変更したファイル、ぶつかった問題を、決まった形のまとめとして返すよう書かれています。
+
+### サブエージェントに画像を渡す {#forwarding-images-to-a-subagent}
+
+ユーザーが送ってきたスクリーンショット、デザインのモック、描画されたグラフのように、タスクそのものが目で見る性質のものだと、文字の context だけでは足りません。各タスクには、任意で `images` の一覧を渡せます（最大 8 件。手元のファイルパス、`http(s)` の URL、`data:image/...` の URL が使えます）。
+
+```python
+delegate_task(tasks=[{
+    "goal": "Compare the rendered dashboard against the design mock and list layout deviations",
+    "context": "The app runs at http://localhost:3000; the repo is at /home/user/dash.",
+    "images": ["/home/user/mocks/dashboard-v2.png",
+               "https://cdn.example.com/current-render.png"],
+}])
+```
+
+渡し方は、ユーザーが添付した画像と同じ振り分け（`agent.image_input_mode`）に従います。
+
+- **画像を読める子モデル**の場合: 画像は子の最初のターンで、そのままのマルチモーダルの内容として届きます。手元のファイルは data URL として埋め込まれ（ほかのファイル読み込みと同じ読み取りの防壁がかかります）、リモートの URL と `data:` の URL は手を加えずに渡されます。子は実際の画素を見ることになります。
+- **画像を読めない子モデル**の場合: goal に `[Image attached at: <path>]` という手がかりの行が足され、子には `vision_analyze` で中身を確かめるよう指示されます。
+
+画像の受け渡しは「できる範囲で」の扱いです。読めないパスはログに 1 行残して飛ばされ、画像まわりの処理がどこかで失敗しても、画像なしの文字だけの goal に戻ります。子の起動が画像のせいで失敗することはありません。画像は子が*目で見る*必要のあるものに使い、文字のファイルのパスはいつもどおり `context` に書いてください。
 
 ## 実際の例 {#practical-examples}
 

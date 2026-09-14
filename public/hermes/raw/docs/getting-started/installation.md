@@ -2,7 +2,7 @@
 title: "インストール"
 description: "Linux、macOS、WSL2、Windows ネイティブ、Android（Termux）に Hermes Agent を導入する手順"
 upstream_path: getting-started/installation.md
-upstream_blob: 352f88aa2c80d9bf06acdd077f349572aee5ff23
+upstream_blob: 91e6205623a6fb75ff540a98867ae5fc7186f595
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -18,6 +18,10 @@ Hermes Agent は 2 分もかからずに動く状態になります。
 ## 手早く導入する {#quick-install}
 ### macOS / Windows で Hermes Desktop インストーラーを使う（推奨） {#with-the-hermes-desktop-installer-on-macos-or-windows-recommended}
 コマンドライン版とデスクトップ版をまとめて手軽に入れたい場合は、公式サイトから [Hermes Desktop インストーラーをダウンロード](https://hermes-agent.nousresearch.com/) して実行してください。
+
+:::note
+macOS 版のインストーラーは **Apple Silicon 専用** です。x86（Intel）プロセッサーの macOS は [対応プラットフォームに含まれていません](/hermes/docs/getting-started/platform-support/#unsupported)。
+:::
 
 ### Hermes Desktop を使わない場合 {#without-hermes-desktop}
 Hermes Desktop なしでコマンドライン版だけを入れるときは、次を実行します。

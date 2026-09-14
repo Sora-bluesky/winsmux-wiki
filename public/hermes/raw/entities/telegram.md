@@ -3,7 +3,7 @@ title: Telegram から使う
 description: Telegram のチャットから自分の Hermes に話しかける形。窓口の中ではいちばん手軽。
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
-hermes_version: "0.21.2"
+hermes_version: "0.21.3"
 confidence: high
 raw: /hermes/raw/entities/telegram.md
 ---

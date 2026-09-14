@@ -5,16 +5,16 @@ sources:
   - https://hermes-agent.nousresearch.com/docs/reference/skills-catalog
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
   - https://github.com/NousResearch/hermes-agent/tree/main/website/docs/user-guide/skills
-hermes_version: "0.21.2"
+hermes_version: "0.21.3"
 confidence: high
 raw: /hermes/raw/skills.md
 ---
 
 # skill
 
-公式の skill ページ 228 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 230 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `a7254e2`（2026-09-13）時点。この一覧は上流の docs から機械生成しています。
+上流 `40f2702`（2026-09-14）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（83）
 
@@ -106,7 +106,7 @@ raw: /hermes/raw/skills.md
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-08-30 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/) | Use when a fetch fails: 403/429, paywall, WAF, bot wall | 2026-08-30 |
 
-## あとから入れる（144）
+## あとから入れる（146）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -122,6 +122,7 @@ raw: /hermes/raw/skills.md
 | [Hyperliquid](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid/) | Hyperliquid market data, account history, trade review | 2026-08-30 |
 | [Solana](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-solana/) | Query Solana wallets, tokens, txs, and NFTs in USD | 2026-08-30 |
 | [One Three One Rule](/hermes/docs/user-guide/skills/optional/communication/communication-one-three-one-rule/) | 1-3-1 decision briefs: problem, three options, one pick | 2026-08-30 |
+| [Ai Presenter Video](/hermes/docs/user-guide/skills/optional/creative/creative-ai-presenter-video/) | Make a verified AI presenter video from script + image | 2026-09-13 |
 | [Archify](/hermes/docs/user-guide/skills/optional/creative/creative-archify/) | Validated interactive HTML diagrams, upstream-maintained | 2026-09-10 |
 | [Ascii Art](/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/) | ASCII art: pyfiglet, cowsay, boxes, image-to-ascii | 2026-08-30 |
 | [Audiocraft Audio Generation](/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/) | AudioCraft: MusicGen text-to-music, AudioGen text-to-sound | 2026-08-30 |
@@ -255,6 +256,7 @@ raw: /hermes/raw/skills.md
 | [Har Derived Api Client](/hermes/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client/) | Record a site's XHR into a HAR, derive an HTTP client | 2026-08-30 |
 | [Page Agent](/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/) | Embed an in-page natural-language GUI copilot in web apps | 2026-08-30 |
 | [Publish Site](/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/) | Versioned site deploys to GitHub/Cloudflare/Netlify Pages | 2026-08-30 |
+| [Scrollcraft](/hermes/docs/user-guide/skills/optional/web-development/web-development-scrollcraft/) | Premium scroll-driven landing pages; scroll = timeline | 2026-09-13 |
 | [Yuanbao](/hermes/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao/) | Yuanbao (元宝) groups: @mention users, query info/members | 2026-08-08 |
 
 ## その他（1）

@@ -2,7 +2,7 @@
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: bb916ac822d2616571b5f3dce0a10e30bc13a5b4
+upstream_blob: 6e252e6a1a481fb5371f971252736b6f1a16cb68
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---
@@ -311,7 +311,7 @@ auxiliary:
 
 推論の設定、システムプロンプト、会話の写し全体、ツールの定義は、分身が生まれた時点で親とバイト単位で同じままに保たれます。見直しがプロンプトのキャッシュの先頭部分を使い回せるようにするためです。見直しの考える深さだけを変えると、その一致が崩れてしまいます。同じモデルでの見直しに、推論の強さを別立てにするスイッチはありません。
 
-普段の会話の強さを変えずに見直しの手間を減らしたいなら、`memory.nudge_interval` / `skills.creation_nudge_interval` を調整するか、下に書くやり方で自動の見直しを切るか、見直しを別のモデルへ振り分けてください。別のモデルへの振り分けは要旨を使うので、親の温まった先頭部分を共有しません。そちらのタスクの強さについては別のバグがあり、[#94825](https://github.com/NousResearch/hermes-agent/issues/94825) で追いかけています。ここに挙げた頻度と振り分けの調整では、同じモデルのときの推論を切り離すことはできません。
+普段の会話の強さを変えずに見直しの手間を減らしたいなら、`memory.nudge_interval` / `skills.creation_nudge_interval` を調整するか、下に書くやり方で自動の見直しを切るか、見直しを別のモデルへ振り分けてください。別のモデルへの振り分けは要旨を使うので、親の温まった先頭部分を共有しません。その振り分けでは `auxiliary.background_review.reasoning_effort` が実際に効きます（未設定なら振り分け先プロバイダーの既定値です）。このキーを設定していても見直しが主モデルのままのときは、一度だけ警告が表示されます。ここに挙げた頻度と振り分けの調整では、同じモデルのときの推論を切り離すことはできません。
 
 ### 自動の見直しを切る（`enabled`） {#disabling-automatic-reviews-enabled}
 

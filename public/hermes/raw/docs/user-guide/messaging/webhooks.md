@@ -2,7 +2,7 @@
 title: "Webhook"
 description: "GitHub や GitLab などのサービスからイベントを受け取り、Hermes のエージェント実行を起こす"
 upstream_path: user-guide/messaging/webhooks.md
-upstream_blob: 71c5774a9e4156f414b31b9a315e875098fdc025
+upstream_blob: ca258573edb8b276adf66f69022cc571dc6499bf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks
 ---
@@ -84,6 +84,7 @@ curl http://localhost:8644/health
 | `deliver` | いいえ | 応答の送り先: `github_comment`、`telegram`、`discord`、`slack`、`signal`、`sms`、`whatsapp`、`matrix`、`mattermost`、`homeassistant`、`email`、`dingtalk`、`feishu`、`wecom`、`weixin`、`bluebubbles`、`qqbot`、または `log`（既定）。 |
 | `deliver_extra` | いいえ | 配信の追加設定。キーは `deliver` の種類によって変わります（例: `repo`、`pr_number`、`chat_id`）。値には `prompt` と同じ `{dot.notation}` のテンプレートが使えます。 |
 | `deliver_only` | いいえ | `true` にすると、エージェントを一切通しません。展開後の `prompt` テンプレートが、そのまま配信されるメッセージになります。LLM の費用はゼロで、1 秒未満で届きます。使いどころは[直接配信モード](#direct-delivery-mode)を参照してください。`deliver` に実際の送り先（`log` 以外）が必要です。 |
+| `cron_job` | いいえ | イベントのたびに新しい webhook のエージェントセッションを始める代わりに、既存の cron ジョブ（ID か名前で指定）を起動します。展開後の `prompt` は、その実行限りの一時的な文脈になり、ジョブ自身のプロンプト、スキル、モデル、配信設定が使われます。`deliver_only` とは同時に使えません。[イベントで起動する cron ジョブ](#event-triggered-cron-jobs)を参照してください。 |
 
 ### 全体の例 {#full-example}
 
@@ -387,6 +388,53 @@ hermes webhook subscribe antenna-matches \
 - 直接配信モードでは `skills` は無視されます（エージェントが動かないので、skill を渡す先がありません）。
 - テンプレートの展開は、`{__raw__}` を含めてエージェント経由のときと同じ `{dot.notation}` の書き方です。
 - 重複除去は同じ `X-GitHub-Delivery` / `X-Request-ID` ヘッダーを見ます。同じ ID での再送は `status=duplicate` を返し、再配信はしません。
+
+---
+
+## イベントで起動する cron ジョブ {#event-triggered-cron-jobs}
+
+ルートに `cron_job` を設定すると、イベントが届くたびに**既存の cron ジョブ**を起動できます。決まった間隔で見に行ったり、新しい webhook のエージェントセッションを始めたりする代わりの方法です。これで、予定を組んだどのジョブもイベント駆動の作業に変えられます。予定は取りこぼしを拾うための見回りとして残し（あるいはめったに動かない間隔にして）、実際に何かが変わった瞬間に webhook から起動させる、という使い方です。
+
+しくみは次のとおりです。
+
+1. イベントは、ほかのルートと同じ HMAC 認証、流量制限、`events`/`filters`/`script` によるふるい分け、重複の除去を通ります。
+2. ルートの `prompt` テンプレートがペイロードから展開され、**その実行限りの一時的な文脈**としてジョブに渡されます（`cronjob(action='run', prompt=...)` と同じ経路です。ジョブに保存されたプロンプトが書き換わることはありません）。
+3. ジョブは、スケジューラーが使うのと同じ「多くても一度だけ」の確保を通して起動します。そのため webhook がまとめて届いても、すでに動いているジョブが二重に起動することはなく、出力はジョブ自身の配信先に届きます。
+
+### 例: レビューのフィードバックで PR レビューのジョブを起動する {#example-fire-a-pr-review-job-on-review-feedback}
+
+```yaml
+platforms:
+  webhook:
+    enabled: true
+    extra:
+      routes:
+        pr-feedback:
+          events: ["pull_request_review"]
+          secret: "github-webhook-secret"
+          cron_job: "pr-review-sweeper"        # existing job ID or name
+          prompt: |
+            PR #{number} in {repository.full_name} received new review feedback
+            from {review.user.login}: {review.body}
+```
+
+### CLI から {#via-the-cli}
+
+```bash
+hermes webhook subscribe pr-feedback \
+  --events "pull_request_review" \
+  --cron-job "pr-review-sweeper" \
+  --prompt "PR #{number} received feedback: {review.body}"
+```
+
+ジョブの指定は購読を作るときに検証されるので、打ち間違いはその場で分かります。
+
+### 注意点 {#notes}
+
+- `cron_job` と `deliver_only` は同時に使えません（ルートに両方を設定すると、アダプターは起動しません）。cron ジョブは自分で配信を受け持ちます。
+- `cron_job` のルートでは、ルート側の `deliver`、`deliver_extra`、`skills` の項目は無視され、ジョブ自身の設定が使われます。
+- 一時停止中や無効のジョブは起動しません。イベントはログに記録されて捨てられます。
+- POST はすぐに `202 Accepted` を返し、ジョブは裏で実行されます。
 
 ---
 

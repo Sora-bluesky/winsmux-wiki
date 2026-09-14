@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダ、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 52cfa284031887955ecb8ab134084c473864a408
+upstream_blob: fc70c52a3d8018feed0847d79a421a62b8346528
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -227,6 +227,8 @@ terminal:
 CLI だけの構成ではプロセスごとに 1 回、掃除します。`temp_dir` に既存の絶対パスを
 設定すれば、セッションの一時ファイルを別の場所へ向けられます。ユーザーが設定した
 パスが自動で刈り込まれることはありません。
+
+`desktop.font_family` は、チャットを含む Hermes Desktop の画面全体のフォントを決めます（ターミナルの枠には上のとおり専用のキーがあります）。インストール済みのフォントファミリー名を 1 つ（たとえば `OpenDyslexic` や `Atkinson Hyperlegible`）か、CSS のフォントスタックを指定します。Hermes は使用中のテーマのフォントスタックを後ろに残すので、CJK の文字や絵文字もきちんと表示されます。空の値ならテーマのフォントを使います。**設定 → 外観 → チャットフォント** から編集できます。
 
 `terminal.font_family` は、Hermes Desktop に埋め込まれたターミナルを制御します。ローカルにインストールされたフォントファミリー名を 1 つ（たとえば `MesloLGS NF`）か、CSS のフォントスタックを受け付けます。Hermes は同梱の JetBrains Mono スタックをフォールバックとして後ろに足し、空の値なら既定のままです。同じプロファイル単位の設定は **設定 → 外観 → ターミナルフォント** からも編集できます。Google Fonts のダウンロードやシステムフォントの許可は要りません。
 
@@ -1360,7 +1362,7 @@ Hermes のモデルの枠は — 補助の作業も、圧縮も、フォール�
 
 これは全体に効く `agent.reasoning_effort` の、作業ごとの相棒です。主役のモデルが高価な推論モデルのとき、主役のチャットのふるまいを変えずに、圧縮を `low` で、画像を `none` で走らせて脇の作業の待ち時間と費用を削れます。これは `vision`・`compression`・`title_generation`・`curator` のような補助クライアントの作業に、3 つの補助の伝送方式（chat completions、Codex Responses、Anthropic Messages）すべてで効きます。同じ作業に明示的な `extra_body.reasoning` があれば、この省略記法より優先されます。
 
-**バックグラウンドのレビューは別です。** 同じモデルでのレビューの分岐は、常に親の推論の深さを引き継ぎます。`auxiliary.background_review.reasoning_effort` はその経路では無視されます。親のプロバイダ／モデルを明示的に選んでいるときも同じです。これは、プロンプトのキャッシュを揃えるために、推論の設定・システムプロンプト・会話の丸ごとの写し・ツールの定義をバイト単位で同一に保つためです。同じモデルでのレビューに、深さを独立に切り替えるスイッチはありません。[バックグラウンドのレビューの推論](/hermes/docs/user-guide/features/memory/#same-model-review-reasoning) をご覧ください。別経路へ振り分けた分岐の深さの問題は [#94825](https://github.com/NousResearch/hermes-agent/issues/94825) で追われています。
+**バックグラウンドのレビューは別です。** 同じモデルでのレビューの分岐は、常に親の推論の深さを引き継ぎます。`auxiliary.background_review.reasoning_effort` はその経路では無視されます。親のプロバイダ／モデルを明示的に選んでいるときも同じです。これは、プロンプトのキャッシュを揃えるために、推論の設定・システムプロンプト・会話の丸ごとの写し・ツールの定義をバイト単位で同一に保つためです。同じモデルでのレビューに、深さを独立に切り替えるスイッチはありません。[バックグラウンドのレビューの推論](/hermes/docs/user-guide/features/memory/#same-model-review-reasoning) をご覧ください。レビューを別のプロバイダ／モデルへ振り分けた場合は、`reasoning_effort` がその振り分け先の分岐に適用されます（未設定なら振り分け先のプロバイダの既定値）。このキーを設定しているのにレビューがメインのモデルで動いたときは、Hermes が一度だけ警告を表示します。
 
 **MoA も別の設定を使います。** Mixture-of-Agents の推論の深さは、`moa_reference`／`moa_aggregator` の補助のブロックではなく、MoA のプリセットの中で **枠ごと** に設定します（`moa.presets.<name>.reference_models[].reasoning_effort` / `aggregator.reasoning_effort`）。[Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/) をご覧ください。
 

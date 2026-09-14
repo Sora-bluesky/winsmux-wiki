@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールを、ツールセットごとにまとめた決定版の早見表"
 upstream_path: reference/tools-reference.md
-upstream_blob: 58296c96402c7877fb7f2e21dc85da4aebbadb88
+upstream_blob: 49cff5f2a0b392eaa8a9f5e068e9ede3c61233cc
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -58,6 +58,21 @@ sources:
 - **メッセージングサービス**（Telegram、Discord など）では、これまでどおり 1 問ずつ順番に聞く形になります。途中で返信が止まった場合、残りの質問は送られません。
 
 途中で待ち時間が切れても、すでに確定した答えは残ります。ツールの結果にはその答えと `"timed_out": true` が入り、未回答の項目は空のままになるので、エージェントは「意図して飛ばした」のか「相手がいなくなった」のかを見分けられます。
+
+## `connections` ツールセット {#connections-toolset}
+
+2 種類の外部アプリを 1 つのツールで扱います。対象は、管理コネクタ（`"gmail"` または
+`{"name": "gmail"}`。Nous ゲートウェイ経由で認可します）か、ローカルの MCP サーバー
+（`{"name": "linear", "mcp": true}`。`mcp_servers` の項目）のどちらかです。
+
+| ツール | 説明 | 必要な環境 |
+|------|-------------|----------------------|
+| `manage_connections` | 管理コネクタ向けの操作は `status`、`connect`、`reconnect`（つながっていないものだけを直します。`force: true` なら動いているものも再起動します）です。MCP 向けの操作は `mcp: true` の対象だけに使え、カタログの項目を `install` する、設定済みで無効になっているサーバーを `enable` する、`authorize`（OAuth）する、の 3 つです。デスクトップでは、どの操作でもカードが出て、対象ごとに接続される・飛ばされる・期限が来る、のいずれかになるまで待ちます。結果には対象ごとに `connected`、`skipped`、`not_connected` のどれかが入り、リンクは付きません。カードが出ない画面（CLI、TUI、メッセージング）では、管理コネクタの対象はアプリごとにユーザーが開く `connect_url` を返し、MCP の対象は `unavailable` と、`hermes mcp install <name>` / `hermes mcp login <name>` のコマンドを返します。アカウントの切断や取り消しはできません。 | — |
+
+1 回の呼び出しの期限は 5 分で、呼び出しの開始時にバックエンドが決めます。
+チャットを開き直しても、デスクトップを再起動しても延びません。このツールは、
+Nous Portal がサインイン中のアカウントでコネクタを有効にしている場合（トークンの `managed_tools` クレーム）にだけ現れます。
+ほかのセッションからは見えません。
 
 ## `code_execution` ツールセット {#codeexecution-toolset}
 
@@ -300,7 +315,7 @@ Hermes が出すヒントもこの間隔を共有するので、1 つ出れば 6
 バックエンドは `plugins/video_gen/<name>/` にプラグインとして入っています。
 
 - **xAI Grok-Imagine** — 文章からの動画生成と、画像からの動画生成に対応（SuperGrok の OAuth か `XAI_API_KEY` が必要）。
-- **FAL.ai** — Veo 3.1、Pixverse v6、Kling O3（`FAL_KEY` が必要）。
+- **FAL.ai** — Veo 3.1、Pixverse v6、Kling 3.0 / O3（`FAL_KEY` が必要）。
 - **OpenRouter** — OpenRouter の動画 API にあるすべての生成モデル（Veo 3.1、Sora 2 Pro、Kling 3、Seedance 2、Wan 3、Hailuo 3、Grok Imagine、FLUX 3 Video など）。文章からの動画生成、画像からの動画生成、参照からの動画生成に対応し、一覧とモデルごとの上限はその場で取得します（`OPENROUTER_API_KEY` が必要で、料金は OpenRouter のクレジットから引かれます）。
 - **DeepInfra** — OpenAI 互換の動画エンドポイントを通じた、その場で取得する `video-gen` の一覧（`DEEPINFRA_API_KEY` が必要）。
 
