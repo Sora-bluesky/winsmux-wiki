@@ -77,3 +77,6 @@ Nous Portal のモデル一覧から、価格帯ごとに 6 つ引いたもの�
 難しい依頼だけクラウドに逃がす形も公式が案内しています。ふだんはローカル、失敗したときだけ有料のモデル、という組み方です（[フォールバック](/hermes/docs/user-guide/features/fallback-providers/)、[プロバイダー振り分け](/hermes/docs/user-guide/features/provider-routing/)）。
 
 まだ動かしていない場合は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/) から、よく使うページは [よく使う](/hermes/guide/) にあります。
+
+
+代表的な無料経路と毎日更新する無料モデルの一覧は、[無料枠で使う方法](/hermes/free/)で確認できます。

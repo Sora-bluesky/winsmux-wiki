@@ -1,0 +1,132 @@
+{
+  "data": [
+    {
+      "id": "inclusionai/ling-3.0-flash-vl:free",
+      "name": "inclusionAI: Ling 3.0 Flash VL (free)",
+      "context_length": 262144,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "dots-studio/dots-3-note-preview:free",
+      "name": "Dots Studio: Dots3-Note Preview (free)",
+      "context_length": 512000,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": "2026-09-30"
+    },
+    {
+      "id": "liquid/lfm-2.5-2.6b:free",
+      "name": "LiquidAI: LFM2.5-2.6B (free)",
+      "context_length": 65536,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "nvidia/nemotron-3.5-content-safety:free",
+      "name": "NVIDIA: Nemotron 3.5 Content Safety (free)",
+      "context_length": 128000,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [],
+      "expiration_date": null
+    },
+    {
+      "id": "google/lyria-3-pro-preview",
+      "name": "Google: Lyria 3 Pro Preview",
+      "context_length": 1048576,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [],
+      "expiration_date": null
+    },
+    {
+      "id": "openrouter/free",
+      "name": "Free Models Router",
+      "context_length": 200000,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "nex-agi/nex-n2.5-mini:free",
+      "name": "Nex AGI: Nex-N2.5-Mini (free)",
+      "context_length": 262144,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "~deepseek/deepseek-pro-latest",
+      "name": "DeepSeek: DeepSeek Pro Latest",
+      "context_length": 1048576,
+      "pricing": {
+        "prompt": "0.00000066",
+        "completion": "0.00000198"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "inference-net/schematron-v2-small",
+      "name": "Inference.net: Schematron V2 Small",
+      "context_length": 128000,
+      "pricing": {
+        "prompt": "0.00000005",
+        "completion": "0.00000023"
+      },
+      "supported_parameters": [],
+      "expiration_date": null
+    },
+    {
+      "id": "openrouter/auto",
+      "name": "Auto Router",
+      "context_length": 2000000,
+      "pricing": {
+        "prompt": "-1",
+        "completion": "-1"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    }
+  ],
+  "total_count": 10,
+  "links": {
+    "next": null
+  }
+}

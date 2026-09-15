@@ -1,0 +1,133 @@
+{
+  "data": [
+    {
+      "id": "inclusionai/ling-3.0-flash-sante:free",
+      "name": "inclusionAI: Ling 3.0 Flash Sante (free)",
+      "context_length": 262144,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "inclusionai/ling-3.0-flash-fin:free",
+      "name": "inclusionAI: Ling 3.0 Flash Fin",
+      "context_length": 262144,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "poolside/laguna-s-2.1:free",
+      "name": "Poolside: Laguna S 2.1",
+      "context_length": 262144,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "poolside/laguna-xs-2.1:free",
+      "name": "Poolside: Laguna XS 2.1",
+      "context_length": 262144,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "stepfun/step-3.7-flash:free",
+      "name": "StepFun: Step 3.7 Flash",
+      "context_length": 262144,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "upstage/solar-pro4:free",
+      "name": "Upstage: Solar Pro 4",
+      "context_length": 524288,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "meituan/longcat-2.0:free",
+      "name": "Meituan: LongCat 2.0",
+      "context_length": 1048576,
+      "pricing": {
+        "prompt": "0.0000000000",
+        "completion": "0.0000000000"
+      },
+      "supported_parameters": [
+        "tools"
+      ]
+    },
+    {
+      "id": "~deepseek/deepseek-pro-latest",
+      "name": "DeepSeek: DeepSeek Pro Latest",
+      "context_length": 1048576,
+      "pricing": {
+        "prompt": "0.0000009600",
+        "completion": "0.0000028800"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "~deepseek/deepseek-flash-latest",
+      "name": "DeepSeek: DeepSeek Flash Latest",
+      "context_length": 1048576,
+      "pricing": {
+        "prompt": "0.0000001500",
+        "completion": "0.0000006000"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    },
+    {
+      "id": "sakana/fugu-max",
+      "name": "Sakana: Fugu Max",
+      "context_length": 1000000,
+      "pricing": {
+        "prompt": "0.0000020000",
+        "completion": "0.0000060000"
+      },
+      "supported_parameters": [
+        "tools"
+      ],
+      "expiration_date": null
+    }
+  ]
+}

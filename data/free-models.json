@@ -1,0 +1,395 @@
+{
+  "generatedAt": "2026-09-15",
+  "sources": {
+    "nous": {
+      "ok": true,
+      "fetchedAt": "2026-09-15",
+      "attemptedAt": "2026-09-15",
+      "errorCode": null,
+      "url": "https://inference-api.nousresearch.com/v1/models",
+      "models": [
+        {
+          "id": "inclusionai/ling-3.0-flash-fin:free",
+          "name": "inclusionAI: Ling 3.0 Flash Fin",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "inclusionai/ling-3.0-flash-sante:free",
+          "name": "inclusionAI: Ling 3.0 Flash Sante (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "meituan/longcat-2.0:free",
+          "name": "Meituan: LongCat 2.0",
+          "ctx": 1048576,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "poolside/laguna-s-2.1:free",
+          "name": "Poolside: Laguna S 2.1",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "poolside/laguna-xs-2.1:free",
+          "name": "Poolside: Laguna XS 2.1",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "stepfun/step-3.7-flash:free",
+          "name": "StepFun: Step 3.7 Flash",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "upstage/solar-pro4:free",
+          "name": "Upstage: Solar Pro 4",
+          "ctx": 524288,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        }
+      ],
+      "conflicts": []
+    },
+    "openrouter": {
+      "ok": true,
+      "fetchedAt": "2026-09-15",
+      "attemptedAt": "2026-09-15",
+      "errorCode": null,
+      "url": "https://openrouter.ai/api/v1/models",
+      "models": [
+        {
+          "id": "cohere/north-mini-code:free",
+          "name": "Cohere: North Mini Code (free)",
+          "ctx": 256000,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "dots-studio/dots-3-note-preview:free",
+          "name": "Dots Studio: Dots3-Note Preview (free)",
+          "ctx": 512000,
+          "tools": true,
+          "expires": "2026-09-30",
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "google/gemma-4-26b-a4b-it:free",
+          "name": "Google: Gemma 4 26B A4B  (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "google/gemma-4-31b-it:free",
+          "name": "Google: Gemma 4 31B (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "google/lyria-3-clip-preview",
+          "name": "Google: Lyria 3 Clip Preview",
+          "ctx": 1048576,
+          "tools": false,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": false,
+          "criteriaReason": "tools"
+        },
+        {
+          "id": "google/lyria-3-pro-preview",
+          "name": "Google: Lyria 3 Pro Preview",
+          "ctx": 1048576,
+          "tools": false,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": false,
+          "criteriaReason": "tools"
+        },
+        {
+          "id": "inclusionai/ling-3.0-flash-fin:free",
+          "name": "inclusionAI: Ling 3.0 Flash Fin (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "inclusionai/ling-3.0-flash-sante:free",
+          "name": "inclusionAI: Ling 3.0 Flash Sante (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "inclusionai/ling-3.0-flash-vl:free",
+          "name": "inclusionAI: Ling 3.0 Flash VL (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "liquid/lfm-2.5-2.6b:free",
+          "name": "LiquidAI: LFM2.5-2.6B (free)",
+          "ctx": 65536,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "nex-agi/nex-n2.5-mini:free",
+          "name": "Nex AGI: Nex-N2.5-Mini (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "nex-agi/nex-n2.5-pro:free",
+          "name": "Nex AGI: Nex-N2.5-Pro (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+          "name": "NVIDIA: Nemotron 3 Nano Omni (free)",
+          "ctx": 256000,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "nvidia/nemotron-3-super-120b-a12b:free",
+          "name": "NVIDIA: Nemotron 3 Super (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+          "name": "NVIDIA: Nemotron 3 Ultra (free)",
+          "ctx": 1000000,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "nvidia/nemotron-3.5-content-safety:free",
+          "name": "NVIDIA: Nemotron 3.5 Content Safety (free)",
+          "ctx": 128000,
+          "tools": false,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": false,
+          "criteriaReason": "tools"
+        },
+        {
+          "id": "nvidia/nemotron-3.5-lightning:free",
+          "name": "NVIDIA: Nemotron 3.5 Lightning (free)",
+          "ctx": 1000000,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "openrouter/free",
+          "name": "Free Models Router",
+          "ctx": 200000,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "poolside/laguna-s-2.1:free",
+          "name": "Poolside: Laguna S 2.1 (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "poolside/laguna-xs-2.1:free",
+          "name": "Poolside: Laguna XS 2.1 (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "thinkingmachines/inkling-small:free",
+          "name": "Thinking Machines: Inkling Small (free)",
+          "ctx": 1048576,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "thinkingmachines/inkling:free",
+          "name": "Thinking Machines: Inkling (free)",
+          "ctx": 1048576,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        }
+      ],
+      "conflicts": []
+    },
+    "opencode": {
+      "ok": true,
+      "fetchedAt": "2026-09-15",
+      "attemptedAt": "2026-09-15",
+      "errorCode": null,
+      "url": "https://opencode.ai/zen/v1/models",
+      "models": [
+        {
+          "id": "deepseek-v4-flash-free",
+          "name": null,
+          "ctx": null,
+          "tools": null,
+          "expires": null,
+          "freeBasis": "label",
+          "criteria": null,
+          "criteriaReason": null
+        },
+        {
+          "id": "ling-3.0-flash-fin-free",
+          "name": null,
+          "ctx": null,
+          "tools": null,
+          "expires": null,
+          "freeBasis": "label",
+          "criteria": null,
+          "criteriaReason": null
+        },
+        {
+          "id": "mimo-v2.5-free",
+          "name": null,
+          "ctx": null,
+          "tools": null,
+          "expires": null,
+          "freeBasis": "label",
+          "criteria": null,
+          "criteriaReason": null
+        },
+        {
+          "id": "muse-spark-1.2-contributor-free",
+          "name": null,
+          "ctx": null,
+          "tools": null,
+          "expires": null,
+          "freeBasis": "label",
+          "criteria": null,
+          "criteriaReason": null
+        },
+        {
+          "id": "muse-spark-1.3-contributor-free",
+          "name": null,
+          "ctx": null,
+          "tools": null,
+          "expires": null,
+          "freeBasis": "label",
+          "criteria": null,
+          "criteriaReason": null
+        },
+        {
+          "id": "nemotron-3-ultra-free",
+          "name": null,
+          "ctx": null,
+          "tools": null,
+          "expires": null,
+          "freeBasis": "label",
+          "criteria": null,
+          "criteriaReason": null
+        },
+        {
+          "id": "nemotron-3.5-lightning-free",
+          "name": null,
+          "ctx": null,
+          "tools": null,
+          "expires": null,
+          "freeBasis": "label",
+          "criteria": null,
+          "criteriaReason": null
+        }
+      ],
+      "conflicts": []
+    }
+  }
+}

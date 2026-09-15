@@ -1,0 +1,369 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import catalogData from '../../../../data/free-models.json';
+import notesData from '../../../../data/free-notes.json';
+
+type SourceKey = 'nous' | 'openrouter' | 'opencode';
+type RouteKey = SourceKey | 'gemini';
+
+type Model = {
+  id: string;
+  name: string | null;
+  ctx: number | null;
+  tools: boolean | null;
+  expires: string | null;
+  freeBasis: 'pricing' | 'label';
+  criteria: boolean | null;
+  criteriaReason: 'tools' | 'ctx' | null;
+};
+
+type Source = {
+  ok: boolean;
+  fetchedAt: string | null;
+  attemptedAt: string;
+  errorCode: 'http' | 'parse' | 'shape' | 'empty' | 'pagination' | 'duplicate' | null;
+  url: string;
+  models: Model[];
+  conflicts: string[];
+};
+
+type Route = {
+  key: RouteKey;
+  title: string;
+  signup: string;
+  freeScope: string;
+  conditions: string;
+  officialSetup: { label: string; url: string }[];
+  checkedAt: string;
+  sources: string[];
+  notes: string[];
+};
+
+type Notes = {
+  hermesRev: string;
+  hermesRevCheckedAt: string;
+  routes: Route[];
+  desktop: {
+    verifiedAt: string | null;
+    steps: string[];
+  };
+};
+
+const catalog = catalogData as {
+  generatedAt: string;
+  sources: Record<SourceKey, Source>;
+};
+const notes = notesData as Notes;
+const routes = notes.routes;
+const sources = catalog.sources;
+
+const INTRO = [
+  'クラウドのモデル利用料が無料になる代表的な経路を、Hermes DesktopとCLI向けにまとめます。',
+  '無料モデルの一覧は公開APIから毎日更新し、経路の説明には確認日を付けています。',
+  '無料になるのはモデル利用料です。Tool Gatewayの検索・画像・音声などは別料金になる場合があります。',
+];
+
+const REPRESENTATIVE =
+  'ここで扱う経路は代表例です。GroqやCerebrasなど、カスタムエンドポイントの無料枠は、公式資料の対応例とレシピ集で確認してください。';
+
+const NO_CATALOG =
+  'このページでは、Google AI Studioのモデル一覧を自動取得していません。対象モデルと条件は公式の料金ページで確認してください。';
+
+const WARNINGS = [
+  'Hermesはコンテキスト長が分からないモデルに256Kの既定値を当てて処理します。この一覧では推定せず「未確認」と表示します。',
+  '無料モデルや無料の提供は予告なく入れ替わります。',
+  'OpenCode FreeはAPIキーも登録も不要ですが、この経路の動作は未検証です。',
+  'Tool Gatewayの検索・画像・音声など、モデル以外の機能は別料金になる場合があります。',
+  'Hermesのモデル選択では、ツール非対応モデルを一覧から除く処理はOpenRouterにだけあります。このページはAPIにある無料モデルを掲載し、条件判定を別列で示します。',
+];
+
+const METADATA_SOURCE =
+  'https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/agent/model_metadata.py';
+
+const fmtCtx = (value: number | null) =>
+  value === null ? '未確認' : new Intl.NumberFormat('ja-JP').format(value);
+
+const toolsText = (value: boolean | null) => {
+  if (value === true) return '対応の記載あり';
+  if (value === false) return '対応の記載なし';
+  return '未確認';
+};
+
+const criteriaText = (model: Model) => {
+  if (model.criteria === true) return '条件を満たす（動作未確認）';
+  if (model.criteria === null) return '判定できない';
+  const reason = model.criteriaReason === 'tools' ? 'ツール呼び出し' : 'コンテキスト上限';
+  return `条件を満たさない（${reason}）`;
+};
+
+const freeBasisText = (value: Model['freeBasis']) =>
+  value === 'pricing'
+    ? '入力・出力の基本単価0（取得時点）'
+    : '提供元の無料表記。料金未確認';
+
+const expiresText = (value: string | null) => {
+  if (value === null) return '終了日未記載';
+  if (value < catalog.generatedAt) return '掲載期限経過。利用可否未確認';
+  return `提供終了予定: ${value}`;
+};
+
+const sourceStatus = (source: Source) => {
+  if (source.ok) return `最終取得: ${source.fetchedAt}`;
+  if (source.fetchedAt !== null) {
+    return `更新失敗。${source.fetchedAt}取得の情報を表示`;
+  }
+  return '取得できませんでした。現在の一覧は未確認';
+};
+
+const sourceFor = (key: RouteKey): Source | null =>
+  key === 'gemini' ? null : sources[key as SourceKey];
+
+const officialSources = [
+  ...new Set([
+    ...routes.flatMap((route) => route.sources),
+    ...Object.values(sources).map((source) => source.url),
+    METADATA_SOURCE,
+  ]),
+];
+
+const showDesktop = typeof notes.desktop.verifiedAt === 'string';
+---
+
+<BaseLayout
+  rawPath="/hermes/raw/free.md"
+  title="無料枠で使う方法"
+  description="クラウドのモデル利用料が無料になる代表的な経路と、無料モデルの一覧。DesktopとCLIが対象。"
+  sources={officialSources}
+>
+  <article class="prose">
+    <h1>無料枠で使う方法</h1>
+
+    {INTRO.map((paragraph) => <p>{paragraph}</p>)}
+
+    <h2>経路の比較</h2>
+
+    <div class="free-tablewrap">
+      <table class="free-table">
+        <thead>
+          <tr>
+            <th>経路</th>
+            <th>登録・APIキー</th>
+            <th>無料になる範囲</th>
+            <th>利用条件</th>
+            <th>公式の設定手順</th>
+            <th>説明の確認日</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            routes.map((route) => (
+              <tr>
+                <td><strong>{route.title}</strong></td>
+                <td>{route.signup}</td>
+                <td>{route.freeScope}</td>
+                <td>{route.conditions}</td>
+                <td>
+                  {route.officialSetup.map((item, index) => (
+                    <>
+                      {index > 0 && ' / '}
+                      <a href={item.url}>{item.label}</a>
+                    </>
+                  ))}
+                </td>
+                <td class="free-nowrap">{route.checkedAt}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      ここで扱う経路は代表例です。GroqやCerebrasなど、カスタムエンドポイントの無料枠は、公式資料の
+      <a href="/hermes/docs/integrations/providers/#other-compatible-providers">対応例</a>
+      と
+      <a href="/hermes/docs/integrations/providers/#cookbook-together-ai-groq-perplexity">レシピ集</a>
+      で確認してください。
+    </p>
+
+    {
+      routes.map((route) => {
+        const source = sourceFor(route.key);
+        return (
+          <section>
+            <h2>{route.title}</h2>
+
+            {route.notes.map((note) => <p>{note}</p>)}
+
+            <p>
+              公式の設定手順:{' '}
+              {route.officialSetup.map((item, index) => (
+                <>
+                  {index > 0 && ' / '}
+                  <a href={item.url}>{item.label}</a>
+                </>
+              ))}
+            </p>
+
+            {
+              source ? (
+                <>
+                  <p class="free-status">{sourceStatus(source)}</p>
+
+                  {source.conflicts.length > 0 && (
+                    <p class="free-warning">
+                      無料表記と価格が不一致のため除外: {source.conflicts.join(', ')}
+                    </p>
+                  )}
+
+                  {source.models.length > 0 && (
+                    <div class="free-tablewrap">
+                      <table class="free-table free-models">
+                        <thead>
+                          <tr>
+                            <th>モデル</th>
+                            <th>コンテキスト上限（トークン）</th>
+                            <th>ツール呼び出し（API記載）</th>
+                            <th>公開仕様の条件判定</th>
+                            <th>提供終了予定</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {source.models.map((model) => (
+                            <tr>
+                              <td>
+                                <span class="free-model-name">{model.name ?? model.id}</span>
+                                <code class="free-model-id">{model.id}</code>
+                                <span class="free-model-basis">{freeBasisText(model.freeBasis)}</span>
+                              </td>
+                              <td class="free-nowrap">{fmtCtx(model.ctx)}</td>
+                              <td>{toolsText(model.tools)}</td>
+                              <td>{criteriaText(model)}</td>
+                              <td>{expiresText(model.expires)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {source.ok && source.models.length === 0 && (
+                    <p>取得時点で条件に合うモデルはありません。</p>
+                  )}
+                </>
+              ) : (
+                <p>{NO_CATALOG}</p>
+              )
+            }
+          </section>
+        );
+      })
+    }
+
+    <h2>注意点</h2>
+
+    <ul>
+      {WARNINGS.map((warning) => <li>{warning}</li>)}
+    </ul>
+
+    {
+      showDesktop && (
+        <section>
+          <h2>Desktopの設定</h2>
+          <p>実機確認日: {notes.desktop.verifiedAt}</p>
+          <ol>
+            {notes.desktop.steps.map((step) => <li>{step}</li>)}
+          </ol>
+        </section>
+      )
+    }
+
+    <h2>正本へのリンク</h2>
+
+    <ul>
+      {officialSources.map((url) => (
+        <li>
+          <a href={url} target="_blank" rel="noopener">{url}</a>
+        </li>
+      ))}
+    </ul>
+  </article>
+</BaseLayout>
+
+<style>
+  .free-tablewrap {
+    width: 100%;
+    margin: 1rem 0 1.5rem;
+    overflow-x: auto;
+  }
+
+  .free-table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .free-table th {
+    padding: 0.55rem 0.7rem;
+    border-bottom: 1px solid var(--color-border-strong);
+    color: var(--color-fg-muted);
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .free-table td {
+    padding: 0.65rem 0.7rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-fg-secondary);
+    vertical-align: top;
+  }
+
+  .free-models {
+    min-width: 900px;
+  }
+
+  .free-model-name,
+  .free-model-id,
+  .free-model-basis {
+    display: block;
+  }
+
+  .free-model-name {
+    color: var(--color-fg);
+    font-weight: 600;
+  }
+
+  .free-model-id {
+    width: fit-content;
+    margin-top: 0.2rem;
+    font-size: 0.72rem;
+  }
+
+  .free-model-basis {
+    margin-top: 0.25rem;
+    color: var(--color-fg-muted);
+    font-size: 0.72rem;
+  }
+
+  .free-nowrap {
+    white-space: nowrap;
+  }
+
+  .free-status {
+    font-size: 0.86rem;
+    font-weight: 600;
+  }
+
+  .free-warning {
+    padding: 0.65rem 0.85rem;
+    border: 1px solid #fed7aa;
+    border-radius: 8px;
+    background: #fff7ed;
+    color: #9a3412;
+    font-size: 0.82rem;
+  }
+</style>

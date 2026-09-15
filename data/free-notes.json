@@ -1,0 +1,113 @@
+{
+  "hermesRev": "59c20a51aa",
+  "hermesRevCheckedAt": "2026-09-15",
+  "routes": [
+    {
+      "key": "nous",
+      "title": "Nous Portal Free",
+      "signup": "登録が必要。APIキーは不要",
+      "freeScope": "無料モデルのモデル利用料",
+      "conditions": "標準のレート制限。月次クレジットは0",
+      "officialSetup": [
+        {
+          "label": "Nous Portalの設定",
+          "url": "/hermes/docs/integrations/nous-portal/"
+        }
+      ],
+      "checkedAt": "2026-09-15",
+      "sources": [
+        "https://portal.nousresearch.com",
+        "https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/nous_account.py"
+      ],
+      "notes": [
+        "無料モデルのみを利用でき、標準のレート制限が適用されます。月次クレジットは0です。",
+        "無料枠かどうかは、Hermesが受け取るアカウントの状態で決まります。"
+      ]
+    },
+    {
+      "key": "openrouter",
+      "title": "OpenRouter :free",
+      "signup": "登録とAPIキーが必要",
+      "freeScope": "末尾に:freeが付くモデルのモデル利用料",
+      "conditions": "1分あたりと1日あたりの回数制限あり。最新値は公式ページで確認",
+      "officialSetup": [
+        {
+          "label": "AIプロバイダーの設定",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "label": "OpenRouterの利用制限",
+          "url": "https://openrouter.ai/docs/api-reference/limits"
+        }
+      ],
+      "checkedAt": "2026-09-15",
+      "sources": [
+        "https://openrouter.ai/docs/api-reference/limits"
+      ],
+      "notes": [
+        "利用にはOpenRouterへの登録とAPIキーが必要です。",
+        "無料モデルには1分あたりと1日あたりの回数制限があります。現在の数値は公式の利用制限ページで確認してください。"
+      ]
+    },
+    {
+      "key": "opencode",
+      "title": "OpenCode Free",
+      "signup": "登録もAPIキーも不要",
+      "freeScope": "末尾に-freeが付く対象モデルのモデル利用料",
+      "conditions": "無料の提供は予告なく出入りする。動作は未検証",
+      "officialSetup": [
+        {
+          "label": "AIプロバイダーの設定",
+          "url": "/hermes/docs/integrations/providers/"
+        }
+      ],
+      "checkedAt": "2026-09-15",
+      "sources": [
+        "https://hermes-agent.nousresearch.com/docs/integrations/providers",
+        "https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/providers.py",
+        "https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/models.py"
+      ],
+      "notes": [
+        "APIキーもアカウントも要りません。リクエストは匿名で送られます。",
+        "公式資料では、無料の提供は予告なく出入りするとされています。",
+        "この経路は実機での動作を確認していません。"
+      ]
+    },
+    {
+      "key": "gemini",
+      "title": "Google AI Studio（Gemini）",
+      "signup": "Google AI StudioのAPIキーが必要",
+      "freeScope": "Gemini APIの無料枠",
+      "conditions": "無料枠では入力データがGoogleの改善に使われる",
+      "officialSetup": [
+        {
+          "label": "Google Geminiガイド",
+          "url": "/hermes/docs/guides/google-gemini/"
+        },
+        {
+          "label": "Gemini APIの料金",
+          "url": "https://ai.google.dev/gemini-api/docs/pricing"
+        }
+      ],
+      "checkedAt": "2026-09-15",
+      "sources": [
+        "https://ai.google.dev/gemini-api/docs/pricing",
+        "https://hermes-agent.nousresearch.com/docs/integrations/providers"
+      ],
+      "notes": [
+        "無料枠では、入力データがGoogleの製品改善に使われます。",
+        "Hermesの公式資料には、個人向けのGoogle AI Pro / UltraでHermesにサインインする方法はなく、GeminiプロバイダーはAPIキー専用だと記載されています。"
+      ]
+    }
+  ],
+  "desktop": {
+    "verifiedAt": "2026-09-15",
+    "version": "Hermes Desktop 0.21.3（fef0bc5）",
+    "steps": [
+      "モデルを選ぶ: 右上の歯車から設定を開き、左の「モデル」を選ぶ。上のプルダウンでプロバイダー（例: Nous Portal）、下のプルダウンでモデル（例: upstage/solar-pro4:free）を選び、「適用」を押す。上部の「適用対象」で、どのプロファイルに適用するかを選べる。",
+      "Nous Portal をつなぐ: 設定の「プロバイダー」から「アカウント」を開き、「アカウントを接続」の一覧で Nous Portal を選ぶ。あとは画面の案内に従ってサインインする。",
+      "OpenRouter の API キーを入れる: 設定の「プロバイダー」から「API キー」を開き、OpenRouter の行の「OpenRouter キーを貼り付け」にキーを貼る。OpenCode Free はキーが要らないので、この操作は不要。",
+      "モデルのプルダウンには id がそのまま並び、この版の画面では無料の印は出ていなかった。末尾の :free や -free は提供元ごとの表記なので、無料かどうかはこのページの表の料金の根拠と、各経路の条件で確かめる。"
+    ]
+  }
+}

@@ -63,6 +63,7 @@ const catalog = [
   ['/hermes/trouble/', 'トラブル（症状から対処を引く表）'],
   ['/hermes/first/', '初めての方へ（段階式の道筋）'],
   ['/hermes/cost/', '料金と実例（費用構造と価格の実例）'],
+  ['/hermes/free/', '無料枠で使う方法（無料モデルの一覧は毎日更新）'],
   ['/hermes/from-claude-code/', 'Claude Code からの乗り換え（概念対応表）'],
   ['/hermes/japanese/', '日本語入力と日本語化の現在地'],
   ['/hermes/community/', 'コミュニティの動き（Discord の週次日本語要約）'],

@@ -36,6 +36,7 @@ Hermes Agent 0.21.0
 - [トラブル（症状から対処を引く表）](https://wiki.winsmux.dev/hermes/trouble/)
 - [初めての方へ（段階式の道筋）](https://wiki.winsmux.dev/hermes/first/)
 - [料金と実例（費用構造と価格の実例）](https://wiki.winsmux.dev/hermes/cost/)
+- [無料枠で使う方法（無料モデルの一覧は毎日更新）](https://wiki.winsmux.dev/hermes/free/)
 - [Claude Code からの乗り換え（概念対応表）](https://wiki.winsmux.dev/hermes/from-claude-code/)
 - [日本語入力と日本語化の現在地](https://wiki.winsmux.dev/hermes/japanese/)
 - [コミュニティの動き（Discord の週次日本語要約）](https://wiki.winsmux.dev/hermes/community/)
@@ -974,6 +975,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/entities/telegram.md
 - https://wiki.winsmux.dev/hermes/raw/entities/vps.md
 - https://wiki.winsmux.dev/hermes/raw/first.md
+- https://wiki.winsmux.dev/hermes/raw/free.md
 - https://wiki.winsmux.dev/hermes/raw/from-claude-code.md
 - https://wiki.winsmux.dev/hermes/raw/guide.md
 - https://wiki.winsmux.dev/hermes/raw/home.md
