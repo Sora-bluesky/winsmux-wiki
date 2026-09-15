@@ -204,13 +204,29 @@ ${automatic}`;
 ${notes.desktop.steps.map((step, index) => `${index + 1}. ${mdText(step)}`).join('\n')}`
       : '';
 
-  const officialSources = [
-    ...new Set([
-      ...notes.routes.flatMap((route) => route.sources),
-      ...Object.values(catalog.sources).map((source) => source.url),
-      METADATA_SOURCE,
-    ]),
-  ];
+  // 出典は 3 群に分けて名前を付ける（Astro 側 src/pages/hermes/free/index.astro と同じ分類）
+  const isCode = (u) => u.startsWith('https://github.com/');
+  const routeUrls = [...new Set(notes.routes.flatMap((route) => route.sources))];
+  const OFFICIAL_LABELS = {
+    'https://portal.nousresearch.com': 'Nous Portal',
+    'https://openrouter.ai/docs/api-reference/limits': 'OpenRouter の利用制限',
+    'https://hermes-agent.nousresearch.com/docs/integrations/providers': 'Hermes 公式ドキュメント: AI プロバイダーの設定',
+    'https://ai.google.dev/gemini-api/docs/pricing': 'Gemini API の料金',
+  };
+  const DATA_LABELS = {
+    nous: 'Nous Portal のモデル一覧 API',
+    openrouter: 'OpenRouter のモデル一覧 API',
+    opencode: 'OpenCode のモデル一覧 API',
+  };
+  const officialPages = routeUrls
+    .filter((u) => !isCode(u))
+    .map((u) => ({ url: u, label: OFFICIAL_LABELS[u] ?? u.replace(/^https?:\/\//, '') }));
+  const dataSources = Object.keys(catalog.sources).map((k) => ({ url: catalog.sources[k].url, label: DATA_LABELS[k] ?? k }));
+  const codeSources = [...routeUrls.filter(isCode), METADATA_SOURCE].map((u) => ({
+    url: u,
+    label: u.replace(/^.*\/blob\/[0-9a-f]+\//, ''),
+  }));
+  const linkList2 = (items) => items.map((s) => `- [${mdText(s.label)}](${abs(s.url)})`).join('\n');
 
   const body =
     front(
@@ -238,7 +254,17 @@ ${WARNINGS.map((warning) => `- ${warning}`).join('\n')}${desktopSection}
 
 ## 正本へのリンク
 
-${officialSources.map((url) => `- ${abs(url)}`).join('\n')}
+### 公式ページ
+
+${linkList2(officialPages)}
+
+### 一覧の取得元（毎日取得）
+
+${linkList2(dataSources)}
+
+### 判定の根拠（Hermes のソース、rev ${mdText(notes.hermesRev)}）
+
+${linkList2(codeSources)}
 `;
 
   await write('free.md', body);

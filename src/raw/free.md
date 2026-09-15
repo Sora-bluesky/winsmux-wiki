@@ -129,14 +129,22 @@ Hermesの公式資料には、個人向けのGoogle AI Pro / UltraでHermesに�
 
 ## 正本へのリンク
 
-- https://portal.nousresearch.com
-- https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/nous_account.py
-- https://openrouter.ai/docs/api-reference/limits
-- https://hermes-agent.nousresearch.com/docs/integrations/providers
-- https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/providers.py
-- https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/models.py
-- https://ai.google.dev/gemini-api/docs/pricing
-- https://inference-api.nousresearch.com/v1/models
-- https://openrouter.ai/api/v1/models
-- https://opencode.ai/zen/v1/models
-- https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/agent/model_metadata.py
+### 公式ページ
+
+- [Nous Portal](https://portal.nousresearch.com)
+- [OpenRouter の利用制限](https://openrouter.ai/docs/api-reference/limits)
+- [Hermes 公式ドキュメント: AI プロバイダーの設定](https://hermes-agent.nousresearch.com/docs/integrations/providers)
+- [Gemini API の料金](https://ai.google.dev/gemini-api/docs/pricing)
+
+### 一覧の取得元（毎日取得）
+
+- [Nous Portal のモデル一覧 API](https://inference-api.nousresearch.com/v1/models)
+- [OpenRouter のモデル一覧 API](https://openrouter.ai/api/v1/models)
+- [OpenCode のモデル一覧 API](https://opencode.ai/zen/v1/models)
+
+### 判定の根拠（Hermes のソース、rev 59c20a51aa）
+
+- [hermes_cli/nous_account.py](https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/nous_account.py)
+- [hermes_cli/providers.py](https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/providers.py)
+- [hermes_cli/models.py](https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/models.py)
+- [agent/model_metadata.py](https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/agent/model_metadata.py)

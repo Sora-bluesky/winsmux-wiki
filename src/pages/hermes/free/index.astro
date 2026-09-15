@@ -118,13 +118,28 @@ const sourceStatus = (source: Source) => {
 const sourceFor = (key: RouteKey): Source | null =>
   key === 'gemini' ? null : sources[key as SourceKey];
 
-const officialSources = [
-  ...new Set([
-    ...routes.flatMap((route) => route.sources),
-    ...Object.values(sources).map((source) => source.url),
-    METADATA_SOURCE,
-  ]),
-];
+// 出典は 3 群に分けて名前を付ける（生 URL を 11 本並べると読めない・2026-09-15 sora 指摘）
+const isCode = (u: string) => u.startsWith('https://github.com/');
+const routeUrls = [...new Set(routes.flatMap((route) => route.sources))];
+const OFFICIAL_LABELS: Record<string, string> = {
+  'https://portal.nousresearch.com': 'Nous Portal',
+  'https://openrouter.ai/docs/api-reference/limits': 'OpenRouter の利用制限',
+  'https://hermes-agent.nousresearch.com/docs/integrations/providers': 'Hermes 公式ドキュメント: AI プロバイダーの設定',
+  'https://ai.google.dev/gemini-api/docs/pricing': 'Gemini API の料金',
+};
+const DATA_LABELS: Record<SourceKey, string> = {
+  nous: 'Nous Portal のモデル一覧 API',
+  openrouter: 'OpenRouter のモデル一覧 API',
+  opencode: 'OpenCode のモデル一覧 API',
+};
+const officialPages = routeUrls
+  .filter((u) => !isCode(u))
+  .map((u) => ({ url: u, label: OFFICIAL_LABELS[u] ?? u.replace(/^https?:\/\//, '') }));
+const dataSources = (Object.keys(sources) as SourceKey[]).map((k) => ({ url: sources[k].url, label: DATA_LABELS[k] }));
+const codeSources = [...routeUrls.filter(isCode), METADATA_SOURCE].map((u) => ({
+  url: u,
+  label: u.replace(/^.*\/blob\/[0-9a-f]+\//, ''),
+}));
 
 const showDesktop = typeof notes.desktop.verifiedAt === 'string';
 ---
@@ -133,7 +148,7 @@ const showDesktop = typeof notes.desktop.verifiedAt === 'string';
   rawPath="/hermes/raw/free.md"
   title="無料枠で使う方法"
   description="クラウドのモデル利用料が無料になる代表的な経路と、無料モデルの一覧。DesktopとCLIが対象。"
-  sources={officialSources}
+  sources={officialPages.map((s) => s.url)}
 >
   <article class="prose">
     <h1>無料枠で使う方法</h1>
@@ -280,10 +295,29 @@ const showDesktop = typeof notes.desktop.verifiedAt === 'string';
 
     <h2>正本へのリンク</h2>
 
+    <h3>公式ページ</h3>
     <ul>
-      {officialSources.map((url) => (
+      {officialPages.map((s) => (
         <li>
-          <a href={url} target="_blank" rel="noopener">{url}</a>
+          <a href={s.url} target="_blank" rel="noopener">{s.label}</a>
+        </li>
+      ))}
+    </ul>
+
+    <h3>一覧の取得元（毎日取得）</h3>
+    <ul>
+      {dataSources.map((s) => (
+        <li>
+          <a href={s.url} target="_blank" rel="noopener">{s.label}</a>
+        </li>
+      ))}
+    </ul>
+
+    <h3>判定の根拠（Hermes のソース、rev {notes.hermesRev}）</h3>
+    <ul>
+      {codeSources.map((s) => (
+        <li>
+          <a href={s.url} target="_blank" rel="noopener">{s.label}</a>
         </li>
       ))}
     </ul>
