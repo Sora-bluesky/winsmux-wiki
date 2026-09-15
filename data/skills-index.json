@@ -1,6 +1,6 @@
 {
-  "sha": "40f2702",
-  "date": "2026-09-14",
+  "sha": "416a817",
+  "date": "2026-09-15",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -215,7 +215,7 @@
       "name": "Email Inbox Triage",
       "description": "Triage an inbox: prioritize threads, draft replies safely",
       "url": "/hermes/docs/user-guide/skills/bundled/email/email-email-inbox-triage/",
-      "date": "2026-08-30",
+      "date": "2026-09-15",
       "source": "bundled"
     },
     {
@@ -787,6 +787,14 @@
       "source": "optional"
     },
     {
+      "slug": "creative-auteur",
+      "name": "Auteur",
+      "description": "Design and build cinematic, award-level web pages",
+      "url": "/hermes/docs/user-guide/skills/optional/creative/creative-auteur/",
+      "date": "2026-09-15",
+      "source": "optional"
+    },
+    {
       "slug": "creative-baoyu-article-illustrator",
       "name": "Baoyu Article Illustrator",
       "description": "Article illustrations: type × style × palette consistency",
@@ -872,6 +880,14 @@
       "description": "Frontend design guidance, upstream-maintained (impeccable)",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-impeccable/",
       "date": "2026-08-30",
+      "source": "optional"
+    },
+    {
+      "slug": "creative-ip-as-logo",
+      "name": "Ip As Logo",
+      "description": "Design minimal cute IP mascot marks readable at 32px",
+      "url": "/hermes/docs/user-guide/skills/optional/creative/creative-ip-as-logo/",
+      "date": "2026-09-15",
       "source": "optional"
     },
     {
@@ -1512,6 +1528,14 @@
       "description": "Publish sites to {slug}.here.now and store files in Drives",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/",
       "date": "2026-08-30",
+      "source": "optional"
+    },
+    {
+      "slug": "productivity-live-dashboard",
+      "name": "Live Dashboard",
+      "description": "Build self-updating dashboards from live sources",
+      "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/",
+      "date": "2026-09-15",
       "source": "optional"
     },
     {

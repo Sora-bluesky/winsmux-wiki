@@ -359,6 +359,7 @@ Hermes Agent 0.21.0
 - [user-guide/skills/optional/creative/creative-archify（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-archify/)
 - [user-guide/skills/optional/creative/creative-ascii-art（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/)
 - [user-guide/skills/optional/creative/creative-audiocraft-audio-generation（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/)
+- [user-guide/skills/optional/creative/creative-auteur（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-auteur/)
 - [user-guide/skills/optional/creative/creative-baoyu-article-illustrator（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/)
 - [user-guide/skills/optional/creative/creative-baoyu-comic（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/)
 - [user-guide/skills/optional/creative/creative-comfyui（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/)
@@ -370,6 +371,7 @@ Hermes Agent 0.21.0
 - [user-guide/skills/optional/creative/creative-heartmula（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-heartmula/)
 - [user-guide/skills/optional/creative/creative-hyperframes（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-hyperframes/)
 - [user-guide/skills/optional/creative/creative-impeccable（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-impeccable/)
+- [user-guide/skills/optional/creative/creative-ip-as-logo（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-ip-as-logo/)
 - [user-guide/skills/optional/creative/creative-kanban-video-orchestrator（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator/)
 - [user-guide/skills/optional/creative/creative-meme-generation（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-meme-generation/)
 - [user-guide/skills/optional/creative/creative-mono-color（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-mono-color/)
@@ -450,6 +452,7 @@ Hermes Agent 0.21.0
 - [user-guide/skills/optional/productivity/productivity-canvas（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/)
 - [user-guide/skills/optional/productivity/productivity-decision-questionnaire（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/)
 - [user-guide/skills/optional/productivity/productivity-here-now（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/)
+- [user-guide/skills/optional/productivity/productivity-live-dashboard（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/)
 - [user-guide/skills/optional/productivity/productivity-memento-flashcards（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/)
 - [user-guide/skills/optional/productivity/productivity-property-listings（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/)
 - [user-guide/skills/optional/productivity/productivity-shop（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/)
@@ -832,6 +835,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-archify.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-ascii-art.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-auteur.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-baoyu-comic.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-comfyui.md
@@ -843,6 +847,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-heartmula.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-hyperframes.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-impeccable.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-ip-as-logo.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-meme-generation.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-mono-color.md
@@ -923,6 +928,7 @@ Hermes Agent 0.21.0
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-canvas.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-here-now.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-live-dashboard.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-property-listings.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-shop.md

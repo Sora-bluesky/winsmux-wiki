@@ -2,7 +2,7 @@
 title: "ゲートウェイのセッションライフサイクル"
 description: "ゲートウェイにおける SessionSource・SessionEntry・SessionStore、セッションキーの規則、マルチユーザーの分離"
 upstream_path: developer-guide/gateway-session-lifecycle.md
-upstream_blob: 69cefef54427368ba4d1e94ddee5f583e8f40b99
+upstream_blob: 0151b31af93027b1927722c8957b142bc0d1c50f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-session-lifecycle
 ---
@@ -543,7 +543,9 @@ SQLite トランスクリプトが保たれ、動いているプロセスは自�
 書き出しを終えられなくなります（#80764）。
 
 `_sweep_agent_cache_under_pressure()` はその逃がし弁です。監視役が動くたびに、
-プロセスの匿名 RSS を `memory_high_mb` と比べます。予算を超えていれば、上限の適用と同じ
+匿名メモリを `memory_high_mb` と比べます。ゲートウェイが cgroup の上限の下で動いているときは
+cgroup 自身の `memory.stat` の `anon`（予算が課される範囲なので、同じユニットの子プロセス、
+たとえば `execute_code` のカーネルも数に入ります。#110549）を、そうでなければプロセス自身の匿名 RSS を使います。予算を超えていれば、上限の適用と同じ
 穏やかな経路（`_commit_then_release_soft`）で LRU のエージェントを退避させ、そのあと
 `malloc_trim` を実行して、解放したアリーナが実際に OS へ返るようにします。退避されたセッションは、
 次のターンで保存済みのセッションからトランスクリプトを組み立て直します。

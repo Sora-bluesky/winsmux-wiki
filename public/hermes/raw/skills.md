@@ -12,9 +12,9 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 230 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 233 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `40f2702`（2026-09-14）時点。この一覧は上流の docs から機械生成しています。
+上流 `416a817`（2026-09-15）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（83）
 
@@ -48,7 +48,7 @@ raw: /hermes/raw/skills.md
 | [Sketch](/hermes/docs/user-guide/skills/bundled/creative/creative-sketch/) | Throwaway HTML mockups: 2-3 design variants to compare | 2026-07-29 |
 | [Songwriting And Ai Music](/hermes/docs/user-guide/skills/bundled/creative/creative-songwriting-and-ai-music/) | Songwriting craft and Suno AI music prompts | 2026-08-30 |
 | [Sdlc Review](/hermes/docs/user-guide/skills/bundled/devops/devops-sdlc-review/) | Review Kanban handoffs and route verified outcomes | 2026-08-30 |
-| [Email Inbox Triage](/hermes/docs/user-guide/skills/bundled/email/email-email-inbox-triage/) | Triage an inbox: prioritize threads, draft replies safely | 2026-08-30 |
+| [Email Inbox Triage](/hermes/docs/user-guide/skills/bundled/email/email-email-inbox-triage/) | Triage an inbox: prioritize threads, draft replies safely | 2026-09-15 |
 | [Himalaya](/hermes/docs/user-guide/skills/bundled/email/email-himalaya/) | Himalaya CLI: IMAP/SMTP email from terminal | 2026-08-30 |
 | [Codebase Inspection](/hermes/docs/user-guide/skills/bundled/github/github-codebase-inspection/) | Inspect codebases w/ pygount: LOC, languages, ratios | 2026-05-28 |
 | [Github Auth](/hermes/docs/user-guide/skills/bundled/github/github-github-auth/) | GitHub auth setup: HTTPS tokens, SSH keys, gh CLI login | 2026-07-26 |
@@ -106,7 +106,7 @@ raw: /hermes/raw/skills.md
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-08-30 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/) | Use when a fetch fails: 403/429, paywall, WAF, bot wall | 2026-08-30 |
 
-## あとから入れる（146）
+## あとから入れる（149）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -126,6 +126,7 @@ raw: /hermes/raw/skills.md
 | [Archify](/hermes/docs/user-guide/skills/optional/creative/creative-archify/) | Validated interactive HTML diagrams, upstream-maintained | 2026-09-10 |
 | [Ascii Art](/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/) | ASCII art: pyfiglet, cowsay, boxes, image-to-ascii | 2026-08-30 |
 | [Audiocraft Audio Generation](/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/) | AudioCraft: MusicGen text-to-music, AudioGen text-to-sound | 2026-08-30 |
+| [Auteur](/hermes/docs/user-guide/skills/optional/creative/creative-auteur/) | Design and build cinematic, award-level web pages | 2026-09-15 |
 | [Baoyu Article Illustrator](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/) | Article illustrations: type × style × palette consistency | 2026-08-30 |
 | [Baoyu Comic](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/) | Knowledge comics (知识漫画): educational, biography, tutorial | 2026-08-30 |
 | [Comfyui](/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/) | Generate images, video, and audio via diffusion workflows | 2026-08-30 |
@@ -137,6 +138,7 @@ raw: /hermes/raw/skills.md
 | [Heartmula](/hermes/docs/user-guide/skills/optional/creative/creative-heartmula/) | HeartMuLa: Suno-like song generation from lyrics + tags | 2026-08-30 |
 | [Hyperframes](/hermes/docs/user-guide/skills/optional/creative/creative-hyperframes/) | Render MP4/WebM videos from HTML compositions | 2026-08-30 |
 | [Impeccable](/hermes/docs/user-guide/skills/optional/creative/creative-impeccable/) | Frontend design guidance, upstream-maintained (impeccable) | 2026-08-30 |
+| [Ip As Logo](/hermes/docs/user-guide/skills/optional/creative/creative-ip-as-logo/) | Design minimal cute IP mascot marks readable at 32px | 2026-09-15 |
 | [Kanban Video Orchestrator](/hermes/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator/) | Plan and run multi-agent video production pipelines | 2026-09-12 |
 | [Meme Generation](/hermes/docs/user-guide/skills/optional/creative/creative-meme-generation/) | Create meme PNGs from templates with Pillow text overlay | 2026-08-30 |
 | [Mono Color](/hermes/docs/user-guide/skills/optional/creative/creative-mono-color/) | Generate one- or two-ink editorial print poster images | 2026-09-12 |
@@ -217,6 +219,7 @@ raw: /hermes/raw/skills.md
 | [Canvas](/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/) | Fetch Canvas LMS courses and assignments via API token | 2026-08-30 |
 | [Decision Questionnaire](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | Turn an unanswerable decision into a questionnaire doc | 2026-08-30 |
 | [Here Now](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | Publish sites to {slug}.here.now and store files in Drives | 2026-08-30 |
+| [Live Dashboard](/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/) | Build self-updating dashboards from live sources | 2026-09-15 |
 | [Memento Flashcards](/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/) | Spaced-repetition flashcards: create, review, quiz, export | 2026-08-30 |
 | [Property Listings](/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/) | Present property and rental listings as desktop cards | 2026-09-08 |
 | [Shop](/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/) | Shop catalog search, checkout, order tracking, returns | 2026-08-30 |

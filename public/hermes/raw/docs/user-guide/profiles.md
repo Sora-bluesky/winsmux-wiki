@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: 251de3a771f9c00daa07b22f2a96cc09de5409e9
+upstream_blob: 43aa3db132503d065f04831956dbab3b51fa3388
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -60,6 +60,17 @@ hermes profile create work --clone
 ```
 
 いま使っているプロファイルの `config.yaml`、`.env`、`SOUL.md`、スキル、そして整理された記憶のファイル `memories/MEMORY.md` と `memories/USER.md` を新しいプロファイルへコピーします。記憶は `SOUL.md` と同じく、エージェントの人となりの一部として扱われます。セッション、`state.db`、cron ジョブをはじめ、ほかのものはすべて空から始まります。記憶も白紙にしたいときは、`--clone` を付けずにプロファイルを作るか、あとからこの 2 つのファイルを削除してください。ファイルがなくても、エージェントが別のプロファイルの記憶を代わりに読むことはありません。API キーを変えたいときは `~/.hermes/profiles/work/.env` を、人格を変えたいときは `~/.hermes/profiles/work/SOUL.md` を編集してください。
+
+#### 複製先でも、取り込んだエージェントの設定を同期し続ける（`--sync-imports`） {#keep-a-clones-imported-agent-setups-synced---sync-imports}
+
+複製元のプロファイルで [`hermes import-agent`](/hermes/docs/user-guide/import-from-other-agents/) を実行していた場合、その `import-sync.json` に、どの Claude Code / Codex の外部ディレクトリを取り込んだかが記録されています。`--clone` はこの記録を複製しないので、複製先はそのスキルと記憶を一度コピーしただけで終わります。記録ごと引き継ぐには `--sync-imports` を付けます。
+
+```bash
+hermes profile create work --clone --sync-imports
+hermes -p work import-agent --sync        # pulls changes from the same ~/.claude / ~/.codex
+```
+
+これは明示的に指定したときだけ働く一方向の仕組みで、複製先を**外部エージェントのディレクトリだけ**に結び付けます。複製元のプロファイルとは結び付きません。2 つのプロファイルは独立したままで、あとから複製元の `config.yaml`、`SOUL.md`、スキルを編集しても複製先には届きません。`--clone-all` は、まるごとのコピーの一部としてこの記録もコピーします。
 
 ### まるごと複製する（`--clone-all`） {#clone-everything---clone-all}
 

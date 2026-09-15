@@ -2,7 +2,7 @@
 title: "音声モード"
 description: "Hermes Agent とリアルタイムで音声のやりとりをする — CLI、Telegram、Discord（DM、テキストチャンネル、ボイスチャンネル）"
 upstream_path: user-guide/features/voice-mode.md
-upstream_blob: 8750029e2bd0c9f401ac8d0a6b8db57f816bd110
+upstream_blob: 03e7572ea583ad27e5d2d0179a1b7e768c32671d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/voice-mode
 ---
@@ -109,6 +109,15 @@ ELEVENLABS_API_KEY=***           # ElevenLabs — premium quality
 :::tip
 `faster-whisper` を入れてあれば、音声認識について **API キーなし**で音声モードが動きます。モデル（`base` でおよそ 150 MB）は最初に使うときに自動で取得されます。
 :::
+
+最初の取得は、ふつう `huggingface.co` から行われます。お使いのネットワークからこのホストにつながらない場合は、Hermes を起動するシェルやサービスで、つながるミラーを環境変数として設定してください。
+
+```bash
+HF_ENDPOINT=https://your-hugging-face-mirror.example
+HF_HUB_DISABLE_XET=1
+```
+
+Xet を無効にしておくと、ミラーを使うときに、Xet が別に持つ CAS のホストで認証に失敗するのを避けられます。モデルが一度キャッシュされたあとは、Hermes はオンラインで版を確かめずに、そのスナップショットを読み込みます。
 
 ---
 

@@ -2,7 +2,7 @@
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: 11ad58a2371e60ab23ff75ac3fffa579d7efb83e
+upstream_blob: 827b94d9c39e0059fa4f847d3f9bc835087a2efa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -193,6 +193,19 @@ docker run -it --rm \
 | `hooks/` | イベントのフック |
 | `logs/` | 実行時のログ |
 | `skins/` | CLI の外観 |
+
+### コンテナで `state.db` を置くファイルシステムの条件 {#filesystem-requirements-for-statedb-in-containers}
+
+Hermes はセッションを SQLite データベース（`/opt/data/state.db`）に保存しており、既定では WAL ジャーナルモードで開きます。WAL は、ファイルを開いているすべてのプロセスの間で共有メモリ（`state.db-shm`）の内容が食い違わないことを前提にしています。VM の境界をまたぐバインドマウントはこれを満たしません。**virtiofs**（macOS の Docker Desktop と Podman、OrbStack）と **9p / drvfs**（Windows の Docker Desktop）では、複数のプロセスが同時に書き込むと WAL データベースが気づかないうちに壊れます。しかも本体のファイルは `PRAGMA integrity_check` を通ってしまいます。
+
+Hermes の対処（v2026.9.14 以降）:
+
+- virtiofs / 9p のマウント上に**新しく**作るデータベースは、ロールバック（`DELETE`）ジャーナルモードで作成し、警告を一度だけログに出します。こちらで何かする必要はありません。
+- そうしたマウント上に**既にある** WAL データベースは、動いている最中に切り替えることはしません。ほかの Hermes プロセスが開いているかもしれず、稼働中に切り替えるとチェックポイント前のコミットが失われるからです。代わりに、各プロセスが起動時にエラーを一度だけログに出し、`hermes doctor` がデータベースを指摘します。直し方は次の2つです。
+  1. そのデータベースを使っている Hermes のプロセスをすべて止めてから、イメージに同梱の Python で一度だけオフライン変換します（イメージに `sqlite3` シェルはありません）: `docker exec hermes python3 -c "import sqlite3; print(sqlite3.connect('/opt/data/state.db').execute('PRAGMA journal_mode=DELETE').fetchone()[0])"`。あとで開いたときに WAL へ戻らないよう、`config.yaml` に `database.journal_mode: delete` を設定してください。
+  2. データディレクトリをネイティブのボリュームへ移します。名前付きの Docker ボリューム（`-v hermes-data:/opt/data`）は VM 自身の ext4 ファイルシステム上にあり、WAL が普通に使えます。
+
+検出はコンテナ内の `/proc/self/mountinfo` を読んで行うので、ホストの OS に関係なく働きます。NFS、SMB、一般的な FUSE のマウントは判別しません。これらの上では `database.journal_mode: delete` を明示的に設定してください。gateway、cron、ワーカーの各プロセスがデータベースを同時に開くため、Hermes は SQLite の `locking_mode=EXCLUSIVE` を代わりの手段として用意していません。
 
 ### 書き換えないインストール先 {#immutable-install-tree}
 

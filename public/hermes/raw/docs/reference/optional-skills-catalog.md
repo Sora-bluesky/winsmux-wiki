@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: 9e0121e03a9ac37ec20a04fb22395ef7020f85ad
+upstream_blob: d88b11affb0aab0efc4cb0a71a9c25b37ac19ab5
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -36,11 +36,9 @@ hermes skills uninstall <skill-name>
 |-------|-------------|
 | [**antigravity-cli**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli/) | Antigravity CLI（agy）を操作します。プラグイン、認証、サンドボックスに対応。 |
 | [**blackbox**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/) | 複数モデルを使う Blackbox AI の CLI にコーディング作業を任せます。 |
-| [**dream-loop**](/hermes/docs/user-guide/skills/optional/creative/creative-dream-loop/) | コンセプトアートとの忠実度を確かめるループで、見栄えのする 3D シーンを作ります。 |
 | [**dynamic-workflow**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/) | 計画をコードで書いて並列に展開し、敵対的な検証と段階的な実行を行います。 |
 | [**grok**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/) | xAI Grok Build CLI にコーディングを任せます（機能追加、PR 作成）。 |
 | [**honcho**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/) | Hermes 向けに Honcho の記憶機能を設定し、不具合を切り分けます。 |
-| [**mono-color**](/hermes/docs/user-guide/skills/optional/creative/creative-mono-color/) | 1 色または 2 色刷りの、雑誌風ポスター画像を生成します。 |
 | [**openhands**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/) | OpenHands CLI にコーディングを任せます（モデルを選ばず、LiteLLM 対応）。 |
 
 ## blockchain {#blockchain}
@@ -66,18 +64,22 @@ hermes skills uninstall <skill-name>
 | [**archify**](/hermes/docs/user-guide/skills/optional/creative/creative-archify/) | 検証済みの対話型 HTML ダイアグラムを作ります。上流で保守されています。 |
 | [**ascii-art**](/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/) | アスキーアート。pyfiglet、cowsay、boxes、画像からの変換に対応します。 |
 | [**audiocraft-audio-generation**](/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/) | AudioCraft。MusicGen で文章から音楽を、AudioGen で文章から効果音を作ります。 |
+| [**auteur**](/hermes/docs/user-guide/skills/optional/creative/creative-auteur/) | 映画のような、賞を狙える水準の Web ページを設計して作ります。 |
 | [**baoyu-article-illustrator**](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/) | 記事の挿絵。種類 × 画風 × 配色をそろえて描きます。 |
 | [**baoyu-comic**](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/) | 知識マンガ（知识漫画）。学習向け、伝記、手順解説に対応します。 |
 | [**comfyui**](/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/) | 拡散モデルのワークフローで画像、動画、音声を生成します。 |
 | [**concept-diagrams**](/hermes/docs/user-guide/skills/optional/creative/creative-concept-diagrams/) | 平面的で装飾を抑えた学習用の SVG 図版を HTML として作ります。 |
 | [**creative-ideation**](/hermes/docs/user-guide/skills/optional/creative/creative-creative-ideation/) | 創作の現場で使われてきた発想法を名指しで呼び出し、アイデアを出します。 |
 | [**draw-your-font**](/hermes/docs/user-guide/skills/optional/creative/creative-draw-your-font/) | 手書き文字の写真から、そのまま使える TTF フォントを作ります。 |
+| [**dream-loop**](/hermes/docs/user-guide/skills/optional/creative/creative-dream-loop/) | コンセプトアートとの忠実度を確かめるループで、見栄えのする 3D シーンを作ります。 |
 | [**excalidraw**](/hermes/docs/user-guide/skills/optional/creative/creative-excalidraw/) | 手描き風の Excalidraw JSON 図（構成図、フロー図、シーケンス図）を作ります。 |
 | [**heartmula**](/hermes/docs/user-guide/skills/optional/creative/creative-heartmula/) | HeartMuLa。歌詞とタグから Suno のように曲を生成します。 |
 | [**hyperframes**](/hermes/docs/user-guide/skills/optional/creative/creative-hyperframes/) | HTML で組んだ構成から MP4/WebM の動画を書き出します。 |
 | [**impeccable**](/hermes/docs/user-guide/skills/optional/creative/creative-impeccable/) | フロントエンド設計の指針。上流で保守されています（impeccable）。 |
+| [**ip-as-logo**](/hermes/docs/user-guide/skills/optional/creative/creative-ip-as-logo/) | 32px でも見分けられる、シンプルでかわいい IP マスコットのマークを作ります。 |
 | [**kanban-video-orchestrator**](/hermes/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator/) | 複数のエージェントで動画制作の工程を計画し、走らせます。 |
 | [**meme-generation**](/hermes/docs/user-guide/skills/optional/creative/creative-meme-generation/) | ひな形に Pillow で文字を重ね、ミーム画像（PNG）を作ります。 |
+| [**mono-color**](/hermes/docs/user-guide/skills/optional/creative/creative-mono-color/) | 1 色または 2 色刷りの、雑誌風ポスター画像を生成します。 |
 | [**pixel-art**](/hermes/docs/user-guide/skills/optional/creative/creative-pixel-art/) | 時代ごとの配色（NES、ゲームボーイ、PICO-8）でドット絵を描きます。 |
 | [**pretext**](/hermes/docs/user-guide/skills/optional/creative/creative-pretext/) | DOM を使わない文字組みで、ブラウザ上の作品デモを作ります。 |
 | [**simple-english**](/hermes/docs/user-guide/skills/optional/creative/creative-simple-english/) | 技術文書を ASD-STE100 の簡易技術英語に書き直します。 |
@@ -215,6 +217,7 @@ hermes skills uninstall <skill-name>
 | [**canvas**](/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/) | API トークンで Canvas LMS の講義と課題を取得します。 |
 | [**decision-questionnaire**](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | 答えの出ない判断を、質問票の形の文書に組み替えます。 |
 | [**here-now**](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | &#123;slug&#125;.here.now にサイトを公開し、ファイルを Drives に保管します。 |
+| [**live-dashboard**](/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/) | ライブのデータ源から、自動で更新されるダッシュボードを作ります。 |
 | [**memento-flashcards**](/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/) | 間隔をあけて復習する単語カード。作成、復習、小テスト、書き出しに対応します。 |
 | [**property-listings**](/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/) | 物件や賃貸の情報を、デスクトップのカードとして並べて見せます。 |
 | [**shop**](/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/) | 商品の検索、購入手続き、配送状況の確認、返品まで扱います。 |

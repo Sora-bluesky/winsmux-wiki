@@ -2,7 +2,7 @@
 title: "プロファイルのコマンド早見表"
 description: ""
 upstream_path: reference/profile-commands.md
-upstream_blob: efa13bf9f209e15f7193c3c7f4e5ecdabbb0c6a3
+upstream_blob: 3d37e5b773207713ff76411b0e83cc36a2c95058
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/profile-commands
 ---
@@ -353,7 +353,7 @@ hermes profile install ./telemetry/
 hermes profile update <name> [--force-config] [--yes]
 ```
 
-記録されている取得元から配布を取り直し、更新を当てます。配布側が持つファイル（SOUL.md、skills/、cron/、mcp.json）は上書きされますが、利用者のデータ（記憶、セッション、認証情報、.env）には触れません。
+記録されている取得元から配布を取り直し、更新を当てます。配布側が持つファイル（SOUL.md、mcp.json）は上書きされ、配布に同梱されたスキルと cron ジョブは入れ替わります。`skills/` や `cron/` の下に自分で追加したスキルや cron ジョブは、そのまま残ります。利用者のデータ（記憶、セッション、認証情報、.env）には触れません。`skills/`、`cron/`、あるいはスキルのカテゴリのディレクトリがシンボリックリンクになっている場合は、何かを書き込む前に拒否されます。リンクを実体のディレクトリに置き換えてから、もう一度実行してください。
 
 `config.yaml` は、手元での上書き設定を残すため既定では保たれます。配布に同梱された設定に戻したい場合は `--force-config` を渡してください。
 

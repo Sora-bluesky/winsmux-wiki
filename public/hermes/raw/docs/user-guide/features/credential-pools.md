@@ -2,7 +2,7 @@
 title: "認証情報プール"
 description: "プロバイダごとに複数の API キーや OAuth トークンをまとめておき、自動で切り替えてレート制限から復帰します。"
 upstream_path: user-guide/features/credential-pools.md
-upstream_blob: 477fb3aef3d4b2dccbf7d44f032d9b4bba0d4411
+upstream_blob: f8409a2cf3dbc62ba6271201715ee2890c7170cd
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/credential-pools
 ---
@@ -284,6 +284,8 @@ Hermes は起動時にいくつもの場所から認証情報を見つけ出し�
 ```
 
 上の OpenRouter の項目は外部から借りてきたものなので、キーそのものは `auth.json` に入っていません。手で追加したほうの Anthropic の項目は Hermes の保管場所へ意図して登録したものなので、トークンをそのまま保存できます。
+
+`env:` の行は読み込むたびに環境変数から値を入れ直します。変数名は、Hermes がそのプロバイダ向けに決めている名前でなくてもかまいません。たとえば `"source": "env:OPENROUTER_API_KEY_2"` という 2 つ目の行は `OPENROUTER_API_KEY_2`（シェル、`.env`、またはシークレット管理ツール）から値を得て、主のキーと一緒にローテーションされます。シークレットそのものが `auth.json` に書き込まれることはありません。
 
 方針の設定は `auth.json` ではなく `config.yaml` に保存されます。
 

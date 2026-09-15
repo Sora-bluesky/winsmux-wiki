@@ -2,7 +2,7 @@
 title: "カンバンの作業レーン"
 description: ""
 upstream_path: user-guide/features/kanban-worker-lanes.md
-upstream_blob: 7a7141cea3cbbee985087dded3ee204ceb31a608
+upstream_blob: 39c7d53c2b196e88ea5ac9db44a0c54c3a654743
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban-worker-lanes
 ---
@@ -64,6 +64,9 @@ Hermes 以外のレーン（プラグインで登録するもの）では、プ�
 残ります。CLI やツールからの書き換えは、そのスクリプトを取りまとめ役として扱うのではなく、はねつけます。
 盤とデータベースの宛先、作業場所のパスはそのまま保たれます。派生したプロセスは、すでにある盤を
 読むことはできますが、スキーマの移行は動かしません。移行は持ち主が行います。
+この囲いが及ぶのは、その系統のボードのルートまでです（目印の値はそのルートで、これにディスパッチャーが
+固定した `HERMES_KANBAN_DB` が加わります）。別の Kanban のホームに対して作業する子孫、たとえば使い捨ての
+`HERMES_HOME` の下で行うテストや再現では、ふつうに読み書きできるボードが使えます。
 
 割り振り役は、新しく割り当てた作業役に、その作業役自身の範囲をはっきり与えます。管理下の
 Hermes ツールの MCP の口も、同じように自分を見ている作業役の代わりに動けますが、実行側の

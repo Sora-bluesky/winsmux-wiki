@@ -2,7 +2,7 @@
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md
-upstream_blob: de96e94bee504fe60f24c1dbce23d854d861d274
+upstream_blob: 03aa91025be282e10bff1bbf8f54ff892763bbf8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/cli
 ---
@@ -320,6 +320,21 @@ hermes chat -s github-pr-workflow -s github-auth
 
 Hermes は、最初のターンの前に、指定された各スキルをセッションのプロンプトへ読み込みます。
 このフラグは、対話モードでも単発クエリモードでも同じように使えます。
+
+### 設定でいつも自動読み込みする {#persistent-auto-load-via-config}
+
+同じスキルを **すべての** 新しいセッション（CLI、TUI、ゲートウェイ、cron、API のセッションのどれでも）の最初から有効にしておくには、`config.yaml` に `skills.auto_load` を書きます。
+
+```yaml
+skills:
+  auto_load:
+    - hermes-agent-dev
+    - github-pr-workflow
+```
+
+各項目はスキル名です。この一覧は、セッションのシステムプロンプトを最初に組み立てるときに一度だけ解決され、組み立てた内容は会話が続くあいだ（モデルの切り替えや圧縮をはさんでも）使い回されるので、プロンプトのキャッシュは崩れません。設定を書き換えた場合は、次のセッションから反映されます。見つからないスキルや無効にしたスキルは、警告をログに出して飛ばします。`-s` で指定した名前が一覧と重なっていても、読み込みは一度だけです。
+
+`--ignore-rules`（`HERMES_IGNORE_RULES=1` と同じ）を付けると、AGENTS.md、SOUL.md、`.cursorrules`、メモリの注入と一緒に自動読み込みも行いません。ただし、`-s` で明示したスキルは読み込まれます。この設定はプロファイルごとで、各プロファイルの `config.yaml` がそれぞれの一覧を決めます。
 
 ## スキルのスラッシュコマンド {#skill-slash-commands}
 

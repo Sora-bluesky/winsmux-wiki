@@ -2,7 +2,7 @@
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: 23cdb2b412a59014a90632c83240d93fce1f9f78
+upstream_blob: 6dccf68dcfc7745025c6d55315a951556b8ffc9b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -14,6 +14,48 @@ Hermes Agent は SQLite のデータベース（`~/.hermes/state.db`）を使い
 どちらのセッションでも残し続けます。以前のセッションごとの JSONL ファイル方式を置き換えたものです。
 
 ソースファイル: `hermes_state.py`（窓口）と、その兄弟にあたる `hermes_state_*.py` 群（スキーマ、fts、検索、圧縮、可搬性、ゲートウェイ、ほか）
+
+## Hermes のホームとプロファイルの分離 {#hermes-home-and-profile-isolation}
+
+状態と設定がファイルシステムのどこにあるかを決める正式な窓口は `get_hermes_home()` です。
+まずその文脈だけに効く上書きを見て、次に環境変数 `HERMES_HOME` を見て、最後にプラットフォームの既定
+（macOS と Linux では `~/.hermes`、Windows では `%LOCALAPPDATA%/hermes`）を使います。
+そのため、既定のデータベースは常に `get_hermes_home() / "state.db"` です。呼び出す側が
+`~/.hermes/state.db` というパスを直書きしてよいわけではありません。
+
+名前付きのプロファイルは、互いに切り離されたディレクトリです。たとえば `coder` という名前のプロファイルは
+`<default Hermes root>/profiles/coder/` を使うので、自分専用の
+`state.db`、設定、ログ、そのほかプロファイル単位の状態を持ちます。あるプロファイルのために
+データベースを作る、設定を読む、子プロセスを起動するといった処理では、そのプロファイルの
+`HERMES_HOME` を持ち続けるか、子へ渡さなければなりません。既定のルートに戻ってしまうと、
+別のプロファイルの状態が処理に混ざります。
+
+CLI の起動処理は、Hermes のほかの部分を import する前に `_apply_profile_override()` を呼びます。
+`--profile`/`-p` がはっきり指定されていれば、そのプロファイルを解決し、
+解決したディレクトリを `HERMES_HOME` に書き込みます。指定がない場合、プロファイル専用の
+`HERMES_HOME` が設定されていればそれを保ちます。そうでなければ、起動処理は既定のルートで
+選ばれている「使用中のプロファイル」を使うことがあります。`HOME` が決めるのは、文脈の上書きも
+`HERMES_HOME` もないときに使うプラットフォームの既定だけです。
+`HOME` を変えるのは、名前付きのプロファイルを選ぶ安全な方法ではありません。とくに、
+`HERMES_HOME` を落とした子プロセスは、別のプロファイルが使用中でも既定のプロファイルに戻ってしまうことがあります。
+子プロセスを起動する側は `HERMES_HOME` を明示して渡してください。
+
+`display_hermes_home()` は、利用者に見せる文字列にだけ使います。解決済みのホームを、できる限り
+利用者のホームディレクトリからの相対表記に整えるものです（たとえば
+`~/.hermes/profiles/coder`）。別の解決規則を持っているわけではありません。
+
+### テストの分離ガード {#test-isolation-guard}
+
+テストでは、一時的な `HERMES_HOME` か、明示した一時的なデータベースのパスを使わなければなりません。
+本番環境を守るガードは、テスト中のプロセスが、実際の既定の Hermes ルートや実在する名前付きプロファイルの下にある
+本番の `state.db` を開こうとした時点で例外を投げます。これにより、テスト用のデータや SQLite の副作用が、
+実際に使っている環境に届くのを防ぎます。
+
+`HERMES_STATE_DB_GUARD_BYPASS=1` は、本番のデータベースにどうしても触る必要がある子プロセスのための、
+テスト専用の抜け道です。同じプロセス内で使う抜け道は `@pytest.mark.live_system_guard_bypass` です。
+ふつうの Hermes コマンド、開発用のシェル、アプリの設定では、どちらの抜け道も設定しないでください。
+本番のセッション履歴を守るガード（容赦なく `RuntimeError` を出すもの）が無効になります。
+また、シェルで export すると、そのあとに走るすべての pytest に抜け道が引き継がれてしまいます。
 
 ### デスクトップのプロファイル分離と圧縮の世代 {#desktop-profile-isolation-and-compaction-generations}
 
@@ -463,10 +505,9 @@ db.delete_session("sess_abc123")
 
 ## データベースの置き場所 {#database-location}
 
-既定のパス: `~/.hermes/state.db`
-
-これは `hermes_constants.get_hermes_home()` から導かれます。既定では `~/.hermes/`
-を指し、環境変数 `HERMES_HOME` があればその値になります。
+既定のパス: `get_hermes_home() / "state.db"` — 既定のプロファイルなら `~/.hermes/state.db`、
+名前付きのプロファイルなら `~/.hermes/profiles/<name>/state.db`、あるいは
+`HERMES_HOME` が指す場所です（[Hermes のホームとプロファイルの分離](#hermes-home-and-profile-isolation)を参照）。
 
 データベース本体、WAL ファイル（`state.db-wal`）、共有メモリのファイル
 （`state.db-shm`）は、いずれも同じディレクトリに作られます。

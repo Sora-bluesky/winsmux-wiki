@@ -2,7 +2,7 @@
 title: "パスワードとログイン"
 description: "エージェントがパスワードを一度も見ることなく、サイトへのサインインや支払い、住所の入力を代わりに行います。"
 upstream_path: user-guide/features/credential-vault.md
-upstream_blob: d003990d1bc2bd552c2abdb6d8e670985b79d77b
+upstream_blob: dc3abb33ea7cf77667cf6e739004b09a07aad7db
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/credential-vault
 ---
@@ -42,6 +42,9 @@ sources:
 
 有効にする操作は要りません。コマンドラインツールの `op` や `bw` がインストールされていてサインイン済みなら、Hermes が自動で検出し、そこに保存されたウェブサイトのログインもローカルのものと並んで入力に使えるようになります。エージェントがそうしたログインを初めて必要としたとき、マスターパスワードでパスワードマネージャーのロックを解除するよう求めてきます（入力は伏せられます。解除はセッションごとに 1 回で、30 分操作がないとロックされます）。Hermes はマスターパスワードを対話なしの経路でパスワードマネージャーの CLI へ渡し（`op signin` なら標準入力、`bw unlock
 --passwordenv` なら子プロセスの環境変数）、メモリにはセッショントークンだけを残します。エージェントがマスターパスワードやトークン、ログイン情報を目にすることはありません。
+パスワードマネージャーの項目に複数のウェブサイト（たとえば `amazon.co.uk`、
+`www.amazon.co.uk`、`eu.account.amazon.com`）が登録されていれば、そのどれかとまったく同じ
+オリジンで入力に使われます。項目に保存された URL から先を推し量ることはありません。
 
 検出されたパスワードマネージャーを使いたくない場合は、`hermes vault sources --disable bitwarden` を実行するか、**設定 → パスワードとログイン** のスイッチで切ります。
 

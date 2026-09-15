@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-15",
+  "generatedAt": "2026-09-16",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-09-15",
-      "attemptedAt": "2026-09-15",
+      "fetchedAt": "2026-09-16",
+      "attemptedAt": "2026-09-16",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -83,8 +83,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-09-15",
-      "attemptedAt": "2026-09-15",
+      "fetchedAt": "2026-09-16",
+      "attemptedAt": "2026-09-16",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -307,14 +307,24 @@
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null
+        },
+        {
+          "id": "z-ai/glm-5.2:free",
+          "name": "Z.ai: GLM 5.2 (free)",
+          "ctx": 32768,
+          "tools": false,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": false,
+          "criteriaReason": "tools"
         }
       ],
       "conflicts": []
     },
     "opencode": {
       "ok": true,
-      "fetchedAt": "2026-09-15",
-      "attemptedAt": "2026-09-15",
+      "fetchedAt": "2026-09-16",
+      "attemptedAt": "2026-09-16",
       "errorCode": null,
       "url": "https://opencode.ai/zen/v1/models",
       "models": [

@@ -2,7 +2,7 @@
 title: "Webhook"
 description: "GitHub や GitLab などのサービスからイベントを受け取り、Hermes のエージェント実行を起こす"
 upstream_path: user-guide/messaging/webhooks.md
-upstream_blob: ca258573edb8b276adf66f69022cc571dc6499bf
+upstream_blob: f4bbd1affb5c75f894c9f16a2e46c530a8b51db2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks
 ---
@@ -85,6 +85,7 @@ curl http://localhost:8644/health
 | `deliver_extra` | いいえ | 配信の追加設定。キーは `deliver` の種類によって変わります（例: `repo`、`pr_number`、`chat_id`）。値には `prompt` と同じ `{dot.notation}` のテンプレートが使えます。 |
 | `deliver_only` | いいえ | `true` にすると、エージェントを一切通しません。展開後の `prompt` テンプレートが、そのまま配信されるメッセージになります。LLM の費用はゼロで、1 秒未満で届きます。使いどころは[直接配信モード](#direct-delivery-mode)を参照してください。`deliver` に実際の送り先（`log` 以外）が必要です。 |
 | `cron_job` | いいえ | イベントのたびに新しい webhook のエージェントセッションを始める代わりに、既存の cron ジョブ（ID か名前で指定）を起動します。展開後の `prompt` は、その実行限りの一時的な文脈になり、ジョブ自身のプロンプト、スキル、モデル、配信設定が使われます。`deliver_only` とは同時に使えません。[イベントで起動する cron ジョブ](#event-triggered-cron-jobs)を参照してください。 |
+| `coalesce` | いいえ | 同じ対象に続けざまに届く別々のイベントを、待ってまとめ、1 回のエージェント実行にします。ブロックで指定し、`key`（対象を見分けるペイロードのフィールドかテンプレート。例: `pull_request.number`）は必須、`window_seconds`（静かな時間の長さ。既定 30）と `max_wait_seconds`（実行までの上限。既定 300）は省略できます。[イベントのまとめ](#event-coalescing)を参照してください。`deliver_only` や `cron_job` とは同時に使えません。 |
 
 ### 全体の例 {#full-example}
 
@@ -157,6 +158,42 @@ platforms:
 - `all`、`any`、`not` のグループ
 
 フィールドの指定にはドット記法を使います。`payload.foo` は、最上位に `payload` オブジェクトがあればそこから、平坦なペイロードなら webhook 本文の直下から読みます。`event` / `event_type` は解決済みのイベント種別と照合し、`headers.<Name>` はリクエストヘッダーを読みます。
+
+### イベントのまとめ {#event-coalescing}
+
+サービス側は、同じ対象について別々のイベントを立て続けに送ってくることがよくあります。1 つのプルリクエストへの 5 回続けての push、1 つのチケットへの編集の連続、出たり消えたりを繰り返す監視アラートなどです。イベントごとに新しい配信 ID が付くので、重複を防ぐキャッシュでは抑えられず、イベントのたびに別々のエージェント実行が起きてしまいます。
+
+ルートに `coalesce` を設定すると、これらを待ってまとめ、対象ごとに 1 回の実行にできます。
+
+```yaml
+platforms:
+  webhook:
+    extra:
+      routes:
+        github-pr:
+          events: ["pull_request"]
+          secret: "github-webhook-secret"
+          coalesce:
+            key: "{repository.full_name}#{pull_request.number}"
+            window_seconds: 30      # quiet window (default 30)
+            max_wait_seconds: 300   # dispatch cap (default 300)
+          prompt: "Review PR #{pull_request.number}: {pull_request.title}"
+          deliver: "github_comment"
+          deliver_extra:
+            repo: "{repository.full_name}"
+            pr_number: "{pull_request.number}"
+```
+
+仕組み:
+
+- イベントは、ルートごとに展開後の `key` でまとめられます。ドットでつないだフィールド名だけ（`pull_request.number`）でも、テンプレート全体（`{repository.full_name}#{pull_request.number}`）でも使えます。
+- 新しいイベントが来るたびに、待っているイベントを**置き換え**、静かな時間のタイマーを延ばします。`window_seconds` の間に新しいイベントが来なければ、そのまとまりは最新のイベントのペイロード、プロンプト、配信テンプレートを使って、エージェントを**1 回だけ**実行します。
+- `max_wait_seconds` は、まとまりの最初のイベントから数えた待ち時間の上限です。イベントが途切れず届き続けても、実行がいつまでも先送りされることはありません。
+- 2 件以上のイベントがまとめられた場合は、それより前のイベントが何件置き換えられたかを伝える短い注記がプロンプトに付きます。
+- あるイベントで `key` が解決できない場合（ペイロードにそのフィールドがない場合。例: `pull_request.number` を key にしたルートに `issue_comment` イベントが来たとき）、そのイベントはまとめずに**すぐ実行**されます。関係のない対象が 1 つのまとまりに混ざることはありません。ルートが受け付けるすべてのイベント種別にある key を選んでください。
+- まとめられたリクエストには、HTTP 202 と `{"status": "coalesced"}` を返します。配信 ID による重複防止は先に働くので、同じ配信をサービス側が再送してきた分は、数に入れずに捨てられます。
+- アダプターの接続が切れたとき（gateway の再接続や `hermes gateway stop`）、待っているまとまりは捨てずに、すぐ実行されます。ためているイベントはメモリ上にあるので、プロセスを強制終了した場合に失われるのは、せいぜいその時点の待ち時間にためていた分だけです。
+- `coalesce` はエージェントモードのルートにだけ使えます。`deliver_only` や `cron_job` と組み合わせると、起動時に拒否されます。
 
 ### スクリプトによるふるい分けと変換 {#script-filters-and-transforms}
 

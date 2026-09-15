@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、ユーザーの認可、コンテナの隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: 8a69a1684b5dd448f4abe3745ab5bba68fd2edb0
+upstream_blob: e3c5c92271122d4a109e40ce51878f18492fa93d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -270,6 +270,13 @@ command_allowlist:
 
 これらのパターンは起動時に読み込まれ、以後のセッションでは確認なしで承認されます。
 
+項目には、コマンドの文字列そのもの、シェル風のグロブ（`podman *`）、または
+`script execution via heredoc` のような危険パターンの規則キー（承認の確認に表示されるキー）を
+書けます。規則キーは、無人で動くものも含めてすべての入口で有効です。cron のジョブ、
+`hermes chat -q` の実行、`cron_mode`/`single_query_mode`/`unattended_mode: deny` の下で動く
+Webhook のセッションでも、検出された規則キーが `command_allowlist` に入っていればコマンドは
+実行されます。ただし、同じコマンドに対する Tirith のコンテンツセキュリティの検出は、引き続き実行を止めます。
+
 この設定は文字列のリストでなければなりません。古い環境で、リストを YAML / JSON の文字列として
 引用符付きで保存していた場合は、読み込み時にリストへ戻したうえで、`hermes config edit` で
 保存し直すよう警告を出します。それ以外の壊れた値は警告を出して無視され、1 文字ずつの承認に
@@ -317,6 +324,12 @@ Proposed command_allowlist additions (from approval history, last 90 days):
   SQL の DROP と TRUNCATE、プロセスの強制終了、そして絶対拒否の分類はすべて外れます。
   `rm -rf build/` を100回承認していても、`rm` の項目が出てくることはありません。
 - すでに `command_allowlist` に入っているものは候補から外れます。
+- **掘り出したコマンドに含まれる認証情報は伏せ字になります**（`ghp_…`、`bot<id>:<token>`
+  の URL、`KEY=value` の代入、Bearer トークン）。表示される `e.g.` の例でも `--json` の出力でも、
+  terminal の出力と同じ伏せ字処理が使われます。伏せ字にした文字列が許可リストのパターンに
+  使われることはありません。グロブに認証情報が入ってしまうコマンド（`TOKEN=… git …`）は、
+  代わりに危険度の分類キーで候補に出ます。なお、セッションのデータベースそのものには、
+  実行されたときのままのコマンドが残っています。
 
 役に立つフラグ: `--days N`（さかのぼる期間。既定は90）、`--min-count N`
 （候補にする最低承認回数。既定は2）、`--limit N`、`--db PATH`。
@@ -332,8 +345,10 @@ Proposed command_allowlist additions (from approval history, last 90 days):
 | 種類 | 例 |
 |----------|----------|
 | OS の認証情報の置き場 | `~/.ssh/`（鍵、`authorized_keys`）、`~/.aws/`、`~/.kube/`、`/etc/sudoers`、`~/.netrc` |
-| Hermes の認証情報の置き場 | HERMES_HOME 配下（使用中のプロファイルと全体の根元）の `auth.json`、`.env`、`.anthropic_oauth.json`、`mcp-tokens/`、`pairing/` |
-| プロジェクトの秘密のファイル | ディスク上のどこにあっても `.env`、`.env.local`、`.env.production`、`.envrc` |
+| Hermes の秘密情報の置き場 | HERMES_HOME 配下（使用中のプロファイルと全体の根元）の `.env`、`.anthropic_oauth.json`、`auth/google_oauth.json`、Bitwarden のキャッシュ（`cache/bws_cache.json`、`cache/bws_cache.enc.json`）、`vault/`、`browser-profile/`、`mcp-tokens/`、`pairing/`。制御ファイル（`auth.json`、`config.yaml`、`webhook_subscriptions.json`）は読み取りが拒否されますが、書き込みはできます。 |
+| Windows の NT / デバイス名前空間のパス | `\??\...`、`\\.\...`、`\\?\UNC\...`、`\\?\GLOBALROOT...` — どのプラットフォームでも、読み取りと書き込みの両方で拒否されます。Windows では、こうしたパス（例: `\??\UNC\host\share`）を*解決*しただけで外向きの SMB 認証が走り、利用者の NTLM ハッシュが漏れるおそれがあります。これらの接頭辞は通常のパスの正規化もすり抜けます。ふつうの長いパス形式のローカルパス（`\\?\C:\...`）や、ただの UNC 共有（`\\server\share`）には影響しません。 |
+
+プロジェクトの `.env`、`.env.local`、`.env.production`、`.envrc` は、ディスク上のどこにあっても**読み取りが拒否されます**（ファイル系のツールが読むのを断ります）が、書き込みはできます。エージェントはこれらのファイルを作ったり編集したりはできますが、中の値を読み返すことはできません。
 
 安全な範囲の中にあっても、重要なパスは止まります。`HERMES_WRITE_SAFE_ROOT` を `$HOME` に向けても、`~/.ssh/id_rsa` に書けるようにはなりません。
 
@@ -369,7 +384,7 @@ export HERMES_WRITE_SAFE_ROOT=/path/to/project:/home/you/.hermes
 `~/.hermes/cron/jobs.json` を直接 `patch` するようにエージェントへ頼まないでください。`cronjob` ツール、[`hermes cron`](/hermes/docs/user-guide/features/cron/)、`/cron` を使ってください。これらは正しい入口を通ってジョブの保存先を更新します。書き込みの安全策で直接の編集が止まったときは、ほかの Hermes の制御ファイルについても同じようにしてください。
 
 :::note 多層防御であって、固い境界ではありません
-書き込みの防御が効くのは `write_file` と `patch` だけです。`terminal` ツールは同じ OS ユーザーとして動くので、シェルのコマンドを使えば禁止されたパスを `cat` したり上書きしたりできます。禁止リストは事故を減らし、モデルにはっきりした「ここで止まれ」を伝えるためのもので、敵対的なエージェントや乗っ取られたエージェントを閉じ込めるものではありません。
+書き込みの防御が効くのは `write_file` と `patch` だけですが、例外がひとつあります。Windows の NT / デバイス名前空間の行は読み取りにも適用され、`read_file`、`search_files`、`@file:`/`@folder:` のコンテキスト参照、ACP のファイルブリッジは、どれもパスを解決する前に、生の文字列の段階でそれらのパスを拒否します。`terminal` ツールは同じ OS ユーザーとして動くので、シェルのコマンドを使えば禁止されたパスを `cat` したり上書きしたりできます。禁止リストは事故を減らし、モデルにはっきりした「ここで止まれ」を伝えるためのもので、敵対的なエージェントや乗っ取られたエージェントを閉じ込めるものではありません。
 :::
 
 ## ユーザーの認可（ゲートウェイ） {#user-authorization-gateway}
@@ -408,6 +423,8 @@ DISCORD_ALLOW_ALL_USERS=true
 GATEWAY_ALLOW_ALL_USERS=true
 ```
 
+全体の全員許可は、`config.yaml` に `gateway.allow_all_users: true`（またはトップレベルの `allow_all_users: true`）として書くこともできます。true にすると、ゲートウェイの起動時に `GATEWAY_ALLOW_ALL_USERS` へ引き継がれます（設定の読み込みや再起動のたびに導き直されるので、`false` に戻せば入口は閉じます）。環境変数をはっきり設定していればそちらが優先され、ゲートウェイは許可の出どころとして `config.yaml` を名指しした警告をログに出します。複数のプロファイルを動かすゲートウェイでは、2 つ目以降のプロファイルは自分の `.env` で `GATEWAY_ALLOW_ALL_USERS` を設定します（そのプロファイルの `config.yaml` がプロセスの環境変数に引き継がれることはありません）。
+
 :::warning
 **許可リストがひとつも設定されておらず**、`GATEWAY_ALLOW_ALL_USERS` も設定されていないときは、**すべての利用者が拒否されます**。ゲートウェイは起動時に警告を出します。
 
@@ -440,6 +457,7 @@ whatsapp:
 
 - チャット型の DM のプラットフォームでは `pair` が既定です。認可されていない DM にはペアリングコードが返ります。
 - `ignore` は、認可されていない DM を黙って捨てます。
+- `decline` は、ペアリングコードの代わりに短く丁寧な断りの返事（"I can only chat with my owner"）を1回だけ送り、その後24時間はその送り主からのメッセージを無視します。文面は `unauthorized_dm_decline_message` で変えられます。
 - メールは、`platforms.email.unauthorized_dm_behavior: pair` を設定しないかぎり `ignore` が既定です。受信箱には関係のない未読メールが入っていることがあるからです。
 - プラットフォームごとの設定は全体の既定を上書きするので、Telegram ではペアリングを残しつつ WhatsApp は黙らせる、といった使い分けができます。
 

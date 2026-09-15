@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みで SHA 固定された Hermes のプラグインを、厳選カタログから探して導入する"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: bf6fd831e2c6741b970c0ed370b1c99314a22158
+upstream_blob: ddff54c4320c30a05db2f1ec5bd3ced747021b3e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -16,8 +16,9 @@ sources:
 hermes plugins install <name>
 ```
 
-見た目で探すなら **[/docs/plugins](https://hermes-agent.nousresearch.com/plugins)** を開いてください。検索、階層フィルタ
-（Official / Community）、機能チップ、そして各エントリのコピーできる導入コマンドが並んでいます。
+見た目で探すなら **[/docs/plugins](https://hermes-agent.nousresearch.com/plugins)** を開いてください。エントリは種類ごとの棚
+（Memory、Desktop、Platforms、Web & Browser、Tools、Voice、Automation、Models）に分かれて並び、検索、階層フィルタ
+（Official / Community）、機能チップ、そして各エントリのコピーできる導入コマンドがそろっています。
 
 カタログは既存の[プラグインの仕組み](/hermes/docs/user-guide/features/plugins/)を置き換えるものではなく、補うものです。カタログから導入できるものは、
 内部的にはすべて普通のプラグインです。カタログはその上に「見つけやすさ」と審査の
@@ -35,6 +36,7 @@ hermes plugins install <name>
 | `repo` | そのプラグインの公開 git リポジトリ |
 | `sha` | 審査を受けた**正確な 40 桁の 16 進コミット**。導入時はブランチの先端ではなく、この固定値をチェックアウトします |
 | `tier` | `official`（NousResearch が保守）または `community` |
+| `category` | 一覧で並ぶ棚: `desktop`（既定）、`memory`、`platform`、`web`、`tools`、`voice`、`automation`、`models`、`general` のいずれか |
 | `maintainer` | プラグインの持ち主 |
 | `capabilities` | 宣言されたツール、フック、ミドルウェア、必要な環境変数 |
 | `requires_hermes` | 必要な Hermes の最低バージョン。例: `>=0.19`（任意） |
@@ -142,12 +144,15 @@ hermes plugins enable snyk
 にあります。要点として、エントリは次を満たす必要があります。
 
 1. **本人による応募** — PR の作成者が、そのプラグインのリポジトリの所有者か保守担当者であること。
+   保守担当者が、審査済みの一括収集から community のプラグインをまとめて追加することもあります
+   （固定したコミットごとに検証とスキャンを済ませています）。自分のプラグインがそうして追加されていて、
+   内容を変えたい、または外したい場合は、そのエントリに対して PR を出してください。
 2. **公開リポジトリであること** — `repo` の URL が誰でもクローンできること。
 3. **リリース済みであること** — 既定ブランチだけでなく、実際のリリースやタグがあること。
 4. **検証を通っていること** — カタログ検証の GitHub Action が PR 上で緑であること
    （スキーマ、SHA の形式、到達性）。
-5. **落ち着いたコードを固定していること** — 固定した SHA が**2 週間以上前**のものであること。
-   審査の直前に push されたコードをカタログが指すことのないようにするためです。
+5. **自分で自分を更新しないこと** — カタログに載せるビルドが、自分のファイルをダウンロードして置き換えてはいけません。
+   更新の道は固定した SHA だけです（SHA を上げる PR と、`hermes plugins update <name>` の組み合わせ）。
 
 固定値の更新（`sha` を新しいコミットへ上げること）も、同じ PR とレビューの手順を通ります。
 

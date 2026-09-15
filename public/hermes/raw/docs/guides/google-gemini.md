@@ -2,7 +2,7 @@
 title: "Google Gemini"
 description: "Hermes Agent を Google Gemini で使う方法。ネイティブの AI Studio API、API キーの設定、ツール呼び出し、ストリーミング、割り当ての考え方まで"
 upstream_path: guides/google-gemini.md
-upstream_blob: d047916b7d354ff76165ee73fe376b807a415724
+upstream_blob: eac7bd4214b474b2c72ae84d3984333a50ba9dfd
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/google-gemini
 ---
@@ -102,6 +102,13 @@ Hermes のエージェントセッションでは、上に挙げた Gemini ネ�
 ```bash
 GEMINI_BASE_URL=https://generativelanguage.googleapis.com/v1beta
 ```
+
+Google のホストのルートだけを書いたベース URL は、自動で整えられます。URL が API のバージョンの区切り
+（`v1beta`、`v1alpha`、`v1`、...）で終わっていなければ、Hermes が `/v1beta` を足すので、
+`GEMINI_BASE_URL=https://generativelanguage.googleapis.com` と書いても、`/v1beta` まで書いたときと同じように動きます。
+同じ整え方は Gemini の TTS のベース URL（`tts.gemini.base_url`）にも当てはまります。チャットの要求がネイティブの
+Gemini の経路を通るのは、ベース URL が `generativelanguage.googleapis.com` を指しているときだけです。
+ほかのホストにあるプロキシは OpenAI 互換のエンドポイントとして扱われるので、`/openai` の形の URL で設定してください。
 
 ## 使えるモデル {#available-models}
 

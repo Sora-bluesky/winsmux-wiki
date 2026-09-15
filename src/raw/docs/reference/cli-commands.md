@@ -2,7 +2,7 @@
 title: "CLI コマンド一覧"
 description: "Hermes のターミナルコマンドとコマンド群の公式な早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: 1eca44ed404ee78aef4a632ec757b2edff4d514f
+upstream_blob: f61f12095879cb191f9edaa84eeb103fe6578d42
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -61,6 +61,7 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes migrate` | 廃止されたモデルや非推奨の設定への参照を見つけ、必要なら `config.yaml` を書き換えます（例: `migrate xai`）。 |
 | `hermes status` | エージェント、認証、プラットフォームの状態を表示します。 |
 | `hermes cron` | cron スケジューラの中身を確認し、手動で進めます。 |
+| `hermes pause` / `hermes resume` | 全体の緊急停止です。再開するまで、新しい cron の起動（組み込みのティッカー、managed-cron の webhook、取りこぼし分の追いかけ実行）、かんばんのディスパッチ、ゲートウェイのターン開始がすべて止まります。実行中の作業が強制終了されることはありません。 |
 | `hermes kanban` | 複数プロファイルで共同作業するためのボードです（タスク、依存関係、ディスパッチャ）。 |
 | `hermes project` | 複数フォルダにまたがる名前付きワークスペース（プロジェクト）を管理します。デスクトップのセッションをまとめる基準になり、かんばんボードと結び付けるとタスクに決まった worktree とブランチの規則を与えます。状態はプロファイルごとに保持されます。 |
 | `hermes webhook` | イベント起動のための動的な webhook 登録を管理します。 |
@@ -123,6 +124,7 @@ hermes chat [options]
 | `-s`, `--skills <name>` | セッションで使うスキルを前もって読み込みます（繰り返し指定、またはカンマ区切りが使えます）。 |
 | `-v`, `--verbose` | 詳しい出力を出します。 |
 | `-Q`, `--quiet` | プログラム向けの動作です。バナー・回転表示・ツールの下見表示を出しません。 |
+| `--format stream-json` | `-q` / `--query` で実行したとき、構造化された JSONL を出力します。`--quiet` を含み、`--tui` とは併用できません。 |
 | `--image <path>` | 1 回の問い合わせにローカルの画像を添えます。 |
 | `--resume <session>` / `--continue [name]` | `chat` から直接セッションを再開します。 |
 | `--worktree` | この実行のために独立した git worktree を作ります。 |
@@ -144,10 +146,35 @@ hermes chat --oneshot -q "Summarize the latest PRs"  # answer and exit
 hermes chat --provider openrouter --model anthropic/claude-sonnet-4.6
 hermes chat --toolsets web,terminal,skills
 hermes chat --quiet -q "Return only JSON"
+hermes chat -q "Inspect this repository" --format stream-json
 hermes chat --worktree -q "Review this repo and open a PR"
 hermes chat --ignore-user-config --ignore-rules -q "Repro without my personal setup"
 hermes chat --safe-mode -q "Is this bug mine or Hermes'?"
 ```
+
+### `--format stream-json` — 構造化された JSONL 出力 {#--format-stream-json-structured-jsonl-output}
+
+プログラムが端末の表示を読み取らずに進み具合を受け取りたいときは、`--format stream-json` を使います。
+`-q` / `--query`（または `--query-file`）が必要で、静かな非対話の CLI モードとして動き、
+`--tui` を明示的に指定すると拒否されます。標準出力の 1 行が JSON オブジェクト 1 つになり、
+診断メッセージと `session_id:` の行は標準エラー出力に残ります。
+
+```bash
+hermes chat -q "Summarize this repository" --format stream-json
+```
+
+どのイベントにも `timestamp`（Unix エポックからのミリ秒）が付きます。
+
+| イベントの `type` | フィールド |
+|---|---|
+| `system` | `subtype: "init"`、`model`、`session_id` |
+| `text` | `text` — ストリーミングされるアシスタントの文章の差分 |
+| `tool_use` | `name`。ツールの引数が得られるときは `input` も付きます |
+| `tool_result` | `name`、`output`（上限 5000 文字）、`duration_ms`、`is_error` |
+| `result` | `session_id`、`exit_code`、`text`、`tokens`（`input`、`output`、`total`、`cache_read`、`cache_write`）、`duration_ms`。ターンが失敗したときは `error` も付きます |
+
+会話が始まったあと、最後の記録は必ず `result` になります。Ctrl-C で中断した場合も
+`exit_code: 130` として出ます。この記録を完了の合図として扱ってください。プロセスの終了コードはこの `exit_code` と一致します。
 
 #### 答えて終わるチャットでの委任 {#delegation-in-finite-chat-runs}
 
@@ -288,7 +315,7 @@ hermes gateway <subcommand>
 | `--no-supervise` | `run` のとき、s6-overlay の Docker イメージの中で自動監視を使わず、s6 導入前の前面動作にします。ゲートウェイがコンテナの主プロセスになり、自動再起動はしません。s6 イメージの外では何も起きません。`HERMES_GATEWAY_NO_SUPERVISE=1` を設定するのと同じです。 |
 | `--external-supervisor` | `run` のとき、前面のゲートウェイをラッパー側のプロセス管理が持つことを宣言します。`sudo` や `env -i`、その他のラッパーが launchd / systemd の環境目印を落としてしまう場合に使ってください。チャット内からの再起動や更新は、切り離した別プロセスを立てるのではなく、その管理側へ戻る形で終了します。 |
 
-`--external-supervisor` は再起動の取り決めそのものです。チャット内からの再起動やサービス再起動を伴う更新は終了ステータス `75` で抜けるので、ラッパー側の監視プロセスがそのゼロ以外の終了のあとでゲートウェイを立て直す必要があります。systemd なら
+`--external-supervisor` は再起動の取り決めそのものです。チャット内からの再起動、`hermes gateway restart`、サービス再起動を伴う更新は終了ステータス `75` で抜けます（そのあと CLI は自前で前面のゲートウェイを動かすのではなく、監視プロセスが立てた新しい PID を待ちます）。そのため、ラッパー側の監視プロセスがそのゼロ以外の終了のあとでゲートウェイを立て直す必要があります。systemd なら
 `Restart=on-failure` か `Restart=always` を使い、`RestartPreventExitStatus` に `75` を含めないでください。launchd なら、失敗終了のあとに立て直すよう `KeepAlive` を設定します。この設定がないと、再起動を頼んでもゲートウェイは止まったままになります。
 
 `hermes gateway enroll` は `--token`、`--connector-url`、`--gateway-id`、`--wake-url` を受け取ります。登録用トークンをコネクタと交換し、得られた `GATEWAY_RELAY_ID`、`GATEWAY_RELAY_SECRET`、`GATEWAY_RELAY_DELIVERY_KEY`、任意の `GATEWAY_RELAY_URL`、そして（`--wake-url` を指定した場合は）`GATEWAY_RELAY_WAKE_URL` の値を、いま有効なプロファイルの `.env` に書き込みます。
@@ -1163,7 +1190,7 @@ hermes config <subcommand>
 |------------|-------------|
 | `show` | 現在の設定値を表示します。 |
 | `edit` | エディタで `config.yaml` を開きます。 |
-| `get <key> [--json]` | ドット区切りのキーで設定値を 1 つ表示します（例: `hermes config get model.default`）。`--json` を付けると機械で読める形になります。 |
+| `get <key> [--json] [--raw]` | ドット区切りのキーで設定値を 1 つ表示します（例: `hermes config get model.default`）。`--json` を付けると機械で読める形になります。認証情報らしい値（`api_key`、`*_TOKEN`、`*_SECRET`、`password` など）は伏せ字（`sk-o...7890`）で表示されます。エージェントがこのコマンドを実行するセッションの記録は残り続けるためです。`--raw` を付けると実際の値を表示します（または `security.redact_secrets: false` を設定します）。 |
 | `set <key> <value>` | 設定値を書き込みます。 |
 | `unset <key>` | 設定のキーを削除し、組み込みの既定値に戻します。 |
 | `path` | 設定ファイルのパスを表示します。 |
@@ -1653,8 +1680,9 @@ hermes import-agent [claude-code|codex] [options]
 | `--dry-run` | 下見だけで、何も書きません。 |
 | `--overwrite` | ぶつかった MCP サーバーやスキルを置き換えます（既定は飛ばします）。 |
 | `--yes`, `-y` | 確認を省きます。 |
+| `--sync` | 前回の取り込み以降にファイルが変わった、取り込み済みの取得元をすべて取り込み直します。確認は出ません。`--dry-run` と組み合わせると下見になります。 |
 
-対応表の全体は **[取り込みの手引き](/hermes/docs/user-guide/import-from-other-agents/)** をご覧ください。
+取り込みが成功するたびに、その取得元が `~/.hermes/import-sync.json` に登録されます。そのあと `hermes import-agent --sync` を実行すると、登録済みの取得元のうちファイルが変わったものを取り込み直します（取り込んだ Claude Code / Codex の設定を cron で最新に保つのに向いた方法です）。対応表の全体は **[取り込みの手引き](/hermes/docs/user-guide/import-from-other-agents/)** をご覧ください。
 
 ## `hermes serve` {#hermes-serve}
 
@@ -1735,6 +1763,7 @@ hermes profile <subcommand>
 ```bash
 hermes profile list
 hermes profile create work --clone
+hermes profile create work --clone --sync-imports   # also carry over the import-agent sync manifest
 hermes profile use work
 hermes profile alias work --name h-work
 hermes profile export work -o work-backup.tar.gz

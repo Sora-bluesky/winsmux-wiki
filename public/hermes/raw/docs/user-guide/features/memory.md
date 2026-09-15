@@ -2,7 +2,7 @@
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: 6e252e6a1a481fb5371f971252736b6f1a16cb68
+upstream_blob: 8eff4717599d56d71c4ab415062ca53deeb0ef85
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---
@@ -222,6 +222,8 @@ hermes sessions list    # Browse past sessions
 - **昔ながらの CLI / 単体で使う** — `hermes journey`（別名: `hermes learning`、`hermes memory-graph`）が、時間の流れをターミナルに描きます。オプション: `--play` で積み上がりを動かし（`--fps` で速さを調整）、`--width`／`--height` で描く大きさを指定し、`--no-color` で色を消し、`--json` でグラフの生のデータを吐き出します。
 - **TUI** — `/journey`（別名: `/learning`、`/memory-graph`）が、時間の流れを重ねて表示します。
 - **デスクトップアプリ** — `/journey` で Star Map（記憶のグラフ）のパネルが開きます。同じ節点を触って動かせる画面です。
+
+skill は、学びの手がかりができた時点で時間の流れに現れます。手がかりとは、この profile の中で作られたこと（`/learn` の結果や、前面での `skill_manage` による作成）、裏側の振り返りで作られたこと、または一度でも使われたことです。同梱の skill や、手で書いたまま一度も使われていない skill は、時間の流れには出てきません。
 
 見るだけでなく、Hermes が学んだことを**間引いたり直したり**するのも、この道のりの画面です。
 

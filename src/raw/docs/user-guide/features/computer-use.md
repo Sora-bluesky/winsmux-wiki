@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: 514f5b3aee45c18ef041d88bb945b64dfeab58b8
+upstream_blob: b781750a8e0a00493d4a980aa505cca90d4ab1fa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -242,10 +242,11 @@ Hermes 側の `computer_use` の進め方と操作の語彙に的を絞ってい
 cua-driver skills install
 ```
 
-このコマンドは、一式を `~/.cua-driver/skills/cua-driver` の下に入れます。Hermes の
-自動検出は cua-driver 側でこれから対応する予定なので、いまのところはそのディレクトリを
-Hermes に指すか、スキルの置き場所にシンボリックリンクを張ってください。ラッパーは
-引き続き進め方の層を受け持ち、ドライバーの挙動については Cua が入れたスキルを指します。
+このコマンドは、一式を `~/.hermes/skills/cua-driver` にリンクします（Hermes は
+`cua-driver skills status` が報告するエージェントの 1 つです）。ラッパーは引き続き
+進め方の層を受け持ちます。一式にはドライバー自身の MCP の語彙
+（`get_window_state`、`element_token`、`snapshot_id`）が書かれていますが、`computer_use`
+ラッパーがそれに合わせて翻訳してくれるので、そのまま `computer_use(action=...)` を呼び続けてください。
 一式には次のものが入っています。
 
 | ファイル | 内容 |
@@ -404,6 +405,13 @@ Hermes は何重にも歯止めをかけています。
   Windows の自動操作の仕組みはすべて同じ影響を受けます。権限の上がった窓を操作するには、
   Hermes エージェント自体を高い整合レベルで動かしてください（権限を上げた端末から
   起動します）。そうしない場合は、権限の上がっていない窓を対象にしてください。
+- **Windows: ツールは動くのに `hermes computer-use doctor` が "Access is denied" で
+  失敗する。** `C:\Program Files\WindowsApps` の下に入った cua-driver は、シェルからは
+  同じ実行ファイルを問題なく見つけられても、Hermes の venv のインタプリタからは
+  実行できません（`CreateProcess` から WinError 5 が返ります）。doctor は現在、これを
+  トレースバックではなく診断として報告します。直すのは一度で済みます。上流のインストーラーで
+  入れ直す（ユーザープロファイルの下に入ります）か、`WindowsApps` の外に置いた複製を
+  `HERMES_CUA_DRIVER_CMD` に設定してください。
 - **プラットフォームごとの導入時の落とし穴:**
   - **macOS** は非公開の SkyLight SPI を使います。Apple はどの OS の更新でも
     これを変えられます。Hermes は、入っている cua-driver が検証済みの

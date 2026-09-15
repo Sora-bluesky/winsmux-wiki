@@ -2,7 +2,7 @@
 title: "CLI の内部構造"
 description: "hermes_cli の成り立ち — スラッシュコマンドの振り分け、設定の読み込み、スキンエンジン、トランザクション方式の更新パイプライン、プロセス同定のルール"
 upstream_path: developer-guide/cli-internals.md
-upstream_blob: 58792e4e51dd51773c8701b1ab4edbe700ccb810
+upstream_blob: f5145a3767df2950e41c494d3cff0c2b2dc83f68
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cli-internals
 ---
@@ -73,9 +73,13 @@ systemd で力ずくの再起動に切り替えたときは、そのユニット
 ## プロファイル: 複数インスタンスの並行運用 {#profiles-multi-instance-support}
 
 Hermes にはプロファイルという仕組みがあります。完全に切り離されたインスタンスで、それぞれが自分の `HERMES_HOME`（設定、API
-キー、メモリ、セッション、スキル、ゲートウェイ）を持ちます。`hermes_cli/main.py` の `_apply_profile_override()` が
-モジュールの読み込みより前に `HERMES_HOME` を設定するので、`get_hermes_home()` を参照する箇所はすべて有効なプロファイルを
-指します。プロファイルの操作はホームディレクトリを基準にします（`_get_profiles_root()` が返すのは
+キー、メモリ、セッション、スキル、ゲートウェイ）を持ちます。1 つのプロファイルに対するコマンド（`hermes -p x <cmd>`）では、
+`hermes_cli/main.py` の `_apply_profile_override()` がモジュールの読み込みより前に `HERMES_HOME` を設定するので、
+`get_hermes_home()` を参照する箇所はすべて有効なプロファイルを指します。一方、多重化したゲートウェイと、デスクトップやダッシュボードの
+`serve` バックエンドは、1 つのプロセスで複数のプロファイルを扱います。この場合、有効なプロファイルは処理の単位ごとに結び付けた
+contextvar による上書きで決まり、`os.environ["HERMES_HOME"]` は起動したプロファイルのままです。ホームから導いたモジュールレベルの定数も、
+起動したプロファイルの値で固定されます（[ゲートウェイの内部構造 § 多重化したプロファイル](/hermes/docs/developer-guide/gateway-internals/#multiplexed-profiles) を参照してください）。
+プロファイルの操作はホームディレクトリを基準にします（`_get_profiles_root()` が返すのは
 `get_hermes_home() / "profiles"` ではなく `Path.home() / ".hermes" / "profiles"` です）。そのため
 `hermes -p coder profile list` は、いまどのプロファイルが有効かに関係なくすべてのプロファイルを表示します。これは意図した動きです。
 プロファイルを壊さないためのコーディング規約はリポジトリ直下の `AGENTS.md` に、多重化したときの秘密情報の扱いは

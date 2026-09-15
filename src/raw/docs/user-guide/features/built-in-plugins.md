@@ -2,7 +2,7 @@
 title: "同梱のプラグイン"
 description: "Hermes Agent に最初から入っていて、節目ごとのフックで自動的に動くプラグイン群 — disk-cleanup とその仲間たち"
 upstream_path: user-guide/features/built-in-plugins.md
-upstream_blob: 21149634027772146f8f542e1f3693ed6c61a8ea
+upstream_blob: 7f7a24475e3d1bb3874a4d4267bcb89edd3b976b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins
 ---
@@ -210,7 +210,44 @@ NeMo Relay は、もう Hermes に同梱されるプラグインではありま�
 
 Relay の中間処理や書き出しを使いたいときは、Relay の標準的な `plugins.toml` を作り、Hermes を立ち上げる前に `HERMES_NEMO_RELAY_PLUGINS_TOML` でそのファイルを指してください。この決まりは、その Hermes のプロセスが抱えるすべてのプロファイルに一括で効きます。ATOF、ATIF、OpenTelemetry の選び方は [NeMo Relay observability configuration](https://docs.nvidia.com/nemo/relay/configure-plugins/observability/about) を見てください。
 
-以前の `HERMES_NEMO_RELAY_ATOF_*` と `HERMES_NEMO_RELAY_ATIF_*` の設定では、もう書き出しは始まりません。代わりの `plugins.toml` が選ばれていない場合、`hermes doctor` がこの古い設定を知らせます。
+以前の `HERMES_NEMO_RELAY_ATOF_*` と `HERMES_NEMO_RELAY_ATIF_*` の設定では、もう書き出しは始まりません。これらが残ったままで `HERMES_NEMO_RELAY_PLUGINS_TOML` が無い `.env` では、**何も**書き出されず、ゲートウェイがその旨の警告を 1 回ログに出します。代わりの `plugins.toml` が選ばれていない場合、`hermes doctor` がこの古い設定を知らせます。
+
+**自動の移行。** `hermes update`（または `hermes migrate relay`、すべてのプロファイルのホームを対象にするなら `hermes migrate relay --all-profiles`）は、以前の変数を `<hermes home>/relay-plugins.toml` に変換し、そのプロファイルの `.env` に `HERMES_NEMO_RELAY_PLUGINS_TOML` を設定し、以前の行をコメントにします（消すものはありません）。ゲートウェイを多重化している場合は、プロファイルのホームごとに自分のファイルが作られます。作られるファイルは、書き込む前に Relay で検証されます。出来上がる形は次のとおりです（書き出し先の種類を示す `type = "file"` に注意してください。これが無い書き出し先は拒否されます）:
+
+```toml
+version = 1
+
+[[components]]
+kind = "observability"
+enabled = true
+
+[components.config]
+version = 4
+enable_full_payloads = false
+
+[components.config.atof]
+enabled = true
+
+[[components.config.atof.sinks]]
+type = "file"
+output_directory = "/home/you/.hermes/telemetry/nemo-relay/atof"
+filename = "hermes-atof.jsonl"
+mode = "append"
+
+[components.config.atif]
+enabled = true
+agent_name = "Hermes Agent"
+model_name = "unknown"
+output_directory = "/home/you/.hermes/telemetry/nemo-relay/atif"
+filename_template = "trajectory-{session_id}.json"
+
+[components.config.policy]
+unknown_component = "warn"
+unknown_field = "warn"
+unsupported_value = "error"
+```
+
+そのあと `.env` に `HERMES_NEMO_RELAY_PLUGINS_TOML=/home/you/.hermes/relay-plugins.toml` を足し、ゲートウェイを再起動します。
 
 #### セッションの区間を区切る（ずっと続くセッション向け） {#session-span-segmentation-continuous-sessions}
 

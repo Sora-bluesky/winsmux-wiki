@@ -2,7 +2,7 @@
 title: "プロファイル配布: エージェントまるごと共有する"
 description: ""
 upstream_path: user-guide/profile-distributions.md
-upstream_blob: 14bbba02f75c94188185b5d2b194b2359df976bf
+upstream_blob: 0ea7f46dda67d31f5e6c53a24fb67817039a1b26
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profile-distributions
 ---
@@ -270,7 +270,7 @@ research-bot/
 
 | 区分 | パス | 更新したとき |
 |---|---|---|
-| **配布側のもの** | `SOUL.md`, `config.yaml`, `mcp.json`, `skills/`, `cron/`, `distribution.yaml` | 新しいクローンの内容に置き換わります |
+| **配布側のもの** | `SOUL.md`, `config.yaml`, `mcp.json`, `skills/`, `cron/`, `distribution.yaml` | ファイルは新しいクローンの内容に置き換わります。ディレクトリは項目ごとにまとめます。新しいクローンに入っているスキルや cron の仕事は、それぞれ対応するものを丸ごと置き換えます（作者がやめたファイルは消えます）。自分で足したスキルや cron の仕事はそのまま残ります。 |
 | **設定の上書き** | `config.yaml` | 実際には既定で保持されます。導入した人がモデルやプロバイダーを調整しているかもしれないためです。更新時に `--force-config` を付けると初期状態に戻ります。 |
 | **利用者側のもの** | `memories/`, `sessions/`, `state.db*`, `auth.json`, `.env`, `logs/`, `workspace/`, `plans/`, `home/`, `*_cache/`, `local/` | 触れられません |
 
@@ -408,7 +408,7 @@ hermes profile update research-bot
 このとき何が起きるか:
 
 1. 記録してある取得元 URL から、リポジトリを再びクローンします。
-2. 配布側のファイル（SOUL、スキル、cron、mcp.json）を置き換えます。
+2. 配布側のファイル（SOUL、mcp.json）と、配布に入っているスキルや cron の仕事をすべて置き換えます。自分でプロファイルに足したスキルや cron の仕事には手を付けません。
 3. `config.yaml` は **保持します**。モデルや temperature などを自分で調整しているかもしれないためです。上書きしたいときは `--force-config` を付けます。
 4. 利用者のデータ、つまりメモリー、セッション、認証情報、`.env`、ログ、状態には **一切触れません**。
 

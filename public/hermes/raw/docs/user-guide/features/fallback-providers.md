@@ -2,7 +2,7 @@
 title: "フォールバックプロバイダー"
 description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: 50d465f65543941bae96da7622a133a7fe25f293
+upstream_blob: b59080755f53e82c7e3dc95e938ef5df7b355845
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
@@ -118,7 +118,7 @@ fallback_providers:
 - **サーバーエラー**（HTTP 500、502、503） — 再試行を使い切ったあと
 - **認証失敗**（HTTP 401、403） — ただちに（再試行しても意味がないため）
 - **見つからない**（HTTP 404） — ただちに
-- **不正な応答** — API が壊れた応答や空の応答を繰り返し返したとき
+- **不正な応答** — API が壊れた応答や空の応答を繰り返し返したとき。ストリーミング中の拒否（モデルが拒否用のチャンネルで理由を添えて断ること）は空の応答ではなく、最終結果の `content_filter` として扱われます。そのため再試行はせず、そのまま表示します。
 
 作動すると、Hermes は次の順に処理します。
 

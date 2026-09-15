@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダ、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: fc70c52a3d8018feed0847d79a421a62b8346528
+upstream_blob: 8dcc4f3aac02f3614f25ca0413a48912a19bff9d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -95,10 +95,13 @@ runtime:
 ```yaml
 database:
   # Journal mode for state.db: wal (default) or delete.
-  # Use delete on filesystems where WAL is unsafe (network mounts, some
-  # virtiofs setups). Note: an existing on-disk WAL database is never
+  # Use delete on filesystems where WAL is unsafe (network mounts). On
+  # virtiofs/9p bind mounts (Docker Desktop, Podman on macOS, OrbStack)
+  # Hermes detects the mount and creates fresh databases in delete mode
+  # automatically. Note: an existing on-disk WAL database is never
   # live-downgraded — Hermes keeps WAL and logs an error telling you the
-  # configured delete did not apply. To convert an existing database, stop
+  # configured delete did not apply (or that the WAL database sits on a
+  # cross-VM mount). To convert an existing database, stop
   # every process using it and run a one-time offline
   # `PRAGMA journal_mode=DELETE` on the file.
   journal_mode: wal
@@ -759,6 +762,19 @@ hermes config set skills.config.myplugin.path ~/myplugin-data
 
 自分のスキルで設定項目を宣言する方法は、[スキルを作る — 設定項目](/hermes/docs/developer-guide/creating-skills/#config-settings-configyaml) をご覧ください。
 
+### 毎回のセッションでスキルを自動で読み込む {#auto-loading-skills-every-session}
+
+スキルを固定しておくと、どの画面から使っても、新しいセッションを始めるたびにそのスキルが最初から丸ごと読み込まれます。
+
+```yaml
+skills:
+  auto_load:
+    - my-workflow
+    - github-pr-workflow
+```
+
+この一覧は、セッションごとにシステムプロンプトを最初に組み立てるときに一度だけ解決されます（プロンプトをキャッシュしやすい形に保つためで、書き換えは次のセッションから効きます）。見つからないスキルや無効にしたスキルは警告を出して飛ばします。`--ignore-rules` / `HERMES_IGNORE_RULES=1` を使うと一覧そのものが使われません。設定はプロファイルごとです。[CLI — 設定による常時の自動読み込み](/hermes/docs/user-guide/cli/#persistent-auto-load-via-config) もご覧ください。
+
 ### エージェントが作るスキルの書き込みに対する見張り {#guard-on-agent-created-skill-writes}
 
 エージェントが `skill_manage` でスキルを作成・編集・パッチ・削除するとき、Hermes は新しい／更新された内容を危険なキーワードのパターン（資格情報の収集、あからさまなプロンプトインジェクション、持ち出しの指示）で調べることもできます。この検査は **既定では無効** です。`~/.ssh/` に正当に触れたり `$OPENAI_API_KEY` に言及したりする本物のエージェントの作業が、この経験則に引っかかりすぎたためです。エージェントのスキル書き込みが着地する前に確認してほしいなら、また有効にしてください。
@@ -1103,9 +1119,9 @@ agent:
     protect_recent: 8
 ```
 
-`max_size` と `idle_ttl_secs` は、キャッシュを件数と時間で縛ります。どちらも何バイト抱えているかは知らないので、`memory_high_mb` が 3 つめの縛りを足します。ゲートウェイ自身の無名の常駐メモリが予算を超えると、最も長く使われていない記録を手放します。それらは次のターンで保存済みのセッションから読み直されます。ゲートウェイがほかのサービスとメモリを取り合っているなら下げ、前置きをすべて温めておきたいなら上げてください（`0` にするとこの処理そのものを止められます）。
+`max_size` と `idle_ttl_secs` は、キャッシュを件数と時間で縛ります。どちらも何バイト抱えているかは知らないので、`memory_high_mb` が 3 つめの縛りを足します。無名メモリが予算を超えると、最も長く使われていない記録を手放します。それらは次のターンで保存済みのセッションから読み直されます。ゲートウェイがほかのサービスとメモリを取り合っているなら下げ、前置きをすべて温めておきたいなら上げてください（`0` にするとこの処理そのものを止められます）。
 
-`auto` は、ゲートウェイが実際に動いているメモリの上限から予算を導きます。コンテナや systemd のユニットなら cgroup の上限、そうでなければ全 RAM です。ユニットの `MemoryMax`/`MemoryHigh` が、二重に管理する数字なしで尊重されます。
+`auto` は、ゲートウェイが実際に動いているメモリの上限から予算を導きます。コンテナや systemd のユニットなら cgroup の上限、そうでなければ全 RAM です。ユニットの `MemoryMax`/`MemoryHigh` が、二重に管理する数字なしで尊重されます。そうした上限の下では、測る範囲も同じように揃います。測るのは cgroup 自身の無名メモリの使用量（`memory.stat` の `anon`）で、ここには `execute_code` のカーネルやターミナルのコマンドといった子プロセスも含まれ、どれもユニットの上限に数えられます。上限がないときは、ゲートウェイ自身の無名の RSS を測ります。
 
 ターンの途中のセッション、`protect_recent` 件の直近に使われたもの、そして記録をディスクへ書き終えていないセッションは、決して手放されません。追い出しは WARNING で、測った RSS と落としたセッションとともに記録されます。
 
@@ -2396,6 +2412,15 @@ whatsapp:
 
 - `pair` は、チャット型の DM のプラットフォームでの既定です。Hermes はアクセスを断りますが、DM で一度きりのペアリングのコードを返します。
 - `ignore` は、許可されていない DM を黙って捨てます。
+- `decline` は、ペアリングのコードの代わりに短く丁寧なお断りを一度だけ送り、その後 24 時間はその相手に何も返しません。既定の文面は次のように変えられます。
+
+  ```yaml
+  unauthorized_dm_behavior: decline
+  unauthorized_dm_decline_message: "Sorry, this assistant is private."
+  ```
+
+  許可リストを空のままにすると、`hermes gateway setup` がこれを「Politely decline unknown senders」（知らない相手には丁寧に断る）という選択肢として出します。選ぶと `platforms.<platform>.unauthorized_dm_behavior: decline` が書き込まれます。
+
 - メールは、`platforms.email.unauthorized_dm_behavior: pair` が設定されていない限り `ignore` が既定です。受信箱には関係のない未読のメールが入っていることがあるからです。
 - プラットフォームのセクションは全体の既定を上書きするので、ペアリングを広く有効にしたまま、1 つのプラットフォームだけを静かにできます。
 
@@ -2586,7 +2611,7 @@ security:
     shared_files: []
 ```
 
-- `redact_secrets` — `true` のとき、ツールの出力の中で API キー・トークン・パスワードらしき並びを自動で見つけ、会話のコンテキストとログへ入る前に伏せます。**既定で有効** です。デバッグや伏せ字の仕組みの開発のために生の資格情報らしき文字列が必要なときだけ、明示的に `false` にしてください。
+- `redact_secrets` — `true` のとき、ツールの出力の中で API キー・トークン・パスワードらしき並びを自動で見つけ、会話のコンテキストとログへ入る前に伏せます。**既定で有効** です。デバッグや伏せ字の仕組みの開発のために生の資格情報らしき文字列が必要なときだけ、明示的に `false` にしてください。また、秘密を含むファイル（`.env` のようなファイル、シェルの rc/profile ファイル、`HERMES_HOME` の下にある Hermes の `config.yaml` とその `backups/config/` のコピー）を `read_file`、`search_files`、ターミナルの `cat`/`grep` で読むと、資格情報の形をした代入（`SOME_API_TOKEN: …`）も、値がどう見えるかにかかわらず、使い回せない `«redacted-secret»` という印で伏せられます。ふつうのソースやプロジェクトの設定ファイルでは、ベンダー固有の接頭辞のパターンだけで伏せるので、`MAX_TOKENS: 100` のようなテスト用の値が崩れることはありません。
 - `tirith_enabled` — `true` のとき、ターミナルのコマンドは実行の前に [Tirith](https://github.com/sheeki03/tirith) で検査され、危険かもしれない操作が見つけられます。
 - `tirith_path` — tirith のバイナリのパスです。tirith を標準でない場所に入れているときに設定してください。
 - `tirith_timeout` — tirith の検査を待つ最大の秒数です。検査がタイムアウトしても、コマンドは進みます。

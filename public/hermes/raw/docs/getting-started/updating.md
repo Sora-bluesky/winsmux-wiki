@@ -2,7 +2,7 @@
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: 85ef1a7de48d0278ec6b8ca2790b6c929c65b6a9
+upstream_blob: 645b623652ba760af7b24a8613e8b6589c94869b
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -91,6 +91,8 @@ hermes update --check --branch experimental   # preview behindness only
 ### 対話できない更新でのローカル変更 {#local-changes-on-non-interactive-updates}
 
 端末から `hermes update` を実行した場合、Hermes はソースツリーのコミットしていない変更を stash し、取得したあとに戻すかどうかを **尋ねます**。これは以前からの動作そのままで、対話的な更新では何も変わりません。
+
+自動の stash が対象にするのは、*ソースツリー* の変更だけです。git のチェックアウトの最上位が `$HERMES_HOME` を兼ねている **フラットなインストール**（たとえば `HERMES_INSTALL_DIR=$HERMES_HOME` で入れたものや、古いインストーラーで作ったもの）では、プロファイルの実行時の状態（`state.db` とその WAL/SHM の付随ファイル、`state-snapshots/`、`backups/`、`sessions/`、`cron/jobs.json`、`cron/*.db` の保存先、`config.yaml`、`auth.json`、`memories/`、ロックや pid のファイルなど）が、追跡されていないファイルとしてチェックアウトの中に置かれています。これらのパスは git の無視対象なので、自動の stash が触れることはなく、動いているゲートウェイは更新の間もデータベースを保ったままです。フラットなインストールの最上位にほかの追跡されていないファイルを置いている場合は、チェックアウトの外へ移すか、`.git/info/exclude` に追加してください。追跡されておらず無視対象でもないものは、ソースの編集と同じように自動の stash に取り込まれます。
 
 端末のない状態で更新が走る場合 — デスクトップやチャットアプリの「Update」ボタン、あるいはゲートウェイ経由の更新 — は、答えるべき問いかけが出せません。stash した変更をどう扱うかは、`updates.non_interactive_local_changes` の設定で決まります。
 

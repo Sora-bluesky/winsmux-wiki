@@ -2,7 +2,7 @@
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: 3041696e5dc1bbf88e905823a64c1596c38a5ac2
+upstream_blob: b49616bd0d4658d2cb90bc981c457c985274fa47
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -224,6 +224,10 @@ hermes config       # shows the generated config
 
 :::info
 コンテナモードでは `virtualisation.docker.enable` が `mkDefault` によって自動で有効になります。代わりに Podman を使う場合は `container.backend = "podman"` と `virtualisation.docker.enable = false` を設定してください。
+:::
+
+:::note ネイティブインストールで cron を使うには、サービス用ユーザーの linger が必要です
+スケジュールされた cron ジョブは、一時的な `systemd-run --user --scope` の中で起動します。こうしておくと、ゲートウェイを再起動しても実行中のジョブが止まりません。そのためにはサービスの uid に systemd のユーザーマネージャーが必要で、システムサービスがそれを持てるのは、その uid が linger（ログアウト後も残る設定）になっているときだけです。`createUser = true` の場合、モジュールが `users.users.<user>.linger = true` を設定し（nixpkgs ≥ 25.05）、ゲートウェイを `linger-users.service` の後に起動するよう順序を付け、起動前に `/run/user/<uid>/bus` が現れるのを少し待ちます。ユーザーを自分で宣言している場合（`createUser = false`）は、そのユーザーに `linger = true` を設定するか、`sudo loginctl enable-linger <user>` を一度実行してください。そうしないと cron はスコープなしのワーカーで動く形に落ちます（`cron.require_restart_safe_scope: true` の場合は、安全側に倒して実行しません）。
 :::
 
 ---

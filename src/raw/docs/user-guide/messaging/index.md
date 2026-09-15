@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: ea9a505e80a77de790bf6067873b02368fb94ee2
+upstream_blob: 6953dd1f7eb04548da6c52b192dc536d65db0cda
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -144,6 +144,7 @@ flowchart TB
 - `SILENT`
 - `NO_REPLY`
 - `NO REPLY`
+- `[静默]` / `静默` と `[沉默]` / `沉默` — モデルがトークンをそのまま出さず、中国語に訳してしまったときの表記です
 
 空白と大文字小文字は正規化されますが、最終応答の全体がそのトークンでなければなりません。「変化がないときは `[SILENT]` を使ってください」といった文は、ふつうに送信されます。
 
@@ -179,6 +180,12 @@ hermes gateway stop         # Stop the default service
 hermes gateway status       # Check default service status
 hermes gateway status --system         # Linux only: inspect the system service explicitly
 ```
+
+### 必要なときにスタックを書き出す（`SIGUSR2`） {#stack-dump-on-demand-sigusr2}
+
+Linux と macOS では、`kill -USR2 <gateway pid>` を送ると、すべてのスレッドのスタックが
+`~/.hermes/logs/gateway_faulthandler.log` に追記され、ゲートウェイは動き続けます。
+止まっている、あるいは様子がおかしいゲートウェイが何をしているのかを、再起動せずに確かめるときに使います。
 
 ### Linux 向けのイベントループ監視（任意） {#optional-linux-event-loop-watchdog}
 

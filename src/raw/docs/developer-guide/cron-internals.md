@@ -2,7 +2,7 @@
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: ca39feb6bc71172f9a68360df34deba6dbb19507
+upstream_blob: ba7aaa957431773e5da4b5b23bad11cf2466cdec
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -140,6 +140,12 @@ tick()
 3. **実行済みなら二度と走りません。** `completed_occurrence()` は、何かを実行時刻とみなす前に、
    実行台帳からちょうどその `scheduled_instant` を持つ `completed` の行を探します。再起動の前に
    走った回は、実行されずに先へ進みます。`failed` / `unknown` の行は完了とみなしません。
+   また、`finished_at`（無ければ `claimed_at`）が、その行に刻まれた時刻より前になっている
+   `completed` の行も完了とみなしません。まだ来ていない回を、実行が済ませたと証明することは
+   できないからです。比べられる時刻を持たない行は、これまでどおり完了として数えます。
+   回の識別は、実行時刻が来てはじめて確保できます。`claim_job_for_fire` はまだ未来にある
+   `scheduled_instant` を捨てるので、ティックの外での発火（ダッシュボードのトリガー、webhook、
+   リースの取り戻し、取りこぼしの受け止め）は、次の回を消費せず、回にひも付かないまま走ります。
 4. **猶予の内側の遅れなら、遅れて実行します。** 猶予は周期の半分を
    `[120 s, 2 h]` に収めたもの（`_compute_grace_seconds`）で、振り分けには
    `last_dispatch.kind = late` が刻まれます。

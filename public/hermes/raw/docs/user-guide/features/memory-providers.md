@@ -2,7 +2,7 @@
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: bbd5451519affab17bbd4d3499f89be7ba360849
+upstream_blob: 9eeaabeae829ba983ae163db4a413e7df7a3aad9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
@@ -569,7 +569,7 @@ hermes config set memory.provider byterover
 
 ### Supermemory {#supermemory}
 
-意味に基づく長期記憶です。利用者の像の呼び出し、意味検索、明示的な記憶のツール、そして Supermemory のグラフ API を通したセッション終了時の会話の取り込みを備えます。
+意味に基づく長期記憶です。利用者の像の呼び出し、意味検索、明示的な記憶のツール、そしてターンごとの会話の記録（セッションごと、4 時間の区切りごとに 1 つの文書）を備えます。
 
 | | |
 |---|---|
@@ -618,17 +618,17 @@ npx supermemory local
 | `profile_frequency` | `50` | 最初のターンと、N ターンごとに像の事実を含めます |
 | `capture_mode` | `all` | 既定では、ごく短いターンや取るに足らないターンを飛ばします |
 | `search_mode` | `hybrid` | 検索のしかた: `hybrid`、`memories`、`documents` |
-| `api_timeout` | `5.0` | SDK と取り込みの要求の待ち時間の上限 |
+| `api_timeout` | `5.0` | SDK の要求の待ち時間の上限 |
 
 **環境変数:** `SUPERMEMORY_API_KEY`（必須）、`SUPERMEMORY_BASE_URL`（`base_url` が設定されていないときの互換用の受け皿）、`SUPERMEMORY_CONTAINER_TAG`（設定を上書きします）。
 
-基準 URL の優先順位は `supermemory.json` → `SUPERMEMORY_BASE_URL` → `https://api.supermemory.ai` です。SDK の操作、設定と状態の確認、会話の取り込みは、すべてこの解決されたつなぎ先を使います。
+基準 URL の優先順位は `supermemory.json` → `SUPERMEMORY_BASE_URL` → `https://api.supermemory.ai` です。SDK の操作と、設定と状態の確認は、すべてこの解決されたつなぎ先を使います。
 
 **主な特徴:**
 - 文脈の自動的な囲い込み — 保存するターンから呼び出した記憶を取り除き、記憶が記憶を汚す循環を防ぎます
-- セッション全体の取り込み — 会話の全体が、セッションの区切りで一度だけ送られます
-- セッション終了時の会話の取り込み（`/v4/conversations` へ）で、Supermemory 側でより豊かな像とグラフを組み立てます
-- 端から端まで自己ホストで完結する経路 — SDK、接続確認、会話の取り込みの要求が、すべて同じ設定のつなぎ先を使います
+- ターンごとの記録 — 終わったターンをその都度書き込みます。セッションごと、4 時間の区切りごとに 1 つの文書になります
+- 書き込みに失敗したターンは、次のターン、セッション終了、`/reset`、終了処理のいずれかで再試行されます（少なくとも 1 回は届きます）
+- 端から端まで自己ホストで完結する経路 — SDK と接続確認の要求が、同じ設定のつなぎ先を使います
 - 最初のターンと、指定した間隔ごとに、像の事実を差し込みます
 - **プロファイル単位の入れ物** — `container_tag` に `{identity}` を使うと（例: `hermes-{identity}` → `hermes-coder`）、Hermes のプロファイルごとに記憶を分けられます
 - **複数の入れ物のモード** — `enable_custom_container_tags` を有効にして `custom_containers` の一覧を書くと、エージェントが名前を付けた入れ物をまたいで読み書きできます。自動の操作は主な入れ物に留まります。

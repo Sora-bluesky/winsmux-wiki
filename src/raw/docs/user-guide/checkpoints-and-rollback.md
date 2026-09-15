@@ -2,7 +2,7 @@
 title: "チェックポイントと /rollback"
 description: "シャドウの git リポジトリと自動スナップショットで、破壊的な操作からファイルを守るしくみです"
 upstream_path: user-guide/checkpoints-and-rollback.md
-upstream_blob: 1a14d7c1be333740bcbc1dbbcf1d1275daa68552
+upstream_blob: a0433750fdddbaf71a843f486dab32c802c985d0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback
 ---
@@ -96,14 +96,17 @@ checkpoints:
   max_total_size_mb: 500      # hard cap on total store size; oldest commits dropped
   max_file_size_mb: 10        # skip any single file larger than this
 
-  # Auto-maintenance (on by default): sweep ~/.hermes/checkpoints/ at startup
-  # and delete project entries whose last_touch is older than retention_days.
-  # Runs at most once per min_interval_hours, tracked via a .last_prune
-  # marker. This sweep never deletes "orphan" entries (working directory not
-  # found) — a missing workdir at startup is ambiguous (deleted project vs.
-  # an unmounted external volume / network share / VPN not yet up), so
-  # orphan cleanup is only ever done via the explicit
-  # `hermes checkpoints prune` command below, with a confirmation prompt.
+  # Auto-maintenance (on by default): sweep ~/.hermes/checkpoints/ in the
+  # background — the CLI on a helper thread right after launch, the gateway
+  # on its housekeeping tick — and delete project entries whose last_touch is
+  # older than retention_days. Runs at most once per min_interval_hours,
+  # tracked via a .last_prune marker. It never blocks the prompt or gateway
+  # startup: the `git gc` that reclaims space can take tens of seconds on a
+  # large store. This sweep never deletes "orphan" entries (working directory
+  # not found) — a missing workdir is ambiguous (deleted project vs. an
+  # unmounted external volume / network share / VPN not yet up), so orphan
+  # cleanup is only ever done via the explicit `hermes checkpoints prune`
+  # command below, with a confirmation prompt.
   auto_prune: true
   retention_days: 7
   min_interval_hours: 24
@@ -236,8 +239,8 @@ Use /rollback <N> --all to restore those too.
 - **ディレクトリの範囲** — 範囲が広すぎるディレクトリ（ルートの `/`、ホームの `$HOME`）は飛ばします。
 - **リポジトリの大きさ** — ファイルが 50,000 個を超えるディレクトリは飛ばします。
 - **ファイル 1 つあたりの上限** — `max_file_size_mb`（既定は 10 MB）より大きいファイルはスナップショットから外します。データセットやモデルの重み、生成したメディアをうっかり抱え込むのを防ぎます。
-- **保管場所全体の上限** — 保管場所が `max_total_size_mb`（既定は 500 MB）を超えると、プロジェクトごとにいちばん古いコミットを順番に落とし、上限を下回るまで続けます。
-- **本当に消す掃除** — `max_snapshots` は、プロジェクトごとの ref を書き換え、そのあと `git gc --prune=now` を実行して適用します。これで参照のないオブジェクトが溜まりません。
+- **保管場所全体の上限** — 保管場所が `max_total_size_mb`（既定は 500 MB）を超えると、チェックポイントのたびに、スナップショットが 2 つ以上残っているプロジェクトすべてから、いちばん古いコミットを 1 つずつ落とします（1 回のチェックポイントにつき 1 巡）。定期的な掃除では、落とす → gc → 測り直す、を保管場所が上限に収まるまで繰り返します。どのプロジェクトもスナップショットが 1 つを下回ることはないので、大きなプロジェクトがたくさんある保管場所では、上限を超えたままになることも正常な状態としてありえます。
+- **本当に消す掃除を、処理の流れの外で** — `max_snapshots` と保管場所全体の上限は、チェックポイントを取る時点でプロジェクトごとの ref を書き換えて適用します（軽い処理です）。そのあと保管場所に `.gc-pending` の印を付け、定期的な掃除が `git gc --prune=now` を 1 回だけ実行します。これで参照のないオブジェクトが溜まらず、ツールの呼び出しが全体の詰め直しを待たされることもありません。
 - **変更がないときのスナップショット** — 前回のスナップショットから何も変わっていなければ、チェックポイントは飛ばされます。
 - **エラーは致命的ではありません** — チェックポイントマネージャの中で起きたエラーはすべてデバッグレベルで記録され、ツールはそのまま動き続けます。
 
@@ -250,6 +253,7 @@ Use /rollback <N> --all to restore those too.
   │   ├── refs/hermes/<hash> # per-project branch tip
   │   ├── indexes/<hash>     # per-project git index
   │   ├── projects/<hash>.json  # workdir + created_at + last_touch
+  │   ├── .gc-pending        # refs rewritten since the last gc; cleared by the next prune
   │   └── info/exclude
   ├── .last_prune            # auto-prune idempotency marker
   └── legacy-<ts>/           # archived pre-v2 per-project shadow repos

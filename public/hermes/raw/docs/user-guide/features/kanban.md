@@ -2,7 +2,7 @@
 title: "かんばん（複数エージェントの盤）"
 description: "複数の Hermes プロファイルをまとめて動かすための、SQLite に残るタスクの盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: 0cd901f1292949cafb04639474097b7fd95f9735
+upstream_blob: f78e32a6cc6b88921336561ea88e0b2729e36568
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -101,6 +101,10 @@ PR の URL、SHA、必須の検査、check の id と URL、分類、立て直�
 | 進め方 | 上下（呼ぶ側 → 呼ばれる側） | 対等。どのプロファイルもどのタスクも読み書きできる |
 
 **一文でいうと：** `delegate_task` は関数の呼び出し、かんばんは仕事の待ち行列で、受け渡しのひとつひとつが、どのプロファイル（や人）も見て直せる 1 行になっています。
+
+:::caution 支援カードを、それが止まりを解くはずのカードにつながない
+`t_parent` で止まっている作業役が、足りない部分のために支援カードを作ったとき、`kanban_link(t_parent, t_support)` をしては**いけません**。つなぐと支援カードは止まっている親の*子*になり、その親を解くために作ったのに親の後ろで待たされて、どちらのカードもいつまでも動きません。代わりに、支援カードの本文に親の id を書いてください。`link`／`kanban_link` は、`ready` の子を下げたときに `gated: true` を返して `dependency_wait` の出来事を記録します（`parents` 付きの `kanban_create` も、新しいカードを待たせたときに同じことをします）。ですから行き詰まりは盤の上で見えます。`hermes kanban unlink <parent> <child>` で解けます。
+:::
 
 **`delegate_task` を使うのは**、親のエージェントが先へ進むために短い答えが要るとき、人が関わらないとき、結果が親の文脈へ戻ればよいときです。
 
@@ -281,6 +285,11 @@ kanban:
   review_dispatch: true            # default: spawn the assigned profile with
                                    # the bundled sdlc-review skill. Set false
                                    # for human-only review boards.
+  dispatch_profiles: null           # default: this home may claim cards for any
+                                   # existing profile. Set to a list (or
+                                   # comma-separated string) of profile names to
+                                   # restrict which assignees this home claims;
+                                   # fail-closed, an empty list claims nothing.
 ```
 
 調べもののときは、`HERMES_KANBAN_DISPATCH_IN_GATEWAY=0` で実行時に設定を
@@ -296,6 +305,15 @@ start` を直に走らせるか、systemd の利用者ユニットとして組�
 逃げ道で、昔ながらの単体の常駐役を 1 つの版のあいだだけ使えます。ただし、
 同じ `kanban.db` に対してゲートウェイに載った差配役と単体の常駐役を同時に
 動かすと、確保の取り合いが起きます。これは想定していません。
+
+### Hermes のホームをまたいで盤を共有する {#shared-boards-across-homes}
+
+ひとつの `kanban.db` を複数の Hermes のホーム（コンテナや、まとめて運用するホスト）にマウントすると盤は共有されます。けれどもプロファイル名はホームごとのもので、どのホームにも `default` という名前の大もとのプロファイルがあります。
+つまり `default` は、しくみのうえで必ずぶつかります。差配役の立ち上げの関門は、`profile_exists(assignee)` を*確保する側*のホームで確かめます。
+ほかに何も設定しなければ、どのホームの差配役も `default` に割り当てられたカードを確保してよいと見なすので、違うホームがそれを確保して走らせてしまうことがあります。
+対策はどちらかです。ホームごとにかぶらないプロファイル名を付け、共有の盤では `default` にカードを割り当てない。
+あるいはホームごとに `kanban.dispatch_profiles` を設定し、そのホームが確保してよい担当をはっきり宣言する。
+それ以外の担当は、立ち上げられずに差配役の `skipped_nonspawnable` の枠へ入り、ゲートウェイの起こし確認でも立ち上げ可能な仕事として数えられなくなります。
 
 ### 二重登録しない作成（自動処理や webhook 向け） {#idempotent-create-for-automation-webhooks}
 
@@ -331,7 +349,7 @@ hermes kanban block    t_abc "need input" --ids t_def t_hij
 ありません。*同じ理由でもう一度止まった* ことが原因です。止まる → 解ける →
 同じ原因でまた止まる、を `BLOCK_RECURRENCE_LIMIT` 回（既定は `2`）くり返すと、
 輪を断つしくみが働きます。`blocked` へ送り返すのをやめ——そこでは cron が
-解除し続けるだけなので——人が決められるよう `triage` へ回します。これは LLM の
+解除し続けるだけなので——まとめ役に目を向けてもらうよう `triage` へ回します。これは LLM の
 判断ではなく DB の決まった守りで、タスクの本文でこれを外すことはできません。
 くり返しの数え上げは、解除のたびにあえて残ります（`complete` が成功したときだけ
 0 に戻ります）。解除したタスクを仕事の輪の中に留めたいなら、解除の前に
@@ -381,8 +399,8 @@ hermes -p planner tools enable kanban --platform telegram  # a gateway platform
 | `kanban_attach` | ファイルの中身をそのまま（base64 で）渡して、タスクに添えます。そのタスクの添付のディレクトリに置かれます（25 MB まで）。 | ファイルの中身と名前 |
 | `kanban_attach_url` | URL でファイルをタスクに添えます。 | `url` |
 | `kanban_attachments` | タスクの添付を並べます。 | — |
-| `kanban_create` | （まとめ役向け）`assignee`、任意の `parents`、`skills` などを付けて、子のタスクへ広げます。 | `title`、`assignee` |
-| `kanban_link` | （まとめ役向け）あとから `parent_id → child_id` の依存の線を足します。 | `parent_id`、`child_id` |
+| `kanban_create` | （まとめ役向け）`assignee`、任意の `parents`、`skills` などを付けて、子のタスクへ広げます。開いている親が新しいカードを `todo` に待たせたときは、`gated: true` と `gated_by` を返します。 | `title`、`assignee` |
+| `kanban_link` | （まとめ役向け）あとから `parent_id → child_id` の依存の線を足します。子が `ready` だったのに親が片付いていないため `todo` へ戻されたときは、`gated: true` を返します。その子は親が完了してから動きます。 | `parent_id`、`child_id` |
 | `kanban_unblock` | （まとめ役向け）止まったタスクを元の段階（`review` か `ready`）へ戻します。親がまだ開いていれば `todo` です。 | `task_id` |
 
 作業役のひと回りは、たとえばこうなります。
@@ -498,6 +516,8 @@ summary は人が読む締めくくり、`metadata` は、あとを継ぐエー�
 モデルがふつうの文章で答えて、かんばんのツールを使わずに終わった、ということです。
 
 一生の流れに加えて、要となる細かい点（作業場の種類、成果物の `artifacts`、作った カードの引き受け方）も同じシステムプロンプトのかたまりに入っています。ですからどの作業役も、どのプロファイルで動いていてもそれを持っています。プロファイルごとにスキルを用意する必要はありません。
+
+**作業役のセッション名。** 作業役のセッションには、立ち上げのときにカードの名前が付きます（`Fix the swap modal` など。盤の行が読めないときは `Kanban task <id>`）。ですから `hermes sessions` やセッションの検索には、モデルの当て推量ではなくカードが出ます。作業役は、対話のセッションに名前を付ける補助の `title_generation` モデルの呼び出しをしません。作業役のセッションで手で `/title` を打てば、そちらが優先されます。
 
 ### 特定のタスクにだけスキルを足す {#pinning-extra-skills-to-a-specific-task}
 
@@ -867,6 +887,7 @@ hermes kanban gc [--event-retention-days N]            # workspaces + old events
 |------------|---------|--------------|
 | `kanban.max_in_progress` | 未設定（無制限） | 同時に走るタスクの数に上限を掛けます。すでに N 個走っていると、差配役はそれ以上立ち上げません。遅い作業役（手元の LLM、資源の限られたホスト）で、抱えたものを片付ける前に積み上がって時間切れになるのを防ぎます。おかしな値や 1 未満の値は、警告を出して無制限として扱われます。 |
 | `kanban.max_in_progress_per_profile` | 未設定（無制限） | `max_in_progress` のプロファイル版で、ひとつの担当プロファイルが同時に走らせられるタスクの数に上限を掛けます。あるプロファイルだけが遅かったり流量制限に掛かったりするけれど、ほかは流したいときに向いています。盤ぐるみの `max_in_progress` と一緒に効き、両方が許したときだけ立ち上がります。 |
+| `kanban.dispatch_profiles` | 未設定（今あるどのプロファイルでも） | Hermes のホームをまたいで共有する盤のための、ホームごとの確保の許可リストです。設定すると、このホームの差配役は、担当がリストに載っているカードだけを確保します（安全側に倒します。空のリストなら何も確保しません）。ほかの担当は `skipped_nonspawnable` に入ります。[Hermes のホームをまたいで盤を共有する](#shared-boards-across-homes)を参照してください。 |
 | `kanban.auto_promote_children` | `true` | `decompose_triage_task()` が、親で止まる依存を持たない子を作ったあと、差配役が拾えるよう自動で `ready` へ上げます。人が見てから進めたいときは `false` にしてください。子は、あなたが上げるまで `todo` に留まります。 |
 | `kanban.default_workdir` | 未設定 | `--workspace` もタスク自身も上書きしないとき、新しいタスクに当てる盤ぐるみの既定の作業ディレクトリです。タスクごとの `workspace:` があれば、そちらが勝ちます。 |
 
@@ -1106,6 +1127,18 @@ hermes kanban notify-unsubscribe t_abcd \
 
 登録は、タスクが `done` か `archived` になると自分で外れます。片付けは要りません。
 
+**`profile_routes` の下の Discord のスレッド：** ゲートウェイが複数のプロファイルを束ねていて、ある*チャンネル*をプロファイルへ振り分けているとき、そのチャンネルの中の*スレッド*に向けて CLI から作った登録には、スレッドの振り分けの目印が要ります。
+ないと通知役はその登録をどの振り分けにも結び付けられず、飛ばします（WARNING で一度だけログに出ます）。
+`--parent-chat-id <channel id>` と、Discord なら `--guild-id <guild id>` をはっきり渡してください。
+
+```bash
+hermes kanban notify-subscribe t_abcd \
+    --platform discord --chat-id <thread id> --thread-id <thread id> --chat-type thread \
+    --parent-chat-id <channel id> --guild-id <guild id> --delivery-mode notify+wake
+```
+
+チャットの中から作った登録（`/kanban create`、`kanban_create`）は、これらの目印を自動で記録します。
+
 ### 届け方 {#delivery-modes}
 
 `--delivery-mode` は、終わりの出来事に通知役が **どう** 応じるかを決めます。どの登録も 3 つのうちのひとつです（`notify` が既定で、昔からの動きです）。
@@ -1127,7 +1160,7 @@ hermes kanban notify-unsubscribe t_abcd \
 
 「起こす」は、届け先のゲートウェイのエージェントに人工の受信メッセージを渡して、ふつうのひと回り（コメントと結果を読み、考え、返す）をさせます。1 行の受け身の知らせで終わらせません。これは通知役が生きているゲートウェイのプロセスの中で動いているときだけ働きます。そうでないときは、`notify+wake` の登録は受け身のメッセージだけを届け、`wake` だけの登録はそのプロセスでは何もしません。
 
-**どの出来事が起こすのか。** 判断を元へ返すものです。`completed`、`blocked`、`gave_up`、`crashed`、`timed_out`、`review_requested`（作業役が実装を終えて `kanban_request_review` で渡した）、そして `block_loop_detected`（くり返し止まったあとタスクが `triage` へ回った）です。`status`、`archived`、`unblocked` は届きますが、起こしません。これらは判断ではなく、帳面の付け替えだからです。`completed` や `review_requested` が要約を持っているときは、その受け渡しも起こすひと回りに乗るので、起きたエージェントは作業役が実際に何をしたかを見られます。
+**どの出来事が起こすのか。** タスクの結果を返すもの、またはまとめ役が目を向ける必要があるものです。`completed`、`blocked`、`gave_up`、`crashed`、`timed_out`、`review_requested`（作業役が実装を終えて `kanban_request_review` で渡した）、そして `block_loop_detected`（くり返し止まったあとタスクが `triage` へ回った）です。`status`、`archived`、`unblocked` は届きますが、起こしません。これらは目を向けるべき合図ではなく、帳面の付け替えだからです。`completed` や `review_requested` が要約を持っているときは、その受け渡しも起こすひと回りに乗るので、起きたエージェントは作業役が実際に何をしたかを見られます。
 
 `--chat-type`（`dm` | `group` | `channel` | `thread`）は、元になったチャットの種類を記録します。起こされたひと回りが、操作している人の **本物の** セッションにたどり着くためです。`build_session_key` は、グループ、チャンネル、スレッドを DM とは別の鍵にするので、`chat_type` が違っていると、起こす先が文脈の無い別のセッションになってしまいます。`/kanban` の自動登録とスラッシュコマンドの経路はこれを自動で取ります。スクリプトや cron からチャットを登録するときだけ、自分で指定してください。書かなければ、いまある登録はそのままです（新しい登録の既定は `dm` です）。
 
@@ -1228,8 +1261,8 @@ hermes kanban runs t_abcd
 | `claimed` | `{lock, expires, run_id}` | 差配役が、立ち上げのために `ready` のタスクを確実に確保しました。 |
 | `completed` | `{result_len, summary?}` | 作業役が `--result` / `--summary` を書き、タスクが `done` になりました。`summary` は 1 行目の受け渡しです（400 文字まで）。全文は実行の行にあります。受け渡しを持った状態で、一度も確保されていないタスクに `complete_task` が呼ばれると、`run_id` が何かを指せるよう、長さ 0 の実行が作られます。 |
 | `blocked` | `{reason, kind, recurrences}` | 作業役か人が、タスクを `blocked` にしました。`kind` は止まった理由の種類です（`needs_input`、`capability`、`transient`、ふつうの中断なら `null`）。`recurrences` は解除の輪の数え上げです。一度も確保されていないタスクに `--reason` 付きで呼ばれたときは、長さ 0 の実行を作ります。 |
-| `dependency_wait` | `{reason, kind}` | 作業役が `kind=dependency` で止まりました。ほかのタスクを待っているだけなので、`blocked` ではなく `todo` へ回ります（親の関門で待ち、自動で上がります）。人は要りません。 |
-| `block_loop_detected` | `{reason, kind, recurrences, limit}` | タスクが同じ理由で `BLOCK_RECURRENCE_LIMIT` 回（既定 2）、解除されては止まりました。また `blocked` に落ちる代わりに——そこでは cron が解除し続けるだけなので——人が決められるよう `triage` へ回り、解除と再中断の輪を断ちます。 |
+| `dependency_wait` | `{reason, kind}` または `{reason: parent_not_done, demoted: true, parent}` | 作業役が `kind=dependency` で止まりました。ほかのタスクを待っているだけなので、`blocked` ではなく `todo` へ回ります（親の関門で待ち、自動で上がります）。人は要りません。`link`／`kanban_link` が `ready` の子を、まだ `done` になっていない親の下に置いたときにも出ます。子は `todo` へ戻り、この出来事がその理由を記録します（`ready → running` の確保でもう一度親を確かめるので、親が完了するか、`hermes kanban unlink` でつながりを外すまで、誰もそれを走らせられません）。 |
+| `block_loop_detected` | `{reason, kind, recurrences, limit}` | タスクが同じ理由で `BLOCK_RECURRENCE_LIMIT` 回（既定 2）、解除されては止まりました。また `blocked` に落ちる代わりに——そこでは cron が解除し続けるだけなので——まとめ役に目を向けてもらうよう `triage` へ回り、解除と再中断の輪を断ちます。 |
 | `unblocked` | — | `blocked → ready`（親がまだ開いていれば `todo`）。手作業でも `/unblock` でも同じです。差配役の `consecutive_failures` は 0 に戻しますが、輪を断つしくみが覚えていられるよう `block_recurrences` はあえて残します。`run_id` は `NULL` です。 |
 | `archived` | — | 既定の盤から隠れます。まだ走っていたタスクなら、そのついでに取り戻された実行の `run_id` を持ちます。 |
 
@@ -1248,7 +1281,7 @@ hermes kanban runs t_abcd
 |---|---|---|
 | `spawned` | `{pid}` | 差配役が作業役のプロセスをうまく始めました。 |
 | `heartbeat` | `{note?}` | 長い作業のあいだ、作業役が `hermes kanban heartbeat $TASK` で生きていることを知らせました。 |
-| `reclaimed` | `{stale_lock}` | 完了のないまま確保の TTL が切れました。タスクは `ready` へ戻ります。 |
+| `reclaimed` | `{stale_lock}` | 完了のないまま確保の TTL が切れました。タスクは `ready` へ戻ります。自動で取り戻した場合は、`gave_up` の打ち切りに向けて、うまくいかなかった試み 1 回として数えます（そうしないと、作業役を立ち上げられなかった確保が、確保 → 取り戻し → 確保といつまでも回り続けます）。操作する人が `reclaim` した場合は、逆に数を 0 に戻します。 |
 | `crashed` | `{pid, claimer}` | 作業役の PID がもういないのに、TTL はまだ切れていませんでした。 |
 | `timed_out` | `{pid, elapsed_seconds, limit_seconds, sigkill}` | `max_runtime_seconds` を超えました。差配役が SIGTERM を送り（5 秒の猶予のあと SIGKILL）、並べ直しました。 |
 | `stale` | `{elapsed_seconds, last_heartbeat_at, heartbeat_age_seconds, timeout_seconds, pid, terminated}` | タスクが `kanban.dispatch_stale_timeout_seconds`（既定 4 時間）より長く走り、かつ直近 1 時間に `kanban_heartbeat` が来ませんでした。差配役は同じホストの作業役があれば SIGTERM を送り、差し向け直すためにタスクを `ready` へ戻します。失敗の数え上げは増やしません（これは作業役の落ち度ではなく、差配役の側で不在を見つけただけです）。長く走る作業役は、これを避けるために少なくとも 1 時間に 1 回は `kanban_heartbeat` を呼んでください。 |

@@ -2,7 +2,7 @@
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: 45d7364f0c7bb5974be0aa4f4445a8f7241a0052
+upstream_blob: 0421b802be5fe5dbbdbc1f3dc9792bd24fe64554
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -274,6 +274,8 @@ mcp_servers:
 最初につなぐとき、Hermes は認可の URL を表示し、できればブラウザを開いて、手元のループバックのポートで OAuth の戻りを待ちます。トークンは `~/.hermes/mcp-tokens/<server>.json` に 0o600 の権限で保存され、更新に失敗するまでは次回以降そのまま静かに使い回されます。
 
 更新トークンは、それを発行した認可サーバーにひも付けられます。Hermes はキャッシュしたトークンと一緒に、見つけた発行元（issuer）を記録します。サーバーが案内する認可サーバーが変わった場合（サーバーの移転、メタデータの書き換え、乗っ取りなど）、保存していた更新トークンは新しい発行元へ送らずに捨てます。いまのアクセストークンは期限が切れるまでそのまま使え、そのあと新しい発行元に対してふつうの認可をやり直します。
+
+認可サーバーからの戻り（リダイレクト）は、RFC 9207 に照らして確かめます。サーバーのメタデータが `authorization_response_iss_parameter_supported` を案内している場合、一致する `iss` のない戻りははねられます。Figma の認可サーバー（`https://api.figma.com`）は、この対応を案内しているのに `iss` を付けてきません。そこで Hermes は、この発行元に限って、見つけた発行元の値で欠けている値を補い、警告をログに出します。これで `hermes mcp login figma` が最後まで通ります。`iss` が付いていて値が違う場合は引き続きはねられ、ほかのサーバーにはこの例外は適用されません。
 
 **遠隔のホストや、画面のないホストの場合。** Hermes がブラウザとは別の端末で動いているときは、ループバックの戻り先が手元のパソコンに届きません。それでも認証を終える方法があります。
 

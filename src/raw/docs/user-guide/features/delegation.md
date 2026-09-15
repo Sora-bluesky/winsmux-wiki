@@ -2,7 +2,7 @@
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: 51f7bb1121e2a489e6a835d98b86d861babc35d2
+upstream_blob: ea8648c50c469bfae53b9c36c44b3fd8e6518297
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -58,7 +58,9 @@ delegate_task(tasks=[
 
 ## 出力の型を決める（`output_schema`） {#structured-output-outputschema}
 
-タスクにはそれぞれ、任意で `output_schema` を持たせられます。子の最終的な回答が満たすべき JSON Schema のオブジェクトです。子は最初にこのスキーマを出力の約束として受け取り、回答が返ってきたときに親が検証します。検証に失敗した場合、親は子に、検証エラーをそのまま載せた 1 回きりの修正のターンを渡します（スキーマを貼り直しはしません）。そのタスクの結果には `schema_valid`（true / false）が加わり、失敗したときは `schema_errors` も付きます。
+タスクにはそれぞれ、任意で `output_schema` を持たせられます。子の最終的な回答が満たすべき JSON Schema のオブジェクトです。子は最初にこのスキーマを出力の約束（「JSON の値だけを返すこと。説明文もコードフェンスも付けない」）として受け取り、回答が返ってきたときに親が検証します。検証に失敗した場合、親は子に、検証エラーをそのまま載せた 1 回きりの修正のターンを渡します（スキーマを貼り直しはしません）。そのタスクの結果には `schema_valid`（true / false）が加わり、失敗したときは `schema_errors` も付きます。
+
+やり直しのあとも約束を満たせなかった場合でも、子の作業は **捨てられません**。結果は `status: completed` のままで、`summary` に子の最終的な生の文章が入り、`schema_valid: false`、`schema_errors`、それに文章が未検証であることを示す `schema_note` が付きます。親は、1 時間かかったかもしれないタスクをやり直す代わりに、生の文章から必要なものを取り出します。中身が正しい JSON（オブジェクトでも配列でも）であれば、前後に説明文やコードフェンスが付いていても、検証では許容されます。
 
 ```python
 delegate_task(

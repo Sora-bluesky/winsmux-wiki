@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 4844ab579cc15bd169093228693a148db1a5a126
+upstream_blob: 01b16f3db582c421efd1775487f5b6a59365cced
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -141,8 +141,8 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 
 | 変数 | 説明 |
 |----------|-------------|
-| `HERMES_PORTAL_BASE_URL` | Nous Portal の URL を上書きします（開発・検証用） |
-| `NOUS_INFERENCE_BASE_URL` | Nous の推論 API の URL を上書きします |
+| `HERMES_PORTAL_BASE_URL` | Nous Portal の URL を上書きします（開発・検証用）。多重化しているときはプロファイルごとの設定になるので、受け持たれているプロファイルの `.env` に書きます。 |
+| `NOUS_INFERENCE_BASE_URL` | Nous の推論 API の URL を上書きします。また、Portal の応答が指してよい本番以外のホストはこれだけです。Portal が返した推論 URL がこの上書き値と一致すれば、本番へ戻されずにそのまま受け入れられ、保存されます。多重化しているときはプロファイルごとの設定です。 |
 | `HERMES_NOUS_MIN_KEY_TTL_SECONDS` | エージェントのキーを作り直すまでの最小の残り時間（既定: 1800 = 30 分） |
 | `HERMES_NOUS_TIMEOUT_SECONDS` | Nous の認証情報・トークンのやり取りの HTTP の制限時間 |
 | `HERMES_DUMP_REQUESTS` | API 要求の中身をログファイルに書き出します（`true` / `false`） |
@@ -549,7 +549,7 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `GATEWAY_PROXY_KEY` | プロキシモードでリモートの API サーバーに認証してもらうためのベアラートークン。リモート側の `API_SERVER_KEY` と一致している必要があります。 |
 | `MESSAGING_CWD` | ゲートウェイの作業ディレクトリのための、互換性のための非推奨の予備です。`config.yaml` の `terminal.cwd` をおすすめします。 |
 | `GATEWAY_ALLOWED_USERS` | すべてのプラットフォームで許可するユーザー ID をカンマ区切りで指定します |
-| `GATEWAY_ALLOW_ALL_USERS` | 許可リストなしですべての利用者を許可します（`true` / `false`。既定: `false`） |
+| `GATEWAY_ALLOW_ALL_USERS` | 許可リストなしで（`true` / `false`。既定: `false`）。`config.yaml` の `gateway.allow_all_users` でも設定できます。両方あるときは環境変数が優先されます。 |
 
 ### Web ダッシュボードと Hermes Desktop {#web-dashboard-hermes-desktop}
 
@@ -800,7 +800,7 @@ Microsoft Teams のプラットフォームのアダプタ（Bot Framework / Azu
 
 | 変数 | 説明 |
 |----------|-------------|
-| `HERMES_NEMO_RELAY_PLUGINS_TOML` | Hermes の中核がプロセス全体で読み込む、標準の NeMo Relay の `plugins.toml` の明示的なパス。未設定なら、Hermes は Relay のミドルウェア、動的なプラグイン、書き出しの仕組みを初期化しません。削除された `HERMES_NEMO_RELAY_ATOF_*` と `HERMES_NEMO_RELAY_ATIF_*` は無視されます。それらの出力は、選んだファイルの中で設定してください。[NeMo Relay の可観測性の設定](https://docs.nvidia.com/nemo/relay/configure-plugins/observability/about) をご覧ください。 |
+| `HERMES_NEMO_RELAY_PLUGINS_TOML` | Hermes の中核がプロセス全体で読み込む、標準の NeMo Relay の `plugins.toml` の明示的なパス。未設定なら、Hermes は Relay のミドルウェア、動的なプラグイン、書き出しの仕組みを初期化しません。削除された `HERMES_NEMO_RELAY_ATOF_*` と `HERMES_NEMO_RELAY_ATIF_*` は無視されます（これらが残った `.env` からは何も書き出されません）。`hermes update` / `hermes migrate relay` がこれらを `<hermes home>/relay-plugins.toml` へ変換し、この変数を設定します。[移行の注意と完全な例](/hermes/docs/user-guide/features/built-in-plugins/#nemo-relay-native-integration-migration-note) を参照してください。[NeMo Relay の可観測性の設定](https://docs.nvidia.com/nemo/relay/configure-plugins/observability/about) をご覧ください。 |
 
 ## エージェントの振る舞い {#agent-behavior}
 
@@ -832,6 +832,8 @@ Microsoft Teams のプラットフォームのアダプタ（Bot Framework / Azu
 | `HERMES_AGENT_TIMEOUT` | ゲートウェイで、動いているエージェントが何もしないまま終了するまでの秒数（既定: `1800`、30 分）。ツールを呼ぶたび、ストリームのトークンが来るたびに数え直します。`0` で無効になります。 |
 | `HERMES_GATEWAY_MAX_STARTS` | 立ち上げの嵐を止める仕組みです。この時間の枠の中でゲートウェイの起動が許される最大回数で、超えると指数的に間を空けて嵐を止めます（既定: `5`。`0` で無効）。`config.yaml` の `gateway.respawn_storm.max_starts` でも設定できます。 |
 | `HERMES_GATEWAY_START_WINDOW_S` | 立ち上げの嵐を見る時間の枠（秒。既定: `120`）。`config.yaml` の `gateway.respawn_storm.window_seconds` でも設定できます。 |
+| `HERMES_STARTUP_WATCHDOG` | `hermes gateway run` の起動時の生存監視。タイムアウトまでにプロセスがイベントループの稼働に達せず、進捗のリースも持たず、CPU の進み具合も見えないときは、全スレッドのスタックを `logs/gateway-startup-watchdog.log` に書き出し、終了コード `75` で終了します。これでサービスの監督役（systemd、s6、Windows のタスク）が再起動します。`0` にすると使いません。`config.yaml` の読み込み自体が監視の時間内に入るため、環境変数でだけ設定します。未設定のときは、`config.yaml` の `gateway.startup_watchdog: false` がこの変数へ橋渡しされます。 |
+| `HERMES_STARTUP_WATCHDOG_TIMEOUT_S` | 起動時の生存監視のタイムアウト（秒。既定: `300`）。遅くても生きている段階（state.db のスキーマ移行、修復、構築時のアーカイブ・削除・VACUUM）は自分で進捗のリースを持つので、大きな環境の起動がそれらの段階の *外で* 本当に5分を超える場合（多重化したプロファイルが多い、遅いディスクに数千のスキルがある など）にだけ値を上げてください。未設定のときは、`config.yaml` の `gateway.startup_watchdog_timeout_seconds` から橋渡しされます。 |
 | `HERMES_AGENT_TIMEOUT_WARNING` | ゲートウェイ: 何も起きないまま、この秒数が過ぎたら警告のメッセージを送ります（既定: `HERMES_AGENT_TIMEOUT` の 75%）。 |
 | `HERMES_AGENT_NOTIFY_INTERVAL` | ゲートウェイ: 長く続くエージェントのターンで、進み具合を知らせる間隔（秒）。 |
 | `HERMES_CHECKPOINT_TIMEOUT` | ファイルシステムのチェックポイントを作るときの制限時間（秒。既定: `30`）。 |

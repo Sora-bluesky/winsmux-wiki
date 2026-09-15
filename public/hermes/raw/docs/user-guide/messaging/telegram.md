@@ -2,7 +2,7 @@
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: d9d7b26bc12af930661ef1275362d3aaa20edd4b
+upstream_blob: ea7744e1155871d938812aac2d857157fe50813e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -1018,9 +1018,14 @@ gateway:
       extra:
         rich_messages: true
         rich_drafts: false
+        allow_cjk_rich_messages: false
 ```
 
-この設定は、クライアントでの表示とコピーのしやすさのためのものです。Telegram がリッチの API 呼び出しを拒否したときは、Hermes がすでに自動で切り替えます。`rich_drafts` は、DM のストリーミング中のプレビューをリッチで*表示する*か（`sendRichMessageDraft`）を決めるもので、既定は無効です。Telegram のデスクトップ版や macOS 版では、トークが描き直されるまでリッチな下書きが重なって見えることがあるためです。無効にしておけば、プレビューは素のまま流れ、最終的なものは本来のリッチメッセージとして届きます。リッチメッセージは有効にしたまま、表については以前の「常にコードブロック」の挙動だけを使いたい場合は、`config.yaml` で `telegram.pretty_tables: false` にして表の整えを止めます（既定は `true`）。
+この設定は、クライアントでの表示とコピーのしやすさのためのものです。Telegram がリッチの API 呼び出しを拒否したときは、Hermes がすでに自動で切り替えます。`rich_drafts` は、DM のストリーミング中のプレビューをリッチで*表示する*か（`sendRichMessageDraft`）を決めるもので、既定は無効です。Telegram のデスクトップ版や macOS 版では、トークが描き直されるまでリッチな下書きが重なって見えることがあるためです。無効にしておけば、プレビューは素のまま流れ、最終的なものは本来のリッチメッセージとして届きます。
+
+CJK の文字（中国語・日本語・韓国語と、まれな漢字の拡張）は、既定では従来の MarkdownV2 の経路のままです。影響を受ける Telegram のデスクトップ版や macOS 版のクライアントで、Bot API のリッチメッセージを表示すると CJK の文字が重なって崩れることがあったためです。影響のないクライアントを使っていて、CJK を含む内容でも表・チェックリスト・折りたたみ・数式を本来のリッチ表示にしたい場合は、`rich_messages: true` とあわせて `allow_cjk_rich_messages: true` を設定し、そのクライアント側の危険を承知のうえで有効にしてください。
+
+リッチメッセージは有効にしたまま、表については以前の「常にコードブロック」の挙動だけを使いたい場合は、`config.yaml` で `telegram.pretty_tables: false` にして表の整えを止めます（既定は `true`）。
 
 **リンクのプレビュー。** Telegram は、ボットのメッセージに含まれる URL のプレビューを自動で作ります。長い `/tools` の出力や、リンクを 10 個挙げるエージェントの返信など、それを出したくない場合は次のようにします。
 

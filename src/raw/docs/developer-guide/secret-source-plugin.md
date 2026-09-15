@@ -2,7 +2,7 @@
 title: "シークレットソースプラグイン"
 description: "Hermes Agent 用のシークレットマネージャ連携プラグインの作り方"
 upstream_path: developer-guide/secret-source-plugin.md
-upstream_blob: b6e5f93da769dae43e00781fde100b3a1ca3f489
+upstream_blob: 666f70995831ac5fa0df40100be71e3865927ede
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/secret-source-plugin
 ---
@@ -25,6 +25,9 @@ sources:
 これで「Bitwarden を自分の保管庫に置き換える」ときに最初のプロセスだけ穴が空く問題（#64177）が塞がりました。
 
 - 取り直しは何度実行しても同じ結果になり、失敗しても素通りします（起動を止めることはありません）。
+- `hermes update` は外部のソースを一切解決しません。更新処理のプロセスでも、そこから起動する取り込みの健全性確認でも同じです。
+  更新の経路には資格情報を必要とするものがなく、解決させると、応答の遅い補助プログラムが取り込みの失敗と
+  誤って報告されてしまうためです（#110823）。
 - ソースが環境変数を渡す経路はオーケストレータ経由だけです。他のプラグインや利用者のシークレット全体を、
   自分のソースの設定で許された範囲を超えて吸い出すようなプラグイン API は **ありません**。
 - 読み込み後の `os.environ` は、同じプロセス内のコードならどれでも読めます —

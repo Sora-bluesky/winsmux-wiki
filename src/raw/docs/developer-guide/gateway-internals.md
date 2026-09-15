@@ -2,7 +2,7 @@
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: 2e5361b1fbd319b03f846e0332b0c4e830c77edd
+upstream_blob: 066d86a4dc5867fc3630fe7d3b0cc36c9162338a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -63,7 +63,7 @@ sources:
    - そのセッションでエージェントが動いていれば、メッセージを待ち行列に入れ、割り込みを知らせます
    - `/approve`、`/deny`、`/stop` は見張りを素通りします (その場で処理されます)
 3. **GatewayRunner._handle_message()** がイベントを受け取ります。
-   - `_session_key_for_source()` でセッションキーを決めます (形式は `agent:main:{platform}:{chat_type}:{chat_id}`)
+   - `_session_key_for_source()` でセッションキーを決めます (形式は `agent:{namespace}:{platform}:{chat_type}:{chat_id}`。namespace は既定のプロファイルなら `main`、多重化しているときは `<profile>` になります。[多重化したプロファイル](#multiplexed-profiles) を参照)
    - 認可を確かめます (下の「認可」を参照)
    - スラッシュコマンドなら、コマンドのハンドラーへ渡します
    - すでにエージェントが動いていれば、`/stop` や `/status` などのコマンドを横取りします
@@ -75,10 +75,12 @@ sources:
 セッションキーには、振り分けに必要な情報がすべて入っています。
 
 ```
-agent:main:{platform}:{chat_type}:{chat_id}
+agent:{namespace}:{platform}:{chat_type}:{chat_id}
 ```
 
-たとえば `agent:main:telegram:private:123456789` のようになります。
+たとえば既定のプロファイルなら `agent:main:telegram:private:123456789`、
+多重化の仕組みがそのチャットをプロファイル `work` へ振り分けたときは `agent:work:telegram:private:123456789` になります
+(`gateway/session.py::_session_key_namespace`。`main` という名前そのもののプロファイルは `main~` と印が付きます)。
 
 スレッドを持つサービス (Telegram のフォーラムトピック、Discord のスレッド、Slack のスレッド) では、chat_id の部分にスレッド ID が入ることがあります。**セッションキーを手で組み立てないでください**。かならず `gateway/session.py` の `build_session_key()` を使います。
 
@@ -99,7 +101,7 @@ agent:main:{platform}:{chat_type}:{chat_id}
 1. **サービスごとの全員許可フラグ** (たとえば `TELEGRAM_ALLOW_ALL_USERS`)。設定されていれば、そのサービスの利用者は全員が認可されます
 2. **サービスごとの許可リスト** (たとえば `TELEGRAM_ALLOWED_USERS`)。利用者 ID をカンマ区切りで並べます
 3. **DM ペアリング**。認可済みの利用者が、ペアリングコードで新しい利用者を追加できます
-4. **全体の全員許可** (`GATEWAY_ALLOW_ALL_USERS`)。設定されていれば、すべてのサービスの利用者が認可されます
+4. **全体の全員許可** (`GATEWAY_ALLOW_ALL_USERS`、または `config.yaml` の `gateway.allow_all_users`。後者は `gateway/config_loader.py::bridge_core_env_settings` が環境変数へ橋渡しします)。設定されていれば、すべてのサービスの利用者が認可されます
 5. **既定は拒否**。認可されていない利用者は弾かれます
 
 ### DM ペアリングの流れ {#dm-pairing-flow}
@@ -230,7 +232,7 @@ cron のジョブの配信は、ゲートウェイのセッション履歴には
 | `agent:end` | エージェントが終わって返事を返したとき |
 | `command:*` | いずれかのスラッシュコマンドが実行されたとき |
 
-フックは `gateway/builtin_hooks/` (置き場としては用意されていますが、配布物ではいまのところ空で、`_register_builtin_hooks()` は何もしない雛形です) と `~/.hermes/hooks/` (自分で入れたもの) から見つけられます。フックはそれぞれ、`HOOK.yaml` という定義ファイルと `handler.py` を置いたディレクトリです。
+フックは `gateway/builtin_hooks/` (置き場としては用意されていますが、配布物ではいまのところ空で、`_register_builtin_hooks()` は何もしない雛形です) と `<profile home>/hooks/` (自分で入れたもの。既定のプロファイルなら `~/.hermes/hooks/`、多重化しているときは受け持つプロファイルごとに1つのディレクトリ。パスは読み込み時ではなく呼び出し時に決まります) から見つけられます。フックはそれぞれ、`HOOK.yaml` という定義ファイルと `handler.py` を置いたディレクトリです。
 
 ## メモリープロバイダーとの連携 {#memory-provider-integration}
 
@@ -274,7 +276,23 @@ AIAgent._invoke_tool()
 - `systemctl` (Linux) や `launchctl` (macOS) — サービスとして管理する
 - `~/.hermes/gateway.pid` の PID ファイル — プロファイル単位でプロセスを追う
 
-**プロファイル単位か、全体か**: `start_gateway()` はプロファイル単位の PID ファイルを使います。`hermes gateway stop` は、いまのプロファイルのゲートウェイだけを止めます。`hermes gateway stop --all` は `ps aux` で全体を走査し、ゲートウェイのプロセスをすべて止めます (更新のときに使われます)。
+**プロファイル単位か、全体か**: `start_gateway()` はプロファイル単位の PID ファイルを使います。単独運用 (プロファイルごとにゲートウェイが1つ) なら、`hermes -p x gateway stop` はそのプロファイルのゲートウェイだけを止めます。多重化しているときはゲートウェイのプロセスは1つだけで、既定のプロファイルが持ち主です。既定のプロファイルで `hermes gateway stop` を実行すると受け持つプロファイルがすべて止まり、受け持たれている側のプロファイルで `hermes -p x gateway stop` を実行すると、終了コード 78 で断られます (そのプロファイル自身のゲートウェイはないためです)。`hermes gateway stop --all` は `ps aux` で全体を走査し、ゲートウェイのプロセスをすべて止めます (更新のときに使われます)。生きているかどうかは `gateway.status.live_gateway_pid_for_home` (PID と起動時刻の指紋) で判断し、PID が存在するかどうかだけでは決めません。
+
+## 多重化したプロファイル {#multiplexed-profiles}
+
+`gateway.multiplex_profiles: true` にすると、1つのプロセスが既定のプロファイルと、`profiles/` の下にある有効なディレクトリすべてを受け持ちます (`hermes_cli/profiles.py::profiles_to_serve(multiplex=True)`)。`os.environ` とモジュールのグローバル変数には **起動した** プロファイルの値が入っているため、ほかのプロファイルのための処理はどれも、自分の範囲を明示的に結び付けます。プロファイルとは、ホームと秘密情報の範囲と端末の範囲をひとまとめにしたものです。
+
+| 処理 | 結び付け方 |
+|---|---|
+| 振り分けられたターン | `run_turn.py::_profile_scope_for_source` 経由の `gateway/run.py::_profile_runtime_scope(home)` |
+| エージェントの解放・追い出し (TTL、LRU、メモリ逼迫) | `gateway/run_agent_cache.py::_run_release_in_profile_scope` |
+| 終了処理 | `gateway/run_shutdown.py::_finalize_session` |
+| ターン後のメディア配信 | `gateway/platforms/base.py::_media_delivery_scope` |
+| cron の定期実行 | `cron/scheduler_provider.py::_profile_cron_scope(home)` (実行役は1つで、プロファイルを順に回ります) |
+| 子プロセス (`hermes -p X` のワーカー、リレーのターン、ブラウザーのドライバー) | `tools/environments/local.py::served_profile_child_env` |
+| バックグラウンドのスレッド | `agent/memory_provider.py::spawn_context_thread` |
+
+秘密情報の読み出しが安全側に失敗する (`agent.secret_scope.get_secret` が `UnscopedSecretError` を投げる) のは、`set_multiplex_active(True)` が呼ばれたあとだけです。これを呼ぶのは、ゲートウェイ、cron、`gateway migrate`、Desktop やダッシュボードの `serve` バックエンドです。多重化しているとき、アダプターの YAML は `os.environ` に書き込まれません。`gateway/platforms/_shared.py::apply_yaml_bridge` が `PlatformConfig.extra` に値を入れ、ほかのプロファイルの範囲では環境変数への書き込みを飛ばします。有効かどうかの判定は `platform_gate_env` を通して読みます。入口を共有するサービス (WhatsApp のブリッジ、Relay) は既定のプロファイルでだけ動きます。ほかのプロファイルでこれらを有効にすると、ログに一度だけ記録され、実行時の状態に印が付きます (`run_adapters.py::_note_unserved_secondary_platform`)。利用者から見たプロファイルごとの分離は [複数プロファイルのゲートウェイ § プロファイルごとに分離されるもの](/hermes/docs/user-guide/multi-profile-gateways/#what-is-isolated-per-profile) を参照してください。
 
 ## 関連ページ {#related-docs}
 

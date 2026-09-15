@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 5b8d70245cb7325c47c98c8982e6e6b90163bc32
+upstream_blob: 32389d862b0fa914e2d80e702db5734abd82cc6e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -378,6 +378,8 @@ hermes sessions export backup.jsonl --redact
 ```
 
 書き出したファイルは 1 行が 1 つの JSON オブジェクトで、セッションの情報一式とすべてのメッセージが入っています。
+
+各レコードには、メッセージの時刻から組み立てた `timings` のまとまりも入っています。これがあるので、バグ報告に添付された書き出しを読む人は、モデルの応答を長く 1 回待ったのか、ツールとの小さな往復がたくさんあったのかを、手で組み立て直さずに見分けられます。中身は ID、役割、件数、所要時間だけで（`wall_clock_ms`、`largest_gap_ms`、`role_counts`、`tool_calls_emitted`、メッセージごとの `intervals`）、プロンプトの文面、ツールの引数や結果は一切含みません。そのため `--redact` を付けてもそのまま残ります。Hermes はモデルやツールの所要時間を計るストップウォッチを保存していないので、`complete` は常に `false` です。時刻付きのメッセージがないセッションでは `available` が `false` になり、`unavailable_reason` にその理由が入ります。このまとまりは書き出しのたびに作り直され、取り込みのときは無視されます（サイズの上限にも数えません）。
 
 #### HTML {#html}
 

@@ -2,7 +2,7 @@
 title: "デスクトップ版を複数の Hermes につなぐ"
 description: ""
 upstream_path: user-guide/multi-connection-desktop.md
-upstream_blob: e8c3ddcafb4f7760c2d8b0f10364abbfee944b16
+upstream_blob: 81e45bf801d1ca91e88989fc5f3e401f0101f4ee
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-connection-desktop
 ---
@@ -96,8 +96,8 @@ every Hermes gateway it can reach through remote, SSH, or Cloud connections.」*
 ゲートウェイやプロファイルのまとまりのメニューからは、**Rename group**、**Reset name**、
 **Move up**、**Move down** を選べます。名前を変えてもサイドバーの表示が変わるだけで、
 ゲートウェイやプロファイルそのものは変わりません。ゲートウェイはまとまりごと動き、
-プロファイルは自分が属するゲートウェイの中で動きます。並べ替えは、まとまりの先頭にある
-アイコンをドラッグするか、そのつまみにフォーカスを合わせて Space、矢印キー、
+プロファイルは自分が属するゲートウェイの中で動きます。並べ替えは、まとまりの見出しの
+どこか（アイコン、名前、空いているところ）をドラッグするか、見出しにフォーカスを合わせて Space、矢印キー、
 もう一度 Space の順に押して置きます。名前と並び順、どこを折りたたんでいたかは、
 この端末に記憶されます。ゲートウェイを折りたたんでも、中のプロファイルそれぞれの
 開閉状態はそのまま残ります。プロファイルごとの新しいセッションを作る操作は、

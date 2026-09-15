@@ -2,7 +2,7 @@
 title: "Discord"
 description: "Hermes Agent を Discord のボットとして設定する"
 upstream_path: user-guide/messaging/discord.md
-upstream_blob: bcf8de0faf3d63563acfb37002d1a9a62b898399
+upstream_blob: a62e2a7a1bfe30344d1e0e56d0d378db52bf5c9a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/discord
 ---
@@ -87,7 +87,7 @@ Hermes は実行中のエージェントをセッションのキーで管理し�
 
 ### ゲートウェイの WebSocket の健全性 {#gateway-websocket-health}
 
-Discord の REST と Gateway の WebSocket は別々の通信路です。REST の応答が成功しても（`fetch_user()` が HTTP 200 を返しても）、ボットが Gateway のイベントをまだ受け取れる証拠にはなりません。そこで Hermes は、準備完了の状態、クライアントとソケットの終了の状態、ソケットが開いているか、ハートビートの確認からの経過時間、そしてハートビートの遅延が有限かどうかを組み合わせて判断します。
+Discord の REST と Gateway の WebSocket は別々の通信路です。REST の応答が成功しても（`fetch_user()` が HTTP 200 を返しても）、ボットが Gateway のイベントをまだ受け取れる証拠にはなりません。そこで Hermes は、準備完了の状態、クライアントとソケットの終了の状態、ソケットが開いているか、ハートビートの確認からの経過時間、ハートビートの遅延が有限かどうか、そして（イベント配信側の観点が加わってからは）最後に解析した Gateway のイベントからどれだけ時間が経ったかを組み合わせて判断します。
 
 設定した回数だけ連続して不健全と判定されると、アダプターはやり直し可能な致命的イベントを 1 回出します。既存のゲートウェイの再接続の監視が新しいアダプターを作るので、Discord のアダプター側が終わりのない再接続のループをもう 1 つ始めることはありません。
 
@@ -99,11 +99,14 @@ discord:
   websocket_liveness_failure_threshold: 2
   websocket_heartbeat_ack_max_age_seconds: 60
   websocket_max_latency_seconds: 30
+  websocket_event_max_silence_seconds: 14400
 ```
 
 以前の `liveness_interval_seconds` と `liveness_failure_threshold` という名前は互換のための別名として残っているだけで、REST での確認を意味しなくなりました。
 
 どれか 1 つでも `0` にすると、WebSocket の生存確認そのものが止まります。正の数として読めない値（`15s`、`nan`、`true`、`-1` など）でも止まり、アダプターが起動するたびに警告がログに出ます。確認が働いていないように見えるときは `gateway.log` を見てください。
+
+`websocket_event_max_silence_seconds` だけは例外です。これはイベントの配信という 1 つの観点だけを見張る設定なので、`0` にすると **その確認だけ** が止まり、準備完了・ハートビートの確認・遅延の見張りは続きます。ソケットは ESTABLISHED のまま、ハートビートの確認も返し続けながら、Gateway のイベントを 1 つも届けない状態になることがあります。ハートビートの確認はイベントの種類を持たないフレームなので、通信路の側の確認ではこの状態を見分けられません。既定値（4 時間）は、運用者が実際に観測した障害の長さに合わせたものです。静かなサーバー（guild）では、Gateway のイベントが何時間も 1 つも来ないことが普通にありえるので、自分のところの通信量を把握していない限り、この上限はゆとりを持たせておいてください。
 
 ## 手順 1: Discord のアプリケーションを作る {#step-1-create-a-discord-application}
 

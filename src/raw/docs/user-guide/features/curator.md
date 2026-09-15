@@ -2,7 +2,7 @@
 title: "キュレーター"
 description: "エージェントが作ったスキルを裏で手入れする仕組み — 利用状況の記録、古びの判定、書庫入れ、そして LLM による見直し"
 upstream_path: user-guide/features/curator.md
-upstream_blob: 1827bc7ad65d346ddee10b7372a7b232769b2cb2
+upstream_blob: 11ffc76a4a0ca005b7fde9e70259ebaf0ad45b1a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/curator
 ---
@@ -209,15 +209,17 @@ hermes curator purge --days 90   # one-off TTL override
 `"background_review"` として動いており（`tools/skill_provenance.py` を通ります）、
 `skill_manage` の中の `mark_agent_created()` を呼ぶ経路はここだけです。
 
-会話の中で表のエージェントが `skill_manage(action="create")` で作ったスキルには、
-エージェント作の印は**付きません**。それは利用者の指示で作られたものと見なし、
+会話の中で表のエージェントが `skill_manage(action="create")` で作ったスキル（`/learn` を含む）には、
+エージェント作の印は**付きません**。代わりに `created_by: learn` と記録されます。
+そのためすぐに[学びの道のり](/hermes/docs/user-guide/features/memory/#learning-journey-journey)に表示されますが、
+キュレーターの管轄に入る印ではありません。それは利用者の指示で作られたものと見なし、
 キュレーターはあえて手を触れません。
 
 :::warning 自分で書いたスキルは手入れの対象外です
 自分で `SKILL.md` を書いた場合や、外部のスキルのディレクトリを Hermes に
 指し示した場合、そのスキルの `.usage.json` の記録は `created_by: null` に
 なります（あるいはその欄自体がありません）。キュレーターはそれに触れません。
-表のエージェントに頼んで作ってもらったスキルも同じです。
+表のエージェントに頼んで作ってもらったスキル（`created_by: learn`）も同じです。
 
 **キュレーターが実際にどのスキルを受け持っているかを見る**には、`hermes curator status` を実行してください。
 エージェント作の数が 0 なら、今キュレーターの管轄にあるスキルはありません。
@@ -248,8 +250,9 @@ unmanaged (no provenance marker): 112 total
 - **pre-dates marker** — `created_by` という欄ができる前に書かれた記録なので、
   出どころの手がかりを何も持っていません。誰が書いたのかは、記録からは
   本当にわかりません。
-- **foreground-created** — 表での `skill_manage(create)` は、あえて印を
-  付けません。頼んで作ってもらったスキルは、頼んだ人のものだからです。
+- **foreground-created** — 表での `skill_manage(create)` は、あえて
+  `created_by: learn` と記録します（古い記録では未設定）。頼んで作ってもらった
+  スキルは、頼んだ人のものだからです。
 
 つまり、大きな棚がすっかり手入れされているように見えて、その大半には手が
 届いていない、ということが起こりえます。`adopt` は、**こちらから宣言する**ことで

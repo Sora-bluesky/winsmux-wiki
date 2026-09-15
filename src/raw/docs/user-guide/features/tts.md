@@ -2,7 +2,7 @@
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md
-upstream_blob: 8cabbb842f85905d16e74c63c37f907d4c40eb71
+upstream_blob: ecff510d47091204239663856bd642aaf063d1ae
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tts
 ---
@@ -500,6 +500,15 @@ stt:
 | `small` | 約 500 MB | ふつう | より良い |
 | `medium` | 約 1.5 GB | やや遅い | かなり良い |
 | `large-v3` | 約 3 GB | 最も遅い | 最良 |
+
+初めて使うときは、選んだモデルを `huggingface.co` からダウンロードします。2回目以降の読み込みではローカルのキャッシュを優先し、オンラインでの版の確認も必要ありません。Hub につながらないネットワークでは、Hermes を起動するシェルやサービスで、利用できるミラーを環境変数に設定してください。
+
+```bash
+HF_ENDPOINT=https://your-hugging-face-mirror.example
+HF_HUB_DISABLE_XET=1
+```
+
+`HF_HUB_DISABLE_XET=1` を付けると、ダウンロードはミラーの通常の HTTP 経路を通ります。付けないと、`HF_ENDPOINT` に従わない Xet CAS のホストへ接続しにいきます。
 
 **Groq API** — `GROQ_API_KEY` が要ります。無料で使えるクラウドの文字起こしがほしいときの、良い受け皿になります。言語が分かっている音声なら、`stt.groq.language`（または全体に効く環境変数 `HERMES_LOCAL_STT_LANGUAGE`）を設定すると Whisper の自動判別を省けて、待ち時間が短くなります。
 

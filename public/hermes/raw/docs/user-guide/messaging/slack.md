@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: 104d4a318f98a794345ed143edea11b74e502c70
+upstream_blob: d07e4ad58e61cccaf486d608cc63d2adedbd43c3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -339,8 +339,11 @@ Slack が Hermes まで届けてくれません。
 **Block Kit のボタン**として表示されます。選択肢ごとに一押しで答えられ、
 「✏️ Other…」のボタンを押すと自由記入に切り替わります（次に打ったメッセージが答えになります）。
 押したあと、そのメッセージは誰が何を選んだかを示す形に書き換わります。同じ質問を
-もう一度押しても無視されます。ボタンを押せるのはメッセージと同じ許可を持つ人だけで、
-期限切れの質問（ゲートウェイの再起動や時間切れ）には、押しても黙って飲み込まずに
+もう一度押しても無視されます。ボタンを押せるのはメッセージと同じ許可を持つ人だけです。
+質問が時間切れになったとき（`agent.clarify_timeout`）、セッションがリセットされたとき、
+ボタンを押さずに文字で返事をしたときは、カードがその場でボタンのない形に書き換わります
+（「⏳ This prompt expired…」または「↩️ Clarification cancelled…」）。
+ゲートウェイの再起動で取り残されたカードを押した場合は、これまでどおり黙って飲み込まずに
 聞き直すよう案内が出ます。選択肢のない自由回答の聞き返しは、ふつうの質問として表示され、
 次に打った返事を受け取ります。設定は要りません。`rich_blocks` の設定に関係なく動きます。
 
