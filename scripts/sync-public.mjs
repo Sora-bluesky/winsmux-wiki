@@ -79,13 +79,17 @@ for (const f of copied) {
 
 const raws = copied.map((f) => `${site}/hermes/raw/${f.replace(/\\/g, '/')}`);
 
+// 版はトップの原稿 src/raw/index.md の front matter から採る（直書きは日次 sync の版更新に掛からず
+// 0.21.0 のまま残った・2026-09-16）。読めなければ版の行を出さない
+const indexRaw = await readFile(join(srcDir, 'index.md'), 'utf8');
+const hermesVersion = indexRaw.match(/^hermes_version:\s*"?([^"\n]+)"?\s*$/m)?.[1]?.trim() ?? '';
+const versionLine = hermesVersion ? `Hermes Agent ${hermesVersion}\n\n` : '';
+
 const llms = `# Hermes Agent Wiki（非公式・日本語）
 
 > 公式 docs の Quickstart / Installation / Messaging の順を日本語にしたもの。独自手順は作らない。正本: https://hermes-agent.nousresearch.com/docs/
 
-Hermes Agent ${'0.21.0'}
-
-## ページ
+${versionLine}## ページ
 
 ${catalog.map(([path, label]) => `- [${label}](${site}${path})`).join('\n')}
 
