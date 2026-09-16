@@ -2,7 +2,7 @@
 title: "かんばん（複数エージェントの盤）"
 description: "複数の Hermes プロファイルをまとめて動かすための、SQLite に残るタスクの盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: f78e32a6cc6b88921336561ea88e0b2729e36568
+upstream_blob: ffc4164efe487cc5f2713894d4c396d0527ec7f2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -127,7 +127,7 @@ PR の URL、SHA、必須の検査、check の id と URL、分類、立て直�
   - `scratch`（既定） — `~/.hermes/kanban/workspaces/<id>/` の下の、まっさらな一時ディレクトリです（既定でない盤では `~/.hermes/kanban/boards/<slug>/workspaces/<id>/`）。**タスクが終わると消えます**。使い捨てなのはそういう設計だからです。`kanban_complete(artifacts=[...])` や `kanban_request_review(artifacts=[...])` ではっきり申告したファイルは、片付けの前に、タスクごとの消えない置き場へ写されます（レビューへの受け渡しでは、受け渡しの時点で写します。あとでレビュー役が完了させたときに、使い捨ての作業場が消えるからです）。昔ながらの完了報告に書かれた成果物のパスも、同じように扱われます。申告した成果物が見つからないときは、パスを直して再挑戦できるよう、タスクは走ったままになります。作業場ごと残しておきたいときは `worktree:` か `dir:<path>` を使ってください。使い捨ての作業場がそのインストールで初めて作られたとき、差配役は警告を出し、そのタスクに `tip_scratch_workspace` の出来事を残します（`hermes kanban show <id>` で見られます）。
   - `dir:<path>` — すでにある共有のディレクトリ（Obsidian の保管庫、メール運用のディレクトリ、アカウントごとのフォルダ）です。**絶対パスでなければなりません。** `dir:../tenants/foo/` のような相対パスは、差し向けのときにはねられます。差配役がたまたまいる作業ディレクトリを基準に解決されてしまい、あいまいなうえ、権限の取り違えを突く抜け道になるからです。それ以外の点で、そのパスは信用されます。あなたの機械、あなたのファイルシステムで、作業役はあなたの権限で動きます。これは「ローカルの利用者は信用する」という前提で、かんばんは 1 台で動かす作りです。**終わっても残ります。**
   - `worktree` — コードの作業のための、`.worktrees/<id>/` の下の git の作業ツリーです。置き場所をきっちり決めたいときは `worktree:<path>` を使います。作業役の側の `git worktree add` が作り、指定があれば `--branch` を使います。**終わっても残ります。**
-- **差配役** — N 秒ごと（既定は 60）に、古くなった確保を戻し、落ちた作業役を取り戻し（PID は消えたが TTL はまだ切れていないもの）、支度のできたタスクを進め、ひとつずつ確実に確保して、割り当てられたプロファイルを立ち上げる、動き続けるループです。既定では **ゲートウェイの中で** 動きます（`kanban.dispatch_in_gateway: true`）。ひとつの差配役が、1 ティックですべての盤を見ます。作業役は `HERMES_KANBAN_BOARD` を固定した状態で立ち上がるので、ほかの盤は見えません。同じタスクで立ち上げに続けて `kanban.failure_limit` 回（既定は 2）失敗すると、差配役は最後のエラーを理由にしてそのタスクを自動で止めます。存在しないプロファイル、つなげない作業場といったもので、いつまでも空回りするのを防ぎます。
+- **差配役** — N 秒ごと（既定は 60）に、古くなった確保を戻し、落ちた作業役を取り戻し（PID は消えたが TTL はまだ切れていないもの）、終わった実行のあとも居残っている作業役を片付け（自分で `kanban_complete`/`kanban_block` を呼んだあとも生きている作業役は、実行が閉じてから 2 分たった時点で終了させます。最後の応答を終えるための猶予です。PID *と* 立ち上げ時の指紋の両方で照合するので、使い回された PID に信号を送ることはありません。`terminal_worker_reaped` の出来事として残ります）、支度のできたタスクを進め、ひとつずつ確実に確保して、割り当てられたプロファイルを立ち上げる、動き続けるループです。既定では **ゲートウェイの中で** 動きます（`kanban.dispatch_in_gateway: true`）。ひとつの差配役が、1 ティックですべての盤を見ます。作業役は `HERMES_KANBAN_BOARD` を固定した状態で立ち上がるので、ほかの盤は見えません。同じタスクで立ち上げに続けて `kanban.failure_limit` 回（既定は 2）失敗すると、差配役は最後のエラーを理由にしてそのタスクを自動で止めます。存在しないプロファイル、つなげない作業場といったもので、いつまでも空回りするのを防ぎます。
 - **借り主** — 盤の *中の* 任意の名前空間です。ひとつの専門役の群れが、作業場のパスと記憶の鍵の前置きでデータを分けながら、複数の事業（`--tenant business-a`）を受け持てます。借り主はゆるい絞り込みで、きっちり分ける境目は盤のほうです。
 
 ## 盤（複数プロジェクト） {#boards-multi-project}
@@ -496,15 +496,22 @@ summary は人が読む締めくくり、`metadata` は、あとを継ぐエー�
 
 この最後の `kanban_complete` / `kanban_block` の呼び出しは、作業役の決まりごとの
 一部です。タスクがまだ `running` のまま作業役のプロセスが終了コード 0 で終わると、
-差配役はそれを決まりごと破りとみなし、`protocol_violation` の出来事を残します。
+差配役はそれを決まりごと破りとみなし、`protocol_violation` の出来事を残します。そのため、差配役が立ち上げた作業役は、
+応答に失敗すると 0 以外で終了します。ふつうの失敗なら `1`、プロバイダが
+使用量の制限にかかった・混み合っていた・5xx を返した・時間切れになった、または
+アカウントが請求・利用枠の上限に当たったときは `75`（`EX_TEMPFAIL`）です。
+このとき差配役はその実行を `rate_limited` として記録し、失敗には数えずに
+タスクを列へ戻します。利用枠の待ち時間が決まりごと破りとして扱われることはありません。
 
 **エージェント側での予防：** 作業役が終わる前、モデルが盤に終わりを告げるツールを
 呼ばないまま止まりそうだと気付くと、Hermes は多くて 2 回、合いの手を差し込みます。
 モデルが次の一歩を言葉にして（「では報告を書きます」）`finish_reason=stop` で
 止まってしまう、よくある場面を捕まえるためです。合いの手は、すぐに
 `kanban_complete` か `kanban_block` を呼ぶようモデルに思い出させます。この守りは、
-差配役が立ち上げた作業役のときだけ働き（`HERMES_KANBAN_TASK` が置かれている
-とき）、`HERMES_KANBAN_STOP_NUDGE=0` で切れます。
+差配役が立ち上げた作業役そのもののときだけ働き（`HERMES_KANBAN_TASK` が置かれていて、
+その実行がそのタスクを持っているとき）、作業役の中で動く `delegate_task` の子や cron ジョブは
+変数を受け継いでいても合いの手を受けません（盤のツールを持たないためです）。
+`HERMES_KANBAN_STOP_NUDGE=0` で切れます。
 
 **差配役側での立て直し：** 合いの手を使い切ったか、そこへ届く前に作業役が落ちた
 場合、差配役はその破りに **回数を区切った再挑戦** を与え
@@ -843,7 +850,7 @@ hermes kanban claim <id> [--ttl SECONDS]
 hermes kanban comment <id> "<text>" [--author NAME]
 
 # Bulk verbs — accept multiple ids:
-hermes kanban complete <id>... [--result "..."]
+hermes kanban complete <id>... [--result "..."] [--force]
 hermes kanban block <id> "<reason>" [--ids <id>...]
 hermes kanban unblock <id>...
 hermes kanban archive <id>...
@@ -910,6 +917,8 @@ hermes kanban create "nightly backup audit" \
 ### 立ち上げ直しの守り {#respawn-guard}
 
 差配役は、支度済みのタスクでも、前回の実行で使用量・認証・429 のエラーに当たったとき（`blocker_auth`）、守りの時間の内にうまく終わった実行があるとき（`recent_success`）、最近のコメントが GitHub の PR を指しているとき（`active_pr`）は、立ち上げ直しを断ります。人が追いつくまで、同じ不具合やタスクに作業役が押し寄せるのを防ぎます。[出来事の一覧](#event-reference)の `respawn_guarded` の行を見てください。
+
+支度済みのカードがなぜ立ち上がらないのかを知るには、`hermes kanban dispatch --dry-run` を実行します。止められているカードごとに `Guarded (<reason>): <task id>` が出ます（`--json` を付けると `respawn_guarded`、`rate_limited`、`skipped_locked`、`memory_pressure` も出ます）。ゲートウェイや単独のデーモンが出す「dispatcher stuck」の警告にも、直前のティックで何を止めたかが `Last tick held back: active_pr=1` のように書かれます。
 
 ### ドラッグして消す、まとめて消す（ダッシュボード） {#drag-to-delete-and-bulk-delete-dashboard}
 
@@ -1238,6 +1247,8 @@ hermes kanban runs t_abcd
 
 **まとめて閉じるときの注意。** `hermes kanban complete a b c --summary X` は断られます。形の決まった受け渡しは実行ごとのものなので、同じ要約を N 個のタスクへ貼るのは、ほぼいつも間違いです。`--summary` / `--metadata` **なし** のまとめ閉じは、「事務作業の山を片付けた」というよくある場合のために、これまでどおり使えます。
 
+**完了させるときの、生きている確保の守り。** 作業役が生きた確保を持っている `running` のタスクを完了にできるのは、その作業役自身（実行の中からの `kanban_complete`）か、操作する人の明示的な上書き（`hermes kanban complete <id> --force` と、ダッシュボードの「mark done」操作）だけです。確保を持たない `hermes kanban complete <id>` や、オーケストレーター側セッションの `kanban_complete` は、`--force` / `hermes kanban reclaim` を案内して断られます。これで、別のセッションが生きている作業役の実行を横から閉じてしまうことはなくなります。`ready`、`blocked`、`review` のカードを確保なしで完了にする動きは変わりません。
+
 **状態を変えたときの取り戻し。** ダッシュボードで走っているタスクを `running` から外すと（`ready` へ戻す、`todo` へ直行する）、あるいはまだ走っているタスクを書庫へ入れると、飛んでいた実行は宙に浮くのではなく `outcome='reclaimed'` で閉じます。`tasks.current_run_id` が `NULL` のとき `task_runs` の行はつねに終わりの状態にあり、その逆も成り立ちます。この決まりは、CLI でも、ダッシュボードでも、差配役でも、通知役でも保たれます。
 
 **確保されなかった完了のための、人工の実行。** 一度も確保されなかったタスクを完了したり止めたりすると（ダッシュボードから人が `ready` のタスクを要約付きで閉じる、CLI で `hermes kanban complete <ready-task> --summary X` を走らせる、など）、そのままでは受け渡しが落ちてしまいます。そこで中心の処理が、要約・metadata・理由を持った長さ 0 の実行の行（`started_at == ended_at`）を差し込むので、挑戦の履歴は欠けません。`completed` / `blocked` の出来事の `run_id` は、その行を指します。
@@ -1282,13 +1293,13 @@ hermes kanban runs t_abcd
 | `spawned` | `{pid}` | 差配役が作業役のプロセスをうまく始めました。 |
 | `heartbeat` | `{note?}` | 長い作業のあいだ、作業役が `hermes kanban heartbeat $TASK` で生きていることを知らせました。 |
 | `reclaimed` | `{stale_lock}` | 完了のないまま確保の TTL が切れました。タスクは `ready` へ戻ります。自動で取り戻した場合は、`gave_up` の打ち切りに向けて、うまくいかなかった試み 1 回として数えます（そうしないと、作業役を立ち上げられなかった確保が、確保 → 取り戻し → 確保といつまでも回り続けます）。操作する人が `reclaim` した場合は、逆に数を 0 に戻します。 |
-| `crashed` | `{pid, claimer}` | 作業役の PID がもういないのに、TTL はまだ切れていませんでした。 |
+| `crashed` | `{pid, claimer, exit_kind?, exit_code?, worker_output?}` | 作業役の PID がもういないのに、TTL はまだ切れていませんでした。`worker_output` は作業役自身のログの末尾（最後の応答か、表示用に整えたプロバイダのエラー。飾りを除いて 400 字以内）で、タスクの `last_failure_error` にも追記されます。盤には終了コードだけでなく、*なぜ* 落ちたかが出ます。 |
 | `timed_out` | `{pid, elapsed_seconds, limit_seconds, sigkill}` | `max_runtime_seconds` を超えました。差配役が SIGTERM を送り（5 秒の猶予のあと SIGKILL）、並べ直しました。 |
 | `stale` | `{elapsed_seconds, last_heartbeat_at, heartbeat_age_seconds, timeout_seconds, pid, terminated}` | タスクが `kanban.dispatch_stale_timeout_seconds`（既定 4 時間）より長く走り、かつ直近 1 時間に `kanban_heartbeat` が来ませんでした。差配役は同じホストの作業役があれば SIGTERM を送り、差し向け直すためにタスクを `ready` へ戻します。失敗の数え上げは増やしません（これは作業役の落ち度ではなく、差配役の側で不在を見つけただけです）。長く走る作業役は、これを避けるために少なくとも 1 時間に 1 回は `kanban_heartbeat` を呼んでください。 |
 | `reconciled` | `{reason, claim_lock, claim_expires, worker_pid}` | 迷子のカードの立て直しです。そのカードは `running` なのに確保の帳面が壊れていて（`claim_lock` か `claim_expires` が NULL。確保の途中で落ちた、手で SQL を叩いた、DB を戻した、など）、生きている作業役もいないため、TTL・落ちた・止まったのどの道でも救えませんでした。差配役が説明のコメントを付けて `ready` へ並べ直しました。config.yaml の `kanban.reconcile_orphans` で切り替えます（既定は `true`）。 |
 | `respawn_guarded` | `{reason}` | 差配役が、このティックではこの支度済みのタスクを立ち上げ直しませんでした。理由は `blocker_auth`（前回の失敗が使用量・認証・429 のエラー。制限の窓が開くのを待ちます）、`recent_success`（直近 1 時間にうまく終わった実行がある。走らせ直す前にレビューを待ちます）、`active_pr`（最近のコメントに GitHub の PR の URL がある。前の作業役がすでに PR を開いています）です。タスクは `ready` に留まり、次のティックでまた立ち上がる機会があります。元の状態が続けば、ふつうの `consecutive_failures` の遮断が、`failure_limit` 回の失敗のあと `gave_up` で自動的に止めます。 |
 | `spawn_failed` | `{error, failures}` | 立ち上げが 1 回失敗しました（PATH が無い、作業場をつなげない、など）。数え上げが増え、タスクは再挑戦のために `ready` へ戻ります。 |
-| `protocol_violation` | `{pid, claimer, exit_code, protocol_violation}` | タスクがまだ `running` なのに、作業役が正常に終了しました。たいていは `kanban_complete` も `kanban_block` も呼ばずに答えたからです。破りのたびに出ます（中身の `protocol_violation: true` の印は実行の情報へ写され、破りだけを数える再挑戦の持ち分に効きます）。持ち分の内なら——`_PROTOCOL_VIOLATION_FAILURE_LIMIT`（既定 3）回まで *続けての* 破り、タスクごとの `max_retries` があればそちらが優先——タスクはもう一度挑むために `ready` へ戻るだけです。続いた回数が上限に届くと、差配役は `gave_up` も出して自動的に止めます。 |
+| `protocol_violation` | `{pid, claimer, exit_code, protocol_violation, worker_output?}` | タスクがまだ `running` なのに、作業役が正常に終了しました。たいていは `kanban_complete` も `kanban_block` も呼ばずに答えたからです。破りのたびに出ます（中身の `protocol_violation: true` の印は実行の情報へ写され、破りだけを数える再挑戦の持ち分に効きます）。持ち分の内なら——`_PROTOCOL_VIOLATION_FAILURE_LIMIT`（既定 3）回まで *続けての* 破り、タスクごとの `max_retries` があればそちらが優先——タスクはもう一度挑むために `ready` へ戻るだけです。続いた回数が上限に届くと、差配役は `gave_up` も出して自動的に止めます。`worker_output` には作業役が最後に出力した文（たいていは止まった理由の説明）が入り、`last_failure_error` にも取り込まれ、再挑戦する作業役には前回のエラーとして見せられます。 |
 | `gave_up` | `{failures, effective_limit, limit_source, error}` | うまくいかない挑戦が N 回続いて、遮断が働きました。タスクは最後のエラーを添えて自動的に止まります。効く上限は、タスクの `max_retries`、次に差配役の `failure_limit` / `kanban.failure_limit`、最後に組み込みの既定の順で決まります。 |
 
 `hermes kanban tail <id>` は、ひとつのタスクぶんを見せます。`hermes kanban watch` は盤ぐるみで流します。

@@ -2,7 +2,7 @@
 title: "worktree から TUI とデスクトップアプリを動かす"
 description: "checkout ごとに npm install をやり直さずに、Ink の TUI と Electron のデスクトップアプリを git の worktree から動かす"
 upstream_path: developer-guide/worktree-ui-dev.md
-upstream_blob: 4f3ab1f847b4afd69b362d7009d99db3af398ba6
+upstream_blob: 464365f642add12650147bd104236cc683f9d19e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/worktree-ui-dev
 ---
@@ -58,52 +58,85 @@ htui() {
 
 ## `hgui` — worktree からデスクトップアプリを動かす {#hgui-desktop-app-from-the-worktree}
 
-デスクトップアプリはもっと重い作りです。リポジトリのルートと `apps/desktop/` の両方に `node_modules` が要り、ポート `5174` に固定された Vite の開発サーバーと、Python のバックエンドも必要になります。`hgui` は、そのすべてをいま作業している worktree に向けて配線します。
+デスクトップアプリには、リポジトリのルートと `apps/desktop/` の両方の依存関係、Vite のサーバー、Python のバックエンドが必要です。標準の `npm run dev` は Vite をポート `5174` に固定します。さらに Electron は、既定で CDP のポート `9222` を使い、ユーザーデータのディレクトリに対して多重起動を防ぐロックをかけます。Vite のポートを変えるだけでは、デスクトップを 2 つ動かせません。
+
+次の **zsh** の例では、起動ごとにスロット（`HGUI_SLOT`、既定は `0`）をはっきり割り当てます。ターミナルごとに別のスロットを使ってください。下の[共通の関数](#shared-helpers)を使い、`lsof` が必要です。
 
 ```bash
-hgui() {
-  local root deps desktop
-  root="$(_hermes_root)" || { echo "hgui: not in a Hermes checkout" >&2; return 1; }
+hgui() (
+  local root deps desktop slot="${HGUI_SLOT:-0}" vite_port cdp_port port
+  [[ "$slot" == [0-9] ]] || { print -u2 'hgui: HGUI_SLOT must be 0-9'; return 1; }
+  vite_port=$((5174 + slot))
+  cdp_port=$((9222 + slot))
+  for port in "$vite_port" "$cdp_port"; do
+    if lsof -nP -t -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1; then
+      print -u2 "hgui: port $port is busy; choose another HGUI_SLOT"
+      return 1
+    fi
+  done
+
+  root="$(_hermes_root)" || { print -u2 'hgui: not in a Hermes checkout'; return 1; }
   deps="${HERMES_GUI_DEPS_CHECKOUT:-$HERMES_MAIN_CHECKOUT}"
   desktop="$root/apps/desktop"
 
-  # Borrow deps when locks match; otherwise install locally in the worktree.
   if cmp -s "$root/package-lock.json" "$deps/package-lock.json"; then
-    _hermes_link_deps "$desktop" "$deps/apps/desktop"
-    _hermes_link_deps "$root" "$deps"
+    _hermes_link_deps "$desktop" "$deps/apps/desktop" || return 1
+    _hermes_link_deps "$root" "$deps" || return 1
   else
     ( cd "$root" && npm ci ) || return 1
   fi
 
-  # Vite is fixed at 5174 — evict a stale session from another hgui.
-  lsof -t -i:5174 >/dev/null 2>&1 && killport 5174
+  cd "$desktop" || return 1
+  export PATH="$desktop/node_modules/.bin:$root/node_modules/.bin:$PATH"
+  export HERMES_DESKTOP_HERMES_ROOT="$root"
+  export HERMES_DESKTOP_PYTHON="$HERMES_MAIN_CHECKOUT/.venv/bin/python"
+  export HERMES_DESKTOP_CWD="$root"
+  export HERMES_DESKTOP_DEV_SERVER="http://127.0.0.1:$vite_port"
+  export HERMES_DESKTOP_CDP_PORT="$cdp_port"
+  export HERMES_DESKTOP_USER_DATA_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/hermes-hgui/slot-$slot"
+  # A userData override would otherwise also relocate the agent's home.
+  export HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
+  export XCURSOR_SIZE=24
 
-  # Electron often survives Ctrl+C without reaping its ephemeral backends.
-  trap '_hermes_gui_cleanup "$root"' INT TERM EXIT
-
-  ( cd "$desktop"
-    export PATH="$root/node_modules/.bin:$PATH"
-    HERMES_DESKTOP_HERMES_ROOT="$root" \
-    HERMES_DESKTOP_PYTHON="$HERMES_MAIN_CHECKOUT/.venv/bin/python" \
-    HERMES_DESKTOP_IGNORE_EXISTING=1 \
-    HERMES_DESKTOP_CWD="$root" \
-    npm run dev )
-}
+  # Mirror the dev scripts, replacing their fixed ports. No repo edits needed.
+  concurrently -k -n "vite,electron" \
+    "node scripts/assert-root-install.mjs && npm run clean:renderer && vite --host 127.0.0.1 --port $vite_port --strictPort" \
+    "tsc --build tsconfig.electron.json && wait-on http://127.0.0.1:$vite_port && node scripts/bundle-electron-main.mjs --dev && electron ."
+)
 ```
 
-ここで設定しているデスクトップ用の環境変数は、どれもバックエンドの解決に実際に効くものです。
+たとえば、`HERMES_MAIN_CHECKOUT` を設定して共通の関数を読み込んだあと、次のように使います。
+
+```bash
+# Terminal 1: main checkout
+cd "$HERMES_MAIN_CHECKOUT"
+HGUI_SLOT=0 hgui
+
+# Terminal 2: an existing worktree
+cd /path/to/hermes-worktree
+HGUI_SLOT=1 hgui
+```
+
+スロット `0` はポート `5174`/`9222` を、スロット `1` は `5175`/`9223` を使います。スロットは呼び出す側が決めるもので、取り合いにならないよう自動で確保されるわけではありません。同時に起動するときは、必ず別々のスロットを使ってください。使用中のポートは断るだけで、先に使っている側を追い出すことはありません。同じ checkout から起動するとビルドの出力を共有してしまうので、別々にビルドしたいときは別々の checkout を使ってください。
 
 | 変数 | `hgui` での役割 |
 |----------|----------------|
-| `HERMES_DESKTOP_HERMES_ROOT` | パッケージ版や PATH 上の `hermes` ではなく、**この worktree** からバックエンドを動かします。 |
-| `HERMES_DESKTOP_PYTHON` | Python を探し直さず、依存関係用の checkout の venv を再利用します。 |
-| `HERMES_DESKTOP_IGNORE_EXISTING` | `PATH` 上の `hermes` を無視して、worktree のものが隠されないようにします。 |
-| `HERMES_DESKTOP_CWD` | デスクトップのチャットを、その worktree を起点にして開きます。 |
+| `HGUI_SLOT` | この関数だけが使うスロット番号で、`0`〜`9` です。Hermes の設定ではありません。 |
+| `HERMES_DESKTOP_HERMES_ROOT` | パッケージ版や PATH 上の実行環境ではなく、この worktree からバックエンドを動かします。 |
+| `HERMES_DESKTOP_PYTHON` | メインの checkout の Python 環境を再利用します。`.venv` ではなく `venv` を使っている環境では書き換えてください。 |
+| `HERMES_DESKTOP_CWD` | デスクトップで新しく始める作業の起点を、その worktree にします。 |
+| `HERMES_DESKTOP_DEV_SERVER` | Electron を、このインスタンス用の Vite サーバーに向けます。 |
+| `HERMES_DESKTOP_CDP_PORT` | インスタンスごとに、画面描画側のデバッグ用ポートを分けます。 |
+| `HERMES_DESKTOP_USER_DATA_DIR` | Electron の多重起動防止ロック、ブラウザーの保存領域、デスクトップの設定を分けます。 |
+| `HERMES_HOME` | Electron のユーザーデータの場所を変えても、エージェントのホームが動かないように明示します。 |
 
-素の `npm run dev` では踏んでしまう落とし穴を、`hgui` は 2 つ処理しています。
+どのスロットも、最初はまっさらなデスクトップの設定で始まり、次に起動したときはその設定を覚えています。この例では、動作中のアプリからブラウザーの保存領域、保存した画面の位置、バックエンドの持ち主の情報は引き継ぎません。
 
-- **ポート `5174` は固定です。** 2 つ目の `hgui` は 1 つ目の Vite サーバーとぶつかるので、先に古いほうを終了させます。
-- **取り残された子プロセス。** Electron は `concurrently` を挟んでいると `Ctrl+C` を生き延びることが多く、一時的な `dashboard --port 0` のバックエンドや Vite のプロセスを回収しないまま残します。`EXIT` / `INT` / `TERM` の trap で後片付けを走らせ、Electron のシェル、`:5174` を掴んでいるプロセス、そこから起動された `--port 0` のダッシュボードを終了させます。
+:::warning デスクトップを分けても、エージェントのデータは分かれません
+既定の `HERMES_HOME` は共有されます。セッション、設定、認証情報、プロファイルは同じままです。同じ会話を両方のインスタンスから編集するのは避けてください。データを壊しかねないテストや、互換性のないデータベースの移行を試すときは、一時的な別の `HERMES_HOME` を渡し、その隔離環境を別に設定してください。
+:::
+
+アプリは普通に終了するか、起動したターミナルで Ctrl-C を押してください。`concurrently -k` が自分の子コマンドを管理し、バックエンドの停止は Electron が受け持ちます。全体に効く `killport` や `pkill electron`、`serve`/`dashboard --port 0` のプロセスをまとめて止める処理は足さないでください。別のインスタンスまで終了させてしまうことがあります。この関数の古い版から置き換える場合は、以前の `_hermes_gui_cleanup` の trap を取り除いてください。
 
 ## 共通の関数 {#shared-helpers}
 
@@ -123,17 +156,7 @@ _hermes_link_deps() {
   [[ -d "$source/node_modules" ]] || return 1
   [[ -e "$target/node_modules" ]] || ln -s "$source/node_modules" "$target/node_modules"
 }
-
-# Reap ephemeral backends Electron leaves behind on exit.
-_hermes_gui_cleanup() {
-  local root="$1"
-  [[ -n "$root" ]] && pkill -TERM -f "${root}/apps/desktop/node_modules/electron" 2>/dev/null
-  lsof -t -i:5174 >/dev/null 2>&1 && killport 5174
-  pgrep -f 'hermes_cli\.main.*dashboard.*--port 0' 2>/dev/null | xargs -r kill -TERM 2>/dev/null
-}
 ```
-
-`killport` は自分で用意する小さな関数です（`lsof -ti:$1 | xargs kill`）。好みのやり方に置き換えてください。
 
 :::info ロックファイルが一致したときだけリンクする理由
 中身が食い違った `node_modules` へのシンボリックリンクは、何もインストールしないより悪い状態です。その worktree のロックファイルが宣言していないパッケージでビルドしてしまうからです。`package-lock.json` をバイト単位で比べるのは、安くて確実な見張りになります。ロックが同じなら借りても安全、違うならその場で `npm ci`、というわけです。Vite は `server.fs.allow` を適用する前にシンボリックリンクの実体パスを解決するので、`apps/desktop/vite.config.ts` では `node_modules` の実体の場所を許可リストに入れてあります。

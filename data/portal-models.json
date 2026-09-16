@@ -1,13 +1,25 @@
 {
-  "fetchedAt": "2026-09-15",
+  "fetchedAt": "2026-09-16",
   "source": "https://inference-api.nousresearch.com/v1/models",
-  "count": 402,
+  "count": 400,
   "counts": {
-    "text": 359,
+    "text": 357,
     "embeddings": 34,
     "other": 9
   },
   "models": [
+    {
+      "id": "stealth/union-alpha",
+      "name": "Union Alpha",
+      "type": "text",
+      "ctx": 262144,
+      "inPerM": 0,
+      "outPerM": 0,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": true
+    },
     {
       "id": "~deepseek/deepseek-pro-latest",
       "name": "DeepSeek: DeepSeek Pro Latest",
@@ -397,23 +409,11 @@
       "name": "Z.ai: GLM Latest",
       "type": "text",
       "ctx": 1310720,
-      "inPerM": 0.8775,
-      "outPerM": 2.97,
+      "inPerM": 0.9,
+      "outPerM": 3,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
-      "free": false
-    },
-    {
-      "id": "z-ai/glm-5.3",
-      "name": "Z.ai: GLM 5.3",
-      "type": "text",
-      "ctx": 1310720,
-      "inPerM": 0.8775,
-      "outPerM": 2.97,
-      "listInPerM": 1.4,
-      "listOutPerM": 4.4,
-      "discount": 37,
       "free": false
     },
     {
@@ -650,18 +650,6 @@
       "type": "text",
       "ctx": 1048576,
       "inPerM": 0.45,
-      "outPerM": 1.2,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "thinkingmachines/inkling-small:batch",
-      "name": "Thinking Machines: Inkling Small (batch)",
-      "type": "text",
-      "ctx": 524288,
-      "inPerM": 0.5,
       "outPerM": 1.2,
       "listInPerM": null,
       "listOutPerM": null,
@@ -1681,11 +1669,11 @@
       "name": "MoonshotAI: Kimi K2.6",
       "type": "text",
       "ctx": 262144,
-      "inPerM": 0.4448,
-      "outPerM": 2.52,
+      "inPerM": 0.3866,
+      "outPerM": 2.1595,
       "listInPerM": 0.95,
       "listOutPerM": 4,
-      "discount": 53,
+      "discount": 59,
       "free": false
     },
     {
@@ -1743,18 +1731,6 @@
       "ctx": 262144,
       "inPerM": 0.09,
       "outPerM": 0.34,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "google/gemma-4-31b-it:batch",
-      "name": "Google: Gemma 4 31B (batch)",
-      "type": "text",
-      "ctx": 262144,
-      "inPerM": 0.39,
-      "outPerM": 0.97,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -4245,18 +4221,6 @@
       "free": false
     },
     {
-      "id": "thedrummer/unslopnemo-12b",
-      "name": "TheDrummer: UnslopNemo 12B",
-      "type": "text",
-      "ctx": 1024000,
-      "inPerM": 0.4,
-      "outPerM": 0.4,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
       "id": "qwen/qwen-2.5-7b-instruct",
       "name": "Qwen: Qwen2.5 7B Instruct",
       "type": "text",
@@ -4827,6 +4791,18 @@
       "ctx": 1048576,
       "inPerM": 2.31,
       "outPerM": 7.26,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "z-ai/glm-5.3",
+      "name": "Z.ai: GLM 5.3",
+      "type": "text",
+      "ctx": 1048576,
+      "inPerM": 0.91,
+      "outPerM": 2.86,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,

@@ -2,7 +2,7 @@
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、スキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: 708ee8fb6cb0785f68c3cbc46d212e46b6ac284e
+upstream_blob: 2b89483b16fb576f2f6a19e0a8fd0a2e598117aa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -1095,7 +1095,9 @@ cronjob(action="create", name="weekly-news-summary",
         prompt="Summarize this week's AI news: ...")
 ```
 
-ジョブに `enabled_toolsets` が設定されていればそれが優先され、次に `hermes tools` の cron プラットフォームの設定、それも無ければ Hermes 内蔵の既定に落ちます。これは費用にも効きます。ちょっとした「ニュースを取ってくる」ジョブに `browser` や `delegation` まで抱えさせると、LLM を呼ぶたびにツールのスキーマがプロンプトを膨らませてしまいます。
+ジョブに `enabled_toolsets` が設定されていればそれが優先され、次に `hermes tools` の cron プラットフォームの設定、それも無ければ Hermes 内蔵の既定に落ちます。cron プラットフォームのツールセット設定そのものが読めない場合（たとえば `config.yaml` の `platform_toolsets` ブロックの書き方が壊れているとき）は、黙ってすべてのツールを持たせて動かすのではなく、エラーを記録して実行が失敗します。`hermes cron list` か `hermes cron doctor` で確かめてください。これは費用にも効きます。ちょっとした「ニュースを取ってくる」ジョブに `browser` や `delegation` まで抱えさせると、LLM を呼ぶたびにツールのスキーマがプロンプトを膨らませてしまいます。
+
+ジョブがログイン済みのサイトを操作する場合は、実行前にログインを済ませておく必要があります。予約したティックには、確認に答えてくれる人がいないからです。その準備は [予約実行と無人での実行](/hermes/docs/user-guide/features/browser/#scheduled-and-unattended-runs) で説明しています。
 
 ### エージェントをまるごと省く: `wakeAgent` {#skipping-the-agent-entirely-wakeagent}
 

@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-09-16、対象期間 = 2026-09-10 〜 2026-09-16（JST）
+生成日 = 2026-09-17、対象期間 = 2026-09-11 〜 2026-09-17（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -137,24 +137,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-09-12 [Hermes Relay](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/relay/)
 - 2026-09-11 [Honcho メモリー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/honcho/)
 - 2026-09-11 [Archify — 検証済みのインタラクティブな HTML 図（本体は上流で管理）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-archify/)
-- 2026-09-10 [アーキテクチャ](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)
-- 2026-09-10 [プロンプトの組み立て](https://wiki.winsmux.dev/hermes/docs/developer-guide/prompt-assembly/)
-- 2026-09-10 [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
-- 2026-09-10 [委任と並行作業](https://wiki.winsmux.dev/hermes/docs/guides/delegation-patterns/)
-- 2026-09-10 [よくある質問とトラブル対処](https://wiki.winsmux.dev/hermes/docs/reference/faq/)
-- 2026-09-10 [同梱スキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/skills-catalog/)
-- 2026-09-10 [API サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
-- 2026-09-10 [IRC](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/irc/)
-- 2026-09-10 [LINE](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/line/)
-- 2026-09-10 [Competitor News Monitor — 指定した企業の重要なニュースを見張り、出典付きのダイジェストにまとめる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/)
-- 2026-09-10 [Grounded Citations — 回答や文書を、出典を示せる形に裏付ける](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/)
-- 2026-09-10 [user-guide/skills/bundled/research/research-rss-feeds](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/)
-- 2026-09-10 [user-guide/skills/bundled/social-media/social-media-reddit-reading](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/)
-- 2026-09-10 [Property Listings — 物件や賃貸の情報をデスクトップのカードとして見せる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/)
-- 2026-09-10 [Rss Feeds — RSS・Atom・JSON のフィードを読み、ページの裏にあるフィードを見つける](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/)
-- 2026-09-10 [Reddit Reading — Reddit を読む。サブレディット、検索、スレッド、ユーザー](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/)
-- 2026-09-10 [TUI](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
-- 2026-09-10 [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
 
 ## 週次まとめ
 

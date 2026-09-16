@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: 43aa3db132503d065f04831956dbab3b51fa3388
+upstream_blob: d012e107192ce1634b138b57a48f4af127ce414f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -78,11 +78,15 @@ hermes -p work import-agent --sync        # pulls changes from the same ~/.claud
 hermes profile create backup --clone-all
 ```
 
-設定・API キー・人格・すべての記憶・スキル・プラグインまで、**まるごと**コピーします。動く状態のスナップショットです。プロファイルごとの履歴（セッション履歴、`state.db`、`backups/`、`state-snapshots/`、`checkpoints/`）は対象外です。これらは元のプロファイルに属するもので、数十 GB に達することもあります。**cron ジョブも複製されません**。cron ジョブは元のプロファイルとその配信チャンネルに結びついた予定作業なので、複製先がそれを引き継ぐと同じジョブが二重に走ってしまいます（ゲートウェイが 2 つ、ジョブ ID は同じ）。新しいプロファイルの `cron/` は空の状態から始まります。履歴と cron ジョブまで含めた完全なバックアップが必要なら、`hermes profile export` か `hermes backup` を使ってください。
+設定・API キー・人格・すべての記憶・スキル・プラグインまで、**まるごと**コピーします。動く状態のスナップショットです。プロファイルごとの履歴（セッション履歴、`state.db`、`backups/`、`state-snapshots/`、`checkpoints/`）は対象外です。これらは元のプロファイルに属するもので、数十 GB に達することもあります。既定のプロファイルから複製するときは、ローカルモデル用の実行環境のディレクトリ（`models/`、`runtimes/`、`node/`。ダウンロードした重みと管理下のバイナリで、必要になれば取り直されます）も、`hermes backup` と同じく対象外になります。**cron ジョブも複製されません**。cron ジョブは元のプロファイルとその配信チャンネルに結びついた予定作業なので、複製先がそれを引き継ぐと同じジョブが二重に走ってしまいます（ゲートウェイが 2 つ、ジョブ ID は同じ）。新しいプロファイルの `cron/` は空の状態から始まります。履歴と cron ジョブまで含めた完全なバックアップが必要なら、`hermes profile export` か `hermes backup` を使ってください。
 
-:::note OAuth ログインはコピーされず、共有されます
-Anthropic（Claude Pro/Max）、OpenAI Codex、xAI の OAuth ログインは**使い捨てのリフレッシュトークン**を使います。コピーしても 2 つ目の資格情報にはならず、1 つの資格情報を 2 人で持っている状態になり、どちらかが先に更新した時点で他方のコピーは失効します。そのため `--clone-all`（およびダッシュボードによる資格情報のミラーリング）は、複製先から OAuth の行を落とします。新しいプロファイルはルートの `~/.hermes/auth.json` からログイン情報を読み続け、どのプロファイルでトークンを更新してもルートへ書き戻されるので、すべてのプロファイルがログインしたままになります。静的な API キーは従来どおりコピーされます。プロファイルに専用の OAuth ログインを持たせたいときは、その中で `hermes -p <name> auth add <provider>` を実行してください。
+:::note OAuth ログインはコピーされません
+Anthropic（Claude Pro/Max）、OpenAI Codex、xAI の OAuth ログインは**使い捨てのリフレッシュトークン**を使います。コピーしても 2 つ目の資格情報にはならず、1 つの資格情報を 2 人で持っている状態になり、どちらかが先に更新した時点で他方のコピーは失効します。そのため `--clone-all`（およびダッシュボードによる資格情報のミラーリング）は、複製先から OAuth の行を落とします。静的な API キーは従来どおりコピーされます。新しいプロファイルでは、OAuth のプロバイダーにそのプロファイル自身でログインしてください。`hermes -p <name> auth add <provider>`（または `hermes -p <name> model`）を使います。
 :::
+
+### どのプロファイルも自分の資格情報を持つ {#every-profile-owns-its-credentials}
+
+名前付きのプロファイルは、**自分の** `auth.json` と `.env` だけからプロバイダーを解決します。ルートのプロファイルのログインや API キーを引き継ぐことはなく、プロファイルの中でトークンを更新しても、ルートの保存先には書き込みません。自分のプロバイダーを持たないプロファイルは、設定するよう求められます（`hermes -p <name> model` か `hermes -p <name> auth add <provider>`）。黙って持ち主として振る舞うことはありません。`hermes update` は、自分のプロバイダーを持たないプロファイルをすべて一覧にするので、ボットが知らないうちに黙り込むことはありません。
 
 ### 特定のプロファイルから複製する {#clone-from-a-specific-profile}
 
@@ -306,6 +310,8 @@ hermes update
 hermes profile list           # show all profiles with status
 hermes profile show coder     # detailed info for one profile
 hermes profile rename coder dev-bot   # rename (updates alias + service)
+hermes profile migrate-identity coder dev-bot   # retry a rename's identity migration
+hermes profile purge-identity dev-bot   # retry a delete's identity purge
 hermes profile export coder   # pack into coder.tar.gz (shareable; keys stripped)
 hermes profile import coder.tar.gz   # install an archive as a new profile
 ```

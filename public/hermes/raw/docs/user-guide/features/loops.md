@@ -2,7 +2,7 @@
 title: "繰り返しのループ"
 description: "セッションの中で、決まった間隔ごとにプロンプトを流し直す — Claude Code の /loop に対する Hermes なりの答え"
 upstream_path: user-guide/features/loops.md
-upstream_blob: 255220e06fa352e67e1a9858e9de9d3b80547a1b
+upstream_blob: 9b8a63898e67f96a4dc2511cac59a86d6aa43898
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/loops
 ---
@@ -86,7 +86,7 @@ sources:
 | `/loop stop` | ループを終わらせます。 |
 | `/proactive …` | `/loop` の別名です（Claude Code に合わせたもの）。 |
 
-CLI、TUI（`hermes --tui`）、Web ダッシュボードのチャット、デスクトップアプリ、そしてすべてのゲートウェイ（Telegram、Discord、Slack、WhatsApp、…）で動きます。メッセージ系のサービスでは、こちらのメッセージとメッセージのあいだでもゲートウェイが起床の合図を送ります — ループはそのチャットのセッションのものなので、結果は普通の返信として届きます。
+CLI、TUI（`hermes --tui`）、Web ダッシュボードのチャット、デスクトップアプリ、そしてすべてのゲートウェイ（Telegram、Discord、Slack、WhatsApp、…）で動きます。メッセージ系のサービスでは、こちらのメッセージとメッセージのあいだでもゲートウェイが起床の合図を送ります — ループはそのチャットのセッションのものなので、結果は普通の返信として届きます — そのセッションを TUI やデスクトップアプリで開いているときも同じで、振り分けられた起床はゲートウェイに任されます。
 
 ## `/goal` と混ぜる {#mixing-with-goal}
 

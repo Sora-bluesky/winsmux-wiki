@@ -2,7 +2,7 @@
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: 86b1f60de534c944bd86e58a78a3cffa2e9da036
+upstream_blob: 8ddfc64796fe3c79e0171c075c0957d6ffc91f03
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -102,6 +102,40 @@ class MyMemoryProvider(MemoryProvider):
 
     # ... implement remaining methods
 ```
+
+### 初期化時に渡されるコンテキスト {#initialization-context}
+
+`AIAgent` は `MemoryManager.initialize_all()` を通じて、セッションのコンテキストを
+`initialize(session_id, **kwargs)` に渡します。`**kwargs` を受け取れるようにし、省略可能な
+項目が欠けていても動くようにしてください。エージェントやセッションのデータベースなしでプロバイダーが初期化されることもあります。
+
+| キーワード | 意味 |
+|---|---|
+| `hermes_home` | 有効なプロファイルの保存先ディレクトリ。 |
+| `platform` | セッションの利用面。`cli`、`gui`、`acp`、`telegram` など。 |
+| `session_title` | 保存されているセッションのタイトル（ある場合）。表示用のラベルが、利用者の選んだ識別名とは限りません。 |
+| `session_title_source` | 保存されているタイトルの出どころ（ある場合）。`derived`、`llm`、`user` のいずれか。自動で付いたタイトルを、明示的な識別名の指定と取り違えないでください。出どころがなければ、プロバイダーは従来の挙動のままです。共通の定数は `hermes_state_common.py` にあります。 |
+| `cwd` | `AIAgent(cwd=...)` で渡された空でない論理ワークスペース。プロバイダーの初期化より前から使えます。`None` や空文字列のときは含まれません。 |
+| `gateway_session_key` | チャットごとにセッションを分けるための、メッセージングのチャットの安定した識別子。 |
+| `user_id`, `user_id_alt`, `user_name`, `chat_id` | ゲートウェイの識別情報。ある場合に含まれます。 |
+| `agent_identity` | 有効なプロファイル名（ある場合）。 |
+| `agent_workspace`, `agent_context` | 実行時のエージェントの範囲（メインのエージェントでは `hermes` と `primary`）。 |
+
+`os.getcwd()` が会話のワークスペースを表すとは考えないでください。1 つの Desktop
+やゲートウェイのバックエンドが、複数のセッションを受け持つことがあるためです。`cwd` がなく、ディレクトリで
+振り分ける必要があるときは、`agent.runtime_cwd.resolve_agent_cwd()` がセッションの cwd
+コンテキスト、次にスコープ付きの `terminal.cwd`（内部では `TERMINAL_CWD` として受け渡されます）、最後に
+起動ディレクトリの順で参照します。構築時のワークスペース情報を使うために、
+プロセスの cwd を変えたり、既存の会話のシステムプロンプトを作り直したりする必要はありません。
+
+Desktop や TUI でワークスペースを変えると、`tui_gateway/session_workdir.py::_register_session_cwd` を通じて
+実行中のエージェントの `session_cwd` が同期されます。ワークスペースを移したあとに遅延して
+エージェントが接続された場合も同様です。これにより、初回または再起動した Codex
+app-server のセッションは、構築時の cwd ではなく現在のワークスペースを使えます。
+ただし、すでに動いている Codex のスレッドを移したり、メモリー
+プロバイダーを初期化し直したり、既存の Honcho セッションの識別子を変えたり、キャッシュ済みの
+システムプロンプトを無効にしたりはしません。プロバイダーの初期化には引き続き構築時の
+ワークスペースが渡されます。cwd がないか空の場合は、固定されないままです。
 
 ## 実装が必要なメソッド {#required-methods}
 

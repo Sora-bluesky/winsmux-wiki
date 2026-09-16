@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "Hermes のネイティブなデスクトップアプリ。ツール出力のストリーミング、横並びのプレビュー、ファイルブラウザー、音声、cron、プロファイル、スキル、設定を備えた、作り込まれた対話環境です。macOS、Windows、Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: d43cb51cd7068883c5fdde91cdb846441cc7542e
+upstream_blob: 2da396f7b2c40b6f21655551d0afc3f5afb71733
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -99,6 +99,8 @@ desktop:
 #### モデルを選ぶ {#choosing-a-model}
 
 モデルの選択欄は**入力欄**の中、マイクのすぐ左にあります。クリックするとモデルを切り替えられます。モデルの行にカーソルを重ねると、その設定（思考、推論の強さ、高速）が出ます。その隣には**推論ピル**があり、使っているモデルの推論の強さ（`Med`、`High`、…）を表示します。ここから同じ設定を直接開けるので、モデルの行を探さなくても推論の強さを変えられます。カタログで推論の調整ができないとされているモデルでは、このピルは表示されません。
+
+**マイク**は音声入力です。カーソルを重ねると、ほかの音声の切り替えがその上に広がって出てきます。**Read replies aloud**（返答を読み上げる）と、**ウェイクワード**の耳です。オンになっている切り替えは塗りつぶしの円で表示されます。音声での会話をまるごと始めるのは、これまでどおり右側の主ボタンです。HUD や幅の狭いタイルでは、同じ操作がマイクの奥にある 1 つのメニューにまとめて折りたたまれます。
 
 - **入力欄の選択欄は表示上の状態で、既定値には一切触れません。** 端末ごとに手元で覚えられ、新しい対話や再起動をまたいで**そのまま引き継がれます**。既定に戻ることはありません。一度選べば、次の `Cmd/Ctrl+N` はそのモデルで開きます。対話が動いているときにモデルを切り替えると、変更はその**いまの対話**の範囲になります。どちらの場合も、選択はセッションの作成や切り替えのときに一緒に運ばれ、プロファイルの既定値へ書き込まれることは**ありません**。例外が 1 つあります。`model.default` や `model.provider` がまだ設定されていない新しいプロファイルでは、最初の選択が保存されます。再起動時に、たまたま残っていた API キーの環境変数へ落ちてしまうのではなく、実体のある既定値を持たせるためです。保存の規則は `/model` と同じです（`model.persist_switch_by_default`）。既定値を意識して変えたいときは **Settings → Model** を使ってください。（[プロファイル](#sessions--profiles)を切り替えると、そのプロファイル自身の既定値で入れ直されます。）
 - **既定値は Settings → Model で設定します。** この「主」モデルが、**プロファイルごとの全体の既定値**です。新しい対話、cron、サブエージェント、補助タスクはここから始まりますし、これを書き込むのはここだけです。[プロファイル](#sessions--profiles)はそれぞれ自分の既定値を持ちます。
@@ -215,12 +217,42 @@ desktop:
 
 端末に降りずに済むよう、Hermes の広い管理機能もアプリの中に出ています。
 
-- **Skills** — [スキル](/hermes/docs/user-guide/features/skills/)を眺め、導入し、管理します。Skills のタブには、導入済みのスキルが有効・無効の切り替えとともに並び、その下に Hermes に同梱される任意スキルの全一覧が出ます。各項目には **Install** ボタンがあり、押して終われば導入済みの一覧へ移ります。
+- **Skills** — **Capabilities → Skills** を開くと[スキル](/hermes/docs/user-guide/features/skills/)を管理できます。**Installed** には、選んだプロファイルに実際に入っているスキルと、その有効・無効の状態が出ます。**Browse** では、公開されている Skills Hub と同じ全カタログを検索できます。既定はカード表示で、一覧と詳細の表示にも切り替えられます。
+- **Plugins** — **Capabilities → Plugins** も同じ **Installed / Browse** の構成です。Installed には、アプリ側に実際に入っているデスクトッププラグインと、選んだプロファイルのエージェントプラグインがまとめて出ます。Browse には公開の [Plugin Catalog](/hermes/docs/user-guide/features/plugin-catalog/) が出ます。どちらのページでも検索欄は上にあり、タブの切り替えと操作ボタンは 1 行に並びます。
 - **記憶のグラフ（Star Map）** — 対話の中で `/journey`（別名 `/learning`、`/memory-graph`）と入力すると、学んだスキルと記憶が時間とともに並ぶ対話的な星座図が開きます。再生用のつまみも付いています。ノードはそのパネルから編集・削除できます（スキルは保管され、記憶は削除されます）。[学びの道のり](/hermes/docs/user-guide/features/memory/#learning-journey-journey)を参照してください。
 - **Cron** — [予定されたジョブ](/hermes/docs/reference/cli-commands/#hermes-cron)を見て管理します。
 - **Profiles** — [Hermes のプロファイル](/hermes/docs/user-guide/profiles/)（設定・スキル・セッションが分かれたもの）を切り替えます。
 - **Messaging** — ゲートウェイのチャンネルを設定します。Telegram には **Quick setup** のカードがあります。**Create with QR** をクリックし、Telegram でコードを読み取る（またはリンクを開く）と、Hermes がボットを作り、許可一覧に使う利用者 ID を見つけ、認証情報を保存し、ゲートウェイの再起動までを代わりに済ませます。認証情報の保存、消去、有効化の切り替えをしたときは、ゲートウェイが実際に再起動するまで、ページに **Restart now** の帯が出たままになります。再起動に失敗しても帯は残るので、やり直すか、手で再起動できます。
 - **Agents** と **Command Center** — 複数エージェントの作業を束ねる画面です。
+
+表示の形は、Browse の絞り込みの右にある一覧とカードのアイコンで切り替えます。
+選んだ形は Skills と Plugins の両方で覚えられます。検索と絞り込みはそのまま残ります。
+カードをクリックすると詳細が開き、カードの Install ボタンからそのまま導入することもできます。
+
+#### Browse のデータの出どころ {#where-browse-gets-its-data}
+
+これらはデスクトップアプリ本来の画面で、**Web サイトのページを埋め込んだものではありません**。デスクトップと
+公開 Web サイトは、生成された同じ CDN のスナップショットを使っています。
+
+| カタログ | 公開ドキュメント上の別名 | デスクトップが取得する URL |
+|---|---|---|
+| Skills | [`/docs/api/skills.json`](https://hermes-agent.nousresearch.com/docs/api/skills.json) | `https://nousresearch.github.io/hermes-agent/docs/api/skills.json` |
+| Plugins | [`/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json) | `https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` |
+
+スキルのスナップショットは、`skills/`、`optional-skills/`、集中管理のスキル索引をまとめたものです。
+プラグインのスナップショットは `plugin-catalog/*.yaml` と、キャッシュしたスターの数から作られます。
+同じ公開の際に、インストーラーが使う削除済み項目の一覧も出されます。眺めているあいだに GitHub API を
+その場で呼んだり、プラグインやスキルの元のリポジトリを取りに行ったりすることはありません。**Installed** は
+別物です。その状態は、選んだプロファイルのバックエンドとアプリのデスクトッププラグイン登録簿から来ており、
+公開スナップショットからではありません。
+
+公開ハブの **Install in Hermes** ボタンは `hermes://skill/install`
+や `hermes://plugin/install` のリンクを開き、デスクトップ側で確認を求めます。スキルの経路と
+プラグインカタログの引数を使うには、更新したデスクトップのビルドが必要です。アプリが無い、または古すぎる場合でも、
+カードにはコピーできる CLI コマンドが残っています。引数と確認の流れは
+[スキルのリンク](/hermes/docs/user-guide/features/skills/#install-from-the-website)と
+[プラグインのリンク](/hermes/docs/user-guide/features/plugins/#one-click-install-links-desktop)
+を参照してください。
 
 ### Bot Mode（同梱） {#bot-mode-built-in}
 
@@ -332,6 +364,8 @@ hermes config set desktop.manage_launcher_entry false
 ```
 
 項目が無い場合は、それでも作られます。このフラグは `hermes desktop` がすでにある項目を書き換えるのを止めるだけです。
+
+アプリケーションの一覧やメニューから Hermes を起動した場合（ランチャーが `DESKTOP_STARTUP_ID` を設定します）、項目はウィンドウが画面に出てから書き込まれます。ウィンドウが出る前にアプリが終了すると、その回は何も書き込まれません。次にターミナルから起動したとき、更新後に再起動したとき、または一覧から起動してウィンドウが出たときに作られます。GNOME Shell の版によっては、起動中に `.desktop` ファイルが変わったアプリを見失うことがあり（プロセスが終わるまでではなく、起動通知が完了するかタイムアウトするまでその状態のままにします）、あとでセッション全体が落ちる原因になります。ウィンドウを待つのはこれを避けるためです。ターミナルからの起動と、更新後の再起動では、これまでどおりすぐに項目を書き込みます。
 
 | フラグ                 | 説明                                                                               |
 | -------------------- | ----------------------------------------------------------------------------------------- |
@@ -457,8 +491,8 @@ hermes serve --host 0.0.0.0 --port 9119
 詳しくは [Desktop Plugin SDK](/hermes/docs/developer-guide/desktop-plugin-sdk/) を
 参照してください。（これは [Web ダッシュボードのプラグインの仕組み](/hermes/docs/user-guide/features/extending-the-dashboard/)とは別のものです。）
 
-**Capabilities → Plugins** は、Hermes を広げるものすべてをまとめて扱う画面です。
-**プラグインごとに 1 行**で、スイッチの列が 2 つあります。
+**Capabilities → Plugins → Installed** には、実際に導入されている状態が出ます。
+**プラグインごとに一覧の 1 項目**で、Desktop と Agent の操作はその詳細欄にあります。
 
 - プラグインが広げるのは**このアプリ**、**エージェント**、または**その両方**です。どれに当たるかは
   各行のバッジが示します。パッケージの中身から判断していて（`plugin.yaml`
@@ -484,12 +518,13 @@ hermes serve --host 0.0.0.0 --port 9119
   画面が入力済みの状態で開きます。[Accent Picker](https://github.com/NousResearch/hermes-desktop-accent-picker)
   のような任意の追加分は、**Install from Git** でそれぞれのリポジトリからインストールします。
 
-その下には、プラグインを探して入れる欄があります。常に最新の [Plugin Catalog](/hermes/docs/user-guide/features/plugin-catalog/)
-の選択欄では、確認済みの項目を固定されたコミットのまま、選んだプロファイルへインストールできます。
-**Install from Git** は、それ以外のリポジトリを同じ「確認してからインストールする」画面で受け付けます。
-任意の **Pin to commit** 欄に 40 文字のコミット SHA を 1 つ入れると、そのコミットちょうどを
-インストールします（非公開のリポジトリも使えます）。固定したプラグインには、一覧で `pinned @ <sha8>`
-のバッジが付きます。以前の `Settings → Plugins` へのリンクは、ここへ転送されます。
+**Browse** に切り替えると、アプリ内の [Plugin Catalog](/hermes/docs/user-guide/features/plugin-catalog/) が開きます。
+Browse からでも **Install from Git** からでも、「確認してからインストールする」画面が開きます。
+エージェントプラグインをカタログから入れる場合、バックエンドがカタログの名前を確認済みの固定コミットに解決します。
+リンクの `sha` は表示用の情報で、それを上書きするものではありません。単体のデスクトッププラグインが
+固定コミットで入ることまでは保証しません。**Install from Git** には、エージェントプラグイン向けに
+**Pin to commit** 欄もあります（40 文字のコミット SHA をそのまま入れます。非公開のリポジトリも使えます）。
+固定したエージェントプラグインには `pinned @ <sha8>` のバッジが付きます。以前の `Settings → Plugins` へのリンクは、ここへ転送されます。
 
 ## 困ったときは {#troubleshooting}
 

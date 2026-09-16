@@ -2,7 +2,7 @@
 title: "オブザーバーフック"
 description: "プラグイン向けの読み取り専用テレメトリ契約。イベントの種類、相関 ID、ペイロードの安全性"
 upstream_path: developer-guide/observer-hooks.md
-upstream_blob: 30b912dda139623f0568121ef2485721ec191632
+upstream_blob: 6a7d1389fb0fa6e8b9d651d6cc3418207551d478
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/observer-hooks
 ---
@@ -210,7 +210,7 @@ API フックは、エージェントループの中でのプロバイダーへ�
 `pattern_keys`、`session_key`、`surface` です。
 
 `post_approval_response` には `choice` も入り、値は `once`、
-`session`、`always`、`deny`、`timeout` などです。
+`session`、`always`、`deny`、`timeout`、`cancelled` などです（cancelled は誰も答えなかったことを表します。ターンが中断・終了してプロンプトが取り下げられた場合や、CLI でプロンプトが利用者に届かなかった場合です）。
 
 承認のフックは観測専用です。プラグインがこれらのフックから、承認に先回りして答えたり
 拒否したりはできません。ツールを承認の段階まで進ませたくない場合は、

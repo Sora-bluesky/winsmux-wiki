@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 01b16f3db582c421efd1775487f5b6a59365cced
+upstream_blob: 1ff800776329f1f51cfdc1d9ec35facb6d8c8d45
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -951,5 +951,5 @@ fallback_providers:
 | `data_collection` | `"allow"`（既定）、またはデータを保存するプロバイダを外すなら `"deny"` |
 
 :::tip
-環境変数の設定には `hermes config set` を使ってください。正しいファイル（秘密なら `.env`、それ以外は `config.yaml`）へ自動で保存してくれます。
+環境変数の設定には `hermes config set` を使ってください。このページにある `UPPER_SNAKE` 形式の名前（ほかの環境変数らしい名前も同じ）はすべて `.env` に保存されます。セットアップの手順が書き込み、実行時に読まれるのと同じファイルで、`config.yaml` に書き込まれることはありません。環境変数の書き込みの拒否リストにある名前（`HERMES_HOME`、`HERMES_YOLO_MODE`、`PATH` など）は受け付けません。ドットで区切った `config.yaml` の設定は `config.yaml` に保存されます。
 :::

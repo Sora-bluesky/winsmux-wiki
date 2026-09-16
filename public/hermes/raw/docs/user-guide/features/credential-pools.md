@@ -2,7 +2,7 @@
 title: "認証情報プール"
 description: "プロバイダごとに複数の API キーや OAuth トークンをまとめておき、自動で切り替えてレート制限から復帰します。"
 upstream_path: user-guide/features/credential-pools.md
-upstream_blob: f8409a2cf3dbc62ba6271201715ee2890c7170cd
+upstream_blob: f44a42572f7d217398a6f631af6c8cebc0c2d2d2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/credential-pools
 ---
@@ -211,6 +211,7 @@ Hermes は起動時にいくつもの場所から認証情報を見つけ出し�
 | 取得元 | 例 | 自動で入る？ |
 |--------|---------|-------------|
 | 環境変数 | `OPENROUTER_API_KEY`、`ANTHROPIC_API_KEY` | はい |
+| 番号付きの環境変数 | `OPENROUTER_API_KEY_2`、`OPENROUTER_API_KEY_3`、… | はい（下を参照） |
 | OAuth トークン（auth.json） | Codex のデバイスコード、Nous のデバイスコード | はい |
 | Claude Code の認証情報 | `~/.claude/.credentials.json` | はい（Anthropic として） |
 | Hermes の PKCE OAuth | `~/.hermes/auth.json` | はい（Anthropic として） |
@@ -218,6 +219,15 @@ Hermes は起動時にいくつもの場所から認証情報を見つけ出し�
 | 手で追加したもの | `hermes auth add` で追加 | auth.json に保存されます |
 
 自動で入った項目はプールを読み込むたびに更新されます。環境変数を消せば、対応する項目も自動で取り除かれます。手で追加した項目（`hermes auth add` によるもの）が自動で消えることはありません。
+
+### 環境変数から複数のキーを使う {#several-keys-from-the-environment}
+
+1 つのプロバイダで複数のキーを使いたいけれど、どれも `auth.json` には保存したくない。そんなときは番号を付けます。`NVIDIA_API_KEY` の隣に `NVIDIA_API_KEY_2`、`NVIDIA_API_KEY_3`、… をシェル、`.env`、またはシークレット管理ツール（Bitwarden Secrets、Vault など）に設定すると、次に読み込んだときにそれぞれが別のプールの項目になります。コマンドも設定も要りません。番号が欠けたところで読み取りは止まるので、`_4` がないのに `_5` だけがあっても無視されます。`credential_pool_strategies` と組み合わせると順番に使い回せます。
+
+```yaml
+credential_pool_strategies:
+  nvidia: round_robin
+```
 
 外部から借りてくる実行時の秘密情報（環境変数、Bitwarden / Vault / keyring / systemd への参照、独自設定の値など）は、`auth.json` の側では参照だけを持ちます。Hermes はその実行の間だけ解決した値をメモリ上で使い、ディスクに残すのは取得元の参照、ラベル、状態、リクエストの回数、元に戻せない指紋といった情報だけです。手で追加した項目と、Hermes 自身が持つ OAuth・デバイスコードの状態については、更新に必要なトークンをそのまま保持します。
 
@@ -285,7 +295,7 @@ Hermes は起動時にいくつもの場所から認証情報を見つけ出し�
 
 上の OpenRouter の項目は外部から借りてきたものなので、キーそのものは `auth.json` に入っていません。手で追加したほうの Anthropic の項目は Hermes の保管場所へ意図して登録したものなので、トークンをそのまま保存できます。
 
-`env:` の行は読み込むたびに環境変数から値を入れ直します。変数名は、Hermes がそのプロバイダ向けに決めている名前でなくてもかまいません。たとえば `"source": "env:OPENROUTER_API_KEY_2"` という 2 つ目の行は `OPENROUTER_API_KEY_2`（シェル、`.env`、またはシークレット管理ツール）から値を得て、主のキーと一緒にローテーションされます。シークレットそのものが `auth.json` に書き込まれることはありません。
+`env:` の行は読み込むたびに環境変数から値を入れ直します。変数名は、Hermes がそのプロバイダ向けに決めている名前でなくてもかまいません。番号付きの変数（`OPENROUTER_API_KEY_2`。[自動の読み取り](#auto-discovery)を参照）はここに自動で現れ、ほかの変数を指すように手で書いた行も同じように値が入ります。どちらの場合も、シークレットそのものが `auth.json` に書き込まれることはありません。
 
 方針の設定は `auth.json` ではなく `config.yaml` に保存されます。
 

@@ -2,7 +2,7 @@
 title: "プロファイルのコマンド早見表"
 description: ""
 upstream_path: reference/profile-commands.md
-upstream_blob: 3d37e5b773207713ff76411b0e83cc36a2c95058
+upstream_blob: 0f7a83ca3088957b213881a20f61f83d633d1c57
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/profile-commands
 ---
@@ -86,7 +86,7 @@ hermes profile create <name> [options]
 |-------------------|-------------|
 | `<name>` | 新しいプロファイルの名前。ディレクトリ名として使える文字（英数字、ハイフン、アンダースコア）にしてください。 |
 | `--clone` | いま使っているプロファイルから `config.yaml`、`.env`、`SOUL.md`、スキル、そして手入れされた `memories/MEMORY.md` / `memories/USER.md` をコピーします。セッション、`state.db`、cron ジョブはコピーしません。 |
-| `--clone-all` | いま使っているプロファイルからすべて（設定、記憶、スキル、プラグイン）をコピーします。プロファイルごとの履歴（セッション、`state.db`、バックアップ、状態のスナップショット、復元ポイント）は除きます。cron ジョブも同じく除かれ、元のプロファイルに結びついたまま残ります（複製先が引き継ぐと、同じジョブが二重に走ってしまうためです）。 |
+| `--clone-all` | いま使っているプロファイルからすべて（設定、記憶、スキル、プラグイン）をコピーします。プロファイルごとの履歴（セッション、`state.db`、バックアップ、状態のスナップショット、復元ポイント）は除きます。cron ジョブも同じく除かれ、元のプロファイルに結びついたまま残ります（複製先が引き継ぐと、同じジョブが二重に走ってしまうためです）。コピー元が既定のプロファイルの場合は、その端末に固有のローカルモデル関連のディレクトリ（`models/`、`runtimes/`、`node/`）も除きます。`hermes backup` が除外するのと同じディレクトリです。 |
 | `--clone-from <profile>` | いま使っているプロファイルではなく、指定したプロファイルから設定・スキル・SOUL をコピーします。`--clone-all` と一緒に使わない限り、`--clone` を指定したのと同じ扱いになります。 |
 | `--no-alias` | ラッパースクリプトを作りません。 |
 | `--description "<text>"` | このプロファイルが得意なことを 1〜2 文で書きます。かんばんの割り振りが、プロファイル名だけで推測するのではなく、役割を見てタスクを配るために使います。あとから `hermes profile describe` で足してもかまいません。`<profile_dir>/profile.yaml` に保存されます。 |
@@ -245,6 +245,71 @@ hermes profile rename <old-name> <new-name>
 hermes profile rename mybot assistant
 # ~/.hermes/profiles/mybot → ~/.hermes/profiles/assistant
 # ~/.local/bin/mybot → ~/.local/bin/assistant
+```
+
+名前を変えると、そのプロファイルに保存されているセッションと配信の識別情報も新しい名前へ移します。対象はセッションキー
+（`agent:<old>:*`）、`sessions.profile_name`、ハートビート、配信の振り分けと配達の記録です。この移し替えは、動いている多重化ゲートウェイが受け持ちます
+（振り分けの索引をメモリに持っているためです）。そのため、ゲートウェイが動いているときは CLI がゲートウェイに処理を任せます。プロファイルのディレクトリの中にある
+作業場所の復元ポイント（`/rollback`）の履歴も新しいパスに付け替えるので、名前を変えたあとも使えます。この手順が失敗したと表示された場合も、
+`hermes profile migrate-identity` でやり直せます。
+
+## `hermes profile migrate-identity` {#hermes-profile-migrate-identity}
+
+```bash
+hermes profile migrate-identity <old-name> <new-name>
+```
+
+名前の変更そのものは終わっているのに、識別情報の移し替えが済んでいない場合にやり直すコマンドです。`hermes profile
+rename` が「動いているゲートウェイがセッションの識別情報を移せなかった」と警告したときに使います。ゲートウェイを再起動するか
+（再起動するとデータベースから振り分けの索引を読み直すので、移し替えが反映されます）、ゲートウェイを止めてください。保存先を握っているゲートウェイがいなければ、このコマンド自身がデータベースを書き換えます。
+
+移し替えは、まだ `<old>` の名前が残っている行をもとに進むので、`profiles/<old>` が残っている必要はありません。
+確認するのは `<new>` だけです。何度実行しても結果は同じで、移し替え済みのときは移すものがないまま成功します。
+次の場合は 0 以外の終了コードで終わり、どのデータベースで何のエラーが起きたかを表示します。動いているゲートウェイが移し替えを拒んだとき、
+データベースが書き換えを拒んだとき（振り分けの衝突、ロック、2 つのデータベースの片方だけが失敗したとき）です。
+
+**例:**
+
+```bash
+hermes profile rename mybot assistant
+# ⚠ Profile was renamed, but the live gateway could not migrate session identity (…).
+#   Restart the gateway, then run:
+#     hermes profile migrate-identity mybot assistant
+
+hermes profile migrate-identity mybot assistant
+# ✓ Session/routing identity migrated: mybot → assistant
+```
+
+## `hermes profile purge-identity` {#hermes-profile-purge-identity}
+
+```bash
+hermes profile purge-identity <name>
+```
+
+プロファイルの削除そのものは終わっているのに、識別情報の消去が済んでいない場合にやり直すコマンドです。`hermes profile delete`
+が「セッションと配信の識別情報の後始末がまだ終わっていない」と表示したときに使います。ゲートウェイを再起動するか（再起動すると
+データベースから振り分けの索引を読み直すので、消去が反映されます）、ゲートウェイを止めてください。保存先を握っているゲートウェイがいなければ、このコマンド自身がデータベースから削除します。
+
+消去は `<name>` だけを手がかりに進むので、プロファイルのディレクトリが残っている必要はありません。ただし、同じ名前のプロファイルが
+また使われている場合は拒否します。識別情報は名前で決まるため、消去すると新しいプロファイルの振り分けまで消えてしまうからです。
+振り分けのキー（`agent:<name>:*`）、ハートビートの行、そのプロファイルの Telegram トピックの結び付けとモードの行は削除します。
+`delivery_obligations` の行は消さずに `abandoned` の印を付けるので、配達待ちの状態が黙って失われることはありません。
+セッションの行は、この消去では削除しません。このコマンドが片付けるのは識別情報で、履歴ではないからです。会話の記録を削除後も残すかどうかは
+`hermes profile delete` で決まります。こちらはプロファイル自身の `profiles/<name>/` を、
+`state.db` も含めて削除します。何度実行しても結果は同じで、消去済みのときは消すものがないまま成功します。
+次の場合は 0 以外の終了コードで終わります。その名前のプロファイルがまた使われているとき、動いているゲートウェイが消去を拒んだとき、
+データベースが削除を拒んだとき（ロック、または一部だけの失敗）です。
+
+**例:**
+
+```bash
+hermes profile delete mybot
+# ⚠ Profile was deleted, but the live gateway could not purge its session identity (…).
+#   Restart the gateway, then run:
+#     hermes profile purge-identity mybot
+
+hermes profile purge-identity mybot
+# ✓ Session/routing identity purged: mybot
 ```
 
 ## `hermes profile export` {#hermes-profile-export}

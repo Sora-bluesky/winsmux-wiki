@@ -2,7 +2,7 @@
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: 066d86a4dc5867fc3630fe7d3b0cc36c9162338a
+upstream_blob: 11d98af4e6f6787c0eae358c0f5f90c321f304d9
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -202,7 +202,7 @@ gateway/platforms/                  # core base + legacy direct adapters
 
 固有の資格情報でつなぐアダプターは、`connect()` で `acquire_scoped_lock()` を、`disconnect()` で `release_scoped_lock()` を呼びます。こうすると、2 つのプロファイルが同じボットのトークンを同時に使ってしまうことがなくなります。
 
-ロックがぶつかったときは `{scope}_lock` として、`retryable=True` を付けて知らせます。**動いている最中** の再接続なら、相手が抜けたあとに復帰できるからです。ただし **起動時** に他のプロセスがロックを握っているなら、それは設定のぶつかりです。`gateway/restart.py::is_global_startup_conflict()` が `*_lock` と `lock_conflict` の系統のコードを見分け、起動側はそのサービスを再試行の列に入れず `fatal` として止めます。他に何もつながっていなければ、ゲートウェイは `78` (`EX_CONFIG`、`gateway_state=startup_failed`) で終了し、見守り役が再起動を繰り返さないようにします。本当に一時的な失敗をした相手と同居している場合は、ゲートウェイ自体は生き続け、その相手だけがやり直します。
+ロックがぶつかったときは `{scope}_lock` として、`retryable=True` を付けて知らせます。**動いている最中** の再接続なら、相手が抜けたあとに復帰できるからです。ただし **起動時** に他のプロセスがロックを握っているなら、それは設定のぶつかりです。`gateway/restart.py::is_global_startup_conflict()` が `*_lock` と `lock_conflict` の系統のコードを見分け、起動側はそのサービスを再試行の列に入れず `fatal` として止めます。他に何もつながっていなければ、ゲートウェイは `78` (`EX_CONFIG`、`gateway_state=startup_failed`) で終了し、見守り役が再起動を繰り返さないようにします。systemd は `RestartPreventExitStatus=78` で、s6 は finish→125 で、launchd は stderr のラッパーが 78→0 に読み替えたうえで `KeepAlive.SuccessfulExit=false` で止まります。本当に一時的な失敗をした相手と同居している場合は、ゲートウェイ自体は生き続け、その相手だけがやり直します。
 
 ## 送り出しの経路 {#delivery-path}
 

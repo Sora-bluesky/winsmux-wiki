@@ -2,7 +2,7 @@
 title: "MCP 設定の早見表"
 description: "Hermes Agent の MCP 設定キー、絞り込みの動き、ユーティリティツールの方針をまとめた早見表です。"
 upstream_path: reference/mcp-config-reference.md
-upstream_blob: 21ca8ec2b08d9f8d1d961b9fdaaf8412daf38a34
+upstream_blob: 5b9e2e5bfa86a6a8dee3a6fa26f3b07675584753
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
 ---
@@ -65,6 +65,7 @@ mcp_servers:
 | `skip_preflight` | 真偽値 | HTTP | HEAD/GET に MCP 以外の content type を返してくる、けれども Streamable HTTP としては正しいエンドポイント向けに、事前確認で即座に打ち切る動きを回避します（既定は `false`） |
 | `transport` | 文字列 | HTTP | `sse` にすると、Streamable HTTP ではなく SSE で通信します |
 | `keepalive_interval` | 数値 | 両方 | 生存確認の ping を送る間隔を秒で指定します（既定は `180`、下限は 5 秒）。使っていないセッションをすぐ片付けるサーバーでは、そのセッション有効期間より短くしてください |
+| `lazy` | 真偽値 | 両方 | 起動時はディスク上のスキーマのキャッシュからサーバーのツールを登録しておき、最初にツールが呼ばれたときに初めてサーバーを起動・接続します（既定は `false`）。キャッシュを埋めるには、事前に一度実際に接続しておく必要があります。キャッシュが無いか古い場合は、通常どおり起動時に接続します。最初に使うまで、状態を表示する画面ではサーバーが `lazy` と表示され、キャッシュにあるツールの数も出ます |
 | `idle_timeout_seconds` | 数値 | stdio | 一定時間使われなかった stdio サーバーを入れ替えるまでの秒数です（`0` で無効）。`lifecycle:` のマッピングの下に置くこともできます |
 | `max_lifetime_seconds` | 数値 | stdio | 起動からの経過時間で stdio サーバーを入れ替えるまでの秒数です（`0` で無効）。`lifecycle:` のマッピングの下に置くこともできます |
 | `tools` | マッピング | 両方 | 絞り込みと、ユーティリティツールの扱いを決めます |
@@ -364,6 +365,9 @@ hermes mcp login protected_api --flow device
 Hermes は承認されるまで問い合わせを続け、`authorization_pending` と `slow_down` に従い、
 断られたときや期限が切れたときは止まります。ブラウザーは開かず、折り返しを受ける待ち受けも要りません。
 承認を待つ時間の上限は `oauth.timeout` で決まり（既定は 300 秒）、コード自体の有効期限でも制限されます。
+サーバーの保護リソースのメタデータに認可サーバーが複数並んでいる場合、デバイスでのログインはそれを順に調べ、
+メタデータの発行者（issuer）が公開している URL と一致し、かつ `device_code` による許可に対応している最初のサーバーを使います（ブラウザ専用のサーバーが先頭にあっても飛ばします）。
+発行者の検証を緩めることはありません。
 
 サーバーに `oauth.flow: device` を書いておくと、`hermes mcp login` と `hermes mcp reauth`
 （`reauth --all` を含みます）がデバイス認可を使うようになります。`login --flow browser` は、その

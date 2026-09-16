@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 32389d862b0fa914e2d80e702db5734abd82cc6e
+upstream_blob: ffedb37b2d04525569ac041f51e6ec8b563d2ea8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -322,6 +322,8 @@ hermes sessions list --source telegram
 # Show more sessions
 hermes sessions list --limit 50
 ```
+
+セッションが `--limit` の件数より多いときは、一覧の最後に `… more not shown (use --limit N to see more)` という行が付きます。件数で切った一覧を、全件の一覧と取り違えずに済みます。
 
 セッションにタイトルが付いていると、タイトル・冒頭の抜粋・相対的な時刻が表示されます。
 

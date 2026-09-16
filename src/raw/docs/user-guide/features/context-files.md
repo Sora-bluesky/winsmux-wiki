@@ -2,7 +2,7 @@
 title: "コンテキストファイル"
 description: "プロジェクトのコンテキストファイル（.hermes.md、AGENTS.md、CLAUDE.md、全体共通の SOUL.md、.cursorrules）は、どの会話にも自動で読み込まれます"
 upstream_path: user-guide/features/context-files.md
-upstream_blob: 2906c4f780bbcc2920a691bb9e6d1a73756cf5ec
+upstream_blob: 02fc7b4ec8228a024ae3b9efb6e95c9088cd422e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files
 ---
@@ -142,7 +142,7 @@ Hermes は、Cursor IDE の `.cursorrules` ファイルと `.cursor/rules/*.mdc`
 2. **親をさかのぼる** — そのディレクトリと、親を 5 段まで見ます（すでに見たディレクトリに当たったら、そこで止めます）
 3. **手がかりの読み込み** — `AGENTS.md`、`CLAUDE.md`、`.cursorrules` が見つかれば読み込みます（1 ディレクトリにつき、最初に見つかったもの）
 4. **安全性の検査** — 起動時のファイルと同じ、プロンプトインジェクションの検査です
-5. **切り詰め** — 1 ファイルあたり 8,000 文字までにします
+5. **切り詰め** — 1 ファイルあたり 32,000 文字までにします（プレビュー用の固定の上限で、`context_file_max_chars` やモデルのコンテキストウィンドウでは変わりません）。上限を超えたヒントは、ファイル全体を指す先頭／末尾の目印を残したうえでログに記録されますが、起動時に読み込むコンテキストファイルのようにチャットへ切り詰めの警告を出すことはありません
 6. **差し込み** — ツールの結果に足すので、モデルは会話の流れの中で自然に目にします
 
 出来上がったプロンプトのまとまりは、だいたい次のような形です。

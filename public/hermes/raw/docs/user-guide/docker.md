@@ -2,7 +2,7 @@
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: 827b94d9c39e0059fa4f847d3f9bc835087a2efa
+upstream_blob: 773e985c01eaafb83d29d62bd5556c64661d8eec
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -233,6 +233,8 @@ Hermes は[複数のプロファイル](/hermes/docs/reference/profile-commands/
 - 落ちたときの自動再起動。間隔は `s6-supervise` が調整します。
 - `${HERMES_HOME}/logs/gateways/<name>/current` にプロファイルごとの回転するログ（1 MB × 10 世代）。
 - コンテナの再起動をまたいだ状態の保存。起動時の調整役が各プロファイルのディレクトリから `gateway_state.json` を読み、最後に記録された状態が `running` だったプロファイルの枠だけを立ち上げ直します。再起動しても止まったままになるのは、あなたが明示的に止めた（`hermes gateway stop`）ゲートウェイだけです。コンテナの再起動、イメージの更新、思わぬ終了では記録が `running` のまま残るので、次の起動でゲートウェイは自動で立ち上がります。
+
+**ホスト**側から、バインドマウントした `~/.hermes` に対して作ったプロファイルは、ディレクトリはできても枠はできません（ホストのプロセスからはコンテナの `/run/service` に手が届かないためです）。コンテナの中で `hermes -p <name> gateway start` を実行すると、足りない枠がその場で登録されて立ち上がります。`docker restart` は要りません。これをするのは `start` だけで、しかも本物のプロファイルのディレクトリ（`SOUL.md` があるもの）に限られます。登録されていないプロファイルへの `stop`/`restart` や、打ち間違えた `-p` の名前は、これまでどおり `✗ no such gateway` で失敗します。
 
 ホストで実行する操作のコマンドは、コンテナの中からも同じように使えます。
 
@@ -527,6 +529,22 @@ PID 1 の道では、`/init` は次を行います。
 
 :::warning 権限の考え方
 イメージの入口を差し替えるなら、`/init`（あるいは同じことですが、stage2 のフックへ渡す従来の `docker/entrypoint.sh` の橋渡し）をコマンドの連なりに残してください。s6-overlay の `/init` は root として動き、初回起動でボリュームの持ち主を変えられるようにします。そのあと、見守られるすべてのサービスと主のプログラムのために `s6-setuidgid` で `hermes` ユーザーへ落ちます。公式のイメージの中で `hermes gateway run` を root として始めることは既定で拒まれます。`/opt/data` に root の持ち物のファイルが残り、あとでダッシュボードやゲートウェイが立ち上がらなくなることがあるからです。その危険を承知のうえで受け入れるときだけ、`HERMES_ALLOW_ROOT_GATEWAY=1` を設定してください。
+:::
+:::warning `entrypoint:` を差し替えると、ゾンビを片付ける役もいなくなります
+`/init` は、親を失った孫プロセス（ヘッドレスブラウザー、MCP サーバー、ツールが立ち上げた `git`/`npm` の補助プロセス）を片付ける役を担っています。Compose のサービスで `entrypoint:` を差し替えて `hermes` を直接呼ぶと — たとえばダッシュボードを root 以外のユーザーで動かすため — hermes のプロセス自身が PID 1 になり、その上で `wait()` を呼ぶものが誰もいなくなります。親を失ったプロセスはすべて `<defunct>` のまま永遠に残ります（ある環境では 3 時間足らずで 284 個のゾンビがたまりました）。この構成では、Hermes が起動時に `[hermes] WARNING: this process is PID 1 with no init above it` と表示します。
+
+どうしても入口を差し替えるなら、Docker の init を PID 1 に置いて、親を失ったプロセスが片付けられるようにしてください:
+
+```yaml
+services:
+  hermes-dashboard:
+    image: nousresearch/hermes-agent:latest
+    init: true                                      # docker-init becomes PID 1 and reaps orphans
+    entrypoint: ["/opt/hermes/.venv/bin/hermes"]
+    command: ["dashboard", "--host", "0.0.0.0", "--port", "9119", "--no-open", "--skip-build"]
+```
+
+（`docker run --init …` が同じ働きのフラグです。）これで直るのはゾンビがたまることだけです。`/init` が連なりから外れている以上、s6 の見守りの仕組みは失われたままです。ダッシュボード、`hermes gateway run`、プロファイルごとのゲートウェイは見守られなくなり、振り分け役自身が出す「PID 1 ではない」という警告のとおりになります。できる限り既定の `ENTRYPOINT` のまま使ってください。
 :::
 
 ### `docker exec` は自動で `hermes` ユーザーへ落ちます {#docker-exec-automatically-drops-to-the-hermes-user}
@@ -840,6 +858,10 @@ docker run -d \
 ```sh
 docker exec -u root hermes chmod 0755 /opt/hermes
 ```
+
+### PID 1 の下にゾンビ（`<defunct>`）のプロセスがたまる {#zombie-defunct-processes-piling-up-under-pid-1}
+
+コンテナの中で `ps -eo stat,ppid,comm | awk '$1 ~ /^Z/'` を実行すると、片付けられないまま終わった子プロセスが一覧で出ます。これは hermes 自身が PID 1 になっているときに起きます。ほとんどの場合、Compose のサービスが `entrypoint:` を差し替えたせいで `docker/entrypoint-dispatch.sh` → `/init` を通らなくなっているのが原因です。Hermes も起動時にこれを警告します（`this process is PID 1 with no init above it`）。既定の入口に戻すか、`init: true`（Compose）/ `docker run --init` を足して `docker-init` が親を失ったプロセスを片付けるようにしてください。詳しくは [Dockerfile がしていること](#what-the-dockerfile-does) を見てください。コンテナを作り直せば、すでにたまったゾンビは消えます。
 
 ### ブラウザの道具が動かない {#browser-tools-not-working}
 

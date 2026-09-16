@@ -2,7 +2,7 @@
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: 0421b802be5fe5dbbdbc1f3dc9792bd24fe64554
+upstream_blob: ebf37711046cf795e6be85f064eb16f9e3068202
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -245,6 +245,8 @@ HTTP のサーバーが向いているのは、こんなときです。
 - 社内の MCP の接続先が用意されている
 - そのつなぎ込みのために、Hermes に手元で子プロセスを立ててほしくない
 
+HTTP と SSE のサーバーは、一般的なプロキシ設定に従います。まず `HTTPS_PROXY` / `HTTP_PROXY` / `ALL_PROXY`（`socks://` と書いた場合は `socks5://` に読み替えます）、次に OS のプロキシ設定（Windows ならレジストリ、macOS ならシステム設定）を見ます。`NO_PROXY` に書いたホストは、CIDR の範囲や `*.example.com` の形も含めて、プロキシを通さず直接つなぎます。
+
 ### OAuth で認証する HTTP サーバー {#oauth-authenticated-http-servers}
 
 提供型の MCP サーバーの多く（Cloudflare、Linear、Sentry、Atlassian、Asana、Figma、Stripe など）は、固定のトークンではなく OAuth 2.1 を求めます。`auth: oauth` を指定すれば、あとは Hermes が MCP の Python SDK を通して、窓口の発見、クライアントの申告、PKCE、トークンの交換、更新、追加認証まで面倒を見ます。
@@ -389,6 +391,7 @@ Hermes は `~/.hermes/config.yaml` の `mcp_servers` から MCP の設定を読�
 | `identity_header` | 対応表 | HTTP / SSE のサーバー向けの、利用者ごとの身元ヘッダー（任意）。`{name, value_from: static\|profile, value}` |
 | `timeout` | 数値 | 道具を呼ぶときの制限時間 |
 | `connect_timeout` | 数値 | 最初につなぐときの制限時間（MCP の `initialize` のやりとりもここに収まります） |
+| `lazy` | 真偽値 | `true` にすると、起動時にはスキーマのキャッシュから道具だけを登録し、最初に道具が呼ばれたときに初めてサーバーを起動・接続します（既定は `false`）。キャッシュを作るため、事前に一度は実際に接続している必要があります。 |
 | `idle_timeout_seconds` | 数値 | 道具が呼ばれないまま この秒数が過ぎたら stdio のサーバーを作り直します（`0` は作り直さない、これが既定）。次に道具が呼ばれたときに、気づかないうちに立ち上げ直されます。 |
 | `max_lifetime_seconds` | 数値 | 起動からこの時間が経ったら stdio のサーバーを作り直します（`0` は作り直さない、これが既定）。次に使うときに、気づかないうちに立ち上げ直されます。 |
 | `enabled` | 真偽値 | `false` なら、Hermes はそのサーバーをまるごと飛ばします |
@@ -634,6 +637,10 @@ mcp_servers:
 ### いつ見つけるか {#discovery-time}
 
 Hermes は起動時に MCP サーバーを見つけて、その道具をふだんの道具の台帳に登録します。
+
+### 遅延起動 {#lazy-start}
+
+`lazy: true` のサーバーは、代わりにディスク上のスキーマのキャッシュから登録されます。道具はすぐ台帳に載り、プロセスの起動（HTTP なら接続先への接続）は最初に道具が呼ばれたときに行われます。キャッシュは実際に接続するたびに書き込まれるので、新しいサーバーや設定を変えたサーバーの初回は、必ずその場で起動します。起動時の表示と TUI のセッションパネルでは、このサーバーが **lazy** として、キャッシュにある道具の数とともに表示されます（`3 tool(s) (lazy, starts on first use)`）。失敗したサーバーではなく、正常に使えるサーバーです。起動時の検出のまとめでは `N lazy, not spawned yet` として数えられます。
 
 ### 動いている最中に道具を見つける {#dynamic-tool-discovery}
 

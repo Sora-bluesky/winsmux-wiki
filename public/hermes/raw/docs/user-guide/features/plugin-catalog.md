@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みで SHA 固定された Hermes のプラグインを、厳選カタログから探して導入する"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: ddff54c4320c30a05db2f1ec5bd3ced747021b3e
+upstream_blob: 6c6a850d3a8408770d4e6c6637841c0caad8a173
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -18,11 +18,31 @@ hermes plugins install <name>
 
 見た目で探すなら **[/docs/plugins](https://hermes-agent.nousresearch.com/plugins)** を開いてください。エントリは種類ごとの棚
 （Memory、Desktop、Platforms、Web & Browser、Tools、Voice、Automation、Models）に分かれて並び、検索、階層フィルタ
-（Official / Community）、機能チップ、そして各エントリのコピーできる導入コマンドがそろっています。
+（Official / Community）、機能チップ、そして各エントリの **Install in Hermes** ボタンとコピーできる CLI コマンドがそろっています。
+
+Desktop では **Capabilities → Plugins → Browse** を開くと、アプリ組み込みのカタログ画面が出ます。
+Web サイトを埋め込んだものではありません。**Installed** は別のタブで、カタログの情報ではなく、
+アプリの Desktop プラグイン登録と、選んでいるプロファイルのエージェントプラグインの状態をもとに表示します。
+Skills も同じ **Installed / Browse** の配置です。検索欄は上に固定され、タブの切り替えと操作ボタンは同じ行に並びます。
+Browse の既定はカード表示です。フィルタの横にあるリストとカードのアイコンで表示を切り替えられ、
+検索とフィルタはそのまま保たれます。選んだ表示は、プラグインとスキルの両方のカタログで記憶されます。
 
 カタログは既存の[プラグインの仕組み](/hermes/docs/user-guide/features/plugins/)を置き換えるものではなく、補うものです。カタログから導入できるものは、
 内部的にはすべて普通のプラグインです。カタログはその上に「見つけやすさ」と審査の
 層を足しているだけです。
+
+### 公開している一覧データ {#published-browse-data}
+
+Web サイトと Desktop は、生成された同じ CDN スナップショットを読みます:
+[`https://hermes-agent.nousresearch.com/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json)。
+Desktop は
+`https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` から取得します。公開ドキュメント側の
+別名でも同じデータが返ります。ドキュメントのビルドは `plugin-catalog/*.yaml` を読み、
+キャッシュしてあるリポジトリのスター数を加えます。導入コマンドが使う、削除済みエントリの一覧もあわせて公開します。
+どちらの Browse 画面も、取得元のリポジトリを巡回したり、GitHub API にその場で問い合わせたりはしません。
+
+この一覧用スナップショットは、導入コマンドが使う
+[`plugin-catalog.json`](#live-refresh) とは別物です。そちらはカタログ名と固定値を解決するためのものです。
 
 ## エントリに書かれていること {#whats-in-an-entry}
 
@@ -42,6 +62,8 @@ hermes plugins install <name>
 | `requires_hermes` | 必要な Hermes の最低バージョン。例: `>=0.19`（任意） |
 | `platforms` | OS の制限。空ならすべて対象（任意） |
 | `docs_url` | 外部ドキュメントへのリンク（任意） |
+| `version` | 固定した sha に付ける、人が読むためのラベル。例: `"1.4.0"`。CLI、カタログのカード、Desktop の **Update to** ボタンに `1.4.0 @ abcd1234` の形で表示されます（任意。見た目だけのもの） |
+| `image` | カタログのカードに出すバナー画像。2:1 で表示されます（1200×600 が合います。ほかの比率は中央で切り抜かれます）。`raw.githubusercontent.com`、`github.com`、`*.githubusercontent.com` 上の `https` URL で指定します（任意）。審査したあとで中身が変わらないよう、エントリのコミットに固定してください（`raw.githubusercontent.com/owner/repo/<sha>/...`） |
 
 ## 信頼のしくみ {#trust-model}
 
@@ -68,6 +90,22 @@ hermes plugins install <name>
 :::
 
 ## カタログから導入する {#installing-from-the-catalog}
+
+Web サイトの **Install in Hermes** は、次の形のプロトコルリンクを開きます。
+
+```text
+hermes://plugin/install?repo=owner%2Frepo&catalog_name=example-plugin&sha=0123456789abcdef0123456789abcdef01234567
+```
+
+`repo` は `#subdir` も含めて URL エンコードされます。Desktop は確定の前に、取得元、導入先、
+構成要素を確認するよう求めます。リンクを開いただけで勝手に導入されることはありません。
+エージェントプラグインの部分については、バックエンドが `catalog_name` を審査済みの固定値に解決します。
+リンクの `sha` は**表示用の情報にすぎず**、コミットを選んだり上書きしたりする権限はありません。
+単体の Desktop プラグインについて、固定値を保証するものでもありません。
+
+カタログ用のパラメーター（と、公開 Skills Hub の新しい `hermes://skill/install?identifier=...` の経路）を使うには、
+新しい Desktop のビルドが必要です。古いビルドは、リポジトリだけを指すプラグインのリンクしか理解できないことがあります。
+展開したカードには CLI コマンドも残っているので、Desktop が無くてもカタログ名で導入できます。
 
 ```bash
 # Install a reviewed catalog entry by name (checks out the pinned SHA)
@@ -155,6 +193,10 @@ hermes plugins enable snyk
    更新の道は固定した SHA だけです（SHA を上げる PR と、`hermes plugins update <name>` の組み合わせ）。
 
 固定値の更新（`sha` を新しいコミットへ上げること）も、同じ PR とレビューの手順を通ります。
+利用者に見えるラベルがコードと食い違わないよう、同じ PR で `version` も上げてください。導入済みのプラグインは、
+記録している sha を現在の固定値と比べます。`hermes plugins list --json` は `update_available` を返し、
+Desktop の Plugins タブには **Update to 1.4.0** ボタンが出て、`hermes plugins update <name>`
+を実行すると新しい固定値のコミットがそのまま取り出されます。
 
 ## 関連ページ {#see-also}
 

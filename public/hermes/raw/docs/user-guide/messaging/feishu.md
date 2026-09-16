@@ -2,7 +2,7 @@
 title: "Feishu / Lark"
 description: "Hermes Agent を Feishu または Lark の Bot として設定します"
 upstream_path: user-guide/messaging/feishu.md
-upstream_blob: 7e7bbbde49382135fea545ae8669be715f69ef78
+upstream_blob: a483395f6363de0550762ea2989befccc75a13fc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu
 ---
@@ -240,6 +240,8 @@ FEISHU_GROUP_POLICY=allowlist   # default
 | `disabled` | グループのメッセージをすべて無視します。 |
 
 どの方式でも、メッセージが処理されるにはグループ内で Bot が明示的に @メンション（または @all）されている必要があります。個別のチャットは、この関門を常に通り抜けます。
+
+既定の `allowlist` の方式で `FEISHU_ALLOWED_USERS` が空のままだと、人からのグループのメッセージはすべて拒否されます。DM はそのまま使えます。最初に落としたときだけ、設定すべきキーを添えて `WARNING` で 1 回記録され、それ以降は `DEBUG` になります。[多重化したゲートウェイ](/hermes/docs/user-guide/multi-profile-gateways/)では、各プロファイルは**自分の** `.env` だけを読みます。既定のプロファイルの `.env` にある `FEISHU_GROUP_POLICY=open` は、2 つ目以降のプロファイルのボットには効きません。`FEISHU_GROUP_POLICY` / `FEISHU_ALLOWED_USERS` は `profiles/<name>/.env` に書くか、そのプロファイルの `config.yaml` で `group_rules` を使ってください。
 
 `FEISHU_REQUIRE_MENTION=false` にすると、@メンションを求めずにグループの発言をすべて読むようになります。
 

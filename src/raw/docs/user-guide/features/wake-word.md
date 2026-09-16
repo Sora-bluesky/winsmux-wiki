@@ -2,7 +2,7 @@
 title: "ウェイクワード"
 description: "手を使わずに済む Hey Hermes のウェイクワード — 話しかけるだけで音声対話が始まる、Hey Siri と同じ感覚で"
 upstream_path: user-guide/features/wake-word.md
-upstream_blob: 622532cd5f6885a4b0a6b6a548edf01ea92e2ccf
+upstream_blob: ecf7b858b660b053a733c0f04aeb0d1a3bd838f2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/wake-word
 ---
@@ -96,7 +96,8 @@ cd ~/.hermes/hermes-agent && uv pip install -e ".[wake]"
 /wake off       # stop listening
 ```
 
-デスクトップアプリでは、入力欄にある耳のアイコンを押します。
+デスクトップアプリでは、入力欄のマイクにカーソルを重ね、そこから広がって出てくる耳を押します。
+ウェイクワードが聞き取りを続けている間、耳は塗りつぶしで表示されます。
 
 この切り替えがそのまま設定になります。`/wake` でもデスクトップの耳のボタンでも、入れたり切ったりすると
 `~/.hermes/config.yaml` の `wake_word.enabled` に書き込まれるので、選んだ状態は次に立ち上げても残ります。手で書き換えることもできます。
@@ -284,7 +285,7 @@ macOS は、マイクの利用許可を**プロセスごと**に与えます。�
 *バックエンド*で動くので、そちらにも別に許可が要ります。許可がないと、CoreAudio はバックエンドに
 「動いている」ストリームを渡しはするものの、そこには無音しか流れてきません。だから耳は聞いているように見えるのに
 言葉には一度も反応しません。Hermes はこれを見つけます（`/wake status` に
-「mic delivers only silence」と出て、デスクトップの耳のツールチップにも同じ手がかりが出ます）。
+「mic delivers only silence」と出て、デスクトップでは折りたたまれた音声メニューの開くボタンにも同じ手がかりが出ます）。
 直しかたは、システム設定 → プライバシーとセキュリティ → マイク で Hermes の
 バックエンド（ターミナル、`python`、Hermes などの名前で並んでいます）を有効にし、そのうえで
 ウェイクワードを切って入れ直すことです。

@@ -2,7 +2,7 @@
 title: "CLI コマンド一覧"
 description: "Hermes のターミナルコマンドとコマンド群の公式な早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: f61f12095879cb191f9edaa84eeb103fe6578d42
+upstream_blob: 47538ebe660ae5d8c0e01c13128afa3888ca8948
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -175,6 +175,17 @@ hermes chat -q "Summarize this repository" --format stream-json
 
 会話が始まったあと、最後の記録は必ず `result` になります。Ctrl-C で中断した場合も
 `exit_code: 130` として出ます。この記録を完了の合図として扱ってください。プロセスの終了コードはこの `exit_code` と一致します。
+
+#### 1 回で終わる実行の終了コード {#exit-codes-for-one-shot-runs}
+
+チャットが答えて終わる場合（`-Q`、`chat --oneshot`、または標準入出力が TTY でない状態でのクエリ）、
+プロセスの終了コードはそのターンの結果を表します。静かな出力でも通常の出力でも同じです。
+`0` はターンが完了したとき、`1` は失敗したとき、途中で止まったとき（`partial`）、繰り返しの上限に達したとき、
+あるいはそもそも動かなかったとき（認証情報やエージェントの初期化に失敗）、`130` は中断されたときです。
+Kanban のディスパッチャーが起動したワーカー（`HERMES_KANBAN_TASK` が設定されている）の場合、
+ターンの失敗理由がプロバイダーのレート制限、過負荷、5xx の応答、タイムアウト、あるいはアカウントの課金・利用枠の上限だけなら、
+`75`（`EX_TEMPFAIL`）で終了します。ディスパッチャーは失敗として数えずにタスクを待ち行列へ戻します。
+`--format stream-json` を使うと、最後の `result` の記録にも同じ `exit_code` が入ります。
 
 #### 答えて終わるチャットでの委任 {#delegation-in-finite-chat-runs}
 
@@ -1008,7 +1019,7 @@ hermes checkpoints [COMMAND]
 | `list` | `status` の別名です。 |
 | `prune` | 掃除を強制的に一巡させます。行き場を失ったプロジェクトや古いプロジェクトを削除し、保管場所を整理し、容量の上限を守らせます。24 時間の重複防止の印は無視します。 |
 | `clear` | チェックポイントの土台をまるごと削除します。元に戻せません。`-f` がなければ確認を求めます。 |
-| `clear-legacy` | v1 から v2 への移行で作られた `legacy-<timestamp>/` の保管分だけを削除します。 |
+| `clear-legacy` | v1 から v2 への移行で作られた `legacy-<timestamp>/` の保管分だけを削除します。削除できない保管分が 1 つでもあると（たとえば Windows で git のオブジェクトが読み取り専用になっている場合）、`Could not delete N archive(s)` と表示したうえで `2` で終了します。 |
 
 ### オプション {#options}
 
@@ -1191,8 +1202,8 @@ hermes config <subcommand>
 | `show` | 現在の設定値を表示します。 |
 | `edit` | エディタで `config.yaml` を開きます。 |
 | `get <key> [--json] [--raw]` | ドット区切りのキーで設定値を 1 つ表示します（例: `hermes config get model.default`）。`--json` を付けると機械で読める形になります。認証情報らしい値（`api_key`、`*_TOKEN`、`*_SECRET`、`password` など）は伏せ字（`sk-o...7890`）で表示されます。エージェントがこのコマンドを実行するセッションの記録は残り続けるためです。`--raw` を付けると実際の値を表示します（または `security.redact_secrets: false` を設定します）。 |
-| `set <key> <value>` | 設定値を書き込みます。 |
-| `unset <key>` | 設定のキーを削除し、組み込みの既定値に戻します。 |
+| `set <key> <value> [--force]` | 設定値を書き込みます。ドット区切りのパスは `config.yaml` に書き込まれます。`UPPER_SNAKE` 形式の名前（`OPENROUTER_API_KEY`、`DISCORD_HOME_CHANNEL`、`TELEGRAM_GROUP_ALLOWED_USERS`、`HERMES_TIMEZONE` など）はすべて環境変数として `.env` に書き込まれます。これはプラットフォームの設定手順や `/sethome` が書き込むのと同じファイルで、実行時に値を読むすべての箇所が参照する先です。`config set` は `--force` を付けても、`UPPER_SNAKE` のキーを `config.yaml` に書き込むことはありません。環境変数の書き込み拒否リストにある名前（`HERMES_YOLO_MODE`、`PATH` など）は、その場で拒否されます。それ以外の `UPPER_SNAKE` の名前は、そのまま `.env` に保存されます（プラグイン、スキル、外部ツールはプロセスの環境変数から読みます）。既知のセクションの下にある未知のパス（`gateway.discord.foo`）は、候補を示したうえで拒否され、何も書き込まれません。小文字の未知の *最上位* キーは、注意を表示したうえで書き込まれます（最上位の単一値はスキル向けに環境変数へ橋渡しされます）。`--force` を付けると、どちらの場合も書き込みます。 |
+| `unset <key>` | 設定のキーを削除し、組み込みの既定値に戻します。`UPPER_SNAKE` の名前なら `.env` の項目を削除し、以前の `config set` の実行で `config.yaml` の最上位に残った古い写しも取り除きます（そうした写しは `get` が古いものとして報告します）。 |
 | `path` | 設定ファイルのパスを表示します。 |
 | `env-path` | `.env` ファイルのパスを表示します。 |
 | `check` | 足りない設定や古い設定を調べます。 |

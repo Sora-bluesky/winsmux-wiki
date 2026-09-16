@@ -2,7 +2,7 @@
 title: "skill のしくみ"
 description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェントが自分で育てる skill、Skills Hub"
 upstream_path: user-guide/features/skills.md
-upstream_blob: 34a6d7c47b192e738ffbfa6ee84ee5c07cb0b03f
+upstream_blob: ec07b8ec24d5698ed63367bf7112554eb33460a7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -19,6 +19,54 @@ Hermes に**外部の skill ディレクトリ**を見に行かせることも�
 
 - [同梱 skill のカタログ](/hermes/docs/reference/skills-catalog/)
 - [公式の追加 skill のカタログ](/hermes/docs/reference/optional-skills-catalog/)
+
+## Desktop で探して入れる {#browse-and-install-in-desktop}
+
+**Capabilities → Skills** を開き、**Installed** と **Browse** を切り替えます。
+検索欄はいちばん上にあり、タブの切り替えと操作ボタンは同じ行に並びます。
+**Installed** には、選んでいるプロファイルに実際に入っている skill と、その有効・無効の状態が出ます。
+公開カタログから推測した一覧ではありません。**Browse** はアプリに組み込まれたカタログ画面で、
+Web サイトを埋め込んだものでも、中身を減らした別のカタログでもありません。表示は最初はカードです。
+絞り込みの右にある一覧とカードのアイコンで、検索や絞り込みを消さずに表示を切り替えられます。この選択は Skills と Plugins で共通に記憶されます。
+カードをクリックすると詳細が開きます。カードの Install ボタンから直接入れることもできます。
+
+Desktop と公開の [Skills Hub](https://hermes-agent.nousresearch.com/skills) は、CDN に公開された同じスナップショットを読みます。
+[`/docs/api/skills.json`](https://hermes-agent.nousresearch.com/docs/api/skills.json) です。
+公開ドキュメント側の別名 URL も、Desktop が取得に使う URL と同じスナップショットを返します。
+`https://nousresearch.github.io/hermes-agent/docs/api/skills.json` です。このファイルは
+ドキュメントのビルド時に、同梱の `skills/` と `optional-skills/`、
+一元管理された skill の索引から作られます。Browse で眺めている間に GitHub を巡回したり、
+上流のマーケットプレイスへその場で問い合わせたりはしません。ただし入れるときは、
+選んだ skill をその配布元のインストーラーで取ってきます。
+
+### Web サイトから入れる {#install-from-the-website}
+
+Skills Hub では、入れられるカードごとに **Install in Hermes** ボタンがあります。押すと、
+入っている Hermes Desktop アプリが開き、配布元つきの skill の指定（URL エンコード済み）が渡されます。
+たとえば追加 skill なら `official/...`、ClawHub なら `clawhub/...` です。
+同梱 skill は、どれを指すか曖昧になる名前だけではなく、リポジトリ内のパスで明示します。
+古いスナップショットにこの明示的な同梱 skill の指定がない場合、Web サイトは
+インストールのリンクを出さず、アプリ側の Browse もインストールを無効にします。曖昧な名前から推測はしません。
+次にドキュメントが公開されるときに、その指定が補われます。
+アプリの Browse とカードの CLI 代替手段も、同じ指定を使います。
+
+```text
+hermes://skill/install?identifier=official%2Fsecurity%2F1password
+```
+
+Hermes は **Install “skill-name”?** という確認を出し、**Source**（配布元）と **Install to**（入れる先）を
+別々の行に表示します。Cancel を押せば何も変わりません。確定すると、同じダイアログに
+**Installing…**、続いて **Installed** が表示され、完了の通知が出ます。エラーは
+ダイアログに残るので、読んでからやり直せます。インストールは既存の
+Skills Hub の仕組みを通るので、セキュリティの検査、操作の記録、入っている一覧の
+更新も行われます。確認が開いている間にプロファイルや接続を切り替えた場合は、
+新しい行き先でリンクを開き直してください。変更が効くのは
+新しいセッションからです。リンクから検査を飛ばしたり、別のプロファイルを選んだりはできません。
+
+公開のリンクは `hermes://` を使います。開発用の `hermes-dev://` スキームではありません。
+`skill/install` の経路を使うには、更新済みの Desktop が必要です。
+アプリが入っていない、またはリンクが認識されない場合は、Desktop を更新するか、
+カードを開いて CLI のインストールコマンドをコピーしてください。
 
 ## 何も入っていない状態から始める {#starting-with-a-blank-slate}
 

@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: e0785ccaaac0877a5bb5b7ab9d9ec3bb9a8acc7c
+upstream_blob: f78eb980486cec03c6105b91416e8dabe76baefd
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -184,10 +184,10 @@ hermes plugins install owner/repo --ref 0123456789abcdef0123456789abcdef01234567
 Hermes はそのコミットを切り離した状態でチェックアウトし、`HEAD` が要求した SHA とぴったり一致することを確かめ、正規の出どころ、導入したリビジョン、固定の有無を、いまのプロファイルに記録します。`hermes plugins update` は固定されたプラグインを動かすことを拒みます。新しいコミットへ移すときは
 `hermes plugins install <source> --force --ref <new-commit>` で明示的に指定してください。プロファイル内に置かれる導入の記録には、設定の値も、環境の値も、秘密情報も、権限の付与も含まれません。
 
-同じ固定は Hermes Desktop でもできます。**Skills → Plugins → Install from
-Git** に *Pin to commit* という欄があり、40 文字の完全な SHA を入れられます。プラグインの一覧では、
-固定して導入したものすべてに `pinned @ <sha8>` の印が付くので、チームの全員が同じコミットで
-動かしているかを確かめられます。`hermes plugins list` でも、Source の列に固定が表示されます
+エージェントのプラグインの同じ固定は Hermes Desktop でもできます。**Capabilities →
+Plugins → Install from Git** に *Pin to commit* という欄があり、40 文字の完全な SHA を入れられます。**Installed** では、
+固定したエージェントのプラグインに `pinned @ <sha8>` の印が付きます。
+単体のデスクトップのプラグインを導入した場合に、固定が保証されるわけではありません。`hermes plugins list` でも、Source の列に固定が表示されます
 （`git pinned@<sha8>`）。固定は非公開のリポジトリでも使えます。資格情報は、下で説明する保存済みのものが同じように使われます。
 
 ### 非公開のリポジトリから導入する {#installing-from-a-private-repository}
@@ -364,6 +364,26 @@ hermes plugins disable my-plugin             # remove from allow-list + add to d
 hermes plugins capabilities [my-plugin]      # declared vs granted capabilities
 ```
 
+### デスクトップの Installed と Browse {#installed-and-browse-in-desktop}
+
+**Capabilities → Plugins** を開きます。**Installed** は、アプリのデスクトップのプラグインの登録簿と、
+選んでいるプロファイルでのエージェントのプラグインの実際の状態を読み、必要に応じて両方を 1 行にまとめて表示します。
+カタログの項目を導入済みとみなして並べた一覧ではありません。**Browse** はアプリ本来のカタログの画面で、
+Web サイトを埋め込んだものではありません。Skills と同じ **Installed / Browse** のタブを使い、上に検索欄、
+その下の 1 行にタブの切り替えと操作が並びます。Browse の既定はカード表示で、
+絞り込みの右にリスト表示とカード表示のアイコンがあります。どちらの表示を選んだかは Skills と共有され、
+次回も覚えています。カードをクリックすると詳しい説明が読めます。Install を押すと、
+これまでと同じ「確認してから導入する」ダイアログが開きます。
+
+デスクトップと公開の[プラグインカタログ](https://hermes-agent.nousresearch.com/plugins)は、同じ CDN の
+スナップショット [`/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json) を使います。
+公開の別名は、デスクトップが取りに行く URL
+`https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` と同じデータを返します。これは文書の
+ビルドが `plugin-catalog/*.yaml` とキャッシュしたスター数から作ります。同じ公開の際に、
+導入の仕組みが使う「削除された項目の一覧」も配られます。
+Browse で眺めるだけなら、GitHub にその場で問い合わせたり、ソースのリポジトリを取りに行ったりはしません。
+コードを取得するのは、別の手順である導入のときだけです。
+
 ### ワンクリック導入のリンク（デスクトップ） {#one-click-install-links-desktop}
 
 Hermes Desktop は `hermes://` の URL 形式を登録するので、Web サイトや README、
@@ -389,6 +409,22 @@ Python）、**デスクトップのプラグイン**（アプリの画面）、�
 Plugins → Install from Git** からも開けます。以前からの `hermes://plugin-agent/…` と
 `hermes://plugin-desktop/…` の URL も、同じダイアログへつながります。開発版
 （`npm run dev`）では形式が `hermes-dev://` になります。
+
+公開の[プラグインカタログ](https://hermes-agent.nousresearch.com/plugins)では、どのカードにも **Install in Hermes** があります。
+カタログのリンクには、`catalog_name`、URL エンコードした `repo`（ある場合は
+`#subdir` を含みます）、`sha` が付きます。
+
+```text
+hermes://plugin/install?repo=owner%2Frepo&catalog_name=example-plugin&sha=0123456789abcdef0123456789abcdef01234567
+```
+
+SHA のパラメーターは表示のための情報にすぎません。エージェントのプラグインを導入するときは、
+確定した時点でバックエンドが `catalog_name` を審査済みの固定コミットに解決します。
+リンクでその固定を上書きすることはできません。単体のデスクトップのプラグインについては、表示された SHA を
+固定の保証と受け取らないでください。これらのカタログ用のパラメーターには、更新したデスクトップのビルドが要ります。
+古いビルドはリポジトリのリンクしか理解しないことがあります。アプリが無い、または古すぎる場合は、
+デスクトップを更新するか、開いたカードにあるコピーできる
+`hermes plugins install <catalog-name>` のコマンドを使えば、カタログからの解決を保ったまま導入できます。
 
 Web サイト側に SDK は要りません。ふつうのリンクで動きます。
 

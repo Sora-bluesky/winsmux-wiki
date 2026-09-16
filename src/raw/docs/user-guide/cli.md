@@ -2,7 +2,7 @@
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md
-upstream_blob: 03aa91025be282e10bff1bbf8f54ff892763bbf8
+upstream_blob: 957635189d0a7c4156486eadaf192a81d368d895
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/cli
 ---
@@ -95,6 +95,10 @@ hermes worktree prune --branches-only  # leave worktrees alone
   取り込まれたコミットは `git cherry` のパッチ等価判定で検出され、取り込み済みとして
   扱われます。これがあるおかげで、いちばん多い「PR は取り込み済みなのにツリーが永久に
   残る」という無駄をようやく回収できます。
+- **リモートを持たないリポジトリ**では、ローカルの本流（`main`/`master`、どちらも無ければ
+  メインの作業ツリーでチェックアウトしているブランチ）を基準に判定します。その本流から
+  たどれるコミット、またはパッチとして等価なコミットだけを持つツリーとブランチが回収されます。
+  比べる本流が無い場合は、ツリーもブランチもすべて残します。
 - **push 済みで PR が開いているレーンは、何も失わずにディスクだけ空けます**。きれいな
   ツリーのブランチ先端が `origin` の持つものと完全に一致していれば（掃除1回につき
   `git ls-remote` を1回だけ実行して確認します）、その作業コピーは重複です。ツリーは

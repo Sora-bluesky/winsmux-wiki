@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 759aed3dac49d15bc9b80916ea9d371c60ba4639
+upstream_blob: 12a8098ed0de9cc3fdaf522370bdb677ff0a2244
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -64,7 +64,7 @@ LLM につなぐ手段が少なくとも 1 つ必要です。`hermes model` を�
 | **LM Studio** | `hermes model` → 「LM Studio」（provider: `lmstudio`、任意で `LM_API_KEY`） |
 | **カスタムエンドポイント** | `hermes model` → 「Custom endpoint」を選ぶ（`config.yaml` に保存されます） |
 
-OpenCode 系の 3 プロバイダはいずれも、会話ごとに変わる不透明な `x-opencode-session` ヘッダをすべてのリクエストに付けて送ります（全トランスポートのメインのやり取りに加えて、圧縮やタイトル生成といった補助的な呼び出しにも付きます）。OpenCode はこれを使って 1 つの会話を同じバックエンドに固定し、プロンプトキャッシュを温かいまま保ちます。値は Hermes のセッション ID から導出したもので、個人情報は含みません。
+OpenCode 系の 3 プロバイダはいずれも、会話ごとに変わる不透明な `x-opencode-session` ヘッダをすべてのリクエストに付けて送ります（全トランスポートのメインのやり取りに加えて、圧縮やタイトル生成といった補助的な呼び出しにも付きます。ヘッドレスで動く Kanban の `specify`/`decompose` と、ダッシュボードの見積もり呼び出しでは、タスクごとのキーを使います）。OpenCode はこれを使って 1 つの会話を同じバックエンドに固定し、プロンプトキャッシュを温かいまま保ちます。値は Hermes のセッション ID（または Kanban のタスク ID）から導出したもので、個人情報は含みません。
 
 公式の API キーを使う経路については、[Google Gemini ガイド](/hermes/docs/guides/google-gemini/)を参照してください。
 
@@ -424,6 +424,10 @@ model:
 :::tip Ollama Cloud とローカルの Ollama
 どちらも同じ OpenAI 互換 API を話します。クラウド版は第一級のプロバイダで（`--provider ollama-cloud`、`OLLAMA_API_KEY`）、ローカルの Ollama はカスタムエンドポイントの流れで使います（ベース URL は `http://localhost:11434/v1`、キーは不要）。手元で動かせない大きなモデルにはクラウドを、プライバシー重視やオフラインの作業にはローカルを使ってください。
 :::
+
+### DeepInfra {#deepinfra}
+
+DeepInfra（`--provider deepinfra`、`DEEPINFRA_API_KEY`）は、そのカタログからモデルをその場で取得します。推論は DeepInfra のトップレベルの `reasoning_effort` フィールドで制御するため、`agent.reasoning_effort`、`/reasoning <level>`、`--reasoning`、モデルごとの `agent.reasoning_overrides` が **どちらの向きにも** 効きます。既定で思考がオフのモデル（DeepSeek-V4.x）は努力度を指定すればオンになり、既定でオンのモデル（GLM-4.6、Qwen3-Thinking）は `/reasoning none` でオフにできます。推論を指定しなければ DeepInfra のモデルごとの既定値のままです。`xhigh` はそのまま使え、`ultra` は `max` として送られます。
 
 ### AWS Bedrock {#aws-bedrock}
 

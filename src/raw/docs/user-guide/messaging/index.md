@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 6953dd1f7eb04548da6c52b192dc536d65db0cda
+upstream_blob: f6a932a2ae993988321afe43624a108a82fea83b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -537,6 +537,8 @@ display:
 ```bash
 HERMES_BACKGROUND_NOTIFICATIONS=result
 ```
+
+`terminal(background=true, notify_on_complete=true)` を使うと、終わったプロセスが新しいエージェントの応答を始め、エージェント自身が結果を報告するので、別の状況行は送られません。例外は、そのプロセスを起動した応答がまだ続いている間にプロセスが終わった場合です。このときは完了が次の応答として列に入り、その応答が終わるまで黙っているのではなく、1 行の `concise` 状況がすぐに届きます（モードが `off` のとき、または `error` で終了コードが 0 のときは届きません）。
 
 ### 使いどころ {#use-cases}
 

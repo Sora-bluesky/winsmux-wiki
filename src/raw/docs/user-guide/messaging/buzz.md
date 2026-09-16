@@ -2,7 +2,7 @@
 title: "Buzz"
 description: ""
 upstream_path: user-guide/messaging/buzz.md
-upstream_blob: 44c0cf732d416579c55bde3629fe340b4ef20e49
+upstream_blob: 0d030b72664a1fd861497574061ec1ba6bf15339
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/buzz
 ---
@@ -165,7 +165,7 @@ hermes gateway start
 ## 補足と制限 {#notes-and-limitations}
 
 - **Buzz のセッションでは、ターミナルのツールの子プロセスから `BUZZ_*` の環境変数を使えます** — つまりエージェントは `buzz` の CLI を直接呼べます（`buzz messages send ...` など）。セッションのプラットフォームが `buzz` のとき、またはそのプロセスが Buzz Desktop が管理するエージェント（`BUZZ_MANAGED_AGENT`）のとき、`BUZZ_PRIVATE_KEY`、`BUZZ_AUTH_TAG`、`BUZZ_RELAY_URL` をはじめとする `BUZZ_*` の変数がターミナルの子プロセスに渡されるからです。同じ端末の Buzz 以外のセッション、`execute_code`、その他ターミナル以外の起動では、これらは閉じられたままです。
-- **受信は流し込みではなく、見に行く方式です。** `buzz` の CLI は要求と応答の形なので、アダプタは見張っているチャンネルごとに `poll_interval` 秒（既定は 4）ごとに `buzz messages get` を実行します。受信のメッセージは、最大でこの間隔ぶん遅れると考えてください。今後の改善として websocket での通信が考えられます（Buzz のリポジトリには本当の流し込みのための `buzz-ws-client` が入っています）。
+- **受信の流し込みには見張り役があります。** WebSocket で受信している場合、5 分間何も届かない接続や、中継サーバー側でソケットが閉じられていた接続は、いったん切って、間隔を延ばしながらつなぎ直します。その間、ゲートウェイの健全性（`/health/detailed` やダッシュボードの状態表示）では、Buzz は `connected` ではなく `retrying` と表示されます。`poll` で受信している場合は、アダプタが見張っているチャンネルごとに `poll_interval` 秒（既定は 4）ごとに `buzz messages get` を実行するので、受信は最大でこの間隔ぶん遅れると考えてください。
 - 接続したとき（つなぎ直したときも）、アダプタは最新のイベントから到達点を決めるので、チャンネルの過去のやり取りがエージェントに流し込まれることはありません。
 - 新しい個別のやり取りは自動で見つかります（数回の見に行きごとに確認します）。
 - 秘密鍵は子プロセスの環境変数として CLI に渡されます。argv やログに現れることはありません。

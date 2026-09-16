@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダ、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 8dcc4f3aac02f3614f25ca0413a48912a19bff9d
+upstream_blob: faf68cab5cef6f6480eeb95f23406ace47ada96d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -50,7 +50,7 @@ hermes config set OPENROUTER_API_KEY sk-or-...  # Saves to .env
 ```
 
 :::tip
-`hermes config set` コマンドは、値を書き込むファイルを自動で振り分けます。API キーは `.env` へ、それ以外は `config.yaml` へ保存されます。
+`hermes config set` コマンドは、値を書き込むファイルを自動で振り分けます。`UPPER_SNAKE` 形式の名前（`OPENROUTER_API_KEY`、`DISCORD_HOME_CHANNEL`、`TELEGRAM_GROUP_ALLOWED_USERS`、`HERMES_TIMEZONE` など）はすべて環境変数として `.env` に保存され、`config.yaml` には書かれません。ドットでつないだ設定は `config.yaml` へ入ります。それ以外の `UPPER_SNAKE` 形式の名前もそのまま `.env` に保存されます（プラグインやスキルのために、プロセスの環境変数として渡されます）。ただし、環境変数の書き込みで拒否リストに載っている名前（`HERMES_YOLO_MODE`、`PATH` など）は受け付けません。既知のセクションの下でパスを打ち間違えた場合（`gateway.discord.foo`）は、何も書き込む前に「もしかして」の候補を添えて拒否されます。それでも書き込みたいときは `--force` を付けてください。
 :::
 
 ## 設定の優先順位 {#configuration-precedence}
@@ -121,6 +121,11 @@ database:
 既存のデータベースのディスク上のジャーナルモードが、開くときに黙って WAL へ切り替わった場合にも、Hermes は
 （プロセスごと・データベースごとに 1 回）警告します。たとえば運用担当者が手動で `delete` に変換したデータベースが
 これに当たります。そのとき、選択を固定する設定として `database.journal_mode` の名前を示します。
+逆向きの切り替えが自動で起きることはありません。すでに WAL モードになっているデータベースは、
+`journal_mode: delete` を設定しても使用中のまま戻されません（接続が開いた状態で戻すと壊れることがあるためです）。`hermes doctor` は
+`<db> is in WAL mode despite database.journal_mode=delete` と警告し続けます。解消するには、そのプロファイルの
+Hermes のプロセスをすべて止め、ファイルに対して一度だけオフラインで
+`PRAGMA journal_mode=DELETE` を実行してください。
 
 ## 環境変数の展開 {#environment-variable-substitution}
 
@@ -987,6 +992,8 @@ auxiliary:
 
 `hygiene_hard_message_limit` は、ゲートウェイ専用の **圧縮前の安全弁** です。これは負の連鎖を断つためにあります。大きすぎるセッションで API 呼び出しが切れ続けると、ゲートウェイはトークン使用量のデータを受け取れず、トークンを基準にした閾値が発火できず、そのため記録は伸び続けて切断はさらに悪化します。この件数を基準にした下限は、（API が失敗しても必ず分かる）メッセージ数だけで発火し、圧縮を強制してセッションを立て直します。既定は `5000` で、どんな普通のセッションよりずっと大きな値です。大きなコンテキスト（100 万トークン以上）のモデルで短いターンを何千回も重ねる場合でも、はるか手前でトークンの閾値によって圧縮されます。珍しいプラットフォームではさらに上げ、もっと積極的に圧縮させたいなら下げてください。動いているゲートウェイでこの値を編集すると、次のメッセージから効きます（後述）。
 
+同じ上限は、ターンの開始までに整理が済まなかったときに **モデルへ送る量を安全側で抑える上限** にもなります。ターンを待たせる予算が切れた、要約がタイムアウトまたは失敗した、失敗後のクールダウン中である、別の圧縮がまだ進行中である、圧縮が無効になっている、といった場合です。このときゲートウェイは、先頭のシステムや準備の行と最新のメッセージを合わせて最大 `hygiene_hard_message_limit` 件だけを残し、残す末尾が対応する呼び出しを失ったツールの結果から始まらないようにします。削られるのはそのターンで送る中身だけです。ディスク上の記録には手を付けず、何も消さず、あとから届いた要約はそのまま採用されます。これにより、圧縮が失敗し続けても、1 週間続く DM で圧縮されていない履歴の全体がモデルへ送られることはありません。
+
 `hygiene_timeout_seconds` は、このエージェント実行前の圧縮の処理に対するゲートウェイの **無反応の予算** であって、全体の実時間の上限ではありません。圧縮の要約の呼び出しはモデルからストリーミングされ、届いたトークンはすべて前進とみなされます。まだ生成を続けている遅い推論モデルは自分の締め切りを伸ばし続けるので、遅いけれど健康な要約モデルが生成の途中で打ち切られることはありません。要約モデルがこの秒数のあいだ **まったく出力しない** ときだけ（バックエンドの停止、固まった接続、黙り込んだプロバイダ）、ゲートウェイはユーザーへ警告し、届いたメッセージを圧縮なしで進め、固まったように見せる代わりにセッションごとの一時的な失敗のクールダウンを記録します。
 
 `hygiene_total_ceiling_seconds`（既定 `600`）は、トークンがまだ動いていても待ち時間の合計を縛るので、ぽつぽつとしか流れてこない壊れたストリームがターンを人質に取り続けることはありません。この値は少なくとも `hygiene_timeout_seconds` まで丸められます。
@@ -1247,6 +1254,8 @@ cron のジョブと委任されたサブエージェントもストリーミン
 ### API のストリーミングを無効にする {#disabling-api-streaming}
 
 `model.streaming: false` は、セッション全体（親もサブエージェントも）で非ストリーミングのリクエストを強制します。これは、*ストリーミング* のツール呼び出しの経路が壊れている、自前ホストの OpenAI 互換サーバー向けの逃げ道です（たとえば vLLM の `--tool-call-parser qwen3_xml` と推論のパーサーを組み合わせると、ツール呼び出しの記法が平文へ漏れて `tool_calls` が 0 件になり、委任されたタスクが静かに何もしなくなることがあります）。既定は `true` です。その種の不具合に当たらない限りそのままにしてください。非ストリーミングの呼び出しは、上で説明した生存の性質を失うからです。これは端末でのトークンの描画だけを決める `display.streaming` とは別物です。
+
+ストリーミングでは先へ進めないとき、Hermes は自分でもセッションを非ストリーミングに切り替えます。プロバイダがストリーミングに対応していないと返した場合や、OpenAI 互換のゲートウェイがストリーミングのリクエストに中身のない SSE フレーム（ペイロードのない `data:` / `event: ping` だけの keepalive。調子の悪い中継でよく見られます）で応えた場合です。そのターンはストリーミングなしでやり直され、警告が表示され、そのセッションの残りではストリーミングがオフのままになります。
 
 ```yaml
 model:
@@ -2044,12 +2053,12 @@ display:
 
 ### ファイル変更の確認役 {#file-mutation-verifier}
 
-`display.file_mutation_verifier` が `true`（既定）のとき、ターンの中で `write_file` や `patch` の呼び出しが失敗し、同じパスへの書き込みが成功で上書きされないままだったなら、Hermes はアシスタントの最終応答へ 1 行の注意書きを足します。これは「並列のパッチをまとめて出し、半分が黙って失敗し、モデルは成功したとまとめる」という種類の言いすぎを、編集のたびに手で `git status` を走らせなくても捕まえます。
+`display.file_mutation_verifier` が `true`（既定）のとき、ターンの中で `write_file` や `patch` の呼び出しが失敗し、その後そのファイルへの書き込みが（どのパス表記でも）成功せず、ターンの終わりまでにディスク上でほかの形でも変わっていなかったなら、Hermes はアシスタントの最終応答へ 1 行の注意書きを足します。これは「並列のパッチをまとめて出し、半分が黙って失敗し、モデルは成功したとまとめる」という種類の言いすぎを、編集のたびに手で `git status` を走らせなくても捕まえます。
 
 末尾に出る例:
 
 ```
-⚠️ File-mutation verifier: 3 file(s) were NOT modified this turn despite any wording above that may suggest otherwise. Run `git status` or `read_file` to confirm.
+⚠️ File-mutation verifier: 3 file edit(s) FAILED this turn despite any wording above that may suggest otherwise. Run `git status` or `read_file` to confirm what actually landed.
   • concepts/automatic-organization.md — [patch] Could not find match for old_string
   • concepts/lora.md — [patch] Could not find match for old_string
   • concepts/rag-pipeline.md — [patch] Could not find match for old_string
@@ -2057,7 +2066,7 @@ display:
 
 `file_mutation_verifier: false`（または `HERMES_FILE_MUTATION_VERIFIER=0`）にすると、この末尾の行を抑えられます。この確認役は、ターンの終わりに本当の失敗が残っているときだけ発火します。失敗したパッチを同じターンの中でやり直して成功したモデルは、そのファイルについては発火させません。
 
-**モデルのまとめよりも、この確認役を信じてください。** この行が出たということは、アシスタントの締めの言葉が完了したと言っていても、挙がったファイルはディスク上で変わって **いない** ということです。よくある原因は次のとおりです。
+**モデルのまとめよりも、この確認役を信じてください。** この行が出たということは、アシスタントの締めの言葉が完了したと言っていても、挙がった編集の呼び出しは **失敗** しており、Hermes はその後それらのファイルが変わったことを確認できなかった、ということです。追跡しているのは `write_file`/`patch` の受領記録と、ターンの終わりの更新時刻の確認だけなので、実際に何が反映されたかは `git status` や `read_file` で確かめてください。よくある原因は次のとおりです。
 
 - **書き込みが拒否された** — パスが資格情報の拒否リストに載っているか、`HERMES_WRITE_SAFE_ROOT` の外にあります（[ファイル書き込みの安全策](/hermes/docs/user-guide/security/#file-write-safety) をご覧ください）
 - **パッチが合わない** — `old_string` がディスク上のファイルと一致しませんでした
@@ -2066,7 +2075,7 @@ display:
 書き込みが遮られたときに出る例:
 
 ```
-⚠️ File-mutation verifier: 2 file(s) were NOT modified this turn despite any wording above that may suggest otherwise. Run `git status` or `read_file` to confirm.
+⚠️ File-mutation verifier: 2 file edit(s) FAILED this turn despite any wording above that may suggest otherwise. Run `git status` or `read_file` to confirm what actually landed.
   • ~/.hermes/cron/jobs.json — [patch] Write denied: '…' is outside HERMES_WRITE_SAFE_ROOT (/path/to/project)
   • ~/.hermes/scripts/monitor.py — [write_file] Write denied: '…' is outside HERMES_WRITE_SAFE_ROOT (/path/to/project)
 ```
@@ -2579,6 +2588,8 @@ timezone: "America/New_York"   # IANA timezone (default: "" = server-local time)
 
 対応する値: IANA のタイムゾーンの識別子なら何でも（たとえば `America/New_York`、`Europe/London`、`Asia/Kolkata`、`UTC`）。サーバーのローカルの時刻にするには、空にするか省いてください。
 
+`hermes doctor`（と起動時の設定チェック）は、実行時に読み込めない値を報告します。これがないと、`Asia/Tokio` のような打ち間違いで、エージェントの時計とすべての cron の予定が黙ってサーバーのローカル時刻になってしまいます。`HERMES_TIMEZONE` を設定すると、このキーより優先されます。
+
 ## Discord {#discord}
 
 メッセージングのゲートウェイでの Discord 固有のふるまいを設定します。
@@ -2871,4 +2882,4 @@ dashboard:
 - `ssh_isolated_idle_grace_s`（既定 `900`） — SSH 越しに届く、デスクトップが持つ `hermes serve --isolated` のバックエンドは、意図して SSH のセッションから切り離されています。接続の途中でノートパソコンが眠っても落ちないようにするためです。そのため以前は、暗いところでの復帰のたびに、`state.db` を握ったバックエンドがもう 1 つ増えていました。今のバックエンドは、この時間ずっとクライアントの WebSocket がつながらず、エージェントのターンも走っていなければ、自分から退きます（ターンがあれば生き続けますし、ターンの状態が読めないときも生き続けます）。ノートパソコンが眠ったあとも、切り離されたバックエンドに長い作業を終わらせてほしいなら、高くしてください。そうしたバックエンドは、半開きのトンネルに気づけるように、ゆっくりした WebSocket の ping（60 秒間隔、10 分のタイムアウト）も送ります。
 - `ws_orphan_reap_grace_s` — WebSocket から切り離されたセッションが、孤児の掃除役に回収されるまで待つ時間です。クライアントの再接続が遅いなら、キープアライブの値とあわせて上げてください。定期のセッションの手入れも、閉じたソケットの片づけをやり切り、失われた孤児のタイマーを掛け直すので、切り離されたチャットが、最初の片づけやタイマーを落としただけで所有のリースを握り続けることはありません。つなぎ直せばそのタイマーは取り消されます。動いている委任の作業と健康な実行中のターンは、通常の孤児の掃除役の確認によって守られたままです。（`HERMES_TUI_WS_ORPHAN_REAP_GRACE_S` は内部の上書きとして残っています。）
 - `ws_orphan_activity_stale_s`（既定 `600`） — 切り離された **実行中の** ターンの活動の時計（`agent.turn_liveness` の見張り役が測るのと同じ時計。API の待ち、ストリームのトークン、ツールの鼓動）が、孤児の掃除役に割り込まれるまでにどれだけ止まっていられるかです。クライアントがいなくても、まだ活発に出力しているターンは切り離されたまま最後まで走ります。ノートパソコンを閉じる、モバイルのアプリを背面へ回す、デスクトップを更新する、といったことで健康な長いターンが取り消されることはもうありません。本当に詰まったターンだけが割り込まれます。活動にかかわらず猶予の時間で割り込ませたい（以前のふるまい）なら `0` にしてください。
-- `startup_orphan_sweep`（既定 `true`） — 上の WebSocket の孤児の回収のタイマーはプロセスの中にあるので、それが発火する前にゲートウェイが再起動（更新、クラッシュ、systemd）すると、セッションの行が永遠に開いたままになります。`/resume` やダッシュボードに、幽霊の「実行中」の作業が残るのです。ゲートウェイが起動するたび — 標準入出力の TUI（`entry.main`）でも、デスクトップ／ダッシュボードの WebSocket のサイドカー（`handle_ws`）でも — ソースが `tui` / `desktop` / `subagent` で、開始の時刻 **と** 最新のメッセージの両方がセッションの TTL（`HERMES_TUI_SESSION_TTL_S`、既定 6 時間）より古い行は、`end_reason: startup_orphan_reap` として閉じられます。メッセージングのプラットフォームのセッション（Telegram、Discord、…）には決して手を出さず、メモリ上で生きているセッション（すでに再開したクライアント）は除かれ、掃除された行はあとから再開できます。
+- `startup_orphan_sweep`（既定 `true`） — 上の WebSocket の孤児の回収のタイマーはプロセスの中にあるので、それが発火する前にゲートウェイが再起動（更新、クラッシュ、systemd）すると、セッションの行が永遠に開いたままになります。`/resume` やダッシュボードに、幽霊の「実行中」の作業が残るのです。ゲートウェイが起動するたび — 標準入出力の TUI（`entry.main`）でも、デスクトップ／ダッシュボードの WebSocket のサイドカー（`handle_ws`）でも — ソースが `tui` / `desktop` / `subagent` / `unknown`（トークン集計の保護処理が自分で作らざるを得なかった行）で、開始の時刻 **と** 最新のメッセージの両方がセッションの TTL（`HERMES_TUI_SESSION_TTL_S`、既定 6 時間）より古い行は、`end_reason: startup_orphan_reap` として閉じられます。メッセージングのプラットフォームのセッション（Telegram、Discord、…）には決して手を出さず、メモリ上で生きているセッション（すでに再開したクライアント）は除かれ、掃除された行はあとから再開できます。

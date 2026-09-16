@@ -2,7 +2,7 @@
 title: "Multiplexing Gateway の内部構造"
 description: "1 つの gateway ですべてのプロファイルを受け持つモードの設計: スコープの組み立て、シークレットのスコープ、受信のルーティング、永続化"
 upstream_path: developer-guide/multiplexing-gateway.md
-upstream_blob: 7f9ac7db946b0f3fac3762335286ab36fd14120b
+upstream_blob: 613f4891f9aa7810ffe9e075206718534fc9c9f6
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/multiplexing-gateway
 ---
@@ -10,8 +10,12 @@ sources:
 # Multiplexing Gateway {#multiplexing-gateway}
 
 1 つの gateway プロセスで、そのインストールにあるすべてのプロファイルを受け持てます。
-このモードは明示的に有効にしたときだけ動き（`gateway.multiplex_profiles`、既定は `false`）、
-フラグを切った瞬間に、変わったものはすべて元に戻ります。この文書は
+このモードは既定で有効で（`gateway.multiplex_profiles`、既定は `true`）、
+フラグを切った瞬間に、変わったものはすべて元に戻ります。フラグが*未設定*のときは、起動時に
+`hermes_cli/gateway_multiplex_mode.py::resolve_multiplex_mode` が値を決めます。この関数は
+`hermes gateway migrate` の事前チェックを走らせ、別のプロファイルがまだ自分の gateway を
+動かしている場合、妨げになるものがある場合、またはそのホストを移行できない場合は、
+gateway を単独のまま保ちます（「モードのフラグ」を参照）。この文書は
 `agent/secret_scope.py` から参照されている設計の根拠（"Workstream A"）です。
 プロファイルごとに何を分離するのか、それを分離する仕組み、そしてあえて
 プロセス全体で共有したままにしているものを説明します。
@@ -32,8 +36,19 @@ HTTP リスナー、プロセスロック、状態の表示面は 1 つずつを
 
 ## モードのフラグ {#the-mode-flag}
 
-- 設定: `gateway.multiplex_profiles: true`（トップレベルに書いても受け付けます）。
-  `gateway/config.py` で、環境変数 > 設定 > 既定値 の優先順位で読み取ります。
+- 設定: `gateway.multiplex_profiles`（トップレベルに書いても受け付けます）。
+  `gateway/config.py` で、環境変数 > 設定 > 未設定 の優先順位で読み取ります。`GatewayConfig`
+  は未設定のフラグを `None` のまま持ちます（読む側は真偽で判定するので、無効として読まれます）。
+  そのあと `load_gateway_config_for_runner` が `resolve_multiplex_mode` を呼び、起動時の判定を
+  書き込みます。静かな状態の複数プロファイルの既定インストールなら `True`、それ以外は理由を
+  ログに残して `False` です。明示された値はそのまま通ります。`GatewayRunner(config=...)` に
+  直接渡した設定は判定されません。
+- ほかのプロセスは、まず動いている gateway の `served_profiles` の記録を読み、次に明示された
+  フラグを読みます（`gateway_multiplex_mode.default_gateway_multiplexes`
+  / `explicit_multiplex_flag`）。既定値と合成した値は読みません。これに従うのは `named_profile_served_
+  by_running_multiplexer`、登録時の警告、管理画面のリスナーの保護、
+  cron 発火時のポート解決、コンテナの起動、そして移行計画
+  （`_read_multiplex_flag`。未設定の既定値は「まだ多重化していない」と読まれ、統合が進みます）です。
 - 環境変数での上書き: `GATEWAY_MULTIPLEX_PROFILES` が受け付けるのは、真偽をはっきり表す
   値だけです。空や認識できない値は「上書きなし」として扱うので、中身が空のデプロイ用
   シークレットが設定での有効化を覆い隠すことはありません。

@@ -2,7 +2,7 @@
 title: "TUI"
 description: "Hermes の新しいターミナル画面を起動する — マウスが使えて、表示が豊かで、入力を待たせない"
 upstream_path: user-guide/tui.md
-upstream_blob: 87bed9a239c24773a1468280a5e4aab653a90f70
+upstream_blob: 6027ab1da6466f21849cbd29c8b4f77cb35bf7a7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/tui
 ---
@@ -285,6 +285,11 @@ TUI は、やり取りを記号の壁ではなく生きた記録として流す�
 コードやログの中で `HERMES_TUI_GATEWAY_URL` という環境変数を見かけることがあります。これは **Web ダッシュボードの内部的な配線** であって、利用者が遠隔接続に使うためのつまみではありません。ダッシュボードの「Chat」タブ（`hermes dashboard` → `/chat`）を開くと、ダッシュボードの Web サーバーが TUI を子プロセスとして起動し、`HERMES_TUI_GATEWAY_URL` を差し込みます。その子プロセスは、ループバックの WebSocket（`/api/ws`）を通じて、ダッシュボード自身のプロセス内 `tui_gateway` につながります。`/api/ws` というエンドポイントはダッシュボードのサーバー（`hermes_cli/web_server.py`）の中にしか存在せず、そのプロセスの寿命と認証に結び付いています。
 
 「どの TUI からでも、どの単独のゲートウェイのポートにでもつなぐ」という汎用のモードはありません。とくに、OpenAI 互換の API サーバー（`hermes gateway` や `api_server` のプラットフォーム）は `/api/ws` を **提供しません**。あちらはモデルの受け口（`/v1/chat/completions`、`/v1/models` など）であり、TUI の JSON-RPC 制御チャネルは意図的に公開していません。`HERMES_TUI_GATEWAY_URL` にそのポートを指定すると 404 になります。
+
+### 接続が切れたとき {#if-the-connection-drops}
+
+- **自分で起動したゲートウェイ（既定）:** セッションの途中でゲートウェイのプロセスが止まると、TUI は *Hermes stopped unexpectedly — restarting and reopening your chat* と表示し、プロセスを起動し直して（1分あたり数回まで）、同じ保存済みのセッションを開き直します。そのとき返答の途中だった内容は、プロセスとともに失われます。
+- **つないでいるゲートウェイ（ダッシュボードのチャット）:** WebSocket だけが切れた場合、TUI は *Connection to Hermes lost — reconnecting and reopening your chat…* と表示し、間隔を少しずつ延ばしながらつなぎ直して、同じセッションに戻ります。バックエンドでまだ流れている返答にも戻れます。何も送り直しはしません。
 
 複数の画面でセッションを共有したい場合は、共有の `~/.hermes/state.db`（[セッション](/hermes/docs/user-guide/sessions/) を参照）か、Web ダッシュボードに組み込まれたチャット（[Web ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/#chat) を参照）を使ってください。ゲートウェイの URL を手で設定する方法ではありません。
 

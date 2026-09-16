@@ -2,7 +2,7 @@
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: c4ea2bddbe787a18430bc1293e56904a8c885d5a
+upstream_blob: f46c01ad192c3c99d7c81016c2fb6582a83a2a28
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -110,6 +110,8 @@ OpenAI の Chat Completions の標準的な形式です。状態を持たず、�
 アップロードしたファイル（`file` / `input_file` / `file_id`）と、画像以外の `data:` の URL は `400 unsupported_content_type` を返します。
 
 **逐次送り**（`"stream": true`）: Server-Sent Events（SSE）で、返答をトークンごとの塊にして返します。**Chat Completions** では標準の `chat.completion.chunk` のイベントに加えて、ツールの開始を見せるための Hermes 独自の `hermes.tool.progress` イベントを使います。**Responses** では、`response.created`、`response.output_text.delta`、`response.output_item.added`、`response.output_item.done`、`response.completed` といった OpenAI Responses のイベント型を使います。
+
+どの SSE の流れ（Chat Completions、Responses、`/api/sessions/{id}/chat/stream`、`/v1/runs/{id}/events`）でも、10 秒間イベントが送られなかったときは `: keepalive` というコメント行を出します。これで、時間のかかるツール呼び出しの途中でクライアント側の無通信タイムアウトが働くことはありません。標準的な SSE クライアントはコメント行を無視します。自前でパースする場合は、`:` で始まる行を読み飛ばしてください。
 
 **逐次送りでのツールの進み具合**:
 - **Chat Completions**: Hermes は `event: hermes.tool.progress` を出します。保存されるアシスタントの文章を汚さずに、ツールの開始を見せるためです。
@@ -466,6 +468,14 @@ gateway:
 
 その実行のツールの進み具合、トークンの差分、節目のできごとを Server-Sent Events で流します。状態を失わずにつないだり離れたりしたい、ダッシュボードや作り込んだクライアントのためのものです。
 
+ツールの節目のできごととして、`tool.started`（`tool` と、引数の `preview`）と
+`tool.completed`（`tool`、秒単位の `duration`、`error`、結果の `preview`）が流れます。
+`error` の旗はツール自身の結果を表します。終了時の `exit_code` が 0 以外だった、構造化された
+`{"error": ...}` の結果が返った、承認が拒まれた、といった場合で、結果が JSON 文字列で届いても、
+解析済みのオブジェクトで届いても同じように判定します。完了時の `preview` は結果の本文（構造化された結果は
+JSON に変換したもの）で、秘密情報の伏せ字処理を必ず通したうえで 500 文字に切り詰めます。そのため
+クライアントは、上限のないツールの中身を受け取らなくても、承認の拒否（`BLOCKED: ...`）と通常の失敗を見分けられます。
+
 エージェントが裏で動く子エージェントに仕事を任せたときは、
 `subagent.start` と `subagent.complete` という節目のできごとも流れます。だからクライアント側は、
 子が働いているあいだ実行が黙り込むのではなく、任せた結果を（時間切れや失敗も含めて）
@@ -514,6 +524,8 @@ ID を JSON でも逐次送りでもそのまま返すので、圧縮のあと�
 ### POST /v1/runs/\{run_id\}/approval {#post-v1runsrunidapproval}
 
 人の判断を待っている実行について、保留中の承認に答えます（たとえば、承認の方針でせき止められたツールの呼び出しです）。本文には承認の判断を入れます。判断が記録されると、実行が再開します。この経路は `/v1/capabilities` で `run_approval` という機能として公開されているので、外部の画面は承認の問いかけを出す前に対応しているかを調べられます。
+
+MCP の信頼ゲートでの同意（`trust: untrusted` と設定したサーバーにある、書き込みのできるツール）も同じ形で現れます。実行は `approval.request` のイベントを出し、この経路で答えが出るまで `waiting_for_approval` で待ちます（`once` ならツールを実行し、`deny` なら止めます）。
 
 ## Jobs の API（裏で動く予定の仕事） {#jobs-api-background-scheduled-work}
 
@@ -565,7 +577,7 @@ ID を JSON でも逐次送りでもそのまま返すので、圧縮のあと�
 | `GET` | `/api/sessions/{id}/messages` | そのセッションのメッセージの履歴 |
 | `POST` | `/api/sessions/{id}/fork` | `SessionDB` の系譜をたどってセッションを枝分かれさせます（CLI の `/branch` と同じ考え方です） |
 | `POST` | `/api/sessions/{id}/chat` | エージェントの往復を 1 回、待ち合わせる形で走らせます |
-| `POST` | `/api/sessions/{id}/chat/stream` | 往復 1 回を SSE で包んだもの。`assistant.delta`、`tool.started`、`tool.completed`、`run.completed` のできごとを出します |
+| `POST` | `/api/sessions/{id}/chat/stream` | 往復 1 回を SSE で包んだもの。`assistant.delta`、`tool.started`、`tool.completed` を出し、最後に往復の終わり方に合わせて `run.completed` / `run.failed` / `run.cancelled` のいずれかの終端イベントを出します（[実行の終端状態](/hermes/docs/developer-guide/programmatic-integration/#terminal-run-status) を参照） |
 
 `/v1/capabilities` は `session_*` の機能の旗と `endpoints.session_*` の項目でこの窓口の全体を知らせるので、外部の画面は対応を調べたうえで安全に別の手に切り替えられます。`chat` と `chat/stream` の中身では、文中の画像にも対応しています（複数の形式を扱える経路です）。
 

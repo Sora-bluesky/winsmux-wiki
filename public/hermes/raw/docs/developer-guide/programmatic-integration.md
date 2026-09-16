@@ -2,7 +2,7 @@
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 434489b1075a641cf73985b3e7b19f288b9b9e8b
+upstream_blob: 3d1d82cd6be76a545053e9f47a3fbe44cd2bcb53
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -171,7 +171,20 @@ OpenAI のクライアントとの互換のためには `/v1/models` を、Herme
 
 `/v1/runs/{id}/steer` を受け付けるのは、実行の状態が `running` のあいだだけです。待機中、承認待ちで止まっている、停止処理中、取り消し済み、失敗、完了の実行は `409 run_not_accepting_steer` を返します。行儀よく終了している途中で、サーバーがまだ内部的にエージェントへの参照を持っていても同じです。
 
-`200` が返り `run.steered` のイベントが出たということは、その文章が**列に並んだ**という意味であって、エージェントが読んだという意味ではありません。エージェントの最終応答より後に届いてしまい、渡すためのツールの区切りがもう来ない場合、届かなかった文章は終了時の `run.completed` イベントと実行の状態に `pending_steer` として返ります。クライアントはそれを捨てずに、次のユーザーのターンとして送り直せます。
+`200` が返り `run.steered` のイベントが出たということは、その文章が**列に並んだ**という意味であって、エージェントが読んだという意味ではありません。エージェントの最終応答より後に届いてしまい、渡すためのツールの区切りがもう来ない場合、届かなかった文章は終了時のイベント（`run.completed`、`run.failed`、`run.cancelled` のいずれか）と実行の状態に `pending_steer` として返ります。クライアントはそれを捨てずに、次のユーザーのターンとして送り直せます。
+
+#### 実行の終了状態 {#terminal-run-status}
+
+実行の終了状態は、エージェントのターンが実際にどう終わったかから決まり、終了時のイベント名は必ずそれと一致します（`run.<status>`）:
+
+| ターンの終わり方 | 状態 | 終了時のイベント | イベント / 状態に付くフラグ |
+|---|---|---|---|
+| 最終的な回答を出した | `completed` | `run.completed` | `completed: true` |
+| 中断された（`/stop`、またはエージェント内部での中断） | `cancelled` | `run.cancelled` | `completed: false`、`interrupted: true` |
+| プロバイダーまたはエージェントの失敗 | `failed` | `run.failed` | `completed: false`、`error` |
+| 終わりきらずに止まった（反復回数の上限、途中で切れた返答や部分的な返答） | `failed` | `run.failed` | `completed: false`、該当する場合は `partial`、`turn_exit_reason`（例: `max_iterations_reached(60/60)`）、代わりの文章があれば `output` |
+
+同じ内容の中で、`completed` と報告しつつ `completed: false` や `partial: true` が付くことはありません。同じ決まりは `/api/sessions/{id}/chat/stream` にも当てはまります。こちらの `assistant.completed` の内容には本当の `completed` / `partial` / `interrupted` のフラグが入り、終了時のイベントは `run.completed`、`run.failed`、`run.cancelled` のいずれかになります。
 
 ---
 

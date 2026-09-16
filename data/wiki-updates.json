@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-16",
+  "generatedAt": "2026-09-17",
   "entries": [
     {
       "date": "2026-09-16",
-      "sha": null,
-      "upstream": "416a817",
+      "sha": "1c09d79",
+      "upstream": null,
       "pages": [
         {
           "id": "developer-guide/cli-internals",

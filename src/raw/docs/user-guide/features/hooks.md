@@ -2,7 +2,7 @@
 title: "出来事のフック"
 description: "節目ごとに自分のコードを走らせます — 動きの記録、通知、webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 67add32eae881991457eedeb81ff960c2b4decac
+upstream_blob: 6d9ac48a474d99c6c45c826801f9f9809cee345d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -1323,7 +1323,7 @@ def register(ctx):
 
 ### `post_approval_response` {#postapprovalresponse}
 
-尋ねる形や賢い承認の判断のあと、問いかけが時間切れになったあと、あるいはゲートウェイが承認の知らせを届けられなかったときに発火します。知らせの失敗では、承認の判断がまだない状態で `choice="notify_failed"` が出ます。
+尋ねる形や賢い承認の判断のあと、問いかけが時間切れになったり取り下げられたり（答えが来る前に応答が中断・終了した場合）したあと、あるいはゲートウェイが承認の知らせを届けられなかったときに発火します。知らせの失敗では、承認の判断がまだない状態で `choice="notify_failed"` が出ます。
 
 **呼び出しの形:**
 
@@ -1344,7 +1344,7 @@ def my_callback(
 
 | 引数 | 型 | 説明 |
 |-----------|------|-------------|
-| `choice` | `str` | 尋ねる形の面では `"once"`、`"session"`、`"always"`、`"deny"`、`"timeout"`、`"notify_failed"`。賢い判断では `"smart_approve"` か `"smart_deny"` |
+| `choice` | `str` | 尋ねる形の面では `"once"`、`"session"`、`"always"`、`"deny"`、`"timeout"`、`"cancelled"`（誰も答えていない状態。応答が中断・終了して問いかけが取り下げられた場合か、CLI で承認のコールバックが失敗した・prompt_toolkit のもとでコールバックが登録されていなかった・読み取りが中断されたためにユーザーへ届かなかった場合で、コマンドは実行されていません）、`"notify_failed"`。賢い判断では `"smart_approve"` か `"smart_deny"` |
 | `decided_by` | `str` | 賢い判断では `"aux_llm"`。尋ねる形の面では付きません |
 
 **戻り値:** 無視されます。

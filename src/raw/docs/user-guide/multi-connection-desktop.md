@@ -2,7 +2,7 @@
 title: "デスクトップ版を複数の Hermes につなぐ"
 description: ""
 upstream_path: user-guide/multi-connection-desktop.md
-upstream_blob: 81e45bf801d1ca91e88989fc5f3e401f0101f4ee
+upstream_blob: b0d3aeb8ed42f4c9f2826918810be4713c998577
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-connection-desktop
 ---
@@ -134,7 +134,10 @@ Hermes Cloud のパネルには、ポータルでの探索からサインアウ�
    - *SSH のときだけ:*
      - **SSH host** — `user@host:22` の形でまとめて書く1つの欄です（ユーザーと
        ポートは省略できます）。認証には自分の SSH 鍵が使われ、アプリはトンネル越しに
-       ダッシュボードのトークンを引き継ぎます。
+       ダッシュボードのトークンを引き継ぎます。リモートでの確認処理はそのアカウントのログイン
+       シェルで動きます。ログインシェルが `zsh` の場合、確認処理の見張り役はプロセスグループ
+       全体を終了させられないため、固まった確認処理の孫プロセスがリモートに残ることがあります
+       （bash/sh のリモートでは回収されます）。
 5. **Save connection** を押します（やめるときは **Cancel**）。
 6. 追加された行の **Test** を押し、*「Reachable」* が出るのを待ちます。
 

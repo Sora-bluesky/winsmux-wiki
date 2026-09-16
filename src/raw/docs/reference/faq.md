@@ -2,7 +2,7 @@
 title: "よくある質問とトラブル対処"
 description: "Hermes Agent でよくある質問と、つまずきやすい箇所の対処法"
 upstream_path: reference/faq.md
-upstream_blob: 2e7d31b5a6455a8ca3143dbd5f329704ec52782a
+upstream_blob: b09c3d802deabff97d8fa4003f9a354379b37ae3
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/faq
 ---
@@ -181,6 +181,8 @@ terminal:
 ```
 
 存在しないファイルは何も言わずに読み飛ばされます。読み込みは bash で行われるため、zsh 固有の書き方に頼っているファイルはエラーになることがあります。心配なら、rc ファイル全体ではなく PATH を設定している部分だけ（たとえば nvm の `nvm.sh` を直接）読ませてください。
+
+こうした初期化ファイルとは別に、ターミナルで実行するすべてのコマンドの `PATH` には、標準のシステムディレクトリ（`/usr/local/bin`、`/opt/homebrew/bin` など）、Hermes が管理するランタイムのディレクトリ、そして存在する場合は `~/.local/bin`（`pip --user` / `pipx` / `uv tool` のインストール先）が補われます。これらは自分で設定した項目の後ろに追加されるので、優先順位は変わりません。systemd や GUI のランチャー、Desktop の SSH リモートバックエンドのように、最小限の PATH だけで非対話的に起動されたバックエンドでも、設定なしで動くようになります。
 
 自動読み込みをやめて、ログインシェルの挙動だけに揃えたい場合はこうします。
 
