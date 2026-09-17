@@ -2,7 +2,7 @@
 title: "Nous Tool Gateway"
 description: "サブスクリプション 1 つで、すべてのツールを。Web 検索、画像生成、音声読み上げ、クラウドブラウザーを、追加の API キー無しで Nous Portal 経由に束ねます。"
 upstream_path: user-guide/features/tool-gateway.md
-upstream_blob: 5c5024806ca47afab2293984611a7c90c74ddd1f
+upstream_blob: 2ed437f2976946038499cc162889408d1ea448e3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-gateway
 ---
@@ -126,6 +126,8 @@ hermes tools          # Interactive picker for each tool category
 | Qwen Image | `fal-ai/qwen-image` | Alibaba のマルチモーダル |
 
 顔ぶれは移り変わります。`hermes tools` → Image Generation で、現在の一覧を確認できます。
+
+**Krea 2**（Medium、Large、Medium Turbo — 画風の参考画像を最大 10 枚まで、任意で Enhance による高解像度化）と、Nous Portal の画像モデルは、それぞれ専用の行を持つのではなく、同じ **Nous Subscription** のモデル選択の中に並びます。どのモデルも 1 回だけ出てきて、Krea の ID（`krea-2-medium` など）を選ぶと、リクエストの宛先が FAL ではなく Krea のゲートウェイになります。設定としては、これまでどおり `image_gen.provider: nous` とモデルの ID を書くだけです。Krea と Portal のモデルには有料のサブスクリプションが必要で、無料のツール枠がまかなうのは FAL のモデルだけです。
 
 ---
 

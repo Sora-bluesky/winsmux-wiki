@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 12a8098ed0de9cc3fdaf522370bdb677ff0a2244
+upstream_blob: 18d7fdca43fa561c610e5cbf81c1199b7bf2b763
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -64,7 +64,7 @@ LLM につなぐ手段が少なくとも 1 つ必要です。`hermes model` を�
 | **LM Studio** | `hermes model` → 「LM Studio」（provider: `lmstudio`、任意で `LM_API_KEY`） |
 | **カスタムエンドポイント** | `hermes model` → 「Custom endpoint」を選ぶ（`config.yaml` に保存されます） |
 
-OpenCode 系の 3 プロバイダはいずれも、会話ごとに変わる不透明な `x-opencode-session` ヘッダをすべてのリクエストに付けて送ります（全トランスポートのメインのやり取りに加えて、圧縮やタイトル生成といった補助的な呼び出しにも付きます。ヘッドレスで動く Kanban の `specify`/`decompose` と、ダッシュボードの見積もり呼び出しでは、タスクごとのキーを使います）。OpenCode はこれを使って 1 つの会話を同じバックエンドに固定し、プロンプトキャッシュを温かいまま保ちます。値は Hermes のセッション ID（または Kanban のタスク ID）から導出したもので、個人情報は含みません。
+OpenCode 系の 3 プロバイダはいずれも、会話ごとに変わる不透明な `x-opencode-session` ヘッダをすべてのリクエストに付けて送ります（全トランスポートのメインのやり取りに加えて、圧縮、タイトル生成、承認の確認、スキルハブの照会、`/btw` の脇道の質問といった補助的な呼び出しにも付きます。やり取りが終わったあとに裏で走るものも含みます。ヘッドレスで動く Kanban の `specify`/`decompose` と、ダッシュボードの見積もり呼び出しでは、タスクごとのキーを使います）。OpenCode はこれを使って 1 つの会話を同じバックエンドに固定し、プロンプトキャッシュを温かいまま保ちます。値は Hermes のセッション ID（または Kanban のタスク ID）から導出したもので、個人情報は含みません。
 
 公式の API キーを使う経路については、[Google Gemini ガイド](/hermes/docs/guides/google-gemini/)を参照してください。
 
@@ -1417,6 +1417,8 @@ model:
 ```
 
 同じキーは名前付きプロバイダのモデル単位でも有効で（`providers.<name>.models.<id>.supports_vision`）、標準的な YAML の真偽値（`true/false/yes/no/on/off/1/0`）を受け付けます。
+
+カタログが知らないモデルについて、メタデータ（たとえば `context_window`）を直すだけの `model_overrides` のエントリを書いた場合、画像認識と推論の対応可否は**不明**のままになります。`vision_analyze`、`video_analyze`、推論の強さを選ぶ画面はそのまま使えます。そのモデルをテキスト専用、あるいは推論なしとして扱うのは、上書きの中で `supports_vision: false` / `supports_reasoning: false` を明示したときだけです。
 
 セッションの途中で切り替えるには、3 つ組の記法を使います。
 

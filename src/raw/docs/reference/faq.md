@@ -2,7 +2,7 @@
 title: "よくある質問とトラブル対処"
 description: "Hermes Agent でよくある質問と、つまずきやすい箇所の対処法"
 upstream_path: reference/faq.md
-upstream_blob: b09c3d802deabff97d8fa4003f9a354379b37ae3
+upstream_blob: b8f3caf82acc4e19de068f34aac2cdb9c2b9c663
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/faq
 ---
@@ -647,7 +647,7 @@ MCP サーバーがリクエストの途中で落ちると、Hermes からはタ
 
 ### プロファイルはいくつまで作れますか {#how-many-profiles-can-i-run}
 
-上限はありません。プロファイルの実体は `~/.hermes/profiles/` の下のディレクトリです。実際の上限は、ディスクの空きと、同時に動かせるゲートウェイの数（1 つずつが軽量な Python のプロセスです）で決まります。何十個作っても問題ありませんし、使っていないプロファイルは資源を消費しません。
+上限はありません。プロファイルの実体は `~/.hermes/profiles/` の下のディレクトリで、目印になるファイル（`config.yaml`、`.env`、`SOUL.md`、`profile.yaml`、`auth.json`、`state.db` のいずれか）を 1 つ以上持っているものを指します。それが 1 つもない空のディレクトリ（ログの入れ替えや cron の実行で残ったものなど）はプロファイルとして扱われません。一覧にも出ず、配信もされず、`-p <name>` で指定すると見つからないと表示され、`hermes profile create <name>` も、そのディレクトリを移動するか削除するまで上書きを拒みます。実際の上限は、ディスクの空きと、同時に動かせるゲートウェイの数（1 つずつが軽量な Python のプロセスです）で決まります。何十個作っても問題ありませんし、使っていないプロファイルは資源を消費しません。
 
 ---
 

@@ -2,7 +2,7 @@
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 3d1d82cd6be76a545053e9f47a3fbe44cd2bcb53
+upstream_blob: 1444270e205d47f84e6d02801c3b61365c645998
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -89,9 +89,13 @@ terminal.resize         clipboard.paste         image.attach
 → {"jsonrpc":"2.0","id":"srq-7","result":{"choice":"once"}}
 ```
 
-メソッドと返す値は次のとおりです。`approval` → `{choice}`。`clarify` → `{answer}`（単一の質問）、または `{answers}` / 取り消しなら `{}`（まとめて聞く場合。`clarify.lock` で答えを 1 つ先に確定できます）。`sudo`、`secret`、`vault.code`、`vault.unlock` → `{value}`。`connection` → `{settled_by, targets}`（`manage_connections` のカードで、対象ごとに結果が 1 つ）。`terminal.read`、`window.read`、`preview.act`、`tour` → `{value}`（JSON のテキスト）。ホストが実装していないメソッドには JSON-RPC のエラー（`-32601`）を返してください。そうすればエージェントはタイムアウトまで待たずにすぐ失敗を受け取れます。
+メソッドと返す値は次のとおりです。`approval` → `{choice}`。`clarify` → `{answer}`（単一の質問）、または `{answers}` / 取り消しなら `{}`（まとめて聞く場合。`clarify.lock` で答えを 1 つ先に確定できます）。`sudo`、`secret`、`vault.code`、`vault.unlock_prompt` → `{value}`。`connection` → `{settled_by, targets}`（`manage_connections` のカードで、対象ごとに結果が 1 つ）。`terminal.read`、`window.read`、`preview.act`、`tour` → `{value}`（JSON のテキスト）。ホストが実装していないメソッドには JSON-RPC のエラー（`-32601`）を返してください。そうすればエージェントはタイムアウトまで待たずにすぐ失敗を受け取れます。
 
 ゲートウェイが質問を取り下げたとき（タイムアウト、中断、別の画面で回答済みなど）は `request.cancel` `{ id, method, reason }` が送られてきます。対応する質問だけを消してください。`session.resume` / `session.activate` の結果と `session.events.since` には、まだ開いているフレームの一覧 `open_requests` が入っているので、再接続したクライアントはそれを表示し直し、そのまま答えることもできます。
+
+### 再接続したときに、進行中のやり取りを組み立て直す {#rebuilding-the-in-flight-turn-on-reconnect}
+
+`session.resume` / `session.activate` の結果には `inflight` が入っています。まだ動いているやり取り（または失敗して保持されているやり取り）のことで、履歴にはまだ入っていないものです。中身は `user`、そこまで配信された `assistant`、`streaming`、やり取りの途中での `corrections`、そしてエラーの項目です。人が入力したのではなくゲートウェイが始めたやり取り（裏で動いていた処理の完了、非同期で任せた作業の結果、表に出さない下準備のプロンプト）の場合、`inflight` には、保存される `messages` の行に付くのと同じ `display_kind` / `display_metadata` も入ります。そのため、やり取りが終わって履歴になったあとの見え方と、いま動いている最中の見え方を、クライアントがぴったり同じにできます。`process_complete` なら `display_metadata.display_text` を使ったタイムラインの印が出て、`hidden` なら何も出ません。本当に利用者が入力したときは、この 2 つの項目はどちらもありません。プロンプトの文面から出どころを推測しないでください（利用者が印の文字列を引用しただけでも、それは利用者の入力です）。
 
 ### Pi 方式の RPC との対応 {#pi-style-rpc-mapping}
 
@@ -180,7 +184,7 @@ OpenAI のクライアントとの互換のためには `/v1/models` を、Herme
 | ターンの終わり方 | 状態 | 終了時のイベント | イベント / 状態に付くフラグ |
 |---|---|---|---|
 | 最終的な回答を出した | `completed` | `run.completed` | `completed: true` |
-| 中断された（`/stop`、またはエージェント内部での中断） | `cancelled` | `run.cancelled` | `completed: false`、`interrupted: true` |
+| 中断された（`/stop`、またはエージェント内部での中断） | `cancelled` | `run.cancelled` | `completed: false`、`interrupted: true`、それに誰が止めたかを示す `turn_exit_reason`。人が止めたときは `interrupted_by_user`、見張り役（`cron_inactivity_watchdog`、`turn_liveness_watchdog`、`gateway_inactivity_watchdog`、`session_turn_lease_lost` など）が終わらせたときは `interrupted_by_system(<issuer>)` / `interrupted_during_api_call(<issuer>)` |
 | プロバイダーまたはエージェントの失敗 | `failed` | `run.failed` | `completed: false`、`error` |
 | 終わりきらずに止まった（反復回数の上限、途中で切れた返答や部分的な返答） | `failed` | `run.failed` | `completed: false`、該当する場合は `partial`、`turn_exit_reason`（例: `max_iterations_reached(60/60)`）、代わりの文章があれば `output` |
 

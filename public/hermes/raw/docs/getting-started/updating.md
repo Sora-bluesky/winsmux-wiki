@@ -2,7 +2,7 @@
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: 9185054d64a09aab85966a81ef2fe9bb068a1532
+upstream_blob: c342759a059a12119c7b32cfa4fad084953680a7
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -199,6 +199,8 @@ $ hermes update
 表示されたプロセスを終了してから、もう一度実行してください。同時に動いているプロセスが邪魔をしないと確信できる場合（まれです。たいていはウイルス対策ソフトの介在が誤って報告されたときくらいです）は、`--force` を渡すとこの確認を飛ばせます。その場合でも更新処理は `.exe` の名前付け替えを間隔を空けて再試行し、それでもロックが外れなければ `MoveFileEx(MOVEFILE_DELAY_UNTIL_REBOOT)` で次回の再起動時に置き換えるよう予約するので、更新は完了できます。
 
 これとは別に、venv の Python インタープリタから動いているプロセスがある間（デスクトップアプリのバックエンド、ゲートウェイ、Python の REPL など）、venv に触れることを拒む二つ目の保護があります。こうしたプロセスはネイティブ拡張のファイル（`.pyd`）をロックし続けるため、依存関係の同期がアクセス拒否で途中終了すると、インストールがバージョンの中間で止まってしまいます。この保護は `--force` では **解除できません**。検出された保持者が誤検知だと確信できる場合は、明示的に `hermes update --force-venv` を使ってください。
+
+この二つの保護と、デスクトップ版の更新前チェック、依存関係の修復処理は、いずれもまず `venv` を、次に uv の既定である `.venv` を環境として探します。そのため `uv venv` / `uv sync` で用意したソースのチェックアウトでも、インストーラーが作った `venv` と同じように更新できます。両方のディレクトリがある場合は、更新されるのは `venv` のほうです。
 
 #### Windows の venv 再作成はトランザクション方式 {#windows-venv-recreation-is-transactional}
 

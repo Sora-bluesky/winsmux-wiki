@@ -2,7 +2,7 @@
 title: "続く目標（Goal）"
 description: "目標をひとつ立てておくと、Hermes が終わるまで応答をまたいで作業を続けます。Ralph ループの Hermes 版です。"
 upstream_path: user-guide/features/goals.md
-upstream_blob: c668fd88ad8c67fe2eba2a9e1bcabb93acb4742a
+upstream_blob: cefadfff0bfa8f200fff932d56ca8f29a73153b6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/goals
 ---
@@ -211,6 +211,10 @@ stop when: a DB schema migration is required
 ### 実行中の安全（プラットフォーム連携） {#mid-run-safety-gateway}
 
 エージェントが動いているあいだでも、`/goal status`、`/goal pause`、`/goal clear`、`/goal wait`、`/goal unwait` は安全に実行できます。制御まわりの状態に触るだけで、いまの応答を止めないからです。実行中に**新しい**目標を設定すること（`/goal <new text>`）は断られ、先に `/stop` するよう伝えられます。古い続きと新しい続きがぶつからないようにするためです。
+
+### 続きの応答は目標を立てたメッセージを引用しません（プラットフォーム連携） {#continuation-replies-do-not-quote-the-goal-message-gateway}
+
+続きを促すプロンプトは、目標を立てたメッセージへの返信ではありません。そのため、返信先を引用して表示するプラットフォーム（Telegram）では、途中経過の吹き出しも最後の返答も、元のメッセージを引用せずにそのチャットやトピックへ投稿されます。返信の形で返ってくるのは、自分で送ったメッセージだけです。
 
 ### 保存のされ方 {#persistence}
 

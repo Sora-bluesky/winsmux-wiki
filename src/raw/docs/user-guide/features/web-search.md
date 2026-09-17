@@ -2,7 +2,7 @@
 title: "Web 検索と本文抽出"
 description: "複数のバックエンドプロバイダで Web を検索し、ページ本文を抽出します。無料で自前運用できる SearXNG にも対応しています。"
 upstream_path: user-guide/features/web-search.md
-upstream_blob: b6d1449fdc9c695f2f1a6dcfba18014f3a8f7a7a
+upstream_blob: 6fdd7254d451520bfa2fb3398d66fa6e70a8e6d7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-search
 ---
@@ -402,16 +402,16 @@ web:
   extract_backend: "firecrawl"  # used by web_extract
 ```
 
-機能ごとのキーが空のときは、どちらも `web.backend` に落ちます。Web の選択が一度も書き込まれていない場合にかぎり、存在する API キーや URL からバックエンドが自動判定されます。いったん選択が存在すれば、実行時は常にそれを使うので、`.env` にキーを足しても Web の通信先は変わりません。
+機能ごとのキーが空のときは、その機能は `web.backend` に落ちます。**共通の** Web の選択（`web.backend`、またはマネージドな `hermes tools` の行）が一度も書き込まれていない場合にかぎり、存在する API キーや URL からバックエンドが自動判定されます。いったん共通の選択が存在すれば、実行時は常にそれを使うので、`.env` にキーを足しても Web の通信先は変わりません。機能ごとのキーはその機能にしか効きません。`web.extract_backend` だけを設定した場合、`web_search` は自動判定されたバックエンドのままです。
 
 **優先順位（機能ごと）:**
 1. `web.search_backend` / `web.extract_backend`（機能ごとの明示指定）
 2. `web.backend`（共通の受け皿。`nous` はマネージドな Tool Gateway）
-3. 環境変数からの自動判定（一度も設定していない環境のみ）
+3. 環境変数からの自動判定（共通の選択が書き込まれていない場合）
 
 ### 自動判定 {#auto-detection}
 
-バックエンドが **一度も** 選ばれていない場合（あなたも `hermes tools` も `web.backend` や機能ごとのキーを書いていない場合）、Hermes は設定済みの認証情報に応じて、最初に使えるものを選びます。
+共通のバックエンドが **一度も** 選ばれていない場合（あなたも `hermes tools` も `web.backend` を書いていない場合）、Hermes は設定済みの認証情報に応じて、最初に使えるものを選びます。
 
 | 存在する認証情報 | 自動で選ばれるバックエンド |
 |--------------------|-----------------------|

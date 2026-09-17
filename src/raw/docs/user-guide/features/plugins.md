@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: f78eb980486cec03c6105b91416e8dabe76baefd
+upstream_blob: a807e96b42c3c89e2d55b26b91af532f9ddef964
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -663,6 +663,11 @@ dangerous で止めたときは、その原因になった重大な指摘を名�
 `fixtures/`）も検査されます。プラグインの `__init__.py` はそこから import できるので、実行時に動くコードだからです。
 ただし、そこで見つかった重大な指摘は **caution** 止まりになります。これらのフィクスチャは、プラグインが悪意のある文字列をはじくことを確かめるために、あえてそうした文字列を持っているからです。
 そのため導入を頭から止めるのではなく、確認を求め、`--force` で通せます。同じ指摘がほかのファイル（`setup.sh`、`src/spec/…`）にあれば、これまでどおり **dangerous** です。
+同じように、実行時に動く `.py` ファイルの `if __name__ == "__main__":` による自己テストの中にある、
+ありがちなサンプルのトークン（`hardcoded_secret`）も **caution** 止まりになります。
+読み込みの仕組みはプラグインを import するだけで、そのブロックを動かすことはないからです。
+一方で、その中にあるそれ以外の指摘（破壊的なコマンドや、`sk-…` のような提供元らしい形のキー）と、
+この行より上にある同じトークンは、これまでどおりの重さで扱われます。
 
 検査は既定で有効です。`config.yaml` で無効にできます。
 

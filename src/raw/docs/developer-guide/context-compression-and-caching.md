@@ -2,7 +2,7 @@
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: 64110224150bf67d343344d819b64aa9dc675cb5
+upstream_blob: 1d006bf4b8913c35d41f4bd9dbfed1bdd9725575
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -145,11 +145,14 @@ DB から履歴を読み直しても壊れません。またセッション行�
 #### 失敗後のクールダウンと、プロバイダーが示したあふれ {#failure-cooldown-and-provider-proven-overflow}
 
 要約の試行が失敗したり止まったりすると、そのセッションに**失敗クールダウン**が設定されます
-（60 秒 → 300 秒 → 900 秒と段階的に伸び、`state.db` に保存されます）。クールダウン中は、
+（60 秒 → 300 秒 → 900 秒と段階的に伸び、`compression.context_timeout_seconds` より
+短くなることはありません。`state.db` に保存されます）。クールダウン中は、
 しきい値による通常の圧縮は先送りされます。要約のバックエンドが壊れているときに、
-毎ターン再実行してしまわないためです。ただし次の 2 つの経路は、それでも実際に試行します。
+毎ターン再実行してしまわないためです。ただし次の 3 つの経路は、それでも実際に試行します。
 
 - 手動の `/compress`（`force=True`） — クールダウンを解除して再試行します。
+- 主経路が止まったあと、同じターンのうちに `fallback_chain` が行う再試行 —
+  取り消された主経路自身の停止クールダウンで、これを止めてしまってはいけません（`bypass_cooldown`）。
 - **プロバイダーが示したあふれ** — プロバイダー自身がコンテキスト長のエラーでリクエストを拒否した場合、
   復旧の処理はクールダウンを解除しないまま、回数を区切って 1 回だけ無視します
   （`max_compression_attempts`）。ここで先送りするとセッションが行き詰まります。毎ターン

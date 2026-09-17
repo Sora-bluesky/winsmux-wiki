@@ -2,7 +2,7 @@
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: f46c01ad192c3c99d7c81016c2fb6582a83a2a28
+upstream_blob: ca5ab601cc6519c9f68fd19ae611f6b94b3773a5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -703,7 +703,7 @@ gateway:
 
 ### 同時に走る実行の上限 {#concurrent-run-cap}
 
-API サーバーは、OpenAI 互換のエンドポイントと Runs のエンドポイントを合わせて、エージェントの実行が同時にいくつまで走れるかを制限します。上限は `gateway.api_server.max_concurrent_runs` から読まれます（既定は **10**、`0` で制限なし、負の値は 0 に丸められます）。上限に達すると、新しく実行を始めようとするリクエストは **HTTP 429** の `Too many concurrent runs (max N)` ではじかれます。クライアント側は間を置いてやり直してください。
+API サーバーは、実行をその場で始めるエンドポイント、つまり OpenAI 互換のエンドポイント、Runs のエンドポイント、そしてセッションのチャット（`POST /api/sessions/{id}/chat` と、その `/stream` 版。端末をまたいだエージェント同士のやり取りはここを通ります）を合わせて、エージェントの実行が同時にいくつまで走れるかを制限します。cron から始まる実行（`POST /api/jobs/{id}/run`、`POST /api/cron/fire`）は cron のスケジューラを通るため、この上限ではなく cron 側の制限に従います。上限は `gateway.api_server.max_concurrent_runs` から読まれます（既定は **10**、`0` で制限なし、負の値は 0 に丸められます）。上限に達すると、新しく実行を始めようとするリクエストは **HTTP 429** の `Too many concurrent runs (max N)` ではじかれます。クライアント側は間を置いてやり直してください。
 
 ## 安全のためのヘッダー {#security-headers}
 

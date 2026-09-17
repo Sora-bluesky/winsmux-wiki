@@ -2,7 +2,7 @@
 title: "デスクトップ版を複数の Hermes につなぐ"
 description: ""
 upstream_path: user-guide/multi-connection-desktop.md
-upstream_blob: b0d3aeb8ed42f4c9f2826918810be4713c998577
+upstream_blob: d1c465309f7de2107c896f5b2db859e4743f8e75
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-connection-desktop
 ---
@@ -138,6 +138,12 @@ Hermes Cloud のパネルには、ポータルでの探索からサインアウ�
        シェルで動きます。ログインシェルが `zsh` の場合、確認処理の見張り役はプロセスグループ
        全体を終了させられないため、固まった確認処理の孫プロセスがリモートに残ることがあります
        （bash/sh のリモートでは回収されます）。
+     - **Hermes path（省略可）** — リモート側にある `hermes` の実行ファイルまでの
+       フルパスです（たとえば `/opt/hermes/bin/hermes`）。空のままにしておくと
+       自動で見つけます。リモートの非対話シェルの `PATH` に `hermes` が入って
+       いなくて、**Test** が *「Hermes is not installed on the remote host」*
+       （リモートのホストに Hermes が入っていません）と出すときに設定してください。
+       欄を空にすれば自動検出に戻ります。
 5. **Save connection** を押します（やめるときは **Cancel**）。
 6. 追加された行の **Test** を押し、*「Reachable」* が出るのを待ちます。
 
@@ -254,7 +260,8 @@ instance itself is not touched — you can add it again any time.」*（イン�
   リモートのゲートウェイは選ばれたときにだけ開かれます。定期的に全体を見に行くような
   問い合わせは行いません。
 - エージェントにマウスを重ねると、そのバックエンドを先に温めておくので、切り替えのときに
-  起動待ちが起きません。
+  起動待ちが起きません。SSH のエージェントだけは例外で、マウスを重ねてもトンネルを
+  つないだりリモートのバックエンドを起動したりはしません。実際に開いたときにだけ動きます。
 - **Capabilities** のページ（Skills / Tools / MCP）も同じ考え方で範囲が決まります。
   **Configuring** の選択欄には、合わせた名簿にあるすべての `(profile, device)` の
   エージェントが並び、選んだものについて **そのマシンの** スキル、ツールセット、MCP

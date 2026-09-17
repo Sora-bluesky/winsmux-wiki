@@ -2,7 +2,7 @@
 title: "コンテキストファイル"
 description: "プロジェクトのコンテキストファイル（.hermes.md、AGENTS.md、CLAUDE.md、全体共通の SOUL.md、.cursorrules）は、どの会話にも自動で読み込まれます"
 upstream_path: user-guide/features/context-files.md
-upstream_blob: 02fc7b4ec8228a024ae3b9efb6e95c9088cd422e
+upstream_blob: aeff4cadf01f1c129b9f6754a6816bd95a63357a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files
 ---
@@ -178,11 +178,23 @@ SOUL の中身だけは、包む文を足さずにそのまま入っている点
 - **秘密のファイルを読む動き**：`cat .env`、`cat credentials`
 - **目に見えない文字**：ゼロ幅スペース、書字方向の上書き、ワードジョイナー
 
-危ないパターンがひとつでも見つかると、そのファイルは止められます。
+プロジェクトのコンテキストファイル（`.hermes.md`、`AGENTS.md`、`CLAUDE.md`、
+`.cursorrules`）で危ないパターンがひとつでも見つかると、そのファイルは止められます。
 
 ```
 [BLOCKED: AGENTS.md contained potential prompt injection (prompt_injection). Content not loaded.]
 ```
+
+`HERMES_HOME` に置いた自分の `SOUL.md` は扱いが違います。これは自分で書いたファイルなので（ファイル操作の
+ツールがここへ書き込むには承認が要りますし、プロジェクトのチェックアウトがこれを持ち込むことはありません）、
+検査に当たっても**ファイルは止まりません**。Hermes は当たったパターンの名前を添えた警告を記録し、ファイルは
+いつもどおり読み込み、`/context` には
+`⚠ SOUL.md … loaded — matched prompt-injection pattern(s); review the file` と並べます。おかげで、攻撃に使われる
+言い回しを*説明している*人格のファイル（「これまでの指示を無視しろと書いてある文章」といった security の手引き）も
+そのまま使えます。そこに出た文言を自分で書いた覚えがないなら、その警告は誰か別のものがファイルを書き換えた
+しるしだと考えてください。この例外は、プロファイルの配布に含まれる `SOUL.md` には広がりません。`hermes profile
+install <git-url>` と `hermes profile update` は、他人の `SOUL.md` を検査も承認の問いかけもなしにプロファイルの
+ホームへ複製するので、`distribution.yaml` がそのファイルを持っている場合は、検査に当たればこれまでどおり止まります。
 
 :::warning
 この検査はよくある手口を防ぎますが、みんなで使うリポジトリのコンテキストファイルに目を通す代わりにはなりません。自分で書いたのではないプロジェクトでは、AGENTS.md の中身をかならず確かめてください。

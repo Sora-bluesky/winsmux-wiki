@@ -2,7 +2,7 @@
 title: "プロンプトの組み立て"
 description: "Hermes がシステムプロンプトをどう組み立て、キャッシュの安定性をどう保ち、その場限りの層をどう差し込むか"
 upstream_path: developer-guide/prompt-assembly.md
-upstream_blob: 4ab98f582c95ea3839b8bb3f8a00ca57f413ab68
+upstream_blob: 2b0b0b27b7c9d0b11dd5cbbf8cb4e82ed4a64eb2
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/prompt-assembly
 ---
@@ -181,7 +181,7 @@ def load_soul_md() -> Optional[str]:
     if not soul_path.exists():
         return None
     content = soul_path.read_text(encoding="utf-8").strip()
-    content = _scan_context_content(content, "SOUL.md")  # Security scan
+    content = _scan_context_content(content, "SOUL.md", user_authored=True)  # Security scan: warn + load, never block
     content = _truncate_content(content, "SOUL.md")       # Cap scales with model context window (20k floor); config override wins
     return content
 ```
@@ -251,7 +251,7 @@ def build_context_files_prompt(cwd=None, skip_soul=False):
 | 4 | `.cursorrules`、`.cursor/rules/*.mdc` | 作業ディレクトリーのみ | Cursor との互換のため |
 
 文脈ファイルはすべて、次の扱いを受けます。
-- **安全性の検査** — プロンプトへの攻撃の型（見えない Unicode 文字、「これまでの指示を無視しろ」、認証情報を持ち出そうとする記述）が無いか調べます
+- **安全性の検査** — プロンプトへの攻撃の型（見えない Unicode 文字、「これまでの指示を無視しろ」、認証情報を持ち出そうとする記述）が無いか調べます。見つかった場合、プロジェクト側のファイルは `[BLOCKED: …]` の印に置き換わります。`HERMES_HOME` にある本人の `SOUL.md` は警告を出したうえでそのまま読み込みます（書き込むときに人が確かめているので、`config.yaml` と同じ信頼の扱いになります）
 - **切り詰め** — `context_file_max_chars` 文字を上限に、先頭 70 / 末尾 20 の割合で残し、切り詰めた印を入れます。上限はモデルの文脈の広さに応じて変わります（下限 20,000 文字、上限 500K）。`config.yaml` に `context_file_max_chars` が明示されていれば必ずそちらが優先されます。
 - **YAML の前書きの除去** — `.hermes.md` の前書きは取り除かれます（将来の設定の上書き用に予約されています）
 

@@ -2,7 +2,7 @@
 title: "フォールバックプロバイダー"
 description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: b59080755f53e82c7e3dc95e938ef5df7b355845
+upstream_blob: c313521f11a120b55228b9f4377407a4e21c0389
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
@@ -97,6 +97,7 @@ Google 純正の API エンドポイントでは、いずれも純正の Gemini 
 | LM Studio（ローカル） | `lmstudio` | `LM_API_KEY`（ローカルなら不要）と `LM_BASE_URL` |
 | Hugging Face | `huggingface` | `HF_TOKEN` |
 | 独自エンドポイント | `custom` | `base_url` と `key_env`（下記参照） |
+| Mixture of Agents のプリセット | `moa`（`model` にプリセット名） | 取りまとめ役に認証情報が設定してある MoA のプリセット。フォールバックではプリセット全体（参照役と取りまとめ役）が動きます。取りまとめ役だけではありません |
 
 ### 独自エンドポイントへのフォールバック {#custom-endpoint-fallback}
 

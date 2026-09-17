@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 1ff800776329f1f51cfdc1d9ec35facb6d8c8d45
+upstream_blob: 8d2977f42bb34ec4625c85be281cb1d31566ed8e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -147,7 +147,7 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `HERMES_NOUS_TIMEOUT_SECONDS` | Nous の認証情報・トークンのやり取りの HTTP の制限時間 |
 | `HERMES_DUMP_REQUESTS` | API 要求の中身をログファイルに書き出します（`true` / `false`） |
 | `HERMES_PREFILL_MESSAGES_FILE` | API 呼び出し時に差し込む、その場限りの先出しメッセージの JSON ファイルのパス |
-| `HERMES_TIMEZONE` | IANA のタイムゾーンの上書き（たとえば `America/New_York`） |
+| `HERMES_TIMEZONE` | IANA のタイムゾーンの上書き（たとえば `America/New_York`）。Linux と macOS では `execute_code` の子プロセスにも `TZ` として渡されます。Windows の子プロセスは OS のタイムゾーンのままです。Windows の C ランタイムは POSIX 形式の `TZ` 文字列しか解釈できず、IANA 形式の名前を渡すと誤った時差として読み取ってしまうためです |
 
 ## ツールの API {#tool-apis}
 
@@ -185,7 +185,7 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `GROQ_BASE_URL` | Groq の OpenAI 互換の音声認識のエンドポイントを上書きします |
 | `STT_OPENAI_MODEL` | OpenAI の音声認識モデルを上書きします（既定: `whisper-1`） |
 | `STT_OPENAI_BASE_URL` | OpenAI 互換の音声認識のエンドポイントを上書きします |
-| `GITHUB_TOKEN` | Skills Hub 向けの GitHub のトークン（API の上限が上がり、スキルを公開できます） |
+| `GITHUB_TOKEN` | Skills Hub 向けの GitHub のトークン（API の上限が上がり、スキルを公開できます）。デスクトップアプリの更新確認にも使われます（`GH_TOKEN` も受け付けます） |
 | `HONCHO_API_KEY` | セッションをまたいだ利用者のモデル化（[honcho.dev](https://honcho.dev/)） |
 | `HONCHO_BASE_URL` | 自分で立てた Honcho のベース URL（既定: Honcho のクラウド）。手元の環境に API キーは要りません |
 | `HINDSIGHT_API_KEY` | グラフを意識した永続メモリのための Hindsight の API キー（[hindsight.vectorize.io](https://hindsight.vectorize.io)） |
@@ -850,7 +850,7 @@ Microsoft Teams のプラットフォームのアダプタ（Bot Framework / Azu
 | `HERMES_DISABLE_FILE_STATE_GUARD` | `1` にすると、`patch` / `write_file` の「読んだあとにファイルが変わっています」という防御を切ります。 |
 | `HERMES_BUNDLED_SKILLS` | 起動時に読み込む同梱スキルの並びを上書きします（カンマ区切り）。 |
 | `HERMES_OPTIONAL_SKILLS` | 初回の実行で自動的に入れる、任意のスキルの名前をカンマ区切りで指定します。 |
-| `HERMES_DEBUG_INTERRUPT` | `1` にすると、割り込みと取り消しの詳しい追跡が `agent.log` に出ます。 |
+| `HERMES_DEBUG_INTERRUPT` | `1` か `true` にすると、割り込みと取り消しの詳しい追跡が `agent.log` に出ます。`0`・`false`・`off`（または未設定）なら出力しません。 |
 | `HERMES_DUMP_REQUESTS` | API 要求の中身をログファイルに書き出します（`true` / `false`） |
 | `HERMES_DUMP_REQUEST_STDOUT` | API 要求の中身を、ログファイルではなく標準出力に書き出します。 |
 | `HERMES_OAUTH_TRACE` | `1` にすると、OAuth のトークンの交換と更新の試みがログに出ます。伏せ字にした時間の情報も含みます。 |

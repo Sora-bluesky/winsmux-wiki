@@ -2,7 +2,7 @@
 title: "画像生成"
 description: "FAL.ai 経由で画像を生成します。FLUX 2、GPT Image（1.5 と 2）、Nano Banana Pro、Ideogram、Recraft V4 Pro、Krea 2 など 11 モデルに対応し、`hermes tools` で選べます。"
 upstream_path: user-guide/features/image-generation.md
-upstream_blob: c5a753eb425119e7db3192c8996629643dfad903
+upstream_blob: f184308054d4a63638aa27080ea26ccb00d1e00c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/image-generation
 ---
@@ -33,6 +33,8 @@ Hermes Agent は FAL.ai を通して、文章のプロンプトから画像を�
 
 :::tip Nous のサブスク利用者へ
 有料の [Nous Portal](https://portal.nousresearch.com) サブスクリプションを使っている場合は、FAL の API キーがなくても **[Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/)** 経由で画像生成が使えます。選んだモデルはどちらの経路でも共通で保たれます。新しく入れる場合は `hermes setup --portal` でログインすれば、ゲートウェイの道具をまとめて有効にできます。すでに入れてある場合は `hermes tools` で画像生成の接続先として **Nous Subscription** を選んでください。
+
+管理型の行は **Nous Subscription** の 1 つだけです。この行のモデル選択には、サブスクリプションが動かしているすべてのゲートウェイのモデルが並びます。上に挙げた FAL のモデル一覧、Krea 2 のネイティブ版（`krea-2-medium`、`krea-2-large`、`krea-2-medium-turbo`）、そして Nous Portal の画像モデルです。同じモデルが重複して出ることはなく、選んだモデルによってどのゲートウェイが処理するかが決まります。無料の道具プールのアカウントでは FAL のモデルだけが見えます。Krea と Portal のモデルは有料のサブスクリプション向けです。
 
 管理型のゲートウェイが特定のモデルで `HTTP 4xx` を返すときは、そのモデルがまだポータル側で中継されていないということです。その場合はエージェントがそう伝えたうえで、直す手順も示します（`hermes tools` で FAL.ai に切り替えて自分の `FAL_KEY` で直接つなぐか、別のモデルを選ぶ）。
 :::

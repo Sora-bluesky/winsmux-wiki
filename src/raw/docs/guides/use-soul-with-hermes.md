@@ -2,7 +2,7 @@
 title: "Hermes で SOUL.md を使う"
 description: "SOUL.md で Hermes Agent の既定の話し方を形づくる方法と、そこに何を書くべきか、AGENTS.md や /personality との違い"
 upstream_path: guides/use-soul-with-hermes.md
-upstream_blob: 81a3680b0d6f0c6d531824646c80f610723f5889
+upstream_blob: 5d3d3b7698380aed9a5a4c008f782946b1ed619d
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/use-soul-with-hermes
 ---
@@ -69,6 +69,8 @@ $HERMES_HOME/SOUL.md
 ## Hermes はこれをどう使うか {#how-hermes-uses-it}
 
 セッションを開始すると、Hermes は `HERMES_HOME` から `SOUL.md` を読み込み、プロンプトインジェクションのパターンが無いか調べ、必要なら切り詰めたうえで、**エージェントの人格**（システムプロンプトの 1 番目の枠）として使います。つまり SOUL.md は、組み込みの既定の人格の文面をそっくり置き換えます。
+
+`SOUL.md` は自分のファイルなので（エージェントがここへ書き込むには、いつでも承認が要ります）、プロンプトインジェクションの検査に当たっても、プロジェクトの `AGENTS.md` のように**止められることはありません**。ファイルはそのまま読み込まれ、Hermes は当たったパターンの名前を添えた警告を記録し、`/context` にはそのファイルが `⚠ … review the file` と印を付けて並びます。攻撃の言い回しを引用した security の手引き（「これまでの指示を無視しろと書いてある文章」など）を書いていても、人格はそのまま保たれます。
 
 SOUL.md が無い、空である、あるいは読み込めない場合、Hermes は組み込みの既定の人格に戻ります。
 
@@ -253,7 +255,7 @@ vim ~/.hermes/SOUL.md
 - 優先度の高い指示に上書きされている
 - ファイルの中で指示どうしが食い違っている
 - ファイルが長すぎて切り詰められた
-- 一部の文がプロンプトインジェクションの内容に似ており、検査によって遮断・変更された
+- 一部の文がプロンプトインジェクションの内容に似ている — SOUL.md 自体はそのまま読み込まれますが、`/context` に `⚠ … review the file` の行が出ていないか、記録に当たったパターンが残っていないかを確かめてください
 
 ### SOUL.md がプロジェクト寄りになりすぎた {#my-soulmd-became-too-project-specific}
 

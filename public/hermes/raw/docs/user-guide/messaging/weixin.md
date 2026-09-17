@@ -2,7 +2,7 @@
 title: "Weixin（微信）"
 description: "iLink Bot API を使って Hermes Agent を個人の WeChat アカウントにつなぐ"
 upstream_path: user-guide/messaging/weixin.md
-upstream_blob: b38ee4a472da9e589ea45e357917dd1b8d093c37
+upstream_blob: 3b7600d73e4ce5f5e85ffc9a9ee7da2808242f31
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/weixin
 ---
@@ -325,6 +325,7 @@ API エラーが起きたとき、アダプターは単純な再試行を行い�
 | `Weixin startup failed: WEIXIN_ACCOUNT_ID is required` | `.env` に `WEIXIN_ACCOUNT_ID` を設定するか、`hermes gateway setup` を実行します |
 | `Another local Hermes gateway is already using this Weixin token` | 先に別のゲートウェイを止めてください。1 つのトークンにつきポーリングは 1 つだけです |
 | セッション切れ（`errcode=-14`） | ログインのセッションが切れています。`hermes gateway setup` をもう一度実行して、新しい QR コードを読み取ってください |
+| こちらから送るとき（cron や通知）に `ret=-2 errmsg=prepare failed` や `unknown error` で失敗する | 相手の `context_token` が古くなっています（その相手から最近メッセージが届いていない状態）。アダプターはこれを送信制限ではなくセッション切れとみなし、トークンなしで 1 度だけ送り直すので、メッセージはちゃんと届きます。送信制限の待機と冷却に入るのは、それ以外の `-2` の応答だけです |
 | 設定中に QR コードの期限が切れた | QR コードは最大 3 回まで自動で更新されます。それでも切れ続ける場合はネットワーク接続を確認してください |
 | ボットが DM に反応しない | `WEIXIN_DM_POLICY` を確認します。`allowlist` なら、送信者が `WEIXIN_ALLOWED_USERS` に入っている必要があります |
 | ボットがグループのメッセージを無視する | グループの方針は既定で `disabled` です。`WEIXIN_GROUP_POLICY=open` か `allowlist` にします。ただし QR ログインの iLink ボット人格（`...@im.bot`）は、そもそも普通の WeChat グループのメッセージを受け取れないのが普通です。ゲートウェイのログにグループのメッセージの生イベントがまったく出ていない場合、制約は iLink 側にあり、Hermes 側の問題ではありません。 |

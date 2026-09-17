@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: ddd8e0bf0cca7e61288f7bf5c8672dfb6e42e221
+upstream_blob: c6803adacf7fec2641d7c261c8a15f7ec5a17812
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -61,7 +61,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/refine [focus]` | ターン後の自動実行を待たず、記憶とスキルの自己改善レビューを**今すぐ**走らせます。focus のテキストを付けるとレビューの方向を指定できます（例: `/refine save the deploy workflow as a skill`）。会話のスナップショットに対してバックグラウンドのフォークで動くので、動いているセッションとプロンプトキャッシュには手を付けません。終わったら結果が報告されます。 |
 | `/review [instructions]` | 独立した、完全な権限を持つレビュー用サブエージェントを立ち上げ、直前まで話していた成果物をレビューさせます。PR でも、コードでも、ドキュメントでも、直近 10 件のチャットで触れたものなら何でも対象になります。サブエージェントはバックグラウンドで調べ（PR を開き、差分を読み、コードを動かし）、レビュー全文はバックグラウンドサブエージェントの完了通知としてこのセッションに戻ってくるので、主エージェントがそれを踏まえて動けます。レビュー専用のモデルを固定したいときは config.yaml の `auxiliary.review` を設定します（既定はメインのモデルです）。[サブエージェントへの委任](/hermes/docs/user-guide/features/delegation/#the-review-command) も見てください。 |
 | `/moa <prompt>` | プロンプトを 1 つ、既定の [Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/) プリセットで実行してから、今のモデルに戻します。単発なので、セッションのモデルは変わりません。 |
-| `/resume [name]` | 名前を付けて保存したセッションを再開します |
+| `/resume [name]` | 名前を付けて保存したセッションを再開します。従来型の CLI では、ターンの実行中はこのコマンド（および `/sessions <id>`）は断られます。CLI は複数のセッションで 1 つのエージェントを共有しているため、ターンの途中で切り替えると、実行中のターンの残りが別のセッションの側に記録されてしまうからです。 |
 | `/sessions`（TUI での別名: `/switch`） | 従来の CLI では、過去のセッションを対話的なピッカーで選んで再開します。TUI では、今開いている TUI セッションのライブ切り替え画面を開きます。TUI で `/sessions new` を使うと、その場でもう 1 つライブセッションを始められます。 |
 | `/egress [status]` | Docker の egress プロキシの状態（有効かどうか、設定済みかどうか、動いているかどうか、認証情報の取得元、トークンの対応付け、まだカバーできていないプロバイダ、次にやるべき対処）を表示します。CLI、TUI、デスクトップのチャット、メッセージングゲートウェイのどれでも使えます。 |
 | `/redraw` | 画面全体を描き直します（tmux のリサイズ後の表示のずれや、マウス選択の残骸などから回復できます） |
@@ -70,9 +70,9 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/agents`（別名: `/tasks`） | 今のセッションで動いているエージェントとタスクを表示します。 |
 | `/bg <prompt>` | プロンプトを別のバックグラウンドセッションで実行します。エージェントが独立して処理するので、今のセッションは他の作業に使えます。タスクが終わると結果がパネルで出ます。[CLI のバックグラウンドセッション](/hermes/docs/user-guide/cli/#background-sessions) も見てください。 |
 | `/btw <question>` | 進行中の会話を止めずに、**今の会話について**ちょっとした質問をします。読み取り専用の記録のスナップショットに対して補助の LLM を 1 回呼んで答えるので、動いているセッションの履歴とプロンプトキャッシュには触れず、今のターンもそのまま続きます。まっさらな文脈で別の作業をさせたいときは `/bg` を使ってください。 |
-| `/branch [name]`（別名: `/fork`） | 今のセッションを分岐させます（別の道を試せます） |
+| `/branch [name]`（別名: `/fork`） | 今のセッションを分岐させます（別の道を試せます）。従来型の CLI では `/handoff` と同じくターンの途中では断られます。いま返ってきている応答が終わるのを待ってから、もう一度実行してください。 |
 | `/worktree [new [name]\|list]` | **CLI 専用。** セッションの途中で、隔離された git の worktree を確認したり作ったりします（Copilot CLI の `/worktree new` に着想を得ています）。引数なしの `/worktree` は今の worktree を表示し、`/worktree list` はリポジトリの worktree を並べ、`/worktree new [name]` は `.worktrees/` の下に worktree を作って（取得したてのリモートの先端から分岐し、`worktree_sync` の設定に従います）、セッションのターミナルとファイル系のツールをそこへ向け直します。名前を付けたものはその名前を使い（ブランチは `hermes/<name>`）、付けなかったものはランダムな `hermes-<id>` になります。終了時、push していないコミットがある場合だけ worktree は残ります。`hermes -w` と同じライフサイクルです。[Git の worktree](/hermes/docs/user-guide/git-worktrees/) も見てください。 |
-| `/handoff <platform>` | **CLI 専用。** 今のセッションをメッセージングプラットフォーム（Telegram、Discord、Slack、WhatsApp、Signal、Matrix）へ引き継ぎます。ゲートウェイがすぐに受け取り、スレッドに対応しているプラットフォームでは新しいスレッドを作り（Telegram のトピック、Discord のテキストチャンネルのスレッド、Slack のメッセージに紐づくスレッド）、引き継ぎ先を CLI の session_id に結び直して、役割込みの記録をまるごと再生します。さらに合成のユーザーターンを 1 つ差し込むので、エージェントが新しい場所で動いていることを確認できます。成功すると CLI は `/resume` のヒントを出してきれいに終了します。ローカルではいつでも `/resume <title>` で再開できます。ターンの途中では断られます。ゲートウェイが動いていることと、引き継ぎ先のプラットフォームにホームチャンネルが設定されていること（引き継ぎ先のチャットで `/sethome` を実行）が必要です。[プラットフォームをまたぐ引き継ぎ](/hermes/docs/user-guide/sessions/#cross-platform-handoff) も見てください。 |
+| `/handoff <platform>` | **CLI 専用。** 今のセッションをメッセージングプラットフォーム（Telegram、Discord、Slack、WhatsApp、Signal、Matrix）へ引き継ぎます。ゲートウェイがすぐに受け取り、スレッドに対応しているプラットフォームでは新しいスレッドを作り（Telegram のトピック、Discord のテキストチャンネルのスレッド、Slack と Matrix のメッセージに紐づくスレッド）、引き継ぎ先を CLI の session_id に結び直して、役割込みの記録をまるごと再生します。さらに合成のユーザーターンを 1 つ差し込むので、エージェントが新しい場所で動いていることを確認できます。成功すると CLI は `/resume` のヒントを出してきれいに終了します。ローカルではいつでも `/resume <title>` で再開できます。ターンの途中では断られます。ゲートウェイが動いていることと、引き継ぎ先のプラットフォームにホームチャンネルが設定されていること（引き継ぎ先のチャットで `/sethome` を実行）が必要です。[プラットフォームをまたぐ引き継ぎ](/hermes/docs/user-guide/sessions/#cross-platform-handoff) も見てください。 |
 | `/journey [list\|delete <id>\|edit <id>]`（別名: `/learning`、`/memory-graph`） | 覚えたスキルと記憶をたどる学習の道のりのタイムラインを開きます。従来の CLI、TUI のオーバーレイ、デスクトップアプリ（Star Map パネル）で使えます。メッセージングプラットフォームでは使えません。[学習の道のり](/hermes/docs/user-guide/features/memory/#learning-journey-journey) も見てください。 |
 
 ### 設定 {#configuration}

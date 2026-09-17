@@ -2,7 +2,7 @@
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: 6dccf68dcfc7745025c6d55315a951556b8ffc9b
+upstream_blob: 78f34343f0fb66fe5c1243b0cb2a992b45984674
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -226,6 +226,7 @@ CREATE INDEX IF NOT EXISTS idx_messages_session_id ON messages(session_id, id);
 - `reasoning_details`、`codex_reasoning_items`、`codex_message_items` も JSON の文字列で保存されます
 - デスクトップの履歴の復元では、REST と JSON-RPC（`session.resume`、`session.activate`、`session.history`）のどちらの表現でも、アシスタント側の付随データを残します。推論やツール呼び出しを含む行も同じです。REST は SQLite の JSON 文字列をそのまま返すことがあり、RPC は復号した項目を返しますが、デスクトップはどちらも受け付けます。Responses の最終的な返答が `codex_message_items` にしか入っておらず、`content` が空のこともあります。それでも正規の content が優先され、分析や注釈の項目が返答の本文へ格上げされることはありません。
 - `reasoning` には、生の推論テキストを出すプロバイダの場合にその本文が入ります
+- 推論だけで正常に終わった応答（`content` が空、`finish_reason=stop`、推論あり）には推論のテキストがそのまま返答として使われますが、アシスタントの行にその本文が `content` として書かれることはありません。`content` は空のままで、本文は `reasoning` や `reasoning_content` に入り、`api_content` が同じ文字列を持つので、次のリクエストでもバイト単位で同じ返答を再生できます。そのため履歴の画面では、返答ではなく推論として表示されます。
 - `api_content` はバイト単位で忠実さを保つための控えです。このメッセージについて実際に API へ送った内容の文字列が `content` と食い違うとき（一時的なメモリやプラグインの差し込み、persist による上書きなど）に、送ったとおりの文字列を保持します。プロンプトキャッシュを崩さずに再生できるよう通信時のバイト列を残すもので、例外は単独のサロゲートだけです。これは sqlite3 がバインドできず、会話ループが送信内容から常に取り除いています。`NULL` なら `content` をそのまま送ったという意味です。
 - タイムスタンプは Unix エポック秒の浮動小数点数です（`time.time()`）
 

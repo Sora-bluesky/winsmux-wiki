@@ -2,7 +2,7 @@
 title: "同梱のプラグイン"
 description: "Hermes Agent に最初から入っていて、節目ごとのフックで自動的に動くプラグイン群 — disk-cleanup とその仲間たち"
 upstream_path: user-guide/features/built-in-plugins.md
-upstream_blob: 7f7a24475e3d1bb3874a4d4267bcb89edd3b976b
+upstream_blob: 25372ac93affdef65bae85bf591107286a5813a1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins
 ---
@@ -113,7 +113,7 @@ hermes plugins disable disk-cleanup
 | `tracked.json.bak` | 上のファイルを安全に書き換えるための控え |
 | `cleanup.log` | 記録・見送り・却下・削除のすべてを追記していく監査の記録 |
 
-**安全のために** — 片づけが手をつけるのは `HERMES_HOME` か `/tmp/hermes-*` の下だけです。Windows のマウント先（`/mnt/c/...`）は受け付けません。よく知られた最上位の状態ディレクトリ（`logs/`、`memories/`、`sessions/`、`cron/`、`cache/`、`skills/`、`plugins/`、そして `disk-cleanup/` 自身）は、たとえ空でも消しません。入れたばかりの環境が最初のセッションの終わりに中身をさらわれることはありません。
+**安全のために** — 片づけが手をつけるのは `HERMES_HOME` か `/tmp/hermes-*` の下だけです。Windows のマウント先（`/mnt/c/...`）は受け付けません。よく知られた最上位の状態ディレクトリ（`logs/`、`memories/`、`sessions/`、`cron/`、`cache/`、`skills/`、`plugins/`、そして `disk-cleanup/` 自身）は、たとえ空でも消しません。入れたばかりの環境が最初のセッションの終わりに中身をさらわれることはありません。利用者のプロジェクトの木（`workspace/`、`projects/`、`plans/`、`home/`）は、そもそも記録も一掃もまったく行いません。プロジェクトの中にある `test_*.py` や `tmp_*` というファイルは、一時的な残骸ではなくソースコードだからです。
 
 **有効にする:** `hermes plugins enable disk-cleanup`（`hermes plugins` の画面でチェックを入れても構いません）。
 

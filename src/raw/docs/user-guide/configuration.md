@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダ、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: faf68cab5cef6f6480eeb95f23406ace47ada96d
+upstream_blob: 1a25dc3129b98217513d3a691359dd9607b2c926
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -50,7 +50,7 @@ hermes config set OPENROUTER_API_KEY sk-or-...  # Saves to .env
 ```
 
 :::tip
-`hermes config set` コマンドは、値を書き込むファイルを自動で振り分けます。`UPPER_SNAKE` 形式の名前（`OPENROUTER_API_KEY`、`DISCORD_HOME_CHANNEL`、`TELEGRAM_GROUP_ALLOWED_USERS`、`HERMES_TIMEZONE` など）はすべて環境変数として `.env` に保存され、`config.yaml` には書かれません。ドットでつないだ設定は `config.yaml` へ入ります。それ以外の `UPPER_SNAKE` 形式の名前もそのまま `.env` に保存されます（プラグインやスキルのために、プロセスの環境変数として渡されます）。ただし、環境変数の書き込みで拒否リストに載っている名前（`HERMES_YOLO_MODE`、`PATH` など）は受け付けません。既知のセクションの下でパスを打ち間違えた場合（`gateway.discord.foo`）は、何も書き込む前に「もしかして」の候補を添えて拒否されます。それでも書き込みたいときは `--force` を付けてください。
+`hermes config set` コマンドは、値を書き込むファイルを自動で振り分けます。`UPPER_SNAKE` 形式の名前（`OPENROUTER_API_KEY`、`DISCORD_HOME_CHANNEL`、`TELEGRAM_GROUP_ALLOWED_USERS`、`HERMES_TIMEZONE` など）はすべて環境変数として `.env` に保存され、`config.yaml` には書かれません。ドットでつないだ設定は `config.yaml` へ入ります。それ以外の `UPPER_SNAKE` 形式の名前もそのまま `.env` に保存されます（プラグインやスキルのために、プロセスの環境変数として渡されます）。ただし、環境変数の書き込みで拒否リストに載っている名前（`HERMES_YOLO_MODE`、`PATH` など）は受け付けません。既知のセクションの下でパスを打ち間違えた場合（`gateway.discord.foo`）は、何も書き込む前に「もしかして」の候補を添えて拒否されます。それでも書き込みたいときは `--force` を付けてください。そうしたパスに `hermes config get` を実行すると、あなたのファイルにある値を表示しつつ、Hermes はそれを読まないかもしれない、という断り書きを標準エラーへ一緒に出します。残ったままのキーが、生きている設定として黙って通ってしまうことはありません。
 :::
 
 ## 設定の優先順位 {#configuration-precedence}
@@ -125,7 +125,10 @@ database:
 `journal_mode: delete` を設定しても使用中のまま戻されません（接続が開いた状態で戻すと壊れることがあるためです）。`hermes doctor` は
 `<db> is in WAL mode despite database.journal_mode=delete` と警告し続けます。解消するには、そのプロファイルの
 Hermes のプロセスをすべて止め、ファイルに対して一度だけオフラインで
-`PRAGMA journal_mode=DELETE` を実行してください。
+`PRAGMA journal_mode=DELETE` を実行してください。この警告の下では、いまそのデータベースを
+握っているプロセスも示されるので（`<db> is held by PID <n> (<command>)`）、何を止めればよいかが
+分かります。握っているプロセスの調べが部分的だったり行えなかったりするときは、問題なしと
+告げる代わりに `cannot prove the database is quiet` と出します。
 
 ## 環境変数の展開 {#environment-variable-substitution}
 
@@ -1387,6 +1390,8 @@ Hermes のモデルの枠は — 補助の作業も、圧縮も、フォール�
 
 これは全体に効く `agent.reasoning_effort` の、作業ごとの相棒です。主役のモデルが高価な推論モデルのとき、主役のチャットのふるまいを変えずに、圧縮を `low` で、画像を `none` で走らせて脇の作業の待ち時間と費用を削れます。これは `vision`・`compression`・`title_generation`・`curator` のような補助クライアントの作業に、3 つの補助の伝送方式（chat completions、Codex Responses、Anthropic Messages）すべてで効きます。同じ作業に明示的な `extra_body.reasoning` があれば、この省略記法より優先されます。
 
+エンドポイントが推論の項目そのものを拒む場合（OpenAI 互換の中継の向こうにいるチャット専用のモデルが `400 Unrecognized request argument supplied: reasoning_effort` と返すような場合）、その補助の呼び出しは、推論に関する項目をすべて外して 1 回だけやり直されます。こうして、その作業（たとえばセッションのタイトル）は、エンドポイントの既定のふるまいのままでもちゃんと終わります。
+
 **バックグラウンドのレビューは別です。** 同じモデルでのレビューの分岐は、常に親の推論の深さを引き継ぎます。`auxiliary.background_review.reasoning_effort` はその経路では無視されます。親のプロバイダ／モデルを明示的に選んでいるときも同じです。これは、プロンプトのキャッシュを揃えるために、推論の設定・システムプロンプト・会話の丸ごとの写し・ツールの定義をバイト単位で同一に保つためです。同じモデルでのレビューに、深さを独立に切り替えるスイッチはありません。[バックグラウンドのレビューの推論](/hermes/docs/user-guide/features/memory/#same-model-review-reasoning) をご覧ください。レビューを別のプロバイダ／モデルへ振り分けた場合は、`reasoning_effort` がその振り分け先の分岐に適用されます（未設定なら振り分け先のプロバイダの既定値）。このキーを設定しているのにレビューがメインのモデルで動いたときは、Hermes が一度だけ警告を表示します。
 
 **MoA も別の設定を使います。** Mixture-of-Agents の推論の深さは、`moa_reference`／`moa_aggregator` の補助のブロックではなく、MoA のプリセットの中で **枠ごと** に設定します（`moa.presets.<name>.reference_models[].reasoning_effort` / `aggregator.reasoning_effort`）。[Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/) をご覧ください。
@@ -1789,7 +1794,7 @@ agent:
 3. 全体の `agent.reasoning_effort`
 4. プロバイダの既定
 
-この上書きは、どこでも自動で効きます。CLI の起動、メッセージングのゲートウェイ、デスクトップ／TUI、cron のジョブ、セッションの途中での `/model` の切り替え、フォールバックのモデルの発動、どれでも同じです。
+この上書きは、どこでも自動で効きます。CLI の起動、メッセージングのゲートウェイ、デスクトップ／TUI、cron のジョブ、セッションの途中での `/model` の切り替え（最初のメッセージより前に切り替えた場合も含みます）、セッションの再開（`--resume`、`/resume`）、`/new`、フォールバックのモデルの発動、どれでも同じです。
 
 ## fast モード {#fast-mode}
 
@@ -2589,6 +2594,8 @@ timezone: "America/New_York"   # IANA timezone (default: "" = server-local time)
 対応する値: IANA のタイムゾーンの識別子なら何でも（たとえば `America/New_York`、`Europe/London`、`Asia/Kolkata`、`UTC`）。サーバーのローカルの時刻にするには、空にするか省いてください。
 
 `hermes doctor`（と起動時の設定チェック）は、実行時に読み込めない値を報告します。これがないと、`Asia/Tokio` のような打ち間違いで、エージェントの時計とすべての cron の予定が黙ってサーバーのローカル時刻になってしまいます。`HERMES_TIMEZONE` を設定すると、このキーより優先されます。
+
+エージェントの時計、cron の予定、時刻を扱うツールは、どの OS でもこのゾーンに従います。`execute_code` で走らせたコードも、Linux と macOS では `TZ` としてこれを引き継ぎます。Windows では、その子プロセスは代わりに OS で設定されたゾーンのままになります（Windows の C ランタイムは POSIX 形式の `TZ` の文字列しか解釈せず、そこに IANA の名前を置くと UTC からのずれが間違って出るためです）。子のスクリプトにこのゾーンでのローカル時刻を出させたいときは、Windows 側のゾーンそのものを設定してください。
 
 ## Discord {#discord}
 

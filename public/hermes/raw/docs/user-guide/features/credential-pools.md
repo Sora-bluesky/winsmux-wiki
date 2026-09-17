@@ -2,7 +2,7 @@
 title: "認証情報プール"
 description: "プロバイダごとに複数の API キーや OAuth トークンをまとめておき、自動で切り替えてレート制限から復帰します。"
 upstream_path: user-guide/features/credential-pools.md
-upstream_blob: f44a42572f7d217398a6f631af6c8cebc0c2d2d2
+upstream_blob: f8999acc0b01733cdba72d80dc57f7d34b41d62a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/credential-pools
 ---
@@ -176,6 +176,11 @@ credential_pool_strategies:
 
 `has_retried_429` のフラグは API 呼び出しが成功するたびに戻るので、一時的な 429 が 1 回出ただけで切り替えが起きることはありません。
 
+**Anthropic の 429 はモデルごとです。** Anthropic はレート制限をモデル単位でかけるため、ある Claude モデルで
+一般的な 429 が返っても、その認証情報が待機に入るのは *そのモデルだけ* です。同じキーはほかの Claude モデルに
+これまでどおり使われ、`ANTHROPIC_API_KEY` や借りてきた Claude Code のトークンも、同じモデル単位の待機時間に
+従います。請求まわり（`402`、利用上限）と認証（`401`）の失敗は、いままでどおり認証情報そのものを外します。
+
 ## 独自エンドポイントのプール {#custom-endpoint-pools}
 
 OpenAI 互換の独自エンドポイント（Together.ai、RunPod、手元のサーバーなど）も、それぞれ独自のプールを持ちます。キーになるのは config.yaml の `providers:` 辞書に書いたエンドポイント名です（旧来の `custom_providers` リストも自動で移行されます）。
@@ -253,7 +258,7 @@ credential_pool_strategies:
 
 認証情報プールは、プロバイダを解決する層に組み込まれています。
 
-1. **`agent/credential_pool.py`** — プールの管理。保存、選択、切り替え、待機時間。**`agent/credential_pool_admin.py`** が、ロックを取った上での対象の特定、解除、追加、削除、優先度の変更を受け持ちます
+1. **`agent/credential_pool.py`** — プールの管理。保存、選択、切り替え、待機時間。**`agent/credential_pool_admin.py`** が、ロックを取った上での対象の特定、解除、追加、削除、優先度の変更を受け持ちます。**`agent/credential_pool_model_cooldowns.py`** が、Anthropic の 429 に対するモデルごとの待機時間を受け持ちます
 2. **`hermes_cli/auth_commands.py`** — CLI のコマンドと対話式ウィザード
 3. **`hermes_cli/runtime_provider.py`** — プールを踏まえた認証情報の解決
 4. **`agent/turn_api_error.py`** — エラーからの復帰。429 / 402 / 401 → プール内での切り替え → フォールバック

@@ -2,7 +2,7 @@
 title: "デスクトッププラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンド領域までを、import 1 行だけ、ビルドなしで扱えます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 3cf661d3298e7f0dbf11d808387e7c937a524e64
+upstream_blob: 099c0bf75a67bb731c5e46eaaa763f5ffa79fd58
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -128,6 +128,8 @@ interface PluginContext {
   rest: <T>(path: string, opts?: PluginRestOptions) => Promise<T>
   /** Live WebSocket to this plugin's own namespace. Returns a disposer. */
   socket: (path: string, onMessage: (data: unknown) => void) => () => void
+  /** Gateway event stream by type (`'*'` = all). Tracked: removed on unload/reload/disable. */
+  onEvent: (type: string, listener: (event: GatewayEvent) => void) => () => void
   /** The curated OS door: native notification, open-external, reveal-in-file-manager, clipboard. */
   os: PluginOs
   /** Plugin-scoped JSON persistence (keys live under `hermes.plugin.<id>.`). */
@@ -391,7 +393,9 @@ host.openWorkspace(id, { render, title?, minWidth?, onClose? })
                                            //   workspace zone and reveal it; returns a disposer
 host.paneVisibility(paneId)                // ReadableAtom<boolean> — is a contributed pane
                                            //   actually on screen (its zone's active tab)?
-host.onEvent(type, fn)                     // gateway event stream ('*' = all); returns disposer
+host.onEvent(type, fn)                     // gateway event stream ('*' = all); returns disposer.
+                                           //   Calls made during register() are retired with the
+                                           //   plugin; elsewhere prefer ctx.onEvent (always tracked)
 host.logs(...)                             // tail an app log file
 host.status()                              // one-shot system status snapshot
 host.restartGateway()                      // restart the backend gateway
@@ -504,7 +508,7 @@ ctx.socket('/events', () => {
     └── plugin.js                 # the desktop half: panes, commands, ctx.rest
 ```
 
-`desktop/plugin.js` の側は、ごく普通のディスクプラグインです。約束事も、import できるものも、隣に置いた `plugin_api.py` へ届く `ctx.rest('/…')` も同じです。インストールも、人に渡すのも、消すのも、フォルダ 1 つで済みます。アプリ側の写しは、元の `plugin.js` が変わると更新され（`hermes plugins update` か **Rescan**）、パッケージのフォルダが無くなると消されます。デスクトップ側が**アプリ単位**になるのは、この写しがあるからです。そのパッケージを持つプロファイルがいくつあっても写しは 1 つだけで、利用者が Capabilities のプロファイル選択を切り替えても、現れたり消えたりしません。画面側が自分で `plugins/` を探しに行くことはありません。目印のファイルにはパッケージの名前と出どころ（カタログの付属情報か git のリモート）が記録されていて、Plugins のページにある **Install here** のボタンは、これを使ってエージェント側を別のプロファイルにインストールします。
+`desktop/plugin.js` の側は、ごく普通のディスクプラグインです。約束事も、import できるものも、隣に置いた `plugin_api.py` へ届く `ctx.rest('/…')` も同じです。インストールも、人に渡すのも、消すのも、フォルダ 1 つで済みます。アプリ側の写しは、元の `plugin.js` が変わると更新され（`hermes plugins update` か **Rescan**）、パッケージのフォルダが無くなると消されます。デスクトップ側が**アプリ単位**になるのは、この写しがあるからです。そのパッケージを持つプロファイルがいくつあっても写しは 1 つだけで、利用者が Capabilities のプロファイル選択を切り替えても、現れたり消えたりしません。画面側が自分で `plugins/` を探しに行くことはありません。目印のファイルにはパッケージの名前と出どころ（カタログの付属情報か git のリモート）が記録されていて、Plugins のページにある **Install here** のボタンは、これを使ってエージェント側を別のプロファイルにインストールします。写しは目的の場所の隣にいったん置かれてから、名前を変えて所定の位置に収まります。そのため、写している途中で止まっても（一時的なファイルのロックや、写している最中のクラッシュでも）、中途半端なフォルダが残ることはありません。目印のファイルも `plugin.js` も無い `desktop-plugins/<id>/` が残っていたら、それはそうした壊れ方だと見なして次の **Rescan** で置き換えます。一方、目印のファイルは無くても `plugin.js` がある場合は、手でインストールした単体のプラグインなので、上書きされることはありません。
 
 有効化のスイッチが 2 つあるのはわざとで、どちらも既定は**オフ**です。デスクトップ側は入れただけでは動かず、**Capabilities → Plugins** に並ぶものの、利用者が切り替えるまで無効のままです。これは Python 側が `config.yaml` の `plugins.enabled` で守られているのと揃えたものです（安全の線引きについては後述します）。`~/.hermes/plugins` にパッケージを置いただけでは、どこでも何も動きません。利用者がそう言うまでは動かないのです。バックエンド側が無効なときも、デスクトップ側は静かに縮退します。`ctx.rest` はエラーを返すだけで、落ちることはありません。
 
