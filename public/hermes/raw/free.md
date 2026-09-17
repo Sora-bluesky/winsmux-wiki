@@ -16,10 +16,10 @@ raw: /hermes/raw/free.md
 
 | 経路 | 登録・APIキー | 無料になる範囲 | 利用条件 | 公式の設定手順 | 説明の確認日 |
 |---|---|---|---|---|---|
-| Nous Portal Free | 登録が必要。APIキーは不要 | 無料モデルのモデル利用料 | 標準のレート制限。月次クレジットは0 | [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/) | 2026-09-15 |
-| OpenRouter :free | 登録とAPIキーが必要 | 末尾に:freeが付くモデルのモデル利用料 | 1分あたりと1日あたりの回数制限あり。最新値は公式ページで確認 | [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits) | 2026-09-15 |
-| OpenCode Free | 登録もAPIキーも不要 | 末尾に-freeが付く対象モデルのモデル利用料 | 無料の提供は予告なく出入りする。動作は未検証 | [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) | 2026-09-15 |
-| Google AI Studio（Gemini） | Google AI StudioのAPIキーが必要 | Gemini APIの無料枠 | 無料枠では入力データがGoogleの改善に使われる | [Google Geminiガイド](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/) / [Gemini APIの料金](https://ai.google.dev/gemini-api/docs/pricing) | 2026-09-15 |
+| Nous Portal Free | 登録が必要。APIキーは不要 | 無料モデルのモデル利用料 | 標準のレート制限。月次クレジットは0 | [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/) | 2026-09-18 |
+| OpenRouter :free | 登録とAPIキーが必要 | 末尾に:freeが付くモデルのモデル利用料 | 1分あたりと1日あたりの回数制限あり。最新値は公式ページで確認 | [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits) | 2026-09-18 |
+| OpenCode Free | 登録もAPIキーも不要 | 末尾に-freeが付く対象モデルのモデル利用料 | 無料の提供は予告なく出入りする。動作は未検証 | [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) | 2026-09-18 |
+| Google AI Studio（Gemini） | Google AI StudioのAPIキーが必要 | Gemini APIの無料枠 | 無料枠では入力データがGoogleの改善に使われる | [Google Geminiガイド](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/) / [Gemini APIの料金](https://ai.google.dev/gemini-api/docs/pricing) | 2026-09-18 |
 
 ここで扱う経路は代表例です。GroqやCerebrasなど、カスタムエンドポイントの無料枠は、公式資料の[対応例](https://wiki.winsmux.dev/hermes/docs/integrations/providers/#other-compatible-providers)と[レシピ集](https://wiki.winsmux.dev/hermes/docs/integrations/providers/#cookbook-together-ai-groq-perplexity)で確認してください。
 
@@ -31,7 +31,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-09-17
+最終取得: 2026-09-18
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -52,7 +52,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-09-17
+最終取得: 2026-09-18
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -76,6 +76,7 @@ raw: /hermes/raw/free.md
 | **Free Models Router**<br>`openrouter/free`<br>入力・出力の基本単価0（取得時点） | 200,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Poolside: Laguna S 2.1 (free)**<br>`poolside/laguna-s-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Poolside: Laguna XS 2.1 (free)**<br>`poolside/laguna-xs-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **Qwen: Qwen3.8 27B (free)**<br>`qwen/qwen3.8-27b:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Union Alpha**<br>`stealth/union-alpha`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2098-12-31 |
 | **Thinking Machines: Inkling Small (free)**<br>`thinkingmachines/inkling-small:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Thinking Machines: Inkling (free)**<br>`thinkingmachines/inkling:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
@@ -91,7 +92,7 @@ APIキーもアカウントも要りません。リクエストは匿名で送�
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 
-最終取得: 2026-09-17
+最終取得: 2026-09-18
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|

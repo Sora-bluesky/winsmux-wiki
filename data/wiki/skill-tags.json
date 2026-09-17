@@ -170,6 +170,10 @@
       "automation",
       "ai-agent"
     ],
+    "autonomous-ai-agents-dynamic-workflow": [
+      "ai-agent",
+      "automation"
+    ],
     "autonomous-ai-agents-hermes-agent": [
       "ai-agent",
       "sysops"
@@ -177,6 +181,10 @@
     "autonomous-ai-agents-opencode": [
       "ai-agent",
       "coding"
+    ],
+    "creative-ai-presenter-video": [
+      "image-video",
+      "audio"
     ],
     "creative-architecture-diagram": [
       "design"
@@ -187,6 +195,10 @@
     "creative-ascii-video": [
       "image-video",
       "design"
+    ],
+    "creative-auteur": [
+      "design",
+      "coding"
     ],
     "creative-baoyu-infographic": [
       "design",
@@ -202,15 +214,27 @@
     "creative-design-md": [
       "design"
     ],
+    "creative-dream-loop": [
+      "image-video",
+      "design"
+    ],
     "creative-excalidraw": [
       "design"
     ],
     "creative-humanizer": [
       "writing"
     ],
+    "creative-ip-as-logo": [
+      "design",
+      "image-video"
+    ],
     "creative-manim-video": [
       "image-video",
       "design"
+    ],
+    "creative-mono-color": [
+      "design",
+      "image-video"
     ],
     "creative-p5js": [
       "design",
@@ -229,6 +253,10 @@
     "creative-songwriting-and-ai-music": [
       "audio",
       "writing"
+    ],
+    "creative-system-atlas": [
+      "design",
+      "coding"
     ],
     "creative-touchdesigner-mcp": [
       "image-video",
@@ -308,6 +336,10 @@
     "productivity-google-workspace": [
       "message",
       "document",
+      "task"
+    ],
+    "productivity-live-dashboard": [
+      "automation",
       "task"
     ],
     "productivity-maps": [
@@ -398,6 +430,10 @@
       "coding",
       "task"
     ],
+    "software-development-pr-lens": [
+      "coding",
+      "design"
+    ],
     "software-development-python-debugpy": [
       "coding"
     ],
@@ -416,6 +452,10 @@
     ],
     "software-development-test-driven-development": [
       "coding"
+    ],
+    "web-development-scrollcraft": [
+      "coding",
+      "design"
     ],
     "autonomous-ai-agents-antigravity-cli": [
       "ai-agent",

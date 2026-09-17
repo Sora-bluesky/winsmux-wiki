@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダ、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 1a25dc3129b98217513d3a691359dd9607b2c926
+upstream_blob: 1469ee645dedcc2a233f1f5503c8f9660a1aa2be
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -50,7 +50,7 @@ hermes config set OPENROUTER_API_KEY sk-or-...  # Saves to .env
 ```
 
 :::tip
-`hermes config set` コマンドは、値を書き込むファイルを自動で振り分けます。`UPPER_SNAKE` 形式の名前（`OPENROUTER_API_KEY`、`DISCORD_HOME_CHANNEL`、`TELEGRAM_GROUP_ALLOWED_USERS`、`HERMES_TIMEZONE` など）はすべて環境変数として `.env` に保存され、`config.yaml` には書かれません。ドットでつないだ設定は `config.yaml` へ入ります。それ以外の `UPPER_SNAKE` 形式の名前もそのまま `.env` に保存されます（プラグインやスキルのために、プロセスの環境変数として渡されます）。ただし、環境変数の書き込みで拒否リストに載っている名前（`HERMES_YOLO_MODE`、`PATH` など）は受け付けません。既知のセクションの下でパスを打ち間違えた場合（`gateway.discord.foo`）は、何も書き込む前に「もしかして」の候補を添えて拒否されます。それでも書き込みたいときは `--force` を付けてください。そうしたパスに `hermes config get` を実行すると、あなたのファイルにある値を表示しつつ、Hermes はそれを読まないかもしれない、という断り書きを標準エラーへ一緒に出します。残ったままのキーが、生きている設定として黙って通ってしまうことはありません。
+`hermes config set` コマンドは、値を書き込むファイルを自動で振り分けます。`UPPER_SNAKE` 形式の名前（`OPENROUTER_API_KEY`、`DISCORD_HOME_CHANNEL`、`TELEGRAM_GROUP_ALLOWED_USERS`、`HERMES_TIMEZONE` など）はすべて環境変数として `.env` に保存され、`config.yaml` には書かれません。ドットでつないだ設定は `config.yaml` へ入ります。それ以外の `UPPER_SNAKE` 形式の名前もそのまま `.env` に保存されます（プラグインやスキルのために、プロセスの環境変数として渡されます）。ただし、環境変数の書き込みで拒否リストに載っている名前（`HERMES_YOLO_MODE`、`PATH` など）は受け付けません。既知のキーを誤ったプレフィックスの下に書いた場合（`gateway.discord.foo`。`discord.foo` 自体は既知のキーです）は、何も書き込む前に「もしかして」の候補を添えて拒否されます。それでも書き込みたいときは `--force` を付けてください。既知のセクションの下にあるそれ以外の知らないパス（`agent.max_turnz` のような打ち間違いや、既定値が用意されていない実行時に読まれるキー）は、「もしかして」の断り書きと一緒に書き込まれます。スキーマだけでは、この 2 つを見分けられないからです。そうしたパスに `hermes config get` を実行すると、あなたのファイルにある値を表示しつつ、Hermes はそれを読まないかもしれない、という断り書きを標準エラーへ一緒に出します。残ったままのキーが、生きている設定として黙って通ってしまうことはありません。
 :::
 
 ## 設定の優先順位 {#configuration-precedence}
@@ -1356,6 +1356,12 @@ $ hermes model
 `auxiliary.title_generation.enabled: false` にしてください。手でタイトルを付ける方法は
 `/title` と `hermes sessions rename` で今までどおり使えます。
 
+すぐ決まる派生のタイトル（最初のメッセージの 1 行目）はそのまま使いつつ、それを整えるための
+モデル呼び出しだけをやめたい場合は、`auxiliary.title_generation.model_upgrade_enabled: false` に
+してください。裏で `auto-title` の処理が始まることも、タイトル用のモデルへ自動でリクエストが
+飛ぶこともなくなります。修復用の `hermes sessions retitle-skills` コマンドを明示的に実行した
+ときだけは、これまでどおりモデルを呼びます。`enabled: false` は、引き続き両方の段階を止めます。
+
 ### ストリーミング専用のエンドポイント {#stream-only-endpoints}
 
 OpenAI 互換のエンドポイントの中には、非ストリーミングのチャットのリクエストをはっきり拒むものがあります（たとえば Tencent Copilot は HTTP 400 で `"Non-stream chat request is currently not supported"` を返します）。対話的なチャットはもともとストリーミングしますが、補助の作業（タイトルの生成、圧縮、画像）は非ストリーミングの呼び出しを使うので、毎回失敗してしまいます。Hermes は `copilot.tencent.com` を常にストリーミング専用として扱います。ほかにそういうエンドポイントがあれば、URL の一部を `auxiliary.stream_only_base_urls` に並べてください。
@@ -1407,6 +1413,8 @@ auxiliary:
 `base_url` が設定されているとき、Hermes はプロバイダを無視してそのエンドポイントを直接呼びます（認証には `api_key` か `OPENAI_API_KEY` を使います）。`provider` だけが設定されているときは、そのプロバイダの組み込みの認証とベース URL を使います。
 
 補助の作業に使えるプロバイダ: `auto`、`main`、そして [プロバイダの一覧](/hermes/docs/reference/environment-variables/) にあるもの — `openrouter`、`nous`、`openai-codex`、`copilot`、`copilot-acp`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`opencode-free`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry` — あるいは自分の `providers:` の辞書にある名前付きの独自プロバイダ（たとえば `provider: "beans"`）。
+
+同じしくみで、ローカルの OpenAI 互換サーバーもそれぞれの名前で使えます。`provider: ollama`（`vllm`、`llamacpp`、`llama.cpp` も同様）に `http://127.0.0.1:11434` のような `base_url` と空の `api_key` を組み合わせると、仮の鍵を使って独自のエンドポイントへ繋がります。base_url をホストとポートだけ（`host:port`）で書いた場合は、`/v1` が自動で補われます。
 
 :::tip MiniMax の OAuth
 `minimax-oauth` はブラウザの OAuth でログインします（API キーは要りません）。`hermes model` を実行して **MiniMax (OAuth)** を選び、認証してください。補助の作業には自動で `MiniMax-M2.7-highspeed` が使われます。[MiniMax OAuth の案内](/hermes/docs/guides/minimax-oauth/) をご覧ください。
@@ -1471,6 +1479,7 @@ auxiliary:
   # set e.g. "English" or "Japanese" to pin titles to one language.
   title_generation:
     enabled: true              # set false to disable auto-title generation
+    model_upgrade_enabled: true  # set false to keep the instant derived title, never call a model
     provider: "auto"
     model: ""
     base_url: ""
@@ -1517,7 +1526,7 @@ auxiliary:
 ```
 
 :::tip
-補助の作業にはそれぞれ設定できる `timeout`（秒）があります。既定は、画像 120 秒、承認 30 秒、圧縮 120 秒です。補助の作業に遅いローカルのモデルを使うなら増やしてください。画像には、HTTP での画像のダウンロード用に別の `download_timeout`（既定 30 秒）もあります。回線が遅いときや自前ホストの画像サーバーを使うときは、こちらを増やしてください。
+補助の作業にはそれぞれ設定できる `timeout`（秒）があります。既定は、画像 120 秒、承認 30 秒、圧縮 120 秒、タイトル生成 30 秒、そのほかの作業はすべて 30 秒です。補助の作業に遅いローカルのモデルを使うなら増やしてください。答えの前に思考のかたまりを出す推論モデルは、タイトル 1 つにも 30 秒以上かかるのがふつうです。期限に達したリクエストは `Auxiliary <task>: request to <base_url> timed out after <N>s (raise auxiliary.<task>.timeout …)` として記録され、そのあと Hermes が代わりの経路を順に試します。タイトル生成・圧縮・画像は、待ち時間の枠を 1 回使い切った時点で最初の経路をあきらめます（同じプロバイダーへの再試行はしません）。遅いモデルのせいで待ち時間が何倍にもならないようにするためです。画像には、HTTP での画像のダウンロード用に別の `download_timeout`（既定 30 秒）もあります。回線が遅いときや自前ホストの画像サーバーを使うときは、こちらを増やしてください。
 :::
 
 :::info
@@ -1551,6 +1560,10 @@ auxiliary:
 | `base_url` | （任意）独自の OpenAI 互換エンドポイント |
 
 `fallback_chain` は、どの補助の作業でも使えます — `compression`、`vision`、`approval`、`skills_hub`、`mcp` などです。
+
+### 本体のモデルが画像を埋め込むときの上限（トップレベルの `vision:`） {#native-vision-embed-budgets-top-level-vision}
+
+`auxiliary.vision`（説明役のモデルを選ぶ設定）とは別の話です。*本体* のモデルが画像を扱える場合、`vision_analyze` とブラウザーのスクリーンショットは、実際の画素をツールの結果に埋め込みます。これは以降の番で毎回送り直されます。`vision.embed_target_bytes`（既定は `262144`、64 KiB〜4 MiB に収められます）は 1 回の埋め込みの大きさを決めます。`vision.max_calls_per_image` は、1 つのセッションで同じ画像を何回まで埋め込めるかの上限です（未設定なら、任された下請けのエージェントの中では 3 回、本体のエージェントでは無制限。`0` で無制限）。詳しくは [画像認識 → 埋め込んだ画像はセッションに残ります](/hermes/docs/user-guide/features/vision/#native-embeds-ride-the-session-visionembed_target_bytes-and-visionmax_calls_per_image) をご覧ください。
 
 ### 補助の同時実行数を抑える {#limiting-auxiliary-concurrency}
 
@@ -1997,6 +2010,7 @@ display:
   focus_view: false       # CLI focus view (/focus) — reduced output, display-only
   platforms: {}           # Per-platform display overrides (see below)
   interim_assistant_messages: true  # Gateway: send natural mid-turn assistant updates as separate messages
+  suppress_warning_notifications: false  # Opt-in: hide automatic warning/diagnostic notices (see messaging guide)
   show_commentary: true   # Codex models: deliver commentary-channel progress narration as visible mid-turn updates
   skin: default           # Built-in or custom CLI skin (see user-guide/features/skins)
   personality: ""         # Legacy cosmetic field still surfaced in some summaries

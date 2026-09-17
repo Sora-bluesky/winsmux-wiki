@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-17",
+  "generatedAt": "2026-09-18",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-09-17",
-      "attemptedAt": "2026-09-17",
+      "fetchedAt": "2026-09-18",
+      "attemptedAt": "2026-09-18",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -93,8 +93,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-09-17",
-      "attemptedAt": "2026-09-17",
+      "fetchedAt": "2026-09-18",
+      "attemptedAt": "2026-09-18",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -299,6 +299,16 @@
           "criteriaReason": null
         },
         {
+          "id": "qwen/qwen3.8-27b:free",
+          "name": "Qwen: Qwen3.8 27B (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
           "id": "stealth/union-alpha",
           "name": "Union Alpha",
           "ctx": 262144,
@@ -343,8 +353,8 @@
     },
     "opencode": {
       "ok": true,
-      "fetchedAt": "2026-09-17",
-      "attemptedAt": "2026-09-17",
+      "fetchedAt": "2026-09-18",
+      "attemptedAt": "2026-09-18",
       "errorCode": null,
       "url": "https://opencode.ai/zen/v1/models",
       "models": [

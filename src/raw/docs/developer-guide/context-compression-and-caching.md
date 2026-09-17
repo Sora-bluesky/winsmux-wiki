@@ -2,7 +2,7 @@
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: 1d006bf4b8913c35d41f4bd9dbfed1bdd9725575
+upstream_blob: 6150d5e5227a02fdea3cd658a9ae8d88fb543e7b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -153,6 +153,21 @@ DB から履歴を読み直しても壊れません。またセッション行�
 - 手動の `/compress`（`force=True`） — クールダウンを解除して再試行します。
 - 主経路が止まったあと、同じターンのうちに `fallback_chain` が行う再試行 —
   取り消された主経路自身の停止クールダウンで、これを止めてしまってはいけません（`bypass_cooldown`）。
+  この固定された経路の要約の呼び出しが失敗しても、compress() は決め打ちの
+  代わりの要約をそのまま確定させます（既定は `abort_on_summary_failure: false`）。
+  このときログには「recovered」ではなく「committed a deterministic fallback summary」と出ます。
+- **停止が続いたときは決め打ちの代替へ** — 1 回目の停止では会話の記録をそのまま残し、
+  クールダウンを仕掛けたうえで、それが切れたら LLM の経路にもう一度やらせます。
+  停止の種類の失敗がまだ段に残っている状態（`_consecutive_timeout_failures >= 1`）で
+  その経路が*また*止まった場合、やり直しの段の最後は決め打ちの段になります。
+  要約の LLM を飛ばして（`DETERMINISTIC_SUMMARY_ROUTE` の固定）ワーカーをもう一度動かし、
+  いつものリース・フェンス・ウォーターマークの流れを通して、決め打ちの代わりの要約を確定させます。
+  要約の呼び出しが失敗したときと同じ落とし方で、「圧縮しないまま進む」として同じ静かな詰まりに
+  毎ターン入り直すのをやめるということです（#112420）。
+  `abort_on_summary_failure: true` のときは、これまでどおり中断します（何も捨てません）。
+  圧縮が確定すると圧縮の担当が結び直され、段の回数も戻るので、圧縮の 1 周ごとに
+  LLM の経路には停止 1 回分の猶予が与えられます。ターンをまたぐ間隔や再起動後の間隔は、
+  これまでどおり保存されたクールダウンの行が決めます。
 - **プロバイダーが示したあふれ** — プロバイダー自身がコンテキスト長のエラーでリクエストを拒否した場合、
   復旧の処理はクールダウンを解除しないまま、回数を区切って 1 回だけ無視します
   （`max_compression_attempts`）。ここで先送りするとセッションが行き詰まります。毎ターン

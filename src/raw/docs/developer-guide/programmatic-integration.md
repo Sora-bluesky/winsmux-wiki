@@ -2,7 +2,7 @@
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 1444270e205d47f84e6d02801c3b61365c645998
+upstream_blob: 505cf5accc8cb628d3f9620dae03ce645e2c867c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -50,6 +50,7 @@ session.activate        session.close           session.interrupt
 session.history         session.compress        session.branch
 session.title           session.usage           session.status
 clarify.lock            config.set / config.get commands.catalog
+client.capabilities     gateway.capabilities    ping
 command.resolve         command.dispatch        cli.exec
 reload.mcp              reload.env              process.stop
 delegation.status       subagent.interrupt      subagent.steer
@@ -90,6 +91,8 @@ terminal.resize         clipboard.paste         image.attach
 ```
 
 メソッドと返す値は次のとおりです。`approval` → `{choice}`。`clarify` → `{answer}`（単一の質問）、または `{answers}` / 取り消しなら `{}`（まとめて聞く場合。`clarify.lock` で答えを 1 つ先に確定できます）。`sudo`、`secret`、`vault.code`、`vault.unlock_prompt` → `{value}`。`connection` → `{settled_by, targets}`（`manage_connections` のカードで、対象ごとに結果が 1 つ）。`terminal.read`、`window.read`、`preview.act`、`tour` → `{value}`（JSON のテキスト）。ホストが実装していないメソッドには JSON-RPC のエラー（`-32601`）を返してください。そうすればエージェントはタイムアウトまで待たずにすぐ失敗を受け取れます。
+
+**答えられることを宣言してください（既存の WebSocket 連携にとっては壊れる変更です）。** 接続ごとに 1 回、`gateway.ready` のあとで `client.capabilities` を `{"server_requests": true}` を付けて呼びます。結果には、このバックエンドが送ることのあるリクエストのメソッドが並びます。一度も呼ばない WebSocket のクライアントは、サーバーからクライアントへのリクエストが入る前の古いビルドとみなされ、ゲートウェイはそのクライアント宛てのリクエストをすべてその場で失敗させます（エージェントから見えるのは、エラーで応答されたときと同じ「答えがない」状態です。承認は拒否ではなく取り下げの扱いになります）。締め切りいっぱい待たされることはありません。猶予の経路はありません。この変更の前は `clarify` や `approval`、`sudo` などに答えられていた他社製の WebSocket クライアントでも、`client.capabilities` の呼び出しを 1 つ足さないかぎり、そうしたリクエストは今後すべて断られます。クライアントがつながっていないセッションは影響を受けません。開いたままの質問は `open_requests` に入り、再接続時の再送を待ちます。標準入出力の TUI、デスクトップアプリ、ダッシュボードは、共通の `JsonRpcRequestChannel` を通して宣言しています。
 
 ゲートウェイが質問を取り下げたとき（タイムアウト、中断、別の画面で回答済みなど）は `request.cancel` `{ id, method, reason }` が送られてきます。対応する質問だけを消してください。`session.resume` / `session.activate` の結果と `session.events.since` には、まだ開いているフレームの一覧 `open_requests` が入っているので、再接続したクライアントはそれを表示し直し、そのまま答えることもできます。
 

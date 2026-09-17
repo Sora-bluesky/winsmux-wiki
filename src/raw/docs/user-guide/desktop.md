@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "Hermes のネイティブなデスクトップアプリ。ツール出力のストリーミング、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定をそなえた、Hermes と対話するための洗練された画面です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: e65c2772a1b8d477970d13804257e56fb55cd3be
+upstream_blob: f02f792ba43a3ced3198d45958c026ab7b0b1814
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -185,6 +185,8 @@ desktop:
 
 #### WSLg（WSL2 から Windows の GPU を使う） {#wslg-windows-gpu-from-wsl2}
 
+同じ端末の WSLg で動かす場合、Hermes は `--ozone-platform=wayland` を付けて起動します。XWayland で最大化したウィンドウの位置がずれたり、マウスの当たり判定がずれたりするのを避けるためです（[microsoft/wslg#1015](https://github.com/microsoft/wslg/issues/1015)）。どのプラットフォームを使うかは、Electron がアプリの JavaScript を読み込むより前、プロセスの起動時に決める必要があります。`--ozone-platform=x11` や `desktop.ozone_platform_hint: x11` を明示する方法も引き続き使えます。WSLg では、最小化・最大化・閉じるのボタンをアプリ自身が描画します。
+
 `hermes gui` を WSL2 の中で動かしていて、`/dev/dxg` があり Mesa の `d3d12_dri.so` も入っている場合、ランチャーは Electron 向けに `GALLIUM_DRIVER=d3d12` を設定します。これで描画に、llvmpipe のソフトウェアラスタライザではなく Windows の GPU が使われます。環境に `GALLIUM_DRIVER`・`MESA_LOADER_DRIVER_OVERRIDE`・`LIBGL_ALWAYS_SOFTWARE`・`LIBGL_DRIVERS_PATH` を自分で設定してあるときは触りません（たとえば `GALLIUM_DRIVER=llvmpipe hermes gui` ならソフトウェア描画のままです）。
 
 ### 設定と初回の案内 {#settings-onboarding}
@@ -327,7 +329,13 @@ routines のペイン、入力欄の処理がその場で外れます。再起�
 
 アプリは裏で更新を確認し、準備ができたらワンクリックの更新を案内します。
 
-裏での確認は、GitHub の API にブランチの先頭を尋ねます。匿名の GitHub へのリクエストは**ネットワークのアドレスごと**に 1 時間 60 回までなので、共有の回線（社内の NAT、VPN、プロキシ）ではこの端末がほとんど呼んでいなくても `GitHub API rate limit reached` と出ることがあります。アプリを起動した環境に `GITHUB_TOKEN`（または `GH_TOKEN`）が設定してあれば、そのトークンの 1 時間 5,000 回の枠が使われます。トークンはリクエストのたびに環境から読まれ、保存されることはありません。更新の適用は API ではなく `git` を使うので、この制限の影響を受けません。
+裏での確認は、GitHub の API にブランチの先頭を尋ねます。匿名の GitHub へのリクエストは**ネットワークのアドレスごと**に 1 時間 60 回までなので、共有の回線（社内の NAT、VPN、プロキシ）ではこの端末がほとんど呼んでいなくても `GitHub API rate limit reached` と出ることがあります。代わりに 1 時間 5,000 回の枠を使うため、確認処理は次の順で最初に見つかった認証情報を使います。
+
+1. アプリを起動した環境の `GITHUB_TOKEN`、次に `GH_TOKEN`。リクエストのたびに読み込まれ、保存されることはありません。
+2. [GitHub CLI](https://cli.github.com/) 自身のログイン情報（`gh auth token`）。Dock や Finder、デスクトップのランチャーから起動したアプリは、シェルの変数を持たない最小限の環境を引き継ぐため、この段が助けになります。`gh` は `PATH` と、よくあるインストール先（Homebrew、`/usr/local/bin`、`~/.local/bin`、Windows の GitHub CLI インストーラー）から探します。結果はアプリを再起動するまで保持されるので、`gh` の実行は 1 回のセッションにつき多くても 1 度です。
+3. 匿名のまま。
+
+GitHub に拒否された認証情報（HTTP 401、期限切れか無効化）は `desktop.log` に 1 度だけ記録されます。記録されるのはどこから来た認証情報かだけで、トークンそのものは残りません。そのリクエストは匿名で試し直されます。更新の適用は API ではなく `git` を使うので、この制限の影響を受けません。
 
 ローカルでの更新中は、詳しいビルドの出力が、いま使っているプロファイルの
 `logs/update.log` に流れます。切り離された `--gateway` の更新も含みます。端末には

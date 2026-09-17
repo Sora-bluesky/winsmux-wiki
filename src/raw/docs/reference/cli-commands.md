@@ -2,7 +2,7 @@
 title: "CLI コマンド早見表"
 description: "Hermes のターミナルコマンドとコマンド群についての公式な早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: acd67424ded9cd76caac798283b28cc4c0412a9d
+upstream_blob: 381bf81fd8b1dc6cdc3261224c768c5e402b4338
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -134,7 +134,7 @@ hermes chat [options]
 | `--ignore-user-config` | `~/.hermes/config.yaml` を読まず、組み込みの既定値で動かします。`.env` の認証情報は今までどおり読み込まれます。CI での独立した実行、再現できるバグ報告、第三者との連携に便利です。 |
 | `--ignore-rules` | `AGENTS.md`、`SOUL.md`、`.cursorrules`、永続メモリ、事前読み込みスキルの自動注入を行いません。`--ignore-user-config` と合わせると、完全に切り離した状態で実行できます。 |
 | `--safe-mode` | 切り分け用のモードです。ユーザー設定、ルールやメモリの注入、プラグイン、シェルフック、MCP サーバーといったカスタマイズを**すべて**無効にします（`--ignore-user-config` と `--ignore-rules` を含みます）。問題が自分の環境由来か Hermes 自体かを見分けるために使います。 |
-| `--source <tag>` | 絞り込み用のセッション種別タグです（既定: `cli`）。利用者のセッション一覧に出したくない外部連携では `tool` を使います。 |
+| `--source <tag>` | 絞り込み用のセッション種別タグです（既定: `cli`。一度きりの実行は `oneshot` が既定で、選択画面には出ません）。利用者のセッション一覧に出したくない外部連携では `tool` を使います。`--source` を明示したときは、TUI やデスクトップのセッションから始めた一度きりの実行でも、指定したとおりに記録されます。 |
 | `--max-turns <N>` | 1 ターンあたりのツール呼び出しの上限回数です（既定: 500、または設定の `agent.max_turns`）。 |
 
 例:
@@ -1239,7 +1239,7 @@ hermes config <subcommand>
 | `show` | 今の設定値を表示します。 |
 | `edit` | `config.yaml` をエディタで開きます。 |
 | `get <key> [--json] [--raw]` | ドットでつないだキーで、設定値を 1 つ表示します（例: `hermes config get model.default`）。`--json` は機械で読める形で出します。認証情報らしい値（`api_key`、`*_TOKEN`、`*_SECRET`、`password` など）は伏せ字になります（`sk-o...7890`）。エージェントがこれを、記録が残るセッションから実行するためです。`--raw` を付けると本当の値を表示します（`security.redact_secrets: false` にしても同じです）。既知の区分の下にある、スキーマが定義していない入れ子のキー（`compression.compressor.enabled`）も、ファイルにある値を表示します。加えて、Hermes がそれを読まないかもしれないという注意が標準エラーに出ます。標準出力と終了コード（0）は変わりません。 |
-| `set <key> <value> [--force]` | 設定値を書き込みます。ドットでつないだパスは `config.yaml` へ、`UPPER_SNAKE` の名前（`OPENROUTER_API_KEY`、`DISCORD_HOME_CHANNEL`、`TELEGRAM_GROUP_ALLOWED_USERS`、`HERMES_TIMEZONE` など）はすべて環境変数とみなされ `.env` へ入ります — プラットフォームの設定の流れや `/sethome` が書くのと同じファイルで、実行時に値を読む側もここを見ます。`config set` が `UPPER_SNAKE` のキーを `config.yaml` に書くことは、`--force` を付けてもありません。環境変数の書き込みで禁止されている名前（`HERMES_YOLO_MODE`、`PATH` など）はその場で拒否されます。それ以外の `UPPER_SNAKE` の名前は、そのまま `.env` に保存されます（プラグインやスキル、外部のツールがプロセスの環境から読みます）。既知の区分の下にある知らないパス（`gateway.discord.foo`）は、候補を示して拒否され、何も書かれません。トップレベルにある知らない小文字のキーは、注意を出したうえで書かれます（トップレベルの値はスキル向けに環境へ橋渡しされるためです）。`--force` を付ければ、どちらの場合も書き込めます。 |
+| `set <key> <value> [--force]` | 設定値を書き込みます。ドットでつないだパスは `config.yaml` へ、`UPPER_SNAKE` の名前（`OPENROUTER_API_KEY`、`DISCORD_HOME_CHANNEL`、`TELEGRAM_GROUP_ALLOWED_USERS`、`HERMES_TIMEZONE` など）はすべて環境変数とみなされ `.env` へ入ります — プラットフォームの設定の流れや `/sethome` が書くのと同じファイルで、実行時に値を読む側もここを見ます。`config set` が `UPPER_SNAKE` のキーを `config.yaml` に書くことは、`--force` を付けてもありません。環境変数の書き込みで禁止されている名前（`HERMES_YOLO_MODE`、`PATH` など）はその場で拒否されます。それ以外の `UPPER_SNAKE` の名前は、そのまま `.env` に保存されます（プラグインやスキル、外部のツールがプロセスの環境から読みます）。既知のキーを誤った接頭辞の下に書いた場合（`gateway.discord.foo`。`discord.foo` 自体は既知のキーです）は、候補を示して拒否され、何も書かれません。既知の区分の下にあるそれ以外の知らないパス（`agent.max_turnz` や、実行時に読まれるだけで既定値が用意されていないキー）は、候補を示す注意とともに書かれます。トップレベルにある知らない小文字のキーも、注意を出したうえで書かれます（トップレベルの値はスキル向けに環境へ橋渡しされるためです）。`--force` を付ければ、拒否された誤った接頭辞のパスも書き込めます。 |
 | `unset <key>` | 設定のキーを消し、組み込みの既定値へ戻します。`UPPER_SNAKE` の名前では `.env` の項目を消し、さらに古い `config set` が残したトップレベルの写しが `config.yaml` にあれば、それも落とします（`get` はそうした写しを古いものとして報告します）。 |
 | `path` | 設定ファイルのパスを表示します。 |
 | `env-path` | `.env` ファイルのパスを表示します。 |
@@ -1762,7 +1762,7 @@ Web ダッシュボードを起動します — 設定や API キーの管理、
 | `--insecure` | 無効 | **非推奨で、何もしません。** 以前は、ループバック以外に開いたときの認証を迂回するものでした。2026 年 6 月の強化以降、公開して待ち受ける場合は*必ず*認証の仕組み（パスワードか OAuth）が要ります。手元だけで使うなら `127.0.0.1` で待ち受けてトンネルしてください。 |
 | `--skip-build` | 無効 | Web UI のビルドを飛ばし、すでにある `dist` をそのまま配ります。npm が使えない、対話しない場面（Windows のタスクスケジューラ、CI）で便利です。先に `cd web && npm run build` でビルドしておいてください。 |
 | `--isolated` | 無効 | 名前付きのプロファイル（`worker dashboard`）から起動したとき、端末共通のダッシュボードへ回すのではなく、そのプロファイル専用のサーバーを動かします。 |
-| `--stop` | — | 動いている `hermes dashboard` のプロセスを止めて終了します。 |
+| `--stop` | — | 動いている `hermes dashboard` のプロセスを止めて終了します。SIGTERM を送り、10 秒待ってから SIGKILL を送ります。バックエンドより長く残ってしまった同居のチャット TUI も止めます（そのままだと削除済みの `state.db-wal` を開いたままにして、次回の起動を妨げるためです）。ダッシュボードから起動したメッセージ連携のボットには手を触れません。 |
 | `--status` | — | 動いている `hermes dashboard` のプロセスを一覧して終了します。 |
 
 ### `hermes dashboard register` {#hermes-dashboard-register}

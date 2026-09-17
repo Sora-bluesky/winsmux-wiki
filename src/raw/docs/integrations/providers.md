@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 18d7fdca43fa561c610e5cbf81c1199b7bf2b763
+upstream_blob: 0fc23c8a9292329cc20803f0add9262ca4b7fcc7
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -65,6 +65,8 @@ LLM につなぐ手段が少なくとも 1 つ必要です。`hermes model` を�
 | **カスタムエンドポイント** | `hermes model` → 「Custom endpoint」を選ぶ（`config.yaml` に保存されます） |
 
 OpenCode 系の 3 プロバイダはいずれも、会話ごとに変わる不透明な `x-opencode-session` ヘッダをすべてのリクエストに付けて送ります（全トランスポートのメインのやり取りに加えて、圧縮、タイトル生成、承認の確認、スキルハブの照会、`/btw` の脇道の質問といった補助的な呼び出しにも付きます。やり取りが終わったあとに裏で走るものも含みます。ヘッドレスで動く Kanban の `specify`/`decompose` と、ダッシュボードの見積もり呼び出しでは、タスクごとのキーを使います）。OpenCode はこれを使って 1 つの会話を同じバックエンドに固定し、プロンプトキャッシュを温かいまま保ちます。値は Hermes のセッション ID（または Kanban のタスク ID）から導出したもので、個人情報は含みません。
+
+組み込みの OpenCode 系 3 プロバイダは、それぞれ `opencode.ai` 上の自分の中継先に固定されています（`opencode-zen` と `opencode-free` は `/zen/v1`、`opencode-go` は `/zen/go/v1`）。別の中継先のまま残った `model.base_url` は、選んだプロバイダの中継先に直されます。どの中継先を使うかは選んだモデル（`-m`、`/model`、フォールバックの項目、チャンネルごとの上書き）で決まるので、Zen のモデルから Go にしかないモデルへ切り替えても、リクエストが Zen へ送られることはありません。`providers:` の下に自分で定義したプロバイダの名前がこの系統のスラッグで始まる場合（たとえば `opencode-go-bridge`）、モデルごとの API モードの振り分けと `/v1` の扱いはその系統のものが適用されますが、`base_url` は書いたとおりに使われます。実際に指している中継先に合わせて名前を付けてください。
 
 公式の API キーを使う経路については、[Google Gemini ガイド](/hermes/docs/guides/google-gemini/)を参照してください。
 
@@ -1338,7 +1340,7 @@ providers:
     transport: anthropic_messages  # for Anthropic-compatible proxies
 ```
 
-各エントリが受け付けるのは、`api`（エンドポイントのベース URL。`base_url`/`url` も別名として使えます）、`name`（任意の表示名。既定は辞書のキー）、`key_env` かインラインの `api_key` か `key_cmd`（後述）、`transport`（`chat_completions` / `anthropic_messages` / `codex_responses`）、`default_model`、`models`、`context_length`、`discover_models`、`extra_body`、`extra_headers`、`ssl_ca_cert` / `ssl_verify`、そしてエントリを消さずに隠すための `enabled: false` です。
+各エントリが受け付けるのは、`api`（エンドポイントのベース URL。`base_url`/`url` も別名として使えます）、`name`（任意の表示名。既定は辞書のキー）、`key_env` かインラインの `api_key` か `key_cmd`（後述）、`transport`（`chat_completions` / `anthropic_messages` / `codex_responses`）、`default_model`、`models`、`context_length`、`discover_models`、`extra_body`、`extra_headers`、`ssl_ca_cert` / `ssl_verify`、`catalog_provider`（後述）、そしてエントリを消さずに隠すための `enabled: false` です。
 
 #### コマンドで発行する認証情報（`key_cmd`） {#command-minted-credentials-keycmd}
 
@@ -1419,6 +1421,18 @@ model:
 同じキーは名前付きプロバイダのモデル単位でも有効で（`providers.<name>.models.<id>.supports_vision`）、標準的な YAML の真偽値（`true/false/yes/no/on/off/1/0`）を受け付けます。
 
 カタログが知らないモデルについて、メタデータ（たとえば `context_window`）を直すだけの `model_overrides` のエントリを書いた場合、画像認識と推論の対応可否は**不明**のままになります。`vision_analyze`、`video_analyze`、推論の強さを選ぶ画面はそのまま使えます。そのモデルをテキスト専用、あるいは推論なしとして扱うのは、上書きの中で `supports_vision: false` / `supports_reasoning: false` を明示したときだけです。
+
+**カタログに載っているベンダーのメタデータを引き継ぐ（`catalog_provider`）。** 名前付きのカスタムプロバイダ（ゲートウェイ、プロキシ、再販業者）が、Hermes が組み込みのプロバイダとしてすでに知っているモデルを提供している場合は、そのベンダーをエントリに指定すると、カタログにあるコンテキスト長・出力の上限・画像認識と推論の対応可否をそのまま引き継げます。`model_overrides` は要りません。
+
+```yaml
+providers:
+  my-gateway:
+    api: https://gateway.example.com/v1
+    key_env: GATEWAY_API_KEY
+    catalog_provider: deepseek   # metadata lookups use DeepSeek's catalog entries
+```
+
+`catalog_provider` には Hermes のプロバイダ ID（`deepseek`、`anthropic`、`openai` など）か models.dev の ID を指定できます。影響するのはメタデータの参照先だけで、リクエストはこれまでどおり自分の `api` の URL へ自分の認証情報で送られます。同じモデルについて `model_overrides` を明示した場合は、そちらが優先されます。
 
 セッションの途中で切り替えるには、3 つ組の記法を使います。
 

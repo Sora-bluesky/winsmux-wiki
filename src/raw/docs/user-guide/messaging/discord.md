@@ -2,7 +2,7 @@
 title: "Discord"
 description: "Hermes Agent を Discord のボットとして設定する"
 upstream_path: user-guide/messaging/discord.md
-upstream_blob: a62e2a7a1bfe30344d1e0e56d0d378db52bf5c9a
+upstream_blob: 0376d9b34ca05e67c0d2ef15e0b7ac254e5714c3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/discord
 ---
@@ -309,7 +309,8 @@ Discord の振る舞いは 2 つのファイルで決まります。認証情報
 | `DISCORD_FREE_RESPONSE_CHANNELS` | いいえ | — | `DISCORD_REQUIRE_MENTION` が `true` でも、`@mention` なしで応答するチャンネルの ID をカンマ区切りで指定します。 |
 | `DISCORD_IGNORE_NO_MENTION` | いいえ | `true` | `true` のとき、ほかのユーザーを `@mentions` していてボットをメンションして**いない**メッセージには黙っています。ほかの人に向けられた会話にボットが割り込むのを防ぎます。サーバーのチャンネルにだけ効き、DM には効きません。 |
 | `DISCORD_AUTO_THREAD` | いいえ | `true` | `true` のとき、テキストチャンネルでの `@mention` ごとに新しいスレッドを自動で作り、会話を切り分けます（Slack に近い挙動です）。すでにスレッドの中や DM のメッセージには影響しません。 |
-| `DISCORD_ALLOW_BOTS` | いいえ | `"none"` | ほかの Discord のボットからのメッセージの扱いを決めます。`"none"` はほかのボットをすべて無視します。`"mentions"` は Hermes を `@mention` したボットのメッセージだけを受け付けます。`"all"` はボットのメッセージをすべて受け付けます。 |
+| `DISCORD_ALLOW_BOTS` | いいえ | `"none"` | ほかの Discord のボットからのメッセージの扱いを決めます。`"none"` はほかのボットをすべて無視します。`"mentions"` は Hermes を `@mention` したボットのメッセージだけを受け付けます。`"all"` はボットのメッセージをすべて受け付けます。どちらの有効な方式でも、既定では文面の中に実際のメンションが書かれている必要があります。次の設定を参照してください。 |
+| `DISCORD_BOTS_REQUIRE_INLINE_MENTION` | いいえ | `true` | ボットからの引き継ぎを始めるのに、文面の中に `<@BOT_ID>` / `<@!BOT_ID>` というトークンが実際に書かれていることを求めます。返信の情報だけでは始まりません。同じ送り手・同じチャンネルからの短い続きは、後述のとおり受け付けられます。`false` にするのは、以前の受け付け方を必要とする信頼できる中継のボットのためだけにしてください。人間のメッセージには影響しません。 |
 | `DISCORD_REACTIONS` | いいえ | `true` | `true` のとき、処理中にメッセージへ絵文字のリアクションを付けます（開始時に 👀、成功で ✅、エラーで ❌）。`false` にするとリアクションを一切付けません。 |
 | `DISCORD_IGNORED_CHANNELS` | いいえ | — | `@mentioned` されても**絶対に**応答しないチャンネルの ID をカンマ区切りで指定します。ほかのチャンネルの設定より優先されます。 |
 | `DISCORD_ALLOWED_CHANNELS` | いいえ | — | チャンネル ID をカンマ区切りで指定します。設定すると、ボットはこれらのチャンネル（と、許可されていれば DM）で**だけ**応答します。`config.yaml` の `discord.allowed_channels` を上書きします。`DISCORD_IGNORED_CHANNELS` と組み合わせて、許可と拒否の規則を表せます。 |
@@ -325,13 +326,32 @@ Discord の振る舞いは 2 つのファイルで決まります。認証情報
 | `DISCORD_ALLOW_ANY_ATTACHMENT` | いいえ | `false` | `true` のとき、どの種類のファイルの添付も受け付けます（組み込みの PDF／テキスト／zip／オフィス文書の許可リストに限りません）。知らない種類はディスクにキャッシュされ、MIME を `application/octet-stream` としてローカルのパスの形でエージェントに渡されるので、`terminal` / `read_file` / `ffprobe` などで中身を調べられます。 |
 | `DISCORD_MAX_ATTACHMENT_BYTES` | いいえ | `33554432` | ゲートウェイがダウンロードしてキャッシュする、添付 1 つあたりの最大バイト数。既定は 32 MiB です。`0` にすると上限なしになります（書き込みの間ファイルはメモリに保持されるので、上限なしには相応のメモリの負担があります）。 |
 | `HERMES_DISCORD_TEXT_BATCH_DELAY_SECONDS` | いいえ | `0.6` | 待たせているテキストの断片を送り出す前に、アダプターが待つ猶予。ストリーミングの出力をなめらかにするのに役立ちます。 |
-| `HERMES_DISCORD_TEXT_BATCH_SPLIT_DELAY_SECONDS` | いいえ | `2.0` | 1 つのメッセージが Discord の長さの上限を超えて分割されたとき、断片どうしの間隔。 |
+| `HERMES_DISCORD_TEXT_BATCH_SPLIT_DELAY_SECONDS` | いいえ | `2.0` | Discord の長さの上限ぎりぎりで分割されたときや、同じチャンネルで直前にタグを付けられたボットから続きの断片が来るときに使う、より長めの静かな待ち時間。 |
 
-:::warning ボットどうしの会話には対応していません
-`DISCORD_ALLOW_BOTS` は、信頼できる特定のボット（中継用や Webhook のボットなど）からの入力を受け付けるためのもので、2 つの Hermes のプロファイルを会話させるためのものではありません。既定の `"none"` はほかのボットをすべて無視する、安全な設定です。
+### ボットどうしの引き継ぎ: 一度タグを付ければ、続く連投もまとめて受け取れます {#bot-to-bot-handoffs-tag-once-collect-the-burst}
 
-複数の Hermes のプロファイルに `"mentions"` や `"all"` を設定して、共有のチャンネルで互いに返信させる構成は対応していません。Discord は返信のたびに返信先の投稿者を自動で `@mentions` するため、`"mentions"` では 2 つのボットが互いのメンションの条件を満たし合い、応答が止まらなくなります。ゲートウェイのボットのループ対策は、これを防ぐものではなく被害を抑えるものです。1 つのチャンネルでボットが書いたメッセージが 5 分以内に 20 件に達すると、そのチャンネルでのボットのメッセージはその後 10 分間捨てられます（`config.yaml` の `gateway.bot_loop_guard` で調整できます。人間のメッセージは数えません）。それでも、対応している設定は `DISCORD_ALLOW_BOTS` を `"none"` のままにしておくことです。どうしても特定のボットを受け付けるなら、対象を狭く絞り、自動で返信するエージェントは決して相手にしないでください。
-:::
+ボットからの入力は、これまでどおり自分で有効にするものです（既定は `DISCORD_ALLOW_BOTS=none`）。`mentions` か `all` で有効にした場合、**ボットからの引き継ぎを始めるには、既定ではメッセージの文面に `<@BOT_ID>` / `<@!BOT_ID>` が実際に書かれている必要があります**。Discord が返信に自動で付けるメンションだけでは、引き継ぎは始まりません。人間が書いたメッセージのメンションの扱いは、これまでと変わりません。
+
+ボットのメンションを受け付けたあと、Hermes は**同じボットから同じチャンネルやスレッドに届く**、メンションのない続きのメッセージを短いあいだ受け付けます。続きのテキストはこれまでどおりのテキストのまとめ役に入るので、細かく分かれた応答でも、断片ごとにタグを付け直さずにまとめてエージェントへ渡せます。送り手側に特別な手順や、断片であることの印は要りません。
+
+たとえば、ボット A が `<@BOT_B_ID> Here is the review …` を送り、続けて同じスレッドにタグのないテキストを 2 つ送ったとします。ボット B はその 2 つを続きを受け付ける時間のうちに取り込み、タグの付いたテキストとまとめます。その時間が過ぎたあとは、既定の方針のもとでは、タグのないメッセージや返信のメンションだけで新しい引き継ぎを始めることはできません。互いに明示的にタグを付け合うやり方はこれまでどおり使えます。これで防ぐのは、返信の情報による意図しない堂々巡りであって、意図して続けている会話ではありません。
+
+#### 時間と限界 {#timing-and-limits}
+
+受け付ける時間は、受け付けたメンションのあと `max(HERMES_DISCORD_TEXT_BATCH_DELAY_SECONDS, HERMES_DISCORD_TEXT_BATCH_SPLIT_DELAY_SECONDS)` のあいだ続き（既定値なら 2 秒）、続きを 1 つ受け付けるたびに数え直されるので、Discord の送信の間隔に合わせた長い引き継ぎも丸ごと届きます。これとは別に、待ち行列に入ったテキストの断片ごとに、まとめ役の静かな待ち時間も数え直されます。タグの付いたボットのまとまりでは、最初の断片が短くても分割用の待ち時間が使われます。これらの設定が決めるのは受け取る側のまとめ方で、送り手の間隔ではありません。テキストのまとめを無効にする（`HERMES_DISCORD_TEXT_BATCH_DELAY_SECONDS=0`）と、続きの受け付けも無効になります。
+
+これは短い連投に合わせた経験則であって、分かれたメッセージが必ず届くことを保証する仕組みではありません。時間の外に遅れて届いた断片には、既定の方針のもとでは、それ自体にメンションが要ります。時間のうちなら、同じボットと同じチャンネルからの関係のないメッセージも受け付けられてしまいます。この例外はテキストに限りません。添付やコマンドも受け付けを通ることがありますが、このまとめ役に入るのはテキストだけで、ほかの種類のメッセージはふだんどおりに扱われます。チャンネルごとの制限と `DISCORD_ALLOW_BOTS=none` は、これまでどおり効きます。履歴の読み込みの挙動も変わりません。ゲートウェイのボットのループ対策も最後の守りとして残ります。1 つのチャンネルでボットが書いたメッセージが 5 分以内に 20 件に達すると、そのチャンネルでのボットのメッセージはその後 10 分間捨てられます（`config.yaml` の `gateway.bot_loop_guard` で調整できます。人間のメッセージは数えません）。
+
+#### 信頼できる中継のボットとの互換 {#compatibility-with-trusted-relays}
+
+文面の中のメンションを求める設定は、`DISCORD_ALLOW_BOTS=all` のときも含めて、既定が **true** になりました（以前は false でした）。返信のメンションや、メンションのないボットのメッセージを意図して使っている中継の仕組みがある場合は、以前の受け付け方を明示的に残してください。
+
+```yaml
+discord:
+  bots_require_inline_mention: false
+```
+
+YAML の設定を書かない場合は、これまでどおり `DISCORD_BOTS_REQUIRE_INLINE_MENTION=false` の環境変数でも上書きできます。この形で外すと、`mentions` は返信のメンションも含めて Discord が解決したメンションを受け付け、`all` はボットに対するメンションの条件そのものをなくします。チャンネルごとのほかのメンションの規則は、引き続き効きます。この互換の方式では、受け付けた返信のメンションから続きを受け付ける時間が始まることもあります。意図しない返信の堂々巡りの危険が戻るので、信頼できる中継の仕組みに対してだけ使ってください。
 
 ### 設定ファイル（`config.yaml`） {#config-file-configyaml}
 
@@ -342,6 +362,7 @@ Discord の振る舞いは 2 つのファイルで決まります。認証情報
 discord:
   require_mention: true           # Require @mention in server channels
   thread_require_mention: false   # If true, require @mention in threads too (multi-bot threads)
+  bots_require_inline_mention: true  # Bot authors must type a literal @mention (default: true)
   free_response_channels: ""      # Comma-separated channel IDs (or YAML list)
   auto_thread: true               # Auto-create threads on @mention
   reactions: true                 # Add emoji reactions during processing

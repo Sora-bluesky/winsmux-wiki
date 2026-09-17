@@ -2,7 +2,7 @@
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: 8037c3acb04da48457a125536edb22e2e4247c19
+upstream_blob: 203a194dda8cd55ebc53c9df5064a68d4665aa4c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -619,6 +619,8 @@ hermes kanban create "Translate the docs site to French" \
 
 終わりの見えない仕事、手数の多い仕事、「X になるまで続ける」タイプのカードに向いています。安上がりな一発仕事には使わないでください。毎手番の判定の手間に見合いませんし、ディスパッチャの再試行とサーキットブレーカーが、一時的なワーカーの失敗はすでに面倒を見ています。判定役の出来はゴールの文面しだいなので、本文は **はっきりした受け入れ条件** として書いてください。
 
+ゴール方式のワーカーの **Worker log**（ダッシュボードの引き出し、`hermes kanban log <id>`）には、ほかのワーカーと同じ生のツールの流れが出ます。加えて、判定された手番ごとに `kanban goal loop: turn N/M verdict=…` の行が 1 本ずつ入るので、カードが動いている間にループが何をしているかを追えます。
+
 :::note ゴール方式のカードは `/goal` の仕組みを借りるだけで、つながってはいない
 `--goal` は、続行のループを *そのカードのワーカーのセッションの中で* 回します。[`/goal` スラッシュコマンド](/hermes/docs/user-guide/features/goals/) と仕組みは共有していますが、状態は別です。チャットのセッションで `/goal` を設定してもカンバンのカードを作ったり占有したり動かしたりはしませんし、ゴール方式のカードのループは、どのチャットセッションの `/goal status` からも見えません。いまの会話を回し続けたいなら [`/goal`](/hermes/docs/user-guide/features/goals/) を、盤の上で仕事を進めたいならカードを作ってください。
 :::
@@ -925,7 +927,7 @@ hermes kanban create "nightly backup audit" \
 
 ready のカードがなぜ起動しないかを見るには、`hermes kanban dispatch --dry-run` を実行してください。押さえられているカードごとに `Guarded (<reason>): <task id>` が並びます（`--json` を付けると `respawn_guarded`、`rate_limited`、`skipped_locked`、`memory_pressure` も出ます）。ゲートウェイと単独デーモンの「ディスパッチャが詰まっている」警告にも、直近の周回が何を押さえたかが出ます。たとえば `Last tick held back: active_pr=1` のように。
 
-`recent_success` と `active_pr` が押さえるのは **ready** の流れだけです。これらはレビューへの引き継ぎの入力であって、引き継ぎを止める合図ではありません。PR がすでに開いているカードを、レビュー担当や締め役、その他の立て直し役に拾わせたいときは、`hermes kanban request-review <id>` でレビューの流れへ移してください（`running` だけでなく `ready` からも受け付けます）。レビューの流れでの起動はどちらの抑止も受けず、開発の担当者が自分の PR に対して再び起動されることもありません。成功のあとにわざと待ち行列へ戻す操作（`done→ready` のドラッグ、`unblock`、昇格のやり直し）も `recent_success` を解くので、手動の再実行が抑止の時間ぶん黙って止められることはありません。
+`recent_success` と `active_pr` が押さえるのは **ready** の流れだけです。これらはレビューへの引き継ぎの入力であって、引き継ぎを止める合図ではありません。PR がすでに開いているカードを、レビュー担当や締め役、その他の立て直し役に拾わせたいときは、`hermes kanban request-review <id>` でレビューの流れへ移す（`running` だけでなく `ready` からも受け付けます。レビューの流れでの起動はどちらの抑止も受けません）か、`hermes kanban assign <id> <profile>` でready のカードをその役へ渡してください。PR のコメントの *あと* に記録された引き継ぎ — 運用者による割り当て直し、レビュー担当の変更要請の判定、レビューの再開 — は、いまカードに名前が載っているプロファイルについて `active_pr` を解きます。そのプロファイルが取り組むべきものが、まさにその PR だからです。数に入るのは *別の* プロファイルへの変更だけです。同じプロファイルへの割り当て直し、割り当ての解除、ディスパッチャ自身による `kanban.default_assignee` の穴埋めでは抑止は解けません。ですから、PR を開いた担当者が、クラッシュや占有の取り戻し、何も変えない割り当て直しのあとにその PR へ再び起動されることはなく、引き継ぎのあとに新しい PR のコメントが付けばまた押さえられます。成功のあとにわざと待ち行列へ戻す操作（`done→ready` のドラッグ、`unblock`、昇格のやり直し）も `recent_success` を解くので、手動の再実行が抑止の時間ぶん黙って止められることはありません。
 
 ### ドラッグで削除・まとめて削除（ダッシュボード） {#drag-to-delete-and-bulk-delete-dashboard}
 

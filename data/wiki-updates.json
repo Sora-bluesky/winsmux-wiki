@@ -1,6 +1,243 @@
 {
-  "generatedAt": "2026-09-17",
+  "generatedAt": "2026-09-18",
   "entries": [
+    {
+      "date": "2026-09-17",
+      "sha": "22a7e01",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトッププラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/programmatic-integration",
+          "title": "外部プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "developer-guide/prompt-assembly",
+          "title": "プロンプトの組み立て",
+          "url": "/hermes/docs/developer-guide/prompt-assembly/"
+        },
+        {
+          "id": "developer-guide/session-storage",
+          "title": "セッションの保存領域",
+          "url": "/hermes/docs/developer-guide/session-storage/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "guides/use-soul-with-hermes",
+          "title": "Hermes で SOUL.md を使う",
+          "url": "/hermes/docs/guides/use-soul-with-hermes/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLI コマンド早見表",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/faq",
+          "title": "よくある質問とトラブル対処",
+          "url": "/hermes/docs/reference/faq/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "reference/tools-reference",
+          "title": "組み込みツール一覧",
+          "url": "/hermes/docs/reference/tools-reference/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/api-server",
+          "title": "API サーバー",
+          "url": "/hermes/docs/user-guide/features/api-server/"
+        },
+        {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザの自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/features/built-in-plugins",
+          "title": "同梱のプラグイン",
+          "url": "/hermes/docs/user-guide/features/built-in-plugins/"
+        },
+        {
+          "id": "user-guide/features/context-files",
+          "title": "コンテキストファイル",
+          "url": "/hermes/docs/user-guide/features/context-files/"
+        },
+        {
+          "id": "user-guide/features/credential-pools",
+          "title": "認証情報プール",
+          "url": "/hermes/docs/user-guide/features/credential-pools/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/curator",
+          "title": "キュレーター",
+          "url": "/hermes/docs/user-guide/features/curator/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
+          "id": "user-guide/features/goals",
+          "title": "続く目標（Goal）",
+          "url": "/hermes/docs/user-guide/features/goals/"
+        },
+        {
+          "id": "user-guide/features/heartbeat",
+          "title": "セッションの定期確認（Heartbeat）",
+          "url": "/hermes/docs/user-guide/features/heartbeat/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/image-generation",
+          "title": "画像生成",
+          "url": "/hermes/docs/user-guide/features/image-generation/"
+        },
+        {
+          "id": "user-guide/features/kanban",
+          "title": "カンバン（マルチエージェント盤）",
+          "url": "/hermes/docs/user-guide/features/kanban/"
+        },
+        {
+          "id": "user-guide/features/loops",
+          "title": "繰り返しのループ",
+          "url": "/hermes/docs/user-guide/features/loops/"
+        },
+        {
+          "id": "user-guide/features/mcp",
+          "title": "MCP（Model Context Protocol）",
+          "url": "/hermes/docs/user-guide/features/mcp/"
+        },
+        {
+          "id": "user-guide/features/mixture-of-agents",
+          "title": "Mixture of Agents",
+          "url": "/hermes/docs/user-guide/features/mixture-of-agents/"
+        },
+        {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "スキルの仕組み",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
+          "id": "user-guide/features/tool-gateway",
+          "title": "Nous Tool Gateway",
+          "url": "/hermes/docs/user-guide/features/tool-gateway/"
+        },
+        {
+          "id": "user-guide/features/web-search",
+          "title": "Web 検索と本文抽出",
+          "url": "/hermes/docs/user-guide/features/web-search/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/weixin",
+          "title": "Weixin（微信）",
+          "url": "/hermes/docs/user-guide/messaging/weixin/"
+        },
+        {
+          "id": "user-guide/multi-connection-desktop",
+          "title": "デスクトップ版を複数の Hermes につなぐ",
+          "url": "/hermes/docs/user-guide/multi-connection-desktop/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        },
+        {
+          "id": "user-guide/windows-native",
+          "title": "Windows（ネイティブ）ガイド",
+          "url": "/hermes/docs/user-guide/windows-native/"
+        }
+      ]
+    },
     {
       "date": "2026-09-17",
       "sha": "70f2e41",
@@ -53,7 +290,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -138,12 +375,12 @@
         },
         {
           "id": "user-guide/features/hooks",
-          "title": "出来事のフック",
+          "title": "イベントフック",
           "url": "/hermes/docs/user-guide/features/hooks/"
         },
         {
           "id": "user-guide/features/kanban",
-          "title": "かんばん（複数エージェントの盤）",
+          "title": "カンバン（マルチエージェント盤）",
           "url": "/hermes/docs/user-guide/features/kanban/"
         },
         {
@@ -168,7 +405,7 @@
         },
         {
           "id": "user-guide/features/skills",
-          "title": "skill のしくみ",
+          "title": "スキルの仕組み",
           "url": "/hermes/docs/user-guide/features/skills/"
         },
         {
@@ -285,7 +522,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -405,7 +642,7 @@
         },
         {
           "id": "user-guide/features/kanban",
-          "title": "かんばん（複数エージェントの盤）",
+          "title": "カンバン（マルチエージェント盤）",
           "url": "/hermes/docs/user-guide/features/kanban/"
         },
         {
@@ -779,7 +1016,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -839,7 +1076,7 @@
         },
         {
           "id": "user-guide/features/hooks",
-          "title": "出来事のフック",
+          "title": "イベントフック",
           "url": "/hermes/docs/user-guide/features/hooks/"
         },
         {
@@ -849,7 +1086,7 @@
         },
         {
           "id": "user-guide/features/kanban",
-          "title": "かんばん（複数エージェントの盤）",
+          "title": "カンバン（マルチエージェント盤）",
           "url": "/hermes/docs/user-guide/features/kanban/"
         },
         {
@@ -966,7 +1203,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -1036,12 +1273,12 @@
         },
         {
           "id": "user-guide/features/hooks",
-          "title": "出来事のフック",
+          "title": "イベントフック",
           "url": "/hermes/docs/user-guide/features/hooks/"
         },
         {
           "id": "user-guide/features/kanban",
-          "title": "かんばん（複数エージェントの盤）",
+          "title": "カンバン（マルチエージェント盤）",
           "url": "/hermes/docs/user-guide/features/kanban/"
         },
         {
@@ -1056,7 +1293,7 @@
         },
         {
           "id": "user-guide/features/skills",
-          "title": "skill のしくみ",
+          "title": "スキルの仕組み",
           "url": "/hermes/docs/user-guide/features/skills/"
         },
         {
@@ -1163,7 +1400,7 @@
         },
         {
           "id": "user-guide/features/hooks",
-          "title": "出来事のフック",
+          "title": "イベントフック",
           "url": "/hermes/docs/user-guide/features/hooks/"
         },
         {
@@ -1210,7 +1447,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -1347,7 +1584,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -1644,7 +1881,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -1729,7 +1966,7 @@
         },
         {
           "id": "user-guide/features/hooks",
-          "title": "出来事のフック",
+          "title": "イベントフック",
           "url": "/hermes/docs/user-guide/features/hooks/"
         },
         {
@@ -1739,7 +1976,7 @@
         },
         {
           "id": "user-guide/features/kanban",
-          "title": "かんばん（複数エージェントの盤）",
+          "title": "カンバン（マルチエージェント盤）",
           "url": "/hermes/docs/user-guide/features/kanban/"
         },
         {
@@ -1759,7 +1996,7 @@
         },
         {
           "id": "user-guide/features/skills",
-          "title": "skill のしくみ",
+          "title": "スキルの仕組み",
           "url": "/hermes/docs/user-guide/features/skills/"
         },
         {
@@ -1881,7 +2118,7 @@
         },
         {
           "id": "user-guide/features/skills",
-          "title": "skill のしくみ",
+          "title": "スキルの仕組み",
           "url": "/hermes/docs/user-guide/features/skills/"
         },
         {
@@ -2085,12 +2322,12 @@
         },
         {
           "id": "user-guide/features/hooks",
-          "title": "出来事のフック",
+          "title": "イベントフック",
           "url": "/hermes/docs/user-guide/features/hooks/"
         },
         {
           "id": "user-guide/features/skills",
-          "title": "skill のしくみ",
+          "title": "スキルの仕組み",
           "url": "/hermes/docs/user-guide/features/skills/"
         },
         {
@@ -2117,7 +2354,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -2274,7 +2511,7 @@
         },
         {
           "id": "user-guide/features/hooks",
-          "title": "出来事のフック",
+          "title": "イベントフック",
           "url": "/hermes/docs/user-guide/features/hooks/"
         },
         {
@@ -2284,7 +2521,7 @@
         },
         {
           "id": "user-guide/features/kanban",
-          "title": "かんばん（複数エージェントの盤）",
+          "title": "カンバン（マルチエージェント盤）",
           "url": "/hermes/docs/user-guide/features/kanban/"
         },
         {
@@ -2416,7 +2653,7 @@
         },
         {
           "id": "user-guide/features/skills",
-          "title": "skill のしくみ",
+          "title": "スキルの仕組み",
           "url": "/hermes/docs/user-guide/features/skills/"
         },
         {
@@ -2468,7 +2705,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -2585,7 +2822,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -2645,7 +2882,7 @@
         },
         {
           "id": "user-guide/features/kanban",
-          "title": "かんばん（複数エージェントの盤）",
+          "title": "カンバン（マルチエージェント盤）",
           "url": "/hermes/docs/user-guide/features/kanban/"
         },
         {
@@ -2670,7 +2907,7 @@
         },
         {
           "id": "user-guide/features/skills",
-          "title": "skill のしくみ",
+          "title": "スキルの仕組み",
           "url": "/hermes/docs/user-guide/features/skills/"
         },
         {
@@ -3692,7 +3929,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -3799,7 +4036,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -3858,7 +4095,7 @@
         },
         {
           "id": "user-guide/features/hooks",
-          "title": "出来事のフック",
+          "title": "イベントフック",
           "url": "/hermes/docs/user-guide/features/hooks/"
         },
         {
@@ -3900,7 +4137,7 @@
       "pages": [
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         }
       ]
@@ -3962,7 +4199,7 @@
         },
         {
           "id": "user-guide/features/kanban",
-          "title": "かんばん（複数エージェントの盤）",
+          "title": "カンバン（マルチエージェント盤）",
           "url": "/hermes/docs/user-guide/features/kanban/"
         },
         {
@@ -4096,7 +4333,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -4262,7 +4499,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド一覧",
+          "title": "CLI コマンド早見表",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -4321,6 +4558,7 @@
     }
   ],
   "digests": {
+    "2026-W38": "ゲートウェイや cron、CLI の内部構造の解説が大きく入れ替わり、送信プロキシ、Relay と Connector の契約、state.db の復旧、マイクロ圧縮といった深いところまで揃った。プラグイン側もメモリープロバイダー、シークレットソース、画像生成プロバイダ、オブザーバーフックが追従し、認証情報プールや 1Password、パスワードとログインの扱いも更新されている。連携先では Matrix・Feishu / Lark・Weixin・Discord・Slack が並び、カンバンを複数ゲートウェイで運用する話や、音声モードとウェイクワード、Nix と Windows のセットアップ、Pr Lens や System Atlas といったスキルの説明も加わった。",
     "2026-W37": "内部構造の解説が広く入れ替わり、コンテキストの圧縮とキャッシュ、プロンプトの組み立て、cron やゲートウェイ、ツールの実行基盤が新しい内容に揃いました。使う側では、続く目標（Goal）、セッションの定期確認、かんばん、フォールバックプロバイダー、Hermes Desktop とデスクトップ向けプラグイン SDK、Bot Mode、Telegram や Discord との連携が更新されています。新しいページとして、認証情報の保管庫、無料枠、Archify スキルの説明が加わりました。",
     "2026-W36": "同梱スキルとオプションスキルの一覧が入れ替わり、Apple 製ツールの操作、コーディング CLI への委任、資料作成、機械学習まわりといった個別の説明が並んだ。手元で動かす話も更新され、Ollama、Termux（Android）、Mac でのローカル LLM、プロファイルの配布が加わっている。設定と環境変数、スラッシュコマンドの早見表、モデルの設定、メッセージングのゲートウェイ（Slack・Telegram・Google Chat・メール）も追従した。",
     "2026-W35": "設定・Docker・環境変数まわりと、プラグイン開発（メモリプロバイダ、ターミナル環境プロバイダ、イベントフック）の解説が広く入れ替わった。ブラウザ自動操作、コンピュータ操作、定期実行タスク（cron）、サブエージェントへの委任、ツール検索といった実行系も更新されている。Slack・WeCom・Signal・Agentmail などの連携先と、Google Gemini やフォールバックプロバイダー、Nous Tool Gateway といったモデル側の記述も追随した。",

@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: b781750a8e0a00493d4a980aa505cca90d4ab1fa
+upstream_blob: 27efbea742cdf0ae264702146ea213b3f502bb77
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -365,8 +365,8 @@ Hermes は何重にも歯止めをかけています。
 スクリーンショットは高くつきます。Hermes は四つの層で無駄を削ります。
 
 - **スクリーンショットの追い出し** — Anthropic のアダプターは、直近 3 枚の
-  スクリーンショットだけをコンテキストに残します。古いものは `[screenshot removed
-  to save context]` という差し込みに変わります。
+  スクリーンショットだけをコンテキストに残します。古いものは
+  `[screenshot removed to save context]` という差し込みに変わります。
 - **クライアント側での圧縮時の間引き** — コンテキストの圧縮処理が、複数の形式を
   含むツールの結果を見つけて、古いものから画像のパートを取り除きます。
 - **画像を考慮したトークンの見積もり** — 画像 1 枚は base64 の文字数ではなく、

@@ -2,7 +2,7 @@
 title: "認証情報プール"
 description: "プロバイダごとに複数の API キーや OAuth トークンをまとめておき、自動で切り替えてレート制限から復帰します。"
 upstream_path: user-guide/features/credential-pools.md
-upstream_blob: f8999acc0b01733cdba72d80dc57f7d34b41d62a
+upstream_blob: c454e120bee420cc3cb71f755850adfcc6cdf67a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/credential-pools
 ---
@@ -180,6 +180,16 @@ credential_pool_strategies:
 一般的な 429 が返っても、その認証情報が待機に入るのは *そのモデルだけ* です。同じキーはほかの Claude モデルに
 これまでどおり使われ、`ANTHROPIC_API_KEY` や借りてきた Claude Code のトークンも、同じモデル単位の待機時間に
 従います。請求まわり（`402`、利用上限）と認証（`401`）の失敗は、いままでどおり認証情報そのものを外します。
+
+**切れた OAuth のログインは、休ませるのではなく報告します。** 更新用のトークンが完全に
+拒まれたとき（`invalid_grant`、`invalid_token`、`refresh_token_reused` — トークンが取り消されたか、
+同じログインを持つ別のプログラムが先に入れ替えた場合）、プールはその項目の名前と直し方の
+コマンド（`hermes auth add <provider>`）を挙げた WARNING を 1 回だけ記録し、その認証情報は
+切り替えの輪から外れます。`dead` の印が付くか、プールがちょうど消したトークンファイルを
+写していただけなら丸ごと落とされ、もう一度サインインするまで戻りません。これは Anthropic、
+Codex、xAI、Nous の OAuth ログインのいずれにも当てはまります。切れた認証情報が時間まかせで
+輪に戻ることはないので、失われたログインは毎時間こっそり失敗し続けるのではなく、
+記録に一度だけ姿を見せます。
 
 ## 独自エンドポイントのプール {#custom-endpoint-pools}
 

@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールを、ツールセットごとにまとめた決定版の早見表"
 upstream_path: reference/tools-reference.md
-upstream_blob: 079d51902e283d19b3f8880a8c45a6e69fa0815a
+upstream_blob: 96a6cc2a43995e8e12599e48e4cdb31fa5f1ca28
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -57,7 +57,7 @@ sources:
 - **TUI と CLI** では、状態の一覧（`✓` 回答済み / `▸` いま答える質問 / `·` 未回答）がコンパクトに表示され、いま答える質問の選択肢だけが開きます。Enter で答えを確定して次の未回答へ進み、Tab で質問の間を移動して好きな順に答えられます。Esc でまとめて取り消します。
 - **メッセージングサービス**（Telegram、Discord など）では、これまでどおり 1 問ずつ順番に聞く形になります。途中で返信が止まった場合、残りの質問は送られません。
 
-途中で待ち時間が切れても、すでに確定した答えは残ります。ツールの結果にはその答えと `"timed_out": true` が入り、未回答の項目は空のままになるので、エージェントは「意図して飛ばした」のか「相手がいなくなった」のかを見分けられます。メッセージ系のプラットフォームでは、待つのをやめた理由を示す `"notice"` も結果に入るので（`[user did not respond within Nm]`、プラットフォームがカードを受け取らなかったときは `[clarify prompt could not be delivered]`）、届かなかった問いかけが相手の無反応として報告されることはありません。
+途中で待ち時間が切れても、すでに確定した答えは残ります。ツールの結果にはその答えと `"timed_out": true` が入り、未回答の項目は空のままになるので、エージェントは「意図して飛ばした」のか「相手がいなくなった」のかを見分けられます。メッセージ系のプラットフォームでは、待つのをやめた理由を示す `"notice"` も結果に入るので（`[user did not respond within Nm]`、プラットフォームがカードを受け取らなかったときは `[clarify prompt could not be delivered]` — このとき Hermes はまず番号付きの一覧を使った普通のメッセージとして問いを送り直し、それも失敗したときだけこの通知になります。問いかけを出せるチャットがない実行では `[clarify prompt could not be delivered: no chat surface]` になります）、届かなかった問いかけが相手の無反応として報告されることはありません。
 
 ## `connections` ツールセット {#connections-toolset}
 

@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール・フック・データファイル・スキルを備えた Hermes プラグインを、手順を追って作り上げるガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 850070ad1d18788c7a91742193761b222dd7515c
+upstream_blob: 88dbbc325f8b1eaf6af47c94fc0e917ba9cb8fe3
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -303,7 +303,8 @@ Hermes はこれを、コードを import せずに導入済みのメタデー�
 | `manifest_version` | int | マニフェストの**ファイル形式**の版。無ければ `1`。いまの最大は `2`。`api_version` とは無関係です。 |
 | `api_version` | int | プラグインが対象とする実行時の**プラグイン API の世代**（ctx の面やフックのシグネチャ）。`manifest_version` とは意図的に別の軸で、`api_version: 1` のプラグインが v2 のマニフェストを使ってもかまいません。 |
 | `requires_plugins` | list | プラグイン間の依存関係。`- id: other-plugin` に、任意で `version_range: ">=1.0,<2"` を添えます。**助言的**で、依存先が見つからないときは分かりやすい警告が出るだけで、プラグイン自体は読み込まれます。実行時には `ctx.has_plugin("other-plugin")` で確かめてください。読み込みの**順序**はこの依存の辺に従います。A が B を必要とするなら B の `register()` が A より先に走ります（トポロジカルソート、同順のときはアルファベット順。循環があるときは警告してアルファベット順に戻ります）。 |
-| `python_dependencies` | list of str | 宣言する pip の要件（例: `"requests>=2.0,<3"`）。**宣言するだけの継ぎ目**です。Hermes は内容を検証し、`hermes plugins install` と `hermes plugins doctor` は足りないものを `pip install` の案内付きで知らせますが、Hermes が**自動で導入することはありません**。上限を固定してください。 |
+| `python_dependencies` | list of str | PEP 508 の要件（例: `"requests>=2.0,<3"`）。`hermes plugins install` / `enable` のときに Hermes の venv へ導入され、**`hermes update` のたびに入れ直されます**（[Python の依存関係](#python-dependencies) を参照）。`plugin.yaml` の隣に `pyproject.toml` を置いて `[project].dependencies` に書くのが、同じ意味で、より勧められる書き方です。 |
+| `python_runtime` | str | `external` — プラグインが自分でインタプリタと venv を持つ形（サイドカー）です。Hermes は何も導入せず、`pyproject.toml` があってもそのままにします。 |
 | `config_schema` | mapping | `plugins.entries.<id>.settings` の下のキーを、JSON スキーマ風に説明したもの。`api_url: {type: str, default: "", description: "...", required: false}` のように書きます。読み込み時に検証され、食い違いはキー名と期待する型を挙げた実行可能な警告として記録されます。読み込みの失敗にはなりません。型は `str`、`int`、`float`、`bool`、`list`、`dict`（および JSON スキーマの別名）です。 |
 | `license` | str | SPDX 形式のライセンス id（例: `MIT`）。 |
 | `homepage` | str | プロジェクトの URL。 |
@@ -322,21 +323,56 @@ requires_plugins:
   - id: other-plugin
     version_range: ">=1.0,<2"
 python_dependencies:
-  - "somepkg>=1.0,<2"     # surfaced, never auto-installed
+  - "somepkg>=1.0,<2"     # installed on install/enable, re-applied after hermes update
 config_schema:
   api_url: {type: str, default: "", description: "Service endpoint"}
 ```
 
-:::note pip の依存関係の分離は先送りです
-`python_dependencies` は、意図して「宣言して知らせるだけ」にしてあります。任意の
-パッケージを Hermes 共有の venv へ入れることは、衝突とサプライチェーンの弱点を
-生みます。そのため導入部分の分離をどう設計するか（ホストのロックに対する
-constraints ファイル方式か、プラグインごとに同梱するディレクトリ方式か、衝突を
-検出して拒否する方式か）は、明示的に先送りした続きの課題です。
-[#64165](https://github.com/NousResearch/hermes-agent/issues/64165) の 2 巡目の
-レビューと [#15220](https://github.com/NousResearch/hermes-agent/issues/15220) を
-ご覧ください。プラグインパック（#64166）は、この v2 のフィールドの上に作られます。
-:::
+### Python の依存関係 {#python-dependencies}
+
+ディレクトリ形式のプラグインは、自分で PyPI のパッケージを持ち込めます。書く場所は、マニフェスト
+（上に出てきた `python_dependencies`）か、できれば `plugin.yaml` の隣に置く `pyproject.toml` です。
+
+```toml
+[project]
+name = "my-plugin"
+version = "1.0.0"
+requires-python = ">=3.11"
+dependencies = [
+    "somepkg>=1.0,<2",
+    "other[extra]>=3.11",
+]
+```
+
+両方があるときは `pyproject.toml` が勝ちます。Hermes がそれをどう扱うかは次のとおりです。
+
+- **導入と有効化** — 宣言されたパッケージは `uv pip install`（駄目なら pip）で Hermes の venv へ入ります。
+  そのとき **Hermes 自身が固定している依存関係から作った constraints ファイル**の下で動くので、
+  プラグインが中核のパッケージ（httpx、pydantic など）を Hermes が検証した版から動かすことはできません。
+  環境マーカー（`; sys_platform == "win32"`）も守られます。
+- **衝突したら拒否。黙って落とすことはしません** — プラグインのツリーを所定の場所へ移す前に、
+  その依存関係を、すでに有効なプラグインすべての依存関係と一緒に予行演習として解決します。
+  解決できない候補は*導入されず*、エラーが衝突の中身を名指しします。すでに入っているプラグインには手を触れません。
+- **`hermes update` は入れ直します** — 更新時の `uv sync` は Hermes のロックから venv を作り直し、それ以外を削ります。
+  そのあと Hermes はすべてのプロファイルの有効なプラグインをたどり、宣言された依存関係を入れ直します。
+  全体としてもう解決できなくなっていたら（中核の固定が動いたときなど）、記憶以外のプラグインを、
+  解決できるようになるまで 1 つずつ外します。外したプラグインはそのつど名前を挙げて**はっきりしたメッセージとともに無効化**し、
+  記憶のプロバイダは何よりも優先して残します。記憶なしで起動した Hermes は、データが消えたように見えるからです。
+- **`hermes plugins update`** は、新しい版が宣言している内容で導入をやり直します。
+- **`--no-deps`** を `hermes plugins install` に付けると、そのプラグイン 1 つだけこの仕組みを飛ばせます
+  （衝突の検査もなく、何も導入されません）。パッケージを自分で面倒みたいときに使ってください。
+- **`python_runtime: external` で外れる** — 重い実行環境（torch、ネイティブの拡張など）を自分のサイドカーの venv に持ち、
+  別プロセスとやり取りするプラグインは、これを `plugin.yaml` に書きます。Hermes は何も導入せず、
+  そのプラグインは共有の解決に加わりません。
+- **読み込むものが無ければエラー** — `hermes plugins validate`（とカタログの CI）は、隣に `__init__.py` も
+  `desktop/plugin.js` も `plugin.json` も無い `plugin.yaml` を落とします。コードが `src/` の下にあって
+  エントリポイント経由で読まれる pip 形式のパッケージには、そのパッケージに依存する `pyproject.toml` を持った、
+  薄いディレクトリ形式の包みが要ります。
+- `security.allow_lazy_installs: false` にすると、この仕組みはすべて止まります。プラグインは入りますが依存関係は入らず、
+  読み込みのときにローダーが警告します。
+
+`HERMES_HOME/plugins/` は `hermes update` でも Desktop の更新でも残ります。更新が作り直すのは venv と
+チェックアウトだけで、ホームディレクトリには手を触れません。
 
 ## ステップ 3: ツールのスキーマを書く {#step-3-write-the-tool-schemas}
 

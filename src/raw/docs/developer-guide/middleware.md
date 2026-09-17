@@ -2,7 +2,7 @@
 title: "ミドルウェア"
 description: "LLM 呼び出しとツール呼び出しの挙動を変えるプラグインのミドルウェア。契約、実行順序、例"
 upstream_path: developer-guide/middleware.md
-upstream_blob: ad1764f904c30289900e3224164272bf8bfea64e
+upstream_blob: 5469af351cf969e91decac0b377e3cdf142d4804
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/middleware
 ---
@@ -81,7 +81,11 @@ def on_tool_execution(**kwargs):
 
 複数のプラグインが同じ種類の実行系ミドルウェアを登録した場合、Hermes は登録順に
 入れ子のチェーンとして実行します。ミドルウェアの失敗はフェイルオープンです。
-Hermes は警告をログに出し、次のミドルウェア、または本来の実行経路へ進みます。
+Hermes は警告をログに出し、次のミドルウェア、または本来の実行経路へ進みます。毎回同じ形で失敗する
+コールバック（多くは、ミドルウェアが渡していないフィールドを引数に並べている場合です）は、
+WARNING として**一度だけ**報告され、そのメッセージには実際に渡されるフィールドが並びます。
+同じ内容の繰り返しは DEBUG に落ちるので、宣言を誤ったミドルウェアがログを埋め尽くすことは
+ありません。プラグインを読み込み直すと、この報告はやり直されます。
 
 ## 実行順序 {#execution-order}
 

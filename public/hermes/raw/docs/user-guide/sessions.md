@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 2da82c6ff2b179ca56712521af55c4e4f76589a4
+upstream_blob: 44268426724055b89b6b607064726f6796a374df
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -75,7 +75,8 @@ FTS5 のインデックスの断片をまとめ、データベースを VACUUM �
 
 | 送信元 | 説明 |
 |--------|-------------|
-| `cli` | 対話形式の CLI（`hermes` または `hermes chat`）と、一回きりの実行（`hermes chat -q`、`hermes -z`）。TUI やデスクトップのセッションの中から起動した一回きりの子プロセスも、`tui` や `desktop` ではなく `cli` の印が付きます。その会話そのものではないため、TUI や WebUI の選択画面に再開できるチャットとして出てくることはありません。一回きりの連携実行をセッションの一覧からまるごと外したいときは、`--source tool` を渡してください。 |
+| `cli` | 対話形式の CLI（`hermes` または `hermes chat`） |
+| `oneshot` | 終わりの決まった、対話形式でない実行です。`hermes chat --oneshot -q`、`-Q`、`hermes -z`、そして端末に繋がっていない標準入出力での `-q` が該当します。TUI・デスクトップアプリ・ダッシュボードのセッション選択画面には出てきません（`kanban` や `tool` と同じ扱いです）。TUI やデスクトップアプリのセッションの中から起動した場合も同じで、その実行は起動元の環境を引き継ぎますが、その会話そのものではないからです。ただし CLI の履歴としては残ります。`hermes -c` や `--resume latest` は直前の一回きりの実行を続けますし、`hermes sessions list` にも出てきます。`--source <tag>` を明示した場合は、そちらが常に優先されます（`hermes chat -q --source tui` は `tui` として保存されます）。 |
 | `telegram` | Telegram |
 | `discord` | Discord のサーバーや DM |
 | `slack` | Slack のワークスペース |
@@ -97,6 +98,10 @@ FTS5 のインデックスの断片をまとめ、データベースを VACUUM �
 | `acp` | ACP のエディター連携 |
 | `cron` | 定期実行の cron |
 | `batch` | まとめて処理する実行 |
+| `kanban` | かんばんの割り振り役が動かすワーカー（盤の上では読めますが、セッション選択画面には出てきません） |
+| `tool` | 外部サービスとの連携（`--source tool`）。セッション選択画面には出てきません |
+
+会話の途中で圧縮されたセッションは、同じ送信元のまま続きます。`--source tool` や `oneshot` の実行から生まれた圧縮後のセッションにも同じ印が付くので、選択画面に出るかどうかの扱いもそのまま引き継がれます。
 
 ## CLI でのセッション再開 {#cli-session-resume}
 

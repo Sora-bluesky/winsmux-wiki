@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: d65eae3ae7aecc922a35311242bb83e2a930fb91
+upstream_blob: a9b3594c3ba74c682a10cf0b76dcf6bb0e6bf991
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -810,6 +810,46 @@ display:
       interim_assistant_messages: false
       long_running_notifications: false
 ```
+
+### 警告とエラーの通知（任意で止める） {#warning-and-error-notifications-opt-in-suppression}
+
+警告とエラーの自動通知は、既定では表示されます。これらの通知を止めたい場合は、
+`suppress_warning_notifications` を全体か、特定の窓口ごとに有効にします。
+
+```yaml
+display:
+  suppress_warning_notifications: true
+  platforms:
+    telegram:
+      suppress_warning_notifications: false
+```
+
+この例では、全体では通知を止めつつ、Telegram でだけ表示を残しています。設定を書かないか
+`false` にすれば、これまでどおり届きます。プラットフォームごとの指定が優先され、`null` は
+上位の設定を引き継ぎます。値が不正な場合、通知は止まりません。
+
+この設定が対象にするのは、エンジンの自動的な警告、再試行やフォールバックの診断、監視機構と
+データベースの知らせ、cron の失敗通知、Kanban の失敗通知、バックグラウンドや委任の診断、
+アダプターが出すエラーの知らせです。メッセージングのプラットフォーム、CLI/TUI の表示、API の
+通知表示のいずれにも効きます。区分けをするのは出す側です。利用者の依頼や普通の実行結果に
+警告らしい文言が含まれていても、言い回しで選り分けられることはありません。
+
+止めるのは見せ方だけで、動き自体は変わりません。これまでどおりのログ、保存された診断の内容、
+再試行の判断、失敗の状態、スケジューラーの記録、通知のしおりはそのまま残ります。診断だけを
+目的とした内部からの呼び起こし（サブエージェントやクレジットの失敗、Kanban の異常終了の知らせ）も、
+これまでどおりエージェントのターンとして動きます。エージェントがその失敗に対処でき、セッションの
+履歴も食い違わないようにするためで、そのターンの料金もふだんどおりかかります。伏せられるのは、
+頼んでいない文章・メディア・ストリーミングの見せ方だけです。承認や確認を求める操作、コマンドや
+API の直接の結果、依頼して得た結果が、成功にすり替えられたり捨てられたりすることはありません。
+診断の文章が隠れていても、API の失敗のフラグ・ステータスコード・利用量は正しいままです。
+
+cron の `failure_deliver` は、これまでどおり届け先を決めます。そこで自動の失敗の知らせを出すかどうかは、
+その届け先の警告に関する設定が決めます。止められた配信は、送信に成功したと偽ることなく処理されます。
+すでに受け付けられた配信は、その配信としての identity と結果を保ちます。
+
+方針は、持ち主のプロファイルと論理的な届け先ごとに決まります。エージェントのターンはそのターンの方針に従い、
+独立した通知や後回しにされた配信は、それぞれの配信の時点で方針を判断します。すでに届いたメッセージが
+取り消されることはありません。通知を止めても、その裏にある失敗が直るわけでも、ログの出力先が増えるわけでもありません。
 
 ### 進捗のふきだしの片づけ（任意） {#progress-bubble-cleanup-opt-in}
 

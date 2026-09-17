@@ -2,7 +2,7 @@
 title: "プロンプトの組み立て"
 description: "Hermes がシステムプロンプトをどう組み立て、キャッシュの安定性をどう保ち、その場限りの層をどう差し込むか"
 upstream_path: developer-guide/prompt-assembly.md
-upstream_blob: 2b0b0b27b7c9d0b11dd5cbbf8cb4e82ed4a64eb2
+upstream_blob: a7482ad24e6658ef9d89cf3012e7c1f2fc554b27
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/prompt-assembly
 ---
@@ -164,6 +164,14 @@ platform_hints:
 - 書き方が壊れている項目は安全側に倒して無視され、手を加えていない
   既定値に戻ります。設定の値がおかしくても、プロンプトの組み立てが壊れたり、
   ほかの入口に漏れたりすることはありません。
+
+Cron のジョブはプラットフォームとしては `cron` として動きますが、最終的な応答は
+そのジョブの `deliver` で指定した経路に届きます。そのため cron のエージェントの
+プロンプトには、その経路のヒント（組み込みの文章と、その経路の
+`platform_hints.<channel>` による上書き）も `Delivery destination (<channel>):`
+という行の下に一緒に載ります。つまり `platform_hints.slack.append` は、その場の
+やり取りの Slack だけでなく、Slack へ届ける予約実行のジョブにも効きます。cron
+そのものの段落は、引き続き `platform_hints.cron` が受け持ちます。
 
 この上書きは、システムプロンプトを組み立てるとき（セッションの開始時と、
 プロンプトを組み直す圧縮のとき）に解決されます。設定が同じなら毎回同じ内容になるので、

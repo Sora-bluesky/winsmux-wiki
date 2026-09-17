@@ -2,7 +2,7 @@
 title: "画像を見せる・貼り付ける"
 description: "クリップボードの画像を Hermes の CLI に貼り付けて、画像を読ませます。"
 upstream_path: user-guide/features/vision.md
-upstream_blob: 628c7ab69e93ac8932034f005a60c18c09a0aff9
+upstream_blob: f8b4c38d3a68e8edb928ea718af9bdb385234965
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/vision
 ---
@@ -214,3 +214,16 @@ powershell.exe -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms;
 `vision_analyze` という道具そのものも、同じ振り分けに従います。いま使っている主モデルが画像を読めて、**かつ**その提供元が道具の結果の中に画像を入れられる場合（いまのところ Anthropic、OpenAI、Azure-OpenAI、Gemini 3.x の系統）、`vision_analyze` は補助の説明役を通さず、画像そのものを道具の結果として返します。主モデルは次の番でその画像を直に見ます。補助の呼び出しも、文字にすることで失われる情報も、余計な待ち時間もありません。
 
 文字だけの主モデルのとき（あるいは道具の結果に画像を載せられない提供元のとき）、`vision_analyze` は従来どおりの経路に戻ります。設定された補助の画像モデルに説明を頼み、その文章をそのまま返します。どちらの場合も、呼び出す側から見た形は同じです。その時々のモデルに応じて、道具が自分でどちらの経路を通るか決めます。
+
+### 画像そのものの埋め込みはセッションに残り続ける: `vision.embed_target_bytes` と `vision.max_calls_per_image` {#native-embeds-ride-the-session-visionembedtargetbytes-and-visionmaxcallsperimage}
+
+`vision_analyze` が画像そのものを返すと、その画像は道具の結果の中に焼き込まれ、以降はそのセッションのすべての API 呼び出しで毎回送り直されます。繰り返しかかるこの費用を抑えるために、`config.yaml` に 2 つの設定があります。
+
+```yaml
+vision:
+  embed_target_bytes: 262144   # per-embed byte budget; clamped 64 KiB..4 MiB (default 256 KB)
+  max_calls_per_image: 3       # unset = 3 inside delegated subagents, unlimited for the main agent
+```
+
+- **`embed_target_bytes`** — この上限を超える画像（または横幅が 1568 px を超える画像）は、収まる大きさの JPEG に縮められます。256 KB にしておけば普通の画面撮影は安く済みますが、表がびっしり写ったスマートフォンの画面撮影はこの大きさだと読めなくなることがあります。モデルが図を「読めない」と言い続けるなら、たとえば `1048576` まで上げてください。ブラウザの画面撮影を画像のまま渡すときも、同じ上限が効きます。
+- **`max_calls_per_image`** — **同じ**画像（その一部を切り出したものも含みます。手元のファイルは解決したあとの場所で見分けます）を、1 つのセッションで何回まで埋め込んでよいかです。上限に達すると、道具はもう一度埋め込む代わりに `"vision_analyze refused: this image has already been loaded into context N time(s) …"` を返すので、モデルはすでに見えているものから答えます。何も書かないでおくと、上限（3 回）がかかるのは `delegate_task` で切り出した下請けのときだけです。下請けは人が見ていないところで動き、途中で CLI から舵を切れないため、読み込み直しの堂々巡りで 5 つのファイルに 158 回を使い切ったことがあります。数値を書けばどのセッションにも上限がかかり、`0` にすればどこでも無制限になります。

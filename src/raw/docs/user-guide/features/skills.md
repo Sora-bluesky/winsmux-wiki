@@ -2,7 +2,7 @@
 title: "スキルの仕組み"
 description: "必要になったときだけ読む知識の文書 — 段階的な開示、エージェントが管理するスキル、Skills Hub"
 upstream_path: user-guide/features/skills.md
-upstream_blob: fd4fc32b569215cf4f18561765177d2bbc880988
+upstream_blob: d8f017bdb492abec85c9a8bde0562f4acdb6a15d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -428,7 +428,7 @@ skills:
 
 ### 仕組み {#how-it-works}
 
-- **作るのはローカル、更新はその場で**: エージェントが新しく作るスキルは `~/.hermes/skills/`（設定していれば `skills.create_dir`。下を参照）へ書かれます。すでにあるスキルは、`external_dirs` の下にあるものも含め、見つかった場所で書き換えられます。エージェントが `skill_manage` の `patch`、`edit`、`write_file`、`remove_file`、`delete` といった操作を使ったときです。
+- **作るのはローカル、更新はその場で**: エージェントが新しく作るスキルは `~/.hermes/skills/`（設定していれば `skills.create_dir`。下を参照）へ書かれます。すでにあるスキルは、`external_dirs` の下にあるものも含め、見つかった場所で書き換えられます。エージェントが `skill_manage` の `patch`（狙いを絞った直しでも、まるごとの書き直しでも）、`write_file`、`remove_file`、`delete` といった操作を使ったときです。
 - **外部のディレクトリは書き込み防止の境界ではありません**: 外部のスキルディレクトリが Hermes のプロセスから書ける状態なら、エージェントによるスキルの更新はそのディレクトリのファイルを変えられます。共有している外部のスキルを読み取り専用にしておきたいなら、ファイルシステムの権限か、別のプロファイル／ツールセットの構成を使ってください。
 - **ローカルが優先**: 同じ名前のスキルがローカルのディレクトリと外部のディレクトリの両方にある場合、ローカルのほうが勝ちます。
 - **完全に統合されます**: 外部のスキルも、システムプロンプトの索引、`skills_list`、`skill_view`、そして `/skill-name` のスラッシュコマンドに出てきます。ローカルのスキルと何も変わりません。
@@ -640,13 +640,20 @@ hermes bundles reload
 |--------|---------|------------|
 | `create` | まっさらから新しいスキルを作る | `name`、`content`（SKILL.md の全文）、任意で `category` |
 | `patch` | 狙いを絞った直し（こちらを推奨） | `name`、`old_string`、`new_string` |
-| `edit` | 大きな構造の書き直し | `name`、`content`（SKILL.md をまるごと差し替え） |
+| `patch` に `content` を渡す | 大きな構造の書き直し（SKILL.md をまるごと差し替えます。`edit` は以前からの別名です） | `name`、`content` |
 | `delete` | スキルをまるごと消す | `name` |
 | `write_file` | 補助のファイルを足す・更新する | `name`、`file_path`、`file_content` |
 | `remove_file` | 補助のファイルを消す | `name`、`file_path` |
 
+各操作は、それぞれ別の形として示されます。文章を入れる場所は操作ごとに 1 つだけです
+（`content` は create とまるごとの書き直し、`new_string` は狙いを絞った直し、`file_content` は
+write_file です）。ほかの操作の場所を使った指示 — たとえば `create` に `file_content` を
+付けたもの — はツールの形式に合いません（形式を縛って動くローカルの実行基盤は、そもそも
+そういう指示を出しません）。それでも届いてしまった場合は、**その束のどの指示も適用される
+前に**はねられ、文章がどのキーに入っているか、どこへ移せばよいかがエラーに示されます。
+
 :::tip
-更新には `patch` の操作を勧めます。変わった文章だけがツールの呼び出しに現れるので、`edit` よりトークンの効率が良いためです。
+更新には狙いを絞った `patch` を勧めます。変わった文章だけがツールの呼び出しに現れるので、まるごと書き直すよりトークンの効率が良いためです。
 :::
 
 ### エージェントのスキル書き込みに関門を置く（`skills.write_approval`） {#gating-agent-skill-writes-skillswriteapproval}

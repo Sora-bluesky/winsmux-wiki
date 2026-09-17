@@ -2,7 +2,7 @@
 title: "モデルプロバイダのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダ（推論のバックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: df11914f3fee66aaabcc737ebd005ec30540dd05
+upstream_blob: 3b97c05798b4935d22c244af12a9b41390d9fe82
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -107,6 +107,7 @@ author: Your Name
 | `default_headers` | `dict[str, str]` | 毎回の要求に付けるヘッダ（例: Copilot の `Editor-Version`） |
 | `fixed_temperature` | Any | `None` なら呼び出し側の値を使います。`OMIT_TEMPERATURE` を指定すると temperature を一切送りません（Kimi） |
 | `default_max_tokens` | `int \| None` | プロバイダ単位での max_tokens の上限（Nvidia は 16384） |
+| `unsupported_response_formats` | `tuple` | API がそのまま拒否する `response_format` の種類です。補助的なリクエストでは、確実に 400 になると分かっているので最初から外して送ります（DeepSeek は `("json_schema",)`） |
 | `default_aux_model` | str | 補助的な作業（圧縮、画像の読み取り、要約）に使う安価なモデル |
 
 ## 差し替えできるフック {#overridable-hooks}

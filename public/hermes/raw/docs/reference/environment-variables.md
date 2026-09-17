@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 8d2977f42bb34ec4625c85be281cb1d31566ed8e
+upstream_blob: b616f3fdd39b1eb670fc3cd02ad530f92d90721c
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -185,7 +185,7 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `GROQ_BASE_URL` | Groq の OpenAI 互換の音声認識のエンドポイントを上書きします |
 | `STT_OPENAI_MODEL` | OpenAI の音声認識モデルを上書きします（既定: `whisper-1`） |
 | `STT_OPENAI_BASE_URL` | OpenAI 互換の音声認識のエンドポイントを上書きします |
-| `GITHUB_TOKEN` | Skills Hub 向けの GitHub のトークン（API の上限が上がり、スキルを公開できます）。デスクトップアプリの更新確認にも使われます（`GH_TOKEN` も受け付けます） |
+| `GITHUB_TOKEN` | Skills Hub 向けの GitHub のトークン（API の上限が上がり、スキルを公開できます）。デスクトップアプリの更新確認にも使われます（`GH_TOKEN` も受け付けます。どちらも無い場合、デスクトップは `gh` CLI のログイン、次いで匿名のアクセスへ切り替えます） |
 | `HONCHO_API_KEY` | セッションをまたいだ利用者のモデル化（[honcho.dev](https://honcho.dev/)） |
 | `HONCHO_BASE_URL` | 自分で立てた Honcho のベース URL（既定: Honcho のクラウド）。手元の環境に API キーは要りません |
 | `HINDSIGHT_API_KEY` | グラフを意識した永続メモリのための Hindsight の API キー（[hindsight.vectorize.io](https://hindsight.vectorize.io)） |
