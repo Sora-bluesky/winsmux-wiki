@@ -2,7 +2,7 @@
 title: "Meeting Action Items — 会議メモから、根拠付きの決定事項・担当者・チケットを起こす"
 description: "会議メモから、根拠付きの決定事項・担当者・チケットを起こす"
 upstream_path: user-guide/skills/bundled/productivity/productivity-meeting-action-items.md
-upstream_blob: 1a595783f4275a40944b3dd9257d315ea9536f89
+upstream_blob: 68177c5ca64411c6e26c97fe37f657a9124fd45b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items
 ---

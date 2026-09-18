@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: d07e4ad58e61cccaf486d608cc63d2adedbd43c3
+upstream_blob: a438e55675f1be6001af6d6eafbf7a99bd33d23f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -460,7 +460,7 @@ platforms:
 | `platforms.slack.extra.reply_broadcast` | `false` | `true` にすると、スレッドの返信をチャンネル本体にも流します。流れるのは最初の一つ分だけです。 |
 | `platforms.slack.extra.unfurl_links` | Slack の既定 | `false` にすると、押せるリンクは残したまま、リンク先の自動プレビューを止めます。どちらかの unfurl の項目を設定すると、メディアの説明文はファイルとは別のメッセージとして*先に*投稿され（Slack の送信 API がプレビューの指定を運べないためです）、下書きを流し込む送り方は書き換え方式に切り替わります。 |
 | `platforms.slack.extra.unfurl_media` | Slack の既定 | `false` にすると、押せるリンクは残したまま、メディアの自動プレビューを止めます。説明文の順序と送り方についての注意は `unfurl_links` と同じです。 |
-| `platforms.slack.extra.rich_blocks` | `false` | `true` にすると、エージェントのメッセージが [Block Kit](https://docs.slack.dev/block-kit/) の部品（見出し、区切り線、本物の入れ子の箇条書き、Slack 本来の表）として表示されます。通知や読み上げのために、文字だけの代替もいつも一緒に送られます。Slack の上限を超える表は、桁の揃った等幅の文字に戻ります。アプリを入れ直す必要はありません。送る側だけの変更です。 |
+| `platforms.slack.extra.rich_blocks` | `false` | `true` にすると、エージェントのメッセージが [Block Kit](https://docs.slack.dev/block-kit/) の部品（見出し、区切り線、本物の入れ子の箇条書き、Slack 本来の表）として表示されます。マークダウンの `[label](url)` 形式のリンクと Slack の `<url\|label>` 形式の自動リンクは、どちらも箇条書き・引用・表のセルの中で押せるリンクになります。呼びかけの記法（`<@U…>`、`<#C…>`、`<!here>`）はそのまま残ります。通知や読み上げのために、文字だけの代替もいつも一緒に送られます。Slack の上限を超える表は、桁の揃った等幅の文字に戻ります。アプリを入れ直す必要はありません。送る側だけの変更です。 |
 | `platforms.slack.extra.feedback_buttons` | `false` | `rich_blocks` と一緒に `true` にすると、最後の返信に Slack 本来の評価ボタンが付きます。 |
 | `platforms.slack.extra.native_task_cards` | `false` | `true` にすると、進行中の道具の呼び出しが Slack 本来の計画・作業カードとして表示されます。カードは Slack 組み込みの既定 `tool_progress: off` のままで動きます。ただし `display.tool_progress: off` を明示的に設定すると（全体でも `display.platforms.slack` でも同じです。`/verbose` も同じキーに書き込みます）、カードも出なくなります。カードにはスレッドが必要です。カード表示が有効で、会話に結び付けるスレッドがない場合（`reply_in_thread: false` のときのトップレベルの DM）は、文字の吹き出しの代わりに進み具合を何も表示しません。ただし `tool_progress: new`/`all` を明示的に設定していれば、そこでは書き換えできる文字の進み具合に切り替わります。Slack 側の呼び出しが立て直せる理由で失敗したときは、書き換え続ける文字のメッセージ一つに切り替わります。 |
 | `platforms.slack.extra.suggested_prompts` | `[]` | Agent / Assistant の DM の入口に出す `{title, message}` を最大 4 つまで。配列でも `{title, prompts}` でも書けます。 |
@@ -583,6 +583,8 @@ platforms:
 - 対応しているスレッドの宛先で、流し込みが立て直せる理由（API のエラーや回数制限）で失敗したときは、
   書き換え続ける文字のメッセージ一つに切り替わるので、その一巡の間も進み具合は見え続けます。
   中継の送信側が宛先を拒んだ場合は立て直せないので、その一巡の進み具合は表示されません。
+- 長い一巡の途中で Slack が流し込みを閉じたときは、Hermes が同じスレッドに新しいカードを開き、
+  そのときの作業の一覧を載せて更新を続けます。前のカードもそのまま残ります。
 - カードの流し込みは、一巡が終わるときにちょうど一度だけ止まります。途中で止めたときや
   接続が切れたときも同じで、動いたままの表示が残ることはありません。
 

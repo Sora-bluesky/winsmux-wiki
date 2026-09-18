@@ -2,7 +2,7 @@
 title: "Blocked Page Recovery — ブロックされたページ、有料記事、WAF に阻まれたページを、アーカイブの保存版や読み取りサービス経由で取り戻す"
 description: "ブロックされたページ、有料記事、WAF に阻まれたページを、アーカイブの保存版や読み取りサービス経由で取り戻す"
 upstream_path: user-guide/skills/bundled/research/research-blocked-page-recovery.md
-upstream_blob: 60ab28f809b451027bfd928fa82dabd92abbe9e2
+upstream_blob: 9995987a36fd85588d156fdde4bf547a561ba08c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-blocked-page-recovery
 ---

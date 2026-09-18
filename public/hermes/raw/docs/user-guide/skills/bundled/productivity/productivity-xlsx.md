@@ -2,7 +2,7 @@
 title: "Xlsx — Excel の .xlsx ブックと CSV を作る・読む・直す"
 description: "Excel の .xlsx ブックと CSV を作る・読む・直す"
 upstream_path: user-guide/skills/bundled/productivity/productivity-xlsx.md
-upstream_blob: e0d51ec0b99e41f8204ce6b49436798571102116
+upstream_blob: cb8f40d87f8f858385ecfa00431b990bd9c66683
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-xlsx
 ---

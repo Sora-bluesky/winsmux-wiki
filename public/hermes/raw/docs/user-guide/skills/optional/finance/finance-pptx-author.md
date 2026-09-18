@@ -2,7 +2,7 @@
 title: "Pptx Author — python-pptx でヘッドレスに PowerPoint 資料を作る"
 description: "python-pptx でヘッドレスに PowerPoint 資料を作る"
 upstream_path: user-guide/skills/optional/finance/finance-pptx-author.md
-upstream_blob: 4f5b5f28c34b6e7f562c313a435d544157c55323
+upstream_blob: 169aad660cd5e20de93f4b065ed4bfc940d1d0b7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-pptx-author
 ---

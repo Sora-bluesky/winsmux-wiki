@@ -2,7 +2,7 @@
 title: "Github Issues — GitHub の issue を gh または REST で作成・仕分け・ラベル付け・担当割り当てする"
 description: "GitHub の issue を gh または REST で作成・仕分け・ラベル付け・担当割り当てする"
 upstream_path: user-guide/skills/bundled/github/github-github-issues.md
-upstream_blob: e25ceb4cb24e57cd90192588559c276674781b19
+upstream_blob: 917311fb10cc3b5105b94ca79ee92844d2402020
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/github/github-github-issues
 ---

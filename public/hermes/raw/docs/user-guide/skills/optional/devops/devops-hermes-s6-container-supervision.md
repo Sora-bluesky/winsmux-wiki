@@ -2,7 +2,7 @@
 title: "Hermes S6 Container Supervision — Hermes の Docker イメージで s6 サービスを直したり調べたりする"
 description: "Hermes の Docker イメージで s6 サービスを直したり調べたりする"
 upstream_path: user-guide/skills/optional/devops/devops-hermes-s6-container-supervision.md
-upstream_blob: 76b34e9c3e7a4d13c073c51eefc5ec0ff0196157
+upstream_blob: e957e7bdb419689b1a768c348f8d80aeab63ed23
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision
 ---

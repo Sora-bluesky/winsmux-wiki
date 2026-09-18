@@ -2,7 +2,7 @@
 title: "WhatsApp"
 description: "内蔵の Baileys ブリッジを使って Hermes Agent を WhatsApp のボットとして設定する"
 upstream_path: user-guide/messaging/whatsapp.md
-upstream_blob: 7fb088085f4d68bc861c9bc7f46425f675a4ff97
+upstream_blob: 60f4020e3743425712af7f3194ef7087c2921256
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/whatsapp
 ---
@@ -129,6 +129,19 @@ whatsapp:
 
 - `unauthorized_dm_behavior: pair` が全体の初期値です。知らない相手から個別のメッセージが来ると、ペアリング用のコードを返します。
 - `whatsapp.unauthorized_dm_behavior: ignore` にすると、許可していない相手からの個別のメッセージに WhatsApp が何も返さなくなります。私用の番号ではたいていこちらのほうが向いています。
+
+### グループのトーク（ボットの使い方） {#group-chats-bot-mode}
+
+グループを通すかどうかを決めるのは、個別のメッセージ向けの許可リストではなく**グループの方針**です。`WHATSAPP_GROUP_POLICY` / `whatsapp.group_policy`
+の初期値は `pairing` で、グループからは何も転送しません。`allowlist` にして `WHATSAPP_GROUP_ALLOWED_USERS` /
+`whatsapp.group_allow_from`（カンマ区切りの**グループ JID**。たとえば `120363001234567890@g.us`）を並べると、書いたグループだけが通ります。
+`open` なら、ボットが入っているグループはすべて通ります。送り主は、そのうえでほかのゲートウェイの相手と同じように確かめられます。
+`WHATSAPP_ALLOWED_USERS` を設定している場合、発言した人がその一覧に載っているか、ペアリング済みである必要があります。WhatsApp が LID で
+指してくる送り主は、Baileys がそれと一緒に渡してくる電話番号で照合されるので、`lid-mapping` のファイルがまだ無い初めての相手でも
+取りこぼしません。送り主の許可リストを置いていない場合、
+`allowlist` はグループ JID の一覧だけを信頼して、載っているグループの参加者全員を通します。`open` のほうは、やはり参加者がペアリング済みか
+`WHATSAPP_ALLOW_ALL_USERS=true` である必要があります。初期状態では、通したグループのメッセージにはボットが毎回返します。
+`require_mention: true` / `WHATSAPP_REQUIRE_MENTION=true` にすると、@メンション・ボットへの返信・`/commands` のときだけ返すようになります（`free_response_chats` に入れたグループは対象外です）。
 
 そのあとゲートウェイを起動します。
 

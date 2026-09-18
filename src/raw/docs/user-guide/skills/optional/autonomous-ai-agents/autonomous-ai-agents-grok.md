@@ -2,7 +2,7 @@
 title: "Grok — xAI の Grok Build CLI にコーディングを任せる（機能追加、PR）"
 description: "xAI の Grok Build CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok.md
-upstream_blob: e57f08318b0adb04023ce5364aadc9174ac561ec
+upstream_blob: 6072540efe5bd348bce3bd29de20af5e2d2ea612
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok
 ---

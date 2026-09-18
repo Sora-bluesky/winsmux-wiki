@@ -2,7 +2,7 @@
 title: "Comps Analysis — Excel で類似企業比較の評価ブックを作る"
 description: "Excel で類似企業比較の評価ブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-comps-analysis.md
-upstream_blob: de8d1aa2e43ae9775e93699b70fc5b49207bd13d
+upstream_blob: 5a17a99c597ba0e69ecde0c95d81215272d7b7d8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-comps-analysis
 ---

@@ -2,7 +2,7 @@
 title: "Excel Author — openpyxl でヘッドレスに監査できる財務ワークブックを作る"
 description: "openpyxl でヘッドレスに監査できる財務ワークブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-excel-author.md
-upstream_blob: 50e1e36f80d44d0584bbd3b551694505c10c39c5
+upstream_blob: 2a88d22a5c08cb0ca9bc3d9e13f48f6ceb16ebf7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-excel-author
 ---

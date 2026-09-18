@@ -2,7 +2,7 @@
 title: "Qmd — メモ・資料・書き起こしを手元でまとめて検索する"
 description: "メモ・資料・書き起こしを手元でまとめて検索する"
 upstream_path: user-guide/skills/optional/research/research-qmd.md
-upstream_blob: 4b0dc1373cbd849cb4071a834b17704bc4621eae
+upstream_blob: ddc21fc07604e7e94b0991c2e5cb7f9e2d7f3e11
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-qmd
 ---

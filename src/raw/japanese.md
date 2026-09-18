@@ -43,7 +43,7 @@ hermes config set display.language ja
 - **#39457**（open、最終更新 2026-07-25）— macOS で、英語のあとに続けて打った文字が落ちます。
 - **#40954**（closed、not planned、2026-07-14）— WSL2 + WSLg のデスクトップアプリで、Windows 側の入力が届きません。
 
-回避策として書かれているものは、いまのところ2つだけです。#40954 には、Windows 側で動くデスクトップアプリを組み、バックエンドだけ WSL に置いてつなぐ手順が書かれています。ただしこの報告は not planned として閉じられており、公式の手順ではありません。#91624 には環境変数 `HERMES_DISABLE_EXTENDED_KEYS` を使う案がありますが、これは報告者が自分で当てた修正の前提での話で、その修正を取り込む PR（#91661）は 2026-09-18 時点でまだ開いたままです。設定するだけでは効きません。
+回避策として書かれているものは、いまのところ2つだけです。#40954 には、Windows 側で動くデスクトップアプリを組み、バックエンドだけ WSL に置いてつなぐ手順が書かれています。ただしこの報告は not planned として閉じられており、公式の手順ではありません。#91624 には環境変数 `HERMES_DISABLE_EXTENDED_KEYS` を使う案がありますが、これは報告者が自分で当てた修正の前提での話で、その修正を取り込む PR（#91661）は 2026-09-19 時点でまだ開いたままです。設定するだけでは効きません。
 
 公式 docs には、入力の不調に対する記述は見つけられませんでした。[Windows](/hermes/docs/user-guide/windows-native/) のページに文字コードの注意はありますが、入力の確定の話ではありません。
 
@@ -64,4 +64,4 @@ hermes config set display.language ja
 
 ## このページの更新
 
-上に挙げた番号は、毎週 GitHub で状態を見直します。閉じたもの、取り込まれたものが出れば、この本文を書き換えます。取得日は 2026-09-18 です。番号の現在の状態は、[NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) で直接確認できます。
+上に挙げた番号は、毎週 GitHub で状態を見直します。閉じたもの、取り込まれたものが出れば、この本文を書き換えます。取得日は 2026-09-19 です。番号の現在の状態は、[NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) で直接確認できます。

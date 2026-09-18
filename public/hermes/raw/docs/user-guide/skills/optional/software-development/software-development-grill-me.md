@@ -2,7 +2,7 @@
 title: "Grill Me — 実装に入る前に、計画を厳しく問いただす"
 description: "実装に入る前に、計画を厳しく問いただす"
 upstream_path: user-guide/skills/optional/software-development/software-development-grill-me.md
-upstream_blob: 1890f819a5570d38c6b036aff42b7c81f38deb4e
+upstream_blob: e28f7fb7ac7f64e8cb1d95bec5e6bab602892717
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-grill-me
 ---

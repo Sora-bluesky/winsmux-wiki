@@ -2,7 +2,7 @@
 title: "Draw Your Font — 手書き文字の写真から、そのまま入れて使える TTF フォントを作る"
 description: "手書き文字の写真から、そのまま入れて使える TTF フォントを作る"
 upstream_path: user-guide/skills/optional/creative/creative-draw-your-font.md
-upstream_blob: e5fcdda279f1ffc8f8f73a3d04b0c479e62cea64
+upstream_blob: 0ea2f9010414e912267fae9f31b2f106c142946b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-draw-your-font
 ---

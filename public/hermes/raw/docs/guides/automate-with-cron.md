@@ -2,7 +2,7 @@
 title: "cron であらゆる作業を自動化する"
 description: "Hermes の cron を使った実践的な自動化パターン — 監視、レポート、パイプライン、複数スキルの組み合わせ"
 upstream_path: guides/automate-with-cron.md
-upstream_blob: c73d9b39ea328d0b18c2699ffe7acca2749193cb
+upstream_blob: 0d261cac5776996c750aa5b0fe8ec8951ff30476
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron
 ---

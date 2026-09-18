@@ -2,7 +2,7 @@
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: e15fb677e3a3d7bad3206d73c896418167838957
+upstream_blob: 68a6e35f8c2dd41c36da24b93d3f331eccef7bbd
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -1038,6 +1038,8 @@ gateway:
 ```
 
 有効にすると、Hermes は送信するすべてのメッセージに Telegram の `LinkPreviewOptions(is_disabled=True)` を付けます。`python-telegram-bot` が古い場合は、従来の `disable_web_page_preview` の引数に切り替えます。
+
+**長い返信と送信制限。** Telegram の 4,096 文字という上限を超える返信は、番号を振った断片（`(1/3)`、`(2/3)`、…）に分けて送ります。1 つのチャットへの送信は返信ごとに 1 件ずつ順番に届くので、定時の報告と個別の返答が同時に発生しても断片が混ざることはなく、文章に添えるファイルが 2 つの断片のあいだに割り込むこともありません。Telegram の送信制限が途中の断片をはねた場合、Hermes は画面にすでに出ている断片を送り直すのではなく、制限が解けてからはねられた断片の続きを送ります。そのチャットが制限の時間帯にあると分かっているあいだは、以降の送信は手元で失敗させます（制限を長引かせる余計な要求を出さないためです）。ゲートウェイがその場で待てる上限を超える制限になった場合は配信の台帳へ引き継ぎ、「一部はすでに上に届いているかもしれません」という断りを添えて返信を送り直します。
 
 ## グループの許可リスト {#group-allowlisting}
 

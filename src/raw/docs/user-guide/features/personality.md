@@ -2,7 +2,7 @@
 title: "人格と SOUL.md"
 description: "グローバルな SOUL.md、組み込みの人格、独自のペルソナ定義で Hermes Agent の人格を自分好みにします"
 upstream_path: user-guide/features/personality.md
-upstream_blob: e8b2beb01ed4e91a0b8fa76bcb7c85a9e5b720a1
+upstream_blob: 7037af11bdf630bb343411ddd7e9161a084c55c3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/personality
 ---

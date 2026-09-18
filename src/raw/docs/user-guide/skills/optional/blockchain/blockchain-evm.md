@@ -2,7 +2,7 @@
 title: "Evm — 読み取り専用の EVM クライアント。8 つのチェーンの残高、トークン、ガス代を見る"
 description: "読み取り専用の EVM クライアント。8 つのチェーンの残高、トークン、ガス代を見る"
 upstream_path: user-guide/skills/optional/blockchain/blockchain-evm.md
-upstream_blob: a065f01a8b0fe3f0636d1251ebdd45f72b78a0bc
+upstream_blob: eaa5b860eae7e025f08925cf226aac4b5f66cf61
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/blockchain/blockchain-evm
 ---

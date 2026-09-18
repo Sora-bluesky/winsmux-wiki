@@ -2,7 +2,7 @@
 title: "チュートリアル: GitHub の PR をレビューするエージェント"
 description: "リポジトリを見張り、プルリクエストをレビューして、その結果を手を触れずに届けてくれる AI レビュアーを作ります"
 upstream_path: guides/github-pr-review-agent.md
-upstream_blob: f45684973bd45028efc2c8e2291998a024705b71
+upstream_blob: 1d426a1bcbcbb119b3aff26a6b73717afe1a8ebb
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/github-pr-review-agent
 ---

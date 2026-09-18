@@ -2,7 +2,7 @@
 title: "スクリプトだけの定期実行（LLM なし）"
 description: "LLM をまったく使わない、昔ながらの見張り番の定期実行です。スクリプトが時間どおりに走り、その標準出力がメッセージアプリへ届きます。メモリの警告、ディスクの警告、CI の通知、定期的な状態確認に使えます。"
 upstream_path: guides/cron-script-only.md
-upstream_blob: ae3f1f0ae0e69435e2bafacaae472ca674818b5a
+upstream_blob: c53fa1c668a721894016b6f368fd5a68fbef7edf
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/cron-script-only
 ---

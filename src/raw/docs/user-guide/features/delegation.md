@@ -2,7 +2,7 @@
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: b699df682b513ca1360a519b93338339cb6039bd
+upstream_blob: 93a793abdc6663c0cad8e1a632f2ed2b8c69a599
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---

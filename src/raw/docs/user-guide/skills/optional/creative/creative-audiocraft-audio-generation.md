@@ -2,7 +2,7 @@
 title: "Audiocraft Audio Generation — AudioCraft。MusicGen で文章から音楽、AudioGen で文章から音"
 description: "AudioCraft。MusicGen で文章から音楽、AudioGen で文章から音"
 upstream_path: user-guide/skills/optional/creative/creative-audiocraft-audio-generation.md
-upstream_blob: 3a8c99319fe34be0c9344ee895016d3c5b67ae52
+upstream_blob: 643692ba3cf0eeb68adc8da5ee27b521f81b37ae
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation
 ---

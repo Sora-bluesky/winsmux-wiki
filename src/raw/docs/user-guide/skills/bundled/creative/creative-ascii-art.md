@@ -2,7 +2,7 @@
 title: "Ascii Art — アスキーアート: pyfiglet、cowsay、boxes、画像からの変換"
 description: "アスキーアート: pyfiglet、cowsay、boxes、画像からの変換"
 upstream_path: user-guide/skills/bundled/creative/creative-ascii-art.md
-upstream_blob: ba08d77c05947be5790b8b7e46fc776d6950a6c6
+upstream_blob: 21cdb1ff5732e83f68eb22c83441a360e512c21e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-ascii-art
 ---

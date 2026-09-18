@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: f31980d51f596b0799cc2c394539810539f3a350
+upstream_blob: bd695ce1b60a3162b1d3db128707d15e715579fb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -66,6 +66,12 @@ worker dashboard
 # → already running: opens the browser at ?profile=worker
 # → not running:     starts the machine dashboard with "worker" preselected
 ```
+
+こうして起動した管理画面は、サーバーが動いているあいだずっと `worker` を既定の
+対象として持ち続けます。`?profile=` を含まない深い場所へのリンク（たとえば
+`/chat?resume=<id>` のリンク）を開いても `worker` のもとで開くので、埋め込みの
+チャットからは、そのプロファイルの MCP サーバー・モデル・スキルが見えます。
+URL に `?profile=` を明示した場合は、そちらが必ず優先されます。
 
 `--isolated` を付けると、この動きをやめて、そのプロファイルだけを対象にした専用の
 サーバーを動かせます（一本化する前の動きです。プロファイルごとの管理画面を、

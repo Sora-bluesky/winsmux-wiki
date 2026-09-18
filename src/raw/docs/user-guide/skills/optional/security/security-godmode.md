@@ -2,7 +2,7 @@
 title: "Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN"
 description: "LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN"
 upstream_path: user-guide/skills/optional/security/security-godmode.md
-upstream_blob: 07eb995afbdd31fe259e279c0013b74e0d913ee9
+upstream_blob: bb2451cc9e628b4e53c4a8157ad77907990c227b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-godmode
 ---

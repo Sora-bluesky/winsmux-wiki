@@ -2,7 +2,7 @@
 title: "Evaluating Llms Harness — lm-eval-harness で LLM を評価する（MMLU、GSM8K など）"
 description: "lm-eval-harness で LLM を評価する（MMLU、GSM8K など）"
 upstream_path: user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness.md
-upstream_blob: 8d449ee126a49a78d7183845dda06a9742d4158c
+upstream_blob: e16931a1edf06d00876e7e3e3c8e25001d175030
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness
 ---
@@ -16,7 +16,7 @@ lm-eval-harness で LLM を評価します（MMLU、GSM8K など）。
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/mlops/evaluating-llms-harness` で入れます |
-| パス | `optional-skills/mlops\evaluation\evaluating-llms-harness` |
+| パス | `optional-skills/mlops/evaluation/evaluating-llms-harness` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -123,11 +123,11 @@ lm_eval --model hf \
 **ステップ 3: 評価を実行する**
 
 ```bash
-# Full MMLU evaluation (57 subjects)
+# Full MMLU evaluation (57 subjects), standard 5-shot evaluation
 lm_eval --model hf \
   --model_args pretrained=meta-llama/Llama-2-7b-hf \
   --tasks mmlu \
-  --num_fewshot 5 \  # 5-shot evaluation (standard)
+  --num_fewshot 5 \
   --batch_size 8 \
   --output_path results/ \
   --log_samples  # Save individual predictions
@@ -192,10 +192,11 @@ Training Progress Tracking:
 CHECKPOINT_DIR=$1
 STEP=$2
 
+# 0-shot for speed
 lm_eval --model hf \
   --model_args pretrained=$CHECKPOINT_DIR/checkpoint-$STEP \
   --tasks gsm8k,hellaswag \
-  --num_fewshot 0 \  # 0-shot for speed
+  --num_fewshot 0 \
   --batch_size 16 \
   --output_path results/step-$STEP.json
 ```
@@ -480,13 +481,13 @@ lm_eval --model hf \
 
 ## さらに進んだ話題 {#advanced-topics}
 
-**ベンチマークの説明**: 60 種類以上のタスクそれぞれが何をはかるのか、結果をどう読むのかは、[references/benchmark-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\evaluation\evaluating-llms-harness/references/benchmark-guide.md) にくわしく書いてあります。
+**ベンチマークの説明**: 60 種類以上のタスクそれぞれが何をはかるのか、結果をどう読むのかは、[references/benchmark-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/evaluation/evaluating-llms-harness/references/benchmark-guide.md) にくわしく書いてあります。
 
-**独自のタスク**: 分野に合わせた評価タスクの作り方は [references/custom-tasks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\evaluation\evaluating-llms-harness/references/custom-tasks.md) を見てください。
+**独自のタスク**: 分野に合わせた評価タスクの作り方は [references/custom-tasks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/evaluation/evaluating-llms-harness/references/custom-tasks.md) を見てください。
 
-**API のモデルの評価**: OpenAI や Anthropic をはじめとする API のモデルを評価する方法は [references/api-evaluation.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\evaluation\evaluating-llms-harness/references/api-evaluation.md) を見てください。
+**API のモデルの評価**: OpenAI や Anthropic をはじめとする API のモデルを評価する方法は [references/api-evaluation.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/evaluation/evaluating-llms-harness/references/api-evaluation.md) を見てください。
 
-**GPU を複数使う進め方**: データ並列とテンソル並列の評価については [references/distributed-eval.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\evaluation\evaluating-llms-harness/references/distributed-eval.md) を見てください。
+**GPU を複数使う進め方**: データ並列とテンソル並列の評価については [references/distributed-eval.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/evaluation/evaluating-llms-harness/references/distributed-eval.md) を見てください。
 
 ## 必要なハードウェア {#hardware-requirements}
 

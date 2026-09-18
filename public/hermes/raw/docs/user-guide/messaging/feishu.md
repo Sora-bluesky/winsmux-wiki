@@ -2,7 +2,7 @@
 title: "Feishu / Lark"
 description: "Hermes Agent を Feishu または Lark の Bot として設定します"
 upstream_path: user-guide/messaging/feishu.md
-upstream_blob: a483395f6363de0550762ea2989befccc75a13fc
+upstream_blob: 42632cc40587743a2aaa481bee9686cf1c18c86b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu
 ---
@@ -105,7 +105,7 @@ FEISHU_CONNECTION_MODE=websocket
 
 **必要なもの:** Python パッケージの `websockets` をインストールしておく必要があります。接続の維持、ハートビート、自動再接続は SDK が内部で面倒を見ます。
 
-**仕組み:** アダプターは Lark SDK の WebSocket クライアントを、裏側のスレッドで動かします。受け取ったイベント（メッセージ、リアクション、カード操作）は本体の asyncio ループへ渡されます。接続が切れたときは、SDK が自動で再接続を試みます。
+**仕組み:** アダプターは Lark SDK の WebSocket クライアントを、裏側のスレッドで動かします。受け取ったイベント（メッセージ、リアクション、カード操作）は本体の asyncio ループへ渡されます。接続が切れたときは、SDK が自動で再接続を試みます。つながり自体が完全に途切れた場合（SDK の再試行が尽きたときや、クライアントのスレッドが終わったとき）は、Hermes のスーパーバイザが、待ち時間に上限を設けながらクライアントを作り直します。つながりが落ちているあいだ、`hermes gateway status` はそのプラットフォームを `retrying` と表示し、接続が戻るまで続きます。
 
 ### 任意: Webhook 方式 {#optional-webhook-mode}
 
@@ -401,9 +401,9 @@ Hermes の Feishu / Lark Bot は、人を招くのと同じやり方でビデオ
 | **動画** | .mp4, .mov, .avi, .mkv, .webm, .m4v, .3gp | ダウンロードし、文書として保存します |
 | **ファイル** | .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx ほか | ダウンロードし、文書として保存します |
 
-リッチテキスト（post）メッセージに含まれるメディアも、本文中の画像や添付ファイルを含めて取り出して保存します。
+リッチテキスト（post）メッセージに含まれるメディアも取り出して保存します。本文の中に置かれた画像やファイルだけでなく、書き手が最上位の `files` の一覧で送った添付（ひとつの吹き出しに、ひとことの文とファイルが入っているもの）も対象です。添付はすべて集められます。フォルダの項目は飛ばされ、ひとつごとに `[Attachment: <name>]` の印が本文に残ります。
 
-小さなテキスト形式の文書（.txt、.md）については、中身がメッセージ本文へ自動で差し込まれるので、エージェントはツールを使わずそのまま読めます。
+小さなテキスト形式の文書（.txt、.md）については、中身がメッセージ本文のうしろへ自動で足されるので、エージェントはツールを使わずそのまま読めます。ファイルに添えて書いたひとことは、そのまま残ります。
 
 ### 送信 {#outbound-sending}
 

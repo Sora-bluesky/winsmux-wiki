@@ -2,7 +2,7 @@
 title: "CLI コマンド早見表"
 description: "Hermes のターミナルコマンドとコマンド群についての公式な早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: 381bf81fd8b1dc6cdc3261224c768c5e402b4338
+upstream_blob: f9a9089cf81e2b777c7938cb745d1b2d4905456a
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -120,7 +120,7 @@ hermes chat [options]
 | `--oneshot` | `-q` / `--query-file` と併用したとき、対話セッションを始めるのではなく、問いに答えて終了します（0.21 より前の単発の挙動）。TTY でない入出力のときと `-Q` を付けたときは自動でこうなります。 |
 | `-m`, `--model <model>` | この実行だけモデルを差し替えます。 |
 | `-t`, `--toolsets <csv>` | カンマ区切りで指定したツールセットを有効にします。 |
-| `--provider <provider>` | プロバイダを指定します: `auto`, `openrouter`, `nous`, `openai-codex`, `copilot-acp`, `copilot`, `anthropic`, `gemini`, `huggingface`, `novita`（別名 `novita-ai`, `novitaai`）, `openai-api`, `zai`, `kimi-coding`, `kimi-coding-cn`, `minimax`, `minimax-cn`, `minimax-oauth`, `kilocode`, `xiaomi`, `arcee`, `gmi`, `upstage`（別名 `solar`）, `alibaba`, `alibaba-cn`, `alibaba-coding-plan`（別名 `alibaba_coding`）, `alibaba-coding-plan-cn`, `alibaba-token-plan`, `alibaba-token-plan-cn`, `deepseek`, `nvidia`, `ollama-cloud`, `xai`（別名 `grok`）, `xai-oauth`（別名 `grok-oauth`）, `qwen-oauth`, `bedrock`, `opencode-zen`, `opencode-go`, `opencode-free`（別名 `free`, `opencode_free`。キー不要）, `commandcode`, `commandcode-anthropic`, `ai-gateway`, `azure-foundry`, `lmstudio`, `stepfun`, `tencent-tokenhub`（別名 `tencent`, `tokenhub`）, `router`（別名 `ramp-router`, `ramp`）, `nebius-token-factory`（別名 `nebius`, `nebius-tf`, `tokenfactory`）, `tencent-tokenplan`（別名 `tokenplan`, `tencent-lkeap`）。 |
+| `--provider <provider>` | プロバイダを指定します: `auto`, `openrouter`, `nous`, `openai-codex`, `copilot-acp`, `copilot`, `anthropic`, `gemini`, `huggingface`, `novita`（別名 `novita-ai`, `novitaai`）, `openai-api`, `zai`, `kimi-coding`, `kimi-coding-cn`, `minimax`, `minimax-cn`, `minimax-oauth`, `kilocode`, `xiaomi`, `arcee`, `gmi`, `upstage`（別名 `solar`）, `alibaba`, `alibaba-cn`, `alibaba-coding-plan`（別名 `alibaba_coding`）, `alibaba-coding-plan-cn`, `alibaba-token-plan`, `alibaba-token-plan-cn`, `deepseek`, `nvidia`, `ollama-cloud`, `xai`（別名 `grok`）, `xai-oauth`（別名 `grok-oauth`）, `qwen-oauth`, `bedrock`, `opencode-zen`, `opencode-go`, `commandcode`, `commandcode-anthropic`, `ai-gateway`, `azure-foundry`, `lmstudio`, `stepfun`, `tencent-tokenhub`（別名 `tencent`, `tokenhub`）, `router`（別名 `ramp-router`, `ramp`）, `nebius-token-factory`（別名 `nebius`, `nebius-tf`, `tokenfactory`）, `tencent-tokenplan`（別名 `tokenplan`, `tencent-lkeap`）。 |
 | `-s`, `--skills <name>` | このセッションで使うスキルを事前に読み込みます（繰り返し指定、またはカンマ区切りで複数可）。 |
 | `-v`, `--verbose` | 詳しい出力を出します。 |
 | `-Q`, `--quiet` | プログラム向けのモードです。バナー・スピナー・ツールの下見表示を出しません。 |
@@ -682,7 +682,7 @@ hermes cron <list|create|edit|pause|resume|run|remove|status|runs|incidents|doct
 | `create` / `add` | プロンプトから予約の仕事を作ります。`--skill` を繰り返して、スキルを 1 つ以上付けられます。`--reasoning-effort <none\|minimal\|low\|medium\|high\|xhigh\|max\|ultra>` で、その仕事だけ推論の深さを固定できます。 |
 | `edit` | 仕事のスケジュール、プロンプト、名前、配信先、繰り返し回数、付けたスキルを変更します。`--clear-skills`、`--add-skill`、`--remove-skill` に加えて `--reasoning-effort`（空文字で固定を解除）が使えます。 |
 | `pause` | 仕事を消さずに一時停止します。 |
-| `resume` | 止めていた仕事を再開し、次の実行時刻を計算し直します。 |
+| `resume` | 止めていた仕事を再開します。止めているあいだに繰り返しの実行時刻が来ていた場合、それは来たままの扱いで残ります（次のティックで 1 回だけ追いかけて実行するか、飛ばしたことが記録されます）。それ以外のときは、次の実行時刻を計算し直します。 |
 | `run` | 次のスケジューラのティックで仕事を動かします。 |
 | `remove` | 予約された仕事を削除します。 |
 | `status` | cron のスケジューラが動いているかを確認します。 |
@@ -897,6 +897,13 @@ hermes doctor [--fix]
 |--------|-------------|
 | `--fix` | 直せるところは自動で直そうとします。 |
 
+**API Connectivity** の項目には `IPv6 route` の検査が入っています。両方のプロトコルに対応した既知のホストへ、短い（2 秒）IPv6 の TCP 接続を 1 回だけ開いてみるものです。経路は知らされているのに時間切れになるだけの状態（行き止まりの IPv6 のアドレス帯）は、直し方である `network.force_ipv4: true` を挙げた注意として報告されます。IPv6 の経路がまったく無いのは健全な状態で、OK と報告されます。すでに `force_ipv4` が設定されているときは、この検査は飛ばされます。
+
+自分で足した接続先の設定についての検査（どちらも注意だけで、`--fix` は書き換えません）:
+
+- `custom_providers` が YAML のリストになっていないとき（たとえば誤った `config set` が残した文字列）は、そのキーと受け取った型を挙げたエラーとして報告されます。リストに戻すまで、実行時は自分で足した接続先をすべて無視します。
+- 古い形の `custom_providers` のリストの項目で、対応する `providers:` の項目（同じ接続先の URL）が無いものは、どう移せばよいかを添えて報告されます。そうした項目は、他のどの画面も編集する `providers:` の対応表ではなく、役目を終えたリストの保管場所から読まれ続けます（モデルの選択画面と Custom Endpoints のページは両方を読みます）。リストを `providers:` へ移す 1 回きりの v12 の移行は、二度と走りません。
+
 ## `hermes dump` {#hermes-dump}
 
 ```bash
@@ -1019,6 +1026,8 @@ hermes backup [options]
 | `-k`, `--keep <N>` | 全体のバックアップのあと、出力先にある古い `hermes-backup-*.zip` を、新しいものから N 個を残して削除します（既定 3。`0` ならすべて残します）。名前を自分で付けた zip には手を触れません。 |
 
 バックアップは SQLite の `backup()` API を使って安全に写すので、Hermes が動いている最中でも正しく取れます（WAL モードでも安全です）。
+
+**終了コード:** 選ばれたファイルがすべて書庫に入ったときだけ `0` です。入れられなかったファイルがある場合（`Backup incomplete: …`）、残りは復元できるよう zip 自体は残しますが、コマンドは `1` で終わります。cron や systemd のタイマーが、欠けのある書庫を成功として報告しないためです。`--keep` による古い分の削除も飛ばされるので、完全な過去の書庫は残ります。`2` は、別のバックアップがすでに動いていたという意味です。
 
 **zip に含まれないもの:**
 
@@ -1239,12 +1248,19 @@ hermes config <subcommand>
 | `show` | 今の設定値を表示します。 |
 | `edit` | `config.yaml` をエディタで開きます。 |
 | `get <key> [--json] [--raw]` | ドットでつないだキーで、設定値を 1 つ表示します（例: `hermes config get model.default`）。`--json` は機械で読める形で出します。認証情報らしい値（`api_key`、`*_TOKEN`、`*_SECRET`、`password` など）は伏せ字になります（`sk-o...7890`）。エージェントがこれを、記録が残るセッションから実行するためです。`--raw` を付けると本当の値を表示します（`security.redact_secrets: false` にしても同じです）。既知の区分の下にある、スキーマが定義していない入れ子のキー（`compression.compressor.enabled`）も、ファイルにある値を表示します。加えて、Hermes がそれを読まないかもしれないという注意が標準エラーに出ます。標準出力と終了コード（0）は変わりません。 |
-| `set <key> <value> [--force]` | 設定値を書き込みます。ドットでつないだパスは `config.yaml` へ、`UPPER_SNAKE` の名前（`OPENROUTER_API_KEY`、`DISCORD_HOME_CHANNEL`、`TELEGRAM_GROUP_ALLOWED_USERS`、`HERMES_TIMEZONE` など）はすべて環境変数とみなされ `.env` へ入ります — プラットフォームの設定の流れや `/sethome` が書くのと同じファイルで、実行時に値を読む側もここを見ます。`config set` が `UPPER_SNAKE` のキーを `config.yaml` に書くことは、`--force` を付けてもありません。環境変数の書き込みで禁止されている名前（`HERMES_YOLO_MODE`、`PATH` など）はその場で拒否されます。それ以外の `UPPER_SNAKE` の名前は、そのまま `.env` に保存されます（プラグインやスキル、外部のツールがプロセスの環境から読みます）。既知のキーを誤った接頭辞の下に書いた場合（`gateway.discord.foo`。`discord.foo` 自体は既知のキーです）は、候補を示して拒否され、何も書かれません。既知の区分の下にあるそれ以外の知らないパス（`agent.max_turnz` や、実行時に読まれるだけで既定値が用意されていないキー）は、候補を示す注意とともに書かれます。トップレベルにある知らない小文字のキーも、注意を出したうえで書かれます（トップレベルの値はスキル向けに環境へ橋渡しされるためです）。`--force` を付ければ、拒否された誤った接頭辞のパスも書き込めます。 |
+| `set <key> <value> [--force]` | 設定値を書き込みます。ドットでつないだパスは `config.yaml` へ、`UPPER_SNAKE` の名前（`OPENROUTER_API_KEY`、`DISCORD_HOME_CHANNEL`、`TELEGRAM_GROUP_ALLOWED_USERS`、`HERMES_TIMEZONE` など）はすべて環境変数とみなされ `.env` へ入ります — プラットフォームの設定の流れや `/sethome` が書くのと同じファイルで、実行時に値を読む側もここを見ます。`config set` が `UPPER_SNAKE` のキーを `config.yaml` に書くことは、`--force` を付けてもありません。環境変数の書き込みで禁止されている名前（`HERMES_YOLO_MODE`、`PATH` など）はその場で拒否されます。それ以外の `UPPER_SNAKE` の名前は、そのまま `.env` に保存されます（プラグインやスキル、外部のツールがプロセスの環境から読みます）。既知のキーを誤った接頭辞の下に書いた場合（`gateway.discord.foo`。`discord.foo` 自体は既知のキーです）は、候補を示して拒否され、何も書かれません。既知の区分の下にあるそれ以外の知らないパス（`agent.max_turnz` や、実行時に読まれるだけで既定値が用意されていないキー）は、候補を示す注意とともに書かれます。トップレベルにある知らない小文字のキーも、注意を出したうえで書かれます（トップレベルの値はスキル向けに環境へ橋渡しされるためです）。`--force` を付ければ、拒否された誤った接頭辞のパスも書き込めます。値はスキーマに照らして型が確かめられます。リストや対応表でなければならないキー（`custom_providers`、`model.aliases`、`display.platforms`、すでにそれらを持っているキー）は、素の文字列や形の合わない書き方を拒みます。また、リストや対応表に見えるのに YAML / JSON として正しくない値も、文字列として保存されるのではなく拒まれます。どちらの場合も何も書かれず、エラーが期待する型を教えます。YAML / JSON の書き方で渡してください（`hermes config set custom_providers '[{name: x, base_url: https://...}]'`）。`[` や `{` で始まるだけの文字列を保存したいときは、YAML として引用符で包みます（`"'[text'"`）。`--force` は、これまでどおり対応表の区分をまるごと置き換えます。リストの場所に入れたリスト以外の値は上書きになりません。ただし、名前のリストを緩く読むキー（`agent.disabled_toolsets`、`skills.disabled`）については、名前を 1 つ書くと 1 項目のリストとして保存されます。 |
 | `unset <key>` | 設定のキーを消し、組み込みの既定値へ戻します。`UPPER_SNAKE` の名前では `.env` の項目を消し、さらに古い `config set` が残したトップレベルの写しが `config.yaml` にあれば、それも落とします（`get` はそうした写しを古いものとして報告します）。 |
 | `path` | 設定ファイルのパスを表示します。 |
 | `env-path` | `.env` ファイルのパスを表示します。 |
 | `check` | 足りない設定や古い設定がないか調べます。 |
 | `migrate` | 新しく増えた項目を対話的に追加します。 |
+
+`config set model.provider <provider>` は、`model:` の区分の行き先を 1 つに保ちます。前のプロバイダから残った
+`model.base_url` や `model.api_mode` が別のプロバイダの接続先だった場合は、取り除かれ（取り除いたことも表示され）
+ます。そのままだと、新しいプロバイダのキーを古い接続先へ送ってしまい、別のプロバイダの名前を挙げた認証のエラーで
+失敗するからです。新しいプロバイダ自身の接続先、名前を付けた `custom_providers` の項目の接続先、`custom` や
+ローカルの別名の下にある URL は、そのまま残ります。見覚えのないホスト（プロキシ、LAN のサーバー）は、
+それが今も効いているという注意とともに残ります。
 
 ### キー名の中にあるドット {#dots-inside-key-names}
 
@@ -1762,7 +1778,7 @@ Web ダッシュボードを起動します — 設定や API キーの管理、
 | `--insecure` | 無効 | **非推奨で、何もしません。** 以前は、ループバック以外に開いたときの認証を迂回するものでした。2026 年 6 月の強化以降、公開して待ち受ける場合は*必ず*認証の仕組み（パスワードか OAuth）が要ります。手元だけで使うなら `127.0.0.1` で待ち受けてトンネルしてください。 |
 | `--skip-build` | 無効 | Web UI のビルドを飛ばし、すでにある `dist` をそのまま配ります。npm が使えない、対話しない場面（Windows のタスクスケジューラ、CI）で便利です。先に `cd web && npm run build` でビルドしておいてください。 |
 | `--isolated` | 無効 | 名前付きのプロファイル（`worker dashboard`）から起動したとき、端末共通のダッシュボードへ回すのではなく、そのプロファイル専用のサーバーを動かします。 |
-| `--stop` | — | 動いている `hermes dashboard` のプロセスを止めて終了します。SIGTERM を送り、10 秒待ってから SIGKILL を送ります。バックエンドより長く残ってしまった同居のチャット TUI も止めます（そのままだと削除済みの `state.db-wal` を開いたままにして、次回の起動を妨げるためです）。ダッシュボードから起動したメッセージ連携のボットには手を触れません。 |
+| `--stop` | — | **この Hermes のホームの**、動いている `hermes dashboard` / `hermes serve` のバックエンドを止めて終了します（`-p <profile>` や `HERMES_HOME` でどれかが決まります。他のプロファイルのバックエンド、その端末にある別のインストール、コマンドを打ち込んだシェル自体には決して触れません。持ち主を読み取れないバックエンドもそのままにします）。SIGTERM を送り、10 秒待ってから SIGKILL を送ります。バックエンドより長く残ってしまった同居のチャット TUI も止めます（そのままだと削除済みの `state.db-wal` を開いたままにして、次回の起動を妨げるためです）。ダッシュボードから起動したメッセージ連携のボットには手を触れません。 |
 | `--status` | — | 動いている `hermes dashboard` のプロセスを一覧して終了します。 |
 
 ### `hermes dashboard register` {#hermes-dashboard-register}

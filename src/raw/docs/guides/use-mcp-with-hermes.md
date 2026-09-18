@@ -2,7 +2,7 @@
 title: "Hermes で MCP を使う"
 description: "MCP サーバーを Hermes Agent につなぎ、公開するツールを絞り込み、実際の作業で安全に使うための実践ガイド"
 upstream_path: guides/use-mcp-with-hermes.md
-upstream_blob: 6b8eee4a5929b508b7bd80c5bdb3e2eda776986d
+upstream_blob: c614acb400e6b49de713f37dd576f6ee00912c43
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/use-mcp-with-hermes
 ---
@@ -88,6 +88,10 @@ Inspect this project and summarize the repo layout.
 - どんなツールが使えるか Hermes に尋ねる
 - 設定を変えたあとは `/reload-mcp` を使う
 - サーバーへの接続に失敗した場合はログを確認する
+- シェルから `hermes mcp test <server>` を実行する。接続して、見つかったツールを並べ、
+  接続まで進めたら `0`、接続に失敗したら `1`、そのサーバーが設定に無ければ `3` で終わる
+  （`2` は argparse が出す引数の誤りです）ので、動作確認の仕組みや cron の見張り役は、
+  出力を読み解かずに `$?` だけで分岐できます
 
 実際に試すなら、次のようなプロンプトが役に立ちます。
 

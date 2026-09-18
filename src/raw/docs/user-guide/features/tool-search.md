@@ -2,7 +2,7 @@
 title: "ツール検索"
 description: ""
 upstream_path: user-guide/features/tool-search.md
-upstream_blob: 59dede88ceda70c18a6f8250b847fcc107b15860
+upstream_blob: bc73ecd601e805f9e9140f791612d522edbaf6f5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 ---
@@ -172,7 +172,9 @@ MCP サーバー（`mcp: true` の対象）のインストール、有効化、�
 `tool_call` は束をまとめて受け取ります。`calls` は `{name, arguments}` の要素からなる配列です
 （1 件だけの呼び出しも、要素 1 つの配列にします）。束の中のコネクターの要素は、それぞれ別の
 ゲートウェイ要求として順番に送られます。ローカルの後回しツールは、`tool_call` 1 回につき
-1 要素のままです。承認は実行の前に要素ごとに片付き、要素と要素のあいだで `/stop` が入ると、
+1 要素のままです。ローカルのツールを含んだ複数要素の束は、呼び出し側が書いた最初の要素を使って
+正しい形を示し直す訂正とともに退けられます。また `calls` の値が JSON の文字列として渡された場合も、
+配列で渡したときと同じように読み取られます。承認は実行の前に要素ごとに片付き、要素と要素のあいだで `/stop` が入ると、
 まだ始まっていないものは送られません（その枠は `INTERRUPTED` と報告されます）。
 
 ## 使わないほうがよいとき {#when-not-to-use-it}

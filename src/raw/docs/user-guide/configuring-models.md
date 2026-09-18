@@ -2,7 +2,7 @@
 title: "モデルの設定"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: e2f501c8f0d5202cd203d64fae101162a630dc04
+upstream_blob: 94345b2d619aafe103de800c3d0f6e60ff2aff8e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---

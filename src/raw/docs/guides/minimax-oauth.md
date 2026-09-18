@@ -2,7 +2,7 @@
 title: "MiniMax OAuth"
 description: "ブラウザ経由の OAuth で MiniMax にログインし、Hermes Agent で MiniMax-M2.7 系のモデルを使う方法です。API キーは要りません"
 upstream_path: guides/minimax-oauth.md
-upstream_blob: 0c0770252a73182e3bbd24c773744735a98ed6d8
+upstream_blob: ffc6aa10355e0de8313437cc99ab3e41a250340e
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/minimax-oauth
 ---
@@ -212,6 +212,12 @@ Hermes が URL とコードを表示します。手元のどの端末でもよ�
 認証情報の保存先に `minimax-oauth` の情報がありません。まだログインしていないか、認証情報のファイルが削除されています。
 
 **対処:** `hermes model` を実行して MiniMax (OAuth) を選ぶか、`hermes auth add minimax-oauth` を実行してください。
+
+### 「Provider 'minimax-oauth' is set in config.yaml but no credentials were found」と出る {#provider-minimax-oauth-is-set-in-configyaml-but-no-credentials-were-found}
+
+主となるエージェント、または補助の仕事（圧縮、画像の読み取りなど）が `minimax-oauth` に固定されているのに、認証情報の保存先にログインの記録がありません。OAuth のプロバイダには `MINIMAX_API_KEY` にあたる環境変数はありません。`MINIMAX_API_KEY` は、API キーをそのまま使う `minimax` のプロバイダのものです。
+
+**対処:** `hermes auth add minimax-oauth` を実行してログインするか、そのプロバイダを API キーを使う `minimax` に切り替えてください。
 
 ## ログアウトする {#logging-out}
 

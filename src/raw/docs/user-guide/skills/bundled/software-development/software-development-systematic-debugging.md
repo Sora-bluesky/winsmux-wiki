@@ -2,7 +2,7 @@
 title: "Systematic Debugging — 4 つの段階で根本原因を突き止めます。直す前に、まず不具合を理解します"
 description: "4 つの段階で根本原因を突き止めます。直す前に、まず不具合を理解します"
 upstream_path: user-guide/skills/bundled/software-development/software-development-systematic-debugging.md
-upstream_blob: 684cbdb5bf91855d44b5412ecb08b08dd69e74f3
+upstream_blob: 5417c330381ee9b25b97d4fa3f935a6fc8b1962d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-systematic-debugging
 ---

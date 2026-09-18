@@ -2,7 +2,7 @@
 title: "SMS（Twilio）"
 description: "Hermes Agent を Twilio 経由の SMS チャットボットとして設定する"
 upstream_path: user-guide/messaging/sms.md
-upstream_blob: 8878cc5f0ab5bac6e5741e2954c56248bd08ccc7
+upstream_blob: 914f160226a745e0174d49d747d53ed928d31832
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/sms
 ---

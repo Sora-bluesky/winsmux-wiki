@@ -2,7 +2,7 @@
 title: "トラブル対処: エージェントが前より賢くなくなった気がするとき"
 description: "Hermes の調子が以前より落ちて見えたり、セッションの途中で物忘れをしたりするときの診断手順。モデルの切り替わり、コンテキストの逼迫、コンテキスト長の誤検出、固定されたメモリのスナップショットを順に確認します"
 upstream_path: guides/troubleshooting-agent-quality.md
-upstream_blob: 67a10953688c6e07ee0d2512809797664ecdd49e
+upstream_blob: c102a49d96db5ab9829f250c4a1553d49ad9c5aa
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/troubleshooting-agent-quality
 ---

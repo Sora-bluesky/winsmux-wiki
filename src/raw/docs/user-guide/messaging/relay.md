@@ -2,7 +2,7 @@
 title: "Hermes Relay"
 description: "プラットフォームの認証情報をコネクタ側が持つ形で、Hermes をメッセージングのプラットフォームにつなぎます。登録・できること・設定・困ったときの対処まで"
 upstream_path: user-guide/messaging/relay.md
-upstream_blob: 4ef23c6f609fe17b2b268fec639788395c0dcf46
+upstream_blob: 260632291736a712900f5d1c1002b9085e77e765
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/relay
 ---

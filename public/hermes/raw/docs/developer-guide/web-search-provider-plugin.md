@@ -2,7 +2,7 @@
 title: "ウェブ検索プロバイダのプラグイン"
 description: "Hermes Agent 向けに、ウェブ検索・本文抽出・巡回のバックエンドとなるプラグインを作る方法"
 upstream_path: developer-guide/web-search-provider-plugin.md
-upstream_blob: 2cce42ac6c3ab1f391f0049c2e35999de7750ff0
+upstream_blob: 2070c68740ee4cc5c35e7f8b669a7309069add88
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/web-search-provider-plugin
 ---

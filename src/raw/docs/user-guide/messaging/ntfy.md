@@ -2,7 +2,7 @@
 title: "ntfy"
 description: ""
 upstream_path: user-guide/messaging/ntfy.md
-upstream_blob: c7895710fb0926cbe96430ba4344633dd76b1bb7
+upstream_blob: 8dd632006463224a10a3fcc3cbafcb6969ab4121
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/ntfy
 ---

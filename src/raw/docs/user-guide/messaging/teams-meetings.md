@@ -2,7 +2,7 @@
 title: "Teams Meetings"
 description: "Microsoft Graph の webhook を使って Microsoft Teams の会議要約パイプラインを設定する"
 upstream_path: user-guide/messaging/teams-meetings.md
-upstream_blob: aca258d37219d4d61683d81e4c3b83be851ff55f
+upstream_blob: 52e022333579478777e2717a9728e0b2bcdb57a9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/teams-meetings
 ---

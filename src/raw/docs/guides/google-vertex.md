@@ -2,7 +2,7 @@
 title: "Google Vertex AI"
 description: "Hermes Agent を Google Cloud Vertex AI の Gemini で使う — OAuth2 のサービスアカウントまたは ADC、GCP の請求とクォータ、固定の API キーは不要"
 upstream_path: guides/google-vertex.md
-upstream_blob: 33bde3653b91bfb9975b805fa2d2162d15c4281e
+upstream_blob: fd8f08e461414910c7847a587d5ee808215c1292
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/google-vertex
 ---

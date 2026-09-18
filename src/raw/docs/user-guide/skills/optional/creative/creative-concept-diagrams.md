@@ -2,7 +2,7 @@
 title: "Concept Diagrams — フラットで最小限の教材向け SVG を HTML として作る"
 description: "フラットで最小限の教材向け SVG を HTML として作る"
 upstream_path: user-guide/skills/optional/creative/creative-concept-diagrams.md
-upstream_blob: cc0bc64a8b847fc74b7b1a3a63e7b8154448ac3d
+upstream_blob: 84a229f7ea3e657afe145ff9b6d15cbda8356485
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-concept-diagrams
 ---

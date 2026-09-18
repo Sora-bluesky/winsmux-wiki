@@ -2,7 +2,7 @@
 title: "プロファイルのコマンド早見表"
 description: ""
 upstream_path: reference/profile-commands.md
-upstream_blob: 0f7a83ca3088957b213881a20f61f83d633d1c57
+upstream_blob: 8e34e33136b6e0d4e3fd0c86d57a51e0f791867e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/profile-commands
 ---
@@ -178,6 +178,8 @@ hermes profile show <name>
 ```
 
 プロファイルの詳細として、ホームディレクトリ、設定されたモデル、ゲートウェイの状態、スキルの数、設定ファイルの状態を表示します。
+
+ここでのスキルの数（および `hermes profile list` での数）は、その場で数えています。デスクトップアプリとダッシュボードのプロファイル一覧は数秒おきに問い合わせる形なので、最後に分かっている数を表示し、裏で数え直します。そのため、起動したばかりのバックエンドでは、最初の裏側の集計が終わるまでプロファイルのスキルが一時的に `0` と出ることがあり、入れたばかりのスキルがこれらの一覧に現れるまでには 1 分ほどかかります。
 
 ここに出るのは、そのプロファイルの Hermes のホームディレクトリで、ターミナルの作業ディレクトリではありません。ターミナルのコマンドは `terminal.cwd`（ローカルのバックエンドで `cwd: "."` の場合は起動したディレクトリ）から始まります。
 

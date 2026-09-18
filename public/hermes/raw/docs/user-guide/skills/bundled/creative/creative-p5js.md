@@ -2,7 +2,7 @@
 title: "P5Js — p5.js のスケッチ。ジェネラティブアート、シェーダー、インタラクティブ、3D"
 description: "p5.js のスケッチ。ジェネラティブアート、シェーダー、インタラクティブ、3D"
 upstream_path: user-guide/skills/bundled/creative/creative-p5js.md
-upstream_blob: f819e3c69ef1cb97d50f637aea71c34b9b4bfd49
+upstream_blob: 15145dfadee9594b8b59fc5ec9f30416441ee22d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-p5js
 ---

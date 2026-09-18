@@ -2,7 +2,7 @@
 title: "Buzz 連携"
 description: "Block の Nostr ベースの人間 + エージェント作業空間 Buzz と Hermes Agent をつなぐ 3 通りの方法"
 upstream_path: integrations/buzz.md
-upstream_blob: c0514bf99e4721692207e653947214213559d2c5
+upstream_blob: 32074ebb087eba68cf57dc61fd774ec4a1adfe35
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/buzz
 ---

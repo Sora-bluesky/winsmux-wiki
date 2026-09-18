@@ -2,7 +2,7 @@
 title: "コンテキストファイル"
 description: "プロジェクトのコンテキストファイル（.hermes.md、AGENTS.md、CLAUDE.md、全体共通の SOUL.md、.cursorrules）は、どの会話にも自動で読み込まれます"
 upstream_path: user-guide/features/context-files.md
-upstream_blob: aeff4cadf01f1c129b9f6754a6816bd95a63357a
+upstream_blob: 45329568e0f156098b97cc88cb164b0a85906c66
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files
 ---

@@ -2,7 +2,7 @@
 title: "ブラウザの CDP スーパーバイザ"
 description: "Hermes が JavaScript のネイティブなダイアログを見つけて応答するしくみと、常時つないだ CDP 経由で別オリジンの iframe を操作するしくみ。"
 upstream_path: developer-guide/browser-supervisor.md
-upstream_blob: a30abdbdaca5a6daaf0e9d85de2fb2d14f714fea
+upstream_blob: 44a7823704c157a51851c7847dbff06c6b12b387
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/browser-supervisor
 ---
@@ -75,6 +75,12 @@ Hermes の `task_id` ごとに、バックグラウンドのデーモンスレ�
   何度呼んでも結果は同じです。
 - **停止:** セッションの片づけ、または `/browser disconnect` のとき。asyncio の
   タスクを取り消し、WebSocket を閉じ、状態を捨てます。
+- **エンドポイントが落ちたとき:** つなぎ終えたあとに切れた場合、スーパーバイザは
+  待ち時間を置きながら（10 秒まで）つなぎ直しますが、`MAX_POST_ATTACH_RECONNECT_FAILURES`
+  の回数だけ続けて失敗すると諦めます。最後に警告を 1 度出し、スレッドは終わり、
+  レジストリの項目も取り除かれます。手元の Chrome が死んだとき（そのタスクが終わったとき）に、
+  つなぎ直しを試み続けるスレッドが残ることはありません。次にブラウザを呼び出したときに、
+  新しいスーパーバイザが立ち上がります。
 - **つなぎ直し:** CDP の URL が変わったとき（利用者が別の Chrome につなぎ直したときなど）は、
   古いスーパーバイザを止めて新しいものを立ち上げます。エンドポイントをまたいで
   状態が使い回されることはありません。

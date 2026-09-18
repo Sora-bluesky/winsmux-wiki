@@ -2,7 +2,7 @@
 title: "Box — Box でクラウド上のファイル、共有、検索、メタデータを扱う"
 description: "Box でクラウド上のファイル、共有、検索、メタデータを扱う"
 upstream_path: user-guide/skills/bundled/productivity/productivity-box.md
-upstream_blob: 770fdc958f4fcd5a3eeff3338afa7d6ae4631270
+upstream_blob: a0f86516d0ebb73a737ebe2409c5ed190f6c2b8d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-box
 ---

@@ -2,7 +2,7 @@
 title: "Blocked Page Recovery — ページの取得に失敗したときに使います: 403/429、ペイウォール、WAF、ボット判定の壁"
 description: "ページの取得に失敗したときに使います: 403/429、ペイウォール、WAF、ボット判定の壁"
 upstream_path: user-guide/skills/bundled/web/web-blocked-page-recovery.md
-upstream_blob: a32d2150444e9ff0543a8dd8b7d05f5c42cd7dbe
+upstream_blob: c3d5f9c360818d155265ad2cccbcc0e539b7ef1c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/web/web-blocked-page-recovery
 ---

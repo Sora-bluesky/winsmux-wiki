@@ -2,7 +2,7 @@
 title: "Parallel Cli — エージェント向けのウェブ検索・深い調査・情報の補完"
 description: "エージェント向けのウェブ検索・深い調査・情報の補完"
 upstream_path: user-guide/skills/optional/research/research-parallel-cli.md
-upstream_blob: 844c62a2136ef74a80611019bd01a2bbcd00c6c0
+upstream_blob: c09419c522915323dea9b7d6fc98560cd6e33a43
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-parallel-cli
 ---

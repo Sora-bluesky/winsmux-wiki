@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール・フック・データファイル・スキルを備えた Hermes プラグインを、手順を追って作り上げるガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 88dbbc325f8b1eaf6af47c94fc0e917ba9cb8fe3
+upstream_blob: 0e4d6fa8d33ee8ffdacc0b07f7c4af581e1493f3
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---

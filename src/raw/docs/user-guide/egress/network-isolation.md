@@ -2,7 +2,7 @@
 title: "外向き通信の分離（Docker）"
 description: "Docker ネットワークを分割し、エージェントのサンドボックスが許可したホストにだけ接続できるようにする"
 upstream_path: user-guide/egress/network-isolation.md
-upstream_blob: 0c0049974b87caf9a19a6aef1e3c25235b124b3c
+upstream_blob: 3c81ade84724d0e333a1999c33f6a1cabd297088
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/egress/network-isolation
 ---

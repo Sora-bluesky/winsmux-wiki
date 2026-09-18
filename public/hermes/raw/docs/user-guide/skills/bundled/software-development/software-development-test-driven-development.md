@@ -2,7 +2,7 @@
 title: "Test Driven Development — TDD: RED-GREEN-REFACTOR を守り、コードより先にテストを書きます"
 description: "TDD: RED-GREEN-REFACTOR を守り、コードより先にテストを書きます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-test-driven-development.md
-upstream_blob: 805782c463766bd7614ee59caf65b13b64b2eb4a
+upstream_blob: 710771afb5bb8421a7216e90bfaa934e66696a63
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development
 ---

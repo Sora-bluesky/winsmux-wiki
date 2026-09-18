@@ -2,7 +2,7 @@
 title: "Nous Portal"
 description: "1 つの定額契約で 300 以上のフロンティアモデルと Tool Gateway が使える、Hermes Agent の推奨構成"
 upstream_path: integrations/nous-portal.md
-upstream_blob: b574213352c020c52a86212a9b52942d16f8ecf1
+upstream_blob: 9cc2feb5bccdbcf8c6e235423de525f1f2b30851
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/nous-portal
 ---
@@ -127,7 +127,9 @@ OAuth にはブラウザが要りますが、コールバックを受けるル�
 
 ### プロファイルでの設定 {#profile-setup}
 
-[Hermes のプロファイル](/hermes/docs/user-guide/profiles/)を使っている場合、Portal のリフレッシュトークンは共有のトークン保管場所を通じて全プロファイルで自動的に共有されます。どれか 1 つのプロファイルでログインすれば残りも自動で引き継ぐので、プロファイルごとに OAuth をやり直す必要はありません。
+[Hermes のプロファイル](/hermes/docs/user-guide/profiles/)を使っている場合、Portal のリフレッシュトークンは共有のトークン保管場所を通じてプロファイル間で共有されます。ただしこの保管場所が行うのは**すでにあるログインの更新であって、ログインを新しく作ることではありません**。プロファイルはそれぞれ独立した島なので（[#111724](https://github.com/NousResearch/hermes-agent/issues/111724)）、一度も Portal にログインしていないプロファイルは Nous の資格情報を自分では持っておらず、起動時に他のプロファイルのセッションを黙って借りるのではなく `Profile '<name>' is not connected to any AI provider yet` と出して安全側で止まります。
+
+ログインは `hermes -p <name> portal`（`hermes -p <name> auth add nous --type oauth` の別名）で**プロファイルごとに一度だけ**行います。その端末に共有の Portal セッションがすでにあれば、このコマンドが取り込むかどうかを尋ねてくれるので、確認 1 回だけで済み、ブラウザを開き直す必要はありません。一度取り込んだあとはプロファイルが自分の状態を持ち、どれかのプロファイルが更新したり入り直したりするたびに共有の保管場所がトークンを最新に保ちます。ログイン済みのプロファイルから `hermes profile create <name> --clone-all` を実行した場合も Portal のログインは引き継がれます（Anthropic や Codex のように一度しか使えない許可だけが複製から外されます）。
 
 ## 日々の使い方 {#using-the-portal-day-to-day}
 

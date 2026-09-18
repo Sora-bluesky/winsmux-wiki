@@ -2,7 +2,7 @@
 title: "個人の端末や仕事用の端末で Hermes を動かす"
 description: "普段使いの端末で Hermes Agent を動かすときの安全策をひととおり見ていきます。既定で守られること、さらに締めるための設定、そして失敗を取り消す方法です"
 upstream_path: guides/secure-hermes-on-a-work-machine.md
-upstream_blob: 280f26b4bd095b2489f5fe6d7b2f2fa695ac4204
+upstream_blob: 2f8d230b0c06f336b8a72ae5ab35096d31753c07
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/secure-hermes-on-a-work-machine
 ---

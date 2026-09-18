@@ -2,7 +2,7 @@
 title: "Node Inspect Debugger — --inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする"
 description: "--inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする"
 upstream_path: user-guide/skills/bundled/software-development/software-development-node-inspect-debugger.md
-upstream_blob: 18580751bc58581f0e894caa7d2a4e2e8407b2fc
+upstream_blob: 24384cbd6604d99698a0a15eb75c2deab44048e4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-node-inspect-debugger
 ---

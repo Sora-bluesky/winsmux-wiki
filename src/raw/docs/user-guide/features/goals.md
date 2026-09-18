@@ -2,7 +2,7 @@
 title: "続く目標（Goal）"
 description: "目標をひとつ立てておくと、Hermes が終わるまで応答をまたいで作業を続けます。Ralph ループの Hermes 版です。"
 upstream_path: user-guide/features/goals.md
-upstream_blob: cefadfff0bfa8f200fff932d56ca8f29a73153b6
+upstream_blob: 7697da97e89fd0f42d95135be6187a17289bb543
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/goals
 ---

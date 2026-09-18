@@ -2,7 +2,7 @@
 title: "Nano Pdf — 手元の PDF の文字を、ふつうの言葉での指示で書き換える"
 description: "手元の PDF の文字を、ふつうの言葉での指示で書き換える"
 upstream_path: user-guide/skills/bundled/productivity/productivity-nano-pdf.md
-upstream_blob: acd3b12ba9de7316755356ae245352fbc3088b3c
+upstream_blob: 602100d582af51644adfa35b38963abf6b9e2134
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-nano-pdf
 ---

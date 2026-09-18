@@ -2,7 +2,7 @@
 title: "動画生成プロバイダプラグイン"
 description: "Hermes Agent 向けの動画生成バックエンドプラグインを作る方法"
 upstream_path: developer-guide/video-gen-provider-plugin.md
-upstream_blob: ddb4a8aa31e54c4ab835fc832ac39bb7ad5d3950
+upstream_blob: 0b564c1cedcfe69133780a709d1cf413dafed120
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/video-gen-provider-plugin
 ---

@@ -2,7 +2,7 @@
 title: "Stripe Projects — Stripe Projects で SaaS を用意し、認証情報を同期する"
 description: "Stripe Projects で SaaS を用意し、認証情報を同期する"
 upstream_path: user-guide/skills/optional/payments/payments-stripe-projects.md
-upstream_blob: 7f2b60032cca601c74299666d5499f3b53c6fab7
+upstream_blob: c1a7279403cc1be2483157713fcd141089c874c2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/payments/payments-stripe-projects
 ---

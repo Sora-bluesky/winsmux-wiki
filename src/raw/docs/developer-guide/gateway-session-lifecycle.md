@@ -2,7 +2,7 @@
 title: "ゲートウェイのセッションライフサイクル"
 description: "ゲートウェイにおける SessionSource・SessionEntry・SessionStore、セッションキーの規則、マルチユーザーの分離"
 upstream_path: developer-guide/gateway-session-lifecycle.md
-upstream_blob: 0151b31af93027b1927722c8957b142bc0d1c50f
+upstream_blob: 21c78aa6a09dec00c6a6bace5ff5912f5b672686
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-session-lifecycle
 ---
@@ -52,7 +52,7 @@ sources:
 | `is_bot` | `bool` | `False` | メッセージの送信者がボットや Webhook（Discord のボット）のとき True。 |
 | `guild_id` | `Optional[str]` | `None` | Discord のギルド／Slack のワークスペース／Matrix のサーバーという範囲を示す識別子。 |
 | `parent_chat_id` | `Optional[str]` | `None` | `chat_id` がスレッドを指すときの、親チャンネル。 |
-| `message_id` | `Optional[str]` | `None` | きっかけになったメッセージの ID。ピン留め／返信／リアクションの操作と、Discord の ID 注入に使われます。 |
+| `message_id` | `Optional[str]` | `None` | きっかけになったメッセージの ID。ピン留め／返信／リアクションの操作と、Discord の ID 注入に使われます（注入される `[Triggering message id: …]` の注記が乗るのは API へ送るメッセージだけで、保存される user の行は書かれたままの本文を保ちます）。 |
 | `role_authorized` | `bool` | `False` | アダプターが（個々のユーザー ID ではなく）プラットフォームのロールによってアクセスを許可したとき True。 |
 
 ### 主なメソッド {#key-methods}
@@ -174,7 +174,7 @@ SessionStore(sessions_dir: Path, config: GatewayConfig, has_active_processes_fn=
 | `get_or_create_session(source, force_new=False)` | 中核の入口。既存の `SessionEntry` を返すか、新しく作ります。明示的な一時停止と、再起動からの復旧の状態を評価します。SQLite のレコードを作成／終了します。 |
 | `update_session(session_key, last_prompt_tokens=None)` | やり取りの後に行う、軽いメタデータの更新。`updated_at` を更新し、必要に応じて `last_prompt_tokens` を記録します。 |
 | `reset_session(session_key, display_name=None)` | 明示的なリセット（`/new` や `/reset` から）。新しい `session_id` を作り、`is_fresh_reset=True` を立てます。古い SQLite セッションを終えて、新しいものを作ります。 |
-| `switch_session(session_key, target_session_id)` | 別の既存セッション ID に切り替えます（`/resume` から）。現在の SQLite セッションを終え、切り替え先を開き直します。 |
+| `switch_session(session_key, target_session_id, *, expected_session_id=None)` | 別の既存セッション ID に切り替えます（`/resume` から）。現在の SQLite セッションを終え、切り替え先を開き直します。`expected_session_id=` を付けると、向き先の付け替えは比較してから入れ替える形になります。キーがそのセッションを指さなくなっていた場合は、切り替えずに `None` を返します。これにより、`await` をまたいで古い写しを元に解決した呼び出し側（非同期の委任による付け直し、Telegram のトピック結び付けの修復）が、同時に走った `/new` や `/resume` を上書きできないようにします。 |
 | `suspend_session(session_key)` | セッションに `suspended=True` の印を付けます（`/stop` から）。次のアクセスで自動リセットを強制します。 |
 | `mark_resume_pending(session_key, reason)` | セッションに `resume_pending=True` の印を付けます（ドレインのタイムアウトから）。次のアクセスで session_id を保ちます。`suspended=True` を上書きすることは**ありません**。 |
 | `clear_resume_pending(session_key)` | 再開したターンが無事に終わった後、`resume_pending` を解除します。`run_conversation()` が戻った後にゲートウェイから呼ばれます。 |
@@ -459,6 +459,14 @@ Append to _queued_events[session_key] (overflow tail)
 ### 消去 {#clearing}
 
 セッションのキューに積まれたイベントは、`/new` と `/reset` で（`_handle_reset_command` を通じて）消去されます。
+`/stop` は、中断されたターンの最中に利用者が送った 1 枠だけの追いかけメッセージを捨てます。
+どちらの置き場にあっても、**内部の**呼び起こし（非同期の委任の完了通知、かんばんや cron の
+`notify+wake`）は 3 つのコマンドすべてを生き延びます。`_interrupt_and_clear_session` はそれを枠に
+残し（捨てられた人間の追いかけメッセージが枠を占めていた場合は、あふれの側から枠へ繰り上げます）、
+コマンドのあとの掃き出しがすぐにそれを始めます。セッションが次の利用者のメッセージまで
+止まったままにならないようにするためです。`/new` が閉じたばかりのセッションに結び付いた
+呼び起こしを動かしてよいかどうかは、処理の時点で決まります（`_resolve_async_delegation_session`。
+判断できないときは動かしません）。
 
 ### FIFO の不変条件 {#fifo-invariant}
 

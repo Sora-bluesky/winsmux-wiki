@@ -2,7 +2,7 @@
 title: "Design Md — Google の DESIGN.md トークン仕様ファイルを書く・検査する・書き出す"
 description: "Google の DESIGN.md トークン仕様ファイルを書く・検査する・書き出す"
 upstream_path: user-guide/skills/bundled/creative/creative-design-md.md
-upstream_blob: d85492d8fd5163787d0cc8ac8456ca6e27bd4b7d
+upstream_blob: 0e4453cb12c99aac4aa03b7850f0a689a8f67776
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-design-md
 ---

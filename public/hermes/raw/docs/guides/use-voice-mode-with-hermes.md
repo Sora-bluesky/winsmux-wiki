@@ -2,7 +2,7 @@
 title: "Hermes で音声モードを使う"
 description: "CLI・Telegram・Discord・Discord のボイスチャンネルで Hermes の音声モードを設定して使うための実践ガイド"
 upstream_path: guides/use-voice-mode-with-hermes.md
-upstream_blob: 996f0167b0d04608a22ef78f2ec4076fd5b635e9
+upstream_blob: b9cca2a4aaf2ce8c06f9a66e8a54932445c455e1
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/use-voice-mode-with-hermes
 ---

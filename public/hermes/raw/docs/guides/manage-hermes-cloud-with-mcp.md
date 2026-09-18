@@ -2,7 +2,7 @@
 title: "MCP で Hermes Cloud を管理する"
 description: "Hermes Agent を Nous Portal の MCP サーバーにつなぎ、手元のエージェントとの会話だけで Hermes Cloud のインスタンスを一覧・起動・停止・管理できるようにする"
 upstream_path: guides/manage-hermes-cloud-with-mcp.md
-upstream_blob: e7906b19b5bfe2e72e328c190fc9c42d96039985
+upstream_blob: c4eaab640142c9c596fcc91f03716ccf1cc50533
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/manage-hermes-cloud-with-mcp
 ---

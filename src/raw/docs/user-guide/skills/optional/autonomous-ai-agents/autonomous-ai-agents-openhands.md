@@ -2,7 +2,7 @@
 title: "Openhands — OpenHands CLI にコーディングを任せる（モデルを選ばない、LiteLLM）"
 description: "OpenHands CLI にコーディングを任せる（モデルを選ばない、LiteLLM）"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands.md
-upstream_blob: b222bdecf7a1f57e9dc78bbbaa54281ce897d8b0
+upstream_blob: faff6bdc3cdaf320b768f164d18081087698a182
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands
 ---

@@ -2,7 +2,7 @@
 title: "Microsoft Foundry"
 description: "Hermes Agent を Microsoft Foundry で使う — OpenAI 形式と Anthropic 形式のエンドポイント、通信方式とデプロイ済みモデルの自動判別"
 upstream_path: guides/azure-foundry.md
-upstream_blob: 76412937b0da0a1b2f5e091ec38145055df5b917
+upstream_blob: 6276e7288480fbb7be86cc2f36980be14300be2a
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/azure-foundry
 ---

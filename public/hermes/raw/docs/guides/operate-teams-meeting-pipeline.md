@@ -2,7 +2,7 @@
 title: "Teams 会議パイプラインを運用する"
 description: "Microsoft Teams 会議パイプラインの運用手順、公開前チェック、運用者用ワークシート"
 upstream_path: guides/operate-teams-meeting-pipeline.md
-upstream_blob: 93c259cc15e72c26f956ba2abc735039dae8fbe6
+upstream_blob: 674a3c1c77bf6d0db0133c17da44d651eae0063e
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/operate-teams-meeting-pipeline
 ---

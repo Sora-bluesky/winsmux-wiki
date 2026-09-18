@@ -2,7 +2,7 @@
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: 773e985c01eaafb83d29d62bd5556c64661d8eec
+upstream_blob: def63ea1f0af383b52bae7ab4a5a361d69f79749
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---

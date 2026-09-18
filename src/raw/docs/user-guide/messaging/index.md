@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: a9b3594c3ba74c682a10cf0b76dcf6bb0e6bf991
+upstream_blob: b69cd35b399156741258d468d62c0bb98df4c33a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -187,6 +187,27 @@ Linux と macOS では、`kill -USR2 <gateway pid>` を送ると、すべての�
 `~/.hermes/logs/gateway_faulthandler.log` に追記され、ゲートウェイは動き続けます。
 止まっている、あるいは様子がおかしいゲートウェイが何をしているのかを、再起動せずに確かめるときに使います。
 
+### 組み込みのイベントループ生存監視 {#built-in-event-loop-liveness-watchdog}
+
+どのプラットフォームでも、ゲートウェイはイベントループの外側で監視スレッドを動かし、
+asyncio のループを定期的に調べます（`gateway.loop_watchdog_probe_interval_s`、既定は 30 秒）。
+`gateway.loop_watchdog_max_strikes` 回（既定は 3 回）続けてループが処理を進めていないと判定されたときは、
+内部の定期処理も、cron のスケジューラも、組み込みのかんばんディスパッチャも一緒に止まっているので、
+監視スレッドはすべてのスレッドのスタックをログに書き出し、`gateway_state.json` に
+`gateway_state: degraded` と `exit_reason: loop_liveness_watchdog` を記録して、
+終了コード `75` で終了します。サービスの管理側がプロセスを再起動するためです。`hermes gateway status` は
+その記録を `⚠ Gateway exited degraded: event loop stopped dispatching …` として表示し、
+新しいゲートウェイのプロセスが上書きするまで残ります。ダッシュボードのゲートウェイのバッジにも、
+同じ理由で **Degraded** と出ます。監視を止めたいときは `config.yaml` に
+`gateway.loop_watchdog: false` を書いてください。
+
+内部の定期処理は、1 回動くたび（60 秒ごと）に `gateway_state.json` の `updated_at` も打ち直すので、
+これが心拍の役目も果たします。プロセスは生きているのにその時刻が 120 秒より古いときは、
+`hermes gateway status` が
+`⚠ Gateway heartbeat stale: housekeeping has not refreshed gateway_state.json
+for N s …` と表示し、ダッシュボードのバッジは **Heartbeat stale** になります。
+動いているように見えて何も予定どおりに進んでいない、という状態です。ゲートウェイを再起動してください。
+
 ### Linux 向けのイベントループ監視（任意） {#optional-linux-event-loop-watchdog}
 
 systemd で管理しているゲートウェイでは、Python の asyncio の
@@ -276,6 +297,10 @@ hermes gateway install --force
   回数も消費しませんし、エージェントを再実行することもありません。再試行では元のボットのプロファイル、チャット、
   スレッドが保たれます。レート制限からの復帰には、前半のチャンクがすでに届いている可能性を
   知らせる前置きが付きます。台帳はメッセージの長さから部分的な配送を推し量ることはできません。
+- それ以外の理由で拒否された最終送信（プラットフォーム側の 5xx、分類できないエラー）も、
+  待ち時間を伸ばしながら（30 秒、次は 2 分）同じように再試行されます。予算の中の最後の 1 回は
+  次にゲートウェイが起動したときのために残してあるので、タイマーより長く続く障害でも返信が宙に浮きません。
+  恒久的に届かないチャット（ボットがブロックされた、グループが削除された）は再試行しません。
 - 送り直しには上限があります。3 回まで、24 時間以内までで、そのあとは
   その行を諦めます。配送済みの行は 7 日後に削除されます。
 
@@ -405,7 +430,7 @@ gateway:
 
 既定では、作業中のエージェントにメッセージを送ると、進行中のターンの向きが変わります（前面で動いているターミナルのコマンドは強制終了ではなくバックグラウンドへ移されるので、メッセージはすぐ読まれます）。ほかに 2 つのモードがあります。
 
-- `queue` — あとから送ったメッセージは待機し、いまの作業が終わってから次のターンとして実行されます。
+- `queue` — あとから送ったメッセージは待機し、いまの作業が終わってから次のターンとして実行されます。あとから送ったもの（テキスト、ボイスメモ、動画、書類）はそれぞれ届いた順に別々のターンになります。ひとまとまりにされるのは、続けざまに送った写真がアルバムとして 1 つのターンになる場合だけです。
 - `steer` — あとから送ったメッセージは `/steer` を通していまの実行に差し込まれ、次のツール呼び出しのあとでエージェントに届きます。割り込みも新しいターンも発生しません。エージェントがまだ動き始めていない場合は `queue` と同じ挙動になります。
 
 ゲートウェイからの舵取り（明示的な `/steer` を含む）と進行中のターンの向き変えは、要求元のイベントで分かるプラットフォーム、チャット、スレッド、送信者、メッセージ、プロファイル、範囲の識別子を、メッセージごとの JSON のコンテキストとして運びます。`privacy.redact_pii: true` を設定していると、対応するプラットフォームではこのモデルから見えるコンテキストの識別子がハッシュ化されます。別名の識別子や親の識別子も対象です。ルーティングに使う元のイベントの識別子は内部に残ります。設定していない場合、識別子はそのまま保たれます。どちらのモードもセッションのシステムプロンプトを変えることはなく、返信先の代わりの宛先を選ぶこともありません。このコンテキストはあくまでルーティングのためのデータであって、権限を与えるものでも、自動で届くことを保証するものでもありません。
@@ -628,6 +653,30 @@ launchd の plist は静的なファイルです。ゲートウェイを設定�
 :::info 複数のインストール
 Linux の systemd サービスと同じく、`HERMES_HOME` のディレクトリごとに別の launchd ラベルが割り当てられます。既定の `~/.hermes` は `ai.hermes.gateway` を、ほかは `ai.hermes.gateway-<suffix>` を使います。
 :::
+
+### Windows（タスク スケジューラ） {#windows-task-scheduler}
+
+```powershell
+hermes gateway install               # Register the Hermes_Gateway Scheduled Task (runs at logon)
+hermes gateway start                 # Start the gateway hidden, without a console window
+hermes gateway stop                  # Drain and stop the service
+hermes gateway status                # Check status, including registration drift
+```
+
+登録されるタスクは、`%USERPROFILE%\.hermes\gateway-service\` に生成される `.vbs` のランチャーを `wscript.exe` で実行します。ランチャーは `python.exe -m hermes_cli.main gateway run` をウィンドウを出さずに起動して、**すぐ終了します**。これは意図した作りです。`wscript.exe` にはコンソールがないので、ログオン時に `cmd.exe` 上のゲートウェイを終わらせてしまう `CTRL_CLOSE_EVENT` を受け取りません。また、子プロセスがそれぞれコンソールを一瞬表示することもなく、ゲートウェイは隠れたコンソールを 1 つだけ引き継ぎます（`hermes_cli/gateway_windows.py::_build_gateway_vbs_script` を参照）。
+
+:::warning RestartOnFailure が守るのはランチャーで、ゲートウェイではありません
+ランチャーはゲートウェイを起動した時点で戻るので、タスク スケジューラが見ているのはランチャーの終了コードだけです。登録されたタスクの `<RestartOnFailure>` の設定は、`wscript.exe` 自体がゲートウェイを起動できなかったときにしか働きません。あとからゲートウェイが落ちたり終了させられたりしても、**再起動はされません**。Windows でのゲートウェイの自動再起動は、ゲートウェイ自身が持つプロセス内の再起動の経路（`/restart`、更新、`hermes gateway restart` コマンド）に頼っています。外から終了させられたゲートウェイは、`hermes gateway start` か `schtasks /Run /TN <task>` を実行するまで止まったままです。
+:::
+
+`hermes gateway install` は、そのときのテンプレートからタスクを書き出します。古いビルドで登録したタスクは、そうしないと古い設定（`RestartOnFailure` がない、ログオン時の `Delay` がない、ランチャーのコマンドラインが古い）をいつまでも持ち続けます。`hermes gateway status` は、登録済みのタスクといまのテンプレートを比べて、古いままなら次のように知らせます。
+
+```
+⚠ Scheduled Task registration predates the current template (missing: RestartOnFailure, LogonTrigger Delay; version 1.3 vs 1.4)
+  Repair: hermes gateway start  (or: hermes gateway install)
+```
+
+`hermes gateway start` と `hermes update` も同じ比較を行い、ずれているタスクをいまのテンプレートから自動で登録し直します（Linux の systemd のユニットを入れ直すのと同じです）。`schtasks` が管理者権限なしでは受け付けないときは、管理者の承認を求められる `hermes gateway install` を実行し直してください。タスクを読み出せない場合、この確認は何も言わずに飛ばされます。見ているのは Hermes が受け持つ数か所（タスクのバージョン、`RestartOnFailure`、ログオンのトリガーの遅延、ランチャーの引数）だけなので、ほかの場所を意図して書き換えていても指摘されません。
 
 ## プラットフォームごとのツールセット {#platform-specific-toolsets}
 

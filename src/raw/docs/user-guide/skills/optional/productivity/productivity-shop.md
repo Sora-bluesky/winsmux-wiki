@@ -2,7 +2,7 @@
 title: "Shop — Shop の商品検索、購入手続き、注文追跡、返品"
 description: "Shop の商品検索、購入手続き、注文追跡、返品"
 upstream_path: user-guide/skills/optional/productivity/productivity-shop.md
-upstream_blob: 9fde16b2d4d6ca4f721ab63fc2cb1f91c7c973fd
+upstream_blob: aec2c1399aee28cc7eb128fda5267d3180f016f7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-shop
 ---

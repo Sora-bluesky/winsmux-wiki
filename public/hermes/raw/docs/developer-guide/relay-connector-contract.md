@@ -2,7 +2,7 @@
 title: "Relay ↔ Connector 契約"
 description: "Hermes gateway の relay アダプターと外部コネクターのあいだの通信契約（実験的）"
 upstream_path: developer-guide/relay-connector-contract.md
-upstream_blob: 5f8a3f6d75e3fe721a6716d1e4c4a9a99e50a7b5
+upstream_blob: 1a7552de68b36ca25401504c63266fc52021f5ea
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-connector-contract
 ---
@@ -380,6 +380,15 @@ connector→gateway の配送区間に使い回したものです。全体を通
    振る舞い層の方針ですが、既存の drain の仕組み（`gateway_state` の running→draining）と
    組み合わせなければならず、relay だけの別のアイドル経路を作ってはいけません — §3.2 が
    `going_idle` に課しているのと同じ統合上の制約です。
+7. **メッセージの接続がすべて relay 越しのときだけ停止すること — しかも起動時だけでなく、
+   停止しようとするその時点で確かめ直すこと。** 直接つながっているプラットフォーム
+   （Photon iMessage の gRPC ストリーム、BlueBubbles、gateway 自身から張ったボットトークン）は、
+   connector が緩衝も起床もできないソケットを掴んでいるので、そのまま停止すると受信を失い、
+   二度と起きません。この判定は、有効になっている起動プロファイルのプラットフォームと、
+   受け持っているすべてのプロファイル（`gateway.multiplex_profiles` の従側も含む）の
+   生きているアダプターを数えます。そしてアイドル監視は休止に入る前に毎回これを問い直すので、
+   起動後に立ち上がった直接接続のアダプター（プロファイルの再調整）があれば、
+   インスタンスは起きたままになります。
 
 これらは振る舞い層が基本機能に対して負う保証です。基本機能が振る舞い層に対して
 負うのは、§3.2/§3.3 ですでに定めたものだけです（going_idle による切り替え、

@@ -2,7 +2,7 @@
 title: "Telephony — Twilio の電話番号の取得、SMS / MMS、AI による発信"
 description: "Twilio の電話番号の取得、SMS / MMS、AI による発信"
 upstream_path: user-guide/skills/optional/productivity/productivity-telephony.md
-upstream_blob: db27beb31c88d79219223fc312b52bdf129a27dc
+upstream_blob: 49c4858f41a5de1221aa4d3434591829e2b05cf4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-telephony
 ---

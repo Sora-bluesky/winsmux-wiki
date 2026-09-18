@@ -2,7 +2,7 @@
 title: "Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 description: "Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md
-upstream_blob: 6e31b32dc99c0d93bdab14328544415ff8bac26d
+upstream_blob: cbf2a01ff4a23a7965e9052f3a15cd379c9673d5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent
 ---

@@ -2,7 +2,7 @@
 title: "MCP 設定の早見表"
 description: "Hermes Agent の MCP 設定キー、絞り込みの動き、ユーティリティツールの方針をまとめた早見表です。"
 upstream_path: reference/mcp-config-reference.md
-upstream_blob: ad3339e3d248c352791933af45d13fdb5586b217
+upstream_blob: 71828ec63d3f8b67bf5207a10461114390245b47
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
 ---
@@ -427,7 +427,9 @@ mcp_servers:
 
 `client_metadata_url` は、パスの付いた HTTPS の URL でなければなりません（オリジンだけ、フラグメント付き、ユーザー情報付き、`.` や `..` を含むものは使えません）。そのうえで **リダイレクトなしで** `200` と `Content-Type: application/json` を返す必要があります。認可サーバーは、この文書を取りにいくときにリダイレクトをたどることを禁じられているからです。Hermes はこの場合もコールバックを同じ `27890`〜`27894` の範囲に固定するので、自分で用意する文書には 10 個のループバック URL（各ポートについて `http://127.0.0.1:<port>/callback` と `http://localhost:<port>/callback`）をすべて書き、`client_id` にはその文書自身の URL を書いてください。
 
-`user_agent` は、HTTP ライブラリが既定で送る `User-Agent` を **トークンのエンドポイントへのリクエストに限って**（認可コードの引き換えと更新）差し替えます。認可サーバーや WAF の中には、そこで既定の `python-httpx/...` という値を拒むものがあるためです。MCP の通信や OAuth の探索には使われませんし、トークンのリクエストで設定できるヘッダーは他にありません。空の値や null は無視されます。
+`user_agent` は、HTTP ライブラリが既定で送る `User-Agent` を **トークンのエンドポイントへのリクエストに限って**（認可コードの引き換えと更新）差し替えます。認可サーバーや WAF の中には、そこで既定の `python-httpx/...` という値を拒むものがあるためです。MCP の通信には使われませんし、トークンのリクエストで設定できるヘッダーは他にありません。空の値や null は無視されます。
+
+OAuth の探索とクライアントの動的な登録のリクエスト（`/.well-known/...` のメタデータ文書と `registration_endpoint` への POST）には、つねに `User-Agent: Hermes-Agent/<version>` が付きます。MCP の SDK はこれらのリクエストをクライアント既定のヘッダーなしで組み立てるため、WAF の後ろにいる認可サーバーはヘッダーのないリクエストに `403` を返します。するとメタデータ文書が読めないように見え、登録は MCP のホスト上の `/register` を当て推量で叩く方へ落ち、最後は `Registration failed: 404` でログインに失敗します。メタデータの取得がすべて失敗した場合、エラーはまず今回のステータスを先に示すようになりました（`Could not read authorization-server metadata (403 from https://…/.well-known/oauth-authorization-server; …)`）。登録の代替処理そのもののエラーはその後ろに続きます。
 
 ## Add to Hermes のリンク {#add-to-hermes-link}
 

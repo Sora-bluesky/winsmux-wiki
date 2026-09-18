@@ -2,7 +2,7 @@
 title: "アーキテクチャ"
 description: "Hermes Agent の内部構造 — 主要なサブシステム、実行経路、データの流れ、次に読むべき場所"
 upstream_path: developer-guide/architecture.md
-upstream_blob: 8b826980e7d783a182e43b214d52246fe4c8583b
+upstream_blob: 85fc06e3910f45184112c81951de09322ebac1ab
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/architecture
 ---

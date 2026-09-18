@@ -2,7 +2,7 @@
 title: "自動化の型紙"
 description: "そのまま使える自動化の型紙です。予定した実行、GitHub のできごとをきっかけにした実行、API の Webhook、複数のスキルを組み合わせた流れをそろえています。"
 upstream_path: guides/automation-blueprints.md
-upstream_blob: 7bf861e8e22258438e08d3b5513bf647ae48f853
+upstream_blob: 24512984677389ce720e7056720036dd1315ee63
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/automation-blueprints
 ---

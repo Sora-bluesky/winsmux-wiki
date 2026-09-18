@@ -2,7 +2,7 @@
 title: "Claude Design — 単発の HTML 成果物をデザインします（ランディングページ、スライド、プロトタイプ）"
 description: "単発の HTML 成果物をデザインします（ランディングページ、スライド、プロトタイプ）"
 upstream_path: user-guide/skills/bundled/creative/creative-claude-design.md
-upstream_blob: 95fdaac6e7c3ea6ca3451e5376b5833d5e438bb4
+upstream_blob: 29dddff99ba310b60fb7ab5172ce3c40e7c316c8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-claude-design
 ---

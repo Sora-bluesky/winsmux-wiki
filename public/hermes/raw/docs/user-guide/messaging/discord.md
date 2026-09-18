@@ -2,7 +2,7 @@
 title: "Discord"
 description: "Hermes Agent を Discord のボットとして設定する"
 upstream_path: user-guide/messaging/discord.md
-upstream_blob: 0376d9b34ca05e67c0d2ef15e0b7ac254e5714c3
+upstream_blob: 03033a526a0ed0126453e548b0e7d313ff145418
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/discord
 ---
@@ -376,6 +376,7 @@ discord:
     window_seconds: 21600         # Look back at most 6 hours
     limit: 100                    # Global scan cap per reconnect
     max_dispatches: 10            # Recovery dispatch cap per reconnect
+    max_attempts: 3               # Lifetime re-dispatch cap per message
   channel_prompts: {}             # Per-channel ephemeral system prompts
   voice_channel_inactivity_timeout_seconds: 300  # Set 0 to stay in VC until explicit /voice leave
   voice_playback_timeout_seconds: 120             # Minimum playback watchdog; long clips get duration+padding
@@ -561,9 +562,12 @@ discord:
     window_seconds: 3600
     limit: 100
     max_dispatches: 10
+    max_attempts: 3
 ```
 
-`channels` が空のとき、Hermes は `discord.free_response_channels` を使います。`"*"` にするのは、到達できるサーバーのテキストチャンネルをすべて調べさせたいときだけにしてください。処理済みの記録はプロファイルごとに `gateway/discord_message_recovery.db` に保存され、いちど答えたメッセージがあとの再起動で再び処理されるのを防ぎます。
+`channels` が空のとき、Hermes は `discord.free_response_channels` を使います。`"*"` にするのは、到達できるサーバーのテキストチャンネルをすべて調べさせたいときだけにしてください。処理済みの記録はプロファイルごとに `gateway/discord_message_recovery.db` に保存され、いちど答えたメッセージがあとの再起動で再び処理されるのを防ぎます。メッセージが「答えた」と数えられるのは、そのターンが最終的な返信を届けた時点です。その返信に Discord の返信参照が付いていたかどうかは問いません（`reply_to_mode: "off"`、ストリーミングでの返信、メディアだけの返信も含みます）。
+
+`max_dispatches` は 1 回の走査に上限をかけます。`max_attempts`（既定は 3）は、1 つのメッセージを生涯で何回まで送り直せるかに上限をかけるもので、ターンが失敗し続けるメッセージが再接続のたびに走り直されるのを防ぎます。`window_seconds` は常に守られます。チャンネルごとの走査位置は走査を狭めることはできますが、この窓より前にさかのぼることはありません。
 
 #### `group_sessions_per_user` {#groupsessionsperuser}
 
@@ -745,7 +749,11 @@ discord:
 
 番号のボタンを押して答えるか、**その他**を押して自由に入力します（そのチャンネルで次に送ったメッセージが答えになります）。選択肢のない自由回答の `clarify` では、ボタンは出ず、次のメッセージがそのまま答えになります。
 
-いちど選ぶとボタンは押せなくなるので、二重に押して二重に答えてしまうことはありません。回答の待ち時間は `~/.hermes/config.yaml` の `agent.clarify_timeout` で設定します（既定は `600` 秒）。時間内に答えないと、エージェントは待ち続けるのではなく、代わりの合図を受けて先へ進みます。
+いちど選ぶとボタンは押せなくなるので、二重に押して二重に答えてしまうことはありません。回答の待ち時間は `~/.hermes/config.yaml` の `agent.clarify_timeout` で設定します（既定は `3600` 秒。`0` 以下にすると無制限です）。時間内に答えないと、エージェントは待ち続けるのではなく、代わりの合図を受けて先へ進みます。
+
+### プロンプトの並び {#prompt-layout}
+
+対話的なプロンプト（コマンドの承認、`clarify` の質問、スラッシュコマンドの確認）は同じ並びを共有します。**そのままのメッセージ**が中身を全部持ちます。コマンドと、なぜ引っかかったのかと承認の期限、あるいは質問と返し方の案内です。その下の**埋め込みカード**は見出しだけで、ボタンはカードの下に並びます。判断に必要なものはすべて素のテキストにあるので、埋め込みを隠したり切り離したりするクライアントでも正しく読めますし、埋め込みを表示するクライアントでも同じものが二度出ることはありません。
 
 ## ホームチャンネル {#home-channel}
 

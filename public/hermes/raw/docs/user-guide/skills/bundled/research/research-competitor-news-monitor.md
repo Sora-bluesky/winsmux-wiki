@@ -2,7 +2,7 @@
 title: "Competitor News Monitor — 指定した企業の重要なニュースを見張り、出典付きのダイジェストにまとめる"
 description: "指定した企業の重要なニュースを見張り、出典付きのダイジェストにまとめる"
 upstream_path: user-guide/skills/bundled/research/research-competitor-news-monitor.md
-upstream_blob: d7f52e44df231ca96a8d1e2fb982185b4048f363
+upstream_blob: d820c13b5ae9de7575aa734980768d8e216b8525
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-competitor-news-monitor
 ---

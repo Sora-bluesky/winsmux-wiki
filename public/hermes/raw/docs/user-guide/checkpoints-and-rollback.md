@@ -2,7 +2,7 @@
 title: "チェックポイントと /rollback"
 description: "シャドウの git リポジトリと自動スナップショットで、破壊的な操作からファイルを守るしくみです"
 upstream_path: user-guide/checkpoints-and-rollback.md
-upstream_blob: a0433750fdddbaf71a843f486dab32c802c985d0
+upstream_blob: c8a512381bad49bfe473bd43e4aeac9832cb352a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback
 ---
@@ -234,6 +234,10 @@ Use /rollback <N> --all to restore those too.
 ```
 
 ## 安全性と性能のためのガード {#safety-and-performance-guards}
+
+### コンテナ系のバックエンド {#container-backends}
+
+コンテナ系のターミナルバックエンド（`docker`、`singularity`、`modal`、`daytona`、`vercel_sandbox`、またはコンテナ用のプラグイン）では、ファイルのパスはホストではなくサンドボックスのものになります。そのため Hermes はそれらのパスについてチェックポイントを取らず、エージェントの書き込み台帳も記録しません。`/rollback` はこの制限を説明します。ホスト側に残っているチェックポイントの一覧は変わらず出しますが、差分の表示と復元は断ります。CLI でも、メッセージングのゲートウェイ越しのチャットでも同じです。`/diff session` も同じ理由を返します。TUI と Desktop も同じ振る舞いで、`/rollback list` は使えますが、`/rollback diff` と `/rollback <N>` は同じ理由で断られます。ローカルと SSH のバックエンドには影響しません。マウントしたディレクトリのコンテナ側から見た場所に `terminal.cwd` を向けたい場合は、[`terminal.docker_mount_cwd_to_workspace`](/hermes/docs/user-guide/configuration/) を参照してください。
 
 - **git があるかどうか** — `PATH` に `git` が見つからない場合、チェックポイントは何も言わずに無効になります。
 - **ディレクトリの範囲** — 範囲が広すぎるディレクトリ（ルートの `/`、ホームの `$HOME`）は飛ばします。

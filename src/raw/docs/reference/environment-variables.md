@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: b616f3fdd39b1eb670fc3cd02ad530f92d90721c
+upstream_blob: af7b87610e089446e99434b773a2f0eb880f1ad6
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -126,7 +126,7 @@ Hermes は、プロセスの環境変数と、利用者が管理する秘密に�
 | `VOICE_TOOLS_OPENAI_KEY` | OpenAI の音声認識・音声合成の提供元で優先して使う OpenAI のキー |
 | `HERMES_LOCAL_STT_COMMAND` | 手元の音声認識コマンドのひな形（任意）。`{input_path}`、`{output_dir}`、`{language}`、`{model}` の差し込みが使えます |
 | `HERMES_LOCAL_STT_LANGUAGE` | 音声認識の既定の言語の手がかり。`config.yaml` に提供元ごとの `language` が無いとき、`local`（faster-whisper）の提供元、`HERMES_LOCAL_STT_COMMAND`、手元の `whisper` CLI の予備（既定: `en`）、Groq、xAI が使います |
-| `HERMES_HOME` | Hermes の設定ディレクトリを上書きします（既定: `~/.hermes`）。ゲートウェイの PID ファイルと systemd のサービス名もここに合わせて分かれるので、複数の導入環境を同時に動かせます |
+| `HERMES_HOME` | Hermes の設定ディレクトリを上書きします（既定: `~/.hermes`）。値の中の `~` や `$VAR` はそのまま展開されるので（fish は `VAR=~/…` の中の `~` を展開しません）、現在のディレクトリからの相対パスになってしまうことはありません。ゲートウェイの PID ファイルと systemd のサービス名もここに合わせて分かれるので、複数の導入環境を同時に動かせます |
 | `HERMES_GIT_BASH_PATH` | **Windows 専用。** ターミナルのツールが探す `bash.exe` を上書きします。どの bash でも指せます — Git for Windows のフル導入、シンボリックリンク経由の WSL の bash、MSYS2、Cygwin。インストーラは、自分で用意した PortableGit をここに自動で設定します。[Windows（ネイティブ）の手引き](/hermes/docs/user-guide/windows-native/#how-hermes-runs-shell-commands-on-windows) をご覧ください |
 | `HERMES_DISABLE_WINDOWS_UTF8` | **Windows 専用。** `1` にすると UTF-8 の標準入出力の仲介（`configure_windows_stdio()`）を無効にし、コンソールのロケールのコードページに戻します。文字化けの原因を切り分けるときに便利ですが、通常の運用で正解になることはまずありません |
 | `HERMES_KANBAN_HOME` | かんばんボード（DB とワークスペースと作業役のログ）の土台になる、共有の Hermes のルートを上書きします。指定が無ければ `get_default_hermes_root()`（有効なプロファイルの親）に落ちます。テストや特殊な構成で便利です |
@@ -359,6 +359,12 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `DISCORD_ALLOW_MENTION_ROLES` | ボットが `@role` のメンションを鳴らせるようにします（既定: `false`）。 |
 | `DISCORD_ALLOW_MENTION_USERS` | ボットが個別の `@user` のメンションを鳴らせるようにします（既定: `true`）。 |
 | `DISCORD_ALLOW_MENTION_REPLIED_USER` | メッセージに返信するとき、その書き手を鳴らします（既定: `true`）。 |
+| `DISCORD_MISSED_MESSAGE_BACKFILL` | `discord.missed_message_backfill.enabled` の環境変数側の指定。切れているあいだに取りこぼしたメッセージを流し直します（既定: `false`）。[取りこぼしたメッセージの補完](/hermes/docs/user-guide/messaging/discord/#discordmissed_message_backfill)を参照してください。 |
+| `DISCORD_MISSED_MESSAGE_BACKFILL_CHANNELS` | 調べるチャンネル ID をカンマ区切りで指定します（`discord.missed_message_backfill.channels` の環境変数側の指定。空なら `discord.free_response_channels`、`*` なら届くすべてのテキストチャンネル）。 |
+| `DISCORD_MISSED_MESSAGE_BACKFILL_WINDOW_SECONDS` | 一度の走査がどこまで遡れるか（`window_seconds` の環境変数側の指定。既定は `21600`、最小は `60`）。 |
+| `DISCORD_MISSED_MESSAGE_BACKFILL_LIMIT` | 一度の走査でチャンネルごとに取得するメッセージの上限（`limit` の環境変数側の指定。既定は `100`、1〜500）。 |
+| `DISCORD_MISSED_MESSAGE_BACKFILL_MAX_DISPATCHES` | 一度の走査で流し直すメッセージの上限（`max_dispatches` の環境変数側の指定。既定は `10`、1〜100）。 |
+| `DISCORD_MISSED_MESSAGE_BACKFILL_MAX_ATTEMPTS` | 1 通のメッセージを、再接続をまたいで流し直す回数の上限（`max_attempts` の環境変数側の指定。既定は `3`、1〜100）。 |
 | `SLACK_BOT_TOKEN` | Slack のボットのトークン（`xoxb-...`） |
 | `SLACK_APP_TOKEN` | Slack のアプリ水準のトークン（`xapp-...`。Socket Mode に必要です） |
 | `SLACK_ALLOWED_USERS` | Slack のユーザー ID をカンマ区切りで指定します |
@@ -385,6 +391,8 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `WHATSAPP_MODE` | `bot`（別の番号）または `self-chat`（自分あてに送る） |
 | `WHATSAPP_ALLOWED_USERS` | 電話番号をカンマ区切りで指定します（国番号つき、`+` は不要）。`*` にすると全員を許可します |
 | `WHATSAPP_ALLOW_ALL_USERS` | 許可リストなしで WhatsApp のすべての送信者を許可します（`true` / `false`） |
+| `WHATSAPP_GROUP_POLICY` | グループからの受け取り方。`pairing`（既定。グループからは何も転送しません）、`allowlist`（下で指定したグループ JID）、`open`（すべてのグループ。参加者の側は引き続き `WHATSAPP_ALLOWED_USERS`、ペアリング、`WHATSAPP_ALLOW_ALL_USERS` のいずれかが必要です）、`disabled` |
+| `WHATSAPP_GROUP_ALLOWED_USERS` | `WHATSAPP_GROUP_POLICY=allowlist` のときに受け入れるグループ JID をカンマ区切りで指定します（例: `120363001234567890@g.us`） |
 | `WHATSAPP_HOME_CHANNEL` | cron や通知の配信に使う既定のチャット ID。 |
 | `WHATSAPP_HOME_CHANNEL_NAME` | WhatsApp のホームチャンネルの表示名。 |
 | `WHATSAPP_DEBUG` | 切り分けのため、ブリッジで生のメッセージの出来事をログに出します（`true` / `false`） |

@@ -2,7 +2,7 @@
 title: "Merger Model — M&A の EPS 増加・希薄化ワークブックを Excel で作る"
 description: "M&A の EPS 増加・希薄化ワークブックを Excel で作る"
 upstream_path: user-guide/skills/optional/finance/finance-merger-model.md
-upstream_blob: 89c34a2cf1da4f4a2d6408f109dbb692bebc17b5
+upstream_blob: a37a7400d6fc700959a68f0cacda39ebe3c5e5db
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-merger-model
 ---

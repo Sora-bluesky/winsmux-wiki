@@ -2,7 +2,7 @@
 title: "Hermes で SOUL.md を使う"
 description: "SOUL.md で Hermes Agent の既定の話し方を形づくる方法と、そこに何を書くべきか、AGENTS.md や /personality との違い"
 upstream_path: guides/use-soul-with-hermes.md
-upstream_blob: 5d3d3b7698380aed9a5a4c008f782946b1ed619d
+upstream_blob: 3f55d0758ba175295e1e9677d0db0cc82683bcf2
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/use-soul-with-hermes
 ---

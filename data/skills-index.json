@@ -1,13 +1,13 @@
 {
-  "sha": "cdceca4",
-  "date": "2026-09-17",
+  "sha": "a51143f",
+  "date": "2026-09-18",
   "skills": [
     {
       "slug": "apple-apple-notes",
       "name": "Apple Notes",
       "description": "Manage Apple Notes via memo CLI: create, search, edit",
       "url": "/hermes/docs/user-guide/skills/bundled/apple/apple-apple-notes/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -39,7 +39,7 @@
       "name": "Claude Code",
       "description": "Delegate coding to Claude Code CLI (features, PRs)",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -47,7 +47,7 @@
       "name": "Codex",
       "description": "Delegate coding to OpenAI Codex CLI (features, PRs)",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -63,7 +63,7 @@
       "name": "Hermes Agent",
       "description": "Use, configure, theme, extend, and orchestrate Hermes Agent",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -71,7 +71,7 @@
       "name": "Merge Reconciler",
       "description": "Neutral third-party resolution of agent merge conflicts",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-merge-reconciler/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -79,7 +79,7 @@
       "name": "Opencode",
       "description": "Delegate coding to OpenCode CLI (features, PR review)",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -87,7 +87,7 @@
       "name": "Architecture Diagram",
       "description": "Dark-themed SVG architecture/cloud/infra diagrams as HTML",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -95,7 +95,7 @@
       "name": "Ascii Art",
       "description": "ASCII art: pyfiglet, cowsay, boxes, image-to-ascii",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-ascii-art/",
-      "date": "2026-05-28",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -119,7 +119,7 @@
       "name": "Claude Design",
       "description": "Design one-off HTML artifacts (landing, deck, prototype)",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-claude-design/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -127,7 +127,7 @@
       "name": "Comfyui",
       "description": "Generate images, video, and audio via diffusion workflows",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-comfyui/",
-      "date": "2026-08-08",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -135,7 +135,7 @@
       "name": "Design Md",
       "description": "Author/validate/export Google's DESIGN.md token spec files",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-design-md/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -151,7 +151,7 @@
       "name": "Humanizer",
       "description": "Humanize text: strip AI-isms and add real voice",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-humanizer/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -167,7 +167,7 @@
       "name": "P5Js",
       "description": "p5.js sketches: gen art, shaders, interactive, 3D",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-p5js/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -183,7 +183,7 @@
       "name": "Pretext",
       "description": "Build creative browser demos with DOM-free text layout",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-pretext/",
-      "date": "2026-07-23",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -191,7 +191,7 @@
       "name": "Sketch",
       "description": "Throwaway HTML mockups: 2-3 design variants to compare",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-sketch/",
-      "date": "2026-07-29",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -215,7 +215,7 @@
       "name": "Email Inbox Triage",
       "description": "Triage an inbox: prioritize threads, draft replies safely",
       "url": "/hermes/docs/user-guide/skills/bundled/email/email-email-inbox-triage/",
-      "date": "2026-09-15",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -231,7 +231,7 @@
       "name": "Codebase Inspection",
       "description": "Inspect codebases w/ pygount: LOC, languages, ratios",
       "url": "/hermes/docs/user-guide/skills/bundled/github/github-codebase-inspection/",
-      "date": "2026-05-28",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -239,7 +239,7 @@
       "name": "Github Auth",
       "description": "GitHub auth setup: HTTPS tokens, SSH keys, gh CLI login",
       "url": "/hermes/docs/user-guide/skills/bundled/github/github-github-auth/",
-      "date": "2026-07-26",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -247,7 +247,7 @@
       "name": "Github Code Review",
       "description": "Review PRs: diffs, inline comments via gh or REST",
       "url": "/hermes/docs/user-guide/skills/bundled/github/github-github-code-review/",
-      "date": "2026-07-26",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -255,7 +255,7 @@
       "name": "Github Issue To Pr",
       "description": "Carry a GitHub issue to a verified PR with honest CI state",
       "url": "/hermes/docs/user-guide/skills/bundled/github/github-github-issue-to-pr/",
-      "date": "2026-08-08",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -263,7 +263,7 @@
       "name": "Github Issues",
       "description": "Create, triage, label, assign GitHub issues via gh or REST",
       "url": "/hermes/docs/user-guide/skills/bundled/github/github-github-issues/",
-      "date": "2026-07-26",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -271,7 +271,7 @@
       "name": "Github Pr Workflow",
       "description": "GitHub PR lifecycle: branch, commit, open, CI, merge",
       "url": "/hermes/docs/user-guide/skills/bundled/github/github-github-pr-workflow/",
-      "date": "2026-07-26",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -279,7 +279,7 @@
       "name": "Github Repo Management",
       "description": "Clone/create/fork repos; manage remotes, releases",
       "url": "/hermes/docs/user-guide/skills/bundled/github/github-github-repo-management/",
-      "date": "2026-07-26",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -367,7 +367,7 @@
       "name": "Box",
       "description": "Box manages cloud files, sharing, search, and metadata",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-box/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -375,7 +375,7 @@
       "name": "Document To Action Items",
       "description": "Extract cited obligations, deadlines, tasks from documents",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -383,7 +383,7 @@
       "name": "Docx",
       "description": "Create, read, edit, template, and review Word .docx files",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-docx/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -391,7 +391,7 @@
       "name": "Google Workspace",
       "description": "Gmail, Calendar, Drive, Docs, Sheets via gws CLI or Python",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -407,7 +407,7 @@
       "name": "Meeting Action Items",
       "description": "Turn meeting notes into cited decisions, owners, tickets",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -415,7 +415,7 @@
       "name": "Nano Pdf",
       "description": "Edit text in existing PDFs via natural-language prompts",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-nano-pdf/",
-      "date": "2026-07-23",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -423,7 +423,7 @@
       "name": "Notion",
       "description": "Notion API + ntn CLI: pages, databases, markdown, Workers",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -431,7 +431,7 @@
       "name": "Ocr And Documents",
       "description": "Extract text from PDFs/scans (pymupdf, marker-pdf)",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-ocr-and-documents/",
-      "date": "2026-08-08",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -439,7 +439,7 @@
       "name": "Pdf",
       "description": "PDF files: create, read, merge, fill, OCR, edit text",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -447,7 +447,7 @@
       "name": "Powerpoint",
       "description": "Create, read, edit .pptx decks with python-pptx",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-powerpoint/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -455,7 +455,7 @@
       "name": "Product Price Monitor",
       "description": "Watch product, flight, or listing prices; alert on target",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-product-price-monitor/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -463,7 +463,7 @@
       "name": "Session Librarian",
       "description": "Organize sessions by prompt: find, rename, archive, prune",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-session-librarian/",
-      "date": "2026-08-12",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -479,7 +479,7 @@
       "name": "Weekly Review Planning",
       "description": "Weekly reset: commitments, stalled work, next-week plan",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -487,7 +487,7 @@
       "name": "Xlsx",
       "description": "Create, read, edit Excel .xlsx workbooks and CSVs",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-xlsx/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -503,7 +503,7 @@
       "name": "Blocked Page Recovery",
       "description": "Recover blocked/paywalled/WAF'd pages via archive snapshots and reader fallbacks",
       "url": "/hermes/docs/user-guide/skills/bundled/research/research-blocked-page-recovery/",
-      "date": "2026-08-12",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -519,7 +519,7 @@
       "name": "Competitor News Monitor",
       "description": "Watch named companies for material news; cited digests",
       "url": "/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/",
-      "date": "2026-09-08",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -527,7 +527,7 @@
       "name": "Grounded Citations",
       "description": "Ground answers and documents in cited, verifiable sources",
       "url": "/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/",
-      "date": "2026-09-08",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -535,7 +535,7 @@
       "name": "Llm Wiki",
       "description": "Karpathy's LLM Wiki: build/query interlinked markdown KB",
       "url": "/hermes/docs/user-guide/skills/bundled/research/research-llm-wiki/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -543,7 +543,7 @@
       "name": "Research Paper Writing",
       "description": "Write ML papers for NeurIPS/ICML/ICLR: design→submit",
       "url": "/hermes/docs/user-guide/skills/bundled/research/research-research-paper-writing/",
-      "date": "2026-08-29",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -567,7 +567,7 @@
       "name": "Codebase Inspection",
       "description": "Inspect codebases w/ pygount: LOC, languages, ratios",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -583,7 +583,7 @@
       "name": "Github",
       "description": "GitHub via gh CLI: PRs, issues, reviews, repos, auth",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-github/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -591,7 +591,7 @@
       "name": "Hermes Agent Skill Authoring",
       "description": "Author in-repo SKILL.md files: frontmatter and structure",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -599,7 +599,7 @@
       "name": "Inspecting Hermes Desktop Dom",
       "description": "Read the live Hermes desktop DOM/CSS over CDP",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -607,7 +607,7 @@
       "name": "Node Inspect Debugger",
       "description": "Debug Node.js via --inspect + Chrome DevTools Protocol CLI",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-node-inspect-debugger/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -615,7 +615,7 @@
       "name": "Python Debugpy",
       "description": "Debug Python: pdb REPL + debugpy remote (DAP)",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -623,7 +623,7 @@
       "name": "Requesting Code Review",
       "description": "Pre-commit review: security scan, quality gates, auto-fix",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -631,7 +631,7 @@
       "name": "Simplify Code",
       "description": "Parallel 4-agent cleanup of recent code changes",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-simplify-code/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -639,7 +639,7 @@
       "name": "Spike",
       "description": "Throwaway experiments to validate an idea before build",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-spike/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -647,7 +647,7 @@
       "name": "Systematic Debugging",
       "description": "4-phase root cause debugging: understand bugs before fixing",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-systematic-debugging/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -655,7 +655,7 @@
       "name": "Test Driven Development",
       "description": "TDD: enforce RED-GREEN-REFACTOR, tests before code",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -663,7 +663,7 @@
       "name": "Blocked Page Recovery",
       "description": "Use when a fetch fails: 403/429, paywall, WAF, bot wall",
       "url": "/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "bundled"
     },
     {
@@ -679,7 +679,7 @@
       "name": "Antigravity Cli",
       "description": "Operate the Antigravity CLI (agy): plugins, auth, sandbox",
       "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -687,7 +687,7 @@
       "name": "Blackbox",
       "description": "Delegate coding tasks to the Blackbox AI multi-model CLI",
       "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -695,7 +695,7 @@
       "name": "Dynamic Workflow",
       "description": "Plan-in-code fan-outs, adversarial verification, waves",
       "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/",
-      "date": "2026-09-12",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -703,7 +703,7 @@
       "name": "Grok",
       "description": "Delegate coding to xAI Grok Build CLI (features, PRs)",
       "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -711,7 +711,7 @@
       "name": "Honcho",
       "description": "Configure and troubleshoot Honcho memory for Hermes",
       "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -719,7 +719,7 @@
       "name": "Openhands",
       "description": "Delegate coding to OpenHands CLI (model-agnostic, LiteLLM)",
       "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -727,7 +727,7 @@
       "name": "Evm",
       "description": "Read-only EVM client: wallets, tokens, gas across 8 chains",
       "url": "/hermes/docs/user-guide/skills/optional/blockchain/blockchain-evm/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -759,7 +759,7 @@
       "name": "Ai Presenter Video",
       "description": "Make a verified AI presenter video from script + image",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-ai-presenter-video/",
-      "date": "2026-09-13",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -767,7 +767,7 @@
       "name": "Archify",
       "description": "Validated interactive HTML diagrams, upstream-maintained",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-archify/",
-      "date": "2026-09-10",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -775,7 +775,7 @@
       "name": "Ascii Art",
       "description": "ASCII art: pyfiglet, cowsay, boxes, image-to-ascii",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -783,7 +783,7 @@
       "name": "Audiocraft Audio Generation",
       "description": "AudioCraft: MusicGen text-to-music, AudioGen text-to-sound",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -791,7 +791,7 @@
       "name": "Auteur",
       "description": "Design and build cinematic, award-level web pages",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-auteur/",
-      "date": "2026-09-15",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -815,7 +815,7 @@
       "name": "Comfyui",
       "description": "Generate images, video, and audio via diffusion workflows",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -823,7 +823,7 @@
       "name": "Concept Diagrams",
       "description": "Generate flat, minimal educational SVG visuals as HTML",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-concept-diagrams/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -839,7 +839,7 @@
       "name": "Draw Your Font",
       "description": "Turn a handwriting photo into an installable TTF font",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-draw-your-font/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -847,7 +847,7 @@
       "name": "Dream Loop",
       "description": "Build stunning 3D scenes via a concept-art fidelity loop",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-dream-loop/",
-      "date": "2026-09-12",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -863,7 +863,7 @@
       "name": "Heartmula",
       "description": "HeartMuLa: Suno-like song generation from lyrics + tags",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-heartmula/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -871,7 +871,7 @@
       "name": "Hyperframes",
       "description": "Render MP4/WebM videos from HTML compositions",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-hyperframes/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -879,7 +879,7 @@
       "name": "Impeccable",
       "description": "Frontend design guidance, upstream-maintained (impeccable)",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-impeccable/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -887,7 +887,7 @@
       "name": "Ip As Logo",
       "description": "Design minimal cute IP mascot marks readable at 32px",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-ip-as-logo/",
-      "date": "2026-09-15",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -895,7 +895,7 @@
       "name": "Kanban Video Orchestrator",
       "description": "Plan and run multi-agent video production pipelines",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator/",
-      "date": "2026-09-12",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -903,7 +903,7 @@
       "name": "Meme Generation",
       "description": "Create meme PNGs from templates with Pillow text overlay",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-meme-generation/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -911,7 +911,7 @@
       "name": "Mono Color",
       "description": "Generate one- or two-ink editorial print poster images",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-mono-color/",
-      "date": "2026-09-12",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -927,7 +927,7 @@
       "name": "Pretext",
       "description": "Build creative browser demos with DOM-free text layout",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-pretext/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -935,7 +935,7 @@
       "name": "Simple English",
       "description": "Rewrite text to ASD-STE100 Simplified Technical English",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-simple-english/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -943,7 +943,7 @@
       "name": "Sketch",
       "description": "Throwaway HTML mockups: 2-3 design variants to compare",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-sketch/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -951,7 +951,7 @@
       "name": "Social Media Content Calendar",
       "description": "Plan multi-platform social campaigns: briefs to posting",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-social-media-content-calendar/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -959,7 +959,7 @@
       "name": "System Atlas",
       "description": "Build explorable isometric architecture atlases as HTML",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/",
-      "date": "2026-09-12",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1007,7 +1007,7 @@
       "name": "Hermes S6 Container Supervision",
       "description": "Modify or debug s6 services in the Hermes Docker image",
       "url": "/hermes/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1047,7 +1047,7 @@
       "name": "Adversarial Ux Test",
       "description": "Roleplay a hostile user to find and triage UX pain points",
       "url": "/hermes/docs/user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1063,7 +1063,7 @@
       "name": "3 Statement Model",
       "description": "Build integrated IS/BS/CF financial workbooks in Excel",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-3-statement-model/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1071,7 +1071,7 @@
       "name": "Comps Analysis",
       "description": "Build comparable-company valuation workbooks in Excel",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-comps-analysis/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1079,7 +1079,7 @@
       "name": "Dcf Model",
       "description": "Build discounted cash flow valuation workbooks in Excel",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-dcf-model/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1087,7 +1087,7 @@
       "name": "Excel Author",
       "description": "Build auditable financial workbooks headless via openpyxl",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1095,7 +1095,7 @@
       "name": "Lbo Model",
       "description": "Build leveraged buyout workbooks with IRR/MOIC in Excel",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-lbo-model/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1103,7 +1103,7 @@
       "name": "Merger Model",
       "description": "Build M&A accretion/dilution workbooks in Excel",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-merger-model/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1119,7 +1119,7 @@
       "name": "Pptx Author",
       "description": "Build PowerPoint decks headless with python-pptx",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1127,7 +1127,7 @@
       "name": "Stocks",
       "description": "Stock quotes, history, search, compare, crypto via Yahoo",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-stocks/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1167,7 +1167,7 @@
       "name": "Fastmcp",
       "description": "Build, test, and deploy Python MCP servers",
       "url": "/hermes/docs/user-guide/skills/optional/mcp/mcp-fastmcp/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1175,7 +1175,7 @@
       "name": "Mcp Oauth Remote Gateway",
       "description": "Manual OAuth for remote MCP servers on headless gateways",
       "url": "/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1191,7 +1191,7 @@
       "name": "Openclaw Migration",
       "description": "Import an OpenClaw setup (memories, skills) into Hermes",
       "url": "/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1223,7 +1223,7 @@
       "name": "Evaluating Llms Harness",
       "description": "lm-eval-harness: benchmark LLMs (MMLU, GSM8K, etc.)",
       "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1351,7 +1351,7 @@
       "name": "Obliteratus",
       "description": "OBLITERATUS: abliterate LLM refusals (diff-in-means)",
       "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-obliteratus/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1439,7 +1439,7 @@
       "name": "Tensorrt Llm",
       "description": "High-throughput LLM inference on NVIDIA GPUs",
       "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-tensorrt-llm/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1487,7 +1487,7 @@
       "name": "Mpp Agent",
       "description": "Pay HTTP 402 APIs via Machine Payments Protocol (MPP)",
       "url": "/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1495,7 +1495,7 @@
       "name": "Stripe Link Cli",
       "description": "Agent payments via Stripe Link — cards, SPT, approvals",
       "url": "/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1503,7 +1503,7 @@
       "name": "Stripe Projects",
       "description": "Provision SaaS services + sync creds via Stripe Projects",
       "url": "/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1519,7 +1519,7 @@
       "name": "Decision Questionnaire",
       "description": "Turn an unanswerable decision into a questionnaire doc",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1535,7 +1535,7 @@
       "name": "Live Dashboard",
       "description": "Build self-updating dashboards from live sources",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/",
-      "date": "2026-09-15",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1559,7 +1559,7 @@
       "name": "Shop",
       "description": "Shop catalog search, checkout, order tracking, returns",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1567,7 +1567,7 @@
       "name": "Shopify",
       "description": "Query Shopify Admin/Storefront GraphQL APIs via curl",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1575,7 +1575,7 @@
       "name": "Siyuan",
       "description": "Query and edit a SiYuan knowledge base via its API",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1583,7 +1583,7 @@
       "name": "Telephony",
       "description": "Provision Twilio numbers, SMS/MMS, and AI outbound calls",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-telephony/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1607,7 +1607,7 @@
       "name": "Darwinian Evolver",
       "description": "Evolve prompts/regex/SQL/code with Imbue's evolution loop",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-darwinian-evolver/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1631,7 +1631,7 @@
       "name": "Duckduckgo Search",
       "description": "Free keyless web, news, and image search via ddgs",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1639,7 +1639,7 @@
       "name": "Gitnexus Explorer",
       "description": "Serve an interactive codebase knowledge graph web UI",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-gitnexus-explorer/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1647,7 +1647,7 @@
       "name": "Osint Investigation",
       "description": "Follow the money via public records and sanctions data",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1655,7 +1655,7 @@
       "name": "Parallel Cli",
       "description": "Agent-native web search, deep research, and enrichment",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-parallel-cli/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1671,7 +1671,7 @@
       "name": "Qmd",
       "description": "Hybrid local search over notes, docs, and transcripts",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-qmd/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1679,7 +1679,7 @@
       "name": "Research Paper Writing",
       "description": "Write ML papers for NeurIPS/ICML/ICLR: design→submit",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1687,7 +1687,7 @@
       "name": "Rss Feeds",
       "description": "Read RSS, Atom, JSON feeds; discover feeds behind a page",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/",
-      "date": "2026-09-08",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1695,7 +1695,7 @@
       "name": "Scrapling",
       "description": "Scrape sites with stealth browsing and Cloudflare bypass",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-scrapling/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1703,7 +1703,7 @@
       "name": "Searxng Search",
       "description": "Free keyless meta-search aggregating 70+ engines",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-searxng-search/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1719,7 +1719,7 @@
       "name": "Godmode",
       "description": "Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN",
       "url": "/hermes/docs/user-guide/skills/optional/security/security-godmode/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1743,7 +1743,7 @@
       "name": "Unbroker",
       "description": "Autonomously remove your info from data-broker sites",
       "url": "/hermes/docs/user-guide/skills/optional/security/security-unbroker/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1767,7 +1767,7 @@
       "name": "Reddit Reading",
       "description": "Read Reddit: subreddits, search, threads, users",
       "url": "/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/",
-      "date": "2026-09-08",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1775,7 +1775,7 @@
       "name": "Ast Grep",
       "description": "AST-aware structural code search and rewrite via ast-grep",
       "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1783,7 +1783,7 @@
       "name": "Code Wiki",
       "description": "Generate wiki docs + Mermaid diagrams for any codebase",
       "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1791,7 +1791,7 @@
       "name": "Grill Me",
       "description": "Adversarial plan interview before implementation",
       "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1807,7 +1807,7 @@
       "name": "Rest Graphql Debug",
       "description": "Debug REST/GraphQL APIs: status codes, auth, schemas, repro",
       "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {
@@ -1815,7 +1815,7 @@
       "name": "Subagent Driven Development",
       "description": "Execute plans via delegate_task subagents (2-stage review)",
       "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/",
-      "date": "2026-08-30",
+      "date": "2026-09-18",
       "source": "optional"
     },
     {

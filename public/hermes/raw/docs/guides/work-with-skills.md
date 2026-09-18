@@ -2,7 +2,7 @@
 title: "スキルを使いこなす"
 description: "スキルの探し方、入れ方、使い方、作り方をまとめます。スキルは Hermes に新しい進め方を教える、必要なときだけ読み込まれる知識です。"
 upstream_path: guides/work-with-skills.md
-upstream_blob: 2a011a2b7bf57d17652cec98eb4fa907b1307334
+upstream_blob: 59b81b6321f11664eaaad264e09447e22bdd9e8c
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/work-with-skills
 ---

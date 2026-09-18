@@ -2,7 +2,7 @@
 title: "Obliteratus — OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）"
 description: "OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）"
 upstream_path: user-guide/skills/optional/mlops/mlops-obliteratus.md
-upstream_blob: 0562055dad283b197baef72f74f7855bb4c61903
+upstream_blob: e8b0ea9267ec756308d526b966ec5632c7464389
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-obliteratus
 ---

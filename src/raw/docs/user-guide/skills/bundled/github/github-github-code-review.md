@@ -2,7 +2,7 @@
 title: "Github Code Review — PR をレビューする: 差分、gh または REST での行コメント"
 description: "PR をレビューする: 差分、gh または REST での行コメント"
 upstream_path: user-guide/skills/bundled/github/github-github-code-review.md
-upstream_blob: 50418869999859c2ca3cddea37e3003dd0ba3274
+upstream_blob: 86d33180dab1655b8f0387b6f714bc715714d003
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/github/github-github-code-review
 ---

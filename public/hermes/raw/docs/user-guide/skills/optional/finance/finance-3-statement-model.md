@@ -2,7 +2,7 @@
 title: "3 Statement Model — Excel で IS/BS/CF が連動する財務ブックを作る"
 description: "Excel で IS/BS/CF が連動する財務ブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-3-statement-model.md
-upstream_blob: 250d7fadf49b5ddd047afd304b6d7277cac2d293
+upstream_blob: 383055f21e3b597830a02f1acc2f680ac6e66286
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-3-statement-model
 ---

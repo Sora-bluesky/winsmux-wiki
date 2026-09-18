@@ -2,7 +2,7 @@
 title: "プロバイダーを追加する"
 description: "Hermes Agent に新しい推論プロバイダーを追加する方法 — 認証、実行時の解決、CLI の導線、アダプター、テスト、ドキュメント"
 upstream_path: developer-guide/adding-providers.md
-upstream_blob: ba8e276bd5e521e5d46ec9bf8c692c595aa6c17d
+upstream_blob: 105081d33dd1a29c1bfe80712fd9c1c9e881b70e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-providers
 ---

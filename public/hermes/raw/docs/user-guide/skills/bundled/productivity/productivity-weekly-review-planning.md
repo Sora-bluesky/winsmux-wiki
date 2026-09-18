@@ -2,7 +2,7 @@
 title: "Weekly Review Planning — 週ごとの仕切り直し: 約束、止まっている仕事、来週の計画"
 description: "週ごとの仕切り直し: 約束、止まっている仕事、来週の計画"
 upstream_path: user-guide/skills/bundled/productivity/productivity-weekly-review-planning.md
-upstream_blob: 353389b4ae23b5a6b265ec41b35035a9ef3082e2
+upstream_blob: cb9cfd2b9bb677067a8a064a025c1930bf1eb67d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning
 ---

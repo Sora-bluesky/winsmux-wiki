@@ -2,7 +2,7 @@
 title: "Ast Grep — ast-grep で構文木を見ながらコードを検索・書き換えする"
 description: "ast-grep で構文木を見ながらコードを検索・書き換えする"
 upstream_path: user-guide/skills/optional/software-development/software-development-ast-grep.md
-upstream_blob: 5d02d37d11e57e7dce593a16b8f1c641772cb250
+upstream_blob: ae2582e9d0b6d7b793a411ca1cdd4ea709a0a687
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-ast-grep
 ---

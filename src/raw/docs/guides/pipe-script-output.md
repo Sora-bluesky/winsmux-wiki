@@ -2,7 +2,7 @@
 title: "スクリプトの出力をメッセージングプラットフォームへ流す"
 description: "シェルスクリプト、cron ジョブ、CI のフック、監視デーモンなどのテキストを、`hermes send` で Telegram・Discord・Slack・Signal などへ送ります。"
 upstream_path: guides/pipe-script-output.md
-upstream_blob: a58f408260767b4e7bda30d775643baadc4765ce
+upstream_blob: 6df59eeb7d5e91e7ee0e84f10ceb58bef933a0ac
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/pipe-script-output
 ---
@@ -187,9 +187,24 @@ msg_id=$(hermes send --to discord:#ops --json "build started" \
 
 **たいていは不要です。** ボットのトークンで動くプラットフォーム（Telegram、
 Discord、Slack、Signal、SMS、WhatsApp Cloud API、そのほかほとんど）では、
-`hermes send` は `~/.hermes/.env` と `~/.hermes/config.yaml` の認証情報を使って
+`hermes send` は `~/.hermes/.env` と `~/.hermes/config.yaml`（あるいは実際に解決さ
+れた Hermes ホーム配下の同じ役割のファイル。Windows なら `%LOCALAPPDATA%\hermes`、
+`HERMES_HOME` や `-p` を指定したときはそのプロファイルのディレクトリ）の認証情報を使って
 プラットフォームの REST エンドポイントを直接呼びます。単独で動くプロセスで、
 メッセージを送り終えるとすぐ終了します。
+
+プラットフォームが `not configured` を返したときは、読みに行ったファイルと、その中身が
+どうだったかがエラーにそのまま並びます。たとえば
+`Looked in: C:\Users\me\AppData\Local\hermes\.env (no DISCORD_BOT_TOKEN),
+C:\Users\me\AppData\Local\hermes\config.yaml (no platforms.discord block),
+environment (DISCORD_BOT_TOKEN unset), external secret sources (none configured)`
+のように出ます。同じホームから起動したゲートウェイでそのプラットフォームがつながって
+いる場合、トークンはゲートウェイのプロセス環境にしかありません。そのホームの `.env` に
+書き足せば `hermes send` からも使えます。シェル側はプロファイルのホーム
+（`HERMES_HOME=<root>/profiles/<name>`）を見ているのに、つながっているゲートウェイは
+既定のルートで動いている、という場合もそう表示されます。ゲートウェイはプロファイルの
+`.env` を読んでいませんし、`hermes send --list` はルート側の
+`channel_directory.json` を指しています。
 
 ゲートウェイの起動が要るのは、接続を保ち続けるアダプターに依存する
 **プラグイン型のプラットフォーム**だけです（たとえば WebSocket を張りっぱなしに

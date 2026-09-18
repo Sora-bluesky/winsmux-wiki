@@ -2,7 +2,7 @@
 title: "かんばんの手引き"
 description: ""
 upstream_path: user-guide/features/kanban-tutorial.md
-upstream_blob: 3e76e94da6a052627c446537462424ee3c4da1d9
+upstream_blob: 5806e544c49e33fc15e784c8d2855ddcf0004b59
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban-tutorial
 ---
@@ -19,7 +19,7 @@ hermes dashboard             # opens http://127.0.0.1:9119 in your browser
 # click Kanban in the left nav
 ```
 
-**あなた**が全体を眺めるには、ダッシュボードがいちばん見やすい場所です。割り振り役が立ち上げるエージェントの作業役は、ダッシュボードも CLI も見ません。専用の `kanban_*` [ツール一式](/hermes/docs/user-guide/features/kanban/#how-workers-interact-with-the-board)（`kanban_show`、`kanban_list`、`kanban_complete`、`kanban_block`、`kanban_heartbeat`、`kanban_comment`、`kanban_attach`、`kanban_attach_url`、`kanban_attachments`、`kanban_create`、`kanban_link`、`kanban_unblock`）でボードを動かします。ダッシュボード、CLI、作業役のツールという三つの窓口は、いずれもボードごとの同じ SQLite の DB（既定のボードなら `~/.hermes/kanban.db`、あとから作ったボードなら `~/.hermes/kanban/boards/<slug>/kanban.db`）を通ります。だから、どちら側から変更しても、ボードの中身は食い違いません。
+**あなた**が全体を眺めるには、ダッシュボードがいちばん見やすい場所です。割り振り役が立ち上げるエージェントの作業役は、ダッシュボードも CLI も見ません。専用の `kanban_*` [ツール一式](/hermes/docs/user-guide/features/kanban/#how-workers-interact-with-the-board)（`kanban_show`、`kanban_list`、`kanban_complete`、`kanban_request_review`、`kanban_request_changes`、`kanban_block`、`kanban_heartbeat`、`kanban_comment`、`kanban_attach`、`kanban_attach_url`、`kanban_attachments`、`kanban_create`、`kanban_link`、`kanban_unblock`）でボードを動かします。ダッシュボード、CLI、作業役のツールという三つの窓口は、いずれもボードごとの同じ SQLite の DB（既定のボードなら `~/.hermes/kanban.db`、あとから作ったボードなら `~/.hermes/kanban/boards/<slug>/kanban.db`）を通ります。だから、どちら側から変更しても、ボードの中身は食い違いません。
 
 この手引きでは終始 `default` のボードを使います。プロジェクトやリポジトリや領域ごとに切り離した待ち行列がほしいときは、概要の[ボード（複数プロジェクト）](/hermes/docs/user-guide/features/kanban/#boards-multi-project)をご覧ください。CLI もダッシュボードも作業役の流れも、ボードごとに同じように使えますし、作業役は仕組みのうえでほかのボードの作業を見られません。
 

@@ -2,7 +2,7 @@
 title: "Webhook で GitHub の PR に自動でコメントする"
 description: "Hermes を GitHub につないで、PR の差分を取り、コードの変更をレビューし、コメントを書き込むところまでを自動にします。きっかけは webhook で、こちらから頼む必要はありません"
 upstream_path: guides/webhook-github-pr-review.md
-upstream_blob: 3f7ec74d2b66a10e8e43e54eca86eb5fbdee9458
+upstream_blob: c875c7b9cd507a335754f9d77a176683f6273b6d
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/webhook-github-pr-review
 ---

@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールを、ツールセットごとにまとめた決定版の早見表"
 upstream_path: reference/tools-reference.md
-upstream_blob: 96a6cc2a43995e8e12599e48e4cdb31fa5f1ca28
+upstream_blob: 4ebc3a670ee8003f6adf77c01a3b92f0725e703c
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---

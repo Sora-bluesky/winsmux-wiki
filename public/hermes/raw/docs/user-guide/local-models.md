@@ -2,7 +2,7 @@
 title: "ローカルモデル"
 description: "モデルを自分の端末だけで動かします。アカウントも API キーも不要で、何も端末の外には出ません。"
 upstream_path: user-guide/local-models.md
-upstream_blob: a224b883ff6235f4ad3bed9eabd2c692f9b5312f
+upstream_blob: a2202cd89df7e6cbaca2f60f079eb50f8a8a5aa6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/local-models
 ---

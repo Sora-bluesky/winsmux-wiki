@@ -2,7 +2,7 @@
 title: "Humanizer — テキストを人間らしくする: AI 特有の言い回しを取り除き、本物の声を足す"
 description: "テキストを人間らしくする: AI 特有の言い回しを取り除き、本物の声を足す"
 upstream_path: user-guide/skills/bundled/creative/creative-humanizer.md
-upstream_blob: e36d984c0d8f34fb2cdd2fb4b4ca1cc7e8d9b458
+upstream_blob: 63acd62c8aa441c4cf39cfe9e70b637a36dc6f22
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-humanizer
 ---

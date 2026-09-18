@@ -2,7 +2,7 @@
 title: "Impeccable — フロントエンド設計の指針、上流で保守（impeccable）"
 description: "フロントエンド設計の指針、上流で保守（impeccable）"
 upstream_path: user-guide/skills/optional/creative/creative-impeccable.md
-upstream_blob: a94647e8f7d4a7d61a4ffbb5b9ee56c4c4c4152c
+upstream_blob: fd6b730fb233ded58aed7625c9f7aec6ba16fbdb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-impeccable
 ---

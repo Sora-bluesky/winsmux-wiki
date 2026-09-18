@@ -2,7 +2,7 @@
 title: "Codebase Inspection — pygount でコードベースを調べる: 行数・言語の内訳・比率"
 description: "pygount でコードベースを調べる: 行数・言語の内訳・比率"
 upstream_path: user-guide/skills/bundled/software-development/software-development-codebase-inspection.md
-upstream_blob: e4d49e9d14fb4b14781d3cbdb62ea8457391e1b4
+upstream_blob: 0e870c91a35a54c3dc3f8fce984aa45766a75d96
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection
 ---

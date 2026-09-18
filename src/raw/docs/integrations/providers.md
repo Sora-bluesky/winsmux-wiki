@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 0fc23c8a9292329cc20803f0add9262ca4b7fcc7
+upstream_blob: da7ef399bb10ce2c35df9caaf63b1232544fbb1a
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -48,7 +48,6 @@ LLM につなぐ手段が少なくとも 1 つ必要です。`hermes model` を�
 | **OpenCode Zen** | `~/.hermes/.env` に `OPENCODE_ZEN_API_KEY`（provider: `opencode-zen`） |
 | **CommandCode** | `~/.hermes/.env` に `COMMANDCODE_API_KEY`（provider: `commandcode`、別名: `commandcode-chat`。Claude 系モデルは `commandcode-anthropic`、別名: `commandcode-claude`）。GOAT / Pro / Max / Provider の各プランで使えます（1 ドルの Go プランは API アクセスが無いため使えません）。 |
 | **OpenCode Go** | `~/.hermes/.env` に `OPENCODE_GO_API_KEY`（provider: `opencode-go`） |
-| **OpenCode Free** | キー不要 — API キーもアカウントも要りません（provider: `opencode-free`、別名: `free`、`opencode_free`）。`hermes model` か `/model free` で選びます。リクエストは匿名で送られます。モデル一覧は OpenCode の最新カタログから自動で更新されるので、入れ替わる無料キャンペーンのモデルも Hermes を更新せずに現れ（掲載が終われば消え）ます |
 | **DeepSeek** | `~/.hermes/.env` に `DEEPSEEK_API_KEY`（provider: `deepseek`） |
 | **Hugging Face** | `~/.hermes/.env` に `HF_TOKEN`（provider: `huggingface`、別名: `hf`） |
 | **Google / Gemini** | `~/.hermes/.env` に `GOOGLE_API_KEY`（または `GEMINI_API_KEY`）（provider: `gemini`） |
@@ -64,9 +63,9 @@ LLM につなぐ手段が少なくとも 1 つ必要です。`hermes model` を�
 | **LM Studio** | `hermes model` → 「LM Studio」（provider: `lmstudio`、任意で `LM_API_KEY`） |
 | **カスタムエンドポイント** | `hermes model` → 「Custom endpoint」を選ぶ（`config.yaml` に保存されます） |
 
-OpenCode 系の 3 プロバイダはいずれも、会話ごとに変わる不透明な `x-opencode-session` ヘッダをすべてのリクエストに付けて送ります（全トランスポートのメインのやり取りに加えて、圧縮、タイトル生成、承認の確認、スキルハブの照会、`/btw` の脇道の質問といった補助的な呼び出しにも付きます。やり取りが終わったあとに裏で走るものも含みます。ヘッドレスで動く Kanban の `specify`/`decompose` と、ダッシュボードの見積もり呼び出しでは、タスクごとのキーを使います）。OpenCode はこれを使って 1 つの会話を同じバックエンドに固定し、プロンプトキャッシュを温かいまま保ちます。値は Hermes のセッション ID（または Kanban のタスク ID）から導出したもので、個人情報は含みません。
+組み込みの OpenCode 系 2 プロバイダはいずれも、会話ごとに変わる不透明な `x-opencode-session` ヘッダをすべてのリクエストに付けて送ります（全トランスポートのメインのやり取りに加えて、圧縮、タイトル生成、承認の確認、スキルハブの照会、`/btw` の脇道の質問といった補助的な呼び出しにも付きます。やり取りが終わったあとに裏で走るものも含みます。ヘッドレスで動く Kanban の `specify`/`decompose` と、ダッシュボードの見積もり呼び出しでは、タスクごとのキーを使います）。OpenCode はこれを使って 1 つの会話を同じバックエンドに固定し、プロンプトキャッシュを温かいまま保ちます。値は Hermes のセッション ID（または Kanban のタスク ID）から導出したもので、個人情報は含みません。
 
-組み込みの OpenCode 系 3 プロバイダは、それぞれ `opencode.ai` 上の自分の中継先に固定されています（`opencode-zen` と `opencode-free` は `/zen/v1`、`opencode-go` は `/zen/go/v1`）。別の中継先のまま残った `model.base_url` は、選んだプロバイダの中継先に直されます。どの中継先を使うかは選んだモデル（`-m`、`/model`、フォールバックの項目、チャンネルごとの上書き）で決まるので、Zen のモデルから Go にしかないモデルへ切り替えても、リクエストが Zen へ送られることはありません。`providers:` の下に自分で定義したプロバイダの名前がこの系統のスラッグで始まる場合（たとえば `opencode-go-bridge`）、モデルごとの API モードの振り分けと `/v1` の扱いはその系統のものが適用されますが、`base_url` は書いたとおりに使われます。実際に指している中継先に合わせて名前を付けてください。
+組み込みの OpenCode 系 2 プロバイダは、それぞれ `opencode.ai` 上の自分の中継先に固定されています（`opencode-zen` は `/zen/v1`、`opencode-go` は `/zen/go/v1`）。別の中継先のまま残った `model.base_url` は、選んだプロバイダの中継先に直されます。どの中継先を使うかは選んだモデル（`-m`、`/model`、フォールバックの項目、チャンネルごとの上書き）で決まるので、Zen のモデルから Go にしかないモデルへ切り替えても、リクエストが Zen へ送られることはありません。`providers:` の下に自分で定義したプロバイダの名前がこの系統のスラッグで始まる場合（たとえば `opencode-go-bridge`）、モデルごとの API モードの振り分けと `/v1` の扱いはその系統のものが適用されますが、`base_url` は書いたとおりに使われます。実際に指している中継先に合わせて名前を付けてください。
 
 公式の API キーを使う経路については、[Google Gemini ガイド](/hermes/docs/guides/google-gemini/)を参照してください。
 
@@ -97,7 +96,7 @@ OpenAI Codex プロバイダはデバイスコードで認証します（URL を
 
 トークンの更新が回復不能なエラー（HTTP 4xx、`invalid_grant`、権限の失効など）で失敗した場合、Hermes はそのリフレッシュトークンを無効と判断して再送をやめるので、同じ認証エラーが延々と出ることはありません。次のリクエストでは、代わりに再認証を促すメッセージが出ます。`hermes auth add openai-codex`（または `hermes model` → **ChatGPT or Codex Subscription**）を実行してデバイスコードのログインをやり直してください。隔離は次に交換が成功した時点で解除されます。
 
-Python / OpenSSL 3.5 以降では、途中の通信機器が X25519MLKEM768 のような耐量子の鍵交換グループを拒否すると、デバイスログインが `[SSL: UNEXPECTED_EOF_WHILE_READING]` や TLS ハンドシェイクのタイムアウトで失敗することがあります（curl では通ることもあります）。Hermes は既定の TLS の方針を変えません。`hermes model` を実行する前に、`Groups` を従来の曲線だけに絞った設定を `OPENSSL_CONF` で指し示すか、TLS 1.2 で切り分けてください。
+Python / OpenSSL 3.5 以降では、途中の通信機器が X25519MLKEM768 のような耐量子の鍵交換グループを拒否すると、デバイスログインが `[SSL: UNEXPECTED_EOF_WHILE_READING]` や TLS ハンドシェイクのタイムアウトで失敗することがあります（curl では通ることもあります）。一度きりの切断で終わりになるわけではありません。ブラウザでの承認を待つあいだ、Hermes は連続 6 回までの通信エラーを乗り越えて問い合わせを続けます（デバイスコードの要求とトークンの交換も 2 回まで再試行します）。つまり、このエラーが表に出るのは、ネットワークが継続的に壊れている場合だけです。Hermes は既定の TLS の方針を変えません。`hermes model` を実行する前に、`Groups` を従来の曲線だけに絞った設定を `OPENSSL_CONF` で指し示すか、TLS 1.2 で切り分けてください。
 
 ```ini
 openssl_conf = openssl_init
@@ -1376,6 +1375,8 @@ providers:
 古い設定では、代わりにトップレベルの `custom_providers:` のリストを使っていました。これはまだ動きますし（Hermes は両方を読みます）、`hermes update` が `providers:` の辞書形式へ自動で移行します（config v12）。辞書形式ではフィールド名が少し違い、旧来の `model` は `default_model`、旧来の `api_mode` は `transport` になります。
 :::
 
+**カスタムエンドポイントでの推論の深さ。** 設定した `reasoning_effort`（`/reasoning max`、`agent.reasoning_effort`）は、`chat_completions` と `codex_responses` のどちらのトランスポートでも、そのままカスタムエンドポイントへ届きます。`max` まで届き、Hermes 内部だけの `ultra` が `max` に丸められるだけです。例外は 2 つあり、いずれも項目ではなく接続先のホストに従います。`api.openai.com` を指したカスタムの項目は OpenAI のモデルごとの段階を保ち（そこでは `max` は gpt-5.6 だけの段階です）、モデルごとの語彙を公開しているプロバイダ（Ramp Router）を指した項目は、そのカタログに丸められます。その段階を受け付けないエンドポイントは、Hermes が黙って落とすのではなく、HTTP 400 を返します。
+
 OpenAI 互換のエンドポイントの中には、プロバイダ固有のリクエストボディのフィールドを必要とするものがあります。該当するカスタムプロバイダに `extra_body` のマップを足すと、Hermes はそのエンドポイント向けの各チャット補完のリクエストにそれを混ぜ込みます。
 
 ```yaml
@@ -1523,6 +1524,8 @@ model:
 # ~/.hermes/.env
 PERPLEXITY_API_KEY=your-perplexity-key
 ```
+
+Perplexity の Agent API（`api_mode: codex_responses` で `api: https://api.perplexity.ai/v1`）は、`web_search`、`search_files`、`fetch_url`、`people_search`、`finance_search` という関数名を、自前の組み込みの道具のために予約しています。Hermes は同じ名前の自分の道具を、通信の上では `hermes_<name>` に改名し、呼び出す直前に元へ戻します。メインのエージェントのループでも、補助的な呼び出し（タイトル生成、圧縮、MoA の集約）でも同じ扱いで、OpenCode の `/v1/responses` のエンドポイントに対するのと同じやり方です。
 
 #### 1 つの設定に複数のプロバイダを入れる {#multiple-providers-in-one-config}
 

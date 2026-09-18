@@ -2,7 +2,7 @@
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: 9eeaabeae829ba983ae163db4a413e7df7a3aad9
+upstream_blob: 6dfda6dcc1b0531ea382b637b197c06040bc1ba3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
@@ -694,6 +694,16 @@ hermes memory setup
 - **設定ファイルを使うプロバイダー**（Honcho、Mem0、Hindsight、Supermemory）は設定を `$HERMES_HOME/` に置くので、プロファイルごとに自分の認証情報を持ちます
 - **クラウドのプロバイダー**（RetainDB）は、プロファイル単位のプロジェクト名を自動で導きます
 - **環境変数を使うプロバイダー**（OpenViking）は、プロファイルごとの `.env` ファイルで設定します
+
+## プラグインカタログへ移るプロバイダー {#providers-moving-to-the-plugin-catalog}
+
+記憶プロバイダーは Hermes 本体のツリーから、それぞれの作者のリポジトリへ移りつつあり、
+[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)で配布されます。利用する側で変わることはありません。
+プロバイダーの名前も、`memory.<name>` の設定も、データの置き場所も、道具もそのままです。
+設定しているプロバイダーが Hermes に同梱されなくなったときは、`hermes update` が、そのプロバイダーを
+指定しているすべてのプロファイルにカタログのプラグインを入れます。デスクトップアプリから更新する場合は、
+エージェントが最初に起動したときに同じことをします（`security.allow_lazy_installs` が
+`false` のときは代わりに `hermes plugins install <name>` の一行を表示します）。
 
 ## 記憶プロバイダーを作る {#building-a-memory-provider}
 

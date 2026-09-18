@@ -2,7 +2,7 @@
 title: "Antigravity Cli — Antigravity CLI（agy）を使いこなします。プラグイン、認証、サンドボックス"
 description: "Antigravity CLI（agy）を使いこなします。プラグイン、認証、サンドボックス"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli.md
-upstream_blob: d4e2f48b971a0b05fe8e49c31f754bd46a50dad0
+upstream_blob: 2cf222adea1dc44d6d14b8f23273ae28575be1fa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli
 ---

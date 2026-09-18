@@ -2,7 +2,7 @@
 title: "コツとベストプラクティス"
 description: "Hermes Agent を最大限に活かすための実践的なアドバイス。プロンプトのコツ、CLI のショートカット、コンテキストファイル、メモリ、コスト最適化、セキュリティ"
 upstream_path: guides/tips.md
-upstream_blob: 03a8b55f194144df45ea810889fbf394de699673
+upstream_blob: 5866aafdcc71f0ddcd9f59afd7a4b55f10e5d43a
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/tips
 ---

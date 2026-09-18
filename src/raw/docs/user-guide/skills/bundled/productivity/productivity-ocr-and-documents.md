@@ -2,7 +2,7 @@
 title: "Ocr And Documents — PDF やスキャン画像から文字を取り出す（pymupdf、marker-pdf）"
 description: "PDF やスキャン画像から文字を取り出す（pymupdf、marker-pdf）"
 upstream_path: user-guide/skills/bundled/productivity/productivity-ocr-and-documents.md
-upstream_blob: 9aed152a6f504bbe8e74e1aa3dc97e7f71d67413
+upstream_blob: 69c940982197272acabeed6446ebf330e56d2742
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-ocr-and-documents
 ---

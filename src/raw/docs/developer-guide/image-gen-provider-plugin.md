@@ -2,7 +2,7 @@
 title: "画像生成プロバイダのプラグイン"
 description: "Hermes Agent 向けに画像生成のバックエンドのプラグインを作る方法"
 upstream_path: developer-guide/image-gen-provider-plugin.md
-upstream_blob: ea4dc7051607aab902e54f3805c6ee507aad75ad
+upstream_blob: 41ae4fb38b334e0f21831df76819b134d1450e5a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/image-gen-provider-plugin
 ---

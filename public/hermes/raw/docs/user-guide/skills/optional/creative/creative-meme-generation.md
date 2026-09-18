@@ -2,7 +2,7 @@
 title: "Meme Generation — 定型画像に Pillow で文字を重ねてミーム画像を作る"
 description: "定型画像に Pillow で文字を重ねてミーム画像を作る"
 upstream_path: user-guide/skills/optional/creative/creative-meme-generation.md
-upstream_blob: f7b61f10f981bb95cdbb29911c5447c5585b2ff3
+upstream_blob: 2aeb574a710b7d2c15bb484610eecc8d703aabf1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-meme-generation
 ---

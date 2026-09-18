@@ -2,7 +2,7 @@
 title: "画像を見せる・貼り付ける"
 description: "クリップボードの画像を Hermes の CLI に貼り付けて、画像を読ませます。"
 upstream_path: user-guide/features/vision.md
-upstream_blob: f8b4c38d3a68e8edb928ea718af9bdb385234965
+upstream_blob: 630f9055f357eefc448685e949ad421c4284f343
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/vision
 ---

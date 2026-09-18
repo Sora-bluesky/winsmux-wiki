@@ -2,7 +2,7 @@
 title: "Shopify — curl で Shopify の Admin / Storefront GraphQL API を使う"
 description: "curl で Shopify の Admin / Storefront GraphQL API を使う"
 upstream_path: user-guide/skills/optional/productivity/productivity-shopify.md
-upstream_blob: 622860fe727179e76fa5ae98adc62b56b93a06a0
+upstream_blob: fbd68f3d053c3bd9965d43444f667f3cff490f13
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-shopify
 ---

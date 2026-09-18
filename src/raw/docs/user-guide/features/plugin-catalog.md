@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みで SHA 固定された Hermes のプラグインを、厳選カタログから探して導入する"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 1972c934f7d379ff49952c24fc9c91131d218fb4
+upstream_blob: 07e8d4bf744216208da5c3979c80665a30fb4c31
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -165,7 +165,9 @@ hermes plugins enable snyk
 （`https://hermes-agent.nousresearch.com/docs/api/plugin-catalog.json`）として公開されます。
 `search` / `install` / `update` はこれを最大 6 時間に 1 回だけ取得し、`~/.hermes/cache/` に
 キャッシュします。そのため、新しいエントリや削除は Hermes を更新しなくても手元に届きます。
-オフラインのときは、手元のチェックアウトに同梱されたコピーが使われます。ツリー内のリストと
+オフラインのときは、手元のチェックアウトに同梱されたコピーが使われます（取得に失敗したことは
+1 分間覚えているので、`plugins list` とダッシュボードの Plugins ページで待たされる接続の
+タイムアウトは、入っているプラグインの数だけではなく多くても 1 回です）。ツリー内のリストと
 最新のリスト、どちらの削除も常に両方が適用されます。
 
 ### カスタムの git URL は別扱いです {#custom-git-urls-are-different}

@@ -2,7 +2,7 @@
 title: "Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 description: "Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 upstream_path: user-guide/skills/bundled/software-development/software-development-python-debugpy.md
-upstream_blob: e6f1120e0835cac46386cb7033401d7f01a00dd4
+upstream_blob: d410baeab99e036f042cda2602f1f7c813d23e21
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy
 ---

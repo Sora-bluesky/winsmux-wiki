@@ -2,7 +2,7 @@
 title: "Mcp Oauth Remote Gateway — 画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す"
 description: "画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す"
 upstream_path: user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway.md
-upstream_blob: 6e43ce44d116e057f2ee6d44c88cde25dcb8d436
+upstream_blob: 710c13365f60bc657c2ba6e0aae71a36d68d8162
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway
 ---

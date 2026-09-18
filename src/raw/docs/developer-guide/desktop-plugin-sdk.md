@@ -2,7 +2,7 @@
 title: "デスクトッププラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンド領域までを、import 1 行だけ、ビルドなしで扱えます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 099c0bf75a67bb731c5e46eaaa763f5ffa79fd58
+upstream_blob: 45b3308ce072983c7708b22588f67ef9d6c814d7
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -165,6 +165,7 @@ interface Contribution {
 | サイドバーのナビ | `SIDEBAR_NAV_AREA` | `data: { path, label, codicon }` |
 | ステータスバー | `STATUSBAR_AREAS.left` / `.right` | `render`（または `StatusbarItem` としての `data`） |
 | タイトルバー | `TITLEBAR_AREAS.left` / `.center` / `.right` | `TitlebarTool` としての `data`、または表示中だけ有効な `<Contribute>` |
+| ページの見出し | `WORKSPACE_PAGE_HEADER_AREA` | ページの中に置いた、表示中だけ有効な `<Contribute>` からの `render` |
 | ⌘K パレット | `PALETTE_AREA` | `data: PaletteContribution` |
 | キー割り当て | `KEYBINDS_AREA` | `data: KeybindContribution` |
 | テーマ | `THEMES_AREA` | `DesktopTheme` としての `data` |
@@ -237,6 +238,10 @@ ctx.register({
 ```
 
 タイトルバーの道具は `TITLEBAR_AREAS.left | .center | .right` に `TitlebarTool` の data（`{ id, label, icon, active?, onSelect? }`）として置きます。
+
+タイトルバーの置き場所は**ずっと居続ける取り付け先**です。そこに登録したコンポーネントは、利用者がチャットと全面ページ（Capabilities、Messaging、Artifacts、プラグインが足した経路）のあいだを行き来しているあいだも取り付いたままです。そのため、アプリ全体に効く副作用を仕込む `useEffect`（`<style>` タグ、`html[data-*]` の属性、`MutationObserver`）は、登録ごとに準備が 1 回だけ走り、後片付けは破棄のときに 1 回だけ走ります。画面の移動の途中で走ることはありません。
+
+ページ 1 つにだけ属する操作（Kanban の盤の切り替え）は、代わりに `WORKSPACE_PAGE_HEADER_AREA` に置いてください。ここはそのページが画面に出ているあいだだけ、作業パネルのタブの見出しの行に描かれ、それ以外のときは空です。ページと一緒に消えるよう、表示中だけ有効な `<Contribute>`（後述）で登録します。
 
 ### パレットのコマンドとキー割り当て {#palette-commands-and-keybinds}
 
@@ -340,12 +345,12 @@ ctx.register({
 
 ### 表示中だけ生きる部品（`Contribute`） {#mount-scoped-chrome-contribute}
 
-`ctx.register` は**ずっと残る**寄与のためのものです。すでに画面に出ているコンポーネントと生死をともにしてほしい部品（そのページ専用のタイトルバーの操作は、ページが消えたら一緒に消えてほしい）は、代わりにその中で `<Contribute>` を描画してください。
+`ctx.register` は**ずっと残る**寄与のためのものです。すでに画面に出ているコンポーネントと生死をともにしてほしい部品（そのページ専用の見出しの操作は、ページが消えたら一緒に消えてほしい）は、代わりにその中で `<Contribute>` を描画してください。
 
 ```javascript
 
 jsx(Contribute, {
-  area: TITLEBAR_AREAS.center,
+  area: WORKSPACE_PAGE_HEADER_AREA,
   id: 'my-page:switcher', // namespace with your slug
   children: jsx(MySwitcher, {})
 })
@@ -513,7 +518,7 @@ ctx.socket('/events', () => {
 有効化のスイッチが 2 つあるのはわざとで、どちらも既定は**オフ**です。デスクトップ側は入れただけでは動かず、**Capabilities → Plugins** に並ぶものの、利用者が切り替えるまで無効のままです。これは Python 側が `config.yaml` の `plugins.enabled` で守られているのと揃えたものです（安全の線引きについては後述します）。`~/.hermes/plugins` にパッケージを置いただけでは、どこでも何も動きません。利用者がそう言うまでは動かないのです。バックエンド側が無効なときも、デスクトップ側は静かに縮退します。`ctx.rest` はエラーを返すだけで、落ちることはありません。
 
 :::note
-写しを作るのは、デスクトップアプリが動いている端末の中だけです。離れたバックエンドにつないでいる場合、向こうの `~/.hermes/plugins` はファイルとしては見えないので、この方法でデスクトップ側が加わるのはその端末に入っているパッケージだけです。離れたバックエンドのときは、インストールの画面がデスクトップ側を別に `desktop-plugins/` へ clone します。デスクトップ専用のリポジトリと同じ扱いです。
+写しを作るのは、デスクトップアプリが動いている端末の中だけです。離れたバックエンドにつないでいる場合、向こうの `~/.hermes/plugins` はファイルとしては見えないので、この方法でデスクトップ側が加わるのはその端末に入っているパッケージだけです。離れたバックエンドのときは、インストールの画面がデスクトップ側を別に `desktop-plugins/` へ clone します。デスクトップ専用のリポジトリと同じ扱いです。エージェント側だけを離れた端末に入れて、この clone をしていないパッケージは、Plugins のページでデスクトップ側が**利用できない（離れたバックエンド）**と表示されます。写しの順番待ちではありません。そのときの吹き出しは、Desktop を対象に指定した **Install from Git** を案内します。
 :::
 
 ### インストール用のリンクで配る {#install-link}
@@ -628,7 +633,7 @@ ctx.storage.remove('lastTab')
 |----------|---------|
 | ホスト | `host`（`.state.*`、`.notify`、`.notifyError`、`.navigate`、`.onEvent`、`.logs`、`.status`、`.restartGateway`、`.request`） |
 | プラグインの約束事 | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
-| 場所を表す定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS` |
+| 場所を表す定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS` |
 | 場所ごとの中身 | `RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider` |
 | React と状態 | `useValue`、`atom`、`computed`、`useQuery`、`useMutation`、`useQueryClient`、`queryClient`、`Contribute` |
 | テーマまわり | `useTheme`、`requestTheme`、`setAccentOverride`、`$accentOverride`、`retintTheme`、`themeHue`、`DesktopTheme`、`DesktopThemeColors`、そして OKLCH の計算（`hexToOklch`、`oklchToHex`、`oklchToSrgb255`、`mixOklab`、`maxChroma`、`hueDelta`、`normalizeHex`）と sRGB の測定（`contrastRatio` は `number | null` を返し、解釈できない入力では null。`readableOn`） |

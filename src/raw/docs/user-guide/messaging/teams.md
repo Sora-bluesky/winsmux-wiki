@@ -2,7 +2,7 @@
 title: "Microsoft Teams"
 description: "Hermes Agent を Microsoft Teams のボットとして設定する"
 upstream_path: user-guide/messaging/teams.md
-upstream_blob: d64efd8a03fef051f0978c4eb6ee74b3cc9dc11e
+upstream_blob: 32002637d1b7f128854cadccbc013a3550c9acfa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/teams
 ---
@@ -24,6 +24,8 @@ Hermes Agent を Microsoft Teams のボットとしてつなぎます。Slack �
 | **チャネル** | @メンションされたときだけ応答します。 |
 
 Teams は @メンションを `<at>BotName</at>` タグ付きの通常メッセージとして届けます。Hermes は処理の前にこのタグを自動で取り除きます。
+
+リソース固有の同意（RSC）が無いうちは、Teams はボットを @メンションしたメッセージだけを届けるので、選り分けは要りません。アプリのマニフェストで `ChannelMessage.Read.Group` か `ChatMessage.Read.Chat` を許可すると、Teams はその会話の**すべて**のメッセージを届けるようになります。`require_mention: true`（または `TEAMS_REQUIRE_MENTION=true`）を設定すると、チャネルとグループチャットでは、ボットを @メンションしたメッセージか、ボット自身のメッセージへの返信にだけ応答します。個人チャットがこの条件で絞られることはありません。条件から外れたメッセージは、添付ファイルを取りに行く前に捨てられます。
 
 ---
 
@@ -170,6 +172,7 @@ teams app get <teamsAppId> --install-link
 | `TEAMS_HOME_CHANNEL` | 定期実行やプロアクティブなメッセージの届け先となる会話 ID |
 | `TEAMS_HOME_CHANNEL_NAME` | ホームチャンネルの表示名 |
 | `TEAMS_PORT` | webhook のポート（既定: `3978`） |
+| `TEAMS_REQUIRE_MENTION` | `true` にすると、チャネルとグループチャットでは @メンションとボットへの返信にだけ応答します（既定: `false`。RSC でメッセージ読み取りの同意を得たアプリ向け） |
 
 ### config.yaml {#configyaml}
 
@@ -184,6 +187,7 @@ platforms:
       client_secret: "your-secret"
       tenant_id: "your-tenant-id"
       port: 3978
+    require_mention: false   # true once the app has RSC message-read consent
 ```
 
 ---

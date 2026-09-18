@@ -2,7 +2,7 @@
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: ca5ab601cc6519c9f68fd19ae611f6b94b3773a5
+upstream_blob: 9e8fc513790800f92b624adbb5e133f9eef85c59
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -462,7 +462,7 @@ gateway:
 }
 ```
 
-終わりの状態（`completed`、`failed`、`cancelled`）になったあとも、問い合わせと画面の突き合わせのために状態はしばらく残ります。
+終わりの状態（`completed`、`failed`、`cancelled`、`interrupted`）になったあとも、問い合わせと画面の突き合わせのために状態はしばらく残ります。実行中にゲートウェイが終了した場合、その実行はエージェントに停止を求めるより先に `interrupted`（エラーは `Gateway shutdown interrupted the run.`、終了時のできごとは `run.interrupted`）として書き残されます。そのため、永続的な実行が再起動をまたいで `running` のまま残ることはなく、中断されたターンから遅れて届いた結果がこれを上書きすることもありません。
 
 ### GET /v1/runs/\{run_id\}/events {#get-v1runsrunidevents}
 

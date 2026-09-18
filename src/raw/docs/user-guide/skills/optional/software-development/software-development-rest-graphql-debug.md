@@ -2,7 +2,7 @@
 title: "Rest Graphql Debug — REST/GraphQL API を調べる: ステータスコード、認証、スキーマ、再現手順"
 description: "REST/GraphQL API を調べる: ステータスコード、認証、スキーマ、再現手順"
 upstream_path: user-guide/skills/optional/software-development/software-development-rest-graphql-debug.md
-upstream_blob: 616274754c6df575b91f145827c488b258ec7f39
+upstream_blob: e1d1b7a2d418cfb40ac3817edadf66fd50b31b3f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug
 ---

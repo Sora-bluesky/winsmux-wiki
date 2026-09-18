@@ -2,7 +2,7 @@
 title: "機能の概要"
 description: ""
 upstream_path: user-guide/features/overview.md
-upstream_blob: 094b29622604f2c96def3f563525182c67330d1e
+upstream_blob: c701d8ae6b271e78bb9597ec51fee2a1f1b691c0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/overview
 ---

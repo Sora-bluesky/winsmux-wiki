@@ -2,7 +2,7 @@
 title: "Sketch — 使い捨ての HTML モックアップ。見比べるための案を 2〜3 通り作る"
 description: "使い捨ての HTML モックアップ。見比べるための案を 2〜3 通り作る"
 upstream_path: user-guide/skills/optional/creative/creative-sketch.md
-upstream_blob: 88f2fcfacd0a5295e67695e3b9f7147607de100f
+upstream_blob: adeb913330de7a625906c11120be41cc6deedda4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-sketch
 ---

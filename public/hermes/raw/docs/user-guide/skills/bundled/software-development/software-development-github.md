@@ -2,7 +2,7 @@
 title: "Github — gh CLI で GitHub を扱う: PR、issue、レビュー、リポジトリ、認証"
 description: "gh CLI で GitHub を扱う: PR、issue、レビュー、リポジトリ、認証"
 upstream_path: user-guide/skills/bundled/software-development/software-development-github.md
-upstream_blob: 6a70dc807c44188fee69ea922728a822f71e53c9
+upstream_blob: 7dce2fca48aad3ef7b3833978f7f5d0797a9d3be
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-github
 ---

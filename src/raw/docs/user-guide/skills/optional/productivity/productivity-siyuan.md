@@ -2,7 +2,7 @@
 title: "Siyuan — SiYuan のナレッジベースを API から読み書きする"
 description: "SiYuan のナレッジベースを API から読み書きする"
 upstream_path: user-guide/skills/optional/productivity/productivity-siyuan.md
-upstream_blob: d14d3cc2bb0ea4d833d164893c2cebbfcd1910de
+upstream_blob: 8c939a290dfe2e9b0e1f4550a6ddefb56c1a2acf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-siyuan
 ---

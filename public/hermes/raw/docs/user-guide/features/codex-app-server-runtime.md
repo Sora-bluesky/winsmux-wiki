@@ -2,7 +2,7 @@
 title: "Codex App-Server ランタイム（任意）"
 description: ""
 upstream_path: user-guide/features/codex-app-server-runtime.md
-upstream_blob: 51821278d77b9610ff08acf05cef07d26bb2d924
+upstream_blob: 9c85c018912fe0823418983c4cbfcff3be7f9a23
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/codex-app-server-runtime
 ---
@@ -99,7 +99,7 @@ Codex ランタイムの作業役の中で動くものは次のとおりです�
 - browser_*、画像の読み取り、image_gen、スキル、TTS のための Hermes のツールコールバック
 
 MCP のコールバックが出しているおかげで、次のものも動きます。
-- **`kanban_complete` / `kanban_block` / `kanban_comment` / `kanban_heartbeat`** — 作業役が結果を引き渡すためのツールです。割り振り役が設定した環境変数 `HERMES_KANBAN_TASK` を読み、正しく門を通し、`HERMES_KANBAN_DB` で指定されたボードごとの SQLite の DB へ書きます。これらがコールバックに無いと、このランタイムの作業役は作業自体はできても報告を返せず、割り振り役の待ち時間が尽きるまで止まったままになります。
+- **`kanban_complete` / `kanban_request_review` / `kanban_request_changes` / `kanban_block` / `kanban_comment` / `kanban_heartbeat`** — 作業役が結果を引き渡すためのツールです。割り振り役が設定した環境変数 `HERMES_KANBAN_TASK` を読み、正しく門を通し、`HERMES_KANBAN_DB` で指定されたボードごとの SQLite の DB へ書きます。これらがコールバックに無いと、このランタイムの作業役は作業自体はできても報告を返せず、割り振り役の待ち時間が尽きるまで止まったままになります。
 - **`kanban_show` / `kanban_list`** — 作業役が自分の状況を確かめるための、読むだけのボード照会です。
 - **`kanban_create` / `kanban_unblock` / `kanban_link`** — まとめ役だけが使う操作です。Codex ランタイムで動くまとめ役が、あたらしい作業を割り振る必要があるときに使えます。
 

@@ -2,7 +2,7 @@
 title: "コードの実行"
 description: "RPC でツールを呼べる Python の実行環境。何手もかかる作業を1ターンに畳み込みます"
 upstream_path: user-guide/features/code-execution.md
-upstream_blob: 0736de5500fb823daec06fbafbdac17881fbe1ec
+upstream_blob: fea567d5662298b877dc3c792ac8b1cc73c64de3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/code-execution
 ---

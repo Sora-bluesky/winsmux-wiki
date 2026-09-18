@@ -2,7 +2,7 @@
 title: "Adversarial Ux Test — 意地の悪い利用者を演じて、使いにくさを見つけて仕分ける"
 description: "意地の悪い利用者を演じて、使いにくさを見つけて仕分ける"
 upstream_path: user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test.md
-upstream_blob: 4bef37dab10befa5c6108a6a31084ccef5b2eaf0
+upstream_blob: 69d00e0529e916b51de9c0ca25e6d775fa562952
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test
 ---

@@ -2,7 +2,7 @@
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md
-upstream_blob: f873026f0f1a797c63cabe4b1d50c7cd5d2b8c90
+upstream_blob: 084e241289bc63b2137e49c5c65812078d632d74
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/cli
 ---

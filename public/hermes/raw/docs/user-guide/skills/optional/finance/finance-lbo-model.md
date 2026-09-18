@@ -2,7 +2,7 @@
 title: "Lbo Model — IRR / MOIC 付きの LBO ワークブックを Excel で作る"
 description: "IRR / MOIC 付きの LBO ワークブックを Excel で作る"
 upstream_path: user-guide/skills/optional/finance/finance-lbo-model.md
-upstream_blob: 27460107291d674f219fda21049b88971122f7b0
+upstream_blob: 51519cf98d77305ef81084411c65b0e1b80fd761
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-lbo-model
 ---

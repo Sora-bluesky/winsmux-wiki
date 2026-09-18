@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-18",
+  "generatedAt": "2026-09-19",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-09-18",
-      "attemptedAt": "2026-09-18",
+      "fetchedAt": "2026-09-19",
+      "attemptedAt": "2026-09-19",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -59,16 +59,6 @@
           "criteriaReason": null
         },
         {
-          "id": "stealth/union-alpha",
-          "name": "Union Alpha",
-          "ctx": 262144,
-          "tools": true,
-          "expires": "2098-12-31",
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
           "id": "stepfun/step-3.7-flash:free",
           "name": "StepFun: Step 3.7 Flash",
           "ctx": 262144,
@@ -93,8 +83,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-09-18",
-      "attemptedAt": "2026-09-18",
+      "fetchedAt": "2026-09-19",
+      "attemptedAt": "2026-09-19",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -102,6 +92,16 @@
           "id": "cohere/north-mini-code:free",
           "name": "Cohere: North Mini Code (free)",
           "ctx": 256000,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "deepseek/deepseek-v4-flash-0731:free",
+          "name": "DeepSeek: DeepSeek V4 Flash 0731 (free)",
+          "ctx": 1048576,
           "tools": true,
           "expires": null,
           "freeBasis": "pricing",
@@ -309,16 +309,6 @@
           "criteriaReason": null
         },
         {
-          "id": "stealth/union-alpha",
-          "name": "Union Alpha",
-          "ctx": 262144,
-          "tools": true,
-          "expires": "2098-12-31",
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
           "id": "thinkingmachines/inkling-small:free",
           "name": "Thinking Machines: Inkling Small (free)",
           "ctx": 1048576,
@@ -353,8 +343,8 @@
     },
     "opencode": {
       "ok": true,
-      "fetchedAt": "2026-09-18",
-      "attemptedAt": "2026-09-18",
+      "fetchedAt": "2026-09-19",
+      "attemptedAt": "2026-09-19",
       "errorCode": null,
       "url": "https://opencode.ai/zen/v1/models",
       "models": [

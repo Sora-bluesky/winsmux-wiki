@@ -2,7 +2,7 @@
 title: "Simple English — 技術文書を ASD-STE100 の簡易技術英語に書き直す"
 description: "技術文書を ASD-STE100 の簡易技術英語に書き直す"
 upstream_path: user-guide/skills/optional/creative/creative-simple-english.md
-upstream_blob: a00e0623c8811a9e3f42a871023b375c764ab34e
+upstream_blob: 0a64375bdfa754e6f00cfc22ab9b1e45ad367c68
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-simple-english
 ---

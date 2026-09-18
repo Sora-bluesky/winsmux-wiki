@@ -2,7 +2,7 @@
 title: "コンテキストエンジンプラグイン"
 description: "組み込みの ContextCompressor を置き換えるコンテキストエンジンプラグインの作り方"
 upstream_path: developer-guide/context-engine-plugin.md
-upstream_blob: 6d33638ddbe0dbab2ec3c443b5bdc5c6e40a3c15
+upstream_blob: 0768f6ef455c988732efd06b396c33eddb0e570a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-engine-plugin
 ---

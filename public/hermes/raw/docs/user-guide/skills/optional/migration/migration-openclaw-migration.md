@@ -2,7 +2,7 @@
 title: "Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む"
 description: "OpenClaw の設定（記憶、skill）を Hermes に取り込む"
 upstream_path: user-guide/skills/optional/migration/migration-openclaw-migration.md
-upstream_blob: 43519fcac5f638bff7e8464037a003e825e35a28
+upstream_blob: 216182efecc942881beb53ce252b1463cbb07d61
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/migration/migration-openclaw-migration
 ---

@@ -2,7 +2,7 @@
 title: "Simplify Code — 直近のコード変更を、4 つのエージェントで並行して片づけます"
 description: "直近のコード変更を、4 つのエージェントで並行して片づけます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-simplify-code.md
-upstream_blob: 59e22aa1f6a200394a20eb291103625945d0c680
+upstream_blob: 0465ae3a4ad570bdac1f3b5bab36f008d07e73a2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-simplify-code
 ---

@@ -2,7 +2,7 @@
 title: "Pretext — DOM を使わない文字組みで、ブラウザで動く作品を作る"
 description: "DOM を使わない文字組みで、ブラウザで動く作品を作る"
 upstream_path: user-guide/skills/optional/creative/creative-pretext.md
-upstream_blob: 7688aadcbc6c83a7178f79ba8d5b421920f1d8b2
+upstream_blob: 55ac2a6e89df4d7d527fbc6cd4665e6a6964ac89
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-pretext
 ---

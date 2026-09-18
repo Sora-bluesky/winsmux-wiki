@@ -2,7 +2,7 @@
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: 203a194dda8cd55ebc53c9df5064a68d4665aa4c
+upstream_blob: 99fd8c8c03bea35a7385247d92dfcbdc6eb0e77c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -117,7 +117,7 @@ PR の URL、SHA、必須コンテキスト、チェックの ID と URL、分�
   を参照してください。単一プロジェクトで使う人は `default` の盤のままでよく、この節の外で
   「盤」という言葉に出会うことはありません。
 - **タスク** — タイトル、任意の本文、担当者 1 人（プロファイル名）、状態（`triage | todo | ready | running | blocked | review | done | archived`）、任意のテナント名前空間、任意の冪等キー（自動処理の再送で重複を防ぐ）を持つ 1 行。
-- **リンク** — 親 → 子の依存関係を記録する `task_links` の行。すべての親が `done` になると、ディスパッチャが `todo → ready` へ上げます。
+- **リンク** — 親 → 子の依存関係を記録する `task_links` の行。すべての親が `done` になると、ディスパッチャが `todo → ready` へ上げます。実行中の子にリンクを足すことはできません。すでに取りかかっている作業を関門で止めることはできないからです。例外は、実行中のワーカーが依存待ちの引き継ぎに入る直前に、ディスパッチャから渡された実行の所有権を使って自分自身のカードへリンクを張る場合だけです。
 - **コメント** — エージェント同士の通信手段。エージェントも人もコメントを追記でき、ワーカーが（再）起動されるときには、コメントの流れ全体が文脈の一部として読み込まれます。
 - **作業場所（workspace）** — ワーカーが作業するディレクトリ。3 種類あります。
   - `scratch`（既定） — `~/.hermes/kanban/workspaces/<id>/` の下に作られる新しい一時ディレクトリ（既定以外の盤では `~/.hermes/kanban/boards/<slug>/workspaces/<id>/`）。**タスクが完了すると消えます** — 使い捨てとして設計されています。`kanban_complete(artifacts=[...])` や `kanban_request_review(artifacts=[...])` で明示的に申告されたファイルは、片付けの前に、タスクごとの永続的な添付保管場所へコピーされます（レビューへの引き継ぎでは引き継ぎの時点で退避されます。使い捨ての作業場所を消すのは、後でレビュー担当が完了させたときだからです）。旧来の完了要約に書かれた成果物のパスも、実在すれば同じ扱いになります。それ以外の使い捨てファイルは削除されます。申告した成果物が見つからないときはタスクを進行中のままにするので、ワーカーはパスを直して再試行できます。作業場所ごと残したいときは `worktree:` か `dir:<path>` を使ってください。あるインストールで初めて使い捨ての作業場所が作られたとき、ディスパッチャは警告をログに出し、そのタスクに `tip_scratch_workspace` イベントを出します（`hermes kanban show <id>` で見えます）。
@@ -200,20 +200,41 @@ slug は検査されます。小文字の英数字 + ハイフン + アンダー
 - **盤のドロップダウン** — 使う盤を選びます。選択はブラウザの
   `localStorage` に保存され、再読み込みしても残ります。開いたままの端末の下で
   CLI 側の `current` が勝手に動くことはありません。
-- **+ New board** — slug、表示名、説明、アイコンを尋ねるモーダルが開きます。
-  作った盤へそのまま切り替えるかどうかも選べます。
+- **+ New board** — slug、表示名、説明、アイコン、プロジェクトディレクトリ、
+  そして（プロジェクトが 1 つでもあるときは）**Project** の選択欄を尋ねる
+  モーダルが開きます。作った盤へそのまま切り替えるかどうかも選べます。
 - **Settings** — いまの盤の表示名、説明、**プロジェクトディレクトリ**
   （`default_workdir`）を編集するモーダルが開きます。プロジェクト
   ディレクトリは、新しいタスクが引き継ぐ盤レベルの作業場所の既定値です
   （git リポジトリなら残る worktree、ふつうのディレクトリならそのまま残る
   ディレクトリ）。タスクごとに作成時の上書きもできます。この欄を空にすると、
-  新しいタスクは使い捨ての作業場所に戻ります。
+  新しいタスクは使い捨ての作業場所に戻ります。ただしプロジェクトが
+  結び付けられているときは、そのプロジェクトの主フォルダが使われます。
+  使い捨てに戻したいときは先にプロジェクトの結び付けを外してください。
+- **Project**（どちらのモーダルにもあります） — 盤を Hermes の
+  プロジェクトに結び付けます（盤の `project_id`）。
+  結び付いた盤で作ったタスクは、そのプロジェクトを引き継ぎます。
+  ディレクトリの欄が空のままプロジェクトを選ぶと、プロジェクトの主フォルダが
+  プロジェクトディレクトリの初期値としても入ります。結び付いたプロジェクトは、
+  盤のドロップダウンの隣に `Project: <name>` のバッジとして出ます。その `×` を
+  押すと、プロジェクトディレクトリはそのままに盤の結び付けだけが外れ
+  （`project_id: ""` が送られます）、Settings の `No binding` も保存時に同じことをします。
+  この選択欄は、プロジェクトが少なくとも 1 つあるときだけ出ます。
 - **Archive** — `default` 以外の盤にだけ出ます。確認のうえ、盤の
   ディレクトリを `boards/_archived/` へ移します。
 
 ダッシュボードの API はどれも `?board=<slug>` で盤を指定できます。
 イベントの WebSocket は接続時に盤へ固定されるので、画面で切り替えると
 新しい盤に対して別の WS が開きます。
+
+### デスクトップアプリで盤を切り替える {#switching-boards-in-the-desktop-app}
+
+デスクトップアプリでは、盤の切替はカンバンのページ上部、ページの見出しの隣にある
+ヘッダー行に置かれています。いまの盤の名前とタスク数を表示する **Board** の
+コントロールで、山形の印が付いています。マウスを重ねると「Switch board」と出ます。
+これを押すと、別の盤を選んだり、盤の名前を変えたり、設定・書き出し・読み込み・
+新規作成・アーカイブをしたりできます。ダッシュボードと同じように、デスクトップも
+自分の選択を（ローカルに保存して）保ち、CLI 側の `current` を動かすことはありません。
 
 ## ファイルの添付 {#file-attachments}
 
@@ -232,7 +253,11 @@ slug は検査されます。小文字の英数字 + ハイフン + アンダー
   **絶対パス** が並びます。ワーカーはファイルと端末のツールを自由に使えるので、
   添付をそのまま読めます（`read_file` や、`pdftotext` のような端末のコマンド）。
 - **ダウンロードと削除** — 引き出しには添付ごとにダウンロードのリンクと
-  削除（×）が並びます。削除すると、メタデータの行とディスク上のファイルの両方が消えます。
+  削除（×）が並びます。削除すると、その添付のメタデータの行が消えます。
+  ディスク上のファイルが消えるのは、ほかの添付の行がそのファイルを参照して
+  いないときだけです（複数のタスクで共有しているファイルは、最後の参照が
+  消えるまで残ります）。CLI からは `hermes kanban attach-rm
+  ATTACHMENT_ID` で同じように添付を削除できます。
 
 :::note リモートの端末バックエンド
 添付のパスは **ローカル** の端末バックエンド上でそのまま解決されます。カンバンの
@@ -279,11 +304,13 @@ kanban:
   review_dispatch: true            # default: spawn the assigned profile with
                                    # the bundled sdlc-review skill. Set false
                                    # for human-only review boards.
-  dispatch_profiles: null           # default: this home may claim cards for any
-                                   # existing profile. Set to a list (or
-                                   # comma-separated string) of profile names to
-                                   # restrict which assignees this home claims;
-                                   # fail-closed, an empty list claims nothing.
+  # dispatch_profiles: [sage]       # unset (key omitted): this home may claim
+                                   # cards for any existing profile. Set to a
+                                   # list (or comma-separated string) of profile
+                                   # names to restrict which assignees this home
+                                   # claims. Fail-closed: an empty list, `null`
+                                   # or a bare `dispatch_profiles:` claims
+                                   # nothing, and so does an unreadable config.
 ```
 
 デバッグのときは `HERMES_KANBAN_DISPATCH_IN_GATEWAY=0` で実行時に設定を
@@ -292,6 +319,32 @@ start` を直接実行するか、ゲートウェイを systemd のユーザー�
 （ゲートウェイのドキュメントを参照）。ゲートウェイが動いていないと、`ready` の
 タスクは上がってくるまでそのまま止まります。`hermes kanban create` は作成時に
 そのことを警告します。
+
+#### ワーカーと systemd の cgroup {#workers-and-systemd-cgroups}
+
+ワーカーは投げっぱなしのプロセスで、ディスパッチャの 1 回の巡回より長く生き残ります。
+そのため、ディスパッチャが systemd のユニットの中で動いている場合は、ワーカーは
+専用の一時スコープ（`systemd-run --user --scope --unit hermes-worker-kanban-<task>-run-<run>`）
+で起動され、そのユニットが終了したり再起動したりしても生き残ります。スコープを作るには、
+起動する利用者のセッションバス（`/run/user/<uid>/bus`）が必要です。システム全体への
+インストールでは `sudo loginctl enable-linger <user>` でその利用者にバスを用意してください。
+
+- **ゲートウェイのディスパッチャ**（`dispatch_in_gateway: true` で、ゲートウェイが systemd の下にある場合）:
+  スコープは必須です。バスに届かない場合は起動そのものが拒否され、カードには *インフラ* の
+  失敗として記録されます — `metadata.infrastructure: true` を伴う `spawn_failed`、
+  `last_failure_error` に linger での直し方、ゲートウェイのログに警告 — そしてカードは
+  `ready` のまま残ります。`consecutive_failures` は **増えません**。ホストの一時的な不調で
+  カードがただの `blocked` に置き去りにされることはない、ということです。バスが戻るまでは
+  再起動の見張りが再試行の間隔を空けます（`infrastructure_cooldown`。レート制限の
+  クールダウンと同じ長さです）。
+- **自分のユニットから `hermes kanban dispatch` を呼ぶ場合**（`Type=oneshot` のタイマー、
+  順番に流すサービスなど）: バスに届くならワーカーは同じスコープを得ます。届かない場合でも
+  ワーカーは起動されますが、それは *あなたの* ユニットの cgroup の中であり、ユニットが
+  終了すればワーカーも死ぬことを、ディスパッチャが一度だけ、はっきりとログに残します。
+  `Type=oneshot` を既定の `KillMode=control-group` で使うと、その回の処理が終わってから
+  1 秒以内にワーカーが残らず消えます。スコープを作れるように linger を有効にするか、
+  そのユニットに `KillMode=process` を設定して、終了時にディスパッチャ自身だけが
+  止まるようにしてください。
 
 `hermes kanban daemon` を別プロセスとして走らせる方法は **非推奨** です。
 ゲートウェイを使ってください。どうしてもゲートウェイを動かせない場合
@@ -388,14 +441,14 @@ hermes -p planner tools enable kanban --platform telegram  # a gateway platform
 | `kanban_complete` | `summary` + `metadata` の構造化された引き継ぎで仕上げる。 | `summary` / `result` のいずれか |
 | `kanban_request_review` | 同じカードのままレビューを始める。永続する `summary`、任意の `metadata`、任意のレビュー担当プロファイルを渡す。タスクは `review` へ移る。ブロックではない。 | `summary` |
 | `kanban_request_changes` | 進行中のレビューからのレビュー担当の判定。その実行を閉じ、親の関門をかけ直し、元の実装担当へ戻す。ブロックの回数には数えない。 | `reason` |
-| `kanban_block` | 作業を止め、理由で行き先を決める。`kind=dependency`（`todo` で待ち、自動で再開）、`needs_input` / `capability` / `transient`（人に知らせる）。同じ種類の再ブロックが続くと自動で `triage` へ上がる。 | `reason` |
+| `kanban_block` | 作業を止め、理由で行き先を決める。`kind=dependency`（`todo` で待ち、未完了の親が終わると自動で再開。開いている親が 1 つも無いときは、その待ちが満たされる見込みが無いので `needs_input` として記録される）、`needs_input` / `capability` / `transient`（人に知らせる）。同じ種類の再ブロックが続くと自動で `triage` へ上がる。 | `reason` |
 | `kanban_heartbeat` | 長い処理の間、生きていることを知らせる。副作用だけのツール。 | — |
 | `kanban_comment` | タスクの流れに消えないメモを追記する。 | `task_id`、`body` |
 | `kanban_attach` | 中身（base64）を直接渡してファイルをタスクに添付する。タスクの添付ディレクトリに保存される（25 MB まで）。 | ファイルの中身と名前 |
 | `kanban_attach_url` | URL でファイルをタスクに添付する。 | `url` |
 | `kanban_attachments` | タスクの添付を並べる。 | — |
 | `kanban_create` | （とりまとめ役向け）`assignee`、任意の `parents`、`skills` などを付けて子タスクへ広げる。開いている親のせいで新しいカードが `todo` で待つときは `gated: true` + `gated_by` を返す。 | `title`、`assignee` |
-| `kanban_link` | （とりまとめ役向け）あとから `parent_id → child_id` の依存を足す。子が `ready` だったのに親が未完了で `todo` へ降格したときは `gated: true` を返す。子は親が終わってから動く。 | `parent_id`、`child_id` |
+| `kanban_link` | （とりまとめ役向け）あとから `parent_id → child_id` の依存を足す。子が `ready` だったのに親が未完了で `todo` へ降格したときは `gated: true` を返す。子は親が終わってから動く。子がすでに占有されているときは `child is already running` として拒否される。占有のあとで足した辺では実行の順番を決められないため（実行中のワーカーが `kind=dependency` のブロックに入る直前に、*自分の* カードへリンクを張ることはできる）。 | `parent_id`、`child_id` |
 | `kanban_unblock` | （とりまとめ役向け）ブロックされたタスクを元の段階（`review` か `ready`）へ戻す。親がまだ開いていれば `todo`。 | `task_id` |
 
 ワーカーの典型的な一手番はこうなります。
@@ -487,22 +540,33 @@ summary は人が読む締めくくり、`metadata` は下流のエージェン�
 1. 起動したら `kanban_show()` を呼び、タイトル + 本文 + 親からの引き継ぎ + 過去の試行 + コメントの流れ全体を読む。
 2. （端末ツールで）`cd $HERMES_KANBAN_WORKSPACE` して、そこで作業する。
 3. 長い処理の間は数分おきに `kanban_heartbeat(note="...")` を呼ぶ。**1 時間を超えそうな作業なら、少なくとも 1 時間に 1 回は `kanban_heartbeat` を呼ぶ** こと。ディスパッチャは、`kanban.dispatch_stale_timeout_seconds`（既定 4 時間）を超えて動き続け、直近 1 時間に鼓動のないタスクを、ワーカーが後始末せずに落ちたとみなして取り戻します。取り戻し自体は害のない動きですが（失敗カウンタを進めずに `ready` へ戻して再配分するだけです）、いま走っている実行の成果は失われます。
-4. `kanban_complete(summary="...", metadata={...})` で仕上げるか、行き詰まったら `kanban_block(reason="...")` を呼ぶ。
+4. `kanban_complete(summary="...", metadata={...})` で仕上げるか、コードの変更を `kanban_request_review(summary="...")` で同じカードのレビューへ引き継ぐか、行き詰まったら `kanban_block(reason="...")` を呼ぶ。
 
-最後の `kanban_complete` / `kanban_block` の呼び出しは、ワーカーの手順の一部です。
+ふつうのツールの動きでも占有は自動で延長されます（ワーカーがプロセス内の生存を、1 分に 1 回ほど盤へ写します）。この橋渡しが効くのは、ディスパッチャ自身が起動したプロセスだけです。`HERMES_KANBAN_TASK` の隣に `HERMES_DELEGATED_CHILD_CONTEXT` を持つプロセス（`delegate_task` の子孫や、ワーカーの環境を手作業でまねて起動したもの）は盤から切り離されます。自動の鼓動は `kanban auto-heartbeat for task … refused` の警告を 1 回出し、`kanban_complete` / `kanban_request_review` は拒否されます。目印を環境から消すのではなく、起動のしかたを直してください（ディスパッチャにワーカーを起動させる）。
+
+最後に盤を締める呼び出し（`kanban_complete` / `kanban_request_review` /
+`kanban_block`。レビュー担当は `kanban_complete` か `kanban_request_changes` で終えます）は、
+ワーカーの手順の一部です。
 タスクがまだ `running` のままワーカーのプロセスが status 0 で終わると、
 ディスパッチャはそれを手順違反とみなして `protocol_violation` イベントを出します。
 そのため、手番に失敗したディスパッチャ起動のワーカーは 0 以外で終了します。ふつうの
 失敗は `1`、プロバイダがレート制限・過負荷・5xx・タイムアウトだったときや、
 アカウントが課金や上限の壁に当たったときは `75`（`EX_TEMPFAIL`）です。ディスパッチャはその実行を `rate_limited` として記録し、
 失敗に数えずタスクを待ち行列へ戻すので、上限の待ち時間が手順違反として
-記録されることはありません。
+記録されることはありません。ワーカーは自分のログの最終行に終了コードも書き出すので
+（`[kanban-worker-exit] rc=<code>`）、巡回ごとに走る `hermes kanban dispatch` の
+プロセス — ワーカーを看取っておらず、その終了状態を読めません — でも、
+ゲートウェイ内蔵のディスパッチャと同じように同じ死に方を記録できます。その行へ届く前に
+殺されたワーカーは、ただの `crashed`（`pid <n> not alive`）になります。
 
 **エージェント側の予防。** ワーカーが終わる前に、盤への締めのツール呼び出しなしに
 モデルが止まろうとしているのを見つけると、Hermes は最大 2 回まで人工的なひと押しを
 差し込みます。「レポートを書きますね」と次の手順を語って `finish_reason=stop` で
 止まってしまう、よくある形を捕まえるためです。ひと押しは、いますぐ
-`kanban_complete` か `kanban_block` を呼ぶようモデルに思い出させます。この
+`kanban_complete`、`kanban_request_review`、`kanban_block` のいずれかを呼ぶよう
+モデルに思い出させます。すでにカードを引き継いだワーカー（`kanban_request_review`、
+またはレビュー担当の `kanban_request_changes`）は決してひと押しされません。その引き継ぎが
+締めの呼び出しであり、レビュー中のカードを `kanban_complete` するよう促すことはないからです。この
 守りが働くのは、ディスパッチャが起動したワーカー自身だけです（`HERMES_KANBAN_TASK` が
 設定されていて、その実行がタスクを持っている場合）。ワーカーの中で動く `delegate_task` の子や cron の仕事は
 変数こそ受け継ぎますが、盤のツールを持たないのでひと押しの対象にはなりません。
@@ -514,7 +578,10 @@ summary は人が読む締めくくり、`metadata` は下流のエージェン�
 それを超えると、同じループへ投げ直す代わりにタスクを自動でブロックします。
 この予算が数えるのは *連続した* きれいな終了の手順違反だけで、間に入った
 レート制限による待ち行列戻しは中立、それ以外の種類の失敗は連続を
-リセットします。タスクごとの `max_retries` があればそちらが優先されます。たいていは、
+リセットします。タスクごとの `max_retries` があればそちらが優先されます。この予算で
+ブロックされたカードは、`failure_limit` に届く前の遮断器によるブロックのように
+自動で戻されることはなく、`hermes kanban unblock <id>` を呼ぶまでブロックされたままです
+（この呼び出しは再試行の予算も新しくします）。たいていは、
 モデルがただの文章で答え、カンバンのツールを使わずに終わったということです。
 
 ライフサイクルに加えて、要となる詳細（作業場所の種類、成果物の `artifacts`、作ったカードの占有）も同じシステムプロンプトのブロックに入っています。どのプロファイルで動いても、すべてのワーカーがそれを持つので、プロファイルごとにスキルを用意する必要はありません。
@@ -619,6 +686,8 @@ hermes kanban create "Translate the docs site to French" \
 
 終わりの見えない仕事、手数の多い仕事、「X になるまで続ける」タイプのカードに向いています。安上がりな一発仕事には使わないでください。毎手番の判定の手間に見合いませんし、ディスパッチャの再試行とサーキットブレーカーが、一時的なワーカーの失敗はすでに面倒を見ています。判定役の出来はゴールの文面しだいなので、本文は **はっきりした受け入れ条件** として書いてください。
 
+`kanban complete` / `kanban request-review`（および対応する `kanban_complete` / `kanban_request_review` のツール）にかかる判定役の関門が拒否するのは、**本当に判定が下りたとき** だけです。判定の呼び出し自体が失敗したとき（中継のエラー、認証、タイムアウト）は引き継ぎが通り、`goal judge unreachable … allowing lifecycle handoff` の警告がログに残ります。判定役に届かないことが人の承認を止めることはない、ということです。画面のない CLI の関門は、`specify` / `decompose` と同じタスクごとの中継の結び付けキー（`kanban:<task-id>`）を送るので、セッションのキーを求める中継でも判定の依頼が通ります。
+
 ゴール方式のワーカーの **Worker log**（ダッシュボードの引き出し、`hermes kanban log <id>`）には、ほかのワーカーと同じ生のツールの流れが出ます。加えて、判定された手番ごとに `kanban goal loop: turn N/M verdict=…` の行が 1 本ずつ入るので、カードが動いている間にループが何をしているかを追えます。
 
 :::note ゴール方式のカードは `/goal` の仕組みを借りるだけで、つながってはいない
@@ -668,7 +737,7 @@ hermes dashboard        # "Kanban" tab appears in the nav, after "Skills"
 ### プラグインでできること {#what-the-plugin-gives-you}
 
 - 状態ごとに 1 列ずつ並ぶ **Kanban** タブ。`triage`、`todo`、`ready`、`running`、`blocked`、`done`（切替を入れると `archived` も）。
-  - `triage` は、まだ粗い思いつきを置いておく列です。既定（`kanban.auto_decompose: true`）では、ここに入ったタスクに対してディスパッチャが **分解役** を自動で走らせます。組み込みの分解役は `auxiliary.kanban_decomposer` のモデル設定を使い、プロファイルの一覧（説明つき）を読んで、そのタスクを小さな子タスクの集まりへ広げ、いちばん合う専門役へ振り分けます。元のタスクはすべての子の親として生き続けるので、全部が終わったときに担当者（`kanban.orchestrator_profile`、未設定なら現在の既定プロファイル）が起き上がって完了を判断します。ページ上部の **Orchestration: Auto/Manual** のピルで切り替えるか（緑 = Auto、灰色 = Manual）、`config.yaml` を直接編集してください。どちらの方式でも `hermes kanban specify` は使えます。広げたくないときの、1 タスクだけの仕様書き直しとして残っています。
+  - `triage` は、まだ粗い思いつきを置いておく列です。既定（`kanban.auto_decompose: true`）では、ここに入ったタスクに対してディスパッチャが **分解役** を自動で走らせます。組み込みの分解役は `auxiliary.kanban_decomposer` のモデル設定を使い、プロファイルの一覧（説明つき）を読んで、そのタスクを小さな子タスクの集まりへ広げ、いちばん合う専門役へ振り分けます。元のタスクはすべての子の親として生き続けるので、全部が終わったときに担当者（`kanban.orchestrator_profile`、それが無ければそのタスクがもともと持っていた担当者、それも無ければ現在の既定プロファイル）が起き上がって完了を判断します。ページ上部の **Orchestration: Auto/Manual** のピルで切り替えるか（緑 = Auto、灰色 = Manual）、`config.yaml` を直接編集してください。どちらの方式でも `hermes kanban specify` は使えます。広げたくないときの、1 タスクだけの仕様書き直しとして残っています。
 - カードには、タスク id、タイトル、優先度のバッジ、テナントのタグ、担当プロファイル、コメントとリンクの数、**進捗のピル**（子を持つタスクでは `N/M`）、「作成から N 前」が出ます。カードごとのチェックボックスで複数選択できます。
 - **Running の中でプロファイルごとに分ける** — ツールバーのチェックボックスで、Running の列を担当者ごとに小分けにできます。
 - **WebSocket による即時更新** — プラグインは追記だけの `task_events` テーブルを短い間隔で追いかけるので、どのプロファイル（CLI、ゲートウェイ、別のダッシュボードのタブ）が動かしても、盤はすぐそれを映します。イベントがまとまって届いても、再読み込みは 1 回にまとめられます。
@@ -690,7 +759,7 @@ hermes dashboard        # "Kanban" tab appears in the nav, after "Skills"
 
 Triage の列に放り込んだタスクの扱い方は 2 通りあります。
 
-**自動（既定）** — `kanban.auto_decompose: true`。ゲートウェイ内蔵のディスパッチャが周回ごとに **分解役** を走らせます。1 周あたりの上限は `kanban.auto_decompose_per_tick`（既定 3 件）なので、triage にまとめて投入しても補助 LLM を一気に使い切ることはありません。分解役は組み込みの分解用プロンプトと `auxiliary.kanban_decomposer` のモデル設定を使い、入っているプロファイルとその説明を読んで、LLM に JSON のタスクグラフを作らせます。どのタスクを起こすか、誰に渡すか、どれがどれに依存するか、です。元の triage のタスクはグラフのすべての葉の親になるので、グラフ全体が終わるまで生き続け、そのあと `ready` へ戻って担当者（`kanban.orchestrator_profile`、未設定なら現在の既定プロファイル）が完了を判断し、足りなければタスクを足せます。これが「一行だけ放り込んで、あとは任せる」流れです。
+**自動（既定）** — `kanban.auto_decompose: true`。ゲートウェイ内蔵のディスパッチャが周回ごとに **分解役** を走らせます。1 周あたりの上限は `kanban.auto_decompose_per_tick`（既定 3 件）なので、triage にまとめて投入しても補助 LLM を一気に使い切ることはありません。分解役は組み込みの分解用プロンプトと `auxiliary.kanban_decomposer` のモデル設定を使い、入っているプロファイルとその説明を読んで、LLM に JSON のタスクグラフを作らせます。どのタスクを起こすか、誰に渡すか、どれがどれに依存するか、です。元の triage のタスクはグラフのすべての葉の親になるので、グラフ全体が終わるまで生き続け、そのあと `ready` へ戻って担当者（`kanban.orchestrator_profile`、それが無ければそのタスクがもともと持っていた担当者、それも無ければ現在の既定プロファイル）が完了を判断し、足りなければタスクを足せます。これが「一行だけ放り込んで、あとは任せる」流れです。
 
 組み込みの展開が終わると、その子のグラフと一緒に不可分な形で記録されます。
 その根を Triage へ戻しても、もう 1 つグラフができることはありません。ふつうの前提条件の
@@ -708,7 +777,7 @@ Triage の列に放り込んだタスクの扱い方は 2 通りあります。
 
 2 つの方式は、カンバンのページ上部にある **Orchestration: Auto/Manual** のピル（緑 = Auto、灰色 = Manual）で切り替えるか、`config.yaml` を直接編集して切り替えます。どちらの方式でも `hermes kanban specify` は使えます。広げたくないときの、1 タスクだけの仕様書き直しとして残っています。
 
-分解役の振り分けは、プロファイルの説明に左右されます。これはプロファイルごとのラベル付けの仕組みで、`hermes profile create --description "..."`、`hermes profile describe <name> --text "..."`、`hermes profile describe <name> --auto`（入っているスキルとモデルから LLM が生成）、またはダッシュボードの **Orchestration settings** パネルを開いたところにあるプロファイル編集で設定します。説明のないプロファイルも一覧には出ます。名前で振り分けられますが、精度は落ちます。分解役が子タスクを `assignee=None` で置くことは決してありません。LLM が知らないプロファイルを選んだときは、`kanban.default_assignee`（未設定なら現在の既定プロファイル）へ回されます。
+分解役の振り分けは、プロファイルの説明に左右されます。これはプロファイルごとのラベル付けの仕組みで、`hermes profile create --description "..."`、`hermes profile describe <name> --text "..."`、`hermes profile describe <name> --auto`（入っているスキルとモデルから LLM が生成）、またはダッシュボードの **Orchestration settings** パネルを開いたところにあるプロファイル編集で設定します。説明のないプロファイルも一覧には出ます。名前で振り分けられますが、精度は落ちます。分解役が子タスクを `assignee=None` で置くことは決してありません。LLM が知らないプロファイルを選んだときは、`kanban.default_assignee`、それが無ければ根のタスクの担当者（実在するプロファイル名のとき）、それも無ければ現在の既定プロファイルへ回されます。
 
 `kanban.orchestrator_profile` は、そのプロファイルのプロンプトやスキル、独自の処理を分解の呼び出しへ読み込むものではありません。展開したあと、根の（とりまとめの）タスクを誰が持つかを決める設定です。分解役のモデルやプロバイダを変えたいときは `auxiliary.kanban_decomposer` を設定してください。組み込みの分解役ではなく、あるプロファイル独自の分け方を使いたいときは、手動へ切り替えて、そのプロファイルに明示的にタスクを作らせるか分解させてください。
 
@@ -718,8 +787,8 @@ Triage の列に放り込んだタスクの扱い方は 2 通りあります。
 |---|---|---|
 | `auto_decompose` | `true` | ディスパッチャが周回ごとに、Triage のタスクへ組み込みの分解役を自動で走らせる。プロファイルからの `kanban_create` の呼び出しや、作成者を起こす手番は制御しない。 |
 | `auto_decompose_per_tick` | `3` | 1 周回あたりの分解の上限。あふれた分は次の周回へ回る。 |
-| `orchestrator_profile` | `""` | 分解のあと、根の（とりまとめの）タスクを持つプロファイル。空なら現在の既定プロファイルに落ちる。 |
-| `default_assignee` | `""` | LLM が知らないプロファイルを選んだときの子タスクの行き先。空なら現在の既定に落ちる。 |
+| `orchestrator_profile` | `""` | 分解のあと、根の（とりまとめの）タスクを持つプロファイル。空なら根のタスクが自分の担当者をそのまま保ち、それも無ければ現在の既定プロファイル。 |
+| `default_assignee` | `""` | LLM が知らないプロファイルを選んだときの子タスクの行き先。空なら根のタスクの担当者、それも無ければ現在の既定に落ちる。 |
 | `auto_subscribe_on_create` | `true` | `kanban_create` が常駐のゲートウェイ / TUI セッションの中で走ったとき、最終イベントが元のエージェントを人工的な状況報告の手番で再開させる。受け身の完了にしたい、または `kanban_notify-subscribe` を明示的に呼ばせたいときは `false` に。`auto_decompose` とは独立。 |
 | `notify_in_gateway` | `true` | このゲートウェイからカンバンの購読を監視して配達する。通知の購読を持たないプロファイルでは `false` にして、5 秒ごとの空回りをやめられる。`dispatch_in_gateway` とは独立で、配分を担当しないゲートウェイがプロファイル固有の配達だけ持つこともある。 |
 | `done_sub_retention_days` | `30` | 通知の購読は `done` を越えて残り（再開しても大丈夫）、`archived` で消える。通知役の掃除は、タスクが `done` か `blocked` のまま新しいイベントがないまま指定日数を過ぎた購読を削り、アーカイブしない盤で購読表が際限なく育つのを防ぐ。`0` で掃除を止める。 |
@@ -901,7 +970,7 @@ hermes kanban gc [--event-retention-days N]            # workspaces + old events
 |------------|---------|--------------|
 | `kanban.max_in_progress` | 未設定（無制限） | 同時に走るタスクの数に上限をかける。すでに N 件走っていると、ディスパッチャはそれ以上起動しない。遅いワーカー（ローカル LLM、資源の限られたホスト）で、積み上がってタイムアウトする前に手持ちを片付けさせたいときに便利。おかしい値や 1 未満の値は警告を出して無制限として扱う。 |
 | `kanban.max_in_progress_per_profile` | 未設定（無制限） | `max_in_progress` のプロファイル版で、1 つの担当プロファイルが同時に走らせるタスク数に上限をかける。1 つのプロファイルだけ遅い、あるいはレート制限にかかっていて、他は流したいときに便利。盤全体の `max_in_progress` と同時に効き、両方が許さないと起動しない。 |
-| `kanban.dispatch_profiles` | 未設定（実在するプロファイルすべて） | 複数の Hermes ホームで共有する盤で、このホームが占有してよい担当者の許可リスト。設定すると、このホームのディスパッチャは列挙された担当者のカードだけを占有する（安全側に倒れるので、空のリストは何も占有しない）。それ以外は `skipped_nonspawnable` に入る。[複数のホーム間で盤を共有する](#shared-boards-across-homes) を参照。 |
+| `kanban.dispatch_profiles` | 未設定（実在するプロファイルすべて） | 複数の Hermes ホームで共有する盤で、このホームが占有してよい担当者の許可リスト。キーがあるときは、このホームのディスパッチャは列挙された担当者のカードだけを占有する。安全側に倒れるので、空のリスト・`null`・値のない `dispatch_profiles:` はどれも何も占有せず、設定の読み込みに失敗したときも警告を出して何も占有しない。それ以外は `skipped_nonspawnable` に入る。「実在するプロファイルすべて」になるのは、キーそのものを書かなかったときだけ。`hermes kanban diagnostics` は、このホームで解決された値（`any`、列挙された名前、または `none (fail-closed: …)`）を表示する。[複数のホーム間で盤を共有する](#shared-boards-across-homes) を参照。 |
 | `kanban.auto_promote_children` | `true` | `decompose_triage_task()` が親でふさがれない子を作ったあと、ディスパッチャが拾えるように自動で `ready` へ上げる。人の確認を挟みたいときは `false` にすると、昇格させるまで子は `todo` に留まる。 |
 | `kanban.default_workdir` | 未設定 | `--workspace` もタスク自身の指定もないときに、新しいタスクへ当てる盤レベルの既定の作業ディレクトリ。タスクごとの `workspace:` が優先される。 |
 
@@ -923,7 +992,7 @@ hermes kanban create "nightly backup audit" \
 
 ### 再起動の抑止 {#respawn-guard}
 
-ディスパッチャは、前回の実行で上限・認証・429 のエラーに当たった（`blocker_auth`）、抑止の時間内に実行が成功して終わった（`recent_success`）、直近のコメントに GitHub の PR へのリンクがある（`active_pr`）ready タスクについては、起動し直すのを拒みます。人が追いつくまで、同じバグやタスクにワーカーの嵐が繰り返し起きるのを防ぐためです。[イベント一覧](#event-reference) の `respawn_guarded` の行を参照してください。
+ディスパッチャは、前回の実行で上限・認証・429 のエラーに当たった（`blocker_auth`）、抑止の時間内に実行が成功して終わった（`recent_success`）、直近のコメントに GitHub の PR へのリンクがある（`active_pr`）ready タスクについては、起動し直すのを拒みます。カードを不利に数えずに押さえておくクールダウンが 2 つあります。上限の壁に当たって待ち行列へ戻したあとの `rate_limit_cooldown` と、ホストがワーカーの配置を断ったあと（再起動に耐える systemd のスコープが作れなかったとき — [ワーカーと systemd の cgroup](#workers-and-systemd-cgroups) を参照）の `infrastructure_cooldown` です。どちらも `HERMES_KANBAN_RATE_LIMIT_COOLDOWN_SECONDS` の長さ（既定 300 秒）を共有します。人が追いつくまで、同じバグやタスクにワーカーの嵐が繰り返し起きるのを防ぐためです。[イベント一覧](#event-reference) の `respawn_guarded` の行を参照してください。
 
 ready のカードがなぜ起動しないかを見るには、`hermes kanban dispatch --dry-run` を実行してください。押さえられているカードごとに `Guarded (<reason>): <task id>` が並びます（`--json` を付けると `respawn_guarded`、`rate_limited`、`skipped_locked`、`memory_pressure` も出ます）。ゲートウェイと単独デーモンの「ディスパッチャが詰まっている」警告にも、直近の周回が何を押さえたかが出ます。たとえば `Last tick held back: active_pr=1` のように。
 
@@ -1011,7 +1080,11 @@ bot> ✓ t_9fc1a3 completed by transcriber
 
 `kanban_create` では、セッションの出どころが次の順で決まります。明示的な `session_id`、
 持ち主のワーカーのタスクが持つ永続セッション、リクエスト単位の API の出どころ、そして
-いまのプロセスのセッションです。組み込みの分解も、その根の永続セッションを引き継ぎます。
+いまのセッションです。候補の id が刻まれるのは、いま使っているプロファイルの `state.db` の
+`sessions` テーブルに行があるときだけです。どこにも解決しない id（行が書かれないまま終わった
+セッションや、別のプロセスから受け継いだ id）のときは、どのデータベースでも解決できない
+セッションを指すのではなく、`session_id` を NULL のままにします。
+組み込みの分解も、その根の永続セッションを引き継ぎます。
 セッションの出どころ自体は通知の届け先ではありません。`session_id` を変えても既存の購読は
 置き換わりません。届け先を変えるには `notify-subscribe` と
 `notify-unsubscribe` を使ってください。
@@ -1199,6 +1272,17 @@ hermes kanban notify-subscribe t_abcd \
   無効になった、あいまいな経路は、配達されないまま再試行に残ります。必要な経路の目印を
   欠いた古い行が、当て推量でプロファイルに結びつけられることはありません。起こす手番は、
   届け先プロファイルの実行範囲と、許可された通り道を保ちます。
+- **状態を持たない（`api_server`）購読** は、素のセッション id を運びます。これは
+  どの `profile_routes` の行でも結びつけられません（セッションにはチャットやスレッド、
+  ギルドといった見分けの手がかりがないからです）。あるプロファイルが権限を持つのは、
+  その購読のセッションがそのプロファイル自身の `state.db` にあるときちょうどです。
+  共有の受け口は `/p/<profile>/` を写したものなので、持ち主であることを証明するのは
+  セッションの保管先であって、プラットフォームではありません。起こす手番はその
+  プロファイルの実行範囲で走り、そのセッションちょうどをプロセス内で再開するので、
+  2 つ目の受け口も、追加の `API_SERVER_KEY` も関わりません。知らないセッション、
+  別のプロファイルの印が付いたセッション、束ねていないプロファイルが持つセッションは、
+  配達されないまま再試行に残ります。既定のプロファイル自身の `api_server` の購読は
+  影響を受けません。
 - **古い購読** — プロファイルの印付けより前に作られたもの（行に
   `notifier_profile` がない）は、実際のディスパッチャの単独ロックを握っている
   ゲートウェイだけが届けるので、2 つのゲートウェイが取り合うことはありません。
@@ -1251,6 +1335,8 @@ hermes kanban runs t_abcd
 
 **まとめて締めるときの注意。** `hermes kanban complete a b c --summary X` は拒否されます。構造化された引き継ぎは実行ごとのものなので、同じ要約を N 件へ貼り付けるのはほぼ確実に間違いだからです。`--summary` / `--metadata` **なし** のまとめ締めは、「事務的なタスクをまとめて片付けた」というよくある場面のために使えます。
 
+**完了時の依存の拒否は、親の名前を挙げます。** 直接の親が `done` / `archived` になっていないカード（実行中に親が開き直された、あるいは実行中の子への拒否より前に張られた辺がある場合）に対する `kanban_complete` / `hermes kanban complete` / ダッシュボードの「mark done」と「request review」（1 件でもまとめてでも）は、「unknown id, stale run, or already terminal」という一般的な文面ではなく、`unsatisfied parent dependencies: t_… (todo)` と報告します。カードは進行中のまま残ります。`kanban_show` は同じ親を `unsatisfied_parents` として並べ、`hermes kanban show` / `hermes kanban diagnostics` / ダッシュボードは、その状態で走っているカードに `running_with_open_parents` の警告を出します。親を終わらせるか、`hermes kanban unlink <parent> <child>` を使ってください。依存の関門を力ずくで抜ける道はありません。
+
 **完了時の生きた占有の守り。** ワーカーが生きた占有を持っている `running` のタスクを完了できるのは、そのワーカー自身（実行の中からの `kanban_complete`）か、操作者の明示的な上書き（`hermes kanban complete <id> --force` とダッシュボードの「mark done」）だけです。占有のない `hermes kanban complete <id>` や、とりまとめ役のセッションからの `kanban_complete` は、`--force` / `hermes kanban reclaim` を示して拒否されます。別のセッションが、生きているワーカーの実行を下から閉じてしまうことはもうありません。占有のない `ready`、`blocked`、`review` のカードの完了はこれまでどおりです。
 
 **状態の変更による取り戻し。** ダッシュボードで動いているタスクを `running` の外（`ready` へ戻す、あるいは `todo` へ直接）へドラッグしたり、まだ走っているタスクをアーカイブしたりすると、飛んでいる最中の実行は宙に浮くのではなく `outcome='reclaimed'` で閉じます。`tasks.current_run_id` が `NULL` のとき `task_runs` の行は必ず終わった状態にあり、その逆も成り立ちます。この決まりは CLI、ダッシュボード、ディスパッチャ、通知役のすべてで守られます。
@@ -1275,8 +1361,8 @@ hermes kanban runs t_abcd
 | `promoted` | — | すべての親が `done` になり `todo → ready`。`run_id` は `NULL`。 |
 | `claimed` | `{lock, expires, run_id}` | ディスパッチャが `ready` のタスクを起動のために不可分に占有した。 |
 | `completed` | `{result_len, summary?}` | ワーカーが `--result` / `--summary` を書き、タスクが `done` になった。`summary` は引き継ぎの 1 行目（400 文字まで）で、全文は実行の行にある。一度も占有されていないタスクに引き継ぎの項目付きで `complete_task` が呼ばれると、時間ゼロの実行が作られて `run_id` が何かを指すようになる。 |
-| `blocked` | `{reason, kind, recurrences}` | ワーカーか人がタスクを `blocked` にした。`kind` は分類されたブロックの理由（`needs_input`、`capability`、`transient`、ふつうのブロックなら `null`）、`recurrences` は解除ループのカウンタ。一度も占有されていないタスクに `--reason` 付きで呼ばれると、時間ゼロの実行が作られる。 |
-| `dependency_wait` | `{reason, kind}` または `{reason: parent_not_done, demoted: true, parent}` | ワーカーが `kind=dependency` でブロックした。別のタスクを待っているだけなので、`blocked` ではなく `todo`（親に関門をかけられ、自動で昇格する）へ回る。人は要らない。`link` / `kanban_link` が `ready` の子を、`done` でない親の下へ置いたときにも出る。子は `todo` へ戻り、このイベントが理由を記録する（`ready → running` の占有は親を確かめ直すので、親が終わるか `hermes kanban unlink` でリンクが外れるまで、何も動かせない）。 |
+| `blocked` | `{reason, kind, recurrences}` | ワーカーか人がタスクを `blocked` にした。`kind` は分類されたブロックの理由（`needs_input`、`capability`、`transient`、ふつうのブロックなら `null`）、`recurrences` は解除ループのカウンタ。未完了の親が 1 つも無い `kind=dependency` のブロックは、`needs_input` としてここに入る（中身に `requested_kind: dependency`、`rekind_reason: no_open_parent` が加わる）。`todo` に置いても、次の配分の周回で昇格して起動し直されるだけだからだ。一度も占有されていないタスクに `--reason` 付きで呼ばれると、時間ゼロの実行が作られる。 |
+| `dependency_wait` | `{reason, kind}` または `{reason: parent_not_done, demoted: true, parent}` | 少なくとも 1 つの親が開いている状態で、ワーカーが `kind=dependency` でブロックした。別のタスクを待っているだけなので、`blocked` ではなく `todo`（親に関門をかけられ、自動で昇格する）へ回り、再発としては数えられない。人は要らない。`link` / `kanban_link` が `ready` の子を、`done` でない親の下へ置いたときにも出る。子は `todo` へ戻り、このイベントが理由を記録する（`ready → running` の占有は親を確かめ直すので、親が終わるか `hermes kanban unlink` でリンクが外れるまで、何も動かせない）。 |
 | `block_loop_detected` | `{reason, kind, recurrences, limit}` | 同じ理由での解除と再ブロックが `BLOCK_RECURRENCE_LIMIT` 回（既定 2 回）繰り返された。また `blocked` に落ちる — cron が解除し続けるだけの場所 — のではなく、とりまとめの目が届く `triage` へ回り、解除と再ブロックのループを断ち切る。 |
 | `unblocked` | — | 手動か `/unblock` で `blocked → ready`（親がまだ開いていれば `todo`）。ディスパッチャの `consecutive_failures` はリセットするが、`block_recurrences` はわざと残してループの遮断器に記憶を保たせる。`run_id` は `NULL`。 |
 | `archived` | — | 既定の盤から隠される。まだ走っていたタスクなら、その副作用として取り戻された実行の `run_id` を持つ。 |
@@ -1301,9 +1387,9 @@ hermes kanban runs t_abcd
 | `timed_out` | `{pid, elapsed_seconds, limit_seconds, sigkill}` | `max_runtime_seconds` を超えた。ディスパッチャが SIGTERM を送り（5 秒の猶予のあと SIGKILL）、待ち行列へ戻した。 |
 | `stale` | `{elapsed_seconds, last_heartbeat_at, heartbeat_age_seconds, timeout_seconds, pid, terminated}` | タスクが `kanban.dispatch_stale_timeout_seconds`（既定 4 時間）より長く走り、**かつ** 直近 1 時間に `kanban_heartbeat` が届かなかった。ディスパッチャは同じホストにいるワーカー（あれば）に SIGTERM を送り、タスクを `ready` に戻して配分し直す。失敗カウンタは進めない（stale はワーカーの落ち度ではなく、ディスパッチャ側の不在検知だから）。長い処理をするワーカーは、これを避けるために少なくとも 1 時間に 1 回 `kanban_heartbeat` を呼ぶこと。 |
 | `reconciled` | `{reason, claim_lock, claim_expires, worker_pid}` | 迷子のカードの立て直し。カードは `running` なのに占有の帳簿が壊れていて（`claim_lock` か `claim_expires` が NULL — 占有の途中でのクラッシュ、手作業の SQL、DB の復元）、生きたワーカーもいないため、TTL・クラッシュ・stale のどの経路でも救えない状態だった。ディスパッチャは説明のコメントを付けて `ready` へ戻した。config.yaml の `kanban.reconcile_orphans` で制御（既定 `true`）。 |
-| `respawn_guarded` | `{reason}` | ディスパッチャがこの周回で、この ready タスクの起動し直しを拒んだ。理由は `blocker_auth`（前回の失敗が上限・認証・429 のエラー — 待ち時間が明けるのを待つ）、`recent_success`（直近 1 時間に完了した実行がある — 再実行の前にレビューを待つ）、`active_pr`（直近のコメントに GitHub の PR の URL がある — 前のワーカーがすでに PR を開いている）。タスクは `ready` のままで、次の周回にまた起動の機会がある。原因が続く場合は、ふつうの `consecutive_failures` の遮断器が `failure_limit` 回の失敗で `gave_up` を出して自動ブロックする。 |
+| `respawn_guarded` | `{reason}` | ディスパッチャがこの周回で、この ready タスクの起動し直しを拒んだ。理由は `infrastructure_cooldown`（ホストが前回の起動を断った — 再起動に耐える systemd のスコープが作れなかった — うえ、クールダウンが明けていない。カードの不利には決して数えない）、`rate_limit_cooldown`（前回の実行が上限の壁に当たった。同じクールダウンで、やはり数えない）、`blocker_auth`（前回の失敗が上限・認証・429 のエラー — 待ち時間が明けるのを待つ）、`recent_success`（直近 1 時間に完了した実行がある — 再実行の前にレビューを待つ）、`active_pr`（直近のコメントに GitHub の PR の URL がある — 前のワーカーがすでに PR を開いている）。タスクは `ready` のままで、次の周回にまた起動の機会がある。原因が続く場合は、ふつうの `consecutive_failures` の遮断器が `failure_limit` 回の失敗で `gave_up` を出して自動ブロックする。 |
 | `spawn_failed` | `{error, failures}` | 起動の試みが 1 回失敗した（PATH がない、作業場所をマウントできない、など）。カウンタが増え、タスクは再試行のため `ready` へ戻る。 |
-| `protocol_violation` | `{pid, claimer, exit_code, protocol_violation, worker_output?}` | タスクがまだ `running` のうちにワーカーが正常終了した。たいていは `kanban_complete` も `kanban_block` も呼ばずに答えてしまった場合。違反のたびに出る（中身の `protocol_violation: true` の印は実行のメタデータへ写され、違反だけを数える再試行の予算に使われる）。予算の内（`_PROTOCOL_VIOLATION_FAILURE_LIMIT`（既定 3 回）まで、*連続する* 違反。タスクごとの `max_retries` が優先）であれば、タスクは次の試行のために `ready` へ戻るだけ。連続が上限に達すると、ディスパッチャは `gave_up` も出して自動ブロックする。`worker_output` はワーカー自身が最後に出した文章（たいていは、なぜ止まったかの説明）で、`last_failure_error` にも畳み込まれ、再試行するワーカーには前回の試行のエラーとして見える。 |
+| `protocol_violation` | `{pid, claimer, exit_code, protocol_violation, worker_output?}` | タスクがまだ `running` のうちにワーカーが正常終了した。たいていは、盤を締める呼び出し（`kanban_complete`、`kanban_request_review`、`kanban_block`）なしに答えてしまった場合。違反のたびに出る（中身の `protocol_violation: true` の印は実行のメタデータへ写され、違反だけを数える再試行の予算に使われる）。予算の内（`_PROTOCOL_VIOLATION_FAILURE_LIMIT`（既定 3 回）まで、*連続する* 違反。タスクごとの `max_retries` が優先）であれば、タスクは次の試行のために `ready` へ戻るだけ。連続が上限に達すると、ディスパッチャは `gave_up` も出して自動ブロックする。`worker_output` はワーカー自身が最後に出した文章（たいていは、なぜ止まったかの説明）で、`last_failure_error` にも畳み込まれ、再試行するワーカーには前回の試行のエラーとして見える。 |
 | `gave_up` | `{failures, effective_limit, limit_source, error}` | 連続 N 回の不成功で遮断器が働いた。タスクは最後のエラーとともに自動でブロックされる。実効の上限は、タスクの `max_retries`、次にディスパッチャの `failure_limit` / `kanban.failure_limit`、最後に組み込みの既定の順で決まる。 |
 
 `hermes kanban tail <id>` は 1 つのタスクぶんを表示し、`hermes kanban watch` は盤の全体を流します。

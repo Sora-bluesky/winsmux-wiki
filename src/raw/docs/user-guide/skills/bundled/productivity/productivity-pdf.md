@@ -2,7 +2,7 @@
 title: "Pdf — PDF ファイルを作る・読む・結合する・入力する・OCR にかける・本文を書き換える"
 description: "PDF ファイルを作る・読む・結合する・入力する・OCR にかける・本文を書き換える"
 upstream_path: user-guide/skills/bundled/productivity/productivity-pdf.md
-upstream_blob: a375340613a50f26788733f49862fc0ccdb61358
+upstream_blob: bb7b601488fef5147cd4fd2fa70b2fe1abc7ca0e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-pdf
 ---

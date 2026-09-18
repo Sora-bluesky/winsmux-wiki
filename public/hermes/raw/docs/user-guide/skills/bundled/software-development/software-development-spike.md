@@ -2,7 +2,7 @@
 title: "Spike — 作り込む前に、使い捨ての試作で見込みを確かめます"
 description: "作り込む前に、使い捨ての試作で見込みを確かめます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-spike.md
-upstream_blob: b2d6342723f781d6270d2159b11348f6caad0415
+upstream_blob: 33f0e7c9a82030431142a475f3b64778437b6edc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-spike
 ---

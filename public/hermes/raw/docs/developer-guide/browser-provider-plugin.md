@@ -2,7 +2,7 @@
 title: "ブラウザプロバイダプラグイン"
 description: "Hermes Agent 向けのクラウドブラウザバックエンドプラグインを作る方法"
 upstream_path: developer-guide/browser-provider-plugin.md
-upstream_blob: 0f71b1684feb27c6244880bd3f1ca09b6c5ed501
+upstream_blob: 465e43e61f0b400a1d5dccd261e03cc569473333
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/browser-provider-plugin
 ---

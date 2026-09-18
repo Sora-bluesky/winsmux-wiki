@@ -2,7 +2,7 @@
 title: "Llm Wiki — Karpathy の LLM Wiki: 相互にリンクした markdown のナレッジベースを作り、問い合わせる"
 description: "Karpathy の LLM Wiki: 相互にリンクした markdown のナレッジベースを作り、問い合わせる"
 upstream_path: user-guide/skills/bundled/research/research-llm-wiki.md
-upstream_blob: 6d97ac289371363624f4054a2d43b2d3ba70c35c
+upstream_blob: 54e93d5045bf29b58baace27378d2fbc40bab8e5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-llm-wiki
 ---

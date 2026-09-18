@@ -2,7 +2,7 @@
 title: "Auteur — 映画のように演出された、賞レベルの Web ページを設計して作る"
 description: "映画のように演出された、賞レベルの Web ページを設計して作る"
 upstream_path: user-guide/skills/optional/creative/creative-auteur.md
-upstream_blob: 096e4a062cb8154c5f39a707a673d291453b91fb
+upstream_blob: 9f1a066061f9a9ca1400449c4a5879799288089c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-auteur
 ---

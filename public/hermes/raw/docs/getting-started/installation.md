@@ -2,7 +2,7 @@
 title: "インストール"
 description: "Linux、macOS、WSL2、Windows ネイティブ、Android（Termux）に Hermes Agent を導入する手順"
 upstream_path: getting-started/installation.md
-upstream_blob: 91e6205623a6fb75ff540a98867ae5fc7186f595
+upstream_blob: 9016377d108586b6d9bab3ec60d6cd24b9ed5c4c
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---

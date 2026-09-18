@@ -2,7 +2,7 @@
 title: "Kanban Video Orchestrator — 複数エージェントによる動画制作の流れを設計して動かす"
 description: "複数エージェントによる動画制作の流れを設計して動かす"
 upstream_path: user-guide/skills/optional/creative/creative-kanban-video-orchestrator.md
-upstream_blob: 32c7341a2ddf01dcf0131a43f13642407d2bd3a3
+upstream_blob: 438d73784588b15f1fd2d2d5893af377d627ad65
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator
 ---

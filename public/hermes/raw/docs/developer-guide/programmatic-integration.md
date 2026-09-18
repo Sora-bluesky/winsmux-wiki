@@ -2,7 +2,7 @@
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 505cf5accc8cb628d3f9620dae03ce645e2c867c
+upstream_blob: 45adae46043a9ac014fca758df9dd4a4ae4d4614
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -74,6 +74,8 @@ terminal.resize         clipboard.paste         image.attach
 | `confirm_empty_truncate` | 切った結果、記録が空になる場合（序数 `0`）に追加で必要です。 |
 
 `confirm_truncate` の付いていない切り詰めのパラメーターはコード `4004` または `4029` で拒否され、何も書き込まれません。巻き戻しを実装するホストは、利用者がそれを求めたその瞬間にフラグを立てる必要があり、通常の送信をまたいで切り詰めのパラメーターを状態として持ち越してはいけません。序数よりも `truncate_before_row_id`（再開時の `row_id` / `_row_id` から取れます）を優先し、序数は永続的な ID がまだ得られないときの互換用・暫定用の経路としてだけ残してください。
+
+切り詰めを伴う送信が、実行中の入力の扱いに吸収されることはありません。ターンがまだ動いている間、通常の `prompt.submit` は誘導・転送・待ち行列のいずれかになります（`display.busy_input_mode`）が、巻き戻し・編集・再生成はそうはならず、コード `4009`（`session busy`）で拒否されます。待ち行列に入れてしまうと記録を切る指定が落ちてしまい、編集前のターンが終わったあとに、編集がただの続きの発言として動いてしまうからです。ホストは `session.interrupt` を呼んでから同じ送信をやり直し、通るまで繰り返します。デスクトップアプリはこれを自動で行うので、Hermes がまだ考えている最中にメッセージを編集すると、動いているターンが止まり、編集後のプロンプトから動き直します。
 
 永続的なセッションに対して切り詰めを伴う送信が成功すると、`prompt.submit` の結果には `survivor_user_row_ids` も付いてきます。これは、残ったユーザーのターンの書き換え後の新しい行 ID を、画面に見えるユーザーの順番どおりに並べたものです。書き換えでは残す前半部分を新しい行として入れ直すため、巻き戻しの前にホストが覚えていた行 ID はすべて古くなります。このリストで覚え直してください（`null` の項目はそのターンに永続的な ID がないという意味なので、覚えていたものを捨てます）。そうしないと、次にもっと古い残存ターンを狙って巻き戻したときに `4018` で拒否されます。
 
@@ -189,6 +191,7 @@ OpenAI のクライアントとの互換のためには `/v1/models` を、Herme
 | 最終的な回答を出した | `completed` | `run.completed` | `completed: true` |
 | 中断された（`/stop`、またはエージェント内部での中断） | `cancelled` | `run.cancelled` | `completed: false`、`interrupted: true`、それに誰が止めたかを示す `turn_exit_reason`。人が止めたときは `interrupted_by_user`、見張り役（`cron_inactivity_watchdog`、`turn_liveness_watchdog`、`gateway_inactivity_watchdog`、`session_turn_lease_lost` など）が終わらせたときは `interrupted_by_system(<issuer>)` / `interrupted_during_api_call(<issuer>)` |
 | プロバイダーまたはエージェントの失敗 | `failed` | `run.failed` | `completed: false`、`error` |
+| 実行中にゲートウェイが終了した（`/v1/runs` のみ） | `interrupted` | `run.interrupted` | `error: "Gateway shutdown interrupted the run."` — エージェントを止めにいく前に記録され、そのターンから遅れて届いた結果で上書きされることはありません。クライアントからの `/stop` は従来どおり `cancelled` で落ち着きます |
 | 終わりきらずに止まった（反復回数の上限、途中で切れた返答や部分的な返答） | `failed` | `run.failed` | `completed: false`、該当する場合は `partial`、`turn_exit_reason`（例: `max_iterations_reached(60/60)`）、代わりの文章があれば `output` |
 
 同じ内容の中で、`completed` と報告しつつ `completed: false` や `partial: true` が付くことはありません。同じ決まりは `/api/sessions/{id}/chat/stream` にも当てはまります。こちらの `assistant.completed` の内容には本当の `completed` / `partial` / `interrupted` のフラグが入り、終了時のイベントは `run.completed`、`run.failed`、`run.cancelled` のいずれかになります。

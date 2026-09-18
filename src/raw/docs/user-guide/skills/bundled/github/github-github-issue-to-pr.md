@@ -2,7 +2,7 @@
 title: "Github Issue To Pr — GitHub の issue を、CI の状態を正直に伝えながら検証済みの PR まで運ぶ"
 description: "GitHub の issue を、CI の状態を正直に伝えながら検証済みの PR まで運ぶ"
 upstream_path: user-guide/skills/bundled/github/github-github-issue-to-pr.md
-upstream_blob: 3d821e45b198222c106767118c32245c1d8bde7d
+upstream_blob: dd60127115d931056111d4d593eb6fb6c4a1a51b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/github/github-github-issue-to-pr
 ---

@@ -2,7 +2,7 @@
 title: "チュートリアル: 毎朝のブリーフィングボット"
 description: "気になるテーマを自動で調べ、要点をまとめ、毎朝 Telegram や Discord に届けてくれるブリーフィングボットを作ります"
 upstream_path: guides/daily-briefing-bot.md
-upstream_blob: a4fda461be8feca8f3840ac77ec89719d9674408
+upstream_blob: 781acaff8a22d04012e36f69394206c69f6c8686
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/daily-briefing-bot
 ---

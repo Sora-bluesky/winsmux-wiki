@@ -2,7 +2,7 @@
 title: "Gitnexus Explorer — コードベースの知識グラフを対話的な Web UI で見る"
 description: "コードベースの知識グラフを対話的な Web UI で見る"
 upstream_path: user-guide/skills/optional/research/research-gitnexus-explorer.md
-upstream_blob: 7829a4432744ac0588d4f602517a80d2a0d19ffd
+upstream_blob: 80f92a69f66bda1653656137b07badc411863714
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-gitnexus-explorer
 ---

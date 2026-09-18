@@ -2,7 +2,7 @@
 title: "Hermes Agent クイックスタート"
 description: "Hermes Agent との最初の会話まで。インストールからおしゃべりできるまで 5 分"
 upstream_path: getting-started/quickstart.md
-upstream_blob: 3d424f0ae7543072e19470bd3bc81eb178a1e219
+upstream_blob: 364a6a9868eb5742193e014b9363d034320cd36f
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/quickstart
 ---

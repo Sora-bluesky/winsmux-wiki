@@ -2,7 +2,7 @@
 title: "ACP の内部"
 description: "ACP アダプタのしくみ — 起動から終了まで、セッション、イベントの橋渡し、承認、ツールの表示"
 upstream_path: developer-guide/acp-internals.md
-upstream_blob: a9cd83b748b4cdfd71dc5a0ca6d5d701b5108dbc
+upstream_blob: 0445b323abc8b26cfe18b69b8971259ff1614d11
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/acp-internals
 ---
@@ -82,6 +82,12 @@ hermes acp / hermes-acp / python -m acp_adapter
 - `thinking_callback`（ACP の橋渡しでは今のところ `None` に設定されていて、推論の内容は `step_callback` を通して送られます）
 - `step_callback`
 
+ACP のツール呼び出しは、必ずどれかの終端の状態にたどり着きます。`tool.completed` が
+その呼び出し自身の結果（`completed` / `failed`）で決着を付け、`step_callback` の
+`prev_tools` を見る処理は、完了を出さないランタイムのための予備でしかありません。
+ターンが終わった時点でまだ開いているもの（拒否された呼び出し、遮断された呼び出し、
+途中で中断されたもの）は、応答を返す前に `failed` として記録されます。
+
 `AIAgent` はワーカースレッドで動く一方、ACP の入出力はメインのイベントループにあるため、橋渡しには次を使います。
 
 ```python
@@ -127,6 +133,14 @@ prompt(..., session_id)
   -> update session history
   -> emit final agent message chunk
 ```
+
+終端の失敗で終わったターン（プロバイダーによる拒否、やり直しのきかないエラー、
+やり直しを使い切った場合、返答が 1 つも出る前の中断）は、中核のループが Hermes 自身の
+書いたアシスタントの行（「Your request was not processed…」「This turn did not complete…」）で
+締めくくります。こうして、保存される会話の記録が `user` の行を開いたまま終わらないように
+します。これがないと、次のプロンプトが失敗した要求に混ぜられて、そのまま繰り返されて
+しまいます。文脈があふれて失敗した場合だけは例外で、その立て直しはセッションの
+入れ替えであって、行を足すことではありません。
 
 ### 中止 {#cancelation}
 

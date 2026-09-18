@@ -2,7 +2,7 @@
 title: "TUI"
 description: "Hermes の新しいターミナル画面を起動する — マウスが使えて、表示が豊かで、入力を待たせない"
 upstream_path: user-guide/tui.md
-upstream_blob: 6027ab1da6466f21849cbd29c8b4f77cb35bf7a7
+upstream_blob: d2e22a81ad491f6196119c6169859abf3e39d0a8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/tui
 ---

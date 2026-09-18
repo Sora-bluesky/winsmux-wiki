@@ -2,7 +2,7 @@
 title: "学習パス"
 description: "'経験の度合いと目的に合わせて、Hermes Agent のドキュメントを読み進める順番を選びます。'"
 upstream_path: getting-started/learning-path.md
-upstream_blob: 0f6e9d85101cafaa5d88f09e56b6ebc1b10bac70
+upstream_blob: 6ddce59518667babf1122eb07d2f8b6836050fe0
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/learning-path
 ---

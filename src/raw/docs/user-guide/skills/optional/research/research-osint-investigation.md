@@ -2,7 +2,7 @@
 title: "Osint Investigation — 公開記録と制裁データから資金の流れを追う"
 description: "公開記録と制裁データから資金の流れを追う"
 upstream_path: user-guide/skills/optional/research/research-osint-investigation.md
-upstream_blob: 983315afefa28446e96f4a8f8b85ffc564b06acb
+upstream_blob: 7287b65f9e5f02d8a4e1b309cb544d20ffe86ab0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-osint-investigation
 ---

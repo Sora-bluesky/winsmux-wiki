@@ -2,7 +2,7 @@
 title: "どのファイルが何をするのか"
 description: "SOUL.md と USER.md と MEMORY.md と AGENTS.md の違い。エージェントが持つファイルを1ページにまとめ、誰が書き、いつエージェントの目に入るのかを示します"
 upstream_path: user-guide/which-file-does-what.md
-upstream_blob: 153e2648db594190a59ff5f94d08b14c151a5ce1
+upstream_blob: fdd9f43de58c65c964ff1b954d634dab2575b13a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/which-file-does-what
 ---

@@ -2,7 +2,7 @@
 title: "外部サービス連携"
 description: ""
 upstream_path: integrations/index.md
-upstream_blob: 370309310c97092ace8b2bcfe252c267c8ed37fc
+upstream_blob: 67feaf70dee0dad32a74be9903a2cabcda4da0ba
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations
 ---

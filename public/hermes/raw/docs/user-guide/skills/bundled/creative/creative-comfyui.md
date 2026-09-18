@@ -2,7 +2,7 @@
 title: "Comfyui — 拡散モデルのワークフローで画像・動画・音声を生成する"
 description: "拡散モデルのワークフローで画像・動画・音声を生成する"
 upstream_path: user-guide/skills/bundled/creative/creative-comfyui.md
-upstream_blob: 5276ffaa0d03566e4b9bf8d30d158f6ecfc6bf40
+upstream_blob: 4c8d4dcc7d7362c57976428996e85cea0f9e80f3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-comfyui
 ---

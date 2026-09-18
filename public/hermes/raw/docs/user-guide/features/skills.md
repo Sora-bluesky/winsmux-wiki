@@ -2,7 +2,7 @@
 title: "スキルの仕組み"
 description: "必要になったときだけ読む知識の文書 — 段階的な開示、エージェントが管理するスキル、Skills Hub"
 upstream_path: user-guide/features/skills.md
-upstream_blob: d8f017bdb492abec85c9a8bde0562f4acdb6a15d
+upstream_blob: 07522d5e62d37bba5ebfa1a4c533724cdecb8c61
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -512,6 +512,8 @@ hermes skills untrust           # revoke
 ### 対話しない画面（cron、API、ACP） {#non-interactive-surfaces-cron-api-acp}
 
 cron のジョブや、ほかの対話しない画面は、あなたが対話のときに下した信頼の判断を引き継ぎます。そこで尋ねることも、勝手に信頼することもありません。プロジェクトのルートは、その画面の作業ディレクトリから解決されます（cron のジョブなら `workdir`。terminal ツールと同じ仕組みです）。`workdir` が、以前に信頼したリポジトリの中にある cron のジョブは、そのリポジトリのプロジェクトスキルを読み込みます。信頼していない、あるいはまだ決めていないリポジトリのジョブは、何も読み込みません。
+
+TUI とデスクトップでは、プロジェクトのルートはセッションごとの**ワークスペース**（サイドバーに表示され、ワークスペースの選択で切り替えられるディレクトリ）に従います。そのため、信頼済みのリポジトリの中で `hermes --tui` を起動すれば、`terminal.cwd` が既定の `.` のままでも、そのリポジトリのプロジェクトスキルがスラッシュコマンドとして登録されます。二つのリポジトリで二つのセッションを開けば、それぞれが自分のぶんだけを見ます。
 
 ## スキルの束 {#skill-bundles}
 

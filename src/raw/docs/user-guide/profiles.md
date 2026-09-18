@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: fb727b906eb1789af8108bed751d85e5149d56df
+upstream_blob: 3df26e473d6b3cd1197d63ed095fbae2c11d0206
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---

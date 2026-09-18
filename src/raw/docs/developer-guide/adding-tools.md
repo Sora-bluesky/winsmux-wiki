@@ -2,7 +2,7 @@
 title: "ツールを追加する"
 description: "Hermes Agent に新しいツールを追加する方法 — スキーマ、ハンドラー、登録、ツールセット"
 upstream_path: developer-guide/adding-tools.md
-upstream_blob: 2219d738010c02e2aff9771643e753056bfd79cf
+upstream_blob: 13bf774f2a7cbbd4e9f8f11eab2eb5207d3d5ea0
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools
 ---

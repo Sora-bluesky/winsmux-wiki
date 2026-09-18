@@ -2,7 +2,7 @@
 title: "Stripe Link Cli — Stripe Link を使ったエージェントの支払い — カード、SPT、承認"
 description: "Stripe Link を使ったエージェントの支払い — カード、SPT、承認"
 upstream_path: user-guide/skills/optional/payments/payments-stripe-link-cli.md
-upstream_blob: 569ad6f420af06025b8fd1449180b9cf9dcee2dc
+upstream_blob: 7e0c5b258199626d882584119d373d2beac517f9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/payments/payments-stripe-link-cli
 ---

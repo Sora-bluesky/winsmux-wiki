@@ -2,7 +2,7 @@
 title: "チュートリアル: チームで使う Telegram アシスタント"
 description: "コードの相談、調べもの、サーバー管理などをチーム全員で頼める Telegram ボットの作り方を、順を追って説明します"
 upstream_path: guides/team-telegram-assistant.md
-upstream_blob: 3b168eb4caf49527624672fadb5f3b716345f9f5
+upstream_blob: 31218f3db33380fc4cc3c6fa27ca8fc791118013
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/team-telegram-assistant
 ---

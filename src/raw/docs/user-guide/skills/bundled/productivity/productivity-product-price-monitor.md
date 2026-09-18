@@ -2,7 +2,7 @@
 title: "Product Price Monitor — 商品・航空券・出品の価格を見張り、目標に届いたら知らせる"
 description: "商品・航空券・出品の価格を見張り、目標に届いたら知らせる"
 upstream_path: user-guide/skills/bundled/productivity/productivity-product-price-monitor.md
-upstream_blob: d757afe4eb2a60613e91cf25afb79d175350c691
+upstream_blob: 12ae99f188ca14e2d602eb3af58b3b71baa1844a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-product-price-monitor
 ---

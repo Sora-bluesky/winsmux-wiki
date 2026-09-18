@@ -2,7 +2,7 @@
 title: "同梱スキルの一覧"
 description: "Hermes Agent に最初から入っているスキルの一覧です。"
 upstream_path: reference/skills-catalog.md
-upstream_blob: b6ab7f5c21a95a8cfe67eb3b5c443d99aa620146
+upstream_blob: 96d399c1b7c2ceb59ccfa2b05acc4ba622ccea95
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/skills-catalog
 ---

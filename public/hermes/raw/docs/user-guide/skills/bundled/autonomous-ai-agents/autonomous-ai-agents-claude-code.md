@@ -2,7 +2,7 @@
 title: "Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）"
 description: "Claude Code CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md
-upstream_blob: a46b7045def4678b993c3cb725874c47f20fe058
+upstream_blob: 8c11926c86e8975a371a7badf594db544f86e2e8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code
 ---
@@ -16,7 +16,7 @@ Claude Code CLI にコーディングを任せます（機能追加、PR）。
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/autonomous-ai-agents\claude-code` |
+| パス | `skills/autonomous-ai-agents/claude-code` |
 | バージョン | `2.2.1` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |
@@ -108,32 +108,41 @@ Claude Code は最初の起動時に、最大 2 つの確認ダイアログを�
 ```
 **対処:** `tmux send-keys -t <session> Enter` — 最初から選ばれている項目で正解です。
 
-### ダイアログ 2: 権限のスキップに関する警告（--dangerously-skip-permissions のときだけ） {#dialog-2-bypass-permissions-warning-only-with---dangerously-skip-permissions}
+### ダイアログ 2: 一つずつ出る許可の確認（通常の流れ） {#dialog-2-individual-permission-prompts-normal-flow}
+
+承認が必要なツールの実行（ファイルの書き込み、シェルのコマンド、ネットワーク）ごとに確認が出ます。出てきたその 1 件に答えるだけで、実行全体の確認を止めてしまうのとは別物です。
 ```
-❯ 1. No, exit                    ← DEFAULT (WRONG choice!)
-  2. Yes, I accept
+# Read the prompt before answering it
+terminal(command="tmux capture-pane -t <session> -p -S -30")
+# Allow this one action (Enter = default "Yes"); Esc declines it
+terminal(command="tmux send-keys -t <session> Enter")
 ```
-**対処:** 先に下へ移動してから Enter を押します。
-```
-tmux send-keys -t <session> Down && sleep 0.3 && tmux send-keys -t <session> Enter
-```
+読まないまま時間まかせで `Enter` を送って承認するのはやめてください。それは手間を増やしただけの、確認を全部飛ばすフラグと変わりません。
+
+全部を飛ばすより範囲の狭い選択肢として `--permission-mode acceptEdits` があります。作業ディレクトリ内のファイル編集は承認済みとして扱い、シェルやそれ以外のツール呼び出しは確認が出ます。使うのは、作業内容を確認したうえで専用の worktree に限ってください。
 
 ### 取りこぼしのないダイアログ処理 {#robust-dialog-handling-pattern}
 ```
-# Launch with permissions bypass
-terminal(command="tmux send-keys -t claude-work 'claude --dangerously-skip-permissions \"your task\"' Enter")
+# Default launch — keep permission prompts enabled
+terminal(command="tmux send-keys -t claude-work 'claude \"your task\"' Enter")
 
 # Handle trust dialog (Enter for default "Yes")
 terminal(command="sleep 4 && tmux send-keys -t claude-work Enter")
-
-# Handle permissions dialog (Down then Enter for "Yes, I accept")
-terminal(command="sleep 3 && tmux send-keys -t claude-work Down && sleep 0.3 && tmux send-keys -t claude-work Enter")
 
 # Now wait for Claude to work
 terminal(command="sleep 15 && tmux capture-pane -t claude-work -p -S -60")
 ```
 
-**補足:** そのディレクトリで一度信頼を許可すれば、信頼のダイアログは二度と出ません。`--dangerously-skip-permissions` を使うときだけ、権限のダイアログが毎回出ます。
+**補足:** そのディレクトリで一度信頼を許可すれば、信頼のダイアログは二度と出ません。
+
+### 自分から選ぶとき: --dangerously-skip-permissions（隔離された環境だけ） {#opt-in---dangerously-skip-permissions-isolated-environments-only}
+
+これは実行のあいだ許可の確認をすべて止めます。ファイルシステム・シェル・ネットワークへのアクセスが、確認なしで通ります。使ってよいのは、捨ててよい worktree か隔離したコンテナだけです。
+```
+❯ 1. No, exit                    ← DEFAULT (safe choice)
+  2. Yes, I accept
+```
+受け入れるには `tmux send-keys -t <session> Down && sleep 0.3 && tmux send-keys -t <session> Enter` を実行します。
 
 ## CLI のサブコマンド {#cli-subcommands}
 
@@ -293,7 +302,7 @@ terminal(command="claude -p 'task' --fallback-model haiku --max-turns 5", timeou
 ### 権限と安全 {#permission-safety}
 | フラグ | はたらき |
 |------|--------|
-| `--dangerously-skip-permissions` | ツールの使用をすべて自動承認します（ファイル書き込み、bash、ネットワークなど） |
+| `--dangerously-skip-permissions` | 自分から選んだときだけ使います。許可の確認をすべて止めます（ファイル書き込み、bash、ネットワーク）。捨ててよい worktree か隔離したコンテナだけで使ってください。上の「自分から選ぶとき」を参照 |
 | `--allow-dangerously-skip-permissions` | スキップを *選択肢として* 使えるようにします。既定では有効にしません |
 | `--permission-mode <mode>` | `default`、`acceptEdits`、`plan`、`auto`、`dontAsk`、`bypassPermissions` |
 | `--allowedTools <tools...>` | 使ってよいツールを列挙します（カンマまたはスペース区切り） |
@@ -738,7 +747,7 @@ terminal(command="tmux capture-pane -t dev -p -S -10")
 ## つまずきやすいところ {#pitfalls-gotchas}
 
 1. **対話モードには tmux が必須です。** Claude Code は全画面の TUI アプリです。Hermes のターミナルで `pty=true` だけでも動きますが、tmux なら `capture-pane` で様子を見られ、`send-keys` で入力を送れます。制御にはこれが欠かせません。
-2. **`--dangerously-skip-permissions` のダイアログは「No, exit」が最初に選ばれています。** 受け入れるには下へ移動してから Enter を送ってください。プリントモード（`-p`）ならこのダイアログ自体が出ません。
+2. **`--dangerously-skip-permissions` の警告ダイアログは「No, exit」が最初に選ばれています。** その選択が安全側です。隔離された環境で自分から確認のスキップを選んだときだけ、下へ移動してから Enter を送ってください。プリントモード（`-p`）ならこのダイアログ自体が出ません。
 3. **`--max-budget-usd` の下限はおよそ $0.05 です。** システムプロンプトのキャッシュ生成だけでこれくらいかかるため、それより低くするとすぐエラーになります。
 4. **`--max-turns` はプリントモード専用です。** 対話セッションでは無視されます。
 5. **Claude が `python` ではなく `python` を使うことがあります。** `python` へのシンボリックリンクがない環境では、Claude の bash コマンドが最初は失敗しますが、Claude が自分で直します。

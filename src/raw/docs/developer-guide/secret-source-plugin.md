@@ -2,7 +2,7 @@
 title: "シークレットソースプラグイン"
 description: "Hermes Agent 用のシークレットマネージャ連携プラグインの作り方"
 upstream_path: developer-guide/secret-source-plugin.md
-upstream_blob: 666f70995831ac5fa0df40100be71e3865927ede
+upstream_blob: 869db2fec3cf6b8f823fce7752367325756a3420
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/secret-source-plugin
 ---

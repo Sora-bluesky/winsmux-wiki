@@ -2,7 +2,7 @@
 title: "Github Pr Workflow — GitHub の PR の一生: ブランチ、コミット、作成、CI、マージ"
 description: "GitHub の PR の一生: ブランチ、コミット、作成、CI、マージ"
 upstream_path: user-guide/skills/bundled/github/github-github-pr-workflow.md
-upstream_blob: 0536a0dd6a57cf0a35f4b3e4f85169908c0fa2fc
+upstream_blob: 9a7e782e3743b71b66a25a8eab05561d47806c0b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/github/github-github-pr-workflow
 ---

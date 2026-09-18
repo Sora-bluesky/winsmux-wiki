@@ -2,7 +2,7 @@
 title: "委任と並行作業"
 description: "サブエージェントへの委任をいつどう使うか。並行しての調査、コードレビュー、複数ファイルの作業の型"
 upstream_path: guides/delegation-patterns.md
-upstream_blob: 0b72b96d708b6ed95373defc79aec9ee89085ccb
+upstream_blob: 91436915a08ded9ba6d4b6574a2211bd163d5c38
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/delegation-patterns
 ---

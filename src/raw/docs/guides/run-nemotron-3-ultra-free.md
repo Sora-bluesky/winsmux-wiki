@@ -2,7 +2,7 @@
 title: "Hermes Agent で Nemotron 3 Ultra を無料で動かす"
 description: "Nous Portal の NVIDIA Nemotron 3 Ultra を試す。6 月 4 日〜18 日は無料、Hermes Agent は初日から対応"
 upstream_path: guides/run-nemotron-3-ultra-free.md
-upstream_blob: db613e79e99106b52a2519fd246a23e0e93e63a1
+upstream_blob: 4239e05e37e39064e8e584923b4e70676af4e7b3
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/run-nemotron-3-ultra-free
 ---

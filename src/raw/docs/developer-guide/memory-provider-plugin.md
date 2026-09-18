@@ -2,7 +2,7 @@
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: 8ddfc64796fe3c79e0171c075c0957d6ffc91f03
+upstream_blob: d4ca52f5b9e7f89299756cce574b256be1433ff2
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -119,7 +119,7 @@ class MyMemoryProvider(MemoryProvider):
 | `gateway_session_key` | チャットごとにセッションを分けるための、メッセージングのチャットの安定した識別子。 |
 | `user_id`, `user_id_alt`, `user_name`, `chat_id` | ゲートウェイの識別情報。ある場合に含まれます。 |
 | `agent_identity` | 有効なプロファイル名（ある場合）。 |
-| `agent_workspace`, `agent_context` | 実行時のエージェントの範囲（メインのエージェントでは `hermes` と `primary`）。 |
+| `agent_workspace`, `agent_context` | 実行時のエージェントの範囲。`agent_workspace` は `hermes` です。`agent_context` はスケジューラーからの実行なら `cron`、`delegate_task` で生まれた子なら `subagent`、それ以外は `primary` になります。primary 以外の値のときは自動での書き込みを飛ばしてください。 |
 
 `os.getcwd()` が会話のワークスペースを表すとは考えないでください。1 つの Desktop
 やゲートウェイのバックエンドが、複数のセッションを受け持つことがあるためです。`cwd` がなく、ディレクトリで
@@ -217,6 +217,13 @@ compression:
 保存先が復旧すればやり直せます。無効のまま（既定）なら、これまでのプロバイダーの
 動きは何も変わりません。
 
+Hermes に同梱されているプロバイダーは、どれもチェックポイント API v2 を宣言して
+いません。この取り決めは希望者だけが使うもので、第三者の記録保管プロバイダーの
+ために用意されています。そうしたプロバイダーが無いまま `checkpoint_required` を
+有効にすると、手動・自動を問わず圧縮の試みがすべて止まります。エージェントの
+初期化時には、有効なプロバイダー名を挙げた警告が記録され、拒否のたびに解除の
+ための項目として `compression.checkpoint_required` が示されます。
+
 この仕組みは、Hermes の要約機能だけでなく、圧縮を行うすべての主体に効きます。
 サーバー側のネイティブ圧縮（`compression.codex_responses_native`）は、仕組みが
 有効な間は抑止されます。ターン後の小刻みな圧縮（`compression.micro_compact`）は
@@ -244,6 +251,25 @@ compression:
 重なりが積み上がらず、まとまるようにしてください。
 
 取り決めのテスト: `tests/agent/test_pre_compress_checkpoint_contract.py`。
+
+## セットアップまわりの使い勝手 — 単独のプロバイダーが保てるもの {#setup-ux-what-a-standalone-provider-keeps}
+
+Hermes が同梱のプロバイダーに用意しているセットアップの画面や手順は、いずれもプロバイダー
+自身のディレクトリにあるファイルで動いています。プラグインのカタログから入れたプロバイダーでも、
+そのすべてをそのまま使えます。
+
+| 画面・手順 | プロバイダー側が用意するもの |
+|---|---|
+| Desktop → Capabilities → Tools → Memory（設定パネル） | `config_schema.py`（後述） |
+| `hermes memory setup` のウィザード | `get_config_schema()` がウィザードで尋ねる項目を宣言し、`save_config(config, hermes_home)` がそれを保存し、`post_setup(hermes_home, config)` がそのあとの対話的な処理（OAuth、初回の同期など）を行います。`get_status_config()` は `hermes memory status` の表示に使われます |
+| `hermes <provider> …` のサブコマンド | `register_cli(subparser)` を持つ `cli.py`（[CLI コマンドを足す](#adding-cli-commands)） |
+| Python の依存関係 | `pyproject.toml` の `[project] dependencies`（または `plugin.yaml` の `python_dependencies`）。インストール時に Hermes 自身の固定バージョンのもとで入り、`hermes update` のたびに当て直されます |
+
+プロバイダーの名前、`memory.<name>` の設定セクション、データディレクトリ、ツール名は、
+すでに使っている人との約束事です。本体から外に出たプロバイダーも、この 4 つをそのまま保ちます。
+そのうえで Hermes は、`memory.provider` がいまもそのプロバイダーを指している人のために、
+カタログのプラグインを自動で入れます（`hermes update` のとき、および `security.allow_lazy_installs`
+が有効なら起動時に 1 回）。
 
 ## 設定スキーマ {#config-schema}
 

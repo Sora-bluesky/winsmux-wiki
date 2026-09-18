@@ -2,7 +2,7 @@
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: caedc302a8371ebc72066385882e1eeabcd4cd08
+upstream_blob: 43902bbcb313819491b89943d9520f3123637c07
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -361,17 +361,9 @@ Inbound callback URLs on the shared listener:
 
 #### 5. PID と錠は 1 つ、状態の見え方も 1 つ {#5-one-pidlock-and-one-status-surface}
 
-プロセスの水準での PID と錠は 1 つだけです（既定のホームの下にある、多重化の
-プロセスのもの）。既定プロファイルでの `hermes status` は多重化のプロセスを報告し、
-受け持っているプロファイルを並べます（`Serves: coder, research`）。
-`hermes -p coder status`、`hermes -p coder gateway status`、`hermes -p coder cron status`
-はいずれも「停止中」ではなく「既定プロファイルの多重化を通して動作中」と報告し、
-ダッシュボードの `/api/status?profile=coder` と Channels のページは、多重化のプロセスを
-coder の動いているゲートウェイとして報告します（プラットフォームには coder 自身の
-アダプタが並びます）。
-唯一の `gateway_state.json` は既定のホームの下にあり、従属側のアダプタはそこに
-`served_profiles` と並んで `<profile>:<platform>` の項目として現れます。従属側の
-プロファイルのホームには何も書かれません。
+プロセスの水準での PID と錠は 1 つだけです（既定のホームの下にある、多重化のプロセスのもの）。既定プロファイルでの `hermes status` は多重化のプロセスを報告し、受け持っているプロファイルを並べます（`Serves: coder, research`）。`hermes -p coder status` と `hermes -p coder gateway status` は「停止中」ではなく「既定プロファイルの多重化を通して動作中」と報告します。ダッシュボードの `/api/status?profile=coder` と Channels のページは、多重化のプロセスを coder の動いているゲートウェイとして報告し、プラットフォームには coder 自身のアダプタが並びます。唯一の `gateway_state.json` は既定のホームの下にあり、従属側のアダプタはそこに `served_profiles` と並んで `<profile>:<platform>` の項目として現れます。プロファイルごとのゲートウェイの状態ファイルは書かれません。
+
+`hermes -p coder cron status` は `Scheduler host: default-profile multiplexer` と表示したうえで、coder 自身の刻みの鼓動と、最後に成功した刻みを確かめます。鼓動が無かったり古かったりするときは、動作中と言い切らずに警告を出します。再起動をうながす案内が指すのは `hermes --profile default gateway restart` です。`cron list` と `cron create` も、受け持っているプロファイルの鼓動が新しくないときは警告します。`cron status` は、この軽い確認では読まない刻みの失敗の詳細まで見せます。
 
 #### 変わら **ない** こと {#what-does-not-change}
 
@@ -480,9 +472,11 @@ Hindsight の URL —— なので、あるプロファイルの鍵がほかの�
 | セッション検索のつまみ（`sessions.cjk_fts`、`sessions.search_slow_ms`） | そのプロファイルの `config.yaml` | 文書どおりの既定。既定プロファイルから橋渡しされた値が使われることはない |
 | プラットフォームのプロキシ（`TELEGRAM_PROXY`、`DISCORD_PROXY`、`HTTPS_PROXY` など） | そのプロファイル自身の `.env` | 直接つなぐ。既定プロファイルのプロキシが使われることはない |
 | デスクトップやダッシュボードの裏側での MCP の探索 | 受け持つプロファイルのホームごとに 1 回 | ほかのプロファイルがすでにエージェントを作ったあとで選ばれたプロファイルも、自分の `mcp_servers` を探索する |
+| デスクトップや TUI のセッションから変えた設定（`/busy`、`/verbose`、`/approval`、`/cwd`、テーマや表示の切り替え） | そのセッションを持っているプロファイルの `config.yaml`。RPC がセッションの ID しか運んでいないときも同じ | 書かれるのはセッション自身のプロファイル。立ち上げたプロファイルの `config.yaml` とその `TERMINAL_CWD` には触れない |
 | デスクトップやダッシュボードの裏側と、プロファイルごとの cron の刻み役での MCP の接続 | `gateway.multiplex_profiles` が切られていても、受け持つプロファイルごとに分ける。多重化と同じ決まり | 名前が同じでも認証情報が違う `mcp_servers` の項目は、別の接続になる。受け持つプロファイルが、ほかのプロファイルとしてサーバーを呼ぶことはない |
 | ダッシュボードの操作（デスクトップやダッシュボードが立ち上げる `hermes -p <name> …`） | そのプロファイルの `HERMES_HOME` に固定した、掃除済みの子プロセスの環境 | 子プロセスは自分の `.env` を読む。ダッシュボードのプロファイルのトークンやポートは引き継がれない |
 | 受け持たれているプロファイルのために動くすべての子プロセス（スラッシュコマンドの作業役、Bot Chat の配達、A2A の転送、`key_cmd` の補助、ブラウザーの操作役） | 認証情報を掃除した土台の上に、そのプロファイル自身の `.env` と秘密情報の出どころを重ねたもの。`gateway.multiplex_profiles` の有無を問わない（デスクトップやダッシュボードの `?profile=` の経路も含む） | 子プロセスには入らない。systemd / Compose / シェルを通じて起動プロセスにだけ届いた鍵が、ほかのプロファイルの子プロセスに引き継がれることはない |
+| ほかのプロファイルのために立ち上げた子プロセスでの、許可の関門（`*_ALLOWED_USERS` / `*_ALLOWED_CHANNELS` / `*_IGNORED_CHANNELS` / `*_ALLOW_ALL_USERS` / `*_ALLOW_BOTS`、`GATEWAY_ALLOW*`）。ダッシュボードの `hermes -p <name>` の操作、かんばんの作業役、Bot Chat の配達、更新後のプロファイルごとの `gateway restart` | 子プロセス自身の `.env` と `config.yaml`。子プロセスが自分で読む | 閉じた状態（アダプタに書かれている初期値）。unit ファイルやシェルから立ち上げ側のプロセスに渡された関門は、子プロセスが始まる前に落とされるので、プロファイル B がプロファイル A のトークや利用者の一覧を当てはめることはない。同じプロファイルの子プロセスはそのまま引き継ぐ |
 | ほかのプロファイルも受け持つ `hermes serve` やダッシュボードのプロセスでの、起動した（既定の）プロファイル自身の認証情報 | **ほかのプロファイルを初めて受け持った瞬間に固定された** プロセスの環境の上に、その `.env` と秘密情報の出どころを重ねたもの。そのあとは読み直さない | プロセスの環境だけで入れ替えた認証情報（`systemctl set-environment`、再実行しなかった `op run` の包みの更新）は、プロセスを再起動するまで反映されない。入れ替える鍵は `.env` か秘密情報の出どころに置くか、入れ替えたあとに再起動する |
 | cron の `.env` での調整（`HERMES_CRON_TIMEOUT`、`HERMES_MODEL` の代替、`HERMES_CRON_MAX_PARALLEL`、事前入力のファイル）、作業役や Bot Chat の子プロセスの環境 | そのプロファイル自身の `.env`。子プロセスが既定プロファイルの `.env` の設定や橋渡しされた `TERMINAL_*` の方針を引き継ぐことはない | cron の既定、またはモデルの拒否。単独の `hermes -p <name> gateway run` とまったく同じ |
 | プロファイルのタスクのかんばんの作業役と知らせ | 担当者の `.env` + `config.yaml`（道具一式の固定、端末の実行先、メディアの方針、表示の言語） | — |

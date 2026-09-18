@@ -2,7 +2,7 @@
 title: "コマンドヘルパーによる secret の取得"
 description: ""
 upstream_path: user-guide/secrets/command.md
-upstream_blob: 04184eb95de5c9bc52cc09ca8a5faccec90f7799
+upstream_blob: 002e95c604e66c8e273d8ca5eb3b885e80708f16
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/secrets/command
 ---

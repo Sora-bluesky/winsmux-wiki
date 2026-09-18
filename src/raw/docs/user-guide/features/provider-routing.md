@@ -2,7 +2,7 @@
 title: "提供元の振り分け"
 description: "OpenRouter の提供元の優先設定を書いて、費用・速度・品質のどれを重く見るかを決めます。"
 upstream_path: user-guide/features/provider-routing.md
-upstream_blob: 3cd2c5c75c9a172705eb2fa46a1672fb0fd74ce9
+upstream_blob: ecd7c3259c431ace69c565bb2e31151e4007e0ae
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/provider-routing
 ---

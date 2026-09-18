@@ -2,7 +2,7 @@
 title: "モデルカタログ"
 description: "OpenRouter と Nous Portal のモデル選択リストを組み立てる、遠隔に置かれた一覧ファイルです。"
 upstream_path: reference/model-catalog.md
-upstream_blob: 740404a5a174c3c39c2897130be18cf1a4fe0fb7
+upstream_blob: e0b98a3ed705138505456a765e47c72bfccd4d1e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/model-catalog
 ---
@@ -69,6 +69,10 @@ https://hermes-agent.nousresearch.com/docs/api/model-catalog.json
 | 一覧がスキーマの検査に通らない | 届かなかったときと同じ扱いになります |
 
 控えの置き場所は `~/.hermes/cache/model_catalog.json` です。
+
+### 画面のモデル選択に出る提供元ごとの一覧 {#per-provider-model-lists-in-the-gui-picker}
+
+Desktop・TUI・ダッシュボードのモデル選択（`model.options`）は、提供元ごとの行を、ディスクに控えてある最新のカタログ（`~/.hermes/provider_models_cache.json`）から組み立てます。まだ何も控えがないときは、選び抜いた一覧を使います。選択を開いても、提供元の `/v1/models` への問い合わせや認証の確認を待つことはありません。古い控えや足りない控えは裏で別のスレッドが取り直し、次に開いたときに反映されます。そのため、遅い提供元や回数制限にかかった提供元、つながらない提供元が 1 つあっても、選択の画面全体が読み込み中のまま止まることはありません。控えを捨てて全部の提供元にその場で問い合わせるのは、**Refresh models**（または `/model --refresh`）という明示の操作です。
 
 ## 設定 {#config}
 

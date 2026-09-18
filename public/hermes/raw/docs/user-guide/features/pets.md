@@ -2,7 +2,7 @@
 title: "ペット（Petdex のマスコット）"
 description: "CLI・TUI・デスクトップアプリを通じて、エージェントの動きに反応する動くマスコットを迎え入れる"
 upstream_path: user-guide/features/pets.md
-upstream_blob: f36f90a471c656cdb4b97c7bc9a5e59c7453e8f7
+upstream_blob: 4bc99085398aa3f6ff4bc460cd07fe8e305a0bca
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/pets
 ---

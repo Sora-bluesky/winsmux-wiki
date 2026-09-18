@@ -2,7 +2,7 @@
 title: "ツールとツールセット"
 description: "Hermes Agent のツールの全体像 — 何が使えるか、ツールセットの仕組み、ターミナルの実行先"
 upstream_path: user-guide/features/tools.md
-upstream_blob: 94963855d89f18d1bba0233b5f13d9e6daaf0f69
+upstream_blob: bd3d989b0f5a0a64862d7df060c7587430b12844
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tools
 ---

@@ -2,7 +2,7 @@
 title: "ウェイクワード"
 description: "手を使わずに済む Hey Hermes のウェイクワード — 話しかけるだけで音声対話が始まる、Hey Siri と同じ感覚で"
 upstream_path: user-guide/features/wake-word.md
-upstream_blob: ecf7b858b660b053a733c0f04aeb0d1a3bd838f2
+upstream_blob: 91b54cc32621010f1c252cb0260d461902e09e57
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/wake-word
 ---

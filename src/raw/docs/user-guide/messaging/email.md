@@ -2,7 +2,7 @@
 title: "メール"
 description: "IMAP/SMTP 経由で Hermes Agent をメール応対の相棒として設定する"
 upstream_path: user-guide/messaging/email.md
-upstream_blob: 71f932d6e927131e66887698730c1e61f6440ecb
+upstream_blob: 436d27caecbc94e2e84983e3a0ce42446a322d0c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/email
 ---

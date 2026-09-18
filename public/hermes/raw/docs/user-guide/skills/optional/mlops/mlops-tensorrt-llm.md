@@ -2,7 +2,7 @@
 title: "Tensorrt Llm — NVIDIA の GPU で LLM の推論を高い処理量で動かす"
 description: "NVIDIA の GPU で LLM の推論を高い処理量で動かす"
 upstream_path: user-guide/skills/optional/mlops/mlops-tensorrt-llm.md
-upstream_blob: 727812c1c8d7fa0526979788ec47601086c77053
+upstream_blob: 3db2e3fa1a97e86c52858cd2c9073ff657389c5f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-tensorrt-llm
 ---
@@ -16,12 +16,12 @@ NVIDIA の GPU で、LLM の推論を高い処理量で動かします。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/tensorrt-llm` で導入します |
-| パス | `optional-skills/mlops\tensorrt-llm` |
+| パス | `optional-skills/mlops/tensorrt-llm` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
 | 依存関係 | `tensorrt-llm`, `torch` |
-| 対応プラットフォーム | linux, macos |
+| 対応プラットフォーム | linux |
 | タグ | `Inference Serving`, `TensorRT-LLM`, `NVIDIA`, `Inference Optimization`, `High Throughput`, `Low Latency`, `Production`, `FP8`, `INT4`, `In-Flight Batching`, `Multi-GPU` |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
@@ -96,8 +96,9 @@ for output in outputs:
 
 ```bash
 # Start server (automatic model download and compilation)
+# Tensor parallelism across 4 GPUs
 trtllm-serve meta-llama/Meta-Llama-3-8B \
-    --tp_size 4 \              # Tensor parallelism (4 GPUs)
+    --tp_size 4 \
     --max_batch_size 256 \
     --max_num_tokens 4096
 
@@ -198,9 +199,9 @@ outputs = llm.generate(
 
 ## 参考ドキュメント {#references}
 
-- **[Optimization Guide](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\tensorrt-llm/references/optimization.md)** - 量子化、まとめ処理、KV キャッシュの調整
-- **[Multi-GPU Setup](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\tensorrt-llm/references/multi-gpu.md)** - テンソル並列とパイプライン並列、複数ノード
-- **[Serving Guide](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\tensorrt-llm/references/serving.md)** - 本番での運用、監視、自動での増減
+- **[Optimization Guide](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/tensorrt-llm/references/optimization.md)** - 量子化、まとめ処理、KV キャッシュの調整
+- **[Multi-GPU Setup](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/tensorrt-llm/references/multi-gpu.md)** - テンソル並列とパイプライン並列、複数ノード
+- **[Serving Guide](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/tensorrt-llm/references/serving.md)** - 本番での運用、監視、自動での増減
 
 ## 参考情報 {#resources}
 

@@ -2,7 +2,7 @@
 title: "Stocks — Yahoo 経由の株価、履歴、検索、比較、暗号資産"
 description: "Yahoo 経由の株価、履歴、検索、比較、暗号資産"
 upstream_path: user-guide/skills/optional/finance/finance-stocks.md
-upstream_blob: b855ca4ac35ee7148e07dd9c5d67b36c22202718
+upstream_blob: 115c432aa8159ec0fb49c7f855d4ee83a639943a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-stocks
 ---

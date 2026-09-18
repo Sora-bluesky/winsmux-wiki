@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: a93f994705583c3bcb00798c7345781aedac6099
+upstream_blob: 3cb7873babe756e5582ac4f0a8d0daeb5430fb05
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -1039,9 +1039,9 @@ def my_callback(session_key: str, platform: str, reason: str, invalidation_reaso
 | `session_key` | `str` | 実行に割り込まれたセッション。 |
 | `platform` | `str` | メッセージングのプラットフォーム名（`"telegram"`、`"discord"` など）。不明なら空文字列。 |
 | `reason` | `str` | エージェントに割り込んだ理由（例: `"user_stop"`、リセット / 新規の理由）。 |
-| `invalidation_reason` | `str` | 溜まっていたセッション状態を無効にした理由（例: `"stop_command"`、`"stop_command_thread_sibling"`、`"reset_command"`）。 |
+| `invalidation_reason` | `str` | 溜まっていたセッション状態を無効にした理由（例: `"stop_command"`、`"stop_command_thread_sibling"`、`"stop_command_chat_scope"`、`"reset_command"`）。 |
 
-**発火箇所:** `gateway/run.py::_interrupt_and_clear_session` で、`request_hard_interrupt()` が動いているエージェントに割り込んだ直後です。実際にエージェントが動いていた場合にかぎります。まだエージェントのループが始まっていない保留中の `/stop` の経路では、手放すべき進行中の作業が無いためこのフックは発火**しません**。遅い方の `/new` リセット経路では、かわりに `_handle_reset_command` の中であとから `on_session_finalize` が発火します。
+**発火箇所:** `gateway/run_agent_cache.py::_interrupt_and_clear_session` で、`request_hard_interrupt()` が動いているエージェントに割り込んだ直後です。実際にエージェントが動いていた場合にかぎります。まだエージェントのループが始まっていない保留中の `/stop` の経路では、手放すべき進行中の作業が無いためこのフックは発火**しません**。遅い方の `/new` リセット経路では、かわりに `_handle_reset_command` の中であとから `on_session_finalize` が発火します。
 
 **戻り値:** 無視されます。
 

@@ -2,7 +2,7 @@
 title: "シークレット"
 description: ""
 upstream_path: user-guide/secrets/index.md
-upstream_blob: 29c7df9e94e49874c284abb26c10140359f501bd
+upstream_blob: 102b5450ee6b6df53020191c3aa91c7b014acc5a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/secrets
 ---
@@ -51,6 +51,10 @@ secrets:
 - **プロファイル別名の解決**（既定で有効。`secrets.profile_alias: false` で切れます） — 名前付きのプロファイルで Hermes を動かしているとき、保管庫にある `FOO_<PROFILE>` という名前のシークレットが、正規の名前 `FOO` にも入ります（対象は認証情報らしい末尾を持つものだけです: `*_API_KEY`、`*_TOKEN`、`*_SECRET`、`*_KEY`、`*_PASSWORD`）。共有プロジェクトに `TELEGRAM_BOT_TOKEN_MILLA` を置いておけば、`TELEGRAM_BOT_TOKEN` という固定の名前を読む `milla` プロファイルのアダプターに、正しい値が自動で渡ります。保管庫が正規の名前のまま直接与えている値は、別名より必ず優先されます。
 
 どちらも、同梱のものもプラグインのものも含めて、すべての取得元に効きます。これらが取りまとめ側にあって、個々の実装側にはないからです。
+
+## 子プロセスに渡るシークレット {#secrets-in-child-processes}
+
+ターミナルのコマンド、`execute_code` のサンドボックス、[`no_agent` の定期実行スクリプト](/hermes/docs/user-guide/features/cron/#giving-a-script-a-credential)は、掃除された環境で動きます。Hermes が管理している認証情報は取り除かれ、`terminal.env_passthrough`（または読み込んだ skill の `required_environment_variables`）で宣言した変数だけが渡ります。宣言した変数には、**持ち主のプロファイル**の値、つまりそのプロファイルの `.env` か取得元から来た値が渡ります。複数プロファイルを受け持つゲートウェイや Desktop ／ダッシュボードの裏側がそのプロファイルを扱っていて、シークレットがプロセスの環境変数に一度も入っていない場合でも同じです。あるプロファイルで宣言した値が、別のプロファイルの子プロセスに届くことはありません。受け持っているプロファイルのために動く子プロセスからは、起動時のプロファイルの `.env` にある認証情報が落とされます。プロバイダーの認証情報は宣言できません。[セキュリティ → 認証情報の範囲](/hermes/docs/user-guide/security/)を参照してください。
 
 ## 自分で取得元を足す {#adding-your-own-backend}
 

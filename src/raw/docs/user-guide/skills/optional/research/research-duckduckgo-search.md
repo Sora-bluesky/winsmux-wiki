@@ -2,7 +2,7 @@
 title: "Duckduckgo Search — ddgs でキー不要の無料 Web・ニュース・画像検索"
 description: "ddgs でキー不要の無料 Web・ニュース・画像検索"
 upstream_path: user-guide/skills/optional/research/research-duckduckgo-search.md
-upstream_blob: a299c474520d5064470374df24cfc5b9643e75e0
+upstream_blob: 5786b31414de8c7c9079ae8d3ed49a44d5fba964
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-duckduckgo-search
 ---

@@ -2,7 +2,7 @@
 title: "スキルを作る"
 description: "Hermes Agent 向けのスキルの作り方 — SKILL.md の書式、指針、公開まで"
 upstream_path: developer-guide/creating-skills.md
-upstream_blob: 25d023ed57c826d473a451b83921103e4f465d56
+upstream_blob: 6533ae6b8bd4ea462ba3763e28ab02e9e19cd8c8
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills
 ---

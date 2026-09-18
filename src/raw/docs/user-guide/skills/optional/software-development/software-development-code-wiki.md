@@ -2,7 +2,7 @@
 title: "Code Wiki — どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する"
 description: "どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する"
 upstream_path: user-guide/skills/optional/software-development/software-development-code-wiki.md
-upstream_blob: 1ee750b2a700b4f3b5687a3d17454de053505070
+upstream_blob: 0dbe7cc06cdbd8ec4c97f0f332f90810f752ecb1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-code-wiki
 ---

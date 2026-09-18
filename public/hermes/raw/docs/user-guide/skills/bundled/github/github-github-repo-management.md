@@ -2,7 +2,7 @@
 title: "Github Repo Management — リポジトリのクローン・作成・fork、リモートとリリースの管理"
 description: "リポジトリのクローン・作成・fork、リモートとリリースの管理"
 upstream_path: user-guide/skills/bundled/github/github-github-repo-management.md
-upstream_blob: f540d02eb264a9981b10697d311fa0fcb453e119
+upstream_blob: 6116ebefb503333ec1906886b1de558e498b73ce
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/github/github-github-repo-management
 ---

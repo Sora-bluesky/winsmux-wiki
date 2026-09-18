@@ -2,7 +2,7 @@
 title: "Github Auth — GitHub の認証設定: HTTPS トークン、SSH 鍵、gh CLI ログイン"
 description: "GitHub の認証設定: HTTPS トークン、SSH 鍵、gh CLI ログイン"
 upstream_path: user-guide/skills/bundled/github/github-github-auth.md
-upstream_blob: ba58277c4e96419f0f634c4ddbce1115d96ac853
+upstream_blob: 8b38d02d298a8e8e788e2bb76db72c2be798ccd7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/github/github-github-auth
 ---

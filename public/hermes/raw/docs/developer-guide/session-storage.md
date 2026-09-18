@@ -2,7 +2,7 @@
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: 78f34343f0fb66fe5c1243b0cb2a992b45984674
+upstream_blob: 56430819040b5ac7868e43cb054cbb8cdde7c926
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -190,6 +190,13 @@ CREATE INDEX IF NOT EXISTS idx_sessions_started ON sessions(started_at DESC);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_sessions_title_unique
     ON sessions(title) WHERE title IS NOT NULL;
 ```
+
+`user_id` は、そのセッションの向こう側にいる主体です。メッセージのアダプターは
+プラットフォームの送信者 ID を入れ、認証付きの `hermes serve`（OAuth、または
+ユーザー名とパスワードによる基本認証のプロバイダー）から開いた `desktop` やダッシュボードの
+セッションは、ログインを `<provider>:<user id>` の形（たとえば `basic:alice`）で入れます。
+誰もいないセッション — 認証なしのループバックでの利用、`subagent`、`cron`、`kanban`
+— では空のままです。値は行を作るときに決まり、あとから推測して埋めることはありません。
 
 ### messages テーブル {#messages-table}
 

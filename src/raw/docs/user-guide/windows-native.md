@@ -2,7 +2,7 @@
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: 99cb490a8fe06c2e17ef64834c3c00856eb244f6
+upstream_blob: 42d26afea101480a1cdb1a5be1d03898d18106a6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -11,7 +11,7 @@ sources:
 
 Hermes は Windows 10 と Windows 11 でそのまま動きます。WSL も Cygwin も Docker も要りません。このページはその詳細です。何がそのまま動き、何が WSL でしか動かないのか、インストーラが実際に何をしているのか、そして Windows ならではの調整項目を扱います。
 
-まずインストールしたいだけであれば、[トップページ](https://hermes-agent.nousresearch.com/) や [インストールのページ](/hermes/docs/getting-started/installation/#windows-native) にある 1 行のコマンドで足ります。何か想定と違うことが起きたときに、このページへ戻ってきてください。
+まずインストールしたいだけであれば、[トップページ](/hermes/docs/index/) や [インストールのページ](/hermes/docs/getting-started/installation/#windows-native) にある 1 行のコマンドで足ります。何か想定と違うことが起きたときに、このページへ戻ってきてください。
 
 :::tip WSL のほうがよい場合は
 本物の POSIX 環境が欲しい場合（ダッシュボードに埋め込まれた端末、`fork` の挙動、Linux 流のファイル監視などが目的なら）、**[Windows（WSL2）ガイド](/hermes/docs/user-guide/windows-wsl-quickstart/)** を参照してください。両者はきれいに共存します。ネイティブのデータは `%LOCALAPPDATA%\hermes` の下に、WSL のデータは `~/.hermes` の下に置かれます。

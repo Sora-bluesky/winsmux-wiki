@@ -2,7 +2,7 @@
 title: "Research Paper Writing — NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる"
 description: "NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる"
 upstream_path: user-guide/skills/bundled/research/research-research-paper-writing.md
-upstream_blob: 3514a6d73f28a23dc7ecaecaf5af63e944864d4a
+upstream_blob: 135406d9c7b3a8e3bd024d4986d0b3b3cbb6d0ca
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-research-paper-writing
 ---

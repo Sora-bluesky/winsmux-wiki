@@ -2,7 +2,7 @@
 title: "OpenClaw から移ってくる"
 description: "OpenClaw / Clawdbot の環境を Hermes Agent へ移すための案内です。何が移るのか、設定がどう対応するのか、移したあとに何を確かめるのかをまとめます。"
 upstream_path: guides/migrate-from-openclaw.md
-upstream_blob: 3a729ee75f17ee4f20a3954359ce6253a20afa8e
+upstream_blob: d59080cc8769459032b98f4b14f51d8a7aeb3c71
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/migrate-from-openclaw
 ---

@@ -2,7 +2,7 @@
 title: "Hyperframes — HTML の composition から MP4/WebM の動画を書き出す"
 description: "HTML の composition から MP4/WebM の動画を書き出す"
 upstream_path: user-guide/skills/optional/creative/creative-hyperframes.md
-upstream_blob: 1a8afaa9e1d7c9201f6f80f0e0d49066ab095275
+upstream_blob: d57b076dcab3bb96bf451a462dddb60298232603
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-hyperframes
 ---

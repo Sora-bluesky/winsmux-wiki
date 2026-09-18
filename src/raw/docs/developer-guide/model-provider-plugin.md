@@ -2,7 +2,7 @@
 title: "モデルプロバイダのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダ（推論のバックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: 3b97c05798b4935d22c244af12a9b41390d9fe82
+upstream_blob: fed6b37c54847329f5cfc8b594abb80df5de5aa8
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---

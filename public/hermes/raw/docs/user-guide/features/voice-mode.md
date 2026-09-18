@@ -2,7 +2,7 @@
 title: "音声モード"
 description: "Hermes Agent とリアルタイムで音声のやりとりをする — CLI、Telegram、Discord（DM、テキストチャンネル、ボイスチャンネル）"
 upstream_path: user-guide/features/voice-mode.md
-upstream_blob: 03e7572ea583ad27e5d2d0179a1b7e768c32671d
+upstream_blob: 4076c1e2540f97668dfb7e945072b29cbb880bf1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/voice-mode
 ---

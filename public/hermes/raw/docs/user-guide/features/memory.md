@@ -2,7 +2,7 @@
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: 8eff4717599d56d71c4ab415062ca53deeb0ef85
+upstream_blob: f15f75296000d9ed2dbc5507d76c321e63a383e1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---

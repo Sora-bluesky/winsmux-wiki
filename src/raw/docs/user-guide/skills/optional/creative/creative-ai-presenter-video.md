@@ -2,7 +2,7 @@
 title: "Ai Presenter Video — 台本と画像から、検証済みの AI プレゼンター動画を作る"
 description: "台本と画像から、検証済みの AI プレゼンター動画を作る"
 upstream_path: user-guide/skills/optional/creative/creative-ai-presenter-video.md
-upstream_blob: 3bceade1a30958b8b527e50524fe5a7ed7cff0b7
+upstream_blob: 935559cec6819d82ec399de9251b94ccebeebd5c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-ai-presenter-video
 ---

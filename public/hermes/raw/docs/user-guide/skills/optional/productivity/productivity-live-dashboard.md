@@ -2,7 +2,7 @@
 title: "Live Dashboard — 生の情報源から、自動で更新されるダッシュボードを作る"
 description: "生の情報源から、自動で更新されるダッシュボードを作る"
 upstream_path: user-guide/skills/optional/productivity/productivity-live-dashboard.md
-upstream_blob: 978f70e5c5e5ea3694b6439f83b1cedf407dd429
+upstream_blob: 9640b311fba8a61044a2fa2999e84f4026b09b0c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-live-dashboard
 ---

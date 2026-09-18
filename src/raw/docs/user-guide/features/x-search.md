@@ -2,7 +2,7 @@
 title: "X（Twitter）の検索"
 description: "xAI に組み込まれた x_search という Responses の道具を使って、エージェントの中から X（Twitter）の投稿やスレッドを検索する。SuperGrok のログインでも XAI_API_KEY でも動く"
 upstream_path: user-guide/features/x-search.md
-upstream_blob: ec06adde31ee7bb92e6c0d05d53f14f1da5be0d7
+upstream_blob: 86318db7d287d2f50b44d97b85cf2f32aab4e758
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/x-search
 ---

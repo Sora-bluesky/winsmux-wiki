@@ -2,7 +2,7 @@
 title: "Decision Questionnaire — 自分では答えの出せない決めごとを質問票にする"
 description: "自分では答えの出せない決めごとを質問票にする"
 upstream_path: user-guide/skills/optional/productivity/productivity-decision-questionnaire.md
-upstream_blob: 73669a692052e81426bbe50ac1ab69737fa4e3d4
+upstream_blob: 01ee2251a05f42f42ad71189905dba402891142f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire
 ---

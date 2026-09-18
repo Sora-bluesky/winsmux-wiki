@@ -2,7 +2,7 @@
 title: "Open WebUI"
 description: "OpenAI 互換の API サーバー経由で Open WebUI を Hermes Agent につなぐ"
 upstream_path: user-guide/messaging/open-webui.md
-upstream_blob: c3e88e82328e6cfa40826afb3fa855ca25ecdc6b
+upstream_blob: d000f936b22de2ac819a61fd0595ce8dcef3f11b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/open-webui
 ---

@@ -2,7 +2,7 @@
 title: "Codebase Inspection — pygount でコードベースを調べる: 行数・言語・比率"
 description: "pygount でコードベースを調べる: 行数・言語・比率"
 upstream_path: user-guide/skills/bundled/github/github-codebase-inspection.md
-upstream_blob: f727c1cd311dc597047d9365924821fecd214684
+upstream_blob: a9c23ab89b900d75fa3c1363bf9ba72ab89e73d3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/github/github-codebase-inspection
 ---

@@ -2,7 +2,7 @@
 title: "Requesting Code Review — コミット前のレビュー: セキュリティ検査、品質の関門、自動修正"
 description: "コミット前のレビュー: セキュリティ検査、品質の関門、自動修正"
 upstream_path: user-guide/skills/bundled/software-development/software-development-requesting-code-review.md
-upstream_blob: dfdfb42622ad852213b576d63300982062e34ed4
+upstream_blob: 5e804e4e09cf288a44a3bab1007c54f66ccfc70e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review
 ---

@@ -2,7 +2,7 @@
 title: "まとめて処理する"
 description: "エージェントの軌跡を大量に生成する — 並列処理、途中経過の保存、ツールセットの配分"
 upstream_path: user-guide/features/batch-processing.md
-upstream_blob: 5a0cbacb908a9cfa5c770a6d83c846d977220562
+upstream_blob: cb86017543bf43b584b578304a8235cd1d0fd188
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/batch-processing
 ---

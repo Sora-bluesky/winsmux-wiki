@@ -2,7 +2,7 @@
 title: "Ollama で Hermes をローカルで動かす — API 料金ゼロ"
 description: "Gemma 4 などのオープンウェイトモデルと Ollama を使い、クラウドの API キーも有料サブスクも使わずに Hermes Agent を自分の端末だけで動かす手順です"
 upstream_path: guides/local-ollama-setup.md
-upstream_blob: 2bb4b7cc31155c865f528087c44f82879700d9b5
+upstream_blob: c3a46ed64d1a6d04088201d53390ccdbfa6dca5e
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/local-ollama-setup
 ---
@@ -270,6 +270,16 @@ fallback_providers:
 こうしておけば利用の 9 割は無料（ローカル）で済み、難しい作業のときだけ有料の API を使うことになります。
 
 ## 困ったときは {#troubleshooting}
+
+### 「provider 'ollama' has no endpoint configured」と出る {#provider-ollama-has-no-endpoint-configured}
+
+`hermes chat --provider ollama`（または `vllm`）は、その別名に対応する接続先がどこにも設定されていないとき、このエラーで止まります。`providers.ollama.base_url` も `model.base_url` も無い状態です。Hermes は、たまたま設定されているクラウドの鍵（`OPENROUTER_API_KEY` / `OPENAI_API_KEY`）で OpenRouter へ流してしまうより、要求を送らないほうを選びます。接続先を足してください。
+
+```yaml
+providers:
+  ollama:
+    base_url: "http://localhost:11434/v1"
+```
 
 ### 起動時に「Connection refused」と出る {#connection-refused-on-startup}
 

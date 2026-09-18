@@ -2,7 +2,7 @@
 title: "AWS Bedrock"
 description: "Hermes Agent を Amazon Bedrock で使う — ネイティブの Converse API、Anthropic SDK 経由の振り分け、Bedrock Mantle 経由の OpenAI モデル、IAM 認証、Guardrails、クロスリージョン推論"
 upstream_path: guides/aws-bedrock.md
-upstream_blob: 348dd17306b5d0f071e4217a39a46cc0129cbc0b
+upstream_blob: 2c83542215d181f3f5fdcbf8168b364227fef281
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/aws-bedrock
 ---
@@ -32,6 +32,7 @@ Hermes は、モデルの系統ごとに最も適した API へ振り分けま�
 - **IAM の権限** — 最低限、次のものが必要です。
   - 推論のための `bedrock:InvokeModel` と `bedrock:InvokeModelWithResponseStream`
   - モデル検出のための `bedrock:ListFoundationModels` と `bedrock:ListInferenceProfiles`
+  - `bedrock:GetInferenceProfile`（`model.default` にアプリケーション推論プロファイルの ARN を指定する場合だけ必要です。包まれているモデルからコンテキストウィンドウの大きさを決めるために使います）
 
 :::tip EC2 / ECS / Lambda
 AWS 上で動かすなら、`AmazonBedrockFullAccess` を付けた IAM ロールをアタッチするだけで済みます。API キーも `.env` の設定も要りません。Hermes がインスタンスロールを自動で見つけます。
@@ -112,6 +113,8 @@ Hermes は Bedrock の **Converse API** 経路で、システムプロンプト�
 ### コンテキストウィンドウの実測 {#context-window-probing}
 
 コンテキストウィンドウが Hermes の静的な一覧に載っていないモデルについては、わざと大きすぎるリクエストを決まった段階（およそ 130 万トークンと 220 万トークン）で送り、Bedrock の長さ検証エラーに含まれる `maximum` の値を読み取って、実際の上限を調べられます。こうして得た値は静的な一覧と同じメタデータキャッシュに入ります。古いキャッシュがモデルの実際のウィンドウより小さい値を報告している場合（たとえば 100 万トークンのウィンドウが正式提供される前に作られた項目など）は、自動的に破棄されて大きいほうの既知の値が使われます。
+
+**アプリケーション推論プロファイル。** `arn:aws:bedrock:us-west-2:123456789012:application-inference-profile/abcdef123456` のような ARN はモデル名を含まないため、実測でも静的な一覧でも大きさを決められません。Hermes はその ARN のリージョンで `bedrock:GetInferenceProfile` を呼び、プロファイルが包んでいるモデルからウィンドウの大きさを決めます（Claude Sonnet 4.6 を包んでいるプロファイルなら 100 万トークン）。この権限がない場合は既定の 128,000 トークンが適用され、どのプロファイルかを示す WARNING が出ます。どちらの場合も `model.context_length` を明示すれば上書きできます。
 
 ## 使えるモデル {#available-models}
 

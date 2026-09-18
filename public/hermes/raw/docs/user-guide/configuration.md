@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダ、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 1469ee645dedcc2a233f1f5503c8f9660a1aa2be
+upstream_blob: 4c8e471466a9d9385d0b0f8b0387c97d9d0386b1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -222,6 +222,7 @@ terminal:
   timeout: 180      # Per-command timeout in seconds
   home_mode: auto   # auto | real | profile — subprocess HOME policy
   env_passthrough: []  # Env var names to forward to sandboxed execution (terminal + execute_code)
+  sync_back_max_bytes: 2147483648  # Remote backends: refuse to extract a state archive larger than this (bytes)
   singularity_image: "docker://nikolaik/python-nodejs:python3.11-nodejs20"  # Container image for Singularity backend
   modal_image: "nikolaik/python-nodejs:python3.11-nodejs20"                 # Container image for Modal backend
   daytona_image: "nikolaik/python-nodejs:python3.11-nodejs20"               # Container image for Daytona backend
@@ -588,7 +589,8 @@ terminal:
 
 **ssh**・**modal**・**daytona** のバックエンドでは、Hermes はセッションの間、`~/.hermes/` の状態（資格情報のファイル、スキル、キャッシュ）をリモートのサンドボックスへ送り込み、片づけのときに **変更された状態ファイルを元の場所へ戻します**。最初に送ったものと内容が違うファイル（内容のハッシュで比べます）はその場に適用され、同期対象のディレクトリの下にできた新しいリモートのファイル（たとえばエージェントがリモートで作ったスキル）は、対応するホスト側のパスへ写されます。アップロード専用の資格情報ファイルが、ホスト側で上書きされることはありません。
 
-- 戻しの同期は、間隔を空けて最大 3 回まで再試行し、2 GiB を超えるリモートのアーカイブは展開を拒みます。
+- 戻しの同期は、間隔を空けて最大 3 回まで再試行し、2 GiB を超えるリモートのアーカイブは展開を拒みます。状態のツリーがもっと大きいときは、`config.yaml` の `terminal.sync_back_max_bytes`（バイト数）を設定すると上限を上げられます。リモート側の `~/.hermes/` にある生きたソケット（たとえば `gateway.sock`）は、転送を失敗させずに読み飛ばします。
+- ダウンロードしたアーカイブは、システムの一時ディレクトリの下（`hermes-sync-back-<pid>-*`）に置かれます。強制終了されたプロセスが残したものは、次の戻しの同期のときに回収されます。
 - docker と singularity はバインドマウント（ホストのファイルシステムをそのまま見る形）なので、これは不要です。
 - 対象になるのは Hermes の状態（`~/.hermes/`）であって、サンドボックスの中の任意の作業ツリーのファイルでは **ありません**。大事な成果物は、サンドボックスが壊される前にエージェントに明示的にコピーさせてください（たとえば `scp`、`modal volume put`）。
 
@@ -702,6 +704,8 @@ terminal:
 - `true` は Hermes を起動したディレクトリへ、サンドボックスから直接手が届くようにします
 
 コンテナにホストの生きたファイルを触らせたい、と意図するときだけ有効にしてください。
+
+`terminal.cwd` に入ったホスト側のパス（たとえば Windows の `C:\Users\me\project` や、デスクトップ／TUI のセッションのワークスペース）が、コンテナの作業ディレクトリになることはありません。それが `/workspace` にマウントされているディレクトリなら、ファイル系のツールもターミナルのコマンドも `/workspace` を使います。そうでなければ、コンテナは自分の作業ディレクトリのままです。それでもファイル系のツールが作業ディレクトリに入れない場合、エラーはシェルの生の `cd:` の行ではなく、いま使っているバックエンドで無効になっている `terminal.cwd` を名指しします。
 
 ### 常駐シェル {#persistent-shell}
 
@@ -1007,7 +1011,7 @@ auxiliary:
 
 この値は固定の間隔ではなく、段階的に伸びるはしごの **最初の段** です。同じセッションで失敗が続くと、`1x`・`3x`・`9x` と待ち、最大 1 時間で頭打ちになります。要約モデルが恒久的に壊れているセッションは、固定の間隔で永遠に再試行するのではなく後退していき、実際に記録を縮められた実行があれば最初の段へ戻ります。この段階の上がり方はセッション単位でプロセスの中に閉じているので、ゲートウェイを再起動すると最初の段へ戻ります。ただしクールダウンの期限そのものは残ります。
 
-`context_timeout_seconds`（既定 `120`）は、エージェントの中の `compress_context`（会話のループ、事前の圧縮、手動の `/compress`）に対する同じ **無反応の予算** で、固まった要約モデルがセッションを無期限に止められないようにします。ストリーミングされた要約のトークンは待ち時間を伸ばし、黙ったワーカーだけが打ち切られます。タイムアウトすると、Hermes は `auxiliary.compression.fallback_chain` の最初の項目に対して要約を 1 回だけやり直します（その項目が `timeout` を宣言していればその値を使います）。止まった経路は例外を上げないので、補助クライアント自身のフォールバックの処理からは見えないからです。その試みも失敗するか、フォールバックの連鎖が設定されていない場合にだけ、Hermes は圧縮を飛ばし、今のメッセージを保ち、ユーザーへ警告します。`0` にすると無効になります。ゲートウェイのセッションの衛生処理は自分の `hygiene_timeout_seconds` の経路を持っていて、二重に包まれることはありません。
+`context_timeout_seconds`（既定 `120`）は、エージェントの中の `compress_context`（会話のループ、事前の圧縮、手動の `/compress`）に対する同じ **無反応の予算** で、固まった要約モデルがセッションを無期限に止められないようにします。ストリーミングされた要約のトークンは待ち時間を伸ばし、黙ったワーカーだけが打ち切られます。この予算には下限があり、補助の圧縮リクエスト自身のタイムアウト（`auxiliary.compression.timeout`、最小 300 秒）を下回りません。リクエスト本体があきらめるより先に、ホストが黙った要約役を見限ることはない、ということです。最初のトークンの前に考え込む推論型の要約役や、ストリーミングできない経路にも、プロバイダーの呼び出しと同じだけの予算が与えられます。タイムアウトすると、Hermes は `auxiliary.compression.fallback_chain` の最初の項目に対して要約を 1 回だけやり直します（その項目が `timeout` を宣言していればその値を使います）。止まった経路は例外を上げないので、補助クライアント自身のフォールバックの処理からは見えないからです。その試みも失敗した場合、またはフォールバックの連鎖が設定されていない場合、次に何が起きるかは、リクエストがまだモデルのコンテキストウィンドウに収まるかどうかで決まります。収まるリクエストは、そのターンだけ圧縮せずに送られます（要約の失敗のクールダウンが働くので、毎ターン再試行が繰り返されることはありません）。ウィンドウを超えるリクエストはそもそも送れないので、Hermes はターンを終えるのではなく、決まった手順のフォールバックの要約（古いツールの結果を刈り、要約されるはずだった中間の部分を静的な引き継ぎで置き換えます）をコミットします。「compression timed out」の復旧結果でターンを終える（メッセージのゲートウェイでは、あわせてセッションが自動でリセットされます）のは最後の手段で、決まった手順の処理でも記録を縮められなかったときにだけそこへ行き着きます。`0` にすると無効になります。ゲートウェイのセッションの衛生処理は自分の `hygiene_timeout_seconds` の経路を持っていて、二重に包まれることはありません。
 
 `context_total_ceiling_seconds`（既定 `600`）は、トークンがまだ動いていても、エージェントの中の **コミット前** の待ち（要約／ストリーミングの段階）を縛ります。この値は少なくとも `context_timeout_seconds` まで丸められます。正確な保証はこうです。**要約の段階はこの上限で縛られ、コミットの段階は上限を超えたら記録され、表に出されます。** ワーカーが圧縮のコミットの囲いに入り、SessionDB の書き換えが進行中になったら、そのコミットが途中で捨てられることは決してありません。記録が食い違う危険があるからです。ただし待ち時間はもう静かではありません。コミットが上限を超えて走ったら、Hermes は超過を記録し（WARNING、繰り返せば ERROR へ上がります）、ユーザーに見える警告の経路で 1 回だけ警告を送り、コミットが終わるまで区切りを決めて待ち続けます。要約の段階で上限が尽きたときは、その瞬間に、どの補助の伝送方式（chat.completions、Codex Responses、Anthropic Messages）でも要約モデルのストリームが閉じられます。誰も待っていない接続の上で、捨てられる要約が最後まで課金されることはありませんし、そのセッションのリースは次の試みのために解放されます。
 
@@ -1362,6 +1366,12 @@ $ hermes model
 飛ぶこともなくなります。修復用の `hermes sessions retitle-skills` コマンドを明示的に実行した
 ときだけは、これまでどおりモデルを呼びます。`enabled: false` は、引き続き両方の段階を止めます。
 
+Hermes Desktop では、3,000 文字を超えるプレーンテキストの貼り付けは、生成された `.txt` の
+添付ファイルになります。その貼り付けの先頭およそ 1,000 文字が、タイトルの段階へタイトル用の
+ヒントとしてだけ渡されるので（エージェントのターンから見えるのは添付への参照だけのままです）、
+「これを要約して」と大きな貼り付けを組み合わせた場合でも、貼り付けた話題にちなんだ名前が付き
+ます。自分で添付したファイルが、タイトルのために読まれることはありません。
+
 ### ストリーミング専用のエンドポイント {#stream-only-endpoints}
 
 OpenAI 互換のエンドポイントの中には、非ストリーミングのチャットのリクエストをはっきり拒むものがあります（たとえば Tencent Copilot は HTTP 400 で `"Non-stream chat request is currently not supported"` を返します）。対話的なチャットはもともとストリーミングしますが、補助の作業（タイトルの生成、圧縮、画像）は非ストリーミングの呼び出しを使うので、毎回失敗してしまいます。Hermes は `copilot.tencent.com` を常にストリーミング専用として扱います。ほかにそういうエンドポイントがあれば、URL の一部を `auxiliary.stream_only_base_urls` に並べてください。
@@ -1394,9 +1404,9 @@ Hermes のモデルの枠は — 補助の作業も、圧縮も、フォール�
 |-----|-------------|---------|
 | `reasoning_effort` | その作業の LLM 呼び出しの思考の深さ: `none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max`、`ultra` | 未設定（プロバイダの既定） |
 
-これは全体に効く `agent.reasoning_effort` の、作業ごとの相棒です。主役のモデルが高価な推論モデルのとき、主役のチャットのふるまいを変えずに、圧縮を `low` で、画像を `none` で走らせて脇の作業の待ち時間と費用を削れます。これは `vision`・`compression`・`title_generation`・`curator` のような補助クライアントの作業に、3 つの補助の伝送方式（chat completions、Codex Responses、Anthropic Messages）すべてで効きます。同じ作業に明示的な `extra_body.reasoning` があれば、この省略記法より優先されます。
+これは全体に効く `agent.reasoning_effort` の、作業ごとの相棒です。主役のモデルが高価な推論モデルのとき、主役のチャットのふるまいを変えずに、圧縮を `low` で、画像を `none` で走らせて脇の作業の待ち時間と費用を削れます。これは `vision`・`compression`・`title_generation`・`curator` のような補助クライアントの作業に、3 つの補助の伝送方式（chat completions、Codex Responses、Anthropic Messages）すべてで効きます。同じ作業に明示的な `extra_body.reasoning` があれば、この省略記法より優先されます。自分の呼び出しのために思考を切る側（タイトルの生成がそうです。64 トークンのタイトルに推論の余地はありません）は、そのどちらよりも優先されます。その場合、作業ごとの深さの指定は、プロバイダの思考を切る項目と並べて送られるのではなく、そのリクエストでは落とされます。
 
-エンドポイントが推論の項目そのものを拒む場合（OpenAI 互換の中継の向こうにいるチャット専用のモデルが `400 Unrecognized request argument supplied: reasoning_effort` と返すような場合）、その補助の呼び出しは、推論に関する項目をすべて外して 1 回だけやり直されます。こうして、その作業（たとえばセッションのタイトル）は、エンドポイントの既定のふるまいのままでもちゃんと終わります。
+エンドポイントが推論の項目そのものを拒む場合（OpenAI 互換の中継の向こうにいるチャット専用のモデルが `400 Unrecognized request argument supplied: reasoning_effort` と返すような場合や、逆の言い回しで `400 reasoning_effort 'none' unsupported; use minimal|low|medium|high|xhigh` と返す場合）、その補助の呼び出しは、推論に関する項目をすべて外して 1 回だけやり直されます。こうして、その作業（たとえばセッションのタイトル）は、エンドポイントの既定のふるまいのままでもちゃんと終わります。主役の会話でも同じ復旧が働きます。思考だけで打ち切られた続きのために Hermes が送る「推論を切る」リクエストを経路が拒んだときは、そのセッションの残りでは切る指定をやめ、その経路の既定でリクエストをやり直します。
 
 **バックグラウンドのレビューは別です。** 同じモデルでのレビューの分岐は、常に親の推論の深さを引き継ぎます。`auxiliary.background_review.reasoning_effort` はその経路では無視されます。親のプロバイダ／モデルを明示的に選んでいるときも同じです。これは、プロンプトのキャッシュを揃えるために、推論の設定・システムプロンプト・会話の丸ごとの写し・ツールの定義をバイト単位で同一に保つためです。同じモデルでのレビューに、深さを独立に切り替えるスイッチはありません。[バックグラウンドのレビューの推論](/hermes/docs/user-guide/features/memory/#same-model-review-reasoning) をご覧ください。レビューを別のプロバイダ／モデルへ振り分けた場合は、`reasoning_effort` がその振り分け先の分岐に適用されます（未設定なら振り分け先のプロバイダの既定値）。このキーを設定しているのにレビューがメインのモデルで動いたときは、Hermes が一度だけ警告を表示します。
 
@@ -1412,7 +1422,7 @@ auxiliary:
 
 `base_url` が設定されているとき、Hermes はプロバイダを無視してそのエンドポイントを直接呼びます（認証には `api_key` か `OPENAI_API_KEY` を使います）。`provider` だけが設定されているときは、そのプロバイダの組み込みの認証とベース URL を使います。
 
-補助の作業に使えるプロバイダ: `auto`、`main`、そして [プロバイダの一覧](/hermes/docs/reference/environment-variables/) にあるもの — `openrouter`、`nous`、`openai-codex`、`copilot`、`copilot-acp`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`opencode-free`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry` — あるいは自分の `providers:` の辞書にある名前付きの独自プロバイダ（たとえば `provider: "beans"`）。
+補助の作業に使えるプロバイダ: `auto`、`main`、そして [プロバイダの一覧](/hermes/docs/reference/environment-variables/) にあるもの — `openrouter`、`nous`、`openai-codex`、`copilot`、`copilot-acp`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry` — あるいは自分の `providers:` の辞書にある名前付きの独自プロバイダ（たとえば `provider: "beans"`）。
 
 同じしくみで、ローカルの OpenAI 互換サーバーもそれぞれの名前で使えます。`provider: ollama`（`vllm`、`llamacpp`、`llama.cpp` も同様）に `http://127.0.0.1:11434` のような `base_url` と空の `api_key` を組み合わせると、仮の鍵を使って独自のエンドポイントへ繋がります。base_url をホストとポートだけ（`host:port`）で書いた場合は、`/v1` が自動で補われます。
 
@@ -1794,10 +1804,15 @@ agent:
 キーの照合は **表記のゆれに強い** ので、それなりの書き方ならどれでも一致します。
 - `claude-opus-4.5`、`claude-opus-4-5`、`claude-opus.4.5`（ドットとダッシュは入れ替え可能です）
 - `anthropic/claude-opus-4.5`、`openrouter/anthropic/claude-opus-4.5`（プロバイダの接頭辞は任意です）
+- 名前付きの独自プロバイダを接頭辞に付けたキー（`ollama-local/qwen3.6:27b-q4_k_m`）は、リクエストがモデル名だけ（`qwen3.6:27b-q4_k_m`）を持っているときにも効きます。フォールバックの項目や `providers:` の経路が送るのは、この形です
 - 完全一致が、ゆれた表記より優先されます
 
 :::note
-`reasoning_overrides` のキーには `hermes config set` は使えません。YAML のファイルを直接編集してください。モデル名にはドットが入ることが多く（たとえば `claude-opus-4.5`）、CLI のドット区切りのキーの書き方とぶつかるからです。
+モデルの名前にはドットが入り（`claude-opus-4.5`、`qwen3.6:27b`）、`hermes config set` はそれを入れ子の区切りとして扱います。キーを文字どおりに書くには、バックスラッシュでドットを打ち消してください — `hermes config set 'agent.reasoning_overrides.ollama-local/qwen3\.6:27b-q4_k_m' low` — もしくは YAML を直接編集してください。[キーの名前に入るドット](/hermes/docs/reference/cli-commands/#dots-inside-key-names) を参照してください。
+:::
+
+:::note ローカルの OpenAI 互換のエンドポイント
+独自の `base_url`（`http://localhost:11434/v1`、vLLM や SGLang、ルーターのエンドポイント）には、解決された深さ — `agent.reasoning_effort` か、一致したモデルごとの上書き — が、標準の最上位の `reasoning_effort` というリクエストの項目として渡されます。値は OpenAI 互換の伝送方式が受け取れるもの（`none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max`）に丸められます。入れ子の `reasoning` のオブジェクトは、受け取れると分かっているエンドポイント（Nous Portal、OpenRouter の推論に対応したモデル、GitHub Models）のために取ってあります。任意のサーバーは、知らない項目を HTTP 400 で拒むからです。自分のサーバーが思考の予算を別の項目から読む場合（Ollama の `think`、vLLM の `chat_template_kwargs`、ルーター独自のキー）は、その独自プロバイダの [`extra_body`](/hermes/docs/integrations/providers/#named-custom-providers) に設定してください。そこへ流れるすべてのリクエストに混ぜ込まれます。
 :::
 
 **解決の優先順位:**
@@ -2412,7 +2427,11 @@ max_concurrent_sessions: null  # null/0 = unlimited; positive integer = active s
 この上限は、ローカルの実行時のリースのファイルで守られる、できる範囲のものです。
 利用者が締め出されないよう、一覧が読めなかったりロックできなかったりしたときは
 Hermes は開く側へ倒れます。1 台のホスト／プロファイルの実行を想定していて、
-複数の端末からマウントされた共有の `$HERMES_HOME` は想定していません。
+複数の端末からマウントされた共有の `$HERMES_HOME` は想定していません。持ち主のプロセスは
+あるのに、それが生きていると確かめられないリース（たとえば `hermes update` がバックエンドを
+再起動したあと、コンテナの中の `/proc` の項目が読めないような場合）は、上限の数には引き続き
+数えられ、自分のセッション ID を囲い続けますが、ほかのセッションを取ることも手放すことも
+邪魔しなくなりました。
 
 共有のチャットで、部屋ごとに 1 つの会話にするか、参加者ごとに 1 つの会話にするかを制御します。
 
@@ -2792,12 +2811,14 @@ delegation:
 
 ## 確認の質問 {#clarify}
 
-確認の質問への返事を、ゲートウェイがどれだけ待つかを設定します。正式なキーは `agent.clarify_timeout`（既定 `3600` 秒）で、従来の最上位の `clarify.timeout` も明示的に設定されていれば今も尊重されます。
+確認の質問への返事を、Hermes がどれだけ待つかを設定します。この 1 つの値が、すべての画面 — 昔ながらの CLI のモーダル、TUI／デスクトップのカード、メッセージのゲートウェイ — をまとめて受け持ちます。正式なキーは `agent.clarify_timeout`（既定 `3600` 秒。`0` 以下で無制限）で、従来の最上位の `clarify.timeout` も明示的に設定されていれば今も尊重されます。
 
 ```yaml
 agent:
   clarify_timeout: 3600        # Seconds to wait for user clarification response (0 or less = unlimited)
 ```
+
+待ち時間が尽きると、エージェントは「利用者は返事をしなかった」という目印を受け取って動き出し、自分だけで先へ進みます。確認の問いかけが、ツール共通の締め切り（`timeouts.tools.sequential_call`）で切られることはありません。この待ち時間を縛るのは `agent.clarify_timeout` だけです。
 
 ## コンテキストのファイル（SOUL.md、AGENTS.md） {#context-files-soulmd-agentsmd}
 
@@ -2849,7 +2870,7 @@ network:
   force_ipv4: false   # Force IPv4 for outbound connections (default: false)
 ```
 
-`force_ipv4` — IPv6 が壊れているか届かないサーバーでは、Python が先に AAAA のレコードを解決し、IPv4 へ落ちるまで TCP のタイムアウトいっぱいぶら下がることがあります。IPv6 を完全に飛ばして IPv4 で直接つなぐには、これを `true` にしてください。
+`force_ipv4` — IPv6 が壊れているか届かないサーバーでは、Python が先に AAAA のレコードを解決し、IPv4 へ落ちるまで TCP のタイムアウトいっぱいぶら下がることがあります。Hermes は自分が出ていくすべての接続で、もともと IPv6 と IPv4 を競争させています（Happy Eyeballs、RFC 8305。IPv4 の試みは IPv6 の 250 ミリ秒あとに始まり、先につながったほうが勝ちます）。そのため、告知されているのに実際は捨てられる IPv6 の経路があっても、かかるのは 1 接続あたり 0.25 秒ほどで、タイムアウトいっぱいにはなりません。これは HTTP だけでなく、ゲートウェイの WebSocket の接続（リレーのコネクタ、プラットフォームのアダプタ）にも効きます。IPv6 を完全に飛ばして IPv4 で直接つなぎたいときにだけ、これを `true` にしてください。`hermes doctor` には `IPv6 route` の検査があり、死んだ IPv6 の経路を見つけてこの設定を案内します。
 
 ## 導入の案内 {#onboarding}
 

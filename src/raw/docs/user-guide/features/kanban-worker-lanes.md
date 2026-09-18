@@ -2,7 +2,7 @@
 title: "カンバンの作業レーン"
 description: ""
 upstream_path: user-guide/features/kanban-worker-lanes.md
-upstream_blob: 39c7d53c2b196e88ea5ac9db44a0c54c3a654743
+upstream_blob: 6507462f9e226d161e477db23e1558db98cafd64
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban-worker-lanes
 ---
@@ -142,6 +142,7 @@ CLI のレーンを足そうと考えているなら、対象の CLI と実現�
 - **実行単位での再試行** — 仕事が再試行されるとき（停止のあと、異常終了のあと、取得の取り消しのあと）、作業役は終わらせるツールの `expected_run_id` 引数を使うことで、自分の実行がすでに置き換えられていた場合にすぐ失敗できます。
 - **仕事ごとの最長実行時間** — `task.max_runtime_seconds` が、PID が生きているかどうかに関係なく、1回の実行の実時間に上限をかけます。生きている PID による延長では止められない、本当に固まった作業役を捕まえます。
 - **取り残された仕事の検出** — ready にある仕事の担当者が `kanban.stranded_threshold_seconds`（既定30分）の間に一度も取得しないと、`hermes kanban diagnostics` に `stranded_in_ready` の警告として現れます。深刻度はしきい値の2倍で error、6倍で critical に上がります。打ち間違えた担当者名も、消したプロファイルも、落ちている外部の作業役の一群も、この1つの合図で捕まります。名乗りに依存せず、盤ごとに許可名簿を整える必要もありません。
+- **親が開いたままの実行中** — `running` のカードの直接の親が `done`／`archived` でない場合（実行の途中で親が開き直された、あるいは実行中の子を拒む仕組みより前につながりが張られた場合）、`running_with_open_parents` の warning が出ます。依存の門が二つの実行を順番に並べられておらず、親が終わるまで `kanban_complete` は拒まれます。この診断は読むだけで、`hermes kanban unlink` を勧めます。
 - **古い形の検分による行き詰まり** — `review-required:` で居座らせて止めた親に対し、直接の子が1つ以上まだ依存で `todo` に留まっている場合、`review_dependency_deadlock` の error がすぐ出ます。この診断は読むだけです。終わった工程を完了させるか、間違ったつながりを外すかを勧めるだけで、人が付けた停止を自動で外すことはありません。
 
 ## 関連 {#related}

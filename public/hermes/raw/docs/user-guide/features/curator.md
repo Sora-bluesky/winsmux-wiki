@@ -2,7 +2,7 @@
 title: "キュレーター"
 description: "エージェントが作ったスキルを裏で手入れする仕組み — 利用状況の記録、古びの判定、書庫入れ、そして LLM による見直し"
 upstream_path: user-guide/features/curator.md
-upstream_blob: 3bc5de4d66cd0e4b422b513a2b9bffa1a5e10839
+upstream_blob: da624362cda3780b2922e668e11266fb1ce26c69
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/curator
 ---

@@ -2,7 +2,7 @@
 title: "Document To Action Items — 書類から、出典付きの義務・期限・作業を取り出す"
 description: "書類から、出典付きの義務・期限・作業を取り出す"
 upstream_path: user-guide/skills/bundled/productivity/productivity-document-to-action-items.md
-upstream_blob: f0a886f02e117a2ad567ab4f62f11f47ad7276f7
+upstream_blob: 80e0869e104c8c6bd1ccbcb39a7fc99763d34372
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items
 ---

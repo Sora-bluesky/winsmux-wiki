@@ -2,7 +2,7 @@
 title: "Google Gemini"
 description: "Hermes Agent を Google Gemini で使う方法。ネイティブの AI Studio API、API キーの設定、ツール呼び出し、ストリーミング、割り当ての考え方まで"
 upstream_path: guides/google-gemini.md
-upstream_blob: eac7bd4214b474b2c72ae84d3984333a50ba9dfd
+upstream_blob: f90c00ed2ba429512659cf8a44fc8cdb4f2ea371
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/google-gemini
 ---
@@ -107,8 +107,21 @@ Google のホストのルートだけを書いたベース URL は、自動で�
 （`v1beta`、`v1alpha`、`v1`、...）で終わっていなければ、Hermes が `/v1beta` を足すので、
 `GEMINI_BASE_URL=https://generativelanguage.googleapis.com` と書いても、`/v1beta` まで書いたときと同じように動きます。
 同じ整え方は Gemini の TTS のベース URL（`tts.gemini.base_url`）にも当てはまります。チャットの要求がネイティブの
-Gemini の経路を通るのは、ベース URL が `generativelanguage.googleapis.com` を指しているときだけです。
-ほかのホストにあるプロキシは OpenAI 互換のエンドポイントとして扱われるので、`/openai` の形の URL で設定してください。
+Gemini の経路を通るのは、ベース URL が `generativelanguage.googleapis.com` か、下で説明する Vertex AI の
+エクスプレス用のホストを指しているときだけです。ほかのホストにあるプロキシは OpenAI 互換のエンドポイントとして
+扱われるので、`/openai` の形の URL で設定してください。
+
+### Vertex AI のエクスプレスモードのキー {#vertex-ai-express-mode-keys}
+
+Google が出す Gemini のキーには 2 つの系統があります。AI Studio のキーは `AIza…` で始まり、
+**Vertex AI のエクスプレスモード**のキーは `AQ.…` で始まって、`aiplatform.googleapis.com` に対してしか
+認証できません（AI Studio 側のホストでは 403 が返ります）。Hermes は `AQ.` という頭の文字を見分けて、
+そのキーを自動で `https://aiplatform.googleapis.com/v1beta1/publishers/google` へ振り向けます。
+`GEMINI_API_KEY` にエクスプレスのキーを入れて、`GEMINI_BASE_URL` は設定しないままにしてください。
+`GEMINI_BASE_URL` に `https://aiplatform.googleapis.com` を設定した場合（`/v1beta1` はあってもなくても構いません）、
+Hermes が `publishers/google` の形まで補います。ほかのホストを指すベース URL（プロキシなど）が
+書き換えられることはありません。エクスプレスのキーは、OAuth を使う
+[Vertex AI プロバイダ](/hermes/docs/guides/google-vertex/)とは別のもので、そちらは API キーを必要としません。
 
 ## 使えるモデル {#available-models}
 

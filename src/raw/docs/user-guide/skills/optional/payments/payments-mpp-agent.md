@@ -2,7 +2,7 @@
 title: "Mpp Agent — Machine Payments Protocol (MPP) で HTTP 402 の API に支払う"
 description: "Machine Payments Protocol (MPP) で HTTP 402 の API に支払う"
 upstream_path: user-guide/skills/optional/payments/payments-mpp-agent.md
-upstream_blob: c20c9d84e556a2ee1bb648f7c21a7d87337bd8c2
+upstream_blob: 9cd7c78fa471d8012147e91c9437a642d477f842
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/payments/payments-mpp-agent
 ---

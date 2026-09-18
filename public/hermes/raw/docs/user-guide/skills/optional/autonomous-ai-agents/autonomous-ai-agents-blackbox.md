@@ -2,7 +2,7 @@
 title: "Blackbox — 複数のモデルを扱う Blackbox AI の CLI にコーディング作業を任せます"
 description: "複数のモデルを扱う Blackbox AI の CLI にコーディング作業を任せます"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox.md
-upstream_blob: a56d767bd6f95856404f78d221eabf15a7ce9d44
+upstream_blob: aa65306b9ea4d5de87c355408afb8f0b58564238
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox
 ---

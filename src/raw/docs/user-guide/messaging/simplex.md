@@ -2,7 +2,7 @@
 title: "SimpleX Chat"
 description: ""
 upstream_path: user-guide/messaging/simplex.md
-upstream_blob: cffff51fe0ad10a22492cef4288b599f02bd14b5
+upstream_blob: dc143eb37268240478f40f911b1ae8c9407d8fd4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/simplex
 ---

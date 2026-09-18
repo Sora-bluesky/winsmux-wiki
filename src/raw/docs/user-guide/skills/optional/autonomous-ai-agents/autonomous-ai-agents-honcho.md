@@ -2,7 +2,7 @@
 title: "Honcho — Hermes の Honcho メモリを設定し、うまく動かないときに直す"
 description: "Hermes の Honcho メモリを設定し、うまく動かないときに直す"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho.md
-upstream_blob: 2bffbcdb4c0a1ee93cbd83652676c875f5e6dc34
+upstream_blob: c3541f3fcb6e1cd120986054df70cbea216e9730
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho
 ---

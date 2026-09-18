@@ -2,7 +2,7 @@
 title: "Subagent Driven Development — delegate_task のサブエージェントで計画を実行する（2 段階レビュー）"
 description: "delegate_task のサブエージェントで計画を実行する（2 段階レビュー）"
 upstream_path: user-guide/skills/optional/software-development/software-development-subagent-driven-development.md
-upstream_blob: 5e42f93712faf4aebf07e22df6e93b1cb11e6289
+upstream_blob: 7403e38e5a07e9b4c2acd14b669a3e84600a8334
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development
 ---

@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: a807e96b42c3c89e2d55b26b91af532f9ddef964
+upstream_blob: b1aab7ae3fe32ca526320ae94c3a59cf9fec9b4b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -193,8 +193,11 @@ Plugins → Install from Git** に *Pin to commit* という欄があり、40 �
 ### 非公開のリポジトリから導入する {#installing-from-a-private-repository}
 
 `hermes plugins install` は対話なしでクローンします（ユーザー名やパスワードを尋ねることはありません）。
-そのため非公開のリポジトリには、Hermes が自分で見つけられる資格情報が要ります。`https://` の
-出どころでは、次の順に試します。
+そのため非公開のリポジトリには、Hermes が自分で見つけられる資格情報が要ります。クローンも、
+`--ref` で固定した取得も、`hermes plugins update` の取り込みも、まずは資格情報なしで試されます。
+公開のリポジトリに資格情報が渡ることはないので、古くなった、あるいは失効したトークンがあっても、
+公開のものの導入は壊れません。相手側が資格情報なしの接続を断ったときにだけ、Hermes は資格情報を
+探しにいきます。`https://` の出どころでは、次の順に試します。
 
 1. `.env` にある `GITHUB_TOKEN` または `GH_TOKEN`（GitHub のホストのみ）。
 2. `gh` CLI のログイン（`gh auth login`）。GitHub のホストのみ。

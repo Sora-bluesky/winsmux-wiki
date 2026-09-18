@@ -2,7 +2,7 @@
 title: "Yuanbao"
 description: "WebSocket ゲートウェイ経由で Hermes Agent を企業向けメッセージングサービス Yuanbao につなぐ"
 upstream_path: user-guide/messaging/yuanbao.md
-upstream_blob: 5ba3b56a700ce3eb4a2c54ed377be7280729e824
+upstream_blob: fe4c666b3a442e65cad8aa48db9b512ef67fd1be
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/yuanbao
 ---

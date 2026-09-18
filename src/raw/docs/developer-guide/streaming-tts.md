@@ -2,7 +2,7 @@
 title: "ストリーミング TTS の内部構造"
 description: "文チャンカー、ストリーミングプロバイダーの ABC、対応表、ストリーミング TTS プロバイダーの追加方法"
 upstream_path: developer-guide/streaming-tts.md
-upstream_blob: 72981dff2771eb103c4c82bc8026b847e9361cd0
+upstream_blob: 2cd77224e181fcd5af5ed159a334d4808638c074
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/streaming-tts
 ---
@@ -64,7 +64,7 @@ tts:
 | elevenlabs  | チャンク HTTP（`pcm_24000`）            | 対応         | `ELEVENLABS_API_KEY` / `tts.elevenlabs` |
 | openai      | チャンク HTTP（`with_streaming_response`、`pcm`） | 対応 | `tts.openai.api_key` → 環境変数 → マネージドゲートウェイ |
 | gemini      | SSE（`streamGenerateContent?alt=sse`） | 対応         | `GEMINI_API_KEY` / `GOOGLE_API_KEY` |
-| xai         | WebSocket（`wss://api.x.ai/v1/tts`）   | 対応         | xAI OAuth または `XAI_API_KEY` |
+| xai         | WebSocket（`wss://api.x.ai/v1/tts`）   | 対応         | `XAI_API_KEY` を優先し、なければ xAI OAuth（サブスクリプションのベアラートークンは従量課金の TTS では 403 になります） |
 | edge、piper、kitten、neutts、mistral、minimax、deepinfra など | — | 非対応（文ごとの同期フォールバック） | 通常どおり |
 
 認証情報の参照はすべて `resolve_provider_secret()` を通ります

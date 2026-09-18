@@ -2,7 +2,7 @@
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: 9677f5caa941408c3aedfed5e23c0e4337854fed
+upstream_blob: 6cdca06b3ee85e4dee212eae2a2a0ecdbfe111b0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -173,6 +173,40 @@ Cursor 風の文脈変数も置き換えられます（大文字と小文字は�
 
 これはカタログのマニフェストにある `${INSTALL_DIR}` とは別のものです。あちらは導入時に、
 その項目のリポジトリを取ってきた場所へ置き換えられます。
+
+### 自分で用意した OAuth アプリが要る項目（DCR なし） {#entries-that-need-your-own-oauth-app-no-dcr}
+
+提供元によっては、遠隔の MCP を OAuth の後ろに置きながら、動的クライアント登録
+（Dynamic Client Registration）を用意して**いない**ことがあります。この場合、どのクライアントも
+利用者が提供元の開発者コンソールであらかじめ登録したアプリでなければなりません。
+最初から入っている例が Asana の V2 サーバー（`https://mcp.asana.com/v2/mcp`）です。
+引退した V1 の `https://mcp.asana.com/sse` はどのクライアントでも受け付けましたが、V2 は受け付けません。
+
+この種のマニフェストは、必要な認証情報を `auth.env` で宣言し、クライアントを `auth.oauth` で
+固定します。そのため導入するとき（CLI の選択画面、ウェブのダッシュボード、Desktop のいずれでも）
+Client ID と Client secret を尋ねられ、それらはプロファイルの `.env` に保存され、
+`config.yaml` には `${VAR}` の参照だけが書かれます。
+
+```yaml
+mcp_servers:
+  asana:
+    url: https://mcp.asana.com/v2/mcp
+    auth: oauth
+    oauth:
+      client_id: "${ASANA_CLIENT_ID}"
+      client_secret: "${ASANA_CLIENT_SECRET}"
+      redirect_host: localhost      # the vendor matches the redirect URL exactly
+      redirect_port: 27890          # register http://localhost:27890/callback on the app
+```
+
+登録すべきアプリの種類と実際のリダイレクト URL は、その項目の `post_install` の説明に書いてあります。
+読んだうえで `hermes mcp login <name>` を実行し、道具を使いたいセッションやゲートウェイを
+再起動（または `/reload-mcp`）してください。ダッシュボードや Desktop の **Authorize** ボタンでも
+できます。クライアントが `redirect_port` を固定した状態で登録済みなので、Hermes は
+ダッシュボード自身のコールバック URL ではなく、登録されたループバックのコールバック
+（`http://localhost:27890/callback`）を使い続けます。そのため、承認するブラウザーは
+Hermes のプロセスと同じ端末で動いている必要があります。遠隔のホストの場合は、
+SSH のポート転送ごしに `hermes mcp login` を使ってください。
 
 ### あとから道具の選択を変える {#updating-tool-selection-later}
 
@@ -384,6 +418,7 @@ Hermes は `~/.hermes/config.yaml` の `mcp_servers` から MCP の設定を読�
 | `command` | 文字列 | stdio の MCP サーバーを動かす実行ファイル |
 | `args` | リスト | stdio のサーバーに渡す引数 |
 | `env` | 対応表 | stdio のサーバーに渡す環境変数 |
+| `cwd` | 文字列 | stdio のサーバーのプロセスを動かす作業ディレクトリ。既定: セッションの作業場所が決まっているとき（ACP やゲートウェイのセッション、`terminal.cwd`）はそこ、決まっていなければ Hermes のプロセスのディレクトリ |
 | `url` | 文字列 | HTTP の MCP の接続先 |
 | `headers` | 対応表 | 遠隔のサーバーに付ける HTTP ヘッダー |
 | `client_cert` | 文字列 \| リスト | mTLS 用のクライアント証明書。まとめた PEM のパスか、`[cert, key]` / `[cert, key, password]` |
@@ -760,6 +795,23 @@ npx --version
 ```
 
 そのうえで設定を見直し、Hermes を起動し直してください。
+
+### 遠隔（HTTP）のサーバーにつながらない {#remote-http-server-rejects-the-connection}
+
+`hermes mcp test <name>` は、サーバーが実際に返した内容をそのまま報告します。MCP の SDK が
+`Server returned an error response`（本文が JSON-RPC のエラーではない 4xx・5xx）としか言えないときは、
+Hermes が HTTP のステータス、要求した URL、応答の本文の先頭を付け足します。
+
+```
+Streamable HTTP: Server returned an error response (HTTP 400 from POST http://host:27200/mcp:
+{"jsonrpc":"2.0","error":{"code":-32020,"message":"Unsupported MCP-Protocol-Version"}})
+```
+
+まずステータスと本文を読んでください。`initialize` の POST に対する `400` や `405` は、たいてい
+その接続先が SSE しか話せない（`transport: sse` を設定します）か、手前にいるプロキシが要求を
+はねているということです。`401` や `403` はトークンか OAuth の許可が違うということで、
+本文が HTML なら URL が MCP の接続先ではなくウェブページを指しています。`hermes logs --level debug` を
+使うと、つなぎにいくたびにどの接続先を使ったかまで出せます。
 
 ### 道具が出てこない {#tools-not-appearing}
 

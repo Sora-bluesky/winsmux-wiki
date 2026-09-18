@@ -2,7 +2,7 @@
 title: "Reddit Reading — Reddit を読む。サブレディット、検索、スレッド、ユーザー"
 description: "Reddit を読む。サブレディット、検索、スレッド、ユーザー"
 upstream_path: user-guide/skills/optional/social-media/social-media-reddit-reading.md
-upstream_blob: 3d299ff23506b024a957676da135df4f35659500
+upstream_blob: f3c4e12ecb3eb71526def9746136415a6b411f19
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/social-media/social-media-reddit-reading
 ---

@@ -2,7 +2,7 @@
 title: "ターミナル環境プロバイダプラグイン"
 description: ""
 upstream_path: developer-guide/terminal-environment-plugin.md
-upstream_blob: dd102de46cc1ab90d20a6262612362188b5ecf0d
+upstream_blob: aca7424bdd44796b525e2457cc08c444742894cb
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/terminal-environment-plugin
 ---

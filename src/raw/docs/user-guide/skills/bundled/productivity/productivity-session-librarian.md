@@ -2,7 +2,7 @@
 title: "Session Librarian — 話しかけるだけでセッションを整理する: 探す・名前を変える・しまう・減らす"
 description: "話しかけるだけでセッションを整理する: 探す・名前を変える・しまう・減らす"
 upstream_path: user-guide/skills/bundled/productivity/productivity-session-librarian.md
-upstream_blob: d1992db21e2a4c73aba5e708c8c5e7b80568d2f9
+upstream_blob: 4cf4db77f6a4976af0c174a1d8c36c553e8bf44a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-session-librarian
 ---

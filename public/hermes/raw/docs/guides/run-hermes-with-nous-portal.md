@@ -2,7 +2,7 @@
 title: "Nous Portal で Hermes Agent を動かす"
 description: "契約から設定、モデルの切り替え、ゲートウェイのツール有効化、経路の確認まで一通りの手順"
 upstream_path: guides/run-hermes-with-nous-portal.md
-upstream_blob: e4928ef6df3a612a04c8133b34bb01ba96d0cc4b
+upstream_blob: 75ecba41d26552d56497c93dce48c6f0477d5c08
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/run-hermes-with-nous-portal
 ---
@@ -175,7 +175,7 @@ hermes cron create "0 9 * * *" \
 
 ## プロフィールと複数人での利用 {#profiles-and-multi-user-setups}
 
-[Hermes のプロフィール](/hermes/docs/user-guide/profiles/) を使っている場合（プロジェクトごとに設定を分けているときなど）、Portal の更新用トークンは共有のトークン置き場を通じて、すべてのプロフィールで自動的に共有されます。どれか 1 つのプロフィールで一度サインインすれば、残りは自動で引き継ぎます。
+[Hermes のプロフィール](/hermes/docs/user-guide/profiles/) を使っている場合（プロジェクトごとに設定を分けているときなど）、プロフィールはそれぞれ独立した資格情報の島になります。Portal に一度もサインインしていないプロフィールは、ほかのプロフィールのセッションを勝手に使うのではなく、つながらないまま止まります。プロフィールごとに `hermes -p <name> portal` で一度サインインしてください。その端末に共有の Portal セッションがすでにあれば、ブラウザーを開かずに取り込むかどうかを尋ねてきます。そのあとは共有のトークン置き場が、そのプロフィールのトークンを最新に保ちます。[プロフィールの設定](/hermes/docs/integrations/nous-portal/#profile-setup) も参照してください。
 
 複数の人が 1 台の端末を共有するチームでは、各自が自分の Portal アカウントを持ち、各自のホームディレクトリにそれぞれの `~/.hermes/auth.json` があるので、利用者をまたいでトークンが共有されることはありません。これが正しい線の引き方です。
 

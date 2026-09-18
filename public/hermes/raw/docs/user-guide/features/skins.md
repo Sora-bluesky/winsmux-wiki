@@ -2,7 +2,7 @@
 title: "スキンとテーマ"
 description: "組み込みのスキンと自分で作ったスキンで Hermes CLI の見た目を変えます"
 upstream_path: user-guide/features/skins.md
-upstream_blob: d4841eb699de24be079d97b49df5cde9db26b723
+upstream_blob: eb8ecf32e1617ad2d1eaca214626e7b59b85a194
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skins
 ---

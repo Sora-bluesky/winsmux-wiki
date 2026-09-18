@@ -2,7 +2,7 @@
 title: "Microsoft Graph webhook リスナー"
 description: "Microsoft Graph の変更通知（会議・予定表・チャットなど）を Hermes で受け取る"
 upstream_path: user-guide/messaging/msgraph-webhook.md
-upstream_blob: eb1cb1dec9bc83166e727c93b3d07cae129dd04d
+upstream_blob: 25b359690d525db1f211b573ad56e18e944597fb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/msgraph-webhook
 ---

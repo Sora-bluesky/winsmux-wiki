@@ -2,7 +2,7 @@
 title: "Architecture Diagram — 暗い配色の SVG で構成図・クラウド図・インフラ図を HTML として作る"
 description: "暗い配色の SVG で構成図・クラウド図・インフラ図を HTML として作る"
 upstream_path: user-guide/skills/bundled/creative/creative-architecture-diagram.md
-upstream_blob: a4bf8cfc18299d05c8e3d6930bd59b3541c3629a
+upstream_blob: a352349efb6bd4ec72834edfb397ca4a2d6efa97
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-architecture-diagram
 ---

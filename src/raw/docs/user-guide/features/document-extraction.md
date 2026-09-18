@@ -2,7 +2,7 @@
 title: "文書からの本文抽出"
 description: "read_file が PDF・Office 文書・ノートブックをどう文字に変換するか、そして PDF が画像を並べただけのときにどうするか"
 upstream_path: user-guide/features/document-extraction.md
-upstream_blob: e3872a8e70212c44962cab4c8b8d9d9b87dd0104
+upstream_blob: 08979794b1226d1fcfe98b5157a1ca8a1474ff69
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/document-extraction
 ---
@@ -25,7 +25,9 @@ sources:
 
 \* 追加の変換器は `firecrawl-anydoc` パッケージで、導入が許可されている場合にだけその場で入ります（`config.yaml` の `security.allow_lazy_installs`）。入っていなくても標準ライブラリで扱う3形式は動きますが、それ以外の形式はバイナリとして読み込みを断られます。
 
-変換後の出力は Markdown で、`read_file` が普段使う `offset`／`limit` の窓で区切って読み出せます。50 MB を超える文書は、ツールの1回のやり取りが膨らみすぎないよう受け付けません。
+変換後の出力は Markdown で、`read_file` が普段使う `offset`／`limit` の窓で区切って読み出せます。東アジア圏のふりがな（XLSX の `rPh`、DOCX のルビ）はセルや文字列に付いた注記であって、取り出す値そのものではありません。トウキョウ というふりがなの付いた 東京 というセルは `東京` として読み出されます。50 MB を超える文書は、ツールの1回のやり取りが膨らみすぎないよう受け付けません。
+
+ノートブックのセル出力は 20,000 文字を超えると途中で切られます。切った印には `jq` のコマンドが添えられ、そこにノートブックの絶対パスがシェル用に引用された形で入っているので、省かれた出力は元のファイルから取り出せます。
 
 抽出は離れた場所のターミナル（Docker、Modal、SSH）でも働きます。ファイルの中身が実行先の境界をまたいで運ばれ、手元の側で変換されるので、サンドボックスの中にある文書も手元のものと同じように読めます。
 
