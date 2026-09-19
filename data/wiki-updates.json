@@ -3,9 +3,14 @@
   "entries": [
     {
       "date": "2026-09-19",
-      "sha": null,
-      "upstream": "a51143f",
+      "sha": "86df338",
+      "upstream": null,
       "pages": [
+        {
+          "id": "developer-guide/acp-internals",
+          "title": "ACP の内部",
+          "url": "/hermes/docs/developer-guide/acp-internals/"
+        },
         {
           "id": "developer-guide/adding-providers",
           "title": "プロバイダーを追加する",
@@ -27,6 +32,16 @@
           "url": "/hermes/docs/developer-guide/browser-provider-plugin/"
         },
         {
+          "id": "developer-guide/browser-supervisor",
+          "title": "ブラウザの CDP スーパーバイザ",
+          "url": "/hermes/docs/developer-guide/browser-supervisor/"
+        },
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
           "id": "developer-guide/context-engine-plugin",
           "title": "コンテキストエンジンプラグイン",
           "url": "/hermes/docs/developer-guide/context-engine-plugin/"
@@ -37,14 +52,34 @@
           "url": "/hermes/docs/developer-guide/creating-skills/"
         },
         {
+          "id": "developer-guide/cron-internals",
+          "title": "cron の内部構造",
+          "url": "/hermes/docs/developer-guide/cron-internals/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトッププラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
           "id": "developer-guide/gateway-internals",
           "title": "ゲートウェイの内部",
           "url": "/hermes/docs/developer-guide/gateway-internals/"
         },
         {
+          "id": "developer-guide/gateway-session-lifecycle",
+          "title": "ゲートウェイのセッションライフサイクル",
+          "url": "/hermes/docs/developer-guide/gateway-session-lifecycle/"
+        },
+        {
           "id": "developer-guide/image-gen-provider-plugin",
           "title": "画像生成プロバイダのプラグイン",
           "url": "/hermes/docs/developer-guide/image-gen-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/memory-provider-plugin",
+          "title": "メモリープロバイダープラグイン",
+          "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
         },
         {
           "id": "developer-guide/model-provider-plugin",
@@ -62,9 +97,29 @@
           "url": "/hermes/docs/developer-guide/plugins/"
         },
         {
+          "id": "developer-guide/programmatic-integration",
+          "title": "外部プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "developer-guide/relay-connector-contract",
+          "title": "Relay ↔ Connector 契約",
+          "url": "/hermes/docs/developer-guide/relay-connector-contract/"
+        },
+        {
           "id": "developer-guide/secret-source-plugin",
           "title": "シークレットソースプラグイン",
           "url": "/hermes/docs/developer-guide/secret-source-plugin/"
+        },
+        {
+          "id": "developer-guide/session-storage",
+          "title": "セッションの保存領域",
+          "url": "/hermes/docs/developer-guide/session-storage/"
+        },
+        {
+          "id": "developer-guide/streaming-tts",
+          "title": "ストリーミング TTS の内部構造",
+          "url": "/hermes/docs/developer-guide/streaming-tts/"
         },
         {
           "id": "developer-guide/terminal-environment-plugin",
@@ -97,6 +152,11 @@
           "url": "/hermes/docs/getting-started/quickstart/"
         },
         {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
           "id": "guides/automate-with-cron",
           "title": "cron であらゆる作業を自動化する",
           "url": "/hermes/docs/guides/automate-with-cron/"
@@ -105,6 +165,11 @@
           "id": "guides/automation-blueprints",
           "title": "自動化の型紙",
           "url": "/hermes/docs/guides/automation-blueprints/"
+        },
+        {
+          "id": "guides/aws-bedrock",
+          "title": "AWS Bedrock",
+          "url": "/hermes/docs/guides/aws-bedrock/"
         },
         {
           "id": "guides/azure-foundry",
@@ -137,6 +202,11 @@
           "url": "/hermes/docs/guides/github-pr-review-agent/"
         },
         {
+          "id": "guides/google-gemini",
+          "title": "Google Gemini",
+          "url": "/hermes/docs/guides/google-gemini/"
+        },
+        {
           "id": "guides/google-vertex",
           "title": "Google Vertex AI",
           "url": "/hermes/docs/guides/google-vertex/"
@@ -145,6 +215,11 @@
           "id": "guides/local-llm-on-mac",
           "title": "Mac でローカル LLM を動かす",
           "url": "/hermes/docs/guides/local-llm-on-mac/"
+        },
+        {
+          "id": "guides/local-ollama-setup",
+          "title": "Ollama で Hermes をローカルで動かす — API 料金ゼロ",
+          "url": "/hermes/docs/guides/local-ollama-setup/"
         },
         {
           "id": "guides/manage-hermes-cloud-with-mcp",
@@ -157,9 +232,24 @@
           "url": "/hermes/docs/guides/migrate-from-openclaw/"
         },
         {
+          "id": "guides/minimax-oauth",
+          "title": "MiniMax OAuth",
+          "url": "/hermes/docs/guides/minimax-oauth/"
+        },
+        {
           "id": "guides/operate-teams-meeting-pipeline",
           "title": "Teams 会議パイプラインを運用する",
           "url": "/hermes/docs/guides/operate-teams-meeting-pipeline/"
+        },
+        {
+          "id": "guides/pipe-script-output",
+          "title": "スクリプトの出力をメッセージングプラットフォームへ流す",
+          "url": "/hermes/docs/guides/pipe-script-output/"
+        },
+        {
+          "id": "guides/run-hermes-with-nous-portal",
+          "title": "Nous Portal で Hermes Agent を動かす",
+          "url": "/hermes/docs/guides/run-hermes-with-nous-portal/"
         },
         {
           "id": "guides/run-nemotron-3-ultra-free",
@@ -185,6 +275,11 @@
           "id": "guides/troubleshooting-agent-quality",
           "title": "トラブル対処: エージェントが前より賢くなくなった気がするとき",
           "url": "/hermes/docs/guides/troubleshooting-agent-quality/"
+        },
+        {
+          "id": "guides/use-mcp-with-hermes",
+          "title": "Hermes で MCP を使う",
+          "url": "/hermes/docs/guides/use-mcp-with-hermes/"
         },
         {
           "id": "guides/use-soul-with-hermes",
@@ -217,9 +312,39 @@
           "url": "/hermes/docs/integrations/"
         },
         {
+          "id": "integrations/nous-portal",
+          "title": "Nous Portal",
+          "url": "/hermes/docs/integrations/nous-portal/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLI コマンド早見表",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
           "id": "reference/faq",
           "title": "よくある質問とトラブル対処",
           "url": "/hermes/docs/reference/faq/"
+        },
+        {
+          "id": "reference/mcp-config-reference",
+          "title": "MCP 設定の早見表",
+          "url": "/hermes/docs/reference/mcp-config-reference/"
+        },
+        {
+          "id": "reference/model-catalog",
+          "title": "モデルカタログ",
+          "url": "/hermes/docs/reference/model-catalog/"
         },
         {
           "id": "reference/optional-skills-catalog",
@@ -227,9 +352,19 @@
           "url": "/hermes/docs/reference/optional-skills-catalog/"
         },
         {
+          "id": "reference/profile-commands",
+          "title": "プロファイルのコマンド早見表",
+          "url": "/hermes/docs/reference/profile-commands/"
+        },
+        {
           "id": "reference/skills-catalog",
           "title": "同梱スキルの一覧",
           "url": "/hermes/docs/reference/skills-catalog/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
         },
         {
           "id": "reference/tools-reference",
@@ -237,14 +372,34 @@
           "url": "/hermes/docs/reference/tools-reference/"
         },
         {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/checkpoints-and-rollback",
+          "title": "チェックポイントと /rollback",
+          "url": "/hermes/docs/user-guide/checkpoints-and-rollback/"
+        },
+        {
           "id": "user-guide/cli",
           "title": "CLI 画面",
           "url": "/hermes/docs/user-guide/cli/"
         },
         {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
           "id": "user-guide/configuring-models",
           "title": "モデルの設定",
           "url": "/hermes/docs/user-guide/configuring-models/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
         },
         {
           "id": "user-guide/docker",
@@ -257,9 +412,19 @@
           "url": "/hermes/docs/user-guide/egress/network-isolation/"
         },
         {
+          "id": "user-guide/features/api-server",
+          "title": "API サーバー",
+          "url": "/hermes/docs/user-guide/features/api-server/"
+        },
+        {
           "id": "user-guide/features/batch-processing",
           "title": "まとめて処理する",
           "url": "/hermes/docs/user-guide/features/batch-processing/"
+        },
+        {
+          "id": "user-guide/features/built-in-plugins",
+          "title": "同梱のプラグイン",
+          "url": "/hermes/docs/user-guide/features/built-in-plugins/"
         },
         {
           "id": "user-guide/features/code-execution",
@@ -267,9 +432,19 @@
           "url": "/hermes/docs/user-guide/features/code-execution/"
         },
         {
+          "id": "user-guide/features/codex-app-server-runtime",
+          "title": "Codex App-Server ランタイム（任意）",
+          "url": "/hermes/docs/user-guide/features/codex-app-server-runtime/"
+        },
+        {
           "id": "user-guide/features/context-files",
           "title": "コンテキストファイル",
           "url": "/hermes/docs/user-guide/features/context-files/"
+        },
+        {
+          "id": "user-guide/features/credential-pools",
+          "title": "認証情報プール",
+          "url": "/hermes/docs/user-guide/features/credential-pools/"
         },
         {
           "id": "user-guide/features/cron",
@@ -287,14 +462,39 @@
           "url": "/hermes/docs/user-guide/features/delegation/"
         },
         {
+          "id": "user-guide/features/document-extraction",
+          "title": "文書からの本文抽出",
+          "url": "/hermes/docs/user-guide/features/document-extraction/"
+        },
+        {
           "id": "user-guide/features/extending-the-dashboard",
           "title": "ダッシュボードを広げる",
           "url": "/hermes/docs/user-guide/features/extending-the-dashboard/"
         },
         {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
           "id": "user-guide/features/goals",
           "title": "続く目標（Goal）",
           "url": "/hermes/docs/user-guide/features/goals/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/kanban-tutorial",
+          "title": "かんばんの手引き",
+          "url": "/hermes/docs/user-guide/features/kanban-tutorial/"
+        },
+        {
+          "id": "user-guide/features/kanban-worker-lanes",
+          "title": "カンバンの作業レーン",
+          "url": "/hermes/docs/user-guide/features/kanban-worker-lanes/"
         },
         {
           "id": "user-guide/features/kanban",
@@ -305,6 +505,11 @@
           "id": "user-guide/features/mcp",
           "title": "MCP（Model Context Protocol）",
           "url": "/hermes/docs/user-guide/features/mcp/"
+        },
+        {
+          "id": "user-guide/features/memory-providers",
+          "title": "記憶プロバイダー",
+          "url": "/hermes/docs/user-guide/features/memory-providers/"
         },
         {
           "id": "user-guide/features/memory",
@@ -327,14 +532,34 @@
           "url": "/hermes/docs/user-guide/features/pets/"
         },
         {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
           "id": "user-guide/features/provider-routing",
           "title": "提供元の振り分け",
           "url": "/hermes/docs/user-guide/features/provider-routing/"
         },
         {
+          "id": "user-guide/features/skills",
+          "title": "スキルの仕組み",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
           "id": "user-guide/features/skins",
           "title": "スキンとテーマ",
           "url": "/hermes/docs/user-guide/features/skins/"
+        },
+        {
+          "id": "user-guide/features/tool-search",
+          "title": "ツール検索",
+          "url": "/hermes/docs/user-guide/features/tool-search/"
         },
         {
           "id": "user-guide/features/tools",
@@ -357,6 +582,11 @@
           "url": "/hermes/docs/user-guide/features/wake-word/"
         },
         {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
           "id": "user-guide/features/x-search",
           "title": "X（Twitter）の検索",
           "url": "/hermes/docs/user-guide/features/x-search/"
@@ -367,9 +597,19 @@
           "url": "/hermes/docs/user-guide/local-models/"
         },
         {
+          "id": "user-guide/messaging/discord",
+          "title": "Discord",
+          "url": "/hermes/docs/user-guide/messaging/discord/"
+        },
+        {
           "id": "user-guide/messaging/email",
           "title": "メール",
           "url": "/hermes/docs/user-guide/messaging/email/"
+        },
+        {
+          "id": "user-guide/messaging/feishu",
+          "title": "Feishu / Lark",
+          "url": "/hermes/docs/user-guide/messaging/feishu/"
         },
         {
           "id": "user-guide/messaging",
@@ -402,6 +642,11 @@
           "url": "/hermes/docs/user-guide/messaging/simplex/"
         },
         {
+          "id": "user-guide/messaging/slack",
+          "title": "Slack",
+          "url": "/hermes/docs/user-guide/messaging/slack/"
+        },
+        {
           "id": "user-guide/messaging/sms",
           "title": "SMS（Twilio）",
           "url": "/hermes/docs/user-guide/messaging/sms/"
@@ -412,9 +657,34 @@
           "url": "/hermes/docs/user-guide/messaging/teams-meetings/"
         },
         {
+          "id": "user-guide/messaging/teams",
+          "title": "Microsoft Teams",
+          "url": "/hermes/docs/user-guide/messaging/teams/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/messaging/weixin",
+          "title": "Weixin（微信）",
+          "url": "/hermes/docs/user-guide/messaging/weixin/"
+        },
+        {
+          "id": "user-guide/messaging/whatsapp",
+          "title": "WhatsApp",
+          "url": "/hermes/docs/user-guide/messaging/whatsapp/"
+        },
+        {
           "id": "user-guide/messaging/yuanbao",
           "title": "Yuanbao",
           "url": "/hermes/docs/user-guide/messaging/yuanbao/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
         },
         {
           "id": "user-guide/profiles",
@@ -427,9 +697,29 @@
           "url": "/hermes/docs/user-guide/secrets/command/"
         },
         {
+          "id": "user-guide/secrets",
+          "title": "シークレット",
+          "url": "/hermes/docs/user-guide/secrets/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        },
+        {
           "id": "user-guide/skills/bundled/apple/apple-apple-notes",
           "title": "Apple Notes — memo CLI で Apple メモを操作する: 作成・検索・編集",
           "url": "/hermes/docs/user-guide/skills/bundled/apple/apple-apple-notes/"
+        },
+        {
+          "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code",
+          "title": "Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）",
+          "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/"
         },
         {
           "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex",
@@ -565,6 +855,11 @@
           "id": "user-guide/skills/bundled/productivity/productivity-nano-pdf",
           "title": "Nano Pdf — 手元の PDF の文字を、ふつうの言葉での指示で書き換える",
           "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-nano-pdf/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-notion",
+          "title": "Notion — Notion API と ntn CLI: ページ、データベース、Markdown、Workers",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/"
         },
         {
           "id": "user-guide/skills/bundled/productivity/productivity-ocr-and-documents",
@@ -767,6 +1062,11 @@
           "url": "/hermes/docs/user-guide/skills/optional/creative/creative-dream-loop/"
         },
         {
+          "id": "user-guide/skills/optional/creative/creative-heartmula",
+          "title": "Heartmula — HeartMuLa: 歌詞とタグから Suno のように曲を作る",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-heartmula/"
+        },
+        {
           "id": "user-guide/skills/optional/creative/creative-hyperframes",
           "title": "Hyperframes — HTML の composition から MP4/WebM の動画を書き出す",
           "url": "/hermes/docs/user-guide/skills/optional/creative/creative-hyperframes/"
@@ -887,9 +1187,19 @@
           "url": "/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/"
         },
         {
+          "id": "user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness",
+          "title": "Evaluating Llms Harness — lm-eval-harness で LLM を評価する（MMLU、GSM8K など）",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness/"
+        },
+        {
           "id": "user-guide/skills/optional/mlops/mlops-obliteratus",
           "title": "Obliteratus — OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）",
           "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-obliteratus/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-tensorrt-llm",
+          "title": "Tensorrt Llm — NVIDIA の GPU で LLM の推論を高い処理量で動かす",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-tensorrt-llm/"
         },
         {
           "id": "user-guide/skills/optional/payments/payments-mpp-agent",
@@ -1035,6 +1345,11 @@
           "id": "user-guide/which-file-does-what",
           "title": "どのファイルが何をするのか",
           "url": "/hermes/docs/user-guide/which-file-does-what/"
+        },
+        {
+          "id": "user-guide/windows-native",
+          "title": "Windows（ネイティブ）ガイド",
+          "url": "/hermes/docs/user-guide/windows-native/"
         },
         {
           "id": "user-guide/windows-wsl-quickstart",

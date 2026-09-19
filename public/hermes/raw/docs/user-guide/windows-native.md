@@ -2,7 +2,7 @@
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: 42d26afea101480a1cdb1a5be1d03898d18106a6
+upstream_blob: e895e5822ba12acb5226c33b47000660474752e0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -188,13 +188,15 @@ hermes gateway install
 
 ```powershell
 hermes gateway status      # Merged view: schtasks + Startup folder + running PID
-hermes gateway start       # Starts the scheduled task now
+hermes gateway start       # Starts the gateway in the background (asks about login auto-start only on a TTY when nothing is installed)
 hermes gateway stop        # Writes the planned-stop marker, waits for the gateway to drain (≤ agent.restart_drain_timeout, capped at 30 s), then force-kills only if it is still alive
 hermes gateway restart     # Same drain-first stop, then a fresh start
 hermes gateway uninstall   # Removes schtasks entry, Startup shortcut, pid file
 ```
 
 `hermes gateway status` は何度実行しても同じ結果になります。千回続けて呼んでも、うっかりゲートウェイを止めてしまうことはありません。（PR #21561 より前は、C の層で `os.kill(pid, 0)` が `CTRL_C_EVENT` とぶつかり、実際に止めてしまっていました。経緯が気になる場合は後述の「プロセス管理の内部事情」を参照してください。）
+
+ログイン時の自動起動が登録されるのは、はっきり求めたときだけです。つまり `hermes gateway install` を実行したとき、実際の端末で `Y` と答えたとき、または `HERMES_GATEWAY_INSTALL_START_ON_LOGIN=1` を設定したときです。スクリプトやパイプから `hermes gateway start` を実行した場合（TTY が無い、または `HERMES_NONINTERACTIVE=1`）は、タスクスケジューラにもスタートアップフォルダにも触れずにゲートウェイを起動します。端末でもこの確認を省きたい場合は、`HERMES_GATEWAY_INSTALL_START_ON_LOGIN=0` を設定してください。
 
 ### なぜ Windows サービスにしないのか {#why-not-a-windows-service}
 

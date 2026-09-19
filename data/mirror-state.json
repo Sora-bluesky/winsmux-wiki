@@ -1982,9 +1982,9 @@
       "translatedAt": "2026-09-18T22:41:13.568Z"
     },
     "user-guide/windows-native.md": {
-      "blob": "42d26afea101480a1cdb1a5be1d03898d18106a6",
+      "blob": "e895e5822ba12acb5226c33b47000660474752e0",
       "status": "translated",
-      "translatedAt": "2026-09-18T22:52:16.678Z"
+      "translatedAt": "2026-09-19T02:04:55.211Z"
     },
     "user-guide/windows-wsl-quickstart.md": {
       "blob": "9cf804af52ca7bf076e44db8b0a198996dbfae7b",
@@ -2321,5 +2321,5 @@
       "translatedAt": "2026-09-16T22:39:41.199Z"
     }
   },
-  "snapshotCommit": "a51143fbbe6ddbc0c7f403d0579c4d75504c6793"
+  "snapshotCommit": "a11bac476bb2a2129fdffca9511d41260fa5f51f"
 }
