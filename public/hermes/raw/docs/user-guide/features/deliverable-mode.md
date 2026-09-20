@@ -2,7 +2,7 @@
 title: "成果物モード（チャットに届く生成ファイル）"
 description: "生成したグラフ・PDF・表計算などのファイルを、エージェントがメッセージアプリの標準の添付として送り届けるしくみ"
 upstream_path: user-guide/features/deliverable-mode.md
-upstream_blob: d01847ebb0573d9bd176ac083fc71ff70ba4e727
+upstream_blob: ea042049b33d23d91df269bdf350c9411c35ffd4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/deliverable-mode
 ---
@@ -30,7 +30,7 @@ WhatsApp、Signal など）で動かしているとき、生成したファイ�
    音声の `text_to_speech` などです。
 
 2. **窓口がエージェントの返事からファイルの場所を探す。** 対応する拡張子で終わる
-   絶対パス（`/tmp/...`）やホーム起点のパス（`~/...`）が取り出されます。
+   絶対パス（`~/.hermes/cache/scratch/...`）やホーム起点のパス（`~/...`）が取り出されます。
    コードブロックとインラインコードの中にある場所は
    対象外なので、コード例が崩れることはありません。
 
@@ -72,7 +72,7 @@ WhatsApp、Signal など）で動かしているとき、生成したファイ�
 `/personality` で切り替えられます）。
 
 エージェントがやることは単純です。ファイルを絶対パス
-（たとえば `/tmp/q3-revenue.png`）に書き出し、その場所を返事の中で
+（たとえば `~/.hermes/cache/scratch/q3-revenue.png`）に書き出し、その場所を返事の中で
 ただの文章として触れる。あとは窓口が引き受けます。コードブロックや
 バッククォートの中にある場所は対象外なので、コード例が崩れることはありません。
 
@@ -85,8 +85,8 @@ Hermes の複数エージェントによるかんばんの進め方を使って�
 kanban_complete(
     summary="rendered Q3 revenue chart and report",
     artifacts=[
-        "/tmp/q3-revenue.png",
-        "/tmp/q3-report.pdf",
+        "~/.hermes/cache/scratch/q3-revenue.png",
+        "~/.hermes/cache/scratch/q3-report.pdf",
     ],
 )
 ```

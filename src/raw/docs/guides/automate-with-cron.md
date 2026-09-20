@@ -2,7 +2,7 @@
 title: "cron であらゆる作業を自動化する"
 description: "Hermes の cron を使った実践的な自動化パターン — 監視、レポート、パイプライン、複数スキルの組み合わせ"
 upstream_path: guides/automate-with-cron.md
-upstream_blob: 0d261cac5776996c750aa5b0fe8ec8951ff30476
+upstream_blob: 71ab8ca441002695252c1cf9746e4e3339ce5ad5
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron
 ---
@@ -18,7 +18,7 @@ cron ジョブは真新しいエージェントのセッションで動くため
 :::
 
 :::tip LLM が要らない場合は、トークンを使わない方法が2つあります
-- **繰り返しの見張り役**で、送りたい文面をスクリプトがすでに作れている場合（メモリ不足の警告、ディスク容量の警告、生存確認など）は、[スクリプトだけの cron ジョブ](/hermes/docs/guides/cron-script-only/)を使います。スケジューラは同じで、LLM は動きません。チャットで Hermes に頼めば設定してもらえます。`cronjob` ツールは `no_agent=True` を選ぶべき場面を判断でき、スクリプトも書いてくれます。
+- **繰り返しの見張り役**で、送りたい文面をスクリプトがすでに作れている場合（メモリ不足の警告、ディスク容量の警告、生存確認など）は、[スクリプトだけの cron ジョブ](/hermes/docs/guides/cron-script-only/)を使います。スケジューラは同じで、LLM は動きません。チャットで Hermes に頼めば設定してもらえます。`cronjob_manage` ツールは `no_agent=True` を選ぶべき場面を判断でき、スクリプトも書いてくれます。
 - **すでに動いているスクリプトから1回だけ送りたい**場合（CI の1ステップ、コミット後のフック、デプロイ用スクリプト、外部でスケジュールされた監視など）は、[`hermes send`](/hermes/docs/guides/pipe-script-output/) を使って標準出力やファイルをそのまま Telegram / Discord / Slack などへ流します。cron に登録する必要はありません。
 :::
 

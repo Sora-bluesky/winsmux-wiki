@@ -2,7 +2,7 @@
 title: "Youtube Content — YouTube の文字起こしを要約・スレッド・ブログ記事にする"
 description: "YouTube の文字起こしを要約・スレッド・ブログ記事にする"
 upstream_path: user-guide/skills/bundled/media/media-youtube-content.md
-upstream_blob: 6324aca0419150294365acbd8a7f23d68d4fce26
+upstream_blob: f95bcd48cfcde9be77a9a9a60c0a43b126b09d95
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/media/media-youtube-content
 ---
@@ -16,7 +16,7 @@ YouTube の文字起こしを要約・スレッド・ブログ記事にします
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/media\youtube-content` |
+| パス | `skills/media/youtube-content` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |

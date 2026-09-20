@@ -2,7 +2,7 @@
 title: "Relay ↔ Connector 契約"
 description: "Hermes gateway の relay アダプターと外部コネクターのあいだの通信契約（実験的）"
 upstream_path: developer-guide/relay-connector-contract.md
-upstream_blob: 1a7552de68b36ca25401504c63266fc52021f5ea
+upstream_blob: bc8ffa9fb398794695d12e951f7760ee632ab7ce
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-connector-contract
 ---
@@ -416,6 +416,15 @@ gateway はアクションの辞書を渡してトランスポートを呼びま
 
 `get_chat_info(chat_id)` は別に中継される呼び出しで、少なくとも
 `{name, type}` を返します。
+
+**`metadata.profile`（多重化の往復）。** チャットを宛先とする送信フレームはすべて、
+`metadata` に、gateway が受信時に取り込んだテナントの識別子（`scope_id`、`user_id`）を載せます。
+多重化された gateway では、そのチャットの受信を connector が振り分けた先の Hermes の `profile` も併せて載せます。
+`follow_up` のフレームは、プロファイルを `session_key` の名前空間に埋め込んで運びます。
+connector は、そのチャットまたはやり取りについて次に送る `passthrough_forward` / `inbound` に、
+同じ `profile` を必ず打刻しなければなりません。そうすることで、スラッシュコマンドのあとに押された
+Discord のボタンが、同じプロファイルのセッションに届きます（`gateway/relay/adapter.py::_with_scope`、`send_follow_up`）。
+プロファイルが 1 つだけの gateway がこのキーを出すことはありません。フレームは 1 バイトも変わりません。
 
 **`send_media`（Phase 2 のメディア送信）。** メディアは参照の形で通信を渡ります。
 `source_url` は、(a) gateway が事前に `POST {connector}/relay/media` でアップロードした

@@ -2,7 +2,7 @@
 title: "Audiocraft Audio Generation — AudioCraft。MusicGen で文章から音楽、AudioGen で文章から音"
 description: "AudioCraft。MusicGen で文章から音楽、AudioGen で文章から音"
 upstream_path: user-guide/skills/optional/creative/creative-audiocraft-audio-generation.md
-upstream_blob: 643692ba3cf0eeb68adc8da5ee27b521f81b37ae
+upstream_blob: ae2b0d903a03e3f215092f6103dfe850771b2049
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation
 ---
@@ -16,7 +16,7 @@ AudioCraft です。MusicGen で文章から音楽を、AudioGen で文章から
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/creative/audiocraft-audio-generation` で導入します |
-| パス | `optional-skills/creative\audiocraft-audio-generation` |
+| パス | `optional-skills/creative/audiocraft-audio-generation` |
 | バージョン | `1.0.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -567,8 +567,8 @@ for desc in descriptions:
 
 ## 参考資料 {#references}
 
-- **[Advanced Usage](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\audiocraft-audio-generation/references/advanced-usage.md)** - 学習、追加学習、運用への載せ方
-- **[Troubleshooting](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\audiocraft-audio-generation/references/troubleshooting.md)** - よくある困りごとと対処
+- **[Advanced Usage](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/audiocraft-audio-generation/references/advanced-usage.md)** - 学習、追加学習、運用への載せ方
+- **[Troubleshooting](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/audiocraft-audio-generation/references/troubleshooting.md)** - よくある困りごとと対処
 
 ## 関連リンク {#resources}
 

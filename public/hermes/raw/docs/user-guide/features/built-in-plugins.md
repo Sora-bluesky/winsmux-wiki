@@ -2,7 +2,7 @@
 title: "同梱のプラグイン"
 description: "Hermes Agent に最初から入っていて、節目ごとのフックで自動的に動くプラグイン群 — disk-cleanup とその仲間たち"
 upstream_path: user-guide/features/built-in-plugins.md
-upstream_blob: ad5663f20757ce6aa709c52f5f8043a575b056e7
+upstream_blob: 1afafcf34ef76363ebb6962e3e8a5d5ecdaf8a59
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins
 ---
@@ -294,6 +294,8 @@ hermes meet auth    # opens a browser to sign into Google and saves session stat
 > 「meet.google.com/abc-defg-hij に入って内容を書き留めておいて。終わったら、やることの一覧を付けてまとめを送って。」
 
 エージェントは会議への参加を始め、通話が進むあいだ書き起こしを自分の文脈へ取り込み続け、会議が終わったとき（あるいは止めるように言われたとき）に整ったまとめを作ります。
+
+**リアルタイムのやり方（`mode='realtime'`）は、音まわりでは話す専門です。** ボットの返事は OpenAI Realtime が声にして、仮想のマイクから通話へ流します。ただしボットが*聞いている*のは今までどおり字幕の流れで、会議の音そのものではありません。通話の音が Realtime のセッションへ送られることはありません。`meet_status` は `micState` を返します（`unmuted`、入室のあとに自分でミュートを解除する必要があった場合は `unmuted_clicked`、Meet の切り替えが見つからなかった場合は `unknown`）。声を出さないボットの原因を、ここから切り分けられます。
 
 **どんなときに使うか:** 参加できなかった人のために、定例の進捗確認を書き起こしてまとめておきたいとき。聞き取り調査のように、整った記録がほしいとき。そのほか Fireflies や Otter、Grain を使うことになりそうな場面です。AI に聞かれたくない場では、有効にしないでください。
 

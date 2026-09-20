@@ -2,7 +2,7 @@
 title: "Obliteratus — OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）"
 description: "OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）"
 upstream_path: user-guide/skills/optional/mlops/mlops-obliteratus.md
-upstream_blob: e8b0ea9267ec756308d526b966ec5632c7464389
+upstream_blob: 08d659b00306ff799340dfbee7e03369567efa5e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-obliteratus
 ---
@@ -16,7 +16,7 @@ OBLITERATUS: LLM の拒否応答を取り除きます（diff-in-means）。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/obliteratus` で入れます |
-| パス | `optional-skills/mlops\obliteratus` |
+| パス | `optional-skills/mlops/obliteratus` |
 | バージョン | `2.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

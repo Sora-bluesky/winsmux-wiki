@@ -2,7 +2,7 @@
 title: "Github — gh CLI で GitHub を扱う: PR、issue、レビュー、リポジトリ、認証"
 description: "gh CLI で GitHub を扱う: PR、issue、レビュー、リポジトリ、認証"
 upstream_path: user-guide/skills/bundled/software-development/software-development-github.md
-upstream_blob: 7dce2fca48aad3ef7b3833978f7f5d0797a9d3be
+upstream_blob: d7385ccbeab4a358e0f2e3aa6fa27ebdedd23541
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-github
 ---
@@ -16,7 +16,7 @@ gh CLI で GitHub を扱います。PR、issue、レビュー、リポジトリ�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development\github` |
+| パス | `skills/software-development/github` |
 | バージョン | `2.0.0` |
 | 作者 | Ben Barclay (benbarclay), Hermes Agent |
 | ライセンス | MIT |

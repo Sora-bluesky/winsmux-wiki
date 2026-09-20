@@ -2,7 +2,7 @@
 title: "Pixel Art — 時代ごとの色数でドット絵を作る（NES、Game Boy、PICO-8）"
 description: "時代ごとの色数でドット絵を作る（NES、Game Boy、PICO-8）"
 upstream_path: user-guide/skills/optional/creative/creative-pixel-art.md
-upstream_blob: 065496394c6b64893ee71a708060e5fc8e54131c
+upstream_blob: 529ee6f59fec001a886f7fd73dafe799d52509aa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-pixel-art
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/pixel-art` で入れます |
-| パス | `optional-skills/creative\pixel-art` |
+| パス | `optional-skills/creative/pixel-art` |
 | バージョン | `2.0.0` |
 | 作者 | dodo-reach |
 | ライセンス | MIT |
@@ -156,12 +156,13 @@ from pixel_art import pixel_art
 from pixel_art_video import pixel_art_video
 
 # 1. Convert to pixel art
-pixel_art("/path/to/photo.jpg", "/tmp/pixel.png", preset="nes")
+out = os.path.expanduser("~/.hermes/cache/scratch")
+pixel_art("/path/to/photo.jpg", f"{out}/pixel.png", preset="nes")
 
 # 2. Animate (optional)
 pixel_art_video(
-    "/tmp/pixel.png",
-    "/tmp/pixel.mp4",
+    f"{out}/pixel.png",
+    f"{out}/pixel.mp4",
     scene="night",
     duration=6,
     fps=15,

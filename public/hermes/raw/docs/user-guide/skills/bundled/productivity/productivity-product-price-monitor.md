@@ -2,7 +2,7 @@
 title: "Product Price Monitor — 商品・航空券・出品の価格を見張り、目標に届いたら知らせる"
 description: "商品・航空券・出品の価格を見張り、目標に届いたら知らせる"
 upstream_path: user-guide/skills/bundled/productivity/productivity-product-price-monitor.md
-upstream_blob: 12ae99f188ca14e2d602eb3af58b3b71baa1844a
+upstream_blob: 0c84cdf645f2fd3912cb49e25b7e86f285f952a3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-product-price-monitor
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity\product-price-monitor` |
+| パス | `skills/productivity/product-price-monitor` |
 | バージョン | `0.1.0` |
 | 作者 | Ben Barclay (benbarclay), Hermes Agent |
 | ライセンス | MIT |

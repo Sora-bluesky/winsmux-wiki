@@ -2,7 +2,7 @@
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md
-upstream_blob: ecff510d47091204239663856bd642aaf063d1ae
+upstream_blob: af3cf9f324c98785c63534295112030739079768
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tts
 ---
@@ -59,8 +59,12 @@ tts:
     model: "gpt-4o-mini-tts"
     voice: "alloy"              # alloy, echo, fable, onyx, nova, shimmer
     base_url: "https://api.openai.com/v1"  # Override for OpenAI-compatible TTS endpoints
+    pcm_sample_rate: 24000      # Streaming PCM rate expected from the endpoint (auto-overridden by X-Audio-Sample-Rate)
     speed: 1.0                  # 0.25 - 4.0
     # language: "es"            # Sent as lang_code — only for OpenAI-compatible endpoints that support it (e.g. Kokoro)
+    # consent_attestation: "I have the speaker's consent"  # Required by some OpenAI-compatible servers for cloned voices
+  streaming:
+    min_len: 20                 # Streaming TTS: shortest first sentence (chars) spoken on its own; CJK setups use ~6
   minimax:
     region: "global"           # "global" or "cn"; see selection rules below
     model: "speech-02-hd"     # speech-02-hd (default), speech-02-turbo
@@ -147,7 +151,11 @@ tts:
 
 書き換えには `auxiliary.tts_audio_tags` を使い、既定ではメインのチャットモデルになります。タグ入れをもっと安いモデルや速いモデルに任せたいなら、この補助タスクを上書きしてください。
 
+**ストリーミング時のサンプルレート（OpenAI 互換のエンドポイント）**: ストリーミング再生ではヘッダの付かない生の PCM が届くので、Hermes 側がそのサンプルレートを知っている必要があります。公式の OpenAI API は 24 kHz で出します。レートを自分から知らせてくる互換サーバー（レスポンスヘッダの `X-Audio-Sample-Rate`、または `Content-Type` に入る `rate=`（`audio/pcm; rate=44100`））なら自動でそれに従い、レスポンスが届いた時点でスピーカーも一時 WAV の再生も、ゲートウェイの音声ストリームも、知らされたレートで開きます。何も知らせてこないサーバーの場合は、`tts.openai.pcm_sample_rate` にそのエンドポイントの出力レートを設定してください（Piper を使うサーバーなら `22050` など）。設定しないと、速さも高さもずれた音声が流れます。おかしな値を入れると警告がログに出て、`24000` に戻ります。
+
 **言語（OpenAI 互換のエンドポイント）**: `tts.openai.language` は `lang_code` というリクエストのパラメータとしてエンドポイントに渡されます。これは `lang_code` に対応した OpenAI 互換の読み上げサーバー向けの指定です。たとえば [Kokoro-FastAPI](https://github.com/remsky/Kokoro-FastAPI) では、`language: "es"` にすると既定の英語ではなくスペイン語の音素変換が選ばれます。公式の OpenAI API はこのパラメータを受け付けないので、そちらを使うときは未設定のままにしてください。未設定なら、余計なものは何も送られません。
+
+**複製した声の同意（OpenAI 互換のエンドポイント）**: 自分で立てた OpenAI 互換の読み上げサーバーには、リクエストに `consent_attestation` という項目が入っていないと、複製した声を `400 consent_required` で拒むものがあります。`tts.openai.consent_attestation` に、そのサーバーが求める同意の文言を設定してください。Hermes は OpenAI 互換のどの経路でも（ファイル全体の合成、ストリーミング、デスクトップがクライアントから直接出す音声）、その文言をそのままリクエストの本文に載せます。公式の OpenAI API を使うときは設定しないままにしてください。未設定なら、この項目は送られません。
 
 ### 入力の長さの上限 {#input-length-limits}
 

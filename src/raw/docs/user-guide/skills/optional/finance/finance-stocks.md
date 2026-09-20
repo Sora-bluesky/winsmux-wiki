@@ -2,7 +2,7 @@
 title: "Stocks — Yahoo 経由の株価、履歴、検索、比較、暗号資産"
 description: "Yahoo 経由の株価、履歴、検索、比較、暗号資産"
 upstream_path: user-guide/skills/optional/finance/finance-stocks.md
-upstream_blob: 115c432aa8159ec0fb49c7f855d4ee83a639943a
+upstream_blob: 0fd703752c2ba551e82b4be1b0d598dba5c603e2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-stocks
 ---
@@ -16,7 +16,7 @@ Yahoo 経由で株価、履歴、検索、比較、暗号資産の情報を取�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/finance/stocks` で入れます |
-| パス | `optional-skills/finance\stocks` |
+| パス | `optional-skills/finance/stocks` |
 | バージョン | `0.1.0` |
 | 作者 | Mibay (Mibayy), Hermes Agent |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Discord"
 description: "Hermes Agent を Discord のボットとして設定する"
 upstream_path: user-guide/messaging/discord.md
-upstream_blob: 03033a526a0ed0126453e548b0e7d313ff145418
+upstream_blob: 3e4f9d1294c86b6855ac7bee362930b720cf7207
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/discord
 ---
@@ -19,7 +19,7 @@ Hermes Agent はボットとして Discord と連携し、ダイレクトメッ�
 |---------|----------|
 | **DM** | Hermes はすべてのメッセージに応答します。`@mention` は要りません。DM ごとに別のセッションになります。 |
 | **サーバーのチャンネル** | 既定では、`@mention` されたときだけ応答します。メンションせずにチャンネルへ投稿しても、Hermes は無視します。 |
-| **メンション不要のチャンネル** | `DISCORD_FREE_RESPONSE_CHANNELS` で特定のチャンネルをメンション不要にできますし、`DISCORD_REQUIRE_MENTION=false` で全体のメンション要求を切ることもできます。これらのチャンネルではその場で返信し、自動でのスレッド作成は行われないので、チャンネルは気軽な会話の場のままです。 |
+| **メンション不要のチャンネル** | `DISCORD_FREE_RESPONSE_CHANNELS` で特定のチャンネルをメンション不要にできますし、`DISCORD_REQUIRE_MENTION=false` で全体のメンション要求を切ることもできます。これらのチャンネルではその場で返信し、自動でのスレッド作成は行われないので、チャンネルは気軽な会話の場のままです。メンション不要の返信と、大元のメッセージごとのスレッドの両方がほしいときは `discord.free_response_auto_thread: true` を設定してください。 |
 | **スレッド** | Hermes は同じスレッドの中で返信します。そのスレッドか親のチャンネルをメンション不要に設定していないかぎり、メンションの規則は効きます。セッションの履歴という点で、スレッドは親のチャンネルから切り離されています。 |
 | **複数人がいる共有のチャンネル** | 既定では、安全さとわかりやすさのために、チャンネルの中でもユーザーごとにセッションの履歴を分けます。同じチャンネルで話している 2 人は、明示的に切らないかぎり 1 つの記録を共有しません。 |
 | **ほかのユーザーをメンションしたメッセージ** | `DISCORD_IGNORE_NO_MENTION` が `true`（既定）のとき、ほかのユーザーを @メンションしていてボットをメンションして**いない**メッセージには、Hermes は黙っています。ほかの人に向けられた会話にボットが割り込むのを防ぎます。誰がメンションされているかに関わらず応答させたい場合は `false` にします。これはサーバーのチャンネルにだけ効き、DM には効きません。 |
@@ -309,6 +309,7 @@ Discord の振る舞いは 2 つのファイルで決まります。認証情報
 | `DISCORD_FREE_RESPONSE_CHANNELS` | いいえ | — | `DISCORD_REQUIRE_MENTION` が `true` でも、`@mention` なしで応答するチャンネルの ID をカンマ区切りで指定します。 |
 | `DISCORD_IGNORE_NO_MENTION` | いいえ | `true` | `true` のとき、ほかのユーザーを `@mentions` していてボットをメンションして**いない**メッセージには黙っています。ほかの人に向けられた会話にボットが割り込むのを防ぎます。サーバーのチャンネルにだけ効き、DM には効きません。 |
 | `DISCORD_AUTO_THREAD` | いいえ | `true` | `true` のとき、テキストチャンネルでの `@mention` ごとに新しいスレッドを自動で作り、会話を切り分けます（Slack に近い挙動です）。すでにスレッドの中や DM のメッセージには影響しません。 |
+| `DISCORD_FREE_RESPONSE_AUTO_THREAD` | いいえ | `false` | `true` のとき、メンション不要のチャンネル（`DISCORD_FREE_RESPONSE_CHANNELS` に挙げたもの）でも、大元のメッセージごとにスレッドを自動で作りつつ、メンション不要のままにします。既定の `false` は、その場で気軽に会話できる挙動を保ちます。`DISCORD_AUTO_THREAD=true` が必要です。`DISCORD_NO_THREAD_CHANNELS` のほうが優先され、音声につながったチャンネルは常にこれを無視します。 |
 | `DISCORD_ALLOW_BOTS` | いいえ | `"none"` | ほかの Discord のボットからのメッセージの扱いを決めます。`"none"` はほかのボットをすべて無視します。`"mentions"` は Hermes を `@mention` したボットのメッセージだけを受け付けます。`"all"` はボットのメッセージをすべて受け付けます。どちらの有効な方式でも、既定では文面の中に実際のメンションが書かれている必要があります。次の設定を参照してください。 |
 | `DISCORD_BOTS_REQUIRE_INLINE_MENTION` | いいえ | `true` | ボットからの引き継ぎを始めるのに、文面の中に `<@BOT_ID>` / `<@!BOT_ID>` というトークンが実際に書かれていることを求めます。返信の情報だけでは始まりません。同じ送り手・同じチャンネルからの短い続きは、後述のとおり受け付けられます。`false` にするのは、以前の受け付け方を必要とする信頼できる中継のボットのためだけにしてください。人間のメッセージには影響しません。 |
 | `DISCORD_REACTIONS` | いいえ | `true` | `true` のとき、処理中にメッセージへ絵文字のリアクションを付けます（開始時に 👀、成功で ✅、エラーで ❌）。`false` にするとリアクションを一切付けません。 |
@@ -365,6 +366,7 @@ discord:
   bots_require_inline_mention: true  # Bot authors must type a literal @mention (default: true)
   free_response_channels: ""      # Comma-separated channel IDs (or YAML list)
   auto_thread: true               # Auto-create threads on @mention
+  free_response_auto_thread: false # If true, free_response_channels also auto-thread (default: inline)
   reactions: true                 # Add emoji reactions during processing
   ignored_channels: []            # Channel IDs where bot never responds
   no_thread_channels: []          # Channel IDs where bot responds without threading
@@ -430,7 +432,27 @@ discord:
 
 スレッドの親のチャンネルがこの一覧にあれば、そのスレッドもメンション不要になります。
 
-メンション不要のチャンネルでは**自動でのスレッド作成も行いません**。メッセージごとに新しいスレッドを作るのではなく、その場で返信します。こうすることで、チャンネルを気軽な会話の場として使えます。スレッドにしたい場合は、そのチャンネルをメンション不要に含めず、通常の `@mention` の流れを使ってください。
+メンション不要のチャンネルでは**自動でのスレッド作成も行いません**。メッセージごとに新しいスレッドを作るのではなく、その場で返信します。こうすることで、チャンネルを気軽な会話の場として使えます。
+
+メンション不要のチャンネルでもスレッドを作りたいときは、`discord.free_response_auto_thread: true`（または `DISCORD_FREE_RESPONSE_AUTO_THREAD=true`）を設定してください。この場合、メンション不要のチャンネルに届いた大元のメッセージごとにスレッドが作られますが、チャンネル自体は @mention なしのままです。`discord.auto_thread: true` が必要です。
+
+#### `discord.free_response_auto_thread` {#discordfreeresponseautothread}
+
+**型:** 真偽値 — **既定:** `false`
+
+`true` のとき、`discord.free_response_channels` に挙げたチャンネルでも、大元のメッセージごとにスレッドが自動で作られ、その場での返信ではなくなります。チャンネルはメンション不要のままで、変わるのは会話が置かれる場所だけです。
+
+```yaml
+discord:
+  free_response_channels:
+    - 1234567890
+  auto_thread: true                # required — this flag refines it
+  free_response_auto_thread: true  # thread every top-level message there
+```
+
+`discord.auto_thread: true` が必要です（切ってあると、どこでもスレッドは作られません）。[`discord.no_thread_channels`](#discordno_thread_channels) のほうが優先され、音声につながったテキストチャンネルは常にその場で返信し、返信の形のメッセージが自動でスレッドになることはありません。
+
+`DISCORD_FREE_RESPONSE_AUTO_THREAD` と `config.yaml` の項目を両方書いた場合は、環境変数のほうが優先されます。ほかの `discord.*` の橋渡しと同じく、YAML の値は環境変数がまだ設定されていないときにその初期値を与えるだけです。
 
 #### `discord.auto_thread` {#discordautothread}
 
@@ -438,7 +460,7 @@ discord:
 
 有効なとき、通常のテキストチャンネルでの `@mention` ごとに、会話用の新しいスレッドが自動で作られます。本体のチャンネルが散らからず、会話ごとに独立したセッションの履歴を持てます。スレッドができてしまえば、その中の以降のメッセージに `@mention` は要りません。ボットは自分が参加していることを知っています。複数のボットがいる構成でスレッド内のこの省略をやめたい場合は、[`thread_require_mention`](#discordthread_require_mention) を `true` にしてください。
 
-すでにあるスレッドや DM に送ったメッセージは、この設定の影響を受けません。`discord.free_response_channels` や `discord.no_thread_channels` に挙げたチャンネルも自動でのスレッド作成を行わず、その場での返信になります。
+すでにあるスレッドや DM に送ったメッセージは、この設定の影響を受けません。`discord.no_thread_channels` に挙げたチャンネル、および [`discord.free_response_auto_thread`](#discordfree_response_auto_thread) が `true` でない限り `discord.free_response_channels` に挙げたチャンネルも、自動でのスレッド作成を行わず、その場での返信になります。
 
 #### `discord.reactions` {#discordreactions}
 

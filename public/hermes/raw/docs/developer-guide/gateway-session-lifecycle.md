@@ -2,7 +2,7 @@
 title: "ゲートウェイのセッションライフサイクル"
 description: "ゲートウェイにおける SessionSource・SessionEntry・SessionStore、セッションキーの規則、マルチユーザーの分離"
 upstream_path: developer-guide/gateway-session-lifecycle.md
-upstream_blob: 21c78aa6a09dec00c6a6bace5ff5912f5b672686
+upstream_blob: 2df83f49cc57ae7f93bb927e1e322bc73b9dcf5e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-session-lifecycle
 ---
@@ -467,6 +467,17 @@ Append to _queued_events[session_key] (overflow tail)
 止まったままにならないようにするためです。`/new` が閉じたばかりのセッションに結び付いた
 呼び起こしを動かしてよいかどうかは、処理の時点で決まります（`_resolve_async_delegation_session`。
 判断できないときは動かしません）。
+
+どちらのコマンドも、そのセッションの**バックグラウンドの委任**を終わらせます（`tools.async_delegation.
+interrupt_for_session` を、ルーティングキーと、起動した側の永続的なセッション ID で選びます）。
+処理中の経路には `_interrupt_and_clear_session` が停止を配り、委任を出したターンがすでに終わっている
+待機中のセッションには `_handle_stop_command` が同じことをします（「No active task to stop」ではなく
+「Stopped」と返します）。ターン自身の強い中断は、こうした単位には届きません。委任した時点で
+`_active_children` から切り離されているからです。この配り直しがなければ、それらは最後まで走り切り、
+数分後にチャットを呼び起こしてしまいます。停止された単位もふつうどおり後始末をして、
+`status="interrupted"` と子の途中までの出力を持つ完了通知として戻ってきます。`/new` と `/reset` は
+これを `_handle_reset_command` の中ですでに済ませていて、共有のヘルパーによる先の呼び出しは
+そこでは何度行っても同じです（強い中断を 2 回頼んでも、停止は 1 回です）。
 
 ### FIFO の不変条件 {#fifo-invariant}
 

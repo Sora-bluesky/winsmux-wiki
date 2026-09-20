@@ -2,7 +2,7 @@
 title: "Android / Termux"
 description: "Termux を使って Android スマートフォン上で Hermes Agent を直接動かす"
 upstream_path: getting-started/termux.md
-upstream_blob: df94ba957089ea08cf12a17125ae29e31469e77c
+upstream_blob: 9fdeb4ed2f02e1760447bd135c5ac40e78971c92
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/termux
 ---
@@ -263,6 +263,10 @@ python -m pip install -e '.[termux]' -c constraints-termux.txt
 export ANDROID_API_LEVEL="$(getprop ro.build.version.sdk)"
 python -m pip install -e '.[termux]' -c constraints-termux.txt
 ```
+
+### `Failed building wheel for uvloop` {#failed-building-wheel-for-uvloop}
+
+`uvloop` は libuv を同梱していますが、その `./configure` は Android では動きません。そのため Hermes は、基本のインストールでも `termux` / `termux-all` の追加セットでも、これを外してあります。`uvicorn` は標準ライブラリの asyncio のループに切り替わり、ダッシュボードもゲートウェイもそのまま問題なく動きます。このエラーが出たときは、`uvloop` を含む追加セット（たとえば `[all]`）をインストールしています。代わりに `.[termux]` か `.[termux-all]` を入れてください。
 
 ### `hermes doctor` が ripgrep や Node が無いと言う {#hermes-doctor-says-ripgrep-or-node-is-missing}
 

@@ -2,7 +2,7 @@
 title: "Docx — Word の .docx ファイルを作る・読む・書き換える・ひな形から埋める・査読する"
 description: "Word の .docx ファイルを作る・読む・書き換える・ひな形から埋める・査読する"
 upstream_path: user-guide/skills/bundled/productivity/productivity-docx.md
-upstream_blob: aa4ce2a6dacb3845667e1ce9928f57e46b0db166
+upstream_blob: 707a695d0157f4be36dc7dbc6bf1afebe0837220
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-docx
 ---
@@ -16,7 +16,7 @@ Word の .docx ファイルを作る・読む・書き換える・ひな形か�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity\docx` |
+| パス | `skills/productivity/docx` |
 | バージョン | `1.1.0` |
 | 作者 | Nous Research |
 | ライセンス | MIT |

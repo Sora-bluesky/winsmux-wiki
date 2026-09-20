@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: da7ef399bb10ce2c35df9caaf63b1232544fbb1a
+upstream_blob: 36b02a3ab882b2d147a320c634f9c0c68520481f
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -65,7 +65,7 @@ LLM につなぐ手段が少なくとも 1 つ必要です。`hermes model` を�
 
 組み込みの OpenCode 系 2 プロバイダはいずれも、会話ごとに変わる不透明な `x-opencode-session` ヘッダをすべてのリクエストに付けて送ります（全トランスポートのメインのやり取りに加えて、圧縮、タイトル生成、承認の確認、スキルハブの照会、`/btw` の脇道の質問といった補助的な呼び出しにも付きます。やり取りが終わったあとに裏で走るものも含みます。ヘッドレスで動く Kanban の `specify`/`decompose` と、ダッシュボードの見積もり呼び出しでは、タスクごとのキーを使います）。OpenCode はこれを使って 1 つの会話を同じバックエンドに固定し、プロンプトキャッシュを温かいまま保ちます。値は Hermes のセッション ID（または Kanban のタスク ID）から導出したもので、個人情報は含みません。
 
-組み込みの OpenCode 系 2 プロバイダは、それぞれ `opencode.ai` 上の自分の中継先に固定されています（`opencode-zen` は `/zen/v1`、`opencode-go` は `/zen/go/v1`）。別の中継先のまま残った `model.base_url` は、選んだプロバイダの中継先に直されます。どの中継先を使うかは選んだモデル（`-m`、`/model`、フォールバックの項目、チャンネルごとの上書き）で決まるので、Zen のモデルから Go にしかないモデルへ切り替えても、リクエストが Zen へ送られることはありません。`providers:` の下に自分で定義したプロバイダの名前がこの系統のスラッグで始まる場合（たとえば `opencode-go-bridge`）、モデルごとの API モードの振り分けと `/v1` の扱いはその系統のものが適用されますが、`base_url` は書いたとおりに使われます。実際に指している中継先に合わせて名前を付けてください。
+組み込みの OpenCode 系 2 プロバイダは、それぞれ `opencode.ai` 上の自分の中継先に固定されています（`opencode-zen` は `/zen/v1`、`opencode-go` は `/zen/go/v1`）。別の中継先のまま残った `model.base_url` は、選んだプロバイダの中継先に直されます。どの中継先を使うかは選んだモデル（`-m`、`/model`、フォールバックの項目、チャンネルごとの上書き）で決まるので、Zen のモデルから Go にしかないモデルへ切り替えても、リクエストが Zen へ送られることはありません。このモデルごとの振り分けは、セッションを再開したとき（`hermes --resume`、`/resume`、TUI やデスクトップアプリの再開経路）にも適用し直されます。そのセッションが別の OpenCode モデルで動いていたあいだに記録された通信形式や中継先の URL が、再開後のモデルに持ち越されることはありません。ID に `-vision` の印が付く OpenCode のモデル（たとえば `deepseek-v4-flash-vision-exp`）は、models.dev に載る前から画像を扱えるものとして扱われるので、`agent.image_input_mode: auto` なら `supports_vision` を上書きしなくても画像がそのまま添付されます。`providers:` の下に自分で定義したプロバイダの名前がこの系統のスラッグで始まる場合（たとえば `opencode-go-bridge`）、モデルごとの API モードの振り分けと `/v1` の扱いはその系統のものが適用されますが、`base_url` は書いたとおりに使われます。実際に指している中継先に合わせて名前を付けてください。補助的な処理（`auxiliary.compression`、タイトル生成、画像認識、MoA）を OpenCode のプロバイダに向けた場合も同じモデルごとの表に従うので、`gpt-5.6-luna` のような Responses 専用のモデルや、`minimax-m2.5` のような Anthropic 方式のモデルも、メインの会話とまったく同じように動きます。
 
 公式の API キーを使う経路については、[Google Gemini ガイド](/hermes/docs/guides/google-gemini/)を参照してください。
 
@@ -92,9 +92,9 @@ hermes portal info        # inspect login + routing at any time
 **JWT 認証（自動）。** Hermes は Portal へのリクエストに、スコープ付きの `inference:invoke` JWT を優先して使い、従来の不透明なセッションキー経路はフォールバックとして残しています。設定は不要で、認証情報は OAuth フローが管理し、意識せずローテーションされます。失効したリフレッシュトークンは隔離され、再送のループに陥らないようになっています。
 
 :::info Codex についての注記
-OpenAI Codex プロバイダはデバイスコードで認証します（URL を開いてコードを入力する方式です）。Hermes は得られた認証情報を自前の認証ストア `~/.hermes/auth.json` に保存し、既存の Codex CLI の認証情報が `~/.codex/auth.json` にあればそれを取り込めます。Codex CLI のインストールは不要です。
+OpenAI Codex プロバイダは、既定ではデバイスコードで認証します（URL を開いてコードを入力する方式です）。デバイスコードの許可を組織として無効にしている場合は、代わりにブラウザでの認可コード + PKCE 方式を選べます。`hermes auth add openai-codex --browser` なら 1 回のログインだけ、`config.yaml` に `auth.codex_login_flow: browser` を書けば `hermes model` を含む Codex のログインすべてがこの方式になります。この方式は `http://localhost:1455/auth/callback` で待ち受けます。これは Codex クライアント用に登録されたリダイレクト URI なので、ポート番号は固定です。すでにそのポートが使われている場合（Codex CLI のサインインが進行中のときなど）は、Hermes がその旨を伝えてデバイスコードに切り替えます。SSH 越しに使うときは、待ち受けにトンネルが必要です（`ssh -N -L 1455:127.0.0.1:1455 user@host`。[SSH 越しの OAuth](/hermes/docs/guides/oauth-over-ssh/) を参照してください）。Hermes は得られた認証情報を自前の認証ストア `~/.hermes/auth.json` に保存し、既存の Codex CLI の認証情報が `~/.codex/auth.json` にあればそれを取り込めます。Codex CLI のインストールは不要です。Hermes 自身の更新が失敗したときに Codex CLI のログインを自動で引き継ぐかどうかは、`auth.adopt_external_logins` で決まります（[借りてきた CLI のログイン](/hermes/docs/user-guide/security/#borrowed-cli-logins) を参照してください）。
 
-トークンの更新が回復不能なエラー（HTTP 4xx、`invalid_grant`、権限の失効など）で失敗した場合、Hermes はそのリフレッシュトークンを無効と判断して再送をやめるので、同じ認証エラーが延々と出ることはありません。次のリクエストでは、代わりに再認証を促すメッセージが出ます。`hermes auth add openai-codex`（または `hermes model` → **ChatGPT or Codex Subscription**）を実行してデバイスコードのログインをやり直してください。隔離は次に交換が成功した時点で解除されます。
+トークンの更新が回復不能なエラー（HTTP 4xx、`invalid_grant`、権限の失効など）で失敗した場合、Hermes はそのリフレッシュトークンを無効と判断して再送をやめるので、同じ認証エラーが延々と出ることはありません。次のリクエストでは、代わりに再認証を促すメッセージが出ます。`hermes auth add openai-codex`（または `hermes model` → **ChatGPT or Codex Subscription**）を実行してログインをやり直してください（デバイスコード、またはループバックの PKCE 方式なら `--browser`）。隔離は次に交換が成功した時点で解除されます。
 
 Python / OpenSSL 3.5 以降では、途中の通信機器が X25519MLKEM768 のような耐量子の鍵交換グループを拒否すると、デバイスログインが `[SSL: UNEXPECTED_EOF_WHILE_READING]` や TLS ハンドシェイクのタイムアウトで失敗することがあります（curl では通ることもあります）。一度きりの切断で終わりになるわけではありません。ブラウザでの承認を待つあいだ、Hermes は連続 6 回までの通信エラーを乗り越えて問い合わせを続けます（デバイスコードの要求とトークンの交換も 2 回まで再試行します）。つまり、このエラーが表に出るのは、ネットワークが継続的に壊れている場合だけです。Hermes は既定の TLS の方針を変えません。`hermes model` を実行する前に、`Groups` を従来の曲線だけに絞った設定を `OPENSSL_CONF` で指し示すか、TLS 1.2 で切り分けてください。
 
@@ -163,7 +163,10 @@ Claude のモデルを Anthropic API 経由で直接使います。OpenRouter �
 
 環境変数の認証情報を明示的に選んでいない場合、認証情報のプールにある Hermes 自身の OAuth の
 許可が、借りてきた Claude Code のログインより優先されます。自前の OAuth の許可が無いときだけ、
-借りてきたログインが控えとして使われます。補助的な認証の復旧処理は、失敗したリクエストで使った
+借りてきたログインが控えとして使われます。ただし `auth.adopt_external_logins: false` を設定した
+場合は別で、このとき Hermes は Claude Code の認証情報を読むことも更新することもしません
+（[借りてきた CLI のログイン](/hermes/docs/user-guide/security/#borrowed-cli-logins) を参照して
+ください）。補助的な認証の復旧処理は、失敗したリクエストで使った
 認証情報を更新するだけで、無関係な周辺のログインには触りません。借りてきたログインを回すと、
 その持ち主のリフレッシュトークンを無効にしてしまうおそれがあるからです。
 
@@ -703,6 +706,7 @@ model:
   provider: custom
   base_url: http://localhost:8000/v1
   api_key: your-key-or-leave-empty-for-local
+  # key_env: MY_PROVIDER_API_KEY  # env var holding the key (alternative to api_key)
 ```
 
 :::warning 古い環境変数
@@ -1142,6 +1146,8 @@ Hermes を WSL2 の中で、モデルサーバーを Windows ホストで動か�
 
 **直し方:** エージェント用途では、コンテキストを少なくとも **64,000 トークン**に設定してください。指定するフラグは、上の各サーバーの節を参照してください。
 
+ローカルのエンドポイント（`127.0.0.1`、LAN、Docker のサービス名）に対して起動時に拒否されたときは、そのサーバーが実際に提供しているウィンドウの大きさと、直し方が表示されます。これは Ollama だけでなく、OpenAI 互換のサーバー全般に当てはまります。サーバー側のコンテキストを広げる（llama.cpp なら `-c 64000`、vLLM なら `--max-model-len`、Ollama なら `OLLAMA_CONTEXT_LENGTH` か Modelfile の `num_ctx`）か、`config.yaml` の `model.ollama_num_ctx` に、そのサーバーが本当に提供しているウィンドウの大きさ（最低でも 64K）を書いてください。`model.ollama_num_ctx` はどのローカルエンドポイントでも効きます。その裏側にある自動検出だけが Ollama の `/api/show` を使います。
+
 #### 起動時に「Context limit: 2048 tokens」と出る {#context-limit-2048-tokens-at-startup}
 
 Hermes はサーバーの `/v1/models` エンドポイントからコンテキスト長を自動検出します。サーバーが小さな値を返す（あるいは何も返さない）場合、Hermes はモデルが宣言している上限を使いますが、それが誤っていることがあります。
@@ -1276,7 +1282,7 @@ Hermes はもう `model.max_tokens`、`HERMES_MAX_TOKENS`、プロバイダ側�
 
 Hermes は、モデルとプロバイダに合ったコンテキストウィンドウを見つけるために、複数の情報源をたどる解決の連鎖を使います。
 
-1. **設定による上書き** — config.yaml の `model.context_length`（最優先）
+1. **設定による上書き** — config.yaml の `model.context_length`（最優先）。これは明示的な**固定**なので、プロバイダ側のメタデータより必ず優先されます。そのため Hermes は、ウィンドウの大きさを表示する場所（起動時のバナー、`/model`、`/usage`、ステータスバー）では `(pinned)` と添えて示し、固定した値がプロバイダの公表しているウィンドウと食い違う場合は起動時に警告を 1 回だけ出します。モデル、プロバイダ、ベース URL を切り替えると、この固定は自動的に外れます。
 2. **カスタムプロバイダのモデル単位の設定** — `providers.<name>.models.<id>.context_length`
 3. **永続キャッシュ** — 過去に判明した値（再起動しても残ります）
 4. **エンドポイントの `/models`** — サーバーの API に問い合わせます（ローカル / カスタムのエンドポイント）
@@ -1339,7 +1345,7 @@ providers:
     transport: anthropic_messages  # for Anthropic-compatible proxies
 ```
 
-各エントリが受け付けるのは、`api`（エンドポイントのベース URL。`base_url`/`url` も別名として使えます）、`name`（任意の表示名。既定は辞書のキー）、`key_env` かインラインの `api_key` か `key_cmd`（後述）、`transport`（`chat_completions` / `anthropic_messages` / `codex_responses`）、`default_model`、`models`、`context_length`、`discover_models`、`extra_body`、`extra_headers`、`ssl_ca_cert` / `ssl_verify`、`catalog_provider`（後述）、そしてエントリを消さずに隠すための `enabled: false` です。
+各エントリが受け付けるのは、`api`（エンドポイントのベース URL。`base_url`/`url` も別名として使えます）、`name`（任意の表示名。既定は辞書のキー）、`key_env` かインラインの `api_key` か `key_cmd`（後述）、`transport`（`chat_completions` / `anthropic_messages` / `codex_responses`）、`default_model`、`models`、`context_length`、`discover_models`、`extra_body`、`extra_headers`、`session_affinity_header`（会話 ID を載せるヘッダーの名前。セッションを意識するプロキシ向けで、設定しないかぎり無効です）、`ssl_ca_cert` / `ssl_verify`、`catalog_provider`（後述）、そしてエントリを消さずに隠すための `enabled: false` です。
 
 #### コマンドで発行する認証情報（`key_cmd`） {#command-minted-credentials-keycmd}
 
@@ -1374,6 +1380,8 @@ providers:
 :::note 旧来の形式
 古い設定では、代わりにトップレベルの `custom_providers:` のリストを使っていました。これはまだ動きますし（Hermes は両方を読みます）、`hermes update` が `providers:` の辞書形式へ自動で移行します（config v12）。辞書形式ではフィールド名が少し違い、旧来の `model` は `default_model`、旧来の `api_mode` は `transport` になります。
 :::
+
+**`codex_responses` のプロキシでのコンテキストウィンドウ。** `transport: codex_responses` を指定したカスタムの項目（たとえばローカルの Codex プロキシ）では、Codex OAuth のモデル（`gpt-6-astra`、`gpt-5.6-sol`/`-terra`/`-luna`、`gpt-5.5` など）のコンテキストウィンドウを、直接 API のカタログの 1.05M ではなく、Codex OAuth の表（ほとんどのスラッグで 272K）から解決します。こうすることで、Codex のバックエンドの上限と 272K の課金区分に達する前に圧縮が走ります。この判断はホスト名ではなくトランスポートに従うので、`HERMES_CODEX_BASE_URL` や `model.base_url` の後ろにいる `openai-codex` でも同じです。モデルごとの `models.<id>.context_length`、項目単位の `context_length`、`model.context_length` を指定した場合は、そちらが優先されます。自分で選ぶ `-900k` 付きの派生は、確認済みの 900K のままです。
 
 **カスタムエンドポイントでの推論の深さ。** 設定した `reasoning_effort`（`/reasoning max`、`agent.reasoning_effort`）は、`chat_completions` と `codex_responses` のどちらのトランスポートでも、そのままカスタムエンドポイントへ届きます。`max` まで届き、Hermes 内部だけの `ultra` が `max` に丸められるだけです。例外は 2 つあり、いずれも項目ではなく接続先のホストに従います。`api.openai.com` を指したカスタムの項目は OpenAI のモデルごとの段階を保ち（そこでは `max` は gpt-5.6 だけの段階です）、モデルごとの語彙を公開しているプロバイダ（Ramp Router）を指した項目は、そのカタログに丸められます。その段階を受け付けないエンドポイントは、Hermes が黙って落とすのではなく、HTTP 400 を返します。
 
@@ -1663,8 +1671,10 @@ fallback_providers:
   - provider: anthropic
     model: claude-sonnet-4
     # base_url: http://localhost:8000/v1    # optional, for custom endpoints
-    # api_mode: chat_completions           # optional override
+    # api_mode: chat_completions           # optional override (`transport:` is an accepted alias)
 ```
+
+`providers.<name>` のブロックを名前で指す項目（`provider: my-relay` や `provider: custom:my-relay`）は、その項目自身が何も指定していなければ、ブロック側の `transport` / `api_mode` を引き継ぎます。そのため、Responses 専用や Anthropic Messages の中継先も、宣言した通信方式のままフォールバックされます。上書きしたいときは、項目側に `api_mode` を書いてください。
 
 旧来の 1 組だけを書く `fallback_model:` の辞書も、後方互換のために受け付けられます。
 

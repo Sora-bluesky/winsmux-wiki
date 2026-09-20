@@ -2,7 +2,7 @@
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: 08db620c004509eddfdda1a40e1228536a625782
+upstream_blob: fcaad2808e8c0b56734e057b8f1212d556d0fabb
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -17,7 +17,7 @@ cron のサブシステムは、決まった時刻にタスクを実行する仕
 |------|---------|
 | `cron/jobs.py` | ジョブのモデル、保存、`jobs.json` への不可分な読み書き |
 | `cron/scheduler.py` | スケジューラのループ。実行時刻が来たジョブの検出、実行、繰り返し回数の管理 |
-| `tools/cronjob_tools.py` | モデルから見える `cronjob` ツールの登録とハンドラ |
+| `tools/cronjob_tools.py` | モデルから見える `cronjob_manage` ツールの登録とハンドラ |
 | `gateway/run.py` | ゲートウェイとの連携。常駐ループの中で cron を刻む |
 | `hermes_cli/cron.py` | CLI の `hermes cron` サブコマンド |
 
@@ -32,7 +32,7 @@ cron のサブシステムは、決まった時刻にタスクを実行する仕
 | **cron 式** | `0 9 * * *` | 標準的な5フィールドの cron 記法（分、時、日、月、曜日） |
 | **ISO 形式の時刻** | `2025-01-15T09:00:00` | 一回きり。指定した時刻ちょうどに実行します |
 
-モデルから見えるのは `cronjob` ツール1つだけで、その中で操作を切り替えます。`create`、`list`、`update`、`pause`、`resume`、`run`、`remove` があります。
+モデルから見えるのは `cronjob_manage` ツール1つだけで、その中で操作を切り替えます。`create`、`list`、`update`、`pause`、`resume`、`run`、`remove` があります。
 
 ## ジョブの保存先 {#job-storage}
 
@@ -69,7 +69,7 @@ cron のサブシステムは、決まった時刻にタスクを実行する仕
 ### `last_status` に入る値 {#laststatus-literals}
 
 `last_status` に入る値は決まっていて、書き込むのは `cron.jobs.mark_job_run` だけです。表示する側
-（`hermes cron list` と `doctor`、`cronjob` ツール、Web ダッシュボードのバッジ、
+（`hermes cron list` と `doctor`、`cronjob_manage` ツール、Web ダッシュボードのバッジ、
 デスクトップの定期実行インスペクタ）はどれも値ごとに意味を明示的に対応づけます。
 「利用者の手元に結果が届いた」の判定を `== "ok"` で済ませてはいけません。
 

@@ -2,7 +2,7 @@
 title: "Simple English — 技術文書を ASD-STE100 の簡易技術英語に書き直す"
 description: "技術文書を ASD-STE100 の簡易技術英語に書き直す"
 upstream_path: user-guide/skills/optional/creative/creative-simple-english.md
-upstream_blob: 0a64375bdfa754e6f00cfc22ab9b1e45ad367c68
+upstream_blob: 7d7d0fd998e19ed4da15f081a5e209110bc3352c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-simple-english
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/simple-english` で入れます |
-| パス | `optional-skills/creative\simple-english` |
+| パス | `optional-skills/creative/simple-english` |
 | バージョン | `1.2.0` |
 | 作者 | AminBlg (https://github.com/AminBlg/SimpleEnglish), ported by Hermes Agent |
 | ライセンス | MIT |

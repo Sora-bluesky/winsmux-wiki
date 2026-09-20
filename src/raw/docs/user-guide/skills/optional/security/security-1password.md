@@ -2,7 +2,7 @@
 title: "1Password — op CLI を用意してサインインし、秘密の値を読み書きする"
 description: "op CLI を用意してサインインし、秘密の値を読み書きする"
 upstream_path: user-guide/skills/optional/security/security-1password.md
-upstream_blob: 17556d33e07fbda903d68e0dd053a49c7ce0edc4
+upstream_blob: 5a38286338ab8130bf01d233cf3c0ea749649bc3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-1password
 ---
@@ -16,7 +16,7 @@ op CLI を用意してサインインし、秘密の値を読み書きします�
 | | |
 |---|---|
 | 提供元 | 追加の skill です。`hermes skills install official/security/1password` で入れられます |
-| パス | `optional-skills/security\1password` |
+| パス | `optional-skills/security/1password` |
 | バージョン | `1.0.0` |
 | 作者 | arceus77-7, enhanced by Hermes Agent |
 | ライセンス | MIT |
@@ -104,7 +104,7 @@ Hermes の端末コマンドは既定で対話を挟まないため、呼び出�
 補足: `OP_SERVICE_ACCOUNT_TOKEN` を使う場合、これは要りません。トークンは端末の呼び出しをまたいで自動的に保たれます。
 
 ```bash
-SOCKET_DIR="${TMPDIR:-/tmp}/hermes-tmux-sockets"
+SOCKET_DIR="${TMPDIR:-${HERMES_HOME:-$HOME/.hermes}/cache/scratch}/hermes-tmux-sockets"
 mkdir -p "$SOCKET_DIR"
 SOCKET="$SOCKET_DIR/hermes-op.sock"
 SESSION="op-auth-$(date +%Y%m%d-%H%M%S)"

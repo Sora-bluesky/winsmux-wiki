@@ -2,7 +2,7 @@
 title: "Inspecting Hermes Desktop Dom — 動いている Hermes デスクトップの DOM/CSS を CDP で読む"
 description: "動いている Hermes デスクトップの DOM/CSS を CDP で読む"
 upstream_path: user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom.md
-upstream_blob: 3ad00695e2cfaad11974ef5dbba3283c347cd4d9
+upstream_blob: 516f42bbb930c47583d59f1a3a5ccba45a545fa8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development\inspecting-hermes-desktop-dom` |
+| パス | `skills/software-development/inspecting-hermes-desktop-dom` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -139,10 +139,10 @@ JSON.stringify({
 
 ```bash
 cd apps/desktop
-HERMES_HOME=/tmp/cdp-probe-home \
+HERMES_HOME=$HOME/.hermes/cache/scratch/cdp-probe-home \
 HERMES_DESKTOP_DEV_SERVER=http://127.0.0.1:5174 \
 HERMES_DESKTOP_CDP_PORT=9333 \
-  npx electron . --user-data-dir=/tmp/cdp-probe-userdata
+  npx electron . --user-data-dir=$HOME/.hermes/cache/scratch/cdp-probe-userdata
 ```
 
 `--user-data-dir` を分けると Electron の単一インスタンスのロックを避けられるので、動いている

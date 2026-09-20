@@ -2,7 +2,7 @@
 title: "Requesting Code Review — コミット前のレビュー: セキュリティ検査、品質の関門、自動修正"
 description: "コミット前のレビュー: セキュリティ検査、品質の関門、自動修正"
 upstream_path: user-guide/skills/bundled/software-development/software-development-requesting-code-review.md
-upstream_blob: 5e804e4e09cf288a44a3bab1007c54f66ccfc70e
+upstream_blob: 9baf44d3f56946921552971a32e08970061efa60
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review
 ---
@@ -16,8 +16,8 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development\requesting-code-review` |
-| バージョン | `2.0.0` |
+| パス | `skills/software-development/requesting-code-review` |
+| バージョン | `2.1.0` |
 | 作者 | Hermes Agent（obra/superpowers と MorAlekss を元にしています） |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
@@ -143,6 +143,8 @@ which go && go vet ./... 2>&1 | tail -10
 
 ## ステップ 5 — 独立したレビュー役のサブエージェント {#step-5-independent-reviewer-subagent}
 
+**対話セッションのときだけです。** 一度きりの実行（`hermes chat -q`、`--oneshot`、ベンチマーク用の仕組み）では、判定を受け取る相手がいないうえ、新しいサブエージェントを立てるとシステムプロンプト全体とリポジトリの読み直しをもう一度払うことになります。この場合はステップ 5 と 7 を飛ばし、ステップ 4 の確認項目を自分で差分に当てはめ、テストを走らせてから、ステップ 8 へ進んでください。
+
 `delegate_task` は直接呼びます。execute_code やスクリプトの中からは使えません。
 
 レビュー役に渡すのは、差分と静的検査の結果だけです。実装した側とは文脈を共有しません。
@@ -212,7 +214,7 @@ Suggestions (non-blocking): [list]
 
 ## ステップ 7 — 自動修正のくり返し {#step-7-auto-fix-loop}
 
-**修正と再検証は、最大 2 巡までです。**
+**修正と再検証は、最大 2 巡までです。対話セッションのときだけです（ステップ 5 を参照）。**
 
 3 つ目のエージェントを立てます。実装した側でも、レビューした側でもありません。
 指摘された点だけを直します。

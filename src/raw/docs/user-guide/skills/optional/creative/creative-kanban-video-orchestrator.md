@@ -2,7 +2,7 @@
 title: "Kanban Video Orchestrator — 複数エージェントによる動画制作の流れを設計して動かす"
 description: "複数エージェントによる動画制作の流れを設計して動かす"
 upstream_path: user-guide/skills/optional/creative/creative-kanban-video-orchestrator.md
-upstream_blob: 438d73784588b15f1fd2d2d5893af377d627ad65
+upstream_blob: fa9efde06d45ab0be9ee2e4d816af33699848c86
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/kanban-video-orchestrator` で入れます |
-| パス | `optional-skills/creative\kanban-video-orchestrator` |
+| パス | `optional-skills/creative/kanban-video-orchestrator` |
 | バージョン | `1.0.0` |
 | 作者 | ['SHL0MS', 'alt-glitch'] |
 | ライセンス | MIT |
@@ -76,7 +76,7 @@ DISCOVER  →  BRIEF  →  TEAM DESIGN  →  SETUP  →  EXECUTE  →  MONITOR
 相手の言い方から答えが読み取れるときは、その都度ふつうに推測して構いません。
 
 聞き取りの型と作風ごとの質問集は
-**[references/intake.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\kanban-video-orchestrator/references/intake.md)** にまとまっています。
+**[references/intake.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/kanban-video-orchestrator/references/intake.md)** にまとまっています。
 
 ### ステップ 2 — 企画書 {#step-2-brief}
 
@@ -99,10 +99,10 @@ DISCOVER  →  BRIEF  →  TEAM DESIGN  →  SETUP  →  EXECUTE  →  MONITOR
 残りは企画書が実際に必要としているもので決めます。
 
 役割のライブラリと作風ごとのチーム構成は
-**[references/role-archetypes.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\kanban-video-orchestrator/references/role-archetypes.md)** を参照してください。
+**[references/role-archetypes.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/kanban-video-orchestrator/references/role-archetypes.md)** を参照してください。
 
 役割から、それが読み込む Hermes の skill と道具一式への対応は
-**[references/tool-matrix.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\kanban-video-orchestrator/references/tool-matrix.md)** にあります。
+**[references/tool-matrix.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/kanban-video-orchestrator/references/tool-matrix.md)** にあります。
 
 ### ステップ 4 — 設定 {#step-4-setup}
 
@@ -118,7 +118,7 @@ DISCOVER  →  BRIEF  →  TEAM DESIGN  →  SETUP  →  EXECUTE  →  MONITOR
 
 `scripts/bootstrap_pipeline.py` を使うと、企画書とチーム設計の JSON から setup.sh を生成できます。
 設定スクリプトの構造、プロファイル設定の型、そして肝心の「作業場所を共有する」決まりについては
-**[references/kanban-setup.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\kanban-video-orchestrator/references/kanban-setup.md)**
+**[references/kanban-setup.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/kanban-video-orchestrator/references/kanban-setup.md)**
 を参照してください。
 
 ### ステップ 5 — 実行 {#step-5-execute}
@@ -148,14 +148,14 @@ hermes dashboard                                   # visual board UI
 3. 企画書の範囲を直し、ディレクターに分解し直させる
 
 切り分けの型、手入れの具体策、「タスクが止まったとき」の手順書は
-**[references/monitoring.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\kanban-video-orchestrator/references/monitoring.md)** を参照してください。
+**[references/monitoring.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/kanban-video-orchestrator/references/monitoring.md)** を参照してください。
 
 ## 参考: 実例 {#reference-worked-examples}
 
 物語作品、商品／宣伝、ミュージックビデオ、数学やアルゴリズムの解説、ASCII 動画、リアルタイムの
 インスタレーションという、まったく異なる 6 つの実例です。同じ進め方から、いかに違うチームと
 タスクの並びが生まれるかが分かります。
-**[references/examples.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative\kanban-video-orchestrator/references/examples.md)** を参照してください。
+**[references/examples.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/kanban-video-orchestrator/references/examples.md)** を参照してください。
 
 ## 大事な決まり {#critical-rules}
 

@@ -2,7 +2,7 @@
 title: "Weights And Biases — W&B で ML の実験・sweep・モデルレジストリ・ダッシュボードを記録する"
 description: "W&B で ML の実験・sweep・モデルレジストリ・ダッシュボードを記録する"
 upstream_path: user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases.md
-upstream_blob: 25b9a23eade842e096e33acc3bd5d62de1adc6ac
+upstream_blob: d94837dd03c6ad235a0d86dffb025f9c1f0e0b9f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases
 ---
@@ -16,7 +16,7 @@ W&B で ML の実験・sweep・モデルレジストリ・ダッシュボード�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/weights-and-biases` で導入します |
-| パス | `optional-skills/mlops\evaluation\weights-and-biases` |
+| パス | `optional-skills/mlops/evaluation/weights-and-biases` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "モデルの設定"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: 94345b2d619aafe103de800c3d0f6e60ff2aff8e
+upstream_blob: bd06b3180249eaeef3f660160b7ac5e44ae67434
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---
@@ -197,7 +197,17 @@ providers:
       CF-Access-Client-Secret: "yyyy"
 ```
 
-ヘッダーの値は認証情報を含むのが普通なので、Hermes は決してログに残しません。`extra_headers` が効くのは OpenAI 互換の経路です。`anthropic_messages` と `bedrock_converse` の API モードでは使われません。
+ヘッダーの値は認証情報を含むのが普通なので、Hermes は決してログに残しません。`extra_headers` が効くのは OpenAI 互換の経路と `anthropic_messages` の経路です（メインのクライアント、`/model` による切り替え、クライアントの作り直し、補助的なクライアントのいずれにも効きます）。`bedrock_converse` では使われません。設定する理由として多いのは、SDK の既定の `User-Agent` を拒む WAF の背後に中継があるときです（403 で「Your request was blocked」と返る、あるいはブラウザ向けの確認ページが返るケースです）。Hermes はこの種の 403 を、API キーの拒否ではなくファイアウォールや CDN による遮断として報告します。
+
+**`session_affinity_header`** — そのプロバイダへのすべてのリクエストに Hermes の会話 ID を載せる、ヘッダーの「名前」です（`chat_completions`、`anthropic_messages`、`codex_responses` でのメインのやり取りに加え、圧縮やタイトル生成といった補助的な呼び出しにも付きます）。設定しない限り無効で、求められてもいないエンドポイントへ Hermes がセッションの識別子を送ることはありません。状態を持つバックエンドの前に立つ、セッションを意識したプロキシ（LiteLLM の `x-litellm-session-id`、自前で立てた Claude / OpenAI のゲートウェイなど）は、これがないとエージェントのループを結び付ける手がかりを持てず、ほとんどのリクエストを新しい会話として扱い、毎回の応答で履歴全体を上流へ送り直してしまいます。値の中身に意味はなく、1 つの会話の間は（圧縮をまたいでも）変わらず、会話ごとに異なります。
+
+```yaml
+providers:
+  my-proxy:
+    api: http://127.0.0.1:4000/v1
+    api_key: sk-...
+    session_affinity_header: x-litellm-session-id
+```
 
 **`discover_models`** — `false` にすると（既定は `true`）、エンドポイントの `/models` 一覧への問い合わせを省き、その項目に書いた `models` だけを使います。モデル一覧の応答が遅い、当てにならない、余計なものが多いゲートウェイで便利です。
 

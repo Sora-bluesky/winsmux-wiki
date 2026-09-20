@@ -2,7 +2,7 @@
 title: "Drug Discovery — 創薬研究: ChEMBL 検索、薬らしさ、相互作用"
 description: "創薬研究: ChEMBL 検索、薬らしさ、相互作用"
 upstream_path: user-guide/skills/optional/research/research-drug-discovery.md
-upstream_blob: 39225e21f2919c0a0efd6630e20e42854bb612a5
+upstream_blob: e147e022583142ce88dab6854a17f01ee6421aae
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-drug-discovery
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/research/drug-discovery` で導入します |
-| パス | `optional-skills/research\drug-discovery` |
+| パス | `optional-skills/research/drug-discovery` |
 | バージョン | `1.0.0` |
 | 作者 | bennytimz |
 | ライセンス | MIT |

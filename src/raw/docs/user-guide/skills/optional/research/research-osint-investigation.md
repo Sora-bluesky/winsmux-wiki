@@ -2,7 +2,7 @@
 title: "Osint Investigation — 公開記録と制裁データから資金の流れを追う"
 description: "公開記録と制裁データから資金の流れを追う"
 upstream_path: user-guide/skills/optional/research/research-osint-investigation.md
-upstream_blob: 7287b65f9e5f02d8a4e1b309cb544d20ffe86ab0
+upstream_blob: 8c03b88a6696a8003520932a94323007839fabd6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-osint-investigation
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/research/osint-investigation` で導入します |
-| パス | `optional-skills/research\osint-investigation` |
+| パス | `optional-skills/research/osint-investigation` |
 | バージョン | `0.1.0` |
 | 作者 | Hermes Agent (adapted from ShinMegamiBoson/OpenPlanter, MIT) |
 | ライセンス | MIT |

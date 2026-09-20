@@ -2,7 +2,7 @@
 title: "Huggingface Hub — HuggingFace の hf CLI: モデルやデータセットの検索・ダウンロード・アップロード"
 description: "HuggingFace の hf CLI: モデルやデータセットの検索・ダウンロード・アップロード"
 upstream_path: user-guide/skills/optional/mlops/mlops-models-huggingface-hub.md
-upstream_blob: 8f504535f764aacbae4b8ba2b48b61e6daea2b0a
+upstream_blob: ee1cd9e093f5bc4a9ac3060fe3d64b91c57bcf36
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-models-huggingface-hub
 ---
@@ -16,7 +16,7 @@ HuggingFace の hf CLI で、モデルやデータセットを検索・ダウン
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/mlops/huggingface-hub` で入れます |
-| パス | `optional-skills/mlops\models\huggingface-hub` |
+| パス | `optional-skills/mlops/models/huggingface-hub` |
 | バージョン | `1.0.1` |
 | 作者 | Hugging Face |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Parallel Cli — エージェント向けのウェブ検索・深い調査・情報の補完"
 description: "エージェント向けのウェブ検索・深い調査・情報の補完"
 upstream_path: user-guide/skills/optional/research/research-parallel-cli.md
-upstream_blob: c09419c522915323dea9b7d6fc98560cd6e33a43
+upstream_blob: 3892ebbda620e8c1cc356a57a2b885354b1c9e53
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-parallel-cli
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加の skill です。`hermes skills install official/research/parallel-cli` で入れられます |
-| パス | `optional-skills/research\parallel-cli` |
+| パス | `optional-skills/research/parallel-cli` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -188,7 +188,7 @@ parallel-cli search "AI coding agent enterprise reviews" --mode agentic --json
 追加の質問が来そうなら、出力を保存しておきます:
 
 ```bash
-parallel-cli search "latest React 19 changes" --json -o /tmp/react-19-search.json
+parallel-cli search "latest React 19 changes" --json -o ~/.hermes/cache/scratch/react-19-search.json
 ```
 
 結果をまとめるときは:
@@ -407,6 +407,6 @@ parallel-cli config auto-update-check off
 - CLI の出力にない出典を示さないでください。
 - `login` には PTY やブラウザ操作が要ることがあります。
 - 短い処理は前面で実行し、バックグラウンド実行を使いすぎないでください。
-- 結果が大きいときは、すべてを文脈に詰め込まず `/tmp/*.json` に保存してください。
+- 結果が大きいときは、すべてを文脈に詰め込まず `~/.hermes/cache/scratch/*.json`（Hermes の一時保存用ディレクトリ）に JSON を保存してください。
 - Hermes 本体のツールで足りている場面で、黙って Parallel を選ばないでください。
 - これは外部サービスを使う流れであり、たいていアカウント認証と、無料枠を超えれば料金が必要になります。

@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: d9f89fd0dc272780789c6ec745be763a7541ef96
+upstream_blob: af3b2b9cd8db0fb425a94f5fd94f65daf216ca28
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -235,7 +235,7 @@ CLI のセッションで `/handoff <platform>` を使うと、進行中の会�
 1. CLI が、`<platform>` が有効でホームチャンネルが設定済みかを確かめます（設定は移動先のチャットで一度 `/sethome` を実行します）。
 2. CLI はセッションを引き継ぎ待ちにして、**ゲートウェイの応答を待ちます**。エージェントがターンの途中なら断られるので、いまの応答が終わるのを待ってください。
 3. ゲートウェイの監視役が引き継ぎを引き受け、移動先のアダプターに新しいスレッドを作らせます。
-   - **Telegram** — 新しいフォーラムのトピックを開きます（そのチャットで Bot API 9.4 以降の Topics モードが有効なら DM のトピック、そうでなければフォーラム型スーパーグループのトピック）。
+   - **Telegram** — 新しいフォーラムのトピックを開きます（ボットの持ち主が BotFather で Threaded Mode を有効にしていれば DM のトピック、そうでなければフォーラム型スーパーグループのトピック）。
    - **Discord** — ホームのテキストチャンネルの下に、1440 分で自動アーカイブされるスレッドを作ります。
    - **Slack** — 起点となるメッセージを投稿し、その `ts` をスレッドの軸にします。
    - **Matrix** — 起点となるメッセージを投稿し、そのイベント ID をスレッドの軸にします（`m.thread` の関連付け）。
@@ -590,7 +590,10 @@ hermes sessions archive --title "dry run" --yes
 ```
 
 絞り込みは少なくとも 1 つ必要です。条件なしの `hermes sessions archive` は、
-履歴の全体をアーカイブすることを断ります。アーカイブしたセッションは
+履歴の全体をアーカイブすることを断ります。圧縮された会話は、いま生きている先端を
+通してひとまとまりとしてアーカイブされます。古い圧縮の区切りだけが単独で古さの
+条件に当てはまることはないので、まだ使っている会話が、履歴が長いというだけで
+見えなくなることはありません。アーカイブしたセッションは
 `hermes sessions list` と `/resume` から見えなくなりますが、データベースには
 残っていて、Desktop やダッシュボードのセッション一覧から戻せます。
 
@@ -655,6 +658,53 @@ hermes sessions repair-routing --max-gap-seconds 300
 会話はどちらにしても `/resume` とセッション検索から読めます。修復が変えるのは
 行き先だけです。先にバックアップを取ってください
 （`cp ~/.hermes/state.db ~/.hermes/state.db.bak`）。
+
+### プロファイルをまたいで混ざった状態を直す {#repair-state-crossed-between-profiles}
+
+プロファイルは 1 つにつき `state.db` を 1 つ持ち、ゲートウェイのセッション
+キーには、その会話を持っているプロファイルの名前が入ります（既定の
+プロファイルなら `agent:main:…`、名前付きなら `agent:<name>:…`）。古い版では
+この 2 つが食い違ったまま残ることがありました。名前付きプロファイルの行が
+既定のストアに書かれている、子セッションが別のプロファイルの行を引き継いで
+いる、ルーティングの行が違うストアにコピーされている、Telegram のトピックや
+`/voice` の設定がボットのプロファイル抜きで保存されている、といった具合です。
+今の版は新しい状態を正しい場所に置きます。すでに混ざっているものは `hermes
+sessions repair-profiles` で片を付けます。
+
+```bash
+# Report only — every store is scanned, nothing is written
+hermes sessions repair-profiles
+
+# Perform the repairs (stop the gateway first; a snapshot of every store is taken)
+hermes sessions repair-profiles --apply
+
+# Machine-readable report
+hermes sessions repair-profiles --json
+```
+
+何を見つけて、何をするか。
+
+| 見つかるもの | 直し方 |
+|---|---|
+| `profile_name` が、その行自身のセッションキーと食い違っている | キーに合わせて付け直します |
+| 別のプロファイルのストアに置かれている行 | メッセージごと、持ち主のプロファイルのストアへ移します |
+| `parent_session_id` が別のプロファイルの行を指している | つながりを切ります。その行自身の素性はそのまま残します |
+| （多重化しているときに）既定のストアの外にあるルーティングの行 | 既定のストアへ移します。そこにすでに行があれば、そちらを残します |
+| すでに無いプロファイルのルーティングの行や `sessions.json` の項目 | 削除します |
+| ボットのプロファイルが抜けている Telegram のトピックの結び付けと、音声モードの項目 | そのチャットを持っているセッションから付け直します |
+
+報告はするものの、どちらなのかを教えないかぎり直さないものが 2 つあります。
+存在しないプロファイルにひも付いた行（そのプロファイルを作るか、`hermes
+profile migrate-identity <old> <new>` を使ってください）と、名前付き
+プロファイルのストアの中にある `agent:main:…` の行です。後者は、そのプロ
+ファイル用にゲートウェイが単独で動いていたころの履歴（`--legacy-main rekey`
+でそのプロファイルの名前空間に移せます）か、スコープを絞った書き込みで
+紛れ込んだ既定プロファイルのチャット（`--legacy-main move` で既定のストアへ
+送ります）のどちらかで、行そのものからは見分けが付きません。
+
+`--apply` は、どれかのストアをゲートウェイが掴んでいる間は実行を断ります
+（ルーティングの索引をメモリに持っていて、あとで書き戻してしまうためです）。
+また、繰り返し実行しても安全です。2 回目は何も見つかりません。
 
 ## Claude Code や Codex CLI からセッションを取り込む {#importing-sessions-from-claude-code-and-codex-cli}
 
@@ -925,6 +975,7 @@ state.db が正本になる前に作られたセッションでは、`~/.hermes/
 - ゲートウェイの会話は、しばらく使わなくても残ります。区切りたいときは `/new` か `/reset` を使ってください
 - リセットの前に、エージェントは期限を迎えるセッションから記憶と skill を保存します
 - 自動の整理（#54189 以降は**既定で有効**）: `sessions.auto_prune` が `true` のとき、終了したセッションのうち `sessions.retention_days`（既定 90）の間なにも起きていないものが、CLI・ゲートウェイ・cron の起動時に整理されます
+- `sessions.retention_days` は `>= 0` の整数の日数でなければなりません。負の値（や、値がないこと）は受け付けられません。起動時の整理処理は、許される範囲を示した警告を記録したうえで、未来の日付を区切りにして「全部」を消しにいくようなことはせず、その回の整理を飛ばします。整理そのものを止めたいときの切り替えは `sessions.auto_prune: false` です
 - 実際に行が消えた整理のあと、`state.db` は次の**両方**の条件を満たしたときだけ `VACUUM` してディスクを取り戻します。前回の `VACUUM` の成功から `sessions.min_vacuum_interval_days`（既定 30）以上たっていること、**かつ**ファイルのページの 25% 以上が取り戻せる状態であること（`PRAGMA freelist_count / page_count`）。中身の詰まったデータベースが、数 MB のために全体を書き直す代価を払うことはありません（SQLite は普通の DELETE ではファイルを縮めません）
 - 整理は `sessions.min_interval_hours`（既定 24）につき最大 1 回だけ走ります。最後に実行した時刻は `state.db` 自身に記録されるので、同じ `HERMES_HOME` を使うすべての Hermes のプロセスで共有されます
 

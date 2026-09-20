@@ -2,7 +2,7 @@
 title: "Pdf — PDF ファイルを作る・読む・結合する・入力する・OCR にかける・本文を書き換える"
 description: "PDF ファイルを作る・読む・結合する・入力する・OCR にかける・本文を書き換える"
 upstream_path: user-guide/skills/bundled/productivity/productivity-pdf.md
-upstream_blob: bb7b601488fef5147cd4fd2fa70b2fe1abc7ca0e
+upstream_blob: ddf2d91450fa4c0db62fc37bdba565fb96355ccf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-pdf
 ---
@@ -16,7 +16,7 @@ PDF ファイルを作り、読み、結合し、フォームに入力し、OCR 
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity\pdf` |
+| パス | `skills/productivity/pdf` |
 | バージョン | `1.1.0` |
 | 作者 | Nous Research |
 | ライセンス | MIT |

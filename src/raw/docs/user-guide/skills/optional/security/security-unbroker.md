@@ -2,7 +2,7 @@
 title: "Unbroker — データブローカーサイトから自分の情報を自動で削除する"
 description: "データブローカーサイトから自分の情報を自動で削除する"
 upstream_path: user-guide/skills/optional/security/security-unbroker.md
-upstream_blob: 9cfeea1e90749a3e522f9d57ab4461632781eb40
+upstream_blob: 7a14567d7dbeabb6b2b58663e89fbb7858167d94
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-unbroker
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/security/unbroker` で導入します |
-| パス | `optional-skills/security\unbroker` |
+| パス | `optional-skills/security/unbroker` |
 | バージョン | `1.0.0` |
 | 作者 | SHL0MS (github.com/SHL0MS) |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Computer Use — デスクトップを裏側から操作し、必要なときだけ前面に出す"
 description: "デスクトップを裏側から操作し、必要なときだけ前面に出す"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use.md
-upstream_blob: e907255c2bbd22378a08dd7842f46081f56844f2
+upstream_blob: b8543e43fd3c576e4db54ed70cb718082d5ad80e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use
 ---
@@ -16,8 +16,8 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/autonomous-ai-agents\computer-use` |
-| バージョン | `2.0.0` |
+| パス | `skills/autonomous-ai-agents/computer-use` |
+| バージョン | `2.1.0` |
 | 作者 | Francesco Bonacci (f-trycua), Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | macos, windows, linux |
@@ -41,11 +41,13 @@ sources:
 Anthropic 独自のスキーマを覚える必要はありません。
 
 内部では Hermes が [cua-driver](https://github.com/trycua/cua) を動かしています。
-このラッパー skill は、Hermes 側の `computer_use` の進め方とアクションの語彙を伝えるものです。
-cua-driver の MCP ツールを直接呼ばず、以下に説明するアクションを使ってください。ドライバの内部やプラットフォームごとのふるまいについては、
-`cua-driver skills install` で入る Cua の skill を参照してください。Hermes による自動検出は
-cua-driver 側で予定されている作業なので、今のところは出来上がった
-`~/.cua-driver/skills/cua-driver` ディレクトリを Hermes に指定するか、skill の置き場所にシンボリックリンクを張ってください。
+この skill が伝えるのは Hermes 側の `computer_use` の**アクションの語彙**で、
+ドライバの生の MCP の語彙ではありません。以下に説明するアクションを呼び、
+ドライバのツール名を直接呼ばないでください。`capture` は Hermes 側のアクションで、
+ドライバの `get_window_state` に対応します。`element=N` は Hermes 側の引数で、
+ラッパーがドライバの `element_token` という取っ手へ翻訳します。`snapshot_id`、
+`element_token`、"no reviewed risk classification" に触れるドライバ側のエラーが出たら、
+あなた（または古くなった説明）がドライバの生の語彙を呼んでいます。以下のアクションへ戻ってください。
 
 ## 基本の進め方 {#the-canonical-workflow}
 
@@ -55,8 +57,7 @@ cua-driver 側で予定されている作業なので、今のところは出来
 computer_use(action="capture", mode="som", app="<the app you're driving>")
 ```
 
-操作できる要素すべてに番号を重ねたスクリーンショットと、
-次のような AX ツリーの索引が返ります。
+スクリーンショットと、次のような要素の一覧が返ります。
 
 ```
 #1  AXButton 'Back' @ (12, 80, 28, 28) [Chrome]
@@ -64,6 +65,12 @@ computer_use(action="capture", mode="som", app="<the app you're driving>")
 #7  Link 'Sign In' @ (900, 420, 80, 24) [Chrome]
 ...
 ```
+
+`#N` の番号が、要素を指す唯一の取っ手です。その裏でラッパーは、
+この画面取得ごとの不透明なトークンを持っていて、`element=N` のアクションのたびに
+いっしょに送ります。おかげで、置き換えられた古い画面取得の番号へのクリックは、
+まちがった部品に当たる代わりに、はっきり `stale` として断られます。
+画面が変わることをしたら取り直してください。番号は持ち越せません。
 
 役割の名前は、動かしている OS のアクセシビリティの仕組みに合わせて変わります
 （macOS なら `AXButton`、Windows の UIA なら `Button`、Linux の
@@ -90,9 +97,19 @@ computer_use(action="click", element=7, capture_after=True)
 
 | `mode` | 返るもの | 向いている場面 |
 |---|---|---|
-| `som`（既定） | スクリーンショット + 番号の重ね表示 + AX の索引 | 画像を見られるモデル。まずはこれです |
-| `vision` | ふつうのスクリーンショット | 番号の重ね表示が、確認したいものと重なってしまうとき |
-| `ax` | AX ツリーだけで画像なし | テキストだけのモデル、または画面を見る必要がないとき |
+| `som`（既定） | スクリーンショット + 要素の一覧 | 画像を見られるモデル。まずはこれです |
+| `vision` | ふつうのスクリーンショットだけで要素なし | ピクセルだけがほしいとき（そのときは `coordinate=` でクリックします） |
+| `ax` | 要素の一覧だけで画像なし | テキストだけのモデル、または画面を見る必要がないとき |
+
+いまのドライバは、どの呼び出しでもスクリーンショットとツリーの両方を返します。
+`mode` が決めるのは Hermes があなたへ何を渡すかであって、ドライバのふるまいではありません。
+スクリーンショットに番号が焼き込まれることはありません。地図になるのは番号の一覧のほうです。
+両方を手がかりにして突き合わせてください（画面によってはツリーのほうが嘘をつきます）。
+
+**画像を読めるモデルがない場合は。** 本命のモデルが画像を読めない（あるいは提供元が画像のツール結果を
+受け付けない）とき、Hermes はスクリーンショットを補助の画像モデルへ回し、ピクセルの代わりに
+文章での説明が返ります。そのモデルは `config.yaml` の `auxiliary.vision` で指定できます。
+`mode="ax"` にして、スクリーンショットなしで要素の番号だけで進めることもできます。
 
 ## アクション {#actions}
 
@@ -106,8 +123,10 @@ drag              from_element=N, to_element=M        (or from/to_coordinate)
 scroll            direction=up|down|left|right   amount=3 (ticks)
 type              text="…"
 key               keys="<save shortcut>" | "return" | "escape" | "<modifier>+t"
+set_value         element=N  value="…"     (selects/sliders without opening the menu)
 wait              seconds=0.5
 list_apps
+list_windows
 focus_app         app="<app name>"   raise_window=false   (default: don't raise)
 ```
 
@@ -133,8 +152,8 @@ cua-driver は既定で入力を **裏側から** 届けます（入力先を奪
   （実行されたが、ほぼ確実に何も起きていません）。
 - `escalation`: `{recommended: "px" | "foreground", reason}` — 次に試す段があるときにだけ
   返ります。
-- `code`: `"background_unavailable"` や
-  `"foreground_unsupported"` のような構造化された拒否です。
+- `code`: `"background_unavailable"`、`"foreground_unsupported"`、
+  あるいは `"stale"`（取り直してから番号でやり直します）のような構造化された拒否です。
 - `verified`: AX での読み返しに成功したときだけ `true` になります。
 
 次の順に進みます。
@@ -252,9 +271,9 @@ computer_use(action="scroll", direction="down", amount=3, coordinate=[500, 400])
 
 `list_apps` は、動いているアプリを、バンドル ID / プロセス名、PID、
 ウィンドウ数とともに返します。`focus_app` は、ウィンドウを前面に出さずに入力先をそのアプリへ向けます。
-入力先を明示的に決める場面はあまりありません。`capture` / `click` / `type` に
-`app=...` を渡せば、そのアプリのいちばん手前のウィンドウが
-自動的に対象になります。
+入力先を明示的に決める場面はあまりありません。`capture` に `app=...` を渡せば
+そのアプリのいちばん手前のウィンドウが対象になり、続く入力のアクションは
+すべて同じウィンドウへ届きます（入力のアクションは `app=` を見ません）。
 
 ## スクリーンショットを利用者に届ける {#delivering-screenshots-to-the-user}
 
@@ -292,10 +311,13 @@ CLI では、見えているものを言葉で説明するだけで構いませ�
 |---|---|
 | `cua-driver not installed` | `hermes computer-use install` を実行するか、`hermes tools` から Computer Use を有効にします |
 | 画面の取得がいつも空、または "no on-screen window" が返る | Linux の場合: DISPLAY が設定されていない（X11）か、Wayland のみの環境かもしれません。`hermes computer-use doctor` を利用者に実行してもらってください。Windows の場合: 対話的なデスクトップではなく Session 0（SSH のセッション）にいるのかもしれません。cua-driver の `WINDOWS.md` の詳しい解説を参照してください |
-| 要素の番号が古い（"Element N not in cache"） | 番号は次の `capture` までしか有効ではありません。クリックの前に取り直してください。ラッパーは古さを判定するために不透明な `element_token` を持ち回るので、間違った場所をクリックする代わりに、はっきりとエラーが返ります |
+| `code:"stale"` / "element_token is stale" | 番号はひとつの画面取得に属します。`capture` を取り直し、新しい番号を読んでから動いてください。画面取得をまたいで番号を使い回さないこと |
+| "bare element_index is not accepted" / `snapshot_id_required` | ドライバがトークンなしの生の番号を受け取りました。これはラッパー側の不具合で、`snapshot_id` を渡して直すものではありません（Hermes にその引数はありません）。まず画面を取り直し、それでも続くなら `hermes update` を利用者に実行してもらい、その間は画面取得の位置情報から `coordinate=[x, y]` で進めてください |
+| "tool 'capture' has no reviewed risk classification" / `Unknown tool` | 何かがドライバの MCP の語彙を直接呼んでいます（`capture`、`screenshot`、`get_window_state`、生の引数での `click` など）。Hermes 側にあるのは、この文書にある `computer_use(action=…)` の語彙だけです |
 | クリックしても何も起きない | 構造化された判定を読んでください。`effect:"unverifiable"` なら、上げる先の助言があっても、再試行の前に画面や状態を取り直します。`effect:"suspected_noop"` や構造化された拒否なら、勧められた段を上げていきます。まず座標（px）、次に前面です。ブラウザの枠や OS のダイアログはこちらのままで、ページの中身は別のツール群です。そのアプリは動かせないと決めつけないでください |
 | ターミナルのエミュレータに打った文字が消える | cua-driver はターミナル（Ghostty、iTerm2、Terminal.app、Windows Terminal、mintty など）を判別し、キーイベントの合成で送ります。新しめの cua-driver ならそのまま動くはずです。動かない場合は `hermes computer-use doctor` を利用者に実行してもらってください |
 | `blocked pattern in type text` | 危険なパターンの一覧に当たるシェルコマンドを `type` しようとしました（`curl ... \| bash`、`sudo rm -rf` など）。コマンドを分けるか、やり方を考え直してください |
+| `hermes computer-use doctor` が "could not be started … Access is denied" と言う（Windows） | Hermes の venv の Python が、`C:\Program Files\WindowsApps` の下にある実行ファイルを起動できません。シェルのほうは PATH 上の別のコピーを見つけるので、ツール自体は動いていることがあります。直すのは一度だけです。cua-driver を公式のインストーラーで入れ直す（利用者のプロファイルの下に入ります）か、`HERMES_CUA_DRIVER_CMD` に `WindowsApps` の外にあるコピーを指定します。同じ拒否は、Hermes が起動するほかの `WindowsApps` の実行ファイル（`bws.exe` など）でも `errors.log` を埋めます |
 | そのほかの不可解な症状 | **最初にすること: `hermes computer-use doctor` を利用者に実行してもらいます。** cua-driver の `health_report` MCP ツールが走り、検査ごとの結果が表で出ます。その出力を見れば、何が問題かがはっきり分かります |
 
 ## `computer_use` を使わないほうがよい場面 {#when-not-to-use-computeruse}
@@ -319,13 +341,12 @@ X11/Wayland の細かい違い、操作の記録と動画、ブラウザのペ�
 cua-driver の skill パックにあります。cua-driver のチームが、他のエージェント基盤向けにも
 そのまま提供・保守している内容です。
 
-cua-driver の skill パックを自分の skill の置き場所に取り込むには、次を実行します。
-
 ```
 cua-driver skills install
 ```
 
-これで次のものが読めるようになります。
+を実行すると、パックが `~/.hermes/skills/cua-driver` に取り込まれます（Hermes は検出される
+エージェントのひとつです。取り込まれた状態は `cua-driver skills status` で見られます）。これで次のものが読めるようになります。
 
 - `SKILL.md` — OS 共通の中核（スナップショットの不変条件、
   前面に出さない約束、クリックの振り分け、AX ツリーの仕組み）
@@ -339,11 +360,6 @@ cua-driver skills install
 - `WEB_APPS.md` — ブラウザのページ操作のこつ
 - `TESTS.md` — 記録した操作を再生する進め方
 
-これらは重複ではなく、プラットフォームごとの掘り下げです。利用者から
-「Windows でクリックが違う要素に当たった」と言われたら、
-`WINDOWS.md` を読んで、その理由と別のやり方を説明する UIA / UWP の
-背景を確かめます。
-
-Hermes による自動検出は trycua/cua で予定されている作業です。今のところ、このコマンドは
-パックを `~/.cua-driver/skills/cua-driver` の下に置きます。そのディレクトリを Hermes に指定するか、
-利用者の skill の置き場所にシンボリックリンクを張ってください。
+これらのファイルが説明しているのは、ドライバ自身の MCP ツール（`get_window_state`、
+`element_token`、`snapshot_id` など）です。プラットフォームの背景を知るために読み、
+呼ぶのはこの文書にある Hermes 側のアクションのままにしてください。翻訳はラッパーがやります。

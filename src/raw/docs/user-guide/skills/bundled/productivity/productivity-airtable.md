@@ -2,7 +2,7 @@
 title: "Airtable — curl で使う Airtable REST API"
 description: "curl で使う Airtable REST API"
 upstream_path: user-guide/skills/bundled/productivity/productivity-airtable.md
-upstream_blob: f0363db1fb694610b370e908d56ab1d56eed2cb6
+upstream_blob: e0150b437cda002a2a17341e98ee7a528fdea9f7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-airtable
 ---
@@ -16,7 +16,7 @@ curl で Airtable の REST API を使います。レコードの作成・取得�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity\airtable` |
+| パス | `skills/productivity/airtable` |
 | バージョン | `1.1.0` |
 | 作者 | community |
 | ライセンス | MIT |

@@ -2,7 +2,7 @@
 title: "Searxng Search — 70 以上の検索エンジンをまとめて引く、鍵の要らない無料の検索"
 description: "70 以上の検索エンジンをまとめて引く、鍵の要らない無料の検索"
 upstream_path: user-guide/skills/optional/research/research-searxng-search.md
-upstream_blob: dca2c40bf2252121cd97963502748cfc4ccf8b5d
+upstream_blob: 89de0e9a2634e4adf1aa2979d86c8d4f899e100d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-searxng-search
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加の skill です。`hermes skills install official/research/searxng-search` で入れられます |
-| パス | `optional-skills/research\searxng-search` |
+| パス | `optional-skills/research/searxng-search` |
 | バージョン | `1.0.1` |
 | 作者 | hermes-agent |
 | ライセンス | MIT |

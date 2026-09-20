@@ -2,7 +2,7 @@
 title: "Blocked Page Recovery — ページの取得に失敗したときに使います: 403/429、ペイウォール、WAF、ボット判定の壁"
 description: "ページの取得に失敗したときに使います: 403/429、ペイウォール、WAF、ボット判定の壁"
 upstream_path: user-guide/skills/bundled/web/web-blocked-page-recovery.md
-upstream_blob: c3d5f9c360818d155265ad2cccbcc0e539b7ef1c
+upstream_blob: 9d8d5220ef6f3f7d9139b8e655bf61638c42e0c9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/web/web-blocked-page-recovery
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/web\blocked-page-recovery` |
+| パス | `skills/web/blocked-page-recovery` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -99,7 +99,7 @@ CDX は混み合うと 503 を返すことがあります。返ってきたら `
 
 ```bash
 for d in archive.ph archive.md archive.li archive.is; do
-  curl -sL --max-time 20 "https://$d/newest/{URL}" -o /tmp/page.html \
+  curl -sL --max-time 20 "https://$d/newest/{URL}" -o ~/.hermes/cache/scratch/page.html \
     -w "%{http_code}" && break
 done
 ```

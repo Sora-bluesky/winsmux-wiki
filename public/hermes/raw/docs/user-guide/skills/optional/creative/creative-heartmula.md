@@ -2,7 +2,7 @@
 title: "Heartmula — HeartMuLa: 歌詞とタグから Suno のように曲を作る"
 description: "HeartMuLa: 歌詞とタグから Suno のように曲を作る"
 upstream_path: user-guide/skills/optional/creative/creative-heartmula.md
-upstream_blob: 4131e473df65cd2e0cd93464299c0a15bf160469
+upstream_blob: fa91ac23e221b93ce1f07ddcb390be433b50437a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-heartmula
 ---

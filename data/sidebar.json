@@ -335,9 +335,6 @@
                       "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent"
                     },
                     {
-                      "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-merge-reconciler"
-                    },
-                    {
                       "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode"
                     }
                   ]
@@ -548,6 +545,9 @@
                   "label": "autonomous-ai-agents",
                   "items": [
                     {
+                      "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-agent-merge-conflict-arbiter"
+                    },
+                    {
                       "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli"
                     },
                     {
@@ -596,10 +596,10 @@
                       "id": "user-guide/skills/optional/creative/creative-ai-presenter-video"
                     },
                     {
-                      "id": "user-guide/skills/optional/creative/creative-ascii-art"
+                      "id": "user-guide/skills/optional/creative/creative-archify"
                     },
                     {
-                      "id": "user-guide/skills/optional/creative/creative-archify"
+                      "id": "user-guide/skills/optional/creative/creative-ascii-art"
                     },
                     {
                       "id": "user-guide/skills/optional/creative/creative-audiocraft-audio-generation"
@@ -1676,7 +1676,6 @@
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex",
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use",
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent",
-    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-merge-reconciler",
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode",
     "user-guide/skills/bundled/creative/creative-architecture-diagram",
     "user-guide/skills/bundled/creative/creative-ascii-video",
@@ -1727,6 +1726,7 @@
     "user-guide/skills/bundled/software-development/software-development-systematic-debugging",
     "user-guide/skills/bundled/software-development/software-development-test-driven-development",
     "user-guide/skills/bundled/web/web-blocked-page-recovery",
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-agent-merge-conflict-arbiter",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow",
@@ -1738,8 +1738,8 @@
     "user-guide/skills/optional/blockchain/blockchain-solana",
     "user-guide/skills/optional/communication/communication-one-three-one-rule",
     "user-guide/skills/optional/creative/creative-ai-presenter-video",
-    "user-guide/skills/optional/creative/creative-ascii-art",
     "user-guide/skills/optional/creative/creative-archify",
+    "user-guide/skills/optional/creative/creative-ascii-art",
     "user-guide/skills/optional/creative/creative-audiocraft-audio-generation",
     "user-guide/skills/optional/creative/creative-auteur",
     "user-guide/skills/optional/creative/creative-baoyu-article-illustrator",

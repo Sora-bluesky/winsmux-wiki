@@ -2,7 +2,7 @@
 title: "Spike — 作り込む前に、使い捨ての試作で見込みを確かめます"
 description: "作り込む前に、使い捨ての試作で見込みを確かめます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-spike.md
-upstream_blob: 33f0e7c9a82030431142a475f3b64778437b6edc
+upstream_blob: 3e5b66f2b2099c9f45fb4b427fcded9ed0a64a65
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-spike
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development\spike` |
+| パス | `skills/software-development/spike` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent（gsd-build/get-shit-done を元にしています） |
 | ライセンス | MIT |

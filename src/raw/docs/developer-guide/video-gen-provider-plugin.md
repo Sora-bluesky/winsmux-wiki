@@ -2,7 +2,7 @@
 title: "動画生成プロバイダプラグイン"
 description: "Hermes Agent 向けの動画生成バックエンドプラグインを作る方法"
 upstream_path: developer-guide/video-gen-provider-plugin.md
-upstream_blob: 0b564c1cedcfe69133780a709d1cf413dafed120
+upstream_blob: 784a9107fd2e234c8f5d8e7803fa34d1617583ff
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/video-gen-provider-plugin
 ---
@@ -179,7 +179,8 @@ requires_env:
 | `negative_prompt` | 出したくない内容（Pixverse と Kling のみ） |
 | `audio` | 音声つきで生成します（Veo3 と Pixverse の該当プラン） |
 | `seed` | 同じ結果を再現するための値 |
-| `model` | 使用中のモデルやファミリーを上書きします |
+
+ここに `model` のパラメータが無いのは意図的です。どのバックエンドとモデルを使うかは利用者の設定（`video_gen.provider` と `video_gen.model`）であって、エージェントが選ぶものではありません。作成した `generate()` には今までどおり `model=` が渡りますが、その値はツール層が解決した、設定どおりのモデルです。
 
 このうちどれが実際に効くかは、プロバイダの `capabilities()` が伝えます。エージェントは使用中のバックエンドの対応内容をツール説明として受け取り、`hermes tools` でバックエンドを変えると、その説明もその場で組み直されます。
 
@@ -206,13 +207,14 @@ def generate(self, prompt, *, image_url=None, model=None, **kwargs):
 
 ## どれが優先されるか {#selection-precedence}
 
-呼び出しごとのモデル指定は、次の順で決まります（`plugins/video_gen/fal/__init__.py` を参照してください）。
+プロバイダごとのモデル設定は、次の順で決まります（`plugins/video_gen/fal/__init__.py` を参照してください）。
 
-1. ツール呼び出しでの `model=` キーワード
-2. 環境変数 `<PROVIDER>_VIDEO_MODEL`
-3. `config.yaml` の `video_gen.<provider>.model`
-4. `config.yaml` の `video_gen.model`（その値が自分の ID のどれかと一致する場合）
-5. プロバイダの `default_model()`
+1. 環境変数 `<PROVIDER>_VIDEO_MODEL`
+2. `config.yaml` の `video_gen.<provider>.model`
+3. `config.yaml` の `video_gen.model`（その値が自分の ID のどれかと一致する場合）
+4. プロバイダの `default_model()`
+
+`generate()` が受け取る `model=` キーワードは、この解決の結果です。エージェントのツール呼び出しに `model` が書かれていても無視されるので、LLM が自分の判断でバックエンドや課金の区分を切り替えることはできません。
 
 ## 返す形 {#response-shape}
 

@@ -2,7 +2,7 @@
 title: "Google Gemini"
 description: "Hermes Agent を Google Gemini で使う方法。ネイティブの AI Studio API、API キーの設定、ツール呼び出し、ストリーミング、割り当ての考え方まで"
 upstream_path: guides/google-gemini.md
-upstream_blob: f90c00ed2ba429512659cf8a44fc8cdb4f2ea371
+upstream_blob: d486aa7b2a1db2942ca4abe72691f68027e802ee
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/google-gemini
 ---
@@ -113,15 +113,29 @@ Gemini の経路を通るのは、ベース URL が `generativelanguage.googleap
 
 ### Vertex AI のエクスプレスモードのキー {#vertex-ai-express-mode-keys}
 
-Google が出す Gemini のキーには 2 つの系統があります。AI Studio のキーは `AIza…` で始まり、
-**Vertex AI のエクスプレスモード**のキーは `AQ.…` で始まって、`aiplatform.googleapis.com` に対してしか
-認証できません（AI Studio 側のホストでは 403 が返ります）。Hermes は `AQ.` という頭の文字を見分けて、
-そのキーを自動で `https://aiplatform.googleapis.com/v1beta1/publishers/google` へ振り向けます。
-`GEMINI_API_KEY` にエクスプレスのキーを入れて、`GEMINI_BASE_URL` は設定しないままにしてください。
-`GEMINI_BASE_URL` に `https://aiplatform.googleapis.com` を設定した場合（`/v1beta1` はあってもなくても構いません）、
-Hermes が `publishers/google` の形まで補います。ほかのホストを指すベース URL（プロキシなど）が
-書き換えられることはありません。エクスプレスのキーは、OAuth を使う
+Google はいま、Google AI Studio と Vertex AI のエクスプレスモードの **どちらにも** `AQ.…` で始まる
+キーを出しています（従来の `AIza…` という AI Studio の形式は、順次なくなっていく予定です）。
+そのため、キーの頭の文字を見ても、どちらのサービス向けかは分かりません。Hermes がキーの形で
+経路を切り替えることはありません。どちらへ行くかを決めるのは、設定したベース URL です。
+既定の AI Studio のホストを使うなら、`GEMINI_API_KEY` を設定して `GEMINI_BASE_URL` は
+設定しないままにします。Vertex AI のエクスプレスモードのキーを使うなら、`GEMINI_BASE_URL` に
+`https://aiplatform.googleapis.com` を設定してください（`/v1beta1` はあってもなくても構いません）。
+Hermes が `publishers/google` の形まで補います。どちらのサービスも、自分向けのキーしか受け付けません。
+`403 PERMISSION_DENIED` が返るときは、たいていキーとホストの組み合わせが食い違っています。
+Hermes は、もう一方のサービスの名前を挙げた案内を添えます。ほかのホストを指すベース URL
+（プロキシなど）が書き換えられることはありません。エクスプレスのキーは、OAuth を使う
 [Vertex AI プロバイダ](/hermes/docs/guides/google-vertex/)とは別のもので、そちらは API キーを必要としません。
+
+:::warning すでにエクスプレスのキーを使っている方への注意
+以前の Hermes は `AQ.` という頭の文字を見分けて、そうしたキーを自動で
+`aiplatform.googleapis.com` へ振り向けていました。そのため、案内も「`GEMINI_API_KEY` に
+エクスプレスのキーを入れて、`GEMINI_BASE_URL` は設定しないまま」というものでした。この自動の
+振り向けはなくなりました。`GEMINI_BASE_URL` を設定していないと、チャットも `hermes doctor` も
+読み上げも、すべて AI Studio のホストへ向かうので、Vertex のエクスプレスのキーではそこで
+`403 PERMISSION_DENIED` が返ります。`~/.hermes/.env` に
+`GEMINI_BASE_URL=https://aiplatform.googleapis.com` を一度書き加えて（あるいはプロバイダ側の
+`base_url` を設定して）、起動し直してください。
+:::
 
 ## 使えるモデル {#available-models}
 

@@ -2,7 +2,7 @@
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: b49616bd0d4658d2cb90bc981c457c985274fa47
+upstream_blob: c93cf0283f8ae0b9300dfed1597b9f5723b192f9
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---

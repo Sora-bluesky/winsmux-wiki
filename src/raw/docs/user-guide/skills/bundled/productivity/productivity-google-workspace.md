@@ -2,7 +2,7 @@
 title: "Google Workspace — gws CLI か Python で Gmail・Calendar・Drive・Docs・Sheets を扱う"
 description: "gws CLI か Python で Gmail・Calendar・Drive・Docs・Sheets を扱う"
 upstream_path: user-guide/skills/bundled/productivity/productivity-google-workspace.md
-upstream_blob: 2a47729ed9b07d21f1fb8fd94ee3e69e32b48d1e
+upstream_blob: 117dee275ea66410df619ee90b01f3e095c219a5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-google-workspace
 ---
@@ -16,7 +16,7 @@ gws CLI か Python で Gmail・Calendar・Drive・Docs・Sheets を扱います�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity\google-workspace` |
+| パス | `skills/productivity/google-workspace` |
 | バージョン | `1.2.0` |
 | 作者 | Nous Research |
 | ライセンス | MIT |
@@ -286,8 +286,9 @@ $GAPI sheets append SHEET_ID "Sheet1!A:C" --values '[["new","row","data"]]'
 ### Docs {#docs}
 
 ```bash
-# Read
+# Read (a tabbed Doc returns a "tabs" array; single-tab and legacy Docs also return "body")
 $GAPI docs get DOC_ID
+$GAPI docs get DOC_ID --tab TAB_ID     # read one tab of a tabbed Doc
 
 # Create a new Doc (optionally seeded with body text)
 $GAPI docs create --title "Meeting Notes"
@@ -295,6 +296,7 @@ $GAPI docs create --title "Draft" --body "First paragraph..."
 
 # Append text to the end of an existing Doc
 $GAPI docs append DOC_ID --text "Additional content to append"
+$GAPI docs append DOC_ID --tab TAB_ID --text "..."   # --tab required when the Doc has multiple tabs
 ```
 
 ## 出力の形式 {#output-format}

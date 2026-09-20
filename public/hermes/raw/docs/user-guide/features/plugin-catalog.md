@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みで SHA 固定された Hermes のプラグインを、厳選カタログから探して導入する"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 07e8d4bf744216208da5c3979c80665a30fb4c31
+upstream_blob: 003ef2185015245b3ca3fa91553bf98ac05c7ace
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -18,31 +18,11 @@ hermes plugins install <name>
 
 見た目で探すなら **[/docs/plugins](https://hermes-agent.nousresearch.com/plugins)** を開いてください。エントリは種類ごとの棚
 （Memory、Desktop、Platforms、Web & Browser、Tools、Voice、Automation、Models）に分かれて並び、検索、階層フィルタ
-（Official / Community）、機能チップ、そして各エントリの **Install in Hermes** ボタンとコピーできる CLI コマンドがそろっています。
-
-Desktop では **Capabilities → Plugins → Browse** を開くと、アプリ組み込みのカタログ画面が出ます。
-Web サイトを埋め込んだものではありません。**Installed** は別のタブで、カタログの情報ではなく、
-アプリの Desktop プラグイン登録と、選んでいるプロファイルのエージェントプラグインの状態をもとに表示します。
-Skills も同じ **Installed / Browse** の配置です。検索欄は上に固定され、タブの切り替えと操作ボタンは同じ行に並びます。
-Browse の既定はカード表示です。フィルタの横にあるリストとカードのアイコンで表示を切り替えられ、
-検索とフィルタはそのまま保たれます。選んだ表示は、プラグインとスキルの両方のカタログで記憶されます。
+（Official / Community）、機能チップ、そして各エントリのコピーできる導入コマンドがそろっています。
 
 カタログは既存の[プラグインの仕組み](/hermes/docs/user-guide/features/plugins/)を置き換えるものではなく、補うものです。カタログから導入できるものは、
 内部的にはすべて普通のプラグインです。カタログはその上に「見つけやすさ」と審査の
 層を足しているだけです。
-
-### 公開している一覧データ {#published-browse-data}
-
-Web サイトと Desktop は、生成された同じ CDN スナップショットを読みます:
-[`https://hermes-agent.nousresearch.com/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json)。
-Desktop は
-`https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` から取得します。公開ドキュメント側の
-別名でも同じデータが返ります。ドキュメントのビルドは `plugin-catalog/*.yaml` を読み、
-キャッシュしてあるリポジトリのスター数を加えます。導入コマンドが使う、削除済みエントリの一覧もあわせて公開します。
-どちらの Browse 画面も、取得元のリポジトリを巡回したり、GitHub API にその場で問い合わせたりはしません。
-
-この一覧用スナップショットは、導入コマンドが使う
-[`plugin-catalog.json`](#live-refresh) とは別物です。そちらはカタログ名と固定値を解決するためのものです。
 
 ## エントリに書かれていること {#whats-in-an-entry}
 
@@ -80,6 +60,11 @@ Desktop は
   その人がすでに目を通しているので、カタログからの導入で、固定されたちょうどその SHA をチェックアウト
   したときには、`caution` について改めて尋ねることはしません。`dangerous` はそれでも止めますし、
   生の URL から入れたものや別のリビジョンから入れたものには、いつもどおりの問いかけが出ます。
+- **Desktop のプラグインは SDK の内側から出ません。** プラグインの `desktop/plugin.js` は、Desktop
+  アプリの中でアプリ自身の権限で動きます。そのため、載せられるのはプラグイン SDK だけを使うものに限られます。
+  組み込みのプロトタイプを書き換えること、`eval` を使うこと、アプリ自身のバンドルの断片や外部の
+  スクリプトを読み込むことは、どれも認められません。受け入れの段階でこうしたものは拒否されるので
+  （`desktop surface` の検査）、カタログから入れたものが知らないうちにアプリの配線を作り替えることはありません。
 - **機能の宣言。** エントリには、そのプラグインが提供するツール・フック・ミドルウェアと、
   必要な環境変数（API キーなど）が最初から書かれているので、導入前に影響範囲を判断できます。
 - **削除リスト。** セキュリティ事故などでカタログから外されたプラグインは、理由と日付を添えて
@@ -96,22 +81,6 @@ Desktop は
 :::
 
 ## カタログから導入する {#installing-from-the-catalog}
-
-Web サイトの **Install in Hermes** は、次の形のプロトコルリンクを開きます。
-
-```text
-hermes://plugin/install?repo=owner%2Frepo&catalog_name=example-plugin&sha=0123456789abcdef0123456789abcdef01234567
-```
-
-`repo` は `#subdir` も含めて URL エンコードされます。Desktop は確定の前に、取得元、導入先、
-構成要素を確認するよう求めます。リンクを開いただけで勝手に導入されることはありません。
-エージェントプラグインの部分については、バックエンドが `catalog_name` を審査済みの固定値に解決します。
-リンクの `sha` は**表示用の情報にすぎず**、コミットを選んだり上書きしたりする権限はありません。
-単体の Desktop プラグインについて、固定値を保証するものでもありません。
-
-カタログ用のパラメーター（と、公開 Skills Hub の新しい `hermes://skill/install?identifier=...` の経路）を使うには、
-新しい Desktop のビルドが必要です。古いビルドは、リポジトリだけを指すプラグインのリンクしか理解できないことがあります。
-展開したカードには CLI コマンドも残っているので、Desktop が無くてもカタログ名で導入できます。
 
 ```bash
 # Install a reviewed catalog entry by name (checks out the pinned SHA)

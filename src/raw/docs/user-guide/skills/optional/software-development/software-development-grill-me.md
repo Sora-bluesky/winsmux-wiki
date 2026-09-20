@@ -2,7 +2,7 @@
 title: "Grill Me — 実装に入る前に、計画を厳しく問いただす"
 description: "実装に入る前に、計画を厳しく問いただす"
 upstream_path: user-guide/skills/optional/software-development/software-development-grill-me.md
-upstream_blob: e28f7fb7ac7f64e8cb1d95bec5e6bab602892717
+upstream_blob: 689a12119f8c0f0eff418bafae6609d79cbdd653
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-grill-me
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/software-development/grill-me` で導入します |
-| パス | `optional-skills/software-development\grill-me` |
+| パス | `optional-skills/software-development/grill-me` |
 | バージョン | `2.0.0` |
 | 作者 | Rafael Zendron (rafaumeu) + Matt Pocock (mattpocock/skills, grilling) + Hermes Agent |
 | ライセンス | MIT |

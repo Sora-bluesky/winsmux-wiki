@@ -2,7 +2,7 @@
 title: "Claude Design — 単発の HTML 成果物をデザインします（ランディングページ、スライド、プロトタイプ）"
 description: "単発の HTML 成果物をデザインします（ランディングページ、スライド、プロトタイプ）"
 upstream_path: user-guide/skills/bundled/creative/creative-claude-design.md
-upstream_blob: 29dddff99ba310b60fb7ab5172ce3c40e7c316c8
+upstream_blob: 050dbf1b42a1a4aa69e2f3b27cde69f6bfc1f180
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-claude-design
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative\claude-design` |
+| パス | `skills/creative/claude-design` |
 | バージョン | `1.1.0` |
 | 作者 | BadTechBandit |
 | ライセンス | MIT |

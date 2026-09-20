@@ -2,7 +2,7 @@
 title: "Siyuan — SiYuan のナレッジベースを API から読み書きする"
 description: "SiYuan のナレッジベースを API から読み書きする"
 upstream_path: user-guide/skills/optional/productivity/productivity-siyuan.md
-upstream_blob: 8c939a290dfe2e9b0e1f4550a6ddefb56c1a2acf
+upstream_blob: 7451ee8d71fee691f0c8fb1076d733ca7197ee27
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-siyuan
 ---
@@ -16,7 +16,7 @@ SiYuan のナレッジベースを API から読み書きします。
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/productivity/siyuan` で導入します |
-| パス | `optional-skills/productivity\siyuan` |
+| パス | `optional-skills/productivity/siyuan` |
 | バージョン | `1.0.0` |
 | 作者 | FEUAZUR |
 | ライセンス | MIT |

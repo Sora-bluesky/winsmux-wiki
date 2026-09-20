@@ -2,7 +2,7 @@
 title: "Multiplexing Gateway の内部構造"
 description: "1 つの gateway ですべてのプロファイルを受け持つモードの設計: スコープの組み立て、シークレットのスコープ、受信のルーティング、永続化"
 upstream_path: developer-guide/multiplexing-gateway.md
-upstream_blob: 613f4891f9aa7810ffe9e075206718534fc9c9f6
+upstream_blob: 512e43893a3b7361bcb449886dfceed9f7703538
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/multiplexing-gateway
 ---
@@ -111,6 +111,13 @@ B のターンに漏れ、`env=dict(os.environ)` で起動されるあらゆる�
 - 小さな許可リスト（`HERMES_HOME`、`HERMES_PROFILE`、プロキシの設定、
   `API_SERVER_*` のリスナー設定。ただし `API_SERVER_KEY` はあえて含めません）は
   グローバルのままにします。これらはプロファイルではなくプロセスを表すものだからです。
+- クラウド SDK の*既定の認証情報チェーン*は、仕組みの上でどうしても環境まかせになります
+  （`google.auth.default()`、`DefaultAzureCredential`、キーを渡さない `boto3.Session()`）。
+  これらがたどる先はプロセスの環境変数、CLI のキャッシュ、インスタンスメタデータのいずれも、
+  起動したときの文脈が持つ身元です。多重化の下では、自前の完全な認証情報を持たないまま
+  提供されるプロファイルは、Vertex と Entra ID と Bedrock のアダプタが**拒否**します。
+  その身元を自分の `base_url` に対して発行してしまわないためです。単独で実行する場合は
+  これまでどおりチェーンを使います。
 
 多重化の下ではターンごとの `.env` の再読み込みは何もしないので、差し替えた認証情報は、
 次のターンでプロファイルのスコープを通じて反映されます。`os.environ` を経由することは
@@ -141,7 +148,7 @@ B のターンに漏れ、`env=dict(os.environ)` で起動されるあらゆる�
 
 ## 受信のルーティング {#inbound-routing}
 
-`gateway.profile_routes` は `(platform, guild_id, chat_id, thread_id)` を
+`gateway.profile_routes` は `(platform, user_id, guild_id, chat_id, thread_id)` を
 プロファイルに対応づけます。一致はすべての条件を満たす必要があり、より具体的なものが
 優先され、スレッドについては親をたどってチャットの一致を見ます。ルーティングは多重化が
 有効なときだけ動き、一致したルートの行き先が受け持つプロファイルの外にあれば拒否します
@@ -169,13 +176,76 @@ B のターンに漏れ、`env=dict(os.environ)` で起動されるあらゆる�
 ## bot ごとのセッションのレーン {#per-bot-session-lanes}
 
 セッションキーはプロファイルごとに名前空間が分かれています（既定のプロファイルは `agent:main`、
-名前つきプロファイルは `agent:<name>`）。アダプターの受信処理は
-`SessionSource.profile` が刻まれる前に動くので、アダプターは `_owner_profile` を
-持っています（受信イベントより前、アダプターの設定時に組み込まれます）。
-`_session_key_profile` は、ソースの刻印 → 持ち主のプロファイル → ストアの解決処理
-の順に解決します。テキストやメディアのまとめ処理、アクティブなセッションの追跡、
-使用中のセッションを守る仕組みは、どれもレーンごとにキーを分けているので、同じチャットに
-いる 2 つの bot がセッションのレーンを共有することはありません。
+名前つきプロファイルは `agent:<name>`）。受信したイベントはどれも、凍結された
+`RoutingIdentity`（`gateway/session_identity.py`）を 1 つだけ持ちます。これはランナーの
+受け口のハンドラーで `resolve_identity()` が解決し、通信経路には現れない属性として
+ソースに留め置かれます。中身は `transport_profile`（そのイベントを受け取った bot。
+認証情報、許可リスト、`authorization_home`）、`runtime_profile`（実際に実行する、
+ルーティング先のプロファイル。`runtime_home`、キーの `namespace`、`store_path`）、
+そして受け取ったアダプターへの弱参照 `transport` です。`"default"` は文字として明示します。
+`None` が既定を意味することはありません。多重化の下で、受け持っていないプロファイルへの
+ルートは `IdentityUnresolved` を送出し、イベントは破棄されます。
+
+アダプターは `_owner_profile` も持っています（受信イベントより前、アダプターの設定時に
+組み込まれます）。受信の経路はどれも、まず最初に本人情報を正規化します。
+`BasePlatformAdapter._canonicalize` が `handle_message`、テキスト／写真／アルバムの
+まとめ処理、使用中のときの経路、アダプター由来のセッションキーのすべてで動きます。
+ランナーのプロファイルごとのハンドラーと既定のハンドラー、認証確認のコールバック、
+共通の `_handle_message` の関所も同じことをします。こうして、受け取った bot が判明する前に
+レーンのキーが決まることはなくなります。テキストやメディアのまとめ処理、アクティブな
+セッションの追跡、使用中のセッションを守る仕組み、`/stop` `/new` `/reset`、確認の返信は
+どれもレーンごとにキーを分けているので、同じチャットにいる 2 つの bot がセッションの
+レーンを共有することはなく、一方の bot への操作コマンドがもう一方の実行に届くこともありません。
+受け持っていないプロファイルへのルートは、最初に当たった継ぎ目で WARNING を 1 回出して
+破棄され、`agent:main` にキーが振られることはありません。ソースを複製するときは
+`dataclasses.replace` ではなく `session_identity.replace_source` を使ってください。
+そうしないと、複製は通信経路と本人情報を失います。
+
+## 受け取りと返し: どの bot がイベントを扱うか {#intake-vs-delivery-which-bot-acts-on-an-event}
+
+多重化した gateway が混同しがちな 2 つの問いに、ランナーの 2 つの継ぎ目が答えます
+（`gateway/authz_mixin.py`）。
+
+- `_intake_adapter_for(source)` — そのイベントを**受け取った** bot です。よりどころにするのは
+  生きている出どころだけで、`build_source` が留め置いた通信経路への参照、リレー経由で
+  届いたイベントならプロセス単位のリレーのアダプター、あるいは再接続のあとで本人情報の
+  `transport_profile` に登録されているアダプターです。受け取りの方針（Slack の無視する
+  チャンネル、リレーの肩代わり、待ち行列にある生イベントの再配送）を左右し、生きている
+  出どころのないソースには `None` を返します。推測した bot で、復元された行を受け入れ直して
+  よいものは 1 つもありません。
+- `_delivery_adapter_for(source)` — **答える** bot です。送信、編集、入力中の表示、進捗、
+  選択肢、保留中メッセージの枠を受け持ちます。受け取った bot が分かっていれば常にそれ、
+  分からなければ `(platform, runtime_profile)` を単独で持つアダプターです。2 つ目以降の
+  プロファイル自身のアダプター、共有 bot の衛星なら主プロファイルのアダプターがこれに当たり、
+  2 つ目以降のプロファイルの bot が切断されているときは `None` です（既定の bot を
+  借りることはありません）。
+
+| 構成 | 実行時（`runtime_profile`、キーの名前空間、ホーム） | 受け取り | 返し |
+| --- | --- | --- | --- |
+| 認証情報ごとの bot、ルートなし | その bot 自身のプロファイル | 持ち主のアダプター | 持ち主のアダプター |
+| 共有の認証情報 → `profile_routes` で衛星へ | ルーティング先のプロファイル | 受け取った（共有の）アダプター | 受け取ったアダプター。再起動のあとも衛星は主プロファイル経由で流れ続けます |
+| 共有 bot → 自分の bot を持つプロファイル | ルーティング先のプロファイル | 受け取ったアダプター | 受け取ったアダプター。会話は利用者が書き込んだ bot に留まります |
+| 2 つ目以降のプロファイルが持つ bot → `default`（`bot_profile: <secondary>`） | `default`（`agent:main`、既定のホーム） | 受け取った（2 つ目以降の）アダプター | 受け取ったアダプター |
+| 復元された、または合成されたソースで生きている出どころがない | 保存された `source.profile` | **なし**（安全側に倒します） | `(platform, runtime)` を単独で持つアダプター。なければ `None` |
+
+多重化していないときはプラットフォームごとにアダプターが 1 つなので、どちらの継ぎ目も
+それを返します。`tests/gateway/test_multiplex_transport_matrix.py` がすべての行を確かめます。
+
+### 復元、リレー、コールバック、スレッド間の移動 {#restore-relay-callbacks-and-thread-hops}
+
+ルーティングの記録はキーの隣に `transport_profile` を保存します（`state.db` の
+`sessions.transport_profile` 列も同じです）。そのため再起動のあとに蘇ったレーンも、
+どの bot が受け取ったのかを覚えています。`_restored_source(entry)` は生きているアダプターの
+ない `RoutingIdentity` を留め置き直し、`_delivery_adapter_for` はその bot のアダプターを
+通して返すか、安全側に倒して失敗します。既定の bot 経由でルーティングされた衛星は
+既定の bot から答え続け、2 つ目以降のプロファイルが持つレーンが既定の bot の認証情報に
+落ちることはありません。この列ができる前に書かれた記録は `null` を持ち、共有 bot 向けの
+経験則をそのまま使います。リレー越しでは、送信するフレームごとの `metadata.profile`
+（と `follow_up` のキーの名前空間）が、次の `passthrough_forward` でどのプロファイルを
+刻むかをコネクターに伝えるので、ルーティングされたスラッシュコマンドのあとにボタンを
+押しても同じプロファイルに留まります。遅延して届くコールバック（`/model` の選択肢）は
+コマンドを受けた時点でルーティング先のホームを捕まえ、gateway の executor をまたぐときは
+ContextVar のスコープを複製します。
 
 ## 管理面 {#control-plane}
 

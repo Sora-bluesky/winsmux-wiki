@@ -2,7 +2,7 @@
 title: "Social Media Content Calendar — 複数の SNS にまたがる企画を、指示書から投稿まで組み立てる"
 description: "複数の SNS にまたがる企画を、指示書から投稿まで組み立てる"
 upstream_path: user-guide/skills/optional/creative/creative-social-media-content-calendar.md
-upstream_blob: 0a8fc7d4af64a365a423ada30f599cddd1df7224
+upstream_blob: 6309450f5690c1c7373a7815441a84b03a134fde
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-social-media-content-calendar
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/social-media-content-calendar` で入れます |
-| パス | `optional-skills/creative\social-media-content-calendar` |
+| パス | `optional-skills/creative/social-media-content-calendar` |
 | バージョン | `0.1.0` |
 | 作者 | Ben Barclay (benbarclay), Hermes Agent |
 | ライセンス | MIT |

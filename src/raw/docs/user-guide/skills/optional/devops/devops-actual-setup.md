@@ -2,7 +2,7 @@
 title: "Actual Setup — Actual Computer（actual.inc）の推論を Hermes に設定する"
 description: "Actual Computer（actual.inc）の推論を Hermes に設定する"
 upstream_path: user-guide/skills/optional/devops/devops-actual-setup.md
-upstream_blob: e4e9b6dd4174bf184a0599d5dbd475314ee19499
+upstream_blob: d7fa4bd756a3b7ce300029dfeb3856b04ea84535
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-actual-setup
 ---
@@ -16,7 +16,7 @@ Actual Computer（actual.inc）の推論を Hermes に設定します。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/devops/actual-setup` で導入します |
-| パス | `optional-skills/devops\actual-setup` |
+| パス | `optional-skills/devops/actual-setup` |
 | バージョン | `2.0.0` |
 | 作者 | shl0ms + Hermes Agent |
 | ライセンス | MIT |
@@ -140,8 +140,8 @@ Actual はユーザー自身のハードウェアを自分だけの推論クラ�
    `repo/QUANT` を取り、量子化を明示しないと 409 になります。`actual models load` は
    `actual models list` に出るインストール後の名前を取ります。
 4. **reasoning 系のモデルが本文を返さない。** GLM や Qwen の reasoning 版は、思考を別の
-   `reasoning` フィールドに出すため、出力に使える枠が小さいとそれだけで使い切ってしまうことが
-   あります。失敗と決めつける前に、サーバー側の出力の既定値を確かめてください。
+   `reasoning` フィールドに出すため、`max_tokens` が小さいとそれだけで使い切ってしまうことが
+   あります。失敗と決めつける前に、max_tokens を十分に大きく取ってください。
 5. **`actual` という名前の独自プロバイダを作らないでください。** 正式対応の前に書かれた古い
    手引きは `providers.actual.*` の設定ブロックを書かせていました。今の Hermes では組み込みの
    提供元がこの名前を取るので、古い独自ブロックは無視されるか、ぶつかります。消したうえで、

@@ -2,7 +2,7 @@
 title: "Docker Management — Docker のコンテナ・イメージ・ボリューム・Compose を管理する"
 description: "Docker のコンテナ・イメージ・ボリューム・Compose を管理する"
 upstream_path: user-guide/skills/optional/devops/devops-docker-management.md
-upstream_blob: d2cff31536e0067f624b7d8562088bf2d38ecb97
+upstream_blob: 6435cb2c7a30caeed15b52fcec070b74337bec52
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-docker-management
 ---
@@ -16,7 +16,7 @@ Docker のコンテナ・イメージ・ボリューム・Compose を管理し�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/devops/docker-management` で導入します |
-| パス | `optional-skills/devops\docker-management` |
+| パス | `optional-skills/devops/docker-management` |
 | バージョン | `1.0.0` |
 | 作者 | sprmn24 |
 | ライセンス | MIT |

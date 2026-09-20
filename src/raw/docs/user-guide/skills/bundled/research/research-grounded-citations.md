@@ -2,7 +2,7 @@
 title: "Grounded Citations — 回答や文書を、出典を示せる形に裏付ける"
 description: "回答や文書を、出典を示せる形に裏付ける"
 upstream_path: user-guide/skills/bundled/research/research-grounded-citations.md
-upstream_blob: 2768a0f3657900c57e5f4fddae9f71be5731cd80
+upstream_blob: 0e80bac0dca53fd80a3a3126422414d2387dd0c8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-grounded-citations
 ---

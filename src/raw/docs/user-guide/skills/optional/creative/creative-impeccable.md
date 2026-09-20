@@ -2,7 +2,7 @@
 title: "Impeccable — フロントエンド設計の指針、上流で保守（impeccable）"
 description: "フロントエンド設計の指針、上流で保守（impeccable）"
 upstream_path: user-guide/skills/optional/creative/creative-impeccable.md
-upstream_blob: fd6b730fb233ded58aed7625c9f7aec6ba16fbdb
+upstream_blob: c1c11f1c7b938559c0f1f66f6a0cf6bf83553501
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-impeccable
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/creative/impeccable` で入れます |
-| パス | `optional-skills/creative\impeccable` |
+| パス | `optional-skills/creative/impeccable` |
 | バージョン | `4.1.2` |
 | 作者 | Paul Bakaus (pbakaus) |
 | ライセンス | Apache-2.0 |

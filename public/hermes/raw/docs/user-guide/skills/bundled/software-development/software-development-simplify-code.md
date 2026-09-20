@@ -2,7 +2,7 @@
 title: "Simplify Code — 直近のコード変更を、4 つのエージェントで並行して片づけます"
 description: "直近のコード変更を、4 つのエージェントで並行して片づけます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-simplify-code.md
-upstream_blob: 0465ae3a4ad570bdac1f3b5bab36f008d07e73a2
+upstream_blob: 132841821035e149794506b3e8b2c1880dd5e908
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-simplify-code
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development\simplify-code` |
+| パス | `skills/software-development/simplify-code` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent（Claude Code の /simplify に着想を得ています） |
 | ライセンス | MIT |

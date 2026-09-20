@@ -2,7 +2,7 @@
 title: "TUI"
 description: "Hermes の新しいターミナル画面を起動する — マウスが使えて、表示が豊かで、入力を待たせない"
 upstream_path: user-guide/tui.md
-upstream_blob: d2e22a81ad491f6196119c6169859abf3e39d0a8
+upstream_blob: fa8e3a8ae10152e23dea93fe96dac4eace9537fc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/tui
 ---
@@ -105,7 +105,7 @@ hermes --tui
 
 キー操作は [従来の CLI](/hermes/docs/user-guide/cli/#keybindings) とまったく同じです。挙動が違うのは次の点だけです。
 
-- **`Ctrl+T`** は、自動で出るサブエージェントの小さな一覧を、画面いっぱいの `/agents` 一覧に広げます。動いているワーカーを選んで **Enter**（または **`t`**）を押すとその場の記録が、**`d`** で詳しい情報が見られます。**`e`** で指示を送り、**`x`** で止められます。この一覧は行数をターミナルの高さに合わせ、書きかけの入力もそのまま残します。[サブエージェントを見守る](/hermes/docs/user-guide/features/delegation/#monitoring-running-subagents-agents) を参照してください。
+- **`Ctrl+T`** は、自動で出る作業中の小さな一覧（サブエージェントに加えて、`terminal(background=true)` で起動したものを並べる **プロセス** の区画があります）を、画面いっぱいの `/agents` 一覧に広げます。動いているワーカーを選んで **Enter**（または **`t`**）を押すとその場の記録が、**`d`** で詳しい情報が見られます。**`e`** で指示を送り、**`x`** で止められます。この一覧は行数をターミナルの高さに合わせ、書きかけの入力もそのまま残します。[サブエージェントを見守る](/hermes/docs/user-guide/features/delegation/#monitoring-running-subagents-agents) を参照してください。
 - **`F7`** は、その一覧をふだんのプレビュー表示と1行の要約表示とで切り替えます。監視画面が開いたり入力欄からフォーカスが移ったりはしません。この選択は設定を変えずに、いま動いている TUI の中だけで有効です。
 - **マウスのドラッグ** で、一様な背景色の選択範囲ができます。
 - **`Cmd+V` / `Ctrl+V`** は、まず通常のテキスト貼り付けを試し、次に OSC52 やネイティブのクリップボード読み取りに切り替え、貼り付けた内容が画像だと分かった場合は最後に画像として添付します。

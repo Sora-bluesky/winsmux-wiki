@@ -2,7 +2,7 @@
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: 9e8fc513790800f92b624adbb5e133f9eef85c59
+upstream_blob: 32d586ffb99f8595c4c4b2940556422030e2116b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -117,6 +117,13 @@ OpenAI の Chat Completions の標準的な形式です。状態を持たず、�
 - **Chat Completions**: Hermes は `event: hermes.tool.progress` を出します。保存されるアシスタントの文章を汚さずに、ツールの開始を見せるためです。
 - **Responses**: Hermes は SSE の流れのなかで、仕様どおりの `function_call` と `function_call_output` という出力項目を出します。クライアント側はツールの様子を構造化した画面として、その場で描けます。
 
+**モデルの思考**（モデルが実際に思考を出し、適用される `reasoning` の設定がそれを許しているときにだけ出ます。入力の側で止めるには `model_options.reasoning.enabled: false` を指定します）:
+- **Chat Completions**: 思考の差分は `choices[0].delta.reasoning_content` の塊として届きます（Open WebUI、opencode、Vercel AI SDK が思考の欄として表示する DeepSeek 風の項目です）。答えの文章は `delta.content` のままです。
+- **Responses**: ひと続きの思考は、仕様どおりの `reasoning` という出力項目になります。`response.output_item.added`（`item.type: "reasoning"`）、`response.reasoning_summary_part.added`、`response.reasoning_summary_text.delta` … `response.reasoning_summary_text.done`、`response.reasoning_summary_part.done`、`response.output_item.done` の順に出て、次の message や `function_call` の項目が始まる前に閉じます。`response.completed` の出力にも `{"id": "rs_…", "type": "reasoning", "status": "completed", "summary": [{"type": "summary_text", "text": "…"}]}` という形で載ります。`sequence_number` は思考・文章・ツールのイベントをまたいで増え続けます。
+- **逐次送りをしないとき**: `/v1/chat/completions` はその往復の思考を `choices[0].message.reasoning_content` に載せて返します。`/v1/responses` は同じ `reasoning` の出力項目を message（とその段階の `function_call` の項目）より前に返します。`GET /v1/responses/{id}` で読み直したときも同じです。
+- 前のレスポンスの `output` の一覧を、そのまま次の `input` として送り返しても構いません（Responses の SDK を使うクライアントはそうします）。`reasoning` の項目は入力では無視され、中身のない利用者の発言として読まれることはありません。
+- この対応は `GET /v1/capabilities` で `features.reasoning_streaming: true` として示されます。
+
 ### POST /v1/responses {#post-v1responses}
 
 OpenAI Responses API の形式です。`previous_response_id` によるサーバー側での会話の保持に対応しています。サーバーが会話の履歴（ツールの呼び出しと結果も含めて）をまるごと保存するので、クライアントが管理しなくても何往復もの文脈が保たれます。
@@ -149,6 +156,8 @@ OpenAI Responses API の形式です。`previous_response_id` によるサーバ
 
 `output` の配列に入っているツールの呼び出しは、すでに Hermes のエージェントがサーバー側で実行し終えたものです。構造化した画面のために `"status": "completed"` で再生されるだけで、クライアントがこれから実行すべき保留中の呼び出しではありません。
 
+`"stream": true` のときは、往復の途中でアシスタントが差しはさむ補足（`openai-codex` のバックエンドが出す `phase="commentary"` の前置きや、モデルがツールの呼び出しと並べて書く文章）が、それ自体で完結した `message` の出力項目として届き、`"phase": "commentary"` が付きます（`response.output_item.added` と `response.output_item.done` で出て、`response.completed` にも並びます）。最終的な答えの項目に混ぜられることはないので、クライアントはその場の進み具合として表示し、返答を組み立てるときは読み飛ばせます。外に出さない思考がこの項目に入ることはありません。`display.interim_assistant_messages: false`（または `display.platforms.api_server` による上書き）を指定すると、API サーバーのどの入口でも出なくなります。
+
 **文中への画像の入力:** `input[].content` には `input_text` と `input_image` の部品を入れられます。遠隔の URL も `data:image/...` の URL も使えます。
 
 ```json
@@ -180,6 +189,8 @@ OpenAI Responses API の形式です。`previous_response_id` によるサーバ
 ```
 
 サーバーは、保存されたレスポンスのつながりから会話の全体を組み直します。それまでのツールの呼び出しと結果はすべて残ります。つながったリクエストは同じセッションも共有するので、何往復もの会話がダッシュボードやセッションの履歴では 1 件として見えます。
+
+各レスポンスの `output` に並ぶのは、その往復の項目だけです（その回の `function_call` と `function_call_output`、それに最後の `message`）。前の往復のツールの呼び出しが混ざることはありません。呼び出しの前に Hermes が渡された履歴を直した場合（続けて並んだ `assistant` や `user` の項目をまとめたり、相手のいないツールの結果を落としたり）や、つながりの途中で履歴を圧縮した場合も同じです。保存されるのは直したあとの記録なので、往復のたびに履歴がもう 1 つぶん増えることはありません。
 
 #### 名前を付けた会話 {#named-conversations}
 
@@ -257,7 +268,8 @@ API サーバーの安定した窓口を、外部の画面や指揮役、プラ�
     "run_submission": true,
     "run_status": true,
     "run_events_sse": true,
-    "run_stop": true
+    "run_stop": true,
+    "reasoning_streaming": true
   }
 }
 ```
@@ -458,15 +470,27 @@ gateway:
   "session_id": "space-session",
   "model": "hermes-agent",
   "output": "Done.",
-  "usage": {"input_tokens": 50, "output_tokens": 200, "total_tokens": 250}
+  "usage": {"input_tokens": 50, "output_tokens": 200, "total_tokens": 250, "cache_read_tokens": 40, "cache_write_tokens": 0},
+  "runtime": {"provider": "openai", "model": "gpt-5", "route_source": "global"}
 }
 ```
 
+`model` には、リクエストで指定したものがそのまま返ります。終わった実行では、`runtime` がその往復を実際に担った提供元とモデルの組です。[予備のプロバイダー](/hermes/docs/user-guide/features/fallback-providers/) へ切り替わったあとは控えの組が入るので、費用の割り当てのために問い合わせる仕組みは、その実行を正しい提供元に付けられます。`usage.cache_read_tokens` と `usage.cache_write_tokens` は、そのセッションでプロンプトのキャッシュを読んだぶんと書いたぶんです。おかげで、キャッシュから読んだ入力が満額の入力として数えられることはありません。`runtime` の形は `/v1/chat/completions` や `/v1/responses` のものと同じです。`route_source` は実行環境がどう選ばれたかを示し（`global`、`raw_request`、`model_routes`）、`model` や `provider` を指定したリクエストには `requested: {provider, model}` も付くので、求めた組と実際に担った組を見比べられます。できごとの流れに出る `run.completed` にも、同じ `usage` と `runtime` の項目が載ります。
+
 終わりの状態（`completed`、`failed`、`cancelled`、`interrupted`）になったあとも、問い合わせと画面の突き合わせのために状態はしばらく残ります。実行中にゲートウェイが終了した場合、その実行はエージェントに停止を求めるより先に `interrupted`（エラーは `Gateway shutdown interrupted the run.`、終了時のできごとは `run.interrupted`）として書き残されます。そのため、永続的な実行が再起動をまたいで `running` のまま残ることはなく、中断されたターンから遅れて届いた結果がこれを上書きすることもありません。
+
+ゲートウェイがまだ後片付けの最中のとき（ターンが動いている状態での `hermes gateway stop` / `restart`、または SIGTERM）は、終わっていない実行のすべてに、新しいターンの受け付けをやめた時点から `shutdown_requested_at`（Unix 秒）が付きます。ターンはまだ処理されているので `status` は `running` のままですが、この項目が見えた側は、プロセスが終わりに向かっていて、遅くとも後片付けに使える時間が尽きた時点でその実行が `interrupted` で終わることが分かります。終わりの状態になった実行に、この項目が後から付くことはありません。
 
 ### GET /v1/runs/\{run_id\}/events {#get-v1runsrunidevents}
 
 その実行のツールの進み具合、トークンの差分、節目のできごとを Server-Sent Events で流します。状態を失わずにつないだり離れたりしたい、ダッシュボードや作り込んだクライアントのためのものです。
+
+往復の途中でアシスタントが差しはさむ補足（`openai-codex` のバックエンドが出す `phase="commentary"` の
+前置きや、モデルがツールの呼び出しと並べて書く文章）は、`message.interim`
+（`text`、`already_streamed`）として届きます。TUI のゲートウェイと同じ約束ごとです。`already_streamed: true`
+は、その文章が `message.delta` としても流れたという意味なので、差分を描くクライアントは読み飛ばせます。
+最終的な答えは、これまでどおり `run.completed` だけに届きます。外に出さない思考が
+`message.interim` になることはありません。出し入れは `display.interim_assistant_messages` で決まります（既定は `true`）。
 
 ツールの節目のできごととして、`tool.started`（`tool` と、引数の `preview`）と
 `tool.completed`（`tool`、秒単位の `duration`、`error`、結果の `preview`）が流れます。
@@ -577,7 +601,7 @@ MCP の信頼ゲートでの同意（`trust: untrusted` と設定したサーバ
 | `GET` | `/api/sessions/{id}/messages` | そのセッションのメッセージの履歴 |
 | `POST` | `/api/sessions/{id}/fork` | `SessionDB` の系譜をたどってセッションを枝分かれさせます（CLI の `/branch` と同じ考え方です） |
 | `POST` | `/api/sessions/{id}/chat` | エージェントの往復を 1 回、待ち合わせる形で走らせます |
-| `POST` | `/api/sessions/{id}/chat/stream` | 往復 1 回を SSE で包んだもの。`assistant.delta`、`tool.started`、`tool.completed` を出し、最後に往復の終わり方に合わせて `run.completed` / `run.failed` / `run.cancelled` のいずれかの終端イベントを出します（[実行の終端状態](/hermes/docs/developer-guide/programmatic-integration/#terminal-run-status) を参照） |
+| `POST` | `/api/sessions/{id}/chat/stream` | 往復 1 回を SSE で包んだもの。`assistant.delta`、`assistant.commentary`（往復の途中の補足です。`message_id`、`text`、`already_streamed` が付き、`assistant.completed` に畳み込まれることはありません）、`tool.started`、`tool.completed` を出し、最後に往復の終わり方に合わせて `run.completed` / `run.failed` / `run.cancelled` のいずれかの終端イベントを出します（[実行の終端状態](/hermes/docs/developer-guide/programmatic-integration/#terminal-run-status) を参照） |
 
 `/v1/capabilities` は `session_*` の機能の旗と `endpoints.session_*` の項目でこの窓口の全体を知らせるので、外部の画面は対応を調べたうえで安全に別の手に切り替えられます。`chat` と `chat/stream` の中身では、文中の画像にも対応しています（複数の形式を扱える経路です）。
 
@@ -697,6 +721,7 @@ gateway:
     cors_origins: http://localhost:3000
     model_name: my-hermes
     max_concurrent_runs: 10   # concurrent-run cap; 0 disables the limit
+    history_tool_output_max_chars: 0   # cap tool outputs in stored /v1/responses history; 0 = verbatim
 ```
 
 `port`、`key`、`host`、`cors_origins`、`model_name` はプラットフォームの `extra` の設定へ自動で橋渡しされるので、対応する `API_SERVER_*` の環境変数とまったく同じように動きます。環境変数のほうが `config.yaml` の値より優先されます。この塊は `gateway.platforms.api_server:` の下や、いちばん上の `platforms.api_server:` の節でも受け付けられます。
@@ -704,6 +729,10 @@ gateway:
 ### 同時に走る実行の上限 {#concurrent-run-cap}
 
 API サーバーは、実行をその場で始めるエンドポイント、つまり OpenAI 互換のエンドポイント、Runs のエンドポイント、そしてセッションのチャット（`POST /api/sessions/{id}/chat` と、その `/stream` 版。端末をまたいだエージェント同士のやり取りはここを通ります）を合わせて、エージェントの実行が同時にいくつまで走れるかを制限します。cron から始まる実行（`POST /api/jobs/{id}/run`、`POST /api/cron/fire`）は cron のスケジューラを通るため、この上限ではなく cron 側の制限に従います。上限は `gateway.api_server.max_concurrent_runs` から読まれます（既定は **10**、`0` で制限なし、負の値は 0 に丸められます）。上限に達すると、新しく実行を始めようとするリクエストは **HTTP 429** の `Too many concurrent runs (max N)` ではじかれます。クライアント側は間を置いてやり直してください。
+
+### `previous_response_id` でつなぐときの履歴の大きさ {#stored-history-size-for-previousresponseid-chaining}
+
+保存される `/v1/responses` のひとつひとつには、そこまでの会話の履歴がまるごと入っています（`previous_response_id` や `conversation` でつないだときに再生されるのがこれです）。ツールの出力も一字一句そのまま入ります。そのため、大きなツールの出力がいくつかある会話では、`response_store.db` への 1 回の書き込みが数百 KB になることもあります。`gateway.api_server.history_tool_output_max_chars`（既定は **0** で、そのまま保存します）を指定すると、**保存される**履歴のなかのツールの出力ひとつずつと、文字列で渡されたツールの引数ひとつずつを、その文字数で頭打ちにできます。それより長いものは先頭だけを残し、`...[N more chars]` という印を付けて切ります。利用者とアシスタントの文章には手を付けません。`response.completed` の中身や、順次届く SSE のできごとにも影響しません。保存された履歴は、次につないだ往復でモデルが見るものでもあります。つまりこの上限を使うと、モデルに再生される内容も短くなります。往復をまたいでツールの出力がまるごと必要な進め方なら、0 のままにしてください。
 
 ## 安全のためのヘッダー {#security-headers}
 

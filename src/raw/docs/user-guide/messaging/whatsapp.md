@@ -2,7 +2,7 @@
 title: "WhatsApp"
 description: "内蔵の Baileys ブリッジを使って Hermes Agent を WhatsApp のボットとして設定する"
 upstream_path: user-guide/messaging/whatsapp.md
-upstream_blob: 60f4020e3743425712af7f3194ef7087c2921256
+upstream_blob: b2a85ef627946716738e76a98a4a0e0d19f6d1a0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/whatsapp
 ---
@@ -234,7 +234,7 @@ Baileys ブリッジのアダプター（ボットの使い方）は、WhatsApp 
 
 ### メッセージのまとめ送り（待ち合わせ） {#message-batching-debounce}
 
-WhatsApp はメッセージを一通ずつ届けます。そのため、立て続けに届いた場合（まとめての転送、貼り付けで分かれたもの、複数行の文章）、そのままでは断片ごとにエージェントが呼ばれてしまい、トークンを無駄にしたうえ、ばらばらの返事がいくつも並ぶことになります。アダプターは同じチャットから続けて届いた文章をためておき、少し静かになってから一つの依頼としてまとめて渡します（初期値は **5 秒**、断片がとても長い場合は **10 秒** に延びます）。`config.yaml` で調整できます。
+WhatsApp はメッセージを一通ずつ届けます。そのため、立て続けに届いた場合（まとめての転送、貼り付けで分かれたもの、複数行の文章）、そのままでは断片ごとにエージェントが呼ばれてしまい、トークンを無駄にしたうえ、ばらばらの返事がいくつも並ぶことになります。アダプターは同じチャットから続けて届いた文章をためておき、少し静かになってから一つの依頼としてまとめて渡します（初期値は **0.3 秒**、断片がとても長い場合は **1 秒** に延びます。上限はそれぞれ 2 秒と 4 秒です）。`config.yaml` で調整できます。
 
 ```yaml
 # ~/.hermes/config.yaml
@@ -242,8 +242,8 @@ gateway:
   platforms:
     whatsapp:
       extra:
-        text_batch_delay_seconds: 5.0         # quiet period before flushing a batch
-        text_batch_split_delay_seconds: 10.0  # extended delay near the split threshold
+        text_batch_delay_seconds: 0.3         # quiet period before flushing a batch (max 2.0)
+        text_batch_split_delay_seconds: 1.0   # extended delay near the split threshold (max 4.0)
 ```
 
 `text_batch_delay_seconds: 0` にすると、メッセージごとにすぐ渡されます（まとめ送りは無効になります）。

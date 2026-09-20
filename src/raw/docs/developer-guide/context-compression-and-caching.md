@@ -2,7 +2,7 @@
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: 193d06a9f4ba445bdeeb4fda8e30f9bf920f14fd
+upstream_blob: f4507f53f7d17c30615d68c8e7217fd69e64b337
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -26,7 +26,7 @@ Hermes Agent は二重の圧縮システムと Anthropic のプロンプトキ�
 
 キャッシュの場所は、いま使っている Hermes home の下の `context_length_cache.yaml` のままです。`context_lengths` は古い読み手のために単一値を保持します。追加された `bedrock_confirmed_v1` のマップが、確認済みのキーそれぞれを正確な値と結び付け、同じ書き込みの中でまとめて保存します。一般の書き込みが入ると、そのキーの出どころは消えます。古い書き手はこの追加のマップを落とすことがあり、その場合はもう一度上げ直したときに検証がやり直されます。バージョンを下げても読めますが、解決の規則は古い側のものに戻ります。
 
-`xai.grok-4.6`（`global.` と `us.` の推論プロファイルを含む）の静的なフォールバック値は 500,000 トークンで、[AWS のモデルカード](https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-6.html) に基づきます。これは Bedrock に固有の値であり、xAI の API を直接使うときのウィンドウではありません。既存の圧縮の規則はそのまま適用されます。出力用の確保もトークン数の明示的な上限もない場合、小さいウィンドウ向けの 75% というしきい値の下限が効き、このウィンドウでは 375,000 トークンで発動します。
+`xai.grok-4.6`（`global.` と `us.` の推論プロファイルを含む）の静的なフォールバック値は 500,000 トークンで、[AWS のモデルカード](https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-6.html) に基づきます。これは Bedrock に固有の値であり、xAI の API を直接使うときのウィンドウではありません。既存の圧縮の規則はそのまま適用されます。出力用の確保がない場合、小さいウィンドウ向けの 75% というしきい値の下限が効いてこのウィンドウでは 375,000 トークンになり、そこから既定の `threshold_tokens` の上限（256,000）でさらに下がります。
 
 ## 差し替え可能なコンテキストエンジン {#pluggable-context-engine}
 
@@ -161,7 +161,13 @@ DB から履歴を読み直しても壊れません。またセッション行�
 （60 秒 → 300 秒 → 900 秒と段階的に伸び、`compression.context_timeout_seconds` より
 短くなることはありません。`state.db` に保存されます）。クールダウン中は、
 しきい値による通常の圧縮は先送りされます。要約のバックエンドが壊れているときに、
-毎ターン再実行してしまわないためです。ただし次の 3 つの経路は、それでも実際に試行します。
+毎ターン再実行してしまわないためです。タイムアウトと停止は 1 つのカウンターで段を上げます。
+`finish_reason=length` で終わった要約（出力の上限に達したもので、会話の記録は残ります）は、
+同じ 60 秒 → 300 秒 → 900 秒の段を、専用のカウンターで上がります。こうしておかないと、
+たとえばクールダウンが切れたあとに非同期の委任の完了が届いたときなど、あとのターンが
+同じ上限に達するリクエストを 30 秒おきに出し直してしまいます（#69637）。JSON のデコード、
+閉じたストリーム、中身が空、といった失敗は 30 秒の一定のクールダウンのままです。
+ただし次の 3 つの経路は、それでも実際に試行します。
 
 - 手動の `/compress`（`force=True`） — クールダウンを解除して再試行します。
 - 主経路が止まったあと、同じターンのうちに `fallback_chain` が行う再試行 —
@@ -181,6 +187,12 @@ DB から履歴を読み直しても壊れません。またセッション行�
   圧縮が確定すると圧縮の担当が結び直され、段の回数も戻るので、圧縮の 1 周ごとに
   LLM の経路には停止 1 回分の猶予が与えられます。ターンをまたぐ間隔や再起動後の間隔は、
   これまでどおり保存されたクールダウンの行が決めます。
+- **要約のプロバイダーが混み合っているときは中断し、会話の記録を残す** — 要約の呼び出しが
+  プロバイダーの過負荷のエラー（`overloaded`、`at capacity`、HTTP 529）で失敗し、
+  メインモデルでの 1 回だけの再試行も失敗した場合、compress() は決め打ちの代わりの要約を
+  確定させずに中断し、会話の記録をそのまま残します。警告にはその過負荷が出て
+  （`failure_class=summary_overload_failure`）、空きが戻ったら `/compress` でもう一度試せます。
+  認証や利用量、ネットワーク、中身が空の失敗も、もともと同じように中断します。
 - **プロバイダーが示したあふれ** — プロバイダー自身がコンテキスト長のエラーでリクエストを拒否した場合、
   復旧の処理はクールダウンを解除しないまま、回数を区切って 1 回だけ無視します
   （`max_compression_attempts`）。ここで先送りするとセッションが行き詰まります。毎ターン
@@ -205,8 +217,8 @@ compression:
   codex_gpt55_autoraise: true  # gpt-5.5 on Codex OAuth: raise trigger to 85% (default: true)
   codex_gpt55_autoraise_notice: true  # Show the one-time autoraise notice (default: true)
   codex_app_server_auto: native  # native|hermes|off for Codex app-server thread compaction
-  codex_responses_native: false  # gpt-5.6 on direct OpenAI/Codex: server-side compaction (opt-in)
-  codex_responses_compact_threshold: null  # Automatic server compaction trigger
+  codex_responses_native: false  # Opt-in server compaction: gpt-5.6 on OpenAI/Codex; Astra on Codex OAuth
+  codex_responses_compact_threshold: null  # Server compaction trigger; only used when codex_responses_native: true
   in_place: true             # Compact on the same session id, no rotation (default: true)
 
 # Summarization model/provider configured under auxiliary:
@@ -221,19 +233,20 @@ auxiliary:
 
 | パラメータ | 既定値 | 範囲 | 説明 |
 |-----------|---------|-------|-------------|
-| `threshold` | `0.50` | 0.0-1.0 | プロンプトのトークン数が `threshold × context_length` 以上になると圧縮が発動します |
+| `threshold` | `0.50` | 0.0-1.0 | プロンプトのトークン数が `threshold × context_length` 以上になると圧縮が発動します（512K 未満のウィンドウでは 0.75 が下限になります） |
+| `threshold_tokens` | `256000` | int または `null` | 発動点に対する絶対値の上限です。割合による発動点とこのトークン数の、低いほうで圧縮が走ります。そのため 1M のウィンドウは 500K ではなく 256K で圧縮されます。`null` にすると割合だけで判断します |
 | `model_thresholds` | `{}` | マップ | モデルごとに `threshold` を上書きします。キーはモデル名に対する部分一致で判定され、最も長く一致したものが勝ちます。`"<provider>:<substring>"` の形のキーは、そのプロバイダーのときだけ効きます。さらに小さいコンテキスト向けの下限がその上に適用されます（後述） |
 | `target_ratio` | `0.20` | 0.10-0.80 | 末尾を保護するためのトークン予算を決めます: `threshold_tokens × target_ratio`（legacy モードのみ。`lean` は独自の上限を使います） |
-| `tail_mode` | `lean` | `lean`, `legacy` | 末尾をどれだけ残すかの方針です。`legacy` は `target_ratio` の大きさの末尾をそのまま残します（大きなウィンドウのモデルでは 10 万トークン以上になります）。`lean` は`2.5% × context window` を上限つきで残し（下限 1 万、上限 2 万 5 千）、代わりに要約の側で話の続きを引き継ぎます。具体的には、識別子を保った詳しいセッションログ（同じ 1 回の要約リクエストで生成されます。lean の圧縮は 1 回の試行につき補助 LLM をちょうど 1 回だけ呼びます）、機械的に抽出したアンカーの索引（PR 番号、SHA、パス、エラー文字列 — 正規表現で取り出し、言い換えは一切しません）、実際の利用者のメッセージをすべて原文のまま引用したもの（新しいものから予算の範囲で）、そして要約で消えた内容にエージェントが再びアクセスできる `session_search` の復元ポインタです。大きすぎる領域は追加の呼び出しを起こさず、要約への入力へ均等にサンプリングされます（省略箇所には明示的な印が入ります）。50 万トークンの実セッションでの結果は、残るのが約 16 万 2 千に対して約 4 万 9 千で、復元と組み合わせたときの再現率はより高くなりました（`evals/compaction/results/` を参照）。lean の末尾に含まれる古いツール結果は、復元ポインタだけを持つ 1 行のスタブに縮められます |
+| `tail_mode` | `lean` | `lean`, `legacy` | 末尾をどれだけ残すかの方針です。`legacy` は `target_ratio` の大きさの末尾をそのまま残します（`threshold_tokens` の上限がない大きなウィンドウのモデルでは 10 万トークン以上になります）。`lean` は`2.5% × context window` を上限つきで残し（下限 1 万、上限 2 万 5 千）、代わりに要約の側で話の続きを引き継ぎます。具体的には、識別子を保った詳しいセッションログ（同じ 1 回の要約リクエストで生成されます。lean の圧縮は 1 回の試行につき補助 LLM をちょうど 1 回だけ呼びます）、機械的に抽出したアンカーの索引（PR 番号、SHA、パス、エラー文字列 — 正規表現で取り出し、言い換えは一切しません）、実際の利用者のメッセージをすべて原文のまま引用したもの（新しいものから予算の範囲で）、そして要約で消えた内容にエージェントが再びアクセスできる `session_search` の復元ポインタです。大きすぎる領域は追加の呼び出しを起こさず、要約への入力へ均等にサンプリングされます（省略箇所には明示的な印が入ります）。50 万トークンの実セッションでの結果は、残るのが約 16 万 2 千に対して約 4 万 9 千で、復元と組み合わせたときの再現率はより高くなりました（`evals/compaction/results/` を参照）。lean の末尾に含まれる古いツール結果は、復元ポインタだけを持つ 1 行のスタブに縮められます |
 | `protect_last_n` | `20` | ≥1 | 常に保持される直近メッセージの最小数 |
 | `min_tail_user_messages` | `1` | ≥1 | 圧縮されない末尾に必ず残る、実際の（対応が必要な）利用者メッセージの最小数です。`1` は従来どおり直近の利用者メッセージ 1 件をアンカーにする挙動で、既定値は動作を変えません。たとえば `3` に上げると、かさばるツール出力が末尾のトークン予算を埋めていても、直近 3 回分の実際の利用者のやり取りが原文のまま残ります。中身のないプラットフォームの反響、圧縮の引き継ぎ、合成された継続の行は N に数えません。この保証は末尾のトークン予算より優先され、アンカーが区切り位置を手前に引き戻した結果、末尾が予算を超えることがあります |
 | `protect_first_n` | `3` | （ハードコード） | システムプロンプトと最初のやり取りは常に保持されます |
 | `idle_compact_after_seconds` | `0` | ≥0 秒 | 任意設定: この秒数だけ間が空いたあとにセッションを再開したとき、先に圧縮します（0 で無効）。コンテキストが threshold × target_ratio 以下ならスキップし、クールダウン・連続実行防止・ロックの各ガードには従います |
-| `codex_gpt55_autoraise` | `true` | bool | ChatGPT Codex の OAuth 経路で gpt-5.5 を使うとき、発動点を 85% に引き上げます（後述）。`false` にすると全体の `threshold` のままになります |
+| `codex_gpt55_autoraise` | `true` | bool | ChatGPT Codex の OAuth 経路で gpt-5.4/5.5/5.6 と gpt-6 Astra を使うとき、発動点を 85% に引き上げます（後述）。`false` にすると全体の `threshold` のままになります |
 | `codex_gpt55_autoraise_notice` | `true` | bool | Codex の gpt-5.5 で自動引き上げが起きたときの一度きりの通知を表示します。`false` にすると 85% への引き上げは残したまま、案内だけを出さなくなります |
 | `codex_app_server_auto` | `native` | `native`, `hermes`, `off` | Codex app-server のセッションにおけるスレッド圧縮のモードです（後述） |
-| `codex_responses_native` | `false` | bool | Responses API でのサーバー側圧縮を利用します。OpenAI の直接 API か ChatGPT Codex のサブスクリプションで、gpt-5.6 系のモデルを使う場合にのみ有効になります（後述） |
-| `codex_responses_compact_threshold` | `null` | `null` または正の整数 | `null` の場合は、解決済みのローカルの圧縮発動点に 8,192 トークンの余裕を持たせた値に従います。正の整数を指定すると絶対値として扱われ、必要なときだけ下方向に丸められます。不正な値は自動の挙動になります。使えるローカルの発動点がない場合、自動モードは `200000` にフォールバックします |
+| `codex_responses_native` | `false` | bool | Responses API での OpenAI によるサーバー側圧縮を利用します。OpenAI の直接 API か ChatGPT Codex のサブスクリプションでの gpt-5.6 系のモデルと、公式の Codex OAuth でちょうど `gpt-6-astra` を使う場合に働きます（後述） |
+| `codex_responses_compact_threshold` | `null` | `null` または正の整数 | サーバー側の圧縮の発動点です。**`codex_responses_native: true` のときだけ**読まれ、ローカルの圧縮がいつ走るかは変えません。ローカルの発動点は `threshold`（割合）を `threshold_tokens` で頭打ちにしたものです。`null` の場合は、解決済みのローカルの圧縮発動点に 8,192 トークンの余裕を持たせた値に従います。正の整数を指定すると絶対値として扱われ、必要なときだけ下方向に丸められます。不正な値は自動の挙動になります。使えるローカルの発動点がない場合、自動モードは `200000` にフォールバックします |
 | `in_place` | `true` | bool | 新しいセッションに切り替えず、同じセッション ID のまま圧縮します（後述） |
 
 ### その場での圧縮（安定した単一のセッション ID） {#in-place-compaction-single-stable-session-id}
@@ -249,7 +262,7 @@ auxiliary:
 
 ### 補助モデルでの実現可能性と、末尾をどれだけ残すか {#auxiliary-feasibility-and-tail-retention}
 
-補助側の圧縮モデルが小さいと、実際に圧縮が始まる点は下がりますが、選ばれる末尾の方針そのものは変わりません。`lean` モードでは、末尾を選ぶための予算は**メインモデルのコンテキストウィンドウ**を基準にしたままです。その 2.5% を取り、10K〜25K トークンの範囲に収めます。たとえばメインが 1M、補助が 512K のモデルなら、実現可能性の判定で発動点が 850K から 512K へ下がっても、末尾の予算は 25K のままです。明示的に `legacy` を指定した場合は、代わりに `threshold_tokens × target_ratio` を計算し直します（512K × 0.20 で 102,400 トークン）。これらは末尾を選ぶための予算であって、圧縮後のコンテキスト全体に対する厳密な上限ではありません。保護されたメッセージ、境界の位置合わせ、要約、アンカーの分だけトークンが増えることがあります。
+補助側の圧縮モデルが小さいと、実際に圧縮が始まる点は下がりますが、選ばれる末尾の方針そのものは変わりません。`lean` モードでは、末尾を選ぶための予算は**メインモデルのコンテキストウィンドウ**を基準にしたままです。その 2.5% を取り、10K〜25K トークンの範囲に収めます。たとえばメインが 1M（`threshold_tokens: null`）、補助が 512K のモデルなら、実現可能性の判定で発動点が 850K から 512K へ下がっても、末尾の予算は 25K のままです。明示的に `legacy` を指定した場合は、代わりに `threshold_tokens × target_ratio` を計算し直します（512K × 0.20 で 102,400 トークン）。これらは末尾を選ぶための予算であって、圧縮後のコンテキスト全体に対する厳密な上限ではありません。保護されたメッセージ、境界の位置合わせ、要約、アンカーの分だけトークンが増えることがあります。
 
 下げられた発動点は圧縮側にとって動かない上限として残るので、同じモデルのウィンドウが直されても（プロバイダーから報告された上限や、大きくなったローカルのウィンドウでも）そのまま保たれます。メインで動かすものが変わったとき — `/model`、フォールバックの発動、主モデルへの復帰 — は、補助モデルをその場で測り直します。新しいウィンドウでの最初の圧縮より前にもう一度発動点を抑え込むか、補助モデルが収まるようになっていればメインモデル自身の値に戻します。
 
@@ -331,7 +344,11 @@ ChatGPT Codex のバックエンドは、gpt-5.4 と gpt-5.6（Sol / Terra / Lun
 （たとえば `gpt-5.6-sol-900k`、`gpt-5.6-terra-900k`、`gpt-5.6-luna-900k`、
 `gpt-5.4-900k`）。これらは Hermes 側の別名で、バックエンドへモデル ID を送る前に接尾辞は
 取り除かれ、料金と使用量の計算では元のモデルとして扱われます。本当に 272K で固定されている
-名前（gpt-5.5、gpt-5.4-mini）には `-900k` の選択肢はありません。
+名前（gpt-5.5、gpt-5.4-mini）には `-900k` の選択肢はありません。認証済みの Codex の
+カタログが、基本の名前に対して 900K を下回る `max_context_window` を公開している場合
+（たとえば 872K）、`-900k` の選択肢はその実際の最大値のほうに解決されます。900K は
+接続できないときのフォールバックとして残り、公開された最大値が 900K を超えていても
+それ以上には上がりません。
 
 圧縮のしきい値はウィンドウに従います。基本の名前（272K）には上で説明した **85% の
 自動引き上げ**が適用され、`-900k` の選択肢では全体の
@@ -358,7 +375,7 @@ Codex app-server のセッション（`api_mode: codex_app_server` — codex の
 圧縮の境界が記録され、見えているやり取りはそのまま残ります。これ以外のすべての経路
 （Codex OAuth のチャットセッションを含む）では、Hermes の要約による圧縮機構が使われます。
 
-### Responses のネイティブ圧縮（OpenAI 直接 / Codex サブスクリプションでの gpt-5.6） {#native-responses-compaction-gpt-56-on-direct-openai-codex-subscription}
+### Responses のネイティブ圧縮（対応する経路での gpt-5.6 と Astra） {#native-responses-compaction-gpt-56-and-astra-on-supported-routes}
 
 OpenAI の Responses API はサーバー側での圧縮に対応しています。リクエストに
 `context_management: [{type: "compaction", compact_threshold: N}]` が含まれていて、
@@ -372,12 +389,19 @@ OpenAI の Responses API はサーバー側での圧縮に対応しています�
 利用するには `compression.codex_responses_native: true` を設定します。適用の条件は
 意図的に狭く、リクエストごとに毎回確認されます。
 
-- **モデル**: gpt-5.6 系のみ。他のモデルではこのフィールドがあるとサーバー側で失敗します
-  （gpt-5.1 / 5.2 は HTTP 500 を返すかストリームが止まってしまい、機能を落として
-  再試行できるような構造化された拒否は返ってきません。2026 年 8 月に実地で確認）。
+- **モデル**: gpt-5.6 系と、公式の Codex サブスクリプションの OAuth でちょうど
+  `gpt-6-astra` を使う場合です。直接 API での Astra、Astra の派生版、その他の GPT-6 の
+  モデルは対象外です。gpt-5.1 / 5.2 はこのフィールドがあると HTTP 500 を返すか
+  ストリームが止まってしまい、機能を落として再試行できるような構造化された拒否は
+  返ってきません（2026 年 8 月に実地で確認）。
 - **経路**: `api.openai.com`（OpenAI の API キー）か ChatGPT Codex のバックエンド
   （Codex サブスクリプションの OAuth）のみ。xAI、GitHub / Copilot、OpenRouter、中継、
   ローカルのサーバーにはこのフィールドは送られません。
+
+Astra の場合は、解決されたプロバイダーが `openai-codex` であることと、接続先が公式の
+HTTPS の `chatgpt.com/backend-api/codex` であることの両方が要ります。信頼済みプロキシで
+上書きしても Astra の圧縮は有効になりません。この仕組みは既存の自動の
+`context_management` の経路を使うもので、`configuration_update` の履歴を足すことはありません。
 
 圧縮に関するそれ以外の点は変わりません。ローカルの圧縮機構は最後の受け皿として
 待機したままです（サーバーが先に圧縮するよう、ネイティブのしきい値はローカルの発動点より
@@ -387,7 +411,10 @@ OpenAI の Responses API はサーバー側での圧縮に対応しています�
 取り込んだチェックポイントは、接続先が変わったときに既存の発行元チェックによって
 再送の対象から外されます。
 
-既定では `compression.codex_responses_compact_threshold: null` となっていて、
+`compression.codex_responses_compact_threshold` が読まれるのは
+`codex_responses_native: true` が効いている間だけです。ネイティブ圧縮を使わない既定の
+状態では無視され、ローカルの圧縮は `threshold` と `threshold_tokens` だけで発動します。
+既定では `codex_responses_compact_threshold: null` となっていて、
 ネイティブのしきい値は解決済みのローカルの発動点から導かれます。たとえばローカルの発動点が
 765,000 なら 756,808 が選ばれます。200,000 のように絶対値で固定したい場合は正の整数を
 設定してください。不正な値の場合は自動の挙動になります。使えるローカルの発動点がない場合、
@@ -405,7 +432,7 @@ max_summary_tokens   = min(200,000 × 0.05, 12,000) = 10,000
 ```
 
 :::note しきい値はメインのモデルのコンテキストウィンドウから決まります
-`threshold_tokens` は常に `threshold × context_length` であり、この `context_length` は
+`threshold_tokens` は `threshold × context_length`（そのうえで `compression.threshold_tokens` による上限がかかります）であり、この `context_length` は
 **メインのエージェントのモデル**のコンテキストウィンドウです。補助モデルや要約モデルのものでは
 決してありません。262,144 トークンのモデルで既定の `0.50` を使うと、しきい値は
 `262,144 × 0.50 = 131,072` になります。この数字がよくある「128K コンテキスト」に近いのは

@@ -2,7 +2,7 @@
 title: "Hyperliquid — Hyperliquid の相場データ、口座の履歴、取引の振り返り"
 description: "Hyperliquid の相場データ、口座の履歴、取引の振り返り"
 upstream_path: user-guide/skills/optional/blockchain/blockchain-hyperliquid.md
-upstream_blob: 2dba79dc9a492c754d7f782d0f4f3ec2892a09e4
+upstream_blob: 5ceda35a15d20ed9eee98934ff88b3f9eb636ad6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid
 ---
@@ -16,7 +16,7 @@ Hyperliquid の相場データ、口座の履歴、取引の振り返りです�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/blockchain/hyperliquid` で入れます |
-| パス | `optional-skills/blockchain\hyperliquid` |
+| パス | `optional-skills/blockchain/hyperliquid` |
 | バージョン | `0.1.0` |
 | 作者 | Hugo Sequier (Hugo-SEQUIER), Hermes Agent |
 | ライセンス | MIT |

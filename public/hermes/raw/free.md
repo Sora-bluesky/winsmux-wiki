@@ -31,7 +31,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-09-19
+最終取得: 2026-09-21
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -51,12 +51,11 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-09-19
+最終取得: 2026-09-21
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
 | **Cohere: North Mini Code (free)**<br>`cohere/north-mini-code:free`<br>入力・出力の基本単価0（取得時点） | 256,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **DeepSeek: DeepSeek V4 Flash 0731 (free)**<br>`deepseek/deepseek-v4-flash-0731:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Dots Studio: Dots3-Note Preview (free)**<br>`dots-studio/dots-3-note-preview:free`<br>入力・出力の基本単価0（取得時点） | 512,000 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-09-30 |
 | **Google: Gemma 4 26B A4B  (free)**<br>`google/gemma-4-26b-a4b-it:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Google: Gemma 4 31B (free)**<br>`google/gemma-4-31b-it:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
@@ -91,11 +90,12 @@ APIキーもアカウントも要りません。リクエストは匿名で送�
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 
-最終取得: 2026-09-19
+最終取得: 2026-09-21
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
 | **deepseek-v4-flash-free**<br>`deepseek-v4-flash-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
+| **jev-1.13-free**<br>`jev-1.13-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **ling-3.0-flash-fin-free**<br>`ling-3.0-flash-fin-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **mimo-v2.5-free**<br>`mimo-v2.5-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **muse-spark-1.2-contributor-free**<br>`muse-spark-1.2-contributor-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |

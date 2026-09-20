@@ -2,7 +2,7 @@
 title: "Gitnexus Explorer — コードベースの知識グラフを対話的な Web UI で見る"
 description: "コードベースの知識グラフを対話的な Web UI で見る"
 upstream_path: user-guide/skills/optional/research/research-gitnexus-explorer.md
-upstream_blob: 80f92a69f66bda1653656137b07badc411863714
+upstream_blob: 19adbafc1dcc4cabc496b63818e2ce566889c48c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-gitnexus-explorer
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/research/gitnexus-explorer` で導入します |
-| パス | `optional-skills/research\gitnexus-explorer` |
+| パス | `optional-skills/research/gitnexus-explorer` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |

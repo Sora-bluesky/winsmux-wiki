@@ -2,7 +2,7 @@
 title: "文書からの本文抽出"
 description: "read_file が PDF・Office 文書・ノートブックをどう文字に変換するか、そして PDF が画像を並べただけのときにどうするか"
 upstream_path: user-guide/features/document-extraction.md
-upstream_blob: 08979794b1226d1fcfe98b5157a1ca8a1474ff69
+upstream_blob: 308c0e894b83222219fc325850677b271acc1204
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/document-extraction
 ---
@@ -18,12 +18,17 @@ sources:
 | Jupyter ノートブック | `.ipynb` | 組み込み（標準ライブラリ） | 常に |
 | Word 文書 | `.docx` | 組み込み（標準ライブラリ） | 常に |
 | Excel ブック | `.xlsx` | 組み込み（標準ライブラリ） | 常に |
+| SQLite のデータベース | `.db`、`.sqlite`、`.sqlite3` | 組み込み（標準ライブラリ） | 常に |
 | PDF | `.pdf` | 追加の `anydoc` 変換器 | 初回利用時に自動で導入* |
 | 旧来の Office | `.doc`、`.ppt`、`.xls`、`.pptx` とその仲間 | 追加の `anydoc` 変換器 | 初回利用時に自動で導入* |
 | OpenDocument | `.odt`、`.ods`、`.odp` | 追加の `anydoc` 変換器 | 初回利用時に自動で導入* |
 | リッチテキスト／電子書籍 | `.rtf`、`.epub` | 追加の `anydoc` 変換器 | 初回利用時に自動で導入* |
 
 \* 追加の変換器は `firecrawl-anydoc` パッケージで、導入が許可されている場合にだけその場で入ります（`config.yaml` の `security.allow_lazy_installs`）。入っていなくても標準ライブラリで扱う3形式は動きますが、それ以外の形式はバイナリとして読み込みを断られます。
+
+SQLite のファイルは中身をそのまま吐き出すのではなく、構造の見取り図として表示されます。テーブルごとの `CREATE` 文、行数、先頭5行に加えて、索引・ビュー・トリガーの一覧が並びます。データベースは読み取り専用で開かれるので（`mode=ro&immutable=1`。ほかのプロセスが開いたままの稼働中のデータベースでも、ロックをかけずに読めます）、この下見より先を知りたいときはターミナルから `sqlite3` で問い合わせてください。中身が SQLite ではない `.db`（先頭の識別バイトが合わないもの）は、その理由をそのまま添えて断られます。抽出の前に Hermes 自身の読み取り禁止一覧が効くので、`HERMES_HOME` の下にある保護された保管場所は読めないままです。
+
+`read_file` は、未解決のまま残った git の衝突箇所も教えてくれます。読み出した範囲に `<<<<<<< ` と `>>>>>>> ` の目印の行が対になって含まれていると、結果に `conflict_blocks: N` と、その周辺を編集する前に衝突を解消するようにという助言が付きます。文字列の中やテストの用例に目印が単独で現れているだけのものは数えません。
 
 変換後の出力は Markdown で、`read_file` が普段使う `offset`／`limit` の窓で区切って読み出せます。東アジア圏のふりがな（XLSX の `rPh`、DOCX のルビ）はセルや文字列に付いた注記であって、取り出す値そのものではありません。トウキョウ というふりがなの付いた 東京 というセルは `東京` として読み出されます。50 MB を超える文書は、ツールの1回のやり取りが膨らみすぎないよう受け付けません。
 
@@ -51,7 +56,7 @@ Decide which gaps you actually need — do NOT OCR or render everything. ...]
 
 1. **数ページなら、画像にして目で読む。** ページを画像に変換し、画像を扱うツールで読ませます。
    ```bash
-   pdftoppm -jpeg -r 150 -f 92 -l 94 document.pdf /tmp/page
+   pdftoppm -jpeg -r 150 -f 92 -l 94 document.pdf $TMPDIR/page
    ```
    そのうえで各画像を `vision_analyze` で確かめます。追加で入れるものはありません（そもそも検出のために poppler が必要です）。
 2. **多くのページなら、OCR。** `ocr-and-documents` スキルが marker-pdf を使った一括 OCR を扱います（90 以上の言語に対応し、数式や表も処理できます。導入には 3〜5 GB ほど必要です）。

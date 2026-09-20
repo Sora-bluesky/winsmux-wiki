@@ -2,7 +2,7 @@
 title: "Ascii Art — アスキーアート: pyfiglet、cowsay、boxes、画像からの変換"
 description: "アスキーアート: pyfiglet、cowsay、boxes、画像からの変換"
 upstream_path: user-guide/skills/optional/creative/creative-ascii-art.md
-upstream_blob: e4b4d069b644d88e7ae3d7cb154966b66ea29311
+upstream_blob: 3a36cdd02731a17d720f970e73f4d3979b71a710
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-ascii-art
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/creative/ascii-art` で導入します |
-| パス | `optional-skills/creative\ascii-art` |
+| パス | `optional-skills/creative/ascii-art` |
 | バージョン | `4.0.0` |
 | 作者 | 0xbyt4, Hermes Agent |
 | ライセンス | MIT |
@@ -251,14 +251,14 @@ Web で集められたアスキーアートを探します。`terminal` から `
 **手順 1 — ページを取ってくる:**
 
 ```bash
-curl -s 'https://ascii.co.uk/art/cat' -o /tmp/ascii_art.html
+curl -s 'https://ascii.co.uk/art/cat' -o ~/.hermes/cache/scratch/ascii_art.html
 ```
 
 **手順 2 — pre タグから作品を取り出す:**
 
 ```python
 
-with open('/tmp/ascii_art.html') as f:
+with open(os.path.expanduser('~/.hermes/cache/scratch/ascii_art.html')) as f:
     text = f.read()
 arts = re.findall(r'<pre[^>]*>(.*?)</pre>', text, re.DOTALL)
 for art in arts:

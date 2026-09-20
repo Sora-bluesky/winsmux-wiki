@@ -2,7 +2,7 @@
 title: "ミドルウェア"
 description: "LLM 呼び出しとツール呼び出しの挙動を変えるプラグインのミドルウェア。契約、実行順序、例"
 upstream_path: developer-guide/middleware.md
-upstream_blob: 5469af351cf969e91decac0b377e3cdf142d4804
+upstream_blob: bf921314a0e2a74304e96eabed9801b89c33100d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/middleware
 ---
@@ -133,7 +133,7 @@ hermes plugins enable <plugin-name>
 同じ `HERMES_HOME` を使います。
 
 ```bash
-export HERMES_HOME=/tmp/hermes-middleware-test
+export HERMES_HOME=$HOME/.hermes/cache/scratch/hermes-middleware-test
 mkdir -p "$HERMES_HOME"
 hermes plugins enable <plugin-name>
 hermes chat --query 'Reply exactly ok'
@@ -181,6 +181,8 @@ def tag_llm_request(**kwargs):
 このプラグインは、`terminal` の呼び出しを決まった作業ディレクトリに固定します。
 
 ```python
+from pathlib import Path
+
 def register(ctx):
     ctx.register_middleware("tool_request", normalize_terminal_workdir)
 
@@ -188,7 +190,7 @@ def normalize_terminal_workdir(**kwargs):
     if kwargs.get("tool_name") != "terminal":
         return None
     args = dict(kwargs["args"])
-    args.setdefault("workdir", "/tmp/hermes-middleware-demo")
+    args.setdefault("workdir", str(Path.home() / ".hermes" / "cache" / "scratch" / "hermes-middleware-demo"))
     return {
         "args": args,
         "source": "middleware-demo",

@@ -2,7 +2,7 @@
 title: "System Atlas — 見て回れるアイソメトリックの構成アトラスを HTML で作る"
 description: "見て回れるアイソメトリックの構成アトラスを HTML で作る"
 upstream_path: user-guide/skills/optional/creative/creative-system-atlas.md
-upstream_blob: a43d82a7c3d24608d3dd4eb2ef9e8787dcade689
+upstream_blob: 438dea97e0072ef8f934ff2ccbc3afec5806bec3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-system-atlas
 ---

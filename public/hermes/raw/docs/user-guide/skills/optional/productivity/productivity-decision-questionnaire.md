@@ -2,7 +2,7 @@
 title: "Decision Questionnaire — 自分では答えの出せない決めごとを質問票にする"
 description: "自分では答えの出せない決めごとを質問票にする"
 upstream_path: user-guide/skills/optional/productivity/productivity-decision-questionnaire.md
-upstream_blob: 01ee2251a05f42f42ad71189905dba402891142f
+upstream_blob: 094eee040f9cc0c4eb03e4118fa278716574228e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/productivity/decision-questionnaire` で導入します |
-| パス | `optional-skills/productivity\decision-questionnaire` |
+| パス | `optional-skills/productivity/decision-questionnaire` |
 | バージョン | `1.0.0` |
 | 作者 | Matt Pocock (mattpocock/skills, to-questionnaire) + Hermes Agent |
 | ライセンス | MIT |

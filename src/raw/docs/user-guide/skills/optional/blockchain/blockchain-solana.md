@@ -2,7 +2,7 @@
 title: "Solana — Solana のウォレット・トークン・取引・NFT を米ドル建てで調べる"
 description: "Solana のウォレット・トークン・取引・NFT を米ドル建てで調べる"
 upstream_path: user-guide/skills/optional/blockchain/blockchain-solana.md
-upstream_blob: a9b4c55b7ed12a6ddf4664119bae092bfbd0ab5f
+upstream_blob: 9e564d29b7718d335833c574e5e33c2b7bb8b4d3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/blockchain/blockchain-solana
 ---
@@ -16,7 +16,7 @@ Solana のウォレット・トークン・取引・NFT を米ドル建てで調
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/blockchain/solana` で導入します |
-| パス | `optional-skills/blockchain\solana` |
+| パス | `optional-skills/blockchain/solana` |
 | バージョン | `0.2.0` |
 | 作者 | Deniz Alagoz (gizdusum), enhanced by Hermes Agent |
 | ライセンス | MIT |

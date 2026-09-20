@@ -2,7 +2,7 @@
 title: "スクリプトの出力をメッセージングプラットフォームへ流す"
 description: "シェルスクリプト、cron ジョブ、CI のフック、監視デーモンなどのテキストを、`hermes send` で Telegram・Discord・Slack・Signal などへ送ります。"
 upstream_path: guides/pipe-script-output.md
-upstream_blob: 6df59eeb7d5e91e7ee0e84f10ceb58bef933a0ac
+upstream_blob: 008a7d27ba6a14ae21541bd3311992ab0b2b03cd
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/pipe-script-output
 ---
@@ -39,7 +39,7 @@ hermes send --to telegram "deploy finished"
 echo "RAM 92%" | hermes send --to telegram:-1001234567890
 
 # Send a file
-hermes send --to discord:#ops --file /tmp/report.md
+hermes send --to discord:#ops --file ~/.hermes/cache/scratch/report.md
 
 # Attach a subject/header line
 hermes send --to slack:#eng --subject "[CI] build.log" --file build.log

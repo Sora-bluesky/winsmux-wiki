@@ -2,7 +2,7 @@
 title: "ローカルモデル"
 description: "モデルを自分の端末だけで動かします。アカウントも API キーも不要で、何も端末の外には出ません。"
 upstream_path: user-guide/local-models.md
-upstream_blob: a2202cd89df7e6cbaca2f60f079eb50f8a8a5aa6
+upstream_blob: 1783667e6c11b104fad5711a6c0b269deec3e21f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/local-models
 ---
@@ -109,8 +109,12 @@ Hermes が最初から最後まで管理し、つまみは一切出しません�
 すでに llama-server が端末で動いている場合、Hermes はそれを見つけて、
 自前のサーバーを起動せずにそちらを使います。OpenAI 互換のサーバーで
 あれば、カスタムのエンドポイントを向けて全部を手動で握ることもできます。
-付属のランタイムはあくまで既定であって、必須ではありません。手動で
-組む場合（Ollama、MLX、独自ビルド、画面のない CLI の端末など）は
+付属のランタイムはあくまで既定であって、必須ではありません。入力欄には
+サーバーのルート（たとえば `http://127.0.0.1:8080`）でも、`/v1` まで
+付けた URL でも構いません。接続テストが両方を試し、実際に `/models` を
+返したほうを保存するので、チャットの問い合わせも、モデル一覧を取れたの
+と同じ場所へ届きます。手動で組む場合（Ollama、MLX、独自ビルド、画面の
+ない CLI の端末など）は
 [Run Hermes Locally with Ollama](/hermes/docs/guides/local-ollama-setup/) と
 [Run Local LLMs on Mac](/hermes/docs/guides/local-llm-on-mac/) を見てください。
 
@@ -127,7 +131,27 @@ local_runtime:
   backend: auto      # auto | cuda | metal | vulkan | hip | cpu
   tag: b10362        # pinned llama.cpp release; Hermes updates it with
                      # each release after re-validation
+  detect_ports: [8081]  # extra ports to probe for a llama-server you run
+                        # yourself (the default probe is :8080 only)
 ```
+
+`llama-server` を自分で決まったポートに立てて動かす場合も、選び方は同じ
+`model.provider: llamacpp` のままで動きます。そのポートを
+`local_runtime.detect_ports` に並べるか、`providers:` の下で接続先を
+はっきり書いてください（明示した設定のほうが、サーバーの自動検出より
+優先されます）。
+
+```yaml
+providers:
+  llamacpp:
+    base_url: http://127.0.0.1:8081/v1
+    model: my-model
+```
+
+`/model` の **Local** の行も `provider: llamacpp` も、そのサーバーを指す
+ようになります。つながるサーバーが 1 つもないときは、知らないプロバイダー
+だとか API キーがないといった言い方ではなく、ローカルのランタイムの話だと
+分かるエラー（「the local model server isn't running」）が出ます。
 
 モデルとランタイムのビルドは Hermes のホームディレクトリの下
 （`models/` と `runtimes/llamacpp/`）に置かれます。ローカルのモデルを

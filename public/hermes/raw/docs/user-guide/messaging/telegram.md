@@ -2,7 +2,7 @@
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: 68a6e35f8c2dd41c36da24b93d3f331eccef7bbd
+upstream_blob: 29ba3a418363f23ae3284f2e93b05828313c93d8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -83,6 +83,37 @@ gateway:
 - "Offline" が書き込まれるのは、ゲートウェイが**正常に**終了したとき（`/stop`、`disconnect`）だけです。
   異常終了すると、最後の表示が残ります。プロフィールの文で状態を示す以上、避けられない限界です。
 - ボットのプロフィールを書き換えるため、既定では無効です。
+
+### 電源を入れ直したときの未処理分（任意） {#cold-boot-pending-queue-optional}
+
+アダプターは既定で、電源を入れ直したときにサーバー側で溜まっていた更新を捨てます
+（最初の `start_polling` で `drop_pending_updates=True` になります）。これは動かしっぱなしの
+サーバーには合っています。再起動は「片付け」を意味し、溜まっていた分は古いものとして扱われます。
+一方で、電源が落ちる端末（夜のあいだ止めているデスクトップなど）には合いません。ゲートウェイが
+止まっているあいだに送られたメッセージは Telegram の Bot API 側で待たされていますが、次に立ち上げた
+ときに Hermes が受け取る前に捨てられてしまいます。しかも静かに捨てられ、ログも残らず、やり直しも
+ありません。
+
+`drop_pending_on_cold_boot: false` を設定すると、起動のときに溜まっていた分を順番どおりに
+受け取れます。
+
+```yaml
+platforms:
+  telegram:
+    extra:
+      drop_pending_on_cold_boot: false
+```
+
+覚えておくことです。
+
+- 既定は `true` です。自分で切り替えない限り、これまでの動きは変わりません。
+- 見張り役による再接続（プロセスは生きたままの短い通信の途切れ）では、この設定にかかわらず
+  溜まっていた分は必ず残ります。
+- 競合からの復帰では、競合している `getUpdates` の接続を終わらせるために、いまでも溜まっていた
+  分を捨てます。そこはこのつまみとは関係のない経路です。
+- 異常終了のあとは、溜めておいた分の中に、落ちたほうが途中まで処理した更新が混じっていて、
+  もう一度届くことがあります。ふつうは Telegram 側の位置の記録で防がれますが、長く止まっている
+  あいだに送られた、時間に左右されるコマンドは、起動のときに動きます。
 
 ### コマンドメニューの優先順と上限（任意） {#command-menu-priority-and-cap-optional}
 
@@ -684,13 +715,13 @@ Telegram の Bot API 9.4（2026 年 2 月）で**1 対 1 のトークのトピ�
 ### 設定 {#configuration}
 
 :::caution 事前に必要なこと
-設定にトピックを足す前に、利用者がボットとの DM のトークで**トピックモードを有効にする**必要があります。
+設定にトピックを足す前に、ボットの持ち主が **@BotFather** でそのボットの **Threaded Mode を有効にする**必要があります。
 
-1. Telegram で Hermes のボットとの 1 対 1 のトークを開きます
-2. 上部のボットの名前を押して、トークの情報を開きます
-3. **Topics** を有効にします（そのトークをフォーラムに切り替える設定です）
+1. BotFather の **ミニアプリ** を開きます（Telegram で `botfather` を検索し、検索結果の **Open** を押します。従来の `/mybots` の文字メニューには、この設定が出てきません）
+2. **My bots → 対象のボット → Bot Settings → Threads Settings** と進みます
+3. **Threaded Mode** をオンにします
 
-これをしないと、Hermes は起動時に `The chat is not a forum` とログに出して、トピックの作成を飛ばします。これは Telegram のクライアント側の設定で、ボットからは有効にできません。
+DM のトーク自体に「Topics」の切り替えはありません。ボットとの DM はグループではないので、古い案内に出てくるグループのフォーラム化の切り替えは、ここには当てはまりません。Threaded Mode を有効にしないと、Hermes は起動時に `The chat is not a forum` とログに出して、トピックの作成を飛ばします。同じ手順をもう少し詳しく説明したものが、下の [事前に必要なこと](#prerequisites) にあります。
 :::
 
 `~/.hermes/config.yaml` の `platforms.telegram.extra.dm_topics` にトピックを足します。

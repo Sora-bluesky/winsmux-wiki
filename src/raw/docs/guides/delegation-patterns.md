@@ -2,7 +2,7 @@
 title: "委任と並行作業"
 description: "サブエージェントへの委任をいつどう使うか。並行しての調査、コードレビュー、複数ファイルの作業の型"
 upstream_path: guides/delegation-patterns.md
-upstream_blob: 91436915a08ded9ba6d4b6574a2211bd163d5c38
+upstream_blob: 4713609873ee32dbaa6b8072c538ef3e648fbcce
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/delegation-patterns
 ---
@@ -28,7 +28,7 @@ Hermes は、独立した子のエージェントを立ち上げて、作業を�
 - 手順の間に判断を挟む、機械的な多段の作業 → `execute_code`
 - 利用者とのやり取りが必要な作業 → サブエージェントは `clarify` を使えません
 - ちょっとしたファイルの編集 → 自分で直接やる
-- セッションを閉じてもプロセスを再起動しても続いていてほしい長い作業 → `cronjob` か `terminal(background=True, notify_on_complete=True)`。最上位の委任は非同期ではありますが、あくまでそのプロセスの中の話です。
+- セッションを閉じてもプロセスを再起動しても続いていてほしい長い作業 → `cronjob_manage` か `terminal(background=True, notify_on_complete=True)`。最上位の委任は非同期ではありますが、あくまでそのプロセスの中の話です。
 
 ---
 
@@ -176,7 +176,7 @@ content = web_extract(urls)
 
 # Save for the analysis step
 
-with open("/tmp/ai-funding-data.json", "w") as f:
+with open(os.path.expanduser("~/.hermes/cache/scratch/ai-funding-data.json"), "w") as f:
     json.dump({"search_results": results, "extracted": content["results"]}, f)
 print(f"Collected {len(results)} results, extracted {len(content['results'])} pages")
 """)
@@ -184,7 +184,7 @@ print(f"Collected {len(results)} results, extracted {len(content['results'])} pa
 # Step 2: Reasoning-heavy analysis (delegation is better here)
 delegate_task(
     goal="Analyze AI funding data and write a market report",
-    context="""Raw data at /tmp/ai-funding-data.json contains search results and
+    context="""Raw data at ~/.hermes/cache/scratch/ai-funding-data.json contains search results and
     extracted web pages about AI funding, acquisitions, and IPOs in Q1 2026.
     Write a structured market report: key deals, trends, notable players,
     and outlook. Focus on deals over $100M."""
@@ -224,7 +224,7 @@ delegation:
 - **端末は別々** — サブエージェントはそれぞれ、作業ディレクトリーも状態も別の端末のセッションを持ちます
 - **会話の履歴は渡らない** — サブエージェントに見えるのは、親が `delegate_task` を呼ぶときに渡した `goal` と `context` だけです
 - **既定では 250 回まで繰り返す** — 単純な作業をたくさん走らせるときは、`config.yaml` の `delegation.max_iterations` を小さくすると費用を抑えられます
-- **やり通す保証はない** — 最上位の委任は裏で走り、あとから結果を返しますが、呼び出したセッションと Hermes のプロセスに結び付いたままです。セッションを閉じる、`/stop`、`/new`、プロセスの再起動のいずれかで、途中の作業が取り消されたり宙に浮いたりします。それらをまたいで残ってほしい作業には `cronjob` か `terminal(background=True, notify_on_complete=True)` を使ってください。
+- **やり通す保証はない** — 最上位の委任は裏で走り、あとから結果を返しますが、呼び出したセッションと Hermes のプロセスに結び付いたままです。セッションを閉じる、`/stop`、`/new`、プロセスの再起動のいずれかで、途中の作業が取り消されたり宙に浮いたりします。それらをまたいで残ってほしい作業には `cronjob_manage` か `terminal(background=True, notify_on_complete=True)` を使ってください。
 
 ---
 

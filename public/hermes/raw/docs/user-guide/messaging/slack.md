@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: a438e55675f1be6001af6d6eafbf7a99bd33d23f
+upstream_blob: 12fef75ba992230cf6ffde896d33c8383262f7f5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -353,7 +353,7 @@ Slack のマニフェストを手で管理していて、スラッシュコマ�
 こうします。
 
 ```bash
-hermes slack manifest --slashes-only > /tmp/slashes.json
+hermes slack manifest --slashes-only > ~/.hermes/cache/scratch/slashes.json
 ```
 
 出てきた配列を、いま使っているマニフェストの `features.slash_commands` の項目に貼ります。

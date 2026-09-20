@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 1ecdcf5ab989a6a36bcc8acdbd75d580219d0754
+upstream_blob: 708c8bb8f1769af558cfb2bde1bf11a1bcad8929
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -70,7 +70,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/agents`（別名: `/tasks`） | 今のセッションで動いているエージェントとタスクを表示します。 |
 | `/bg <prompt>` | プロンプトを別のバックグラウンドセッションで実行します。エージェントが独立して処理するので、今のセッションは他の作業に使えます。タスクが終わると結果がパネルで出ます。[CLI のバックグラウンドセッション](/hermes/docs/user-guide/cli/#background-sessions) も見てください。 |
 | `/btw <question>` | 進行中の会話を止めずに、**今の会話について**ちょっとした質問をします。読み取り専用の記録のスナップショットに対して補助の LLM を 1 回呼んで答えるので、動いているセッションの履歴とプロンプトキャッシュには触れず、今のターンもそのまま続きます。まっさらな文脈で別の作業をさせたいときは `/bg` を使ってください。 |
-| `/branch [name]`（別名: `/fork`） | 今のセッションを分岐させます（別の道を試せます）。従来型の CLI では `/handoff` と同じくターンの途中では断られます。いま返ってきている応答が終わるのを待ってから、もう一度実行してください。 |
+| `/branch [--here] [name]`（別名: `/fork`） | 今のセッションを、独立した写しとして分岐させます（別の道を試せます）。Discord、Telegram、Slack、Matrix では、分岐したほうが**隣に並ぶ新しいスレッド**として開き、いま使っているチャットは元のセッションのまま残ります。`--here` を付けると、逆にいまのチャットのほうを分岐先に切り替えます（#66023 より前の動きです）。CLI やスレッドの無いプラットフォームでは、つねにその場で分岐します。従来型の CLI では `/handoff` と同じくターンの途中では断られます。いま返ってきている応答が終わるのを待ってから、もう一度実行してください。 |
 | `/worktree [new [name]\|list]` | **CLI 専用。** セッションの途中で、隔離された git の worktree を確認したり作ったりします（Copilot CLI の `/worktree new` に着想を得ています）。引数なしの `/worktree` は今の worktree を表示し、`/worktree list` はリポジトリの worktree を並べ、`/worktree new [name]` は `.worktrees/` の下に worktree を作って（取得したてのリモートの先端から分岐し、`worktree_sync` の設定に従います）、セッションのターミナルとファイル系のツールをそこへ向け直します。名前を付けたものはその名前を使い（ブランチは `hermes/<name>`）、付けなかったものはランダムな `hermes-<id>` になります。終了時、push していないコミットがある場合だけ worktree は残ります。`hermes -w` と同じライフサイクルです。[Git の worktree](/hermes/docs/user-guide/git-worktrees/) も見てください。 |
 | `/handoff <platform>` | **CLI 専用。** 今のセッションをメッセージングプラットフォーム（Telegram、Discord、Slack、WhatsApp、Signal、Matrix）へ引き継ぎます。ゲートウェイがすぐに受け取り、スレッドに対応しているプラットフォームでは新しいスレッドを作り（Telegram のトピック、Discord のテキストチャンネルのスレッド、Slack と Matrix のメッセージに紐づくスレッド）、引き継ぎ先を CLI の session_id に結び直して、役割込みの記録をまるごと再生します。さらに合成のユーザーターンを 1 つ差し込むので、エージェントが新しい場所で動いていることを確認できます。成功すると CLI は `/resume` のヒントを出してきれいに終了します。ローカルではいつでも `/resume <title>` で再開できます。ターンの途中では断られます。ゲートウェイが動いていることと、引き継ぎ先のプラットフォームにホームチャンネルが設定されていること（引き継ぎ先のチャットで `/sethome` を実行）が必要です。[プラットフォームをまたぐ引き継ぎ](/hermes/docs/user-guide/sessions/#cross-platform-handoff) も見てください。 |
 | `/journey [list\|delete <id>\|edit <id>]`（別名: `/learning`、`/memory-graph`） | 覚えたスキルと記憶をたどる学習の道のりのタイムラインを開きます。従来の CLI、TUI のオーバーレイ、デスクトップアプリ（Star Map パネル）で使えます。メッセージングプラットフォームでは使えません。[学習の道のり](/hermes/docs/user-guide/features/memory/#learning-journey-journey) も見てください。 |
@@ -81,7 +81,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 |---------|-------------|
 | `/config` | 今の設定を表示します |
 | `/model [model-name]` | 今のモデルを表示、または変更します。`/model claude-sonnet-4`、`/model provider:model`（プロバイダの切り替え）、`/model custom:model`（独自のエンドポイント）、`/model custom:name:model`（名前を付けた独自プロバイダ）、`/model custom`（エンドポイントから自動判別）、OpenRouter のアカウントのプリセット（`/model @preset/<slug>` または `/model <model>@preset/<slug>`。プリセットはアカウントに属するので、公開されたモデル一覧での確認を飛ばします）、そしてユーザーが決めた別名（`/model fav`、`/model grok`。[モデルの別名を自分で決める](#custom-model-aliases) を参照）に対応します。フラグは、`--global` で config.yaml に変更を残す、`--session` でセッション限りにする、`--once` で次のターンだけに適用する、`--refresh` でプロバイダのモデル一覧を取り直す、`--provider <name>` でバックエンドを切り替える（`--global` がなければセッション限り）、`--reasoning <level>` で推論の強さ（`none`、`minimal` … `ultra`）をモデルの選択と同じ手順・同じ範囲で設定する、です。単に `/model <name>` と書いた場合は、`model.persist_switch_by_default: true` を設定していない限りセッション限りです。ただし `model.default` や `model.provider` をまだ設定していない場合は例外で、最初に選んだものがそのまま残り、プロファイルにきちんとした既定値ができます。デスクトップの入力欄のピッカーも同じ規則で動きます。**対話的なピッカー:** 引数なしで `/model` を実行するとプロバイダ→モデルのピッカーが開きます。モデルの一覧では**入力してあいまい検索で絞り込め**（たとえば `grok` と打つと該当するモデルだけになります）、Backspace で絞り込みを縮め、Esc で消せます（またはピッカーを閉じます）。選択は必ず 1 つの具体的なモデルに落ち着きます。絞り込みは一覧を狭めるだけで、推測はしません。モデルを選んだあとの 3 つめの段階では、そのモデルの推論の強さを選べます（**Keep current effort** で今のまま）。カタログ上でその経路に推論の調整がない場合、この段階は飛ばされます。**注意:** `/model` は、すでに設定済みのプロバイダの間でしか切り替えられません。新しいプロバイダを追加するには、セッションを抜けてターミナルから `hermes model` を実行してください。**費用に関する注意:** 会話の途中でモデルを切り替えるとプロンプトキャッシュがリセットされます。キャッシュのキーにモデルが含まれるので、次のターンは会話全体を、約 75% 割引のキャッシュ料金ではなく入力の全額で読み直すことになります。想定どおりの挙動で避けようがありませんが、長いセッションでは知っておく価値があります。 |
-| `/codex-runtime [auto\|codex_app_server\|on\|off]` | OpenAI / Codex のモデル向けに、任意で使える [Codex app-server ランタイム](/hermes/docs/user-guide/features/codex-app-server-runtime/) を切り替えます。`auto`（既定）は Hermes の標準のチャット補完を使い、`codex_app_server` は `codex app-server` のサブプロセスにターンを渡して、ネイティブのシェル、apply_patch、ChatGPT のサブスクリプション認証、移行済みの Codex プラグインを使えるようにします。次のセッションから有効になります。 |
+| `/codex-runtime [auto\|codex_app_server\|on\|off]` | OpenAI / Codex のモデルと、`~/.codex/config.toml` にも定義されている名前付きの独自プロバイダ向けに、任意で使える [Codex app-server ランタイム](/hermes/docs/user-guide/features/codex-app-server-runtime/) を切り替えます。`auto`（既定）は Hermes の標準のチャット補完を使い、`codex_app_server` は `codex app-server` のサブプロセスにターンを渡して、ネイティブのシェル、apply_patch、ChatGPT のサブスクリプション認証、移行済みの Codex プラグインを使えるようにします。次のセッションから有効になります。 |
 | `/personality` | あらかじめ用意された人格を設定します。`/personality none`（または `default` / `neutral`）で重ねた人格を外し、素の振る舞いに戻します。 |
 | `/verbose` | ツールの進捗表示を切り替えます。off → new → all → verbose と順に回ります。設定によって[メッセージングでも有効にできます](#notes)。 |
 | `/focus [on\|off\|status]` | **フォーカス表示**を切り替えます。表示だけを絞るモードで、自分のプロンプトと最終的な返答だけを見せます。`/verbose` と組み合わさり、有効にするとツールの進捗表示が `off` に固定され、それまでのモードを覚えておきます。`/focus off` で元に戻ります。各ターンの終わりに戻し方を示す薄い 1 行（`⋯ 7 tool lines hidden · /focus off to show`）が出て、ステータスバーには `◉ focus` のバッジが出続けるので、絞り込み表示中であることが常にわかります。モデルへの送信内容は何も変わりません。詳細は隠れるだけで、捨てられることはありません。 |
@@ -247,7 +247,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/new [name]`（別名: `/reset`） | 新しいセッションを始めます（セッション ID と履歴が新しくなります）。`[name]` を付けるとセッションの初期タイトルになります。末尾に `now`、`--yes`、`-y` を足すと確認ダイアログを飛ばせます（例: `/reset now`、`/new --yes my-experiment`）。 |
 | `/status` | セッションの情報を表示し、続けてローカルで作った **Session recap** のブロック（直近のターン数、よく使ったツール、触ったファイル、最新のプロンプトと返答）を出します。 |
 | `/stop` | 動いているバックグラウンドプロセスをすべて止め、実行中のエージェントを中断します。 |
-| `/model [provider:model]` | モデルを表示、または変更します。プロバイダの切り替え（`/model zai:glm-5`）、独自のエンドポイント（`/model custom:model`）、名前を付けた独自プロバイダ（`/model custom:local:qwen`）、自動判別（`/model custom`）、OpenRouter のアカウントのプリセット（`/model @preset/<slug>`。アカウントに属するので、公開されたモデル一覧での確認を飛ばします）、ユーザーが決めた別名（`/model fav`、`/model grok`。[モデルの別名を自分で決める](#custom-model-aliases) を参照）に対応します。`--global` を付けると変更を config.yaml に残します。**注意:** `/model` は、すでに設定済みのプロバイダの間でしか切り替えられません。新しいプロバイダを足したり API キーを設定したりするには、チャットの外のターミナルで `hermes model` を使ってください。**費用に関する注意:** セッションの途中でモデルを切り替えるとプロンプトキャッシュがリセットされるので（キャッシュのキーにモデルが含まれます）、次のメッセージは会話全体を入力の全額で読み直すことになります。 |
+| `/model [provider:model]` | モデルを表示、または変更します。プロバイダの切り替え（`/model zai:glm-5`）、独自のエンドポイント（`/model custom:model`）、名前を付けた独自プロバイダ（`/model custom:local:qwen`）、自動判別（`/model custom`）、OpenRouter のアカウントのプリセット（`/model @preset/<slug>`。アカウントに属するので、公開されたモデル一覧での確認を飛ばします）、ユーザーが決めた別名（`/model fav`、`/model grok`。[モデルの別名を自分で決める](#custom-model-aliases) を参照）に対応します。`--global` を付けると変更を config.yaml に残します。`--global` での選択（打ち込みでもピッカーでも）が成功すると、このチャットのセッション限りの上書きも外れるので、ゲートウェイを再起動したあとは config.yaml だけがモデルを決めます（`channel_overrides` でモデルを指定しているチャットはその上書きを保ったままです。チャンネル側の設定は、そのままだと config.yaml より優先されてしまうからです。CLI と TUI はセッションごとの固定をあえて残すので、再開するとそのチャットで使っていたモデルに戻ります）。**注意:** `/model` は、すでに設定済みのプロバイダの間でしか切り替えられません。新しいプロバイダを足したり API キーを設定したりするには、チャットの外のターミナルで `hermes model` を使ってください。**費用に関する注意:** セッションの途中でモデルを切り替えるとプロンプトキャッシュがリセットされるので（キャッシュのキーにモデルが含まれます）、次のメッセージは会話全体を入力の全額で読み直すことになります。 |
 | `/codex-runtime [auto\|codex_app_server\|on\|off]` | 任意で使える [Codex app-server ランタイム](/hermes/docs/user-guide/features/codex-app-server-runtime/) を切り替えます。設定は config.yaml の `model.openai_runtime` に残り、キャッシュされたエージェントを破棄するので、次のメッセージから新しいランタイムが使われます。次のセッションから有効になります。 |
 | `/personality [name]` | このセッションに重ねる人格を設定します。`/personality none`（または `default` / `neutral`）で外します。 |
 | `/fast [normal\|fast\|auto\|cold\|status]` | 高速モードです（OpenAI の Priority Processing、Anthropic の Fast Mode）。`auto` と `cold` は、ターンごと・セッションごとに区切られた高速の時間帯を開きます。 |
@@ -279,7 +279,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/refine [focus]` | 記憶とスキルの自己改善レビューを今すぐ走らせます。focus の指示を付けることもできます。Slack では `/hermes refine …` を使ってください。 |
 | `/review [instructions]` | 直前まで話していた成果物（PR、コード、ドキュメント）を対象に、独立したレビュー用サブエージェントを立ち上げます。レビューは終わり次第このチャットに戻ってきます。Slack では `/hermes review …` を使ってください。 |
 | `/moa <prompt>` | プロンプトを 1 つ、既定の [Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/) プリセットで実行してから、セッションのモデルに戻します。 |
-| `/branch [name]`（別名: `/fork`） | 今のセッションを分岐させます（別の道を試せます）。 |
+| `/branch [--here] [name]`（別名: `/fork`） | 今のセッションを分岐させます。スレッドを扱えるプラットフォーム（Discord、Telegram、Slack、Matrix）では、分岐したほうが隣に並ぶ新しいスレッドで開き、このチャットは元のセッションのまま残ります。`--here` を付けると、このチャットのほうを分岐先に切り替えます。 |
 | `/agents`（別名: `/tasks`） | 動いているエージェントとタスクを表示します。 |
 | `/sessions` | 過去のセッションを見て、再開します。 |
 | `/context [all]`（別名: `/ctx`） | コンテキストウィンドウの使用量のゲージとカテゴリごとの内訳です（メッセージング向けのテキスト表示）。`/context all` を使うと、スキルごと・ツールセットごとのコストの詳細が加わります。 |

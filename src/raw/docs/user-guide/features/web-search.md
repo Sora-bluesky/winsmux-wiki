@@ -2,7 +2,7 @@
 title: "Web 検索と本文抽出"
 description: "複数のバックエンドプロバイダで Web を検索し、ページ本文を抽出します。無料で自前運用できる SearXNG にも対応しています。"
 upstream_path: user-guide/features/web-search.md
-upstream_blob: 6fdd7254d451520bfa2fb3398d66fa6e70a8e6d7
+upstream_blob: caabfcb24f06b5b67d8454599ebbf0f38755ceec
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-search
 ---
@@ -30,8 +30,9 @@ Hermes Agent には、複数のプロバイダを背後に持つ、モデルか�
 | **Perplexity** | `PERPLEXITY_API_KEY` | ✔ | ✔（クエリに関わる抜粋） | 有料（Search API のリクエスト従量） |
 | **Keenable** | `KEENABLE_API_KEY`（任意） | ✔ | ✔ | ✔ キーなしリングの参加先 · キーありは有料 |
 | **xAI（Grok）** | `XAI_API_KEY` または `hermes auth add xai-oauth` | ✔ | — | 有料（SuperGrok またはトークン従量） |
+| **OpenAI Native（Codex）** | `hermes auth add openai-codex` | ✔ | — | ChatGPT／Codex のサブスクリプションが要ります |
 
-Brave Search・DDGS・xAI は **検索専用** です。`web_extract` も使いたい場合は、これらのどれかと Firecrawl / Tavily / Perplexity / Keenable / Exa / Parallel を組み合わせてください。DDGS は内部で [`ddgs` Python パッケージ](https://pypi.org/project/ddgs/)を使います。未インストールなら `pip install ddgs` を実行するか、初回使用時に Hermes が遅延インストールするのに任せてください。xAI は Responses API 上で Grok のサーバー側 `web_search` ツールを動かします。結果は索引に基づくものではなく LLM が生成したもので、タイトル・説明・URL の選択がすべてモデルの出力になります（後述の[信頼モデルの注意](#xai-grok)を参照）。
+Brave Search・DDGS・xAI・OpenAI Native は **検索専用** です。`web_extract` も使いたい場合は、これらのどれかと Firecrawl / Tavily / Perplexity / Keenable / Exa / Parallel を組み合わせてください。DDGS は内部で [`ddgs` Python パッケージ](https://pypi.org/project/ddgs/)を使います。未インストールなら `pip install ddgs` を実行するか、初回使用時に Hermes が遅延インストールするのに任せてください。xAI は Responses API 上で Grok のサーバー側 `web_search` ツールを動かします。結果は索引に基づくものではなく LLM が生成したもので、タイトル・説明・URL の選択がすべてモデルの出力になります（後述の[信頼モデルの注意](#xai-grok)を参照）。OpenAI Native も同じ種類の、プロバイダ側で動くツールを Codex Responses のエンドポイントで宣言します（[後述](#openai-native)を参照）。
 
 **機能ごとの分割:** 検索と抽出で別々のプロバイダを使えます。たとえば検索は SearXNG（無料）、抽出は Firecrawl といった具合です。後述の[機能ごとの設定](#per-capability-configuration)を参照してください。
 
@@ -376,6 +377,24 @@ web:
 :::caution 信頼モデル
 索引に基づくプロバイダ（Brave・Tavily・Exa）が検索エンジンの結果をそのまま返すのに対し、xAI では LLM がどの URL を出すかを選び、タイトルと説明も自分で書きます。クエリの *内容* が出力に影響するため、悪意をもって作られたクエリ（たとえばエージェントが拾った信用できない入力から注入されたもの）が、原理的には Grok を誘導して攻撃者の狙った URL を出させることがあり得ます。返ってきた URL は、モデルが生成したリンク全般と同じように扱ってください。とくにクエリが信用できない入力に由来する場合は、取得する前に検証してください。
 :::
+
+### OpenAI Native（Codex Responses） {#openai-native}
+
+OpenAI 側で実行される `web_search` ツールを、Codex Responses のエンドポイント（ChatGPT／Codex のサブスクリプション）で宣言します。検索はモデルがサーバー側で進め、その結果を自分の答えに織り込みます。このやり方では、Hermes がクライアント側で検索を走らせることはありません。
+
+```yaml
+# ~/.hermes/config.yaml
+web:
+  search_backend: "openai-native"
+```
+
+必要なものと適用範囲は次のとおりです。
+
+- **認証情報**: openai-codex の OAuth ログイン（`hermes auth add openai-codex`）。このバックエンドに専用の API キーはありません。ログインがなければ、単に選べません。
+- **通信経路**: この組み込みツールを出せるのは Codex Responses のエンドポイントだけです。ほかの経路 — OpenAI 互換の独自 `base_url` や、OpenAI 以外のモデル — では、クライアント側の `web_search` 関数がそのまま残ります。そのエンドポイントがこのツールを備えているとは限らないからです。そうした場合は `web.search_backend` にふつうのプロバイダを指定してください。
+- **検索だけ**: 組み込みツールがまかなうのは検索で、抽出は含みません。`web_extract` も使いたい場合は、`web.extract_backend` で Firecrawl（または抽出に対応したほかのバックエンド）を組み合わせてください。
+
+**どちらにしてもツールは1つです。** このバックエンドを選ぶと、クライアント側の `web_search` 関数が組み込みのものと 1 対 1 で入れ替わります。上乗せで与えられるわけではありません。道具立てに `web_search` を持たないセッションに、サーバー側の検索が差し込まれることはありません。
 
 ---
 

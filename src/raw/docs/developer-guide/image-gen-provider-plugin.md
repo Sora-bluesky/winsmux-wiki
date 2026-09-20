@@ -2,7 +2,7 @@
 title: "画像生成プロバイダのプラグイン"
 description: "Hermes Agent 向けに画像生成のバックエンドのプラグインを作る方法"
 upstream_path: developer-guide/image-gen-provider-plugin.md
-upstream_blob: 41ae4fb38b334e0f21831df76819b134d1450e5a
+upstream_blob: 82eeaeeb6ba1b6e31e17479fc06c52dc77b94c7d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/image-gen-provider-plugin
 ---
@@ -276,7 +276,7 @@ error_response(
 ## 試す {#testing}
 
 ```bash
-export HERMES_HOME=/tmp/hermes-imggen-test
+export HERMES_HOME=$HOME/.hermes/cache/scratch/hermes-imggen-test
 mkdir -p $HERMES_HOME/plugins/image_gen/my-backend
 # …copy __init__.py + plugin.yaml into that dir…
 

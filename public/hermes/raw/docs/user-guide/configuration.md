@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダ、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: 4c8e471466a9d9385d0b0f8b0387c97d9d0386b1
+upstream_blob: c36d55a482dc8576d4b6b64fa5a560402424fcd0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -156,7 +156,7 @@ AI プロバイダの設定（OpenRouter、Anthropic、Copilot、独自エンド
 
 プロバイダ全体のリクエストタイムアウトには `providers.<id>.request_timeout_seconds` を、モデルごとの上書きには `providers.<id>.models.<model>.timeout_seconds` を設定できます。これはすべての伝送方式（OpenAI ワイヤ、ネイティブ Anthropic、Anthropic 互換）における主役のターン用クライアント、フォールバックの連鎖、資格情報のローテーション後の再構築、そして（OpenAI ワイヤでは）リクエストごとのタイムアウト引数に適用されます。つまり、設定した値が従来の `HERMES_API_TIMEOUT` 環境変数より優先されます。
 
-非ストリーミング呼び出しの停滞検出には `providers.<id>.stale_timeout_seconds` を、モデルごとの上書きには `providers.<id>.models.<model>.stale_timeout_seconds` を設定できます。これは従来の `HERMES_API_CALL_STALE_TIMEOUT` 環境変数より優先されます。
+非ストリーミング呼び出しの停滞検出には `providers.<id>.stale_timeout_seconds` を、モデルごとの上書きには `providers.<id>.models.<model>.stale_timeout_seconds` を設定できます。これは従来の `HERMES_API_CALL_STALE_TIMEOUT` 環境変数より優先されます。同じキーは、ストリーミングが止まったと見なすまでの期限も兼ねます。値をはっきり書いた場合はその値がそのまま使われます。コンテキストの大きさに応じた暗黙の段階（5 万トークンを超えると 240 秒、10 万を超えると 300 秒）と推論モデル向けの下限は、既定の 180 秒にだけ効くので、はっきり書いた値は、固まったストリームを待つ時間を短くする方向にも働きます。
 
 これらを設定しないままにすると、従来の既定値が使われます（`HERMES_API_TIMEOUT=1800` 秒、`HERMES_API_CALL_STALE_TIMEOUT=90` 秒、ネイティブ Anthropic は 900 秒）。非ストリーミングの停滞検出は、暗黙のままにしておくとローカルのエンドポイントでは自動的に無効になり、非常に大きなコンテキストでは上向きにスケールすることがあります。AWS Bedrock には現時点でつながっていません（`bedrock_converse` と AnthropicBedrock SDK のどちらの経路も、boto3 の独自のタイムアウト設定を使います）。[`cli-config.yaml.example`](https://github.com/NousResearch/hermes-agent/blob/main/cli-config.yaml.example) のコメント付きの例をご覧ください。
 
@@ -239,6 +239,16 @@ terminal:
 CLI だけの構成ではプロセスごとに 1 回、掃除します。`temp_dir` に既存の絶対パスを
 設定すれば、セッションの一時ファイルを別の場所へ向けられます。ユーザーが設定した
 パスが自動で刈り込まれることはありません。
+
+`terminal.temp_dir` とは別に、Hermes のプロセス（CLI、TUI、ゲートウェイ、Desktop の
+バックエンド、cron）とそれが起動するすべての子プロセスは、起動時に `TMPDIR`・`TMP`・`TEMP` が
+**`~/.hermes/cache/scratch`**（プロファイルごと）を指すように設定されます。`tempfile.mkdtemp()` や
+`mktemp`、ブラウザのプロファイル、調査用のスクリプトが、RAM 上のシステムの一時ディレクトリではなく
+実ストレージに置かれるようにするためです。システムプロンプトは、このディレクトリを作業用の一時置き場として
+案内します。Hermes がこれらを設定するのは、まだ設定されていないときだけです。あなたや OS が
+書き出した `TMPDIR`（macOS の `/var/folders`、Windows の `%TEMP%`）はそのまま残ります。72 時間より
+古い項目は起動時に刈り込まれます（多くても 1 時間に 1 回）。`hermes doctor` はこのディレクトリと
+その容量を報告します。
 
 `desktop.font_family` は、チャットを含む Hermes Desktop の画面全体のフォントを決めます（ターミナルの枠には上のとおり専用のキーがあります）。インストール済みのフォントファミリー名を 1 つ（たとえば `OpenDyslexic` や `Atkinson Hyperlegible`）か、CSS のフォントスタックを指定します。Hermes は使用中のテーマのフォントスタックを後ろに残すので、CJK の文字や絵文字もきちんと表示されます。空の値ならテーマのフォントを使います。**設定 → 外観 → チャットフォント** から編集できます。
 
@@ -725,7 +735,7 @@ hermes config set terminal.persistent_shell false
 ```
 
 **コマンドをまたいで残るもの:**
-- 作業ディレクトリ（`cd /tmp` が次のコマンドにも効きます）
+- 作業ディレクトリ（`cd ~/project` が次のコマンドにも効きます）
 - エクスポートした環境変数（`export FOO=bar`）
 - シェル変数（`MY_VAR=hello`）
 
@@ -965,7 +975,7 @@ compression:
   enabled: true                                     # Toggle compression on/off
   progress_notices: false                           # Opt-in: deliver routine compression progress notices to chat platforms — see below
   threshold: 0.50                                   # Compress at this % of context limit
-  threshold_tokens: null                            # Absolute token cap (optional) — takes lower of ratio vs absolute
+  threshold_tokens: 256000                          # Absolute token cap — takes lower of ratio vs absolute
   target_ratio: 0.20                                # Fraction of threshold to preserve as recent tail
   tail_mode: lean                                   # Tail retention: "lean" (default — clamped 2.5% tail, 10K-25K, with a detailed session log + anchor index + session_search recovery pointers in the summary, all from ONE auxiliary summarizer call; ~3x fewer retained tokens after compaction) or "legacy" (0.20×threshold verbatim tail)
   protect_last_n: 20                                # Min recent messages to keep uncompressed
@@ -1011,19 +1021,19 @@ auxiliary:
 
 この値は固定の間隔ではなく、段階的に伸びるはしごの **最初の段** です。同じセッションで失敗が続くと、`1x`・`3x`・`9x` と待ち、最大 1 時間で頭打ちになります。要約モデルが恒久的に壊れているセッションは、固定の間隔で永遠に再試行するのではなく後退していき、実際に記録を縮められた実行があれば最初の段へ戻ります。この段階の上がり方はセッション単位でプロセスの中に閉じているので、ゲートウェイを再起動すると最初の段へ戻ります。ただしクールダウンの期限そのものは残ります。
 
-`context_timeout_seconds`（既定 `120`）は、エージェントの中の `compress_context`（会話のループ、事前の圧縮、手動の `/compress`）に対する同じ **無反応の予算** で、固まった要約モデルがセッションを無期限に止められないようにします。ストリーミングされた要約のトークンは待ち時間を伸ばし、黙ったワーカーだけが打ち切られます。この予算には下限があり、補助の圧縮リクエスト自身のタイムアウト（`auxiliary.compression.timeout`、最小 300 秒）を下回りません。リクエスト本体があきらめるより先に、ホストが黙った要約役を見限ることはない、ということです。最初のトークンの前に考え込む推論型の要約役や、ストリーミングできない経路にも、プロバイダーの呼び出しと同じだけの予算が与えられます。タイムアウトすると、Hermes は `auxiliary.compression.fallback_chain` の最初の項目に対して要約を 1 回だけやり直します（その項目が `timeout` を宣言していればその値を使います）。止まった経路は例外を上げないので、補助クライアント自身のフォールバックの処理からは見えないからです。その試みも失敗した場合、またはフォールバックの連鎖が設定されていない場合、次に何が起きるかは、リクエストがまだモデルのコンテキストウィンドウに収まるかどうかで決まります。収まるリクエストは、そのターンだけ圧縮せずに送られます（要約の失敗のクールダウンが働くので、毎ターン再試行が繰り返されることはありません）。ウィンドウを超えるリクエストはそもそも送れないので、Hermes はターンを終えるのではなく、決まった手順のフォールバックの要約（古いツールの結果を刈り、要約されるはずだった中間の部分を静的な引き継ぎで置き換えます）をコミットします。「compression timed out」の復旧結果でターンを終える（メッセージのゲートウェイでは、あわせてセッションが自動でリセットされます）のは最後の手段で、決まった手順の処理でも記録を縮められなかったときにだけそこへ行き着きます。`0` にすると無効になります。ゲートウェイのセッションの衛生処理は自分の `hygiene_timeout_seconds` の経路を持っていて、二重に包まれることはありません。
+`context_timeout_seconds`（既定 `120`）は、エージェントの中の `compress_context`（会話のループ、事前の圧縮、手動の `/compress`）に対する同じ **無反応の予算** で、固まった要約モデルがセッションを無期限に止められないようにします。ストリーミングされた要約のトークンは待ち時間を伸ばし、黙ったワーカーだけが打ち切られます。この予算には下限があり、補助の圧縮リクエスト自身のタイムアウト（`auxiliary.compression.timeout`、最小 300 秒）を下回りません。リクエスト本体があきらめるより先に、ホストが黙った要約役を見限ることはない、ということです。最初のトークンの前に考え込む推論型の要約役や、ストリーミングできない経路にも、プロバイダーの呼び出しと同じだけの予算が与えられます。タイムアウトすると、Hermes は `auxiliary.compression.fallback_chain` の最初の項目に対して要約を 1 回だけやり直します（その項目が `timeout` を宣言していればその値を使います）。止まった経路は例外を上げないので、補助クライアント自身のフォールバックの処理からは見えないからです。その試みも失敗した場合、またはフォールバックの連鎖が設定されていない場合、次に何が起きるかは、リクエストがまだモデルのコンテキストウィンドウに収まるかどうかで決まります。収まるリクエストは、そのターンだけ圧縮せずに送られます（要約の失敗のクールダウンが働くので、毎ターン再試行が繰り返されることはありません）。ウィンドウを超えるリクエストはそもそも送れないので、Hermes はターンを終えるのではなく、決まった手順のフォールバックの要約（古いツールの結果を刈り、要約されるはずだった中間の部分を静的な引き継ぎで置き換えます）をコミットします。「compression timed out」の復旧結果でターンを終える（メッセージのゲートウェイでは、あわせてセッションが自動でリセットされます）のは最後の手段で、決まった手順の処理でも記録を縮められなかったときにだけそこへ行き着きます。`0` にすると無効になります。ウィンドウをまだ超えているリクエストに対して、事前の圧縮が何も取り戻せなかった場合は、モデルが受け取れないリクエストを送らずに、その場でターンを終えて新しいセッション（`/new`）を始めるよう案内します。ゲートウェイのセッションの衛生処理は自分の `hygiene_timeout_seconds` の経路を持っていて、二重に包まれることはありません。
 
-`context_total_ceiling_seconds`（既定 `600`）は、トークンがまだ動いていても、エージェントの中の **コミット前** の待ち（要約／ストリーミングの段階）を縛ります。この値は少なくとも `context_timeout_seconds` まで丸められます。正確な保証はこうです。**要約の段階はこの上限で縛られ、コミットの段階は上限を超えたら記録され、表に出されます。** ワーカーが圧縮のコミットの囲いに入り、SessionDB の書き換えが進行中になったら、そのコミットが途中で捨てられることは決してありません。記録が食い違う危険があるからです。ただし待ち時間はもう静かではありません。コミットが上限を超えて走ったら、Hermes は超過を記録し（WARNING、繰り返せば ERROR へ上がります）、ユーザーに見える警告の経路で 1 回だけ警告を送り、コミットが終わるまで区切りを決めて待ち続けます。要約の段階で上限が尽きたときは、その瞬間に、どの補助の伝送方式（chat.completions、Codex Responses、Anthropic Messages）でも要約モデルのストリームが閉じられます。誰も待っていない接続の上で、捨てられる要約が最後まで課金されることはありませんし、そのセッションのリースは次の試みのために解放されます。
+`context_total_ceiling_seconds`（既定 `600`）は、トークンがまだ動いていても、エージェントの中の **コミット前** の待ち（要約／ストリーミングの段階）を縛ります。この値は少なくとも `context_timeout_seconds` まで丸められます。すでにモデルのコンテキストウィンドウを超えているリクエストでは、コミット前の待ちはこの上限ではなく `context_timeout_seconds` 1 回分で縛られます。そうしたリクエストはどのみち圧縮せずには送れず、何も取り戻せないまま要約が流れ続けると、毎ターンこの上限いっぱいセッション（とデスクトップの画面）を押さえてしまうからです。そのあとの圧縮は、決まった手順のフォールバックの要約が担います。要約役が本当にもっと時間を必要とするなら `context_timeout_seconds` を上げてください。正確な保証はこうです。**要約の段階はこの上限で縛られ、コミットの段階は上限を超えたら記録され、表に出されます。** ワーカーが圧縮のコミットの囲いに入り、SessionDB の書き換えが進行中になったら、そのコミットが途中で捨てられることは決してありません。記録が食い違う危険があるからです。ただし待ち時間はもう静かではありません。コミットが上限を超えて走ったら、Hermes は超過を記録し（WARNING、繰り返せば ERROR へ上がります）、ユーザーに見える警告の経路で 1 回だけ警告を送り、コミットが終わるまで区切りを決めて待ち続けます。要約の段階で上限が尽きたときは、その瞬間に、どの補助の伝送方式（chat.completions、Codex Responses、Anthropic Messages）でも要約モデルのストリームが閉じられます。誰も待っていない接続の上で、捨てられる要約が最後まで課金されることはありませんし、そのセッションのリースは次の試みのために解放されます。
 
 `protect_first_n` は、圧縮のたびに固定される **システム以外の** 先頭のメッセージの数を決めます。既定は `3` で、最初のユーザー／アシスタントのやり取りは要約のたびに生き残り、当初の目的が見えたままになります。長く続く回転式の圧縮のセッションで最初のターンがもう関係ないときは、`protect_first_n: 0` にして、システムプロンプトと要約と末尾だけを残すようにできます。システムプロンプトそのものは、この設定にかかわらず常に保たれます。
 
 `in_place`（既定 `true`）は、圧縮が起きたときにセッションの身元がどうなるかを決めます。`true` のとき、圧縮はメッセージの一覧を書き換え、システムプロンプトを組み直しますが、**セッション ID を回しません**。会話は生涯にわたって 1 つの持続する ID を保ちます（`parent_session_id` の連鎖も、セッション一覧での `name #2` / `#3` という番号の振り直しもありません）。圧縮は破壊的ではありません。生きているコンテキストは圧縮されますが、圧縮前のターンは同じ ID の下でそっと保管され（非アクティブ／圧縮済みの印が付きます）、`session_search` で今も検索でき、取り戻せます。消えるわけではありません。フックは `session:compress` イベントの `in_place` フィールドでこのモードを知れます。`in_place: false` にすると、圧縮のたびに古いセッションへ紐づいた新しいセッション ID へ回る、従来の動きに戻ります。
 
-`threshold_tokens` は、圧縮のきっかけに対する任意の **絶対的なトークンの上限** を設定します。設定すると、割合による `threshold` とこの絶対値の、低いほうで圧縮が起きます。つまり、どのモデルが動いていても、あなたの望むトークン数より遅れて圧縮が起きることはありません。これは、コンテキストウィンドウの違うモデルを行き来する（たとえば 100 万 → 40 万）と絶対的なきっかけの位置がずれる、という問題を解きます。この上限はモデルのコンテキスト長へ丸められるので、モデルが対応する以上の値を設定しても安全です（そのときは割合による閾値が使われます）。既定は `null`（無効。割合による閾値だけ）です。この上限は、モデルの切り替えやフォールバックの発動をまたいで残ります。
+`threshold_tokens` は、圧縮のきっかけに対する **絶対的なトークンの上限** を設定します。圧縮は、割合による `threshold` とこの絶対値の、低いほうで起きます。ウィンドウの大きいモデルが、何十万トークンにもなるまで静かに圧縮を先送りすることはありません。既定は `256000` で、100 万トークンのモデルの既定の 50% というきっかけを 25.6 万トークンで抑えます。一方で、これより低い割合によるきっかけがあればそちらが優先されます（27.2 万トークンの Codex のウィンドウもこれに当たります）。この上限は、モデルの切り替えやフォールバックの発動をまたいで残り、モデルのコンテキスト長へ丸められます。`null` にすると割合だけの動きに戻り、仕事の内容に合わせて別の正の値を選ぶこともできます。
 
 `idle_compact_after_seconds` は、大きさを基準にした `threshold` を補う、**任意で使う時間基準の** きっかけです。既定は `0`（無効）です。0 より大きくすると、その秒数以上放置されたあとに再開したセッションは、最初の返事の前にたまった履歴を先に圧縮します。長く続くスレッド（たとえば数時間後に戻ってくる Telegram の会話）が、以降のターンのたびに古いコンテキストを丸ごと読み直さずに済みます。コンテキストがすでに圧縮後の目標（`threshold × target_ratio`）以下のときは発火せず、失敗のクールダウン、行ったり来たりの防止、セッションごとのロックという、あらゆる自動の圧縮と同じ見張りに従います。例: `idle_compact_after_seconds: 1800` は、30 分放置したあとに圧縮します。
 
-`proactive_prune_tokens` は、`threshold` とは独立に走る、LLM を使わない決定的な古いツール結果の刈り込みを有効にします。ウィンドウの大きいモデルでは `threshold` による圧縮（ウィンドウのおよそ 50%）がめったに起きないので、かさばるツールの出力（ターミナルの吐き出し、ファイルの読み込み、web の抽出）が履歴に乗ったまま、以降のターンのたびに送り直されます。送り直される履歴が `proactive_prune_tokens`（既定 `0` = 無効。`48000` あたりから試すと良いでしょう）を超えると、刈り込みは同一の結果をまとめ、古くて大きいものを要約し、大きなツール呼び出しの引数を切り詰めます。直近の `protect_last_n` 件のメッセージは守られ、モデルを呼ぶことはありません。出力の全体はセッションの保管庫から取り戻せます。`proactive_prune_min_result_chars`（既定 `8000`、200 以上へ丸められます）は、これより小さいツールの結果には手を付けない、という下限を決めます。`proactive_prune_min_reclaim_tokens`（既定 `4096`）は、これだけのトークンを取り戻せない限り刈り込みを確定させません。確定した刈り込みは送信済みの履歴を書き換え、プロバイダのプロンプトキャッシュの前置きを無効にしてしまうので、この関門があることで、キャッシュの断絶がツールの反復のたびに起きるのではなく、（圧縮の区切りのように）意味のある断絶 1 回にまとまって薄まります。これは組み込みの `compressor` エンジンの下でだけ動きます。ほかのコンテキストエンジンでは何もしません。
+`proactive_prune_tokens` は、`threshold` とは独立に走る、LLM を使わない決定的な古いツール結果の刈り込みを有効にします。ウィンドウの大きいモデルでは `threshold` による圧縮（ウィンドウのおよそ 50%）がめったに起きないので、かさばるツールの出力（ターミナルの吐き出し、ファイルの読み込み、web の抽出）が履歴に乗ったまま、以降のターンのたびに送り直されます。送り直される履歴が `proactive_prune_tokens`（既定 `0` = 無効。`48000` あたりから試すと良いでしょう）を超えると、刈り込みは同一の結果をまとめ、古くて大きいものを要約し、大きなツール呼び出しの引数を切り詰めます。直近の `protect_last_n` 件のメッセージは守られ、モデルを呼ぶことはありません。ただしこの保護は絶対ではありません。圧縮のたびに *圧力* の処理も走り、守られた末尾だけでトークンの予算の 1.5 倍を超えたときは、その末尾の **内側** でもツールの結果を格下げし、ツール呼び出しの引数を切り詰めます（こちらは `proactive_prune_tokens` で制御されていません）。どちらの処理も、モデルが読み直す履歴の写しだけを書き換えます。ツールの呼び出しはプロバイダのその場の応答から実行され、履歴からは実行されないので、すでに送り出された呼び出しの引数がどちらの処理で変わることもありません。出力の全体はセッションの保管庫から取り戻せます。`proactive_prune_min_result_chars`（既定 `8000`、200 以上へ丸められます）は、これより小さいツールの結果には手を付けない、という下限を決めます。`proactive_prune_min_reclaim_tokens`（既定 `4096`）は、これだけのトークンを取り戻せない限り刈り込みを確定させません。確定した刈り込みは送信済みの履歴を書き換え、プロバイダのプロンプトキャッシュの前置きを無効にしてしまうので、この関門があることで、キャッシュの断絶がツールの反復のたびに起きるのではなく、（圧縮の区切りのように）意味のある断絶 1 回にまとまって薄まります。これは組み込みの `compressor` エンジンの下でだけ動きます。ほかのコンテキストエンジンでは何もしません。
 
 :::tip 圧縮とコンテキスト長のゲートウェイでの即時反映
 最近のリリースからは、動いているゲートウェイの `config.yaml` で `model.context_length` や `compression.*` のキーを編集すると、次のメッセージから効きます。ゲートウェイの再起動も、`/reset` も、セッションの入れ替えも要りません。キャッシュされたエージェントの署名にこれらのキーが含まれているので、変更を見つけたゲートウェイが裏でエージェントを組み直します。API キーとツール／スキルの設定は、これまでどおりの再読み込みの手順が要ります。
@@ -1064,6 +1074,23 @@ auxiliary:
 | `auto`（既定） | 未設定 | 使える中で最良のプロバイダを自動検出します |
 | `nous` / `openrouter` など | 未設定 | そのプロバイダを強制し、その認証を使います |
 | 何でも | 設定あり | 独自のエンドポイントを直接使います（プロバイダは無視されます） |
+
+### ストリームの進み具合のタイムアウト（Responses の経路） {#stream-progress-timeout-responses-routes}
+
+要約が Responses のストリームの上で走るとき（`openai-codex` プロバイダ、または補助クライアントが Responses API 経由で動かすあらゆる経路）、2 つのタイムアウトが効きます。この 2 つは互いに独立しています。
+
+- `auxiliary.compression.timeout` — リクエスト全体の予算です（既定 120 秒）。
+- `auxiliary.compression.no_progress_timeout` — ストリームに **中身のある** イベント（テキストや推論の差分、あるいは完了した出力の項目）が届かないまま何秒待つと、`Codex auxiliary Responses stream stalled: no new output for Ns` として試みを中断するかを決めます。未設定なら既定は **60 秒** です。接続を保つためのフレームやライフサイクルのフレーム（`response.in_progress`、ping）は前進とは数えません。中身のあるイベントが届くたびにこの窓は張り直されるので、遅くても進んでいる要約がこれで打ち切られることはありません。
+
+`timeout` だけを上げても、進み具合の窓は広がり **ません**。600 秒に設定したリクエストでも、60 秒の空白があれば中断します。その空白を変えるには `no_progress_timeout` を設定してください。実際の窓は `timeout` で頭打ちになり、ホストの絶対的な締め切りや中断のほうが今も優先されます。ここでの外側の上限は、ホスト自身の無反応の予算です。エージェントの中の圧縮は、黙った要約役を `compression.context_timeout_seconds`（既定 120 秒。実際の `auxiliary.compression.timeout` が下限で、これ自体が最低 300 秒です）で見限り、ゲートウェイの衛生処理は `compression.hygiene_timeout_seconds`（既定 30 秒）で見限ります。つまり、当てはまるホストの予算より大きい `no_progress_timeout` は、そちらに静かに切り詰められます。このキーはタスクごとなので（`auxiliary.<task>.no_progress_timeout`）、圧縮のために広げても、ほかの補助タスクは変わりません。正の数でない値は、ログに警告を残して無視され、既定の 60 秒が使われます。
+
+```yaml
+auxiliary:
+  compression:
+    provider: openai-codex
+    timeout: 600
+    no_progress_timeout: 180   # tolerate a 3-minute silent gap on a long reasoning summary
+```
 
 :::warning 要約モデルのコンテキスト長の条件
 要約モデルは、主役のエージェントのモデルと同じかそれ以上のコンテキストウィンドウを持っていなければ **なりません**。圧縮の仕組みは会話の中ほどの全体を要約モデルへ送るので、そのモデルのコンテキストウィンドウが主役のモデルより小さいと、要約の呼び出しはコンテキスト長のエラーで失敗します。そうなると、中ほどのターンは **要約されないまま捨てられ**、会話のコンテキストが静かに失われます。モデルを上書きするときは、そのコンテキスト長が主役のモデル以上であることを確かめてください。
@@ -1176,6 +1203,7 @@ agent:
                                # "unlimited"/"inf"/"infinity"/"infinite"/0/-1 = no limit
   budget_warning_ratio: null   # Optional one-time checkpoint warning, e.g. 0.75
   api_max_retries: 3           # Retries per provider before fallback engages (default: 3)
+  auto_recovery_cycles: 5      # Wait-and-retry cycles after retries + fallback are spent on an outage (0 = off)
 ```
 
 `agent.max_turns` は **既定で無制限** です。ターン数の上限は解決するより多くの問題（作業の途中での静かな打ち切り）を生んだので、そのままの状態では Hermes は会話のターンを最後まで走らせます。上限をかけるには正の整数を設定してください。「上限なし」を明示したいなら、大文字小文字を問わず次のどれでも使えます: `"none"`、`"null"`、`"unlimited"`、`"infinite"`、`"infinity"`、`"inf"`、`0`、`-1`（これらは `sys.maxsize` の番人の値になるので、ターン数でループが抜けることはありません）。
@@ -1183,6 +1211,8 @@ agent:
 `agent.budget_warning_ratio` は、通常の会話でも委任された会話でも、既定では無効です。有限の `max_turns` とあわせて `0` より大きく `1` より小さい値を設定すると、閾値に達したあとで Hermes は最新のツールの結果へ、モデルから見える節目の知らせを 1 つ足します。この知らせは会話のターンごとに再装填され、それぞれのエージェント自身の反復の予算を使います。足されるのは今のツールの結果の末尾だけで、古いターンへ足すことはありませんし、作りものの user／system のメッセージを足したり、既存の予算切れの猶予の呼び出しを変えたりもしません。ディスパッチャが持つカンバンのワーカーは、既定で 90% の時点で完了の節目を受け取ります（明示的な比率を設定すればその閾値が変わります）。そのときもツールは使えたままです。この節目が求めるのは、検証済みの完了か、あとに残る進捗のコメントであって、早すぎる成功の宣言ではありません。
 
 `agent.api_max_retries` は、一時的なエラー（レート制限、接続の切断、5xx）のときに、フォールバックのプロバイダへ切り替わる **前** に、Hermes がプロバイダの API 呼び出しを何回やり直すかを決めます。既定は `3` で、合わせて 4 回試します。[フォールバックのプロバイダ](/hermes/docs/user-guide/features/fallback-providers/) を設定していて、もっと早く切り替えたいなら `0` にしてください。主役のプロバイダで最初の一時的なエラーが出た瞬間に、不安定なエンドポイントへ再試行を重ねずフォールバックへ渡します。
+
+`agent.auto_recovery_cycles` は、再試行とフォールバックの連鎖を使い切った *あと* の安全網です。障害が一時的なもので（HTTP 5xx、`overloaded`／529 の応答、接続や読み取りのタイムアウト）、まだ本文が 1 文字も届いていないとき、Hermes は「API failed after N retries」でターンを終えたりはしません。待ってからもう一度試します。回数はこの値まで（既定 `5`）で、15／30／60／60／60 秒に揺らぎを加えた間隔で進みます。プロバイダが `Retry-After` ヘッダを返したときは、そちらがこの間隔より優先されます（120 秒まで尊重します）。待っている間はどの画面にも同じ 1 行が出ます。CLI・TUI・Desktop では `⏳ Provider temporarily unavailable — retrying automatically in 30s (cycle 2/5); press Esc to stop`、メッセージのプラットフォームでは状態の吹き出し（`send /stop to cancel`）、API サーバーでは `hermes.status` の SSE イベント、cron のジョブではログの 1 行です。Esc（または `/stop`）を押せば、待ちはその場で取り消せます。フォールバックのほうが今も先です。フォールバックの連鎖を設定していれば、これまでどおり使い切った時点で次のプロバイダへ移り、連鎖に何も残っていないときにはじめてこのはしごが働きます。認証・請求・リクエストの形式・利用資格・コンテンツポリシーのエラーが、このはしごに入ることはありません。`0` にすると無効になります。
 
 ## 実時間の実行の予算 {#wall-clock-run-budget}
 
@@ -1244,17 +1274,23 @@ Hermes はストリーミング向けに別々のタイムアウトの層を持�
 | ソケットの読み取りのタイムアウト | 120 秒 | 自動で 1800 秒へ引き上げ | `HERMES_STREAM_READ_TIMEOUT` |
 | ストリームの停滞の検出 | 180 秒 | 900 秒の上限まで引き上げ（`agent.local_stream_stale_timeout`） | `HERMES_STREAM_STALE_TIMEOUT` |
 | 非ストリーミングの停滞の検出 | 90 秒 | 暗黙のままなら自動で無効 | `providers.<id>.stale_timeout_seconds` または `HERMES_API_CALL_STALE_TIMEOUT` |
+| Responses の最初のイベントの見張り | 120 秒 | 900 秒の上限まで引き上げ（`agent.local_stream_stale_timeout`） | `HERMES_CODEX_TTFB_TIMEOUT_SECONDS` |
 | API 呼び出し（非ストリーミング） | 1800 秒 | 変わりません | `providers.<id>.request_timeout_seconds` / `timeout_seconds` または `HERMES_API_TIMEOUT` |
+| 終了フレームのあとのストリームの汲み出し（Codex／Responses） | 2 秒 | 変わりません | `agent.stream_drain_timeout` |
 
 **ソケットの読み取りのタイムアウト** は、httpx がプロバイダからの次のデータの塊をどれだけ待つかを決めます。ローカルの LLM は、大きなコンテキストでは最初のトークンを出すまでの前処理に数分かかることがあるので、ローカルのエンドポイントだと分かると Hermes はこれを 30 分へ引き上げます。`HERMES_STREAM_READ_TIMEOUT` を明示的に設定すると、エンドポイントの判定に関係なく常にその値が使われます。
 
 **ストリームの停滞の検出** は、SSE のキープアライブの合図は届くのに本当の中身が来ない接続を切ります。ローカルのプロバイダは（前処理の間にキープアライブを送らないので）既定が 180 秒ではなく有限の 900 秒の上限へ引き上げられます。`agent.local_stream_stale_timeout` か `HERMES_LOCAL_STREAM_STALE_TIMEOUT` 環境変数で設定できます。
 
+**Responses の最初のイベントの見張り**（Codex / `codex_responses` の伝送方式。Responses の伝送方式で宣言した独自のプロバイダも含みます）は、接続は受け付けるのに 120 秒のあいだストリームのイベントを 1 つも出さないリクエストを打ち切って、つなぎ直します。大きなコンテキストの前処理をしているローカルのサーバーは、それよりも長く黙るのが当たり前なので、ローカルのエンドポイントでは暗黙の既定がストリームの停滞の検出と同じ上限（`agent.local_stream_stale_timeout` / `HERMES_LOCAL_STREAM_STALE_TIMEOUT`、900 秒）まで引き上げられます。`HERMES_CODEX_TTFB_TIMEOUT_SECONDS` を明示した場合は常にその値がそのまま使われます（`0` で見張りを無効にできます）。
+
 **非ストリーミングの停滞の検出** は、いつまでも応答を出さない非ストリーミングの呼び出しを切ります。既定では、長い前処理の間の誤検出を避けるため、Hermes はローカルのエンドポイントでこれを無効にします。`providers.<id>.stale_timeout_seconds`・`providers.<id>.models.<model>.stale_timeout_seconds`・`HERMES_API_CALL_STALE_TIMEOUT` を明示的に設定した場合は、ローカルのエンドポイントでもその明示の値が尊重されます。
+
+**終了フレームのあとのストリームの汲み出し** は、Codex／Responses のストリームが終了の `response.completed` フレームのあともどれだけ読み続けるかを縛ります（中継の後始末が走れるようにという心配りです）。中継によっては、終了フレームのあとも SSE のソケットを決して閉じません。上限がないと、ストリームの停滞の見張りが発火して課金済みの応答を捨てて再試行するまで、ターンが詰まったままになっていました。`agent.stream_drain_timeout` 秒が過ぎるとストリームは閉じられ、完了した応答が返ります。接続を普通に閉じるエンドポイントは汲み出しをすぐ終えるので、ここまで待つことはありません。`0` にすると汲み出しを丸ごと飛ばせます。
 
 この予算は、すべての非ストリーミングの呼び出しを縛ります。リクエストを受け取ったあと黙り込むプロバイダ — 接続は開いたまま、バイトも来ず、エラーも出ない — は、停滞のタイムアウトで中断されて再試行されます。ずっと長いソケットの読み取りのタイムアウトまで（無人の cron の実行なら、外から何かがプロセスを殺すまで）ぶら下がり続けることはありません。
 
-プロバイダを待っている定期の知らせは、少なくとも **60 秒の沈黙** のあとにだけ出ます。Codex Responses の **待機の状態表示** は、生成にかかった合計時間ではなく沈黙を表します。動いているストリームのイベント（推論を含みます）があれば静かなままです。イベントが止まったときは、応答がまだ来ていないと言い張るのではなく、ストリームのイベントが無い時間を報告します。イベントが再開すればこの知らせは消えます。再接続が最初のイベントを待つ新しい段階を始めたときは、待機の状態表示もその段階に従います。この表示のふるまいが、別にある実時間の停滞した呼び出しの予算を伸ばしたり、見張りのタイムアウトを変えたりすることはありません。chat-completion のストリームも同じく、チャンクが再開すればすぐに沈黙の警告を消し、ローカルのモデルの読み込み中の表示を置き換えることもありません。
+プロバイダを待っている定期の知らせは、少なくとも **60 秒の沈黙** のあとにだけ出ます。Codex Responses の **待機の状態表示** は、生成にかかった合計時間ではなく沈黙を表します。動いているストリームのイベント（推論を含みます）があれば静かなままです。イベントが止まったときは、応答がまだ来ていないと言い張るのではなく、ストリームのイベントが無い時間を報告します。イベントが再開すればこの知らせは消えます。再接続が最初のイベントを待つ新しい段階を始めたときは、待機の状態表示もその段階に従います。この表示のふるまいが、別にある実時間の停滞した呼び出しの予算を伸ばしたり、見張りのタイムアウトを変えたりすることはありません。この表示は沈黙 1 回につき 1 度だけ（60 秒後に）出て、待っている段階（`waiting for the first provider event` か `provider stream active; Ns without stream events`）と、つなぎ直すことになる見張り（`TTFB`・`stream idle`・`wall-clock stale`）を、発火までの残り秒数とともに、淡々とした言い方で示します。書き換えられるのは段階が変わったときか、その締め切りが近いときだけで、30 秒ごとの生存の鼓動のたびに書き換わるわけではありません。chat-completion のストリームも同じ規則に従い（`waiting for the first stream chunk` / `stream open; Ns without stream output`、見張りは `stream stale`）、同じくチャンクが再開すればすぐに沈黙の警告を消し、ローカルのモデルの読み込み中の表示を置き換えることもありません。
 
 cron のジョブと委任されたサブエージェントもストリーミングします。これらはリクエストを自分のスレッドで直接走らせますが（ほかのセッションが使う割り込みのワーカーは、ゲートウェイの入れ子のスレッドプールの中で詰まります）、通信そのものは今も `stream: true` なので、上の **ストリームの停滞の検出** の予算が効きます。トークンはすべて生存の合図になるので、数分考える推論モデルが固まったプロバイダと取り違えられることはありませんし、黙った接続を切る中継のプロキシにもバイトが届き続けます。
 
@@ -1366,6 +1402,14 @@ $ hermes model
 飛ぶこともなくなります。修復用の `hermes sessions retitle-skills` コマンドを明示的に実行した
 ときだけは、これまでどおりモデルを呼びます。`enabled: false` は、引き続き両方の段階を止めます。
 
+主役のプロバイダーが `custom`（llama.cpp、Ollama、vLLM、LM Studio など、自分で立てた
+OpenAI 互換のサーバー）のときは、タイトル用のモデル呼び出しは、そのターンの返事が
+返ってきた **あと** に送られます。返事と同時には送りません。ただし
+`auxiliary.title_generation` を別のプロバイダーや `base_url` に固定している場合は別です。
+返事を生成している最中に `json_schema` 付きのタイトル要求を受け取った、枠が 1 つしかない
+ローカルのサーバーは、返事のほうに `{"title": ...}` を返してしまうことがあり、それが
+そのままアシスタントの手番として保存され、読み返されてしまうからです。
+
 Hermes Desktop では、3,000 文字を超えるプレーンテキストの貼り付けは、生成された `.txt` の
 添付ファイルになります。その貼り付けの先頭およそ 1,000 文字が、タイトルの段階へタイトル用の
 ヒントとしてだけ渡されるので（エージェントのターンから見えるのは添付への参照だけのままです）、
@@ -1426,6 +1470,10 @@ auxiliary:
 
 同じしくみで、ローカルの OpenAI 互換サーバーもそれぞれの名前で使えます。`provider: ollama`（`vllm`、`llamacpp`、`llama.cpp` も同様）に `http://127.0.0.1:11434` のような `base_url` と空の `api_key` を組み合わせると、仮の鍵を使って独自のエンドポイントへ繋がります。base_url をホストとポートだけ（`host:port`）で書いた場合は、`/v1` が自動で補われます。
 
+`provider: openai` は、直接 API を呼ぶための別名です。そのブロックの `base_url`、無ければ `OPENAI_BASE_URL`、それも無ければ `https://api.openai.com/v1` のエンドポイントへ繋ぎ、`api_key` か `OPENAI_API_KEY` で認証します。どの補助の作業も同じように解決します。`compression`／`vision`／`title_generation` はもちろん、`background_review`・`curator`・MoA の枠も同じです。つまり `provider: openai` を残したまま `base_url` を消すと、その作業は公開の OpenAI のエンドポイントへ移ります。自分の `providers:` の辞書に `providers.openai` の項目があれば、そちらが優先され、自前のエンドポイントと鍵を使い続けます。
+
+振り分け先を指定した `auxiliary.<task>` のブロックが解決できないとき（知らないプロバイダ、エンドポイントや資格情報の不足）、その作業は主役のモデルで走り、Hermes はそのことを伝えます。`background_review` は、プロバイダ名と理由を挙げた、ユーザーに見える警告を一度だけ出します（あわせてレビューごとに `agent.log` へ `WARNING` の行が残ります）。`hermes doctor` は、振り分け先を指定したすべての `auxiliary.<task>` のブロックを同じ解決の仕組みに通し、失敗するものを報告します。
+
 :::tip MiniMax の OAuth
 `minimax-oauth` はブラウザの OAuth でログインします（API キーは要りません）。`hermes model` を実行して **MiniMax (OAuth)** を選び、認証してください。補助の作業には自動で `MiniMax-M2.7-highspeed` が使われます。[MiniMax OAuth の案内](/hermes/docs/guides/minimax-oauth/) をご覧ください。
 :::
@@ -1475,6 +1523,8 @@ auxiliary:
   # Context compression timeout (separate from compression.* config)
   compression:
     timeout: 120               # seconds — compression summarizes long conversations, needs more time
+    # no_progress_timeout: 60   # Responses-stream routes (openai-codex) only: seconds a summary stream
+    #                           # may go without a substantive event before the attempt fails fast
     # fallback_chain:           # Optional — providers to try on rate-limit / connectivity failure
     #   - provider: nous
     #     model: deepseek/deepseek-chat
@@ -1641,7 +1691,7 @@ AUXILIARY_VISION_MODEL=openai/gpt-4o
 | `"auto"` | 使える中で最良のもの（既定）。画像は OpenRouter → Nous → Codex の順に試します。 | — |
 | `"openrouter"` | OpenRouter を強制します — どのモデル（Gemini、GPT-4o、Claude など）へも振り分けられます | `OPENROUTER_API_KEY` |
 | `"nous"` | Nous Portal を強制します | `hermes auth` |
-| `"codex"` | Codex の OAuth（ChatGPT アカウント）を強制します。画像に対応しています（gpt-5.3-codex）。 | `hermes model` → ChatGPT または Codex の購読 |
+| `"codex"` | Codex の OAuth（ChatGPT アカウント）を強制します。`model` は明示的に設定してください（たとえば `gpt-5.4`）。 | `hermes model` → ChatGPT または Codex の購読 |
 | `"minimax-oauth"` | MiniMax の OAuth（ブラウザでログイン、API キー不要）を強制します。補助の作業には MiniMax-M2.7-highspeed を使います。 | `hermes model` → MiniMax (OAuth) |
 | `"xai-oauth"` | xAI Grok の OAuth（SuperGrok か X Premium+ の購読者向けのブラウザログイン、API キー不要）を強制します。同じ OAuth のトークンで、チャット・TTS・画像・動画・書き起こしがまかなえます。 | `hermes model` → xAI Grok OAuth (SuperGrok / Premium+) |
 | `"main"` | いま使っている独自／主役のエンドポイントを使います。これは `OPENAI_BASE_URL` + `OPENAI_API_KEY` から来ることも、`hermes model` や `config.yaml` で保存した独自のエンドポイントから来ることもあります。OpenAI でも、ローカルのモデルでも、OpenAI 互換の API なら何でも動きます。**補助の作業専用です — `model.provider` には使えません。** | 独自のエンドポイントの資格情報とベース URL |
@@ -1695,7 +1745,7 @@ auxiliary:
 auxiliary:
   vision:
     provider: "codex"     # uses your ChatGPT OAuth token
-    # model defaults to gpt-5.3-codex (supports vision)
+    model: "gpt-5.4"      # no implicit default on the Codex route
 ```
 
 **MiniMax の OAuth を使う**（ブラウザでログイン、API キーは要りません）:
@@ -1753,6 +1803,17 @@ agent:
 
 未設定のとき（既定）、推論の深さは「medium」になります。ほとんどの作業でうまく働く、釣り合いの取れた段階です。値を設定するとそれが優先されます。推論を深くするほど複雑な作業での結果は良くなりますが、トークンと待ち時間が増えます。
 
+### 回答の長さ（`text_verbosity`） {#answer-length-textverbosity}
+
+Responses API のモデル（OpenAI の GPT-5 系以降、OpenAI 直接、ChatGPT Codex、Azure の経路）は、推論の深さとは別に、最後の自然な言葉での回答をどれくらいの長さにするかというつまみも受け付けます。
+
+```yaml
+agent:
+  text_verbosity: ""   # empty = not sent (provider default). Options: low, medium, high
+```
+
+Hermes がこれを Responses の最上位の `text: {verbosity: ...}` の項目として送るのは、Responses 系の経路だけです。`chat_completions`・Anthropic・xAI のリクエストへ送ることは決してありませんし、空の値や知らない値のときは何も送りません。`request_overrides` で設定した構造化出力（`text.format`）は、そのまま通されます。
+
 :::note OpenRouter 経由の適応的思考のモデル（Claude 4.6 以降、Fable/Mythos 系）
 これらのモデルは *適応的な* 思考を使い、いつもの `reasoning.effort` の項目を
 受け付けません。OpenRouter はそれらに対しては無視します。Hermes はあなたの
@@ -1772,6 +1833,13 @@ OpenRouter を通るほかのモデルについては、Hermes は生きてい�
 黙って上がることはありません）。推論に対応した新しいベンダーは、Hermes の更新を待たずに
 自動で使えます。カタログに届かないときや、モデルが載っていないときは、Hermes は
 組み込みのモデル系統の一覧へ落ち、あなたの深さをそのまま通します。
+:::
+
+:::note `ultra` は経路が受け付ける最上段へ丸められます
+`ultra` は Hermes の内部だけのはしごの段です。これを受け付けるプロバイダの通信はないので、どの経路でも
+その経路の最上段へ丸められます（GPT-5.6 Codex と OpenAI 互換の経路では `max`、古い
+Codex のモデルでは `xhigh`）。深さの選択画面と `/reasoning` の状態表示は、これを
+`ultra (sends max on this route)` と示すので、見えている段階と送られる段階が一致します。
 :::
 
 `/reasoning` コマンドで、実行中に推論の深さを変えることもできます。
@@ -1807,8 +1875,31 @@ agent:
 - 名前付きの独自プロバイダを接頭辞に付けたキー（`ollama-local/qwen3.6:27b-q4_k_m`）は、リクエストがモデル名だけ（`qwen3.6:27b-q4_k_m`）を持っているときにも効きます。フォールバックの項目や `providers:` の経路が送るのは、この形です
 - 完全一致が、ゆれた表記より優先されます
 
+#### 独自の推論の段階の名前 {#custom-reasoning-tier-names}
+
+OpenAI 互換のエンドポイントの中には、標準のはしごの外にある思考の段階を出しているものがあります（`low`…`max` ではなく `fast`／`thinking` を出す中継など）。はしごの外にある、ただの文字列は `Unknown reasoning_effort '<value>', using default (medium)` として拒まれるので、打ち間違いが通信に乗ることはありません。プロバイダ独自の段階の名前を要求したいときは、明示的な辞書の形を使ってください。`effort` の値は最上位の `reasoning_effort` の項目としてそのまま送られます。
+
+```yaml
+agent:
+  reasoning_effort:
+    enabled: true
+    effort: thinking            # sent as-is
+  reasoning_overrides:
+    "my-relay/lumo-max":        # dict form works per model too
+      enabled: true
+      effort: fast
+```
+
+辞書の形での `enabled: false` は、`reasoning_effort: none` と同じく思考を切ります。
+
+辞書の形は `config.yaml` を直接編集して設定します。`/reasoning` のメニュー、`hermes model`、ダッシュボードの補助モデルの選択画面が示すのは標準のはしごだけです（設定さえ済んでいれば、TUI の状態表示と初期設定の案内には独自の段階の名前が出ます）。
+
 :::note
 モデルの名前にはドットが入り（`claude-opus-4.5`、`qwen3.6:27b`）、`hermes config set` はそれを入れ子の区切りとして扱います。キーを文字どおりに書くには、バックスラッシュでドットを打ち消してください — `hermes config set 'agent.reasoning_overrides.ollama-local/qwen3\.6:27b-q4_k_m' low` — もしくは YAML を直接編集してください。[キーの名前に入るドット](/hermes/docs/reference/cli-commands/#dots-inside-key-names) を参照してください。
+:::
+
+:::note OpenAI Responses（`openai-api`、`openai-codex`）
+`reasoning_effort: none` は、それを受け付けるモデル（GPT-5.x）へは `reasoning.effort: "none"` として明示的に送られます。項目を省くと、モデルの既定の深さが有効なままになるからです（GPT-5.6 の既定は `medium` です）。項目が省かれるのは、深さが未設定のときだけです。`api.openai.com` にあるチャット時代のモデル（`gpt-4o`、`gpt-4.1`、その `-mini` の派生、ファインチューン版）は `reasoning` のパラメータを一切拒むので、Hermes は設定された深さに関係なくそれらへは何も送りません。`400 Unsupported parameter: 'reasoning.effort'` で失敗させないためです。モデルが `none` を拒んだ場合、Hermes は警告を出し、そのセッションでは切る指定をやめ、モデルの既定でやり直します。
 :::
 
 :::note ローカルの OpenAI 互換のエンドポイント
@@ -1822,7 +1913,7 @@ agent:
 3. 全体の `agent.reasoning_effort`
 4. プロバイダの既定
 
-この上書きは、どこでも自動で効きます。CLI の起動、メッセージングのゲートウェイ、デスクトップ／TUI、cron のジョブ、セッションの途中での `/model` の切り替え（最初のメッセージより前に切り替えた場合も含みます）、セッションの再開（`--resume`、`/resume`）、`/new`、フォールバックのモデルの発動、どれでも同じです。
+この上書きは、どこでも自動で効きます。CLI の起動、`hermes -p` の一発実行、メッセージングのゲートウェイ、デスクトップ／TUI、ACP のセッション、cron のジョブ、セッションの途中での `/model` の切り替え（最初のメッセージより前に切り替えた場合も含みます）、セッションの再開（`--resume`、`/resume`）、`/new`、フォールバックのモデルの発動、どれでも同じです。
 
 ## fast モード {#fast-mode}
 
@@ -1844,6 +1935,22 @@ agent:
 `/fast normal|fast|auto|cold` でそのセッションのモードを切り替えます。`--global` を付けると `config.yaml` に保存されます。`/fast` だけなら、いまのモードが表示されます。
 
 **費用について:** どちらのプロバイダも、速いリクエストには標準料金に倍率をかけて課金し（Anthropic は Opus 4.8 と Opus 5 で入出力 100 万トークンあたり $10 / $50）、プロンプトのキャッシュの料金と積み重なります。`auto`／`cold` は、その割増を時間の窓の中だけに抑えます。速さのパラメータは、それに対応するファーストパーティのエンドポイント（`api.openai.com` / Codex の購読、`api.anthropic.com`、`api.x.ai`）にだけ送られます。OpenRouter・Nous Portal・Copilot・Azure・Bedrock・独自の `base_url` の経路は、どのモードでも受け取りません。リクエストの間で変わるのはリクエストごとのパラメータだけで、システムプロンプト・ツール・メッセージはバイト単位で同じままなので、プロンプトのキャッシュは窓の境目を越えても生き残ります。
+
+### ゲートウェイやプロキシの向こうの fast の段階 {#fast-tiers-behind-a-gateway-or-proxy}
+
+ファーストパーティだけ、という決まりはわざとそうしています。fast の段階のパラメータは課金の指示なので、Hermes は料金表を知っているエンドポイントにしか送りません。OpenAI 互換のゲートウェイ・ルーター・プロキシを自分で動かしていて、そこが独自の優先の段階（独自の `service_tier` の値や、別の名前の項目）を出しているなら、`agent.service_tier` ではなく、そのプロバイダの `extra_body` から要求してください。[名前付きの独自プロバイダ](/hermes/docs/integrations/providers/#named-custom-providers) の `extra_body` は、そのエンドポイントへ振り分けられる **すべての** chat-completions のリクエストに混ぜ込まれ、ゲートウェイのターンや `/fast` の変更をまたいで残り、`/model` でそのプロバイダから離れるとまた外れます。
+
+```yaml
+providers:
+  my-gateway:
+    api: https://gateway.example.com/v1
+    key_env: MY_GATEWAY_KEY
+    default_model: fast-lane-model
+    extra_body:
+      service_tier: priority     # whatever tier value your gateway documents
+```
+
+`agent.service_tier` との違いはこうです。その段階はそのプロバイダでは常に有効で（`auto`／`cold` の窓はありません）、`/fast` で切り替わらず、Hermes は値を検証しません。何を受け付け、いくら課金するかは、ゲートウェイが決めます。
 
 ## ツールを使わせる強制 {#tool-use-enforcement}
 
@@ -1949,7 +2056,7 @@ tool_loop_guardrails:
 
 ### 実行中の停滞よけの見張り {#runtime-anti-stall-guards}
 
-上の失敗を基準にした安全策を補うものとして、`agent.stall_guards`（既定 `true`）は、無駄なターンを防ぐ控えめな 2 つの見張りを有効にします。1 つめは **同一呼び出しのループの遮断** です。同じツールがまったく同じ引数で 3 回以上続けて呼ばれ、*しかも* まったく同じ結果を返したとき、そのツールの結果へ「同じ呼び出しを繰り返さないように」と伝える短い 1 行が足されます。警告だけのセッションでは呼び出しを遮ることはなく、正当に繰り返す確認系（`process`、`*_get_result`、`*_poll`）は対象外です。強制停止が有効なとき（明示的な `hard_stop_enabled`、または無人のゲートウェイ／cron のプラットフォーム）、同じ連続が `hard_stop_after.idempotent_no_progress` 回に達すると強制停止にもなります。これは `idempotent_no_progress` の安全策が追う読み取り専用のツールだけでなく **どのツールにも** 効くので、成功した `terminal` や `skill_view` の呼び出しを繰り返すモデルは、反復の予算を使い切る代わりに止まります（`identical_call_streak_halt`）。2 つめは **続ける意図の回収** です。モデルがツールを呼ばずにターンを終え、しかも短い返事が何かをやると宣言して尻切れになっているとき（「では、ファイルを更新します…」）、Hermes は、意図の確認の回収に使うのと同じ上限付きの継続の仕組みで、行動するよう促し直します（ターンごとに最大 2 回）。どちらもキャッシュを壊さず（断り書きは結果を組み立てるときに足され、あとから遡って足すことはありません）、まとめて無効にできます。
+上の失敗を基準にした安全策を補うものとして、`agent.stall_guards`（既定 `true`）は、無駄なターンを防ぐ控えめな 2 つの見張りを有効にします。1 つめは **同一呼び出しのループの遮断** です。同じツールがまったく同じ引数で 3 回以上続けて呼ばれ、*しかも* まったく同じ結果を返したとき、そのツールの結果へ「同じ呼び出しを繰り返さないように」と伝える短い 1 行が足されます。警告だけのセッションでは呼び出しを遮ることはなく、正当に繰り返す確認系（`process_manage`、`*_get_result`、`*_poll`）は対象外です。強制停止が有効なとき（明示的な `hard_stop_enabled`、または無人のゲートウェイ／cron のプラットフォーム）、同じ連続が `hard_stop_after.idempotent_no_progress` 回に達すると強制停止にもなります。これは `idempotent_no_progress` の安全策が追う読み取り専用のツールだけでなく **どのツールにも** 効くので、成功した `terminal` や `skill_view` の呼び出しを繰り返すモデルは、反復の予算を使い切る代わりに止まります（`identical_call_streak_halt`）。2 つめは **続ける意図の回収** です。モデルがツールを呼ばずにターンを終え、しかも短い返事が何かをやると宣言して尻切れになっているとき（「では、ファイルを更新します…」）、Hermes は、意図の確認の回収に使うのと同じ上限付きの継続の仕組みで、行動するよう促し直します（ターンごとに最大 2 回）。どちらもキャッシュを壊さず（断り書きは結果を組み立てるときに足され、あとから遡って足すことはありません）、まとめて無効にできます。
 
 ```yaml
 agent:
@@ -1988,6 +2095,7 @@ tts:
     voice: "alloy"              # alloy, echo, fable, onyx, nova, shimmer
     speed: 1.0                  # Speed multiplier (clamped to 0.25–4.0 by the API)
     base_url: "https://api.openai.com/v1"  # Override for OpenAI-compatible TTS endpoints
+    pcm_sample_rate: 24000      # Streaming PCM rate; overridden by the endpoint's X-Audio-Sample-Rate header
   minimax:
     speed: 1.0                  # Speech speed multiplier
     # base_url: ""              # Optional: override for OpenAI-compatible TTS endpoints
@@ -2114,7 +2222,7 @@ display:
   • ~/.hermes/scripts/monitor.py — [write_file] Write denied: '…' is outside HERMES_WRITE_SAFE_ROOT (/path/to/project)
 ```
 
-Hermes の状態（cron のジョブ、スキル、`~/.hermes/` の下のスクリプト）への書き込みが失敗しているなら、環境に `HERMES_WRITE_SAFE_ROOT` が設定されていないか確かめてください。cron の変更には、`jobs.json` へ直接パッチを当てるのではなく `cronjob` ツールか `hermes cron edit` を使ってください。
+Hermes の状態（cron のジョブ、スキル、`~/.hermes/` の下のスクリプト）への書き込みが失敗しているなら、環境に `HERMES_WRITE_SAFE_ROOT` が設定されていないか確かめてください。cron の変更には、`jobs.json` へ直接パッチを当てるのではなく `cronjob_manage` ツールか `hermes cron edit` を使ってください。
 
 ### 定型メッセージの UI の言語 {#ui-language-for-static-messages}
 
@@ -2194,9 +2302,10 @@ display:
 | `model` | ベンダーの接頭辞を落とした素のモデル ID | `gpt-5.4` |
 | `context_pct` | 直近の呼び出しのコンテキストの占有率 | `5%` |
 | `latency` | そのターンの実時間 | `22s`、`1m05s` |
+| `served_model` | 実際に答えたモデル。設定したものと違うときに出ます。振り分けのプロキシが `x-litellm-model-id`（または `x-litellm-model-api-base`）の応答ヘッダで知らせたデプロイ先か、そのターンで Hermes が切り替えたフォールバックのモデルです | `hermes-router → gpt-4o-2024-11-20` |
 | `cwd` | ホームからの相対の作業ディレクトリ | `~` |
 
-既定の組み合わせは `["model", "context_pct", "cwd"]` です。`latency` は任意で、使うには `fields` へ足してください。データが無い項目は、空の枠を描くのではなく黙って飛ばされます。
+既定の組み合わせは `["model", "context_pct", "cwd"]` です。`latency` と `served_model` は任意で、使うには `fields` へ足してください。`served_model` は、答えたモデルが設定したものと同じとき（またはプロキシがそのヘッダを送らないとき）は何も描かないので、振り分けのプロキシの向こうや、フォールバックが効いている場面で、切り替わりを見せてくれる項目になります。データが無い項目は、空の枠を描くのではなく黙って飛ばされます。
 
 `/footer` のスラッシュコマンドで、どのセッションでも実行中に切り替えられます。
 
@@ -2224,7 +2333,7 @@ display:
       tool_progress: 'off'    # quiet in shared Slack workspace
 ```
 
-CLI からは、正式なパスを使ってください — `hermes config set display.platforms.telegram.streaming false`。短い書き方の `hermes config set platforms.telegram.streaming false` も受け付けます。プラットフォームごとの *表示* の設定（`streaming`、`show_reasoning`、`tool_progress`、…）は `display.platforms` からしか読まれないので、`config set`／`get`／`unset` はその短い書き方を正式なキーへ振り向け、そのことを知らせます。最上位の `platforms.<name>` ブロックの下にある接続のキー（`token`、`enabled`、`reply_to_mode`、`extra`）は振り向けられません。
+CLI からは、正式なパスを使ってください — `hermes config set display.platforms.telegram.streaming false`。短い書き方の `hermes config set platforms.telegram.streaming false` も受け付けます。プラットフォームごとの *表示* の設定（`streaming`、`show_reasoning`、`tool_progress`、…）は `display.platforms` からしか読まれないので、`config set`／`get`／`unset` はその短い書き方を正式なキーへ振り向け、そのことを知らせます。最上位の `platforms.<name>` ブロックの下にある接続のキー（`token`、`enabled`、`reply_to_mode`、`extra`）は振り向けられません。これらを入れ子の接頭辞の下に書いた場合（`hermes config set gateway.platforms.telegram.enabled true`）は、最上位の `platforms.telegram.enabled` へ振り向けられ、そのことを知らせます。ゲートウェイは両方のブロックを読みますが、同じキーでは最上位のほうが勝つので、入れ子に書いても、すでにある最上位の値に黙って覆い隠されてしまうからです。
 
 上書きの無いプラットフォームは、全体の `tool_progress` の値へ落ちます。使えるプラットフォームのキー: `telegram`、`discord`、`slack`、`signal`、`whatsapp`、`matrix`、`mattermost`、`email`、`sms`、`homeassistant`、`dingtalk`、`feishu`、`wecom`、`weixin`、`bluebubbles`、`qqbot`。従来の `display.tool_progress_overrides` のキーも後方互換のために今も読み込まれますが、非推奨で、最初の読み込みのときに `display.platforms` へ移されます。
 
@@ -2290,10 +2399,14 @@ stt:
   openai:
     model: "whisper-1"         # whisper-1 | gpt-4o-mini-transcribe | gpt-4o-transcribe | gpt-transcribe
     language: ""               # per-provider override of stt.language
+    timeout: 60                # seconds per transcription request; raise for self-hosted model cold starts
+    max_retries: 1             # SDK transport retries (connection errors, 408/409/429/5xx); 0 = single attempt
   # model: "whisper-1"         # Legacy fallback key still respected
 ```
 
 言語の解決は **すべての** STT のプロバイダ（local、groq、openai、mistral、xai、elevenlabs、deepinfra、コマンド型のプロバイダ、プラグイン）で同じです: `stt.<provider>.language` → `stt.language` → `HERMES_LOCAL_STT_LANGUAGE` 環境変数 → プロバイダの自動判定。**既定は `stt.language: "en"` です。** Whisper の自動判定は、短い音声や訛りのある音声をしばしば取り違え、ボイスメモが違う言語で書き起こされる形で現れるからです。英語以外を話す方は、`stt.language` に自分の言語コードを一度設定してください（たとえば `"es"`、`"zh"`、`"uk"`）。多言語で使うために自動判定へ戻すには `""` にします。
+
+`stt.openai.timeout` と `stt.openai.max_retries` は、`openai`・`groq`・`deepinfra` のプロバイダが共有する OpenAI SDK の書き起こしクライアントの形を決めます（まだプロバイダごとの同名のキーはなく、SDK はこれらを環境変数から読みません）。既定はこれまでの固定の 30 秒・再試行なしではなく `60` / `1` です。自前でホストした OpenAI 互換のエンドポイントは、最初のリクエストでモデルを読み込むのに 30 秒より長くかかることがあり、以前はそのボイスメッセージがまるごと失われていたからです。引き換えに、届かないバックエンドが相手だと、Hermes があきらめるまでボイスメッセージを「2 回の試行 × タイムアウト」のあいだ抱えることになります。以前の形に戻すには `timeout: 30` と `max_retries: 0` にしてください。
 
 ゲートウェイにボイスメモをエージェントのために書き起こさせつつ、生の書き起こしをチャットへ戻してほしくないとき（たとえば顧客向けの WhatsApp のボット）は、`stt.echo_transcripts: false` にしてください。
 
@@ -2639,11 +2752,13 @@ discord:
   require_mention: true          # Require @mention to respond in server channels
   free_response_channels: ""     # Comma-separated channel IDs where bot responds without @mention
   auto_thread: true              # Auto-create threads on @mention in channels
+  free_response_auto_thread: false  # Free-response channels also auto-thread (default: reply inline)
 ```
 
 - `require_mention` — `true`（既定）のとき、ボットはサーバーのチャンネルでは `@BotName` とメンションされたときだけ応答します。DM はメンション無しでも常に働きます。
 - `free_response_channels` — メンション無しでもすべてのメッセージに応答する、チャンネル ID のカンマ区切りの一覧です。
 - `auto_thread` — `true`（既定）のとき、チャンネルでのメンションは会話のためのスレッドを自動で作り、チャンネルをきれいに保ちます（Slack のスレッドに似ています）。
+- `free_response_auto_thread` — `true` のとき、`free_response_channels` のチャンネルでも、最上位のメッセージごとにスレッドを自動で作ります。既定は `false` で、自由応答のチャンネルはその場に返信します。`auto_thread: true` が前提です。
 
 ## セキュリティ {#security}
 
@@ -2779,6 +2894,7 @@ delegation:
   worktree_isolation: false                 # Give each child its own git worktree branched from HEAD (local backend + git repos only; inspired by Muse Code). See Subagent Delegation → Worktree Isolation.
   max_spawn_depth: 1                        # Delegation tree depth cap (1-3, clamped). 1 = flat (default): parent spawns leaves that cannot delegate. 2 = orchestrator children can spawn leaf grandchildren. 3 = three levels.
   orchestrator_enabled: true                # Global kill switch. When false, role="orchestrator" is ignored and every child is forced to leaf regardless of max_spawn_depth.
+  oneshot_max_children: 2                   # Total subagents a one-shot run (hermes chat -q / --oneshot) may spawn; 0 = unlimited. Interactive and gateway sessions are never capped by this.
 ```
 
 **サブエージェントの provider:model の上書き:** 既定では、サブエージェントは親のエージェントのプロバイダとモデルを引き継ぎます。`delegation.provider` と `delegation.model` を設定すると、サブエージェントを別のプロバイダ:モデルの組み合わせへ振り分けられます。たとえば、主役のエージェントが高価な推論モデルで動いているあいだ、範囲の狭い下請けの作業には安くて速いモデルを使う、といったことができます。
@@ -2804,6 +2920,8 @@ delegation:
 委任のプロバイダは、CLI／ゲートウェイの起動と同じ資格情報の解決を使います。設定されたプロバイダはすべて使えます: `openrouter`、`nous`、`copilot`、`zai`、`kimi-coding`、`minimax`、`minimax-cn`。プロバイダを設定すると、正しいベース URL・API キー・API の方式が自動で解決されるので、資格情報を手でつなぐ必要はありません。
 
 **優先順位:** 設定の `delegation.base_url` → 設定の `delegation.provider` → 親のプロバイダ（引き継ぎ）。設定の `delegation.model` → 親のモデル（引き継ぎ）。`provider` なしで `model` だけを設定すると、親の資格情報を保ったままモデル名だけが変わります（OpenRouter のように、同じプロバイダの中でモデルを切り替えるときに便利です）。
+
+**一発実行のとき:** 終わりの決まった `hermes chat -q` / `--oneshot` のセッションには、委任の結果を受け取る後のターンも、学ばせる後のセッションもありません。そのため、より小さな構えで走ります。`skill_manage` は差し出されず（スキルの一覧と、`skill_view` での読み込みは今までどおりできます）、スキルの案内は手順のスキルではなく分野のスキルだけを求め、`oneshot_max_children` がその実行で起こせるサブエージェントの総数に上限をかけます（既定 `2`、`0` なら無制限）。上限を超えると、`delegate_task` は、そのまま自分で終えるようエージェントへ伝えるツールのエラーを返します。
 
 **幅と深さ:** `max_concurrent_children` は、1 回のまとまりの中で並列に走るサブエージェントの数に上限をかけます（既定 `3`、下限は 1、上限なし）。`DELEGATION_MAX_CONCURRENT_CHILDREN` 環境変数でも設定できます。モデルが上限より長い `tasks` の配列を出したときは、`delegate_task` は黙って切り詰めるのではなく、上限を説明するツールのエラーを返します。`max_spawn_depth` は委任の木の深さを決めます（1〜3 に丸められます）。既定の `1` では委任は平らで、子が孫を起こすことはできず、`role="orchestrator"` を渡しても黙って `leaf` へ落ちます。`2` へ上げると、orchestrator の子が leaf の孫を起こせます。`3` なら 3 段の木になります。エージェントは呼び出しごとに `role="orchestrator"` で指揮役になることを選びます。`orchestrator_enabled: false` にすると、それにかかわらずすべての子が leaf へ戻されます。費用は掛け算で増えます。`max_spawn_depth: 3` と `max_concurrent_children: 3` なら、木は 3×3×3 = 27 の同時の leaf エージェントに達しえます。使い方の型は [サブエージェントへの委任 → 深さの上限と入れ子の指揮](/hermes/docs/user-guide/features/delegation/#depth-limit-and-nested-orchestration) をご覧ください。
 

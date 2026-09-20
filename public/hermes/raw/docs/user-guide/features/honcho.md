@@ -2,7 +2,7 @@
 title: "Honcho メモリー"
 description: "Honcho による AI 前提の永続メモリー — 対話的な推論、マルチエージェントのユーザーモデリング、深い個別化"
 upstream_path: user-guide/features/honcho.md
-upstream_blob: 3052368c8180aaa8518c803896df31cdfea767e9
+upstream_blob: c13d87bb18433b101cddbe10b97d9483242550b2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/honcho
 ---
@@ -126,6 +126,8 @@ Honcho の設定は `~/.honcho/config.json`（全体）または `$HERMES_HOME/h
 | `dialecticDynamic` | `true` | `true` なら、モデルがツールの引数で呼び出しごとに推論レベルを上書きできます |
 | `dialecticMaxChars` | `600` | システムプロンプトに差し込む対話的推論の結果の最大文字数 |
 | `recallMode` | `'hybrid'` | `hybrid`（自動の差し込み + ツール）、`context`（差し込みのみ）、`tools`（ツールのみ） |
+| `initOnSessionStart` | `false` | `tools` モードのみ。`true` にすると Honcho のセッションを**セッション開始時に同期的に**作るので、最初のツール呼び出しより前に準備が整います。`false`（既定）では最初の `honcho_*` の呼び出しまで先送りされます。下の起動時の注意を参照 |
+| `timeout` | `null`（SDK の既定） | Honcho の SDK 呼び出し 1 回あたりに許す秒数（`requestTimeout` と環境変数 `HONCHO_TIMEOUT` も受け付けます）。つながらないサーバーが呼び出しを抱え込む時間の上限になります。上の先行した初期化も含みます |
 | `writeFrequency` | `'async'` | メッセージを書き出すタイミング: `async`（バックグラウンドのスレッド）、`turn`（同期）、`session`（終了時にまとめて）、または整数 N |
 | `saveMessages` | `true` | メッセージを Honcho API に保存するかどうか |
 | `observationMode` | `'directional'` | `directional`（すべて有効）または `unified`（共有プール）。細かく決めたいときは `observation` オブジェクトで上書きします |
@@ -169,6 +171,7 @@ Hermes が自動で付けたタイトル（`derived` または `llm`）は、Des
 
 `tools` モードでは、主導権は完全にモデルにあります。使いたいときに `honcho_reasoning` を、自分で選んだ `reasoning_level` で呼び出します。間隔や上限の設定が効くのは、自動の差し込みがあるモード（`hybrid` と `context`）だけです。
 
+**起動時の振る舞いと `initOnSessionStart`。** `hybrid` と `context` のモードでは、セッションはバックグラウンドのスレッドで作られ、Honcho が遅いときや落ちているときでも起動は止まりません。`tools` モードは、そこを意図して変えてあります。`initOnSessionStart: false`（既定）なら、最初の `honcho_*` のツール呼び出しまで Honcho には一切触れません。`initOnSessionStart: true` なら**エージェントを組み立てる途中で同期的に**セッションが作られるので、1 ターン目のツール呼び出しが中途半端なセッションと競合することはありません。ただしこの保証は、起動が Honcho を待つということでもあります。サーバーに届かない場合、この先回りの経路にある SDK 呼び出しはどれも、接続や `timeout` の上限まで粘ってからでないと、エージェントは使えるようになりません。Desktop ではこれが `request timed out: session.resume` や `prompt.submit` として表に出ます（画面側は 30 秒であきらめます）。Desktop を使うときや、Honcho が動いていないかもしれない手元のサービスであるときは、`initOnSessionStart` を `false` のままにしてください。それでも有効にするなら、`honcho.json` に `timeout`（秒）を設定して、1 回ずつの呼び出しに上限を付けてください。
 ## ゲートウェイでの識別子の対応づけ {#gateway-identity-mapping}
 
 ここでの設定が意味を持つのは、[Hermes のゲートウェイ](/hermes/docs/developer-guide/gateway-internals/)を動かしているときだけです。ゲートウェイは、利用者がプラットフォーム固有の実行時 ID（Telegram の UID、Discord の snowflake、Slack のユーザー）を持ってやって来る唯一の入口です。CLI、TUI、デスクトップのセッションには実行時 ID がなく、常に `peerName` に行き着くので、ゲートウェイを使っていなければこれらのキーは何もしません。

@@ -2,7 +2,7 @@
 title: "Comfyui — 拡散モデルのワークフローで画像・動画・音声を生成する"
 description: "拡散モデルのワークフローで画像・動画・音声を生成する"
 upstream_path: user-guide/skills/optional/creative/creative-comfyui.md
-upstream_blob: a2bbc4913135f31f7b9f8a47afda785b5200b41e
+upstream_blob: e490349a2544fe592906c8465c1c9bab1520abc8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-comfyui
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/creative/comfyui` で導入します |
-| パス | `optional-skills/creative\comfyui` |
+| パス | `optional-skills/creative/comfyui` |
 | バージョン | `5.1.0` |
 | 作者 | ['kshitijk4poor', 'alt-glitch', 'purzbeats'] |
 | ライセンス | MIT |

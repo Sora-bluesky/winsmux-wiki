@@ -2,7 +2,7 @@
 title: "CLI コマンド早見表"
 description: "Hermes のターミナルコマンドとコマンド群についての公式な早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: f9a9089cf81e2b777c7938cb745d1b2d4905456a
+upstream_blob: 869c3cde6cb70ebf8667ceb50106dc4eeaf8586f
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -59,7 +59,9 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes peer` | 別の端末にある Hermes ゲートウェイを peer として登録し、そのエージェントの正式な Bot Chat へ DM します（`hermes peer dm <peer>[/<agent>] "…"`）。端末をまたいだボット同士のやり取りを支える転送路です。 |
 | `hermes secrets` | 外部のシークレット供給元（現在は Bitwarden Secrets Manager）を管理し、API キーを `~/.hermes/.env` からではなくプロセス起動時に取り込みます。 |
 | `hermes migrate` | 引退したモデルや非推奨の設定への参照を調べ、必要なら `config.yaml` を書き換えます（例: `migrate xai`）。 |
+| `hermes codex-runtime` | `/codex-runtime` の非対話版です。`migrate [--dry-run] [--json]` で、選んだプロファイル向けに `~/.codex/config.toml` の Hermes 管理ブロックを作り直します。[Codex app-server runtime](/hermes/docs/user-guide/features/codex-app-server-runtime/#running-the-migration-from-a-script) を参照してください。 |
 | `hermes status` | エージェント・認証・プラットフォームの状態を表示します。 |
+| `hermes usage` | 設定済みアカウントのレート制限の枠（`/usage` のブロック）を、セッションを開かずに表示します。スクリプトから読むときは `--json` を付けます。 |
 | `hermes cron` | cron スケジューラの状態確認と実行を行います。 |
 | `hermes pause` / `hermes resume` | 全体の緊急停止です。再開するまで、新しい cron の発火（組み込みのティッカー、管理された cron の webhook、取りこぼしの追い実行）も、kanban のディスパッチも、ゲートウェイのターンも始まりません。実行中の作業が止められることはありません。 |
 | `hermes kanban` | 複数プロファイルで共同作業するためのボードです（タスク、リンク、ディスパッチャ）。 |
@@ -120,7 +122,7 @@ hermes chat [options]
 | `--oneshot` | `-q` / `--query-file` と併用したとき、対話セッションを始めるのではなく、問いに答えて終了します（0.21 より前の単発の挙動）。TTY でない入出力のときと `-Q` を付けたときは自動でこうなります。 |
 | `-m`, `--model <model>` | この実行だけモデルを差し替えます。 |
 | `-t`, `--toolsets <csv>` | カンマ区切りで指定したツールセットを有効にします。 |
-| `--provider <provider>` | プロバイダを指定します: `auto`, `openrouter`, `nous`, `openai-codex`, `copilot-acp`, `copilot`, `anthropic`, `gemini`, `huggingface`, `novita`（別名 `novita-ai`, `novitaai`）, `openai-api`, `zai`, `kimi-coding`, `kimi-coding-cn`, `minimax`, `minimax-cn`, `minimax-oauth`, `kilocode`, `xiaomi`, `arcee`, `gmi`, `upstage`（別名 `solar`）, `alibaba`, `alibaba-cn`, `alibaba-coding-plan`（別名 `alibaba_coding`）, `alibaba-coding-plan-cn`, `alibaba-token-plan`, `alibaba-token-plan-cn`, `deepseek`, `nvidia`, `ollama-cloud`, `xai`（別名 `grok`）, `xai-oauth`（別名 `grok-oauth`）, `qwen-oauth`, `bedrock`, `opencode-zen`, `opencode-go`, `commandcode`, `commandcode-anthropic`, `ai-gateway`, `azure-foundry`, `lmstudio`, `stepfun`, `tencent-tokenhub`（別名 `tencent`, `tokenhub`）, `router`（別名 `ramp-router`, `ramp`）, `nebius-token-factory`（別名 `nebius`, `nebius-tf`, `tokenfactory`）, `tencent-tokenplan`（別名 `tokenplan`, `tencent-lkeap`）。 |
+| `--provider <provider>` | プロバイダを指定します: `auto`, `openrouter`, `nous`, `openai-codex`（別名 `chatgpt`, `chatgpt-codex`）, `copilot-acp`, `copilot`, `anthropic`, `gemini`, `huggingface`, `novita`（別名 `novita-ai`, `novitaai`）, `openai-api`, `zai`, `kimi-coding`, `kimi-coding-cn`, `minimax`, `minimax-cn`, `minimax-oauth`, `kilocode`, `xiaomi`, `arcee`, `gmi`, `upstage`（別名 `solar`）, `alibaba`, `alibaba-cn`, `alibaba-coding-plan`（別名 `alibaba_coding`）, `alibaba-coding-plan-cn`, `alibaba-token-plan`, `alibaba-token-plan-cn`, `deepseek`, `nvidia`, `ollama-cloud`, `xai`（別名 `grok`）, `xai-oauth`（別名 `grok-oauth`）, `qwen-oauth`, `bedrock`, `opencode-zen`, `opencode-go`, `commandcode`, `commandcode-anthropic`, `ai-gateway`, `azure-foundry`, `lmstudio`, `stepfun`, `tencent-tokenhub`（別名 `tencent`, `tokenhub`）, `router`（別名 `ramp-router`, `ramp`）, `nebius-token-factory`（別名 `nebius`, `nebius-tf`, `tokenfactory`）, `tencent-tokenplan`（別名 `tokenplan`, `tencent-lkeap`）。 |
 | `-s`, `--skills <name>` | このセッションで使うスキルを事前に読み込みます（繰り返し指定、またはカンマ区切りで複数可）。 |
 | `-v`, `--verbose` | 詳しい出力を出します。 |
 | `-Q`, `--quiet` | プログラム向けのモードです。バナー・スピナー・ツールの下見表示を出しません。 |
@@ -251,9 +253,9 @@ HERMES_INFERENCE_MODEL=anthropic/claude-sonnet-4.6 hermes -z "…"
 `hermes -z "…" --usage-file /path/report.json` は、実行後に機械で読める利用状況レポートを書き出します。内容は `estimated_cost_usd`、`input_tokens` / `output_tokens` / `cache_read_tokens` / `cache_write_tokens` / `reasoning_tokens` / `total_tokens`、`api_calls`、`model`、`provider`、`session_id`、`service_tier`、`completed` / `failed` / `partial` / `interrupted` のフラグ、そして `turn_exit_reason`（`completed` が偽になった理由。例: `max_iterations_reached(3/3)`）です。この最上位の数字が指すのは**エージェント本体のループ**だけです。同じ実行の中で行われた補助的な LLM 呼び出し（タイトル生成、画像認識、文脈の圧縮、`web_extract`、裏でのレビューなど）は `auxiliary` の下にまとめて報告され、同じ項目に加えて処理ごとの `by_task` が付きます。請求の対象となる総額は `total_including_auxiliary`（`estimated_cost_usd`、`total_tokens`、`api_calls`）です。このレポートは**実行が失敗したときにも**書かれるので、まとめて処理するパイプラインでも支出をいつでも把握できます。`-z`/`--oneshot` 以外では効かず、レポートの書き出しに失敗しても実行自体の結末が隠れることはありません。
 
 ```bash
-hermes -z "summarize this repo" --usage-file /tmp/usage.json
-jq .total_including_auxiliary.estimated_cost_usd /tmp/usage.json
-jq .auxiliary.by_task /tmp/usage.json      # what did title generation / vision cost?
+hermes -z "summarize this repo" --usage-file ~/.hermes/cache/scratch/usage.json
+jq .total_including_auxiliary.estimated_cost_usd ~/.hermes/cache/scratch/usage.json
+jq .auxiliary.by_task ~/.hermes/cache/scratch/usage.json      # what did title generation / vision cost?
 ```
 
 ## `hermes model` {#hermes-model}
@@ -490,15 +492,15 @@ hermes send --list [platform]
 `--file` は*テキスト*の本文専用です。画像、文書、動画、音声をプラットフォームの添付ファイルとして届けるには、本文の中で `MEDIA:<local_path>` と書いて参照します:
 
 ```bash
-hermes send --to telegram "MEDIA:/tmp/screenshot.png"
-hermes send --to telegram "Build chart for today MEDIA:/tmp/chart.png"   # with caption
-hermes send --to discord:#ops "MEDIA:/tmp/report.pdf"
+hermes send --to telegram "MEDIA:~/.hermes/cache/scratch/screenshot.png"
+hermes send --to telegram "Build chart for today MEDIA:~/.hermes/cache/scratch/chart.png"   # with caption
+hermes send --to discord:#ops "MEDIA:~/.hermes/cache/scratch/report.pdf"
 ```
 
 既定では画像は写真として送られます（Telegram などは再圧縮します）。圧縮されないファイル添付として届けたいときは、本文に `[[as_document]]` を加えます:
 
 ```bash
-hermes send --to telegram "[[as_document]] MEDIA:/tmp/screenshot.png"
+hermes send --to telegram "[[as_document]] MEDIA:~/.hermes/cache/scratch/screenshot.png"
 ```
 
 例:
@@ -506,7 +508,7 @@ hermes send --to telegram "[[as_document]] MEDIA:/tmp/screenshot.png"
 ```bash
 hermes send --to telegram "deploy finished"
 echo "RAM 92%" | hermes send --to telegram:-1001234567890
-hermes send --to discord:#ops --file /tmp/report.md
+hermes send --to discord:#ops --file ~/.hermes/cache/scratch/report.md
 hermes send --to slack:#eng --subject "[CI]" --file build.log
 hermes send --list                  # all platforms
 hermes send --list telegram         # filter by platform
@@ -593,6 +595,19 @@ hermes migrate <type>
 
 > `hermes claw migrate`（OpenClaw の設定を一度だけ Hermes へ取り込むコマンド）と混同しないでください — `hermes migrate` は設定を書き換えるトップレベルのコマンドです。
 
+## `hermes codex-runtime` {#hermes-codex-runtime}
+
+```bash
+hermes codex-runtime migrate [--dry-run] [--json]
+```
+
+`/codex-runtime codex_app_server` が起こす `~/.codex/config.toml` の移行を、チャットのセッションを開かずに実行します。Hermes の `mcp_servers`（導入済みの codex プラグインと `default_permissions` の既定値を含みます）が、選んだプロファイルの管理ブロックへ書き出されます（`hermes -p <name> codex-runtime migrate`）。ブロックの外にある利用者の記述はそのまま残ります。Hermes のサーバーと同じ名前の `[mcp_servers.<name>]` を利用者が自分で書いている場合は、そちらが残され、その名前についての Hermes からの書き出しは飛ばされます（`preserved_user_servers` として報告されます）。書き込む内容は TOML として検証してから、一度の操作でまとめて書き込みます。報告にエラーが含まれるときは、終了コードが 1 になります。
+
+| フラグ | 説明 |
+|------|-------------|
+| `--dry-run` | `config.toml` を書き換えずに、移行の内容を計算して報告します。 |
+| `--json` | 移行の報告全体を JSON で出力します（`migrated`, `preserved_user_servers`, `skipped_keys_per_server`, `errors`, `target_path`, `written`）。 |
+
 ## `hermes proxy` {#hermes-proxy}
 
 ```bash
@@ -647,6 +662,7 @@ hermes auth add openrouter --api-key sk-or-v1-xxx        # Add API key
 hermes auth add openrouter --type oauth                  # Browser login (OpenRouter PKCE) mints a key for you
 hermes auth add anthropic --type oauth                   # Add OAuth credential
 hermes auth add openai-codex --type oauth --priority 0   # Add an account and try it first
+hermes auth add openai-codex --browser                   # Codex: browser auth-code + PKCE on localhost:1455 instead of device code
 hermes auth remove openrouter 2                          # Remove by index
 hermes auth priority openrouter backup-key 0             # Move a credential to the front of fill_first order
 hermes auth reset openrouter                             # Clear cooldowns
@@ -658,6 +674,49 @@ hermes auth spotify                                      # Authenticate Hermes w
 ```
 
 サブコマンド: `add`、`list`、`remove`、`reset`、`priority`、`refresh`、`status`、`logout`、`spotify`。サブコマンドなしで呼ぶと、対話的な管理ウィザードが立ち上がります。
+
+## `hermes usage` {#hermes-usage}
+
+`/usage` スラッシュコマンドのうち、アカウントの上限を示すブロックです。Codex の5時間枠・週次枠、プラン、
+持ち越した reset、Anthropic の OAuth 枠、OpenRouter の残高を、セッションを開かずに表示します。シェルスクリプトや
+cron ジョブから読めます。
+
+```bash
+hermes usage                          # configured model provider, human-readable block
+hermes usage --provider openai-codex  # a specific provider
+hermes usage --json                   # one JSON document on stdout
+```
+
+| オプション | 説明 |
+|--------|-------------|
+| `--provider NAME` | 問い合わせ先のプロバイダです（既定は設定済みの `model.provider`）。使えるのは `openai-codex`, `anthropic`, `openrouter` です。 |
+| `--json` | 読みやすい形のブロックではなく、JSON 文書を1つ出力します。 |
+
+認証情報の探し方は、エージェントが動いていないセッションでの `/usage` とまったく同じです（まず認証情報の保管場所、
+次に認証情報プール）。チャットで使わない認証情報を、このコマンドが足したり更新したりすることはありません。成功すると
+終了コードは `0` です。そのプロバイダの認証情報が設定されていない、プロバイダに利用状況の窓口がない、取得に失敗した、
+のいずれかのときは `1` になり、標準エラー出力に1行だけ出ます（標準出力は空のままです）。
+
+`--json` の形（ここにあるキーは変わりません。キーが増えることはあります）:
+
+```json
+{
+  "provider": "openai-codex",
+  "source": "usage_api",
+  "title": "Account limits",
+  "plan": "Plus",
+  "fetched_at": "2026-09-19T07:58:55+00:00",
+  "windows": [
+    {"label": "Session", "used_percent": 37.0, "resets_at": "2026-09-19T21:00:00+00:00", "detail": null},
+    {"label": "Weekly", "used_percent": 12.5, "resets_at": "2026-09-25T09:00:00+00:00", "detail": null}
+  ],
+  "details": ["You have 1 reset banked - use /usage reset to activate"],
+  "unavailable_reason": null
+}
+```
+
+プロバイダがその枠を報告しなかったときは `used_percent` が `null` になります。`resets_at` は ISO-8601 の UTC か `null` です
+（枠によっては、代わりに自由文の `detail` が入ります）。`plan` はわからないときに `null` になります。
 
 ## `hermes status` {#hermes-status}
 
@@ -1042,7 +1101,7 @@ hermes backup [options]
 
 ```bash
 hermes backup                           # Full backup to ~/hermes-backup-*.zip
-hermes backup -o /tmp/hermes.zip        # Full backup to specific path
+hermes backup -o ~/backups/hermes.zip   # Full backup to specific path
 hermes backup --quick                   # Quick state-only snapshot
 hermes backup --quick --label "pre-upgrade"  # Quick snapshot with label
 ```
@@ -1520,7 +1579,7 @@ MCP（Model Context Protocol）サーバーの設定を管理し、Hermes 自身
 |------------|-------------|
 | *(なし)* または `picker` | 対話的な目録の選択画面です — Nous が認めた MCP を見て回り、導入・有効化・無効化します。 |
 | `catalog` | Nous が認めた MCP を一覧します（プレーンテキストで、スクリプトから扱えます）。 |
-| `install <name>` | 目録の項目を導入します（例: `hermes mcp install n8n`）。 |
+| `install <name>` | 目録の項目を導入します（例: `hermes mcp install deepwiki`）。 |
 | `serve [-v\|--verbose]` | Hermes を MCP サーバーとして動かします — 会話を他のエージェントへ開きます。 |
 | `add <name> [--url URL] [--command CMD] [--auth oauth\|header] [--args ...]` | 独自の MCP サーバーを追加し、ツールを自動で見つけます。`--args` は残りの引数を標準入出力のコマンドへ渡すので、最後に置いてください。 |
 | `remove <name>`（別名: `rm`） | MCP サーバーを設定から外します。 |
@@ -1668,6 +1727,7 @@ hermes sessions <subcommand>
 | `optimize-storage` | 全文検索の索引を、内容を外に置くコンパクトな v23 の形式へ移します。大きなデータベースでは `state.db` がかなり小さくなります。 |
 | `repair` | 壊れた `state.db` のスキーマ（例: `table messages_fts already exists`）を直し、見えなくなっていたセッションを戻します。先に控えを取ります。 |
 | `repair-routing` | 経路の情報を失ったセッションの行に取り残された、ゲートウェイの会話をつなぎ直します（再起動のあとチャットが「時間を遡る」現象）。既定は下見で、`--apply` で実際に引き取ります（先にゲートウェイを止めてください）。`--max-gap-seconds N` で連続とみなす幅を調整します。曖昧さのない場合だけ直します。[セッション → 取り残されたゲートウェイのセッションを直す](/hermes/docs/user-guide/sessions/#repair-stranded-gateway-sessions) を参照してください。 |
+| `repair-profiles` | 誤ったプロファイルの下に入ってしまったセッション・経路・Telegram のトピック・音声モードの状態を整えます（別のプロファイルの保管場所にある行、セッションキーと食い違うラベル、プロファイルをまたぐ親子のつながり、削除済みプロファイルの索引の行）。既定は下見で、`--apply` を付けると保管場所をすべて控えてから実際に直します（先にゲートウェイを止めてください）。`--legacy-main rekey\|move` は、名前付きプロファイルの保管場所にある `agent:main` の行をどう扱うかを決めます。`--json` は自動処理向けです。[セッション → プロファイルをまたいでしまった状態を直す](/hermes/docs/user-guide/sessions/#repair-state-crossed-between-profiles) を参照してください。 |
 | `recover` | 壊れた `state.db` を、別のきれいなデータベースへオフラインで救い出します（元には手を触れません）。 |
 | `retitle-skills` | `/skill` で始めたセッションのタイトルを、利用者が実際に入力した内容から付け直します。`--apply` を付けない限り、変更の内容を並べるだけです。 |
 

@@ -2,7 +2,7 @@
 title: "Ollama で Hermes をローカルで動かす — API 料金ゼロ"
 description: "Gemma 4 などのオープンウェイトモデルと Ollama を使い、クラウドの API キーも有料サブスクも使わずに Hermes Agent を自分の端末だけで動かす手順です"
 upstream_path: guides/local-ollama-setup.md
-upstream_blob: c3a46ed64d1a6d04088201d53390ccdbfa6dca5e
+upstream_blob: 84dbf8f4682b06da97b3c97591834fc19f819f44
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/local-ollama-setup
 ---
@@ -171,12 +171,12 @@ Ollama の既定のコンテキストは 2048 トークンです。ツールを�
 
 ```bash
 # Create a Modelfile that extends context
-cat > /tmp/Modelfile << 'EOF'
+cat > ~/.hermes/cache/scratch/Modelfile << 'EOF'
 FROM gemma4:31b
 PARAMETER num_ctx 64000
 EOF
 
-ollama create gemma4-64k -f /tmp/Modelfile
+ollama create gemma4-64k -f ~/.hermes/cache/scratch/Modelfile
 ```
 
 そのうえで、Hermes の設定のモデル名を `gemma4-64k` に変更します。

@@ -2,7 +2,7 @@
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: 6cdca06b3ee85e4dee212eae2a2a0ecdbfe111b0
+upstream_blob: 9e58f8ca3dd1bcb9a372af829df60f39e1ae53e6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -65,15 +65,15 @@ Hermes には、Nous のスタッフが目を通して取り込んだ MCP サー
 代わりに下のコマンドを案内します。
 
 ```bash
-hermes mcp                # interactive picker (default)
-hermes mcp catalog        # plain-text list, scriptable
-hermes mcp install n8n    # install a catalog entry by name
+hermes mcp                   # interactive picker (default)
+hermes mcp catalog           # plain-text list, scriptable
+hermes mcp install deepwiki  # install a catalog entry by name
 ```
 
 選択画面には、それぞれの今の状態が並びます。
 
 ```
-n8n          available              Manage and inspect n8n workflows from Hermes
+deepwiki     available              Ask questions about public GitHub repositories
 linear       enabled                Linear issue/project management (remote OAuth)
 github       installed (disabled)   GitHub repo + PR tools
 ```
@@ -83,6 +83,13 @@ github       installed (disabled)   GitHub repo + PR tools
 `optional-mcps/` に置かれていて、そこにあること自体が Nous の承認を意味します。
 利用者が投稿する枠はありません。項目は PR を取り込む形で追加されます。
 
+他社製の n8n ブリッジは、カタログからは導入できなくなりました。すでに入れてあるものは、
+`mcp_servers` の設定、資格情報、導入済みのファイル、選んだ道具をそのまま保ちます。設定済みの
+MCP サーバーとして読み込まれ続け、選択画面には独自の項目として並び、そこで道具の設定や
+有効・無効の切り替えもできます。できなくなるのは、カタログからの入れ直しだけです。この変更で、
+今あるつながりが [n8n 公式の MCP サーバー](https://docs.n8n.io/connect/connect-to-n8n-mcp-server/)
+へ移し替えられることはありません。
+
 カタログの項目が求めるものには、次のようなものがあります。
 
 - **API キー** — 導入するときに Hermes が尋ねて、値を `~/.hermes/.env` に
@@ -91,6 +98,29 @@ github       installed (disabled)   GitHub repo + PR tools
   MCP のクライアントがブラウザを開きます。
 - **OAuth**（Google や GitHub のような他社の窓口） — まだ認証していなければ、
   Hermes が `hermes auth <provider>` を案内します。
+
+### n8n 公式の MCP サーバー {#n8ns-official-mcp-server}
+
+`n8n-official` というカタログの項目は、n8n Cloud や自分で立てた n8n のインスタンスへ、HTTP と
+ブラウザでの OAuth を使って直接つなぎます。手元にブリッジを置く必要も、n8n の API キーも
+要りません。
+
+1. n8n の所有者か管理者に頼んで、**Settings > Instance-level MCP** を有効にしてもらいます。
+2. **Connect** を開き、`/mcp-server/http` で終わる **Server URL** を省略せずに控えます。編集画面の
+   URL ではありません。古い版では、MCP の設定ページに窓口がそのまま表示されます。
+3. `hermes mcp install n8n-official` を実行し、尋ねられたらその URL を入力します。
+4. ブラウザで OAuth を済ませます。必要なら `hermes mcp login n8n-official` を実行するか、
+   デスクトップかダッシュボードで、設定済みのサーバーの **Authorize** を押します。
+5. `hermes mcp configure n8n-official` で道具を見直してから、新しいセッションを始めるか
+   `/reload-mcp` を使います。
+
+Hermes のバックエンドから、その URL に届く必要があります。権限とワークフローの公開範囲は n8n の
+側が決めます。道具のなかには、ワークフローを書き換えたり実行したりするものもあります。
+[n8n の接続ガイド](https://docs.n8n.io/connect/connect-to-n8n-mcp-server/)を参照してください。
+
+この項目は、これまでのカタログの導入と保存の仕組みをそのまま使います。退役した `n8n` ブリッジ
+とは別のものなので、今あるつながり・資格情報・導入済みのファイル・道具の選択が置き換わることは
+ありません。
 
 ### 導入時に道具を選ぶ {#tool-selection-at-install-time}
 
@@ -313,6 +343,8 @@ mcp_servers:
 
 認可サーバーからの戻り（リダイレクト）は、RFC 9207 に照らして確かめます。サーバーのメタデータが `authorization_response_iss_parameter_supported` を案内している場合、一致する `iss` のない戻りははねられます。Figma の認可サーバー（`https://api.figma.com`）は、この対応を案内しているのに `iss` を付けてきません。そこで Hermes は、この発行元に限って、見つけた発行元の値で欠けている値を補い、警告をログに出します。これで `hermes mcp login figma` が最後まで通ります。`iss` が付いていて値が違う場合は引き続きはねられ、ほかのサーバーにはこの例外は適用されません。
 
+認可サーバーのメタデータの文書は、対象のサーバーが案内したとおりのサーバー名を名乗っていなければなりません（RFC 8414 §3.3）。別のサーバーの文書だった場合は、登録もログインも始める前にはねられます。完全一致でなくても受け入れる形がひとつだけあります。パス付きで案内されたサーバー（`https://host/path`）の文書を `https://host/.well-known/oauth-authorization-server/path` から取り出したとき、その文書が発行元として大元の `https://host` を名乗っている場合です。Strava の MCP 接続先は、ちょうどこの組み合わせを公開しています。この well-known の置き場所を操作できるのはその大元の運営者だけなので、文書は案内されたサーバー自身のものとして扱います。別の大元や別のパスを名乗る文書、リダイレクトや代わりの置き場所を経由しないと届かない文書は、引き続き `Authorization server metadata issuer mismatch` として失敗します。
+
 **遠隔のホストや、画面のないホストの場合。** Hermes がブラウザとは別の端末で動いているときは、ループバックの戻り先が手元のパソコンに届きません。それでも認証を終える方法があります。
 
 - **Hermes Desktop（自動）:** デスクトップアプリの MCP 設定画面から、遠くの裏側に対して OAuth のサインインを実行すると、*手元の*端末側でデスクトップが戻りを受け取り、その認可をゲートウェイまで自動で中継します。トンネルも貼り付けも代理サーバーも要りません。デスクトップアプリと裏側の両方が最新である必要があります。
@@ -352,6 +384,8 @@ mcp_servers:
 そのうえで `hermes mcp login googledrive` を実行します。登録済みのクライアントがあるので、Hermes は登録の手順を飛ばして、いつものブラウザでの認可に進みます。
 
 **つまずきどころ — 設定の自動読み込みとの競合。** Hermes のセッションを動かしたまま `~/.hermes/config.yaml` を編集すると、CLI は 30 秒の制限時間で MCP の接続を読み込み直します。対話的な OAuth を終えるにはこれでは足りません。設定を書き足したら、新しい端末で `hermes mcp login <server>` を実行してください。こちらは認証を終えるまで 5 分たっぷり待ちます。
+
+**承認に 5 分では足りないときは。** そのサーバーの項目に `oauth.timeout`（秒）を設定してください。`hermes mcp login`、ダッシュボード、デスクトップの認証のやり直しは、いずれも `oauth.timeout` + 15 秒（その項目の `connect_timeout` のほうが長ければそちら）まで待つようになります。それでも時間切れになったログインは、素っ気ない失敗の 1 行ではなく、`Connecting to MCP server '<name>' timed out after Ns` としてどちらの設定項目が効いているかを示します。
 
 ## mTLS / クライアント証明書 {#mtls-client-certificates}
 
@@ -439,7 +473,7 @@ Hermes は `~/.hermes/config.yaml` の `mcp_servers` から MCP の設定を読�
 mcp_servers:
   filesystem:
     command: "npx"
-    args: ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"]
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/allowed/dir"]
 ```
 
 ### メモリを食う stdio のサーバーを作り直す {#recycling-memory-heavy-stdio-servers}
@@ -795,6 +829,14 @@ npx --version
 ```
 
 そのうえで設定を見直し、Hermes を起動し直してください。
+
+`agent.log` の起動時のまとめには、登録できなかったサーバーが記録された接続エラーとともに全部並びます。どれが失敗したのかを消去法で突き止める必要はありません。
+
+```
+MCP: registered 116 tool(s) from 4 server(s) (2 failed: github (Connection closed); notion (HTTP 401 from POST https://mcp.notion.com/mcp))
+```
+
+前に失敗してまだ再試行の待ち時間の中にいるため、今回は見送られたサーバーは、`not attempted (in retry cooldown)` と表示されます。
 
 ### 遠隔（HTTP）のサーバーにつながらない {#remote-http-server-rejects-the-connection}
 

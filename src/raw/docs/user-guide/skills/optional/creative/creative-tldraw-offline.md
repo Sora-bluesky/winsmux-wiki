@@ -2,7 +2,7 @@
 title: "Tldraw Offline — tldraw のオフラインキャンバスをエージェントで操作・スクリプト化する"
 description: "tldraw のオフラインキャンバスをエージェントで操作・スクリプト化する"
 upstream_path: user-guide/skills/optional/creative/creative-tldraw-offline.md
-upstream_blob: 737d51391205f927c60c0089c72b923c3a3f1258
+upstream_blob: 6769657bd1f92dd3a54e686c3518a7bb8f16a99f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-tldraw-offline
 ---
@@ -16,7 +16,7 @@ tldraw のオフラインキャンバスをエージェントで操作・スク�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/creative/tldraw-offline` で導入します |
-| パス | `optional-skills/creative\tldraw-offline` |
+| パス | `optional-skills/creative/tldraw-offline` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium + Hermes Agent |
 | ライセンス | MIT |

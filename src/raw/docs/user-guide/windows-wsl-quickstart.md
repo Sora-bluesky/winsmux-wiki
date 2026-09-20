@@ -2,7 +2,7 @@
 title: "Windows（WSL2）ガイド"
 description: "WSL2 を使って Windows で Hermes Agent を動かす方法。セットアップ、Windows と Linux の間のファイルのやり取り、ネットワーク、よくあるつまずき"
 upstream_path: user-guide/windows-wsl-quickstart.md
-upstream_blob: 9cf804af52ca7bf076e44db8b0a198996dbfae7b
+upstream_blob: 76f7f1cca150b2f2cf13c9dd7226b05c3a6191f0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-wsl-quickstart
 ---

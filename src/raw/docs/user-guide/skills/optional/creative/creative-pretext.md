@@ -2,7 +2,7 @@
 title: "Pretext — DOM を使わない文字組みで、ブラウザで動く作品を作る"
 description: "DOM を使わない文字組みで、ブラウザで動く作品を作る"
 upstream_path: user-guide/skills/optional/creative/creative-pretext.md
-upstream_blob: 55ac2a6e89df4d7d527fbc6cd4665e6a6964ac89
+upstream_blob: 7f11acc13b0e62c8ac2ea82a90da5f21765cad80
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-pretext
 ---
@@ -16,7 +16,7 @@ DOM を使わない文字組みで、ブラウザで動く作品を作ります�
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/creative/pretext` で導入します |
-| パス | `optional-skills/creative\pretext` |
+| パス | `optional-skills/creative/pretext` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -176,7 +176,7 @@ while (true) {
 2. **ひな形から始めます**。
    - `templates/hello-orb-flow.html` — 動く球のまわりを回り込むテキスト（障害物を避ける型）
    - `templates/donut-orbit.html` — 発展的な例。実測した ASCII ロゴの障害物、ドラッグできるワイヤーの球と立方体、形が移り変わる場、選択できる DOM テキスト、開発時だけの操作パネル
-   - `write_file` で `/tmp/` かユーザーの作業場所に新しい `.html` を作ります。
+   - `write_file` で `~/.hermes/cache/scratch/` かユーザーの作業場所に新しい `.html` を作ります。
 3. 依頼に合った文章に**差し替えます**。本物の文章を 10〜100 文ほど。ダミー文は使いません。
 4. **見た目を詰めます**。フォント、配色、構図、操作。ここが本番なので、飛ばさないでください。
 5. **手元で確認します**。

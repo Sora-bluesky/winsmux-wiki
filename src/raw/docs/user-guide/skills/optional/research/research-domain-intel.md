@@ -2,7 +2,7 @@
 title: "Domain Intel — サブドメイン・SSL 証明書・WHOIS・DNS を受動的に調べる"
 description: "サブドメイン・SSL 証明書・WHOIS・DNS を受動的に調べる"
 upstream_path: user-guide/skills/optional/research/research-domain-intel.md
-upstream_blob: f1d27f6fe505d2a76e2f824e72ef5e0e91bfe817
+upstream_blob: a8da9488c4899b38347d07a5e7e0bd248ea469c1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-domain-intel
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/research/domain-intel` で導入します |
-| パス | `optional-skills/research\domain-intel` |
+| パス | `optional-skills/research/domain-intel` |
 | バージョン | `1.0.0` |
 | 作者 | FurkanL0, Hermes Agent |
 | ライセンス | MIT |

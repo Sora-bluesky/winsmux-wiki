@@ -2,7 +2,7 @@
 title: "ツールを追加する"
 description: "Hermes Agent に新しいツールを追加する方法 — スキーマ、ハンドラー、登録、ツールセット"
 upstream_path: developer-guide/adding-tools.md
-upstream_blob: 13bf774f2a7cbbd4e9f8f11eab2eb5207d3d5ea0
+upstream_blob: c625cb68f1f571b25b9c1d618284275d9924b97d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools
 ---
@@ -176,7 +176,7 @@ registry.register(
 
 ## エージェントループが横取りするツール {#agent-loop-intercepted-tools}
 
-一部のツール（`todo`、`memory`、`session_search`、`delegate_task`）は、セッションごとのエージェントの状態にアクセスする必要があります。これらはレジストリに届く前に、エージェントループ（`agent/tool_executor.py`。`agent/conversation_loop.py` から呼ばれます）が横取りします。スキーマ自体はレジストリが持ったままですが、この横取りを通らずに来た場合、`dispatch()` は予備のエラーを返します。
+一部のツール（`todo_list`、`memory`、`session_search`、`delegate_task`）は、セッションごとのエージェントの状態にアクセスする必要があります。これらはレジストリに届く前に、エージェントループ（`agent/tool_executor.py`。`agent/conversation_loop.py` から呼ばれます）が横取りします。スキーマ自体はレジストリが持ったままですが、この横取りを通らずに来た場合、`dispatch()` は予備のエラーを返します。
 
 ## 任意: セットアップウィザードへの組み込み {#optional-setup-wizard-integration}
 

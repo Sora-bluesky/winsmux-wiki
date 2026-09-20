@@ -2,7 +2,7 @@
 title: "Architecture Diagram — 暗い配色の SVG で構成図・クラウド図・インフラ図を HTML として作る"
 description: "暗い配色の SVG で構成図・クラウド図・インフラ図を HTML として作る"
 upstream_path: user-guide/skills/bundled/creative/creative-architecture-diagram.md
-upstream_blob: a352349efb6bd4ec72834edfb397ca4a2d6efa97
+upstream_blob: 977316e40fbc4f207c2ba2a42d8fec8b904063d4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-architecture-diagram
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative\architecture-diagram` |
+| パス | `skills/creative/architecture-diagram` |
 | バージョン | `1.0.0` |
 | 作者 | Cocoon AI (hello@cocoon-ai.com), ported by Hermes Agent |
 | ライセンス | MIT |

@@ -1,101 +1,104 @@
 ---
-title: "ストリーミング TTS の内部構造"
-description: "文チャンカー、ストリーミングプロバイダーの ABC、対応表、ストリーミング TTS プロバイダーの追加方法"
+title: "ストリーミング TTS の内部"
+description: "文分割チャンカー、ストリーミングプロバイダーの ABC、対応状況の表、ストリーミング TTS プロバイダーの追加方法"
 upstream_path: developer-guide/streaming-tts.md
-upstream_blob: 2cd77224e181fcd5af5ed159a334d4808638c074
+upstream_blob: c18df3ef8714bdb22f668850dc949f130303362b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/streaming-tts
 ---
 
 # ストリーミング TTS {#streaming-tts}
 
-Hermes は、音声がすべてそろうのを待ってから再生するのではなく、プロバイダーから
-届いた順に TTS 音声をストリーミング再生できます。この仕組みは、音声モード（CLI/TUI での
-リアルタイム会話）、ダッシュボードの speak-stream WebSocket、そしてゲートウェイの
-`StreamingTTSConsumer` を通じて、ストリーミング音声に対応したプラットフォームアダプターで使われます。
-音声での返答は、生成と音声合成がすべて終わってからではなく、最初の文節ができた時点で話し始めます。
+Hermes は、音声が全部そろうのを待たずに、プロバイダーから届いた端から
+TTS の音声を流せます。音声モード（CLI / TUI での会話）、ダッシュボードの
+speak-stream WebSocket、そしてゲートウェイの `StreamingTTSConsumer` を通じて
+ストリーミング音声に対応したプラットフォームアダプターが、この仕組みを使います。
+文章の生成と音声合成がすべて終わるのを待たず、最初のひと区切りができた時点で
+返事が喋りはじめます。
 
-## 構成 {#architecture}
+## 仕組み {#architecture}
 
-ストリーミングのパイプラインは 4 つの部分でできています。
+ストリーミングの流れは、4 つの部分でできています。
 
-1. **生成側** — LLM が応答を生成しながら、テキストの差分を出力します
-2. **文チャンカー** — `tools.tts_streaming.SentenceChunker` が差分をため込み、
-   `<think>` ブロックを取り除き（差分をまたいで分割されていても除去します）、
-   完成した文ごとに送り出します
-3. **TTS プロバイダー** — 登録された `StreamingTTSProvider` が、各文を
-   生の PCM チャンク（プロバイダーが宣言した `sample_rate` の int16 モノラル）に変換します
-4. **音声の出力先** — ローカル再生では `sounddevice.OutputStream`
-   （`tools.tts_tool_speaker.stream_tts_to_speaker`）、ゲートウェイでは
-   プラットフォームアダプターの `write_streaming_tts` の接続口（`gateway/streaming_tts_consumer.py`）です
+1. **生成側** — LLM が返事を作りながら、テキストの差分を送り出します
+2. **文分割チャンカー** — `tools.tts_streaming.SentenceChunker` が差分をためこみ、
+   `<think>` ブロックを（差分をまたいで分かれていても）取り除き、
+   文として完成した分から送り出します
+3. **TTS プロバイダー** — 登録された `StreamingTTSProvider` が、各文を生の PCM
+   チャンク（プロバイダーが宣言した `sample_rate` の int16 モノラル）に変えます
+4. **音声の出口** — 手元で再生するなら `sounddevice.OutputStream`
+   （`tools.tts_tool_speaker.stream_tts_to_speaker`）、ゲートウェイのプラットフォーム
+   アダプターなら `write_streaming_tts` の接続点（`gateway/streaming_tts_consumer.py`）
 
-チャンク単位の API を持たないプロバイダーでも、実績のある同期経路の
-`text_to_speech_tool` を通して*文*ごとに再生されるため、既定の edge でも会話のように話せます。
-読み上げるテキストはすべて `tools.tts_text_normalize.prepare_spoken_text` で整えられます
-（整形処理は 1 つで、全経路共通です）。
+チャンク対応の API を持たないプロバイダーでも、実績のある同期版
+`text_to_speech_tool` の経路を通って *文* 単位で再生されるので、
+既定の edge でも会話らしいテンポになります。
+読み上げるテキストはすべて `tools.tts_text_normalize.prepare_spoken_text` で
+整えられます（整形役はひとつ、経路は全部これを通ります）。
 
 ## プロバイダーの選び方 {#how-to-pick-a-provider}
 
-既定では、すでに設定済みのプロバイダー（`tts.provider`）がチャンク単位の API を持っていれば、
-ディスパッチャーはそのプロバイダーでストリーミングします。ストリーミングのためだけに、
-黙って別のプロバイダーの声に切り替えることはありません。
+既定では、すでに設定しているプロバイダー（`tts.provider`）にチャンク対応の API が
+あれば、そのままストリーミングします。ストリーミングしたいがために、
+黙って別のプロバイダーの声に差し替えることはありません。
 
-変更したい場合は、`config.yaml` で `tts.streaming.provider` を設定します。
+変えたいときは、`config.yaml` で `tts.streaming.provider` を設定します。
 
-- プロバイダー名（`elevenlabs`、`gemini`、`openai`、`xai`）を指定すると、そのストリーマーに固定されます
-- `auto` を指定すると、優先順位 `elevenlabs → gemini → openai → xai` を順にたどり、
-  認証情報が解決できた最初のものを使います。「使える中で最良のチャンク対応の声」を
-  明示的に選ぶ設定です
+- プロバイダー名（`elevenlabs`、`gemini`、`openai`、`xai`）を書くと、その配信役に固定されます
+- `auto` にすると `elevenlabs → gemini → openai → xai` の優先順で見ていき、
+  認証情報が通った最初のものを使います。「使えるチャンク音声のうち一番いいもの」を
+  自分から選ぶ設定です
 
 ```yaml
 tts:
   provider: gemini
   streaming:
     provider: gemini      # or "auto"
+    min_len: 20           # shortest first sentence (chars) spoken on its own; CJK setups use ~6
   gemini:
     model: gemini-2.5-flash-preview-tts
     voice: Kore
 ```
 
-## 対応表 {#capability-matrix}
+## 対応状況の表 {#capability-matrix}
 
-| プロバイダー | 通信方式                              | チャンク PCM | 認証情報 |
+| プロバイダー | 通信方式 | チャンク PCM | 認証情報 |
 |-------------|---------------------------------------|-------------|-------------|
 | elevenlabs  | チャンク HTTP（`pcm_24000`）            | 対応         | `ELEVENLABS_API_KEY` / `tts.elevenlabs` |
 | openai      | チャンク HTTP（`with_streaming_response`、`pcm`） | 対応 | `tts.openai.api_key` → 環境変数 → マネージドゲートウェイ |
 | gemini      | SSE（`streamGenerateContent?alt=sse`） | 対応         | `GEMINI_API_KEY` / `GOOGLE_API_KEY` |
-| xai         | WebSocket（`wss://api.x.ai/v1/tts`）   | 対応         | `XAI_API_KEY` を優先し、なければ xAI OAuth（サブスクリプションのベアラートークンは従量課金の TTS では 403 になります） |
-| edge、piper、kitten、neutts、mistral、minimax、deepinfra など | — | 非対応（文ごとの同期フォールバック） | 通常どおり |
+| xai         | WebSocket（`wss://api.x.ai/v1/tts`）   | 対応         | `XAI_API_KEY` を優先、なければ xAI の OAuth（サブスクリプションの bearer は従量課金の TTS で 403 になります） |
+| edge, piper, kitten, neutts, mistral, minimax, deepinfra, … | — | 非対応（文単位の同期処理で代替） | 通常どおり |
 
-認証情報の参照はすべて `resolve_provider_secret()` を通ります
-（設定 > 環境変数/.env > 認証情報プール）。環境変数を直接読むことはありません。ストリーミングの
-本文は 1 文あたり 16 MiB が上限で、同期プロバイダーでの「上流から受け取る本文には上限がある」
-という不変条件と同じです。
+認証情報の取得はすべて `resolve_provider_secret()` を通ります
+（設定ファイル > 環境変数 / .env > 認証情報プール）。環境変数を直接読むことはありません。
+受け取る本文は 1 文あたり 16 MiB が上限で、同期版プロバイダーが守っている
+「上流からの本文には上限を設ける」という不変条件と揃えてあります。
 
-## 新しいストリーミングプロバイダーを追加する {#adding-a-new-streaming-provider}
+## ストリーミングプロバイダーを新しく足す {#adding-a-new-streaming-provider}
 
-1. `tools/tts_streaming.py` で `StreamingTTSProvider` のサブクラスを作ります
-2. `sample_rate` を設定します（int16 モノラル以外なら `channels` / `sample_width` も設定します）
-3. `available()`（純粋な確認処理で、何もインストールしないこと）と、
+1. `tools/tts_streaming.py` で `StreamingTTSProvider` を継承します
+2. `sample_rate` を設定します（int16 モノラルでなければ `channels` と `sample_width` も）
+3. `available()`（何もインストールしない、純粋な判定だけの処理）と、
    生の PCM チャンクを返す `stream(self, text) -> Iterator[bytes]` を実装します
-4. `@register("yourname")` デコレーターを付けます
-5. `tests/tools/test_tts_streaming.py` にテストを追加します
+4. `@register("yourname")` を付けます
+5. `tests/tools/test_tts_streaming.py` にテストを足します
 
-ABC が契約を守らせ、レジストリがプロバイダーを見つけられるようにします。
-文のバッファ、停止イベント、音声の出力先は、ディスパッチャー（`stream_tts_to_speaker`）と
-ゲートウェイのコンシューマーが引き受けるので、自分で実装する必要はありません。
+契約は ABC が守らせ、プロバイダーは登録先から見つけられるようになります。
+文のバッファ、停止イベント、音声の出口は、振り分け役（`stream_tts_to_speaker`）と
+ゲートウェイの受け手が面倒を見てくれます。
 
 ## ゲートウェイでのストリーミング（プラットフォームアダプター） {#gateway-streaming-platform-adapters}
 
-`gateway/streaming_tts_consumer.py` は、エージェントのテキスト差分をアダプターの
-ストリーミング音声の接続口へ橋渡しします。アダプターは、
-`BasePlatformAdapter` の次のメソッドをオーバーライドすることで対応を宣言します。
+`gateway/streaming_tts_consumer.py` が、エージェントの差分とアダプターの
+ストリーミング音声の接続点をつなぎます。アダプター側は
+`BasePlatformAdapter` の次のものを上書きして対応します。
 
 - `supports_streaming_tts(chat_id, audio_format) -> bool`
 - `begin_streaming_tts / write_streaming_tts / finish_streaming_tts /
   abort_streaming_tts`
 
-どれも既定では非対応／何もしない実装なので、既存のアダプターには影響しません。
-あるターンのストリーミング音声が最後まで再生されると、そのターンのファイル全体での
-自動 TTS 返答は抑止されます（二重に再生されません）。音声が聞こえる前にストリーミングが
-失敗した場合、ゲートウェイは従来のファイル全体での音声返答に切り替えます。
+どれも既定では非対応・何もしない実装なので、いまあるアダプターには影響しません。
+ある往復のストリーミング音声が最後まで流れたときは、その往復のファイル一括での
+自動 TTS 返信は抑制されます（二重に鳴らないためです）。音が一度も鳴らないうちに
+ストリーミングが失敗したときは、ゲートウェイが従来のファイル一括の音声返信に戻します。

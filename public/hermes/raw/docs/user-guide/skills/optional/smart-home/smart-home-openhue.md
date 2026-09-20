@@ -1,22 +1,22 @@
 ---
-title: "Openhue — Philips Hue の照明・シーン・部屋を OpenHue CLI から操作する"
-description: "Philips Hue の照明・シーン・部屋を OpenHue CLI から操作する"
+title: "Openhue — OpenHue CLI で Philips Hue の照明・シーン・部屋を操作する"
+description: "OpenHue CLI で Philips Hue の照明・シーン・部屋を操作する"
 upstream_path: user-guide/skills/optional/smart-home/smart-home-openhue.md
-upstream_blob: ba4826f2ae2cabf585ca5558d01d79cfc74a88cd
+upstream_blob: 90e574a053b0d97d1f80ca421ac17d68b95b8997
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/smart-home/smart-home-openhue
 ---
 
 # Openhue {#openhue}
 
-Philips Hue の照明・シーン・部屋を OpenHue CLI から操作します。
+OpenHue CLI を通して、Philips Hue の照明・シーン・部屋を操作します。
 
 ## skill の情報 {#skill-metadata}
 
 | | |
 |---|---|
-| 提供元 | 追加インストール — `hermes skills install official/smart-home/openhue` で導入します |
-| パス | `optional-skills/smart-home\openhue` |
+| 提供元 | 追加インストール — `hermes skills install official/smart-home/openhue` で入れます |
+| パス | `optional-skills/smart-home/openhue` |
 | バージョン | `1.0.1` |
 | 作者 | community |
 | ライセンス | MIT |
@@ -26,35 +26,35 @@ Philips Hue の照明・シーン・部屋を OpenHue CLI から操作します�
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
 :::info
-以下は、この skill が呼び出されたときに Hermes が読み込む skill 定義の全文です。skill が有効なあいだ、エージェントはこれを指示として受け取ります。
+以下は、この skill が呼び出されたときに Hermes が読み込む定義の全文です。skill が有効なあいだ、エージェントはこれを指示として見ています。
 :::
 
 # OpenHue CLI {#openhue-cli}
 
-Hue ブリッジ越しに、Philips Hue の照明やシーンを端末から操作します。
+Hue Bridge 経由で、Philips Hue の照明とシーンを端末から操作します。
 
 ## 事前に必要なもの {#prerequisites}
 
 ```bash
 # Linux (pre-built binary — releases ship tarballs, not bare binaries)
 curl -sL "https://github.com/openhue/openhue-cli/releases/latest/download/openhue_Linux_x86_64.tar.gz" \
-  | tar -xz -C /tmp openhue \
-  && install -m 0755 /tmp/openhue ~/.local/bin/openhue
+  | tar -xz -C ~/.hermes/cache/scratch openhue \
+  && install -m 0755 ~/.hermes/cache/scratch/openhue ~/.local/bin/openhue
 # (use openhue_Linux_arm64.tar.gz on ARM64)
 
 # macOS
 brew install openhue/cli/openhue-cli
 ```
 
-はじめて動かすときは、Hue ブリッジ本体のボタンを押してペアリングします。ブリッジは同じローカルネットワークにつながっている必要があります。
+初回の実行では、Hue Bridge 本体のボタンを押してペアリングする必要があります。Bridge は同じローカルネットワーク上になければいけません。
 
-## こんなときに使います {#when-to-use}
+## 使いどころ {#when-to-use}
 
-- 「明かりをつけて / 消して」と言われたとき
-- 「リビングの明かりを暗くして」と言われたとき
-- 「シーンを設定して」「映画モードにして」と言われたとき
-- Hue の特定の部屋、ゾーン、電球ひとつを操作したいとき
-- 明るさ、色、色温度を変えたいとき
+- 「照明をつけて / 消して」
+- 「リビングの照明を暗くして」
+- 「シーンを設定して」「映画モードにして」
+- Hue の特定の部屋・ゾーン・個別の電球を操作したいとき
+- 明るさ・色・色温度を調整したいとき
 
 ## よく使うコマンド {#common-commands}
 
@@ -101,7 +101,7 @@ openhue set scene "Relax" --room "Bedroom"
 openhue set scene "Concentrate" --room "Office"
 ```
 
-## すぐ使える設定例 {#quick-presets}
+## すぐ使えるプリセット {#quick-presets}
 
 ```bash
 # Bedtime (dim warm)
@@ -121,8 +121,8 @@ openhue set room "Living Room" --off
 
 ## 補足 {#notes}
 
-- ブリッジは、Hermes が動いている端末と同じローカルネットワークにつないでおきます
-- はじめて動かすときは、Hue ブリッジのボタンを実際に押して許可する必要があります
-- 色の指定が効くのは色に対応した電球だけです（白色のみのモデルでは変わりません）
-- 照明名と部屋名は大文字と小文字を区別します。正確な名前は `openhue get light` で確かめてください
-- cron と組み合わせると、寝る時間に暗くする、起きる時間に明るくするといった予約点灯がうまく回ります
+- Bridge は、Hermes を動かしている端末と同じローカルネットワーク上にある必要があります
+- 初回の実行では、Hue Bridge のボタンを実際に押して認可する必要があります
+- 色の指定が効くのは色を出せる電球だけです（白色のみのモデルでは効きません）
+- 照明名と部屋名は大文字小文字を区別します。正確な名前は `openhue get light` で確認してください
+- cron ジョブと組み合わせると照明のスケジュール運用がしやすくなります（就寝時に暗く、起床時に明るく、など）

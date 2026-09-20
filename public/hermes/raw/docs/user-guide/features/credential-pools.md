@@ -2,7 +2,7 @@
 title: "認証情報プール"
 description: "プロバイダごとに複数の API キーや OAuth トークンをまとめておき、自動で切り替えてレート制限から復帰します。"
 upstream_path: user-guide/features/credential-pools.md
-upstream_blob: 2292f0977ff6b02116b0d1c05b4117c8be28f32d
+upstream_blob: 7eae3eab0a17db65ee88fb76bab850f0d2a64242
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/credential-pools
 ---
@@ -39,6 +39,13 @@ Your request
   → 401 auth expired?
       → Try refreshing the token (OAuth)
       → Refresh failed → rotate to next pool key
+  → 400 "model is not supported when using Codex with a ChatGPT account"?
+      → Bench this key for that model only, rotate to the next key (other models stay usable)
+      → Every key rejects the model → fallback_model; the model is skipped for the session
+  → HTTP 200 but `response.status: failed` (ChatGPT/Codex reports usage limits this way)?
+      → Same rules as above, keyed on the embedded error code/message:
+        quota/billing/auth → pool rotation first, provider fallback only once the pool is exhausted;
+        content-policy and other failures → no rotation
   → Success → continue normally
 ```
 
@@ -111,6 +118,8 @@ anthropic supports both API keys and OAuth login.
 Type [1/2]:
 ```
 
+`hermes auth add openai-codex` でログインするたびに、それぞれが別のプールの項目になります。ただし切り替えの効き目があるのは**別々の** OpenAI アカウントの場合だけです。同じアカウントで 2 回ログインすると、上流では 1 つのトークンの系統を共有することになるので、OpenAI は古いほうを取り消し、2 つ目の項目は枠を増やしません。Hermes は追加のときに警告を出します（`warning: this login is the same OpenAI account as openai-codex credential #N`）。別のアカウントでログインするか、1 つだけにしておいてください。
+
 ## CLI のコマンド {#cli-commands}
 
 | コマンド | 説明 |
@@ -121,6 +130,7 @@ Type [1/2]:
 | `hermes auth add <provider>` | 認証情報を追加します（種類とキーを尋ねられます） |
 | `hermes auth add <provider> --type api-key --api-key <key>` | 対話なしで API キーを追加します |
 | `hermes auth add <provider> --type oauth` | ブラウザでのログインを通して OAuth の認証情報を追加します |
+| `hermes auth add openai-codex --browser` | Codex 専用。既定のデバイスコードの代わりに、`localhost:1455` でブラウザによる認可コード + PKCE の流れでサインインします（デバイスコードの付与を禁じている組織向け）。ポートがふさがっているときはデバイスコードに戻ります。`auth.codex_login_flow: browser` を設定すると、Codex のログインすべてでこちらが既定になります |
 | `hermes auth add <provider> --priority 0` | 認証情報を追加し、`fill_first` の順番で先頭に置きます |
 | `hermes auth priority <provider> <target> <n>` | 認証情報を優先度 `n`（0 が最初に試されます）へ移します。残りは番号を付け直します |
 | `hermes auth remove <provider> <index>` | 1 から数えた番号で認証情報を削除します |
@@ -164,6 +174,19 @@ credential_pool_strategies:
 | `least_used` | 常にリクエスト数が最も少ないキーを選びます |
 | `random` | 健全なキーの中からランダムに選びます |
 
+### 健全な認証情報を後ろへ回す {#demoting-a-healthy-credential}
+
+プールが認証情報をいったん外すのは、プロバイダがそれを拒んだ*あと*です（429 / 402 / 401）。ほかの用途で現に使っているもの、たとえば週ごとの枠を対話的な作業のために取っておきたい Codex のログインなどを、使い切る*前*にゲートウェイの最初の選択肢から外しておきたいときは、削除するのではなく `fill_first` の順番の最後尾へ移します。
+
+```bash
+hermes auth list openai-codex                 # find the index, id or label
+hermes auth priority openai-codex 1 99        # 1-based index, entry id, or exact label; large n = last
+hermes auth priority openai-codex work-seat 0 # ...and back to the front later
+```
+
+`hermes auth priority <provider> <target> <priority>` は 1 つの認証情報の順番を入れ替え、残りに番号を振り直したうえで、新しい順番を `auth.json` に保存します。後ろへ回した項目は健全なままです。使い切った扱いにはならないので、Codex の枠の回復を調べる処理が触ることはなく、`hermes auth reset` が消すものもありません。時間で更新されることもなく、前に並ぶ認証情報がすべて外されれば、ちゃんと出番が来ます。
+すでに認証情報を握っているセッションは、切り替わるまでそれを使い続けます。新しいセッション（および次のゲートウェイ起動）は新しい順番に従います。
+
 ## エラーからの復帰 {#error-recovery}
 
 プールはエラーの種類ごとに動きを変えます。
@@ -173,6 +196,7 @@ credential_pool_strategies:
 | **429 レート制限** | 同じキーで 1 回だけやり直します（一時的なものとみなす）。続けて 2 回目の 429 が出たら次のキーへ切り替えます | 1 時間 |
 | **402 課金・上限** | ただちに次のキーへ切り替えます | 1 時間 |
 | **401 認証切れ** | まず OAuth トークンの更新を試みます。更新に失敗したときだけ切り替えます | 5 分 |
+| **400 Codex のモデル利用資格**（`The '<model>' model is not supported when using Codex with a ChatGPT account.`） | 拒まれたモデルについてだけこのキーを外し、次のキーへ切り替えます。ほかのモデルは同じキーを使い続けます。それ以外の 400 で切り替えが起きることはありません | `hermes auth reset` まで（モデルごと。利用資格は契約の性質であって、時間で開く枠ではありません） |
 | **キーをすべて使い切った** | 設定してあれば `fallback_model` へ回します | — |
 
 プロバイダから `reset_at` の時刻が返ってきた場合は、上の既定の待機時間より優先されます。
@@ -201,6 +225,15 @@ credential_pool_strategies:
 Codex、xAI、Nous の OAuth ログインのいずれにも当てはまります。切れた認証情報が時間まかせで
 輪に戻ることはないので、失われたログインは毎時間こっそり失敗し続けるのではなく、
 記録に一度だけ姿を見せます。
+
+**常時稼働の環境で Codex のログインがすべて切れているときは、取り込みを待たずサインインし直してください。** Hermes が Codex CLI の
+`~/.codex/auth.json` を自動で取り込むのは、*すでに持っているログインを直すため*だけです。つまり、自分の `openai-codex` の項目の
+更新に失敗し、かつ `auth.adopt_external_logins` が有効なときです（[借りてきた CLI のログイン](/hermes/docs/user-guide/security/#borrowed-cli-logins)を参照）。
+Codex の項目がすべて `dead`（あるいは削除済み）のプールには、直す相手が残っていません。そのため、画面のないゲートウェイや
+定時実行のプロファイルは、*その*ホームで `hermes auth add openai-codex`（名前付きプロファイルなら
+`hermes -p <profile> auth add openai-codex`）を実行するまで、Codex の認証情報を持たないままになります。このコマンドは
+Codex CLI からの取り込みを対話的に提案します。1 つのログインを共有したいプロファイルは、1 回しか使えない
+更新トークンをそれぞれ抱えるのではなく、同じ `HERMES_HOME` を指すようにできます。
 
 **待機中や切れている認証情報は、まっさらな導入とは違います。** 設定済みのプロファイルが、たった 1 つの
 認証情報が待機中か隔離中の状態で CLI を起動すると、起動時にその失敗が表示され、待機なら残りの待機時間が、

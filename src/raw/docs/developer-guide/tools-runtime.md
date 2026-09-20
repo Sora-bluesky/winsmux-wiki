@@ -2,7 +2,7 @@
 title: "ツールの実行基盤"
 description: "ツールの登録簿、ツールセット、振り分け、ターミナル環境の動き"
 upstream_path: developer-guide/tools-runtime.md
-upstream_blob: 52a2cc330a575289a79137c6171554548d869abe
+upstream_blob: 3c844f03f0d03ec6ed61825f29e958fb261b2180
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime
 ---
@@ -169,7 +169,7 @@ Return result string (or JSON error)
 
 次の 4 つは、エージェントの階層の状態（TodoStore、MemoryStore など）を必要とするため、登録簿での振り分けより前に横取りされます。
 
-- `todo` — 計画とタスクの管理
+- `todo_list` — 計画とタスクの管理
 - `memory` — 残しておくメモリへの書き込み
 - `session_search` — セッションをまたいだ想起
 - `delegate_task` — 副エージェントのセッションを起こす

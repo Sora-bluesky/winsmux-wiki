@@ -2,7 +2,7 @@
 title: "Systematic Debugging — 4 つの段階で根本原因を突き止めます。直す前に、まず不具合を理解します"
 description: "4 つの段階で根本原因を突き止めます。直す前に、まず不具合を理解します"
 upstream_path: user-guide/skills/bundled/software-development/software-development-systematic-debugging.md
-upstream_blob: 5417c330381ee9b25b97d4fa3f935a6fc8b1962d
+upstream_blob: 7f247c8484ff49990288b8d1a50e6fc56d2a4a90
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-systematic-debugging
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development\systematic-debugging` |
+| パス | `skills/software-development/systematic-debugging` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent（obra/superpowers から取り入れています） |
 | ライセンス | MIT |

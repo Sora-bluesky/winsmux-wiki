@@ -2,7 +2,7 @@
 title: "Ip As Logo — 32px でも見分けられる、最小限でかわいい IP マスコットのマークを作る"
 description: "32px でも見分けられる、最小限でかわいい IP マスコットのマークを作る"
 upstream_path: user-guide/skills/optional/creative/creative-ip-as-logo.md
-upstream_blob: 39256d7f010d46475ecbf0569c5482b9d2ad3f44
+upstream_blob: 54ec430c54c8dc788dc8dd04dbe13b4d4d51793a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-ip-as-logo
 ---

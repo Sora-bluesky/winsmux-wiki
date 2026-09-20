@@ -2,7 +2,7 @@
 title: "Xurl — xurl CLI で X/Twitter を扱う: 投稿の生データ検索、投稿、DM、メディア"
 description: "xurl CLI で X/Twitter を扱う: 投稿の生データ検索、投稿、DM、メディア"
 upstream_path: user-guide/skills/bundled/social-media/social-media-xurl.md
-upstream_blob: 7e42b4f9e76a2e2ddde946e3c23a779dce151e3e
+upstream_blob: c88091157f48c3238374db6d1fefaa047c66d783
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/social-media/social-media-xurl
 ---
@@ -16,7 +16,7 @@ xurl CLI で X/Twitter を扱います。投稿の生データ検索、投稿、
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/social-media\xurl` |
+| パス | `skills/social-media/xurl` |
 | バージョン | `1.1.3` |
 | 作者 | xdevplatform + openclaw + Hermes Agent |
 | ライセンス | MIT |

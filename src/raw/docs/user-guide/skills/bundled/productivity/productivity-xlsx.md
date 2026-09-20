@@ -2,7 +2,7 @@
 title: "Xlsx — Excel の .xlsx ブックと CSV を作る・読む・直す"
 description: "Excel の .xlsx ブックと CSV を作る・読む・直す"
 upstream_path: user-guide/skills/bundled/productivity/productivity-xlsx.md
-upstream_blob: cb8f40d87f8f858385ecfa00431b990bd9c66683
+upstream_blob: 235b232d73f554ec8fbf3624e10a35652efd1eec
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-xlsx
 ---
@@ -16,7 +16,7 @@ Excel の .xlsx ブックと CSV を作り、読み、直します。
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity\xlsx` |
+| パス | `skills/productivity/xlsx` |
 | バージョン | `1.1.0` |
 | 作者 | Nous Research |
 | ライセンス | MIT |

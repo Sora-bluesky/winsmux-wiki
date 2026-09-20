@@ -2,7 +2,7 @@
 title: "Dynamic Workflow — 計画をコードに持たせた並列展開、反証による検証、段階ごとの投入"
 description: "計画をコードに持たせた並列展開、反証による検証、段階ごとの投入"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow.md
-upstream_blob: 6c7073faf8481ec64690142a55e4facc5cc21e08
+upstream_blob: 221feca5b944e8417a4335ac55b0f475e65e6862
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow
 ---
@@ -52,7 +52,7 @@ hermes-agent そのもののリファクタリングや修正をまとめて行�
   子がさらに並列展開する必要があるときだけ `delegation.max_spawn_depth >= 2` にします。
 - 書き込みできる実行用ディレクトリを、ターミナル環境の一時ディレクトリから決めること
   （`$TMPDIR`、なければプラットフォームの一時ディレクトリ）。`/tmp` を直接書いてはいけません。Termux には
-  `/tmp` がなく、ネイティブの Windows ではそこで壊れます。`<tmp>/wf_<name>_<uuid>/` を実行ごとに一意に使い、
+  そうしたディレクトリがなく、ネイティブの Windows ではそこで壊れます。`<tmp>/wf_<name>_<uuid>/` を実行ごとに一意に使い、
   中断した以前の実行が残した古い出力を取り違えないようにします。
 - 決定的な処理の層に `execute_code` があること（その中で使えるのは `web_search`、`web_extract`、
   `read_file`、`write_file`、`search_files`、`terminal`、`patch` だけです）。

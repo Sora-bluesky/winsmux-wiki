@@ -2,7 +2,7 @@
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 45adae46043a9ac014fca758df9dd4a4ae4d4614
+upstream_blob: 4b050ad82283697bfed2463aa84a50499bd9b5c2
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -61,6 +61,10 @@ terminal.resize         clipboard.paste         image.attach
 `session.active_list`、`session.activate`、`session.close` は、TUI のセッション切り替えが使う「そのプロセスの中で今動いているセッション」を操作するためのものです。保存済みの記録を探すときは `session.list` や `/resume` を使い、これらのメソッドは TUI ゲートウェイのプロセスで現在開いているセッションにだけ使ってください。
 
 同じ認証済みゲートウェイの中では、動いているセッションを再開したり呼び出したりしても、前の接続が置き換わるのではなく、イベントの受け取り手がもう一つ増えるだけです。ストリーミングと端末のイベントは接続中のすべてのクライアントに届き、片方のクライアントが切断しても、別のクライアントが見ているセッションは終わりません。送信の排他制御と、設定された「実行中の入力の扱い」の方針はそのまま生きています。接続しているクライアントはそのセッションのサブエージェントに指示を差し込めますが、ブラウザーコントローラーの結果を受け取れるのは、そのコントローラーを登録した接続だけです。これは、別々のゲートウェイのプロセスが同じセッションに書き込めるようになるという意味ではありませんし、持ち主のプロセスを再起動してもプロンプトの受け付けが残るという意味でもありません。
+
+### `session.create` でのモデルの上書き {#model-overrides-on-sessioncreate}
+
+`session.create` では、セッションごとに `model` / `provider` を上書きできます。プロバイダー側で扱えない組み合わせ（`provider: anthropic` に `model: gpt-5.5` を指定した場合や、`provider` を書かずにプロファイルの設定が Anthropic になっている場合）は、最初のやり取りがプロバイダーで失敗するようなセッションを作ってしまう前に、JSON-RPC のコード `-32602` で断ります。`error.data` には `model` と `provider`、そしてそのプロバイダーの一覧から選んだ最大 5 件の `suggestions` が入り、`error.message` にも同じ内容が書かれます。この確認は通信せずに行われ、断るのは Hermes が「よそのものだ」と分かっている名前だけです。独自のエンドポイント（`custom`、`custom:<name>`）、取りまとめ役のサービス（OpenRouter、Nous など）、そのプロバイダー自身の系列にあるもので手元の一覧がまだ追いついていないモデル、どの一覧にも載っていない名前は、これまでどおり受け付けます。
 
 ### `prompt.submit` で履歴を巻き戻す {#rewinding-history-on-promptsubmit}
 

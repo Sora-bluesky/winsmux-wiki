@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: 83f8056ae1966103b777214b7a1c34c2e59f643e
+upstream_blob: a59ba090f0218ab39ce5bdf145118fe76d82251e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -34,6 +34,7 @@ hermes skills uninstall <skill-name>
 
 | スキル | 説明 |
 |-------|-------------|
+| [**agent-merge-conflict-arbiter**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-agent-merge-conflict-arbiter/) | 2 つのエージェントのあいだで起きたマージの衝突を、どちらにも肩入れせずに裁定します。 |
 | [**antigravity-cli**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli/) | Antigravity CLI（agy）を操作します。プラグイン、認証、サンドボックスに対応。 |
 | [**blackbox**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/) | 複数モデルを使う Blackbox AI の CLI にコーディング作業を任せます。 |
 | [**dynamic-workflow**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/) | 計画をコードで書いて並列に展開し、敵対的な検証と段階的な実行を行います。 |
@@ -47,7 +48,6 @@ hermes skills uninstall <skill-name>
 |-------|-------------|
 | [**evm**](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-evm/) | 読み取り専用の EVM クライアント。8 つのチェーンでウォレット、トークン、ガス代を確認します。 |
 | [**hyperliquid**](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid/) | Hyperliquid の相場データ、口座の履歴、取引の振り返りに使います。 |
-| [**pr-lens**](/hermes/docs/user-guide/skills/optional/software-development/software-development-pr-lens/) | コードの変更を、動くアーキテクチャ図やデータフロー図の SVG として描きます。 |
 | [**solana**](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-solana/) | Solana のウォレット、トークン、取引、NFT を米ドル建てで調べます。 |
 
 ## communication {#communication}
@@ -275,6 +275,7 @@ hermes skills uninstall <skill-name>
 | [**ast-grep**](/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/) | ast-grep で、構文木を踏まえた構造的なコード検索と書き換えを行います。 |
 | [**code-wiki**](/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/) | どんなコードベースからでも、解説文書と Mermaid の図を生成します。 |
 | [**grill-me**](/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/) | 実装に入る前に、計画を厳しく問いただす面談を行います。 |
+| [**pr-lens**](/hermes/docs/user-guide/skills/optional/software-development/software-development-pr-lens/) | コードの変更を、動くアーキテクチャ図やデータフロー図の SVG として描きます。 |
 | [**rest-graphql-debug**](/hermes/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug/) | REST/GraphQL API の切り分け。状態コード、認証、スキーマ、再現手順。 |
 | [**subagent-driven-development**](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) | delegate_task のサブエージェントで計画を実行します（2 段階の点検つき）。 |
 

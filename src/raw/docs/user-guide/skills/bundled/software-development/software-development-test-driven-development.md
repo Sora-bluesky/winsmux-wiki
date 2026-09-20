@@ -2,7 +2,7 @@
 title: "Test Driven Development — TDD: RED-GREEN-REFACTOR を守り、コードより先にテストを書きます"
 description: "TDD: RED-GREEN-REFACTOR を守り、コードより先にテストを書きます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-test-driven-development.md
-upstream_blob: 710771afb5bb8421a7216e90bfaa934e66696a63
+upstream_blob: 8b6ee02e346a1934cc8538739593d71b87b5bc62
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development
 ---
@@ -16,7 +16,7 @@ TDD: RED-GREEN-REFACTOR を守り、コードより先にテストを書きま�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development\test-driven-development` |
+| パス | `skills/software-development/test-driven-development` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent（obra/superpowers から取り入れています） |
 | ライセンス | MIT |

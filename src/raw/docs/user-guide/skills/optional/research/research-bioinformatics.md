@@ -2,7 +2,7 @@
 title: "Bioinformatics — ゲノム解析と計算生物学の 400 以上の skill への入口"
 description: "ゲノム解析と計算生物学の 400 以上の skill への入口"
 upstream_path: user-guide/skills/optional/research/research-bioinformatics.md
-upstream_blob: dae339a0490b268e0424afd16068ed5e1b5cbfde
+upstream_blob: ec08e6c7bb0e49e2041eff08513bf4e6e50b195b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-bioinformatics
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/research/bioinformatics` で導入します |
-| パス | `optional-skills/research\bioinformatics` |
+| パス | `optional-skills/research/bioinformatics` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium（teknium1）、Hermes Agent |
 | ライセンス | MIT |
@@ -51,18 +51,18 @@ sources:
 2. 該当のリポジトリを取ってきます（時間を節約するため浅いクローンにします）。
    ```bash
    # bioSkills (reference material)
-   git clone --depth 1 https://github.com/GPTomics/bioSkills.git /tmp/bioSkills
+   git clone --depth 1 https://github.com/GPTomics/bioSkills.git ~/.hermes/cache/scratch/bioSkills
 
    # ClawBio (runnable pipelines)
-   git clone --depth 1 https://github.com/ClawBio/ClawBio.git /tmp/ClawBio
+   git clone --depth 1 https://github.com/ClawBio/ClawBio.git ~/.hermes/cache/scratch/ClawBio
    ```
 3. 目当ての skill を読みます。
    ```bash
    # bioSkills — each skill is at: <category>/<skill-name>/SKILL.md
-   cat /tmp/bioSkills/variant-calling/gatk-variant-calling/SKILL.md
+   cat ~/.hermes/cache/scratch/bioSkills/variant-calling/gatk-variant-calling/SKILL.md
 
    # ClawBio — each skill is at: skills/<skill-name>/
-   cat /tmp/ClawBio/skills/pharmgx-reporter/README.md
+   cat ~/.hermes/cache/scratch/ClawBio/skills/pharmgx-reporter/README.md
    ```
 4. 取ってきた skill は参考資料として使ってください。これらは Hermes 形式の skill ではありません。その分野の専門家が書いた手引きとして扱います。正しいパラメーター、適切なツールの指定、検証済みのパイプラインが載っています。
 

@@ -2,7 +2,7 @@
 title: "Archify — 検証済みのインタラクティブな HTML 図（本体は上流で管理）"
 description: "検証済みのインタラクティブな HTML 図（本体は上流で管理）"
 upstream_path: user-guide/skills/optional/creative/creative-archify.md
-upstream_blob: 0cef5f532db239000b2deb413965c471b10f04f6
+upstream_blob: aaca38c574ae1c32ca70b31baa2ae17fedd61e3a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-archify
 ---

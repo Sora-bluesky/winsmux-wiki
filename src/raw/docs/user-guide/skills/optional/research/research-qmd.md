@@ -2,7 +2,7 @@
 title: "Qmd — メモ・資料・書き起こしを手元でまとめて検索する"
 description: "メモ・資料・書き起こしを手元でまとめて検索する"
 upstream_path: user-guide/skills/optional/research/research-qmd.md
-upstream_blob: ddc21fc07604e7e94b0991c2e5cb7f9e2d7f3e11
+upstream_blob: 2cefd00a1571d1738f0cbefe4c7cd70ee8ccfa5a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-qmd
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加の skill です。`hermes skills install official/research/qmd` で入れられます |
-| パス | `optional-skills/research\qmd` |
+| パス | `optional-skills/research/qmd` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |
@@ -309,9 +309,9 @@ cat > ~/Library/LaunchAgents/com.qmd.daemon.plist << 'EOF'
   <key>KeepAlive</key>
   <true/>
   <key>StandardOutPath</key>
-  <string>/tmp/qmd-daemon.log</string>
+  <string>/Users/YOU/.hermes/cache/scratch/qmd-daemon.log</string>
   <key>StandardErrorPath</key>
-  <string>/tmp/qmd-daemon.log</string>
+  <string>/Users/YOU/.hermes/cache/scratch/qmd-daemon.log</string>
 </dict>
 </plist>
 EOF

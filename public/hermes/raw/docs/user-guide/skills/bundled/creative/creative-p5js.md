@@ -2,7 +2,7 @@
 title: "P5Js — p5.js のスケッチ。ジェネラティブアート、シェーダー、インタラクティブ、3D"
 description: "p5.js のスケッチ。ジェネラティブアート、シェーダー、インタラクティブ、3D"
 upstream_path: user-guide/skills/bundled/creative/creative-p5js.md
-upstream_blob: 15145dfadee9594b8b59fc5ec9f30416441ee22d
+upstream_blob: 0246aacef2c903f754ab7d2c851cbbac3e5b3a2f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-p5js
 ---
@@ -16,7 +16,7 @@ p5.js のスケッチ。ジェネラティブアート、シェーダー、イ�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/creative\p5js` |
+| パス | `skills/creative/p5js` |
 | バージョン | `1.0.0` |
 | 作者 | SHL0MS, Hermes Agent |
 | ライセンス | MIT |

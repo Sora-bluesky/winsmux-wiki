@@ -2,7 +2,7 @@
 title: "Arxiv — arXiv の論文をキーワード・著者・分野・ID で探す"
 description: "arXiv の論文をキーワード・著者・分野・ID で探す"
 upstream_path: user-guide/skills/bundled/research/research-arxiv.md
-upstream_blob: f41cfcbfc9556f596f107a0ecbe930b87bbf0996
+upstream_blob: 9d0d19a99f430f71ceae1b4f23470a7fc8afc08a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-arxiv
 ---
@@ -16,13 +16,13 @@ arXiv の論文をキーワード・著者・分野・ID で探します。
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/research\arxiv` |
+| パス | `skills/research/arxiv` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Research`, `Arxiv`, `Papers`, `Academic`, `Science`, `API` |
-| 関連 skill | `ocr-and-documents` |
+| 関連 skill | [`pdf`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

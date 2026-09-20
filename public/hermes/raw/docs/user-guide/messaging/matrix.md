@@ -2,7 +2,7 @@
 title: "Matrix"
 description: "Hermes Agent を Matrix のボットとして設定する"
 upstream_path: user-guide/messaging/matrix.md
-upstream_blob: cc17a72702c1eb065842426e1ed813425f5eca97
+upstream_blob: aa110653de071dfc81e4ff638d9a140e18eaea5c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/matrix
 ---
@@ -19,10 +19,10 @@ Hermes は Synapse・Conduit・Dendrite・matrix.org など、どの Matrix ホ�
 
 | 状況 | 動作 |
 |---------|----------|
-| **DM** | Hermes はすべてのメッセージに応答します。`@mention` は要りません。DM ごとに別々のセッションを持ちます。DM で `@mentioned` されたときにスレッドを開きたい場合は `MATRIX_DM_MENTION_THREADS=true` を設定します。 |
-| **ルーム** | 既定では、Hermes は `@mention` されたときだけ応答します。`MATRIX_REQUIRE_MENTION=false` を設定するか、`MATRIX_FREE_RESPONSE_ROOMS` にルーム ID を足すと、メンションなしで応答するルームになります。ルームへの招待は自動で受け入れます。 |
+| **DM** | Hermes はすべてのメッセージに応答します。`@mention` は要りません。DM ごとに別々のセッションを持ちます。DM で `@mentioned` されたときにスレッドを開きたい場合は `MATRIX_DM_MENTION_THREADS=true` を設定します。参加者が 2 人以下のルームは、はっきり名前が付いていても同じように DM として扱われます。Matrix のクライアントは 1 対 1 のチャットに自動で名前を付けるので、名前だけでは見分けがつかないからです。 |
+| **ルーム** | 既定では、Hermes は `@mention` されたときだけ応答します。`MATRIX_REQUIRE_MENTION=false` を設定するか、`MATRIX_FREE_RESPONSE_ROOMS` にルーム ID を足すと、メンションなしで応答するルームになります。ルームへの招待は自動で受け入れます。あえて 2 人で作ったルームも DM として扱われるので（上を参照）、`MATRIX_ALLOWED_ROOMS`、`MATRIX_REQUIRE_MENTION`、`MATRIX_FREE_RESPONSE_ROOMS` を黙って素通りします。普通のルームとして動かしたい場合は、3 人目を入れてください。 |
 | **スレッド** | Hermes は Matrix のスレッド（MSC3440）に対応します。スレッド内で返信すると、Hermes はそのスレッドの文脈をルーム本体の流れから切り離して保ちます。ボットがすでに参加しているスレッドでは、メンションは要りません。 |
-| **自動スレッド化** | 既定では、Hermes はルームで応答するたびにスレッドを自動で作ります。会話が混ざらないようにするためです。`MATRIX_AUTO_THREAD=false` で無効にできます。DM のメッセージでもスレッドを自動で作りたい場合は `MATRIX_DM_AUTO_THREAD=true`（既定は false）を設定します。これは、DM で `@mentioned` されたときだけスレッドを開く `MATRIX_DM_MENTION_THREADS` とは別物です。 |
+| **自動スレッド化** | 既定では、Hermes はルームで応答するたびにスレッドを自動で作ります。会話が混ざらないようにするためです。`MATRIX_AUTO_THREAD=false` で無効にできます。DM のメッセージでもスレッドを自動で作りたい場合は `MATRIX_DM_AUTO_THREAD=true`（既定は false）を設定します。これは、DM で `@mentioned` されたときだけスレッドを開く `MATRIX_DM_MENTION_THREADS` とは別物です。参加者が 2 人以下のルームは DM として扱われるので（上を参照）、`MATRIX_AUTO_THREAD` ではなく `MATRIX_DM_AUTO_THREAD` に従います。 |
 | **コマンド** | Matrix のクライアントが送ってくれるなら、Hermes は通常の `/commands` を受け付けます。クライアントが `/` をローカルのコマンド用に押さえている場合は、代わりに `!commands` を使ってください。Hermes は既知の `!command` の別名を `/command` として扱います。 |
 | **操作用のボタン代わり** | 危険なコマンドの承認と `/model` の選択には、Matrix のリアクションを使えます。承認のリアクションは、その操作を求めた本人だけに限ることもできます。 |
 | **思考とツールの動き** | ゲートウェイの進捗表示を有効にすると、Matrix ではスレッド内の編集できる欄で思考とツールの動きを見せます。ルーム本体の流れが更新であふれません。 |

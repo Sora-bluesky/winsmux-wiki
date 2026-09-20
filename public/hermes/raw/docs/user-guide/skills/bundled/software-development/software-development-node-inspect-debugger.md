@@ -2,7 +2,7 @@
 title: "Node Inspect Debugger — --inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする"
 description: "--inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする"
 upstream_path: user-guide/skills/bundled/software-development/software-development-node-inspect-debugger.md
-upstream_blob: 24384cbd6604d99698a0a15eb75c2deab44048e4
+upstream_blob: 90fd243bce8585a56e667c58d95fc597f581a1ac
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-node-inspect-debugger
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development\node-inspect-debugger` |
+| パス | `skills/software-development/node-inspect-debugger` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -130,7 +130,7 @@ npm i -g chrome-remote-interface        # or project-local
 node --inspect-brk=9229 target.js &
 ```
 
-動かす側のスクリプト（`/tmp/cdp-debug.js` として保存します）:
+動かす側のスクリプト（`~/.hermes/cache/scratch/cdp-debug.js` として保存します）:
 
 ```javascript
 const CDP = require('chrome-remote-interface');
@@ -183,14 +183,14 @@ const CDP = require('chrome-remote-interface');
 実行します。
 
 ```bash
-node /tmp/cdp-debug.js
+node ~/.hermes/cache/scratch/cdp-debug.js
 ```
 
 Hermes 固有の注意: `chrome-remote-interface` は `ui-tui/package.json` に入っていません。プロジェクトを汚したくない場合は、使い捨ての場所に入れてください。
 
 ```bash
-mkdir -p /tmp/cdp-tools && cd /tmp/cdp-tools && npm i chrome-remote-interface
-NODE_PATH=/tmp/cdp-tools/node_modules node /tmp/cdp-debug.js
+mkdir -p ~/.hermes/cache/scratch/cdp-tools && cd ~/.hermes/cache/scratch/cdp-tools && npm i chrome-remote-interface
+NODE_PATH=~/.hermes/cache/scratch/cdp-tools/node_modules node ~/.hermes/cache/scratch/cdp-debug.js
 ```
 
 ## Hermes の ui-tui をデバッグする {#debugging-hermes-ui-tui}
@@ -265,8 +265,8 @@ await client.Profiler.enable();
 await client.Profiler.start();
 await new Promise(r => setTimeout(r, 5000));
 const { profile } = await client.Profiler.stop();
-require('fs').writeFileSync('/tmp/cpu.cpuprofile', JSON.stringify(profile));
-// Open /tmp/cpu.cpuprofile in Chrome DevTools → Performance tab
+require('fs').writeFileSync('~/.hermes/cache/scratch/cpu.cpuprofile', JSON.stringify(profile));
+// Open ~/.hermes/cache/scratch/cpu.cpuprofile in Chrome DevTools → Performance tab
 ```
 
 ```javascript
@@ -275,7 +275,7 @@ await client.HeapProfiler.enable();
 const chunks = [];
 client.HeapProfiler.addHeapSnapshotChunk(({ chunk }) => chunks.push(chunk));
 await client.HeapProfiler.takeHeapSnapshot({ reportProgress: false });
-require('fs').writeFileSync('/tmp/heap.heapsnapshot', chunks.join(''));
+require('fs').writeFileSync('~/.hermes/cache/scratch/heap.heapsnapshot', chunks.join(''));
 ```
 
 ## よくある落とし穴 {#common-pitfalls}

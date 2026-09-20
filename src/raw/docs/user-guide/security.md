@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、ユーザーの認可、コンテナの隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: d1e8526d5357efa148d8df3c6fa70a8981aface9
+upstream_blob: 386704cd29e5f00a86b8a74b31d232fbc998b451
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -238,7 +238,7 @@ approvals:
 
 ```
   ⚠️  DANGEROUS COMMAND: recursive delete
-      rm -rf /tmp/old-project
+      rm -rf ~/old-project
 
       [o]nce  |  [s]ession  |  [a]lways  |  [d]eny
 
@@ -387,7 +387,7 @@ export HERMES_WRITE_SAFE_ROOT=/path/to/project:/home/you/.hermes
 
 ### cron などの Hermes の状態 {#cron-and-other-hermes-state}
 
-`~/.hermes/cron/jobs.json` を直接 `patch` するようにエージェントへ頼まないでください。`cronjob` ツール、[`hermes cron`](/hermes/docs/user-guide/features/cron/)、`/cron` を使ってください。これらは正しい入口を通ってジョブの保存先を更新します。書き込みの安全策で直接の編集が止まったときは、ほかの Hermes の制御ファイルについても同じようにしてください。
+`~/.hermes/cron/jobs.json` を直接 `patch` するようにエージェントへ頼まないでください。`cronjob_manage` ツール、[`hermes cron`](/hermes/docs/user-guide/features/cron/)、`/cron` を使ってください。これらは正しい入口を通ってジョブの保存先を更新します。書き込みの安全策で直接の編集が止まったときは、ほかの Hermes の制御ファイルについても同じようにしてください。
 
 :::note 多層防御であって、固い境界ではありません
 書き込みの防御が効くのは `write_file` と `patch` だけですが、例外がひとつあります。Windows の NT / デバイス名前空間の行は読み取りにも適用され、`read_file`、`search_files`、`@file:`/`@folder:` のコンテキスト参照、ACP のファイルブリッジは、どれもパスを解決する前に、生の文字列の段階でそれらのパスを拒否します。`terminal` ツールは同じ OS ユーザーとして動くので、シェルのコマンドを使えば禁止されたパスを `cat` したり上書きしたりできます。禁止リストは事故を減らし、モデルにはっきりした「ここで止まれ」を伝えるためのもので、敵対的なエージェントや乗っ取られたエージェントを閉じ込めるものではありません。
@@ -534,6 +534,7 @@ _BASE_SECURITY_ARGS = [
     "--cap-add", "FOWNER",                        # Package managers need file ownership
     "--security-opt", "no-new-privileges",         # Block privilege escalation
     "--pids-limit", "256",                         # Limit process count
+    # no-tmp: ok — configures the sandbox's own tmpfs
     "--tmpfs", "/tmp:rw,nosuid,size=512m",         # Size-limited /tmp
     "--tmpfs", "/var/tmp:rw,noexec,nosuid,size=256m",  # No-exec /var/tmp
 ]
@@ -650,6 +651,17 @@ terminal:
 ```
 
 パスは `~/.hermes/` からの相対です。ファイルはコンテナの中の `/root/.hermes/` にマウントされます。この一覧を読むのは `tools/credential_files.py`（`terminal.credential_files`）です。`terminal:` のまとまりの中にありますが、読み込むのは認証情報のファイルの担当部分であって terminal のバックエンド本体ではないため、同梱の `DEFAULT_CONFIG` のひな形には入っていません。
+
+### 借りてきた CLI のログイン（Codex CLI、Claude Code） {#borrowed-cli-logins}
+
+Hermes が `openai-codex` や `anthropic` について自分で使えるログインを持っていないとき、Codex CLI の `~/.codex/auth.json` と Claude Code の `~/.claude/.credentials.json`（またはキーチェーンの項目）を借りて、代わりに更新することができます。どちらも1回かぎりで入れ替わる更新用のトークンを使うので、2つのプログラムが同じトークンの系列を持つと、先に更新したほうがもう一方の控えを無効にします。これが「ターミナルで1回ログインしたのに Hermes が失敗し続ける」（あるいはその逆）という形で表に出ます。これらの CLI を Hermes と並べて使うなら、Hermes には自前のログインを与えて、借りる動きを切ってください。
+
+```yaml
+auth:
+  adopt_external_logins: false   # default: true
+```
+
+この切り替えを切ると、Hermes はそれらのファイルを読むことも更新することもなくなります。認証情報プールの `claude_code` の行は消え、`hermes auth list` はその旨を1行表示し、ログにはプロセスごとに INFO が1行残ります。影響を受けるのは自動で借りる動きだけで、`hermes auth add openai-codex` は既存の Codex CLI のログインを取り込む前に、これまでどおり確認を求めます。自動の復旧も、Hermes がすでに持っている認証情報を直すだけです。別の ChatGPT ワークスペースへの Codex CLI / Desktop のログインは警告とともに拒否されますし（`hermes auth add openai-codex` で認証し直してください）、復旧の最中に完了したログインが上書きされることもありません。自分のログインは `hermes auth add anthropic` / `hermes auth add openai-codex` で追加します。
 
 ### サンドボックスごとのふるい分け {#what-each-sandbox-filters}
 

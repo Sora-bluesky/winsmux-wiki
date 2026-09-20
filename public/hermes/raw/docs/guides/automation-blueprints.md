@@ -2,7 +2,7 @@
 title: "自動化の型紙"
 description: "そのまま使える自動化の型紙です。予定した実行、GitHub のできごとをきっかけにした実行、API の Webhook、複数のスキルを組み合わせた流れをそろえています。"
 upstream_path: guides/automation-blueprints.md
-upstream_blob: 24512984677389ce720e7056720036dd1315ee63
+upstream_blob: 112896e5c2e053ab51df572d4d1b9a60df956a74
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/automation-blueprints
 ---
@@ -18,7 +18,7 @@ cron の書き方ではなく入力欄で値を決めたい場合は、[自動�
 :::tip 3 つのきっかけ
 | きっかけ | やり方 | 使うもの |
 |---------|-----|------|
-| **予定** | 決まった間隔で動きます（毎時、毎晩、毎週） | `cronjob` ツールか `/cron` スラッシュコマンド |
+| **予定** | 決まった間隔で動きます（毎時、毎晩、毎週） | `cronjob_manage` ツールか `/cron` スラッシュコマンド |
 | **GitHub のできごと** | PR が開かれた、push された、issue が立った、CI の結果が出たときに動きます | Webhook の仕組み（`hermes webhook subscribe`） |
 | **API の呼び出し** | 外部のサービスが自分のエンドポイントに JSON を POST します | Webhook の仕組み（config.yaml のルートか `hermes webhook subscribe`） |
 

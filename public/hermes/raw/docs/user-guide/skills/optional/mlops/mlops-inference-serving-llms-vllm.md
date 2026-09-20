@@ -2,7 +2,7 @@
 title: "Serving Llms Vllm — vLLM: 高スループットな LLM 配信、OpenAI API、量子化"
 description: "vLLM: 高スループットな LLM 配信、OpenAI API、量子化"
 upstream_path: user-guide/skills/optional/mlops/mlops-inference-serving-llms-vllm.md
-upstream_blob: e375a1c832aa8b8d86686adcc2fd9aa10a156b9f
+upstream_blob: 205f41a5fcae275abc555885e2d1e2ad53fe3af3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-inference-serving-llms-vllm
 ---
@@ -16,7 +16,7 @@ vLLM による高スループットな LLM 配信、OpenAI API、量子化を扱
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/serving-llms-vllm` で入れます |
-| パス | `optional-skills/mlops\inference\serving-llms-vllm` |
+| パス | `optional-skills/mlops/inference/serving-llms-vllm` |
 | バージョン | `1.0.1` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -363,13 +363,13 @@ vllm serve MODEL \
 
 ## さらに踏み込む {#advanced-topics}
 
-**サーバー配置のパターン**: Docker、Kubernetes、負荷分散の設定は [references/server-deployment.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\inference\serving-llms-vllm/references/server-deployment.md) を見てください。
+**サーバー配置のパターン**: Docker、Kubernetes、負荷分散の設定は [references/server-deployment.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/inference/serving-llms-vllm/references/server-deployment.md) を見てください。
 
-**性能の最適化**: PagedAttention の調整、継続的バッチ処理の詳細、ベンチマーク結果は [references/optimization.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\inference\serving-llms-vllm/references/optimization.md) を見てください。
+**性能の最適化**: PagedAttention の調整、継続的バッチ処理の詳細、ベンチマーク結果は [references/optimization.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/inference/serving-llms-vllm/references/optimization.md) を見てください。
 
-**量子化の手引き**: AWQ/GPTQ/FP8 の設定、モデルの準備、精度の比較は [references/quantization.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\inference\serving-llms-vllm/references/quantization.md) を見てください。
+**量子化の手引き**: AWQ/GPTQ/FP8 の設定、モデルの準備、精度の比較は [references/quantization.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/inference/serving-llms-vllm/references/quantization.md) を見てください。
 
-**困ったとき**: エラーメッセージの詳細、切り分けの手順、性能の診断は [references/troubleshooting.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\inference\serving-llms-vllm/references/troubleshooting.md) を見てください。
+**困ったとき**: エラーメッセージの詳細、切り分けの手順、性能の診断は [references/troubleshooting.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/inference/serving-llms-vllm/references/troubleshooting.md) を見てください。
 
 ## 必要なハードウェア {#hardware-requirements}
 

@@ -2,7 +2,7 @@
 title: "Jupyter Notebook — 動いている Jupyter カーネルで Python を少しずつ試す（hamelnb）"
 description: "動いている Jupyter カーネルで Python を少しずつ試す（hamelnb）"
 upstream_path: user-guide/skills/optional/data-science/data-science-jupyter-notebook.md
-upstream_blob: 3d5f5780ff75f0414daad20c5e4160c791fabea5
+upstream_blob: 5c059ab7959a7c4363c09609ebed75031300c9be
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/data-science/data-science-jupyter-notebook
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/data-science/jupyter-notebook` で導入します |
-| パス | `optional-skills/data-science\jupyter-notebook` |
+| パス | `optional-skills/data-science/jupyter-notebook` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -73,7 +73,7 @@ uv run "$SCRIPT" servers
 見つからなければ、起動します:
 ```
 jupyter-lab --no-browser --port=8888 --notebook-dir=$HOME/notebooks \
-  --IdentityProvider.token='' --ServerApp.password='' > /tmp/jupyter.log 2>&1 &
+  --IdentityProvider.token='' --ServerApp.password='' > ~/.hermes/cache/scratch/jupyter.log 2>&1 &
 sleep 3
 ```
 

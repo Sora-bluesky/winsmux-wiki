@@ -2,7 +2,7 @@
 title: "Rest Graphql Debug — REST/GraphQL API を調べる: ステータスコード、認証、スキーマ、再現手順"
 description: "REST/GraphQL API を調べる: ステータスコード、認証、スキーマ、再現手順"
 upstream_path: user-guide/skills/optional/software-development/software-development-rest-graphql-debug.md
-upstream_blob: e1d1b7a2d418cfb40ac3817edadf66fd50b31b3f
+upstream_blob: 307f04073ad04598ce248f816aa8a6a92193cae4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug
 ---
@@ -16,7 +16,7 @@ REST/GraphQL API を調べます。ステータスコード、認証、スキー
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/software-development/rest-graphql-debug` で入れます |
-| パス | `optional-skills/software-development\rest-graphql-debug` |
+| パス | `optional-skills/software-development/rest-graphql-debug` |
 | バージョン | `1.2.0` |
 | 作者 | eren-karakus0 |
 | ライセンス | MIT |

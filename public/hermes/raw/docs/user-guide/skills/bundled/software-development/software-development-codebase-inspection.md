@@ -2,7 +2,7 @@
 title: "Codebase Inspection — pygount でコードベースを調べる: 行数・言語の内訳・比率"
 description: "pygount でコードベースを調べる: 行数・言語の内訳・比率"
 upstream_path: user-guide/skills/bundled/software-development/software-development-codebase-inspection.md
-upstream_blob: 0e870c91a35a54c3dc3f8fce984aa45766a75d96
+upstream_blob: c8efd14b3cd8f8c6fd125ef74edeb72afd985073
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection
 ---
@@ -16,7 +16,7 @@ pygount でコードベースを調べます。行数、言語の内訳、比率
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development\codebase-inspection` |
+| パス | `skills/software-development/codebase-inspection` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

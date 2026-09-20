@@ -2,7 +2,7 @@
 title: "Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 description: "Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 upstream_path: user-guide/skills/bundled/software-development/software-development-python-debugpy.md
-upstream_blob: d410baeab99e036f042cda2602f1f7c813d23e21
+upstream_blob: 3ce8f84f62b155524d05342b48c875cc640e4b9a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy
 ---
@@ -16,7 +16,7 @@ Python のデバッグです。pdb の REPL と、debugpy のリモート接続�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development\python-debugpy` |
+| パス | `skills/software-development/python-debugpy` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -219,7 +219,7 @@ echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 **選択肢 1: `debugpy` 用の自作 CLI REPL** — 公式の機能ではありませんが、ごく小さな DAP クライアントを書けます。
 
 ```python
-# /tmp/dap_client.py
+# ~/.hermes/cache/scratch/dap_client.py
 
 HOST, PORT = "127.0.0.1", 5678
 s = socket.create_connection((HOST, PORT))

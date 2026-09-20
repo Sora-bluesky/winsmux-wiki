@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: b1aab7ae3fe32ca526320ae94c3a59cf9fec9b4b
+upstream_blob: ee3d49d29f120754c55040128f6378f546da87c0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -184,10 +184,10 @@ hermes plugins install owner/repo --ref 0123456789abcdef0123456789abcdef01234567
 Hermes はそのコミットを切り離した状態でチェックアウトし、`HEAD` が要求した SHA とぴったり一致することを確かめ、正規の出どころ、導入したリビジョン、固定の有無を、いまのプロファイルに記録します。`hermes plugins update` は固定されたプラグインを動かすことを拒みます。新しいコミットへ移すときは
 `hermes plugins install <source> --force --ref <new-commit>` で明示的に指定してください。プロファイル内に置かれる導入の記録には、設定の値も、環境の値も、秘密情報も、権限の付与も含まれません。
 
-エージェントのプラグインの同じ固定は Hermes Desktop でもできます。**Capabilities →
-Plugins → Install from Git** に *Pin to commit* という欄があり、40 文字の完全な SHA を入れられます。**Installed** では、
-固定したエージェントのプラグインに `pinned @ <sha8>` の印が付きます。
-単体のデスクトップのプラグインを導入した場合に、固定が保証されるわけではありません。`hermes plugins list` でも、Source の列に固定が表示されます
+同じ固定は Hermes Desktop でもできます。**Skills →
+Plugins → Install from Git** に *Pin to commit* という欄があり、40 文字の完全な SHA を入れられます。
+プラグインの一覧では、固定して導入したものすべてに `pinned @ <sha8>` の印が付くので、
+チーム全員が同じコミットで動いていることを確かめられます。`hermes plugins list` でも、Source の列に固定が表示されます
 （`git pinned@<sha8>`）。固定は非公開のリポジトリでも使えます。資格情報は、下で説明する保存済みのものが同じように使われます。
 
 ### 非公開のリポジトリから導入する {#installing-from-a-private-repository}
@@ -209,6 +209,10 @@ Plugins → Install from Git** に *Pin to commit* という欄があり、40 �
 SSH の出どころ（`git@host:owner/repo.git`）は、これまでどおり ssh-agent で認証します。
 同じ探し方は `hermes plugins update`、カタログからの git 経由の MCP の導入、
 git の URL から取り寄せるプロファイルの配布物にも使われます。
+
+`hermes doctor` は、設定されている `GITHUB_TOKEN` / `GH_TOKEN` を `api.github.com` へ送って
+確かめます（**API Connectivity** の項目です）。GitHub に断られた場合は、その変数の名前と、
+期限切れのトークンが書かれている `.env` ファイルを示すので、消すか入れ替えるかを判断できます。
 
 ### 許可リストが門にしないもの {#what-the-allow-list-does-not-gate}
 
@@ -367,38 +371,29 @@ hermes plugins disable my-plugin             # remove from allow-list + add to d
 hermes plugins capabilities [my-plugin]      # declared vs granted capabilities
 ```
 
-### デスクトップの Installed と Browse {#installed-and-browse-in-desktop}
-
-**Capabilities → Plugins** を開きます。**Installed** は、アプリのデスクトップのプラグインの登録簿と、
-選んでいるプロファイルでのエージェントのプラグインの実際の状態を読み、必要に応じて両方を 1 行にまとめて表示します。
-カタログの項目を導入済みとみなして並べた一覧ではありません。**Browse** はアプリ本来のカタログの画面で、
-Web サイトを埋め込んだものではありません。Skills と同じ **Installed / Browse** のタブを使い、上に検索欄、
-その下の 1 行にタブの切り替えと操作が並びます。Browse の既定はカード表示で、
-絞り込みの右にリスト表示とカード表示のアイコンがあります。どちらの表示を選んだかは Skills と共有され、
-次回も覚えています。カードをクリックすると詳しい説明が読めます。Install を押すと、
-これまでと同じ「確認してから導入する」ダイアログが開きます。
-
-デスクトップと公開の[プラグインカタログ](https://hermes-agent.nousresearch.com/plugins)は、同じ CDN の
-スナップショット [`/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json) を使います。
-公開の別名は、デスクトップが取りに行く URL
-`https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` と同じデータを返します。これは文書の
-ビルドが `plugin-catalog/*.yaml` とキャッシュしたスター数から作ります。同じ公開の際に、
-導入の仕組みが使う「削除された項目の一覧」も配られます。
-Browse で眺めるだけなら、GitHub にその場で問い合わせたり、ソースのリポジトリを取りに行ったりはしません。
-コードを取得するのは、別の手順である導入のときだけです。
-
 ### ワンクリック導入のリンク（デスクトップ） {#one-click-install-links-desktop}
 
 Hermes Desktop は `hermes://` の URL 形式を登録するので、Web サイトや README、
 やり取りの中のメッセージから、プラグインの導入へ直接つなげられます。
 
 ```
-hermes://plugin/install?repo=owner/repo            # main install link
+hermes://plugin/install?catalog=NAME               # catalog entry, installs the reviewed pin
+hermes://plugin/install?repo=owner/repo            # any git repo
 hermes://plugin/install?repo=owner/repo&enable=1   # enable the agent plugin after install
 hermes://plugin/install?repo=owner/repo&force=1    # replace an existing install
+hermes://plugin/install?catalog=<name>             # reviewed catalog entry at its pinned commit
 ```
 
-クリックすると Hermes が開き、**確認のダイアログ**が出ます。リポジトリの id、
+`catalog=<name>` の形は、[プラグインカタログ](/hermes/docs/user-guide/features/plugin-catalog/)の
+どのカードにもある **Open in Hermes Desktop** のボタンが使っているものです。Desktop はその名前を
+動いているカタログ（**Capabilities → Plugins** の選択画面が見せているのと同じ配信元）に照らして
+解決し、アプリの中で選んだときとまったく同じ**審査済みのカタログの項目**のダイアログを開きます。
+エージェント側は、ブランチの先頭ではなく、カタログが固定しているコミットで入ります。このリンクは
+リポジトリの URL を運びません。カタログにない名前はエラーの通知が出るだけで、それ以上は何も起きません。
+git のパスとして読み直されることはないので、見覚えのある名前の裏に審査されていないリポジトリを
+紛れ込ませることはできません。
+
+`repo=` のリンクをクリックすると Hermes が開き、**確認のダイアログ**が出ます。リポジトリの id、
 「導入する前に」の注記、GitHub を見るためのリンクとクローンのリンクが並びます。そのあと
 リポジトリを浅くクローンして、何が入っているのかを調べます（**エージェントのプラグイン**（バックエンドの
 Python）、**デスクトップのプラグイン**（アプリの画面）、あるいはその両方です）。どの部品を入れるかを
@@ -412,22 +407,6 @@ Python）、**デスクトップのプラグイン**（アプリの画面）、�
 Plugins → Install from Git** からも開けます。以前からの `hermes://plugin-agent/…` と
 `hermes://plugin-desktop/…` の URL も、同じダイアログへつながります。開発版
 （`npm run dev`）では形式が `hermes-dev://` になります。
-
-公開の[プラグインカタログ](https://hermes-agent.nousresearch.com/plugins)では、どのカードにも **Install in Hermes** があります。
-カタログのリンクには、`catalog_name`、URL エンコードした `repo`（ある場合は
-`#subdir` を含みます）、`sha` が付きます。
-
-```text
-hermes://plugin/install?repo=owner%2Frepo&catalog_name=example-plugin&sha=0123456789abcdef0123456789abcdef01234567
-```
-
-SHA のパラメーターは表示のための情報にすぎません。エージェントのプラグインを導入するときは、
-確定した時点でバックエンドが `catalog_name` を審査済みの固定コミットに解決します。
-リンクでその固定を上書きすることはできません。単体のデスクトップのプラグインについては、表示された SHA を
-固定の保証と受け取らないでください。これらのカタログ用のパラメーターには、更新したデスクトップのビルドが要ります。
-古いビルドはリポジトリのリンクしか理解しないことがあります。アプリが無い、または古すぎる場合は、
-デスクトップを更新するか、開いたカードにあるコピーできる
-`hermes plugins install <catalog-name>` のコマンドを使えば、カタログからの解決を保ったまま導入できます。
 
 Web サイト側に SDK は要りません。ふつうのリンクで動きます。
 
@@ -662,10 +641,35 @@ hermes plugins pack export --enabled-only       # only plugins.enabled
 dangerous で止めたときは、その原因になった重大な指摘を名前で示します（例:
 `1 critical of 42 findings (destructive_root_rm)`）。そのため、止める理由になった 1 行が合計件数の陰に隠れることはありません。
 
-プラグインの最上位にあるテスト用のツリー（プラグインのルート直下の `tests/`、`test/`、`testing/`、`spec/`、`specs/`、
-`fixtures/`）も検査されます。プラグインの `__init__.py` はそこから import できるので、実行時に動くコードだからです。
-ただし、そこで見つかった重大な指摘は **caution** 止まりになります。これらのフィクスチャは、プラグインが悪意のある文字列をはじくことを確かめるために、あえてそうした文字列を持っているからです。
-そのため導入を頭から止めるのではなく、確認を求め、`--force` で通せます。同じ指摘がほかのファイル（`setup.sh`、`src/spec/…`）にあれば、これまでどおり **dangerous** です。
+導入の時点でその端末上では動きようがない文章は、プラグインの振る舞いではなく**文脈**として採点されます。
+つまり指摘の重さを下げることはあっても、指摘そのものを消すことはありません。どの指摘も、
+ファイル名と行番号を添えて報告に残ります。
+
+- **説明の文章**（`README.md`、`AGENTS.md`、`docs/**/*.md`、`.txt`、
+  `.rst`、`.html`）だけで **dangerous** になることはありません。そこに引用されたコマンドや
+  認証情報の置き場所（アンインストールの手順、`~/.ssh` を名指しした「やらないこと」の一覧）は
+  重さが 1 段下がり、README がそのプラグイン**自身**の導入先ディレクトリを消す例
+  （`rm -rf "$HOME/.hermes/plugins/<name>"`）は注記どまりです。エージェントに向けた形のものは
+  重さがそのままです。プロンプトの注入、Markdown を使った持ち出し、エージェントの設定の書き換え、
+  `curl … | sh` の 1 行、`authorized_keys` への追記、漏れた提供元のキーがこれにあたります。
+  同梱された `skills/` のツリーの中身や `after-install.md` も、エージェントが指示として読むので
+  同じ扱いです。
+- **テスト用のツリーとフィクスチャ**（プラグインのルート直下の `tests/`、`test/`、`testing/`、`spec/`、
+  `specs/`、`fixtures/`、どの深さにあってもよい `__tests__/` と `__fixtures__/`、
+  `*.test.*`、`*.spec.*`、`test_*.py`、`*_test.*`）も検査されます。プラグインの `__init__.py` が
+  そこから import できるからです。ただし、文字列として置いてあるだけの悪意ある例
+  （`verdict_for("rm -rf /")`、偽の `sk-…` のキーを含む伏せ字の見本集）は注記どまりで、
+  import した時点で動いてしまうテストのコード（`os.system('rm -rf /')`）は **caution** 止まりです。
+  同じ指摘がほかのファイル（`setup.sh`、`src/spec/…`）にあれば、これまでどおり **dangerous** です。
+- **行まるごとのコメントと `CHANGELOG.md`** は防御のしかたを説明するものなので、
+  説明の文章と同じ採点になります。
+- **復号すると画像や動画の見出しになる Base64**（データ URI や JSON の飾りに入った
+  PNG / JPEG / GIF / WOFF / PDF など）は参考情報です。`base64 -d` を文字列を扱う道具
+  （`grep`、`jq`）へ渡す形は注記どまりですが、シェルや実行環境へ渡す形は重さがそのままです。
+  `sudo` や `env|` が正規表現の選択肢の 1 つとして書かれている場合
+  （`/approval|sudo|secret/` のような伏せ字の型）は注記ですが、コマンドの文字列の中
+  （`subprocess.run("sudo …")`）にあるならそうではありません。
+
 同じように、実行時に動く `.py` ファイルの `if __name__ == "__main__":` による自己テストの中にある、
 ありがちなサンプルのトークン（`hardcoded_secret`）も **caution** 止まりになります。
 読み込みの仕組みはプラグインを import するだけで、そのブロックを動かすことはないからです。

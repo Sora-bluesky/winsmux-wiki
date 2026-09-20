@@ -2,7 +2,7 @@
 title: "Hermes S6 Container Supervision — Hermes の Docker イメージで s6 サービスを直したり調べたりする"
 description: "Hermes の Docker イメージで s6 サービスを直したり調べたりする"
 upstream_path: user-guide/skills/optional/devops/devops-hermes-s6-container-supervision.md
-upstream_blob: e957e7bdb419689b1a768c348f8d80aeab63ed23
+upstream_blob: 94998a5d0a1c063d4bc95a9a2a2e12cbbd735d7c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision
 ---
@@ -16,7 +16,7 @@ Hermes の Docker イメージで s6 サービスを直したり調べたりし�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/devops/hermes-s6-container-supervision` で入れます |
-| パス | `optional-skills/devops\hermes-s6-container-supervision` |
+| パス | `optional-skills/devops/hermes-s6-container-supervision` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

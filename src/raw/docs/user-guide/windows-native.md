@@ -2,7 +2,7 @@
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: e895e5822ba12acb5226c33b47000660474752e0
+upstream_blob: 7f16485481dab1e20bef4ab0d330b3382b0e0577
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -200,7 +200,7 @@ hermes gateway uninstall   # Removes schtasks entry, Startup shortcut, pid file
 
 ### なぜ Windows サービスにしないのか {#why-not-a-windows-service}
 
-サービスはインストールに管理者権限が要り、ゲートウェイの生存期間がユーザーのログインではなく端末の起動に結び付いてしまいます。Hermes を使う人がふつうに望むのは「ログインすればゲートウェイが使える、ログアウトすれば消える」という形です。タスクスケジューラは、昇格なしでちょうどそれを実現します。どうしてもサービスにしたい場合は `nssm` や `sc create` を手作業で使えますが、おそらくその必要はありません。
+サービスはインストールに管理者権限が要り、ゲートウェイの生存期間がユーザーのログインではなく端末の起動に結び付いてしまいます。Hermes を使う人がふつうに望むのは「ログインすればゲートウェイが使える、ログアウトすれば消える」という形です。タスクスケジューラは、昇格なしでちょうどそれを実現します。どうしてもサービスにしたい場合は `nssm` や `sc create` を手作業で使えますが、おそらくその必要はありません。それでも作るなら、名前を `Hermes*` にするか、実行ファイルのパスを Hermes を入れた場所の中（`venv\Scripts\hermes.exe`、チェックアウトしたディレクトリ、`gateway-service\` のいずれか）に向けてください。`hermes update` は、サービス制御マネージャーを通して Hermes のものだと確かに言い切れるサービスだけを止めて動かし直し、タスクスケジューラから起動したゲートウェイは PID を見て一時停止します（タスクスケジューラそのものには手を触れません）。
 
 ## データの配置 {#data-layout}
 

@@ -2,7 +2,7 @@
 title: "Stripe Projects — Stripe Projects で SaaS を用意し、認証情報を同期する"
 description: "Stripe Projects で SaaS を用意し、認証情報を同期する"
 upstream_path: user-guide/skills/optional/payments/payments-stripe-projects.md
-upstream_blob: c1a7279403cc1be2483157713fcd141089c874c2
+upstream_blob: 8e94eba01457bd62396d82a479b678472e563701
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/payments/payments-stripe-projects
 ---
@@ -16,7 +16,7 @@ Stripe Projects で SaaS を用意し、認証情報を同期します。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/payments/stripe-projects` で入れます |
-| パス | `optional-skills/payments\stripe-projects` |
+| パス | `optional-skills/payments/stripe-projects` |
 | バージョン | `0.1.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |

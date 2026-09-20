@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: af7b87610e089446e99434b773a2f0eb880f1ad6
+upstream_blob: 33cc4aa318b0ce1298682d74262a6eef3c628a6e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -26,6 +26,7 @@ Hermes は、プロセスの環境変数と、利用者が管理する秘密に�
 | `AI_GATEWAY_BASE_URL` | AI Gateway のベース URL を上書きします（既定: `https://ai-gateway.vercel.sh/v1`） |
 | `OPENAI_API_KEY` | OpenAI 互換の独自エンドポイント向けの API キー（`OPENAI_BASE_URL` と一緒に使います） |
 | `OPENAI_BASE_URL` | 独自エンドポイントのベース URL（VLLM、SGLang など） |
+| `HERMES_CODEX_BASE_URL` | `openai-codex`（ChatGPT のサブスクリプション）プロバイダの通信を、既定の Codex バックエンドではなくプロキシ経由に切り替えます。この認証情報を使うところすべてに効きます。プールの解決、補助クライアントと生のクライアント、401/429 が返ったときの認証情報の切り替えが対象です。これを設定していないときは、`model.provider: openai-codex` の下にある `model.base_url` が次点の上書きになります。 |
 | `LM_API_KEY` | LM Studio（`lmstudio` プロバイダ）の API キー。手元のサーバーでは形だけの値であることが多いです |
 | `LM_BASE_URL` | LM Studio のベース URL（既定: `http://localhost:1234/v1`） |
 | `COPILOT_GITHUB_TOKEN` | Copilot API 用の GitHub トークン。優先順位は 1 番目です（OAuth の `gho_*` か、細かい権限の PAT `github_pat_*`。従来型の PAT `ghp_*` には **対応していません**） |
@@ -232,6 +233,7 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `HERMES_LANGFUSE_RELEASE` | 記録に付ける公開・版のタグ |
 | `HERMES_LANGFUSE_SAMPLE_RATE` | SDK の抽出率 0.0〜1.0（既定: `1.0`） |
 | `HERMES_LANGFUSE_MAX_CHARS` | 直列化した中身の、項目ごとの切り詰め（既定: `12000`） |
+| `HERMES_LANGFUSE_MAX_DEPTH` | 記録する道具の入力・出力で、どの深さの入れ子まで残すかです。これより深い値は `<max-depth>` になります（既定: `4`。おかしな値のときは警告を出して既定のままにします） |
 | `HERMES_LANGFUSE_DEBUG` | `true` にすると、プラグインの詳しいログが `agent.log` に出ます |
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` / `LANGFUSE_BASE_URL` | Langfuse の SDK の標準の名前です。対応する `HERMES_LANGFUSE_*` が未設定のときの予備として受け付けられます。 |
 
@@ -351,6 +353,7 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `DISCORD_AUTO_THREAD` | 対応している場面で、長い返信を自動でスレッドにします |
 | `DISCORD_ALLOW_ANY_ATTACHMENT` | `true` にすると、どんな種類の添付も受け取ります（組み込みの PDF / テキスト / zip / オフィス文書の許可リストに限りません）。分からない種類のものは手元に保存され、エージェントにはローカルのパスとして渡されるので、`terminal` / `read_file` / `ffprobe` で調べられます。既定は `false`。 |
 | `DISCORD_MAX_ATTACHMENT_BYTES` | ゲートウェイが保存する添付 1 つあたりの最大バイト数。既定は `33554432`（32 MiB）。`0` にすると上限なしになります（書き出しの間、添付はメモリ上に保持されます）。 |
+| `DISCORD_FREE_RESPONSE_AUTO_THREAD` | `true` にすると、メンションが要らないチャンネル（`DISCORD_FREE_RESPONSE_CHANNELS` に並べたもの）でも、トップレベルのメッセージごとにスレッドを自動で作ります。既定は `false` で、メンションが要らないチャンネルはその場に返信します。`DISCORD_AUTO_THREAD=true` が必要です。`DISCORD_NO_THREAD_CHANNELS` のほうが引き続き優先されます。 |
 | `DISCORD_REACTIONS` | 処理中にメッセージへ絵文字のリアクションを付けます（既定: `true`） |
 | `DISCORD_IGNORED_CHANNELS` | ボットが決して応答しないチャンネル ID をカンマ区切りで指定します |
 | `DISCORD_NO_THREAD_CHANNELS` | ボットが自動でスレッドを作らずに応答するチャンネル ID をカンマ区切りで指定します |
@@ -521,19 +524,19 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `MATRIX_ALLOW_ALL_USERS` | どの Matrix の利用者でもボットを動かせるようにします（開発時のみ）。 |
 | `MATRIX_HOME_CHANNEL` | cron や通知の配信に使う既定の部屋 ID。 |
 | `MATRIX_HOME_CHANNEL_NAME` | Matrix のホームの部屋の表示名。 |
-| `MATRIX_ALLOWED_ROOMS` | ボットの応答を引き起こせる Matrix の部屋 ID をカンマ区切りで指定します |
+| `MATRIX_ALLOWED_ROOMS` | ボットの応答を引き起こせる Matrix の部屋 ID をカンマ区切りで指定します。自動的に DM とみなされた部屋（参加者が 2 人以下の部屋は、名前に関係なくそう扱われます）には効かず、そちらは常に応答します。 |
 | `MATRIX_HOME_ROOM` | こちらから送るメッセージの配信に使う部屋 ID（例: `!abc123:matrix.org`） |
 | `MATRIX_ENCRYPTION` | 端末間の暗号化を有効にします（`true` / `false`。既定: `false`） |
 | `MATRIX_E2EE_MODE` | Matrix の端末間暗号化の扱い: `off`、`optional`、`required`。設定すると `MATRIX_ENCRYPTION` より優先されます。 |
 | `MATRIX_DEVICE_ID` | 再起動をまたいで端末間暗号化を保つための、変わらない Matrix のデバイス ID（例: `HERMES_BOT`）。これが無いと、起動のたびに鍵が入れ替わり、過去の部屋の復号ができなくなります。 |
 | `MATRIX_REACTIONS` | 受信したメッセージに、処理の進み具合を示す絵文字のリアクションを付けます（既定: `true`）。`false` にすると無効になります。 |
-| `MATRIX_REQUIRE_MENTION` | 部屋で `@mention` を必要とします（既定: `true`）。`false` にするとすべてのメッセージに応答します。 |
-| `MATRIX_FREE_RESPONSE_ROOMS` | `@mention` なしでボットが応答する部屋 ID をカンマ区切りで指定します |
+| `MATRIX_REQUIRE_MENTION` | 部屋で `@mention` を必要とします（既定: `true`）。`false` にするとすべてのメッセージに応答します。参加者が 2 人以下の部屋は自動的に DM とみなされ、この設定に関係なくメンションを必要としません。あえて 2 人だけの部屋をふつうの部屋として扱いたいときは、3 人目を入れてください。 |
+| `MATRIX_FREE_RESPONSE_ROOMS` | `@mention` なしでボットが応答する部屋 ID をカンマ区切りで指定します。自動的に DM とみなされた部屋（参加者が 2 人以下）はもともとメンションなしで応答するので、この一覧を見ません。 |
 | `MATRIX_IGNORE_USER_PATTERNS` | 無視する Matrix のブリッジ / アプリサービスの分身のユーザー ID の正規表現をカンマ区切りで指定します |
 | `MATRIX_PROCESS_NOTICES` | 受信した Matrix の `m.notice` の出来事を処理します（既定: `false`） |
 | `MATRIX_SESSION_SCOPE` | プロジェクトの部屋での Matrix のセッションの区切り: `auto`、`room`、`thread`（既定: `auto`） |
 | `MATRIX_ALLOW_ROOM_MENTIONS` | 部屋のメンバー全員に知らせる `@room` のメンションの送信を許可します（既定: `false`） |
-| `MATRIX_AUTO_THREAD` | 部屋のメッセージで自動的にスレッドを作ります（既定: `true`） |
+| `MATRIX_AUTO_THREAD` | 部屋のメッセージで自動的にスレッドを作ります（既定: `true`）。自動的に DM とみなされた部屋（参加者が 2 人以下）には効かず、そちらは `MATRIX_DM_AUTO_THREAD` に従います。 |
 | `MATRIX_DM_AUTO_THREAD` | Matrix の DM のメッセージで自動的にスレッドを作ります（既定: `false`） |
 | `MATRIX_DM_MENTION_THREADS` | DM でボットが `@mentioned` されたときにスレッドを作ります（既定: `false`） |
 | `MATRIX_APPROVAL_REQUIRE_SENDER` | 承認やモデル選択のリアクションを、分かっている場合は元の依頼者からのものに限ります（既定: `true`） |
@@ -573,6 +576,7 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `HERMES_DASHBOARD_BASIC_AUTH_SECRET` | 基本の仕組みの、状態を持たないセッショントークンに署名する HMAC の鍵（32 バイト以上。base64 / 16 進 / 生のいずれか）。再起動をまたいでセッションを保ちたい、複数のワーカーにまたがらせたい場合は明示的に設定してください。空にするとプロセスごとにランダムになり、再起動のたびにログアウトします。`dashboard.basic_auth.secret` より優先されます。 |
 | `HERMES_DASHBOARD_BASIC_AUTH_TTL_SECONDS` | 基本の仕組みのアクセストークンの寿命（既定 12 時間）。`dashboard.basic_auth.session_ttl_seconds` より優先されます。 |
 | `HERMES_DASHBOARD_OAUTH_CLIENT_ID` | 関門つき・公開のダッシュボード向けの OAuth のクライアント ID（`agent:{instance_id}`）。Nous の仕組み（`plugins/dashboard_auth/nous`）が有効になります。`dashboard.oauth.client_id` より優先されます。`hermes dashboard register` で用意してください。 |
+| `HERMES_DASHBOARD_SESSION_TOKEN` | ダッシュボードの取り扱いに注意が要る `/api` の経路のための、プロセスごとのセッショントークンです。`hermes dashboard` を立ち上げる側（デスクトップの外枠や、リンク方式の連携）が発行します。親のプロセスから渡された値はそのまま使われ、`~/.hermes/.env` に `HERMES_DASHBOARD_SESSION_TOKEN` の行があっても置き換わりません。設定していない場合は、起動のたびにサーバーが新しいトークンを発行します。 |
 | `HERMES_DASHBOARD_PUBLIC_URL` | リバースプロキシの後ろでダッシュボードに届く、公開の URL 全体です。OAuth のコールバックの組み立てを決め、そのホスト名を HTTP の Host / WebSocket の Origin の防御に足し、バックエンドがループバックに割り当てられていても、ループバック以外の公開ホストには認証の関門を要求します。`dashboard.public_url` より優先されます。 |
 | `HERMES_DASHBOARD_OIDC_ISSUER` | 同梱の自前 OIDC の仕組み（`plugins/dashboard_auth/self_hosted`）の OIDC の発行元の URL。有効にするには必須です。`dashboard.oauth.self_hosted.issuer` より優先されます。 |
 | `HERMES_DASHBOARD_OIDC_CLIENT_ID` | 自前 OIDC の仕組みの公開のクライアント ID（認可コード + PKCE）。有効にするには必須です。`dashboard.oauth.self_hosted.client_id` より優先されます。 |
@@ -585,6 +589,7 @@ Anthropic のネイティブな認証では、Claude Code 自身の認証情報�
 | `HERMES_DESKTOP_PYTHON` | バックエンド用の Python インタプリタの絶対パス。ソースのチェックアウトのために Electron が自動で見つけるより先に見られます。共有の venv を使い回すため、worktree の開発用の補助が使います（[worktree からの TUI とデスクトップ](/hermes/docs/developer-guide/worktree-ui-dev/) をご覧ください）。 |
 | `HERMES_DESKTOP_DEV_SERVER` | Electron のシェルが、同梱のバンドルの代わりに読み込む Vite の開発サーバーの URL（例: `http://127.0.0.1:5174`）。`npm run dev` が自動で設定します。アプリ自体をいじるときだけ関係します。 |
 | `HERMES_DESKTOP_CDP_PORT` | DOM / CSS を調べる道具のために、描画側が `127.0.0.1` に開く Chrome DevTools Protocol のポートを上書きします（既定 `9222`）。開発サーバーでの実行（`npm run dev`、`hgui`）では自動で開きますが、パッケージ済みのアプリでは決して開かず、ここに何を設定しても変わりません。開発時の実行で閉じたいときは `off` にしてください。このポートに届くものは何であれ、描画側でコードを実行できます。 |
+| `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY` | （デスクトップ側）アプリ内での更新の確認（`Help → Check for Updates…` と、静かに出る更新の知らせ）は、これらの標準的な変数が指すプロキシ経由で `api.github.com` に届きます。`NO_PROXY` の除外も尊重され、`curl`、`npm`、`git` と同じ作法です。設定していない場合は直接つなぎます。 |
 
 ### Microsoft Graph（Teams の会議） {#microsoft-graph-teams-meetings}
 

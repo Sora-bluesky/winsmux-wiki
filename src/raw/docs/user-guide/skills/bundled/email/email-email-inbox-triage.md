@@ -2,7 +2,7 @@
 title: "Email Inbox Triage — 受信箱を仕分ける: スレッドに優先順位を付け、安全に返信案を書く"
 description: "受信箱を仕分ける: スレッドに優先順位を付け、安全に返信案を書く"
 upstream_path: user-guide/skills/bundled/email/email-email-inbox-triage.md
-upstream_blob: d5690a64eb6bd8f7980decc6440088fa81e3295d
+upstream_blob: f0c5b6b162651a3d48d2c26ba3c94c0390829391
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/email/email-email-inbox-triage
 ---

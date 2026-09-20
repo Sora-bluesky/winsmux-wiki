@@ -2,7 +2,7 @@
 title: "ツールセット一覧"
 description: "Hermes の中核・複合・プラットフォーム・動的の各ツールセットをまとめた一覧です。"
 upstream_path: reference/toolsets-reference.md
-upstream_blob: ba3051dac417f51fa1c09026541a1fd93c217370
+upstream_blob: 279c6a4d6c387dc7d5dfc140841f22704dbaad10
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 ---
@@ -55,12 +55,12 @@ hermes tools                            # curses UI to enable/disable per platfo
 
 | ツールセット | ツール | 用途 |
 |---------|-------|---------|
-| `browser` | `browser_back`, `browser_cdp`, `browser_click`, `browser_console`, `browser_dialog`, `browser_get_images`, `browser_navigate`, `browser_press`, `browser_scroll`, `browser_snapshot`, `browser_type`, `browser_vision`, `web_search` | ブラウザ操作の中核です。ちょっと調べたいときの逃げ道として `web_search` も入っています。`browser_cdp` と `browser_dialog` は動かしている最中に判定され、セッションの開始時に CDP の接続先へ届くときだけ登録されます（`/browser connect`、`browser.cdp_url` の設定、Browserbase、Camofox のいずれか経由）。`browser_dialog` は、CDP の監視役がつながっているときに `browser_snapshot` が足す `pending_dialogs` と `frame_tree` の項目と組みで働きます。 |
+| `browser` | `browser_back`, `browser_cdp`, `browser_click`, `browser_console`, `browser_dialog`, `browser_exec`, `browser_get_images`, `browser_navigate`, `browser_press`, `browser_scroll`, `browser_snapshot`, `browser_type`, `browser_vault_enter_code`, `browser_vault_fill`, `browser_vault_list`, `browser_vault_save_login`, `browser_vault_unlock`, `browser_vision` | ブラウザ操作の中核です。`browser_cdp` と `browser_dialog` は動かしている最中に判定され、セッションの開始時に CDP の接続先へ届くときだけ登録されます（`/browser connect`、`browser.cdp_url` の設定、Browserbase、Camofox のいずれか経由）。`browser_dialog` は、CDP の監視役がつながっているときに `browser_snapshot` が足す `pending_dialogs` と `frame_tree` の項目と組みで働きます。`browser.backend` が `browser-use` のときは、ほかのブラウザ用の道具の代わりに `browser_exec` が入ります。`browser_vault_*` の道具は、認証情報を入れる画面のためにブラウザと一緒に付いてきます。ちょっと調べたいときは `web`／`search` のまとまりの担当で、`web_search` はここにあえて入れていません。`disabled_toolsets: [browser]` にしても取り上げられないようにするためです（#64503）。 |
 | `clarify` | `clarify` | エージェントがはっきりさせたいことがあるとき、利用者に問いかけます。 |
 | `code_execution` | `execute_code` | Hermes のツールをプログラムから呼ぶ Python スクリプトを実行します。 |
 | `connections` | `manage_connections` | 利用者をアプリにつなぎます。対象は、Nous のゲートウェイを通して管理されるコネクターのアカウントと、カタログにある手元の MCP サーバーです。デスクトップでは、どの操作も利用者が決着をつけるまで待つカードとして出ます。デスクトップ以外では、管理されたアカウントの操作がアプリごとの接続用リンクを返します。 |
 | `coding` | composite (`file` + `terminal` + `search` + `web` + `skills` + `browser` + `todo` + `memory` + `session_search` + `clarify` + `code_execution` + `delegation` + `vision`) | ソフトウェアの作業向けにコードを中心へ据えた束です。ファイルの編集、端末、検索、web の資料、スキル、ブラウザ、任せる先の切り出し、コードの実行までそろいます。 |
-| `cronjob` | `cronjob` | 繰り返す作業を予定に入れて管理します。 |
+| `cronjob` | `cronjob_manage` | 繰り返す作業を予定に入れて管理します。 |
 | `debugging` | composite (`file` + `terminal` + `web`) | 不具合を追うための束です。ファイル、プロセスと端末、web の抜き出しと検索が入ります。 |
 | `delegation` | `delegate_task` | 別々に動く下請けのエージェントを起こして、並べて作業させます。 |
 | `discord` | `discord` | Discord のテキスト・埋め込み・DM といった基本の操作です（gateway でのみ動きます）。`hermes-discord` のツールセットで有効になります。 |
@@ -75,15 +75,15 @@ hermes tools                            # curses UI to enable/disable per platfo
 | `video_gen` | `video_generate`, `xai_video_edit`, `xai_video_extend` | プラグインが登録した基盤（xAI Grok-Imagine、FAL.ai の Veo 3.1／Pixverse v6／Kling 3.0／Kling O3）を使い、文章や画像から動画を作ります。画像を動かしたいときは `image_url` を渡し、文章から作るときは省きます。`xai_video_edit` と `xai_video_extend` は提供元に固有の編集・延長のツールで、xAI Imagine の資格情報があるときだけ使えます。 |
 | `kanban` | `kanban_attach`, `kanban_attach_url`, `kanban_attachments`, `kanban_block`, `kanban_comment`, `kanban_complete`, `kanban_create`, `kanban_heartbeat`, `kanban_link`, `kanban_list`, `kanban_request_changes`, `kanban_request_review`, `kanban_show`, `kanban_unblock` | 複数のエージェントで足並みをそろえるためのツールです。差配役が起こした作業係（`HERMES_KANBAN_TASK`）と、保存済みの選択に `kanban` が含まれるプラットフォームに登録されます（`hermes tools enable kanban --platform <p>`。`all`／`*` のまとめ指定では**有効になりません**）。作業係は仕事を終わりにする、正式な見直しを頼む、止まっていると伝える、生きていると知らせる、コメントする、続きの仕事を作ってつなげる、といったことができます。差配側のプロファイルには、これに加えて一覧や止め解除といった板を回すためのツールが付きます。`delegate_task` で生まれた子は板の持ち主にはなりません。子の側ではこのツールセットが定義から外されて無効になり、親から `HERMES_KANBAN_*` の環境変数が渡っていても、板を直に書き換える操作は実行時に弾かれます。 |
 | `memory` | `memory` | セッションをまたいで残る記憶の管理です。 |
-| `desktop_ui` | `annotate_preview`, `close_preview`, `close_terminal`, `drive_preview`, `focus_pane`, `open_preview`, `react_to_message`, `read_preview`, `read_terminal`, `read_window_below`, `tour` | Hermes のデスクトップアプリそのものに働きかける機能です。組み込みの端末ペインを読む・閉じる、アプリ内のブラウザを開く・読む・閉じる・操作する・書き込みを添える、アプリの背後にある OS の窓を見分ける、ペインを表に出す、メッセージにリアクションを付ける、案内を流す（アプリや下見のペインで画面の要素を光らせながら説明する）といったことができます。デスクトップアプリから始まったセッションで有効になり、つなぎ先が手元でも SSH でも URL でも Hermes Cloud でも変わりません。CLI、TUI、メッセージ、定時実行のセッションには決して現れません。 |
-| `project` | `project_create`, `project_list`, `project_switch` | デスクトップの[プロジェクト](/hermes/docs/user-guide/cli/)（名前を付けた、複数のフォルダーをまとめた作業場）を作って切り替えます。画面のある、デスクトップのセッション専用です。 |
+| `desktop_ui` | `annotate_preview`, `apply_layout`, `close_terminal`, `desktop_preview`, `drive_preview`, `focus_pane`, `gui_tour`, `react_to_message`, `read_terminal`, `read_window_below`, `show_tip` | Hermes のデスクトップアプリそのものに働きかける機能です。組み込みの端末ペインを読む・閉じる、アプリ内のブラウザを開く・読む・閉じる・操作する・書き込みを添える、アプリの背後にある OS の窓を見分ける、ペインを表に出す、メッセージにリアクションを付ける、案内を流す（アプリや下見のペインで画面の要素を光らせながら説明する）、画面の割り付けをあらかじめ用意した形に切り替える、といったことができます。デスクトップアプリから始まったセッションで有効になり、つなぎ先が手元でも SSH でも URL でも Hermes Cloud でも変わりません。CLI、TUI、メッセージ、定時実行のセッションには決して現れません。 |
+| `project` | `desktop_project` | デスクトップの[プロジェクト](/hermes/docs/user-guide/cli/)（名前を付けた、複数のフォルダーをまとめた作業場）を、`create`／`switch`／`list` の動作を選ぶひとつの道具で作って切り替えます。画面のある、デスクトップのセッション専用です。 |
 | `safe` | `image_generate`, `vision_analyze`, `web_extract`, `web_search` (via `includes`) | 読むだけの調べものと、素材づくりです。ファイルへの書き込みも、端末も、コードの実行もありません。 |
 | `search` | `web_search` | web の検索だけです（抜き出しは付きません）。 |
 | `session_search` | `session_search` | 過去のやりとりのセッションを探します。 |
 | `skills` | `skill_manage`, `skill_view`, `skills_list` | スキルの作成・閲覧・更新・削除と、見て回る操作です。 |
 | `spotify` | `spotify_albums`, `spotify_devices`, `spotify_library`, `spotify_playback`, `spotify_playlists`, `spotify_queue`, `spotify_search` | Spotify をそのまま操作します（再生、順番待ち、検索、プレイリスト、アルバム、ライブラリ）。同梱の `spotify` プラグインが登録します。 |
-| `terminal` | `process`, `terminal` | シェルのコマンドの実行と、裏で動くプロセスの管理です。 |
-| `todo` | `todo` | セッションの中でやることの一覧を扱います。 |
+| `terminal` | `process_manage`, `terminal` | シェルのコマンドの実行と、裏で動くプロセスの管理です。 |
+| `todo` | `todo_list` | セッションの中でやることの一覧を扱います。 |
 | `tts` | `text_to_speech` | 文章から読み上げの音声を作ります。 |
 | `vision` | `vision_analyze` | 画像を扱えるモデルによる画像の読み取りです。 |
 | `video` | `video_analyze` | 動画を読み取って中身をつかむためのツールです（初めから入ってはいません。`--toolsets` で名指しして足します）。 |

@@ -2,7 +2,7 @@
 title: "Pptx Author — python-pptx でヘッドレスに PowerPoint 資料を作る"
 description: "python-pptx でヘッドレスに PowerPoint 資料を作る"
 upstream_path: user-guide/skills/optional/finance/finance-pptx-author.md
-upstream_blob: 169aad660cd5e20de93f4b065ed4bfc940d1d0b7
+upstream_blob: 22b1bd39fea5d00748cf5b90bc37b3ab8a1fcc65
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-pptx-author
 ---
@@ -16,7 +16,7 @@ python-pptx を使い、ヘッドレスで PowerPoint 資料を作ります。
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/finance/pptx-author` で入れます |
-| パス | `optional-skills/finance\pptx-author` |
+| パス | `optional-skills/finance/pptx-author` |
 | バージョン | `1.0.0` |
 | 作者 | Anthropic（Nous Research が改変） |
 | ライセンス | Apache-2.0 |

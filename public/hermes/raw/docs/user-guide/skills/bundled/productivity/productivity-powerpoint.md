@@ -2,7 +2,7 @@
 title: "Powerpoint — python-pptx で .pptx のスライドを作る・読む・直す"
 description: "python-pptx で .pptx のスライドを作る・読む・直す"
 upstream_path: user-guide/skills/bundled/productivity/productivity-powerpoint.md
-upstream_blob: cf1a459d98d9d9e531ceb46dc026dad3e79aa17f
+upstream_blob: c90ac0690d2bbbc061cdecb24e2a6515179d9002
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-powerpoint
 ---
@@ -16,7 +16,7 @@ python-pptx で .pptx のスライドを作り、読み、直します。
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity\powerpoint` |
+| パス | `skills/productivity/powerpoint` |
 | バージョン | `1.1.0` |
 | 作者 | Nous Research |
 | ライセンス | MIT |

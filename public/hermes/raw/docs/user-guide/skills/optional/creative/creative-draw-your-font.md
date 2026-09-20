@@ -2,7 +2,7 @@
 title: "Draw Your Font — 手書き文字の写真から、そのまま入れて使える TTF フォントを作る"
 description: "手書き文字の写真から、そのまま入れて使える TTF フォントを作る"
 upstream_path: user-guide/skills/optional/creative/creative-draw-your-font.md
-upstream_blob: 0ea2f9010414e912267fae9f31b2f106c142946b
+upstream_blob: a55080b1a2d39f51d2cb8a0f5ab649e4071325d2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-draw-your-font
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/draw-your-font` で入れます |
-| パス | `optional-skills/creative\draw-your-font` |
+| パス | `optional-skills/creative/draw-your-font` |
 | バージョン | `0.1.0` |
 | 作者 | Danilo Znamerovszkij (https://github.com/danilo-znamerovszkij/draw-your-font)、Hermes Agent が移植 |
 | ライセンス | MIT |

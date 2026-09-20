@@ -2,7 +2,7 @@
 title: "Blackbox — 複数のモデルを扱う Blackbox AI の CLI にコーディング作業を任せます"
 description: "複数のモデルを扱う Blackbox AI の CLI にコーディング作業を任せます"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox.md
-upstream_blob: aa65306b9ea4d5de87c355408afb8f0b58564238
+upstream_blob: ed40d6fac7f365ed66d8900fc48445499db849b1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/autonomous-ai-agents/blackbox` で導入します |
-| パス | `optional-skills/autonomous-ai-agents\blackbox` |
+| パス | `optional-skills/autonomous-ai-agents/blackbox` |
 | バージョン | `1.0.1` |
 | 作者 | Hermes Agent（Nous Research） |
 | ライセンス | MIT |
@@ -110,8 +110,8 @@ terminal(command="REVIEW=$(mktemp -d) && git clone https://github.com/user/repo.
 互いに関係のない作業なら、Blackbox をいくつも同時に立ち上げられます。
 
 ```
-terminal(command="blackbox --prompt 'Fix the login bug'", workdir="/tmp/issue-1", background=true, pty=true)
-terminal(command="blackbox --prompt 'Add unit tests for auth'", workdir="/tmp/issue-2", background=true, pty=true)
+terminal(command="blackbox --prompt 'Fix the login bug'", workdir="~/.hermes/cache/scratch/issue-1", background=true, pty=true)
+terminal(command="blackbox --prompt 'Add unit tests for auth'", workdir="~/.hermes/cache/scratch/issue-2", background=true, pty=true)
 
 # Monitor all
 process(action="list")

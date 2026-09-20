@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール・フック・データファイル・スキルを備えた Hermes プラグインを、手順を追って作り上げるガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 0e4d6fa8d33ee8ffdacc0b07f7c4af581e1493f3
+upstream_blob: cade14e784ab653dbefa6216b46c21ff899389ea
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -939,10 +939,14 @@ plugins:
 からです。同梱のプラグインは対象外で、そこでの差し替えは開発側の判断です。
 設定が読み込めない場合、この関門は安全側に倒れます。
 
-このキーを手で書き換えることは、普通はありません。同梱ではないプラグインを
-有効にするとき、`hermes plugins enable <name>` がこの capability を与えるか
-どうかを尋ねます（既定は「いいえ」です）。スクリプトで導入するときは
-`--allow-tool-override` / `--no-allow-tool-override` のフラグで質問を飛ばせます。
+このキーを手で書き換えることは、普通はありません。`hermes plugins enable <name>`
+がこの capability を与えるかどうかを尋ねるのは、プラグインのマニフェストが
+`capabilities:` の下でそれを宣言しているときだけです（同意画面が出ます。既定は
+「いいえ」です）。capability を何も宣言していないプラグインは、許可を尋ねられる
+ことなく有効になります。`--allow-tool-override` / `--no-allow-tool-override` の
+フラグは、どちらの場合でも許可を明示的に与えたり取り消したりします。スクリプトで
+導入するときや、マニフェストのこの項目をまだ取り入れていないプラグインに
+あらかじめ許可を与えておきたいときに使います。
 同じ許可は `deregister()` の関門でもあります。これがないと、プラグインは自分の
 ものではないツールを取り除けません（それができると、差し替えの検査を迂回する
 道になってしまいます）。

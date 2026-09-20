@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 3cb7873babe756e5582ac4f0a8d0daeb5430fb05
+upstream_blob: a3d235f332179dc61c78aa9d888667f9c2745315
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -1662,6 +1662,8 @@ hooks_auto_accept: false         # See "Consent model" below
 ```
 
 イベント名は[プラグインフックのイベント](#plugin-hooks)のいずれかである必要があります。打ち間違いは「Did you mean X?」の警告が出て読み飛ばされます。1 つの項目の中の知らないキーは無視され、`command` が無い項目は警告のうえ読み飛ばされます。`timeout > 300` は警告とともに上限へ丸められます。`pre_tool_call` 以外のイベントに `fail_closed: true` を書くと警告が出て無視されます（閉じる側へ倒せるのは、遮断できるイベントだけです）。
+
+Windows では、`command` が実在するスクリプトファイルで始まっているとき — 下の例で使っている `~/.hermes/agent-hooks/x.sh` のような形です — そのファイルに合った実行環境（`.sh` / `.bash` なら Git Bash、`.py` なら動いている Hermes の Python）を通して起こされます。`CreateProcess` はシェバンを見てくれず、素のスクリプトを `WinError 193` で弾いてしまうからです。それ以外のコマンド、そして POSIX 系のプラットフォームでは、`argv` がそのまま `Popen` へ渡されます。こちらはカーネルがすでにシェバンを見てくれます。
 
 ### JSON のやり取りの形 {#json-wire-protocol}
 

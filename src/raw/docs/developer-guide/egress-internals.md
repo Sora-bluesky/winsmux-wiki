@@ -2,7 +2,7 @@
 title: "送信プロキシの内部構造"
 description: "iron-proxy の送信ファイアウォールが Hermes とどう結びついているか — モジュール構成、ライフサイクル、セキュリティ上の不変条件、拡張ポイント"
 upstream_path: developer-guide/egress-internals.md
-upstream_blob: 4b0e5eaea6e0631bc687a90cc599a62103d93405
+upstream_blob: 45ceb8d3ed21b7cde7f7e5c59201b8edbe72cbf6
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/egress-internals
 ---
@@ -307,8 +307,8 @@ scripts/run_tests.sh tests/agent/test_iron_proxy.py tests/hermes_cli/test_iron_p
 HERMES_RUN_E2E=1 scripts/run_tests.sh tests/agent/test_iron_proxy_e2e.py
 
 # Live PTY smoke against `hermes egress`
-HERMES_HOME=/tmp/hermes-egress-test python3 -m hermes_cli.main egress --help
-HERMES_HOME=/tmp/hermes-egress-test python3 -m hermes_cli.main egress setup --help
+HERMES_HOME=$HOME/.hermes/cache/scratch/hermes-egress-test python3 -m hermes_cli.main egress --help
+HERMES_HOME=$HOME/.hermes/cache/scratch/hermes-egress-test python3 -m hermes_cli.main egress setup --help
 ```
 
 CLI は argparse を使っているので、「足したフラグがちゃんと登録できたか」を確かめるには `--help` が手軽な最初の一手になります。

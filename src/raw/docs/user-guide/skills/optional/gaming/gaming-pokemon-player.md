@@ -2,7 +2,7 @@
 title: "Pokemon Player — ヘッドレスのエミュレーターと RAM 読み取りでポケモンを遊ぶ"
 description: "ヘッドレスのエミュレーターと RAM 読み取りでポケモンを遊ぶ"
 upstream_path: user-guide/skills/optional/gaming/gaming-pokemon-player.md
-upstream_blob: c7cde4080a2c6db44262a20eb0e9797c332fd25b
+upstream_blob: d474e9c3aa7aeafe1ceb429051b56c248a8140b2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/gaming/gaming-pokemon-player
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/gaming/pokemon-player` で入れます |
-| パス | `optional-skills/gaming\pokemon-player` |
+| パス | `optional-skills/gaming/pokemon-player` |
 | バージョン | `1.0.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |
@@ -95,7 +95,7 @@ GET /saves で保存済みの状態がすべて返ります。
 
 ### ステップ 1: 見る — 状態の確認とスクリーンショットの両方 {#step-1-observe-check-state-and-take-a-screenshot}
 GET /state で位置、HP、戦闘中かどうか、会話中かどうかを取ります。
-GET /screenshot で画像を取り、/tmp/pokemon.png に保存してから vision_analyze にかけます。
+GET /screenshot で画像を取り、~/.hermes/cache/scratch/pokemon.png に保存してから vision_analyze にかけます。
 必ず両方やってください。RAM の状態は数値を、画像は周囲の様子を教えてくれます。
 
 ### ステップ 2: 状況をつかむ {#step-2-orient}

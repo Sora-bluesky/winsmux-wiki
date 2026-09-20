@@ -2,7 +2,7 @@
 title: "ゲートウェイの監視"
 description: "ヘルス情報のエクスポート、構造化された診断、フリート全体のクエリ、監視の仕組みを拡張する方法"
 upstream_path: developer-guide/gateway-monitoring.md
-upstream_blob: dbea45a939c2bbca81057fa80e4eb2fb2428e276
+upstream_blob: 216aebffb081b34e92c0ed54e4f5775db4feed23
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-monitoring
 ---
@@ -191,13 +191,13 @@ Hermes Agent が持つ Relay の通信経路のヘルスは、引き続き対象
 ```bash
 # terminal 1: capture collector on :4318
 python scripts/observability/otel_capture_collector.py \
-  --host 127.0.0.1 --port 4318 --log /tmp/hermes_otel_capture.jsonl
+  --host 127.0.0.1 --port 4318 --log ~/.hermes/cache/scratch/hermes_otel_capture.jsonl
 
 # terminal 2: drive the real exporter through lifecycle transitions,
 # a fatal platform, and a structured warning event, then flush
 python scripts/observability/gateway_health_export_probe.py \
   --endpoint http://127.0.0.1:4318/v1/traces \
-  --log /tmp/hermes_otel_capture.jsonl --wait 8
+  --log ~/.hermes/cache/scratch/hermes_otel_capture.jsonl --wait 8
 # exit 0 prints: {"requests": 6, "paths": ["/v1/logs", "/v1/metrics", "/v1/traces"]}
 ```
 
@@ -285,7 +285,7 @@ cron の形（`cron_health.py` とその組み込み）を真似します。読�
 hermes monitoring status                 # posture
 python scripts/observability/gateway_health_export_probe.py \
   --endpoint http://127.0.0.1:4318/v1/traces \
-  --log /tmp/cap.jsonl --wait 8          # drive the real exporter
+  --log ~/.hermes/cache/scratch/cap.jsonl --wait 8          # drive the real exporter
 ```
 
 キャプチャした OTLP ペイロードをデコードし、新しい名前や属性が存在すること、

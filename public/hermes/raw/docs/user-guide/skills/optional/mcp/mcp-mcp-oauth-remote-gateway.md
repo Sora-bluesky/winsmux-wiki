@@ -2,7 +2,7 @@
 title: "Mcp Oauth Remote Gateway — 画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す"
 description: "画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す"
 upstream_path: user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway.md
-upstream_blob: 710c13365f60bc657c2ba6e0aae71a36d68d8162
+upstream_blob: a618aff3470fe6218b3cd77198e3c58c49d56052
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mcp/mcp-oauth-remote-gateway` で入れます |
-| パス | `optional-skills/mcp\mcp-oauth-remote-gateway` |
+| パス | `optional-skills/mcp/mcp-oauth-remote-gateway` |
 | バージョン | `1.0.0` |
 | 作者 | Ben Barclay (benbarclay), Hermes Agent |
 | ライセンス | MIT |
@@ -232,7 +232,7 @@ done
 `scopes_supported` に対してスコープ名をでっち上げると、認可サーバーによっては `invalid_scope` の
 エラーになります。
 
-**`code_verifier` と `state` はディスクに残しておいてください**（たとえば `/tmp/.mcp-oauth-work/<server>.json`、
+**`code_verifier` と `state` はディスクに残しておいてください**（たとえば `~/.hermes/cache/scratch/.mcp-oauth-work/<server>.json`、
 パーミッションは 0600）。手順 7 で必要になりますし、やりとりが何回かにまたがることもあります。
 
 ### 6. 認可用の URL を利用者に渡す {#6-give-the-user-the-authorize-url}
@@ -365,7 +365,7 @@ Hermes は httpx を使うので通るのに、こちらだけ Cloudflare に 40
 
 12. **利用者に開いてもらう URL を手で打たないでください。** 認可用の URL は `urllib.parse.urlencode()` でプログラムから組み立てます。スコープに含まれる空白や `state` の特殊文字が、文字列をつなげただけの URL を壊します。
 
-13. **安全のために: 控えておいたファイルには `code_verifier` が入っています。** トークンの交換に成功したら、`/tmp/.mcp-oauth-work/<server>.json` はすぐ消してください。使い終わった本人確認の秘密を残しておく理由はありません。
+13. **安全のために: 控えておいたファイルには `code_verifier` が入っています。** トークンの交換に成功したら、`~/.hermes/cache/scratch/.mcp-oauth-work/<server>.json` はすぐ消してください。使い終わった本人確認の秘密を残しておく理由はありません。
 
 14. **トークンのエンドポイントが実際に返した内容を書いてください。** 認可サーバーは、頼んだより狭い（あるいは広い）スコープを渡してくることがあります。`<server>.json` に書くのは、手順 5 で頼んだものではなく、トークン交換の返答にあった `scope` です。`scopes_supported: []` の場合、こちらが送るスコープの一覧が両方向で決め手になります。指定したとおりに渡すサーバーもあれば（必要最小限で通したいなら狭く、全部要るなら列挙します）、登録の時点では渡したスコープを返してこないサーバーもあります。頼りになるのはトークン交換の返答だけです。
 

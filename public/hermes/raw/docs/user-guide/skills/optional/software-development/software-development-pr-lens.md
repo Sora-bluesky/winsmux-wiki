@@ -2,7 +2,7 @@
 title: "Pr Lens — コードの変更を、動く構成図・データフロー図の SVG として描く"
 description: "コードの変更を、動く構成図・データフロー図の SVG として描く"
 upstream_path: user-guide/skills/optional/software-development/software-development-pr-lens.md
-upstream_blob: a1dffef3bc1d3925015de7d29f8aed716da2b667
+upstream_blob: 9568497d55d5ab3915bee2943ca9d56008d2d178
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-pr-lens
 ---
@@ -147,7 +147,7 @@ PR Lens は、コードを見栄えのするアニメーション図として描
 スモークテスト（2026-09-12 に npx 経由の `@coldtea/pr-lens-cli`、Linux の node で実際に確認済み）:
 
 ```bash
-cp references/example.graph.json /tmp/prlens-smoke/ && cd /tmp/prlens-smoke
+cp references/example.graph.json ~/.hermes/cache/scratch/prlens-smoke/ && cd ~/.hermes/cache/scratch/prlens-smoke
 npx -y @coldtea/pr-lens-cli@latest validate example.graph.json
 # ✓ example.graph.json — graph document · 3 lanes, 10 nodes, 13 edges, 1 flow · 6 walkthrough steps
 npx -y @coldtea/pr-lens-cli@latest render example.graph.json --theme light

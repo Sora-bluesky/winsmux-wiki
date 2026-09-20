@@ -2,7 +2,7 @@
 title: "Darwinian Evolver — Imbue の進化ループでプロンプト・正規表現・SQL・コードを進化させる"
 description: "Imbue の進化ループでプロンプト・正規表現・SQL・コードを進化させる"
 upstream_path: user-guide/skills/optional/research/research-darwinian-evolver.md
-upstream_blob: 78107b81032994d54a0d0a557088449a78826731
+upstream_blob: f11ed932971f80af10a11380c392a7d37af42e7f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-darwinian-evolver
 ---
@@ -16,7 +16,7 @@ Imbue の進化ループで、プロンプト・正規表現・SQL・コード�
 | | |
 |---|---|
 | 提供元 | オプション — `hermes skills install official/research/darwinian-evolver` で導入します |
-| パス | `optional-skills/research\darwinian-evolver` |
+| パス | `optional-skills/research/darwinian-evolver` |
 | バージョン | `0.1.0` |
 | 作者 | Bihruze (Asahi0x), Hermes Agent |
 | ライセンス | MIT |
@@ -97,12 +97,12 @@ uv run darwinian_evolver parrot \
   --num_iterations 2 \
   --num_parents_per_iteration 2 \
   --mutator_concurrency 2 --evaluator_concurrency 2 \
-  --output_dir /tmp/parrot_demo
+  --output_dir ~/.hermes/cache/scratch/parrot_demo
 ```
 
 出力されるもの:
-- `/tmp/parrot_demo/snapshots/iteration_N.pkl` — 反復ごとの集団を pickle にしたもの
-- `/tmp/parrot_demo/<jsonl>` — 反復ごとの JSON ログ（パスは最後に表示されます）
+- `~/.hermes/cache/scratch/parrot_demo/snapshots/iteration_N.pkl` — 反復ごとの集団を pickle にしたもの
+- `~/.hermes/cache/scratch/parrot_demo/<jsonl>` — 反復ごとの JSON ログ（パスは最後に表示されます）
 
 `~/.hermes/cache/darwinian-evolver/darwinian_evolver/darwinian_evolver/lineage_visualizer.html`
 をブラウザで開き、JSON ログを読み込ませると進化の系統樹が見られます。
@@ -121,14 +121,14 @@ cd "$DE_DIR" && \
   EVOLVER_MODEL='openai/gpt-4o-mini' \
   uv run --with openai python "$SKILL_DIR/scripts/parrot_openrouter.py" \
     --num_iterations 3 --num_parents_per_iteration 2 \
-    --output_dir /tmp/parrot_or
+    --output_dir ~/.hermes/cache/scratch/parrot_or
 ```
 
 結果は `scripts/show_snapshot.py` で確認します。
 
 ```bash
 uv run --with openai python "$SKILL_DIR/scripts/show_snapshot.py" \
-  /tmp/parrot_or/snapshots/iteration_3.pkl
+  ~/.hermes/cache/scratch/parrot_or/snapshots/iteration_3.pkl
 ```
 
 期待される出力は、スコア順に並んだ 7 個の進化後プロンプトテンプレートです。上位は

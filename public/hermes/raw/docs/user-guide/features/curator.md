@@ -2,7 +2,7 @@
 title: "キュレーター"
 description: "エージェントが作ったスキルを裏で手入れする仕組み — 利用状況の記録、古びの判定、書庫入れ、そして LLM による見直し"
 upstream_path: user-guide/features/curator.md
-upstream_blob: da624362cda3780b2922e668e11266fb1ce26c69
+upstream_blob: ad668cf2b8e51b76d5276c888bc4dbdd7dd06f0e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/curator
 ---
@@ -13,7 +13,7 @@ sources:
 
 [自己改善のループ](/hermes/docs/user-guide/features/skills/#agent-managed-skills-skill_manage-tool)で作られたスキルが、いつまでも積み上がり続けないようにするためのものです。エージェントが初めての問題を解くたびにスキルを保存すると、それは `~/.hermes/skills/` に置かれます。手入れをしないでいると、似たような狭いスキルが何十個もたまり、一覧を汚してトークンを無駄にします。
 
-初期値（`prune_builtins: true`）では、キュレーターは主に受け持っているエージェント作のスキルに加えて、**使われていない同梱の組み込みスキル**（リポジトリに最初から入っているもの）も `archive_after_days` の間使われなければ書庫に移せます。ハブから入れたスキル（[agentskills.io](https://agentskills.io) 由来のもの）には、いつでも一切手を触れません。`curator.prune_builtins: false` にすると、エージェント作のスキルだけを相手にする以前の動きに戻り、同梱のスキルには触れなくなります。なお、キュレーターが**自動で削除することはありません**。いちばん厳しくても `~/.hermes/skills/.archive/` へ書庫入りするだけで、そこから戻せます。
+初期状態のキュレーターが受け持つのは、エージェント作のスキルだけです。`curator.prune_builtins: true` にすると、**使われていない同梱の組み込みスキル**（リポジトリに最初から入っているもの）も `archive_after_days` の間使われなければ書庫に移せます。これを自分から選ぶ形にしているのは、最初から入っていたスキルが黙って `skills_list` から消えると、入れ方を間違えたのかと勘違いしやすいからです。ハブから入れたスキル（[agentskills.io](https://agentskills.io) 由来のもの）には、いつでも一切手を触れません。なお、キュレーターが**自動で削除することはありません**。いちばん厳しくても `~/.hermes/skills/.archive/` へ書庫入りするだけで、そこから戻せます。
 
 [issue #7816](https://github.com/NousResearch/hermes-agent/issues/7816) で追いかけています。
 
@@ -61,7 +61,7 @@ curator:
   stale_after_days: 14
   archive_after_days: 30
   consolidate: false           # LLM umbrella-building pass — opt-in (prune-only by default)
-  prune_builtins: true         # archive unused bundled built-in skills too (hub skills always exempt)
+  prune_builtins: false        # opt in to archiving unused bundled built-in skills too (hub skills always exempt)
 ```
 
 まるごと止めたいときは `curator.enabled: false` にします。常に働く整理は残したまま LLM のまとめ直しも使いたいときは `curator.consolidate: true` にします。
@@ -127,7 +127,7 @@ hermes curator purge [--days N] [--dry-run]  # delete archived skills older than
 
 ## バックアップと巻き戻し {#backups-and-rollback}
 
-本番のキュレーターの実行を始める前に、Hermes は `~/.hermes/skills/` を tar.gz で写し取り、`~/.hermes/skills/.curator_backups/<utc-iso>/skills.tar.gz` に置きます。触ってほしくなかったものが書庫入りしたりまとめられたりしても、コマンド一つで一巡分をまるごと元に戻せます。
+まとめ直しの実行（`consolidate: true`。スキルの中身をその場で書き換えるのはこの実行だけです）の前に、Hermes は `~/.hermes/skills/` を tar.gz で写し取り、`~/.hermes/skills/.curator_backups/<utc-iso>/skills.tar.gz` に置きます。写しに入るのは動いているスキルの木だけです。`.archive/`、記録の台帳、`.hub/`、そして写し自身は決して巻き込まれませんし、巻き戻しでもそれらは戻りません（古い写しで上書きすると、書庫のスキルや台帳の記録が失われてしまうからです）。触ってほしくなかったものが書庫入りしたりまとめられたりしても、コマンド一つで一巡分をまるごと元に戻せます。
 
 ```bash
 hermes curator rollback        # restore newest snapshot (with confirmation)
@@ -139,13 +139,13 @@ hermes curator rollback --list # see all snapshots with reason + size
 
 `hermes curator backup --reason "before-refactor"` を使えば、いつでも自分の手で写しを取れます。`--reason` に書いた文字列は写しの `manifest.json` に入り、`--list` に表示されます。
 
-写しは、ディスクを圧迫しないように `curator.backup.keep`（初期値は 5）の数まで残します。
+初期状態の整理だけの実行では、写しは取りません。ディレクトリをまるごと `.archive/` へ移すだけで、それ自体が元に戻す手段になっていますし（`hermes curator restore`）、書き換えはすべて下の台帳に残るからです。写しは、ディスクを圧迫しないように、実行のたびに `curator.backup.keep`（初期値は 2）の数まで減らされます。
 
 ```yaml
 curator:
   backup:
     enabled: true
-    keep: 5
+    keep: 2
 ```
 
 `curator.backup.enabled: false` にすると、自動での写し取りが止まります。バックアップを切っているときに `hermes curator backup` を手で実行したい場合は、先に `enabled: true` に戻す必要があります。この設定は両方の経路に同じように効くので、棚を書き換える実行の前の写し取りだけをうっかり飛ばす、ということは起きません。
@@ -326,7 +326,7 @@ hermes curator unpin <skill>
 
 どれかの cron ジョブの `skills:` の並びに名前が挙がっているスキルは、**自動の切り替え**については同じように守られます（参照が残っているかぎり、キュレーターがそれを古びた扱いにしたり書庫へ入れたりすることはありません）。ジョブが一時停止中でも無効でも同じです。`skill_manage delete` も止めたいときは、はっきり固定するほうを選んでください。
 
-固定できるのは**エージェント作**のスキルだけです。同梱のものやハブから入れたものに `hermes curator pin` を使おうとすると、理由を添えて断られます。ハブから入れたスキルが、キュレーターに書き換えられることはありません。同梱の組み込みスキルは `curator.prune_builtins: true`（初期値）のときだけ触れられ、それも `archive_after_days` の間使われなかったときに書庫へ入るだけで、手を入れられたり、まとめられたり、消されたりはしません。`curator.prune_builtins: false` にすれば、同梱のスキルはまるごと対象から外れます。
+固定できるのは**エージェント作**のスキルだけです。同梱のものやハブから入れたものに `hermes curator pin` を使おうとすると、理由を添えて断られます。ハブから入れたスキルが、キュレーターに書き換えられることはありません。同梱の組み込みスキルは `curator.prune_builtins: true` を自分で選んだときだけ触れられ、それも `archive_after_days` の間使われなかったときに書庫へ入るだけで、手を入れられたり、まとめられたり、消されたりはしません。
 
 さらに、ごく少数の**守られた組み込みスキル**は、`curator.prune_builtins` の設定にも固定の有無にも LLM の判断にも関係なく、書庫入りもまとめ直しもされないように作り込まれています。これらは大事な使い心地を支えているので、黙って書庫に入れてしまうと、そのスラッシュコマンドは何の知らせもなく「Unknown command」のエラーに変わり、こちらには何も伝わりません。（この集まりは今のところ空です。もともと入っていた `plan` は、ディスク上にスキルを持たない組み込みの `/plan` コマンドへ移りました。）守られた組み込みスキルはキュレーターの候補の一覧からそもそも外されるので、まとめ直しの見直しがそれを目にすることはありません。
 

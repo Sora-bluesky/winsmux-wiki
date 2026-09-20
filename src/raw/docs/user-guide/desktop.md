@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "Hermes のネイティブなデスクトップアプリ。ツール出力のストリーミング、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定をそなえた、Hermes と対話するための洗練された画面です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: fc77e3ce876eb75d51ac3903424160336084962f
+upstream_blob: 4f5c884d9311b69156374944ff87f2e7465014e9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -69,7 +69,7 @@ hermes desktop
 - **セッションごとの YOLO 切り替え** — このセッションだけ YOLO を入切します（TUI と同じ挙動です）。YOLO は危険なコマンドの承認確認を飛ばすので、何を外すのかを分かったうえで使ってください。[セキュリティ → YOLO モード](/hermes/docs/user-guide/security/#yolo-mode) を参照してください。
 - **コンテキスト使用量のメーター** — セッションのコンテキストウィンドウが何 % 埋まっているかを表示します。クリックすると **Context Usage** のポップオーバーが開き、種別ごと（システムプロンプト、ツール定義、スキル、記憶、ルール、MCP、サブエージェントの定義、そして会話そのもの）の使用量が分かります。圧縮が走る前に、何がウィンドウを食っているのかを正確につかめます。
 - **キャッシュのヒット率と 1 秒あたりのトークン数** — 既定では出ません。右クリックのメニューから表示できます。キャッシュのヒット率は、このセッションのプロンプトのうちプロバイダーのプロンプトキャッシュから返った割合です（キャッシュされたトークンは安いので、高いほど安上がりです。セッションが温まるにつれて安くなっていく様子を眺められます）。1 秒あたりのトークン数は、直近 10 回のモデル呼び出しを平均した出力の速さです。どちらもターンの最中に更新され続けます。
-- **表示する項目の選択** — ステータスバーを右クリックして（**Show in status bar**）、何を出すかを選べます。コンテキストのメーター、キャッシュのヒット率、1 秒あたりのトークン数、ワークスペース、モデル、承認、ターンとセッションの経過時間、ターミナル、Command Center、バックエンドの版などです。バーごと隠すこともできます（**Cmd/Ctrl+Shift+S** で切り替わります）。
+- **表示する項目の選択** — ステータスバーを右クリックして（**Show in status bar**）、何を出すかを選べます。コンテキストのメーター、キャッシュのヒット率、1 秒あたりのトークン数、ワークスペース、モデル、承認、ターンとセッションの経過時間、ターミナル、Command Center、バックエンドの版などです。バーごと隠すこともできます（**Cmd/Ctrl+Shift+S** で切り替わります）。ワークスペースの項目のメニューに **Open containing folder** が出るのは、選んでいるセッションがこの端末で動いているときだけです。リモートのゲートウェイで動いているセッションはフォルダが向こうの端末にあるので、代わりに **Reveal in filetree** を使ってください。OS のファイルマネージャーがパスを見つけられないときは、何も起きないのではなく、その旨を知らせます。
 
 同梱のローカルなバックエンドではなく、別の端末で動いている Hermes とやり取りしたいときは、後述の [リモートのバックエンドにつなぐ](#connecting-to-a-remote-backend) を見てください。リモートで動かすダッシュボードとの接続（認証の入口、`/api/ws` の対話用ソケット、WebSocket の切断コードの切り分け）の全体像は、[Web ダッシュボード → Hermes Desktop をリモートのバックエンドにつなぐ](/hermes/docs/user-guide/features/web-dashboard/#connecting-hermes-desktop-to-a-remote-backend) にあります。
 
@@ -101,9 +101,9 @@ desktop:
 
 #### モデルを選ぶ {#choosing-a-model}
 
-モデルの選択は **入力欄** の、マイクのすぐ左にあります。クリックすればモデルを切り替えられ、行にカーソルを合わせるとその選択肢（思考、effort、fast）が出ます。その隣の **reasoning のピル** には、いま使っているモデルの effort（`Med`、`High` など）が出ていて、押すと同じ選択肢が直接開きます。モデルの行を探さずに effort を変えられます。カタログ上 reasoning を制御できないモデルでは、このピルは出ません。切り替えにリスクがあるとゲートウェイが判断したとき（大きなキャッシュを抱えている、費用の高いモデル、データが学習に使われる区分など）は、まずダイアログで確認します。**Switch anyway** で適用し、**Keep current model**（または Esc）ならそのままです。
+モデルの選択は **入力欄** の、マイクのすぐ左にあります。クリックすればモデルを切り替えられ、行にカーソルを合わせるとその選択肢（思考、effort、fast）が出ます。その隣の **reasoning のピル** には、いま使っているモデルの effort（`Med`、`High` など）が出ていて、押すと同じ選択肢が直接開きます。モデルの行を探さずに effort を変えられます。カタログ上 reasoning を制御できないモデルでは、このピルは出ません。Hermes の内部での段階を経路の側が抑えるとき（`ultra` は、その経路でいちばん強い水準、たとえば `max` として送られます）、ピルには両端が出て（`Ultra→Max`）、その吹き出しには CLI と同じ言い回しの `Ultra (sends Max on this route)` が書かれます。見えている水準が、実際に送られる水準だと分かるようにするためです。切り替えにリスクがあるとゲートウェイが判断したとき（大きなキャッシュを抱えている、費用の高いモデル、データが学習に使われる区分など）は、まずダイアログで確認します。**Switch anyway** で適用し、**Keep current model**（または Esc）ならそのままです。
 
-**マイク** は音声入力です。カーソルを合わせると、ほかの音声関連の切り替えが上に広がります。**Read replies aloud** と、ウェイクワードの耳のマークです。オンになっている切り替えは塗りつぶされた円で示されます。音声での会話をまるごと始めるのは、右側の主ボタンのままです。HUD や幅の狭いタイルでは、同じ操作がマイクの後ろの 1 つのメニューにまとまります。
+**マイク** は音声入力です。カーソルを合わせると、ほかの音声関連の切り替えが上に広がります。**Read replies aloud** と、ウェイクワードの耳のマークです。オンになっている切り替えは塗りつぶされた円で示されます。音声での会話をまるごと始めるのは、右側の主ボタンのままです。HUD や幅の狭いタイルでは、同じ操作がマイクの後ろの 1 つのメニューにまとまります。音声入力が音声認識のプロバイダーと直接やり取りするとき（クライアントから直につなぐ音声）、その要求はゲートウェイ自身の文字起こしと同じ `stt.openai.timeout` の持ち時間（既定は 60 秒）に従います。応答の遅い接続先では、マイクが文字起こし中のまま固まらずに「Transcription timed out」で失敗します。
 
 - **入力欄の選択は UI の一時的な状態で、既定には触れません。** この選択は端末ごとにローカルに覚えられ、新しい対話や再起動をまたいで**引き継がれます**。既定に戻ることはありません。一度選んでおけば、次の `Cmd/Ctrl+N` はそのモデルで開きます。対話が進んでいる状態でモデルを切り替えると、変更は**その対話**だけに効きます。いずれの場合も、選択はセッションの作成・切り替えについてまわるだけで、プロファイルの既定には**決して**書き込まれません。例外が 1 つあります。`model.default` も `model.provider` もまだ設定されていない新しいプロファイルでは、最初の選択が保存されます。再起動したときに、たまたま環境変数に残っていた API キーへ落ちてしまわないよう、実体のある既定を持たせるためです。保存の挙動は `/model` と同じ規則（`model.persist_switch_by_default`）に従います。既定を意図して変えるときは **Settings → Model** を使ってください。（[プロファイル](#sessions--profiles) を切り替えると、そのプロファイル自身の既定に戻ります。）
 - **既定は Settings → Model で決めます。** この「メイン」のモデルが、**プロファイルごとの全体の既定**です。新しい対話・cron・サブエージェント・補助的な処理はここから始まりますし、これを書き込む場所もここだけです。[プロファイル](#sessions--profiles) はそれぞれ自分の既定を持ちます。
@@ -115,6 +115,8 @@ desktop:
 アプリから離れずに作業ディレクトリをたどり、中身を確認できます。エージェントがファイルを読み、書き、直していく様子を追うのに便利です。最初に開くプロジェクトのディレクトリは `hermes desktop --cwd <path>`（または環境変数 `HERMES_DESKTOP_CWD`）で指定します。
 
 ### 成果物 {#artifacts}
+
+入力欄の上に出るプレビューのリンクは、そのセッションからの提案であって、作業が終わったかどうかのチェックリストではありません。1 つ閉じると、画面を移動したり読み込み直したりしても、過去のツールの実行履歴からまた出てくることはありません。ツールが新しく成功すれば、同じファイルをもう一度勧めることはあります。読むだけのファイル確認や、失敗した書き込みでは提案は作られません。同じ名前のファイルは、見分けがつくだけのディレクトリの情報を添えて表示します。提案を閉じても、そのファイルや対話の記録が消えるわけではありません。`/goal` を変えても、その対話の成果物が消えることはありません。
 
 リモートのゲートウェイにつないでいるとき、ファイルの成果物を開くと、そのゲートウェイ経由でダウンロードされます。使われるのは、その成果物を生んだプロファイルとセッションです。相対パスはセッションに保存された作業ディレクトリを起点に解決され、ホームからの相対パスはゲートウェイ側のホームを指します。Desktop を動かしている端末のホームではありません。Windows 形式の相対パスもスラッシュ区切りのパスと同じように認識され、file URI はドライブやネットワーク共有の情報を保ったままゲートウェイに渡されます。セッションや作業ディレクトリが見つからないときは、別のローカルファイルを選ぶのではなくエラーになります。
 
@@ -196,10 +198,11 @@ desktop:
 
 - **Providers の設定ページ** — 推論プロバイダーを管理する専用の場所で、Accounts / API キーの UI からサインインし、プロバイダーごとに資格情報を保存できます。Accounts と API キーは、設定の **Applies to** の選択を共有します。資格情報の読み書き、OAuth アカウントの削除、ここから始めるサインインは、いま対話に使っているプロファイルではなく、選ばれているプロファイルに対して行われます。サインインの流れは、資格情報の保存とモデルの選択までその対象を保ちます。**Applies to** を変えると、保存していない資格情報の下書きは破棄されます。サインインを閉じると待ち受けは止まり、遅れて届いた結果は無視されます。すでに送られた資格情報の書き込みは、もとのプロファイルで完了することがあります。外部で管理されている CLI の資格情報は、その CLI 自身が扱うので、このプロファイルの選択の対象外です。ここにある **Local Models** のビューからは、端末内で動く llama.cpp のランタイムを導入・管理できます。[ローカルモデル](/hermes/docs/user-guide/local-models/) を参照してください。
 - **メニューにすべてのプロバイダーとモデルが並びます** — GUI には、プロバイダーの一覧と `hermes model` が知っているすべてのモデルが出ます。一部を選りすぐったものではなく、CLI と同じカタログから選べます。
+- **API の方式を選べる独自の接続先** — **Settings → Providers → Custom Endpoints** には **API Mode** の選択があります（**Auto-detect**、**Chat Completions**、**Responses API**、**Anthropic Messages**）。独自のプロバイダーについて `hermes model` が出すのと同じ選択肢です。これは `config.yaml` に `providers.<id>.api_mode` として保存されるので、Responses しか受けない接続先や Anthropic 互換の接続先へ `/chat/completions` を呼びに行くことはなくなります。**Test** は `/v1/models` を叩くだけでなく、実際に使う通信の方式を確かめます。固定した方式の経路（Auto-detect ならそれが解決した方式の経路）へトークン 1 つ分の要求を送り、接続先がそれを提供していなければ、その方式の名前を挙げて失敗します。**Test** は、ゲートウェイが `/v1/models` で知らせる別名の情報（`canonical_model`、`reasoning_effort`）も保ちます。`gpt-5.6-sol-high` のような別名を選ぶと、正式なモデル名が保存され、その effort が `agent.reasoning_overrides` の下に固定されます。
 - **xAI Grok の OAuth** — Grok はランチャーで一級の OAuth プロバイダーとして扱われます。ほかの OAuth プロバイダーと同じく、ブラウザの流れでサインインします。
 - **ツールバックエンドの導入を GUI から** — ツールバックエンドの導入後の手順を、端末に降りずにアプリから実行できます。ターミナルのバックエンドを選ぶ画面で **Needs setup** と付いたものを選ぶと、まず確認を求められます。断れば、いま選ばれているバックエンドのままになります。
 - **ターミナルのフォント選択** — **Settings → Appearance** で、インストール済みのフォントを選べます。`MesloLGS NF` のような Nerd Fonts なら、対話用のターミナルでもエージェント用のターミナルでも Powerlevel10k の区切りやアイコンが表示されます。この設定はプロファイルごとに保存されます。
-- **Reasoning Blocks** — **Settings → Chat → Reasoning Blocks**（`config.yaml` の `display.show_reasoning`）で、モデルの思考を記録に出すか隠すかを切り替えます（切ると答えだけになります）。開いている対話は、設定を保存した時点で切り替わります。
+- **Reasoning Blocks** — **Settings → Chat → Reasoning Blocks**（`config.yaml` の `display.show_reasoning`）で、モデルの思考を記録に出すか隠すかを切り替えます（切ると答えだけになります）。開いている対話は、設定を保存した時点で切り替わります。入力欄に `/reasoning hide` や `/reasoning show` と打っても同じ設定が入れ替わり、開いている記録はすぐそれに従います。
 - **起動時に前回の対話を開く** — 既定では、冷えた状態から起動しても前回の続きから始まります。いつも新しい対話で始めたいときは **Settings → Appearance** で切るか、`config.yaml` に `display.resume_last_session: false` を書きます。ディープリンクや明示的な行き先は、どちらの設定でも上書きされません。
 - **補助モデルの警告** — 補助的な処理（タイトル付け、要約など）が別のプロバイダーに固定されたまま、メインのモデルを新しいプロバイダーに切り替えると、アプリが警告します。気づかないうちに 2 つのプロバイダーへ作業が分かれてしまうのを防ぐためです。
 - **処理ごとの reasoning の effort** — **Settings → Model → Auxiliary models** の各行には、プロバイダーとモデルの選択の隣に reasoning の選択があります。水準を選ぶか、**Off** か、**inherit · main model effort**（既定で、その処理の個別設定を外します）です。これは `config.yaml` に `auxiliary.<task>.reasoning_effort` として保存され、`hermes model` が書くのと同じキーです。設定してあれば行の概要にも出ます。圧縮やタイトル付けのようによく走る処理を低い reasoning か無しで回し、メインのエージェントは高いままにしておく、といった使い方ができます。
@@ -223,43 +226,12 @@ desktop:
 
 端末に降りなくて済むように、Hermes の管理まわりもアプリに載っています。
 
-- **Skills** — **Capabilities → Skills** を開くと [スキル](/hermes/docs/user-guide/features/skills/) を管理できます。**Installed** には、選んでいるプロファイルの実際のスキルと、有効・無効の状態が出ます。**Browse** は、公開されている Skills Hub と同じカタログ全体を検索します。既定はカードの表示で、一覧と詳細の表示にも切り替えられます。
-- **Plugins** — **Capabilities → Plugins** も同じ **Installed / Browse** の作りです。Installed には、アプリ側のデスクトップ用プラグインと、選んでいるプロファイルのエージェント用プラグインが並びます。Browse には公開の [プラグインカタログ](/hermes/docs/user-guide/features/plugin-catalog/) が出ます。検索は上部に固定され、タブの切り替えと操作はどちらのページでも同じ 1 行に収まります。
+- **Skills** — [スキル](/hermes/docs/user-guide/features/skills/) を探し、入れ、管理します。Skills のタブには、入れてあるスキルが有効・無効の切り替えとともに並び、その下に Hermes に付いてくる追加スキルのカタログが全部出ます。項目ごとに **Install** のボタンがひとつあり、押して終わればその行が、入れてあるものの一覧へ移ります。
 - **記憶のグラフ（Star Map）** — 対話で `/journey`（別名 `/learning`、`/memory-graph`）と打つと、学んだスキルと記憶が時間とともに星座のように並ぶ画面が開き、再生のつまみで動かせます。ノードはそのパネルから編集・削除できます（スキルは保管され、記憶は消えます）。[学びの軌跡](/hermes/docs/user-guide/features/memory/#learning-journey-journey) を参照してください。
-- **Cron** — [予約したジョブ](/hermes/docs/reference/cli-commands/#hermes-cron) を確認・管理します。
+- **Cron** — [予約したジョブ](/hermes/docs/reference/cli-commands/#hermes-cron) を確認・管理します。**All profiles** を入れておくと、すべてのプロファイルのジョブをまとめて一覧できます。ジョブの実行履歴と操作（一時停止・再開・編集・削除）は、どのプロファイルを選んでいても、必ずそのジョブを持つプロファイルに対して行われます。
 - **Profiles** — [Hermes のプロファイル](/hermes/docs/user-guide/profiles/)（設定・スキル・セッションが分かれたもの）を切り替えます。
 - **Messaging** — ゲートウェイのチャンネルを設定します。Telegram には **Quick setup** のカードがあります。**Create with QR** を押し、Telegram でコードを読み取る（またはリンクを開く）と、Hermes がボットを作り、許可リストに載せるユーザー ID を検出し、資格情報を保存し、ゲートウェイを再起動するところまでやります。資格情報の保存・消去・有効化の切り替えをすると、ゲートウェイが実際に再起動するまで **Restart now** の帯がページに残ります。再起動に失敗したときも帯は残るので、もう一度試すか手で再起動できます。
 - **Agents** と **Command Center** — 複数のエージェントで進めるための画面です。
-
-Browse の絞り込みの右にある一覧とカードのアイコンで、表示を変えられます。
-この選択は Skills と Plugins をまたいで覚えられます。検索と絞り込みはそのまま
-残ります。カードを押せば詳細が開きますし、Install のボタンを直接使うこともできます。
-
-#### Browse のデータの出どころ {#where-browse-gets-its-data}
-
-これらは Desktop のネイティブなビューで、**Web サイトを埋め込んだページではありません**。Desktop と
-公開サイトは、生成された同じ CDN のスナップショットを使っています。
-
-| カタログ | 公開ドキュメント側の別名 | Desktop が取得する URL |
-|---|---|---|
-| Skills | [`/docs/api/skills.json`](https://hermes-agent.nousresearch.com/docs/api/skills.json) | `https://nousresearch.github.io/hermes-agent/docs/api/skills.json` |
-| Plugins | [`/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json) | `https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` |
-
-スキルのスナップショットは、`skills/`・`optional-skills/`・中央のスキル索引を
-合わせたものです。プラグインのスナップショットは `plugin-catalog/*.yaml` とキャッシュした star の
-数から作られ、同じ公開物がインストーラー向けの削除済み項目の一覧も供給します。Browse は GitHub の API を
-その場で呼んだり、プラグインやスキルのソースのリポジトリを取りに行ったりはしません。**Installed** は
-別で、状態は選んでいるプロファイルのバックエンドと、アプリのデスクトッププラグインの登録簿から来ます。
-公開のスナップショットからではありません。
-
-公開ハブの **Install in Hermes** のボタンは `hermes://skill/install`
-や `hermes://plugin/install` のリンクを開き、Desktop 側で確認を求めます。
-スキルの経路とプラグインカタログのパラメータには、新しい Desktop のビルドを使ってください。
-アプリが無かったり古かったりする場合に備えて、カードには CLI のコマンドもコピーできる形で残っています。
-パラメータと確認の流れは
-[スキルのリンク](/hermes/docs/user-guide/features/skills/#install-from-the-website) と
-[プラグインのリンク](/hermes/docs/user-guide/features/plugins/#one-click-install-links-desktop) を
-参照してください。
 
 ### Bot Mode（内蔵） {#bot-mode-built-in}
 
@@ -535,20 +507,22 @@ UI を使わずに、アプリを起動する前に環境変数 `HERMES_DESKTOP_
   [Accent Picker](https://github.com/NousResearch/hermes-desktop-accent-picker)
   のような追加のものは、**Install from Git** でそれぞれのリポジトリから入れます。
 
-ネイティブの [プラグインカタログ](/hermes/docs/user-guide/features/plugin-catalog/) を見るには **Browse** に切り替えます。
-Browse も **Install from Git** も、内容を確認してから入れるダイアログを開きます。
-カタログからエージェントのプラグインを入れるときは、バックエンドがカタログ上の名前を
-確認済みの固定先に解決します。リンクの `sha` は表示のための情報で、上書きではありません。
-単体のデスクトッププラグインの導入が固定されることは、これでは保証されません。**Install from Git**
-では、エージェントのプラグインについて **Pin to commit** も選べます（40 文字の
-SHA をまるごと指定し、非公開のリポジトリにも使えます）。固定したエージェントのプラグインには
-`pinned @ <sha8>` のバッジが出ます。古い `Settings → Plugins` のリンクはここへ転送されます。
+その下には、見つけるための仕組みがあります。動いている [プラグインカタログ](/hermes/docs/user-guide/features/plugin-catalog/)
+の選択画面は、内容を確認済みの項目を、固定されたコミットのまま、選んでいるプロファイルへ入れます。
+**Install from Git** は、それ以外のどのリポジトリも、同じ「確認してから入れる」ダイアログに通します。
+任意の **Pin to commit** の欄では、40 文字のコミット SHA をちょうどひとつ指定して入れられます
+（非公開のリポジトリも使えます）。固定したプラグインには、一覧に `pinned @ <sha8>` のバッジが出ます。
+古い `Settings → Plugins` のリンクはここへ転送されます。
 
 ## 困ったときは {#troubleshooting}
 
 ### アプリを再起動せずにつなぎ直す {#reconnect-without-restarting-the-app}
 
 接続が **Connected** のままなのに Desktop の対話やボットが返事をしなくなったときは、そのボットやプロファイル、あるいはゲートウェイを選び、ステータスバーのゲートウェイのメニューから **Reconnect gateway** を押してください。つなぎ直しは、開いている・つなぎに行っている・切れている、どの状態でも使えます。Desktop を再起動したり、ほかの経路のソケットをわざわざ閉じたりせずに、いまの経路だけをつなぎ直します。選んだソケットで処理中のリクエストは中断されることがあります。これは明示的な復旧の操作であって、バックエンドやモデルの再起動ではありません。
+
+### `hermes update` のあとにアプリが消えた {#the-app-vanished-after-hermes-update}
+
+以前の更新が、`apps/desktop/release/` を残さずに作業ツリーを入れ替えてしまうと、起動できるパッケージ済みのアプリがなくなります。`HERMES_HOME/desktop-build-stamp.json`（Desktop のビルドが成功したときだけ書かれます）がまだ残っていれば、次の `hermes update` がアプリの欠けに気づいて作り直します。手で作り直すなら `hermes desktop --build-only --force-build` です。Windows では ZIP を使う代替の経路でも、入れ替えをまたいで、ビルド済みのアプリと描画側のバンドル、そして Electron の `node_modules` が残ります。
 
 ### ローカルのバックエンドが裏で止まった {#the-local-backend-stopped-in-the-background}
 
@@ -562,9 +536,19 @@ SHA をまるごと指定し、非公開のリポジトリにも使えます）�
 一般的なエラーの通知ではありません。カードには、失敗に合わせた復旧の操作が並びます。
 
 - **Retry** — 失敗したターンをその場でやり直します（内容の方針による拒否のように、
-  やり直しても同じ結果になるとわかっているときは出ません）。
-- **Switch provider** — プロバイダー、エンドポイント、認証、課金の失敗のとき、
-  Settings → Models へ飛びます。
+  やり直しても同じ結果になるとわかっているときは出ません）。レート制限や利用量の上限の
+  応答が、いつ制限が解けるかを伝えてきたとき（`Retry-After` のヘッダーか `resets_at`
+  の項目）、カードには Retry の隣に **Limit resets at HH:mm (in 1h 05m)** と出るので、
+  いつやり直せば通るのかが分かります。CLI と TUI も、エラーの下に同じ行を出します。
+  この案内自体はただの情報ですが、カードには **Retry when the limit resets (HH:mm)**
+  も出ます。押すと、制限が解ける時刻に、残り時間を表示しながらそのターンを 1 回だけ
+  やり直します。**Cancel** で取り消せます。この予定は開いているウィンドウの中にしか
+  残りません。セッションを切り替える、別のメッセージを送る、アプリを閉じる、のどれかで
+  消えますし、人が見ていないところで勝手にやり直すことはありません。
+- **Switch provider** — プロバイダー、エンドポイント、認証、課金の失敗のときは、
+  入力欄のモデルのメニューをその場で開くので、**いまのこの対話**を別のプロバイダーや
+  モデルへすぐ移せます（Settings → Models で変わるのは、新しい対話の既定だけです）。
+  対話の画面が出ていないときは、Settings → Models へ飛びます。
 - **Open logs** — `HERMES_HOME/logs` をファイルマネージャで開きます。リモートや
   Cloud の接続では **Open Desktop logs** という表示になり、手元の Desktop 側のログ
   （通信の記録）を開きます。失敗したターンのゲートウェイやエージェントのログは、
@@ -632,6 +616,8 @@ ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ \
 
 **ミラーが必要なほかのネイティブのダウンロード（たとえば Windows の `get-windows` のビルド済みバイナリ）** については、npm のキーを `$HERMES_HOME/npmrc`（Windows では `%LOCALAPPDATA%\hermes\npmrc`、それ以外では `~/.hermes/npmrc`）に書いてください。たとえば `node_get_windows_binary_host_mirror=https://<mirror>/sindresorhus/get-windows/releases/download/` のように書きます。更新処理が起動する `npm ci` や `npm run`（デスクトップ、Web、TUI のビルド）は、そのファイルがあれば `NPM_CONFIG_USERCONFIG` をそこへ向けるので、設定は `hermes update` をまたいで残ります。リポジトリ直下の `.npmrc` は git の管理下にあって更新のたびに自動で退避されますし、`~/.npmrc` は、デスクトップへの受け渡しが GUI の環境を引き継ぐ都合で見落とされることがあります。自分で設定した `NPM_CONFIG_USERCONFIG` が上書きされることはありません。
 
+**`get-windows` が入っていない、または中途半端に入っている場合:** ビルドはもう失敗しません。`[stage-native-deps] get-windows not installed ... read_window_below will be unavailable in this build` と表示して、`read_window_below` のツールを載せずに出来上がります。パッケージのディレクトリはあるのに読み込めない場合（Hermes のウィンドウが動いたまま Windows でその場の更新が中断されたとき。導入のログに `TAR_ENTRY_ERROR` が出ます）は、同じ警告がそのディレクトリの名前を挙げ、次の `hermes desktop --force-build` か更新が、npm の導入の前にそれを消すので、パッケージは展開し直されます。展開がまた中断されないよう、Hermes のウィンドウとゲートウェイを先に全部閉じてください。ネイティブの結合部や macOS 側の補助が欠けているパッケージも同じように、ビルドを失敗させるのではなく、ウィンドウの列挙なしで出来上がります。
+
 壊れたキャッシュ上の zip を手で消すには、次のようにします。
 
 ```bash
@@ -653,7 +639,7 @@ npm run dev          # Vite renderer + Electron, which boots the Python backend
 
 ```bash
 HERMES_DESKTOP_HERMES_ROOT=/path/to/clone npm run dev
-HERMES_HOME=/tmp/throwaway npm run dev
+HERMES_HOME=$HOME/.hermes/cache/scratch/throwaway npm run dev
 npm run dev:fake-boot   # exercise the startup overlay with deterministic delays
 ```
 

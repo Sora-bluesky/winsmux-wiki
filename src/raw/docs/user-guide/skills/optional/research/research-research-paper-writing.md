@@ -2,7 +2,7 @@
 title: "Research Paper Writing — NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる"
 description: "NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる"
 upstream_path: user-guide/skills/optional/research/research-research-paper-writing.md
-upstream_blob: ead1781cceb5498bc43db2ee85c6c7b4b1211b03
+upstream_blob: 94f7c9bf8193864c5004330d57670c999c1fba3b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-research-paper-writing
 ---
@@ -16,7 +16,7 @@ NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上
 | | |
 |---|---|
 | 提供元 | 追加で入れる skill です。`hermes skills install official/research/research-paper-writing` で導入します |
-| パス | `optional-skills/research\research-paper-writing` |
+| パス | `optional-skills/research/research-paper-writing` |
 | バージョン | `1.1.0` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -365,7 +365,7 @@ def doi_to_bibtex(doi: str) -> str:
 
 **必ず研究者に伝えること**: 「[X] 件の引用を、検証が必要な仮置きとして印を付けました」
 
-API の詳しい説明と `CitationManager` クラスの全体は [references/citation-workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/citation-workflow.md) にあります。
+API の詳しい説明と `CitationManager` クラスの全体は [references/citation-workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/citation-workflow.md) にあります。
 
 ### Step 1.4: 関連研究を整理する {#step-14-organize-related-work}
 
@@ -449,7 +449,7 @@ analyze_results.py             # Statistical analysis
 make_charts.py                 # Visualization
 ```
 
-設計パターン、cron による監視、エラーからの復帰の全体は [references/experiment-patterns.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/experiment-patterns.md) にあります。
+設計パターン、cron による監視、エラーからの復帰の全体は [references/experiment-patterns.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/experiment-patterns.md) にあります。
 
 ### Step 2.5: 人手評価を設計する（必要な場合） {#step-25-design-human-evaluation-if-applicable}
 
@@ -488,7 +488,7 @@ NLP、HCI、アラインメントの論文では、人手評価が主要な証�
 - アノテーション画面の説明かスクリーンショット（付録）
 - アノテーションにかかった総時間
 
-人手評価データの統計的検定、クラウドソーシングの品質管理の型、倫理審査についての案内を含む完全な手引きは [references/human-evaluation.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/human-evaluation.md) にあります。
+人手評価データの統計的検定、クラウドソーシングの品質管理の型、倫理審査についての案内を含む完全な手引きは [references/human-evaluation.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/human-evaluation.md) にあります。
 
 ---
 
@@ -624,7 +624,7 @@ for strategy, tasks in results.items():
 - **一対検定**: 二つの手法を比べるなら McNemar 検定
 - **効果量**: 実質的な差を見るための Cohen の d や h
 
-McNemar 検定、ブートストラップによる信頼区間、Cohen の h の実装は [references/experiment-patterns.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/experiment-patterns.md) にそろっています。
+McNemar 検定、ブートストラップによる信頼区間、Cohen の h の実装は [references/experiment-patterns.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/experiment-patterns.md) にそろっています。
 
 ### Step 4.3: 物語を見つける {#step-43-identify-the-story}
 
@@ -806,7 +806,7 @@ autoreason で論文そのものを磨くときは、次に気をつけます。
 | 過適合（コード） | 公開テストは通るが非公開テストが落ちる | テストの結果だけでなく、構造的な分析を使う |
 | 審査員の故障 | 解析失敗で審査団が 3 名を割る | 続ける前にパーサーを直す |
 
-プロンプト全文、Borda 集計の詳細、モデル選びの案内、スコープ制約の設計パターン、計算予算の目安は [references/autoreason-methodology.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/autoreason-methodology.md) にあります。
+プロンプト全文、Borda 集計の詳細、モデル選びの案内、スコープ制約の設計パターン、計算予算の目安は [references/autoreason-methodology.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/autoreason-methodology.md) にあります。
 
 ---
 
@@ -883,7 +883,7 @@ Reviews:
 
 **査読に使うモデルの選び方**: 査読には、使える中でいちばん強いモデルを充てるのが良い方法です。論文自体を安いモデルで書いていても構いません。査読側のモデルは、執筆側とは独立に選んでください。
 
-**少数事例での較正**: 手に入るなら、投稿先で実際に公開された査読を 1〜2 本、例として添えます。点数の較正が目に見えて良くなります。査読の例は [references/reviewer-guidelines.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/reviewer-guidelines.md) にあります。
+**少数事例での較正**: 手に入るなら、投稿先で実際に公開された査読を 1〜2 本、例として添えます。点数の較正が目に見えて良くなります。査読の例は [references/reviewer-guidelines.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/reviewer-guidelines.md) にあります。
 
 ### Step 6.1b: 見た目の査読（VLM） {#step-61b-visual-review-pass-vlm}
 
@@ -985,7 +985,7 @@ paper/
 
 どの投稿先にも必須のチェックリストがあります。丁寧に埋めてください。未記入があると、査読に回る前に却下されることがあります。
 
-次の内容は [references/checklists.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/checklists.md) にあります。
+次の内容は [references/checklists.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/checklists.md) にあります。
 
 - NeurIPS の 16 項目チェックリスト
 - ICML の broader impact と再現性
@@ -1355,7 +1355,7 @@ ACL 系の投稿先には、はっきり分かれた投稿区分があります�
 
 ## 実験系 ML 以外の論文タイプ {#paper-types-beyond-empirical-ml}
 
-ここまでのパイプラインは実験系の ML 論文を想定しています。ほかの種類の論文は、構成も求められる証拠も違います。種類ごとの詳しい案内は [references/paper-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/paper-types.md) にあります。
+ここまでのパイプラインは実験系の ML 論文を想定しています。ほかの種類の論文は、構成も求められる証拠も違います。種類ごとの詳しい案内は [references/paper-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/paper-types.md) にあります。
 
 ### 理論論文 {#theory-papers}
 
@@ -1616,7 +1616,7 @@ Next step: <what happens next>
 - 2: Reject — 技術的な欠陥がある
 - 1: Strong Reject — 既知の結果、あるいは倫理上の問題
 
-詳しい指針、よくある懸念、反論の進め方は [references/reviewer-guidelines.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/reviewer-guidelines.md) にあります。
+詳しい指針、よくある懸念、反論の進め方は [references/reviewer-guidelines.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/reviewer-guidelines.md) にあります。
 
 ---
 
@@ -1632,9 +1632,9 @@ Next step: <what happens next>
 | 実験が広がりすぎている | すべての実験を特定の主張に対応させます。対応しないものは削ります |
 | 不採択で、再投稿が必要 | Phase 7 の「別の会議への再投稿」を参照。査読に言及せずに懸念へ対処します |
 | broader impact の節がない | Step 5.10 を参照。ほとんどの投稿先で必要です。「悪影響はありません」はまず通りません |
-| 人手評価が弱いと批判された | Step 2.5 と [references/human-evaluation.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/human-evaluation.md) を参照。一致度の指標、アノテーターの情報、報酬を報告します |
+| 人手評価が弱いと批判された | Step 2.5 と [references/human-evaluation.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/human-evaluation.md) を参照。一致度の指標、アノテーターの情報、報酬を報告します |
 | 再現性を問われた | コードを公開し（Step 7.9）、すべてのハイパーパラメータ、乱数シード、計算資源の詳細を書きます |
-| 理論論文に直感が欠けている | 形式的な証明の前に、平易な言葉の説明を伴う証明の概略を足します。[references/paper-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/paper-types.md) を参照 |
+| 理論論文に直感が欠けている | 形式的な証明の前に、平易な言葉の説明を伴う証明の概略を足します。[references/paper-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/paper-types.md) を参照 |
 | 結果が否定的 / 帰無だった | Phase 4.3 の否定的結果の扱いを参照。ワークショップ、TMLR、あるいは分析としての枠づけ直しを検討します |
 
 ---
@@ -1643,21 +1643,21 @@ Next step: <what happens next>
 
 | 資料 | 内容 |
 |----------|----------|
-| [references/writing-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/writing-guide.md) | Gopen & Swan の 7 原則、Perez の細かなコツ、Lipton の語選び、Steinhardt の精密さ、図の設計 |
-| [references/citation-workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/citation-workflow.md) | 引用まわりの API、Python のコード、CitationManager クラス、BibTeX の管理 |
-| [references/checklists.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/checklists.md) | NeurIPS の 16 項目、ICML、ICLR、ACL の要件、投稿前の共通チェックリスト |
-| [references/reviewer-guidelines.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/reviewer-guidelines.md) | 評価基準、点数、よくある懸念、反論のひな形 |
-| [references/sources.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/sources.md) | 執筆ガイド、会議の規定、API の完全な文献一覧 |
-| [references/experiment-patterns.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/experiment-patterns.md) | 実験設計のパターン、評価手順、監視、エラーからの復帰 |
-| [references/autoreason-methodology.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/autoreason-methodology.md) | Autoreason のループ、戦略の選び方、モデル選び、プロンプト、スコープ制約、Borda 集計 |
-| [references/human-evaluation.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/human-evaluation.md) | 人手評価の設計、アノテーション手引き、一致度の指標、クラウドソーシングの品質管理、倫理審査の案内 |
-| [references/paper-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/references/paper-types.md) | 理論論文（証明の書き方、定理の構成）、サーベイ論文、ベンチマーク論文、ポジションペーパー |
+| [references/writing-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/writing-guide.md) | Gopen & Swan の 7 原則、Perez の細かなコツ、Lipton の語選び、Steinhardt の精密さ、図の設計 |
+| [references/citation-workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/citation-workflow.md) | 引用まわりの API、Python のコード、CitationManager クラス、BibTeX の管理 |
+| [references/checklists.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/checklists.md) | NeurIPS の 16 項目、ICML、ICLR、ACL の要件、投稿前の共通チェックリスト |
+| [references/reviewer-guidelines.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/reviewer-guidelines.md) | 評価基準、点数、よくある懸念、反論のひな形 |
+| [references/sources.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/sources.md) | 執筆ガイド、会議の規定、API の完全な文献一覧 |
+| [references/experiment-patterns.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/experiment-patterns.md) | 実験設計のパターン、評価手順、監視、エラーからの復帰 |
+| [references/autoreason-methodology.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/autoreason-methodology.md) | Autoreason のループ、戦略の選び方、モデル選び、プロンプト、スコープ制約、Borda 集計 |
+| [references/human-evaluation.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/human-evaluation.md) | 人手評価の設計、アノテーション手引き、一致度の指標、クラウドソーシングの品質管理、倫理審査の案内 |
+| [references/paper-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/references/paper-types.md) | 理論論文（証明の書き方、定理の構成）、サーベイ論文、ベンチマーク論文、ポジションペーパー |
 
 ### LaTeX のテンプレート {#latex-templates}
 
 `templates/` に、**NeurIPS 2025**、**ICML 2026**、**ICLR 2026**、**ACL**、**AAAI 2026**、**COLM 2025** 向けのテンプレートがあります。
 
-組版の手順は [templates/README.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research\research-paper-writing/templates/README.md) にあります。
+組版の手順は [templates/README.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/research/research-paper-writing/templates/README.md) にあります。
 
 ### 主な外部出典 {#key-external-sources}
 

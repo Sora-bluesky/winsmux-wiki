@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: 27efbea742cdf0ae264702146ea213b3f502bb77
+upstream_blob: dced6a9b6f2d551b02b498bb7a0aa4759c589eb3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -204,6 +204,19 @@ $ hermes computer-use doctor
 Windows と Linux では概念が当てはまらないので `skip` になります。
 `ax_capability` は macOS では AX、Windows では UIA、Linux では AT-SPI を調べ、
 届かないときはそれぞれに合った助言を返します。
+
+Linux では、常駐プロセスが管理された自動起動ではなく手書きの systemd ユーザー
+ユニットか XDG の自動起動エントリになります。doctor はそれらのユニットも読みます。
+`cua-driver` の `ExecStart` が、すでに整理されて残っていない
+`packages/releases/<version>/` ディレクトリを指している場合は、失敗した
+`daemon unit (...)` の検査として報告します（`~/.cua-driver/packages/current/cua-driver`
+を指すように直してください）。`cua-driver serve` を実行するユニットには
+`daemon (...)` の検査が付き、そのソケットへ接続しにいきます。何も待ち受けて
+いなければ `fail` で（起動の繰り返しで落ちている、停止している、一度も起動して
+いない、のいずれか）、常駐プロセスが応答すれば `pass` です。ドライバーを入れ直しても
+常駐プロセスは起動しません。起動するのは `systemctl --user status <unit>` です。
+`hermes computer-use status` も同じく常駐プロセスが落ちている旨の行を出し、
+終了コード 1 で終わります。
 
 ## エージェントのカーソルとセッション {#the-agent-cursor-and-sessions}
 

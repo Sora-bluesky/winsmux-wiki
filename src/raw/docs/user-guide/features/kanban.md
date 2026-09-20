@@ -2,7 +2,7 @@
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: 99fd8c8c03bea35a7385247d92dfcbdc6eb0e77c
+upstream_blob: d8311c9217a8277b3003afb5e4ec788f0a36cc48
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -553,7 +553,20 @@ summary は人が読む締めくくり、`metadata` は下流のエージェン�
 失敗は `1`、プロバイダがレート制限・過負荷・5xx・タイムアウトだったときや、
 アカウントが課金や上限の壁に当たったときは `75`（`EX_TEMPFAIL`）です。ディスパッチャはその実行を `rate_limited` として記録し、
 失敗に数えずタスクを待ち行列へ戻すので、上限の待ち時間が手順違反として
-記録されることはありません。ワーカーは自分のログの最終行に終了コードも書き出すので
+記録されることはありません。そして、再試行ではどうにもならないものをプロバイダが
+拒んだときは `78`（`EX_CONFIG`）です。プロファイルの資格情報（401/403、失効した鍵や
+無効な鍵）、モデル（404 / モデルが見つからない）、TLS の証明書の連なりが該当します。
+この **プロバイダ側の打ち切り** は、1 回目で遮断器を働かせます。ディスパッチャはその実行を
+`crashed` として `exit_kind: terminal_provider` を添えて記録し、`terminal_provider: true`
+つきの `gave_up` を出して、カードを `blocked` に置きます（この状態は固定で、
+`recompute_ready` が自動で戻すことはありません）。`last_failure_error` には
+プロバイダ自身の言葉が入ります。`kanban.failure_limit` / `max_retries` を使い切るまで
+同じ壁へ投げ直す、ということをしないわけです。実装側もレビュー側も記録のされ方は同じで、
+失効した鍵で落ちたレビュー担当のワーカーも、実装担当とまったく同じようにカードを置きます。
+`hermes kanban show` では *Provider rejected this profile's credential or model — blocked
+after one attempt* と出ます。担当プロファイルのプロバイダを直してから
+（`hermes -p <profile> auth` / `setup`）、`hermes kanban unblock <id>` を呼んでください。
+ワーカーは自分のログの最終行に終了コードも書き出すので
 （`[kanban-worker-exit] rc=<code>`）、巡回ごとに走る `hermes kanban dispatch` の
 プロセス — ワーカーを看取っておらず、その終了状態を読めません — でも、
 ゲートウェイ内蔵のディスパッチャと同じように同じ死に方を記録できます。その行へ届く前に
@@ -737,6 +750,7 @@ hermes dashboard        # "Kanban" tab appears in the nav, after "Skills"
 ### プラグインでできること {#what-the-plugin-gives-you}
 
 - 状態ごとに 1 列ずつ並ぶ **Kanban** タブ。`triage`、`todo`、`ready`、`running`、`blocked`、`done`（切替を入れると `archived` も）。
+  - 順番待ちの列は、実行に回る順（優先度、次に古いものから）にカードが並びます。いちばん上のカードが次に起動します。`done` の列は履歴なので、最近終わったものから並びます。コマンドで同じ並びを見るには `hermes kanban list --status done --sort completed-desc` を使います。
   - `triage` は、まだ粗い思いつきを置いておく列です。既定（`kanban.auto_decompose: true`）では、ここに入ったタスクに対してディスパッチャが **分解役** を自動で走らせます。組み込みの分解役は `auxiliary.kanban_decomposer` のモデル設定を使い、プロファイルの一覧（説明つき）を読んで、そのタスクを小さな子タスクの集まりへ広げ、いちばん合う専門役へ振り分けます。元のタスクはすべての子の親として生き続けるので、全部が終わったときに担当者（`kanban.orchestrator_profile`、それが無ければそのタスクがもともと持っていた担当者、それも無ければ現在の既定プロファイル）が起き上がって完了を判断します。ページ上部の **Orchestration: Auto/Manual** のピルで切り替えるか（緑 = Auto、灰色 = Manual）、`config.yaml` を直接編集してください。どちらの方式でも `hermes kanban specify` は使えます。広げたくないときの、1 タスクだけの仕様書き直しとして残っています。
 - カードには、タスク id、タイトル、優先度のバッジ、テナントのタグ、担当プロファイル、コメントとリンクの数、**進捗のピル**（子を持つタスクでは `N/M`）、「作成から N 前」が出ます。カードごとのチェックボックスで複数選択できます。
 - **Running の中でプロファイルごとに分ける** — ツールバーのチェックボックスで、Running の列を担当者ごとに小分けにできます。
@@ -910,7 +924,7 @@ hermes kanban create "<title>" [--body ...] [--assignee <profile>]
                                 [--json]
 hermes kanban list [--mine] [--assignee P] [--status S] [--tenant T] [--archived]
         [--workflow-template-id <id>] [--current-step-key <key>]
-        [--sort created|created-desc|priority|priority-desc|status|assignee|title|updated]
+        [--sort completed-desc|created|created-desc|priority|priority-desc|status|assignee|title|updated]
         [--json]
 hermes kanban show <id> [--json]
 hermes kanban assign <id> <profile>                    # or 'none' to unassign
@@ -1264,11 +1278,14 @@ hermes kanban notify-subscribe t_abcd \
   プロファイルの印が付いた購読だけを見ます。`writer` プロファイルの Telegram から作られた
   タスクの `completed` / `blocked` は、配分をしたのが `default` の
   ゲートウェイであっても、`writer` のゲートウェイが届けます。
-- **振り分けだけの束ね役プロファイル** は、購読に保存された
+- **`gateway.profile_routes` で結び付けた束ね役プロファイル** は、購読に保存された
   プラットフォーム、チャット、スレッド、範囲、親チャンネルの目印が
-  `gateway.profile_routes` を通してそのプロファイルちょうどに解決できるとき、主たるアダプタを使えます。
-  つながっている二次のアダプタがあれば、そちらが最終権限を持ちます。二次のアダプタの登録が
-  途中までしかない状態で、主たるボットへ落ちることはありません。一致しない、割り当てが変わった、
+  `gateway.profile_routes` を通してそのプロファイルちょうどに解決でき、かつその購読の
+  プラットフォーム向けのアダプタをそのプロファイルが自分では持っていないとき、
+  主たるアダプタを使えます。そのプラットフォームでつながっている二次のアダプタがあれば、
+  そちらが最終権限を持ちます。そのプロファイルが *ほかの* プラットフォームで動かしている
+  アダプタは、配達をさまたげません（結び付けたチャットを受け持つ資格情報は共有のボットだけで、
+  入ってくる手番も通知も同じです）。一致しない、割り当てが変わった、
   無効になった、あいまいな経路は、配達されないまま再試行に残ります。必要な経路の目印を
   欠いた古い行が、当て推量でプロファイルに結びつけられることはありません。起こす手番は、
   届け先プロファイルの実行範囲と、許可された通り道を保ちます。
@@ -1390,7 +1407,7 @@ hermes kanban runs t_abcd
 | `respawn_guarded` | `{reason}` | ディスパッチャがこの周回で、この ready タスクの起動し直しを拒んだ。理由は `infrastructure_cooldown`（ホストが前回の起動を断った — 再起動に耐える systemd のスコープが作れなかった — うえ、クールダウンが明けていない。カードの不利には決して数えない）、`rate_limit_cooldown`（前回の実行が上限の壁に当たった。同じクールダウンで、やはり数えない）、`blocker_auth`（前回の失敗が上限・認証・429 のエラー — 待ち時間が明けるのを待つ）、`recent_success`（直近 1 時間に完了した実行がある — 再実行の前にレビューを待つ）、`active_pr`（直近のコメントに GitHub の PR の URL がある — 前のワーカーがすでに PR を開いている）。タスクは `ready` のままで、次の周回にまた起動の機会がある。原因が続く場合は、ふつうの `consecutive_failures` の遮断器が `failure_limit` 回の失敗で `gave_up` を出して自動ブロックする。 |
 | `spawn_failed` | `{error, failures}` | 起動の試みが 1 回失敗した（PATH がない、作業場所をマウントできない、など）。カウンタが増え、タスクは再試行のため `ready` へ戻る。 |
 | `protocol_violation` | `{pid, claimer, exit_code, protocol_violation, worker_output?}` | タスクがまだ `running` のうちにワーカーが正常終了した。たいていは、盤を締める呼び出し（`kanban_complete`、`kanban_request_review`、`kanban_block`）なしに答えてしまった場合。違反のたびに出る（中身の `protocol_violation: true` の印は実行のメタデータへ写され、違反だけを数える再試行の予算に使われる）。予算の内（`_PROTOCOL_VIOLATION_FAILURE_LIMIT`（既定 3 回）まで、*連続する* 違反。タスクごとの `max_retries` が優先）であれば、タスクは次の試行のために `ready` へ戻るだけ。連続が上限に達すると、ディスパッチャは `gave_up` も出して自動ブロックする。`worker_output` はワーカー自身が最後に出した文章（たいていは、なぜ止まったかの説明）で、`last_failure_error` にも畳み込まれ、再試行するワーカーには前回の試行のエラーとして見える。 |
-| `gave_up` | `{failures, effective_limit, limit_source, error}` | 連続 N 回の不成功で遮断器が働いた。タスクは最後のエラーとともに自動でブロックされる。実効の上限は、タスクの `max_retries`、次にディスパッチャの `failure_limit` / `kanban.failure_limit`、最後に組み込みの既定の順で決まる。 |
+| `gave_up` | `{failures, effective_limit, limit_source, error, terminal_provider?}` | 連続 N 回の不成功で遮断器が働いた。タスクは最後のエラーとともに自動でブロックされる。実効の上限は、タスクの `max_retries`、次にディスパッチャの `failure_limit` / `kanban.failure_limit`、最後に組み込みの既定の順で決まる。`terminal_provider: true` は、再試行では直らないプロバイダ側のエラー（資格情報の失効、モデルの消滅）でワーカーが `78` で終了し、上限に関係なく 1 回目で遮断器が働いたことを表す（この状態は固定）。 |
 
 `hermes kanban tail <id>` は 1 つのタスクぶんを表示し、`hermes kanban watch` は盤の全体を流します。
 

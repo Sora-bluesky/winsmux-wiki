@@ -2,7 +2,7 @@
 title: "Telephony — Twilio の電話番号の取得、SMS / MMS、AI による発信"
 description: "Twilio の電話番号の取得、SMS / MMS、AI による発信"
 upstream_path: user-guide/skills/optional/productivity/productivity-telephony.md
-upstream_blob: 49c4858f41a5de1221aa4d3434591829e2b05cf4
+upstream_blob: b0b2116092e8c89154ed2f2ae3b012903e62a04f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-telephony
 ---
@@ -16,7 +16,7 @@ Twilio の電話番号の取得、SMS / MMS、AI による発信をあつかい�
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/productivity/telephony` で導入します |
-| パス | `optional-skills/productivity\telephony` |
+| パス | `optional-skills/productivity/telephony` |
 | バージョン | `1.0.0` |
 | 作者 | Nous Research |
 | ライセンス | MIT |

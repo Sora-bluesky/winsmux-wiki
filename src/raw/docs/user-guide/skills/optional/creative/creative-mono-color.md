@@ -2,7 +2,7 @@
 title: "Mono Color — 1色または2色刷りの、編集デザイン調の印刷ポスター画像を作る"
 description: "1色または2色刷りの、編集デザイン調の印刷ポスター画像を作る"
 upstream_path: user-guide/skills/optional/creative/creative-mono-color.md
-upstream_blob: e24f0b6aa4db237bdc3514447ac7059ca5a39dac
+upstream_blob: a0582ae44b66fbf99ae3d3a9f51d0686c832636d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-mono-color
 ---

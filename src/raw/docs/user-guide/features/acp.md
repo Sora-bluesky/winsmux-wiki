@@ -2,7 +2,7 @@
 title: "ACP ホスト連携"
 description: "ACP に対応したエディタや共同作業ツールの中で Hermes Agent を使う"
 upstream_path: user-guide/features/acp.md
-upstream_blob: aff86e2a32b1778ff5de4e46319f9ce1e9fda942
+upstream_blob: 8d7ad9dd475c0c7b866385de4baed6547830d747
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/acp
 ---
@@ -350,6 +350,9 @@ ACP のセッションは、エディタの作業ディレクトリを Hermes �
 ください。
 
 制限時間を過ぎたときやエラーが起きたときは、承認の橋渡し部分が要求を拒否します。
+待つ長さは `config.yaml` の `approvals.timeout`（初期値は 300 秒）で、CLI や
+ゲートウェイの確認で使われるものと同じつまみです。エディタが承認のカードを
+もっと長く開いたままにするなら、この値を大きくしてください。
 
 ### セッションの間だけ編集を自動承認する {#session-scoped-edit-auto-approval}
 

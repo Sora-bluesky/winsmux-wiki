@@ -2,7 +2,7 @@
 title: "Maps — OpenStreetMap と OSRM で位置検索・周辺施設・経路・タイムゾーンを調べる"
 description: "OpenStreetMap と OSRM で位置検索・周辺施設・経路・タイムゾーンを調べる"
 upstream_path: user-guide/skills/bundled/productivity/productivity-maps.md
-upstream_blob: d6ff985af39f671e3366c5cd9e0d273f18c06d26
+upstream_blob: dfc1e152a4666c2774f89d0e68dd4add4cf87912
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-maps
 ---
@@ -16,7 +16,7 @@ OpenStreetMap と OSRM で位置検索・周辺施設・経路・タイムゾー
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity\maps` |
+| パス | `skills/productivity/maps` |
 | バージョン | `1.2.0` |
 | 作者 | Mibayy |
 | ライセンス | MIT |

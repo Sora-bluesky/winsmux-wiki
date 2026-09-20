@@ -2,7 +2,7 @@
 title: "Grok — xAI の Grok Build CLI にコーディングを任せる（機能追加、PR）"
 description: "xAI の Grok Build CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok.md
-upstream_blob: 6072540efe5bd348bce3bd29de20af5e2d2ea612
+upstream_blob: ec82fbc82675ef2ab1c12d0bdad00d458eecdd10
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok
 ---
@@ -16,7 +16,7 @@ xAI の Grok Build CLI にコーディングを任せます（機能追加、PR�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/autonomous-ai-agents/grok` で入れます |
-| パス | `optional-skills/autonomous-ai-agents\grok` |
+| パス | `optional-skills/autonomous-ai-agents/grok` |
 | バージョン | `0.1.1` |
 | 作者 | Matt Maximo (MattMaximo), Hermes Agent |
 | ライセンス | MIT |
@@ -203,7 +203,7 @@ terminal(command="grok --no-auto-update -c -p 'What did you change last time?'",
 3. Grok の標準出力をそのまま `write_file()` で目的のノートに保存します。
 
 ```
-grok --no-auto-update -p "Read /tmp/current.md and /tmp/inventory.md. Produce markdown only, no preamble. Output a clean note titled 'Cleanup Review'." --output-format plain
+grok --no-auto-update -p "Read ~/.hermes/cache/scratch/current.md and ~/.hermes/cache/scratch/inventory.md. Produce markdown only, no preamble. Output a clean note titled 'Cleanup Review'." --output-format plain
 ```
 
 **気をつける点（Claude Code と同じです）:** 文書を書き直させるとき、「これを
@@ -237,22 +237,22 @@ terminal(command="gh pr comment 42 --body '<review text>'", workdir="/path/to/re
 
 ```
 # Create worktrees
-terminal(command="git worktree add -b fix/issue-78 /tmp/issue-78 main", workdir="~/project")
-terminal(command="git worktree add -b fix/issue-99 /tmp/issue-99 main", workdir="~/project")
+terminal(command="git worktree add -b fix/issue-78 ~/.hermes/cache/scratch/issue-78 main", workdir="~/project")
+terminal(command="git worktree add -b fix/issue-99 ~/.hermes/cache/scratch/issue-99 main", workdir="~/project")
 
 # Launch Grok headless in each (background)
-terminal(command="grok --no-auto-update --always-approve -p 'Fix issue #78: <description>. Commit when done.'", workdir="/tmp/issue-78", background=true, notify_on_complete=true)
-terminal(command="grok --no-auto-update --always-approve -p 'Fix issue #99: <description>. Commit when done.'", workdir="/tmp/issue-99", background=true, notify_on_complete=true)
+terminal(command="grok --no-auto-update --always-approve -p 'Fix issue #78: <description>. Commit when done.'", workdir="~/.hermes/cache/scratch/issue-78", background=true, notify_on_complete=true)
+terminal(command="grok --no-auto-update --always-approve -p 'Fix issue #99: <description>. Commit when done.'", workdir="~/.hermes/cache/scratch/issue-99", background=true, notify_on_complete=true)
 
 # Monitor
 process(action="list")
 
 # After completion: push and open PRs
-terminal(command="cd /tmp/issue-78 && git push -u origin fix/issue-78")
+terminal(command="cd ~/.hermes/cache/scratch/issue-78 && git push -u origin fix/issue-78")
 terminal(command="gh pr create --repo user/repo --head fix/issue-78 --title 'fix: ...' --body '...'")
 
 # Cleanup
-terminal(command="git worktree remove /tmp/issue-78", workdir="~/project")
+terminal(command="git worktree remove ~/.hermes/cache/scratch/issue-78", workdir="~/project")
 ```
 
 ## 便利なサブコマンドと TUI のコマンド {#useful-subcommands-tui-commands}

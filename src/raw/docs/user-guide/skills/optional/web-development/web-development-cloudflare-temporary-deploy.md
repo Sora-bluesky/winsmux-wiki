@@ -2,7 +2,7 @@
 title: "Cloudflare Temporary Deploy — アカウントなしで Worker を公開する（wrangler --temporary）"
 description: "アカウントなしで Worker を公開する（wrangler --temporary）"
 upstream_path: user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy.md
-upstream_blob: 3650a0bda8405a12ea0bdeb3c52ba4b4123d0e70
+upstream_blob: 233a05b285b77f685f4cf91e9d35dc575058e2d9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy
 ---
@@ -16,7 +16,7 @@ wrangler --temporary を使って、アカウントなしで Worker を公開し
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/web-development/cloudflare-temporary-deploy` で導入します |
-| パス | `optional-skills/web-development\cloudflare-temporary-deploy` |
+| パス | `optional-skills/web-development/cloudflare-temporary-deploy` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

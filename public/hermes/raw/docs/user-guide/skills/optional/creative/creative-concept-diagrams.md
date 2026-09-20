@@ -2,7 +2,7 @@
 title: "Concept Diagrams — フラットで最小限の教材向け SVG を HTML として作る"
 description: "フラットで最小限の教材向け SVG を HTML として作る"
 upstream_path: user-guide/skills/optional/creative/creative-concept-diagrams.md
-upstream_blob: 84a229f7ea3e657afe145ff9b6d15cbda8356485
+upstream_blob: e2741e29196f85e248a1f3d12ee7a8fcf4b51286
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-concept-diagrams
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/concept-diagrams` で入れます |
-| パス | `optional-skills/creative\concept-diagrams` |
+| パス | `optional-skills/creative/concept-diagrams` |
 | バージョン | `0.1.0` |
 | 作者 | v1k22（もとの PR）、hermes-agent へ移植 |
 | ライセンス | MIT |

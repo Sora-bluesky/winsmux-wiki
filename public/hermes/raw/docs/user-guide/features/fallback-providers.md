@@ -2,7 +2,7 @@
 title: "フォールバックプロバイダー"
 description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: d8cf8f73af8c2efb3975af2f2f68406bcf96003d
+upstream_blob: 7dabb0b02e000dfea43d7a70129b9139cdbe8166
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
@@ -118,7 +118,7 @@ fallback_providers:
 - **サーバーエラー**（HTTP 500、502、503） — 再試行を使い切ったあと
 - **認証失敗**（HTTP 401、403） — ただちに（再試行しても意味がないため）
 - **見つからない**（HTTP 404） — ただちに
-- **不正な応答** — API が壊れた応答や空の応答を繰り返し返したとき。ストリーミング中の拒否（モデルが拒否用のチャンネルで理由を添えて断ること）は空の応答ではなく、最終結果の `content_filter` として扱われます。そのため再試行はせず、そのまま表示します。Anthropic 本来の通信では `stop_reason: refusal` が本文なしで届きます。Hermes はその応答の `stop_details` にある理由（区分と、あれば説明）を拒否のメッセージとログの行（`native_stop_reason=… stop_details=…`）に載せます。
+- **不正な応答** — API が壊れた応答や空の応答を繰り返し返したとき。HTTP 200 で返ってきた本文でも、アシスタントの発言がルーターの `Connect timeout, please try again later.` だけで、生成したトークンが 0 なら、これも不正として数えます（ストリーミングかどうかを問わず、主となるやり取りでも、反復上限のまとめでも、補助的な呼び出しでも同じです）。そのため、そのまま答えとして見せずに再試行します。ストリーミング中の拒否（モデルが拒否用のチャンネルで理由を添えて断ること）は空の応答ではなく、最終結果の `content_filter` として扱われます。そのため再試行はせず、そのまま表示します。Anthropic 本来の通信では `stop_reason: refusal` が本文なしで届きます。Hermes はその応答の `stop_details` にある理由（区分と、あれば説明）を拒否のメッセージとログの行（`native_stop_reason=… stop_details=…`）に載せます。
 
 作動すると、Hermes は次の順に処理します。
 
@@ -181,15 +181,16 @@ fallback_providers:
 ```yaml
 fallback_providers:
   - provider: openai-codex
-    model: gpt-5.3-codex
+    model: gpt-5.4
 ```
 
 ### フォールバックが効く場所 {#where-fallback-works}
 
 | 場面 | フォールバック対応 |
 |---------|-------------------|
-| CLI のセッション | ✔ |
+| CLI のセッション（対話形式と `hermes -z` の一回きりの実行） | ✔（主プロバイダーの資格情報や残量が足りずに起動したとき、セッションの途中、そしてチャットを開いたまま連鎖を足したり直したりしたときは次のやり取りから効きます） |
 | メッセージングゲートウェイ（Telegram、Discord など） | ✔ |
+| デスクトップアプリや TUI のチャット | ✔（チャットを開いたまま連鎖を足したり直したりしたときは、次のやり取りから効きます） |
 | サブエージェントへの委任 | ✔（`delegation.fallback_providers` が設定されていればそれを使います。設定がなければ、モデルを固定していない子だけが親の連鎖を引き継ぎます。`[]` で無効にできます） |
 | cron ジョブ | ✔（cron のエージェントは設定済みのフォールバックプロバイダーを引き継ぎます） |
 | `provider: auto` の補助タスク | ✔（タスクごとのフォールバックを試し、次にメインのフォールバック連鎖、それから組み込みの補助用探索へ進みます） |

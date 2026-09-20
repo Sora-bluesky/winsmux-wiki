@@ -2,7 +2,7 @@
 title: "Comps Analysis — Excel で類似企業比較の評価ブックを作る"
 description: "Excel で類似企業比較の評価ブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-comps-analysis.md
-upstream_blob: 5a17a99c597ba0e69ecde0c95d81215272d7b7d8
+upstream_blob: ac4f7e41981386f2f397c07fcb1ada6917eb6e47
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-comps-analysis
 ---
@@ -16,7 +16,7 @@ Excel で類似企業比較の評価ブックを作ります。
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/finance/comps-analysis` で入れます |
-| パス | `optional-skills/finance\comps-analysis` |
+| パス | `optional-skills/finance/comps-analysis` |
 | バージョン | `1.0.0` |
 | 作者 | Anthropic（Nous Research が移植） |
 | ライセンス | Apache-2.0 |

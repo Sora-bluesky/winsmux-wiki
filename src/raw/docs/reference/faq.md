@@ -2,7 +2,7 @@
 title: "よくある質問とトラブル対処"
 description: "Hermes Agent でよくある質問と、つまずきやすい箇所の対処法"
 upstream_path: reference/faq.md
-upstream_blob: 62fc20ec60fd69b011582b4e0a4c4814c27dc0a1
+upstream_blob: db9777c1dbca5ab0ae0d18f7d8d24b63646ca316
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/faq
 ---
@@ -233,6 +233,22 @@ Hermes 側の制御はもっとはっきり出ます。ツールの実行がブ�
 
 Hermes が公式に備えている実行制御は [セキュリティ](/hermes/docs/user-guide/security/)、プロバイダー側の設定は [プロバイダー](/hermes/docs/integrations/providers/) をご覧ください。
 
+#### 「Could not open a stream to `<host>` after N attempts (request X KB)」 {#could-not-open-a-stream-to-host-after-n-attempts-request-x-kb}
+
+**意味:** そのエンドポイントへの接続は毎回、ストリームのイベントが 1 つも届かないうちに失敗しています。つまり課金は発生していませんし、このあとも通常どおり再試行とフォールバックの流れが走ります。この行には、実際に接続しにいったホスト、試した回数、シリアライズしたあとのリクエストサイズが出ます。障害なのかリクエストサイズの上限なのかを切り分けるのに要る 3 つです。
+
+**対処:** リクエストが大きく（数百 KB — 長いコーディングのセッションでは、コンテキストが育つとこの大きさに届きます）、短い新規チャットなら通るなら、エンドポイントか、その手前のプロキシが、そのサイズの本文を拒んでいる可能性が高いです。本文サイズの上限を上げるか、`/compress` を実行してコンテキストを縮めてください。リクエストが小さいなら、エンドポイントに到達できていません。`base_url` を確かめてから `/retry` で試し直してください。試行ごとの例外の連なりは `logs/agent.log` に記録されています。
+
+#### メッセージへの返事: 「interrupted mid-request」と「not running or is unreachable」と「could not reach」の違い {#messaging-replies-interrupted-mid-request-vs-not-running-or-is-unreachable-vs-could-not-reach}
+
+チャットの画面（Telegram、Discord、Slack など）に、通信のときの生の例外がそのまま出ることはありません。ゲートウェイがそれを 3 種類の短い返事のどれかに置き換えます。どれが返ってきたかで、どこを見ればよいかが分かります。
+
+| 返事 | 起きたこと | どうするか |
+|---|---|---|
+| 「The connection to the AI model service was **interrupted mid-request** — usually transient.」 | つながっていた接続が途中で切れました（`Connection reset by peer`、EOF、`RemoteProtocolError`）。接続そのものには応答があったので、エンドポイントは動いています。 | `/retry` を実行します。大きなリクエストで繰り返し起きるなら、上のストリームの項目を見てください。 |
+| 「The AI model service isn't reachable right now — the configured model endpoint is **not running or is unreachable**.」 | 接続を受け付けるものが何もありませんでした（`Connection refused`、ホストへの経路なし、DNS の失敗）。 | モデルのサーバーを起動するか `base_url` を確かめてから `/retry` を実行します。そのホストで `hermes doctor` も試してください。 |
+| 「Hermes **could not reach** the AI model service (no further detail from the SDK).」 | SDK が一般的な `APIConnectionError` を返しただけで、原因が残っていません。上の 2 つのどちらとも言い切れない状態です。 | `/retry` を実行し、それでも続くなら `hermes doctor` を試します。生の例外は `hermes logs` にあります。 |
+
 #### `/model` に 1 つのプロバイダーしか出ない・切り替えられない {#model-only-shows-one-provider-cant-switch-providers}
 
 **原因:** チャットの中で使う `/model` は、**すでに設定済みの** プロバイダー間でしか切り替えられません。OpenRouter しか設定していなければ、`/model` にはそれしか出てきません。
@@ -325,6 +341,8 @@ hermes chat --model openrouter/google/gemini-3-flash-preview
 CLI の起動時の行に、検出したコンテキスト長が出ます（例: `📊 Context limit: 128000 tokens`）。セッション中なら `/usage` でも確認できます。
 
 **エラーを返さずに黙り込むローカルサーバー（llama.cpp、Ollama）の場合:** リクエストが大きすぎるとプロバイダーに拒否されると、Hermes は会話を圧縮してリクエストを組み立て直します。再試行の前に、組み立て直した*リクエスト全体*（システムプロンプト + ツールスキーマ + メッセージ）を測り直し、まだしきい値を超えていれば、回数を区切った圧縮をさらに走らせます。それでも収まらない場合は、llama.cpp が黙って切り詰めてしまうような特大のリクエストを送る代わりに、`Context length exceeded: compression could not reduce the rebuilt request below the safe threshold` を出してそのターンを終えます（切り詰められると、サーバーのログに `stop processing: n_tokens = 65535, truncated = 1` と出ます）。このメッセージが出たときは、ほぼ確実に上に挙げた `context_length` の設定が原因です。サーバー側で実際に指定している `-c` / `--ctx-size` に合わせてください。
+
+**「The model server rejected this request as too large, but this conversation is only about N tokens…」と出る場合:** サーバーは測定値をいっさい示さずに「コンテキスト超過」と言っている一方で、Hermes 自身が見積もったリクエストは、そのモデルについて把握しているウィンドウよりはるかに小さい状態です。そのため Hermes は圧縮もしませんし、会話のせいにもしません。そのターンは再試行できるまま残ります。スロットが 1 つしかないローカルサーバー（LM Studio、Ollama）では、ほぼ必ず、その時点で別のリクエストがサーバーのコンテキストを占有していることが原因です。たいていは、前のセッションから走っている裏側のメモリ見直しです（`logs/agent.log` に `thread=bg-review` と出ます）。少し待ってから `/retry` を実行してください。ほかに Hermes のプロセスが動いていないのに繰り返し出るなら、サーバーが Hermes の想定より小さいウィンドウでモデルを読み込んでいます。サーバー側のコンテキストの設定を上げるか、`model.context_length` をそれに合わせて下げてください。
 
 判定を直すには、明示的に指定します。
 
@@ -575,7 +593,7 @@ node --version
 npx --version
 
 # Test the server manually
-npx -y @modelcontextprotocol/server-filesystem /tmp
+npx -y @modelcontextprotocol/server-filesystem /path/to/allowed/dir
 ```
 
 `~/.hermes/config.yaml` の MCP の設定も確かめてください。

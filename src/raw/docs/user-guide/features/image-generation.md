@@ -2,7 +2,7 @@
 title: "画像生成"
 description: "FAL.ai 経由で画像を生成します。FLUX 2、GPT Image（1.5 と 2）、Nano Banana Pro、Ideogram、Recraft V4 Pro、Krea 2 など 11 モデルに対応し、`hermes tools` で選べます。"
 upstream_path: user-guide/features/image-generation.md
-upstream_blob: f184308054d4a63638aa27080ea26ccb00d1e00c
+upstream_blob: 2c9bd620b39d213be70c3db55141e8277bf8f60a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/image-generation
 ---
@@ -194,6 +194,62 @@ hermes config set image_gen.openai.model gpt-image-2.5-flare
 そのため Flare や Sunburst を「選んだ」としても、名前が付くだけで何の効果もありません。
 2.5 を使うなら、OpenAI API 直結の事業者か FAL を選んでください。
 
+### OpenAI 互換の独自エンドポイント {#custom-openai-compatible-image-endpoint}
+
+**OpenAI** の事業者は、チャットの事業者とは切り離して、OpenAI 互換の `/v1/images/generations`
+のエンドポイントなら何にでも向けられます（手元のゲートウェイ、用途を絞ったプロキシ、他社の API
+ゲートウェイなど）。キーを読み込む変数も、好きなものを指定できます。
+
+```yaml
+image_gen:
+  provider: openai
+  openai:
+    model: gpt-image-2-medium
+    base_url: http://localhost:18081/v1   # → OPENAI_BASE_URL → api.openai.com
+    key_env: IMAGE_GATEWAY_TOKEN          # → OPENAI_API_KEY
+```
+
+`config.yaml` に残るのは変数の*名前*だけで、秘密の値そのものは `.env` かプロセスの環境変数に
+置いたままです。使えるかどうかの確認も生成も同じ解決のしかたを通るので、`key_env` を設定して
+あればそれで足ります。`OPENAI_API_KEY` は要りません。リクエストは Hermes 自身の HTTP
+クライアントを通ります。こちらは `HTTP(S)_PROXY` と `NO_PROXY` には従いますが、macOS の
+システム側のプロキシ設定は無視するので（その除外リストは Python からは見えません）、`localhost`
+のエンドポイントには直接つながります。画像のリクエストでは `OpenAI-Project` ヘッダを空にして
+送ります。チャット用に `OPENAI_PROJECT_ID` を設定していると、モデルの許可リストがある
+プロジェクトでは画像のエンドポイントが 403 の `model_not_found` を返してしまいますし、キー自体が
+すでにプロジェクトの情報を持っているためです。
+
+**ゲートウェイでのモデル名。** カタログの ID は OpenAI 向けに読み替えられます。`gpt-image-2-medium`
+は `model: gpt-image-2` と `quality: medium` として送られます。`image_gen.openai.model`
+（または `OPENAI_IMAGE_MODEL`）にそれ以外の値を書くと、そのまま `model` として送られ、`quality`
+のフィールドは**付きません**。そのため、独自の画像モデル名（`custom-image-model`、
+`grok-imagine-image` など）を出すゲートウェイには、その ID がそのまま届き、受け付けないかもしれない
+quality の列挙値を見ずに済みます。全体で共有している `image_gen.model` は素通しされません。前に
+選んだ別の事業者の ID（たとえば FAL のパス）が入っていることがあるからです。
+
+**名前を付けた独自エンドポイントを使い回す。** そのゲートウェイをチャット用に `providers:` の下で
+すでに宣言してあるなら、URL とキーを書き直さずに、画像の事業者を*名前*で指せます。
+
+```yaml
+providers:
+  my-gateway:
+    name: My Gateway
+    api: https://gateway.example.com/v1
+    key_env: MY_GATEWAY_KEY
+
+image_gen:
+  provider: openai
+  openai:
+    provider: my-gateway        # inherits api + key_env from providers.my-gateway
+    model: grok-imagine-image   # sent verbatim, no quality
+```
+
+解決の順番は、`image_gen.openai.base_url` → 名前で指したエンドポイントの URL →
+`OPENAI_BASE_URL` で、キーは `image_gen.openai.key_env` が指す変数 → 名前で指した
+エンドポイントの `api_key` か `key_env` → `OPENAI_API_KEY` の順です。ですから `provider` の
+隣に `base_url` や `key_env` を書くと、その部分だけエンドポイント側の設定を上書きします。
+`providers:` のどの項目にも当たらない名前は、警告に記録したうえで無視されます。
+
 ## 使い方 {#usage}
 
 エージェントから見える指定はあえて最小限にしてあります。設定した内容はモデルの側が読み取ります。
@@ -321,6 +377,7 @@ FAL の画像の拡大処理が動くときは、次の設定が使われます�
 3. **送信** — `_submit_fal_request()` が、保存された `image_gen.provider` の選択に従って、FAL の資格情報で直接送るか、管理型の Nous ゲートウェイを通すかを決めます。
 4. **拡大** — エージェントが `upscale: true` を渡したときだけ動きます。どのモデルもカタログ上の既定は「切」です。
 5. **受け渡し** — できあがった画像の URL がエージェントに返り、エージェントが `MEDIA:<url>` というタグを出します。各サービスのつなぎ役が、それをそのサービスのメディア表示に変えます。
+6. **利用状況の集計** — トークンで課金する画像モデル（OpenRouter のチャット画像モデルや、`google/gemini-3.1-flash-lite-image` のような Image API のモデル、OpenAI の `gpt-image`）は実際のトークン数を返します。そのため呼び出しごとに、課金元の事業者とモデルのもとで `image_generation` というタスクとして `session_model_usage` に記録され、`hermes insights` やダッシュボードの利用状況の分析にも、ほかのモデルの呼び出しと並んで出てきます。1 枚ごとに課金する接続先（FAL、xAI、Krea など）はトークンの使用量を返さないので、そこには記録されません。
 
 ## 不具合を調べる {#debugging}
 

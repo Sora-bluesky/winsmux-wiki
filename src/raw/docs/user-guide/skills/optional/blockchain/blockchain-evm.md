@@ -2,7 +2,7 @@
 title: "Evm — 読み取り専用の EVM クライアント。8 つのチェーンの残高、トークン、ガス代を見る"
 description: "読み取り専用の EVM クライアント。8 つのチェーンの残高、トークン、ガス代を見る"
 upstream_path: user-guide/skills/optional/blockchain/blockchain-evm.md
-upstream_blob: eaa5b860eae7e025f08925cf226aac4b5f66cf61
+upstream_blob: 32865877213aa868c45baf295412b1ab9e42308d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/blockchain/blockchain-evm
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/blockchain/evm` で入れます |
-| パス | `optional-skills/blockchain\evm` |
+| パス | `optional-skills/blockchain/evm` |
 | バージョン | `1.0.0` |
 | 作者 | Mibayy (@Mibayy), youssefea (@youssefea), ethernet8023 (@ethernet8023), Hermes Agent |
 | ライセンス | MIT |

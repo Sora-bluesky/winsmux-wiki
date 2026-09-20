@@ -2,7 +2,7 @@
 title: "Opencode — コーディングを OpenCode CLI に任せる（機能追加、PR レビュー）"
 description: "コーディングを OpenCode CLI に任せる（機能追加、PR レビュー）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode.md
-upstream_blob: dc0626684f17a85d56d078ff6f22309bec5809df
+upstream_blob: c458d8d33eb51ab12551ee1ac9271f2b650740b7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/autonomous-ai-agents\opencode` |
+| パス | `skills/autonomous-ai-agents/opencode` |
 | バージョン | `1.2.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -185,8 +185,8 @@ terminal(command="REVIEW=$(mktemp -d) && git clone https://github.com/user/repo.
 ぶつからないように、作業ディレクトリや worktree を分けます。
 
 ```
-terminal(command="opencode run 'Fix issue #101 and commit'", workdir="/tmp/issue-101", background=true, pty=true)
-terminal(command="opencode run 'Add parser regression tests and commit'", workdir="/tmp/issue-102", background=true, pty=true)
+terminal(command="opencode run 'Fix issue #101 and commit'", workdir="~/.hermes/cache/scratch/issue-101", background=true, pty=true)
+terminal(command="opencode run 'Add parser regression tests and commit'", workdir="~/.hermes/cache/scratch/issue-102", background=true, pty=true)
 process(action="list")
 ```
 

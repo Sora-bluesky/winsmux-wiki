@@ -2,7 +2,7 @@
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: 56430819040b5ac7868e43cb054cbb8cdde7c926
+upstream_blob: e3c45ccd6d51d0b26228cd404017c06d9e392363
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -148,7 +148,8 @@ CLI の起動処理は、Hermes のほかの部分を import する前に `_appl
 （適用するのは `hermes_state_schema.py`）を参照してください。そちらにはゲートウェイの
 経路情報である `session_key`、`chat_id`、`chat_type`、`thread_id`、`display_name`、
 `origin_json`、`expiry_finalized`、作業環境の `cwd` / `git_branch` / `git_repo_root`、
-引き継ぎと圧縮失敗に関する列、`profile_name`、`rewind_count`、`archived`、
+引き継ぎと圧縮失敗に関する列、`profile_name`、`transport_profile`（その通り道を
+受け取った多重化の bot。空でも構いません）、`rewind_count`、`archived`、
 `pinned` も含まれます。
 
 ```sql
@@ -231,6 +232,7 @@ CREATE INDEX IF NOT EXISTS idx_messages_session_id ON messages(session_id, id);
 補足:
 - `tool_calls` は JSON の文字列として保存されます（ツール呼び出しオブジェクトの配列を直列化したもの）
 - `reasoning_details`、`codex_reasoning_items`、`codex_message_items` も JSON の文字列で保存されます
+- `reasoning_details` は履歴に必ず残ります。ただし chat-completions の通信で送り直すのは OpenRouter と Nous Portal に対してだけです（ほかの chat-completions の経路には、この項目を外した写しが渡ります。決まりの厳しいスキーマがこの項目を受け付けないためです）
 - デスクトップの履歴の復元では、REST と JSON-RPC（`session.resume`、`session.activate`、`session.history`）のどちらの表現でも、アシスタント側の付随データを残します。推論やツール呼び出しを含む行も同じです。REST は SQLite の JSON 文字列をそのまま返すことがあり、RPC は復号した項目を返しますが、デスクトップはどちらも受け付けます。Responses の最終的な返答が `codex_message_items` にしか入っておらず、`content` が空のこともあります。それでも正規の content が優先され、分析や注釈の項目が返答の本文へ格上げされることはありません。
 - `reasoning` には、生の推論テキストを出すプロバイダの場合にその本文が入ります
 - 推論だけで正常に終わった応答（`content` が空、`finish_reason=stop`、推論あり）には推論のテキストがそのまま返答として使われますが、アシスタントの行にその本文が `content` として書かれることはありません。`content` は空のままで、本文は `reasoning` や `reasoning_content` に入り、`api_content` が同じ文字列を持つので、次のリクエストでもバイト単位で同じ返答を再生できます。そのため履歴の画面では、返答ではなく推論として表示されます。
@@ -292,7 +294,7 @@ hermes のプロセスが複数（ゲートウェイ、CLI のセッション、
 `state.db` は 1 つを共有します。`SessionDB` クラスは書き込みの競合を次のように処理します。
 
 - **SQLite のタイムアウトを短く**（既定の 30 秒ではなく 1 秒）
-- **アプリ側での再試行**にランダムな揺らぎを持たせる（20〜150 ミリ秒、最大 15 回）
+- **アプリ側での再試行に制限時間を設ける**。ランダムな揺らぎを持たせます（最初の 2 秒は 20〜150 ミリ秒、そのあとは 250 ミリ秒〜1 秒）。持ち時間は通常の書き込みが 20 秒、会話記録の書き込みが 60 秒（失敗するとそのターンが打ち切られるため）、記録目的だけの活動ログの書き込みが 0.5 秒です
 - **BEGIN IMMEDIATE** のトランザクションで、ロックの競合をトランザクション開始時に表面化させる
 - **WAL のチェックポイント**を書き込み 50 回成功ごとに実行（PASSIVE モード）
 
@@ -300,11 +302,24 @@ hermes のプロセスが複数（ゲートウェイ、CLI のセッション、
 同じ間隔でいっせいに再試行してしまう「行列効果」を避けられます。
 
 ```
-_WRITE_MAX_RETRIES = 15
-_WRITE_RETRY_MIN_S = 0.020   # 20ms
-_WRITE_RETRY_MAX_S = 0.150   # 150ms
+_WRITE_PATIENCE_S, _TRANSCRIPT_WRITE_PATIENCE_S, _ACTIVITY_WRITE_PATIENCE_S = 20.0, 60.0, 0.5
+_WRITE_RETRY_MIN_S, _WRITE_RETRY_MAX_S = 0.020, 0.150
+_WRITE_RETRY_SLOW_MIN_S, _WRITE_RETRY_SLOW_MAX_S = 0.250, 1.000
 _CHECKPOINT_EVERY_N_WRITES = 50
 ```
+
+書き手が持ち時間を使い切ると、そのターンは `session_persistence_failed:locked` で
+終わります。さらに Linux では `hermes_state_lockowners` が WARNING を出し、その時点で
+ロックを握っていたプロセスを名前付きで記録します
+（`PID 594094 (hermes --worktree --yolo) holds WAL write lock on state.db-shm`）。
+これは `/proc/locks` から読み取ったもので、SQLite のバイト範囲 `fcntl` ロックは
+ロックの種類をオフセットで表しています（`state.db-shm` の 120 バイト目が WAL の書き込み、
+121 がチェックポイント、123〜127 が読み取り枠。`state.db` 側の 1 GiB の pending バイトの
+ページはロールバックジャーナルの PENDING / RESERVED / SHARED です）。開いている
+ファイル記述子を調べるやり方ではこの区別ができません。Hermes のプロセスはどれも
+この DB を開いているからです。`database is locked` の失敗のすぐ隣に出るこの行を、
+`~/.hermes/logs/errors.log` で探してください。
+
 
 ## よく使う操作 {#common-operations}
 
@@ -314,7 +329,7 @@ _CHECKPOINT_EVERY_N_WRITES = 50
 from hermes_state import SessionDB
 
 db = SessionDB()                           # Default: ~/.hermes/state.db
-db = SessionDB(db_path=Path("/tmp/test.db"))  # Custom path
+db = SessionDB(db_path=Path("~/.hermes/cache/scratch/test.db").expanduser())  # Custom path
 ```
 
 ### セッションの作成と管理 {#create-and-manage-sessions}

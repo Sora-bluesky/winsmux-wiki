@@ -2,7 +2,7 @@
 title: "Openhands — OpenHands CLI にコーディングを任せる（モデルを選ばない、LiteLLM）"
 description: "OpenHands CLI にコーディングを任せる（モデルを選ばない、LiteLLM）"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands.md
-upstream_blob: faff6bdc3cdaf320b768f164d18081087698a182
+upstream_blob: e05bfa83e0bafd87f24bbe32880d679209c35f4f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands
 ---
@@ -16,7 +16,7 @@ OpenHands CLI にコーディングを任せます（モデルを選ばない、
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/autonomous-ai-agents/openhands` で入れます |
-| パス | `optional-skills/autonomous-ai-agents\openhands` |
+| パス | `optional-skills/autonomous-ai-agents/openhands` |
 | バージョン | `0.1.0` |
 | 作者 | Tim Koepsel (xzessmedia), Hermes Agent |
 | ライセンス | MIT |
@@ -154,7 +154,7 @@ CLI はまず LiteLLM や Authlib からの標準エラー出力をすべて表�
 ```
 terminal(
   command="OPENHANDS_SUPPRESS_BANNER=1 LLM_MODEL=openrouter/openai/gpt-4o-mini LLM_API_KEY=$OPENROUTER_API_KEY LLM_BASE_URL=https://openrouter.ai/api/v1 openhands --headless --json --override-with-envs --exit-without-confirmation -t 'Print the string OPENHANDS_OK to stdout via the terminal tool.'",
-  workdir="/tmp",
+  workdir="~/.hermes/cache/scratch",
   timeout=120
 )
 ```

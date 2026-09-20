@@ -2,7 +2,7 @@
 title: "Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成"
 description: "リポジトリ内の SKILL.md を書く: フロントマターと構成"
 upstream_path: user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring.md
-upstream_blob: 7e53288669c1f93473ee2b0a3b883057d2ea23bd
+upstream_blob: 777ad2fc55e4d38e6d3594175718f8800739a288
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/software-development\hermes-agent-skill-authoring` |
+| パス | `skills/software-development/hermes-agent-skill-authoring` |
 | バージョン | `2.0.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -120,6 +120,7 @@ metadata:
 | `osascript`, `defaults`, `pmset` | `[macos]` |
 | `apt`/`systemctl`/`/proc` | `[linux]` |
 
+<!-- no-tmp: ok — names the anti-pattern skill authors must avoid -->
 `scripts/` の中で探すべき POSIX 限定の手がかり: `fcntl`, `termios`, `pty`, `os.fork`, `os.killpg`, `signal.SIGKILL`, `os.kill(pid, 0)` による生存確認、直書きされた `/tmp` `/proc` `/etc`。基本の姿勢は、まず OS をまたいで動くように直すこと（`tempfile.gettempdir()`, `pathlib.Path`, `psutil.pid_exists`）です。本当にそのプラットフォームでしか動かない依存があるときだけ範囲を狭め、その理由を `## Pitfalls` に書いてください。
 
 ## 大きさの上限 {#size-limits}

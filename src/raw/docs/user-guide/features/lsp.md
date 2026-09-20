@@ -2,7 +2,7 @@
 title: "LSP — 意味を読み取る診断"
 description: "本物の言語サーバー（pyright、gopls、rust-analyzer など）を、write_file と patch の書き込み後チェックにつなぎます。"
 upstream_path: user-guide/features/lsp.md
-upstream_blob: c34ac0e9c01db906d473971dac08e32790bb9667
+upstream_blob: 0a77a35e771d5ac385932456209fc5b88f89b04a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/lsp
 ---
@@ -77,6 +77,7 @@ LSP が動くかどうかは、**git のワークスペースかどうか**で�
 | YAML | `yaml-language-server` | npm |
 | Lua | `lua-language-server` | 手動（GitHub のリリース） |
 | PHP | `intelephense` | npm |
+| Laravel Blade（`.blade.php`） | `laravel-lsp` | 手動（composer） |
 | OCaml | `ocaml-lsp` | 手動（opam） |
 | Dockerfile | `dockerfile-language-server-nodejs` | npm |
 | Terraform | `terraform-ls` | 手動 |
@@ -119,12 +120,42 @@ PowerShellEditorServices は 1 つの実行ファイルではありません。`
 `pwsh` が見つかれば、`hermes lsp status` は `installed` と表示します。束が
 見当たらないときは、ダウンロード先のリンク付きの警告がログに一度だけ出ます。
 
+### Laravel Blade {#laravel-blade}
+
+`.blade.php` のテンプレートは [laravel-lsp](https://github.com/laravel/lsp)
+（Blade、Eloquent、Facade）が担当し、ふつうの `.php` のファイルは
+intelephense のままです。Composer で一度入れて、実行ファイルが PATH に
+載っていることを確かめてください（`lsp.servers.laravel-lsp.command` で
+場所を決め打ちしてもかまいません）。
+
+```bash
+composer global require laravel/lsp
+export PATH="$HOME/.config/composer/vendor/bin:$PATH"
+```
+
+Hermes はこれを `laravel-lsp lsp`（標準入出力）として起動します。自動で
+入れる手順は用意されていないので、実行ファイルが見つかるまで
+`hermes lsp status` には `manual-only` と表示されます。
+
 一部のサーバーは、npm が自動では引いてこない相棒のパッケージと一緒に
-入れる必要があります。今のところ該当するのは
-`typescript-language-server` で、同じ `node_modules` の木から
-`typescript` の SDK を読み込める必要があります。`hermes lsp install typescript`
-を実行したときや、初回利用で自動インストールが走ったときには、Hermes が
-両方のパッケージをまとめて入れます。
+入れる必要があります。`typescript-language-server` と
+`@vue/language-server` は、同じ `node_modules` の木から `typescript` の
+SDK を読み込める必要があります。`hermes lsp install typescript` や
+`hermes lsp install vue-language-server` を実行したとき、あるいは初回利用で
+自動インストールが走ったときには、Hermes が `typescript@6`（JavaScript で
+書かれた最後の系列です。TypeScript 7 は Go への移植版で `tsserver.js` を
+同梱していません）をサーバーと一緒に入れます。
+
+Vue は `@vue/language-server@2` に固定してあり、`vue.hybridMode: false` で
+起動して自前の TypeScript のサービスを抱えます。3.x の系列は、クライアント側が
+`tsserver` を立ててトンネルする作り（VS Code や Neovim の構成）でしか動かず、
+Hermes の汎用クライアントはそれを走らせないので、診断がまったく出てきません。
+以前の Hermes が 3.x を入れていた場合は、ログに
+`vue-language-server: ... 3.x` という警告が一度だけ出ます。
+`<HERMES_HOME>/lsp/node_modules/@vue` と
+`<HERMES_HOME>/lsp/bin/vue-language-server*` を消してから
+`hermes lsp install vue-language-server` を実行してください（この手順で
+TypeScript の SDK も一緒に入ります）。
 
 ## CLI {#cli}
 
@@ -155,8 +186,9 @@ lsp:
 
   # How long to wait for diagnostics after each write.
   wait_mode: document      # "document" or "full"
-  # Max seconds to wait for the server to re-check the file after an
-  # edit. Only *fresh* diagnostics (produced for the post-edit
+  # Max seconds to wait for the server on each of the two waits an
+  # edit makes: the pre-edit baseline snapshot and the post-edit
+  # re-check. Only *fresh* diagnostics (produced for the post-edit
   # content) are ever reported; if the server doesn't finish within
   # this budget, the edit reports "no LSP data" rather than stale
   # errors from before the edit. Raise this for slow servers on big
@@ -167,6 +199,20 @@ lsp:
   #   auto    — install via npm/pip/go install into <HERMES_HOME>/lsp/bin
   #   manual  — only use binaries already on PATH
   install_strategy: auto
+
+  # Node package manager for the npm-based servers: npm (default), pnpm
+  # or yarn. Installs still land in <HERMES_HOME>/lsp/node_modules; a
+  # manager that is configured but not installed — or a value outside
+  # npm|pnpm|yarn — skips the install with a warning instead of silently
+  # using npm, so a pnpm/yarn supply-chain policy (minimumReleaseAge,
+  # allowBuilds, …) is never bypassed. Yarn Berry (2+): its default PnP
+  # linker writes no node_modules/.bin, so set `nodeLinker: node-modules`
+  # in <HERMES_HOME>/lsp/.yarnrc.yml. pnpm 11 blocks git-hosted transitive
+  # deps by default (ERR_PNPM_EXOTIC_SUBDEP); @vue/language-server 2.x pulls
+  # one in, so under pnpm that server is skipped with the pnpm error in the
+  # log — install it once with npm, or relax block-exotic-subdeps in
+  # <HERMES_HOME>/lsp/.npmrc if your policy allows it.
+  package_manager: npm
 
   # How long an unused language-server client stays alive (seconds).
   # Idle servers are shut down automatically and respawned on the next
@@ -200,6 +246,32 @@ lsp:
   `initializationOptions` に混ぜ込みます。中身はサーバーごとに違うので、
   その言語サーバーの説明を見てください。
 
+### 自分で足すサーバー {#custom-servers}
+
+`lsp.servers` の項目のうち、組み込みのサーバー id **ではない**名前を書くと、
+それが自分の言語サーバーの宣言になります。必要なのは `command` と
+`extensions` で、ほかの項目は任意です。自分で足したサーバーは組み込みより
+*先に*照合されるので、Hermes がすでに面倒を見ている拡張子を引き取らせる
+こともできます。
+
+```yaml
+lsp:
+  servers:
+    panache:
+      command: ["panache-lsp", "--stdio"]   # PATH lookup or an absolute/~ path
+      extensions: [".pnch"]                 # or basenames like "Justfile"
+      root_markers: ["panache.toml"]        # nearest dir with one of these; default: workspace root
+      language_id: "panache"                # didOpen languageId; default: derived from the extension
+      description: "Panache markdown"
+      env: { PANACHE_LOG: "warn" }          # same optional keys as built-ins
+      initialization_options: {}
+```
+
+自分で足したサーバーが自動で入ることはありません。実行ファイルを PATH に
+置く（または絶対パスで書く）と、`hermes lsp status` が `installed` として
+並べます。書き方を間違えた項目は記録に残したうえで飛ばされ、ほかの
+サーバーには影響しません。
+
 ## インストール先 {#installation-locations}
 
 `install_strategy: auto` のとき、Hermes は実行ファイルを
@@ -224,7 +296,9 @@ lsp:
 診断が何も出ないきれいな書き込みでは、LSP の層が足す時間は数ミリ秒です。
 診断が出るときの待ち時間は `wait_timeout` 秒までで、実際には
 pyright や tsserver なら数十ミリ秒、索引を作っている最中の rust-analyzer
-なら数秒というところです。
+なら数秒というところです。1 回の編集で待つのは二度（差分を取るための
+編集前の控えと、編集後の見直し）なので、まったく答えを返さないサーバーでも
+1 回の編集にかかるのは最大で `2 × wait_timeout` です。
 
 診断には**新しさの関門**があります。今回の編集後の中身に対してサーバーが
 出したものだけを結果として数えます（変更のとき以降に届いた
@@ -239,6 +313,17 @@ pyright や tsserver なら数十ミリ秒、索引を作っている最中の r
 サーバーは、次にファイルを扱うときに自動でまた立ち上がります。
 `idle_timeout: 0` にすれば片付けをやめて、プロセスが生きている間ずっと
 すべてのサーバーの索引を温かいまま保てます。
+
+サーバーは、使われている最中であっても、そのワークスペースがなくなれば
+手放されます。Hermes が面倒を見ている作業ツリーを取り除くとき（`hermes -w`
+のセッションの終わり、Kanban のタスクの後片付け、任せたサブエージェントの
+作業ツリーの刈り込み）は、`git worktree remove` が走る前にその木の言語
+サーバーを閉じます。また定期的な見回りが、プロジェクトのルートがディスク上に
+もう存在しないサーバー（Hermes の外で消されたもの）を閉じます。この見回りは
+遊んでいるサーバーの片付けの一部なので、`idle_timeout: 0` にすると、消えた
+ルートの片付けも止まります。作業ツリーを取り除くときの解放はいつでも
+走ります。複数のルートを持つサーバーは、消えたフォルダーだけを手放し、
+隣り合ったほかのルートへの働きは続けます。
 
 複数のルートを持つワークスペースに対応しているサーバー（いまのところ
 pyright）は、Hermes のプロセスごとに **1 つのプロセス**として動きます。

@@ -2,14 +2,14 @@
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: 39634741d59a77c5016c1a97bb2aa8ca409e417c
+upstream_blob: c419c6db59baea4420bf4803ed0dbca9a2ecaef6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
 
 # 定期実行タスク（cron） {#scheduled-tasks-cron}
 
-自然な言葉や cron 式で、タスクを自動的に実行するよう予約できます。Hermes は、schedule / list / remove と別々に分かれたツールではなく、アクション形式の操作をそなえた単一の `cronjob` ツールで cron の管理を提供します。
+自然な言葉や cron 式で、タスクを自動的に実行するよう予約できます。Hermes は、schedule / list / remove と別々に分かれたツールではなく、アクション形式の操作をそなえた単一の `cronjob_manage` ツールで cron の管理を提供します。
 
 ## cron でいまできること {#what-cron-can-do-now}
 
@@ -23,14 +23,14 @@ cron ジョブでできることは次のとおりです。
 - **no-agent モード**で実行する — スクリプトを予定どおり走らせ、その標準出力をそのまま届けます。LLM は一切関与しません（下の [no-agent モード](#no-agent-mode-script-only-jobs)の節を参照）
 - **外部イベント**で発火する — `cron_job` を設定した webhook ルートは、次の予定時刻を待たずに、何かが起きた瞬間（PR にフィードバックが付いた、サービスがアラートを投げた）にジョブを発火させます。[イベント起動の cron ジョブ](/hermes/docs/user-guide/messaging/webhooks/#event-triggered-cron-jobs)を参照してください。
 
-これらはすべて `cronjob` ツールを通じて Hermes 自身からも使えます。つまり、普通の言葉で頼むだけでジョブの作成・一時停止・編集・削除ができ、CLI は要りません。
+これらはすべて `cronjob_manage` ツールを通じて Hermes 自身からも使えます。つまり、普通の言葉で頼むだけでジョブの作成・一時停止・編集・削除ができ、CLI は要りません。
 
 :::tip
-**cron ジョブはどのモデルで動くのか。** 発火時の解決順は、ジョブごとの固定 → `config.yaml` の `cron.model` → `hermes model` によるグローバル既定、です。
+**cron ジョブはどのモデルで動くのか。** 発火時の解決順は、ジョブごとの固定 → `config.yaml` の `cron.model` → `hermes model` のメインエージェントのモデル、です。
 
-- **ジョブごとの固定** — *あなた*が、ダッシュボード、`hermes cron create/edit --model … --provider …`、あるいは `~/.hermes/cron/jobs.json` の編集で設定します。いちど設定すると、変えるまで維持されます。エージェントの `cronjob` ツールは、ジョブごとのモデルを設定も変更もできません。推論の固定は利用者が持つものです。
+- **ジョブごとの固定** — そのジョブ自身がモデルを持っている状態です。特定のモデルを指定するには、ダッシュボード、`hermes cron create/edit --model … --provider …`、あるいは `~/.hermes/cron/jobs.json` の編集を使います。**いま使っているメインのモデルをそのまま固定する**なら `hermes cron create/edit --pin` です（エージェントの `cronjob_manage` ツールでも `pinned=true` で同じことができますが、あなたが頼んだときだけです）。`--unpin`（`pinned=false`）で固定を外せます。エージェントがジョブを*別の*モデルへ向けることはできません。推論の固定は利用者が持つものです。
 - **`cron.model` / `cron.model_provider`** — cron 群ぜんたいの既定です。固定されていないジョブはすべてこのモデルで動き、チャット用のモデルとは切り離されます。いちど設定しておけば（`hermes config set cron.model <name>`）、`hermes model` や `/model` でチャットのモデルを切り替えても cron 群には触れません。
-- **グローバル既定** — 上のどちらも設定されていないときだけ、ジョブは `hermes model` に従います。Hermes は作成時にプロバイダーとモデルを**スナップショット**として控え、それがそのジョブの実効的な固定になります。あとからグローバル既定を切り替えても（`hermes model`、`/model`、`hermes config set model.default …`）、ジョブは**作成したときのモデルとプロバイダーのまま動き続け**、実行ごとに違いを知らせる INFO 行を 1 行だけ残します。グローバルなモデル変更が予約ジョブを止めることはありませんし、無人のジョブが有料のプロバイダー／モデルへの切り替えを黙って引き継ぐこともありません（#44585）。ジョブを新しい既定へ移すには、**resnap** する（`hermes cron resnap <job_id>`、固定されていないジョブすべてなら `--all`）と、固定しないまま現在の既定を採用します。あるいは固定する（`hermes cron edit <job_id> --provider <provider> --model <model>`）か、`cron.model` を設定して群ぜんたいをまとめて移します。スナップショットの仕組みができる前に作られたジョブは、これまでどおり現在のグローバル既定に従います。
+- **メインエージェントのモデル** — 上のどちらも設定されていないとき、ジョブは**発火したその時点**で `hermes model` / `/model` に設定されているモデルで動きます。メインのモデルを変えれば、固定していないジョブは次の実行からそれに従います。
 
 どのプロバイダーに解決される場合でも、そのプロバイダー固有のリクエスト設定（カスタムプロバイダー向けの `extra_body`/`extra_headers` といった `request_overrides` など）は、対話セッションと同じように予約実行にも引き継がれます。
 
@@ -38,7 +38,7 @@ cron ジョブでできることは次のとおりです。
 :::
 
 :::tip
-**ジョブごとの推論エフォート。** ジョブは、モデルの固定とは別に、自分の思考レベルを固定できます。`none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max`、`ultra` のいずれかです。設定すると、そのジョブの実行についてはグローバルの `agent.reasoning_effort` と、モデルごとの `agent.reasoning_overrides` の両方を上書きします（`none` は思考を無効にします）。設定は `hermes cron create/edit --reasoning-effort high` で行い、編集時に空文字を渡すと固定を外して再び設定ファイルに従います。（エージェントの `cronjob` ツールには意図的に出していません。モデルの設定は利用者が決めることだからです。）モデルが対応していないレベルは、リクエストの時点でプロバイダーが丸めるか省きます。上限が `high` のモデルに `xhigh` を固定すると `high` で動きます。この固定は `no_agent` のジョブには効きません（調整すべき LLM 呼び出しがないためです）。重い定期分析は `high` で、安い繰り返しジョブは `minimal` で、というように、グローバル既定に触れずに使い分けられます。
+**ジョブごとの推論エフォート。** ジョブは、モデルの固定とは別に、自分の思考レベルを固定できます。`none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max`、`ultra` のいずれかです。設定すると、そのジョブの実行についてはグローバルの `agent.reasoning_effort` と、モデルごとの `agent.reasoning_overrides` の両方を上書きします（`none` は思考を無効にします）。設定は `hermes cron create/edit --reasoning-effort high` で行い、編集時に空文字を渡すと固定を外して再び設定ファイルに従います。（エージェントの `cronjob_manage` ツールには意図的に出していません。モデルの設定は利用者が決めることだからです。）モデルが対応していないレベルは、リクエストの時点でプロバイダーが丸めるか省きます。上限が `high` のモデルに `xhigh` を固定すると `high` で動きます。この固定は `no_agent` のジョブには効きません（調整すべき LLM 呼び出しがないためです）。重い定期分析は `high` で、安い繰り返しジョブは `minimal` で、というように、グローバル既定に触れずに使い分けられます。
 :::
 
 :::warning
@@ -75,7 +75,7 @@ Hermes に普通に頼みます。
 Every morning at 9am, check Hacker News for AI news and send me a summary on Telegram.
 ```
 
-Hermes は内部で、統合された `cronjob` ツールを使います。
+Hermes は内部で、統合された `cronjob_manage` ツールを使います。
 
 ## 発送前の設定検証 {#pre-dispatch-configuration-validation}
 
@@ -102,6 +102,13 @@ Hermes は内部で、統合された `cronjob` ツールを使います。
 ジョブがトークンを使うことはありません。次に正常な実行ができるとブロック状態は解除され、
 以後にまた設定が壊れたときはアラートが出ます。
 
+認証情報が見つからないという判定には、スケジューラーが読んだプロファイル名と `HERMES_HOME` が
+併記されます。たとえば `provider credential missing: No Codex credentials stored … [profile 'default', HERMES_HOME /opt/data]`
+のように出ます。「同じ」認証情報を使っているはずの対話セッションでは動く、という場合は、そこに
+出たパスとシェル側の `HERMES_HOME` を見比べてください。シェルの環境を引き継がずに起動した
+ゲートウェイ（Docker の `HOME` と `HERMES_HOME` の取り違え、サービスのユニットなど）や、多重化
+された衛星プロファイルは、シェルが読むものとは別の `auth.json` と `.env` を読んでいます。
+
 検証を無効にして、以前の挙動（実行が進み、途中で失敗する）に戻すには次のようにします。
 
 ```yaml
@@ -113,28 +120,17 @@ cron:
 
 ## 固定していないジョブを新しいグローバル既定へ移す {#moving-unpinned-jobs-to-a-new-global-default}
 
-固定していないジョブは作成時のプロバイダー／モデルのまま動くので、チャットのモデルを変えても
-cron 群が変わったり止まったりすることはありません。予約ジョブを*動かしたい*ときは、次のようにします。
+固定していないジョブはメインエージェントのモデルに従うので、`hermes model` を変えると cron 群も
+いっしょに動きます。あるジョブだけを*そのまま*にしておきたいときは、次のようにします。
 
 ```bash
-hermes cron edit <job_id> --provider <provider> --model <model>   # one job
-hermes config set cron.model <model>                               # every unpinned job
+hermes cron edit <job_id> --pin                                   # lock the current main model onto one job
+hermes cron edit <job_id> --provider <provider> --model <model>   # pin an explicit model
+hermes cron edit <job_id> --unpin                                 # follow the main model again
+hermes config set cron.model <model>                              # every unpinned job, without touching chat
 ```
 
-`hermes config set model.default …` と Desktop のモデル選択画面は、元のモデルのままになる
-固定していないジョブを一覧で示すので、意図して判断できます。保存されたスナップショットは、ジョブの
-プロバイダー・モデル・ベース URL を編集するたびに更新されます。
-
-resnap は、固定していないジョブの保存済みスナップショットを、固定せずに現在のグローバルな解決へ
-更新します。そのため、以後の変更も追い続けます。
-
-```bash
-hermes cron resnap <job_id>   # one job
-hermes cron resnap --all      # every unpinned agent job
-```
-
-エージェント向けの `cronjob` ツールも同じアクションを受け付けます（`action=resnap job_id=<id>` または
-`action=resnap all=true`）。固定済みの軸と、`no_agent` のスクリプトジョブはそのままです。
+`hermes cron list` と `cronjob_manage` ツールは、ジョブごとに `pinned` を表示します。
 
 ## スキル付きの cron ジョブ {#skill-backed-cron-jobs}
 
@@ -271,7 +267,7 @@ hermes cron tick
 - `remove` — まるごと削除します
 - `edit` — 予定・プロンプト・配信などを変えます
 
-**名前での指定。** 変更をともなう 4 つの動詞（`pause`、`resume`、`run`、`remove`、`edit`）と、エージェントの `cronjob` ツールは、16 進数の ID の代わりにジョブの**名前**も受け付けるようになりました（大文字小文字は区別しません）。エージェントも CLI も、ID の完全一致があればそちらを優先します。名前があいまいな場合（同じ名前のジョブが複数ある場合）は、候補の ID をすべて示して断るので、明示的に選び直せます。名前は一意ではないので、この防護は効いています。同じ名前のジョブが 2 つあるときに、黙って別のジョブを書き換えてしまうのを防ぎます。
+**名前での指定。** 変更をともなう 4 つの動詞（`pause`、`resume`、`run`、`remove`、`edit`）と、エージェントの `cronjob_manage` ツールは、16 進数の ID の代わりにジョブの**名前**も受け付けるようになりました（大文字小文字は区別しません）。エージェントも CLI も、ID の完全一致があればそちらを優先します。名前があいまいな場合（同じ名前のジョブが複数ある場合）は、候補の ID をすべて示して断るので、明示的に選び直せます。名前は一意ではないので、この防護は効いています。同じ名前のジョブが 2 つあるときに、黙って別のジョブを書き換えてしまうのを防ぎます。
 
 ### すべてを止める: `hermes pause` {#pausing-everything-hermes-pause}
 
@@ -301,7 +297,7 @@ cron 管理ツールの `create` アクション、ゲートウェイの `POST /
 
 ## エージェントによる予約管理（cron ジョブが cron ジョブを管理する） {#agent-managed-scheduling-cron-jobs-that-manage-cron-jobs}
 
-既定では、スケジューラー*から*起動されたエージェントは `cronjob` ツールを使えません。
+既定では、スケジューラー*から*起動されたエージェントは `cronjob_manage` ツールを使えません。
 予約ジョブが別のジョブを作ったり、編集したり、削除したりはできません。`config.yaml` で
 明示的に有効にします。
 
@@ -440,6 +436,21 @@ cron:
   retry_unreachable: false   # default true; disables the automatic re-runs
 ```
 
+### プロバイダーの利用枠が閉じている間、ジョブを預かる {#holding-a-job-through-a-closed-provider-usage-window}
+
+こちらは鏡写しの場合です。プロバイダー自身が、あとどれくらい閉じているかをはっきり教えてくれます。
+スケジューラーがサブスクリプション型のプロバイダー（今のところ OpenAI Codex の利用状況プローブ）を
+解決したときに、プロバイダーが利用上限を使い切ったと答え、`retry after <N>s` という手がかり（多くは
+何時間も先）を返し、そのうえフォールバックの連鎖もすべて使えない、という状況です。ここへ 1 時間
+より短い間隔のジョブを撃ち直しても、どの tick でも同じように失敗することが確定していて、そのたびに
+アラートが出ます。実行の途中でモデル API が返す 429 は、こういう預かり方はせず、通常の間隔で
+再試行されます。
+
+そこでスケジューラーは**ジョブを預かります**。失敗のアラートは 1 回だけで、枠が閉じていることと、
+ジョブを預かったことを伝えます。`next_run_at` は枠が明けたあとの最初の予定時刻へ動き（ジョブの
+記録では `quota_hold_until`）、それまでは何も起動せず、アラートも出ません。モデルまで届いた実行が
+あれば、預かりは解除されます。一度きりのジョブは預かりません。
+
 ### 失敗のインシデント: 1 度だけ知らせ、間をあけて念押しし、了解済みにする {#failure-incidents-alert-once-remind-on-a-cooldown-acknowledge}
 
 *同じ*エラーで失敗し続ける繰り返しジョブが知らせてくるのは、実行のたびではなく**1 度だけ**です。
@@ -568,7 +579,7 @@ doctor がジョブや状態を書き換えることはありません。報告�
 - `bot-chat:<profile>` は、**同じマシン上の**別のプロファイルを指します。名前は、ジョブを作るときに `hermes profile list` と突き合わせて検証されます。別のゲートウェイやマシンのプロファイルは決して指定できないので、マシンをまたいで同じ名前があっても曖昧になりません。
 - 配信 1 回につき、受け側のボットのエージェントのターンをまるごと 1 回使います。実行の間隔には気をつけてください。
 - ほかの宛先と組み合わせられますが（`bot-chat,telegram`）、`all` に含まれることは決してありません。
-- 本来のチャットが、メールボックスに対応した Desktop / TUI のバックエンドで開かれている場合、配信は、ボットが空いていても取り込み中でも**すぐに確実にキューへ入ります**。受信のターンを走らせるのはその生きた持ち主だけで、cron が競合する CLI の書き手を起こすことはありません。CLI しか使えない持ち主や、対応していない古い持ち主がそのチャットを握っている場合、cron は未着手の出力を、送る側のプロファイルの `cron/bot_chat_pending/<receipt-id>.json` に保持します。以後のスケジューラーの tick が、その持ち主がチャットを手放したあと、受け入れた順に届けます。持ち越された仕事は、スケジューラーの起動ルートが変わっても、受け入れたときの宛先ホームとレシート ID を保ち続けます。宛先が無くなったり名前が変わったりしても、作り直したり別のプロファイルへ振り替えたりはしません。`transferred` の保留記録が指すのは、失敗したターンではなく、生きた持ち主のレシートです。壊れた JSON の記録は、ほかのキュー済みの出力を止めずに保持され、ログに残ります。持ち主がいない場合は、これまでの `hermes chat -c "Bot Chat" --create-if-missing` の経路がそのまま使えます（通常のセッション所有権の確認も引き続き働きます）。その子プロセスは、cron がすでに確かめた宛先ホームをそのまま使い、独自のルートも含みます。引き継いだ `HOME` や、アクティブなプロファイルの変更で行き先が変わることはありません。宛先のディレクトリが無い場合は、起動する前に断られ、作り直されることはありません。持ち越された要求は、その経路を起動する前に確保されます。中断や、サブプロセスの結果がはっきりしない場合でも、自動で送り直すことはありません。
+- 本来のチャットが、メールボックスに対応した Desktop / TUI のバックエンドで開かれている場合、配信は、ボットが空いていても取り込み中でも**すぐに確実にキューへ入ります**。受信のターンを走らせるのはその生きた持ち主だけで、cron が競合する CLI の書き手を起こすことはありません。CLI しか使えない持ち主や、対応していない古い持ち主がそのチャットを握っている場合、cron は未着手の出力を、送る側のプロファイルの `cron/bot_chat_pending/<receipt-id>.json` に保持します。以後のスケジューラーの tick が、その持ち主がチャットを手放したあと、受け入れた順に届けます。持ち越された仕事は、スケジューラーの起動ルートが変わっても、受け入れたときの宛先ホームとレシート ID を保ち続けます。宛先が無くなったり名前が変わったりしても、作り直したり別のプロファイルへ振り替えたりはしません。`transferred` の保留記録が指すのは、失敗したターンではなく、生きた持ち主のレシートです。壊れた JSON の記録は、ほかのキュー済みの出力を止めずに保持され、ログに残ります。持ち主がいない場合は、これまでの `hermes chat -c "Bot Chat" --create-if-missing` の経路がそのまま使えます（通常のセッション所有権の確認も引き続き働きます）。その子プロセスは、cron がすでに確かめた宛先ホームをそのまま使い、独自のルートも含みます。引き継いだ `HOME` や、アクティブなプロファイルの変更で行き先が変わることはありません。その子プロセスの環境はまるごと**宛先**のプロファイルのもので、単独で `hermes -p <profile>` を起動したときと同じように組み立てられます。送った側のゲートウェイの `.env` の設定、橋渡しされた `TERMINAL_*` のポリシー、プラットフォームの認可ゲートと資格情報は落とされ、宛先が持つ秘密情報が上に重ねられます。宛先のディレクトリが無い場合は、起動する前に断られ、作り直されることはありません。持ち越された要求は、その経路を起動する前に確保されます。中断や、サブプロセスの結果がはっきりしない場合でも、自動で送り直すことはありません。
 - 未着手の出力に期限はありません。対応していない持ち主がずっと手放さなくても、黙って捨てられることはなく、キューに残ります。レシートはその中身を無期限に保持します。予期しない配信の例外はログに残り、`ambiguous` として保持され、その掃き取りの中のほかの配信を止めることはありません。claimed や ambiguous の試行が自動でやり直されることはありません。
 - **キューに入った＝完了ではありません。** cron はレシート ID と `queued`/`claimed` のステータスを `last_delivery_queued` に記録し、配信の結果は `queued`（届いてもいないし、失敗でもない）になります。成功したジョブは `delivery_queued` と表示されます。ほかの宛先での本当のエラーは、引き続き配信の失敗として優先されます。ボットはあとから終えるかもしれません。正本は、宛先プロファイルの `runtime/bot_live_delivery/<receipt-id>.json` にある消えないレシートです。cron 側の過去のステータスが自動で更新されることはありません。
 - 同じ実行をもう一度確かめると、持ち主が消えていても既存のレシートを見にいきます。受け入れたあとに別の書き手へ戻ることはありません。`failed`、`cancelled`、`ambiguous` のレシートが自動でやり直されることはありません。意図して新しい仕事を始める前に、チャットとレシートを確かめてください。cron の実行ごとに、配信の ID は別のものになります。
@@ -677,9 +688,9 @@ cron:
 触れられるのは、そのジョブ**自身の会話**だけです。
 
 - ジョブが作られた**作成元のチャット**、
-- `deliver: origin` が作成元を捕まえられなかったときの**ホームチャンネルへの受け皿**（生きた
-  ゲートウェイのチャットからではなく、スクリプトや API から作られたジョブ）。利用者の
-  主な会話が、作成元の代わりを務めます、
+- `deliver: origin` が作成元を捕まえられなかったときの**ホームチャンネルへの受け皿**（スクリプト
+  から作られたジョブや、配信を受け取れない要求・応答型の `api_server` プラットフォーム上の
+  セッションから作られたジョブ）。利用者の主な会話が、作成元の代わりを務めます、
 - ジョブの**ひとつだけの明示的な `platform:chat` 宛先**。ただし、そのジョブ自身が
   `attach_to_session: true` で有効にしたときに限ります。ジョブの作者が、その宛先を会話だと
   宣言した、という意味です。グローバルな `mirror_delivery` のフラグだけでは、明示的に宛先を
@@ -829,6 +840,18 @@ cron:
 
 この上限が縛るのは、ボットの**ターン**だけです。そのターンが仲間へメッセージを送った場合（`message_agent`）、配信のプロセスはそのあとも生き続け（`terminal.oneshot_completion_wait_seconds` が上限です）、仲間の返事が Bot Chat へ届けられるようにします。この待ち時間は配信の一部ではなく、この上限に数えられることも、この上限で打ち切られることもありません。
 
+## 単独送信のタイムアウト {#standalone-send-timeout}
+
+生きているゲートウェイのアダプターが配信できないとき（あるいはゲートウェイが動いていないとき）、宛先にはそのプラットフォームの単独の送信経路が使われます。この送信には実時間のタイムアウトがあり、既定は 60 秒です。再接続の途中の通信路が、ジョブの実行（とその後ろで待っている再起動後の掃き出し）をいつまでも縛ってしまわないようにするためです。
+
+```yaml
+# ~/.hermes/config.yaml
+cron:
+  standalone_send_timeout_seconds: 120
+```
+
+タイムアウトした送信は `last_delivery_error` に `standalone send to <target> timed out after Ns` として記録されます。アダプターがすでに受け取っていた場合は、メッセージが届くこともあります。
+
 ## no-agent モード（スクリプトだけのジョブ） {#no-agent-mode-script-only-jobs}
 
 LLM の推論が要らない繰り返しのジョブ — 昔ながらの見張り、ディスクやメモリの警告、死活の確認、CI への ping — には、作成のときに `no_agent=True` を渡します。スケジューラーは予定どおりスクリプトを走らせ、その標準出力をそのまま届け、エージェントをまるごと飛ばします。
@@ -865,7 +888,7 @@ terminal:
 
 ### エージェントが用意してくれます {#the-agent-sets-these-up-for-you}
 
-`cronjob` ツールのスキーマは `no_agent` を Hermes 自身へ見せているので、チャットで見張りの内容を伝えるだけで、エージェントに組み立てさせられます。
+`cronjob_manage` ツールのスキーマは `no_agent` を Hermes 自身へ見せているので、チャットで見張りの内容を伝えるだけで、エージェントに組み立てさせられます。
 
 ```text
 Ping me on Telegram if RAM is over 85%, every 5 minutes.
@@ -986,7 +1009,7 @@ cron のジョブは、設定したフォールバックのプロバイダーと
 
 この取りこぼしは `last_fire_error`（時刻と理由）としてジョブの記録に刻まれ、次の場所に現れます。
 
-- `cronjob` ツールの `action: "list"` — `last_fire_error` のフィールド
+- `cronjob_manage` ツールの `action: "list"` — `last_fire_error` のフィールド
 - `hermes cron list`: ジョブの下に、赤い取りこぼしの警告
 - `hermes cron doctor`: ジョブごとの取りこぼしの指摘。これがあると、コマンドは `1` で終了します
 - ダッシュボードのジョブの画面
@@ -1216,8 +1239,8 @@ cronjob(action="create", name="process-feed",
 ```bash
 #!/bin/bash
 # ~/.hermes/scripts/flag-ready.sh
-if test -f /tmp/new-data-ready; then
-  rm -f /tmp/new-data-ready
+if test -f ~/.hermes/cache/scratch/new-data-ready; then
+  rm -f ~/.hermes/cache/scratch/new-data-ready
   echo '{"wakeAgent": true}'
 else
   echo '{"wakeAgent": false}'
@@ -1282,7 +1305,7 @@ cronjob(action="create", name="daily-digest",
 ジョブの定義は、ディスク上のただの JSON です。`hermes update`、ゲートウェイの再起動、マシンの再起動を越えて残ります。再起動のときに実行中だったジョブは、実行の台帳で `unknown` と記録されます。自動で再試行はされませんが、そのジョブの次の予定の tick は普通に発火します。詳しくは[実行の履歴](#execution-history)を参照してください。
 
 :::tip
-ジョブの管理は、`jobs.json` を直接いじるのではなく、`cronjob` ツール、`hermes cron edit`、`/cron` を通じてエージェントに頼んでください。直接の編集は、[ファイル書き込みの安全装置](/hermes/docs/user-guide/security/#file-write-safety)がそのパスを止めたとき（`HERMES_WRITE_SAFE_ROOT` を設定している場合など）に黙って失敗することがあり、[ファイル変更の検証](/hermes/docs/user-guide/configuration/#file-mutation-verifier)のフッターが、何も保存されなかったことを示す正式な信号になります。
+ジョブの管理は、`jobs.json` を直接いじるのではなく、`cronjob_manage` ツール、`hermes cron edit`、`/cron` を通じてエージェントに頼んでください。直接の編集は、[ファイル書き込みの安全装置](/hermes/docs/user-guide/security/#file-write-safety)がそのパスを止めたとき（`HERMES_WRITE_SAFE_ROOT` を設定している場合など）に黙って失敗することがあり、[ファイル変更の検証](/hermes/docs/user-guide/configuration/#file-mutation-verifier)のフッターが、何も保存されなかったことを示す正式な信号になります。
 :::
 
 ジョブは `model` と `provider` を `null` として保存することがあります。これらが省かれている場合、Hermes は実行のときにグローバルな設定から解決します。ジョブの記録に現れるのは、ジョブごとの上書きが設定されているときだけです。

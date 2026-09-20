@@ -2,7 +2,7 @@
 title: "Meme Generation — 定型画像に Pillow で文字を重ねてミーム画像を作る"
 description: "定型画像に Pillow で文字を重ねてミーム画像を作る"
 upstream_path: user-guide/skills/optional/creative/creative-meme-generation.md
-upstream_blob: 2aeb574a710b7d2c15bb484610eecc8d703aabf1
+upstream_blob: 2842e94e5f90450a36679dbda7937e408cd71551
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-meme-generation
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール型 — `hermes skills install official/creative/meme-generation` で入れます |
-| パス | `optional-skills/creative\meme-generation` |
+| パス | `optional-skills/creative/meme-generation` |
 | バージョン | `2.0.0` |
 | 作者 | adanaleycio |
 | ライセンス | MIT |
@@ -79,9 +79,9 @@ python "$SKILL_DIR/scripts/generate_meme.py" --search "disaster"
    ```
 5. 生成スクリプトを実行します。
    ```bash
-   python "$SKILL_DIR/scripts/generate_meme.py" <template_id> /tmp/meme.png "caption 1" "caption 2" ...
+   python "$SKILL_DIR/scripts/generate_meme.py" <template_id> ~/.hermes/cache/scratch/meme.png "caption 1" "caption 2" ...
    ```
-6. `MEDIA:/tmp/meme.png` の形で画像を返します
+6. `MEDIA:~/.hermes/cache/scratch/meme.png` の形で画像を返します
 
 ### やり方 2: AI で作った独自画像を使う（image_generate が使えるとき） {#mode-2-custom-ai-image-when-imagegenerate-is-available}
 
@@ -93,35 +93,35 @@ python "$SKILL_DIR/scripts/generate_meme.py" --search "disaster"
 4. `--image` を付けてスクリプトを実行し、文字を重ねます。載せ方は 2 通りあります。
    - **重ね書き**（画像に直接、白抜き文字に黒い縁取り）:
      ```bash
-     python "$SKILL_DIR/scripts/generate_meme.py" --image /path/to/scene.png /tmp/meme.png "top text" "bottom text"
+     python "$SKILL_DIR/scripts/generate_meme.py" --image /path/to/scene.png ~/.hermes/cache/scratch/meme.png "top text" "bottom text"
      ```
    - **帯**（上下に黒い帯を敷いて白文字を置く。すっきりして必ず読める）:
      ```bash
-     python "$SKILL_DIR/scripts/generate_meme.py" --image /path/to/scene.png --bars /tmp/meme.png "top text" "bottom text"
+     python "$SKILL_DIR/scripts/generate_meme.py" --image /path/to/scene.png --bars ~/.hermes/cache/scratch/meme.png "top text" "bottom text"
      ```
    画像が込み入っていて、上に載せると文字が読みにくいときは `--bars` を使ってください。
 5. **見た目で確かめます**（`vision_analyze` が使えるとき）。仕上がりが良いか確認します。
    ```
-   vision_analyze(image_url="/tmp/meme.png", question="Is the text legible and well-positioned? Does the meme work visually?")
+   vision_analyze(image_url="~/.hermes/cache/scratch/meme.png", question="Is the text legible and well-positioned? Does the meme work visually?")
    ```
    画像を読むモデルが問題を指摘したら（文字が読みにくい、位置が悪いなど）、もう一方の載せ方に切り替える（重ね書きと帯を入れ替える）か、場面を作り直してください。
-6. `MEDIA:/tmp/meme.png` の形で画像を返します
+6. `MEDIA:~/.hermes/cache/scratch/meme.png` の形で画像を返します
 
 ## 例 {#examples}
 
 **「午前 2 時に本番環境をデバッグ」:**
 ```bash
-python generate_meme.py this-is-fine /tmp/meme.png "SERVERS ARE ON FIRE" "This is fine"
+python generate_meme.py this-is-fine ~/.hermes/cache/scratch/meme.png "SERVERS ARE ON FIRE" "This is fine"
 ```
 
 **「寝るか、もう 1 話見るか」:**
 ```bash
-python generate_meme.py drake /tmp/meme.png "Getting 8 hours of sleep" "One more episode at 3 AM"
+python generate_meme.py drake ~/.hermes/cache/scratch/meme.png "Getting 8 hours of sleep" "One more episode at 3 AM"
 ```
 
 **「月曜の朝の段階」:**
 ```bash
-python generate_meme.py expanding-brain /tmp/meme.png "Setting an alarm" "Setting 5 alarms" "Sleeping through all alarms" "Working from bed"
+python generate_meme.py expanding-brain ~/.hermes/cache/scratch/meme.png "Setting an alarm" "Setting 5 alarms" "Sleeping through all alarms" "Working from bed"
 ```
 
 ## 定型画像を一覧する {#listing-templates}

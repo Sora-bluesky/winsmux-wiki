@@ -2,7 +2,7 @@
 title: "Har Derived Api Client — サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす"
 description: "サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす"
 upstream_path: user-guide/skills/optional/web-development/web-development-har-derived-api-client.md
-upstream_blob: 01024b762ec0fcda410dbb129a90f1ef32a4eb40
+upstream_blob: ac19dd52db38c3f9367261ecce2c7e6d6f02bb2d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/web-development/har-derived-api-client` で導入します |
-| パス | `optional-skills/web-development\har-derived-api-client` |
+| パス | `optional-skills/web-development/har-derived-api-client` |
 | バージョン | `0.1.0` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |
@@ -172,9 +172,9 @@ for p in r.json()["pages"]:
 API キーなしで、実際のサイト相手に端から端まで確かめます:
 
 ```bash
-python3 scripts/har_capture.py "https://en.wikipedia.org/wiki/Main_Page" /tmp/wiki.har \
+python3 scripts/har_capture.py "https://en.wikipedia.org/wiki/Main_Page" ~/.hermes/cache/scratch/wiki.har \
   --action "fill:input[name=search]:dune messiah" --action "sleep:3" --wait 2
-python3 scripts/har_to_client.py /tmp/wiki.har --host wikipedia.org --max-body 200
+python3 scripts/har_to_client.py ~/.hermes/cache/scratch/wiki.har --host wikipedia.org --max-body 200
 ```
 
 割り出しの結果として `GET https://en.wikipedia.org/w/rest.php/v1/search/title` が、

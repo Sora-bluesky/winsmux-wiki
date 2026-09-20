@@ -2,7 +2,7 @@
 title: "Llama Cpp — llama.cpp によるローカル GGUF 推論と HF Hub でのモデル探索"
 description: "llama.cpp によるローカル GGUF 推論と HF Hub でのモデル探索"
 upstream_path: user-guide/skills/optional/mlops/mlops-inference-llama-cpp.md
-upstream_blob: beb9091df0132254f44c20624fd14c2961497f01
+upstream_blob: 4f9f8fb85ac25715ed0767703fd93d5864276a04
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-inference-llama-cpp
 ---
@@ -16,7 +16,7 @@ llama.cpp によるローカル GGUF 推論と、HF Hub でのモデル探索を
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/mlops/llama-cpp` で入れます |
-| パス | `optional-skills/mlops\inference\llama-cpp` |
+| パス | `optional-skills/mlops/inference/llama-cpp` |
 | バージョン | `2.1.2` |
 | 作者 | Orchestra Research |
 | ライセンス | MIT |
@@ -249,12 +249,12 @@ Source URLs:
 
 ## 参考資料 {#references}
 
-- **[hub-discovery.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\inference\llama-cpp/references/hub-discovery.md)** - URL だけで完結する Hugging Face の手順、検索パターン、GGUF の洗い出し、コマンドの組み立て
-- **[advanced-usage.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\inference\llama-cpp/references/advanced-usage.md)** — 投機的デコード、バッチ推論、文法で制約した生成、LoRA、マルチ GPU、独自ビルド、ベンチマーク用スクリプト
-- **[quantization.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\inference\llama-cpp/references/quantization.md)** — 量子化による品質の兼ね合い、Q4/Q5/Q6/IQ の使い分け、モデルサイズとの関係、imatrix
-- **[server.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\inference\llama-cpp/references/server.md)** — Hub から直接サーバーを起動する方法、OpenAI API のエンドポイント、Docker での配置、NGINX による負荷分散、監視
-- **[optimization.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\inference\llama-cpp/references/optimization.md)** — CPU のスレッド設定、BLAS、GPU オフロードの目安、バッチ調整、ベンチマーク
-- **[troubleshooting.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops\inference\llama-cpp/references/troubleshooting.md)** — インストール・変換・量子化・推論・サーバーの不具合、Apple Silicon、デバッグ
+- **[hub-discovery.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/inference/llama-cpp/references/hub-discovery.md)** - URL だけで完結する Hugging Face の手順、検索パターン、GGUF の洗い出し、コマンドの組み立て
+- **[advanced-usage.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/inference/llama-cpp/references/advanced-usage.md)** — 投機的デコード、バッチ推論、文法で制約した生成、LoRA、マルチ GPU、独自ビルド、ベンチマーク用スクリプト
+- **[quantization.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/inference/llama-cpp/references/quantization.md)** — 量子化による品質の兼ね合い、Q4/Q5/Q6/IQ の使い分け、モデルサイズとの関係、imatrix
+- **[server.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/inference/llama-cpp/references/server.md)** — Hub から直接サーバーを起動する方法、OpenAI API のエンドポイント、Docker での配置、NGINX による負荷分散、監視
+- **[optimization.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/inference/llama-cpp/references/optimization.md)** — CPU のスレッド設定、BLAS、GPU オフロードの目安、バッチ調整、ベンチマーク
+- **[troubleshooting.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/inference/llama-cpp/references/troubleshooting.md)** — インストール・変換・量子化・推論・サーバーの不具合、Apple Silicon、デバッグ
 
 ## 関連リンク {#resources}
 

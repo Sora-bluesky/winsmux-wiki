@@ -2,7 +2,7 @@
 title: "Fitness Nutrition — wger / USDA を使ったトレーニング計画・マクロ栄養素・身体指標の計算"
 description: "wger / USDA を使ったトレーニング計画・マクロ栄養素・身体指標の計算"
 upstream_path: user-guide/skills/optional/health/health-fitness-nutrition.md
-upstream_blob: 1ff5827959027f87731bc131dd7491453ed2e22a
+upstream_blob: 16142f5db21afbec7bc00b171e1b4b491a526855
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/health/health-fitness-nutrition
 ---
@@ -16,7 +16,7 @@ wger / USDA を使って、トレーニング計画・マクロ栄養素・身�
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/health/fitness-nutrition` で入れます |
-| パス | `optional-skills/health\fitness-nutrition` |
+| パス | `optional-skills/health/fitness-nutrition` |
 | バージョン | `1.0.0` |
 | 作者 | Hailey Marshall (haileymarshall), Hermes Agent |
 | ライセンス | MIT |

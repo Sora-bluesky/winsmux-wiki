@@ -2,7 +2,7 @@
 title: "実行時のプロバイダー解決"
 description: "Hermes が実行時にプロバイダー・資格情報・API モード・補助モデルをどう決めているか"
 upstream_path: developer-guide/provider-runtime.md
-upstream_blob: 203965c83326cc6b6440e2a549e5d3288172ec0a
+upstream_blob: a1718fd3435837618b6ade7534df17026e022573
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/provider-runtime
 ---
@@ -39,6 +39,13 @@ Hermes はこうしたフィールドを、メインのストリーム、Relay �
 断片がもともと持っている空白はそのまま残り、平坦化のときにフィールドの中へ区切りを足すことはありません。
 メインのストリームと Relay の記録では、太字の reasoning 見出しがそろっている箇所の段落の切れ目は
 これまでどおり残ります。reasoning は目に見える回答とは分けたままです。
+
+`delta.reasoning_details` は、プロバイダーごとの中身を解釈しない記録が並んだリストです。
+メインのストリームでも Relay の記録でも、これらの記録は届いた順にそのまま追加され、
+平坦化も、まとめ直しも、中身の書き換えもしません。プロバイダーは最後の delta でまとめて出しても、
+複数の delta に分けて出してもかまいません。新しい記録がないチャンクではこのフィールドを省きます。
+集めた記録はレスポンスの正規化とアシスタントメッセージの保存を通り、入れ子になった署名付きのデータも含めて
+セッションの再生まで残ります。
 
 ## 解決の優先順位 {#resolution-precedence}
 
@@ -155,6 +162,7 @@ Codex は Responses API を使う別経路です。
 
 - `api_mode = codex_responses`
 - 専用の資格情報の解決と、認証情報の保管への対応
+- 再開したセッションに残っていた Codex の推論項目（`encrypted_content`）が拒否されたとき（400 の `invalid_encrypted_content` でも、401 の `token_expired` でも）は、資格情報の更新やプールの切り替えに進む前に、保存していた項目を外して一度だけ送り直し、自力で立て直します
 
 ## 補助モデルの振り分け {#auxiliary-model-routing}
 

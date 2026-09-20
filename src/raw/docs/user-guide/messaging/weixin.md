@@ -2,7 +2,7 @@
 title: "Weixin（微信）"
 description: "iLink Bot API を使って Hermes Agent を個人の WeChat アカウントにつなぐ"
 upstream_path: user-guide/messaging/weixin.md
-upstream_blob: eb23c084262729e6772c797cd0e4bee8b0b1eea4
+upstream_blob: 45d85b4246637a7e6047994d7919fbfac9aaf346
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/weixin
 ---
@@ -126,8 +126,8 @@ hermes gateway
 | `allow_from` | `[]` | DM を許可するユーザー ID（dm_policy=allowlist のとき） |
 | `group_allow_from` | `[]` | 許可するグループ ID（group_policy=allowlist のとき） |
 | `split_multiline_messages` | `false` | `true` にすると、複数行の返信を複数のメッセージに分けて送ります（従来の動き）。`false` なら、長さの上限を超えないかぎり複数行の返信を 1 通のままにします。 |
-| `text_batch_delay_seconds` | `3.0` | 短時間に届いたテキストをまとめて 1 回のリクエストとして流すまでの待ち時間（秒）。iLink はメッセージを 1 通ずつ届けるため、この待ち時間があると断片ごとにエージェントが動くのを避けられます。`0` にすると 1 通ごとにすぐ処理します。 |
-| `text_batch_split_delay_seconds` | `5.0` | 直近の断片が分割のしきい値に近いとき（iLink が長文を分けた可能性があるとき）に使う、長めの待ち時間。 |
+| `text_batch_delay_seconds` | `0.3` | 短時間に届いたテキストをまとめて 1 回のリクエストとして流すまでの待ち時間（秒、最大 `2.0`）。iLink はメッセージを 1 通ずつ届けるため、この待ち時間があると断片ごとにエージェントが動くのを避けられます。`0` にすると 1 通ごとにすぐ処理します。 |
+| `text_batch_split_delay_seconds` | `1.0` | 直近の断片が分割のしきい値に近いとき（iLink が長文を分けた可能性があるとき）に使う、長めの待ち時間（最大 `4.0`。`text_batch_delay_seconds` を下回ることはありません）。 |
 
 ## アクセス方針 {#access-policies}
 

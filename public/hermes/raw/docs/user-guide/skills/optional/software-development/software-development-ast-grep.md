@@ -2,7 +2,7 @@
 title: "Ast Grep — ast-grep で構文木を見ながらコードを検索・書き換えする"
 description: "ast-grep で構文木を見ながらコードを検索・書き換えする"
 upstream_path: user-guide/skills/optional/software-development/software-development-ast-grep.md
-upstream_blob: ae2582e9d0b6d7b793a411ca1cdd4ea709a0a687
+upstream_blob: 5e3818e0b785755598c58a3c6171d041d0479c55
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-ast-grep
 ---
@@ -16,7 +16,7 @@ ast-grep で構文木を見ながらコードを検索・書き換えします�
 | | |
 |---|---|
 | 提供元 | 追加 skill — `hermes skills install official/software-development/ast-grep` で入れます |
-| パス | `optional-skills/software-development\ast-grep` |
+| パス | `optional-skills/software-development/ast-grep` |
 | バージョン | `1.0.0` |
 | 作者 | Yeongyu Kim (code-yeongyu), adapted by Hermes Agent |
 | ライセンス | MIT |

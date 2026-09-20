@@ -2,7 +2,7 @@
 title: "スキルの仕組み"
 description: "必要になったときだけ読む知識の文書 — 段階的な開示、エージェントが管理するスキル、Skills Hub"
 upstream_path: user-guide/features/skills.md
-upstream_blob: 07522d5e62d37bba5ebfa1a4c533724cdecb8c61
+upstream_blob: 0d164d39ecf872421040bb9ac32c396cc0670d06
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -19,53 +19,6 @@ Hermes に**外部のスキルディレクトリ**を見させることもでき
 
 - [同梱スキルの一覧](/hermes/docs/reference/skills-catalog/)
 - [公式オプションスキルの一覧](/hermes/docs/reference/optional-skills-catalog/)
-
-## Desktop で探して入れる {#browse-and-install-in-desktop}
-
-**Capabilities → Skills** を開き、**Installed** と **Browse** を切り替えます。
-検索欄は上に固定され、タブの切り替えと操作は同じ行に並びます。
-**Installed** は、選んでいるプロファイルの実際のスキルと有効・無効の状態を読みます。
-公開カタログから推測しているのではありません。**Browse** はネイティブのカタログ画面で、
-サイトを埋め込んだものでも、もうひとつの小さなカタログでもありません。カードが既定の
-表示です。フィルターの右にある一覧表示とカード表示のアイコンで、検索やフィルターを
-消さずにレイアウトを切り替えられます。この選択は Skills と Plugins の間で覚えられます。
-カードをクリックすると詳細が出ますし、そのカードの Install ボタンを直接押すこともできます。
-
-Desktop と公開の [Skills Hub](https://hermes-agent.nousresearch.com/skills) は、同じ公開済みの CDN
-スナップショット [`/docs/api/skills.json`](https://hermes-agent.nousresearch.com/docs/api/skills.json) を読みます。
-公開ドキュメント側の別名は、Desktop が取りにいく URL
-`https://nousresearch.github.io/hermes-agent/docs/api/skills.json` と同じスナップショットを配ります。
-ドキュメントのビルドが、同梱の `skills/`、`optional-skills/`、そして中央のスキル索引から
-これを生成します。閲覧のときに GitHub をたどったり、上流のマーケットプレイスへ問い合わせたり
-することはありません。導入のときには、選んだスキルをその出どころの導入処理が取ってきます。
-
-### サイトから入れる {#install-from-the-website}
-
-Skills Hub では、入れられるカードのそれぞれに **Install in Hermes** のボタンが付いています。押すと、
-インストール済みの Hermes Desktop アプリが、URL エンコードされた、出どころ付きのスキル指定で開きます。
-たとえばオプションスキルなら `official/...`、ClawHub なら `clawhub/...` です。
-同梱のスキルは、あいまいな名前だけではなく、明示的なリポジトリのパスを使います。
-古いスナップショットにその明示的な同梱の指定が無い場合、サイトは導入リンクを出さず、
-ネイティブの Browse も、あいまいな名前を解決するのではなく導入を無効にします。
-次にドキュメントが公開されると、その指定が入ります。
-同じ指定を、ネイティブの Browse とカードの CLI フォールバックも使います。
-
-```text
-hermes://skill/install?identifier=official%2Fsecurity%2F1password
-```
-
-Hermes は **Install “skill-name”?** を、**Source** と **Install to** の行を分けて表示します。
-Cancel を押しても何も変わりません。確認したあとは、同じダイアログが **Installing…**、
-続いて **Installed** を表示し、完了の通知が出ます。エラーはダイアログに残るので、読んでから
-やり直せます。導入はこれまでの Skills Hub の流れを使い、セキュリティの走査、操作のログ、
-導入済み一覧の更新も含みます。確認のダイアログを開いたままプロファイルや接続を切り替えた場合は、
-新しい行き先でリンクを開き直してください。変更は新しいセッションから効きます。リンクで走査を
-迂回したり、別のプロファイルを選んだりはできません。
-
-公開のリンクは `hermes://` を使い、開発専用の `hermes-dev://` のスキームは使いません。
-`skill/install` の経路には、更新された Desktop のビルドが必要です。アプリが無い、あるいは
-リンクが認識されない場合は、Desktop を更新するか、カードを広げて CLI の導入コマンドを
-コピーしてください。
 
 ## まっさらな状態から使う {#starting-with-a-blank-slate}
 
@@ -125,7 +78,7 @@ hermes skills opt-in --sync      # undo: remove the marker and re-seed now
 （ファイルのパスなど）が飲み込まれることはありません。
 
 ```bash
-/ocr-and-documents /tmp/scan.pdf extract the tables   # loads one skill; /tmp/scan.pdf is the argument
+/ocr-and-documents ~/.hermes/cache/scratch/scan.pdf extract the tables   # loads one skill; ~/.hermes/cache/scratch/scan.pdf is the argument
 ```
 
 何度も使う組み合わせには、[スキルの束](#skill-bundles)のほうが向いています。

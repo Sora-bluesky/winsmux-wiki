@@ -2,7 +2,7 @@
 title: "Excalidraw — 手描き風の Excalidraw JSON で図を作る（構成図、フロー図、シーケンス図）"
 description: "手描き風の Excalidraw JSON で図を作る（構成図、フロー図、シーケンス図）"
 upstream_path: user-guide/skills/optional/creative/creative-excalidraw.md
-upstream_blob: 15da2dbebc4ac31ecfc5c9bd6e45da5672f8d790
+upstream_blob: d70d31f506ef3b776a28fff83cd6fdf54f046cc3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-excalidraw
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/creative/excalidraw` で導入します |
-| パス | `optional-skills/creative\excalidraw` |
+| パス | `optional-skills/creative/excalidraw` |
 | バージョン | `1.0.1` |
 | 作者 | Hermes Agent |
 | ライセンス | MIT |

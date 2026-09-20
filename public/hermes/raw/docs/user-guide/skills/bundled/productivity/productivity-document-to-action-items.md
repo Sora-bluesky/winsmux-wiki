@@ -2,7 +2,7 @@
 title: "Document To Action Items — 書類から、出典付きの義務・期限・作業を取り出す"
 description: "書類から、出典付きの義務・期限・作業を取り出す"
 upstream_path: user-guide/skills/bundled/productivity/productivity-document-to-action-items.md
-upstream_blob: 80e0869e104c8c6bd1ccbcb39a7fc99763d34372
+upstream_blob: bb7b6c0bfebc14a214efacd2a46f35cf5211ddcf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/productivity\document-to-action-items` |
+| パス | `skills/productivity/document-to-action-items` |
 | バージョン | `0.1.0` |
 | 作者 | Ben Barclay (benbarclay), Hermes Agent |
 | ライセンス | MIT |

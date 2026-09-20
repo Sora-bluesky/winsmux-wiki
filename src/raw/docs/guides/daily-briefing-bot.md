@@ -2,7 +2,7 @@
 title: "チュートリアル: 毎朝のブリーフィングボット"
 description: "気になるテーマを自動で調べ、要点をまとめ、毎朝 Telegram や Discord に届けてくれるブリーフィングボットを作ります"
 upstream_path: guides/daily-briefing-bot.md
-upstream_blob: 781acaff8a22d04012e36f69394206c69f6c8686
+upstream_blob: 88193ec8f8e94b4895091d6cc3d34beae869c6af
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/daily-briefing-bot
 ---
@@ -109,7 +109,7 @@ and open source LLMs. Summarize the top 3 stories in a concise briefing
 with links. Use a friendly, professional tone. Deliver to telegram.
 ```
 
-Hermes が `cronjob` ツールを使って、cron ジョブを作ってくれます。
+Hermes が `cronjob_manage` ツールを使って、cron ジョブを作ってくれます。
 
 ### 選択肢 B: CLI のスラッシュコマンド {#option-b-cli-slash-command}
 

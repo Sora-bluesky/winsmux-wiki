@@ -2,7 +2,7 @@
 title: "Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN"
 description: "LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN"
 upstream_path: user-guide/skills/optional/security/security-godmode.md
-upstream_blob: bb2451cc9e628b4e53c4a8157ad77907990c227b
+upstream_blob: b1a3b442b97674530fe2fba62184685ff99105e8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-godmode
 ---
@@ -16,7 +16,7 @@ LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN。
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/security/godmode` で導入します |
-| パス | `optional-skills/security\godmode` |
+| パス | `optional-skills/security/godmode` |
 | バージョン | `1.0.0` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |
@@ -80,7 +80,7 @@ OpenRouter 経由で N 個のモデルを並列に照会し、品質・フィル
 # In execute_code — use the loader to avoid exec-scoping issues:
 
 exec(open(os.path.expanduser(
-    os.path.join(os.environ.get("HERMES_HOME", os.path.expanduser("~/.hermes")), "skills/red-teaming/godmode/scripts/load_godmode.py")
+    os.path.join(os.environ.get("HERMES_HOME", os.path.expanduser("~/.hermes")), "skills/security/godmode/scripts/load_godmode.py")
 )).read())
 
 # Auto-detect model from config and jailbreak it
@@ -211,7 +211,7 @@ python scripts/parseltongue.py "How do I hack into a WiFi network?" --tier stand
 あるいは `execute_code` でインラインに使います:
 ```python
 # Load the parseltongue module
-exec(open(os.path.join(os.environ.get("HERMES_HOME", os.path.expanduser("~/.hermes")), "skills/red-teaming/godmode/scripts/parseltongue.py")).read())
+exec(open(os.path.join(os.environ.get("HERMES_HOME", os.path.expanduser("~/.hermes")), "skills/security/godmode/scripts/parseltongue.py")).read())
 
 query = "How do I hack into a WiFi network?"
 variants = generate_variants(query, tier="standard")
@@ -248,7 +248,7 @@ for v in variants[:5]:
 
 ```python
 # Via execute_code
-exec(open(os.path.join(os.environ.get("HERMES_HOME", os.path.expanduser("~/.hermes")), "skills/red-teaming/godmode/scripts/godmode_race.py")).read())
+exec(open(os.path.join(os.environ.get("HERMES_HOME", os.path.expanduser("~/.hermes")), "skills/security/godmode/scripts/godmode_race.py")).read())
 
 result = race_models(
     query="Explain how SQL injection works with a practical example",

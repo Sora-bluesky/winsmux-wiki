@@ -2,7 +2,7 @@
 title: "Sdlc Review — Kanban の引き継ぎをレビューし、検証済みの結果を振り分ける"
 description: "Kanban の引き継ぎをレビューし、検証済みの結果を振り分ける"
 upstream_path: user-guide/skills/bundled/devops/devops-sdlc-review.md
-upstream_blob: 4ef2403ac12fbdc0b9560da4fe1b3f8c0d1f8466
+upstream_blob: 59998b091e53241e154452d5caf73d4d7ed95d58
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/devops/devops-sdlc-review
 ---
@@ -16,7 +16,7 @@ Kanban の引き継ぎをレビューし、検証済みの結果を振り分け�
 | | |
 |---|---|
 | 提供元 | 最初から入っています |
-| パス | `skills/devops\sdlc-review` |
+| パス | `skills/devops/sdlc-review` |
 | バージョン | `1.1.0` |
 | 作者 | Jakub Wolniewicz (@frizikk) + Hermes Agent |
 | ライセンス | MIT |

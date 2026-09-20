@@ -2,7 +2,7 @@
 title: "Subagent Driven Development — delegate_task のサブエージェントで計画を実行する（2 段階レビュー）"
 description: "delegate_task のサブエージェントで計画を実行する（2 段階レビュー）"
 upstream_path: user-guide/skills/optional/software-development/software-development-subagent-driven-development.md
-upstream_blob: 7403e38e5a07e9b4c2acd14b669a3e84600a8334
+upstream_blob: 0e5e46ab303619e15a1dd52af0cb76c9a98db362
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development
 ---
@@ -16,7 +16,7 @@ delegate_task のサブエージェントで計画を実行します（2 段階�
 | | |
 |---|---|
 | 提供元 | 追加で入れるもの — `hermes skills install official/software-development/subagent-driven-development` で導入します |
-| パス | `optional-skills/software-development\subagent-driven-development` |
+| パス | `optional-skills/software-development/subagent-driven-development` |
 | バージョン | `1.1.0` |
 | 作者 | Hermes Agent (adapted from obra/superpowers) |
 | ライセンス | MIT |

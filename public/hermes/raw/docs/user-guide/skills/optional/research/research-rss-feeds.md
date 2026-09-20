@@ -2,7 +2,7 @@
 title: "Rss Feeds — RSS・Atom・JSON のフィードを読み、ページの裏にあるフィードを見つける"
 description: "RSS・Atom・JSON のフィードを読み、ページの裏にあるフィードを見つける"
 upstream_path: user-guide/skills/optional/research/research-rss-feeds.md
-upstream_blob: 20bab27f46562b3260ba76b8df5e73d8b826165f
+upstream_blob: b58c57398578ab04433a8c7a30bd0d5e3ae62af5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-rss-feeds
 ---

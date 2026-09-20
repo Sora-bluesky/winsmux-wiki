@@ -2,7 +2,7 @@
 title: "スキルを作る"
 description: "Hermes Agent 向けのスキルの作り方 — SKILL.md の書式、指針、公開まで"
 upstream_path: developer-guide/creating-skills.md
-upstream_blob: 6533ae6b8bd4ea462ba3763e28ab02e9e19cd8c8
+upstream_blob: 51219596e479baced9d9e1e942682a6105661f2b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills
 ---
@@ -402,7 +402,7 @@ Hermes は、定期実行を自分で組み立てさせる代わりに、自動�
 /suggestions catalog     # add the curated starter automations
 ```
 
-提案を受け入れると、`cronjob` ツールが使うのと同じ `cron.jobs.create_job` が呼ばれます。定期実行の仕組みが二重になることはありません。提案から勝手に定期実行が作られることは**ありません**。受け入れるのはいつも自分の操作です。断った提案は決まった鍵で覚えられ、同じものが二度と出てくることはありません。待機中の一覧には上限があるので、うるさく積み上がることもありません。
+提案を受け入れると、`cronjob_manage` ツールが使うのと同じ `cron.jobs.create_job` が呼ばれます。定期実行の仕組みが二重になることはありません。提案から勝手に定期実行が作られることは**ありません**。受け入れるのはいつも自分の操作です。断った提案は決まった鍵で覚えられ、同じものが二度と出てくることはありません。待機中の一覧には上限があるので、うるさく積み上がることもありません。
 
 catalog にある **大事なメールの見張り** は、集めて、選り分けて、必要なものだけ見せるという型のお手本です。受信箱の内容を軽い判定用モデル（`config.yaml` の `auxiliary.monitor`）で採点し、急ぎと判断されたものだけを届けて、それ以外のときは黙っています。
 

@@ -2,7 +2,7 @@
 title: "Microsoft Foundry"
 description: "Hermes Agent を Microsoft Foundry で使う — OpenAI 形式と Anthropic 形式のエンドポイント、通信方式とデプロイ済みモデルの自動判別"
 upstream_path: guides/azure-foundry.md
-upstream_blob: 6276e7288480fbb7be86cc2f36980be14300be2a
+upstream_blob: 78996fcad9c8cf65be241aa449a3837bade9a685
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/azure-foundry
 ---
@@ -144,6 +144,8 @@ Entra モードでは `~/.hermes/.env` に秘密情報は入りません。`azur
 
 無人で動く Hermes のために、ブラウザを開く対話型の認証は既定で除外されています。代わりに Azure CLI、Azure Developer CLI、マネージド ID、ワークロード ID、サービスプリンシパルのいずれかを使ってください。
 
+**プロファイルを多重化しているとき（`gateway.multiplex_profiles: true`）:** この順番に出てくる認証情報は、どれも*プロセス*から解決されます。起動時のプロファイルが持つ `AZURE_*`、その `az login` のセッション、ホストのマネージド ID です。そのため、自分の `AZURE_*` を何も設定していないプロファイルを配ろうとすると、起動時の身元を借りるのではなく拒否されます（Vertex のアダプターがアプリケーション既定の認証情報に対してかけているのと同じ決まりです）。プロファイルごとに `.env` を用意して、`AZURE_TENANT_ID` と `AZURE_CLIENT_ID` と `AZURE_CLIENT_SECRET`（または `AZURE_FEDERATED_TOKEN_FILE`）をそれぞれに与えてください。`AZURE_CLIENT_ID` だけを書いた場合は、そのプロファイルがホストのユーザー割り当てマネージド ID を使う指定になります。プロファイルが 1 つだけの起動（`hermes`、`hermes -p beta`）では、これまでどおり順番を最後まで試します。
+
 ### 使い方のパターン {#deployment-patterns}
 
 **ローカル開発:**
@@ -189,6 +191,8 @@ azure-foundry (Microsoft Entra ID):
   Status: configured; live token probe is skipped here
 ```
 
+メインのモデルに追随する補助タスク（`provider: auto` — セッションのタイトル付け、コンテキストの圧縮、スマート承認）は、認証をやり直さずにメインのセッションの Entra トークン提供部分をそのまま使い回します。CLI で `--api-key` の文字列を渡せば、その場かぎりの確認のために上書きできます。
+
 ### 制約 {#limitations}
 
 - **Anthropic 形式のエンドポイントは httpx のイベントフックを使います。** Anthropic Python SDK は呼び出し可能な `auth_token` をそのままでは受け付けません（0.86.0 以前）。そこで Hermes は独自の `httpx.Client` にリクエストイベントフックを組み込み、送信のたびに新しい JWT を発行して `Authorization: Bearer <jwt>` を書き換えます。OpenAI SDK の `Callable[[], str]` の仕組みと働きは同じですが、間に一段はさまる形になります。将来 Anthropic SDK が呼び出し可能な認証に正式対応したら、Hermes は気づかれない形でそちらへ切り替えます。
@@ -229,6 +233,7 @@ model:
 押さえておきたい動きは次のとおりです。
 
 - **GPT-5.x、codex、o シリーズは自動的に Responses API へ回ります。** Microsoft Foundry は GPT-5 / codex / o1 / o3 / o4 のモデルを Responses API 専用としてデプロイするため、これらに `/chat/completions` を呼ぶと `400 "The requested operation is unsupported."` が返ります。Hermes は名前からこれらのモデルファミリーを見分け、`config.yaml` が `api_mode: chat_completions` のままでも、気づかれない形で `api_mode` を `codex_responses` へ引き上げます。GPT-4、GPT-4o、Llama、Mistral などのデプロイは `/chat/completions` のままです。
+- **`api_mode: responses` は `codex_responses` の別の書き方として受け付けられます。** この別名は `model.api_mode`、`fallback_providers` の項目、タスクごとの `auxiliary.<task>.api_mode`（たとえば `auxiliary.vision` を GPT-5.x のデプロイへ向ける場合）のいずれでも使えて、どれも同じ Responses のアダプターを選びます。
 - **`max_completion_tokens` が自動で使われます。** Azure OpenAI は（本家 OpenAI と同じく）gpt-4o、o シリーズ、gpt-5.x のモデルで `max_completion_tokens` を要求します。Hermes はエンドポイントに応じて正しいパラメーターを送ります。
 - **`api-version` が必要な v1 より前のエンドポイント。** `https://<resource>.openai.azure.com/openai?api-version=2025-04-01-preview` のような従来のベース URL を使っている場合、Hermes はクエリ文字列を取り出し、リクエストのたびに `default_query` で渡します（そうしないと OpenAI SDK がパスをつなぐときに落としてしまいます）。
 
@@ -251,6 +256,7 @@ model:
 - **`x-api-key` ではなくベアラー認証が使われます。** Azure の Anthropic 互換の経路は、Anthropic 本来の `x-api-key` ヘッダーではなく `Authorization: Bearer <key>` を要求します。Hermes はベース URL に `azure.com` が含まれていることを見分け、SDK の `auth_token` 欄に API キーを渡して、正しいヘッダーが送られるようにします。
 - **100 万トークンのコンテキスト用ベータヘッダーは残されます。** Azure は 100 万トークンの Claude コンテキスト（Opus 4.6/4.7、Sonnet 4.6）を、いまも `anthropic-beta: context-1m-2025-08-07` ヘッダーの後ろに置いています。Hermes は Azure の経路ではこのベータヘッダーを残します（本家 Anthropic の OAuth リクエストでは、一部のサブスクリプションが拒否するため取り除いていますが、Azure では必要です）。
 - **OAuth トークンの更新は無効になります。** Azure のデプロイは固定の API キーを使います。Anthropic Console 向けに動く `~/.claude/.credentials.json` の OAuth トークン更新処理は、Azure のエンドポイントでは明示的に飛ばされます。Claude Code の OAuth トークンが、会話の途中で Azure のキーを上書きしてしまうのを防ぐためです。
+- **`hermes doctor` も同じ経路を確認します。** `/anthropic` の経路には `GET /models` がないため、接続の確認では、実行時と同じベアラー認証と `api-version` のクエリを付けて 1 トークンぶんの `POST /v1/messages` を送ります。200 が返れば（あるいは Messages API から 400 が返っても）エンドポイントは正常、401/403 なら認証の問題として報告されます。
 
 ## 別のやり方: `provider: anthropic` と Azure のベース URL {#alternative-provider-anthropic-azure-base-url}
 
@@ -274,11 +280,24 @@ Azure には、API キーだけで*デプロイ済み*のモデルを一覧で�
 
 Hermes にできるのは次のことです。
 
-- Azure OpenAI の v1 エンドポイント（`<resource>.openai.azure.com/openai/v1`）は、そのリソースで**利用可能な**モデルのカタログを `GET /models` で公開しています。Hermes はこの一覧をモデルピッカーの初期表示に使います。
-- Microsoft Foundry の `/anthropic` 経路は URL のパスから判別され、モデル名は手で入力します。
+- Azure OpenAI の v1 エンドポイント（`<resource>.openai.azure.com/openai/v1`）は、そのリソースで**利用可能な**モデルのカタログを `GET /models` で公開しています。Hermes はこの一覧を、セットアップウィザードのモデルピッカーの初期表示に使うだけでなく、セッション中の `/model azure-foundry` のピッカー（CLI、TUI、デスクトップ、ゲートウェイ）にも使います。そのため `hermes setup` をやり直さずにデプロイを切り替えられます。
+- Microsoft Foundry の `/anthropic` 経路は URL のパスから判別され、モデル名は手で入力します（こちらには `/models` がないため、`/model` のピッカーには現在の選択と、自分で宣言した `providers.azure-foundry.models` だけが出ます）。
 - プライベートなエンドポイントやファイアウォールの内側にあるものは、「調べられませんでした」という案内とともに手入力になります。
+- Entra ID を使う場合（`model.auth_mode: entra_id` で `AZURE_FOUNDRY_API_KEY` なし）は、`model.base_url`（または `AZURE_FOUNDRY_BASE_URL`）が設定されていれば、それだけで `/model` のピッカーにこのプロバイダーが並びます。行を表示するためだけにトークンを発行することはありません。
 
 デプロイ名はいつでも直接入力できます。Hermes は返ってきた一覧と照合して弾いたりはしません。
+
+カタログは長くなりがちです。実際に使うデプロイだけをピッカーに出したいときや、`/models` を持たないエンドポイントのモデルを並べたいときは、`config.yaml` で宣言してください。宣言したものは、その場で取得したカタログより先に並びます。
+
+```yaml
+providers:
+  azure-foundry:
+    models:
+      - gpt-5.4
+      - kimi-k2.6
+```
+
+実行時のピッカーは、Azure Foundry が現在のプロバイダーである間は `model.base_url` からエンドポイントを解決します。別のプロバイダーに切り替えたあとも行を出したままにしたい場合は、`AZURE_FOUNDRY_BASE_URL` も設定してください。
 
 ## 環境変数 {#environment-variables}
 

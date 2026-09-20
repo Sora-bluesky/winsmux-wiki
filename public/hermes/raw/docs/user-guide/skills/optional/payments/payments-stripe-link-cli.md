@@ -2,7 +2,7 @@
 title: "Stripe Link Cli — Stripe Link を使ったエージェントの支払い — カード、SPT、承認"
 description: "Stripe Link を使ったエージェントの支払い — カード、SPT、承認"
 upstream_path: user-guide/skills/optional/payments/payments-stripe-link-cli.md
-upstream_blob: 7e0c5b258199626d882584119d373d2beac517f9
+upstream_blob: d3ea09efb577259521249934429a801e07f2a248
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/payments/payments-stripe-link-cli
 ---
@@ -16,7 +16,7 @@ Stripe Link を使ったエージェントの支払いです — カード、SPT
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/payments/stripe-link-cli` で導入します |
-| パス | `optional-skills/payments\stripe-link-cli` |
+| パス | `optional-skills/payments/stripe-link-cli` |
 | バージョン | `0.1.0` |
 | 作者 | Teknium (teknium1), Hermes Agent |
 | ライセンス | MIT |
@@ -149,7 +149,7 @@ MPP の販売側には `--credential-type shared_payment_token` を足してく�
 ```
 link-cli spend-request retrieve <lsrq_id> \
   --include card \
-  --output-file /tmp/link-card.json \
+  --output-file ~/.hermes/cache/scratch/link-card.json \
   --format json
 ```
 
@@ -172,7 +172,7 @@ link-cli spend-request retrieve <lsrq_id> \
 買い物が終わったら、すぐにカードのファイルを消してください:
 
 ```
-rm -f /tmp/link-card.json
+rm -f ~/.hermes/cache/scratch/link-card.json
 ```
 
 ## 任意: MCP サーバーとして動かす {#optional-run-as-an-mcp-server-instead}

@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: b69cd35b399156741258d468d62c0bb98df4c33a
+upstream_blob: c856a1f7e85e3139a5d0802f855f4486040c3d08
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -603,6 +603,16 @@ journalctl -u hermes-gateway -f
 Hermes が入れるユニットは、`KillMode=mixed` と `KillSignal=SIGTERM` ですでにゲートウェイをきれいに終了させ、更新や `/restart` が正しく再起動するように `Restart=always` と `RestartForceExitStatus` を使っています。`ExecStopPost=/bin/kill -9 $MAINPID` のような systemd の drop-in を足さ**ない**でください。`ExecStopPost` はきれいな再起動も含めて*あらゆる*停止で発火するため、生まれたばかりのインスタンスが安定する前に `SIGKILL` してしまい、`Restart=always` がすぐまた起動します。結果は終わりのない再起動のループです（Telegram では再起動のメッセージが大量に流れます）。すでに足してしまっているなら外してください。`systemctl --user edit hermes-gateway`（システムサービスなら `sudo systemctl edit hermes-gateway`）で `ExecStopPost` の行を消し、`systemctl --user daemon-reload` を実行します。
 :::
 
+### `systemctl restart` / `stop` を直接使ってもきれいに終わります {#direct-systemctl-restart-stop-exits-cleanly}
+
+入れられるユニットには `ExecStop=` が書かれていて、`SIGTERM` が届く前に `$MAINPID` に対して「これは予定された停止だ」という印を残します。そのため、サービスを直接止めたり再起動したりしても、意図した操作として扱われます。ゲートウェイは処理を出し切り、`gateway_state=stopped` を保存して、終了コード `0` で終わります。ジャーナルにも、きれいな停止と起動が並ぶだけで `Failed with result exit-code` の行は出ません。
+
+```bash
+systemctl --user restart hermes-gateway   # or: sudo systemctl restart hermes-gateway
+```
+
+進行中のエージェントのターンを大事にしたいときは、`hermes gateway restart` のほうを使ってください。こちらはゲートウェイに先に処理を出し切るよう頼み（`SIGUSR1` を送り、再起動を待つ時間の上限を守ります）、入れ替わったプロセスが立ち上がるまで待ちます。素の `systemctl restart` は、いま動いているプロセスを systemd の都合で止めます。Hermes を更新したあとは、`hermes gateway restart` を一度実行して、動作中のサービスに `ExecStop=` の行が入った新しいユニットを読み直させてください（入っているユニットが古いままの間は、`hermes gateway status` が警告します）。
+
 :::tip 画面のない VM では、ユーザーサービス＋ linger で root を求められずに済みます
 システムサービスは再起動のたびに root を必要とします。`hermes update` の最後に走る自動のゲートウェイ再起動も同じです。`hermes update` を root 以外で実行すると、パスワードなしの `sudo systemctl` を試み、それが使えなければ再起動を飛ばして `sudo systemctl restart hermes-gateway` のコマンドを表示します（対話的なパスワードの入力待ちで止まることはありません）。
 
@@ -648,6 +658,13 @@ tail -f ~/.hermes/logs/gateway.log   # View logs
 
 :::tip インストール後に PATH が変わったら
 launchd の plist は静的なファイルです。ゲートウェイを設定したあとで新しいツールを入れた（nvm で新しい Node.js を入れた、Homebrew で ffmpeg を入れた、など）ときは、もう一度 `hermes gateway install` を実行して新しい PATH を取り込んでください。ゲートウェイは古くなった plist を検出して自動で読み直します。
+:::
+
+:::tip `hermes auth add` / `hermes auth reset` のあとに新しい認証情報を反映させる
+エージェントは 1 つのゲートウェイプロセスの中でスレッドとして動きます。子プロセスになるのはツールのサブプロセス（ターミナルのコマンド、ブラウザー）だけで、これらがプロバイダーの認証情報を持つことはありません。動いているゲートウェイは、`auth.json` から取り込んだ `openai-codex` のログインについては、そのエントリが `exhausted` や `dead` になったあとプールが次にそれを選んだ時点で読み直します（`hermes auth add openai-codex` で追加したエントリは独立したアカウント扱いで、読み直されません）。すべてのセッションを一度に新しいログインへ切り替えたいときは、ゲートウェイを再起動します。ただし、いきなり終了させるのではなく、処理の終わりを待つ経路を選んでください。
+
+- `hermes gateway restart` は、ゲートウェイに（SIGUSR1 で）新しいターンを受け付けないよう伝え、実行中のターンが終わるのを `agent.restart_after_turn_timeout`（既定 1800 秒）まで待って終了し、launchd の `KeepAlive` に再起動させます。新しいプロセスは `auth.json` を最初から読み直します。
+- `launchctl kickstart -k gui/$UID/ai.hermes.gateway` は代わりに SIGTERM を送ります。ゲートウェイは実行中のチャットのターンを `agent.restart_drain_timeout`（既定は `0`。つまりすぐに中断します。利用者にはその旨が伝わり、次のメッセージでターンが再開します）のあとで中断し、cron の実行には `agent.cron_drain_timeout`（既定 30 秒）を与え、ツールのサブプロセスを終了させて自身も終了し、そのあと launchd が再起動します。古いプロセスからは何も残らないので、再起動したあともセッションが `401` で失敗するなら、別のゲートウェイプロセスにつながっています。`hermes gateway status`（と `launchctl list | grep hermes`）で 2 つ目の PID がないか確かめ、たとえば手で起動した `hermes gateway run` があれば、そちらも止めてください。
 :::
 
 :::info 複数のインストール

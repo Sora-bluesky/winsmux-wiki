@@ -2,7 +2,7 @@
 title: "MCP 設定の早見表"
 description: "Hermes Agent の MCP 設定キー、絞り込みの動き、ユーティリティツールの方針をまとめた早見表です。"
 upstream_path: reference/mcp-config-reference.md
-upstream_blob: 71828ec63d3f8b67bf5207a10461114390245b47
+upstream_blob: cdb53264cf5942e49d53724425cf823a09e85962
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
 ---
@@ -367,7 +367,9 @@ Hermes は承認されるまで問い合わせを続け、`authorization_pending
 承認を待つ時間の上限は `oauth.timeout` で決まり（既定は 300 秒）、コード自体の有効期限でも制限されます。
 サーバーの保護リソースのメタデータに認可サーバーが複数並んでいる場合、デバイスでのログインはそれを順に調べ、
 メタデータの発行者（issuer）が公開している URL と一致し、かつ `device_code` による許可に対応している最初のサーバーを使います（ブラウザ専用のサーバーが先頭にあっても飛ばします）。
-発行者の検証を緩めることはありません。
+唯一認められる違いは、MCP の機能ガイドの「OAuth で認証する HTTP サーバー」で説明している、
+パスを含む形だけです（`https://host/path` として公開されているサーバーの
+`/.well-known/oauth-authorization-server/path` にある文書が `https://host` を名乗る場合）。
 
 サーバーに `oauth.flow: device` を書いておくと、`hermes mcp login` と `hermes mcp reauth`
 （`reauth --all` を含みます）がデバイス認可を使うようになります。`login --flow browser` は、その
@@ -427,7 +429,7 @@ mcp_servers:
 
 `client_metadata_url` は、パスの付いた HTTPS の URL でなければなりません（オリジンだけ、フラグメント付き、ユーザー情報付き、`.` や `..` を含むものは使えません）。そのうえで **リダイレクトなしで** `200` と `Content-Type: application/json` を返す必要があります。認可サーバーは、この文書を取りにいくときにリダイレクトをたどることを禁じられているからです。Hermes はこの場合もコールバックを同じ `27890`〜`27894` の範囲に固定するので、自分で用意する文書には 10 個のループバック URL（各ポートについて `http://127.0.0.1:<port>/callback` と `http://localhost:<port>/callback`）をすべて書き、`client_id` にはその文書自身の URL を書いてください。
 
-`user_agent` は、HTTP ライブラリが既定で送る `User-Agent` を **トークンのエンドポイントへのリクエストに限って**（認可コードの引き換えと更新）差し替えます。認可サーバーや WAF の中には、そこで既定の `python-httpx/...` という値を拒むものがあるためです。MCP の通信には使われませんし、トークンのリクエストで設定できるヘッダーは他にありません。空の値や null は無視されます。
+`user_agent` は、既定の `User-Agent` を **トークンのエンドポイントへのリクエストに限って**（認可コードの引き換え、更新、デバイスフローでのトークンの問い合わせ）差し替えます。これを書かない場合、Hermes は `Hermes-Agent/<version>` を送ります。ヘッダーなしで送ることはありません。WAF の内側にある認可サーバーは、ヘッダーなしのリクエストに `403` を返すからです。MCP の通信には使われませんし、トークンのリクエストで設定できるヘッダーは他にありません。空の値や null は無視されます。引き換えに失敗したときは、ステータスと、エラー本文を短く伏せ字にした抜粋を一緒に知らせます（WAF の「Request blocked」ページなのか、発行者の `invalid_grant` なのかが分かります）。パケットを取らなくても原因が見えるようにするためです。`hermes mcp login` は、古くなった許可とクライアント登録を消してから認可をやり直しますが、認可サーバーのメタデータのキャッシュは残します。そのため、メタデータの文書を取り直せないときでも、案内される認可の URL は最初に見つけたものが使われます。
 
 OAuth の探索とクライアントの動的な登録のリクエスト（`/.well-known/...` のメタデータ文書と `registration_endpoint` への POST）には、つねに `User-Agent: Hermes-Agent/<version>` が付きます。MCP の SDK はこれらのリクエストをクライアント既定のヘッダーなしで組み立てるため、WAF の後ろにいる認可サーバーはヘッダーのないリクエストに `403` を返します。するとメタデータ文書が読めないように見え、登録は MCP のホスト上の `/register` を当て推量で叩く方へ落ち、最後は `Registration failed: 404` でログインに失敗します。メタデータの取得がすべて失敗した場合、エラーはまず今回のステータスを先に示すようになりました（`Could not read authorization-server metadata (403 from https://…/.well-known/oauth-authorization-server; …)`）。登録の代替処理そのもののエラーはその後ろに続きます。
 

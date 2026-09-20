@@ -2,7 +2,7 @@
 title: "Chronos managed-cron の契約"
 description: "Chronos cron プロバイダーにおけるエージェントと NAS の間の通信契約"
 upstream_path: developer-guide/chronos-managed-cron-contract.md
-upstream_blob: fe331fea11da5886f8bc853a22203e18e348dbca
+upstream_blob: c7d4c34f400a547d9666693e46c729f5644bbf39
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/chronos-managed-cron-contract
 ---
@@ -213,6 +213,18 @@ provision に失敗しても（NAS の一時的なエラー）、次の突き合
 `callback_url` / `portal_url` が空か、エージェントが Nous にログインしていなければ、
 `is_available()` は False を返し、解決処理はプロセス内の組み込みの刻み処理にフォールバックします。
 cron が発火のきっかけを失うことはありません。
+
+**実行時に身元が拒否される場合（`403 invalid_client`）。** `is_available()` は設定しか見ないので、
+保存してある Nous のトークンが、NAS 側で provision 済みのインスタンスに結びつく身元なのか（上の区間 1）
+までは判断できません。`provision` が 403 `invalid_client` を返したとき — つまり `auth.json` にある
+トークンが、`hermes-cli-vps` の bootstrap セッションでも `agent:*` クライアントでもなく、ただの
+`hermes-cli` のユーザーログインだったとき — その拒否は、その認証情報が生きているあいだずっと変わりません。
+仕掛けるときも、仕掛け直すときも、`list` のときも同じように失敗しますし、`hermes auth` でログインし直すと
+それが決定的になります（bootstrap セッションを*置き換えて*しまい、作り直せるのは NAS だけだからです）。
+そこでプロバイダーは、その対処法を名指しした警告を 1 回だけ記録し、NAS を呼ぶのをやめ、プロセスが終わるまで
+組み込みの刻み処理を動かします。こうすれば、遅れて走る取りこぼしの掃除（`cron.misfire_grace_minutes`）
+だけに頼らず、ジョブは時間どおり発火し続けます。一時的な失敗（5xx や通信のエラー）では切り替えません。
+次の突き合わせで再試行します。
 
 ## 非常口（既定ではありません） {#escape-hatch-not-default}
 

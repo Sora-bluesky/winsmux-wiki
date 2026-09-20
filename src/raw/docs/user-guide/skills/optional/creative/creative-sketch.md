@@ -2,7 +2,7 @@
 title: "Sketch — 使い捨ての HTML モックアップ。見比べるための案を 2〜3 通り作る"
 description: "使い捨ての HTML モックアップ。見比べるための案を 2〜3 通り作る"
 upstream_path: user-guide/skills/optional/creative/creative-sketch.md
-upstream_blob: adeb913330de7a625906c11120be41cc6deedda4
+upstream_blob: 0adfb7fc13f660c8455deb8ef96b184aff87860a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-sketch
 ---
@@ -16,7 +16,7 @@ sources:
 | | |
 |---|---|
 | 提供元 | 追加インストール — `hermes skills install official/creative/sketch` で導入します |
-| パス | `optional-skills/creative\sketch` |
+| パス | `optional-skills/creative/sketch` |
 | バージョン | `1.0.1` |
 | 作者 | Hermes Agent (adapted from gsd-build/get-shit-done) |
 | ライセンス | MIT |

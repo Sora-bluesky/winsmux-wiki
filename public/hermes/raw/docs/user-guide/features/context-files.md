@@ -2,7 +2,7 @@
 title: "コンテキストファイル"
 description: "プロジェクトのコンテキストファイル（.hermes.md、AGENTS.md、CLAUDE.md、全体共通の SOUL.md、.cursorrules）は、どの会話にも自動で読み込まれます"
 upstream_path: user-guide/features/context-files.md
-upstream_blob: 45329568e0f156098b97cc88cb164b0a85906c66
+upstream_blob: eb461c4cfc497a94c897c67049d43b0bf7b7355d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files
 ---
@@ -46,6 +46,7 @@ monorepo/                   (git root, cwd = packages/webapp/)
         └── AGENTS.md      ← Loaded last (most specific, takes precedence)
 ```
 
+<!-- no-tmp: ok — explains why /tmp is never trusted -->
 git リポジトリの外では、作業ディレクトリそのものしか見ません。親をたどることはないので、`/tmp` や `$HOME` に置かれた `AGENTS.md` が、関係のないセッションに紛れ込むことはありません。
 
 ### 下のディレクトリを進みながら見つける {#progressive-subdirectory-discovery}
