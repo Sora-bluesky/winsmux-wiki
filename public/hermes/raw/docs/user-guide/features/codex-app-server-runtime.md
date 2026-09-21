@@ -2,14 +2,14 @@
 title: "Codex App-Server ランタイム（任意）"
 description: ""
 upstream_path: user-guide/features/codex-app-server-runtime.md
-upstream_blob: 9c85c018912fe0823418983c4cbfcff3be7f9a23
+upstream_blob: 5bc52e73424708ebaa481ccc25a585dfbcc104f1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/codex-app-server-runtime
 ---
 
 # Codex App-Server ランタイム {#codex-app-server-runtime}
 
-Hermes は、`openai/*` と `openai-codex/*` のターンを、自前のツールループで回す代わりに [Codex CLI app-server](https://github.com/openai/codex) へ任せることもできます。これを有効にすると、端末のコマンド、ファイルの編集、サンドボックス、MCP のツール呼び出しが、すべて Codex のランタイムの中で動きます。Hermes はその外側を包む殻になります（セッションの DB、スラッシュコマンド、ゲートウェイ、記憶とスキルの見直し）。
+Hermes は、`openai/*`、`openai-codex/*`、[名前付きのカスタムプロバイダ](#named-custom-providers)のターンを、自前のツールループで回す代わりに [Codex CLI app-server](https://github.com/openai/codex) へ任せることもできます。これを有効にすると、端末のコマンド、ファイルの編集、サンドボックス、MCP のツール呼び出しが、すべて Codex のランタイムの中で動きます。Hermes はその外側を包む殻になります（セッションの DB、スラッシュコマンド、ゲートウェイ、記憶とスキルの見直し）。
 
 これは**自分で選んだときだけ有効になる**仕組みです。フラグを切り替えないかぎり、Hermes のふるまいはこれまでどおりです。Hermes が勝手にこのランタイムへ振り分けることはありません。
 
@@ -24,6 +24,7 @@ OpenAI Codex は使っていないという場合、`hermes setup --portal` を�
 - **Codex 純正のプラグイン**（Linear、GitHub、Gmail、Calendar、Canva など）を `codex plugin` で入れてあれば、それがそのまま移され、Hermes のセッションでも有効になります。
 - **Hermes 側の充実したツールも一緒についてきます。** web_search、web_extract、ブラウザの自動操作、画像の読み取り、画像生成、スキル、TTS が MCP のコールバック経由で動きます。Codex は自分が持っていないツールについて Hermes を呼び返します。
 - **記憶とスキルの促しもそのまま働きます。** Codex のイベントは Hermes のメッセージの形へ投影されるので、自己改善のループから見ると、いつもどおりの会話ログに見えます。
+- **Hermes のペルソナも一緒に届きます。** 組み立てたシステムプロンプト（SOUL.md、MEMORY.md/USER.md、チャンネルごとの `system_prompt` の上書き）は、スレッドが始まるときに一度だけ developer instructions として Codex のスレッドへ送られます。Codex に内蔵の人格は無効になるので、あなたのペルソナと張り合うことはありません。
 
 ## モデルが実際に持っているツール {#what-tools-the-model-actually-has}
 
@@ -118,6 +119,7 @@ MCP のコールバックが出しているおかげで、次のものも動き�
 | `web_search`、`web_extract` | あり | あり（MCP のコールバック経由） |
 | ブラウザの自動操作（Camofox / Browserbase） | あり | あり（MCP のコールバック経由） |
 | `vision_analyze`、`image_generate` | あり | あり（MCP のコールバック経由） |
+| ユーザーのターンに添えた画像（スクリーンショット、貼り付けた画像、`/image`） | あり（ネイティブのマルチモーダル） | あり。app-server の画像入力（data/http の URL）か手元の画像のパスとしてそのまま送られ、テキストの目印に置き換えられることはありません |
 | `skill_view`、`skills_list` | あり | あり（MCP のコールバック経由） |
 | `text_to_speech` | あり | あり（MCP のコールバック経由） |
 | Codex の `shell`（端末・読み・書き・検索・探索・実行） | — | あり（Codex 内蔵） |
@@ -129,12 +131,14 @@ MCP のコールバックが出しているおかげで、次のものも動き�
 | Codex 純正のプラグイン（Linear、GitHub など） | — | あり（自動で移されます） |
 | 利用者の MCP サーバー | あり | あり（Codex へ自動で移されます） |
 | 記憶とスキルの見直し（裏側で動きます） | あり | あり（項目の投影経由） |
+| システムプロンプト / SOUL.md / チャンネルの `system_prompt` の上書き | あり | あり（スレッドの開始時に developer instructions として一度だけ送られます） |
 | 何ターンにもわたる会話 | あり | あり |
 | `/goal`（Ralph ループ） | あり | あり |
 | かんばんの作業役の割り振り | あり | あり（コールバック経由） |
 | かんばんのまとめ役のツール | あり | あり（コールバック経由） |
 | すべてのゲートウェイの窓口 | あり | あり |
-| OpenAI 以外の提供元 | あり | 該当なし（OpenAI と Codex 向けの仕組みです） |
+| 名前付きのカスタムプロバイダ（`providers.<name>`） | あり | あり。`~/.codex/config.toml` に対応する `[model_providers.<name>]` が必要です |
+| そのほかの OpenAI 以外の提供元 | あり | 該当なし（Codex を通しません） |
 
 ### 実況の表示 {#live-display}
 
@@ -163,6 +167,35 @@ Codex のイベントの流れを、既定のランタイムと同じ表示の�
    codex login                  # writes tokens to ~/.codex/auth.json
    ```
    Hermes 側の `hermes auth add openai-codex` が書くのは `~/.hermes/auth.json` で、これは別のセッションです。まだなら **`codex login` を別途実行してください**。
+
+   **または、名前付きのカスタムプロバイダ。** Hermes の設定にある `providers.<name>` の項目は、Codex 側に**同じ名前**の提供元が定義されていれば、このランタイムで使えます。Hermes の設定は次のとおりです。
+
+   ```yaml
+   providers:
+     my-gateway:
+       api: https://gateway.example.com/v1
+       key_env: MY_GATEWAY_API_KEY
+       default_model: gpt-5.4
+
+   model:
+     provider: custom:my-gateway
+     default: gpt-5.4
+     openai_runtime: codex_app_server
+   ```
+
+   そして `~/.codex/config.toml` には、対応する表を書きます。
+
+   ```toml
+   [model_providers.my-gateway]
+   name = "My Gateway"
+   base_url = "https://gateway.example.com/v1"
+   env_key = "MY_GATEWAY_API_KEY"
+   wire_api = "responses"
+   ```
+
+   Hermes が `thread/start` で送るのは `model` と `modelProvider = "my-gateway"` だけです。`base_url` は Codex が解決し、キーは Codex 自身の環境の `env_key` から読みます。**Hermes は API キーを渡しません**。そのため `MY_GATEWAY_API_KEY` は、Hermes が動いているプロセスの環境になければなりません。`~/.hermes/.env` は起動時に読み込まれ、提供元の資格情報は Codex のサブプロセスへ引き継がれます。補助の処理（題名、圧縮、記憶の見直し）は、引き続き Hermes 自身の `providers.my-gateway` の項目を使います。
+
+   注意点があります。`custom:` の後ろの名前は `providers:` の設定のキーで、`[model_providers.<name>]` の表の名前と完全に一致していなければなりません。Codex 側にその名前が無ければ、Codex は Hermes のエンドポイントを黙って使うのではなく、知らない提供元だと報告します。名前の無い `provider: custom`（`base_url` だけのもの）は対象外です。Codex に渡せる決まった名前が無いため、Hermes の標準のランタイムのままになります。
 
 3. **（任意）使いたい Codex のプラグインを入れておく。** ランタイムを有効にすると、Codex CLI ですでに入れてある選りすぐりのプラグインを Hermes が自動で移します。
    ```bash
@@ -201,6 +234,19 @@ Hermes のセッションで次のようにします。
 model:
   openai_runtime: codex_app_server   # default is "auto" (= Hermes runtime)
 ```
+
+ゲートウェイのサービス、cron やかんばんの作業役、デスクトップに同梱された CLI などでよくあるように、Hermes のプロセスが `PATH` から `codex` を見つけられず、
+最初のターンが `No such file or directory: 'codex'` で失敗する場合は、実行ファイルの場所をランタイムにはっきり指定します。
+
+```yaml
+model:
+  openai_runtime: codex_app_server
+  codex_bin: /Applications/Codex.app/Contents/Resources/codex   # default: "codex" from PATH
+```
+
+`model.codex_bin` は、Hermes が codex を立ち上げるすべての場所で使われます。`/codex-runtime` の使えるかどうかの確認、
+移し替えのときの純正プラグインの検出、そして長く動き続ける app-server のサブプロセスです。
+値は実行ファイルのパスひとつで、シェルのコマンドではありません。引用符や追加の引数は付けないでください。
 
 ## 自己改善のループ（記憶とスキルの促し） {#self-improvement-loop-memory-skill-nudges}
 
@@ -247,7 +293,7 @@ Codex は、コマンドを実行する前や patch を当てる前に承認を�
 - **Allow for this session** → 似たコマンドについて Codex は聞き直しません。
 - **Deny** → コマンドは断られ、Codex は読むだけのやり方で続けます。
 
-`apply_patch`（ファイルの編集）の承認では、Codex が対応する `fileChange` の項目でデータを渡してくれた場合、何が変わるのかの要約（`1 add, 1 update: /tmp/new.py, /tmp/old.py`）を Hermes が見せます。
+`apply_patch`（ファイルの編集）の承認では、Codex が対応する `fileChange` の項目でデータを渡してくれた場合、何が変わるのかの要約（`1 add, 1 update: src/new.py, src/old.py`）を Hermes が見せます。
 
 ## 権限のプロファイル {#permission-profiles}
 
@@ -304,7 +350,7 @@ default_permissions = ":workspace"
 # end hermes-agent managed section
 ```
 
-この範囲の**外**にあるものは、あなたのものです。移し替えをやり直しても（`/codex-runtime codex_app_server` を実行したときや、ランタイムを切り替えたときに走ります）、管理されている範囲だけがその場で置き換わり、その上下にある利用者の記述はそのまま残ります。つまり、次のことができます。
+この範囲の**外**にあるものは、あなたのものです。移し替えをやり直しても（`/codex-runtime codex_app_server` を実行したとき、ランタイムを切り替えたとき、`hermes codex-runtime migrate` を実行したときに走ります）、管理されている範囲だけがその場で置き換わり、その上下にある利用者の記述はそのまま残ります。つまり、次のことができます。
 
 - Hermes が知らない自前の MCP サーバーを足す
 - 確認を挟むほうがよければ `default_permissions` を `:read-only` へ上書きする
@@ -312,6 +358,19 @@ default_permissions = ":workspace"
 - 自分で決めた権限のプロファイルを `[permissions.<name>]` の表として足す
 
 管理されている範囲の**中**に足したものは、次の移し替えで上書きされて消えます。管理されている範囲を編集しないと実現できない調整が必要なら、issue を立ててください。つまみを用意します。
+
+**同じ名前のサーバー。** 範囲の外にある自分の `[mcp_servers.<name>]` の表が、Hermes の `mcp_servers` にあるサーバーと同じ名前を使っている場合は、あなたの表が優先されます。Hermes は 2 つめの `[mcp_servers.<name>]` の見出しを出す代わりに、その名前の投影を飛ばします（見出しが重なると TOML として不正になり、Codex が起動しなくなるためです）。そうした名前は、移し替えの報告の「Kept N user-owned MCP server(s)」の下に並びます。そのサーバーを Hermes に管理させたいときは、自分の表を消して移し替えをやり直してください。書き出した内容は `config.toml` を置き換える前に TOML として読み込んで確かめられ、読めない結果になったときは報告だけして、今のファイルには手を付けません。
+
+### スクリプトから移し替えを実行する {#running-the-migration-from-a-script}
+
+```bash
+hermes codex-runtime migrate            # rewrite the managed block for the active profile
+hermes codex-runtime migrate --dry-run  # report only, no write
+hermes codex-runtime migrate --json     # machine-readable report (migrated, preserved_user_servers, errors, …)
+hermes -p work codex-runtime migrate    # a named profile's mcp_servers
+```
+
+これは `/codex-runtime codex_app_server` が走らせるのと同じ移し替えです。何度やっても結果は同じで、書き込みは途中で壊れない形で行われ、報告にエラーが含まれていれば 0 以外の終了コードで終わります。書き込み先は、`CODEX_HOME` が設定されていれば `$CODEX_HOME/config.toml`（後述）、そうでなければ `~/.codex/config.toml` です。
 
 ## 複数プロファイル・複数テナントでの使い方 {#multi-profile-multi-tenant-setups}
 
@@ -413,6 +472,9 @@ tool_timeout_sec = 600.0
 - **Hermes の認証と Codex の認証は別のセッションです。** いちばん気持ちよく使うには `codex login` と `hermes auth add openai-codex` の両方が要ります（ランタイムは LLM の呼び出しに Codex 側のセッションを使います）。これは Hermes の `_import_codex_cli_tokens` での意図的な設計です。トークンの更新でお互いを壊さないよう、Hermes は OAuth の状態を Codex CLI と共有しません。
 - **`delegate_task`、`memory`、`session_search`、`todo` はこのランタイムでは使えません。** 動いている AIAgent の文脈が要り、状態を持たない MCP のコールバックではそれを用意できません。これらが必要なときは `/codex-runtime auto` を使ってください。
 - **Codex が変更の一式を持っていないとき、承認の確認に patch の中身が出ません。** Codex の `fileChange` の承認のパラメータには、変更の一式がいつも付いてくるとはかぎりません。Hermes は対応する `item/started` の通知からデータを拾って覚えておこうとしますが、項目が流れてくる前に承認が来た場合は、Codex が渡す `reason` の内容で代用します。
+- **`fallback_providers` への切り替えは、利用枠とレート制限の失敗のときだけです。** Codex app-server のターンが課金・利用上限・レート制限のエラーで失敗すると、Hermes は設定した[フォールバック先の提供元](/hermes/docs/user-guide/features/fallback-providers/)へ切り替え、同じターンをそちらでやり直します。認証の失敗（`codex login` の期限切れ）、ターンの時間切れ、知らないモデルのエラーはこのランタイムでは切り替わらず、そのターンのエラーとして表に出ます。
+- **それまでの Hermes の履歴を流し込むのは、Codex が一から始めるスレッドだけです。** Codex が `thread/resume` で返してくるスレッドは、すでに会話を持っています。再開できるスレッドが無いとき（`/model` で openai-codex へ切り替える前にセッションが別の提供元で動いていた、Codex が保存済みのスレッドを再開できなかった、動いていたスレッドが引退した）は、あたらしいスレッドの `developerInstructions` に、Hermes のシステムプロンプトと、それに続くセッションのこれまでのターン（ユーザーとアシスタントの文章、ツールの名前、ツールの結果の抜粋。直近のおよそ 32K 文字）が入ります。セッションの途中で組み立てたプロンプトが変わったとき（たとえば TUI や Desktop での `/personality`）は、次のターンで動いているスレッドを引退させ、更新したプロンプトと同じ履歴の流し込みを持ったあたらしいスレッドを始めます。
+- **Codex のスレッド自体は再起動をまたいで残ります。** ターンが確定するたびに、Hermes は Codex のスレッドの id をセッションの行に保存します（セッションの `model_config` の `codex_thread_id`。`hermes sessions` / `state.db`）。同じ Hermes のセッションのために次に組み立てられるエージェント（あとからの `/api/sessions/{id}/chat` の要求や、API サーバーやゲートウェイを再起動したあとの最初のターン）は、`turn/start` の前に、保存した id で `thread/resume` を出します。そのためモデルは前のターンを自分の記憶として持ち続けます（再開のときに履歴を流し込まないのはこのためです）。Codex がスレッドを返せないとき（rollout が消された、`CODEX_HOME` が変わった、前の app-server が書き込みの途中で強制終了された）は、Hermes は安全側に倒します。保存した id を捨て、あたらしいスレッドを始め、いま使っている画面（CLI、TUI/Desktop、メッセージ系のゲートウェイ）の状態表示に `Codex thread could not be resumed; starting a new one.` という一行を出します。`/new` のセッションが古いスレッドを再開することはありません。
 - **一秒未満での取り消しは保証されません。** 流れの途中での割り込み（Codex が応答している最中の Ctrl+C）は `turn/interrupt` で送られますが、Codex が最後のメッセージをすでに吐き出していた場合は、そのまま応答が返ってきます。
 
 不具合を見つけたら、`hermes logs --since 5m` の出力を添えて [issue を立ててください](https://github.com/NousResearch/hermes-agent/issues)。仕分けしやすいよう、題名に `codex-runtime` と入れてもらえると助かります。
@@ -436,7 +498,7 @@ tool_timeout_sec = 600.0
              ▼                                            │
         ┌──────────────────────────────────┐              │
         │  codex app-server (subprocess)    │──────────────┘
-        │   thread/start, turn/start        │
+        │   thread/start|resume, turn/start │
         │   item/* notifications            │
         │   shell + apply_patch + update_plan│
         │   view_image + sandbox            │

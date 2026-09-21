@@ -2,7 +2,7 @@
 title: "LSP — 意味を読み取る診断"
 description: "本物の言語サーバー（pyright、gopls、rust-analyzer など）を、write_file と patch の書き込み後チェックにつなぎます。"
 upstream_path: user-guide/features/lsp.md
-upstream_blob: 0a77a35e771d5ac385932456209fc5b88f89b04a
+upstream_blob: 77847baebe611eeab9eccfe2a3d0f26c1783d68c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/lsp
 ---
@@ -195,6 +195,30 @@ lsp:
   # projects (tsserver, rust-analyzer mid-indexing).
   wait_timeout: 5.0
 
+  # Budget for the FIRST request against a workspace whose server is
+  # not running yet — spawn, initialize and the server's initial program
+  # build all happen inside it (tsserver on a 10k-file project can need
+  # a minute). Once the client is up, wait_timeout applies again.
+  # 0 = no extra grace (same as wait_timeout).
+  warmup_timeout: 0
+
+  # After a server fails for a workspace (spawn error, or the request
+  # outran its budget) that (server, root) pair is skipped. 0 = for the
+  # rest of the process (until `hermes lsp restart`); N = retried after
+  # N seconds, so one transient stall does not silence a workspace
+  # forever. Skips are logged once per root at INFO with the retry time.
+  broken_retry_seconds: 0
+
+  # Workspace roots where no language server runs at all — glob
+  # patterns matched against the resolved project root (~ expanded; a
+  # bare path also matches everything beneath it). Use it for the one
+  # huge monorepo whose server cannot finish in budget while every other
+  # workspace keeps its diagnostics — unlike servers.<id>.disabled,
+  # which switches the server off everywhere. Must be a list; any other
+  # shape logs a warning and skips LSP for every workspace until fixed.
+  exclude_roots: []
+  # exclude_roots: ["~/work/huge-monorepo", "/srv/checkouts/*/vendor"]
+
   # How to handle missing server binaries.
   #   auto    — install via npm/pip/go install into <HERMES_HOME>/lsp/bin
   #   manual  — only use binaries already on PATH
@@ -299,6 +323,19 @@ pyright や tsserver なら数十ミリ秒、索引を作っている最中の r
 なら数秒というところです。1 回の編集で待つのは二度（差分を取るための
 編集前の控えと、編集後の見直し）なので、まったく答えを返さないサーバーでも
 1 回の編集にかかるのは最大で `2 × wait_timeout` です。
+ただし、ワークスペースに対する最初の問い合わせだけは、サーバーの起動と、
+サーバーが最初にプログラム全体を組み立てる時間も負担します。大きなプロジェクトでは
+`wait_timeout` を上げるのではなく、`lsp.warmup_timeout` で余裕を持たせてください
+（これが使われるのは最初の冷えた状態の問い合わせだけで、ふだんの持ち時間は変わりません）。
+そちらを上げると、そのあとのすべての編集が、最初の組み立てと同じだけ待たされかねません。
+
+あるワークスペースでサーバーが失敗すると（起動のエラーか、持ち時間を超えた問い合わせ）、
+その `(server, root)` の組は壊れたものとして扱われ、以降の問い合わせはすべて飛ばされます
+（ルートごとに一度だけ INFO でログに出ます）。初期設定では、`hermes lsp restart` を実行するか
+プロセスが終わるまで、壊れたままです。`lsp.broken_retry_seconds: N` を設定すると N 秒後に
+もう一度試すので、一時的に止まっただけでワークスペースの診断がずっと失われることはありません。
+どれだけ待っても終わらない巨大なモノレポのように、サーバーを動かしたくないルートは
+`lsp.exclude_roots` に入れます。ほかのワークスペースでは、サーバーはそのまま動きます。
 
 診断には**新しさの関門**があります。今回の編集後の中身に対してサーバーが
 出したものだけを結果として数えます（変更のとき以降に届いた

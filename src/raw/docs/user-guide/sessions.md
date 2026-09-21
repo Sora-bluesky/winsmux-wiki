@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: af3b2b9cd8db0fb425a94f5fd94f65daf216ca28
+upstream_blob: 08a7f887ea85f00eba50988bc0c7bdb83d8a946a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -63,7 +63,10 @@ Hermes が明示的に差し込んだ内容だけです。
 `hermes sessions prune` は、終了したセッションを保存領域から本当に消したいときだけ
 使ってください。`state.db` が大きくなっただけなら、まず消さずに済む方法から
 試します。`hermes sessions optimize` は、セッションのデータには一切触れずに
-FTS5 のインデックスの断片をまとめ、データベースを VACUUM します。圧縮は動いている文脈を小さくするもので、privacy のための削除ではありません。
+FTS5 のインデックスの断片をまとめ、データベースを VACUUM します。`optimize` も `prune` も、ほかの Hermes のプロセス（ゲートウェイ、Desktop、ダッシュボード、cron）が
+`state.db` を掴んでいる間は実行を断ります。先にそのプロセスを止めるか、
+`--force` を付けてください。詳しくは[セッション保存領域の復旧](/hermes/docs/user-guide/session-storage-recovery/)を見てください。
+圧縮は動いている文脈を小さくするもので、privacy のための削除ではありません。
 `/new` に名前を渡す（例: `/new payments-refactor`）と、新しいセッションの
 最初のタイトルをその場で決められます。あとから `/resume <name>` や
 `/sessions` の一覧で探すときに便利です。
@@ -705,6 +708,34 @@ profile migrate-identity <old> <new>` を使ってください）と、名前付
 `--apply` は、どれかのストアをゲートウェイが掴んでいる間は実行を断ります
 （ルーティングの索引をメモリに持っていて、あとで書き戻してしまうためです）。
 また、繰り返し実行しても安全です。2 回目は何も見つかりません。
+
+### ストアのジャーナルモードを WAL と DELETE の間で切り替える {#convert-the-store-between-wal-and-delete-journal-mode}
+
+`database.journal_mode: delete` が効くのは、Hermes が新しく作るデータベースだけです。
+すでに WAL モードになっている既存の `state.db` は、開くときに稼働中のまま
+格下げされることは**決して**ありません。ほかのゲートウェイ、ダッシュボード、cron のプロセスが
+まだチェックポイントしていない WAL のコミットを持っているかもしれず、その下で格下げすると
+それらのコミットが失われるからです。そのため Hermes は WAL のまま動き、設定した `delete` が
+効かなかったことを知らせる `ERROR` をプロセスごとに 1 回ログに出します。自分で切り替える手順は次のとおりです。
+
+```bash
+# stop every process using the profile's store first (gateway, dashboard, CLIs, cron)
+hermes sessions set-journal-mode delete     # WAL -> rollback journal
+hermes sessions set-journal-mode wal        # back to WAL
+hermes sessions set-journal-mode delete --db ~/.hermes/kanban.db   # another Hermes store
+```
+
+このコマンドは、ファイル本体か、その `-wal`/`-shm` の付随ファイルをどれかのプロセスが
+まだ掴んでいる間は、それぞれの PID とコマンドを示して実行を断ります。開いているプロセスが
+いなくなるのを待たずにモードを切り替え（途中で掴むプロセスが現れた場合は、競合させずに
+SQLite が拒否します）、ファイルのヘッダーが新しいモードになったことを確かめます。
+設定と食い違うときは、`database.journal_mode` を同じ値にするよう促します。次に開くときに
+設定したモードがもう一度適用されるためです。掴んでいるプロセスの確認はローカルかつ
+POSIX 専用なので、同じボリュームを共有する別のコンテナや VM のプロセスは見えません。
+Windows ではこの確認がまったく行われないため、Hermes のプロセスをすべて自分で止めたうえで
+`--force` を付けない限り、コマンドは最初から実行を断ります。ストアが VM をまたぐ
+ファイルシステム（virtiofs/9p）にある場合も、WAL の有効化は断られます。そこでは WAL の
+共有メモリが気づかないうちに壊れるためです。
 
 ## Claude Code や Codex CLI からセッションを取り込む {#importing-sessions-from-claude-code-and-codex-cli}
 

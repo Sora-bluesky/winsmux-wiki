@@ -2,7 +2,7 @@
 title: "Multiplexing Gateway の内部構造"
 description: "1 つの gateway ですべてのプロファイルを受け持つモードの設計: スコープの組み立て、シークレットのスコープ、受信のルーティング、永続化"
 upstream_path: developer-guide/multiplexing-gateway.md
-upstream_blob: 512e43893a3b7361bcb449886dfceed9f7703538
+upstream_blob: a2967827dac258ff2423f3fe2b8cbeca214b8f81
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/multiplexing-gateway
 ---
@@ -57,6 +57,31 @@ HTTP リスナー、プロセスロック、状態の表示面は 1 つずつを
   contextvar ではなく、ただのモジュールのグローバル変数です。表しているのはデプロイの
   モードで、タスクごとの値ではないからです。役目はただ 1 つ、`get_secret()` の安全側に
   倒す動作を有効にすることです。
+- ダッシュボードや Desktop のバックエンド（`hermes serve`）にはそうしたフラグがないので、
+  `hermes_cli/web_server.py::start_server` が起動の最後の手順として
+  `tui_gateway.launch_profile_policy.activate_multi_profile_hosting_eagerly()` を呼びます。
+  最初の `?profile=<other>` のリクエストを待たず、その端末に提供できるプロファイルのホームが
+  2 つ以上あれば、ホスト側がこの防御を有効にします。有効化は一方通行で、それまでにバックエンドが
+  済ませていたこと（アイドル時の後片付けによる会話記録の書き出し、ホストしているルーム、cron）が
+  あとからスコープし直されることはありませんでした。最後に回しているのは、有効化の時点で
+  `os.environ` が起動時のプロファイルの資格情報として固定されるからです。組み立て直す元の `.env` が
+  ない起動時のキー（systemd の `Environment=`、`op run`、Compose）にとっては、このスナップショットが
+  唯一の出どころになります。固定のあとで注入したり入れ替えたりしたキーは、そのプロセスが終わるまで
+  見えません。本当にプロファイルが 1 つだけのホストでは有効化されません。
+  `gateway.multiplex_profiles: false` は廃止済みで、ここでは意図して参照しません（従うと、
+  2 つ目のプロファイルを起動時のプロファイルの資格情報で提供してしまうためです）。`profiles/`
+  ディレクトリが読めない場合は安全側に倒して有効化し、WARNING をログに出します。
+- 防御が有効なときは、**起動時のプロファイルもテナントの 1 つ**になります。ルーティング先の
+  プロファイルがない処理は、周りの `os.environ` のままスコープなしで動くのではなく、
+  `launch_profile_scope_if_multiplexed()` を組み込みます。このスコープの中の優先順位に注意してください。
+  起動時のホームの **`.env` が固定された環境変数より優先される**ため、起動時のテナントにとって有効化は
+  厳しくなる一方というわけではありません。`os.environ` と `<launch home>/.env` の**両方**に設定された
+  キーは、スコープなしで読むと有効化の前は周りの値が、有効化のあとは `.env` の値が返ります。
+  環境変数にしかないキーには影響しません。
+- ルーティング先のプロファイル名が解決できなくなった処理（実行中に削除や改名がされた場合）は、
+  **何も**組み込みません。その資格情報の読み取りは、起動時のプロファイルのものへ戻るのではなく
+  `UnscopedSecretError` を送出します。「これは誰のものか」に答えがない状態は安全側に倒して止める条件で、
+  借りてくることは決してありません。
 
 ## スコープの組み立て {#scope-composition}
 

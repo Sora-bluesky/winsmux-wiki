@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: c856a1f7e85e3139a5d0802f855f4486040c3d08
+upstream_blob: 4df31e927839ca8cfec8eb47adc8624d55cb7a17
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -415,7 +415,7 @@ gateway:
 
 #### 自分の権限を確かめる {#inspecting-your-access}
 
-どのプラットフォームでも `/whoami` を実行すると、いまの範囲、自分の層（admin / user / unrestricted）、そして実行できるスラッシュコマンドが分かります。プラットフォームごとの例は [Telegram](/hermes/docs/user-guide/messaging/telegram/#slash-command-access-control) と [Discord](/hermes/docs/user-guide/messaging/discord/#slash-command-access-control) のページをご覧ください。
+どのプラットフォームでも `/whoami` を実行すると、いまの範囲、自分の層（admin / user / unrestricted）、そして実行できるスラッシュコマンドが分かります。admin の一覧を設定している場合、`/help` と `/commands` は admin でない人には実際に実行できるコマンド（`/help`、`/whoami`、それに `user_allowed_commands`）だけを表示します。admin には全コマンドの一覧が表示されます。プラットフォームごとの例は [Telegram](/hermes/docs/user-guide/messaging/telegram/#slash-command-access-control) と [Discord](/hermes/docs/user-guide/messaging/discord/#slash-command-access-control) のページをご覧ください。
 
 ## エージェントの向きを変える {#redirecting-the-agent}
 
@@ -439,7 +439,11 @@ gateway:
 display:
   busy_input_mode: steer   # or queue, or interrupt (default)
   busy_ack_enabled: true   # set to false to suppress the ⚡/⏳/⏩ chat reply entirely
+  busy_text_debounce_seconds: 0.35   # quiet window before merged busy text is delivered
+  busy_text_hard_cap_seconds: 1.0    # never hold merged busy text longer than this
 ```
+
+この 4 つのキーは、どれもプロファイルごとの `config.yaml` から読み込まれます。そのため、複数のプロファイルを同時に動かしていても、作業中の扱いはプロファイルごとに独立して保たれます。プロセスの環境変数で上書きする方法はありません。
 
 どのプラットフォームでも、作業中のエージェントに初めてメッセージを送ったときは、この設定項目を説明する 1 行の案内が受け取り確認に付け加えられます（`"💡 First-time tip — …"`）。この案内は 1 つのインストールにつき 1 回だけ出ます。`onboarding.seen.busy_input_prompt` のフラグがそれを覚えています。もう一度見たければ、そのキーを削除してください。
 
@@ -613,6 +617,8 @@ systemctl --user restart hermes-gateway   # or: sudo systemctl restart hermes-ga
 
 進行中のエージェントのターンを大事にしたいときは、`hermes gateway restart` のほうを使ってください。こちらはゲートウェイに先に処理を出し切るよう頼み（`SIGUSR1` を送り、再起動を待つ時間の上限を守ります）、入れ替わったプロセスが立ち上がるまで待ちます。素の `systemctl restart` は、いま動いているプロセスを systemd の都合で止めます。Hermes を更新したあとは、`hermes gateway restart` を一度実行して、動作中のサービスに `ExecStop=` の行が入った新しいユニットを読み直させてください（入っているユニットが古いままの間は、`hermes gateway status` が警告します）。
 
+入れられるユニットは、`systemctl reload hermes-gateway` も `SIGUSR1` に割り当てています。つまり Hermes にとっての `reload` は、処理を出し切ってからプロセスが終了し、監視役（supervisor）が起動し直すことを意味します。プロセスの中で設定を読み直す操作では**ありません**。入れ替わったプロセスが立ち上がるのを CLI に待たせて確かめたいときは、`hermes gateway restart` を使ってください。
+
 :::tip 画面のない VM では、ユーザーサービス＋ linger で root を求められずに済みます
 システムサービスは再起動のたびに root を必要とします。`hermes update` の最後に走る自動のゲートウェイ再起動も同じです。`hermes update` を root 以外で実行すると、パスワードなしの `sudo systemctl` を試み、それが使えなければ再起動を飛ばして `sudo systemctl restart hermes-gateway` のコマンドを表示します（対話的なパスワードの入力待ちで止まることはありません）。
 
@@ -658,6 +664,10 @@ tail -f ~/.hermes/logs/gateway.log   # View logs
 
 :::tip インストール後に PATH が変わったら
 launchd の plist は静的なファイルです。ゲートウェイを設定したあとで新しいツールを入れた（nvm で新しい Node.js を入れた、Homebrew で ffmpeg を入れた、など）ときは、もう一度 `hermes gateway install` を実行して新しい PATH を取り込んでください。ゲートウェイは古くなった plist を検出して自動で読み直します。
+:::
+
+:::info ローカルネットワークへのアクセス（LAN の機器に "No route to host" で失敗する）
+macOS のローカルネットワークのプライバシー保護は、ソケットを launchd がそのジョブのために起動した実行ファイルに結び付けて判断します。素の venv の Python にはアプリとしての身元がないため、launchd から動かしたゲートウェイは LAN 上のホスト（Home Assistant、ローカルのモデルサーバーなど）に届きませんでした。同じ URL がターミナルからは通るのに、接続はすべて `errno 65 No route to host` で失敗し、許可を求める画面も一度も出ませんでした。そこで、生成される plist はゲートウェイを `/usr/bin/osascript`（`do shell script "exec …"`）経由で動かします。macOS はその子プロセスを osascript 自身のものとして扱い、osascript は Apple のプラットフォームバイナリなので、この確認の対象外になります。`ps` には `osascript → stderr_timestamp → gateway run` と表示されます。停止、再起動、KeepAlive の動きはこれまでとまったく同じです。古い Hermes で入れた plist は、`hermes gateway install` で（または次の `hermes gateway start` で）新しくなります。
 :::
 
 :::tip `hermes auth add` / `hermes auth reset` のあとに新しい認証情報を反映させる

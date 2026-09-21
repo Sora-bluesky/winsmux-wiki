@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 36b02a3ab882b2d147a320c634f9c0c68520481f
+upstream_blob: 63664d476cb380d1754701e3586f1931eb9730df
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -1383,7 +1383,7 @@ providers:
 
 **`codex_responses` のプロキシでのコンテキストウィンドウ。** `transport: codex_responses` を指定したカスタムの項目（たとえばローカルの Codex プロキシ）では、Codex OAuth のモデル（`gpt-6-astra`、`gpt-5.6-sol`/`-terra`/`-luna`、`gpt-5.5` など）のコンテキストウィンドウを、直接 API のカタログの 1.05M ではなく、Codex OAuth の表（ほとんどのスラッグで 272K）から解決します。こうすることで、Codex のバックエンドの上限と 272K の課金区分に達する前に圧縮が走ります。この判断はホスト名ではなくトランスポートに従うので、`HERMES_CODEX_BASE_URL` や `model.base_url` の後ろにいる `openai-codex` でも同じです。モデルごとの `models.<id>.context_length`、項目単位の `context_length`、`model.context_length` を指定した場合は、そちらが優先されます。自分で選ぶ `-900k` 付きの派生は、確認済みの 900K のままです。
 
-**カスタムエンドポイントでの推論の深さ。** 設定した `reasoning_effort`（`/reasoning max`、`agent.reasoning_effort`）は、`chat_completions` と `codex_responses` のどちらのトランスポートでも、そのままカスタムエンドポイントへ届きます。`max` まで届き、Hermes 内部だけの `ultra` が `max` に丸められるだけです。例外は 2 つあり、いずれも項目ではなく接続先のホストに従います。`api.openai.com` を指したカスタムの項目は OpenAI のモデルごとの段階を保ち（そこでは `max` は gpt-5.6 だけの段階です）、モデルごとの語彙を公開しているプロバイダ（Ramp Router）を指した項目は、そのカタログに丸められます。その段階を受け付けないエンドポイントは、Hermes が黙って落とすのではなく、HTTP 400 を返します。
+**カスタムエンドポイントでの推論の深さ。** 設定した `reasoning_effort`（`/reasoning max`、`agent.reasoning_effort`）は、`chat_completions` と `codex_responses` のどちらのトランスポートでも、そのままカスタムエンドポイントへ届きます。`max` まで届き、Hermes 内部だけの `ultra` が `max` に丸められるだけです。例外は 2 つあり、いずれも項目ではなく接続先のホストに従います。`api.openai.com` を指したカスタムの項目は OpenAI のモデルごとの段階を保ち（そこでは `max` は gpt-5.6 だけの段階です）、モデルごとの語彙を公開しているプロバイダ（Ramp Router）を指した項目は、そのカタログに丸められます。その段階を受け付けないエンドポイントは、Hermes が黙って落とすのではなく、HTTP 400 を返します。推論の深さをまったく設定していないときは、`chat_completions` のリクエストに `reasoning_effort: medium` が付きます。Nous Portal や OpenRouter の経路と同じ既定値で、エンドポイント側の既定に任せることはしません（kimi-k3 の既定は `max` で、`medium` の約 3 倍の推論トークンを使います）。カタログや `model_overrides` で `supports_reasoning: false` とされたモデルと、`thinking` の機能を持たない Ollama のモデルでは、この項目は付きません。
 
 OpenAI 互換のエンドポイントの中には、プロバイダ固有のリクエストボディのフィールドを必要とするものがあります。該当するカスタムプロバイダに `extra_body` のマップを足すと、Hermes はそのエンドポイント向けの各チャット補完のリクエストにそれを混ぜ込みます。
 

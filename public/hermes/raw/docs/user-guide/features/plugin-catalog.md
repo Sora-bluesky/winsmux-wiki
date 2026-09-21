@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みで SHA 固定された Hermes のプラグインを、厳選カタログから探して導入する"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 003ef2185015245b3ca3fa91553bf98ac05c7ace
+upstream_blob: bbef86dd1a310f2d71e70a7bf581e5cfcf4bbbcf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -19,6 +19,12 @@ hermes plugins install <name>
 見た目で探すなら **[/docs/plugins](https://hermes-agent.nousresearch.com/plugins)** を開いてください。エントリは種類ごとの棚
 （Memory、Desktop、Platforms、Web & Browser、Tools、Voice、Automation、Models）に分かれて並び、検索、階層フィルタ
 （Official / Community）、機能チップ、そして各エントリのコピーできる導入コマンドがそろっています。
+
+どのエントリにも `/docs/plugins/<name>` に専用のページがあります（カードをクリックすると開きます）。
+説明の全文と注意書き、固定したコミット、ツール・フック・環境変数、Desktop の導入ボタンと CLI のコマンド、
+任意のスクリーンショット、審査したコミット時点の README、そして **More by this author** の棚が載っています。
+作者ごとのページも `/docs/plugins/by/<maintainer>` にあり、その人がカタログで保守しているものがすべて並びます。
+どちらも同じカタログのファイルからビルド時に生成されるので、ページが変わるのはマージされた PR を通したときだけです。
 
 カタログは既存の[プラグインの仕組み](/hermes/docs/user-guide/features/plugins/)を置き換えるものではなく、補うものです。カタログから導入できるものは、
 内部的にはすべて普通のプラグインです。カタログはその上に「見つけやすさ」と審査の
@@ -43,7 +49,9 @@ hermes plugins install <name>
 | `platforms` | OS の制限。空ならすべて対象（任意） |
 | `docs_url` | 外部ドキュメントへのリンク（任意） |
 | `version` | 固定した sha に付ける、人が読むためのラベル。例: `"1.4.0"`。CLI、カタログのカード、Desktop の **Update to** ボタンに `1.4.0 @ abcd1234` の形で表示されます（任意。見た目だけのもの） |
-| `image` | カタログのカードに出すバナー画像。2:1 で表示されます（1200×600 が合います。ほかの比率は中央で切り抜かれます）。`raw.githubusercontent.com`、`github.com`、`*.githubusercontent.com` 上の `https` URL で指定します（任意）。審査したあとで中身が変わらないよう、エントリのコミットに固定してください（`raw.githubusercontent.com/owner/repo/<sha>/...`） |
+| `image` | カタログのカードとプラグインのページ上部に出すバナー画像。2:1 で表示されます（1200×600 が合います。ほかの比率は中央で切り抜かれます）。`raw.githubusercontent.com`、`github.com`、`*.githubusercontent.com` 上の `https` URL で指定します（任意）。審査したあとで中身が変わらないよう、エントリのコミットに固定してください（`raw.githubusercontent.com/owner/repo/<sha>/...`） |
+| `screenshots` | プラグインのページにギャラリーとして出す画像。最大 6 枚で、置き場所の条件は `image` と同じです（任意）。これもエントリのコミットに固定してください |
+| `readme` | プラグインのページには、既定でリポジトリの README が表示されます（エントリの `subdir` にあればそれ、無ければリポジトリ直下のもの）。README はドキュメントのビルド時に**固定したコミットから**取ってきます。ブランチからは取りません。そのため、ページに出るのは審査した人が読んだ README で、変わるのは固定値が変わったときだけです。`false` にすると表示しません。GitHub と GitLab のリポジトリが対象です（任意。既定は `true`） |
 
 ## 信頼のしくみ {#trust-model}
 
@@ -170,7 +178,9 @@ hermes plugins enable snyk
    更新の道は固定した SHA だけです（SHA を上げる PR と、`hermes plugins update <name>` の組み合わせ）。
 
 固定値の更新（`sha` を新しいコミットへ上げること）も、同じ PR とレビューの手順を通ります。
-利用者に見えるラベルがコードと食い違わないよう、同じ PR で `version` も上げてください。導入済みのプラグインは、
+利用者に見えるラベルがコードと食い違わないよう、同じ PR で `version` も上げ、sha を埋め込んだ `image` / `screenshots` の URL も固定し直してください。
+プラグインのページ（`/docs/plugins/<name>`）も同じファイルからビルドされます。ページを充実させたいときは、そこに
+`screenshots:` を足してください（README は既定で表示されます）。別に管理する掲載情報はありません。導入済みのプラグインは、
 記録している sha を現在の固定値と比べます。`hermes plugins list --json` は `update_available` を返し、
 Desktop の Plugins タブには **Update to 1.4.0** ボタンが出て、`hermes plugins update <name>`
 を実行すると新しい固定値のコミットがそのまま取り出されます。

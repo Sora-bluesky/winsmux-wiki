@@ -3,7 +3,7 @@ title: wiki.winsmux.dev
 description: このホストで公開しているもの。
 sources:
   - https://hermes-agent.nousresearch.com/docs/
-hermes_version: "0.21.3"
+hermes_version: "0.21.4"
 confidence: high
 raw: /hermes/raw/home.md
 ---

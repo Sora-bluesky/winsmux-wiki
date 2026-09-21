@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "Hermes Agent を設定する — config.yaml、プロバイダ、モデル、API キーなど"
 upstream_path: user-guide/configuration.md
-upstream_blob: c36d55a482dc8576d4b6b64fa5a560402424fcd0
+upstream_blob: 96e507eead4924ba0efd6a5d9149f9a2991faf6c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -102,8 +102,8 @@ database:
   # live-downgraded — Hermes keeps WAL and logs an error telling you the
   # configured delete did not apply (or that the WAL database sits on a
   # cross-VM mount). To convert an existing database, stop
-  # every process using it and run a one-time offline
-  # `PRAGMA journal_mode=DELETE` on the file.
+  # every process using it and run
+  # `hermes sessions set-journal-mode delete` (see Sessions).
   journal_mode: wal
 
   # Durability level for every state.db connection: OFF, NORMAL, FULL,
@@ -124,8 +124,8 @@ database:
 逆向きの切り替えが自動で起きることはありません。すでに WAL モードになっているデータベースは、
 `journal_mode: delete` を設定しても使用中のまま戻されません（接続が開いた状態で戻すと壊れることがあるためです）。`hermes doctor` は
 `<db> is in WAL mode despite database.journal_mode=delete` と警告し続けます。解消するには、そのプロファイルの
-Hermes のプロセスをすべて止め、ファイルに対して一度だけオフラインで
-`PRAGMA journal_mode=DELETE` を実行してください。この警告の下では、いまそのデータベースを
+Hermes のプロセスをすべて止め、
+`hermes sessions set-journal-mode delete` を実行してください（まだファイルを握っているものがあれば実行を断り、変換後のヘッダーも確かめます）。この警告の下では、いまそのデータベースを
 握っているプロセスも示されるので（`<db> is held by PID <n> (<command>)`）、何を止めればよいかが
 分かります。握っているプロセスの調べが部分的だったり行えなかったりするときは、問題なしと
 告げる代わりに `cannot prove the database is quiet` と出します。
@@ -977,7 +977,7 @@ compression:
   threshold: 0.50                                   # Compress at this % of context limit
   threshold_tokens: 256000                          # Absolute token cap — takes lower of ratio vs absolute
   target_ratio: 0.20                                # Fraction of threshold to preserve as recent tail
-  tail_mode: lean                                   # Tail retention: "lean" (default — clamped 2.5% tail, 10K-25K, with a detailed session log + anchor index + session_search recovery pointers in the summary, all from ONE auxiliary summarizer call; ~3x fewer retained tokens after compaction) or "legacy" (0.20×threshold verbatim tail)
+  tail_mode: lean                                   # Tail retention: "lean" (default — clamped 2.5% tail, 10K-25K, never above 20% of the window, with a detailed session log + anchor index + session_search recovery pointers in the summary, all from ONE auxiliary summarizer call; ~3x fewer retained tokens after compaction) or "legacy" (0.20×threshold verbatim tail)
   protect_last_n: 20                                # Min recent messages to keep uncompressed
   protect_first_n: 3                                # Non-system head messages pinned across compactions (0 = pin nothing)
   in_place: true                                    # Compact on the same session id (no rotation) — see below
@@ -1356,10 +1356,12 @@ Qwen Cloud（Alibaba DashScope）の上流はキャッシュの TTL を 5 分で
 
 ```yaml
 prompt_caching:
-  cache_ttl: "5m"   # "5m" or "1h" (Anthropic-supported tiers); other values are ignored
+  cache_ttl: "5m"   # "5m", "1h" (Anthropic-supported tiers) or "auto"; other values are ignored
 ```
 
-`cache_ttl` は、ネイティブ Anthropic API・OpenRouter・Nous Portal 経由の Claude に対して Hermes が付ける区切りの TTL を選びます。Anthropic が対応する 2 つの段階（`"5m"`、`"1h"`）だけが有効で、それ以外の値は無視されます。独自の上限を持つプロバイダ（たとえば最大 5 分の Qwen Cloud）は、今も上流が許す範囲へ丸められます。
+`cache_ttl` は、ネイティブ Anthropic API・OpenRouter・Nous Portal 経由の Claude に対して Hermes が付ける区切りの TTL を選びます。Anthropic の 2 つの段階（`"5m"`、`"1h"`）はそのまま送られ、それ以外の値は無視されます。独自の上限を持つプロバイダ（たとえば最大 5 分の Qwen Cloud）は、今も上流が許す範囲へ丸められます。
+
+1h の段階は書き込みが基本の入力料金の 2 倍（5m は 1.25 倍）で、ターンとターンの間が 5 分より空くときにしか元が取れません。そうでなければ、誰も使わない保持のために、ツールの結果がすべて高いほうの料金で書き込まれます。`"auto"` は、そのセッションを誰のペースで進めるかによって段階をセッションごとに選びます。人が入力するセッション（CLI、TUI、Desktop、Telegram/Discord/Slack などのメッセージングプラットフォーム）には `1h`、機械のペースで進むもの（サブエージェント、cron、`hermes -q` の単発実行、webhook、Kanban のワーカー、API サーバー、ツールから呼ばれる実行やバッチ実行）には `5m` です。対話のセッションを一日の中で置いておいては再開する使い方の環境では、`auto` によって対話の分のキャッシュ書き込み料金がおよそ 40% 減り、枝分かれするサブエージェントの費用は変わりませんでした。委任されたサブエージェントは、設定にかかわらず常に `5m` に固定されます。
 
 ## 補助モデル {#auxiliary-models}
 
@@ -1903,7 +1905,7 @@ agent:
 :::
 
 :::note ローカルの OpenAI 互換のエンドポイント
-独自の `base_url`（`http://localhost:11434/v1`、vLLM や SGLang、ルーターのエンドポイント）には、解決された深さ — `agent.reasoning_effort` か、一致したモデルごとの上書き — が、標準の最上位の `reasoning_effort` というリクエストの項目として渡されます。値は OpenAI 互換の伝送方式が受け取れるもの（`none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max`）に丸められます。入れ子の `reasoning` のオブジェクトは、受け取れると分かっているエンドポイント（Nous Portal、OpenRouter の推論に対応したモデル、GitHub Models）のために取ってあります。任意のサーバーは、知らない項目を HTTP 400 で拒むからです。自分のサーバーが思考の予算を別の項目から読む場合（Ollama の `think`、vLLM の `chat_template_kwargs`、ルーター独自のキー）は、その独自プロバイダの [`extra_body`](/hermes/docs/integrations/providers/#named-custom-providers) に設定してください。そこへ流れるすべてのリクエストに混ぜ込まれます。
+独自の `base_url`（`http://localhost:11434/v1`、vLLM や SGLang、ルーターのエンドポイント）には、解決された深さ — `agent.reasoning_effort` か、一致したモデルごとの上書き — が、標準の最上位の `reasoning_effort` というリクエストの項目として渡されます。値は OpenAI 互換の伝送方式が受け取れるもの（`none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max`）に丸められます。深さが未設定の場合も、ここでは `medium` として送られます。Nous Portal や OpenRouter の経路が使うのと同じ既定値です。項目を省くと選択をエンドポイントに委ねることになり、ホストされた推論モデル自身の既定値が上限になっていることがあるためです（kimi-k3 の既定は `max` で、`medium` のおよそ 3 倍の推論トークンと待ち時間がかかります）。この項目は、カタログか `model_overrides` で `supports_reasoning: false` とされたモデル、`thinking` の機能なしで取り込んだローカルの Ollama のモデル、そしてエンドポイントがこの項目に `400` を返したあとのセッションの残りでは付きません。入れ子の `reasoning` のオブジェクトは、受け取れると分かっているエンドポイント（Nous Portal、OpenRouter の推論に対応したモデル、GitHub Models）のために取ってあります。任意のサーバーは、知らない項目を HTTP 400 で拒むからです。自分のサーバーが思考の予算を別の項目から読む場合（Ollama の `think`、vLLM の `chat_template_kwargs`、ルーター独自のキー）は、その独自プロバイダの [`extra_body`](/hermes/docs/integrations/providers/#named-custom-providers) に設定してください。そこへ流れるすべてのリクエストに混ぜ込まれます。
 :::
 
 **解決の優先順位:**
@@ -2627,6 +2629,8 @@ human_delay:
   min_ms: 800                  # Minimum delay (custom mode)
   max_ms: 2500                 # Maximum delay (custom mode)
 ```
+
+各プロファイル自身の `config.yaml` が読まれるので、多重化したプロファイルもそれぞれ別々の間の取り方を保てます。プロセスの環境変数で上書きする方法はありません。`custom` モードで `min_ms`/`max_ms` の組が整数でない、負である、または大小が逆になっている場合は、そのキーの名前を挙げた警告とともに拒否され、代わりに `natural` の範囲（800–2500 ms）が使われます。
 
 ## コードの実行 {#code-execution}
 

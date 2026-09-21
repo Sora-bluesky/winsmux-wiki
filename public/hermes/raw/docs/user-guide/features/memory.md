@@ -2,7 +2,7 @@
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: ee3c226c8e619feeef8438848d50ec14e06efcf9
+upstream_blob: efee7737fcab3f4e4a9086ce1b173d43a1a86d22
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---
@@ -106,6 +106,8 @@ memory(action="replace", target="memory",
 ```
 
 その部分文字列が複数の項目に当たった場合は、もっと絞り込むよう求めるエラーが返ります。
+
+`replace` は、当たった**項目全体**を `content` で上書きします。`old_text` は項目を探すためだけに使われ、その部分だけが切り取られて置き換わるわけではありません。新しい `content` には、古い項目のうち残したい部分もすべて含めた、完全な新しい項目を書いてください。（項目の全文と同じ `old_text` を渡すと完全一致として扱われ、部分一致よりも優先されます。）
 
 ## 2つの宛先 {#two-targets-explained}
 

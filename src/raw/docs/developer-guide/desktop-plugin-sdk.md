@@ -2,7 +2,7 @@
 title: "デスクトッププラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンド領域までを、import 1 行だけ、ビルドなしで扱えます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 45b3308ce072983c7708b22588f67ef9d6c814d7
+upstream_blob: da30c8980de74cca789a8e895f042a756143fb4e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -489,6 +489,8 @@ ctx.socket('/events', () => {
 > `SearchField`、`ScrollArea`、`Separator`、`Skeleton`、`GlyphSpinner`、`Loader`、
 > `EmptyState`、`ErrorState`、`CopyButton`、`StatusDot`、`LogView`、`Codicon`、
 > `DecodeText`。
+
+この変更から、`DecodeText` の `loop` は明示したときだけ有効になります。既定では 1 回だけデコードして、その表示のまま止まります。文字がかき混ざる動きを続けてほしい進捗表示では、`loop` を明示的に渡してください。
 
 補助的なものもあります。`cn`（クラスの結合）、`icons.*`（アプリで使っている lucide のアイコン）、`haptic`、`profileColor` / `profileColorSoft`（同じ相手には必ず同じ色が付きます）、時刻の書式整形の `relativeTime` / `fmtDateTime` / `fmtDayTime` / `coarseElapsed`、`useI18n`（各言語の文言。プラグインも翻訳できるようになります）、そして `evaluateRuntimeReadiness` です。
 

@@ -2,7 +2,7 @@
 
 > 公式 docs の Quickstart / Installation / Messaging の順を日本語にしたもの。独自手順は作らない。正本: https://hermes-agent.nousresearch.com/docs/
 
-Hermes Agent 0.21.3
+Hermes Agent 0.21.4
 
 ## ページ
 
@@ -261,6 +261,7 @@ Hermes Agent 0.21.3
 - [user-guide/secrets（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/)
 - [user-guide/secrets/onepassword（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/onepassword/)
 - [user-guide/security（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
+- [user-guide/session-storage-recovery（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/session-storage-recovery/)
 - [user-guide/sessions（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
 - [user-guide/skills/bundled/apple/apple-apple-notes（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/apple/apple-apple-notes/)
 - [user-guide/skills/bundled/apple/apple-apple-reminders（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/apple/apple-apple-reminders/)
@@ -714,6 +715,7 @@ Hermes Agent 0.21.3
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/secrets/index.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/secrets/onepassword.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/security.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/session-storage-recovery.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/sessions.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/apple/apple-apple-notes.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/bundled/apple/apple-apple-reminders.md

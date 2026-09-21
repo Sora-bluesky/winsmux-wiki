@@ -2,7 +2,7 @@
 title: "フォールバックプロバイダー"
 description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: 7dabb0b02e000dfea43d7a70129b9139cdbe8166
+upstream_blob: 6c47a6f2d0b251ff187206204f3b7d81c183ed18
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
@@ -40,6 +40,17 @@ fallback_providers:
 ```
 
 各エントリーには `provider` と `model` の両方が必要です。どちらかが欠けているエントリーは無視されます。
+
+レート制限の応答が制限の解ける時刻を示している場合、メインはちょうどその時刻まで控えに回されます（何も示さないプロバイダーには、60 秒から 4 時間まで伸びていく指数的な待ち時間が適用されます）。必要なら、メインがすぐに使えるようになるときは切り替えないようにもできます。
+
+```yaml
+fallback:
+  min_switch_reset_seconds: 120   # 0 (default) = always switch
+```
+
+| キー | 初期値 | 効果 |
+|-----|---------|--------|
+| `fallback.min_switch_reset_seconds` | `0`（無効） | レート制限を受けたメインが示した解除までの時間がこの秒数より短い場合、控えには切り替えません。代わりに、再試行の待ち時間でその間をやり過ごします。 |
 
 Gemini の控えのエントリーは `gemini`、`google`、`google-gemini`、`google-ai-studio` のどれでも書けます。
 Google 純正の API エンドポイントでは、いずれも純正の Gemini クライアントを使い、

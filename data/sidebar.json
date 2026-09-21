@@ -92,6 +92,9 @@
           "id": "user-guide/sessions"
         },
         {
+          "id": "user-guide/session-storage-recovery"
+        },
+        {
           "id": "user-guide/profiles"
         },
         {
@@ -1608,6 +1611,7 @@
     "user-guide/egress/iron-proxy",
     "user-guide/egress/network-isolation",
     "user-guide/sessions",
+    "user-guide/session-storage-recovery",
     "user-guide/profiles",
     "user-guide/profile-distributions",
     "user-guide/multi-profile-gateways",

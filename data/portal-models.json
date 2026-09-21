@@ -1,13 +1,49 @@
 {
-  "fetchedAt": "2026-09-20",
+  "fetchedAt": "2026-09-21",
   "source": "https://inference-api.nousresearch.com/v1/models",
-  "count": 402,
+  "count": 399,
   "counts": {
-    "text": 360,
+    "text": 357,
     "embeddings": 34,
     "other": 8
   },
   "models": [
+    {
+      "id": "xiaomi/mimo-v2.6-pro-ultraspeed",
+      "name": "Xiaomi: MiMo-V2.6-Pro-UltraSpeed",
+      "type": "text",
+      "ctx": 1048576,
+      "inPerM": 4.35,
+      "outPerM": 8.7,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "xiaomi/mimo-v2.6-flash",
+      "name": "Xiaomi: MiMo-V2.6-Flash",
+      "type": "text",
+      "ctx": 1048576,
+      "inPerM": 0.14,
+      "outPerM": 0.28,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "xiaomi/mimo-v2.6-pro",
+      "name": "Xiaomi: MiMo-V2.6-Pro",
+      "type": "text",
+      "ctx": 1048576,
+      "inPerM": 0.435,
+      "outPerM": 0.87,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
     {
       "id": "prism-ml/ternary-bonsai-2-27b",
       "name": "PrismML: Ternary Bonsai 2 27B",
@@ -49,8 +85,8 @@
       "name": "DeepSeek: DeepSeek Pro Latest",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.524,
-      "outPerM": 1.5721,
+      "inPerM": 0.5359,
+      "outPerM": 1.6078,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -61,8 +97,8 @@
       "name": "DeepSeek: DeepSeek Flash Latest",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.13,
-      "outPerM": 0.52,
+      "inPerM": 0.12,
+      "outPerM": 0.48,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -157,11 +193,11 @@
       "name": "DeepSeek: DeepSeek V4.1 Flash",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.13,
-      "outPerM": 0.52,
+      "inPerM": 0.12,
+      "outPerM": 0.48,
       "listInPerM": 0.15,
       "listOutPerM": 0.6,
-      "discount": 13,
+      "discount": 20,
       "free": false
     },
     {
@@ -525,18 +561,6 @@
       "free": false
     },
     {
-      "id": "qwen/qwen3.8-2.4t-a95b:batch",
-      "name": "Qwen: Qwen3.8 2.4T A95B (batch)",
-      "type": "text",
-      "ctx": 1010000,
-      "inPerM": 2,
-      "outPerM": 6,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
       "id": "bytedance-seed/seed-2.0-code",
       "name": "ByteDance Seed: Seed-2.0-Code",
       "type": "text",
@@ -638,7 +662,7 @@
       "type": "text",
       "ctx": 1310720,
       "inPerM": 0.04,
-      "outPerM": 0.16,
+      "outPerM": 0.4,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -861,39 +885,15 @@
       "free": false
     },
     {
-      "id": "thinkingmachines/inkling:batch",
-      "name": "Thinking Machines: Inkling (batch)",
-      "type": "text",
-      "ctx": 524288,
-      "inPerM": 1,
-      "outPerM": 4.05,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
       "id": "moonshotai/kimi-k3",
       "name": "MoonshotAI: Kimi K3",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 1.7,
-      "outPerM": 8.5,
+      "inPerM": 1.5,
+      "outPerM": 7.5,
       "listInPerM": 3,
       "listOutPerM": 15,
-      "discount": 43,
-      "free": false
-    },
-    {
-      "id": "moonshotai/kimi-k3:batch",
-      "name": "MoonshotAI: Kimi K3 (batch)",
-      "type": "text",
-      "ctx": 1048576,
-      "inPerM": 3,
-      "outPerM": 15,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
+      "discount": 50,
       "free": false
     },
     {
@@ -1057,8 +1057,8 @@
       "name": "xAI: Grok Latest",
       "type": "text",
       "ctx": 500000,
-      "inPerM": 2,
-      "outPerM": 6,
+      "inPerM": 1.6,
+      "outPerM": 4.8,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -1242,18 +1242,6 @@
       "listInPerM": 0.3,
       "listOutPerM": 1.2,
       "discount": 23,
-      "free": false
-    },
-    {
-      "id": "minimax/minimax-m3:batch",
-      "name": "MiniMax: MiniMax M3 (batch)",
-      "type": "text",
-      "ctx": 524288,
-      "inPerM": 0.3,
-      "outPerM": 1.2,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
       "free": false
     },
     {
@@ -1477,8 +1465,8 @@
       "name": "MoonshotAI: Kimi Latest",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 1.7,
-      "outPerM": 8.5,
+      "inPerM": 1.5,
+      "outPerM": 7.5,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -1693,11 +1681,11 @@
       "name": "MoonshotAI: Kimi K2.6",
       "type": "text",
       "ctx": 262144,
-      "inPerM": 0.3743,
-      "outPerM": 1.576,
+      "inPerM": 0.4085,
+      "outPerM": 1.72,
       "listInPerM": 0.95,
       "listOutPerM": 4,
-      "discount": 61,
+      "discount": 57,
       "free": false
     },
     {
@@ -1983,18 +1971,6 @@
       "ctx": 262144,
       "inPerM": 0.08,
       "outPerM": 0.13,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "qwen/qwen3.5-9b:batch",
-      "name": "Qwen: Qwen3.5-9B (batch)",
-      "type": "text",
-      "ctx": 262144,
-      "inPerM": 0.17,
-      "outPerM": 0.25,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -3477,18 +3453,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-oss-120b:batch",
-      "name": "OpenAI: gpt-oss-120b (batch)",
-      "type": "text",
-      "ctx": 131072,
-      "inPerM": 0.15,
-      "outPerM": 0.6,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
       "id": "openai/gpt-oss-20b",
       "name": "OpenAI: gpt-oss-20b",
       "type": "text",
@@ -3777,22 +3741,10 @@
       "free": false
     },
     {
-      "id": "anthropic/claude-opus-4",
-      "name": "Anthropic: Claude Opus 4",
-      "type": "text",
-      "ctx": 200000,
-      "inPerM": 15,
-      "outPerM": 75,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
       "id": "anthropic/claude-sonnet-4",
       "name": "Anthropic: Claude Sonnet 4",
       "type": "text",
-      "ctx": 1000000,
+      "ctx": 200000,
       "inPerM": 3,
       "outPerM": 15,
       "listInPerM": null,
@@ -4758,6 +4710,18 @@
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
+      "free": false
+    },
+    {
+      "id": "x-ai/grok-4.7",
+      "name": "xAI: Grok 4.7",
+      "type": "text",
+      "ctx": 500000,
+      "inPerM": 1,
+      "outPerM": 3,
+      "listInPerM": 2,
+      "listOutPerM": 6,
+      "discount": 50,
       "free": false
     },
     {

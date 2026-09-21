@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "Hermes のネイティブなデスクトップアプリ。ツール出力のストリーミング、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定をそなえた、Hermes と対話するための洗練された画面です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 4f5c884d9311b69156374944ff87f2e7465014e9
+upstream_blob: 8be2627e1a844d4a6c934ba84841be1066d54aee
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -130,6 +130,14 @@ desktop:
 - **複数のウィンドウ** — **Cmd/Ctrl+Shift+N** で新しいウィンドウが開きます。どのセッションも、右クリックメニュー（**New window**）やコマンドパレットから切り出せます。切り出したウィンドウは、全体のサイドバーなしでその対話だけを表示します。長く走らせるセッションを別のモニターに置いておくのに便利です。エージェントの出力は、そのセッションを表示しているすべてのウィンドウに流れます。
 - **ペイン** — **Cmd/Ctrl+B** で左のサイドバー、**Cmd/Ctrl+J** で右のサイドバーを出し入れし、**Cmd/Ctrl+\\** でサイドバーの左右を入れ替えます。
 
+#### トレイに最小化する {#minimize-to-tray}
+
+**Settings → Appearance → Window layout → Minimize to tray** をオンにすると、最小化したウィンドウがタスクバーや Dock から消え、セッションはそのまま動き続けます。この設定は既定でオフで、この端末にだけ適用されます。
+
+この設定がオンでトレイが使えるときは、メインウィンドウを **X** や **Alt+F4** で閉じても、Hermes は止まらず、セッションも消えずに、ウィンドウが隠れるだけです。メイン以外のウィンドウは、これまでどおり閉じます。隠したウィンドウを戻すには、システムトレイ（macOS ではメニューバー）の **Show Hermes** を使います。トレイのメニューの **Quit Hermes** と **Cmd+Q** では、これまでどおり終了します。作業中のときに出る確認もいつもどおりです。トレイが使えないときは、メインウィンドウを閉じると通常どおりの動きになります。
+
+macOS では、ふつうの Hermes のウィンドウが 1 つも見えていないときにだけ Dock のアイコンが隠れます。Linux では、StatusNotifier のトレイホストが登録されている必要があります。それがないデスクトップでは、最小化はふつうの動きのままです。ホストがいなくなった場合は、隠れていたウィンドウが元に戻ります。
+
 ### ターミナル {#terminal}
 
 右のサイドバーには、ファイルブラウザと並んで本物のターミナルがあります。
@@ -168,6 +176,7 @@ Hermes に話しかけ、返事を聞けます。ほかの画面でも使える 
 - **バーを動かす** — macOS と Windows では、入力欄のどこかを**少し長めに押してから**ドラッグします。Linux/X11 では、**Ctrl** を押しながら主ボタンでドラッグすればすぐつかめます（選択中の文字の上でも同じです）。長押しからのドラッグも使えます。つかんだまま仮想デスクトップ切り替えのショートカットを押せば、HUD を別のデスクトップへ連れていけます。ネイティブな Wayland では、入力欄のバーがコンポジタ側のドラッグハンドルになります（アプリは自分のウィンドウ位置を決められないので、動かす手段はこれだけです）。
 - **大きさを変える** — バーの辺か角をドラッグします。反対側の辺は固定されたままです。ネイティブな Wayland で使えるのは右辺と下辺です。コンポジタが、アプリ自身にトップレベルのウィンドウ位置を決めさせないためです。
 - **配置を戻す** — バーの破棄の操作で、既定の大きさと（X11 / macOS / Windows では）位置に戻ります。保存された大きさのせいで HUD が使いものにならなくなったときに使ってください。
+- **タップで呼び出す** — **Settings → Keyboard Shortcuts → HUD gesture** で **Tap to summon HUD** をオンにし、macOS では **⌘+Option**、Windows と Linux X11 では **Ctrl+Alt** を押してすぐ離します。ほかのキーやマウスの操作をはさまず、0.5 秒以内に両方のキーを離してください。Windows では左の Alt を使います。右の Alt は AltGr 配列のために取ってあります。この操作は、ほかのアプリを使っているところから HUD を開くか、HUD にフォーカスを移すだけです。HUD を閉じる切り替えにはならず、録音もメッセージの送信もしません。既定ではオフで、設定はこの端末にだけ保存されます。macOS では入力監視（Input Monitoring）の許可が必要です。設定のページに復旧のための操作が出るのは、許可やそのほかのエラーに対処が必要なときだけです。Linux の Wayland ではこの操作を使えないので、アプリ内の HUD のショートカットを使い続けてください。
 - **カーソルの位置へ呼ぶ** — **⌘/Ctrl+Shift+G**（全体のホットキーで、どのアプリからでも効きます）で、HUD がカーソルのある場所へ飛びます。ネイティブな Wayland では何も起きません。配置はコンポジタが握っているからです。
 - **抜ける** — バーの終了ボタンを押すか、**⌘/Ctrl+Shift+H** をもう一度押すか、HUD にフォーカスがある状態で **⌘/Ctrl+W** を押します。アプリのウィンドウがセッションごと手前に戻り、入力欄にカーソルが入ります。
 
@@ -192,11 +201,34 @@ desktop:
 
 `hermes gui` を WSL2 の中で動かしていて、`/dev/dxg` があり Mesa の `d3d12_dri.so` も入っている場合、ランチャーは Electron 向けに `GALLIUM_DRIVER=d3d12` を設定します。これで描画に、llvmpipe のソフトウェアラスタライザではなく Windows の GPU が使われます。環境に `GALLIUM_DRIVER`・`MESA_LOADER_DRIVER_OVERRIDE`・`LIBGL_ALWAYS_SOFTWARE`・`LIBGL_DRIVERS_PATH` を自分で設定してあるときは触りません（たとえば `GALLIUM_DRIVER=llvmpipe hermes gui` ならソフトウェア描画のままです）。
 
+#### 起動フラグとレンダラーのヒープ上限 {#launch-flags-and-the-renderer-heap-ceiling}
+
+`desktop.*` の 2 つのキーは、どの経路で起動しても Chromium に渡ります。`hermes desktop`、スタートメニューのショートカット、Linux の `.desktop` エントリのいずれでも同じです（アプリは最初のウィンドウを開く前に、これらを `config.yaml` から読み込みます）。
+
+```yaml
+desktop:
+  electron_flags: ["--ozone-platform=x11"]   # extra Chromium switches; a single string is split on spaces
+  renderer_max_old_space_mb: 2048            # V8 heap ceiling for the chat renderer; 0 = Chromium default
+```
+
+`renderer_max_old_space_mb` は `--js-flags=--max-old-space-size=N` として適用され、すでに渡している `--js-flags` と合わせて使われます。どちらかがもう一方を上書きすることはありません。とても長く、ツールを多用するセッションで、レンダラーが端末の余裕を超えてメモリを使うようになったときに設定してください。そうすると、端末全体が固まる代わりに、レンダラーが自分の上限に達して再読み込みします（再読み込みは 1 分あたり 3 回までです）。
+
+どちらのキーも、例のとおりに正確に書く必要があります。最上位の `desktop:` キーの下は 2 つの空白で字下げし、ブロック形式のリストでは `-` の前に 4 つの空白を置きます。
+
+```yaml
+desktop:
+  electron_flags:
+    - "--ozone-platform=x11"
+    - "--js-flags=--expose-gc"
+```
+
+ウィンドウを開く前に読み込む仕組みは、Hermes のほかの部分が使う完全なパーサーではなく、YAML の小さなサブセットだけを扱うものです。アプリが何かを読み込むより前に動く必要があるからです。ほかの字下げでも YAML としては正しいのですが、ここでは無視されます。その場合、アプリは起動時に `desktop.electron_flags / desktop.renderer_max_old_space_mb were ignored` とログに書き、Chromium の既定の設定で起動します。
+
 ### 設定と初回の案内 {#settings-onboarding}
 
 プロバイダー・モデル・ツール・資格情報を、YAML を編集するのではなく本物の UI から管理できます。初回の案内は、数秒で最初のメッセージまで連れていきます。設定のページは、プロバイダーとキー、モデルの選択、ツールセットの構成、MCP サーバー、ゲートウェイ、セッション管理をカバーします。
 
-- **Providers の設定ページ** — 推論プロバイダーを管理する専用の場所で、Accounts / API キーの UI からサインインし、プロバイダーごとに資格情報を保存できます。Accounts と API キーは、設定の **Applies to** の選択を共有します。資格情報の読み書き、OAuth アカウントの削除、ここから始めるサインインは、いま対話に使っているプロファイルではなく、選ばれているプロファイルに対して行われます。サインインの流れは、資格情報の保存とモデルの選択までその対象を保ちます。**Applies to** を変えると、保存していない資格情報の下書きは破棄されます。サインインを閉じると待ち受けは止まり、遅れて届いた結果は無視されます。すでに送られた資格情報の書き込みは、もとのプロファイルで完了することがあります。外部で管理されている CLI の資格情報は、その CLI 自身が扱うので、このプロファイルの選択の対象外です。ここにある **Local Models** のビューからは、端末内で動く llama.cpp のランタイムを導入・管理できます。[ローカルモデル](/hermes/docs/user-guide/local-models/) を参照してください。
+- **Providers の設定ページ** — 推論プロバイダーを管理する専用の場所で、Accounts / API キーの UI からサインインし、プロバイダーごとに資格情報を保存できます。Accounts、API キー、Custom Endpoints は、設定の **Applies to** の選択を共有します。資格情報の読み書き、OAuth アカウントの削除、カスタムエンドポイントの保存とテスト、ここから始めるサインインは、いま対話に使っているプロファイルではなく、選ばれているプロファイルに対して行われます。サインインの流れは、資格情報の保存とモデルの選択までその対象を保ちます。**Applies to** を変えると、保存していない資格情報の下書きは破棄されます。サインインを閉じると待ち受けは止まり、遅れて届いた結果は無視されます。すでに送られた資格情報の書き込みは、もとのプロファイルで完了することがあります。外部で管理されている CLI の資格情報は、その CLI 自身が扱うので、このプロファイルの選択の対象外です。ここにある **Local Models** のビューからは、端末内で動く llama.cpp のランタイムを導入・管理できます。[ローカルモデル](/hermes/docs/user-guide/local-models/) を参照してください。
 - **メニューにすべてのプロバイダーとモデルが並びます** — GUI には、プロバイダーの一覧と `hermes model` が知っているすべてのモデルが出ます。一部を選りすぐったものではなく、CLI と同じカタログから選べます。
 - **API の方式を選べる独自の接続先** — **Settings → Providers → Custom Endpoints** には **API Mode** の選択があります（**Auto-detect**、**Chat Completions**、**Responses API**、**Anthropic Messages**）。独自のプロバイダーについて `hermes model` が出すのと同じ選択肢です。これは `config.yaml` に `providers.<id>.api_mode` として保存されるので、Responses しか受けない接続先や Anthropic 互換の接続先へ `/chat/completions` を呼びに行くことはなくなります。**Test** は `/v1/models` を叩くだけでなく、実際に使う通信の方式を確かめます。固定した方式の経路（Auto-detect ならそれが解決した方式の経路）へトークン 1 つ分の要求を送り、接続先がそれを提供していなければ、その方式の名前を挙げて失敗します。**Test** は、ゲートウェイが `/v1/models` で知らせる別名の情報（`canonical_model`、`reasoning_effort`）も保ちます。`gpt-5.6-sol-high` のような別名を選ぶと、正式なモデル名が保存され、その effort が `agent.reasoning_overrides` の下に固定されます。
 - **xAI Grok の OAuth** — Grok はランチャーで一級の OAuth プロバイダーとして扱われます。ほかの OAuth プロバイダーと同じく、ブラウザの流れでサインインします。
@@ -213,7 +245,7 @@ desktop:
 
 #### プロファイルごとの設定: 「Applies to」の範囲 {#per-profile-settings-the-applies-to-scope}
 
-[プロファイル](/hermes/docs/user-guide/profiles/) が 2 つ以上あるとき、設定ファイルに紐づく設定のページ（**Model、Workspace、Safety、Memory & Context、Voice、Chat、Advanced、Tools & Keys**）と **Messaging** のオーバーレイには、上部に共通の **Applies to** のチップの列が出ます。編集がどのプロファイルに効くかを、ここで選びます。
+[プロファイル](/hermes/docs/user-guide/profiles/) が 2 つ以上あるとき、設定ファイルに紐づく設定のページ（**Model、Workspace、Safety、Memory & Context、Voice、Chat、Advanced、Tools & Keys**）に加え、**Providers → Custom Endpoints** と **Messaging** のオーバーレイには、上部に共通の **Applies to** のチップの列が出ます。編集がどのプロファイルに効くかを、ここで選びます。
 
 - 既定では**いま使っているプロファイルに追従**します。これまでどおり、使っているプロファイルを編集する動きです。
 - 別のプロファイルを選べば、アプリ全体を切り替えずに*そのプロファイル*の設定を見て編集できます。選択は設定のページを移動しても保たれます。
@@ -506,6 +538,16 @@ UI を使わずに、アプリを起動する前に環境変数 `HERMES_DESKTOP_
   そのプロファイル向けに埋めてくれます。
   [Accent Picker](https://github.com/NousResearch/hermes-desktop-accent-picker)
   のような追加のものは、**Install from Git** でそれぞれのリポジトリから入れます。
+- **アンインストール** — 選んでいるプロファイルの `plugins/` フォルダーに入っている
+  プラグイン（ユーザーが入れたものや git から入れたもの）には、名前の横にゴミ箱のボタンがあります。
+  確認のあと、そのプロファイルからプラグインのファイルと導入時の情報を削除します。
+  `hermes plugins remove <name>` と同じ操作です。一体型のパッケージの場合は、
+  アプリ側にあるデスクトップ部分の複製も片付けます。プラグインのコードを外すには、ゲートウェイを再起動してください。
+  リポジトリに同梱のプラグインと、pip で入れた（エントリポイントの）プラグインにはゴミ箱のボタンがありません。
+  前者は削除できず、後者は Python のパッケージと一緒に消えるためです。
+  単独のデスクトッププラグイン（エージェント側のパッケージを持たず、
+  `~/.hermes/desktop-plugins/` に置いたフォルダー）にも同じゴミ箱のボタンがあります。
+  確認すると、その端末上のフォルダーを削除し、プラグインをすぐに外します。ゲートウェイは関係しません。
 
 その下には、見つけるための仕組みがあります。動いている [プラグインカタログ](/hermes/docs/user-guide/features/plugin-catalog/)
 の選択画面は、内容を確認済みの項目を、固定されたコミットのまま、選んでいるプロファイルへ入れます。
@@ -573,6 +615,8 @@ Copy error details の操作を備えたカードは出ます。
 ```bash
 hermes logs gui -f
 ```
+
+Linux では、Chromium 自身のエラーは `HERMES_HOME/logs/desktop-chromium.log` に書かれます。シェル自体がクラッシュした場合は、アプリの `Crashpad/` ディレクトリ（Electron のユーザーデータのディレクトリの中、`connection.json` の隣）にミニダンプが残ります。ジャーナルに `SIGTRAP` が出てウィンドウが消えたときは、そのログの `FATAL:` の行に、引っかかったチェックの名前が書かれています。不具合の報告に添えてください。どこかへ送られることはありません。
 
 よく使うリセットはこちらです。
 
@@ -653,6 +697,8 @@ npm run pack         # unpacked app under release/ (no installer)
 ```
 
 macOS と Windows の署名と公証は、必要な資格情報が環境にあれば自動で走ります（macOS は `CSC_LINK` / `CSC_KEY_PASSWORD` / `APPLE_*`、Windows は `WIN_CSC_*` です）。
+
+HUD の修飾キーのタップを扱う補助プログラムは、明示してオンにしたときだけ使われるもので、Electron のバンドルと一緒にビルドされ、ASAR の外にパッケージされます。macOS では、もともと必要な Xcode のコマンドラインツールを使います。Windows のビルドでは、OS の .NET Framework に含まれる C# コンパイラを使うので、Clang や開発者向けの SDK は要りません。Windows では、補助プログラムを黙って省くのではなく、パッケージの作成が失敗します。Linux のビルドには、C コンパイラと X11/XInput の開発用ヘッダー（Debian/Ubuntu なら `libx11-dev` と `libxi-dev`）が必要です。この Linux 向けの任意の前提がなくてもパッケージの作成は続き、修飾キーのタップが使えない状態になります。ビルドは対象の OS の上で行ってください。Linux では対象のアーキテクチャも合わせる必要があります。インストールして使うだけの人には、開発用のツールは要りません。設定の画面では、補助プログラムがない場合と、起動に失敗した場合と、対応していないデスクトップのセッションの場合を区別して表示します。Windows の補助プログラムがない、または失敗したときに、X11/Wayland についての警告は出ません。
 
 ### macOS の許可とローカルでのビルドし直し（TCC） {#macos-permissions-and-local-rebuilds-tcc}
 

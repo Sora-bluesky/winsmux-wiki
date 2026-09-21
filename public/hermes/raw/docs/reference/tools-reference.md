@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールを、ツールセットごとにまとめた決定版の早見表"
 upstream_path: reference/tools-reference.md
-upstream_blob: b65bc8b5f3db96afb704eb2516246d36966756eb
+upstream_blob: 6f8213b443eb69c6449bcd30c443ff3a7b3708de
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -67,7 +67,7 @@ sources:
 
 | ツール | 説明 | 必要な環境 |
 |------|-------------|----------------------|
-| `manage_connections` | 管理コネクタ向けの操作は `status`、`connect`、`reconnect`（つながっていないものだけを直します。`force: true` なら動いているものも再起動します）です。MCP 向けの操作は `mcp: true` の対象だけに使え、カタログの項目を `install` する、設定済みで無効になっているサーバーを `enable` する、`authorize`（OAuth）する、の 3 つです。デスクトップでは、どの操作でもカードが出て、対象ごとに接続される・飛ばされる・期限が来る、のいずれかになるまで待ちます。結果には対象ごとに `connected`、`skipped`、`not_connected` のどれかが入り、リンクは付きません。カードが出ない画面（CLI、TUI、メッセージング）では、管理コネクタの対象はアプリごとにユーザーが開く `connect_url` を返し、MCP の対象は `unavailable` と、`hermes mcp install <name>` / `hermes mcp login <name>` のコマンドを返します。アカウントの切断や取り消しはできません。 | — |
+| `manage_connections` | 管理コネクタ向けの操作は `status`、`connect`、`reconnect`（つながっていないものだけを直します。`force: true` なら動いているものも再起動します）です。MCP 向けの操作は `mcp: true` の対象だけに使え、カタログの項目を `install` する、設定済みで無効になっているサーバーを `enable` する、`authorize`（OAuth）する、の 3 つです。デスクトップアプリ、ターミナル UI、従来の CLI では、どの操作でもカードが出て、対象ごとに接続される・飛ばされる・300 秒の期限が来る、のいずれかになるまで待ちます。結果には対象ごとに `connected`、`skipped`、`not_connected` のどれかが入り、リンクは付きません。MCP の `install` では、項目に必要な設定値をカードで集め、項目に OAuth があればカードから実行し（リンクはユーザーが開きます。勝手に開くことはありません）、サーバーがトークンを受け入れたときに設定・トークン・値をまとめて保存します。接続できた MCP の対象には `tools`（登録された名前）と `tools_listing` が付き、それらのツールは同じターンのうちに `tool_describe`/`tool_call` から呼び出せます。`discovery_error` が付いた対象は、認可は済んでいるもののツールの一覧を取れなかったものです。その対象にもう一度 `install` か `authorize` を呼ぶと、新たな同意なしで一覧の取得をやり直せます。カードが出ない画面（メッセージング、スクリプトからの実行）では、管理コネクタの対象はアプリごとにユーザーが開く `connect_url` を返し、MCP の対象はその場で実行されます。`authorize` と OAuth を伴う `install` は認可用の URL を返し、それ以外の install と `enable` は結果を知らせ、認証情報が足りないときは設定すべき変数の名前を添えた `failed` が返ります。アカウントの切断や取り消しはできません。 | — |
 
 1 回の呼び出しの期限は 5 分で、呼び出しの開始時にバックエンドが決めます。
 チャットを開き直しても、デスクトップを再起動しても延びません。このツールは、
@@ -199,7 +199,7 @@ Feishu のドキュメントコメント処理専用です。ドライブ上の�
 | ツール | 説明 | 必要な環境 |
 |------|-------------|----------------------|
 | `process_manage` | terminal(background=true) で始めたバックグラウンドのプロセスを管理します。操作は 'list'（すべて表示）、'poll'（状態と新しい出力を確認）、'log'（出力全体をページ送りで表示）、'wait'（終わるか時間切れになるまで待つ）、'kill'（終了させる）、'write'（入力を送… | — |
-| `terminal` | Linux 環境でシェルのコマンドを実行します。ファイルシステムは呼び出しをまたいで残ります。長く動かすサーバーには `background=true` を指定してください。`background=true` と一緒に `notify_on_complete=true` を指定すると、プロセスが終わったときに自動で通知が来るので、様子を見に行く必要がなくなります。cat/head/tail は使わず read_file を、grep/rg/find は使わず search_files を使ってください。 | — |
+| `terminal` | Linux 環境でシェルのコマンドを実行します。ファイルシステムは呼び出しをまたいで残ります。長く動かすサーバーには `background=true` を指定してください。`background=true` と一緒に `notify_on_complete=true` を指定すると、プロセスが終わったときに自動で通知が来るので、様子を見に行く必要がなくなります。さらに `heartbeat=N`（秒。最小 60）を足すと、前回の通知以降に出た出力を載せた通知も定期的に届きます。マージトレインやテスト一式のように長いが終わりのある作業向けで、失敗に気づくのが終了時ではなく N 秒以内になります。cat/head/tail は使わず read_file を、grep/rg/find は使わず search_files を使ってください。 | — |
 
 ## `desktop_ui` ツールセット {#desktopui-toolset}
 

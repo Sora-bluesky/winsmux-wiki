@@ -67,12 +67,14 @@ const LABELS_JA = {
 function normalize(node) {
   if (typeof node === 'string') return { id: node };
   if (node && node.type === 'category') {
-    return { label: LABELS_JA[node.label] ?? node.label, items: (node.items ?? []).map(normalize) };
+    return { label: LABELS_JA[node.label] ?? node.label, items: (node.items ?? []).map(normalize).filter(Boolean) };
   }
+  // upstream navbar-hub shortcuts (/skills, /plugins) are not docs pages; our own hubs are linked elsewhere
+  if (node && node.type === 'link') return null;
   throw new Error(`sidebars.ts: unsupported node ${JSON.stringify(node).slice(0, 80)}`);
 }
 
-const tree = (parsed.docs ?? []).map(normalize);
+const tree = (parsed.docs ?? []).map(normalize).filter(Boolean);
 
 // Flat order for prev/next inside the mirror.
 const order = [];

@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: dced6a9b6f2d551b02b498bb7a0aa4759c589eb3
+upstream_blob: b41c478361c4394ac9080ea0548c715b4655162e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -86,7 +86,7 @@ Cua Driver を先に入れた場合、`cua-driver skills install` を実行す�
 
 | プラットフォーム | 前提条件 |
 |---|---|
-| **macOS** | システム設定 → プライバシーとセキュリティ → **アクセシビリティ** と **画面収録**。`hermes computer-use doctor` が示す名前に対して許可します。標準モードは CuaDriver.app を使い、bounded と unrestricted のモードは Hermes ホストの名義を使います。 |
+| **macOS** | システム設定 → プライバシーとセキュリティ → **アクセシビリティ** と **画面収録**。`hermes computer-use doctor` が示す名前に対して許可します（どの権限モードでも CuaDriver、つまり `com.trycua.driver` です。ドライバのデーモンは必ず `CuaDriver.app` を通して起動します）。 |
 | **Windows** | インストール時には不要です。RDP やコンソールではなく SSH 越しに操作する場合は、自動起動の型が必要です。Session 0 と Session 1 以降をつなぐ中継については [cua.ai/docs/how-to-guides/driver/windows-ssh](https://cua.ai/docs/how-to-guides/driver/windows-ssh) を参照してください。 |
 | **Linux** | 届くディスプレイサーバー。X11 なら `DISPLAY` を設定し、Wayland なら `XDG_SESSION_TYPE=wayland` にします。Wayland のセッションでは画面の取り込みに XWayland の橋渡しが要ります。AT-SPI も有効にしておく必要があります（GNOME / KDE / Xfce では既定で有効です）。 |
 
@@ -157,8 +157,8 @@ MCP の各つなぎ口は、自分のランタイムの中に専用の生存管�
 プロセスの終了。いずれでもそのつなぎ口のセッションは閉じます。Hermes は、bounded や
 unrestricted のために自分で起動した専用ランタイムも止めます。
 ある Hermes の会話が、別のランタイムのモードや許可を変えることはできません。
-bounded と unrestricted のモードは、Hermes ホストの名義で動く
-専用の組み込みサービスを使います。
+bounded と unrestricted のモードは、専用の組み込みデーモンを使います。macOS では
+このデーモンも `CuaDriver.app` を通して起動します（上を参照）。
 
 `smart` の承認は `standard` のままです。LLM による分類が、確認済みの
 マニフェストの代わりになることはありません。
@@ -599,6 +599,19 @@ doctor では捕まらない、個別の症状は次のとおりです。
 **クリックが効いていないように見える** — 画面を取り込んで確かめてください。
 気づかなかったモーダルが入力をふさいでいることがあります。`escape` か閉じる
 ボタンで消してください。
+
+**macOS: システム設定では CuaDriver がオンなのに、`hermes computer-use
+permissions status` や `doctor` がアクセシビリティや画面収録を未許可と報告する**
+— 保存されている許可が古くなっています。macOS は権限の各行を、アプリの
+コード署名の要件に結びつけて記録します。以前の CuaDriver のビルドで書かれた行は、
+ドライバを更新すると一致しなくなり、トグルを切り替えても書き直されません。
+該当する行をリセットしてから、許可し直してください。
+
+```
+tccutil reset Accessibility com.trycua.driver
+tccutil reset ScreenCapture com.trycua.driver
+hermes computer-use permissions grant
+```
 
 **要素の番号が古い** — SOM の番号は次の `capture` までしか有効ではありません。
 状態を変える操作をしたら、必ず取り直してください。ラッパーは古さを検出する

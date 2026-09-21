@@ -2,7 +2,7 @@
 title: "CLI コマンド早見表"
 description: "Hermes のターミナルコマンドとコマンド群についての公式な早見表"
 upstream_path: reference/cli-commands.md
-upstream_blob: 869c3cde6cb70ebf8667ceb50106dc4eeaf8586f
+upstream_blob: e371552a4dd798e2433da3d2b2970d83d76ce980
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -327,7 +327,7 @@ hermes gateway <subcommand>
 | `install` | systemd（Linux）または launchd（macOS）のバックグラウンドサービスとして導入します。 |
 | `uninstall` | 導入済みのサービスを削除します。 |
 | `setup` | メッセージングプラットフォームを対話的に設定します。 |
-| `migrate` | プロファイルごとに独立していたゲートウェイを、多重化された 1 つの既定ゲートウェイへまとめます（`--multiplex`。これが既定）。記録しておいた一覧から元へ戻すこともできます（`--standalone`）。事前確認（ボットトークンの重複、`/p/<profile>/` の入口を持たないままポートを掴んでいる二次プロセス）を行い、問題があれば何も変更しません。フラグ: `--dry-run`、`-y`/`--yes`。[プロファイルごとのゲートウェイからの移行](/hermes/docs/user-guide/multi-profile-gateways/#migrating-from-per-profile-gateways) を参照してください。 |
+| `migrate` | プロファイルごとに独立していたゲートウェイを、ホストに 1 つだけのゲートウェイへまとめます（`--multiplex`。これが唯一のモードで、本当に越えられない境界に阻まれない限り `hermes update` が自動で実行します）。途中まで移行したホストでも、もう一度実行すれば最後までそろいます。ディスク上の一覧は再開のための記録であって、元へ戻すためのものではありません（`--standalone` はありません）。事前確認（ボットトークンの重複、`/p/<profile>/` の入口を持たないままポートを掴んでいる二次プロセス）を行い、問題があれば何も変更しません。フラグ: `--dry-run`、`-y`/`--yes`。[プロファイルごとのゲートウェイからの移行](/hermes/docs/user-guide/multi-profile-gateways/#migrating-from-per-profile-gateways) を参照してください。 |
 | `migrate-legacy` | 名前変更より前の導入で残った、古い `hermes.service` のユニットを削除します。プロファイルのユニット（`hermes-gateway-<profile>.service`）や無関係なサービスには手を触れません。フラグ: `--dry-run`、`-y`/`--yes`。 |
 | `enroll` | 試験的な機能です。このゲートウェイをリレーのコネクタに登録し、コネクタ経由のプラットフォーム向けにリレーの認証情報を保存します。[Hermes Relay](/hermes/docs/user-guide/messaging/relay/) を参照してください。 |
 
@@ -956,6 +956,8 @@ hermes doctor [--fix]
 |--------|-------------|
 | `--fix` | 直せるところは自動で直そうとします。 |
 
+終了コード: 報告に未解決の問題が 1 つもなければ `0`、1 つでも残っていれば（`--fix` で直せなかった問題を含みます） `1` です。そのため、健全性の確認や CI の手順で `hermes doctor` をそのまま検査として信頼できます。
+
 **API Connectivity** の項目には `IPv6 route` の検査が入っています。両方のプロトコルに対応した既知のホストへ、短い（2 秒）IPv6 の TCP 接続を 1 回だけ開いてみるものです。経路は知らされているのに時間切れになるだけの状態（行き止まりの IPv6 のアドレス帯）は、直し方である `network.force_ipv4: true` を挙げた注意として報告されます。IPv6 の経路がまったく無いのは健全な状態で、OK と報告されます。すでに `force_ipv4` が設定されているときは、この検査は飛ばされます。
 
 自分で足した接続先の設定についての検査（どちらも注意だけで、`--fix` は書き換えません）:
@@ -1093,6 +1095,7 @@ hermes backup [options]
 - `*.db-wal`、`*.db-shm`、`*.db-journal` — SQLite の WAL・共有メモリ・ジャーナルの付随ファイル。`*.db` 自体は `sqlite3.backup()` で一貫した状態を写してあるので、生きた付随ファイルを一緒に入れると、復元したときに書きかけの状態が見えてしまいます。
 - `checkpoints/` — セッションごとの軌跡のキャッシュ。ハッシュで管理され、セッションごとに作り直されるので、他の環境へ持っていっても意味がありません。
 - `~/.hermes` の直下（および各 `profiles/<name>/` の直下）の `models/`、`runtimes/`、`node/` — 作り直せる実行時のダウンロードで、数十 GB になることもあります。同じ名前でも、もっと深い階層にあるもの（スキルの `models/`）は残します。
+- ブラウザのプロファイル: どの深さにある `browser-profile/`（実際のプロファイルの写し。Cookies や Login Data をコピーしたもの）と `browser-profiles/`（稼働中の CDP のプロファイル）、そして `~/.hermes` の直下と各 `profiles/<name>/` の直下にある `browser_profiles/`（Browser Use CLI バックエンドが使う Chromium のユーザーデータのディレクトリで、独自の Login Data / Cookies を持ちます）。書庫に決して入れてはいけない認証情報の保管場所で、どれも次の起動時に作り直されます。
 - 同じ直下にある `cache/` のうち、作り直せるもの — モデルやプラグインの目録、印、ブラウザのプロファイル、ツール出力の退避。残るのは長持ちする成果物です: `cache/images`、`cache/audio`、`cache/videos`、`cache/documents`、`cache/screenshots`（届けた、あるいは受け取ったメディア）と `cache/citations`（根拠付きの引用の台帳）。もっと深い階層の `cache/`（スキルの中のもの）は丸ごと残します。
 - Unix のソケット、デバイス、シンボリックリンク — zip には入れられません。これらを除外する前は、置き去りの `gateway.sock` があるだけで、全体のバックアップが毎回 `Backup incomplete` と報告していました。
 - `hermes-agent` のコード本体（これは利用者のデータのバックアップであって、リポジトリの写しではありません）。

@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: 3df26e473d6b3cd1197d63ed095fbae2c11d0206
+upstream_blob: 006e31941b845b99bd1f4cf61e61fb344f852e78
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -106,13 +106,9 @@ hermes profile create backup --clone-all
 
 設定・API キー・人格・すべての記憶・スキル・プラグインまで、**まるごと**コピーします。動く状態のスナップショットです。プロファイルごとの履歴（セッション履歴、`state.db`、`backups/`、`state-snapshots/`、`checkpoints/`）は対象外です。これらは元のプロファイルに属するもので、数十 GB に達することもあります。既定のプロファイルから複製するときは、ローカルモデル用の実行環境のディレクトリ（`models/`、`runtimes/`、`node/`。ダウンロードした重みと管理下のバイナリで、必要になれば取り直されます）も、`hermes backup` と同じく対象外になります。**cron ジョブも複製されません**。cron ジョブは元のプロファイルとその配信チャンネルに結びついた予定作業なので、複製先がそれを引き継ぐと同じジョブが二重に走ってしまいます（ゲートウェイが 2 つ、ジョブ ID は同じ）。新しいプロファイルの `cron/` は空の状態から始まります。履歴と cron ジョブまで含めた完全なバックアップが必要なら、`hermes profile export` か `hermes backup` を使ってください。
 
-:::note OAuth ログインはコピーされません
-Anthropic（Claude Pro/Max）、OpenAI Codex、xAI の OAuth ログインは**使い捨てのリフレッシュトークン**を使います。コピーしても 2 つ目の資格情報にはならず、1 つの資格情報を 2 人で持っている状態になり、どちらかが先に更新した時点で他方のコピーは失効します。そのため `--clone-all`（およびダッシュボードによる資格情報のミラーリング）は、複製先から OAuth の行を落とします。静的な API キーは従来どおりコピーされます。新しいプロファイルでは、OAuth のプロバイダーにそのプロファイル自身でログインしてください。`hermes -p <name> auth add <provider>`（または `hermes -p <name> model`）を使います。
+:::note OAuth ログインはコピーせず共有します
+Anthropic（Claude Pro/Max）、OpenAI Codex、xAI の OAuth ログインは**使い捨てのリフレッシュトークン**を使います。コピーしても 2 つ目の資格情報にはならず、1 つの資格情報を 2 人で持っている状態になり、どちらかが先に更新した時点で他方のコピーは失効します。そのため `--clone-all`（およびダッシュボードによる資格情報のミラーリング）は、複製先から OAuth の行を落とします。新しいプロファイルは、ルートの `~/.hermes/auth.json` からログイン情報を読み続けます。どのプロファイルの中でトークンを更新しても、その結果はルートに書き戻されるので、すべてのプロファイルがログインしたままになります。静的な API キーは従来どおりコピーされます。あるプロファイルに独自の OAuth ログインを持たせたいときは、そのプロファイルで `hermes -p <name> auth add <provider>` を実行してください。
 :::
-
-### どのプロファイルも自分の資格情報を持つ {#every-profile-owns-its-credentials}
-
-名前付きのプロファイルは、**自分の** `auth.json` と `.env` だけからプロバイダーを解決します。ルートのプロファイルのログインや API キーを引き継ぐことはなく、プロファイルの中でトークンを更新しても、ルートの保存先には書き込みません。自分のプロバイダーを持たないプロファイルは、設定するよう求められます（`hermes -p <name> model` か `hermes -p <name> auth add <provider>`）。黙って持ち主として振る舞うことはありません。`hermes update` は、自分のプロバイダーを持たないプロファイルをすべて一覧にするので、ボットが知らないうちに黙り込むことはありません。
 
 ### 特定のプロファイルから複製する {#clone-from-a-specific-profile}
 

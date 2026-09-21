@@ -2,12 +2,15 @@
 title: "state.db の復旧"
 description: "FTS インデックスやファイルそのものが壊れたときに、Hermes が state.db をどう復旧するか"
 upstream_path: developer-guide/state-db-recovery.md
-upstream_blob: 7a7af15bd6c39fe06f060bf91a68a7fecf4236cf
+upstream_blob: c33820b54605d34f661069de0484b666d6b7bf27
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/state-db-recovery
 ---
 
 # state データベースと FTS の復旧 {#state-database-and-fts-recovery}
+
+利用者向けの手順（何を止めるか、`state.db` の隣にあるファイルは何か、書き込み中のプロセスが動いている間は保守コマンドがなぜ実行を断るのか）は、
+[セッション保存領域の復旧](/hermes/docs/user-guide/session-storage-recovery/)を見てください。
 
 `state.db` には、性質の異なる 2 種類のデータが入っています。
 

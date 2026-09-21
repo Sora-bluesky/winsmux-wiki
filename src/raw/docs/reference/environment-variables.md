@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数の一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 33cc4aa318b0ce1298682d74262a6eef3c628a6e
+upstream_blob: 02f934f62e2bd6231af4f5951d69d312c9eadcb9
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -828,9 +828,7 @@ Microsoft Teams のプラットフォームのアダプタ（Bot Framework / Azu
 | `HERMES_SAFE_MODE` | 切り分け用のモードです。あらゆる独自設定を無効にし、プラグインの探索、MCP サーバーの読み込み、シェルフックの登録を飛ばします。`--safe-mode`（上の 2 つのフラグも一緒に設定します）が自動で設定します。 |
 | `HERMES_TOOL_PROGRESS` | config-v12 を下限とする対応範囲では使えません。この変数は無視されます。`config.yaml` の `display.tool_progress` を使ってください。 |
 | `HERMES_TOOL_PROGRESS_MODE` | ツールの進み具合の表示のための、互換性のための非推奨の変数です（ゲートウェイは今も予備として読みます）。`config.yaml` の `display.tool_progress` をおすすめします。 |
-| `HERMES_HUMAN_DELAY_MODE` | 応答の間の取り方: `off` / `natural` / `custom` |
-| `HERMES_HUMAN_DELAY_MIN_MS` | 独自に決める間の最小値（ミリ秒） |
-| `HERMES_HUMAN_DELAY_MAX_MS` | 独自に決める間の最大値（ミリ秒） |
+| `HERMES_HUMAN_DELAY_MODE` / `HERMES_HUMAN_DELAY_MIN_MS` / `HERMES_HUMAN_DELAY_MAX_MS` | もう読まれません。応答の間の取り方は、各プロファイルの `config.yaml` にある `human_delay` の項目（`mode`、`min_ms`、`max_ms`）で決めます。そのため、多重化したプロファイルもそれぞれ別々の間の取り方を保てます。 |
 | `HERMES_QUIET` | 必須でない出力を抑えます（`true` / `false`） |
 | `CODEX_HOME` | [Codex app-server の実行環境](/hermes/docs/user-guide/features/codex-app-server-runtime/) が有効なとき、Codex CLI が設定と認証情報を読むディレクトリを上書きします（既定: `~/.codex`）。Hermes の移行は、管理下の設定の塊を `<CODEX_HOME>/config.toml` に書きます。 |
 | `HERMES_KANBAN_TASK` | かんばんのディスパッチャが作業役を立ち上げるときに設定します（タスクの UUID）。作業役と、そこから立ち上がる `hermes-tools` の MCP の子プロセスがこれを受け継ぐので、かんばんのツールが正しく働きます。手で設定しないでください。 |
