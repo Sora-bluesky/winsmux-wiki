@@ -6,3 +6,22 @@
 /hermes/start/line/                /hermes/docs/user-guide/messaging/line/         301
 /hermes/start/telegram/            /hermes/docs/user-guide/messaging/telegram/     301
 /hermes/syntheses/cost-and-model/  /hermes/cost/                                   301
+
+# 上流で skill が同梱（bundled）からオプション（optional）へ移ったもの（2026-09-21・GSC のクロール済み URL を後継へ）
+/hermes/docs/user-guide/skills/bundled/creative/creative-ascii-art/                      /hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/                     301
+/hermes/docs/user-guide/skills/bundled/creative/creative-comfyui/                        /hermes/docs/user-guide/skills/optional/creative/creative-comfyui/                       301
+/hermes/docs/user-guide/skills/bundled/creative/creative-excalidraw/                     /hermes/docs/user-guide/skills/optional/creative/creative-excalidraw/                    301
+/hermes/docs/user-guide/skills/bundled/creative/creative-pretext/                        /hermes/docs/user-guide/skills/optional/creative/creative-pretext/                       301
+/hermes/docs/user-guide/skills/bundled/creative/creative-sketch/                         /hermes/docs/user-guide/skills/optional/creative/creative-sketch/                        301
+/hermes/docs/user-guide/skills/bundled/mlops/mlops-evaluation-evaluating-llms-harness/   /hermes/docs/user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness/  301
+/hermes/docs/user-guide/skills/bundled/mlops/mlops-evaluation-weights-and-biases/        /hermes/docs/user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases/       301
+/hermes/docs/user-guide/skills/bundled/mlops/mlops-inference-llama-cpp/                  /hermes/docs/user-guide/skills/optional/mlops/mlops-inference-llama-cpp/                 301
+/hermes/docs/user-guide/skills/bundled/mlops/mlops-inference-serving-llms-vllm/          /hermes/docs/user-guide/skills/optional/mlops/mlops-inference-serving-llms-vllm/         301
+/hermes/docs/user-guide/skills/bundled/research/research-blogwatcher/                    /hermes/docs/user-guide/skills/optional/research/research-blogwatcher/                   301
+/hermes/docs/user-guide/skills/bundled/research/research-research-paper-writing/         /hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/        301
+/hermes/docs/user-guide/skills/bundled/research/research-rss-feeds/                      /hermes/docs/user-guide/skills/optional/research/research-rss-feeds/                     301
+/hermes/docs/user-guide/skills/bundled/smart-home/smart-home-openhue/                    /hermes/docs/user-guide/skills/optional/smart-home/smart-home-openhue/                   301
+/hermes/docs/user-guide/skills/bundled/social-media/social-media-reddit-reading/         /hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/        301
+/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-merge-reconciler/ /hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-agent-merge-conflict-arbiter/ 301
+# 上流が削除したページで、同じ主題を自前ページが扱うもの
+/hermes/docs/user-guide/free-tier/                                                       /hermes/free/                                                                            301
