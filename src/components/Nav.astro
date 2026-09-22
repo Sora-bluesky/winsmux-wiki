@@ -8,13 +8,13 @@ const NAV = [
   { href: '/hermes/trouble/', label: 'トラブル' },
   { href: '/hermes/models/', label: 'モデルと料金' },
   { href: '/hermes/community/', label: 'コミュニティ' },
-  { href: '/hermes/guide/', label: 'ドキュメント' },
+  { href: '/hermes/guide/', label: 'Hermes Agentの使い方' },
 ];
 const feedbackUrl = `https://github.com/Sora-bluesky/winsmux-wiki/issues/new?template=feedback.yml&page=${encodeURIComponent(new URL(path, Astro.site ?? 'https://wiki.winsmux.dev').href)}`;
+// 「Hermes Agentの使い方」は guide 配下と、その一覧に載る concepts / entities / syntheses、公式ミラー docs を現在地にする
+const GUIDE_PREFIXES = ['/hermes/guide/', '/hermes/docs/', '/hermes/concepts/', '/hermes/entities/', '/hermes/syntheses/'];
 const isActive = (href: string) =>
-  href === '/hermes/guide/'
-    ? path.startsWith('/hermes/guide/') || path.startsWith('/hermes/docs/')
-    : path.startsWith(href);
+  href === '/hermes/guide/' ? GUIDE_PREFIXES.some((p) => path.startsWith(p)) : path.startsWith(href);
 
 type Group = { name: string; items: typeof PAGES };
 const groups: Group[] = [];
