@@ -2,7 +2,7 @@
 title: "ツールセット一覧"
 description: "Hermes の中核・複合・プラットフォーム・動的の各ツールセットをまとめた一覧です。"
 upstream_path: reference/toolsets-reference.md
-upstream_blob: 279c6a4d6c387dc7d5dfc140841f22704dbaad10
+upstream_blob: 03b34044a83d2662d4be975d1d4c2c4813812f31
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 ---
@@ -80,6 +80,7 @@ hermes tools                            # curses UI to enable/disable per platfo
 | `safe` | `image_generate`, `vision_analyze`, `web_extract`, `web_search` (via `includes`) | 読むだけの調べものと、素材づくりです。ファイルへの書き込みも、端末も、コードの実行もありません。 |
 | `search` | `web_search` | web の検索だけです（抜き出しは付きません）。 |
 | `session_search` | `session_search` | 過去のやりとりのセッションを探します。 |
+| `setup` | （まだなし） | デスクトップのセットアップ用プロファイルが、オンボーディングの間だけ使う面です（承認カードを通したカタログのインストール依頼）。`profile.yaml` に `role: setup` を持つプロファイルのセッションにだけ、バックエンドが付与します。ほかのプロファイルからは、設定のリスト、`HERMES_TUI_TOOLSETS`、`all` のどれで名前が挙がっていても取り除かれます。設定では変えられず、`hermes tools` にも出ません。 |
 | `skills` | `skill_manage`, `skill_view`, `skills_list` | スキルの作成・閲覧・更新・削除と、見て回る操作です。 |
 | `spotify` | `spotify_albums`, `spotify_devices`, `spotify_library`, `spotify_playback`, `spotify_playlists`, `spotify_queue`, `spotify_search` | Spotify をそのまま操作します（再生、順番待ち、検索、プレイリスト、アルバム、ライブラリ）。同梱の `spotify` プラグインが登録します。 |
 | `terminal` | `process_manage`, `terminal` | シェルのコマンドの実行と、裏で動くプロセスの管理です。 |

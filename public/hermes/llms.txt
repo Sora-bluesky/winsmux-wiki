@@ -74,6 +74,7 @@ Hermes Agent 0.21.4
 - [developer-guide/observer-hooks（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/observer-hooks/)
 - [developer-guide/onboarding-recommendations（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/onboarding-recommendations/)
 - [developer-guide/plugin-llm-access（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugin-llm-access/)
+- [developer-guide/plugins/application-declarations（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/application-declarations/)
 - [developer-guide/plugins（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
 - [developer-guide/programmatic-integration（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
 - [developer-guide/prompt-assembly（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/prompt-assembly/)
@@ -528,6 +529,7 @@ Hermes Agent 0.21.4
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/observer-hooks.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/onboarding-recommendations.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugin-llm-access.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugins/application-declarations.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugins/index.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/programmatic-integration.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/prompt-assembly.md

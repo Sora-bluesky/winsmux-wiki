@@ -2,7 +2,7 @@
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: 4d329d1b218b84a398827fbe9c7372b2050de8df
+upstream_blob: d80b893596d87acae16ed9e1ac10adc5296d340d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -333,7 +333,7 @@ hermes config set compression.codex_gpt55_autoraise_notice false
 
 ### Codex の大きなコンテキスト向け `-900k` 選択肢（任意） {#codex-large-context--900k-picker-variants-opt-in}
 
-ChatGPT Codex のバックエンドは、gpt-5.4 と gpt-5.6（Sol / Terra / Luna）系について
+ChatGPT Codex のバックエンドは、gpt-5.4、gpt-5.6（Sol / Terra / Luna）、GPT-6（Sol / Terra / Luna）系について
 272K のウィンドウを*表向きには*示していますが、実際には ChatGPT のサブスクリプション
 アカウントで約 911K の入力トークンを受け付けます（2026 年 8 月に実地で確認）。Hermes は
 基本の名前については**表向きの 272K を既定のまま**にしています。ウィンドウが大きいと
@@ -341,7 +341,7 @@ ChatGPT Codex のバックエンドは、gpt-5.4 と gpt-5.6（Sol / Terra / Lun
 大きいウィンドウはあくまで任意で選ぶものとしています。
 
 大きいウィンドウを使うには、`/model` で `-900k` の付いた選択肢を明示的に選んでください
-（たとえば `gpt-5.6-sol-900k`、`gpt-5.6-terra-900k`、`gpt-5.6-luna-900k`、
+（たとえば `gpt-6-sol-900k`、`gpt-6-terra-900k`、`gpt-6-luna-900k`、`gpt-5.6-sol-900k`、`gpt-5.6-terra-900k`、`gpt-5.6-luna-900k`、
 `gpt-5.4-900k`）。これらは Hermes 側の別名で、バックエンドへモデル ID を送る前に接尾辞は
 取り除かれ、料金と使用量の計算では元のモデルとして扱われます。本当に 272K で固定されている
 名前（gpt-5.5、gpt-5.4-mini）には `-900k` の選択肢はありません。認証済みの Codex の

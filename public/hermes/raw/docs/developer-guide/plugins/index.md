@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 874e0666e59068be578103d2293556780cbd8468
+upstream_blob: b1e6e26eee0666e62a0b3796fe376a7a87718452
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -66,7 +66,7 @@ hermes plugins list
 hermes plugins enable <plugin-name>
 ```
 
-ポータブルパッケージはインストール後、明示的に有効化しない限り無効のままです。有効化されたパッケージは、`skills/*/SKILL.md` ディレクトリと、ルートの `mcp.json` による stdio MCP サーバーを即座に提供できます。スキルは読み取り専用で名前空間化され、`skills_list` と `skill_view` を通じて読み込まれます。MCP コマンドは、シェルを経由せず、単一の実行可能トークンと別個の引数リストとして渡されます。完全修飾されたスキル名を確認するには `skills_list` を使ってください。ポータブルスキルの名前空間は `agent-plugin-<slug>-<hash>` という決定的な形式を持ち、検出されたプラグインキーから導出されるため、サニタイズ後の名前が衝突することはありません。
+ポータブルパッケージはインストール後、明示的に有効化しない限り無効のままです。有効化されたパッケージは、`skills/*/SKILL.md` ディレクトリと、ルートの `mcp.json` による stdio MCP サーバーを即座に提供できます。スキルは読み取り専用で名前空間化され、`skills_list` と `skill_view` を通じて読み込まれます。MCP コマンドは、シェルを経由せず、単一の実行可能トークンと別個の引数リストとして渡されます。完全修飾されたスキル名を確認するには `skills_list` を使ってください。ポータブルスキルの名前空間は `agent-plugin-<slug>-<hash>` という決定的な形式を持ち、検出されたプラグインキーから導出されるため、サニタイズ後の名前が衝突することはありません。ポータブルパッケージの MCP サーバーは、`mcp.json` で付けられた名前をそのまま使います。ユーザー自身の `mcp_servers` ブロックと同じ規則です。これにより、モデルから見える `mcp__<server>__<tool>` という名前でも、プロバイダーの64文字の上限の中にツールの動詞が収まります。サーバー名の重複は読み込み時の衝突として扱われます。`config.yaml` のサーバーはパッケージより優先され、先に読み込まれたパッケージが後のものより優先されます。負けた側は、両方の名前を挙げた警告とともにスキップされます。
 
 Hermes は `plugin.json`、Agent Skills のフロントマター、固定されたコンポーネントの配置、`mcp.json`、解決済みパス、シンボリックリンクの内包関係をローカルで検証します。パッケージの読み込み中に JSON スキーマを取得することはありません。不正なスキルや MCP エントリは、有効な兄弟コンポーネントがまだ読み込める場合、その境界だけでスキップされます。`PLUGIN_ROOT` は解決済みのパッケージルートを指します。`PLUGIN_DATA` は Hermes が管理する、プロファイルスコープの書き込み可能なディレクトリを指します。
 ポータブル MCP の `env` に宣言された値は可視のパッケージデータであり、シークレット保管の仕組みではありません。`mcp.json` に認証情報を置かないでください。
@@ -1283,6 +1283,36 @@ def register(ctx):
 
     ctx.register_platform_handler("discord", _wire)
 ```
+
+### 実行中のプラグイン読み込み：すぐ有効になるものと次のセッションからのもの {#mid-run-plugin-loading-what-activates-now-vs-next-session}
+
+プラグインは、ゲートウェイ（または TUI/Desktop のサーバー）がすでに動いている最中にも読み込まれることがあります。`hermes plugins
+install`/`enable`、Desktop やダッシュボードからのインストール、カタログの再ピン留め、ツールがきっかけの強制的な
+再検出がそれにあたります。これらの経路はどれも**実際の強制再スキャン**（`discover_plugins(force=True)`）を行い、
+その中から `PluginManager.on_plugin_loaded(callback)` が、**新しく**読み込まれたプラグインごとに1つの要約を渡して呼ばれます
+（`hermes_cli/plugins_activation.py`）。
+
+```python
+{"name": "late-mcp", "key": "late-mcp",
+ "activated_now": {"gateway_commands": ["late"], "callbacks": ["telegram"]},
+ "deferred": {"tools": ["late_tool"], "prompt": ["late.section"], "mcp_servers": ["worker"]}}
+```
+
+- **すぐ有効になるもの** — ゲートウェイのスラッシュコマンド、ゲートウェイの変換フックとその他のフック、プラットフォームの
+  コールバックです。ゲートウェイのランナーは起動時に購読し、動いているすべてのアダプターの冪等な
+  `rewire_plugin_handlers()` を呼びます。そのため、後から読み込まれたプラグインが登録した `register_platform_handler` のファクトリ（や Slack のアクションハンドラー）も、
+  再起動なしで配線されます。再配線は、ネイティブのクライアントごとに `(plugin, factory
+  qualname)` で重複を除きます。Telegram では、後から来たハンドラーがコアの受け皿である `filters.COMMAND` /
+  `CallbackQueryHandler` より前へ引き上げられます（PTB はグループごとに最初に一致したものへ振り分けるため）。接続時に登録された場合とまったく同じ位置に並びます。
+- **次のセッションからのもの** — `tools` と `prompt` の節は**次のセッション**から効きます（実行中のセッションの
+  プロンプトとツールスキーマはキャッシュを保つため固定です。`/skills install` と同じ規則です）。`mcp_servers`（プラグインの
+  `mcp.json` のサーバー。mcp.json での名前のまま）は、`mcp.reload` か次のセッションで接続されます。
+- 配線を外す仕組みはありません。実行中にプラグインを無効にしても、すでに配線されたハンドラーはゲートウェイを
+  再起動するまで残り、各画面もそのように表示します。
+
+インストールの各入口は、まさにこの内訳を報告します。`hermes plugins install/enable` は、動いている
+ゲートウェイに合図を送ったあと（コントロールソケットの `reload-plugins` 動詞）にこれを表示し、`plugins.manage install/toggle/update` は `activation` と
+`gateway_reloaded` を返します（`restart_required` が true になるのは、どのゲートウェイも応答しなかったときだけです）。
 
 :::tip
 このガイドは**一般的なプラグイン**（ツール、フック、スラッシュコマンド、CLI コマンド）を扱っています。以下の節では、専門化されたプラグインの種類ごとに執筆のパターンを概観します。それぞれのリンク先に、フィールド一覧と例を含む完全なガイドがあります。
