@@ -2,51 +2,51 @@
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: 29ba3a418363f23ae3284f2e93b05828313c93d8
+upstream_blob: 2b8cebbe6b6313847656f93e526c18c399bd4c3d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
 
 # Telegram の設定 {#telegram-setup}
 
-Hermes Agent は、Telegram の会話ボットとしてひととおりの機能を備えた形で連携します。つないでしまえば、どの端末からでもエージェントと話せますし、送った音声メモは自動で文字起こしされ、決まった時刻の作業の結果を受け取ったり、グループのトークでエージェントを使ったりもできます。この連携は [python-telegram-bot](https://python-telegram-bot.org/) の上に作られており、テキスト・音声・画像・添付ファイルに対応します。
+Hermes Agent は、機能をひととおり備えた会話ボットとして Telegram に組み込めます。つないでしまえば、どの端末からでもエージェントと話せますし、送ったボイスメモは自動で文字起こしされ、定期実行の結果も受け取れて、グループチャットでも使えます。この連携は [python-telegram-bot](https://python-telegram-bot.org/) の上に作られていて、テキスト、音声、画像、ファイルの添付に対応しています。
 
-## 手早い設定（ダッシュボードとデスクトップアプリ） {#quick-setup-dashboard-and-desktop-app}
+## すぐに設定する（ダッシュボードとデスクトップアプリ） {#quick-setup-dashboard-and-desktop-app}
 
-[ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/)と[デスクトップアプリ](/hermes/docs/user-guide/desktop/)の **Messaging → Telegram** のページには、**Create with QR** のボタンがあります。表示されたコードを Telegram で読み取る（またはリンクを開く）と、Hermes がボットを作り、Telegram のユーザー ID を見つけ、`TELEGRAM_BOT_TOKEN` と `TELEGRAM_ALLOWED_USERS` をプロファイルの `.env` に書き込み、ゲートウェイを再起動します。ボットを自分で作りたい場合は、下の手作業の手順に従ってください。
+[ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/) と [デスクトップアプリ](/hermes/docs/user-guide/desktop/) の **Messaging → Telegram** のページには、**Create with QR** のボタンがあります。そのコードを Telegram で読み取る（またはリンクを開く）と、Hermes がボットを作り、あなたの Telegram のユーザー ID を検出し、`TELEGRAM_BOT_TOKEN` と `TELEGRAM_ALLOWED_USERS` をプロファイルの `.env` に書き込んで、ゲートウェイを再起動します。自分でボットを作りたい場合は、下の手作業の手順に従ってください。
 
 ## 手順 1: BotFather でボットを作る {#step-1-create-a-bot-via-botfather}
 
-Telegram のボットには、Telegram 公式のボット管理ツールである [@BotFather](https://t.me/BotFather) が発行する API トークンが必ず要ります。
+Telegram のボットにはどれも、Telegram 公式のボット管理ツールである [@BotFather](https://t.me/BotFather) が発行する API トークンが必要です。
 
 1. Telegram を開いて **@BotFather** を検索するか、[t.me/BotFather](https://t.me/BotFather) を開きます
 2. `/newbot` を送ります
-3. **表示名**を決めます（たとえば "Hermes Agent"）。これは何でも構いません
-4. **ユーザー名**を決めます。ほかと重ならず、末尾が `bot` である必要があります（たとえば `my_hermes_bot`）
-5. BotFather が **API トークン**を返します。次のような文字列です。
+3. **表示名**（例: "Hermes Agent"）を決めます — これは何でも構いません
+4. **ユーザー名**を決めます — これは重複してはならず、`bot` で終わる必要があります（例: `my_hermes_bot`）
+5. BotFather が **API トークン**を返します。こんな見た目です。
 
 ```
 123456789:ABCdefGHIjklMNOpqrSTUvwxYZ
 ```
 
 :::warning
-ボットのトークンは人に見せないでください。これを持っている人は誰でもボットを操作できます。漏れたときは、BotFather で `/revoke` を使ってすぐ無効にします。
+ボットのトークンは人目に触れないようにしてください。これを持っている人はボットを操作できます。漏れたら、BotFather の `/revoke` ですぐ失効させてください。
 :::
 
-## 手順 2: ボットの見た目を整える（任意） {#step-2-customize-your-bot-optional}
+## 手順 2: ボットを整える（任意） {#step-2-customize-your-bot-optional}
 
-次の BotFather のコマンドを使うと、使う人にとって分かりやすくなります。@BotFather に話しかけて実行します。
+次の BotFather のコマンドで使い勝手が良くなります。@BotFather に送って使ってください。
 
 | コマンド | 用途 |
 |---------|---------|
-| `/setdescription` | 会話を始める前に表示される「このボットは何ができるか」の説明文 |
-| `/setabouttext` | ボットのプロフィール欄に出る短い文 |
-| `/setuserpic` | ボットのアイコン画像をアップロードします |
-| `/setcommands` | コマンドのメニュー（トーク画面の `/` ボタン）を決めます |
-| `/setprivacy` | ボットがグループのすべてのメッセージを見られるかを切り替えます（手順 3 を参照） |
+| `/setdescription` | 利用者が会話を始める前に表示される「このボットは何ができる?」の文章 |
+| `/setabouttext` | ボットのプロフィールページに出る短い文章 |
+| `/setuserpic` | ボットのアイコンをアップロードする |
+| `/setcommands` | コマンドのメニューを定義する（チャットの `/` のボタン） |
+| `/setprivacy` | ボットがグループのすべてのメッセージを見られるかを制御する（手順 3 を参照） |
 
 :::tip
-`/setcommands` の出発点として使いやすい組み合わせです。
+`/setcommands` の出発点としては、次のあたりが使いやすいです。
 
 ```
 help - Show help information
@@ -55,14 +55,14 @@ sethome - Set this chat as the home channel
 ```
 :::
 
-### オンライン・オフラインの表示（任意） {#onlineoffline-status-indicator-optional}
+### オンライン / オフラインの表示（任意） {#onlineoffline-status-indicator-optional}
 
-Telegram のボットには、本当の意味でのオンライン・オフラインを示す点はありません。あの緑の点は
-*ユーザーアカウント*の機能で、Bot API がボット向けに出しているものではありません。いちばん近いのが
-ボットの**短い説明文**（プロフィールで名前の下に出る 1 行）です。
+Telegram のボットには、本当の意味でのオンライン / オフラインを示す点がありません。あの緑の点は
+*利用者アカウント*の機能で、Bot API がボット向けに出しているものではありません。いちばん近いのは、
+ボットの**短い説明**（プロフィールで名前の下に出る行）です。
 
-`status_indicator` を有効にすると、Hermes はゲートウェイの接続時にその短い説明文を **Online** に、
-正常に終了したときに **Offline** に書き換えます。
+`status_indicator` を有効にすると、Hermes はゲートウェイの接続時にその短い説明を **Online** に、
+きれいに停止したときに **Offline** に書き換えます。
 
 ```yaml
 gateway:
@@ -75,27 +75,26 @@ gateway:
         status_offline: "🔴 Offline"
 ```
 
-覚えておくことです。
+補足:
 
-- 短い説明文はボットに対して**ひとつ**（全員に見えます）で、トークごとに分かれてはいません。
-  利用者が目にするのはボットのプロフィールの画面であって、開いているトークの中に出る
-  ラベルではありません。
-- "Offline" が書き込まれるのは、ゲートウェイが**正常に**終了したとき（`/stop`、`disconnect`）だけです。
-  異常終了すると、最後の表示が残ります。プロフィールの文で状態を示す以上、避けられない限界です。
-- ボットのプロフィールを書き換えるため、既定では無効です。
+- 短い説明はボットの**全体**に対するもので（すべての利用者に見えます）、チャットごとではありません。
+  利用者はボットのプロフィールページで目にするのであって、開いているチャットの中の生のバッジとして
+  見るわけではありません。
+- 「Offline」が書かれるのは、ゲートウェイが**きれいに**停止したとき（`/stop`、`disconnect`）だけです。
+  ひどい落ち方をすると最後の状態が残ります。プロフィールの文章による表示に付きものの限界です。
+- ボットの全体のプロフィールを書き換えるので、既定では無効です。
 
-### 電源を入れ直したときの未処理分（任意） {#cold-boot-pending-queue-optional}
+### 冷えた状態からの起動で溜まっていた更新（任意） {#cold-boot-pending-queue-optional}
 
-アダプターは既定で、電源を入れ直したときにサーバー側で溜まっていた更新を捨てます
-（最初の `start_polling` で `drop_pending_updates=True` になります）。これは動かしっぱなしの
-サーバーには合っています。再起動は「片付け」を意味し、溜まっていた分は古いものとして扱われます。
-一方で、電源が落ちる端末（夜のあいだ止めているデスクトップなど）には合いません。ゲートウェイが
-止まっているあいだに送られたメッセージは Telegram の Bot API 側で待たされていますが、次に立ち上げた
-ときに Hermes が受け取る前に捨てられてしまいます。しかも静かに捨てられ、ログも残らず、やり直しも
-ありません。
+既定では、アダプターは冷えた状態からの起動時にサーバー側に溜まっていた更新を捨てます
+（最初の `start_polling` での `drop_pending_updates=True`）。これは常時動いているサーバーには
+合っています。再起動は「片付け」であり、待ち行列は古びたものとして扱われます。一方、電源が
+落ちるホスト（夜に切るデスクトップなど）には合いません。ゲートウェイが止まっている間に送られた
+メッセージは Telegram の Bot API の待ち行列に残り、次の起動時に、Hermes が目にする前に捨てられて
+しまいます。黙って、ログもなく、再試行もなしにです。
 
-`drop_pending_on_cold_boot: false` を設定すると、起動のときに溜まっていた分を順番どおりに
-受け取れます。
+代わりに、起動時にその溜まった分を順番に受け取りたい場合は `drop_pending_on_cold_boot: false` を
+設定します。
 
 ```yaml
 platforms:
@@ -104,22 +103,52 @@ platforms:
       drop_pending_on_cold_boot: false
 ```
 
-覚えておくことです。
+補足:
 
-- 既定は `true` です。自分で切り替えない限り、これまでの動きは変わりません。
-- 見張り役による再接続（プロセスは生きたままの短い通信の途切れ）では、この設定にかかわらず
-  溜まっていた分は必ず残ります。
-- 競合からの復帰では、競合している `getUpdates` の接続を終わらせるために、いまでも溜まっていた
-  分を捨てます。そこはこのつまみとは関係のない経路です。
-- 異常終了のあとは、溜めておいた分の中に、落ちたほうが途中まで処理した更新が混じっていて、
-  もう一度届くことがあります。ふつうは Telegram 側の位置の記録で防がれますが、長く止まっている
-  あいだに送られた、時間に左右されるコマンドは、起動のときに動きます。
+- 既定は `true` です。自分で選ばない限り、これまでの振る舞いは変わりません。
+- 見張りによる再接続（プロセスは生きたままの短いネットワークの不調）では、この設定に関係なく
+  待ち行列は必ず保たれます。
+- 競合からの回復では、競合する `getUpdates` のセッションを終わらせるために、やはり溜まった更新を
+  捨てます。その経路はこの項目とは関係ありません。
+- 異常終了のあとは、保たれた待ち行列が、落ちたインスタンスが途中まで処理した更新を再び届けることが
+  あります。ふつうは Telegram のオフセットがこれを防ぎますが、長い停止の間に送られた時間に敏感な
+  コマンドは、起動時に実行されます。
 
-### コマンドメニューの優先順と上限（任意） {#command-menu-priority-and-cap-optional}
+### 同じ受信の更新が繰り返されたとき {#repeated-inbound-updates}
 
-Hermes は、Telegram のゲートウェイが起動するときにコマンドのメニューを自動で登録します。メニューは、中心にあるスラッシュコマンドの一覧に、条件を満たしたプラグインやスキルのコマンドを足して組み立てられ、Telegram が確実に受け取れるよう上限をかけられます。既定の上限は 60 件で、組み込みのコマンド全部とよく使うスキルのコマンドが収まる程度です。
+Hermes は、メッセージのまとめ、コマンド / メディアの処理、観測したグループ履歴の書き込み、
+プラグインの観測役よりも前に、繰り返された Telegram の `update_id` を抑えます。
+この検査の範囲は、受け取ったアダプターと数値のボット ID です。本文や `message_id` では
+重複を判定しません。新しい更新の ID を持つ本物の編集は、これまでどおり処理されます。
 
-Telegram の `/` の選択肢に必ず出したいスキル・プラグイン・組み込みのコマンドがある場合は、`~/.hermes/config.yaml` で優先順を指定します。
+これは範囲の限られた、**メモリ上の**保護であって、ちょうど 1 回の保証ではありません。
+
+- アダプターは、直近 4096 件の受け入れ済みを、時間による失効なしで覚えています。処理中の更新は、
+  振り分けと、その予定された PTB の処理が終わるまで確保されたままです。ブロックしないネイティブの
+  プラグインや、登録されたエラーのコールバックも含みます。
+- 同じアダプターに接続し直しても、その履歴は残ります。追い出し、アダプターの入れ替え、プロセスの
+  再起動があると、古い更新が再び通ることがあります。ディスク上の再生の台帳には何も書かれません。
+- 準備が失敗したり取り消されたりした場合、何も引き渡していなければ確保を解きます。更新がいったん
+  まとめ / 保留の待ち行列、ゲートウェイの振り分け、観測役、ネイティブのプラグインに入ったあとは、
+  あとでエラーが起きても再び開かれることはありません。ネイティブのプラグインは自分の途中までの
+  影響を自分で持つので、その更新や登録されたエラーのコールバックに入ることは、安全側に倒して
+  引き渡しとみなします。PTB 自身の例外の記録は引き渡しではありません。キャッシュされていない
+  静止ステッカーの画像の解析も引き渡しです。待ちを取り消しても、すでに送った補助のモデルへの
+  要求は取り消せないからです。引き渡しより前に捕まえられた準備のエラーは再試行できますが、
+  意図的な拒否は終端です。
+- 確保を解くのは、あとの配信を許すことであって、Telegram に配信を求めることではありません。
+  受信の確認は、エージェントの完了とは独立です。この検査は、失敗した返信を再試行するものでも、
+  下流の部品が独自に作業を重複させるのを防ぐものでもありません。
+
+遅れて再生されたと思われる場合は、両方の発生について、ボット / プロファイル、チャット / トピック、
+`update_id`、更新の種類、`message_id`、実際に受け取った時刻を見比べてください。編集は
+`message_id` を使い回せますし、メッセージの送信時刻は受信時刻ではありません。
+
+### コマンドメニューの優先度と上限（任意） {#command-menu-priority-and-cap-optional}
+
+Hermes は、Telegram のゲートウェイの起動時にコマンドのメニューを自動で登録します。メニューは中央のスラッシュコマンドの登録簿と、条件を満たすプラグイン / スキルのコマンドから作られ、そのあと Telegram が確実に受け取れるよう上限がかけられます。既定の上限は 60 件で、組み込みのコマンドすべてに加えてよく使うスキルのコマンドが見える程度です。
+
+Telegram の `/` の選択肢に残しておきたいスキル、プラグイン、組み込みのコマンドがある場合は、`~/.hermes/config.yaml` で優先度を付けてください。
 
 ```yaml
 platforms:
@@ -133,19 +162,19 @@ platforms:
           - songsee          # skill commands work here too
 ```
 
-`priority_mode` は、自分の指定と Hermes の組み込みの優先順をどう組み合わせるかを決めます。
+`priority_mode` は、あなたの一覧が Hermes の組み込みの優先の一覧とどう組み合わさるかを決めます。
 
-- `prepend`: 自分のコマンドを先に置き、そのあとに Hermes の既定を並べます
-- `append`: Hermes の既定を先に置き、そのあとに自分のコマンドを並べます
-- `replace`: 優先順の指定に自分の一覧だけを使います
+- `prepend`: あなたのコマンドを先に、そのあと Hermes の既定
+- `append`: Hermes の既定を先に、そのあとあなたのコマンド
+- `replace`: 優先の並びにあなたの一覧だけを使う
 
-優先順は、上限をかける前の**まとまった**候補の一覧（中心のコマンド・プラグインのコマンド・スキルのコマンド）に対して適用されます。そのため、優先すると決めたスキルのコマンドは、中心のコマンドだけでメニューが埋まるような場合でも必ず場所を得られます。以前はスキルが常に先に、しかもアルファベット順で切られていたため、後ろのほうの名前のスキルは `priority` に関係なく出てこられませんでした。
+優先度は、上限をかける前の**まとまった**候補の一覧（中核のコマンド、プラグインのコマンド、スキルのコマンド）に対して適用されます。そのため、中核のコマンドだけでメニューが埋まる場合でも、優先されたスキルのコマンドには必ず枠が確保されます。以前はスキルが常に先にアルファベット順で削られていたので、`priority` にかかわらず名前が後ろのスキルは決して現れませんでした。
 
-Telegram は BotCommand を 100 件まで受け付けますが、大きすぎると失敗することがあります。Hermes は確実さを優先して既定を 60 とし、設定された値も `1..100` に収めます。コマンドの全一覧は `/commands` で見られます。
+Telegram は BotCommands を 100 件まで許しますが、大きなコマンドの内容は失敗することがあります。Hermes は確実さのために既定を 60 にし、設定された値を `1..100` に収めます。すべてのコマンドの一覧には `/commands` を使ってください。
 
-### インラインの選択画面: すべてのコマンドを検索する（上限なし） {#inline-command-picker-search-every-command-no-cap}
+### インラインのコマンド選択: すべてのコマンドを検索する（上限なし） {#inline-command-picker-search-every-command-no-cap}
 
-`/` のメニューには上限がありますが、Telegram の**インラインモード**にはありません。有効にすると、どのトークでも `@yourbotname` に続けて検索語を打つだけで、Hermes の**すべての**コマンドと導入済みのスキルを、その場で絞り込める一覧が出ます。結果は 1 文字打つごとに計算され、ページ送りできるので、何も切り落とされません。
+`/` のメニューには上限がありますが、Telegram の**インラインモード**にはありません。有効にすると、どのチャットでも `@yourbotname` に続けて検索語を入力するだけで、**すべて**の Hermes のコマンドと導入済みのスキルを対象にした、その場で絞り込める選択肢が出ます。結果は打鍵ごとに計算されてページ送りされるので、何かが削られることはありません。
 
 ```
 @yourbotname plan            → tap the /plan result to send it
@@ -153,42 +182,42 @@ Telegram は BotCommand を 100 件まで受け付けますが、大きすぎる
 @yourbotname pdf             → finds skills matching "pdf" by name or description
 ```
 
-最初の単語で候補を絞り込み、そのあとに続けた文字列はそのままコマンドの引数として送られます。結果を選ぶと、自分から送る普通のメッセージとしてそのコマンドが送信されるので、通常のコマンドの経路で処理されます（コマンドで始まるメッセージは、プライバシーモードが有効でもボットに届きます）。
+最初の語が一覧を絞り込み、それより後ろはすべて、送られるコマンドの引数として運ばれます。結果をタップすると、そのコマンドはあなたからのふつうのメッセージとして送られるので、標準のコマンドの経路で処理されます（コマンドで始まるメッセージは、プライバシーモードが有効でもボットに届きます）。
 
-**最初に一度だけ必要な設定:** インラインモードは、どの Telegram のボットでも既定では無効です。[@BotFather](https://t.me/BotFather) で `/setinline` を使って有効にします（対象のボットを選び、案内文は好きな文字列で構いません。たとえば `Search commands and skills...`）。それまで Telegram はインラインの問い合わせを届けず、選択画面は動きません。
+**最初に一度だけの設定:** インラインモードは、どの Telegram のボットでも既定では無効です。[@BotFather](https://t.me/BotFather) で `/setinline` を使って有効にしてください（自分のボットを選び、案内の文章を何か設定します。たとえば `Search commands and skills...`）。それまで Telegram はインラインの問い合わせを届けないので、選択肢は動きません。
 
-結果が返るのは、ゲートウェイの許可リストを通った利用者に対してだけです。許可されていない相手には空の一覧が返るので、導入済みのスキルの一覧が知らない人に見えることはありません（インラインの問い合わせは、ボットがいないトークからでも送れます）。
+結果が出るのは、あなたのゲートウェイの許可一覧を通る利用者に対してだけです。許可されていない利用者には空の一覧が返るので、導入済みのスキルの一覧が見知らぬ人に見えることはありません（インラインの問い合わせは、ボットがいないチャットも含めどこからでも送れます）。
 
 ## 手順 3: プライバシーモード（グループでは重要） {#step-3-privacy-mode-critical-for-groups}
 
-Telegram のボットには**プライバシーモード**があり、**既定で有効**です。グループでボットを使うとき、いちばん混乱の元になるのがこれです。
+Telegram のボットには**プライバシーモード**があり、**既定で有効**です。グループでボットを使うときの混乱の原因として、これが最も多いものです。
 
-**プライバシーモードが有効なとき**、ボットに見えるのは次のものだけです。
-- `/` で始まるコマンドのメッセージ
+**プライバシーモードが ON のとき**、ボットが見られるのは次だけです。
+- `/` のコマンドで始まるメッセージ
 - ボット自身のメッセージへの直接の返信
-- 参加・退出やピン留めなどの通知メッセージ
+- 案内のメッセージ（メンバーの参加 / 退出、ピン留めなど）
 - ボットが管理者になっているチャンネルのメッセージ
 
-**プライバシーモードが無効なとき**、ボットはグループのすべてのメッセージを受け取ります。
+**プライバシーモードが OFF のとき**、ボットはグループのすべてのメッセージを受け取ります。
 
-### プライバシーモードを無効にする手順 {#how-to-disable-privacy-mode}
+### プライバシーモードを無効にする方法 {#how-to-disable-privacy-mode}
 
-1. **@BotFather** に話しかけます
+1. **@BotFather** にメッセージを送ります
 2. `/mybots` を送ります
-3. 対象のボットを選びます
+3. 自分のボットを選びます
 4. **Bot Settings → Group Privacy → Turn off** と進みます
 
 :::warning
-プライバシーの設定を変えたあとは、**そのボットをグループからいったん外して、入れ直す必要があります**。Telegram はボットがグループに入った時点のプライバシーの状態を覚えており、外して入れ直すまで更新されません。
+プライバシーの設定を変えたら、**ボットをいったんグループから外して入れ直す必要があります**。Telegram はボットがグループに参加した時点のプライバシーの状態をキャッシュしていて、外して入れ直すまで更新されません。
 :::
 
 :::tip
-プライバシーモードを無効にする代わりの手があります。ボットを**グループの管理者**にすることです。管理者のボットはプライバシーの設定にかかわらず常にすべてのメッセージを受け取るので、全体のプライバシーモードを切り替えずに済みます。
+プライバシーモードを無効にする代わりの方法として、ボットを**グループの管理者**に昇格させる手もあります。管理者のボットはプライバシーの設定に関係なく常にすべてのメッセージを受け取るので、全体のプライバシーモードを切り替えずに済みます。
 :::
 
-### 自動で返さずにグループの流れを見る {#observe-group-chatter-without-auto-replying}
+### 自動で返さずにグループの会話を見る {#observe-group-chatter-without-auto-replying}
 
-OpenClaw や元宝のようなグループでの振る舞いにしたい場合は、ボットが普通のグループのメッセージを**見られる**一方で、直接呼ばれたときだけ**返す**ように設定します。
+OpenClaw や Yuanbao のようなグループでの振る舞いにしたい場合は、ボットがふつうのグループのメッセージを**見られる**一方で、直接呼ばれたときだけ**応答する**ように Telegram を設定します。
 
 ```yaml
 telegram:
@@ -200,9 +229,9 @@ telegram:
   observe_unmentioned_group_messages: true
 ```
 
-この設定にすると、明示的に許可したトークやトピックでメンションなしに流れたグループのメッセージは、見えている文脈として共有のトークやトピックのセッションの記録に足されますが、エージェントは動きません。`allowed_chats` はボットがどこで応答するかを決め、`group_allowed_chats` は見えている文脈を保つ共有のグループのセッションを許可します。そのため、このモードでは同じトークの ID を両方に書きます。同じ許可済みのトークやトピックで、あとから `@botname` のメンション、ボットへの返信、または設定したメンションのパターンが来ると、そこまでの見えている文脈を使えます。呼び出したメッセージには `[nickname|user_id]` の印が付き、そのやり取りごとに安全のための指示が添えられるので、モデルは前の観測した行を、ボットへの指示ではなく文脈として扱います。
+このモードを有効にすると、明示的に許可したチャット / トピックからの、メンションのないグループのメッセージが、観測した文脈として共有のチャット / トピックのセッションの記録に書き足されますが、エージェントは動きません。`allowed_chats` はボットが応答する場所を決め、`group_allowed_chats` は観測した文脈に使う共有のグループのセッションを認可するので、このモードでは同じチャット ID を使ってください。同じ許可済みのチャット / トピックで、あとから `@botname` のメンション、ボットへの返信、設定したメンションの型が来れば、その観測した文脈を使えます。きっかけになったメッセージには `[nickname|user_id]` の印が付き、やり取りごとの安全のためのプロンプトも付くので、モデルはそれまでの観測した行を、ボットに向けられた指示ではなく文脈として扱います。
 
-環境変数で書く場合は次のとおりです。
+同じ意味の環境変数:
 
 ```bash
 TELEGRAM_ALLOWED_CHATS=-1001234567890
@@ -210,31 +239,31 @@ TELEGRAM_GROUP_ALLOWED_CHATS=-1001234567890
 TELEGRAM_OBSERVE_UNMENTIONED_GROUP_MESSAGES=true
 ```
 
-これには、Telegram が普通のグループのメッセージをゲートウェイへ届けてくれる必要があります。前述のとおり BotFather のプライバシーモードを無効にするか、ボットをグループの管理者にしてください。
+これには、Telegram がふつうのグループのメッセージをゲートウェイへ届ける必要があるので、上で説明したように BotFather のプライバシーモードを無効にするか、ボットをグループの管理者に昇格させてください。
 
 ## 手順 4: 自分のユーザー ID を調べる {#step-4-find-your-user-id}
 
-Hermes Agent は、誰が使えるかを Telegram の数字のユーザー ID で制御します。ユーザー ID はユーザー名では**なく**、`123456789` のような数字です。
+Hermes Agent は、アクセスの制御に Telegram の数値のユーザー ID を使います。ユーザー ID はユーザー名では**ありません**。`123456789` のような数字です。
 
-**方法 1（おすすめ）:** [@userinfobot](https://t.me/userinfobot) に話しかけると、すぐにユーザー ID が返ってきます。
+**方法 1（推奨）:** [@userinfobot](https://t.me/userinfobot) にメッセージを送ると、すぐにユーザー ID を返してくれます。
 
-**方法 2:** [@get_id_bot](https://t.me/get_id_bot) に話しかけます。こちらも確実です。
+**方法 2:** [@get_id_bot](https://t.me/get_id_bot) にメッセージを送ります。こちらも確実です。
 
-この数字は次の手順で使うので、控えておいてください。
+この数字は控えておいてください。次の手順で使います。
 
 ## 手順 5: Hermes を設定する {#step-5-configure-hermes}
 
-### 方法 A: 対話形式で設定する（おすすめ） {#option-a-interactive-setup-recommended}
+### 方法 A: 対話形式の設定（推奨） {#option-a-interactive-setup-recommended}
 
 ```bash
 hermes gateway setup
 ```
 
-聞かれたら **Telegram** を選びます。ボットのトークンと許可するユーザー ID を尋ねられ、そのまま設定が書き込まれます。
+尋ねられたら **Telegram** を選びます。案内がボットのトークンと許可するユーザー ID を聞いてきて、設定を書き込んでくれます。
 
-### 方法 B: 手で設定する {#option-b-manual-configuration}
+### 方法 B: 手作業での設定 {#option-b-manual-configuration}
 
-`~/.hermes/.env` に次を足します。
+`~/.hermes/.env` に次を追加します。
 
 ```bash
 TELEGRAM_BOT_TOKEN=123456789:ABCdefGHIjklMNOpqrSTUvwxYZ
@@ -247,21 +276,21 @@ TELEGRAM_ALLOWED_USERS=123456789    # Comma-separated for multiple users
 hermes gateway
 ```
 
-数秒でボットがつながるはずです。Telegram でメッセージを送って確かめてください。
+数秒でボットがオンラインになります。Telegram でメッセージを送って確かめてください。
 
 ## Docker のターミナルで作ったファイルを送る {#sending-generated-files-from-docker-backed-terminals}
 
-ターミナルのバックエンドが `docker` の場合、Telegram への添付を送るのはコンテナの中ではなく
-**ゲートウェイのプロセス**だという点に注意してください。つまり、最終的な `MEDIA:/...` の
-パスは、ゲートウェイが動いているホスト側から読める必要があります。
+ターミナルのバックエンドが `docker` の場合、Telegram への添付はコンテナの中からではなく
+**ゲートウェイのプロセス**が送る、という点に注意してください。つまり最後の `MEDIA:/...` の
+パスは、ゲートウェイが動いているホスト側で読める必要があります。
 
-よくある落とし穴です。
+よくある落とし穴:
 
-- エージェントが Docker の中の `/workspace/report.txt` にファイルを書く
-- モデルが `MEDIA:/workspace/report.txt` と出力する
-- `/workspace/report.txt` はコンテナの中にしかなくホストには無いので、Telegram への送信が失敗する
+- エージェントが Docker の中で `/workspace/report.txt` にファイルを書く
+- モデルが `MEDIA:/workspace/report.txt` を出す
+- `/workspace/report.txt` はコンテナの中にしかなくホストにはないので、Telegram への送信が失敗する
 
-おすすめの形です。
+おすすめの形:
 
 ```yaml
 terminal:
@@ -270,47 +299,47 @@ terminal:
     - "/home/user/.hermes/cache/documents:/output"
 ```
 
-そのうえで、
+そのうえで:
 
 - Docker の中では `/output/...` にファイルを書く
 - `MEDIA:` には**ホストから見える**パスを出す。たとえば
-  `MEDIA:/home/user/.hermes/cache/documents/report.txt` のように書きます
+  `MEDIA:/home/user/.hermes/cache/documents/report.txt`
 
-すでに `docker_volumes:` の節がある場合は、新しいマウントを同じ一覧に足してください。
-YAML はキーが重複すると、前のほうを黙って上書きします。
+すでに `docker_volumes:` の節がある場合は、同じ一覧に新しいマウントを足してください。
+YAML の重複したキーは、前のものを黙って上書きします。
 
-### `MEDIA:` で使えるファイルの拡張子 {#supported-media-file-extensions}
+### 対応している `MEDIA:` のファイル拡張子 {#supported-media-file-extensions}
 
-ゲートウェイはエージェントの返信から `MEDIA:/path/to/file` の印を取り出し、そのファイルをそのプラットフォーム本来の添付として送ります。ゲートウェイのどのプラットフォームでも使える拡張子です。
+ゲートウェイは、エージェントの返信から `MEDIA:/path/to/file` の印を取り出し、そのファイルをそのプラットフォームの添付として送ります。すべてのゲートウェイのプラットフォームで対応している拡張子は次のとおりです。
 
-| 種類 | 拡張子 |
+| 種別 | 拡張子 |
 |---|---|
-| 画像 | `png`, `jpg`, `jpeg`, `gif`, `webp`, `bmp`, `tiff`, `svg` |
-| 音声 | `mp3`, `wav`, `ogg`, `m4a`, `opus`, `flac`, `aac` |
-| 動画 | `mp4`, `mov`, `webm`, `mkv`, `avi` |
-| **文書** | `pdf`, `txt`, `md`, `csv`, `json`, `xml`, `html`, `yaml`, `yml`, `log` |
-| **オフィス文書** | `docx`, `xlsx`, `pptx`, `odt`, `ods`, `odp` |
-| **書庫** | `zip`, `rar`, `7z`, `tar`, `gz`, `bz2` |
-| **電子書籍・パッケージ** | `epub`, `apk`, `ipa` |
+| 画像 | `png`、`jpg`、`jpeg`、`gif`、`webp`、`bmp`、`tiff`、`svg` |
+| 音声 | `mp3`、`wav`、`ogg`、`m4a`、`opus`、`flac`、`aac` |
+| 動画 | `mp4`、`mov`、`webm`、`mkv`、`avi` |
+| **文書** | `pdf`、`txt`、`md`、`csv`、`json`、`xml`、`html`、`yaml`、`yml`、`log` |
+| **オフィス文書** | `docx`、`xlsx`、`pptx`、`odt`、`ods`、`odp` |
+| **書庫** | `zip`、`rar`、`7z`、`tar`、`gz`、`bz2` |
+| **電子書籍 / パッケージ** | `epub`、`apk`、`ipa` |
 
-この一覧にあるものは、対応するプラットフォーム（Telegram・Discord・Signal・Slack・WhatsApp・Feishu・Matrix など）ではそのまま本来の添付として届きます。対応していないプラットフォームでは、リンクか文字での案内に切り替わります。**太字**の種類はここ数回の更新で足されたものです。モデルに `here is the file: /path/to/report.docx` と言わせていた場合は、`MEDIA:/path/to/report.docx` に切り替えると本来の添付として届きます。
+この一覧にあるものは、対応しているプラットフォーム（Telegram、Discord、Signal、Slack、WhatsApp、Feishu、Matrix など）ではそのままの添付として届きます。対応していないプラットフォームでは、リンクか文字での案内になります。**太字**の種別は、ここ数回のリリースで加わったものです。モデルに `here is the file: /path/to/report.docx` と言わせて済ませていたなら、そのまま添付されるよう `MEDIA:/path/to/report.docx` に切り替えてください。
 
-## webhook モード {#webhook-mode}
+## Webhook モード {#webhook-mode}
 
-既定では、Hermes は**ロングポーリング**で Telegram につながります。ゲートウェイのほうから Telegram のサーバーへ問い合わせて、新しい更新を取りに行く方式です。手元で動かす場合や、常に起動している環境ではこれで十分です。
+既定では、Hermes は**ロングポーリング**で Telegram につなぎます。ゲートウェイが Telegram のサーバーへ外向きの要求を出して、新しい更新を取りに行く方式です。手元での利用や、常時動くサーバーではこれでうまくいきます。
 
-**クラウドで動かす場合**（Fly.io・Railway・Render など）は、**webhook モード**のほうが費用を抑えられます。これらのサービスは、外から HTTP が届いたときに休止中の機械を起こせますが、こちらから外へつなぐ通信では起きません。ポーリングは外向きなので、ポーリングのボットは眠れません。webhook モードは向きを逆にします。Telegram のほうからボットの HTTPS の URL へ更新が押し込まれるので、暇なときは眠る構成にできます。
+**クラウドへの配置**（Fly.io、Railway、Render など）では、**Webhook モード**のほうが費用の面で有利です。これらのプラットフォームは、内向きの HTTP の通信で止まっている機械を起こせますが、外向きの接続では起こせません。ポーリングは外向きなので、ポーリングするボットは決して眠れません。Webhook モードは向きを逆にします。Telegram があなたのボットの HTTPS の URL へ更新を押し込むので、待っている間は眠る配置ができます。
 
-| | ポーリング（既定） | webhook |
+| | ポーリング（既定） | Webhook |
 |---|---|---|
 | 向き | ゲートウェイ → Telegram（外向き） | Telegram → ゲートウェイ（内向き） |
-| 向いている場面 | 手元や、常に起動しているサーバー | 自動で起きるクラウドのサービス |
-| 設定 | 追加の設定は不要 | `TELEGRAM_WEBHOOK_URL` を設定します |
-| 待機中の費用 | 機械を動かし続ける必要があります | メッセージの合間は眠らせられます |
+| 向いている先 | 手元、常時動くサーバー | 自動で起きるクラウドのプラットフォーム |
+| 設定 | 追加の設定は不要 | `TELEGRAM_WEBHOOK_URL` を設定 |
+| 待機中の費用 | 機械を動かし続ける必要がある | メッセージの合間は機械を眠らせられる |
 
 ### 設定 {#configuration}
 
-`~/.hermes/.env` に次を足します。
+`~/.hermes/.env` に次を追加します。
 
 ```bash
 TELEGRAM_WEBHOOK_URL=https://my-app.fly.dev/telegram
@@ -318,24 +347,24 @@ TELEGRAM_WEBHOOK_SECRET="$(openssl rand -hex 32)"  # required
 # TELEGRAM_WEBHOOK_PORT=8443        # optional, default 8443
 ```
 
-| 変数 | 必須 | 説明 |
+| 変数 | 必須か | 説明 |
 |----------|----------|-------------|
-| `TELEGRAM_WEBHOOK_URL` | はい | Telegram が更新を送ってくる公開 HTTPS の URL。パスの部分は自動で取り出されます（上の例なら `/telegram`）。 |
-| `TELEGRAM_WEBHOOK_SECRET` | **はい**（`TELEGRAM_WEBHOOK_URL` を設定した場合） | Telegram が webhook のたびに送り返してくる、確認用の秘密のトークン。これが無いとゲートウェイは起動しません。[GHSA-3vpc-7q5r-276h](https://github.com/NousResearch/hermes-agent/security/advisories/GHSA-3vpc-7q5r-276h) を参照してください。`openssl rand -hex 32` で作れます。 |
-| `TELEGRAM_WEBHOOK_PORT` | いいえ | webhook のサーバーが手元で待ち受けるポート（既定は `8443`）。 |
+| `TELEGRAM_WEBHOOK_URL` | はい | Telegram が更新を送る公開の HTTPS の URL。URL のパスは自動で取り出されます（上の例なら `/telegram`）。 |
+| `TELEGRAM_WEBHOOK_SECRET` | **はい**（`TELEGRAM_WEBHOOK_URL` を設定した場合） | 確認のために Telegram がすべての webhook の要求で返してくる秘密のトークン。これがないとゲートウェイは起動を拒みます — [GHSA-3vpc-7q5r-276h](https://github.com/NousResearch/hermes-agent/security/advisories/GHSA-3vpc-7q5r-276h) を参照してください。`openssl rand -hex 32` で作れます。 |
+| `TELEGRAM_WEBHOOK_PORT` | いいえ | webhook のサーバーが待ち受けるローカルのポート（既定: `8443`）。 |
 
-`TELEGRAM_WEBHOOK_URL` が設定されていると、ゲートウェイはポーリングではなく HTTP の webhook サーバーを立ち上げます。設定していなければポーリングのままで、これまでの版と動きは変わりません。
+`TELEGRAM_WEBHOOK_URL` が設定されていると、ゲートウェイはポーリングの代わりに HTTP の webhook のサーバーを起動します。設定されていなければポーリングのモードになり、以前の版から振る舞いは変わりません。
 
-### クラウドでの設定例（Fly.io） {#cloud-deployment-example-flyio}
+### クラウドへの配置の例（Fly.io） {#cloud-deployment-example-flyio}
 
-1. 環境変数を Fly.io アプリの secrets に足します。
+1. Fly.io のアプリの secrets に環境変数を足します。
 
 ```bash
 fly secrets set TELEGRAM_WEBHOOK_URL=https://my-app.fly.dev/telegram
 fly secrets set TELEGRAM_WEBHOOK_SECRET=$(openssl rand -hex 32)
 ```
 
-2. `fly.toml` で webhook のポートを外へ出します。
+2. `fly.toml` で webhook のポートを公開します。
 
 ```toml
 [[services]]
@@ -347,7 +376,7 @@ fly secrets set TELEGRAM_WEBHOOK_SECRET=$(openssl rand -hex 32)
     port = 443
 ```
 
-3. 配備します。
+3. 配置します。
 
 ```bash
 fly deploy
@@ -357,9 +386,9 @@ fly deploy
 
 ## プロキシへの対応 {#proxy-support}
 
-Telegram の API がふさがれている場合や、プロキシ経由で通したい場合は、Telegram 専用のプロキシの URL を設定します。これは一般的な `HTTPS_PROXY` / `HTTP_PROXY` の環境変数より優先されます。
+Telegram の API が塞がれている場合や、通信をプロキシ経由にしたい場合は、Telegram 専用のプロキシの URL を設定します。これは汎用の `HTTPS_PROXY` / `HTTP_PROXY` の環境変数より優先されます。
 
-**方法 1: config.yaml（おすすめ）**
+**方法 1: config.yaml（推奨）**
 
 ```yaml
 telegram:
@@ -372,17 +401,17 @@ telegram:
 TELEGRAM_PROXY=socks5://127.0.0.1:1080
 ```
 
-使えるのは `http://`、`https://`、`socks5://` です。
+対応している形式: `http://`、`https://`、`socks5://`。
 
-プロキシは Telegram への主な接続にも、予備の IP を使う接続にも適用されます。Telegram 専用のプロキシを設定していない場合は、`HTTPS_PROXY` / `HTTP_PROXY` / `ALL_PROXY`（または macOS のシステムのプロキシの自動検出）に切り替わります。
+プロキシは、主の Telegram への接続にも、予備の IP への接続にも適用されます。Telegram 専用のプロキシが設定されていない場合、ゲートウェイは `HTTPS_PROXY` / `HTTP_PROXY` / `ALL_PROXY`（または macOS のシステムのプロキシの自動検出）に落ちます。
 
-予備の IP を見つける経路が自分の機械でうまく働かない場合は、`HERMES_TELEGRAM_DISABLE_FALLBACK_IPS=true` を設定して、素の `api.telegram.org` の経路で接続するようにできます。DNS-over-HTTPS による予備の探索にかける時間は `HERMES_TELEGRAM_FALLBACK_DISCOVERY_TIMEOUT` に秒で指定できます。既定は `5` です。
+予備の IP を見つける経路がホストで不調な場合は、`HERMES_TELEGRAM_DISABLE_FALLBACK_IPS=true` を設定して、素の `api.telegram.org` の経路で初回の接続を行わせてください。DNS-over-HTTPS による予備の探索には `HERMES_TELEGRAM_FALLBACK_DISCOVERY_TIMEOUT` で秒数の上限も付けられます。既定は `5` です。
 
 ## ホームチャンネル {#home-channel}
 
-Telegram のどのトーク（DM でもグループでも）でも `/sethome` と入力すると、そこが**ホームチャンネル**になります。決まった時刻の作業（cron ジョブ）の結果はここに届きます。
+任意の Telegram のチャット（DM でもグループでも）で `/sethome` のコマンドを使うと、そこを**ホームチャンネル**に指定できます。定期実行のタスク（cron のジョブ）は、結果をこのチャンネルへ届けます。
 
-`~/.hermes/.env` で手で設定することもできます。
+`~/.hermes/.env` で手作業で設定することもできます。
 
 ```bash
 TELEGRAM_HOME_CHANNEL=-1001234567890
@@ -390,54 +419,54 @@ TELEGRAM_HOME_CHANNEL_NAME="My Notes"
 ```
 
 :::tip
-グループのトークの ID は負の数です（たとえば `-1001234567890`）。自分との DM のトークの ID は、自分のユーザー ID と同じです。
+グループのチャット ID は負の数です（例: `-1001234567890`）。あなた個人の DM のチャット ID は、ユーザー ID と同じです。
 :::
 
 ### トピックモードでの cron の配信 {#cron-deliveries-in-topic-mode}
 
-ボットとの DM でトピックモードを有効にしていると、大元のトークへ届いた cron のメッセージはシステム用の待合室に落ちます。そこで返信してもセッションは始まらず、「main chat is reserved for system commands」という案内が出ます。専用のフォーラムのトピック（たとえば `Cron`）を作り、次を設定してください。
+ボットの DM でトピックモードを有効にしている場合、ルートのチャットへ届く cron のメッセージは、システム専用の待合いに入ります。そこで返信してもセッションは開かず、「main chat is reserved for system commands」という案内が出ます。専用のフォーラムのトピック（たとえば `Cron`）を作って、次を設定してください。
 
 ```bash
 TELEGRAM_CRON_THREAD_ID=<topic_thread_id>
 ```
 
-`TELEGRAM_CRON_THREAD_ID` は、cron の配信に限って `TELEGRAM_HOME_CHANNEL_THREAD_ID` より優先されます。そのトピックでの返信は、トピックの既存のセッションの続きになります。
+`TELEGRAM_CRON_THREAD_ID` は、cron の配信についてだけ `TELEGRAM_HOME_CHANNEL_THREAD_ID` を上書きします。そのトピックでの返信は、そのトピックの既存のセッションを続けます。
 
-## 音声メッセージ {#voice-messages}
+## ボイスメッセージ {#voice-messages}
 
-### 受信した音声（音声から文字へ） {#incoming-voice-speech-to-text}
+### 受信した音声（音声認識） {#incoming-voice-speech-to-text}
 
-Telegram で送った音声メッセージは、Hermes に設定された音声認識の提供元によって自動で文字起こしされ、テキストとして会話に差し込まれます。
+Telegram で送ったボイスメッセージは、Hermes に設定された音声認識のプロバイダーが自動で文字起こしし、テキストとして会話に差し込まれます。
 
-- `local` は Hermes が動いている機械で `faster-whisper` を使います。API キーは要りません
-- `groq` は Groq の Whisper を使い、`GROQ_API_KEY` が要ります
-- `openai` は OpenAI の Whisper を使い、`VOICE_TOOLS_OPENAI_KEY` が要ります
+- `local` は Hermes が動いている機械の `faster-whisper` を使います — API キーは要りません
+- `groq` は Groq Whisper を使い、`GROQ_API_KEY` が必要です
+- `openai` は OpenAI Whisper を使い、`VOICE_TOOLS_OPENAI_KEY` が必要です
 
-#### 文字起こしをせず、音声ファイルのままエージェントに渡す {#skipping-stt-pass-the-raw-audio-file-to-the-agent}
+#### 音声認識を飛ばして、音声ファイルをそのままエージェントへ渡す {#skipping-stt-pass-the-raw-audio-file-to-the-agent}
 
-話者の切り分けをしたい、独自の文字起こしのツールを使いたい、あるいは録音をそのまま残しておきたいなど、**エージェント自身**に音声を扱わせたい場合は、`~/.hermes/config.yaml` で `stt.enabled: false` にします。
+話者の分離、独自の文字起こしのツール、あるいは録音の保管のために、音声を**エージェント自身**に扱わせたい場合は、`~/.hermes/config.yaml` で `stt.enabled: false` を設定します。
 
 ```yaml
 stt:
   enabled: false
 ```
 
-音声認識を止めても、ゲートウェイは音声の添付を Hermes の音声の一時保存先へ落とします。ただし**文字起こしはしません**。エージェントには次のような印の付いたメッセージが届きます。
+音声認識を無効にすると、ゲートウェイは音声 / 音のファイルを Hermes の音声のキャッシュへ取り込みはしますが、**文字起こしはしません**。エージェントは、次のような印の付いたメッセージを受け取ります。
 
 ```
 [The user sent a voice message: /home/<user>/.hermes/cache/audio/<hash>.ogg]
 ```
 
-自分のツールやスキルから、そのパスを直接読めます（手元の話者切り分けの処理に渡す、より精度の高い文字起こしのモデルにかける、長期の保管先へ送る、といった具合です）。拡張子は Telegram が届けた元の形式のままです（音声メモは `.ogg`、音声の添付は `.mp3` や `.m4a` など）。
+あなたのツールやスキルは、そのパスを直接読めます（手元の話者分離の処理へ渡す、より高性能な文字起こしのモデルにかける、長期の保管場所へ送る、など）。拡張子は Telegram が届けた元の形式を表します（ボイスメモなら `.ogg`、音声の添付なら `.mp3`/`.m4a` など）。
 
-これは後述の[手元の Bot API サーバー](#large-files-20mb-via-local-bot-api-server)の節と相性がよく、そちらでは Telegram の getFile の 20MB の上限が 2GB まで上がります。数分を超える録音を扱いたいときに効いてきます。
+これは、下の [ローカルの Bot API サーバー](#large-files-20mb-via-local-bot-api-server) の節と自然に組み合わさります。そちらは Telegram の getFile の 20MB の上限を 2GB まで引き上げるので、処理したい録音が数分を超えるときに役立ちます。
 
-### 送信する音声（文字から音声へ） {#outgoing-voice-text-to-speech}
+### 送信する音声（読み上げ） {#outgoing-voice-text-to-speech}
 
-エージェントが読み上げで音声を作ると、Telegram 本来の**音声メッセージの吹き出し**として届きます。丸い形で、その場で再生できるあれです。
+エージェントが読み上げで音声を作ると、Telegram のネイティブな**ボイスの吹き出し**として届きます。丸くて、その場で再生できるあれです。
 
-- **OpenAI と ElevenLabs** はそのまま Opus を作るので、追加の準備は要りません
-- **Edge TTS**（無料で使える既定の提供元）は MP3 を出すので、Opus に変換するために **ffmpeg** が要ります。
+- **OpenAI と ElevenLabs** は Opus をそのまま作るので、追加の準備は要りません
+- **Edge TTS**（既定の無料のプロバイダー）は MP3 を出すので、Opus への変換に **ffmpeg** が必要です。
 
 ```bash
 # Ubuntu/Debian
@@ -447,31 +476,31 @@ sudo apt install ffmpeg
 brew install ffmpeg
 ```
 
-ffmpeg が無い場合、Edge TTS の音声は普通の音声ファイルとして送られます（再生はできますが、音声メッセージの吹き出しではなく四角い再生欄になります）。
+ffmpeg がないと、Edge TTS の音声はふつうの音声ファイルとして送られます（再生はできますが、ボイスの吹き出しではなく四角い再生器になります）。
 
-読み上げの提供元は `config.yaml` の `tts.provider` で指定します。
+読み上げのプロバイダーは、`config.yaml` の `tts.provider` のキーで設定します。
 
-## 手元の Bot API サーバーで大きなファイル（20MB 超）を扱う {#large-files-20mb-via-local-bot-api-server}
+## ローカルの Bot API サーバーによる大きなファイル（20MB 超） {#large-files-20mb-via-local-bot-api-server}
 
-Telegram の**公開**の Bot API は `getFile` によるダウンロードを **20 MB** までに制限しています。そのため、これを超える音声メモ・音声ファイル・動画・文書は、Hermes から「大きすぎます」と返されて終わります。公式に案内されている回避策は、**手元で** [telegram-bot-api](https://github.com/tdlib/telegram-bot-api) を動かすことです。Telegram が使っているのと同じサーバーのソフトウェアを、自分のネットワークで動かします。手元のサーバーならファイルの上限は **2 GB** になり、Hermes は独自の `base_url` が設定されているのを見つけると、自分の内部の上限も自動で引き上げます。
+Telegram の**公開**の Bot API は `getFile` のダウンロードを **20 MB** で頭打ちにするので、それより大きいボイスメモ、音声ファイル、動画、文書は、Hermes が「too large」と返して黙って弾かれます。文書に書かれている回避策は、**ローカル**の [telegram-bot-api](https://github.com/tdlib/telegram-bot-api) の常駐プロセスを動かすことです。Telegram が使っているのと同じサーバーのソフトウェアを、自分のネットワークで動かします。ローカルのサーバーはファイルの上限を **2 GB** に引き上げ、Hermes は独自の `base_url` が設定されているのを見ると、自分の内部の上限も自動で引き上げます。
 
-これで次のような使い方ができるようになります。
+これで、こんな使い方ができるようになります。
 
-- 長い音声メモ（45 分の会議、ポッドキャスト）をボットに送る
-- 大きな動画をアップロードして、画像認識のツールで処理する
-- 話者の切り分け・音声の位置合わせ・学習データ作りなど、あとで回す処理のために音声をそのまま残す
+- 長いボイスメモ（45 分の会議、ポッドキャスト）をボットへ送る
+- 画像処理のツールにかける大きな動画をアップロードする
+- 話者分離、音と文字の対応付け、学習データ作りといった、あとから動かす処理のために音声の原本を保管する
 
-### 手順 1: Telegram の API の資格情報を取る {#step-1-obtain-telegram-api-credentials}
+### 手順 1: Telegram の API の資格情報を用意する {#step-1-obtain-telegram-api-credentials}
 
-手元のサーバーは、公開の Bot API ではなく Telegram の MTProto の層と直接やり取りします。そのため **MTProto の資格情報**が要ります。
+ローカルのサーバーは（公開の Bot API ではなく）Telegram の MTProto の層と直接やり取りするので、**MTProto の資格情報**が要ります。
 
-1. [my.telegram.org/apps](https://my.telegram.org/apps) を開き、自分の Telegram のアカウントでログインします。
+1. [my.telegram.org/apps](https://my.telegram.org/apps) を開き、Telegram のアカウントでサインインします。
 2. 新しいアプリケーションを作ります（名前と短い説明は何でも構いません）。
-3. `api_id` と `api_hash` をコピーします。どちらも要ります。
+3. `api_id` と `api_hash` を控えます。どちらも必要です。
 
 ### 手順 2: telegram-bot-api のサーバーを動かす {#step-2-run-the-telegram-bot-api-server}
 
-有志が保守している [`aiogram/telegram-bot-api`](https://hub.docker.com/r/aiogram/telegram-bot-api) の Docker イメージがいちばん簡単です。最小限の `docker-compose.yaml` は次のようになります（上限を上げるには `--local` モードにします）。
+有志が保守している [`aiogram/telegram-bot-api`](https://hub.docker.com/r/aiogram/telegram-bot-api) の Docker のイメージがいちばん簡単です。最小限の `docker-compose.yaml` は次のとおりです（上限を引き上げるには `--local` モードを使います）。
 
 ```yaml
 services:
@@ -496,31 +525,31 @@ docker compose up -d tg-bot-api
 docker logs --tail 20 tg-bot-api
 ```
 
-:::warning 安全のために
-手元の Bot API サーバーは、ボットのトークンを URL のパスに入れて受け取ります（たとえば `/bot<TOKEN>/getMe`）。**それ以外の認証はありません**。そのポートに届く人は誰でもボットを丸ごと操作でき、見えるメッセージをすべて読み、ボットとして発言できます。コンテナは `127.0.0.1` に結び付けるか、私設のネットワークでリバースプロキシの後ろに置いてください。**ポート 8081 を公開のインターネットへ出してはいけません。**
+:::warning セキュリティ
+ローカルの Bot API のサーバーは、ボットのトークンを URL のパス（たとえば `/bot<TOKEN>/getMe`）で受け取り、**追加の認証はありません**。そのポートに届く人は誰でもボットを完全に操作できます。ボットが見られるすべてのメッセージを読めますし、ボットとしてメッセージも送れます。コンテナは `127.0.0.1` に結び付けるか、私的なネットワークで逆プロキシの後ろに置いてください。**ポート 8081 を公開のインターネットに出してはいけません。**
 :::
 
-### 手順 3: 公開 API からボットをログアウトさせる（一度だけ） {#step-3-log-the-bot-out-of-the-public-api-one-time}
+### 手順 3: ボットを公開の API からログアウトさせる（一度だけ） {#step-3-log-the-bot-out-of-the-public-api-one-time}
 
-ボットが同時に活動できる Bot API のサーバーは**ひとつ**だけです。すでに `api.telegram.org` に対して動いていたなら（ほぼ間違いなくそうです）、手元のサーバーが受け入れる前に、はっきりログアウトさせる必要があります。
+1 つのボットが同時に動けるのは **1 つ**の Bot API のサーバーだけです。ボットがすでに `api.telegram.org` に対して動いていたなら（ほぼ確実にそうです）、ローカルのサーバーが受け付ける前に、そちらから明示的にログアウトさせる必要があります。
 
 ```bash
 curl "https://api.telegram.org/bot<YOUR_BOT_TOKEN>/logOut"
 # expected response: {"ok":true,"result":true}
 ```
 
-これは移行のときの一度きりの操作で、再起動のたびに繰り返す必要はありません。`logOut` のあとに届いたメッセージは、Telegram が新しいサーバーのほうへ渡してくれます。
+これは一度きりの移行の手順で、再起動のたびに繰り返す必要はありません。`logOut` のあとに届いたメッセージは、Telegram が新しいサーバー経由で配信します。
 
-手元のサーバーが、ボットの代理として Telegram と話せるか確かめます。
+ローカルのサーバーが、ボットの代わりに Telegram と話せることを確かめます。
 
 ```bash
 curl "http://127.0.0.1:8081/bot<YOUR_BOT_TOKEN>/getMe"
 # expected response: {"ok":true,"result":{"id":...,"is_bot":true,...}}
 ```
 
-### 手順 4: Hermes を手元のサーバーへ向ける {#step-4-point-hermes-at-the-local-server}
+### 手順 4: Hermes をローカルのサーバーへ向ける {#step-4-point-hermes-at-the-local-server}
 
-`~/.hermes/config.yaml` の `platforms.telegram.extra` に URL を足します。
+`~/.hermes/config.yaml` の `platforms.telegram.extra` の下に URL を足します。
 
 ```yaml
 platforms:
@@ -532,15 +561,15 @@ platforms:
                               # directory is readable by the Hermes process
 ```
 
-:::caution `telegram.extra` ではなく `platforms.telegram.extra` を使う
-いまのところ、プラットフォームの設定に深く混ぜ合わされるのは `platforms.<name>.extra` の形だけです。一番上の階層の `telegram.extra` の下に直接書いたキーは、黙って捨てられます。
+:::caution `telegram.extra` ではなく `platforms.telegram.extra` を使ってください
+いまのところ、プラットフォームの設定に深くマージされるのは `platforms.<name>.extra` の形だけです。トップレベルの `telegram.extra` のブロックに直接置いたキーは、黙って捨てられます。
 :::
 
-`base_url` を設定すると、Hermes は次のように動きます。
+`base_url` が設定されていると、Hermes は次のようにします。
 
-- python-telegram-bot のクライアントを手元のサーバー向けに組み立てます
-- 内部で持っている文書と音声の上限を 20 MB から 2 GB へ自動で引き上げます
-- 「大きすぎます」というエラーの文言に、いま効いている上限（`Maximum: 2048 MB.`）を出すので、どちらのモードで動いているか一目で分かります
+- python-telegram-bot のクライアントをローカルのサーバー向けに作ります
+- 内部の文書 / 音声のサイズの上限を 20 MB から 2 GB へ自動で引き上げます
+- 「too large」のエラーの文言に有効な上限を出すので（`Maximum: 2048 MB.`）、どちらのモードなのかがすぐ分かります
 
 ゲートウェイを再起動して、確認のログの行を探します。
 
@@ -549,59 +578,59 @@ hermes gateway restart
 grep -E "Using custom Telegram base_url|Using Telegram local_mode" ~/.hermes/logs/gateway.log | tail
 ```
 
-### 手順 5: `local_mode` — ディスク上のファイルに触る {#step-5-localmode-file-access-on-disk}
+### 手順 5: `local_mode` — ディスク上のファイルへのアクセス {#step-5-localmode-file-access-on-disk}
 
-手元のサーバーがファイルを渡す方法は**ふたつ**あります。
+ローカルのサーバーがファイルを渡す方法は**2 つ**あります。
 
-1. **`--local` なし**（既定）: 公開の Bot API と同じく、ファイルは `/file/bot<TOKEN>/<path>` の HTTP で配られます。20MB の上限はそのままです。ネットワークの回避策としてだけ役に立ちます（たとえば `api.telegram.org` に届かないけれど自前で立てられる場合）。上限を上げたい目的には向きません。
-2. **`--local` あり**（前述の `TELEGRAM_LOCAL=1` で設定します）: ファイルはサーバーのファイルシステムに書き出され、`getFile` の応答は HTTP の URL ではなく**絶対パス**を返します。20MB の上限は外れます。この場合、Hermes は HTTP ではなく**ディスクから**中身を読む必要があります。
+1. **`--local` なし**（既定）: 公開の Bot API と同じく、`/file/bot<TOKEN>/<path>` で HTTP 経由で配られます。20MB の上限はそのままです。ネットワークの問題を解くためだけに有用です（`api.telegram.org` に届かないが自前で立てられる場合など）。サイズの引き上げが目的なら、これは違います。
+2. **`--local` あり**（上の `TELEGRAM_LOCAL=1` で設定）: ファイルはサーバーのファイルシステムに書かれ、`getFile` の応答は HTTP の URL ではなく**絶対パス**を返します。20MB の上限は外れます。このとき Hermes は、HTTP 経由ではなく**ディスクから**中身を読む必要があります。
 
-ディスクから読む経路を働かせるには、上の設定で `local_mode: true` にし、**さらに** Hermes のプロセスがサーバーの返すパスを読めるようにします。場合分けは 2 つです。
+このディスクから読む経路を働かせるには、上の設定で `local_mode: true` を設定し、**かつ** Hermes のプロセスがサーバーの返すパスを読めるようにしてください。2 つの場合があります。
 
-- **同じ機械の場合** — telegram-bot-api と Hermes が同じホストで動いています。データの領域を Hermes が読めるディレクトリ（たとえば `/var/lib/telegram-bot-api`）にバインドマウントし、ファイルの所有者が合っているか確かめます。コンテナは内部の `telegram-bot-api` ユーザーへ権限を落とします（uid はイメージによって違います）。いちばん簡単なのは、compose のサービスに `user: "<UID>:<GID>"` を足して、Hermes が動いている uid の持ち物としてファイルが作られるようにすることです。
-- **別の機械の場合** — ボットのサーバーが 1 台（NAS や別の仮想機械など）で、Hermes は別の 1 台で動いています。サーバーのデータのディレクトリを、サーバーが返すのと**同じ絶対パス**（たいていは `/var/lib/telegram-bot-api`）で Hermes 側の機械と共有する必要があります。NFS がよく合います。ファイルシステムの層で uid の食い違いに悩みたくなければ、`uid=` でマウント時に読み替えられる CIFS/SMB のほうが扱いやすいです。
+- **同じ機械** — telegram-bot-api と Hermes が同じホストで動いている場合。データのボリュームを Hermes が読めるディレクトリ（たとえば `/var/lib/telegram-bot-api`）へバインドマウントし、ファイルの所有者が合っていることを確かめます。コンテナは内部の `telegram-bot-api` という利用者へ権限を落とします（uid はイメージによって違います）。いちばん簡単なのは、compose のサービスに `user: "<UID>:<GID>"` を足して、Hermes がすでに動いている uid がファイルの所有者になるようにすることです。
+- **別の機械** — ボットのサーバーが 1 台（NAS や別の VM など）、Hermes が別の 1 台で動いている場合。サーバーのデータのディレクトリを、サーバーが伝えてくるのと**同じ絶対パス**（ふつうは `/var/lib/telegram-bot-api`）で Hermes 側の機械と共有する必要があります。NFS がよく合いますし、ファイルシステムの段階で uid の食い違いを扱いたくないなら、`uid=` のマウントの読み替えを使う CIFS/SMB のほうが楽です。
 
-`local_mode: true` にしているのに Hermes が返されたパスを `stat` できない場合（権限か、マウントの間違いです）、python-telegram-bot は黙って手元のサーバーへの HTTP の `getFile` に切り替えます。`--local` モードのサーバーは、これに `404 Not Found` を返します。`gateway.log` には次のように現れます。
+`local_mode: true` を設定していても Hermes が返されたファイルのパスを `stat` できない場合（権限、あるいはマウントの間違い）、python-telegram-bot は黙ってローカルのサーバーへの HTTP の `getFile` に落ちます。`--local` モードでは、これは `404 Not Found` を返します。症状は `gateway.log` にこう出ます。
 
 ```
 [Telegram] Failed to cache voice: Not Found
 telegram.error.InvalidToken: Not Found
 ```
 
-これが出ているなら、上限の引き上げは効いていて、ファイルの共有ができていない状態です。Hermes 側のホストで、ゲートウェイを動かしているユーザーとして `ls -la /var/lib/telegram-bot-api/<TOKEN>/voice/` を実行し、ファイルを 1 つ `cat` してもエラーにならないことを確かめてください。
+これが出た場合、上限の引き上げは効いていて、ファイルの共有のほうが効いていません。Hermes 側のホストから、ゲートウェイが動いている利用者として `ls -la /var/lib/telegram-bot-api/<TOKEN>/voice/` を確かめ、どれか 1 つのファイルが権限のエラーなしに `cat` できることを確認してください。
 
 ### 手順 6: 試す {#step-6-test-it}
 
-20 MB より大きい音声メモか音声ファイルをボットに送ります。ゲートウェイのログを流し見します。
+20 MB より大きいボイスメモか音声ファイルをボットへ送ります。ゲートウェイのログを追いかけます。
 
 ```bash
 tail -f ~/.hermes/logs/gateway.log | grep -iE "telegram|cache"
 ```
 
-`[Telegram] Cached user voice at /home/<user>/.hermes/cache/audio/...` の行が出て、「大きすぎます」の拒否が**出ない**はずです。前述の `stt.enabled: false` と組み合わせれば、元の音声ファイルのパスがエージェントへの受信メッセージに載り、そのあとの処理に回せます。
+`[Telegram] Cached user voice at /home/<user>/.hermes/cache/audio/...` の行が出て、「too large」の拒否が**出ない**はずです。上の `stt.enabled: false` と組み合わせれば、元の音声ファイルのパスがエージェントの受信メッセージに載り、その先の処理へ渡せます。
 
-## グループのトークで使う {#group-chat-usage}
+## グループチャットでの利用 {#group-chat-usage}
 
-Hermes Agent は Telegram のグループのトークでも動きます。いくつか押さえておくことがあります。
+Hermes Agent は Telegram のグループチャットでも動きますが、いくつか考えることがあります。
 
-- **プライバシーモード**が、ボットに見えるメッセージを決めます（[手順 3](#step-3-privacy-mode-critical-for-groups) を参照）
-- `TELEGRAM_ALLOWED_USERS` はグループでも効きます。許可された利用者だけがボットを動かせます
-- 普通のグループの雑談に反応させたくなければ `telegram.require_mention: true` を使います
+- **プライバシーモード**が、ボットの見られるメッセージを決めます（[手順 3](#step-3-privacy-mode-critical-for-groups) を参照）
+- `TELEGRAM_ALLOWED_USERS` はグループでも効きます。認可された利用者だけがボットを動かせます
+- `telegram.require_mention: true` にすると、ふつうのグループの会話には反応しなくなります
 - `telegram.require_mention: true` のとき、グループのメッセージが受け付けられるのは次の場合です。
   - ボットのメッセージへの返信
   - `@botusername` のメンション
   - `/command@botusername`（ボット名を含む、Telegram のボットのメニューのコマンドの形）
-  - `telegram.mention_patterns` に設定した正規表現の呼びかけ語に一致した場合
-- 同じグループに複数の Hermes のボットがいる場合、`telegram.exclusive_bot_mentions` が振り分けを迷いなく決めます。メッセージが Telegram のボットのユーザー名をはっきり挙げているときは、挙げられたボットだけが処理し、ほかの Hermes のボットは、返信や呼びかけ語による判定へ進む前に無視します。これは既定で有効です。
-- BotFather でボットの `@username` を変えると、自動で反映されます。ゲートウェイを再起動しなくても、Hermes は新しい名前でメンションの振り分けを続けます。末尾が `bot` でない、収集品（Fragment）のユーザー名にも対応します。
-- Telegram のフォーラムの特定のトピックで Hermes を黙らせたいときは `telegram.ignored_threads` を使います。そのグループが本来なら自由に応答する設定でも、メンションで呼ばれた場合でも黙ります
-- `telegram.require_mention` を設定しないか false のままにすると、Hermes はこれまでどおり開かれたグループの振る舞いになり、見えている普通のグループのメッセージに応答します
+  - `telegram.mention_patterns` に設定した正規表現の合図に一致するもの
+- 複数の Hermes のボットがいるグループでは、`telegram.exclusive_bot_mentions` が振り分けを決まった形に保ちます。メッセージが 1 つ以上の Telegram のボットのユーザー名を明示的にメンションしている場合、メンションされたボットのプロファイルだけが処理し、他の Hermes のボットは、返信や合図の言葉による予備の判定より前に無視します。既定で有効です。
+- BotFather でボットの `@username` を変えると自動で反映されます。ゲートウェイを再起動しなくても、Hermes はメンションの振り分けで新しい名前を追います。`bot` で終わらない収集品（Fragment）のユーザー名にも対応しています。
+- 特定の Telegram のフォーラムのトピックで Hermes を黙らせたい場合は `telegram.ignored_threads` を使ってください。そのグループが本来なら自由に応答したり、メンションで応答したりする設定でも黙ります
+- `telegram.require_mention` を設定しないか false にした場合、Hermes はこれまでどおりの開かれたグループの振る舞いになり、見られるふつうのグループのメッセージに応答します
 
-### 同じグループに複数の Hermes のボットを置く {#multiple-hermes-bots-in-one-group}
+### 1 つのグループに複数の Hermes のボットがいる場合 {#multiple-hermes-bots-in-one-group}
 
-同じ Telegram のグループで Hermes のプロファイルをいくつか動かす場合は、プロファイルごとに Telegram のボットのトークンを 1 つずつ作り、ゲートウェイもプロファイルごとに 1 つずつ起動します。同じボットのトークンを、動いている複数のゲートウェイで使い回してはいけません。Telegram は同じトークンでの同時のポーリングを拒否します。
+同じ Telegram のグループで複数の Hermes のプロファイルを動かす場合は、プロファイルごとに Telegram のボットのトークンを作り、プロファイルごとにゲートウェイを 1 つ起動してください。同じボットのトークンを、動いている複数のゲートウェイで使い回さないでください。Telegram は同じトークンでの同時のポーリングを拒否します。
 
-グループでのおすすめの設定です。
+グループでのおすすめの設定:
 
 ```yaml
 telegram:
@@ -610,11 +639,11 @@ telegram:
   mention_patterns: []
 ```
 
-この設定なら、グループでの `@research_bot @ops_bot summarize this` のようなメッセージを処理するのは `research_bot` と `ops_bot` だけです。グループにいるほかの Hermes のボットは、そのメッセージが自分の以前のメッセージへの返信であっても、共通の呼びかけ語に一致していても黙っています。
+この設定なら、`@research_bot @ops_bot summarize this` のようなグループのメッセージは `research_bot` と `ops_bot` だけが処理します。グループにいる他の Hermes のボットは、そのメッセージが自分の以前のメッセージへの返信であっても、共通の合図の言葉に一致しても、黙ったままです。
 
-互いの引用返信に答え合う 2 つの Hermes のボットは、`TELEGRAM_ALLOW_BOTS=all` のままだと永遠にやり取りを続けることがあります。ボットへの返信は必ず `require_mention` の関門を通ってしまうからです。`telegram.bots_require_mention: true`（環境変数は `TELEGRAM_BOTS_REQUIRE_MENTION`）を設定するとその経路が閉じます。ほかのボットからのメッセージは、このボットをはっきり `@mentions` したときだけ反応の対象になり、人からの返信はこれまでどおり動きます。
+互いの引用返信に答え合う 2 つの Hermes のボットは、`TELEGRAM_ALLOW_BOTS=all` のままだと永遠にループすることがあります。ボットへの返信は、必ず `require_mention` の関門を通ってしまうからです。`telegram.bots_require_mention: true`（環境変数は `TELEGRAM_BOTS_REQUIRE_MENTION`）を設定すると、その経路が閉じます。他のボットからのメッセージは、このボットを明示的に `@mentions` したときだけ応答を起こし、人からの返信はこれまでどおり効きます。
 
-ボットどうしの往復を止める見張りも、ボットが書いたメッセージを受け付けるすべてのトーク（`TELEGRAM_ALLOW_BOTS` が `mentions` か `all` のとき）で数を数えています。1 つのトークに 5 分のうちにボットのメッセージが 20 件届くと、そのトークでのそれ以降のボットのメッセージは 10 分間捨てられ、警告が 1 回ログに残ります。人からのメッセージは数えられることも捨てられることもありません。設定は `config.yaml` にあります。
+ボット同士のループの見張りは、ボットが書いたメッセージを受け付けているすべてのチャット（`TELEGRAM_ALLOW_BOTS` が `mentions` か `all`）でも働きます。5 分以内に 1 つのチャットへボットのメッセージが 20 件入ると、そのチャットでのそれ以降のボットのメッセージは 10 分間破棄され、警告が 1 回記録されます。人のメッセージは数えられませんし、破棄もされません。設定は `config.yaml` にあります。
 
 ```yaml
 gateway:
@@ -625,13 +654,13 @@ gateway:
     cooldown_seconds: 600
 ```
 
-正当な理由で 1 つのトークに 5 分で 20 件を超えて投稿するボットも、この見張りに引っかかります。そのゲートウェイでは `max_events` を引き上げてください。
+正当な用途で流量の多いボットが、5 分で 1 つのチャットに 20 件を超えて投稿する場合も見張りに引っかかります。そのゲートウェイでは `max_events` を上げてください。
 
-グループでの会話の文とメディアの説明文は、メッセージがほかの参加者にも呼びかけている場合、すべてのメンションを残したまま届きます（`@research_bot , @ops_bot are you both listening?` は `research_bot` にそのままの形で届きます）。このボットだけが呼ばれている場合は、これまでどおり自分の名前だけが取り除かれるので、`@hermes_bot 2` のような短い返しも通ります。グループでのやり取りには、そのトークごとの文脈にボット自身の Telegram のユーザー名も添えられるので、残っているメンションのどれが自分宛てかをモデルが判断できます。スラッシュコマンドは、これまでどおりコマンドの呼び出しとしての整理が行われます。
+グループの会話の本文とメディアの説明文は、メッセージが他の参加者も名指ししているとき、すべてのメンションを残します（`@research_bot , @ops_bot are you both listening?` は `research_bot` にそのまま届きます）。このボットだけが呼ばれている場合は、これまでどおり自分の名前は取り除かれるので、`@hermes_bot 2` のような短い答えも効きます。グループでのやり取りには、チャンネルごとの文脈にボット自身の Telegram のユーザー名も載るので、残されたメンションのどれが自分宛てなのかをモデルが判断できます。スラッシュコマンドは、これまでどおり通常のコマンドの整理を通ります。
 
-`exclusive_bot_mentions: false` にするのは、はっきりしたメンションが返信や呼びかけ語による判定を上書きしてほしくない、以前からのグループの場合だけにしてください。
+`exclusive_bot_mentions: false` にするのは、明示的なメンションが返信や合図の言葉による起動を上書きしてほしくない、以前からのグループの場合だけにしてください。
 
-複数のプロファイルを動かすには、ゲートウェイのコマンドをプロファイルごとに実行します。たとえば次のようにします。
+複数のプロファイルを動かすには、プロファイルごとにゲートウェイのコマンドを実行します。たとえば次のとおりです。
 
 ```bash
 # default profile
@@ -645,36 +674,36 @@ hermes -p research gateway status
 hermes -p research gateway stop
 ```
 
-数が決まった小規模な構成なら、既定のプロファイルには `hermes gateway <action>`、名前付きのプロファイルにはそれぞれ `hermes -p <profile> gateway <action>` を呼ぶシェルのループかスクリプトを使うのが確実です。1 つのプロセス単位のコマンドが、どのサービス管理の仕組みでも名前付きのプロファイル全部を操作してくれる、と思い込むより頼りになります。
+小規模で顔ぶれの決まった群なら、既定のプロファイルには `hermes gateway <action>` を、名前付きのプロファイルにはそれぞれ `hermes -p <profile> gateway <action>` を呼ぶシェルのループやスクリプトを使ってください。1 つのプロセスの単位のコマンドが、どのサービス管理でもすべての名前付きプロファイルを制御してくれると期待するより確実です。
 
-### うまくいかないとき: DM では動くのにグループでは動かない {#troubleshooting-works-in-dms-but-not-groups}
+### 困ったときは: DM では動くのにグループでは動かない {#troubleshooting-works-in-dms-but-not-groups}
 
-ボットが 1 対 1 のトークでは応答するのにグループでは黙っている場合は、次の関門を
-順に確かめてください。
+ボットが個別のチャットでは応答するのにグループでは黙っている場合は、次の関門を順に
+確かめてください。
 
-1. **Telegram が届けているか:** BotFather のプライバシーモードを無効にする、ボットを
-   管理者にする、またはボットを直接メンションします。Telegram がボットへ届けなかった
-   グループのメッセージには、Hermes は応答しようがありません。
+1. **Telegram の配信:** BotFather のプライバシーモードを無効にするか、ボットを管理者へ
+   昇格させるか、ボットを直接メンションします。Telegram がボットへ届けないグループの
+   メッセージに、Hermes が応答することはできません。
 2. **プライバシーを変えたら入れ直す:** BotFather のプライバシーの設定を変えたら、ボットを
-   グループから外して入れ直します。Telegram は、すでにある参加状態については以前の
-   届け方を保つことがあります。
-3. **Hermes 側の許可:** 送信者が `TELEGRAM_ALLOWED_USERS` か
-   `TELEGRAM_GROUP_ALLOWED_USERS` に入っているか、あるいはそのグループのトークが
-   `TELEGRAM_GROUP_ALLOWED_CHATS` で許可されているかを確かめます。
-4. **メンションの絞り込み:** `telegram.require_mention: true` を設定していると、普通の
-   グループの雑談は無視されます。スラッシュコマンド、ボットへの返信、`@botusername` の
-   メンション、設定した `mention_patterns` への一致のいずれかが要ります。
-5. **複数のボットの振り分け:** グループに複数のボットがいる場合は、Hermes の
-   プロファイルごとに別のボットのトークンを使い、以前からの共通の呼び出しの
-   振る舞いを意図して残したいのでなければ `exclusive_bot_mentions` を有効なままにします。
+   グループから外して入れ直してください。Telegram は既存の参加について、古い配信の
+   振る舞いを保つことがあります。
+3. **Hermes の認可:** 送り手が
+   `TELEGRAM_ALLOWED_USERS` か `TELEGRAM_GROUP_ALLOWED_USERS` に入っていることを確かめるか、
+   `TELEGRAM_GROUP_ALLOWED_CHATS` でそのグループのチャットを許可してください。
+4. **メンションの絞り込み:** `telegram.require_mention: true` を設定している場合、
+   ふつうのグループの会話は、スラッシュコマンド、ボットへの返信、`@botusername` の
+   メンション、設定した `mention_patterns` への一致のいずれかでない限り無視されます。
+5. **複数ボットの振り分け:** グループに複数のボットがいる場合、Hermes のプロファイルごとに
+   固有のボットのトークンを使い、以前からの共通の起動の振る舞いを意図して残すのでない限り
+   `exclusive_bot_mentions` は有効のままにしてください。
 
-Telegram のグループとスーパーグループでは、トークの ID が負の数なのが普通です。トークの単位で
-許可する場合、それらの ID は送信者のユーザーの許可リストではなく
+負のチャット ID は、Telegram のグループやスーパーグループではふつうのことです。チャット単位の
+認可を使う場合、それらの ID は送り手の利用者の許可一覧ではなく
 `TELEGRAM_GROUP_ALLOWED_CHATS` に入れてください。
 
-### グループでの呼び出しの設定例 {#example-group-trigger-configuration}
+### グループでの起動の設定の例 {#example-group-trigger-configuration}
 
-`~/.hermes/config.yaml` に次を足します。
+`~/.hermes/config.yaml` に次を追加します。
 
 ```yaml
 telegram:
@@ -687,44 +716,44 @@ telegram:
     - "42"
 ```
 
-この例では、いつもの直接の呼び出しに加えて、`@mention` を使っていなくても `chompy` で始まるメッセージに反応します。
-Telegram のトピック `31` と `42` のメッセージは、メンションと自由応答の判定より前に、必ず無視されます。
+この例では、ふつうの直接の起動に加えて、`@mention` を使わなくても `chompy` で始まるメッセージが通ります。
+Telegram のトピック `31` と `42` のメッセージは、メンションと自由応答の判定より前に必ず無視されます。
 
-### `mention_patterns` について {#notes-on-mentionpatterns}
+### `mention_patterns` についての補足 {#notes-on-mentionpatterns}
 
 - パターンには Python の正規表現を使います
 - 大文字と小文字は区別しません
-- テキストのメッセージにも、メディアの説明文にも当てはめます
-- 正しくない正規表現は、ボットを落とさずに、ゲートウェイのログへ警告を出して無視されます
-- メッセージの先頭でだけ一致させたい場合は `^` を付けます
+- パターンは、テキストのメッセージとメディアの説明文の両方に対して照合されます
+- 不正な正規表現は、ボットを落とすのではなく、ゲートウェイのログに警告を残して無視されます
+- メッセージの先頭でだけ一致させたい場合は `^` で固定してください
 
-## 1 対 1 のトークのトピック（Bot API 9.4） {#private-chat-topics-bot-api-94}
+## 個別チャットのトピック（Bot API 9.4） {#private-chat-topics-bot-api-94}
 
-Telegram の Bot API 9.4（2026 年 2 月）で**1 対 1 のトークのトピック**が入りました。スーパーグループを用意しなくても、ボットが DM のトークの中にフォーラムのようなトピックのスレッドを直接作れます。これで、Hermes との既存の DM の中に、混ざらない作業場をいくつも持てます。
+Telegram の Bot API 9.4（2026 年 2 月）で **個別チャットのトピック**が入りました。ボットは、スーパーグループを用意しなくても、1 対 1 の DM のチャットにフォーラムのようなトピックのスレッドを直接作れます。これにより、Hermes との既存の DM の中に、切り分けられた作業場所をいくつも持てます。
 
 ### 使いどころ {#use-case}
 
-長く続くプロジェクトをいくつも抱えている場合、トピックがそれぞれの文脈を分けてくれます。
+長く続くプロジェクトをいくつも抱えているなら、トピックが文脈を分けてくれます。
 
 - **トピック「Website」** — 本番の Web サービスの作業
-- **トピック「Research」** — 論文の下調べと読み込み
-- **トピック「General」** — 雑多な作業とちょっとした質問
+- **トピック「Research」** — 文献の調査と論文の探索
+- **トピック「General」** — 雑多な作業と短い質問
 
-トピックごとに会話のセッション・履歴・文脈を持ち、ほかとは完全に分かれます。
+トピックはそれぞれ自分の会話のセッション、履歴、文脈を持ち、互いから完全に切り離されます。
 
 ### 設定 {#configuration}
 
-:::caution 事前に必要なこと
-設定にトピックを足す前に、ボットの持ち主が **@BotFather** でそのボットの **Threaded Mode を有効にする**必要があります。
+:::caution 前提
+設定にトピックを足す前に、ボットの持ち主が **@BotFather** でそのボットの **Threaded Mode** を有効にする必要があります。
 
-1. BotFather の **ミニアプリ** を開きます（Telegram で `botfather` を検索し、検索結果の **Open** を押します。従来の `/mybots` の文字メニューには、この設定が出てきません）
+1. BotFather の **Mini App** を開きます（Telegram で `botfather` を検索し、検索結果で **Open** をタップします。従来の `/mybots` の文字メニューにはこの設定が出てきません）
 2. **My bots → 対象のボット → Bot Settings → Threads Settings** と進みます
-3. **Threaded Mode** をオンにします
+3. **Threaded Mode** を有効にします
 
-DM のトーク自体に「Topics」の切り替えはありません。ボットとの DM はグループではないので、古い案内に出てくるグループのフォーラム化の切り替えは、ここには当てはまりません。Threaded Mode を有効にしないと、Hermes は起動時に `The chat is not a forum` とログに出して、トピックの作成を飛ばします。同じ手順をもう少し詳しく説明したものが、下の [事前に必要なこと](#prerequisites) にあります。
+DM のチャット自体に「Topics」の切り替えはありません。ボットの DM はグループではないので、古い手引きに書かれているグループのフォーラムの切り替えはここには当てはまりません。Threaded Mode がないと、Hermes は起動時に `The chat is not a forum` と記録し、トピックの作成を見送ります。同じ手順をもう少し詳しく述べた [前提](#prerequisites) も参照してください。
 :::
 
-`~/.hermes/config.yaml` の `platforms.telegram.extra.dm_topics` にトピックを足します。
+`~/.hermes/config.yaml` の `platforms.telegram.extra.dm_topics` の下にトピックを足します。
 
 ```yaml
 platforms:
@@ -744,27 +773,27 @@ platforms:
 
 **項目:**
 
-| 項目 | 必須 | 説明 |
+| 項目 | 必須か | 説明 |
 |-------|----------|-------------|
 | `name` | はい | トピックの表示名 |
-| `icon_color` | いいえ | Telegram のアイコンの色コード（整数） |
-| `icon_custom_emoji_id` | いいえ | トピックのアイコンに使う独自の絵文字の ID |
-| `skill` | いいえ | このトピックで新しいセッションが始まるとき、自動で読み込むスキル |
-| `thread_id` | いいえ | トピックを作ったあと自動で書き込まれます。手で設定しないでください |
+| `icon_color` | いいえ | Telegram のアイコンの色のコード（整数） |
+| `icon_custom_emoji_id` | いいえ | トピックのアイコンに使うカスタム絵文字の ID |
+| `skill` | いいえ | このトピックでの新しいセッションに自動で読み込むスキル |
+| `thread_id` | いいえ | トピックの作成後に自動で入ります — 手で設定しないでください |
 
 ### 仕組み {#how-it-works}
 
-1. ゲートウェイの起動時に、Hermes は `thread_id` がまだ無いトピックそれぞれについて `createForumTopic` を呼びます
-2. `thread_id` は自動で `config.yaml` に書き戻されるので、次からの起動では API の呼び出しを飛ばします
-3. トピックはそれぞれ別のセッションのキー `agent:main:telegram:dm:{chat_id}:{thread_id}` に対応します
-4. トピックごとに、会話の履歴・記憶の書き出し・文脈の枠が分かれます
+1. ゲートウェイの起動時に、Hermes はまだ `thread_id` を持たないトピックごとに `createForumTopic` を呼びます
+2. `thread_id` は自動で `config.yaml` へ書き戻されるので、次回以降の再起動では API の呼び出しを飛ばします
+3. 各トピックは、切り分けられたセッションのキー `agent:main:telegram:dm:{chat_id}:{thread_id}` に対応します
+4. 各トピックのメッセージは、それぞれ自分の会話の履歴、記憶の書き出し、文脈の窓を持ちます
 
-### 大元の DM の扱い {#root-dm-handling}
+### ルートの DM の扱い {#root-dm-handling}
 
-既定では、トピックの外にある大元の DM に送られたメッセージは、これまでどおり
-処理されます。`ignore_root_dm: true` にすると、大元の DM は待合室になります。DM の
-トピックを設定している利用者については普通のメッセージが黙って無視され、システムの
-コマンド（`/start`、`/help`、`/status` など）はこれまでどおり使えます。
+既定では、（どのトピックにも属さない）ルートの DM へ送られたメッセージはふつうに処理されます。
+`ignore_root_dm: true` を設定すると、ルートの DM を待合いに変えられます。DM のトピックを設定して
+いる利用者について、ふつうのメッセージは黙って無視され、システムのコマンド（`/start`、`/help`、
+`/status` など）は変わらず効きます。
 
 ```yaml
 platforms:
@@ -777,90 +806,89 @@ platforms:
             - name: General
 ```
 
-判定は**トークごと**です。影響を受けるのは、`dm_topics` に少なくとも 1 件の設定がある
-利用者の大元の DM だけです。トピックを設定していない利用者には
-影響しません。
+この判定は**チャットごと**です。影響を受けるのは、`dm_topics` に項目が 1 つ以上ある利用者の
+ルートの DM だけです。トピックを設定していない利用者には影響しません。
 
-### スキルの結び付け {#skill-binding}
+### スキルの結びつけ {#skill-binding}
 
-`skill` の項目があるトピックでは、そのトピックで新しいセッションが始まるときに、そのスキルが自動で読み込まれます。会話のはじめに `/skill-name` と打つのとまったく同じで、スキルの内容が最初のメッセージに差し込まれ、そのあとのメッセージからは会話の履歴として見えます。
+`skill` の項目を持つトピックでは、そのトピックで新しいセッションが始まったときにそのスキルが自動で読み込まれます。これは会話の冒頭で `/skill-name` と入力するのとまったく同じ働きです。スキルの内容が最初のメッセージへ差し込まれ、以降のメッセージは会話の履歴の中でそれを見ます。
 
-たとえば `skill: arxiv` のトピックでは、（`/new` や `/reset` を明示したあとなど）セッションが作り直されるたびに arxiv のスキルが先に読み込まれます。
+たとえば `skill: arxiv` のトピックでは、（明示的な `/new` や `/reset` のあとで）セッションが作り直されるたびに arxiv のスキルがあらかじめ読み込まれます。
 
 :::tip
-設定の外で作られたトピック（Telegram の API を手で呼んだ場合など）も、`forum_topic_created` の通知メッセージが届いたときに自動で見つけられます。ゲートウェイが動いている最中に設定へトピックを足すこともできます。次に一時保存を見に行った時点で拾われます。
+設定の外で作られたトピック（Telegram の API を手で呼んだ場合など）は、`forum_topic_created` の案内のメッセージが届いたときに自動で見つかります。ゲートウェイが動いている間に設定へトピックを足すこともできます。次にキャッシュに無いものが出たときに拾われます。
 :::
 
-## DM の複数セッションモード（`/topic`） {#multi-session-dm-mode-topic}
+## DM の複数セッションのモード（`/topic`） {#multi-session-dm-mode-topic}
 
-ChatGPT のような、1 つのボットで並行して何本も会話を持てる DM です。上で説明した運用者が用意する `extra.dm_topics` と違い、こちらは**利用者が自分で操作する**方式です。設定も、あらかじめ決めたトピック名も要りません。利用者が `/topic` で有効にし、あとは Telegram の **+** ボタンで好きなだけトピックを作ります。そのひとつひとつが、完全に独立した Hermes のセッションになります。
+ChatGPT のような、DM での複数セッションです。1 つのボットで、並行する会話をいくつも持てます。上の、運用者が用意する `extra.dm_topics` と違い、こちらは**利用者が動かす**モードです。設定も、あらかじめ決めたトピック名も要りません。利用者が `/topic` で有効にし、Telegram の **+** のボタンを押して好きなだけトピックを作ります。それぞれが完全に独立した Hermes のセッションです。
 
-### `/topic` の使い方 {#topic-subcommands}
+### `/topic` のサブコマンド {#topic-subcommands}
 
-| 形 | 場所 | はたらき |
+| 形 | 場面 | 効果 |
 |------|---------|--------|
-| `/topic` | 大元の DM、まだ有効でない | BotFather の設定を確かめ、複数セッションモードを有効にし、ピン留めした System のトピックを作ります |
-| `/topic` | 大元の DM、すでに有効 | 状態を表示します。復元できる、結び付いていないセッションの一覧が出ます |
-| `/topic` | トピックの中 | 今のトピックがどのセッションに結び付いているかを表示します |
-| `/topic help` | どこでも | その場で使い方を表示します |
-| `/topic off` | 大元の DM | 複数セッションモードを無効にし、このトークのトピックの結び付けをすべて外します |
-| `/topic <session-id>` | トピックの中 | 以前の Telegram のセッションを、今のトピックへ復元します |
+| `/topic` | ルートの DM、まだ有効でない | BotFather の能力を確かめ、複数セッションのモードを有効にし、ピン留めした System のトピックを作る |
+| `/topic` | ルートの DM、すでに有効 | 状態を表示する: 復元できる、結びついていないセッション |
+| `/topic` | トピックの中 | いまのトピックのセッションの結びつきを表示する |
+| `/topic help` | どこでも | その場での使い方 |
+| `/topic off` | ルートの DM | 複数セッションのモードを無効にし、このチャットのトピックの結びつきをすべて消す |
+| `/topic <session-id>` | トピックの中 | 以前の Telegram のセッションをいまのトピックへ復元する |
 
-`/topic` を使えるのは許可された利用者だけです（`TELEGRAM_ALLOWED_USERS` やプラットフォームの認証の設定による許可リスト）。許可されていない相手には、有効化ではなく断りが返ります。
+`/topic` を実行できるのは、認可された利用者（`TELEGRAM_ALLOWED_USERS` やプラットフォームの認証の設定による許可一覧）だけです。認可されていない送り手には、有効化ではなく拒否が返ります。
 
-### DM のトピックと DM の複数セッションモードの違い {#dm-topics-vs-multi-session-dm-mode}
+### DM のトピックと DM の複数セッションのモードの違い {#dm-topics-vs-multi-session-dm-mode}
 
-| | `extra.dm_topics`（設定で決める） | `/topic`（利用者が決める） |
+| | `extra.dm_topics`（設定で決める） | `/topic`（利用者が動かす） |
 |---|---|---|
 | 誰が有効にするか | 運用者が `config.yaml` で | 利用者が `/topic` を送って |
-| トピックの一覧 | 設定に書いた決まった集合 | 利用者が自由に作ったり消したりします |
-| トピックの名前 | 運用者が決めます | 利用者が決めます。Hermes のセッションの題名に合わせて自動で付け替えられます |
-| 大元の DM の扱い | 普通のトーク（`ignore_root_dm: true` なら待合室） | システム用の待合室になります（コマンド以外のメッセージは断られます） |
-| 主な使いどころ | 常設の作業場。必要ならスキルを結び付けられます | その場かぎりの並行したセッション |
-| どこに残るか | 設定の `extra.dm_topics` | SQLite の `telegram_dm_topic_mode` と `telegram_dm_topic_bindings` の表 |
+| トピックの一覧 | 設定で宣言した決まった組 | 利用者が自由に作ったり消したりする |
+| トピック名 | 運用者が決める | 利用者が決める。Hermes のセッションの題名に合わせて自動で改名される |
+| ルートの DM の振る舞い | ふつうのチャット（`ignore_root_dm: true` なら待合い） | システムの待合いになる（コマンド以外のメッセージは拒否される） |
+| 主な使いどころ | 任意のスキルを結び付けた常設の作業場所 | その場限りの並行するセッション |
+| 保存先 | 設定の `extra.dm_topics` | SQLite の `telegram_dm_topic_mode` と `telegram_dm_topic_bindings` の表 |
 
-どちらも同じボットで併用できます。ある利用者の DM では `/topic` を使い、`extra.dm_topics` はほかのトークで運用者が決めたトピックを引き続き受け持つ、という形になります。
+どちらの機能も同じボットで共存できます。利用者の DM で `/topic` を動かしつつ、`extra.dm_topics` が他のチャットについて運用者の宣言したトピックを引き続き管理します。
 
-### 事前に必要なこと {#prerequisites}
+### 前提 {#prerequisites}
 
 **@BotFather** で対象のボットを開き、**Bot Settings → Threads Settings** と進みます。
 
 1. **Threaded Mode** を有効にします（`has_topics_enabled` が立ちます）
-2. 利用者がトピックを作れる設定は無効に**しない**でください（`allows_users_to_create_topics` を有効なままにします）
+2. 利用者がトピックを作れる設定を無効に**しない**でください（`allows_users_to_create_topics` を有効のままにします）
 
-利用者が最初に `/topic` を実行すると、Hermes は `getMe` を呼んで両方の状態を確かめます。どちらかが無効なら、Hermes は BotFather の Threads Settings の画面のスクリーンショットを送り、どこを切り替えればよいかを説明します。条件がそろうまで有効化は起きません。
+利用者が初めて `/topic` を実行したとき、Hermes は `getMe` を呼んで両方の印を確かめます。どちらかが無効なら、Hermes は BotFather の Threads Settings の画面の画像を送り、何を切り替えればよいかを説明します。前提が満たされるまで、有効化は行われません。
 
 ### 有効にする流れ {#activation-flow}
 
-大元の DM から次を送ります。
+ルートの DM から次を送ります。
 
 ```
 /topic
 ```
 
-Hermes は次のように動きます。
+Hermes は次のようにします。
 
-1. `getMe().has_topics_enabled` と `allows_users_to_create_topics` を確かめます
-2. どちらも有効なら、この DM で複数セッションのトピックモードを有効にします
-3. 状態表示とコマンド用に **System** のトピックを作ってピン留めします（できる範囲で）
-4. 復元できる、以前の結び付いていない Telegram のセッションの一覧を返します
+1. `getMe().has_topics_enabled` と `allows_users_to_create_topics` を確かめる
+2. どちらも true なら、この DM で複数セッションのトピックのモードを有効にする
+3. 状態やコマンド用の **System** のトピックを作ってピン留めする（できる範囲で）
+4. 利用者が復元できる、以前の結びついていない Telegram のセッションの一覧を返す
 
-有効にしたあと、**大元の DM は待合室になります**。普通の問いかけは断られ、**All Messages** を使うよう案内が出ます。システムのコマンド（`/status`、`/sessions`、`/usage`、`/help` など）は大元でもこれまでどおり使えます。
+有効にしたあと、**ルートの DM は待合い**になります。ふつうの指示は拒否され、**All Messages** を指す案内が出ます。システムのコマンド（`/status`、`/sessions`、`/usage`、`/help` など）は、ルートでも変わらず効きます。
 
-### 新しいトピックを作る（利用者の操作） {#creating-a-new-topic-end-user-flow}
+### 新しいトピックを作る（利用者側の流れ） {#creating-a-new-topic-end-user-flow}
 
-1. Telegram でボットとの DM を開きます
-2. ボットの画面の上部にある **All Messages** を押し、何かメッセージを送ります
+1. Telegram でボットの DM を開きます
+2. ボットの画面の上部にある **All Messages** をタップして、何かメッセージを送ります
 3. Telegram がそのメッセージのために新しいトピックを作ります
-4. Hermes がそのトピックの中で応答します。これでそのトピックは独立したセッションです
+4. Hermes がそのトピックの中で応答します。そのトピックは、これで独立したセッションです
 
-トピックはそれぞれ、会話の履歴・モデルの状態・ツールの実行・セッション ID を持ちます。分かれ目のキーは `agent:main:telegram:dm:{chat_id}:{thread_id}` で、設定で決める DM のトピックの分け方とまったく同じです。
+トピックはそれぞれ自分の会話の履歴、モデルの状態、ツールの実行、セッション ID を持ちます。切り分けのキーは `agent:main:telegram:dm:{chat_id}:{thread_id}` で、設定で決める DM のトピックの切り分けと同じです。
 
-### トピックの名前が自動で付け替わる {#auto-renamed-topics}
+### 自動で改名されるトピック {#auto-renamed-topics}
 
-Hermes が（最初のやり取りのあと、題名を自動で付ける処理で）そのトピックのセッションの題名を作ると、Telegram のトピック自体もそれに合わせて付け替えられます。たとえば「New Topic」が「Database migration plan」になります。付け替えはできる範囲での処理で、失敗してもログに残るだけでセッションは壊れません。
+Hermes が（最初のやり取りのあと、自動の題名付けの処理で）トピックのセッションの題名を作ると、Telegram のトピック自体もそれに合わせて改名されます。たとえば「New Topic」が「Database migration plan」になります。改名はできる範囲で行われ、失敗しても記録に残るだけで、セッションは壊れません。
 
-これを止めて、自分で付けたトピックの名前をそのままにしたい場合は、次を設定します。
+これを止めて、自分で付けたトピック名をそのままにしたい場合は次を設定します。
 
 ```yaml
 gateway:
@@ -870,11 +898,11 @@ gateway:
         disable_topic_auto_rename: true
 ```
 
-この設定を有効にしても、Hermes は内部のセッションの題名（`hermes sessions` や TUI などで使われます）を作り続けますが、Telegram のトピックの名前には触れません。BotFather の Threaded Mode の下でトピックを手作業で整理していて、最初の返信のたびに題名が上書きされては困る場合に役立ちます。
+この項目が有効なとき、Hermes は内部のセッションの題名（`hermes sessions` や TUI などで使われます）は作りますが、Telegram のトピック名を書き換えることはありません。BotFather の Threaded Mode でトピックを自分の手で整理していて、最初の返信のたびに題名が上書きされるのが嫌なときに便利です。
 
 ### トピックの中での `/new` {#new-inside-a-topic}
 
-今のトピックのセッションを作り直します（新しいセッション ID、まっさらな履歴）。ほかのトピックには触れません。Hermes は、並行して作業したいなら（**All Messages** から）別のトピックを作るほうがたいてい望みどおりだ、と添えて返します。
+いまのトピックのセッションだけを作り直します（新しいセッション ID、まっさらな履歴）。他のトピックには触れません。Hermes は、並行して作業したいなら（**All Messages** から）もう 1 つトピックを作るほうがふつうは望みに近い、という案内を添えて返します。
 
 ### 以前のセッションを復元する {#restoring-a-previous-session}
 
@@ -884,39 +912,39 @@ gateway:
 /topic <session-id>
 ```
 
-これで、まっさらから始める代わりに、今のトピックを既存の Hermes のセッションに結び付けます。トピックモードを有効にする前に始めた会話の続きをしたいときに役立ちます。制限は次のとおりです。
+これは、まっさらから始める代わりに、いまのトピックを既存の Hermes のセッションへ結び付けます。トピックのモードを有効にする前に始めた会話を続けたいときに便利です。制限は次のとおりです。
 
 - 対象のセッションは、同じ Telegram の利用者のものである必要があります
-- 対象のセッションが、すでに別のトピックに結び付いていてはいけません
+- 対象のセッションが、すでに別のトピックへ結び付いていないこと
 
-Hermes はセッションの題名を添えて確認し、文脈のために最後のアシスタントのメッセージをもう一度出します。
+Hermes はセッションの題名で確認し、文脈のために最後のアシスタントのメッセージを出し直します。
 
-セッション ID を調べるには、大元の DM で `/topic` を引数なしで送ります。その利用者の、結び付いていない Telegram のセッションの一覧が出ます。
+セッションの ID を調べるには、ルートの DM で（引数なしの）`/topic` を送ってください。Hermes が、その利用者の結びついていない Telegram のセッションを並べます。
 
 ### トピックの中での `/topic`（引数なし） {#topic-inside-a-topic-no-argument}
 
-今のトピックの結び付きを表示します。セッションの題名、セッション ID、そして `/new` と別のトピックを作ることの使い分けの案内が出ます。
+いまのトピックの結びつきを表示します。セッションの題名、セッション ID、そして `/new` と別のトピックを作ることの使い分けの案内です。
 
-### 内側の仕組み {#under-the-hood}
+### 内部の作り {#under-the-hood}
 
-- 有効にした状態は `state.db` の `telegram_dm_topic_mode(profile_name, chat_id, user_id, enabled, ...)` に残ります。主キーが `(profile_name, chat_id)` なので、1 つの `state.db` を共有する多重化・プロファイル振り分けのボットどうしが、同じ Telegram の利用者から複数のボットへ DM が来ても互いを壊しません（1 対 1 の `chat_id` は利用者の ID そのもので、どのボットでも同じ値になります）。
-- トピックの結び付きは `telegram_dm_topic_bindings(profile_name, chat_id, thread_id, session_id, ...)` に残ります。主キーは `(profile_name, chat_id, thread_id)` で、`session_id` に `ON DELETE CASCADE` が付いているため、セッションを整理するとそのトピックの結び付きも自動で消えます
-- トピックモードの SQLite の移行は**必要になったときだけ**走ります。最初に `/topic` が呼ばれたときであって、ゲートウェイの起動時ではありません。そのプロファイルで誰も `/topic` を使わないかぎり、`state.db` は変わりません。スキーマの v3 で `profile_name` が加わり、以前からの行は `default` の名前空間へだけ移されます
-- 受信した DM のメッセージはそれぞれ、**振り分け先の**プロファイル（プロセス全体で有効なプロファイルではなく `source.profile`）を使って `(profile_name, chat_id, thread_id)` の結び付きを調べます。見つかれば `SessionStore.switch_session()` で結び付いたセッションへ回されるので、セッションのキーとセッション ID の対応がディスク上でも食い違いません
-- トピックの中の `/new` は結び付きの行を書き換えて新しいセッション ID を指すようにするので、次のメッセージはそのまっさらなセッションで続きます
-- `extra.dm_topics` に書いたトピックの名前は**自動では付け替えられません**。複数セッションモードが有効でも、運用者が決めた名前が保たれます
-- `extra.disable_topic_auto_rename: true` にすると、そのトークの**すべての**トピック（Threaded Mode でその場で作ったトピックも含みます）で自動の付け替えが止まります
-- フォーラムを有効にした DM の General（上にピン留めされた）トピックは、Telegram がそのメッセージを `message_thread_id=1` で届けるか、thread_id なしで届けるかにかかわらず、大元の待合室として扱われます
-- 大元の待合室での案内は、**（プロファイル, トーク）**の組ごとに 30 秒に 1 通までに抑えられます。トピックモードが有効なのを忘れて大元に 10 回問いかけた人へ 10 回返すことはありませんし、同じトークの ID を共有する 2 つの多重化されたプロファイルが、互いの案内を打ち消すこともありません
-- BotFather の設定のスクリーンショットは、**（プロファイル, トーク）**の組ごとに 5 分に 1 回までです。Threads Settings が無効なまま `/topic` を繰り返しても、同じ画像を何度も送りません
-- トピックの中で始めた `/bg <prompt>` は、その結果を同じトピックへ返します。裏で動くセッションが、持ち主のトピックの名前を自動で付け替えることはありません
-- `/topic` そのものも、ボットの利用者の許可の確認を通ります。許可されていない DM には、有効化ではなく断りが返ります
+- 有効化は `state.db` の `telegram_dm_topic_mode(profile_name, chat_id, user_id, enabled, ...)` に保存されます。主キーは `(profile_name, chat_id)` なので、1 つの `state.db` を共有する多重化 / 経路の固定されたボットどうしが、同じ Telegram の利用者が複数のボットに DM を送っても互いを潰すことはありません（個別チャットの `chat_id` は利用者の id で、どのボットでも同じです）。
+- トピックごとの結びつきは、主キー `(profile_name, chat_id, thread_id)` と `session_id` への `ON DELETE CASCADE` を持つ `telegram_dm_topic_bindings(profile_name, chat_id, thread_id, session_id, ...)` に保存されます。セッションを刈り取ると、そのトピックの結びつきも自動で消えます
+- トピックのモードの SQLite の移行は**必要になってから**行われます。ゲートウェイの起動時ではなく、最初の `/topic` の呼び出しで走ります。このプロファイルで誰かが `/topic` を実行するまで、`state.db` は変わりません。スキーマの v3 で `profile_name` が加わり、以前の行は `default` の名前空間へだけ移ります
+- 受信した DM のメッセージはそれぞれ、**振り分けられた**プロファイル（プロセス全体で有効なプロファイルではなく `source.profile`）を使って `(profile_name, chat_id, thread_id)` の結びつきを引きます。あれば、`SessionStore.switch_session()` を通してそのメッセージを結び付いたセッションへ流すので、セッションのキーとセッション ID の対応がディスク上で一貫します
+- トピックの中での `/new` は、結びつきの行を新しいセッション ID へ向け直すので、次のメッセージは新しいセッションのままです
+- `extra.dm_topics` で宣言したトピックは**決して自動で改名されません**。複数セッションのモードが有効でも、運用者が決めた名前が保たれます
+- `extra.disable_topic_auto_rename: true` を設定すると、そのチャットの**すべて**のトピック（Threaded Mode でその場で作られたトピックも含む）で自動の改名が止まります
+- フォーラムを有効にした DM の General（上部にピン留めされた）トピックは、Telegram がそのメッセージを `message_thread_id=1` で届けても thread_id なしで届けても、ルートの待合いとして扱われます
+- ルートの待合いの案内は、**（プロファイル, チャット）**ごとに 30 秒に 1 通までに絞られます。トピックのモードが有効なのを忘れてルートに 10 個の指示を書いた利用者に 10 通が返ることはありませんし、1 つのチャット id を共有する 2 つの多重化されたプロファイルが互いの案内を抑え合うこともありません
+- BotFather の設定の画像は、**（プロファイル, チャット）**ごとに 5 分に 1 回までです。Threads Settings が無効なまま `/topic` を繰り返しても、同じ画像が再送されることはありません
+- トピックの中で始めた `/bg <prompt>` は、結果を同じトピックへ返します。裏で動くセッションが、持ち主のトピックの自動の改名を起こすことはありません
+- `/topic` 自体も、ボットの利用者の認可の判定を通ります。認可されていない DM には、有効化ではなく拒否が返ります
 
-### 複数セッションモードを無効にする {#disabling-multi-session-mode}
+### 複数セッションのモードを無効にする {#disabling-multi-session-mode}
 
-大元の DM で `/topic off` を送ります。Hermes は**このプロファイルの**名前空間の行を無効にし、そのプロファイルがこのトークで持っていた `(thread_id → session_id)` の結び付きを外します。大元の DM は普通の Hermes のトークに戻ります。Telegram にあるトピックが消えることはなく、独立したセッションとしての扱いが止まるだけです。あとでもう一度 `/topic` を送れば戻せます。
+ルートの DM で `/topic off` を送ります。Hermes は**このプロファイルの**名前空間の行を無効にし、そのチャットについてそのプロファイルの `(thread_id → session_id)` の結びつきを消すので、ルートの DM はふつうの Hermes のチャットへ戻ります。Telegram にある既存のトピックが消えることはありません。独立したセッションとして扱われなくなるだけです。あとで `/topic` をもう一度実行すれば、また有効にできます。
 
-手作業で片づけたい場合（たくさんのトークをまとめて戻す場合など）は、`profile_name` で行を絞ります（プロファイルが 1 つだけの構成では `default` です）。
+手作業で片付ける必要がある場合（多数のチャットをまとめて初期化するなど）は、`profile_name` で行を絞り込んでください（プロファイルが 1 つだけの導入では `default` を使います）。
 
 ```bash
 sqlite3 ~/.hermes/state.db \
@@ -926,25 +954,25 @@ sqlite3 ~/.hermes/state.db \
      WHERE profile_name = 'default' AND chat_id = '<your_chat_id>';"
 ```
 
-### Hermes を古い版に戻す {#downgrading-hermes}
+### Hermes を古い版へ戻す場合 {#downgrading-hermes}
 
-`/topic` が入る前の Hermes の版に戻すと、この機能はただ動かなくなります。`telegram_dm_topic_mode` と `telegram_dm_topic_bindings` の表は `state.db` に残りますが、古いコードからは見られません。DM は本来のスレッドごとの分け方に戻り（`message_thread_id` ごとに `build_session_key` で別のセッションになります）、既存の Telegram のトピックは並行したセッションとしてそのまま使えます。大元の DM はもう待合室ではなく、そこへのメッセージは以前と同じようにエージェントへ届きます。新しい版に上げ直せば、複数セッションモードは止めた場所からそのまま再開します。
+`/topic` より前の版の Hermes へ戻すと、この機能は単に働かなくなります。`telegram_dm_topic_mode` と `telegram_dm_topic_bindings` の表は `state.db` に残りますが、古いコードは無視します。DM は、もともとのスレッドごとの切り分け（`build_session_key` により `message_thread_id` ごとにセッションが分かれる形）に戻るので、既存の Telegram のトピックは並行するセッションとしてそのまま使えます。ルートの DM はもう待合いではなく、そこへのメッセージは以前のようにエージェントへ届きます。もう一度新しい版にすれば、複数セッションのモードは中断したところからそのまま働きます。
 
-## グループのフォーラムのトピックにスキルを結び付ける {#group-forum-topic-skill-binding}
+## グループのフォーラムのトピックへのスキルの結びつけ {#group-forum-topic-skill-binding}
 
-**トピックモード**（「フォーラムのトピック」とも呼びます）を有効にしたスーパーグループでは、すでにトピックごとにセッションが分かれています。`thread_id` ごとに別の会話になります。ただ、DM のトピックへのスキルの結び付けと同じように、特定のグループのトピックにメッセージが来たとき**スキルを自動で読み込みたい**こともあります。
+**Topics モード**（「フォーラムのトピック」とも呼ばれます）を有効にしたスーパーグループでは、すでにトピックごとにセッションが切り分けられています。`thread_id` ごとに別々の会話になります。とはいえ、DM のトピックでのスキルの結びつけと同じように、特定のグループのトピックにメッセージが来たら**スキルを自動で読み込みたい**こともあるでしょう。
 
 ### 使いどころ {#use-case}
 
-作業の流れごとにフォーラムのトピックを分けた、チームのスーパーグループです。
+作業の流れごとにフォーラムのトピックを分けている、チームのスーパーグループを考えます。
 
-- **Engineering** のトピック → `software-development` のスキルを自動で読み込みます
-- **Research** のトピック → `arxiv` のスキルを自動で読み込みます
-- **General** のトピック → スキルなし。汎用のアシスタントとして動きます
+- **Engineering** のトピック → `software-development` のスキルを自動で読み込む
+- **Research** のトピック → `arxiv` のスキルを自動で読み込む
+- **General** のトピック → スキルなし、汎用の助手
 
 ### 設定 {#configuration}
 
-`~/.hermes/config.yaml` の `platforms.telegram.extra.group_topics` にトピックの結び付けを足します。
+`~/.hermes/config.yaml` の `platforms.telegram.extra.group_topics` の下にトピックの結びつきを足します。
 
 ```yaml
 platforms:
@@ -966,53 +994,53 @@ platforms:
 
 **項目:**
 
-| 項目 | 必須 | 説明 |
+| 項目 | 必須か | 説明 |
 |-------|----------|-------------|
-| `chat_id` | はい | スーパーグループの数字の ID（`-100` で始まる負の数） |
-| `name` | いいえ | そのトピックにつける、人が読むための名前（説明のためだけのものです） |
-| `thread_id` | はい | Telegram のフォーラムのトピックの ID。`t.me/c/<group_id>/<thread_id>` のリンクで確認できます |
-| `skill` | いいえ | このトピックで新しいセッションが始まるとき、自動で読み込むスキル |
+| `chat_id` | はい | スーパーグループの数値の ID（`-100` で始まる負の数） |
+| `name` | いいえ | そのトピックの人が読むための名前（情報として持つだけです） |
+| `thread_id` | はい | Telegram のフォーラムのトピックの ID — `t.me/c/<group_id>/<thread_id>` のリンクで見えます |
+| `skill` | いいえ | このトピックでの新しいセッションに自動で読み込むスキル |
 
 ### 仕組み {#how-it-works}
 
-1. 対応づけたグループのトピックにメッセージが来ると、Hermes は `group_topics` の設定から `chat_id` と `thread_id` を探します
-2. 見つかった設定に `skill` の項目があれば、そのスキルがそのセッション向けに自動で読み込まれます。DM のトピックへのスキルの結び付けとまったく同じです
-3. `skill` のキーが無いトピックは、セッションが分かれるだけです（これまでどおりで、変わりません）
-4. 対応づけていない `thread_id` や `chat_id` は黙って素通りします。エラーも出ませんし、スキルも読み込まれません
+1. 対応付けられたグループのトピックにメッセージが来ると、Hermes は `group_topics` の設定でその `chat_id` と `thread_id` を引きます
+2. 一致した項目に `skill` があれば、そのスキルがそのセッションに自動で読み込まれます。DM のトピックでのスキルの結びつけと同じです
+3. `skill` のキーがないトピックは、セッションの切り分けだけが効きます（従来どおりで、変わりません）
+4. 対応付けのない `thread_id` や `chat_id` は、黙って素通りします。エラーも出ませんし、スキルも読み込まれません
 
 ### DM のトピックとの違い {#differences-from-dm-topics}
 
 | | DM のトピック | グループのトピック |
 |---|---|---|
 | 設定のキー | `extra.dm_topics` | `extra.group_topics` |
-| トピックの作成 | `thread_id` が無ければ Hermes が API で作ります | 管理者が Telegram の画面で作ります |
-| `thread_id` | 作成後に自動で書き込まれます | 手で設定する必要があります |
-| `icon_color` / `icon_custom_emoji_id` | 使えます | 対象外です（見た目は管理者が決めます） |
-| スキルの結び付け | ✓ | ✓ |
-| セッションの分離 | ✓ | ✓（フォーラムのトピックでは元から備わっています） |
+| トピックの作成 | `thread_id` がなければ Hermes が API で作る | 管理者が Telegram の画面で作る |
+| `thread_id` | 作成後に自動で入る | 手で設定する必要がある |
+| `icon_color` / `icon_custom_emoji_id` | 対応 | 当てはまらない（見た目は管理者が決める） |
+| スキルの結びつけ | ✓ | ✓ |
+| セッションの切り分け | ✓ | ✓（フォーラムのトピックでは元から備わっている） |
 
 :::tip
-トピックの `thread_id` を調べるには、Telegram の Web 版かデスクトップ版でそのトピックを開き、URL を見ます。`https://t.me/c/1234567890/5` の最後の数字（`5`）が `thread_id` です。スーパーグループの `chat_id` は、グループの ID の頭に `-100` を付けたものです（グループ `1234567890` なら `-1001234567890` になります）。
+トピックの `thread_id` を調べるには、Telegram の Web 版かデスクトップ版でそのトピックを開いて URL を見てください。`https://t.me/c/1234567890/5` の最後の数字（`5`）が `thread_id` です。スーパーグループの `chat_id` は、グループの ID に `-100` を付けたものです（たとえばグループ `1234567890` は `-1001234567890` になります）。
 :::
 
 ## 最近の Bot API の機能 {#recent-bot-api-features}
 
-- **Bot API 9.4（2026 年 2 月）:** 1 対 1 のトークのトピック。`createForumTopic` を使って、ボットが 1 対 1 の DM のトークにフォーラムのトピックを作れます。Hermes はこれを 2 つの機能に使っています。運用者が用意する[1 対 1 のトークのトピック](#private-chat-topics-bot-api-94)（設定で決める、決まったトピックの一覧）と、利用者が操作する[DM の複数セッションモード](#multi-session-dm-mode-topic)（`/topic` で有効にし、利用者がいくつでもトピックを作れます）です。
-- **プライバシーポリシー:** Telegram はボットにプライバシーポリシーを求めるようになりました。BotFather の `/setprivacy_policy` で設定します。設定しないと Telegram が仮のものを自動で用意することがあります。誰でも使えるボットでは特に大切です。
-- **Bot API 9.5（2026 年 3 月）: `sendMessageDraft` による本来のストリーミング。** Hermes は、1 対 1 のトークで使える送信方式として Telegram 本来の下書きストリーミングに対応しています（自分で選んで有効にします）。既定は従来の `editMessageText` の経路のままです。下書きのプレビューは、Telegram のクライアントによっては目に見えてたたまれ、描き直されることがあるためです。
+- **Bot API 9.4（2026 年 2 月）:** 個別チャットのトピック — ボットは `createForumTopic` で 1 対 1 の DM にフォーラムのトピックを作れます。Hermes はこれを 2 つの別の機能に使っています。運用者が用意する [個別チャットのトピック](#private-chat-topics-bot-api-94)（設定で決める、決まったトピックの一覧）と、利用者が動かす [DM の複数セッションのモード](#multi-session-dm-mode-topic)（`/topic` で有効にする、利用者が好きなだけ作れるトピック）です。
+- **プライバシーポリシー:** Telegram は、ボットにプライバシーポリシーを持つことを求めるようになりました。BotFather の `/setprivacy_policy` で設定してください。設定しないと Telegram が仮のものを自動で作ることがあります。誰でも使えるボットでは特に大切です。
+- **Bot API 9.5（2026 年 3 月）: `sendMessageDraft` によるネイティブな逐次表示。** Hermes は、Telegram のネイティブな下書きによる逐次表示の API を、個別チャット向けの選択できる伝送路として使えます。既定は従来の `editMessageText` の経路のままです。一部の Telegram のクライアントでは、下書きの表示がいったん畳まれて描き直されるのが目に見えてしまうためです。
 
-### ストリーミングの送信方式（`gateway.streaming.transport`） {#streaming-transport-gatewaystreamingtransport}
+### 逐次表示の伝送路（`gateway.streaming.transport`） {#streaming-transport-gatewaystreamingtransport}
 
-ストリーミングを有効にすると（`gateway.streaming.enabled: true`）、Hermes は 4 つの送信方式のどれかを選びます。
+逐次表示が有効なとき（`gateway.streaming.enabled: true`）、Hermes は 4 つの伝送路から 1 つを選びます。
 
-| 値 | 動作 |
+| 値 | 振る舞い |
 |---|---|
-| `auto`（既定） | 対応しているトーク（今のところ Telegram の DM）では本来の下書きストリーミングを使い、それ以外では従来の編集による経路を使います。下書きの更新が失敗しても、そっと切り替わります。 |
-| `draft` | 本来の下書きを必ず使います。トークが下書きに対応していない場合（グループやトピックなど）は、格下げをログに出して編集の経路に切り替えます。 |
-| `edit` | どのトークでも、従来の `editMessageText` を繰り返す方式を使います。 |
-| `off` | ストリーミングを完全に止めます（最終的な返信だけで、途中の更新はありません）。 |
+| `auto`（既定） | 対応しているチャット（いまのところ Telegram の DM）ではネイティブな下書きによる逐次表示、それ以外では従来の編集による経路。下書きのやり取りが失敗しても、きれいに従来の経路へ落ちます。 |
+| `draft` | ネイティブな下書きを強制します。チャットが下書きに対応していない場合（グループ / トピックなど）、降格を記録して編集の経路へ落ちます。 |
+| `edit` | どのチャットの種類でも、従来の `editMessageText` を少しずつ呼ぶ経路。 |
+| `off` | 逐次表示を完全に無効にします（最後の返信だけで、途中の更新はありません）。 |
 
-`~/.hermes/config.yaml` では次のように書きます。
+`~/.hermes/config.yaml` では次のようにします。
 
 ```yaml
 gateway:
@@ -1021,26 +1049,26 @@ gateway:
     transport: auto    # auto | draft | edit | off
 ```
 
-**DM で `edit`（既定）のときに見えるもの** — ゲートウェイは普通のプレビューのメッセージを送り、`editMessageText` で少しずつ書き換えます。Telegram の下書きプレビューがたたまれたり戻ったりする現象を避けられます。
+**`edit`（既定）での DM の見え方** — ゲートウェイはふつうの下書き表示のメッセージを送り、`editMessageText` で少しずつ更新します。Telegram の下書き表示が畳まれて戻る効果を避けられます。
 
-**DM で `auto` または `draft` のときに見えるもの** — Telegram が、少しずつ文字が増えていく下書きのプレビューを動かして見せます。返信が終わると普通のメッセージとして届き、下書きのプレビューはクライアント側で自然に消えます。下書きにはメッセージの ID が無いので、トークの履歴に残るのは最終的な答えです。
+**`auto` や `draft` での DM の見え方** — Telegram が、トークンごとに更新される動く下書きの表示を出します。返信が終わると、ふつうのメッセージとして届き、下書きの表示はクライアント側で自然に消えます。下書きにはメッセージの id がないので、チャットの履歴に残るのは最後の答えです。
 
-**グループやスーパーグループ、フォーラムのトピックではどうなるか。** Telegram は `sendMessageDraft` を 1 対 1 のトークに限っています。それ以外では、ゲートウェイが黙って編集による経路に切り替えます。見え方はこれまでと同じです。
+**グループ、スーパーグループ、フォーラムのトピックでは?** Telegram は `sendMessageDraft` を個別チャット（DM）に限っています。ゲートウェイはそれ以外では黙って編集の経路へ落とすので、使い勝手はこれまでと同じです。
 
-**下書きの更新が失敗したらどうなるか。** 一時的なネットワークのエラー、サーバー側の拒否、python-telegram-bot が古いなど、何であれ失敗すると、その応答は残りの間ずっと編集による経路に切り替わります。次の応答では、また下書きから試します。
+**下書きのやり取りが失敗したら?** どんな失敗でも（一時的なネットワークのエラー、サーバー側の拒否、古い python-telegram-bot の導入）、その応答の残りは編集の経路へ切り替わります。次の応答では、また新しく試されます。
 
-## 表示: リッチメッセージ・表・リンクのプレビュー {#rendering-rich-messages-tables-and-link-previews}
+## 表示: 表現の豊かなメッセージ、表、リンクのプレビュー {#rendering-rich-messages-tables-and-link-previews}
 
-**リッチメッセージ（Bot API 10.1）。** 従来の MarkdownV2 の経路では崩れてしまう書き方を含む最終的な返信、つまり表・チェックリスト・折りたためる `<details>`・別行の数式などは、エージェントの**生のマークダウン**のまま Telegram 本来の [`sendRichMessage`](https://core.telegram.org/bots/api#sendrichmessage) で送られます。クライアント側で平らにされることなく、そのまま表示されます。DM では、既定の `rich_drafts: false` によってストリーミング中のプレビューは素のままです（Telegram の一時的な下書きの送信方式と従来の表示を使うので、表などリッチでしか出せない書き方はプレビューでは生のマークダウンのまま残ります）。そのうえで、できあがった応答を `sendRichMessage` で残します。`rich_drafts: true` にすると、途中のプレビューも `sendRichMessageDraft` を使うようになります。編集によるストリーミングでは、`editMessageText` の `rich_message` の引数を使って、既存のプレビューをその場で仕上げられます。普通の返信（ただの文章、太字や斜体、簡単な箇条書き）は、クライアントをまたいで文字の太さや間隔をそろえるため、これまでどおり MarkdownV2 の経路を通ります。
+**表現の豊かなメッセージ（Bot API 10.1）。** 従来の MarkdownV2 の経路では崩れてしまう要素 — 表、チェックリスト、折りたためる `<details>`、ブロックの数式 — を含む最後の返信は、エージェントの**素の markdown** を使って Telegram のネイティブな [`sendRichMessage`](https://core.telegram.org/bots/api#sendrichmessage) で送られるので、クライアント側で平らにされることなくそのまま表示されます。DM では、既定の `rich_drafts: false` が逐次表示を素のままに保ち — Telegram の消える下書きの伝送路を従来の表示で使うので、表など豊かな表示でしか扱えない要素は下書きでは素の markdown のままです — そのうえで、できあがった応答を `sendRichMessage` で残します。`rich_drafts: true` にすると、実況の表示にも `sendRichMessageDraft` が使われます。編集による逐次表示では、`editMessageText` の `rich_message` の引数で、既存の表示をその場で仕上げられます。ふつうの返信（素の文章、太字 / 斜体、単純な箇条書き）は、クライアントをまたいで字の太さと間隔をそろえるために MarkdownV2 の経路のままです。
 
-リッチの経路は、内容が 32,768 文字というリッチテキストの上限を超えると自動で使われなくなります。また、Telegram から拒否された場合（古い `python-telegram-bot` でその API が無い、解析のエラー、大きすぎる塊や列など）は、**そっと** MarkdownV2 の経路へ切り替わります。メッセージが失われることはありません。一時的なエラーやネットワークのエラーで黙って送り直すことは*ありません*（最終的なメッセージが二重に届くことはありません）。
+内容が 32,768 文字という表現の豊かなテキストの上限を超えると、豊かな経路は自動で見送られます。また Telegram からの拒否（古い `python-telegram-bot` で窓口が未対応、解析のエラー、大きすぎるブロックや列）があれば、**黙って** MarkdownV2 の経路へ落ちるので、メッセージが失われることはありません。一時的なエラーやネットワークのエラーでは、黙って送り直すことは*しません*（最後のメッセージが二重になりません）。
 
-**MarkdownV2 への切り替え。** あるメッセージでリッチの経路が使えないとき、Hermes はマークダウンを MarkdownV2 に変換します。MarkdownV2 には表の書き方が無いので、縦棒で書かれた表は次のように整えられます。
+**MarkdownV2 での代替。** あるメッセージで豊かな経路が使えないとき、Hermes は markdown を MarkdownV2 に変換します。MarkdownV2 には表の書き方がないので、縦棒の表は形を整え直されます。
 
-- **小さい表**は、**行ごとの箇条書き**に開かれます。各行が、見出しの下に読める形の箇条書きになります。2〜4 列で、セルが短い表に向いています。
-- **大きい表や横に広い表**は、列をそろえた**コードブロック**に切り替わり、崩れないようにします。
+- **小さな表**は**行ごとのまとまりの箇条書き**へ平らにされます。各行が、列の見出しの下の読みやすい箇条書きになります。2〜4 列で、各セルが短いときに向いています。
+- **大きい、あるいは横に広い表**は、列をそろえた**コードブロック**になるので、何も潰れません。
 
-リッチメッセージは**自分で選んで有効にする**ものです。既定が従来の MarkdownV2 の経路のままなのは、いまの Telegram のクライアントでは Bot API のリッチメッセージをただの文字としてコピーしにくいことがあるためです。コマンドの断片や、スマートフォンから別の場所へ移したいときに特に困ります。表・チェックリスト・詳細・数式を本来の形で表示させたい場合は、次のようにします。
+表現の豊かなメッセージは**使いたい人が選ぶ**ものです。既定は従来の MarkdownV2 の経路のままです。いまの Telegram のクライアントでは、Bot API の豊かなメッセージを素のテキストとしてコピーしにくいことがあり、コマンドの断片や携帯への受け渡しでは特に困るからです。表 / チェックリスト / details / 数式をそのまま表示させたい場合は、次のようにします。
 
 ```yaml
 gateway:
@@ -1052,13 +1080,13 @@ gateway:
         allow_cjk_rich_messages: false
 ```
 
-この設定は、クライアントでの表示とコピーのしやすさのためのものです。Telegram がリッチの API 呼び出しを拒否したときは、Hermes がすでに自動で切り替えます。`rich_drafts` は、DM のストリーミング中のプレビューをリッチで*表示する*か（`sendRichMessageDraft`）を決めるもので、既定は無効です。Telegram のデスクトップ版や macOS 版では、トークが描き直されるまでリッチな下書きが重なって見えることがあるためです。無効にしておけば、プレビューは素のまま流れ、最終的なものは本来のリッチメッセージとして届きます。
+この設定は、クライアントでの表示とコピーのしやすさのためのものです。Telegram が豊かな API の呼び出しを拒んだときは、Hermes がすでに自動で従来の経路へ落ちます。`rich_drafts` は、DM の逐次表示を豊かに*表示*するか（`sendRichMessageDraft`）を決めるもので、既定では無効です。Telegram のデスクトップ版 / macOS 版では、チャットが描き直されるまで豊かな下書きが重なって見えることがあるためです。無効なら、逐次表示は素のまま流れ、最後のものはネイティブな豊かなメッセージとして届きます。
 
-CJK の文字（中国語・日本語・韓国語と、まれな漢字の拡張）は、既定では従来の MarkdownV2 の経路のままです。影響を受ける Telegram のデスクトップ版や macOS 版のクライアントで、Bot API のリッチメッセージを表示すると CJK の文字が重なって崩れることがあったためです。影響のないクライアントを使っていて、CJK を含む内容でも表・チェックリスト・折りたたみ・数式を本来のリッチ表示にしたい場合は、`rich_messages: true` とあわせて `allow_cjk_rich_messages: true` を設定し、そのクライアント側の危険を承知のうえで有効にしてください。
+CJK の文字（中国語、日本語、韓国語、それに稀な漢字の拡張）は、既定では従来の MarkdownV2 の経路のままです。影響を受ける Telegram のデスクトップ版 / macOS 版のクライアントで、Bot API の豊かなメッセージが CJK の字形を重ねて表示してしまうことがあったためです。影響のないクライアントを使っていて、CJK の内容でもネイティブな豊かな表 / チェックリスト / details / 数式のほうがよければ、`rich_messages: true` と併せて `allow_cjk_rich_messages: true` を設定して、そのクライアント側の危険を引き受けてください。
 
-リッチメッセージは有効にしたまま、表については以前の「常にコードブロック」の挙動だけを使いたい場合は、`config.yaml` で `telegram.pretty_tables: false` にして表の整えを止めます（既定は `true`）。
+表現の豊かなメッセージを有効にしたまま、従来の「常にコードブロック」の表の振る舞いだけがほしい場合は、`config.yaml` で `telegram.pretty_tables: false` を設定して表の整え直しを無効にしてください（既定は `true`）。
 
-**リンクのプレビュー。** Telegram は、ボットのメッセージに含まれる URL のプレビューを自動で作ります。長い `/tools` の出力や、リンクを 10 個挙げるエージェントの返信など、それを出したくない場合は次のようにします。
+**リンクのプレビュー。** Telegram は、ボットのメッセージにある URL のプレビューを自動で作ります。それを抑えたい場合は（長い `/tools` の出力、10 個のリンクに触れるエージェントの返信など）次のようにします。
 
 ```yaml
 gateway:
@@ -1068,16 +1096,16 @@ gateway:
         disable_link_previews: true
 ```
 
-有効にすると、Hermes は送信するすべてのメッセージに Telegram の `LinkPreviewOptions(is_disabled=True)` を付けます。`python-telegram-bot` が古い場合は、従来の `disable_web_page_preview` の引数に切り替えます。
+有効にすると、Hermes はすべての送信メッセージに Telegram の `LinkPreviewOptions(is_disabled=True)` を付け、古い `python-telegram-bot` では従来の `disable_web_page_preview` の引数へ落ちます。
 
-**長い返信と送信制限。** Telegram の 4,096 文字という上限を超える返信は、番号を振った断片（`(1/3)`、`(2/3)`、…）に分けて送ります。1 つのチャットへの送信は返信ごとに 1 件ずつ順番に届くので、定時の報告と個別の返答が同時に発生しても断片が混ざることはなく、文章に添えるファイルが 2 つの断片のあいだに割り込むこともありません。Telegram の送信制限が途中の断片をはねた場合、Hermes は画面にすでに出ている断片を送り直すのではなく、制限が解けてからはねられた断片の続きを送ります。そのチャットが制限の時間帯にあると分かっているあいだは、以降の送信は手元で失敗させます（制限を長引かせる余計な要求を出さないためです）。ゲートウェイがその場で待てる上限を超える制限になった場合は配信の台帳へ引き継ぎ、「一部はすでに上に届いているかもしれません」という断りを添えて返信を送り直します。
+**長い返信と流量の制御。** Telegram の 4,096 文字の上限を超える返信は、番号を振った分割（`(1/3)`、`(2/3)` …）で送られます。1 つのチャットへの送信は一度に 1 通ずつ届くので、定期実行の報告と DM の返答が同時に来ても、分割が混ざることはありませんし、テキストの 2 つの分割の間にファイルの送信が割り込むこともありません。Telegram の流量の制御が途中の分割を拒んだ場合、Hermes はすでに画面に出た分を送り直すのではなく、罰則の期間が明けてから拒まれた分割から再開します。また、そのチャットが分かっている罰則の期間にある間は、それ以降の送信は手元で閉じる側に倒れます（罰則を長引かせる余計な要求を出しません）。ゲートウェイのその場での待ちの上限を超える罰則は配信の台帳へ渡され、「一部はすでに上に届いているかもしれません」という注記とともに返信を送り直します。
 
-## グループの許可リスト {#group-allowlisting}
+## グループの許可一覧 {#group-allowlisting}
 
-Telegram のグループとフォーラムのトークには、別々に設定できる関門が 2 つあります。
+Telegram のグループとフォーラムのチャットには、互いに独立した 2 つの関門を設定できます。
 
-- **送信者のユーザー ID**（`group_allow_from` / `TELEGRAM_GROUP_ALLOWED_USERS`） — グループやフォーラムのメッセージにだけ効く、送信者単位の許可リストです。特定の利用者にグループでボットを呼ばせたいけれど、`TELEGRAM_ALLOWED_USERS` に足す（DM も使えるようになります）のは避けたい、というときに使います。
-- **トークの ID**（`group_allowed_chats` / `TELEGRAM_GROUP_ALLOWED_CHATS`） — トーク単位の許可リストです。これらのグループやフォーラムのメンバーなら誰でもボットとやり取りできます。グループにいること自体が資格になる、チームや問い合わせ対応のボットに向いています。
+- **送り手のユーザー ID**（`group_allow_from` / `TELEGRAM_GROUP_ALLOWED_USERS`） — グループ / フォーラムのメッセージにだけ効く、送り手を絞る許可一覧です。特定の利用者に、（DM へのアクセスも与えてしまう）`TELEGRAM_ALLOWED_USERS` に追加せずにグループでボットを呼べるようにしたいときに使います。
+- **チャット ID**（`group_allowed_chats` / `TELEGRAM_GROUP_ALLOWED_CHATS`） — チャットを絞る許可一覧です。これらのグループ / フォーラムのメンバーなら誰でもボットとやり取りできます。グループにいること自体がアクセスの合図になる、チームやサポートのボットに向いています。
 
 ```yaml
 gateway:
@@ -1095,7 +1123,7 @@ gateway:
           - "-1001234567890"
 ```
 
-環境変数で書く場合は次のとおりです。
+同じ意味の環境変数:
 
 ```bash
 TELEGRAM_ALLOWED_USERS="123456789"
@@ -1103,17 +1131,17 @@ TELEGRAM_GROUP_ALLOWED_USERS="987654321"
 TELEGRAM_GROUP_ALLOWED_CHATS="-1001234567890"
 ```
 
-動作は次のとおりです。
+振る舞い:
 
-- `TELEGRAM_ALLOWED_USERS` は、どの種類のトーク（DM・グループ・フォーラム）にも効きます。
-- `TELEGRAM_GROUP_ALLOWED_USERS` は、挙げた送信者をグループとフォーラムでだけ許可します。`TELEGRAM_ALLOWED_USERS` に入っていないかぎり、DM は使えません。
-- `TELEGRAM_GROUP_ALLOWED_CHATS` にあるトークでは、送信者が誰であれ、そのトークのメンバー全員が許可されます。
-- どれにも `*` を書けば、送信者やトークを問わず許可できます。
-- これは、これまでのメンションやパターンによる呼び出しの上に、そして `group_topics` と `ignored_threads` の上に重なって働きます。
+- `TELEGRAM_ALLOWED_USERS` は、すべてのチャットの種類（DM、グループ、フォーラム）を対象にします。
+- `TELEGRAM_GROUP_ALLOWED_USERS` は、挙げた送り手をグループ / フォーラムでだけ認可します。`TELEGRAM_ALLOWED_USERS` に入っていない限り、ボットへ DM はできません。
+- `TELEGRAM_GROUP_ALLOWED_CHATS` にあるチャットは、送り手にかかわらずそのチャットのすべてのメンバーを認可します。
+- どれでも `*` を使うと、任意の送り手 / チャットを許可できます。
+- これは既存のメンションや型による起動、そして `group_topics` + `ignored_threads` の上に重なって働きます。
 
 ### PR #17686 より前からの移行 {#migration-from-before-pr-17686}
 
-この分け方が入る前は `TELEGRAM_GROUP_ALLOWED_USERS` だけがつまみで、利用者はそこへ**トークの ID** を入れていました。以前との互換のため、`TELEGRAM_GROUP_ALLOWED_USERS` の中の `-` で始まるトークの ID らしい値は、いまもトークの ID として扱われ、そのとき一度だけ廃止予定の警告がログに出ます。移行の仕方です。
+この分離より前は `TELEGRAM_GROUP_ALLOWED_USERS` だけが項目で、利用者はそこに**チャット ID** を入れていました。互換のため、`TELEGRAM_GROUP_ALLOWED_USERS` にあるチャット ID の形をした値（`-` で始まるもの）はいまもチャット ID として扱われ、非推奨の警告が一度だけ記録されます。移行のしかたは次のとおりです。
 
 ```bash
 # Old (still works, but deprecated)
@@ -1123,11 +1151,11 @@ TELEGRAM_GROUP_ALLOWED_USERS="-1001234567890"
 TELEGRAM_GROUP_ALLOWED_CHATS="-1001234567890"
 ```
 
-### 客人としての @mention の抜け道（`guest_mode`） {#guest-mention-bypass-guestmode}
+### 客人の @mention による通し（`guest_mode`） {#guest-mention-bypass-guestmode}
 
-ふつうの設定では、`group_allowed_chats` は固い関門です。一覧に無いグループからのメッセージは、メンバーがはっきり @mention していても黙って捨てられます。問い合わせ対応やチームのボットなら、それが正しい既定です。
+ふつうの構成では、`group_allowed_chats` は固い関門です。一覧にないグループからのメッセージは、メンバーが明示的にボットを @mention しても黙って捨てられます。サポートやチームのボットには、それが正しい既定です。
 
-もっと気楽な使い方、たとえば友人どうしのグループで、ボットには**ふだん黙っていてほしい**けれど**名指しされたときだけ答えてほしい**場合は、`guest_mode` を有効にします。
+もっと気軽な使い方 — ボットに**ふだんは黙っていて**ほしいが、**はっきり呼ばれたときは応じて**ほしい友人のグループチャットなど — では `guest_mode` を有効にします。
 
 ```yaml
 gateway:
@@ -1139,7 +1167,7 @@ gateway:
         guest_mode: true       # non-allowlisted groups: allow on @mention only
 ```
 
-環境変数では次のとおりです。
+同じ意味の環境変数:
 
 ```bash
 TELEGRAM_GUEST_MODE=true
@@ -1147,13 +1175,13 @@ TELEGRAM_GUEST_MODE=true
 
 既定は `false` です。
 
-`guest_mode: true` のとき、許可リストに無いグループからのメッセージは、ボットをはっきり @mention したときに**だけ**処理されます。メンションは毎回必要で、客人としてのやり取りに続きの記憶はありません。呼ばれていない友人どうしのやり取りに、ボットが勝手に入っていくことはありません。
+`guest_mode: true` のとき、許可一覧にないグループからのメッセージは、ボットを明示的に @mention したときに**だけ**処理されます。メンションは毎回必要で、客人としてのやり取りにはセッションの粘りがありません。呼ばれていない友人のグループの会話に、ボットが勝手に加わることはありません。
 
-DM と許可済みのグループの動きは、これまでとまったく同じです。
+DM と許可一覧にあるグループの振る舞いは、これまでとまったく同じです。
 
-## スラッシュコマンドの権限 {#slash-command-access-control}
+## スラッシュコマンドのアクセス制御 {#slash-command-access-control}
 
-既定では、許可された利用者は誰でもすべてのスラッシュコマンドを使えます。許可リストを、**管理者**（すべてのスラッシュコマンドを使えます）と**一般の利用者**（明示的に許したコマンドだけ）に分けたい場合は、そのプラットフォームの `extra` の節に `allow_admin_from` と `user_allowed_commands` を足します。
+既定では、許可されたすべての利用者がすべてのスラッシュコマンドを実行できます。許可一覧を、すべてのスラッシュコマンドを使える**管理者**と、明示的に有効にしたコマンドだけを使える**一般利用者**に分けるには、プラットフォームの `extra` のブロックに `allow_admin_from` と `user_allowed_commands` を追加します。
 
 ```yaml
 gateway:
@@ -1184,41 +1212,41 @@ gateway:
           - status
 ```
 
-**動作:**
+**振る舞い:**
 
-- ある範囲（DM またはグループ）の `allow_admin_from` に挙げられた利用者は、登録されている**すべての**スラッシュコマンド（組み込みのものもプラグインが登録したものも）を、その場の一覧を通して使えます。
-- `allow_from` にはいるが `allow_admin_from` には**いない**利用者は、`user_allowed_commands` に挙げたコマンドと、常に許される最低限の `/help` と `/whoami` だけを使えます。
-- 普通の会話（スラッシュでないメッセージ）には影響しません。管理者でない利用者も、これまでどおりエージェントと話せます。任意のコマンドを呼べないだけです。
-- **以前との互換:** ある範囲で `allow_admin_from` が設定されていなければ、その範囲ではスラッシュコマンドの制限は働きません。すでに動かしている構成は、何も変えずにそのまま使えます。
-- DM での管理者は、グループでの管理者を意味しません。範囲ごとに別の管理者の一覧を持ちます。
+- ある範囲（DM またはグループ）の `allow_admin_from` に入っている利用者は、登録されている**すべて**のスラッシュコマンドを、組み込みのものもプラグインが登録したものも含めて、実行時の登録簿を通じて実行できます。
+- `allow_from` にいるが `allow_admin_from` に**いない**利用者が実行できるのは、`user_allowed_commands` に挙げたコマンドと、常に許可されている最低限の `/help` と `/whoami` だけです。
+- ふつうの会話（スラッシュでないメッセージ）は影響を受けません。管理者でない利用者もこれまでどおりエージェントと話せます。任意のコマンドを起動できないだけです。
+- **以前との互換性:** ある範囲について `allow_admin_from` を設定していない場合、その範囲ではスラッシュコマンドの制御が無効になります。既存の環境は何も変えずに動き続けます。
+- DM の管理者であることは、グループでの管理者であることを意味しません。範囲ごとに別の管理者一覧を持ちます。
 - `group_allow_admin_from` だけを設定した場合、DM の範囲は制限なし（以前との互換）のままです。
 
-いま自分がどの範囲にいるか、どの立場か（管理者 / 利用者 / 制限なし）、どのスラッシュコマンドを使えるかは `/whoami` で確認できます。
+`/whoami` を使うと、いまの範囲、自分の区分（管理者 / 利用者 / 制限なし）、実行できるスラッシュコマンドが分かります。
 
-## モデルを選ぶ画面 {#interactive-model-picker}
+## 対話形式のモデル選択 {#interactive-model-picker}
 
-Telegram のトークで `/model` を引数なしで送ると、Hermes はモデルを切り替えるための操作画面をその場に出します。
+Telegram のチャットで引数なしの `/model` を送ると、Hermes はモデルを切り替えるための対話的なインラインキーボードを出します。
 
-1. **提供元の選択** — 使える提供元とモデルの数がボタンで並びます（たとえば「OpenAI (15)」、いま使っている提供元には「✓ Anthropic (12)」のように印が付きます）。
-2. **モデルの選択** — ページ送りできるモデルの一覧に、**Prev** と **Next** の移動、提供元の一覧に戻る **Back**、そして **Cancel** が付きます。
+1. **プロバイダーの選択** — 利用できるプロバイダーをモデル数付きで示すボタン（たとえば「OpenAI (15)」、いま使っているプロバイダーなら「✓ Anthropic (12)」）。
+2. **モデルの選択** — ページ送りのモデルの一覧。**Prev**/**Next** の移動、プロバイダーの一覧へ戻る **Back**、そして **Cancel** が付きます。
 
-いま使っているモデルと提供元は上部に表示されます。移動はすべて同じメッセージをその場で書き換える形で行われるので、トークが散らかりません。
+いまのモデルとプロバイダーは上部に表示されます。移動はすべて同じメッセージをその場で編集して行われます（チャットが散らかりません）。
 
 :::tip
-モデルの名前が分かっているなら、`/model <name>` と直接打てばこの画面を飛ばせます。`/model <name> --global` と打つと、セッションをまたいでその設定が残ります。
+正確なモデル名が分かっているなら、`/model <name>` と直接入力して選択を飛ばせます。`/model <name> --global` と入力すると、その変更をセッションをまたいで残せます。
 :::
 
-## DNS-over-HTTPS による予備の IP {#dns-over-https-fallback-ips}
+## DNS-over-HTTPS の予備の IP {#dns-over-https-fallback-ips}
 
-制限のあるネットワークでは、`api.telegram.org` が届かない IP に解決されることがあります。Telegram のアダプターには**予備の IP** の仕組みがあり、正しい TLS のホスト名と SNI を保ったまま、別の IP へそっと接続し直します。
+一部の制限のあるネットワークでは、`api.telegram.org` が届かない IP に解決されることがあります。Telegram のアダプターには**予備の IP** の仕組みがあり、正しい TLS のホスト名と SNI を保ったまま、別の IP への接続を黙って試し直します。
 
 ### 仕組み {#how-it-works}
 
-1. `TELEGRAM_FALLBACK_IPS` が設定されていれば、その IP をそのまま使います。
-2. 設定されていなければ、アダプターは **Google DNS** と **Cloudflare DNS** に DNS-over-HTTPS（DoH）で問い合わせ、`api.telegram.org` の別の IP を自動で探します。
-3. 分かっている Telegram の API の IPv4 のアドレスを、デュアルスタックの `api.telegram.org` というホスト名より**先に**試します。行き止まりの IPv6 の経路は、エラーを返さないまま `connect()` に居座ることがあり、以前はそれがイベントループを押さえてしまって、30 秒の初期化の期限が働きませんでした。
-4. DoH もふさがれているか時間切れになる場合は、埋め込みの IPv4 の初期値（`149.154.166.110`、`149.154.167.220`）をその IPv4 優先の一覧として使います。ホスト名は最後の手段のままです。
-5. うまくいった経路が見つかると、それが「定着」します。以降の要求はその経路を直接使います。ホスト名は、IPv6 しか使えないネットワークのための最後の手段として残します。
+1. `TELEGRAM_FALLBACK_IPS` が設定されていれば、その IP がそのまま使われます。
+2. そうでなければ、アダプターは **Google DNS** と **Cloudflare DNS** に DNS-over-HTTPS（DoH）で問い合わせて、`api.telegram.org` の別の IP を自動で探します。
+3. 分かっている Telegram の API の IPv4 のアドレスは、デュアルスタックの `api.telegram.org` というホスト名**より先に**試されます。どこにも届かない IPv6 の経路は、エラーにならないまま `connect()` に留まることがあり、以前はそれがイベントループを縛って、30 秒の初期化の期限が発火しないことがありました。
+4. DoH も塞がれているか時間切れになった場合は、埋め込みの IPv4 の種となる一覧（`149.154.166.110`、`149.154.167.220`）が、その IPv4 優先の一覧として使われます。ホスト名は最後の手段のままです。
+5. いったん通った経路は「粘り」ます。以降の要求はそれを直接使います。ホスト名は、IPv6 しかないネットワークのための最後の手段として残されます。
 
 ### 設定 {#configuration}
 
@@ -1227,7 +1255,7 @@ Telegram のトークで `/model` を引数なしで送ると、Hermes はモデ
 TELEGRAM_FALLBACK_IPS=149.154.167.220,149.154.167.221
 ```
 
-`~/.hermes/config.yaml` に書く場合は次のとおりです。
+あるいは `~/.hermes/config.yaml` で次のようにします。
 
 ```yaml
 platforms:
@@ -1238,21 +1266,21 @@ platforms:
 ```
 
 :::tip
-たいていの場合、これを手で設定する必要はありません。DoH による自動の探索で、制限のあるネットワークのほとんどはしのげます。`TELEGRAM_FALLBACK_IPS` が要るのは、DoH までふさがれているネットワークだけです。機械の IPv6 が壊れている場合は、`config.yaml` で `network.force_ipv4: true` を設定して、プロセス全体で AAAA の問い合わせを飛ばすこともできます。
+ふつうはこれを手で設定する必要はありません。DoH による自動の探索が、制限のあるネットワークのたいていの場合を扱います。`TELEGRAM_FALLBACK_IPS` の環境変数が要るのは、DoH までネットワークで塞がれている場合だけです。ホストで IPv6 が壊れている場合は、`config.yaml` で `network.force_ipv4: true` を設定して、プロセス全体で AAAA の問い合わせを飛ばすこともできます。
 :::
 
 ## プロキシへの対応 {#proxy-support}
 
-インターネットに出るのに HTTP のプロキシが要るネットワーク（企業ではよくあります）では、Telegram のアダプターが標準のプロキシの環境変数を自動で読み、すべての接続をプロキシ経由にします。
+ネットワークがインターネットへ出るのに HTTP のプロキシを必要とする場合（企業ではよくあります）、Telegram のアダプターは標準のプロキシの環境変数を自動で読み、すべての接続をプロキシ経由にします。
 
-### 使える変数 {#supported-variables}
+### 対応している変数 {#supported-variables}
 
-アダプターは次の環境変数を順に見て、最初に設定されているものを使います。
+アダプターは、次の環境変数を順に確かめ、最初に設定されているものを使います。
 
 1. `HTTPS_PROXY`
 2. `HTTP_PROXY`
 3. `ALL_PROXY`
-4. `https_proxy` / `http_proxy` / `all_proxy`（小文字の書き方）
+4. `https_proxy` / `http_proxy` / `all_proxy`（小文字の版）
 
 ### 設定 {#configuration}
 
@@ -1263,50 +1291,50 @@ export HTTPS_PROXY=http://proxy.example.com:8080
 hermes gateway
 ```
 
-`~/.hermes/.env` に書いても構いません。
+あるいは `~/.hermes/.env` に足します。
 
 ```bash
 HTTPS_PROXY=http://proxy.example.com:8080
 ```
 
-プロキシは、主な接続にも、予備の IP を使うすべての接続にも適用されます。Hermes 側で追加の設定は要りません。環境変数が設定されていれば、そのまま使われます。
+プロキシは、主の接続にも、すべての予備の IP への接続にも適用されます。Hermes 側で追加の設定は要りません。環境変数が設定されていれば自動で使われます。
 
 :::note
-ここで説明しているのは、Hermes が Telegram への接続に使う独自の予備の通信の層についてです。ほかの場所で使っている標準の `httpx` のクライアントは、もともとプロキシの環境変数をそのまま尊重します。
+これは、Hermes が Telegram への接続に使う独自の予備の伝送の層についての説明です。他のところで使われている標準の `httpx` のクライアントは、もともとプロキシの環境変数をそのまま尊重します。
 :::
 
 ## メッセージへのリアクション {#message-reactions}
 
-処理の状況が目で分かるよう、ボットはメッセージに絵文字のリアクションを付けられます。
+ボットは、処理の様子を見せるためにメッセージへ絵文字のリアクションを付けられます。
 
-- 👀 ボットがメッセージの処理を始めたとき
-- 👍 応答を無事に送れたとき
+- 👀 メッセージの処理を開始したとき
+- 👍 応答を無事に送り終えたとき
 - 👎 処理の途中でエラーが起きたとき
 
-リアクションは**既定で無効**です。`config.yaml` で有効にします。
+リアクションは**既定では無効**です。`config.yaml` で有効にします。
 
 ```yaml
 telegram:
   reactions: true
 ```
 
-環境変数で書く場合は次のとおりです。
+環境変数でも設定できます。
 
 ```bash
 TELEGRAM_REACTIONS=true
 ```
 
 :::note
-リアクションが積み重なる Discord とは違い、Telegram の Bot API はボットのリアクションを 1 回の呼び出しで全部置き換えます。👀 から 👍 や 👎 への切り替わりはひとまとまりで起きるので、両方が同時に見えることはありません。
+リアクションが積み重なる Discord と違い、Telegram の Bot API は 1 回の呼び出しでボットのリアクションをすべて置き換えます。👀 から 👍/👎 への変化は一度に起こるので、両方が同時に見えることはありません。
 :::
 
 :::tip
-グループでリアクションを付ける権限がボットに無い場合、リアクションの呼び出しは黙って失敗し、メッセージの処理はそのまま続きます。
+グループでリアクションを付ける権限がボットにない場合、リアクションの呼び出しは黙って失敗し、メッセージの処理はふつうに続きます。
 :::
 
-## トークごとの指示文 {#per-channel-prompts}
+## チャンネルごとのプロンプト {#per-channel-prompts}
 
-Telegram の特定のグループやフォーラムのトピックに、その場かぎりのシステムの指示文を割り当てられます。指示文はやり取りのたびに実行時に差し込まれ、会話の記録には残らないので、変更はすぐに効きます。
+特定の Telegram のグループやフォーラムのトピックに、一時的なシステムプロンプトを割り当てられます。プロンプトはやり取りのたびに実行時に差し込まれ、記録として履歴に残らないので、変更はすぐ効きます。
 
 ```yaml
 telegram:
@@ -1319,57 +1347,57 @@ telegram:
       constructive.
 ```
 
-キーはトークの ID（グループやスーパーグループ）か、フォーラムのトピックの ID です。フォーラムのグループでは、トピック単位の指示文がグループ単位の指示文より優先されます。
+キーはチャット ID（グループ / スーパーグループ）かフォーラムのトピックの ID です。フォーラムのグループでは、トピックの単位のプロンプトがグループの単位のプロンプトより優先されます。
 
-- グループ `-1001234567890` の中のトピック `42` のメッセージ → トピック `42` の指示文を使います
-- トピック `99`（設定が無い）のメッセージ → グループ `-1001234567890` の指示文に戻ります
-- 設定が無いグループのメッセージ → トークごとの指示文は使いません
+- グループ `-1001234567890` の中のトピック `42` のメッセージ → トピック `42` のプロンプトを使う
+- トピック `99`（項目なし）のメッセージ → グループ `-1001234567890` のプロンプトに落ちる
+- 項目のないグループのメッセージ → チャンネルのプロンプトは適用されない
 
-YAML で数字として書かれたキーは、自動で文字列に直されます。
+YAML の数値のキーは、自動で文字列に直されます。
 
-## うまくいかないとき {#troubleshooting}
+## 困ったときは {#troubleshooting}
 
 | 症状 | 対処 |
 |---------|----------|
-| ボットがまったく応答しない | `TELEGRAM_BOT_TOKEN` が正しいか確かめます。`hermes gateway` のログにエラーが出ていないか見てください。 |
-| ボットが「許可されていません」と返す | 自分のユーザー ID が `TELEGRAM_ALLOWED_USERS` に入っていません。@userinfobot でもう一度確かめてください。 |
-| グループのメッセージを無視する | プライバシーモードが有効になっているはずです。無効にするか（手順 3）、ボットをグループの管理者にします。**プライバシーの設定を変えたら、ボットを外して入れ直すのを忘れずに。** |
-| 音声メッセージが文字起こしされない | 音声認識が使える状態か確かめます。手元で文字起こしするなら `faster-whisper` を入れ、そうでなければ `~/.hermes/.env` に `GROQ_API_KEY` か `VOICE_TOOLS_OPENAI_KEY` を設定します。 |
-| 音声の返信が吹き出しでなくファイルになる | `ffmpeg` を入れてください（Edge TTS の Opus への変換に要ります）。 |
-| ボットのトークンが失効・不正 | BotFather で `/revoke` のあと `/newbot` か `/token` を使って新しいトークンを作ります。`.env` ファイルを書き換えてください。 |
-| webhook に更新が届かない | `TELEGRAM_WEBHOOK_URL` に外から届くか確かめます（`curl` で試せます）。使っているサービスやリバースプロキシが、その URL のポートに来た HTTPS の通信を `TELEGRAM_WEBHOOK_PORT` で指定した手元の待ち受けポートへ渡しているか確かめてください（番号が同じである必要はありません）。SSL/TLS が有効かどうかも確かめます。Telegram は HTTPS の URL にしか送りません。ファイアウォールの設定も見てください。 |
+| ボットがまったく応答しない | `TELEGRAM_BOT_TOKEN` が正しいか確かめてください。`hermes gateway` のログにエラーがないか見てください。 |
+| ボットが「unauthorized」と返す | 自分のユーザー ID が `TELEGRAM_ALLOWED_USERS` に入っていません。@userinfobot で確かめ直してください。 |
+| ボットがグループのメッセージを無視する | プライバシーモードが有効なはずです。無効にする（手順 3）か、ボットをグループの管理者にしてください。**プライバシーを変えたら、ボットを外して入れ直すのを忘れずに。** |
+| ボイスメッセージが文字起こしされない | 音声認識が使える状態か確かめてください。手元で文字起こしするなら `faster-whisper` を導入し、あるいは `~/.hermes/.env` に `GROQ_API_KEY` / `VOICE_TOOLS_OPENAI_KEY` を設定します。 |
+| 音声の返信が吹き出しでなくファイルになる | `ffmpeg` を導入してください（Edge TTS の Opus への変換に必要です）。 |
+| ボットのトークンが失効 / 無効 | BotFather で `/revoke` のあと `/newbot`、または `/token` で新しいトークンを作ってください。`.env` を更新します。 |
+| webhook が更新を受け取らない | `TELEGRAM_WEBHOOK_URL` が外から届くか確かめてください（`curl` で試せます）。プラットフォームや逆プロキシが、その URL のポートに来た内向きの HTTPS の通信を、`TELEGRAM_WEBHOOK_PORT` で設定したローカルの待ち受けのポートへ流すようにしてください（同じ番号である必要はありません）。SSL/TLS が有効であることも確かめてください。Telegram は HTTPS の URL にしか送りません。ファイアウォールの設定も見てください。 |
 
-## コマンド実行の承認 {#exec-approval}
+## 実行の承認 {#exec-approval}
 
-エージェントが危険かもしれないコマンドを実行しようとすると、トークの中で承認を求めてきます。
+エージェントが危険かもしれないコマンドを実行しようとすると、チャットで承認を求めてきます。
 
-> ⚠️ このコマンドは危険かもしれません（再帰的な削除）。承認するなら "yes" と返してください。
+> ⚠️ This command is potentially dangerous (recursive delete). Reply "yes" to approve.
 
-承認するなら "yes" か "y"、断るなら "no" か "n" と返します。
+承認するなら「yes」/「y」、拒否するなら「no」/「n」と返してください。
 
-## 対話的な問いかけ（clarify） {#interactive-prompts-clarify}
+## 対話形式の問い合わせ（clarify） {#interactive-prompts-clarify}
 
-エージェントが `clarify` のツールを呼ぶとき、つまりどちらの進め方がよいか尋ねる、作業のあとの感想を聞く、あるいは軽くない判断の前に確かめるとき、Telegram ではその質問が**画面のボタン**として表示されます。
+エージェントが `clarify` ツールを呼んだとき — どの進め方がよいか尋ねる、作業後の感想を聞く、判断の前に確認する、といった場面で — Telegram では**インラインキーボードのボタン**として質問が表示されます。
 
 > ❓ ダッシュボードにはどのフレームワークを使いましょうか？
 >
 > [1. Next.js] [2. Remix] [3. Astro]
-> [✏️ その他（入力して答える）]
+> [✏️ その他（自由に入力）]
 
-ボタンを押して答えるか、**その他**を押して自由に書いて答えます（次に送ったメッセージが答えになります）。選択肢を用意しない自由回答の `clarify` の呼び出しでは、ボタンは出ず、次のメッセージがそのまま答えとして受け取られます。
+ボタンをタップして答えるか、**その他** をタップして自由に書いて答えます（次に送ったメッセージが答えになります）。選択肢のない自由形式の `clarify` では、ボタンは出ず、次のメッセージをそのまま受け取ります。
 
-答えを待つ時間は `~/.hermes/config.yaml` の `agent.clarify_timeout` で設定します（既定は `3600` 秒）。その間に答えないと、エージェントは目印のメッセージで待つのをやめ、止まらずに進み方を変えます。
+応答の制限時間は `~/.hermes/config.yaml` の `agent.clarify_timeout` で設定します（既定は `3600` 秒）。制限時間内に答えないと、エージェントは所定の合図とともに待機を解き、止まったままにならずに進みます。
 
-Telegram がボタンのカードを表示できないとき（Bot API に拒否された場合や、15 秒の受け付け時間を過ぎて送信に失敗した場合）は、Hermes が同じ問いかけをただの番号付きの一覧のメッセージとして送り直し、入力した返事（番号か選択肢の文言）を答えとして受け取ります。それすら届けられないときは、時間切れを待って沈黙を「答えなかった」と取り違えることなく、`[clarify prompt could not be delivered]` を添えてエージェントをすぐ先へ進めます。
+Telegram がボタンのカードを表示できない場合（Bot API が拒む、15 秒の受領の時間内に送信が終わらない）、Hermes は同じ質問を番号付きの一覧の素のメッセージとして聞き直し、あなたが打った返事（番号か選択肢の文章）を答えとして受け取ります。それすら届けられないときは、制限時間を待って沈黙をあなたの無回答と取り違えるのではなく、`[clarify prompt could not be delivered]` とともにエージェントをすぐ解放します。
 
-## 通知の多さ {#push-notification-volume}
+## 通知の量 {#push-notification-volume}
 
-Telegram は、ボットが送るメッセージのたびに通知を鳴らします。エージェントの長いやり取りでは、ツールの進捗の吹き出し・ストリーミングの更新・状態の知らせが次々に出るので、あっという間にうるさくなります。Telegram のアダプターには通知の方式が 2 つあります。
+Telegram は、ボットが送るすべてのメッセージで通知を出します。ツールの進捗の吹き出し、逐次の更新、状態の知らせを出す長いやり取りでは、すぐにうるさくなります。Telegram のアダプターには通知の方式が 2 つあります。
 
-| 方式 | 動作 |
+| 方式 | 振る舞い |
 |------|----------|
-| `important`（既定） | 鳴るのは**最終的な応答**・**承認を求める問いかけ**・**スラッシュコマンドの確認**だけです。ツールの進捗、ストリーミングの断片、状態の知らせは `disable_notification=true` で送られます。 |
-| `all` | 送信するすべてのメッセージで通知が鳴ります。以前の動きです。ツールの呼び出しをひとつ残らず知りたい場合に選んでください。 |
+| `important`（既定） | 鳴るのは**最後の応答**、**承認の問い合わせ**、**スラッシュコマンドの確認**だけです。ツールの進捗、逐次の断片、状態のメッセージは `disable_notification=true` で届けられます。 |
+| `all` | 送信するすべてのメッセージで通知が鳴ります。従来の振る舞いで、ツールの呼び出しを本当にすべて知りたい場合に選んでください。 |
 
 `~/.hermes/config.yaml` で設定します。
 
@@ -1380,28 +1408,28 @@ display:
       notifications: important   # or "all"
 ```
 
-環境変数での上書きもできます（ちょっと試すときに便利です）。
+環境変数での上書き（手早く比べたいときに便利です）:
 
 ```bash
 HERMES_TELEGRAM_NOTIFICATIONS=all
 ```
 
-知らない値を書くと、警告をログに出して `important` として扱われます。
+分からない値は警告を記録して `important` に落ちます。
 
-## 状態のメッセージはその場で書き換わる {#status-messages-edited-in-place}
+## 状態のメッセージはその場で書き換えられる {#status-messages-edited-in-place}
 
-Telegram のアダプターは、繰り返し出るエージェントの状態の知らせ（「文脈を圧縮しています…」「ツールを呼び出しています…」など）を `send_or_update_status()` に通します。この関数は `{(chat_id, status_key) → message_id}` の対応を覚えていて、2 回目からは新しい吹き出しを足すのではなく**既存の吹き出しを書き換えます**。`status_key` が違えばそれぞれ別のメッセージになり、別のトークどうしがぶつかることもありません。書き換えに失敗した場合（利用者がそのメッセージを消した、Telegram が編集を許す時間を過ぎたなど）は、覚えていた対応を捨て、次のときに新しいメッセージを送って ID を覚え直します。設定は要りません。これが Telegram での既定の動きです。`send_or_update_status` を持たないほかのアダプターは、これまでどおり素の `send()` に落ちます。
+Telegram のアダプターは、繰り返し来るエージェントの状態の知らせ（「Compressing context…」「Calling tool…」など）を `send_or_update_status()` に通します。これは `{(chat_id, status_key) → message_id}` のキャッシュを持ち、次からは新しい吹き出しを足す代わりに**既存の吹き出しを書き換えます**。`status_key` が違えばそれぞれ別のメッセージになりますし、違うチャットどうしがぶつかることもありません。書き換えに失敗した場合（利用者がメッセージを消した、Telegram が書き換えを許す期間より古い、など）、キャッシュの項目は捨てられ、次のときに新しいメッセージを出して ID を覚え直します。設定は要りません。これが Telegram での既定の振る舞いです。`send_or_update_status` を実装していない他のアダプターは、これまでどおり素の `send()` に落ちます。
 
-## やり取りの間、受け取ったメッセージをピン留めする {#pin-incoming-user-message-during-agent-turn}
+## エージェントのやり取りの間、受信メッセージをピン留めする {#pin-incoming-user-message-during-agent-turn}
 
-利用者がエージェントを動かすメッセージを送ると、Telegram のアダプターはそのやり取りの間だけ受け取ったメッセージをピン留めし、応答が終わると外します。ボットが無視しているのではなく、いま取りかかっているのだと目で分かるようにするためです。ピン留めには `disable_notification=true` を使うので、余計な通知は鳴りません。設定は要りません。
+利用者がエージェントのやり取りを起こすメッセージを送ると、Telegram のアダプターはそのやり取りの間だけその受信メッセージをピン留めし、応答が終わると外します。ボットがそのメッセージを無視しているのではなく、いま取り組んでいることを示す、軽い目印です。ピン留めには `disable_notification=true` を使うので、余計な通知は出ません。設定は要りません。
 
-## 安全のために {#security}
+## セキュリティ {#security}
 
 :::warning
-誰がボットとやり取りできるかを絞るため、`TELEGRAM_ALLOWED_USERS` は必ず設定してください。設定していない場合、ゲートウェイは安全のため既定ですべての利用者を断ります。
+ボットとやり取りできる人を絞るために、`TELEGRAM_ALLOWED_USERS` を必ず設定してください。設定がない場合、ゲートウェイは安全側に倒してすべての利用者を拒否します。
 :::
 
-ボットのトークンを人前に出さないでください。漏れたときは、BotFather の `/revoke` ですぐに無効にします。
+ボットのトークンを人目に触れる場所に出さないでください。漏れた場合は、BotFather の `/revoke` のコマンドですぐ失効させてください。
 
-詳しくは[安全についての説明](/hermes/docs/user-guide/security/)を見てください。利用者の認証をもっと融通の利く形にしたい場合は、[DM ペアリング](/hermes/docs/user-guide/messaging/#dm-pairing-alternative-to-allowlists)も使えます。
+詳しくは [セキュリティの文書](/hermes/docs/user-guide/security/) を参照してください。利用者の認可をもっと柔らかく扱う方法として、[DM のペアリング](/hermes/docs/user-guide/messaging/#dm-pairing-alternative-to-allowlists) も使えます。

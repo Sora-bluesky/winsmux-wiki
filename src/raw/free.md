@@ -65,8 +65,8 @@ raw: /hermes/raw/free.md
 | **inclusionAI: Ling 3.0 Flash Sante (free)**<br>`inclusionai/ling-3.0-flash-sante:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **inclusionAI: Ling 3.0 Flash VL (free)**<br>`inclusionai/ling-3.0-flash-vl:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **LiquidAI: LFM2.5-2.6B (free)**<br>`liquid/lfm-2.5-2.6b:free`<br>入力・出力の基本単価0（取得時点） | 65,536 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **Nex AGI: Nex-N2.5-Mini (free)**<br>`nex-agi/nex-n2.5-mini:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **Nex AGI: Nex-N2.5-Pro (free)**<br>`nex-agi/nex-n2.5-pro:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **Nex AGI: Nex-N2.5-Mini (free)**<br>`nex-agi/nex-n2.5-mini:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-09-25 |
+| **Nex AGI: Nex-N2.5-Pro (free)**<br>`nex-agi/nex-n2.5-pro:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-09-25 |
 | **NVIDIA: Nemotron 3 Nano Omni (free)**<br>`nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`<br>入力・出力の基本単価0（取得時点） | 256,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3 Super (free)**<br>`nvidia/nemotron-3-super-120b-a12b:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3 Ultra (free)**<br>`nvidia/nemotron-3-ultra-550b-a55b:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |

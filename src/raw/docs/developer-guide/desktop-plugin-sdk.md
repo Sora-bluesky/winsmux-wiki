@@ -1,45 +1,81 @@
 ---
-title: "デスクトッププラグイン SDK（@hermes/plugin-sdk）"
-description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンド領域までを、import 1 行だけ、ビルドなしで扱えます。"
+title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
+description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: da30c8980de74cca789a8e895f042a756143fb4e
+upstream_blob: 1723498d2314f6909a09cc9dd5aff3dd6000915d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
 
-# デスクトッププラグイン SDK {#desktop-plugin-sdk}
+# デスクトップのプラグイン SDK {#desktop-plugin-sdk}
 
-ネイティブの [Hermes Desktop](/hermes/docs/user-guide/desktop/) アプリは、あらゆる部品が「寄与」として登録される作りになっています。ウィンドウの中に見えるもの、つまりペイン、ルート、サイドバーのナビ、ステータスバーの表示、パレットの項目、キー割り当て、テーマは、すべて 1 つの中央レジストリに登録されます。アプリ本体も、プラグインとまったく同じやり方で自分の部品を登録しています。だからプラグインの仕組みは後付けの飾りではなく、本物です。
+ネイティブの [Hermes Desktop](/hermes/docs/user-guide/desktop/) アプリは、コントリビューションで
+組み立てられています。ウィンドウ内のあらゆる面 — ペイン、ルート、サイドバーのナビ、
+ステータスバーの項目、パレットの項目、キー割り当て、テーマ — が、1 つの中央の登録簿に
+登録されます。中核部分も、プラグインとまったく同じやり方で自分の面を登録しているので、
+プラグインの仕組みは後付けではなく本物です。
 
-**デスクトッププラグイン**とは、`HermesPlugin` を default export する ESM ファイル 1 つのことです。読み込むモジュールは `@hermes/plugin-sdk` の 1 つだけで、それだけで必要なものが全部手に入ります。アプリの生きた状態、ゲートウェイの JSON-RPC の入口、プラグイン専用の REST / ソケットの領域、React Query、そしてアプリ自身の UI キットです。UI キットのおかげで、プラグインの見た目は最初からアプリになじみます。リポジトリを clone する必要も、`npm run build` する必要も、アプリのソースに手を入れる必要もありません。`$HERMES_HOME/desktop-plugins/<id>/plugin.js` にファイルを置けば、アプリが数秒で読み込み、以降は保存するたびにその場で反映します。
+**デスクトップのプラグイン**は、`HermesPlugin` を default export する 1 つの ESM ファイルです。
+読み込むモジュールは `@hermes/plugin-sdk` の 1 つだけで、そこから全部が手に入ります。アプリの
+現在の状態、ゲートウェイの JSON-RPC の窓口、プラグイン専用の REST とソケットの名前空間、
+React Query、そしてアプリ自身の UI キットです。おかげでプラグインの UI は何もしなくても
+アプリに馴染みます。リポジトリのクローンも、`npm run build` も、アプリのソースへのパッチも要りません。
+ファイルを `$HERMES_HOME/desktop-plugins/<id>/plugin.js` に置けば、アプリが数秒で読み込み、
+保存のたびにその場で入れ替えます。
 
-:::warning これはウェブダッシュボードのプラグイン SDK ではありません
-Hermes では「プラグイン」という言葉がいくつかの別ものを指します。このページで扱うのは**ネイティブのデスクトップアプリ**（`hermes desktop`）の SDK、つまり `@hermes/plugin-sdk` モジュールと `$HERMES_HOME/desktop-plugins/` です。**ウェブダッシュボード**（`hermes dashboard`）には、`window.__HERMES_PLUGIN_SDK__` と `manifest.json` を使うまったく別のプラグインの仕組みがあり、[ダッシュボードを拡張する](/hermes/docs/user-guide/features/extending-the-dashboard/) で説明しています。Python の CLI / ゲートウェイ向けプラグインは [Hermes プラグインを作る](/hermes/docs/developer-guide/plugins/) にあります。3 つはコードも API も配り方も共有していません。デスクトップとダッシュボードの SDK で共通なのは、バックエンドの `plugin_api.py` の領域（`/api/plugins/<id>`）だけです。
+:::warning これはウェブのダッシュボード用のプラグイン SDK ではありません
+Hermes では「プラグイン」という言葉がいくつかの別物を指します。このページは**ネイティブの
+デスクトップアプリ**（`hermes desktop`）の SDK、つまり `@hermes/plugin-sdk` モジュールと
+`$HERMES_HOME/desktop-plugins/` の話です。**ウェブのダッシュボード**（`hermes dashboard`）には、
+`manifest.json` と `window.__HERMES_PLUGIN_SDK__` を使う、これとは無関係の別のプラグインの仕組みが
+あります。そちらは[ダッシュボードを拡張する](/hermes/docs/user-guide/features/extending-the-dashboard/)で
+説明しています。Python の CLI・ゲートウェイのプラグインは[Hermes のプラグインを作る](/hermes/docs/developer-guide/plugins/)にあります。
+この 3 つは、コードも API も配り方も共有していません。デスクトップとダッシュボードの SDK で
+共通なのは、バックエンドの `plugin_api.py` の名前空間（`/api/plugins/<id>`）だけです。
 :::
 
-## 全体像 {#mental-model}
+## 頭の中の見取り図 {#mental-model}
 
-この SDK は VS Code のモジュールの考え方をなぞっています。プラグインの作者が読み込むモジュールはきっちり 1 つで、アプリの内部には一切触れません（同梱プラグインでは lint が遮り、ディスクに置いたプラグインでは解決に失敗します）。できることは段階に分かれています。
+この SDK は VS Code と同じモジュールの考え方をとっています。プラグインの作者が読み込むのは
+きっかり 1 つのモジュールだけで、アプリの内部には触れません（同梱プラグインでは lint で遮られ、
+ディスク上のプラグインでは解決に失敗します）。できることは段階に分かれています。
 
-- **`host.state.*`** — アプリの生きた状態（nanostore の atom）を読み取り専用で覗く窓です。現在のセッション、セッションごとのターン実行中フラグ、cwd、ゲートウェイのソケットの状態、モデル、プロファイル、ビューポート。`gateway` はあくまで WebSocket の状態で、ターンの実行中かどうかではありません。
-- **`host.*` のアクション** — 安全だと確認された動詞だけを揃えたものです。トースト表示、画面遷移、ログの追尾、ゲートウェイの再起動、ゲートウェイのイベント購読。
-- **`host.request`** — ゲートウェイの JSON-RPC の入口です。セッション、設定、スキル、cron など、アプリ自身が呼んでいるものがすべて通ります。
-- **`ctx.rest` / `ctx.socket`** — `plugin_api.py` を同梱していれば使える、プラグイン専用のバックエンド領域（`/api/plugins/<id>`）です。
-- **`ui.*`** — 見た目の言語です。アプリが実際に使っているコンポーネント、テーマ変数、アイコン、書式整形が入っているので、UI がアプリと 1 ピクセル単位でそろいます。
+- **`host.state.*`** — アプリの現在の状態（nanostore の atom）を読み取り専用で見るものです。
+  動いているセッション、セッションごとのターンの進行中フラグ、作業ディレクトリ、ゲートウェイの
+  ソケットの状態、モデル、プロファイル、表示領域。`gateway` はターンの進行中ではなく WebSocket です。
+- **`host.*` の操作** — 選び抜かれた安全な動詞です。トースト表示、画面移動、ログの追尾、
+  ゲートウェイの再起動、ゲートウェイのイベントの購読。
+- **`host.request`** — ゲートウェイの JSON-RPC の窓口です。セッション、設定、スキル、cron など、
+  アプリ自身が呼んでいるものすべて。
+- **`ctx.rest` / `ctx.socket`** — `plugin_api.py` を同梱するなら使える、そのプラグイン専用の
+  バックエンドの名前空間（`/api/plugins/<id>`）です。
+- **`ui.*`** — 見た目の言語です。アプリの本物のコンポーネント、テーマの変数、アイコン、
+  整形処理が手に入るので、UI がアプリと 1 ピクセル単位で揃います。
 
-## 2 つの届け方 {#two-delivery-modes}
+## 配り方は 2 通り {#two-delivery-modes}
 
-| 方式 | 置き場所 | 誰が書くか | ビルド |
+| 方式 | 置き場所 | 誰が | ビルド |
 |------|-------|-----|------------|
-| **ディスク**（おすすめ） | `$HERMES_HOME/desktop-plugins/<id>/plugin.js` | 利用者、エージェント | 不要 — 素の ESM をそのまま読み込みます |
-| **ひとまとめのパッケージ** | `$HERMES_HOME/plugins/<id>/desktop/plugin.js` | エージェント側のコードも一緒に配るプラグイン | 不要 — ディスク方式と同じ経路です |
-| **同梱** | `apps/desktop/src/plugins/<id>/plugin.tsx` | ツリー内、アプリと一緒に配られるもの | アプリ自身の Vite ビルド |
+| **ディスク**（推奨） | `$HERMES_HOME/desktop-plugins/<id>/plugin.js` | 利用者、エージェント | 不要 — 素の ESM をそのまま読み込みます |
+| **一体型のパッケージ** | `$HERMES_HOME/plugins/<id>/desktop/plugin.js` | エージェント側のコードも同梱するプラグイン | 不要 — 同じディスク経路です |
+| **同梱** | `apps/desktop/src/plugins/<id>/plugin.tsx` | ツリー内で、アプリと一緒に配られるもの | アプリ自身の Vite ビルド |
 
-3 つとも同じ `HermesPlugin` の約束事に従い、**Capabilities → Plugins** に並び、その場で有効・無効を切り替えられます。ひとまとめのパッケージは、エージェント用プラグインのフォルダの中をディスク方式の入口が覗きに行くだけのものです。[1 つのパッケージで両方の SDK](#one-package-both-sdks) を参照してください。このページの内容はすべてディスク方式（あなたやエージェントが書くもの）を前提に書いてあり、[同梱プラグイン](#bundled-plugins) に 2 点だけ違いを記しています。Radio は、SDK だけで作られた同梱プラグインとして配られていて、既定ではオフです。**Capabilities → Plugins** で有効にすると、無料のライブ配信、放送局の検索、ステータスバーからの再生操作が使えるようになり、音に合わせて動く波形も出ます。いつものプラグインの切り替えスイッチを使うもので、無効のあいだは何も加えません。手本になるデモは、別リポジトリの [`hermes-example-plugins`](https://github.com/NousResearch/hermes-example-plugins) にあります。
+3 つとも同じ `HermesPlugin` の取り決めに従い、**Capabilities → Plugins** に現れ、その場で
+有効・無効を切り替えられます。一体型のパッケージは、エージェントのプラグインのフォルダーの中まで
+ディスクの窓口が見に行くだけのものです。[1 つのパッケージで両方の SDK](#one-package-both-sdks)を
+参照してください。このページの内容はすべてディスクの窓口に沿って書いています（あなたやエージェントが
+書くのはこちらです）。[同梱のプラグイン](#bundled-plugins)に、2 つの違いを書きました。Radio は
+同梱の SDK 専用プラグインとして配られていて、既定では無効です。**Capabilities → Plugins** で
+有効にすると、無料のライブ配信、局の検索、音に反応する波形付きの再生操作がステータスバーに出ます。
+既存のプラグインの切り替えをそのまま使い、無効の間は何も足しません。参考になる実装例は、
+別リポジトリの [`hermes-example-plugins`](https://github.com/NousResearch/hermes-example-plugins) にあります。
 
 ## 手早く試す — 最初のプラグイン {#quick-start-your-first-plugin}
 
-`$HERMES_HOME/desktop-plugins/hello/plugin.js` を作ります（既定では `~/.hermes/...` です）。デスクトッププラグインはアプリ単位のものです。ウィンドウがつなぐプロファイル、ゲートウェイ、離れた端末がいくつあっても、置き場所は 1 つだけです。フォルダ名はプラグインの `id` と同じでなければいけません。
+`$HERMES_HOME/desktop-plugins/hello/plugin.js` を作ります（既定では `~/.hermes/...` です）。
+デスクトップのプラグインはアプリ単位です。ウィンドウがつなぐプロファイル、ゲートウェイ、
+遠隔のマシンがいくつあっても、置き場所は 1 か所だけです。フォルダー名はプラグインの `id` と
+同じにしてください。
 
 ```javascript
 // ~/.hermes/desktop-plugins/hello/plugin.js
@@ -89,13 +125,19 @@ export default {
 }
 ```
 
-保存してください。アプリは `desktop-plugins/` を見張っていて、数秒でファイルを読み込みます。それ以降は保存するたびにその場で反映されます。出てこないときは ⌘K から **Reload desktop plugins** を実行してください。読み込みに失敗した場合はトーストが原因を教えてくれるので、直して保存し直します。
+保存します。アプリは `desktop-plugins/` を見張っていて、数秒でファイルを読み込み、以後は保存の
+たびにその場で入れ替えます。現れないときは ⌘K →
+**Reload desktop plugins** を実行してください。読み込みに失敗すると、トーストがエラーを知らせます。
+直してもう一度保存してください。
 
-:::note JSX もビルドも使いません
-ディスク上のファイルは**そのまま**読み込まれるので、JSX の書き方では構文解析できません。UI は `react/jsx-runtime` の `jsx()` / `jsxs()`（あるいは `React.createElement`）で書いてください。import できるのは `@hermes/plugin-sdk`、`react`、`react/jsx-runtime` の 3 つだけで、それ以外はわざと解決に失敗するようになっています。
+:::note JSX もビルドもありません
+ディスク上のファイルは**コンパイルせずに**読み込まれるので、JSX の構文は解釈できません。UI は
+`react/jsx-runtime` の `jsx()` / `jsxs()`（または `React.createElement`）で書いてください。
+読み込める指定子は `@hermes/plugin-sdk`、`react`、
+`react/jsx-runtime` の 3 つだけです。それ以外は意図的に解決に失敗します。
 :::
 
-## プラグインの約束事 {#the-plugin-contract}
+## プラグインの取り決め {#the-plugin-contract}
 
 プラグインは `HermesPlugin` を default export します。
 
@@ -114,7 +156,10 @@ interface HermesPlugin {
 }
 ```
 
-`register` が受け取る `PluginContext` は、そのプラグイン専用に**閉じられた**ものです。レジストリを直接触ることはありません。出どころ（`source: 'plugin:<id>'`）が自動で付き、寄与の id にも名前空間（`<id>:<localId>`）が付くので、2 つのプラグインがぶつかることはあり得ません。
+`register` は**プラグインごとに区切られた** `PluginContext` を受け取ります。登録簿を直接
+触ることはありません。このコンテキストが出どころ（`source: 'plugin:<id>'`）を自動で付け、
+すべてのコントリビューションの id に名前空間（`<id>:<localId>`）を付けるので、2 つのプラグインが
+ぶつかることはありません。
 
 ```ts
 interface PluginContext {
@@ -130,6 +175,12 @@ interface PluginContext {
   socket: (path: string, onMessage: (data: unknown) => void) => () => void
   /** Gateway event stream by type (`'*'` = all). Tracked: removed on unload/reload/disable. */
   onEvent: (type: string, listener: (event: GatewayEvent) => void) => () => void
+  /** Any other cleanup to run on unload/reload/disable (store subscriptions, injected DOM). */
+  onDispose: (fn: () => void) => void
+  /** Scoped timers and DOM listeners — cleared with the plugin. Each returns a disposer. */
+  setTimeout: (fn: () => void, ms: number) => () => void
+  setInterval: (fn: () => void, ms: number) => () => void
+  addEventListener: (target: EventTarget, type: string, listener: EventListener, options?: AddEventListenerOptions | boolean) => () => void
   /** The curated OS door: native notification, open-external, reveal-in-file-manager, clipboard. */
   os: PluginOs
   /** Plugin-scoped JSON persistence (keys live under `hermes.plugin.<id>.`). */
@@ -137,7 +188,7 @@ interface PluginContext {
 }
 ```
 
-**寄与**は、どの部品も共通で使うただ 1 つの基本単位です。
+**コントリビューション**は、あらゆる面が共有する唯一の基本要素です。
 
 ```ts
 interface Contribution {
@@ -152,28 +203,29 @@ interface Contribution {
 }
 ```
 
-`render` と `data` のどちらか、あるいは両方を、置き場所に応じて渡します。
+どの領域かによって、`render`、`data`、またはその両方を渡します。
 
-## 寄与できる場所 — 実例集 {#contribution-areas-the-cookbook}
+## コントリビューションの領域 — 実例集 {#contribution-areas-the-cookbook}
 
-場所を表す定数は SDK から import します。場所ごとに `data` の中身が決まっています。
+領域の定数は SDK から読み込みます。領域ごとに `data` の中身が違います。
 
-| 部品 | `area` | 渡すもの |
+| 面 | `area` | 渡すもの |
 |---------|--------|-------------|
 | レイアウトのペイン | `PANES_AREA`（`'panes'`） | `title` + `render` + `data: { placement, dock?, width?, height? }` |
-| 全面ページ | `ROUTES_AREA` | `data: { path }` + `render` |
+| 全面のページ | `ROUTES_AREA` | `data: { path }` + `render` |
 | サイドバーのナビ | `SIDEBAR_NAV_AREA` | `data: { path, label, codicon }` |
 | ステータスバー | `STATUSBAR_AREAS.left` / `.right` | `render`（または `StatusbarItem` としての `data`） |
-| タイトルバー | `TITLEBAR_AREAS.left` / `.center` / `.right` | `TitlebarTool` としての `data`、または表示中だけ有効な `<Contribute>` |
-| ページの見出し | `WORKSPACE_PAGE_HEADER_AREA` | ページの中に置いた、表示中だけ有効な `<Contribute>` からの `render` |
-| ⌘K パレット | `PALETTE_AREA` | `data: PaletteContribution` |
+| タイトルバー | `TITLEBAR_AREAS.left` / `.center` / `.right` | `TitlebarTool` としての `data`、またはマウントに紐づく `<Contribute>` |
+| ページの見出し | `WORKSPACE_PAGE_HEADER_AREA` | ページの中でマウントに紐づく `<Contribute>` を通した `render` |
+| ⌘K のパレット | `PALETTE_AREA` | `data: PaletteContribution` |
 | キー割り当て | `KEYBINDS_AREA` | `data: KeybindContribution` |
 | テーマ | `THEMES_AREA` | `DesktopTheme` としての `data` |
-| 入力欄まわり | `COMPOSER_AREAS.*` | 描画スロット、あるいは中間処理・添付の提供元 |
+| 入力欄まわり | `COMPOSER_AREAS.*` | 描画の差し込み口、またはミドルウェアと添付の提供元 |
 
 ### ペイン {#panes}
 
-ペインはレイアウトの木に置かれるタイルです。`placement` はその役割を表すもので、ペインは同じ役割の既存のペインとタブとして重なります。あとから利用者が好きな位置へドラッグできます。
+ペインは、レイアウトの木構造に置かれる 1 枚のタイルです。`placement` はその役割を表すもので、
+同じ役割の既存のペインとタブとして重なります。そのあと利用者は好きな場所へドラッグできます。
 
 ```javascript
 ctx.register({
@@ -185,7 +237,9 @@ ctx.register({
 })
 ```
 
-`placement` に指定できるのは `'main' | 'left' | 'right' | 'top' | 'bottom'` です。重ねるのではなく特定の**辺**に置きたいときは、`dock` の指定を足します。ペインのドロップ用のつまみにドラッグするのと同じ操作にあたります。
+`placement` は `'main' | 'left' | 'right' | 'top' | 'bottom'` です。重ねるのではなく特定の
+**端**に置きたい場合は、`dock` の指定を足します。ペインのドロップ用のつまみにドラッグするのと
+同じことです。
 
 ```javascript
 // Below the conversation, 200px tall.
@@ -196,13 +250,20 @@ data: {
 }
 ```
 
-`dock.pane` には任意のペイン id を指定します（`workspace` は会話の本体で、ほかに `sessions`、`terminal`、`files`、`review`、`logs` があります）。`dock.pos` は `'top' | 'bottom' | 'left' | 'right' | 'center'` です。ペインがその区画の半分を占めてしまわないよう、`width` か `height` を宣言しておいてください。
+`dock.pane` にはどのペインの id でも書けます（`workspace` が本体の会話です。ほかに `sessions`、
+`terminal`、`files`、`review`、`logs` があります）。`dock.pos` は
+`'top' | 'bottom' | 'left' | 'right' | 'center'` です。区画の半分を占めてしまわないように、
+`width` か `height` を宣言してください。
 
-プラグインが出しているペインが 1 つだけのとき、それを閉じるとプラグイン自体が無効になります。**Capabilities → Plugins** から戻せます。複数のペインを出しているプラグインなら、1 つ閉じてもそのペインが消えるだけで、残りのペインもコマンドも中間処理も動いたままです。**レイアウトをリセット**すると、閉じた寄与ペインが元に戻ります。
+あるプラグインが出している唯一のペインを閉じると、そのプラグインは無効になります。
+**Capabilities → Plugins** から有効に戻せます。1 つのプラグインが複数のペインを出している場合、
+1 つ閉じてもそのペインが消えるだけで、ほかのペイン、コマンド、ミドルウェアは動いたままです。
+**Reset layout** を使うと、閉じたコントリビューションのペインが戻ります。
 
 ### ページとサイドバーのナビ {#pages-and-sidebar-nav}
 
-ルートは、組み込みの画面と同じようにワークスペースのペインへ全面のページを表示します。サイドバーのナビの行（やパレットのコマンド）と組み合わせて、たどり着けるようにしてください。
+ルートは、組み込みの画面と同じように、作業領域のペインに全面のページを表示します。たどり着けるように、
+サイドバーのナビの行（やパレットのコマンド）と組み合わせてください。
 
 ```javascript
 
@@ -221,11 +282,14 @@ ctx.registerMany([
 ])
 ```
 
-`codicon` は [VS Code の codicon](https://microsoft.github.io/vscode-codicons/dist/codicon.html) の id です。どこからでも `host.navigate('/my-page')` でそのルートへ移動できます。
+`codicon` には [VS Code の codicon](https://microsoft.github.io/vscode-codicons/dist/codicon.html) の
+id を書きます。どこからでも `host.navigate('/my-page')` でそのルートへ移動できます。
 
 ### ステータスバーとタイトルバー {#status-bar-and-title-bar}
 
-ステータスバーの項目は、画面下のバーの左右どちらかのまとまりに表示されます。いちばん手軽なのは `render` 関数を渡す形です。ただのボタンなら `StatusbarItem` としての `data`（`{ id, label?, icon?, detail?, variant?, menuItems?, … }`）で済みます。
+ステータスバーの項目は、下のバーの左右どちらかの集まりに表示されます。いちばん簡単なのは
+`render` 関数を渡すことです。ただのボタンでよければ、`StatusbarItem`
+（`{ id, label?, icon?, detail?, variant?, menuItems?, … }`）としての `data` を使ってください。
 
 ```javascript
 
@@ -237,11 +301,19 @@ ctx.register({
 })
 ```
 
-タイトルバーの道具は `TITLEBAR_AREAS.left | .center | .right` に `TitlebarTool` の data（`{ id, label, icon, active?, onSelect? }`）として置きます。
+タイトルバーの道具は、`TitlebarTool` の data（`{ id, label, icon, active?, onSelect? }`）として
+`TITLEBAR_AREAS.left | .center | .right` に置きます。
 
-タイトルバーの置き場所は**ずっと居続ける取り付け先**です。そこに登録したコンポーネントは、利用者がチャットと全面ページ（Capabilities、Messaging、Artifacts、プラグインが足した経路）のあいだを行き来しているあいだも取り付いたままです。そのため、アプリ全体に効く副作用を仕込む `useEffect`（`<style>` タグ、`html[data-*]` の属性、`MutationObserver`）は、登録ごとに準備が 1 回だけ走り、後片付けは破棄のときに 1 回だけ走ります。画面の移動の途中で走ることはありません。
+タイトルバーの差し込み口は**恒久的なマウント先**です。そこに登録したコンポーネントは、利用者が
+チャットと全面のページ（Capabilities、Messaging、Artifacts、追加したルート）を行き来する間も
+マウントされたままです。そのため、全体に副作用を及ぼす `useEffect`（`<style>` タグの差し込み、
+`html[data-*]` の属性、`MutationObserver`）は、登録ごとに 1 回だけ準備が走り、破棄のときに
+1 回だけ後片付けが走ります。画面移動の途中で走ることはありません。
 
-ページ 1 つにだけ属する操作（Kanban の盤の切り替え）は、代わりに `WORKSPACE_PAGE_HEADER_AREA` に置いてください。ここはそのページが画面に出ているあいだだけ、作業パネルのタブの見出しの行に描かれ、それ以外のときは空です。ページと一緒に消えるよう、表示中だけ有効な `<Contribute>`（後述）で登録します。
+1 つのページだけのもの（かんばんのボード切り替えなど）は、代わりに
+`WORKSPACE_PAGE_HEADER_AREA` に置いてください。そのページが画面にある間だけ、作業領域のパネルの
+タブの見出しの行に描画され、それ以外のときは空になります。ページと一緒に消えるように、
+マウントに紐づく `<Contribute>`（後述）で登録してください。
 
 ### パレットのコマンドとキー割り当て {#palette-commands-and-keybinds}
 
@@ -272,18 +344,21 @@ ctx.registerMany([
 ])
 ```
 
-キー割り当ては設定画面から利用者が変更できます。`defaults` は最初の割り当てにすぎません。
+キー割り当ては設定画面で利用者が変えられます。`defaults` は最初の割り当てにすぎません。
 
 ### テーマ {#themes}
 
-テーマの寄与は、`data` として `DesktopTheme` 一式（名前、ラベル、色など）を渡します。組み込みのテーマと同じようにテーマの選択肢に並びます。
+テーマのコントリビューションは、完全な `DesktopTheme` を `data` として渡します（名前、表示名、
+色など）。組み込みのものと同じようにテーマの選択画面に現れます。
 
 ```javascript
 
 ctx.register({ id: 'noir', area: THEMES_AREA, data: myDesktopTheme })
 ```
 
-テーマを登録しても、選択肢に並ぶだけで、選ばれるわけではありません。`useTheme()` は、いま塗られている見た目（`theme`、`themeName`、`availableThemes`、`resolvedMode`）を読み、コンポーネントの中からそれを変えます（`setTheme`、`setMode`、`previewTheme`）。
+テーマを登録すると一覧に載りますが、選ばれるわけではありません。`useTheme()` は、コンポーネントの
+中から今の見た目を読み（`theme`、`themeName`、`availableThemes`、`resolvedMode`）、変更します
+（`setTheme`、`setMode`、`previewTheme`）。
 
 ```javascript
 
@@ -298,7 +373,11 @@ function ThemePicker() {
 }
 ```
 
-描画以外のきっかけで切り替える場合、つまりゲートウェイの接続、ソケットのイベント、`host.onEvent` のコールバック全般では、フックを掛けるコンポーネントがありません。そこでは `requestTheme(name)` を使ってください。解決できない名前は既定の見た目に丸められるのではなく拒否されるので、戻り値がそのまま在否の確認になり、名前を間違えても利用者の見た目が黙って戻されることはありません。
+描画以外のきっかけで切り替える場合 — ゲートウェイの接続、ソケットのイベント、`host.onEvent` の
+コールバックなど — フックを掛けるコンポーネントがありません。そこでは `requestTheme(name)` を
+使ってください。解決できない名前は、既定の見た目に置き換えられるのではなく拒否されます。そのため
+戻り値がそのまま「入っているかどうか」の確認になり、名前を間違えても誰かの見た目を黙って
+リセットしてしまうことはありません。
 
 ```javascript
 
@@ -309,15 +388,23 @@ host.onEvent('gateway.ready', () => {
 })
 ```
 
-どちらの入口もプロフィールごとに残るので、プラグインからの切り替えも、手で選んだときとまったく同じように残ります。テーマを差し替えるのではなく**いま有効な**テーマに色味を足したいときは、`setAccentOverride(hex)` を使い、`ctx.onDispose` で戻してください。単体で配られている [Accent Picker](https://github.com/NousResearch/hermes-desktop-accent-picker) プラグインが実際の手本です（そのままインストールできる、完成したディスクプラグインでもあります）。
+どちらの窓口もプロファイルごとに保存されるので、プラグインからの切り替えも手で選んだときと
+まったく同じように残ります。テーマを差し替えるのではなく*今の*テーマに色味を足したいときは、
+`setAccentOverride(hex)` を使い、`ctx.onDispose` で解除してください。単体で配られている
+[Accent Picker](https://github.com/NousResearch/hermes-desktop-accent-picker) の
+プラグインが、その実例です（そのままインストールできる完成したディスク型のプラグインでもあります）。
 
 ### 入力欄の拡張 {#composer-extensions}
 
-`COMPOSER_AREAS`（`top`、`bottom`、`leading`、`actions`、`attachments`、`middleware`）を使うと、メッセージの入力欄のまわりに操作を足したり、添付の取得元を提供したり、送信前に下書きを加工したり（`handler(draft) => draft | null` を持つ `ComposerMiddleware`）できます。
+`COMPOSER_AREAS`（`top`、`bottom`、`leading`、`actions`、`attachments`、
+`middleware`）を使うと、メッセージの入力欄のまわりに操作を足したり、添付の提供元を用意したり、
+送信前に下書きを加工したり（`handler(draft) => draft | null` を持つ `ComposerMiddleware`）できます。
 
-### 会話中の指示子 — モデルが名指しできる埋め込み部品 {#transcript-directives-inline-components-the-model-addresses}
+### 会話の中の指示子 — モデルが呼び出すインラインのコンポーネント {#transcript-directives-inline-components-the-model-addresses}
 
-`TRANSCRIPT_DIRECTIVE_AREA` は、会話の表示そのものを寄与できる場所にします。名前付きの指示子を登録しておくと、エージェントは `::name{key="value"}` という形の段落を書くだけで、アシスタントのメッセージの中にあなたのコンポーネントを描画できます。
+`TRANSCRIPT_DIRECTIVE_AREA` は、会話そのものをコントリビューションの領域にします。名前を付けた
+指示子を登録すると、エージェントが `::name{key="value"}` という形の段落を出すことで、アシスタントの
+メッセージの中に自作のコンポーネントを表示できます。
 
 ```javascript
 
@@ -331,21 +418,44 @@ ctx.register({
 })
 ```
 
-この場所を安全に保つため、ホスト側が次の決まりを守らせます。
+この面を安全に保つために、ホストが守らせている決まりがあります。
 
-- 指示子は**段落まるごと**でなければいけません。文の途中に出てくる `::name` はただの文として扱われるので、プラグインのコンポーネントが本文を乗っ取ることはできません。
-- 属性は**モデルが出力した信用できない文字列**です（`key="value"` の組で、値は必ず文字列）。自分のフィールドは自分で検証し、おかしな値なら推測せず何も描かないでください。
-- 誰も**引き取っていない**指示子（その名前でプラグインが登録されていないもの）は、もとどおりただの段落として表示されます。プラグインを切っていても何も壊れません。
-- 描画は寄与ごとのエラー境界に包まれています。例外が出ても、その場に小さなエラー表示が出るだけで、メッセージ全体が死ぬことはありません。
-- 名前がぶつかったときは先に登録したほうが勝ちます。冒険的な名前には自分のスラッグを付けてください（`board` ではなく `myplugin-board`）。
+- 指示子は**段落まるごと**でなければなりません。文の途中の `::name` はただの文章のままなので、
+  プラグインのコンポーネントが本文を乗っ取ることはありません。
+- 属性は**信用できないモデルの出力**です（`key="value"` の組で、文字列だけ）。
+  自分のフィールドは自分で検証し、おかしな値のときは推測せずに何も描かないでください。
+- 誰も**引き受けていない**指示子（その名前のプラグインが登録されていない場合）は、これまでどおり
+  ただの段落として表示されます。プラグインが無効でも何も壊れません。
+- 描画はコントリビューションのエラー境界に包まれています。例外が出てもインラインのエラー表示に
+  なるだけで、メッセージが死ぬことはありません。
+- 名前がぶつかった場合は先に登録したほうが勝ちます。攻めた名前には自分のスラッグで名前空間を
+  付けてください（`board` ではなく `myplugin-board`）。
 
-アプリ本体も手本として指示子を 1 つ持っています。`::preview{file="…"}` は、ワークスペースの HTML ファイルを**メッセージの中でそのまま**表示します。中身は隔離された `srcdoc` の iframe で、生成元は不透明です（スクリプトは動き、部品としてきちんと操作できますが、アプリやそのデータや橋渡しには手が届きません）。枠は中身に合わせて大きさを決め（高さは動きに追従し、幅は中身の本来の広がりを取り、メッセージの流れの中で左に寄ります）、先頭に差し込まれるテーマの記述がアプリの色（`--foreground`、`--muted-foreground`、`--accent`、`--border`、`--card`）、アプリのフォント、そして透明な背景をその文書に渡します。おかげで、部品らしい HTML はアプリの一部のように見え、ページまるごとのものは自分のデザインを保てます。HTML 以外の対象や、離れた場所のゲートウェイでは、従来のプレビューのカードに戻ります。自分の指示子のことは、スキルに書いてエージェントに教えてください（そうやって書き方を覚えます）。
+中核部分は参考例として指示子を 1 つ同梱しています。`::preview{file="…"}` は、作業領域の HTML
+ファイルを**メッセージの中でそのまま**表示します。中身は、生成元を持たないサンドボックスの
+`srcdoc` の iframe です（スクリプトは動き、部品は完全に操作できますが、アプリやその保存領域、
+橋渡しの仕組みには手が届きません）。枠は中身に合わせて大きさを変え（高さは随時、幅は中身の
+自然な広がりに合わせ、メッセージの流れの中で左端に揃います）、テーマの前置きが、アプリで解決済みの
+色の値（`--foreground`、`--muted-foreground`、
+`--accent`、`--border`、`--card`）、アプリのフォント、透明な背景を文書に渡します。そのため部品の
+ような HTML は最初から馴染んで見え、丸ごとのページは自分のデザインを保ちます。HTML 以外の対象と
+遠隔のゲートウェイでは、従来のプレビューのカードに戻ります。自作の指示子はスキルの中で
+エージェントに教えてください（それが出し方を覚える経路です）。
 
-表示された部品は**話しかけ返す**こともできます。枠の中で `window.hermes.send('get-price eth')` を呼ぶか、書くだけで済む `<button data-hermes-send="get-price eth">` を置くと、その文がユーザーの発言としてエージェントに渡ります。画面の外での出来事なので、会話に吹き出しが増えることはなく、部品が更新されること自体が目に見える返事になります。それでもこのターンは本物です。エージェントを動かし、入力欄の割り込み・順番待ちの規則にも従い、`hidden` という種別で保存されるので、再開してもセッションのデータベースにも記録が丸ごと残ります。渡す文は前後の空白が落とされ、500 文字までに切られ、1 つの枠につき毎秒 1 回までに抑えられます。
+プレビューした部品は**返事もできます**。枠の中で
+`window.hermes.send('get-price eth')` を呼ぶ（あるいは宣言的に
+`<button data-hermes-send="get-price eth">` と書く。スクリプトは要りません）と、そのプロンプトが
+利用者のターンとして画面の外でエージェントへ渡ります。会話に吹き出しは増えず、部品が更新される
+ことが目に見える返事になります。それでもターンは本物です。エージェントを起こし、入力欄の
+割り込みや順番待ちの決まりに従い、（`hidden` の型で）保存されるので、再開時もセッションの DB にも
+記録がすべて残ります。プロンプトは前後が削られ、500 文字までに切られ、1 つの枠につき毎秒 1 回に
+絞られます。
 
-### 表示中だけ生きる部品（`Contribute`） {#mount-scoped-chrome-contribute}
+### マウントに紐づく装飾（`Contribute`） {#mount-scoped-chrome-contribute}
 
-`ctx.register` は**ずっと残る**寄与のためのものです。すでに画面に出ているコンポーネントと生死をともにしてほしい部品（そのページ専用の見出しの操作は、ページが消えたら一緒に消えてほしい）は、代わりにその中で `<Contribute>` を描画してください。
+`ctx.register` は**恒久的な**コントリビューション向けです。すでに画面にあるコンポーネントと
+生死をともにすべき装飾なら（ページ専用の見出しの操作は、そのページが外れれば消えるべきです）、
+代わりにその中で `<Contribute>` を描画してください。
 
 ```javascript
 
@@ -356,11 +466,12 @@ jsx(Contribute, {
 })
 ```
 
-表示されたときに登録し、消えたときに自動で片付けます。
+マウントで登録され、アンマウントで自動的に破棄されます。
 
-## ホスト API {#host-api}
+## ホストの API {#host-api}
 
-`host` にあるものは、プラグインのどこからでも呼べます。状態の atom は読み取り専用で、ハンドラの中では `.get()` で読み、コンポーネントでは `useValue(atom)` で購読します。
+`host` にあるものは、プラグインのどこからでも使えます。状態の atom は読み取り専用です。
+処理の中では `.get()` で読み、コンポーネントでは `useValue(atom)` で購読してください。
 
 ```ts
 host.state.activeSessionId  // ReadableAtom<string | null>
@@ -378,7 +489,11 @@ host.state.profile          // ReadableAtom<string>
 host.state.viewport         // ReadableAtom<{ width, height, narrow }>
 ```
 
-`host.state.gateway` は WebSocket の接続の状態であって、会話のターンが走っているかどうかではありません。ソケットが `open` のままターンの途中ということもあれば、同じときに別のセッションが何もしていないこともあります。入力欄やプラグインの操作を止めるかどうかは、**注目しているセッション**のターン実行中フラグ（`host.state.busyBySession[sessionId]`、またはそのセッションの `view.$busy`）で決めてください。`gateway` で決めてはいけませんし、プロセス全体で 1 つの実行中フラグを使うのも避けてください。
+`host.state.gateway` は WebSocket の接続のことで、チャットのターンが動いているかどうかでは
+ありません。ソケットが `open` のままターンの途中ということもありますし、同時に別のセッションが
+待機中ということもあります。入力欄やプラグインの操作を無効にするときは、**今見ているセッションの**
+ターンの進行中（`host.state.busyBySession[sessionId]`、またはそのセッションの `view.$busy`）を
+見てください。`gateway` を使ってはいけませんし、プロセス全体の進行中フラグも使ってはいけません。
 
 ```ts
 host.notify({ kind, message, title?, detail?, action? })  // toast; returns id
@@ -410,29 +525,84 @@ host.requestProfile<T>(profile, method, params?) // legacy v1/local overload
 host.request<T>(method, params?)           // active-gateway JSON-RPC — the real power
 ```
 
-`host.request` は、アプリ自身が使っているのと同じ JSON-RPC です（セッション、設定、スキル、cron、かんばん、など）。`host.requestProfile` は `host.profileRoutes()` が返した情報を受け取り、その RPC を対応するレジストリの供給元とプロファイルへ正確に流します。今表示している会話やゲートウェイを切り替えることはありません。プロファイル名だけを渡す形は、ローカル 1 つだけという古い構成のために残してあるものです。レジストリを意識したプラグインは、同じプロファイル名を持つ供給元が 2 つあってもぶつからないよう、必ず情報のほうを渡してください。
+`host.request` は、アプリ自身が使っているのと同じ JSON-RPC です（セッション、設定、スキル、
+cron、かんばんなど）。`host.requestProfile` は `host.profileRoutes()` が返す記述子を受け取り、
+今のチャットやゲートウェイを変えずに、その記述子が指す登録元とプロファイルへ RPC を流します。
+プロファイル名だけを渡す形は、単一のローカル環境や従来の構成のために残してあるだけです。登録簿を
+意識するプラグインは記述子を渡して、同じプロファイル名を出す 2 つの登録元がぶつからないように
+してください。
 
-`host.openWorkspace(id, { render, title?, minWidth?, onClose? })` は、プラグインが描いた画面を**ワークスペースの主区画**、つまりセッションのタイルやプレビューが使う中央の領域にタブとして差し込み、前面に出します。同じ `id` でもう一度呼ぶと、新しいタブを作らずに中身をその場で差し替えてタブを前に出します。タブを閉じると（タブの閉じるボタンか ⌘W）登録が解除され、`onClose` が呼ばれます。返ってくる後始末の関数を呼べばプログラムからも閉じられます。この関数があるか（`typeof host.openWorkspace === 'function'`）を確かめて、古いデスクトップでは普通の寄与ペインに切り替えてください。Bot Mode のグループチャットの部屋が手本です（使えるときは主画面を占有し、そうでなければパネル内の表示になります）。
+`host.openWorkspace(id, { render, title?, minWidth?, onClose? })` は、プラグインが描いた画面を
+**作業領域の中心**（セッションのタイルやプレビューが使うのと同じ中央の場所）にタブとして
+差し込み、前面に出します。同じ `id` でもう一度呼ぶと、二重に開かずに中身をその場で更新して
+タブを前に戻します。タブを閉じると（タブの閉じるボタンか ⌘W）、登録が解かれて `onClose` が
+呼ばれます。戻ってくる破棄用の関数を使えば、プログラムから閉じられます。古いデスクトップの
+ビルドに備えて、この機能の有無を確かめ（`typeof host.openWorkspace ===
+'function'`）、無ければ通常のペインに落としてください。Bot Mode のグループチャットの部屋が
+参考例です（使えるならメインウィンドウを占有し、そうでなければパネル内の表示にします）。
 
-`host.paneVisibility(paneId)` は、寄与したペインが実際に画面に出ている間だけ `true` になる読み取り専用の atom を返します。レイアウトの木にあり、閉じられても隠されてもおらず、その区画が最小化されておらず、区画の中で選ばれているタブになっている状態です（その区画に 1 つしかないペインも該当します）。id は寄与としてのペイン id、`<pluginId>:<paneId>` です。atom は id ごとに使い回されるので、描画の中で呼んでも問題ありません。自分のペインが見えている間だけ相棒の UI を登録する、といった使い方ができます。Bot Mode の Cronjobs のペインが手本で、Bots のペインがサイドバーのタブを持っている間だけ登録し、利用者が Sessions に戻ると登録を外します。古いデスクトップ向けに `typeof host.paneVisibility === 'function'` で存在を確かめ、なければ常に登録したままにしてください。
+`host.paneVisibility(paneId)` は、そのコントリビューションのペインが実際に画面に出ている間だけ
+`true` になる、読み取り専用の反応する atom を返します。つまり、レイアウトの木構造にあり、
+閉じられても隠されてもおらず、その区画が最小化されておらず、その区画の表に出ているタブを
+占めている状態です（区画に 1 つしかないペインもこれに当たります）。id は
+コントリビューションの範囲でのペインの id、つまり `<pluginId>:<paneId>` です。atom は id ごとに
+記憶されるので、描画の中で呼んでも問題ありません。ペインが見えている間だけ関連する UI を登録する、
+といった使い方ができます。Bot Mode の Cronjobs のペインが参考例で、Bots のペインがサイドバーの
+タブを取っている間だけ登録し、利用者が Sessions に戻ると登録を解きます。古いデスクトップでは
+機能の有無を確かめ（`typeof host.paneVisibility === 'function'`）、無ければ常に登録したままの
+挙動に落としてください。
 
-`host.profileRoutes()` は、今の接続レジストリに登録されている供給元をすべて洗い出します。必要になってからつなぐ SSH の供給元は、トンネルを開かなくても資格情報なしの `default` の経路を見せるので、プラグインが最初の呼び出し役になれます。SSH の `remoteProfile` は、その経路のバックエンド側 `targetProfile` として残ります。`connectionId` はレジストリ上の経路の識別子で、キーや保存に使うときは `profile` と組み合わせてください。接続先、トークン、SSH のホストや鍵といった生の接続情報が、プラグインとの境界を越えて渡ることはありません。`profile` は要求を出すときに使う供給元の中での経路名、`targetProfile` はその経路が実際につながっている Hermes 側のプロファイルです。経路が明示的に別のプロファイルへ割り当てられている場合（たとえば SSH の `remoteProfile` による上書きや、古いプロファイル別 URL の別名）に、この 2 つは食い違います。この区別のおかげで、接続の秘密を出さずにバックエンド側の身元を保てます。
+`host.profileRoutes()` は、今の接続の登録簿にあるすべての登録元を列挙します。必要になってから
+つなぐ SSH の登録元は、トンネルを開かずに資格情報の要らない `default` の種となる経路を出すので、
+プラグインが最初にそこへつなぐ側になれます。SSH の `remoteProfile` は、その経路のバックエンドの
+`targetProfile` のままです。`connectionId` は登録簿での経路の識別子で、
+キーや保存には `profile` と組み合わせて使ってください。エンドポイント、トークン、SSH のホストや鍵、
+そのほかの生の接続情報が、プラグインの IPC の境界を越えることはありません。`profile` は
+リクエストに使う、その登録元の中での経路です。`targetProfile` は、その経路が受け持つバックエンドの
+Hermes のプロファイルです。経路が別のバックエンドのプロファイルに明示的に対応付けられている場合
+（たとえば SSH の `remoteProfile` の上書きや、従来のプロファイルごとの URL の別名）に、両者は
+異なります。この区別によって、接続の秘密を出さずにバックエンドの素性を保てます。
 
-プロファイルを扱うプラグイン向けの専用メソッドもあります。`profiles.list` は各プロファイルと、その直近の会話を `last_session` として返します（`include_sessions: false` を渡せばプロファイルごとのデータベース参照を省けます。`preferred_session_ids: { profileName: sessionId }` を渡すと、プロファイルごとに 1 つ固定したセッションを、存在確認込みで正確に引けます。指定した行には `preferred_session` の要約が付き、隠れた行や圧縮でつながった系譜は生きている先端まで解決されます。もう完全に無いものは `null` になります。古いゲートウェイはこの引数を無視し、このフィールドも返しません）。`profiles.create` は `name`、`description`、`clone_from`、`clone_all`、`no_skills`、`soul`、任意の `model` と `provider` の固定を受け取ります。どちらも、ダッシュボードの `/api/profiles` という REST の経路の WebSocket 版です。
-
-`host.state.busy` は、注目している会話が今まさに動いているか（考え中と、文字を返している最中）を表します。`host.state.awaitingResponse` は、送信してからアシスタントの最初の応答が届くまで true のままです。どちらも利用者が実際に見ている会話に追従します。フォーカスを持つセッションのタイルがあればそれ、なければワークスペースの主たる会話です（ステータスバーの動作中の脈打ちが読んでいるのと同じ信号です）。コンポーネントの中ではこう購読します。
+プロファイルを扱うプラグイン向けには、専用のメソッドもあります。
+`profiles.list`（各プロファイルと、その直近の会話を `last_session` として返します。
+`include_sessions: false` を渡すとプロファイルごとの DB の問い合わせを省けます。
+`preferred_session_ids: { profileName: sessionId }` を渡すと、プロファイルごとに固定した
+1 つのセッションを、存在を確かめたうえで正確に引けます。名指しした行には
+`preferred_session` の要約が付き、隠れた行や圧縮の系譜は今の先端まで解決されます。
+その id が完全に無くなっている場合は `null` です。古いゲートウェイはこのパラメーターを
+無視してこのフィールドを省きます）
+と `profiles.create`（`name`、`description`、`clone_from`、
+`clone_all`、`no_skills`、`soul`、任意の `model` と `provider` の固定）です。これらは
+ダッシュボードの `/api/profiles` の REST の経路の、WebSocket 版の双子です。
+`host.state.busy` は、今見ているチャットのターンが進行中か（考え中と出力中）を表します。
+`host.state.awaitingResponse` は、送信からアシスタントの最初の応答が来るまで真のままです。
+どちらも、利用者が実際に見ているチャットに追随します。焦点のあるセッションのタイルがあれば
+それ、無ければ作業領域の主となるチャットです（ステータスバーの進行中の脈打つ表示が読むのと
+同じ信号です）。コンポーネントの中ではこう購読します。
 
 ```javascript
 const busy = useValue(host.state.busy)
 ```
 
-トークン単位の細かい様子が要るときは、`host.onEvent` で `message.start`、`message.delta`、`message.complete` を聞いてください。
+トークン単位の細かい情報がほしいときは、`host.onEvent` で受け取ってください（`message.start`、
+`message.delta`、`message.complete`）。
 
-`host.onEvent` は、ゲートウェイのイベント（メッセージの差分、セッションの一生、ツールの動き）をそのまま流します。購読の処理は互いに切り離されていて、あなたの処理が例外を投げてもアプリ側の配送には影響しません。`host` の入口はどれも非同期として安全です。内部の補助処理が同期的に例外を投げた場合（たとえばただのブラウザでデスクトップの橋渡しが無いとき）も、それは `.catch()` で受け取れる rejection になり、エラー境界でアプリが落ちることはありません。
+`host.onEvent` は、ゲートウェイのイベント（出力の差分、セッションの節目、ツールの動き）を
+流し続けます。リスナーは切り離されているので、自分のリスナーで例外が出てもアプリの配信には
+影響しません。`host` のどの窓口も非同期で安全です。内部の処理から同期的に投げられた例外
+（素のブラウザーでデスクトップの橋渡しが無い場合など）は、`.catch()` で受け取れる拒否になり、
+エラー境界での異常終了にはなりません。
 
-`ctx.os` は、OS へつながる入口をまとめたものです。プラグインがアプリのウィンドウの外へ手を伸ばす手段が、あなたのプラグイン名義で 1 か所に揃っています。`ctx.os.notify` は **OS のネイティブな通知**を出します。アプリ自身の承認待ちやターン終了の知らせと同じ Electron の経路です。これが鳴るのは利用者が Hermes から離れているとき（背面にあるか、フォーカスが無いとき）だけです。画面を見ているときにアプリ内のトーストを出したいなら `host.notify` を使ってください。利用者は端末ごとに、設定 ▸ 通知 ▸ 「Plugin notifications」で黙らせることができ、同じプラグインからの連発は抑えられます。ですから、本当に知らせる価値のある出来事のための信号として扱ってください。ログ代わりにはしないことです。
+`ctx.os` は、選び抜かれた OS への窓口です。プラグインがアプリのウィンドウの外へ手を伸ばす
+経路をすべて、そのプラグインに紐づけて 1 つの名前空間にまとめてあります。`ctx.os.notify` は
+**OS のネイティブな通知**を出します。アプリ自身の承認やターンの知らせが使うのと同じ Electron の
+経路です。これは利用者が Hermes から離れているとき（背面や、焦点が外れているとき）にだけ
+出ます。利用者がアプリを見ているときのアプリ内のトーストには `host.notify` を使ってください。
+利用者は端末ごとに、設定の Notifications にある「Plugin notifications」で止められますし、
+同じプラグインからの繰り返しは絞られます。ログ代わりではなく、本当に知らせる価値のある
+出来事の合図として使ってください。
 
-見せ方と押したときの動き（もともとの `ctx.os` の入口を広げたもの）は次のとおりです。
+見せ方と押したときの動き（もとの `ctx.os` の窓口を拡張したものです）。
 
 ```ts
 ctx.os.notify({
@@ -451,13 +621,21 @@ ctx.os.notify({
 })
 ```
 
-`activate` はディープリンクと同じ書き方です。`hermes://index-network/intent/1` と、ハッシュのパス `/index-network/intent/1` は、アプリ内の同じルートに解決されます（同じ `hermes://…` の URL は、OS のディープリンクとしても働きます）。操作ボタンが出るのは署名済みの macOS のビルドだけで、それ以外の環境でも本文のクリックは効きます。画面が移動するのは利用者が押したときだけで、裏で起きたイベントだけで動くことはありません。
+`activate` はディープリンクと同じ書き方です。`hermes://index-network/intent/1` と、ハッシュの
+パス `/index-network/intent/1` は、アプリ内の同じルートに解決されます（同じ `hermes://…` の
+URL は OS のディープリンクとしても働きます）。操作のボタンが出るのは署名済みの macOS の
+ビルドだけですが、それ以外でも本文をクリックすれば反応します。画面移動が起きるのは利用者が
+クリックしたときだけで、背景のイベントだけでは起きません。
 
-残りの入口（`openExternal`、`revealPath`、`writeClipboard`）は、その機能が使えないとき（古いデスクトップの外殻、ただのブラウザ）に例外ではなく `false` を返します。橋渡しの有無を探るのではなく、返り値で分岐してください。
+ほかの窓口（`openExternal`、`revealPath`、`writeClipboard`）は、その機能が使えないとき
+（古いデスクトップの外殻、素のブラウザー）に例外を投げるのではなく `false` を返します。橋渡しの
+有無を探るのではなく、この戻り値で分岐してください。
 
-## データの扱い — React Query と nanostores {#data-layer-react-query-nanostores}
+## データの層 — React Query と nanostores {#data-layer-react-query-nanostores}
 
-プラグインはアプリと同じ `QueryClient` を共有します。ですからプラグインの問い合わせも、アプリ本体の画面とまったく同じようにキャッシュされ、重複が省かれ、定期的に取り直され、無効化されます。取得のループを自作しないでください。
+プラグインはアプリと同じ 1 つの `QueryClient` を共有します。そのためプラグインの問い合わせも、
+中核の画面とまったく同じようにキャッシュされ、重複が省かれ、定期取得され、無効化されます。
+取得のループを自作しないでください。
 
 ```javascript
 
@@ -470,7 +648,10 @@ function MyPanel() {
 }
 ```
 
-きっかけの部品とパネルの間で共有する状態（あるいは定期取得のループ）には、`atom` / `computed` を使ってください。`host.state` が使っているのと同じ道具です。購読するのは、その値を実際に描く末端のコンポーネントだけにして、`useValue` を使います。React の**外側**から問い合わせを無効化したいとき（たとえば `ctx.socket` のフレームが届いたとき）は、共有の `queryClient` を import します。
+きっかけとなる部品とパネルの間で共有する状態（や定期取得のループ）には、`atom` /
+`computed` を使ってください。`host.state` が使っているのと同じ仕組みです。購読は、その値を
+描画する末端で `useValue` を使って行います。React の**外**から問い合わせを無効にしたいときは
+（`ctx.socket` のフレームが届いたときなど）、共有の `queryClient` を読み込んでください。
 
 ```javascript
 
@@ -481,7 +662,7 @@ ctx.socket('/events', () => {
 
 ## UI キットとテーマ {#the-ui-kit-and-theming}
 
-アプリが実際に使っているコンポーネントをそのまま import すれば、UI は最初からアプリになじみます。
+アプリの本物のコンポーネントをそのまま読み込めば、UI は何もしなくてもアプリに馴染みます。
 
 > `Button`、`Input`、`Textarea`、`Select*`、`Switch`、`Checkbox`、
 > `SegmentedControl`、`Tabs*`、`Dialog*`、`ConfirmDialog`、`DropdownMenu*`、
@@ -490,19 +671,36 @@ ctx.socket('/events', () => {
 > `EmptyState`、`ErrorState`、`CopyButton`、`StatusDot`、`LogView`、`Codicon`、
 > `DecodeText`。
 
-この変更から、`DecodeText` の `loop` は明示したときだけ有効になります。既定では 1 回だけデコードして、その表示のまま止まります。文字がかき混ざる動きを続けてほしい進捗表示では、`loop` を明示的に渡してください。
+`DecodeText` の `loop` は、この変更から明示指定になりました。既定では 1 回だけ解読してそのまま止まるので、ずっと文字を崩し続けたい進捗の表示では `loop` を明示的に渡してください。
 
-補助的なものもあります。`cn`（クラスの結合）、`icons.*`（アプリで使っている lucide のアイコン）、`haptic`、`profileColor` / `profileColorSoft`（同じ相手には必ず同じ色が付きます）、時刻の書式整形の `relativeTime` / `fmtDateTime` / `fmtDayTime` / `coarseElapsed`、`useI18n`（各言語の文言。プラグインも翻訳できるようになります）、そして `evaluateRuntimeReadiness` です。
+さらに補助的なものとして、`cn`（クラスの結合）、`icons.*`（アプリの lucide 一式）、`haptic`、
+`profileColor` / `profileColorSoft`（素性から決まる色）、時刻の整形処理
+`relativeTime` / `fmtDateTime` / `fmtDayTime` / `coarseElapsed`、
+`useI18n`（地域化した文言。プラグインも翻訳できるままになります）、そして
+`evaluateRuntimeReadiness` があります。
 
-**色は直接書かず、テーマ変数で指定してください。** ペインはすでにアプリのエディタの背景の上に乗っているので、背景はそのままにして、それ以外を変数で指定します。`var(--ui-text-secondary)`、`var(--ui-text-tertiary)`、`var(--ui-text-quaternary)`、`var(--ui-stroke-secondary)`、`var(--ui-accent)` などです。canvas に描くときは、`getComputedStyle(canvas).getPropertyValue('--ui-accent')` で一度だけ値を取り出してください。これが、テーマを変えるたびにプラグインの見た目も自動で追従する理由です。
+**色は直接書かず、テーマの変数で組み立ててください。** ペインはすでにアプリのエディターの
+背景の上に載っています。背景はそのままにして、それ以外は変数を使ってください。
+`var(--ui-text-secondary)`、`var(--ui-text-tertiary)`、
+`var(--ui-text-quaternary)`、`var(--ui-stroke-secondary)`、`var(--ui-accent)` です。
+canvas へ描くときは、
+`getComputedStyle(canvas).getPropertyValue('--ui-accent')` で一度だけ値を取ってください。
+これがあるおかげで、どのテーマに変えてもプラグインの見た目が自動で付いてきます。
 
-## プラグイン用のバックエンド {#a-backend-for-your-plugin}
+## プラグインのバックエンド {#a-backend-for-your-plugin}
 
-サーバ側の処理が必要なら、Python の `plugin_api.py` を同梱して `ctx.rest` / `ctx.socket` から呼んでください。作りからしてプラグインごとに**閉じた**領域になっています。
+サーバー側の処理が必要なら、Python の `plugin_api.py` を同梱して、`ctx.rest` / `ctx.socket` から
+呼んでください。**仕組みの上で**そのプラグインだけに区切られた名前空間になります。
 
 ### 1 つのパッケージで両方の SDK {#one-package-both-sdks}
 
-デスクトップの UI **と**エージェント側のコード（Python のプラグイン、そのバックエンドの経路、スキル）の両方が要る機能でも、互いに依存する 2 つのインストール物に分ける必要はありません。エージェント用のパッケージの中に `desktop/plugin.js` を入れておきます。パッケージがローカルのどの `plugins/` の置き場所（既定のホームでもプロファイルでも）に入っても、Electron のメインプロセスがその半分を `$HERMES_HOME/desktop-plugins/<id>/` へ写し、隣に `.hermes-package.json` という目印のファイルを置きます。画面側はそれを、単体のディスク方式とまったく同じ経路で読み込みます（保存のたびに反映されるのも同じです）。
+デスクトップの UI **と**エージェント側のコード（Python のプラグイン、そのバックエンドの経路、
+スキル）の両方が必要な機能でも、互いに依存する 2 つのインストールに分ける必要はありません。
+エージェントのパッケージの中に `desktop/plugin.js` を置いてください。そのパッケージがローカルの
+`plugins/` のいずれか（既定の置き場所でもプロファイルでも）に入ると、Electron のメインプロセスが
+デスクトップ側だけを `$HERMES_HOME/desktop-plugins/<id>/` へ複製し、そこに
+`.hermes-package.json` の目印を置きます。そしてレンダラーは、単体のディスクの窓口とまったく
+同じ経路でそれを読み込みます（その場での入れ替えも含みます）。
 
 ```
 ~/.hermes/plugins/<id>/           # ONE installable folder
@@ -515,27 +713,58 @@ ctx.socket('/events', () => {
     └── plugin.js                 # the desktop half: panes, commands, ctx.rest
 ```
 
-`desktop/plugin.js` の側は、ごく普通のディスクプラグインです。約束事も、import できるものも、隣に置いた `plugin_api.py` へ届く `ctx.rest('/…')` も同じです。インストールも、人に渡すのも、消すのも、フォルダ 1 つで済みます。アプリ側の写しは、元の `plugin.js` が変わると更新され（`hermes plugins update` か **Rescan**）、パッケージのフォルダが無くなると消されます。デスクトップ側が**アプリ単位**になるのは、この写しがあるからです。そのパッケージを持つプロファイルがいくつあっても写しは 1 つだけで、利用者が Capabilities のプロファイル選択を切り替えても、現れたり消えたりしません。画面側が自分で `plugins/` を探しに行くことはありません。目印のファイルにはパッケージの名前と出どころ（カタログの付属情報か git のリモート）が記録されていて、Plugins のページにある **Install here** のボタンは、これを使ってエージェント側を別のプロファイルにインストールします。写しは目的の場所の隣にいったん置かれてから、名前を変えて所定の位置に収まります。そのため、写している途中で止まっても（一時的なファイルのロックや、写している最中のクラッシュでも）、中途半端なフォルダが残ることはありません。目印のファイルも `plugin.js` も無い `desktop-plugins/<id>/` が残っていたら、それはそうした壊れ方だと見なして次の **Rescan** で置き換えます。一方、目印のファイルは無くても `plugin.js` がある場合は、手でインストールした単体のプラグインなので、上書きされることはありません。
+`desktop/plugin.js` の側は、ごく普通のディスク型のプラグインです。取り決めも読み込みも同じで、
+`ctx.rest('/…')` は隣にある `plugin_api.py` に届きます。導入も共有も削除もフォルダー 1 つで
+済みます。アプリの置き場所にある複製は、元の `plugin.js` が変わると更新され（`hermes plugins update`
+か、**Rescan**）、パッケージのフォルダーが消えれば一緒に消えます。この複製こそが、デスクトップ側を
+**アプリ単位**にしているものです。パッケージを持つプロファイルがいくつあっても複製は 1 つだけで、
+利用者が Capabilities のプロファイルの選択を切り替えても現れたり消えたりしません。レンダラーが
+自分で `plugins/` を走査することはありません。目印にはパッケージ名とその出どころ（カタログの
+付属情報か git のリモート）が記録されていて、Plugins のページの **Install here** ボタンは、
+これを使ってエージェント側を別のプロファイルへ入れます。複製は目的地の隣に用意してから名前を
+変えて置かれるので、複製が中断しても（一時的なファイルのロック、途中での異常終了）、書きかけの
+フォルダーが残ることはありません。目印も `plugin.js` も無い `desktop-plugins/<id>/` が残っていた
+場合は、そうした壊れた状態とみなして次の **Rescan** で置き換えます。一方、目印は無いが
+`plugin.js` は*ある*フォルダーは、手で入れた単体のプラグインなので、上書きされることはありません。
 
-有効化のスイッチが 2 つあるのはわざとで、どちらも既定は**オフ**です。デスクトップ側は入れただけでは動かず、**Capabilities → Plugins** に並ぶものの、利用者が切り替えるまで無効のままです。これは Python 側が `config.yaml` の `plugins.enabled` で守られているのと揃えたものです（安全の線引きについては後述します）。`~/.hermes/plugins` にパッケージを置いただけでは、どこでも何も動きません。利用者がそう言うまでは動かないのです。バックエンド側が無効なときも、デスクトップ側は静かに縮退します。`ctx.rest` はエラーを返すだけで、落ちることはありません。
+有効にする切り替えが 2 つあるのは意図的で、どちらも既定は**無効**です。デスクトップ側は
+明示的に有効にする形で配られます。**Capabilities → Plugins** には並びますが、利用者が切り替えるまで
+無効のままです。これは Python 側の `config.yaml` での `plugins.enabled` の制御（後述のセキュリティ上の
+線引き）と揃えたものです。`~/.hermes/plugins` にパッケージを置いただけでは、どの面でも何も
+起きません。バックエンド側が無効でも、デスクトップ側はうまく働きを落とします。`ctx.rest` は
+異常終了ではなくエラーを返します。
 
 :::note
-写しを作るのは、デスクトップアプリが動いている端末の中だけです。離れたバックエンドにつないでいる場合、向こうの `~/.hermes/plugins` はファイルとしては見えないので、この方法でデスクトップ側が加わるのはその端末に入っているパッケージだけです。離れたバックエンドのときは、インストールの画面がデスクトップ側を別に `desktop-plugins/` へ clone します。デスクトップ専用のリポジトリと同じ扱いです。エージェント側だけを離れた端末に入れて、この clone をしていないパッケージは、Plugins のページでデスクトップ側が**利用できない（離れたバックエンド）**と表示されます。写しの順番待ちではありません。そのときの吹き出しは、Desktop を対象に指定した **Install from Git** を案内します。
+この複製は、デスクトップアプリが動いているマシンの中だけの話です。遠隔のバックエンドに対しては、
+向こうのマシンの `~/.hermes/plugins` にファイルとして手が届かないので、この方法でデスクトップ側が
+足されるのはローカルに入れたパッケージだけです。遠隔のバックエンドの場合、インストールの
+ダイアログがデスクトップ側だけを別途 `desktop-plugins/` に取ってきます。デスクトップ専用の
+リポジトリと同じ扱いです。エージェント側だけを遠隔のホストに入れて、この取得をしていない
+パッケージは、Plugins のページでデスクトップ側が**利用不可（遠隔のバックエンド）**と表示されます。
+複製待ちではありません。そして説明の吹き出しが、Desktop を選んだ状態の **Install from Git** を
+案内します。
 :::
 
 ### インストール用のリンクで配る {#install-link}
 
-プラグインのリポジトリ（エージェント側、デスクトップ側、あるいは両方）を公開して、`hermes://` の形式でリンクしてください。ウェブサイトや README に置く、ただのアンカーで済みます。
+プラグインのリポジトリ（エージェント側、デスクトップ側、またはその両方）を公開し、`hermes://`
+のスキームでリンクしてください。自分のサイトや README に置く、ただのリンクです。
 
 ```html
 <a href="hermes://plugin/install?repo=owner/repo&enable=1">Install in Hermes</a>
 ```
 
-利用者には確認のダイアログ（リポジトリの id、出どころへのリンク、そのリポジトリが何を含んでいるかの下調べ）が出て、何かが入る前にどの部分を入れるかを選べます。ディープリンクが勝手にインストールすることはありません。`force=1` は既存のインストールを置き換えます。開発版のビルドでは `hermes-dev://` を使います。リンクの詳しい一覧は [ワンクリックのインストールリンク](/hermes/docs/user-guide/features/plugins/#one-click-install-links-desktop) にあります。
+利用者には確認のダイアログが出て（リポジトリの id、出どころのリンク、そのリポジトリが何を
+含むかの下調べ）、何かが入る前に部品を選べます。ディープリンクが勝手にインストールすることは
+ありません。`force=1` を付けると既存のインストールを置き換えます。開発用のビルドでは
+`hermes-dev://` です。リンクの詳しい説明は
+[ワンクリックのインストールリンク](/hermes/docs/user-guide/features/plugins/#one-click-install-links-desktop)にあります。
 
 ### Python 側 {#the-python-side}
 
-デスクトッププラグインは、ダッシュボードのプラグインのバックエンドの取り付け口をそのまま使います。バックエンドは通常の Hermes プラグインの `dashboard/` サブフォルダに置き、`manifest.json` で宣言します。
+デスクトップのプラグインは、ダッシュボードのプラグインのバックエンドの置き場所を使い回します。
+通常の Hermes のプラグインの `dashboard/` というサブフォルダーにバックエンドを置き、
+`manifest.json` で宣言してください。
 
 ```
 ~/.hermes/plugins/<id>/
@@ -559,10 +788,19 @@ async def action(body: dict):
     return {"ok": True, "received": body}
 ```
 
-経路は `/api/plugins/<id>/` の下に取り付けられます（`GET /api/plugins/<id>/board` など）。バックエンドのコードはゲートウェイのプロセスの中で動くので、hermes-agent のコードベースから直接 import できます（`hermes_state`、`hermes_cli.config` など）。バックエンド側の詳しい説明は [ダッシュボードを拡張する → バックエンドの API 経路](/hermes/docs/user-guide/features/extending-the-dashboard/#backend-api-routes) を参照してください。取り付け口は同じものです。
+経路は `/api/plugins/<id>/` の下に置かれます（`GET /api/plugins/<id>/board` など）。
+バックエンドのコードはゲートウェイのプロセスの中で動くので、hermes-agent のコードを直接
+読み込めます（`hermes_state`、`hermes_cli.config` など）。バックエンドの説明の全体は
+[ダッシュボードを拡張する → バックエンドの API の経路](/hermes/docs/user-guide/features/extending-the-dashboard/#backend-api-routes)を
+参照してください。置かれ方はまったく同じです。
 
-:::caution Python のバックエンドは別に守られています
-デスクトップの **Capabilities → Plugins** の画面でプラグインを有効にするのは画面側の話で、Python を読み込むわけでは**ありません**。利用者が入れたプラグインの `plugin_api.py` が読み込まれるのは、そのプラグインが `config.yaml` の `plugins.enabled` の許可一覧に入っている（かつ `plugins.disabled` に入っていない）ときだけです。プロジェクトのプラグイン（`./.hermes/`）が Python を自動で読み込むことはありません。これは見落としではなく、安全のための線引きです（GHSA-mcfc-hp25-cjv7）。
+:::caution Python のバックエンドは別に制御されます
+デスクトップの **Capabilities → Plugins** のパネルでプラグインを有効にするのは、レンダラー側の
+選択です。それだけでは Python は**読み込まれません**。利用者のプラグインの `plugin_api.py` が
+読み込まれるのは、`config.yaml` の `plugins.enabled` の許可一覧にそのプラグインがある（かつ
+`plugins.disabled` に無い）ときだけです。プロジェクトのプラグイン（`./.hermes/`）が Python を
+自動で読み込むことはありません。これは見落としではなく、セキュリティ上の線引きです
+（GHSA-mcfc-hp25-cjv7）。
 :::
 
 ### プラグインから呼ぶ {#calling-it-from-the-plugin}
@@ -580,20 +818,32 @@ register(ctx) {
 }
 ```
 
-`ctx.rest` はプロファイルを見分けたうえで、上の階層へ抜ける書き方（`..`）を拒否します。ですから、これを通して他のプラグインの API や本体の経路を呼ぶことはできません。`PluginRestOptions` は `{ method?, body?, upload?: { filename, contentType?, bytes }, timeoutMs? }` です。
+`ctx.rest` はプロファイルを意識し、パスの遡り（`..`）を拒否します。そのため、これを通して
+ほかのプラグインの API や中核の経路を叩くことはできません。`PluginRestOptions` は
+`{ method?, body?, upload?: { filename, contentType?, bytes }, timeoutMs? }` です。
 
-`ctx.socket` は、片付けられるまで間隔を空けながら自動で再接続します。**OAuth でつなぐ離れた環境では何もしません**（使い捨ての WebSocket 用の券は本体が管理しているためです）。ソケットは定期取得を速くするおまけと考えて、置き換えにはしないでください。どんなソケットも切れることはあるので、どの利用側にも定期取得の逃げ道が必要です。
+`ctx.socket` は、破棄されるまで間隔を空けながら自動で再接続します。**OAuth の遠隔環境では
+何もしません**（1 回限りの WebSocket の切符は中核が管理しているためです）。ソケットは定期取得を
+速くするためのものであって、置き換えではないと考えてください。どのみちソケットは切れることが
+あるので、使う側には必ず定期取得の代替が要ります。
 
-自分の領域ではなくゲートウェイ全体のデータが欲しいときは、代わりに `host.request`（JSON-RPC）と `host.onEvent`（ゲートウェイのイベント）を使ってください。
+自分の名前空間ではなくゲートウェイ全体のデータを扱うなら、代わりに `host.request`（JSON-RPC）と
+`host.onEvent`（ゲートウェイのイベント）を使ってください。
 
 ## 設定、有効・無効の状態、保存 {#settings-enable-state-and-storage}
 
-有効かどうかによらず、すべてのプラグインが**Capabilities → Plugins** に並びます。ここで利用者は、アプリを再起動せずに切り替えたり、フォルダを開いたり、探し直させたりできます。選んだ内容は覚えられます。
+有効かどうかにかかわらず、すべてのプラグインが **Capabilities → Plugins** に並びます。利用者は
+そこでその場で切り替えたり（アプリの再起動は不要です）、フォルダーを開いたり、再走査したり
+できます。利用者の選択は覚えられます。
 
-- まだ選んでいなければ、そのプラグインの `defaultEnabled`（既定は `true`）に従います。`defaultEnabled: false` にすれば、利用者が入れるまで暗いままの、選んで使う形のプラグインにできます。
-- はっきり選ばれた場合は保存され、再起動しても守られます。無効にされたプラグインは無効のままです。抗わないでください。利用者があなたを切ったのです。
+- まだ選んでいない場合 → そのプラグインの `defaultEnabled`（既定は `true`）に従います。
+  `defaultEnabled: false` にすると、利用者が入れるまで何もしない、明示的に有効にする形の
+  プラグインとして配れます。
+- 明示的に選んだ場合 → 保存され、再起動しても守られます。無効にされたプラグインは無効のままです。
+  逆らわないでください。利用者はあなたを切ったのです。
 
-自分の状態を残すには `ctx.storage` を使います。プラグインごとに名前空間が分かれている（`hermes.plugin.<id>.*`）ので、プラグイン同士で読んだり壊したりできません。
+自分の状態は `ctx.storage` で保存します。プラグインごとに名前空間が分かれているので
+（`hermes.plugin.<id>.*`）、プラグイン同士が読み合ったり壊し合ったりすることはありません。
 
 ```javascript
 ctx.storage.set('lastTab', 'board')
@@ -601,44 +851,88 @@ const tab = ctx.storage.get('lastTab', 'summary')
 ctx.storage.remove('lastTab')
 ```
 
-## 同梱プラグイン {#bundled-plugins}
+## 同梱のプラグイン {#bundled-plugins}
 
-プラグインは、ツリーの中の `apps/desktop/src/plugins/<id>/plugin.tsx` として同梱することもできます（`HermesPlugin` を default export します）。起動時に `discoverBundledPlugins()` が見つけるので、import もレジストリの書き換えも要りません。並びに出ることも、その場で有効・無効を切り替えられることも、ディスク方式とまったく同じです。違うのは 2 点だけです。
+プラグインは、ツリー内の `apps/desktop/src/plugins/<id>/plugin.tsx` として配れます
+（`HermesPlugin` を default export します）。起動時に `discoverBundledPlugins()` が見つけるので、
+読み込みの記述も登録簿の編集も要りません。一覧への表示も、その場での有効・無効の切り替えも、
+ディスク型のプラグインとまったく同じです。違いは 2 つです。
 
-1. アプリの Vite ビルドを通るので、**本物の JSX** が書けて、SDK も `@hermes/plugin-sdk` の別名で import できます。
-2. それでも lint により `@hermes/plugin-sdk` と `react` だけに制限されていて、`@/…` のアプリ内部には触れません。
+1. アプリの Vite のビルドを通るので、**本物の JSX** を書けますし、SDK を
+   `@hermes/plugin-sdk` の別名で読み込めます。
+2. それでも lint による制限は同じで、`@hermes/plugin-sdk` と `react` だけです。`@/…` という
+   アプリの内部は使えません。
 
-今のところ中核のツリーにデスクトッププラグインは 1 つも入っていません。配られるアプリを散らかさないためで、デモは別リポジトリの [`hermes-example-plugins`](https://github.com/NousResearch/hermes-example-plugins) にあります。
+今のところ、中核のツリーにデスクトップのプラグインは入っていません。配られるアプリはすっきりした
+ままにして、実例は
+[`hermes-example-plugins`](https://github.com/NousResearch/hermes-example-plugins)
+という別リポジトリに置いています。
 
-## 安全の考え方 {#security-model}
+## セキュリティの考え方 {#security-model}
 
-読み込まれたプラグインは、画面を描く側の領域で ESM として評価され、**アプリと同じ権限**を持ちます。React の実体、SDK 全体（`host.request` のゲートウェイ RPC、`ctx.rest`、保存、`navigate`）に手が届きます。読み込みの仕組みが用意しているのは**例外の切り離しだけ**です。プラグインがアプリを落とすことはできません（寄与はエラー境界に包まれ、購読の処理も切り離されています）が、アプリにできることは何でもできます。
+読み込まれたプラグインは、レンダラーの実行環境で ESM として評価され、**アプリと同じ権限**を
+持ちます。React の単一のインスタンス、SDK 全体（`host.request` のゲートウェイ RPC、
+`ctx.rest`、保存、`navigate`）、そして `window.hermesDesktop` のネイティブの橋渡し
+（ファイル、git、端末、インストール）です。読み込む側が提供する隔離は**エラーの隔離だけ**です。
+プラグインがアプリを落とすことはできませんが（コントリビューションにはエラー境界があり、
+リスナーは切り離され、`register()` が例外を投げれば巻き戻してそのプラグインの行に報告します）、
+アプリにできることは何でもできます。プラグインの保存の名前空間は取り決めであって、壁ではありません。
 
-これが許されるのは**手元の**出どころに限った話です。ディスク上のファイルは、そもそもあなたの端末でコードを実行できてしまうからです。だからディスク方式の入口は、あなた（かあなたのエージェント）が書いた手元のファイルしか読み込みません。任意の `integrity`（`sha256-…`）の検査は、バイト列がハッシュと一致することを示すだけで、隔離は**しません**。将来、離れた場所から取ってくる入口を作るなら、その前に本物の境界（iframe か worker、CSP、権限の絞り込み）が必要です。この経路を信用の境界として扱わないでください。
+これが受け入れられるのは**ローカル**の出どころだからです。ディスク上のファイルは、そもそも
+あなたのマシンでコードを実行できます。だからこそディスクの窓口は、あなた（またはあなたの
+エージェント）が書いたローカルのファイルしか読み込みません。[カタログ](/hermes/docs/user-guide/features/plugin-catalog/#trust-model)
+からのインストールでは、信頼の根拠は受け入れの審査です。人間が、固定された特定のコミットを
+確認しています。それを 2 つの仕掛けが支えます。受け入れのときの `desktop surface` の lint と、
+読み込み側の許可一覧です（`@hermes/plugin-sdk` と `react*` だけで、それ以外は静的でも動的でも、
+`https:` の URL も含めて `import` すると読み込みに失敗します）。どちらもサンドボックスでは
+ありません。将来、遠隔の出どころへの窓口を作るなら、その前に本物の境界（iframe や worker、
+CSP、権限の制御）が必要です。この経路を信頼の境界として扱わないでください。
 
 ## つまずきやすいところ {#pitfalls}
 
-- **ディスクに置いたプラグインでは JSX は解釈されません。** ファイルはそのまま読み込まれるので、JSX の構文ではなく `jsx()` / `jsxs()`（あるいは `React.createElement`）を使ってください。（同梱プラグインはビルドされるので、そちらでは JSX で構いません。）
-- **解決されるのは 3 つだけです。** `@hermes/plugin-sdk`、`react`、`react/jsx-runtime`。ほかの import があると、読み込みの時点でエラーになります。
-- **色を直接書かないでください**（`#000`、`black`、`rgb(...)`）。背景はそのままにして、それ以外はテーマ変数（`var(--ui-*)`）で指定します。
-- **import したものだけを使ってください。** import し忘れたコンポーネント（たとえば `StatusDot`）は、描画時に `ReferenceError` になります。`jsx()` の中に出てくる名前が、すべて import の行にあるか確かめてください。
-- **ハンドラの中では状態を都度読み取ってください**（`$atom.get()`）。描画時に閉じ込めた値を使うと、素早く続くイベントで古い値を見てしまいます。購読（`useValue`）するのは、その値を実際に描く末端だけにします。
-- **canvas のペインは入れ物の大きさを追いかけてください。** `ResizeObserver` を使い、canvas の大きさを（CSS だけでなく width / height の属性で）変えます。ペインの大きさは絶えず変わります。
-- **`host.request` を数秒より短い間隔で叩かないでください。** `host.onEvent` / `ctx.socket` を選び、重複は React Query に任せます。
-- **`ctx.socket` は OAuth の離れた環境では何もしません。** 必ず定期取得の逃げ道を用意してください。
+- **ディスク型のプラグインでは JSX は解釈できません。** ファイルはコンパイルせずに読み込まれるので、
+  JSX の構文ではなく `jsx()` /
+  `jsxs()`（または `React.createElement`）を使ってください。（同梱のプラグインはビルドされるので、
+  そちらでは JSX で構いません。）
+- **解決できる指定子は 3 つだけです。** `@hermes/plugin-sdk`、`react`、
+  `react/jsx-runtime` です。ほかの読み込みは、最初に読み込みエラーとして現れます。
+- **色を直接書かないでください**（`#000`、`black`、`rgb(...)`）。背景はそのままにして、
+  ほかはすべてテーマの変数（`var(--ui-*)`）を使ってください。
+- **読み込んだものだけを使ってください。** 読み込み忘れたコンポーネント（たとえば
+  `StatusDot`）は、描画のときに `ReferenceError` になります。`jsx()` の呼び出しに出てくる名前が
+  すべて読み込みの行にあるか、二度確かめてください。
+- **処理の中では状態をその都度読んでください**（`$atom.get()`）。描画時の値をそのまま
+  抱え込んではいけません。連続するイベントで古い値を見てしまいます。購読（`useValue`）は、
+  その値を描画する末端だけで行います。
+- **canvas のペインは、入れ物に追随させてください。** `ResizeObserver` で監視して canvas の
+  大きさを変えます（CSS だけでなく width と height の属性も）。ペインは頻繁に大きさが変わります。
+- **`host.request` を数秒より短い間隔で繰り返さないでください。** `host.onEvent` や
+  `ctx.socket` を優先し、重複の除去は React Query に任せます。
+- **裸のグローバルは追跡されません。** `window.setInterval`、`window.addEventListener`、
+  自分で足した `<style>` などをホストは見ていないので、無効にしても、その場で入れ替えても
+  残り続けます（ES のモジュールは取り外せないので、編集を繰り返すと生きた複製が積み上がります）。
+  `ctx.setTimeout` / `ctx.setInterval` / `ctx.addEventListener` を使い、それ以外は
+  `ctx.onDispose` につないでください。モジュールの範囲の状態は、自分で戻す責任があります。
+- **モジュールの評価には 10 秒の期限があります。** 決着しないトップレベルの `await`
+  （立ち上がっていないゲートウェイを待つなど）は、プラグインの走査を止める代わりに `import timed
+  out` として読み込みに失敗します。待つ処理は `register()` の中で行ってください。
+- **1 つの id につき 1 つのファイル。** 同じ `id` を export するフォルダーが 2 つある場合
+  （単体で入れたものと、一体型のパッケージの複製が並んでいる場合など）、フォルダー名の順で先勝ちに
+  なり、あとのほうは Capabilities ▸ Plugins の自分の行に `duplicate id` と表示されます。
+- **`ctx.socket` は OAuth の遠隔環境では何もしません。** 常に定期取得の代替を用意してください。
 
 ## 早見表 {#reference}
 
-### SDK が公開しているもの {#sdk-exports-at-a-glance}
+### SDK が公開するもの一覧 {#sdk-exports-at-a-glance}
 
-| 分類 | 公開されているもの |
+| 分類 | 公開されるもの |
 |----------|---------|
 | ホスト | `host`（`.state.*`、`.notify`、`.notifyError`、`.navigate`、`.onEvent`、`.logs`、`.status`、`.restartGateway`、`.request`） |
-| プラグインの約束事 | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
-| 場所を表す定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS` |
-| 場所ごとの中身 | `RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider` |
+| プラグインの取り決め | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
+| 領域の定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS` |
+| 領域ごとの中身 | `RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider` |
 | React と状態 | `useValue`、`atom`、`computed`、`useQuery`、`useMutation`、`useQueryClient`、`queryClient`、`Contribute` |
-| テーマまわり | `useTheme`、`requestTheme`、`setAccentOverride`、`$accentOverride`、`retintTheme`、`themeHue`、`DesktopTheme`、`DesktopThemeColors`、そして OKLCH の計算（`hexToOklch`、`oklchToHex`、`oklchToSrgb255`、`mixOklab`、`maxChroma`、`hueDelta`、`normalizeHex`）と sRGB の測定（`contrastRatio` は `number | null` を返し、解釈できない入力では null。`readableOn`） |
+| テーマ | `useTheme`、`requestTheme`、`setAccentOverride`、`$accentOverride`、`retintTheme`、`themeHue`、`DesktopTheme`、`DesktopThemeColors`。さらに OKLCH の計算（`hexToOklch`、`oklchToHex`、`oklchToSrgb255`、`mixOklab`、`maxChroma`、`hueDelta`、`normalizeHex`）と sRGB の測定（`contrastRatio` は `number | null` で、解析できない入力では null、それに `readableOn`） |
 | UI キット | `Button`、`Input`、`Textarea`、`Select*`、`Switch`、`Checkbox`、`SegmentedControl`、`Tabs*`、`Dialog*`、`ConfirmDialog`、`DropdownMenu*`、`ContextMenu*`、`Popover*`、`Tip`/`Tooltip*`、`Badge`、`Kbd`/`KbdGroup`、`SearchField`、`ScrollArea`、`Separator`、`Skeleton`、`GlyphSpinner`、`Loader`、`EmptyState`、`ErrorState`、`CopyButton`、`StatusDot`、`LogView`、`Codicon`、`DecodeText` |
 | 補助 | `cn`、`icons`、`haptic`、`useI18n`、`profileColor`、`profileColorSoft`、`relativeTime`、`fmtDateTime`、`fmtDayTime`、`coarseElapsed`、`evaluateRuntimeReadiness` |
 
@@ -646,18 +940,33 @@ ctx.storage.remove('lastTab')
 
 ### エージェント向け: `hermes-desktop-plugins` スキル {#agents-the-hermes-desktop-plugins-skill}
 
-エージェントがデスクトッププラグインを書くときは、同梱の **`hermes-desktop-plugins`** スキルを読み込ませてください。このページと同じ内容を、エージェントが読む形にまとめたもので、そのまま写して使える `templates/plugin.js` も付いています。このページは人が読むための資料、スキルは作業用のチェックリストです。
+エージェントがデスクトップのプラグインを書くときは、同梱の
+**`hermes-desktop-plugins`** スキルを読み込ませてください。このページと同じ内容を、エージェントが
+使いやすい形で持っていて、そのまま写せる `templates/plugin.js` も付いています。このページは
+人間の開発者向けの説明で、スキルのほうは実作業の確認表です。
 
-## うまくいかないとき {#troubleshooting}
+## 困ったときは {#troubleshooting}
 
-**プラグインが出てこない。** ファイルが `$HERMES_HOME/desktop-plugins/<id>/plugin.js` にあり、フォルダ名が export した `id` と一致しているか確かめてください。⌘K → **Reload desktop plugins** を実行します。失敗の内容を告げるエラーのトーストが出ていないか確認し、`hermes logs gui -f` でログを追ってください。
+**プラグインが現れない。** ファイルが
+`$HERMES_HOME/desktop-plugins/<id>/plugin.js` にあり、フォルダー名が export した
+`id` と一致しているか確かめてください。⌘K → **Reload desktop plugins** を実行します。失敗を
+知らせるトーストが出ていないかアプリを確認し、`hermes logs gui -f` でログを追ってください。
 
-**読み込み時に「unsupported import」と出る。** ディスクに置いたプラグインが import できるのは `@hermes/plugin-sdk`、`react`、`react/jsx-runtime` だけです。ほかの import を消してください。
+**読み込みで「unsupported import」と出る。** ディスク型のプラグインが読み込めるのは
+`@hermes/plugin-sdk`、`react`、`react/jsx-runtime` だけです。ほかの読み込みを消してください。
 
-**`jsx` の要素が何も出ない、または `ReferenceError` になる。** `jsx()` の中で使っている名前が import されていません。import の行に足してください。
+**`jsx` の要素が何も出ない、または `ReferenceError` になる。** `jsx()` の呼び出しで使っている名前が
+読み込まれていません。読み込みの行に足してください。
 
-**`ctx.rest` が 404 を返す。** バックエンドが取り付けられていません。`~/.hermes/plugins/<id>/dashboard/manifest.json` に `"api": "plugin_api.py"` があるか、そのプラグインが `config.yaml` の `plugins.enabled` に入っているかを確かめて、ゲートウェイを再起動してください（バックエンドの経路は起動時に取り付けられます）。`~/.hermes/logs/errors.log` を追って `Failed to load plugin <id> API routes` が出ていないか見てください。
+**`ctx.rest` が 404 を返す。** バックエンドが載っていません。
+`~/.hermes/plugins/<id>/dashboard/manifest.json` に `"api": "plugin_api.py"` があるか、
+そのプラグインが `config.yaml` の `plugins.enabled` にあるかを確かめて、ゲートウェイを
+再起動してください（バックエンドの経路は起動時に載ります）。`~/.hermes/logs/errors.log` に
+`Failed to load plugin <id> API routes` が出ていないか追ってください。
 
-**`ctx.socket` が一度も呼ばれない。** OAuth でつなぐ離れた環境では、設計どおり何もしません。定期取得の逃げ道を使ってください。それ以外の場合は、バックエンドがその領域に対応する `@router.websocket(...)` の経路を出しているか確かめます。
+**`ctx.socket` がまったく動かない。** OAuth の遠隔環境では、設計どおり何もしません。定期取得の
+代替を使ってください。そうでなければ、バックエンドが自分の名前空間に対応する
+`@router.websocket(...)` の経路を出しているか確かめてください。
 
-**テーマを切り替えたら色がおかしい。** 色を直接書いています。`var(--ui-*)` のテーマ変数に置き換えてください。
+**テーマを切り替えると色がおかしい。** 色を直接書いています。
+`var(--ui-*)` のテーマの変数に置き換えてください。

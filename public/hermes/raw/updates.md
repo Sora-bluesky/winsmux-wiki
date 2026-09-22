@@ -37,8 +37,8 @@ raw: /hermes/raw/updates.md
 - [Matrix](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/matrix/)
 - [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
 - [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
-- [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
 - [セッション保存領域の復旧](https://wiki.winsmux.dev/hermes/docs/user-guide/session-storage-recovery/)
+- [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
 
 ## 2026-09-21
 

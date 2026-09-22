@@ -1475,6 +1475,9 @@
                 },
                 {
                   "id": "developer-guide/terminal-environment-plugin"
+                },
+                {
+                  "id": "developer-guide/plugins/application-declarations"
                 }
               ]
             },
@@ -1984,6 +1987,7 @@
     "developer-guide/web-search-provider-plugin",
     "developer-guide/browser-provider-plugin",
     "developer-guide/terminal-environment-plugin",
+    "developer-guide/plugins/application-declarations",
     "developer-guide/creating-skills",
     "developer-guide/extending-the-cli",
     "developer-guide/tools-runtime",

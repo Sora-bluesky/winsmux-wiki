@@ -3,8 +3,8 @@
   "entries": [
     {
       "date": "2026-09-22",
-      "sha": null,
-      "upstream": "743ee72",
+      "sha": "b9e0694",
+      "upstream": null,
       "pages": [
         {
           "id": "developer-guide/context-compression-and-caching",
@@ -142,14 +142,14 @@
           "url": "/hermes/docs/user-guide/profiles/"
         },
         {
-          "id": "user-guide/sessions",
-          "title": "セッション",
-          "url": "/hermes/docs/user-guide/sessions/"
-        },
-        {
           "id": "user-guide/session-storage-recovery",
           "title": "セッション保存領域の復旧",
           "url": "/hermes/docs/user-guide/session-storage-recovery/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
         }
       ]
     },
