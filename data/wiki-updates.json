@@ -1,6 +1,149 @@
 {
-  "generatedAt": "2026-09-22",
+  "generatedAt": "2026-09-23",
   "entries": [
+    {
+      "date": "2026-09-23",
+      "sha": "d0c46e7",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-23",
+      "sha": "5c2b2f5",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-22",
+      "sha": "4afc283",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-22",
+      "sha": "8d89a79",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/context-engine-plugin",
+          "title": "コンテキストエンジンのプラグイン",
+          "url": "/hermes/docs/developer-guide/context-engine-plugin/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/model-provider-plugin",
+          "title": "モデルプロバイダーのプラグイン",
+          "url": "/hermes/docs/developer-guide/model-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/observer-hooks",
+          "title": "オブザーバーフック",
+          "url": "/hermes/docs/developer-guide/observer-hooks/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/tools-reference",
+          "title": "組み込みツール一覧",
+          "url": "/hermes/docs/reference/tools-reference/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/curator",
+          "title": "キュレーター",
+          "url": "/hermes/docs/user-guide/features/curator/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/kanban",
+          "title": "カンバン（マルチエージェント盤）",
+          "url": "/hermes/docs/user-guide/features/kanban/"
+        },
+        {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "スキルの仕組み",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
+          "id": "user-guide/features/tool-search",
+          "title": "ツール検索",
+          "url": "/hermes/docs/user-guide/features/tool-search/"
+        },
+        {
+          "id": "user-guide/messaging/discord",
+          "title": "Discord",
+          "url": "/hermes/docs/user-guide/messaging/discord/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        }
+      ]
+    },
     {
       "date": "2026-09-22",
       "sha": "b9e0694",
@@ -18,7 +161,7 @@
         },
         {
           "id": "developer-guide/desktop-plugin-sdk",
-          "title": "デスクトッププラグイン SDK（@hermes/plugin-sdk）",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
           "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
         },
         {
@@ -53,7 +196,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -215,7 +358,7 @@
         },
         {
           "id": "developer-guide/model-provider-plugin",
-          "title": "モデルプロバイダープラグイン",
+          "title": "モデルプロバイダーのプラグイン",
           "url": "/hermes/docs/developer-guide/model-provider-plugin/"
         },
         {
@@ -335,7 +478,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -1804,7 +1947,7 @@
         },
         {
           "id": "developer-guide/context-engine-plugin",
-          "title": "コンテキストエンジンプラグイン",
+          "title": "コンテキストエンジンのプラグイン",
           "url": "/hermes/docs/developer-guide/context-engine-plugin/"
         },
         {
@@ -1819,7 +1962,7 @@
         },
         {
           "id": "developer-guide/desktop-plugin-sdk",
-          "title": "デスクトッププラグイン SDK（@hermes/plugin-sdk）",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
           "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
         },
         {
@@ -1844,7 +1987,7 @@
         },
         {
           "id": "developer-guide/model-provider-plugin",
-          "title": "モデルプロバイダープラグイン",
+          "title": "モデルプロバイダーのプラグイン",
           "url": "/hermes/docs/developer-guide/model-provider-plugin/"
         },
         {
@@ -2084,7 +2227,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -3136,7 +3279,7 @@
         },
         {
           "id": "developer-guide/model-provider-plugin",
-          "title": "モデルプロバイダープラグイン",
+          "title": "モデルプロバイダーのプラグイン",
           "url": "/hermes/docs/developer-guide/model-provider-plugin/"
         },
         {
@@ -3166,7 +3309,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -3268,7 +3411,7 @@
         },
         {
           "id": "developer-guide/desktop-plugin-sdk",
-          "title": "デスクトッププラグイン SDK（@hermes/plugin-sdk）",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
           "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
         },
         {
@@ -3303,7 +3446,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -3545,7 +3688,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -3777,7 +3920,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -4176,7 +4319,7 @@
         },
         {
           "id": "developer-guide/desktop-plugin-sdk",
-          "title": "デスクトッププラグイン SDK（@hermes/plugin-sdk）",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
           "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
         },
         {
@@ -4271,7 +4414,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -4458,7 +4601,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -4692,7 +4835,7 @@
       "pages": [
         {
           "id": "developer-guide/desktop-plugin-sdk",
-          "title": "デスクトッププラグイン SDK（@hermes/plugin-sdk）",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
           "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
         },
         {
@@ -4702,7 +4845,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -4839,7 +4982,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -5071,7 +5214,7 @@
         },
         {
           "id": "developer-guide/context-engine-plugin",
-          "title": "コンテキストエンジンプラグイン",
+          "title": "コンテキストエンジンのプラグイン",
           "url": "/hermes/docs/developer-guide/context-engine-plugin/"
         },
         {
@@ -5136,7 +5279,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -5609,7 +5752,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -5666,7 +5809,7 @@
         },
         {
           "id": "developer-guide/model-provider-plugin",
-          "title": "モデルプロバイダープラグイン",
+          "title": "モデルプロバイダーのプラグイン",
           "url": "/hermes/docs/developer-guide/model-provider-plugin/"
         },
         {
@@ -5960,7 +6103,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -6077,7 +6220,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -7184,7 +7327,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -7291,7 +7434,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -7392,7 +7535,7 @@
       "pages": [
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         }
       ]
@@ -7588,7 +7731,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -7754,7 +7897,7 @@
         },
         {
           "id": "reference/cli-commands",
-          "title": "CLI コマンド早見表",
+          "title": "CLIコマンド一覧",
           "url": "/hermes/docs/reference/cli-commands/"
         },
         {
@@ -7806,7 +7949,7 @@
       "pages": [
         {
           "id": "developer-guide/desktop-plugin-sdk",
-          "title": "デスクトッププラグイン SDK（@hermes/plugin-sdk）",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
           "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
         }
       ]

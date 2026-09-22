@@ -47,9 +47,9 @@
       "translatedAt": "2026-09-04T22:44:56.788Z"
     },
     "developer-guide/context-compression-and-caching.md": {
-      "blob": "4d329d1b218b84a398827fbe9c7372b2050de8df",
+      "blob": "d80b893596d87acae16ed9e1ac10adc5296d340d",
       "status": "translated",
-      "translatedAt": "2026-09-21T22:48:31.561Z"
+      "translatedAt": "2026-09-22T23:37:59.936Z"
     },
     "developer-guide/context-engine-plugin.md": {
       "blob": "d124ce46d9b22e7f08167a8f4c021ca82d2be307",
@@ -87,9 +87,9 @@
       "translatedAt": "2026-09-04T22:51:30.442Z"
     },
     "developer-guide/gateway-internals.md": {
-      "blob": "543793d50764aedb588cf937b545cd7b1f59f76c",
+      "blob": "5333ba3576e4042fc22c88e3e9cf911b3b1be1ed",
       "status": "translated",
-      "translatedAt": "2026-09-21T22:48:31.567Z"
+      "translatedAt": "2026-09-22T23:37:59.939Z"
     },
     "developer-guide/image-gen-provider-plugin.md": {
       "blob": "82eeaeeb6ba1b6e31e17479fc06c52dc77b94c7d",
@@ -112,9 +112,9 @@
       "translatedAt": "2026-09-18T22:41:13.101Z"
     },
     "developer-guide/plugins/index.md": {
-      "blob": "874e0666e59068be578103d2293556780cbd8468",
+      "blob": "b1e6e26eee0666e62a0b3796fe376a7a87718452",
       "status": "translated",
-      "translatedAt": "2026-09-22T12:09:33.160Z"
+      "translatedAt": "2026-09-22T23:37:59.942Z"
     },
     "developer-guide/programmatic-integration.md": {
       "blob": "4b050ad82283697bfed2463aa84a50499bd9b5c2",
@@ -452,9 +452,9 @@
       "translatedAt": "2026-09-22T12:09:33.157Z"
     },
     "reference/toolsets-reference.md": {
-      "blob": "279c6a4d6c387dc7d5dfc140841f22704dbaad10",
+      "blob": "03b34044a83d2662d4be975d1d4c2c4813812f31",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.197Z"
+      "translatedAt": "2026-09-22T23:37:59.943Z"
     },
     "user-guide/bot-mode.md": {
       "blob": "12807a266144e3fc5652c02f701ab7df46091ef9",
@@ -482,9 +482,9 @@
       "translatedAt": "2026-09-20T23:06:07.205Z"
     },
     "user-guide/desktop.md": {
-      "blob": "075b2a1bf3529fb9d05ed8fd9cde4a340cfe4046",
+      "blob": "67fe84f888ae5f3cfa71848ce8087d3d13f9ccb7",
       "status": "translated",
-      "translatedAt": "2026-09-22T22:43:11.518Z"
+      "translatedAt": "2026-09-22T23:37:59.945Z"
     },
     "user-guide/docker.md": {
       "blob": "f7c8114964c70b8a231be0ccbcd1b213c12d02ec",
@@ -2329,7 +2329,12 @@
       "blob": "aa1e522f3f7d9cd1722e54ca4af23463f0fee04e",
       "status": "translated",
       "translatedAt": "2026-09-21T22:48:31.607Z"
+    },
+    "developer-guide/plugins/application-declarations.md": {
+      "blob": "20c465be6e3496e526a0c64446472c76fb56261a",
+      "status": "translated",
+      "translatedAt": "2026-09-22T23:37:59.945Z"
     }
   },
-  "snapshotCommit": "e175ee3a4db10872c28dd5db83a6013912d72eb6"
+  "snapshotCommit": "28aceb3451f5a5d2a27396b2adf29231be34c482"
 }

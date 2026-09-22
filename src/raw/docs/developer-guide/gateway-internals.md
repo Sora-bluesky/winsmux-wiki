@@ -2,7 +2,7 @@
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: 543793d50764aedb588cf937b545cd7b1f59f76c
+upstream_blob: 5333ba3576e4042fc22c88e3e9cf911b3b1be1ed
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -293,6 +293,27 @@ AIAgent._invoke_tool()
 | バックグラウンドのスレッド | `agent/memory_provider.py::spawn_context_thread` |
 
 秘密情報の読み出しが安全側に失敗する (`agent.secret_scope.get_secret` が `UnscopedSecretError` を投げる) のは、`set_multiplex_active(True)` が呼ばれたあとだけです。これを呼ぶのは、ゲートウェイ、cron、`gateway migrate`、Desktop やダッシュボードの `serve` バックエンドです。多重化しているとき、アダプターの YAML は `os.environ` に書き込まれません。`gateway/platforms/_shared.py::apply_yaml_bridge` が `PlatformConfig.extra` に値を入れ、ほかのプロファイルの範囲では環境変数への書き込みを飛ばします。有効かどうかの判定は `platform_gate_env` を通して読みます。入口を共有するサービス (WhatsApp のブリッジ、Relay) は既定のプロファイルでだけ動きます。ほかのプロファイルでこれらを有効にすると、ログに一度だけ記録され、実行時の状態に印が付きます (`run_adapters.py::_note_unserved_secondary_platform`)。利用者から見たプロファイルごとの分離は [複数プロファイルのゲートウェイ § プロファイルごとに分離されるもの](/hermes/docs/user-guide/multi-profile-gateways/#what-is-isolated-per-profile) を参照してください。
+
+## 実行中のプラグイン読み込み {#mid-run-plugin-loading}
+
+アダプターの接続後に読み込まれたプラグイン（CLI・Desktop・ダッシュボード・
+`plugins.manage` からのインストールや有効化、ツールがきっかけの強制的な再検出）は、再起動しなくてもプラットフォームのハンドラーを配線し直します
+(#87770)。構成要素はすべて `gateway/run_plugin_rewire.py` にあります。
+
+- **検出リスナー** — 起動プロファイルでは `_start_recover_previous_run` が `PluginManager.on_plugin_loaded` を購読し、
+  配信対象のプロファイルごとには `_load_secondary_profile_config` が同じく購読します。このイベントは新たに読み込まれたプラグインについて
+  `discover_and_load` の内部から発火します（RPC から発火することはありません）。コールバックは `call_soon_threadsafe` でゲートウェイの
+  イベントループへ移ります。
+- **冪等な再配線** — `BasePlatformAdapter.rewire_plugin_handlers()` が
+  `get_platform_handler_factories(platform)` を読み直し、稼働中のネイティブクライアントにまだ配線されていないファクトリーだけを実行します
+  （強制リロードでは新しい関数オブジェクトが返るため、キーは `(plugin, qualname)` です）。Telegram では
+  追加したハンドラーをコアの catch-all より前に持ち上げます。Slack ではさらに、足りない
+  `register_slack_action_handler` のコールバックを `AsyncApp` ごとに1回だけ登録し直します。
+- **`reload-plugins` 制御動詞** — ほかのプロセス（`hermes plugins install`、`hermes serve`）は
+  稼働中のゲートウェイに、指定した（配信中の）ホームを強制的に再スキャンするよう依頼します。応答には `plugins`、プラグインごとの
+  `activations`、`adapters_rewired` が入るので、呼び出し側は「いま有効になった」と正確に伝えられます。
+- **適用範囲の限界** — 対象はハンドラーだけです。あとから読み込まれたプラグインのツールやシステムプロンプトの節は、次の
+  セッションまで待ちます（プロンプトキャッシュの不変条件のため）。持ち運べる MCP サーバーは `mcp.reload` まで待ちます。無効化しても配線は外れません。
 
 ## 関連ページ {#related-docs}
 
