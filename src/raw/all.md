@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（230 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（231 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -58,7 +58,7 @@ raw: /hermes/raw/all.md
 - [Windows (Native) Guide](/hermes/docs/user-guide/windows-native/)
 - [Windows (WSL2) Guide](/hermes/docs/user-guide/windows-wsl-quickstart/)
 
-## Core Features（34）
+## Core Features（35）
 
 - [Features Overview](/hermes/docs/user-guide/features/overview/)
 - [Tools](/hermes/docs/user-guide/features/tools/)
@@ -71,6 +71,7 @@ raw: /hermes/raw/all.md
 - [Personality & SOUL.md](/hermes/docs/user-guide/features/personality/)
 - [Plugins](/hermes/docs/user-guide/features/plugins/)
 - [Built-in Plugins](/hermes/docs/user-guide/features/built-in-plugins/)
+- [Bot Screen](/hermes/docs/user-guide/features/bot-screen/)
 - [Codex App-Server Runtime (optional)](/hermes/docs/user-guide/features/codex-app-server-runtime/)
 - [Computer Use](/hermes/docs/user-guide/features/computer-use/)
 - [Passwords & Logins](/hermes/docs/user-guide/features/credential-vault/)

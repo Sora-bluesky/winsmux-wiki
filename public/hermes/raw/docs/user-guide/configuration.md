@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: baef49f5223cf47be2d143ed279d88555c1774ed
+upstream_blob: 2dec21b039bbaaadc6520c46b4f49af63c82cb64
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -171,7 +171,8 @@ AI プロバイダーの設定（OpenRouter、Anthropic、Copilot、カスタム
 自動で行われる更新確認（CLI のバナー、TUI のバッジ、ダッシュボード、デスクトップアプリ）は、
 GitHub REST API に `main` の最新コミットを問い合わせ、手元のチェックアウトと違っていれば、
 compare エンドポイントで新しいコミットの正確な数と変更履歴を取得します。`git fetch` は
-一度も実行せず、問い合わせはどのインストールでも**24時間に1回まで**です（確認に失敗したときは
+一度も実行せず（部分クローン（`--filter=blob:none`）では、足りないオブジェクトを promisor リモートから
+ダウンロードすることもありません。Git 2.44 以降）、問い合わせはどのインストールでも**24時間に1回まで**です（確認に失敗したときは
 1時間後に再試行します）。更新を適用する操作（`hermes update`、またはデスクトップアプリの
 Update ボタン）では、必ず最新の状態を取得し直し、キャッシュした結果を破棄します。明示的な
 確認（`hermes update --check`、デスクトップアプリの「Check for Updates…」メニュー項目、
@@ -1221,7 +1222,7 @@ agent:
 
 `agent.api_max_retries` は、一時的なエラー（レート制限、接続の切断、5xx）が起きたとき、フォールバックプロバイダーへの切り替えが始まる**前に**、Hermes がプロバイダーの API 呼び出しを何回再試行するかを決めます。既定値は `3` で、合計4回試行します。[フォールバックプロバイダー](/hermes/docs/user-guide/features/fallback-providers/) を設定していて、より早く切り替えたい場合は、これを `0` に下げてください。そうすれば、メインのプロバイダーで最初に一時的なエラーが出た時点で、不安定なエンドポイントへの再試行を重ねずに、すぐフォールバックへ引き継ぎます。
 
-`agent.auto_recovery_cycles` は、再試行とフォールバックチェーンの両方を使い切った*あと*の安全網です。失敗の原因が一時的な障害（HTTP 5xx、`overloaded`/529 の応答、接続または読み込みのタイムアウト）で、まだ回答のテキストが届いていない場合、Hermes は「API failed after N retries」でターンを終えず、待ってから再び試します。試すのは最大でこの回数（既定は `5`）までで、間隔は15/30/60/60/60秒に揺らぎを加えたものです。プロバイダーが `Retry-After` ヘッダーを返した場合は、この間隔より優先します（120秒まで従います）。待っているあいだは、どの画面にも同じ内容が表示されます。CLI/TUI/Desktop では `⏳ Provider temporarily unavailable — retrying automatically in 30s (cycle 2/5); press Esc to stop`、メッセージングプラットフォームではステータスの吹き出し（`send /stop to cancel`）、API サーバーでは `hermes.status` の SSE イベント、cron ジョブではログの1行です。Esc を押す（または `/stop` を送る）と、待機はすぐに取り消されます。それでもフォールバックが先です。フォールバックチェーンを設定していれば、使い切ったときはこれまでどおり次のプロバイダーへ移り、この段階的な待機はチェーンに残りがなくなって初めて始まります。認証、支払い、リクエストの形式、利用資格、コンテンツポリシーのエラーは、この段階的な待機の対象になりません。無効にするには `0` を設定してください。
+`agent.auto_recovery_cycles` は、再試行とフォールバックチェーンの両方を使い切った*あと*の安全網です。失敗の原因が一時的な障害（HTTP 5xx、`overloaded`/529 の応答、接続または読み込みのタイムアウト）で、まだ回答のテキストが届いていない場合、Hermes は「API failed after N retries」でターンを終えず、待ってから再び試します。試すのは最大でこの回数（既定は `5`）までで、間隔は15/30/60/60/60秒に揺らぎを加えたものです。プロバイダーが `Retry-After` ヘッダーを返した場合は、この間隔より優先します（120秒まで従います）。待っているあいだは、どの画面にも同じ内容が表示されます。CLI/TUI/Desktop では `⏳ Provider temporarily unavailable — retrying automatically in 30s (cycle 2/5); press Esc to stop`、メッセージングプラットフォームではステータスの吹き出し（`send /stop to cancel`）、API サーバーでは `hermes.status` の SSE イベント、cron ジョブではログの1行です。Esc を押す（または `/stop` を送る）と、待機はすぐに取り消されます。それでもフォールバックが先です。フォールバックチェーンを設定していれば、使い切ったときはこれまでどおり次のプロバイダーへ移り、この段階的な待機はチェーンに残りがなくなって初めて始まります。認証、支払い、リクエストの形式、利用資格、コンテンツポリシー、アカウントのポリシーのエラーは、この段階的な待機の対象になりません。無効にするには `0` を設定してください。
 
 ## 経過時間による実行の上限 {#wall-clock-run-budget}
 
@@ -1461,6 +1462,8 @@ Hermes でモデルを指定する場所は、補助タスクでも圧縮でも�
 これは全体設定の `agent.reasoning_effort` を、タスクごとに指定するためのものです。メインモデルが高価な推論モデルのとき、圧縮を `low`、画像認識を `none` で動かせば、メインのチャットの動作には手を付けずに、補助タスクの待ち時間と費用を減らせます。対象は `vision`、`compression`、`title_generation`、`curator` などの補助クライアントのタスクで、補助タスクの3つの送信形式（chat completions、Codex Responses、Anthropic Messages）すべてで効きます。同じタスクに `extra_body.reasoning` を明示的に書いた場合は、この省略形の設定よりそちらが優先されます。呼び出し側が自分の呼び出しで思考をオフにする場合（タイトル生成がそうです。64トークンのタイトルに推論の入る余地はありません）は、その両方より優先されます。そのリクエストでは、タスク単位の推論の深さの指定はプロバイダーの思考オフのフィールドと並べて送られることなく、取り除かれます。
 
 エンドポイントが推論のフィールドそのものを受け付けない場合（OpenAI 互換のリレーの裏にあるチャット専用モデルが `400 Unrecognized request argument supplied: reasoning_effort` と返す場合や、語順が逆の `400 reasoning_effort 'none' unsupported; use minimal|low|medium|high|xhigh` を返す場合）、補助の呼び出しは推論のフィールドをすべて外して1回だけ再試行されます。そのため、タスク（たとえばセッションのタイトル）はエンドポイントの既定の動作で最後まで完了します。メインの会話でも同じ立て直しを行います。思考だけで途中で切れた応答の続きを求めるとき、Hermes は推論をオフにしたリクエストを送りますが、その経路がこれを拒否した場合は、そのセッションの残りの間は無効化の指定を外し、経路の既定の設定でリクエストを再試行します。
+
+モデルによっては、思考をまったくオフにできないものもあります（`400 Reasoning is mandatory for this endpoint and cannot be disabled`）。そうしたモデルでは、思考をオフにした補助の呼び出し（タイトル生成や、`reasoning_effort: none` を設定したタスク）は、無効化の指定の代わりに最も低い深さ（`low`）で送られます。経路のモデルカタログがそのモデルを必須と示している場合（OpenRouter と Nous Portal の `/v1/models`。`cache/reasoning_caps.json` にキャッシュされます）や、同じプロセスの中で、その経路が以前の無効化の指定にすでにそう答えている場合、Hermes は事前にそれを把握しています。そのため、拒否されるリクエストは送られません。カタログのキャッシュがまだない新規インストールでは、この 400 が1回だけ出ることがあります。問い合わせの処理が裏でカタログを取得し、以降の呼び出しではそれを使います。
 
 **バックグラウンドレビューは扱いが異なります:** 同じモデルで行うレビューのフォークは、常に親の推論の深さを引き継ぎます。この経路では、親のプロバイダー／モデルを明示的に選んでいる場合も含め、`auxiliary.background_review.reasoning_effort` は無視されます。プロンプトキャッシュを親と同じ状態に保つために、推論の設定、システムプロンプト、会話全体のスナップショット、ツールの定義をバイト単位で同一に保つからです。同じモデルでのレビューだけ推論の深さを別にする切り替えはありません。[バックグラウンドレビューの推論](/hermes/docs/user-guide/features/memory/#same-model-review-reasoning) を参照してください。レビューを別のプロバイダー／モデルに振り分けた場合は、振り分け先のフォークに `reasoning_effort` が適用されます（未設定なら振り分け先プロバイダーの既定値）。このキーを設定しているのにレビューがメインモデルで動いた場合、Hermes は1回だけ警告を表示します。
 
@@ -1919,7 +1922,7 @@ agent:
 
 ## Fast モード {#fast-mode}
 
-Fast モードは、割増料金と引き換えに、プロバイダーへより速い出力を求める機能です。対象は OpenAI の [Priority Processing](https://openai.com/api-priority-processing/)（`service_tier: priority`）、Grok 4.6 での xAI の Priority Processing、Anthropic の [Fast Mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode)（`speed: fast`、Opus 4.8 / Opus 5 のみ）です。**既定ではオフ**です。
+Fast モードは、割増料金と引き換えに、プロバイダーへより速い出力を求める機能です。対象は OpenAI の [Priority Processing](https://openai.com/api-priority-processing/)（`service_tier: priority`）、Grok 4.6 での xAI の Priority Processing、Anthropic の [Fast Mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode)（`speed: fast`、Opus 4.8 / Opus 5 / Opus 5.5 のみ）です。**既定ではオフ**です。
 
 ```yaml
 agent:
@@ -1936,7 +1939,13 @@ agent:
 
 `/fast normal|fast|auto|cold` で、そのセッションのモードを切り替えます。`--global` を付けると `config.yaml` に保存され、次回以降も使われます。`/fast` だけを実行すると、現在のモードを表示します。
 
-**料金の注意:** どちらのプロバイダーも、fast のリクエストには標準料金に倍率を掛けた額を請求します（Anthropic の場合、Opus 4.8 と Opus 5 で入力／出力それぞれ 100万トークン（MTok）あたり $10 / $50）。この割増はプロンプトキャッシュの料金と重ねて適用されます。`auto`/`cold` を使うと、割増がかかるのは時間枠の中だけになります。fast のパラメーターは、それに対応した提供元直営のエンドポイント（`api.openai.com` / Codex のサブスクリプション、`api.anthropic.com`、`api.x.ai`）にだけ送られます。OpenRouter、Nous Portal、Copilot、Azure、Bedrock、カスタムの `base_url` の経路には、どのモードでも送られません。リクエストごとに変わるのはリクエスト単位のこのパラメーターだけで、システムプロンプト、ツール、メッセージはバイト単位で同一のままです。そのため、時間枠の境目をまたいでもプロンプトキャッシュは効いたままです。
+**料金の注意:** どちらのプロバイダーも、fast のリクエストには標準料金に倍率を掛けた額を請求します（Anthropic の場合、入力／出力それぞれ 100万トークン（MTok）あたり、Opus 5.5 で $8 / $40、Opus 5 と Opus 4.8 で $10 / $50）。この割増はプロンプトキャッシュの料金と重ねて適用されます。Hermes は Anthropic の応答ごとに、API が `usage.speed` で報告する速度をもとに料金を計算します。`auto`/`cold` を使うと、割増がかかるのは時間枠の中だけになります。fast のパラメーターは、それに対応した提供元直営のエンドポイント（`api.openai.com` / Codex のサブスクリプション、`api.anthropic.com`、`api.x.ai`）にだけ送られます。OpenRouter、Nous Portal、Copilot、Azure、Bedrock、カスタムの `base_url` の経路には、どのモードでも送られません。
+
+**プロンプトキャッシュ:** リクエストごとに変わるのはリクエスト単位のこのパラメーターだけで、システムプロンプト、ツール、メッセージはバイト単位で同一のままです。ただし Anthropic は速度ごとに別々のプロンプトキャッシュを持つので、Anthropic では `auto`/`cold` の時間枠の境目のたびに、会話の先頭部分が新しい速度で書き直されます。Anthropic で長いセッションを続けるなら、`fast` か `normal` にしておくと、温まったキャッシュを1つに保てます。
+
+Fast モードで速くなるのは1秒あたりの出力トークン数なので、長い回答ほど効果が大きくなります。
+
+Anthropic の組織にそのモデルの Fast モードの枠がない場合（API が fast のリクエストに、Fast モードの上限が 0 だと答えた場合）、Hermes はそのセッションの残りの間、そのモデルを標準の速度に切り替えてリクエストを再試行します。
 
 ### ゲートウェイやプロキシ経由での Fast のティア {#fast-tiers-behind-a-gateway-or-proxy}
 

@@ -2,7 +2,7 @@
 title: "外部サービス連携"
 description: ""
 upstream_path: integrations/index.md
-upstream_blob: 67feaf70dee0dad32a74be9903a2cabcda4da0ba
+upstream_blob: adf8f6ae005fa58d4e885c865c4c7979534bb178
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations
 ---
@@ -87,7 +87,7 @@ Hermes にはブラウザを操作する機能が一式そろっていて、サ�
 ## 記憶と個人向けの調整 {#memory-personalization}
 
 - **[組み込みのメモリ](/hermes/docs/user-guide/features/memory/)** — `MEMORY.md` と `USER.md` に、選び抜いた内容を残していく仕組みです。エージェントが個人的なメモと利用者の情報を上限付きで管理し、セッションをまたいで持ち越します。
-- **[メモリのプロバイダー](/hermes/docs/user-guide/features/memory-providers/)** — 外部の記憶サービスをつないで、より深く個人に合わせられます。対応は 8 つで、Honcho（対話的な推論）、OpenViking（段階的な検索）、Mem0（クラウドでの抽出）、Hindsight（知識グラフ）、Holographic（手元の SQLite）、RetainDB（ハイブリッド検索）、ByteRover（コマンド方式）、Supermemory です。
+- **[メモリのプロバイダー](/hermes/docs/user-guide/features/memory-providers/)** — 外部の記憶サービスをつないで、より深く個人に合わせられます。Hermes に同梱されているのは 7 つで、Honcho（対話的な推論）、OpenViking（段階的な検索）、Mem0（クラウドでの抽出）、Holographic（手元の SQLite）、RetainDB（ハイブリッド検索）、ByteRover（コマンド方式）、Supermemory です。Hindsight（知識グラフ）はプラグインカタログから `hermes plugins install hindsight` で入れられます。
 
 ## メッセージングサービス {#messaging-platforms}
 

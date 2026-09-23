@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: bd695ce1b60a3162b1d3db128707d15e715579fb
+upstream_blob: bed869e53731f631be57973c3c8390c1c588a39d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -152,6 +152,8 @@ OOM による再起動 > ディスク注意 > メモリ注意）。閉じたこ�
 
 **セッションの切り替え（右の細い欄）:** チャットのタブは、ターミナルの横の細い欄に、ChatGPT のような会話の一覧を持っています。ページを離れずに会話を移れます。欄の上にモデルの選択、その下にセッションの一覧が並び、画面のほとんどはターミナルが占めます。一覧には、選んでいるプロファイルの最近のセッションが出ます。題名（なければメッセージの冒頭）、最後に動いた時刻の相対表示、メッセージ数、そして CLI 以外のセッションではどの経路から来たかが見えます。どれかの行を押すとその場で続きから始まり（ターミナルがその会話の履歴を持って立ち上がり直します）、いま動いているセッションは目立つように示されます。**新しいチャット**で新しいセッションを始められ、読み直しの操作で一覧を取り直せます。この欄は切り替えのためだけのもので、削除・名前の変更・書き出し・まとめての片づけは、これまでどおり**セッション**のタブにあります。画面が狭いときは、横から出てくる面に畳まれます。
 
+**作業場所の選択:** 新しいチャットは、管理画面のプロセスを起動した場所で始まります。スマートフォンから Hermes を動かしていて `~/code/foo` で作業させたいときには、これでは役に立ちません。欄の **workspace** の選択肢には、デスクトップのサイドバーが把握しているのと同じディレクトリが並びます。自分で登録したプロジェクト（`hermes projects`）と、見つかったすべての git リポジトリ（セッションから分かったものと、`desktop.repo_scan_roots` を走査して見つけたもの）で、最近使ったものほど上に来ます。それ以外の場所を使いたいときのために **Other path…** の項目もあります。選んだ場所はプロファイルごとに覚えられ、次の**新しいチャット**から使われます（続きから始めたセッションは、そのセッション自身の作業ディレクトリのままです）。走査し直すボタンを押すと、ホスト上の探索の起点をたどり直すので、SSH 越しに clone したばかりのリポジトリも再起動なしで現れます。もう存在しないパスを選ぶと、黙って起動した場所で始めるのではなく、エラーで断られます。裏では `GET /api/chat/workspaces` と、`/api/pty` の WebSocket の `cwd` パラメータが使われています。
+
 **前もって要るもの:**
 
 - Node.js（`hermes --tui` と同じ条件です。TUI の一式は最初の起動時に組み立てられます）
@@ -184,7 +186,18 @@ Hermes デスクトップ版はふだん自分のバックエンドを立ち上�
 EnvironmentFile=%h/.hermes/.env
 ExecStart=/path/to/venv/bin/python -m hermes_cli.main dashboard \
     --host 0.0.0.0 --port 9119 --no-open
+Restart=always
+RestartSec=10
+# Exit 78 (EX_CONFIG) is a deliberate refusal ("this host is already served by PID … on
+# another port"); parking on it beats an infinite restart loop with nothing listening.
+RestartPreventExitStatus=78
 ```
+
+バックエンドは1台のホストにつき1つで、ホスト全体を受け持ちます。そのため `hermes dashboard` は、
+指定された `--host`/`--port` では応じられない稼働中のバックエンドを見つけると、終了コード 78 で起動を断り、
+そのバックエンドの持ち主を示します。そのバックエンドを止めるか、`--isolated` を付けてサービス専用の
+サーバーを持たせてください。デスクトップアプリが自分で使うループバックのバックエンドはホストの持ち主を名乗らないので、
+どちらのフラグも使わずに両方を並べて動かせます。
 
 `~/.hermes/.env` の中身はこうです。
 
@@ -465,6 +478,10 @@ You → /reload
 どちらの採取も安全側に倒れます。測るときに何か失敗しても、状況の入口ごと失敗させるのではなく、
 その塊を `{"pressure": "unknown"}` に落とします。`/api/status` は誰でも触れるので、
 数字は粗いもの（MB 単位、パーセント単位）です。
+
+### GET /api/chat/workspaces {#get-apichatworkspaces}
+
+チャットのタブで新しいセッションを始められるディレクトリを返します。プロファイルのプロジェクト（フォルダ付き）と、見つかった git リポジトリ（`root`、`label`、`sessions`、`last_active`）に加えて、`default_cwd`（何も選ばなかったときにチャットが始まる場所）と `home` が入ります。`?scan=1` を付けると、先にホスト上の `desktop.repo_scan_roots` を走査し直します。`/api/pty?cwd=<path>` と組み合わせて使います。こちらはディレクトリが無いと安全側に倒れて失敗します。
 
 ### GET /api/sessions {#get-apisessions}
 

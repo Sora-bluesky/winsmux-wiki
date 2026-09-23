@@ -2,7 +2,7 @@
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: d4ca52f5b9e7f89299756cce574b256be1433ff2
+upstream_blob: 306eb646a547e86309a7f80b7f970eb1c5c5679e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -166,8 +166,16 @@ app-server のセッションは、構築時の cwd ではなく現在のワー�
 | `sync_turn(user, assistant, *, session_id="", messages=None)` | 1 ターンが終わるたび | 会話を保存する |
 | `on_session_end(messages)` | 会話が終わったとき | 最後の抽出・書き出し |
 | `on_pre_compress(messages)` | コンテキスト圧縮の前 | 捨てられる前に気づきを保存する |
-| `on_memory_write(action, target, content)` | 組み込みメモリーへの書き込み時 | 自前のバックエンドにも同じ内容を残す |
+| `on_memory_write(action, target, content, metadata=None)` | 組み込みメモリーへの書き込み時 | 自前のバックエンドにも同じ内容を残す |
 | `shutdown()` | プロセス終了時 | 接続の後始末 |
+
+組み込みの `replace` と `remove` では、`metadata["previous_content"]` に、組み込みの保存先の
+ロックをかけた状態で選ばれたエントリーの全文が入ります。通知は、書き込みや一括処理がすべて
+成功してからしか出ません。一括処理の通知は操作の順番を保ち、各操作の変更前の内容には、その
+一括処理の中で先に行われた操作が反映されています。
+`old_text` は呼び出し側の検索文字列であって、変更されたエントリーを特定するものではありません。
+古い Hermes のバージョンでは `previous_content` が省かれることがあります。エントリーを正確に
+特定する必要があるプロバイダーは、これが無いときは、消去を伴う書き写しを見送ってください。
 
 ### 大きすぎる prefetch の結果 {#oversized-prefetch-results}
 

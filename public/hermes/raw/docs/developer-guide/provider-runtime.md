@@ -2,7 +2,7 @@
 title: "実行時のプロバイダー解決"
 description: "Hermes が実行時にプロバイダー・資格情報・API モード・補助モデルをどう決めているか"
 upstream_path: developer-guide/provider-runtime.md
-upstream_blob: a1718fd3435837618b6ade7534df17026e022573
+upstream_blob: cae44ae79ddd3037276dd63ac678efd878006f5c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/provider-runtime
 ---
@@ -216,7 +216,7 @@ Hermes では、予備のプロバイダーの連なりを設定できます。`
 - **サブエージェントへの委任** (`tools/delegate_tool.py`): サブエージェントは親のプロバイダーは受け継ぎますが、予備の設定は受け継ぎません
 - **補助的な仕事**: 自前のプロバイダー自動判定の連なりを使います (上の「補助モデルの振り分け」を参照)
 
-cron のジョブでは予備が **働きます**。`run_job()` が `config.yaml` から `fallback_providers` (または古い `fallback_model`) を読み、`AIAgent(fallback_model=...)` に渡します。ゲートウェイの `_load_fallback_model()` と同じやり方です。[cron の内部](/hermes/docs/developer-guide/cron-internals/) も参照してください。
+プロバイダーやモデルを固定していない cron のジョブでは予備が **働きます**。`run_job()` が `config.yaml` から `fallback_providers` (または古い `fallback_model`) を読み、`AIAgent(fallback_model=...)` に渡します。ゲートウェイの `_load_fallback_model()` と同じやり方です。自前の `provider` / `model` / `base_url` を持つジョブには予備の連なりが付きません。固定した委任先の子エージェントと同じ決まりです。[cron の内部](/hermes/docs/developer-guide/cron-internals/) も参照してください。
 
 ### テストの範囲 {#test-coverage}
 
@@ -224,7 +224,6 @@ cron のジョブでは予備が **働きます**。`run_job()` が `config.yaml
 
 - `tests/agent/test_fallback_credential_isolation.py` — メインと予備のあいだで資格情報が混ざらないこと
 - `tests/hermes_cli/test_fallback_cmd.py` — CLI の `/fallback` コマンド
-- `tests/gateway/test_fallback_eviction.py` — ゲートウェイが失敗したプロバイダーを外すこと
 
 ## 関連ページ {#related-docs}
 

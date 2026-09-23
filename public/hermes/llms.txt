@@ -163,6 +163,7 @@ Hermes Agent 0.21.4
 - [user-guide/features/acp（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/acp/)
 - [user-guide/features/api-server（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
 - [user-guide/features/batch-processing（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/batch-processing/)
+- [user-guide/features/bot-screen（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/bot-screen/)
 - [user-guide/features/browser（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/browser/)
 - [user-guide/features/built-in-plugins（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/built-in-plugins/)
 - [user-guide/features/code-execution（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/code-execution/)
@@ -618,6 +619,7 @@ Hermes Agent 0.21.4
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/acp.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/api-server.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/batch-processing.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/bot-screen.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/browser.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/built-in-plugins.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/features/code-execution.md

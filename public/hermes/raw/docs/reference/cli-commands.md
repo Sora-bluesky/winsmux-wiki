@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 1f01c6c2173337d75131de7f61cf170eec109040
+upstream_blob: 075005479ed9a11a77e2a31925c8802a1a22277d
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -36,6 +36,10 @@ hermes [global-options] <command> [subcommand/options]
 | `--tui` | 従来の CLI ではなく [TUI](/hermes/docs/user-guide/tui/) を起動します。`HERMES_TUI=1` と同等です。`display.interface` より常に優先されます。 |
 | `--cli` | 従来の prompt_toolkit REPL を強制します。1回の実行だけ `display.interface: tui` を上書きするために使います。 |
 | `--dev` | `--tui` と併用: プリビルドされたバンドルの代わりに `tsx` で TypeScript ソースを直接実行します（TUI 開発者向け）。 |
+
+### `hermes-agent`（旧来の単発クエリ用ランナー） {#hermes-agent-legacy-single-query-runner}
+
+インストールすると `hermes-agent` も入ります。クエリを 1 つ送って終了するだけの最小限のランナーで、`hermes-agent --query "summarize README.md"`（または `hermes-agent "summarize README.md"`）のように使います。`hermes-agent --help` はオプション（`--model`、`--base-url`、`--max-turns`、`--enabled-toolsets`、`--disabled-toolsets`、`--list-tools`、`--save-trajectories` など）を一覧表示し、`hermes-agent --version` はバージョンを表示します。どちらもエージェントは起動しません。クエリを付けずに実行すると、同じヘルプを表示して終了します。それ以外の用途には `hermes` を使ってください（スクリプトから単発で実行するなら `hermes -z <prompt>` です）。
 
 ## トップレベルコマンド {#top-level-commands}
 
@@ -1440,7 +1444,7 @@ hermes hooks <subcommand>
 hermes memory <subcommand>
 ```
 
-外部メモリプロバイダのプラグインをセットアップ・管理します。利用可能なプロバイダ: honcho、openviking、mem0、hindsight、holographic、retaindb、byterover、supermemory。同時にアクティブにできる外部プロバイダは1つだけです。組み込みメモリ（MEMORY.md/USER.md）は常にアクティブです。
+外部メモリプロバイダのプラグインをセットアップ・管理します。同梱のプロバイダ: honcho、openviking、mem0、holographic、retaindb、byterover、supermemory。hindsight（プラグインカタログ）は `hermes plugins install hindsight` のあとで使えます。同時にアクティブにできる外部プロバイダは1つだけです。組み込みメモリ（MEMORY.md/USER.md）は常にアクティブです。
 
 サブコマンド:
 
@@ -1833,7 +1837,7 @@ hermes update [--gateway] [--check] [--plan] [--no-backup] [--backup] [--yes]
 
 追加の挙動:
 
-- **ゲートウェイの再起動。** 更新の成功後、Hermes は実行中のすべてのゲートウェイプロファイルを自動的に再起動しようとし、新しいコードを反映させます。更新を適用せずにゲートウェイだけ再起動したいときは `hermes gateway restart` を使ってください。
+- **ゲートウェイの再起動。** 更新の成功後、Hermes は更新対象のホーム（そのルートと、配下のすべての `profiles/<name>`）で実行中のゲートウェイプロファイルをすべて自動的に再起動しようとし、新しいコードを反映させます。同じマシン上でも別の `HERMES_HOME` に属するゲートウェイや `hermes-gateway*` サービス（別のインストールや、`hermes update` を実行している一時的なホーム）は、出力に名前を示したうえで手を付けずに残します。更新を適用せずにゲートウェイだけ再起動したいときは `hermes gateway restart` を使ってください。
 - **再起動フェーズの復旧。** 新しく取得したツリーをインポート中に、プロセス内の再起動フェーズが中断された場合、監視下にあるゲートウェイプロファイルは、クリーンな Python プロセスを通じて再試行されます。systemd（`systemctl --user is-active`）によって独立に確認された再起動だけが verified として報告されます。単に終了コード 0 を返しただけの再起動は `relaunch_attempted` として記録され、それでも更新は保守的に失敗として扱われます。手動のゲートウェイと serve/dashboard のランタイムは、再起動の権限なしに強制終了されることはありません。それらは理由付きでスキップとして記録され、正確な再起動コマンドと共に不完全な更新レポートに残ります。
 - **更新レシート + フリートのバージョン確認。** 各実行は、`~/.hermes/logs/update_receipts/` に機械可読なレシートを書き込みます（更新前のフリート計画、各ステップ、理由付きのスキップ、再起動の結果。`latest.json` は最新のものを指します）。再起動フェーズの後、アップデータは各稼働中のゲートウェイの実行中コードを更新後のチェックアウトと照合し、プロファイルごとのバージョン行列を表示します。更新前のコードのままのゲートウェイがあると、正確な再起動コマンドと共に更新が失敗します（終了コード1）。
 - **ローカルのソース変更。** git によるインストールでは、追跡中の汚れたファイルと未追跡のファイルは、ブランチのチェックアウトや pull の前に自動的にスタッシュされます（`git stash push --include-untracked`）。対話的なターミナルでの更新では、スタッシュを復元する前に確認を求めます。非対話的な更新では、既定でそれを復元します。管理されたインストールで、意図的なローカルのソース編集を成功した pull の後に破棄したい場合だけ `updates.non_interactive_local_changes: discard` を設定してください。スタッシュの復元が競合する、または pull が失敗した場合、手動での復旧のためにスタッシュはそのまま残されます。

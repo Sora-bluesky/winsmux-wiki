@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 1723498d2314f6909a09cc9dd5aff3dd6000915d
+upstream_blob: 96452e7ebf85c8971100fc13f85c3c642e1c3845
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -520,7 +520,7 @@ host.logs(...)                             // tail an app log file
 host.status()                              // one-shot system status snapshot
 host.restartGateway()                      // restart the backend gateway
 host.profileRoutes()                       // [{ profile, targetProfile, connectionId, mode }]
-host.requestProfile<T>(route, method, params?)   // registry-routed RPC; no foreground swap
+host.requestProfile<T>(route, method, params?, timeoutMs?, { spawnPriority? })   // registry-routed RPC; no foreground swap
 host.requestProfile<T>(profile, method, params?) // legacy v1/local overload
 host.request<T>(method, params?)           // active-gateway JSON-RPC — the real power
 ```
@@ -531,6 +531,14 @@ cron、かんばんなど）。`host.requestProfile` は `host.profileRoutes()` 
 プロファイル名だけを渡す形は、単一のローカル環境や従来の構成のために残してあるだけです。登録簿を
 意識するプラグインは記述子を渡して、同じプロファイル名を出す 2 つの登録元がぶつからないように
 してください。
+
+プールされたプロファイルのバックエンドを冷えた状態から起こす可能性のある呼び出しは、既定では
+バックグラウンドの優先度でつなぎに行きます。バックグラウンドの接続は、ユーザーの操作のために
+プールが空けておく枠を決して使えません。呼び出しがユーザーの操作そのもの（保存、ボタンの押下、
+ダイアログを開く）であるときは、
+`host.requestProfile(route, method, params, undefined, { spawnPriority: 'foreground' })` を渡してください。
+そうしないと、温まったバックエンドでプールが埋まっているとき、枠が空くのを 30 秒のタイムアウトまで
+待ったうえで失敗します。定期的な問い合わせや、一覧を温めておく処理には、既定のバックグラウンドを使ってください。
 
 `host.openWorkspace(id, { render, title?, minWidth?, onClose? })` は、プラグインが描いた画面を
 **作業領域の中心**（セッションのタイルやプレビューが使うのと同じ中央の場所）にタブとして

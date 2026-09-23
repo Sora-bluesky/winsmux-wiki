@@ -2,7 +2,7 @@
 title: "プロファイルのコマンド早見表"
 description: ""
 upstream_path: reference/profile-commands.md
-upstream_blob: 8e34e33136b6e0d4e3fd0c86d57a51e0f791867e
+upstream_blob: 06244e462cc697a175616e8444b76f130aa18acf
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/profile-commands
 ---
@@ -85,7 +85,7 @@ hermes profile create <name> [options]
 | 引数 / オプション | 説明 |
 |-------------------|-------------|
 | `<name>` | 新しいプロファイルの名前。ディレクトリ名として使える文字（英数字、ハイフン、アンダースコア）にしてください。 |
-| `--clone` | いま使っているプロファイルから `config.yaml`、`.env`、`SOUL.md`、スキル、そして手入れされた `memories/MEMORY.md` / `memories/USER.md` をコピーします。セッション、`state.db`、cron ジョブはコピーしません。 |
+| `--clone` | いま使っているプロファイルから `config.yaml`、`.env`、`SOUL.md`、スキル、手入れされた `memories/MEMORY.md` / `memories/USER.md`、そして有効な `memory.provider` 自身の設定（`<provider>/` または `<provider>.json`。例: `hindsight/config.json`）をコピーします。セッション、`state.db`、cron ジョブはコピーしません。 |
 | `--clone-all` | いま使っているプロファイルからすべて（設定、記憶、スキル、プラグイン）をコピーします。プロファイルごとの履歴（セッション、`state.db`、バックアップ、状態のスナップショット、復元ポイント）は除きます。cron ジョブも同じく除かれ、元のプロファイルに結びついたまま残ります（複製先が引き継ぐと、同じジョブが二重に走ってしまうためです）。コピー元が既定のプロファイルの場合は、その端末に固有のローカルモデル関連のディレクトリ（`models/`、`runtimes/`、`node/`）も除きます。`hermes backup` が除外するのと同じディレクトリです。 |
 | `--clone-from <profile>` | いま使っているプロファイルではなく、指定したプロファイルから設定・スキル・SOUL をコピーします。`--clone-all` と一緒に使わない限り、`--clone` を指定したのと同じ扱いになります。 |
 | `--no-alias` | ラッパースクリプトを作りません。 |

@@ -10,6 +10,15 @@ raw: /hermes/raw/updates.md
 
 ## 2026-09-23
 
+- [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- [アプリケーション宣言](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/application-declarations/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+
+## 2026-09-23
+
 - [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 
 ## 2026-09-23

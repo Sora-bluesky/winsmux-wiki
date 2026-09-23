@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: b41c478361c4394ac9080ea0548c715b4655162e
+upstream_blob: 0af1431dee44fa6f40b96ad43f2aecbd07126ff6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -435,8 +435,12 @@ Hermes は何重にも歯止めをかけています。
     手順は [windows-ssh](https://cua.ai/docs/how-to-guides/driver/windows-ssh)
     にあります。
   - **Linux** には届くディスプレイサーバーが要ります。画面の無いサーバーでは、
-    `computer_use` がイベントを取り込んだり送ったりする前に Xvfb
-    （`Xvfb :99 -screen 0 1920x1080x24`）が必要です。Wayland だけのセッションでは、
+    [Bot Screen](/hermes/docs/user-guide/features/bot-screen/) がそれを用意します。TigerVNC 越しに動く
+    プロファイルごとの Xfce デスクトップで、Hermes Desktop に映像が届き、ログインや 2FA の
+    ときはあなたが操作を代われます。Desktop の Screen ペインか `hermes computer-use screen start` で
+    起動します。最初に使ったとき（最初の `computer_use` の呼び出しや、画面ありのブラウザーの利用）に
+    自動で起動するのは、`bot_desktop.auto_start: true` を設定したときだけです（既定はオフ）。
+    Wayland だけのセッションでは、
     画面の取り込みに XWayland の橋渡しが要ります（cua-driver の Wayland への
     入力経路は、それとは別に動きます）。
 

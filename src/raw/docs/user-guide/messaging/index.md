@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 4df31e927839ca8cfec8eb47adc8624d55cb7a17
+upstream_blob: 1ad2373964103081767c7c581ab870e73ee75140
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -282,13 +282,15 @@ hermes gateway install --force
 エージェントの最終応答は、プラットフォームへ送る前後で耐久性のある**配送台帳**
 （`state.db`）に記録されます。応答を作ってからプラットフォームが受領を確認するまでの
 あいだにゲートウェイが落ちたり再起動したりしても、次の起動時に保存した応答を
-送り直すので、応答が失われることも、ターン全体をやり直すこともありません。
+送り直すので、応答が失われることも、ターン全体をやり直すこともありません。台帳は、ゲートウェイを
+起動したときのホームに置かれます。複数のプロファイルをまとめて受け持つゲートウェイでも、受け持つすべての
+プロファイルの返信がそこに記録されます。
 
 意味づけは正直に「少なくとも 1 回」です。
 
 - 送信が**始まってすらいなかった**応答は、そのまま送り直されます。
 - ゲートウェイが落ちた時点で**送信の途中だった**応答（プラットフォームが受け取ったかどうか
-  分からないもの）は、目に見える形で
+  分からないもの）は、前回の起動時に送り直している途中だったものも含めて、目に見える形で
   「♻️ Recovered reply — … may be a duplicate」という前置きを付けて送り直されます。あいまいなものはあいまいだと示され、
   黙って送り直すことはありません。
 - **流量制限**（Telegram のレート制限など）で拒否された最終送信は、記録した待ち時間が過ぎたあとに
@@ -666,6 +668,10 @@ tail -f ~/.hermes/logs/gateway.log   # View logs
 launchd の plist は静的なファイルです。ゲートウェイを設定したあとで新しいツールを入れた（nvm で新しい Node.js を入れた、Homebrew で ffmpeg を入れた、など）ときは、もう一度 `hermes gateway install` を実行して新しい PATH を取り込んでください。ゲートウェイは古くなった plist を検出して自動で読み直します。
 :::
 
+:::info 起動せずにインストールする
+plist には `RunAtLoad` が設定されているので、読み込むとゲートウェイが起動します。`hermes gateway install --no-start-now` は、`hermes gateway setup` で「Start the gateway now?」に No と答えたときと同じく、plist を書くだけで読み込みません。この場合、ゲートウェイは次にログインしたとき、または `hermes gateway start` を実行したときに起動します。launchd がすでに動かしているゲートウェイは、止まるのではなく、新しい plist で読み直されます。
+:::
+
 :::info ローカルネットワークへのアクセス（LAN の機器に "No route to host" で失敗する）
 macOS のローカルネットワークのプライバシー保護は、ソケットを launchd がそのジョブのために起動した実行ファイルに結び付けて判断します。素の venv の Python にはアプリとしての身元がないため、launchd から動かしたゲートウェイは LAN 上のホスト（Home Assistant、ローカルのモデルサーバーなど）に届きませんでした。同じ URL がターミナルからは通るのに、接続はすべて `errno 65 No route to host` で失敗し、許可を求める画面も一度も出ませんでした。そこで、生成される plist はゲートウェイを `/usr/bin/osascript`（`do shell script "exec …"`）経由で動かします。macOS はその子プロセスを osascript 自身のものとして扱い、osascript は Apple のプラットフォームバイナリなので、この確認の対象外になります。`ps` には `osascript → stderr_timestamp → gateway run` と表示されます。停止、再起動、KeepAlive の動きはこれまでとまったく同じです。古い Hermes で入れた plist は、`hermes gateway install` で（または次の `hermes gateway start` で）新しくなります。
 :::
@@ -854,6 +860,8 @@ gateway:
 ### ゲートウェイの再起動をまたいだセッションの再開 {#session-resume-across-gateway-restarts}
 
 ツール呼び出しや生成の途中でゲートウェイが停止すると、その影響を受けたセッションに `restart_interrupted` の印が付きます。次の起動時、ゲートウェイはそれぞれについて自動再開を予約します。利用者にはチャットに短い案内が届き（「再起動後に何かメッセージを送ってください。続きから再開してみます。」）、返事をした時点で、最後に確定したターンからセッションが再開します。
+
+再開するのは実際に途中だったターンだけで、それぞれ1回しか再開しません。ターンがすでに終わっていたチャットは、落ちる少し前まで動いていたというだけで、もう一度返事をされることはありません。エージェントが返信を書き終えたあと、送る前にゲートウェイが止められた場合は、返信を作り直すのではなく、保存しておいた返信を（「Recovered reply」の知らせを付けて）届けます。
 
 この挙動は既定で有効で、ゲートウェイの起動時にログに残ります。
 

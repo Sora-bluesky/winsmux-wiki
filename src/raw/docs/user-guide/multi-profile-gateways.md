@@ -2,7 +2,7 @@
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: 2db636025dcb7f38494b0fd0eb98fe65e2948304
+upstream_blob: bb82a5fba9d849b4908e778d709d3a24883b9b8d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -73,8 +73,8 @@ research gateway start
 どのプロファイルから起動したものでも — が唯一の受け口になり、その端末上の *すべての*
 プロファイル宛てのメッセージをさばきます。
 
-そうしたプロセスは常に 1 つしかないので、起動や停止などの操作は「このプロファイルの
-ゲートウェイ」ではなく、そのプロセスに向けて働きます。
+既定プロファイルでの起動や停止などの操作は、そのプロセスに向けて働きます。名前付きの
+プロファイルは、ホストを止めずに自分のボットだけを止めたり再起動したりできます。
 
 - それが動いている間に `hermes -p <name> gateway run` を実行すると、2 つ目のプロセスを
   起動する代わりに **合流** します。ホストのゲートウェイの PID と受け持つプロファイルの
@@ -86,13 +86,22 @@ research gateway start
   端末上のゲートウェイのプロセスを片っ端から相手にすることはありません。自前のゲートウェイを
   まだ動かしているプロファイルは、止めずに報告だけし、`hermes gateway migrate --multiplex`
   の 1 行コマンドを添えます。
-- `hermes gateway run --replace` は、動いているプロセスをどのプロファイルが起動したかに
-  かかわらず、ホストの役を引き継ぎます。`hermes gateway run --force` は、ホストのプロセスに
-  まったく問い合わせずに、別のゲートウェイを起動します（ホストが固まっていたり、
-  おかしな答えを返したりするときの逃げ道です）。
+- `hermes gateway run --replace` は、どのプロファイルが起動したかにかかわらず、
+  **このプロファイルを受け持っている** プロセスを引き継ぎます。ホストの持ち主が別の
+  プロファイルの単独のゲートウェイ（移行していない、プロファイルごとの一式）のときは、
+  そのプロセスがこのプロファイルを受け持つことはないので、`--replace` は断って監視役の下で
+  再起動を繰り返す代わりに、ふつうの `run` とまったく同じように隣で起動します。古い Hermes は
+  ユニットに `--replace` を強制する systemd の追加設定（`hermes-gateway.service.d/20-replace.conf`）を
+  書いていましたが、いまは `hermes update` / `hermes gateway restart` がそのファイルを消します。
+  `hermes gateway run --force` は、ホストのプロセスにまったく問い合わせずに、別のゲートウェイを
+  起動します（ホストが固まっていたり、おかしな答えを返したりするときの逃げ道です）。
 - サービスの監視役の下では、合流したときの終了コードは 0 ではなく 75 になります。
   systemd・s6・launchd はどれも 75 で終わったものを少し待って再起動するので、そのユニットは
   再試行を続け、ホストのプロセスがいなくなった時点で自分から役を引き継ぎます。
+- 同時に起動した 2 つのユニットが、どちらもまだホストのプロセスを見つけられないことがあります。
+  どちらが動くかはホストの錠が決め、負けたほうは 75 で終わって、再試行のときに合流します。
+  `--replace` はこの確認を飛ばしません（生成されるユニットはどれもこれを付けています）。
+  飛ばすのは `--force` だけです。
 
 多重化は **既定で有効** です（`gateway.multiplex_profiles` の既定値は
 `true`）。ただし安全のための決まりが 1 つあります。フラグが *未設定* のときは、
@@ -100,23 +109,39 @@ research gateway start
 起動のたびに [`hermes gateway migrate --multiplex`](#migrating-from-per-profile-gateways) と
 同じ事前確認を行い、まとめても安全だった場合にだけ多重化します。条件は、
 プロファイルが 2 つ以上あること、自前のゲートウェイをまだ動かしている従属側が無いこと（動いているプロセスも、
-入れてあるサービスも含みます）、ボットの認証情報の重複が無いこと、`/p/<profile>/` の入口を
-持たないポートを掴むプラットフォームが無いこと、そして移行処理が扱えるホストであること
-（s6 のコンテナや Windows のタスク スケジューラではないこと）です。どれかに当たると、
-これまでとまったく同じ形 — 既定プロファイルだけをさばく形 — で立ち上がり、妨げになった理由と
-`hermes gateway migrate --multiplex` の 1 行コマンドをログに書きます。ディスク上は何も変わりません。
+入れてあるサービスも、s6 の下で実際に *up* になっているプロファイルごとの枠も含みます）、
+ボットの認証情報の重複が無いこと、`/p/<profile>/` の入口を持たないポートを掴む
+プラットフォームが無いことです。**未設定は有効の意味です**。妨げが何も無ければ、ゲートウェイは
+多重化し、既定プロファイルの `config.yaml` に `gateway.multiplex_profiles: true` を書き込みます
+（コメントは残します）。これで、ファイルの内容が実際の動きと一致します。
+どれかに当たると、既定プロファイルだけをさばく形で立ち上がり、ほかのプロファイルがあるホストでは
+そのことを **はっきり** 知らせます。ゲートウェイの起動時に、受け持たれないプロファイル・妨げになった
+理由・直し方を書いた枠付きの警告を出し、同じ枠を `hermes
+update` の要約と `hermes gateway status` にも出し、ダッシュボードにはバナーを出します
+（`/api/status` が `multiplex_standalone_reason` を持ちます）。プロファイルが 1 つだけの環境では
+警告しません。受け持つものが無いからです。断ったときは何も書き込みません。
 
-**明示した** `true` は、疑われることがありません。
+**明示した** `true` は、移行の事前確認を飛ばします。ただし、起動するプロファイルが
+`gateway.standalone: true` で外れている場合は別です。
 
 - `gateway.multiplex_profiles: true`（移行処理が書き込む値）は、事前確認の結果に
   かかわらず多重化します。自分か移行処理がそう決めた、という扱いです。
-- `gateway.multiplex_profiles: false` は **廃止** されました。以前はプロファイルごとの
-  ゲートウェイをずっと保つ値でしたが、いまは未設定とまったく同じに扱われ、ゲートウェイは
-  `hermes gateway migrate --multiplex` を案内する警告をログに書きます。
-  ホストごとに 1 つのゲートウェイがすべてのプロファイルを受け持ちます。プロファイルごとに
-  別のゲートウェイを動かす方法は `--force`（下を参照）だけです。
+- `gateway.multiplex_profiles` に **いま有効な値は `true` の 1 つだけ** で、これは自動で
+  書き込まれます。未設定のキーは有効として扱われ、既定プロファイルの `config.yaml` に明示されます。
+  `false` は **廃止** されました。ゲートウェイはその場で `true` に書き換え、その起動時と次の
+  `hermes update` の要約で、1 回だけ枠付きの知らせを出します。黙って切り替えることはありません。
+  プロファイルごとのゲートウェイにするには、そのプロファイル自身の設定で `gateway.standalone: true`
+  にする（一時的な互換用のしくみで、支援される構成ではありません）か、下にある境目の場合に
+  `--force` を使います。
 - プロセスの環境変数の `GATEWAY_MULTIPLEX_PROFILES` は、明示した `true` と同じように、
   未設定のときの判断より優先されます。
+- **名前付きの** プロファイル自身の `config.yaml`（`profiles/<name>/config.yaml`）に書いた
+  `gateway.standalone: true` は **一時的な互換用のしくみ** です（[下](#temporary-gatewaystandalone-true)を
+  見てください）。ホストのゲートウェイはそのプロファイルを受け持たず、そのプロファイルは
+  `--force` なしで自前のゲートウェイを動かします。そのゲートウェイは、`multiplex_profiles: true` も
+  設定されていても、自分だけを受け持ちます（[プロファイルごとのゲートウェイは新しく作らない](#no-new-per-profile-gateways)
+  を見てください）。既定プロファイルに設定した場合は警告を出して無視します。既定プロファイルが
+  ホストのゲートウェイだからです。このキーに対応する環境変数はありません。
 
 ほかのプロセス（`hermes -p <name> gateway start`、ダッシュボード、`hermes gateway
 migrate`）が、未設定のフラグがどう決まったかを推測することはありません。動いている
@@ -130,12 +155,13 @@ migrate`）が、未設定のフラグがどう決まったかを推測するこ
 - 通信量の少ないプロファイルが多数あり、1 つずつプロセスを立てるほどではないとき。
 - 起動・監視・再起動の対象を 1 つにまとめたいとき。
 
-プロファイルごとに 1 プロセスという形は、もう *選べる* 構成としては扱われません。
+プロファイルごとに 1 プロセスという形は、もう暗黙のうちに *選べる* 構成ではありません。
 名前付きのプロファイルの `gateway install` / `gateway start` は、`--force` を付けないと
 断られます（[プロファイルごとのゲートウェイは新しく作らない](#no-new-per-profile-gateways) を見てください）。
-この形が残るのは、本当の境目がまとめるのを妨げる場合だけです — UNIX ユーザーごとに分かれた
-一式や、`<default home>/profiles/` の外にある `HERMES_HOME` など。そうした場合は、
-どのプロファイルも `--force` が正式な道筋のままです。
+多重化の穴がまだ塞がっていない間、自前のゲートウェイがどうしても要るプロファイルは、
+自分の `config.yaml` に一時的な `gateway.standalone: true` を設定できます。本当の境目がまとめるのを
+妨げる場合 — UNIX ユーザーごとに分かれた一式や、`<default home>/profiles/` の外にある
+`HERMES_HOME` など — は、どのプロファイルも `--force` が道筋のままです。
 
 ### フラグを固定する {#pinning-the-flag}
 
@@ -163,13 +189,70 @@ gateway:
 振り分け先のプロファイルの設定・スキル・記憶・SOUL、**そしてプロバイダーの鍵** が
 解決されます。認証情報がプロファイル間で共有されることはありません。
 
-従属側のプロファイルで `hermes gateway start` を実行する必要は **ありません**。
-既定のゲートウェイがそれらを受け持ちます。下にある取り決めの変更点を見てください。
+ホストは、休止させていない従属側のプロファイルを自動で受け持ちます。休止させたプロファイルを
+つなぎ直すには、そのプロファイルで `gateway start` を使います。
+
+### ホストを止めずに 1 つのプロファイルだけ止める {#stopping-one-profile-without-stopping-the-host}
+
+ホストの多重化プロセスが受け持っている名前付きのプロファイルでは、次のようにします。
+
+```bash
+hermes -p coder gateway stop     # park coder; other profiles keep running
+hermes -p coder gateway start    # unpark coder and serve it again
+hermes -p coder gateway restart  # reconnect coder with its current configuration
+```
+
+`stop` はプロファイルのホームに `gateway.parked` を書き込み、それからホストに、そのプロファイルの
+アダプターを止めて、以降の周期でそのプロファイルの cron ジョブを外すよう頼みます。この目印は
+ホストを再起動しても残ります。中身は見ないので、空のファイルで足ります。環境を用意する段階で
+`<profiles-root>/coder/gateway.parked` を先に作っておけば、入れたプロファイルをつながない
+状態のまま置いておけます。休止させても、プロファイルそのもの、そのセッション、予定したジョブは
+消えません。
+
+`start` は目印を消し、それから動いているホストにそのプロファイルを受け持つよう頼みます。
+ホストが動いていなければ、目印を消してからふつうの起動の手順に進みます。求められたら、
+既定プロファイルからホストを起動してください。`restart` は休止の目印を書かずに、そのプロファイルを
+いったん外してから受け持ち直し、設定を読み直します。どの操作も、cron の周期ですでに
+送り出された作業を打ち切ることはありません。
+
+ホストは 30 秒ごとにも走査し直します。手で目印を足すとそのプロファイルは外れ、手で消すと
+また受け持たれる対象に戻ります。制御用のソケットが頼みを確認しなかったときは CLI がそう伝え、
+次の走査で目印の状態が反映されます。アダプターの片付けや接続には、さらに時間がかかることが
+あります。目印がある間、`hermes -p coder gateway status` は
+`parked (hermes -p coder gateway start)` と表示します。
+
+起動したプロファイルは外せません。既定プロファイルの目印は警告を出して無視され、その起動・停止
+などの操作と `--all` の付く形は、ホスト全体に働くままです。別に動いている `--force` の
+ゲートウェイは、そのプロセスの起動・停止をそれ自身で持ち続けます。
+
+受け持たれているプロファイルでは、ダッシュボードとデスクトップアプリの **Stop** / **Start**
+ボタンも同じ働きをします。Stop は休止させ（`/api/gateway/stop?profile=coder` が
+`hermes -p coder gateway stop` を立ち上げます）、Start はホストのゲートウェイが動いている間に
+休止を解き、`/api/status` は `parked_profiles` を並べます。休止して *いない* 名前付きの
+プロファイルで Start を押すと、いまも `409` が返ります。自前のゲートウェイが要ることになるからです。
+
+#### 休止と `gateway.standalone: true` の違い {#parked-vs-gatewaystandalone-true}
+
+この 2 つが同じプロファイルに同時に当てはまることはなく、一方がもう一方を意味することも
+ありません。
+
+| プロファイル | ホストが受け持つか | `-p X gateway stop` | `-p X gateway start` |
+|---|---|---|---|
+| 受け持たれている（ふつうの場合） | はい | 休止させる（目印 + `unserve-profile`） | すでに受け持たれている |
+| 休止中（`gateway.parked` がある） | 休止を解くまでいいえ | すでに休止中 | 休止を解く（目印を消す + `serve-profile`） |
+| 単独（`gateway.standalone: true`） | 決して受け持たない | **自前の** ゲートウェイのプロセスを止める。目印は書かない | 自前のゲートウェイを起動する |
+
+`gateway.standalone` が優先されます。ホストは単独のプロファイルに `gateway.parked` を書くことはなく、
+休止していてもいなくても受け持つことはないので、そのプロファイルでの `stop` と `start` は
+プロセスごとの意味のままです。休止は、多重化の考え方に沿って 1 つのプロファイルだけを
+止めるやり方です。[一時的なしくみ](#temporary-gatewaystandalone-true) が残されていた理由の
+「プロファイルごとの停止・再起動」の穴は、これで塞がります。
 
 ### プロファイルごとのゲートウェイは新しく作らない {#no-new-per-profile-gateways}
 
-ホストのゲートウェイ 1 つがすべてのプロファイルを受け持つので、名前付きのプロファイルが
-自分専用のゲートウェイを持つことはありません。`hermes -p coder gateway install`（`start`、`run`、
+既定では、ホストのゲートウェイ 1 つがすべてのプロファイルを受け持ち、名前付きのプロファイルが
+自分専用のゲートウェイを持つことはありません。下にある外し方を使わない限り、
+`hermes -p coder gateway install`（`start`、`run`、
 `hermes -p coder setup` のサービスの手順も同じ）は、いまホストのゲートウェイが動いているかどうかに
 かかわらず、終了コード 78 で断られます。
 
@@ -190,40 +273,89 @@ gateway:
 
   A separate per-profile gateway (for a fleet split across UNIX users or a
   HERMES_HOME outside profiles/) needs --force:  hermes -p coder gateway install --force
+
+  Temporary compatibility path while multiplexing gaps are closed: set
+  gateway.standalone: true in profiles/coder/config.yaml,
+  then wait for the host gateway to rescan (<=30s) or send its rescan-profiles control verb.
+  (gateway.standalone is a temporary compatibility shim while multiplexing gaps are fixed;
+  it will be removed once they are — plan to fold this profile with `hermes gateway migrate --multiplex`.)
 ```
 
 ホストのゲートウェイがすでに動いていてそのプロファイルを受け持っているときは、1 行目が
 `The host gateway already serves profile 'coder'.` になり、持ち主の PID と受け持つプロファイルの
 一覧が添えられ、案内されるコマンドは `hermes -p default gateway restart` になります。
 ダッシュボードで名前付きのプロファイルの **Start** ボタンを押しても、同じように断られます。
-逃げ道は `--force` だけです。これを付けるとプロファイルごとの本物のサービスが入り、その
-サービス（`ExecStart` には `--force` が付きません）は、それ以降ふつうに起動し続けます。
+
+### 一時的なしくみ: `gateway.standalone: true` {#temporary-gatewaystandalone-true}
+
+:::warning 一時的な後方互換で、残していく構成ではありません
+向かう先は多重化だけの形、つまりホストごとに 1 つのゲートウェイがすべてのプロファイルを
+受け持つ形です。この切り替えは、すべての穴が塞がる前に入りました — 塞がっていないのは、従属側の
+プロファイルでの WhatsApp のブリッジと中継、それにダッシュボードの対象の絞り込みです。
+プロファイルごとの停止・起動・再起動は[休止](#stopping-one-profile-without-stopping-the-host)で
+塞がりました — そのため、プロファイルごとのゲートウェイに頼っていた一式は、一晩でそれを失いました。
+`gateway.standalone: true` は、そうした一式が **穴が塞がるまでの間** 動き続けられるように
+あるものです。穴が塞がれば、リリースノートで前もって知らせたうえで取り除きます。これを表示する
+場所はどこも、そのことを書いています。新しい構成をこの上に組まないでください。いちから
+始めるなら、ホストの多重化プロセスを動かしてください。いま穴に阻まれているなら、キーを設定し、
+その穴の issue を立てるか賛成票を入れてください。そのほうが早くこのしくみを外せます。
+:::
+
+プロファイル自身の `config.yaml` に `gateway.standalone: true` を設定します。
+
+```yaml
+# profiles/coder/config.yaml
+gateway:
+  standalone: true
+```
+
+するとホストのゲートウェイはそのプロファイルを受け持たなくなり、起動時のログに
+`profile 'coder' is standalone (gateway.standalone: true); not served
+by this gateway` と残ります。`hermes -p coder gateway install|start|run` は `--force` なしで
+動きます。動いているホストがまだそのプロファイルを受け持ち一覧に載せているときは、走査し直すまで
+コマンドは断られます。次の走査（ふだんは長くて 30 秒）を待つか、ホストのゲートウェイに
+`rescan-profiles` の制御コマンドを送ってください。ホストの再起動は要りません。
+
+キーを消すと、そのプロファイルはまたホストに受け持たれる対象に戻ります。そのプロファイル自身の
+ゲートウェイが動いている間は、ホストは足すのを見送り、先に止める必要があるとログに書きます。
+そのゲートウェイを止めれば、次の走査でホストがそのプロファイルを受け持ちます。
+
+単独のプロファイルのアダプター、cron、webhook の入口、Kanban の通知は、そのプロファイル自身の
+ゲートウェイが動いている間だけ働き、ホストの多重化プロセスや `hermes serve` の下では働きません。
+webhook を送る側は、単独のゲートウェイ自身の待ち受け先に向けてください。ホストの
+`/p/<profile>/` の入口は、もうそのプロファイルを受け持ちません。cron の送り先の選択肢には、
+単独のプロファイルもいまだに `bot-chat:<name>` として並びますが、ホストはそこへ届けられません。
+
+`hermes -p coder gateway status` は、そのプロファイル自身のゲートウェイの状態の前に `standalone by config
+(gateway.standalone: true)` と表示し、`hermes gateway status`（既定）は受け持ち一覧のあとに
+`standalone by config: coder` と並べます。`hermes gateway migrate --multiplex` はそのプロファイルに
+手を付けず、`Standalone by config (gateway.standalone: true), left
+alone` と表示します。WhatsApp のブリッジと中継は、ほかの単独のゲートウェイと同じく、
+そのプロファイル自身のゲートウェイで動きます。
+
+`--force` はこのしくみの道筋ではありません。これは、断るときの案内に書かれた 2 つの境目の
+場合（UNIX ユーザーごとに分かれた一式と、`profiles/` の外にある `HERMES_HOME`）の逃げ道のままです。
+これを付けるとプロファイルごとの本物のサービスが入り、そのサービス（`ExecStart` には `--force` が
+付きません）は、それ以降ふつうに起動し続けます。
 
 ### 多重化を有効にすると変わること {#what-changes-when-multiplexing-is-on}
 
-多重化すると、いくつかの挙動が変わります。境目のあるホストで `--force` を付けて別の
-ゲートウェイを動かしているプロファイルには、どれも当てはまりません。
+多重化すると、いくつかの挙動が変わります。`gateway.standalone: true` で外れているプロファイルや、
+境目のあるホストで `--force` を付けて別のゲートウェイを動かしているプロファイルには、どれも
+当てはまりません。
 
 #### 1. 従属側のプロファイルは自前のゲートウェイを起動してはいけない {#1-secondary-profiles-must-not-start-their-own-gateway}
 
-多重化が動いている間、プロファイルを指定した `hermes gateway run`、`start`、
-`install`、`restart` は **明確なエラー**（終了コード 78）になり、多重化のほうを
-使うよう案内されます。
-
-```
-The default gateway is running as a profile multiplexer and already serves
-profile 'coder'. ...
-```
-
-この拒否はサービス管理のしくみに触れる前に CLI のなかで起きるので、受け持たれて
-いるプロファイルが systemd の失敗した単位を抱え込んだり、launchd の再起動の輪に
-はまったりすることはありません。coder が自前のゲートウェイを持たないときは、
-`hermes -p coder gateway stop` も同じように断られます（終了コード 78）。止める対象は
-多重化のプロセスしかなく、それを止めるのは既定プロファイルでの
-`hermes gateway stop` で、受け持っているすべてのプロファイルがまとめて止まります。
+多重化が動いている間、名前付きのプロファイルの `gateway run` はそれに合流し、
+`gateway install` は別のプロセスを作るのを断ります（終了コード 78）。CLI はサービス管理の
+しくみに触れる前に断るので、systemd の失敗したままのユニットや launchd の再起動の輪が
+生まれません。ホストのなかの従属側を管理するには、上にあるプロファイルごとの `stop`、`start`、
+`restart` を使ってください。既定プロファイルでの `hermes gateway
+stop` は、いまも受け持っているすべてのプロファイルをまとめて止めます。
 ダッシュボードとデスクトップアプリも CLI に従います。受け持たれているプロファイルでは、
-ゲートウェイの「Start」と「Stop」は同じ説明を添えて `409` を返し（System のページに
-その場の知らせとして表示されます）、「Restart」は失敗するしかない
+「Stop」は休止させ、「Start」は休止を解きます（上を参照）。休止していない名前付きの
+プロファイルでの「Start」は、同じ説明を添えて `409` を返します（System のページにその場の
+知らせとして表示されます）。「Restart」は失敗するしかない
 `-p coder gateway restart` を立ち上げるのではなく、多重化のプロセス（実際にその
 プロファイルを受け持っているプロセス）を再起動します。この再起動はその端末のすべての
 ボットをつなぎ直すので、どちらのアプリも先に *"Restart the shared gateway? All bots on this device reconnect: default,
@@ -245,11 +377,12 @@ coder, research"* と確認し（並ぶのは動いているゲートウェイ�
 足せば、動いている多重化がそれを拾います。
 
 多重化は唯一の受け口です。2 つめのプロファイルのゲートウェイが立つと、その
-プロファイルのプラットフォームを二重に掴んでしまいます。`--force`（`run`、
-`start`、`install`、`restart` が受け付けます）は、そのプロファイルだけあえて別の
-プロセスにしたいときにだけ使ってください（多重化が動いている間は勧めません）。
+プロファイルのプラットフォームを二重に掴んでしまいます。あえて別のプロセスにしたい
+プロファイルは、`gateway.standalone: true` で外れます（[プロファイルごとのゲートウェイは新しく作らない](#no-new-per-profile-gateways)
+を見てください）。`--force`（`run`、`start`、`install`、`restart` が受け付けます）は、
+境目がまとめるのを妨げる場合にだけ使ってください。
 そのため、このページの前のほうにあるプロファイル横断の起動停止をまとめる
-スクリプトは、多重化のときは **使いません**。管理するのは既定のゲートウェイだけです。
+スクリプトは、多重化のときは **使いません**。ホストか、その名前付きのプロファイルを直接管理します。
 
 #### 2. HTTP で受けるプラットフォームは `/p/<profile>/` の接頭辞で届く {#2-http-inbound-platforms-are-reached-via-a-pprofile-url-prefix}
 
@@ -287,6 +420,9 @@ POST http://host:8644/p/coder/webhooks/<route>
   ログへ出します。どのプロファイルもそのプラットフォームを動かしていない場合は、受け持つ者がいないと
   WARNING が出ます。`hermes gateway status --profile work` には
   `whatsapp: not served under multiplex (shared ingress owned by default)` と表示されます。
+  ただ 1 つの例外は、`gateway.standalone:
+  true` で外れたプロファイルです。ほかの単独のゲートウェイと同じく、自分のゲートウェイで
+  WhatsApp のブリッジと中継を動かします。
 
 認証は URL に書かれたプロファイルに従います。接頭辞のない宛先は、これまでどおり
 既定の待ち受けの認証情報を使います。
@@ -541,6 +677,7 @@ Hindsight の URL —— なので、あるプロファイルの鍵がほかの�
 | ダッシュボードの操作（デスクトップやダッシュボードが立ち上げる `hermes -p <name> …`） | そのプロファイルの `HERMES_HOME` に固定した、掃除済みの子プロセスの環境 | 子プロセスは自分の `.env` を読む。ダッシュボードのプロファイルのトークンやポートは引き継がれない |
 | 受け持たれているプロファイルのために動くすべての子プロセス（スラッシュコマンドの作業役、Bot Chat の配達、A2A の転送、`key_cmd` の補助、ブラウザーの操作役） | 認証情報を掃除した土台の上に、そのプロファイル自身の `.env` と秘密情報の出どころを重ねたもの。`gateway.multiplex_profiles` の有無を問わない（デスクトップやダッシュボードの `?profile=` の経路も含む） | 子プロセスには入らない。systemd / Compose / シェルを通じて起動プロセスにだけ届いた鍵が、ほかのプロファイルの子プロセスに引き継がれることはない |
 | ほかのプロファイルのために立ち上げた子プロセスでの、許可の関門（`*_ALLOWED_USERS` / `*_ALLOWED_CHANNELS` / `*_IGNORED_CHANNELS` / `*_ALLOW_ALL_USERS` / `*_ALLOW_BOTS`、`GATEWAY_ALLOW*`）。ダッシュボードの `hermes -p <name>` の操作、かんばんの作業役、Bot Chat の配達、更新後のプロファイルごとの `gateway restart` | 子プロセス自身の `.env` と `config.yaml`。子プロセスが自分で読む | 閉じた状態（アダプタに書かれている初期値）。unit ファイルやシェルから立ち上げ側のプロセスに渡された関門は、子プロセスが始まる前に落とされるので、プロファイル B がプロファイル A のトークや利用者の一覧を当てはめることはない。同じプロファイルの子プロセスはそのまま引き継ぐ |
+| 古い読み手のために、受け持っているプロファイルを実行中の `HERMES_HOME` 環境変数へ写す組み込み先（Hermes WebUI）での、振り分け先のプロファイルの判定 | 組み込み先が `hermes_constants.pin_process_hermes_home()` で固定した起動時のホーム。MCP の接続の鍵、受け持たれているプロファイルの子プロセスでの起動環境の除去、橋渡しされた全員許可の初期値、`terminal.*` の環境の橋渡しの守りは、どれもこれと比べる | 固定しなければ、実行中の環境変数がそのまま起動時のホームで、これまでとまったく同じ。`HERMES_HOME` を書き換えない組み込み先は何もしなくてよい |
 | ほかのプロファイルも受け持つ `hermes serve` やダッシュボードのプロセスでの、起動した（既定の）プロファイル自身の認証情報 | **ほかのプロファイルを初めて受け持った瞬間に固定された** プロセスの環境の上に、その `.env` と秘密情報の出どころを重ねたもの。そのあとは読み直さない | プロセスの環境だけで入れ替えた認証情報（`systemctl set-environment`、再実行しなかった `op run` の包みの更新）は、プロセスを再起動するまで反映されない。入れ替える鍵は `.env` か秘密情報の出どころに置くか、入れ替えたあとに再起動する |
 | cron の `.env` での調整（`HERMES_CRON_TIMEOUT`、`HERMES_MODEL` の代替、`HERMES_CRON_MAX_PARALLEL`、事前入力のファイル）、作業役や Bot Chat の子プロセスの環境 | そのプロファイル自身の `.env`。子プロセスが既定プロファイルの `.env` の設定や橋渡しされた `TERMINAL_*` の方針を引き継ぐことはない | cron の既定、またはモデルの拒否。単独の `hermes -p <name> gateway run` とまったく同じ |
 | プロファイルのタスクのかんばんの作業役と知らせ | 担当者の `.env` + `config.yaml`（道具一式の固定、端末の実行先、メディアの方針、表示の言語） | — |
@@ -553,9 +690,11 @@ Hindsight の URL —— なので、あるプロファイルの鍵がほかの�
 ### どのプロファイルが受け持たれるか {#which-profiles-are-served}
 
 `gateway.multiplex_profiles: true` は、既定プロファイルに加えて `profiles/` の下にある
-生きている名前付きプロファイルを **すべて** 受け持ちます。プロファイルごとに外す
-一覧はありません。（以前の `gateway.multiplex_profile_allowlist` の設定は廃止されました。
-設定の移行で `config.yaml` から取り除かれます。受け持たせたくないプロファイルは、
+生きている名前付きプロファイルを **すべて** 受け持ちます。ただし、自分の `config.yaml` で
+`gateway.standalone: true` にして外れたものは除きます。単独のプロファイルは自前のゲートウェイを
+動かし、ホストに数え上げられません（[プロファイルごとのゲートウェイは新しく作らない](#no-new-per-profile-gateways)
+を見てください）。（以前の `gateway.multiplex_profile_allowlist` の設定は廃止されました。
+設定の移行で `config.yaml` から取り除かれます。受け持たせたくないのに外れていないプロファイルは、
 代わりに保管へ回すか削除します。`hermes profile delete <name>` を使うか、そのディレクトリを
 `profiles/` の外へ移してください。）削除したプロファイルは墓標を残し、数え上げられる
 ことはありません。ディレクトリの無くなったプロファイルが、受け持ちのやり取り、
@@ -955,7 +1094,23 @@ hermes gateway migrate --multiplex             # apply (asks for confirmation on
 
 `--standalone` のような逆向きのコマンドはありません。プロファイルごとの一式は、目指す構成として
 扱われないからです。妨げられた一式はそのまま動き続け、どのプロファイルも
-`hermes -p <name> gateway install --force` が正式な道筋のままです。
+`hermes -p <name> gateway install --force` が道筋のままです。あるいは `gateway.standalone: true`
+でホストのゲートウェイから外れます（[プロファイルごとのゲートウェイは新しく作らない](#no-new-per-profile-gateways)
+を見てください）。`hermes gateway migrate --multiplex` はこの設定を尊重します。
+
+### Docker / Hermes Cloud（s6 が監視するコンテナ） {#docker-hermes-cloud-s6-supervised-container}
+
+公式のイメージのなかでは、どのプロファイルにも s6 の枠
+（`/run/service/gateway-<profile>`）があります。コンテナの起動処理は *名前付きの* 枠をすべて
+down として登録し、その自動起動の意図を root の枠にまとめるので、まっさらな起動の時点で
+もう多重化しています。**その場での** 更新でも、揃えるためにコンテナを再起動する必要は
+なくなりました。`hermes gateway migrate --multiplex`（と `hermes
+update` が走らせるフック）は、まだ up になっている名前付きの枠を止め（`s6-svc -d` に加えて、
+監視役が再起動しても生き返らないよう `down` ファイルを置きます）、起動処理と同じ決まりで
+その意図を root の枠にまとめ、root の枠を再起動します。down として登録された枠は妨げに
+なりません。妨げになるのは、実際に up になっている枠だけです。このコマンドがなかから
+できないのは、起動処理が一度も登録しなかった root の枠を作ることだけです。その場合はそう
+名乗ったうえで、コンテナの再起動を求めます。
 
 ### `hermes update` がすること {#what-hermes-update-does}
 
@@ -987,7 +1142,7 @@ hermes gateway migrate --multiplex             # apply (asks for confirmation on
 | `HERMES_HOME` が `<default home>/profiles/` の外にある | `HERMES_HOME=/opt/hermes/profiles/emma` を固定したユニット |
 
 この場合、`hermes update` は見つけた境目と `hermes gateway migrate --multiplex` を表示するだけで、
-何も変えません。ユニットは消されず、プロファイルごとのゲートウェイは動き続けます（`--force` が引き続き正式な道筋です）。こうした構成を
+何も変えません。ユニットは消されず、プロファイルごとのゲートウェイは動き続けます（こうした境目がまとめるのを妨げる場合は `--force` が引き続き道筋です。境目の無いプロファイルは `gateway.standalone: true` で外れます）。こうした構成を
 ひとつにまとめると、カーネルが守る境目（ファイルの持ち主、`User=`）を、プロセスの中での分離に
 置き換えることになります。それを決めるのは運用する人です。はっきりしたコマンドなら、それでも移行できます。
 同じ発見は `hermes gateway migrate --multiplex --dry-run` に**注意**として出るので、先に読めます。
@@ -1038,7 +1193,7 @@ hermes config set gateway.auto_multiplex_migration false
 | 妨げるもの | 理由 | 直し方 |
 |---|---|---|
 | 2 つのプロファイルが同じプラットフォームの認証情報を設定している（たとえば同じ `TELEGRAM_BOT_TOKEN`） | 1 つのプロセスのなかでは、ボットトークン 1 つにつき問い合わせは 1 回しかできません。多重化は重複したほうを止め置き、そのプロファイルのボットは黙ってしまいます | 2 つめのプロファイルからトークンを外すか、`default` に置いたまま、そのプロファイルのチャットを [`profile_routes`](#routing-shared-bot-chats-to-profiles-profile_routes) で振り分けます |
-| 従属側のプロファイルが、既定の待ち受けに `/p/<profile>/` の入口を **持たない**、ポートを掴むプラットフォームを有効にしている | 多重化はそのプロファイル全体を飛ばします（[決まり 2](#2-http-inbound-platforms-are-reached-via-a-pprofile-url-prefix) を見てください） | そのプロファイルでプラットフォームを無効にする（`platforms.<name>.enabled: false`）か、`hermes -p <name> gateway install --force` でそのプロファイルを単独のゲートウェイのままにします（受け持たれているプロファイルの `install`/`start` は、これを付けないと断られます） |
+| 従属側のプロファイルが、既定の待ち受けに `/p/<profile>/` の入口を **持たない**、ポートを掴むプラットフォームを有効にしている | 多重化はそのプロファイル全体を飛ばします（[決まり 2](#2-http-inbound-platforms-are-reached-via-a-pprofile-url-prefix) を見てください） | そのプロファイルでプラットフォームを無効にする（`platforms.<name>.enabled: false`）か、そのプロファイルを単独で動かします。自分の `config.yaml` に `gateway.standalone: true` を設定し、ホストが走査し直すのを待つ（長くて 30 秒）か、ホストに `rescan-profiles` の制御コマンドを送ります。`hermes -p <name> gateway install --force` は、境目がまとめるのを妨げる場合にだけ使ってください。 |
 
 認証情報の確認はゲートウェイ自身のぶつかりの検出を使い回すので、その判定は多重化が
 起動時にすることと一致します。どのポートを掴むプラットフォームが `/p/<profile>/` の

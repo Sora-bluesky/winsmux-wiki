@@ -2,7 +2,7 @@
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: f7c8114964c70b8a231be0ccbcd1b213c12d02ec
+upstream_blob: 9b176a0706981e4e36451e9baf58a6f75e841c24
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -502,7 +502,7 @@ docker run -d \
 
 公式のイメージは `debian:13.4` を土台にしていて、次を含みます。
 
-- Python 3.13。焼き込む追加分（`all`、`messaging`、Anthropic / Bedrock / Azure の認証、Hindsight、Matrix）の依存はロックファイルから `uv sync --frozen --no-install-project` で揃え、そのあと Hermes 自身を依存なしの編集可能な形で入れます。
+- Python 3.13。焼き込む追加分（`all`、`messaging`、Anthropic / Bedrock / Azure の認証、Matrix）の依存はロックファイルから `uv sync --frozen --no-install-project` で揃え、そのあと Hermes 自身を依存なしの編集可能な形で入れます。Hindsight のメモリプロバイダーのようなカタログのプラグインは焼き込まれていません。`hermes plugins install hindsight` を実行すると、インストールのときにプラグインとその依存が `HERMES_LAZY_INSTALL_TARGET`（`/opt/data/lazy-packages`）に入ります。
 - Node.js 26 と npm（ブラウザの自動操作、WhatsApp の橋渡し、TUI / デスクトップの一式、ワークスペースのビルド用）
 - Chromium 付きの Playwright（`npx playwright install --with-deps chromium --only-shell`）
 - システムの道具として ripgrep、ffmpeg、git、`xz-utils`

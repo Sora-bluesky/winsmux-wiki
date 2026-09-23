@@ -1,6 +1,43 @@
 {
-  "generatedAt": "2026-09-23",
+  "generatedAt": "2026-09-24",
   "entries": [
+    {
+      "date": "2026-09-23",
+      "sha": "ba113f1",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/gateway-internals",
+          "title": "ゲートウェイの内部",
+          "url": "/hermes/docs/developer-guide/gateway-internals/"
+        },
+        {
+          "id": "developer-guide/plugins/application-declarations",
+          "title": "アプリケーション宣言",
+          "url": "/hermes/docs/developer-guide/plugins/application-declarations/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "reference/toolsets-reference",
+          "title": "ツールセット一覧",
+          "url": "/hermes/docs/reference/toolsets-reference/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        }
+      ]
+    },
     {
       "date": "2026-09-23",
       "sha": "d0c46e7",

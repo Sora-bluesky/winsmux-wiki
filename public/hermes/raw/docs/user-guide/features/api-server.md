@@ -2,7 +2,7 @@
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: 32d586ffb99f8595c4c4b2940556422030e2116b
+upstream_blob: 5db0303f4fe273b510db8e11ca41ac852440f57f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -646,6 +646,8 @@ X-Hermes-Session-Key: agent:main:webui:dm:user-42
 ```
 
 決まりごと: 最大 256 文字、制御文字（`\r`、`\n`、`\x00`）は拒否され、値はレスポンス（JSON も SSE も）にそのまま返ります。`/v1/capabilities` は `"session_key_header": "X-Hermes-Session-Key"` で対応していることを知らせます。この鍵がないと、Honcho の `per-session` のやり方では `session_id` ごとに違う切り分けになります。Hermes がこれまでしていたのと、まさに同じ動きです。
+
+自動の想起は**会話の記録**に沿って働きます。メモリプロバイダーはセッションごとに一度だけ初期化され、リクエストをまたいで保たれます。そのため、続きのセッション（`X-Hermes-Session-Id`、`previous_response_id`、または `X-Hermes-Session-Key` で宣言した会話）は、プロバイダーが前のターンのあとに用意した想起を受け取ります。Telegram や Discord のチャットとまったく同じです。続きの指定がないリクエストは新しいセッションを始めるので、新しい CLI セッションの最初のターンと同じく、用意されたものはまだ何もありません。使われていないセッションは、ゲートウェイのエージェントキャッシュと同じ待機時間（`agent.agent_cache.idle_ttl_secs`、既定は1時間）が過ぎるとプロバイダーを手放します。
 
 ## システムプロンプトの扱い {#system-prompt-handling}
 

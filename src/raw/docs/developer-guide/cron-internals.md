@@ -2,7 +2,7 @@
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: 15c8bd5f0eeb523d3e6e21a7c228302ea4d7d933
+upstream_blob: d0ddd4175ef32c206eaad8d2db3fa5af4794a857
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -315,7 +315,7 @@ Windows では引き続き `taskkill /F /T` を使います。
 
 `run_job()` は、利用者が設定した予備のプロバイダと資格情報のプールを `AIAgent` のインスタンスへ渡します。
 
-- **予備のプロバイダ** — `config.yaml` から `fallback_providers`（リスト）または `fallback_model`（旧来の辞書）を読み、ゲートウェイの `_load_fallback_model()` と同じやり方に合わせます。`fallback_model=` として `AIAgent.__init__` に渡され、どちらの形式も予備の連なりへとそろえられます。
+- **予備のプロバイダ** — `config.yaml` から `fallback_providers`（リスト）または `fallback_model`（旧来の辞書）を読み、ゲートウェイの `_load_fallback_model()` と同じやり方に合わせます。`fallback_model=` として `AIAgent.__init__` に渡され、どちらの形式も予備の連なりへとそろえられます。**固定していないジョブだけが対象です。** ジョブ自身が `provider`、`model`、`base_url` のどれかを持っている場合、`_job_fallback_chain()` は予備の連なりを返しません。同じ答えが、`_resolve_job_runtime()` での認証情報の解決の走査、実行前のキーの確認、実行中に予備へ順に切り替える処理にも使われるので、固定されたジョブが全体用の連なりの項目に落ちることはありません（#100437）。この処理は、固定された委任先の子と同じ `hermes_cli.fallback_config.scoped_fallback_chain()` を共有しています。
 - **資格情報のプール** — 実行時に決まったプロバイダ名を使い、`agent.credential_pool` の `load_pool(provider)` で読み込みます。渡すのはプールに資格情報があるとき（`pool.has_credentials()`）だけです。429 や利用制限のエラーが出たときに、同じプロバイダの別の鍵へ切り替えられます。
 
 これはゲートウェイと同じ振る舞いです。これがないと、cron のエージェントは利用制限にぶつかった時点で、立て直しを試みないまま失敗してしまいます。

@@ -2,7 +2,7 @@
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: e3c45ccd6d51d0b26228cd404017c06d9e392363
+upstream_blob: 62070cfe205e3d2e42597420bbe205b64c0aa3fd
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -319,6 +319,15 @@ _CHECKPOINT_EVERY_N_WRITES = 50
 ファイル記述子を調べるやり方ではこの区別ができません。Hermes のプロセスはどれも
 この DB を開いているからです。`database is locked` の失敗のすぐ隣に出るこの行を、
 `~/.hermes/logs/errors.log` で探してください。
+
+ロックの競合は、メッセージの文面ではなく SQLite の結果コード（`SQLITE_BUSY` /
+`SQLITE_LOCKED`、`hermes_state_errors.is_sqlite_lock_error`）で見分けます。ロールバックジャーナル
+（`delete`）モードでは、FTS5 のテーブルのコンストラクタの中でロックを失うと、`SQLITE_BUSY` と
+`vtable constructor failed:
+messages_fts` という文面で届きます。これも `database is locked` と同じ扱いです。書き込みできる
+`SessionDB` を開くときは最大 `_WRITE_PATIENCE_S` まで待ちます。読み取り専用で開くときは、読み取りの持ち時間
+`_READ_BUSY_TIMEOUT_S`（5 秒）を1回だけ待ちます。ロックがそれより長く続くと、ダッシュボードは
+500 ではなく 503（busy）を返します。
 
 
 ## よく使う操作 {#common-operations}

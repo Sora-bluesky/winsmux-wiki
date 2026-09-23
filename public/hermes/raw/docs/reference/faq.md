@@ -2,7 +2,7 @@
 title: "よくある質問とトラブル対処"
 description: "Hermes Agent でよくある質問と、つまずきやすい箇所の対処法"
 upstream_path: reference/faq.md
-upstream_blob: db9777c1dbca5ab0ae0d18f7d8d24b63646ca316
+upstream_blob: 59cb5dd83012690db10d19271793315fb75fa129
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/faq
 ---
@@ -233,6 +233,12 @@ Hermes 側の制御はもっとはっきり出ます。ツールの実行がブ�
 
 Hermes が公式に備えている実行制御は [セキュリティ](/hermes/docs/user-guide/security/)、プロバイダー側の設定は [プロバイダー](/hermes/docs/integrations/providers/) をご覧ください。
 
+#### 「…refused this request because of a policy on your account」 {#refused-this-request-because-of-a-policy-on-your-account}
+
+**意味:** プロバイダーが、再試行しても変わらないアカウント単位の理由でリクエストを拒否しています。アグリゲーターのデータやプライバシーの設定によって、そのモデルのエンドポイントがすべて除外されたか、モデルの上流プロバイダーがアカウントをブロックしているかのどちらかです（たとえば `this user has been blocked for a previous policy violation`。OpenRouter は、これを見かけ上は成功した HTTP 200 のストリームの中で伝えてくることがあります）。Hermes はそのリクエストを 1 回だけ送り、再試行も認証情報の切り替えもしません。フォールバックの連なりを設定していれば、そちらへ移ります。
+
+**対処:** 返答に名前が出ているプロバイダーで、アカウントの状態とデータ・プライバシーの設定を確かめるか、`/model` で別のモデルやプロバイダーに切り替えてください。`hermes fallback add` を設定しておくと、今後同じようにブロックされたときに自動で予備へ回します。
+
 #### 「Could not open a stream to `<host>` after N attempts (request X KB)」 {#could-not-open-a-stream-to-host-after-n-attempts-request-x-kb}
 
 **意味:** そのエンドポイントへの接続は毎回、ストリームのイベントが 1 つも届かないうちに失敗しています。つまり課金は発生していませんし、このあとも通常どおり再試行とフォールバックの流れが走ります。この行には、実際に接続しにいったホスト、試した回数、シリアライズしたあとのリクエストサイズが出ます。障害なのかリクエストサイズの上限なのかを切り分けるのに要る 3 つです。
@@ -342,7 +348,7 @@ CLI の起動時の行に、検出したコンテキスト長が出ます（例:
 
 **エラーを返さずに黙り込むローカルサーバー（llama.cpp、Ollama）の場合:** リクエストが大きすぎるとプロバイダーに拒否されると、Hermes は会話を圧縮してリクエストを組み立て直します。再試行の前に、組み立て直した*リクエスト全体*（システムプロンプト + ツールスキーマ + メッセージ）を測り直し、まだしきい値を超えていれば、回数を区切った圧縮をさらに走らせます。それでも収まらない場合は、llama.cpp が黙って切り詰めてしまうような特大のリクエストを送る代わりに、`Context length exceeded: compression could not reduce the rebuilt request below the safe threshold` を出してそのターンを終えます（切り詰められると、サーバーのログに `stop processing: n_tokens = 65535, truncated = 1` と出ます）。このメッセージが出たときは、ほぼ確実に上に挙げた `context_length` の設定が原因です。サーバー側で実際に指定している `-c` / `--ctx-size` に合わせてください。
 
-**「The model server rejected this request as too large, but this conversation is only about N tokens…」と出る場合:** サーバーは測定値をいっさい示さずに「コンテキスト超過」と言っている一方で、Hermes 自身が見積もったリクエストは、そのモデルについて把握しているウィンドウよりはるかに小さい状態です。そのため Hermes は圧縮もしませんし、会話のせいにもしません。そのターンは再試行できるまま残ります。スロットが 1 つしかないローカルサーバー（LM Studio、Ollama）では、ほぼ必ず、その時点で別のリクエストがサーバーのコンテキストを占有していることが原因です。たいていは、前のセッションから走っている裏側のメモリ見直しです（`logs/agent.log` に `thread=bg-review` と出ます）。少し待ってから `/retry` を実行してください。ほかに Hermes のプロセスが動いていないのに繰り返し出るなら、サーバーが Hermes の想定より小さいウィンドウでモデルを読み込んでいます。サーバー側のコンテキストの設定を上げるか、`model.context_length` をそれに合わせて下げてください。
+**「The model server rejected this request as too large, but this conversation is only about N tokens…」と出る場合:** ローカルのサーバー（localhost、LAN、Tailscale）が測定値をいっさい示さずに「コンテキスト超過」と言っている一方で、Hermes 自身が見積もったリクエストは、そのモデルについて把握しているウィンドウよりはるかに小さい状態です。そのため Hermes は圧縮もしませんし、会話のせいにもしません。そのターンは再試行できるまま残ります。スロットが 1 つしかないローカルサーバー（LM Studio、Ollama）では、ほぼ必ず、その時点で別のリクエストがサーバーのコンテキストを占有していることが原因です。たいていは、前のセッションから走っている裏側のメモリ見直しです（`logs/agent.log` に `thread=bg-review` と出ます）。少し待ってから `/retry` を実行してください。ほかに Hermes のプロセスが動いていないのに繰り返し出るなら、サーバーが Hermes の想定より小さいウィンドウでモデルを読み込んでいます。サーバー側のコンテキストの設定を上げるか、`model.context_length` をそれに合わせて下げてください。ホスティング型のプロバイダーでは、このメッセージは出ません。待てば空く共有スロットがないので、同じ拒否が出たらその経路の実際のウィンドウが Hermes の想定より小さいということであり、Hermes は圧縮してから再試行します。
 
 判定を直すには、明示的に指定します。
 

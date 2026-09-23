@@ -2,7 +2,7 @@
 title: "フォールバックプロバイダー"
 description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: 6c47a6f2d0b251ff187206204f3b7d81c183ed18
+upstream_blob: 489f6a86beb3a3d3f4a3f8cbb283c0718e605f73
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
@@ -203,7 +203,7 @@ fallback_providers:
 | メッセージングゲートウェイ（Telegram、Discord など） | ✔ |
 | デスクトップアプリや TUI のチャット | ✔（チャットを開いたまま連鎖を足したり直したりしたときは、次のやり取りから効きます） |
 | サブエージェントへの委任 | ✔（`delegation.fallback_providers` が設定されていればそれを使います。設定がなければ、モデルを固定していない子だけが親の連鎖を引き継ぎます。`[]` で無効にできます） |
-| cron ジョブ | ✔（cron のエージェントは設定済みのフォールバックプロバイダーを引き継ぎます） |
+| cron ジョブ | ✔（固定していないジョブは設定済みの連鎖を引き継ぎます。自分の provider/model/base_url を持つジョブは、その連鎖へ切り替わることはありません） |
 | `provider: auto` の補助タスク | ✔（タスクごとのフォールバックを試し、次にメインのフォールバック連鎖、それから組み込みの補助用探索へ進みます） |
 
 :::tip
@@ -429,7 +429,7 @@ delegation:
 
 ## cron ジョブのプロバイダー {#cron-job-providers}
 
-cron ジョブはエージェントを作るとき、設定された `fallback_providers` の連鎖（または旧来の `fallback_model`）を引き継ぎます。cron ジョブだけ別のプロバイダーをメインにしたい場合は、そのジョブ自身に `provider` と `model` の上書きを設定します。
+固定していない cron ジョブは、設定された `fallback_providers` の連鎖（または旧来の `fallback_model`）を引き継ぎます。実行の前に主プロバイダーの認証情報が解決できなかった場合も、実行の途中でプロバイダーがエラーを返した場合も同じです。自分のプロバイダー・モデル・エンドポイントに固定したジョブは、引き継ぎ**ません**。その経路が失敗すれば、実行は失敗します（同じプロバイダーの[認証情報プール](/hermes/docs/user-guide/configuration/#credential-pool-strategies)での巡回は引き続き効きます）。これは、固定した[委任](/hermes/docs/user-guide/features/delegation/)の子の振る舞いと同じです。cron ジョブを固定するには、そのジョブ自身に `provider` と `model` の上書きを設定します。
 
 ```python
 cronjob(
@@ -441,7 +441,7 @@ cronjob(
 )
 ```
 
-設定の詳細は[定時タスク（cron）](/hermes/docs/user-guide/features/cron/)を参照してください。
+あるジョブでフォールバックを使い続けたい場合は、固定せずに、代わりに `cron.model` / `cron.model_provider` でモデルを選びます。詳しくは[定時タスク（cron）](/hermes/docs/user-guide/features/cron/#provider-recovery)を参照してください。
 
 ---
 
@@ -460,4 +460,4 @@ cronjob(
 | タイトル生成 | 上記の多層方式 | `auxiliary.title_generation` |
 | トリアージの仕様化 | 上記の多層方式 | `auxiliary.triage_specifier` |
 | 委任 | `delegation.fallback_providers` が書かれていればそれを使います。書かれていなければ、モデルを固定していない子だけが親の連鎖を引き継ぎます | `delegation.provider` / `delegation.model` / `delegation.fallback_providers` |
-| cron ジョブ | 設定された `fallback_providers` の連鎖を引き継ぎます。ジョブごとのプロバイダー上書きは任意 | ジョブごとの `provider` / `model` |
+| cron ジョブ | 固定していないジョブは設定された `fallback_providers` の連鎖を引き継ぎます。自分の `provider` / `model` / `base_url` を持つジョブは、その連鎖へ切り替わることはありません | ジョブごとの `provider` / `model`、または `cron.model` / `cron.model_provider` |

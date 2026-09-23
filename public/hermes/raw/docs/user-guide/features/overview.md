@@ -2,7 +2,7 @@
 title: "機能の概要"
 description: ""
 upstream_path: user-guide/features/overview.md
-upstream_blob: c701d8ae6b271e78bb9597ec51fee2a1f1b691c0
+upstream_blob: 6762f2ab8e84c0f21f7824360d0ee9720be3d870
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/overview
 ---
@@ -48,7 +48,7 @@ Hermes Agent には、ただのチャットにとどまらない多彩な機能�
 - **[予備の提供元](/hermes/docs/user-guide/features/fallback-providers/)** — 主に使う LLM でエラーが起きたとき、自動で予備の提供元に切り替えます。画像認識や圧縮といった補助的な処理にも、独立した予備を設定できます。
 - **[認証情報のプール](/hermes/docs/user-guide/features/credential-pools/)** — 同じ提供元の複数のキーに API 呼び出しを分散させます。レート制限や失敗が起きたときは自動で切り替わります。
 - **[プロンプトキャッシュ](/hermes/docs/user-guide/configuration/#prompt-caching)** — Anthropic 直結、OpenRouter、Nous Portal 上の Claude に対して、セッションをまたぐ1時間の前方一致キャッシュが組み込まれています。常に有効で、設定は要りません。
-- **[記憶の提供元](/hermes/docs/user-guide/features/memory-providers/)** — 外部の記憶の仕組み（Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory）を差し込めます。組み込みの記憶を超えて、セッションをまたいだ利用者像の把握や個別最適ができます。
+- **[記憶の提供元](/hermes/docs/user-guide/features/memory-providers/)** — 外部の記憶の仕組み（Honcho、OpenViking、Mem0、Holographic、RetainDB、ByteRover、Supermemory、それにプラグインカタログから入れる Hindsight）を差し込めます。組み込みの記憶を超えて、セッションをまたいだ利用者像の把握や個別最適ができます。
 - **[API サーバー](/hermes/docs/user-guide/features/api-server/)** — Hermes を OpenAI 互換の HTTP エンドポイントとして公開します。OpenAI の形式を話せるフロントエンドなら何でもつながります。Open WebUI、LobeChat、LibreChat などです。
 - **[エディタ連携（ACP）](/hermes/docs/user-guide/features/acp/)** — VS Code、Zed、JetBrains など ACP に対応したエディタの中で Hermes を使えます。会話、ツールの動き、ファイルの差分、ターミナルのコマンドがエディタ内に表示されます。
 - **[一括処理](/hermes/docs/user-guide/features/batch-processing/)** — CLI から多数のプロンプトやタスクに対してエージェントを並列で走らせます。出力は構造化され、軌跡も記録されるので、評価や学習用のパイプラインにそのまま使えます。

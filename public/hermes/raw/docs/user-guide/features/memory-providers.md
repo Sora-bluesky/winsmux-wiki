@@ -2,14 +2,14 @@
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: 6dfda6dcc1b0531ea382b637b197c06040bc1ba3
+upstream_blob: 4eefe17e252ec312046f71e67a475400bee2df79
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
 
 # 記憶プロバイダー {#memory-providers}
 
-Hermes Agent には、外部の記憶プロバイダーのプラグインが 8 つ同梱されています。内蔵の MEMORY.md と USER.md を超えて、セッションをまたいで残る知識をエージェントに持たせるものです。外部プロバイダーは一度に**1 つ**しか動かせません。内蔵の記憶は、それと並んで常に動いています。
+Hermes Agent には、外部の記憶プロバイダーのプラグインが 7 つ同梱されています。内蔵の MEMORY.md と USER.md を超えて、セッションをまたいで残る知識をエージェントに持たせるものです。Hindsight などほかのものは、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れられます。外部プロバイダーは一度に**1 つ**しか動かせません。内蔵の記憶は、それと並んで常に動いています。
 
 ## すぐに使い始める {#quick-start}
 
@@ -25,7 +25,8 @@ hermes memory off        # disable external provider
 
 ```yaml
 memory:
-  provider: openviking   # or honcho, mem0, hindsight, holographic, retaindb, byterover, supermemory
+  provider: openviking   # or honcho, mem0, holographic, retaindb, byterover, supermemory,
+                         # or hindsight (plugin catalog — run `hermes plugins install hindsight` first)
 ```
 
 ## しくみ {#how-it-works}
@@ -432,26 +433,31 @@ echo "MEM0_API_KEY=your-admin-api-key" >> ~/.hermes/.env
 
 ### Hindsight {#hindsight}
 
+:::info プラグインカタログ
+Hindsight は [vectorize-io](https://github.com/vectorize-io/hindsight) が保守しており、Hermes に同梱されるのではなく[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れます。設定の詳しい手順は上流のドキュメントにあります: [hindsight.vectorize.io/sdks/integrations/hermes](https://hindsight.vectorize.io/sdks/integrations/hermes)。
+:::
+
 知識グラフ、実体の名寄せ、複数の戦略を使った取り出しを備えた長期記憶です。`hindsight_reflect` ツールは、記憶をまたいだ統合を行うもので、他のプロバイダーにはありません。会話のターン（ツール呼び出しを含みます）を丸ごと自動で保持し、セッション単位で文書を追跡します。
 
 | | |
 |---|---|
 | **向いている用途** | 実体どうしの関係をたどる、知識グラフに基づく呼び出し |
-| **必要なもの** | クラウド: [ui.hindsight.vectorize.io](https://ui.hindsight.vectorize.io) の API キー。ローカル: LLM の API キー（OpenAI、Groq、OpenRouter など） |
-| **データの置き場所** | Hindsight Cloud または手元に組み込まれた PostgreSQL |
+| **必要なもの** | `hermes plugins install hindsight`。クラウド: [ui.hindsight.vectorize.io](https://ui.hindsight.vectorize.io) の API キー。ローカル: LLM の API キー（OpenAI、Groq、OpenRouter など） |
+| **データの置き場所** | Hindsight Cloud、手元に組み込まれた PostgreSQL、または手元で別に動かす Hindsight サーバー |
 | **費用** | Hindsight の料金（クラウド）または無料（ローカル） |
 
 **ツール:** `hindsight_retain`（実体の抽出を伴う保存）、`hindsight_recall`（複数戦略での検索）、`hindsight_reflect`（記憶をまたいだ統合）
 
 **設定:**
 ```bash
-hermes memory setup    # select "hindsight"
+hermes plugins install hindsight   # from the plugin catalog
+hermes memory setup                # select "hindsight"
 # Or manually:
 hermes config set memory.provider hindsight
 echo "HINDSIGHT_API_KEY=your-key" >> ~/.hermes/.env
 ```
 
-設定の案内は依存関係を自動で導入し、選んだモードに必要なものだけを入れます（クラウドなら `hindsight-client`、ローカルなら `hindsight-all`）。`hindsight-client >= 0.4.22` が必要です（古ければセッションの開始時に自動で上げます）。
+プラグインは `~/.hermes/plugins/hindsight/`（プロファイルごとのホーム）に置かれ、`config.yaml` の `plugins.enabled` で有効になります。`hermes memory setup`、`hermes memory status`、`hermes plugins list`、ダッシュボードの記憶の設定は、どれもカタログから入れたプラグインでそのまま使えます。手元に組み込むモードでは、最初に使うときにプラグインが Hermes の遅延導入の経路を通して `hindsight-all` を入れます。この経路は `security.allow_lazy_installs` に従います。
 
 **ローカルモードの画面:** `hindsight-embed -p hermes ui start`
 
@@ -473,7 +479,17 @@ echo "HINDSIGHT_API_KEY=your-key" >> ~/.hermes/.env
 | `retain_assistant_prefix` | `Assistant` | 自動で保持した記録の中で、アシスタントのターンの前に置くラベル |
 | `recall_tags` | — | 呼び出し時に絞り込むタグ |
 
-設定できる項目の全容は[プラグインの README](https://github.com/NousResearch/hermes-agent/blob/main/plugins/memory/hindsight/README.md) を参照してください。
+設定できる項目の全容は[上流の Hermes 連携ドキュメント](https://hindsight.vectorize.io/sdks/integrations/hermes)を参照してください。
+
+#### 同梱の Hindsight から移る {#migrating-from-bundled-hindsight}
+
+Hindsight は以前、Hermes のツリーの中に（また pip の追加パッケージ `hermes-agent[hindsight]` として）同梱されていました。`config.yaml` にすでに `memory.provider: hindsight` があるなら、ほとんどの利用者は何もする必要がありません。
+
+- `hermes update` が、このプロバイダーを指定しているすべてのプロファイルのホームにカタログのプラグインを入れます（`security.allow_lazy_installs` が `false` でも動きます）。
+- エージェントを最初に起動したとき（`hermes chat`、ゲートウェイ、…）にまだプラグインが無ければ、Hermes がそれを入れて `✓ Memory provider 'hindsight' moved out of core — installed its plugin from the catalog (your memory.hindsight settings and data are unchanged).` と表示します。
+- `security.allow_lazy_installs: false` のときは、エージェントの起動経路が代わりに 1 行だけ記録します — ``Memory provider 'hindsight' is not installed; security.allow_lazy_installs is off — run `hermes plugins install hindsight`.`` — そのうえで、`hermes plugins install hindsight` をご自身で実行します。
+
+ディスク上で変わるのは次の点です。プラグインが `~/.hermes/plugins/hindsight/` に現れ、`config.yaml` に `plugins.enabled: [hindsight]` が加わります。`memory.provider`、`memory.hindsight.*`、`$HERMES_HOME/hindsight/config.json`、`.env` の `HINDSIGHT_API_KEY`、記憶の保管庫のデータには手を触れません。確かめるには `hermes memory status`（プロバイダーが動いているか）と `hermes plugins list`（プラグインが入って有効になっているか）を使います。
 
 ---
 
@@ -679,7 +695,7 @@ hermes memory setup
 | **Honcho** | クラウド | 有料 | 5 | `honcho-ai` | 対話的な利用者のモデリングとセッション範囲の文脈 |
 | **OpenViking** | 自己ホスト | 無料 | 6 | `openviking` とサーバー | ファイルシステム風の階層と段階的な読み込み |
 | **Mem0** | クラウド／自己ホスト | 無料／有料 | 4 | `mem0ai` | サーバー側の LLM 抽出と、自己ホスト／OSS のモード |
-| **Hindsight** | クラウド／ローカル | 無料／有料 | 3 | `hindsight-client` | 知識グラフと reflect による統合 |
+| **Hindsight**（プラグインカタログ） | クラウド／ローカル | 無料／有料 | 3 | `hermes plugins install hindsight` | 知識グラフと reflect による統合 |
 | **Holographic** | ローカル | 無料 | 2 | 無し | HRR の代数と信頼度の採点 |
 | **RetainDB** | クラウド | 月額 20 ドル | 10 | `requests` | 差分圧縮 |
 | **ByteRover** | ローカル／クラウド | 無料／有料 | 3 | `brv` の CLI | 圧縮の直前の抽出 |
@@ -698,12 +714,12 @@ hermes memory setup
 ## プラグインカタログへ移るプロバイダー {#providers-moving-to-the-plugin-catalog}
 
 記憶プロバイダーは Hermes 本体のツリーから、それぞれの作者のリポジトリへ移りつつあり、
-[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)で配布されます。利用する側で変わることはありません。
+[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)で配布されます。最初に移ったのは Hindsight です（[同梱の Hindsight から移る](#migrating-from-bundled-hindsight)を参照）。利用する側で変わることはありません。
 プロバイダーの名前も、`memory.<name>` の設定も、データの置き場所も、道具もそのままです。
 設定しているプロバイダーが Hermes に同梱されなくなったときは、`hermes update` が、そのプロバイダーを
 指定しているすべてのプロファイルにカタログのプラグインを入れます。デスクトップアプリから更新する場合は、
 エージェントが最初に起動したときに同じことをします（`security.allow_lazy_installs` が
-`false` のときは代わりに `hermes plugins install <name>` の一行を表示します）。
+`false` のときは代わりに `hermes plugins install <name>` の一行をログに記録します）。
 
 ## 記憶プロバイダーを作る {#building-a-memory-provider}
 

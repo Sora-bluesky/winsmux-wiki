@@ -2,7 +2,7 @@
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: fab10a5811fdd1cec8acc9f8c1112d3384f9f4e8
+upstream_blob: 536a7f66468959046df03ca25d6a8e0220196309
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -749,6 +749,21 @@ async def _handle_callback(self, request):
 ```
 
 応答の期限が厳しいプラットフォーム（たとえば WeCom の 5 秒）では、必ずその場で受領だけを返し、エージェントの返事はあとから API を使ってこちらから届けます。エージェントのセッションは 3〜30 分かかるので、コールバックの応答の枠の中でそのまま返すのは無理があります。
+
+### 受信の重複を取り除く {#inbound-deduplication}
+
+プラットフォームは同じメッセージを送り直してきます。WebSocket が再開すると直近のイベントが再送され、Webhook は失敗すると再試行し、受領を返さなかったポーリングの一括分はもう一度届きます。こうした重複は、共通のヘルパーを使い、プラットフォームのメッセージ ID をキーにして捨てます。
+
+```python
+from gateway.platforms.helpers import MessageDeduplicator
+
+self._dedup = MessageDeduplicator(ttl_seconds=600)  # in __init__
+
+if self._dedup.is_duplicate(msg_id):  # in the inbound handler
+    return
+```
+
+ゲートウェイの再接続の見張り役が、失敗したアダプターを新しいインスタンスに置き換えるとき、`MessageDeduplicator` の属性それぞれが持っている有効な ID を、古いインスタンスから新しいインスタンスへすべて写します。そのため、再接続の直後に再送が来ても、やはり捨てられます。別の入れ物（素の dict や set）に持たせたキャッシュは、新しいインスタンスでは空の状態から始まります。
 
 ### トークンの取り合いを防ぐ錠 {#token-locks}
 

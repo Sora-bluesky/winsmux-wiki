@@ -2,7 +2,7 @@
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: c93cf0283f8ae0b9300dfed1597b9f5723b192f9
+upstream_blob: 3907462350f5bf55cb9dee19e17f3411431130ac
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -807,8 +807,8 @@ services.hermes-agent.extraDependencyGroups = [ "messaging" ];
 ```nix
 # Enable a memory provider
 services.hermes-agent = {
-  extraDependencyGroups = [ "hindsight" ];
-  settings.memory.provider = "hindsight";
+  extraDependencyGroups = [ "honcho" ];
+  settings.memory.provider = "honcho";
 };
 ```
 
@@ -827,12 +827,13 @@ services.hermes-agent = {
 | `bedrock` | AWS Bedrock（boto3） |
 | `azure-identity` | Azure Entra ID による認証 |
 | `honcho` | Honcho の記憶プロバイダー |
-| `hindsight` | Hindsight の記憶プロバイダー |
 | `modal` | Modal のターミナルバックエンド |
 | `daytona` | Daytona のターミナルバックエンド |
 | `exa` | Exa のウェブ検索 |
 | `firecrawl` | Firecrawl のウェブ検索 |
 | `fal` | FAL の画像生成 |
+
+Hermes のツリーではなく[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)にある記憶プロバイダー（たとえば Hindsight）は、追加機能ではありません。ほかのカタログのプラグインと同じく `hermes plugins install hindsight` でインストールするか、プラグインのソースツリーを指す [`extraPlugins`](#directory-plugins-extraplugins) で宣言的に入れてください。
 
 追加機能を個別に設定する代わりに、ビルド済みの `#messaging` や `#full` の flake パッケージを使うこともできます（[クイックスタート](#quick-start-any-nix-user)を参照）。
 
@@ -868,7 +869,7 @@ services.hermes-agent = {
     nixpkgs.overlays = [ hermes-agent.overlays.default ];
     # Then:
     #   pkgs.hermes-agent.override { extraPythonPackages = [...]; }
-    #   pkgs.hermes-agent.override { extraDependencyGroups = [ "hindsight" ]; }
+    #   pkgs.hermes-agent.override { extraDependencyGroups = [ "honcho" ]; }
   };
 }
 ```
@@ -1015,7 +1016,7 @@ nix build .#checks.x86_64-linux.config-roundtrip    # merge script preserves use
 | `extraPackages` | `listOf package` | `[]` | エージェントが使える追加パッケージ。hermes ユーザーのプロファイルに入るので、ターミナルのコマンド、スキル、cron ジョブのどこからでも見えます |
 | `extraPlugins` | `listOf package` | `[]` | `$HERMES_HOME/plugins/` へシンボリックリンクするディレクトリ型プラグインのパッケージ。それぞれ `plugin.yaml` を含む必要があります |
 | `extraPythonPackages` | `listOf package` | `[]` | エントリーポイント型プラグインの検出のため PYTHONPATH に追加する Python パッケージ。`python312Packages` でビルドしてください |
-| `extraDependencyGroups` | `listOf str` | `[]` | 封じた venv に含める pyproject.toml の追加機能（たとえば `["hindsight"]`）。uv が解決するので衝突しません |
+| `extraDependencyGroups` | `listOf str` | `[]` | 封じた venv に含める pyproject.toml の追加機能（たとえば `["honcho"]`）。uv が解決するので衝突しません |
 | `restart` | `str` | `"always"` | systemd の `Restart=` の方針。macOS では使われません。 |
 | `restartSec` | `int` | `5` | systemd の `RestartSec=` の値。macOS では使われません。 |
 

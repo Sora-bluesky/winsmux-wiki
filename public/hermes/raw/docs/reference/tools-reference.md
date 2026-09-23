@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールをツールセットごとにまとめた公式な一覧"
 upstream_path: reference/tools-reference.md
-upstream_blob: b1e2b6ddd5a35928814bfd8492583309641672c0
+upstream_blob: 357ab37c0500b7dc1c3826a59d3edea7fa731c4c
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -182,6 +182,14 @@ Feishu の文書コメント処理専用です。ドライブ上のファイル�
 |------|-------------|----------------------|
 | `memory` | セッションをまたいで残る記憶に、大事な情報を保存します。保存した記憶はセッション開始時のシステムプロンプトに現れます。これが、会話と会話のあいだで利用者や環境のことを覚えておく仕組みです。何を保存するか… | — |
 
+## `setup` ツールセット {#setup-toolset}
+
+デスクトップのセットアップ用プロファイル（`profile.yaml` に `role: setup` を持つもの）のセッションにだけ与えられます。設定では変えられません。
+
+| ツール | 説明 | 必要な環境 |
+|------|-------------|----------------------|
+| `manage_catalog` | セットアップ用プロファイル専用（`setup` ツールセット）で、デスクトップのチャットでだけ使えます。`search` は、`query` に合うカタログのプラグインとハブのスキルを（必要なら `kind` を 1 つに絞って）一覧表示し、`id`、`kind`、`display`、`tier`、`platforms`、`installed`（`default` プロファイルに入っているか）を返します。何も変更しません。`install` は `items: [{kind, id}]` を受け取り、項目ごとに 1 行（Install、Advanced、Skip）が並ぶ承認カードを 1 枚表示します。カタログが知らない id や、この OS では動かないプラグインは、理由を添えて失敗として表示されます。承認された行は、カタログで審査済みのコミットで `default`（または Advanced で選んだプロファイル）にインストールされます。停止リスト、セキュリティスキャン、その場での有効化は Plugins タブと同じなので、プラグインの MCP ツールとスキルは、そのプロファイルで開いているチャットですぐに使えます。結果には各行が `connected`（`tools` と `skill` 付き）、`skipped`、`failed`（`detail` 付き）、`not_connected` のどれになったかが並びます。モデルがソース、コミット、プロファイル、設定を渡すことはできません。ほかの場所で呼ぶと、代わりに実行すべき `hermes plugins install` / `hermes skills install` のコマンドを返します。 | — |
+
 ## `session_search` ツールセット {#sessionsearch-toolset}
 
 | ツール | 説明 | 必要な環境 |
@@ -321,7 +329,7 @@ Hermes が出すひとことも同じ間合いを共有するので、出した�
 
 - **xAI Grok-Imagine** — 文章からの動画生成と画像からの動画生成（SuperGrok の OAuth か `XAI_API_KEY`）。
 - **FAL.ai** — Veo 3.1、Pixverse v6、Kling 3.0 / O3（`FAL_KEY` が必要）。
-- **OpenRouter** — OpenRouter の動画 API にある生成モデルすべて（Veo 3.1、Sora 2 Pro、Kling 3、Seedance 2、Wan 3、Hailuo 3、Grok Imagine、FLUX 3 Video など）。文章から、画像から、参考画像からの生成に対応し、カタログとモデルごとの上限はその場で取得します（`OPENROUTER_API_KEY` が必要で、料金は OpenRouter の残高から引かれます）。
+- **OpenRouter** — OpenRouter の動画 API にある生成モデルすべて（Veo 3.1、Sora 2 Pro、Kling 3、Seedance 2、Wan 3、Hailuo 3、Grok Imagine、FLUX 3 Video など）。文章から、画像から、参考画像からの生成に対応し、カタログとモデルごとの上限はその場で取得します（`OPENROUTER_API_KEY` か、`hermes auth add openrouter` で追加した認証情報が必要で、料金は OpenRouter の残高から引かれます）。
 - **DeepInfra** — OpenAI 互換の videos エンドポイント越しに、`video-gen` のカタログをその場で取得します（`DEEPINFRA_API_KEY` が必要）。
 
 `video_generate` ひとつで両方の作り方をまかないます。静止画を動かすなら `image_url` を渡し、文章だけから作るなら省きます。有効なバックエンドが適切なエンドポイントへ自動で振り分けます。`image_generate` と同じく、モデルは利用者が設定するもので（`video_gen.model`）、エージェントからは選べません。動画系のツールはどれも `model` の引数を取らないのです。ツールの説明文はセッション開始時に組み立て直され、有効なバックエンドが実際にできること（生成の種類、縦横比、解像度、長さの範囲、参考画像の上限、音声の対応）を反映します。バックエンドの作り方は [動画生成プロバイダーのプラグイン](/hermes/docs/developer-guide/video-gen-provider-plugin/) をご覧ください。

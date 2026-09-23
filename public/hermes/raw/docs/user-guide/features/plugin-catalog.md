@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 7734c442692f6c7edbd89d3eefaedd97e66301af
+upstream_blob: dc7e0d3caa70e437f71b8f179f83476c565caf46
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -32,6 +32,10 @@ hermes plugins install <name>
 カタログから入れたものも中身はふつうのプラグインで、カタログは見つけやすさと審査の層を
 その上に足しているだけです。
 
+デスクトップのオンボーディング中には、セットアップガイドが承認カードを通じてカタログのプラグインやスキルを
+勧めることもあります。各行は Install をクリックしたときにだけ `default` プロファイルに入り、
+このページで説明しているのと同じ審査済みのコミットが使われます。
+
 ## 項目の中身 {#whats-in-an-entry}
 
 カタログの各項目は、hermes-agent リポジトリの
@@ -49,6 +53,8 @@ hermes plugins install <name>
 | `capabilities` | 宣言されたツール、フック、ミドルウェア、必要な環境変数 |
 | `requires_hermes` | 必要な Hermes の最低バージョン。たとえば `>=0.19`（任意） |
 | `platforms` | OS の制限。空ならすべて（任意） |
+| `title` | カードに表示する人向けの名前。たとえば `NVIDIA App`（任意。省略時は `name`） |
+| `onboarding` | `true` にすると、デスクトップのオンボーディングカードで、ホスト型コネクタの隣にこのプラグインを並べます。対象は項目に書かれたプラットフォームです。選別されるのは公式の項目だけです（任意、既定は `false`） |
 | `docs_url` | 外部ドキュメントへのリンク（任意） |
 | `version` | 固定した sha に付ける読みやすいラベル。たとえば `"1.4.0"`。CLI、カタログのカード、デスクトップの **Update to** ボタンでは `1.4.0 @ abcd1234` と表示されます（任意、見た目だけ） |
 | `image` | カタログのカードとプラグインページの見出しに使うバナー画像。2:1 で表示されます（1200×600 が使いやすく、他の比率は中央で切り取られます）。`raw.githubusercontent.com`、`github.com`、`*.githubusercontent.com` 上の `https` URL を指定します（任意）。審査の下で中身が変わらないよう、その項目のコミットに固定してください（`raw.githubusercontent.com/owner/repo/<sha>/...`） |

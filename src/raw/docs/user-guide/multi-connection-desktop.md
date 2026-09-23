@@ -2,7 +2,7 @@
 title: "デスクトップ版を複数の Hermes につなぐ"
 description: ""
 upstream_path: user-guide/multi-connection-desktop.md
-upstream_blob: d1c465309f7de2107c896f5b2db859e4743f8e75
+upstream_blob: d636f78e6debfbfe76fc9c8da6131fa8f893a3e2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-connection-desktop
 ---
@@ -256,9 +256,11 @@ instance itself is not touched — you can add it again any time.」*（イン�
   すべて選択中の `(gateway, profile)` の中だけのものです。Telegram のゲートウェイから
   Signal のゲートウェイへ切り替えたときに、前のゲートウェイのチャンネルのまとまりや
   セッションがサイドバーに残ることはありません。
-- 切り替えの操作を表示するだけなら、読むのは Electron が持つ手元の接続一覧だけです。
-  リモートのゲートウェイは選ばれたときにだけ開かれます。定期的に全体を見に行くような
-  問い合わせは行いません。
+- デスクトップは起動時に手元の接続一覧を読み込みます。ステータスバーを隠していても同じで、
+  ゲートウェイを保存したり削除したりするたびに一覧を最新に保ちます。Settings を開く必要は
+  ありません。Simple モードでは、ゲートウェイが2つ以上登録されていれば、プロファイルが
+  既定のものだけでもプロファイルのレールが使えるままになります。一覧を読み込んでも
+  すべてのゲートウェイにつながるわけではなく、定期的に全体を見に行くような問い合わせも行いません。
 - エージェントにマウスを重ねると、そのバックエンドを先に温めておくので、切り替えのときに
   起動待ちが起きません。SSH のエージェントだけは例外で、マウスを重ねてもトンネルを
   つないだりリモートのバックエンドを起動したりはしません。実際に開いたときにだけ動きます。

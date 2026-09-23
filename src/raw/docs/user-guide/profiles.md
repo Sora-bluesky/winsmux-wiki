@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: 006e31941b845b99bd1f4cf61e61fb344f852e78
+upstream_blob: 345b74f2822c15d767d39c945f3a6db55fc28bcc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -85,7 +85,7 @@ hermes profile create researcher --description "Reads source code and external d
 hermes profile create work --clone
 ```
 
-いま使っているプロファイルの `config.yaml`、`.env`、`SOUL.md`、スキル、そして整理された記憶のファイル `memories/MEMORY.md` と `memories/USER.md` を新しいプロファイルへコピーします。記憶は `SOUL.md` と同じく、エージェントの人となりの一部として扱われます。セッション、`state.db`、cron ジョブをはじめ、ほかのものはすべて空から始まります。記憶も白紙にしたいときは、`--clone` を付けずにプロファイルを作るか、あとからこの 2 つのファイルを削除してください。ファイルがなくても、エージェントが別のプロファイルの記憶を代わりに読むことはありません。API キーを変えたいときは `~/.hermes/profiles/work/.env` を、人格を変えたいときは `~/.hermes/profiles/work/SOUL.md` を編集してください。
+いま使っているプロファイルの `config.yaml`、`.env`、`SOUL.md`、スキル、そして整理された記憶のファイル `memories/MEMORY.md` と `memories/USER.md` を新しいプロファイルへコピーします。記憶は `SOUL.md` と同じく、エージェントの人となりの一部として扱われます。`config.yaml` で外部の記憶プロバイダー（`memory.provider`）を選んでいる場合は、そのプロバイダー自身の設定も一緒にコピーされます。プロファイルのホームの下にある `<provider>/` ディレクトリか `<provider>.json`（たとえば `hindsight/config.json`）のことで、これにより複製先でも記憶が知らないうちに無効になることなく使えます。ただし、`local_embedded` の hindsight 設定を複製した場合は、複製先に専用の hindsight の `profile`/`bank_id` を与えるまで、複製元の組み込みデーモンと記憶のバンクを共有したままです（[#81815](https://github.com/NousResearch/hermes-agent/issues/81815)）。セッション、`state.db`、cron ジョブをはじめ、ほかのものはすべて空から始まります。記憶も白紙にしたいときは、`--clone` を付けずにプロファイルを作るか、あとからこの 2 つのファイルを削除してください。ファイルがなくても、エージェントが別のプロファイルの記憶を代わりに読むことはありません。API キーを変えたいときは `~/.hermes/profiles/work/.env` を、人格を変えたいときは `~/.hermes/profiles/work/SOUL.md` を編集してください。
 
 #### 複製先でも、取り込んだエージェントの設定を同期し続ける（`--sync-imports`） {#keep-a-clones-imported-agent-setups-synced---sync-imports}
 

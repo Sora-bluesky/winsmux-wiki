@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-09-23、対象期間 = 2026-09-17 〜 2026-09-23（JST）
+生成日 = 2026-09-24、対象期間 = 2026-09-18 〜 2026-09-24（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,13 +16,17 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
-- 2026-09-23 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- 2026-09-23 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- 2026-09-23 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- 2026-09-23 [アプリケーション宣言](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/application-declarations/)
+- 2026-09-23 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- 2026-09-23 [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
 - 2026-09-23 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- 2026-09-23 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - 2026-09-22 [コンテキストエンジンのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-engine-plugin/)
 - 2026-09-22 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - 2026-09-22 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
 - 2026-09-22 [オブザーバーフック](https://wiki.winsmux.dev/hermes/docs/developer-guide/observer-hooks/)
-- 2026-09-22 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
 - 2026-09-22 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - 2026-09-22 [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
 - 2026-09-22 [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
@@ -36,9 +40,7 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-09-22 [Discord](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/discord/)
 - 2026-09-22 [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
 - 2026-09-22 [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
-- 2026-09-22 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
 - 2026-09-22 [cron の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cron-internals/)
-- 2026-09-22 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
 - 2026-09-22 [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
 - 2026-09-22 [state.db の復旧](https://wiki.winsmux.dev/hermes/docs/developer-guide/state-db-recovery/)
 - 2026-09-22 [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
@@ -91,7 +93,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-09-21 [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
 - 2026-09-21 [同梱 skill カタログ](https://wiki.winsmux.dev/hermes/docs/reference/skills-catalog/)
 - 2026-09-21 [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
-- 2026-09-21 [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
 - 2026-09-21 [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
 - 2026-09-21 [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
 - 2026-09-21 [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
@@ -419,15 +420,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-09-19 [Live Dashboard — 生の情報源から、自動で更新されるダッシュボードを作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/)
 - 2026-09-19 [どのファイルが何をするのか](https://wiki.winsmux.dev/hermes/docs/user-guide/which-file-does-what/)
 - 2026-09-18 [プロンプトの組み立て](https://wiki.winsmux.dev/hermes/docs/developer-guide/prompt-assembly/)
-- 2026-09-17 [ブラウザの自動操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/browser/)
-- 2026-09-17 [セッションの定期確認（Heartbeat）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/heartbeat/)
-- 2026-09-17 [繰り返しのループ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/loops/)
-- 2026-09-17 [Nous Tool Gateway](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-gateway/)
-- 2026-09-17 [デスクトップ版を複数の Hermes につなぐ](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-connection-desktop/)
-- 2026-09-17 [オンボーディングでのおすすめ](https://wiki.winsmux.dev/hermes/docs/developer-guide/onboarding-recommendations/)
-- 2026-09-17 [worktree から TUI とデスクトップアプリを動かす](https://wiki.winsmux.dev/hermes/docs/developer-guide/worktree-ui-dev/)
-- 2026-09-17 [Buzz](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/buzz/)
-- 2026-09-17 [1Password](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/onepassword/)
 
 ## 週次まとめ
 

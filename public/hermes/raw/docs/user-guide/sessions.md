@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 08a7f887ea85f00eba50988bc0c7bdb83d8a946a
+upstream_blob: 64ef5b6590c07d7b3d1f57ee5e495daf204d612a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -459,7 +459,7 @@ hermes sessions export --format md --model sonnet --min-messages 50 --redact
 hermes sessions export --format md --session-id 20250305_091523_a1b2c3d4 --delete-after-verified --yes
 ```
 
-Markdown / QMD の書き出しは、書き出したセッションごとに `.md` または `.qmd` を 1 ファイル作り、加えてファイルのパス・メッセージ数・系列の ID・SHA-256 を記した `manifest.jsonl` を作ります。まとめて書き出すには絞り込みが少なくとも 1 つ必要で、条件なしのまとめ書き出しは断られます。`--delete-after-verified` は意図的に `--session-id` のときだけに限られ、`--yes` も必要です。親セッションを消すと、その委任先や下位エージェントのセッションも消えるため、このモードでは委任先を 1 つずつ別ファイルに書き出して確かめてから削除に進みます。書き出しの途中で委任先の顔ぶれが変わった場合、削除は行われません。`--redact` は、書き出す前にメッセージ本文とツールの出力から秘密の値（API キー、トークン、認証情報）を伏せます。誰かに渡す予定の書き出しには必ず付けてください。
+Markdown / QMD の書き出しは、書き出したセッションごとに `.md` または `.qmd` を 1 ファイル作り、加えてファイルのパス・メッセージ数・系列の ID・SHA-256 を記した `manifest.jsonl` を作ります。まとめて書き出すには絞り込みが少なくとも 1 つ必要で、条件なしのまとめ書き出しは断られます。`--delete-after-verified` は意図的に `--session-id` のときだけに限られ、`--yes` も必要です。親セッションを消すと、その委任先や下位エージェントのセッションも消えるため、このモードでは委任先を 1 つずつ別ファイルに書き出して確かめてから削除に進みます。Markdown / QMD のファイルには、そのセッションで表示される履歴がすべて入ります。その場での圧縮によってアーカイブされたターンも含まれます。削除の際は、削除を実行するのと同じデータベースのトランザクションの中で、その表示用の記録そのものと委任先の顔ぶれをもう一度照らし合わせます。その間に追記・書き換え・巻き戻し・圧縮・委任先の変化が 1 つでもあれば、削除は行われません。この表示履歴の決まりは、`--format html`、`--only user-prompts`（Markdown と JSONL のどちらで出力する場合も）、`/save md|html` にも同じく当てはまります。一方、セッション全体の JSON / JSONL の書き出しと `/save json` は、いま有効な履歴だけを対象にしたままです。アーカイブ済みのターンを取り込むと、それがモデルの有効な文脈として復活してしまうためです。`--redact` は、書き出す前にメッセージ本文とツールの出力から秘密の値（API キー、トークン、認証情報）を伏せます。誰かに渡す予定の書き出しには必ず付けてください。
 
 ### セッションを消す {#delete-a-session}
 

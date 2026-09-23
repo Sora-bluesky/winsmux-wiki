@@ -31,7 +31,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-09-23
+最終取得: 2026-09-24
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -40,6 +40,7 @@ raw: /hermes/raw/free.md
 | **Meituan: LongCat 2.0**<br>`meituan/longcat-2.0:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Poolside: Laguna S 2.1**<br>`poolside/laguna-s-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Poolside: Laguna XS 2.1**<br>`poolside/laguna-xs-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **Space Bunny Alpha**<br>`stealth/space-bunny-alpha`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2098-12-31 |
 | **StepFun: Step 3.7 Flash**<br>`stepfun/step-3.7-flash:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Upstage: Solar Pro 4**<br>`upstage/solar-pro4:free`<br>入力・出力の基本単価0（取得時点） | 524,288 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 
@@ -51,7 +52,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-09-23
+最終取得: 2026-09-24
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -63,7 +64,6 @@ raw: /hermes/raw/free.md
 | **Google: Lyria 3 Pro Preview**<br>`google/lyria-3-pro-preview`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |
 | **inclusionAI: Ling 3.0 Flash Fin (free)**<br>`inclusionai/ling-3.0-flash-fin:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **inclusionAI: Ling 3.0 Flash Sante (free)**<br>`inclusionai/ling-3.0-flash-sante:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **inclusionAI: Ling 3.0 Flash VL (free)**<br>`inclusionai/ling-3.0-flash-vl:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **LiquidAI: LFM2.5-2.6B (free)**<br>`liquid/lfm-2.5-2.6b:free`<br>入力・出力の基本単価0（取得時点） | 65,536 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Nex AGI: Nex-N2.5-Mini (free)**<br>`nex-agi/nex-n2.5-mini:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-09-25 |
 | **Nex AGI: Nex-N2.5-Pro (free)**<br>`nex-agi/nex-n2.5-pro:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-09-25 |
@@ -76,6 +76,7 @@ raw: /hermes/raw/free.md
 | **Poolside: Laguna S 2.1 (free)**<br>`poolside/laguna-s-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Poolside: Laguna XS 2.1 (free)**<br>`poolside/laguna-xs-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Qwen: Qwen3.8 27B (free)**<br>`qwen/qwen3.8-27b:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **Space Bunny Alpha**<br>`stealth/space-bunny-alpha`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2098-12-31 |
 | **Thinking Machines: Inkling Small (free)**<br>`thinkingmachines/inkling-small:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Thinking Machines: Inkling (free)**<br>`thinkingmachines/inkling:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Z.ai: GLM 5.2 (free)**<br>`z-ai/glm-5.2:free`<br>入力・出力の基本単価0（取得時点） | 32,768 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |
@@ -90,7 +91,7 @@ APIキーもアカウントも要りません。リクエストは匿名で送�
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 
-最終取得: 2026-09-23
+最終取得: 2026-09-24
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -103,6 +104,7 @@ APIキーもアカウントも要りません。リクエストは匿名で送�
 | **muse-spark-1.3-contributor-free**<br>`muse-spark-1.3-contributor-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **nemotron-3-ultra-free**<br>`nemotron-3-ultra-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **nemotron-3.5-lightning-free**<br>`nemotron-3.5-lightning-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
+| **space-bunny-free**<br>`space-bunny-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 
 ## Google AI Studio（Gemini）
 

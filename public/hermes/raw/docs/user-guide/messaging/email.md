@@ -2,7 +2,7 @@
 title: "メール"
 description: "IMAP/SMTP 経由で Hermes Agent をメール応対の相棒として設定する"
 upstream_path: user-guide/messaging/email.md
-upstream_blob: 436d27caecbc94e2e84983e3a0ce42446a322d0c
+upstream_blob: 16ac4251c04a50e833e1ea88f353818117d39280
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/email
 ---
@@ -172,10 +172,15 @@ platforms:
 
 メールの応対範囲は、チャット系のプラットフォームより既定で厳しめです。
 
-1. **`EMAIL_ALLOWED_USERS` を設定した場合** → そのアドレスから届いたメールだけを処理します
+1. **`EMAIL_ALLOWED_USERS` を設定した場合** → そのアドレス（と、`GATEWAY_ALLOWED_USERS` に入っているアドレスや承認済みのペアリング）から届いたメールだけを処理します
 2. **許可リストを設定しない場合** → 見知らぬ差出人は黙って無視されます
 3. **`EMAIL_ALLOW_ALL_USERS=true`** → どんな差出人でも受け付けます（気をつけて使ってください）
 4. **`platforms.email.unauthorized_dm_behavior: pair`** → 見知らぬ差出人にはペアリング用のコードが届きます
+5. **`platforms.email.unauthorized_dm_behavior: decline`** → 見知らぬ差出人には丁寧なお断りを1通だけ送り、その後24時間は何も送りません
+
+許可リストの項目はアドレス全体で照合します。`alice` のようにドメインのない項目（たとえば `GATEWAY_ALLOWED_USERS` に書いたチャットのユーザー名）は、どのドメインの `alice@` も通しません。そうしたアドレスからのメールは、ペアリングやお断りの対象にもならず、そのまま捨てられます。
+
+誰でも受け付ける設定にしていない限り、Hermes がメッセージに応じるのは、受信側のメールサーバーが付けた `Authentication-Results` ヘッダーで `From:` のドメインが認証されている場合（DMARC、または整合した SPF/DKIM）だけです。`GATEWAY_ALLOW_ALL_USERS` が「誰でも受け付ける」扱いになるのは、ゲートウェイ本体と同じく、許可リストを設定していないあいだだけです。ペアリング用のコードとお断りのメールは、誰でも受け付ける設定でも認証済みの `From:` が必要なので、偽装されたアドレスには送られません。お使いのメールサーバーがこのヘッダーを付けない場合は、危険を承知のうえで `platforms.email.require_authenticated_sender: false` を設定してください。
 
 :::warning
 **普段の運用では、専用の受信箱を用意して `EMAIL_ALLOWED_USERS` を設定してください。** メールのペアリングを既定で切ってあるのは、共有の受信箱には関係のない未読メールが溜まりがちで、Hermes がその相手に勝手に返事をするべきではないからです。

@@ -2,7 +2,7 @@
 title: "ゲートウェイのセッションライフサイクル"
 description: "ゲートウェイにおける SessionSource・SessionEntry・SessionStore、セッションキーの規則、マルチユーザーの分離"
 upstream_path: developer-guide/gateway-session-lifecycle.md
-upstream_blob: 2df83f49cc57ae7f93bb927e1e322bc73b9dcf5e
+upstream_blob: b9edf3f9c6b8c01d2df798cfeb3f406c49df5d80
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-session-lifecycle
 ---
@@ -102,7 +102,7 @@ SessionEntry にはいくつかの真偽値フラグがあり、次にアクセ�
 | `is_fresh_reset` | `bool` | `False` | 明示的な `/new` や `/reset` で立ちます。最初のメッセージで、トピック／チャンネルのスキルを再注入するきっかけになります。紛らわしい「セッションの期限が切れました」という通知を避けるため、`was_auto_reset` とは区別されています。 |
 | `expiry_finalized` | `bool` | `False` | 復旧のために残されている、過去の確定済みの境界。タイマーがこれを書き込むことはありません。 |
 | `suspended` | `bool` | `False` | 強制的に消去するための強いシグナル。`/stop` か、ループが止まらないときのエスカレーション（再起動の失敗が3回以上連続）で立ちます。次の `get_or_create_session()` で、`resume_pending` にかかわらず新しい `session_id` を強制します。 |
-| `resume_pending` | `bool` | `False` | 穏やかな復旧のためのマーカー。`suspend_recently_active()`（クラッシュからの復旧）か、ドレインのタイムアウトで立ちます。次にアクセスされたとき、既存の `session_id` を保ち、ユーザーは同じトランスクリプトのまま続けられます。次のターンが無事に終わった後に解除されます。 |
+| `resume_pending` | `bool` | `False` | 穏やかな復旧のためのマーカー。`recover_interrupted_turns()`（印の付いた、まだ返事をしていないターンのクラッシュからの復旧）か、ドレインのタイムアウトで立ちます。次にアクセスされたとき、既存の `session_id` を保ち、ユーザーは同じトランスクリプトのまま続けられます。次のターンが無事に終わった後に解除されます。 |
 | `resume_reason` | `Optional[str]` | `None` | 再開の印を付けた理由: `"restart_timeout"`、`"shutdown_timeout"`、`"restart_interrupted"`。 |
 | `last_resume_marked_at` | `Optional[datetime]` | `None` | 最後に再開待ちの印を付けた日時。 |
 
@@ -178,7 +178,7 @@ SessionStore(sessions_dir: Path, config: GatewayConfig, has_active_processes_fn=
 | `suspend_session(session_key)` | セッションに `suspended=True` の印を付けます（`/stop` から）。次のアクセスで自動リセットを強制します。 |
 | `mark_resume_pending(session_key, reason)` | セッションに `resume_pending=True` の印を付けます（ドレインのタイムアウトから）。次のアクセスで session_id を保ちます。`suspended=True` を上書きすることは**ありません**。 |
 | `clear_resume_pending(session_key)` | 再開したターンが無事に終わった後、`resume_pending` を解除します。`run_conversation()` が戻った後にゲートウェイから呼ばれます。 |
-| `suspend_recently_active(max_age_seconds=120)` | クラッシュからの復旧: 最近動きのあったセッションに `resume_pending=True` の印を付けます。すでに再開待ちのものと、すでに一時停止中のエントリーは飛ばします。正常に終了しなかった後の起動時に呼ばれます。 |
+| `recover_interrupted_turns(max_age_seconds)` | クラッシュからの復旧: 落ちたプロセスが残した、永続化された実行中ターンの印を `resume_pending=True`（`restart_interrupted`）に格上げします。印のないセッションはターンを終えているので、手を付けません。正常に終了しなかった後の起動時に呼ばれます。 |
 | `prune_old_entries(max_age_days)` | `max_age_days` より古いエントリー（`updated_at` を基準）を削除します。`suspended` のエントリーと、プロセスが動いているセッションは飛ばします。 |
 | `list_sessions(active_minutes=None)` | すべてのセッションを返します。最近の動きで絞り込むこともできます。`updated_at` の降順で並びます。 |
 | `lookup_by_session_id(session_id)` | 保存されているセッション ID に対応する、有効な `SessionEntry` を探します。 |
@@ -328,8 +328,10 @@ Gateway starts
        │ Missing
        ▼
 ┌───────────────────────────────┐
-│ session_store                 │── Marks sessions updated within
-│ .suspend_recently_active()    │   last 120 seconds as resume_pending
+│ _recover_unclean_sessions()   │── Marked turn with a persisted reply
+│                               │   → delivery ledger (sent, marked);
+│                               │   marked turn without one →
+│                               │   resume_pending (once)
 └───────────────────────────────┘
        │
        ▼
@@ -355,15 +357,35 @@ Gateway starts
 └───────────────────────────────┘
 ```
 
-### suspend_recently_active(max_age_seconds=120) {#suspendrecentlyactivemaxageseconds120}
+### クラッシュからの復旧（`_recover_unclean_sessions`） {#crash-recovery-recoveruncleansessions}
 
-`.clean_shutdown` マーカーがない（クラッシュや予期しない終了があったことを示す）とき、
-ゲートウェイの起動時に呼ばれます。直近120秒以内に更新されたセッションそれぞれについて、次のことを行います。
+`.clean_shutdown` マーカーがない（クラッシュや予期しない終了があった）とき、ゲートウェイの
+起動時に呼ばれます。判断の材料にするのは、永続化された実行中ターンの印だけで、最近動いたかどうかは
+見ません。クラッシュの少し前に動いていただけのチャットは、そのターンを終えているので、もう一度
+返事をすることはありません。
 
-- `resume_pending=True`、`resume_reason="restart_interrupted"`、
-  `last_resume_marked_at=now` を設定します。
-- すでに `resume_pending=True` のエントリーは飛ばします（二重に印を付けません）。
-- 明示的に `suspended=True` になっているエントリーは飛ばします（強い消去はそのまま残すべきだからです）。
+この印はターンが始まったときに付き、最終的な返事が配達台帳に載るまで（アダプターは
+`record_delivery_obligation` の直後に印を外します）、または届けるべきものがもう無くなるまで
+（ストリーミングで返した、抑止された、空の応答だった）残ります。つまり、起動時に印が残っていれば、
+次の2つのどちらかを意味します。
+
+- **返事は保存されたが、台帳には載らなかった。** 保存されたトランスクリプトの返事を、持ち主のいない
+  台帳の行として記録し、印を外します。起動時の一掃がそれを「Recovered reply」の知らせを付けて1回だけ
+  届けます。ターンは作り直しません。返事は、通常の配達で判断されるのと同じやり方で判断されます。
+  内部のターンに対する沈黙の印だけの返事（`[SILENT]`、`NO_REPLY` など）や、チャットの方針が消音に
+  している診断用の起こしへの返事には、届けるべきものがありません（印を外し、何も送らず、再開も
+  しません）。人間のターンに対する沈黙の印だけの返事は、通常の経路が送るのと同じ「沈黙の印しか
+  返さなかった」という知らせになります。
+- **返事が保存されていなかった。** `recover_interrupted_turns()` が `resume_pending=True`、
+  `resume_reason="restart_interrupted"` を設定し、そのターンは1回だけ自動で再開します。
+
+印の開始時刻はタイムゾーン付きの UTC で保存し、エポック秒で比べます。そのため、別のローカルの
+タイムゾーンで再起動しても（夏時間の切り替え、コンテナとユニットの `TZ` の違い）、新しい印を古いと
+みなして捨てることも、前のターンの返事をこのターンの返事として取り込むこともありません。古いビルドが
+書いた印（タイムゾーンなしのローカル時刻）は、ホストのローカル時刻として読みます。
+
+すでに台帳に載っているターンは台帳の一掃が届け直し、その一掃はそのセッションの `resume_pending` も
+外します。そのため、届けたうえでさらに返事をし直すことはありません。
 
 ### 止まらないループの検出（`_suspend_stuck_loop_sessions`） {#stuck-loop-detection-suspendstuckloopsessions}
 
@@ -378,7 +400,7 @@ Gateway starts
 
 - `"restart_timeout"` — 再起動のドレイン中に強制終了された
 - `"shutdown_timeout"` — シャットダウンのドレイン中に強制終了された
-- `"restart_interrupted"` — クラッシュからの復旧（`suspend_recently_active` から）
+- `"restart_interrupted"` — 印の付いた、まだ返事をしていないターンのクラッシュからの復旧（`recover_interrupted_turns` から）
 
 3つの理由はすべて `_AUTO_RESUME_REASONS` に含まれ、起動時の自動再開の対象になります。
 
@@ -399,8 +421,8 @@ Gateway starts
 
 正常なシャットダウンの最後に書き込まれます。次の起動時の動きは次のとおりです。
 
-- あれば: `suspend_recently_active()` をまるごと飛ばします。動いていたエージェントはすでに
-  ドレイン済みなので、止まったままのセッションはありません。
+- あれば: クラッシュからの復旧をまるごと飛ばし、持ち主のいないターンの印を捨てます。動いていた
+  エージェントはすでにドレイン済みなので、止まったままのセッションはありません。
 - そのあとマーカーを削除します。
 
 これにより、`hermes update`、`hermes gateway restart`、
