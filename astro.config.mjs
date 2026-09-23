@@ -21,6 +21,9 @@ const REDIRECTED = new Set([
   '/hermes/syntheses/cost-and-model/',
 ]);
 
+// public/_headers で X-Robots-Tag: noindex を返すページ。両方を同時に直す
+const NOINDEX = new Set(['/hermes/search/']);
+
 const TEMPLATE_ROUTES = [
   { urlPrefix: 'hermes/concepts/', sourceDir: 'src/raw/concepts' },
   { urlPrefix: 'hermes/entities/', sourceDir: 'src/raw/entities' },
@@ -188,8 +191,11 @@ export default defineConfig({
     // ルートは /hermes/ を canonical に指している。正規化先ではない URL を
     // サイトマップに載せるとクロールの一枠を無駄にするので外す
     sitemap({
-      // 301 で転送する入口（public/_redirects）はサイトマップに載せない
-      filter: (page) => !REDIRECTED.has(page.replace(SITE_URL, '')),
+      // 301 で転送する入口（public/_redirects）と noindex のページ（public/_headers）はサイトマップに載せない
+      filter: (page) => {
+        const path = page.replace(SITE_URL, '');
+        return !REDIRECTED.has(path) && !NOINDEX.has(path);
+      },
       serialize(item) {
         serializedUrlCount += 1;
 
