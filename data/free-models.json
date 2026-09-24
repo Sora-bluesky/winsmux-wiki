@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-24",
+  "generatedAt": "2026-09-25",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-09-24",
-      "attemptedAt": "2026-09-24",
+      "fetchedAt": "2026-09-25",
+      "attemptedAt": "2026-09-25",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -63,7 +63,7 @@
           "name": "Space Bunny Alpha",
           "ctx": 1000000,
           "tools": true,
-          "expires": "2098-12-31",
+          "expires": null,
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null
@@ -93,8 +93,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-09-24",
-      "attemptedAt": "2026-09-24",
+      "fetchedAt": "2026-09-25",
+      "attemptedAt": "2026-09-25",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -113,7 +113,7 @@
           "name": "Dots Studio: Dots3-Note Preview (free)",
           "ctx": 512000,
           "tools": true,
-          "expires": "2026-12-31",
+          "expires": null,
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null
@@ -303,7 +303,7 @@
           "name": "Space Bunny Alpha",
           "ctx": 1000000,
           "tools": true,
-          "expires": "2098-12-31",
+          "expires": null,
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null
@@ -343,8 +343,8 @@
     },
     "opencode": {
       "ok": true,
-      "fetchedAt": "2026-09-24",
-      "attemptedAt": "2026-09-24",
+      "fetchedAt": "2026-09-25",
+      "attemptedAt": "2026-09-25",
       "errorCode": null,
       "url": "https://opencode.ai/zen/v1/models",
       "models": [

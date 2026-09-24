@@ -2,7 +2,7 @@
 title: "ACP ホスト連携"
 description: "ACP に対応したエディタや共同作業ツールの中で Hermes Agent を使う"
 upstream_path: user-guide/features/acp.md
-upstream_blob: 8d7ad9dd475c0c7b866385de4baed6547830d747
+upstream_blob: ad4ebb37c7ac19dc746170ab5d79aa8436de2578
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/acp
 ---
@@ -36,6 +36,25 @@ ACP モードの Hermes は、エディタ作業向けに選び抜いた `hermes
 - 画像認識
 
 一方で、メッセージの配信や定期実行の管理など、エディタでの使い勝手に合わないものは意図的に外してあります。
+
+ツールセットは、同じプラットフォーム設定のメッセージングゲートウェイと同じやり方で決まります。
+ゲートウェイが一覧に上乗せする分（有効にしたプラグインのツールセットなど）も含まれるので、
+ACP のセッションでもそれらが使えます。
+`platform_toolsets.acp` を書くと既定の `hermes-acp` がそれに置き換わり、
+`agent.disabled_toolsets` に書いたツールセットはすべての ACP セッションから外れます。
+`mcp_servers` の MCP サーバーも同じ規則に従います。既定では、有効なサーバーがすべて ACP で使えます。
+`platform_toolsets.acp` にサーバー名を並べると、そのサーバーだけが入ります。`no_mcp` を書くとすべて外れます。
+`hermes tools` には ACP の項目がないので、`config.yaml` を直接編集してください。
+
+```yaml
+platform_toolsets:
+  acp: [file, web, skills, github]   # only the github MCP server
+agent:
+  disabled_toolsets: [code_execution]
+```
+
+エディタが `session/new` で送ってくる MCP サーバーは別扱いです。
+クライアントがセッションごとに要求するもので、常に追加されます。
 
 ## インストール {#installation}
 
@@ -267,12 +286,12 @@ Buzz は新しいエージェントを作るとき、**Who can talk to this agen
 ここで `Anyone` を選ぶと、そのチャンネルに手が届く投稿者すべてに同じシェル権限を渡すことに
 なります。Buzz は選んでも警告を出しません。
 
-すぐ思いつく対策は、どちらも今のところ効きません。
-
-- `approvals.mode: manual` にすると Hermes は確かに権限要求を出しますが、
-  Buzz がそれを自動承認するのでコマンドは実行されます。
-- `platform_toolsets.acp` では ACP のツールセットを絞り込めないため、
-  `terminal` を外す用途には使えません。
+`approvals.mode: manual` は役に立ちません。Hermes は権限要求を出しますが、
+Buzz がそれを自動承認するのでコマンドは実行されます。シェルを取り上げたいときは、
+代わりにツールセットを絞ってください。`platform_toolsets.acp` を `terminal` と
+`code_execution` を含まない一覧にするか、この 2 つを `agent.disabled_toolsets` に加えます。
+空の `platform_toolsets.acp: []` にしても、有効なプラグインのツールセットは追加されます。
+外したいプラグインのツールセットは `agent.disabled_toolsets` に名前を書いてください。
 
 所有者が `!shutdown` と送ればどのモードでもエージェントは停止します。Buzz は他の人からの
 このコマンドを無視します。

@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 075005479ed9a11a77e2a31925c8802a1a22277d
+upstream_blob: 2fc9cc35fb73ba6b58d3fbfc3e4a7f501e297d22
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -876,6 +876,7 @@ hermes webhook subscribe <name> [options]
 | `--deliver-chat-id` | クロスプラットフォーム配信先のチャット/チャンネル ID です。 |
 | `--secret` | カスタムの HMAC シークレットです。省略時は自動生成されます。 |
 | `--deliver-only` | エージェントをスキップし、レンダリングした `--prompt` をそのままメッセージとして配信します。LLM のコストはゼロで、配信は1秒未満です。`--deliver` が実際のターゲット（`log` 以外）である必要があります。 |
+| `--mirror-to-session` | 配信した各メッセージを、宛先チャットのセッションにも書き込みます。そのチャットで返信したとき、エージェントが文脈を踏まえて答えられるようになります。既定ではオフです。会話に取り込んでも信頼できる内容を送ってくる送信元に限って有効にしてください。 |
 | `--script` | `~/.hermes/scripts/` 配下のフィルタ/変換スクリプトです。webhook のペイロードは stdin に JSON として渡され、JSON の stdout がペイロードを置き換えます。空の stdout、`[SILENT]`、非ゼロの終了コードは、その webhook を無視します。詳細は [Script Filters and Transforms](/hermes/docs/user-guide/messaging/webhooks/#script-filters-and-transforms) を参照してください。 |
 | `--route-profile` | ルートを多重化されたプロファイルに紐付けます: そのルートは `/p/<profile>/webhooks/<name>` からのみ到達可能になり、エージェントはそのプロファイルとして動作します。既存のプロファイルに対して検証され、省略時は更新時にそのまま保持されます。サブスクリプションファイルを書き込むゲートウェイを選ぶグローバルな `-p/--profile` とは別物です。詳細は [Multi-profile gateways](/hermes/docs/user-guide/multi-profile-gateways/) を参照してください。 |
 
@@ -1099,6 +1100,8 @@ hermes import <zipfile> [options]
 :::warning
 実行中のプロセスとの競合を避けるため、インポート前にゲートウェイを停止してください。
 :::
+
+**終了ステータス:** アーカイブが壊れている場合は `1` です。何かを書き込む前に、すべてのメンバーを一度展開して CRC を確かめます。1 つでも失敗すると `Error: backup archive is damaged (N member(s) …)` と問題のメンバーを表示し、Hermes のホームには一切手を付けずに止まります。アーカイブ内のファイルを 1 つでも復元できなかった場合も `1` です（`Warnings (N files skipped)` の下に一覧が出て、`Import incomplete: …` とまとめて表示されます）。書き込めたファイルはそのまま残りますが、スクリプトやダッシュボードが途中までの復元を成功として扱うことはありません。インポートが意図してこの端末のものを残すランタイムファイル（`gateway.pid`、`gateway_state.json`、…）と、下で説明する古いバックアップのセッションに関する警告は、終了ステータスに影響しません。
 
 ### SQLite データベース {#sqlite-databases}
 

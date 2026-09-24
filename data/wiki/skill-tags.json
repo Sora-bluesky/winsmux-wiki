@@ -919,6 +919,10 @@
     "social-media-reddit-reading": [
       "message",
       "research"
+    ],
+    "autonomous-ai-agents-agent-merge-conflict-arbiter": [
+      "ai-agent",
+      "coding"
     ]
   }
 }

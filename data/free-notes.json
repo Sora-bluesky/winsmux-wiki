@@ -14,7 +14,7 @@
           "url": "/hermes/docs/integrations/nous-portal/"
         }
       ],
-      "checkedAt": "2026-09-19",
+      "checkedAt": "2026-09-25",
       "sources": [
         "https://portal.nousresearch.com",
         "https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/nous_account.py"
@@ -40,7 +40,7 @@
           "url": "https://openrouter.ai/docs/api-reference/limits"
         }
       ],
-      "checkedAt": "2026-09-19",
+      "checkedAt": "2026-09-25",
       "sources": [
         "https://openrouter.ai/docs/api-reference/limits"
       ],
@@ -89,7 +89,7 @@
           "url": "https://ai.google.dev/gemini-api/docs/pricing"
         }
       ],
-      "checkedAt": "2026-09-19",
+      "checkedAt": "2026-09-25",
       "sources": [
         "https://ai.google.dev/gemini-api/docs/pricing",
         "https://hermes-agent.nousresearch.com/docs/integrations/providers"

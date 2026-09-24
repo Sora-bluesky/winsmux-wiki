@@ -2,7 +2,7 @@
 title: "Nous Tool Gateway"
 description: "サブスクリプション 1 つで、すべてのツールを。Web 検索、画像生成、音声読み上げ、クラウドブラウザーを、追加の API キー無しで Nous Portal 経由に束ねます。"
 upstream_path: user-guide/features/tool-gateway.md
-upstream_blob: 2ed437f2976946038499cc162889408d1ea448e3
+upstream_blob: 552135ce063987c571ef32c4f7a30abbbef1d3d4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-gateway
 ---
@@ -11,7 +11,7 @@ sources:
 
 **サブスクリプションは 1 つ。ツールは全部入り。**
 
-Tool Gateway は、有料の [Nous Portal](https://portal.nousresearch.com) サブスクリプションすべてに含まれています。Hermes のツール呼び出し（Web 検索、画像生成、音声読み上げ、クラウドブラウザーの自動操作）を、Nous がすでに運用している基盤へ通してくれます。エージェントを使いものにするためだけに、Firecrawl や FAL、OpenAI、Browser Use などへ個別に登録する必要はありません。
+Tool Gateway は、有料の [Nous Portal](https://portal.nousresearch.com) サブスクリプションすべてに含まれています。Hermes のツール呼び出し（Web 検索、画像生成、音声読み上げ、クラウドブラウザーの自動操作）を、Nous がすでに運用している基盤へ通してくれます。エージェントを使いものにするためだけに、Web 検索のベンダーや FAL、OpenAI、Browser Use などへ個別に登録する必要はありません。
 
 [サブスクリプションを始める・管理する →](https://portal.nousresearch.com/manage-subscription)
 
@@ -19,7 +19,7 @@ Tool Gateway は、有料の [Nous Portal](https://portal.nousresearch.com) サ�
 
 | | ツール | できること |
 |---|---|---|
-| 🔍 | **Web 検索と本文抽出** | Firecrawl によるエージェント向けの Web 検索と、ページ全文の抽出。スケーリングはゲートウェイ側が引き受けるので、レート制限を気にする必要はありません。 |
+| 🔍 | **Web 検索と本文抽出** | Nous が運用する、エージェント向けの Web 検索と、ページ全文の抽出。スケーリングはゲートウェイ側が引き受けるので、レート制限を気にする必要はありません。 |
 | 🎨 | **画像生成** | 1 つのエンドポイントに 9 つのモデル。**FLUX 2 Klein 9B**、**FLUX 2 Pro**、**Z-Image Turbo**、**Nano Banana Pro**（Gemini 3 Pro Image）、**GPT Image 1.5**、**GPT Image 2**、**Ideogram V3**、**Recraft V4 Pro**、**Qwen Image**。生成ごとにフラグで選ぶことも、Hermes の既定である FLUX 2 Klein に任せることもできます。 |
 | 🔊 | **音声読み上げ** | OpenAI の TTS 音声が `text_to_speech` ツールにつながっています。Telegram にボイスメモを投げる、パイプライン用の音声を作る、何かを読み上げさせる、といった使い方ができます。 |
 | 🌐 | **クラウドブラウザーの自動操作** | Browser Use 経由のヘッドレス Chromium セッション。`browser_navigate`、`browser_click`、`browser_type`、`browser_vision` といったエージェント操作の基本部品が、Browserbase のアカウント無しで使えます。 |
@@ -31,7 +31,7 @@ Tool Gateway は、有料の [Nous Portal](https://portal.nousresearch.com) サ�
 実際に*何かをこなせる*エージェントを組もうとすると、5 つ以上の API サブスクリプションをつなぎ合わせることになります。それぞれに登録があり、レート制限があり、請求があり、癖があります。ゲートウェイはそれをアカウント 1 つにまとめます。
 
 - **請求は 1 つ。** Nous に払えば、あとはこちらで面倒を見ます。
-- **登録は 1 回。** Firecrawl も FAL も Browser Use も OpenAI の音声アカウントも、管理する必要がありません。
+- **登録は 1 回。** Web 検索も FAL も Browser Use も OpenAI の音声アカウントも、管理する必要がありません。
 - **キーは 1 つ。** Nous Portal の OAuth が、すべてのツールをカバーします。
 - **品質は同じ。** 直接キーを使う経路と同じバックエンドを、こちらが前面で受けているだけです。
 
@@ -99,7 +99,7 @@ Nous のモデルを選ぶ（`hermes model`）と、ゲートウェイのバッ�
 
 - **すべてを Nous 経由に** — いちばん簡単です。サブスクリプション 1 つで完了します。
 - **Web と画像はゲートウェイ、TTS は自前** — ElevenLabs の声はそのままに、残りを Nous に任せます。
-- **キーを持っていないものだけゲートウェイ経由に** — 「Browserbase にはすでに払っているが、Firecrawl のアカウントは作りたくない」といった使い方もできます。
+- **キーを持っていないものだけゲートウェイ経由に** — 「Browserbase にはすでに払っているが、Web 検索のアカウントは作りたくない」といった使い方もできます。
 
 どのツールも、いつでも次のコマンドで切り替えられます。
 

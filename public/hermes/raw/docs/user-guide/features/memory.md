@@ -2,7 +2,7 @@
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: afe78f83d337f17b31139a5d68cf600af94f61b3
+upstream_blob: dba1d42ae9aace4d77e72995ebe15eea9a348610
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---
@@ -254,7 +254,7 @@ skill は、学びの手がかりができた時点で時間の流れに現れ�
 
 | コマンド | 何をするか |
 |---------|--------------|
-| `hermes journey list` | 節点の id を並べます — skill の名前と、記憶のかたまりの `memory:<source>:<index>` という id です。 |
+| `hermes journey list` | 節点の id を並べます — skill の名前と、記憶のかたまりの `memory:<source>:<index>:<fingerprint>` という id です（指定するときは表示されたとおりに渡します）。 |
 | `hermes journey delete <node> [-y]` | 節点を消します。skill は**書庫に入る**ので戻せます。記憶のかたまりは取り除かれます。`-y` で確認を飛ばします。 |
 | `hermes journey edit <node>` | その節点の中身（skill なら `SKILL.md`、記憶ならそのかたまり）を `$EDITOR` で開きます。 |
 
@@ -297,6 +297,8 @@ memory:
 ```
 
 これが「エージェントが自分について間違った思い込みを保存した」への答えです。`write_approval: true` にしておけば、すべての保存 — とりわけ頼んでいない裏側からのもの — が、人物像に入る前にこちらの可否を待ちます。
+
+下書きに回った `replace` や `remove`（裏側の見直しは、関門が切れていてもこれらを下書きに回します）は、対象の項目の全文を記録し、`/memory pending` でそれを表示します。承認が適用されるのはまさにその項目だけです。書き込みが下書きに回ったあとでその項目が変わっていたら、書き込みは断られ、却下できるよう保留のまま残ります。この固定の仕組みができる前に下書きに回った `replace`/`remove` には確かめられる対象が無いので、これも断られます。却下してから、変更を作り直してください。`/memory approve` は、上書きしたり消したりしたすべての項目の全文を並べて示します。
 
 ## 裏側の見直しの知らせ（`display.memory_notifications`） {#background-review-notifications-displaymemorynotifications}
 

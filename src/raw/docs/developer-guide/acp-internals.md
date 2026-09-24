@@ -2,7 +2,7 @@
 title: "ACP の内部"
 description: "ACP アダプタのしくみ — 起動から終了まで、セッション、イベントの橋渡し、承認、ツールの表示"
 upstream_path: developer-guide/acp-internals.md
-upstream_blob: 0445b323abc8b26cfe18b69b8971259ff1614d11
+upstream_blob: 1c5fed2e7e22771e48a09bf2f362424eb6debd95
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/acp-internals
 ---
@@ -122,7 +122,10 @@ asyncio.run_coroutine_threadsafe(...)
 ```text
 new_session(cwd)
   -> create SessionState
-  -> create AIAgent(platform="acp", enabled_toolsets=["hermes-acp"])
+  -> create AIAgent(platform="acp", enabled_toolsets=<_get_platform_tools(config, "acp"), as on the
+                   gateway: platform_toolsets.acp (default hermes-acp) plus the resolver's extras
+                   such as plugin toolsets, with its admitted MCP servers keyed mcp-<server>>,
+                   disabled_toolsets=<agent.disabled_toolsets>)
   -> bind task_id/session_id to cwd override
 
 prompt(..., session_id)

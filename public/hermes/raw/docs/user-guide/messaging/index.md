@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 1ad2373964103081767c7c581ab870e73ee75140
+upstream_blob: 03098e7afe377aa18b5e21f5f1e36da021fca7e4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -879,6 +879,8 @@ Telegram はたいていスマートフォンの受信箱なので、既定値�
 - **`busy_ack_detail`** の既定値は **`off`** です。作業中の受け取り確認や長時間処理のハートビートは簡潔なままです（`iteration 21/60` のようなデバッグの詳細は出ません）。
 - **`interim_assistant_messages`** は **有効のまま**です。ターンの途中で出る本物のアシスタントのつぶやき（これから何をするかをモデルが実際に語るもの）は、雑音ではなく信号だからです。
 - **`long_running_notifications`** も **有効のまま**です。その場で書き換わる「⏳ Working — N min」のふきだしが数分ごとに更新されるので、30 分も `typing…` を眺め続けずに済みます。
+
+こうしたプラットフォームごとの既定値が効くのは、同じキーが `display:` の直下に書かれていないあいだだけです。グローバルな `display.tool_progress`、`display.show_reasoning`、`display.busy_ack_detail`、`display.interim_assistant_messages`、`display.long_running_notifications` はすべてのプラットフォームに効き、その既定値を置き換えます。古い `cli-config.yaml.example` から写した `config.yaml` はこの 5 つをすべてグローバルに設定しており、古い初回の `hermes setup` は `tool_progress: all` を書き込んでいました。プラットフォームごとの既定値に戻すには、それらの行を消してください。
 
 有効のままにしてある既定値を切ったり、プラットフォームごとに詳しい進捗表示に戻したりできます。
 

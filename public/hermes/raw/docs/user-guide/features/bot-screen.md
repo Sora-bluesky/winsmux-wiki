@@ -2,7 +2,7 @@
 title: "ボットの画面"
 description: ""
 upstream_path: user-guide/features/bot-screen.md
-upstream_blob: 52c7962a667bbce91f7334683e428eec92bbcceb
+upstream_blob: 67a0d8f39e3a0cfd08cc370cada2137a0ffb5e78
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/bot-screen
 ---
@@ -76,10 +76,10 @@ WebSocket のブリッジは、リースのファイルを読み直すまでの�
   0.5〜1 GB 増えます（1 ページで約 550 MB）。**ブラウザを開いた画面 1 つにつき約 1.1〜1.5 GB** を
   見込んでください。デスクトップだけなら軽く、重いのはブラウザです。CPU は制約になりません
   （待機中のデスクトップで約 0.01 コア、ライブ配信中で約 0.03 コア）。パッケージは
-  Debian で約 550 MB のディスクを使います。
+  Debian 13 で約 930 MB のディスクを使います。
 
   画面を起動する前に、Hermes はホスト（またはコンテナの cgroup のうち、厳しいほう）に
-  `bot_desktop.min_free_memory_mb`（既定は 1536）以上の空きがあるかを確かめます。
+  `bot_desktop.min_free_memory_mb`（既定は 1536。`0` にすると確認しません）以上の空きがあるかを確かめます。
   足りない場合、ペインには **Start screen** の代わりにその理由が表示され、
   `hermes computer-use screen start` も起動を拒否します。すでに動いている画面がこの確認で
   止められることはありません。だれも使っていない画面は
@@ -91,15 +91,26 @@ WebSocket のブリッジは、リースのファイルを読み直すまでの�
 ### パッケージをコンテナイメージに組み込む {#baking-the-packages-into-a-container-image}
 
 ホスト型や権限のない環境向けのイメージは実行時に何もインストールできないので、
-パッケージをビルド時に組み込みます。公式の `Dockerfile` には、有効にしたときだけ効く
-ビルド引数があります。
+パッケージをビルド時に組み込んでおく必要があります。CI はバージョンごとに 2 種類を公開しています。
+接尾辞のないタグ（`:latest`、`:v*`）にはパッケージが入っておらず、
+**`-desktop` タグ**（`:latest-desktop`、`:v*-desktop`）には入っています。ホスト型の環境
+（Fly Machines、Azure のコンテナインスタンス）では、接尾辞付きのタグを取得すれば Bot Screen が使えます。
+こうした環境はビルドを一度も実行しないので、ビルド引数ではどのみち届きません。
+いまのところプロビジョナーには `-desktop` を選ぶ仕組みがないため、ホスト型のインスタンスは
+軽量版のまま立ち上がります。接尾辞付きのタグを自分で取得する方法なら、現時点でも使えます。
+
+自前でビルドするのは、独自のイメージにパッケージを入れたい場合だけです。公式の `Dockerfile` には、
+有効にしたときだけ効くビルド引数があります。既定ではオフなので、ふつうの
+`docker build .` は軽いままです。
 
 ```bash
 docker build --build-arg HERMES_BOT_DESKTOP=1 -t hermes-agent:screen .
 ```
 
-これで TigerVNC、Xfce のコンポーネント、画面付きの `chromium`（ドックの Browser アイコン用）が
-1 つのレイヤー（約 550 MB）として加わります。起動時には何も動かないので、この方法で作った
+これで TigerVNC、Xfce のコンポーネント、画面付きの `chromium`（ドックの Browser アイコン用）に加えて、
+Playwright の画面付き Chromium ビルドが入ります。イメージは約 **1.4 GB** 増え
+（実測: arm64 で引数なし 4.1 GB、引数あり 5.5 GB）、そのうち約 930 MB が apt のレイヤーです。
+起動時には何も動かないので、この方法で作った
 イメージは、画面を起動するまでメモリを使いません。
 
 ## 使い方 {#using-it}

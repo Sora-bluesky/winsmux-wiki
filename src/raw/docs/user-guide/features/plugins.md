@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 1d6a1a49e4f02feddfdd03aa02d1f01e7a72b167
+upstream_blob: 668251aebe8b0bda87f0198e575cdc05c783dfce
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -160,6 +160,11 @@ plugins:
     - disk-cleanup
   disabled:       # optional deny-list — always wins if a name appears in both
     - noisy-plugin
+  # Optional: deadline (seconds) for each Git clone, fetch or checkout
+  # during plugin installation, including automatic memory-provider migration.
+  # Default 300; values above 3600 are clamped. A subdirectory install
+  # (owner/repo/path/to/plugin) downloads only that folder's files.
+  clone_timeout_seconds: 300
   # Optional: wall-clock cap (seconds) for timeout-bounded in-process Python
   # plugin hook callbacks (hot-path observers + pre_tool_call). Default 30;
   # set 0 to disable; values above 600 are clamped. Timed-out pre_tool_call
@@ -793,7 +798,9 @@ CLI のとき:
 - 配送が終わるまで、経路と会話は固定されます。処理が始まる前に、話題の復元で経路が変わったり、セッションが入れ替わったりした場合、Hermes はその要求を捨てます。
 - 要求は、プラットフォームのアダプターの通常のメッセージの経路に入ります。動いているセッションでは、競合するターンを始めるのではなく、既存の「取り込み中」の待ち行列を使います。
 - 動いているゲートウェイが、非同期の配送のためにその要求を受け取ったとき `True` を返します。これは、エージェントのターンやプラットフォームへの配送が終わったことを示すものではありません。
-- `session_key` が無いとき、権限が与えられていないとき、要求を受け取れる動いているゲートウェイが無いときは `False` を返します。非同期に受け取ったあとで、セッションのキーが不明だったり経路が作れなかったりすることが分かった場合は、ゲートウェイのログに書かれます。
+- `session_key` が無いとき、権限が与えられていないとき、要求を受け取れる動いているホストが無いときは `False` を返します。非同期に受け取ったあとで、セッションのキーが不明だったり経路が作れなかったりすることが分かった場合は、ゲートウェイのログに書かれます。
+
+Ink TUI（`hermes --tui`）と、デスクトップ / ダッシュボードのチャットは、3 つ目のホストです。これらは従来の CLI への参照を設定せず、メッセージのゲートウェイの差し込み口にも登録しません。この 2 つのホストを分けておくことで、動いているゲートウェイが TUI を上書きしたり、その逆が起きたりしないようにしています。渡すのは、一時的な UI のセッション ID ではなく、そのセッションの長く保たれる `session_key`（`ses_…` の id）です。Hermes は、そのセッションのプロンプトの待ち行列に文章を積みます。取り込み中のセッションは次のターンのためにメッセージを取っておき、手が空いているセッションはすぐにターンを始めます。動いている TUI のセッションではないキーは、メッセージのゲートウェイが動いていればそちらに任され、別のチャットへ回されることはありません。
 
 これにより、遠隔の表示、メッセージの橋渡し、Webhook の受け口といったプラグインが、外部から会話へメッセージを流し込めるようになります。
 

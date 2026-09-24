@@ -2,7 +2,7 @@
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: 2a8b7de2a847a6b4fd18701696d60644b78fa52d
+upstream_blob: c2577cc0e8291001781f9dfbb118c5e182b67d1c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -84,6 +84,18 @@ gateway:
 
 どちらも既定値のままなら、セッション全体で1つのセッションスコープが保たれます。
 切り替えたスパンは同じ `session_id` を持ち、`hermes.session.segment` と `hermes.session.segment_reason`（`compaction` または `max_turns`）が加わります。
+
+## 作業ディレクトリのスコープデータ {#working-directory-scope-data}
+
+Hermes がセッションやタスクの論理的な作業ディレクトリを把握している場合、
+`hermes.session` と `hermes.turn` の開始スコープには、ATOF でそれが `data.cwd` として含まれます。
+そのため、タスクの worktree で動くターンは、それを持つセッションと値が異なることがあります。
+作業ディレクトリが分からない場合は省かれます。スコープ終了時のデータは、引き続き結果のために予約されています。
+
+作業ディレクトリは Relay のスコープ入力なので、ATOF だけでなく、有効になっているすべての
+Relay サブスクライバーから見えます。パスからはユーザー名、リポジトリ名、マウントの構成が分かることがあります。
+Relay は作業ディレクトリでイベントを絞り込みません。パスをホストの外に出したくない場合は、
+信頼できるローカルのコレクターを使うか、そのプロセスではリモートのエクスポーターを有効にしないでください。
 
 ## プロセス全体のプラグインポリシーとプロファイルの分離 {#process-wide-plugin-policy-and-profile-isolation}
 

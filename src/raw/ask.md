@@ -7,7 +7,7 @@ sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
-hermes_version: "0.21.4"
+hermes_version: "0.21.5"
 confidence: high
 raw: /hermes/raw/ask.md
 ---

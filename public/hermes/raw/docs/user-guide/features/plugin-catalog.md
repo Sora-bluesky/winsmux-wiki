@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: dc7e0d3caa70e437f71b8f179f83476c565caf46
+upstream_blob: d212a95aea46669ec154edc3745d7c2fd4007b51
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -85,7 +85,11 @@ hermes plugins install <name>
   そのコミットである、という点。加えて仕掛けが2つあります。受け入れ時の `desktop surface`
   lint がプラグイン SDK の外へ出る分かりやすい手口を拒みます（組み込みのプロトタイプへの
   パッチ、`eval`、`@hermes/plugin-sdk`/`react` 以外の読み込み、リモートのスクリプトの取り込み）。
-  そしてアプリのローダーが読み込み時にも SDK 以外の import をもう一度拒みます。この lint は
+  そしてアプリのローダーが読み込み時にも SDK 以外の import をもう一度拒みます。lint は `<script` を含む正規表現
+  （リテラル、または `.replace()`/`.split()`/`.match()` にそのまま渡すか `.test()`/`.exec()` で使う
+  `new RegExp(...)` のパターン文字列）を、注入ではなく本来の役目どおりの無害化処理として扱います。
+  一方、DOM に書き込まれる `<script` の文字列は、`new RegExp(...).source` から組み立てたものも含めて、
+  引き続き不合格になります。この lint は
   審査の助けであって保証ではないと考えてください。デスクトップ側にも Python 側と同じ目を
   向けてください。
 - **機能の宣言。** 各項目は、そのプラグインが提供するツール・フック・ミドルウェアと、必要な

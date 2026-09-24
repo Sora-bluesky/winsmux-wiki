@@ -2,7 +2,7 @@
 title: "WeCom（企業向け WeChat）"
 description: "AI Bot の WebSocket ゲートウェイ経由で Hermes Agent を WeCom につなぎます"
 upstream_path: user-guide/messaging/wecom.md
-upstream_blob: 3dec3bca94d2d1494d63a34a4772ebc7e4c10c02
+upstream_blob: fb90dbc438943a61a5f003d22baaca4d84a150c5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/wecom
 ---
@@ -102,8 +102,10 @@ hermes gateway
 WeCom のアダプターは、WeCom の `msgtype: "stream"` の仕組みをそのまま使って応答を流します。
 やり取りが始まるとすぐ、クライアントには考え中・入力中の吹き出しが出て、モデルが生成するそばから
 ひとつの吹き出しの中に応答が少しずつ描かれていきます。ツールを呼び出している途中経過も、同じ吹き出しに
-まとめられます。この流し込みは既定で有効です（`config.yaml` の `display.platforms.wecom.streaming: true`）。
-`false` にすると、これまでどおり応答を一度にまとめて届ける形に戻せます。
+まとめられます。この流し込みは全体のストリーミング設定に従い、その設定は既定で無効です。
+`config.yaml` で `streaming.enabled: true` にすると有効になります。WeCom 用の個別設定
+`display.platforms.wecom.streaming`（既定は `true`）は、全体の設定が有効なときにだけ効きます。
+`false` にすると、WeCom では応答を一度にまとめて届ける形のままにできます。
 :::
 
 ## 設定できる項目 {#configuration-options}

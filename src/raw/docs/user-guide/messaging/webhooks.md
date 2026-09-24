@@ -2,7 +2,7 @@
 title: "Webhook"
 description: "GitHub や GitLab などのサービスからイベントを受け取り、Hermes のエージェント実行を起こす"
 upstream_path: user-guide/messaging/webhooks.md
-upstream_blob: f4bbd1affb5c75f894c9f16a2e46c530a8b51db2
+upstream_blob: 55c70f41a1a95693e0f09190f773a65449547f9e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks
 ---
@@ -86,6 +86,7 @@ curl http://localhost:8644/health
 | `deliver_only` | いいえ | `true` にすると、エージェントを一切通しません。展開後の `prompt` テンプレートが、そのまま配信されるメッセージになります。LLM の費用はゼロで、1 秒未満で届きます。使いどころは[直接配信モード](#direct-delivery-mode)を参照してください。`deliver` に実際の送り先（`log` 以外）が必要です。 |
 | `cron_job` | いいえ | イベントのたびに新しい webhook のエージェントセッションを始める代わりに、既存の cron ジョブ（ID か名前で指定）を起動します。展開後の `prompt` は、その実行限りの一時的な文脈になり、ジョブ自身のプロンプト、スキル、モデル、配信設定が使われます。`deliver_only` とは同時に使えません。[イベントで起動する cron ジョブ](#event-triggered-cron-jobs)を参照してください。 |
 | `coalesce` | いいえ | 同じ対象に続けざまに届く別々のイベントを、待ってまとめ、1 回のエージェント実行にします。ブロックで指定し、`key`（対象を見分けるペイロードのフィールドかテンプレート。例: `pull_request.number`）は必須、`window_seconds`（静かな時間の長さ。既定 30）と `max_wait_seconds`（実行までの上限。既定 300）は省略できます。[イベントのまとめ](#event-coalescing)を参照してください。`deliver_only` や `cron_job` とは同時に使えません。 |
+| `mirror_to_session` | いいえ | 既定は `false`。`true` にすると、チャットプラットフォームへの配信に成功したあと、届けたメッセージをそのチャットのセッション記録にも書き込みます（続きのやり取りができる cron の報告と同じく、ラベル付きのユーザーの発言として入ります）。そのため、そのチャットで返信すると、エージェントは自分が直前に何を送ったかを分かっています。[配信への返信](#replying-to-a-delivery)を参照してください。 |
 
 ### 全体の例 {#full-example}
 
@@ -351,6 +352,14 @@ platforms:
 | `bluebubbles` | 応答を BlueBubbles（iMessage）へ送ります。ホームチャンネルを使うか、`deliver_extra` に `chat_id` を書きます。 |
 
 別のプラットフォームへ送る場合は、送り先のプラットフォームもゲートウェイで有効になっていて、接続済みである必要があります。`deliver_extra` に `chat_id` がなければ、そのプラットフォームに設定したホームチャンネルへ応答が届きます。
+
+### 配信への返信 {#replying-to-a-delivery}
+
+既定では、配信は送りっぱなしです。Webhook のイベントはそれぞれ別のセッションで動くので、届いたメッセージにそのチャットで返信しても、そこにいるエージェントには何を送ったかの記録がありません。ルートに `mirror_to_session: true` を設定する（または `hermes webhook subscribe` に `--mirror-to-session` を渡す）と、届けた文面が送り先チャットのセッションにも `[Webhook delivery: <route>]` に続く形で追記されます。そのため「じゃあ彼は休みなの？」のような続きの質問にも文脈が伝わります。
+
+- この書き写しはできる範囲で行うものです。これが原因で配信が失敗することはなく、そのチャットにまだゲートウェイのセッションがない（そこでエージェントと話した人がいない）場合は行われません。
+- `/p/<profile>/` のルートでは、そのプロファイルのチャット用セッションに書き込まれ、別のプロファイルのセッションには書き込まれません。
+- 書き写された文面は、あなたが送ったものとしてチャットの履歴に入ります。[`deliver_only`](#direct-delivery-mode) のルートでは、テンプレートを当てはめただけの生のペイロードがそのまま入ります。会話に入れても構わないと信頼できる内容の送り元（自分のサービスなど。公開の issue トラッカーは避ける）に限って有効にしてください。
 
 ---
 

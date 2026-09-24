@@ -2,7 +2,7 @@
 title: "Web 検索と本文抽出"
 description: "複数のバックエンドプロバイダで Web を検索し、ページ本文を抽出します。無料で自前運用できる SearXNG にも対応しています。"
 upstream_path: user-guide/features/web-search.md
-upstream_blob: caabfcb24f06b5b67d8454599ebbf0f38755ceec
+upstream_blob: cd9dee329727e9fbcb4182f9d897816091747c85
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-search
 ---
@@ -43,7 +43,7 @@ Web 系の認証情報が **まったくない** まっさらな環境でも、`
 **無料と有料を明示的に選ぶ:** `hermes tools` では、Exa・Parallel・Keenable がそれぞれ 2 行 — **Free（キーなし）** と **Paid（API キー）** — で表示されます。Free を選ぶとそのベンダーの匿名エンドポイントに固定されます（あとでキーを足しても変わりません）。Paid を選ぶとキーを使う経路に固定され、キーがなければ黙って無料枠に落ちるのではなくエラーになります。選択内容は `web.provider_tier.<name>: free|paid` として保存されます。未設定のままにすると自動判定（キーがあれば有料、なければキーなしリング）です。
 
 :::tip Nous のサブスクリプション利用者へ
-有料の [Nous Portal](https://portal.nousresearch.com) サブスクリプションがあれば、Web の検索と抽出はマネージドな Firecrawl 経由で **[Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/)** から使えます。API キーは不要です。新規インストールなら `hermes setup --portal` でログインして、ゲートウェイのツールをまとめて有効にできます。すでに使っている環境なら、`hermes tools` で Web だけ切り替えられます。
+有料の [Nous Portal](https://portal.nousresearch.com) サブスクリプションがあれば、Web の検索と抽出を、Nous が運用する Web 検索として **[Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/)** から使えます。API キーは不要です。新規インストールなら `hermes setup --portal` でログインして、ゲートウェイのツールをまとめて有効にできます。すでに使っている環境なら、`hermes tools` で Web だけ切り替えられます。
 :::
 
 ---
@@ -438,7 +438,8 @@ web:
 | `PERPLEXITY_API_KEY` | perplexity |
 | `EXA_API_KEY` | exa |
 | `PARALLEL_API_KEY` | parallel |
-| `FIRECRAWL_API_KEY` または `FIRECRAWL_API_URL`（あるいは Nous Tool Gateway が使える状態） | firecrawl |
+| `FIRECRAWL_API_KEY` または `FIRECRAWL_API_URL` | firecrawl |
+| Nous Tool Gateway が使える状態（Portal のサブスクリプション） | Tool Gateway 経由の、Nous が運用する Web 検索 |
 | `SEARXNG_URL` | searxng |
 | `BRAVE_SEARCH_API_KEY` | brave-free |
 | `ddgs` パッケージが import 可能 | ddgs |

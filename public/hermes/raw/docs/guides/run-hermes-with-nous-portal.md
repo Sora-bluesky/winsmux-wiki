@@ -2,7 +2,7 @@
 title: "Nous Portal で Hermes Agent を動かす"
 description: "契約から設定、モデルの切り替え、ゲートウェイのツール有効化、経路の確認まで一通りの手順"
 upstream_path: guides/run-hermes-with-nous-portal.md
-upstream_blob: 75ecba41d26552d56497c93dce48c6f0477d5c08
+upstream_blob: 8cda466a76a271b8194a15110f9a6e1660154df4
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/run-hermes-with-nous-portal
 ---
@@ -17,7 +17,7 @@ sources:
 - 設定する端末で使えるウェブブラウザー（または SSH のポート転送。[SSH 越しの OAuth](/hermes/docs/guides/oauth-over-ssh/) を参照）
 - 5 分ほどの時間
 
-必要 **ない** ものもあります。OpenAI のキー、Anthropic のキー、Firecrawl のアカウント、FAL のアカウント、Browser Use のアカウント、その他ベンダーごとの認証情報はどれもいりません。それこそがこの仕組みの狙いです。
+必要 **ない** ものもあります。OpenAI のキー、Anthropic のキー、ウェブ検索のアカウント、FAL のアカウント、Browser Use のアカウント、その他ベンダーごとの認証情報はどれもいりません。それこそがこの仕組みの狙いです。
 
 ## 1. 契約する {#1-get-a-subscription}
 
@@ -94,7 +94,7 @@ hermes chat
 Hey, search the web for "Hermes Agent release notes" and summarize the top 3 hits.
 ```
 
-Hermes が（ゲートウェイ経由で Firecrawl を使う）`web_search` を呼び出し、要約を返すはずです。検索が走って、返ってきた内容に筋が通っていれば完了です。Portal が端から端までつながっています。
+Hermes が（ゲートウェイ経由の）`web_search` を呼び出し、要約を返すはずです。検索が走って、返ってきた内容に筋が通っていれば完了です。Portal が端から端までつながっています。
 
 ## 5. 本当に使いたいモデルを選ぶ {#5-pick-the-model-you-actually-want}
 
@@ -260,7 +260,7 @@ hermes auth logout nous       # wipes the local refresh token
 | Portal を使わない場合 | Portal を使う場合 |
 |----------------|-------------|
 | `.env` に OpenRouter / Anthropic / OpenAI のキーを 1 本 | OAuth の更新用トークンを 1 つ。`.env` にキーは不要 |
-| ウェブ用に Firecrawl のキーを 1 本 | ウェブはゲートウェイ経由 |
+| ウェブ検索のキーを 1 本 | ウェブはゲートウェイ経由 |
 | 画像生成用に FAL のキーを 1 本 | 画像生成はゲートウェイ経由 |
 | ブラウザー用に Browser Use / Browserbase のキーを 1 本 | ブラウザーはゲートウェイ経由 |
 | 音声合成・音声モード用に OpenAI のキーを 1 本 | 音声合成はゲートウェイ経由 |

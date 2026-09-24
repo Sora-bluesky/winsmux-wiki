@@ -2,7 +2,7 @@
 title: "プロファイル配布: エージェントまるごと共有する"
 description: ""
 upstream_path: user-guide/profile-distributions.md
-upstream_blob: 0ea7f46dda67d31f5e6c53a24fb67817039a1b26
+upstream_blob: 036f3b03edb3e14ce7e82f46444074944e4105e1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profile-distributions
 ---
@@ -208,9 +208,16 @@ backups/
 # Logs
 errors.log
 .hermes_history
+
+# Distribution-authored scheduler/skills state only
+cron/*
+!cron/jobs.json
+skills/.*
 ```
 
 これは、導入する側で installer が取り除く [完全に除外されるパス](#whats-not-in-a-distribution-ever) と対応しています。ほかにリポジトリへ入れたくないもの（作業用の一時ファイル、大きな素材、ローカル専用のスキル）も、ここに書き足してください。
+
+cron については `cron/jobs.json` だけをコミットします。Hermes は `cron/` の下にあるそれ以外の項目をすべて実行時の状態（ロック、台帳、出力、提案、今後増えるスケジューラーの付随ファイル）として扱い、配布からインストールしたり置き換えたりすることはありません。`skills/` の直下にある隠し項目も、同じく Hermes がローカルで使う管理用のデータです。一方、作者が作ったスキルのディレクトリの中にある隠しファイルは、そのスキルの一部として扱われます。
 
 ### 手順4 — git リポジトリへ push する {#step-4-push-to-a-git-repo}
 
@@ -260,7 +267,7 @@ research-bot/
 │   ├── paper-summarization/SKILL.md
 │   └── citation-lookup/SKILL.md
 ├── cron/
-│   └── weekly-digest.json       # scheduled tasks
+│   └── jobs.json                # cron definitions; installed paused
 └── README.md                    # human-facing description (optional)
 ```
 
@@ -270,7 +277,7 @@ research-bot/
 
 | 区分 | パス | 更新したとき |
 |---|---|---|
-| **配布側のもの** | `SOUL.md`, `config.yaml`, `mcp.json`, `skills/`, `cron/`, `distribution.yaml` | ファイルは新しいクローンの内容に置き換わります。ディレクトリは項目ごとにまとめます。新しいクローンに入っているスキルや cron の仕事は、それぞれ対応するものを丸ごと置き換えます（作者がやめたファイルは消えます）。自分で足したスキルや cron の仕事はそのまま残ります。 |
+| **配布側のもの** | `SOUL.md`, `config.yaml`, `mcp.json`, `skills/`, `cron/jobs.json`, `distribution.yaml` | ファイルは新しいクローンの内容に置き換わります。スキルのディレクトリは項目ごとにまとめます。`cron/jobs.json` はジョブの id ごとにまとめます。配布に入っている定義はその場で更新され、自分で足したジョブと、各ジョブの一時停止・有効の状態は残ります。新しく配布に入ったジョブは一時停止の状態で届きます。`cron/` のほかのファイルと、`skills/` 直下の隠しメタデータは実行時の状態なので、手元に残ります。 |
 | **設定の上書き** | `config.yaml` | 実際には既定で保持されます。導入した人がモデルやプロバイダーを調整しているかもしれないためです。更新時に `--force-config` を付けると初期状態に戻ります。 |
 | **利用者側のもの** | `memories/`, `sessions/`, `state.db*`, `auth.json`, `.env`, `logs/`, `workspace/`, `plans/`, `home/`, `*_cache/`, `local/` | 触れられません |
 
@@ -280,7 +287,7 @@ research-bot/
 distribution_owned:
   - SOUL.md
   - skills/research/            # only my research skills; other installed skills stay
-  - cron/digest.json
+  - cron/jobs.json              # canonical cron store; merged job by job
 ```
 
 省いた場合は上記の既定が適用されます。たいていの配布はそれで足ります。
@@ -408,7 +415,7 @@ hermes profile update research-bot
 このとき何が起きるか:
 
 1. 記録してある取得元 URL から、リポジトリを再びクローンします。
-2. 配布側のファイル（SOUL、mcp.json）と、配布に入っているスキルや cron の仕事をすべて置き換えます。自分でプロファイルに足したスキルや cron の仕事には手を付けません。
+2. 配布側のファイル（SOUL、mcp.json）と配布に入っているスキルを置き換え、そのあと `cron/jobs.json` をジョブの id ごとにまとめます。自分のジョブは残り、配布に入っているジョブの定義は、一時停止・有効の選択を変えずに更新されます。新しく配布に入ったジョブは一時停止の状態で届きます。
 3. `config.yaml` は **保持します**。モデルや temperature などを自分で調整しているかもしれないためです。上書きしたいときは `--force-config` を付けます。
 4. 利用者のデータ、つまりメモリー、セッション、認証情報、`.env`、ログ、状態には **一切触れません**。
 
@@ -722,7 +729,7 @@ tar -tzf research-bot.tar.gz | less
 - **git のホスト**（GitHub / GitLab など）が、作者の push したバイト列をそのまま配ること。
 - **作者** が、悪意のある SOUL やスキル、cron ジョブを同梱しないこと。
 
-配布に含まれる cron ジョブは **自動では登録されません**。installer が `hermes -p <name> cron list` を表示するので、自分で明示的に有効にします。一方 SOUL.md とスキルは、そのプロファイルとチャットを始めた時点でもう効いています。知らない相手の配布を入れるなら、最初に動かす前に中身を読んでください。
+配布に含まれる cron ジョブは **自動では登録されません**。新しく配布に入ったジョブは一時停止の状態でインストールされます。`hermes -p <name> cron list` で中身を確かめ、信頼できるジョブだけを再開してください。一方 SOUL.md とスキルは、そのプロファイルとチャットを始めた時点でもう効いています。知らない相手の配布を入れるなら、最初に動かす前に中身を読んでください。
 
 大まかにたとえるなら、配布を入れるのはブラウザ拡張や VS Code の拡張を入れるのに似ています。手間は小さく、力は大きく、出どころを信頼して使うものです。社内向けの配布ならプライベートリポジトリと普段の git 認証をそのまま使えます。新しく設定するものはありません。
 

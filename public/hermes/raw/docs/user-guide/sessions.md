@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 64ef5b6590c07d7b3d1f57ee5e495daf204d612a
+upstream_blob: 6362ff984a43e9761dddbdc7f2c1a6fb4b790ecd
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -730,10 +730,12 @@ hermes sessions set-journal-mode delete --db ~/.hermes/kanban.db   # another Her
 いなくなるのを待たずにモードを切り替え（途中で掴むプロセスが現れた場合は、競合させずに
 SQLite が拒否します）、ファイルのヘッダーが新しいモードになったことを確かめます。
 設定と食い違うときは、`database.journal_mode` を同じ値にするよう促します。次に開くときに
-設定したモードがもう一度適用されるためです。掴んでいるプロセスの確認はローカルかつ
-POSIX 専用なので、同じボリュームを共有する別のコンテナや VM のプロセスは見えません。
-Windows ではこの確認がまったく行われないため、Hermes のプロセスをすべて自分で止めたうえで
-`--force` を付けない限り、コマンドは最初から実行を断ります。ストアが VM をまたぐ
+設定したモードがもう一度適用されるためです。掴んでいるプロセスの確認はローカルで行われる
+（Linux/macOS では開いているファイルの一覧、Windows では Restart Manager を使います）ため、
+同じボリュームを共有する別のコンテナや VM のプロセスは見えません。確認そのものが失敗した場合は、
+ストアが静かな状態だと証明できないので、コマンドは実行を断ります。`--force` が免除するのは
+この場合だけで、Hermes のプロセスをすべて自分で止めたあとに使います。確認で見つかったプロセスが
+あるときは、どんな場合でも断られます。ストアが VM をまたぐ
 ファイルシステム（virtiofs/9p）にある場合も、WAL の有効化は断られます。そこでは WAL の
 共有メモリが気づかないうちに壊れるためです。
 
