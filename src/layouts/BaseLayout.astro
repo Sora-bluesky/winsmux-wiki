@@ -102,7 +102,8 @@ const jsonLd: Record<string, unknown>[] = [
 ];
 if (crumbSegs.length > 0) {
   const items = [{ name: 'ホーム', item: 'https://wiki.winsmux.dev/hermes/' } as { name: string; item?: string }]
-    .concat(crumbs.map((c) => ({ name: c.label, ...(c.href ? { item: `https://wiki.winsmux.dev${c.href}` } : {}) })))
+    // Google は最後以外の ListItem に item（URL）を必須とする。ページの無い中間階層（画面ではテキスト表示）は構造化データから外す
+    .concat(crumbs.filter((c) => c.href).map((c) => ({ name: c.label, item: `https://wiki.winsmux.dev${c.href}` })))
     .concat([{ name: title }]);
   jsonLd.push({
     '@context': 'https://schema.org',
