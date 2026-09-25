@@ -2,7 +2,7 @@
 title: "Evaluating Llms Harness — lm-eval-harness で LLM を評価する（MMLU、GSM8K など）"
 description: "lm-eval-harness で LLM を評価する（MMLU、GSM8K など）"
 upstream_path: user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness.md
-upstream_blob: e16931a1edf06d00876e7e3e3c8e25001d175030
+upstream_blob: 166fb6e67fb7478dfcc7f6ec09f70f819658d765
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness
 ---
@@ -186,7 +186,7 @@ Training Progress Tracking:
 学習ステップ N ごとに評価します。
 
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # eval_checkpoint.sh
 
 CHECKPOINT_DIR=$1
@@ -289,7 +289,7 @@ microsoft/phi-2
 **ステップ 2: 評価を実行する**
 
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # eval_all_models.sh
 
 TASKS="mmlu,gsm8k,hellaswag,truthfulqa"

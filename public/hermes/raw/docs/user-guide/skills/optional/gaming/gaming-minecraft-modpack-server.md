@@ -2,7 +2,7 @@
 title: "Minecraft Modpack Server — MOD 入りの Minecraft サーバーを立てる（CurseForge、Modrinth）"
 description: "MOD 入りの Minecraft サーバーを立てる（CurseForge、Modrinth）"
 upstream_path: user-guide/skills/optional/gaming/gaming-minecraft-modpack-server.md
-upstream_blob: 4b8f0ec356c9f1fcb9fb26d9ca52f40ff9703df9
+upstream_blob: 73a8e3093a4fafae68ae4cbf2a1b4aba90f1f085
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server
 ---
@@ -152,7 +152,7 @@ sudo ufw allow 25565/tcp comment "Minecraft Server"
 ### 8. 起動スクリプトを作る {#8-create-launch-script}
 ```bash
 cat > ~/start-minecraft.sh << 'EOF'
-#!/bin/bash
+#!/usr/bin/env bash
 cd ~/minecraft-server/server
 java @user_jvm_args.txt @libraries/net/neoforged/neoforge/<VERSION>/unix_args.txt nogui
 EOF
@@ -164,7 +164,7 @@ chmod +x ~/start-minecraft.sh
 バックアップ用のスクリプトを作ります。
 ```bash
 cat > ~/minecraft-server/backup.sh << 'SCRIPT'
-#!/bin/bash
+#!/usr/bin/env bash
 SERVER_DIR="$HOME/minecraft-server/server"
 BACKUP_DIR="$HOME/minecraft-server/backups"
 WORLD_DIR="$SERVER_DIR/world"

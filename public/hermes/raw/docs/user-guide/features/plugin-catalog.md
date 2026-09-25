@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: d212a95aea46669ec154edc3745d7c2fd4007b51
+upstream_blob: feda75c8cf4303b2a1bb6d6f6a308012ec939f17
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -19,7 +19,7 @@ hermes plugins install <name>
 見て選びたいときは **[/docs/plugins](https://hermes-agent.nousresearch.com/plugins)** を開いてください。
 カテゴリ（メモリ、デスクトップ、プラットフォーム、Web とブラウザ、ツール、音声、自動化、
 モデル）ごとに棚が分かれていて、検索、ティア絞り込み（公式 / コミュニティ）、機能チップ、
-そして各項目のコピーできるインストールコマンドが並びます。
+そして各項目の **Open in Hermes Desktop** ボタンとコピーできる CLI コマンドが並びます。
 
 カード（クリックできます）ごとに専用ページ `/docs/plugins/<name>` もあります。
 説明の全文と注意書き、固定されたコミット、ツール・フック・環境変数、デスクトップ用の
@@ -28,6 +28,11 @@ hermes plugins install <name>
 その人がカタログで保守しているものがすべて並びます。どちらも同じカタログファイルからビルド時に
 生成されるので、ページが変わるのは PR がマージされたときだけです。
 
+デスクトップでは **Capabilities → Plugins → Browse** を開くと、ネイティブのカタログ画面が出ます。
+Web サイトを埋め込んだものではありません。**Installed** は別のタブで、カタログの情報ではなく、
+アプリのデスクトッププラグインの登録内容と、選んでいるプロファイルのエージェントプラグインの状態をもとに表示します。
+Skills も同じ **Installed / Browse** の配置で、検索欄は上に固定され、タブの切り替えと操作ボタンは同じ行に並びます。
+
 カタログは既存の[プラグインの仕組み](/hermes/docs/user-guide/features/plugins/)を置き換えるものではなく、補うものです。
 カタログから入れたものも中身はふつうのプラグインで、カタログは見つけやすさと審査の層を
 その上に足しているだけです。
@@ -35,6 +40,19 @@ hermes plugins install <name>
 デスクトップのオンボーディング中には、セットアップガイドが承認カードを通じてカタログのプラグインやスキルを
 勧めることもあります。各行は Install をクリックしたときにだけ `default` プロファイルに入り、
 このページで説明しているのと同じ審査済みのコミットが使われます。
+
+### 公開されている閲覧用データ {#published-browse-data}
+
+Web サイトとデスクトップは、生成された同じ CDN のスナップショットを読みます:
+[`https://hermes-agent.nousresearch.com/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json)。
+デスクトップは
+`https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` から取得し、公開の
+ドキュメント側の別名も同じデータを返します。ドキュメントのビルドは `plugin-catalog/*.yaml` を読み、
+キャッシュしたリポジトリのスター数を加えます。インストーラー用の削除済み項目の一覧も公開します。
+どちらの Browse 画面も、元のリポジトリを巡回したり、GitHub API をその場で問い合わせたりはしません。
+
+この閲覧用スナップショットは、カタログ上の名前と固定値を解決するインストーラーの
+[`plugin-catalog.json`](#live-refresh) とは別物です。
 
 ## 項目の中身 {#whats-in-an-entry}
 
@@ -114,6 +132,21 @@ hermes plugins install <name>
 
 ## カタログから入れる {#installing-from-the-catalog}
 
+Web サイトの **Open in Hermes Desktop** は、次の形のプロトコルリンクを開きます。
+
+```text
+hermes://plugin/install?catalog=example-plugin
+```
+
+デスクトップは公開カタログからその名前を解決し、確定する前に取得元・入れ先・構成要素を確認するよう求めます。
+リンクが勝手にインストールしたり、独自のリポジトリやコミットを指定したりすることはありません。
+名前が見つからないときや照会に失敗したときはエラーを表示し、リポジトリからのインストールに切り替わることはありません。
+エージェントプラグインの構成要素については、バックエンドがカタログ上の名前を審査済みの固定値へ解決します。
+
+カタログのリンクと Skills Hub の `hermes://skill/install?identifier=...` のルートを使うには、
+更新済みのデスクトップ版を使ってください。カードには CLI コマンドも残っているので、
+デスクトップが無くてもカタログ上の名前で入れられます。
+
 ```bash
 # Install a reviewed catalog entry by name (checks out the pinned SHA)
 hermes plugins install <name>
@@ -150,7 +183,7 @@ hermes plugins enable snyk
 
 `hermes plugins update <name>` は、カタログから入れたものに対して `git pull` を走らせることは
 ありません。手元の固定値と現在のカタログの固定値を比べて、カタログ側が（レビュー付きの PR で）
-動いていたら、新しい SHA で強制的に入れ直します。有効・無効の状態はそのまま引き継がれ、
+動いていたら、新しい SHA を準備して依存関係を検証してから、それを公開します。有効・無効の状態はそのまま引き継がれ、
 プラグインのリポジトリが管理していないファイル（`.example` から作った `config.yaml`、データ
 ファイル、`.env`）も残ります。*管理下の*ファイルに加えた変更は新しいコードへは持ち越されません。
 写しが `~/.hermes/plugins-backup/<name>-<sha>/` に保存され、更新時に警告が出ます。
@@ -158,12 +191,17 @@ hermes plugins enable snyk
 有効フラグは新しい名前へ移ります。`hermes plugins list` はカタログから入れたものを
 `catalog:<tier>@<sha>` と表示するので、出どころがひと目で分かります。
 
+有効なプラグインについては、新しいコードで入れ替える前に PM が依存関係を検証します。バージョン、走査、
+依存関係、公開のどこかで失敗した場合は、動いているコードと依存関係の選択がそのまま残ります。
+無効にしてあるプラグインは無効のままです。
 出どころはインストーラーが `~/.hermes/plugins/.install-metadata.json` に記録します。
 プラグイン自身のツリーの外なので、審査済みのカタログ経由に見せかけるファイルをリポジトリ側が
 同梱することはできません。（プラグインのディレクトリにある `.hermes-catalog.json` は便宜上の
 写しにすぎません。）カタログの項目を `--ref <sha>` を付けて入れた場合は、実際にチェックアウト
 した SHA が記録されるので、`list`、デスクトップのプラグインタブ、`update` のいずれもが
 「審査された固定値から外れている」と報告します。
+カスタムの Git プラグインは、記録された Git やフィードの更新方針を保ちつつ、
+同じ PM の検証と公開の流れを通ります。
 
 ### カタログに無い名前 {#names-not-in-the-catalog}
 

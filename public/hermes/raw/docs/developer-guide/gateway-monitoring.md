@@ -2,7 +2,7 @@
 title: "ゲートウェイの監視"
 description: "ヘルス情報のエクスポート、構造化された診断、フリート全体のクエリ、監視の仕組みを拡張する方法"
 upstream_path: developer-guide/gateway-monitoring.md
-upstream_blob: 216aebffb081b34e92c0ed54e4f5775db4feed23
+upstream_blob: 8963c052e46ba793f39238d4aff716256226635e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-monitoring
 ---
@@ -68,8 +68,9 @@ monitoring:
 hermes monitoring status
 ```
 
-OpenTelemetry SDK は任意の追加パッケージ（`pip install 'hermes-agent[otlp]'`）で、
-初めて使うときに自動でインストールされます。SDK が無い場合や送り先が停止している場合でも、
+OpenTelemetry SDK は追加パッケージ `otlp` に含まれ、ポリシーが許せば初めて使うときに
+インストールされます。準備済みのチェックアウトから明示的に入れたい場合は
+`python -c "import pm; pm.sync_venv(['otlp'], explicit=True)"` を実行します。SDK が無い場合や送り先が停止している場合でも、
 ゲートウェイの動作には影響しません。メトリクスの収集と通常のイベントのエクスポートは
 処理の中心経路から外れており、cron の終端イベントだけは最終状態を失いにくくするため、
 最大1秒の fail-open なフラッシュを1回だけ試みます。

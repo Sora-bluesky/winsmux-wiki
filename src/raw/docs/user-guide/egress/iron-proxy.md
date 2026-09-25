@@ -2,7 +2,7 @@
 title: "外向き通信に資格情報を差し込むプロキシ（iron-proxy）"
 description: ""
 upstream_path: user-guide/egress/iron-proxy.md
-upstream_blob: f38cbfa33a85b4d3c2623ba3110f57d70f8e65be
+upstream_blob: 2a7c2d9c4e1906786b3ff8a387a7f44560ec040a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/egress/iron-proxy
 ---
@@ -17,7 +17,7 @@ Hermes が Docker のターミナルサンドボックスの中でエージェ�
 
 ## これは何か {#what-it-is}
 
-- ホスト上で管理される `iron-proxy` のサブプロセス。必要になった時点で `~/.hermes/bin/iron-proxy` へ導入されます
+- ホスト上で動く `iron-proxy` のサブプロセス。版を固定したバイナリは PM のツール置き場にあります
 - `~/.hermes/proxy/ca.crt` に置かれるローカルの CA。サンドボックス側がこれを信頼するので、iron-proxy は TLS を横取りしてヘッダーを書き換えられます
 - `~/.hermes/proxy/proxy.yaml` に置かれる `proxy.yaml` 設定。許可する上流ホストと、秘密情報の差し替え対応表を書いておきます
 - どのプロキシ用トークンがどの本物の環境変数に対応するかを記録した `mappings.json`
@@ -225,7 +225,7 @@ CLI のサブコマンドの構成です。
 
 ```
 hermes egress install                  # download the pinned iron-proxy binary
-hermes egress install --force          # re-download even if a managed copy exists
+hermes egress install --force          # check and repair the managed copy
 
 hermes egress setup                    # interactive wizard
 hermes egress setup --tunnel-port N    # override the tunnel listener port
@@ -286,7 +286,14 @@ hermes egress start
 
 ## 状態ディレクトリの構成 {#state-directory-layout}
 
-iron-proxy が保つものはすべて `~/.hermes/proxy/` の中にあります。
+管理対象のバイナリは PM が持ちます。Hermes は PM の選択を確かめる前に、
+`PATH` 上の `iron-proxy` 実行ファイルがあればそれを使います。どちらも無い場合は、`auto_install` が版を固定したパッケージを要求します。これは
+PM の遅延インストールの方針に従います。明示的にインストールを実行すると、管理対象の
+項目を確認して修復しますが、正しいファイルを強制的にダウンロードし直すことはしません。ハッシュと署名の確認については
+[PM のセキュリティツール](/hermes/docs/reference/package-management/#optional-security-tools)を参照してください。
+
+デーモンの設定・認証情報・ログは、これまでどおりプロファイルごとに
+`$HERMES_HOME/proxy/`（既定では `~/.hermes/proxy/`）の中にあります。
 
 | パス | モード | 用途 |
 |---|---|---|

@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: 0af1431dee44fa6f40b96ad43f2aecbd07126ff6
+upstream_blob: 357a5540e2e317383515735bbafd88786ef61fb7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -45,10 +45,10 @@ Spaces が勝手に切り替わることもありません。同じ機械の上�
 
 ## 有効にする {#enabling}
 
-**新しくインストールした環境には、すでにドライバーが入っています。** Hermes の
-インストーラー（`install.sh` / `install.ps1`）が `cua-driver` を先に入れておくので
-（可能な範囲で。`--skip-computer-use` / `-SkipComputerUse` を渡せば見送れます）、
-コンピュータ操作を使うには設定を切り替えるだけです。
+**ドライバーは PM が管理するツールです。** `cua-driver` の版は
+`pm/lock.json` で固定されています。インストーラーはこれを前もって取ってきません
+（`--skip-computer-use` / `-SkipComputerUse` というフラグもありません）。
+何かが初めてコンピュータ操作を有効にしたときに用意されます。
 
 - **`hermes tools`** → `🖱️  Computer Use` を選びます。まだ入っていなければ
   ドライバーを自動でインストールします。
@@ -56,21 +56,21 @@ Spaces が勝手に切り替わることもありません。同じ機械の上�
   ドライバーが無ければ、その操作が背後でインストールを自動的に始めます
   （進み具合はツール群のパネルで見られます）。
 
-**手で入れる場合（古い環境や、インストーラーの手順を飛ばした場合）:**
+**手で入れる・修復する場合:**
 
 ```
 hermes computer-use install
 ```
 
-これは上流の cua-driver のインストーラーを取ってきて実行します。macOS と Linux では
-`install.sh`、Windows では `install.ps1` です。入ったかどうかは `hermes computer-use
-status` で確かめられます。
+これは、版を固定した `cua-driver` パッケージの用意を PM に頼みます（中身は
+`pm/lock.json` と照合されます）。上流のインストーラーは実行しません。入ったかどうかは
+`hermes computer-use status` で確かめられます。
 
 すでに cua-driver がありますか。0.20 のランタイムの取り決めに対応していれば、Hermes は
 それをそのまま使います。セットアップ時、ツール群を有効にしたとき、`hermes update` のとき、
 そしてセッションで最初に `computer_use` を呼んだときに、Hermes は手元のバージョンと
-マニフェストを確認します。標準の入れ方をした古い、あるいは不完全なものは、上流の
-インストーラーを通して修復します（実行中は 1 セッションにつき最大 1 回）。
+マニフェストを確認します。標準の入れ方をした古い、あるいは不完全なものは、
+PM を通して修復します（実行中は 1 セッションにつき最大 1 回）。
 `HERMES_CUA_DRIVER_CMD` で指定したバイナリは
 あなたの管理下にあるものなので、Hermes は非互換を報告するだけで、手を加えません。
 

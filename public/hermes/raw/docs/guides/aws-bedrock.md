@@ -2,12 +2,16 @@
 title: "AWS Bedrock"
 description: "Hermes Agent を Amazon Bedrock で使う — ネイティブの Converse API、Anthropic SDK 経由の振り分け、Bedrock Mantle 経由の OpenAI モデル、IAM 認証、Guardrails、クロスリージョン推論"
 upstream_path: guides/aws-bedrock.md
-upstream_blob: 2c83542215d181f3f5fdcbf8168b364227fef281
+upstream_blob: 1ebb312223d5bbb8807ad860cac300e1f30295b2
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/aws-bedrock
 ---
 
 # AWS Bedrock {#aws-bedrock}
+
+このページの Python 依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 Hermes Agent は Amazon Bedrock をネイティブのプロバイダーとして扱います。そのため Bedrock のエコシステムをそのまま使えます。IAM 認証、Guardrails、クロスリージョン推論プロファイル、そしてすべての基盤モデルが対象です。
 
@@ -28,7 +32,7 @@ Hermes は、モデルの系統ごとに最も適した API へ振り分けま�
   - `AWS_ACCESS_KEY_ID` と `AWS_SECRET_ACCESS_KEY` の環境変数
   - SSO や名前付きプロファイルを使う場合の `AWS_PROFILE`
   - ローカル開発なら `aws configure`
-- **boto3** — `cd ~/.hermes/hermes-agent && uv pip install -e ".[bedrock]"` を実行すると入ります。
+- **boto3** — `cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['bedrock'], explicit=True)"` を実行すると入ります。
 - **IAM の権限** — 最低限、次のものが必要です。
   - 推論のための `bedrock:InvokeModel` と `bedrock:InvokeModelWithResponseStream`
   - モデル検出のための `bedrock:ListFoundationModels` と `bedrock:ListInferenceProfiles`
@@ -42,7 +46,7 @@ AWS 上で動かすなら、`AmazonBedrockFullAccess` を付けた IAM ロール
 
 ```bash
 # Install with Bedrock support
-cd ~/.hermes/hermes-agent && uv pip install -e ".[bedrock]"
+cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['bedrock'], explicit=True)"
 
 # Select Bedrock as your provider
 hermes model

@@ -2,7 +2,7 @@
 title: "Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む"
 description: "OpenClaw の設定（記憶、skill）を Hermes に取り込む"
 upstream_path: user-guide/skills/optional/migration/migration-openclaw-migration.md
-upstream_blob: 404debafbc1cf3e6b299b890c6be757c7b06d72d
+upstream_blob: 9789585e86e6730ed86d607f15268ae3555347d5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/migration/migration-openclaw-migration
 ---
@@ -244,6 +244,9 @@ Hermes の CLI は対話用に `clarify` ツールを備えていますが、次
 補助スクリプトは分類ごとの `--include` / `--exclude` にも対応していますが、これは通常の流れではなく、上級者向けの逃げ道として扱ってください。
 
 ## コマンド {#commands}
+
+補助スクリプトは、`ruamel.yaml` を含む Hermes の Python 環境で実行してください。
+Hermes とは別の Python 環境で動かす場合は、先に `ruamel.yaml==0.18.17` を入れておきます。
 
 すべてを洗い出す試し実行:
 

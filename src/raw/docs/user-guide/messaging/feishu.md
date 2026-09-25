@@ -2,12 +2,16 @@
 title: "Feishu / Lark"
 description: "Hermes Agent を Feishu または Lark の Bot として設定します"
 upstream_path: user-guide/messaging/feishu.md
-upstream_blob: 42632cc40587743a2aaa481bee9686cf1c18c86b
+upstream_blob: 21cecb31fbb2a7181b521ba5285f8901aa040c16
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu
 ---
 
 # Feishu / Lark の設定 {#feishu-lark-setup}
+
+このページにある Python の依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存関係を変えたら、チェックアウトを有効化し直してから Hermes を再起動してください。
 
 Hermes Agent は、Feishu と Lark に本格的な Bot として組み込めます。つないでしまえば、個別のチャットでもグループチャットでもエージェントと会話でき、定期タスクの結果をホームチャットで受け取り、テキスト・画像・音声・ファイルの添付を通常のゲートウェイの流れでやり取りできます。
 
@@ -580,9 +584,9 @@ WebSocket とグループごとのアクセス制御の設定は、`config.yaml`
 
 | 症状 | 対処 |
 |---------|-----|
-| `lark-oapi not installed` | SDK を入れます: `pip install lark-oapi` |
-| `websockets not installed; websocket mode unavailable` | websockets を入れます: `pip install websockets` |
-| `aiohttp not installed; webhook mode unavailable` | aiohttp を入れます: `pip install aiohttp` |
+| `lark-oapi not installed` | SDK を入れます: `python -c "import pm; pm.sync_venv(['feishu'], explicit=True)"` |
+| `websockets not installed; websocket mode unavailable` | websockets を入れます: `hermes pm repair` |
+| `aiohttp not installed; webhook mode unavailable` | aiohttp を入れます: `python -c "import pm; pm.sync_venv(['messaging'], explicit=True)"` |
 | `FEISHU_APP_ID or FEISHU_APP_SECRET not set` | 両方の環境変数を設定するか、`hermes gateway setup` で設定します |
 | `Another local Hermes gateway is already using this Feishu app_id` | 同じ app_id を同時に使える Hermes は 1 つだけです。先に別のゲートウェイを止めてください。 |
 | グループで Bot が応答しない | Bot が @ メンションされているか確かめ、`FEISHU_GROUP_POLICY` を見直し、方針が `allowlist` なら送信者が `FEISHU_ALLOWED_USERS` に入っているか確かめます |

@@ -2,7 +2,7 @@
 title: "Har Derived Api Client — サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす"
 description: "サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす"
 upstream_path: user-guide/skills/optional/web-development/web-development-har-derived-api-client.md
-upstream_blob: ac19dd52db38c3f9367261ecce2c7e6d6f02bb2d
+upstream_blob: c800c5136f0f07976884f5b4d8646354dd6cd31c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client
 ---
@@ -60,7 +60,7 @@ Browser-Use、Firecrawl）、そして `/browser connect` でつなぐ CDP の�
 ## 事前に必要なもの {#prerequisites}
 
 - Playwright とブラウザー本体（記録のときだけ）:
-  - `pip install playwright` のあと `playwright install chromium`
+  - `pip install playwright` のあと `playwright install chromium --no-shell`
   - （システムの Playwright が `~/.cache/ms-playwright` にブラウザーを持っているなら、それを使い回してください。）
 - 再現には `requests` か `httpx`（標準ライブラリーの `urllib` でも動きます）。
 - API キーは要りません。クライアントに必要なキーやトークンは、HAR に記録されたものです。

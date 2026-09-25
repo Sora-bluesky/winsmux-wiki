@@ -2,7 +2,7 @@
 title: "同梱のプラグイン"
 description: "Hermes Agent に最初から入っていて、節目ごとのフックで自動的に動くプラグイン群 — disk-cleanup とその仲間たち"
 upstream_path: user-guide/features/built-in-plugins.md
-upstream_blob: 1afafcf34ef76363ebb6962e3e8a5d5ecdaf8a59
+upstream_blob: 647b73165a250ad19e65a804783a9e62b756ab92
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins
 ---
@@ -153,16 +153,24 @@ Hermes のターン、LLM の呼び出し、ツールの実行を [Langfuse](htt
 hermes tools          # → Langfuse Observability → Cloud or Self-Hosted
 ```
 
-案内役が鍵を聞き取り、`langfuse` の SDK を `pip install` し、`plugins.enabled` に `observability/langfuse` を書き加えてくれます。Hermes を立ち上げ直せば、次のターンから記録が送られます。
+案内役が鍵を聞き取り、必要なら宣言済みの追加パッケージ `langfuse` を PM で用意して、
+`observability/langfuse` を有効にしてくれます。Hermes を立ち上げ直せば、次の
+ターンから記録が送られます。用意に失敗したら `hermes tools` からやり直してください。
+選んだ環境へ pip で SDK を入れないでください。
 
 **設定（自分で進める）:**
 
+ソースのチェックアウトで使う場合は、まず使う予定の Hermes ホームを指定して [PM の開発者向けワークフロー](/hermes/docs/reference/package-management/#developer-workflow)
+に沿って準備します。そのうえで、チェックアウトで用意した Python を使います。
+
 ```bash
-pip install langfuse
-hermes plugins enable observability/langfuse
+python -c "import pm; pm.sync_venv(['langfuse'], explicit=True)"
+source ./activate
+python hermes plugins enable observability/langfuse
 ```
 
-続いて `~/.hermes/.env` に資格情報を書きます。
+PowerShell で有効化するときは `. .\activate.ps1` を使います。続いて、有効なホームの
+`.env`（`$HERMES_HOME/.env`、ふつうは `~/.hermes/.env`）に資格情報を書きます。
 
 ```bash
 HERMES_LANGFUSE_PUBLIC_KEY=pk-lf-...
@@ -362,7 +370,7 @@ hermes meet auth    # opens a browser to sign into Google and saves session stat
 
 同梱にふさわしいのは、こんなプラグインです。
 
-- 追加の依存がない（あっても `pip install .[all]` にすでに含まれている）
+- 追加の依存がない（あっても、宣言済みの追加パッケージ `all` にすでに含まれている）
 - そのふるまいが多くの人の役に立ち、止めたい人だけが止める形になっている
 - エージェントがいちいち呼ぶことを覚えておかないといけない処理を、節目のフックに任せられる
 - モデルから見えるツールを増やさずに、本体の機能を補える

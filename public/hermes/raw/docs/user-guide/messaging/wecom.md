@@ -2,12 +2,16 @@
 title: "WeCom（企業向け WeChat）"
 description: "AI Bot の WebSocket ゲートウェイ経由で Hermes Agent を WeCom につなぎます"
 upstream_path: user-guide/messaging/wecom.md
-upstream_blob: fb90dbc438943a61a5f003d22baaca4d84a150c5
+upstream_blob: 8874a8fbc0c337c822d62988cda5e25b34f49d90
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/wecom
 ---
 
 # WeCom（企業向け WeChat） {#wecom-enterprise-wechat}
+
+このページにある Python の依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存関係を変えたら、チェックアウトを有効化し直してから Hermes を再起動してください。
 
 Hermes を、Tencent の企業向けメッセージングプラットフォームである [WeCom](https://work.weixin.qq.com/)（企业微信）につなぎます。アダプターは WeCom の AI Bot 向け WebSocket ゲートウェイを使って双方向にやり取りするので、公開のエンドポイントも Webhook も要りません。
 
@@ -217,7 +221,7 @@ WeCom は、受信するメディアの添付の一部を AES-256-CBC で暗号�
 - 届いたメディアの項目に `aeskey` のフィールドが含まれている場合、アダプターは暗号化されたデータをダウンロードし、PKCS#7 のパディングを伴う AES-256-CBC で復号します。
 - AES の鍵は `aeskey` フィールドを base64 で復号した値です（ちょうど 32 バイトである必要があります）。
 - IV は鍵の先頭 16 バイトから作られます。
-- この処理には Python パッケージの `cryptography`（`pip install cryptography`）が必要です。
+- この処理には Python パッケージの `cryptography`（`hermes pm repair`）が必要です。
 
 設定は要りません。暗号化されたメディアを受け取ると、復号は裏側で自動的に行われます。
 
@@ -295,14 +299,14 @@ WeCom のコールバック経由でメッセージを受け取ると、アダ�
 | 症状 | 対処 |
 |---------|-----|
 | `WECOM_BOT_ID and WECOM_SECRET are required` | 両方の環境変数を設定するか、設定のウィザードで指定します |
-| `WeCom startup failed: aiohttp not installed` | aiohttp を入れます: `pip install aiohttp` |
-| `WeCom startup failed: httpx not installed` | httpx を入れます: `pip install httpx` |
+| `WeCom startup failed: aiohttp not installed` | aiohttp を入れます: `python -c "import pm; pm.sync_venv(['messaging'], explicit=True)"` |
+| `WeCom startup failed: httpx not installed` | httpx を入れます: `hermes pm repair` |
 | `invalid secret (errcode=40013)` | Bot の認証情報と secret が一致しているか確かめます |
 | `Timed out waiting for subscribe acknowledgement` | `openws.work.weixin.qq.com` へのネットワーク接続を確かめます |
 | グループで Bot が応答しない | `group_policy` の設定を見直し、そのグループ ID が `group_allow_from` に入っているか確かめます |
 | グループ内の特定の利用者が無視される | `groups` の設定にあるグループごとの `allow_from` の一覧を確かめます |
-| メディアの復号に失敗する | `cryptography` を入れます: `pip install cryptography` |
-| `cryptography is required for WeCom media decryption` | 受け取ったメディアが AES で暗号化されています。`pip install cryptography` で入れてください。 |
+| メディアの復号に失敗する | `cryptography` を入れます: `hermes pm repair` |
+| `cryptography is required for WeCom media decryption` | 受け取ったメディアが AES で暗号化されています。`hermes pm repair` で入れてください。 |
 | 音声メッセージがファイルとして送られる | WeCom 本来の音声は AMR 形式にしか対応していません。他の形式は自動でファイルに切り替わります。 |
 | `File too large` のエラーが出る | WeCom はすべてのファイルのアップロードに 20 MB の上限を設けています。圧縮するか分割してください。 |
 | 画像がファイルとして送られる | 10 MB を超える画像は本来の画像の上限を超えるため、添付ファイルへ自動で切り替わります。 |

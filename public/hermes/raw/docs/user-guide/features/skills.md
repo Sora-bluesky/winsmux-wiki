@@ -2,7 +2,7 @@
 title: "スキルの仕組み"
 description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェント管理のスキル、スキルのハブ"
 upstream_path: user-guide/features/skills.md
-upstream_blob: 7dfd8f5a295e9765253ed25371638722382afe56
+upstream_blob: a8594f51897b373f690ce1c83fc9e9f4986b16ba
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -20,15 +20,61 @@ Hermes に**外部のスキルのディレクトリ**を教えることもでき
 - [同梱スキル一覧](/hermes/docs/reference/skills-catalog/)
 - [公式の追加スキル一覧](/hermes/docs/reference/optional-skills-catalog/)
 
+## Desktop で探して入れる {#browse-and-install-in-desktop}
+
+**Capabilities → Skills** を開き、**Installed** と **Browse** を切り替えます。
+検索は上に固定され、タブの切り替えと操作のボタンは同じ1行に並びます。
+**Installed** は、選んでいるプロファイルに実際に入っているスキルと、それぞれが有効かどうかを読み取って表示します。
+公開されている一覧から推測したものではありません。**Browse** は Desktop に組み込まれた一覧の画面で、
+Web サイトを埋め込んだものでも、別に用意した小さな一覧でもありません。
+
+Desktop と公開されている [Skills Hub](https://hermes-agent.nousresearch.com/skills) は、CDN に公開された同じ
+スナップショットを読みます: [`/docs/api/skills.json`](https://hermes-agent.nousresearch.com/docs/api/skills.json)。
+公開ドキュメント側の別名も、Desktop が取りにいく URL と同じスナップショットを返します。
+`https://nousresearch.github.io/hermes-agent/docs/api/skills.json` です。これは
+ドキュメントのビルドが、同梱の `skills/`、`optional-skills/`、そして
+一か所にまとめたスキルの索引から作ります。一覧を見ている間に GitHub を巡回したり、上流の
+マーケットプレイスへその場で問い合わせたりはしません。ただしインストールするときは、選んだスキルを
+その提供元のインストーラーから取ってきます。
+
+### Web サイトから入れる {#install-from-the-website}
+
+Skills Hub では、インストールできるカードそれぞれに **Install in Hermes** のボタンがあります。押すと、
+インストール済みの Hermes Desktop アプリが、URL エンコードされ提供元を明示したスキルの指定付きで開きます。
+たとえば追加スキルなら `official/...`、ClawHub なら `clawhub/...` です。
+同梱のスキルは、紛らわしい名前だけの指定ではなく、リポジトリ内のパスをはっきり書いて指定します。
+古いスナップショットにその明示的な同梱スキルの指定が無い場合、Web サイトは
+インストールのリンクを出さず、Desktop の Browse もインストールを無効にします。紛らわしい名前を推測で解決することはしません。
+次にドキュメントが公開されるときに、その指定が補われます。
+Desktop の Browse とカードの CLI 向けの代替手段も、同じ指定を使います。
+
+```text
+hermes://skill/install?identifier=official%2Fsecurity%2F1password
+```
+
+Hermes は **Install “skill-name”?** と表示し、**Source**（提供元）と **Install to**（入れる先）を
+別々の行で示します。Cancel を押せば何も変わりません。確定すると、同じダイアログに
+**Installing…**、続いて **Installed** が表示され、完了の通知が出ます。エラーが起きたときは
+ダイアログに残るので、読んでからやり直せます。インストールには、これまでの
+Skills Hub の流れがそのまま使われます。安全性の検査、操作の記録、インストール済み一覧の
+更新も含みます。確認の画面を開いたままプロファイルや接続を切り替えた場合は、
+新しい入れ先に向けてリンクを開き直してください。変更が効くのは
+新しいセッションからです。リンクから検査を飛ばしたり、別のプロファイルを選んだりすることはできません。
+
+公開のリンクが使うのは `hermes://` で、開発専用の `hermes-dev://`
+ではありません。`skill/install` の経路を使うには、更新した Desktop が必要です。
+アプリが入っていない、またはリンクが認識されない場合は、Desktop を更新するか、
+カードを広げて CLI のインストールコマンドをコピーしてください。
+
 ## まっさらな状態から始める {#starting-with-a-blank-slate}
 
 既定では、どのプロファイルにも同梱のスキルが最初から入り、`hermes update` のたびに新しく同梱されたスキルが足されます。**同梱のスキルが1つも無い**プロファイルがほしい、しかも更新後も空のままにしたい、という場合は2つの道があります。
 
 **入れるとき**（既定の `~/.hermes` のプロファイルに効きます）:
-
-```bash
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --no-skills
-```
+インストーラーに `--no-skills` のフラグはありません。Blank Slate の設定を選ぶと、設定の段階で
+同梱のスキルを最初から入れるかどうかを尋ねられます。いいえと答えると、下で説明する
+やめる印が書き込まれます。対話なしのインストールでは同梱のスキルが入るので、
+プロファイルを空にしたい場合は、あとで `hermes skills opt-out` を実行してください。
 
 **プロファイルを作るとき**（名前付きのプロファイル）:
 
@@ -44,7 +90,7 @@ hermes skills opt-out --remove   # also delete UNMODIFIED bundled skills (confir
 hermes skills opt-in --sync      # undo: remove the marker and re-seed now
 ```
 
-この3つはどれも、プロファイルのディレクトリに `.no-bundled-skills` という印のファイルを書きます。この印がある間は、インストーラーも `hermes update` もスキルの同期も、そのプロファイルへの同梱スキルの配置を飛ばします。印を消せば（または `hermes skills opt-in` を実行すれば）元に戻ります。
+どの方法でも、プロファイルのディレクトリに `.no-bundled-skills` という印のファイルを書きます。この印がある間は、インストーラーも `hermes update` もスキルの同期も、そのプロファイルへの同梱スキルの配置を飛ばします。印を消せば（または `hermes skills opt-in` を実行すれば）元に戻ります。
 
 :::note 既定で安全です
 `hermes skills opt-out` が止めるのは*これから*の配置だけで、ディスク上のものを消すことはありません。任意の `--remove` を付けたときに消えるのは、手を加えていない同梱のスキル**だけ**です（Hermes が入れた版とバイト単位で同じもの）。自分が編集したスキル、ハブから入れたスキル、自分で書いたスキルは必ず残ります。

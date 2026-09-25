@@ -2,7 +2,7 @@
 title: "ボットの画面"
 description: ""
 upstream_path: user-guide/features/bot-screen.md
-upstream_blob: 67a0d8f39e3a0cfd08cc370cada2137a0ffb5e78
+upstream_blob: 141c6d2e050cc6a3e5fa2e5b1236dd647af7efaa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/bot-screen
 ---
@@ -107,10 +107,11 @@ WebSocket のブリッジは、リースのファイルを読み直すまでの�
 docker build --build-arg HERMES_BOT_DESKTOP=1 -t hermes-agent:screen .
 ```
 
-これで TigerVNC、Xfce のコンポーネント、画面付きの `chromium`（ドックの Browser アイコン用）に加えて、
-Playwright の画面付き Chromium ビルドが入ります。イメージは約 **1.4 GB** 増え
-（実測: arm64 で引数なし 4.1 GB、引数あり 5.5 GB）、そのうち約 930 MB が apt のレイヤーです。
-起動時には何も動かないので、この方法で作った
+これで TigerVNC、Xfce のコンポーネント、ディストリビューションの `chromium`（[引き継ぎ後も残る
+ブラウザのセッション](#browser-sessions-that-survive-the-handoff)で説明している、サンドボックス用の予備）が入ります。
+apt のレイヤーは Debian 13 で約 930 MB でした（実測）。Playwright のブラウザが 2 つ目として加わることはありません。
+slim でも `-desktop` でも、どのイメージにも PM が固定したフル版の Chromium がすでに入っていて、
+これはウィンドウを開けます。起動時には何も動かないので、この方法で作った
 イメージは、画面を起動するまでメモリを使いません。
 
 ## 使い方 {#using-it}
@@ -182,19 +183,20 @@ user-data-dir を 1 つ持ちます（`<HERMES_HOME>/bot-desktop/browser-profile
 `screen start` のときに、その時点で入っているものからドックが作り直されます。
 
 ドックとボットがどの Chromium を使うか: `AGENT_BROWSER_EXECUTABLE_PATH` を明示すればそれが
-優先されます。指定がなければ、Hermes はシステムの
-`chromium` / `google-chrome` が入っていればそれを選び、なければ
-Playwright 同梱の Chromium を使います。この順にしている理由はサンドボックスです。
-Ubuntu 23.10 以降では `kernel.apparmor_restrict_unprivileged_userns=1` によって、
-Playwright 同梱の Chromium が root 以外のユーザーでサンドボックスを準備できず、
-`FATAL: No usable sandbox!` で終了します。一方、ディストリビューションの Chromium には
-それを許可する AppArmor プロファイルが付いています。この選び方がホストに合わない場合は、
+優先されます。指定がなければ、Hermes は PM が管理する Chromium を使い、
+それが使えなければシステムの `chromium` / `google-chrome` に切り替えます。
+ただし `kernel.apparmor_restrict_unprivileged_userns=1` のホスト（Ubuntu 23.10 以降）で
+root 以外のユーザーが動かす場合は、この順が逆になります。そこでは PM が管理するビルドが
+サンドボックスを準備できず `FATAL: No usable sandbox!` で終了する一方、ディストリビューションの
+Chromium にはそれを許可する AppArmor プロファイルが付いているからです。この選び方がホストに合わない場合は、
 ゲートウェイの環境に `AGENT_BROWSER_EXECUTABLE_PATH=/usr/bin/chromium`（または Chrome のパス）を
-設定してください。公式の Docker イメージには Playwright の
-*headless shell* しか入っておらず、これはウィンドウを描けません。そのためイメージ内ではドックに
-Browser アイコンがなく、画面付きのブラウザ（`apt-get install chromium`）を入れるまで、
-ペインと `screen status` は **no headed browser** と報告します。入れたあとは、
-ドックのアイコンがそのコンテナで agent-browser が使うのと同じサンドボックス設定でそれを起動するので、
+設定してください。公式の Docker イメージは `AGENT_BROWSER_EXECUTABLE_PATH` を、ウィンドウを描ける
+PM 固定のフル版 Chromium に向けているので、ドックの Browser アイコンはそれを使います。`-desktop` のタグには
+ディストリビューションの `chromium` も入っています。固定ビルドのサンドボックスを拒むホストでは、
+`AGENT_BROWSER_EXECUTABLE_PATH=/usr/bin/chromium` を設定してください。Playwright の *headless shell* が
+アイコンに使われることはありません。それしかブラウザがないときは、画面付きのブラウザ（`apt-get install chromium`）を
+入れるまで、ペインと `screen status` は **no headed browser** と報告します。
+ドックのアイコンは、そのコンテナで agent-browser が使うのと同じサンドボックス設定でブラウザを起動するので、
 人が使う Browser とボットのブラウザはまったく同じものになります。
 
 ## CLI {#cli}

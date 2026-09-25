@@ -2,7 +2,7 @@
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: 0c8bb43e87b39bf5423b1955cf032b65824771af
+upstream_blob: c6be34a9ad2f1a353de1fc6eed088a4c7860b69a
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -11,13 +11,105 @@ sources:
 
 ## 更新する {#updating}
 
-最新版への更新は、コマンド 1 つで済みます。
+いま動いているインストールの種類に合わせて、更新の方法を選んでください。
+
+| インストールの種類 | 更新の方法 |
+|---|---|
+| 管理されたソースのチェックアウト | `hermes update`、またはソースからビルドしたデスクトップアプリの更新の受け渡し。 |
+| Windows のサイドロード版 MSIX | デスクトップアプリの更新ボタンと、Windows の App Installer。 |
+| Microsoft Store のパッケージ | Microsoft Store の更新。 |
+| macOS の同梱アプリ | デスクトップアプリの更新ボタン（`electron-updater` 経由）。 |
+| Docker イメージ | 選んだイメージを pull し、同じデータのマウントでコンテナを作り直す。 |
+| Nix | flake やプロファイルを更新して再ビルドする。 |
+| Termux の APT | `pkg update` のあとに `pkg upgrade hermes-agent`。 |
+
+`hermes update` は、パッケージが持っているアプリのファイルを書き換えません。PM が扱うのは
+依存関係であって、アプリの配布ではありません。`hermes pm update` はメンテナーが固定バージョンを
+更新するためのコマンドで、アプリを更新する別の手段ではありません。
+
+管理されたソースのインストールでは、次のコマンドで更新します。
 
 ```bash
 hermes update
 ```
 
-このコマンドは `main` から最新のコードを取り込み、依存関係を更新し、前回の更新以降に追加された設定項目があれば、その場で設定するよう案内します。
+ソースの既定のチャンネルは `main` を追いかけます。stable や canary のチャンネルを設定している場合は、
+それぞれ公開されたリリースのコミットを追いかけます。更新では PM を通じて依存関係を用意し、
+設定の変更点とプロセスの再起動結果を報告します。
+
+### 同梱デスクトップアプリの更新 {#bundled-desktop-updates}
+
+Windows では、サイドロード版のアプリが登録済みの App Installer の配信元を確認します。適用を選ぶと、
+アプリが持っているバックエンドを止める前に `.appinstaller` の記述ファイルをダウンロードし、
+そのローカルファイルを開いてから終了し、パッケージの置き換えを Windows に任せます。
+切り離された待機プロセスが、パッケージのバージョンが変わったあとにアプリを自動で起動し直そうとします。
+待機プロセスの登録に失敗した場合は、手動で開き直すよう警告が出ます。
+
+macOS では、適用を選ぶと ZIP の更新をダウンロードし、署名済みのアプリを Squirrel.Mac が受け入れるのを
+待ってからバックエンドを止めます。インストールと再起動を求めるのは、この適用の流れだけです。
+普通に終了しただけでは、ダウンロード済みの更新はインストールされません。
+ダウンロードや検証に失敗した場合、バックエンドは動いたままです。
+
+Store のパッケージは、どちらのサイドロード用の配信でもなく Store を使います。更新の確認が壊れていたり
+使えなかったりしても、それを「すでに最新」と受け取ってはいけません。
+アプリと同梱の基本ランタイムは一緒に更新され、ユーザーのデータはパッケージの外に置かれたままです。
+[デスクトップアプリのインストール](/hermes/docs/user-guide/desktop/#install) をご覧ください。
+
+stable と canary のデスクトップ版は、別々のアプリです。canary を入れても stable は置き換わりません。
+Windows の MSIX でも同じです。それぞれのアプリは自分のデスクトップの状態を持ち、ビルドに焼き込まれた
+チャンネルの中で更新されます。チャンネルを変えるには、設定を変えるのではなく、もう一方のアプリを入れます。
+canary のアイコンは背景が黄色（ダークモードでは濃い黄色）で、CLI のコマンドは `hermes-canary` です。
+
+特定のコミットから作った単発のビルドは、どちらのリリースチャンネルとも、ほかのコミット単位のビルドとも
+別のアプリです。赤いアイコンにはビルドの短い SHA が表示され、同じ SHA が CLI のコマンド
+`hermes-<short-sha>` にも使われます。これらは更新を確認もインストールもしません。
+`hermes update` や `hermes update --check` を使っても同じです。表示される説明は次のとおりです。
+
+> This build doesn't get updates. Ask the developer who gave it to you for a new build.
+
+別々のアプリでも、同じ Hermes ホームの下にある Hermes のプロファイル、設定、セッションは共有します。
+1 つのプロファイルに対して違うビルドを動かしても、スキーマが分かれるわけではありません。新しいビルドは、
+古いビルドが読めない形に保存データを変えることがあります。試す前に共有データをバックアップしてください。
+デスクトップアプリと単体の CLI は、同じプロファイルを別の動作中のインストールが使っていると警告しますが、
+これは注意喚起であってロックではありません。更新後のお知らせはアプリごとに分かれているので、
+canary を起動しても stable 側の未読のお知らせが消費されることはありません。`hermes://` の URL スキームは
+共有のままで、最後に登録したアプリがリンクを処理します。
+
+### ソースのチャンネルとインストールの識別情報 {#source-channels-and-install-identity}
+
+```bash
+hermes update --install-id
+hermes update --set-channel stable
+hermes update --channel stable --check
+# Or track published canary commits in this source installation:
+hermes update --set-channel canary
+hermes update
+```
+
+`--install-id` は、そのインストールの識別情報とパスを表示します。`--set-channel` は
+そのインストールの設定だけを変え、更新は適用せずに終了します。`--channel` はその 1 回だけの指定です。
+ソースのチェックアウトでは、明示した `--branch` が優先されます。
+
+チャンネル名は、Hermes に同梱された固定の一覧ではなく、Cloudflare R2 上のリリース保管庫に登録されています。
+`main` の記録はソースのブランチからの配信を選び、公開ビルドのチャンネルは特定の Git コミットを選びます。
+独自のプレビュー用チャンネルも同じソースのコマンドで使えます。たとえば `hermes update --set-channel pm-preview` です。
+更新がそのチャンネルを解決できるのは、公開する側がチャンネルを作ったあとだけです。
+記録が見つからない、または不正な場合はエラーを報告し、`main` やほかのリリースへ代わりに切り替えることはしません。
+ソースのチャンネルを切り替えても、デスクトップアプリのパッケージはインストールされません。
+インストールごとの購読は設定の `update.installs` に置かれるので、あるチェックアウトでの選択が
+別のインストールのチャンネルを変えることはありません。ソースからビルドしたデスクトップアプリも、
+更新の確認と受け渡しに同じ選択を使います。選ばれたリリースチャンネルを、自分の既定のブランチで
+置き換えることはしません。
+
+ブランチを追いかけるソースのインストールでは、デスクトップアプリ用のブランチ指定を明示していない限り、
+デスクトップアプリは現在の名前付きブランチを保ちます。HEAD が切り離されたチェックアウトでは既定のブランチを使います。
+ソースのチャンネルを確かめる仕組みを持たない古いチェックアウトは、リリースチャンネルより前のものなので、
+デスクトップアプリは git で `main` から更新します。その更新で、確かめる仕組みも入ります。
+
+パッケージ版デスクトップアプリの配信チャンネルは、ビルドのタグとパッケージの所有者から決まります。
+ソースのチャンネルを変えても、MSIX や Store のチャンネルが切り替わるわけではありません。canary のビルドは
+保存データの形式を進めることがあり、元に戻してもスキーマが巻き戻るわけではありません。
+リリースチャンネルを変える前に、データをバックアップしてください。
 
 :::tip
 `hermes update` は新しい設定項目を自動で見つけ、追加するかどうかを尋ねます。その案内を飛ばしてしまった場合は、`hermes config check` を実行すると足りない項目が分かり、`hermes config migrate` で対話形式で追加できます。
@@ -35,15 +127,14 @@ hermes config set updates.check false
 
 ### 更新中に何が起きるか {#what-happens-during-an-update}
 
-`hermes update` を実行すると、次の順に処理が進みます。
+更新の対象として受け付けられたソースのチェックアウトでは、`hermes update` は次の順に処理を進めます。
 
-1. **更新前のスナップショット** — 既定で軽量な状態スナップショットを保存します（ペアリング情報、cron ジョブ、`config.yaml`、`.env`、`auth.json` など、実行中に書き換わる状態ファイルが対象です。1 GiB を超えるファイルは個別に除外されるので、巨大なセッション DB があっても更新が遅くなりません）。コードの入れ替えとゲートウェイの再起動はすべてのプロファイルに影響するため、インストール内の **すべてのプロファイル** について同じスナップショットを取り、それぞれ専用の `state-snapshots/` ディレクトリに保存します。更新後の cron ジョブ保護も、各プロファイルを自分のスナップショットと照らし合わせます。動作は `updates.pre_update_backup` で決まります（既定は `quick`、`HERMES_HOME` 全体を zip にするなら `full`、無効にするなら `off`）。復旧は [スナップショットとロールバック](/hermes/docs/user-guide/checkpoints-and-rollback/) で説明しているスナップショット復元の流れで行えます。quick スナップショットはファイルを失ったときの復旧手段であって、コードを巻き戻すための保険ではありません。ある時点の状態を丸ごと戻したい場合は `--backup`（full モード）を使ってください。スナップショットはできる範囲での処理です。失敗した場合は `⚠ Pre-update snapshot FAILED` という警告を表示したうえで更新を続け、レシートには `pre_update_backup` が失敗した手順として記録されます（自分で `off` や `--no-backup` を指定した場合は、失敗ではなく理由付きで飛ばした処理の側に入ります）。
-2. **git pull** — `main` ブランチから最新のコードを取得し、サブモジュールも更新します
+1. **更新前のスナップショット** — Hermes は、プロファイルごとに選んだ状態ファイルを、そのプロファイルの `state-snapshots/` ディレクトリに保存します。対象はペアリング情報、cron ジョブ、`config.yaml`、`.env`、`auth.json` などです。自動の quick スナップショットでは、1 GiB を超えるファイルは個別に除外されます。`updates.pre_update_backup` で `quick`、`full`、`off` のどれかを選びます。full のアーカイブは [バックアップの除外対象](/hermes/docs/reference/faq/#hermes-backup-vs-hermes-profile-export) に従います。復旧は [スナップショットとロールバック](/hermes/docs/user-guide/checkpoints-and-rollback/) の手順で行います。quick スナップショットで戻せるのは状態ファイルで、アプリのコードではありません。スナップショットはできる範囲での処理です。失敗した場合は `⚠ Pre-update snapshot FAILED` という警告を表示したうえで更新を続け、レシートには `pre_update_backup` が失敗した手順として記録されます（自分で `off` や `--no-backup` を指定した場合は、失敗ではなく理由付きで飛ばした処理の側に入ります）。
+2. **コードの更新** — 設定されたソースのブランチ、または stable のリリースタグを当て、サブモジュールも更新します。
 3. **取得後の構文チェックと自動ロールバック** — 取得のあと、`hermes` の起動時に必ず読み込まれる重要な 9 ファイルをコンパイルします。どれか 1 つでも構文解析に失敗した場合（マージ競合マーカーの取り残し、途中で切れたファイルなど）、Hermes は `git reset --hard <pre-pull-sha>` を実行してインストールを巻き戻し、シェルが起動できる状態を保ちます。上流で修正が入ったら、あらためて `hermes update` を実行してください。
-   この時点から先は、更新処理が取得したばかりのコードの上で自分自身を実行し直します（`update.log` に `=== hermes update continued on the pulled code ===` と出ます）。残りの手順で、古いモジュールと新しいモジュールが 1 つのプロセスに混ざることはありません。一瞬だけ `hermes update` のプロセスが 2 つ見えることがありますが、それがこの引き継ぎです。
-4. **依存関係のインストール** — `uv pip install -e ".[all]"` を実行し、新しく追加された依存関係や更新された依存関係を取り込みます。チェックアウトがすでに最新の場合でも、venv の状態が健全でない（中心的なモジュールのインポートに失敗する）とき、**または** インストール済みの `hermes-agent` ディストリビューションがチェックアウトより古いリリースのものだったときは、この手順を実行します。後者は、前回の実行で依存関係のインストールが拒否されたか途中で終わったことの表れです（`⚠ Checkout is current, but its dependencies were never synced after the last pull`）。おかげで、`✓ Already up to date!` が中途半端な状態の環境を覆い隠してしまうことはありません。
+4. **依存関係の準備** — PM が必要なツールを用意し、新しいロックファイル、すでに入っている追加機能、有効なプラグインの要件から、完全な Python 環境を準備します。その環境を検証してから、選択として公開します。プラグインが原因で更新が失敗することはありません。新しい本体に合わなくなったプラグインは、それを有効にしているすべてのプロファイルで `plugins.disabled` に追加されます（メモリプロバイダーの場合は `memory.provider` が空になります）。対象になるのは、`requires-python` が Hermes の Python を含まないもの、`manifest_version` がこの Hermes の対応範囲より新しいもの、そして依存関係が本体や設定順で先にあるプラグインと一緒には解決できないと解決器が示したもの、または自分自身のビルドに失敗したものです。ダウンロードや通信の失敗は 1 回だけ再試行し、再び失敗したら無効にします。更新は `⚠ Disabled plugin '<name>' in <home>: <reason>` と表示し、レシートの警告に記録して、処理を続けます。プラグインが対応するリリースを出したら、あるいは通信が戻ったら、`hermes plugins enable <name>` で有効に戻してください。`requires_hermes` の範囲に動作中のバージョンが入らない場合は、プラグインを無効にしません。リリースタグのないソースのチェックアウトは、古いリリースに見えることがあるからです。その場合プラグインは今回の更新から外れるだけで（`⚠ Left plugin '<name>' … out of this update`）、有効なままです。Hermes が受け入れられるバージョンを報告するようになれば、また加わります。設定を読めない 2 番目以降のプロファイルも、設定が直るまで同じように外れます。この手順が失敗するのは、本体だけでもビルドできない場合に限られます。
 5. **設定の移行** — 使用中のバージョン以降に追加された設定項目を検出し、値を設定するよう案内します
-6. **デスクトップアプリの再ビルド（ステージしてから入れ替え）** — Hermes Desktop アプリがこのチェックアウトからビルドされていた場合、GUI が新しいコードに合うよう再ビルドします。再ビルドはまず `apps/desktop/release/` の隣にある一時的なステージング用ディレクトリに書き出し、そこで検証してから、前のビルドに上書きする形で名前を付け替えます（Windows でリアルタイム検査のソフトが `release/win-unpacked` を一時的に掴んでいる場合は、短い再試行を数回はさんでやり過ごします）。Electron のダウンロード破損、依存関係の不足、ディスク不足など、途中で失敗した場合は前のアプリがそのまま残り、起動できます。このとき更新は `⚠ Update partially complete` と報告し、`hermes desktop` が再ビルドを試み直します。macOS では、再ビルドしたバンドルを `ditto` で（署名を保ったまま）古くなった `/Applications/Hermes.app` や `~/Applications/Hermes.app` に上書きコピーします。Finder や Dock から起動するアプリが、バックエンドと同じものになるようにするためです。インストール済みのアプリが動作中の場合はそれに手を付けず、いったん終了してから `hermes update` をやり直すよう案内します。
+6. **デスクトップアプリの再ビルド（ステージしてから入れ替え）** — Hermes Desktop アプリがこのチェックアウトからビルドされていた場合、GUI が新しいコードに合うよう再ビルドします。再ビルドはまず `apps/desktop/release/` の隣にある一時的なステージング用ディレクトリに書き出し、そこで検証してから、前のビルドに上書きする形で名前を付け替えます（Windows でリアルタイム検査のソフトが `release/win-unpacked` を一時的に掴んでいる場合は、短い再試行を数回はさんでやり過ごします）。Electron のダウンロード破損、依存関係の不足、ディスク不足など、途中で失敗した場合は前のアプリがそのまま残り、起動できます。このとき更新はその手順で失敗し、`hermes desktop --build-only --force-build` か次の `hermes update` で再ビルドをやり直せます。macOS では、再ビルドしたバンドルを `ditto` で（署名を保ったまま）古くなった `/Applications/Hermes.app` や `~/Applications/Hermes.app` に上書きコピーします。Finder や Dock から起動するアプリが、バックエンドと同じものになるようにするためです。インストール済みのアプリが動作中の場合はそれに手を付けず、いったん終了してから `hermes update` をやり直すよう案内します。
 7. **ゲートウェイの自動再起動**: 更新の完了後、動作中のゲートウェイを入れ替えます。サービスとして管理されているゲートウェイ（Linux なら systemd、macOS なら launchd）は、サービスマネージャー経由で再起動します。手動で起動したゲートウェイは、その PID をプロファイルに紐付けられた場合に立ち上げ直します。手動で起動した `hermes serve` / `hermes dashboard` のバックエンドは扱いが違います。更新処理はそれらを動かしたままにして、持ち主に再起動をお願いします。[手動で起動したバックエンドの再起動のお知らせ](#manual-backend-restart-reminders) をご覧ください。動作中のデスクトップアプリが持っているバックエンドは、引き続きアプリ側の担当です。
 8. **多重化への移行（複数プロファイルのインストール）** — 新しいコードでの動作が一通り確認できたあと、プロファイルが 2 つ以上あり、いまも **プロファイルごとに 1 つのゲートウェイ** を動かしているインストールは、妨げになるものがなければ、多重化した既定のゲートウェイ 1 つにまとめられます（`hermes gateway migrate --multiplex --yes` と同じです）。妨げになるもの（2 つのプロファイルで同じ Bot トークンを使っている、`/p/<profile>/` の受け口を持たない 2 番目以降のプロファイルがポートを使っている、など）がある場合は、その内容と直し方を表示するだけで、何も変更しません。プロファイルが 1 つだけのインストールには一切手を加えません。詳しくは [プロファイルごとのゲートウェイからの移行](/hermes/docs/user-guide/multi-profile-gateways/#migrating-from-per-profile-gateways) をご覧ください。
 
@@ -71,7 +162,8 @@ Windows では、パッケージ作成の途中で開き直されたデスクト
 
 ### 既定以外のブランチに対して更新する: `--branch` {#updating-against-a-non-default-branch---branch}
 
-`hermes update` は既定で `origin/main` を追いかけます。別のブランチに対して更新したい場合は `--branch <name>` を渡します。QA 用のチャンネル、機能ブランチ、リリース候補の検証などで役立ちます。
+ソースの既定のチャンネルでは、`hermes update` は `origin/main` を追いかけます。その 1 回だけ
+別のブランチを使いたい場合は `--branch NAME` を渡します。
 
 ```bash
 hermes update --branch release-candidate
@@ -87,7 +179,7 @@ hermes update --check --branch experimental   # preview behindness only
 - **ブランチがすべてマージ済み**（すべてのコミットが既に `origin/main` に含まれていて、`git cherry` が未マージのものを報告しない場合）: 更新はその旨を `Checkout was parked on '<branch>' (fully merged) — switched back to main` と伝え、そのあとは `main` に留まります。
 - **未マージのコミットがある**が作業ツリーはきれいな場合: 更新を進めるために、それでも `main` へ切り替えます。デスクトップの更新ボタン、ゲートウェイの `/update`、cron といった対話できない呼び出し元は、中断を解決する手段がないためこの動作に頼っています。コミットした内容には手を付けません。`git checkout` がコミット済みの作業を捨てることはなく、更新はブランチ名とコミット数、そしてあとで作業を再開するための `git checkout <branch>` コマンドを目立つ形で表示します。
 
-独自のブランチを *意図して* 運用している場合（main の上に自前のパッチを載せて維持しているようなケース）は、`config.yaml` に `updates.parked_branch_strategy: update_in_place` を設定してください。更新はブランチから離れる代わりに、`origin/main` をあなたのブランチ **へ** マージします。チェックアウトは動かず、コミットも残り、動作するコードだけが進みます。可能なら fast-forward し、履歴が分かれている場合は `pre-update-<stamp>` という安全用のタグを付けたうえで通常のマージを行い、競合したときは何も変更せずきれいに停止します。`hermes update --switch-branch` を使うと、その 1 回だけ切り替え方式に戻せます。更新由来のマージコミットを溜めたくない、深い機能ブランチで作業しているときに便利です。
+独自のブランチを *意図して* 運用している場合（main の上に自前のパッチを載せて維持しているようなケース）は、`config.yaml` に `updates.parked_branch_strategy: update_in_place` を設定してください。更新はブランチから離れる代わりに、`origin/main` をそのブランチ **へ** マージします。チェックアウトは動かず、コミットも残り、動作するコードだけが進みます。可能なら fast-forward し、履歴が分かれている場合は `pre-update-<stamp>` という安全用のタグを付けたうえで通常のマージを行い、競合したときは何も変更せずきれいに停止します。`hermes update --switch-branch` を使うと、その 1 回だけ切り替え方式に戻せます。更新由来のマージコミットを溜めたくない、深い機能ブランチで作業しているときに便利です。
 
 置きっぱなしのブランチに **コミットしていない変更** がある（作業ツリーが汚れている）場合、Hermes はそこに手を付け **ません**。コードの更新は **SKIPPED** として記録され、ブランチ名、`origin/main` からどれだけ遅れているか、解決するための具体的なコマンドを添えた警告が目立つ形で出ます。更新が成功したふりをすることはありません。完了行には常に実際のブランチと HEAD が表示される（`✓ Update complete! [main @ 30fcf9580]`）ので、ずれがひと目で分かります。自動切り替えそのものを止めたい場合は、`config.yaml` に `updates.auto_switch_parked_branch: false` を設定してください（切り替えを飛ばした際の警告は引き続き出ます）。
 
@@ -127,7 +219,10 @@ git stash apply stash@{0}
 
 ### 確認だけする: `hermes update --check` {#preview-only-hermes-update---check}
 
-取得する前に更新があるかどうかだけ知りたい場合は、`hermes update --check` を実行します。フェッチして `origin/main` とコミットを比べるだけで、ファイルは書き換わらず、ゲートウェイも再起動しません。「更新があるか」で処理を分けるスクリプトや cron ジョブで役立ちます。
+`hermes update --check` は、チェックアウトをそのソースのチャンネルの目標と比べるだけで、
+コードの適用、依存関係のインストール、ゲートウェイの再起動は行いません。比べる際に
+Git のメタデータを取得することがあるので、ファイルシステムへの書き込みがまったくないとは限りません。
+パッケージが持っているインストールでは、外部の更新方法を報告します。
 
 ### まとめて事前確認する: `hermes update --plan` {#fleet-preview-hermes-update---plan}
 
@@ -189,92 +284,42 @@ updates:
   pre_update_backup: full
 ```
 
-`updates.pre_update_backup` は 3 つのモードを持つ 1 つのつまみです。`quick`（既定 — 上で説明した軽量な状態スナップショット）、`full`（quick のスナップショットに加えて `HERMES_HOME` 全体の zip。ホームが大きいと数分かかることがあります）、`off`（更新前のバックアップを一切取らない。`--no-backup` を渡すと 1 回だけ同じ扱いになります）です。従来の真偽値も使えます。`true` は `full`、`false` は `off` を意味します。
+`updates.pre_update_backup` には 3 つのモードがあります。
+
+- `quick` は、上で説明した選ばれた状態ファイルを保存します。これが既定です。
+- `full` は、[バックアップの除外対象](/hermes/docs/reference/faq/#hermes-backup-vs-hermes-profile-export) に従った zip のアーカイブを加えます。データのディレクトリが大きいと数分かかることがあります。
+- `off` は、更新前のバックアップを取りません。`--no-backup` を渡すと、その 1 回だけこのモードになります。
+
+従来の真偽値も使えます。`true` は `full`、`false` は `off` を意味します。
 
 :::tip 別の端末へ引っ越すのですか？
 更新時のバックアップは、その場での更新を守るためのものです。環境まるごとを別のハードウェアへ移すのであれば、代わりに `hermes backup` と `hermes import` を使ってください。詳しくは [Hermes を別の端末へ移す](/hermes/docs/reference/faq/#exporting-hermes-to-another-machine) と [`hermes backup` と `hermes profile export` の違い](/hermes/docs/reference/faq/#hermes-backup-vs-hermes-profile-export) をご覧ください。
 :::
 
-### Windows: 別の `hermes.exe` が動いている {#windows-another-hermesexe-is-running}
+### Windows のプロセスの持ち主と依存関係の変更 {#windows-process-ownership-and-dependency-changes}
 
-Windows では、venv のエントリポイントとなる実行ファイルを掴んでいる別の `hermes.exe` プロセスが見つかると、`hermes update` は実行を拒みます。よくあるのは Hermes Desktop アプリが起動したバックエンド、別の端末で開いたままの `hermes` REPL、動作中のゲートウェイです。
+Windows では、プロセスが動いている間、実行ファイルやネイティブ拡張のファイルが開かれたままになることがあります。
+そのため PM は、読み込まれているライブラリをその場で置き換えるのではなく、依存関係の世代を別に用意します。
+動いているプロセスは、再起動するまで今読み込んでいるものを使い続けます。
 
-```
-$ hermes update
-✗ Another hermes.exe is running:
-    PID 12345  hermes.exe
+妨げになっているものの診断が出たら、そこに示された特定のプロセスとインストールについて対処してください。
+Python や Hermes という名前のプロセスを片っ端から終了させるのはやめてください。ソースの更新と MSIX の
+パッケージの置き換えでは、持ち主も終了の条件も違います。
 
-  Updating now would fail to overwrite ...\venv\Scripts\hermes.exe because
-  Windows blocks REPLACE on a running executable.
-
-  Close Hermes Desktop, exit any open `hermes` REPLs, and
-  stop the gateway (`hermes gateway stop`) before retrying.
-  Override with `hermes update --force` if you've already
-  confirmed those processes will not write to the venv.
-```
-
-表示されたプロセスを終了してから、もう一度実行してください。同時に動いているプロセスが邪魔をしないと確信できる場合（まれです。たいていはウイルス対策ソフトの介在が誤って報告されたときくらいです）は、`--force` を渡すとこの確認を飛ばせます。その場合でも更新処理は `.exe` の名前付け替えを間隔を空けて再試行し、それでもロックが外れなければ `MoveFileEx(MOVEFILE_DELAY_UNTIL_REBOOT)` で次回の再起動時に置き換えるよう予約するので、更新は完了できます。
-
-これとは別に、venv の Python インタープリタから動いているプロセスがある間（デスクトップアプリのバックエンド、ゲートウェイ、Python の REPL など）、venv に触れることを拒む二つ目の保護があります。こうしたプロセスはネイティブ拡張のファイル（`.pyd`）をロックし続けるため、依存関係の同期がアクセス拒否で途中終了すると、インストールがバージョンの中間で止まってしまいます。この保護は `--force` では **解除できません**。検出された保持者が誤検知だと確信できる場合は、明示的に `hermes update --force-venv` を使ってください。
-
-#### スクリプトでの更新: `hermes update --list-venv-holders` {#scripted-updates-hermes-update---list-venv-holders}
-
-定期実行の `hermes update --yes` が venv の保護に何度も引っかかる場合（多くはデスクトップアプリがバックエンドを起動し直すためです）、同じことを繰り返す代わりに、先に確認できます。`hermes update
---list-venv-holders` は読み取りだけを行います。保護が拒否の理由にするプロセスを `{pid, exe, argv, kind}` の
-JSON の一覧として表示し、venv が空いていれば `0`、保持しているプロセスがあれば `3` で終了します。`kind` は `gateway`（更新処理が自分で一時停止を扱えるゲートウェイ）、`backend`
-（`hermes serve` / ダッシュボードのバックエンド。デスクトップアプリはこの形です）、それ以外の Hermes のプロセスなら `hermes:<subcommand>`、
-無関係なインタープリタなら `python` です。自動化の側では、まさにそれらの PID を止めて（またはデスクトップアプリを終了して）やり直せます。このフラグ自体は何も終了させません。
-この保護は Windows にしかないので、ほかの環境では一覧は常に `[]` です。
-
-```
-$ hermes update --list-venv-holders
-[
-  {"pid": 4242, "exe": "C:\\hermes\\venv\\Scripts\\python.exe",
-   "argv": "...python.exe -m hermes_cli.main serve --port 8642", "kind": "backend"}
-]
-$ echo $LASTEXITCODE
-3
-```
-
-この二つの保護と、デスクトップ版の更新前チェック、依存関係の修復処理は、いずれもまず `venv` を、次に uv の既定である `.venv` を環境として探します。そのため `uv venv` / `uv sync` で用意したソースのチェックアウトでも、インストーラーが作った `venv` と同じように更新できます。両方のディレクトリがある場合は、更新されるのは `venv` のほうです。
-
-#### Windows: 更新の仕上げは venv の Python が担当する {#windows-the-update-finishes-under-the-venv-python}
-
-`hermes.exe` は動作中に自分自身を置き換えられないため、そこから始めた更新はコードの入れ替えが終わった時点でいったん止まり、`→ Windows: hermes.exe cannot replace itself while it runs; the update continues under the venv Python` と表示します。シェルはすぐに戻ってきて、子のインタープリタが依存関係のインストールを最後までやり遂げ、その結果を自分で表示します。子はまず、更新を始めたプロセス（判別できる場合は `hermes.exe` のランチャー、できない場合はそれを実行したインタープリタ）が終わるのを最大 30 秒待ってから、更新用のロックを引き継ぎます。更新が止めたゲートウェイを立ち上げ直すのはこの子だけです。起動元のプロセスは、まだ shim を掴んでいる間はゲートウェイを戻しません。待ち時間が過ぎてもランチャーが生きている場合、子はその旨を伝えたうえで処理を続けます。インストールの時点でまだ shim がロックされていれば、従来どおりその旨が報告され、インストールは次に `hermes` を実行したときへ持ち越されます。
-
-#### Windows の venv 再作成はトランザクション方式 {#windows-venv-recreation-is-transactional}
-
-Windows のインストーラーが既存の `venv` を作り直す必要があるとき、まず古いディレクトリを重複しない `venv.stale.*` という名前へ移し、そのあとで置き換え先を作って検証します。古いツリーが削除されるのは、依存関係のインストールが完了し、新しいツリーで基本的なインポートが通ったあとだけです。それまでは巻き戻しの元として残ります（`venv.pending-backup` に記録されます）。
-
-移動を完了できなかった場合、インストーラーは処理を止め、稼働中の `venv` には手を付けません。`uv` が失敗した場合や、成功と報告しながらインタープリタを作っていない場合は、途中まで作られたものを `venv.failed.*` へ移し、前の venv を戻します。これにより、インストールに失敗したあとでも健全性チェックや阻害要因の確認が使える状態を保てます。
-
-別のプロセスがまだファイルハンドルを握っていると、`venv.stale.*` や `venv.failed.*` のディレクトリが残ることがあります。そのインストールを使っている Hermes Desktop、ゲートウェイ、Python のプロセスを終了してから、インストールや更新をやり直してください。残ったディレクトリは、再作成に成功したあとで可能な範囲で片付けられます。
-
-出力はおおむね次のようになります。
-
-```
-$ hermes update
-Updating Hermes Agent...
-📥 Pulling latest code...
-Already up to date.  (or: Updating abc1234..def5678)
-📦 Updating dependencies...
-✅ Dependencies updated
-🔍 Checking for new config options...
-✅ Config is up to date  (or: Found 2 new options — running migration...)
-🔄 Restarting gateways...
-✅ Gateway restarted
-✅ Hermes Agent updated successfully!
-```
+コマンドの解析部は、Windows との互換のために `--force` と `--force-venv` を残しています。これらは
+通常の更新手順ではなく、OS のファイルロックを回避できる保証でもありません。失敗した更新をやり直す前に、
+`hermes update --plan`、更新ログ、`hermes pm status` を確認してください。
 
 ### 更新後に確認しておきたいこと {#recommended-post-update-validation}
 
-`hermes update` は更新の本筋を引き受けますが、簡単な確認をしておくと、すべてきれいに反映されたと分かります。
+ソースを更新したあとは、次の診断を実行してください。同梱アプリの場合は、パッケージの中で Git のコマンドを
+使うのではなく、アプリの About ページとバックエンドの健全性を確認します。
 
 1. `git status --short` — 思い当たらない変更が出ていたら、先へ進む前に中身を確かめます
 2. `hermes doctor` — 設定、依存関係、サービスの状態を点検します
 3. `hermes --version` — 期待どおりバージョンが上がったか確かめます
 4. ゲートウェイを使っている場合: `hermes gateway status`
-5. `doctor` が npm の脆弱性を報告した場合: 指摘されたディレクトリで `npm audit fix` を実行します
+5. `hermes pm status` — 依存関係の準備の状況と、失敗した手順がないかを確かめます。
 
 :::warning 更新後に作業ツリーが汚れている場合
 `hermes update` のあとに `git status --short` で身に覚えのない変更が出ていたら、そこで止めて中身を確認してください。たいていは、ローカルの変更が更新後のコードの上に戻されたか、依存関係の処理がロックファイルを更新したかのどちらかです。
@@ -313,55 +358,44 @@ Telegram、Discord、Slack、WhatsApp、Teams から次のように送っても�
 
 これで最新のコードを取得し、依存関係を更新し、動作中のゲートウェイを再起動します。再起動の間だけボットは一時的に応答しなくなり（おおむね 5〜15 秒）、そのあと復帰します。
 
-### 手動で更新する {#manual-update}
+### ソースの手動保守と巻き戻し {#manual-source-maintenance-and-rollback}
 
-クイックインストーラーを使わず、手動でインストールした場合は次のようにします。
+独立した開発用のチェックアウトについては、[ソースからのインストールの手引き](/hermes/docs/user-guide/switching-to-source/) を
+ご覧ください。Git のリビジョンを変える前に、手元の作業をコミットするなどして残しておいてください。
+サービスが動かしているコードを置き換える前に、自分が持っているそのサービスを止めてください。
 
-```bash
-cd /path/to/hermes-agent
-# Activate the venv you created during install (outside the source tree)
-export VIRTUAL_ENV="$HOME/.hermes/venvs/hermes-dev"
-export PATH="$VIRTUAL_ENV/bin:$PATH"
+ソースのリビジョンを変えたあとは、そのリビジョンの依存関係と初期セットアップの手順を実行します。
+PM で管理されたチェックアウトでは、選んだソースの環境から `python -m pm.cli install` を使います。
+素の pip install は同じではありません。管理されたツールの保管場所も、PM による実行環境の選択も用意しないからです。
 
-# Pull latest code
-git pull origin main
+コードのチェックアウトを戻しただけでは、データは巻き戻りません。新しいリリースは、古いコードが読めない形で
+設定やデータベースを移行することがあります。古いリリースが以前のデータ形式を必要とする場合は、更新前に取った
+一貫したバックアップを使ってください。復元を試す前に、現在のデータを残しておいてください。
 
-# Reinstall (picks up new dependencies)
-uv pip install -e ".[all]"
+パッケージが持っているインストールでは、そのパッケージマネージャーの巻き戻しか再インストールの手順を使います。
+署名されたアプリや変更できないイメージの中で、Git や pip を実行しないでください。
 
-# Check for new config options
-hermes config check
-hermes config migrate   # Interactively add any missing options
-```
+### Python 3.14 とそれより古いインタープリター {#python-314-and-older-interpreters}
 
-### 巻き戻しの手順 {#rollback-instructions}
+Hermes が動くのは **Python 3.14** だけです。`pyproject.toml` はいまも
+`requires-python = ">=3.11,<3.15"` と宣言していますが、実行時の依存関係にはすべて
+`python_version >= '3.14'` のマーカーが付いています。範囲を広くしてあるのには理由が 1 つだけあります。
+venv が PM への移行より前（Python 3.11–3.13）のソースのインストールでも、新しいコードをチェックアウトして
+もう一度 `hermes update` を実行できる必要があるからです。その更新は新しい仕上げ用のプロセスに引き継がれ、
+PM が `pm/lock.json` から固定された 3.14 のインタープリターを用意し、その上に依存関係の環境を作り、
+ランチャーの向き先を付け替えます。それ以降、古いインタープリターは使われません。
 
-更新で不具合が出た場合は、前のバージョンへ戻せます。
+`hermes update` 以外では、これが次のような意味を持ちます。
 
-```bash
-cd /path/to/hermes-agent
-
-# List recent versions
-git log --oneline -10
-
-# Roll back to a specific commit
-git checkout <commit-hash>
-uv pip install -e ".[all]"
-
-# Restart the gateway if running
-hermes gateway restart
-```
-
-特定のリリースタグへ戻す場合は、次のようにします（タグは自分が使っていたものに置き換えてください。たとえば `v2026.5.16` のような最近のリリースや、`git tag --sort=-version:refname` で出てくる以前のタグです）。
-
-```bash
-git checkout vX.Y.Z
-uv pip install -e ".[all]"
-```
-
-:::warning
-新しい設定項目が追加されていた場合、巻き戻すと設定が噛み合わなくなることがあります。戻したあとに `hermes config check` を実行し、エラーが出るようなら認識されない項目を `config.yaml` から取り除いてください。
-:::
+- `pip install .`、`uv pip install .`、`pip install -e .`、あるいは Python 3.11–3.13 でビルドされた
+  Homebrew や PyPI のパッケージでは、`hermes-agent` が **依存関係なし** でインストールされ、
+  パッケージを読み込めません。これらのインストール方法は
+  [サポート対象外](/hermes/docs/getting-started/platform-support/#unsupported) です。ソースのインストーラーか、
+  パッケージ版のビルドを使ってください。
+- リポジトリの flake を使わない Nix のビルドも、同じマーカー付きの依存関係を見ることになり、
+  3.14 のインタープリターが必要です。
+- まだ移行前の venv を指している `hermes` のランチャーは、古い venv に入れ直すのではなく、
+  `hermes update`（またはチェックアウトからの `python -m pm.cli install`）で直してください。
 
 ### イメージで管理されたインストール（Docker）と来歴マーカー {#image-managed-installs-docker-the-provenance-marker}
 
@@ -395,10 +429,22 @@ nix profile rollback
 hermes uninstall
 ```
 
-アンインストーラーは、あとで入れ直すときのために設定ファイル（`~/.hermes/`）を残すかどうかを選ばせてくれます。
+ソースのインストールでは、削除する前に `hermes uninstall --dry-run` で内容を確かめてください。
+既定の削除では、設定とユーザーのデータを残せます。`--full` はデータも削除します。
+`--data` は、パッケージが持っているコードは消さずにユーザーのデータを削除します。
+どのモードも元に戻せないので、先にバックアップを取ってください。
+
+MSIX や Store 版は、Windows の設定 → アプリ → インストールされているアプリから削除します。macOS では、
+Hermes を終了してからアプリのバンドルをゴミ箱へ移します。Docker、Nix、Termux は、インストールしたときと
+同じ管理ツールを使います。それらのパッケージのファイルは、ソース用のアンインストーラーでは削除されません。
+データの削除は、パッケージの削除とは別の作業です。
 
 :::tip やめるのではなく、別の端末へ引っ越すのですか？
-何かを消す前に、環境を持ち出しておきましょう。`hermes backup` は認証情報を含めて `~/.hermes` ディレクトリ全体を保存します。`hermes profile export` は 1 つのプロファイルをまとめますが、設計上そこに認証情報は含まれません（したがってエクスポートだけでは完全なバックアップになりません）。詳しくは [`hermes backup` と `hermes profile export` の違い](/hermes/docs/reference/faq/#hermes-backup-vs-hermes-profile-export) をご覧ください。
+インストールを削除する前に `hermes backup` を実行してください。完全なアーカイブには認証情報が含まれますが、
+ダウンロードしたランタイム、依存関係の環境、キャッシュ、ブラウザーのプロファイルは含まれません。
+ソースのデータを消す前に、飛ばしたファイルの報告を確認してください。
+`hermes profile export` は、認証情報を含めずに 1 つのプロファイルをまとめます。
+詳しくは [`hermes backup` と `hermes profile export` の違い](/hermes/docs/reference/faq/#hermes-backup-vs-hermes-profile-export) をご覧ください。
 :::
 
 ### 手動でアンインストールする {#manual-uninstall}

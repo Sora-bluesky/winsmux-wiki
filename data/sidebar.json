@@ -52,6 +52,9 @@
           "id": "user-guide/windows-wsl-quickstart"
         },
         {
+          "id": "user-guide/switching-to-source"
+        },
+        {
           "id": "user-guide/configuration"
         },
         {
@@ -1532,6 +1535,26 @@
               "id": "developer-guide/trajectory-format"
             }
           ]
+        },
+        {
+          "label": "Packaging & Releases",
+          "items": [
+            {
+              "id": "developer-guide/source-update-completion"
+            },
+            {
+              "id": "developer-guide/shared-bundle-builds"
+            },
+            {
+              "id": "developer-guide/stable-releases"
+            },
+            {
+              "id": "developer-guide/macos-bundle-updates"
+            },
+            {
+              "id": "developer-guide/pm-audit-status"
+            }
+          ]
         }
       ]
     },
@@ -1543,6 +1566,9 @@
           "items": [
             {
               "id": "reference/cli-commands"
+            },
+            {
+              "id": "reference/package-management"
             },
             {
               "id": "reference/slash-commands"
@@ -1607,6 +1633,7 @@
     "user-guide/bot-mode",
     "user-guide/windows-native",
     "user-guide/windows-wsl-quickstart",
+    "user-guide/switching-to-source",
     "user-guide/configuration",
     "user-guide/managed-scope",
     "user-guide/configuring-models",
@@ -2006,7 +2033,13 @@
     "developer-guide/streaming-tts",
     "developer-guide/billing-lifecycle",
     "developer-guide/trajectory-format",
+    "developer-guide/source-update-completion",
+    "developer-guide/shared-bundle-builds",
+    "developer-guide/stable-releases",
+    "developer-guide/macos-bundle-updates",
+    "developer-guide/pm-audit-status",
     "reference/cli-commands",
+    "reference/package-management",
     "reference/slash-commands",
     "reference/profile-commands",
     "reference/environment-variables",

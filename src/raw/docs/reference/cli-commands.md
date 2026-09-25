@@ -2,12 +2,16 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 2fc9cc35fb73ba6b58d3fbfc3e4a7f501e297d22
+upstream_blob: a2f81b1724a8e4307972c21835413f24428152ec
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
 
 # CLIコマンド一覧 {#cli-commands-reference}
+
+このページの Python の依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)で実行する前提です。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 このページでは、シェルから実行する**ターミナルコマンド**について説明します。
 
@@ -519,7 +523,7 @@ hermes secrets bw <subcommand>          # short alias
 | `status` | 現在の設定、バイナリのパス/バージョン、トークンの検証状態を表示します。 |
 | `token` | アクセストークンをローテーションします: `.env` に保存する前に新しいトークンを Bitwarden に対して検証します（拒否されたトークンは何も変更しません）。非対話利用には `--access-token`、検証をスキップするには `--no-verify` を受け付けます。 |
 | `sync` | 今すぐシークレットを取得し、変更内容を報告します。`--apply` を付けると、そのシークレットを実際に現在のシェルの環境変数へエクスポートします（既定は dry-run）。 |
-| `install` | ピン留めされた `bws` バイナリをダウンロードして検証します。`--force` は管理済みのコピーが既にあっても再ダウンロードします。 |
+| `install` | PM でピン留めされた `bws` バイナリをインストール、または修復します。`--force` は同じ整合性の確認と修復を求めるもので、無条件にダウンロードし直すわけではありません。 |
 | `disable` | Bitwarden 連携を無効にします。 |
 
 ## `hermes migrate` {#hermes-migrate}
@@ -768,7 +772,7 @@ Cline Kanban / Paperclip / NanoClaw / Gemini Enterprise との比較、8つの�
 
 ```bash
 hermes egress install                  # download the pinned iron-proxy binary
-hermes egress install --force          # re-download even if already installed
+hermes egress install --force          # check and repair the managed copy
 
 hermes egress setup                    # interactive wizard: CA, mappings, config
 hermes egress setup --tunnel-port N    # override the tunnel listener port (default 9090)
@@ -1479,7 +1483,7 @@ python -m acp_adapter
 先にサポートをインストールしてください:
 
 ```bash
-cd ~/.hermes/hermes-agent && uv pip install -e '.[acp]'
+cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['acp'], explicit=True)"
 ```
 
 [ACP Editor Integration](/hermes/docs/user-guide/features/acp/) と [ACP Internals](/hermes/docs/developer-guide/acp-internals/) を参照してください。
@@ -1521,9 +1525,9 @@ hermes plugins [subcommand]
 | サブコマンド | 説明 |
 |------------|-------------|
 | *(なし)* | 複合的な対話 UI — 一般プラグインの切り替え + プロバイダプラグインの設定です。 |
-| `install <identifier> [--force] [--ref COMMIT_SHA] [--allow-removed]` | Hermes プラグインカタログ（そのままのエントリ名）、Git URL、または `owner/repo` の省略形からプラグインをインストールします。カタログ名は、そのエントリのリポジトリの、ピン留めされた40桁の16進数コミット SHA に解決され、宣言された機能概要を表示し、カタログの出自をインストーラの `.install-metadata.json` の記録に残します（利便性のため `.hermes-catalog.json` のコピーがプラグインディレクトリ内にも書かれますが、これは決して信頼されません）。生の URL はカスタム（未レビュー）ソースとしてフラグ付けされます。`--ref`（完全な40文字のコミット SHA）はそれをピン留めし、カタログの項目に対しては、レビュー済みのピンの代わりにチェックアウトした SHA を記録します。`--allow-removed`（危険）は、インストール時に削除済みプラグインのブロックリストを回避し、そのインストールを更新/有効化/ロード時の kill-list チェックからも除外します。 |
+| `install <identifier> [--force] [--ref COMMIT_SHA] [--allow-removed]` | Hermes プラグインカタログ（そのままのエントリ名）、Git URL、または `owner/repo` の省略形からプラグインをインストールします。カタログ名は、レビュー済みの40桁の16進数コミット SHA に解決され、宣言された機能を表示します。ソース、チェックアウトしたリビジョン、入れ子になったカタログの出自のブロックは、インストーラの `plugins/.install-metadata.json` に記録されます。プラグインディレクトリ内の `.hermes-catalog.json` のコピーは利便性のためだけのもので、決して信頼されません。生の URL はカスタム（未レビュー）ソースとしてフラグ付けされます。`--ref` は完全な SHA でカスタムのピンを選び、実際にチェックアウトした SHA を記録します。`--allow-removed`（危険）は、インストール時に削除済みプラグインのブロックリストを回避し、そのインストールを更新・有効化・ロード時の kill-list チェックからも除外します。 |
 | `search [term] [--json]` | Hermes プラグインカタログを検索します（エントリ名、説明、宣言されたツールにマッチします。`term` を省略するとすべて一覧します）。カタログはリポジトリ内（`plugin-catalog/`）でキュレーションされ、6時間キャッシュで生きているリポジトリから更新され、オフライン時はリポジトリ内のコピーにフォールバックします。カタログ化されている ≠ 監査済みです — 受け入れはエントリをレビューするもので、コードをレビューするものではありません。 |
-| `update <name>` | ピン留めされていないインストール済みプラグインの最新の変更を pull します。ピン留めされたプラグインを移動するには、`--force --ref <new-commit>` で再インストールする必要があります。 |
+| `update <name>` | カタログからのインストールは、レビュー済みのカタログの SHA にピンを付け直します。カスタムの Git インストールは、記録されたソースやフィードから更新します。PM は、コードを公開する前に有効なプラグインの依存関係を検証します。明示したカスタムのピンは、`install --force --ref <new-commit>` を使ったときだけ動きます。 |
 | `remove <name>`（別名: `rm`, `uninstall`） | インストール済みのプラグインを削除します。 |
 | `enable <name>` | 無効化されたプラグインを有効化します。 |
 | `disable <name>` | プラグインを削除せずに無効化します。 |
@@ -1725,7 +1729,7 @@ Hermes の**バックエンドサーバー**を起動します — [デスクト
 hermes dashboard [options]
 ```
 
-Web ダッシュボードを起動します — 設定、API キー、セッションの監視を行うためのブラウザベースの UI です。（デスクトップアプリが起動するような、ブラウザ UI のないヘッドレスなバックエンドが必要な場合は、上の [`hermes serve`](#hermes-serve) を使ってください。）`cd ~/.hermes/hermes-agent && uv pip install -e ".[web]"`（FastAPI + Uvicorn）が必要です。埋め込みのブラウザ Chat タブは常に利用可能ですが、さらに `pty` エクストラ（`cd ~/.hermes/hermes-agent && uv pip install -e ".[web,pty]"`）と、Linux、macOS、WSL2 のような POSIX の PTY 環境が必要です。詳しいドキュメントは [Web Dashboard](/hermes/docs/user-guide/features/web-dashboard/) を参照してください。
+Web ダッシュボードを起動し、設定、API キー、セッションを管理します。ヘッドレスなバックエンドが必要な場合は [`hermes serve`](#hermes-serve) を使ってください。FastAPI、Uvicorn、プラットフォームの PTY ヘルパーは中核の依存関係に含まれます。`web` の extra は HTTP スタックの厳密なバージョン制約を加えるもので、標準の PM のセットアップでは `all` を通して選ばれます。依存関係が壊れた場合は `hermes pm repair` を実行してください。埋め込みの Chat タブには、Linux、macOS、WSL2 のような POSIX の PTY 環境が必要です。[Web Dashboard](/hermes/docs/user-guide/features/web-dashboard/) を参照してください。
 
 | オプション | 既定値 | 説明 |
 |--------|---------|-------------|
@@ -1819,18 +1823,47 @@ hermes completion zsh >> ~/.zshrc
 hermes completion fish > ~/.config/fish/completions/hermes.fish
 ```
 
+## `hermes pm` {#hermes-pm}
+
+ピン留めしたツール、Python の依存関係の環境、そしてそれらの診断を管理します。
+このコマンドは Hermes のアプリケーションそのものは更新しません。
+
+```bash
+hermes pm --help
+hermes pm doctor
+hermes pm status
+hermes pm repair
+hermes pm install
+hermes pm install chromium
+```
+
+ソースから開発する場合は、セットアップのスクリプトを一度実行し、そのあと `source ./activate`、PowerShell なら `. .\activate.ps1` で
+インストールした環境を有効化します。
+`deactivate` で元のシェルの環境に戻せます。準備、日常のコマンド、依存関係の更新、テスト環境については、
+[開発者向けのワークフロー](/hermes/docs/reference/package-management/#developer-workflow)を参照してください。
+
+すべてのサブコマンド、ソース版とバンドル版の動きの違い、遅延インストールの方針、メンテナー向けのコマンドは、
+[パッケージ管理](/hermes/docs/reference/package-management/)を参照してください。
+
 ## `hermes update` {#hermes-update}
 
 ```bash
 hermes update [--gateway] [--check] [--plan] [--no-backup] [--backup] [--yes]
 ```
 
-最新の `hermes-agent` のコードを pull し、管理された venv に依存関係を再インストールし、post-install のフック（MCP サーバー、スキルの同期、補完のインストール）を再実行します。稼働中のインストールに対しても安全に実行できます。インストールせずに、チェックアウトが `origin/main` より遅れていないか確認するには `--check` を使ってください。
+受け入れ済みのソースのチェックアウトを更新し、PM を通して依存関係を用意します。
+更新を適用せずに、設定されたソースの対象と比べるには `--check` を使います。
+デスクトップのバンドル、Docker、Nix、Termux のパッケージは、それぞれ外部の更新の仕組みが引き続き担当します。
+[更新とアンインストール](/hermes/docs/getting-started/updating/) を参照してください。
 
 `hermes update` は、設定された更新用ブランチ（既定: `main`）を pull します。チェックアウトが別のブランチにある場合、Hermes は pull の前に更新用ブランチをチェックアウトすることがあります。更新の自動 stash フローの外にブランチ上の作業を残しておきたい場合は、更新前にコミットしてください。
 
 | オプション | 説明 |
 |--------|-------------|
+| `--install-id` | このインストールの識別子とパスを表示して終了します。 |
+| `--set-channel CHANNEL` | 更新は適用せずに、このソースのインストールに `main`、`stable`、`canary` のいずれかを保存します。バンドル版のアプリケーションはビルドのチャンネルが固定なので、チャンネルの変更を拒否します。 |
+| `--channel CHANNEL` | この実行に限ってソースのチャンネルを選びます。 |
+| `--branch NAME` | この実行に使うソースのブランチを選びます。ソースのチャンネルの選択より優先されます。 |
 | `--gateway` | メッセージングの `/update` コマンドが使う内部モードです。プロンプトと進捗のストリーミングに、ターミナルの stdin を読む代わりに、ファイルベースの IPC を使います。ゲートウェイの再起動フラグではありません。 |
 | `--check` | pull・依存関係のインストール・何かの再起動をせずに、更新が利用可能かどうかを確認します。 |
 | `--plan` | 何も変更せずに更新の計画を表示して終了します: インストールの種類（git/Docker/Nix/apt）、すべてのプロファイルで実行中のすべての Hermes サービスとそのスーパーバイザおよび実行中のコードバージョン、それぞれがどう再起動されるか。イメージ管理やパッケージ管理のインストールでは、代わりに正しい外部の更新コマンドが表示されます。読み取り専用です。 |
@@ -1856,7 +1889,7 @@ hermes update [--gateway] [--check] [--plan] [--no-backup] [--backup] [--yes]
 | `hermes --version` | バージョン情報を表示します。 |
 | `hermes update` | 最新の変更を取得し、依存関係を再インストールします。 |
 
-| `hermes uninstall [--full] [--gui] [--dry-run] [--yes]` | Hermes を削除します。オプションで設定/データもすべて削除できます。`--gui` はデスクトップの Chat GUI だけを削除し、エージェント自体は残します。`--full` は設定/データも削除します。`--dry-run` は何が削除されるかを、何も変更せずに表示します。`--yes` はプロンプトをスキップします。 |
+| `hermes uninstall [--full] [--gui] [--data] [--dry-run] [--yes]` | ソースからのインストールで Hermes が持つファイルを削除します。`--gui` はソースからビルドしたデスクトップの削除を選びます。`--full` はデータも削除します。`--data` は、パッケージが持つコードは消さずにユーザーのデータを削除します。封じられたインストールでは、アプリケーションの削除はそのパッケージの管理側が行います。`--dry-run` は削除の範囲を事前に表示し、`--yes` は確認を省きます。 |
 
 ## 関連 {#see-also}
 

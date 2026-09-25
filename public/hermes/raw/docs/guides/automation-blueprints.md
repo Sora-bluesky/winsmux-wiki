@@ -2,7 +2,7 @@
 title: "自動化の型紙"
 description: "そのまま使える自動化の型紙です。予定した実行、GitHub のできごとをきっかけにした実行、API の Webhook、複数のスキルを組み合わせた流れをそろえています。"
 upstream_path: guides/automation-blueprints.md
-upstream_blob: 112896e5c2e053ab51df572d4d1b9a60df956a74
+upstream_blob: d1983b07a3cd96ea9e9630de6889d79bbad73ff4
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/automation-blueprints
 ---
@@ -145,9 +145,9 @@ Report any gaps where code changed but docs didn't. If everything is in sync, re
 hermes cron create "0 6 * * *" \
   "Run a dependency security audit on the hermes-agent project.
 
-1. cd ~/.hermes/hermes-agent && source .venv/bin/activate
-2. Run: pip audit --format json 2>/dev/null || pip audit 2>&1
-3. Run: npm audit --json 2>/dev/null (in website/ directory if it exists)
+1. Locate the hermes-agent checkout and its pyproject.toml and uv.lock. Do not activate or mutate Hermes's dependency environment.
+2. Scan uv.lock with an independently installed scanner that supports that lock format (check its --help). Preserve the complete findings and errors. If no scanner is available, report the blocker; do not install one into Hermes.
+3. Run: npm audit --json in website/ if it exists. Preserve stderr and distinguish findings from a failed scan.
 4. Check for any CVEs with CVSS score >= 7.0
 
 If vulnerabilities found:

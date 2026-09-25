@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: 12fef75ba992230cf6ffde896d33c8383262f7f5
+upstream_blob: f8dd1ea69b737901051cf06801e87106b1661757
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -793,7 +793,7 @@ slack:
 ゲートウェイの設定変更・配備・再起動のあとは、この点検を実行します。
 
 ```bash
-uv run --frozen pytest -q tests/gateway/test_slack_peer_agent_smoke.py -o addopts=''
+scripts/run_tests.sh tests/gateway/test_slack_peer_agent_smoke.py -q
 ```
 
 この点検は、その場で作った疑似的な Slack のイベントだけを使います。実際に Slack へメッセージを送ることはなく、既定では本物のボットトークンも要りません。

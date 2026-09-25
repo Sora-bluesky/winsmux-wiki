@@ -2,7 +2,7 @@
 title: "Google Workspace — gws CLI か Python で Gmail・Calendar・Drive・Docs・Sheets を扱う"
 description: "gws CLI か Python で Gmail・Calendar・Drive・Docs・Sheets を扱う"
 upstream_path: user-guide/skills/bundled/productivity/productivity-google-workspace.md
-upstream_blob: 117dee275ea66410df619ee90b01f3e095c219a5
+upstream_blob: fe22fd0ab114fb6635ed583445252ec97c41a3b1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-google-workspace
 ---
@@ -48,6 +48,10 @@ Gmail、Calendar、Drive、Contacts、Sheets、Docs を、Hermes が管理する
 
 設定は最初から最後まで対話なしで進みます。エージェントが一段ずつ進める形なので、
 CLI でも Telegram でも Discord でも、どの経路からでも動きます。
+
+設定スクリプトは、関係のないシステムの Python ではなく、Hermes の環境にある Python で実行してください。
+`--install-deps` を付けると、Hermes が宣言している Google 用の追加パッケージを PM で同期します。
+同期したら Hermes を再起動し、OAuth のコマンドをもう一度実行してください。Hermes を import できない場合は、pip でパッケージを入れるのではなく、先に `hermes setup` を実行してください。
 
 まず短縮名を決めておきます。
 

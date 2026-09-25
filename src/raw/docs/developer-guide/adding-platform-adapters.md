@@ -2,7 +2,7 @@
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: 536a7f66468959046df03ca25d6a8e0220196309
+upstream_blob: 17b03d261ec37063c01febd162ff2d6b43303236
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -150,12 +150,12 @@ def register(ctx):
         # ACTIVE installer (optional) — only for platforms with a
         # lazy-installable SDK.  create_adapter() calls it when check_fn
         # returns False, right before the gateway connects the platform.
-        # Typically wraps tools.lazy_deps.ensure_and_bind(...).  Omit it
+        # Typically wraps pm.extras.ensure_and_bind(...).  Omit it
         # and a False check_fn is a hard block.
         # ensure_deps_fn=ensure_requirements,
         validate_config=validate_config,
         required_env=["MY_PLATFORM_TOKEN"],
-        install_hint="pip install my-platform-sdk",
+        install_hint="Declare my-platform-sdk in this plugin's Python dependencies, then retry hermes plugins enable my-platform",
         # Env-driven auto-configuration — seeds PlatformConfig.extra from
         # env vars before adapter construction. See "Env-Driven Auto-
         # Configuration" section below.

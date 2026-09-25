@@ -2,7 +2,7 @@
 title: "Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 description: "Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 upstream_path: user-guide/skills/bundled/software-development/software-development-python-debugpy.md
-upstream_blob: 3ce8f84f62b155524d05342b48c875cc640e4b9a
+upstream_blob: d0d8fe7b4b79737ab851dfbbd6804433665ab0f9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy
 ---
@@ -113,24 +113,19 @@ python -m pdb path/to/script.py arg1 arg2
 
 ## レシピ 3: pytest のテストをデバッグする {#recipe-3-debug-a-pytest-test}
 
-hermes のテストランナーも pytest も、これに対応しています。
+対話を伴わない調査には、`terminal` と正規のテストランナーを使います。
 
 ```bash
-# Drop to pdb on failure (or on any raised exception):
-scripts/run_tests.sh tests/path/to/test_file.py::test_name --pdb
-
-# Drop to pdb at the START of the test:
-scripts/run_tests.sh tests/path/to/test_file.py::test_name --trace
-
 # Show locals in tracebacks without pdb:
 scripts/run_tests.sh tests/path/to/test_file.py --showlocals --tb=long
 ```
 
-ただし `scripts/run_tests.sh` は、`run_tests_parallel.py` を通してテストファイルごとに出力を取り込んだサブプロセスで走らせます（xdist は使っていません）。そのため、このラッパー越しでは対話的な pdb は動きません。`--pdb` を使いたいときは pytest を直接実行してください。
+`scripts/run_tests.sh` はファイルごとに別のサブプロセスで出力を取り込むので、そこでは `--pdb`
+や `--trace` を付けても対話のプロンプトは出ません。対話的なデバッガを使うときに限り、
+レシピ 5 で用意した、独立した開発・テスト用のインタープリターを使ってください（本番の世代は決して使いません）。
 
 ```bash
-source .venv/bin/activate
-python -m pytest tests/foo_test.py::test_bar --pdb
+.venv/bin/python -m pytest tests/foo_test.py::test_bar --pdb
 ```
 
 この方法だと環境を隔離する仕組みは効かなくなります。デバッグ中はそれでかまいませんが、push する前にラッパー越しで走らせ直して確かめてください。
@@ -167,10 +162,23 @@ sys.excepthook = excepthook
 
 ### 下ごしらえ {#setup}
 
+Hermes の場合は、動いている本番の世代ではなく、別に用意した開発用のチェックアウトとデータのホームを使います。
+[PM の開発者向けワークフロー](https://hermes-agent.nousresearch.com/docs/reference/package-management#developer-workflow)
+に従い、そのチェックアウトを有効化してください。PowerShell なら `. .\activate.ps1` です。宣言済みの `dev`
+extra には debugpy が含まれますが、PM の有効化では同期されません（`all` にも含まれません）。
+`terminal` を使い、準備したチェックアウトの Python で、呼び出し側が持つデバッグ・テスト用の環境を新しく作ります。
+
 ```bash
-source <hermes-agent-repo>/.venv/bin/activate
-pip install debugpy
+source ./activate
+python -m pm.build_env --source . --out .venv --group dev --group test
+.venv/bin/python -c "import debugpy; print(debugpy.__file__)"
 ```
+
+出力先はまだ存在していてはいけません。作り直すときは、その環境のプロセスを止め、使い捨てのその環境だけを
+意図して消してから作ります。デバッグ対象には、同じ分離された `HERMES_HOME` を使い続けます。
+`.venv/bin/python` は、ここで明示的に作ったデバッグ用の環境で、当て推量のアプリの venv ではありません。以下のパターンは
+これを通して実行します。動いている本番の環境に debugpy を足さないでください。本番で再現するのは、
+あらかじめ用意したデバッグ対象がある場合だけにするか、開発用の環境で再起動の段取りを組みます。
 
 ### パターン A: ソースを書き換えて、起動時にデバッガの接続を待たせる {#pattern-a-source-edit-process-waits-for-debugger-at-launch}
 
@@ -189,13 +197,13 @@ debugpy.breakpoint()       # optional: pause immediately once attached
 ### パターン B: ソースを触らず、`-m debugpy` で起動する {#pattern-b-no-source-edit-launch-with--m-debugpy}
 
 ```bash
-python -m debugpy --listen 127.0.0.1:5678 --wait-for-client your_script.py arg1
+.venv/bin/python -m debugpy --listen 127.0.0.1:5678 --wait-for-client your_script.py arg1
 ```
 
 モジュールとして起動する場合も同じ要領です。
 
 ```bash
-python -m debugpy --listen 127.0.0.1:5678 --wait-for-client -m your.module
+.venv/bin/python -m debugpy --listen 127.0.0.1:5678 --wait-for-client -m your.module
 ```
 
 ### パターン C: すでに動いているプロセスに接続する {#pattern-c-attach-to-an-already-running-process}
@@ -203,7 +211,7 @@ python -m debugpy --listen 127.0.0.1:5678 --wait-for-client -m your.module
 PID がわかっていて、相手の環境に debugpy が入っていることが前提です。
 
 ```bash
-python -m debugpy --listen 127.0.0.1:5678 --pid <pid>
+.venv/bin/python -m debugpy --listen 127.0.0.1:5678 --pid <pid>
 # debugpy injects itself into the process. Then attach a client as below.
 ```
 
@@ -271,9 +279,10 @@ send({"type": "request", "command": "configurationDone"})
 
 **選択肢 3: DAP をやめて `remote-pdb` を使う** — ターミナルで動くエージェントが本当に欲しいのは、たいていこちらです。
 
-```bash
-pip install remote-pdb
-```
+独立して管理している Python のプロジェクトなら、そのプロジェクトの開発用の依存関係に `remote-pdb` を宣言し、
+プロジェクトのパッケージ管理ツールでデバッグ用の環境を用意します。これは Hermes の SDK の導入手順ではありません。
+Hermes では、宣言済みの debugpy の依存関係を優先してください。以下の remote-pdb の例は、別に宣言して新しく作った
+デバッグ用の環境が前提です。選ばれているアプリの世代に、その場で pip で入れることは決してしません。
 
 コードにはこう書きます。
 ```python
@@ -295,7 +304,8 @@ nc 127.0.0.1 4444
 レシピ 3 を見てください。ラッパーはサブプロセスの出力を取り込んでしまうので、対話的な pdb を使うなら pytest を直接実行します。
 
 ### `run_agent.py` と CLI — 一度きりの実行 {#runagentpy-cli-one-shot}
-いちばん簡単なのは、怪しい行の近くに `breakpoint()` を置いて `hermes` を普通に実行することです。止まった時点で、操作はターミナルに戻ってきます。
+準備したデバッグ用のチェックアウトで、怪しい行の近くに `breakpoint()` を置き、
+`python hermes` を実行します。止まった時点で、操作はターミナルに戻ってきます。
 
 ### `tui_gateway` のサブプロセス（`hermes --tui` から起動される） {#tuigateway-subprocess-spawned-by-hermes---tui}
 gateway は Node 製 TUI の子プロセスとして動きます。やり方は 2 つあります。
@@ -307,7 +317,7 @@ gateway は Node 製 TUI の子プロセスとして動きます。やり方は 
 debugpy.listen(("127.0.0.1", 5678))
 debugpy.wait_for_client()
 ```
-`hermes --tui` を起動します。TUI は固まったように見えます（裏側が待っているためです）。クライアントをつないで `continue` すると、実行が再開します。
+準備したデバッグ用のチェックアウトから `python hermes --tui` を起動します。TUI は固まったように見えます（裏側が待っているためです）。クライアントをつないで `continue` すると、実行が再開します。子プロセスがデバッグ用の環境を受け継いだと決めつける前に、子のインタープリターと import 先を確かめてください。
 
 **B. 目的のハンドラで `remote-pdb` を使う:**
 ```python
@@ -347,7 +357,7 @@ TUI から対応するスラッシュコマンドを実行し、別のターミ�
 
 ## 確認リスト {#verification-checklist}
 
-- [ ] `pip install debugpy` のあと、`python -c "import debugpy; print(debugpy.__version__)"` で入ったことを確かめる
+- [ ] 独立して作ったデバッグ用の環境で、`.venv/bin/python -c "import debugpy; print(debugpy.__version__); print(debugpy.__file__)"` で確かめる
 - [ ] リモートデバッグでは、ポートが実際に待ち受けているか確かめる: `ss -tlnp | grep 5678`
 - [ ] 最初のブレークポイントで本当に止まる（止まらないなら、`PYTHONBREAKPOINT=0` になっている、並列実行や出力の取り込みを行うランナーの下にいる、接続前に実行が終わっている、のどれかです）
 - [ ] `where` または `w` で、想定どおりの呼び出し履歴が出る
@@ -371,9 +381,9 @@ breakpoint()
 **「単体では通るのに、まとめて実行すると落ちるテスト」**
 ```bash
 scripts/run_tests.sh tests/the_test.py   # confirm it fails under the isolated runner first
-# For interactive debugging, or if it only fails WITH other tests:
-source .venv/bin/activate
-python -m pytest tests/ -x --pdb
+# For interactive debugging, or if it only fails WITH other tests, use the
+# independent development/test interpreter prepared in Recipe 5:
+.venv/bin/python -m pytest tests/ -x --pdb
 # Now it pdb-traps at the exact failing test after state accumulated.
 ```
 

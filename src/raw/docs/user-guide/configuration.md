@@ -2,12 +2,16 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: cf74aaa66f0182543d548d465124db1db45adc5f
+upstream_blob: 1883092fe088b8fb8a1e6ff6a83e909f494ab7f3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
 
 # Hermes Agent の設定 {#hermes-agent-configuration}
+
+このページの Python の依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)で実行する前提です。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 設定はすべて `~/.hermes/` ディレクトリにまとまっているので、すぐに開けます。
 
@@ -542,7 +546,7 @@ terminal:
 **必要なインストール:** 追加の SDK（extra）をインストールします。
 
 ```bash
-pip install 'hermes-agent[vercel]'
+python -c "import pm; pm.sync_venv(['vercel'], explicit=True)"
 ```
 
 **必要な認証:** アクセストークンによる認証を、`VERCEL_TOKEN`、`VERCEL_PROJECT_ID`、`VERCEL_TEAM_ID` の3つすべてを使って設定します。デプロイや、Render、Railway、Docker などのホストで長時間動かす通常の Hermes プロセスでサポートされているのは、この構成です。
@@ -2424,7 +2428,7 @@ stt:
 
 プロバイダーごとの動き:
 
-- `local` は、手元のマシンで動く `faster-whisper` を使います。`pip install faster-whisper` で別途インストールしてください。無音時のハルシネーション（ありもしない文字起こし）への対策は既定で有効です。Silero VAD フィルターで無音や雑音が Whisper に届かないようにし、区間をまたいだ条件付けを無効にし、モデル自身が「おそらく発話ではない」*かつ*「信頼度が低い」と判定した区間を捨てます。発話以外の音声（音楽、環境音）を対策なしの元の動きで文字起こししたいときは、`stt.local.vad: false` を設定してください。低いレイテンシで文字起こしできるよう、モデルは音声メッセージの合間もメモリに読み込まれたままです。使われていないときにモデルを自動で解放するには、`stt.local.unload_after_idle_seconds`（例: 5分なら `300`）を設定してください。CUDA のホストでは GPU メモリが解放されます（ローカルの LLM と GPU を共有しているときに一番効果があります）。CPU の場合、そのメモリはプロセスが再利用できるようになりますが、プロセスが別の用途でその領域を必要とするまで、OS から見た使用量は減らないことがあります。次の音声メッセージが届くと、モデルは自動的に読み込み直されます。
+- `local` は、手元のマシンで動く `faster-whisper` を使います。`python -c "import pm; pm.sync_venv(['stt-whisper'], explicit=True)"` で別途インストールしてください。無音時のハルシネーション（ありもしない文字起こし）への対策は既定で有効です。Silero VAD フィルターで無音や雑音が Whisper に届かないようにし、区間をまたいだ条件付けを無効にし、モデル自身が「おそらく発話ではない」*かつ*「信頼度が低い」と判定した区間を捨てます。発話以外の音声（音楽、環境音）を対策なしの元の動きで文字起こししたいときは、`stt.local.vad: false` を設定してください。低いレイテンシで文字起こしできるよう、モデルは音声メッセージの合間もメモリに読み込まれたままです。使われていないときにモデルを自動で解放するには、`stt.local.unload_after_idle_seconds`（例: 5分なら `300`）を設定してください。CUDA のホストでは GPU メモリが解放されます（ローカルの LLM と GPU を共有しているときに一番効果があります）。CPU の場合、そのメモリはプロセスが再利用できるようになりますが、プロセスが別の用途でその領域を必要とするまで、OS から見た使用量は減らないことがあります。次の音声メッセージが届くと、モデルは自動的に読み込み直されます。
 - `groq` は Groq の Whisper 互換エンドポイントを使い、`GROQ_API_KEY` を読み込みます。`stt.groq.language`（または全体に効く `HERMES_LOCAL_STT_LANGUAGE` 環境変数）を指定すると、自動判定を省いてレイテンシを減らせます。
 - `openai` は OpenAI の音声 API を使い、`VOICE_TOOLS_OPENAI_KEY` を読み込みます。
 
@@ -2610,7 +2614,7 @@ quick_commands:
     command: df -h /
   update:
     type: exec
-    command: cd ~/.hermes/hermes-agent && git pull && uv pip install -e .
+    command: hermes update
   gpu:
     type: exec
     command: nvidia-smi --query-gpu=name,utilization.gpu,memory.used,memory.total --format=csv,noheader

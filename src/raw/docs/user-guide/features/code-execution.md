@@ -2,7 +2,7 @@
 title: "コードの実行"
 description: "RPC でツールを呼べる Python の実行環境。何手もかかる作業を1ターンに畳み込みます"
 upstream_path: user-guide/features/code-execution.md
-upstream_blob: fea567d5662298b877dc3c792ac8b1cc73c64de3
+upstream_blob: f373bb26dab932497f19780a8b6806589cb141cb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/code-execution
 ---
@@ -154,6 +154,17 @@ code_execution:
 - 資源の上限（制限時間、標準出力の上限、ツールの呼び出し回数の上限）
 
 しかたを切り替えて変わるのは、台本がどこで走り、どの実行系が走らせるかであって、どの認証情報が見えるかでも、どのツールを呼べるかでもありません。
+
+## セッションをまたいで残るカーネル {#persistent-session-kernel}
+
+呼び出しは、セッション、実行のしかた、実行系、
+作業ディレクトリ、ツールの組み合わせが同じなら、同じ Python の子プロセスを使い回します。import したもの、変数、読み込んだデータは、
+セルをまたいで残ることがあります。子プロセスの環境は、カーネルが起動した時点で固定されます。
+
+カーネルの状態を捨てたいときは `reset: true` を渡します。時間切れや中断されたカーネルでも、
+状態は失われることがあります。あとからターミナルの環境を変えても、すでに動いているカーネルの中に
+その変更が見えているとは考えないでください。以前の `code_execution.kernel_mode`
+の設定は、もう独立した切り替えではありません。
 
 ## 資源の上限 {#resource-limits}
 

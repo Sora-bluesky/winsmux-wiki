@@ -2,7 +2,7 @@
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: 9784892e0f9e5e1da50d06e5ebd8542dc027129e
+upstream_blob: c49316ace4729fff9ef1e0be0c2398ab94e54977
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -1222,7 +1222,7 @@ print(json.dumps({"wakeAgent": True, "context": {"new_issues": latest - prev}}))
 **ファイル変更の関門** — 前回うまくいった tick 以降に、見張っているファイルへ新しい中身が入ったときだけ実行します。スケジューラーは各ジョブの `last_run_at` を記録しているので、それをファイルの mtime と比べます。
 
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # ~/.hermes/scripts/feed-changed.sh
 FEED="$HOME/data/feed.json"
 STATE="$HOME/.hermes/scripts/.feed-changed.last"
@@ -1247,7 +1247,7 @@ cronjob(action="create", name="process-feed",
 **外部フラグの関門** — ほかのプロセスが「準備できた」と合図したときだけ実行します（デプロイのフックがファイルを置く、CI のジョブが状態ストアへ値を書く、など）。
 
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # ~/.hermes/scripts/flag-ready.sh
 if test -f ~/.hermes/cache/scratch/new-data-ready; then
   rm -f ~/.hermes/cache/scratch/new-data-ready

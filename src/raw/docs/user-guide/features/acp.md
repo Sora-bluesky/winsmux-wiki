@@ -2,12 +2,16 @@
 title: "ACP ホスト連携"
 description: "ACP に対応したエディタや共同作業ツールの中で Hermes Agent を使う"
 upstream_path: user-guide/features/acp.md
-upstream_blob: ad4ebb37c7ac19dc746170ab5d79aa8436de2578
+upstream_blob: dff4914f54b6b796c985e44400ce3933dfae8a7e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/acp
 ---
 
 # ACP ホスト連携 {#acp-host-integration}
+
+このページにある Python の依存パッケージのコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)で実行する前提です。
+依存パッケージを変えたあとは、チェックアウトをもう一度有効にしてから Hermes を再起動してください。
 
 Hermes Agent は ACP サーバーとして動かせます。ACP に対応したホストは、
 標準入出力を通して Hermes とやり取りできます。エディタ側では次のものを表示できます。
@@ -61,7 +65,7 @@ agent:
 Hermes を普通にインストールしたあと、インストール先のディレクトリで ACP 用の追加パッケージを入れます。
 
 ```bash
-cd ~/.hermes/hermes-agent && uv pip install -e '.[acp]'
+cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['acp'], explicit=True)"
 ```
 
 これで `agent-client-protocol` が入り、次のものが使えるようになります。
@@ -396,7 +400,7 @@ ACP の橋渡し部分は、これらの選択肢を Hermes 内部の承認の�
 
 - 手動設定や開発中の環境なら、ホスト側の起動コマンドが `hermes acp` を指しているか。
 - Hermes がインストールされていて、PATH 上にあるか。
-- ACP 用の追加パッケージが入っているか（`cd ~/.hermes/hermes-agent && uv pip install -e '.[acp]'`）。
+- ACP 用の追加パッケージが入っているか（`cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['acp'], explicit=True)"`）。
 
 ### 起動した直後にエラーで落ちる {#acp-starts-but-immediately-errors}
 

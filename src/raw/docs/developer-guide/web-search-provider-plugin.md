@@ -2,7 +2,7 @@
 title: "ウェブ検索プロバイダのプラグイン"
 description: "Hermes Agent 向けに、ウェブ検索・本文抽出・巡回のバックエンドとなるプラグインを作る方法"
 upstream_path: developer-guide/web-search-provider-plugin.md
-upstream_blob: 2070c68740ee4cc5c35e7f8b669a7309069add88
+upstream_blob: a254b8561cec8af7e535e28d7bee3b369608cd60
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/web-search-provider-plugin
 ---
@@ -233,7 +233,14 @@ web:
 
 ## 任意の依存を必要になってから入れる {#lazy-installing-optional-dependencies}
 
-DDGS が `ddgs` パッケージを使うように、外部の SDK を包むプロバイダを書くときは、モジュールの先頭で `import` しないでください。`is_available()` や `search()` の中で `tools.lazy_deps.ensure(...)` を使えば、Hermes が最初に使うときにパッケージを入れます。動くかどうかは `security.allow_lazy_installs` で制御されます。安全上の考え方は [Hermes プラグインを作る → 必要になってから入れる](/hermes/docs/developer-guide/plugins/#lazy-install-optional-python-dependencies)をご覧ください。
+使えるかどうかの確認は、読み取りだけで済ませてください。Hermes の extra でまかなえる SDK なら、
+`is_available()` では `pm.available("extra-name")` を使います。
+`pm.ensure_import("extra-name")` は、その SDK を実際に必要とする処理の中で呼びます。
+`InstallError` は、再起動が必要な場合も含めて、呼び出し元へそのまま伝えてください。
+
+外部のプラグインが自分で使う依存は、Hermes の extra を新しくこしらえず、そのプラグインのマニフェストか
+`pyproject.toml` に書きます。詳しくは
+[Hermes プラグインを作る → 必要になってから入れる](/hermes/docs/developer-guide/plugins/#lazy-install-optional-python-dependencies)をご覧ください。
 
 ## 手本になる実装 {#reference-implementations}
 

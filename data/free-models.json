@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-25",
+  "generatedAt": "2026-09-26",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-09-25",
-      "attemptedAt": "2026-09-25",
+      "fetchedAt": "2026-09-26",
+      "attemptedAt": "2026-09-26",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -31,7 +31,7 @@
         {
           "id": "meituan/longcat-2.0:free",
           "name": "Meituan: LongCat 2.0",
-          "ctx": 1048576,
+          "ctx": 1048756,
           "tools": true,
           "expires": null,
           "freeBasis": "pricing",
@@ -93,8 +93,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-09-25",
-      "attemptedAt": "2026-09-25",
+      "fetchedAt": "2026-09-26",
+      "attemptedAt": "2026-09-26",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -184,26 +184,6 @@
           "ctx": 65536,
           "tools": true,
           "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
-          "id": "nex-agi/nex-n2.5-mini:free",
-          "name": "Nex AGI: Nex-N2.5-Mini (free)",
-          "ctx": 262144,
-          "tools": true,
-          "expires": "2026-09-25",
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
-          "id": "nex-agi/nex-n2.5-pro:free",
-          "name": "Nex AGI: Nex-N2.5-Pro (free)",
-          "ctx": 262144,
-          "tools": true,
-          "expires": "2026-09-25",
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null
@@ -327,24 +307,14 @@
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null
-        },
-        {
-          "id": "z-ai/glm-5.2:free",
-          "name": "Z.ai: GLM 5.2 (free)",
-          "ctx": 32768,
-          "tools": false,
-          "expires": null,
-          "freeBasis": "pricing",
-          "criteria": false,
-          "criteriaReason": "tools"
         }
       ],
       "conflicts": []
     },
     "opencode": {
       "ok": true,
-      "fetchedAt": "2026-09-25",
-      "attemptedAt": "2026-09-25",
+      "fetchedAt": "2026-09-26",
+      "attemptedAt": "2026-09-26",
       "errorCode": null,
       "url": "https://opencode.ai/zen/v1/models",
       "models": [

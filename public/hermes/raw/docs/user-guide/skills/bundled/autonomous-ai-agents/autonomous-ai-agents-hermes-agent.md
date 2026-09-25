@@ -2,7 +2,7 @@
 title: "Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 description: "Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md
-upstream_blob: 0af76f3a8315aa113606c9914a33951dcfaefcef
+upstream_blob: a0f39f317ed7b1041c381b9aaada2845b8a873b8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent
 ---
@@ -63,7 +63,7 @@ Hermes ならではの点は次のとおりです。
 ## 使い始める {#quick-start}
 
 ```bash
-# Install (shell installer — sets up uv, Python, the venv, and the launcher)
+# Install (shell installer — bootstraps PM, Python, dependencies, and the launcher)
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 
 # Interactive chat (default surface; set display.interface: tui to launch the Ink TUI instead)

@@ -2,12 +2,16 @@
 title: "DingTalk"
 description: "Hermes Agent を DingTalk のチャットボットとして設定する"
 upstream_path: user-guide/messaging/dingtalk.md
-upstream_blob: 72ec3f2eadc0a5c50b30fce8fc341157cda28df4
+upstream_blob: 571b7464443b70ca757080a33de76316d850fce5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/dingtalk
 ---
 
 # DingTalk の設定 {#dingtalk-setup}
+
+このページにある Python の依存パッケージのコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存パッケージを変えたあとは、チェックアウトを有効にし直して Hermes を再起動してください。
 
 Hermes Agent は DingTalk（钉钉）とチャットボットとして連携し、ダイレクトメッセージやグループチャットから AI アシスタントと話せるようにします。ボットがつながるのは DingTalk の Stream Mode で、これは長くつなぎっぱなしにする WebSocket の接続です。公開 URL も webhook 用のサーバーも要りません。返事は DingTalk のセッション webhook API を通して、markdown で整形されたメッセージとして届きます。
 
@@ -47,14 +51,10 @@ group_sessions_per_user: false
 必要な Python パッケージをインストールします。
 
 ```bash
-cd ~/.hermes/hermes-agent && uv pip install -e ".[dingtalk]"
+cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['dingtalk'], explicit=True)"
 ```
 
-個別に入れる場合は次のとおりです。
-
-```bash
-pip install dingtalk-stream httpx alibabacloud-dingtalk
-```
+この追加パッケージの組（extra）で、Hermes 本体の依存パッケージに加えて次の SDK が入ります。
 
 - `dingtalk-stream` — Stream Mode（WebSocket によるリアルタイムのやり取り）のための DingTalk 公式 SDK
 - `httpx` — セッション webhook 経由で返信を送るために使う、非同期の HTTP クライアント
@@ -239,7 +239,7 @@ display:
 **対処**: インストールします。
 
 ```bash
-pip install dingtalk-stream httpx
+python -c "import pm; pm.sync_venv(['dingtalk'], explicit=True)"
 ```
 
 ### 「DINGTALK_CLIENT_ID and DINGTALK_CLIENT_SECRET required」 {#dingtalkclientid-and-dingtalkclientsecret-required}

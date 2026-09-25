@@ -2,12 +2,16 @@
 title: "Matrix"
 description: "Hermes Agent を Matrix のボットとして設定する"
 upstream_path: user-guide/messaging/matrix.md
-upstream_blob: c01a5a1ed7a1256505125ae1adbd992c1678a891
+upstream_blob: a4ba1c86a8b03d946e22236fdbc38f6151e098f7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/matrix
 ---
 
 # Matrix の設定 {#matrix-setup}
+
+このページにある Python の依存パッケージのコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存パッケージを変えたあとは、チェックアウトを有効にし直して Hermes を再起動してください。
 
 Hermes Agent は、オープンで連合型のメッセージ規格である Matrix と連携します。Matrix では自分でホームサーバーを立てることも、matrix.org のような公開サーバーを使うこともできます。どちらを選んでも、やり取りの主導権は自分の手に残ります。ボットは `mautrix` の Python SDK で接続し、受け取ったメッセージを Hermes Agent の処理の流れ（ツールの利用・記憶・推論を含みます）に通して、その場で返答します。テキスト・添付ファイル・画像・音声・動画に対応し、必要ならエンドツーエンド暗号化（E2EE）も使えます。
 
@@ -362,11 +366,8 @@ Hermes は Matrix のエンドツーエンド暗号化に対応しているの�
 E2EE には、暗号化用の追加をそろえた `mautrix` ライブラリと、C 言語のライブラリ `libolm` が要ります。
 
 ```bash
-# Install mautrix with E2EE support
-pip install 'mautrix[encryption]'
-
-# Or install with hermes extras
-cd ~/.hermes/hermes-agent && uv pip install -e ".[matrix]"
+# Request the declared Matrix dependencies
+python -c "import pm; pm.sync_venv(['matrix'], explicit=True)"
 ```
 
 `libolm` もシステムに入れておく必要があります。
@@ -610,13 +611,13 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 **対処**: 入れます。
 
 ```bash
-pip install 'mautrix[encryption]'
+python -c "import pm; pm.sync_venv(['matrix'], explicit=True)"
 ```
 
 Hermes の追加としてまとめて入れる方法もあります。
 
 ```bash
-cd ~/.hermes/hermes-agent && uv pip install -e ".[matrix]"
+cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['matrix'], explicit=True)"
 ```
 
 ### 暗号化のエラー、または "could not decrypt event" {#encryption-errors-could-not-decrypt-event}
@@ -713,7 +714,10 @@ cd ~/.hermes/hermes-agent && uv pip install -e ".[matrix]"
 
 ## プロキシモード（macOS での E2EE） {#proxy-mode-e2ee-on-macos}
 
-Matrix の E2EE には `libolm` が要りますが、これは macOS の ARM64（Apple Silicon）ではビルドできません。`hermes-agent[matrix]` の追加は Linux 限定になっています。macOS を使っている場合、プロキシモードなら E2EE の部分だけを Linux の仮想マシン上の Docker コンテナで動かし、エージェント本体は macOS でそのまま動かせます。ローカルのファイル・記憶・スキルにはこれまでどおり届きます。
+`matrix` の追加は Linux 限定になっています。macOS や Windows では、Matrix の
+アダプターと暗号化の依存パッケージを Linux のコンテナで動かし、リクエストを
+その端末で直接動くエージェントへ転送します。下の例は macOS をホストにしたものです。Windows でも、
+対応するホストのアドレスと認証を使えば、同じように分けて動かせます。
 
 ### 仕組み {#how-it-works}
 
@@ -788,18 +792,10 @@ services:
       - ./matrix-store:/root/.hermes/platforms/matrix/store
 ```
 
-**`Dockerfile`:**
-
-```dockerfile
-FROM python:3.11-slim
-
-RUN apt-get update && apt-get install -y libolm-dev && rm -rf /var/lib/apt/lists/*
-RUN cd ~/.hermes/hermes-agent && uv pip install -e ".[matrix]"
-
-CMD ["hermes", "gateway"]
-```
-
-コンテナはこれで全部です。OpenRouter や Anthropic など、推論を提供するサービスの API キーは 1 つも要りません。
+リポジトリの [Docker ビルド](/hermes/docs/user-guide/docker/)を使ってください。対応する Linux の環境では、
+Matrix の追加と必要なネイティブライブラリが含まれています。
+封をしたイメージに、実行中に依存パッケージを入れないでください。コンテナに要るのは
+Matrix の認証情報とプロキシへのアクセスで、推論を提供するサービスの API キーは要りません。
 
 ### 手順 3: 両方を起動する {#step-3-start-both}
 

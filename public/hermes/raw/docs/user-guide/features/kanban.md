@@ -2,7 +2,7 @@
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: 7eb9ac85ea1fafee4b44f9eb4263cb7722bccccd
+upstream_blob: 507fa598ce20e9184c6d6bdceab183cff0deb9e0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -888,7 +888,7 @@ GUI は厳密に **DB から読み、kanban_db を通して書く**層で、そ�
 | `DELETE` | `/links?parent_id=…&child_id=…` | 依存を取り除きます |
 | `POST` | `/dispatch?max=…&dry_run=…` | ディスパッチャーを促します — 60 秒の待ちを飛ばします |
 | `GET` | `/config` | `config.yaml` から `dashboard.kanban` の設定を読みます — `default_tenant`、`lane_by_profile`、`include_archived_by_default`、`render_markdown` |
-| `WS` | `/events?since=<event_id>` | `task_events` の行の実況 |
+| `WS` | `/events?since=<event_id>` | `task_events` の行の実況。`since` を付けないと、盤のいまの末尾から流れ始めます（過去の分は `/board` のスナップショットがすでに持っています）。そこから追いつくには `since=<latest_event_id>` を、履歴を最初から流し直すには `since=0` を渡します |
 
 どの処理も薄い包みです。プラグインは Python でおよそ 700 行（ルーター + WebSocket の追いかけ + まとめての処理 + 設定の読み取り）で、新しい業務の処理は足していません。小さな `_conn()` の補助が、読み書きのたびに `kanban.db` を自動で初期化するので、利用者がダッシュボードを先に開いても、REST API を直接叩いても、`hermes kanban init` を実行しても、新しい導入がそのまま動きます。
 

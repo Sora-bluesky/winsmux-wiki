@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 17889cbe8b7d290cce20acc80b9d11573e909b7f
+upstream_blob: 1e01e81322d73a5c4f93a020faf8461385e129f4
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -127,8 +127,7 @@ Hermes は環境変数をプロセスの環境から読み、利用者が管理�
 | `VOICE_TOOLS_OPENAI_KEY` | OpenAI の音声認識・読み上げで優先して使われる OpenAI のキー |
 | `HERMES_LOCAL_STT_COMMAND` | 手元で音声認識をするコマンドの雛形（任意）。`{input_path}`、`{output_dir}`、`{language}`、`{model}` を差し込めます |
 | `HERMES_LOCAL_STT_LANGUAGE` | 音声認識で使う既定の言語のヒント。`config.yaml` に提供元ごとの `language` を設定していないとき、`local`（faster-whisper）の提供元、`HERMES_LOCAL_STT_COMMAND`、手元の `whisper` CLI への切り替え（既定: `en`）、Groq、xAI が使います |
-| `HERMES_HOME` | Hermes の設定ディレクトリを上書きします（既定: `~/.hermes`）。値の中の `~` や `$VAR` は展開されるので（fish は `VAR=~/…` の中の `~` を展開しません）、現在のディレクトリからの相対にはなりません。ゲートウェイの PID ファイルや systemd のサービス名もこれで分かれるので、複数の導入を同時に動かせます |
-| `HERMES_GIT_BASH_PATH` | **Windows 専用。** ターミナルのツールが使う `bash.exe` の探索を上書きします。Git for Windows のフルインストール、シンボリックリンク経由の WSL の bash、MSYS2、Cygwin など、どの bash でも指せます。インストーラーは、用意した PortableGit を自動でここに設定します。[Windows（ネイティブ）のガイド](/hermes/docs/user-guide/windows-native/#how-hermes-runs-shell-commands-on-windows) を参照してください |
+| `HERMES_HOME` | 設定と利用者データを置くホームを選びます。値の中の `~` や `$VAR` は展開されるので（fish は `VAR=~/…` の中の `~` を展開しません）、現在のディレクトリからの相対にはなりません。既定は POSIX では `~/.hermes`、Windows では `%LOCALAPPDATA%\hermes` で、公式の Docker イメージは `/opt/data` を使います。プロファイルや実行時の状況によって、より個別のホームが選ばれることもあります。 |
 | `HERMES_DISABLE_WINDOWS_UTF8` | **Windows 専用。** `1` にすると UTF-8 の入出力の下駄（`configure_windows_stdio()`）を切り、コンソールのロケールのコードページに戻します。文字化けの原因を切り分けるときには便利ですが、ふだんの運用で正しい設定であることはまずありません |
 | `HERMES_KANBAN_HOME` | かんばんの盤（DB、作業場、ワーカーのログ）の土台になる共有の Hermes ルートを上書きします。指定が無ければ `get_default_hermes_root()`（有効なプロファイルの親）になります。テストや変わった構成で役に立ちます |
 | `HERMES_KANBAN_BOARD` | このプロセスで使うかんばんの盤を固定します。`~/.hermes/kanban/current` より優先されます。ディスパッチャーはこれをワーカーの子プロセスの環境に入れるので、ワーカーは物理的に別の盤のタスクを見られません。既定は `default` です。slug の条件は、小文字の英数字とハイフンとアンダースコアで 1〜64 文字です |
@@ -181,7 +180,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `KREA_API_KEY` | Krea 2 での画像生成に使う Krea の API キー（[krea.ai](https://krea.ai/)） |
 | `GROQ_API_KEY` | Groq の Whisper による音声認識の API キー（[groq.com](https://groq.com/)） |
 | `ELEVENLABS_API_KEY` | ElevenLabs の上位の読み上げ音声（[elevenlabs.io](https://elevenlabs.io/)） |
-| `PORCUPINE_ACCESS_KEY` | Picovoice Porcupine の呼びかけ語の認識エンジン（[console.picovoice.ai](https://console.picovoice.ai/)） — `wake_word.provider: porcupine` のときだけ必要で、既定の openWakeWord と sherpa のエンジンにはキーが要りません |
+| `PORCUPINE_ACCESS_KEY` | Picovoice Porcupine の呼びかけ語の認識エンジン（[console.picovoice.ai](https://console.picovoice.ai/)） — Porcupine を選んだときに必要で、openWakeWord と sherpa にはキーが要りません |
 | `STT_GROQ_MODEL` | Groq の音声認識モデルを上書きします（既定: `whisper-large-v3-turbo`） |
 | `GROQ_BASE_URL` | Groq の OpenAI 互換の音声認識エンドポイントを上書きします |
 | `STT_OPENAI_MODEL` | OpenAI の音声認識モデルを上書きします（既定: `whisper-1`） |
@@ -582,7 +581,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `HERMES_DASHBOARD_OIDC_CLIENT_ID` | 自前運用の OIDC で使う公開のクライアント ID（認可コード + PKCE）。有効にするには必須です。`dashboard.oauth.self_hosted.client_id` より優先されます。 |
 | `HERMES_DASHBOARD_OIDC_SCOPES` | 自前運用の OIDC で要求するスコープ（既定 `openid profile email`）。`dashboard.oauth.self_hosted.scopes` より優先されます。 |
 | `HERMES_DESKTOP_REMOTE_URL` | （デスクトップ側）遠隔のバックエンドのベース URL。たとえば `http://host:9119` です。設定するとアプリ内のゲートウェイの URL より優先されます。ログインは引き続きゲートウェイの設定画面から行います（バックエンドが示す方式に応じて、OAuth の転送かユーザー名 / パスワードになります）。 |
-| `HERMES_DESKTOP_HERMES` | デスクトップのバックエンドのコマンドを上書きします。パッケージの作成者や Nix、あるいは不具合の調査で、バックエンドの探索のあとに特定の `hermes` を指したいときに使います。 |
+| `HERMES_DESKTOP_HERMES` | デスクトップのバックエンドのコマンドを上書きします。パッケージの作成者や Nix、あるいは不具合の調査で、書き換え可能な管理下のインストールを確かめる前に特定の `hermes` を Electron に指させたいときに使います。 |
 | `HERMES_DESKTOP_HERMES_ROOT` | `hermes desktop --hermes-root` が使う、ソースを取得した場所の指定。同梱の初回起動時のインストールや、`PATH` 上の既存の `hermes` より先に見られます。 |
 | `HERMES_DESKTOP_IGNORE_EXISTING` | `1` にすると、バックエンドを決めるときに `PATH` 上の既存の `hermes` を無視します。`hermes desktop --ignore-existing` と同じです。 |
 | `HERMES_DESKTOP_CWD` | デスクトップのチャットのセッションで最初に使うプロジェクトのディレクトリ。`hermes desktop --cwd` が設定します。 |
@@ -720,7 +719,6 @@ Node のサイドカーを通して、Hermes を [Photon](https://photon.codes/)
 | `PHOTON_TELEMETRY` | サイドカーで Spectrum の SDK の計測を有効にします（`true`/`false`。既定 `false`。`hermes photon telemetry on|off` で切り替えられます）。 |
 | `PHOTON_SIDECAR_PORT` | Node のサイドカーの制御と受信に使うループバックのポート（既定 `8789`）。 |
 | `PHOTON_SIDECAR_AUTOSTART` | 接続時に Node のサイドカーを起動します（`true`/`false`。既定 `true`）。 |
-| `PHOTON_NODE_BIN` | node の実行ファイルのパス（既定: `shutil.which('node')`）。 |
 | `PHOTON_DASHBOARD_HOST` | Photon Dashboard の API のホスト（既定 `https://app.photon.codes`）。 |
 | `PHOTON_SPECTRUM_HOST` | Photon Spectrum の API のホスト（既定 `https://spectrum.photon.codes`）。 |
 
@@ -857,7 +855,7 @@ Microsoft Teams のプラットフォーム用アダプター（Bot Framework / 
 | `HERMES_ALLOW_PRIVATE_URLS` | `true`/`false` — ツールが localhost や内部ネットワークの URL を取得してよいかどうか。ゲートウェイでは既定で無効です。 |
 | `HERMES_REDACT_SECRETS` | `true`/`false` — ツールの出力、ログ、チャットの返答で秘密を伏せるかどうか（既定: `true`）。 |
 | `HERMES_WRITE_SAFE_ROOT` | 指定したディレクトリの外への `write_file`/`patch` を**問答無用で止める**、任意の接頭辞（承認の確認も出ません）。`os.pathsep`（Unix では `:`、Windows では `;`）で区切って複数指定できます。下の [HERMES_WRITE_SAFE_ROOT](#hermes_write_safe_root) を参照してください。 |
-| `HERMES_DISABLE_LAZY_INSTALLS` | 公式の Docker イメージで自動的に設定される内部の橋渡しの変数で、書き換えできない `/opt/hermes` の中へ実行中に依存物が入るのを防ぎます。利用者向けの同等の設定は `config.yaml` の `security.allow_lazy_installs: false` です。これを `.env` に書かないでください。 |
+| `HERMES_DISABLE_LAZY_INSTALLS` | テストやインストールの検査で使う PM 内部のポリシーです。真とみなされる値を入れると、必要に応じたインストールを拒否します。利用者向けの設定 `security.allow_lazy_installs` より優先されます。`.env` には書かないでください。 |
 | `HERMES_DISABLE_FILE_STATE_GUARD` | `1` にすると、`patch`/`write_file` の「読んだあとにファイルが変わっています」という保護を切ります。 |
 | `HERMES_BUNDLED_SKILLS` | 起動時に読み込む同梱スキルの一覧を、カンマ区切りで上書きします。 |
 | `HERMES_OPTIONAL_SKILLS` | 初回の実行で自動的に入れる、任意のスキル名をカンマ区切りで。 |
@@ -885,6 +883,17 @@ export HERMES_WRITE_SAFE_ROOT=/path/to/project:/home/you/.hermes
 
 変数を消すか `.env` から取り除けば、ふだんどおりの書き込みに戻ります（資格情報のパスの禁止一覧は引き続き効きます。[ファイル書き込みの安全](/hermes/docs/user-guide/security/#file-write-safety) を参照してください）。
 
+### 内部の橋渡しの変数 {#internal-bridge-variables}
+
+Hermes は、まだ `config.yaml` が存在しない境界や、2つのプロセスが値をそろえる必要がある場面で状態を受け渡すために、これらを自分で設定します。プロセスの環境変数やログで見かけたときに何なのか分かるよう載せています。自分では設定せず、`.env` にも決して書かないでください。
+
+| 変数 | 説明 |
+|----------|-------------|
+| `HERMES_DATA_DIR_SUFFIX` | デスクトップのバンドルの環境に組み込まれ（`--bundle-env`、`HERMES_BUNDLE_ENV_JSON`、またはチャンネルごとのデータディレクトリを持つチャンネル版のビルド。この場合は `-channel-build-<channel>` を使います）、テスト用やチャンネル版のビルドが自分専用のデータを持てるようにします。既定の Hermes のホームと既定の Electron の `userData` ディレクトリの末尾に、区切り文字なしでそのまま付け足されます。たとえば `-channel-build-canary` なら、POSIX では `~/.hermes-channel-build-canary` になります。明示的に指定した `HERMES_HOME` と `HERMES_DESKTOP_USER_DATA_DIR` が優先され、接尾辞は付きません。`.env` と `config.yaml` を置くホームを決める値なので、起動前の環境に入っている必要があります。 |
+| `HERMES_REPO_URL` | インストーラー（`scripts/install.sh`、`scripts/install.ps1`）が clone に使い、再実行時には `origin` の向け先にもする Git のリモートです。インストーラーは Hermes の設定がまだ無い段階で動くので、環境変数になっています。CI やリハーサル用のスクリプトが、fork やミラーからインストールするのに使います。設定しなければ公式のリポジトリを使います。 |
+| `HERMES_UPDATE_STATUS_FILE` | デスクトップの更新用 shim（`scripts/desktop-update/posix.sh`）が、進捗ウィンドウに表示する状態の JSON のパスを入れて export します。`hermes update` の引き継ぎ先の子プロセスは、時間のかかる段階をこのファイルに書き出し、ウィンドウの表示が止まらないようにします。この変数が無い場合（古い shim）は、更新マーカーに記された shim の pid から決まる状態ファイルを使い、UI が見ていなければ何も書き出しません。 |
+| `HERMES_UPDATE_UI_ACTIVE` | 自前のウィンドウを持たない古い shim のために、更新の子プロセスが macOS のネイティブの状態パネルを開いたあと `1` に設定します。子プロセスへ引き継がれるので、1回の更新の流れの中でパネルが開くのは多くても1回です。 |
+
 ## 画面 {#interface}
 
 | 変数 | 説明 |
@@ -902,6 +911,10 @@ export HERMES_WRITE_SAFE_ROOT=/path/to/project:/home/you/.hermes
 | `HERMES_SESSION_ID` | **Hermes が起動するすべてのツールの子プロセスへ自動で渡されます**（`terminal`、`execute_code`、持続シェル、Docker / Singularity のバックエンド、委任したサブエージェントの実行）。エージェントがいまのセッション ID を入れるので、ツールから呼ばれた自作のスクリプトはこれを読んで、自分の出力・計測・副作用を元の Hermes のセッションと結び付けられます。**手で設定しないでください** — 親のシェルから上書きしても効くのはエージェントの実行の外だけで、エージェントがセッションを始めた瞬間に上書きされます。 |
 | `AI_AGENT` | **CLI とゲートウェイの入口が `hermes-agent` に設定し**（外側の仕組みがすでに設定している場合を除きます）、ターミナルのツールのシェルすべてへ渡されます。遠隔のバックエンド（Docker、SSH、Modal、Daytona、Singularity、Vercel）も含みます。子プロセスに呼び出し元を伝えるための、エージェントをまたいで広まりつつある決まりで、一般的な道具（たとえば huggingface_hub のエージェント検出）がこれを読んで AI のエージェントの下で動いていることを知ります。値は、公開されているエージェントの仕組みの登録簿での Hermes の id と一致します。手で設定しないでください。 |
 | `HERMES_AGENT` | **CLI とゲートウェイの入口が `true` に設定し**、ターミナルのツールのシェルすべてへ渡されるので、子プロセスは自分が Hermes の中で動いていることを判別できます。手で設定しないでください。 |
+
+ターミナルのセッションのスナップショットには、注入されたセッションやエージェントの帰属を示す変数は残りません。
+Hermes はコマンドごとに現在の値を渡すので、前のターミナルのコマンドの中で export しても、
+次のセッションの識別情報は変わりません。
 
 ## 文脈の圧縮（config.yaml のみ） {#context-compression-configyaml-only}
 

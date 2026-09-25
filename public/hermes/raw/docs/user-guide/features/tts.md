@@ -2,12 +2,16 @@
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md
-upstream_blob: b321aed062621b11beaa7d4a35461ce577aa1f0c
+upstream_blob: c0b57016bc522da74f509ea5bdf1f3f3bf1e5459
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tts
 ---
 
 # 音声と読み上げ {#voice-tts}
+
+このページの Python 依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)で実行する前提です。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 Hermes Agent は、どのメッセージングのプラットフォームでも、文章の読み上げと音声メッセージの文字起こしの両方に対応しています。
 
@@ -111,6 +115,8 @@ tts:
     # volume: 1.0                               # 0.5 = half as loud
     # normalize_audio: true
 ```
+
+KittenTTS は Intel の macOS と Windows ARM64 では使えません。依存するパッケージが、これらのプラットフォーム向けの `onnxruntime` や PyTorch の wheel を公開していないためです。そこで選ぶと、提供元が使えないと表示されます。
 
 MiniMax TTS は、地域とエンドポイントと資格情報を組にして選びます。
 
@@ -241,7 +247,9 @@ tts:
 
 Piper は Open Home Foundation（Home Assistant を保守している団体）による、速くて手元で動くニューラル読み上げエンジンです。CPU だけで完結し、学習済みの声で **44 言語**に対応していて、API キーも要りません。
 
-**`hermes tools` から入れられます** → Voice & TTS → Piper と進むと、Hermes が `pip install piper-tts` を代わりに実行します。手で入れるなら `pip install piper-tts` です。
+**`hermes tools` から入れられます** → Voice & TTS → Piper と進みます。Hermes は PM を通して
+`piper` の追加依存を要求します。準備済みのソースのチェックアウトから明示的に入れるコマンドは
+`python -c "import pm; pm.sync_venv(['piper'], explicit=True)"` です。プラットフォームごとの条件はそのまま適用されます。
 
 **Piper に切り替える:**
 
@@ -324,6 +332,9 @@ tts:
 #### 例：Doubao（中国語の seed-tts-2.0） {#example-doubao-chinese-seed-tts-20}
 
 ByteDance の [seed-tts-2.0](https://www.volcengine.com/docs/6561/1257544) の双方向ストリーミング API で品質の高い中国語の読み上げをするには、PyPI の [`doubao-speech`](https://pypi.org/project/doubao-speech/) を入れて、コマンド型の提供元として組み込みます。
+
+このコマンド型の外部提供元は、Hermes の Python 環境ではなく、専用のツール環境に入れてください。
+その実行ファイルは `PATH` から使えるようにしておきます。
 
 ```bash
 pip install doubao-speech
@@ -522,7 +533,7 @@ HF_HUB_DISABLE_XET=1
 
 **OpenAI API** — まず `VOICE_TOOLS_OPENAI_KEY` を見て、なければ `OPENAI_API_KEY` に落ちます。`whisper-1`、`gpt-4o-mini-transcribe`、`gpt-4o-transcribe`、`gpt-transcribe` に対応します。
 
-**Mistral API（Voxtral Transcribe）** — `MISTRAL_API_KEY` が要ります。Mistral の [Voxtral Transcribe](https://docs.mistral.ai/capabilities/audio/speech_to_text/) のモデルを使います。13 言語、話者の切り分け、単語ごとの時刻に対応します。`cd ~/.hermes/hermes-agent && uv pip install -e ".[mistral]"` で入れてください。
+**Mistral API（Voxtral Transcribe）** — `MISTRAL_API_KEY` が要ります。Mistral の [Voxtral Transcribe](https://docs.mistral.ai/capabilities/audio/speech_to_text/) のモデルを使います。13 言語、話者の切り分け、単語ごとの時刻に対応します。`cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['mistral'], explicit=True)"` で入れてください。
 
 **xAI Grok STT** — `XAI_API_KEY` が要ります。`https://api.x.ai/v1/stt` に multipart/form-data で送ります。すでにチャットや読み上げで xAI を使っていて、API キーを 1 本にまとめたいなら良い選択です。自動判別の順番では Groq のあとになるので、確実に使いたいときは `stt.provider: xai` を明示してください。
 
@@ -531,6 +542,9 @@ HF_HUB_DISABLE_XET=1
 #### 例：Doubao / Volcengine の音声認識 {#example-doubao-volcengine-asr}
 
 Doubao の読み上げで [`doubao-speech`](https://pypi.org/project/doubao-speech/) を使っているなら（[上](#example-doubao-chinese-seed-tts-20)を参照）、同じパッケージが手元コマンドの経路で音声から文字への変換も引き受けます。
+
+このコマンド型の外部提供元は、Hermes の Python 環境ではなく、専用のツール環境に入れてください。
+その実行ファイルは `PATH` から使えるようにしておきます。
 
 ```bash
 pip install doubao-speech

@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 668251aebe8b0bda87f0198e575cdc05c783dfce
+upstream_blob: 902b6f35b95bffd855c09ad1695676fc58ed8f8f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -206,10 +206,10 @@ Hermes はそのコミットを detached でチェックアウトし、`HEAD` �
 プロファイルに置かれるインストールの情報には、設定値・環境の値・秘密の情報・
 権限の付与はいっさい含まれません。
 
-同じ固定は Hermes Desktop でも使えます。**Skills → Plugins → Install from
-Git** に *Pin to commit* の欄があり、40文字の SHA をそのまま入れられます。プラグインの
-一覧では、固定して入れたものすべてに `pinned @ <sha8>` のバッジが付くので、チーム全員が
-同じコミットで動いていることを確かめられます。`hermes plugins list` は Source の列に
+エージェントのプラグインの同じ固定は Hermes Desktop でも使えます。**Capabilities →
+Plugins → Install from Git** に *Pin to commit* の欄があり、40文字の SHA をそのまま入れられます。
+**Installed** では、固定して入れたエージェントのプラグインに `pinned @ <sha8>` のバッジが付きます。
+単独のデスクトップのプラグインが固定されて入ることまでは保証しません。`hermes plugins list` は Source の列に
 固定を表示します（`git pinned@<sha8>`）。固定は、下で説明する保存された資格情報を通して、
 非公開のリポジトリでも使えます。
 
@@ -370,7 +370,7 @@ services.hermes-agent = {
   # Directory plugin (source tree with plugin.yaml)
   extraPlugins = [ (pkgs.fetchFromGitHub { ... }) ];
   # Entry-point plugin (pip package)
-  extraPythonPackages = [ (pkgs.python312Packages.buildPythonPackage { ... }) ];
+  extraPythonPackages = [ (config.services.hermes-agent.package.python.pkgs.buildPythonPackage { ... }) ];
   # Enable in config
   settings.plugins.enabled = [ "my-plugin" ];
 };
@@ -387,7 +387,7 @@ hermes plugins list                          # table: enabled / disabled / not e
 hermes plugins search <term>                 # search the Hermes plugin catalog
 hermes plugins install <name>                # install a catalog entry (repo @ reviewed pinned SHA)
 hermes plugins install user/repo             # install from Git, then prompt Enable? [y/N]
-hermes plugins install user/repo --enable    # install AND enable (no prompt)
+hermes plugins install user/repo --enable    # request enable; dependency consent still applies
 hermes plugins install user/repo --no-enable # install but leave disabled (no prompt)
 hermes plugins update my-plugin              # pull latest (local edits are autostashed and re-applied)
 hermes plugins remove my-plugin              # uninstall; also drops it from plugins.enabled/disabled/entries
@@ -396,7 +396,76 @@ hermes plugins enable my-plugin              # add to allow-list
 hermes plugins disable my-plugin             # remove from allow-list + add to disabled (bundled platforms:
                                              # either spelling works, e.g. photon-platform or platforms/photon)
 hermes plugins capabilities [my-plugin]      # declared vs granted capabilities
+hermes plugins check-updates                 # read-only: is any installed plugin outdated?
+hermes plugins adopt my-plugin               # track a self-cloned plugin dir (read its git origin)
+hermes plugins trust-update-url my-plugin    # confirm a changed update_url after review
 ```
+
+### 更新の確認と入手元の記録 {#update-checks-and-provenance}
+
+Hermes は、Git から入れたときの入手元とリビジョンを `.install-metadata.json` に記録します。
+固定せずに追跡しているインストールは、保存された入手元のリモートの HEAD か、一致する保存済みの
+`update_url` のフィードと比べられます。固定したインストールは固定されたままです。自分でクローンしたディレクトリは、
+`hermes plugins adopt NAME` を実行してはじめて追跡されるインストールになります。
+手でコピーしたディレクトリや、入手元の記録とずれたディレクトリには、診断のための案内が出ます。
+pip のエントリーポイントのプラグインは、それを持つ配布パッケージで入手できるバージョンを報告できます。
+ただし、その確認によって Git で管理されるインストールに変わるわけではありません。
+
+`hermes plugins check-updates` はプラグインのファイルに手を加えません。ゲートウェイの定期的な確認は、
+`plugins.auto_update_check_hours` の時期が来たときに走ります。既定は 24 時間で、
+`0` にすると止まります。その結果は `hermes pm status` と
+デスクトップの同期状況の画面で見られます。別の間隔を設定すれば、1 日 1 回という固い上限があるわけではありません。
+
+既定では、更新するには `hermes plugins update NAME` を実行する必要があります。
+`plugins.auto_apply: true` を設定すると、追跡している Git のプラグインは人の手を介さずに更新されるようになります。
+どちらの経路でも、更新時のセキュリティスキャンが走ります。自動適用は、固定したもの・
+手で入れたもの・記録とずれたもの・pip の配布パッケージの行は扱いません。
+
+マニフェストで `update_url` が変わったり新しく加わったりすると、Hermes はその新しいアドレスを、
+`hermes plugins trust-update-url NAME` で承認するまで受け付けません。これはフィードの入手元を確かめるもので、
+すでに信頼しているプラグインのコードを閉じ込めるサンドボックスではありません。
+
+### 依存関係の準備と保持 {#dependency-preparation-and-preservation}
+
+Python の依存関係のインストールには、同意と受け入れの手順が別にあります。
+`plugins install --enable` でもこの手順は飛ばせません。依存関係のインストールを断った場合や、
+対話できない状況で入れた場合は、プラグインは入っても無効のままになることがあります。
+Node のサイドカーの依存関係には別の確認があり、プラグインの中に閉じて置かれます。
+
+PM は、新しい環境と設定を反映する前に、中核と有効なプラグインの組み合わせで Python の依存関係を準備します。
+解決に失敗したときは、前の選択がそのまま残ります。
+新しく選んだ環境が、動いているプロセスでまだ有効になっていないときは、Hermes を再起動してください。
+
+有効なプラグインの組み合わせは、既定のホーム**と、`profiles/` の下のすべてのプロファイル**を合わせたもので、
+それぞれの `config.yaml`（`plugins.enabled`、`plugins.disabled`、
+`memory.provider`）から読み取ります。PM は、読めないホームについて推測はしません。
+`config.yaml` が正しい YAML でない、マッピングでない、あるいはリストでない
+`plugins.enabled`/`plugins.disabled` や文字列でない `memory.provider` を持つ場合は、
+**すべて**のホームで依存関係の準備が失敗します（`could not parse plugin selection:
+<path>`）。そのプロファイルのプラグインを、黙って次の環境から落とすことはしません。
+問題のファイルを直すか取り除いてください。空の `config.yaml` はかまいません。
+
+Hermes アプリのふつうの更新では、ユーザーのプラグインのディレクトリは、ラッパーのファイルや
+外部のサイドカーへのリンクも含めてそのまま残ります。プラグインをはっきり更新したり削除したりすると、
+それらのファイルが変わることがあります。[パッケージ管理](/hermes/docs/reference/package-management/)
+と[プラグイン作成のガイド](/hermes/docs/developer-guide/plugins/#lazy-install-optional-python-dependencies)も見てください。
+
+### デスクトップの Installed と Browse {#installed-and-browse-in-desktop}
+
+**Capabilities → Plugins** を開きます。**Installed** は、アプリのデスクトップのプラグインの
+登録簿と、選んでいるプロファイルのエージェントのプラグインの実際の状態を読み、必要に応じて両方を
+1 つの行にまとめます。入っているとみなしたカタログの項目の一覧ではありません。**Browse** はアプリ本来の
+カタログ画面で、Web サイトを埋め込んだものではありません。Skills と同じ **Installed / Browse** のタブを使い、
+上に検索欄、1 つの行にタブの切り替えと操作が並びます。
+
+デスクトップと公開の[プラグインカタログ](https://hermes-agent.nousresearch.com/plugins)は、同じ CDN の
+スナップショット [`/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json) を使います。
+公開の別名は、デスクトップが取得する URL
+`https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` と同じデータを返します。これは docs の
+ビルドが `plugin-catalog/*.yaml` とキャッシュしたスターの数から作ります。
+同じ公開で、インストーラーが使う削除済みの項目の一覧も届きます。
+一覧を見るだけでは、GitHub にその場で問い合わせたり、入手元のリポジトリを取得したりはしません。
+インストーラーがコードを取ってくるのは、別に行うインストールの流れの中だけです。
 
 ### ワンクリックのインストールのリンク（デスクトップ） {#one-click-install-links-desktop}
 
@@ -408,17 +477,20 @@ hermes://plugin/install?catalog=NAME               # catalog entry, installs the
 hermes://plugin/install?repo=owner/repo            # any git repo
 hermes://plugin/install?repo=owner/repo&enable=1   # enable the agent plugin after install
 hermes://plugin/install?repo=owner/repo&force=1    # replace an existing install
-hermes://plugin/install?catalog=<name>             # reviewed catalog entry at its pinned commit
 ```
 
 `catalog=<name>` の形は、[プラグインカタログ](/hermes/docs/user-guide/features/plugin-catalog/)の各カードにある
 **Open in Hermes Desktop** ボタンが使うものです。デスクトップはその名前を公開中のカタログ
-（**Capabilities → Plugins** の選択画面が表示するのと同じ情報源）で解決し、アプリの中で選んだときと
+（**Capabilities → Plugins → Browse** が表示するのと同じ情報源）で解決し、アプリの中で選んだときと
 同じ**審査済みのカタログの項目**のダイアログを開きます。エージェント側はカタログで固定された
 コミットで入り、ブランチの先端が使われることはありません。このリンクはリポジトリの URL を
 持たず、カタログに無い名前はエラーの通知が出るだけで何も起きません。git のパスとして
 読み替えられることは決してないので、見慣れた名前の裏に未審査のリポジトリを忍ばせる、
 ということができません。
+
+カタログのリンクと、Skills Hub の `hermes://skill/install?identifier=...` の経路には、更新したデスクトップのビルドを使ってください。
+アプリが入っていないか古すぎる場合は、カードにあるコピーできる `hermes plugins install <catalog-name>` のコマンドを使えば、
+カタログによる名前の解決がそのまま効きます。
 
 `repo=` のリンクをクリックすると Hermes が開き、**確認のダイアログ**が出ます。リポジトリの識別子、
 「入れる前に」の注意、GitHub を見るリンクとクローンのリンクが並び、そのあとリポジトリを浅く
@@ -735,7 +807,7 @@ Plugins
      Context Engine           ▸ compressor
 ```
 
-- **一般のプラグインの欄** — チェックボックスで、スペースキーで切り替えます。チェックあり = `plugins.enabled`、チェックなし = `plugins.disabled`（はっきりオフ）です。
+- **一般のプラグインの欄** — チェックボックスで、スペースキーで切り替えます。いま有効なプラグインの行は、チェックが入った状態で開きます。`plugins.enabled` に載っているもの、同梱のプラットフォーム・バックエンド・モデルプロバイダー（一覧に載せなくてもオン）、あるいはカテゴリで選ばれているプロバイダーがそれにあたります。終了時に書き込まれるのは、切り替えた行だけです。チェックを外すとプラグインが `plugins.disabled` に加わり（はっきりオフ）、チェックを入れると `plugins.enabled` に加わって、古い無効化の指定が消えます。選択画面を開いて閉じただけなら、何も変わりません。
 - **プロバイダー型のプラグインの欄** — いまの選択を表示します。ENTER を押すとラジオボタンの選択画面に入り、有効にするプロバイダーを1つ選びます。
 - 同梱のプラグインも同じ一覧に並び、`[bundled]` の印が付きます。
 

@@ -2,7 +2,7 @@
 title: "Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN"
 description: "LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN"
 upstream_path: user-guide/skills/optional/security/security-godmode.md
-upstream_blob: b1a3b442b97674530fe2fba62184685ff99105e8
+upstream_blob: d755caf4e272d7507967748b25668191808bebda
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-godmode
 ---
@@ -73,6 +73,9 @@ OpenRouter 経由で N 個のモデルを並列に照会し、品質・フィル
 実装は `scripts/godmode_race.py` を参照してください。
 
 ## ステップ 0: 自動ジェイルブレイク（推奨） {#step-0-auto-jailbreak-recommended}
+
+このヘルパーには `ruamel.yaml` が要ります（Hermes に同梱されています）。単独の
+Python 環境で使う場合は、読み込む前に `ruamel.yaml==0.18.17` を入れてください。
 
 最速の経路です。モデルを自動検出し、戦略をテストして、勝ったものを固定します。
 

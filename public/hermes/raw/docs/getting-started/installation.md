@@ -1,8 +1,8 @@
 ---
 title: "インストール"
-description: "Linux、macOS、WSL2、Windows ネイティブ、Android（Termux）に Hermes Agent を導入する手順"
+description: "デスクトップ版パッケージ、ソースからのインストーラー、Docker、Nix、Termux の APT パッケージで Hermes Agent を導入する"
 upstream_path: getting-started/installation.md
-upstream_blob: 9016377d108586b6d9bab3ec60d6cd24b9ed5c4c
+upstream_blob: 29f41a40e632898449a1158604ff53a646d1f6ff
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -12,12 +12,29 @@ sources:
 Hermes Agent は 2 分もかからずに動く状態になります。
 
 :::tip 対応プラットフォーム
-対応 OS・配布方法・プラットフォームごとに制限のある機能をまとめた一覧は、**[対応プラットフォーム](/hermes/docs/getting-started/platform-support/)** をご覧ください。
+対応 OS・配布方法・プラットフォームごとに制限のある機能をまとめた一覧は、
+**[対応プラットフォーム](/hermes/docs/getting-started/platform-support/)** をご覧ください。
 :::
 
 ## 手早く導入する {#quick-install}
-### macOS / Windows で Hermes Desktop インストーラーを使う（推奨） {#with-the-hermes-desktop-installer-on-macos-or-windows-recommended}
-コマンドライン版とデスクトップ版をまとめて手軽に入れたい場合は、公式サイトから [Hermes Desktop インストーラーをダウンロード](https://hermes-agent.nousresearch.com/) して実行してください。
+### macOS / Windows のデスクトップ版パッケージ {#desktop-packages-on-macos-or-windows}
+
+お使いのプラットフォーム向けのパッケージを
+[Hermes の公式サイト](https://hermes-agent.nousresearch.com/)からダウンロードします。
+
+- **Windows:** ダウンロードした `.appinstaller` を Windows アプリ インストーラーで開きます。
+  署名済みの MSIX バンドルがインストールされ、更新の取得元も記録されます。
+  Microsoft Store 版のパッケージは Store 側の管理になり、これとは別です。
+- **macOS:** DMG を開き、`Hermes.app` をアプリケーションフォルダーにコピーします。ZIP 版の
+  配布物には、自動アップデーターが使う署名済みのアプリが入っています。
+
+パッケージ版には、エージェント本体、Python、対応する依存パッケージ、ビルド済みの
+画面一式が同梱されています。初回起動時にこの基本の実行環境をビルドすることはありません。ただし、プロバイダーへの接続や
+任意で追加する連携機能には、引き続きネットワーク接続が必要な場合があります。
+
+`Hermes-Setup` というブートストラップ用のインストーラーは別物です。こちらはソースを
+ダウンロードしてインストールし、デスクトップアプリをビルドします。Light はリモート専用のビルド版で、
+ローカルの実行環境を同梱したものではありません。[Hermes Desktop](/hermes/docs/user-guide/desktop/) をご覧ください。
 
 :::note
 macOS 版のインストーラーは **Apple Silicon 専用** です。x86（Intel）プロセッサーの macOS は [対応プラットフォームに含まれていません](/hermes/docs/getting-started/platform-support/#unsupported)。
@@ -26,7 +43,7 @@ macOS 版のインストーラーは **Apple Silicon 専用** です。x86（Int
 ### Hermes Desktop を使わない場合 {#without-hermes-desktop}
 Hermes Desktop なしでコマンドライン版だけを入れるときは、次を実行します。
 
-#### Linux / macOS / WSL2 / Android（Termux） {#linux-macos-wsl2-android-termux}
+#### Linux / macOS / WSL2 {#linux-macos-wsl2}
 ```bash
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 ```
@@ -43,20 +60,56 @@ iex (irm https://hermes-agent.nousresearch.com/install.ps1)
 hermes desktop
 ```
 
-### インストーラーが行うこと {#what-the-installer-does}
+### Android / Termux {#android-termux}
 
-インストーラーはすべてを自動で処理します。依存関係（Python、Node.js、ripgrep、ffmpeg）の導入、リポジトリのクローン、仮想環境の作成、どこからでも呼べる `hermes` コマンドの設定、LLM プロバイダーの設定まで一通り済ませます。終わったころには、すぐ会話を始められる状態になっています。
+aarch64 の Android 端末では [Termux の APT パッケージ](/hermes/docs/getting-started/termux/)を使います。
+`pkg install hermes-agent` を実行する前に、署名付きのリポジトリを設定してください。
+デスクトップ / サーバー向けのスクリプトは、Termux でのインストール手段ではありません。
+
+### ソースからのインストーラーが行うこと {#what-the-source-installer-does}
+
+スクリプトはソースをクローンし、uv を用意したうえで、依存パッケージの準備を
+PM に任せます。PM は、バージョンを固定した Python、Node.js、npm、ripgrep、FFmpeg を用意します。ソースからの
+インストールでは Python の `all` extra が選ばれます。任意の extra がすべて入るわけではありません。
+PM は既定でブラウザ用ツール（`agent-browser` と、バージョンを固定した Chromium）も入れます。
+このダウンロードに失敗してもインストールそのものは最後まで進み、再試行用の
+コマンドが表示されます。そのほかの任意ツールは、それぞれの機能ごとのインストール手順で
+入れます。
+
+ブラウザ用ツールを入れたくない場合は、POSIX では `--skip-browser`、Windows では `-SkipBrowser`
+を渡します。Hermes はこの選択を覚えていて、あとのインストールや `hermes update` でも
+ブラウザ用ツールを入れ直しません。入れたくなったら `hermes pm install agent-browser` を実行すると、ツールが入り、
+この選択も取り消されます。
+
+スクリプトは起動用のランチャーを作り、データディレクトリを用意します。対話モードで実行した場合は、
+セットアップとゲートウェイの設定も続けて始まります。POSIX の `--non-interactive`、Windows の
+`-NonInteractive` を付けると、入力が必要な段階を飛ばします。任意で付けられる
+`--include-desktop` / `-IncludeDesktop` を指定すると、デスクトップ版をソースからビルドします。
+
+ターミナルで実行すると、スクリプトは手順ごとに 1 行の進行状況を表示し、git・uv・各ビルドの
+出力は Hermes のデータディレクトリ配下の `logs/install.log` に書き出します。
+失敗した手順があると、その出力の最後の数行とログのパスが表示されます。CI（`CI` または
+`GITHUB_ACTIONS` が設定されている環境）、出力をリダイレクトしている場合、`--verbose` / `-Verbose`、
+`HERMES_INSTALL_VERBOSE=1` のいずれかでは、すべての出力をそのまま流します。
 
 #### インストール先の構成 {#install-layout}
 
-インストーラーが何をどこへ置くかは、通常のユーザーとして入れるか root として入れるかで変わります。
+| 方法 | コードの場所 | CLI の起動口 | ユーザーデータの既定の場所 |
+|---|---|---|---|
+| POSIX 用のソーススクリプト | `~/.hermes/hermes-agent/` | `~/.local/bin/hermes` のラッパー | `~/.hermes/` |
+| Windows 用のソーススクリプト | `%LOCALAPPDATA%\hermes\hermes-agent\` | `%LOCALAPPDATA%\hermes\bin\` | `%LOCALAPPDATA%\hermes\` |
+| デスクトップ版パッケージ | インストールしたアプリのパッケージ内 | パッケージ同梱のランチャー、Windows ではアプリ実行エイリアス | プラットフォームごとの既定の Hermes データディレクトリ |
+| Docker | `/opt/hermes/` | イメージのエントリーポイントと `hermes` のシム | マウントした `/opt/data/` |
+| Termux APT | `$PREFIX/lib/hermes-agent/` | `$PREFIX/bin/` 内のシンボリックリンク | `~/.hermes/` |
 
-| インストーラー                          | コードの場所                   | `hermes` バイナリ                       | データディレクトリ                   |
-| -------------------------------------- | ------------------------------ | --------------------------------------- | ------------------------------------ |
-| ユーザーごと（git インストーラー）      | `~/.hermes/hermes-agent/`      | `~/.local/bin/hermes`（シンボリックリンク） | `~/.hermes/`                         |
-| root モード（`sudo curl … \| sudo bash`） | `/usr/local/lib/hermes-agent/` | `/usr/local/bin/hermes`                 | `/root/.hermes/`（または `$HERMES_HOME`） |
+ユーザーデータの場所は `HERMES_HOME` で決まります。POSIX 用スクリプトの `--dir` は、ソースの
+チェックアウト先をそれとは別に指定します。Windows では `-HermesHome` と `-InstallDir` を使います。
+POSIX 用スクリプトを root で実行しても、自動で FHS 配置になるわけではありません。
+ソースの場所を明示しない限り、root のホームディレクトリが使われます。
 
-root モードの **FHS 配置**（`/usr/local/lib/…`、`/usr/local/bin/hermes`）は、Linux で他のシステム全体向け開発ツールが置かれる場所に合わせたものです。1 つのシステムへのインストールで全ユーザーに使わせたい、共有マシンでの運用に向いています。ユーザーごとの設定（認証情報、スキル、セッション）は、各ユーザーの `~/.hermes/` か、明示的に指定した `HERMES_HOME` の下に置かれたままになります。
+PM のツール置き場と、インストールごとの Python の世代は、それぞれ別に管理され、残る期間も異なります。
+置き場所は [パッケージ管理](/hermes/docs/reference/package-management/) をご覧ください。
+アプリのインストールを直す目的で、データのルートディレクトリを削除しないでください。
 
 ### インストールしたあと {#after-installation}
 
@@ -96,17 +149,21 @@ hermes setup --portal
 
 ## 前提条件 {#prerequisites}
 
-**インストーラー:** Windows 以外のプラットフォームでは、前提となるのは **Git** だけです。Linux では加えて `curl` と `xz-utils` が使えるようにしておいてください（インストーラーは Node.js を `.tar.xz` 形式のアーカイブとしてダウンロードします）。デスクトップアプリを使う場合は、ネイティブモジュールをコンパイルするために `g++`（Debian / Ubuntu では `build-essential`）も必要です。それ以外はインストーラーが自動でそろえます。
+POSIX 用のソーススクリプトを使うには、Git、curl、tar、SHA-256 のチェック用ツールを用意してください。
+Windows では、Git が入っていなければ、バージョンを固定した Git for Windows のアーカイブを自動で用意できます。
+uv がすでにあればそれを使って PM を準備します。なければ、スクリプトが検証済みの固定版をダウンロードします。
 
-- **uv**（高速な Python パッケージマネージャー）
-- **Python 3.11**（uv 経由で導入。sudo は不要）
-- **Node.js v26**（ブラウザ自動化と WhatsApp ブリッジ用。すでにシステムに Node 22.22 以降、24.11 以降、26 以降のいずれかが入っていれば、それをそのまま使います）
-- **ripgrep**（高速なファイル検索）
-- **ffmpeg**（TTS 用の音声フォーマット変換）
+現在の公式のインストールは **Python 3.14** で動きます。`pyproject.toml` にある
+`>=3.11,<3.15` という広めの範囲は、古い Python のインストールでもアップデーターを
+動かせるようにして、PM が 3.14 へ切り替えるまでをつなぐためのものです。3.11〜3.13 で現在の
+実行環境が動くことを約束するものではありません。PM が使うツールのバージョンは
+`pm/lock.json` で決まります。システムに入っている任意のバージョンの Node を、
+インストール先の実行環境として採用することはありません。
 
-:::info
-Python、Node.js、ripgrep、ffmpeg を自分で入れる必要は **ありません**。インストーラーが足りないものを検出して導入します。`git` が使えることだけ確認しておいてください（`git --version`）。Linux では `curl` と `xz-utils` が入っているか確認します（Debian / Ubuntu なら `sudo apt install curl xz-utils`）。デスクトップアプリを使う場合は `build-essential` も入れてください（`sudo apt install build-essential`）。
-:::
+ソースからビルドする場合は、ネイティブのコンパイラーとプラットフォームの開発用ライブラリが必要になることがあります。
+Electron をソースからビルドするなら、Node のネイティブモジュール用の要件も加わります。これらの
+ビルド用の前提条件は、完成品のデスクトップ版パッケージを入れる場合には当てはまりません。
+Linux の Chromium には、ディストリビューションが提供するシステムライブラリも必要です。
 
 :::tip Nix を使っている方へ
 Nix は **明示的にサポートされるインストール経路ではなくなりました**（ベストエフォートでの対応のみです）。すでに Nix を使っている場合（NixOS、macOS、Linux のいずれでも）、Nix flake、宣言的な NixOS モジュール、任意で使えるコンテナモードを備えた専用のセットアップ経路があります。**[Nix & NixOS のセットアップ](/hermes/docs/getting-started/nix-setup/)** ガイドをご覧ください。
@@ -116,54 +173,45 @@ Nix は **明示的にサポートされるインストール経路ではなく�
 
 ## 手動インストール / 開発者向けインストール {#manual-developer-installation}
 
-リポジトリをクローンしてソースから入れたい場合 — 開発に参加する、特定のブランチから動かす、仮想環境を細かく制御したい、といった目的 — は、コントリビューションガイドの [開発環境のセットアップ](/hermes/docs/developer-guide/contributing/#development-setup) の節をご覧ください。
+ソースをチェックアウトして使う場合は、まず
+[PM を使った開発の流れ](/hermes/docs/reference/package-management/#developer-workflow)をご覧ください。
+環境の有効化、日々使うコマンド、依存パッケージの更新、現時点でのブートストラップの制限をまとめています。
+テスト用の環境とチェックは、別ページの [開発環境のセットアップ](/hermes/docs/developer-guide/contributing/#development-setup) で扱っています。
 
 ---
 
 ## sudo なしの環境 / システムサービス用ユーザーでのインストール {#non-sudo-system-service-user-installs}
 
-Hermes を専用の非特権ユーザー（たとえば `hermes` という systemd のサービスアカウントや、`sudo` を使えない任意のユーザー）で動かす構成もサポートしています。インストール手順のうち本当に root が必要なのは Playwright の `--with-deps` ステップだけで、ここでは Chromium が使う共有ライブラリ（`libnss3`、`libxkbcommon` など）を `apt` で入れます。インストーラーは sudo が使えるかどうかを検出し、使えない場合はうまく機能を落として動作します。具体的には Chromium のバイナリをそのサービスユーザー自身の Playwright キャッシュへ入れ、管理者が別途実行すべきコマンドをそのまま表示します。
+ソースからのインストーラーは、実際にサービスを動かすユーザーで実行してください。そのユーザーのホーム、ツール置き場、
+設定、ランチャーは、すべてそのユーザーの持ち物である必要があります。
 
-**推奨する役割分担（Debian / Ubuntu）:**
+1. 管理者として、ソースからのビルドに必要な前提条件と、使うブラウザのバックエンドが必要とする
+   Linux のライブラリを入れます。
+2. サービス用ユーザーとして、通常のインストーラーを実行します。
 
-1. **最初に一度だけ、sudo を使える管理ユーザーで** Chromium が必要とするシステムライブラリを入れます。
-   ```bash
-   sudo npx playwright install-deps chromium
-   ```
-   （どのディレクトリから実行してもかまいません。`npx` がその場で Playwright を取得します。）
-
-2. **非特権のサービスユーザーで** 通常のインストーラーを実行します。sudo がないことを検出して `--with-deps` を飛ばし、Chromium をそのユーザーのローカル Playwright キャッシュへ入れます。
    ```bash
    curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
    ```
 
-   Playwright のステップそのものを飛ばしたい場合 — たとえばヘッドレスで動かしていてブラウザ自動化が要らない場合 — は `--skip-browser` を渡します。
-   ```bash
-   curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --skip-browser
-   ```
-
-   インストーラーは [`cua-driver`](/hermes/docs/user-guide/features/computer-use/) もあらかじめ入れておくので、Computer Use のツール群は有効にした瞬間から使えます。不要なら `--skip-computer-use` を渡して見送れます（その場合はツールを有効にしたときに必要に応じて導入されます）。
-
-3. **サービスユーザーのシェルから `hermes` を呼べるようにします。** インストーラーは起動用のスクリプトを `~/.local/bin/hermes` に書き出します。システムのサービスアカウントは PATH が最小限で、`~/.local/bin` を含まないことがよくあります。そのユーザーの環境に追加するか、起動用スクリプトをシステム側の場所へシンボリックリンクしてください。
-   ```bash
-   # Option A — add to the service user's profile
-   echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-
-   # Option B — symlink system-wide (run as an admin)
-   sudo ln -s /home/hermes/.hermes/hermes-agent/venv/bin/hermes /usr/local/bin/hermes
-   ```
-
-4. **確認:** ここまでで `hermes doctor` がエラーなく動くはずです。`ModuleNotFoundError: No module named 'dotenv'` が出る場合は、venv の起動用スクリプト（`~/.hermes/hermes-agent/venv/bin/hermes`）ではなく、リポジトリのソースにある `hermes` ファイル（`~/.hermes/hermes-agent/hermes`）をシステムの Python で呼んでいます。手順 3 を見直してください。
-
-5. **このアカウントでメッセージングゲートウェイを動かしますか？** ユーザーレベルのサービスはログアウトで停止し、そのサービスユーザーの lingering を有効にするまで起動時にも立ち上がりません。
+3. 実際のランチャーがあるディレクトリを、サービス用ユーザーのシェル環境に追加します。
 
    ```bash
-   sudo loginctl enable-linger <service-user>
+   export PATH="$HOME/.local/bin:$PATH"
    ```
 
-   サービスそのもののセットアップは [メッセージングゲートウェイ](/hermes/docs/user-guide/messaging/) をご覧ください。
+4. そのアカウントで `hermes doctor` を実行します。インストールされたラッパーを使い、
+   `venv/bin/hermes` のようなパスを直接書いて呼ばないでください。
+5. ログアウトしても止まらない Linux のユーザーサービスにするには、管理者として lingering を有効にします。
 
-同じやり方は Arch（インストーラーは同じ sudo 検出ロジックで pacman を使います）、Fedora / RHEL、openSUSE でも通用します。これらのディストリビューションは `--with-deps` に対応していないため、システムライブラリは必ず管理者が別途入れることになります。該当する `dnf` / `zypper` のコマンドはインストーラーが表示します。
+   ```bash
+   sudo loginctl enable-linger SERVICE_USER
+   ```
+
+現在のソースからのインストーラーは、Playwright の `--with-deps` ステップを実行しません。
+パッケージマネージャーごとに sudo で代わりに入れる仕組みもありません。PM が管理するのはツールのバイナリで、
+システムライブラリは管理者が用意します。
+[ブラウザ自動化](/hermes/docs/user-guide/features/browser/) と
+[メッセージングゲートウェイ](/hermes/docs/user-guide/messaging/) をご覧ください。
 
 ---
 
@@ -179,10 +227,10 @@ Hermes を専用の非特権ユーザー（たとえば `hermes` という syste
 
 ### シンボリックリンクにしたホームディレクトリと外部ストレージ {#symlinked-home-directories-and-external-storage}
 
-Hermes は、`HERMES_HOME` 自体をシンボリックリンクにする使い方にも、`hooks`・`skills`・`sessions`・`logs`
-といったホーム直下のディレクトリだけをリンクにする使い方にも対応しています。ホームの初期化では、
-すでにあるディレクトリのリンクはそのまま残り、リンク先のディレクトリ（および `logs/curator` のような
-その配下）の権限は持ち主の設定に任せます。
+Hermes は、`HERMES_HOME` 自体をシンボリックリンクにする使い方にも、ホーム直下のディレクトリをリンクにする使い方にも対応しています。
+`hooks`・`skills`・`sessions`・`logs` も対象です。ホームの初期化では、
+すでにあるディレクトリのリンクはそのまま残り、リンク先のディレクトリ
+（および `logs/curator` のようなその配下）の権限は持ち主の設定に任せます。
 
 リンク先が見つからない、アクセスできない、ディレクトリではない、のいずれかだった場合、初期化は止まり、
 パスとリンク先を書いたストレージのエラーになります。Hermes はリンクを差し替えたり、足りないリンク先を
@@ -191,11 +239,15 @@ Hermes は、`HERMES_HOME` 自体をシンボリックリンクにする使い�
 確認してからやり直してください。意図してドットファイルの置き場を新しくするなら、目的のストレージが
 使える状態だと確かめたうえで、自分で作ってください。
 
-`hermes doctor` はこの失敗を、YAML の不備ではなくストレージの問題として報告します。いまの `config.yaml`
-はそのまま残してください。ディレクトリが使えない状態は `hermes setup` では直りません。これは
-ディレクトリが使えるかどうかの確認であって、マウントの監視ではありません。ディレクトリが存在することは、
-目的のボリュームがマウントされている証拠にはならないからです。
+`hermes doctor` はこの失敗を、YAML の不備ではなくストレージの問題として報告します。
+いまの `config.yaml` はそのまま残してください。ディレクトリが使えない状態は `hermes setup` では直りません。これは
+ディレクトリが使えるかどうかの確認であって、マウントの監視ではありません。
+ディレクトリが存在することは、目的のボリュームがマウントされている証拠にはならないからです。
 
 ## インストール方法の自動判別 {#install-method-auto-detection}
 
-Hermes は自分が git インストーラー・Docker・NixOS のどれで入れられたかを自動で判別し、`hermes update` はその経路に合った更新コマンドを表示します。設定すべき環境変数はありません。判別はインストール先の構成（`~/.hermes/hermes-agent/` のチェックアウト、Docker イメージのスタンプ、Nix ストアのパス）にもとづいて行われます。判別結果は `hermes doctor` の環境サマリーにも表示されます。
+更新を誰が担うかは、データの置き場所だけでなく、実際に動いているインストールによって決まります。
+ソースのチェックアウトは、Hermes が管理する Git 経由の更新を使います。デスクトップ版パッケージ、Docker、
+Nix、Termux のパッケージは、それぞれのパッケージ側の更新の仕組みを使い続けます。
+`hermes doctor` は、どの方法でインストールされたかを表示します。パッケージが管理するファイルを変更する前に、
+[更新とアンインストール](/hermes/docs/getting-started/updating/) をご覧ください。

@@ -2,12 +2,16 @@
 title: "QQ Bot"
 description: ""
 upstream_path: user-guide/messaging/qqbot.md
-upstream_blob: 288522518afe2ecac5942eebe889bc67a8e70629
+upstream_blob: 5ad299bece6b25f5d8bd4f5af8fee9f0d61e368d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/qqbot
 ---
 
 # QQ Bot {#qq-bot}
+
+このページにある Python の依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存関係を変えたら、チェックアウトを有効化し直してから Hermes を再起動してください。
 
 **公式 QQ Bot API (v2)** を使って Hermes を QQ につなぎます。個人チャット（C2C）、グループでの @ メンション、ギルド、ダイレクトメッセージに対応し、音声メッセージの文字起こしもできます。
 
@@ -29,7 +33,7 @@ QQ Bot アダプターは [公式 QQ Bot API](https://bot.q.qq.com/wiki/develop/
 
 2. **依存パッケージ** — アダプターには `aiohttp` と `httpx` が必要です。
    ```bash
-   pip install aiohttp httpx
+   python -c "import pm; pm.sync_venv(['messaging'], explicit=True)"
    ```
 
 ## 設定 {#configuration}
@@ -129,6 +133,6 @@ platforms:
 
 ### 接続エラーが出る {#connection-errors}
 
-- `aiohttp` と `httpx` が入っているか確かめます: `pip install aiohttp httpx`
+- `aiohttp` と `httpx` が入っているか確かめます: `python -c "import pm; pm.sync_venv(['messaging'], explicit=True)"`
 - `api.sgroup.qq.com` と WebSocket ゲートウェイに通信が届くか確かめます
 - ゲートウェイのログで、詳しいエラー内容と再接続の様子を確認します

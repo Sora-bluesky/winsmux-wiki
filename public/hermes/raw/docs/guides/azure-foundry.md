@@ -2,12 +2,16 @@
 title: "Microsoft Foundry"
 description: "Hermes Agent を Microsoft Foundry で使う — OpenAI 形式と Anthropic 形式のエンドポイント、通信方式とデプロイ済みモデルの自動判別"
 upstream_path: guides/azure-foundry.md
-upstream_blob: 78996fcad9c8cf65be241aa449a3837bade9a685
+upstream_blob: 0535d9b1ba3364e901b27569f7d4b1cfbc65860d
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/azure-foundry
 ---
 
 # Microsoft Foundry {#microsoft-foundry}
+
+このページの Python 依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 Hermes Agent の `azure-foundry` プロバイダーは、Microsoft Foundry（旧 Azure AI Foundry）と Azure OpenAI に対応しています。1 つの Foundry リソースが、2 種類の通信形式でモデルを提供することがあります。
 
@@ -104,7 +108,7 @@ hermes model
 `azure-identity` は初回利用時に Hermes の遅延インストールで自動的に入ります。先に入れておきたい場合はこうします。
 
 ```bash
-pip install azure-identity
+python -c "import pm; pm.sync_venv(['azure-identity'], explicit=True)"
 ```
 
 ### `config.yaml` に書き込まれる設定 {#configuration-written-to-configyaml}

@@ -2,12 +2,16 @@
 title: "WhatsApp Business（Cloud API）"
 description: "Meta 公式の Business Cloud API を使って Hermes Agent を WhatsApp のボットとして設定する"
 upstream_path: user-guide/messaging/whatsapp-cloud.md
-upstream_blob: 06c3df1888ffcd21f1f9eac8bf70b85cbbbfd1a4
+upstream_blob: 4e5f4e5fe81b4f854c8f28d3b1120bb20c7ec570
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/whatsapp-cloud
 ---
 
 # WhatsApp Business Cloud API の設定 {#whatsapp-business-cloud-api-setup}
+
+このページの Python の依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)で実行する前提です。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 Hermes は Meta の **公式** の WhatsApp Business Cloud API を通して WhatsApp につながります。本番の運用に耐える経路で、Node.js のブリッジの子プロセスも QR コードも要らず、アカウントが止められる心配もありません。
 
@@ -368,7 +372,7 @@ Meta の初期値では、business の電話番号 1 件あたり **毎秒 80 �
 
 ### 音声の文字起こしが空になる、"could not transcribe" と出る {#stt-voice-note-transcription-returns-empty-could-not-transcribe}
 
-初期値の `stt.provider: local` を使うには `pip install faster-whisper` が要ります。 Nous の購読者なら、代わりに管理されたゲートウェイ経由で音声認識を動かせます。`hermes tools` の音声認識で **Nous Subscription** を選ぶか、次のように直接設定します。
+初期値の `stt.provider: local` を使うには `python -c "import pm; pm.sync_venv(['stt-whisper'], explicit=True)"` が要ります。 Nous の購読者なら、代わりに管理されたゲートウェイ経由で音声認識を動かせます。`hermes tools` の音声認識で **Nous Subscription** を選ぶか、次のように直接設定します。
 
 ```bash
 hermes config set stt.provider nous

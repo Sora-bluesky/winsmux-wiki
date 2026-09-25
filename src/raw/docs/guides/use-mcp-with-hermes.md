@@ -2,12 +2,16 @@
 title: "Hermes で MCP を使う"
 description: "MCP サーバーを Hermes Agent につなぎ、公開するツールを絞り込み、実際の作業で安全に使うための実践ガイド"
 upstream_path: guides/use-mcp-with-hermes.md
-upstream_blob: c614acb400e6b49de713f37dd576f6ee00912c43
+upstream_blob: bbcb119c8454ddbdecb9f32f46f23b5a9e052a3a
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/use-mcp-with-hermes
 ---
 
 # Hermes で MCP を使う {#use-mcp-with-hermes}
+
+このページの Python 依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 このガイドでは、日々の作業のなかで Hermes Agent と MCP を実際にどう使うかを説明します。
 
@@ -42,13 +46,13 @@ MCP はアダプタの層だと考えてください。
 
 ## ステップ 1: MCP のサポートを入れる {#step-1-install-mcp-support}
 
-標準のインストールスクリプトで Hermes を入れたなら、MCP のサポートは最初から含まれています（インストーラが `uv pip install -e ".[all]"` を実行します）。
+標準のインストールスクリプトで Hermes を入れたなら、MCP のサポートは最初から含まれています。PM が宣言済みの `all` extra を選ぶためです。
 
 追加機能なしでインストールしていて、あとから MCP だけを足したい場合は次のようにします。
 
 ```bash
 cd ~/.hermes/hermes-agent
-uv pip install -e ".[mcp]"
+python -c "import pm; pm.sync_venv(['mcp'], explicit=True)"
 ```
 
 npm ベースのサーバーを使うなら、Node.js と `npx` が使える状態にしておいてください。

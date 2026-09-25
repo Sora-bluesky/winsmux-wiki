@@ -2,12 +2,16 @@
 title: "Weixin（微信）"
 description: "iLink Bot API を使って Hermes Agent を個人の WeChat アカウントにつなぐ"
 upstream_path: user-guide/messaging/weixin.md
-upstream_blob: 45d85b4246637a7e6047994d7919fbfac9aaf346
+upstream_blob: 8216be13c790e0def59142de7bd4a2b5c46be81b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/weixin
 ---
 
 # Weixin（微信） {#weixin-wechat}
+
+このページの Python 依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 Hermes を、テンセントの個人向けメッセージングサービス [WeChat](https://weixin.qq.com/)（微信）につなぎます。このアダプターは個人の WeChat アカウント向けにテンセントの **iLink Bot API** を使います。WeCom（企業向け WeChat）とは別物です。メッセージはロングポーリングで届くので、公開エンドポイントや Webhook を用意する必要はありません。
 
@@ -35,9 +39,8 @@ QR ログインで Hermes につながるのは **iLink のボット人格**（�
 必要な依存関係をインストールします。
 
 ```bash
-pip install aiohttp cryptography
-# Optional: for terminal QR code display
-cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"
+# Includes aiohttp and terminal QR code support
+python -c "import pm; pm.sync_venv(['messaging'], explicit=True)"
 ```
 
 ## 設定 {#setup}
@@ -320,7 +323,7 @@ API エラーが起きたとき、アダプターは単純な再試行を行い�
 
 | 症状 | 対処 |
 |---------|-----|
-| `Weixin startup failed: aiohttp and cryptography are required` | 両方をインストールします: `pip install aiohttp cryptography` |
+| `Weixin startup failed: aiohttp and cryptography are required` | 両方をインストールします: `python -c "import pm; pm.sync_venv(['messaging'], explicit=True)"` |
 | `Weixin startup failed: WEIXIN_TOKEN is required` | `hermes gateway setup` を実行して QR ログインを済ませるか、`WEIXIN_TOKEN` を手で設定します |
 | `Weixin startup failed: WEIXIN_ACCOUNT_ID is required` | `.env` に `WEIXIN_ACCOUNT_ID` を設定するか、`hermes gateway setup` を実行します |
 | `Another local Hermes gateway is already using this Weixin token` | 先に別のゲートウェイを止めてください。1 つのトークンにつきポーリングは 1 つだけです |
@@ -334,4 +337,4 @@ API エラーが起きたとき、アダプターは単純な再試行を行い�
 | 音声メッセージがテキストで表示される | WeChat が書き起こしを返す場合、アダプターはそのテキストを使います。想定どおりの動きです |
 | メッセージが重複して見える | アダプターはメッセージ ID で重複を除きます。重複が見える場合は、ゲートウェイが複数動いていないか確認してください |
 | `iLink POST ... HTTP 4xx/5xx` | iLink 側の API エラーです。トークンが有効か、ネットワークがつながっているかを確認してください |
-| ターミナルに QR コードが表示されない | messaging エクストラ付きで入れ直します: `cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"`。あるいは QR コードの上に出力された URL を開いてください |
+| ターミナルに QR コードが表示されない | messaging エクストラ付きで入れ直します: `cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['messaging'], explicit=True)"`。あるいは QR コードの上に出力された URL を開いてください |

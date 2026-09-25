@@ -1,308 +1,176 @@
 ---
 title: "Android / Termux"
-description: "Termux を使って Android スマートフォン上で Hermes Agent を直接動かす"
+description: "署名付きの Termux APT リポジトリから Android に Hermes Agent を導入する"
 upstream_path: getting-started/termux.md
-upstream_blob: 9fdeb4ed2f02e1760447bd135c5ac40e78971c92
+upstream_blob: cd6ccc8c246bf60cabe8120c5a525703d9795d82
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/termux
 ---
 
 # Termux で Android 上の Hermes を動かす {#hermes-on-android-with-termux}
 
-:::warning ティア 2 のプラットフォーム
-Termux（Android）は [ティア 2 のプラットフォーム](/hermes/docs/getting-started/platform-support/#tier-2) です。ここで説明するインストーラのスクリプトとドキュメントは、できる範囲での対応にとどまります。`main` へのコミットによって、これらのパッケージがいつ壊れてもおかしくありません。
+:::danger Termux 版は現在動作しません
+Termux のパッケージはいま動かない状態です。修正を進めており、まもなく
+公開します。それまでは、以下の手順が失敗したり、動かないパッケージが
+導入されたりすることがあります。
 :::
 
-Hermes Agent は、[Termux](https://termux.dev/) を通じて Android スマートフォン上で直接動かせます。
+Termux のパッケージは、**aarch64（arm64-v8a）** の Android 端末で Hermes を動かします。
+APT のチャンネルは 2 つあり、
+`https://hermes-assets.nousresearch.com/releases/termux/<channel>` で公開しています。
 
-これにより、スマートフォン上で動くローカルの CLI に加えて、現時点で Android にきれいにインストールできると分かっている中心的な追加機能が手に入ります。
+| チャンネル | APT スイート | 中身 |
+| --- | --- | --- |
+| `stable` | `hermes-stable` | 安定版のリリース判定を通過した、`vMAJOR.MINOR.PATCH` のタグ付きリリース |
+| `canary` | `hermes-canary` | canary タグから作るプレリリース版。バージョンに `~canary.<timestamp>` が付きます |
 
-## 検証済みの手順では何がサポートされるのか {#what-is-supported-in-the-tested-path}
+以下の手順では `stable` を使います。プレリリース版を追いかける場合は、手順 2 と 4 で
+`stable` を `canary` に、`hermes-stable` を `hermes-canary` に置き換えてください。
+どちらのチャンネルも同じ鍵で署名しています。
 
-検証済みの Termux 向けの一式では、次のものがインストールされます。
+パッケージには Python、Node.js、npm、uv、ripgrep、ffmpeg と、それらの実行に必要なライブラリが入っています。
+ネイティブの Python wheel と TUI は、パッケージを作る前に CI でビルドします。
+そのため導入時に、端末側で中核の依存関係をコンパイルしたり、土台となる Python
+環境を組み立てたりすることはありません。パッケージは bionic 向けに固定したインタープリターの
+Python 3.14 を使います。デスクトップの CPython と同じパッチバージョンである必要はありません。
+同梱する wheel は中核部分と `acp` だけで、デスクトップ版の追加機能がすべて入っているわけではありません。
 
-- Hermes の CLI
-- cron のサポート
-- PTY / バックグラウンドのターミナルのサポート
-- Telegram ゲートウェイのサポート（手動 / できる範囲でのバックグラウンド実行）
-- MCP のサポート
-- Honcho メモリのサポート
-- ACP のサポート
+## 導入 {#install}
 
-具体的には、次のコマンドに対応します。
+標準の [Termux](https://termux.dev/) アプリを使ってください。
+パッケージは Termux の標準プレフィックス `/data/data/com.termux/files/usr` を前提にしています。
+ほかのアーキテクチャや、パッケージ名を変えた Termux アプリには対応していません。
+wheel は Android API 24（`android_24_arm64_v8a`）向けです。
+この環境では、デスクトップ・サーバー向けの `install.sh` や glibc の Linux 用アーカイブを使わないでください。
 
-```bash
-python -m pip install -e '.[termux]' -c constraints-termux.txt
-```
+1. リポジトリの設定に使うツールを入れます。
 
-## 検証済みの手順にまだ含まれていないもの {#what-is-not-part-of-the-tested-path-yet}
+   ```bash
+   pkg install curl gnupg
+   ```
 
-いくつかの機能は、Android 向けに公開されていないデスクトップ / サーバー向けの依存関係を必要とするか、スマートフォン上でまだ検証されていません。
+2. 公開鍵をダウンロードします。
 
-- `.[all]` は現時点の Android ではサポートされていません
-- `voice` の追加機能は `faster-whisper -> ctranslate2` によって塞がれており、`ctranslate2` は Android 向けの wheel を公開していません
-- ブラウザ / Playwright の自動セットアップは、Termux のインストーラではスキップされます
-- Docker を用いたターミナルの隔離は、Termux の中では利用できません
-- Android は Termux のバックグラウンドのジョブを一時停止することがあるため、ゲートウェイを常駐させ続けるのは、通常の管理下にあるサービスというよりも、できる範囲での動作になります
+   ```bash
+   mkdir -p "$PREFIX/etc/apt/keyrings"
+   curl -fsSL \
+     https://hermes-assets.nousresearch.com/releases/termux/stable/key.asc \
+     -o "$PREFIX/etc/apt/keyrings/hermes-agent.asc"
+   ```
 
-とはいえ、スマートフォンにネイティブな CLI エージェントとして Hermes がよく動くことに変わりはありません。推奨されるモバイル向けのインストールが、デスクトップ / サーバー向けよりも意図的に絞られている、というだけのことです。
+3. 主鍵のフィンガープリントを確かめます。
 
----
+   ```bash
+   gpg --show-keys --with-fingerprint "$PREFIX/etc/apt/keyrings/hermes-agent.asc"
+   ```
 
-## コミュニティが管理するネイティブな `pkg` 版 {#community-maintained-native-pkg-option}
+   リポジトリの鍵のフィンガープリントは次のとおりです。
 
-:::caution コントリビューターが運用している配布
-この APT リポジトリは **`@adybag14-cyber` がコミュニティとして管理しているもので、NousResearch の公式な配布ではありません**。NousResearch はこれらのパッケージのビルド・署名・ホスティング・監査のいずれも行っていません。このリポジトリを有効にすることは、コントリビューターが運用するリポジトリとその署名鍵を信頼することを意味します。Termux 自体も、引き続きティア 2 / できる範囲での対応のプラットフォームです。
-:::
+   ```text
+   C572 B5FD D1A2 9CCF A9A9 12B6 840B 0848 E139 156D
+   ```
 
-スマートフォン上で Python / Rust の依存関係をビルドするよりも、ネイティブなパッケージマネージャでインストールしたい場合のために、コミュニティが管理する APT リポジトリが用意されています。リポジトリの初期設定とパッケージングのソースは [`adybag14-cyber/termux-python`](https://github.com/adybag14-cyber/termux-python) で公開されており、Hermes のパッケージのビルドは [`adybag14-cyber/termux-hermes`](https://github.com/adybag14-cyber/termux-hermes) にあります。
+   フィンガープリントが違う場合は、そこで作業を止めてください。署名の検証を無効にしてはいけません。
 
-リポジトリの鍵とソースを登録し、Hermes をインストールするには次のようにします。
+4. リポジトリを追加します。
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/adybag14-cyber/termux-python/main/scripts/setup_apt_repo.sh | bash
-pkg install hermes-agent
-```
+   ```bash
+   printf '%s\n' \
+     "deb [signed-by=$PREFIX/etc/apt/keyrings/hermes-agent.asc] https://hermes-assets.nousresearch.com/releases/termux/stable hermes-stable main" \
+     > "$PREFIX/etc/apt/sources.list.d/hermes-agent.list"
+   ```
 
-このコミュニティの配布が現時点で公開しているリポジトリの署名鍵のフィンガープリントは、次のとおりです。
+5. Hermes を入れます。
 
-```text
-EAD24A2124EFA7393A78B7B14699F966313F7A6B
-```
+   ```bash
+   pkg update
+   pkg install hermes-agent
+   ```
 
-APT で管理された Hermes のインストールには、インストール方法として `apt` の印が付きます。そのため Hermes は、パッケージが所有するファイルに対して Git による自己更新を実行しません。代わりにパッケージマネージャを使ってください。
+6. プロバイダーを設定してから、TUI を起動します。
+
+   ```bash
+   hermes setup
+   hermes --tui
+   ```
+
+`hermes`、`hermes-agent`、`hermes-acp` の各コマンドは、パッケージに同梱した実行環境を使います。
+Termux の `python` や `nodejs` パッケージは必要ありません。
+
+## ファイルの場所と更新 {#files-and-updates}
+
+| 中身 | 場所 |
+| --- | --- |
+| パッケージのファイル | `$PREFIX/lib/hermes-agent/` |
+| コマンドのシンボリックリンク | `$PREFIX/bin/hermes`, `$PREFIX/bin/hermes-agent`, `$PREFIX/bin/hermes-acp` |
+| 設定とユーザーデータ | `~/.hermes/`、または指定した `HERMES_HOME` |
+
+更新は APT で行います。
 
 ```bash
 pkg update
 pkg upgrade hermes-agent
 ```
 
-この方法でのパッケージング / リポジトリ / 署名に関する問題は、上に挙げたコミュニティのパッケージングのリポジトリへ報告してください。Hermes の実行時のバグは引き続きここへ報告できますが、Android / Termux のサポートができる範囲のものである点は念頭に置いてください。
+`hermes update` は、APT が管理しているインストールを書き換えません。
+代わりに、パッケージマネージャーで実行するコマンドを表示します。
+canary 版のバージョンには `~canary.<timestamp>` が付き、対応する stable 版より前の版として
+並びます。各スイートには自分のチャンネルのパッケージしか載っていません。チャンネルを
+切り替えるときは、`hermes-agent.list` のチャンネルのパスとスイートを書き換えてから、
+`pkg update && pkg upgrade hermes-agent` を実行してください。
 
----
+## ゲートウェイ {#gateway}
 
-## 方法 1: ワンラインのインストーラ {#option-1-one-line-installer}
-
-Hermes には、Termux を認識するインストールの経路が用意されています。
-
-```bash
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
-```
-
-Termux 上では、インストーラが自動で次のことを行います。
-
-- システムのパッケージには `pkg` を使う
-- venv を `python -m venv` で作る
-- まず広い範囲の `.[termux-all]` の追加機能を試し、だめならより小さい `.[termux]`（さらに基本のインストール）へ順に下がる — curl 版のインストーラも自動で同じ順序をたどります
-- `hermes` を `$PREFIX/bin` にリンクし、Termux の PATH 上に残るようにする
-- 未検証のブラウザ / WhatsApp の初期セットアップはスキップする
-
-明示的なコマンドを知りたい場合や、失敗したインストールを調べたい場合は、以下の手動の手順を使ってください。
-
----
-
-## 方法 2: 手動でのインストール（すべて明示的に） {#option-2-manual-install-fully-explicit}
-
-### 1. Termux を更新し、システムのパッケージを入れる {#1-update-termux-and-install-system-packages}
+この APT 版は、systemd、launchd、Windows のタスク スケジューラを使いません。
+ゲートウェイは Termux のセッションの中で動かします。
 
 ```bash
-pkg update
-pkg install -y git python clang rust make pkg-config libffi openssl nodejs ripgrep ffmpeg
+hermes gateway run
 ```
 
-これらのパッケージが必要な理由は次のとおりです。
-
-- `python` — 実行環境と venv のサポート
-
-:::warning 対応している Python の範囲
-Hermes が必要とするのは **Python >=3.11,&lt;3.14** です。いまの Termux が配布している `python`
-は 3.14.x で、この範囲から外れています。インストーラはそれを見つけると、対応するバージョンを
-[Termux ユーザーリポジトリ（TUR）](https://github.com/termux-user-repository/tur)
-から入れようと自動で試みます。手作業で入れる場合は、自分で次のように用意してください。
+バックグラウンドで動かす場合は次のようにします。
 
 ```bash
-pkg install tur-repo
-pkg install python3.13
+mkdir -p "${HERMES_HOME:-$HOME/.hermes}/logs"
+nohup hermes gateway run >> "${HERMES_HOME:-$HOME/.hermes}/logs/gateway.log" 2>&1 &
 ```
 
-このあとのコマンドでは `python` の代わりに `python3.13` を使ってください
-（例: `python3.13 -m venv venv`）。
+:::warning Android のプロセス制限
+Android は、バックグラウンドで動いている Termux のプロセスを一時停止したり終了させたりすることがあります。
+電池の最適化の対象から外すことや `termux-wake-lock` は役に立ちますが、動き続けることを保証するものではありません。
 :::
 
-- `git` — リポジトリの clone / 更新
-- `clang`、`rust`、`make`、`pkg-config`、`libffi`、`openssl` — Android 上でいくつかの Python の依存関係をビルドするために必要
-- `nodejs` — 検証済みの中心的な手順を超えて試すための、任意の Node 実行環境
-- `ripgrep` — 高速なファイル検索
-- `ffmpeg` — メディア / TTS の変換
+## 制限 {#limits}
 
-### 2. Hermes を clone する {#2-clone-hermes}
+パッケージには `nemo-relay` エクスポーターが入っていません。同梱しているビルド
+ツールチェーンが、この環境に対応していないためです。
 
-```bash
-git clone https://github.com/NousResearch/hermes-agent.git
-cd hermes-agent
-```
+Electron、ローカルの Chromium、デスクトップの computer-use ツールも入っていません。
+ローカルの Docker デーモンは Termux の環境にはありません。リモートの
+サービスには、それぞれに必要な条件と接続上の制限があります。
 
-### 3. 仮想環境を作る {#3-create-a-virtual-environment}
+スマートフォン本体の機能を使う Termux:API のマイクやクリップボードのアダプターは、
+このパッケージでは提供していません。ビルド済みの CLI/TUI が動くからといって、端末上での音声入力や
+ウェイクワードに対応しているわけではありません。任意の連携機能やサードパーティのプラグインは、
+Android に対応していない依存関係を必要とすることがあります。
 
-```bash
-python -m venv venv
-source venv/bin/activate
-export ANDROID_API_LEVEL="$(getprop ro.build.version.sdk)"
-python -m pip install --upgrade pip setuptools wheel
-```
+この環境の Python 3.14 では `sys.platform == "android"` になります。`linux` だけを
+条件にしている依存関係や skill は、Android では自動的には使えません。
 
-`ANDROID_API_LEVEL` は、`jiter` のような Rust / maturin を使うパッケージにとって重要です。
-
-### 4. 検証済みの Termux 向けの一式をインストールする {#4-install-the-tested-termux-bundle}
+## アンインストール {#uninstall}
 
 ```bash
-python -m pip install -e '.[termux]' -c constraints-termux.txt
+pkg uninstall hermes-agent
 ```
 
-最小構成のエージェント本体だけでよければ、次でも動きます。
+APT はパッケージとコマンドのシンボリックリンクを削除します。設定、セッション、skill、メモリは残ります。
 
-```bash
-python -m pip install -e '.' -c constraints-termux.txt
-```
+## 困ったとき {#troubleshooting}
 
-### 5. `hermes` を Termux の PATH に置く {#5-put-hermes-on-your-termux-path}
+- **パッケージが見つからない:** リポジトリの設定行を確かめてから、`pkg update` を実行してください。
+- **署名エラー:** 公開鍵のフィンガープリントを確かめてください。署名のないリポジトリを使ったり、エラーを回避したりしないでください。
+- **コマンドが見つからない:** `$PREFIX/bin` が `PATH` に入っているかを確かめるか、パッケージを入れ直してください。
+- **ライブラリや TUI のバンドルが足りない:** `hermes --version` の出力とエラーの全文を報告してください。中核のパッケージが端末上での再ビルドを必要とすることは、本来あってはならないことです。
+- **画面を消すとゲートウェイが止まる:** Android の電池とバックグラウンドプロセスの制限を見直してください。
 
-```bash
-ln -sf "$PWD/venv/bin/hermes" "$PREFIX/bin/hermes"
-```
-
-Termux では `$PREFIX/bin` がすでに PATH に入っているため、これで毎回 venv を有効化しなくても、新しいシェルで `hermes` コマンドを使い続けられます。
-
-### 6. インストールを確認する {#6-verify-the-install}
-
-```bash
-hermes --version
-hermes doctor
-```
-
-### 7. Hermes を起動する {#7-start-hermes}
-
-```bash
-hermes
-```
-
----
-
-## そのあとにおすすめの設定 {#recommended-follow-up-setup}
-
-### モデルを設定する {#configure-a-model}
-
-```bash
-hermes model
-```
-
-あるいは、`~/.hermes/.env` に直接キーを書いても構いません。
-
-### あとで対話的なセットアップウィザードをやり直す {#re-run-the-full-interactive-setup-wizard-later}
-
-```bash
-hermes setup
-```
-
-### 任意の Node の依存関係を手動でインストールする {#install-optional-node-dependencies-manually}
-
-検証済みの Termux 向けの手順では、Node / ブラウザの初期セットアップを意図的にスキップしています。あとからブラウザ関連のツールを試したい場合、必要なものは使うバックエンドによって変わります。
-
-- **クラウドのブラウザプロバイダ**（Browserbase、Browser Use、Firecrawl）は自前の Chromium をホストしているため、Node.js だけあれば十分です。`agent-browser` は最初に使うときに `npx agent-browser` で遅延解決されます。
-
-  ```bash
-  pkg install nodejs-lts
-  ```
-
-- **ローカルでのブラウザ自動操作**を Termux 上で行うには、`agent-browser` を実際にインストールする必要があります。npx だけで済ませるフォールバックは、ローカルモードでは「使える」と言うには脆すぎるとして、意図的に拒否されます。
-
-  ```bash
-  pkg install nodejs-lts
-  npm install -g agent-browser && agent-browser install
-  ```
-
-ブラウザのツールは、PATH の探索先に Termux のディレクトリ（`/data/data/com.termux/files/usr/bin`）を自動で含めます。そのため、PATH を追加で設定しなくても `agent-browser` と `npx` が見つかります。
-
-Android 上のブラウザ / WhatsApp 関連のツールは、別途そうでないと明記されるまでは実験的なものとして扱ってください。
-
----
-
-## トラブルシューティング {#troubleshooting}
-
-### `.[all]` のインストールで `No solution found` と出る {#no-solution-found-when-installing-all}
-
-代わりに、検証済みの Termux 向けの一式を使ってください。
-
-```bash
-python -m pip install -e '.[termux]' -c constraints-termux.txt
-```
-
-現時点で妨げになっているのは `voice` の追加機能です。
-
-- `voice` は `faster-whisper` を引き込む
-- `faster-whisper` は `ctranslate2` に依存する
-- `ctranslate2` は Android 向けの wheel を公開していない
-
-### Android 上で `uv pip install` が失敗する {#uv-pip-install-fails-on-android}
-
-代わりに、標準ライブラリの venv と `pip` を使う Termux 向けの手順を使ってください。
-
-```bash
-python -m venv venv
-source venv/bin/activate
-export ANDROID_API_LEVEL="$(getprop ro.build.version.sdk)"
-python -m pip install --upgrade pip setuptools wheel
-python -m pip install -e '.[termux]' -c constraints-termux.txt
-```
-
-### `jiter` / `maturin` が `ANDROID_API_LEVEL` について文句を言う {#jiter-maturin-complains-about-androidapilevel}
-
-インストールの前に、API レベルを明示的に設定してください。
-
-```bash
-export ANDROID_API_LEVEL="$(getprop ro.build.version.sdk)"
-python -m pip install -e '.[termux]' -c constraints-termux.txt
-```
-
-### `Failed building wheel for uvloop` {#failed-building-wheel-for-uvloop}
-
-`uvloop` は libuv を同梱していますが、その `./configure` は Android では動きません。そのため Hermes は、基本のインストールでも `termux` / `termux-all` の追加セットでも、これを外してあります。`uvicorn` は標準ライブラリの asyncio のループに切り替わり、ダッシュボードもゲートウェイもそのまま問題なく動きます。このエラーが出たときは、`uvloop` を含む追加セット（たとえば `[all]`）をインストールしています。代わりに `.[termux]` か `.[termux-all]` を入れてください。
-
-### `hermes doctor` が ripgrep や Node が無いと言う {#hermes-doctor-says-ripgrep-or-node-is-missing}
-
-Termux のパッケージでインストールしてください。
-
-```bash
-pkg install ripgrep nodejs
-```
-
-### Python パッケージのインストール中にビルドが失敗する {#build-failures-while-installing-python-packages}
-
-ビルド用のツールチェーンが入っているか確認してください。
-
-```bash
-pkg install clang rust make pkg-config libffi openssl
-```
-
-そのうえで、やり直します。
-
-```bash
-python -m pip install -e '.[termux]' -c constraints-termux.txt
-```
-
----
-
-## スマートフォン上での既知の制限 {#known-limitations-on-phones}
-
-- Docker のバックエンドは利用できません
-- 検証済みの手順では、`faster-whisper` によるローカルでの音声書き起こしは利用できません
-- ブラウザ自動操作のセットアップは、インストーラが意図的にスキップします
-- 一部の任意の追加機能は動くかもしれませんが、現時点で Android 向けの検証済みの一式として文書化されているのは `.[termux]` と `.[termux-all]` だけです
-
-Android 固有の新しい問題に当たった場合は、次の情報を添えて GitHub の issue を作成してください。
-
-- Android のバージョン
-- `termux-info`
-- `python --version`
-- `hermes doctor`
-- 実行したインストールのコマンドと、エラー出力の全文
+全般的な診断には `hermes doctor` を実行してください。

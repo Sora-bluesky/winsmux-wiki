@@ -2,7 +2,7 @@
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: 3907462350f5bf55cb9dee19e17f3411431130ac
+upstream_blob: aee0a2c38f439ec7937dee1d2681efdcbb6e2b0c
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -31,6 +31,27 @@ Hermes Agent は Nix flake、NixOS モジュール、Home Manager モジュー�
 
 **NixOS モジュールの利用者にとって**は、運用の流れそのものが変わります。設定は `configuration.nix` に置き、シークレットは sops-nix や agenix を通し、サービスは systemd ユニットになり、設定変更用の CLI コマンドは使えなくなります。ほかの NixOS サービスと同じやり方で hermes を扱うことになります。
 :::
+
+## 実行時の版の固定 {#runtime-pins}
+
+PM のツールのロックは、Nix のビルド入力にもなっています。`nix/npm-pinned.nix` が npm の
+固定版を読み、`nix/pm-packages.nix` が対応するアーカイブを `pm-NAME` という derivation として公開します。
+
+```bash
+nix build .#pm-ripgrep
+```
+
+これらの出力は、版を固定したアーカイブを展開するだけです。Hermes のラッパー一式ではなく、
+プラットフォームとの統合なしにどのアーカイブも動くと保証するものでもありません。
+アプリケーション自体は、引き続き uv2nix の環境と Nix のラッパーを使います。
+
+`nix/pythonLock.nix` は、Python のメジャー・マイナー版を `pm/lock.json` から読みます。
+uv2nix の環境、パッケージの上書き、プラグインのパッケージ、開発用シェルは、
+この系列のインタープリターを使います。固定した nixpkgs にその系列が無ければ、
+別の Python を選ぶことはせず、評価をそこで止めます。
+
+Nix のネイティブな評価とビルドは、引き続き CI の関門です。更新は Nix を通して行ってください。
+Nix のストアのパスを pip で直そうとしないでください。
 
 ## 事前に必要なもの {#prerequisites}
 
@@ -778,7 +799,7 @@ services.hermes-agent.extraPlugins = [
 
 ```nix
 services.hermes-agent.extraPythonPackages = [
-  (pkgs.python312Packages.buildPythonPackage {
+  (config.services.hermes-agent.package.python.pkgs.buildPythonPackage {
     pname = "rtk-hermes";
     version = "1.0.0";
     src = pkgs.fetchFromGitHub {
@@ -788,7 +809,7 @@ services.hermes-agent.extraPythonPackages = [
       hash = "sha256-...";
     };
     format = "pyproject";
-    build-system = [ pkgs.python312Packages.setuptools ];
+    build-system = [ config.services.hermes-agent.package.python.pkgs.setuptools ];
   })
 ];
 ```
@@ -812,7 +833,9 @@ services.hermes-agent = {
 };
 ```
 
-これらは中核の依存関係と一緒に uv が解決します。PYTHONPATH を書き換える必要も、衝突の心配もありません。使えるグループは次のとおりです。
+これらのグループは、ビルドのときに中核の依存関係の解決に加わります。要件どうしがぶつかれば、
+その解決が失敗することはあります。表はよく使うグループだけを載せています。すべての一覧とプラットフォームの条件は、
+`pyproject.toml` が正です。
 
 | グループ | 有効になるもの |
 |-------|-----------------|
@@ -853,7 +876,7 @@ Hermes のツリーではなく[プラグインカタログ](/hermes/docs/user-g
 ```nix
 services.hermes-agent = {
   extraPlugins = [ my-plugin-src ];          # plugin source
-  extraPythonPackages = [ pkgs.python312Packages.redis ];  # its Python dep
+  extraPythonPackages = [ config.services.hermes-agent.package.python.pkgs.redis ];  # its Python dep
   extraPackages = [ pkgs.redis ];            # system binary it needs
 };
 ```
@@ -895,17 +918,15 @@ services.hermes-agent.settings.plugins.enabled = [
 
 ### 開発用シェル {#dev-shell}
 
-この flake は、Python 3.12、uv、Node.js、実行時のツール一式が入った開発用シェルを提供します。
+この flake は、ロックから決まるインタープリターと `dev` の依存グループを備えた、編集可能な Python 環境を提供します。
+`HERMES_PYTHON` がそのインタープリターを指します。リポジトリ直下の `.venv` に
+Python の依存を入れることはしません。シェルには Node.js と実行時のツールも入っています。
+npm のフックが、JS のワークスペースの入力が変わったときにそれを更新します。
 
 ```bash
 cd hermes-agent
 nix develop
-
-# Shell provides:
-#   - Python 3.12 + uv (deps installed into .venv on first entry)
-#   - Node.js 26, ripgrep, git, openssh, ffmpeg on PATH
-#   - Stamp-file optimization: re-entry is near-instant if deps haven't changed
-
+"$HERMES_PYTHON" -c "import sys; print(sys.executable); print(sys.version)"
 hermes setup
 hermes chat
 ```
@@ -917,7 +938,7 @@ hermes chat
 ```bash
 cd hermes-agent
 direnv allow    # one-time
-# Subsequent entries are near-instant (stamp file skips dep install)
+# Nix reuses its built Python environment; the npm hook checks JS inputs.
 ```
 
 ### flake のチェック {#flake-checks}
@@ -1015,7 +1036,7 @@ nix build .#checks.x86_64-linux.config-roundtrip    # merge script preserves use
 | `extraArgs` | `listOf str` | `[]` | `hermes gateway` に渡す追加の引数 |
 | `extraPackages` | `listOf package` | `[]` | エージェントが使える追加パッケージ。hermes ユーザーのプロファイルに入るので、ターミナルのコマンド、スキル、cron ジョブのどこからでも見えます |
 | `extraPlugins` | `listOf package` | `[]` | `$HERMES_HOME/plugins/` へシンボリックリンクするディレクトリ型プラグインのパッケージ。それぞれ `plugin.yaml` を含む必要があります |
-| `extraPythonPackages` | `listOf package` | `[]` | エントリーポイント型プラグインの検出のため PYTHONPATH に追加する Python パッケージ。`python312Packages` でビルドしてください |
+| `extraPythonPackages` | `listOf package` | `[]` | エントリーポイント型プラグインの検出のため PYTHONPATH に追加する Python パッケージ。選んだパッケージの `python.pkgs` を使ってください |
 | `extraDependencyGroups` | `listOf str` | `[]` | 封じた venv に含める pyproject.toml の追加機能（たとえば `["honcho"]`）。uv が解決するので衝突しません |
 | `restart` | `str` | `"always"` | systemd の `Restart=` の方針。macOS では使われません。 |
 | `restartSec` | `int` | `5` | systemd の `RestartSec=` の値。macOS では使われません。 |
@@ -1223,7 +1244,7 @@ nix-store --query --roots $(docker exec hermes-agent readlink /data/current-pack
 | 症状 | 原因 | 対処 |
 |---|---|---|
 | `Cannot save configuration: managed by NixOS` | CLI の保護が働いています | `configuration.nix` を編集して `nixos-rebuild switch` を実行します |
-| `No adapter available for discord`（telegram や slack でも同様） | 封じた Nix の venv にメッセージ連携の依存が入っていません | `#messaging` の版を入れます: `nix profile install ...#messaging`。NixOS モジュールなら `extraDependencyGroups = [ "messaging" ]` です。根本の原因は `journalctl -u hermes-agent` で `FeatureUnavailable` や `requirements not met` を探すとわかります。 |
+| `No adapter available for discord`（telegram や slack でも同様） | 封じた Nix の venv にメッセージ連携の依存が入っていません | `#messaging` の版を入れます: `nix profile install ...#messaging`。NixOS モジュールなら `extraDependencyGroups = [ "messaging" ]` です。`journalctl -u hermes-agent` で `InstallError` や `requirements not met` を探し、根本の原因を読んでください。 |
 | コンテナが思いがけず作り直された | `extraVolumes`、`extraOptions`、`image` のどれかが変わりました | 想定どおりの動きです。書き込みレイヤーは初期化されます。パッケージを入れ直すか、独自イメージを使ってください |
 | `hermes --version` が古い版を表示する | コンテナが再起動されていません | `systemctl restart hermes-agent` を実行します |
 | `/var/lib/hermes` で権限がないと言われる | 状態ディレクトリが `0750 hermes:hermes` になっています | `docker exec` か `sudo -u hermes` を使ってください |

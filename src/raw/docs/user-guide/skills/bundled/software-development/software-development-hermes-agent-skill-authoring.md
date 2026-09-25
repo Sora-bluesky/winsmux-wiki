@@ -2,7 +2,7 @@
 title: "Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成"
 description: "リポジトリ内の SKILL.md を書く: フロントマターと構成"
 upstream_path: user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring.md
-upstream_blob: 777ad2fc55e4d38e6d3594175718f8800739a288
+upstream_blob: 56c819a27b13fd417e50542ffc2a9f4a8674bfd8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring
 ---
@@ -178,11 +178,12 @@ skill があるのは、エージェントの進め方をぶれにくくする�
 3. `write_file` で `skills/<category>/<name>/SKILL.md`（または `optional-skills/...`）に**下書きします**。
 4. **手元で検証します**:
    ```python
-   import yaml, re, pathlib
+   import re, pathlib
+   from ruamel.yaml import YAML
    content = pathlib.Path("skills/<category>/<name>/SKILL.md").read_text()
    assert content.startswith("---")
    m = re.search(r'\n---\s*\n', content[3:])
-   fm = yaml.safe_load(content[3:m.start()+3])
+   fm = YAML(typ="safe").load(content[3:m.start()+3])
    assert "name" in fm and "description" in fm
    assert len(fm["description"]) <= 60, f"description {len(fm['description'])} chars — hardline is 60"
    assert fm["description"].endswith(".")

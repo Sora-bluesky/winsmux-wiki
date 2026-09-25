@@ -2,12 +2,16 @@
 title: "ツールとツールセット"
 description: "Hermes Agent のツールの全体像 — 何が使えるか、ツールセットの仕組み、ターミナルの実行先"
 upstream_path: user-guide/features/tools.md
-upstream_blob: bd3d989b0f5a0a64862d7df060c7587430b12844
+upstream_blob: 6e8bfd610497f32f8e4929e7364220a0badc5576
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tools
 ---
 
 # ツールとツールセット {#tools-toolsets}
+
+このページの Python の依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)で実行する前提です。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 ツールは、エージェントにできることを広げる関数です。意味のまとまりごとに**ツールセット**へ整理されていて、サービスごとに使う・使わないを切り替えられます。
 
@@ -154,7 +158,7 @@ hermes config set terminal.singularity_image ~/python.sif
 ### Modal（サーバーレスのクラウド） {#modal-serverless-cloud}
 
 ```bash
-uv pip install modal
+python -c "import pm; pm.sync_venv(['modal'], explicit=True)"
 modal setup
 hermes config set terminal.backend modal
 ```
@@ -162,7 +166,7 @@ hermes config set terminal.backend modal
 ### Vercel Sandbox {#vercel-sandbox}
 
 ```bash
-pip install 'hermes-agent[vercel]'
+python -c "import pm; pm.sync_venv(['vercel'], explicit=True)"
 hermes config set terminal.backend vercel_sandbox
 hermes config set terminal.vercel_runtime node24
 ```

@@ -2,7 +2,7 @@
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: 5db0303f4fe273b510db8e11ca41ac852440f57f
+upstream_blob: 1c940e6db4220c92a9aa6218817329d6a456aeb5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -114,7 +114,7 @@ OpenAI の Chat Completions の標準的な形式です。状態を持たず、�
 どの SSE の流れ（Chat Completions、Responses、`/api/sessions/{id}/chat/stream`、`/v1/runs/{id}/events`）でも、10 秒間イベントが送られなかったときは `: keepalive` というコメント行を出します。これで、時間のかかるツール呼び出しの途中でクライアント側の無通信タイムアウトが働くことはありません。標準的な SSE クライアントはコメント行を無視します。自前でパースする場合は、`:` で始まる行を読み飛ばしてください。
 
 **逐次送りでのツールの進み具合**:
-- **Chat Completions**: Hermes は `event: hermes.tool.progress` を出します。保存されるアシスタントの文章を汚さずに、ツールの開始を見せるためです。
+- **Chat Completions**: Hermes は `event: hermes.tool.progress` を出します。保存されるアシスタントの文章を汚さずに、ツールの開始を見せるためです。名前付きの SSE イベントを受け付けない厳密な OpenAI クライアントでは、`gateway.platforms.api_server.tool_progress_events: false`（既定は `true`）でこのフレームを止められます。本文の塊には影響しません。この止め方が効くのは Chat Completions だけです。`/v1/runs/{id}/events` は常にツールのイベントを出します。`/v1/capabilities` の `tool_progress_events` 機能が示しているのはこちらです。
 - **Responses**: Hermes は SSE の流れのなかで、仕様どおりの `function_call` と `function_call_output` という出力項目を出します。クライアント側はツールの様子を構造化した画面として、その場で描けます。
 
 **モデルの思考**（モデルが実際に思考を出し、適用される `reasoning` の設定がそれを許しているときにだけ出ます。入力の側で止めるには `model_options.reasoning.enabled: false` を指定します）:
@@ -601,7 +601,7 @@ MCP の信頼ゲートでの同意（`trust: untrusted` と設定したサーバ
 | `GET` | `/api/sessions/{id}/messages` | そのセッションのメッセージの履歴 |
 | `POST` | `/api/sessions/{id}/fork` | `SessionDB` の系譜をたどってセッションを枝分かれさせます（CLI の `/branch` と同じ考え方です） |
 | `POST` | `/api/sessions/{id}/chat` | エージェントの往復を 1 回、待ち合わせる形で走らせます |
-| `POST` | `/api/sessions/{id}/chat/stream` | 往復 1 回を SSE で包んだもの。`assistant.delta`、`assistant.commentary`（往復の途中の補足です。`message_id`、`text`、`already_streamed` が付き、`assistant.completed` に畳み込まれることはありません）、`tool.started`、`tool.completed` を出し、最後に往復の終わり方に合わせて `run.completed` / `run.failed` / `run.cancelled` のいずれかの終端イベントを出します（[実行の終端状態](/hermes/docs/developer-guide/programmatic-integration/#terminal-run-status) を参照） |
+| `POST` | `/api/sessions/{id}/chat/stream` | 往復 1 回を SSE で包んだもの。`assistant.delta`、`assistant.commentary`（往復の途中の補足です。`message_id`、`text`、`already_streamed` が付き、`assistant.completed` に畳み込まれることはありません）、`tool.started`、`tool.completed`、`tool.failed`（エラーで終わったツール）を出し、最後に往復の終わり方に合わせて `run.completed` / `run.failed` / `run.cancelled` のいずれかの終端イベントを出します（[実行の終端状態](/hermes/docs/developer-guide/programmatic-integration/#terminal-run-status) を参照） |
 
 `/v1/capabilities` は `session_*` の機能の旗と `endpoints.session_*` の項目でこの窓口の全体を知らせるので、外部の画面は対応を調べたうえで安全に別の手に切り替えられます。`chat` と `chat/stream` の中身では、文中の画像にも対応しています（複数の形式を扱える経路です）。
 

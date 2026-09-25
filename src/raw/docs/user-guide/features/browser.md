@@ -2,7 +2,7 @@
 title: "ブラウザの自動操作"
 description: "いくつものプロバイダ、CDP でつなぐ手元の Chromium 系ブラウザ、あるいはクラウドのブラウザでブラウザを操り、ウェブとのやり取り、フォームの入力、情報の取り出しなどを行います。"
 upstream_path: user-guide/features/browser.md
-upstream_blob: 1383392f20992472a45911a423b9ae087f9a557b
+upstream_blob: bcd00d73b59ffa70f318e51ad989470f28b4a86c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/browser
 ---
@@ -543,11 +543,17 @@ AGENT_BROWSER_ARGS=--no-sandbox
 
 ### agent-browser CLI を入れる {#install-agent-browser-cli}
 
-何も入れる必要はありません。`agent-browser` は、ブラウザの道具を最初に使うときに `npx agent-browser` で自動的に解決されます。npx が一度だけ取りに行く手間を避けたいなら、先に全体に入れておくこともできます（任意）。
+インストーラーと `hermes update` は、既定で Hermes のパッケージマネージャーを通して `agent-browser` と、版を固定した
+Chromium を入れます。`--skip-browser` / `-SkipBrowser` を付けてインストールした場合や、ダウンロードに失敗した場合は、次のコマンドで入れてください。
 
 ```bash
-npm install -g agent-browser
+hermes pm install agent-browser
 ```
+
+これで以前の `--skip-browser` の選択も取り消されるので、以後の更新でもブラウザの道具が最新に保たれます。すでに `PATH` 上にある `agent-browser` も使えます。
+Linux では、Chromium にシステムのライブラリが必要なこともあります
+（`npx playwright install-deps chromium`）。Android/Termux では、代わりに
+`npm install -g agent-browser && agent-browser install` を実行してください。
 
 :::info
 `browser` の道具一式が設定の `toolsets` の並びに入っているか、`hermes config set toolsets '["hermes-cli", "browser"]'` で有効にされている必要があります。

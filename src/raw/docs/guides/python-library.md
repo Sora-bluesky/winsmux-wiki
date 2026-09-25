@@ -2,7 +2,7 @@
 title: "Hermes を Python ライブラリとして使う"
 description: "AIAgent を自作の Python スクリプト・Web アプリ・自動化パイプラインに組み込む方法。CLI は不要です"
 upstream_path: guides/python-library.md
-upstream_blob: 1fb0387400e1c6541db395c7f0e4fabf7e23528b
+upstream_blob: 443155f49b1478f4f470dbd4ba71a7f26235c1ad
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/python-library
 ---
@@ -15,15 +15,18 @@ Hermes は CLI ツールだけではありません。`AIAgent` を直接イン�
 
 ## インストール {#installation}
 
-Hermes をクローンして、サポートされている編集可能な開発環境を作ります。
+Hermes をクローンし、PM でソース環境を準備します。Bash での手順は次のとおりです。
 
 ```bash
 git clone https://github.com/NousResearch/hermes-agent.git
 cd hermes-agent
-uv sync
+source ./activate
 ```
 
-作ったアプリケーションは、そのチェックアウト先で `uv run python your_app.py` として実行します。Hermes は `requirements.txt` からインストールするための wheel やソース配布物を、サポート対象としては公開していません。
+作ったアプリケーションは、有効化したそのチェックアウト先で `python your_app.py` として実行します。
+PowerShell で準備する場合や、独立したインタプリタを使う場合は、
+[PM の開発者向けワークフロー](/hermes/docs/reference/package-management/#developer-workflow)を参照してください。
+Hermes は `requirements.txt` からインストールするための wheel やソース配布物を、サポート対象としては公開していません。
 
 :::tip
 CLI で使う環境変数は、ライブラリとして使う場合にも同じものが必要です。最低限 `OPENROUTER_API_KEY` を設定してください（プロバイダに直接つなぐ場合は `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`）。

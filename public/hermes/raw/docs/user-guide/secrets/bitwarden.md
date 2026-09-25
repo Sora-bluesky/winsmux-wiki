@@ -2,7 +2,7 @@
 title: "Bitwarden Secrets Manager"
 description: ""
 upstream_path: user-guide/secrets/bitwarden.md
-upstream_blob: 671fb640fef781aacf418770bc94370bccd1c4b4
+upstream_blob: 00cf5059d96429be936be49aced4d91e41602131
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/secrets/bitwarden
 ---
@@ -18,7 +18,9 @@ API キーを `~/.hermes/.env` に平文で置く代わりに、起動時に [Bi
 3. `hermes`（あるいはゲートウェイや cron ジョブ）が起動するたび、`~/.hermes/.env` を読み込んだあとに Hermes が `bws secret list <project_id>` を呼び、返ってきたキーを `os.environ` に入れます。
 4. 既定では、Hermes はすでに環境にある値を**上書き**します。つまり Bitwarden が正本になるということで、Web アプリでキーを 1 回入れ替えれば、次に起動したすべての Hermes のプロセスがそれを拾います。`.env` のほうを勝たせたいなら、設定で `override_existing: false` にしてください。
 
-`bws` の実行ファイルは、最初に使うときに `~/.hermes/bin/` へ自動でダウンロードされます。`apt` も `brew` も `sudo` も要りません。
+Hermes は、PM での選択を確かめる前に、`PATH` 上にある `bws` の実行ファイルを優先して使います。
+どちらも無い場合は、最初に使うときに、版を固定したパッケージを
+[PM](/hermes/docs/reference/package-management/#optional-security-tools) に求めます。これは遅延インストールの方針に従います。
 
 ## なぜマシンアカウントなのか（そして 2 要素認証を求められない理由） {#why-machine-accounts-and-why-no-2fa-prompt}
 
@@ -48,7 +50,7 @@ hermes secrets bitwarden setup
 
 このコマンドは次の順に進みます。
 
-1. `bws v2.0.0` を `~/.hermes/bin/bws` へダウンロードし、検証します。
+1. `bws` が無ければ、版を固定したパッケージを PM に求めます。
 2. アクセストークンの入力を求めます（入力は伏せ字になります）。`~/.hermes/.env` に `BWS_ACCESS_TOKEN` として保存されます。
 3. マシンアカウントが属する Bitwarden の地域を尋ねます。**US Cloud**、**EU Cloud**、**自前ホスト / 独自 URL** から選びます。`config.yaml` に `secrets.bitwarden.server_url` として保存され、`bws` には `BWS_SERVER_URL` として渡されます。
 4. マシンアカウントから見えるプロジェクトを一覧し、そこから 1 つ選ばせます。`config.yaml` に `secrets.bitwarden.project_id` として保存されます。
@@ -81,7 +83,8 @@ hermes secrets bitwarden status
 | `hermes secrets bitwarden token` | アクセストークンを入れ替える。新しいトークンを Bitwarden に問い合わせて確かめてから `.env` に保存する |
 | `hermes secrets bitwarden sync` | 試しに実行する。今すぐシークレットを取得して、何が反映されるかを表示する |
 | `hermes secrets bitwarden sync --apply` | 取得して、今のシェルの環境変数として書き出す |
-| `hermes secrets bitwarden install` | 版を固定した `bws` の実行ファイルを落とすだけ（認証は不要） |
+| `hermes secrets bitwarden install` | PM で版を固定した `bws` の実行ファイルを入れる、または直す。Bitwarden の認証は要りません。 |
+| `hermes secrets bitwarden install --force` | 管理されているコピーを確かめて直す。問題のないものは、もう一度ダウンロードせずにそのまま使えます。 |
 | `hermes secrets bitwarden disable` | `enabled: false` に切り替える。トークンとプロジェクト ID はそのまま残る |
 
 ## 期限切れや失効したトークンを入れ替える {#rotating-an-expired-or-revoked-token}
@@ -131,7 +134,7 @@ secrets:
 | `encrypted_cache.enabled` | `false` | 最後に成功した取得結果を、AES-GCM で暗号化したキャッシュとして `~/.hermes/cache/bws_cache.enc.json` に保存します。 |
 | `encrypted_cache.max_stale_seconds` | `0` | 暗号化キャッシュを有効にしているとき、そのキャッシュを使えるのはネットワークの不調やタイムアウトのあとだけで、しかもここに設定した古さまでに限られます。認証の失敗では、古いシークレットが使われることはありません。暗号化された書き込みに成功すると、以前の平文の `cache/bws_cache.json` は削除されます。 |
 | `override_existing` | `true` | true のとき、Bitwarden の値が環境にすでにある値を上書きします（Web アプリでの入れ替えが実際に効くようにするためです）。手元では `.env` やシェルの export を勝たせたいなら `false` にします。 |
-| `auto_install` | `true` | true のとき、最初に使うタイミングで `bws` が `~/.hermes/bin/` へ自動でダウンロードされます。 |
+| `auto_install` | `true` | 実行ファイルがどこにも無いとき、PM で版を固定した `bws` のパッケージを求めます。PM の遅延インストールの方針も適用されます。 |
 
 ## うまくいかないときの挙動 {#failure-modes}
 
@@ -143,8 +146,8 @@ Bitwarden が Hermes の起動を止めることはありません。何か問�
 | `Bitwarden rejected the machine-account access token … invalid_client` | トークンが失効した、期限が切れた、マシンアカウントが消えた。あるいはトークンが別の地域のもの（EU のトークンで US の認証エンドポイントを叩いた場合など） | `hermes secrets bitwarden token` を実行して新しいトークンを貼り付ける。地域の食い違いなら、設定をやり直して EU か自前ホストを選ぶ（または `secrets.bitwarden.server_url` を設定する） |
 | `bws exited 1: invalid access token` | トークンが失効している、または間違っている | `hermes secrets bitwarden token` に新しいトークンを渡して実行する |
 | `bws timed out` | ネットワークが遮断されている、または Bitwarden の API が遅い | `api.bitwarden.com`（あるいは設定した `server_url`）へつながるか確認する |
-| `bws binary not available` | `auto_install: false` になっていて、`bws` が PATH にもない | [github.com/bitwarden/sdk-sm/releases](https://github.com/bitwarden/sdk-sm/releases) から手で入れるか、`auto_install` を元に戻す |
-| `Checksum mismatch` | ダウンロードが壊れた、または改ざんされた | 実行し直せば再試行される。それでも続くなら issue を立てる |
+| `bws binary not available` | PM での選択も `PATH` 上の実行ファイルもなく、自動インストールが無効になっているか失敗した | `hermes secrets bitwarden install` を実行し、その診断の内容を読む。 |
+| チェックサムの失敗 | ダウンロードしたものが PM のロックと一致しない | そこで止めて、ダウンロード元を調べる。ハッシュの照合を回避しない。 |
 
 起動時の警告には `→` から始まる対処の行が付き、どのコマンドで直せるかがそのまま書かれています。
 
@@ -152,8 +155,8 @@ Bitwarden が Hermes の起動を止めることはありません。何か問�
 
 - 最初のトークン（`BWS_ACCESS_TOKEN`）自体が秘密の情報です。これを持っている人は、そのマシンアカウントが読めるシークレットをすべて読めます。他の API キーと同じ扱いにしてください。
 - Hermes は、`override_existing: true` であっても、Bitwarden にこの最初のトークン自体を上書きさせません。`BWS_ACCESS_TOKEN` をプロジェクト内のシークレットとして置いた場合、反映のときに黙って飛ばされます。
-- `bws` の実行ファイルは、同じ GitHub リリースで公開されている SHA-256 のチェックサムと照合されます。食い違えば導入を中止します。
-- 版は固定してあり（この文書を書いた時点では `bws v2.0.0`）、更新はこのリポジトリへの PR で行います。上流のリリースの形が変わることがあるので、Hermes が `bws` を勝手に「最新」へ上げることはありません。
+- PM は、管理しているアーカイブを `pm/lock.json` にある SHA-256 のハッシュと照合します。食い違えばインストールを中止します。
+- 版も同じロックで決まっています。最初に使うときに「最新」のリリースを探しにいくことはありません。外部の実行ファイルは、こうした PM の確認の対象外です。
 
 ## 使わないほうがよい場面 {#when-not-to-use-this}
 

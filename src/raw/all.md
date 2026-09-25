@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（231 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（238 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -21,11 +21,11 @@ raw: /hermes/raw/all.md
 - [Quickstart](/hermes/docs/getting-started/quickstart/)
 - [Learning Path](/hermes/docs/getting-started/learning-path/)
 - [Updating](/hermes/docs/getting-started/updating/)
-- [Termux (Android)](/hermes/docs/getting-started/termux/)
 - [Nix Setup](/hermes/docs/getting-started/nix-setup/)
 - [Platform Support](/hermes/docs/getting-started/platform-support/)
+- [Android / Termux](/hermes/docs/getting-started/termux/)
 
-## Using Hermes（30）
+## Using Hermes（31）
 
 - [CLI](/hermes/docs/user-guide/cli/)
 - [TUI (Ink terminal UI)](/hermes/docs/user-guide/tui/)
@@ -54,6 +54,7 @@ raw: /hermes/raw/all.md
 - [1Password](/hermes/docs/user-guide/secrets/onepassword/)
 - [Session Storage Recovery](/hermes/docs/user-guide/session-storage-recovery/)
 - [Google Workspace — Gmail, Calendar, Drive, Sheets & Docs](/hermes/docs/user-guide/skills/google-workspace/)
+- [Switching to a Source Install](/hermes/docs/user-guide/switching-to-source/)
 - [Which File Does What?](/hermes/docs/user-guide/which-file-does-what/)
 - [Windows (Native) Guide](/hermes/docs/user-guide/windows-native/)
 - [Windows (WSL2) Guide](/hermes/docs/user-guide/windows-wsl-quickstart/)
@@ -205,7 +206,7 @@ raw: /hermes/raw/all.md
 - [Automated GitHub PR Comments with Webhooks](/hermes/docs/guides/webhook-github-pr-review/)
 - [xAI Grok OAuth (SuperGrok / X Premium+)](/hermes/docs/guides/xai-grok-oauth/)
 
-## Developer Guide（51）
+## Developer Guide（56）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -235,6 +236,7 @@ raw: /hermes/raw/all.md
 - [Gateway Monitoring](/hermes/docs/developer-guide/gateway-monitoring/)
 - [Gateway Session Lifecycle](/hermes/docs/developer-guide/gateway-session-lifecycle/)
 - [Image Generation Provider Plugins](/hermes/docs/developer-guide/image-gen-provider-plugin/)
+- [macOS bundle updates](/hermes/docs/developer-guide/macos-bundle-updates/)
 - [Memory Provider Plugins](/hermes/docs/developer-guide/memory-provider-plugin/)
 - [Micro-compaction](/hermes/docs/developer-guide/micro-compaction/)
 - [Middleware](/hermes/docs/developer-guide/middleware/)
@@ -245,10 +247,14 @@ raw: /hermes/raw/all.md
 - [Plugin LLM Access](/hermes/docs/developer-guide/plugin-llm-access/)
 - [Build a Hermes Plugin](/hermes/docs/developer-guide/plugins/)
 - [Application declarations](/hermes/docs/developer-guide/plugins/application-declarations/)
+- [PM audit remediation status](/hermes/docs/developer-guide/pm-audit-status/)
 - [Programmatic Integration](/hermes/docs/developer-guide/programmatic-integration/)
 - [Relay ↔ Connector Contract](/hermes/docs/developer-guide/relay-connector-contract/)
 - [Relay Shared Metrics](/hermes/docs/developer-guide/relay-shared-metrics/)
 - [Secret Source Plugins](/hermes/docs/developer-guide/secret-source-plugin/)
+- [Shared bundle builds](/hermes/docs/developer-guide/shared-bundle-builds/)
+- [Source update completion ownership](/hermes/docs/developer-guide/source-update-completion/)
+- [Stable release admission and promotion](/hermes/docs/developer-guide/stable-releases/)
 - [State DB Recovery](/hermes/docs/developer-guide/state-db-recovery/)
 - [Streaming TTS Internals](/hermes/docs/developer-guide/streaming-tts/)
 - [Public Subagent Lifecycle API](/hermes/docs/developer-guide/subagent-lifecycle-api/)
@@ -259,7 +265,7 @@ raw: /hermes/raw/all.md
 - [Web Search Provider Plugins](/hermes/docs/developer-guide/web-search-provider-plugin/)
 - [TUI & Desktop from Worktrees](/hermes/docs/developer-guide/worktree-ui-dev/)
 
-## Reference（13）
+## Reference（14）
 
 - [CLI Commands](/hermes/docs/reference/cli-commands/)
 - [Slash Commands](/hermes/docs/reference/slash-commands/)
@@ -274,6 +280,7 @@ raw: /hermes/raw/all.md
 - [FAQ & Troubleshooting](/hermes/docs/reference/faq/)
 - [Automation Blueprints Catalog](/hermes/docs/reference/automation-blueprints-catalog/)
 - [CLI Symbols Glossary](/hermes/docs/reference/cli-symbols/)
+- [Package Management](/hermes/docs/reference/package-management/)
 
 ## More（1）
 

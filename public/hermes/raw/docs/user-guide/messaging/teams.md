@@ -2,12 +2,16 @@
 title: "Microsoft Teams"
 description: "Hermes Agent を Microsoft Teams のボットとして設定する"
 upstream_path: user-guide/messaging/teams.md
-upstream_blob: 32002637d1b7f128854cadccbc013a3550c9acfa
+upstream_blob: f92366fc7a5b43c7c609a34c420d6f1a3c057dde
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/teams
 ---
 
 # Microsoft Teams の設定 {#microsoft-teams-setup}
+
+このページの Python 依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 Hermes Agent を Microsoft Teams のボットとしてつなぎます。Slack の Socket Mode とは違い、Teams は**公開された HTTPS の webhook** を呼び出す形でメッセージを届けます。そのため、外部から到達できるエンドポイントが必要です。手元で試すなら開発用トンネル、本番なら実際のドメインを用意します。
 
@@ -32,9 +36,7 @@ Teams は @メンションを `<at>BotName</at>` タグ付きの通常メッセ�
 ソースから入れる場合やローカルにインストールする場合は、同梱のアダプターを使えるように Teams の extra を入れてください。
 
 ```bash
-uv sync --extra teams
-# or, for editable installs:
-uv pip install -e ".[teams]"
+python -c "import pm; pm.sync_venv(['teams'], explicit=True)"
 ```
 
 ## ステップ 1: Teams CLI をインストールする {#step-1-install-the-teams-cli}
@@ -124,11 +126,13 @@ hermes gateway restart
 # or foreground: hermes gateway run
 ```
 
-Teams SDK は任意です。Teams を有効にしておくと、初回起動時にゲートウェイが Hermes 専用の venv へ遅延インストールします（Ubuntu 24.04 でシステムの `pip install` を使うのは避けてください。PEP 668 の `externally-managed-environment` に引っかかります）。手動で Hermes の venv に入れるには次のようにします。
+Teams SDK は任意です。ポリシーが許せば、ゲートウェイは初回起動時に PM を通して
+追加パッケージ `teams` を要求します。PM は動作中のインタープリターを書き換えるのではなく、
+環境を丸ごと準備します。準備済みのソースのチェックアウトから明示的に要求するには
+次のようにします。
 
 ```bash
-~/.hermes/hermes-agent/venv/bin/pip install microsoft-teams-apps aiohttp
-# or from a clone of the agent: uv sync --extra teams
+python -c "import pm; pm.sync_venv(['teams'], explicit=True)"
 ```
 
 webhook の既定ポートは `3978` です（`TEAMS_PORT` で変更できます）。動いているかどうかは次で確認します。
@@ -263,7 +267,7 @@ teams app update --id <teamsAppId> --endpoint "https://your-domain.com/api/messa
 | 症状 | 対処 |
 |---------|----------|
 | `docker compose` が `Can't find a suitable configuration file` を返す | `docker-compose.yml` のあるリポジトリにいないか、ネイティブインストールを使っています。代わりに `hermes gateway restart` を使うか、先にクローンへ `cd` してください |
-| `requirements not met` / `Teams SDK missing` / `No adapter available for teams` | ゲートウェイを再起動して遅延インストールを走らせるか、**Hermes の venv** へ入れてください: `~/.hermes/hermes-agent/venv/bin/pip install microsoft-teams-apps aiohttp`。システムの `pip` は Ubuntu 24.04 では失敗し（PEP 668）、そもそもサービス側には反映されません |
+| `requirements not met` / `Teams SDK missing` / `No adapter available for teams` | 上で示したとおり PM を通して追加パッケージ `teams` を要求し、ゲートウェイを再起動してください。システムの Python に入れたり、Hermes の環境を書き換えたりしないでください。 |
 | `health` は返るのにボットが応答しない | トンネルがまだ動いているか、ボットのメッセージングエンドポイントがトンネルの URL と一致しているか確かめてください |
 | Teams からメッセージが来たときログに `"UNKNOWN / HTTP/1.0" 400` が出る | トンネルかリバースプロキシが、HTTPS のまま Hermes のプレーン HTTP へ転送しています。TLS はプロキシで終端し、HTTP としてポート `3978` へ転送してください |
 | ログに `KeyError: 'teams'` が出る | コンテナーを再起動してください。現行バージョンでは修正済みです |

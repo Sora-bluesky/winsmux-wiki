@@ -2,12 +2,16 @@
 title: "Hermes で音声モードを使う"
 description: "CLI・Telegram・Discord・Discord のボイスチャンネルで Hermes の音声モードを設定して使うための実践ガイド"
 upstream_path: guides/use-voice-mode-with-hermes.md
-upstream_blob: b9cca2a4aaf2ce8c06f9a66e8a54932445c455e1
+upstream_blob: 168088a9f6cdcfd59e51c9bce5a0ed867255cd95
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/use-voice-mode-with-hermes
 ---
 
 # Hermes で音声モードを使う {#use-voice-mode-with-hermes}
+
+このページの Python の依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)で実行する前提です。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 このガイドは、[音声モードの機能早見表](/hermes/docs/user-guide/features/voice-mode/)と対になる実践編です。
 
@@ -64,32 +68,36 @@ What tools do you have available?
 ### CLI のマイク入力と再生 {#cli-microphone-playback}
 
 ```bash
-cd ~/.hermes/hermes-agent && uv pip install -e ".[voice]"
+cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['voice'], explicit=True)"
 ```
 
 ### メッセージングのプラットフォーム {#messaging-platforms}
 
 ```bash
-cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"
+cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['messaging'], explicit=True)"
 ```
 
 ### 高品質な ElevenLabs の TTS {#premium-elevenlabs-tts}
 
 ```bash
-cd ~/.hermes/hermes-agent && uv pip install -e ".[tts-premium]"
+cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['tts-premium'], explicit=True)"
 ```
 
 ### ローカルの NeuTTS（任意） {#local-neutts-optional}
 
+宣言されている `neutts` の依存関係は、3.14 より前の Python を必要とします。Hermes のランタイムは
+Python 3.14 を必要とするため、この extra を指定してもランタイムには NeuTTS が入りません。
+対応するプロバイダを選んでください。NeuTTS をコマンドのプロバイダとして別に管理する場合は、
+それ専用の、対応する Python の環境が要ります。
+
+### 音声とメッセージングをまとめて入れる {#combined-voice-and-messaging-setup}
+
 ```bash
-python -m pip install -U neutts[all]
+python -c "import pm; pm.sync_venv(['voice', 'messaging', 'tts-premium', 'edge-tts'], explicit=True)"
 ```
 
-### すべて {#everything}
-
-```bash
-cd ~/.hermes/hermes-agent && uv pip install -e ".[all]"
-```
+`all` の extra は、任意の機能をすべて含むわけではありません。ここに挙げた音声とメッセージングの
+extra は含まれていません。
 
 ## ステップ 3: システム側の依存関係を入れる {#step-3-install-system-dependencies}
 
@@ -156,13 +164,15 @@ ELEVENLABS_API_KEY=***
 
 ### `hermes setup` を使う場合 {#if-you-use-hermes-setup}
 
-設定ウィザードで NeuTTS を選ぶと、Hermes は `neutts` がすでに入っているかを調べます。入っていなければ、NeuTTS には Python パッケージの `neutts` とシステムパッケージの `espeak-ng` が必要だと伝えたうえで、代わりに導入するかを尋ね、`espeak-ng` はお使いのプラットフォームのパッケージ管理ツールで入れ、そのあと次を実行します。
+セットアップは、宣言済みの Python の extra を PM を通して要求します。extra に付いている
+Python のバージョンやプラットフォームの条件を上書きすることはできません。
 
-```bash
-python -m pip install -U neutts[all]
-```
+宣言されている `neutts` の依存関係は、3.14 より前の Python を必要とします。Hermes のランタイムは
+Python 3.14 を必要とするため、この extra を指定してもランタイムには NeuTTS が入りません。
+対応するプロバイダを選んでください。NeuTTS をコマンドのプロバイダとして別に管理する場合は、
+それ専用の、対応する Python の環境が要ります。
 
-この導入を飛ばした場合や失敗した場合は、ウィザードが Edge TTS に切り替えます。
+依存関係がお使いのプラットフォームで動かない場合は、別のプロバイダを選んでください。
 
 ## ステップ 5: おすすめの設定 {#step-5-recommended-config}
 

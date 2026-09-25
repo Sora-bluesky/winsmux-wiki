@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 209 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `749220e`（2026-09-24）時点。この一覧は上流の docs から機械生成しています。
+上流 `32b4acf`（2026-09-25）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（58）
 
@@ -52,7 +52,7 @@ raw: /hermes/raw/skills.md
 | [Box](/hermes/docs/user-guide/skills/bundled/productivity/productivity-box/) | Box manages cloud files, sharing, search, and metadata | 2026-09-20 |
 | [Document To Action Items](/hermes/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items/) | Extract cited obligations, deadlines, tasks from documents | 2026-09-20 |
 | [Docx](/hermes/docs/user-guide/skills/bundled/productivity/productivity-docx/) | Create, read, edit, template, and review Word .docx files | 2026-09-20 |
-| [Google Workspace](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/) | Gmail, Calendar, Drive, Docs, Sheets via gws CLI or Python | 2026-09-20 |
+| [Google Workspace](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/) | Gmail, Calendar, Drive, Docs, Sheets via gws CLI or Python | 2026-09-21 |
 | [Maps](/hermes/docs/user-guide/skills/bundled/productivity/productivity-maps/) | Geocode, POIs, routes, timezones via OpenStreetMap/OSRM | 2026-09-20 |
 | [Meeting Action Items](/hermes/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items/) | Turn meeting notes into cited decisions, owners, tickets | 2026-09-20 |
 | [Notion](/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/) | Notion API + ntn CLI: pages, databases, markdown, Workers | 2026-09-18 |
@@ -73,7 +73,7 @@ raw: /hermes/raw/skills.md
 | [Hermes Agent Skill Authoring](/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/) | Author in-repo SKILL.md files: frontmatter and structure | 2026-09-20 |
 | [Inspecting Hermes Desktop Dom](/hermes/docs/user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom/) | Read the live Hermes desktop DOM/CSS over CDP | 2026-09-20 |
 | [Node Inspect Debugger](/hermes/docs/user-guide/skills/bundled/software-development/software-development-node-inspect-debugger/) | Debug Node.js via --inspect + Chrome DevTools Protocol CLI | 2026-09-20 |
-| [Python Debugpy](/hermes/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy/) | Debug Python: pdb REPL + debugpy remote (DAP) | 2026-09-20 |
+| [Python Debugpy](/hermes/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy/) | Debug Python: pdb REPL + debugpy remote (DAP) | 2026-09-23 |
 | [Requesting Code Review](/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/) | Pre-commit review: security scan, quality gates, auto-fix | 2026-09-20 |
 | [Simplify Code](/hermes/docs/user-guide/skills/bundled/software-development/software-development-simplify-code/) | Parallel 4-agent cleanup of recent code changes | 2026-09-20 |
 | [Spike](/hermes/docs/user-guide/skills/bundled/software-development/software-development-spike/) | Throwaway experiments to validate an idea before build | 2026-09-20 |

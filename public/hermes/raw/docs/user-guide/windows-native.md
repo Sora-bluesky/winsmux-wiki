@@ -2,7 +2,7 @@
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: 7f16485481dab1e20bef4ab0d330b3382b0e0577
+upstream_blob: 89aa1fbdcc7198d19ee07d29667f6e52b26c3138
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -14,7 +14,7 @@ Hermes は Windows 10 と Windows 11 でそのまま動きます。WSL も Cygwi
 まずインストールしたいだけであれば、[トップページ](/hermes/docs/index/) や [インストールのページ](/hermes/docs/getting-started/installation/#windows-native) にある 1 行のコマンドで足ります。何か想定と違うことが起きたときに、このページへ戻ってきてください。
 
 :::tip WSL のほうがよい場合は
-本物の POSIX 環境が欲しい場合（ダッシュボードに埋め込まれた端末、`fork` の挙動、Linux 流のファイル監視などが目的なら）、**[Windows（WSL2）ガイド](/hermes/docs/user-guide/windows-wsl-quickstart/)** を参照してください。両者はきれいに共存します。ネイティブのデータは `%LOCALAPPDATA%\hermes` の下に、WSL のデータは `~/.hermes` の下に置かれます。
+`fork` の挙動や Linux 流のファイル監視のために POSIX 環境を使いたい場合は、**[Windows（WSL2）ガイド](/hermes/docs/user-guide/windows-wsl-quickstart/)** を参照してください。両者はきれいに共存します。ネイティブのデータは `%LOCALAPPDATA%\hermes` の下に、WSL のデータは `~/.hermes` の下に置かれます。
 :::
 
 ## 手早くインストールする {#quick-install}
@@ -27,58 +27,85 @@ iex (irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/script
 
 管理者権限は要りません。インストーラは `%LOCALAPPDATA%\hermes\` に導入し、**ユーザーの PATH** に `hermes` を追加します。終わったら新しい端末を開いてください。
 
-**インストーラのオプション**（引数を渡すにはスクリプトブロックの形が必要です）:
+**インストーラのオプション**を渡すには、スクリプトブロックの形を使います。
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.ps1))) -NoVenv -SkipSetup -Branch main
+& ([scriptblock]::Create((irm https://hermes-agent.nousresearch.com/install.ps1))) -NonInteractive -Branch main
 ```
 
-| 引数 | 既定値 | 用途 |
-|---|---|---|
-| `-Branch` | `main` | 指定したブランチをクローンします（PR の検証に便利です） |
-| `-Commit` | 未設定 | 特定のコミット SHA に固定します（`-Branch` より優先されます） |
-| `-Tag` | 未設定 | 特定の git タグに固定します（例: `v0.14.0`） |
-| `-NoVenv` | 無効 | venv の作成を省きます（上級者向け。Python の管理は自分で行います） |
-| `-SkipSetup` | 無効 | インストール後の `hermes setup` ウィザードを省きます |
-| `-HermesHome` | `%LOCALAPPDATA%\hermes` | データディレクトリを変更します |
-| `-InstallDir` | `%LOCALAPPDATA%\hermes\hermes-agent` | コードの置き場所を変更します |
-
-インストーラは git の取得が不安定なときに自動で再試行し、ダウンロードした `install.ps1` の内容から BOM を取り除きます。そのため、HTTP でのやり取りの途中で UTF-8 の BOM が混ざっても、`[scriptblock]::Create((irm ...))` の形が壊れることはなくなりました。
-
-### デスクトップ版インストーラ（別の方法） {#desktop-installer-alternative}
-
-画面付きの簡単なインストーラもあります。PowerShell を開くよりも `.exe` をダブルクリックしたい場合に便利です。Hermes Desktop をダウンロードしてインストーラを実行すると、初回起動時に画面の裏側で `install.ps1` が呼ばれ、（`uv` による）Python、Node、PortableGit、そのほか後述する依存関係の準備が進みます。初回のあとは、デスクトップアプリと PowerShell で入れた `hermes` の CLI が同じ `%LOCALAPPDATA%\hermes\hermes-agent` のインストールと `%LOCALAPPDATA%\hermes` のデータディレクトリを共有するので、画面と端末を自由に行き来できます。
-
-Windows でおなじみのインストール体験が欲しいとき、あるいは開発者ではない人に Hermes を渡すときは、デスクトップ版インストーラを使ってください。すでに端末を開いているなら、PowerShell の 1 行のコマンドが早道です。
-
-### 依存関係の自動準備（`dep_ensure`） {#dependency-bootstrap-depensure}
-
-初回の起動時（および足りないツールが見つかったとき随時）、Hermes は `hermes_cli/dep_ensure.py` という小さな準備用のスクリプトを実行し、Python 以外で必要になるものを確認して、そのとき必要な分だけインストールします。Windows で関係するのは次のものです。
-
-| 依存関係 | Hermes がそれを必要とする理由 |
+| 引数 | 用途 |
 |---|---|
-| **PortableGit** | 端末ツール用の `bash.exe` と、セッション内でクローンするための `git` を提供します。インストール時に用意され、`dep_ensure` が入れるわけではありません。 |
-| **Node.js 26** | ブラウザツール（`agent-browser`）、TUI の Web ブリッジ、WhatsApp のブリッジに必要です。 |
-| **ffmpeg** | 読み上げや音声メッセージのための音声形式の変換に使います。 |
-| **ripgrep** | 高速なファイル検索に使います。無ければ `grep` に切り替わります。 |
-| **npm のパッケージ** | `agent-browser`、Playwright の Chromium、ツールセットごとの Node 依存は、ブラウザツールを最初に使うときに一度だけインストールされます。 |
+| `-Branch NAME` | 取得するブランチを選びます。既定は `main` です。 |
+| `-Commit SHA` | ブランチを取得したあと、特定のコミットを選びます。 |
+| `-HermesHome PATH` | データディレクトリを選びます。 |
+| `-InstallDir PATH` | ソースのチェックアウトを置くディレクトリを選びます。 |
+| `-NonInteractive` | 入力が必要な設定とゲートウェイの段階を省きます。 |
+| `-IncludeDesktop` | デスクトップアプリをビルドし、ショートカットを作ります。 |
+| `-ShowResolvedPaths` | インストールはせず、決まったパスを JSON で表示します。 |
+| `-Verbose` | 手順ごとに 1 行の状況表示ではなく、子コマンドの出力をすべて流します。 |
+| `-Manifest` / `-ProtocolVersion` | 画面付きの準備用インストーラが使う段階のやり取りの取り決めを確認します。 |
+| `-Stage NAME -Json` | 1 つの段階だけを実行し、その結果を出力します。 |
 
-依存関係ごとに `shutil.which(...)` に相当する確認があり、実行ファイルが見つからず、かつ対話的に実行されている場合、`dep_ensure` はインストールするかどうかを尋ねます（実際のインストール処理は `scripts\install.ps1 -ensure <dep>` に任せます）。ゲートウェイ、cron、画面なしでのデスクトップ起動といった対話できない実行では確認を省き、代わりに `this feature needs <dep>` という分かりやすいエラーを表示します。
+現在のスクリプトは `-NoVenv`、`-SkipSetup`、`-Tag` を受け付けません。
+Windows のパスが思いがけず短い形になる原因を調べるときは、まず `-ShowResolvedPaths` を使ってください。
 
-## インストーラが実際に行うこと {#what-the-installer-actually-does}
+### MSIX / アプリ インストーラーと Microsoft Store {#msix-app-installer-and-microsoft-store}
 
-上から順に、次のとおりです。
+同梱版のデスクトップアプリは、ソースから入れるスクリプトとは別物です。その MSIX パッケージは
+**Windows 11 22H2 以降**が必要です。ソースのスクリプトが Windows 10 に対応しているからといって、
+MSIX パッケージが Windows 10 に対応しているわけではありません。
 
-1. **`uv` を準備します** — Astral 製の高速な Python 管理ツールです。`%USERPROFILE%\.local\bin` に入ります。
-2. **`uv` で Python 3.11 をインストールします。** 既存の Python は必要ありません。
-3. **Node.js 26 をインストールします**（winget があればそれを使い、無ければ持ち運び可能な Node の書庫を `%LOCALAPPDATA%\hermes\node` の下に展開します）。ブラウザツールと WhatsApp のブリッジで使います。
-4. **持ち運び可能な Git を用意します** — `git` がすでに PATH にあればそれを使い、無ければ切り詰めた自己完結型の **PortableGit**（約 45 MB、公式の `git-for-windows` リリースから）を `%LOCALAPPDATA%\hermes\git` へダウンロードします。管理者権限も、Windows のインストーラの登録情報も不要で、端末上のほかのものに干渉しません。
-5. **リポジトリをクローンします** — `%LOCALAPPDATA%\hermes\hermes-agent` に取得し、その中に仮想環境を作ります。
-6. **段階的な `uv pip install`** — まず `.[all]` を試し、GitHub の回数制限などで `git+https` の依存が失敗した場合は、より小さな組み合わせ（`[messaging,dashboard,ext]` → `[messaging]` → `.`）へ順に切り替えます。一度の失敗で最小構成まで落ちてしまう事態を防ぎます。
-7. **メッセージング用 SDK を `.env` に応じて自動でインストールします** — `TELEGRAM_BOT_TOKEN` / `DISCORD_BOT_TOKEN` / `SLACK_BOT_TOKEN` / `SLACK_APP_TOKEN` / `WHATSAPP_ENABLED` があれば、`python -m ensurepip --upgrade` と必要な `pip install` を実行し、各プラットフォームの SDK を実際に読み込める状態にします。
-8. **`HERMES_GIT_BASH_PATH` を設定します** — 見つかった `bash.exe` を指すようにし、新しいシェルでも Hermes が確実に見つけられるようにします。
-9. **`%LOCALAPPDATA%\hermes\bin` をユーザーの PATH に追加し、`HERMES_HOME=%LOCALAPPDATA%\hermes` を設定します** — 新しい端末を開いたあと、`hermes` コマンドが使えるようになり（データディレクトリもそこを指します）。この `bin` ディレクトリに複製されるのは `hermes.exe` と `hermes-acp.exe` の起動用ファイルだけです。`venv\Scripts` 全体は意図的に PATH に置かないので、Hermes が自分の `python` コマンドを覆い隠すことはありません。
-10. **`hermes setup` を実行します** — 通常の初回設定ウィザード（モデル、プロバイダ、ツールセット）です。`-SkipSetup` で省けます。
+ダウンロードした `.appinstaller` ファイルを Windows のアプリ インストーラーで開きます。署名付きの
+ユニバーサル バンドルがインストールされ、更新の取得元が記録されます。パッケージには
+Python、Node、対応する依存関係、ビルド済みの画面が含まれます。初回起動時にチェックアウトを
+クローンしたり、基本の実行環境をビルドしたりはしません。
+
+MSIX の実行エイリアスとして、`hermes`、`hermes-agent`、`hermes-acp` が使えます。
+別のインストールがエイリアスを覆い隠している場合は、`Get-Command hermes -All` で確認してください。
+エイリアスは、Windows の設定 → アプリ → アプリの詳細設定 → アプリ実行エイリアス で
+切り替えられます。
+
+サイドロード版の更新は、アプリの「更新」操作と Windows のアプリ インストーラーで行います。
+Hermes は終了処理の前に更新情報のファイルを手元にダウンロードし、自動で起動し直すよう登録します。
+`ms-appinstaller:` の URL プロトコルは必要ありません。更新の確認結果が不明なときは、
+パッケージが最新だという意味ではありません。
+
+Microsoft Store 版は、Partner Center で登録したパッケージ ID と Store の更新を使います。
+サイドロード版の配信元は使いません。どちらの同梱版の実行環境でも、`hermes update` が
+パッケージのファイルに対して Git を実行することはありません。
+
+`Hermes-Setup.exe` はこれとは別の、準備用のインストーラです。スクリプトを通してソースの
+チェックアウトを用意します。自己完結型の MSIX パッケージと混同しないでください。
+[更新とアンインストール](/hermes/docs/getting-started/updating/) を参照してください。
+
+### 依存関係の準備 {#dependency-bootstrap}
+
+管理対象のツールは PM が受け持ちます。機能側のコードは、インストーラを実行し直すのではなく、
+必要なパッケージを PM に求めます（`pm.ensure("<package>")`。たとえば Computer Use なら `cua-driver`）。
+すでに入っているツールは PM が記録した状態から再利用され、足りない任意のツールは、
+[`security.allow_lazy_installs`](/hermes/docs/reference/package-management/#lazy-install-policy)
+が許可している場合にだけ、必要になった時点で取得されます。`install.ps1` に `-Ensure` の動作はありません。
+
+```powershell
+hermes pm doctor
+hermes pm install
+```
+
+## ソースのインストーラが行うこと {#what-the-source-installer-does}
+
+1. Git を探し、無ければ検証済みの版に固定した Git for Windows を用意します。
+2. 選んだブランチでリポジトリをクローンし、指定があればコミットに固定します。
+3. uv を準備し、最初の Python 環境を作ります。
+4. PM を実行して、Python 3.14、必要なツール、Python の `all` 追加機能を用意します。
+5. データの置き場所にある `bin` ディレクトリに CLI の起動用ファイルを作り、そこをユーザーの PATH に追加します。
+6. 設定を用意し、省く指定がなければ、対話的な初期設定とゲートウェイの段階を呼び出します。
+7. 求められていれば、デスクトップアプリをビルドし、スタートメニューとデスクトップのショートカットを作ります。
+8. 準備が終わったことを示す印を書き込みます。
+
+実行時の起動用ファイルは、PM が管理する Python を実行し、読み込みの前に依存関係の
+環境を選びます。PM は、動いているプロセスがすでに読み込んだライブラリを置き換えずに、
+書き込み可能な新しい環境を公開できます。段階的に pip へ切り替えて、入る機能を
+黙って減らすような仕組みはありません。
 
 :::tip Windows でのプロバイダ探しを省く
 Windows では、ツールごとの API キーの設定（Firecrawl、FAL、Browser Use、OpenAI TTS）が、使えるエージェントを整えるうえで最も手間のかかるところです。[Nous Portal](/hermes/docs/user-guide/features/tool-gateway/) を契約すると、モデル**と**それらのツールがすべて 1 回の OAuth ログインでまかなえます。インストーラが終わったら `hermes setup --portal` を実行して、まとめて設定してください。
@@ -86,7 +113,8 @@ Windows では、ツールごとの API キーの設定（Firecrawl、FAL、Brow
 
 ## 機能の対応表 {#feature-matrix}
 
-ダッシュボードに埋め込まれた端末のペインを除けば、すべて Windows でそのまま動きます。
+Windows での対応は、機能と CPU の種類ごとに異なります。基本の画面や操作はそのまま動きますが、
+一部の任意の SDK は特定の環境で除外されています。
 
 | 機能 | Windows ネイティブ | WSL2 |
 |---|---|---|
@@ -98,26 +126,41 @@ Windows では、ツールごとの API キーの設定（Firecrawl、FAL、Brow
 | MCP サーバー（stdio と HTTP） | ✓ | ✓ |
 | 手元の Ollama / LM Studio / llama-server | ✓ | ✓（WSL のネットワーク経由） |
 | Web のダッシュボード（セッション、ジョブ、指標、設定） | ✓ | ✓ |
-| ダッシュボードの `/chat` に埋め込まれた端末のペイン | ✗（POSIX の PTY が必要） | ✓ |
+| ダッシュボードの `/chat` に埋め込まれた端末のペイン | `pywinpty` を通した ConPTY | POSIX の PTY |
 | ログイン時の自動起動 | ✓（schtasks） | ✓（systemd） |
 
-ダッシュボードの `/chat` タブは、POSIX の PTY（`ptyprocess`）で本物の端末を埋め込んでいます。Windows ネイティブには同じ仕組みがありません。Python の `pywinpty` や Windows の ConPTY なら実現できますが、それは別の実装になるため、今後の課題としています。**ダッシュボードのそれ以外の部分はそのまま動きます。** 「ここは WSL2 を使ってください」という案内が出るのは、そのタブだけです。
+ダッシュボードは、Windows では `pywinpty`/ConPTY の橋渡しを、POSIX では `ptyprocess`
+を使います。ネイティブの依存関係が無かったり壊れていたりすると、端末が使えなくなることがあります。
+WSL は代わりの手段の 1 つであって、現在の設計で必須というわけではありません。
+
+### 任意の依存関係の制限 {#optional-dependency-limits}
+
+- Matrix のネイティブの暗号化対応アダプタは Linux 専用です。Windows では、対応している
+  プロキシ経由の方法か、Linux の実行先を使ってください。
+- Windows ネイティブの ARM64 では、`mem0` と `google-chat` の SDK の追加機能、および
+  openWakeWord のエンジンが除外されます。Sherpa は Windows ネイティブの ARM64 に対応しており、
+  その環境では呼びかけ語の検出に自動で使われる既定のエンジンです。
+- 手元で動かす Faster-Whisper の音声認識は、Windows ネイティブの ARM64 では除外されます。
+  クラウドかコマンド方式の音声認識のプロバイダを使ってください。呼びかけ語のエンジンとしては Porcupine も引き続き選べます。
+
+`pyproject.toml` のプラットフォーム指定が、パッケージに含まれる依存関係の組み合わせを決めます。
+ゲートウェイや音声機能についての一般的な説明が、その指定より優先されることはありません。
 
 ## Hermes が Windows でシェルのコマンドを実行する仕組み {#how-hermes-runs-shell-commands-on-windows}
 
 Hermes の端末ツールは、**Git Bash** を通してコマンドを実行します。Claude Code と同じやり方です。これにより、すべてのツールを書き直すことなく、POSIX と Windows の隔たりを回避できます。
 
-`bash.exe` を探す順序は次のとおりです。
+Bash を探すのは `pm.shell()` の役目です。まず PM の記録にある Git のパッケージを確認し、
+次に用意された `PATH` を確認します。PATH 上の候補が WindowsApps の
+パッケージに属している場合は、通常の Git for Windows のインストールがあればそちらを優先します。
 
-1. 環境変数 `HERMES_GIT_BASH_PATH`（設定されている場合）。
-2. `%LOCALAPPDATA%\hermes\git\usr\bin\bash.exe`（インストーラが管理する PortableGit）。
-3. `%LOCALAPPDATA%\hermes\git\bin\bash.exe`（古い Git for Windows の構成）。
-4. システムに入れた Git for Windows（`%ProgramFiles%\Git\bin\bash.exe` など）。
-5. 最後の手段として、MSYS2、Cygwin、あるいは PATH 上のいずれかの `bash.exe`。
+パッケージに含まれるツールは、汎用に使える端末上のインストールではありません。外部の Python の
+プロセスが WindowsApps のパッケージ内の実行ファイルを起動しようとすると、`WinError 5` で失敗することがあります。
+パッケージ自身の起動用ファイルを使うか、ソースのチェックアウトでは通常のツールを使ってください。
+この境界を回避するために、Windows のセキュリティ機能を無効にしないでください。
 
-インストーラは `HERMES_GIT_BASH_PATH` を明示的に設定するので、新しい PowerShell のセッションで探し直す必要がありません。特定の bash を使わせたい場合は上書きしてください。たとえば、システムに入れた Git Bash や、シンボリックリンク経由の WSL 上の bash などです。
-
-**つまずきどころ:** MinGit の構成は、Git for Windows の通常のインストーラとは異なります。bash があるのは `bin\bash.exe` ではなく `usr\bin\bash.exe` です。Hermes は両方を確認します。MinGit の zip を手作業で展開する場合は、**busybox でない**版（`MinGit-*-busybox*.zip` ではなく `MinGit-*-64-bit.zip`）を選んでください。busybox 版には `bash` ではなく `ash` が入っていて、coreutils の多くも欠けています。
+現在のインストーラは `HERMES_GIT_BASH_PATH` を設定しません。MinGit は、Bash を含む
+Git for Windows の代わりにはなりません。
 
 ## Windows での UTF-8 コンソール {#utf-8-console-on-windows}
 
@@ -206,23 +249,27 @@ hermes gateway uninstall   # Removes schtasks entry, Startup shortcut, pid file
 
 | パス | 中身 |
 |---|---|
-| `%LOCALAPPDATA%\hermes\hermes-agent\` | git のチェックアウトと venv。`Remove-Item -Recurse` して入れ直しても問題ありません。 |
-| `%LOCALAPPDATA%\hermes\git\` | PortableGit（インストーラが用意した場合のみ）。 |
-| `%LOCALAPPDATA%\hermes\node\` | 持ち運び可能な Node.js（インストーラが用意した場合のみ）。 |
-| `%LOCALAPPDATA%\hermes\bin\` | `hermes` と `hermes-acp` の起動用ファイル、および Hermes が管理する `uv.exe`（更新に使う Python 管理ツール）。 |
-| `%LOCALAPPDATA%\hermes\`（直下） | 設定、認証情報、スキル、セッション、ログ（`config.yaml`、`.env`、`skills\`、`sessions\`、`logs\` など）。**入れ直しても残ります。** |
+| `%LOCALAPPDATA%\hermes\hermes-agent\` | スクリプトで入れた場合のソースのチェックアウト。MSIX だけで入れた場合はありません。 |
+| `%LOCALAPPDATA%\hermes\tools\` | 書き込み可能な、管理対象ツールの置き場所。MSIX の基本ツールはパッケージの中に残ります。 |
+| `%LOCALAPPDATA%\hermes\installs\` | インストールごとの実行環境の選択、記録、Python の世代。 |
+| `%LOCALAPPDATA%\hermes\bin\` | ソースから入れた場合の CLI の起動用ファイル。MSIX では代わりに実行エイリアスが使われます。 |
+| `%LOCALAPPDATA%\hermes\` | 利用者の設定、認証情報、セッション、プラグイン、スキル、ログ。 |
 
-Windows ネイティブでは、インストーラが `HERMES_HOME=%LOCALAPPDATA%\hermes` を設定するため、データと、消してよいインストールの中身が**同じ** `%LOCALAPPDATA%\hermes` の下に同居します。インストールと実行環境は `hermes-agent\`、`git\`、`node\`、`bin\` の各サブディレクトリで、データのファイルは `%LOCALAPPDATA%\hermes` の直下に置かれます。入れ直しで置き換わるのは `hermes-agent\` のチェックアウトだけなので、データは残ります。ただし同じ場所を共有しているため、データを残したいなら `Remove-Item -Recurse %LOCALAPPDATA%\hermes` を実行しては**いけません**。消すのは `hermes-agent\` のサブディレクトリのほうです。データディレクトリの構成は Linux の `~/.hermes` とまったく同じなので、端末の間で同じ形のまま持ち回せます。
-
-**`HERMES_HOME` の変更:** 環境変数で別のデータディレクトリを指すようにできます（たとえば Linux や WSL の配置に合わせるなら `%USERPROFILE%\.hermes`）。動作は Linux と同じです。
+これらは既定のパスです。`HERMES_HOME` やインストーラのパスの引数で変えられます。
+`%LOCALAPPDATA%\hermes` を丸ごと削除すると、利用者のデータも消え、同じ場所を共有している
+ほかのインストールにも影響することがあります。アプリを直す目的でその最上位を削除せず、
+アンインストールのコマンドか Windows のパッケージの削除を使ってください。
 
 ## ブラウザツール {#browser-tool}
 
-ブラウザツールは、Node の補助プログラムである `agent-browser` を使って Chromium を操作します。Windows では次のようになります。
+ブラウザの準備は、選んだ実行方式によって異なります。組み込みの方式では、PM が版を固定した
+`agent-browser` と Chromium のパッケージを用意します。Browser Use は
+`hermes tools` を通して、管理された独自の CLI をインストールします。自己完結型の
+MSIX には、対応するブラウザツールが中身に含まれています。
 
-- インストーラが npm 経由で `agent-browser` を PATH に置きます。
-- `shutil.which("agent-browser", path=...)` が `.cmd` のラッパーを自動で拾います。`CreateProcessW` は拡張子のないシェバングのスクリプトを実行できないため、Hermes は常に `.CMD` のラッパーを使います。シェバングのスクリプトを直接呼ばず、必ず `.cmd` を通してください。
-- Playwright の Chromium は初回の実行時に自動でインストールされます（`npx playwright install chromium`）。失敗した場合は `hermes doctor` がそれを示し、直し方の手がかりも表示します。
+Windows の ARM64 では、版を固定した Chromium と `agent-browser` の実行ファイルが
+Windows の x64 エミュレーションで動くことがあります。これは ARM64 ネイティブの Python の実行環境とは異なります。
+実行方式の選び方は [ブラウザの自動操作](/hermes/docs/user-guide/features/browser/) を参照してください。
 
 ## Windows で Hermes を動かすときの実務的なメモ {#running-hermes-on-windows-practical-notes}
 
@@ -254,7 +301,6 @@ TELEGRAM_BOT_TOKEN=...
 
 | 変数 | 効果 |
 |---|---|
-| `HERMES_GIT_BASH_PATH` | bash.exe の探索先を上書きします。Git for Windows の完全版、シンボリックリンク経由の WSL の bash、MSYS2、Cygwin など、どの bash でも指定できます。インストーラが自動で設定します。 |
 | `HERMES_DISABLE_WINDOWS_UTF8` | `1` を設定すると UTF-8 の標準入出力の調整を無効にし、ロケールのコードページに戻します。文字コードの不具合を切り分けるときに役立ちます。 |
 | `EDITOR` / `VISUAL` | `/edit` と `Ctrl-X Ctrl-E` で使うエディタです。どちらも未設定なら、Hermes は `notepad` を既定にします。 |
 
@@ -266,16 +312,18 @@ PowerShell から次を実行します。
 hermes uninstall
 ```
 
-これがきれいなやり方です。schtasks の登録、スタートアップフォルダのショートカット、`hermes.cmd` のラッパーを取り除き、`%LOCALAPPDATA%\hermes\hermes-agent\` を削除し、ユーザーの PATH を整えます。入れ直す場合に備えて、`%LOCALAPPDATA%\hermes\` のそれ以外（設定、認証情報、スキル、セッション、ログ）はそのまま残します。
+ソースから入れた場合、アンインストーラは Hermes が作った起動用ファイル、サービスの登録、
+アプリのファイルを取り除きます。削除の前に `hermes uninstall --dry-run` で内容を確認してください。
+`--full` はデータも削除し、`--data` はパッケージのコードを残したままデータだけを削除します。
+MSIX や Store から入れた場合は、Windows の設定 →
+アプリ → インストールされているアプリ から削除してください。CLI はパッケージが持つコードの削除を拒否します。
 
-すべて消したい場合は次のようにします。
-
-```powershell
-hermes uninstall
-Remove-Item -Recurse -Force "$env:LOCALAPPDATA\hermes"
-# Also remove a legacy CLI/WSL data dir if you ever used one:
-Remove-Item -Recurse -Force "$env:USERPROFILE\.hermes"
-```
+:::caution 利用者のデータの削除
+データを削除する前に、選んだ `HERMES_HOME` を使っている Hermes のプロセスをすべて止め、バックアップを取ってください。
+データを削除する方式を選ぶ前に、`hermes uninstall --dry-run` で内容を確認してください。
+1 つのアプリやプロファイルを直すために、既定のデータの最上位を丸ごと削除しないでください。
+独自の `HERMES_HOME` は別の場所にあることがあり、パッケージを削除してもそのデータは消えません。
+:::
 
 CLI の `hermes uninstall` は、schtasks の登録が別のタスク名で行われている場合（古いインストール）にも対応します。タスク名を決め打ちにせず、インストール先のパスから探すためです。
 
@@ -307,10 +355,14 @@ Linux と macOS では、POSIX の慣用句である `os.kill(pid, 0)` は何も
 いま動いているプロセスにだけ設定した状態です。シェルを閉じて開き直すか、システムのプロパティ → 環境変数でユーザーの範囲に設定してください。新しい PowerShell のウィンドウで `echo $env:EDITOR` を実行すると確認できます。
 
 **ブラウザツールは起動するが、ツールの処理が時間切れになる。**
-Chromium は初回の実行時に自動でインストールされます。（GitHub の回数制限や Playwright の配信元の不調で）インストールに失敗していた場合は `hermes doctor` を実行してください。Chromium が足りないことを示し、それを直すための `npx playwright install chromium` コマンドをそのまま表示します。
+`hermes doctor` と `hermes pm doctor` を実行してください。選ばれているブラウザの実行方式は `hermes tools` で
+確認できます。署名付きのアプリの中身に、無関係な版の Playwright を
+インストールしないでください。
 
-**`agent-browser` が Node のバージョンに関する妙なエラーで失敗する。**
-インストーラは `%LOCALAPPDATA%\hermes\node` に Node 26 を用意しますが、PATH の先頭にシステムの古い Node 18 が来ているのかもしれません。Hermes の node のディレクトリを PATH の前のほうへ移すか、ほかで Node を使っていないならシステム側のインストールを削除してください。
+**`agent-browser` が Node のバージョンに関するエラーを出す。**
+`hermes pm doctor` を実行し、どの Hermes の起動用ファイルがそのプロセスを起動したかを確認してください。
+管理された Node の版は PM が用意します。Hermes を直すために、無関係なシステムの Node の
+インストールを削除しないでください。
 
 **CLI で中国語・日本語・アラビア語の文字が `?` になる。**
 UTF-8 の標準入出力の調整が働いていません。`HERMES_DISABLE_WINDOWS_UTF8` が設定されていないことを確認してください（`Get-ChildItem env:HERMES_DISABLE_WINDOWS_UTF8`）。空なのに `?` のままなら、コンソール（とても古い `cmd.exe`）が UTF-8 にまったく対応していない可能性があります。Windows Terminal に切り替えてください。
@@ -323,7 +375,7 @@ Windows で UTF-8 以外のエディタ（古い Windows のメモ帳や一部�
 
 ## 次に読むもの {#where-to-go-next}
 
-- **[インストール](/hermes/docs/getting-started/installation/)** — Linux / macOS / WSL2 / Termux を含む、インストールのページ全体です。
+- **[インストール](/hermes/docs/getting-started/installation/)** — Linux / macOS / WSL2 を含む、インストールのページ全体です。
 - **[Windows（WSL2）ガイド](/hermes/docs/user-guide/windows-wsl-quickstart/)** — POSIX の挙動や、ダッシュボードの端末ペインが必要な場合はこちらです。
 - **[CLI コマンド一覧](/hermes/docs/reference/cli-commands/)** — `hermes` のすべてのサブコマンドです。
 - **[FAQ](/hermes/docs/reference/faq/)** — Windows に限らない、よくある質問です。

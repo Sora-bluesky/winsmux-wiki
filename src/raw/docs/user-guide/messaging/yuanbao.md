@@ -2,7 +2,7 @@
 title: "Yuanbao"
 description: "WebSocket ゲートウェイ経由で Hermes Agent を企業向けメッセージングサービス Yuanbao につなぐ"
 upstream_path: user-guide/messaging/yuanbao.md
-upstream_blob: fe4c666b3a442e65cad8aa48db9b512ef67fd1be
+upstream_blob: e85b9da27673cdd2b662ac52ac313f9d15ac285c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/yuanbao
 ---
@@ -19,13 +19,12 @@ Yuanbao はテンセント社内や企業環境で主に使われている、企
 
 - ボットを作る権限のある Yuanbao アカウント
 - Yuanbao の APP_ID と APP_SECRET（プラットフォームの管理者から受け取ります）
-- Python のパッケージ: `websockets` と `httpx`
-- メディアを扱う場合: `aiofiles`
+- Python のパッケージ: `websockets` と `httpx`（どちらも Hermes の中核の依存として最初から入っています）
 
-必要な依存パッケージを入れます。
+これらの中核の依存が壊れているときは、選んでいる環境を修復します。
 
 ```bash
-pip install websockets httpx aiofiles
+hermes pm repair
 ```
 
 ## 準備の手順 {#setup}

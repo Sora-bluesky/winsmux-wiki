@@ -11,9 +11,9 @@ raw: /hermes/raw/dev.md
 
 # developer-guide
 
-Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（51 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
+Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（56 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
 
-## Developer Guide（51）
+## Developer Guide（56）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -43,6 +43,7 @@ Hermes Agent 本体を拡張したり、上流に貢献したりする人向け�
 - [Gateway Monitoring](/hermes/docs/developer-guide/gateway-monitoring/)
 - [Gateway Session Lifecycle](/hermes/docs/developer-guide/gateway-session-lifecycle/)
 - [Image Generation Provider Plugins](/hermes/docs/developer-guide/image-gen-provider-plugin/)
+- [macOS bundle updates](/hermes/docs/developer-guide/macos-bundle-updates/)
 - [Memory Provider Plugins](/hermes/docs/developer-guide/memory-provider-plugin/)
 - [Micro-compaction](/hermes/docs/developer-guide/micro-compaction/)
 - [Middleware](/hermes/docs/developer-guide/middleware/)
@@ -53,10 +54,14 @@ Hermes Agent 本体を拡張したり、上流に貢献したりする人向け�
 - [Plugin LLM Access](/hermes/docs/developer-guide/plugin-llm-access/)
 - [Build a Hermes Plugin](/hermes/docs/developer-guide/plugins/)
 - [Application declarations](/hermes/docs/developer-guide/plugins/application-declarations/)
+- [PM audit remediation status](/hermes/docs/developer-guide/pm-audit-status/)
 - [Programmatic Integration](/hermes/docs/developer-guide/programmatic-integration/)
 - [Relay ↔ Connector Contract](/hermes/docs/developer-guide/relay-connector-contract/)
 - [Relay Shared Metrics](/hermes/docs/developer-guide/relay-shared-metrics/)
 - [Secret Source Plugins](/hermes/docs/developer-guide/secret-source-plugin/)
+- [Shared bundle builds](/hermes/docs/developer-guide/shared-bundle-builds/)
+- [Source update completion ownership](/hermes/docs/developer-guide/source-update-completion/)
+- [Stable release admission and promotion](/hermes/docs/developer-guide/stable-releases/)
 - [State DB Recovery](/hermes/docs/developer-guide/state-db-recovery/)
 - [Streaming TTS Internals](/hermes/docs/developer-guide/streaming-tts/)
 - [Public Subagent Lifecycle API](/hermes/docs/developer-guide/subagent-lifecycle-api/)

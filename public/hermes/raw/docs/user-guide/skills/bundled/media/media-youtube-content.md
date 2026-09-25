@@ -2,7 +2,7 @@
 title: "Youtube Content — YouTube の文字起こしを要約・スレッド・ブログ記事にする"
 description: "YouTube の文字起こしを要約・スレッド・ブログ記事にする"
 upstream_path: user-guide/skills/bundled/media/media-youtube-content.md
-upstream_blob: f95bcd48cfcde9be77a9a9a60c0a43b126b09d95
+upstream_blob: 94aed9d17793b3b63b3fdca5db0574879fd1bec2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/media/media-youtube-content
 ---
@@ -26,55 +26,68 @@ YouTube の文字起こしを要約・スレッド・ブログ記事にします
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
 :::info
-以下は、この skill が呼び出されたときに Hermes が読み込む skill 定義の全文です。skill が有効なあいだ、エージェントはこれを指示として受け取ります。
+以下は、この skill が呼び出されたときに Hermes が読み込む skill 定義の全文です。skill が有効な間、エージェントはこれを指示として受け取ります。
 :::
 
-# YouTube コンテンツツール {#youtube-content-tool}
+# YouTube Content Tool {#youtube-content-tool}
 
-## こんなときに {#when-to-use}
+## 使う場面 {#when-to-use}
 
-YouTube の URL や動画リンクが渡されたとき、動画の要約を頼まれたとき、文字起こしを求められたとき、YouTube 動画の内容を取り出して別の形に整えたいときに使います。文字起こしを、章立て・要約・スレッド・ブログ記事といった構造のあるコンテンツに変換します。
+ユーザーが YouTube の URL や動画のリンクを共有したとき、動画の要約を頼んだとき、文字起こしを求めたとき、または YouTube 動画の内容を取り出して別の形に整えたいときに使います。文字起こしを、構造化されたコンテンツ（チャプター、要約、スレッド、ブログ記事）に変換します。
 
 YouTube 動画から文字起こしを取り出し、使いやすい形式に変換します。
 
 ## 準備 {#setup}
 
-`uv` を使って、補助スクリプトを動かす Hermes 管理下の環境と同じ場所に依存パッケージを入れます。
+PM で準備した Hermes のソースチェックアウトにある Python を、`terminal` で使います。
+`youtube` の追加機能に、補助スクリプトが必要とする依存関係が宣言されています。素の pip や、
+プロジェクトを自動検出する `uv run` で Hermes にパッケージを入れないでください。
+
+そのチェックアウトで、まず
+[パッケージ管理](https://hermes-agent.nousresearch.com/docs/reference/package-management#developer-workflow)にある、分離した開発用ホームの設定を行います。
+続けて追加機能を準備し、補助スクリプトを動かす前にもう一度環境を有効化します。
 
 ```bash
-uv pip install youtube-transcript-api
+source ./activate
+python -c "import pm; pm.sync_venv(['youtube'], explicit=True)"
+source ./activate
+python -c "import youtube_transcript_api; print(youtube_transcript_api.__file__)"
 ```
+
+Windows では、`source ./activate` の代わりに `. .\activate.ps1` を使います。ターミナルが
+別のホストやサンドボックスで動いている場合は、エージェントの本番環境ではなく、そこで明示的に分離した
+補助用の環境を使ってください。以下のコマンドは、どれも import の確認が通ったインタープリターで実行します。
 
 ## 補助スクリプト {#helper-script}
 
-`SKILL_DIR` は、この SKILL.md が置かれているディレクトリです。このスクリプトは、標準的な YouTube の URL、短縮リンク（youtu.be）、shorts、埋め込み用リンク、ライブのリンク、11 文字の動画 ID のいずれでも受け取れます。
+`SKILL_DIR` は、この SKILL.md ファイルがあるディレクトリです。スクリプトは、標準的な YouTube の URL 形式、短縮リンク（youtu.be）、ショート、埋め込み、ライブのリンク、または 11 文字の動画 ID そのものを受け付けます。
 
 ```bash
 # JSON output with metadata
-uv run python SKILL_DIR/scripts/fetch_transcript.py "https://youtube.com/watch?v=VIDEO_ID"
+python SKILL_DIR/scripts/fetch_transcript.py "https://youtube.com/watch?v=VIDEO_ID"
 
 # Plain text (good for piping into further processing)
-uv run python SKILL_DIR/scripts/fetch_transcript.py "URL" --text-only
+python SKILL_DIR/scripts/fetch_transcript.py "URL" --text-only
 
 # With timestamps
-uv run python SKILL_DIR/scripts/fetch_transcript.py "URL" --timestamps
+python SKILL_DIR/scripts/fetch_transcript.py "URL" --timestamps
 
 # Specific language with fallback chain
-uv run python SKILL_DIR/scripts/fetch_transcript.py "URL" --language tr,en
+python SKILL_DIR/scripts/fetch_transcript.py "URL" --language tr,en
 ```
 
 ## 出力形式 {#output-formats}
 
-文字起こしを取得したあと、頼まれた内容に合わせて次のように整えます。
+文字起こしを取得したら、ユーザーの求めに合わせて整形します。
 
-- **章立て**: 話題の切り替わりでまとめ、タイムスタンプ付きの章リストにします
+- **チャプター**: 話題の切り替わりでまとめ、タイムスタンプ付きのチャプター一覧を出力します
 - **要約**: 動画全体を 5〜10 文で簡潔にまとめます
-- **章ごとの要約**: 章立てに、それぞれ短い段落の要約を添えます
-- **スレッド**: Twitter / X のスレッド形式。番号付きの投稿にし、1 件を 280 文字以内に収めます
-- **ブログ記事**: タイトル・節・要点を備えた記事の全文にします
+- **チャプターごとの要約**: チャプターごとに短い段落の要約を付けます
+- **スレッド**: Twitter/X のスレッド形式です。番号付きの投稿で、それぞれ 280 文字以内にします
+- **ブログ記事**: タイトル、節、要点を備えた記事全体です
 - **引用**: 印象的な発言をタイムスタンプ付きで抜き出します
 
-### 例 — 章立ての出力 {#example-chapters-output}
+### 例 — チャプターの出力 {#example-chapters-output}
 
 ```
 00:00 Introduction — host opens with the problem statement
@@ -84,17 +97,17 @@ uv run python SKILL_DIR/scripts/fetch_transcript.py "URL" --language tr,en
 31:55 Q&A — audience questions on scalability and next steps
 ```
 
-## 進め方 {#workflow}
+## 作業の流れ {#workflow}
 
-1. **取得**: 補助スクリプトに `--text-only --timestamps` を付け、`uv run python` 経由で文字起こしを取ります。
-2. **確認**: 出力が空でないこと、想定した言語であることを確かめます。空だった場合は `--language` を外して再実行し、取得できるものを取ります。それでも空なら、その動画はおそらく文字起こしが無効になっていることを伝えます。
-3. **必要なら分割**: 文字起こしが 5 万文字ほどを超える場合は、重なりを持たせて分割し（4 万文字ずつ、2 千文字の重なり）、それぞれを要約してからまとめます。
-4. **変換**: 頼まれた出力形式に整えます。形式の指定がなければ要約にします。
-5. **見直し**: 出来上がったものを読み返し、話の筋が通っているか、タイムスタンプが正しいか、抜けがないかを確かめてから提示します。
+1. **取得**: `terminal` と準備済みの Python を使い、`--text-only --timestamps` を付けて文字起こしを取得します。
+2. **確認**: 出力が空でなく、想定した言語になっているかを確かめます。空なら `--language` を外して再実行し、使える文字起こしをどれでも取得します。それでも空なら、その動画は文字起こしが無効になっている可能性が高いとユーザーに伝えます。
+3. **必要なら分割**: 文字起こしが約 5 万文字を超える場合は、重なりを持たせたチャンク（約 4 万文字、重なり 2 千文字）に分け、チャンクごとに要約してから統合します。
+4. **変換**: 求められた出力形式に変換します。ユーザーが形式を指定していなければ、要約にします。
+5. **検証**: 提示する前に変換結果を読み直し、話のつながり、タイムスタンプの正しさ、抜けがないかを確かめます。
 
-## うまくいかないとき {#error-handling}
+## エラーへの対応 {#error-handling}
 
-- **文字起こしが無効**: その旨を伝え、動画ページで字幕があるか確認するようにすすめます。
-- **非公開・視聴できない動画**: エラーの内容をそのまま伝え、URL を確認してもらいます。
-- **該当する言語がない**: `--language` を外して再実行し、取得できる文字起こしを取ったうえで、実際の言語を伝えます。
-- **依存パッケージがない**: `uv pip install youtube-transcript-api` を実行してからやり直します。
+- **文字起こしが無効**: ユーザーに伝え、動画のページで字幕が使えるかを確かめるよう提案します。
+- **非公開または視聴できない動画**: エラーをそのまま伝え、URL を確かめるようユーザーに頼みます。
+- **一致する言語がない**: `--language` を外して再実行し、使える文字起こしを取得してから、実際の言語をユーザーに伝えます。
+- **依存関係が足りない**: 上の PM での準備と再有効化をやり直し、補助スクリプトがその Python を使っているかを確かめます。選択中の世代を pip で修復しないでください。

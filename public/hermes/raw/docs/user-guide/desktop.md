@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 67fe84f888ae5f3cfa71848ce8087d3d13f9ccb7
+upstream_blob: 7cf292f2877cdf627ffb40bf6d9df128e4aede65
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -274,12 +274,38 @@ YAML を書く代わりに、きちんとした UI からプロバイダー・�
 
 ターミナルへ降りずに済むよう、アプリは Hermes のより広い管理機能も表に出しています。
 
-- **Skills** — [スキル](/hermes/docs/user-guide/features/skills/)を見て、導入し、管理します。Skills のタブには導入済みのスキルが有効／無効の切り替えとともに並び、その下に Hermes に同梱されている任意導入スキルのカタログが全件並びます。どの項目にもワンクリックの **Install** ボタンがあり、終わるとその行は導入済みの一覧へ移ります。
+- **Skills** — **Capabilities → Skills** を開いて[スキル](/hermes/docs/user-guide/features/skills/)を管理します。**Installed** には、選択したプロファイルに実際に入っているスキルと、その有効／無効の状態が出ます。**Browse** では、公開の Skills Hub と同じ公開カタログ全体を検索でき、アプリ独自のカードと詳細で表示します。
+- **Plugins** — **Capabilities → Plugins** も同じ **Installed / Browse** の構成です。Installed には、アプリ単位で実際に入っているデスクトップのプラグインと、選択したプロファイルのエージェントのプラグインがまとめて出ます。Browse には公開の [Plugin Catalog](/hermes/docs/user-guide/features/plugin-catalog/) が出ます。どちらのページでも、検索欄は上部にあり、タブの切り替えと操作ボタンは同じ1行に並びます。
 - **メモリグラフ（Star Map）** — チャットで `/journey`（別名 `/learning`、`/memory-graph`）と打つと、学んだスキルとメモリの時間を追った星座図が開き、再生用のつまみで動かせます。ノードはこのパネルから直接編集も削除もできます（スキルは保管に回り、メモリは削除されます）。[Learning Journey](/hermes/docs/user-guide/features/memory/#learning-journey-journey) を参照してください。
 - **Cron** — [予約ジョブ](/hermes/docs/reference/cli-commands/#hermes-cron)を見て管理します。**All profiles** を入れると、すべてのプロファイルのジョブがまとめて並びます。ジョブの実行履歴と操作（一時停止・再開・編集・削除）は、どのプロファイルを使っていても、常にそのジョブを持つプロファイルに向かいます。
 - **Profiles** — [Hermes のプロファイル](/hermes/docs/user-guide/profiles/)（設定・スキル・セッションが分離されています）を切り替えます。
 - **Messaging** — ゲートウェイのチャンネルを設定します。Telegram には **Quick setup** のカードがあります。**Create with QR** を押してコードを読む（またはリンクを開く）と、Telegram 側で Hermes がボットを作り、許可リスト用にあなたのユーザー ID を検出し、資格情報を保存し、ゲートウェイを再起動します。資格情報の保存・消去・有効化の切り替えを行うと、ゲートウェイが実際に再起動するまで **Restart now** の帯がページに残ります。再起動に失敗しても帯は残るので、やり直したり手で再起動したりできます。
 - **Agents** と **Command Center** — 複数エージェントでの作業を束ねるための画面です。
+
+#### Browse のデータの出どころ {#where-browse-gets-its-data}
+
+これらはデスクトップアプリ独自の画面で、**Web サイトのページを埋め込んだものではありません**。デスクトップと
+公開の Web サイトは、同じように生成された CDN のスナップショットを読みます。
+
+| カタログ | 公開ドキュメントでの別名 | デスクトップが取得する URL |
+|---|---|---|
+| Skills | [`/docs/api/skills.json`](https://hermes-agent.nousresearch.com/docs/api/skills.json) | `https://nousresearch.github.io/hermes-agent/docs/api/skills.json` |
+| Plugins | [`/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json) | `https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` |
+
+スキルのスナップショットは、`skills/`、`optional-skills/`、それに一元化された
+スキルの索引をまとめたものです。プラグインのスナップショットは、`plugin-catalog/*.yaml` とキャッシュされたスターの
+数から作られます。インストーラーが使う、削除された項目の一覧も同じ公開で配られます。Browse で見ているあいだに、
+GitHub API をその場で呼んだり、プラグインやスキルのソースのリポジトリを取得したりすることはありません。**Installed** は
+別です。その状態は、これらの公開スナップショットではなく、選択したプロファイルのバックエンドと、アプリの
+デスクトップのプラグインの登録簿から来ます。
+
+公開のハブにあるインストールのボタンは、`hermes://skill/install?identifier=...`
+または `hermes://plugin/install?catalog=...` のリンクを開き、デスクトップ側で確認を求めます。
+これらの経路を使うには、更新済みのデスクトップのビルドが必要です。アプリが無いか古すぎる場合も、カードにはコピーできる CLI の
+コマンドが残っています。パラメーターとレビューの流れは、
+[スキルのリンク](/hermes/docs/user-guide/features/skills/#install-from-the-website)と
+[プラグインのリンク](/hermes/docs/user-guide/features/plugins/#one-click-install-links-desktop)を
+参照してください。
 
 ### Bot Mode（組み込み） {#bot-mode-built-in}
 
@@ -378,15 +404,17 @@ GitHub が拒否した資格情報（HTTP 401 — 期限切れか失効）は、
 
 ## アンインストール {#uninstalling}
 
-**Settings → About → Danger zone** を開いて、どこまで消すかを選びます。
+アプリが管理しているインストールでは、**Settings → About → Danger zone** を開いて、どこまで消すかを選びます。
 
 - **Uninstall Chat GUI only** — デスクトップアプリとそのデータを消します。Hermes のエージェント、設定、チャットは残ります。（`hermes uninstall --gui` と同じです。）
 - **Uninstall GUI + agent, keep my data** — アプリとエージェントを消しますが、設定・チャット・秘密情報は将来の再インストールのために残します。（`hermes uninstall` と同じです。）
 - **Uninstall everything** — アプリ・エージェント・すべてのユーザーデータを消します。（`hermes uninstall --full` と同じです。）
 
-仕上げのためにアプリは閉じます（後片付けは終了後に走ります。動いているアプリ本体と自身の venv を消せるようにするためです）。ローカルにエージェントが入っていない場合（たとえば、リモートのバックエンドにつないだ GUI だけの「lite」なクライアント）、エージェントを消す選択肢は自動的に隠れます。
+仕上げのためにアプリは閉じます（後片付けは終了後に走ります。動いているアプリ本体と自身の venv を消せるようにするためです）。ローカルにエージェントが入っていない場合、エージェントを消す選択肢は自動的に隠れます。
 
-同じことはターミナルからもできます。GUI だけなら `hermes uninstall --gui`、エージェントも消すなら `hermes uninstall` か `hermes uninstall --full` です。
+Nix、同梱版／Light のパッケージ、そのほか外部が所有するインストールでは、これらの操作は隠れます。それらは、それぞれのパッケージマネージャーか OS から削除してください。アプリは、リモートのバックエンドの更新状況とは関係なく、ローカルのパッケージを自分が所有しているかを確かめます。所有を確認できない場合、アンインストールの操作は出ません。
+
+自分で管理しているインストールなら、同じことはターミナルからもできます。GUI だけなら `hermes uninstall --gui`、エージェントも消すなら `hermes uninstall` か `hermes uninstall --full` です。
 
 :::note
 **ソースのチェックアウト**（`hermes desktop` の開発ビルド）から `hermes uninstall --gui` を走らせると、ワークスペースの `node_modules` と `apps/desktop/{dist,release}` のビルド成果物も消えます。どちらも GUI のビルド成果物だからです。`hermes desktop`（または `npm install` と再ビルド）で戻せますが、デスクトップアプリ自体をいじっている最中なら、そのあと依存関係を入れ直すことになると思ってください。
@@ -419,7 +447,7 @@ hermes config set desktop.manage_launcher_entry false
 
 ## 仕組み {#how-it-works}
 
-パッケージ済みのアプリには、Electron のシェルとネイティブな React のチャット画面が入っています。初回の起動時には、Hermes Agent のランタイムを `HERMES_HOME`（`~/.hermes`、Windows なら `%LOCALAPPDATA%\hermes`）へ導入できます。これは **CLI で入れたときとまったく同じ配置**で、だからこそ両者は入れ替えて使えます。バックエンドの解決は、まず `HERMES_DESKTOP_HERMES_ROOT` を尊重し、次に完了している管理下の導入、次に `PATH` 上で見つかった `hermes`（`--ignore-existing` / `HERMES_DESKTOP_IGNORE_EXISTING=1` が指定されていない場合）、最後に Nix のようなパッケージャー向けの明示的な `HERMES_DESKTOP_HERMES` によるコマンドの上書き、の順に見ます。React のレンダラーは、アプリが代わりに立ち上げるヘッドレスのバックエンド、すなわち `tui_gateway` の JSON-RPC/WebSocket API を提供する `hermes serve` のプロセスと話し、`hermes --tui` を埋め込むのではなくエージェントのランタイムを使い回します。デスクトップアプリは**自己完結**していて、自前の `hermes serve` のバックエンドを走らせ、[web dashboard](/hermes/docs/user-guide/features/web-dashboard/) を開くことも必要とすることもありません。（`serve` コマンドより古いランタイムでは、自動的にヘッドレスの `dashboard --no-open` に落ちるので、アプリの更新がバックエンドを追い越すことはありません。）導入・バックエンドの解決・自己更新の処理は、Electron のメインプロセスにあります。
+パッケージ済みのアプリには、Electron のシェルとネイティブな React のチャット画面が入っています。初回の起動時には、Hermes Agent のランタイムを `HERMES_HOME`（`~/.hermes`、Windows なら `%LOCALAPPDATA%\hermes`）へ導入できます。これは **CLI で入れたときとまったく同じ配置**で、だからこそ両者は入れ替えて使えます。同梱版のアプリは、中に含まれているバックエンドを使います。同梱のバックエンドが無い場合、解決は `HERMES_DESKTOP_HERMES_ROOT` を尊重し、次に開発用のチェックアウト、次に Nix のようなパッケージャー向けの明示的な `HERMES_DESKTOP_HERMES` によるコマンドの上書き、最後に使える状態の管理下の導入、の順に見ます。コマンドの上書きを管理下の導入より優先するのは、Nix のデスクトップが古い書き換え可能なランタイムを黙って起動しないようにするためです。React のレンダラーは、アプリが代わりに立ち上げるヘッドレスのバックエンド、すなわち `tui_gateway` の JSON-RPC/WebSocket API を提供する `hermes serve` のプロセスと話し、`hermes --tui` を埋め込むのではなくエージェントのランタイムを使い回します。デスクトップアプリは**自己完結**していて、自前の `hermes serve` のバックエンドを走らせ、[web dashboard](/hermes/docs/user-guide/features/web-dashboard/) を開くことも必要とすることもありません。（`serve` コマンドより古いランタイムでは、自動的にヘッドレスの `dashboard --no-open` に落ちるので、アプリの更新がバックエンドを追い越すことはありません。）導入・バックエンドの解決・自己更新の処理は、Electron のメインプロセスにあります。
 
 ## リモートバックエンドへの接続 {#connecting-to-a-remote-backend}
 
@@ -539,24 +567,24 @@ SHA の固定）と import の許可リストであって、隔離ではあり�
 **⌘K → Reload desktop plugins** は、導入済みの `plugin.js` をすべて読み直します。
 インストーラーがその場で置き換えたものも含みます。
 
-**Capabilities → Plugins** は、Hermes を拡張するものすべてを扱う
-1か所です。**プラグイン1つにつき1行**で、スイッチの列が2つあります。
+**Capabilities → Plugins → Installed** には、実際に導入されている状態が出ます。
+**プラグイン1つにつき一覧の項目は1つ**で、その詳細ペインに Desktop と Agent の操作があります。
 
 - プラグインは**このアプリ**を拡張することも、**エージェント**を拡張することも、**その両方**もあります。各行の
   バッジがどちらかを示し、パッケージの中身（`plugin.yaml`
   ならエージェント側、`plugin.js` ならデスクトップ側）から判断されます。両方を持つプラグインは1つの
   行で、2行に分かれることはありません。
-- **Desktop の列** — このアプリに読み込まれる側です。アプリ単位で効くので、
+- **Desktop の操作** — このアプリに読み込まれる側です。アプリ単位で効くので、
   ウィンドウがどのプロファイル、どのゲートウェイ、どのリモートの端末を見ていても、
   同じスイッチ、同じ値です。デスクトップのコードが読み込まれる場所はちょうど1つ、
   `~/.hermes/desktop-plugins/` です。エージェントとデスクトップが一体になったパッケージのデスクトップ側は、
   導入時にアプリがそこへ複製します（更新やアンインストールにも追随します）。だからプロファイルを切り替えても、
   ペインが読み込まれたり外れたり範囲が変わったりすることはありません。切り替えはその場で効きます。
-- **Agent の列** — 選択したプロファイルのバックエンドに導入される側です
+- **Agent の操作** — 選択したプロファイルのバックエンドに導入される側です
   （[エージェントのプラグイン](/hermes/docs/user-guide/features/plugins/): user、git、project、pip、
   持ち運び可能な形での導入）。カタログの固定が動いたときは **Update** のチップが付きます。
-  プロファイルの選択がこの列の見出しにあるのは、それがこの列だけを支配するからです。
-  プロファイルが1つしかなければ、選択そのものが出ません。
+  プロファイルの選択が効くのはエージェント側だけです。プロファイルが1つしかなければ、
+  選択そのものが出ません。
   リポジトリに同梱された組み込み（プラットフォームのアダプター、プロバイダーのプラグイン）は
   並びません。有効な状態で出荷され、それぞれの画面から設定します。
   例外は、自分の画面を持たない同梱のライフサイクルのプラグイン
@@ -580,13 +608,14 @@ SHA の固定）と import の許可リストであって、隔離ではあり�
   ボタンが付きます。確認するとこの端末上のそのフォルダが消え、プラグインは
   すぐ外れます。ゲートウェイは関係ありません。
 
-その土台には見つけるための仕組みがあります。動いている [Plugin Catalog](/hermes/docs/user-guide/features/plugin-catalog/)
-の選択画面は、レビュー済みの項目をその固定されたコミットのまま、選択した
-プロファイルへ導入します。**Install from Git** は、それ以外のリポジトリも同じ
-「レビューしてから導入する」ダイアログに通します。任意で使える **Pin to commit** の欄には
-40 文字ちょうどのコミット SHA を1つ指定でき（プライベートなリポジトリも含みます）、固定されたプラグインは
-一覧で `pinned @ <sha8>` のバッジを持ちます。古い `Settings → Plugins` のリンクは
-ここへ転送されます。
+**Browse** に切り替えると、アプリ独自の [Plugin Catalog](/hermes/docs/user-guide/features/plugin-catalog/) が出ます。
+Browse からも **Install from Git** からも、「レビューしてから導入する」ダイアログが開きます。
+エージェントのプラグインをカタログから導入する場合、バックエンドがカタログの名前を、レビュー済みの固定先に解決します。
+Web サイトのリンクが運ぶのはその名前だけです。デスクトップは、リンクが渡すメタデータを信用するのではなく、
+レビュー済みのリポジトリとコミットを自分で調べます。
+**Install from Git** には、エージェントのプラグインの導入向けに **Pin to commit** の欄もあります
+（40 文字のコミット SHA を完全な形で指定します。プライベートなリポジトリも含みます）。固定したエージェントのプラグインには
+`pinned @ <sha8>` のバッジが付きます。古い `Settings → Plugins` のリンクはここへ転送されます。
 
 ## 困ったときは {#troubleshooting}
 
@@ -649,17 +678,18 @@ SHA の固定）と import の許可リストであって、隔離ではあり�
 hermes logs gui -f
 ```
 
+正規のソースのインストールでは、デスクトップはインストールの起動スクリプトを確かめて実行します。
+インタプリタと依存関係の世代は PM が選びます。その起動スクリプトが動くなら、
+ブートストラップの目印のファイルが無くても、インストールをやり直すことはありません。
+
 Linux では、Chromium 自身のエラーは `HERMES_HOME/logs/desktop-chromium.log` に出ます。シェル自体が落ちた場合は、アプリの `Crashpad/` ディレクトリ（Electron のユーザーデータのディレクトリの中、`connection.json` の隣）にミニダンプが残ります。ウィンドウが消え、ジャーナルに `SIGTRAP` が出ているなら、そのログの `FATAL:` の行が、どのチェックが発火したかを示します。バグ報告に添えてください。どこにもアップロードされません。
 
-よくあるリセット。
+Python の依存関係が壊れた場合は、そのインストールの `hermes pm repair` を実行してください。
+そのあとデスクトップを再起動します。当て推量の `venv` のパスや PM の記録を消さないでください。
+アプリのファイルが壊れた場合は、
+[インストールの所有者](/hermes/docs/reference/package-management/#source-installs-and-packaged-builds)を通して修復してください。
 
 ```bash
-# Force a clean first-launch setup (macOS/Linux)
-rm "$HOME/.hermes/hermes-agent/.hermes-bootstrap-complete"
-
-# Rebuild a broken Python venv (macOS/Linux)
-rm -rf "$HOME/.hermes/hermes-agent/venv"
-
 # Reset a stuck macOS microphone prompt
 tccutil reset Microphone com.nousresearch.hermes
 ```
@@ -682,9 +712,9 @@ ssh-keygen -R <host>
 
 ビルドは Electron のランタイム（約 114&nbsp;MB）を `github.com/electron/electron/releases` からダウンロードします。インストーラーが **Build desktop app** の段で止まり、出力に `retrying attempt=…` が繰り返し出ているなら、あなたのネットワーク（ファイアウォール、プロキシ、あるいは地域）で GitHub が塞がれているか絞られています。
 
-インストーラーはこれを自分で立て直します。ビルドが失敗すると、(1) 壊れたキャッシュ済みの Electron の zip を消してやり直し、(2) それでも駄目で、Electron の配布物がまだ無く、`ELECTRON_MIRROR` を自分で設定していなければ、事実上の Electron のコミュニティミラーである `npmmirror.com` を通してもう一度だけやり直します。`@electron/get` はダウンロードの SHASUM を検証しますが、そのチェックサムも同じミラーから来ます。つまり壊れた／途中で切れたダウンロードは捕まえられますが、乗っ取られたミラーは捕まえられません。第三者のホストを信用したくないなら、自分の `ELECTRON_MIRROR` を指定してください（下記）。ビルドが、あなたの設定した値を上書きすることはありません。
+ビルドは、自分からミラーに切り替えることも、失敗したダウンロードをやり直すこともしません。理由が何であれビルドが失敗すると、以前のアプリはそのまま残り（段階的に用意してから入れ替える方式です。[更新](/hermes/docs/getting-started/updating/#what-happens-during-an-update)を参照）、更新そのものが失敗します。`hermes desktop --build-only --force-build`（または次の `hermes update`）で、もう一度ビルドが走ります。キャッシュ済みの Electron の zip が壊れていたのが原因なら、ビルドし直す前に `@electron/get` のキャッシュ（Linux は `~/.cache/electron/`、macOS は `~/Library/Caches/electron/`、Windows は `%LOCALAPPDATA%\electron\Cache`）から消してください。`@electron/get` はすべてのダウンロードの SHASUM を検証しますが、そのチェックサムも同じホストから来ます。そのため、指定したミラーは、ダウンロードとチェックサムの両方について信用することになります。
 
-**自分のミラーを選ぶ**なら（社内の信頼できるものなど）、導入の前に `ELECTRON_MIRROR` を設定するか、手でビルドし直してください。ビルドはそれを尊重し、上書きしません。
+**ミラーを使う**なら（社内のもの、または事実上の Electron のコミュニティミラーである `npmmirror.com` など）、導入の前に `ELECTRON_MIRROR` を設定するか、手でビルドし直してください。ビルドはそれを尊重し、設定した値を上書きすることはありません。
 
 ```bash
 ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ \

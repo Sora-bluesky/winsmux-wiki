@@ -2,7 +2,7 @@
 title: "送信プロキシの内部構造"
 description: "iron-proxy の送信ファイアウォールが Hermes とどう結びついているか — モジュール構成、ライフサイクル、セキュリティ上の不変条件、拡張ポイント"
 upstream_path: developer-guide/egress-internals.md
-upstream_blob: 45ceb8d3ed21b7cde7f7e5c59201b8edbe72cbf6
+upstream_blob: dde37d99ace8f900d6f23431db168637c191dda4
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/egress-internals
 ---
@@ -16,7 +16,10 @@ sources:
 ## モジュール構成 {#module-layout}
 
 ```text
-agent/proxy_sources/iron_proxy.py     Core: binary install, CA gen, config build,
+pm/security_packages.py              Pinned binary acquisition and publication
+                                       through PM. Release provenance staging.
+
+agent/proxy_sources/iron_proxy.py     Core: binary lookup, GPG checks, CA gen, config build,
                                        subprocess lifecycle, mappings I/O, PID/nonce
                                        defense.  Pure-function surface where possible.
 
@@ -70,15 +73,14 @@ tests/agent/test_iron_proxy_e2e.py          Live E2E (gated on HERMES_RUN_E2E=1)
 ```text
 hermes egress install
   -> agent.proxy_sources.iron_proxy.install_iron_proxy(force=...)
-       Downloads pinned tarball + checksums.txt from GitHub Releases.
-       SHA-256 verification before extraction.
-       tarfile.extract(..., filter="data") on Python 3.12+ (PEP 706);
-         falls back to plain extract on older Python with member-name
-         sanitisation via _pick_tar_member.
-       Stage into ~/.hermes/bin/.iron-proxy_XXXX, chmod 755, os.replace
-         to ~/.hermes/bin/iron-proxy (atomic).
-       _VERSION_CACHE.pop(target) so a forced reinstall re-probes
-         --version on next call.
+       pm.ensure("iron-proxy", explicit=True) installs or repairs the entry.
+       PM checks archive and provenance hashes against pm/lock.json.
+       Package staging checks that release checksums cover the pinned archive,
+         then calls the GPG checker. Missing GPG permits hash-only installation.
+         An explicit signature rejection aborts installation.
+       PM publishes the entry and records its identity and digest in facts.
+       pm.installed_package("iron-proxy").binary returns the selected path.
+       _VERSION_CACHE.pop(target) makes the next status call probe --version.
 
 hermes egress setup [--from-bitwarden | --no-bitwarden] [--rotate-tokens]
   -> proxy_cli.cmd_setup

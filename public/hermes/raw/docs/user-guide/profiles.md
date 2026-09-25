@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: 345b74f2822c15d767d39c945f3a6db55fc28bcc
+upstream_blob: 06688de2f36946b2ac493d38e82737493f47f515
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -326,6 +326,11 @@ hermes update
 
 自分で書き換えたスキルが上書きされることはありません。
 
+依存の準備では、すべてのプロファイルの `config.yaml` を読み、共有の環境に入れておくべき
+プラグインの組み合わせを割り出します。`config.yaml` を解析できないプロファイル（または `plugins` / `memory` の節の形が
+正しくないプロファイル）が 1 つでもあると、インストール全体でこの手順が失敗します。詳しくは
+[依存の準備と保持](/hermes/docs/user-guide/features/plugins/#dependency-preparation-and-preservation)をご覧ください。
+
 ## プロファイルを管理する {#managing-profiles}
 
 ```bash
@@ -415,6 +420,14 @@ Hermes はサブプロセスに `HERMES_REAL_HOME` も渡すので、`home_mode:
 ある端末で育てたプロファイルは、別の場所へ持っていけます。自分のもう 1 台の作業機でも、同僚のノート PC でも、コミュニティへでも。方法は 2 つあります。
 
 **ファイルで渡す。** `/export` はプロファイルを 1 つの `.tar.gz` にまとめます。スキル、記憶、人格、cron、プラグイン、設定、そしてデスクトップからならテーマとレイアウトも入ります。API キーは取り除かれます。受け取った側は `/import` を実行します。
+
+端末ごとの PM の状態は持ち運べません。エクスポート、インポート、配布用のインストールでは、
+プロファイルの直下にある `installs/`、`tools/`、`cache/` を対象から外します。
+バックアップと復元でも、既定のホームと名前付きのプロファイルに同じ決まりが当てはまります。
+古いアーカイブで、受け取る側の端末の PM の選択やツールを置き換えることはできません。
+`plugins/example/facts.json` や `skills/example/tools/helper.py` のようなファイルは
+ユーザーのデータとして扱われ、そのまま残ります。受け取る側の依存は、環境をコピーするのではなく
+[PM](/hermes/docs/reference/package-management/) を通して入れてください。
 
 ```bash
 # In chat, run /export, hand over the file, and they run /import on it

@@ -2,12 +2,16 @@
 title: "よくある質問とトラブル対処"
 description: "Hermes Agent でよくある質問と、つまずきやすい箇所の対処法"
 upstream_path: reference/faq.md
-upstream_blob: 59cb5dd83012690db10d19271793315fb75fa129
+upstream_blob: 3cd01e00d6b1668c034531d9ae687e933e551845
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/faq
 ---
 
 # よくある質問とトラブル対処 {#faq-troubleshooting}
+
+このページにある Python の依存パッケージのコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存パッケージを変えたあとは、チェックアウトを有効にし直して Hermes を再起動してください。
 
 よく寄せられる質問と、つまずきやすい箇所の直し方をまとめました。
 
@@ -31,7 +35,7 @@ Hermes Agent は OpenAI 互換の API であれば動きます。対応してい
 
 プロバイダーの指定は `hermes model` を実行するか、`~/.hermes/.env` を直接編集して行います。プロバイダーごとのキー名は [環境変数](/hermes/docs/reference/environment-variables/) の一覧にすべて載っています。
 
-### Windows や Android、Termux、手元の環境でも動きますか {#does-it-work-on-windowsandroidtermuxmy-plataform}
+### Windows や Android、手元の環境でも動きますか {#does-it-work-on-windowsandroidmy-platform}
 対応環境の一覧は **[対応プラットフォーム](/hermes/docs/getting-started/platform-support/)** にまとめてあります。
 
 ### WSL2 で Hermes を動かしています。Windows 側の Chrome を操作する良い方法はありますか {#i-run-hermes-in-wsl2-whats-the-best-way-to-control-my-normal-windows-chrome}
@@ -147,20 +151,18 @@ ls ~/.local/bin/hermes
 インストーラーは PATH に `~/.local/bin` を追加します。独自のシェル設定を使っている場合は、`export PATH="$HOME/.local/bin:$PATH"` を自分で書き足してください。
 :::
 
-#### Python のバージョンが古い {#python-version-too-old}
+#### 対応していない Python のバージョン {#unsupported-python-version}
 
-**原因:** Hermes は Python 3.11 以上が必要です。
+いまの公式のインストールに必要なのは **Python 3.14** で、それより新しければどれでもよいわけではありません。
+`pyproject.toml` にある `>=3.11,<3.15` の範囲は、古いインストールが 3.14 へ切り替える前に
+アップデーターを動かせるようにするためのものです。いまの実行環境が 3.11〜3.13 に対応しているという意味ではありません。
+インストーラーと配布パッケージには、版を固定した実行系が付いてきます。
 
-**対処:**
-```bash
-python3 --version   # Check current version
-
-# Install a newer Python
-sudo apt install python3.12   # Ubuntu/Debian
-brew install python@3.12      # macOS
-```
-
-インストーラーを使えばここは自動で処理されます。手動インストール中にこのエラーが出たら、先に Python を上げてください。
+ソースから手で環境を作る場合は、
+[開発環境の準備](/hermes/docs/developer-guide/contributing/#development-setup)に従ってください。
+インストール済みのアプリやコンテナの中の実行系を入れ替えないでください。
+管理されたインストールでエラーが出た場合は、`hermes doctor` を実行し、そのインストールに合った
+[更新のしかた](/hermes/docs/getting-started/updating/)を使ってください。
 
 #### ターミナル操作で `node: command not found` になる（`nvm`、`pyenv`、`asdf` なども同様） {#terminal-commands-say-node-command-not-found-or-nvm-pyenv-asdf}
 
@@ -466,7 +468,7 @@ cat ~/.hermes/logs/gateway.log | tail -50
 **対処:**
 ```bash
 # Install core messaging gateway dependencies
-cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"  # Telegram, Discord, Slack, and shared gateway deps
+cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['messaging'], explicit=True)"  # Telegram, Discord, Slack, and shared gateway deps
 
 # Check for port conflicts
 lsof -i :8080
@@ -592,7 +594,7 @@ hermes chat --continue
 **対処:**
 ```bash
 # Ensure MCP dependencies are installed (already included in standard install)
-cd ~/.hermes/hermes-agent && uv pip install -e ".[mcp]"
+cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['mcp'], explicit=True)"
 
 # For npm-based servers, ensure Node.js is available
 node --version
@@ -798,7 +800,9 @@ skills:
    ```bash
    hermes backup
    ```
-   `~/.hermes/` ディレクトリ全体、つまり設定・API キー・記憶・スキル・セッション・プロファイルを zip にまとめ、ホームディレクトリに `~/hermes-backup-<timestamp>.zip` として保存します。
+   zip の書庫が `~/hermes-backup-<timestamp>.zip` に保存されます。
+   まるごとのバックアップには、Hermes のデータの置き場所にある設定、認証情報、記憶、スキル、セッション、
+   プロファイルが入ります。アプリや実行環境そのもののイメージではありません。
 
 3. その zip を新しい端末へコピーして読み込ませます。
    ```bash
@@ -830,10 +834,26 @@ hermes profile import ./work-backup.tar.gz work
 | 項目 | `hermes backup` | `hermes profile export` |
 | :--- | :--- | :--- |
 | **使う場面** | **端末まるごとの引っ越し** | **特定のプロファイルの持ち出し・受け渡し** |
-| **範囲** | 全体（`~/.hermes` ディレクトリ全部） | 一部（プロファイル 1 つ分のディレクトリ） |
+| **範囲** | Hermes のデータの置き場所（下に挙げるものは除きます） | プロファイル 1 つ分のディレクトリ |
 | **入るもの** | 全プロファイル、全体の設定、API キー、セッション | プロファイル 1 つ分: SOUL.md、記憶、セッション、スキル |
 | **認証情報** | **入ります**（`.env` と `auth.json`） | **入りません**（安全に渡せるよう取り除かれます） |
 | **形式** | `.zip` | `.tar.gz` |
+
+まるごとのバックアップから除かれるもの:
+
+- ソースのチェックアウト、依存パッケージの環境、ダウンロードしたツール・モデル・実行環境。
+- ビルドのキャッシュ、チェックポイント、以前のバックアップ、手早く取ったスナップショット。
+- ブラウザのプロファイル。実際のブラウザの認証情報のコピーも含みます。
+- バイトコード、SQLite の付随ファイル、`gateway.pid`、`cron.pid`、`.backup.lock`。
+
+`hermes backup --quick` は、まるごとの書庫ではなく、選んだ状態ファイルだけを保存します。
+端末を引っ越す前のまるごとのバックアップの代わりにはなりません。
+
+まるごとのバックアップでは、コピーに失敗したファイルが報告されます。つまり、データが欠けたまま
+書庫ができていることもありえます。移す元のインストールを消す前に、飛ばされたファイルの報告を確かめてください。
+戻したパッケージの宣言をもとに、PM が依存パッケージをもう一度ダウンロードできます。バイトコードと
+SQLite の付随ファイルは手元で作り直されます。除かれるものがあっても、`.env` と
+`auth.json` はまるごとのバックアップに入ったままです。
 
 **手作業でやる場合（rsync）:** 自分でファイルをコピーしたいなら、コードのリポジトリを除いてください。
 ```bash

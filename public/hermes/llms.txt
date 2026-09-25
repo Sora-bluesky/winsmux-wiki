@@ -66,6 +66,7 @@ Hermes Agent 0.21.5
 - [developer-guide/gateway-monitoring（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-monitoring/)
 - [developer-guide/gateway-session-lifecycle（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-session-lifecycle/)
 - [developer-guide/image-gen-provider-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/image-gen-provider-plugin/)
+- [developer-guide/macos-bundle-updates（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/macos-bundle-updates/)
 - [developer-guide/memory-provider-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
 - [developer-guide/micro-compaction（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/micro-compaction/)
 - [developer-guide/middleware（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/middleware/)
@@ -76,6 +77,7 @@ Hermes Agent 0.21.5
 - [developer-guide/plugin-llm-access（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugin-llm-access/)
 - [developer-guide/plugins/application-declarations（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/application-declarations/)
 - [developer-guide/plugins（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [developer-guide/pm-audit-status（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/pm-audit-status/)
 - [developer-guide/programmatic-integration（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
 - [developer-guide/prompt-assembly（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/prompt-assembly/)
 - [developer-guide/provider-runtime（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/provider-runtime/)
@@ -83,6 +85,9 @@ Hermes Agent 0.21.5
 - [developer-guide/relay-shared-metrics（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
 - [developer-guide/secret-source-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/secret-source-plugin/)
 - [developer-guide/session-storage（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
+- [developer-guide/shared-bundle-builds（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/shared-bundle-builds/)
+- [developer-guide/source-update-completion（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/source-update-completion/)
+- [developer-guide/stable-releases（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
 - [developer-guide/state-db-recovery（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/state-db-recovery/)
 - [developer-guide/streaming-tts（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/streaming-tts/)
 - [developer-guide/subagent-lifecycle-api（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/subagent-lifecycle-api/)
@@ -145,6 +150,7 @@ Hermes Agent 0.21.5
 - [reference/mcp-config-reference（日本語版）](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
 - [reference/model-catalog（日本語版）](https://wiki.winsmux.dev/hermes/docs/reference/model-catalog/)
 - [reference/optional-skills-catalog（日本語版）](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
+- [reference/package-management（日本語版）](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
 - [reference/profile-commands（日本語版）](https://wiki.winsmux.dev/hermes/docs/reference/profile-commands/)
 - [reference/skills-catalog（日本語版）](https://wiki.winsmux.dev/hermes/docs/reference/skills-catalog/)
 - [reference/slash-commands（日本語版）](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
@@ -474,6 +480,7 @@ Hermes Agent 0.21.5
 - [user-guide/skills/optional/web-development/web-development-publish-site（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/)
 - [user-guide/skills/optional/web-development/web-development-scrollcraft（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-scrollcraft/)
 - [user-guide/skills/optional/yuanbao/yuanbao-yuanbao（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao/)
+- [user-guide/switching-to-source（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/switching-to-source/)
 - [user-guide/tui（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
 - [user-guide/which-file-does-what（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/which-file-does-what/)
 - [user-guide/windows-native（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
@@ -522,6 +529,7 @@ Hermes Agent 0.21.5
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-monitoring.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-session-lifecycle.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/image-gen-provider-plugin.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/macos-bundle-updates.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/memory-provider-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/micro-compaction.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/middleware.md
@@ -532,6 +540,7 @@ Hermes Agent 0.21.5
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugin-llm-access.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugins/application-declarations.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugins/index.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/pm-audit-status.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/programmatic-integration.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/prompt-assembly.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/provider-runtime.md
@@ -539,6 +548,9 @@ Hermes Agent 0.21.5
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/relay-shared-metrics.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/secret-source-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/session-storage.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/shared-bundle-builds.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/source-update-completion.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/stable-releases.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/state-db-recovery.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/streaming-tts.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/subagent-lifecycle-api.md
@@ -601,6 +613,7 @@ Hermes Agent 0.21.5
 - https://wiki.winsmux.dev/hermes/raw/docs/reference/mcp-config-reference.md
 - https://wiki.winsmux.dev/hermes/raw/docs/reference/model-catalog.md
 - https://wiki.winsmux.dev/hermes/raw/docs/reference/optional-skills-catalog.md
+- https://wiki.winsmux.dev/hermes/raw/docs/reference/package-management.md
 - https://wiki.winsmux.dev/hermes/raw/docs/reference/profile-commands.md
 - https://wiki.winsmux.dev/hermes/raw/docs/reference/skills-catalog.md
 - https://wiki.winsmux.dev/hermes/raw/docs/reference/slash-commands.md
@@ -930,6 +943,7 @@ Hermes Agent 0.21.5
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/web-development/web-development-publish-site.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/web-development/web-development-scrollcraft.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/switching-to-source.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/tui.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/which-file-does-what.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/windows-native.md

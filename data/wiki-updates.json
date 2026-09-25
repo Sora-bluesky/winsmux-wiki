@@ -1,6 +1,133 @@
 {
-  "generatedAt": "2026-09-25",
+  "generatedAt": "2026-09-26",
   "entries": [
+    {
+      "date": "2026-09-25",
+      "sha": "8a33c6a",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/acp-internals",
+          "title": "ACP の内部",
+          "url": "/hermes/docs/developer-guide/acp-internals/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "guides/run-hermes-with-nous-portal",
+          "title": "Nous Portal で Hermes Agent を動かす",
+          "url": "/hermes/docs/guides/run-hermes-with-nous-portal/"
+        },
+        {
+          "id": "integrations/nous-portal",
+          "title": "Nous Portal",
+          "url": "/hermes/docs/integrations/nous-portal/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/acp",
+          "title": "ACP ホスト連携",
+          "url": "/hermes/docs/user-guide/features/acp/"
+        },
+        {
+          "id": "user-guide/features/bot-screen",
+          "title": "ボットの画面",
+          "url": "/hermes/docs/user-guide/features/bot-screen/"
+        },
+        {
+          "id": "user-guide/features/credential-pools",
+          "title": "認証情報プール",
+          "url": "/hermes/docs/user-guide/features/credential-pools/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/memory",
+          "title": "ずっと残る記憶",
+          "url": "/hermes/docs/user-guide/features/memory/"
+        },
+        {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/tool-gateway",
+          "title": "Nous Tool Gateway",
+          "url": "/hermes/docs/user-guide/features/tool-gateway/"
+        },
+        {
+          "id": "user-guide/features/tts",
+          "title": "音声と読み上げ",
+          "url": "/hermes/docs/user-guide/features/tts/"
+        },
+        {
+          "id": "user-guide/features/voice-mode",
+          "title": "音声モード",
+          "url": "/hermes/docs/user-guide/features/voice-mode/"
+        },
+        {
+          "id": "user-guide/features/web-search",
+          "title": "Web 検索と本文抽出",
+          "url": "/hermes/docs/user-guide/features/web-search/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/webhooks",
+          "title": "Webhook",
+          "url": "/hermes/docs/user-guide/messaging/webhooks/"
+        },
+        {
+          "id": "user-guide/messaging/wecom",
+          "title": "WeCom（企業向け WeChat）",
+          "url": "/hermes/docs/user-guide/messaging/wecom/"
+        },
+        {
+          "id": "user-guide/profile-distributions",
+          "title": "プロファイル配布: エージェントまるごと共有する",
+          "url": "/hermes/docs/user-guide/profile-distributions/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        }
+      ]
+    },
     {
       "date": "2026-09-24",
       "sha": "e62ec31",

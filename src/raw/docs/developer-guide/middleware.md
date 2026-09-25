@@ -2,7 +2,7 @@
 title: "ミドルウェア"
 description: "LLM 呼び出しとツール呼び出しの挙動を変えるプラグインのミドルウェア。契約、実行順序、例"
 upstream_path: developer-guide/middleware.md
-upstream_blob: bf921314a0e2a74304e96eabed9801b89c33100d
+upstream_blob: e19f05c296f052f7dbbe19e10c9f804b8cf727ee
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/middleware
 ---
@@ -139,13 +139,16 @@ hermes plugins enable <plugin-name>
 hermes chat --query 'Reply exactly ok'
 ```
 
-ソースをチェックアウトして使っている場合は、ランタイムが作業ツリーのプラグインと
-ミドルウェアを読み込むように、ソース版のコマンドを使ってください。
+ソースをチェックアウトして使っている場合は、[PM の開発者向けワークフロー](/hermes/docs/reference/package-management/#developer-workflow)
+と別の開発用ホームを使ってください。こうすると、ランタイムが作業ツリーのプラグインと
+ミドルウェアを読み込みます。
 
 ```bash
-uv sync
-uv run hermes plugins enable <plugin-name>
-uv run hermes chat --query 'Reply exactly ok'
+export HERMES_HOME="$HOME/hermes-middleware-test"
+export HERMES_RUNTIME_DIR="$HERMES_HOME/tools"
+source ./activate
+python hermes plugins enable <plugin-name>
+python hermes chat --query 'Reply exactly ok'
 ```
 
 ## 汎用的なプラグインの例 {#generic-plugin-examples}

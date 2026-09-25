@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: bed869e53731f631be57973c3c8390c1c588a39d
+upstream_blob: 7b164fad86146da4e29847c2e25a018d057151c7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -89,13 +89,14 @@ URL に `?profile=` を明示した場合は、そちらが必ず優先されま
 
 ## 前もって要るもの {#prerequisites}
 
-既定の `hermes-agent` の導入では、HTTP まわりの部品も PTY の補助も入りません。どちらも追加で入れるものです。**管理画面**には FastAPI と Uvicorn（`web` の追加分）が要ります。**チャット**のタブでは、疑似端末の後ろで TUI を起こすために `ptyprocess` も要ります（POSIX では `pty` の追加分）。両方まとめて入れるには次のようにします。
+FastAPI、Uvicorn、それに各プラットフォーム向けの PTY の補助は、Hermes の中核の依存関係に含まれています。
+`web` の追加分は、HTTP まわりの部品のバージョンを厳密に固定する制約を加えるものです。`pty` の追加分は、
+依存するものがすでに中核に入っているので中身が空です。PM による標準の導入では、
+`all` を通じて `web` も入ります。
 
-```bash
-cd ~/.hermes/hermes-agent && uv pip install -e ".[web,pty]"
-```
-
-`web` の追加分は FastAPI と Uvicorn を、`pty` の追加分は `ptyprocess`（POSIX）または `pywinpty`（Windows 本体。ただし埋め込みの TUI 自体はやはり WSL が要ります）を連れてきます。`cd ~/.hermes/hermes-agent && uv pip install -e ".[all]"` は両方を含むので、メッセージ連携や音声なども使いたいなら、これがいちばん手軽です。
+これらの依存関係が壊れたときは、`hermes pm repair` を実行してから Hermes を再起動してください。
+ソースから導入する場合は、[PM の開発者向けワークフロー](/hermes/docs/reference/package-management/#developer-workflow)を使います。
+メッセージ連携や音声の追加分は別に指定するもので、`all` には含まれません。
 
 依存するものを入れずに `hermes dashboard` を実行すると、何を入れればよいか教えてくれます。画面側がまだ組み立てられておらず `npm` が使えるなら、最初の起動時に自動で組み立てられます。
 
@@ -157,7 +158,7 @@ OOM による再起動 > ディスク注意 > メモリ注意）。閉じたこ�
 **前もって要るもの:**
 
 - Node.js（`hermes --tui` と同じ条件です。TUI の一式は最初の起動時に組み立てられます）
-- `ptyprocess` — `pty` の追加分で入ります（`cd ~/.hermes/hermes-agent && uv pip install -e ".[web,pty]"`、または `[all]` で両方まかなえます）
+- `ptyprocess` — POSIX では中核の依存関係に含まれています
 - POSIX の中核（Linux、macOS、WSL2）。`/chat` のターミナルの面だけは POSIX の PTY が要ります。Windows 本体の Python には同じものがないので、Windows に直接入れた場合、管理画面のほかの部分（セッション、仕事、計測、設定の編集）は動きますが、`/chat` のタブにはその機能には WSL2 を使うようにという帯が出ます。
 
 ブラウザのタブを閉じれば、サーバー側の PTY はきれいに片づけられます。開き直すと新しいセッションが立ち上がります。

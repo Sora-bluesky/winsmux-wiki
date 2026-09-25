@@ -2,7 +2,7 @@
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: 306eb646a547e86309a7f80b7f970eb1c5c5679e
+upstream_blob: e88a61074c276157d01ea71dd55073c685a65e89
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -24,7 +24,7 @@ Hermes は次の 4 か所からメモリープロバイダーを見つけます�
 | 同梱 | `plugins/memory/<name>/` | Hermes に最初から入っています。新しいプロバイダーの追加は受け付けていません — [CONTRIBUTING](https://github.com/NousResearch/hermes-agent/blob/main/CONTRIBUTING.md) を参照してください。 |
 | ユーザー | `$HERMES_HOME/plugins/<name>/` | 利用者が自分で置きます。プロファイルごとに分かれます。 |
 | プロジェクト | `./.hermes/plugins/<name>/` | `HERMES_ENABLE_PROJECT_PLUGINS=1` を設定したときだけ有効になります。 |
-| パッケージ | `hermes_agent.memory_providers` のエントリーポイント | `pip install` で入り、ファイルをコピーする必要はありません。 |
+| パッケージ | `hermes_agent.memory_providers` のエントリーポイント | インストールの管理者が用意した配布物を使います。ファイルをコピーする必要はありません。 |
 
 名前がぶつかったときは先に挙げた取得元が勝ちます。そのため、作業ツリーに
 置かれたディレクトリが同梱のプロバイダーを覆い隠すことはありません。
@@ -38,6 +38,20 @@ Hermes は次の 4 か所からメモリープロバイダーを見つけます�
 
 見つける処理は *列挙するだけ* で、プロバイダーを読み込むことはありません。
 `memory.provider` に名前が書かれるまで、何も動きません。
+
+エントリーポイントからの検出は、パッケージをインストールしません。Hermes が選んでいる環境へ
+pip でプロバイダーを押し込まないでください。PM で管理しているインストールでは、Python の依存関係を
+宣言したディレクトリ型のプロバイダーとして配布します。プラグインの受け入れ処理と
+`hermes memory setup` が、使う前に PM を通してそれらを準備します。管理者が自分で管理するビルド
+（Nix など）では、エントリーポイント型の配布物を宣言的に含めることができます。
+
+CLI とダッシュボードの設定は、候補の準備処理を共有しています。PM は、プロバイダーの
+`pyproject.toml`、または旧来の `pip_dependencies` / `python_dependencies` を、有効な
+プラグイン全体の依存関係の集合に加えます。モジュールを import できても、宣言されたバージョンの
+制約を飛ばすことはできません。ダッシュボードの準備状況の確認は、同じ入力を何もインストールせずに
+調べます。準備が成功しても、選ばれた依存関係の世代を動作中のプロセスが使えるようになるには、
+Hermes の再起動が必要なことがあります。外部のサイドカーの確認や設定コマンドは、Python の
+依存関係の集合とは別に扱われます。
 
 ### ディレクトリ型のプロバイダー {#directory-provider}
 
@@ -487,3 +501,12 @@ plugins/memory/my-provider/
 ## プロバイダーは 1 つだけ {#single-provider-rule}
 
 同時に有効にできる外部のメモリープロバイダーは **1 つ** だけです。2 つめを登録しようとすると、MemoryManager が警告を出して拒否します。これは、ツールの定義が膨れ上がることや、保存先どうしがぶつかることを防ぐためです。
+
+## `HERMES_HOME` が残ることの約束（ラッパーが頼れること） {#hermeshome-survival-contract-what-wrappers-can-rely-on}
+
+ここでの対象は、実行環境を Hermes が管理する Python の外にあるサイドカーの venv に置くラッパー型のプロバイダーです（走査されるプラグインのルートに依存関係の定義 — `pyproject.toml`、`pip_dependencies`、`python_dependencies` のどれも — が無いもの。外部または入れ子のサイドカーだけに属する `pyproject.toml` は走査されません）。
+
+- **場所。** `$HERMES_HOME/plugins/<name>/` がプロファイルごとのプラグインの置き場所です。`HERMES_HOME` は、有効なコンテキストの上書き、次に `$HERMES_HOME`、次にプラットフォームの既定値の順で決まります。プロファイルの分離を保つため、ラッパーやサイドカーを起動するときは `HERMES_HOME` を引き継いでください。`MemoryManager.initialize_all` は、有効な `hermes_home` をすべてのプロバイダーに渡します。
+- **残ること。** 通常の Hermes の更新（pm による管理 venv の再構築や置き換えを含む）は、`$HERMES_HOME/plugins/**` を削除も書き換えもしません。インストール済みのラッパーのディレクトリと、その目印のファイル（例: `mnemosyne-wrapper.json`）は残ります。プラグインを明示的に更新・削除する流れ（`hermes uninstall`、`hermes plugins remove`、プロファイルの削除、利用者による削除）は、この保証の対象外です。
+- **サイドカーの分離。** 依存関係の定義が無いプラグインのルートは、pm のワークスペースの依存関係の集合に加わりません。再同期や venv の再構築をしても、その依存関係を用意することも、そのツリーに触れることもありません。
+- **衝突。** 共有 venv を使うネイティブのプラグインでは、依存関係の集合が解決できないと、はっきり失敗します。候補のプラグインは有効化されず、import もされません（受け入れを判断する側が、設定を反映する前に拒否し、プラグインの識別名と依存解決の理由を報告します。再有効化や再試行の手順と、機械で読める pm の受領記録も付きます）。依存関係の解決が、ほかのプラグインを自動で無効にしたり、原因の切り分け（bisect）を走らせたりすることはありません。プラグインの明示的な更新や削除、独立したセキュリティの確認は、別の操作です。

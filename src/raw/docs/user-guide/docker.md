@@ -2,7 +2,7 @@
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: 9b176a0706981e4e36451e9baf58a6f75e841c24
+upstream_blob: 525d3028a3d13eeaab30e7fb7b9c087894b58003
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -15,6 +15,22 @@ Docker と Hermes Agent の関わり方には、はっきり違う 2 つがあ�
 2. **Docker をターミナルのバックエンドとして使う** — エージェントはホストで動き、コマンドはすべて 1 つの長生きする Docker のサンドボックスコンテナの中で実行されます。このコンテナは、Hermes のプロセスが生きているあいだ、ツールの呼び出しをまたいでも `/new` をしてもサブエージェントを使っても残り続けます（[設定 → Docker バックエンド](/hermes/docs/user-guide/configuration/#docker-backend)を参照してください）
 
 このページで扱うのは 1 のほうです。コンテナは、利用者のデータ（設定、API キー、セッション、スキル、記憶）をすべて、ホストから `/opt/data` にマウントした 1 つのディレクトリに置きます。イメージ自体は状態を持たないので、新しい版を取ってくれば、設定を失わずに入れ替えられます。
+
+## イメージのチャンネルと、実行時に何を誰が持つか {#image-channels-and-runtime-ownership}
+
+| イメージのタグ | 意味 |
+|---|---|
+| `latest` / `stable` | 安定版のリリースの関門を通ったイメージです。 |
+| `main` | main ブランチのビルドから公開される開発用のイメージです。 |
+| `X.Y.Z` | 版番号の付いた安定版のイメージです。配備する版をきっちり固定するなら digest を使ってください。 |
+
+ワークフローは amd64 と arm64 のイメージをビルドしてテストします。安定版の公開では、ビルドし直さず、
+テスト済みのイメージのアーカイブをそのまま使います。`stable` と `latest` を進めるのは、リリースの昇格を
+最後まで通したときだけです。main への push では、これらのタグは進みません。
+
+イメージの Python 環境は `pyproject.toml` と `uv.lock` に従います（いまは
+Python 3.14）。厳選した追加分は、ネイティブのデスクトップ版の一式が使う
+`--all-extras` とは別物です。Electron のデスクトップアプリは含みません。
 
 ## クイックスタート {#quick-start}
 
@@ -500,18 +516,40 @@ docker run -d \
 
 ## Dockerfile が何をしているか {#what-the-dockerfile-does}
 
-公式のイメージは `debian:13.4` を土台にしていて、次を含みます。
+イメージは Debian 13.4 を使い、次を含みます。
 
-- Python 3.13。焼き込む追加分（`all`、`messaging`、Anthropic / Bedrock / Azure の認証、Matrix）の依存はロックファイルから `uv sync --frozen --no-install-project` で揃え、そのあと Hermes 自身を依存なしの編集可能な形で入れます。Hindsight のメモリプロバイダーのようなカタログのプラグインは焼き込まれていません。`hermes plugins install hindsight` を実行すると、インストールのときにプラグインとその依存が `HERMES_LAZY_INSTALL_TARGET`（`/opt/data/lazy-packages`）に入ります。
-- Node.js 26 と npm（ブラウザの自動操作、WhatsApp の橋渡し、TUI / デスクトップの一式、ワークスペースのビルド用）
-- Chromium 付きの Playwright（`npx playwright install --with-deps chromium --only-shell`）
-- システムの道具として ripgrep、ffmpeg、git、`xz-utils`
-- **`docker-cli`** — コンテナの中で動くエージェントが、ホストの Docker デーモンを操れるようにするためです（使うには `/var/run/docker.sock` をマウントします）。`docker build`、`docker run`、コンテナの確認などに使えます。
-- **`openssh-client`** — コンテナの中から [SSH のターミナルバックエンド](/hermes/docs/user-guide/configuration/#ssh-backend)を使えるようにします。SSH のバックエンドはシステムの `ssh` を呼び出すので、これがないとコンテナでの導入では黙って失敗していました。
-- WhatsApp の橋渡し（`scripts/whatsapp-bridge/`）
-- PID 1 としての **[`s6-overlay`](https://github.com/just-containers/s6-overlay) v3**（以前の `tini` に代わるものです）。ダッシュボードとプロファイルごとのゲートウェイを見守って落ちたら立ち上げ直し、ゾンビになったサブプロセスを片付け、シグナルを転送します。
 
-イメージは実行時、`/opt/hermes` を書き換えないインストール先として扱います。Docker の中で使えるようにしたい Python の追加分、Node のワークスペース、TUI の資材は、イメージを作るときに焼き込む必要があります。実行時の遅延インストールは止めてあるので、見守られたゲートウェイや `docker exec hermes …` のコマンドが、読み取り専用のソースへ依存の成果物を書き戻そうとすることはありません。
+- コミット済みの `uv.lock` から揃えた Python 3.14 の環境。そのあと
+  Hermes 自身を依存なしの編集可能な形で入れます。
+- 厳選した追加分 `all`、`messaging`、`otlp`、`anthropic`、`bedrock`、
+  `azure-identity`、`matrix`。これは `--all-extras` ではありません。
+- digest で固定した Node のソースイメージから取った Node.js 26 と npm。
+- `/opt/hermes/tools` に置いた、PM で版を固定した uv、完全版の Chromium、FFmpeg、ripgrep。
+- システムの Git、OpenSSH、Docker CLI、Chromium の共有ライブラリ。
+- 作り置きの TUI / ダッシュボードの資材と、焼き込んだ Photon のサイドカーの依存。
+- 見守りとゾンビプロセスの片付けのための s6-overlay。
+
+Chromium は `npx playwright install` ではなく PM を通して用意します。ビルドは、
+解決した実行ファイルの場所を `/etc/hermes/agent-browser-executable-path` に記録します。
+`PLAYWRIGHT_BROWSERS_PATH` は、データのマウントの外にある `/opt/hermes/tools` を指します。
+
+接尾辞の付かない（`-desktop` でない）タグも含め、どのイメージにも Playwright の軽い headless shell ではなく
+完全版の Chromium が入っています。版を固定しチェックサムを確かめた 1 つのブラウザで、画面を出さない閲覧と、
+画面を出す Bot Screen のセッションの両方をまかないます。その代わりにイメージは大きくなります。完全版は、
+以前のイメージが積んでいた headless shell より大きいからです。
+
+必要なときだけ使うバックエンドの SDK（Edge TTS、Firecrawl、Exa、プラットフォームのアダプター、プラグインの
+依存）は、最初に使うときに `/opt/data/installs` の下の PM の依存の世代へ入ります。そのため、コンテナを作り直しても
+イメージを更新しても残ります。
+イメージ自身の `/opt/hermes/.venv` は書き換えられません。起動のたびに、コンテナは記録された選択を
+新しいイメージのロックに照らして解決し直してから、サービスを立ち上げます。これが失敗したとき（たとえばオフライン）は、
+イメージ自身の環境で起動し、記録された追加分は次の起動やインストールのために取っておきます。
+必要に応じたインストールを断るには `security.allow_lazy_installs: false` を設定してください。以前の `lazy-packages` の重ね合わせは使いません。
+
+イメージの出どころの記録は、ソースのマウントとデータのマウントのどちらの外でもある `/etc/hermes/image-provenance.json` にあります。
+ビルドの刻印は `/opt/hermes/install-stamp.json` にあります。
+刻印を渡さずにローカルでビルドした場合は、コミットをこしらえず、リビジョンは不明と報告します。`hermes update` は
+イメージが持つコードの変更を断ります。アプリケーションを更新するには、イメージを入れ替えてください。
 
 コンテナの `ENTRYPOINT` は小さな振り分け役（`docker/entrypoint-dispatch.sh`）です。コンテナが PID 1 を持っているとき（ふつうの Docker / Podman）は s6-overlay の `/init` を exec し、下で説明する見守りの木がまるごと手に入ります。プラットフォームがイメージの入口を自前の PID 1 の init で包んでいるとき（Fly.io Machines、`docker run --init`、一部の Nomad / Kubernetes の構成）、`/init` は `s6-overlay-suexec: fatal: can only run as pid 1` で止まってしまうので、振り分け役は代わりに stage2 の下ごしらえを直接実行し、s6 なしで主のラッパーを exec します。この代わりの道でも、頼んだコマンドは動きますが、見守られるサービス（ダッシュボード、プロファイルごとのゲートウェイ）は使えません。
 
@@ -551,7 +589,7 @@ services:
 
 ### `docker exec` は自動で `hermes` ユーザーへ落ちます {#docker-exec-automatically-drops-to-the-hermes-user}
 
-`docker exec hermes <cmd>` は既定でコンテナの中の root として動きますが、イメージには `/opt/hermes/bin/hermes` という薄い橋渡しが入っていて（PATH のいちばん前にあります）、root からの呼び出しを見分けて `s6-setuidgid hermes` を通して透過的に実行し直します。ですから `docker exec hermes login`、`docker exec hermes profile create …`、`docker exec hermes setup` などは、`--user` のフラグを足さなくても UID 10000 の持ち物としてファイルを書きます。つまり、見守られたゲートウェイから読める形です。root 以外からの呼び出し（見守られているプロセス自身、`docker exec --user hermes`、コンテナの中のカンバンのサブエージェント）は近道を通って venv の実行ファイルを直接呼ぶので、よく通る道に余計な負担はありません。
+`docker exec hermes <cmd>` は既定でコンテナの中の root として動きますが、イメージには `/opt/hermes/bin/hermes` という薄い橋渡しが入っていて（PATH のいちばん前にあります）、root からの呼び出しを見分けて `s6-setuidgid hermes` を通して透過的に実行し直します。ですから `docker exec hermes hermes login`、`docker exec hermes hermes profile create …`、`docker exec hermes hermes setup` などは、`--user` のフラグを足さなくても UID 10000 の持ち物としてファイルを書きます。つまり、見守られたゲートウェイから読める形です。root 以外からの呼び出し（見守られているプロセス自身、`docker exec --user hermes`、コンテナの中のカンバンのサブエージェント）は近道を通って venv の実行ファイルを直接呼ぶので、よく通る道に余計な負担はありません。
 
 診断のためのセッション、root だけが見られる状態の確認、`/opt/data` の外にある root の持ち物のファイルなど、root の権限を保った `docker exec` がどうしても要るときは、その実行だけ外せます。
 
@@ -618,7 +656,10 @@ npm や PyPI で公開されている道具なら、`npx`（npm）か `uvx`（Py
 
 ### そのほかの道具（apt のパッケージ、実行ファイル） — 入れて覚えさせる {#other-tools-apt-packages-binaries-install-and-remember}
 
-npm や PyPI の外にあるもの（`apt` のパッケージ、作り置きの実行ファイル、イメージにまだない言語の実行環境）は、入れ方を Hermes に教え（たとえば `apt-get update && apt-get install -y <package>`）、その導入のコマンドを覚えるよう伝えてください。道具はそのコンテナが生きているあいだ残り、コンテナを再起動したあとに必要になれば、Hermes が導入のコマンドを実行し直します。
+実行時のユーザーは、システムの APT パッケージを入れられません。たまに使う道具なら、
+運用する人が意図して root のシェルを使うことはできます。ただし、その変更はコンテナを入れ替えるまでしか残りません。
+コンテナを再起動しても書き込み可能な層は残りますが、作り直すと消えます。導入のコマンドを覚えさせても、自動で用意されるわけではありません。
+毎回同じように要るシステムの依存には、派生のイメージを使ってください。
 
 これは、すぐ入れられて、たまに使う道具に向いています。いつも使う道具には、次の方法のほうが向きます。
 
@@ -633,7 +674,7 @@ USER root
 RUN apt-get update \
     && apt-get install -y --no-install-recommends <your-package> \
     && rm -rf /var/lib/apt/lists/*
-USER hermes
+# Keep the root entrypoint; s6 drops privileges for the runtime.
 ```
 
 作ったら、公式のイメージの代わりに使います。
@@ -831,9 +872,8 @@ model:
 
 コンテナの stage2 のフックは、見守られる各サービスの中で `s6-setuidgid` を使い、root でない `hermes` ユーザー（UID 10000）へ権限を落とします。ホストの `~/.hermes/` が別の UID の持ち物なら、`HERMES_UID` と `HERMES_GID`（LinuxServer.io や NAS のイメージに合わせた `PUID` と `PGID` という別名でも構いません）をホストのユーザーに合わせるか、データのディレクトリを書き込めるようにしてください。
 
-```sh
-chmod -R 755 ~/.hermes
-```
+データの一式をまるごと誰でも読める状態にしないでください。資格情報が入っています。
+代わりに、コンテナの UID と GID を、マウントしたディレクトリの持ち主に合わせてください。
 
 NAS（UGOS、Synology、unRAID）では、データのディレクトリはたいてい、コンテナからは `chown` できないホストの UID が持つ**マウント**です。UID 10000 ではなくマウントの持ち主として動くよう、`PUID` と `PGID`（または `HERMES_UID` と `HERMES_GID`）をそのホストのユーザーに合わせてください。
 
@@ -889,6 +929,6 @@ docker restart hermes
 
 ```sh
 docker logs --tail 50 hermes          # Recent logs
-docker run -it --rm nousresearch/hermes-agent:latest version     # Verify version
+docker run -it --rm nousresearch/hermes-agent:latest --version   # Verify version
 docker stats hermes                    # Resource usage
 ```

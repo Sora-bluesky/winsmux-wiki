@@ -2,7 +2,7 @@
 title: "Google Chat"
 description: "Cloud Pub/Sub を使って Hermes Agent を Google Chat のボットとして設定する"
 upstream_path: user-guide/messaging/google_chat.md
-upstream_blob: cc085162c929cc953b0702e4c02017bfebe9ffde
+upstream_blob: ebc8e582f909781101ee2374e793e5511be38f94
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/google_chat
 ---
@@ -182,11 +182,11 @@ Google Chat のアダプターが必要とするものは、専用の導入コ�
 python -m plugins.platforms.google_chat.oauth --install-deps
 ```
 
-Docker やホスティング用のイメージでは、`/opt/hermes/.venv` は読み取り専用です。そのため、この
-インストーラーは site-packages へ書き込まず、`tools.lazy_deps` を通して
-`HERMES_LAZY_INSTALL_TARGET`（公式イメージでは `/opt/data/lazy-packages`）へ入れます。
-終わったらゲートウェイを再起動してください。公開イメージには `[google-chat]` の追加パッケージも
-組み込まれているので、新しいコンテナで初回起動時にインストールする必要はありません。
+`--install-deps` は、PM に頼んで、管理下の Python 環境へ `google-chat` の追加パッケージを加えます
+（`pm.sync_venv`）。終わったら、新しい環境が有効になるようゲートウェイを再起動してください。
+Docker やホスティング用のイメージでは venv が読み取り専用で、その場でのインストールも無効に
+なっている（`HERMES_DISABLE_LAZY_INSTALLS=1`）ため、この手順では何も追加できません。代わりに、
+公開イメージには `[google-chat]` の追加パッケージが組み込まれているので、新しいコンテナで初回起動時にインストールする必要はありません。
 
 ゲートウェイを起動します。
 

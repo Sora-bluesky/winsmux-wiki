@@ -2,7 +2,7 @@
 title: "ウェイクワード"
 description: "手を使わずに済む Hey Hermes のウェイクワード — 話しかけるだけで音声対話が始まる、Hey Siri と同じ感覚で"
 upstream_path: user-guide/features/wake-word.md
-upstream_blob: 91b54cc32621010f1c252cb0260d461902e09e57
+upstream_blob: f5ee03f259007513a1705b7f455a326ffca3a787
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/wake-word
 ---
@@ -46,7 +46,7 @@ Hermes はこの場合のために、**手元で音を拾う**やり方を用意
 
 1. デスクトップは `capture: client` でウェイクワードを構えます（つないだ先に入力機器がない
    ときは自動でこうなります。下の設定で明示することもできます）。
-2. openWakeWord は変わらず**つないだ先で**動きます（同じエンジン、同じモデルです）。
+2. 選んだウェイクワードのエンジンは変わらず**つないだ先で**動きます（同じエンジン、同じモデルです）。
 3. デスクトップは**手元の Mac／PC のマイク**を開き、16 kHz モノラルの int16 に変換して、
    短い音のかたまりを `wake.feed` の RPC で送り続けます。
 4. 検出できたら、つないだ先はいつもどおり `wake.detected` を出し、デスクトップは手元のマイクで
@@ -73,19 +73,49 @@ wake_word:
 
 | エンジン | 費用 | API キー | 備考 |
 |--------|------|---------|-------|
-| **openWakeWord**（既定） | 無料 | 不要 | 手元で動く ONNX のモデルです。**「hey hermes」**用のモデルが同梱されています（既定）。`hey_jarvis`、`alexa`、`hey_mycroft` などや、自作のモデルも使えます |
-| **sherpa** | 無料 | 不要 | **語彙の縛りがありません** — 学習なしで、打ち込んだどんな言葉でも検出します。小さな英語モデルが初回の利用時に自動で落ちてきます（約 13 MB） |
+| **openWakeWord** | 無料 | 不要 | `pyopen-wakeword` を通した TFLite です。**「hey hermes」**用のモデルが含まれています。自作のモデルには `.tflite` ファイルが必要です。Intel の macOS とネイティブの Windows ARM64 では使えません。 |
+| **sherpa** | 無料 | 不要 | 打ち込んだ言葉をそのまま検出できる、語彙の縛りがない方式です。初回の利用時に英語のモデルを落としてきます。ネイティブの Windows ARM64 に対応しています。 |
 | **Porcupine** | 無料枠／有料 | `PORCUPINE_ACCESS_KEY` | Picovoice のエンジンです。組み込みのキーワードと自作の `.ppn` ファイルが使えます |
 
-既定の合図の言葉は**「hey hermes」**です。そのためのモデルが Hermes に同梱されているので、
-学習なしでそのまま使えます。（初回の利用時に、openWakeWord が共通で使う特徴抽出のモデルを落としてきます。一度きりの小さなダウンロードです。）
+既定のプロバイダーは **`auto`** です。環境が対応しているエンジンのうち、
+**openWakeWord → sherpa → Porcupine** の順で最初のものを選びます。ここでいう環境は
+Python のバックエンドが動いている側で、離れたデスクトップのクライアント側ではありません。
 
-どちらもウェイクワードを初めて有効にしたときにその場で入ります（`--include-desktop` を付けて
-入れたデスクトップ版なら先に入っているので、耳はすぐ働きます）。前もって入れておくには、次を実行します。
+- **ネイティブの Windows ARM64 と Intel の macOS:** sherpa（無料、キー不要）。
+- **Windows x64、Apple Silicon、対応している Linux:** openWakeWord
+  （無料、キー不要）。
 
-```bash
-cd ~/.hermes/hermes-agent && uv pip install -e ".[wake]"
-```
+プロバイダーを明示した場合は、その環境が対応していなくても、そのまま選ばれ続けます。
+Hermes は黙ってエンジンを切り替えず、必要なものが足りないというエラーを出します。
+すでに明示してある設定が移し替えられることはありません。自動で選ばせたい場合は
+`hermes config set wake_word.provider auto` を実行してください。ウェイクワードの検出は、
+有効にするまで**オフ**のままです。
+
+既定の合図の言葉の表示名は**「hey hermes」**です。openWakeWord 向けには、学習済みの
+TFLite モデルが Hermes に含まれています。
+`pyopen-wakeword` のパッケージには共通で使う特徴抽出のモデルが入っているので、
+このエンジンは起動するときにモデルを落としてきません。
+
+選んだエンジンが入っていない場合は、ウェイクワードの検出を有効にしたときに、Hermes が
+そのエンジンの PM の追加パッケージを要求します。このインストールは `security.allow_lazy_installs` で制御します。
+依存関係の環境が新しくなった場合は、エンジンを読み込む前に Hermes の再起動が必要になることがあります。
+パッケージ版のビルドには、その対象環境で使えるエンジンの依存関係が含まれています。
+
+`pyopen-wakeword` の macOS 向け
+wheel は `universal2` と表示されていますが、中身は ARM64 専用のライブラリです。そのため Hermes は、
+Intel の Mac とネイティブの Windows ARM64 ではこのエンジンを候補から外します。
+どちらの環境でも、sherpa ならキーなしで検出できます。
+
+Porcupine の既定のキーワードは「hey hermes」ではなく**「jarvis」**です。`phrase` の設定は
+表示名にすぎず、検出する言葉を変えるには、組み込みのキーワードを選ぶか自作の
+`.ppn` モデルを用意してください。アクセスキーは
+[console.picovoice.ai](https://console.picovoice.ai) で取得し、`PORCUPINE_ACCESS_KEY` を
+`config.yaml` ではなくプロファイルの `.env` に保存します。
+
+対応している `pyopen-wakeword` の wheel は、macOS 15 以降の Apple Silicon、
+glibc 2.35 以降の Linux、Windows x64 向けです。この条件はこのエンジンに限った話で、
+Hermes のすべての機能に当てはまるわけではありません。Termux の core/ACP パッケージには、
+このウェイクワードの仕組みは含まれていません。
 
 ## さっそく動かす {#quick-start}
 
@@ -115,20 +145,20 @@ wake_word:
   surface: auto               # eligible surface: "auto" | "cli" | "tui" | "gui"
   input_device: null           # PortAudio input index or device-name substring; null = process default
   capture: auto               # auto | local | client — where PCM is captured (see Remote desktop)
-  provider: openwakeword      # "openwakeword" (free, local) | "sherpa" (free, any phrase) | "porcupine"
+  provider: auto              # auto | openwakeword | sherpa | porcupine (requires an access key)
   phrase: "hey hermes"        # cosmetic label only — detection is keyed by the model/keyword below
   sensitivity: 0.6            # 0.0-1.0 — higher = stricter (fewer false triggers), consistent across all engines
   confirmation_frames: 3      # openWakeWord only — consecutive over-threshold frames required to fire
   start_new_session: true     # start a fresh session on wake vs. continue the current one
   openwakeword:
-    model: hey_hermes         # bundled default; OR a built-in name OR a path to a custom .onnx/.tflite
-    inference_framework: ""   # "" (auto) | "onnx" | "tflite"
+    model: hey_hermes         # bundled default, or an absolute path to a custom .tflite
   porcupine:
     keyword: jarvis           # built-in keyword OR path to a custom .ppn
 ```
 
-`sensitivity`、`phrase`、`start_new_session` は、どちらのエンジンにも効きます。実際にどのモデルで
-検出するかは、`openwakeword` と `porcupine` のかたまりで決まります。
+`sensitivity` と `start_new_session` は3つのエンジンすべてに効きます。sherpa では、
+`phrase` が検出する言葉を決めます。openWakeWord と Porcupine では `phrase` は表示名で、
+検出する言葉はそれぞれのモデルかキーワードで決まります。
 
 `input_device` は、聞き役の PortAudio（`sounddevice`）のストリームにそのまま渡されます。
 数値の機器番号か、他と紛れない機器名の一部を指定してください。この設定が変えるのは
@@ -156,11 +186,11 @@ openWakeWord は短い（約 80ms）音のかたまりを1つずつ採点する�
 `sherpa` と `porcupine` のエンジンは、言葉ぜんたいを内部で読み解くので、1つのかたまりだけ跳ね上がる
 問題がありません。そのため `confirmation_frames` は無視されます（`sensitivity` は効きます）。
 
-`inference_framework` は openWakeWord の実行基盤を選びます。空のまま（既定）にしておくと、
-Hermes が環境に合わせて選びます。**Apple Silicon では tflite**、それ以外では onnx です。
-openWakeWord の onnx は macOS の ARM64 でほぼゼロの点数を返すため（[openWakeWord#336](https://github.com/dscripka/openWakeWord/issues/336)）、
-そこで `onnx` に固定すると、構えて聞いているように見えるのに一度も反応しません。macOS の tflite には
-`ai-edge-litert` が要りますが、これは Hermes が他のウェイクワード用の依存と一緒に必要なときに入れます。
+プロバイダー名 `openwakeword` は、現在は
+[pyopen-wakeword](https://github.com/rhasspy/pyopen-wakeword) を選びます。その wheel には
+TFLite のライブラリと共通の特徴抽出モデルが含まれています。Hermes は既定で同梱の
+`hey_hermes.tflite` モデルを使います。ONNX のウェイクワードモデルと
+`inference_framework` の設定には、もう対応していません。
 
 ### 使う場所（CLI、TUI、GUI） {#surfaces-cli-tui-gui}
 
@@ -183,8 +213,9 @@ TUI とデスクトップの画面は同じ Python のバックエンド（`tui_
 
 ## 別の言葉を使う {#using-a-different-phrase}
 
-「Hey Hermes」はそのまま使えます。同梱の openWakeWord のモデル
-（`model: hey_hermes`）が既定だからです。別の言葉で呼びたいときは、語彙の縛りがない
+openWakeWord と sherpa では、「Hey Hermes」が既定の検出する言葉です。
+Porcupine は代わりに設定したキーワード（既定は「jarvis」）を使います。
+別の言葉で呼びたいときは、対応している環境なら、語彙の縛りがない
 エンジンを使うのがいちばん手軽です。
 
 ### 案A — sherpa（どんな言葉でも、学習なし） {#option-a-sherpa-any-phrase-zero-training}
@@ -224,9 +255,9 @@ sherpa のエンジンなら、聞き役ひとつでどのプロファイルで�
 
 ### 案B — openWakeWord（無料、学習済みモデル） {#option-b-openwakeword-free-trained-model}
 
-組み込みのモデル名（`hey_jarvis`、`alexa`、`hey_mycroft` など）を指定するか、いちばん確実にしたいなら
-自分でモデルを学習させ（無料の Colab の GPU でおよそ 75〜90 分）、できた
-`.onnx` ファイルをどこかに置いて、そこを指します。
+別の言葉を使うには、openWakeWord 対応の TFLite モデルを手に入れるか学習させてください。
+そのモデルの絶対パスを設定に書きます。`hey_jarvis` のような組み込みの名前を Hermes が
+解決したり、そのモデルを代わりに落としてきたりすることはありません。
 
 ```yaml
 wake_word:
@@ -234,7 +265,7 @@ wake_word:
   provider: openwakeword
   phrase: "computer"
   openwakeword:
-    model: ~/.hermes/wakewords/computer.onnx   # or a built-in name like hey_jarvis
+    model: /absolute/path/to/computer.tflite
 ```
 
 学習の参考になる場所です。

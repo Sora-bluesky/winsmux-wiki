@@ -2,7 +2,7 @@
 title: "ローカルモデル"
 description: "モデルを自分の端末だけで動かします。アカウントも API キーも不要で、何も端末の外には出ません。"
 upstream_path: user-guide/local-models.md
-upstream_blob: 1783667e6c11b104fad5711a6c0b269deec3e21f
+upstream_blob: 7519399caad98148c656247f6e8cc6d416e0d8df
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/local-models
 ---
@@ -17,6 +17,28 @@ Hermes はオープンなモデルを、自分の端末のなかだけで動か�
 
 何も端末の外には出ません。アカウントも API キーも要らず、モデルを
 ダウンロードしたあとはネットワークにもつなぎません。
+
+## デスクトップでの提供状況とダウンロード {#desktop-availability-and-downloads}
+
+デスクトップの Local Models 画面は、canary ビルドで有効になっています。それ以外の
+デスクトップのビルドでは、起動時に `--local` フラグが必要です。ランタイムは最初から
+同梱されていることがあります。同梱されていない場合は、管理ツールのインストール経路に進みます。
+llama.cpp の最新版を適当にダウンロードすることはありません。
+
+エンジンのインストール、エンジンの更新、カタログのモデル、Hugging Face からのダウンロード、
+クイックスタートでは、**Pause**（一時停止）と **Resume**（再開）が使えます。一時停止したジョブは、
+Local Models を離れて開き直しても表示されたままです。一時停止は、転送をチャンクの区切りで止めます。
+展開、検証、サーバーの起動はそれぞれ別の段階です。
+
+PM は、CUDA のランタイム DLL を含むエンジンの部品をすべて、`pm/lock.json` にある
+URL と SHA-256 の固定値に従ってダウンロードします。モデルの重み、分割された GGUF の各部分、
+画像認識用のプロジェクター、ドラフトモデルも同じダウンローダーを使います。バイト単位の進み具合は、
+完了済みのファイルや再開した範囲も含めた、ダウンロード計画の全体を対象にしています。
+クイックスタートでは、エンジンとモデルの進み具合を別々の段階として表示します。
+
+途中までのダウンロードは、署名されたアプリのパッケージの外にある、PM の書き込み可能な
+`cache/partials` 領域に置かれます。Range に対応したホストからは、足りないバイトだけを再開して取得します。
+Range に対応していないホストでは、そのファイルを最初から取り直します。完了したファイルは再利用されます。
 
 ## 導入 {#getting-started}
 
@@ -129,8 +151,6 @@ local_runtime:
   enabled: false     # true = start the managed server with Hermes.
                      # The desktop "Use" button sets this automatically.
   backend: auto      # auto | cuda | metal | vulkan | hip | cpu
-  tag: b10362        # pinned llama.cpp release; Hermes updates it with
-                     # each release after re-validation
   detect_ports: [8081]  # extra ports to probe for a llama-server you run
                         # yourself (the default probe is :8080 only)
 ```
@@ -153,19 +173,25 @@ providers:
 だとか API キーがないといった言い方ではなく、ローカルのランタイムの話だと
 分かるエラー（「the local model server isn't running」）が出ます。
 
-モデルとランタイムのビルドは Hermes のホームディレクトリの下
-（`models/` と `runtimes/llamacpp/`）に置かれます。ローカルのモデルを
-主役のモデルに据えるときは、いつもの `model.provider: llamacpp` と
-`model.default` の設定を使います。ほかのプロバイダーとまったく同じ形です。
+エンジンのバージョンは PM のロックファイルだけで決まり、`local_runtime.tag` で
+上書きすることはできません。起動時は、インストール済みの PM のエンジンをダウンロードせずに使います。
+新しい固定版が出たら、デスクトップの更新ボタンからインストールしてください。
+
+モデルは、端末で共有される `models/` ディレクトリに置かれます。エンジンのバイナリは
+PM のストアに置かれ、`runtimes/llamacpp/` には変更されうるプリセットとサーバーの状態が入ります。
+ローカルのモデルを主役のモデルに据えるときは、いつもの
+`model.provider: llamacpp` と `model.default` の設定を使います。
 
 ## 必要なものと限界 {#requirements-and-limits}
 
-- **Windows と Linux:** NVIDIA の GPU（CUDA）または CPU。**macOS:** Apple
-  Silicon（Metal）。AMD の GPU には Vulkan のビルドが使われます。
+- **Windows:** 対応する NVIDIA の環境では CUDA、x64 では Vulkan、または CPU。
+  **Linux:** Vulkan または CPU。固定版のリリースには、ビルド済みの CUDA のアーカイブがありません。
+  **macOS:** Metal または CPU。HIP/ROCm は、対応する x64 の環境で明示的に選んだときだけ使います。
+  対応していないバックエンドと環境の組み合わせは、ダウンロードを始める前に失敗します。
 - メモリ 8 GB 以上の GPU があればカタログの小さめのモデルは快適に動き、
   16 GB 以上なら 27〜35B のモデルを高い品質で動かせます。
-- モデルのダウンロードは転送中にカタログのバイト数と突き合わせます。
-  途中で欠けたものは削除して報告するので、中途半端なまま使われることは
-  ありません（SHA-256 で検証するのはランタイムのエンジンの zip だけです）。
+- モデルが揃っているかは、カタログのサイズの見積もりではなく、サーバーの応答と突き合わせて確かめます。
+  中断した転送は、再開できるよう途中までのファイルを残します。欠けたファイルが公開されることは
+  ありません。エンジンのアーカイブは、使う前に SHA-256 で検証します。
 - モデルを削除すると、画像認識のアダプタや投機的デコード用の相棒まで
   含めて、そのモデルが置いたファイルをすべて消します。

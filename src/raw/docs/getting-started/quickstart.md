@@ -2,12 +2,16 @@
 title: "Hermes Agent クイックスタート"
 description: "Hermes Agent との最初の会話まで。インストールからおしゃべりできるまで 5 分"
 upstream_path: getting-started/quickstart.md
-upstream_blob: 364a6a9868eb5742193e014b9363d034320cd36f
+upstream_blob: a015bc630d8da092acb785e4a3ddaf202ac7e9ea
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/quickstart
 ---
 
 # Hermes Agent クイックスタート {#hermes-agent-quickstart}
+
+このページの Python 依存に関するコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存を変えたら、チェックアウトをもう一度有効にしてから Hermes を再起動してください。
 
 この案内では、何も無い状態から、実際に使い続けられる Hermes の環境までを作ります。インストールし、プロバイダーを選び、会話がちゃんと動くことを確かめ、うまくいかないときに何をすればよいかまで分かる形にします。
 
@@ -47,7 +51,9 @@ sources:
 ### Hermes Desktop を使わない場合: {#without-hermes-desktop}
 Hermes Desktop なしでコマンドラインだけを入れるには、次を実行します。
 
-#### Linux / macOS / WSL2 / Android（Termux） {#linux-macos-wsl2-android-termux}
+aarch64 の Android 端末では、別の [Termux APT の案内](/hermes/docs/getting-started/termux/)を使ってください。
+
+#### Linux / macOS / WSL2 {#linux-macos-wsl2}
 ```bash
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 ```
@@ -58,10 +64,6 @@ powershell で実行します。
 ```powershell
 iex (irm https://hermes-agent.nousresearch.com/install.ps1) 
 ```
-
-:::tip Android / Termux
-スマートフォンに入れる場合は、動作を確かめた手作業の手順、使える追加機能、今のところの Android 固有の制限をまとめた [Termux の案内](/hermes/docs/getting-started/termux/) を参照してください。
-:::
 
 終わったら、シェルを読み込み直します。
 
@@ -277,15 +279,10 @@ Docker で隔離する場合は、**外向き通信に認証情報を差し込�
 
 ### 音声モード {#voice-mode}
 
-```bash
-# From the Hermes install directory (the curl installer placed it at
-# ~/.hermes/hermes-agent on Linux/macOS or %LOCALAPPDATA%\hermes\hermes-agent on Windows):
-cd ~/.hermes/hermes-agent
-uv pip install --python ./venv/bin/python -e ".[voice]"
-# Includes faster-whisper for free local speech-to-text
-```
-
-そのあと CLI で `/voice on` と打ちます。録音は `Ctrl+B` です。[音声モード](/hermes/docs/user-guide/features/voice-mode/) を参照してください。
+`hermes tools` を実行して、音声のプロバイダーを設定します。そのあと CLI で `/voice on`
+と打って有効にし、`Ctrl+B` を押すと録音できます。対応している依存が足りなければ PM が
+用意します。依存が変わると再起動が必要になることがあります。ローカルの Faster-Whisper は、
+すべてのアーキテクチャで使えるわけではありません。[音声モード](/hermes/docs/user-guide/features/voice-mode/) を参照してください。
 
 ### スキル {#skills}
 
@@ -334,7 +331,7 @@ ACP への対応は標準の `[all]` の追加分に含まれているので、c
 hermes acp
 ```
 
-（`[all]` なしで入れた場合は、先に `cd ~/.hermes/hermes-agent && uv pip install -e ".[acp]"` を実行してください。）
+（`[all]` なしで入れた場合は、先に `cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['acp'], explicit=True)"` を実行してください。）
 
 [ACP でのエディター連携](/hermes/docs/user-guide/features/acp/) を参照してください。
 

@@ -2,7 +2,7 @@
 title: "Windows（WSL2）ガイド"
 description: "WSL2 を使って Windows で Hermes Agent を動かす方法。セットアップ、Windows と Linux の間のファイルのやり取り、ネットワーク、よくあるつまずき"
 upstream_path: user-guide/windows-wsl-quickstart.md
-upstream_blob: 76f7f1cca150b2f2cf13c9dd7226b05c3a6191f0
+upstream_blob: d361f3176439276070acaa78fdbbd8f066ef29dd
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-wsl-quickstart
 ---
@@ -278,8 +278,8 @@ WSL に入るところまでやってもらいます。
 
 これで Windows ターミナルが開き、WSL のディストリビューションが起動し、Linux のホーム
 ディレクトリに入って、Hermes が立ち上がります。`hermes` がまだ PATH に無ければ、一度 WSL を
-手で開いて `source ~/.bashrc` を実行するか、コマンドをプロジェクトのチェックアウトの中で
-`uv run hermes` に置き換えてください。
+手で開いて `source ~/.bashrc` を実行するか、コマンドを PM で有効にしたプロジェクトのチェックアウトの中で
+`python hermes` に置き換えてください。
 
 もう少し整えるなら、次のようにします。
 
@@ -354,7 +354,7 @@ WSL2 は仮想マシンのディスクを、`%LOCALAPPDATA%\Packages\...` の下
 
 ## 次に読むもの {#where-to-go-next}
 
-- **[インストール](/hermes/docs/getting-started/installation/)** — 実際のインストール手順（Linux / WSL2 / Termux は同じインストーラを使います）。
+- **[インストール](/hermes/docs/getting-started/installation/)** — 実際のインストール手順（Linux / WSL2 は同じインストーラを使います）。
 - **[統合 → プロバイダ → WSL2 のネットワーク](/hermes/docs/integrations/providers/#wsl2-networking-windows-users)** — 手元のモデルサーバのためのネットワークの、詳しい正本。
 - **[MCP ガイド → WSL から Windows の Chrome へ](/hermes/docs/guides/use-mcp-with-hermes/#wsl2-bridge-hermes-in-wsl-to-windows-chrome)** — ログイン済みの Windows の Chrome を、WSL の中の Hermes から操作する方法。
 - **[Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/)** と **[Web ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/)** — WSL からネットワークの他の場所に公開したくなることが一番多い、長く動かし続けるサービス。

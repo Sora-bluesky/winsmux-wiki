@@ -2,7 +2,7 @@
 title: "Photon iMessage"
 description: ""
 upstream_path: user-guide/messaging/photon.md
-upstream_blob: 04e79d5d4447267f4f34f3be80abd8dc9fee48a6
+upstream_blob: 9d70a0aae16717f966cd97b9666322143dbd3eae
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/photon
 ---
@@ -45,7 +45,8 @@ Photon は Discord や Slack と同じ **接続を張りっぱなしにする** 
 ## 事前に必要なもの {#prerequisites}
 
 - Photon のアカウント。登録は [app.photon.codes][app] から
-- PATH の通った **Node.js 18.17 以降**（`node --version`）
+- Node.js：Hermes が管理する Node があれば、それを使います。
+  `hermes pm install node` で固定の版を用意できます。無ければアダプターは PATH の Node を使います。
 - iMessage を受け取れる電話番号（アカウントとの紐づけに使います）
 
 必要なのはこれだけです。公開 URL もトンネルも用意する必要はありません。
@@ -244,7 +245,6 @@ Photon iMessage status
 | `PHOTON_PROJECT_SECRET`   | `.env` から        | プロジェクトの秘密鍵。設定時に書き込まれます               |
 | `PHOTON_SIDECAR_PORT`     | `8789`             | サイドカーの操作と受信に使うループバックのポート |
 | `PHOTON_SIDECAR_AUTOSTART`| `true`             | アダプタがサイドカーを立ち上げるかどうか     |
-| `PHOTON_NODE_BIN`         | `which node`       | Node の実行ファイルのパスを上書きします              |
 | `PHOTON_HOME_CHANNEL`     | （未設定）            | cron や通知の既定の space の ID  |
 | `PHOTON_HOME_CHANNEL_NAME`| （未設定）            | ホームチャンネルの表示名           |
 | `PHOTON_ALLOWED_USERS`    | （未設定）            | カンマ区切りの E.164 形式の許可リスト            |

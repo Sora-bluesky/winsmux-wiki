@@ -2,7 +2,7 @@
 title: "Torchtitan — PyTorch の 4D 並列で LLM を大規模に事前学習する"
 description: "PyTorch の 4D 並列で LLM を大規模に事前学習する"
 upstream_path: user-guide/skills/optional/mlops/mlops-torchtitan.md
-upstream_blob: 40a7b94a8750f5c94f057feec782d19c2d4c1065
+upstream_blob: faa3ef77651993d43565e44f5d582af7c78c273f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-torchtitan
 ---
@@ -177,7 +177,7 @@ context_parallel_degree = 1       # Increase for long sequences
 **手順 2: SLURM 用のスクリプトを用意する**
 
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 #SBATCH --job-name=llama70b
 #SBATCH --nodes=32
 #SBATCH --ntasks-per-node=8

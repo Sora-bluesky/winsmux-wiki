@@ -2,7 +2,7 @@
 title: "Memento Flashcards — 間隔反復の暗記カード: 作成・復習・クイズ・書き出し"
 description: "間隔反復の暗記カード: 作成・復習・クイズ・書き出し"
 upstream_path: user-guide/skills/optional/productivity/productivity-memento-flashcards.md
-upstream_blob: 71caeb2607b9c15c793dc93c826d0d8470e3656f
+upstream_blob: ebcfb9b989a8657f91c2804840b68d155d03c278
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards
 ---
@@ -219,10 +219,21 @@ python3 ~/.hermes/skills/productivity/memento-flashcards/scripts/youtube_quiz.py
 
 `{"title": "...", "transcript": "..."}` かエラーが返ります。
 
-スクリプトが `missing_dependency` を返したら、次を入れてもらうよう伝えます。
+スクリプトが `missing_dependency` を返したら、PM で準備した Hermes のチェックアウトで `terminal` を使い、
+宣言済みの `youtube` extra を用意してから、有効化し直します。
+
 ```bash
-pip install youtube-transcript-api
+python -c "import pm; pm.sync_venv(['youtube'], explicit=True)"
+source ./activate
+python -c "import youtube_transcript_api; print(youtube_transcript_api.__file__)"
 ```
+
+用意する前に、
+[Package Management](https://hermes-agent.nousresearch.com/docs/reference/package-management#developer-workflow)
+にある分離した開発用ホームの設定に従ってください。そのうえで、その Python と、`skill_view` が返した実際の
+skill のディレクトリを使って `youtube_quiz.py` をもう一度実行します。リモートやサンドボックスの端末では、
+その端末の上に独立した補助用の環境を用意します。Hermes が選んでいる環境に pip で入れることは
+決してしないでください。
 
 **手順 3:** 字幕から 5 問を作ります。ルールは次のとおりです。
 
@@ -312,7 +323,7 @@ python3 ~/.hermes/skills/productivity/memento-flashcards/scripts/memento_cards.p
 
 - **`cards.json` を直接編集しないこと** — データが壊れないよう、必ずスクリプトのサブコマンドを使います
 - **字幕が取れないことがある** — 英語の字幕がない動画や、字幕が無効になっている動画があります。そのことを伝えて、別の動画を提案してください
-- **任意の依存パッケージ** — `youtube_quiz.py` には `youtube-transcript-api` が必要です。入っていなければ `pip install youtube-transcript-api` を実行してもらいます
+- **任意の依存パッケージ** — `youtube_quiz.py` には `youtube-transcript-api` が必要です。入っていなければ、上の PM での準備とインタープリターの確認を行います。
 - **大きな読み込み** — 数千行の CSV でも問題なく読めますが、JSON の出力が長くなります。結果は要約して伝えてください
 - **動画 ID の取り出し** — `youtube.com/watch?v=ID` と `youtu.be/ID` の両方の形式に対応します
 
@@ -329,7 +340,7 @@ python3 ~/.hermes/skills/productivity/memento-flashcards/scripts/memento_cards.p
 リポジトリのチェックアウトから試すときは、次を実行します。
 
 ```bash
-pytest tests/skills/test_memento_cards.py tests/skills/test_youtube_quiz.py -q
+scripts/run_tests.sh tests/skills/test_memento_cards.py tests/skills/test_youtube_quiz.py -q
 ```
 
 エージェントとしての確認:

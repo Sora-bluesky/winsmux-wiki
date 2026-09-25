@@ -2,7 +2,7 @@
 title: "SimpleX Chat"
 description: ""
 upstream_path: user-guide/messaging/simplex.md
-upstream_blob: dc143eb37268240478f40f911b1ae8c9407d8fd4
+upstream_blob: 83fb176a410e1be0fba1f63673fb0fe33d3c15fe
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/simplex
 ---
@@ -16,7 +16,7 @@ sources:
 ## 事前に必要なもの {#prerequisites}
 
 - **simplex-chat** の CLI を入れて、常駐させておくこと
-- Python のパッケージ **websockets**（`pip install websockets`）
+- Python のパッケージ **websockets**（`hermes pm repair`）
 
 ## simplex-chat を入れる {#install-simplex-chat}
 
@@ -155,6 +155,6 @@ hermes send simplex:<contact-id> "Done!"
 
 **「Cannot reach daemon」と出る** — `simplex-chat -p 5225` が動いていることと、ポートが `SIMPLEX_WS_URL` と合っていることを確かめます。
 
-**「websockets not installed」と出る** — `pip install websockets` を動かします。
+**「websockets not installed」と出る** — `hermes pm repair` を動かします。
 
 **メッセージが届かない** — その相手の ID が `SIMPLEX_ALLOWED_USERS` に入っているかを確かめるか、個別チャットでのペアリングで承認します。

@@ -2,12 +2,16 @@
 title: "SMS（Twilio）"
 description: "Hermes Agent を Twilio 経由の SMS チャットボットとして設定する"
 upstream_path: user-guide/messaging/sms.md
-upstream_blob: 914f160226a745e0174d49d747d53ed928d31832
+upstream_blob: d8cc112e065ef6f3ce9890664d390525a22c0c37
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/sms
 ---
 
 # SMS の設定（Twilio） {#sms-setup-twilio}
+
+このページにある Python の依存パッケージのコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存パッケージを変えたあとは、チェックアウトを有効にし直して Hermes を再起動してください。
 
 Hermes は [Twilio](https://www.twilio.com/) の API を通して SMS につながります。相手が Twilio の電話番号にショートメッセージを送ると、AI からの返事がそのまま返ってきます。Telegram や Discord と同じ会話体験を、ふつうのショートメッセージの上で味わえるということです。
 
@@ -22,7 +26,7 @@ SMS ゲートウェイは、任意で追加できる[電話スキル](/hermes/do
 - **Twilio アカウント** — [twilio.com で登録します](https://www.twilio.com/try-twilio)（無料トライアルあり）
 - **SMS を扱える Twilio の電話番号**
 - **外部から到達できるサーバー** — SMS が届いたとき、Twilio はあなたのサーバーへ webhook を送ります
-- **aiohttp** — `cd ~/.hermes/hermes-agent && uv pip install -e ".[sms]"` でインストールします
+- **aiohttp** — `cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['sms'], explicit=True)"` でインストールします
 
 ---
 

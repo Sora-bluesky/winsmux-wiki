@@ -2,7 +2,7 @@
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: 4eefe17e252ec312046f71e67a475400bee2df79
+upstream_blob: a2762cacd8edafa1db6128a240eee9ce5898637b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
@@ -51,7 +51,7 @@ AI に向いた、セッションをまたぐ利用者のモデリング。対�
 | | |
 |---|---|
 | **向いている用途** | セッションをまたぐ文脈を持つ複数エージェントの仕組み、利用者とエージェントのすり合わせ |
-| **必要なもの** | `pip install honcho-ai` と [API キー](https://app.honcho.dev)、または自己ホストの環境 |
+| **必要なもの** | `hermes memory setup` が PM で Honcho の SDK を用意します。そのうえで [API キー](https://app.honcho.dev)、または自己ホストの環境 |
 | **データの置き場所** | Honcho Cloud または自己ホスト |
 | **費用** | Honcho の料金（クラウド）／無料（自己ホスト） |
 
@@ -359,9 +359,13 @@ Hermes は OpenViking への要求に `User-Agent: openviking-memory-hermes/<ver
 | | |
 |---|---|
 | **向いている用途** | 手のかからない記憶の管理 — 抽出は Mem0 が自動でやります |
-| **必要なもの** | `pip install mem0ai` と API キー（platform）、動いている Mem0 のサーバー（自己ホストのダッシュボード）、または LLM とベクトルストア（OSS） |
+| **必要なもの** | `hermes memory setup` が PM で Mem0 の SDK を用意します。そのうえで API キー（platform）、動いている Mem0 のサーバー（自己ホストのダッシュボード）、または LLM とベクトルストア（OSS） |
 | **データの置き場所** | Mem0 Cloud（platform）、自分の Mem0 のサーバー（自己ホストのダッシュボード）、または同じプロセス内（OSS） |
 | **費用** | Mem0 の料金（platform）／無料（自己ホストまたは OSS） |
+
+Windows ARM64 のネイティブ環境では、追加パッケージ `mem0` の SDK は対象外です。HTTP 経由で外部の Mem0
+サーバーを使うのは別のモードです。リモートのサービスが使えても、同じプロセス内で動く SDK が
+その環境で動くとは限りません。
 
 **ツール（4 つ）:** `mem0_search`（意味検索。platform では順位の付け直しも任意で使えます。既定では無効）、`mem0_add`（事実をそのまま保存）、`mem0_update`（ID を指定して更新）、`mem0_delete`（ID を指定して削除）
 
@@ -465,7 +469,7 @@ echo "HINDSIGHT_API_KEY=your-key" >> ~/.hermes/.env
 
 | キー | 既定値 | 説明 |
 |-----|---------|-------------|
-| `mode` | `cloud` | `cloud` または `local` |
+| `mode` | `cloud` | `cloud`、`local_embedded`、`local_external` のいずれか |
 | `bank_id` | `hermes` | 記憶の保管庫の識別子 |
 | `recall_budget` | `mid` | 呼び出しの丁寧さ: `low` / `mid` / `high` |
 | `memory_mode` | `hybrid` | `hybrid`（文脈とツール）、`context`（自動の差し込みのみ）、`tools`（ツールのみ） |
@@ -590,7 +594,7 @@ hermes config set memory.provider byterover
 | | |
 |---|---|
 | **向いている用途** | 利用者の像づくりとセッション単位のグラフ構築を伴う、意味に基づく呼び出し |
-| **必要なもの** | `pip install supermemory` と[クラウドの API キー](http://app.supermemory.ai/integrations?connect=hermes)、または[自己ホストのサーバー](https://supermemory.ai/docs/self-hosting/overview) |
+| **必要なもの** | `hermes memory setup` が PM で Supermemory の SDK を用意します。そのうえで[クラウドの API キー](http://app.supermemory.ai/integrations?connect=hermes)、または[自己ホストのサーバー](https://supermemory.ai/docs/self-hosting/overview) |
 | **データの置き場所** | Supermemory Cloud または自己ホスト |
 | **費用** | Supermemory の料金（クラウド）／無料（自己ホスト） |
 
@@ -672,19 +676,31 @@ Memori Cloud を使う、構造化された長期記憶です。終わったタ�
 | | |
 |---|---|
 | **向いている用途** | プロジェクトとセッションの帰属を構造化したうえで、エージェント自身が呼び出しを制御する使い方 |
-| **必要なもの** | `pip install hermes-memori` と `hermes-memori install`、そして [Memori の API キー](https://app.memorilabs.ai/signup) |
+| **必要なもの** | 外部から提供される `hermes-memori` の CLI とプロバイダー連携、そして [Memori の API キー](https://app.memorilabs.ai/signup) |
 | **データの置き場所** | Memori Cloud |
 | **費用** | Memori の料金 |
 
 **ツール:** `memori_recall`（長期記憶の検索）、`memori_recall_summary`（要約した文脈）、`memori_quota`（利用量と枠）、`memori_signup`（登録メールの依頼）、`memori_feedback`（連携についての意見の送信）
 
 **設定:**
+
+`hermes-memori` は外部の連携で、PM が管理するツール名ではありません。CLI は、
+提供元の手順に沿って独立した環境へ入れてください。そのインストーラーを実行する前に、
+使う予定の Hermes ホームを対象にしていること、そして Python の依存関係を宣言したプロバイダーを
+提供することを確かめてください。外部のインストーラーに、Hermes が選んだ環境へ pip で
+入れさせないでください。CLI が使えるだけでは、Hermes の中で Python のプロバイダーは使えるようになりません。
+エントリーポイントだけの配布物は、それを含めたビルドを所有者が管理して用意する必要があります。
+
 ```bash
-pip install hermes-memori
+# Run only after confirming the external installer's integration contract above.
 hermes-memori install
 hermes config set memory.provider memori
 hermes memory setup
 ```
+
+インストーラーが、PM の管理するディレクトリ型プロバイダーの受け入れに対応していない場合は、
+`hermes pm install` のようなパッケージのコマンドを勝手に作らず、その連携を提供元に依頼してください。
+依存関係の用意がうまくいったら、Hermes を再起動してください。
 
 ---
 

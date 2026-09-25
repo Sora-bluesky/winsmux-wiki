@@ -2,7 +2,7 @@
 title: "CLI を拡張する"
 description: "Hermes の TUI に独自のウィジェット・キーバインド・レイアウト変更を足すラッパー CLI を作る"
 upstream_path: developer-guide/extending-the-cli.md
-upstream_blob: c1a2cafd3039cf5bf189665c07b8ec231951c9a7
+upstream_blob: 7c4a5150ec9bdf6f295730c705fd499ccd139573
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/extending-the-cli
 ---
@@ -74,11 +74,11 @@ if __name__ == "__main__":
     cli.run()
 ```
 
-次のように実行します。
+[PM の開発者向けワークフロー](/hermes/docs/reference/package-management/#developer-workflow)で分離した開発用のホームを選んでから、
+ソースのチェックアウト先で次のように実行します。
 
 ```bash
-cd ~/.hermes/hermes-agent
-source .venv/bin/activate
+source ./activate
 python my_cli.py
 ```
 

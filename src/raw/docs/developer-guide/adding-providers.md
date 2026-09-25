@@ -2,7 +2,7 @@
 title: "プロバイダーを追加する"
 description: "Hermes Agent に新しい推論プロバイダーを追加する方法 — 認証、実行時の解決、CLI の導線、アダプター、テスト、ドキュメント"
 upstream_path: developer-guide/adding-providers.md
-upstream_blob: 105081d33dd1a29c1bfe80712fd9c1c9e881b70e
+upstream_blob: 2bf4ef8efde1420469ad187733d213cc6dd32cbc
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-providers
 ---
@@ -346,35 +346,37 @@ API キーを直接使うプロバイダーなら、安くて速い補助モデ�
 - provider:model の読み取り
 - アダプター独自のメッセージ変換があれば、それ
 
-対象を絞ったテストを走らせます（ファイルごとに別プロセスで走らせる `scripts/run_tests.sh` を使ってもかまいません）。
+[独立したテスト環境](/hermes/docs/developer-guide/contributing/#manual-development-and-test-environment)を用意してから、
+正規のテストランナーを使います。ファイルごとに分離して走らせ、認証情報も取り除いてくれます。
 
 ```bash
-source venv/bin/activate
-python -m pytest tests/hermes_cli/test_runtime_provider_resolution.py tests/hermes_cli/test_cli_provider_resolution.py tests/hermes_cli/test_setup_model_provider.py tests/agent/test_provider_parity.py -q
+
+scripts/run_tests.sh tests/hermes_cli/test_runtime_provider_resolution.py tests/hermes_cli/test_cli_provider_resolution.py tests/hermes_cli/test_setup_model_provider.py tests/agent/test_provider_parity.py -q
 ```
 
 変更が深いところに及ぶなら、push の前に全体を走らせます。
 
 ```bash
-source venv/bin/activate
-python -m pytest tests/ -n0 -q
+scripts/run_tests.sh tests/ -q
 ```
 
 ## ステップ 9: 実際に動かして確かめる {#step-9-live-verification}
 
-テストのあとは、本物で軽く動かしてみます。
+テストのあとは、チェックアウトから本物で軽く動かしてみます。
+[PM の開発者向けワークフロー](/hermes/docs/reference/package-management/#developer-workflow)と、
+それが用意する分離された開発用ホームを使ってください。PM を有効化する前に、テスト用の venv からは抜けておきます。
 
 ```bash
-source venv/bin/activate
-python -m hermes_cli.main chat -q "Say hello" --provider your-provider --model your-model
+source ./activate
+python hermes chat -q "Say hello" --provider your-provider --model your-model
 ```
 
 メニューを変えたなら、対話的な流れも試します。
 
 ```bash
-source venv/bin/activate
-python -m hermes_cli.main model
-python -m hermes_cli.main setup
+source ./activate
+python hermes model
+python hermes setup
 ```
 
 独自形式のプロバイダーでは、ただの文章の応答だけでなく、ツール呼び出しも最低 1 回は確かめてください。

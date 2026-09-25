@@ -2,7 +2,7 @@
 title: "音声モード"
 description: "Hermes Agent とリアルタイムで音声のやりとりをする — CLI、Telegram、Discord（DM、テキストチャンネル、ボイスチャンネル）"
 upstream_path: user-guide/features/voice-mode.md
-upstream_blob: 6aab39939e5e83b09367e44b1c02a4f5e965b6f5
+upstream_blob: f119d16f938f0e8c3c70081b13d28daf1bb9a7d1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/voice-mode
 ---
@@ -43,30 +43,28 @@ Hermes Agent は、CLI とメッセージ系のサービスの両方で音声の
 
 ### Python パッケージ {#python-packages}
 
-```bash
-# CLI voice mode (microphone + audio playback)
-cd ~/.hermes/hermes-agent && uv pip install -e ".[voice]"
+音声の提供元は `hermes tools` で設定します。組み込み機能に必要なもので足りないものは PM を通して入ります。
+ただし、`security.allow_lazy_installs` の設定と、対象の環境が依存パッケージに対応しているかどうかに左右されます。
+選んだ依存パッケージの環境が変わったら、Hermes を再起動してください。
 
-# Discord + Telegram messaging (includes discord.py[voice] for VC support)
-cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"
-
-# Premium TTS (ElevenLabs)
-cd ~/.hermes/hermes-agent && uv pip install -e ".[tts-premium]"
-
-# Local TTS (NeuTTS, optional)
-python -m pip install -U neutts[all]
-
-# Everything at once
-cd ~/.hermes/hermes-agent && uv pip install -e ".[all]"
-```
+同梱版のアプリには、対応するエンジンの依存パッケージが入っています。Docker には選び抜いた一部だけが入っていて、
+その場でのインストールは無効になっています。署名済みの中身やシステムの Python を pip で書き換えないでください。
+手作業で開発環境を作る場合は、
+[開発環境の準備](/hermes/docs/developer-guide/contributing/#development-setup)で必要な追加指定を選んでください。
 
 | 追加指定 | パッケージ | 必要になる場面 |
 |-------|----------|-------------|
-| `voice` | `sounddevice`, `numpy` | CLI の音声モード |
+| `voice` | `sounddevice`, `numpy`、対応環境では Faster-Whisper | CLI の音声入出力と、任意の手元での音声認識 |
 | `messaging` | `discord.py[voice]`, `python-telegram-bot`, `aiohttp` | Discord と Telegram のボット |
 | `tts-premium` | `elevenlabs` | ElevenLabs の TTS 提供元 |
 
-手元で動かす TTS 提供元は任意です。`python -m pip install -U neutts[all]` で `neutts` を別途入れます。最初に使うときにモデルを自動で取得します。
+手元で動かす Faster-Whisper は、ネイティブの Windows ARM64 と Intel 版 macOS では使えません。
+これらの環境では、クラウドかコマンド型の音声認識の提供元を使ってください。`audio-io` には、
+手元の音声認識を含まない、マイクと再生のための依存パッケージが入っています。`all` の追加指定は、
+すべての音声エンジンや呼びかけ検出エンジンを含むという意味ではありません。
+
+NeuTTS は別の任意のランタイムで、最初に使うときにモデルを取得します。
+その依存パッケージを署名済みのアプリやシステムの Python に入れないでください。
 
 :::info
 `discord.py[voice]` は **PyNaCl**（音声の暗号化用）と **opus のバインディング**を自動で入れます。Discord のボイスチャンネルに対応するには、これが必要です。
@@ -97,7 +95,7 @@ sudo apt install espeak-ng   # for NeuTTS
 
 ```bash
 # Speech-to-Text — local provider needs NO key at all
-# pip install faster-whisper          # Free, runs locally, recommended
+# PM prepares local Faster-Whisper on supported targets; no STT API key is needed.
 GROQ_API_KEY=your-key                 # Groq Whisper — fast, free tier (cloud)
 VOICE_TOOLS_OPENAI_KEY=your-key       # OpenAI Whisper — paid (cloud)
 
@@ -386,7 +384,7 @@ sudo apt install libopus0
 DISCORD_BOT_TOKEN=your-bot-token
 DISCORD_ALLOWED_USERS=your-user-id
 
-# STT — local provider needs no key (pip install faster-whisper)
+# PM prepares local Faster-Whisper on supported targets; no STT API key is needed.
 # GROQ_API_KEY=your-key            # Alternative: cloud-based, fast, free tier
 
 # TTS — optional. Edge TTS and NeuTTS need no key.
@@ -508,7 +506,7 @@ tts:
 
 ```bash
 # Speech-to-Text providers (local needs no key)
-# pip install faster-whisper        # Free local STT — no API key needed
+# PM prepares local Faster-Whisper on supported targets; no STT API key is needed.
 GROQ_API_KEY=...                    # Groq Whisper (fast, free tier)
 VOICE_TOOLS_OPENAI_KEY=...         # OpenAI Whisper (paid)
 

@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: a9960bf59c5a9d7e142793f8fca118e4d583dab2
+upstream_blob: 2833d5e32dc4becc50fedb0892b6ad7e7853b4b5
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -203,7 +203,7 @@ Hermes はこれらをインストール済みメタデータから読み取り�
 | `manifest_version` | int | マニフェストの**ファイル形式**バージョン。省略時は `1`。現在の最大値: `2`。`api_version` とは独立。 |
 | `api_version` | int | プラグインが対象とするランタイムの**プラグイン API 世代**（ctx サーフェス / フックのシグネチャ）。`manifest_version` とは意図的に別軸で、`api_version: 1` のプラグインが v2 マニフェストを使うこともできる。 |
 | `requires_plugins` | list | プラグイン間の依存関係: `version_range: ">=1.0,<2"` を任意で指定した `- id: other-plugin`。**あくまで助言**: 依存先がなくても明確な警告が出るだけでプラグインは読み込まれる — 実行時に `ctx.has_plugin("other-plugin")` で確認する。読み込みの**順序**はこの依存関係を尊重する: A が B を要求する場合、B の `register()` は A より先に実行される（トポロジカルソート、アルファベット順のタイブレーク。循環は警告しアルファベット順にフォールバックする）。 |
-| `python_dependencies` | list of str | PEP 508 の要件（例: `"requests>=2.0,<3"`）。`hermes plugins install` / `enable` で Hermes の venv にインストールされ、**`hermes update` のたびに再適用される**（[Python の依存関係](#python-dependencies) を参照）。`plugin.yaml` の横にある `[project].dependencies` を持つ `pyproject.toml` が、これと等価かつ推奨される形式。 |
+| `python_dependencies` | list of str | 宣言した Python の要件（例: `"requests>=2.0,<3"`）。インストール時には同意を求める。有効化すると、既存の core・追加パッケージ・有効なプラグインの和集合とあわせて、候補を PM に受け入れる。準備が成功すると、環境と設定がトランザクションとして反映される。失敗したときは、以前の選択と有効なプラグインの集合がそのまま残る。同意しなかった場合、インストールしたプラグインは無効のままになる。上限を固定すること。 |
 | `python_runtime` | str | `external` — プラグインが自身のインタプリタ/venv を管理する（サイドカーパターン）。Hermes は何もインストールせず、既存の `pyproject.toml` にも触れない。 |
 | `config_schema` | mapping | `plugins.entries.<id>.settings` 以下のキーを記述する JSON-schema 風の説明: `api_url: {type: str, default: "", description: "...", required: false}`。読み込み時に検証され、不一致はキー名と期待する型を示す実用的な警告としてログに出る — 読み込みエラーにはならない。型は `str`、`int`、`float`、`bool`、`list`、`dict`（と JSON-schema の別名）、`secret`。Desktop の Plugins タブの設定フォームも駆動する — [Desktop の設定フォーム](#settings-form-in-the-desktop) を参照。 |
 | `license` | str | SPDX 形式のライセンス id（例: `MIT`）。 |
@@ -223,10 +223,21 @@ requires_plugins:
   - id: other-plugin
     version_range: ">=1.0,<2"
 python_dependencies:
-  - "somepkg>=1.0,<2"     # installed on install/enable, re-applied after hermes update
+  - "somepkg>=1.0,<2"     # consent before PM admission
 config_schema:
   api_url: {type: str, default: "", description: "Service endpoint"}
 ```
+
+:::note 依存関係の共同受け入れ
+プラグインをインストールすると、Python の依存関係について同意を求められます。プラグインを有効にすると、
+その要件が core の依存関係・追加パッケージ・有効なプラグインとあわせて PM で準備されます。
+パックの有効化も同じ受け入れのトランザクションを使います。有効なプラグインを入れ直すときは、
+反映する前に、ステージングした宣言に対して同意を求めます。
+拒否した場合は、インストール済みのプラグインと選択中の環境がそのまま残ります。
+
+インストーラーと PM の受け入れは、対応していない `manifest_version` の値や、
+満たされていない `requires_hermes` の制約を、反映する前に拒否します。
+:::
 
 ### Python の依存関係 {#python-dependencies}
 
@@ -245,26 +256,41 @@ dependencies = [
 
 両方が存在する場合は `pyproject.toml` が優先されます。Hermes がこれらに対して行うことは次のとおりです。
 
-- **インストール / 有効化** — 宣言されたパッケージは、**Hermes 自身の固定済みの依存関係から構築された制約ファイル**の下で、`uv pip install`（フォールバックで pip）を使って Hermes の venv にインストールされます。そのため、プラグインが core パッケージ（httpx、pydantic など）を、Hermes がテストしたバージョンから動かすことは決してありません。環境マーカー（`; sys_platform == "win32"`）は尊重されます。
-- **競合は拒否であり、無音のドロップではない** — プラグインのツリーが実際に配置される前に、その依存関係は、すでに有効な全プラグインの依存関係とともにドライランで解決されます。解決できない候補は*インストールされず*、エラーが競合の内容を名指しします。既存のプラグインは影響を受けません。
-- **`hermes update` はこれらを再適用する** — 更新時の `uv sync` は Hermes のロックファイルから venv を再構築し、他のものはすべて取り除きます。その後、Hermes はすべてのプロファイルの有効なプラグインを走査し、宣言済みの依存関係を再インストールします。その和集合がもはや解決できない場合（core のピンが移動した場合）、メモリ以外のプラグインが解決できるようになるまで 1 つずつドロップされます。ドロップされたプラグインはそれぞれ**大きな警告付きで**名指しされて無効化され、メモリプロバイダーは他のすべてより優先して保持されます。なぜなら、メモリなしで起動する Hermes はデータ損失のように見えるからです。
-- **`hermes plugins update`** は、新しいリビジョンが宣言する内容に対してインストールを再実行します。
-- **`--no-deps`** を `hermes plugins install` に付けると、1 つのプラグインについてこれらすべてをスキップします（競合ゲートなし、何もインストールしない）。パッケージを自分で管理したい場合に使います。
-- **`python_runtime: external` で抜ける** — torch やネイティブ拡張のような重いランタイムを自分自身の sidecar venv に保持し、サブプロセス経由で通信するプラグインは、`plugin.yaml` でこれを宣言します。すると Hermes は何もインストールせず、そのプラグインは共有解決に参加しません。
-- **読み込むものが何もないのはエラー** — `hermes plugins validate`（とカタログの CI）は、`__init__.py`、`desktop/plugin.js`、`plugin.json` のいずれも横にない `plugin.yaml` を失敗させます。コードが `src/` 以下にあり、エントリーポイントの裏にある pip レイアウトのパッケージには、`pyproject.toml` がそのパッケージに依存する薄いディレクトリ型プラグインのラッパーが必要です。
-- `security.allow_lazy_installs: false` は、これらすべてを無効化します。プラグインはインストールされますが、その依存関係はインストールされず、ローダーは import 時に警告します。
+- **インストール / 有効化** — PM は、core・選択した追加パッケージ・有効なプラグインの和集合を、
+  依存関係のホームを共有するすべてのプロファイルにわたって解決します。独自の `HERMES_HOME` のルートも含みます。
+  新しいプラグインは無効の状態でダウンロードされ、有効にする前に Python の依存関係への同意が必要です。
+  `pyproject.toml` は、`python_dependencies` や旧来の `pip_dependencies` より優先されます。
+- **不可分な反映** — PM は、有効化や、有効なプラグインの差し替えを反映する前に、新しい環境の世代を
+  準備します。解決・ダウンロード・ビルドのどれかに失敗しても、以前の環境とプラグインの選択は
+  そのまま残ります。既存のプラグインが犠牲になることはありません。
+- **更新しても和集合は保たれる** — `hermes update` は、新しい世代を準備するときに有効なプラグインも
+  含めます。更新後に pip で入れ直す処理はありません。`hermes plugins update` は、有効なプラグインの
+  差し替えを準備してから、そのコードと依存関係の世代をまとめて入れ替えます。
+- **要件の衛生管理** — 形式の崩れた PEP 508 の要件は拒否されます。環境マーカーはそのまま残り、
+  対象のインタプリタが評価します。`hermes-agent` 自身への依存は、チェックアウトが Hermes を提供するので
+  省かれます。URL を直接指定した要件は管理対象外です。それらには、プラグイン自身が持つ外部の
+  ランタイムを使ってください。
+- **`--no-deps`** を付けると、依存関係への同意なしで新しいプラグインをダウンロードし、`--enable` を
+  付けていても無効のままにします。有効なプラグインを差し替えるときに、PM の受け入れを回避することはできません。
+- **`python_runtime: external`** は、sidecar の依存関係を共有の和集合から外します。
+  Hermes はその Python ランタイムをインストールせず、その宣言も変更しません。
+- **読み込むものが何もないのはエラー** — `hermes plugins validate` は、`__init__.py`、
+  `desktop/plugin.js`、`plugin.json` のいずれも横にない `plugin.yaml` を拒否します。pip レイアウトの
+  パッケージには、ディレクトリ型プラグインのラッパーが必要です。
+- `security.allow_lazy_installs: false` は、必要になった時点での取得を止めます。依存関係への明示的な
+  同意と明示的な有効化があれば、PM の準備は許可されます。検出だけでインストールが起きることはありません。
 
 `HERMES_HOME/plugins/` は `hermes update` と Desktop の更新を生き延びます — アップデータが再構築するのは venv とチェックアウトだけで、home ディレクトリには決して触れません。
 
 ### 依存関係のセキュリティ方針 {#dependency-security-policy}
 
-Hermes は**自分自身の**依存関係を隔離しています。チェックアウトの `[tool.uv] exclude-newer = "14 days"` によって、Hermes 自身が依存するパッケージの新しいリリースは、公開から2週間は `hermes update` にも組み込みの遅延インストールにも取り込まれません。乗っ取られたアップロードがあっても、利用者に届く前に上流で見つかるようにするためです。**この隔離は、プラグインの依存関係には効きません。**プラグインのインストールは Hermes のプロジェクト方針の外で動きます（`uv pip install --no-config`。ただし上で説明した core の制約ファイルは引き続き適用されます）。そのため、プラグインは昨日公開されたリリースを下限に指定して、今日インストールさせることができます。それで何が入ってくるかに責任を持つのは、Hermes ではなくプラグインの作者です。
+Hermes は**自分自身の**依存関係を隔離しています。チェックアウトの `[tool.uv] exclude-newer = "14 days"` によって、Hermes 自身が依存するパッケージの新しいリリースは、公開から2週間は `hermes update` にも組み込みの遅延インストールにも取り込まれません。乗っ取られたアップロードがあっても、利用者に届く前に上流で見つかるようにするためです。**この隔離は、プラグインの依存関係には効きません。**Hermes がプラグインを自分の環境へ解決するとき、この期限がかかるのは Hermes 自身がロックしているパッケージだけで、それ以外にはかかりません。そのため、プラグインは昨日公開されたリリースを下限に指定して、今日インストールさせることができます。それで何が入ってくるかに責任を持つのは、Hermes ではなくプラグインの作者です。（Hermes 自身が依存するパッケージの新しい版を必要とするプラグインは、そのパッケージについては期間が明けるまで待つことになります。）
 
 自分で方針を決めて、それを守ってください。強くおすすめするのは次のとおりです。
 
 - **すべての依存関係に上限を付ける** — 安定版のパッケージなら `>=floor,<next_major`、1.0 未満のものなら `>=0.29,<0.32` のように書きます。`>=X.Y` だけでは、今後のリリースを確認しないまま全部受け入れることになります。
 - **下限は、API の互換性がある最も古い版にする**。その週に出たばかりの版にはしません。出たばかりの wheel を下限にすると、公開されたその日からインストールする全員がその版を強いられます。`>=old,!=broken,<next` と書けば、広い範囲を保ったまま、問題のあるリリースだけを避けられます。
-- **新しいリリースの隔離期間を自分でも設ける** — 下限を新しいリリースに上げるまで14日ほど待ち、自分の CI では `uv --exclude-newer "14 days"`（または `UV_EXCLUDE_NEWER`）で解決します。こうすると、テストしたロックと利用者が受け取るロックが同じになります。プラグインのインストールにも同じ防御をかけたい運用者は、Hermes の環境に `UV_EXCLUDE_NEWER` を設定できます。これは Hermes が行うすべてのインストールに適用されます。
+- **新しいリリースの隔離期間を自分でも設ける** — 下限を新しいリリースに上げるまで14日ほど待ち、自分の CI では `uv --exclude-newer "14 days"`（または `UV_EXCLUDE_NEWER`）で解決します。こうすると、テストしたロックと利用者が受け取るロックが同じになります。
 - **ロックを固定し、更新は確認してから入れる。**依存関係の更新はコードの変更として扱ってください。上流の差分を読んでから、固定し直します。
 
 プラグインカタログの審査では、固定された SHA 時点の依存関係の一覧（`plugin.yaml` または `pyproject.toml`）を読み、上限のない下限指定や上限の付け忘れを指摘します。下限が単に新しいというだけでは、掲載は保留されません。
@@ -610,12 +636,13 @@ hermes logs --level WARNING | grep -i plugin
 ```python
 # In tools.py or __init__.py
 from pathlib import Path
+from ruamel.yaml import YAML
 
 _PLUGIN_DIR = Path(__file__).parent
 _DATA_FILE = _PLUGIN_DIR / "data" / "languages.yaml"
 
 with open(_DATA_FILE) as f:
-    _DATA = yaml.safe_load(f)
+    _DATA = YAML(typ="safe").load(f)
 ```
 
 それは*同梱する*ファイル向けです。*書き込む* state はまた別で、次の節を参照してください。
@@ -716,32 +743,50 @@ requires_env:
 
 ### 任意の Python 依存関係を遅延インストールする {#lazy-install-optional-python-dependencies}
 
-プラグインが、すべてのユーザーが導入しているとは限らない SDK（ベンダー SDK、重い ML ライブラリ、プラットフォーム固有のパッケージ）をラップしている場合、モジュールの先頭で `import` しないでください。代わりに、ツールハンドラーの内側で `tools.lazy_deps.ensure(...)` ヘルパーを使います — Hermes は初回使用時にそのパッケージをインストールし、ユーザーの `security.allow_lazy_installs` 設定によってゲートされます。
+Hermes のプロジェクトの追加パッケージに含まれる SDK なら、それが必要になる処理の場所で
+`pm.ensure_import` を使います。使えるかどうかを読み取りだけで確かめるには `pm.available` を使います。
+頻繁に呼ばれる `check_fn` の中で依存関係をインストールしないでください。
+
+次の例では、既存の追加パッケージ `bedrock` を要求しています。
 
 ```python
-# tools.py
-from tools.lazy_deps import ensure, FeatureUnavailable
+from pm import InstallError, ensure_import
 
 def my_tool_handler(args, **kwargs):
     try:
-        ensure("my-plugin.my-backend")   # key must be in LAZY_DEPS
-    except FeatureUnavailable as exc:
+        ensure_import("bedrock")
+    except InstallError as exc:
         return {"error": str(exc)}
 
-    import my_backend_sdk   # safe now
-    ...
+    import boto3
+    # Use the SDK here.
 ```
 
-`tools/lazy_deps.py` のセキュリティモデルには2つの規則があります。
+引数は `pyproject.toml` の追加パッケージの名前です。任意のパッケージ指定や、プラグイン名で
+修飾したキーではありません。以前の `LAZY_DEPS` の登録簿と
+`FeatureUnavailable` 例外は、もうありません。
 
-| 規則 | 理由 |
-|---|---|
-| あなたの feature key はツリー内の `LAZY_DEPS` allowlist に載っていなければならない | 悪意ある設定が Hermes に任意のパッケージをインストールさせるのを防ぐ — Hermes 自身が出荷している仕様だけが対象になる |
-| 仕様は PyPI 名だけを指定できる | `--index-url`、`git+https://`、file: パスは不可。allowlist のエントリ内で PEP 440（`"my-sdk>=1.2,<2"`）によりバージョンを固定する |
+新しい環境が選ばれた場合、このヘルパーは再起動が必要だと知らせることがあります。
+そのときは、動いているプロセスの中で2つ目の環境から import しようとせず、そのエラーを返してください。
+すでに使える依存関係は、`security.allow_lazy_installs` が false でも
+インストールの必要はありません。
 
-pip 経由で配布されるサードパーティプラグインでは、任意の依存関係を自分の `pyproject.toml` の `[project.optional-dependencies]` extras として宣言し、ユーザーに `pip install your-plugin[backend]` を伝えてください — その経路は `lazy_deps` を通りません。遅延インストールという振る舞いは、すべてのインストールにハードな依存関係を持たせるとベースの Hermes のフットプリントが肥大してしまう **bundled** プラグインで最も有用です。
+ディレクトリ型プラグイン自身の Python の依存関係は、その `pyproject.toml` の `[project]` の下に
+`dependencies` として宣言します。自分で書いたプロジェクトファイルがない場合、PM は `plugin.yaml` または
+`plugin.yml` にある、旧来の `pip_dependencies` と `python_dependencies` のリストを合わせて使います。
+PM が以前に生成したプロジェクトファイルが、これらのリストより優先されることはありません。
+同意、ワークスペースへの参加、最新かどうかの確認は、同じ宣言を使います。
+PM は、プラグインを有効にする前に、その依存関係を core の要件とあわせて準備します。
+生成されるワークスペースが、プラグインのディレクトリや同梱のロックファイルを書き換えることはありません。
+依存関係が競合すると受け入れは拒否され、以前の選択がそのまま残ります。
+PM がほかのプラグインを自動で無効にすることはありません。
 
-グローバルに `security.allow_lazy_installs: false` が設定されている場合、`ensure()` は修復のヒントを添えて即座に `FeatureUnavailable` を raise します — あなたのプラグインはそれを捕捉し、穏やかに縮退動作すべきです（エラー結果を返し、ツールループをクラッシュさせない）。
+pip で手動インストールした依存関係は、PM の永続的な宣言にはなりません。
+あとで環境が入れ替わったときに、残るとは限りません。Python のランタイムが PM の外にある
+ラッパー型のプラグインは、
+[メモリプロバイダーの存続の約束](/hermes/docs/developer-guide/memory-provider-plugin/#hermes_home-survival-contract-what-wrappers-can-rely-on)を頼りにできます。
+ランタイムの配置と遅延インストールの方針は、[パッケージ管理](/hermes/docs/reference/package-management/)を
+参照してください。
 
 ### スレッドセーフな遅延シングルトン {#thread-safe-lazy-singletons}
 
@@ -1632,10 +1677,13 @@ STT の場合は、`HERMES_LOCAL_STT_COMMAND` に argv トークン化された�
 my-plugin = "my_plugin_package"
 ```
 
-```bash
-pip install hermes-plugin-calculator
-# Plugin auto-discovered on next hermes startup
-```
+インストールの所有者が用意した環境（たとえば Nix の derivation）に配布物が入っている場合、
+エントリーポイントによる検出は引き続き使えます。
+これは検出の仕組みであって、PM が選んだ世代へパッケージを差し込んでよいという許可ではありません。
+管理されたインストールでは、`pyproject.toml` か、マニフェストの Python の要件を持つディレクトリ型
+プラグインとして配布し、PM がトランザクションとして受け入れられるように `hermes plugins install` / `enable` を
+使ってください。新しい環境が選ばれたら Hermes を再起動します。
+`hermes pm install` が受け付けるのは管理対象のツール名で、任意の PyPI パッケージではありません。
 
 ## NixOS 向けに配布する {#distribute-for-nixos}
 
@@ -1649,7 +1697,7 @@ NixOS ユーザーは、エントリーポイントを持つ `pyproject.toml` �
 ```nix
 # User's configuration.nix
 services.hermes-agent.extraPythonPackages = [
-  (pkgs.python312Packages.buildPythonPackage {
+  (config.services.hermes-agent.package.python.pkgs.buildPythonPackage {
     pname = "my-plugin";
     version = "1.0.0";
     src = pkgs.fetchFromGitHub {
@@ -1659,7 +1707,7 @@ services.hermes-agent.extraPythonPackages = [
       hash = "sha256-...";  # nix-prefetch-url --unpack
     };
     format = "pyproject";
-    build-system = [ pkgs.python312Packages.setuptools ];
+    build-system = [ config.services.hermes-agent.package.python.pkgs.setuptools ];
   })
 ];
 ```

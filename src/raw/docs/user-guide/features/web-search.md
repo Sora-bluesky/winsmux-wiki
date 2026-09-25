@@ -2,12 +2,16 @@
 title: "Web 検索と本文抽出"
 description: "複数のバックエンドプロバイダで Web を検索し、ページ本文を抽出します。無料で自前運用できる SearXNG にも対応しています。"
 upstream_path: user-guide/features/web-search.md
-upstream_blob: cd9dee329727e9fbcb4182f9d897816091747c85
+upstream_blob: 81e515d344e963bada4b30e7ea702902d96b3a14
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-search
 ---
 
 # Web 検索と本文抽出 {#web-search-extract}
+
+このページの Python の依存関係のコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)で実行する前提です。
+依存関係を変えたら、チェックアウトを有効化し直して Hermes を再起動してください。
 
 Hermes Agent には、複数のプロバイダを背後に持つ、モデルから呼び出せる Web ツールが 2 つあります。
 
@@ -32,7 +36,7 @@ Hermes Agent には、複数のプロバイダを背後に持つ、モデルか�
 | **xAI（Grok）** | `XAI_API_KEY` または `hermes auth add xai-oauth` | ✔ | — | 有料（SuperGrok またはトークン従量） |
 | **OpenAI Native（Codex）** | `hermes auth add openai-codex` | ✔ | — | ChatGPT／Codex のサブスクリプションが要ります |
 
-Brave Search・DDGS・xAI・OpenAI Native は **検索専用** です。`web_extract` も使いたい場合は、これらのどれかと Firecrawl / Tavily / Perplexity / Keenable / Exa / Parallel を組み合わせてください。DDGS は内部で [`ddgs` Python パッケージ](https://pypi.org/project/ddgs/)を使います。未インストールなら `pip install ddgs` を実行するか、初回使用時に Hermes が遅延インストールするのに任せてください。xAI は Responses API 上で Grok のサーバー側 `web_search` ツールを動かします。結果は索引に基づくものではなく LLM が生成したもので、タイトル・説明・URL の選択がすべてモデルの出力になります（後述の[信頼モデルの注意](#xai-grok)を参照）。OpenAI Native も同じ種類の、プロバイダ側で動くツールを Codex Responses のエンドポイントで宣言します（[後述](#openai-native)を参照）。
+Brave Search・DDGS・xAI・OpenAI Native は **検索専用** です。`web_extract` も使いたい場合は、これらのどれかと Firecrawl / Tavily / Perplexity / Keenable / Exa / Parallel を組み合わせてください。DDGS は内部で [`ddgs` Python パッケージ](https://pypi.org/project/ddgs/)を使います。未インストールなら `python -c "import pm; pm.sync_venv(['ddgs'], explicit=True)"` を実行するか、初回使用時に Hermes が遅延インストールするのに任せてください。xAI は Responses API 上で Grok のサーバー側 `web_search` ツールを動かします。結果は索引に基づくものではなく LLM が生成したもので、タイトル・説明・URL の選択がすべてモデルの出力になります（後述の[信頼モデルの注意](#xai-grok)を参照）。OpenAI Native も同じ種類の、プロバイダ側で動くツールを Codex Responses のエンドポイントで宣言します（[後述](#openai-native)を参照）。
 
 **機能ごとの分割:** 検索と抽出で別々のプロバイダを使えます。たとえば検索は SearXNG（無料）、抽出は Firecrawl といった具合です。後述の[機能ごとの設定](#per-capability-configuration)を参照してください。
 
@@ -461,11 +465,13 @@ xAI の Web 検索は自動判定の連鎖に **含まれません**。`XAI_API_
 ✅ Web Search & Extract (searxng)
 ```
 
-CLI から確かめることもできます。
+ソースのチェックアウトで使っている場合は、
+[PM で有効化](/hermes/docs/reference/package-management/#developer-workflow)したあとにモジュールを直接確かめることもできます。
+調べたい Web の設定を持つホームを使ってください。
 
 ```bash
-# Activate the venv and run the web tools module directly
-source ~/.hermes/hermes-agent/.venv/bin/activate
+# From the Hermes source checkout, in a clean shell
+source ./activate
 python -m tools.web_tools
 ```
 

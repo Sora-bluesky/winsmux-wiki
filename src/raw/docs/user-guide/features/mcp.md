@@ -2,12 +2,16 @@
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: ba34ca9f915504d70da67d104a654c7657467455
+upstream_blob: 61d76c1c02747bcb7132b8fcac73cf3ba4d131e5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
 
 # MCP（Model Context Protocol） {#mcp-model-context-protocol}
+
+このページにある Python の依存パッケージのコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)で実行する前提です。
+依存パッケージを変えたあとは、チェックアウトをもう一度有効にしてから Hermes を再起動してください。
 
 MCP を使うと、Hermes Agent を外部の道具サーバーにつなげます。GitHub、データベース、ファイルシステム、ブラウザ一式、社内 API など、Hermes の外にある道具をエージェントが使えるようになります。
 
@@ -860,7 +864,7 @@ Inspect the project root and explain the directory layout.
 
 ```bash
 # Verify MCP deps are installed (already included in standard install)
-cd ~/.hermes/hermes-agent && uv pip install -e ".[mcp]"
+cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['mcp'], explicit=True)"
 
 node --version
 npx --version

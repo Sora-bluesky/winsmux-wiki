@@ -2,12 +2,16 @@
 title: "MCP で Hermes Cloud を管理する"
 description: "Hermes Agent を Nous Portal の MCP サーバーにつなぎ、手元のエージェントとの会話だけで Hermes Cloud のインスタンスを一覧・起動・停止・管理できるようにする"
 upstream_path: guides/manage-hermes-cloud-with-mcp.md
-upstream_blob: c4eaab640142c9c596fcc91f03716ccf1cc50533
+upstream_blob: 780072d778a0b2e3846ace953f31dd1646dc90a2
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/manage-hermes-cloud-with-mcp
 ---
 
 # MCP で Hermes Cloud を管理する {#manage-hermes-cloud-with-mcp}
+
+このページの Python 依存に関するコマンドは、
+[PM で準備したソースのチェックアウト](/hermes/docs/reference/package-management/#developer-workflow)を前提にしています。
+依存を変えたら、チェックアウトをもう一度有効にしてから Hermes を再起動してください。
 
 [Hermes Cloud](https://portal.nousresearch.com/cloud) は、Hermes Agent のインスタンスを預かって動かしてくれるサービスです。ふだんは [Nous Portal](/hermes/docs/integrations/nous-portal/) の `/agents` のページから管理します。このガイドでは、手元の **ローカル** の Hermes Agent を Portal の MCP サーバーにつなぎ、「クラウドのエージェントを一覧して」「止まっているのを再起動して」「いくらかかってる？」と頼むだけで、端末から離れずにクラウドのインスタンスを管理できるようにします。
 
@@ -36,7 +40,7 @@ sources:
 
   ```bash
   cd ~/.hermes/hermes-agent
-  uv pip install -e ".[mcp]"
+  python -c "import pm; pm.sync_venv(['mcp'], explicit=True)"
   ```
 
 別途の API キーやクライアントシークレットは **要りません**。このサーバーは PKCE 付きの OAuth を使い、ログインはブラウザで一度往復するだけです。

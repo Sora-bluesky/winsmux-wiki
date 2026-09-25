@@ -8,6 +8,33 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-09-25
+
+- [ACP の内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/acp-internals/)
+- [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- [Nous Portal で Hermes Agent を動かす](https://wiki.winsmux.dev/hermes/docs/guides/run-hermes-with-nous-portal/)
+- [Nous Portal](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [ACP ホスト連携](https://wiki.winsmux.dev/hermes/docs/user-guide/features/acp/)
+- [ボットの画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/bot-screen/)
+- [認証情報プール](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-pools/)
+- [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+- [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
+- [プラグインカタログ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [Nous Tool Gateway](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-gateway/)
+- [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
+- [音声モード](https://wiki.winsmux.dev/hermes/docs/user-guide/features/voice-mode/)
+- [Web 検索と本文抽出](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-search/)
+- [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
+- [Webhook](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/webhooks/)
+- [WeCom（企業向け WeChat）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/wecom/)
+- [プロファイル配布: エージェントまるごと共有する](https://wiki.winsmux.dev/hermes/docs/user-guide/profile-distributions/)
+- [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
+
 ## 2026-09-24
 
 - [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
