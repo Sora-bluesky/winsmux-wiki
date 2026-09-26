@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 1e01e81322d73a5c4f93a020faf8461385e129f4
+upstream_blob: e2ba195ca2dee978b0f986b517c3cf27832b2126
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -25,7 +25,7 @@ Hermes は環境変数をプロセスの環境から読み、利用者が管理�
 | `NOUS_INFERENCE_BASE_URL` | Nous の推論エンドポイントを直接上書きします |
 | `AI_GATEWAY_API_KEY` | Vercel AI Gateway の API キー（[ai-gateway.vercel.sh](https://ai-gateway.vercel.sh)） |
 | `AI_GATEWAY_BASE_URL` | AI Gateway のベース URL を上書きします（既定: `https://ai-gateway.vercel.sh/v1`） |
-| `OPENAI_API_KEY` | OpenAI 互換の独自エンドポイント用の API キー（`OPENAI_BASE_URL` と組みで使います） |
+| `OPENAI_API_KEY` | OpenAI の API キー（`openai-api` プロバイダー）です。`OPENAI_BASE_URL` を設定しているときは、OpenAI 互換の独自エンドポイント用のキーになります。OpenRouter のキーとして扱われるのは `sk-or-` で始まる場合だけです。OpenRouter のキーは `OPENROUTER_API_KEY` に入れてください |
 | `OPENAI_BASE_URL` | 独自エンドポイント（VLLM、SGLang など）のベース URL |
 | `HERMES_CODEX_BASE_URL` | `openai-codex`（ChatGPT の契約）の提供元を、既定の Codex バックエンドではなくプロキシ経由にします。この資格情報を使うすべての場面、つまりプールの解決、補助・生のクライアント、401/429 での資格情報の切り替えに効きます。これを設定しない場合は、`model.provider: openai-codex` の下の `model.base_url` が次点の上書きになります。 |
 | `LM_API_KEY` | LM Studio（`lmstudio` の提供元）の API キー。手元のサーバーでは形だけの値でかまわないことが多いです |
@@ -584,7 +584,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `HERMES_DESKTOP_REMOTE_URL` | （デスクトップ側）遠隔のバックエンドのベース URL。たとえば `http://host:9119` です。設定するとアプリ内のゲートウェイの URL より優先されます。ログインは引き続きゲートウェイの設定画面から行います（バックエンドが示す方式に応じて、OAuth の転送かユーザー名 / パスワードになります）。 |
 | `HERMES_DESKTOP_HERMES` | デスクトップのバックエンドのコマンドを上書きします。パッケージの作成者や Nix、あるいは不具合の調査で、書き換え可能な管理下のインストールを確かめる前に特定の `hermes` を Electron に指させたいときに使います。 |
 | `HERMES_DESKTOP_HERMES_ROOT` | `hermes desktop --hermes-root` が使う、ソースを取得した場所の指定。同梱の初回起動時のインストールや、`PATH` 上の既存の `hermes` より先に見られます。 |
-| `HERMES_DESKTOP_IGNORE_EXISTING` | `1` にすると、バックエンドを決めるときに `PATH` 上の既存の `hermes` を無視します。`hermes desktop --ignore-existing` と同じです。 |
+| `HERMES_DESKTOP_IGNORE_EXISTING` | `1` にすると、バックエンドを決めるときにインストール済みの実行環境（`~/.hermes/hermes-agent`、Windows では `%LOCALAPPDATA%\hermes\hermes-agent`）を飛ばします。ローカルのバックエンドは起動せず、Desktop は接続するかインストールするかの選択を表示します。同梱の実行環境、`HERMES_DESKTOP_HERMES_ROOT`、パッケージ化されていないソースのチェックアウト、`HERMES_DESKTOP_HERMES` はこれまでどおり優先されます。この起動の間にインストールした実行環境は使われます。`hermes desktop --ignore-existing` と同じです。 |
 | `HERMES_DESKTOP_CWD` | デスクトップのチャットのセッションで最初に使うプロジェクトのディレクトリ。`hermes desktop --cwd` が設定します。 |
 | `HERMES_DESKTOP_PYTHON` | バックエンドで使う Python の絶対パス。ソースを取得した構成で Electron が自動で探すより先に見られます。作業ツリーの開発補助（[作業ツリーからの TUI / デスクトップ開発](/hermes/docs/developer-guide/worktree-ui-dev/) を参照）が、共有の仮想環境を使い回すために利用します。 |
 | `HERMES_DESKTOP_DEV_SERVER` | Electron の外枠が、同梱のバンドルの代わりに読み込む Vite の開発サーバーの URL（たとえば `http://127.0.0.1:5174`）。`npm run dev` が自動で設定します。アプリ自体をいじるときだけ関係します。 |

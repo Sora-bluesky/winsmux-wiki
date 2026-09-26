@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "スキンとテーマ"
 description: "組み込みのスキンと自分で作ったスキンで Hermes CLI の見た目を変えます"
 upstream_path: user-guide/features/skins.md
-upstream_blob: eb8ecf32e1617ad2d1eaca214626e7b59b85a194
+upstream_blob: 5fb780757b413d5ab815d78778453b97d72265ac
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skins
 ---
@@ -111,6 +111,7 @@ CLI の画面のあちこちで使われる文字列です。
 | `tool_emojis` | 辞書 | スピナーと進捗に使うツールごとの絵文字（`{tool_name: emoji}`） | `{}` |
 | `banner_logo` | 文字列 | Rich マークアップのアスキーアートのロゴ（既定の HERMES_AGENT バナーを置き換えます） | `""` |
 | `banner_hero` | 文字列 | Rich マークアップのメインの絵（既定のカドゥケウスの絵を置き換えます） | `""` |
+| `customCSS` | 文字列 | スキンが有効な間、デスクトップアプリとウェブダッシュボードに差し込む生の CSS（GUI の画面だけで使われ、CLI/TUI は無視します）。上限は 32 KiB です。 | `""` |
 
 ## 自分で作るスキン {#custom-skins}
 
@@ -215,6 +216,24 @@ branding:
 
 tool_prefix: "▏"
 ```
+
+### 生の `customCSS` {#raw-customcss}
+
+色の指定だけでは表せない、セレクタ単位の見た目（文字の大きさ、余白、疑似要素、アニメーション）を整えたいときは、生の CSS を `customCSS` に書きます。デスクトップアプリとウェブダッシュボードは、スキンが有効な間それを `<style>` タグとして差し込み、それを持たないスキンに切り替えると取り除きます。
+
+```yaml
+name: myskin
+
+colors:
+  background: "#1a1030"
+  ui_accent: "#ff5fd2"
+
+customCSS: |
+  .chat-input { font-size: 16px; }
+  .status-bar { background: rgba(0, 0, 0, 0.5); }
+```
+
+この項目の上限は 32 KiB で、効くのは GUI の画面だけです。CLI と TUI は無視します。`~/.hermes/skins/` の下にあるスキンの YAML に書くものなので、アプリを更新しても消えません（`app.asar` を書き換える必要はもうありません）。
 
 ## Hermes Mod — 目で見て編集できるスキンエディタ {#hermes-mod-visual-skin-editor}
 

@@ -2,7 +2,7 @@
 title: "プロファイルのコマンド早見表"
 description: ""
 upstream_path: reference/profile-commands.md
-upstream_blob: 06244e462cc697a175616e8444b76f130aa18acf
+upstream_blob: e629a91d378c8de07ed15113f24bf3253e5567e9
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/profile-commands
 ---
@@ -476,7 +476,7 @@ distribution_owned:   # optional; defaults to SOUL.md, config.yaml,
 
 `hermes_requires` では `>=`、`<=`、`==`、`!=`、`>`、`<` と、記号なしの版（`>=` として扱われます）が使えます。いま入っている Hermes の版が条件を満たさない場合は、理由がわかる形で導入が止まります。
 
-`distribution_owned` は任意です。書いた場合は、更新で置き換わるのはそこに挙げたパスだけで、それ以外はすべて利用者のものとして残ります。省いた場合は、上に書いた既定が使われます。
+`distribution_owned` は任意です。書いた場合は、更新されるのはそこに挙げたパスだけで、それ以外はすべて利用者のものとして残ります。`skills/` や `skills/research/` のようなカテゴリーなど、skill をまとめたディレクトリーは skill ごとに統合されます。配布物に含まれる skill は置き換わり、利用者がそこに足した skill は残ります。作者があとから配布物から外した skill は、トップレベルの `skills/` と同じく、更新しても残ったままです。省いた場合は、上に書いた既定が使われます。
 
 ### 配布を公開する {#publishing-a-distribution}
 

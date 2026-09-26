@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 03098e7afe377aa18b5e21f5f1e36da021fca7e4
+upstream_blob: 083fa5ede7ec3577fa2b1a1c7488179185324fe7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -158,6 +158,8 @@ user: next message
 ```
 
 失敗したターンはこれまでどおりエラーとして表に出ます。文面が黙るためのトークンに似ているというだけで、Hermes が失敗を隠すことはありません。
+
+人から届いたメッセージに対して黙るためのトークンだけが返った場合は、短いお知らせに置き換えられます。返事が要るメッセージが消えてしまってはいけないからです。バックグラウンドのプロセスの通知のような内部からの呼び起こしは黙ったままでかまいませんし、プラットフォームのアダプタが「ボットに向けたものではない」と報告したメッセージも同じです。Slack がそう報告するのは、ほかの人を @ で呼んで始まるメッセージと、自由に応じるチャンネルで新しいスレッドを始める、呼びかけのない最上位のメッセージです。ほかのプラットフォームでは、いつもお知らせが出ます。
 
 ## すぐに設定する {#quick-setup}
 
@@ -674,7 +676,7 @@ plist には `RunAtLoad` が設定されているので、読み込むとゲー�
 :::
 
 :::info ローカルネットワークへのアクセス（LAN の機器に "No route to host" で失敗する）
-macOS のローカルネットワークのプライバシー保護は、ソケットを launchd がそのジョブのために起動した実行ファイルに結び付けて判断します。素の venv の Python にはアプリとしての身元がないため、launchd から動かしたゲートウェイは LAN 上のホスト（Home Assistant、ローカルのモデルサーバーなど）に届きませんでした。同じ URL がターミナルからは通るのに、接続はすべて `errno 65 No route to host` で失敗し、許可を求める画面も一度も出ませんでした。そこで、生成される plist はゲートウェイを `/usr/bin/osascript`（`do shell script "exec …"`）経由で動かします。macOS はその子プロセスを osascript 自身のものとして扱い、osascript は Apple のプラットフォームバイナリなので、この確認の対象外になります。`ps` には `osascript → stderr_timestamp → gateway run` と表示されます。停止、再起動、KeepAlive の動きはこれまでとまったく同じです。古い Hermes で入れた plist は、`hermes gateway install` で（または次の `hermes gateway start` で）新しくなります。
+macOS のローカルネットワークのプライバシー保護は、ソケットを launchd がそのジョブのために起動した実行ファイルに結び付けて判断します。素の venv の Python にはアプリとしての身元がないため、launchd から動かしたゲートウェイは LAN 上のホスト（Home Assistant、ローカルのモデルサーバーなど）に届きませんでした。同じ URL がターミナルからは通るのに、接続はすべて `errno 65 No route to host` で失敗し、許可を求める画面も一度も出ませんでした。そこで、生成される plist はゲートウェイを `/usr/bin/osascript` 経由で動かします。JXA の `system()` 呼び出しが、対話用のイベント待ちループを持たずにゲートウェイを起動し、macOS はその子プロセスを osascript 自身のものとして扱い、osascript は Apple のプラットフォームバイナリなので、この確認の対象外になります。`ps` には `osascript → stderr_timestamp → gateway run` と表示されます。停止、再起動、KeepAlive の動きはこれまでとまったく同じです。古い Hermes で入れた plist は、`hermes gateway install` で（または次の `hermes gateway start` で）新しくなります。
 :::
 
 :::tip `hermes auth add` / `hermes auth reset` のあとに新しい認証情報を反映させる

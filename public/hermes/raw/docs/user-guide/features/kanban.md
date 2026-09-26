@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: 507fa598ce20e9184c6d6bdceab183cff0deb9e0
+upstream_blob: 0363bbd6c8d5c2158056f14c529767f13a23d6e8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -1430,6 +1430,7 @@ hermes kanban runs t_abcd
 | 種類 | 中身 | いつ |
 |---|---|---|
 | `spawned` | `{pid}` | ディスパッチャーがワーカーのプロセスを無事に開始した。 |
+| `worker_registered` | `{pid, started_at}` | ディスパッチャーがワーカーを起動したあと、その pid を記録する前に落ちたため、ワーカーが最初のモデル呼び出しの前に自分で記録した。生存確認はこれを見るので、期限切れの確保は延長され、2つ目のワーカーは起動されない。そこまで進む前に実行を取り戻されたワーカーは、カードの作業をせずに終了する。 |
 | `heartbeat` | `{note?}` | 長い処理の間、生きていることを知らせるためにワーカーが `hermes kanban heartbeat $TASK` を呼んだ。 |
 | `reclaimed` | `{stale_lock}` | 完了のないまま取り掛かりの TTL が切れた。タスクは `ready` へ戻ります。自動の回収は、`gave_up` の遮断機に向けて 1 回の不成功の試みとして数えられます（ワーカーを起動しなかった取り掛かりは、さもないと 取り掛かり → 回収 → 取り掛かり を永遠に繰り返します）。運用者による `reclaim` は、代わりに数え上げをゼロに戻します。 |
 | `crashed` | `{pid, claimer, exit_kind?, exit_code?, worker_output?}` | ワーカーの PID はもう生きていないが、TTL はまだ切れていなかった。`worker_output` はワーカー自身のログの末尾（最後の応答か、描画されたプロバイダーのエラー。装飾を取り除いた 400 文字まで）で、タスクの `last_failure_error` にも書き足されるので、盤には終了コードだけでなく*理由*が出ます。 |

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: c49316ace4729fff9ef1e0be0c2398ab94e54977
+upstream_blob: f64cd647825b111dac756c0e5c450a8cc3c1cfb3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -1318,6 +1318,8 @@ cronjob(action="create", name="daily-digest",
 :::tip
 ジョブの管理は、`jobs.json` を直接いじるのではなく、`cronjob_manage` ツール、`hermes cron edit`、`/cron` を通じてエージェントに頼んでください。直接の編集は、[ファイル書き込みの安全装置](/hermes/docs/user-guide/security/#file-write-safety)がそのパスを止めたとき（`HERMES_WRITE_SAFE_ROOT` を設定している場合など）に黙って失敗することがあり、[ファイル変更の検証](/hermes/docs/user-guide/configuration/#file-mutation-verifier)のフッターが、何も保存されなかったことを示す正式な信号になります。
 :::
+
+手で編集した結果 `jobs.json` の形が崩れても、スケジューラーは止まらず、次に読み込むときに修復します。`jobs` のリストのうち JSON オブジェクトでない項目は取り除かれ、`repeat.completed` が 0 以上の整数でなければ正しい回数に戻されます（読み取れないときは 0）。修復のたびに警告がログに残ります（記録されるのは値の型だけで、中身は残りません）。
 
 ジョブは `model` と `provider` を `null` として保存することがあります。これらが省かれている場合、Hermes は実行のときにグローバルな設定から解決します。ジョブの記録に現れるのは、ジョブごとの上書きが設定されているときだけです。
 

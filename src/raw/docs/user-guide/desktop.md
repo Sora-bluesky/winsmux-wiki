@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 7cf292f2877cdf627ffb40bf6d9df128e4aede65
+upstream_blob: 00caeff2b8789756245868adc0cf52bab1b9b113
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -442,7 +442,7 @@ hermes config set desktop.manage_launcher_entry false
 | `--source`           | パッケージ済みのアプリではなく `apps/desktop/dist` に対して `electron .` で起動する           |
 | `--cwd PATH`         | デスクトップのチャットセッションが最初に開くプロジェクトのディレクトリ（`HERMES_DESKTOP_CWD` を設定）           |
 | `--hermes-root PATH` | アプリが使う Hermes のソースルートを上書きする（`HERMES_DESKTOP_HERMES_ROOT` を設定）          |
-| `--ignore-existing`  | バックエンドの解決中、`PATH` 上にすでにある `hermes` CLI を無視させる      |
+| `--ignore-existing`  | インストール済みの Hermes ランタイムを使わず、ローカルのバックエンドを起動しない。代わりに接続かインストールを案内する |
 | `--fake-boot`        | 起動時の UI を確かめるために、決まった長さの起動の遅延を入れる                            |
 
 ## 仕組み {#how-it-works}

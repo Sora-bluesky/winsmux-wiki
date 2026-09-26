@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: f8dd1ea69b737901051cf06801e87106b1661757
+upstream_blob: d70a3e4ead288568dbc5048028b2772071f3a81c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -656,6 +656,10 @@ slack:
 
 :::tip `ignore_other_user_mentions` を使う場面
 ボットが人の多いスレッドを追いかけていて（スレッドの自動参加や `free_response_channels` によって）、人どうしのやりとりに割り込んでしまうときは `true` にしてください。`strict_mention` より狭い道具です。参加しているスレッドでのふつうの続きには、これまでどおり答えます。飛ばされるのは、ほかの人を @ で呼んで始まるメッセージだけです。**1 対 1 の DM には影響しません**。グループ DM（MPIM）とチャンネルにはどちらも適用され、下に書いた共有の場としての扱いに合わせてあります。`@here` や `@channel` のような全体への呼びかけやチャンネルの参照は、人ではなく場に向けたものなので、飛ばされることはありません。
+:::
+
+:::note ボットに向けたものではないメッセージでの黙る合図
+ボットが人のメッセージに[黙るためのトークン](/hermes/docs/user-guide/messaging/#intentional-silence-tokens)だけで答えた場合、Hermes はふつう代わりに短いお知らせを投稿し、質問が答えのないまま残らないようにします。Slack では、ほかの人を @ で呼んで始まったメッセージや、`free_response_channels` のチャンネルで自分のスレッドを始める、呼びかけのない最上位のメッセージ（既定の `reply_in_thread: true` のとき）なら、トークンのまま黙っていてかまいません。1 対 1 の DM、ボットへの呼びかけ、コマンド、リアクションによる呼び出し、ボットが加わっている会話（スレッドや、`reply_in_thread: false` のチャンネル）でのふつうの続きには、これまでどおりお知らせが出ます。
 :::
 
 :::info

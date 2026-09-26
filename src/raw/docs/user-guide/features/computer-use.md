@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: 357a5540e2e317383515735bbafd88786ef61fb7
+upstream_blob: 9a09d504c3105825f927ccffed319f015e9867e6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -476,6 +476,29 @@ computer_use:
 ```
 HERMES_CUA_DRIVER_CMD=/path/to/your/cua-driver
 ```
+
+### Windows での自動起動（オプトイン） {#windows-auto-start-opt-in}
+
+Windows では、cua-driver を起動のたびに動くスケジュールされたタスク
+（`cua-driver-serve`）から走らせておき、Hermes が必要とするときにはもう待ち受けている状態にできます。
+このタスクは**オプトイン**です。既定では、コンピュータ操作はドライバーを必要になったときに
+セッションごとに起動します（macOS や Linux とまったく同じです）。ツールセットを入れたり有効にしたりしても、
+スケジュールされたタスクは登録されません（#97389）。
+
+使うには `config.yaml` に次を設定します（タスクは、次にドライバーを入れたとき、
+またはツールセットを有効にしたときに登録されます。すでにあれば修復されます）:
+
+```yaml
+computer_use:
+  autostart: true   # default: false (on-demand; no scheduled task)
+```
+
+これが要るのは、SSH 越しに Windows を操作するときです。Session 0 には対話できる
+デスクトップがないので、必要なときに起動するドライバーではデスクトップに届きません
+（手順は [windows-ssh](https://cua.ai/docs/how-to-guides/driver/windows-ssh) にあります）。
+タスクがあって消したい場合は、管理者権限のシェルで
+`cua-driver autostart disable`（または `schtasks /Delete /TN cua-driver-serve`）を実行して削除します。
+`computer_use.autostart` が false なら、Hermes がタスクを登録し直すことはありません。
 
 バックエンドをまるごと差し替える（テスト用）:
 

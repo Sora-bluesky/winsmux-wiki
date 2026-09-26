@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: d80b893596d87acae16ed9e1ac10adc5296d340d
+upstream_blob: b7b78a618db06398f16f27225d39566ceba9849c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -193,7 +193,13 @@ DB から履歴を読み直しても壊れません。またセッション行�
   メインモデルでの 1 回だけの再試行も失敗した場合、compress() は決め打ちの代わりの要約を
   確定させずに中断し、会話の記録をそのまま残します。警告にはその過負荷が出て
   （`failure_class=summary_overload_failure`）、空きが戻ったら `/compress` でもう一度試せます。
-  認証や利用量、ネットワーク、中身が空の失敗も、もともと同じように中断します。
+  認証や利用量、ネットワーク、中身が空の失敗も、もともと同じように中断します。*長引く*過負荷は
+  段階が上がります（#123167）。1 つのセッションで過負荷による中断が 3 回続くと、過負荷は
+  中断の理由として扱われなくなり、compress() は決め打ちの代わりの要約を確定させます
+  （`failure_class=summary_overload_degraded`）。失うのは中ほどの範囲に限られ、会話の記録が
+  膨らみ続けて `compression_exhausted` に至り、ゲートウェイの自動リセットでセッションを
+  丸ごと失うよりはましだからです。要約が 1 回成功するとこの回数は戻ります。
+  `abort_on_summary_failure: true` のときは、これまでどおり毎回中断します。
 - **プロバイダーが示したあふれ** — プロバイダー自身がコンテキスト長のエラーでリクエストを拒否した場合、
   復旧の処理はクールダウンを解除しないまま、回数を区切って 1 回だけ無視します
   （`max_compression_attempts`）。ここで先送りするとセッションが行き詰まります。毎ターン
@@ -246,7 +252,7 @@ auxiliary:
 | `codex_gpt55_autoraise` | `true` | bool | ChatGPT Codex の OAuth 経路で gpt-5.4/5.5/5.6 と gpt-6 Astra を使うとき、発動点を 85% に引き上げます（後述）。`false` にすると全体の `threshold` のままになります |
 | `codex_gpt55_autoraise_notice` | `true` | bool | Codex の gpt-5.5 で自動引き上げが起きたときの一度きりの通知を表示します。`false` にすると 85% への引き上げは残したまま、案内だけを出さなくなります |
 | `codex_app_server_auto` | `native` | `native`, `hermes`, `off` | Codex app-server のセッションにおけるスレッド圧縮のモードです（後述） |
-| `codex_responses_native` | `false` | bool | Responses API での OpenAI によるサーバー側圧縮を利用します。OpenAI の直接 API か ChatGPT Codex のサブスクリプションでの gpt-5.6 系のモデルと、公式の Codex OAuth でちょうど `gpt-6-astra` を使う場合に働きます（後述） |
+| `codex_responses_native` | `false` | bool | Responses API での OpenAI によるサーバー側圧縮を利用します。OpenAI の直接 API か ChatGPT Codex のサブスクリプションでの gpt-5.6 系のモデルと、公式の Codex OAuth で `gpt-6-astra`（モデル選択での別名 `-900k` を含む）を使う場合に働きます（後述） |
 | `codex_responses_compact_threshold` | `null` | `null` または正の整数 | サーバー側の圧縮の発動点です。**`codex_responses_native: true` のときだけ**読まれ、ローカルの圧縮がいつ走るかは変えません。ローカルの発動点は `threshold`（割合）を `threshold_tokens` で頭打ちにしたものです。`null` の場合は、解決済みのローカルの圧縮発動点に 8,192 トークンの余裕を持たせた値に従います。正の整数を指定すると絶対値として扱われ、必要なときだけ下方向に丸められます。不正な値は自動の挙動になります。使えるローカルの発動点がない場合、自動モードは `200000` にフォールバックします |
 | `in_place` | `true` | bool | 新しいセッションに切り替えず、同じセッション ID のまま圧縮します（後述） |
 
@@ -390,8 +396,8 @@ OpenAI の Responses API はサーバー側での圧縮に対応しています�
 利用するには `compression.codex_responses_native: true` を設定します。適用の条件は
 意図的に狭く、リクエストごとに毎回確認されます。
 
-- **モデル**: gpt-5.6 系と、公式の Codex サブスクリプションの OAuth でちょうど
-  `gpt-6-astra` を使う場合です。直接 API での Astra、Astra の派生版、その他の GPT-6 の
+- **モデル**: gpt-5.6 系と、公式の Codex サブスクリプションの OAuth で
+  `gpt-6-astra`（とモデル選択での別名 `-900k`）を使う場合です。直接 API での Astra、その他の Astra の派生版、その他の GPT-6 の
   モデルは対象外です。gpt-5.1 / 5.2 はこのフィールドがあると HTTP 500 を返すか
   ストリームが止まってしまい、機能を落として再試行できるような構造化された拒否は
   返ってきません（2026 年 8 月に実地で確認）。
@@ -455,6 +461,12 @@ max_summary_tokens   = min(200,000 × 0.05, 12,000) = 10,000
 
 これは安価な下準備で、冗長なツールの出力（ファイルの中身、ターミナルの出力、検索結果）から
 かなりのトークンを節約できます。
+
+モデルがまだ応答していないツールの回（ツールの実行直後に圧縮が走った場合。その後に `/steer` の
+メッセージが届いていてもいなくても同じです）は、テキストの結果をそのままの形で、画像の結果も欠けずに
+末尾に残します。モデルが自分で求めた出力を使えるようにするためです。ただし、その 1 回だけで
+入力の予算（コンテキストウィンドウから出力用の確保分を引いたもの）の 20% を超える回は要約されることがあり、
+古い画像も外されて、圧縮で空きを作れるようにします。
 
 ### 段階 2: 境界の決定 {#phase-2-determine-boundaries}
 

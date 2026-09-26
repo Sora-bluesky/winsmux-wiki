@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "対応プラットフォーム"
 description: "Hermes Agent が対応している OS、配布方法、機能の一覧"
 upstream_path: getting-started/platform-support.md
-upstream_blob: 895fbc29430b65d6547fd4581406199f96749882
+upstream_blob: 973d747d9a1ae6f4b66c38be9f52f3b9affa7a42
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/platform-support
 ---
@@ -44,6 +44,11 @@ Hermes Agent は多くのプラットフォームと配布方法に対応して�
 ネイティブのバンドルを作るパイプラインには、Apple Silicon に加えて Intel の macOS（`x64`）も含まれています。
 署名付きパッケージの更新の受け入れ確認も、両方のアーキテクチャについて定めています。
 ただし、それによって Apple Silicon に割り当てた Tier 1 の優先度が変わるわけではありません。
+例外はブートストラップ用のインストーラー `Hermes-Setup.dmg` です。これは Apple Silicon（`arm64`）向けにしか
+ビルドされていないため、Intel の Mac では「この Mac には対応していません」と表示されます。
+Intel の Mac では代わりに `darwin-x64` のデスクトップ版のバンドルを使うか、
+[CLI](/hermes/docs/getting-started/installation/#linux--macos--wsl2--android-termux) を入れてから
+`hermes desktop` を実行してください。
 Linux のデスクトップ版のパッケージ作成はリリースのワークフローで無効にしています。ただし、ローカルでの
 AppImage のビルドと、Linux ネイティブのパッケージマネージャー向けバンドルの確認は用意されています。
 

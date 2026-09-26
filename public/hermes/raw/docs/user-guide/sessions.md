@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 6362ff984a43e9761dddbdc7f2c1a6fb4b790ecd
+upstream_blob: 582c2b184d474179de326ef74509429bdf08459a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -472,6 +472,8 @@ hermes sessions delete 20250305_091523_a1b2c3d4
 hermes sessions delete 20250305_091523_a1b2c3d4 --yes
 ```
 
+動いているチャットで開いたままのセッションを削除しても、そのチャットは止まりません。次の保存のときに、メモリ上の会話記録を丸ごと使って、同じ ID でセッションが作り直されます。セッションを消したいなら、先にチャットを閉じてください。
+
 ### セッションの名前を変える {#rename-a-session}
 
 ```bash
@@ -575,6 +577,7 @@ hermes sessions prune --older-than 30 --yes
 
 :::info
 整理で消えるのは**終了した**セッションだけです（明示的に終了したか、自動でリセットされたもの）。動いているセッションが消えることはありません。
+圧縮によって複数のセッションに分かれた会話は、ひとまとまりとして整理されます。あとの区切りが 1 つでも残っている間は、それより前の区切りも残ります。
 :::
 
 ### セッションをまとめてアーカイブする {#bulk-archive-sessions}
@@ -662,6 +665,52 @@ hermes sessions repair-routing --max-gap-seconds 300
 会話はどちらにしても `/resume` とセッション検索から読めます。修復が変えるのは
 行き先だけです。先にバックアップを取ってください
 （`cp ~/.hermes/state.db ~/.hermes/state.db.bak`）。
+
+### 傷んだ保存済みプロンプトを直す {#repair-degraded-stored-prompts}
+
+#122822 の影響を受ける古いビルドでは、ゲートウェイの定期の手入れやゲートウェイの `/compress` が、
+切り離された保守用エージェントの、ツールを絞ったシステムプロンプトを、
+動いているセッションの上に保存してしまうことがありました。PR #122825 の根本修正を入れたあとは、
+`hermes sessions repair-prompts` で、すでに傷んでいる行を探せます。
+
+この走査は慎重です。修復を提案するのは、保存されたプロンプトに
+`## Skill Safety` の案内がなく、**しかも**保存されている `tools[]` の固定に
+`skill_manage`（これがあれば必ずその案内が出ます）が含まれているときだけです。読める固定が
+ない行や、`memory` だけの固定（これは正当な `toolsets: [memory]` の設定でもあります）の行は、
+**確かめられない**ものとして報告され、この走査では変更されません。必要なら
+`SESSION_ID` を指定してはっきり消してください。
+memory だけの行も、ひとりでに直せる状態になります。セッションを再開すると、その
+`tools[]` の固定がツール全体を固定し直すので、そのあとの走査では
+Skill Safety の案内がないまま `skill_manage` があることが分かり、消されます。
+
+```bash
+# Report verified candidates and unverifiable rows; writes nothing
+hermes sessions repair-prompts
+
+# Clear verified degraded prompts after confirmation
+hermes sessions repair-prompts --apply
+
+# Machine-readable report
+hermes sessions repair-prompts --json
+
+# Non-interactive automation: apply and report the ids actually cleared
+hermes sessions repair-prompts --apply --json
+
+# Explicit destructive override for one session (id or unique prefix).
+# This clears the stored prompt even when it is healthy.
+hermes sessions repair-prompts SESSION_ID --apply
+```
+
+プロンプトを消すと、わざと NULL が保存されます。次のターンで健全な中身が作り直されて保存されるので、
+修復したセッションごとに、予想どおりの
+`Stored system prompt ... is null; rebuilding from scratch` という警告が 1 回ずつ出ます。
+この警告は明示的に修復した結果であって、新たに壊れた証拠ではありません。
+
+修復は、#122822 の根本修正が入ってから行ってください。そうでないと、あとの
+保守用の圧縮で、その行がまた傷むことがあります。
+
+動いているゲートウェイは、キャッシュしている各セッションの古いプロンプトをメモリに持っているので、
+修復した行を反映させるには、`--apply` のあとにゲートウェイを再起動してください（`hermes gateway restart`）。
 
 ### プロファイルをまたいで混ざった状態を直す {#repair-state-crossed-between-profiles}
 
@@ -1030,7 +1079,9 @@ sessions:
 消えるのは**終了した**セッションだけです。動いているセッションは、どれだけ古くても
 自動で整理されることはありません。終了したセッションは最後のメッセージからの
 経過で数えるので、始まったのが保持期間より前でも、最近使った長い会話が
-それだけの理由で消えることはありません。
+それだけの理由で消えることはありません。圧縮によって複数のセッションに分かれた会話も
+同じです。あとの区切りが残っている間はそれより前の区切りも残り、会話全体が条件を
+満たしたときに、まとめて整理されます。
 
 **自動処理が残す開きっぱなしのセッション。** cron の処理、かんばんのワーカー、
 下位エージェント、1 回きりの CLI 実行といったものは、セッションを終了と
