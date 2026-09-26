@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Stripe Link Cli — Stripe Link を使ったエージェントの支払い — カード、SPT、承認"
 description: "Stripe Link を使ったエージェントの支払い — カード、SPT、承認"
 upstream_path: user-guide/skills/optional/payments/payments-stripe-link-cli.md

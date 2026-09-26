@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "CLI の記号集"
 description: "Hermes の端末画面に出てくる記号の意味をすべてまとめました。会話の流れに付く印、下段に出る表示、重ねて出る画面の記号、承認を求める画面までを扱います。"
 upstream_path: reference/cli-symbols.md

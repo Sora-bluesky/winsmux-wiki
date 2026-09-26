@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Faiss — 10 億件規模でも速い、ベクトルの類似検索"
 description: "10 億件規模でも速い、ベクトルの類似検索"
 upstream_path: user-guide/skills/optional/mlops/mlops-faiss.md

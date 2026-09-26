@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 description: "Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md

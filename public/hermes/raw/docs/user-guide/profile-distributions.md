@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "プロファイル配布: エージェントまるごと共有する"
 description: ""
 upstream_path: user-guide/profile-distributions.md

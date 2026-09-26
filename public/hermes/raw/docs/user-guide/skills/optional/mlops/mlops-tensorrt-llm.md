@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Tensorrt Llm — NVIDIA の GPU で LLM の推論を高い処理量で動かす"
 description: "NVIDIA の GPU で LLM の推論を高い処理量で動かす"
 upstream_path: user-guide/skills/optional/mlops/mlops-tensorrt-llm.md

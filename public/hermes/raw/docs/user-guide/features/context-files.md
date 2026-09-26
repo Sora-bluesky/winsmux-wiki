@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "コンテキストファイル"
 description: "プロジェクトのコンテキストファイル（.hermes.md、AGENTS.md、CLAUDE.md、全体共通の SOUL.md、.cursorrules）は、どの会話にも自動で読み込まれます"
 upstream_path: user-guide/features/context-files.md

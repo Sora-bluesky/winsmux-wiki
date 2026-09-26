@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Buzz 連携"
 description: "Block の Nostr ベースの人間 + エージェント作業空間 Buzz と Hermes Agent をつなぐ 3 通りの方法"
 upstream_path: integrations/buzz.md

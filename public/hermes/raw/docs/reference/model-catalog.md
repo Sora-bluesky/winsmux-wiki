@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "モデルカタログ"
 description: "OpenRouter と Nous Portal のモデル選択リストを組み立てる、遠隔に置かれた一覧ファイルです。"
 upstream_path: reference/model-catalog.md

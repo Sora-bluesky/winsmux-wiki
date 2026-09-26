@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Songsee — 音声のスペクトログラムや特徴量（mel, chroma, MFCC）を CLI で作る"
 description: "音声のスペクトログラムや特徴量（mel, chroma, MFCC）を CLI で作る"
 upstream_path: user-guide/skills/bundled/media/media-songsee.md

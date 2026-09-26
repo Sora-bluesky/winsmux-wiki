@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Sdlc Review — Kanban の引き継ぎをレビューし、検証済みの結果を振り分ける"
 description: "Kanban の引き継ぎをレビューし、検証済みの結果を振り分ける"
 upstream_path: user-guide/skills/bundled/devops/devops-sdlc-review.md

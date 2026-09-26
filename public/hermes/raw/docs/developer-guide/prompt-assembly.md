@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "プロンプトの組み立て"
 description: "Hermes がシステムプロンプトをどう組み立て、キャッシュの安定性をどう保ち、その場限りの層をどう差し込むか"
 upstream_path: developer-guide/prompt-assembly.md

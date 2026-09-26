@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ブラウザの自動操作"
 description: "いくつものプロバイダ、CDP でつなぐ手元の Chromium 系ブラウザ、あるいはクラウドのブラウザでブラウザを操り、ウェブとのやり取り、フォームの入力、情報の取り出しなどを行います。"
 upstream_path: user-guide/features/browser.md

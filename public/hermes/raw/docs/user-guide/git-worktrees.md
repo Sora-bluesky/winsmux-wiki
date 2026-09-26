@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Git ワークツリー"
 description: "git のワークツリーと独立したチェックアウトを使って、同じリポジトリで複数の Hermes エージェントを安全に動かします"
 upstream_path: user-guide/git-worktrees.md

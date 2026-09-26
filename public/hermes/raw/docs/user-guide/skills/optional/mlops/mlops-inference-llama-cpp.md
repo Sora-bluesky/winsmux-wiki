@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Llama Cpp — llama.cpp によるローカル GGUF 推論と HF Hub でのモデル探索"
 description: "llama.cpp によるローカル GGUF 推論と HF Hub でのモデル探索"
 upstream_path: user-guide/skills/optional/mlops/mlops-inference-llama-cpp.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Grounded Citations — 回答や文書を、出典を示せる形に裏付ける"
 description: "回答や文書を、出典を示せる形に裏付ける"
 upstream_path: user-guide/skills/bundled/research/research-grounded-citations.md

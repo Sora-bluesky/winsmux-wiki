@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "デスクトップアプリのネイティブサインイン（RFC 8252）"
 description: "Hermes デスクトップアプリが、システムのブラウザと PKCE を使って認証付きゲートウェイにサインインする仕組み。埋め込みの WebView もセッションクッキーも使いません"
 upstream_path: guides/desktop-native-signin.md

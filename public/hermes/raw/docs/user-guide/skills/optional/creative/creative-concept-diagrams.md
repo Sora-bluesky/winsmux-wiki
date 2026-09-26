@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Concept Diagrams — フラットで最小限の教材向け SVG を HTML として作る"
 description: "フラットで最小限の教材向け SVG を HTML として作る"
 upstream_path: user-guide/skills/optional/creative/creative-concept-diagrams.md

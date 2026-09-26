@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "エージェントに自分のメールアドレスを持たせる"
 description: "同梱の Himalaya スキルを使って、エージェントが読み書きできる専用のメールボックスを用意します。cron で定期的に確認する型と、気をつけたいことも合わせて説明します"
 upstream_path: guides/agent-email-address.md

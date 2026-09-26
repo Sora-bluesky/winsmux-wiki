@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Google Vertex AI"
 description: "Hermes Agent を Google Cloud Vertex AI の Gemini で使う — OAuth2 のサービスアカウントまたは ADC、GCP の請求とクォータ、固定の API キーは不要"
 upstream_path: guides/google-vertex.md

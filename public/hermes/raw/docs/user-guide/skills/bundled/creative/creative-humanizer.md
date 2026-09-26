@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Humanizer — テキストを人間らしくする: AI 特有の言い回しを取り除き、本物の声を足す"
 description: "テキストを人間らしくする: AI 特有の言い回しを取り除き、本物の声を足す"
 upstream_path: user-guide/skills/bundled/creative/creative-humanizer.md

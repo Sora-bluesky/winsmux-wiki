@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "X（Twitter）の検索"
 description: "xAI に組み込まれた x_search という Responses の道具を使って、エージェントの中から X（Twitter）の投稿やスレッドを検索する。SuperGrok のログインでも XAI_API_KEY でも動く"
 upstream_path: user-guide/features/x-search.md

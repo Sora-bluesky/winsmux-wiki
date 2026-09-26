@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Mixture of Agents"
 description: "名前を付けた MoA プリセットを作り、Mixture of Agents プロバイダーの選べるモデルとして表示します"
 upstream_path: user-guide/features/mixture-of-agents.md

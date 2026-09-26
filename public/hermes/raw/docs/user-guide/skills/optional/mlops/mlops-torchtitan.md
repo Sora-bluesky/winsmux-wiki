@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Torchtitan — PyTorch の 4D 並列で LLM を大規模に事前学習する"
 description: "PyTorch の 4D 並列で LLM を大規模に事前学習する"
 upstream_path: user-guide/skills/optional/mlops/mlops-torchtitan.md

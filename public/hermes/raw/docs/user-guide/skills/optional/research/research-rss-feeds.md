@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Rss Feeds — RSS・Atom・JSON のフィードを読み、ページの裏にあるフィードを見つける"
 description: "RSS・Atom・JSON のフィードを読み、ページの裏にあるフィードを見つける"
 upstream_path: user-guide/skills/optional/research/research-rss-feeds.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md

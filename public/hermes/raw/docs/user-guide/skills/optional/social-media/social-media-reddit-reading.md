@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Reddit Reading — Reddit を読む。サブレディット、検索、スレッド、ユーザー"
 description: "Reddit を読む。サブレディット、検索、スレッド、ユーザー"
 upstream_path: user-guide/skills/optional/social-media/social-media-reddit-reading.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Yuanbao — 元宝のグループで、ユーザーへの @ メンション、グループ情報やメンバーの照会を行います"
 description: "元宝のグループで、ユーザーへの @ メンション、グループ情報やメンバーの照会を行います"
 upstream_path: user-guide/skills/optional/yuanbao/yuanbao-yuanbao.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 description: "Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 upstream_path: user-guide/skills/bundled/software-development/software-development-python-debugpy.md

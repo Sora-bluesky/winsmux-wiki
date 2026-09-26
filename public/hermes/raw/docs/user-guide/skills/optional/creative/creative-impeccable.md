@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Impeccable — フロントエンド設計の指針、上流で保守（impeccable）"
 description: "フロントエンド設計の指針、上流で保守（impeccable）"
 upstream_path: user-guide/skills/optional/creative/creative-impeccable.md

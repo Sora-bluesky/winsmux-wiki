@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Spike — 作り込む前に、使い捨ての試作で見込みを確かめます"
 description: "作り込む前に、使い捨ての試作で見込みを確かめます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-spike.md

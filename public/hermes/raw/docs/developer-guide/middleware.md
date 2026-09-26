@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ミドルウェア"
 description: "LLM 呼び出しとツール呼び出しの挙動を変えるプラグインのミドルウェア。契約、実行順序、例"
 upstream_path: developer-guide/middleware.md

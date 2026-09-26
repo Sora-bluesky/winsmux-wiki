@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Mpp Agent — Machine Payments Protocol (MPP) で HTTP 402 の API に支払う"
 description: "Machine Payments Protocol (MPP) で HTTP 402 の API に支払う"
 upstream_path: user-guide/skills/optional/payments/payments-mpp-agent.md

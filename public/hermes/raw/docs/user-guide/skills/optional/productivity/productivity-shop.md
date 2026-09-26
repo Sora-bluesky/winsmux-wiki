@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Shop — Shop の商品検索、購入手続き、注文追跡、返品"
 description: "Shop の商品検索、購入手続き、注文追跡、返品"
 upstream_path: user-guide/skills/optional/productivity/productivity-shop.md

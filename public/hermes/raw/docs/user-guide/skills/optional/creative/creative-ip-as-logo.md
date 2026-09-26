@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Ip As Logo — 32px でも見分けられる、最小限でかわいい IP マスコットのマークを作る"
 description: "32px でも見分けられる、最小限でかわいい IP マスコットのマークを作る"
 upstream_path: user-guide/skills/optional/creative/creative-ip-as-logo.md

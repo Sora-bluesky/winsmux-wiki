@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Windows（WSL2）ガイド"
 description: "WSL2 を使って Windows で Hermes Agent を動かす方法。セットアップ、Windows と Linux の間のファイルのやり取り、ネットワーク、よくあるつまずき"
 upstream_path: user-guide/windows-wsl-quickstart.md

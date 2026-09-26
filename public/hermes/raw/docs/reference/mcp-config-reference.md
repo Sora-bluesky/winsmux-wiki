@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "MCP 設定の早見表"
 description: "Hermes Agent の MCP 設定キー、絞り込みの動き、ユーティリティツールの方針をまとめた早見表です。"
 upstream_path: reference/mcp-config-reference.md

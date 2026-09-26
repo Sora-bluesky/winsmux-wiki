@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ウェブ検索プロバイダのプラグイン"
 description: "Hermes Agent 向けに、ウェブ検索・本文抽出・巡回のバックエンドとなるプラグインを作る方法"
 upstream_path: developer-guide/web-search-provider-plugin.md

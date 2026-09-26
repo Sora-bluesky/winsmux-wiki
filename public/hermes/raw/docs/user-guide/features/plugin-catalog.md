@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md

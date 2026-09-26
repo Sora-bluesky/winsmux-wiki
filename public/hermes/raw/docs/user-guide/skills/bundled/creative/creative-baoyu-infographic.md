@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Baoyu Infographic — インフォグラフィック: 21 種類のレイアウト × 21 種類のスタイル (信息图, 可视化)"
 description: "インフォグラフィック: 21 種類のレイアウト × 21 種類のスタイル (信息图, 可视化)"
 upstream_path: user-guide/skills/bundled/creative/creative-baoyu-infographic.md

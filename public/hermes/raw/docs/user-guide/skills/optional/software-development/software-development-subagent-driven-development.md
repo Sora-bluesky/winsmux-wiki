@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Subagent Driven Development — delegate_task のサブエージェントで計画を実行する（2 段階レビュー）"
 description: "delegate_task のサブエージェントで計画を実行する（2 段階レビュー）"
 upstream_path: user-guide/skills/optional/software-development/software-development-subagent-driven-development.md

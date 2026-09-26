@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Actual Setup — Actual Computer（actual.inc）の推論を Hermes に設定する"
 description: "Actual Computer（actual.inc）の推論を Hermes に設定する"
 upstream_path: user-guide/skills/optional/devops/devops-actual-setup.md

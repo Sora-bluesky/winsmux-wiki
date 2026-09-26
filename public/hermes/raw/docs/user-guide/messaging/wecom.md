@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "WeCom（企業向け WeChat）"
 description: "AI Bot の WebSocket ゲートウェイ経由で Hermes Agent を WeCom につなぎます"
 upstream_path: user-guide/messaging/wecom.md

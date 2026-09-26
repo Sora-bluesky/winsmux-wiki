@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Audiocraft Audio Generation — AudioCraft。MusicGen で文章から音楽、AudioGen で文章から音"
 description: "AudioCraft。MusicGen で文章から音楽、AudioGen で文章から音"
 upstream_path: user-guide/skills/optional/creative/creative-audiocraft-audio-generation.md

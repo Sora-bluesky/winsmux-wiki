@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Dynamic Workflow — 計画をコードに持たせた並列展開、反証による検証、段階ごとの投入"
 description: "計画をコードに持たせた並列展開、反証による検証、段階ごとの投入"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow.md

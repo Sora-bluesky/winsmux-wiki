@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Test Driven Development — TDD: RED-GREEN-REFACTOR を守り、コードより先にテストを書きます"
 description: "TDD: RED-GREEN-REFACTOR を守り、コードより先にテストを書きます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-test-driven-development.md

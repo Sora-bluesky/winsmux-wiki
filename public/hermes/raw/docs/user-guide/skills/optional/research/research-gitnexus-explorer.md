@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Gitnexus Explorer — コードベースの知識グラフを対話的な Web UI で見る"
 description: "コードベースの知識グラフを対話的な Web UI で見る"
 upstream_path: user-guide/skills/optional/research/research-gitnexus-explorer.md

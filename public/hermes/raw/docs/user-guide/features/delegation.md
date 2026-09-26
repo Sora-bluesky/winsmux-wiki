@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md

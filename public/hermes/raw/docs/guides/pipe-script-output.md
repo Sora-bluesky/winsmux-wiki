@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "スクリプトの出力をメッセージングプラットフォームへ流す"
 description: "シェルスクリプト、cron ジョブ、CI のフック、監視デーモンなどのテキストを、`hermes send` で Telegram・Discord・Slack・Signal などへ送ります。"
 upstream_path: guides/pipe-script-output.md

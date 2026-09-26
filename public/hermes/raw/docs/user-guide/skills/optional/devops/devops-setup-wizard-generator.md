@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Setup Wizard Generator — 手作業のセットアップを人に案内する bash ウィザードを作る"
 description: "手作業のセットアップを人に案内する bash ウィザードを作る"
 upstream_path: user-guide/skills/optional/devops/devops-setup-wizard-generator.md

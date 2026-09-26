@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "よくある質問とトラブル対処"
 description: "Hermes Agent でよくある質問と、つまずきやすい箇所の対処法"
 upstream_path: reference/faq.md

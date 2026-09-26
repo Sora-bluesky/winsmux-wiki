@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md

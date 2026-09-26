@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Stable Diffusion — 文章からの画像生成、部分の描き直し、画像からの画像生成"
 description: "文章からの画像生成、部分の描き直し、画像からの画像生成"
 upstream_path: user-guide/skills/optional/mlops/mlops-stable-diffusion.md

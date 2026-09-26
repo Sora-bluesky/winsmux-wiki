@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Teams 会議パイプラインを運用する"
 description: "Microsoft Teams 会議パイプラインの運用手順、公開前チェック、運用者用ワークシート"
 upstream_path: guides/operate-teams-meeting-pipeline.md

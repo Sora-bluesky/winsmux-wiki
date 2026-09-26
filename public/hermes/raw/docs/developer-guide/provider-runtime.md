@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "実行時のプロバイダー解決"
 description: "Hermes が実行時にプロバイダー・資格情報・API モード・補助モデルをどう決めているか"
 upstream_path: developer-guide/provider-runtime.md

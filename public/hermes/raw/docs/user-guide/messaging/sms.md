@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "SMS（Twilio）"
 description: "Hermes Agent を Twilio 経由の SMS チャットボットとして設定する"
 upstream_path: user-guide/messaging/sms.md

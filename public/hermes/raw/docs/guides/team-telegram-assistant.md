@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "チュートリアル: チームで使う Telegram アシスタント"
 description: "コードの相談、調べもの、サーバー管理などをチーム全員で頼める Telegram ボットの作り方を、順を追って説明します"
 upstream_path: guides/team-telegram-assistant.md

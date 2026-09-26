@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "オブザーバーフック"
 description: "プラグイン向けの読み取り専用テレメトリ契約。イベントの系統、相関 ID、ペイロードの安全性"
 upstream_path: developer-guide/observer-hooks.md

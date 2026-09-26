@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Raft"
 description: "wake チャンネルのブリッジ経由で、Hermes Agent を外部エージェントとして Raft につなぐ"
 upstream_path: user-guide/messaging/raft.md

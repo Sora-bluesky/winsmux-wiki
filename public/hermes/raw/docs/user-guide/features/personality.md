@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "人格と SOUL.md"
 description: "グローバルな SOUL.md、組み込みの人格、独自のペルソナ定義で Hermes Agent の人格を自分好みにします"
 upstream_path: user-guide/features/personality.md

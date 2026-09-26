@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Document To Action Items — 書類から、出典付きの義務・期限・作業を取り出す"
 description: "書類から、出典付きの義務・期限・作業を取り出す"
 upstream_path: user-guide/skills/bundled/productivity/productivity-document-to-action-items.md

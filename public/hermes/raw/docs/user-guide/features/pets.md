@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ペット（Petdex のマスコット）"
 description: "CLI・TUI・デスクトップアプリを通じて、エージェントの動きに反応する動くマスコットを迎え入れる"
 upstream_path: user-guide/features/pets.md

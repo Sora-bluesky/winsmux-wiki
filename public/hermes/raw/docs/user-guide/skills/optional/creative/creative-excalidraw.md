@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Excalidraw — 手描き風の Excalidraw JSON で図を作る（構成図、フロー図、シーケンス図）"
 description: "手描き風の Excalidraw JSON で図を作る（構成図、フロー図、シーケンス図）"
 upstream_path: user-guide/skills/optional/creative/creative-excalidraw.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Design Md — Google の DESIGN.md トークン仕様ファイルを書く・検査する・書き出す"
 description: "Google の DESIGN.md トークン仕様ファイルを書く・検査する・書き出す"
 upstream_path: user-guide/skills/bundled/creative/creative-design-md.md

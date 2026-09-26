@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Fitness Nutrition — wger / USDA を使ったトレーニング計画・マクロ栄養素・身体指標の計算"
 description: "wger / USDA を使ったトレーニング計画・マクロ栄養素・身体指標の計算"
 upstream_path: user-guide/skills/optional/health/health-fitness-nutrition.md

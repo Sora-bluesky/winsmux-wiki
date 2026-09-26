@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "成果物モード（チャットに届く生成ファイル）"
 description: "生成したグラフ・PDF・表計算などのファイルを、エージェントがメッセージアプリの標準の添付として送り届けるしくみ"
 upstream_path: user-guide/features/deliverable-mode.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Systematic Debugging — 4 つの段階で根本原因を突き止めます。直す前に、まず不具合を理解します"
 description: "4 つの段階で根本原因を突き止めます。直す前に、まず不具合を理解します"
 upstream_path: user-guide/skills/bundled/software-development/software-development-systematic-debugging.md

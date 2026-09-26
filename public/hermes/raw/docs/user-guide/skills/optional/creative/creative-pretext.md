@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Pretext — DOM を使わない文字組みで、ブラウザで動く作品を作る"
 description: "DOM を使わない文字組みで、ブラウザで動く作品を作る"
 upstream_path: user-guide/skills/optional/creative/creative-pretext.md

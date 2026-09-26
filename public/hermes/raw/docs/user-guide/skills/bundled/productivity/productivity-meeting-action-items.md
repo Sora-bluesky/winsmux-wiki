@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Meeting Action Items — 会議メモから、根拠付きの決定事項・担当者・チケットを起こす"
 description: "会議メモから、根拠付きの決定事項・担当者・チケットを起こす"
 upstream_path: user-guide/skills/bundled/productivity/productivity-meeting-action-items.md

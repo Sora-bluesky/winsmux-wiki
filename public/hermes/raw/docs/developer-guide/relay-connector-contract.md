@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Relay ↔ Connector 契約"
 description: "Hermes gateway の relay アダプターと外部コネクターのあいだの通信契約（実験的）"
 upstream_path: developer-guide/relay-connector-contract.md

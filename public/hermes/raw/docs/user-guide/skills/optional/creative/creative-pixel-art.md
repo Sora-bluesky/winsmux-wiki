@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Pixel Art — 時代ごとの色数でドット絵を作る（NES、Game Boy、PICO-8）"
 description: "時代ごとの色数でドット絵を作る（NES、Game Boy、PICO-8）"
 upstream_path: user-guide/skills/optional/creative/creative-pixel-art.md

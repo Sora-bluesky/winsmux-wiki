@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "コードベース所有マップ"
 description: "どのディレクトリがどのサブシステムに属し、それぞれの正しいドキュメント入口はどこにあるか"
 upstream_path: developer-guide/codebase-ownership.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Bot Mode"
 description: "Hermes のプロファイルを、名前を持つ Bot の一覧に変えます。それぞれが自分のチャット、役割、モデル、記憶、スキル、アバターを持ちます。Bot は定期タスクをこなし、グループチャットを共有し、互いにメッセージを送り合います。"
 upstream_path: user-guide/bot-mode.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Pr Lens — コードの変更を、動く構成図・データフロー図の SVG として描く"
 description: "コードの変更を、動く構成図・データフロー図の SVG として描く"
 upstream_path: user-guide/skills/optional/software-development/software-development-pr-lens.md

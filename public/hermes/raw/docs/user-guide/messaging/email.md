@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "メール"
 description: "IMAP/SMTP 経由で Hermes Agent をメール応対の相棒として設定する"
 upstream_path: user-guide/messaging/email.md

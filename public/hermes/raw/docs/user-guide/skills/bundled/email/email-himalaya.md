@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Himalaya — Himalaya CLI: ターミナルから IMAP/SMTP のメールを扱う"
 description: "Himalaya CLI: ターミナルから IMAP/SMTP のメールを扱う"
 upstream_path: user-guide/skills/bundled/email/email-himalaya.md

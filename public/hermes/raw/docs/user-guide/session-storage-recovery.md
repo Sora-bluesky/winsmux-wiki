@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "セッション保存領域の復旧"
 description: "別のプロセスがセッションデータベースの先行書き込みログの古いコピーを保持していると Hermes に言われたときの対処と、state.db の横にあるファイルの正体"
 upstream_path: user-guide/session-storage-recovery.md

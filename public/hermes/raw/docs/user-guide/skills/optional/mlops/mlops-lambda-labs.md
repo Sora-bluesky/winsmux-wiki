@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Lambda Labs — ML の学習用に、必要なときだけ GPU を借りるクラウド"
 description: "ML の学習用に、必要なときだけ GPU を借りるクラウド"
 upstream_path: user-guide/skills/optional/mlops/mlops-lambda-labs.md

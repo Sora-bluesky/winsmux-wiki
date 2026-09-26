@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Decision Questionnaire — 自分では答えの出せない決めごとを質問票にする"
 description: "自分では答えの出せない決めごとを質問票にする"
 upstream_path: user-guide/skills/optional/productivity/productivity-decision-questionnaire.md

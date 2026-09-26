@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Inference Sh Cli — inference.sh の CLI から 150 以上の AI アプリ（画像・動画・LLM）を動かす"
 description: "inference.sh の CLI から 150 以上の AI アプリ（画像・動画・LLM）を動かす"
 upstream_path: user-guide/skills/optional/devops/devops-inference-sh-cli.md

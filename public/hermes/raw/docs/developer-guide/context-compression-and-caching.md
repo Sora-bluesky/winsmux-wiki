@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md

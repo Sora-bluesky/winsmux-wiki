@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Polymarket — Polymarket を調べる: 市場、価格、板、履歴"
 description: "Polymarket を調べる: 市場、価格、板、履歴"
 upstream_path: user-guide/skills/optional/finance/finance-polymarket.md

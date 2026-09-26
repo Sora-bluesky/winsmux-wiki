@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "委任と並行作業"
 description: "サブエージェントへの委任をいつどう使うか。並行しての調査、コードレビュー、複数ファイルの作業の型"
 upstream_path: guides/delegation-patterns.md

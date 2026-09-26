@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Scrollcraft — スクロールがタイムラインになる、上質なランディングページ"
 description: "スクロールがタイムラインになる、上質なランディングページ"
 upstream_path: user-guide/skills/optional/web-development/web-development-scrollcraft.md

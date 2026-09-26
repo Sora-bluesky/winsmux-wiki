@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Flash Attention — 長い系列を扱う Transformer の学習と推論を速くする"
 description: "長い系列を扱う Transformer の学習と推論を速くする"
 upstream_path: user-guide/skills/optional/mlops/mlops-flash-attention.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Node Inspect Debugger — --inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする"
 description: "--inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする"
 upstream_path: user-guide/skills/bundled/software-development/software-development-node-inspect-debugger.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Feishu / Lark"
 description: "Hermes Agent を Feishu または Lark の Bot として設定します"
 upstream_path: user-guide/messaging/feishu.md

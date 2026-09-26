@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Merger Model — M&A の EPS 増加・希薄化ワークブックを Excel で作る"
 description: "M&A の EPS 増加・希薄化ワークブックを Excel で作る"
 upstream_path: user-guide/skills/optional/finance/finance-merger-model.md

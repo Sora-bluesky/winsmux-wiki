@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Research Paper Writing — NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる"
 description: "NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる"
 upstream_path: user-guide/skills/optional/research/research-research-paper-writing.md

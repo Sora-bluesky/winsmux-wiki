@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Arxiv — arXiv の論文をキーワード・著者・分野・ID で探す"
 description: "arXiv の論文をキーワード・著者・分野・ID で探す"
 upstream_path: user-guide/skills/bundled/research/research-arxiv.md

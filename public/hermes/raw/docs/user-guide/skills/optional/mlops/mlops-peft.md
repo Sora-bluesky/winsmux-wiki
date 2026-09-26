@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Peft — 限られた GPU メモリで大きな LLM を LoRA でファインチューニングする"
 description: "限られた GPU メモリで大きな LLM を LoRA でファインチューニングする"
 upstream_path: user-guide/skills/optional/mlops/mlops-peft.md

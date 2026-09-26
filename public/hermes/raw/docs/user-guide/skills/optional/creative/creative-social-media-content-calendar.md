@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Social Media Content Calendar — 複数の SNS にまたがる企画を、指示書から投稿まで組み立てる"
 description: "複数の SNS にまたがる企画を、指示書から投稿まで組み立てる"
 upstream_path: user-guide/skills/optional/creative/creative-social-media-content-calendar.md

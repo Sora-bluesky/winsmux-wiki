@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Slime — Megatron と SGLang による LLM の強化学習後処理"
 description: "Megatron と SGLang による LLM の強化学習後処理"
 upstream_path: user-guide/skills/optional/mlops/mlops-slime.md

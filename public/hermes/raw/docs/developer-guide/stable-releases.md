@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md

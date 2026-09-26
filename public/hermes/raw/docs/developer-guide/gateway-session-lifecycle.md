@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ゲートウェイのセッションライフサイクル"
 description: "ゲートウェイにおける SessionSource・SessionEntry・SessionStore、セッションキーの規則、マルチユーザーの分離"
 upstream_path: developer-guide/gateway-session-lifecycle.md

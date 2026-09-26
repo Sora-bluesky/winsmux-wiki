@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "パスワードとログイン"
 description: "エージェントがパスワードを一度も見ることなく、サイトへのサインインや支払い、住所の入力を代わりに行います。"
 upstream_path: user-guide/features/credential-vault.md

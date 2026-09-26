@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "画像の貼り付けと視覚認識"
 description: "クリップボードの画像を Hermes CLI に貼り付けて、マルチモーダルな画像解析を行います。"
 upstream_path: user-guide/features/vision.md

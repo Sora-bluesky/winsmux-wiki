@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Hermes Relay"
 description: "プラットフォームの認証情報をコネクタ側が持つ形で、Hermes をメッセージングのプラットフォームにつなぎます。登録・できること・設定・困ったときの対処まで"
 upstream_path: user-guide/messaging/relay.md

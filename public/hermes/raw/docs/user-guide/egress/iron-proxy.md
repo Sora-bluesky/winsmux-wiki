@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "外向き通信に資格情報を差し込むプロキシ（iron-proxy）"
 description: ""
 upstream_path: user-guide/egress/iron-proxy.md

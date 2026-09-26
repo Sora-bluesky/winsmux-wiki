@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Ascii Video — ASCII 動画: 動画や音声を色付き ASCII の MP4/GIF に変換します"
 description: "ASCII 動画: 動画や音声を色付き ASCII の MP4/GIF に変換します"
 upstream_path: user-guide/skills/bundled/creative/creative-ascii-video.md

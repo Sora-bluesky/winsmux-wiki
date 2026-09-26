@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む"
 description: "OpenClaw の設定（記憶、skill）を Hermes に取り込む"
 upstream_path: user-guide/skills/optional/migration/migration-openclaw-migration.md

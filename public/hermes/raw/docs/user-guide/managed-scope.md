@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "管理者による適用範囲"
 description: "システム全体の管理用ディレクトリを使い、管理者が固定して利用者側では変更できない設定と秘密情報を配る仕組みです"
 upstream_path: user-guide/managed-scope.md

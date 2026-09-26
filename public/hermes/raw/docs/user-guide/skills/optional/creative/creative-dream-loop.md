@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Dream Loop — コンセプトアートに近づける反復で、見事な 3D シーンを作る"
 description: "コンセプトアートに近づける反復で、見事な 3D シーンを作る"
 upstream_path: user-guide/skills/optional/creative/creative-dream-loop.md

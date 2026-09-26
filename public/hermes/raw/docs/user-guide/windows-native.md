@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md

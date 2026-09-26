@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Neuroskill Bci — NeuroSkill から認知状態と気分のデータをそのまま受け取る"
 description: "NeuroSkill から認知状態と気分のデータをそのまま受け取る"
 upstream_path: user-guide/skills/optional/health/health-neuroskill-bci.md

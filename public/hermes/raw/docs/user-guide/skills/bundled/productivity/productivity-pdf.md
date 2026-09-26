@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Pdf — PDF ファイルを作る・読む・結合する・入力する・OCR にかける・本文を書き換える"
 description: "PDF ファイルを作る・読む・結合する・入力する・OCR にかける・本文を書き換える"
 upstream_path: user-guide/skills/bundled/productivity/productivity-pdf.md

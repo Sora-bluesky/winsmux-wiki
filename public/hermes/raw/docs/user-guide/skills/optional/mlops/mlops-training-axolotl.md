@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Axolotl — Axolotl: YAML で LLM をファインチューニングする（LoRA、DPO、GRPO）"
 description: "Axolotl: YAML で LLM をファインチューニングする（LoRA、DPO、GRPO）"
 upstream_path: user-guide/skills/optional/mlops/mlops-training-axolotl.md

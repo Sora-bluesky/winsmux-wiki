@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Hermes Agent で Nemotron 3 Ultra を無料で動かす"
 description: "Nous Portal の NVIDIA Nemotron 3 Ultra を試す。6 月 4 日〜18 日は無料、Hermes Agent は初日から対応"
 upstream_path: guides/run-nemotron-3-ultra-free.md

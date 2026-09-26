@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Kanban Video Orchestrator — 複数エージェントによる動画制作の流れを設計して動かす"
 description: "複数エージェントによる動画制作の流れを設計して動かす"
 upstream_path: user-guide/skills/optional/creative/creative-kanban-video-orchestrator.md

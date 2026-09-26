@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Qdrant — 本番の RAG システムのためのベクトル検索エンジン"
 description: "本番の RAG システムのためのベクトル検索エンジン"
 upstream_path: user-guide/skills/optional/mlops/mlops-qdrant.md

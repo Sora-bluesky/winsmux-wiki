@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Openhands — OpenHands CLI にコーディングを任せる（モデルを選ばない、LiteLLM）"
 description: "OpenHands CLI にコーディングを任せる（モデルを選ばない、LiteLLM）"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands.md

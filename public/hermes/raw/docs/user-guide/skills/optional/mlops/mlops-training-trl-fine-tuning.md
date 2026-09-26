@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Trl Fine Tuning — TRL: LLM の RLHF に使う SFT、DPO、GRPO、RLOO と報酬モデリング"
 description: "TRL: LLM の RLHF に使う SFT、DPO、GRPO、RLOO と報酬モデリング"
 upstream_path: user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning.md

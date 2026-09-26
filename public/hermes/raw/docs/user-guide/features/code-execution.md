@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "コードの実行"
 description: "RPC でツールを呼べる Python の実行環境。何手もかかる作業を1ターンに畳み込みます"
 upstream_path: user-guide/features/code-execution.md

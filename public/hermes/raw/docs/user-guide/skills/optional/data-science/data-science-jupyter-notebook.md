@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Jupyter Notebook — 動いている Jupyter カーネルで Python を少しずつ試す（hamelnb）"
 description: "動いている Jupyter カーネルで Python を少しずつ試す（hamelnb）"
 upstream_path: user-guide/skills/optional/data-science/data-science-jupyter-notebook.md

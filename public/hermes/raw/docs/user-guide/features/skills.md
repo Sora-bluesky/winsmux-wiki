@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "スキルの仕組み"
 description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェント管理のスキル、スキルのハブ"
 upstream_path: user-guide/features/skills.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "スキンとテーマ"
 description: "組み込みのスキンと自分で作ったスキンで Hermes CLI の見た目を変えます"
 upstream_path: user-guide/features/skins.md

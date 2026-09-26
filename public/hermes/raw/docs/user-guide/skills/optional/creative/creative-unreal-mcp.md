@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Unreal Mcp — Unreal Engine のエディタでシーン・アクター・レンダリングを自動化する"
 description: "Unreal Engine のエディタでシーン・アクター・レンダリングを自動化する"
 upstream_path: user-guide/skills/optional/creative/creative-unreal-mcp.md

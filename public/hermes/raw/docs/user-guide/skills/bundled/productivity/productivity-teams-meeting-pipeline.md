@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Teams Meeting Pipeline — Teams の会議のまとめ、ジョブの再実行、Graph の購読"
 description: "Teams の会議のまとめ、ジョブの再実行、Graph の購読"
 upstream_path: user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline.md

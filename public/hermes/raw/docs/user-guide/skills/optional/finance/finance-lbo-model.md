@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Lbo Model — IRR / MOIC 付きの LBO ワークブックを Excel で作る"
 description: "IRR / MOIC 付きの LBO ワークブックを Excel で作る"
 upstream_path: user-guide/skills/optional/finance/finance-lbo-model.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Fastmcp — Python で MCP サーバーを作り、試し、公開する"
 description: "Python で MCP サーバーを作り、試し、公開する"
 upstream_path: user-guide/skills/optional/mcp/mcp-fastmcp.md

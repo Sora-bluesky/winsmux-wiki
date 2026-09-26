@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Stripe Projects — Stripe Projects で SaaS を用意し、認証情報を同期する"
 description: "Stripe Projects で SaaS を用意し、認証情報を同期する"
 upstream_path: user-guide/skills/optional/payments/payments-stripe-projects.md

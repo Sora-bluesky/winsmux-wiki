@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Osint Investigation — 公開記録と制裁データから資金の流れを追う"
 description: "公開記録と制裁データから資金の流れを追う"
 upstream_path: user-guide/skills/optional/research/research-osint-investigation.md

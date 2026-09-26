@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "スキルを作る"
 description: "Hermes Agent 向けのスキルの作り方 — SKILL.md の書式、指針、公開まで"
 upstream_path: developer-guide/creating-skills.md

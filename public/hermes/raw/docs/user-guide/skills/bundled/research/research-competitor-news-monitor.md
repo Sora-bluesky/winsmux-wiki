@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Competitor News Monitor — 指定した企業の重要なニュースを見張り、出典付きのダイジェストにまとめる"
 description: "指定した企業の重要なニュースを見張り、出典付きのダイジェストにまとめる"
 upstream_path: user-guide/skills/bundled/research/research-competitor-news-monitor.md

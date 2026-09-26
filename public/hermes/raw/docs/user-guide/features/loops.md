@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "繰り返しのループ"
 description: "セッションの中で、決まった間隔ごとにプロンプトを流し直す — Claude Code の /loop に対する Hermes なりの答え"
 upstream_path: user-guide/features/loops.md

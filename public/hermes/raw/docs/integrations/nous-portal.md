@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Nous Portal"
 description: "1 つの定額契約で 300 以上のフロンティアモデルと Tool Gateway が使える、Hermes Agent の推奨構成"
 upstream_path: integrations/nous-portal.md

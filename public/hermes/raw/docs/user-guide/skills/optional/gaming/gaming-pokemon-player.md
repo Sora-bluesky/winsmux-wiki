@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Pokemon Player — ヘッドレスのエミュレーターと RAM 読み取りでポケモンを遊ぶ"
 description: "ヘッドレスのエミュレーターと RAM 読み取りでポケモンを遊ぶ"
 upstream_path: user-guide/skills/optional/gaming/gaming-pokemon-player.md

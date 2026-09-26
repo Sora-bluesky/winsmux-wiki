@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Darwinian Evolver — Imbue の進化ループでプロンプト・正規表現・SQL・コードを進化させる"
 description: "Imbue の進化ループでプロンプト・正規表現・SQL・コードを進化させる"
 upstream_path: user-guide/skills/optional/research/research-darwinian-evolver.md

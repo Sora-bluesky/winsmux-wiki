@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "cron であらゆる作業を自動化する"
 description: "Hermes の cron を使った実践的な自動化パターン — 監視、レポート、パイプライン、複数スキルの組み合わせ"
 upstream_path: guides/automate-with-cron.md

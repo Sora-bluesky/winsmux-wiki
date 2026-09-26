@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ブラウザの CDP スーパーバイザ"
 description: "Hermes が JavaScript のネイティブなダイアログを見つけて応答するしくみと、常時つないだ CDP 経由で別オリジンの iframe を操作するしくみ。"
 upstream_path: developer-guide/browser-supervisor.md

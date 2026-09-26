@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Meme Generation — 定型画像に Pillow で文字を重ねてミーム画像を作る"
 description: "定型画像に Pillow で文字を重ねてミーム画像を作る"
 upstream_path: user-guide/skills/optional/creative/creative-meme-generation.md

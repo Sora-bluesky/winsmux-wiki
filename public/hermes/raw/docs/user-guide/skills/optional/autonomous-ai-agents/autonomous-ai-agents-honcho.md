@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Honcho — Hermes の Honcho メモリを設定し、うまく動かないときに直す"
 description: "Hermes の Honcho メモリを設定し、うまく動かないときに直す"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho.md

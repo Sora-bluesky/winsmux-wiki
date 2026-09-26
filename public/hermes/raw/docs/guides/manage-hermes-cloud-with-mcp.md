@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "MCP で Hermes Cloud を管理する"
 description: "Hermes Agent を Nous Portal の MCP サーバーにつなぎ、手元のエージェントとの会話だけで Hermes Cloud のインスタンスを一覧・起動・停止・管理できるようにする"
 upstream_path: guides/manage-hermes-cloud-with-mcp.md

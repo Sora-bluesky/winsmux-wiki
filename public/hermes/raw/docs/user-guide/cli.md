@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md

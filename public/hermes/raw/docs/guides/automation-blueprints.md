@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "自動化の型紙"
 description: "そのまま使える自動化の型紙です。予定した実行、GitHub のできごとをきっかけにした実行、API の Webhook、複数のスキルを組み合わせた流れをそろえています。"
 upstream_path: guides/automation-blueprints.md

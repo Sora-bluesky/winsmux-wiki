@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Serving Llms Vllm — vLLM: 高スループットな LLM 配信、OpenAI API、量子化"
 description: "vLLM: 高スループットな LLM 配信、OpenAI API、量子化"
 upstream_path: user-guide/skills/optional/mlops/mlops-inference-serving-llms-vllm.md

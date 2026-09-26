@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Hermes で SOUL.md を使う"
 description: "SOUL.md で Hermes Agent の既定の話し方を形づくる方法と、そこに何を書くべきか、AGENTS.md や /personality との違い"
 upstream_path: guides/use-soul-with-hermes.md

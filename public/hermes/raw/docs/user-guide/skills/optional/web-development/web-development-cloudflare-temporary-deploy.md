@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Cloudflare Temporary Deploy — アカウントなしで Worker を公開する（wrangler --temporary）"
 description: "アカウントなしで Worker を公開する（wrangler --temporary）"
 upstream_path: user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy.md

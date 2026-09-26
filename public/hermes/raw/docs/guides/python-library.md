@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Hermes を Python ライブラリとして使う"
 description: "AIAgent を自作の Python スクリプト・Web アプリ・自動化パイプラインに組み込む方法。CLI は不要です"
 upstream_path: guides/python-library.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Mac でローカル LLM を動かす"
 description: "llama.cpp または MLX を使って macOS 上に OpenAI 互換のローカル LLM サーバーを立てる手順。モデルの選び方、メモリの節約、Apple Silicon での実測ベンチマークまで"
 upstream_path: guides/local-llm-on-mac.md

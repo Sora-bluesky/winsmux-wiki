@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Ast Grep — ast-grep で構文木を見ながらコードを検索・書き換えする"
 description: "ast-grep で構文木を見ながらコードを検索・書き換えする"
 upstream_path: user-guide/skills/optional/software-development/software-development-ast-grep.md

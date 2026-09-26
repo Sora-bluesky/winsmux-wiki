@@ -981,3 +981,9 @@ Hermes Agent 0.21.5
 - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/line
 - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 - https://hermes-agent.nousresearch.com/docs/llms.txt
+
+## ライセンス
+
+- 公式ドキュメントの翻訳部分: Copyright (c) 2025 Nous Research（MIT License）
+- サイト独自の部分: Copyright (c) 2026 Sora-bluesky（MIT License）
+- 全文: https://wiki.winsmux.dev/hermes/licenses.txt

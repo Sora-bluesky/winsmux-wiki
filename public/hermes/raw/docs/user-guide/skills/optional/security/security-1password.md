@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "1Password — op CLI を用意してサインインし、秘密の値を読み書きする"
 description: "op CLI を用意してサインインし、秘密の値を読み書きする"
 upstream_path: user-guide/skills/optional/security/security-1password.md

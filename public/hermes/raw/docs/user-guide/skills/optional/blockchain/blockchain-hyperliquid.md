@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Hyperliquid — Hyperliquid の相場データ、口座の履歴、取引の振り返り"
 description: "Hyperliquid の相場データ、口座の履歴、取引の振り返り"
 upstream_path: user-guide/skills/optional/blockchain/blockchain-hyperliquid.md

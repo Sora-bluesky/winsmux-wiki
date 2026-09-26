@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Email Inbox Triage — 受信箱を仕分ける: スレッドに優先順位を付け、安全に返信案を書く"
 description: "受信箱を仕分ける: スレッドに優先順位を付け、安全に返信案を書く"
 upstream_path: user-guide/skills/bundled/email/email-email-inbox-triage.md

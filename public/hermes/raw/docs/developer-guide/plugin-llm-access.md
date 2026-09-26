@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "プラグインからの LLM 呼び出し"
 description: "ctx.llm を使うと、プラグインの中からどんな LLM 呼び出しもできます。チャットでも構造化出力でも、同期でも非同期でも同じです。認証はホストが持ち、信頼ゲートは既定で閉じ、JSON Schema による検証も選べます。"
 upstream_path: developer-guide/plugin-llm-access.md

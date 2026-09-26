@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Xurl — xurl CLI で X/Twitter を扱う: 投稿の生データ検索、投稿、DM、メディア"
 description: "xurl CLI で X/Twitter を扱う: 投稿の生データ検索、投稿、DM、メディア"
 upstream_path: user-guide/skills/bundled/social-media/social-media-xurl.md

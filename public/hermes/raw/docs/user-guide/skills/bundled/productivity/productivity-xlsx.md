@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Xlsx — Excel の .xlsx ブックと CSV を作る・読む・直す"
 description: "Excel の .xlsx ブックと CSV を作る・読む・直す"
 upstream_path: user-guide/skills/bundled/productivity/productivity-xlsx.md

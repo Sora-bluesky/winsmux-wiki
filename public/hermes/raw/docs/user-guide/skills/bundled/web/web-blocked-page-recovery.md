@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Blocked Page Recovery — ページの取得に失敗したときに使います: 403/429、ペイウォール、WAF、ボット判定の壁"
 description: "ページの取得に失敗したときに使います: 403/429、ペイウォール、WAF、ボット判定の壁"
 upstream_path: user-guide/skills/bundled/web/web-blocked-page-recovery.md

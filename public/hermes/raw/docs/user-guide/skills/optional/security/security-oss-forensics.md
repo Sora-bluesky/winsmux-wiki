@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Oss Forensics — GitHub サプライチェーンのフォレンジック: 復元・IOC・報告"
 description: "GitHub サプライチェーンのフォレンジック: 復元・IOC・報告"
 upstream_path: user-guide/skills/optional/security/security-oss-forensics.md

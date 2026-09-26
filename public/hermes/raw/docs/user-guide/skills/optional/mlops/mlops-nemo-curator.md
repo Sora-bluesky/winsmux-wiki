@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Nemo Curator — LLM の学習データを整える: 重複除去・絞り込み・個人情報の伏せ字化"
 description: "LLM の学習データを整える: 重複除去・絞り込み・個人情報の伏せ字化"
 upstream_path: user-guide/skills/optional/mlops/mlops-nemo-curator.md

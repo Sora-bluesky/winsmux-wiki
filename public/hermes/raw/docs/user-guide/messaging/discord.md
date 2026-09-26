@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Discord"
 description: "Hermes Agent を Discord のボットとして設定する"
 upstream_path: user-guide/messaging/discord.md

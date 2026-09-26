@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "まとめて処理する"
 description: "エージェントの軌跡を大量に生成する — 並列処理、途中経過の保存、ツールセットの配分"
 upstream_path: user-guide/features/batch-processing.md

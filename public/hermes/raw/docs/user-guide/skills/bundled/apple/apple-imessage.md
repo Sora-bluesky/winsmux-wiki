@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Imessage — macOS の imsg CLI で iMessage / SMS を送受信する"
 description: "macOS の imsg CLI で iMessage / SMS を送受信する"
 upstream_path: user-guide/skills/bundled/apple/apple-imessage.md

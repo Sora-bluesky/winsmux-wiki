@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "SSH / リモートホスト越しの OAuth"
 description: "Hermes をリモートのマシンやコンテナ、踏み台の向こうで動かしているときに、ブラウザを使う OAuth（Spotify、MCP サーバー）を完了させる方法"
 upstream_path: guides/oauth-over-ssh.md

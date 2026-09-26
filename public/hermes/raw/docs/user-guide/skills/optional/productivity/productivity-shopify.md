@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Shopify — curl で Shopify の Admin / Storefront GraphQL API を使う"
 description: "curl で Shopify の Admin / Storefront GraphQL API を使う"
 upstream_path: user-guide/skills/optional/productivity/productivity-shopify.md

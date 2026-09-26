@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Huggingface Tokenizers — 高速な BPE/WordPiece のトークン分割と、独自語彙の学習"
 description: "高速な BPE/WordPiece のトークン分割と、独自語彙の学習"
 upstream_path: user-guide/skills/optional/mlops/mlops-huggingface-tokenizers.md

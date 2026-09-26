@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "課金のライフサイクル（TUI）"
 description: "課金・サブスクリプションのあらゆる状態と型付きの拒否を、TUI の表示文言と回復手順に対応づけた一覧"
 upstream_path: developer-guide/billing-lifecycle.md

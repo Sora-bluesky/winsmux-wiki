@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Outlines — Outlines: JSON・正規表現・Pydantic で形を決めた LLM の生成"
 description: "Outlines: JSON・正規表現・Pydantic で形を決めた LLM の生成"
 upstream_path: user-guide/skills/optional/mlops/mlops-inference-outlines.md

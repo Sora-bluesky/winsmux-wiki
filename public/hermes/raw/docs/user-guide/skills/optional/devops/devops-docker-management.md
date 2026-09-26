@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Docker Management — Docker のコンテナ・イメージ・ボリューム・Compose を管理する"
 description: "Docker のコンテナ・イメージ・ボリューム・Compose を管理する"
 upstream_path: user-guide/skills/optional/devops/devops-docker-management.md

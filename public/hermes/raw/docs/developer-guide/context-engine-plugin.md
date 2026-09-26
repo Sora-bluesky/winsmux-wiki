@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "コンテキストエンジンのプラグイン"
 description: "組み込みの ContextCompressor を置き換えるコンテキストエンジンのプラグインを作る方法"
 upstream_path: developer-guide/context-engine-plugin.md

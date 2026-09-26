@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Instructor — LLM の出力を Pydantic で検証しながら決まった形で受け取る"
 description: "LLM の出力を Pydantic で検証しながら決まった形で受け取る"
 upstream_path: user-guide/skills/optional/mlops/mlops-instructor.md

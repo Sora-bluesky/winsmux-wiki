@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Hermes で MCP を使う"
 description: "MCP サーバーを Hermes Agent につなぎ、公開するツールを絞り込み、実際の作業で安全に使うための実践ガイド"
 upstream_path: guides/use-mcp-with-hermes.md

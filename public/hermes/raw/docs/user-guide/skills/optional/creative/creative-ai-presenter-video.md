@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Ai Presenter Video — 台本と画像から、検証済みの AI プレゼンター動画を作る"
 description: "台本と画像から、検証済みの AI プレゼンター動画を作る"
 upstream_path: user-guide/skills/optional/creative/creative-ai-presenter-video.md

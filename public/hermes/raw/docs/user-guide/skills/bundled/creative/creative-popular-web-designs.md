@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Popular Web Designs — 実在する 54 のデザインシステム（Stripe、Linear、Vercel）を HTML/CSS で"
 description: "実在する 54 のデザインシステム（Stripe、Linear、Vercel）を HTML/CSS で"
 upstream_path: user-guide/skills/bundled/creative/creative-popular-web-designs.md

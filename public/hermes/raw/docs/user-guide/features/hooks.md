@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md

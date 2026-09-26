@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Maps — OpenStreetMap と OSRM で位置検索・周辺施設・経路・タイムゾーンを調べる"
 description: "OpenStreetMap と OSRM で位置検索・周辺施設・経路・タイムゾーンを調べる"
 upstream_path: user-guide/skills/bundled/productivity/productivity-maps.md

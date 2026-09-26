@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md

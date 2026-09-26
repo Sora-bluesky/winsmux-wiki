@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Pinecone Research — Pinecone でエージェントの RAG と長期記憶を作る"
 description: "Pinecone でエージェントの RAG と長期記憶を作る"
 upstream_path: user-guide/skills/optional/research/research-pinecone-research.md

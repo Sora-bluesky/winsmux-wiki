@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Chroma — RAG と意味検索のための埋め込みデータベース"
 description: "RAG と意味検索のための埋め込みデータベース"
 upstream_path: user-guide/skills/optional/mlops/mlops-chroma.md

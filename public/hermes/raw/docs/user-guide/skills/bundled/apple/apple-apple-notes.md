@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Apple Notes — memo CLI で Apple メモを操作する: 作成・検索・編集"
 description: "memo CLI で Apple メモを操作する: 作成・検索・編集"
 upstream_path: user-guide/skills/bundled/apple/apple-apple-notes.md

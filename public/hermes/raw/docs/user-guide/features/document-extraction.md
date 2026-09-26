@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "文書からの本文抽出"
 description: "read_file が PDF・Office 文書・ノートブックをどう文字に変換するか、そして PDF が画像を並べただけのときにどうするか"
 upstream_path: user-guide/features/document-extraction.md

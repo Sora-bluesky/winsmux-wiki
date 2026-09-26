@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Box — Box でクラウド上のファイル、共有、検索、メタデータを扱う"
 description: "Box でクラウド上のファイル、共有、検索、メタデータを扱います"
 upstream_path: user-guide/skills/bundled/productivity/productivity-box.md

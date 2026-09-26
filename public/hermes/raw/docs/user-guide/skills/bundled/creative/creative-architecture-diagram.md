@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Architecture Diagram — 暗い配色の SVG で構成図・クラウド図・インフラ図を HTML として作る"
 description: "暗い配色の SVG で構成図・クラウド図・インフラ図を HTML として作る"
 upstream_path: user-guide/skills/bundled/creative/creative-architecture-diagram.md

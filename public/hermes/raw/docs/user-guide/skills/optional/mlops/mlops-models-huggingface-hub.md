@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Huggingface Hub — HuggingFace の hf CLI: モデルやデータセットの検索・ダウンロード・アップロード"
 description: "HuggingFace の hf CLI: モデルやデータセットの検索・ダウンロード・アップロード"
 upstream_path: user-guide/skills/optional/mlops/mlops-models-huggingface-hub.md

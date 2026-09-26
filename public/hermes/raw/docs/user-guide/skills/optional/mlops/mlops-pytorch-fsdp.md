@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Pytorch Fsdp — 大きなモデルを完全シャーディングでデータ並列に学習する"
 description: "大きなモデルを完全シャーディングでデータ並列に学習する"
 upstream_path: user-guide/skills/optional/mlops/mlops-pytorch-fsdp.md

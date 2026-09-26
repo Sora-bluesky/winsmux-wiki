@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "定期実行がうまくいかないとき"
 description: "Hermes の定期実行でよく起きる不具合を切り分けて直します。ジョブが動かない、配信が届かない、スキルが読み込めない、動きが遅いといった症状をあつかいます"
 upstream_path: guides/cron-troubleshooting.md

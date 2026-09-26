@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Unsloth — Unsloth: LoRA/QLoRA のファインチューニングが 2〜5 倍速く、VRAM も少なくて済む"
 description: "Unsloth: LoRA/QLoRA のファインチューニングが 2〜5 倍速く、VRAM も少なくて済む"
 upstream_path: user-guide/skills/optional/mlops/mlops-training-unsloth.md

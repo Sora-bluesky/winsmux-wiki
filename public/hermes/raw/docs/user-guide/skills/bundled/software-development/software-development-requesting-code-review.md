@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Requesting Code Review — コミット前のレビュー: セキュリティ検査、品質の関門、自動修正"
 description: "コミット前のレビュー: セキュリティ検査、品質の関門、自動修正"
 upstream_path: user-guide/skills/bundled/software-development/software-development-requesting-code-review.md

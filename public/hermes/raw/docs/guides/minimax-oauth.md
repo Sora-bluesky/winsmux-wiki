@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "MiniMax OAuth"
 description: "ブラウザ経由の OAuth で MiniMax にログインし、Hermes Agent で MiniMax-M2.7 系のモデルを使う方法です。API キーは要りません"
 upstream_path: guides/minimax-oauth.md

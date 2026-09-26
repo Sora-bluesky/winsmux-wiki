@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Google Chat"
 description: "Cloud Pub/Sub を使って Hermes Agent を Google Chat のボットとして設定する"
 upstream_path: user-guide/messaging/google_chat.md

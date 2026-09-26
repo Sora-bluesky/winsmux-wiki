@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Rest Graphql Debug — REST/GraphQL API を調べる: ステータスコード、認証、スキーマ、再現手順"
 description: "REST/GraphQL API を調べる: ステータスコード、認証、スキーマ、再現手順"
 upstream_path: user-guide/skills/optional/software-development/software-development-rest-graphql-debug.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Drug Discovery — 創薬研究: ChEMBL 検索、薬らしさ、相互作用"
 description: "創薬研究: ChEMBL 検索、薬らしさ、相互作用"
 upstream_path: user-guide/skills/optional/research/research-drug-discovery.md

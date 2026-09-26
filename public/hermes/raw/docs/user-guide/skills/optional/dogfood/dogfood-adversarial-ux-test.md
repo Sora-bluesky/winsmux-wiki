@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Adversarial Ux Test — 意地の悪い利用者を演じて、使いにくさを見つけて仕分ける"
 description: "意地の悪い利用者を演じて、使いにくさを見つけて仕分ける"
 upstream_path: user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test.md

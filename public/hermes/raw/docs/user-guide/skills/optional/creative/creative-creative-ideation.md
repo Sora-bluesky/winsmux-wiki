@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Creative Ideation — 創作の現場で名前の付いた手法を使ってアイデアを出す"
 description: "創作の現場で名前の付いた手法を使ってアイデアを出す"
 upstream_path: user-guide/skills/optional/creative/creative-creative-ideation.md

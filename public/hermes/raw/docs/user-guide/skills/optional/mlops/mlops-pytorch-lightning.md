@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Pytorch Lightning — 分散学習まで組み込まれた、すっきりした学習ループ"
 description: "分散学習まで組み込まれた、すっきりした学習ループ"
 upstream_path: user-guide/skills/optional/mlops/mlops-pytorch-lightning.md

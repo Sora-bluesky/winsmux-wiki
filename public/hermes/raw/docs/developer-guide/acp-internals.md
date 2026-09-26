@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ACP の内部"
 description: "ACP アダプタのしくみ — 起動から終了まで、セッション、イベントの橋渡し、承認、ツールの表示"
 upstream_path: developer-guide/acp-internals.md

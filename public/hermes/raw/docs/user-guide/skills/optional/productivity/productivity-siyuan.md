@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Siyuan — SiYuan のナレッジベースを API から読み書きする"
 description: "SiYuan のナレッジベースを API から読み書きする"
 upstream_path: user-guide/skills/optional/productivity/productivity-siyuan.md

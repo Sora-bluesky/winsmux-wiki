@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "マイクロ圧縮"
 description: "マイクロ圧縮でコンテキスト圧縮のコストを分割払いにするしくみ。発動のタイミング、末尾の保護範囲、キャッシュ済みプレフィックスとのトレードオフ"
 upstream_path: developer-guide/micro-compaction.md

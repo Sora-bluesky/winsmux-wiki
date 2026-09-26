@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "コンテキスト参照"
 description: "@ 記法をメッセージ中に書いて、ファイル・フォルダ・git の差分・URL をそのまま添付します"
 upstream_path: user-guide/features/context-references.md

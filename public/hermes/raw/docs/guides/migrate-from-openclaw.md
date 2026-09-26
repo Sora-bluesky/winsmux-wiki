@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "OpenClaw から移ってくる"
 description: "OpenClaw / Clawdbot の環境を Hermes Agent へ移すための案内です。何が移るのか、設定がどう対応するのか、移したあとに何を確かめるのかをまとめます。"
 upstream_path: guides/migrate-from-openclaw.md

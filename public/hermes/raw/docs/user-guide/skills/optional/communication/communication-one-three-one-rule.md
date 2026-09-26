@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "One Three One Rule — 1-3-1 形式の提案書。課題ひとつ、選択肢三つ、推す案ひとつ"
 description: "1-3-1 形式の提案書。課題ひとつ、選択肢三つ、推す案ひとつ"
 upstream_path: user-guide/skills/optional/communication/communication-one-three-one-rule.md

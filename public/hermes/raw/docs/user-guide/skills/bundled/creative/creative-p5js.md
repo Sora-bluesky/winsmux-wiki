@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "P5Js — p5.js のスケッチ。ジェネラティブアート、シェーダー、インタラクティブ、3D"
 description: "p5.js のスケッチ。ジェネラティブアート、シェーダー、インタラクティブ、3D"
 upstream_path: user-guide/skills/bundled/creative/creative-p5js.md

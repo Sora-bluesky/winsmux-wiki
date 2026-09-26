@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Google Workspace — Gmail、カレンダー、ドライブ、スプレッドシート、ドキュメント"
 description: "メールの送信、カレンダーの予定の管理、ドライブの検索、スプレッドシートの読み書き、ドキュメントの参照を、OAuth2 で認証した Google の API からまとめて行います"
 upstream_path: user-guide/skills/google-workspace.md

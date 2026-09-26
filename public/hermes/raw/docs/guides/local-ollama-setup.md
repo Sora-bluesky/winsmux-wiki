@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Ollama で Hermes をローカルで動かす — API 料金ゼロ"
 description: "Gemma 4 などのオープンウェイトモデルと Ollama を使い、クラウドの API キーも有料サブスクも使わずに Hermes Agent を自分の端末だけで動かす手順です"
 upstream_path: guides/local-ollama-setup.md

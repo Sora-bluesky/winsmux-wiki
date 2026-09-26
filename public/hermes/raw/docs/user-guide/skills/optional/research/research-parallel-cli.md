@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Parallel Cli — エージェント向けのウェブ検索・深い調査・情報の補完"
 description: "エージェント向けのウェブ検索・深い調査・情報の補完"
 upstream_path: user-guide/skills/optional/research/research-parallel-cli.md

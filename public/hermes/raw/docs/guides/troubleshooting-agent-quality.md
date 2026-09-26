@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "トラブル対処: エージェントが前より賢くなくなった気がするとき"
 description: "Hermes の調子が以前より落ちて見えたり、セッションの途中で物忘れをしたりするときの診断手順。モデルの切り替わり、コンテキストの逼迫、コンテキスト長の誤検出、固定されたメモリのスナップショットを順に確認します"
 upstream_path: guides/troubleshooting-agent-quality.md

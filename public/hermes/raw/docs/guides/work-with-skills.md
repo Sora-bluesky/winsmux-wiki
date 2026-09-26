@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "スキルを使いこなす"
 description: "スキルの探し方、入れ方、使い方、作り方をまとめます。スキルは Hermes に新しい進め方を教える、必要なときだけ読み込まれる知識です。"
 upstream_path: guides/work-with-skills.md

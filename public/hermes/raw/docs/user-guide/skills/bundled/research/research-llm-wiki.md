@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Llm Wiki — Karpathy の LLM Wiki: 相互にリンクした markdown のナレッジベースを作り、問い合わせる"
 description: "Karpathy の LLM Wiki: 相互にリンクした markdown のナレッジベースを作り、問い合わせる"
 upstream_path: user-guide/skills/bundled/research/research-llm-wiki.md

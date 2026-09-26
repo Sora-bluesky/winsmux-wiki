@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Sketch — 使い捨ての HTML モックアップ。見比べるための案を 2〜3 通り作る"
 description: "使い捨ての HTML モックアップ。見比べるための案を 2〜3 通り作る"
 upstream_path: user-guide/skills/optional/creative/creative-sketch.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Kanban を複数ゲートウェイで運用する"
 description: "プロファイルごとの複数ゲートウェイで 1 つの kanban ボードを動かす方法。ディスパッチャーは 1 つ、配信はプロファイルごと"
 upstream_path: user-guide/features/kanban-multi-gateway.md

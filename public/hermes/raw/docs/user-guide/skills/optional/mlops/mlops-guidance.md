@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Guidance — 文法で LLM の出力を縛り、必ず妥当な JSON を得る"
 description: "文法で LLM の出力を縛り、必ず妥当な JSON を得る"
 upstream_path: user-guide/skills/optional/mlops/mlops-guidance.md

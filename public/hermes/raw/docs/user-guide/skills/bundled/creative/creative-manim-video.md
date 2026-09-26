@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Manim Video — Manim CE のアニメーション: 3Blue1Brown 風の数学・アルゴリズム動画"
 description: "Manim CE のアニメーション: 3Blue1Brown 風の数学・アルゴリズム動画"
 upstream_path: user-guide/skills/bundled/creative/creative-manim-video.md

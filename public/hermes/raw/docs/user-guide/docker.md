@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "契約の中継サーバー"
 description: "Nous Portal の契約（や他の OAuth プロバイダー）を、外部アプリ向けの OpenAI 互換エンドポイントとして使えるようにします。"
 upstream_path: user-guide/features/subscription-proxy.md

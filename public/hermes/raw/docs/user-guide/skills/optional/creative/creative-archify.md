@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Archify — 検証済みのインタラクティブな HTML 図（本体は上流で管理）"
 description: "検証済みのインタラクティブな HTML 図（本体は上流で管理）"
 upstream_path: user-guide/skills/optional/creative/creative-archify.md

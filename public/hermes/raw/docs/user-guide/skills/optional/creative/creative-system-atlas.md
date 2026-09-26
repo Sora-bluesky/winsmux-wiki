@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "System Atlas — 見て回れるアイソメトリックの構成アトラスを HTML で作る"
 description: "見て回れるアイソメトリックの構成アトラスを HTML で作る"
 upstream_path: user-guide/skills/optional/creative/creative-system-atlas.md

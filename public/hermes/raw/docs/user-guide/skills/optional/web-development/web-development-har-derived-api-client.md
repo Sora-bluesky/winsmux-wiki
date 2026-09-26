@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Har Derived Api Client — サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす"
 description: "サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす"
 upstream_path: user-guide/skills/optional/web-development/web-development-har-derived-api-client.md

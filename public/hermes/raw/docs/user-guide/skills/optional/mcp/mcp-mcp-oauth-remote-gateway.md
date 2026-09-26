@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Mcp Oauth Remote Gateway — 画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す"
 description: "画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す"
 upstream_path: user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway.md

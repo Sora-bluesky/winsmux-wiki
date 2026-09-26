@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Saelens — スパースオートエンコーダを学習させてモデルの特徴を読み解く"
 description: "スパースオートエンコーダを学習させてモデルの特徴を読み解く"
 upstream_path: user-guide/skills/optional/mlops/mlops-saelens.md

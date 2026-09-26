@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Opencode — コーディングを OpenCode CLI に任せる（機能追加、PR レビュー）"
 description: "コーディングを OpenCode CLI に任せる（機能追加、PR レビュー）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode.md

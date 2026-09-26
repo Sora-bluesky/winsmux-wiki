@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "LSP — 意味を読み取る診断"
 description: "本物の言語サーバー（pyright、gopls、rust-analyzer など）を、write_file と patch の書き込み後チェックにつなぎます。"
 upstream_path: user-guide/features/lsp.md

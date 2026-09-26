@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Draw Your Font — 手書き文字の写真から、そのまま入れて使える TTF フォントを作る"
 description: "手書き文字の写真から、そのまま入れて使える TTF フォントを作る"
 upstream_path: user-guide/skills/optional/creative/creative-draw-your-font.md

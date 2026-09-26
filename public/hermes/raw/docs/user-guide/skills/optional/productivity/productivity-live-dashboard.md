@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Live Dashboard — 生の情報源から、自動で更新されるダッシュボードを作る"
 description: "生の情報源から、自動で更新されるダッシュボードを作る"
 upstream_path: user-guide/skills/optional/productivity/productivity-live-dashboard.md

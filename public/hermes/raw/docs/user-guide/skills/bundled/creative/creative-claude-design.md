@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Claude Design — 単発の HTML 成果物をデザインします（ランディングページ、スライド、プロトタイプ）"
 description: "単発の HTML 成果物をデザインします（ランディングページ、スライド、プロトタイプ）"
 upstream_path: user-guide/skills/bundled/creative/creative-claude-design.md

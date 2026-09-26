@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Google Gemini"
 description: "Hermes Agent を Google Gemini で使う方法。ネイティブの AI Studio API、API キーの設定、ツール呼び出し、ストリーミング、割り当ての考え方まで"
 upstream_path: guides/google-gemini.md

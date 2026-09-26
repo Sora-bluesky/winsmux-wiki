@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "提供元の振り分け"
 description: "OpenRouter の提供元の優先設定を書いて、費用・速度・品質のどれを重く見るかを決めます。"
 upstream_path: user-guide/features/provider-routing.md

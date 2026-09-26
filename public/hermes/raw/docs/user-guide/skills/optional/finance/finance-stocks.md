@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Stocks — Yahoo 経由の株価、履歴、検索、比較、暗号資産"
 description: "Yahoo 経由の株価、履歴、検索、比較、暗号資産"
 upstream_path: user-guide/skills/optional/finance/finance-stocks.md

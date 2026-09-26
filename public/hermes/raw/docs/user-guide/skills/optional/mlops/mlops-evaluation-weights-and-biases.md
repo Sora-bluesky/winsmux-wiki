@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Weights And Biases — W&B で ML の実験・sweep・モデルレジストリ・ダッシュボードを記録する"
 description: "W&B で ML の実験・sweep・モデルレジストリ・ダッシュボードを記録する"
 upstream_path: user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases.md

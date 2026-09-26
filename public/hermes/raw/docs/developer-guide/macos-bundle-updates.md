@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "macOS バンドルの更新"
 description: ""
 upstream_path: developer-guide/macos-bundle-updates.md

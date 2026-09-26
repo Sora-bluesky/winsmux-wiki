@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Microsoft Graph webhook リスナー"
 description: "Microsoft Graph の変更通知（会議・予定表・チャットなど）を Hermes で受け取る"
 upstream_path: user-guide/messaging/msgraph-webhook.md

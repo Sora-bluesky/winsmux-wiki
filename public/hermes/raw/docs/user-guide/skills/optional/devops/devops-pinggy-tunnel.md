@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Pinggy Tunnel — Pinggy を使い、SSH 経由でインストール不要の localhost トンネルを張る"
 description: "Pinggy を使い、SSH 経由でインストール不要の localhost トンネルを張ります"
 upstream_path: user-guide/skills/optional/devops/devops-pinggy-tunnel.md

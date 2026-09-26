@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Webhook で GitHub の PR に自動でコメントする"
 description: "Hermes を GitHub につないで、PR の差分を取り、コードの変更をレビューし、コメントを書き込むところまでを自動にします。きっかけは webhook で、こちらから頼む必要はありません"
 upstream_path: guides/webhook-github-pr-review.md

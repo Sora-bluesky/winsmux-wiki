@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Simple English — 技術文書を ASD-STE100 の簡易技術英語に書き直す"
 description: "技術文書を ASD-STE100 の簡易技術英語に書き直す"
 upstream_path: user-guide/skills/optional/creative/creative-simple-english.md

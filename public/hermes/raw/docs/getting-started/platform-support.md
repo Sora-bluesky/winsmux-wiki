@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "対応プラットフォーム"
 description: "Hermes Agent が対応している OS、配布方法、機能の一覧"
 upstream_path: getting-started/platform-support.md

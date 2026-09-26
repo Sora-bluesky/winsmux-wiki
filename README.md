@@ -51,3 +51,9 @@ npm run build
 ## フィードバック
 
 訳の誤り・リンク切れは [Issues](https://github.com/Sora-bluesky/winsmux-wiki/issues) へ。ドキュメントの内容そのものへの指摘は上流の [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) が適切です。
+
+## ライセンス / License
+
+MIT（[LICENSE](LICENSE)）。公式ドキュメントの翻訳部分（`src/raw/docs/` など）は、Nous Research による原文の MIT License に従います。範囲と原文のライセンス全文は [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) にあります。
+
+MIT. The translated documentation is derived from the Hermes Agent docs (Copyright (c) 2025 Nous Research, MIT); see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

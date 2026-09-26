@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Segment Anything Model — SAM: 点・ボックス・マスクで指示するゼロショット画像セグメンテーション"
 description: "SAM: 点・ボックス・マスクで指示するゼロショット画像セグメンテーション"
 upstream_path: user-guide/skills/optional/mlops/mlops-models-segment-anything-model.md

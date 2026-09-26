@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Notion — Notion API と ntn CLI: ページ、データベース、Markdown、Workers"
 description: "Notion API と ntn CLI: ページ、データベース、Markdown、Workers"
 upstream_path: user-guide/skills/bundled/productivity/productivity-notion.md

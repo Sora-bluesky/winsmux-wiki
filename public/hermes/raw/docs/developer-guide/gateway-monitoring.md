@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ゲートウェイの監視"
 description: "ヘルス情報のエクスポート、構造化された診断、フリート全体のクエリ、監視の仕組みを拡張する方法"
 upstream_path: developer-guide/gateway-monitoring.md

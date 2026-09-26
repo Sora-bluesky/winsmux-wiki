@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "動画生成プロバイダプラグイン"
 description: "Hermes Agent 向けの動画生成バックエンドプラグインを作る方法"
 upstream_path: developer-guide/video-gen-provider-plugin.md

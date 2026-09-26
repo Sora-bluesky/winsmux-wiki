@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Dspy — DSPy: 宣言的に言語モデルのプログラムを書き、プロンプトを自動で最適化し、RAG を作る"
 description: "DSPy: 宣言的に言語モデルのプログラムを書き、プロンプトを自動で最適化し、RAG を作る"
 upstream_path: user-guide/skills/optional/mlops/mlops-research-dspy.md

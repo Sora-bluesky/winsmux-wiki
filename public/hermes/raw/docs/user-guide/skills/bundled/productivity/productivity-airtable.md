@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Airtable — curl で使う Airtable REST API"
 description: "curl で使う Airtable REST API"
 upstream_path: user-guide/skills/bundled/productivity/productivity-airtable.md

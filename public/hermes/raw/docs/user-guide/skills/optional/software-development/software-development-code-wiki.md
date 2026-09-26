@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Code Wiki — どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する"
 description: "どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する"
 upstream_path: user-guide/skills/optional/software-development/software-development-code-wiki.md

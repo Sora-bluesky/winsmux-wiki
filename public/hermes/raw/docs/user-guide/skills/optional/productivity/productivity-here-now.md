@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Here Now — {slug}.here.now にサイトを公開し、Drive にファイルを置く"
 description: "{slug}.here.now にサイトを公開し、Drive にファイルを置く"
 upstream_path: user-guide/skills/optional/productivity/productivity-here-now.md

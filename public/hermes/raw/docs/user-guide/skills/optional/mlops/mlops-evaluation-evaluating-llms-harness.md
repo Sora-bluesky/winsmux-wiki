@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Evaluating Llms Harness — lm-eval-harness で LLM を評価する（MMLU、GSM8K など）"
 description: "lm-eval-harness で LLM を評価する（MMLU、GSM8K など）"
 upstream_path: user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness.md

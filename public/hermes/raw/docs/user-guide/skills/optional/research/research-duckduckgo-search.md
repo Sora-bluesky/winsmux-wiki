@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Duckduckgo Search — ddgs でキー不要の無料 Web・ニュース・画像検索"
 description: "ddgs でキー不要の無料 Web・ニュース・画像検索"
 upstream_path: user-guide/skills/optional/research/research-duckduckgo-search.md

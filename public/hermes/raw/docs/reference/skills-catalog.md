@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "同梱 skill カタログ"
 description: "Hermes Agent に最初から入っている skill の一覧"
 upstream_path: reference/skills-catalog.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ソースからのインストールへ切り替える"
 description: "パッケージ版のファイルを上書きせず、ユーザーデータの所在も見失わずに、別のソースチェックアウトを動かす"
 upstream_path: user-guide/switching-to-source.md

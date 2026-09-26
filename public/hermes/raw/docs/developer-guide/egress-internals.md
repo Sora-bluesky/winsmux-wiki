@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "送信プロキシの内部構造"
 description: "iron-proxy の送信ファイアウォールが Hermes とどう結びついているか — モジュール構成、ライフサイクル、セキュリティ上の不変条件、拡張ポイント"
 upstream_path: developer-guide/egress-internals.md

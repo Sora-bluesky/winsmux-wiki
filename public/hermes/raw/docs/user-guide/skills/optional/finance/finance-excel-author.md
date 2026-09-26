@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Excel Author — openpyxl でヘッドレスに監査できる財務ワークブックを作る"
 description: "openpyxl でヘッドレスに監査できる財務ワークブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-excel-author.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "音声モード"
 description: "Hermes Agent とリアルタイムで音声のやりとりをする — CLI、Telegram、Discord（DM、テキストチャンネル、ボイスチャンネル）"
 upstream_path: user-guide/features/voice-mode.md

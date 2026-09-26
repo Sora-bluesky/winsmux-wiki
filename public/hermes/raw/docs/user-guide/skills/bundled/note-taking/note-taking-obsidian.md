@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Obsidian — Obsidian の保管庫にあるノートを読む・探す・作る・直す"
 description: "Obsidian の保管庫にあるノートを読む・探す・作る・直す"
 upstream_path: user-guide/skills/bundled/note-taking/note-taking-obsidian.md

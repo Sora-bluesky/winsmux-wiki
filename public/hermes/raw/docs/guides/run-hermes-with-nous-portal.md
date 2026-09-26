@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Nous Portal で Hermes Agent を動かす"
 description: "契約から設定、モデルの切り替え、ゲートウェイのツール有効化、経路の確認まで一通りの手順"
 upstream_path: guides/run-hermes-with-nous-portal.md

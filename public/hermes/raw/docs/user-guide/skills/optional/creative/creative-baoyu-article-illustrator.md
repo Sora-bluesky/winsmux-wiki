@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Baoyu Article Illustrator — 記事の挿絵。型 × 画風 × 配色をそろえて作る"
 description: "記事の挿絵。型 × 画風 × 配色をそろえて作る"
 upstream_path: user-guide/skills/optional/creative/creative-baoyu-article-illustrator.md

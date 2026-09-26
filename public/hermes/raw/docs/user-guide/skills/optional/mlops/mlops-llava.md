@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Llava — 画像について話せるモデル: 質問応答、説明文づくり、対話"
 description: "画像について話せるモデル: 質問応答、説明文づくり、対話"
 upstream_path: user-guide/skills/optional/mlops/mlops-llava.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "認証情報プール"
 description: "プロバイダごとに複数の API キーや OAuth トークンをまとめておき、自動で切り替えてレート制限から復帰します。"
 upstream_path: user-guide/features/credential-pools.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Pptx Author — python-pptx でヘッドレスに PowerPoint 資料を作る"
 description: "python-pptx でヘッドレスに PowerPoint 資料を作る"
 upstream_path: user-guide/skills/optional/finance/finance-pptx-author.md

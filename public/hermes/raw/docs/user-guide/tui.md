@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "TUI"
 description: "Hermes の新しいターミナル画面を起動する — マウスが使えて、表示が豊かで、入力を待たせない"
 upstream_path: user-guide/tui.md

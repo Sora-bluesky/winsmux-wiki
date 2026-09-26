@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "チェックポイントと /rollback"
 description: "シャドウの git リポジトリと自動スナップショットで、破壊的な操作からファイルを守るしくみです"
 upstream_path: user-guide/checkpoints-and-rollback.md

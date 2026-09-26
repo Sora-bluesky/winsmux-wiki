@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ACP ホスト連携"
 description: "ACP に対応したエディタや共同作業ツールの中で Hermes Agent を使う"
 upstream_path: user-guide/features/acp.md

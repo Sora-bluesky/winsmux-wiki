@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Clip — 学習なしでの画像の分類と、画像と文章での検索"
 description: "学習なしでの画像の分類と、画像と文章での検索"
 upstream_path: user-guide/skills/optional/mlops/mlops-clip.md

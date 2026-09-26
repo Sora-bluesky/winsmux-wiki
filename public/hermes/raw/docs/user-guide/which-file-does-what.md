@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "どのファイルが何をするのか"
 description: "SOUL.md と USER.md と MEMORY.md と AGENTS.md の違い。エージェントが持つファイルを1ページにまとめ、誰が書き、いつエージェントの目に入るのかを示します"
 upstream_path: user-guide/which-file-does-what.md

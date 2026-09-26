@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "外向き通信の分離（Docker）"
 description: "Docker ネットワークを分割し、エージェントのサンドボックスが許可したホストにだけ接続できるようにする"
 upstream_path: user-guide/egress/network-isolation.md

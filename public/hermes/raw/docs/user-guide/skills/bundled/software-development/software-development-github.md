@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Github — gh CLI で GitHub を扱う: PR、issue、レビュー、リポジトリ、認証"
 description: "gh CLI で GitHub を扱う: PR、issue、レビュー、リポジトリ、認証"
 upstream_path: user-guide/skills/bundled/software-development/software-development-github.md

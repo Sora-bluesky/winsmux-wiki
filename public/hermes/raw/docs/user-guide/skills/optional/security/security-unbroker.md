@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Unbroker — データブローカーサイトから自分の情報を自動で削除する"
 description: "データブローカーサイトから自分の情報を自動で削除する"
 upstream_path: user-guide/skills/optional/security/security-unbroker.md

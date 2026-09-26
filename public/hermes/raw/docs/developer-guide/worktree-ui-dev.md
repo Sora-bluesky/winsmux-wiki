@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "worktree から TUI とデスクトップアプリを動かす"
 description: "checkout ごとに npm install をやり直さずに、Ink の TUI と Electron のデスクトップアプリを git の worktree から動かす"
 upstream_path: developer-guide/worktree-ui-dev.md

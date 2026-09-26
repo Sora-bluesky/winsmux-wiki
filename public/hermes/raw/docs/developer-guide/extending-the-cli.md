@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "CLI を拡張する"
 description: "Hermes の TUI に独自のウィジェット・キーバインド・レイアウト変更を足すラッパー CLI を作る"
 upstream_path: developer-guide/extending-the-cli.md

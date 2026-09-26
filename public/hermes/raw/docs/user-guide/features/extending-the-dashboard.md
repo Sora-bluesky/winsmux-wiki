@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ダッシュボードを広げる"
 description: "Hermes の Web ダッシュボード向けにテーマとプラグインを作ります — 配色、書体、レイアウト、独自のタブ、外枠のスロット、ページごとのスロット、そして裏側の API ルート"
 upstream_path: user-guide/features/extending-the-dashboard.md

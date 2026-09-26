@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "AWS Bedrock"
 description: "Hermes Agent を Amazon Bedrock で使う — ネイティブの Converse API、Anthropic SDK 経由の振り分け、Bedrock Mantle 経由の OpenAI モデル、IAM 認証、Guardrails、クロスリージョン推論"
 upstream_path: guides/aws-bedrock.md

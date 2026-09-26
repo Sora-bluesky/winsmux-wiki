@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ローカルモデル"
 description: "モデルを自分の端末だけで動かします。アカウントも API キーも不要で、何も端末の外には出ません。"
 upstream_path: user-guide/local-models.md

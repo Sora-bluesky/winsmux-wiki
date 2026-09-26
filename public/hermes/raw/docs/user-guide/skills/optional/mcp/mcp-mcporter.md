@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Mcporter — MCP のサーバーやツールを、端末から一覧・認証・呼び出しする"
 description: "MCP のサーバーやツールを、端末から一覧・認証・呼び出しする"
 upstream_path: user-guide/skills/optional/mcp/mcp-mcporter.md

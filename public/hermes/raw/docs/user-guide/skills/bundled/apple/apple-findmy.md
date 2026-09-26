@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Findmy — macOS の FindMy.app で Apple 製デバイスや AirTag の場所を追う"
 description: "macOS の FindMy.app で Apple 製デバイスや AirTag の場所を追う"
 upstream_path: user-guide/skills/bundled/apple/apple-findmy.md

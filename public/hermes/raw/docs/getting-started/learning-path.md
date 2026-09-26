@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "学習パス"
 description: "'経験の度合いと目的に合わせて、Hermes Agent のドキュメントを読み進める順番を選びます。'"
 upstream_path: getting-started/learning-path.md

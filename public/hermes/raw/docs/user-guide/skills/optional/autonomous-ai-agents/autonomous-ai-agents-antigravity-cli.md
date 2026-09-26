@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Antigravity Cli — Antigravity CLI（agy）を使いこなします。プラグイン、認証、サンドボックス"
 description: "Antigravity CLI（agy）を使いこなします。プラグイン、認証、サンドボックス"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli.md

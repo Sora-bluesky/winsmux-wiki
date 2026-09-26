@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "ブラウザプロバイダプラグイン"
 description: "Hermes Agent 向けのクラウドブラウザバックエンドプラグインを作る方法"
 upstream_path: developer-guide/browser-provider-plugin.md

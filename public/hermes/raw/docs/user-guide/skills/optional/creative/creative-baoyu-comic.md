@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Baoyu Comic — 知識まんが（知识漫画）。学習向け、伝記、手引き"
 description: "知識まんが（知识漫画）。学習向け、伝記、手引き"
 upstream_path: user-guide/skills/optional/creative/creative-baoyu-comic.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "同梱のプラグイン"
 description: "Hermes Agent に最初から入っていて、節目ごとのフックで自動的に動くプラグイン群 — disk-cleanup とその仲間たち"
 upstream_path: user-guide/features/built-in-plugins.md

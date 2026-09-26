@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Qmd — メモ・資料・書き起こしを手元でまとめて検索する"
 description: "メモ・資料・書き起こしを手元でまとめて検索する"
 upstream_path: user-guide/skills/optional/research/research-qmd.md

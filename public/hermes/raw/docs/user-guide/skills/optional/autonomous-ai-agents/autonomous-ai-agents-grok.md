@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Grok — xAI の Grok Build CLI にコーディングを任せる（機能追加、PR）"
 description: "xAI の Grok Build CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok.md

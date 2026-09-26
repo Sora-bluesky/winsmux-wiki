@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Pinecone — 本番の RAG と検索のためのマネージド型ベクトルデータベース"
 description: "本番の RAG と検索のためのマネージド型ベクトルデータベース"
 upstream_path: user-guide/skills/optional/mlops/mlops-pinecone.md

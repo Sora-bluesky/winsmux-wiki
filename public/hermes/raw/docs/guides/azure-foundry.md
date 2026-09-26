@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Microsoft Foundry"
 description: "Hermes Agent を Microsoft Foundry で使う — OpenAI 形式と Anthropic 形式のエンドポイント、通信方式とデプロイ済みモデルの自動判別"
 upstream_path: guides/azure-foundry.md

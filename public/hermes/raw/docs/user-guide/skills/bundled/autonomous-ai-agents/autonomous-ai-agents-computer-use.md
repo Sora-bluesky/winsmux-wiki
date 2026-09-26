@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Computer Use — デスクトップを裏側から操作し、必要なときだけ前面に出す"
 description: "デスクトップを裏側から操作し、必要なときだけ前面に出す"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use.md

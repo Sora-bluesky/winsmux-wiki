@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "他のエージェントから取り込む"
 description: "Claude Code（~/.claude）や OpenAI Codex CLI（~/.codex）の設定を、コマンド1つで Hermes へ取り込みます。指示・許可リスト・MCP サーバー・スキル・メモリが対象です。"
 upstream_path: user-guide/import-from-other-agents.md

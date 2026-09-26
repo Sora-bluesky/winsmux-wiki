@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "state.db の復旧"
 description: "FTS インデックスやファイルそのものが壊れたときに、Hermes が state.db をどう復旧するか"
 upstream_path: developer-guide/state-db-recovery.md

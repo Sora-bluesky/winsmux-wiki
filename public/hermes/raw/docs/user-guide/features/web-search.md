@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Web 検索と本文抽出"
 description: "複数のバックエンドプロバイダで Web を検索し、ページ本文を抽出します。無料で自前運用できる SearXNG にも対応しています。"
 upstream_path: user-guide/features/web-search.md

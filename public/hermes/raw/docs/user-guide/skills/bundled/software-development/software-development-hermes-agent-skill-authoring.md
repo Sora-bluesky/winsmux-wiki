@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成"
 description: "リポジトリ内の SKILL.md を書く: フロントマターと構成"
 upstream_path: user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring.md

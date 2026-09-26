@@ -26,8 +26,15 @@ const copied = [];
 
 for (const file of files) {
   const src = await readFile(join(srcDir, file), 'utf8');
+  let content = src;
+  if (file.startsWith('docs/') && src.startsWith('---\n')) {
+    const frontmatter = src.slice(4).split('\n---', 1)[0];
+    if (!/^license:/m.test(frontmatter)) {
+      content = '---\nlicense: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"\n' + src.slice(4);
+    }
+  }
   await mkdir(join(destDir, file, '..'), { recursive: true });
-  await writeFile(join(destDir, file), src.endsWith('\n') ? src : src + '\n');
+  await writeFile(join(destDir, file), content.endsWith('\n') ? content : content + '\n');
   copied.push(file);
 }
 
@@ -111,6 +118,12 @@ ${raws.map((url) => `- ${url}`).join('\n')}
 - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/line
 - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 - https://hermes-agent.nousresearch.com/docs/llms.txt
+
+## ライセンス
+
+- 公式ドキュメントの翻訳部分: Copyright (c) 2025 Nous Research（MIT License）
+- サイト独自の部分: Copyright (c) 2026 Sora-bluesky（MIT License）
+- 全文: https://wiki.winsmux.dev/hermes/licenses.txt
 `;
 
 await mkdir(join(root, 'public/hermes'), { recursive: true });

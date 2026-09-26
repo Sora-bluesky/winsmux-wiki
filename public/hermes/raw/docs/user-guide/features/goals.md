@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "続く目標（Goal）"
 description: "目標をひとつ立てておくと、Hermes が終わるまで応答をまたいで作業を続けます。Ralph ループの Hermes 版です。"
 upstream_path: user-guide/features/goals.md

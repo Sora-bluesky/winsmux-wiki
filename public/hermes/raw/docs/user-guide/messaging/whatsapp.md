@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "WhatsApp"
 description: "内蔵の Baileys ブリッジを使って Hermes Agent を WhatsApp のボットとして設定する"
 upstream_path: user-guide/messaging/whatsapp.md

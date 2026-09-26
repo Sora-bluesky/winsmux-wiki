@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "xAI Grok OAuth（SuperGrok / X Premium+）"
 description: "SuperGrok または X Premium+ のサブスクリプションでサインインして、Hermes Agent から Grok モデルを使う — API キーは不要"
 upstream_path: guides/xai-grok-oauth.md

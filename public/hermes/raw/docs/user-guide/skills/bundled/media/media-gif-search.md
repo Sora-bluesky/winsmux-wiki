@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Gif Search — Tenor の GIF を curl + jq で検索・ダウンロードする"
 description: "Tenor の GIF を curl + jq で検索・ダウンロードする"
 upstream_path: user-guide/skills/bundled/media/media-gif-search.md

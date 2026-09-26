@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "チュートリアル: GitHub の PR をレビューするエージェント"
 description: "リポジトリを見張り、プルリクエストをレビューして、その結果を手を触れずに届けてくれる AI レビュアーを作ります"
 upstream_path: guides/github-pr-review-agent.md

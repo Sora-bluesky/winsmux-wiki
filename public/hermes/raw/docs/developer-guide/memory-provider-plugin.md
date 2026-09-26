@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md

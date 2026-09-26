@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）"
 description: "Claude Code CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md

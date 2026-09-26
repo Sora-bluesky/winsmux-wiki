@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "プロバイダーを追加する"
 description: "Hermes Agent に新しい推論プロバイダーを追加する方法 — 認証、実行時の解決、CLI の導線、アダプター、テスト、ドキュメント"
 upstream_path: developer-guide/adding-providers.md

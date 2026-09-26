@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Whisper — 99 の言語で音声を文字にし、翻訳する"
 description: "99 の言語で音声を文字にし、翻訳する"
 upstream_path: user-guide/skills/optional/mlops/mlops-whisper.md

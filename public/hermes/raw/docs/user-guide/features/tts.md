@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md

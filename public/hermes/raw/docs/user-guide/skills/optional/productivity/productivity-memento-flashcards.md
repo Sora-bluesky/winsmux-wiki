@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Memento Flashcards — 間隔反復の暗記カード: 作成・復習・クイズ・書き出し"
 description: "間隔反復の暗記カード: 作成・復習・クイズ・書き出し"
 upstream_path: user-guide/skills/optional/productivity/productivity-memento-flashcards.md

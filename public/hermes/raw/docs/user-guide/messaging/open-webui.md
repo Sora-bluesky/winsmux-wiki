@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Open WebUI"
 description: "OpenAI 互換の API サーバー経由で Open WebUI を Hermes Agent につなぐ"
 upstream_path: user-guide/messaging/open-webui.md

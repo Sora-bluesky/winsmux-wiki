@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Obliteratus — OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）"
 description: "OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）"
 upstream_path: user-guide/skills/optional/mlops/mlops-obliteratus.md

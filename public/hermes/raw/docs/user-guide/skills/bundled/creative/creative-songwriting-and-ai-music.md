@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Songwriting And Ai Music — 作詞作曲の技法と Suno の AI 音楽プロンプト"
 description: "作詞作曲の技法と Suno の AI 音楽プロンプト"
 upstream_path: user-guide/skills/bundled/creative/creative-songwriting-and-ai-music.md

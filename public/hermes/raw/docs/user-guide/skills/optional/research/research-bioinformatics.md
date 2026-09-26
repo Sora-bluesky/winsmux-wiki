@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Bioinformatics — ゲノム解析と計算生物学の 400 以上の skill への入口"
 description: "ゲノム解析と計算生物学の 400 以上の skill への入口"
 upstream_path: user-guide/skills/optional/research/research-bioinformatics.md

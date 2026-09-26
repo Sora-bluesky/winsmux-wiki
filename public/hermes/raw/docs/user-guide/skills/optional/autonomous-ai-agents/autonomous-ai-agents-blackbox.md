@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Blackbox — 複数のモデルを扱う Blackbox AI の CLI にコーディング作業を任せます"
 description: "複数のモデルを扱う Blackbox AI の CLI にコーディング作業を任せます"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox.md

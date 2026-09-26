@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Chronos managed-cron の契約"
 description: "Chronos cron プロバイダーにおけるエージェントと NAS の間の通信契約"
 upstream_path: developer-guide/chronos-managed-cron-contract.md

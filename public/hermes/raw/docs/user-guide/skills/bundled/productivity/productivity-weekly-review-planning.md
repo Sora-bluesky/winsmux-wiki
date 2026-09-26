@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Weekly Review Planning — 週ごとの仕切り直し: 約束、止まっている仕事、来週の計画"
 description: "週ごとの仕切り直し: 約束、止まっている仕事、来週の計画"
 upstream_path: user-guide/skills/bundled/productivity/productivity-weekly-review-planning.md

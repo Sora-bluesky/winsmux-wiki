@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Honcho メモリー"
 description: "Honcho による AI 前提の永続メモリー — 対話的な推論、マルチエージェントのユーザーモデリング、深い個別化"
 upstream_path: user-guide/features/honcho.md

@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Tldraw Offline — tldraw のオフラインキャンバスをエージェントで操作・スクリプト化する"
 description: "tldraw のオフラインキャンバスをエージェントで操作・スクリプト化する"
 upstream_path: user-guide/skills/optional/creative/creative-tldraw-offline.md

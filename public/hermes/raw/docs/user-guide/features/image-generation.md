@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "画像生成"
 description: "FAL.ai 経由で画像を生成します。FLUX 2、GPT Image（1.5 と 2）、Nano Banana Pro、Ideogram、Recraft V4 Pro、Krea 2 など 11 モデルに対応し、`hermes tools` で選べます。"
 upstream_path: user-guide/features/image-generation.md

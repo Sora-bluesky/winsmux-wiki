@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "3 Statement Model — Excel で IS/BS/CF が連動する財務ブックを作る"
 description: "Excel で IS/BS/CF が連動する財務ブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-3-statement-model.md

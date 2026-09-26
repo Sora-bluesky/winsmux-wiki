@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Product Price Monitor — 商品・航空券・出品の価格を見張り、目標に届いたら知らせる"
 description: "商品・航空券・出品の価格を見張り、目標に届いたら知らせる"
 upstream_path: user-guide/skills/bundled/productivity/productivity-product-price-monitor.md

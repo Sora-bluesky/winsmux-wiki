@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md

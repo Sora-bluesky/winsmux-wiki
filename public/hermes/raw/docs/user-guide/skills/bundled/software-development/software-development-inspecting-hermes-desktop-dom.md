@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Inspecting Hermes Desktop Dom — 動いている Hermes デスクトップの DOM/CSS を CDP で読む"
 description: "動いている Hermes デスクトップの DOM/CSS を CDP で読む"
 upstream_path: user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom.md

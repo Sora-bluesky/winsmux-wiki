@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Page Agent — Web アプリの中に、自然言語で操作できる相棒を組み込む"
 description: "Web アプリの中に、自然言語で操作できる相棒を組み込む"
 upstream_path: user-guide/skills/optional/web-development/web-development-page-agent.md

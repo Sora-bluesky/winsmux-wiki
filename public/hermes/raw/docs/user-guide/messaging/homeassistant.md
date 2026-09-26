@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Home Assistant"
 description: "Home Assistant との連携で、Hermes Agent からスマートホームを操作する。"
 upstream_path: user-guide/messaging/homeassistant.md

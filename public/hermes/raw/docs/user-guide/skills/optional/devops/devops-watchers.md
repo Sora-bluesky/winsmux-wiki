@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Watchers — RSS・JSON API・GitHub を定期的に見に行き、既読の印で重複を省く"
 description: "RSS・JSON API・GitHub を定期的に見に行き、既読の印で重複を省く"
 upstream_path: user-guide/skills/optional/devops/devops-watchers.md

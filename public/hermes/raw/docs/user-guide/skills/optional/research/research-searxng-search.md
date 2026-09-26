@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Searxng Search — 70 以上の検索エンジンをまとめて引く、鍵の要らない無料の検索"
 description: "70 以上の検索エンジンをまとめて引く、鍵の要らない無料の検索"
 upstream_path: user-guide/skills/optional/research/research-searxng-search.md

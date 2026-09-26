@@ -1,4 +1,5 @@
 ---
+license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "Dogfood — Web アプリを探索的にテストする: バグ、証拠、報告書"
 description: "Web アプリを探索的にテストする: バグ、証拠、報告書"
 upstream_path: user-guide/skills/bundled/software-development/software-development-dogfood.md
