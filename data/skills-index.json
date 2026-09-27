@@ -1,6 +1,6 @@
 {
-  "sha": "b9d5e4d",
-  "date": "2026-09-26",
+  "sha": "6e69a89",
+  "date": "2026-09-28",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -616,6 +616,22 @@
       "description": "Knowledge comics (知识漫画): educational, biography, tutorial",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/",
       "date": "2026-09-20",
+      "source": "optional"
+    },
+    {
+      "slug": "creative-brag-slim",
+      "name": "Brag Slim",
+      "description": "Launch video from a project or URL, upstream-maintained",
+      "url": "/hermes/docs/user-guide/skills/optional/creative/creative-brag-slim/",
+      "date": "2026-09-26",
+      "source": "optional"
+    },
+    {
+      "slug": "creative-brag",
+      "name": "Brag",
+      "description": "Project launch video via Hyperframes, upstream-maintained",
+      "url": "/hermes/docs/user-guide/skills/optional/creative/creative-brag/",
+      "date": "2026-09-26",
       "source": "optional"
     },
     {

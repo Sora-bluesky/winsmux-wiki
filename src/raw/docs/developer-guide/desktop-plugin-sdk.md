@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 790b60d946d9fbba3e0126883836cb65023c9f19
+upstream_blob: c63cdb148fa36b102d827ee38e60d39c4daf7edd
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -226,7 +226,7 @@ interface Contribution {
 | サイドバーのナビ | `SIDEBAR_NAV_AREA` | `data: { path, label, codicon }` |
 | ステータスバー | `STATUSBAR_AREAS.left` / `.right` | `render`（または `StatusbarItem` としての `data`） |
 | タイトルバー | `TITLEBAR_AREAS.left` / `.center` / `.right` | `TitlebarTool` としての `data`、またはマウントに紐づく `<Contribute>` |
-| ページの見出し | `WORKSPACE_PAGE_HEADER_AREA` | ページの中でマウントに紐づく `<Contribute>` を通した `render` |
+| ページの見出し | `WORKSPACE_PAGE_HEADER_AREA` | ページの中に置く `<WorkspacePageHeaderControl>`（分割タイルではその場に表示） |
 | ⌘K のパレット | `PALETTE_AREA` | `data: PaletteContribution` |
 | キー割り当て | `KEYBINDS_AREA` | `data: KeybindContribution` |
 | テーマ | `THEMES_AREA` | `DesktopTheme` としての `data` |
@@ -323,8 +323,10 @@ ctx.register({
 
 1 つのページだけのもの（かんばんのボード切り替えなど）は、代わりに
 `WORKSPACE_PAGE_HEADER_AREA` に置いてください。そのページが画面にある間だけ、作業領域のパネルの
-タブの見出しの行に描画され、それ以外のときは空になります。ページと一緒に消えるように、
-マウントに紐づく `<Contribute>`（後述）で登録してください。
+タブの見出しの行に描画され、それ以外のときは空になります。操作部品は、ページ自身の見出しの行の中で
+`<WorkspacePageHeaderControl>`（後述）に包んでください。作業領域のペインではページの見出しに映し出され、
+ページの見出しを持たない分割ルートのタイルでページを開いたときは、置いた場所にそのまま描画されます。
+素の `<Contribute area={WORKSPACE_PAGE_HEADER_AREA}>` は、作業領域のペインでしか表示されません。
 
 ### パレットのコマンドとキー割り当て {#palette-commands-and-keybinds}
 
@@ -780,6 +782,24 @@ jsx(Contribute, {
 ```
 
 マウントで登録され、アンマウントで自動的に破棄されます。
+
+ページの見出しの操作部品には、代わりに `WorkspacePageHeaderControl` を使ってください。ページがどこに
+描画されるかで置き場所を選びます。作業領域のペインでは `WORKSPACE_PAGE_HEADER_AREA` に登録し、
+それ以外の場所（分割ルートのタイル）では子要素をその場に描画します。その場に表示するときに
+操作部品を置きたい位置に書いてください。
+
+```javascript
+
+jsx(WorkspacePageHeaderControl, {
+  id: 'my-page:switcher', // namespace with your slug
+  children: jsx(MySwitcher, {})
+})
+```
+
+`WorkspacePageHeaderControl` はこのリリースで加わったものです。古いデスクトップのビルドはこれを
+エクスポートしておらず、SDK にないエクスポートを名前付きで import すると、プラグインのモジュールが
+読み込めなくなります。古いビルドでも動かす必要があるプラグインは、名前空間 import（`import * as sdk from '@hermes/plugin-sdk'` のあと
+`sdk.WorkspacePageHeaderControl ?? …`）で機能の有無を確かめるか、上の素の `Contribute` の形を使い続けてください。
 
 ### サイドバーのナビの表示と並び順（`SIDEBAR_NAV_PREFS_AREA`） {#sidebar-nav-visibility-and-order-sidebarnavprefsarea}
 
@@ -1500,10 +1520,10 @@ CSP、権限の制御）が必要です。この経路を信頼の境界とし�
 | プラグインの取り決め | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
 | 領域の定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS`、`SESSION_ROW_AREAS`、`SIDEBAR_NAV_PREFS_AREA`、`APPEARANCE_AREAS` |
 | 領域ごとの中身 | `RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider`、`SessionRowSlotContribution`、`SidebarNavPrefsContribution` |
-| React と状態 | `useValue`、`atom`、`computed`、`useQuery`、`useMutation`、`useQueryClient`、`queryClient`、`Contribute` |
+| React と状態 | `useValue`、`atom`、`computed`、`useQuery`、`useMutation`、`useQueryClient`、`queryClient`、`Contribute`、`WorkspacePageHeaderControl` |
 | テーマ | `useTheme`、`requestTheme`、`setAccentOverride`、`$accentOverride`、`retintTheme`、`themeHue`、`DesktopTheme`、`DesktopThemeColors`。さらに OKLCH の計算（`hexToOklch`、`oklchToHex`、`oklchToSrgb255`、`mixOklab`、`maxChroma`、`hueDelta`、`normalizeHex`）と sRGB の測定（`contrastRatio` は `number | null` で、解析できない入力では null、それに `readableOn`） |
 | UI キット | `Button`、`Input`、`Textarea`、`Select*`、`Switch`、`Checkbox`、`SegmentedControl`、`Tabs*`、`Dialog*`、`ConfirmDialog`、`DropdownMenu*`、`ContextMenu*`、`Popover*`、`Tip`/`Tooltip*`、`Badge`、`Kbd`/`KbdGroup`、`SearchField`、`ScrollArea`、`Separator`、`Skeleton`、`GlyphSpinner`、`Loader`、`EmptyState`、`ErrorState`、`CopyButton`、`StatusDot`、`LogView`、`Codicon`、`DecodeText`、`SandboxedFrame` |
-| 補助 | `cn`、`icons`、`haptic`、`useI18n`、`profileColor`、`profileColorSoft`、`relativeTime`、`fmtDateTime`、`fmtDayTime`、`coarseElapsed`、`evaluateRuntimeReadiness` |
+| 補助 | `cn`、`icons`、`haptic`、`useI18n`、`profileColor`、`profileColorSoft`、`relativeTime`、`fmtDateTime`、`fmtDayTime`、`coarseElapsed`、`evaluateRuntimeReadiness`、`catalogProviderMatches` |
 
 いつでも最新の正式な一覧は `apps/desktop/src/sdk/index.ts` です。
 

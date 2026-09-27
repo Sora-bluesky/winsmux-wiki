@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 7b164fad86146da4e29847c2e25a018d057151c7
+upstream_blob: 4bee7a415d1b3c4c8ff50003a14d26506a97eb87
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -530,7 +530,7 @@ You → /reload
 
 ### DELETE /api/sessions/\{session_id\} {#delete-apisessionssessionid}
 
-セッションとそのメッセージの履歴を消します。
+セッションとそのメッセージの履歴を消します。そのセッションにアクティブなターンのリースか圧縮のロックがかかっている場合は、`409 Conflict` を返します。
 
 ### GET /api/logs {#get-apilogs}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 083fa5ede7ec3577fa2b1a1c7488179185324fe7
+upstream_blob: 047bc448104435c4e43d740a4d2e2a8ca103a297
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -564,7 +564,7 @@ display:
 | `all` | 動作中の出力の更新**と**、出力の末尾を添えた最後の状態メッセージ |
 | `result` | 出力の末尾を添えた最後の状態メッセージだけ（終了コードにかかわらず） |
 | `error` | 終了コードが 0 以外のときだけ、出力の末尾を添えた最後の状態メッセージ |
-| `off` | プロセスの監視メッセージを一切送らない |
+| `off` | プロセスの監視メッセージを一切送らない。CLI・TUI・Desktop でもこの設定が効き、バックグラウンドのプロセスの完了やハートビートでエージェントが起こされなくなります（サブエージェントの結果では、これまでどおり起こされます） |
 
 環境変数でも設定できます。
 

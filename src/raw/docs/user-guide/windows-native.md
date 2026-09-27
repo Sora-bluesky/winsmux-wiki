@@ -2,7 +2,7 @@
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: 89aa1fbdcc7198d19ee07d29667f6e52b26c3138
+upstream_blob: c9784b16d740e8b037475ac6f3abc6178d99c63a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -46,7 +46,7 @@ iex (irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/script
 | `-Manifest` / `-ProtocolVersion` | 画面付きの準備用インストーラが使う段階のやり取りの取り決めを確認します。 |
 | `-Stage NAME -Json` | 1 つの段階だけを実行し、その結果を出力します。 |
 
-現在のスクリプトは `-NoVenv`、`-SkipSetup`、`-Tag` を受け付けません。
+現在のスクリプトは `-NoVenv` と `-Tag` を受け付けません。`-SkipSetup` は、古いインストール用のラッパーがそのまま動くように、`-NonInteractive` の非推奨の別名として今も受け付けます。
 Windows のパスが思いがけず短い形になる原因を調べるときは、まず `-ShowResolvedPaths` を使ってください。
 
 ### MSIX / アプリ インストーラーと Microsoft Store {#msix-app-installer-and-microsoft-store}
@@ -223,6 +223,7 @@ hermes gateway install
 
 1. `schtasks /Create /SC ONLOGON /RL LIMITED /TN Hermes_Gateway` — ログイン時に、昇格していない通常の権限で動くタスクを登録します。UAC の確認は出ません。
 2. グループポリシーで schtasks が禁じられている場合は、小さな `Hermes_Gateway.vbs` という起動用のファイル（`wscript.exe` で画面に出さずに実行されます）を `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup` に書き出す方式に切り替えます。効果は同じで、作りが少し素朴なだけです。`cmd.exe` のショートカットではなく VBScript を使うのは、ログイン時に割り当てられたコンソールが閉じる合図を受け取ると、ゲートウェイが起動し終わる前に落ちてしまうことがあるからです。
+   残るのは必ずどちらか一方だけです。タスクの登録に成功するとスタートアップフォルダーの項目（古い `Hermes_Gateway.cmd` も含みます）は取り除かれ、タスクが登録されたままの間は代わりの方式は使われません。両方が残っている古いインストールは、`hermes update` や `hermes doctor --fix` が片づけます。両方あると、ログイン時にゲートウェイが二重に起動してしまうためです。
 3. ゲートウェイは `python.exe` ではなく **`pythonw.exe` で切り離して起動します**。`pythonw.exe` にはコンソールが結び付かないため、同じ立場のプロセスから飛んでくる `CTRL_C_EVENT` の影響を受けません（同じプロセスグループで何かを Ctrl+C したときにゲートウェイが落ちる、という実際に起きていた問題への対策です）。
 
 起動時に使うフラグは `DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB` です。

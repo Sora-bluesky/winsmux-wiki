@@ -2,7 +2,7 @@
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: f64cd647825b111dac756c0e5c450a8cc3c1cfb3
+upstream_blob: b79c7deb2badf86970ab9c996f97bb23369a3f84
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -878,7 +878,7 @@ hermes cron create "every 5m" \
 - 最後の行の `{"wakeAgent": false}` は、静かな tick になります（LLM のジョブと同じ関門です）。
 - トークンも、モデルも、プロバイダーのフォールバックもありません。このジョブが推論の層に触れることはありません。
 
-`.sh` / `.bash` のファイルは、`PATH` に `bash` があればそれで、無ければ `/bin/bash` で動きます（Windows の Git Bash では大事な点です）。それ以外は、いまの Python インタープリター（`sys.executable`）で動きます。スクリプトは `$HERMES_HOME/scripts/` の中に解決されなければなりません。相対名、絶対パス、`~` で始まるパスは、解決した先がそのディレクトリに収まるなら受け付けられ、外へ出るパスは拒否されます。サブプロセスの環境変数は掃除されます（`_sanitize_subprocess_env`）。プロバイダーの API 認証情報や、Hermes が管理するほかの秘密情報は、cron のスクリプトへ**引き継がれません**。
+`.sh` / `.bash` のファイルは、`PATH` に `bash` があればそれで、無ければ `/bin/bash` で動きます（Windows の Git Bash では大事な点です）。それ以外は、いまの Python インタープリター（`sys.executable`）で動きます。スクリプトは `$HERMES_HOME/scripts/` の中に解決されなければなりません。相対名、絶対パス、`~` で始まるパスは、解決した先がそのディレクトリに収まるなら受け付けられ、外へ出るパスは拒否されます。Python の `script` や `monitor_script` は、作成時や編集時に `--interpreter ~/venvs/.../bin/python` を渡すと、自分で管理している venv に固定することもできます（Hermes のランタイムに入っていないパッケージを使いたいときに便利です）。詳しくは [自分の Python 環境を使う](/hermes/docs/guides/cron-script-only/#using-your-own-python-environment) を見てください。Hermes が管理する venv は Hermes のものであり続け、何かが自動でインストールされたり元に戻されたりすることはありません。サブプロセスの環境変数は掃除されるので、プロバイダーの API 認証情報や、Hermes が管理するほかの秘密情報は、cron のスクリプトへ**引き継がれません**。
 
 #### スクリプトへ資格情報を渡す {#giving-a-script-a-credential}
 

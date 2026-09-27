@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールをツールセットごとにまとめた公式な一覧"
 upstream_path: reference/tools-reference.md
-upstream_blob: 357ab37c0500b7dc1c3826a59d3edea7fa731c4c
+upstream_blob: 693f6277ed8835e3756b74921cbac3c4267a64e2
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -210,7 +210,7 @@ Feishu の文書コメント処理専用です。ドライブ上のファイル�
 | ツール | 説明 | 必要な環境 |
 |------|-------------|----------------------|
 | `process_manage` | terminal(background=true) で起動した背後のプロセスを管理します。操作は 'list'（すべて表示）、'poll'（状態と新しい出力を確認）、'log'（ページ送りで全出力）、'wait'（終わるか時間切れまで待つ）、'kill'（終了させる）、'write'（送… | — |
-| `terminal` | Linux 環境でシェルのコマンドを実行します。ファイルシステムは呼び出しをまたいで残ります。長く動かすサーバーには `background=true` を指定してください。`background=true` と一緒に `notify_on_complete=true` を指定すると、処理が終わったときに自動で知らせが来ます（こちらから確認しにいく必要はありません）。さらに `heartbeat=N`（秒。最小 60）を足すと、前回以降に出た出力を持った知らせが定期的に届きます。マージの列やテスト一式のような、長いけれど終わりのある仕事で、失敗を終了時ではなく N 秒以内に気づくためのものです。cat / head / tail は使わず read_file を、grep / rg / find は使わず search_files を使ってください。 | — |
+| `terminal` | Linux 環境でシェルのコマンドを実行します。ファイルシステムは呼び出しをまたいで残ります。長く動かすサーバーには `background=true` を指定してください。`background=true` と一緒に `notify_on_complete=true` を指定すると、処理が終わったときに自動で知らせが来ます（こちらから確認しにいく必要はありません）。さらに `heartbeat=N`（秒。最小 60）を足すと、前回以降に出た出力を持った知らせが定期的に届きます。マージの列やテスト一式のような、長いけれど終わりのある仕事で、失敗を終了時ではなく N 秒以内に気づくためのものです。新しい出力がない回の知らせは送られません。また、Desktop / TUI ではこの知らせで起きたことはやり取りの表示に出ず、エージェントの返答だけが表示されます。cat / head / tail は使わず read_file を、grep / rg / find は使わず search_files を使ってください。 | — |
 
 ## `desktop_ui` ツールセット {#desktopui-toolset}
 

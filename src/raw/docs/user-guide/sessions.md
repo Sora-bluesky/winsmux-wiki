@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 582c2b184d474179de326ef74509429bdf08459a
+upstream_blob: 4403ac6bf276d1bcd72db7c8a6818906625fdcb2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -472,6 +472,8 @@ hermes sessions delete 20250305_091523_a1b2c3d4 --yes
 ```
 
 動いているチャットで開いたままのセッションを削除しても、そのチャットは止まりません。次の保存のときに、メモリ上の会話記録を丸ごと使って、同じ ID でセッションが作り直されます。セッションを消したいなら、先にチャットを閉じてください。
+
+ターンを実行している最中や圧縮している最中にセッションを削除しようとすると、断られます（終了コード 1 で終わります）。動いているエージェントの下で会話記録が失われるのを防ぐためです。実行中のターンや圧縮が終わるのを待ってから削除してください。
 
 ### セッションの名前を変える {#rename-a-session}
 

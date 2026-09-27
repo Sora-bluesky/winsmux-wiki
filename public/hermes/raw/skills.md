@@ -12,9 +12,9 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 209 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 211 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `b9d5e4d`（2026-09-26）時点。この一覧は上流の docs から機械生成しています。
+上流 `6e69a89`（2026-09-28）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（58）
 
@@ -81,7 +81,7 @@ raw: /hermes/raw/skills.md
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-09-20 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/) | Use when a fetch fails: 403/429, paywall, WAF, bot wall | 2026-09-20 |
 
-## あとから入れる（150）
+## あとから入れる（152）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -105,6 +105,8 @@ raw: /hermes/raw/skills.md
 | [Auteur](/hermes/docs/user-guide/skills/optional/creative/creative-auteur/) | Design and build cinematic, award-level web pages | 2026-09-18 |
 | [Baoyu Article Illustrator](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/) | Article illustrations: type × style × palette consistency | 2026-09-20 |
 | [Baoyu Comic](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/) | Knowledge comics (知识漫画): educational, biography, tutorial | 2026-09-20 |
+| [Brag Slim](/hermes/docs/user-guide/skills/optional/creative/creative-brag-slim/) | Launch video from a project or URL, upstream-maintained | 2026-09-26 |
+| [Brag](/hermes/docs/user-guide/skills/optional/creative/creative-brag/) | Project launch video via Hyperframes, upstream-maintained | 2026-09-26 |
 | [Comfyui](/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/) | Generate images, video, and audio via diffusion workflows | 2026-09-20 |
 | [Concept Diagrams](/hermes/docs/user-guide/skills/optional/creative/creative-concept-diagrams/) | Generate flat, minimal educational SVG visuals as HTML | 2026-09-20 |
 | [Creative Ideation](/hermes/docs/user-guide/skills/optional/creative/creative-creative-ideation/) | Generate ideas via named methods from creative practice | 2026-09-20 |

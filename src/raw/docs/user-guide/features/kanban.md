@@ -2,7 +2,7 @@
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: 0363bbd6c8d5c2158056f14c529767f13a23d6e8
+upstream_blob: b682fb89176df957f1fecaf817ad6a16d52e44eb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -244,7 +244,9 @@ slug は検証されます。小文字の英数字 + ハイフン + アンダー
 横にあるヘッダーの行に置かれています。現在の盤の名前とタスク数を表示する
 **Board** という部品で、山形の印が付いています。ここにカーソルを合わせると
 「Switch board」と出ます。クリックすると別の盤を選べるほか、盤の名前の変更、
-設定、書き出し、読み込み、作成、アーカイブができます。ダッシュボードと同じく、
+設定、書き出し、読み込み、作成、アーカイブができます。カンバンを分割タイルで開いているときは、
+同じ **Board** の部品が、盤自身のヘッダー行のタスク数の後ろに置かれます。
+ダッシュボードと同じく、
 デスクトップアプリも自分の選択を（ローカルに）保持し、CLI の `current` の
 指す先を動かすことはありません。
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "スクリプトだけの定期実行（LLM なし）"
 description: "LLM をまったく使わない、昔ながらの見張り番の定期実行です。スクリプトが時間どおりに走り、その標準出力がメッセージアプリへ届きます。メモリの警告、ディスクの警告、CI の通知、定期的な状態確認に使えます。"
 upstream_path: guides/cron-script-only.md
-upstream_blob: c5d2250ab49be9e8d71fd2d92d172509e13403b8
+upstream_blob: 8c4de0b267cf1759d5ec1d5b297233af2474486a
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/cron-script-only
 ---
@@ -32,7 +32,7 @@ Hermes ではこれを **no-agent モード**と呼びます。定期実行の�
 
 - **LLM を呼びません。** トークンもエージェントのループもモデルの費用もゼロです。
 - **スクリプトそのものが仕事です。** 知らせるかどうかはスクリプトが決めます。出力を出せばメッセージが送られ、何も出さなければ静かに終わります。
-- **Bash か Python です。** `.sh` / `.bash` のファイルは `PATH` にある `bash`（見つからないときは `/bin/bash`）で動き、それ以外の拡張子は今使っている Python インタプリタで動きます。パスは `~/.hermes/scripts/` の中に収まる必要があります（相対でも絶対でも `~` 付きでも、その中に収まっていれば大丈夫です）。定期実行のスクリプトは、Hermes 本体のプロセス環境からプロバイダの認証情報を**引き継ぎません**。
+- **Bash か Python です。** `.sh` / `.bash` のファイルは `PATH` にある `bash`（見つからないときは `/bin/bash`）で動き、それ以外の拡張子は今使っている Python インタプリタで動きます。Python のスクリプトは、`--interpreter` で**自分で管理する venv** に固定することもできます（[自分の Python 環境を使う](#using-your-own-python-environment) をご覧ください）。パスは `~/.hermes/scripts/` の中に収まる必要があります（相対でも絶対でも `~` 付きでも、その中に収まっていれば大丈夫です）。定期実行のスクリプトは、Hermes 本体のプロセス環境からプロバイダの認証情報を**引き継ぎません**。
 - **スケジューラは同じです。** LLM を使うジョブと並んで `cronjob` に置かれるので、一時停止も再開も一覧表示もログも配信先の指定も、すべて同じように使えます。
 
 ## こんなときに使います {#when-to-use-it}
@@ -154,16 +154,47 @@ hermes cron run <job_id>    # fire it once to test
 
 ## スクリプトの決まりごと {#script-rules}
 
-スクリプトは `~/.hermes/scripts/` の中に置く必要があります。これはジョブを作るときと実際に走らせるときの両方で確認され、絶対パスや `~/` の展開、`../` を使った抜け道は拒否されます。このディレクトリは、LLM ジョブが使う事前チェック用スクリプトの置き場と共通です。
+スクリプトは、たどった先が `~/.hermes/scripts/` の中に収まっている必要があります。これは実際に走らせるときに確認されます。相対の名前、絶対パス、`~` で始まるパスは、たどった先がそのディレクトリの中なら受け付けます。パスをさかのぼって外に出るものや、シンボリックリンクで外へ抜けるものは拒否されます。このディレクトリは、LLM ジョブが使う事前チェック用スクリプトの置き場と共通です。
 
 どのインタプリタで動くかは拡張子で決まります。
 
 | 拡張子 | インタプリタ |
 |-----------|-------------|
 | `.sh`, `.bash` | `PATH` にある `bash`（見つからないときは `/bin/bash`） |
-| それ以外 | `sys.executable`（今使っている Python） |
+| それ以外 | `sys.executable`（今使っている Python）、または[設定したインタプリタ](#using-your-own-python-environment) |
 
 `#!/...` のシェバンはあえて見ていません。使うインタプリタをはっきり少なく保つことで、スケジューラが信頼する範囲を狭くしています。
+
+### 自分の Python 環境を使う {#using-your-own-python-environment}
+
+Python の定期実行スクリプトは、既定では Hermes 自身の Python 環境で動きます。この環境には Hermes が使う依存パッケージしか入っていません。そのため、`openpyxl` やデータベースのドライバなど、自分で入れたパッケージを import するスクリプトは `ModuleNotFoundError` で失敗します。
+
+代わりに `--interpreter` で、ジョブが**自分で管理する venv** を使うよう指定できます。
+
+```bash
+# 1. Create a venv you own — it survives Hermes reinstalls/rebuilds.
+uv venv ~/venvs/hermes-reporting --python 3.11
+uv pip install --python ~/venvs/hermes-reporting/bin/python openpyxl
+
+# 2. Schedule the job with that interpreter.
+hermes cron create "0 8 * * *" \
+  --no-agent \
+  --script daily-report.py \
+  --interpreter ~/venvs/hermes-reporting/bin/python \
+  --deliver telegram
+```
+
+`--model` と同じく、これは利用者が持つ設定です。`hermes cron create/edit` で設定します。エージェントの `cronjob` ツールからは設定できません。
+
+決まりごと:
+
+- venv は**利用者が管理する**ものです。Hermes は venv を作ったり、固定したり、元に戻したり、パッケージを入れたりはしません。指定されたパスを呼び出すだけです。
+- パスは**絶対パスか `~` で始まる形**にしてください（例: `~/venvs/reporting/bin/python3`）。`python3` のような名前だけの指定は、`PATH` が変わると指す先が変わるため拒否されます。
+- **Python の実行ファイル**（`python`、`python3`、`python3.12` など）でなければなりません。シンボリックリンクの場合はリンク先で判断します。`/bin/bash` などほかのインタプリタは拒否されます。
+- 効くのは **Python のスクリプトだけ**です。`.sh` / `.bash` は、この設定にかかわらず常に bash で動きます。
+- ジョブ単位の設定なので、`script` と `monitor_script` がどちらも Python のファイルなら両方に効きます。
+- 確認は作成時ではなく**実行時**に行われます。定期実行のジョブは長く使われ、作ってから実際に走るまでの間に venv を作り直したり移動したりすることがあるためです。インタプリタが見つからない、または実行できない場合は、スクリプトの失敗としてわかりやすく扱われ、ほかのエラーと同じように届きます。
+- あとで解除するには `hermes cron edit <job_id> --interpreter ""` を実行します。
 
 ## 予定の書き方 {#schedule-syntax}
 

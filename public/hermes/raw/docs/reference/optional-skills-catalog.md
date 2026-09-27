@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: a59ba090f0218ab39ce5bdf145118fe76d82251e
+upstream_blob: d6ea8e8c990289f65bf8ed7e8bbd55cd65b8e267
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -68,6 +68,8 @@ hermes skills uninstall <skill-name>
 | [**auteur**](/hermes/docs/user-guide/skills/optional/creative/creative-auteur/) | 映画のような、賞を狙える水準の Web ページを設計して作ります。 |
 | [**baoyu-article-illustrator**](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/) | 記事の挿絵。種類 × 画風 × 配色をそろえて描きます。 |
 | [**baoyu-comic**](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/) | 知識マンガ（知识漫画）。学習向け、伝記、手順解説に対応します。 |
+| [**brag**](/hermes/docs/user-guide/skills/optional/creative/creative-brag/) | Hyperframes でプロジェクトの紹介動画を作ります。上流で保守されています。 |
+| [**brag-slim**](/hermes/docs/user-guide/skills/optional/creative/creative-brag-slim/) | プロジェクトや URL から紹介動画を作ります。上流で保守されています。 |
 | [**comfyui**](/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/) | 拡散モデルのワークフローで画像、動画、音声を生成します。 |
 | [**concept-diagrams**](/hermes/docs/user-guide/skills/optional/creative/creative-concept-diagrams/) | 平面的で装飾を抑えた学習用の SVG 図版を HTML として作ります。 |
 | [**creative-ideation**](/hermes/docs/user-guide/skills/optional/creative/creative-creative-ideation/) | 創作の現場で使われてきた発想法を名指しで呼び出し、アイデアを出します。 |

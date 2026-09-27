@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "SimpleX Chat"
 description: ""
 upstream_path: user-guide/messaging/simplex.md
-upstream_blob: 83fb176a410e1be0fba1f63673fb0fe33d3c15fe
+upstream_blob: e1317f66b3e3d64741722738563e5508f17af65b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/simplex
 ---
@@ -62,7 +62,7 @@ SIMPLEX_HOME_CHANNEL=<contact-id>
 | 変数 | 必須 | 説明 |
 |---|---|---|
 | `SIMPLEX_WS_URL` | はい | simplex-chat の常駐プロセスの WebSocket の URL |
-| `SIMPLEX_ALLOWED_USERS` | 入れておくのがおすすめ | 許可する相手をカンマ区切りで指定します。一つずつ、数字の `contactId` でも表示名でも書けます。 |
+| `SIMPLEX_ALLOWED_USERS` | 入れておくのがおすすめ | 許可する相手を、数字の `contactId` のカンマ区切りで指定します。表示名は **受け付けません**。表示名はどの連絡先も自分で変えられるからです。 |
 | `SIMPLEX_ALLOW_ALL_USERS` | 任意 | `true` にすると、すべての連絡先を許可します（扱いに注意してください） |
 | `SIMPLEX_AUTO_ACCEPT` | 任意 | 届いた連絡先の申請を自動で受け入れます（初期値: `true`） |
 | `SIMPLEX_GROUP_ALLOWED` | 任意 | ボットが参加するグループの ID をカンマ区切りで指定します。どのグループでもよければ `*` にします。書かない場合、グループのメッセージはすべて無視します |
@@ -70,15 +70,15 @@ SIMPLEX_HOME_CHANNEL=<contact-id>
 | `SIMPLEX_HOME_CHANNEL_NAME` | 任意 | ホームチャンネルにつける、人が読むための名前 |
 | `HERMES_SIMPLEX_TEXT_BATCH_DELAY` | 任意 | 続けざまに届いた文字のメッセージを一つのできごとにまとめるための、静かになるまで待つ秒数（初期値: `0.8`） |
 
-## 連絡先の ID や表示名を調べる {#find-your-contact-id-or-display-name}
+## 連絡先の ID を調べる {#find-your-contact-id}
 
-常駐させたあと、エージェントの連絡先との会話を開きます。数字の `contactId` は、セッションの記録に出てきます。SimpleX の画面に出ている表示名のほうが使いやすければ、それでもかまいません。`SIMPLEX_ALLOWED_USERS` はどちらの書き方も受け付けます。
+常駐させたあと、エージェントの連絡先との会話を開きます。数字の `contactId` は、セッションの記録に出てきます（常駐プロセスで `/contacts` を実行しても確かめられます）。`SIMPLEX_ALLOWED_USERS` が照らし合わせるのはこの ID だけです。表示名は相手が自分で決めるもので、ほかの人と重なることもあるため、無視されます。
 
 ## 誰が使えるか {#authorization}
 
 初期状態では **すべての連絡先が拒否** されます。次のどちらかを行ってください。
 
-1. `SIMPLEX_ALLOWED_USERS` に、`contactId` や表示名をカンマ区切りで並べます（たとえば `SIMPLEX_ALLOWED_USERS=4,alice` なら、contactId が 4 の相手か、表示名が「alice」の相手のどちらにも当てはまります）。
+1. `SIMPLEX_ALLOWED_USERS` に、数字の `contactId` をカンマ区切りで並べます（たとえば `SIMPLEX_ALLOWED_USERS=4,9`）。
 2. **個別チャットでのペアリング** を使います。ボットに何かメッセージを送るとペアリングコードが返ってくるので、そのコードを `hermes pairing approve simplex <CODE>` で入力します。
 
 ## グループでのやり取り {#group-chats}

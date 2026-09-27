@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 00caeff2b8789756245868adc0cf52bab1b9b113
+upstream_blob: 80625c23d19ae5b54bb7fc93e601ba2ddf40a555
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -198,7 +198,7 @@ Hermes に話しかけ、返事を聞けます。他の場所で使えるのと�
 
 #### Linux / Wayland {#linux-wayland}
 
-Electron 20 以降は、Wayland のセッション上ではすでにネイティブの Wayland クライアントとして動きます。ドラッグ・クリックの通過・リサイズはこの経路で動きます。
+ローカルの Wayland セッション（`XDG_SESSION_TYPE=wayland` のとき、または `WAYLAND_DISPLAY` が設定されているとき）では、Hermes は `--ozone-platform=wayland` を付けて起動します。Electron が XWayland へ落ちないようにするためです。プラットフォームは、アプリケーションの JavaScript が読み込まれる前に、プロセスのコマンドラインに載っていなければなりません。明示的な `--ozone-platform`、`desktop.ozone_platform_hint: x11`、`desktop.electron_flags` の中の ozone プラットフォーム指定は、これまでどおりそちらが優先されます。ドラッグ・クリックの通過・リサイズは、ネイティブ Wayland の経路で動きます。
 
 **Hyprland**（Omarchy を含む）では、HUD はマップされたあとにコンポジターの IPC を通してフロート化・ピン留めされます。そうしないと Hyprland が他のウィンドウと同じようにタイル配置してしまい、`always-on-top` は無視され、コンポジターのドラッグも効きません。追加のウィンドウルールは要りません。
 

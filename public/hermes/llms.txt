@@ -348,6 +348,8 @@ Hermes Agent 0.21.5
 - [user-guide/skills/optional/creative/creative-auteur（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-auteur/)
 - [user-guide/skills/optional/creative/creative-baoyu-article-illustrator（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/)
 - [user-guide/skills/optional/creative/creative-baoyu-comic（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/)
+- [user-guide/skills/optional/creative/creative-brag-slim（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-brag-slim/)
+- [user-guide/skills/optional/creative/creative-brag（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-brag/)
 - [user-guide/skills/optional/creative/creative-comfyui（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/)
 - [user-guide/skills/optional/creative/creative-concept-diagrams（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-concept-diagrams/)
 - [user-guide/skills/optional/creative/creative-creative-ideation（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-creative-ideation/)
@@ -811,6 +813,8 @@ Hermes Agent 0.21.5
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-auteur.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-baoyu-comic.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-brag-slim.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-brag.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-comfyui.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-concept-diagrams.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-creative-ideation.md

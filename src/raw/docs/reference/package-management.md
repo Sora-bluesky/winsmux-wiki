@@ -2,7 +2,7 @@
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 52f6a72adf787eaa0ad5698abf76a4411b5f0349
+upstream_blob: c40a5d86190367a10f2d38bd2c4e692b4ec72eac
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -544,7 +544,7 @@ hermes pm install chromium
 | `pm update --target TARGET` | 指定したターゲット向けにバージョンを解決します。 |
 | `pm update --uv` / `--npm` | Python または npm の依存関係の解決結果も更新します。 |
 | `pm update --termux [--check]` | ローリング方式のプールから外された termux プールのアーカイブ（ランタイムライブラリの固定表と bionic のロック行）を固定し直します。`--check` は書き込みをせずに報告し、外された固定版があれば終了コード 1 を返します。 |
-| `pm install --target TARGET NAME...` | 明示したクロスターゲットのパッケージを、ホストのインストール済み実行環境として記録せずに配置します。 |
+| `pm install --target TARGET NAME...` | 明示したクロスターゲットのパッケージを、ホストのインストール済み実行環境として記録せずに配置します。win32 の `git` ターゲットは自己展開形式の PortableGit アーカイブに固定されています。配置するときは提供元の展開プログラムを実行するため、Windows のホストが必要です。 |
 | `pm bundle --out DIR [--ref REF]` | ソースのスナップショット、ネイティブツール、facts、Python の依存関係を配置します。署名済みのデスクトップインストーラーは作りません。 |
 
 完全なデスクトップビルダーは、JavaScript の画面もビルドし、ランチャーを生成して、

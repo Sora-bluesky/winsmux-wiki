@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: b7b78a618db06398f16f27225d39566ceba9849c
+upstream_blob: 3199d9a11b995c1372e2c5f4fa6eb43b6baca7a0
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -552,7 +552,8 @@ max_summary_tokens   = min(200,000 × 0.05, 12,000) = 10,000
 古くなった情報は取り除かれます。
 
 このために、圧縮機構のインスタンスの `_previous_summary` フィールドが
-直前の要約の文面を保持しています。
+直前の要約の文面を保持しています。決まった手順で作る代替の要約もここに保存されます。
+それがいまの会話記録に残る引き継ぎになるためです。
 
 ## 圧縮前後の例 {#beforeafter-example}
 
