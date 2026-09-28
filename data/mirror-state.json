@@ -172,9 +172,9 @@
       "translatedAt": "2026-09-16T22:39:41.138Z"
     },
     "getting-started/installation.md": {
-      "blob": "29f41a40e632898449a1158604ff53a646d1f6ff",
+      "blob": "b3013f68a27cc71dd10f9f4bdfbd8217944a9e43",
       "status": "translated",
-      "translatedAt": "2026-09-25T22:58:06.422Z"
+      "translatedAt": "2026-09-28T02:49:55.348Z"
     },
     "getting-started/learning-path.md": {
       "blob": "6ddce59518667babf1122eb07d2f8b6836050fe0",
@@ -482,9 +482,9 @@
       "translatedAt": "2026-09-20T23:06:07.205Z"
     },
     "user-guide/desktop.md": {
-      "blob": "80625c23d19ae5b54bb7fc93e601ba2ddf40a555",
+      "blob": "7e19d4324d4c8a892e9745c031ec22f574bc04b9",
       "status": "translated",
-      "translatedAt": "2026-09-27T22:49:12.651Z"
+      "translatedAt": "2026-09-28T02:49:55.354Z"
     },
     "user-guide/docker.md": {
       "blob": "525d3028a3d13eeaab30e7fb7b9c087894b58003",
@@ -507,9 +507,9 @@
       "translatedAt": "2026-09-25T22:58:06.480Z"
     },
     "user-guide/features/api-server.md": {
-      "blob": "1c940e6db4220c92a9aa6218817329d6a456aeb5",
+      "blob": "5752296eb3247cd7938e9213f0ed9fded3da56c4",
       "status": "translated",
-      "translatedAt": "2026-09-25T22:58:06.491Z"
+      "translatedAt": "2026-09-28T02:49:55.356Z"
     },
     "user-guide/features/batch-processing.md": {
       "blob": "cb86017543bf43b584b578304a8235cd1d0fd188",
@@ -517,9 +517,9 @@
       "translatedAt": "2026-09-18T22:41:13.179Z"
     },
     "user-guide/features/browser.md": {
-      "blob": "bcd00d73b59ffa70f318e51ad989470f28b4a86c",
+      "blob": "adf24bb06f09ac058264a711912355b539c94393",
       "status": "translated",
-      "translatedAt": "2026-09-25T22:58:06.464Z"
+      "translatedAt": "2026-09-28T02:49:55.358Z"
     },
     "user-guide/features/built-in-plugins.md": {
       "blob": "647b73165a250ad19e65a804783a9e62b756ab92",
@@ -537,9 +537,9 @@
       "translatedAt": "2026-09-21T22:48:31.592Z"
     },
     "user-guide/features/computer-use.md": {
-      "blob": "9a09d504c3105825f927ccffed319f015e9867e6",
+      "blob": "c5fc35126799f812c02bc0568db9d1db10681dfa",
       "status": "translated",
-      "translatedAt": "2026-09-26T22:49:05.163Z"
+      "translatedAt": "2026-09-28T02:49:55.359Z"
     },
     "user-guide/features/context-files.md": {
       "blob": "eb461c4cfc497a94c897c67049d43b0bf7b7355d",
@@ -947,9 +947,9 @@
       "translatedAt": "2026-09-25T22:58:06.482Z"
     },
     "user-guide/multi-connection-desktop.md": {
-      "blob": "d636f78e6debfbfe76fc9c8da6131fa8f893a3e2",
+      "blob": "294d2ddeabc2fc6a312168ab28a59638cb4e44d6",
       "status": "translated",
-      "translatedAt": "2026-09-23T22:51:08.910Z"
+      "translatedAt": "2026-09-28T02:49:55.360Z"
     },
     "user-guide/multi-profile-gateways.md": {
       "blob": "bb82a5fba9d849b4908e778d709d3a24883b9b8d",
@@ -2366,9 +2366,9 @@
       "translatedAt": "2026-09-25T22:58:06.505Z"
     },
     "reference/package-management.md": {
-      "blob": "c40a5d86190367a10f2d38bd2c4e692b4ec72eac",
+      "blob": "fecdbddb144a5bb62fcb8574ca1806e8b9ba1483",
       "status": "translated",
-      "translatedAt": "2026-09-27T22:49:12.666Z"
+      "translatedAt": "2026-09-28T02:49:55.361Z"
     },
     "user-guide/switching-to-source.md": {
       "blob": "766782bed736ffa0bbb0ff70d3c46212547257a4",
@@ -2386,5 +2386,5 @@
       "translatedAt": "2026-09-27T22:49:12.667Z"
     }
   },
-  "snapshotCommit": "6e69a8933adda7dbbff7cf3009a259a4524477e9"
+  "snapshotCommit": "27062c347426f2c3ad2b828064e033d81fa9bcc3"
 }

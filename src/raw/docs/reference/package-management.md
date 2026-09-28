@@ -2,7 +2,7 @@
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: c40a5d86190367a10f2d38bd2c4e692b4ec72eac
+upstream_blob: fecdbddb144a5bb62fcb8574ca1806e8b9ba1483
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -518,8 +518,8 @@ hermes pm install chromium
 
 | コマンド | 効果 |
 |---|---|
-| `pm install [names...]` | 名前を指定したパッケージをインストールします。名前を指定しない場合は、必要なツールと Python を用意し、そのツールを PATH に置いてから、`all` extra を同期します。名前なしのインストールでは、既定のオプションツール（`agent-browser` と Chromium）もインストールします。これらのダウンロードに失敗しても警告が出るだけで、インストール自体は失敗しません。以前に断ったパッケージの名前を指定すると、その選択を取り消せます。 |
-| `pm install --without NAME` | 既定のオプションパッケージ `NAME`（`agent-browser` のみ）を除いて名前なしのインストールを行い、その選択を記録します。以降の名前なしのインストールと `hermes update` でも除外されます。インストーラーの `--skip-browser` / `-SkipBrowser` はこれを使っています。 |
+| `pm install [names...]` | 名前を指定したパッケージをインストールします。名前を指定しない場合は、必要なツールと Python を用意し、そのツールを PATH に置いてから、`all` extra を同期します。名前なしのインストールでは、既定のオプションツール（`agent-browser` と Chromium、`cua-driver`）もインストールします。これらのダウンロードに失敗しても警告が出るだけで、インストール自体は失敗しません。以前に断ったパッケージの名前を指定すると、その選択を取り消せます。 |
+| `pm install --without NAME` | 既定のオプションパッケージ `NAME`（`agent-browser` か `cua-driver`）を除いて名前なしのインストールを行い、その選択を記録します。以降の名前なしのインストールと `hermes update` でも除外されます。インストーラーの `--skip-browser` / `-SkipBrowser` と `--skip-computer-use` / `-SkipComputerUse` はこれを使っています。 |
 | `pm install --tools-only` | そのツール一式をインストールして PATH に置き、そこで止めます。venv の同期は行いません。 |
 | `pm env [names...]` | インストール済みパッケージについて、PM が追加する環境変数の値を JSON で出力します。足りないパッケージはインストールしませんが、Hermes をコールドスタートした場合は、先に自分用の Python 実行環境を用意することがあります。 |
 | `pm doctor` | インストール済みツールの識別情報、ファイル、ダイジェストをロックと照合します。 |

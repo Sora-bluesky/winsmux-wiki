@@ -2,7 +2,7 @@
 title: "ブラウザの自動操作"
 description: "いくつものプロバイダ、CDP でつなぐ手元の Chromium 系ブラウザ、あるいはクラウドのブラウザでブラウザを操り、ウェブとのやり取り、フォームの入力、情報の取り出しなどを行います。"
 upstream_path: user-guide/features/browser.md
-upstream_blob: bcd00d73b59ffa70f318e51ad989470f28b4a86c
+upstream_blob: adf24bb06f09ac058264a711912355b539c94393
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/browser
 ---
@@ -75,7 +75,7 @@ BROWSERBASE_PROJECT_ID=your-project-id-here
 
 Browser Use モードは、組み込みのブラウザの道具の代わりに [Browser Use CLI 3.0](https://github.com/browser-use/browser-use) を使います。エージェントはブラウザの中で Python を書いて動かし、クリック、入力、ドラッグ、情報の取り出し、ページとのやり取りをします。
 
-**これが既定のブラウザモードです。** `browser.backend` が設定されておらず、`browser-use` の CLI が動かせる（入っているか、`uvx` から使える）とき、エージェントには `browser_exec` という道具が1つ渡されます。CLI が動かせないときは、Hermes が自動で組み込みのブラウザの道具に戻します。
+**これが既定のブラウザモードです。** `browser.backend` が設定されておらず、`browser-use` の CLI が動かせる（入っているか、`uvx` から使える）とき、エージェントには `browser_exec` という道具が1つ渡されます。インストーラーと `hermes update` は、`--skip-browser` / `-SkipBrowser` を渡したか `backend: "off"` を選んだ場合を除き、バージョンを固定した CLI を Hermes が管理する環境に入れます。ダウンロードに失敗したときは `hermes tools post-setup browser_use_cli` で再試行できます。CLI が動かせないときは、Hermes が自動で組み込みのブラウザの道具に戻します。
 
 このモードは**ドライバ**で、設定したブラウザの裏方と組み合わせて動きます。Hermes 自身の画面なしの Chromium、Nous の購読で使えるクラウドのブラウザ、Browserbase、Firecrawl、Browser Use のクラウドブラウザ — `hermes tools` → Browser Automation で選んだブラウザの出どころなら、どれでも動かします。唯一の例外は Camofox で、こちらは仕組みがつなぎに行ける CDP の口を持ちません。Camofox の設定では、自動的に組み込みのブラウザの道具のままになります。
 

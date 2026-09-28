@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "インストール"
 description: "デスクトップ版パッケージ、ソースからのインストーラー、Docker、Nix、Termux の APT パッケージで Hermes Agent を導入する"
 upstream_path: getting-started/installation.md
-upstream_blob: 29f41a40e632898449a1158604ff53a646d1f6ff
+upstream_blob: b3013f68a27cc71dd10f9f4bdfbd8217944a9e43
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -72,15 +72,17 @@ aarch64 の Android 端末では [Termux の APT パッケージ](/hermes/docs/g
 スクリプトはソースをクローンし、uv を用意したうえで、依存パッケージの準備を
 PM に任せます。PM は、バージョンを固定した Python、Node.js、npm、ripgrep、FFmpeg を用意します。ソースからの
 インストールでは Python の `all` extra が選ばれます。任意の extra がすべて入るわけではありません。
-PM は既定でブラウザ用ツール（`agent-browser` と、バージョンを固定した Chromium）も入れます。
-このダウンロードに失敗してもインストールそのものは最後まで進み、再試行用の
-コマンドが表示されます。そのほかの任意ツールは、それぞれの機能ごとのインストール手順で
-入れます。
+PM は既定でブラウザ用とコンピュータ操作用のツールも入れます。`agent-browser`
+と、バージョンを固定した Chromium、Browser Use CLI（既定のブラウザドライバー）、それに
+`cua-driver`（コンピュータ操作のドライバー。macOS、Windows、glibc の Linux が対象）です。
+ダウンロードに失敗してもインストールそのものは最後まで進み、再試行用のコマンドが表示されます。
+そのほかの任意ツールは、それぞれの機能ごとのインストール手順で入れます。
 
 ブラウザ用ツールを入れたくない場合は、POSIX では `--skip-browser`、Windows では `-SkipBrowser`
-を渡します。Hermes はこの選択を覚えていて、あとのインストールや `hermes update` でも
-ブラウザ用ツールを入れ直しません。入れたくなったら `hermes pm install agent-browser` を実行すると、ツールが入り、
-この選択も取り消されます。
+を渡します。コンピュータ操作のドライバーなら `--skip-computer-use` /
+`-SkipComputerUse` です。Hermes はこれらの選択を覚えていて、あとのインストールや
+`hermes update` でも入れ直しません。入れたくなったら `hermes pm install agent-browser` か
+`hermes pm install cua-driver` を実行すると、ツールが入り、この選択も取り消されます。
 
 スクリプトは起動用のランチャーを作り、データディレクトリを用意します。対話モードで実行した場合は、
 セットアップとゲートウェイの設定も続けて始まります。POSIX の `--non-interactive`、Windows の

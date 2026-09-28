@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: 9a09d504c3105825f927ccffed319f015e9867e6
+upstream_blob: c5fc35126799f812c02bc0568db9d1db10681dfa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -45,10 +45,15 @@ Spaces が勝手に切り替わることもありません。同じ機械の上�
 
 ## 有効にする {#enabling}
 
-**ドライバーは PM が管理するツールです。** `cua-driver` の版は
-`pm/lock.json` で固定されています。インストーラーはこれを前もって取ってきません
-（`--skip-computer-use` / `-SkipComputerUse` というフラグもありません）。
-何かが初めてコンピュータ操作を有効にしたときに用意されます。
+**ドライバーは Hermes に同梱されています。** `cua-driver` の版は `pm/lock.json`
+で固定されていて、PM の既定パッケージです。インストーラー、名前なしの `hermes pm install`、
+`hermes update` が、macOS、Windows、glibc の Linux のどの環境にもこれを入れます
+（cua-driver は musl 版と Android 版を出していません）。デスクトップアプリの同梱物にも
+含まれています。入れたくない場合は、POSIX では `--skip-computer-use`、Windows では
+`-SkipComputerUse` を渡します（または `hermes pm install --without cua-driver` を実行します）。
+Hermes はこの選択を覚えていて、`hermes pm install cua-driver` で取り消せます。
+
+ダウンロードに失敗した場合や、前に入れないことを選んだ場合は、次のどれかでインストールできます。
 
 - **`hermes tools`** → `🖱️  Computer Use` を選びます。まだ入っていなければ
   ドライバーを自動でインストールします。

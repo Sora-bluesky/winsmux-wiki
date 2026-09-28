@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "デスクトップ版を複数の Hermes につなぐ"
 description: ""
 upstream_path: user-guide/multi-connection-desktop.md
-upstream_blob: d636f78e6debfbfe76fc9c8da6131fa8f893a3e2
+upstream_blob: 294d2ddeabc2fc6a312168ab28a59638cb4e44d6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-connection-desktop
 ---
@@ -221,7 +221,7 @@ instance itself is not touched — you can add it again any time.」*（イン�
 - ゲートウェイを選ぶと、そこで最後に使っていたプロファイルが戻ってきます。ホームのラベルは
   既定のプロファイルに戻り、レイヤーのラベルは **All profiles on this gateway** を
   表示します。
-  **Cmd/Ctrl+1–9** は、これまでどおり選択中のゲートウェイの中でプロファイルを切り替えます。
+  **Cmd/Ctrl+1–9** は、タブ列を持つペインがそのキーを使わない限り、これまでどおり選択中のゲートウェイの中でプロファイルを切り替えます。
 - ゲートウェイが複数あるとき、プロファイルの列は**全体のプロファイル列**になります。登録した
   すべてのゲートウェイのプロファイルが1本の帯に並び、それぞれの組の先頭には、そのゲートウェイ
   の種類を表す記号（デバイス、ネットワーク、ターミナル、クラウド）が付きます。ゲートウェイの
