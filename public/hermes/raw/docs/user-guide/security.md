@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: db9f86be7ce77e5e875f250ad07a3c8a090c205d
+upstream_blob: f15a4cc4f306d015cc975073c0ff1b68db0812f9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -553,7 +553,7 @@ _BASE_SECURITY_ARGS = [
 ```yaml
 terminal:
   backend: docker
-  docker_image: "nikolaik/python-nodejs:python3.11-nodejs20"
+  docker_image: "nousresearch/hermes-sandbox:desktop"
   docker_forward_env: []  # Explicit allowlist only; empty keeps secrets out of the container
   container_cpu: 1        # CPU cores
   container_memory: 5120  # MB (default 5GB)
@@ -684,7 +684,7 @@ auth:
 - 資格情報のファイルは、Docker のコンテナへ **読み取り専用** でマウントされます
 - Skills Guard が、導入の前にスキルの中身をあやしい環境変数のさわり方がないか走査します
 - 設定されていない変数は登録されません（存在しないものは漏れようがありません）
-- Hermes の基盤にあたる秘密情報（プロバイダーの API キー、ゲートウェイのトークン）は、`env_passthrough` に足すべきではありません。専用のしくみがあります
+- Hermes の基盤にあたる秘密情報（プロバイダーの API キー、ゲートウェイのトークン）は、`env_passthrough` に足すべきではありません。専用のしくみがあります。そうした名前は宣言した時点で拒まれます。また、宣言済みの名前をあとからプラットフォームのアダプターが自分のものとした場合（スキルが読み込まれたあとにプラグインのアダプターが登録された場合）、その時点から渡されなくなります
 
 ## MCP の資格情報の扱い {#mcp-credential-handling}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Multiplexing Gateway の内部構造"
 description: "1 つの gateway ですべてのプロファイルを受け持つモードの設計: スコープの組み立て、シークレットのスコープ、受信のルーティング、永続化"
 upstream_path: developer-guide/multiplexing-gateway.md
-upstream_blob: a2967827dac258ff2423f3fe2b8cbeca214b8f81
+upstream_blob: efea24c3a59e440d5752eec8466f0dee2049a863
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/multiplexing-gateway
 ---
@@ -293,6 +293,16 @@ HERMES_HOME の上書きの下で実行します。資源の書き込みはア�
   例外を送出します。受け持っていないプロファイル宛てにルーティングされたイベントは破棄します。
   スコープのない `/p/` へのリクエストは、未定義のスコープではなく既定のプロファイルの
   スコープに入ります（`#61276`）。
+- プロファイルごとに安全側に倒して失敗させるもの: リモートの MCP サーバーの `url` / `headers` に、
+  所有者のプロファイルのスコープで展開したあとも `${VAR}` がそのまま残っている場合は接続しません
+  （`MCP server 'x': ${VAR} in url/headers is not set in this
+  profile's .env or secret source`）。この参照は接続と再接続のたびに所有者の新しいスコープで
+  展開し直されるので、そのプロファイルの `.env` かシークレットソースが値を用意すれば直ります。
+  起動プロファイルの対応表には、起動時に固定された環境変数も引き続き含まれます
+  （systemd の `Environment=` や `op run` の資格情報が解決されます）。二次プロファイルは自分のファイルだけから解決します。
+- スコープごとのプラットフォームの有効化判定: A2A（`A2A_PORT`）と Buzz を有効にするかどうかは、
+  そのプロファイル自身のスコープと `platforms.<name>` セクションから読み取ります。そのため、起動プロファイルの
+  環境変数によって、すべての二次プロファイルで受信用のリスナーが有効になることはなくなりました。
 - フォールバックするもの: 外部の `cron.provider` は多重化に対応していないので、
   警告を出して組み込みの刻み処理にフォールバックします。
 

@@ -2,7 +2,7 @@
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: fa9bd16a717667bac8d80550ee22320a4ceae51d
+upstream_blob: 95c4268fea6da71a4e22157cb0eeea0c12818519
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -655,7 +655,7 @@ delegation:
 
 `base_url` が Anthropic 互換の接続先を指しているとき — たとえば `/anthropic` で終わるパス、Azure Foundry の Claude の経路、MiniMax の `/anthropic` のプロキシなど — `api_mode` は `anthropic_messages` として自動で見分けられるので、何も設定しなくてもサブエージェントは正しい形式を使います。自動の見分けが外れたとき（まれです）は、`api_mode` を明示してください。
 
-サブエージェントは親と同じところで文脈を圧縮します。`compression.threshold` × 窓の大きさ と、全体にかかる `compression.threshold_tokens` の上限（1M のモデルなら既定で 256K）のうち、小さいほうが使われます。`delegation.compression_threshold_tokens`（既定は `0`、無効）は、子の圧縮の*きっかけ*に対する絶対値の上限を任意で足すもので、割合のしきい値と比べて小さいほうが使われます。リクエストの中身にも、親にも触れません。16000 以上のトークン数を入れると有効になります。`true` や `"200k"` は設定の誤りで、警告を出して無視されます。既定で無効なのは、1,393 エージェントの実行を再生してみたところ、キャッシュの前置きが保たれていれば 200K と 400K の上限の費用差が 5% 以内に収まり、しかも圧縮のたびに細部を失う恐れがあるからです。
+サブエージェントは親と同じところで文脈を圧縮します。`compression.threshold` × 窓の大きさ（既定は 0.50）で圧縮し、全体にかかる `compression.threshold_tokens` の上限が設定されていてそれより小さければ、そちらが使われます。`delegation.compression_threshold_tokens`（既定は `0`、無効）は、子の圧縮の*きっかけ*に対する絶対値の上限を任意で足すもので、割合のしきい値と比べて小さいほうが使われます。リクエストの中身にも、親にも触れません。16000 以上のトークン数を入れると有効になります。`true` や `"200k"` は設定の誤りで、警告を出して無視されます。既定で無効なのは、1,393 エージェントの実行を再生してみたところ、キャッシュの前置きが保たれていれば 200K と 400K の上限の費用差が 5% 以内に収まり、しかも圧縮のたびに細部を失う恐れがあるからです。
 
 `delegation.request_overrides` は**3 つの**解決の分岐すべて — 直接の `base_url`、名前付きの `provider`、そのまま受け継ぐ場合 — で働くので、つねに効きます。最上位のキーは API の引数（たとえば `service_tier`）で、`extra_body` の下の辞書はリクエストの `extra_body` へ混ぜられます。明示した値は、実行時や親から導かれた上書きの**上**に重なります。最上位のキーは明示したほうが勝ち、`extra_body` は 1 階層だけ深く混ぜられるので、プロバイダ自身のリクエストの癖（たとえば `thinking: {type: disabled}`）は、あなたのキーがそれを定義し直さないかぎり残ります。詳しくは[設定 → Delegation](/hermes/docs/user-guide/configuration/#delegation)を参照してください。
 

@@ -2,7 +2,7 @@
 title: "ツールとツールセット"
 description: "Hermes Agent のツールの全体像 — 何が使えるか、ツールセットの仕組み、ターミナルの実行先"
 upstream_path: user-guide/features/tools.md
-upstream_blob: 6e8bfd610497f32f8e4929e7364220a0badc5576
+upstream_blob: 49f679149b1cc3779c256bade2956c6b9953b7a5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tools
 ---
@@ -168,10 +168,10 @@ hermes config set terminal.backend modal
 ```bash
 python -c "import pm; pm.sync_venv(['vercel'], explicit=True)"
 hermes config set terminal.backend vercel_sandbox
-hermes config set terminal.vercel_runtime node24
+hermes config set terminal.vercel_image vercel/sandbox/universal:latest
 ```
 
-`VERCEL_TOKEN`、`VERCEL_PROJECT_ID`、`VERCEL_TEAM_ID` の3つすべてで認証します。このアクセストークンによる形が、Render、Railway、Docker などのホストで、配置や長く動かす普通の Hermes のプロセスに対して支えられている道筋です。使える実行環境は `node24`、`node22`、`python3.13` で、離れた側の作業場の根として Hermes は `/vercel/sandbox` を既定にします。
+`VERCEL_TOKEN`、`VERCEL_PROJECT_ID`、`VERCEL_TEAM_ID` の3つすべてで認証します。このアクセストークンによる形が、Render、Railway、Docker などのホストで、配置や長く動かす普通の Hermes のプロセスに対して支えられている道筋です。新しいサンドボックスは `terminal.vercel_image` から立ち上がります（既定は `vercel/sandbox/universal:latest`。以前の `vercel_runtime` のプリセットは Vercel が非推奨にしています）。離れた側の作業場の根として Hermes は `/vercel/sandbox` を既定にします。
 
 その場かぎりの手元での開発のために、Hermes は寿命の短い Vercel の OIDC トークンも受け付けます。
 

@@ -2,7 +2,7 @@
 title: "ボットの画面"
 description: ""
 upstream_path: user-guide/features/bot-screen.md
-upstream_blob: 141c6d2e050cc6a3e5fa2e5b1236dd647af7efaa
+upstream_blob: 1f90b8f7dcf661e7358de3b53d12c9ebcc90aa5e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/bot-screen
 ---
@@ -15,7 +15,11 @@ Xfce の画面で、その様子は Hermes Desktop にライブで映ります�
 ログイン、2FA の確認、CAPTCHA、支払いの手順に差しかかったら**操作を引き継ぎ**、終わったら
 **操作を返して**、いまサインインしたセッションのまま続きを任せられます。
 アプリを閉じてもノート PC の電源を切っても、ボットは作業を続けます。
-画面はあなたの端末ではなく、ゲートウェイホスト側にあるからです。
+画面はあなたの端末ではなく、ゲートウェイホスト側にあるからです。ゲートウェイが
+`terminal` をサンドボックスで動かしている場合（`terminal.backend: docker`、`ssh`、`singularity`）は、
+画面はシェルと並んで**そのサンドボックスの中**に置かれます。そのため、ボットの `computer_use` と
+ブラウザが、あなたの決めた境界の外で操作することはありません（
+[画面が動く場所](#where-the-screen-runs)を参照してください）。
 
 Hermes のプロファイル（「ボット」）には、それぞれ専用の画面、ブラウザプロファイル、
 Cookie があります。画面は作業のための場所であって、セキュリティの境界ではありません。
@@ -210,6 +214,106 @@ hermes computer-use screen install [-y]    # apt/dnf/pacman the packages
 hermes -p research computer-use screen start   # another bot's screen
 ```
 
+## 画面が動く場所 {#where-the-screen-runs}
+
+`computer_use`、ボットのブラウザ、そしてそれらが操作する画面は、いつも同じ場所で動きます。
+その場所を決めるのが `bot_desktop.placement` です。
+
+| `terminal.backend` | `placement: auto`（既定） | 意味 |
+|---|---|---|
+| `local` | ゲートウェイホスト | ターミナル、画面、ブラウザ、`computer_use` のすべてが、ゲートウェイを動かしているマシンを共有します。 |
+| `docker`、`ssh`、`singularity` | **サンドボックスの中** | Xvnc + Xfce、Chromium、cua-driver は、ターミナルが使うのと同じ `docker exec` / `ssh` の経路で起動され、コンテナの中または SSH 先のホストで動きます。ペインにはサンドボックスの画面が映り、ホストのデスクトップには一切触れられません。 |
+| `modal`、`daytona`、`vercel_sandbox` | **拒否** | これらのバックエンドは、まだディスプレイを持てません。エージェント用に選んだサンドボックスの横で、ホスト上に黙って画面を動かす代わりに、`Start` が理由を説明し、`placement: gateway` を案内します。 |
+
+`placement: gateway` を指定すると、従来の動き（ターミナルがサンドボックスで動いていても、画面は
+ゲートウェイホストに置く）を明示的に選べます。`placement:
+terminal` を指定するとサンドボックスへの配置を強制し、サンドボックスが画面を持てないときはエラーになります
+（`local` バックエンドではターミナル*そのもの*がゲートウェイホストなので、そこに配置されます）。
+
+配置は方針であって、その時点で動いているもののスナップショットではありません。画面が
+サンドボックスに配置されている場合は、最初のブラウザか `computer_use` の呼び出しで、必要に応じてそこに画面が立ち上がります
+（`auto_start` を有効にする必要はありません。サンドボックスはあなたが選んだ境界で、その中の画面は
+外のものに一切触れないからです）。立ち上がらなかった場合、その呼び出しは理由を添えて失敗します。画面が落ちている
+サンドボックスの代わりにホストが使われることはありません。ゲートウェイを再起動しても画面は
+失われません。ホスト側の目印に、画面を持っているコンテナが記録されているので、
+再起動したゲートウェイはまだ動いているサンドボックスにつなぎ直します。また、その間に `placement` を
+変えていても、`Stop` は画面が実際に動いている場所でそれを止めます。
+
+### サンドボックスのイメージ {#the-sandbox-image}
+
+サンドボックスには、デスクトップ一式が必要です。`nousresearch/hermes-sandbox:desktop` は、
+すべてのコンテナ系バックエンド（Docker、Modal、Daytona、
+Singularity）の既定のイメージです。`nikolaik/python-nodejs` をベース（Python 3.13 / Node 26）に、
+TigerVNC、Xfce のコンポーネント、画面付きの Chromium、`agent-browser`、`cua-driver`、
+そしてベースに足りなかった普段使いのツール（jq、ripgrep、fd、tmux、rsync、イメージの `pn` ユーザー用の sudo）を
+加えたものです。既定のユーザーは以前の既定と同じく root なので、シェルでの作業の流れは
+変わりません。自分で固定したイメージには手を付けません。その場合、画面はこのイメージか
+`bot_desktop.placement: gateway` が必要だと知らせます。
+
+```yaml
+terminal:
+  backend: docker
+  docker_image: nousresearch/hermes-sandbox:desktop
+```
+
+素のイメージのままだと、Screen ペインは足りないバイナリを報告し、
+このタグを案内します。
+
+Singularity / Apptainer では、同じイメージが SIF に変換されます
+（`docker://nousresearch/hermes-sandbox:desktop`）。Dockerfile の `ENV` は変換後も残りますが、
+イメージの `USER` は残りません。すべてがあなた自身のユーザーで動くので、ブラウザの
+プロファイルはコンテナ内のあなたの `$HOME` に置かれます。ここは既定で永続する
+オーバーレイです。インスタンスは `--containall` で動くので、その一時ディレクトリ（画面の
+実行時の状態が置かれる場所）は Apptainer のセッション用 tmpfs で、管理者が
+`sessiondir max size` を引き上げていなければ 64 MiB です。この経路は Apptainer の
+ドキュメントと照らし合わせて確かめたもので、実際に動かして試したものではありません。
+
+SSH のホストはバックエンドに指定した先そのものなので、デスクトップ一式もそのホスト自身が
+持っている必要があります。同じバイナリ（TigerVNC、Xfce、`cua-driver`、見つけられる Chromium を伴った
+`agent-browser`）が、**対話しないログインセッション**から使えることが条件です。
+この最後の点が、デスクトップのイメージから作ったホストと `docker exec` との違いです。
+Dockerfile の `ENV` は ssh のセッションには届かないので、イメージは
+`PLAYWRIGHT_BROWSERS_PATH` を `/etc/environment` にも書き込み、PAM に適用させています。
+自前のホストでも同じ設定が必要です。ないと、`agent-browser` はローカルのシェルでは動くのに、
+ssh 経由では「Chrome not found」と報告します。
+
+**以前の既定からの移行。** すでにある Docker のサンドボックスは、
+置き換えずにそのまま残します。`docker_image` が未設定で、永続化されたコンテナが
+別のイメージ（以前の既定だった `nikolaik/python-nodejs:python3.11-nodejs20`）で動いている場合、
+ターミナルはそのコンテナを使い続け、切り替えるかどうかはあなたが決めます。
+対話型の CLI は起動時に 1 回だけ尋ねます。Screen ペインにも同じ選択肢が
+**Switch image** / **Keep current image** として表示されます。どのシェルからでも、`hermes config set
+terminal.docker_image nousresearch/hermes-sandbox:desktop` を実行すれば同じ答えになります。
+どちらを選んでも `terminal.docker_image` に書き込まれ、書き込まれたイメージは決定として扱われます。
+コンテナが作り直されるのは、新しいイメージを選んだ場合の次のターミナル呼び出しのときだけで、
+それも新しいイメージの取得が終わってからです（非公開のタグや綴りを間違えたタグ、レジストリの障害の場合は、
+何も残らない状態にはせず、いまのコンテナを動かし続けます）。切り替えで起きること: `/root` と
+`/workspace` の下のファイルは残ります（`~/.hermes/sandboxes/` の下にあるホストのディレクトリだからです）。
+コンテナ内で `apt`/`pip`/`npm -g` を使って入れたパッケージは、
+必要になったときに入れ直されます。Python 3.11 の仮想環境は、3.13 用に作り直す必要があります。
+ゲートウェイと cron が決めることはありません。サンドボックスをそのまま使い、通知をログに残します。
+以前の既定の値がそのまま書かれていた設定は、アップグレード時に未設定に戻されました（その値は
+固定ではなく、ひな形がコピーされたものだったからです）。Modal は自分のスナップショットを復元し、Daytona は
+ラベルの付いたサンドボックスを再利用します。どちらも設定されたイメージに関係なくそうするので、
+既存のサンドボックスには手が入らず、新しく作られるものだけが新しいイメージになります。デスクトップのプロセスは、イメージの権限のない `pn`（uid 1000）で動きます。
+コンテナ内の Chromium には `--no-sandbox` が付きます（Docker の seccomp プロファイルが、
+Chromium 自身のサンドボックスに必要なユーザー名前空間を拒否するためです。コンテナそのものが
+サンドボックスの役を果たします）。
+
+サンドボックス内の実行時の状態（X のソケット、Cookie、ランチャーのログ）は
+`<sandbox tmp>/hermes-bot-desktop/<profile>/` の下に置かれ、ホストに残るのは
+`<HERMES_HOME>/bot-desktop/` の下の目印だけです。ブラウザのプロファイル（ログイン情報、Cookie）は、
+サンドボックス内のデスクトップ用ユーザーのホーム、`~/.hermes/bot-desktop/browser-profile` に置かれ、
+エージェントのブラウザとドックの **Browser** アイコンが共有します。その扱いは
+コンテナ自体の永続性に従います。永続化されたコンテナなら停止や再起動をまたいで残り、
+使い捨てのコンテナでは消えます。イメージの切り替えを承認した場合も消えます（切り替えで
+置き換わるのはコンテナの書き込み可能なレイヤーだからです）。コンテナの一時ディレクトリにあえて置いていないのは、
+Docker がそこを小さな tmpfs としてマウントし、停止のたびに空にするからです。
+ブラウザ系ツールが撮ったスクリーンショットはホストにコピーし直されるので、`MEDIA:` の
+パスはそのまま使えます。ペインのサムネイルはサンドボックスの中で撮られます。
+`browser_exec` と保管庫の自動入力は、同じ `docker exec` / `ssh` の経路で転送した
+ポートを通じて、サンドボックスの Chromium に届きます。
+
 ## 設定 {#configuration}
 
 ```yaml
@@ -218,6 +322,7 @@ bot_desktop:
   auto_start: false         # set true to start on the first computer_use call or headed browser use
   min_free_memory_mb: 1536  # refuse to start below this much free memory (0 = never check)
   idle_stop_minutes: 30     # stop a screen nobody used for this long (0 = keep it up)
+  placement: auto           # auto | terminal | gateway — see "Where the screen runs"
 ```
 
 `auto_start` は既定でオフです。画面は Desktop の Screen

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ブラウザの自動操作"
 description: "いくつものプロバイダ、CDP でつなぐ手元の Chromium 系ブラウザ、あるいはクラウドのブラウザでブラウザを操り、ウェブとのやり取り、フォームの入力、情報の取り出しなどを行います。"
 upstream_path: user-guide/features/browser.md
-upstream_blob: adf24bb06f09ac058264a711912355b539c94393
+upstream_blob: f2867da33a3d96e1c5a1520843812d1939e29639
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/browser
 ---
@@ -76,7 +76,7 @@ BROWSERBASE_PROJECT_ID=your-project-id-here
 
 Browser Use モードは、組み込みのブラウザの道具の代わりに [Browser Use CLI 3.0](https://github.com/browser-use/browser-use) を使います。エージェントはブラウザの中で Python を書いて動かし、クリック、入力、ドラッグ、情報の取り出し、ページとのやり取りをします。
 
-**これが既定のブラウザモードです。** `browser.backend` が設定されておらず、`browser-use` の CLI が動かせる（入っているか、`uvx` から使える）とき、エージェントには `browser_exec` という道具が1つ渡されます。インストーラーと `hermes update` は、`--skip-browser` / `-SkipBrowser` を渡したか `backend: "off"` を選んだ場合を除き、バージョンを固定した CLI を Hermes が管理する環境に入れます。ダウンロードに失敗したときは `hermes tools post-setup browser_use_cli` で再試行できます。CLI が動かせないときは、Hermes が自動で組み込みのブラウザの道具に戻します。
+**これが既定のブラウザモードです。** `browser.backend` が設定されていないとき、エージェントには `browser_exec` という道具が1つ渡されます。その中で動くのは browser-harness（Browser Use CLI はこれを薄く包んだものです）で、Hermes の通常の Python の依存関係です。そのため、Desktop アプリを含むどのインストールにも最初から入っていて、別にダウンロードする必要はありません。万一 Hermes の環境から欠けていたときは、Hermes が組み込みのブラウザの道具に戻し、`hermes update` で元に戻ります。
 
 このモードは**ドライバ**で、設定したブラウザの裏方と組み合わせて動きます。Hermes 自身の画面なしの Chromium、Nous の購読で使えるクラウドのブラウザ、Browserbase、Firecrawl、Browser Use のクラウドブラウザ — `hermes tools` → Browser Automation で選んだブラウザの出どころなら、どれでも動かします。唯一の例外は Camofox で、こちらは仕組みがつなぎに行ける CDP の口を持ちません。Camofox の設定では、自動的に組み込みのブラウザの道具のままになります。
 
@@ -94,7 +94,7 @@ browser:
 
 （`backend: "browser-use"` は、モードをはっきり強いる指定として今も有効です。）
 
-Browser Use 自身のクラウドブラウザには `browser-use auth login` か `BROWSER_USE_API_KEY` が要ります。ほかのブラウザの出どころは、今ある資格情報をそのまま使います。
+Browser Use 自身のクラウドブラウザには `BROWSER_USE_API_KEY` が要ります。ほかのブラウザの出どころは、今ある資格情報をそのまま使います。
 
 :::note
 Browser Use モードはモデルが書いた Python を手元の機械で動かすので、`browser_exec` の道具は端末も使えるセッションにだけ渡されます。端末の道具一式なしで設定された場（たとえば締めたメッセージの窓口）では、既定のブラウザの道具のままになります。

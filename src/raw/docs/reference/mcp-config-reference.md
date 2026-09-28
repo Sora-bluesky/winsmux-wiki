@@ -2,7 +2,7 @@
 title: "MCP 設定の早見表"
 description: "Hermes Agent の MCP 設定キー、絞り込みの動き、ユーティリティツールの方針をまとめた早見表です。"
 upstream_path: reference/mcp-config-reference.md
-upstream_blob: cdb53264cf5942e49d53724425cf823a09e85962
+upstream_blob: 4f8dd8d5a91751e1c73aab964195f5be22370560
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
 ---
@@ -87,7 +87,7 @@ mcp_servers:
       GITHUB_PERSONAL_ACCESS_TOKEN: "${env:GITHUB_TOKEN}"   # same as "${GITHUB_TOKEN}"
 ```
 
-値は、いま使っているプロファイルの秘密情報の範囲から解決されます（見つからなければプロセスの環境変数を見ます）。ですので、秘密の値は `~/.hermes/.env` に置いてください。設定されていない変数は、書いたままの文字列として残ります。
+値は、いま使っているプロファイルの秘密情報の範囲から解決されます（見つからなければプロセスの環境変数を見ます）。ですので、秘密の値は `~/.hermes/.env` に置いてください。設定されていない変数は、書いたままの文字列として残ります。ただし、リモートのサーバーの `url` や `headers` では例外です。そこで `${VAR}` をそのまま送ると必ず 401 になり、資格情報が間違っているように見えてしまうため、接続は安全側に倒して失敗させ、サーバーの状態にその変数名を出します（`MCP server 'name': ${VAR} in url/headers is not set in this profile's .env or secret source`）。プロファイルの `.env`（またはその秘密情報の取得元）を直してください。次に接続を試みるとき、参照はあらためて展開されます。
 
 ### コンテキスト変数 {#context-variables}
 

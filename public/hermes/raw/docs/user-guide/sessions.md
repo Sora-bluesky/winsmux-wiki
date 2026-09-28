@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 4403ac6bf276d1bcd72db7c8a6818906625fdcb2
+upstream_blob: e8c6756279a4a9bc115932414784fa14d6aaf00f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -958,8 +958,10 @@ group_sessions_per_user: false
 
 ゲートウェイの会話は、しばらく使わなかったからといって、また日付が変わったからといって
 リセットされることはありません。新しい会話にしたいときは `/new` か `/reset` をはっきり使って
-ください。文脈の圧縮はこれまでどおり自動です。古い `session_reset` の設定、リセットの決まりの
-上書き、リセットの時間を決める環境変数は、いずれも無視されます。資源を取り戻すために、
+ください。文脈の圧縮はこれまでどおり自動です。本体は、古い `session_reset` の設定、リセットの決まりの
+上書き、リセットの時間を決める環境変数を、いずれも無視します。設定でまだ `session_reset.mode` を `idle`、`daily`、`both` のいずれかにしていると、ゲートウェイの起動時と `hermes doctor` が警告を出します。時間でのリセットを残したいときは、
+同じ設定ブロックをそのまま読むカタログのプラグインを入れてください:
+`hermes plugins install hermes-session-reset-policy`。資源を取り戻すために、
 キャッシュしてあるエージェントが解放されることはありますが、それで永続的な会話が
 置き換わるわけではありません。再起動からの復旧における「新しさ」の条件が制限するのは
 自動で続けるかどうかであって、メッセージを送ったときに読み込まれる履歴ではありません。

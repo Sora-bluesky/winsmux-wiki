@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 047bc448104435c4e43d740a4d2e2a8ca103a297
+upstream_blob: dd1126bb2b3eeca89aa8124be714b9b954b50a75
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -316,8 +316,10 @@ hermes gateway install --force
 
 ゲートウェイの会話は、しばらく使わなくても、日付が変わってもリセットされません。会話をはっきり切り替えたいときは `/new`
 か `/reset` を使ってください。コンテキストの圧縮は引き続き自動です。
-以前の `session_reset` の設定、リセット方針の上書き、リセットのタイマーに関する環境変数は
-無視されます。キャッシュされたエージェントはリソースを取り戻すために解放されることがありますが、耐久的な会話が
+本体は、以前の `session_reset` の設定、リセット方針の上書き、リセットのタイマーに関する環境変数を
+無視します。設定でまだ `session_reset.mode` を `idle`、`daily`、`both` のいずれかにしていると、ゲートウェイの起動時と `hermes doctor` が警告を出します。時間でのリセットを残したいときは、
+同じ設定ブロックをそのまま読むカタログのプラグインを入れてください:
+`hermes plugins install hermes-session-reset-policy`。キャッシュされたエージェントはリソースを取り戻すために解放されることがありますが、耐久的な会話が
 置き換わるわけではありません。再起動からの復帰に関する鮮度の制限がかかるのは自動での継続だけで、メッセージを送ったときに読み込まれる履歴には及びません。
 
 ## チャンネルごとのモデルとシステムプロンプトの上書き {#per-channel-model-system-prompt-overrides}

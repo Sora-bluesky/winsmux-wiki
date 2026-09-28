@@ -2,7 +2,7 @@
 title: "個人の端末や仕事用の端末で Hermes を動かす"
 description: "普段使いの端末で Hermes Agent を動かすときの安全策をひととおり見ていきます。既定で守られること、さらに締めるための設定、そして失敗を取り消す方法です"
 upstream_path: guides/secure-hermes-on-a-work-machine.md
-upstream_blob: 2f8d230b0c06f336b8a72ae5ab35096d31753c07
+upstream_blob: 2ecf8cc20faac235a1e55a5b847e5c0f057643a5
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/secure-hermes-on-a-work-machine
 ---
@@ -89,7 +89,7 @@ export HERMES_WRITE_SAFE_ROOT=/path/to/project:/home/you/.hermes
 ```yaml
 terminal:
   backend: docker
-  docker_image: "nikolaik/python-nodejs:python3.11-nodejs20"
+  docker_image: "nousresearch/hermes-sandbox:desktop"
   docker_forward_env: []  # Explicit allowlist only; empty keeps secrets out of the container
 ```
 

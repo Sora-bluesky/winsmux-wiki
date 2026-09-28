@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 2833d5e32dc4becc50fedb0892b6ad7e7853b4b5
+upstream_blob: 950969c624fbef3bcbf31ad52c73739d65f28b9e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -101,15 +101,15 @@ Hermes は `plugin.json`、Agent Skills のフロントマター、固定され�
 
 Hermes は、隔離された `HERMES_HOME` から検出される固定済みの外部プラグインフィクスチャで、この契約を強制します。これらのテストは `PluginManager` を通じてプラグインを読み込み・呼び出し、内部のシンボル一覧やソースコードの形ではなく、実際の登録とコールバックの結果を検証します。
 
-### 2026年9月のモジュール分割: 旧インポートパスは2026-09-14に終了 {#sep-2026-module-decomposition-old-import-paths-end-2026-09-14}
+### 2026年9月のモジュール分割: 旧インポートパスは削除済み {#sep-2026-module-decomposition-old-import-paths-removed}
 
 Hermes の内部は、2026年9月（PR #102117）に `<stem>_<topic>` という兄弟モジュールへ分割されました。**Internal
 
-は **2026-09-14** まで旧モジュールから解決され、その後互換レイヤーが削除されます。
+パスは 2026-09-14 まで一時的な互換レイヤーで解決されていましたが、そのレイヤーは削除されました。そのため、旧パスを import し続けているプラグインは `ImportError` で読み込みに失敗します（理由は `hermes plugins list` に表示されます）。
 
-- **プラグインを確認する:** `hermes plugins compat /path/to/your/plugin` は、旧パスと新パスを示す `file:line` をすべて列挙し、1 件でも残っていれば終了コード 1 を返します。リポジトリの `COMPAT_MANIFEST.md` が完全な対応表です。
-- **ユーザーに見えるもの:** CLI バナー下の通知、`hermes doctor` と `hermes update` の後の通知、そしてプラグイン名を示す 1 回だけの Desktop ダイアログです。旧パスを経由した解決 1 回ごとに、プロセスごとに 1 回だけ `HermesPluginCompatWarning` も発せられます。
-- **2026-09-14 以降:** 旧パスを import し続けているプラグインは**読み込まれなくなります**（理由は `hermes plugins list` に表示されます）。ユーザーは、レイヤーが実際に削除されるまで `plugins.allow_deprecated_imports: true` で強制読み込みできますが、削除後は旧パスが `ImportError` を発生させます。
+こうしたプラグインを直すには、その名前をいま定義しているモジュールから import してください。内部に頼らず、`ctx` と文書化された ABC を使うほうがさらに確実です。旧パスから新パスへの完全な対応表は、互換レイヤーを含んでいた最後のコミットにある
+[`COMPAT_MANIFEST.md`](https://github.com/NousResearch/hermes-agent/blob/5912ed81ed9/COMPAT_MANIFEST.md)
+です。
 
 ## 作るもの {#what-youre-building}
 
@@ -210,6 +210,7 @@ Hermes はこれらをインストール済みメタデータから読み取り�
 | `license` | str | SPDX 形式のライセンス id（例: `MIT`）。 |
 | `homepage` | str | プロジェクトの URL。 |
 | `tags` | list of str | 自由形式の発見用タグ（例: `[gateway, telegram]`）。 |
+| `provides_locales` | list | 言語パックの宣言です。id（`- pl`）か `{id, endonym, rtl}` の対応を並べると、ローダーがその `locales/<id>[.tui\|.desktop].yaml` を自動で登録します。[言語パックを同梱する](#ship-a-language-pack) を参照してください。 |
 
 ```yaml
 # plugin.yaml — manifest v2 example
@@ -707,6 +708,55 @@ skill_view("my-workflow")              # → built-in version (unchanged)
 :::tip 旧来のパターン
 古い `shutil.copy2` パターン（スキルを `~/.hermes/skills/` へコピーする）は今でも動作しますが、組み込みスキルとの名前衝突のリスクを生みます。新しいプラグインには `ctx.register_skill()` を使ってください。
 :::
+
+### 言語パックを同梱する {#ship-a-language-pack}
+
+プラグインは、UI の言語を追加したり、既存の言語の言い回しを差し替えたりできます。しかも全部の画面に一度に効きます。
+対象は Python 側（`agent.i18n.t()`: 承認プロンプト、ゲートウェイの返信、ツールの動詞、ヒント）、`hermes --tui` の
+画面、Desktop アプリです。`provides_locales` を宣言して YAML を同梱するだけで、**Python は書かなくてかまいません**。
+
+```
+~/.hermes/plugins/hermes-lang-pl/
+├── plugin.yaml
+└── locales/
+    ├── pl.yaml            # core (Python) strings — same key tree as the bundled locales/en.yaml
+    ├── pl.tui.yaml        # optional: TUI strings (keys in locales/_keys.tui.json)
+    └── pl.desktop.yaml    # optional: Desktop strings (keys in locales/_keys.desktop.json)
+```
+
+```yaml
+name: hermes-lang-pl
+version: 1.0.0
+description: Polish language pack
+provides_locales:
+  - id: pl              # lowercase BCP-47-style id: pl, pt-br, zh-hant
+    endonym: Polski     # what language switchers show
+    rtl: false
+```
+
+`provides_locales` が宣言されていると、ローダーは `register()` の前に `ctx.register_locale_dir(<plugin>/locales)` を
+呼びます（`__init__.py` の無いマニフェストだけのパックは、マニフェストだけの Desktop プラグインと同じように読み込まれます）。
+カタログは**重ね合わせ式で、部分的でかまいません**。優先順は、パック → ユーザーの上書き（`<HERMES_HOME>/locales/`）→ 同梱 →
+英語 → キーそのもの、です。パックには変えたいキーだけを入れればよく、同じキーは最後に読み込まれたパックが勝ちます。
+core の値は英語と同じ名前付きの `{placeholders}` を使います。TUI/Desktop の項目のうち英語の値が関数になっているものは、
+位置指定の `{0}`、`{1}` プレースホルダーを使った文字列として書きます。
+
+コードを持つプラグインは、プログラムから登録することもできます。ハンドルは `PluginRegistration` なので、プラグインを
+アンロードすればその層も外れます。登録によって `display.language` が変わることはありません。
+
+```python
+def register(ctx):
+    here = Path(__file__).parent
+    ctx.register_locale("pl", here / "locales" / "pl.yaml", endonym="Polski")        # YAML path
+    ctx.register_locale("pl", {"approval": {"denied": "      ✗ Odrzucono"}})          # mapping, nested or flat
+    ctx.register_locale("pl", here / "locales" / "pl.tui.yaml", surface="tui")       # core | tui | desktop
+    ctx.register_locale_dir(here / "locales")                                         # every <lang>[.surface].yaml
+```
+
+`hermes plugins validate` は、宣言された各 id について、解析できてテキストだけで書かれた `locales/<id>.yaml` があるかを確かめます
+（テキスト以外の末端値はエラーです）。その画面の英語カタログに無いキーがあれば、キー名を挙げて**警告**します。
+描画側は `i18n.languages` / `i18n.catalog` の RPC でパックの層を取得します。
+利用者向けの説明: [言語パック](/hermes/docs/user-guide/features/language-packs/)。
 
 ### 環境変数でゲートする {#gate-on-environment-variables}
 

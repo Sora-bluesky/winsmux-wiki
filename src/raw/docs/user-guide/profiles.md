@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: 06688de2f36946b2ac493d38e82737493f47f515
+upstream_blob: 3d294f61c58d37499fa056d38f1277e1b2010503
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -336,7 +336,7 @@ hermes update
 ```bash
 hermes profile list           # show all profiles with status
 hermes profile show coder     # detailed info for one profile
-hermes profile rename coder dev-bot   # rename (updates alias + service)
+hermes profile rename coder dev-bot   # rename (updates alias; removes the old name's gateway service)
 hermes profile migrate-identity coder dev-bot   # retry a rename's identity migration
 hermes profile purge-identity dev-bot   # retry a delete's identity purge
 hermes profile export coder   # pack into coder.tar.gz (shareable; keys stripped)

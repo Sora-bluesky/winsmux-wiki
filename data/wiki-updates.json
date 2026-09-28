@@ -1,6 +1,120 @@
 {
-  "generatedAt": "2026-09-28",
+  "generatedAt": "2026-09-29",
   "entries": [
+    {
+      "date": "2026-09-29",
+      "sha": null,
+      "upstream": "b9df1cc",
+      "pages": [
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/gateway-session-lifecycle",
+          "title": "ゲートウェイのセッションライフサイクル",
+          "url": "/hermes/docs/developer-guide/gateway-session-lifecycle/"
+        },
+        {
+          "id": "developer-guide/multiplexing-gateway",
+          "title": "Multiplexing Gateway の内部構造",
+          "url": "/hermes/docs/developer-guide/multiplexing-gateway/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/mcp-config-reference",
+          "title": "MCP 設定の早見表",
+          "url": "/hermes/docs/reference/mcp-config-reference/"
+        },
+        {
+          "id": "reference/profile-commands",
+          "title": "プロファイルのコマンド早見表",
+          "url": "/hermes/docs/reference/profile-commands/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/bot-screen",
+          "title": "ボットの画面",
+          "url": "/hermes/docs/user-guide/features/bot-screen/"
+        },
+        {
+          "id": "user-guide/features/memory-providers",
+          "title": "記憶プロバイダー",
+          "url": "/hermes/docs/user-guide/features/memory-providers/"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-28",
+      "sha": "bf7ceea",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "getting-started/installation",
+          "title": "インストール",
+          "url": "/hermes/docs/getting-started/installation/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/api-server",
+          "title": "API サーバー",
+          "url": "/hermes/docs/user-guide/features/api-server/"
+        },
+        {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザの自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/features/computer-use",
+          "title": "コンピュータ操作",
+          "url": "/hermes/docs/user-guide/features/computer-use/"
+        },
+        {
+          "id": "user-guide/multi-connection-desktop",
+          "title": "デスクトップ版を複数の Hermes につなぐ",
+          "url": "/hermes/docs/user-guide/multi-connection-desktop/"
+        }
+      ]
+    },
     {
       "date": "2026-09-28",
       "sha": "477b804",

@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 4bee7a415d1b3c4c8ff50003a14d26506a97eb87
+upstream_blob: fe693cf4009fb62ec52569a09cb3adf20ba18b6a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -81,6 +81,11 @@ URL に `?profile=` を明示した場合は、そちらが必ず優先されま
 プロファイルの `HERMES_HOME` を渡して PTY の子プロセスを起こすので、そのプロファイルの
 モデル・スキル・記憶・セッション履歴で会話が進みます。プロファイルを切り替えると、
 新しいターミナルのセッションが始まります。
+
+ハブからの操作（スキルのインストール・更新・アンインストール、MCP のインストール、ツールセットの
+設定）は、ダッシュボードのプロセスの環境ではなく、対象のプロファイル自身の秘密情報の範囲、つまり
+その `.env` と設定済みのシークレットの取得元を使って実行されます。端末全体のダッシュボードから
+`default` プロファイルに向けた操作も同じです。
 
 切り替えが吸収しない、プロファイルごとのままのもの。ゲートウェイのプロセス
 （`hermes -p <name> gateway …` で扱ってください）、プロファイルごとの
@@ -447,7 +452,10 @@ You → /reload
 
 :::tip プロファイルを絞れる入口
 管理のための入口の一群、つまり `/api/config`、`/api/env`、`/api/skills`、
-`/api/tools/toolsets`、`/api/mcp`、`/api/model/{info,options,auxiliary,set}` は、
+`/api/tools/toolsets`、`/api/mcp`、
+`/api/model/{info,options,auxiliary,set,recommended-default}`、
+`/api/cron/{delivery-targets,blueprints}`、`/api/audio/voice-config`、
+`/api/ops/debug-share`、`/api/learning/graph`、`/api/dashboard/plugins/hub` は、
 任意の `?profile=<name>` というクエリの項目（書き込みでは JSON の中身の `"profile"`）を
 受け取り、読み書きをそのプロファイルの `HERMES_HOME` に向けます。
 省くと管理画面自身のプロファイルになります。知らない名前を渡すと `404` が返ります。

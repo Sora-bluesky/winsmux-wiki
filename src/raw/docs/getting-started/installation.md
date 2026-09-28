@@ -2,7 +2,7 @@
 title: "インストール"
 description: "デスクトップ版パッケージ、ソースからのインストーラー、Docker、Nix、Termux の APT パッケージで Hermes Agent を導入する"
 upstream_path: getting-started/installation.md
-upstream_blob: b3013f68a27cc71dd10f9f4bdfbd8217944a9e43
+upstream_blob: c15289d75b92147bfaddc9ed2f516800c87ac548
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -72,9 +72,11 @@ aarch64 の Android 端末では [Termux の APT パッケージ](/hermes/docs/g
 PM に任せます。PM は、バージョンを固定した Python、Node.js、npm、ripgrep、FFmpeg を用意します。ソースからの
 インストールでは Python の `all` extra が選ばれます。任意の extra がすべて入るわけではありません。
 PM は既定でブラウザ用とコンピュータ操作用のツールも入れます。`agent-browser`
-と、バージョンを固定した Chromium、Browser Use CLI（既定のブラウザドライバー）、それに
+と、バージョンを固定した Chromium、それに
 `cua-driver`（コンピュータ操作のドライバー。macOS、Windows、glibc の Linux が対象）です。
 ダウンロードに失敗してもインストールそのものは最後まで進み、再試行用のコマンドが表示されます。
+既定のブラウザドライバー（Browser Use CLI の中核である browser-harness）はふつうの Python の依存パッケージなので、
+デスクトップアプリを含め、どのインストールにも最初から入っています。
 そのほかの任意ツールは、それぞれの機能ごとのインストール手順で入れます。
 
 ブラウザ用ツールを入れたくない場合は、POSIX では `--skip-browser`、Windows では `-SkipBrowser`
@@ -153,7 +155,7 @@ hermes setup --portal
 
 POSIX 用のソーススクリプトを使うには、Git、curl、tar、SHA-256 のチェック用ツールを用意してください。
 Windows では、Git が入っていなければ、バージョンを固定した Git for Windows のアーカイブを自動で用意できます。
-uv がすでにあればそれを使って PM を準備します。なければ、スクリプトが検証済みの固定版をダウンロードします。
+スクリプトは常に、検証済みの固定版の uv をダウンロードします。PATH にすでにある uv は使いません。
 
 現在の公式のインストールは **Python 3.14** で動きます。`pyproject.toml` にある
 `>=3.11,<3.15` という広めの範囲は、古い Python のインストールでもアップデーターを

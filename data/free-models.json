@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-28",
+  "generatedAt": "2026-09-29",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-09-28",
-      "attemptedAt": "2026-09-28",
+      "fetchedAt": "2026-09-29",
+      "attemptedAt": "2026-09-29",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -32,6 +32,16 @@
           "id": "meituan/longcat-2.0:free",
           "name": "Meituan: LongCat 2.0",
           "ctx": 1048756,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "meituan/longcat-2.5-preview:free",
+          "name": "Meituan: LongCat 2.5 Preview",
+          "ctx": 1048576,
           "tools": true,
           "expires": null,
           "freeBasis": "pricing",
@@ -73,7 +83,7 @@
           "name": "StepFun: Step 3.7 Flash",
           "ctx": 262144,
           "tools": true,
-          "expires": null,
+          "expires": "2026-10-01",
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null
@@ -93,8 +103,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-09-28",
-      "attemptedAt": "2026-09-28",
+      "fetchedAt": "2026-09-29",
+      "attemptedAt": "2026-09-29",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -157,16 +167,6 @@
           "freeBasis": "pricing",
           "criteria": false,
           "criteriaReason": "tools"
-        },
-        {
-          "id": "inclusionai/ling-3.0-flash-fin:free",
-          "name": "inclusionAI: Ling 3.0 Flash Fin (free)",
-          "ctx": 262144,
-          "tools": true,
-          "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
         },
         {
           "id": "inclusionai/ling-3.0-flash-sante:free",
@@ -313,8 +313,8 @@
     },
     "opencode": {
       "ok": true,
-      "fetchedAt": "2026-09-28",
-      "attemptedAt": "2026-09-28",
+      "fetchedAt": "2026-09-29",
+      "attemptedAt": "2026-09-29",
       "errorCode": null,
       "url": "https://opencode.ai/zen/v1/models",
       "models": [

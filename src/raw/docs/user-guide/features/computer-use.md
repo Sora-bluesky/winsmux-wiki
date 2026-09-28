@@ -2,7 +2,7 @@
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: c5fc35126799f812c02bc0568db9d1db10681dfa
+upstream_blob: d8649e42a434f69b0d14a0eab22cdda6c2cc87e8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -42,6 +42,18 @@ Spaces が勝手に切り替わることもありません。同じ機械の上�
 その土台にある取り決め、つまり背後で動くことが *なぜ* 大事なのか、手前に出さない
 という不変条件、クリックを送る内部の仕組みについては
 **[cua.ai/docs/explanation/the-no-foreground-contract](https://cua.ai/docs/explanation/the-no-foreground-contract)** を参照してください。
+
+## どの端末を操作するか {#which-machine-it-drives}
+
+`computer_use` が操作するのは、ボットの画面がある端末です。Hermes Desktop を動かしている
+端末ではありません。ゲートウェイの設定が `terminal.backend:
+local` なら、それはゲートウェイのホストです。サンドボックスのターミナル（`docker`、`ssh`、
+`singularity`）を使う場合、ドライバーは**サンドボックスの中で**、サンドボックス自身の
+ディスプレイの上で動きます。そのため、触れられるのはターミナルから触れられるものだけです。
+サンドボックスのイメージには `cua-driver` が入っている必要があります（`nousresearch/hermes-sandbox:desktop` には入っています）。Modal、
+Daytona、Vercel のサンドボックスはまだディスプレイを持てないので、これらのバックエンドでは、
+`bot_desktop.placement: gateway` でホストの操作を明示的に選ばない限り、`computer_use` は
+実行を断ります。詳しくは [ボットの画面 → 画面が動く場所](/hermes/docs/user-guide/features/bot-screen/#where-the-screen-runs) を見てください。
 
 ## 有効にする {#enabling}
 

@@ -2,7 +2,7 @@
 title: "Raft"
 description: "wake チャンネルのブリッジ経由で、Hermes Agent を外部エージェントとして Raft につなぐ"
 upstream_path: user-guide/messaging/raft.md
-upstream_blob: 0e62b1aa749150c29901eff39f7bfe10555fa936
+upstream_blob: f3ae6e5a8450be22687eccdfa556f98367ce48a0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/raft
 ---
@@ -62,7 +62,7 @@ Agent → raft message send → Raft Server (replies)
 
 ## ブリッジ {#bridge}
 
-アダプターは `raft agent bridge` を子プロセスとして自動的に起動し、エンドポイントの URL とトークンを渡します。ブリッジは指定されたプロファイルで Raft サーバーに接続し、起動ヒントの転送を始めます。ゲートウェイが終了すると、ブリッジも終了します。
+アダプターは `raft agent bridge` を子プロセスとして自動的に起動し、エンドポイントの URL とトークンを渡します。ブリッジが受け取るのは、Hermes が秘密情報を取り除いた子プロセス用の環境変数と、`RAFT_PROFILE`、そのトークンだけです。Hermes のゲートウェイのトークンやプロバイダーの API キーは渡りません。ブリッジは指定されたプロファイルで Raft サーバーに接続し、起動ヒントの転送を始めます。ゲートウェイが終了すると、ブリッジも終了します。
 
 ---
 

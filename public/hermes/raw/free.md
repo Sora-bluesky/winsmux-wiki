@@ -31,17 +31,18 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-09-28
+最終取得: 2026-09-29
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
 | **inclusionAI: Ling 3.0 Flash Fin**<br>`inclusionai/ling-3.0-flash-fin:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **inclusionAI: Ling 3.0 Flash Sante (free)**<br>`inclusionai/ling-3.0-flash-sante:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Meituan: LongCat 2.0**<br>`meituan/longcat-2.0:free`<br>入力・出力の基本単価0（取得時点） | 1,048,756 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **Meituan: LongCat 2.5 Preview**<br>`meituan/longcat-2.5-preview:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Poolside: Laguna S 2.1**<br>`poolside/laguna-s-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Poolside: Laguna XS 2.1**<br>`poolside/laguna-xs-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Space Bunny Alpha**<br>`stealth/space-bunny-alpha`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **StepFun: Step 3.7 Flash**<br>`stepfun/step-3.7-flash:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **StepFun: Step 3.7 Flash**<br>`stepfun/step-3.7-flash:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-10-01 |
 | **Upstage: Solar Pro 4**<br>`upstage/solar-pro4:free`<br>入力・出力の基本単価0（取得時点） | 524,288 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 
 ## OpenRouter :free
@@ -52,7 +53,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-09-28
+最終取得: 2026-09-29
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -62,7 +63,6 @@ raw: /hermes/raw/free.md
 | **Google: Gemma 4 31B (free)**<br>`google/gemma-4-31b-it:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Google: Lyria 3 Clip Preview**<br>`google/lyria-3-clip-preview`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |
 | **Google: Lyria 3 Pro Preview**<br>`google/lyria-3-pro-preview`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |
-| **inclusionAI: Ling 3.0 Flash Fin (free)**<br>`inclusionai/ling-3.0-flash-fin:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **inclusionAI: Ling 3.0 Flash Sante (free)**<br>`inclusionai/ling-3.0-flash-sante:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **LiquidAI: LFM2.5-2.6B (free)**<br>`liquid/lfm-2.5-2.6b:free`<br>入力・出力の基本単価0（取得時点） | 65,536 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3 Nano Omni (free)**<br>`nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`<br>入力・出力の基本単価0（取得時点） | 256,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
@@ -88,7 +88,7 @@ APIキーもアカウントも要りません。リクエストは匿名で送�
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 
-最終取得: 2026-09-28
+最終取得: 2026-09-29
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|

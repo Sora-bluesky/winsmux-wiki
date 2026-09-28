@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: a2762cacd8edafa1db6128a240eee9ce5898637b
+upstream_blob: beae77ee8ab6de003cfb79df10c55e0d61549ef8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
@@ -325,6 +325,12 @@ OpenViking のサーバー側の設定は `ov.conf` にあります（`--config`
 `OPENVIKING_CONFIG_FILE`、または `~/.openviking/ov.conf`）。クライアント側の接続の値は
 `ovcli.conf` にあります（`OPENVIKING_CLI_CONFIG_FILE` または
 `~/.openviking/ovcli.conf`）。
+
+エンドポイントがローカルで、何も待ち受けていない場合、Hermes は
+`openviking-server` を裏で起動します。このサーバーには、モデルプロバイダーの
+キー（埋め込みと VLM のモデル用）、`HOME`、
+`OPENVIKING_CONFIG_FILE` が渡されますが、ボット、ゲートウェイ、中継のトークンは決して渡されず、
+Hermes の `PYTHONPATH` も渡されません。サーバーがほかに必要とするものは `ov.conf` に書いてください。
 
 **主な特徴:**
 - 段階的な文脈の読み込み: L0（約 100 トークン）→ L1（約 2k）→ L2（全文）

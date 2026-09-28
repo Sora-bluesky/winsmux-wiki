@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "LSP — 意味を読み取る診断"
 description: "本物の言語サーバー（pyright、gopls、rust-analyzer など）を、write_file と patch の書き込み後チェックにつなぎます。"
 upstream_path: user-guide/features/lsp.md
-upstream_blob: 77847baebe611eeab9eccfe2a3d0f26c1783d68c
+upstream_blob: a5e188c437dd0ddd6b0ee1ca18d13186d0892082
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/lsp
 ---
@@ -61,6 +61,71 @@ LSP が動くかどうかは、**git のワークスペースかどうか**で�
 経路がそれぞれ独立した信号を運ぶので、文法はきれいなのに意味の上で問題が
 あるファイルは、エージェントからは ``lint: ok`` と、中身の入った
 ``lsp_diagnostics`` として見えます。
+
+### ワークスペースの信頼 {#workspace-trust}
+
+多くの言語サーバーは、プロジェクト自身が持っているコードを実行します。
+pyright は設定された Python インタープリターを実行し、
+typescript-language-server はプロジェクトの
+`node_modules/typescript` を読み込み、svelte-language-server は
+`svelte.config.js` を読み込みます。rust-analyzer は保存のたびに
+`cargo check`（ビルドスクリプトや proc-macro）を走らせ、jdtls、
+kotlin-language-server、elixir-ls、zls、haskell-language-server などは
+起動時にプロジェクトのビルドファイル（Gradle、`mix.exs`、`build.zig`、
+Cabal/Stack）を評価します。自分のプロジェクトならそれで問題ありませんが、
+エージェントがいま clone してきたばかりのリポジトリでは困ります。
+
+そのため Hermes は、次のどちらかに当たらないワークスペースをすべて「信頼しない」ものとして扱います。
+
+- Hermes に指定したディレクトリの git worktree。具体的には、起動した場所
+  （`cd my-app && hermes`）、`hermes -w` が作った worktree、Desktop や TUI の
+  セッションを開いたプロジェクト、ゲートウェイの `terminal.cwd` です。
+- `lsp.trusted_workspaces` に書いたディレクトリ（とその下にあるディレクトリすべて）。
+
+エージェントのターミナルで `cd` しても、セッションのワークスペースは動きません。
+cron ジョブと Kanban ワーカーは自動では信頼されません。作業ディレクトリや
+ワークスペースをエージェントが選べてしまうからです。信頼させたいディレクトリは
+`lsp.trusted_workspaces` に書いてください。信頼された worktree の中に入れ子に
+なったチェックアウトは自分の `.git` を持っているので信頼されません。ホーム
+ディレクトリそのもの、またはそれより上にある git リポジトリも信頼されません
+（そこに dotfiles のリポジトリがあると、その下が全部信頼されてしまうためです）。
+信頼は Hermes に指定したディレクトリ全体に及び、あとからそこへ clone したものも
+含みます。Hermes が終了するまで続きます。
+
+信頼されていないワークスペースでは、Hermes は**原則として拒否**します。起動するのは
+下の表のサーバーだけで、それぞれ Hermes 側のツールだけを使う設定で動きます。
+それ以外のサーバーはすべて起動しません。rust-analyzer、gopls、
+jdtls、kotlin-language-server、elixir-ls、zls、clojure-lsp、
+haskell-language-server、lua-language-server、terraform-ls、prisma、
+astro、vue-language-server（プロジェクトの `tsconfig.json` が指定する
+`vueCompilerOptions.plugins` を読み込むため）、それに `lsp.servers` で自分で追加したサーバーも含みます。診断ログには
+`skipped: untrusted workspace …; add it to
+lsp.trusted_workspaces` と記録され、`hermes lsp status` はそれらのサーバーに
+`[trusted workspaces only]` と表示します。
+
+| サーバー | 信頼されていないワークスペースでの動き |
+|---|---|
+| pyright | `VIRTUAL_ENV` か Hermes が管理する Python を使います。プロジェクトの `.venv`/`venv` は使いません |
+| typescript-language-server | `tsserver.path` をサーバーと同じ場所にある TypeScript に固定します。それが無ければ起動しません |
+| svelte-language-server | `isTrusted: false` で動きます（`svelte.config.js` も、プロジェクトの `svelte`/`prettier` も読みません） |
+| bash-language-server, yaml-language-server, dockerfile-ls, intelephense | 変わりません。プロジェクトのコードを実行しないためです（yaml-language-server は、ファイルが指定する JSON スキーマを取りに行くことがあります） |
+| clangd | 変わりません。Hermes は `--query-driver` を渡さないので、プロジェクトのコンパイラは動きません |
+
+ローカルのバックエンドでは、ターミナルの今いるディレクトリが信頼されていないとき、
+チェックアウト自身のツール群を使ってしまう書き込み後のシェル linter も同じように
+飛ばします。対象は `npx tsc`（リポジトリの `node_modules/.bin/tsc` を実行するか、
+リポジトリの `.npmrc` が指定するレジストリからインストールするため）と
+`rustfmt --check`（rustup がリポジトリの `rust-toolchain.toml` に従うため）です。
+サンドボックス型のバックエンド（Docker、SSH、Modal など）は変わりません。
+
+プロジェクトの依存関係が必要な診断（たとえば import を解決できないという警告）は、
+ワークスペースを信頼するまで精度が落ちることがあります。
+
+```yaml
+lsp:
+  trusted_workspaces:
+    - ~/code/my-app
+```
 
 ## 対応している言語 {#supported-languages}
 
@@ -220,6 +285,13 @@ lsp:
   exclude_roots: []
   # exclude_roots: ["~/work/huge-monorepo", "/srv/checkouts/*/vendor"]
 
+  # Directories whose projects a language server may load code from
+  # (see "Workspace trust" above). ~ expanded; everything under an
+  # entry counts. The worktree of the directory you launched Hermes in,
+  # or opened the session in, is always trusted.
+  trusted_workspaces: []
+  # trusted_workspaces: ["~/code/my-app"]
+
   # How to handle missing server binaries.
   #   auto    — install via npm/pip/go install into <HERMES_HOME>/lsp/bin
   #   manual  — only use binaries already on PATH
@@ -267,6 +339,9 @@ lsp:
 * `command: [bin, ...args]` — 実行ファイルの場所を自分で決め打ちします。
   自動インストールは行われません。
 * `env: {KEY: value}` — 起動するプロセスに渡す環境変数を足します。
+  サーバーと、npm / `go install` による自動インストーラーは、Hermes が中身を
+  消した子プロセス用の環境（ゲートウェイのトークンやプロバイダーの API キーを含まない）
+  から起動します。そうした値が必要なサーバーには、このキーでしか渡せません。
 * `initialization_options: {...}` — `initialize` のやりとりで送る LSP の
   `initializationOptions` に混ぜ込みます。中身はサーバーごとに違うので、
   その言語サーバーの説明を見てください。

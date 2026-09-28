@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 50d7570015db46fd702cace92944660490a2bb22
+upstream_blob: 8ff1e0b6d15c2d186bb10814befa84a3b5c88a14
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -233,9 +233,9 @@ terminal:
   home_mode: auto   # auto | real | profile — subprocess HOME policy
   env_passthrough: []  # Env var names to forward to sandboxed execution (terminal + execute_code)
   sync_back_max_bytes: 2147483648  # Remote backends: refuse to extract a state archive larger than this (bytes)
-  singularity_image: "docker://nikolaik/python-nodejs:python3.11-nodejs20"  # Container image for Singularity backend
-  modal_image: "nikolaik/python-nodejs:python3.11-nodejs20"                 # Container image for Modal backend
-  daytona_image: "nikolaik/python-nodejs:python3.11-nodejs20"               # Container image for Daytona backend
+  singularity_image: "docker://nousresearch/hermes-sandbox:desktop"  # Container image for Singularity backend
+  modal_image: "nousresearch/hermes-sandbox:desktop"                 # Container image for Modal backend
+  daytona_image: "nousresearch/hermes-sandbox:desktop"               # Container image for Daytona backend
 ```
 
 `terminal.temp_dir` は、ローカルバックエンドで Hermes がセッションの一時ファイル
@@ -352,7 +352,12 @@ real_home = Path(os.environ.get("HERMES_REAL_HOME", os.environ["HOME"]))
 ```yaml
 terminal:
   backend: docker
-  docker_image: "nikolaik/python-nodejs:python3.11-nodejs20"
+  # Default: nikolaik/python-nodejs (Python 3.13 / Node 26) plus a display stack, so Bot Screen,
+  # computer_use and the browser run INSIDE this sandbox (Bot Screen → "Where the screen runs").
+  # Any other image works for shell work; the screen then needs bot_desktop.placement: gateway.
+  # Writing this key is a decision: a persisted container on another image is recreated on the next
+  # terminal call. Left unset, an existing container is kept and the CLI / Screen pane ask first.
+  docker_image: "nousresearch/hermes-sandbox:desktop"
   docker_mount_cwd_to_workspace: false  # Mount launch dir into /workspace
   docker_run_as_host_user: false   # See "Running container as host user" below
   docker_snap_compat: false        # See "Snap-packaged Docker (AppArmor)" below
@@ -508,7 +513,7 @@ terminal:
 
 **必須:** 環境変数 `MODAL_TOKEN_ID` と `MODAL_TOKEN_SECRET` の組、または `~/.modal.toml` 設定ファイルのどちらかが必要です。
 
-**永続化:** 有効にすると、後片付けのときにサンドボックスのファイルシステムのスナップショットを取り、次のセッションで復元します。スナップショットは `~/.hermes/modal_snapshots.json` で管理されます。保存されるのはファイルシステムの状態で、動作中のプロセス、PID 空間、バックグラウンドのジョブは保存されません。
+**永続化:** 有効にすると、後片付けのときにサンドボックスのファイルシステムのスナップショットを取り、次のセッションで復元します。スナップショットは `~/.hermes/modal_snapshots.json` で管理され、削除するまで保持されます（Hermes は Modal SDK の30日でスナップショットが失効する設定を使いません）。保存されるのはファイルシステムの状態で、動作中のプロセス、PID 空間、バックグラウンドのジョブは保存されません。
 
 **認証情報のファイル:** `~/.hermes/` から自動でマウントされ（OAuth トークンなど）、コマンドを実行するたびにその前に同期されます。
 
@@ -538,7 +543,7 @@ terminal:
 ```yaml
 terminal:
   backend: vercel_sandbox
-  vercel_runtime: node24          # node24 | node22 | python3.13
+  vercel_image: vercel/sandbox/universal:latest   # Vercel managed image or a VCR repository[:tag]
   cwd: /vercel/sandbox            # default workspace root
   container_persistent: true      # Snapshot/restore filesystem
   container_disk: 51200           # Shared default only; custom disk is unsupported
@@ -566,7 +571,7 @@ VERCEL_OIDC_TOKEN="$(vc project token)" hermes chat
 
 OIDC トークンは有効期限が短いため、正式なデプロイ方法としては使わないでください。
 
-**ランタイム:** `terminal.vercel_runtime` は `node24`、`node22`、`python3.13` に対応しています。未設定の場合、Hermes は既定で `node24` を使います。
+**イメージ:** `terminal.vercel_image` は、新しく作るサンドボックスのコンテナイメージを選びます。指定できるのは、`vercel/sandbox/universal:latest`（既定。Ubuntu、Node.js 24、Python 3.14）、`vercel/sandbox/node:26`、`vercel/sandbox/python:3.14` のような [Vercel が管理するイメージ](https://vercel.com/docs/sandbox/concepts/images)か、プロジェクトの Vercel Container Registry にあるリポジトリです（名前だけなら `latest` になり、タグやダイジェストを付けるとその版に固定されます）。以前の `terminal.vercel_runtime` のプリセット（`node24`、`node22`、`python3.13`）は [Vercel が非推奨にしています](https://vercel.com/docs/sandbox/concepts/runtimes)。ランタイムを固定している場合は引き続き動作し、イメージより優先されますが、両方を同時には指定できません。スナップショットから復元するときは、スナップショット自身がファイルシステムを持っているため、どちらも送りません。
 
 **永続化:** `container_persistent: true` のとき、Hermes は後片付けの際にサンドボックスのファイルシステムのスナップショットを取り、同じタスクであとから作るサンドボックスをそのスナップショットから復元します。スナップショットには、Hermes が同期してサンドボックスにコピーした認証情報、スキル、キャッシュファイルが含まれることがあります。保存されるのはファイルシステムの状態だけで、動作中のサンドボックスそのもの、PID 空間、シェルの状態、実行中のバックグラウンドプロセスは保存されません。
 
@@ -581,7 +586,7 @@ OIDC トークンは有効期限が短いため、正式なデプロイ方法と
 ```yaml
 terminal:
   backend: singularity
-  singularity_image: "docker://nikolaik/python-nodejs:python3.11-nodejs20"
+  singularity_image: "docker://nousresearch/hermes-sandbox:desktop"
   container_cpu: 1                 # CPU cores
   container_memory: 5120           # MB
   container_persistent: true       # Writable overlay persists across sessions
@@ -989,7 +994,7 @@ compression:
   enabled: true                                     # Toggle compression on/off
   progress_notices: false                           # Opt-in: deliver routine compression progress notices to chat platforms — see below
   threshold: 0.50                                   # Compress at this % of context limit
-  threshold_tokens: 256000                          # Absolute token cap — takes lower of ratio vs absolute
+  threshold_tokens: null                            # Absolute token cap (optional) — takes lower of ratio vs absolute
   target_ratio: 0.20                                # Fraction of threshold to preserve as recent tail
   tail_mode: lean                                   # Tail retention: "lean" (default — clamped 2.5% tail, 10K-25K, never above 20% of the window, with a detailed session log + anchor index + session_search recovery pointers in the summary, all from ONE auxiliary summarizer call; ~3x fewer retained tokens after compaction) or "legacy" (0.20×threshold verbatim tail)
   protect_last_n: 20                                # Min recent messages to keep uncompressed
@@ -1043,7 +1048,7 @@ auxiliary:
 
 `in_place`（既定は `true`）は、圧縮が発動したときにセッションの識別をどう扱うかを決めます。`true` のとき、圧縮はメッセージの一覧を書き換え、**セッション ID を切り替えずに**システムプロンプトを作り直します。会話は最初から最後まで1つの ID を持ち続けます（`parent_session_id` の連鎖はなく、セッション一覧で `name #2` / `#3` と番号が振り直されることもありません）。圧縮で何かが消えるわけではありません。使用中のコンテキストは圧縮されますが、圧縮前のターンは同じ ID のままアーカイブ扱いになります（非アクティブ／圧縮済みの印が付きます）。削除はされず、`session_search` で検索でき、元に戻すこともできます。フックは、`session:compress` イベントの `in_place` フィールドでこのモードを確認できます。圧縮のたびに、古い ID にひも付いた新しいセッション ID へ切り替える旧来の動作に戻すには、`in_place: false` にしてください。
 
-`threshold_tokens` は、圧縮が発動するトークン数に**絶対値の上限**を設けます。圧縮は、比率で決まる `threshold` と、この絶対値のうち低いほうで発動します。そのため、コンテキストウィンドウの大きいモデルで、知らないうちに圧縮が数十万トークンまで先送りされることはありません。既定値は `256000` です。1M のモデルでは既定の50%で発動する位置が256Kに抑えられ、比率で決まる位置がそれより低ければそちらが優先されます（ウィンドウが 272K の Codex もこの場合に当たります）。この上限はモデルの切り替えやフォールバックの発動後も維持され、モデルのコンテキスト長を超えないよう調整されます。比率だけで決める動作に戻すには `null` にします。作業の内容に合わせて、別の正の値を選んでもかまいません。
+`threshold_tokens` は、圧縮が発動するトークン数に、任意で**絶対値の上限**を設けます。設定すると、圧縮は比率で決まる `threshold` と、この絶対値のうち低いほうで発動します。そのため、どのモデルを使っていても、このトークン数より後に圧縮が遅れることはありません。1回の呼び出しあたりのコストに固定の上限を設けたいときに使います。たとえば `threshold_tokens: 256000` にすると、1M のウィンドウを持つモデルを 500K ではなく 256K で圧縮します。この上限はモデルのコンテキスト長を超えないよう調整されるため、ウィンドウより大きい値を指定しても効果はありません。既定値は `null` です（無効。比率で決まるしきい値だけを使います）。この上限はモデルの切り替えやフォールバックの発動後も維持されます。
 
 `idle_compact_after_seconds` は、サイズで決まる `threshold` を補う、**明示的に有効にしたときだけ働く、時間ベースの**発動条件です。既定値は `0`（無効）です。0より大きくすると、その秒数以上やり取りがなかったあとに再開したセッションは、最初の返信の前に、それまでにたまった履歴をまとめて圧縮します。そのため、長く続くスレッド（たとえば数時間後に戻ってきた Telegram の会話）で、古くなったコンテキスト全体を以降のターンのたびに読み直すことがなくなります。コンテキストがすでに圧縮後の目標（`threshold × target_ratio`）以下であれば発動しません。また、ほかの自動圧縮と同じく、失敗後のクールダウン、短い間隔での繰り返しの防止、セッションごとのロックという保護にも従います。例: `idle_compact_after_seconds: 1800` にすると、30分アイドルが続いたあとに圧縮します。
 
@@ -2245,7 +2250,9 @@ Hermes の状態（cron のジョブ、スキル、`~/.hermes/` 以下のスク�
 
 `display.language` は、ユーザーに表示される決まった文言のうち、ごく一部を翻訳する設定です。対象は CLI の承認の確認と、ゲートウェイのスラッシュコマンドへの返信のいくつか（例: 再起動前の処理待ち（drain）の通知、「approval expired」、「goal cleared」）です。エージェントの応答、ログの行、ツールの出力、エラーのトレースバック、スラッシュコマンドの説明は翻訳**しません**。これらは英語のままです。エージェント自身に別の言語で返答させたいときは、プロンプトかシステムメッセージでそう伝えてください。
 
-対応している値: `en`（既定）、`zh`（簡体字中国語）、`zh-hant`（繁体字中国語）、`ja`（日本語）、`de`（ドイツ語）、`es`（スペイン語）、`fr`（フランス語）、`tr`（トルコ語）、`uk`（ウクライナ語）、`af`（アフリカーンス語）、`ko`（韓国語）、`it`（イタリア語）、`ga`（アイルランド語）、`pt`（ポルトガル語）、`ru`（ロシア語）、`hu`（ハンガリー語）。認識できない値を指定すると英語に切り替わります。
+同梱されている値: `en`（既定）、`zh`（簡体字中国語）、`zh-hant`（繁体字中国語）、`ja`（日本語）、`de`（ドイツ語）、`es`（スペイン語）、`fr`（フランス語）、`tr`（トルコ語）、`uk`（ウクライナ語）、`af`（アフリカーンス語）、`ko`（韓国語）、`it`（イタリア語）、`ga`（アイルランド語）、`pt`（ポルトガル語）、`ru`（ロシア語）、`hu`（ハンガリー語）、`ar`（アラビア語）。
+
+この一覧は**追加できます**。[言語パック](/hermes/docs/user-guide/features/language-packs/)のプラグイン（`provides_locales`）や、部分的な `<HERMES_HOME>/locales/<lang>.yaml` のオーバーレイを使うと、言語を追加したり文言を上書きしたりできます。`hermes config set display.language <id>` は、同梱のカタログ、自分のオーバーレイ、インストールしたパックのいずれかが提供している id なら受け付けます。認識できない id は拒否され、使える言語の一覧が表示されます。実行時に解決できない値になっていた場合は英語に切り替わります。
 
 `HERMES_LANGUAGE` 環境変数を使えば、セッションごとに設定することもできます。この環境変数は設定ファイルの値を上書きします。
 
@@ -2754,7 +2761,7 @@ browser:
 
 ## タイムゾーン {#timezone}
 
-サーバーのローカルタイムゾーンを、IANA のタイムゾーン文字列で上書きします。ログのタイムスタンプ、cron のスケジュール、システムプロンプトに差し込まれる時刻に影響します。
+サーバーのローカルタイムゾーンを、IANA のタイムゾーン文字列で上書きします。cron のスケジュールと、システムプロンプトに差し込まれる時刻に影響します。ログファイルは変わりません。`~/.hermes/logs/` の各行にはマシンのローカル時刻が記録され、`hermes logs --since` もその時刻と比較します。
 
 ```yaml
 timezone: "America/New_York"   # IANA timezone (default: "" = server-local time)

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: a4373c18c530780ae630a9022dd9109cd69ee6b4
+upstream_blob: 882f2c7c9455fa6e2e021b0b9eb48d6490750e60
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -1146,6 +1146,7 @@ Hermes のログファイルを表示・追跡・フィルタします。すべ�
 | `gateway` | `gateway.log` | メッセージングゲートウェイの活動 — プラットフォーム接続、メッセージディスパッチ、webhook イベント |
 | `gui` | `gui.log` | ダッシュボード / TUI-ゲートウェイ / PTY ブリッジ / websocket のイベント |
 | `desktop` | `desktop.log` | Electron デスクトップアプリ — 起動、バックエンド起動時の出力、直近の Python トレースバック |
+| `mcp` | `mcp-stderr.log` | stdio で動くすべての MCP サーバーの stderr。起動のたびに `starting MCP server` のバナーが 1 行入ります |
 
 ### オプション {#options}
 
@@ -1158,6 +1159,8 @@ Hermes のログファイルを表示・追跡・フィルタします。すべ�
 | `--session <ID>` | セッション ID の部分文字列を含む行だけをフィルタします。 |
 | `--since <TIME>` | 相対時間前からの行を表示します: `30m`、`1h`、`2d` など。`s`（秒）、`m`（分）、`h`（時間）、`d`（日）に対応しています。 |
 | `--component <NAME>` | コンポーネントでフィルタします: `gateway`, `agent`, `tools`, `cli`, `cron`。 |
+
+トレースバックの各行や、複数行にわたるメッセージの続きのように、自分の時刻を持たない行は、その上にある時刻付きの行といっしょに表示されたり隠されたりします。
 
 ### 例 {#examples}
 

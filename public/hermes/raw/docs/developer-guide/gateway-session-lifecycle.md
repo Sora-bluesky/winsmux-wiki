@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイのセッションライフサイクル"
 description: "ゲートウェイにおける SessionSource・SessionEntry・SessionStore、セッションキーの規則、マルチユーザーの分離"
 upstream_path: developer-guide/gateway-session-lifecycle.md
-upstream_blob: b9edf3f9c6b8c01d2df798cfeb3f406c49df5d80
+upstream_blob: ccbec078e8cdfcb2000060a004c611d30b3fbfa1
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-session-lifecycle
 ---
@@ -302,8 +302,7 @@ def is_shared_multi_user_session(source, *, group_sessions_per_user, thread_sess
 
 動きがない時間や時計の時刻によって、会話が切り替わることはありません。`/new` と `/reset` が
 明示的な区切りを作り、長い履歴は引き続きコンテキストの圧縮が管理します。
-古いタイマーの設定は無視されます。既存の `SessionResetPolicy` というデータ型は、
-互換性のために残された効力のないデータで、実行時のポリシーではありません。
+古いタイマーの設定は無視されます。
 
 明示的な一時停止は、今も次に届いたターンで区切りを作ります。復旧処理は、
 明示的な区切りと過去に確定済みの区切りを尊重し、それらを開き直すことはしません。

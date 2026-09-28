@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（238 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（239 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -59,7 +59,7 @@ raw: /hermes/raw/all.md
 - [Windows (Native) Guide](/hermes/docs/user-guide/windows-native/)
 - [Windows (WSL2) Guide](/hermes/docs/user-guide/windows-wsl-quickstart/)
 
-## Core Features（35）
+## Core Features（36）
 
 - [Features Overview](/hermes/docs/user-guide/features/overview/)
 - [Tools](/hermes/docs/user-guide/features/tools/)
@@ -82,6 +82,7 @@ raw: /hermes/raw/all.md
 - [Session Heartbeats](/hermes/docs/user-guide/features/heartbeat/)
 - [Kanban Multi-Gateway Deployment](/hermes/docs/user-guide/features/kanban-multi-gateway/)
 - [Kanban worker lanes](/hermes/docs/user-guide/features/kanban-worker-lanes/)
+- [Language Packs](/hermes/docs/user-guide/features/language-packs/)
 - [Recurring Loops](/hermes/docs/user-guide/features/loops/)
 - [LSP — Semantic Diagnostics](/hermes/docs/user-guide/features/lsp/)
 - [Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/)

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: bb82a5fba9d849b4908e778d709d3a24883b9b8d
+upstream_blob: 96e1b7a7ca39931ffd26a094ad203db18da20364
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -213,7 +213,10 @@ hermes -p coder gateway restart  # reconnect coder with its current configuratio
 `start` は目印を消し、それから動いているホストにそのプロファイルを受け持つよう頼みます。
 ホストが動いていなければ、目印を消してからふつうの起動の手順に進みます。求められたら、
 既定プロファイルからホストを起動してください。`restart` は休止の目印を書かずに、そのプロファイルを
-いったん外してから受け持ち直し、設定を読み直します。どの操作も、cron の周期ですでに
+いったん外してから受け持ち直し、設定を読み直します。
+**休止中**のプロファイルで、プロファイルごとのゲートウェイが動いていなければ、`restart` は
+`start` と同じように動きます。目印を消し、そのプロファイルを動いたまま受け持たせます（目印と並べて
+`--force` で起動したゲートウェイは、自分自身の再起動をそのまま行います）。どの操作も、cron の周期ですでに
 送り出された作業を打ち切ることはありません。
 
 ホストは 30 秒ごとにも走査し直します。手で目印を足すとそのプロファイルは外れ、手で消すと
@@ -324,7 +327,11 @@ by this gateway` と残ります。`hermes -p coder gateway install|start|run` �
 単独のプロファイルのアダプター、cron、webhook の入口、Kanban の通知は、そのプロファイル自身の
 ゲートウェイが動いている間だけ働き、ホストの多重化プロセスや `hermes serve` の下では働きません。
 webhook を送る側は、単独のゲートウェイ自身の待ち受け先に向けてください。ホストの
-`/p/<profile>/` の入口は、もうそのプロファイルを受け持ちません。cron の送り先の選択肢には、
+`/p/<profile>/` の入口は、もうそのプロファイルを受け持ちません。その待ち受け先のポートは、
+プロファイル自身の `.env` か `config.yaml` から決まります。そのため、単独のゲートウェイとホストの
+ゲートウェイの両方で API サーバーか webhook の入口を有効にする場合は、プロファイルに専用の
+`API_SERVER_PORT` / `WEBHOOK_PORT` を割り当ててください。どちらも既定のままだと、2 つのゲートウェイが
+同じポートを掴もうとします。cron の送り先の選択肢には、
 単独のプロファイルもいまだに `bot-chat:<name>` として並びますが、ホストはそこへ届けられません。
 
 `hermes -p coder gateway status` は、そのプロファイル自身のゲートウェイの状態の前に `standalone by config
@@ -656,6 +663,7 @@ Hindsight の URL —— なので、あるプロファイルの鍵がほかの�
 |---|---|---|
 | プロバイダーの鍵、ボットトークン、`config.yaml` の `${VAR}` 参照 | そのプロファイル自身の `.env`（自分の秘密情報の範囲） | 未解決、またはアダプタ無し。既定プロファイルの値が使われることはない |
 | 権限（`GATEWAY_ALLOW_ALL_USERS`、`GATEWAY_ALLOWED_USERS`、プラットフォームごとの許可一覧と全員許可の指定） | 持ち主のプロファイルの `.env` と `config.yaml` | 閉じたまま。既定プロファイルで開いても従属側のボットは開かない |
+| スラッシュコマンドの関門（`allow_admin_from`、`user_allowed_commands`、`group_allow_admin_from`。[スラッシュコマンド](/hermes/docs/reference/slash-commands/)を参照） | メッセージを受け取ったボットのプロファイル。従属側のボットを律するのはそのプロファイル自身のプラットフォームの `extra` ブロックで、既定プロファイルのものではない | 閉じる側に倒れる。多重化プロセスが設定をまだ読み込んでいない受け持ち中のプロファイルは、管理者の一覧を**空**、利用者に許可したコマンドも無しとして関門にかけられ、常に許される最低限（`/help`、`/whoami`）だけが動く。既定プロファイルの開いた方針が使われることはない |
 | HTTP の宛先（`/p/<profile>/api/...`、`/p/<profile>/webhooks/...`、プラットフォームの出来事の呼び返し） | 名指しされたプロファイルの `API_SERVER_KEY`、`profile:` で結び付けた Webhook の経路、そのプロファイル自身のアダプタ | `401` か `404`。アダプタが無いままの送付は `502` か `503` で、ほかのプロファイルのボットは使われない |
 | 受信ポート型のプラットフォーム（`/p/<profile>/webhooks/twilio`、`/p/<profile>/line/webhook`、`/p/<profile>/api/messages` など） | 名指しされたプロファイル自身のアダプタとその合言葉（Twilio の認証トークン、LINE のチャンネルのシークレット、Teams のアプリ、BlueBubbles のパスワードなど）。返信もそのアダプタから出る | 合言葉が違えば `401` か `403`、そのアダプタを持たないプロファイルなら `404`。既定プロファイルのアダプタが使われることはない |
 | アダプタの設定（`*_REQUIRE_MENTION`、`*_REACTIONS`、`*_ALLOW_BOTS`、`*_PROXY`、Discord の `allow_mentions`、Matrix の `allowed_users` / `ignore_user_patterns`、Webhook のホスト・ポート・URL、Matrix のスレッド・セッション・E2EE の方針、Discord の遡り取得と添付の上限、Buzz の返信の形、A2A のエージェントカードと公開 URL、WhatsApp のブリッジの方針、Yuanbao のホームチャンネル） | 持ち主のプロファイル。明示した `.env` の値 → そのプロファイルの `config.yaml` → アダプタの既定、の順 | そのアダプタの文書どおりの既定。既定プロファイルの設定が使われることはない。プロファイルが 1 つだけの環境では、各プラットフォームのページに書かれているとおり、環境変数が YAML より勝つ決まりがそのまま保たれる |
@@ -1239,7 +1247,7 @@ root で動かす必要があるシステムのユニット、書き換えられ
 ゲートウェイの無いプロファイルを残さないためのものです。
 
 自動では扱わないもの: s6 で監督しているコンテナ — 次にコンテナを起動したときに揃います
-（プロファイルごとの枠は停止として登録され、ルートのゲートウェイが多重化します）。Windows のタスク スケジューラの
+（プロファイルごとの枠は停止として登録され、ルートのゲートウェイが多重化します。ただし `gateway.standalone: true` のプロファイルは、自分の実行の意図にもとづいて自分の枠を起動します）。Windows のタスク スケジューラの
 タスクは、コマンドがまとめます。事前確認で移行できる環境と
 わかったときは、ダッシュボードの System のページにも同じ移行がボタンとして出ます。
 

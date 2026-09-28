@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: e2ba195ca2dee978b0f986b517c3cf27832b2126
+upstream_blob: fc1b5e313fca60cd525a706d56251e607634eabd
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -254,7 +254,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 |----------|-------------|
 | `TERMINAL_ENV` | バックエンド: `local`、`docker`、`ssh`、`singularity`、`modal`、`daytona`、`vercel_sandbox` |
 | `HERMES_DOCKER_BINARY` | Hermes が呼び出すコンテナのコマンドを上書きします（`podman`、`/usr/local/bin/docker` など）。設定しなければ `PATH` 上の `docker` か `podman` を自動で探します。両方入っていて既定でないほうを使いたいときや、コマンドが `PATH` の外にあるときに必要です。 |
-| `TERMINAL_DOCKER_IMAGE` | Docker のイメージ（既定: `nikolaik/python-nodejs:python3.11-nodejs20`） |
+| `TERMINAL_DOCKER_IMAGE` | Docker のイメージ（既定: `nousresearch/hermes-sandbox:desktop`） |
 | `TERMINAL_DOCKER_FORWARD_ENV` | Docker のターミナルセッションへ明示的に渡す環境変数名の JSON 配列。なお、スキルが宣言した `required_environment_variables` は自動で渡されるので、どのスキルも宣言していない変数のときだけ必要です。 |
 | `TERMINAL_DOCKER_VOLUMES` | Docker に追加でマウントするボリューム（`host:container` の組をカンマ区切りで） |
 | `TERMINAL_DOCKER_ENV` | Docker のターミナルセッション内に設定する追加の環境変数の JSON オブジェクト（たとえば `{"FOO":"bar"}`） |
@@ -589,6 +589,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `HERMES_DESKTOP_PYTHON` | バックエンドで使う Python の絶対パス。ソースを取得した構成で Electron が自動で探すより先に見られます。作業ツリーの開発補助（[作業ツリーからの TUI / デスクトップ開発](/hermes/docs/developer-guide/worktree-ui-dev/) を参照）が、共有の仮想環境を使い回すために利用します。 |
 | `HERMES_DESKTOP_DEV_SERVER` | Electron の外枠が、同梱のバンドルの代わりに読み込む Vite の開発サーバーの URL（たとえば `http://127.0.0.1:5174`）。`npm run dev` が自動で設定します。アプリ自体をいじるときだけ関係します。 |
 | `HERMES_DESKTOP_CDP_PORT` | DOM や CSS を調べる道具のために、描画側が `127.0.0.1` で開ける Chrome DevTools Protocol のポートを上書きします（既定 `9222`）。開発サーバーでの実行（`npm run dev`、`hgui`）では自動で開きますが、パッケージ版では決して開かず、ここに何を書いても変わりません。開発時の実行で閉じたいときは `off` にしてください。このポートに届くものは、描画側でコードを実行できます。 |
+| `HERMES_DESKTOP_NVIDIA_SWIFTSHADER` | （Linux のデスクトップ版で、NVIDIA のみ）EGL の検査が壊れているドライバー系列（`580.x`、#40077）で描画を SwiftShader に回す EGL の代替経路を上書きします。`1` は代替経路を強制的に有効にします。将来の系列で同じクラッシュが再発し、まだ対象の一覧に入っていないときの復旧手段です。`0` は代替経路を使わず、自己責任でネイティブの GPU 経路を使います。別の条件ですでに GPU が無効になっている場合（リモート表示、WSLg、`HERMES_DESKTOP_DISABLE_GPU=0`）には、強制的な有効化は効きません。 |
 | `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY` | （デスクトップ側）アプリ内の更新確認（`Help → Check for Updates…` と、控えめに出る更新の帯）は、これらの標準の変数が示すプロキシを通って `api.github.com` に届きます。`NO_PROXY` の除外も尊重され、`curl`、`npm`、`git` と同じ作法です。設定が無ければ直接つなぎます。 |
 
 ### Microsoft Graph（Teams の会議） {#microsoft-graph-teams-meetings}

@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: c63cdb148fa36b102d827ee38e60d39c4daf7edd
+upstream_blob: c16a953331ba0b76fcf3cbca885c2d52fc7a728d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -928,6 +928,8 @@ host.toolsets.list(profile?)               // toolsets + enabled state
 host.toolsets.setEnabled(name, on, profile?)// enable/disable a toolset
 host.profiles.list(scope?: ProfileScope)   // the profile list the profile rail reads
 host.pluginDecisions                       // READ-ONLY atom: this window's plugin on/off decisions (frozen copies)
+host.i18n.registerAppLocale(id, { endonym?, rtl?, translations? })  // add a whole UI language (language pack); returns disposer
+host.i18n.languageOptions()                // [{ id, endonym, rtl, source }] — what the language switcher lists
 ```
 
 `host.request` は、アプリ自身が使っているのと同じ JSON-RPC です（セッション、設定、スキル、
@@ -1174,6 +1176,57 @@ JSON.parse(localStorage.getItem(                           host.pluginDecisions.
 localStorage.setItem('hermes.desktop.pluginDecisions.v2')  // declined — host.navigate('/capabilities?tab=plugins')
 row.querySelector('[data-slot="switch"]').click()          // same: the app's Plugins tab owns the toggle
 ```
+
+### 言語パック — `host.i18n.registerAppLocale` / `ctx.i18n.registerAppLocale` {#language-packs-hosti18nregisterapplocale-ctxi18nregisterapplocale}
+
+`ctx.i18n.register` は、自分のプラグインの文字列を翻訳するためのものです。**言語パック**はその逆で、
+アプリ全体に言語を追加（または拡張）します。中核のラベル、ダイアログ、ヒントのすべてが対象になるので、
+ポーランド語のユーザーにはポーランド語のデスクトップが表示されます。登録するのは部分的なカタログで、
+その id に同梱されているカタログ（新しい言語なら英語）の上に重ねてマージされます。パックに含まれない項目は
+キーごとにフォールバックし、生のキーがそのまま表示されることはありません。言語の切り替えメニューには、
+その言語自身での名前（エンドニム）ですぐに表示されます（国旗は使いません。言語は国ではないためです）。
+`<html dir>` は `rtl` に従い、`display.language` はユーザーが選んだ値のまま変わりません。登録しただけでは選択されません。
+
+```ts
+export default {
+  id: 'hermes-lang-pl',
+  register(ctx) {
+    // Attributed to this plugin and dropped on unload/disable.
+    ctx.i18n.registerAppLocale('pl', {
+      endonym: 'Polski',
+      englishName: 'Polish',        // search-only
+      rtl: false,
+      translations: {
+        // Nested like en.ts…
+        common: { save: 'Zapisz', cancel: 'Anuluj' },
+        // …or flat dotted keys (what a .desktop.yaml pack flattens to).
+        'catalog.results': '{0} wyników'
+      }
+    })
+  }
+}
+```
+
+```ts
+host.i18n.registerAppLocale(id, { endonym?, englishName?, rtl?, translations? }): () => void
+host.i18n.languageOptions(): LanguageOption[]   // bundled ∪ registered ∪ backend i18n.languages
+```
+
+英語側の項目が**関数**になっている場合（``results: n => `${n} results` ``）、パックでは
+**位置で指定するプレースホルダー**（引数の順に `{0}`、`{1}`）を使った普通の文字列を渡します。
+マージの際に、同じ呼び出し形の関数に包まれます。キーの一覧は `locales/_keys.desktop.json` に
+公開されています（`apps/desktop` で `npm run i18n:keys` を実行して再生成し、コミットします。CI はこのファイルが `en.ts` と一致することを確認します）。`hermes plugins
+validate` は、パックの `<lang>.desktop.yaml` をこの一覧と照らし合わせて検査します。
+
+`host.i18n.registerAppLocale` は、`ctx` を参照できないコードから同じことをするための呼び出しです。
+戻り値の disposer は `ctx.onDispose` に渡してください。基本的には `ctx` の形を使ってください。
+
+中核（Python）と TUI の文字列も同梱するパックなら、**デスクトップ用のコードはまったく要りません**。
+`plugin.yaml` に `provides_locales: [pl]` を宣言し、
+`locales/pl.yaml`、`pl.tui.yaml`、`pl.desktop.yaml` を置くと、ゲートウェイが
+デスクトップ用のファイルを `i18n.catalog {lang, surface: 'desktop'}` で配信します。`display.language` がその言語を指しているとき、
+アプリはそれを同じ登録先に取り込み（source は `backend`）、
+プロファイルを切り替えると取り込み直します。
 
 ## データの層 — React Query と nanostores {#data-layer-react-query-nanostores}
 

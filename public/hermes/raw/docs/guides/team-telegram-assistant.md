@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "チュートリアル: チームで使う Telegram アシスタント"
 description: "コードの相談、調べもの、サーバー管理などをチーム全員で頼める Telegram ボットの作り方を、順を追って説明します"
 upstream_path: guides/team-telegram-assistant.md
-upstream_blob: 31218f3db33380fc4cc3c6fa27ca8fc791118013
+upstream_blob: 2b57ea8fbad9c24d290fb347df02670677e51f8d
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/team-telegram-assistant
 ---
@@ -379,7 +379,7 @@ cron ジョブのプロンプトは、それまでの会話の記憶を持たな
 ```bash
 # In ~/.hermes/.env
 TERMINAL_ENV=docker
-TERMINAL_DOCKER_IMAGE=nikolaik/python-nodejs:python3.11-nodejs20
+TERMINAL_DOCKER_IMAGE=nousresearch/hermes-sandbox:desktop
 ```
 
 `~/.hermes/config.yaml` に書くこともできます。

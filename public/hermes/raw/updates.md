@@ -8,6 +8,32 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-09-29
+
+- [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- [ゲートウェイのセッションライフサイクル](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-session-lifecycle/)
+- [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
+- [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
+- [プロファイルのコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/profile-commands/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [ボットの画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/bot-screen/)
+- [記憶プロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
+
+## 2026-09-28
+
+- [インストール](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
+- [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [API サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
+- [ブラウザの自動操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/browser/)
+- [コンピュータ操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/computer-use/)
+- [デスクトップ版を複数の Hermes につなぐ](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-connection-desktop/)
+
 ## 2026-09-28
 
 - [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)

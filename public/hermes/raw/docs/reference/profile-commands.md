@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プロファイルのコマンド早見表"
 description: ""
 upstream_path: reference/profile-commands.md
-upstream_blob: e629a91d378c8de07ed15113f24bf3253e5567e9
+upstream_blob: 5f7ce5b5774520984b4be68df185e3480b4ebcc7
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/profile-commands
 ---
@@ -235,7 +235,11 @@ hermes profile alias work --remove
 hermes profile rename <old-name> <new-name>
 ```
 
-プロファイルの名前を変えます。ディレクトリとシェルの別名も合わせて更新されます。
+プロファイルの名前を変えます。ディレクトリとシェルの別名も合わせて更新されます。古い名前で
+入れたゲートウェイのサービス（`hermes -p <old-name> gateway install`）は、ゲートウェイが
+動いているかどうかにかかわらず削除されます。残しておくと、次のログイン時に古い名前で起動してしまうためです。
+`hermes -p <new-name> gateway install` で入れ直してください。Docker イメージの中では、s6 のゲートウェイ枠が
+新しい名前へ移ります。
 
 | 引数 | 説明 |
 |----------|-------------|
