@@ -307,7 +307,7 @@ ${linkList2(codeSources)}
     ) +
     `# Hermes Wingtips 日本語版
 
-「Hermes Wingtips」は、Nous Research の [@${t.author}](${t.authorUrl}) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは ${coverage}の ${t.items.length} 回・${t.categories.length} 分類を収録しています。
+「Hermes Wingtips」は、Nous Research の [@${t.author}](${t.authorUrl}) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは ${coverage}の ${t.items.length} 回・${t.categories.length} 分類を収録しています。英語の原文は @${t.author} のサイト [hermes recipes](https://notwitcheer.github.io/hermes-recipes/wingtips/) にもまとまっています。
 
 日本語の文はこのサイトによる要約です。正確な内容は元のポストと公式ドキュメントをご覧ください。
 
