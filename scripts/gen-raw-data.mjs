@@ -288,6 +288,8 @@ ${linkList2(codeSources)}
 // tips
 {
   const t = await readJson('data/wiki/tips.json');
+  const latest = t.items.reduce((a, b) => (b.n > a.n ? b : a));
+  const coverage = `#1〜#${latest.n}（${latest.date} まで）`;
   const sections = t.categories.map((cat) => {
     const items = t.items
       .filter((i) => i.category === cat)
@@ -300,12 +302,12 @@ ${linkList2(codeSources)}
   const body =
     front(
       'Hermes Wingtips 日本語版',
-      `Nous Research の @witcheer による X の連載「Hermes Wingtips」全 ${t.items.length} 回を日本語で`,
+      `Nous Research の @witcheer による X の連載「Hermes Wingtips」の ${coverage}を日本語で`,
       'tips.md',
     ) +
     `# Hermes Wingtips 日本語版
 
-「Hermes Wingtips」は、Nous Research の [@${t.author}](${t.authorUrl}) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。全 ${t.items.length} 回・${t.categories.length} 分類。
+「Hermes Wingtips」は、Nous Research の [@${t.author}](${t.authorUrl}) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは ${coverage}の ${t.items.length} 回・${t.categories.length} 分類を収録しています。
 
 日本語の文はこのサイトによる要約です。正確な内容は元のポストと公式ドキュメントをご覧ください。
 

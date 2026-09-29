@@ -1,12 +1,12 @@
 ---
 title: "Hermes Wingtips 日本語版"
-description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」全 86 回を日本語で"
+description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」の #1〜#86（2026-09-28 まで）を日本語で"
 raw: /hermes/raw/tips.md
 ---
 
 # Hermes Wingtips 日本語版
 
-「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。全 86 回・8 分類。
+「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは #1〜#86（2026-09-28 まで）の 86 回・8 分類を収録しています。
 
 日本語の文はこのサイトによる要約です。正確な内容は元のポストと公式ドキュメントをご覧ください。
 

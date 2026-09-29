@@ -16,6 +16,9 @@ type Tip = {
 
 const categories = tips.categories as string[];
 const items = tips.items as Tip[];
+// 収録範囲は件数ではなく「#1〜#最新（最新回の日付まで）」で示す。連載は続くので「全 N 回」とは書かない
+const latest = items.reduce((a, b) => (b.n > a.n ? b : a));
+const coverage = `#1〜#${latest.n}（${latest.date} まで）`;
 const byCat = categories.map((c) => ({
   name: c,
   items: items.filter((i) => i.category === c).sort((a, b) => b.n - a.n),
@@ -36,7 +39,7 @@ const summaryHtml = (summary: string) =>
 <BaseLayout
   rawPath="/hermes/raw/tips.md"
   title="Hermes Wingtips 日本語版"
-  description={`Nous Research の @witcheer による X の連載「Hermes Wingtips」全 ${items.length} 回を、日本語で読めるようにまとめたページ。各回から元のポストと公式ドキュメント日本語版へ進めます。`}
+  description={`Nous Research の @witcheer による X の連載「Hermes Wingtips」の ${coverage}を、日本語で読めるようにまとめたページ。各回から元のポストへ、関連する公式ドキュメントがある回はその日本語版へも進めます。`}
   sources={['https://hermes-agent.nousresearch.com/docs/', 'https://x.com/witcheer']}
   prevOverride={null}
   nextOverride={null}
@@ -47,7 +50,7 @@ const summaryHtml = (summary: string) =>
       「Hermes Wingtips」は、Nous Research の
       <a href={tips.authorUrl} target="_blank" rel="noopener">@{tips.author}</a>
       による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。
-      このページでは全 {items.length} 回を日本語で読めるようにまとめ、各回から元のポストと公式ドキュメント日本語版の該当ページへ進めるようにしました。
+      このページでは {coverage}を日本語で読めるようにまとめ、各回から元のポストへ、関連する公式ドキュメントがある回はその日本語版へも進めるようにしました。
     </p>
     <p>この連載を続けている @{tips.author} と Nous Research に感謝します。</p>
     <p class="wiki-note">日本語の文はこのサイトによる要約です。正確な内容は元のポストと公式ドキュメントをご覧ください。</p>
