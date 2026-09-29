@@ -33,7 +33,7 @@ Hermes Agent 0.21.5
 - [モデルと料金（Portal 全モデルの一覧・毎日更新）](https://wiki.winsmux.dev/hermes/models/)
 - [更新履歴（公式 docs への追随記録）](https://wiki.winsmux.dev/hermes/updates/)
 - [逆引き（やりたいことから探す索引）](https://wiki.winsmux.dev/hermes/howto/)
-- [小ワザ集（Hermes Wingtips 全回の日本語索引）](https://wiki.winsmux.dev/hermes/tips/)
+- [Hermes Wingtips 日本語版（@witcheer による連載の全回を日本語で）](https://wiki.winsmux.dev/hermes/tips/)
 - [トラブル（症状から対処を引く表）](https://wiki.winsmux.dev/hermes/trouble/)
 - [初めての方へ（段階式の道筋）](https://wiki.winsmux.dev/hermes/first/)
 - [料金と実例（費用構造と価格の実例）](https://wiki.winsmux.dev/hermes/cost/)

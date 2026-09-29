@@ -1,14 +1,14 @@
 ---
-title: "小ワザ集"
-description: "Nous Research の @witcheer による Hermes Wingtips 全 86 回の日本語索引"
+title: "Hermes Wingtips 日本語版"
+description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」全 86 回を日本語で"
 raw: /hermes/raw/tips.md
 ---
 
-# 小ワザ集
+# Hermes Wingtips 日本語版
 
-Nous Research のコミュニティ担当 [@witcheer](https://x.com/witcheer) による Hermes Wingtips。全 86 回・8 分類。
+「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。全 86 回・8 分類。
 
-このページはこのサイト独自の索引です。正本は各リンク先の公式ページと元のポストです。
+日本語の文はこのサイトによる要約です。正確な内容は元のポストと公式ドキュメントをご覧ください。
 
 ## メッセージとボット
 

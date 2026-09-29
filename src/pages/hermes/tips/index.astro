@@ -35,24 +35,26 @@ const summaryHtml = (summary: string) =>
 
 <BaseLayout
   rawPath="/hermes/raw/tips.md"
-  title="小ワザ集"
-  description={`Nous Research の @witcheer が X で連載している Hermes Wingtips（全 ${items.length} 回）を日本語で紹介する索引。各回に元のポストと公式ドキュメント日本語版へのリンク。`}
+  title="Hermes Wingtips 日本語版"
+  description={`Nous Research の @witcheer による X の連載「Hermes Wingtips」全 ${items.length} 回を、日本語で読めるようにまとめたページ。各回から元のポストと公式ドキュメント日本語版へ進めます。`}
   sources={['https://hermes-agent.nousresearch.com/docs/', 'https://x.com/witcheer']}
   prevOverride={null}
   nextOverride={null}
 >
   <article class="prose">
-    <h1>小ワザ集</h1>
+    <h1>Hermes Wingtips 日本語版</h1>
     <p>
-      Nous Research のコミュニティ担当
+      「Hermes Wingtips」は、Nous Research の
       <a href={tips.authorUrl} target="_blank" rel="noopener">@{tips.author}</a>
-      が X で連載している Hermes Wingtips を、日本語で探せるようにまとめました。
+      による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。
+      このページでは全 {items.length} 回を日本語で読めるようにまとめ、各回から元のポストと公式ドキュメント日本語版の該当ページへ進めるようにしました。
     </p>
-    <p class="wiki-note">このページはこのサイト独自の索引です。正本は各リンク先の公式ページと元のポストです。</p>
+    <p>この連載を続けている @{tips.author} と Nous Research に感謝します。</p>
+    <p class="wiki-note">日本語の文はこのサイトによる要約です。正確な内容は元のポストと公式ドキュメントをご覧ください。</p>
   </article>
 
   <div class="hw-controls">
-    <input id="hw-search" type="search" placeholder="小ワザを検索" aria-label="小ワザを検索" />
+    <input id="hw-search" type="search" placeholder="Wingtips を検索" aria-label="Wingtips を検索" />
     <div class="hw-chips" role="group" aria-label="カテゴリで絞り込み">
       <button type="button" class="hw-chip active" data-cat="all">すべて（{items.length}）</button>
       {byCat.map((c) => (
