@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: 176e942fd23f9b251eb40c8b8e891bed620fa5a3
+upstream_blob: c5bca3df9a13163dc0f0266e1a4319104fab57ea
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -20,23 +20,20 @@ Hermes の実行はそのまま使えますが、Relay のスコープ、ミド�
 > [!WARNING]
 > この変更で、Hermes の `observability/nemo_relay` プラグインは削除されます。既存の利用者は、
 > `plugins.enabled` から `observability/nemo_relay`（または旧名の `nemo_relay`）を外し、
-> エクスポーターの設定を、`HERMES_NEMO_RELAY_PLUGINS_TOML` で指定する Relay の
-> `plugins.toml` へ移す必要があります。旧来の
-> `HERMES_NEMO_RELAY_ATOF_*` と `HERMES_NEMO_RELAY_ATIF_*` の環境変数では、
-> エクスポーターはもう有効になりません。新しい環境変数を設定しない限り、Hermes は
-> Relay のプラグイン検出、設定の重ね合わせ、ミドルウェア、エクスポーターを動かしません。
+> エクスポーターの設定を Relay の
+> `plugins.toml` へ移す必要があります。`HERMES_NEMO_RELAY_PLUGINS_TOML` で明示的に
+> ファイルを指定することもでき、`hermes update` または `hermes migrate relay` は、旧来の
+> `HERMES_NEMO_RELAY_ATOF_*` と
+> `HERMES_NEMO_RELAY_ATIF_*` の設定を移行するときにこのファイルを作ります。旧来の環境変数そのものでは、
+> Relay のエクスポーターはもう設定されません。
 
-Hermes には、0.8 系の中で NeMo Relay 0.8.3 以降が必要です。
-この系列が、Hermes が管理下のプロバイダー呼び出しとツール呼び出しに使う、provider-codec と正規のツール結果の取り決めを提供しています。
+対応しているプラットフォームでは、Hermes が管理下のプロバイダー呼び出しとツール呼び出しを行うには NeMo Relay 0.9 が必要です。
 
 ## 実行時依存とデータの境界 {#runtime-dependency-and-data-boundary}
 
-Hermes は、範囲を限った `>=0.8.3,<0.9` の依存指定から、プラットフォーム別の `nemo-relay` ネイティブ wheel をインストールします。
+Hermes は、範囲を限った `>=0.9,<0.10` の依存指定から、プラットフォーム別の `nemo-relay` ネイティブ wheel をインストールします。
 公開パッケージは [NVIDIA NeMo Relay リポジトリ](https://github.com/NVIDIA/NeMo-Relay) からビルドされています。
 対応していないプラットフォームでは、別の実装をダウンロードするのではなく、上で説明した明示的な何もしないランタイムを使います。
-
-運用者が用意する型付きのネイティブプラグインは、Relay 0.8 向けにビルドし直す必要があります。
-`grpc-v1` ワーカーは、ツールのコールバック、ツール実行のインターセプト、手動のツール終了 API を使っている場合、生成し直してビルドし直す必要があります。
 
 Relay の管理下実行が有効なときは、設定したインターセプターが実際の呼び出しに作用できるよう、プロバイダーへのリクエストとレスポンスが Hermes プロセス内のそのネイティブモジュールを通ります。
 これは共有メトリクスのデータの取り決めとは別のものです。
@@ -56,13 +53,22 @@ telemetry:
 この選択は、プロファイル自身の `config.yaml` から読み取ります。
 マシン側で管理される設定の上書きで、プロファイルに代わって共有メトリクスを有効・無効にすることはできません。
 
-Relay プラグインの有効化はネイティブランタイムが受け持ち、明示的に有効にする形のままです。
-設定したミドルウェア、エクスポーター、動的プラグインを有効にするには、`HERMES_NEMO_RELAY_PLUGINS_TOML` に使う `plugins.toml` を指定します。
-この環境変数が未設定のとき、Hermes は Relay のプラグイン初期化を呼び出さないので、Relay はプラグイン設定の検出や重ね合わせを行いません。
-設定されていて、指定したファイルの読み込みに成功した場合、Relay は対応するユーザー用とシステム用の `plugins.toml` を検出し、指定した静的設定をその上に重ねます。
-リポジトリ内の `.nemo-relay/plugins.toml` は無視されます。
-動的な `[[plugins.dynamic]]` の記述は、指定したファイルからだけ読み込みます。
-指定したファイルを読み込めない場合、Hermes はエラーを報告し、Relay の初期化を呼び出さず、周囲の設定の検出にも切り替えません。
+Hermes は、Relay の通常のプロセス全体でのプラグイン検出を使います。Relay は次のファイルを、
+優先度の低いものから順に読み込みます。
+
+| 層 | Linux と macOS | Windows |
+|-------|-----------------|---------|
+| ユーザー | `$XDG_CONFIG_HOME/nemo-relay/plugins.toml`、または `~/.config/nemo-relay/plugins.toml` | `%USERPROFILE%\.config\nemo-relay\plugins.toml`（`XDG_CONFIG_HOME`、次に `HOME` が設定されていれば、そちらが優先されます） |
+| システム | `/etc/nemo-relay/plugins.toml` | `%ProgramData%\nemo-relay\plugins.toml` |
+
+`HERMES_NEMO_RELAY_PLUGINS_TOML` は、ユーザー用のファイルを明示的に指定したファイルに置き換えます。
+システム用のファイルは、その上に引き続き適用されます。リポジトリ内の設定は
+無視されます。明示的に指定したファイルを読み込めない場合、Hermes はエラーを報告し、
+別の設定に切り替えるのではなく、Relay のプラグインなしで動作を続けます。
+
+どのファイルが適用されるかは `hermes doctor` を実行すると確認できます。その **NeMo Relay Plugins**
+の節には、Relay が解決した各ファイル、有効なプラグインがあるかどうか、Relay が報告した問題が一覧で表示されます。
+プラグインのコードは読み込みません。
 
 ## 継続セッションのセッションスパン分割 {#session-span-segmentation-for-continuous-sessions}
 
@@ -102,10 +108,10 @@ Relay は作業ディレクトリでイベントを絞り込みません。パ�
 
 Relay プラグインの設定は、Hermes のプロファイル設定ではなく、プロセス単位のデプロイ上の選択です。
 最初にホストされたプロファイルが遅延初期化のきっかけになり、同じ Hermes プロセスがホストするほかのプロファイルはすべて、その結果できた静的ミドルウェア、動的プラグイン、サブスクライバー、エクスポーター、ガードレールのポリシーを共有します。
-初期化に成功すると、Hermes は次のログを出します。
+初期化に成功すると、Hermes は読み込んだファイルを次のようにログに出します。
 
 ```text
-Relay plugins are active process-wide and apply to all profiles hosted by this Hermes process.
+The Relay plugin host is active process-wide and applies to all profiles hosted by this Hermes process. Configuration files: /home/user/.config/nemo-relay/plugins.toml; /etc/nemo-relay/plugins.toml
 ```
 
 共有のポリシーの中でも、プロファイルのスコープは因果関係の分離を保ちます。

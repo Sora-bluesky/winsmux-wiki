@@ -2,7 +2,7 @@
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 4b050ad82283697bfed2463aa84a50499bd9b5c2
+upstream_blob: 828b3151028a6cb23b107e359cf3a4323bc861d7
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -96,7 +96,7 @@ terminal.resize         clipboard.paste         image.attach
 → {"jsonrpc":"2.0","id":"srq-7","result":{"choice":"once"}}
 ```
 
-メソッドと返す値は次のとおりです。`approval` → `{choice}`。`clarify` → `{answer}`（単一の質問）、または `{answers}` / 取り消しなら `{}`（まとめて聞く場合。`clarify.lock` で答えを 1 つ先に確定できます）。`sudo`、`secret`、`vault.code`、`vault.unlock_prompt` → `{value}`。`connection` → `{settled_by, targets}`（`manage_connections` のカードで、対象ごとに結果が 1 つ）。`terminal.read`、`window.read`、`preview.act`、`tour` → `{value}`（JSON のテキスト）。ホストが実装していないメソッドには JSON-RPC のエラー（`-32601`）を返してください。そうすればエージェントはタイムアウトまで待たずにすぐ失敗を受け取れます。
+メソッドと返す値は次のとおりです。`approval` → `{choice}`。`clarify` → 質問 ID をキーにした `{answers}`、取り消しなら `{}`（`clarify.lock` で答えを 1 つ先に確定でき、`null` にするとその質問を飛ばします）。`sudo`、`secret`、`vault.code`、`vault.unlock_prompt` → `{value}`。`connection` → `{settled_by, targets}`（`manage_connections` のカードで、対象ごとに結果が 1 つ）。`terminal.read`、`window.read`、`preview.act`、`tour` → `{value}`（JSON のテキスト）。ホストが実装していないメソッドには JSON-RPC のエラー（`-32601`）を返してください。そうすればエージェントはタイムアウトまで待たずにすぐ失敗を受け取れます。
 
 **答えられることを宣言してください（既存の WebSocket 連携にとっては壊れる変更です）。** 接続ごとに 1 回、`gateway.ready` のあとで `client.capabilities` を `{"server_requests": true}` を付けて呼びます。結果には、このバックエンドが送ることのあるリクエストのメソッドが並びます。一度も呼ばない WebSocket のクライアントは、サーバーからクライアントへのリクエストが入る前の古いビルドとみなされ、ゲートウェイはそのクライアント宛てのリクエストをすべてその場で失敗させます（エージェントから見えるのは、エラーで応答されたときと同じ「答えがない」状態です。承認は拒否ではなく取り下げの扱いになります）。締め切りいっぱい待たされることはありません。猶予の経路はありません。この変更の前は `clarify` や `approval`、`sudo` などに答えられていた他社製の WebSocket クライアントでも、`client.capabilities` の呼び出しを 1 つ足さないかぎり、そうしたリクエストは今後すべて断られます。クライアントがつながっていないセッションは影響を受けません。開いたままの質問は `open_requests` に入り、再接続時の再送を待ちます。標準入出力の TUI、デスクトップアプリ、ダッシュボードは、共通の `JsonRpcRequestChannel` を通して宣言しています。
 

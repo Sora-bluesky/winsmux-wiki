@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 211 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `b9df1cc`（2026-09-29）時点。この一覧は上流の docs から機械生成しています。
+上流 `374eaf5`（2026-09-29）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（58）
 
@@ -33,7 +33,7 @@ raw: /hermes/raw/skills.md
 | [Opencode](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode/) | Delegate coding to OpenCode CLI (features, PR review) | 2026-09-20 |
 | [Architecture Diagram](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) | Dark-themed SVG architecture/cloud/infra diagrams as HTML | 2026-09-20 |
 | [Ascii Video](/hermes/docs/user-guide/skills/bundled/creative/creative-ascii-video/) | ASCII video: convert video/audio to colored ASCII MP4/GIF | 2026-09-20 |
-| [Baoyu Infographic](/hermes/docs/user-guide/skills/bundled/creative/creative-baoyu-infographic/) | Infographics: 21 layouts x 21 styles (信息图, 可视化) | 2026-09-20 |
+| [Baoyu Infographic](/hermes/docs/user-guide/skills/bundled/creative/creative-baoyu-infographic/) | Infographics: 21 layouts x 21 styles (信息图, 可视化) | 2026-09-29 |
 | [Claude Design](/hermes/docs/user-guide/skills/bundled/creative/creative-claude-design/) | Design one-off HTML artifacts (landing, deck, prototype) | 2026-09-20 |
 | [Design Md](/hermes/docs/user-guide/skills/bundled/creative/creative-design-md/) | Author/validate/export Google's DESIGN.md token spec files | 2026-09-20 |
 | [Humanizer](/hermes/docs/user-guide/skills/bundled/creative/creative-humanizer/) | Humanize text: strip AI-isms and add real voice | 2026-09-20 |
@@ -103,8 +103,8 @@ raw: /hermes/raw/skills.md
 | [Ascii Art](/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/) | ASCII art: pyfiglet, cowsay, boxes, image-to-ascii | 2026-09-20 |
 | [Audiocraft Audio Generation](/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/) | AudioCraft: MusicGen text-to-music, AudioGen text-to-sound | 2026-09-20 |
 | [Auteur](/hermes/docs/user-guide/skills/optional/creative/creative-auteur/) | Design and build cinematic, award-level web pages | 2026-09-18 |
-| [Baoyu Article Illustrator](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/) | Article illustrations: type × style × palette consistency | 2026-09-20 |
-| [Baoyu Comic](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/) | Knowledge comics (知识漫画): educational, biography, tutorial | 2026-09-20 |
+| [Baoyu Article Illustrator](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/) | Article illustrations: type × style × palette consistency | 2026-09-29 |
+| [Baoyu Comic](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/) | Knowledge comics (知识漫画): educational, biography, tutorial | 2026-09-29 |
 | [Brag Slim](/hermes/docs/user-guide/skills/optional/creative/creative-brag-slim/) | Launch video from a project or URL, upstream-maintained | 2026-09-26 |
 | [Brag](/hermes/docs/user-guide/skills/optional/creative/creative-brag/) | Project launch video via Hyperframes, upstream-maintained | 2026-09-26 |
 | [Comfyui](/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/) | Generate images, video, and audio via diffusion workflows | 2026-09-20 |
@@ -154,7 +154,7 @@ raw: /hermes/raw/skills.md
 | [Fastmcp](/hermes/docs/user-guide/skills/optional/mcp/mcp-fastmcp/) | Build, test, and deploy Python MCP servers | 2026-09-20 |
 | [Mcp Oauth Remote Gateway](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/) | Manual OAuth for remote MCP servers on headless gateways | 2026-09-20 |
 | [Mcporter](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcporter/) | List, auth, and call MCP servers/tools from the terminal | 2026-09-20 |
-| [Openclaw Migration](/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/) | Import an OpenClaw setup (memories, skills) into Hermes | 2026-09-20 |
+| [Openclaw Migration](/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/) | Import an OpenClaw setup (memories, skills) into Hermes | 2026-09-29 |
 | [Accelerate](/hermes/docs/user-guide/skills/optional/mlops/mlops-accelerate/) | Run PyTorch training across GPUs with minimal changes | 2026-09-20 |
 | [Chroma](/hermes/docs/user-guide/skills/optional/mlops/mlops-chroma/) | Embedding database for RAG and semantic search | 2026-09-20 |
 | [Clip](/hermes/docs/user-guide/skills/optional/mlops/mlops-clip/) | Zero-shot image classification and image-text search | 2026-09-20 |

@@ -2,7 +2,7 @@
 title: "Baoyu Article Illustrator — 記事の挿絵。型 × 画風 × 配色をそろえて作る"
 description: "記事の挿絵。型 × 画風 × 配色をそろえて作る"
 upstream_path: user-guide/skills/optional/creative/creative-baoyu-article-illustrator.md
-upstream_blob: 2fbe498b784c20e8cd678742051d6fa730d83b21
+upstream_blob: 6dfdd2019f3eac270d4d54e396498f01a986f788
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator
 ---
@@ -102,7 +102,7 @@ sources:
 ```
 - [ ] Step 1: Detect reference images (if provided)
 - [ ] Step 2: Analyze content
-- [ ] Step 3: Confirm settings (clarify tool, one question at a time)
+- [ ] Step 3: Confirm settings (clarify tool)
 - [ ] Step 4: Generate outline
 - [ ] Step 5: Generate prompts
 - [ ] Step 6: Generate images (image_generate)
@@ -134,7 +134,7 @@ sources:
 
 ### 手順 3: 設定を確かめる {#step-3-confirm-settings}
 
-`clarify` ツールを使います。`clarify` は一度にひとつしか質問できないので、いちばん大事なことから聞きます。すでに利用者の依頼に書かれている項目は飛ばします。
+`clarify` ツールを使います。互いに独立した質問は、1 つの `questions` 配列にまとめます（最大 5 問）。すでに利用者の依頼に書かれている項目は飛ばします。
 
 | 順番 | 質問 | 選択肢 |
 |-------|----------|---------|

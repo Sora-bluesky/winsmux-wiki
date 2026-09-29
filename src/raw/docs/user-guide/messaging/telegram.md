@@ -2,7 +2,7 @@
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: 2b8cebbe6b6313847656f93e526c18c399bd4c3d
+upstream_blob: 1c824492dbb8228ffd02a9e3f819fc73af142019
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -1386,7 +1386,7 @@ YAML の数値のキーは、自動で文字列に直されます。
 
 ボタンをタップして答えるか、**その他** をタップして自由に書いて答えます（次に送ったメッセージが答えになります）。選択肢のない自由形式の `clarify` では、ボタンは出ず、次のメッセージをそのまま受け取ります。
 
-応答の制限時間は `~/.hermes/config.yaml` の `agent.clarify_timeout` で設定します（既定は `3600` 秒）。制限時間内に答えないと、エージェントは所定の合図とともに待機を解き、止まったままにならずに進みます。
+応答の制限時間は `~/.hermes/config.yaml` の `agent.clarify_timeout` で設定します（既定は `3600` 秒）。制限時間内に答えないと、エージェントは `"outcome": "timed_out"` とともに待機を解き、止まったままにならずに進みます。質問を飛ばすには `skip` と返信します。
 
 Telegram がボタンのカードを表示できない場合（Bot API が拒む、15 秒の受領の時間内に送信が終わらない）、Hermes は同じ質問を番号付きの一覧の素のメッセージとして聞き直し、あなたが打った返事（番号か選択肢の文章）を答えとして受け取ります。それすら届けられないときは、制限時間を待って沈黙をあなたの無回答と取り違えるのではなく、`[clarify prompt could not be delivered]` とともにエージェントをすぐ解放します。
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "チェックポイントと /rollback"
 description: "シャドウの git リポジトリと自動スナップショットで、破壊的な操作からファイルを守るしくみです"
 upstream_path: user-guide/checkpoints-and-rollback.md
-upstream_blob: dd732f53aadd76aab46c62fadb4bb749c5125b41
+upstream_blob: d9a8ea916e138add09cef8c807e966813ac39ad5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback
 ---
@@ -235,6 +235,22 @@ Use /rollback <N> --all to restore those too.
 ```
 
 ## 安全性と性能のためのガード {#safety-and-performance-guards}
+
+### 入れ子になった Git リポジトリ {#nested-git-repositories}
+
+親ディレクトリのチェックポイントは、入れ子になったリポジトリを、ファイルの複製ではなく Git の
+**gitlink**（コミットへの参照）として保存することがあります。入れ子のリポジトリを再帰的に取り込む機能はありません。
+そのため、そのリポジトリでコミットしていない編集や追跡していないファイルは、親のチェックポイントからは取り戻せません。
+このバージョン以降で取ったチェックポイントには、`/rollback` の一覧で印が付きます。たとえば
+`before write_file: app.py [nested git repos not captured: tool]` のように表示されます。
+
+選んだチェックポイントに gitlink が含まれている場合、全体のロールバック（`--all` を含む）は、
+ファイルを変更したりロールバック前のスナップショットを作ったりする前に断られます。
+入れ子のリポジトリそのもの、その下のファイル、またはそれに一致する Git のパス指定を選んだ場合も、
+取り込んでいないファイルについて成功と報告するのではなく、復元を断ります。
+関係のない、取り込み済みのファイルなら復元できます。たとえば
+`/rollback 1 notes.txt` です。入れ子のリポジトリは、別にバックアップを取るか、
+そのリポジトリ自身の作業ディレクトリで直接チェックポイントを取っておいてください。
 
 ### コンテナ系のバックエンド {#container-backends}
 

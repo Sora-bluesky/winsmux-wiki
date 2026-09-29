@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "同梱のプラグイン"
 description: "Hermes Agent に最初から入っていて、節目ごとのフックで自動的に動くプラグイン群 — disk-cleanup とその仲間たち"
 upstream_path: user-guide/features/built-in-plugins.md
-upstream_blob: 647b73165a250ad19e65a804783a9e62b756ab92
+upstream_blob: e7d7bd39ca847e5b4e91fbc9d49c5f6d0265b70b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins
 ---
@@ -217,9 +217,9 @@ Hermes を頭に付けた名前と、SDK が本来使う名前（`LANGFUSE_PUBLI
 
 NeMo Relay は、もう Hermes に同梱されるプラグインではありません。`hermes plugins enable observability/nemo_relay` は実行しないでください。Relay のセッション、ターン、LLM、ツールの流れは Hermes 本体が受け持つようになりました。
 
-Relay の中間処理や書き出しを使いたいときは、Relay の標準的な `plugins.toml` を作り、Hermes を立ち上げる前に `HERMES_NEMO_RELAY_PLUGINS_TOML` でそのファイルを指してください。この決まりは、その Hermes のプロセスが抱えるすべてのプロファイルに一括で効きます。ATOF、ATIF、OpenTelemetry の選び方は [NeMo Relay observability configuration](https://docs.nvidia.com/nemo/relay/configure-plugins/observability/about) を見てください。
+Relay の中間処理や書き出しは、Relay の標準的な `plugins.toml` で設定します。Hermes は Relay の利用者ごとの設定（`~/.config/nemo-relay/plugins.toml`）を読み、続いて端末全体のシステム設定（`/etc/nemo-relay/plugins.toml`、Windows では `%ProgramData%\nemo-relay\plugins.toml`）を読みます。Hermes を立ち上げる前に `HERMES_NEMO_RELAY_PLUGINS_TOML` を設定するのは、利用者ごとの設定の代わりに特定のファイルを使いたいときだけです。その場合もシステム設定のほうが優先されます。この決まりは、その Hermes のプロセスが抱えるすべてのプロファイルに一括で効きます。どのファイルが使われているかは `hermes doctor` で確かめられます。ATOF、ATIF、OpenTelemetry の選び方は [NeMo Relay observability configuration](https://docs.nvidia.com/nemo/relay/configure-plugins/observability/about) を見てください。
 
-以前の `HERMES_NEMO_RELAY_ATOF_*` と `HERMES_NEMO_RELAY_ATIF_*` の設定では、もう書き出しは始まりません。これらが残ったままで `HERMES_NEMO_RELAY_PLUGINS_TOML` が無い `.env` では、**何も**書き出されず、ゲートウェイがその旨の警告を 1 回ログに出します。代わりの `plugins.toml` が選ばれていない場合、`hermes doctor` がこの古い設定を知らせます。
+以前の `HERMES_NEMO_RELAY_ATOF_*` と `HERMES_NEMO_RELAY_ATIF_*` の設定では、もう書き出しの設定はできません。`HERMES_NEMO_RELAY_PLUGINS_TOML` が設定されていないとき、残っている古い変数についてゲートウェイが警告し、`hermes doctor` も知らせます。これとは関係なく、Relay の利用者ごとの設定やシステム設定で見つかった書き出しはそのまま効きます。
 
 **自動の移行。** `hermes update`（または `hermes migrate relay`、すべてのプロファイルのホームを対象にするなら `hermes migrate relay --all-profiles`）は、以前の変数を `<hermes home>/relay-plugins.toml` に変換し、そのプロファイルの `.env` に `HERMES_NEMO_RELAY_PLUGINS_TOML` を設定し、以前の行をコメントにします（消すものはありません）。ゲートウェイを多重化している場合は、プロファイルのホームごとに自分のファイルが作られます。作られるファイルは、書き込む前に Relay で検証されます。出来上がる形は次のとおりです（書き出し先の種類を示す `type = "file"` に注意してください。これが無い書き出し先は拒否されます）:
 

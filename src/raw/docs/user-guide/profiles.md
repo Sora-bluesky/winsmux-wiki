@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: 3d294f61c58d37499fa056d38f1277e1b2010503
+upstream_blob: 94904c0a03973a498a34c9b69eed35087fe0809a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -214,6 +214,12 @@ hermes profile use default    # switch back
 ```
 
 既定を設定すると、`hermes` とだけ打ったコマンドがそのプロファイルを対象にします。`kubectl config use-context` と同じ感覚です。
+
+既定にしたプロファイルのディレクトリを手で消してしまうと、Hermes は普段のコマンドを
+代わりに default プロファイルで動かすことを断ります。別のプロファイルの状態を読み書きしてしまうからです。
+抜け出すための操作だけは、警告付きで動きます。`hermes profile list`、`hermes profile use default`、
+それに `--data` も `--full` も付けない `hermes uninstall` です（この 2 つを付けた場合は断られたままです。
+対話式のアンインストールのメニューでは、確認の問いかけを経たうえで、default プロファイルを丸ごと消す選択肢が引き続き出ます）。
 
 ### いまどのプロファイルにいるか {#knowing-where-you-are}
 

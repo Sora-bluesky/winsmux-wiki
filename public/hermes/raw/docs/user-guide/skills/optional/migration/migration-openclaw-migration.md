@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む"
 description: "OpenClaw の設定（記憶、skill）を Hermes に取り込む"
 upstream_path: user-guide/skills/optional/migration/migration-openclaw-migration.md
-upstream_blob: 9789585e86e6730ed86d607f15268ae3555347d5
+upstream_blob: dd4bc26368ddcc9e363c7367d4d4b8e835ccf3e7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/migration/migration-openclaw-migration
 ---
@@ -122,7 +122,7 @@ Hermes の CLI は対話用に `clarify` ツールを備えていますが、次
 - `enter directory here` のような偽の入力欄、埋めさせるための空行、`_____` のような下線を質問に入れないでください
 - パスのように自由に答えてもらう質問では、文だけを書きます。利用者は、パネルの下にある通常の CLI の入力欄に打ちます
 
-`clarify` の呼び出しがエラーを返したら、エラーの文面を読み、内容を直して、正しい `question` と整った選択肢で 1 度だけやり直します。
+`clarify` の呼び出しがエラーを返したら、エラーの文面を読み、内容を直して、正しい `questions` 配列と整った選択肢で 1 度だけやり直します。
 
 `clarify` が使える状態で、試し実行から利用者に決めてもらうべき点が出てきたら、**次の行動は `clarify` の呼び出しでなければなりません**。
 次のような通常の返事でターンを終えないでください。

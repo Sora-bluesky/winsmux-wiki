@@ -2,7 +2,7 @@
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: 62070cfe205e3d2e42597420bbe205b64c0aa3fd
+upstream_blob: ff6206f97ed71de0402bc7faa6dacdf0b6c38d36
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -150,6 +150,7 @@ CLI の起動処理は、Hermes のほかの部分を import する前に `_appl
 `origin_json`、`expiry_finalized`、作業環境の `cwd` / `git_branch` / `git_repo_root`、
 引き継ぎと圧縮失敗に関する列、`profile_name`、`transport_profile`（その通り道を
 受け取った多重化の bot。空でも構いません）、`rewind_count`、`archived`、
+`auto_archived`（アイドル時の掃除だけが立てる印です。再開や圧縮の続きが入ると、掃除だけによるアーカイブは解除されますが、意図して行ったアーカイブは解除されません）、
 `pinned` も含まれます。
 
 ```sql
@@ -203,7 +204,8 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_sessions_title_unique
 
 以下は抜粋です。実際のスキーマには `effect_disposition`、
 `platform_message_id`、`observed`、`active`、`compacted`、`api_content`、
-`display_kind`、`display_metadata` も含まれます。
+`display_kind`、`display_metadata`、`message_uid`、`absorbed_message_uids`、
+`tool_call_uids`、`tool_call_uid` も含まれます。
 
 ```sql
 CREATE TABLE IF NOT EXISTS messages (
@@ -238,6 +240,9 @@ CREATE INDEX IF NOT EXISTS idx_messages_session_id ON messages(session_id, id);
 - 推論だけで正常に終わった応答（`content` が空、`finish_reason=stop`、推論あり）には推論のテキストがそのまま返答として使われますが、アシスタントの行にその本文が `content` として書かれることはありません。`content` は空のままで、本文は `reasoning` や `reasoning_content` に入り、`api_content` が同じ文字列を持つので、次のリクエストでもバイト単位で同じ返答を再生できます。そのため履歴の画面では、返答ではなく推論として表示されます。
 - `api_content` はバイト単位で忠実さを保つための控えです。このメッセージについて実際に API へ送った内容の文字列が `content` と食い違うとき（一時的なメモリやプラグインの差し込み、persist による上書きなど）に、送ったとおりの文字列を保持します。プロンプトキャッシュを崩さずに再生できるよう通信時のバイト列を残すもので、例外は単独のサロゲートだけです。これは sqlite3 がバインドできず、会話ループが送信内容から常に取り除いています。`NULL` なら `content` をそのまま送ったという意味です。
 - タイムスタンプは Unix エポック秒の浮動小数点数です（`time.time()`）
+- `message_uid` はメッセージごとに長く保たれる ID です（16 進 32 桁、`uuid4().hex`）。行を最初に挿入したときに一度だけ発行し、行の複製（その場での圧縮の世代、ローテーションで生まれる子、並行する末尾の複製、`replace_messages` による再発行、エクスポートとインポート）のたびにそのまま写します。そのため物理的な `id` が変わっても、論理的に同じメッセージは同じ uid を持ち続けます。行を指定しての書き換えでは変わりません。どの投影でも復元され（`get_messages_as_conversation` は常に付け、`_row_id` は指定したときだけ付きます）、プロバイダへのリクエストからは取り除かれます。コンテキストエンジンは、メッセージごとの自前の状態をこの値で引きます。[コンテキストエンジンプラグイン](/hermes/docs/developer-guide/context-engine-plugin/#stable-message-identity-message_uid)を参照してください。
+- `absorbed_message_uids` は統合の記録です。ホストがこの行へ畳み込んだメッセージの `message_uid` を JSON の配列で持ちます（交互の並びを直すときのユーザー同士・アシスタント同士の統合、圧縮器による処理途中の言い直しとアンカーの畳み込み、マイクロ圧縮による隣り合うユーザー発言の統合が対象で、まとめた行は最初の構成要素の uid を引き継ぎます）。残った行を書き出すときに書き込み、その行と一緒に書き直され、実行中の `_absorbed_message_uids` として復元されます。何も取り込んでいない行では `NULL` です。
+- `tool_call_uids`（アシスタントの行）は JSON の `{tool_call_id: uid}` の対応表で、`tool_calls` の各項目に出現ごとの ID を与えます。プロバイダのツール呼び出し ID は重複するためです（1 つの応答の中で同じ ID を繰り返す呼び出しは uid を共有し、2 つのアシスタントのターンを畳み込んだあとは、両方が持つ ID が uid の配列、つまり呼び出し順に出現ごと 1 つずつの uid に対応します）。`tool_call_uid`（ツールの行）は、その結果に対応する値です。`tool_calls` の JSON 自体は変更しません。アシスタントの行を最初に挿入したときに発行し、書き出し時に結果の行へ対にして付けます。列が `NULL` の場合は、復元時に直前のアシスタントの行から導きます。実行中の `_tool_call_uids` / `_tool_call_uid` として復元されます。
 
 ### FTS5 の全文検索 {#fts5-full-text-search}
 
@@ -259,7 +264,7 @@ FTS の作り直しが進んでいても二重に索引されません）、索�
 
 ## スキーマのバージョンと移行 {#schema-version-and-migrations}
 
-現在のスキーマバージョン: **23**
+現在のスキーマバージョン: **31**
 
 `schema_version` テーブルには整数が 1 つだけ入ります。単純な列の追加は `_reconcile_columns()` が宣言的に処理します（実際の列と `SCHEMA_SQL` を突き合わせ、足りない列を ADD します）。バージョンで段階を切る移行の連なりは、宣言的に書けないデータ移行や索引・FTS の変更のために取ってあります。
 
@@ -283,6 +288,7 @@ FTS の作り直しが進んでいても二重に索引されません）、索�
 | 23 | FTS の保存方式の見直し。v11 のインライン方式の複製を外部コンテンツ方式の FTS テーブルに置き換え（既存のデータベースは希望した場合のみ移行） |
 | 29 | cron のセッションをトライグラム（部分一致・CJK）索引から外す。`messages_fts_trigram_src` ビューとトリガーが `sessions.source` で絞り込み、一度だけの作り直しで過去の行を掃除 |
 | 30 | 委任先（副エージェント）のセッションもトライグラム索引から外す。判定は `source='subagent'` か `$._delegate_from` の印（`FTS_TRIGRAM_SESSION_SQL`）。行は `messages` と通常の単語索引 `messages_fts` に残るので `session_search` では見つかり、約 2.6 倍に膨らむトライグラムの影テーブルだけが小さくなる。作り直しは v29 と同じく一度だけ |
+| 31 | `messages.message_uid`、`absorbed_message_uids`、`tool_call_uids`、`tool_call_uid`（宣言的な列追加）。列ができる前からある全行に新しい `message_uid` を埋める（2,000 id ずつの塊に分け、塊ごとに短い書き込みにする。1 回の起動では最初の塊のあと約 1 秒だけ進め、次の起動で `message_uid_backfill_id` のメタ情報のカーソルから再開し、`message_uid_backfill` の印で終わる。そのため大きな保存領域でも表全体の書き込みロックを握り続けない）。さらに uid なしで挿入された行（古いビルドがこの保存領域へ書き込んだ場合）に 1 つ発行する `messages_message_uid_insert` トリガーを加える。これで v31 の保存領域は、すべての行を ID 付きで利用側へ渡す（ツール呼び出しの uid は行が次に書き込まれるときに発行し、結果は復元時に対にする） |
 
 上の表に出てこないバージョンは、`_reconcile_columns()` が処理した宣言的な列追加です（バージョンを上げるだけで、データ移行はありません）。
 

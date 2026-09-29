@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-29",
+  "generatedAt": "2026-09-30",
   "entries": [
     {
       "date": "2026-09-29",
-      "sha": null,
-      "upstream": "b9df1cc",
+      "sha": "041a1bf",
+      "upstream": null,
       "pages": [
         {
           "id": "developer-guide/context-compression-and-caching",
@@ -27,14 +27,34 @@
           "url": "/hermes/docs/developer-guide/multiplexing-gateway/"
         },
         {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
           "id": "developer-guide/relay-shared-metrics",
           "title": "Relay 共有メトリクス",
           "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
         },
         {
+          "id": "getting-started/installation",
+          "title": "インストール",
+          "url": "/hermes/docs/getting-started/installation/"
+        },
+        {
           "id": "getting-started/updating",
           "title": "更新とアンインストール",
           "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "guides/secure-hermes-on-a-work-machine",
+          "title": "個人の端末や仕事用の端末で Hermes を動かす",
+          "url": "/hermes/docs/guides/secure-hermes-on-a-work-machine/"
+        },
+        {
+          "id": "guides/team-telegram-assistant",
+          "title": "チュートリアル: チームで使う Telegram アシスタント",
+          "url": "/hermes/docs/guides/team-telegram-assistant/"
         },
         {
           "id": "reference/cli-commands",
@@ -67,9 +87,79 @@
           "url": "/hermes/docs/user-guide/features/bot-screen/"
         },
         {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザの自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/features/computer-use",
+          "title": "コンピュータ操作",
+          "url": "/hermes/docs/user-guide/features/computer-use/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/kanban",
+          "title": "カンバン（マルチエージェント盤）",
+          "url": "/hermes/docs/user-guide/features/kanban/"
+        },
+        {
+          "id": "user-guide/features/language-packs",
+          "title": "言語パック",
+          "url": "/hermes/docs/user-guide/features/language-packs/"
+        },
+        {
+          "id": "user-guide/features/lsp",
+          "title": "LSP — 意味を読み取る診断",
+          "url": "/hermes/docs/user-guide/features/lsp/"
+        },
+        {
           "id": "user-guide/features/memory-providers",
           "title": "記憶プロバイダー",
           "url": "/hermes/docs/user-guide/features/memory-providers/"
+        },
+        {
+          "id": "user-guide/features/tools",
+          "title": "ツールとツールセット",
+          "url": "/hermes/docs/user-guide/features/tools/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/raft",
+          "title": "Raft",
+          "url": "/hermes/docs/user-guide/messaging/raft/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
         }
       ]
     },

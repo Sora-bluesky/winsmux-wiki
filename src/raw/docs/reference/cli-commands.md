@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 882f2c7c9455fa6e2e021b0b9eb48d6490750e60
+upstream_blob: b4a6b0d132af04f7f17a0c7f388bd2d1d6bff64e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -932,7 +932,7 @@ hermes dump [--show-keys]
 | **Features** | 有効なツールセット、MCP サーバー数、メモリプロバイダ |
 | **Services** | ゲートウェイの状態、設定済みのメッセージングプラットフォーム |
 | **Workload** | cron ジョブ数、インストール済みスキル数 |
-| **Config overrides** | 既定値と異なる設定値 |
+| **Config overrides** | 既定値と異なる設定値。そこに含まれる認証情報は伏せられます。対象は、`fallback_providers` の項目の `api_key` と、その `base_url` に含まれる認証情報（ユーザー情報、`key`/トークンのクエリパラメーター、署名付き URL の署名）です。 |
 
 ### 出力例 {#example-output}
 
@@ -999,7 +999,7 @@ hermes debug share [options]
 | `--local` | アップロードせず、レポートをローカルに表示します。 |
 | `--no-redact` | アップロード時のシークレットの redaction を無効にします。既定ではアップロードは redaction されます。 |
 
-レポートには、システム情報（OS、Python のバージョン、Hermes のバージョン）、直近のエージェント・ゲートウェイ・GUI/ダッシュボード・デスクトップのログ（ファイルごとに 512 KB 上限）、redaction 済みの API キーの状態が含まれます。既定ではアップロードは redaction されるため、シークレットは含まれません。
+レポートには、システム情報（OS、Python のバージョン、Hermes のバージョン）、直近のエージェント・ゲートウェイ・GUI/ダッシュボード・デスクトップのログ（ファイルごとに 512 KB 上限）、redaction 済みの API キーの状態が含まれます。既定ではアップロードは redaction されるため、シークレットは含まれません。これはログだけでなく、システムの情報（`fallback_providers` の項目やその URL に含まれる認証情報といった設定値を含みます）にも、ゲートウェイの `/debug` レポートにも当てはまります。
 
 既定のアップロードは、公開のペーストサービス（paste.rs、dpaste.com の順）を試します。`--nous` は同じデバッグバンドルを非公開の Nous 診断ストレージにアップロードします。返される viewer リンクは Nous チーム用で、14日後に自動削除されます。
 

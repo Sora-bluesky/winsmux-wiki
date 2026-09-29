@@ -2,7 +2,7 @@
 title: "Baoyu Comic — 知識まんが（知识漫画）。学習向け、伝記、手引き"
 description: "知識まんが（知识漫画）。学習向け、伝記、手引き"
 upstream_path: user-guide/skills/optional/creative/creative-baoyu-comic.md
-upstream_blob: 88fdc93af6a3f9927cd5139319d1c79a0c24a9e8
+upstream_blob: c4f0a68cec2662a1adf990000b0c12bbbda93e4d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-baoyu-comic
 ---
@@ -186,11 +186,11 @@ Input → Analyze → [Check Existing?] → [Confirm: Style + Reviews] → Story
 
 ### 利用者への質問 {#user-questions}
 
-`clarify` ツールで希望を確かめます。`clarify` は一度にひとつしか質問できないので、いちばん大事なことから順に聞いていきます。手順 2 の質問一式は [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/workflow.md) にあります。
+`clarify` ツールで希望を確かめます。互いに独立した質問は、1 つの `questions` 配列にまとめます（最大 5 問）。前の答えによって選択肢が変わる質問は、別に聞きます。手順 2 の質問一式は [references/workflow.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/creative/baoyu-comic/references/workflow.md) にあります。
 
-**返事がないときの扱い（重要）**: `clarify` は `"The user did not provide a response within the time limit. Use your best judgement to make the choice and proceed."` を返すことがあります。これは、すべてを既定のまま進めてよいという承諾ではありません。
+**返事がないときの扱い（重要）**: `clarify` は `"outcome": "timed_out"` を返し、回答に `"status": "unanswered"` が付くことがあります。これは、すべてを既定のまま進めてよいという承諾ではありません。
 
-- その**一問についてだけ**既定を使ったと考えます。手順 2 の残りの質問は順に続けてください。質問はどれも、それぞれ独立した確認の場です。
+- **答えのなかった質問についてだけ**既定を使ったと考えます。質問はどれも、それぞれ独立した確認の場です。
 - **既定にしたことは、次の発言ではっきり伝えます**。あとから直してもらえるようにするためです。たとえば `"Style: defaulted to ohmsha preset (clarify timed out). Say the word to switch."` のように書きます。伝えられていない既定は、そもそも聞かなかったのと区別がつきません。
 - 一度返事がなかったからといって、手順 2 をまとめて「すべて既定で」で片づけては**いけません**。本当にその場を離れているなら、五つの質問すべてで同じことが起きるでしょう。それでも、目に見える形で既定を伝えておけば戻ってきたときに直せますし、伝えていなければ直しようがありません。
 

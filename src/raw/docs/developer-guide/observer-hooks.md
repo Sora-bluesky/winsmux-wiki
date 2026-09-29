@@ -2,7 +2,7 @@
 title: "オブザーバーフック"
 description: "プラグイン向けの読み取り専用テレメトリ契約。イベントの系統、相関 ID、ペイロードの安全性"
 upstream_path: developer-guide/observer-hooks.md
-upstream_blob: 075f4f809e4447a94e89252bbcd3bf15904da8f5
+upstream_blob: 3d9c636706ff28aa6a117c1c0700fa2767aa19ae
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/observer-hooks
 ---
@@ -330,7 +330,8 @@ def on_post_tool_call(**kwargs):
 フックを直接使った可観測性の実装例になっています。
 
 NeMo Relay SDK との公式な統合は、Hermes のセッション、ターン、LLM、ツールの各
-ライフサイクルを Relay へ対応付けます。Relay のプラグインを明示的に設定すれば、
+ライフサイクルを Relay へ対応付けます。Relay が見つけたユーザーとシステムの設定、または
+`HERMES_NEMO_RELAY_PLUGINS_TOML` で明示的に選んだファイルによって、
 [ATOF、ATIF、OTEL](https://docs.nvidia.com/nemo/relay/configure-plugins/observability/about)
 のエクスポーターや実行ミドルウェアを追加できます。
 [Relay の共有メトリクス](/hermes/docs/developer-guide/relay-shared-metrics/)を参照してください。

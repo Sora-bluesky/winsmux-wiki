@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 8ff1e0b6d15c2d186bb10814befa84a3b5c88a14
+upstream_blob: a71c321f1196e2aca4daad8186202ca9e5748523
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -42,7 +42,7 @@ hermes config edit         # Open config.yaml in your editor
 hermes config get KEY      # Print a resolved value
 hermes config set KEY VAL  # Set a specific value
 hermes config unset KEY    # Remove a user-set value
-hermes config check        # Check for missing options (after updates)
+hermes config check        # Check for missing options and stale saved selections
 hermes config migrate      # Interactively add missing options
 
 # Examples:
@@ -1435,6 +1435,12 @@ Hermes Desktop では、3,000文字を超えるプレーンテキストを貼り
 渡されます（エージェントのターンから見えるのは、これまでどおり添付ファイルへの参照だけです）。そのため「これを要約して」と
 大量の貼り付けを一緒に送ると、貼り付けた内容の話題にちなんだタイトルが付きます。自分で添付したファイルが
 タイトル付けのために読まれることはありません。
+
+ローカルのメッセージングゲートウェイでは、テキストのメッセージの場合、チャンネルに結び付いたスキルやプラットフォームの
+文脈が足される前の、元の依頼文がセッションのタイトル付けに渡されます。
+メインのモデルと会話の履歴には、これまでどおりスキルの内容が全部残ります。
+添付ファイルだけのターンでは、従来どおり情報を足したあとのメッセージでタイトルを付けます。
+これが効くのは新しく付けるタイトルだけで、すでに名前が付いたセッションを直すものではありません。
 
 ### ストリーミング専用のエンドポイント {#stream-only-endpoints}
 
@@ -2965,7 +2971,7 @@ agent:
   clarify_timeout: 3600        # Seconds to wait for user clarification response (0 or less = unlimited)
 ```
 
-時間切れになると、エージェントは「user did not respond」という目印を受け取って待機を解き、自分の判断で作業を続けます。確認の質問が、ツール全般に共通する1回ごとの期限（`timeouts.tools.sequential_call`）で打ち切られることはありません。待ち時間を区切るのは `agent.clarify_timeout` だけです。
+時間切れになると、エージェントは `"outcome": "timed_out"` を受け取って待機を解き（ユーザーがすでに確定した回答は残ります）、自分の判断で作業を続けます。確認の質問が、ツール全般に共通する1回ごとの期限（`timeouts.tools.sequential_call`）で打ち切られることはありません。待ち時間を区切るのは `agent.clarify_timeout` だけです。
 
 ## コンテキストファイル（SOUL.md、AGENTS.md） {#context-files-soulmd-agentsmd}
 
@@ -3029,7 +3035,7 @@ onboarding:
   seen: {}               # internal latch — leave empty
 ```
 
-- `profile_build` — ゲートウェイに届くいちばん最初のメッセージで示す、プロファイル作成の流れを決めます。`"ask"`（既定）は、ユーザープロファイルの作成を提案します。この提案は**ユーザーが明示的に受け入れたときだけ進み、同意が前提です**。エージェントは何かを調べる前に必ず尋ね、接続済みのアカウントを黙って読むことはありません。`"off"` は簡単な紹介だけを表示します。この提案が出るのは多くても1回です。
+- `profile_build` — プロファイルごとに、ゲートウェイ経由で届く最初のダイレクトメッセージで示す、プロファイル作成の流れを決めます（グループチャットでは示しません）。`"ask"`（既定）は、ユーザープロファイルの作成を提案します。この提案は**ユーザーが明示的に受け入れたときだけ進み、同意が前提です**。エージェントは何かを調べる前に必ず尋ね、接続済みのアカウントを黙って読むことはありません。`"off"` は簡単な紹介だけを表示します。この提案が出るのは、1つのプロファイルにつき多くても1回です。
 - `seen` — 内部の状態です。Hermes は表示したヒントを1つずつここに記録し、二度と出さないようにします。プロファイル作成の提案も、一度表示されるとここに記録されます。手で編集しないでください。すべてのヒントをもう一度見たいときは、`onboarding` セクションを丸ごと消します。
 
 ## ダッシュボード {#dashboard}

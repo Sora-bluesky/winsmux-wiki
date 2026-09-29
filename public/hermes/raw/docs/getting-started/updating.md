@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: 06e559bdde22ed0a1996e83db99bcbfe819adea9
+upstream_blob: cbd089c531b5d2d461c598113c0ba8eb0334df72
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -160,6 +160,45 @@ hermes config set updates.check false
 保守されている更新スクリプトが見当たらない場合（たとえばウイルス対策ソフトに隔離されたときです）、旧来の更新の受け渡し処理は、引き渡しに成功したと報告せずに失敗します。もう一度試す前に、インストールを修復し、セキュリティソフトの隔離レポートを確認してください。ウイルス対策そのものを止めるのはやめてください。保守されている更新処理は、成功を報告する前に、CLI の読み込み、Windows の実行ファイルのヘッダー、ASAR のヘッダーと同梱された main のエントリ、ローカルのモジュールエントリを持つ読み取り可能な画面側の HTML、最初のモジュールファイル、現在のビルド刻印を確かめます。これらは最低限の成果物チェックであって、依存関係の全数監査でも、アプリやバックエンドを実際に起動する試験でもありません。Python が見つからないことは、デスクトップアプリの終了を待つ前に報告します。依存関係の修復は、更新の一部としてそのまま実行できます。Electron は、その構成であればバックエンドを止める前に受け渡しの前提条件を確かめます。旧来のフラットな更新構成も引き続き使えるため、更新用のファイルの欠落がすべてバックエンド停止の前に見つかるわけではありません。
 
 Windows では、パッケージ作成の途中で開き直されたデスクトップアプリを、用意したビルドへ切り替える直前にもう一度停止します。この後始末の対象は、そのチェックアウトのデスクトップリリース配下にある実行ファイルだけで、無関係なインストールは止めません。ロックが残っていた場合は、名前の付け替えのエラーを見逃さずに、切り替えそのものを失敗させます。
+
+### 取得が `should_include_obj should only be called on existing objects` で失敗するとき {#fetch-fails-with-shouldincludeobj-should-only-be-called-on-existing-objects}
+
+Git 2.53 以降では、部分クローンへの取得（fetch）の最中に、一部のパックファイルに
+`.promisor` の目印が無いと Git がクラッシュすることがあります。これは、絞り込み付きの取得によって完全なクローンや浅いクローンが部分クローンに変わったときや、
+目印が失われたときに起こります。`hermes update` はそうしたパックに目印を付けて取得を 1 回だけやり直し、
+インストーラーを再実行したときは取得の前に目印を付けます。更新処理そのものがこの修正より古いインストールでは、その修正を取得できません。インストーラーを再実行するか、Hermes を閉じた状態で手作業でパックに目印を付けてから、もう一度更新してください。
+
+チェックアウトは、Hermes のホーム（`~/.hermes`、`HERMES_HOME` を設定していればそちら。
+Windows では `HERMES_HOME` を設定していない限り `%LOCALAPPDATA%\hermes`）の下にある `hermes-agent` です。
+
+```bash
+# macOS / Linux
+repo="${HERMES_HOME:-$HOME/.hermes}/hermes-agent"
+for p in "$repo"/.git/objects/pack/pack-*.pack; do [ -e "${p%.pack}.promisor" ] || : > "${p%.pack}.promisor"; done
+```
+
+```powershell
+# Windows
+$repo = Join-Path ($(if ($env:HERMES_HOME) { $env:HERMES_HOME } else { "$env:LOCALAPPDATA\hermes" })) 'hermes-agent'
+Get-ChildItem "$repo\.git\objects\pack\pack-*.pack" | ForEach-Object {
+  $m = [IO.Path]::ChangeExtension($_.FullName, '.promisor')
+  if (-not (Test-Path -LiteralPath $m)) { New-Item -ItemType File -Path $m | Out-Null }
+}
+```
+
+チェックアウトは部分クローンのままです。クラッシュを避けるために `remote.origin.promisor` や `partialclonefilter` を消さないでください。
+リリースのタグや更新時のバックアップからしかたどれないオブジェクトは一度もダウンロードされていないので、部分クローンでなくなったチェックアウトでは `git gc` が `bad tree object` で失敗します。すでに消してしまった場合は、
+足りないオブジェクトを取得し、残りが無いことを確かめてから、自動の後片付けを元に戻してください。
+
+```bash
+git -C "$repo" rev-list --objects --missing=print --all | grep '^?' | cut -c2- | git -C "$repo" fetch -q --no-tags --stdin origin
+git -C "$repo" rev-list --objects --missing=error --all >/dev/null && echo complete
+```
+
+```powershell
+git -C $repo rev-list --objects --missing=print --all | Where-Object { $_.StartsWith('?') } | ForEach-Object { $_.Substring(1) } | git -C $repo fetch -q --no-tags --stdin origin
+git -C $repo rev-list --objects --missing=error --all | Out-Null; $LASTEXITCODE   # 0 = complete
+```
 
 ### 既定以外のブランチに対して更新する: `--branch` {#updating-against-a-non-default-branch---branch}
 

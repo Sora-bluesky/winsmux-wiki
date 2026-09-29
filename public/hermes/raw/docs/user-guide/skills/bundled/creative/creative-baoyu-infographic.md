@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Baoyu Infographic — インフォグラフィック: 21 種類のレイアウト × 21 種類のスタイル (信息图, 可视化)"
 description: "インフォグラフィック: 21 種類のレイアウト × 21 種類のスタイル (信息图, 可视化)"
 upstream_path: user-guide/skills/bundled/creative/creative-baoyu-infographic.md
-upstream_blob: e915f2ce63bd8ebd31e6bddd525a9fae8761ae0b
+upstream_blob: f1f241770fa62b57e856c0431923024cf7995142
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-baoyu-infographic
 ---
@@ -201,7 +201,7 @@ slug はテーマから 2〜4 語をケバブケースにしたものです。�
 
 ### ステップ 4: 選択肢を確認する {#step-4-confirm-options}
 
-`clarify` ツールでユーザーに確認します。`clarify` は一度に 1 問しか扱えないので、いちばん重要なものから聞きます。
+`clarify` ツールでユーザーに確認します。下の質問のうち互いに独立したものは、1 つの `questions` 配列にまとめます（最大 5 問）。前の答えによって選択肢が変わる質問は、別に聞きます。
 
 **Q1 — 組み合わせ**: レイアウト×スタイルの案を 3 つ以上、理由を添えて提示します。ひとつ選んでもらいます。
 

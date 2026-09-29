@@ -1,5 +1,5 @@
 {
-  "sha": "b9df1cc",
+  "sha": "374eaf5",
   "date": "2026-09-29",
   "skills": [
     {
@@ -95,7 +95,7 @@
       "name": "Baoyu Infographic",
       "description": "Infographics: 21 layouts x 21 styles (信息图, 可视化)",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-baoyu-infographic/",
-      "date": "2026-09-20",
+      "date": "2026-09-29",
       "source": "bundled"
     },
     {
@@ -607,7 +607,7 @@
       "name": "Baoyu Article Illustrator",
       "description": "Article illustrations: type × style × palette consistency",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/",
-      "date": "2026-09-20",
+      "date": "2026-09-29",
       "source": "optional"
     },
     {
@@ -615,7 +615,7 @@
       "name": "Baoyu Comic",
       "description": "Knowledge comics (知识漫画): educational, biography, tutorial",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/",
-      "date": "2026-09-20",
+      "date": "2026-09-29",
       "source": "optional"
     },
     {
@@ -1015,7 +1015,7 @@
       "name": "Openclaw Migration",
       "description": "Import an OpenClaw setup (memories, skills) into Hermes",
       "url": "/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/",
-      "date": "2026-09-20",
+      "date": "2026-09-29",
       "source": "optional"
     },
     {

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 7e19d4324d4c8a892e9745c031ec22f574bc04b9
+upstream_blob: ca9030d2206ac7db7c2784924899d66ba9356141
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -172,7 +172,7 @@ macOS では、ふつうの Hermes のウィンドウが1つも見えなくな�
 Git リポジトリの中で動いているセッションには、組み込みのソース管理の画面があります。
 
 - **レビューペイン** — **Cmd/Ctrl+G** で作業ツリーのレビューペインを出し入れします。ブランチと ahead/behind の状態、変更されたファイル（リスト表示かツリー表示）、そして **Uncommitted**・**Branch**・**Last turn**（エージェントが直近のターンで変えた分だけ）に絞った差分が見えます。ファイルをステージ／アンステージし、変更を取り消し、コミットメッセージを書き（**Generate commit message** もあります）、**Commit** か **Commit & Push** を押します。GitHub CLI（`gh`）を使った **Create PR** もありますし、**Ask Hermes to open PR** でまるごとエージェントに任せることもできます。ここからブランチを作って切り替えることもできます。
-- **worktree** — **Cmd/Ctrl+Shift+B**（またはサイドバーのプロジェクトの **New worktree**）で、新しいブランチの上に Git の worktree を作ります。自分のチェックアウトに触れずに、エージェントがリポジトリの並行コピーで作業できます。worktree はプロジェクトの下に独自のレーンとして並び、片づけるときは worktree のディレクトリごと消す（ブランチは残ります）か、レーンを隠すだけでディスクには残すかを選べます。コミットされていない変更があるときは強制するための選択肢も出ます。
+- **worktree** — **Cmd/Ctrl+Shift+B**（またはサイドバーのプロジェクトの **New worktree**）で、新しいブランチの上に Git の worktree を作ります。自分のチェックアウトに触れずに、エージェントがリポジトリの並行コピーで作業できます。worktree はプロジェクトの下に独自のレーンとして並び、片づけるときは worktree のディレクトリごと消す（ブランチは残ります）か、レーンを隠すだけでディスクには残すかを選べます。コミットされていない変更があるときは強制するための選択肢も出ます。チャットは**エージェントについていきます**。worktree を作ってそこで作業するよう頼むと、ターンの終わりにチャットがそのレーンへ移り、サイドバーの表示範囲も一緒に切り替わります。その場にとどまるのは、自分で意図してチャットを切り替えた作業場所（フォルダーの選択、またはプロジェクトの切り替え）だけです。
 
 ### メモリグラフ {#memory-graph}
 

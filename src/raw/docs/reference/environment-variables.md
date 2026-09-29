@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: fc1b5e313fca60cd525a706d56251e607634eabd
+upstream_blob: 103d06b3001cf744fc38af1c22331df78e1c1813
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -812,7 +812,7 @@ Microsoft Teams のプラットフォーム用アダプター（Bot Framework / 
 
 | 変数 | 説明 |
 |----------|-------------|
-| `HERMES_NEMO_RELAY_PLUGINS_TOML` | Hermes の中核がプロセス全体で読み込む、標準の NeMo Relay の `plugins.toml` のパス。設定が無ければ、Relay の中間処理、動的なプラグイン、書き出しのいずれも初期化されません。廃止された `HERMES_NEMO_RELAY_ATOF_*` と `HERMES_NEMO_RELAY_ATIF_*` は無視されます（まだ書いてある `.env` があっても何も渡りません）。`hermes update` / `hermes migrate relay` がそれらを `<hermes home>/relay-plugins.toml` へ変換し、この変数を設定します。[移行の注記と全体の例](/hermes/docs/user-guide/features/built-in-plugins/#nemo-relay-native-integration-migration-note) を参照してください。[NeMo Relay の可観測性の設定](https://docs.nvidia.com/nemo/relay/configure-plugins/observability/about) もご覧ください。 |
+| `HERMES_NEMO_RELAY_PLUGINS_TOML` | Hermes の中核がプロセス全体で読み込む、標準の NeMo Relay の `plugins.toml` のパスを明示したいときに指定します（省略可）。設定が無ければ、Relay はいつもどおり利用者ごとの設定を読み、続いてそれより優先度の高い、端末全体のシステム設定を読みます。設定すると、このファイルが利用者ごとの設定の代わりになりますが、システム設定はその上から引き続き効きます。廃止された `HERMES_NEMO_RELAY_ATOF_*` と `HERMES_NEMO_RELAY_ATIF_*` は無視されます。`hermes update` / `hermes migrate relay` がそれらを `<hermes home>/relay-plugins.toml` へ変換し、この変数を設定します。[移行の注記と全体の例](/hermes/docs/user-guide/features/built-in-plugins/#nemo-relay-native-integration-migration-note) を参照してください。[NeMo Relay の可観測性の設定](https://docs.nvidia.com/nemo/relay/configure-plugins/observability/about) もご覧ください。 |
 
 ## エージェントの振る舞い {#agent-behavior}
 

@@ -31,7 +31,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-09-29
+最終取得: 2026-09-30
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -42,7 +42,7 @@ raw: /hermes/raw/free.md
 | **Poolside: Laguna S 2.1**<br>`poolside/laguna-s-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Poolside: Laguna XS 2.1**<br>`poolside/laguna-xs-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Space Bunny Alpha**<br>`stealth/space-bunny-alpha`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **StepFun: Step 3.7 Flash**<br>`stepfun/step-3.7-flash:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-10-01 |
+| **StepFun: Step 3.7 Flash**<br>`stepfun/step-3.7-flash:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Upstage: Solar Pro 4**<br>`upstage/solar-pro4:free`<br>入力・出力の基本単価0（取得時点） | 524,288 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 
 ## OpenRouter :free
@@ -53,7 +53,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-09-29
+最終取得: 2026-09-30
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -88,7 +88,7 @@ APIキーもアカウントも要りません。リクエストは匿名で送�
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 
-最終取得: 2026-09-29
+最終取得: 2026-09-30
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|

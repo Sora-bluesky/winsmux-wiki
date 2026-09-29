@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ミドルウェア"
 description: "LLM 呼び出しとツール呼び出しの挙動を変えるプラグインのミドルウェア。契約、実行順序、例"
 upstream_path: developer-guide/middleware.md
-upstream_blob: e19f05c296f052f7dbbe19e10c9f804b8cf727ee
+upstream_blob: 913a99e86e72e7207a7eee6a5166de7eceaef3ac
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/middleware
 ---
@@ -244,8 +244,8 @@ def annotate_tool_execution(**kwargs):
 後続のミドルウェアと本来のツールディスパッチャーに渡すこともできます。
 
 プラグイン固有の例は、その挙動を持つプラグイン側に置くべきです。
-NeMo Relay の実行ミドルウェアは、明示的に選んだ Relay の `plugins.toml` を通して
-組み込まれます。詳しくは
+NeMo Relay の実行ミドルウェアは、Relay が見つけたユーザーとシステムの設定を通して、
+または `HERMES_NEMO_RELAY_PLUGINS_TOML` で明示的に選んだ `plugins.toml` を通して組み込まれます。詳しくは
 [Relay の共有メトリクス](/hermes/docs/developer-guide/relay-shared-metrics/)を参照してください。
 
 ## 安全上の注意 {#safety-notes}

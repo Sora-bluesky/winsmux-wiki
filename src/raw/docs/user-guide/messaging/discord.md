@@ -2,7 +2,7 @@
 title: "Discord"
 description: "Hermes Agent を Discord のボットとして設定する"
 upstream_path: user-guide/messaging/discord.md
-upstream_blob: d639cea111b76fcc3f248c4a18e8ae53de9af0ba
+upstream_blob: 9027d61290065238e64bfebddd9d285032dd936a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/discord
 ---
@@ -771,7 +771,7 @@ discord:
 
 番号の付いたボタンをクリックして答えるか、**その他** をクリックして自由に書いて答えます（そのチャンネルで次に送ったメッセージが答えになります）。選択肢のない自由形式の `clarify` では、ボタンは出ず、次のメッセージをそのまま受け取ります。
 
-一度選ぶとボタンは無効になるので、二度押しで二重に確定することはありません。応答の制限時間は `~/.hermes/config.yaml` の `agent.clarify_timeout` で設定します（既定は `3600` 秒、`0` 以下で無制限）。制限時間内に答えないと、エージェントは所定の合図とともに待機を解き、止まったままにならずに進みます。
+一度選ぶとボタンは無効になるので、二度押しで二重に確定することはありません。応答の制限時間は `~/.hermes/config.yaml` の `agent.clarify_timeout` で設定します（既定は `3600` 秒、`0` 以下で無制限）。制限時間内に答えないと、エージェントは `"outcome": "timed_out"` とともに待機を解き、止まったままにならずに進みます。質問を飛ばすには `skip` と返信します。
 
 ### 問い合わせの見た目 {#prompt-layout}
 

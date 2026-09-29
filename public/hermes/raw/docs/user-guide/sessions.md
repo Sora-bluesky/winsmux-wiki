@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: e8c6756279a4a9bc115932414784fa14d6aaf00f
+upstream_blob: 8ad285e0003c60d5cd0a00aa56a748346e58b5a9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -605,6 +605,11 @@ hermes sessions archive --title "dry run" --yes
 見えなくなることはありません。アーカイブしたセッションは
 `hermes sessions list` と `/resume` から見えなくなりますが、データベースには
 残っていて、Desktop やダッシュボードのセッション一覧から戻せます。
+
+`sessions.auto_archive` による、しばらく使っていないセッションの一掃で隠れた会話は、
+また動き出せば自然に戻ってきます。再開したときや、新しいやり取りで圧縮されて
+新しい続きになったときです。自分でアーカイブした会話（サイドバー、API、
+`hermes sessions archive`）は、戻すまでアーカイブされたままです。
 
 ### セッションの統計 {#session-statistics}
 
