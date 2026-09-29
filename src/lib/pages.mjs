@@ -6,6 +6,7 @@ export const PAGES = [
   { path: '/hermes/first/', label: '初めての方へ', group: '調べる' },
   { path: '/hermes/ask/', label: 'Hermes 自身に聞く', group: '調べる' },
   { path: '/hermes/howto/', label: '逆引き', group: '調べる' },
+  { path: '/hermes/tips/', label: '小ワザ集', group: '調べる' },
   { path: '/hermes/trouble/', label: 'トラブル', group: '調べる' },
   { path: '/hermes/models/', label: 'モデルと料金', group: '調べる' },
   { path: '/hermes/cost/', label: '料金の考え方', group: '調べる' },

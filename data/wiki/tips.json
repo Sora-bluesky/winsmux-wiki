@@ -1,0 +1,1861 @@
+{
+ "series": "Hermes Wingtips",
+ "author": "witcheer",
+ "authorUrl": "https://x.com/witcheer",
+ "updated": "2026-09-29",
+ "categories": [
+  "メッセージとボット",
+  "モデルとプロバイダ",
+  "セッションと文脈",
+  "skill",
+  "定期実行",
+  "承認と安全",
+  "CLI とデスクトップ",
+  "その他"
+ ],
+ "count": 86,
+ "items": [
+  {
+   "n": 1,
+   "date": "2026-06-18",
+   "url": "https://x.com/witcheer/status/2067717599090143569",
+   "feature": "setprivacy",
+   "title_ja": "Telegram のグループでボットが黙ったままのときの直し方",
+   "summary_ja": "グループでボットが反応しないときは、BotFather のプライバシーモードが原因のことが多いです。`/setprivacy` で無効にしたあと、ボットをグループから外して入れ直すと、ふつうの発言も届くようになります。",
+   "category": "メッセージとボット",
+   "links": [
+    {
+     "title": "Telegram",
+     "url": "/hermes/docs/user-guide/messaging/telegram/"
+    }
+   ],
+   "tags": [
+    "Telegram",
+    "BotFather",
+    "privacy mode",
+    "グループ"
+   ]
+  },
+  {
+   "n": 2,
+   "date": "2026-06-19",
+   "url": "https://x.com/witcheer/status/2068027535955468533",
+   "feature": "context compression",
+   "title_ja": "🗜️ の数字の意味と、文脈の圧縮で残るもの・消えるもの",
+   "summary_ja": "🗜️ は会話を自動要約した回数です。最初と直近は残り、あいだが要約されます。効き方は `config.yaml` の `protect_last_n`、`auxiliary.compression.model`、`model.context_length` で調整します。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "コンテキストの圧縮とキャッシュ",
+     "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+    },
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "compression",
+    "context_length",
+    "protect_last_n",
+    "圧縮"
+   ]
+  },
+  {
+   "n": 3,
+   "date": "2026-06-22",
+   "url": "https://x.com/witcheer/status/2069020659829608570",
+   "feature": "MEMORY.md",
+   "title_ja": "保存した記憶が同じセッションで効かない理由",
+   "summary_ja": "記憶はすぐディスクへ保存されますが、システムプロンプトに入る写しはセッション開始時に固定されます。キャッシュを保つための作りで、新しい記憶は次のセッションから反映されます。すぐ効かせたいときは `/new` です。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "ずっと残る記憶",
+     "url": "/hermes/docs/user-guide/features/memory/"
+    }
+   ],
+   "tags": [
+    "MEMORY.md",
+    "memory",
+    "snapshot",
+    "記憶"
+   ]
+  },
+  {
+   "n": 4,
+   "date": "2026-06-23",
+   "url": "https://x.com/witcheer/status/2069385776756895880",
+   "feature": "SOUL.md / USER.md / MEMORY.md / AGENTS.md",
+   "title_ja": "エージェントの設定ファイル、どれが何を決めるか",
+   "summary_ja": "`SOUL.md` は人格、`USER.md` は使う人、`MEMORY.md` は覚えた事実です。プロジェクトの指示は `.hermes.md` → `AGENTS.override.md` → `AGENTS.md` → `CLAUDE.md` → `.cursorrules` の順で最初の1つだけが読まれ、長すぎるファイルは切り詰められます。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "コンテキストファイル",
+     "url": "/hermes/docs/user-guide/features/context-files/"
+    },
+    {
+     "title": "どのファイルが何をするのか",
+     "url": "/hermes/docs/user-guide/which-file-does-what/"
+    }
+   ],
+   "tags": [
+    "SOUL.md",
+    "AGENTS.md",
+    ".hermes.md",
+    "context files"
+   ]
+  },
+  {
+   "n": 5,
+   "date": "2026-06-24",
+   "url": "https://x.com/witcheer/status/2069828190197973337",
+   "feature": "/learn",
+   "title_ja": "資料や作業をコマンド1つでスキルに変える",
+   "summary_ja": "`/learn` にフォルダ、ドキュメントの URL、直前の作業、貼ったメモを渡すと、再利用できるスキルを書き起こします。できた `SKILL.md` の説明文は毎回読み込まれるので、使う前に短く整えておきます。",
+   "category": "skill",
+   "links": [
+    {
+     "title": "スキルの仕組み",
+     "url": "/hermes/docs/user-guide/features/skills/"
+    }
+   ],
+   "tags": [
+    "/learn",
+    "skill",
+    "SKILL.md"
+   ]
+  },
+  {
+   "n": 6,
+   "date": "2026-06-25",
+   "url": "https://x.com/witcheer/status/2070141757707239594",
+   "feature": "disk-cleanup",
+   "title_ja": "ディスクがいっぱいになる前に見ておきたい場所と片づけ方",
+   "summary_ja": "ディスクを圧迫するのはログより、状態のスナップショットや定期実行の出力のことがあります。同梱の `disk-cleanup` プラグインを有効にすると、一時ファイルや定期実行の出力を期限で片づけます。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "同梱のプラグイン",
+     "url": "/hermes/docs/user-guide/features/built-in-plugins/"
+    }
+   ],
+   "tags": [
+    "disk-cleanup",
+    "plugin",
+    "cron",
+    "ディスク"
+   ]
+  },
+  {
+   "n": 7,
+   "date": "2026-06-26",
+   "url": "https://x.com/witcheer/status/2070594190656815137",
+   "feature": "computer use",
+   "title_ja": "カーソルを奪わずに Mac を操作させる",
+   "summary_ja": "エージェントが裏でクリックや入力をしても、手元のカーソルは動きません。`hermes computer-use install` で入れ、画面収録とアクセシビリティを許可し、`hermes -t computer_use chat` で使います。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "コンピュータ操作",
+     "url": "/hermes/docs/user-guide/features/computer-use/"
+    }
+   ],
+   "tags": [
+    "computer use",
+    "CuaDriver",
+    "macOS",
+    "自動操作"
+   ]
+  },
+  {
+   "n": 8,
+   "date": "2026-06-27",
+   "url": "https://x.com/witcheer/status/2070888011508674819",
+   "feature": "Mixture of Agents",
+   "title_ja": "複数のモデルに助言させて1つの答えにまとめる",
+   "summary_ja": "Mixture of Agents は、参照役のモデルたちの分析を集約役のモデルがまとめて答える仮想のモデルです。料金はほぼ集約役の側にかかります。1回だけ試すなら `/moa`、組み合わせは `hermes moa configure` で決めます。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "Mixture of Agents",
+     "url": "/hermes/docs/user-guide/features/mixture-of-agents/"
+    }
+   ],
+   "tags": [
+    "MoA",
+    "Mixture of Agents",
+    "aggregator",
+    "/moa"
+   ]
+  },
+  {
+   "n": 9,
+   "date": "2026-06-30",
+   "url": "https://x.com/witcheer/status/2071924626561638757",
+   "feature": "profile",
+   "title_ja": "プロファイルは設定ではなく別のエージェント",
+   "summary_ja": "プロファイルを作ると、記憶・セッション・スキル・ボットを別に持つ独立したエージェントになります。`hermes profile create <名前> --clone-all` は設定・記憶・スキルなどを写しますが、セッション履歴・cron ジョブ・ボットの接続設定は写しません。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "プロファイル: 複数のエージェントを動かす",
+     "url": "/hermes/docs/user-guide/profiles/"
+    }
+   ],
+   "tags": [
+    "profile",
+    "--clone-all",
+    "プロファイル"
+   ]
+  },
+  {
+   "n": 10,
+   "date": "2026-07-01",
+   "url": "https://x.com/witcheer/status/2072321716626366479",
+   "feature": "fallback_providers",
+   "title_ja": "フォールバックの各項目には provider と model が要る",
+   "summary_ja": "`fallback_providers` の各項目は、`provider` と `model` の両方がそろって初めて有効になり、欠けた項目は無視されます。クラウドが落ちたときの最後の控えとして、`custom` で自前のエンドポイントも指定できます。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "フォールバックプロバイダー",
+     "url": "/hermes/docs/user-guide/features/fallback-providers/"
+    }
+   ],
+   "tags": [
+    "fallback_providers",
+    "fallback",
+    "custom",
+    "フォールバック"
+   ]
+  },
+  {
+   "n": 11,
+   "date": "2026-07-02",
+   "url": "https://x.com/witcheer/status/2072698059788562587",
+   "feature": "toolsets: all",
+   "title_ja": "`all` だけではカンバンのツールが入らない",
+   "summary_ja": "チャットのエージェントにカンバンの盤を操作させたいとき、`all` を指定してもカンバンのツールは含まれません。`hermes -p <プロファイル> tools enable kanban` で名前を挙げて有効にし、新しいチャットを始めます。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "カンバン（マルチエージェント盤）",
+     "url": "/hermes/docs/user-guide/features/kanban/"
+    }
+   ],
+   "tags": [
+    "kanban",
+    "toolsets",
+    "カンバン"
+   ]
+  },
+  {
+   "n": 12,
+   "date": "2026-07-03",
+   "url": "https://x.com/witcheer/status/2073051003482456511",
+   "feature": "kanban workspace",
+   "title_ja": "カンバンのタスクが書いたファイルを消さずに残す方法",
+   "summary_ja": "カンバンのワーカーは既定で使い捨ての作業場所（scratch）で動き、タスクが終わると中身が消えます。残したいときはタスクを作るときに `--workspace dir:<絶対パス>` を付けます。相対パスは受け付けられません。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "カンバン（マルチエージェント盤）",
+     "url": "/hermes/docs/user-guide/features/kanban/"
+    }
+   ],
+   "tags": [
+    "kanban",
+    "workspace",
+    "scratch",
+    "カンバン"
+   ]
+  },
+  {
+   "n": 13,
+   "date": "2026-07-05",
+   "url": "https://x.com/witcheer/status/2073728726496334163",
+   "feature": "hermes sessions prune",
+   "title_ja": "セッションを溜め込む保存領域を軽く保つ方法",
+   "summary_ja": "セッションは `~/.hermes/state.db` に溜まります。終了したセッションを消すのが `hermes sessions prune` です。自動の整理 `sessions.auto_prune` は既定で有効で、履歴を全部残したいときは `false` にします。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "セッション",
+     "url": "/hermes/docs/user-guide/sessions/"
+    }
+   ],
+   "tags": [
+    "state.db",
+    "sessions prune",
+    "auto_prune",
+    "SQLite"
+   ]
+  },
+  {
+   "n": 14,
+   "date": "2026-07-06",
+   "url": "https://x.com/witcheer/status/2074153526222114974",
+   "feature": "/model",
+   "title_ja": "モデルを切り替えるとプロンプトのキャッシュが消える",
+   "summary_ja": "会話の途中で `/model` でモデルを変えると、次のターンは履歴全体を割引なしで読み直します。長いセッションでは行ったり来たりせず、別のモデルで新しいセッションを始めるほうが安く済むことがあります。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "コツとベストプラクティス",
+     "url": "/hermes/docs/guides/tips/"
+    }
+   ],
+   "tags": [
+    "prompt cache",
+    "/model",
+    "キャッシュ",
+    "コスト"
+   ]
+  },
+  {
+   "n": 15,
+   "date": "2026-07-07",
+   "url": "https://x.com/witcheer/status/2074478482327806232",
+   "feature": "compaction",
+   "title_ja": "文脈の圧縮は履歴を消さず、作業メモに書き直す",
+   "summary_ja": "長い会話が圧縮されると、あいだのやり取りは目標・制約・進み具合・決定事項・関係ファイル・次の手順といった決まった枠の要約に置き換わります。元のやり取りは `session_search` で探せます。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "コンテキストの圧縮とキャッシュ",
+     "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+    }
+   ],
+   "tags": [
+    "compaction",
+    "compression",
+    "session_search",
+    "要約"
+   ]
+  },
+  {
+   "n": 16,
+   "date": "2026-07-08",
+   "url": "https://x.com/witcheer/status/2074942527996838105",
+   "feature": "enable-linger",
+   "title_ja": "再起動後にゲートウェイが戻らないときの設定",
+   "summary_ja": "ユーザーのサービスとして入れたゲートウェイはログアウトで止まり、再起動後も自動では戻りません。`sudo loginctl enable-linger $USER` を一度実行するか、`sudo hermes gateway install --system` を使います。",
+   "category": "メッセージとボット",
+   "links": [
+    {
+     "title": "メッセージングゲートウェイ",
+     "url": "/hermes/docs/user-guide/messaging/"
+    }
+   ],
+   "tags": [
+    "gateway",
+    "systemd",
+    "linger",
+    "VPS"
+   ]
+  },
+  {
+   "n": 17,
+   "date": "2026-07-09",
+   "url": "https://x.com/witcheer/status/2075236387914166408",
+   "feature": "built-in tools",
+   "title_ja": "スキルを入れる前に組み込みツールを確かめる",
+   "summary_ja": "記憶、Web 検索、ブラウザ操作、定期実行、サブエージェントは最初から入っているツールです。同じ役割の外部スキルを入れる前に、組み込みツールの一覧で足りるかどうかを見ておくと重複を避けられます。",
+   "category": "skill",
+   "links": [
+    {
+     "title": "組み込みツール一覧",
+     "url": "/hermes/docs/reference/tools-reference/"
+    }
+   ],
+   "tags": [
+    "built-in tools",
+    "tools",
+    "skill",
+    "ツール"
+   ]
+  },
+  {
+   "n": 18,
+   "date": "2026-07-10",
+   "url": "https://x.com/witcheer/status/2075562193320292426",
+   "feature": "/memory approval, /skills approval",
+   "title_ja": "記憶とスキルの書き込みを承認してから反映させる",
+   "summary_ja": "自動での学習は続けたまま、記憶やスキルの書き込みを確認してから反映させられます。`/memory approval on` と `/skills approval on` を有効にすると、新しい書き込みは承認するまで保留になります。",
+   "category": "承認と安全",
+   "links": [
+    {
+     "title": "ずっと残る記憶",
+     "url": "/hermes/docs/user-guide/features/memory/"
+    },
+    {
+     "title": "スキルの仕組み",
+     "url": "/hermes/docs/user-guide/features/skills/"
+    }
+   ],
+   "tags": [
+    "write_approval",
+    "memory",
+    "skills",
+    "承認"
+   ]
+  },
+  {
+   "n": 19,
+   "date": "2026-07-13",
+   "url": "https://x.com/witcheer/status/2076670836891689174",
+   "feature": "MEMORY.md / USER.md",
+   "title_ja": "保存した記憶は次のセッションで見えるようになる",
+   "summary_ja": "`MEMORY.md` と `USER.md` の写しはセッション開始時に一度だけ取られます。途中で保存した内容はすぐディスクに入りますが、プロンプトに入るのは次のセッションからです。今すぐ使うなら `/new` で始め直します。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "ずっと残る記憶",
+     "url": "/hermes/docs/user-guide/features/memory/"
+    }
+   ],
+   "tags": [
+    "MEMORY.md",
+    "USER.md",
+    "snapshot",
+    "記憶"
+   ]
+  },
+  {
+   "n": 20,
+   "date": "2026-07-14",
+   "url": "https://x.com/witcheer/status/2077015914361336050",
+   "feature": "hermes sessions export",
+   "title_ja": "セッションを読める形や共有できる形で書き出す",
+   "summary_ja": "`hermes sessions export` は `--format` で形式を選べます。`md`／`qmd` は保管用、`html` は1ページで共有用です。外に出すときは `--redact` で鍵や認証情報を伏せ、1件だけなら `--session-id` を付けます。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "セッション",
+     "url": "/hermes/docs/user-guide/sessions/"
+    }
+   ],
+   "tags": [
+    "export",
+    "--redact",
+    "Markdown",
+    "HTML"
+   ]
+  },
+  {
+   "n": 21,
+   "date": "2026-07-15",
+   "url": "https://x.com/witcheer/status/2077409888045510954",
+   "feature": "credential pools",
+   "title_ja": "同じプロバイダのキーを複数登録して順に回す",
+   "summary_ja": "認証情報プールは、1つのプロバイダに複数のキーを登録し、制限や枠切れのキーから次へ切り替えます。別プロバイダへ移るフォールバックはプールを使い切ってからです。追加は `hermes auth add`、確認は `hermes auth list` です。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "認証情報プール",
+     "url": "/hermes/docs/user-guide/features/credential-pools/"
+    }
+   ],
+   "tags": [
+    "credential pool",
+    "API key",
+    "rate limit",
+    "OpenRouter"
+   ]
+  },
+  {
+   "n": 22,
+   "date": "2026-07-16",
+   "url": "https://x.com/witcheer/status/2077799836804407715",
+   "feature": "/steer",
+   "title_ja": "エージェントの作業を止めずに途中で方向を伝える",
+   "summary_ja": "`/steer` で送ったメモは、今のツール呼び出しが終わった時点でエージェントに届き、作業は中断されません。次のターンに回すなら `/queue`、作業中の Enter の動きを決めるなら `/busy` です。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    }
+   ],
+   "tags": [
+    "/steer",
+    "/queue",
+    "/busy"
+   ]
+  },
+  {
+   "n": 23,
+   "date": "2026-07-17",
+   "url": "https://x.com/witcheer/status/2078094918740758606",
+   "feature": "tool calling",
+   "title_ja": "自前のモデルがツールを実行せず JSON を返すとき",
+   "summary_ja": "返答にツール呼び出しの JSON がそのまま出るときは、推論サーバー側でツール呼び出しが無効です。vLLM は `--enable-auto-tool-choice` と `--tool-call-parser`、llama.cpp は `--jinja` を付けて起動します。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "LLM とモデルプロバイダ",
+     "url": "/hermes/docs/integrations/providers/"
+    }
+   ],
+   "tags": [
+    "vLLM",
+    "llama.cpp",
+    "SGLang",
+    "tool calling"
+   ]
+  },
+  {
+   "n": 24,
+   "date": "2026-07-18",
+   "url": "https://x.com/witcheer/status/2078481963040530769",
+   "feature": "session_reset",
+   "title_ja": "ゲートウェイの会話は自動ではリセットされない",
+   "summary_ja": "Telegram などの会話は、時間が経っても日付が変わっても切れません。今の本体は `session_reset` の設定を無視します。区切りたいときは `/new` か `/reset` を使い、時間で区切りたいならプラグインを入れます。",
+   "category": "メッセージとボット",
+   "links": [
+    {
+     "title": "セッション",
+     "url": "/hermes/docs/user-guide/sessions/"
+    }
+   ],
+   "tags": [
+    "session_reset",
+    "gateway",
+    "/new",
+    "Telegram"
+   ]
+  },
+  {
+   "n": 25,
+   "date": "2026-07-20",
+   "url": "https://x.com/witcheer/status/2079195853634310372",
+   "feature": "/goal",
+   "title_ja": "`/goal` の「完了」をはっきり決めて渡す",
+   "summary_ja": "`/goal` は判定役のモデルが完了と判断するまで作業を続けます。完了の条件があいまいだと判定もあいまいになるので、`/goal draft` で取り決めを書かせるか、`verify:` や `stop when:` で条件を書き添えます。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "続く目標（Goal）",
+     "url": "/hermes/docs/user-guide/features/goals/"
+    }
+   ],
+   "tags": [
+    "/goal",
+    "goal",
+    "judge",
+    "Ralph loop"
+   ]
+  },
+  {
+   "n": 26,
+   "date": "2026-07-21",
+   "url": "https://x.com/witcheer/status/2079595063534145708",
+   "feature": "web_extract",
+   "title_ja": "Web ページを読むときの費用と文字数の上限",
+   "summary_ja": "`web_extract` は今、長いページを LLM で要約せず、決まった文字数で先頭と末尾を残して返します。要約用のモデル代はかかりません。1ページの上限は `web.extract_char_limit` で変えられます。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "Web 検索と本文抽出",
+     "url": "/hermes/docs/user-guide/features/web-search/"
+    }
+   ],
+   "tags": [
+    "web_extract",
+    "web",
+    "extract_char_limit"
+   ]
+  },
+  {
+   "n": 27,
+   "date": "2026-07-22",
+   "url": "https://x.com/witcheer/status/2079951218101891530",
+   "feature": "/background",
+   "title_ja": "時間のかかる作業を別のセッションで裏に回す",
+   "summary_ja": "`/bg <プロンプト>` を送ると、別のセッションが並行して動き、手元のチャットはそのまま使えます。裏のエージェントは今の会話を知らないので、プロンプトは単体で分かるように書きます。モデルと設定は引き継がれます。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "CLI 画面",
+     "url": "/hermes/docs/user-guide/cli/"
+    },
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    }
+   ],
+   "tags": [
+    "/bg",
+    "background",
+    "並列"
+   ]
+  },
+  {
+   "n": 28,
+   "date": "2026-07-23",
+   "url": "https://x.com/witcheer/status/2080346485745676561",
+   "feature": "--workdir",
+   "title_ja": "定期実行のジョブに作業ディレクトリを与える",
+   "summary_ja": "定期実行のジョブは既定でどのリポジトリにも属さず、`AGENTS.md` も読み込みません。`hermes cron create` に `--workdir` を付けるか、チャットで場所を伝えると、そのディレクトリで動き、指示ファイルも読まれます。",
+   "category": "定期実行",
+   "links": [
+    {
+     "title": "定期実行タスク（cron）",
+     "url": "/hermes/docs/user-guide/features/cron/"
+    }
+   ],
+   "tags": [
+    "cron",
+    "workdir",
+    "AGENTS.md"
+   ]
+  },
+  {
+   "n": 29,
+   "date": "2026-07-24",
+   "url": "https://x.com/witcheer/status/2080682763594899763",
+   "feature": "context length",
+   "title_ja": "ローカルモデルには 64K 以上のコンテキストを",
+   "summary_ja": "Hermes はツールを使う作業に 64,000 トークン以上のコンテキストが要り、小さいと起動時に断られます。Ollama は `OLLAMA_CONTEXT_LENGTH`、vLLM は `--max-model-len`、llama.cpp は `-c` で広げます。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "LLM とモデルプロバイダ",
+     "url": "/hermes/docs/integrations/providers/"
+    }
+   ],
+   "tags": [
+    "Ollama",
+    "vLLM",
+    "llama.cpp",
+    "context length"
+   ]
+  },
+  {
+   "n": 30,
+   "date": "2026-07-25",
+   "url": "https://x.com/witcheer/status/2081051573254549904",
+   "feature": "hermes backup",
+   "title_ja": "設定や記憶ごとエージェントを丸ごとバックアップする",
+   "summary_ja": "`hermes backup` は設定・記憶・スキル・セッションなどを zip にまとめ、動いている最中でも安全に取れます。戻すのは `hermes import`、重要なファイルだけ手早く取るなら `hermes backup --quick` です。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "CLIコマンド一覧",
+     "url": "/hermes/docs/reference/cli-commands/"
+    }
+   ],
+   "tags": [
+    "backup",
+    "import",
+    "zip",
+    "移行"
+   ]
+  },
+  {
+   "n": 31,
+   "date": "2026-07-26",
+   "url": "https://x.com/witcheer/status/2081381590488568218",
+   "feature": "hermes prompt-size",
+   "title_ja": "毎回のメッセージに乗る固定の分量を確かめる",
+   "summary_ja": "`hermes prompt-size` は、会話の前に毎回送られるシステムプロンプト、スキルの索引、記憶、ツールの定義の大きさを内訳で示します。減らしたいときは `hermes tools` や `hermes skills` で使わないものを外します。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "CLIコマンド一覧",
+     "url": "/hermes/docs/reference/cli-commands/"
+    }
+   ],
+   "tags": [
+    "prompt-size",
+    "token",
+    "system prompt",
+    "トークン"
+   ]
+  },
+  {
+   "n": 32,
+   "date": "2026-07-27",
+   "url": "https://x.com/witcheer/status/2081822725325435386",
+   "feature": "hermes insights",
+   "title_ja": "トークンやモデルの使い方を期間でまとめて振り返る",
+   "summary_ja": "`hermes insights` は手元のセッションの記録から、直近30日のトークン量、使ったモデル、プラットフォーム、よく使うツールをまとめて表示します。期間は `--days`、対象の絞り込みは `--source` で指定します。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "CLIコマンド一覧",
+     "url": "/hermes/docs/reference/cli-commands/"
+    }
+   ],
+   "tags": [
+    "insights",
+    "token",
+    "analytics",
+    "統計"
+   ]
+  },
+  {
+   "n": 33,
+   "date": "2026-07-28",
+   "url": "https://x.com/witcheer/status/2082169101913604120",
+   "feature": "checkpoints",
+   "title_ja": "書き換えの前に自動で控えを取り、あとで戻す",
+   "summary_ja": "チェックポイントを有効にすると、書き込みや危ない操作の前にプロジェクトの状態を控えます。1回だけなら `hermes chat --checkpoints`、常に使うなら `checkpoints.enabled`。戻すときは `/rollback` です。",
+   "category": "承認と安全",
+   "links": [
+    {
+     "title": "チェックポイントと /rollback",
+     "url": "/hermes/docs/user-guide/checkpoints-and-rollback/"
+    }
+   ],
+   "tags": [
+    "checkpoints",
+    "/rollback",
+    "undo",
+    "復元"
+   ]
+  },
+  {
+   "n": 34,
+   "date": "2026-07-29",
+   "url": "https://x.com/witcheer/status/2082613966774350301",
+   "feature": "hermes proxy",
+   "title_ja": "Nous Portal の契約を別のアプリから使う",
+   "summary_ja": "`hermes proxy start` で手元に OpenAI 互換の中継サーバーが立ち、Open WebUI などが契約中のモデルを使えます。準備の確認は `hermes proxy status` です。エージェントごと使いたいときは API サーバーのほうです。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "契約の中継サーバー",
+     "url": "/hermes/docs/user-guide/features/subscription-proxy/"
+    }
+   ],
+   "tags": [
+    "proxy",
+    "Nous Portal",
+    "OpenAI API",
+    "Open WebUI"
+   ]
+  },
+  {
+   "n": 35,
+   "date": "2026-07-30",
+   "url": "https://x.com/witcheer/status/2082882457339322828",
+   "feature": "hermes bundles",
+   "title_ja": "よく一緒に使うスキルを1つのコマンドにまとめる",
+   "summary_ja": "`hermes bundles create` でスキルをまとめると、`/<名前>` と打つだけで全部をまとめて読み込めます。まとめは `~/.hermes/skill-bundles/` の小さな YAML なので、共有やバージョン管理もしやすくなります。",
+   "category": "skill",
+   "links": [
+    {
+     "title": "スキルの仕組み",
+     "url": "/hermes/docs/user-guide/features/skills/"
+    }
+   ],
+   "tags": [
+    "bundles",
+    "skill",
+    "YAML"
+   ]
+  },
+  {
+   "n": 36,
+   "date": "2026-08-01",
+   "url": "https://x.com/witcheer/status/2083360088593776765",
+   "feature": "hermes import-agent",
+   "title_ja": "Claude Code や Codex の設定をそのまま移す",
+   "summary_ja": "`hermes import-agent` は `~/.claude` や `~/.codex` を見つけ、指示・スキル・MCP サーバー・許可リストを Hermes の形に移します。API キーは読みません。書く前に計画が出て、`--dry-run` なら何も書きません。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "他のエージェントから取り込む",
+     "url": "/hermes/docs/user-guide/import-from-other-agents/"
+    }
+   ],
+   "tags": [
+    "import-agent",
+    "Claude Code",
+    "Codex",
+    "移行"
+   ]
+  },
+  {
+   "n": 37,
+   "date": "2026-08-01",
+   "url": "https://x.com/witcheer/status/2083587946574389358",
+   "feature": "hermes project",
+   "title_ja": "複数のリポジトリを1つのプロジェクトにまとめる",
+   "summary_ja": "`hermes project create` で複数のフォルダに1つの名前を付けると、デスクトップのセッションがプロジェクトごとにまとまります。`add-folder` で追加、`use` で切り替え、`bind-board` でカンバンの盤と結びます。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "CLIコマンド一覧",
+     "url": "/hermes/docs/reference/cli-commands/"
+    }
+   ],
+   "tags": [
+    "project",
+    "workspace",
+    "kanban",
+    "Desktop"
+   ]
+  },
+  {
+   "n": 38,
+   "date": "2026-08-02",
+   "url": "https://x.com/witcheer/status/2084003270776041697",
+   "feature": "hermes doctor",
+   "title_ja": "設定や環境の不調をコマンド1つで点検する",
+   "summary_ja": "`hermes doctor` は設定、依存関係、認証などを調べて問題を一覧にします。直せるものは `hermes doctor --fix` が自動で修復を試みます。更新のあとや調子がおかしいときに、まず走らせるコマンドです。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "CLIコマンド一覧",
+     "url": "/hermes/docs/reference/cli-commands/"
+    }
+   ],
+   "tags": [
+    "doctor",
+    "health check",
+    "診断"
+   ]
+  },
+  {
+   "n": 39,
+   "date": "2026-08-06",
+   "url": "https://x.com/witcheer/status/2085293767506931833",
+   "feature": "vendor/model",
+   "title_ja": "モデルが 404 を返したら ID の接頭辞を確かめる",
+   "summary_ja": "モデル指定で 404 が返るとき、障害ではなく ID の `vendor/` の部分が抜けていることがあります。`vendor/model` の形で書くのを習慣にし、迷ったら `hermes model` の選択画面から選びます。",
+   "category": "モデルとプロバイダ",
+   "links": [],
+   "tags": [
+    "model id",
+    "404",
+    "OpenRouter",
+    "hermes model"
+   ]
+  },
+  {
+   "n": 40,
+   "date": "2026-08-07",
+   "url": "https://x.com/witcheer/status/2085640740353233270",
+   "feature": "sudoers NOPASSWD",
+   "title_ja": "root を渡さず、決まったコマンドだけ許す",
+   "summary_ja": "エージェントに特定のサービスの起動と停止だけをパスワードなしで許すには、そのユニットに絞った sudoers の規則を書きます。ほかのサービスで `sudo -n` がパスワードを求めることも確かめておきます。",
+   "category": "承認と安全",
+   "links": [],
+   "tags": [
+    "sudo",
+    "sudoers",
+    "NOPASSWD",
+    "systemctl"
+   ]
+  },
+  {
+   "n": 41,
+   "date": "2026-08-09",
+   "url": "https://x.com/witcheer/status/2086460177046286778",
+   "feature": "hermes approvals suggest",
+   "title_ja": "何度も承認するコマンドを許可リストの候補にする",
+   "summary_ja": "`hermes approvals suggest` は過去の承認の履歴から、繰り返し許しているコマンドを許可リストの候補として番号付きで出します。そのままでは何も書かず、選んだものだけ `--apply` で反映します。",
+   "category": "承認と安全",
+   "links": [
+    {
+     "title": "セキュリティ",
+     "url": "/hermes/docs/user-guide/security/"
+    }
+   ],
+   "tags": [
+    "approvals",
+    "allowlist",
+    "command_allowlist"
+   ]
+  },
+  {
+   "n": 42,
+   "date": "2026-08-10",
+   "url": "https://x.com/witcheer/status/2086745372521591061",
+   "feature": "auxiliary.compression",
+   "title_ja": "文脈を圧縮するときの要約を安いモデルに任せる",
+   "summary_ja": "文脈を圧縮するときの要約は、既定では普段のチャットモデルが書きます。高いモデルを使っていると、費用も待ち時間もその分かかります。`auxiliary.compression` で速くて安いモデルに振り分けられます。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "compression",
+    "auxiliary",
+    "summary model",
+    "コスト"
+   ]
+  },
+  {
+   "n": 43,
+   "date": "2026-08-11",
+   "url": "https://x.com/witcheer/status/2087071761040896227",
+   "feature": "/topic",
+   "title_ja": "Telegram でトピックを分けるか、別のエージェントを立てるか",
+   "summary_ja": "1つのボットの DM で並行する会話を持つなら `/topic` で、裏のエージェントは1つのままです。完全に分けたいときは `hermes profile create` で別のボットを持つ別のエージェントを作ります。",
+   "category": "メッセージとボット",
+   "links": [
+    {
+     "title": "Telegram",
+     "url": "/hermes/docs/user-guide/messaging/telegram/"
+    },
+    {
+     "title": "プロファイル: 複数のエージェントを動かす",
+     "url": "/hermes/docs/user-guide/profiles/"
+    }
+   ],
+   "tags": [
+    "Telegram",
+    "/topic",
+    "profile",
+    "topics"
+   ]
+  },
+  {
+   "n": 44,
+   "date": "2026-08-12",
+   "url": "https://x.com/witcheer/status/2087482141118435477",
+   "feature": "hermes curator rollback",
+   "title_ja": "キュレーターによるスキル整理を以前の状態へ巻き戻す",
+   "summary_ja": "統合の処理（`consolidate`）でスキルを書き換える前に、現役のスキルの控えが取られます。書庫入りのスキルや監査台帳は控えに入りません。`hermes curator rollback --list` で控えを一覧し、`hermes curator rollback` で戻せます。",
+   "category": "skill",
+   "links": [
+    {
+     "title": "キュレーター",
+     "url": "/hermes/docs/user-guide/features/curator/"
+    }
+   ],
+   "tags": [
+    "curator",
+    "rollback",
+    "snapshot",
+    "キュレーター"
+   ]
+  },
+  {
+   "n": 45,
+   "date": "2026-08-13",
+   "url": "https://x.com/witcheer/status/2087812081110147134",
+   "feature": "hermes claw migrate",
+   "title_ja": "OpenClaw の設定と記憶を Hermes へ移す",
+   "summary_ja": "OpenClaw の設定・記憶・スキルを Hermes へ取り込めます。`hermes claw migrate --dry-run` なら計画を見るだけです。API キーは `--migrate-secrets` を付けたときだけ移り、適用前に復元用の zip が作られます。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "OpenClaw から移ってくる",
+     "url": "/hermes/docs/guides/migrate-from-openclaw/"
+    }
+   ],
+   "tags": [
+    "OpenClaw",
+    "migrate",
+    "migrate-secrets",
+    "移行"
+   ]
+  },
+  {
+   "n": 46,
+   "date": "2026-08-14",
+   "url": "https://x.com/witcheer/status/2088204444391399722",
+   "feature": "Browser Use",
+   "title_ja": "ブラウザ操作を1本のスクリプトでまとめて進める",
+   "summary_ja": "Browser Use モードでは、クリックごとにツールを呼ぶ代わりに、一連の操作をまとめて動かします。手元の Chrome とクラウドブラウザでは、これが既定のブラウザドライバです。詳しくはブラウザの自動操作のページへ。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "ブラウザの自動操作",
+     "url": "/hermes/docs/user-guide/features/browser/"
+    }
+   ],
+   "tags": [
+    "Browser Use",
+    "browser",
+    "ブラウザ"
+   ]
+  },
+  {
+   "n": 47,
+   "date": "2026-08-17",
+   "url": "https://x.com/witcheer/status/2089275668949356763",
+   "feature": "cron prompts",
+   "title_ja": "定期実行のプロンプトは会話の文脈なしで書く",
+   "summary_ja": "チャットでうまくいった作業を `/cron` で予約すると、結果が崩れることがあります。定期実行は会話の記憶がない新しいセッションで動くためです。URL・コマンド・守る条件をプロンプトの中に全部書いておきます。",
+   "category": "定期実行",
+   "links": [
+    {
+     "title": "定期実行タスク（cron）",
+     "url": "/hermes/docs/user-guide/features/cron/"
+    }
+   ],
+   "tags": [
+    "cron",
+    "prompt",
+    "定期実行"
+   ]
+  },
+  {
+   "n": 48,
+   "date": "2026-08-18",
+   "url": "https://x.com/witcheer/status/2089706892993941840",
+   "feature": "platform_toolsets",
+   "title_ja": "使わないツールを外して毎回のトークンを減らす",
+   "summary_ja": "読み込んだツールの定義は、使わなくても毎回モデルに送られます。`config.yaml` の `platform_toolsets` でプラットフォームごとのツールを絞れます。変化は `hermes prompt-size` でトークンを使わずに確かめられます。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "ツールとツールセット",
+     "url": "/hermes/docs/user-guide/features/tools/"
+    },
+    {
+     "title": "CLIコマンド一覧",
+     "url": "/hermes/docs/reference/cli-commands/"
+    }
+   ],
+   "tags": [
+    "platform_toolsets",
+    "toolset",
+    "prompt-size",
+    "token"
+   ]
+  },
+  {
+   "n": 49,
+   "date": "2026-08-19",
+   "url": "https://x.com/witcheer/status/2090030442363670584",
+   "feature": "compaction thresholds",
+   "title_ja": "会話の要約が始まる位置をモデルごとに決める",
+   "summary_ja": "会話の要約（圧縮）は、チャットに使うモデルのコンテキスト長に対する割合で始まります。割合は `compression.threshold` で決まり、モデルごとに変えたいときは `compression.model_thresholds` を使います。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    },
+    {
+     "title": "コンテキストの圧縮とキャッシュ",
+     "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+    }
+   ],
+   "tags": [
+    "compression",
+    "threshold",
+    "model_thresholds",
+    "context window"
+   ]
+  },
+  {
+   "n": 50,
+   "date": "2026-08-21",
+   "url": "https://x.com/witcheer/status/2090697512097112274",
+   "feature": "[SILENT]",
+   "title_ja": "異常がないときは、定期実行の通知を送らない",
+   "summary_ja": "cron ジョブの応答が `[SILENT]` だと、配信先へは何も届きません。「問題なければ [SILENT] だけ返す」とプロンプトに書けば、異常があるときだけ通知が来ます。失敗の通知は `[SILENT]` では止まらず、宛先は `--failure-deliver` で変えられます。",
+   "category": "定期実行",
+   "links": [
+    {
+     "title": "定期実行タスク（cron）",
+     "url": "/hermes/docs/user-guide/features/cron/"
+    },
+    {
+     "title": "cron であらゆる作業を自動化する",
+     "url": "/hermes/docs/guides/automate-with-cron/"
+    }
+   ],
+   "tags": [
+    "SILENT",
+    "cron",
+    "monitoring",
+    "通知"
+   ]
+  },
+  {
+   "n": 51,
+   "date": "2026-08-22",
+   "url": "https://x.com/witcheer/status/2091175733750124856",
+   "feature": "checkpoints in one-shot runs",
+   "title_ja": "スクリプトからの実行でもファイル変更を取り消せる",
+   "summary_ja": "`hermes chat --checkpoints` を付けて動かすと、ファイルを変える前の状態が保存されます。あとでそのフォルダでセッションを開けば `/rollback` で戻せます。保存状況は `hermes checkpoints status` で見られます。",
+   "category": "承認と安全",
+   "links": [
+    {
+     "title": "チェックポイントと /rollback",
+     "url": "/hermes/docs/user-guide/checkpoints-and-rollback/"
+    }
+   ],
+   "tags": [
+    "checkpoints",
+    "rollback",
+    "undo"
+   ]
+  },
+  {
+   "n": 52,
+   "date": "2026-08-23",
+   "url": "https://x.com/witcheer/status/2091520019318423801",
+   "feature": "compression.idle_compact_after_seconds",
+   "title_ja": "しばらく間が空いた会話を、再開する前に要約する",
+   "summary_ja": "長いスレッドに間を置いて戻ると、古い履歴を毎ターン読み直すことになります。`compression.idle_compact_after_seconds` に秒数を入れると、その時間やり取りがなかったセッションは最初の返信の前に要約されます。既定は0（無効）です。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "compression",
+    "idle_compact_after_seconds",
+    "Telegram",
+    "context"
+   ]
+  },
+  {
+   "n": 53,
+   "date": "2026-08-24",
+   "url": "https://x.com/witcheer/status/2091778310783070649",
+   "feature": "SOUL.md, AGENTS.md, MEMORY.md, USER.md",
+   "title_ja": "4つの Markdown ファイルの役割を見分ける",
+   "summary_ja": "`SOUL.md` はエージェントの人格、`AGENTS.md` はプロジェクトごとの決まり、`MEMORY.md` はエージェント自身の覚え書き、`USER.md` は利用者の好みです。後の2つはエージェントが書きます。置き場所と読み込まれる時機は下のページにまとまっています。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "どのファイルが何をするのか",
+     "url": "/hermes/docs/user-guide/which-file-does-what/"
+    },
+    {
+     "title": "コンテキストファイル",
+     "url": "/hermes/docs/user-guide/features/context-files/"
+    }
+   ],
+   "tags": [
+    "SOUL.md",
+    "AGENTS.md",
+    "MEMORY.md",
+    "USER.md"
+   ]
+  },
+  {
+   "n": 54,
+   "date": "2026-08-25",
+   "url": "https://x.com/witcheer/status/2092200934608625728",
+   "feature": "session, project, profile, bot",
+   "title_ja": "セッション・プロジェクト・プロファイル・ボットの違い",
+   "summary_ja": "セッションは1つの会話、プロジェクトは作業フォルダのまとまりです。プロファイルは設定・記憶・スキル・履歴を別に持つ独立したエージェントで、デスクトップアプリの Bot Mode ではプロファイルがアバター付きのボットとして並びます。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "プロファイル: 複数のエージェントを動かす",
+     "url": "/hermes/docs/user-guide/profiles/"
+    },
+    {
+     "title": "Hermes Desktop",
+     "url": "/hermes/docs/user-guide/desktop/"
+    }
+   ],
+   "tags": [
+    "session",
+    "profile",
+    "Bot Mode",
+    "プロファイル"
+   ]
+  },
+  {
+   "n": 55,
+   "date": "2026-08-26",
+   "url": "https://x.com/witcheer/status/2092527968140632114",
+   "feature": "chaining cron jobs",
+   "title_ja": "前のジョブの出力を、次の定期実行のジョブへ渡す",
+   "summary_ja": "定期実行のジョブは毎回まっさらなセッションで動きます。`context_from` に別のジョブの ID を指定すると、その直近の出力が実行時にプロンプトの先頭へ付きます。`continuity` なら自分の前回の出力が付きます。",
+   "category": "定期実行",
+   "links": [
+    {
+     "title": "定期実行タスク（cron）",
+     "url": "/hermes/docs/user-guide/features/cron/"
+    }
+   ],
+   "tags": [
+    "cron",
+    "context_from",
+    "continuity",
+    "pipeline"
+   ]
+  },
+  {
+   "n": 56,
+   "date": "2026-08-27",
+   "url": "https://x.com/witcheer/status/2092941623961190832",
+   "feature": "switching models from anywhere",
+   "title_ja": "どのチャットからでもモデルを切り替えて保存する",
+   "summary_ja": "`hermes model` の選択画面はパイプやスクリプトからは使えませんが、チャットの `/model` なら切り替えられます。`--global` を付けると `config.yaml` にも残り、`--once` なら1ターンだけ切り替えて元に戻ります。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "モデルの設定",
+     "url": "/hermes/docs/user-guide/configuring-models/"
+    },
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    }
+   ],
+   "tags": [
+    "/model",
+    "--global",
+    "--once",
+    "model switch"
+   ]
+  },
+  {
+   "n": 57,
+   "date": "2026-08-29",
+   "url": "https://x.com/witcheer/status/2093591294740168760",
+   "feature": "delegate_task",
+   "title_ja": "作業を子エージェントに分けて並行して進める",
+   "summary_ja": "組み込みの `delegate_task` ツールで、独立した子エージェントに作業を任せられます。子は会話の文脈を持たずに始まるので、必要なパスや条件は指示に書き込みます。子だけ安いモデルで動かす設定もあります。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "サブエージェントへの委任",
+     "url": "/hermes/docs/user-guide/features/delegation/"
+    }
+   ],
+   "tags": [
+    "delegate_task",
+    "subagent",
+    "delegation",
+    "サブエージェント"
+   ]
+  },
+  {
+   "n": 58,
+   "date": "2026-08-30",
+   "url": "https://x.com/witcheer/status/2093944377085219321",
+   "feature": "real profile browsing",
+   "title_ja": "自分のログイン状態を使ってブラウザ作業を任せる",
+   "summary_ja": "本物のプロファイルで見て回る機能を有効にすると、ふだんのブラウザのプロファイルの写しを使い、ログインが要るサイトも操作できます。元のブラウザではなく写しが動き、設定を戻すと次にブラウザを使うときに写しが消されます。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "ブラウザの自動操作",
+     "url": "/hermes/docs/user-guide/features/browser/"
+    }
+   ],
+   "tags": [
+    "browser",
+    "use_real_profile",
+    "login",
+    "ブラウザ"
+   ]
+  },
+  {
+   "n": 59,
+   "date": "2026-08-31",
+   "url": "https://x.com/witcheer/status/2094362454390129137",
+   "feature": "hermes fallback",
+   "title_ja": "モデルが止まったら控えのモデルで会話を続ける",
+   "summary_ja": "メインのモデルがレート制限やエラーで止まると、控えの provider と model へ切り替わり、同じ会話を続けます。控えは `hermes fallback` で登録します。制限の解除時刻やクールダウンを過ぎると、メインがまた試されます。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "フォールバックプロバイダー",
+     "url": "/hermes/docs/user-guide/features/fallback-providers/"
+    }
+   ],
+   "tags": [
+    "fallback",
+    "fallback_providers",
+    "rate limit",
+    "フォールバック"
+   ]
+  },
+  {
+   "n": 60,
+   "date": "2026-09-01",
+   "url": "https://x.com/witcheer/status/2094664430814400740",
+   "feature": "/bg vs /btw",
+   "title_ja": "裏で別の作業を頼む `/bg` と、脇道の質問の `/btw`",
+   "summary_ja": "`/bg` はプロンプトを別のセッションで裏に回し、終わると結果が返ってきます。`/btw` はいまの会話について、進行中の作業を止めずに質問します。どちらもメッセージングのプラットフォームでも使えます。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    },
+    {
+     "title": "CLI 画面",
+     "url": "/hermes/docs/user-guide/cli/"
+    }
+   ],
+   "tags": [
+    "/bg",
+    "/btw",
+    "background",
+    "slash command"
+   ]
+  },
+  {
+   "n": 61,
+   "date": "2026-09-02",
+   "url": "https://x.com/witcheer/status/2095028256332271691",
+   "feature": "cron preflight",
+   "title_ja": "設定に問題のある定期実行はモデルを呼ばずに止まる",
+   "summary_ja": "定期実行の前に、そのジョブが実行できるかが確かめられます。失敗すると `blocked_config` になり、通知は1回だけ届き、LLM は呼ばれません。次に正常に実行できれば自動で解除されます。",
+   "category": "定期実行",
+   "links": [
+    {
+     "title": "定期実行タスク（cron）",
+     "url": "/hermes/docs/user-guide/features/cron/"
+    }
+   ],
+   "tags": [
+    "cron",
+    "preflight",
+    "blocked_config"
+   ]
+  },
+  {
+   "n": 62,
+   "date": "2026-09-04",
+   "url": "https://x.com/witcheer/status/2095722000907923465",
+   "feature": "cron.model",
+   "title_ja": "定期実行のジョブだけを、別の安いモデルで動かす",
+   "summary_ja": "`hermes config set cron.model <model>` で、個別に指定していない定期実行のジョブがすべてそのモデルで動きます。重いジョブだけ別のモデルにしたいときは `hermes cron edit <job_id> --model` で固定します。",
+   "category": "定期実行",
+   "links": [
+    {
+     "title": "定期実行タスク（cron）",
+     "url": "/hermes/docs/user-guide/features/cron/"
+    }
+   ],
+   "tags": [
+    "cron",
+    "cron.model",
+    "model",
+    "cost"
+   ]
+  },
+  {
+   "n": 63,
+   "date": "2026-09-05",
+   "url": "https://x.com/witcheer/status/2096128698147557524",
+   "feature": "compression.context_timeout_seconds",
+   "title_ja": "要約モデルが応答しないときにセッションを止めない",
+   "summary_ja": "要約モデルが一定時間なにも返さないと、Hermes は待つのをやめます。`compression.context_timeout_seconds`（既定120秒）がその許容時間で、圧縮リクエスト自体のタイムアウトより短くはなりません。控えのモデルを設定していれば、1回だけやり直します。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "compression",
+    "context_timeout_seconds",
+    "timeout",
+    "summary"
+   ]
+  },
+  {
+   "n": 64,
+   "date": "2026-09-06",
+   "url": "https://x.com/witcheer/status/2096481734388858931",
+   "feature": "AGENTS.override.md",
+   "title_ja": "チームの AGENTS.md を触らずに自分用の指示を使う",
+   "summary_ja": "プロジェクトの `AGENTS.md` の隣に `AGENTS.override.md` を置くと、こちらが代わりに読み込まれます。共有の指示ファイルは書き換えずに済み、git の管理から外せば手元だけの設定になります。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "コンテキストファイル",
+     "url": "/hermes/docs/user-guide/features/context-files/"
+    }
+   ],
+   "tags": [
+    "AGENTS.override.md",
+    "AGENTS.md",
+    "gitignore"
+   ]
+  },
+  {
+   "n": 65,
+   "date": "2026-09-07",
+   "url": "https://x.com/witcheer/status/2096849498173530284",
+   "feature": "hermes sessions import",
+   "title_ja": "他の CLI エージェントの会話を Hermes で続ける",
+   "summary_ja": "`hermes sessions import` で、Claude Code と Codex CLI のセッションが新しい順に並び、選んだものが Hermes のセッションになります。元のファイルは書き換えません。設定の移行は `hermes import-agent` です。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "セッション",
+     "url": "/hermes/docs/user-guide/sessions/"
+    }
+   ],
+   "tags": [
+    "sessions import",
+    "Claude Code",
+    "Codex CLI",
+    "import"
+   ]
+  },
+  {
+   "n": 66,
+   "date": "2026-09-08",
+   "url": "https://x.com/witcheer/status/2097201422844436642",
+   "feature": "sessions.auto_prune",
+   "title_ja": "使わなくなった古いセッションを自動で片付ける",
+   "summary_ja": "終了して長く触れていないセッションは、起動時に自動で整理されます。すべて残したいときは `hermes config set sessions.auto_prune false`、残す期間を変えるときは `sessions.retention_days`（既定90日）を使います。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "セッション",
+     "url": "/hermes/docs/user-guide/sessions/"
+    }
+   ],
+   "tags": [
+    "auto_prune",
+    "retention_days",
+    "sessions",
+    "state.db"
+   ]
+  },
+  {
+   "n": 67,
+   "date": "2026-09-09",
+   "url": "https://x.com/witcheer/status/2097565476435992883",
+   "feature": "hermes debug share",
+   "title_ja": "サポート用の診断レポートを1コマンドで作る",
+   "summary_ja": "`hermes debug share` で、バージョン・システム情報・直近のログをまとめたレポートを作り、共有用の URL を受け取れます。アップロード前に秘密の値は伏せられます。`--local` なら手元に表示するだけ、`--nous` なら非公開の置き場へ送ります。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "CLIコマンド一覧",
+     "url": "/hermes/docs/reference/cli-commands/"
+    }
+   ],
+   "tags": [
+    "debug share",
+    "support",
+    "logs",
+    "診断"
+   ]
+  },
+  {
+   "n": 68,
+   "date": "2026-09-10",
+   "url": "https://x.com/witcheer/status/2097944804084556003",
+   "feature": "/skill-name",
+   "title_ja": "スキル名をスラッシュコマンドとして直接呼ぶ",
+   "summary_ja": "入っているスキルはどれも `/スキル名` で呼べます。`/humanizer` のあとに依頼を書くと、そのスキルを読み込んでから依頼を処理します。メッセージの先頭に複数並べれば、いくつものスキルを一度に使えます。",
+   "category": "skill",
+   "links": [
+    {
+     "title": "スキルの仕組み",
+     "url": "/hermes/docs/user-guide/features/skills/"
+    }
+   ],
+   "tags": [
+    "skill",
+    "slash command",
+    "スラッシュコマンド"
+   ]
+  },
+  {
+   "n": 69,
+   "date": "2026-09-11",
+   "url": "https://x.com/witcheer/status/2098290534758408306",
+   "feature": "tool_loop_guardrails",
+   "title_ja": "同じツール呼び出しの空回りを検知して止める",
+   "summary_ja": "同じ呼び出しの失敗や、進展のない繰り返しを数え、しきい値で警告を入れます。ゲートウェイと cron では既定でターンを止めます。すべての環境で止めたいときは `tool_loop_guardrails.hard_stop_enabled` を `true` にします。",
+   "category": "承認と安全",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "tool_loop_guardrails",
+    "hard_stop_enabled",
+    "loop",
+    "guardrails"
+   ]
+  },
+  {
+   "n": 70,
+   "date": "2026-09-12",
+   "url": "https://x.com/witcheer/status/2098679753960034724",
+   "feature": "skills.external_dirs",
+   "title_ja": "ほかのフォルダに置いたスキルもまとめて読み込む",
+   "summary_ja": "`config.yaml` の `skills` に `external_dirs` を足すと、共有リポジトリなど別の場所にあるスキルも読み込まれ、スラッシュコマンドで呼べます。同じ名前のスキルがあれば手元のものが優先されます。",
+   "category": "skill",
+   "links": [
+    {
+     "title": "スキルの仕組み",
+     "url": "/hermes/docs/user-guide/features/skills/"
+    }
+   ],
+   "tags": [
+    "external_dirs",
+    "skills",
+    "shared"
+   ]
+  },
+  {
+   "n": 71,
+   "date": "2026-09-13",
+   "url": "https://x.com/witcheer/status/2099034806466015383",
+   "feature": "hermes -z --resume",
+   "title_ja": "スクリプトからの one-shot 実行で会話を続ける",
+   "summary_ja": "`hermes -z` はスクリプト向けに質問を1回投げて終わる実行です。`--resume latest` を付けると直近のセッションの続きとして動きます。`latest` の代わりにセッションの ID やタイトルも使えます。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "CLIコマンド一覧",
+     "url": "/hermes/docs/reference/cli-commands/"
+    }
+   ],
+   "tags": [
+    "hermes -z",
+    "--resume",
+    "one-shot",
+    "script"
+   ]
+  },
+  {
+   "n": 72,
+   "date": "2026-09-14",
+   "url": "https://x.com/witcheer/status/2099370347153805667",
+   "feature": "skills.create_dir",
+   "title_ja": "エージェントが作るスキルの保存先を変える",
+   "summary_ja": "`config.yaml` の `skills.create_dir` に場所を書くと、エージェントが新しく作るスキルはそこへ保存されます。共有のリポジトリなどを指定できます。すでにあるスキルは元の場所のまま更新されます。",
+   "category": "skill",
+   "links": [
+    {
+     "title": "スキルの仕組み",
+     "url": "/hermes/docs/user-guide/features/skills/"
+    }
+   ],
+   "tags": [
+    "create_dir",
+    "skills",
+    "shared"
+   ]
+  },
+  {
+   "n": 73,
+   "date": "2026-09-15",
+   "url": "https://x.com/witcheer/status/2099784645529276481",
+   "feature": "gateway.message_timestamps",
+   "title_ja": "メッセージの送信時刻をエージェントに伝える",
+   "summary_ja": "`gateway.message_timestamps` の `enabled` を `true` にすると、利用者のメッセージの先頭に送信時刻が付いてモデルに届きます。「今朝の件」や間が空いたことを踏まえた返答になります。画面の表示と保存される記録は変わりません。",
+   "category": "メッセージとボット",
+   "links": [
+    {
+     "title": "メッセージングゲートウェイ",
+     "url": "/hermes/docs/user-guide/messaging/"
+    }
+   ],
+   "tags": [
+    "message_timestamps",
+    "gateway",
+    "Telegram",
+    "Discord"
+   ]
+  },
+  {
+   "n": 74,
+   "date": "2026-09-16",
+   "url": "https://x.com/witcheer/status/2100156876209963106",
+   "feature": "provider_routing",
+   "title_ja": "OpenRouter で特定の提供元を避ける",
+   "summary_ja": "OpenRouter では同じモデルを複数の提供元が配信しています。`config.yaml` の `provider_routing` の `ignore` に提供元を書くと、そこへは送られなくなります。Nous Portal は振り分けを自分で決めるので設定は効きません。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "提供元の振り分け",
+     "url": "/hermes/docs/user-guide/features/provider-routing/"
+    }
+   ],
+   "tags": [
+    "provider_routing",
+    "OpenRouter",
+    "ignore",
+    "Nous Portal"
+   ]
+  },
+  {
+   "n": 75,
+   "date": "2026-09-17",
+   "url": "https://x.com/witcheer/status/2100460797239415168",
+   "feature": "reasoning_effort for side tasks",
+   "title_ja": "要約などの補助タスクだけ、思考の深さを下げる",
+   "summary_ja": "会話の要約や画像の読み取りなどの補助タスクには、それぞれ `reasoning_effort` を設定できます。`low` や `none` にすると補助の呼び出しが速く安くなり、メインのチャットの設定は変わりません。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "reasoning_effort",
+    "auxiliary",
+    "compression",
+    "vision"
+   ]
+  },
+  {
+   "n": 76,
+   "date": "2026-09-18",
+   "url": "https://x.com/witcheer/status/2100853054970990803",
+   "feature": "display.vim_mode",
+   "title_ja": "CLI の入力欄で vi のキー操作を使う",
+   "summary_ja": "`config.yaml` で `display.vim_mode: true` にすると、CLI の入力欄が vi のキー操作になります。Esc で NORMAL、i で INSERT に移り、ステータスバーの右端にモードが出ます。起動時に読まれるので CLI を再起動します。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "vim_mode",
+    "vi",
+    "keybindings",
+    "CLI"
+   ]
+  },
+  {
+   "n": 77,
+   "date": "2026-09-19",
+   "url": "https://x.com/witcheer/status/2101229280185270718",
+   "feature": "display.bell_on_complete / bell_on_prompt",
+   "title_ja": "作業の終わりや確認待ちを端末のベルで知らせる",
+   "summary_ja": "`display.bell_on_complete` を有効にするとターンが終わったとき、`display.bell_on_prompt` なら承認などの確認待ちで端末のベルが鳴ります。SSH 越しでも鳴り、Ghostty などではデスクトップ通知も出ます。既定はオフです。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    },
+    {
+     "title": "CLI 画面",
+     "url": "/hermes/docs/user-guide/cli/"
+    }
+   ],
+   "tags": [
+    "bell_on_complete",
+    "bell_on_prompt",
+    "notification",
+    "SSH"
+   ]
+  },
+  {
+   "n": 78,
+   "date": "2026-09-20",
+   "url": "https://x.com/witcheer/status/2101606053800456228",
+   "feature": "approvals.smart_policy",
+   "title_ja": "危険なコマンドの審査役に自分のルールを足す",
+   "summary_ja": "危なそうなコマンドは、実行前に別のモデルが承認・拒否・確認のどれかを判断します。`approvals.smart_policy` に書いたルールがその審査役の指示に加わり、「/etc の変更は必ず確認」のような方針を持たせられます。",
+   "category": "承認と安全",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "smart_policy",
+    "approvals",
+    "smart approval"
+   ]
+  },
+  {
+   "n": 79,
+   "date": "2026-09-21",
+   "url": "https://x.com/witcheer/status/2101910495888392672",
+   "feature": "agent.disabled_toolsets",
+   "title_ja": "指定したツールセットをすべての場所で止める",
+   "summary_ja": "`agent.disabled_toolsets` に並べたツールセットは、CLI とすべてのゲートウェイで外されます。プラットフォームごとの設定より後に効くので、一か所で確実に止められます。`web` や `memory` などを指定します。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "disabled_toolsets",
+    "toolset",
+    "web",
+    "memory"
+   ]
+  },
+  {
+   "n": 80,
+   "date": "2026-09-22",
+   "url": "https://x.com/witcheer/status/2102275176138178793",
+   "feature": "skills.auto_load",
+   "title_ja": "決まったスキルを毎回のセッションで最初から使う",
+   "summary_ja": "`config.yaml` の `skills.auto_load` に並べたスキルは、CLI・ゲートウェイ・cron などの新しいセッションで最初から読み込まれます。1回の起動だけなら `hermes -s <skill>` を使います。",
+   "category": "skill",
+   "links": [
+    {
+     "title": "CLI 画面",
+     "url": "/hermes/docs/user-guide/cli/"
+    },
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "auto_load",
+    "skills",
+    "hermes -s"
+   ]
+  },
+  {
+   "n": 81,
+   "date": "2026-09-23",
+   "url": "https://x.com/witcheer/status/2102680195161366668",
+   "feature": "unauthorized_dm_behavior",
+   "title_ja": "許可していない相手からの DM を丁寧に断る",
+   "summary_ja": "許可していない相手がボットに DM を送ると、既定ではペアリングコードが返ります。`unauthorized_dm_behavior: decline` にすると短いお断りを1回だけ送り、その後24時間はその相手に返信しません。",
+   "category": "メッセージとボット",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    },
+    {
+     "title": "セキュリティ",
+     "url": "/hermes/docs/user-guide/security/"
+    }
+   ],
+   "tags": [
+    "unauthorized_dm_behavior",
+    "decline",
+    "pairing",
+    "DM"
+   ]
+  },
+  {
+   "n": 82,
+   "date": "2026-09-24",
+   "url": "https://x.com/witcheer/status/2102997146660110386",
+   "feature": "agent.session_stall_timeout",
+   "title_ja": "ボットの「停滞しています」通知の意味と調整",
+   "summary_ja": "追加のメッセージが届いているのにエージェントの動きが止まっていると、ゲートウェイが1回だけ知らせます。通知するだけでターンは止めません。時間は `agent.session_stall_timeout`（既定300秒、0で無効）で変えます。",
+   "category": "メッセージとボット",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "session_stall_timeout",
+    "watchdog",
+    "gateway",
+    "stalled"
+   ]
+  },
+  {
+   "n": 83,
+   "date": "2026-09-25",
+   "url": "https://x.com/witcheer/status/2103395194963980527",
+   "feature": "approvals.denial_breaker_threshold",
+   "title_ja": "拒否されたコマンドの言い換えをやめさせる",
+   "summary_ja": "審査役に続けて拒否されると、エージェントに作業を止めて報告し、手動の実行か `/approve` を頼むよう指示が出ます。回数は `approvals.denial_breaker_threshold`（既定3、0で無効）で決まります。",
+   "category": "承認と安全",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "denial_breaker_threshold",
+    "approvals",
+    "smart approval"
+   ]
+  },
+  {
+   "n": 84,
+   "date": "2026-09-26",
+   "url": "https://x.com/witcheer/status/2103850251220042077",
+   "feature": "mcp.discovery_concurrency",
+   "title_ja": "起動時の MCP サーバーの同時接続数を決める",
+   "summary_ja": "Hermes の起動時、設定した MCP サーバーへ接続する数に上限を設けられます。`mcp.discovery_concurrency`（既定4、0で無制限）を上げると早く揃い、小さいマシンでは下げると負荷が抑えられます。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "MCP（Model Context Protocol）",
+     "url": "/hermes/docs/user-guide/features/mcp/"
+    }
+   ],
+   "tags": [
+    "MCP",
+    "discovery_concurrency",
+    "startup"
+   ]
+  },
+  {
+   "n": 85,
+   "date": "2026-09-27",
+   "url": "https://x.com/witcheer/status/2104227606614757460",
+   "feature": "hermes pause",
+   "title_ja": "cron やボットの新しい作業をまとめて止める",
+   "summary_ja": "`hermes pause` を実行すると、cron の発火・kanban の振り分け・ゲートウェイの新しいターンがすべて始まらなくなります。`hermes resume` で元に戻ります。予想外の定期実行を見つけたときに使います。",
+   "category": "定期実行",
+   "links": [
+    {
+     "title": "定期実行タスク（cron）",
+     "url": "/hermes/docs/user-guide/features/cron/"
+    },
+    {
+     "title": "CLIコマンド一覧",
+     "url": "/hermes/docs/reference/cli-commands/"
+    }
+   ],
+   "tags": [
+    "hermes pause",
+    "hermes resume",
+    "cron",
+    "kanban"
+   ]
+  },
+  {
+   "n": 86,
+   "date": "2026-09-28",
+   "url": "https://x.com/witcheer/status/2104531742686093765",
+   "feature": "hermes send",
+   "title_ja": "スクリプトからメッセージを Telegram などへ送る",
+   "summary_ja": "`hermes send` は設定済みのボットを使って、スクリプトからメッセージを送ります。モデルは呼びません。`hermes send --to telegram` のように送り先を指定し、ほかのコマンドの出力をパイプで渡すこともできます。",
+   "category": "メッセージとボット",
+   "links": [
+    {
+     "title": "スクリプトの出力をメッセージングプラットフォームへ流す",
+     "url": "/hermes/docs/guides/pipe-script-output/"
+    },
+    {
+     "title": "CLIコマンド一覧",
+     "url": "/hermes/docs/reference/cli-commands/"
+    }
+   ],
+   "tags": [
+    "hermes send",
+    "Telegram",
+    "CI",
+    "pipe"
+   ]
+  }
+ ]
+}

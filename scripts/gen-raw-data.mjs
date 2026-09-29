@@ -1,4 +1,4 @@
-// データ駆動ページ（models / free / howto / trouble / community / updates）の raw Markdown を
+// データ駆動ページ（models / free / howto / tips / trouble / community / updates）の raw Markdown を
 // 画面と同じ JSON から生成する。sync-public.mjs の先頭で import され、build のたびに追随する。
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -285,6 +285,35 @@ ${linkList2(codeSources)}
   await write('howto.md', body);
 }
 
+// tips
+{
+  const t = await readJson('data/wiki/tips.json');
+  const sections = t.categories.map((cat) => {
+    const items = t.items
+      .filter((i) => i.category === cat)
+      .sort((a, b) => b.n - a.n)
+      .map((i) =>
+        `- **#${i.n} ${i.title_ja}** — ${i.summary_ja}\n  - 元のポスト: ${i.url}${i.links?.length ? '\n  - 関連: ' + linkList(i.links) : ''}`,
+      );
+    return `## ${cat}\n\n${items.join('\n')}`;
+  });
+  const body =
+    front(
+      '小ワザ集',
+      `Nous Research の @witcheer による Hermes Wingtips 全 ${t.items.length} 回の日本語索引`,
+      'tips.md',
+    ) +
+    `# 小ワザ集
+
+Nous Research のコミュニティ担当 [@${t.author}](${t.authorUrl}) による Hermes Wingtips。全 ${t.items.length} 回・${t.categories.length} 分類。
+
+このページはこのサイト独自の索引です。正本は各リンク先の公式ページと元のポストです。
+
+${sections.join('\n\n')}
+`;
+  await write('tips.md', body);
+}
+
 // trouble
 {
   const t = await readJson('data/wiki/trouble.json');
@@ -398,4 +427,4 @@ ${changedPages}${digestSection}
   await write('updates-weekly.md', weeklyBody);
 }
 
-console.log('gen-raw-data: wrote models.md free.md howto.md trouble.md community.md updates.md updates-weekly.md');
+console.log('gen-raw-data: wrote models.md free.md howto.md tips.md trouble.md community.md updates.md updates-weekly.md');
