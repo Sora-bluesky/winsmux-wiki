@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 5dc64abc7ac81e4a970d6c5b25e94ee6b8080620
+upstream_blob: cfc33d4b23f685356a5cd2e5dfa6f7d73b12dd04
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -347,6 +347,17 @@ R2 の認証情報は要りません。
 python scripts/release.py --channel pm-preview --build-commit my-branch --remote origin
 python scripts/release.py --channel pm-preview --build-commit my-branch --remote origin --publish
 python scripts/release.py --channels --remote origin
+```
+
+既定では、プレビューのチャンネルは独立したアプリ（`Hermes
+NAME`、専用のパッケージ ID）として並べてインストールされます。特定のコミットを通常のアプリとして試したいときは、
+`--branding stable` を付けてチャンネルを作ってください。公開済みの安定版チャンネルの名前・アイコン・パッケージ ID を引き継ぐので、
+ビルドは公式アプリに上書きでインストールされ、デスクトップの設定も共有し、以後の更新はそのチャンネルに従います。ブランディングはチャンネルを
+作った時点で固定されます。そのチャンネルを起動するたびにこのフラグを付け直し、変えたいときは新しいチャンネル名を使ってください。
+`--branding` には `--channel` が必要です。チャンネルを使わない一度きりのコミットのビルドは、常に `Hermes Agent <sha>` という名前になるためです。
+
+```sh
+python scripts/release.py --channel my-commit --branding stable --build-commit SHA --remote origin --publish
 ```
 
 使い捨ての R2 スコープは任意で、テスト実行専用です。デスクトップの

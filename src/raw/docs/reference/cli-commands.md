@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: b4a6b0d132af04f7f17a0c7f388bd2d1d6bff64e
+upstream_blob: e59b7e73c3655828829dd8d5ded91a50f0e4d21b
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -999,7 +999,7 @@ hermes debug share [options]
 | `--local` | アップロードせず、レポートをローカルに表示します。 |
 | `--no-redact` | アップロード時のシークレットの redaction を無効にします。既定ではアップロードは redaction されます。 |
 
-レポートには、システム情報（OS、Python のバージョン、Hermes のバージョン）、直近のエージェント・ゲートウェイ・GUI/ダッシュボード・デスクトップのログ（ファイルごとに 512 KB 上限）、redaction 済みの API キーの状態が含まれます。既定ではアップロードは redaction されるため、シークレットは含まれません。これはログだけでなく、システムの情報（`fallback_providers` の項目やその URL に含まれる認証情報といった設定値を含みます）にも、ゲートウェイの `/debug` レポートにも当てはまります。
+レポートには、システム情報（OS、Python のバージョン、Hermes のバージョン）、直近のエージェント・ゲートウェイ・GUI/ダッシュボード・デスクトップのログ（ファイルごとに 512 KB 上限）、あれば更新ログと Desktop からの更新の引き継ぎログ、redaction 済みの API キーの状態が含まれます。既定ではアップロードは redaction されるため、シークレットは含まれません。これはログだけでなく、システムの情報（`fallback_providers` の項目やその URL に含まれる認証情報といった設定値を含みます）にも、ゲートウェイの `/debug` レポートにも当てはまります。
 
 既定のアップロードは、公開のペーストサービス（paste.rs、dpaste.com の順）を試します。`--nous` は同じデバッグバンドルを非公開の Nous 診断ストレージにアップロードします。返される viewer リンクは Nous チーム用で、14日後に自動削除されます。
 
@@ -1146,12 +1146,14 @@ Hermes のログファイルを表示・追跡・フィルタします。すべ�
 | `gui` | `gui.log` | ダッシュボード / TUI-ゲートウェイ / PTY ブリッジ / websocket のイベント |
 | `desktop` | `desktop.log` | Electron デスクトップアプリ — 起動、バックエンド起動時の出力、直近の Python トレースバック |
 | `mcp` | `mcp-stderr.log` | stdio で動くすべての MCP サーバーの stderr。起動のたびに `starting MCP server` のバナーが 1 行入ります |
+| `update` | `update.log` | `hermes update` の実行時の stdout/stderr をそのまま写したもの（追記のみ）。更新や依存関係の失敗の根本原因がわかります |
+| `handoff` | `desktop-update-handoff.log` | Desktop から始めた更新の引き継ぎの各段階。Desktop の再ビルドを再試行したときの出力も含みます |
 
 ### オプション {#options}
 
 | オプション | 説明 |
 |--------|-------------|
-| `log_name` | 表示するログ: `agent`（既定）、`errors`、`gateway`、または利用可能なファイルをサイズ付きで表示する `list`。 |
+| `log_name` | 表示するログ: `agent`（既定）、`errors`、`gateway`、`gui`、`desktop`、`update`、`handoff`、または利用可能なファイルをサイズ付きで表示する `list`。 |
 | `-n`, `--lines <N>` | 表示する行数（既定: 50）。 |
 | `-f`, `--follow` | `tail -f` のように、リアルタイムでログを追跡します。停止するには Ctrl+C を押してください。 |
 | `--level <LEVEL>` | 表示する最小のログレベル: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`。 |

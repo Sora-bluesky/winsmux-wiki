@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: a71c321f1196e2aca4daad8186202ca9e5748523
+upstream_blob: 16eec2d448c179937f9652ff7bea252c07bf6228
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -1937,11 +1937,11 @@ agent:
 
 ## Fast モード {#fast-mode}
 
-Fast モードは、割増料金と引き換えに、プロバイダーへより速い出力を求める機能です。対象は OpenAI の [Priority Processing](https://openai.com/api-priority-processing/)（`service_tier: priority`）、Grok 4.6 での xAI の Priority Processing、Anthropic の [Fast Mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode)（`speed: fast`、Opus 4.8 / Opus 5 / Opus 5.5 のみ）です。**既定ではオフ**です。
+Fast モードは、割増料金と引き換えに、プロバイダーへより速い出力を求める機能です。対象は OpenAI の [Priority Processing](https://openai.com/api-priority-processing/)（`service_tier: priority`）と対応する OpenAI のモデルでの Ultrafast（`service_tier: ultrafast`）、Grok 4.6 での xAI の Priority Processing、Anthropic の [Fast Mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode)（`speed: fast`、Opus 4.8 / Opus 5 / Opus 5.5 のみ）です。`openai` と `openai-api` のプロバイダーは、OpenAI 直営のエンドポイントを使います。**既定ではオフ**です。
 
 ```yaml
 agent:
-  service_tier: ""          # "" / normal | fast | auto | cold
+  service_tier: ""          # "" / normal | fast | priority | ultrafast | auto | cold
   fast_auto_seconds: 60     # window for auto / cold
 ```
 
@@ -1952,7 +1952,7 @@ agent:
 | `auto` | **毎回の**ターンの最初の `fast_auto_seconds` 秒間のリクエスト | 最初の返信を素早く返したいとき。長いツールのループでは標準料金に切り替わります |
 | `cold` | 同じ時間枠。ただし、セッションの**最初のターン**（それまでの履歴がない状態）だけ | 会話の最初の返信を速くし、その後は標準料金にしたいとき |
 
-`/fast normal|fast|auto|cold` で、そのセッションのモードを切り替えます。`--global` を付けると `config.yaml` に保存され、次回以降も使われます。`/fast` だけを実行すると、現在のモードを表示します。
+`/fast normal|fast|ultrafast|auto|cold` で、そのセッションのモードを切り替えます。`--global` を付けると `config.yaml` に保存され、次回以降も使われます。`/fast` だけを実行すると、現在のモードを表示します。
 
 **料金の注意:** どちらのプロバイダーも、fast のリクエストには標準料金に倍率を掛けた額を請求します（Anthropic の場合、入力／出力それぞれ 100万トークン（MTok）あたり、Opus 5.5 で $8 / $40、Opus 5 と Opus 4.8 で $10 / $50）。この割増はプロンプトキャッシュの料金と重ねて適用されます。Hermes は Anthropic の応答ごとに、API が `usage.speed` で報告する速度をもとに料金を計算します。`auto`/`cold` を使うと、割増がかかるのは時間枠の中だけになります。fast のパラメーターは、それに対応した提供元直営のエンドポイント（`api.openai.com` / Codex のサブスクリプション、`api.anthropic.com`、`api.x.ai`）にだけ送られます。OpenRouter、Nous Portal、Copilot、Azure、Bedrock、カスタムの `base_url` の経路には、どのモードでも送られません。
 

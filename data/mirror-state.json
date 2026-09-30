@@ -72,9 +72,9 @@
       "translatedAt": "2026-09-23T22:51:08.865Z"
     },
     "developer-guide/desktop-plugin-sdk.md": {
-      "blob": "c16a953331ba0b76fcf3cbca885c2d52fc7a728d",
+      "blob": "081bbb9c3c83a5fa894efa68f451357a8a236264",
       "status": "translated",
-      "translatedAt": "2026-09-28T22:47:58.469Z"
+      "translatedAt": "2026-09-30T22:46:44.352Z"
     },
     "developer-guide/egress-internals.md": {
       "blob": "dde37d99ace8f900d6f23431db168637c191dda4",
@@ -397,9 +397,9 @@
       "translatedAt": "2026-09-21T22:48:31.573Z"
     },
     "reference/cli-commands.md": {
-      "blob": "b4a6b0d132af04f7f17a0c7f388bd2d1d6bff64e",
+      "blob": "e59b7e73c3655828829dd8d5ded91a50f0e4d21b",
       "status": "translated",
-      "translatedAt": "2026-09-29T22:49:53.502Z"
+      "translatedAt": "2026-09-30T22:46:44.358Z"
     },
     "reference/cli-symbols.md": {
       "blob": "76d0fcd513551ad62992ffc06f63494b1ad2bed9",
@@ -457,9 +457,9 @@
       "translatedAt": "2026-09-23T22:51:08.885Z"
     },
     "user-guide/bot-mode.md": {
-      "blob": "12807a266144e3fc5652c02f701ab7df46091ef9",
+      "blob": "4e9f9b60123039055cdbd27e22ee68b3dd4f686c",
       "status": "translated",
-      "translatedAt": "2026-09-21T22:48:31.584Z"
+      "translatedAt": "2026-09-30T22:46:44.343Z"
     },
     "user-guide/checkpoints-and-rollback.md": {
       "blob": "d9a8ea916e138add09cef8c807e966813ac39ad5",
@@ -472,9 +472,9 @@
       "translatedAt": "2026-09-23T22:51:08.886Z"
     },
     "user-guide/configuration.md": {
-      "blob": "a71c321f1196e2aca4daad8186202ca9e5748523",
+      "blob": "16eec2d448c179937f9652ff7bea252c07bf6228",
       "status": "translated",
-      "translatedAt": "2026-09-29T22:49:53.514Z"
+      "translatedAt": "2026-09-30T22:46:44.349Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "bd06b3180249eaeef3f660160b7ac5e44ae67434",
@@ -482,9 +482,9 @@
       "translatedAt": "2026-09-20T23:06:07.205Z"
     },
     "user-guide/desktop.md": {
-      "blob": "ca9030d2206ac7db7c2784924899d66ba9356141",
+      "blob": "2ed42b2bf95e36976b0876e0b26ae7fc675a7d42",
       "status": "translated",
-      "translatedAt": "2026-09-29T22:49:53.516Z"
+      "translatedAt": "2026-09-30T22:46:44.339Z"
     },
     "user-guide/docker.md": {
       "blob": "525d3028a3d13eeaab30e7fb7b9c087894b58003",
@@ -2361,9 +2361,9 @@
       "translatedAt": "2026-09-25T22:58:06.505Z"
     },
     "developer-guide/stable-releases.md": {
-      "blob": "5dc64abc7ac81e4a970d6c5b25e94ee6b8080620",
+      "blob": "cfc33d4b23f685356a5cd2e5dfa6f7d73b12dd04",
       "status": "translated",
-      "translatedAt": "2026-09-25T22:58:06.505Z"
+      "translatedAt": "2026-09-30T22:46:44.353Z"
     },
     "reference/package-management.md": {
       "blob": "fecdbddb144a5bb62fcb8574ca1806e8b9ba1483",
@@ -2391,5 +2391,5 @@
       "translatedAt": "2026-09-28T22:47:58.504Z"
     }
   },
-  "snapshotCommit": "374eaf5143ec7fc4801b3fe5982b105dfbad6479"
+  "snapshotCommit": "12e4d3e2dd5281adf289f70e5d6c7f33427d6982"
 }

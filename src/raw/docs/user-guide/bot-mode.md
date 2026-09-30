@@ -2,7 +2,7 @@
 title: "Bot Mode"
 description: "Hermes のプロファイルを、名前を持つ Bot の一覧に変えます。それぞれが自分のチャット、役割、モデル、記憶、スキル、アバターを持ちます。Bot は定期タスクをこなし、グループチャットを共有し、互いにメッセージを送り合います。"
 upstream_path: user-guide/bot-mode.md
-upstream_blob: 12807a266144e3fc5652c02f701ab7df46091ef9
+upstream_blob: 4e9f9b60123039055cdbd27e22ee68b3dd4f686c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/bot-mode
 ---
@@ -19,6 +19,19 @@ Bot Mode は **[デスクトップアプリ](/hermes/docs/user-guide/desktop/) �
 Bot Mode が、メッセージ用のボットや、任せる先のサブエージェントとどういう関係にあるかは
 [プロファイル、エージェント、Bot](/hermes/docs/user-guide/profiles/#profiles-agents-and-bots) をご覧ください。
 :::
+
+## プロファイルから移ってきた場合 {#coming-from-profiles}
+
+プロファイルはこれまでとまったく同じように使えます。Bot Mode は、プロファイルだけでは持てない部分を足します。
+
+| プロファイルだけの場合 | Bot Mode の場合 |
+|---|---|
+| プロファイルごとにセッションが積み重なり、その中から1つを選ぶか新しく始めます | Bot ごとに、ずっと続く **Bot Chat** が1つだけあります。Bot をクリックすれば同じ会話に戻れます。`/new` は会話を枝分かれさせず、圧縮します |
+| 別の専門家と話すにはプロファイルを切り替えます | すべての Bot が1つの一覧に、アバター、最新のメッセージ、未読の状態とともに並びます |
+| プロファイル同士はやり取りしません | Bot は[互いにメッセージを送り合い](#bot-to-bot-messaging)、[グループチャット](#groups-and-group-chats)を共有します |
+| 定期ジョブは `hermes cron` にあり、チャットとは切り離されています | 各 Bot の[定期タスク](#routines)は、そのチャットの隣で予定を組み、編集します |
+
+何も移動しません。設定、記憶、スキル、認証情報は `~/.hermes/profiles/<name>/` に置かれたままで、`hermes -p <bot> chat` でも同じエージェントが開きます。
 
 ## Bots ペイン {#the-bots-pane}
 

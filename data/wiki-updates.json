@@ -1,6 +1,128 @@
 {
-  "generatedAt": "2026-09-30",
+  "generatedAt": "2026-10-01",
   "entries": [
+    {
+      "date": "2026-09-30",
+      "sha": "2c413ff",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/context-engine-plugin",
+          "title": "コンテキストエンジンのプラグイン",
+          "url": "/hermes/docs/developer-guide/context-engine-plugin/"
+        },
+        {
+          "id": "developer-guide/middleware",
+          "title": "ミドルウェア",
+          "url": "/hermes/docs/developer-guide/middleware/"
+        },
+        {
+          "id": "developer-guide/observer-hooks",
+          "title": "オブザーバーフック",
+          "url": "/hermes/docs/developer-guide/observer-hooks/"
+        },
+        {
+          "id": "developer-guide/programmatic-integration",
+          "title": "外部プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "developer-guide/session-storage",
+          "title": "セッションの保存領域",
+          "url": "/hermes/docs/developer-guide/session-storage/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/tools-reference",
+          "title": "組み込みツール一覧",
+          "url": "/hermes/docs/reference/tools-reference/"
+        },
+        {
+          "id": "user-guide/checkpoints-and-rollback",
+          "title": "チェックポイントと /rollback",
+          "url": "/hermes/docs/user-guide/checkpoints-and-rollback/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/api-server",
+          "title": "API サーバー",
+          "url": "/hermes/docs/user-guide/features/api-server/"
+        },
+        {
+          "id": "user-guide/features/built-in-plugins",
+          "title": "同梱のプラグイン",
+          "url": "/hermes/docs/user-guide/features/built-in-plugins/"
+        },
+        {
+          "id": "user-guide/messaging/discord",
+          "title": "Discord",
+          "url": "/hermes/docs/user-guide/messaging/discord/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        },
+        {
+          "id": "user-guide/skills/bundled/creative/creative-baoyu-infographic",
+          "title": "Baoyu Infographic — インフォグラフィック: 21 種類のレイアウト × 21 種類のスタイル (信息图, 可视化)",
+          "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-baoyu-infographic/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-baoyu-article-illustrator",
+          "title": "Baoyu Article Illustrator — 記事の挿絵。型 × 画風 × 配色をそろえて作る",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-baoyu-comic",
+          "title": "Baoyu Comic — 知識まんが（知识漫画）。学習向け、伝記、手引き",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/"
+        },
+        {
+          "id": "user-guide/skills/optional/migration/migration-openclaw-migration",
+          "title": "Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む",
+          "url": "/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/"
+        }
+      ]
+    },
     {
       "date": "2026-09-29",
       "sha": "041a1bf",

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: c16a953331ba0b76fcf3cbca885c2d52fc7a728d
+upstream_blob: 081bbb9c3c83a5fa894efa68f451357a8a236264
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -764,8 +764,12 @@ ctx.register({
 利用者のターンとして画面の外でエージェントへ渡ります。会話に吹き出しは増えず、部品が更新される
 ことが目に見える返事になります。それでもターンは本物です。エージェントを起こし、入力欄の
 割り込みや順番待ちの決まりに従い、（`hidden` の型で）保存されるので、再開時もセッションの DB にも
-記録がすべて残ります。プロンプトは前後が削られ、500 文字までに切られ、1 つの枠につき毎秒 1 回に
-絞られます。
+記録がすべて残ります。プロンプトは前後が削られ、500 文字（`window.hermes.maxLength`）までに切られ、
+1 つの枠につき毎秒 1 回に絞られます。黙って切り詰めたり捨てたりすることはありません。
+`send()` は Promise を返し、プロンプトが会話の入力欄に届くと `{ ok: true }` で、届かなければ
+`{ ok: false, error }` で解決します。`error` は `too_long`（`maxLength` 付き）、`throttled`（`retryAfterMs` 付き）、`invalid`、
+`undelivered`（受け取る入力欄が画面上になかった）のいずれかです。部品を「保存済み」と表示する前に、
+この結果を確かめてください。
 
 ### マウントに紐づく装飾（`Contribute`） {#mount-scoped-chrome-contribute}
 
