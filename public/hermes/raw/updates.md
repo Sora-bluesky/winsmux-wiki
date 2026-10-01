@@ -8,6 +8,15 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-01
+
+- [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+
 ## 2026-09-30
 
 - [コンテキストエンジンのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-engine-plugin/)
@@ -1962,3 +1971,7 @@ Bot モードと Hermes デスクトップアプリを中心に更新が入っ�
 ## 週次まとめ 2026-W39
 
 Hermes Desktop とデスクトップ向けプラグイン SDK の解説がたびたび更新され、プラグインの作り方やプラグインカタログも新しい内容に揃いました。内部構造では、コンテキストの圧縮とキャッシュ、cron やゲートウェイ、実行時のプロバイダー解決、セッションの保存領域が入れ替わっています。使う側では、Hermes Agent の設定と CLI コマンド一覧、Nous Portal、プロファイルとセッションの説明が更新され、新しいページとしてアプリケーション宣言、ボットの画面、セッション保存領域の復旧が加わりました。
+
+## 週次まとめ 2026-W40
+
+Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ版を複数の Hermes につなぐ話が更新され、プラグインの作り方や同梱のプラグイン、コンテキストエンジンのプラグインも新しい内容に揃いました。内部構造では、コンテキストの圧縮とキャッシュ、Multiplexing Gateway の内部構造、ゲートウェイのセッションライフサイクル、Relay 共有メトリクスが入れ替わっています。使う側では、インストールと更新、Windows（ネイティブ）ガイド、CLI コマンド一覧と環境変数、カンバンやプロファイル、Telegram・Discord・SimpleX Chat との連携が更新され、Brag や Baoyu Comic といったスキルの説明も加わりました。

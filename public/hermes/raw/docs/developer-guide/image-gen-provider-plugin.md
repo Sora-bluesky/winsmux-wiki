@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "画像生成プロバイダのプラグイン"
 description: "Hermes Agent 向けに画像生成のバックエンドのプラグインを作る方法"
 upstream_path: developer-guide/image-gen-provider-plugin.md
-upstream_blob: 82eeaeeb6ba1b6e31e17479fc06c52dc77b94c7d
+upstream_blob: 47684b8cbda90df472b3f93f6e16ca7d28e877c9
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/image-gen-provider-plugin
 ---
@@ -120,6 +120,10 @@ class MyBackendImageGenProvider(ImageGenProvider):
         # The tool layer surfaces this in the dynamic schema so the model
         # knows when `image_url` is honored. Default (if you omit this) is
         # text-only: {"modalities": ["text"], "max_reference_images": 0}.
+        # Optional keys: "supports_upscale" (bool) adds an `upscale` param, and
+        # "creative_controls" lists the controls you honor from `creativity`,
+        # `intensity`, `complexity`, `movement`. Only declared controls appear
+        # in the schema and reach generate() as kwargs.
         return {"modalities": ["text", "image"], "max_reference_images": 4}
 
     def generate(

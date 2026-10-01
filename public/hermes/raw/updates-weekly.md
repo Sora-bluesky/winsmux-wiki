@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-10-01、対象期間 = 2026-09-25 〜 2026-10-01（JST）
+生成日 = 2026-10-02、対象期間 = 2026-09-26 〜 2026-10-02（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,6 +16,12 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-10-01 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- 2026-10-01 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- 2026-10-01 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- 2026-10-01 [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
+- 2026-10-01 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- 2026-10-01 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
 - 2026-09-30 [コンテキストエンジンのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-engine-plugin/)
 - 2026-09-30 [ミドルウェア](https://wiki.winsmux.dev/hermes/docs/developer-guide/middleware/)
 - 2026-09-30 [オブザーバーフック](https://wiki.winsmux.dev/hermes/docs/developer-guide/observer-hooks/)
@@ -23,12 +29,9 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-09-30 [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
 - 2026-09-30 [セッションの保存領域](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
 - 2026-09-30 [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
-- 2026-09-30 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - 2026-09-30 [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
 - 2026-09-30 [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
 - 2026-09-30 [チェックポイントと /rollback](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
-- 2026-09-30 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
-- 2026-09-30 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
 - 2026-09-30 [API サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
 - 2026-09-30 [同梱のプラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/built-in-plugins/)
 - 2026-09-30 [Discord](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/discord/)
@@ -40,7 +43,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-09-30 [Baoyu Comic — 知識まんが（知识漫画）。学習向け、伝記、手引き](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/)
 - 2026-09-30 [Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
 - 2026-09-29 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
-- 2026-09-29 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - 2026-09-29 [ゲートウェイのセッションライフサイクル](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-session-lifecycle/)
 - 2026-09-29 [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
 - 2026-09-29 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
@@ -87,7 +89,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-09-26 [PM 監査の修正状況](https://wiki.winsmux.dev/hermes/docs/developer-guide/pm-audit-status/)
 - 2026-09-26 [共有バンドルビルド](https://wiki.winsmux.dev/hermes/docs/developer-guide/shared-bundle-builds/)
 - 2026-09-26 [ソース版の更新の仕上げを誰が受け持つか](https://wiki.winsmux.dev/hermes/docs/developer-guide/source-update-completion/)
-- 2026-09-26 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
 - 2026-09-26 [ウェブ検索プロバイダのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/web-search-provider-plugin/)
 - 2026-09-26 [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
 - 2026-09-26 [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
@@ -138,20 +139,12 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-09-26 [Har Derived Api Client — サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client/)
 - 2026-09-26 [ソースからのインストールへ切り替える](https://wiki.winsmux.dev/hermes/docs/user-guide/switching-to-source/)
 - 2026-09-26 [Windows（WSL2）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-wsl-quickstart/)
-- 2026-09-25 [ACP の内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/acp-internals/)
-- 2026-09-25 [Nous Portal で Hermes Agent を動かす](https://wiki.winsmux.dev/hermes/docs/guides/run-hermes-with-nous-portal/)
-- 2026-09-25 [Nous Portal](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
-- 2026-09-25 [認証情報プール](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-pools/)
-- 2026-09-25 [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
-- 2026-09-25 [Nous Tool Gateway](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-gateway/)
-- 2026-09-25 [Webhook](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/webhooks/)
-- 2026-09-25 [プロファイル配布: エージェントまるごと共有する](https://wiki.winsmux.dev/hermes/docs/user-guide/profile-distributions/)
 
 ## 週次まとめ
 
-対象週: 2026-W39
+対象週: 2026-W40
 
-Hermes Desktop とデスクトップ向けプラグイン SDK の解説がたびたび更新され、プラグインの作り方やプラグインカタログも新しい内容に揃いました。内部構造では、コンテキストの圧縮とキャッシュ、cron やゲートウェイ、実行時のプロバイダー解決、セッションの保存領域が入れ替わっています。使う側では、Hermes Agent の設定と CLI コマンド一覧、Nous Portal、プロファイルとセッションの説明が更新され、新しいページとしてアプリケーション宣言、ボットの画面、セッション保存領域の復旧が加わりました。
+Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ版を複数の Hermes につなぐ話が更新され、プラグインの作り方や同梱のプラグイン、コンテキストエンジンのプラグインも新しい内容に揃いました。内部構造では、コンテキストの圧縮とキャッシュ、Multiplexing Gateway の内部構造、ゲートウェイのセッションライフサイクル、Relay 共有メトリクスが入れ替わっています。使う側では、インストールと更新、Windows（ネイティブ）ガイド、CLI コマンド一覧と環境変数、カンバンやプロファイル、Telegram・Discord・SimpleX Chat との連携が更新され、Brag や Baoyu Comic といったスキルの説明も加わりました。
 
 ## 正本
 

@@ -2,7 +2,7 @@
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: b7e84c076ef74893442de1c4f96bbccaf4c28a52
+upstream_blob: 693d164ae164c9990cfcad7f74b98fcbba4d079c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -347,7 +347,7 @@ ChatGPT Codex のバックエンドは、gpt-5.4、gpt-5.6（Sol / Terra / Luna�
 大きいウィンドウはあくまで任意で選ぶものとしています。
 
 大きいウィンドウを使うには、`/model` で `-900k` の付いた選択肢を明示的に選んでください
-（たとえば `gpt-6-sol-900k`、`gpt-6-terra-900k`、`gpt-6-luna-900k`、`gpt-5.6-sol-900k`、`gpt-5.6-terra-900k`、`gpt-5.6-luna-900k`、
+（たとえば `gpt-6.1-sol-900k`、`gpt-6-sol-900k`、`gpt-6-luna-900k`、`gpt-5.6-sol-900k`、`gpt-5.6-terra-900k`、`gpt-5.6-luna-900k`、
 `gpt-5.4-900k`）。これらは Hermes 側の別名で、バックエンドへモデル ID を送る前に接尾辞は
 取り除かれ、料金と使用量の計算では元のモデルとして扱われます。本当に 272K で固定されている
 名前（gpt-5.5、gpt-5.4-mini）には `-900k` の選択肢はありません。認証済みの Codex の

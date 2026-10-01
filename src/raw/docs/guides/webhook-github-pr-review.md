@@ -2,7 +2,7 @@
 title: "Webhook で GitHub の PR に自動でコメントする"
 description: "Hermes を GitHub につないで、PR の差分を取り、コードの変更をレビューし、コメントを書き込むところまでを自動にします。きっかけは webhook で、こちらから頼む必要はありません"
 upstream_path: guides/webhook-github-pr-review.md
-upstream_blob: c875c7b9cd507a335754f9d77a176683f6273b6d
+upstream_blob: bff438a3c9f5ad3ba0caabf45b2f6c1ade18f03c
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/webhook-github-pr-review
 ---
@@ -284,7 +284,7 @@ GitLab のペイロードの項目名は GitHub とは違います。たとえ�
 - 本番では **`INSECURE_NO_AUTH` を絶対に使わないでください**。署名の検証が丸ごと無効になります。手元での開発のためだけのものです。
 - **webhook の秘密の値は定期的に入れ替えて**、GitHub 側（webhook の設定）と `config.yaml` の両方を更新してください。
 - **回数の制限**は、既定でルートごとに毎分 30 回です（`extra.rate_limit` で変えられます）。超えると `429` が返ります。
-- **同じ配信が重複したとき**（webhook の再送）は、1 時間だけ覚えておく仕組みで重複を落とします。目印にするのは、あれば `X-GitHub-Delivery`、次に `X-Request-ID`、それもなければミリ秒のタイムスタンプです。配信の ID のヘッダーがどちらも付いていない場合、再送は重複として落とされ**ません**。
+- **同じ配信が重複したとき**（webhook の再送）は、1 時間だけ覚えておく仕組みで重複を落とします。目印にするのは、あれば `X-GitHub-Delivery`、次に `X-Request-ID`、それもなければリクエストごとに振るランダムな ID です。配信の ID のヘッダーがどちらも付いていない場合、再送は重複として落とされ**ません**。
 - **プロンプトインジェクション:** PR のタイトル、説明、コミットのメッセージは、攻撃者が自由に書けます。悪意のある PR がエージェントの動きを操ろうとしてくることがあります。インターネットに向けて開くなら、ゲートウェイは隔離された環境（Docker、仮想マシン）で動かしてください。
 
 ---

@@ -2,7 +2,7 @@
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: c5bca3df9a13163dc0f0266e1a4319104fab57ea
+upstream_blob: 2ae7663db8101ab3ff4fc336b1a0226e739da32f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -479,12 +479,22 @@ telemetry:
 - `enabled` と同じく、`send` はプロファイルが持つ設定で、管理側スコープの設定で
   上書きされることはありません。
 
-どちらのキーも、プロファイルごとに1回だけたずねます。`hermes setup` の Shared Metrics の節か、
-Hermes Desktop では入力欄の上に出る提案の帯です
-（Send to Nous / Local only / No thanks の選択肢と、Details の表示があります）。Desktop の提案は
-入力欄をふさがず、フォーカスも奪いません。初回起動の導入が終わってから表示され、
-答えるまで残ります。`config.yaml` にどちらかのキーがすでにあるプロファイルでは、どの画面でも二度とたずねません。あとから両方のキーを切り替えるには、
-Settings › Safety › Privacy & network を使います。
+どちらのキーも、プロファイルごとに1回だけたずねます。どの画面でも答えは同じ3つです
+（Send to Nous / Local only / No thanks）。
+
+| 画面 | 提案が出る場所 |
+| --- | --- |
+| `hermes setup` | すべての流れ（Quick、Full、Blank Slate、Portal、`--quick`）の最後。 |
+| `hermes` / `hermes --tui` | 対話のチャットを始める前に1回。`-q`、パイプや JSON での出力、起動されたアクション、Desktop の中で開いたペインでは出しません。 |
+| Hermes Desktop | 初回起動の導入が終わったあと、入力欄の上に出る帯。入力欄をふさがず、フォーカスも奪いません。 |
+| Web ダッシュボード | 管理しているプロファイルについて、すべてのページの上に出るバナー。 |
+
+ターミナルでは「No thanks」が既定なので、Enter を押しただけで誰かが参加してしまうことはありません。
+ターミナルで Esc を押すか、ダッシュボードのバナーの ✕ を押した場合は、質問は答えのないまま残り、
+次の機会にまたたずねます。どの画面で答えても、両方のキーがプロファイルの `config.yaml` に書き込まれます。
+どちらかのキーがすでにあるプロファイルでは、二度とたずねません。管理されたインストールでは、提案そのものを出しません。
+あとから答えを変えるには、`hermes setup telemetry`、`hermes tools`、または Desktop の Settings ›
+Safety › Privacy & network を使います。
 
 **パッケージを送信するのは、その期間全体が記録済みの同意期間に収まるときだけです。**
 同意は、共有メトリクスの SQLite ストア（`send_consent_windows`）に明示的な区間として保存します。

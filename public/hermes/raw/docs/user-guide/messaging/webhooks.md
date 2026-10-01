@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Webhook"
 description: "GitHub や GitLab などのサービスからイベントを受け取り、Hermes のエージェント実行を起こす"
 upstream_path: user-guide/messaging/webhooks.md
-upstream_blob: 55c70f41a1a95693e0f09190f773a65449547f9e
+upstream_blob: b53b6a0816680d351c2ad61e1de60bc04c4812b6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks
 ---
@@ -524,9 +524,11 @@ hermes webhook test github-issues --payload '{"issue": {"number": 42, "title": "
 ### 動的な購読のしくみ {#how-dynamic-subscriptions-work}
 
 - 購読は `~/.hermes/webhook_subscriptions.json` に保存されます
-- webhook アダプターはリクエストを受けるたびにこのファイルを読み直します（更新時刻を見るので、負荷はごくわずかです）
+- webhook アダプターはリクエストを受けるたびに、このファイルの整合のとれたスナップショットを読み直します（更新時刻・サイズ・inode を見て変化があったときだけ読み、ロックは使いません）
 - 同じ名前があるときは、`config.yaml` の固定ルートが必ず優先されます
 - 動的な購読は、固定ルートと同じ書式・同じ機能を使えます（イベント、プロンプトのテンプレート、skill、配信先）
+- 作成・更新・有効化と無効化・削除の操作は順番に1つずつ処理され、保存ファイルを丸ごと原子的に置き換えます。同時に走った古い更新は拒否されるので、別の操作が削除や無効化したルートが元に戻ることはありません
+- 既存のルートを `--route-profile` で付け替えると、その HMAC シークレットは自動で新しくなります。古いプロファイルのシークレットを持つ呼び出し元は、付け替えたルートで認証できません。別の `--secret` を渡すのは、受け取る側のサービスが運用者の決めた値を求める場合だけにしてください
 - ゲートウェイの再起動は不要です。購読した瞬間から有効になります
 
 ### エージェントに購読を作らせる {#agent-driven-subscriptions}
@@ -618,7 +620,7 @@ platforms:
 
 ### 重複の除去 {#idempotency}
 
-配信 ID（`X-GitHub-Delivery`、`svix-id`、`webhook-id`、`X-Request-ID`、またはタイムスタンプで代用）は **1 時間**保持されます。重複した配信（webhook の再送など）は黙って読み飛ばして `200` を返すので、エージェントが二重に動くことはありません。
+配信 ID（`X-GitHub-Delivery`、`svix-id`、`webhook-id`、`X-Request-ID`、またはリクエストごとのランダムな ID で代用）は **1 時間**保持されます。重複した配信（webhook の再送など）は黙って読み飛ばして `200` を返すので、エージェントが二重に動くことはありません。
 
 ### 本文サイズの上限 {#body-size-limits}
 

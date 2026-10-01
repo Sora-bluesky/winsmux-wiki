@@ -2,7 +2,7 @@
 title: "Git ワークツリー"
 description: "git のワークツリーと独立したチェックアウトを使って、同じリポジトリで複数の Hermes エージェントを安全に動かします"
 upstream_path: user-guide/git-worktrees.md
-upstream_blob: 98b65f3092ae82d4840b0fbc2cd4d40e4717955b
+upstream_blob: b2d130198f836fe1bf5522ad2970ec0b54b41621
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/git-worktrees
 ---
@@ -171,6 +171,8 @@ hermes -w
 - リポジトリ内の `.worktrees/` の下に、一時的なワークツリーを作ります。
 - 分離されたブランチ（たとえば `hermes/hermes-<hash>`）をチェックアウトします。
 - そのワークツリーの中で、CLI セッションを最後まで動かします。
+
+Hermes はこのワークツリーをチェックアウトするとき、リポジトリ自身の git の設定を動かしません。フック、`core.fsmonitor`、clean/smudge フィルターはこのチェックアウトでは無効になります。Hermes が kanban のタスクやサブエージェント用に作るワークツリーと同じ扱いです。Git LFS でファイルを保存しているリポジトリでは、ワークツリーにはポインタのファイルが置かれます。セッションでその中身が必要なら、ワークツリーの中で `git lfs pull` を実行してください。
 
 ワークツリーによる分離を得るには、これがいちばん簡単な方法です。単発の問い合わせと組み合わせることもできます。
 

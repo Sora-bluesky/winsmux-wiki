@@ -2,7 +2,7 @@
 title: "画像生成"
 description: "FAL.ai 経由で画像を生成します。FLUX 2、GPT Image（1.5 と 2）、Nano Banana Pro、Ideogram、Recraft V4 Pro、Krea 2 など 11 モデルに対応し、`hermes tools` で選べます。"
 upstream_path: user-guide/features/image-generation.md
-upstream_blob: 2c9bd620b39d213be70c3db55141e8277bf8f60a
+upstream_blob: 7c4f5738af0f7490bb6a4a940e9ed64d52d510de
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/image-generation
 ---
@@ -34,7 +34,7 @@ Hermes Agent は FAL.ai を通して、文章のプロンプトから画像を�
 :::tip Nous のサブスク利用者へ
 有料の [Nous Portal](https://portal.nousresearch.com) サブスクリプションを使っている場合は、FAL の API キーがなくても **[Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/)** 経由で画像生成が使えます。選んだモデルはどちらの経路でも共通で保たれます。新しく入れる場合は `hermes setup --portal` でログインすれば、ゲートウェイの道具をまとめて有効にできます。すでに入れてある場合は `hermes tools` で画像生成の接続先として **Nous Subscription** を選んでください。
 
-管理型の行は **Nous Subscription** の 1 つだけです。この行のモデル選択には、サブスクリプションが動かしているすべてのゲートウェイのモデルが並びます。上に挙げた FAL のモデル一覧、Krea 2 のネイティブ版（`krea-2-medium`、`krea-2-large`、`krea-2-medium-turbo`）、そして Nous Portal の画像モデルです。同じモデルが重複して出ることはなく、選んだモデルによってどのゲートウェイが処理するかが決まります。無料の道具プールのアカウントでは FAL のモデルだけが見えます。Krea と Portal のモデルは有料のサブスクリプション向けです。
+管理型の行は **Nous Subscription** の 1 つだけです。この行のモデル選択には、サブスクリプションが動かしているすべてのゲートウェイのモデルが並びます。上に挙げた FAL のモデル一覧、Krea 2 のネイティブ版（`krea-2-medium`、`krea-2-large`、`krea-2-medium-turbo`）、そして Nous Portal の画像モデルです。同じモデルが重複して出ることはなく、選んだモデルによってどのゲートウェイが処理するかが決まります。無料の道具プールのアカウントでは FAL のモデルだけが見えます。Krea と Portal のモデルは有料のサブスクリプション向けです。Krea 2 のモデルを選んでいると、`image_generate` では Krea の `creativity` の設定と、`intensity`・`complexity`・`movement` のスライダー（-100 から 100）も使えます。
 
 管理型のゲートウェイが特定のモデルで `HTTP 4xx` を返すときは、そのモデルがまだポータル側で中継されていないということです。その場合はエージェントがそう伝えたうえで、直す手順も示します（`hermes tools` で FAL.ai に切り替えて自分の `FAL_KEY` で直接つなぐか、別のモデルを選ぶ）。
 :::
@@ -293,7 +293,7 @@ Blend these two product shots into one hero image → <image1> <image2>
 | **FAL.ai**（下に挙げた編集対応モデル） | ✓ | 最大 16 枚（モデルによる） | そのモデルの `/edit` の窓口に振り分けます |
 | **OpenAI**（GPT Image 2 / 2.5 Flare / Sunburst） | ✓ | 最大 16 枚 | `images.edit()` |
 | **xAI**（Grok Imagine） | ✓ | 1 枚 | `/v1/images/edits`（`grok-imagine-image-quality`） |
-| **Krea**（`Krea 2`） | ✓ | 最大 10 枚 | 参考画像にならった生成（`image_style_references`） |
+| **Krea**（`Krea 2`） | ✓ | 最大 10 枚 | 参考画像にならった生成（`image_style_references`）。手元のファイルはリクエストに埋め込まれ、合計 3 MB まで |
 | **OpenAI (Codex auth)** | ✓ | 最大 16 枚 | `POST /backend-api/codex/images/edits` に、`images[]` の data URL を直接埋め込んで送ります（リモートの URL は手元で取得してから渡します） |
 | **OpenRouter**（Image API のモデル） | ✓ | 最大 14〜16 枚（モデルによる） | `POST /images/generations` の `input_references`。チャット経由のモデルは `image_url` の内容を使います（3 枚まで） |
 

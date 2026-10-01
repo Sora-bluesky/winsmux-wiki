@@ -923,6 +923,12 @@
     "autonomous-ai-agents-agent-merge-conflict-arbiter": [
       "ai-agent",
       "coding"
+    ],
+    "creative-brag": [
+      "image-video"
+    ],
+    "creative-brag-slim": [
+      "image-video"
     ]
   }
 }

@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: d70a3e4ead288568dbc5048028b2772071f3a81c
+upstream_blob: c931e0940ebf04eadc96fc754f47f04a8f895204
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -663,7 +663,7 @@ slack:
 :::
 
 :::info
-Slack ではどちらのやり方も使えます。既定では会話を始めるのに `@mention` が要りますが、`SLACK_FREE_RESPONSE_CHANNELS`（チャンネル ID をカンマ区切りで）か `config.yaml` の `slack.free_response_channels` で、特定のチャンネルだけ外せます。ボットがスレッドで動き出したあとは、続く返信に呼びかけは要りません。**1 対 1 の DM** では、呼びかけなしでいつも応じます。
+Slack ではどちらのやり方も使えます。既定では会話を始めるのに `@mention` が要りますが、`SLACK_FREE_RESPONSE_CHANNELS`（チャンネル ID をカンマ区切りで）か `config.yaml` の `slack.free_response_channels` で、特定のチャンネルだけ外せます。ボットがスレッドで動き出したあとは、続く返信に呼びかけは要りません。**1 対 1 の DM** では、呼びかけなしでいつも応じます。これらの応答条件のキーは、最上位の `slack:` ブロックと `platforms.slack.extra` のどちらにも書けます。ユーザーの YAML で同じキーを両方に書いた場合は `platforms.slack.extra` が勝ち、ゲートウェイが警告をログに出します。管理者が固定した値は引き続き最優先で、明示した環境変数の設定もこれまでどおりの優先順位を保ちます。
 :::
 
 :::caution グループ DM（MPIM）は共有の場であり、1 対 1 の DM ではありません

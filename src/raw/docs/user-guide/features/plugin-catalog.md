@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 6b420aa52f5256b5e6840fbf80e6481b11273897
+upstream_blob: 8c43fac5b81160dc6a7dba2b518a9158a4baf988
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -65,6 +65,7 @@ Web サイトとデスクトップは、生成された同じ CDN のスナッ�
 | `name` | `hermes plugins install` に渡すカタログ上のキー |
 | `repo` | そのプラグインの公開 git リポジトリ |
 | `sha` | 審査された**正確な 40 桁の 16 進コミット**。インストールはブランチの先端ではなくこの固定値をチェックアウトします |
+| `subdir` | モノレポの場合に、リポジトリ内のプラグインの場所を示すパス。`[A-Za-z0-9._/-]+` に合うふつうの相対パスにします（`..`、`.`、空の区切り、絶対パスやバックスラッシュの形は不可）（任意。既定はリポジトリの最上位） |
 | `tier` | `official`（NousResearch が保守）または `community` |
 | `category` | 並ぶ棚。`desktop`（既定）、`memory`、`platform`、`web`、`tools`、`voice`、`automation`、`models`、`general` |
 | `maintainer` | そのプラグインの持ち主 |
@@ -110,6 +111,13 @@ Web サイトとデスクトップは、生成された同じ CDN のスナッ�
   引き続き不合格になります。この lint は
   審査の助けであって保証ではないと考えてください。デスクトップ側にも Python 側と同じ目を
   向けてください。
+- **Hermes を実行時に書き換えない。** 載っているプラグインは、公開された接点（フック、
+  ミドルウェア、プロバイダーのプロファイル、デスクトップ SDK のスロット）を通して Hermes を拡張し、
+  コアの関数・メソッド・デスクトップの UI をその場で置き換えることはしません。2 つのプラグインが同じ
+  継ぎ目を書き換えると互いに壊し合い、コアのリリース1つで両方が壊れることもあるからです。審査の
+  `no core override` チェックは、Hermes のモジュール・クラス・その表を実行時に差し替える Python を拒み、
+  `desktop surface` の lint は、アプリ自身のマークアップを探してコアの UI の見た目を変えたり、隠したり、
+  クリックしたり、書き換えたりする `desktop/plugin.js` のコードを拒みます。
 - **機能の宣言。** 各項目は、そのプラグインが提供するツール・フック・ミドルウェアと、必要な
   環境変数（API キーなど）を最初に明示します。入れる前に影響範囲を判断できます。
 - **削除リスト。** カタログから取り下げられたプラグイン（たとえばセキュリティ上の問題が

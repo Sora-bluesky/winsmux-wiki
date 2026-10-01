@@ -2,7 +2,7 @@
 title: "WhatsApp Business（Cloud API）"
 description: "Meta 公式の Business Cloud API を使って Hermes Agent を WhatsApp のボットとして設定する"
 upstream_path: user-guide/messaging/whatsapp-cloud.md
-upstream_blob: 4e5f4e5fe81b4f854c8f28d3b1120bb20c7ec570
+upstream_blob: 51aa19f9188fcda02a6d2e97e100e052e5098f3b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/whatsapp-cloud
 ---
@@ -68,7 +68,7 @@ hermes whatsapp-cloud
 | **Access Token** | アプリの画面 → WhatsApp → API Setup →「アクセストークンを生成」 | `EAA` で始まる 100 文字以上 | 一時的なトークンは 24 時間で切れます。本番では下の「期限のないトークン」を見てください。 |
 | **App Secret** | アプリの画面 → 設定 → ベーシック → App secret の横の「表示」 | 小文字の 16 進数 32 文字 | 届いた webhook の署名を確かめるために使います。 これがないと、受信は 503 で拒まれます。 |
 | **App ID**（任意） | アプリの画面 → 設定 → ベーシック | 数字 15〜16 桁 | メッセージのやり取りには要りませんが、分析に使えます。 |
-| **WABA ID**（任意） | アプリの画面 → WhatsApp → API Setup → 上のほう | 数字 15 桁以上 | メッセージのやり取りには要りませんが、分析に使えます。 |
+| **WABA ID**（任意） | アプリの画面 → WhatsApp → API Setup → 上のほう | 数字 15 桁以上 | 設定すると、届く webhook はこのビジネスアカウントのものと一致しなければなりません。 |
 
 ---
 
@@ -231,7 +231,7 @@ WhatsApp は、チャットの見出しや連絡先の一覧にボットの **�
 | **`WHATSAPP_CLOUD_ALLOWED_USERS`** | — | ボットにメッセージを送れる wa_id をカンマ区切りで書きます。 |
 | `WHATSAPP_CLOUD_ALLOW_ALL_USERS` | `false` | `true` にすると許可リストを使いません。 |
 | `WHATSAPP_CLOUD_APP_ID` | — | 任意です。今後の分析との連携に使います。 |
-| `WHATSAPP_CLOUD_WABA_ID` | — | 任意です。今後の分析との連携に使います。 |
+| `WHATSAPP_CLOUD_WABA_ID` | — | 任意です。設定すると、届く webhook はこのビジネスアカウントのものと一致しなければなりません。 |
 | `WHATSAPP_CLOUD_WEBHOOK_HOST` | 未設定（IPv4 と IPv6 の両方で、すべての接続口） | webhook のサーバーが待ち受ける接続口です。 |
 | `WHATSAPP_CLOUD_WEBHOOK_PORT` | `8090` | webhook のサーバーが待ち受けるポートです。 トンネルの転送先と合わせます。 |
 | `WHATSAPP_CLOUD_WEBHOOK_PATH` | `/whatsapp/webhook` | Meta が POST を送る URL の経路です。 |

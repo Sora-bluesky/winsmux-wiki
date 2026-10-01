@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 63664d476cb380d1754701e3586f1931eb9730df
+upstream_blob: 17c3a2f62cf4aff51d90a0e691986f83b0351ac7
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -1269,6 +1269,10 @@ Hermes はもう `model.max_tokens`、`HERMES_MAX_TOKENS`、プロバイダ側�
 `model_overrides.*.*.max_output_tokens` を読みません。これらの古い設定は消してください。
 独自の OpenAI 互換エンドポイントには、カタログのサイズに合わせた出力上限を自動では付けません。
 サーバー側の既定がそのまま効くので、モデルの最大値より小さいこともあります。
+それでも、応答が同じ内容の繰り返しに陥った場合は止まります。繰り返しが始まってからおよそ 130,000
+文字以内（表示される本文でも推論のテキストでも）に、Hermes がストリームを閉じ、
+「Repetition Detected」という通知を出してターンを終えます。上限のないエンドポイントでも、繰り返し続けるモデルが
+動き続けることはありません。
 
 ネイティブの Anthropic Messages（ネイティブの Anthropic Bedrock の経路も含みます）は
 `max_tokens` を必須とするので、Hermes が内部の値を渡します。Bedrock Converse は別のプロトコルで、

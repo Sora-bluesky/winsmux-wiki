@@ -2,7 +2,7 @@
 title: "実行時のプロバイダー解決"
 description: "Hermes が実行時にプロバイダー・資格情報・API モード・補助モデルをどう決めているか"
 upstream_path: developer-guide/provider-runtime.md
-upstream_blob: cae44ae79ddd3037276dd63ac678efd878006f5c
+upstream_blob: 60f1638b1f931f7db52ba9c2ff6d12d99978ef64
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/provider-runtime
 ---
@@ -162,7 +162,7 @@ Codex は Responses API を使う別経路です。
 
 - `api_mode = codex_responses`
 - 専用の資格情報の解決と、認証情報の保管への対応
-- 再開したセッションに残っていた Codex の推論項目（`encrypted_content`）が拒否されたとき（400 の `invalid_encrypted_content` でも、401 の `token_expired` でも）は、資格情報の更新やプールの切り替えに進む前に、保存していた項目を外して一度だけ送り直し、自力で立て直します
+- 再開したセッションに残っていた Codex の推論項目（`encrypted_content`）が拒否されたとき（400 の `invalid_encrypted_content` でも、401 の `token_expired` でも）は、資格情報の更新やプールの切り替えに進む前に、保存していた項目を外して一度だけ送り直し、自力で立て直します。その除去のあとに生成された推論は引き続き送り直します。送り直しを止めるのは、同じセッションで2回目に拒否されたときだけです
 
 ## 補助モデルの振り分け {#auxiliary-model-routing}
 

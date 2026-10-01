@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 103d06b3001cf744fc38af1c22331df78e1c1813
+upstream_blob: 0eb4fe936b9f241b5787186d662b84b9b5c3981a
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -406,7 +406,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `WHATSAPP_CLOUD_ALLOWED_USERS` | ボットへ送れる `wa_id`（国番号付きの電話番号、`+` なし）をカンマ区切りで |
 | `WHATSAPP_CLOUD_ALLOW_ALL_USERS` | 許可一覧なしで、すべての WhatsApp Cloud の送信者を受け入れます（`true`/`false`） |
 | `WHATSAPP_CLOUD_APP_ID` | Meta のアプリ ID（任意。今後の分析機能との連携用） |
-| `WHATSAPP_CLOUD_WABA_ID` | WhatsApp Business Account の ID（任意。今後の分析機能との連携用） |
+| `WHATSAPP_CLOUD_WABA_ID` | WhatsApp Business Account の ID（任意）。設定すると、受け取る webhook はこの ID と一致している必要があります |
 | `WHATSAPP_CLOUD_WEBHOOK_HOST` | 受信 webhook のサーバーが待ち受けるインターフェース（既定 `0.0.0.0`） |
 | `WHATSAPP_CLOUD_WEBHOOK_PORT` | 受信 webhook のサーバーが待ち受けるポート（既定 `8090`） |
 | `WHATSAPP_CLOUD_WEBHOOK_PATH` | Meta が受信メッセージを送ってくる URL のパス（既定 `/whatsapp/webhook`） |

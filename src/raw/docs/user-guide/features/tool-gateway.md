@@ -2,7 +2,7 @@
 title: "Nous Tool Gateway"
 description: "サブスクリプション 1 つで、すべてのツールを。Web 検索、画像生成、音声読み上げ、クラウドブラウザーを、追加の API キー無しで Nous Portal 経由に束ねます。"
 upstream_path: user-guide/features/tool-gateway.md
-upstream_blob: 552135ce063987c571ef32c4f7a30abbbef1d3d4
+upstream_blob: bebe3c896efd120af1f1b7d5a32014aacc901c31
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-gateway
 ---
@@ -20,7 +20,7 @@ Tool Gateway は、有料の [Nous Portal](https://portal.nousresearch.com) サ�
 | | ツール | できること |
 |---|---|---|
 | 🔍 | **Web 検索と本文抽出** | Nous が運用する、エージェント向けの Web 検索と、ページ全文の抽出。スケーリングはゲートウェイ側が引き受けるので、レート制限を気にする必要はありません。 |
-| 🎨 | **画像生成** | 1 つのエンドポイントに 9 つのモデル。**FLUX 2 Klein 9B**、**FLUX 2 Pro**、**Z-Image Turbo**、**Nano Banana Pro**（Gemini 3 Pro Image）、**GPT Image 1.5**、**GPT Image 2**、**Ideogram V3**、**Recraft V4 Pro**、**Qwen Image**。生成ごとにフラグで選ぶことも、Hermes の既定である FLUX 2 Klein に任せることもできます。 |
+| 🎨 | **画像生成** | **Nous Subscription** の 1 行で、FAL のカタログ、Krea 2 のネイティブモデル、Nous Portal の画像モデルをまとめて使えます。**FLUX 2**、**GPT Image**、**Nano Banana**、**Seedream**、**Ideogram**、**Recraft**、**Qwen**、**Krea 2** などです。モデルは `hermes tools` で一度選ぶだけで、そこに最新の一覧が出ます。 |
 | 🔊 | **音声読み上げ** | OpenAI の TTS 音声が `text_to_speech` ツールにつながっています。Telegram にボイスメモを投げる、パイプライン用の音声を作る、何かを読み上げさせる、といった使い方ができます。 |
 | 🌐 | **クラウドブラウザーの自動操作** | Browser Use 経由のヘッドレス Chromium セッション。`browser_navigate`、`browser_click`、`browser_type`、`browser_vision` といったエージェント操作の基本部品が、Browserbase のアカウント無しで使えます。 |
 
@@ -111,23 +111,13 @@ hermes tools          # Interactive picker for each tool category
 
 ## 画像モデルを個別に使う {#using-individual-image-models}
 
-画像生成は速さを優先して FLUX 2 Klein 9B を既定にしています。呼び出しごとに変えたい場合は、`image_generate` ツールにモデル ID を渡してください。
+モデルは `hermes tools` → Image Generation で一度だけ選び、`config.yaml` に `image_gen.model` として保存されます。`image_generate` の呼び出しはすべて、この保存済みのモデルを使います。ツールにはモデルを指定する引数が無いので、呼び出しごとに切り替えることはできません。何も設定していなければ、Hermes は FLUX 2 Klein 9B を使います。
 
-| モデル | ID | 向いている用途 |
-|---|---|---|
-| FLUX 2 Klein 9B | `fal-ai/flux-2/klein/9b` | 高速。既定として使いやすい |
-| FLUX 2 Pro | `fal-ai/flux-2-pro` | より忠実度の高い FLUX |
-| Z-Image Turbo | `fal-ai/z-image/turbo` | 様式的で高速 |
-| Nano Banana Pro | `fal-ai/nano-banana-pro` | Google Gemini 3 Pro Image |
-| GPT Image 1.5 | `fal-ai/gpt-image-1.5` | OpenAI の画像生成。テキストと画像の両方 |
-| GPT Image 2 | `fal-ai/gpt-image-2` | OpenAI の最新版 |
-| Ideogram V3 | `fal-ai/ideogram/v3` | プロンプトへの忠実さと文字組みに強い |
-| Recraft V4 Pro | `fal-ai/recraft/v4/pro/text-to-image` | ベクター調、グラフィックデザイン向け |
-| Qwen Image | `fal-ai/qwen-image` | Alibaba のマルチモーダル |
+**Nous Subscription** の行にはモデル選択が 1 つだけあり、すべてのモデルが 1 回ずつ並びます。どのゲートウェイがリクエストを処理するかは、保存されたモデルの ID で決まります。Krea のネイティブ ID（`krea-2-medium`、`krea-2-large`、`krea-2-medium-turbo`）なら Krea のゲートウェイへ、FAL のカタログの ID なら FAL へ、それ以外の ID なら Nous Portal へ送られます。設定としては、これまでどおり `image_gen.provider: nous` とモデルの ID を書くだけです。
 
-顔ぶれは移り変わります。`hermes tools` → Image Generation で、現在の一覧を確認できます。
+**Krea 2**（Medium、Large、Medium Turbo — 画風の参考画像を最大 10 枚まで、任意で Enhance による高解像度化）と Nous Portal の画像モデルは、それぞれ専用の行を持つのではなく、この同じモデル選択の中に並びます。これらには有料のサブスクリプションが必要で、無料のツール枠がまかなうのは FAL のモデルだけです。FAL 経由の Krea の ID（`fal-ai/krea/v2/...`）は、これまでどおり FAL.ai を直接使う行に残ります。
 
-**Krea 2**（Medium、Large、Medium Turbo — 画風の参考画像を最大 10 枚まで、任意で Enhance による高解像度化）と、Nous Portal の画像モデルは、それぞれ専用の行を持つのではなく、同じ **Nous Subscription** のモデル選択の中に並びます。どのモデルも 1 回だけ出てきて、Krea の ID（`krea-2-medium` など）を選ぶと、リクエストの宛先が FAL ではなく Krea のゲートウェイになります。設定としては、これまでどおり `image_gen.provider: nous` とモデルの ID を書くだけです。Krea と Portal のモデルには有料のサブスクリプションが必要で、無料のツール枠がまかなうのは FAL のモデルだけです。
+モデルの ID、速さ、料金は [画像生成](/hermes/docs/user-guide/features/image-generation/#supported-models) のページにまとめています。顔ぶれは移り変わります。`hermes tools` → Image Generation で、現在の一覧を確認できます。
 
 ---
 
