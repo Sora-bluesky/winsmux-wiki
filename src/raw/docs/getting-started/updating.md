@@ -2,7 +2,7 @@
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: cbd089c531b5d2d461c598113c0ba8eb0334df72
+upstream_blob: 7a552b46f6a0f79898a3b9dba18cdf20b8e70226
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -154,6 +154,8 @@ hermes config set updates.check false
 
 引っかかったまま進まない作業は、再起動を引き止めません。`agent.gateway_timeout` を超えて何も起きていないチャットのターンや、スケジューラーが認める進行中の上限（`max(2 × the job's interval, cron.inflight_max_minutes)`。既定では 30 分）より古い cron の実行は、待つ対象から外され、再起動によって打ち切られます。
 
+ゲートウェイより長く生き延びる作業も、再起動を引き止めません。すでに独自の systemd スコープ（`systemd-run --user --scope`。systemd でインストールした場合の通常の形です）を持つワーカーに渡された cron の実行は、ゲートウェイが止まっても動き続け、その結果は次に立ち上がったゲートウェイが永続キューから届けます。そのため、再起動は上限いっぱいまで待たずに進みます。独自のスコープを得られなかったワーカー（ユーザーの D-Bus セッションに接続できない場合です。`cron.require_restart_safe_scope` を参照）は、ゲートウェイの cgroup にとどまり、引き続き待つ対象になります。再起動すると実行の途中で終了させてしまうからです。
+
 ### Windows で更新用のファイルが見つからないとき {#missing-windows-updater-files}
 
 保守されている更新スクリプトが見当たらない場合（たとえばウイルス対策ソフトに隔離されたときです）、旧来の更新の受け渡し処理は、引き渡しに成功したと報告せずに失敗します。もう一度試す前に、インストールを修復し、セキュリティソフトの隔離レポートを確認してください。ウイルス対策そのものを止めるのはやめてください。保守されている更新処理は、成功を報告する前に、CLI の読み込み、Windows の実行ファイルのヘッダー、ASAR のヘッダーと同梱された main のエントリ、ローカルのモジュールエントリを持つ読み取り可能な画面側の HTML、最初のモジュールファイル、現在のビルド刻印を確かめます。これらは最低限の成果物チェックであって、依存関係の全数監査でも、アプリやバックエンドを実際に起動する試験でもありません。Python が見つからないことは、デスクトップアプリの終了を待つ前に報告します。依存関係の修復は、更新の一部としてそのまま実行できます。Electron は、その構成であればバックエンドを止める前に受け渡しの前提条件を確かめます。旧来のフラットな更新構成も引き続き使えるため、更新用のファイルの欠落がすべてバックエンド停止の前に見つかるわけではありません。
@@ -197,6 +199,22 @@ git -C "$repo" rev-list --objects --missing=error --all >/dev/null && echo compl
 ```powershell
 git -C $repo rev-list --objects --missing=print --all | Where-Object { $_.StartsWith('?') } | ForEach-Object { $_.Substring(1) } | git -C $repo fetch -q --no-tags --stdin origin
 git -C $repo rev-list --objects --missing=error --all | Out-Null; $LASTEXITCODE   # 0 = complete
+```
+
+### 部分クローンで `.git` が大きくなり続けるとき {#git-keeps-growing-in-a-partial-clone}
+
+インストーラーが作るチェックアウトは部分クローンです。git はツリーと blob を必要になった時点でダウンロードし、
+そのたびに小さなパックを1つずつ書き出します。`hermes update` と `hermes update --check` は、
+これらを `git gc --auto`（git 自体の `gc.autoPackLimit`。既定は 50）でまとめ直すので、
+健全なチェックアウトでは何も起きません。また、そのチェックアウトで `maintenance.commit-graph.enabled`、
+`gc.writeCommitGraph`、`fetch.writeCommitGraph` を `false` に設定します。コミットグラフがまだ把握していないコミットに対して書き込みを行うと、それらのコミットのツリーがすべてダウンロードされてしまうからです。これらの設定は変えずにおき、
+`gc.auto` も既定のままにしてください。`gc.auto=0` にするとまとめ直しが止まります。数千個のパックがたまったチェックアウトでの
+最初のまとめ直しは完全な再パックになり、数分かかることがあります。更新は始める前にその旨を伝え、
+まとめ直しが 20 分を超えた場合は処理を止めて、次のコマンドを表示します。
+手でまとめ直すには、Hermes を閉じた状態で次を実行します。
+
+```bash
+git -C "$repo" -c gc.writeCommitGraph=false gc --auto
 ```
 
 ### 既定以外のブランチに対して更新する: `--branch` {#updating-against-a-non-default-branch---branch}

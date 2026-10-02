@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 8c43fac5b81160dc6a7dba2b518a9158a4baf988
+upstream_blob: 8005cf156737a8a71b76a2ab42810ab99c57939d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -19,7 +19,7 @@ hermes plugins install <name>
 見て選びたいときは **[/docs/plugins](https://hermes-agent.nousresearch.com/plugins)** を開いてください。
 カテゴリ（メモリ、デスクトップ、プラットフォーム、Web とブラウザ、ツール、音声、自動化、
 モデル）ごとに棚が分かれていて、検索、ティア絞り込み（公式 / コミュニティ）、機能チップ、
-そして各項目の **Open in Hermes Desktop** ボタンとコピーできる CLI コマンドが並びます。
+そして各項目のコピーできるインストールコマンドが並びます。
 
 カード（クリックできます）ごとに専用ページ `/docs/plugins/<name>` もあります。
 説明の全文と注意書き、固定されたコミット、ツール・フック・環境変数、デスクトップ用の
@@ -28,11 +28,6 @@ hermes plugins install <name>
 その人がカタログで保守しているものがすべて並びます。どちらも同じカタログファイルからビルド時に
 生成されるので、ページが変わるのは PR がマージされたときだけです。
 
-デスクトップでは **Capabilities → Plugins → Browse** を開くと、ネイティブのカタログ画面が出ます。
-Web サイトを埋め込んだものではありません。**Installed** は別のタブで、カタログの情報ではなく、
-アプリのデスクトッププラグインの登録内容と、選んでいるプロファイルのエージェントプラグインの状態をもとに表示します。
-Skills も同じ **Installed / Browse** の配置で、検索欄は上に固定され、タブの切り替えと操作ボタンは同じ行に並びます。
-
 カタログは既存の[プラグインの仕組み](/hermes/docs/user-guide/features/plugins/)を置き換えるものではなく、補うものです。
 カタログから入れたものも中身はふつうのプラグインで、カタログは見つけやすさと審査の層を
 その上に足しているだけです。
@@ -40,19 +35,6 @@ Skills も同じ **Installed / Browse** の配置で、検索欄は上に固定�
 デスクトップのオンボーディング中には、セットアップガイドが承認カードを通じてカタログのプラグインやスキルを
 勧めることもあります。各行は Install をクリックしたときにだけ `default` プロファイルに入り、
 このページで説明しているのと同じ審査済みのコミットが使われます。
-
-### 公開されている閲覧用データ {#published-browse-data}
-
-Web サイトとデスクトップは、生成された同じ CDN のスナップショットを読みます:
-[`https://hermes-agent.nousresearch.com/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json)。
-デスクトップは
-`https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` から取得し、公開の
-ドキュメント側の別名も同じデータを返します。ドキュメントのビルドは `plugin-catalog/*.yaml` を読み、
-キャッシュしたリポジトリのスター数を加えます。インストーラー用の削除済み項目の一覧も公開します。
-どちらの Browse 画面も、元のリポジトリを巡回したり、GitHub API をその場で問い合わせたりはしません。
-
-この閲覧用スナップショットは、カタログ上の名前と固定値を解決するインストーラーの
-[`plugin-catalog.json`](#live-refresh) とは別物です。
 
 ## 項目の中身 {#whats-in-an-entry}
 
@@ -139,21 +121,6 @@ Web サイトとデスクトップは、生成された同じ CDN のスナッ�
 :::
 
 ## カタログから入れる {#installing-from-the-catalog}
-
-Web サイトの **Open in Hermes Desktop** は、次の形のプロトコルリンクを開きます。
-
-```text
-hermes://plugin/install?catalog=example-plugin
-```
-
-デスクトップは公開カタログからその名前を解決し、確定する前に取得元・入れ先・構成要素を確認するよう求めます。
-リンクが勝手にインストールしたり、独自のリポジトリやコミットを指定したりすることはありません。
-名前が見つからないときや照会に失敗したときはエラーを表示し、リポジトリからのインストールに切り替わることはありません。
-エージェントプラグインの構成要素については、バックエンドがカタログ上の名前を審査済みの固定値へ解決します。
-
-カタログのリンクと Skills Hub の `hermes://skill/install?identifier=...` のルートを使うには、
-更新済みのデスクトップ版を使ってください。カードには CLI コマンドも残っているので、
-デスクトップが無くてもカタログ上の名前で入れられます。
 
 ```bash
 # Install a reviewed catalog entry by name (checks out the pinned SHA)
@@ -260,28 +227,17 @@ git URL の経路は自分のプラグインや、すでに信頼しているリ
 ## カタログへプラグインを応募する {#submitting-a-plugin-to-the-catalog}
 
 応募は、`plugin-catalog/<name>.yaml` を1つ追加するプルリクエストです。
-確認事項の全文は
+完全なガイドラインは
+**[プラグインカタログへの応募](/hermes/docs/developer-guide/plugins/catalog-submission/)** にあります。
+応募前に確認すること、PR とレビューの進み方、受け入れの規則のすべて、
+固定値の更新・掲載の取り下げ・削除の扱いが書かれています。このページは
 [plugin-catalog の README](https://github.com/NousResearch/hermes-agent/tree/main/plugin-catalog)
-にあります。要点として、項目は次を満たす必要があります。
+にある正式な規則を写したものです。
 
-1. **持ち主からの応募であること** — PR の作者が、そのプラグインのリポジトリを所有または保守している。
-   保守担当が、審査した一斉調査からコミュニティのプラグインをまとめて追加することもあります
-   （固定値はそれぞれ、そのコミットで検証と走査を通します）。もし自分のものがその調査で入っていて、
-   変更や削除を望むなら、自分の項目に対して PR を出してください。
-2. **公開リポジトリであること** — `repo` の URL が誰でもクローンできる。
-3. **リリースされていること** — 既定のブランチがあるだけでなく、実際のリリースやタグがある。
-4. **検証を通ること** — カタログ検証の GitHub Action が PR 上で緑になる（スキーマ、SHA の形式、到達性）。
-5. **自己更新をしないこと** — カタログのビルドが自分のファイルを取得して置き換えてはいけません。
-   更新の経路は固定された SHA だけです（SHA を上げる PR と `hermes plugins update <name>`）。
-
-固定値の更新（`sha` を新しいコミットへ上げること）も、同じ PR とレビューの流れで行います。
-利用者が目にするラベルとコードが合うよう、同じ PR で `version` も上げ、sha を含む `image` /
-`screenshots` の URL も固定し直してください。プラグインのページ（`/docs/plugins/<name>`）も
-同じファイルから作られます。内容を充実させたければ `screenshots:` をそこに足してください
-（README は既定で表示されます）。別に管理する掲載情報はありません。入っているプラグインは、
-記録された sha を公開されている固定値と比べます。`hermes plugins list --json` は
-`update_available` を報告し、デスクトップのプラグインタブには **Update to 1.4.0** ボタンが出て、
-`hermes plugins update <name>` は新しい固定値をそのままチェックアウトします。
+要点だけ言うと、載っているプラグインは、持ち主が応募したもの（または保守担当が審査した一斉調査で
+追加したもの）で、公開リポジトリにあり、正確なコミットに固定され、カタログの CI で
+`hermes plugins validate` を通り、自分で自分を更新しません。そして Hermes を拡張するのは公開された
+フックとデスクトップ SDK を通してだけで、コアのコードやデスクトップの UI を実行時に書き換えることはしません。
 
 ## 関連 {#see-also}
 
@@ -290,3 +246,4 @@ git URL の経路は自分のプラグインや、すでに信頼しているリ
 - [組み込みプラグイン](/hermes/docs/user-guide/features/built-in-plugins/) — Hermes に同梱されているプラグイン
 - [Hermes プラグインを作る](/hermes/docs/developer-guide/plugins/) — 自分で書く
 - [プラグインカタログのページ](https://hermes-agent.nousresearch.com/plugins) — 一覧を見て選ぶ
+- [プラグインカタログへの応募](/hermes/docs/developer-guide/plugins/catalog-submission/) — 受け入れの規則と応募のガイド

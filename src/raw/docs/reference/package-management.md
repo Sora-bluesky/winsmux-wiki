@@ -2,7 +2,7 @@
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: fecdbddb144a5bb62fcb8574ca1806e8b9ba1483
+upstream_blob: f93d91a8310a0f7fce9c06488ea3cef0f641c6e4
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -344,6 +344,16 @@ OS 全体の PATH は変えず、通常の venv 式のプロンプトも入れ�
 `deactivate` は、アクティベーションスクリプトが記録した環境変数の値を元に戻し、
 関数とプロンプトのプレフィックスを取り除きます。
 パッケージをアンインストールしたり、自分で起動したプロセスを止めたりはしません。
+
+シェルをアクティベートせずに、その環境で1つのコマンドやスクリプトだけを実行するには、
+先頭に `scripts/run-in-hermes-env` を付けます。同じ環境をそのコマンドにだけ適用し、
+引き継げる環境がない場合や、引き継いだ環境が古くなっている場合は先に同期します。シェル自体には手を付けません。
+`scripts/run_tests.sh` はこの方法で自分自身を実行し直し、リポジトリの Python スクリプトは
+shebang から自分自身をこのコマンドに渡します。
+
+```bash
+scripts/run-in-hermes-env python scripts/release.py --help
+```
 
 作業を始める前に、インタープリターとソースを確認してください。
 

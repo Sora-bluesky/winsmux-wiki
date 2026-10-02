@@ -2,7 +2,7 @@
 title: "Honcho メモリー"
 description: "Honcho による AI 前提の永続メモリー — 対話的な推論、マルチエージェントのユーザーモデリング、深い個別化"
 upstream_path: user-guide/features/honcho.md
-upstream_blob: c13d87bb18433b101cddbe10b97d9483242550b2
+upstream_blob: 1aa15a234c8d5cbec11a5bf0b8adfc6b8bff26f3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/honcho
 ---
@@ -11,8 +11,8 @@ sources:
 
 [Honcho](https://github.com/plastic-labs/honcho) は AI 前提のメモリー基盤で、Hermes に組み込まれたメモリーの上に、対話的な推論と深いユーザーモデリングを足します。単純なキーと値の保存ではなく、会話が終わったあとにその内容を考え直すことで、ユーザーがどんな人か — 好み、話し方、目標、行動の傾向 — を捉えたモデルを保ち続けます。
 
-:::info Honcho はメモリープロバイダーのプラグインです
-Honcho は[メモリープロバイダー](/hermes/docs/user-guide/features/memory-providers/)のしくみに組み込まれています。以下の機能はすべて、共通のメモリープロバイダーの窓口から使えます。
+:::info Honcho はカタログから入れるメモリープロバイダーのプラグインです
+Honcho は Plastic Labs が保守していて、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れます（`hermes plugins install honcho`）。ソースは [plastic-labs/honcho](https://github.com/plastic-labs/honcho/tree/main/hermes-plugin-honcho) にあります。[メモリープロバイダー](/hermes/docs/user-guide/features/memory-providers/)のしくみにつながるので、以下の機能はすべて、共通のメモリープロバイダーの窓口から使えます。Honcho を同梱していたリリースから更新した環境には、このプラグインが自動で入ります。設定とメモリーはそのまま引き継がれます。
 :::
 
 ## Honcho が足すもの {#what-honcho-adds}
@@ -36,7 +36,8 @@ Honcho は[メモリープロバイダー](/hermes/docs/user-guide/features/memo
 ## セットアップ {#setup}
 
 ```bash
-hermes memory setup    # select "honcho" from the provider list
+hermes plugins install honcho   # from the plugin catalog
+hermes memory setup             # select "honcho" from the provider list
 ```
 
 手で設定する場合は次のとおりです。

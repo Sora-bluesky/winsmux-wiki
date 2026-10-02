@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: aee0a2c38f439ec7937dee1d2681efdcbb6e2b0c
+upstream_blob: 1715f113397cbb4ec09e81b9cea38cfe49695993
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -829,8 +829,8 @@ services.hermes-agent.extraDependencyGroups = [ "messaging" ];
 ```nix
 # Enable a memory provider
 services.hermes-agent = {
-  extraDependencyGroups = [ "honcho" ];
-  settings.memory.provider = "honcho";
+  extraDependencyGroups = [ "mem0" ];
+  settings.memory.provider = "mem0";
 };
 ```
 
@@ -850,7 +850,7 @@ services.hermes-agent = {
 | `anthropic` | Anthropic 純正の SDK（OpenRouter 経由なら不要です） |
 | `bedrock` | AWS Bedrock（boto3） |
 | `azure-identity` | Azure Entra ID による認証 |
-| `honcho` | Honcho の記憶プロバイダー |
+| `mem0` | Mem0 の記憶プロバイダー |
 | `modal` | Modal のターミナルバックエンド |
 | `daytona` | Daytona のターミナルバックエンド |
 | `exa` | Exa のウェブ検索 |
@@ -893,7 +893,7 @@ services.hermes-agent = {
     nixpkgs.overlays = [ hermes-agent.overlays.default ];
     # Then:
     #   pkgs.hermes-agent.override { extraPythonPackages = [...]; }
-    #   pkgs.hermes-agent.override { extraDependencyGroups = [ "honcho" ]; }
+    #   pkgs.hermes-agent.override { extraDependencyGroups = [ "voice" ]; }
   };
 }
 ```
@@ -1038,7 +1038,7 @@ nix build .#checks.x86_64-linux.config-roundtrip    # merge script preserves use
 | `extraPackages` | `listOf package` | `[]` | エージェントが使える追加パッケージ。hermes ユーザーのプロファイルに入るので、ターミナルのコマンド、スキル、cron ジョブのどこからでも見えます |
 | `extraPlugins` | `listOf package` | `[]` | `$HERMES_HOME/plugins/` へシンボリックリンクするディレクトリ型プラグインのパッケージ。それぞれ `plugin.yaml` を含む必要があります |
 | `extraPythonPackages` | `listOf package` | `[]` | エントリーポイント型プラグインの検出のため PYTHONPATH に追加する Python パッケージ。選んだパッケージの `python.pkgs` を使ってください |
-| `extraDependencyGroups` | `listOf str` | `[]` | 封じた venv に含める pyproject.toml の追加機能（たとえば `["honcho"]`）。uv が解決するので衝突しません |
+| `extraDependencyGroups` | `listOf str` | `[]` | 封じた venv に含める pyproject.toml の追加機能（たとえば `["voice"]`）。uv が解決するので衝突しません |
 | `restart` | `str` | `"always"` | systemd の `Restart=` の方針。macOS では使われません。 |
 | `restartSec` | `int` | `5` | systemd の `RestartSec=` の値。macOS では使われません。 |
 

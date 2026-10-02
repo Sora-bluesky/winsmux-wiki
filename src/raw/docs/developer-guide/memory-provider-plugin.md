@@ -2,7 +2,7 @@
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: e88a61074c276157d01ea71dd55073c685a65e89
+upstream_blob: d1a921f08169dfaad7126c637c91ac9ef4598d11
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -325,7 +325,7 @@ def get_config_schema(self):
 `secret: True` と `env_var` が付いた項目は `.env` に書かれます。秘密でない項目は `save_config()` に渡されます。
 
 :::tip 最小限のスキーマと全部入りのスキーマ
-`get_config_schema()` に入れた項目は、`hermes memory setup` の途中ですべて質問されます。設定項目が多いプロバイダーは、スキーマを最小限にとどめてください。入れるのは、利用者が **必ず** 設定しなければならないもの（API キーや必須の認証情報）だけにします。任意の設定は、設定ファイルの一覧（たとえば `$HERMES_HOME/myprovider.json`）に書いておき、設定の途中で全部を聞かないようにします。こうすると、細かい設定にも対応しながら、初期設定はすばやく終わります。例としては Supermemory のプロバイダーを見てください。質問するのは API キーだけで、他の項目はすべて `supermemory.json` にあります。
+`get_config_schema()` に入れた項目は、`hermes memory setup` の途中ですべて質問されます。設定項目が多いプロバイダーは、スキーマを最小限にとどめてください。入れるのは、利用者が **必ず** 設定しなければならないもの（API キーや必須の認証情報）だけにします。任意の設定は、設定ファイルの一覧（たとえば `$HERMES_HOME/myprovider.json`）に書いておき、設定の途中で全部を聞かないようにします。こうすると、細かい設定にも対応しながら、初期設定はすばやく終わります。例としては [Supermemory のプロバイダー](https://github.com/supermemoryai/hermes-supermemory)（プラグインカタログに載っているもの）を見てください。質問するのは API キーだけで、他の項目はすべて `supermemory.json` にあります。
 :::
 
 ## 設定の保存 {#save-config}
@@ -486,7 +486,7 @@ def register_cli(subparser) -> None:
 
 ### 手本になる実装 {#reference-implementation}
 
-13 個のサブコマンド、プロファイルをまたいだ管理（`--target-profile`）、設定の読み書きまでそろった完全な例として、`plugins/memory/honcho/cli.py` を参照してください。
+13 個のサブコマンド、プロファイルをまたいだ管理（`--target-profile`）、設定の読み書きまでそろった完全な例として、Honcho プラグインの [`cli.py`](https://github.com/plastic-labs/honcho/blob/main/hermes-plugin-honcho/cli.py) を参照してください。
 
 ### CLI を含むディレクトリ構成 {#directory-structure-with-cli}
 

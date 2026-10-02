@@ -31,16 +31,17 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-10-02
+最終取得: 2026-10-03
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
 | **inclusionAI: Ling 3.0 Flash Fin**<br>`inclusionai/ling-3.0-flash-fin:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **inclusionAI: Ling 3.0 Flash Sante (free)**<br>`inclusionai/ling-3.0-flash-sante:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **inclusionAI: Ling 3.1 Flash**<br>`inclusionai/ling-3.1-flash`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Meituan: LongCat 2.0**<br>`meituan/longcat-2.0:free`<br>入力・出力の基本単価0（取得時点） | 1,048,756 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Meituan: LongCat 2.5 Preview**<br>`meituan/longcat-2.5-preview:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **Poolside: Laguna S 2.1**<br>`poolside/laguna-s-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **Poolside: Laguna XS 2.1**<br>`poolside/laguna-xs-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **Poolside: Laguna S 2.1**<br>`poolside/laguna-s-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-10-31 |
+| **Poolside: Laguna XS 2.1**<br>`poolside/laguna-xs-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-10-31 |
 | **Space Bunny Alpha**<br>`stealth/space-bunny-alpha`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-10-05 |
 | **StepFun: Step 3.7 Flash**<br>`stepfun/step-3.7-flash:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 
@@ -52,18 +53,19 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-10-02
+最終取得: 2026-10-03
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
 | **Apodex: Apodex 1.1 Mini (free)**<br>`apodex/apodex-1.1-mini:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Cohere: North Mini Code (free)**<br>`cohere/north-mini-code:free`<br>入力・出力の基本単価0（取得時点） | 256,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **Dots Studio: Dots3-Note Preview (free)**<br>`dots-studio/dots-3-note-preview:free`<br>入力・出力の基本単価0（取得時点） | 512,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **Dots Studio: Dots3-Note Preview (free)**<br>`dots-studio/dots-3-note-preview:free`<br>入力・出力の基本単価0（取得時点） | 512,000 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-12-31 |
 | **Google: Gemma 4 26B A4B  (free)**<br>`google/gemma-4-26b-a4b-it:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Google: Gemma 4 31B (free)**<br>`google/gemma-4-31b-it:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Google: Lyria 3 Clip Preview**<br>`google/lyria-3-clip-preview`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |
 | **Google: Lyria 3 Pro Preview**<br>`google/lyria-3-pro-preview`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |
 | **inclusionAI: Ling 3.0 Flash Sante (free)**<br>`inclusionai/ling-3.0-flash-sante:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **inclusionAI: Ling 3.1 Flash**<br>`inclusionai/ling-3.1-flash`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **LiquidAI: LFM2.5-2.6B (free)**<br>`liquid/lfm-2.5-2.6b:free`<br>入力・出力の基本単価0（取得時点） | 65,536 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3 Nano Omni (free)**<br>`nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`<br>入力・出力の基本単価0（取得時点） | 256,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3 Super (free)**<br>`nvidia/nemotron-3-super-120b-a12b:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
@@ -71,8 +73,8 @@ raw: /hermes/raw/free.md
 | **NVIDIA: Nemotron 3.5 Content Safety (free)**<br>`nvidia/nemotron-3.5-content-safety:free`<br>入力・出力の基本単価0（取得時点） | 128,000 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |
 | **NVIDIA: Nemotron 3.5 Lightning (free)**<br>`nvidia/nemotron-3.5-lightning:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Free Models Router**<br>`openrouter/free`<br>入力・出力の基本単価0（取得時点） | 200,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **Poolside: Laguna S 2.1 (free)**<br>`poolside/laguna-s-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **Poolside: Laguna XS 2.1 (free)**<br>`poolside/laguna-xs-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **Poolside: Laguna S 2.1 (free)**<br>`poolside/laguna-s-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-10-31 |
+| **Poolside: Laguna XS 2.1 (free)**<br>`poolside/laguna-xs-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-10-31 |
 | **Qwen: Qwen3.8 27B (free)**<br>`qwen/qwen3.8-27b:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Space Bunny Alpha**<br>`stealth/space-bunny-alpha`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-10-05 |
 | **Thinking Machines: Inkling Small (free)**<br>`thinkingmachines/inkling-small:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
@@ -88,7 +90,7 @@ APIキーもアカウントも要りません。リクエストは匿名で送�
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 
-最終取得: 2026-10-02
+最終取得: 2026-10-03
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -96,6 +98,7 @@ APIキーもアカウントも要りません。リクエストは匿名で送�
 | **fledge-alpha-free**<br>`fledge-alpha-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **jev-1.13-free**<br>`jev-1.13-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **ling-3.0-flash-fin-free**<br>`ling-3.0-flash-fin-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
+| **ling-3.1-flash-free**<br>`ling-3.1-flash-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **longcat-2.5-preview-free**<br>`longcat-2.5-preview-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **mimo-v2.5-free**<br>`mimo-v2.5-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **mimo-v2.6-flash-free**<br>`mimo-v2.6-flash-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |

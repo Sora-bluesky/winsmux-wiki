@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "スキンとテーマ"
 description: "組み込みのスキンと自分で作ったスキンで Hermes CLI の見た目を変えます"
 upstream_path: user-guide/features/skins.md
-upstream_blob: 5fb780757b413d5ab815d78778453b97d72265ac
+upstream_blob: dbf4b2f749294294982d93c9ed846d4e5fb9db2d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skins
 ---
@@ -45,6 +45,14 @@ display:
 | `poseidon` | 海神のテーマ — 深い青とシーフォーム | `Poseidon Agent` | 深い青からシーフォームへのグラデーション。海をテーマにしたスピナー（"charting currents"、"sounding the depth"）。三叉の矛のアスキーアートのバナー。 |
 | `sisyphus` | シーシュポスのテーマ — 厳しいグレーと粘り強さ | `Sisyphus Agent` | 明るめのグレーで強いコントラスト。岩をテーマにしたスピナー（"pushing uphill"、"resetting the boulder"、"enduring the loop"）。岩と丘のアスキーアートのバナー。 |
 | `charizard` | 火山のテーマ — 焦がしたオレンジと残り火 | `Charizard Agent` | 温かい焦げオレンジから残り火へのグラデーション。炎をテーマにしたスピナー（"banking into the draft"、"measuring burn"）。ドラゴンの影絵のアスキーアートのバナー。 |
+
+### Desktop アプリでは {#on-the-desktop-app}
+
+Desktop アプリは **Settings → Appearance** で、CLI のスキンを Desktop 自身のテーマと並べて一覧に出します。ただし、いくつか違いがあります。
+
+- `default`（と `/skin default`）は、Desktop の既定のテーマである **Nous** を指します。そのため、何も変えていない `display.skin: default` で Desktop の見た目が塗り替わることはありません。また、CLI/TUI や `config.yaml` から実行中に `default` へ切り替えると、Desktop で選んでいたテーマも Nous に戻ります。
+- 昔ながらの金色の見た目は、`classic`（**Classic Hermes**）という名前の別の Desktop テーマです。Appearance で選ぶか、Desktop のチャットで `/skin classic`、`/skin gold`、`/skin hermes` のいずれかを実行してください。このテーマはライト/ダークの切り替えに従います。ダークモードでは紺地に金、ライトモードでは CLI の明るい端末向けのゴールデンロッドの配色になります。
+- `classic` は、ほかの Desktop 組み込みテーマ（`mono`、`slate`、…）と同じく、Desktop が予約しているテーマ名です。これらと同じ名前のスキンファイルを自分で作っても、Desktop ではその名前に Desktop 側の配色が使われます。ただし、そのファイルの `customCSS` は引き続き効きます。
 
 ## 設定できる項目の一覧 {#complete-list-of-configurable-keys}
 

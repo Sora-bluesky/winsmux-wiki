@@ -1,6 +1,108 @@
 {
-  "generatedAt": "2026-10-02",
+  "generatedAt": "2026-10-03",
   "entries": [
+    {
+      "date": "2026-10-02",
+      "sha": "1d4a5be",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/image-gen-provider-plugin",
+          "title": "画像生成プロバイダのプラグイン",
+          "url": "/hermes/docs/developer-guide/image-gen-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/provider-runtime",
+          "title": "実行時のプロバイダー解決",
+          "url": "/hermes/docs/developer-guide/provider-runtime/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "guides/webhook-github-pr-review",
+          "title": "Webhook で GitHub の PR に自動でコメントする",
+          "url": "/hermes/docs/guides/webhook-github-pr-review/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/faq",
+          "title": "よくある質問とトラブル対処",
+          "url": "/hermes/docs/reference/faq/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/codex-app-server-runtime",
+          "title": "Codex App-Server ランタイム（任意）",
+          "url": "/hermes/docs/user-guide/features/codex-app-server-runtime/"
+        },
+        {
+          "id": "user-guide/features/image-generation",
+          "title": "画像生成",
+          "url": "/hermes/docs/user-guide/features/image-generation/"
+        },
+        {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
+          "id": "user-guide/features/tool-gateway",
+          "title": "Nous Tool Gateway",
+          "url": "/hermes/docs/user-guide/features/tool-gateway/"
+        },
+        {
+          "id": "user-guide/features/web-search",
+          "title": "Web 検索と本文抽出",
+          "url": "/hermes/docs/user-guide/features/web-search/"
+        },
+        {
+          "id": "user-guide/git-worktrees",
+          "title": "Git ワークツリー",
+          "url": "/hermes/docs/user-guide/git-worktrees/"
+        },
+        {
+          "id": "user-guide/messaging/slack",
+          "title": "Slack",
+          "url": "/hermes/docs/user-guide/messaging/slack/"
+        },
+        {
+          "id": "user-guide/messaging/webhooks",
+          "title": "Webhook",
+          "url": "/hermes/docs/user-guide/messaging/webhooks/"
+        },
+        {
+          "id": "user-guide/messaging/whatsapp-cloud",
+          "title": "WhatsApp Business（Cloud API）",
+          "url": "/hermes/docs/user-guide/messaging/whatsapp-cloud/"
+        }
+      ]
+    },
     {
       "date": "2026-10-01",
       "sha": "cfeeb02",

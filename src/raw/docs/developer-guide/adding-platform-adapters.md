@@ -2,7 +2,7 @@
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: 17b03d261ec37063c01febd162ff2d6b43303236
+upstream_blob: cfe6c706f7ee10f2136e2b6241a29bd8f96c4994
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -224,7 +224,7 @@ gateway:
 | システムプロンプトへの助言 | `platform_hint` が LLM の文脈に差し込まれる |
 | メッセージの分割 | 賢く分けるための `max_message_length` |
 | 個人情報の伏せ字 | `pii_safe` のフラグ |
-| `hermes status` | プラグインのプラットフォームを `(plugin)` の印付きで表示する |
+| `hermes status` | プラグインのプラットフォームを組み込みのものと並べて1行ずつ表示し、判定にはゲートウェイ自身の設定済みチェックを使う |
 | `hermes gateway setup` | セットアップのメニューにプラグインのプラットフォームが出る |
 | `hermes tools` と `hermes skills` | プラットフォームごとの設定にプラグインのものも並ぶ |
 | トークンの取り合いの防止（複数プロファイル） | `connect()` の中で `acquire_scoped_lock()` を使う |

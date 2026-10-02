@@ -2,7 +2,7 @@
 title: "Honcho — Hermes の Honcho メモリを設定し、うまく動かないときに直す"
 description: "Hermes の Honcho メモリを設定し、うまく動かないときに直す"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho.md
-upstream_blob: a73598ad3ebd49bfac1aea3b7997e3007db22d5c
+upstream_blob: fa2a6c5f6720bbcb197a6c8637802c51c610f37a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho
 ---
@@ -44,6 +44,12 @@ Honcho は、AI に合わせて作られた、会話をまたいで利用者像�
 - コンテキストの上限やセッション要約の差し込みを設定するとき
 
 ## 導入 {#setup}
+
+Honcho は Plastic Labs が保守している、プラグインカタログのメモリープロバイダーです。端末ごとに一度インストールしてください（Honcho を同梱していたリリースから更新した環境には自動で入ります）。
+
+```bash
+hermes plugins install honcho
+```
 
 ### クラウド版（app.honcho.dev） {#cloud-apphonchodev}
 

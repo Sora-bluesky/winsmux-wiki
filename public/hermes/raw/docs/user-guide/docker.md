@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: 525d3028a3d13eeaab30e7fb7b9c087894b58003
+upstream_blob: ef9c3794281e2d57d53956e86b318a8400a9649f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -611,7 +611,7 @@ docker exec -e HERMES_DOCKER_EXEC_AS_ROOT=1 hermes <cmd>
 - `docker restart`、イメージの更新（`docker compose up -d --force-recreate`）、思わぬ終了があっても、動いていたゲートウェイは保たれます。cont-init の調整役が `$HERMES_HOME/profiles/<name>/gateway_state.json` を読み、最後に記録された状態が `running` なら枠を立ち上げ直します。`stopped` が記録され、再起動しても止まったままになるのは、明示的な `hermes gateway stop` だけです。再起動や更新のときにコンテナや s6 が送る SIGTERM は「まだ動いている」として扱われ、自動で立ち上がります。
 - プロファイルごとのゲートウェイのログは `$HERMES_HOME/logs/gateways/<profile>/current` に残り（`s6-log` が回転させます）、調整役の動きは起動のたびに `$HERMES_HOME/logs/container-boot.log` へ書き足されます。振り分けの全体像は[ログの行き先](#where-the-logs-go)を参照してください。
 
-コンテナの中の `hermes status` は `Manager: s6 (container supervisor)` と表示します。見守り役の生の様子を見たいときは `/command/s6-svstat /run/service/gateway-<name>` を使ってください（`/command/` が PATH に入るのは見守りの木のプロセスだけなので、`docker exec` から呼ぶときは絶対パスで渡します）。
+コンテナの中の `hermes status --full` は `Manager: s6 (container supervisor)` と表示します。見守り役の生の様子を見たいときは `/command/s6-svstat /run/service/gateway-<name>` を使ってください（`/command/` が PATH に入るのは見守りの木のプロセスだけなので、`docker exec` から呼ぶときは絶対パスで渡します）。
 
 ## 更新する {#upgrading}
 

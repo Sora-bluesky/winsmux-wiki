@@ -2,7 +2,7 @@
 title: "WeCom（企業向け WeChat）"
 description: "AI Bot の WebSocket ゲートウェイ経由で Hermes Agent を WeCom につなぎます"
 upstream_path: user-guide/messaging/wecom.md
-upstream_blob: 8874a8fbc0c337c822d62988cda5e25b34f49d90
+upstream_blob: 83feb7509809777e052135e0f9d72e4579a64abf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/wecom
 ---
@@ -229,7 +229,7 @@ WeCom は、受信するメディアの添付の一部を AES-256-CBC で暗号�
 
 | メソッド | 送るもの | 大きさの上限 |
 |--------|--------------|------------|
-| `send` | マークダウンのテキストメッセージ | 4000 文字 |
+| `send` | マークダウンのテキストメッセージ | 1 通あたり 4000 文字。これより長い文章は複数のメッセージに分けて送ります |
 | `send_image` / `send_image_file` | WeCom 本来の画像メッセージ | 10 MB |
 | `send_document` | 添付ファイル | 20 MB |
 | `send_voice` | 音声メッセージ（本来の音声として送れるのは AMR 形式のみ） | 2 MB |

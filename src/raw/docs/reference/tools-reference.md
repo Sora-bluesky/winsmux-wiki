@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールをツールセットごとにまとめた公式な一覧"
 upstream_path: reference/tools-reference.md
-upstream_blob: 28211a8a342568c0dc64f61d62341f904d9f941c
+upstream_blob: 04d0cf3c2d85791c01b31f1464b3477f2463d08d
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -138,7 +138,7 @@ Feishu の文書コメント処理専用です。ドライブ上のファイル�
 | `computer_use` | cua-driver を通じて、背後でデスクトップを操作します。スクリーンショット（SOM / 視覚 / AX）、クリック・ドラッグ・スクロール・入力・キー操作・待機、list_apps、focus_app ができます。利用者のマウスカーソルやキーボードの入力先を奪いません。ツールを扱えるモデルなら何でも使えます。macOS、Windows、Linux に対応します。 | `$PATH` に `cua-driver` があること（`hermes tools` から入れられます）。 |
 
 :::note
-**Honcho のツール**（`honcho_profile`、`honcho_search`、`honcho_context`、`honcho_reasoning`、`honcho_conclude`）は組み込みではなくなりました。`plugins/memory/honcho/` にある Honcho メモリープロバイダーのプラグインとして使えます。導入と使い方は [メモリープロバイダー](/hermes/docs/user-guide/features/memory-providers/) をご覧ください。
+**Honcho のツール**（`honcho_profile`、`honcho_search`、`honcho_context`、`honcho_reasoning`、`honcho_conclude`）は組み込みではなくなりました。プラグインカタログにある Honcho メモリープロバイダーのプラグイン（`hermes plugins install honcho` で入れます）として使えます。導入と使い方は [メモリープロバイダー](/hermes/docs/user-guide/features/memory-providers/) をご覧ください。
 :::
 
 ## `image_gen` ツールセット {#imagegen-toolset}

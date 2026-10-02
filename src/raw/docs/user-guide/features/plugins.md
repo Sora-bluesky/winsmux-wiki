@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 902b6f35b95bffd855c09ad1695676fc58ed8f8f
+upstream_blob: e8623a0c7c0712b7bf229f002706f9e5858787b2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -206,10 +206,10 @@ Hermes はそのコミットを detached でチェックアウトし、`HEAD` �
 プロファイルに置かれるインストールの情報には、設定値・環境の値・秘密の情報・
 権限の付与はいっさい含まれません。
 
-エージェントのプラグインの同じ固定は Hermes Desktop でも使えます。**Capabilities →
-Plugins → Install from Git** に *Pin to commit* の欄があり、40文字の SHA をそのまま入れられます。
-**Installed** では、固定して入れたエージェントのプラグインに `pinned @ <sha8>` のバッジが付きます。
-単独のデスクトップのプラグインが固定されて入ることまでは保証しません。`hermes plugins list` は Source の列に
+同じ固定は Hermes Desktop でも使えます。**Skills → Plugins → Install from
+Git** に *Pin to commit* の欄があり、40文字の SHA をそのまま入れられます。プラグインの一覧では、
+固定して入れたものすべてに `pinned @ <sha8>` のバッジが付くので、チーム全員が同じコミットで
+動かしているかを確かめられます。`hermes plugins list` は Source の列に
 固定を表示します（`git pinned@<sha8>`）。固定は、下で説明する保存された資格情報を通して、
 非公開のリポジトリでも使えます。
 
@@ -450,23 +450,6 @@ Hermes アプリのふつうの更新では、ユーザーのプラグインの�
 それらのファイルが変わることがあります。[パッケージ管理](/hermes/docs/reference/package-management/)
 と[プラグイン作成のガイド](/hermes/docs/developer-guide/plugins/#lazy-install-optional-python-dependencies)も見てください。
 
-### デスクトップの Installed と Browse {#installed-and-browse-in-desktop}
-
-**Capabilities → Plugins** を開きます。**Installed** は、アプリのデスクトップのプラグインの
-登録簿と、選んでいるプロファイルのエージェントのプラグインの実際の状態を読み、必要に応じて両方を
-1 つの行にまとめます。入っているとみなしたカタログの項目の一覧ではありません。**Browse** はアプリ本来の
-カタログ画面で、Web サイトを埋め込んだものではありません。Skills と同じ **Installed / Browse** のタブを使い、
-上に検索欄、1 つの行にタブの切り替えと操作が並びます。
-
-デスクトップと公開の[プラグインカタログ](https://hermes-agent.nousresearch.com/plugins)は、同じ CDN の
-スナップショット [`/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json) を使います。
-公開の別名は、デスクトップが取得する URL
-`https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` と同じデータを返します。これは docs の
-ビルドが `plugin-catalog/*.yaml` とキャッシュしたスターの数から作ります。
-同じ公開で、インストーラーが使う削除済みの項目の一覧も届きます。
-一覧を見るだけでは、GitHub にその場で問い合わせたり、入手元のリポジトリを取得したりはしません。
-インストーラーがコードを取ってくるのは、別に行うインストールの流れの中だけです。
-
 ### ワンクリックのインストールのリンク（デスクトップ） {#one-click-install-links-desktop}
 
 Hermes Desktop は `hermes://` の URL スキームを登録します。ですから Web サイト、README、
@@ -477,20 +460,17 @@ hermes://plugin/install?catalog=NAME               # catalog entry, installs the
 hermes://plugin/install?repo=owner/repo            # any git repo
 hermes://plugin/install?repo=owner/repo&enable=1   # enable the agent plugin after install
 hermes://plugin/install?repo=owner/repo&force=1    # replace an existing install
+hermes://plugin/install?catalog=<name>             # reviewed catalog entry at its pinned commit
 ```
 
 `catalog=<name>` の形は、[プラグインカタログ](/hermes/docs/user-guide/features/plugin-catalog/)の各カードにある
 **Open in Hermes Desktop** ボタンが使うものです。デスクトップはその名前を公開中のカタログ
-（**Capabilities → Plugins → Browse** が表示するのと同じ情報源）で解決し、アプリの中で選んだときと
+（**Capabilities → Plugins** の選択画面が表示するのと同じ情報源）で解決し、アプリの中で選んだときと
 同じ**審査済みのカタログの項目**のダイアログを開きます。エージェント側はカタログで固定された
 コミットで入り、ブランチの先端が使われることはありません。このリンクはリポジトリの URL を
 持たず、カタログに無い名前はエラーの通知が出るだけで何も起きません。git のパスとして
 読み替えられることは決してないので、見慣れた名前の裏に未審査のリポジトリを忍ばせる、
 ということができません。
-
-カタログのリンクと、Skills Hub の `hermes://skill/install?identifier=...` の経路には、更新したデスクトップのビルドを使ってください。
-アプリが入っていないか古すぎる場合は、カードにあるコピーできる `hermes plugins install <catalog-name>` のコマンドを使えば、
-カタログによる名前の解決がそのまま効きます。
 
 `repo=` のリンクをクリックすると Hermes が開き、**確認のダイアログ**が出ます。リポジトリの識別子、
 「入れる前に」の注意、GitHub を見るリンクとクローンのリンクが並び、そのあとリポジトリを浅く

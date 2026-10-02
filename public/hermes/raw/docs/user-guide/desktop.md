@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 55bebc20115b68f15cd8bf5a71f95c3649574268
+upstream_blob: 3ac2bbe86a0882a6aac69eff72c218bfdb109790
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -276,38 +276,12 @@ YAML を書く代わりに、きちんとした UI からプロバイダー・�
 
 ターミナルへ降りずに済むよう、アプリは Hermes のより広い管理機能も表に出しています。
 
-- **Skills** — **Capabilities → Skills** を開いて[スキル](/hermes/docs/user-guide/features/skills/)を管理します。**Installed** には、選択したプロファイルに実際に入っているスキルと、その有効／無効の状態が出ます。**Browse** では、公開の Skills Hub と同じ公開カタログ全体を検索でき、アプリ独自のカードと詳細で表示します。
-- **Plugins** — **Capabilities → Plugins** も同じ **Installed / Browse** の構成です。Installed には、アプリ単位で実際に入っているデスクトップのプラグインと、選択したプロファイルのエージェントのプラグインがまとめて出ます。Browse には公開の [Plugin Catalog](/hermes/docs/user-guide/features/plugin-catalog/) が出ます。どちらのページでも、検索欄は上部にあり、タブの切り替えと操作ボタンは同じ1行に並びます。
+- **Skills** — [スキル](/hermes/docs/user-guide/features/skills/)を見て回り、導入し、管理します。Skills のタブには、導入済みのスキルが有効／無効の切り替えとともに並び、その下に Hermes に同梱された任意スキルの組み込みカタログ全体が並びます。どの項目にも1クリックの **Install** ボタンがあり、導入が終わるとその行は導入済みの一覧へ移ります。公開の Skills Hub にある **Install in Hermes** のボタンは `hermes://skill/install?identifier=...` のリンクを開き、確認したあと同じ仕組みで導入します（[スキルのリンク](/hermes/docs/user-guide/features/skills/#install-from-the-website)を参照してください）。
 - **メモリグラフ（Star Map）** — チャットで `/journey`（別名 `/learning`、`/memory-graph`）と打つと、学んだスキルとメモリの時間を追った星座図が開き、再生用のつまみで動かせます。ノードはこのパネルから直接編集も削除もできます（スキルは保管に回り、メモリは削除されます）。[Learning Journey](/hermes/docs/user-guide/features/memory/#learning-journey-journey) を参照してください。
 - **Cron** — [予約ジョブ](/hermes/docs/reference/cli-commands/#hermes-cron)を見て管理します。**All profiles** を入れると、すべてのプロファイルのジョブがまとめて並びます。ジョブの実行履歴と操作（一時停止・再開・編集・削除）は、どのプロファイルを使っていても、常にそのジョブを持つプロファイルに向かいます。
 - **Profiles** — [Hermes のプロファイル](/hermes/docs/user-guide/profiles/)（設定・スキル・セッションが分離されています）を切り替えます。
 - **Messaging** — ゲートウェイのチャンネルを設定します。Telegram には **Quick setup** のカードがあります。**Create with QR** を押してコードを読む（またはリンクを開く）と、Telegram 側で Hermes がボットを作り、許可リスト用にあなたのユーザー ID を検出し、資格情報を保存し、ゲートウェイを再起動します。資格情報の保存・消去・有効化の切り替えを行うと、ゲートウェイが実際に再起動するまで **Restart now** の帯がページに残ります。再起動に失敗しても帯は残るので、やり直したり手で再起動したりできます。
 - **Agents** と **Command Center** — 複数エージェントでの作業を束ねるための画面です。
-
-#### Browse のデータの出どころ {#where-browse-gets-its-data}
-
-これらはデスクトップアプリ独自の画面で、**Web サイトのページを埋め込んだものではありません**。デスクトップと
-公開の Web サイトは、同じように生成された CDN のスナップショットを読みます。
-
-| カタログ | 公開ドキュメントでの別名 | デスクトップが取得する URL |
-|---|---|---|
-| Skills | [`/docs/api/skills.json`](https://hermes-agent.nousresearch.com/docs/api/skills.json) | `https://nousresearch.github.io/hermes-agent/docs/api/skills.json` |
-| Plugins | [`/docs/api/plugins.json`](https://hermes-agent.nousresearch.com/docs/api/plugins.json) | `https://nousresearch.github.io/hermes-agent/docs/api/plugins.json` |
-
-スキルのスナップショットは、`skills/`、`optional-skills/`、それに一元化された
-スキルの索引をまとめたものです。プラグインのスナップショットは、`plugin-catalog/*.yaml` とキャッシュされたスターの
-数から作られます。インストーラーが使う、削除された項目の一覧も同じ公開で配られます。Browse で見ているあいだに、
-GitHub API をその場で呼んだり、プラグインやスキルのソースのリポジトリを取得したりすることはありません。**Installed** は
-別です。その状態は、これらの公開スナップショットではなく、選択したプロファイルのバックエンドと、アプリの
-デスクトップのプラグインの登録簿から来ます。
-
-公開のハブにあるインストールのボタンは、`hermes://skill/install?identifier=...`
-または `hermes://plugin/install?catalog=...` のリンクを開き、デスクトップ側で確認を求めます。
-これらの経路を使うには、更新済みのデスクトップのビルドが必要です。アプリが無いか古すぎる場合も、カードにはコピーできる CLI の
-コマンドが残っています。パラメーターとレビューの流れは、
-[スキルのリンク](/hermes/docs/user-guide/features/skills/#install-from-the-website)と
-[プラグインのリンク](/hermes/docs/user-guide/features/plugins/#one-click-install-links-desktop)を
-参照してください。
 
 ### Bot Mode（組み込み） {#bot-mode-built-in}
 
@@ -418,8 +392,10 @@ Nix、同梱版／Light のパッケージ、そのほか外部が所有する�
 
 自分で管理しているインストールなら、同じことはターミナルからもできます。GUI だけなら `hermes uninstall --gui`、エージェントも消すなら `hermes uninstall` か `hermes uninstall --full` です。
 
+GUI の後片付けを試しに見るには `hermes uninstall --gui --dry-run` を使います。消す対象を並べるだけで、確認も削除もせずに終わります。`--yes` を一緒に付けても同じです。
+
 :::note
-**ソースのチェックアウト**（`hermes desktop` の開発ビルド）から `hermes uninstall --gui` を走らせると、ワークスペースの `node_modules` と `apps/desktop/{dist,release}` のビルド成果物も消えます。どちらも GUI のビルド成果物だからです。`hermes desktop`（または `npm install` と再ビルド）で戻せますが、デスクトップアプリ自体をいじっている最中なら、そのあと依存関係を入れ直すことになると思ってください。
+**ソースのチェックアウト**（`hermes desktop` の開発ビルド）から `hermes uninstall --gui` を走らせると、`apps/desktop/{dist,release,node_modules}` とデスクトップのビルドの印が消えます。ワークスペース直下の `node_modules` は、TUI やダッシュボードなど他のワークスペースと共有しているので残ります。GUI がまた必要になったら `hermes desktop` で作り直してください。
 :::
 
 ## CLI 早見表: `hermes desktop` {#cli-reference-hermes-desktop}
@@ -582,24 +558,24 @@ SHA の固定）と import の許可リストであって、隔離ではあり�
 **⌘K → Reload desktop plugins** は、導入済みの `plugin.js` をすべて読み直します。
 インストーラーがその場で置き換えたものも含みます。
 
-**Capabilities → Plugins → Installed** には、実際に導入されている状態が出ます。
-**プラグイン1つにつき一覧の項目は1つ**で、その詳細ペインに Desktop と Agent の操作があります。
+**Capabilities → Plugins** は、Hermes を拡張するものすべてを扱う唯一の場所です。
+**プラグイン1つにつき1行**で、スイッチの列が2つあります。
 
 - プラグインは**このアプリ**を拡張することも、**エージェント**を拡張することも、**その両方**もあります。各行の
   バッジがどちらかを示し、パッケージの中身（`plugin.yaml`
   ならエージェント側、`plugin.js` ならデスクトップ側）から判断されます。両方を持つプラグインは1つの
   行で、2行に分かれることはありません。
-- **Desktop の操作** — このアプリに読み込まれる側です。アプリ単位で効くので、
+- **Desktop の列** — このアプリに読み込まれる側です。アプリ単位で効くので、
   ウィンドウがどのプロファイル、どのゲートウェイ、どのリモートの端末を見ていても、
   同じスイッチ、同じ値です。デスクトップのコードが読み込まれる場所はちょうど1つ、
   `~/.hermes/desktop-plugins/` です。エージェントとデスクトップが一体になったパッケージのデスクトップ側は、
   導入時にアプリがそこへ複製します（更新やアンインストールにも追随します）。だからプロファイルを切り替えても、
   ペインが読み込まれたり外れたり範囲が変わったりすることはありません。切り替えはその場で効きます。
-- **Agent の操作** — 選択したプロファイルのバックエンドに導入される側です
+- **Agent の列** — 選択したプロファイルのバックエンドに導入される側です
   （[エージェントのプラグイン](/hermes/docs/user-guide/features/plugins/): user、git、project、pip、
   持ち運び可能な形での導入）。カタログの固定が動いたときは **Update** のチップが付きます。
-  プロファイルの選択が効くのはエージェント側だけです。プロファイルが1つしかなければ、
-  選択そのものが出ません。
+  プロファイルの選択がこの列の見出しにあるのは、それが効くのがこの列だけだからです。
+  プロファイルが1つしかなければ、選択そのものが出ません。
   リポジトリに同梱された組み込み（プラットフォームのアダプター、プロバイダーのプラグイン）は
   並びません。有効な状態で出荷され、それぞれの画面から設定します。
   例外は、自分の画面を持たない同梱のライフサイクルのプラグイン
@@ -623,14 +599,13 @@ SHA の固定）と import の許可リストであって、隔離ではあり�
   ボタンが付きます。確認するとこの端末上のそのフォルダが消え、プラグインは
   すぐ外れます。ゲートウェイは関係ありません。
 
-**Browse** に切り替えると、アプリ独自の [Plugin Catalog](/hermes/docs/user-guide/features/plugin-catalog/) が出ます。
-Browse からも **Install from Git** からも、「レビューしてから導入する」ダイアログが開きます。
-エージェントのプラグインをカタログから導入する場合、バックエンドがカタログの名前を、レビュー済みの固定先に解決します。
-Web サイトのリンクが運ぶのはその名前だけです。デスクトップは、リンクが渡すメタデータを信用するのではなく、
-レビュー済みのリポジトリとコミットを自分で調べます。
-**Install from Git** には、エージェントのプラグインの導入向けに **Pin to commit** の欄もあります
-（40 文字のコミット SHA を完全な形で指定します。プライベートなリポジトリも含みます）。固定したエージェントのプラグインには
-`pinned @ <sha8>` のバッジが付きます。古い `Settings → Plugins` のリンクはここへ転送されます。
+その下には見つけるための入口があります。現行の [Plugin Catalog](/hermes/docs/user-guide/features/plugin-catalog/)
+の選択画面は、レビュー済みの項目を固定されたコミットで、選択したプロファイルへ導入します。
+**Install from Git** は、それ以外のリポジトリを同じ「レビューしてから導入する」ダイアログで受け付けます。
+任意の **Pin to commit** の欄に 40 文字のコミット SHA を1つ指定すると、そのコミットちょうどを導入します
+（プライベートなリポジトリも含みます）。固定したプラグインには一覧で
+`pinned @ <sha8>` のバッジが付きます。古い `Settings → Plugins` のリンクは
+ここへ転送されます。
 
 ## 困ったときは {#troubleshooting}
 

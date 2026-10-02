@@ -2,7 +2,7 @@
 title: "ツール検索"
 description: ""
 upstream_path: user-guide/features/tool-search.md
-upstream_blob: 9bec47d2988c96d0e2f3540190b8855f83a5a4c0
+upstream_blob: 4f32f076c35e6e18f0450bde13903338f9867c17
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 ---
@@ -43,10 +43,12 @@ tool_describe(names)           load the full schemas for one or more tools
 tool_call(calls)               invoke deferred tools; `calls` is an array of {name, arguments}
 ```
 
-`calls` には呼び出し 1 回につき 1 件を入れます。ローカルのツールを 1 つだけ
-呼ぶ場合も、要素 1 つの配列にします。まとめて渡せるのは `connectors__`
-で始まる名前だけで、種類の混ざったまとめ呼び出しや、ローカルツールを複数
-並べたまとめ呼び出しは拒否されます。
+`calls` には呼び出し 1 回につき 1 件を入れます。1 つだけ呼ぶ場合も、
+要素 1 つの配列にします。互いに依存しない呼び出しは、まとめて渡せます（最大 10 件）。
+ローカルのツールを含むまとめ呼び出しは、エージェントが 1 件ずつ別々のツール呼び出しに分けます。
+そのため各件が、それぞれ範囲の確認、スキーマの検証、フック、承認、結果を個別に持ち、
+そのツールの通常の並行実行の方針に従って動きます。`connectors__`
+で始まる名前だけのまとめ呼び出しは、ホスト型のコネクターゲートウェイへ 1 回でまとめて送られます。
 
 やりとりは、だいたい次のような形になります。
 

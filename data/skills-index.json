@@ -1,6 +1,6 @@
 {
-  "sha": "e05b163",
-  "date": "2026-10-01",
+  "sha": "4ed093c",
+  "date": "2026-10-02",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -519,7 +519,7 @@
       "name": "Honcho",
       "description": "Configure and troubleshoot Honcho memory for Hermes",
       "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/",
-      "date": "2026-09-20",
+      "date": "2026-10-02",
       "source": "optional"
     },
     {

@@ -2,7 +2,7 @@
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: cfc33d4b23f685356a5cd2e5dfa6f7d73b12dd04
+upstream_blob: 2114708b392742be0b0c58b5b3520972fbe3396a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -161,7 +161,8 @@ python scripts/release.py abandon --version 0.21.5 --remote origin
 
 `publish` は、置き換えの有無を同期的に事前確認してから、自動復旧でも使われる同じ
 順序付きコントローラーを起動します。より新しい公開済みリリースより下にある、焼き切れたと分かっているバージョンは拒否します。
-`abandon` は、ドラフトがあれば削除し、
+`abandon` は、その試行で進行中の `Stable Release` の実行を強制キャンセルし、
+ドラフトがあれば削除し、
 `abandoned-rc.<N>-vX.Y.Z` マーカー ref を書き込み、試行 ref は残します。
 マーカーが中止の記録で、試行 ref は決して削除されません。
 バージョンは使用済みにならないので、次の切り出しは `rc.<N+1>-vX.Y.Z` になります。

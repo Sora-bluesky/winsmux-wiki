@@ -3,14 +3,14 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: beae77ee8ab6de003cfb79df10c55e0d61549ef8
+upstream_blob: 7b97e4cba8186d9b0b94e0577eae2c19fc46d98e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
 
 # 記憶プロバイダー {#memory-providers}
 
-Hermes Agent には、外部の記憶プロバイダーのプラグインが 7 つ同梱されています。内蔵の MEMORY.md と USER.md を超えて、セッションをまたいで残る知識をエージェントに持たせるものです。Hindsight などほかのものは、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れられます。外部プロバイダーは一度に**1 つ**しか動かせません。内蔵の記憶は、それと並んで常に動いています。
+Hermes Agent には、外部の記憶プロバイダーのプラグインが 5 つ同梱されています。内蔵の MEMORY.md と USER.md を超えて、セッションをまたいで残る知識をエージェントに持たせるものです。Honcho、Hindsight、Supermemory などほかのものは、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れられます。外部プロバイダーは一度に**1 つ**しか動かせません。内蔵の記憶は、それと並んで常に動いています。
 
 ## すぐに使い始める {#quick-start}
 
@@ -26,8 +26,9 @@ hermes memory off        # disable external provider
 
 ```yaml
 memory:
-  provider: openviking   # or honcho, mem0, holographic, retaindb, byterover, supermemory,
-                         # or hindsight (plugin catalog — run `hermes plugins install hindsight` first)
+  provider: openviking   # or mem0, holographic, retaindb, byterover,
+                         # or honcho / hindsight / supermemory (plugin catalog — run
+                         # `hermes plugins install <name>` first)
 ```
 
 ## しくみ {#how-it-works}
@@ -47,12 +48,16 @@ memory:
 
 ### Honcho {#honcho}
 
+:::info プラグインカタログ
+Honcho は [Plastic Labs](https://github.com/plastic-labs/honcho/tree/main/hermes-plugin-honcho) が保守しており、Hermes に同梱されるのではなく[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れます。以前 Hermes 本体に入っていたものと同じプロバイダーで、ツール、設定ファイル、`hermes honcho` のコマンドは変わりません。
+:::
+
 AI に向いた、セッションをまたぐ利用者のモデリング。対話的な推論、セッション範囲の文脈の差し込み、意味検索、そして残り続ける結論を備えます。基本の文脈には、利用者の像とピアのカードに加えて、セッションの要約も含まれるようになったので、エージェントはすでに話した内容を把握できます。
 
 | | |
 |---|---|
 | **向いている用途** | セッションをまたぐ文脈を持つ複数エージェントの仕組み、利用者とエージェントのすり合わせ |
-| **必要なもの** | `hermes memory setup` が PM で Honcho の SDK を用意します。そのうえで [API キー](https://app.honcho.dev)、または自己ホストの環境 |
+| **必要なもの** | `hermes plugins install honcho`（`honcho-ai` の SDK もいっしょに入ります）。そのうえで [API キー](https://app.honcho.dev)、または自己ホストの環境 |
 | **データの置き場所** | Honcho Cloud または自己ホスト |
 | **費用** | Honcho の料金（クラウド）／無料（自己ホスト） |
 
@@ -70,14 +75,15 @@ AI に向いた、セッションをまたぐ利用者のモデリング。対�
 
 **設定の案内:**
 ```bash
-hermes memory setup        # select "honcho" — runs the Honcho-specific post-setup
+hermes plugins install honcho   # from the plugin catalog
+hermes memory setup             # select "honcho" — runs the Honcho-specific post-setup
 ```
 
 以前からある `hermes honcho setup` コマンドも動きます（いまは `hermes memory setup` へ回されます）。ただし、Honcho を記憶プロバイダーとして選んだあとにしか登録されません。
 
 **画面の無い端末やリモートの端末では:** ブラウザーの無い環境（SSH、リモートの仮想マシン）でクラウドの認証を行うには、案内の認証方法の質問で **device** を選んでください。CLI が短いコードと確認用のリンクを表示するので、別の端末のブラウザーでそのリンクを開いて承認すれば設定が終わります。API キーをコピーして貼る必要はありません。使えるブラウザーが手元に見つからない場合、案内は自動でこの選択肢を既定にします。
 
-**設定ファイル:** `$HERMES_HOME/honcho.json`（プロファイル内）または `~/.honcho/config.json`（全体）。解決の順番は `$HERMES_HOME/honcho.json` > `~/.hermes/honcho.json` > `~/.honcho/config.json` です。[設定の早見表](https://github.com/NousResearch/hermes-agent/blob/main/plugins/memory/honcho/README.md)と [Honcho の連携ガイド](https://docs.honcho.dev/v3/guides/integrations/hermes)を参照してください。
+**設定ファイル:** `$HERMES_HOME/honcho.json`（プロファイル内）または `~/.honcho/config.json`（全体）。解決の順番は `$HERMES_HOME/honcho.json` > `~/.hermes/honcho.json` > `~/.honcho/config.json` です。[プラグインの README](https://github.com/plastic-labs/honcho/tree/main/hermes-plugin-honcho)と [Honcho の連携ガイド](https://docs.honcho.dev/v3/guides/integrations/hermes)を参照してください。
 
 <details>
 <summary>設定の早見表（全項目）</summary>
@@ -279,7 +285,11 @@ hermes honcho sync
 
 </details>
 
-[設定の早見表](https://github.com/NousResearch/hermes-agent/blob/main/plugins/memory/honcho/README.md)と [Honcho の連携ガイド](https://docs.honcho.dev/v3/guides/integrations/hermes)を参照してください。
+[プラグインの README](https://github.com/plastic-labs/honcho/tree/main/hermes-plugin-honcho)と [Honcho の連携ガイド](https://docs.honcho.dev/v3/guides/integrations/hermes)を参照してください。
+
+#### 同梱されていた Honcho からの移行 {#upgrading-from-the-bundled-honcho}
+
+以前の Hermes では、Honcho が本体に入っていました。プロファイルにまだ `memory.provider: honcho` が残っていれば、次に起動したときか `hermes update` を実行したときに、Hermes がカタログのプラグインを自動で入れます。`~/.honcho/config.json`（または `$HERMES_HOME/honcho.json`）、ホストのブロック、ピア、セッションの対応づけはこれまでどおりに読まれるので、記憶が失われることはありません。手で入れたいとき、または起動時にネットワークにつながらない端末では、`hermes plugins install honcho` を実行してください。
 
 ---
 
@@ -496,11 +506,15 @@ echo "HINDSIGHT_API_KEY=your-key" >> ~/.hermes/.env
 
 Hindsight は以前、Hermes のツリーの中に（また pip の追加パッケージ `hermes-agent[hindsight]` として）同梱されていました。`config.yaml` にすでに `memory.provider: hindsight` があるなら、ほとんどの利用者は何もする必要がありません。
 
-- `hermes update` が、このプロバイダーを指定しているすべてのプロファイルのホームにカタログのプラグインを入れます（`security.allow_lazy_installs` が `false` でも動きます）。
-- エージェントを最初に起動したとき（`hermes chat`、ゲートウェイ、…）にまだプラグインが無ければ、Hermes がそれを入れて `✓ Memory provider 'hindsight' moved out of core — installed its plugin from the catalog (your memory.hindsight settings and data are unchanged).` と表示します。
-- `security.allow_lazy_installs: false` のときは、エージェントの起動経路が代わりに 1 行だけ記録します — ``Memory provider 'hindsight' is not installed; security.allow_lazy_installs is off — run `hermes plugins install hindsight`.`` — そのうえで、`hermes plugins install hindsight` をご自身で実行します。
+- `hermes update` が、このプロバイダーを指定しているすべてのプロファイルのホームにカタログのプラグインを入れます。表示される各行には、どのプロファイルの話かが書かれます。ターミナルでは、プラグインが使う Python の依存パッケージを用意する前に確認を求めます。このプロバイダーを使うプロファイルが複数あるときは、質問は 1 回だけで、その答えがすべてのプロファイルに当てはまります。ターミナルが無い場合（デスクトップアプリ、スクリプト、サービス）は誰も答えられないので、`security.allow_lazy_installs` がオン（既定）のプロファイルは確認なしで用意します。これがオフのプロファイルには、代わりに `hermes -p <profile> plugins install hindsight` という実行すべきコマンドがそのまま示され、ほかのプロファイルの移行は続きます。
+- エージェントを最初に起動したとき（`hermes chat`、デスクトップ、ゲートウェイ、…）にまだプラグインが無ければ、Hermes が依存パッケージごとそれを入れて ``✓ Memory provider 'hindsight' moved out of core — installed its plugin from the catalog (memory.provider and your stored memories are unchanged; check its settings with `hermes memory status`).`` と表示します。メッセージングのプラットフォームでは、この行が最初の返信といっしょに届きます。
+- エージェント起動時の導入ができなかった場合は、外部の記憶なしで黙って動くのではなく、その理由が表示されます。`security.allow_lazy_installs: false` のときは、警告にそのプロファイル用の導入コマンドが示されます。オフラインのときや導入を断ったときは、エラーと同じコマンドが表示されます。
 
-ディスク上で変わるのは次の点です。プラグインが `~/.hermes/plugins/hindsight/` に現れ、`config.yaml` に `plugins.enabled: [hindsight]` が加わります。`memory.provider`、`memory.hindsight.*`、`$HERMES_HOME/hindsight/config.json`、`.env` の `HINDSIGHT_API_KEY`、記憶の保管庫のデータには手を触れません。確かめるには `hermes memory status`（プロバイダーが動いているか）と `hermes plugins list`（プラグインが入って有効になっているか）を使います。
+ディスク上で変わるのは次の点です。プラグインが `~/.hermes/plugins/hindsight/` に現れ、`config.yaml` に `plugins.enabled: [hindsight]` が加わります。`memory.provider`、`$HERMES_HOME/hindsight/config.json`、`.env` の `HINDSIGHT_API_KEY`、記憶の保管庫のデータには手を触れません。確かめるには `hermes memory status`（プロバイダーが動いているか）と `hermes plugins list`（プラグインが入って有効になっているか）を使います。
+
+:::warning プラグインが設定を読む場所
+Hindsight が読むのは、`$HERMES_HOME/hindsight/config.json`（プロファイルのホームごと）、`~/.hindsight/config.json`（以前からある共有の設定）、そして `.env` の `HINDSIGHT_*` の変数です。`config.yaml` の `memory.hindsight` の節は読みません。そこにある `memory.hindsight.*` のキーは無視されます。プラグイン自身の `config.json`（上のキーの表）を編集するか、`hermes memory setup` を使ってください。
+:::
 
 ---
 
@@ -596,12 +610,16 @@ hermes config set memory.provider byterover
 
 ### Supermemory {#supermemory}
 
+:::info プラグインカタログ
+Supermemory は Supermemory が保守しており、Hermes に同梱されるのではなく[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れます。ソースと設定の全項目は [supermemoryai/hermes-supermemory](https://github.com/supermemoryai/hermes-supermemory) にあります。すでにある設定は自動で移行されます。[同梱の Supermemory から移る](#migrating-from-bundled-supermemory)を参照してください。
+:::
+
 意味に基づく長期記憶です。利用者の像の呼び出し、意味検索、明示的な記憶のツール、そしてターンごとの会話の記録（セッションごと、4 時間の区切りごとに 1 つの文書）を備えます。
 
 | | |
 |---|---|
 | **向いている用途** | 利用者の像づくりとセッション単位のグラフ構築を伴う、意味に基づく呼び出し |
-| **必要なもの** | `hermes memory setup` が PM で Supermemory の SDK を用意します。そのうえで[クラウドの API キー](http://app.supermemory.ai/integrations?connect=hermes)、または[自己ホストのサーバー](https://supermemory.ai/docs/self-hosting/overview) |
+| **必要なもの** | `hermes plugins install supermemory`（Supermemory の SDK もプラグインといっしょに入ります）。そのうえで[クラウドの API キー](http://app.supermemory.ai/integrations?connect=hermes)、または[自己ホストのサーバー](https://supermemory.ai/docs/self-hosting/overview) |
 | **データの置き場所** | Supermemory Cloud または自己ホスト |
 | **費用** | Supermemory の料金（クラウド）／無料（自己ホスト） |
 
@@ -609,7 +627,8 @@ hermes config set memory.provider byterover
 
 **設定:**
 ```bash
-hermes memory setup    # select "supermemory"
+hermes plugins install supermemory   # from the plugin catalog
+hermes memory setup                  # select "supermemory"
 # Or manually:
 hermes config set memory.provider supermemory
 echo 'SUPERMEMORY_API_KEY=***' >> ~/.hermes/.env
@@ -621,7 +640,7 @@ echo 'SUPERMEMORY_API_KEY=***' >> ~/.hermes/.env
 npx supermemory local
 ```
 
-`hermes memory setup` を実行する前に、
+`hermes plugins install supermemory` を実行したあと、`hermes memory setup` を実行する前に、
 `$HERMES_HOME/supermemory.json` に `base_url` を設定してください。
 
 ```json
@@ -676,6 +695,16 @@ npx supermemory local
 
 **問い合わせ先:** [Discord](https://supermemory.link/discord) · [support@supermemory.com](mailto:support@supermemory.com)
 
+### 同梱の Supermemory から移る {#migrating-from-bundled-supermemory}
+
+Supermemory は以前、Hermes のツリーの中に（また pip の追加パッケージ `hermes-agent[supermemory]` として）同梱されていました。`config.yaml` にすでに `memory.provider: supermemory` があるなら、ほとんどの利用者は何もする必要がありません。
+
+- `hermes update` が、このプロバイダーを指定しているすべてのプロファイルのホームにカタログのプラグインを入れます（`security.allow_lazy_installs` が `false` でも動きます）。
+- エージェントを最初に起動したとき（`hermes chat`、ゲートウェイ、…）にまだプラグインが無ければ、Hermes がそれを入れて `✓ Memory provider 'supermemory' moved out of core — installed its plugin from the catalog (your memory.supermemory settings and data are unchanged).` と表示します。
+- `security.allow_lazy_installs: false` のときは、エージェントの起動経路が代わりに 1 行だけ記録します — ``Memory provider 'supermemory' is not installed; security.allow_lazy_installs is off — run `hermes plugins install supermemory`.`` — そのうえで、`hermes plugins install supermemory` をご自身で実行します。
+
+ディスク上で変わるのは次の点です。プラグインが `~/.hermes/plugins/supermemory/` に現れ、`config.yaml` に `plugins.enabled: [supermemory]` が加わります。Supermemory の SDK はプラグイン自身のパッケージ情報から入るので、追加パッケージ `hermes-agent[supermemory]` はもう要りません。`memory.provider`、`$HERMES_HOME/supermemory.json`、`.env` の `SUPERMEMORY_*` のキー、Supermemory のアカウントに保存された記憶には手を触れません。確かめるには `hermes memory status`（プロバイダーが動いているか）と `hermes plugins list`（プラグインが入って有効になっているか）を使います。
+
 ### Memori {#memori}
 
 Memori Cloud を使う、構造化された長期記憶です。終わったターンを裏で取り込み、ツールを踏まえたターンの文脈を持ち、事実・要約・利用枠・登録・フィードバックのための明示的な呼び出しのツールを備えます。
@@ -715,14 +744,14 @@ hermes memory setup
 
 | プロバイダー | 置き場所 | 費用 | ツール | 依存 | 独自の特徴 |
 |----------|---------|------|-------|-------------|----------------|
-| **Honcho** | クラウド | 有料 | 5 | `honcho-ai` | 対話的な利用者のモデリングとセッション範囲の文脈 |
+| **Honcho**（プラグインカタログ） | クラウド／自己ホスト | 有料／無料 | 5 | `hermes plugins install honcho` | 対話的な利用者のモデリングとセッション範囲の文脈 |
 | **OpenViking** | 自己ホスト | 無料 | 6 | `openviking` とサーバー | ファイルシステム風の階層と段階的な読み込み |
 | **Mem0** | クラウド／自己ホスト | 無料／有料 | 4 | `mem0ai` | サーバー側の LLM 抽出と、自己ホスト／OSS のモード |
 | **Hindsight**（プラグインカタログ） | クラウド／ローカル | 無料／有料 | 3 | `hermes plugins install hindsight` | 知識グラフと reflect による統合 |
 | **Holographic** | ローカル | 無料 | 2 | 無し | HRR の代数と信頼度の採点 |
 | **RetainDB** | クラウド | 月額 20 ドル | 10 | `requests` | 差分圧縮 |
 | **ByteRover** | ローカル／クラウド | 無料／有料 | 3 | `brv` の CLI | 圧縮の直前の抽出 |
-| **Supermemory** | クラウド／自己ホスト | 無料／有料 | 4 | `supermemory` | 文脈の囲い込み、セッションのグラフ取り込み、複数の入れ物 |
+| **Supermemory**（プラグインカタログ） | クラウド／自己ホスト | 無料／有料 | 4 | `hermes plugins install supermemory` | 文脈の囲い込み、セッションのグラフ取り込み、複数の入れ物 |
 | **Memori** | クラウド | 無料／有料 | 5 | `hermes-memori` | ツールを踏まえた記憶と、構造化された呼び出し |
 
 ## プロファイルごとの分離 {#profile-isolation}
@@ -737,12 +766,16 @@ hermes memory setup
 ## プラグインカタログへ移るプロバイダー {#providers-moving-to-the-plugin-catalog}
 
 記憶プロバイダーは Hermes 本体のツリーから、それぞれの作者のリポジトリへ移りつつあり、
-[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)で配布されます。最初に移ったのは Hindsight です（[同梱の Hindsight から移る](#migrating-from-bundled-hindsight)を参照）。利用する側で変わることはありません。
-プロバイダーの名前も、`memory.<name>` の設定も、データの置き場所も、道具もそのままです。
+[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)で配布されます。最初に移ったのは Hindsight で（[同梱の Hindsight から移る](#migrating-from-bundled-hindsight)を参照）、続いて Honcho（
+[同梱されていた Honcho からの移行](#upgrading-from-the-bundled-honcho)を参照）と Supermemory（
+[同梱の Supermemory から移る](#migrating-from-bundled-supermemory)を参照）が移りました。利用する側で変わることはありません。
+プロバイダーの名前も、それが読む設定も、データの置き場所も、道具もそのままです。
 設定しているプロバイダーが Hermes に同梱されなくなったときは、`hermes update` が、そのプロバイダーを
 指定しているすべてのプロファイルにカタログのプラグインを入れます。デスクトップアプリから更新する場合は、
-エージェントが最初に起動したときに同じことをします（`security.allow_lazy_installs` が
-`false` のときは代わりに `hermes plugins install <name>` の一行をログに記録します）。
+エージェントが最初に起動したときに同じことをします。どの結果も、ターミナル、デスクトップ、
+またはメッセージングのプラットフォームでの最初の返信で必ず知らされます。導入ができなかった場合
+（`security.allow_lazy_installs: false`、オフライン、断ったとき）は、警告に実行すべき
+`hermes plugins install <name>` のコマンドがそのまま示されます。
 
 ## 記憶プロバイダーを作る {#building-a-memory-provider}
 

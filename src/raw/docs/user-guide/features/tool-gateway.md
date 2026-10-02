@@ -2,7 +2,7 @@
 title: "Nous Tool Gateway"
 description: "サブスクリプション 1 つで、すべてのツールを。Web 検索、画像生成、音声読み上げ、クラウドブラウザーを、追加の API キー無しで Nous Portal 経由に束ねます。"
 upstream_path: user-guide/features/tool-gateway.md
-upstream_blob: bebe3c896efd120af1f1b7d5a32014aacc901c31
+upstream_blob: 05d6b45337c44f6ab8da620edb2785e684c69e32
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-gateway
 ---
@@ -62,7 +62,7 @@ hermes tools              # Enable the gateway per-tool — pick "Nous Subscript
 ```bash
 hermes portal info        # Portal auth + Tool Gateway routing summary
 hermes portal tools       # Gateway catalog with current routing per tool
-hermes status             # Full system status (Tool Gateway is one section)
+hermes status --full      # Full system status (Tool Gateway is one section)
 ```
 
 `hermes portal info` は次のような欄を表示します。

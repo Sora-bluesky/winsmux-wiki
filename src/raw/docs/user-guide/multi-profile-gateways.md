@@ -2,7 +2,7 @@
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: 96e1b7a7ca39931ffd26a094ad203db18da20364
+upstream_blob: 00ca1eae682e56c02b46f779f1be5abfb5618843
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -564,7 +564,7 @@ Inbound callback URLs on the shared listener:
 
 #### 5. PID と錠は 1 つ、状態の見え方も 1 つ {#5-one-pidlock-and-one-status-surface}
 
-プロセスの水準での PID と錠は 1 つだけです（既定のホームの下にある、多重化のプロセスのもの）。既定プロファイルでの `hermes status` は多重化のプロセスを報告し、受け持っているプロファイルを並べます（`Serves: coder, research`）。`hermes -p coder status` と `hermes -p coder gateway status` は「停止中」ではなく「既定プロファイルの多重化を通して動作中」と報告します。ダッシュボードの `/api/status?profile=coder` と Channels のページは、多重化のプロセスを coder の動いているゲートウェイとして報告し、プラットフォームには coder 自身のアダプタが並びます。唯一の `gateway_state.json` は既定のホームの下にあり、従属側のアダプタはそこに `served_profiles` と並んで `<profile>:<platform>` の項目として現れます。プロファイルごとのゲートウェイの状態ファイルは書かれません。
+プロセスの水準での PID と錠は 1 つだけです（既定のホームの下にある、多重化のプロセスのもの）。既定プロファイルでの `hermes status --full` は多重化のプロセスを報告し、受け持っているプロファイルを並べます（`Serves: coder, research`）。`hermes -p coder status` と `hermes -p coder gateway status` は「停止中」ではなく「既定プロファイルの多重化を通して動作中」と報告します。ダッシュボードの `/api/status?profile=coder` と Channels のページは、多重化のプロセスを coder の動いているゲートウェイとして報告し、プラットフォームには coder 自身のアダプタが並びます。唯一の `gateway_state.json` は既定のホームの下にあり、従属側のアダプタはそこに `served_profiles` と並んで `<profile>:<platform>` の項目として現れます。プロファイルごとのゲートウェイの状態ファイルは書かれません。
 
 `hermes -p coder cron status` はホストのゲートウェイ 1 つと、それが受け持つプロファイルを名指しで表示し（`Scheduler host: the host gateway (PID 4211) serving profiles default, coder`）、そのうえで coder 自身の刻みの鼓動と、最後に成功した刻みを確かめます。鼓動が無かったり古かったりするときは、動作中と言い切らずに警告を出します。`cron list` と `cron create` も、受け持っているプロファイルの鼓動が新しくないときは警告します。`cron status` は、この軽い確認では読まない刻みの失敗の詳細まで見せます。
 

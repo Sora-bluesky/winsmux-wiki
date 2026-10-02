@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 16eec2d448c179937f9652ff7bea252c07bf6228
+upstream_blob: a2061da1de1f41e0556893960ca0078ed795b747
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -2561,7 +2561,7 @@ max_concurrent_sessions: null  # null/0 = unlimited; positive integer = active s
 
 上限に達すると、Hermes は、どの画面がスロットを使っているかを明記して、上限に達したことをはっきり伝えるメッセージを返します。
 すでに使用中のセッションは、いつもどおりに動作します。
-現在のスロットの使用状況と、スロットを使っているものをすべて確認するには、`hermes status` を実行してください。
+現在のスロットの使用状況と、スロットを使っているものをすべて確認するには、`hermes status --full` を実行してください。
 
 ゲートウェイで同時に進むターンの数を抑えるのは、この上限だけです。ゲートウェイはターンの本体をそれぞれ専用のスレッドで動かすので、
 既定（未設定）のままなら、受け付けたターンはほかの実行中のターンの後ろで待たされることなく、

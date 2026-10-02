@@ -8,6 +8,28 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-02
+
+- [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- [画像生成プロバイダのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/image-gen-provider-plugin/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [実行時のプロバイダー解決](https://wiki.winsmux.dev/hermes/docs/developer-guide/provider-runtime/)
+- [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- [Webhook で GitHub の PR に自動でコメントする](https://wiki.winsmux.dev/hermes/docs/guides/webhook-github-pr-review/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [よくある質問とトラブル対処](https://wiki.winsmux.dev/hermes/docs/reference/faq/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [Codex App-Server ランタイム（任意）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/codex-app-server-runtime/)
+- [画像生成](https://wiki.winsmux.dev/hermes/docs/user-guide/features/image-generation/)
+- [プラグインカタログ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
+- [Nous Tool Gateway](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-gateway/)
+- [Web 検索と本文抽出](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-search/)
+- [Git ワークツリー](https://wiki.winsmux.dev/hermes/docs/user-guide/git-worktrees/)
+- [Slack](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/slack/)
+- [Webhook](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/webhooks/)
+- [WhatsApp Business（Cloud API）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/whatsapp-cloud/)
+
 ## 2026-10-01
 
 - [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)

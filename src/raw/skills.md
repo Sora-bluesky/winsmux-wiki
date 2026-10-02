@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 211 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `e05b163`（2026-10-01）時点。この一覧は上流の docs から機械生成しています。
+上流 `4ed093c`（2026-10-02）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（58）
 
@@ -92,7 +92,7 @@ raw: /hermes/raw/skills.md
 | [Blackbox](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/) | Delegate coding tasks to the Blackbox AI multi-model CLI | 2026-09-20 |
 | [Dynamic Workflow](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/) | Plan-in-code fan-outs, adversarial verification, waves | 2026-09-19 |
 | [Grok](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/) | Delegate coding to xAI Grok Build CLI (features, PRs) | 2026-09-20 |
-| [Honcho](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/) | Configure and troubleshoot Honcho memory for Hermes | 2026-09-20 |
+| [Honcho](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/) | Configure and troubleshoot Honcho memory for Hermes | 2026-10-02 |
 | [Openhands](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/) | Delegate coding to OpenHands CLI (model-agnostic, LiteLLM) | 2026-09-20 |
 | [Evm](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-evm/) | Read-only EVM client: wallets, tokens, gas across 8 chains | 2026-09-20 |
 | [Hyperliquid](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid/) | Hyperliquid market data, account history, trade review | 2026-09-20 |

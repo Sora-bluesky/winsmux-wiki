@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 9515423c2ca78891430d5967b3cd16693b885c16
+upstream_blob: d35c2c422e7e36cb4ec9beb176bacc69f2a149b3
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -275,6 +275,9 @@ dependencies = [
   ランタイムを使ってください。
 - **`--no-deps`** を付けると、依存関係への同意なしで新しいプラグインをダウンロードし、`--enable` を
   付けていても無効のままにします。有効なプラグインを差し替えるときに、PM の受け入れを回避することはできません。
+- **`--yes-deps`** を付けると依存関係の質問に前もって答えたことになり、画面のない環境でのインストール（CI、SSH
+  での自動化、コンテナのエントリポイント）でも拒否されずに、宣言された依存関係を用意します。
+  `--no-deps` とは同時に使えません。
 - **`python_runtime: external`** は、sidecar の依存関係を共有の和集合から外します。
   Hermes はその Python ランタイムをインストールせず、その宣言も変更しません。
 - **読み込むものが何もないのはエラー** — `hermes plugins validate` は、`__init__.py`、
@@ -880,7 +883,7 @@ def reset_client():
     _slot.reset()
 ```
 
-どちらも、二重チェックロックで最初の同時呼び出しを直列化し、ファクトリを最大1回だけ実行します。ファクトリが raise した場合、何もキャッシュされず、次の呼び出しで再試行されます。honcho メモリプラグイン（`plugins/memory/honcho/client.py`）が参照実装です。
+どちらも、二重チェックロックで最初の同時呼び出しを直列化し、ファクトリを最大1回だけ実行します。ファクトリが raise した場合、何もキャッシュされず、次の呼び出しで再試行されます。[Honcho メモリプラグイン](https://github.com/plastic-labs/honcho/tree/main/hermes-plugin-honcho)（`client.py`）が参照実装です。
 
 > 目安: `global _something` を書いて `is None` チェックとその構築を続けるくらいなら、代わりにこれらのどちらかを使ってください。
 

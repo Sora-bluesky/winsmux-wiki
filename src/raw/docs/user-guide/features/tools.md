@@ -2,7 +2,7 @@
 title: "ツールとツールセット"
 description: "Hermes Agent のツールの全体像 — 何が使えるか、ツールセットの仕組み、ターミナルの実行先"
 upstream_path: user-guide/features/tools.md
-upstream_blob: 49f679149b1cc3779c256bade2956c6b9953b7a5
+upstream_blob: ad23c36061769851069cde25d1580d2ad2988ac7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tools
 ---
@@ -20,7 +20,7 @@ sources:
 Hermes には、Web の検索、ブラウザの自動操作、ターミナルでの実行、ファイルの編集、記憶、委任、予定した作業、Home Assistant など、幅広い組み込みのツールの登録簿が付いています。
 
 :::note
-**Honcho によるセッションをまたいだ記憶**は、組み込みのツールセットではなく、記憶プロバイダのプラグイン（`plugins/memory/honcho/`）として使えます。入れ方は[プラグイン](/hermes/docs/user-guide/features/plugins/)を参照してください。
+**Honcho によるセッションをまたいだ記憶**は、組み込みのツールセットではなく、プラグインカタログにある記憶プロバイダのプラグイン（`hermes plugins install honcho` で入れます）として使えます。詳しくは[記憶プロバイダ](/hermes/docs/user-guide/features/memory-providers/#honcho)を参照してください。
 :::
 
 大きな分け方はこうです。

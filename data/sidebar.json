@@ -1493,6 +1493,9 @@
                 },
                 {
                   "id": "developer-guide/plugins/application-declarations"
+                },
+                {
+                  "id": "developer-guide/plugins/catalog-submission"
                 }
               ]
             },
@@ -2031,6 +2034,7 @@
     "developer-guide/browser-provider-plugin",
     "developer-guide/terminal-environment-plugin",
     "developer-guide/plugins/application-declarations",
+    "developer-guide/plugins/catalog-submission",
     "developer-guide/creating-skills",
     "developer-guide/extending-the-cli",
     "developer-guide/tools-runtime",

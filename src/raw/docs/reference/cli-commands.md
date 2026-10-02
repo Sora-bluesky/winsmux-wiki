@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: e59b7e73c3655828829dd8d5ded91a50f0e4d21b
+upstream_blob: daad50e6a504881f37f4c879b54bf2a0dc249646
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -667,13 +667,17 @@ hermes usage --json                   # one JSON document on stdout
 ## `hermes status` {#hermes-status}
 
 ```bash
-hermes status [--all] [--deep]
+hermes status [--full] [--deep]
 ```
+
+既定では、1画面に収まる要約を表示します。内容は、モデル、使用中のプロバイダ、認証情報が登録された
+すべてのプロバイダ（`/model` の選択画面に出るものと同じ一覧）、gateway の状態、gateway が起動する
+メッセージングプラットフォーム、予約ジョブです。キーの値は表示しません。
 
 | オプション | 説明 |
 |--------|-------------|
-| `--all` | 共有可能な redaction 済みの形式で、すべての詳細を表示します。 |
-| `--deep` | 時間がかかる可能性のある、より深いチェックを実行します。 |
+| `--full` | すべての項目を表示します（API キーは伏せ字、認証プロバイダ、ターミナルのバックエンド、セッションなど）。`--all` は同じ意味の別名です。 |
+| `--deep` | 時間がかかる可能性のある、より深いチェックを実行します。`--full` も有効になります。 |
 
 ## `hermes cron` {#hermes-cron}
 
@@ -1456,7 +1460,7 @@ hermes hooks <subcommand>
 hermes memory <subcommand>
 ```
 
-外部メモリプロバイダのプラグインをセットアップ・管理します。同梱のプロバイダ: honcho、openviking、mem0、holographic、retaindb、byterover、supermemory。hindsight（プラグインカタログ）は `hermes plugins install hindsight` のあとで使えます。同時にアクティブにできる外部プロバイダは1つだけです。組み込みメモリ（MEMORY.md/USER.md）は常にアクティブです。
+外部メモリプロバイダのプラグインをセットアップ・管理します。同梱のプロバイダ: openviking、mem0、holographic、retaindb、byterover。honcho、hindsight、supermemory（プラグインカタログ）は `hermes plugins install <name>` のあとで使えます（`memory.provider` にすでに指定されているプロバイダなら、`hermes update` がこのインストールを自動で行います）。同時にアクティブにできる外部プロバイダは1つだけです。組み込みメモリ（MEMORY.md/USER.md）は常にアクティブです。
 
 サブコマンド:
 

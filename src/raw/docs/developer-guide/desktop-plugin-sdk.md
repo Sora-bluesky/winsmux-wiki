@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 081bbb9c3c83a5fa894efa68f451357a8a236264
+upstream_blob: 051c3767f0e7d3b7b49af5a086b6d5bf0f325592
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -231,6 +231,7 @@ interface Contribution {
 | キー割り当て | `KEYBINDS_AREA` | `data: KeybindContribution` |
 | テーマ | `THEMES_AREA` | `DesktopTheme` としての `data` |
 | 入力欄まわり | `COMPOSER_AREAS.*` | 描画の差し込み口、またはミドルウェアと添付の提供元 |
+| モデルメニューの行 | `MODEL_MENU_ROW_AREA` | `data: ModelMenuRowContribution` — モデルごとに、先頭のアイコンと末尾のバッジを付ける |
 | 外観の設定 | `APPEARANCE_AREAS.extra` | `render` — Settings → Appearance の末尾に足す操作 |
 
 ### ペイン {#panes}
@@ -406,6 +407,43 @@ host.onEvent('gateway.ready', () => {
 `setAccentOverride(hex)` を使い、`ctx.onDispose` で解除してください。単体で配られている
 [Accent Picker](https://github.com/NousResearch/hermes-desktop-accent-picker) の
 プラグインが、その実例です（そのままインストールできる完成したディスク型のプラグインでもあります）。
+
+#### チャット切り替えの見た目を整える — `data-session-switching` {#styling-the-chat-switch-data-session-switching}
+
+チャットを開くと、会話の記録は段階を踏んで配置されます。セッションが読み込まれ、行が並び、
+復元されたスクロール位置が数フレーム後に落ち着きます。その途中を隠したい（またはフェードさせたい）
+テーマは、ルートや DOM を監視するのではなく、文書化された属性を1つだけ狙います。コアは、切り替えが
+始まったフレームから、新しい会話の行が画面に出てスクロール位置が落ち着くまでのあいだ、チャット画面の
+ルート（`[data-chat-surface]`）に `data-session-switching="true"` を付け、
+終わったら外します。
+
+```css
+/* Hide the transcript while it is being placed, fade it in when it lands. */
+:root[data-hermes-theme="noir"] [data-chat-surface] [data-slot="aui_thread-viewport"] {
+  transition: opacity 0.12s ease-out;
+}
+:root[data-hermes-theme="noir"] [data-chat-surface][data-session-switching] [data-slot="aui_thread-viewport"] {
+  opacity: 0;
+  transition: none;
+}
+```
+
+- **画面ごとに付きます。** メインのチャットにもタイルの1枚1枚にも、それぞれの
+  `[data-chat-surface]` があり、属性が付くのは切り替え中の画面だけです。メインのペインに
+  絞るときは `[data-composer-target="main"]` を使います。
+- **必ず外れます。** 属性はコア自身の読み込みとスクロール復元の段階が保持しています。
+  読み込みの段階は会話の記録が届くか再開をあきらめた時点で、復元の段階は落ち着いた時点
+  （上限のあるフレーム数）か利用者が最初にスクロール・キー・ポインターを操作した時点で終わり、
+  アンマウント時にはどちらも終わります。このため、この属性の下で中身を隠すテーマが、チャットを
+  隠したままにしてしまうことはありません。まっさらな空の下書きでは、この属性は付きません。
+- **契約は属性そのものです。** 狙うのは `[data-session-switching]` と、
+  `data-chat-surface` / `data-slot` のフックです。内部のクラス名は契約ではなく、予告なく
+  変わります。属性を自分で付け外ししたり、ルートのリスナーや `MutationObserver` で同じことを
+  再現したりしないでください（カタログの規則 8）。
+
+これは t3-code-theme の `installSwitchFade` の書き方（フォーカスのストアのリスナーと、会話の行と
+スクロール位置を `requestAnimationFrame` のループで見張り、自前のルート属性を切り替える仕組み）を
+置き換えるものです。移行は、上の CSS だけで済みます。
 
 ### 入力欄の拡張 {#composer-extensions}
 
@@ -624,6 +662,57 @@ register(ctx) {
 
 このプラグインが差し込んでいた、推論のピルの表示を切り替える CSS には対応するフックがありません。
 それが要るのは、アプリが狭い幅でその表示名を隠すようになった場合だけです。
+
+#### モデルメニューの行の飾り {#model-menu-row-decorations}
+
+`MODEL_MENU_ROW_AREA` は、ネイティブのモデルメニューの中にモデルごとの印を付けます。対象は、入力欄の
+ピルから開くメニューと、`ModelCatalogMenu` を描画するほかのすべての画面です。コントリビューションは
+`decorate(row)` を渡します。コアはその戻り値を、行の決まった2つの場所に描きます。モデル名の前の
+**先頭のアイコン**と、コア自身のチップの後ろの**末尾のバッジ**です。行のマークアップ、名前、
+星、サブメニュー、クリック時の動作はコアのままです。
+
+```ts
+
+interface ModelMenuRowContext {
+  provider: string  // provider slug: 'anthropic', 'openrouter', …
+  model: string     // the model id the row commits
+  label: string     // the display name core paints on the row
+}
+interface ModelMenuRowDecoration {
+  icon?: ReactNode  // element (<img>, <svg>, a component) or short text, drawn in a 1rem box
+  badge?: string    // plain text chip
+}
+
+ctx.register({
+  area: MODEL_MENU_ROW_AREA,
+  id: 'provider-marks',
+  data: {
+    decorate: ({ provider }) => {
+      const src = PROVIDER_ICONS[provider]   // data: URL of an SVG mark
+      return src ? { icon: <img alt="" src={src} /> } : null
+    }
+  } satisfies ModelMenuRowContribution
+})
+```
+
+**調停。** 飾りの関数は登録簿の順に、**場所ごとに**実行されます。使える `icon` を最初に返したものが
+アイコンの場所を、使える `badge` を最初に返したものがバッジの場所を埋めるので、アイコンのプラグインと
+料金バッジのプラグインを同じ行で組み合わせられます。`null`（または使えるものが無い戻り値）は辞退の
+意味になります。アイコンとして扱うのは React の要素か空でない文字列だけ、バッジとして扱うのは空でない
+文字列だけで、それ以外は描画せずに無視します。**例外を投げた**飾りの関数も辞退として扱い、描画中に
+例外を投げたアイコンのコンポーネントは、自分の場所だけを空にします（それぞれが専用のエラー境界の中に
+あるためです）。壊れたプラグインがメニューごと落とすことはありません。
+`decorate()` が再実行されるのは、登録簿か、行の provider / model / label が変わったときだけなので、
+純粋な引き当てにしておいてください。
+
+**片付け。** 通常のデータのコントリビューションです。`ctx.register` の解除関数（とプラグインの
+無効化・再読み込み）で取り除かれ、行は飾りの無い状態で描き直されます。
+
+**t3-code-theme の移行。** このテーマは、メニューの DOM から行を探し出してマスク画像を書き込む
+`MutationObserver` で、開いたメニューに提供元の印を描いていました。同じ印は、
+`decorate({ provider })` が
+`{ icon: <img alt="" src={providerSvgDataUrl(provider)} /> }` を返すだけで出せます。DOM を読む必要が無く、
+メニューのマークアップが変わっても行は動き続けます。
 
 ### 外観の設定 {#appearance-settings}
 
@@ -1575,7 +1664,7 @@ CSP、権限の制御）が必要です。この経路を信頼の境界とし�
 |----------|---------|
 | ホスト | `host`（`.state.*`、`.settings`、`.notify`、`.notifyError`、`.navigate`、`.onEvent`、`.logs`、`.status`、`.restartGateway`、`.request`、`.composer`、`.sessions`、`.skills`、`.toolsets`、`.profiles`、`.pluginDecisions`） |
 | プラグインの取り決め | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
-| 領域の定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS`、`SESSION_ROW_AREAS`、`SIDEBAR_NAV_PREFS_AREA`、`APPEARANCE_AREAS` |
+| 領域の定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS`、`MODEL_MENU_ROW_AREA`、`SESSION_ROW_AREAS`、`SIDEBAR_NAV_PREFS_AREA`、`APPEARANCE_AREAS` |
 | 領域ごとの中身 | `RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider`、`SessionRowSlotContribution`、`SidebarNavPrefsContribution` |
 | React と状態 | `useValue`、`atom`、`computed`、`useQuery`、`useMutation`、`useQueryClient`、`queryClient`、`Contribute`、`WorkspacePageHeaderControl` |
 | テーマ | `useTheme`、`requestTheme`、`setAccentOverride`、`$accentOverride`、`retintTheme`、`themeHue`、`DesktopTheme`、`DesktopThemeColors`。さらに OKLCH の計算（`hexToOklch`、`oklchToHex`、`oklchToSrgb255`、`mixOklab`、`maxChroma`、`hueDelta`、`normalizeHex`）と sRGB の測定（`contrastRatio` は `number | null` で、解析できない入力では null、それに `readableOn`） |

@@ -2,7 +2,7 @@
 title: "WeCom Callback（自社で作るアプリ）"
 description: ""
 upstream_path: user-guide/messaging/wecom-callback.md
-upstream_blob: f6cf5ed4a473f9555e0b40169fcc5bd57e33ab09
+upstream_blob: f33f26eef1d5b181745c930e145fc59e34ef7881
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/wecom-callback
 ---
@@ -156,6 +156,7 @@ WECOM_CALLBACK_ALLOW_ALL_USERS=true
 - **入力中の表示なし** — コールバック方式は入力中の状態に対応していません
 - **テキストのみ** — 入力として扱えるのは今のところテキストのメッセージだけで、画像・ファイル・音声の入力はまだ実装されていません。送信側のメディア対応（画像、文書、動画、音声）については、WeCom プラットフォームのヒントを通じてエージェントが把握しています。
 - **応答までの時間** — エージェントの処理には 3〜30 分かかります。利用者には、処理が終わった時点で返信が表示されます
+- **テキストメッセージは 2048 バイトまで** — WeCom はテキストメッセージの先頭 2048 バイトしか残さないため、それより長い返信（と cron の出力）は複数のメッセージに分けて送られます。日中韓の文字なら、1 通におよそ 680 文字が収まります
 
 ## 困ったときは {#troubleshooting}
 

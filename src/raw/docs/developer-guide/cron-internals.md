@@ -2,7 +2,7 @@
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: d0ddd4175ef32c206eaad8d2db3fa5af4794a857
+upstream_blob: 6595498011751e8073d53db7c9613ce0e4b3f439
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -300,7 +300,7 @@ Create a daily funding report → attach "ai-funding-daily-report" skill
 3. **設定** — `config.yaml` の `cron.script_timeout_seconds`（`load_config()` 経由で読み込みます）
 4. **既定値** — 3600秒（1時間）
 
-この制限時間がかかるのは**実行前のスクリプトだけ**で、エージェント側にはかかりません。スキルや LLM で動くジョブは、*無操作*の時間を基準にした別の制限（`HERMES_CRON_TIMEOUT`、既定は無操作600秒、`0` で無制限）で動きます。ツールを呼び続けたりトークンを出し続けたりしているかぎり何時間でも動き、何も起きない時間が設定分だけ続いたときに初めて打ち切られます。スクリプトは常駐のスレッドプールに投げられ、1回分の処理のロックを握ったままにはしないので、長く走るスクリプトがほかのジョブの実行を止めることはありません。
+この制限時間がかかるのは**実行前のスクリプトだけ**で、エージェント側にはかかりません。スキルや LLM で動くジョブは、*無操作*の時間を基準にした別の制限（`HERMES_CRON_TIMEOUT`、既定は無操作600秒、`0` で無制限）で動きます。ツールを呼び続けたりトークンを出し続けたりしているかぎり何時間でも動き、何も起きない時間が設定分だけ続いたときに初めて打ち切られます。Python の単調時計がスリープ中の時間を含まないプラットフォーム（macOS と Linux）では、ホストがスリープしていた時間はこの無操作時間に数えません。Windows での動作は変わりません。スクリプトは常駐のスレッドプールに投げられ、1回分の処理のロックを握ったままにはしないので、長く走るスクリプトがほかのジョブの実行を止めることはありません。
 
 制限時間を超えたとき、あるいは所有権が取り消されたときは、`cron.scheduler_script` が共通の
 `agent.deadline.kill_process_tree` による強制終了の経路を使います。POSIX ではいったん動きを止めてから、
