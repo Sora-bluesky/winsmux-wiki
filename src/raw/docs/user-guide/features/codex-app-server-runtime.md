@@ -2,7 +2,7 @@
 title: "Codex App-Server ランタイム（任意）"
 description: ""
 upstream_path: user-guide/features/codex-app-server-runtime.md
-upstream_blob: ca80eaec65402a9905bbcb55d5426b2717349908
+upstream_blob: 60b865ace05e4bdc310931837e9e058e1101af1d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/codex-app-server-runtime
 ---
@@ -129,6 +129,7 @@ MCP のコールバックが出しているおかげで、次のものも動き�
 | Codex のサンドボックス（seatbelt / landlock、プロファイル） | — | あり（Codex 内蔵） |
 | ChatGPT のサブスクリプションでの認証 | — | あり（`openai-codex` の提供元経由） |
 | モデルの選択（`model.default`、`/model`） | あり | あり。`thread/start` と毎回の `turn/start` で送られるので、セッションの途中で `/model` を切り替えると次のターンから反映されます。`-900k` の付いた版は元の slug として送られ（拡張された文脈の幅は codex 側が適用します）、codex 自身の提供元では `openai/` の接頭辞が外されます |
+| 推論の深さと `/fast` | あり | あり。明示した `reasoning_effort`（そのモデルが受け付ける範囲に収められます。段階が `max` まであるモデルでは `ultra` が codex 自身の Ultra モードとして送られ、推論を無効にした場合は `none` として送られます）と `/fast` は `turn/start` に載って送られます。Hermes 側で設定していなければ、codex 自身に設定された既定値が使われます |
 | Codex 純正のプラグイン（Linear、GitHub など） | — | あり（自動で移されます） |
 | 利用者の MCP サーバー | あり | あり（Codex へ自動で移されます） |
 | 記憶とスキルの見直し（裏側で動きます） | あり | あり（項目の投影経由） |

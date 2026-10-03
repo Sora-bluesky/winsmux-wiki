@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Matrix"
 description: "Hermes Agent を Matrix のボットとして設定する"
 upstream_path: user-guide/messaging/matrix.md
-upstream_blob: a4ba1c86a8b03d946e22236fdbc38f6151e098f7
+upstream_blob: 184929217fef463cf5fd93bef9e5ae9de7deda04
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/matrix
 ---
@@ -106,7 +106,7 @@ matrix:
   session_scope: room             # auto|room|thread; room is recommended for project rooms
   auto_thread: true               # Auto-create threads for responses (default: true)
   dm_mention_threads: false       # Create thread when @mentioned in DM (default: false)
-  max_message_length: 16000       # Outbound chunk size in chars (default: 16000, max: 65535)
+  max_message_length: 15000       # Outbound chunk size in UTF-8 bytes (default and max: 15000)
 ```
 
 環境変数で書く場合は次のようになります。

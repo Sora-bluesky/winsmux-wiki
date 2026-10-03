@@ -2,7 +2,7 @@
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: f93d91a8310a0f7fce9c06488ea3cef0f641c6e4
+upstream_blob: 8d245291e9277cfc24b18b3014c33a8ed02f38a6
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -318,12 +318,14 @@ Nix は PM ロックを別の derivation としてビルドします。パッケ
 | シェル | 入る | 抜ける |
 |---|---|---|
 | Bash | `source ./activate` | `deactivate` |
+| fish | `source ./activate.fish` | `deactivate` |
 | PowerShell | `. .\activate.ps1` | `deactivate` |
 
 PowerShell では、先頭のドットとスペースが必須です。
 ドットソースせずに `.\activate.ps1` を実行しても、同じセッションのスコープにはなりません。
-POSIX 用のスクリプトは Bash の構文を使っています。この手順では `sh` や
-fish ではなく Bash を使ってください。Zsh の起動ファイルが Bash と同じ意味で動くとも考えないでください。
+`activate` は Bash の構文を使っています。この手順では `sh` ではなく Bash を使ってください。
+Zsh の起動ファイルが Bash と同じ意味で動くとも考えないでください。fish には専用の
+`activate.fish` があり、同じように動きます。
 
 アクティベートのたびに PM のインストールと同期の経路が呼ばれ、全エントリを再ハッシュする代わりに、
 記録済みのツールのダイジェストを信頼します。それでも PM は、足りないツールをインストールし、

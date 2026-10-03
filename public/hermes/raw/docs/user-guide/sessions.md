@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 8ad285e0003c60d5cd0a00aa56a748346e58b5a9
+upstream_blob: 7247c53d24ed8a4b3670c943c1cf6b380e377ca3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -389,7 +389,9 @@ hermes sessions export ~/exports/ --session-id 20250305_091523_a1b2c3d4
 hermes sessions export backup.jsonl --redact
 ```
 
-書き出したファイルは 1 行が 1 つの JSON オブジェクトで、セッションの情報一式とすべてのメッセージが入っています。
+書き出したファイルは 1 行が 1 つの JSON オブジェクトで、セッションの情報一式と、保存されているすべてのメッセージが入っています。各メッセージには `active`/`compacted` の印が付いています。その場での圧縮でアーカイブされたターンや、巻き戻しや編集で取り除かれたメッセージも含まれます。このファイルを取り込むと（ダッシュボードのセッション取り込み）、それらの行はアーカイブされた履歴として戻り、モデルが使う現在の文脈としては戻りません。`/save json` のスナップショット（CLI、メッセージング、TUI、Desktop）にも同じ行が入ります。バックアップには、そのセッションにかつて含まれていたものが全部入っていると考えてください。会話を人に渡すときは、表示用の形式（`--format md` か `html`。セッションで表示される履歴だけが入ります）で `--redact` を付けて書き出してください。セッションごとのバックアップはメモリ上で組み立てるので、保存されている行が `sessions.max_export_messages` より多いセッションは断られます（[大きすぎる会話記録への備え](#oversized-transcript-guards)を参照）。
+
+絞り込んで書き出すときは、条件に合う固定済みのセッションやアーカイブ済みのセッションも含まれます。固定は自動整理から守るためのもので、バックアップから外すためのものではありません。明示した `--session-id` が見つからない場合、書き出しは 0 以外の終了コードで終わり、出力ファイルは作られません。
 
 各レコードには、メッセージの時刻から組み立てた `timings` のまとまりも入っています。これがあるので、バグ報告に添付された書き出しを読む人は、モデルの応答を長く 1 回待ったのか、ツールとの小さな往復がたくさんあったのかを、手で組み立て直さずに見分けられます。中身は ID、役割、件数、所要時間だけで（`wall_clock_ms`、`largest_gap_ms`、`role_counts`、`tool_calls_emitted`、メッセージごとの `intervals`）、プロンプトの文面、ツールの引数や結果は一切含みません。そのため `--redact` を付けてもそのまま残ります。Hermes はモデルやツールの所要時間を計るストップウォッチを保存していないので、`complete` は常に `false` です。時刻付きのメッセージがないセッションでは `available` が `false` になり、`unavailable_reason` にその理由が入ります。このまとまりは書き出しのたびに作り直され、取り込みのときは無視されます（サイズの上限にも数えません）。
 
@@ -460,7 +462,7 @@ hermes sessions export --format md --model sonnet --min-messages 50 --redact
 hermes sessions export --format md --session-id 20250305_091523_a1b2c3d4 --delete-after-verified --yes
 ```
 
-Markdown / QMD の書き出しは、書き出したセッションごとに `.md` または `.qmd` を 1 ファイル作り、加えてファイルのパス・メッセージ数・系列の ID・SHA-256 を記した `manifest.jsonl` を作ります。まとめて書き出すには絞り込みが少なくとも 1 つ必要で、条件なしのまとめ書き出しは断られます。`--delete-after-verified` は意図的に `--session-id` のときだけに限られ、`--yes` も必要です。親セッションを消すと、その委任先や下位エージェントのセッションも消えるため、このモードでは委任先を 1 つずつ別ファイルに書き出して確かめてから削除に進みます。Markdown / QMD のファイルには、そのセッションで表示される履歴がすべて入ります。その場での圧縮によってアーカイブされたターンも含まれます。削除の際は、削除を実行するのと同じデータベースのトランザクションの中で、その表示用の記録そのものと委任先の顔ぶれをもう一度照らし合わせます。その間に追記・書き換え・巻き戻し・圧縮・委任先の変化が 1 つでもあれば、削除は行われません。この表示履歴の決まりは、`--format html`、`--only user-prompts`（Markdown と JSONL のどちらで出力する場合も）、`/save md|html` にも同じく当てはまります。一方、セッション全体の JSON / JSONL の書き出しと `/save json` は、いま有効な履歴だけを対象にしたままです。アーカイブ済みのターンを取り込むと、それがモデルの有効な文脈として復活してしまうためです。`--redact` は、書き出す前にメッセージ本文とツールの出力から秘密の値（API キー、トークン、認証情報）を伏せます。誰かに渡す予定の書き出しには必ず付けてください。
+Markdown / QMD の書き出しは、書き出したセッションごとに `.md` または `.qmd` を 1 ファイル作り、加えてファイルのパス・メッセージ数・系列の ID・SHA-256 を記した `manifest.jsonl` を作ります。まとめて書き出すには絞り込みが少なくとも 1 つ必要で、条件なしのまとめ書き出しは断られます。`--delete-after-verified` は意図的に `--session-id` のときだけに限られ、`--yes` も必要です。親セッションを消すと、その委任先や下位エージェントのセッションも消えるため、このモードでは委任先を 1 つずつ別ファイルに書き出して確かめてから削除に進みます。Markdown / QMD のファイルには、そのセッションで表示される履歴がすべて入ります。その場での圧縮によってアーカイブされたターンも含まれます。削除の際は、削除を実行するのと同じデータベースのトランザクションの中で、その表示用の記録そのものと委任先の顔ぶれをもう一度照らし合わせます。その間に追記・書き換え・巻き戻し・圧縮・委任先の変化が 1 つでもあれば、削除は行われません。この表示履歴の決まりは、`--format html`、`--only user-prompts`（Markdown と JSONL のどちらで出力する場合も）、`/save md|html` にも同じく当てはまります。一方、セッション全体の JSON / JSONL の書き出し（`--only` を付けない `hermes sessions export`）と `/save json`（CLI、メッセージング、TUI、Desktop）は、アーカイブ済みの行も含めて、保存されているすべての行のバックアップです（[セッションを書き出す](#export-sessions)を参照）。`--redact` は、書き出す前にメッセージ本文とツールの出力から秘密の値（API キー、トークン、認証情報）を伏せます。誰かに渡す予定の書き出しには必ず付けてください。
 
 ### セッションを消す {#delete-a-session}
 
@@ -494,6 +496,14 @@ hermes sessions rename 20250305_091523_a1b2c3d4 debugging auth flow
 `sessions.auto_archive` による自動整理の対象外になり、常に一覧に出ます。
 これは Desktop の横一覧の Pinned で使われるのと同じ印なので、どちらで
 固定しても両方に反映されます。
+
+セッションの書き出しを復元するとき（ダッシュボードでの取り込みや、取り残された
+セッションをプロファイルが引き取るとき）は、固定・アーカイブ・非表示の印と、
+そのアーカイブが `sessions.auto_archive` の整理によるものかどうかが保たれます。
+復元した固定済みのセッションは引き続き保持期間の後片付けの対象外になり、
+引き取った Bot Mode のチャットは非表示のままです。整理でアーカイブされたものを
+復元した場合も、再開すれば元に戻ります。これらの印ができる前の書き出しは、
+固定なし・表示ありの普通のセッションとして復元されます。
 
 ```bash
 # Pin one or more sessions (unique ID prefixes work)
@@ -1109,13 +1119,18 @@ sessions:
 ### 大きすぎる会話記録への備え {#oversized-transcript-guards}
 
 暴走した会話記録が一度にメモリへ読み込まれないよう、2 つの上限があります
-（どちらも既定は動いているメッセージ `20000` 件。`0` にすると無効になります）。
+（どちらも既定はメッセージ `20000` 件。`0` にすると無効になります）。
 
 ```yaml
 sessions:
   max_resume_messages: 20000   # interactive resume (CLI / TUI / Desktop)
   max_export_messages: 20000   # one-shot in-memory export of a single session
 ```
+
+`max_export_messages` は、JSON / JSONL のバックアップ（`hermes sessions export`、
+`hermes console` の中の `sessions export`、CLI・メッセージング・TUI・Desktop の `/save json`）にセッションごとに効きます。バックアップにはアーカイブ済みの行も全部入るので、
+保存されているすべての行を数えます。何度も圧縮されて、いま動いている先端が小さいセッションでも、この上限を超えることがあります。
+ダッシュボードの Sessions ページにある Export 操作は行を少しずつ流して書き出すので、この上限はかかりません。
 
 `max_resume_messages` が制限するのは**再開のときに実際に読み込む量**であって、
 会話の履歴全体ではありません。
@@ -1131,8 +1146,9 @@ sessions:
   保存された系列全体を表しています。
 
 再開が断られると、クライアントにはエラーコード `4130` と、件数、そして
-どの範囲で数えたか（`across its lineage` か `in its tip segment`）が返ります。
-そうしたセッションでも `hermes sessions export` は使えます。
+どの範囲で数えたか（`across its lineage` か `in its tip segment`）が返ります。TUI / Desktop の `/save` が `max_export_messages` で断られた場合は、エラーコード `4131` が返ります。
+そうしたセッションでも `hermes sessions export` は使えます。ただしその JSON / JSONL の
+バックアップでは、各セッションが `max_export_messages` を下回っている必要があります。
 
 ### 手動の後片付け {#manual-cleanup}
 

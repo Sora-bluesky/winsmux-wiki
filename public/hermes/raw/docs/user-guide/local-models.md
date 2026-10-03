@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ローカルモデル"
 description: "モデルを自分の端末だけで動かします。アカウントも API キーも不要で、何も端末の外には出ません。"
 upstream_path: user-guide/local-models.md
-upstream_blob: 7519399caad98148c656247f6e8cc6d416e0d8df
+upstream_blob: d28a66698b9a7e0b6a9d2175738c9296a1d9ea31
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/local-models
 ---
@@ -189,6 +189,12 @@ PM のストアに置かれ、`runtimes/llamacpp/` には変更されうるプ�
   **Linux:** Vulkan または CPU。固定版のリリースには、ビルド済みの CUDA のアーカイブがありません。
   **macOS:** Metal または CPU。HIP/ROCm は、対応する x64 の環境で明示的に選んだときだけ使います。
   対応していないバックエンドと環境の組み合わせは、ダウンロードを始める前に失敗します。
+- `backend: auto` は、NVIDIA なら CUDA、AMD と Intel の GPU なら Vulkan を優先し、
+  使えなければ上に挙げたその環境向けのビルドに切り替えます（GPU が見つからなければ CPU）。
+  Vulkan か HIP のエンジンでは、単体の GPU はそのカード自身のメモリで大きさを見積もり
+  （システムの RAM ははみ出した分の置き場です）、起動のたびにほかのプログラムがそのカードで使っている分を差し引きます。
+  内蔵 GPU はシステムの RAM を共有するので、RAM から見積もります。
+  Quickstart はモデルを選ぶ前にエンジンを入れるので、選ばれるモデルはカードに合ったものになります。
 - メモリ 8 GB 以上の GPU があればカタログの小さめのモデルは快適に動き、
   16 GB 以上なら 27〜35B のモデルを高い品質で動かせます。
 - モデルが揃っているかは、カタログのサイズの見積もりではなく、サーバーの応答と突き合わせて確かめます。

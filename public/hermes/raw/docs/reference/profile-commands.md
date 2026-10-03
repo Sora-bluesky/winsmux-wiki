@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プロファイルのコマンド早見表"
 description: ""
 upstream_path: reference/profile-commands.md
-upstream_blob: 5f7ce5b5774520984b4be68df185e3480b4ebcc7
+upstream_blob: 9f4f840f67da5bfd1f9adaa33b871364a74d95af
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/profile-commands
 ---
@@ -325,7 +325,7 @@ hermes profile purge-identity mybot
 hermes profile export <name> [options]
 ```
 
-プロファイルを圧縮した tar.gz の書庫として書き出します。持ち運べる控えなので、バックアップにも、別の端末へ移すのにも、誰かに渡すのにも使えます。`auth.json` と `.env` は必ず除かれます。
+プロファイルを圧縮した tar.gz の書庫として書き出します。持ち運べる控えなので、バックアップにも、別の端末へ移すのにも、誰かに渡すのにも使えます。`auth.json`、`.env` などの認証情報の保管場所は必ず除かれます。詳しくは[書き出したファイルに含まれるもの](/hermes/docs/user-guide/profile-distributions/#what-an-export-file-contains)を参照してください。
 
 チャットからは [`/export`](/hermes/docs/reference/slash-commands/) でも実行でき、デスクトップアプリでは **⌘K → Export profile…**、またはプロファイルのタイルの右クリックメニューから使えます。デスクトップからの書き出しでは、`desktop.json`（スキン、ライト／ダークの設定、独自テーマ、レールの色、ウィンドウの配置）も書庫に入ります。
 

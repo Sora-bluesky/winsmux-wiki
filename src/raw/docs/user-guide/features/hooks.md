@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 59975d14edf93509da71e8f886c1d0f98bcef97c
+upstream_blob: 0f48e8cb85d5b57c01a20bb4cba05f140fb70316
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -1756,7 +1756,7 @@ Windows では、`command` が実在するスクリプトのファイルで始�
 
 // Silent no-op — any empty / non-matching output is fine:
 ```
-
+後述する `pre_tool_call` の終了コード 2 を除き、壊れた JSON、ふつうの 0 以外の終了コード、時間切れは、既定では開く側へ倒れます。警告を記録しますが、エージェントのループは止めません。`fail_closed` のフックでは、後述のとおり振る舞いが変わります。
 壊れた JSON、0 以外の終了コード、時間切れは警告を記録しますが、エージェントのループを止めることは決してありません。
 
 ### 終了コード 2 = 遮断（Claude Code / Cursor と互換） {#exit-code-2-block-claude-code-cursor-compatible}
@@ -1798,6 +1798,7 @@ hooks:
 |---------|--------------------|--------------------|
 | コマンドが無い / 実行できない | 警告して進む | **遮断** |
 | 時間切れ | 警告して進む | **遮断** |
+| 認識できる指示の無い 0 以外の終了 | 警告して進む | **遮断** |
 | JSON でない標準出力（スタックトレースなど） | 警告して進む | **遮断** |
 | きれいに終了し、有効な何もしない JSON（`{}`） | 進む | 進む |
 

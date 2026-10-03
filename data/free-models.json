@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-03",
+  "generatedAt": "2026-10-04",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-10-03",
-      "attemptedAt": "2026-10-03",
+      "fetchedAt": "2026-10-04",
+      "attemptedAt": "2026-10-04",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -103,8 +103,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-10-03",
-      "attemptedAt": "2026-10-03",
+      "fetchedAt": "2026-10-04",
+      "attemptedAt": "2026-10-04",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -333,8 +333,8 @@
     },
     "opencode": {
       "ok": true,
-      "fetchedAt": "2026-10-03",
-      "attemptedAt": "2026-10-03",
+      "fetchedAt": "2026-10-04",
+      "attemptedAt": "2026-10-04",
       "errorCode": null,
       "url": "https://opencode.ai/zen/v1/models",
       "models": [

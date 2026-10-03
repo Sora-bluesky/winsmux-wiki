@@ -2,7 +2,7 @@
 title: "プロファイル配布: エージェントまるごと共有する"
 description: ""
 upstream_path: user-guide/profile-distributions.md
-upstream_blob: 036f3b03edb3e14ce7e82f46444074944e4105e1
+upstream_blob: dbf94f42f253ff9a7c485c6e670f52b226c02a27
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profile-distributions
 ---
@@ -92,7 +92,7 @@ tarball、HTTP アーカイブ、独自形式も検討しましたが、どれ�
 
 - **今すぐ一度だけ、自分の環境を誰かに渡したいとき。** 配布にはリポジトリとマニフェストと `.gitignore` が要ります。`/export` はどれも要りません — [プロファイルをファイルで書き出す・読み込む](#export-and-import-a-profile-file) を参照してください。バックアップや、新しい端末への引っ越しも同じです。
 - **デスクトップのテーマや画面配置を共有したいとき。** 配布が運ぶのはエージェント本体、つまり SOUL、設定、スキル、cron、MCP、プラグインです。デスクトップアプリから作ったエクスポートは見た目も一緒に運びます。スキン、ライト/ダークの切り替え、スキンが必要とする独自テーマ、そのプロファイルのレール色、ウィンドウの配置です。
-- **API キーもエージェントと一緒に渡したいとき。** `auth.json` と `.env` は配布から意図的に除いてあります。導入する人がそれぞれ自分の資格情報を用意します。（エクスポートファイルでも同じように取り除かれます。）
+- **API キーもエージェントと一緒に渡したいとき。** `auth.json`、`.env`、そして Hermes がプロファイルから読むほかの資格情報の保存場所（`.op.env`、`npmrc`、OAuth やボットのトークンのファイル、`honcho.json`、`mem0.json`、`teams_pipeline_store.json`、`mcp-tokens/`、`vault/`、`proxy/`、ブラウザーのプロファイル、プラットフォームのセッション、さらにルート直下またはスキルの下に置かれた `.ssh/`、`.aws/`、`.gnupg/`、`.kube/`、`.envrc`）は、配布から意図的に除いてあります。導入する人がそれぞれ自分の資格情報を用意します。（エクスポートファイルでも同じように取り除かれます。）
 - **メモリーやセッション、会話履歴を共有したいとき。** これらは利用者のデータであって、配布の中身ではありません。同梱されることはありません。（エクスポートファイルはここが違います。送る前に [エクスポートファイルに入るもの](#what-an-export-file-contains) を読んでください。）
 
 :::caution
@@ -279,7 +279,7 @@ research-bot/
 |---|---|---|
 | **配布側のもの** | `SOUL.md`, `config.yaml`, `mcp.json`, `skills/`, `cron/jobs.json`, `distribution.yaml` | ファイルは新しいクローンの内容に置き換わります。スキルのディレクトリは項目ごとにまとめます。`cron/jobs.json` はジョブの id ごとにまとめます。配布に入っている定義はその場で更新され、自分で足したジョブと、各ジョブの一時停止・有効の状態は残ります。新しく配布に入ったジョブは一時停止の状態で届きます。`cron/` のほかのファイルと、`skills/` 直下の隠しメタデータは実行時の状態なので、手元に残ります。 |
 | **設定の上書き** | `config.yaml` | 実際には既定で保持されます。導入した人がモデルやプロバイダーを調整しているかもしれないためです。更新時に `--force-config` を付けると初期状態に戻ります。 |
-| **利用者側のもの** | `memories/`, `sessions/`, `state.db*`, `auth.json`, `.env`, `logs/`, `workspace/`, `plans/`, `home/`, `*_cache/`, `local/` | 触れられません |
+| **利用者側のもの** | `memories/`, `sessions/`, `state.db*`, `auth.json`, `.env` とそのほかの資格情報の保存場所（`platforms/pairing/` や `platforms/whatsapp/session/` のように、配布側のディレクトリの下にあるものも含む）、および Hermes がそれらについて残す復旧用のコピー（`state-snapshots/`, `auth.json.corrupt`, `.env.bak-*`）、`logs/`, `workspace/`, `plans/`, `home/`, `*_cache/`, `local/` | 触れられません。`distribution_owned` で資格情報の保存場所を配布側のものにすることもできません。資格情報の保存場所を含むディレクトリがプロファイルにあるところへ、同じ名前のファイル（`platforms` という名前のファイルなど）を送り込む更新は、何も書き込む前に拒否されます |
 
 配布側のものの一覧は、マニフェストで上書きできます。
 
@@ -680,13 +680,13 @@ hermes profile import ./research-bot.tar.gz --name research-bot-2
 
 ### エクスポートファイルに入るもの {#what-an-export-file-contains}
 
-どちらの種類のプロファイルでも常に除外されるのは `auth.json` と `.env` です。API キーが端末の外へ出ることはありません。
+どちらの種類のプロファイルでも常に除外されるのは、`auth.json`、`.env`、そして Hermes がプロファイルから読むほかの資格情報の保存場所（WeChat の `weixin/accounts/` のような OAuth やボットのトークンのファイル、`honcho.json`、`mcp-tokens/`、`vault/`、`proxy/` にある iron-proxy の鍵、`chrome-debug/` にある `/browser connect` 用のものを含むブラウザーのプロファイル、プラットフォームのセッションとペアリングの保存場所、Graph の webhook の `clientState` を持つ Teams パイプラインの `teams_pipeline_store.json`）、さらにルート直下またはスキルの下に置かれた `.ssh/`、`.aws/`、`.gnupg/`、`.kube/`、`.envrc` です。API キーが端末の外へ出ることはありません。`honcho.json` と `mem0.json` には、設定と並んでプロバイダーの API キーが入っていることがあります。そのため、読み込んだあとに `hermes honcho setup` か `hermes memory setup` をもう一度実行してください。
 
 **default プロファイル**（`~/.hermes`）は許可リスト方式で書き出されます。Hermes が把握している成果物だけが対象なので、ホームディレクトリに置いてある無関係なファイルが巻き込まれることはありません。
 
 対象は `config.yaml`、`SOUL.md`、`MEMORY.md`、`USER.md`、`todo.json`、`system_prompt.md`、`AGENTS.md`、`CLAUDE.md`、`.cursorrules`、`skills/`、`plugins/`、`cron/`、`scripts/`、`sessions/`、`memories/`、`knowledge/`、`preferences/`、そしてデスクトップが用意していれば `desktop.json` です。
 
-**名前付きプロファイル**（`~/.hermes/profiles/<name>`）は、`auth.json` と `.env` を除いたディレクトリ全体をコピーします。こちらは対象が広く、そのプロファイルに `state.db` やログ、キャッシュがあればアーカイブにも入り、ファイルは大きくなります。
+**名前付きプロファイル**（`~/.hermes/profiles/<name>`）は、ディレクトリ全体をコピーします。ただし、上に挙げた資格情報の保存場所、`home/`（Hermes が動かすツールのサブプロセスの `HOME` で、`git`、`ssh`、`gh`、`npm` やスキルの CLI が資格情報を置く場所）、そして Hermes がそれらについて残す復旧用のコピー（`backups/`、`state-snapshots/`、すべての `auth.json.*` や `.env.bak*`、`hermes update` が書き出す `config.yaml.bak-<timestamp>` のコピー）は除きます。`config.yaml.bak-my-note` のように自分で名前を付けたコピーはエクスポートされ、その中の秘密の値は `config.yaml` と同じように伏せられます。こちらは対象が広く、そのプロファイルに `state.db` やログ、キャッシュがあればアーカイブにも入り、ファイルは大きくなります。
 
 :::caution 送る前にアーカイブの中身を読む
 エクスポートはプロファイルのスナップショットであって、整えた公開物ではありません。配布と違い、`memories/` や `sessions/`、`USER.md` が **入りえます**。しかも、スキルやメモリー、自分の人格に書き込んだ個人的な内容を走査する仕組みはありません。資格情報はファイル名で振り分けているだけで、中身までは見ていません。

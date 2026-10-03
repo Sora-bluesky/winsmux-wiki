@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 3ac2bbe86a0882a6aac69eff72c218bfdb109790
+upstream_blob: 6b2c07b9e7c4e853f03c57b4009b0ad0b7932555
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -257,7 +257,7 @@ YAML を書く代わりに、きちんとした UI からプロバイダー・�
 - **補助モデルの警告** — 補助タスク（タイトル付け、要約などの手伝い）が別のプロバイダーに固定されたまま、メインのモデルを新しいプロバイダーへ切り替えると、アプリが警告します。気づかないうちに作業が2つのプロバイダーへ分かれてしまわないようにするためです。
 - **タスクごとの推論 effort** — **Settings → Model → Auxiliary models** の各行には、プロバイダーとモデルの選択の隣に推論の選択があります。段階を指定するか、**Off** か、**inherit · main model effort**（既定で、そのタスクの上書きを外します）です。これは `config.yaml` に `auxiliary.<task>.reasoning_effort` として保存され、`hermes model` が書くのと同じキーで、設定されていれば行の要約にも出ます。圧縮やタイトル付けのような頻繁に走る手伝いを低い推論や推論なしで回し、メインのエージェントは高いままにしておく、といった使い方ができます。
 - **VS Code Marketplace のテーマ** — 組み込みのテーマのプリセットに加えて、外観の設定には VS Code Marketplace をその場で検索する機能があります。好きなカラーテーマを選べば、アプリがダウンロードし、変換し、デスクトップのテーマとして導入します。同じ取り込み機能はコマンドパレット（*Install theme*）からも使え、取り込んだテーマは外観の設定から削除できます。
-- **端末をスリープさせない** — **Settings → Advanced → Keep computer awake** は端末が眠るのを止めるので、長時間や一晩がかりのエージェントの作業が止まりません（画面が暗くなることはあります）。これは端末ごとの設定です。
+- **端末をスリープさせない** — **Settings → Advanced → Keep computer awake** は端末が眠るのを止めるので、長時間や一晩がかりのエージェントの作業が止まりません（画面が暗くなることはあります）。**While working** はターンの実行中だけ端末を起こしたままにし、作業が終わるか失敗すれば通常どおりスリープさせます。**Always** は Hermes を開いているあいだずっと起こしたままにします。これは端末ごとの設定です。
 
 初回のセットアップは統一されたオーバーレイのデザインシステムで作り直されました。**Choose provider later** を選べば、プロバイダーの設定を飛ばして先にアプリへ入れます。
 

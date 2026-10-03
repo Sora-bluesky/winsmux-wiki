@@ -2,7 +2,7 @@
 title: "契約の中継サーバー"
 description: "Nous Portal の契約（や他の OAuth プロバイダー）を、外部アプリ向けの OpenAI 互換エンドポイントとして使えるようにします。"
 upstream_path: user-guide/features/subscription-proxy.md
-upstream_blob: 5e7e852a3cf78e3c1aff0d68607513132fe6c13b
+upstream_blob: 666969772bcf671228da387d0977ab00a8e842db
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/subscription-proxy
 ---
@@ -165,15 +165,21 @@ INFERENCE_TEXT_MODEL=Hermes-4-70B
 
 ## 家庭内のネットワークに出す {#exposing-on-lan}
 
-既定では、中継サーバーは `127.0.0.1`（自分の端末の中だけ）で待ち受けます。
-同じネットワークにある他の端末からも使えるようにするには、次のようにします。
+既定では、中継サーバーは `127.0.0.1`（自分の端末の中だけ）で待ち受けます。`Host` ヘッダーが
+自分自身のアドレス（`localhost`、`127.0.0.1`、`[::1]`、または待ち受けている IP）でない
+リクエストと、ほかのサイトからのブラウザーのリクエスト（自分以外の `Origin`、または
+`Sec-Fetch-Site` が `cross-site`/`same-site` のもの）は断るので、ブラウザーで開いている
+Web ページからは使えません。SDK や `curl` のようなクライアントはどちらのヘッダーも送らないので、
+影響を受けません。同じネットワークにある他の端末からも使えるようにするには、次のようにします。
 
 ```bash
 hermes proxy start --host 0.0.0.0 --port 8645
 ```
 
 ⚠ **注意:** これでネットワーク上の誰もが、自分の Portal の契約を使えるように
-なります。中継サーバー自身は認証を持たず、どんな bearer でも受け入れます。
+なります。すべてのアドレスで待ち受けると `Host` の確認は省かれる（どの名前でも届く）ため、
+Web ページからのリクエストはすべて断ります（どんな `Origin` でも、`Sec-Fetch-Site` が `none` 以外でも）。
+つまり、すべてのアドレスで待ち受けている中継サーバーはブラウザーからは使えません。中継サーバー自身は認証を持たず、どんな bearer でも受け入れます。
 信頼できる範囲の外へ出すのなら、ファイアウォールか VPN、あるいはきちんと
 認証のある逆向きの中継を挟んでください。
 

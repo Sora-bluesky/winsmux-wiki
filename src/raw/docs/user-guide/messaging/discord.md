@@ -2,7 +2,7 @@
 title: "Discord"
 description: "Hermes Agent を Discord のボットとして設定する"
 upstream_path: user-guide/messaging/discord.md
-upstream_blob: 9027d61290065238e64bfebddd9d285032dd936a
+upstream_blob: 0c9f4b3348f6388b14fd2562165835b5c960562e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/discord
 ---
@@ -297,7 +297,7 @@ Discord の振る舞いは 2 つのファイルで制御します。認証情報
 | 変数 | 必須か | 既定値 | 説明 |
 |----------|----------|---------|-------------|
 | `DISCORD_BOT_TOKEN` | **はい** | — | [Discord 開発者ポータル](https://discord.com/developers/applications) で取得したボットトークン。 |
-| `DISCORD_ALLOWED_USERS` | 条件付き | — | ボットとやり取りできる Discord ユーザー ID をカンマ区切りで指定します。これ**も** `DISCORD_ALLOWED_ROLES` も設定していない場合、`DISCORD_ALLOW_ALL_USERS=true`、`GATEWAY_ALLOW_ALL_USERS=true`、または `DISCORD_ALLOWED_CHANNELS` によるサーバーへのアクセス範囲の明示がない限り、ゲートウェイはすべての利用者を拒否します。 |
+| `DISCORD_ALLOWED_USERS` | 条件付き | — | ボットとやり取りできる Discord ユーザー ID をカンマ区切りで指定します。これ**も** `DISCORD_ALLOWED_ROLES` も設定していない場合、`DISCORD_ALLOW_ALL_USERS=true`、`GATEWAY_ALLOW_ALL_USERS=true`、または `DISCORD_ALLOWED_CHANNELS` によるサーバーへのアクセス範囲の明示がない限り、ゲートウェイはすべての利用者を拒否します。ユーザー名でも指定できます。その場合はボットの接続時に ID へ変換されます（**Server Members Intent** が必要です）。表示名やサーバーのニックネームは、どのメンバーでも自由に設定できるため、照合には一切使いません。 |
 | `DISCORD_ALLOWED_ROLES` | いいえ | — | Discord のロール ID をカンマ区切りで指定します。いずれかのロールを持つメンバーが認可されます（`DISCORD_ALLOWED_USERS` とは OR の関係です）。接続時に **Server Members Intent** を自動で有効にします。管理役の入れ替わりが多い場面で便利で、ロールを付与した時点で新しい管理役にアクセス権が渡り、設定の配布は要りません。 |
 | `DISCORD_ALLOW_ALL_USERS` | いいえ | `false` | ボットに到達できるすべての Discord 利用者を許可する、明示的な選択です。Discord についてだけ 0.18 以前の開放された振る舞いに戻します。信頼できる非公開サーバーか開発用途にだけ使ってください。 |
 | `GATEWAY_ALLOW_ALL_USERS` | いいえ | `false` | すべてのゲートウェイのプラットフォームに対する全員許可の選択です。接続しているすべてのプラットフォームを意図的に開放したいのでなければ、プラットフォーム個別の `DISCORD_ALLOW_ALL_USERS` を使ってください。 |

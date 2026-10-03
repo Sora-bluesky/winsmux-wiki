@@ -1,6 +1,178 @@
 {
-  "generatedAt": "2026-10-03",
+  "generatedAt": "2026-10-04",
   "entries": [
+    {
+      "date": "2026-10-03",
+      "sha": "77bdae7",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/adding-platform-adapters",
+          "title": "プラットフォームアダプターを追加する",
+          "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
+        },
+        {
+          "id": "developer-guide/cron-internals",
+          "title": "cron の内部構造",
+          "url": "/hermes/docs/developer-guide/cron-internals/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/memory-provider-plugin",
+          "title": "メモリープロバイダープラグイン",
+          "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/plugins/catalog-submission",
+          "title": "プラグインカタログへの登録申請",
+          "url": "/hermes/docs/developer-guide/plugins/catalog-submission/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/stable-releases",
+          "title": "安定版リリースの受け入れと昇格",
+          "url": "/hermes/docs/developer-guide/stable-releases/"
+        },
+        {
+          "id": "getting-started/nix-setup",
+          "title": "Nix と NixOS のセットアップ",
+          "url": "/hermes/docs/getting-started/nix-setup/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "integrations",
+          "title": "外部サービス連携",
+          "url": "/hermes/docs/integrations/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "reference/tools-reference",
+          "title": "組み込みツール一覧",
+          "url": "/hermes/docs/reference/tools-reference/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/docker",
+          "title": "Hermes の Docker 設定",
+          "url": "/hermes/docs/user-guide/docker/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/honcho",
+          "title": "Honcho メモリー",
+          "url": "/hermes/docs/user-guide/features/honcho/"
+        },
+        {
+          "id": "user-guide/features/memory-providers",
+          "title": "記憶プロバイダー",
+          "url": "/hermes/docs/user-guide/features/memory-providers/"
+        },
+        {
+          "id": "user-guide/features/memory",
+          "title": "ずっと残る記憶",
+          "url": "/hermes/docs/user-guide/features/memory/"
+        },
+        {
+          "id": "user-guide/features/overview",
+          "title": "機能の概要",
+          "url": "/hermes/docs/user-guide/features/overview/"
+        },
+        {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "スキルの仕組み",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
+          "id": "user-guide/features/skins",
+          "title": "スキンとテーマ",
+          "url": "/hermes/docs/user-guide/features/skins/"
+        },
+        {
+          "id": "user-guide/features/tool-gateway",
+          "title": "Nous Tool Gateway",
+          "url": "/hermes/docs/user-guide/features/tool-gateway/"
+        },
+        {
+          "id": "user-guide/features/tool-search",
+          "title": "ツール検索",
+          "url": "/hermes/docs/user-guide/features/tool-search/"
+        },
+        {
+          "id": "user-guide/features/tools",
+          "title": "ツールとツールセット",
+          "url": "/hermes/docs/user-guide/features/tools/"
+        },
+        {
+          "id": "user-guide/messaging/wecom-callback",
+          "title": "WeCom Callback（自社で作るアプリ）",
+          "url": "/hermes/docs/user-guide/messaging/wecom-callback/"
+        },
+        {
+          "id": "user-guide/messaging/wecom",
+          "title": "WeCom（企業向け WeChat）",
+          "url": "/hermes/docs/user-guide/messaging/wecom/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        },
+        {
+          "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
+          "title": "Honcho — Hermes の Honcho メモリを設定し、うまく動かないときに直す",
+          "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/"
+        }
+      ]
+    },
     {
       "date": "2026-10-02",
       "sha": "1d4a5be",

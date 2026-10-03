@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "フォールバックプロバイダー"
 description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: 489f6a86beb3a3d3f4a3f8cbb283c0718e605f73
+upstream_blob: 32d698c02023208ecd21edcfeddbcf2ac0adb678
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
@@ -106,6 +106,7 @@ Google 純正の API エンドポイントでは、いずれも純正の Gemini 
 | Tencent TokenPlan | `tencent-tokenplan` | `TOKENPLAN_API_KEY` |
 | Microsoft Foundry | `azure-foundry` | `AZURE_FOUNDRY_API_KEY` と `AZURE_FOUNDRY_BASE_URL` |
 | LM Studio（ローカル） | `lmstudio` | `LM_API_KEY`（ローカルなら不要）と `LM_BASE_URL` |
+| ローカルの llama.cpp（Hermes が管理） | `llamacpp`（別名 `llama.cpp`、`llama-cpp`） | Hermes が管理するローカルのモデルサーバー（Desktop の **Settings → Providers → Local models**）。`base_url` は要りません。サーバーが動いていなければこの項目は飛ばされます。Hermes がローカルのモデル名を別のプロバイダーへ送ることはありません |
 | Hugging Face | `huggingface` | `HF_TOKEN` |
 | 独自エンドポイント | `custom` | `base_url` と `key_env`（下記参照） |
 | Mixture of Agents のプリセット | `moa`（`model` にプリセット名） | 取りまとめ役に認証情報が設定してある MoA のプリセット。フォールバックではプリセット全体（参照役と取りまとめ役）が動きます。取りまとめ役だけではありません |
@@ -322,6 +323,7 @@ fallback_providers:
 | `"codex"` | Codex OAuth を強制します | `hermes model` → ChatGPT または Codex のサブスクリプション |
 | `"main"` | メインのエージェントが使っているプロバイダーをそのまま使います（補助タスク専用） | メインのプロバイダーが有効に設定されていること |
 | `"anthropic"` | Anthropic ネイティブを強制します | `ANTHROPIC_API_KEY` または Claude Code の認証情報 |
+| `"llamacpp"` | Hermes が管理するローカルの llama.cpp サーバーを強制します | ローカルのモデルサーバーが動いていること。止まっているときも、ローカルのモデル名が別のプロバイダーへ送られることはありません |
 
 ### エンドポイントの直接指定 {#direct-endpoint-override}
 

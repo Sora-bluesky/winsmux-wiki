@@ -2,7 +2,7 @@
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: 2ae7663db8101ab3ff4fc336b1a0226e739da32f
+upstream_blob: fb9be1d2925047d8043f325534695898cc6c8e00
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -154,6 +154,10 @@ Hermes は、メトリクス専用のライフサイクルに空の `LLMRequest`
 パッケージスキーマ v3 からは、経路の各行に `call_role`（`primary` または `auxiliary`）、`outcome`（`success`、`failed`、`cancelled`）、`error_class` も入ります。
 この分類は、その論理的な呼び出しで最後に失敗した試行について、エラー分類器自身が付けた `FailoverReason` の値（`rate_limit`、`auth`、`context_overflow` など）で、失敗がなければ `none` です。
 `success` の行で分類が `none` 以外なら、そのエラーのあとに回復した呼び出しという意味です。
+補助の呼び出し（タイトル、圧縮、画像の読み取りなど）も同じ規則に従います。フォールバックの試行が何回あっても論理的な呼び出し 1 つにつき 1 行で、同じ分類器で分類します（HTTP 200 の本文にプロバイダーの `error` オブジェクトが入っている場合は、そのオブジェクトから分類します）。
+Hermes が中断した場合（`/stop`、Ctrl+C、割り込み、終了処理）は `cancelled` で分類は `none` になり、`unknown` になるのは分類器が失敗を言い当てられないときだけです。
+ターンと並行して走り（タイトルの生成）、ターン自身の生きているスコープの下で終わる補助の呼び出しも数えます。その結果は、ターンがそれを受け取って片づけるときにスコープを閉じます。
+補助の行の `ttft_bucket` は `unknown` になります。補助の呼び出しの多くはストリーミングされないためです。
 以前の `hermes.model_call.count` の取り決めは、古いビルドで作られた未送出のローカルカウンターをデータを失わずに出力できるよう、読み取り専用で残しています。
 
 同意したうえでの最初のセッション開始時に、空の `hermes.client.active` Relay mark を出します。
@@ -175,6 +179,23 @@ Hermes のバージョン、OS の種類、アーキテクチャ、インスト�
 ツール呼び出しは、終端のツール結果を観測したあと、Hermes のツール呼び出し ID で重複を除きます。
 外側の `AIAgent` 実行の境界が、通常の戻り、早期の戻り、例外、キャンセルのいずれでもタスクを閉じます。
 コンテキスト圧縮の途中で Hermes が会話のセッションを切り替えた場合も、実行中のタスクの所有はタスク ID に従います。
+
+`entrypoint` の次元（`hermes.task_run.started`、`hermes.task_run.finished`、`hermes.session.count` にあります）は、誰がその実行を送り出したかを、決まった値の集合から示します。
+
+| 値 | 意味 |
+|---|---|
+| `interactive` | チャットの画面にいる人です。`hermes` の REPL、TTY 上で REPL の最初の入力になる `hermes chat -q`、`--tui`、Desktop、ACP のエディターが当たります。 |
+| `one_shot` | プロンプトに 1 回答えて終わる、有限の CLI 実行です。`hermes -z` / `--oneshot`、TTY の外または `--oneshot` 付きの `hermes chat -q`、`-Q` / `--quiet` が当たります。人がシェルに打った 1 行と、それを繰り返し回すスクリプトは見分けがつかないので、どちらも `one_shot` になります。Bot Chat の配信ターン（`hermes -p <profile> chat -c "Bot Chat" -Q`）も 1 回きりの実行です。書いたのは別の接続にいる人かもしれません。実行面は `cli` のままです。 |
+| `background` | Hermes の振り分け役が起動した、人が見ていない実行です。kanban のワーカー（`HERMES_SESSION_SOURCE=kanban`）や A2A の転送（`--source a2a`）が当たります。 |
+| `delegated` | 親のタスクやセッションの下で動くサブエージェントの実行です（上の値より優先されます）。 |
+| `gateway_message` | メッセージングプラットフォームのメッセージです。 |
+| `scheduled_task`、`batch`、`api`、`python` | cron、バッチ実行、API サーバー、Python への組み込みです。 |
+| `other`、`unknown` | 出どころを特定できないものです。 |
+
+実行が `one_shot` か `background` になるのは、そのプロセスが、1 回きりの経路が設定する `HERMES_SINGLE_QUERY_SESSION` の目印を持っているときです（セッションの出どころと `cache_ttl: auto` が読むのと同じ目印です）。
+エンゲージメント（`hermes.engagement.*`）と、人が見ている実行だけを数える行（タスクの費用、セッションごとのツールの使用、モデルとの摩擦）は、この値ができる前と同じく `one_shot` を `interactive` と同じに扱います。`background` と `delegated` の実行は人が見ていないので、そこから外します。
+`one_shot` ができる前に書かれたパッケージは、こうした実行を `interactive` として持っており、それでも検証を通ります。
+`hermes -z` は `os._exit` で抜けるので、atexit のフックに頼らず、終了する前に自分でメトリクスのセッションを閉じます。
 
 ツールの呼び出しはそれぞれ、`hermes.tool_call` という名前の Relay ツールライフサイクルで表します。
 終端のカウンターに含まれるのは、範囲を限ったツールの分類、結果、承認の結果だけです。

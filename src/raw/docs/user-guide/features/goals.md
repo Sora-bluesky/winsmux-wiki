@@ -2,7 +2,7 @@
 title: "続く目標（Goal）"
 description: "目標をひとつ立てておくと、Hermes が終わるまで応答をまたいで作業を続けます。Ralph ループの Hermes 版です。"
 upstream_path: user-guide/features/goals.md
-upstream_blob: 298dc45aa9d83ea1e5aae8a2ced35abb841f4127
+upstream_blob: 323d5f8f484b747428b88b4ef8139978056aeb40
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/goals
 ---
@@ -61,6 +61,7 @@ sources:
 | コマンド | 何をするか |
 |---|---|
 | `/goal <text>` | 目標を設定（または置き換え）します。1 回目の応答がすぐ始まるので、別途メッセージを送る必要はありません。 |
+| `/goal -- <text>` | 制御用の語で始まる目標の文を設定します（`/goal -- pause the nightly cron`）。`--` を付けないと、`resume`/`continue`/`unpause`/`pause`/`status`/`show`/`unwait` のあとに言葉が続いた場合、その制御コマンドが実行され、残りの言葉は無視されます。 |
 | `/goal draft <text>` | ふつうの言葉で書いた目的から、形の整った完了の取り決めを起こして設定します。[完了の取り決め](#completion-contracts)をご覧ください。 |
 | `/goal show` | いま有効な目標の完了の取り決めを表示します。 |
 | `/goal` または `/goal status` | いまの目標、その状態、使った応答の回数を表示します。 |

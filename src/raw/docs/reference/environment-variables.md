@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 0eb4fe936b9f241b5787186d662b84b9b5c3981a
+upstream_blob: 59c7fd61ebe91e3a40cb39cb6a27cf3f2198c02e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -24,7 +24,7 @@ Hermes は環境変数をプロセスの環境から読み、利用者が管理�
 | `NOUS_INFERENCE_BASE_URL` | Nous の推論エンドポイントを直接上書きします |
 | `AI_GATEWAY_API_KEY` | Vercel AI Gateway の API キー（[ai-gateway.vercel.sh](https://ai-gateway.vercel.sh)） |
 | `AI_GATEWAY_BASE_URL` | AI Gateway のベース URL を上書きします（既定: `https://ai-gateway.vercel.sh/v1`） |
-| `OPENAI_API_KEY` | OpenAI の API キー（`openai-api` プロバイダー）です。`OPENAI_BASE_URL` を設定しているときは、OpenAI 互換の独自エンドポイント用のキーになります。OpenRouter のキーとして扱われるのは `sk-or-` で始まる場合だけです。OpenRouter のキーは `OPENROUTER_API_KEY` に入れてください |
+| `OPENAI_API_KEY` | OpenAI の API キー（`openai-api` プロバイダー）です。`OPENAI_BASE_URL` を設定しているときは、OpenAI 互換の独自エンドポイント用のキーになります。その場合、キーはその URL とまったく同じオリジン（スキーム・ホスト・ポート）にだけ送られ、別のポートや同じホストの `http://` に送られることはありません。OpenRouter のキーとして扱われるのは `sk-or-` で始まる場合だけです。OpenRouter のキーは `OPENROUTER_API_KEY` に入れてください |
 | `OPENAI_BASE_URL` | 独自エンドポイント（VLLM、SGLang など）のベース URL |
 | `HERMES_CODEX_BASE_URL` | `openai-codex`（ChatGPT の契約）の提供元を、既定の Codex バックエンドではなくプロキシ経由にします。この資格情報を使うすべての場面、つまりプールの解決、補助・生のクライアント、401/429 での資格情報の切り替えに効きます。これを設定しない場合は、`model.provider: openai-codex` の下の `model.base_url` が次点の上書きになります。 |
 | `LM_API_KEY` | LM Studio（`lmstudio` の提供元）の API キー。手元のサーバーでは形だけの値でかまわないことが多いです |

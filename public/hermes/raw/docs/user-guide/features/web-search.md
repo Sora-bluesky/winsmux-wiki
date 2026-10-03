@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Web 検索と本文抽出"
 description: "複数のバックエンドプロバイダで Web を検索し、ページ本文を抽出します。無料で自前運用できる SearXNG にも対応しています。"
 upstream_path: user-guide/features/web-search.md
-upstream_blob: ea471a8cadd21eb1c47c1fc8a43b5f333c9d94e3
+upstream_blob: 719a93960822fe7f1e233697f27e06f1f6ca3d4e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-search
 ---
@@ -301,7 +301,7 @@ TAVILY_API_KEY=tvly-your-key-here
 
 ### Perplexity {#perplexity}
 
-[Perplexity の Search API](https://docs.perplexity.ai/docs/search/quickstart) は、Perplexity 自身の索引から、順位付けされ日付の入った結果を返します（`web_search`）。`web_extract` では、公式の `pplx` CLI と同じ「クエリに関わる *抜粋*」の経路を使います。つまりページ全文をそのまま写し取るのではなく、そのページのうち意味のある一節だけが、省略箇所を `…` で示した形で返ります。ページ全体が必要なときは、`web.extract_backend` に Firecrawl / Exa / Parallel を選んでください。キーが必須で、匿名で使える枠はありません。
+[Perplexity の Search API](https://docs.perplexity.ai/docs/search/quickstart) は、Perplexity 自身の索引から、順位付けされ日付の入った結果を返します（`web_search`）。`web_extract` では、公式の `pplx` CLI と同じ「クエリに関わる *抜粋*」の経路を使います。つまりページ全文をそのまま写し取るのではなく、そのページのうち意味のある一節だけが、省略箇所を `…` で示した形で返ります。ページ全体が必要なときは、`web.extract_backend` に Firecrawl / Exa / Parallel を選んでください。Perplexity 自体を使うにはキーが必須です。ただし Nous が管理する経路（ゲストを含め、Nous の ID があれば誰でも）なら、キーなしで `web_search` を使えます。
 
 ```bash
 # ~/.hermes/.env
@@ -448,10 +448,10 @@ web:
 | `SEARXNG_URL` | searxng |
 | `BRAVE_SEARCH_API_KEY` | brave-free |
 | `ddgs` パッケージが import 可能 | ddgs |
-| 登録済みの Nous Portal のアカウント（クレジットの無い無料枠を含むすべてのプラン。匿名のゲストは除く） | 管理型の Web 検索（`web_search` のみ）。本文抽出と下のキーなしリングは変わりません |
+| Nous の ID がある（無料枠や匿名のゲストを含め、どのアカウントでも） | 管理型の Web 検索（`web_search` のみ）。本文抽出と下のキーなしリングは変わりません |
 | *(何も設定されていない)* | キーなしリング: exa / parallel / firecrawl / keenable（ラウンドロビン） |
 
-**キーなし無料枠のリング:** 上のどの認証情報も *ない* とき、リクエストはリング参加ベンダー（Exa・Parallel・Firecrawl・Keenable）の公開無料枠を順に回るので、まっさらな環境でも設定ゼロで Web ツールが動きます。レート制限に当たったリクエストは、リングの次のベンダーへ自動的に切り替わります。ローテーションを止めたい場合は `hermes tools` でベンダーを 1 つ固定してください（その場合、リングは制限に当たったときの切り替え先としてだけ使われます）。無料枠はいずれもベンダー側でレート制限があり、短時間に集中させると引っかかりますが、通常の使い方を続ける分には問題ありません。この枠を切るには `web.keyless_fallback: false` を設定します。切ったうえで認証情報もない場合、プロバイダを設定するまで Web ツールは使えません。登録済みの Nous Portal のアカウントはこの切り替えの影響を受けず、管理型の `web_search` はそのまま使えます。ただし `web_extract` にはプロバイダの設定が必要です。
+**キーなし無料枠のリング:** 上のどの認証情報も *ない* とき、リクエストはリング参加ベンダー（Exa・Parallel・Firecrawl・Keenable）の公開無料枠を順に回るので、まっさらな環境でも設定ゼロで Web ツールが動きます。レート制限に当たったリクエストは、リングの次のベンダーへ自動的に切り替わります。ローテーションを止めたい場合は `hermes tools` でベンダーを 1 つ固定してください（その場合、リングは制限に当たったときの切り替え先としてだけ使われます）。無料枠はいずれもベンダー側でレート制限があり、短時間に集中させると引っかかりますが、通常の使い方を続ける分には問題ありません。この枠を切るには `web.keyless_fallback: false` を設定します。切ったうえで認証情報もない場合、プロバイダを設定するまで Web ツールは使えません。Nous の ID（ゲストも含む）はこの切り替えの影響を受けず、管理型の `web_search` はそのまま使えます。ただし `web_extract` にはプロバイダの設定が必要です。
 
 **キー付きバックエンドへの一回限りのキーなし救済:** 選んだキー付きバックエンド（Nous Tool Gateway 経由の `web.backend: nous` も含みます）が呼び出しに失敗したとき（キーの誤り、障害、ゲートウェイに届かない、上流の 5xx など）、その 1 回の呼び出しはエラーにせず、自動的にキーなし無料枠のリングで再試行します。結果には、どのベンダーが応じたかと理由が記録されます（`rescued_from` / `backend_error`）。この切り替えは尾を引きません。次の `web_search` / `web_extract` の呼び出しでは、また選んだバックエンドを試します。無効にするには `web.keyless_rescue: false` を指定します（`keyless_fallback` を切っている場合も同時に無効です）。
 

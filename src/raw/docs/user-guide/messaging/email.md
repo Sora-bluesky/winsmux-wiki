@@ -2,7 +2,7 @@
 title: "メール"
 description: "IMAP/SMTP 経由で Hermes Agent をメール応対の相棒として設定する"
 upstream_path: user-guide/messaging/email.md
-upstream_blob: 16ac4251c04a50e833e1ea88f353818117d39280
+upstream_blob: bc0da29640603300ac0a459c800bca1cffac434f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/email
 ---
@@ -180,7 +180,7 @@ platforms:
 
 許可リストの項目はアドレス全体で照合します。`alice` のようにドメインのない項目（たとえば `GATEWAY_ALLOWED_USERS` に書いたチャットのユーザー名）は、どのドメインの `alice@` も通しません。そうしたアドレスからのメールは、ペアリングやお断りの対象にもならず、そのまま捨てられます。
 
-誰でも受け付ける設定にしていない限り、Hermes がメッセージに応じるのは、受信側のメールサーバーが付けた `Authentication-Results` ヘッダーで `From:` のドメインが認証されている場合（DMARC、または整合した SPF/DKIM）だけです。`GATEWAY_ALLOW_ALL_USERS` が「誰でも受け付ける」扱いになるのは、ゲートウェイ本体と同じく、許可リストを設定していないあいだだけです。ペアリング用のコードとお断りのメールは、誰でも受け付ける設定でも認証済みの `From:` が必要なので、偽装されたアドレスには送られません。お使いのメールサーバーがこのヘッダーを付けない場合は、危険を承知のうえで `platforms.email.require_authenticated_sender: false` を設定してください。
+Hermes がメッセージに応じるのは、受信側のメールサーバーが付けた `Authentication-Results` ヘッダーで `From:` のドメインが認証されている場合（DMARC、または整合した SPF/DKIM）だけです。これは誰でも受け付ける設定（`EMAIL_ALLOW_ALL_USERS` / `GATEWAY_ALLOW_ALL_USERS`）でも同じです。誰でも受け付ける設定はどの差出人も通しますが、会話もすべての返信も `From:` をもとに振り分けられるので、`From:` が偽装されていると、攻撃者の書いた文面がそのアドレスのセッションに入り、Hermes がそれをメールで送ってしまうからです。ペアリング用のコードとお断りのメールも同じく認証済みの `From:` が必要なので、偽装されたアドレスには送られません。お使いのメールサーバーがこのヘッダーを付けない場合は、危険を承知のうえで `platforms.email.require_authenticated_sender: false`（または `EMAIL_TRUST_FROM_HEADER=true`）を設定してください。設定しないと、受け付ける差出人からのメールでもこのヘッダーがなければ破棄され、ゲートウェイのログに `Dropping sender with unauthenticated From` の警告が出ます。いちばん上の `Authentication-Results` ヘッダー（お使いのサーバーが先頭に付けるもの。それより下のヘッダーは一切参照しません）に、固定した `authserv_id` がそのとおりに書かれていない場合も、同じ警告が出ます。このときは `platforms.email.authserv_id`（`EMAIL_AUTHSERV_ID`）を見直すよう示されます。`authserv_id` は、サーバーが書き込むホスト名と完全に一致させる必要があります。そのホスト名がメッセージごとに変わる場合は、`authserv_id` を設定しないでください。`EMAIL_ALLOWED_USERS` / `GATEWAY_ALLOWED_USERS` に載っているアドレスからのメールが、それ以外の理由で認証に失敗した場合（たとえば差出人の DKIM が壊れている、転送サービスが整合を崩しているなど）も、同じ警告とその判定結果を添えて破棄されます。この場合、無効にする方法の案内は出ません。それ以外の差出人の認証に失敗したメール（誰でも受け付ける設定での偽装された `From:` など）は、何も知らせずに破棄され、debug レベルのログにだけ記録されます。
 
 :::warning
 **普段の運用では、専用の受信箱を用意して `EMAIL_ALLOWED_USERS` を設定してください。** メールのペアリングを既定で切ってあるのは、共有の受信箱には関係のない未読メールが溜まりがちで、Hermes がその相手に勝手に返事をするべきではないからです。

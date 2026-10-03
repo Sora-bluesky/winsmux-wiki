@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 2114708b392742be0b0c58b5b3520972fbe3396a
+upstream_blob: 4d1dd8329bbf7ce3a4be0b45bdb5e42a070a75e0
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -303,8 +303,8 @@ SemVer 上はその安定版の本体と等しくなります。どちらへ進�
 
 単発ビルドの刻印には `source: commit-build` が使われます。これらにはアプリの更新フィードも App Installer の
 購読も公開されず、GUI と同梱の CLI のどちらも更新の要求を拒否します。
-受け取った人には、開発者に新しいビルドを頼むよう案内します。ソースチェックアウトのチャンネルは別物で、
-そちらでは `hermes update --set-channel` が引き続き使え、公開済みリリースのソースコミットを選びます。
+受け取った人には、開発者に新しいビルドを頼むよう案内します。ソースチェックアウトは別物で、
+使えるチャンネルは `main` だけです。
 
 `--build-commit` は、起動の前に、決定的に決まるダウンロードページの URL を表示します。
 ドライランでも表示されます:

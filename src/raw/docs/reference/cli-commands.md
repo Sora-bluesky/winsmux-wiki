@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: daad50e6a504881f37f4c879b54bf2a0dc249646
+upstream_blob: e9c28573fbc95d46471751ecbe115c4a3653a56e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -1871,8 +1871,8 @@ hermes update [--gateway] [--check] [--plan] [--no-backup] [--backup] [--yes]
 | オプション | 説明 |
 |--------|-------------|
 | `--install-id` | このインストールの識別子とパスを表示して終了します。 |
-| `--set-channel CHANNEL` | 更新は適用せずに、このソースのインストールに `main`、`stable`、`canary` のいずれかを保存します。バンドル版のアプリケーションはビルドのチャンネルが固定なので、チャンネルの変更を拒否します。 |
-| `--channel CHANNEL` | この実行に限ってソースのチャンネルを選びます。 |
+| `--set-channel CHANNEL` | 更新は適用せずに、このソースのインストールの更新チャンネルを保存します。ソースのチャンネルとして有効なのは `main` だけです。バンドル版のアプリケーションはビルドのチャンネルが固定なので、チャンネルの変更を拒否します。 |
+| `--channel CHANNEL` | この実行に限ってソースのチャンネルを選びます（有効なのは `main` だけです）。 |
 | `--branch NAME` | この実行に使うソースのブランチを選びます。ソースのチャンネルの選択より優先されます。 |
 | `--gateway` | メッセージングの `/update` コマンドが使う内部モードです。プロンプトと進捗のストリーミングに、ターミナルの stdin を読む代わりに、ファイルベースの IPC を使います。ゲートウェイの再起動フラグではありません。 |
 | `--check` | pull・依存関係のインストール・何かの再起動をせずに、更新が利用可能かどうかを確認します。 |

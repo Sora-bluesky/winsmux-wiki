@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: 7a552b46f6a0f79898a3b9dba18cdf20b8e70226
+upstream_blob: f5ffa0fc2419f4d9012b904ffbaf32952973f73e
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -34,9 +34,8 @@ sources:
 hermes update
 ```
 
-ソースの既定のチャンネルは `main` を追いかけます。stable や canary のチャンネルを設定している場合は、
-それぞれ公開されたリリースのコミットを追いかけます。更新では PM を通じて依存関係を用意し、
-設定の変更点とプロセスの再起動結果を報告します。
+ソースのインストールは、ソースのチャンネルとして唯一有効な `main` を追いかけます。更新では
+PM を通じて依存関係を用意し、設定の変更点とプロセスの再起動結果を報告します。
 
 ### 同梱デスクトップアプリの更新 {#bundled-desktop-updates}
 
@@ -75,42 +74,6 @@ canary のアイコンは背景が黄色（ダークモードでは濃い黄色�
 これは注意喚起であってロックではありません。更新後のお知らせはアプリごとに分かれているので、
 canary を起動しても stable 側の未読のお知らせが消費されることはありません。`hermes://` の URL スキームは
 共有のままで、最後に登録したアプリがリンクを処理します。
-
-### ソースのチャンネルとインストールの識別情報 {#source-channels-and-install-identity}
-
-```bash
-hermes update --install-id
-hermes update --set-channel stable
-hermes update --channel stable --check
-# Or track published canary commits in this source installation:
-hermes update --set-channel canary
-hermes update
-```
-
-`--install-id` は、そのインストールの識別情報とパスを表示します。`--set-channel` は
-そのインストールの設定だけを変え、更新は適用せずに終了します。`--channel` はその 1 回だけの指定です。
-ソースのチェックアウトでは、明示した `--branch` が優先されます。
-
-チャンネル名は、Hermes に同梱された固定の一覧ではなく、Cloudflare R2 上のリリース保管庫に登録されています。
-`main` の記録はソースのブランチからの配信を選び、公開ビルドのチャンネルは特定の Git コミットを選びます。
-独自のプレビュー用チャンネルも同じソースのコマンドで使えます。たとえば `hermes update --set-channel pm-preview` です。
-更新がそのチャンネルを解決できるのは、公開する側がチャンネルを作ったあとだけです。
-記録が見つからない、または不正な場合はエラーを報告し、`main` やほかのリリースへ代わりに切り替えることはしません。
-ソースのチャンネルを切り替えても、デスクトップアプリのパッケージはインストールされません。
-インストールごとの購読は設定の `update.installs` に置かれるので、あるチェックアウトでの選択が
-別のインストールのチャンネルを変えることはありません。ソースからビルドしたデスクトップアプリも、
-更新の確認と受け渡しに同じ選択を使います。選ばれたリリースチャンネルを、自分の既定のブランチで
-置き換えることはしません。
-
-ブランチを追いかけるソースのインストールでは、デスクトップアプリ用のブランチ指定を明示していない限り、
-デスクトップアプリは現在の名前付きブランチを保ちます。HEAD が切り離されたチェックアウトでは既定のブランチを使います。
-ソースのチャンネルを確かめる仕組みを持たない古いチェックアウトは、リリースチャンネルより前のものなので、
-デスクトップアプリは git で `main` から更新します。その更新で、確かめる仕組みも入ります。
-
-パッケージ版デスクトップアプリの配信チャンネルは、ビルドのタグとパッケージの所有者から決まります。
-ソースのチャンネルを変えても、MSIX や Store のチャンネルが切り替わるわけではありません。canary のビルドは
-保存データの形式を進めることがあり、元に戻してもスキーマが巻き戻るわけではありません。
-リリースチャンネルを変える前に、データをバックアップしてください。
 
 :::tip
 `hermes update` は新しい設定項目を自動で見つけ、追加するかどうかを尋ねます。その案内を飛ばしてしまった場合は、`hermes config check` を実行すると足りない項目が分かり、`hermes config migrate` で対話形式で追加できます。
@@ -220,7 +183,7 @@ git -C "$repo" -c gc.writeCommitGraph=false gc --auto
 
 ### 既定以外のブランチに対して更新する: `--branch` {#updating-against-a-non-default-branch---branch}
 
-ソースの既定のチャンネルでは、`hermes update` は `origin/main` を追いかけます。その 1 回だけ
+ソースのインストールは `origin/main` を追いかけます。その 1 回だけ
 別のブランチを使いたい場合は `--branch NAME` を渡します。
 
 ```bash
@@ -277,7 +240,7 @@ git stash apply stash@{0}
 
 ### 確認だけする: `hermes update --check` {#preview-only-hermes-update---check}
 
-`hermes update --check` は、チェックアウトをそのソースのチャンネルの目標と比べるだけで、
+`hermes update --check` は、チェックアウトを `origin/main` と比べるだけで、
 コードの適用、依存関係のインストール、ゲートウェイの再起動は行いません。比べる際に
 Git のメタデータを取得することがあるので、ファイルシステムへの書き込みがまったくないとは限りません。
 パッケージが持っているインストールでは、外部の更新方法を報告します。

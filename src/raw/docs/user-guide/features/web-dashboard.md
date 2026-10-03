@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: fe693cf4009fb62ec52569a09cb3adf20ba18b6a
+upstream_blob: a7cd53a10072a27fee843b9a6e505c04d1ed8cd8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -455,7 +455,7 @@ You → /reload
 `/api/tools/toolsets`、`/api/mcp`、
 `/api/model/{info,options,auxiliary,set,recommended-default}`、
 `/api/cron/{delivery-targets,blueprints}`、`/api/audio/voice-config`、
-`/api/ops/debug-share`、`/api/learning/graph`、`/api/dashboard/plugins/hub` は、
+`/api/ops/debug-share`、`/api/learning/{graph,node}`、`/api/dashboard/plugins/hub` は、
 任意の `?profile=<name>` というクエリの項目（書き込みでは JSON の中身の `"profile"`）を
 受け取り、読み書きをそのプロファイルの `HERMES_HOME` に向けます。
 省くと管理画面自身のプロファイルになります。知らない名前を渡すと `404` が返ります。

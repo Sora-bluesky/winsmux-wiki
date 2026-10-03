@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: e8623a0c7c0712b7bf229f002706f9e5858787b2
+upstream_blob: 6782dd9976aaf1112ed2646bfb33886d65c1deea
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -768,6 +768,56 @@ hermes plugins pack export --enabled-only       # only plugins.enabled
 plugins:
   scan_on_install: false
 ```
+
+### プラグインを別プロセスで動かす（`plugins.isolation`） {#running-plugins-out-of-process-pluginsisolation}
+
+既定では、他者が作った Python プラグインはこれまでどおり Hermes のプロセスの中に import されます。
+`plugins.isolation: host` を設定すると、プラグインは**プラグインホスト**へ移ります。これはプロファイルごとに
+1つずつ、必要になったときに起動する別の Python プロセスで、そのプロファイルにユーザーが入れたプラグインを import し、
+Hermes とは専用のパイプで通信します。
+
+```yaml
+plugins:
+  isolation: host        # default: in_process
+  host:
+    launcher: []         # optional argv prefix for the host, e.g. a sandbox runner
+```
+
+プラグインの側は何も変わりません。これまでと同じ `ctx` を受け取り、ツール・フック・スラッシュコマンド・スキル・
+プロバイダーのオブジェクト（画像や動画の生成、Web 検索、ブラウザー、TTS/STT、メモリー、コンテキストエンジン、
+モデルプロバイダーのプロファイル）をまったく同じように登録します。Hermes の側には、ホストを呼び出す対応する項目が
+登録されます。ダッシュボード向けのプラグイン API もホストが提供します。同梱のプラグインは引き続きプロセス内で動きます。
+
+`host` モードで変わること:
+
+- **インタープリターを共有しません。** プラグインのモジュールが Hermes のプロセスに入ることはないので、
+  メモリー上にある別のプロファイルのデータを読んだり、Hermes の内部に手を加えたりできません。多重化したゲートウェイでは、
+  プロファイルごとに専用のホストがあり、そのプロファイルの環境変数と秘密情報だけを持って起動します。
+- **クラッシュが外へ広がりません。** プラグインがクラッシュしたり終了したりして落ちるのはホストで、Hermes ではありません。
+  処理中だった呼び出しはツールのエラーを返し、Hermes はホストを再起動してプラグインを読み込み直します（再試行の回数には上限があります）。
+- **一部の機能はプロセス内のコードを必要とします。** これらを使うプラグインは読み込まれず、理由がはっきり示されたうえで失敗します。
+  対象は、ゲートウェイのプラットフォームアダプター（`register_platform`）、承認の受け渡し、Telegram などのプラットフォームのハンドラー、
+  独自の SDK クライアントを作るモデルプロバイダーのプロファイル（`create_client`）、ストリーミングするダッシュボードの
+  エンドポイント、Hermes のモジュールに monkeypatch を当てるプラグインです。これらは `isolation: in_process` で動かしてください。
+
+**共有の環境で固定する。** `plugins.isolation` は普通のプロファイル設定なので、プロファイルの `config.yaml` を
+編集できる人なら誰でも無効にできます。プロファイルの持ち主どうしを互いに隔離したい場合は、代わりに
+[管理者による適用範囲](/hermes/docs/user-guide/managed-scope/)で固定してください。管理者が決めた値はどのプロファイルの設定よりも
+優先され、`hermes config set` でも変更できなくなります。
+
+```yaml
+# /etc/hermes/config.yaml (root-owned, read by every profile on the machine)
+plugins:
+  isolation: host
+  host:
+    launcher: [...]      # pin the sandbox runner too, if you use one
+```
+
+あわせて、エージェントのターミナルも隔離されたバックエンド（Docker、SSH など）で動かしてください。こうすると、
+エージェント自身も運用者のファイルに届かなくなります。
+
+`hermes plugins validate <dir>` と `hermes plugins show <name>` は、プラグインがホストで動くかどうか、
+動かない場合はその理由を表示します。執筆時点のプラグインカタログでは、348 件のうち 299 件が手を加えずにホストで動きます。
 
 ### 対話の画面 {#interactive-ui}
 

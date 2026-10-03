@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "アプリケーション宣言"
 description: ""
 upstream_path: developer-guide/plugins/application-declarations.md
-upstream_blob: 20c465be6e3496e526a0c64446472c76fb56261a
+upstream_blob: 93e5e147d5777e755299beba5e3ac05095600f0b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/application-declarations
 ---
@@ -77,8 +77,11 @@ requires:
 |---|---|---|
 | `app` | bool | true のときは `app:` が必須で、サーバーはアプリケーションの存在を条件に提示されます |
 | `min_version` | str | `app: true` が必要。ドット区切りの数字。該当するすべての `app.<os>` に実際の `version.kind` を宣言する必要があります。区切りごとに数値として比較し、区切り内の数字以外の文字は捨てます（`2.3.0.12594` ≥ `2.3.0`。プレリリースの接尾辞は順序付けされません） |
+| `gpu` | str | `nvidia`。`hermes_platform.host.facts.gpu_class()` がそのベンダーを返すホストでだけ、サーバーを提示します。`app` とは独立しています。`app:` ブロックのないサーバーでも GPU を条件にできます。 |
 
 `app:` ブロックがないのに `requires.app: true` を書くと `DeclarationError` になります。
+
+`gpu` は、確認できるインストール先がないアプリケーションや、何がインストールされていてもそのハードウェアを必要とするアプリケーションのためのものです。`gpu_class()` は Windows ではレジストリ、Linux では sysfs、macOS では CPU のアーキテクチャを読みます。サブプロセスやドライバーのライブラリは使いません。GPU を読み取れないとき（`unknown`）は、条件を満たしたものとして扱います。読み取りに失敗しただけで GPU を持つ端末を締め出してはいけないからで、接続の確認はその場合も行われます。受け付けるのは `nvidia` だけです。`gpu_class()` は搭載されているベンダーのうち優先度が最も高いものを返すので、「NVIDIA の GPU があるか」には正確に答えられますが、NVIDIA の GPU も載っている端末では、AMD や Intel について同じ問いに答えられないからです。
 
 ## 可用性: どの読み手も使う唯一の評価 {#availability-the-one-evaluation-every-reader-uses}
 
@@ -87,21 +90,22 @@ requires:
 ```
 Availability(
   state:   available | installed_not_running | missing_app | version_too_old
-         | unsupported_os | no_requirements,
+         | unsupported_os | unsupported_gpu | no_requirements,
   version: str | None,       # inspected, when present
   path:    str | None,       # where the app was found or looked for
   min_version: str | None,   # from requires
 )
 ```
 
-- `no_requirements`: `requires.app` がありません。アプリケーションの条件は通りますが、接続の確認は引き続き行われます。
+- `no_requirements`: `requires.app` がなく、`requires.gpu` があればそれを満たしています。アプリケーションの条件は通りますが、接続の確認は引き続き行われます。
 - `unsupported_os`: `requires.app` があり、`app.<this os>` のブロックがありません。I/O は一切発生しません。
+- `unsupported_gpu`: `requires.gpu` が、このホストの GPU とは違うベンダーを指定しています。インストールは拒否され（`… is unavailable: unsupported_gpu, needs an NVIDIA GPU.`）、登録済みのサーバーの状態には「`<app>` needs an NVIDIA GPU; none was found on this machine. Use `<app>` on a machine with an NVIDIA GPU.」と表示されます（この端末には NVIDIA の GPU が見つからないので、NVIDIA の GPU がある端末でそのアプリケーションを使ってください、という意味です）。
 - `missing_app`: `locate` が `location` で何も見つけられませんでした。
 - `version_too_old`: バージョンが最小値より低いか、読み取れません。
 - `available`: 存在し、バージョンが条件を満たすか、バージョンの条件がありません。
 - `installed_not_running`: 予約された語彙で、この評価器が返すことはありません。
 
-評価には `locate` と、任意でバージョンの確認を使います。サーバーを探ったり、アプリケーションを起動したり、接続したりすることはありません。ツールのレジストリは、既存の可用性キャッシュをそのまま保持します。
+評価には `locate`、任意のバージョンの確認、キャッシュ済みの GPU の情報を使います。サーバーを探ったり、アプリケーションを起動したり、接続したりすることはありません。ツールのレジストリは、既存の可用性キャッシュをそのまま保持します。
 
 ## 2つの関門 {#the-two-gates}
 

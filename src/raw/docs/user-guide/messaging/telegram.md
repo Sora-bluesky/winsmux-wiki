@@ -2,7 +2,7 @@
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: 1c824492dbb8228ffd02a9e3f819fc73af142019
+upstream_blob: b318eaafb0f0123c9a2b0b34fc5ac0810652acd3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -113,6 +113,21 @@ platforms:
 - 異常終了のあとは、保たれた待ち行列が、落ちたインスタンスが途中まで処理した更新を再び届けることが
   あります。ふつうは Telegram のオフセットがこれを防ぎますが、長い停止の間に送られた時間に敏感な
   コマンドは、起動時に実行されます。
+
+### 更新の並行処理 {#concurrent-update-handling}
+
+異なるチャットからの更新は並行して処理されます。そのため、1 回の遅いやり取り
+（プロバイダーの長い再試行や、大きなダウンロード）が、ほかのすべてのチャットを止めることはなくなりました。
+同じチャットからの更新は、これまでどおり届いた順に 1 つずつ実行されます。
+チャットをまたいだ同時実行の枠は既定で 32 です。不正な値を入れると警告をログに出し、
+既定値を使います。
+
+```yaml
+platforms:
+  telegram:
+    extra:
+      max_concurrent_updates: 32   # 1 restores fully sequential processing
+```
 
 ### 同じ受信の更新が繰り返されたとき {#repeated-inbound-updates}
 
