@@ -2,7 +2,7 @@
 title: "定期実行がうまくいかないとき"
 description: "Hermes の定期実行でよく起きる不具合を切り分けて直します。ジョブが動かない、配信が届かない、スキルが読み込めない、動きが遅いといった症状をあつかいます"
 upstream_path: guides/cron-troubleshooting.md
-upstream_blob: fbb96320da26e6d4fed9f0b48519d2b27ea0c382
+upstream_blob: 29090c4d4b074940a2ed44a200b00bfa6eeccb1c
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/cron-troubleshooting
 ---
@@ -75,7 +75,7 @@ hermes cron list   # Compare next_run times with local time
 | `local` | `~/.hermes/cron/output/` への書き込み権限 |
 | `origin` | ジョブを作ったチャットへ返します |
 
-このほかに `mattermost`、`homeassistant`、`dingtalk`、`feishu`、`wecom`、`weixin`、`bluebubbles`、`qqbot`、`webhook` も使えます。`platform:chat_id` の形で、特定のチャットを名指しすることもできます（たとえば `telegram:-1001234567890`）。
+このほかに `mattermost`、`homeassistant`（プラグイン）、`dingtalk`、`feishu`、`wecom`、`weixin`、`bluebubbles`、`qqbot`、`webhook` も使えます。`platform:chat_id` の形で、特定のチャットを名指しすることもできます（たとえば `telegram:-1001234567890`）。
 
 配信に失敗しても、ジョブそのものは動いています。ただ、どこにも届かないだけです。`hermes cron list` で `last_error` の欄が更新されていないか見てください（表示される場合）。
 

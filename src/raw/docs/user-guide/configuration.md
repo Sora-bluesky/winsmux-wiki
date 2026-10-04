@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 4af7149a3f0696353b190d679cbc1b22db181d90
+upstream_blob: c0a238e5731a96218ad41f6e45ed2918138cf432
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -2367,7 +2367,7 @@ display:
 
 CLI からは、正式なパスを使ってください（`hermes config set display.platforms.telegram.streaming false`）。省略形の `hermes config set platforms.telegram.streaming false` も受け付けます。プラットフォームごとの*表示*設定（`streaming`、`show_reasoning`、`tool_progress` など）は `display.platforms` からしか読み込まれないので、`config set`/`get`/`unset` はこの省略形を正式なキーに置き換えて処理し、その旨の注記を表示します。トップレベルの `platforms.<name>` ブロックにある接続用のキー（`token`、`enabled`、`reply_to_mode`、`extra`）は、この置き換えの対象外です。これらを入れ子のプレフィックスの下に書き込もうとすると（`hermes config set gateway.platforms.telegram.enabled true`）、注記とともにトップレベルの `platforms.telegram.enabled` に置き換えられます。ゲートウェイは両方のブロックを読み込みますが、両方にあるキーではトップレベルの値が優先されるため、入れ子に書き込んでも既存のトップレベルの値に隠れてしまい、しかもそれに気づけないからです。
 
-上書きを設定していないプラットフォームには、全体の `tool_progress` の値が使われます。有効なプラットフォームのキー: `telegram`、`discord`、`slack`、`signal`、`whatsapp`、`matrix`、`mattermost`、`email`、`sms`、`homeassistant`、`dingtalk`、`feishu`、`wecom`、`weixin`、`bluebubbles`、`qqbot`。旧来の `display.tool_progress_overrides` キーも後方互換のために読み込まれますが、非推奨で、初回の読み込み時に `display.platforms` へ移行されます。
+上書きを設定していないプラットフォームには、全体の `tool_progress` の値が使われます。有効なプラットフォームのキー: `telegram`、`discord`、`slack`、`signal`、`whatsapp`、`matrix`、`mattermost`、`email`、`sms`、`dingtalk`、`feishu`、`wecom`、`weixin`、`bluebubbles`、`qqbot` と、プラグインで足したプラットフォームの名前（たとえば Home Assistant プラグインの `homeassistant`）。旧来の `display.tool_progress_overrides` キーも後方互換のために読み込まれますが、非推奨で、初回の読み込み時に `display.platforms` へ移行されます。
 
 Signal は、設定をプラットフォームごとに保存できるため有効なプラットフォームのキーに含まれていますが、現在の Signal のアダプターは送信済みのメッセージを編集できず、ツールの進行状況の吹き出しを表示しません。Signal の `tool_progress` は `off` のままにしてください。各ツール呼び出しをリアルタイムで見たいときは、CLI か、メッセージの編集に対応したメッセージングプラットフォームを使ってください。
 

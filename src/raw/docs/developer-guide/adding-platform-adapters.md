@@ -2,7 +2,7 @@
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: cfe6c706f7ee10f2136e2b6241a29bd8f96c4994
+upstream_blob: e859aee5cbd7d83efb4fd7a7fac8fe7de1d79497
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -229,6 +229,44 @@ gateway:
 | `hermes tools` と `hermes skills` | プラットフォームごとの設定にプラグインのものも並ぶ |
 | トークンの取り合いの防止（複数プロファイル） | `connect()` の中で `acquire_scoped_lock()` を使う |
 | 設定だけが残っているときの注意 | プラグインが見つからないとき、内容のわかるログを出す |
+| サービスからのイベントの認可 | `trusted_inbound=True` にすると、利用者の許可リストやペアリングを通さない（下で説明） |
+| 表示の既定値 | `display_tier` で、ツールの進み具合やストリーミングの見せ方を組み込みの段階から選ぶ |
+| プロファイルを複製するときの認証情報の削除 | `shared_env_prefixes` があると、アダプターを使っていないプロファイルではツールと共有しているキーが残る |
+
+### サービス向けのアダプター: `trusted_inbound`、`display_tier`、`shared_env_prefixes` {#service-adapters-trustedinbound-displaytier-sharedenvprefixes}
+
+チャットのネットワークではなく、何かのサービスとの橋渡しをするアダプターのために、`ctx.register_platform(...)` と `PlatformEntry` には省略できる項目が3つあります。
+[Home Assistant のプラグイン](https://github.com/NousResearch/hermes-homeassistant)が、これを使う代表例です。
+
+| 項目 | 型と既定値 | 効き目 |
+|---|---|---|
+| `trusted_inbound` | `bool = False` | 届くイベントはすべて、アダプターが自分の認証情報でログインしたサービスから来るもので、送り手の人間はいません。このプラットフォームには、ゲートウェイの利用者の許可リストも DM のペアリングも適用されません。これを使っているのは Home Assistant のイベントバスです。**チャットのプラットフォームでは絶対に設定しないでください**。ボットにメッセージを送れる人なら誰でもエージェントを動かせるようになってしまいます。 |
+| `display_tier` | `str = ''` | `'high'`、`'medium'`、`'low'`、`'minimal'` のどれかです。利用者が `display.platforms.<name>` で上書きしていないときに使う、プラットフォームごとの組み込みの表示の既定値（ツールの進み具合、ストリーミング、途中経過のメッセージ）の段階を決めます。空のままなら、プラグイン共通の既定値になります。Home Assistant は `'minimal'` を使います。 |
+| `shared_env_prefixes` | `tuple[str, ...] = ()` | そのプラットフォームが、チャンネル以外の機能（たとえば同じプラグインのツール）と共有している環境変数の接頭辞です（Home Assistant なら `('HASS_',)`）。[プロファイルを複製する](/hermes/docs/user-guide/profiles/)とき、この接頭辞のキーが消されるのは、複製元のプロファイルが実際にアダプターを動かしている場合だけです。そのため、ツールしか使っていないプロファイルでは認証情報が残ります。 |
+
+```python
+
+def register(ctx):
+    kwargs = dict(
+        name="my_service",
+        label="My Service",
+        adapter_factory=MyServiceAdapter,
+        check_fn=check_requirements,
+    )
+    # Feature-detect: older cores reject unknown register_platform kwargs.
+    from gateway.platform_registry import PlatformEntry
+    known = {f.name for f in dataclasses.fields(PlatformEntry)}
+    for key, value in (
+        ("trusted_inbound", True),
+        ("display_tier", "minimal"),
+        ("shared_env_prefixes", ("MY_SERVICE_",)),
+    ):
+        if key in known:
+            kwargs[key] = value
+    ctx.register_platform(**kwargs)
+```
+
+これらの項目があるかどうかは、上の例のように `dataclasses.fields(PlatformEntry)` で確かめてください。そうすれば、まだこれらの項目を持たない古い Hermes の本体でも、プラグインを読み込めます。
 
 ## 単独で送るときの拡張 {#standalone-send-path-extensions}
 

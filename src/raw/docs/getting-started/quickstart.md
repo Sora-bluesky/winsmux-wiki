@@ -2,7 +2,7 @@
 title: "Hermes Agent クイックスタート"
 description: "Hermes Agent との最初の会話まで。インストールからおしゃべりできるまで 5 分"
 upstream_path: getting-started/quickstart.md
-upstream_blob: a015bc630d8da092acb785e4a3ddaf202ac7e9ea
+upstream_blob: 6e921e288b94b5cd264cb66e9c2c7747a7b2dba6
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/quickstart
 ---
@@ -258,7 +258,7 @@ hermes -c            # Short form
 hermes gateway setup    # Interactive platform configuration
 ```
 
-[Telegram](/hermes/docs/user-guide/messaging/telegram/)、[Discord](/hermes/docs/user-guide/messaging/discord/)、[Slack](/hermes/docs/user-guide/messaging/slack/)、[WhatsApp](/hermes/docs/user-guide/messaging/whatsapp/)、[Signal](/hermes/docs/user-guide/messaging/signal/)、[メール](/hermes/docs/user-guide/messaging/email/)、[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/)、[Microsoft Teams](/hermes/docs/user-guide/messaging/teams/) につなげます。
+[Telegram](/hermes/docs/user-guide/messaging/telegram/)、[Discord](/hermes/docs/user-guide/messaging/discord/)、[Slack](/hermes/docs/user-guide/messaging/slack/)、[WhatsApp](/hermes/docs/user-guide/messaging/whatsapp/)、[Signal](/hermes/docs/user-guide/messaging/signal/)、[メール](/hermes/docs/user-guide/messaging/email/)、[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/)（プラグイン）、[Microsoft Teams](/hermes/docs/user-guide/messaging/teams/) につなげます。
 
 ### 自動化とツール {#automation-and-tools}
 

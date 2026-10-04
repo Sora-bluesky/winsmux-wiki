@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プロファイル配布: エージェントまるごと共有する"
 description: ""
 upstream_path: user-guide/profile-distributions.md
-upstream_blob: dbf94f42f253ff9a7c485c6e670f52b226c02a27
+upstream_blob: a041d507f13902861be331f977cf52945a6c1e1b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profile-distributions
 ---
@@ -93,7 +93,7 @@ tarball、HTTP アーカイブ、独自形式も検討しましたが、どれ�
 
 - **今すぐ一度だけ、自分の環境を誰かに渡したいとき。** 配布にはリポジトリとマニフェストと `.gitignore` が要ります。`/export` はどれも要りません — [プロファイルをファイルで書き出す・読み込む](#export-and-import-a-profile-file) を参照してください。バックアップや、新しい端末への引っ越しも同じです。
 - **デスクトップのテーマや画面配置を共有したいとき。** 配布が運ぶのはエージェント本体、つまり SOUL、設定、スキル、cron、MCP、プラグインです。デスクトップアプリから作ったエクスポートは見た目も一緒に運びます。スキン、ライト/ダークの切り替え、スキンが必要とする独自テーマ、そのプロファイルのレール色、ウィンドウの配置です。
-- **API キーもエージェントと一緒に渡したいとき。** `auth.json`、`.env`、そして Hermes がプロファイルから読むほかの資格情報の保存場所（`.op.env`、`npmrc`、OAuth やボットのトークンのファイル、`honcho.json`、`mem0.json`、`teams_pipeline_store.json`、`mcp-tokens/`、`vault/`、`proxy/`、ブラウザーのプロファイル、プラットフォームのセッション、さらにルート直下またはスキルの下に置かれた `.ssh/`、`.aws/`、`.gnupg/`、`.kube/`、`.envrc`）は、配布から意図的に除いてあります。導入する人がそれぞれ自分の資格情報を用意します。（エクスポートファイルでも同じように取り除かれます。）
+- **API キーもエージェントと一緒に渡したいとき。** `auth.json`、`.env`、そして Hermes がプロファイルから読むほかの資格情報の保存場所（`.op.env`、`npmrc`、OAuth やボットのトークンのファイル、`honcho.json`、`mem0.json`、`teams_pipeline_store.json`、`mcp-tokens/`、`vault/`、`proxy/`、ブラウザーのプロファイル、プラットフォームのセッション、さらにルート直下またはスキルの下に置かれた `.ssh/`、`.aws/`、`.gnupg/`、`.kube/`、`.docker/`、`.azure/`、`.config/gh/`、`.config/gcloud/`、`.envrc`）は、配布から意図的に除いてあります。導入する人がそれぞれ自分の資格情報を用意します。（エクスポートファイルでも同じように取り除かれます。）
 - **メモリーやセッション、会話履歴を共有したいとき。** これらは利用者のデータであって、配布の中身ではありません。同梱されることはありません。（エクスポートファイルはここが違います。送る前に [エクスポートファイルに入るもの](#what-an-export-file-contains) を読んでください。）
 
 :::caution
@@ -681,7 +681,7 @@ hermes profile import ./research-bot.tar.gz --name research-bot-2
 
 ### エクスポートファイルに入るもの {#what-an-export-file-contains}
 
-どちらの種類のプロファイルでも常に除外されるのは、`auth.json`、`.env`、そして Hermes がプロファイルから読むほかの資格情報の保存場所（WeChat の `weixin/accounts/` のような OAuth やボットのトークンのファイル、`honcho.json`、`mcp-tokens/`、`vault/`、`proxy/` にある iron-proxy の鍵、`chrome-debug/` にある `/browser connect` 用のものを含むブラウザーのプロファイル、プラットフォームのセッションとペアリングの保存場所、Graph の webhook の `clientState` を持つ Teams パイプラインの `teams_pipeline_store.json`）、さらにルート直下またはスキルの下に置かれた `.ssh/`、`.aws/`、`.gnupg/`、`.kube/`、`.envrc` です。API キーが端末の外へ出ることはありません。`honcho.json` と `mem0.json` には、設定と並んでプロバイダーの API キーが入っていることがあります。そのため、読み込んだあとに `hermes honcho setup` か `hermes memory setup` をもう一度実行してください。
+どちらの種類のプロファイルでも常に除外されるのは、`auth.json`、`.env`、そして Hermes がプロファイルから読むほかの資格情報の保存場所（WeChat の `weixin/accounts/` のような OAuth やボットのトークンのファイル、`honcho.json`、`mcp-tokens/`、`vault/`、`proxy/` にある iron-proxy の鍵、`chrome-debug/` にある `/browser connect` 用のものを含むブラウザーのプロファイル、プラットフォームのセッションとペアリングの保存場所、Graph の webhook の `clientState` を持つ Teams パイプラインの `teams_pipeline_store.json`）、さらにルート直下またはスキルの下に置かれた `.ssh/`、`.aws/`、`.gnupg/`、`.kube/`、`.docker/`、`.azure/`、`.config/gh/`、`.config/gcloud/`、`.envrc` です。API キーが端末の外へ出ることはありません。`honcho.json` と `mem0.json` には、設定と並んでプロバイダーの API キーが入っていることがあります。そのため、読み込んだあとに `hermes honcho setup` か `hermes memory setup` をもう一度実行してください。
 
 **default プロファイル**（`~/.hermes`）は許可リスト方式で書き出されます。Hermes が把握している成果物だけが対象なので、ホームディレクトリに置いてある無関係なファイルが巻き込まれることはありません。
 

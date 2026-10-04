@@ -2,7 +2,7 @@
  "series": "Hermes Wingtips",
  "author": "witcheer",
  "authorUrl": "https://x.com/witcheer",
- "updated": "2026-09-29",
+ "updated": "2026-10-05",
  "categories": [
   "メッセージとボット",
   "モデルとプロバイダ",
@@ -13,7 +13,7 @@
   "CLI とデスクトップ",
   "その他"
  ],
- "count": 86,
+ "count": 91,
  "items": [
   {
    "n": 1,
@@ -1855,6 +1855,120 @@
     "Telegram",
     "CI",
     "pipe"
+   ]
+  },
+  {
+   "n": 87,
+   "date": "2026-09-30",
+   "url": "https://x.com/witcheer/status/2105222388530946090",
+   "feature": "/handoff telegram",
+   "title_ja": "CLI の会話をそのまま Telegram へ引き継ぐ",
+   "summary_ja": "CLI で `/handoff telegram` を打つと、履歴ごとセッションが Telegram のホームチャンネル（トピックを作れる場合は新しいトピック）へ移り、エージェントが要約を返します。ゲートウェイが動いていて、移動先で `/sethome` を済ませていることが条件です。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "セッション",
+     "url": "/hermes/docs/user-guide/sessions/"
+    },
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    }
+   ],
+   "tags": [
+    "handoff",
+    "Telegram",
+    "sethome",
+    "resume"
+   ]
+  },
+  {
+   "n": 88,
+   "date": "2026-10-01",
+   "url": "https://x.com/witcheer/status/2105552884670550343",
+   "feature": "/context",
+   "title_ja": "コンテキストウィンドウを何が占めているか見る",
+   "summary_ja": "`/context` を打つと、システムプロンプト・ツール定義・ルール・記憶・会話などがウィンドウをどれだけ使っているかと、残りの空きが表で出ます。`/context all` ならスキルやツールセットごとの内訳も加わります。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    }
+   ],
+   "tags": [
+    "context",
+    "ctx",
+    "コンテキストウィンドウ",
+    "トークン"
+   ]
+  },
+  {
+   "n": 89,
+   "date": "2026-10-02",
+   "url": "https://x.com/witcheer/status/2105922267636965538",
+   "feature": "/branch",
+   "title_ja": "今の会話を履歴ごと写して、別の方向を試す",
+   "summary_ja": "`/branch` を打つと、今のセッションが履歴ごと独立した写しとして分岐し、元の会話を残したまま別の案を試せます。`/branch plan-b` のように名前も付けられます。Telegram や Discord では分岐先が隣の新しいスレッドで開きます。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    }
+   ],
+   "tags": [
+    "branch",
+    "fork",
+    "セッション",
+    "分岐"
+   ]
+  },
+  {
+   "n": 90,
+   "date": "2026-10-03",
+   "url": "https://x.com/witcheer/status/2106275419557126419",
+   "feature": "/blueprint learn-daily",
+   "title_ja": "質問に答えるだけで定期実行の自動化を作る",
+   "summary_ja": "`/blueprint learn-daily` を打つと、Hermes が学ぶトピックや時刻を1つずつ聞き、確認のあとで cron ジョブとして予約します。cron 構文は要りません。`/blueprint` だけなら型紙の一覧が出ます。",
+   "category": "定期実行",
+   "links": [
+    {
+     "title": "Automation Blueprints カタログ",
+     "url": "/hermes/docs/reference/automation-blueprints-catalog/"
+    },
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    }
+   ],
+   "tags": [
+    "blueprint",
+    "cron",
+    "learn-daily",
+    "テンプレート"
+   ]
+  },
+  {
+   "n": 91,
+   "date": "2026-10-04",
+   "url": "https://x.com/witcheer/status/2106632278839337357",
+   "feature": "deliverable mode",
+   "title_ja": "PDF やグラフをファイルとしてチャットに届けてもらう",
+   "summary_ja": "Telegram などで「PDF で送って」と頼むと、エージェントが作ったファイルが添付で届きます。グラフは画像、表は `.xlsx` で届きます。毎回そうしてほしいときは `~/.hermes/SOUL.md` にその旨を書いておきます。",
+   "category": "メッセージとボット",
+   "links": [
+    {
+     "title": "成果物モード（チャットに届く生成ファイル）",
+     "url": "/hermes/docs/user-guide/features/deliverable-mode/"
+    }
+   ],
+   "tags": [
+    "deliverable mode",
+    "PDF",
+    "Telegram",
+    "SOUL.md",
+    "添付"
    ]
   }
  ]

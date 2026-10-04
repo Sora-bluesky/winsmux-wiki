@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: dd1126bb2b3eeca89aa8124be714b9b954b50a75
+upstream_blob: 117c3ffae0acdd69034b1ec829c6d81dcf906bb0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -45,7 +45,7 @@ CLI のマイク入力モード、メッセージングでの音声返信、Disc
 | Signal | — | ✅ | ✅ | — | — | ✅ | — |
 | SMS | — | — | — | — | — | — | — |
 | メール | — | ✅ | ✅ | ✅ | — | — | — |
-| Home Assistant | — | — | — | — | — | — | — |
+| Home Assistant（プラグイン） | — | — | — | — | — | — | — |
 | Mattermost | ✅ | ✅ | ✅ | ✅ | — | ✅ | ✅ |
 | Matrix | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | DingTalk | — | ✅ | ✅ | — | ✅ | — | ✅ |
@@ -731,7 +731,7 @@ hermes gateway status                # Check status, including registration drif
 | Signal | `hermes-signal` | ターミナルを含む全ツール |
 | SMS | `hermes-sms` | ターミナルを含む全ツール |
 | メール | `hermes-email` | ターミナルを含む全ツール |
-| Home Assistant | `hermes-homeassistant` | 全ツール + HA の機器操作（ha_list_entities, ha_get_state, ha_call_service, ha_list_services） |
+| Home Assistant（プラグイン） | `hermes-homeassistant` | 全ツール + HA の機器操作（ha_list_entities, ha_get_state, ha_call_service, ha_list_services）。`homeassistant` カタログプラグインが提供します |
 | Mattermost | `hermes-mattermost` | ターミナルを含む全ツール |
 | Matrix | `hermes-matrix` | ターミナルを含む全ツール |
 | DingTalk | `hermes-dingtalk` | ターミナルを含む全ツール |
@@ -967,7 +967,7 @@ display:
 - [Signal の設定](/hermes/docs/user-guide/messaging/signal/)
 - [SMS の設定（Twilio）](/hermes/docs/user-guide/messaging/sms/)
 - [メールの設定](/hermes/docs/user-guide/messaging/email/)
-- [Home Assistant との連携](/hermes/docs/user-guide/messaging/homeassistant/)
+- [Home Assistant との連携](/hermes/docs/user-guide/messaging/homeassistant/)（プラグインカタログ）
 - [Mattermost の設定](/hermes/docs/user-guide/messaging/mattermost/)
 - [Matrix の設定](/hermes/docs/user-guide/messaging/matrix/)
 - [DingTalk の設定](/hermes/docs/user-guide/messaging/dingtalk/)

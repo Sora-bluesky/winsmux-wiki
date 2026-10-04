@@ -8,6 +8,37 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-04
+
+- [アプリケーション宣言](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/application-declarations/)
+- [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
+- [プロファイルのコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/profile-commands/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [Codex App-Server ランタイム（任意）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/codex-app-server-runtime/)
+- [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+- [フォールバックプロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/fallback-providers/)
+- [続く目標（Goal）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/goals/)
+- [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
+- [契約の中継サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/subscription-proxy/)
+- [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- [Web 検索と本文抽出](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-search/)
+- [ローカルモデル](https://wiki.winsmux.dev/hermes/docs/user-guide/local-models/)
+- [Discord](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/discord/)
+- [メール](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/email/)
+- [Matrix](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/matrix/)
+- [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
+- [プロファイル配布: エージェントまるごと共有する](https://wiki.winsmux.dev/hermes/docs/user-guide/profile-distributions/)
+- [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
+
 ## 2026-10-03
 
 - [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)

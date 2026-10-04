@@ -1,6 +1,6 @@
 {
-  "sha": "158fd63",
-  "date": "2026-10-03",
+  "sha": "af8839d",
+  "date": "2026-10-04",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -39,7 +39,7 @@
       "name": "Claude Code",
       "description": "Delegate coding to Claude Code CLI (features, PRs)",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/",
-      "date": "2026-09-20",
+      "date": "2026-10-04",
       "source": "bundled"
     },
     {
@@ -391,7 +391,7 @@
       "name": "Hermes Agent Skill Authoring",
       "description": "Author in-repo SKILL.md files: frontmatter and structure",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/",
-      "date": "2026-09-20",
+      "date": "2026-10-04",
       "source": "bundled"
     },
     {
@@ -783,7 +783,7 @@
       "name": "System Atlas",
       "description": "Build explorable isometric architecture atlases as HTML",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/",
-      "date": "2026-09-20",
+      "date": "2026-10-04",
       "source": "optional"
     },
     {
@@ -799,7 +799,7 @@
       "name": "Unreal Mcp",
       "description": "Automate Unreal Engine editor scenes, actors, and renders",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-unreal-mcp/",
-      "date": "2026-09-20",
+      "date": "2026-10-04",
       "source": "optional"
     },
     {

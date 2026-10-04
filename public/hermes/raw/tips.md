@@ -1,17 +1,20 @@
 ---
 title: "Hermes Wingtips 日本語版"
-description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」の #1〜#86（2026-09-28 まで）を日本語で"
+description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」の #1〜#91（2026-10-04 まで）を日本語で"
 raw: /hermes/raw/tips.md
 ---
 
 # Hermes Wingtips 日本語版
 
-「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは #1〜#86（2026-09-28 まで）の 86 回・8 分類を収録しています。英語の原文は @witcheer のサイト [hermes recipes](https://notwitcheer.github.io/hermes-recipes/wingtips/) にもまとまっています。
+「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは #1〜#91（2026-10-04 まで）の 91 回・8 分類を収録しています。英語の原文は @witcheer のサイト [hermes recipes](https://notwitcheer.github.io/hermes-recipes/wingtips/) にもまとまっています。
 
 日本語の文はこのサイトによる要約です。正確な内容は元のポストと公式ドキュメントをご覧ください。
 
 ## メッセージとボット
 
+- **#91 PDF やグラフをファイルとしてチャットに届けてもらう** — Telegram などで「PDF で送って」と頼むと、エージェントが作ったファイルが添付で届きます。グラフは画像、表は `.xlsx` で届きます。毎回そうしてほしいときは `~/.hermes/SOUL.md` にその旨を書いておきます。
+  - 元のポスト: https://x.com/witcheer/status/2106632278839337357
+  - 関連: [成果物モード（チャットに届く生成ファイル）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/deliverable-mode/)
 - **#86 スクリプトからメッセージを Telegram などへ送る** — `hermes send` は設定済みのボットを使って、スクリプトからメッセージを送ります。モデルは呼びません。`hermes send --to telegram` のように送り先を指定し、ほかのコマンドの出力をパイプで渡すこともできます。
   - 元のポスト: https://x.com/witcheer/status/2104531742686093765
   - 関連: [スクリプトの出力をメッセージングプラットフォームへ流す](https://wiki.winsmux.dev/hermes/docs/guides/pipe-script-output/) / [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
@@ -80,6 +83,15 @@ raw: /hermes/raw/tips.md
 
 ## セッションと文脈
 
+- **#89 今の会話を履歴ごと写して、別の方向を試す** — `/branch` を打つと、今のセッションが履歴ごと独立した写しとして分岐し、元の会話を残したまま別の案を試せます。`/branch plan-b` のように名前も付けられます。Telegram や Discord では分岐先が隣の新しいスレッドで開きます。
+  - 元のポスト: https://x.com/witcheer/status/2105922267636965538
+  - 関連: [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
+- **#88 コンテキストウィンドウを何が占めているか見る** — `/context` を打つと、システムプロンプト・ツール定義・ルール・記憶・会話などがウィンドウをどれだけ使っているかと、残りの空きが表で出ます。`/context all` ならスキルやツールセットごとの内訳も加わります。
+  - 元のポスト: https://x.com/witcheer/status/2105552884670550343
+  - 関連: [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
+- **#87 CLI の会話をそのまま Telegram へ引き継ぐ** — CLI で `/handoff telegram` を打つと、履歴ごとセッションが Telegram のホームチャンネル（トピックを作れる場合は新しいトピック）へ移り、エージェントが要約を返します。ゲートウェイが動いていて、移動先で `/sethome` を済ませていることが条件です。
+  - 元のポスト: https://x.com/witcheer/status/2105222388530946090
+  - 関連: [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/) / [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
 - **#66 使わなくなった古いセッションを自動で片付ける** — 終了して長く触れていないセッションは、起動時に自動で整理されます。すべて残したいときは `hermes config set sessions.auto_prune false`、残す期間を変えるときは `sessions.retention_days`（既定90日）を使います。
   - 元のポスト: https://x.com/witcheer/status/2097201422844436642
   - 関連: [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
@@ -167,6 +179,9 @@ raw: /hermes/raw/tips.md
 
 ## 定期実行
 
+- **#90 質問に答えるだけで定期実行の自動化を作る** — `/blueprint learn-daily` を打つと、Hermes が学ぶトピックや時刻を1つずつ聞き、確認のあとで cron ジョブとして予約します。cron 構文は要りません。`/blueprint` だけなら型紙の一覧が出ます。
+  - 元のポスト: https://x.com/witcheer/status/2106275419557126419
+  - 関連: [Automation Blueprints カタログ](https://wiki.winsmux.dev/hermes/docs/reference/automation-blueprints-catalog/) / [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
 - **#85 cron やボットの新しい作業をまとめて止める** — `hermes pause` を実行すると、cron の発火・kanban の振り分け・ゲートウェイの新しいターンがすべて始まらなくなります。`hermes resume` で元に戻ります。予想外の定期実行を見つけたときに使います。
   - 元のポスト: https://x.com/witcheer/status/2104227606614757460
   - 関連: [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/) / [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)

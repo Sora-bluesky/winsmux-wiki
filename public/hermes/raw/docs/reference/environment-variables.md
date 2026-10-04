@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 59c7fd61ebe91e3a40cb39cb6a27cf3f2198c02e
+upstream_blob: 691c06571d4577c904d286478d7900239271c24c
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -441,6 +441,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `EMAIL_SMTP_HOST` | メール用のアダプターが使う SMTP のホスト名 |
 | `EMAIL_SMTP_PORT` | SMTP のポート |
 | `EMAIL_ALLOWED_USERS` | ボットへ送れるメールアドレスをカンマ区切りで |
+| `EMAIL_AUTHSERV_ID` | 受信サーバーが付ける一番上の `Authentication-Results` ヘッダーにある authserv-id を正確に指定します。送信者の認証を無効にしていない限り（`EMAIL_TRUST_FROM_HEADER=true`）必須です |
 | `EMAIL_HOME_ADDRESS` | こちらから送るメールの既定の宛先 |
 | `EMAIL_HOME_ADDRESS_NAME` | メールの既定の宛先の表示名 |
 | `EMAIL_POLL_INTERVAL` | メールを確認しにいく間隔（秒） |
@@ -545,8 +546,9 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `MATRIX_MAX_MEDIA_BYTES` | Matrix のメディアの送受信の最大バイト数（既定: `104857600`） |
 | `MATRIX_RECOVERY_KEY` | デバイスの鍵を入れ替えたあと、相互署名の検証に使う復旧キー。相互署名を有効にした暗号化の構成ではおすすめです。 |
 | `MATRIX_RECOVERY_KEY_OUTPUT_FILE` | 生成した Matrix の復旧キーを一度だけ書き出すパス（任意）。`0600` の権限で作られ、上書きされることはありません。 |
-| `HASS_TOKEN` | Home Assistant の長期有効なアクセストークン（HA のプラットフォームとツールが使えるようになります） |
-| `HASS_URL` | Home Assistant の URL（既定: `http://homeassistant.local:8123`） |
+| `HASS_TOKEN` | Home Assistant プラグイン: 長期有効なアクセストークン（HA のプラットフォームとツールが使えるようになります。カタログの `homeassistant` プラグインが必要です。詳しくは [Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/) を参照） |
+| `HASS_URL` | Home Assistant プラグイン: Home Assistant の URL（既定: `http://homeassistant.local:8123`） |
+| `HASS_HOME_CHANNEL` | Home Assistant プラグイン: 宛先を書かない `deliver: homeassistant`（cron や Webhook）で使う既定の通知先 |
 | `WEBHOOK_ENABLED` | webhook のプラットフォーム用アダプターを有効にします（`true`/`false`） |
 | `WEBHOOK_PORT` | webhook を受け取る HTTP サーバーのポート（既定: `8644`） |
 | `WEBHOOK_SECRET` | webhook の署名の検証に使う共通の HMAC の秘密（経路ごとの指定が無いときに使われます） |

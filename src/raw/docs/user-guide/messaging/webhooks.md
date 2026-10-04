@@ -2,7 +2,7 @@
 title: "Webhook"
 description: "GitHub や GitLab などのサービスからイベントを受け取り、Hermes のエージェント実行を起こす"
 upstream_path: user-guide/messaging/webhooks.md
-upstream_blob: b53b6a0816680d351c2ad61e1de60bc04c4812b6
+upstream_blob: bc413bfe35981156f60fc0a472426d84ad4a1a5f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks
 ---
@@ -81,7 +81,7 @@ curl http://localhost:8644/health
 | `script` | いいえ | `~/.hermes/scripts/` に置いた、ふるい分けや変換のためのスクリプト。webhook のペイロードは JSON として標準入力に渡されます。標準出力が JSON オブジェクトならテンプレート展開前にペイロードを差し替え、テキストなら `script_output` として使えるようになります。標準出力が空、`[SILENT]`、または終了コードが 0 以外のときは、その webhook を無視します。 |
 | `skills` | いいえ | エージェント実行時に読み込む skill 名のリスト。 |
 | `toolsets` | いいえ | ツールセットのキーのリスト（例: `["terminal", "file", "web"]`）。このルートで起きた実行に限り、プラットフォーム側の webhook 用ツールセットを**置き換え**ます。設定ファイルを手で編集したときだけ効き、`hermes webhook subscribe` では指定できません。つまりエージェントが作った購読が自分で強い権限を得ることはできません。名前は `platform_toolsets` の項目と同じ方法で検証されます（知らない名前やプラットフォーム側で制限された名前は捨てられます）。[ルートごとのツールセット](#per-route-toolsets)を参照してください。 |
-| `deliver` | いいえ | 応答の送り先: `github_comment`、`telegram`、`discord`、`slack`、`signal`、`sms`、`whatsapp`、`matrix`、`mattermost`、`homeassistant`、`email`、`dingtalk`、`feishu`、`wecom`、`weixin`、`bluebubbles`、`qqbot`、または `log`（既定）。 |
+| `deliver` | いいえ | 応答の送り先: `github_comment`、`telegram`、`discord`、`slack`、`signal`、`sms`、`whatsapp`、`matrix`、`mattermost`、`homeassistant`（プラグイン）、`email`、`dingtalk`、`feishu`、`wecom`、`weixin`、`bluebubbles`、`qqbot`、または `log`（既定）。 |
 | `deliver_extra` | いいえ | 配信の追加設定。キーは `deliver` の種類によって変わります（例: `repo`、`pr_number`、`chat_id`）。値には `prompt` と同じ `{dot.notation}` のテンプレートが使えます。 |
 | `deliver_only` | いいえ | `true` にすると、エージェントを一切通しません。展開後の `prompt` テンプレートが、そのまま配信されるメッセージになります。LLM の費用はゼロで、1 秒未満で届きます。使いどころは[直接配信モード](#direct-delivery-mode)を参照してください。`deliver` に実際の送り先（`log` 以外）が必要です。 |
 | `cron_job` | いいえ | イベントのたびに新しい webhook のエージェントセッションを始める代わりに、既存の cron ジョブ（ID か名前で指定）を起動します。展開後の `prompt` は、その実行限りの一時的な文脈になり、ジョブ自身のプロンプト、スキル、モデル、配信設定が使われます。`deliver_only` とは同時に使えません。[イベントで起動する cron ジョブ](#event-triggered-cron-jobs)を参照してください。 |
@@ -343,7 +343,7 @@ platforms:
 | `whatsapp` | 応答を WhatsApp へ送ります。ホームチャンネルを使うか、`deliver_extra` に `chat_id` を書きます。 |
 | `matrix` | 応答を Matrix へ送ります。ホームチャンネルを使うか、`deliver_extra` に `chat_id` を書きます。 |
 | `mattermost` | 応答を Mattermost へ送ります。ホームチャンネルを使うか、`deliver_extra` に `chat_id` を書きます。 |
-| `homeassistant` | 応答を Home Assistant へ送ります。ホームチャンネルを使うか、`deliver_extra` に `chat_id` を書きます。 |
+| `homeassistant` | 応答を Home Assistant へ送ります（[`homeassistant` プラグイン](/hermes/docs/user-guide/messaging/homeassistant/)が必要です）。ホームチャンネル（`HASS_HOME_CHANNEL`）を使うか、`deliver_extra` に `chat_id` を書きます。 |
 | `email` | 応答をメールで送ります。ホームチャンネルを使うか、`deliver_extra` に `chat_id` を書きます。 |
 | `dingtalk` | 応答を DingTalk へ送ります。ホームチャンネルを使うか、`deliver_extra` に `chat_id` を書きます。 |
 | `feishu` | 応答を Feishu / Lark へ送ります。ホームチャンネルを使うか、`deliver_extra` に `chat_id` を書きます。 |

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ローカルモデル"
 description: "モデルを自分の端末だけで動かします。アカウントも API キーも不要で、何も端末の外には出ません。"
 upstream_path: user-guide/local-models.md
-upstream_blob: d28a66698b9a7e0b6a9d2175738c9296a1d9ea31
+upstream_blob: d215eaad220b0e60ae9bbc9ffbc9a87902ba43ce
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/local-models
 ---
@@ -55,6 +55,12 @@ Range に対応していないホストでは、そのファイルを最初か�
 流れはこれで全部です。サーバーは Hermes と一緒に起動・終了し、アプリを
 再起動しても設定は残ります。クラウドのプロバイダーに戻したいときも、
 モデル選択欄で 1 回押すだけです。
+
+ターミナルからは、`hermes model` → **Local models** で同じ設定ができます。
+手元の端末に合わせて見積もったカタログを一覧にし（★ がおすすめの印です）、
+固定版のエンジンを入れ、進み具合を表示しながらモデルをダウンロードし、
+サーバーを起動して、そのモデルを既定にします。すでにディスクにあるモデルも候補に出ます。
+Ctrl+C でダウンロードを一時停止し、同じモデルをもう一度選ぶと再開します。
 
 ## Hermes が何をダウンロードするか決めるしくみ {#how-hermes-picks-what-to-download}
 
@@ -186,7 +192,7 @@ PM のストアに置かれ、`runtimes/llamacpp/` には変更されうるプ�
 ## 必要なものと限界 {#requirements-and-limits}
 
 - **Windows:** 対応する NVIDIA の環境では CUDA、x64 では Vulkan、または CPU。
-  **Linux:** Vulkan または CPU。固定版のリリースには、ビルド済みの CUDA のアーカイブがありません。
+  **Linux:** x64 と arm64 の NVIDIA での CUDA（CUDA 13 対応のドライバーが必要）、Vulkan、または CPU。
   **macOS:** Metal または CPU。HIP/ROCm は、対応する x64 の環境で明示的に選んだときだけ使います。
   対応していないバックエンドと環境の組み合わせは、ダウンロードを始める前に失敗します。
 - `backend: auto` は、NVIDIA なら CUDA、AMD と Intel の GPU なら Vulkan を優先し、

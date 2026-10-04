@@ -2,7 +2,7 @@
 title: "外部サービス連携"
 description: ""
 upstream_path: integrations/index.md
-upstream_blob: 01c8bdbfe3d0fda764bb65d3a03d398571406dc7
+upstream_blob: eef29e5be73589efb43e8def3b61a08e881a616d
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations
 ---
@@ -93,7 +93,7 @@ Hermes にはブラウザを操作する機能が一式そろっていて、サ�
 
 Hermes は 27 以上のメッセージングサービスでボットとして動きます。設定はすべて同じ `gateway` の仕組みで行います。
 
-- **[Telegram](/hermes/docs/user-guide/messaging/telegram/)**, **[Discord](/hermes/docs/user-guide/messaging/discord/)**, **[Slack](/hermes/docs/user-guide/messaging/slack/)**, **[WhatsApp](/hermes/docs/user-guide/messaging/whatsapp/)**, **[Signal](/hermes/docs/user-guide/messaging/signal/)**, **[Matrix](/hermes/docs/user-guide/messaging/matrix/)**, **[Mattermost](/hermes/docs/user-guide/messaging/mattermost/)**, **[メール](/hermes/docs/user-guide/messaging/email/)**, **[SMS](/hermes/docs/user-guide/messaging/sms/)**, **[DingTalk](/hermes/docs/user-guide/messaging/dingtalk/)**, **[Feishu/Lark](/hermes/docs/user-guide/messaging/feishu/)**, **[WeCom](/hermes/docs/user-guide/messaging/wecom/)**, **[WeCom コールバック](/hermes/docs/user-guide/messaging/wecom-callback/)**, **[Weixin](/hermes/docs/user-guide/messaging/weixin/)**, **[BlueBubbles](/hermes/docs/user-guide/messaging/bluebubbles/)**, **[Buzz](/hermes/docs/user-guide/messaging/buzz/)**, **[QQ Bot](/hermes/docs/user-guide/messaging/qqbot/)**, **[Yuanbao](/hermes/docs/user-guide/messaging/yuanbao/)**, **[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/)**, **[Microsoft Teams](/hermes/docs/user-guide/messaging/teams/)**, **[Microsoft Teams 会議](/hermes/docs/user-guide/messaging/teams-meetings/)**, **[Microsoft Graph Webhook](/hermes/docs/user-guide/messaging/msgraph-webhook/)**, **[Google Chat](/hermes/docs/user-guide/messaging/google_chat/)**, **[LINE](/hermes/docs/user-guide/messaging/line/)**, **[ntfy](/hermes/docs/user-guide/messaging/ntfy/)**, **[SimpleX](/hermes/docs/user-guide/messaging/simplex/)**, **[Open WebUI](/hermes/docs/user-guide/messaging/open-webui/)**, **[Webhook](/hermes/docs/user-guide/messaging/webhooks/)**
+- **[Telegram](/hermes/docs/user-guide/messaging/telegram/)**, **[Discord](/hermes/docs/user-guide/messaging/discord/)**, **[Slack](/hermes/docs/user-guide/messaging/slack/)**, **[WhatsApp](/hermes/docs/user-guide/messaging/whatsapp/)**, **[Signal](/hermes/docs/user-guide/messaging/signal/)**, **[Matrix](/hermes/docs/user-guide/messaging/matrix/)**, **[Mattermost](/hermes/docs/user-guide/messaging/mattermost/)**, **[メール](/hermes/docs/user-guide/messaging/email/)**, **[SMS](/hermes/docs/user-guide/messaging/sms/)**, **[DingTalk](/hermes/docs/user-guide/messaging/dingtalk/)**, **[Feishu/Lark](/hermes/docs/user-guide/messaging/feishu/)**, **[WeCom](/hermes/docs/user-guide/messaging/wecom/)**, **[WeCom コールバック](/hermes/docs/user-guide/messaging/wecom-callback/)**, **[Weixin](/hermes/docs/user-guide/messaging/weixin/)**, **[BlueBubbles](/hermes/docs/user-guide/messaging/bluebubbles/)**, **[Buzz](/hermes/docs/user-guide/messaging/buzz/)**, **[QQ Bot](/hermes/docs/user-guide/messaging/qqbot/)**, **[Yuanbao](/hermes/docs/user-guide/messaging/yuanbao/)**, **[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/)** (プラグイン), **[Microsoft Teams](/hermes/docs/user-guide/messaging/teams/)**, **[Microsoft Teams 会議](/hermes/docs/user-guide/messaging/teams-meetings/)**, **[Microsoft Graph Webhook](/hermes/docs/user-guide/messaging/msgraph-webhook/)**, **[Google Chat](/hermes/docs/user-guide/messaging/google_chat/)**, **[LINE](/hermes/docs/user-guide/messaging/line/)**, **[ntfy](/hermes/docs/user-guide/messaging/ntfy/)**, **[SimpleX](/hermes/docs/user-guide/messaging/simplex/)**, **[Open WebUI](/hermes/docs/user-guide/messaging/open-webui/)**, **[Webhook](/hermes/docs/user-guide/messaging/webhooks/)**
 
 サービスごとの比較表と設定手順は [メッセージングゲートウェイの概要](/hermes/docs/user-guide/messaging/) にまとめてあります。
 
@@ -117,7 +117,7 @@ Hermes は 27 以上のメッセージングサービスでボットとして動
 
 ## 家電の操作 {#home-automation}
 
-- **[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/)** — 4 つの専用ツール（`ha_list_entities`、`ha_get_state`、`ha_list_services`、`ha_call_service`）でスマート家電を操作します。`HASS_TOKEN` を設定すると Home Assistant のツール一式が自動で有効になります。
+- **[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/)** — 4 つの専用ツール（`ha_list_entities`、`ha_get_state`、`ha_list_services`、`ha_call_service`）でスマート家電を操作し、ゲートウェイ経由で状態の変化にリアルタイムで反応します。`homeassistant` というカタログのプラグインとして提供されます（`hermes plugins install homeassistant`）。`HASS_TOKEN` を設定すると、そのツール一式が自動で有効になります。
 
 ## プラグイン {#plugins}
 

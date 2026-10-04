@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 7247c53d24ed8a4b3670c943c1cf6b380e377ca3
+upstream_blob: 0eeecea58b8964c7a467e9690a464fd564604a51
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -95,7 +95,7 @@ FTS5 のインデックスの断片をまとめ、データベースを VACUUM �
 | `weixin` | Weixin（個人向け WeChat） |
 | `bluebubbles` | macOS の BlueBubbles サーバー経由の Apple iMessage |
 | `qqbot` | 公式 API v2 経由の QQ Bot（Tencent QQ） |
-| `homeassistant` | Home Assistant の会話 |
+| `homeassistant` | Home Assistant のイベント（プラグイン） |
 | `webhook` | 受信した webhook |
 | `api-server` | API サーバーへのリクエスト |
 | `acp` | ACP のエディター連携 |

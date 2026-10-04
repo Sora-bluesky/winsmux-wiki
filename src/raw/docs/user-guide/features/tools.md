@@ -2,7 +2,7 @@
 title: "ツールとツールセット"
 description: "Hermes Agent のツールの全体像 — 何が使えるか、ツールセットの仕組み、ターミナルの実行先"
 upstream_path: user-guide/features/tools.md
-upstream_blob: ad23c36061769851069cde25d1580d2ad2988ac7
+upstream_blob: 67553fe7e1f4df5b6324401937d23f2b2e7f7201
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tools
 ---
@@ -17,7 +17,7 @@ sources:
 
 ## 使えるツール {#available-tools}
 
-Hermes には、Web の検索、ブラウザの自動操作、ターミナルでの実行、ファイルの編集、記憶、委任、予定した作業、Home Assistant など、幅広い組み込みのツールの登録簿が付いています。
+Hermes には、Web の検索、ブラウザの自動操作、ターミナルでの実行、ファイルの編集、記憶、委任、予定した作業など、幅広い組み込みのツールの登録簿が付いています。プラグインを入れるとツールがさらに増えます。たとえば Home Assistant の機器の操作は、カタログにある `homeassistant` プラグインから提供されます。
 
 :::note
 **Honcho によるセッションをまたいだ記憶**は、組み込みのツールセットではなく、プラグインカタログにある記憶プロバイダのプラグイン（`hermes plugins install honcho` で入れます）として使えます。詳しくは[記憶プロバイダ](/hermes/docs/user-guide/features/memory-providers/#honcho)を参照してください。
@@ -35,7 +35,7 @@ Hermes には、Web の検索、ブラウザの自動操作、ターミナルで
 | **エージェントの采配** | `todo`、`clarify`、`execute_code`、`delegate_task` | 計画立て、確認、コードの実行、子エージェントへの委任です。 |
 | **記憶と思い出し** | `memory`、`session_search` | ずっと残る記憶と、セッションの検索です。 |
 | **自動化** | `cronjob` | 予定した作業です。作成 / 一覧 / 更新 / 一時停止 / 再開 / 実行 / 削除の操作があります。外へ送り出す部分は cron 自身の配送、`hermes send` の CLI、ゲートウェイの通知役が担っていて、エージェントが呼べるツールではありません。 |
-| **連携** | `ha_*`、MCP サーバーのツール | Home Assistant、MCP、その他の連携です。 |
+| **連携** | MCP サーバーのツール、プラグインのツール | MCP やプラグインによる連携です。たとえば Home Assistant（`ha_*`。[カタログの `homeassistant` プラグイン](/hermes/docs/user-guide/messaging/homeassistant/)から提供されます）。 |
 
 コードから起こした正本の登録簿は、[組み込みツール一覧](/hermes/docs/reference/tools-reference/)と[ツールセット一覧](/hermes/docs/reference/toolsets-reference/)を参照してください。
 
@@ -56,7 +56,7 @@ hermes tools
 hermes tools
 ```
 
-よく使うツールセットには、`web`、`search`、`terminal`、`file`、`browser`、`vision`、`image_gen`、`skills`、`tts`、`todo`、`memory`、`session_search`、`cronjob`、`code_execution`、`delegation`、`clarify`、`homeassistant`、`messaging`、`spotify`、`discord`、`discord_admin`、`debugging`、`safe` があります。
+よく使うツールセットには、`web`、`search`、`terminal`、`file`、`browser`、`vision`、`image_gen`、`skills`、`tts`、`todo`、`memory`、`session_search`、`cronjob`、`code_execution`、`delegation`、`clarify`、`messaging`、`spotify`、`discord`、`discord_admin`、`debugging`、`safe` があります。
 
 `hermes-cli` や `hermes-telegram` といったサービス別のひとまとまりや、`mcp-<server>` のような動的な MCP のツールセットも含めた全体は、[ツールセット一覧](/hermes/docs/reference/toolsets-reference/)を参照してください。
 

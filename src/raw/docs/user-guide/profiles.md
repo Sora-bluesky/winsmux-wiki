@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: 003f8165eb1140fa5bf612050e9cd47857c56b2b
+upstream_blob: 50f8e260ee6810d5eba075064dc9ab57225201c1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -161,7 +161,7 @@ hermes profile create twin --clone --clone-channels   # keep the source's bots a
   `google_chat_user_tokens/`、`<platform>_*`）。
 
 メッセージのアダプターが、チャンネル以外の機能と共有している認証情報もあります。`HASS_TOKEN`/`HASS_URL`
-（Home Assistant のツールも使う）、`TWILIO_*`（電話のスキルも使う）、`EMAIL_*`（メール送信の
+（Home Assistant プラグインのツールも使う。プラグインのアダプターはこれらを `shared_env_prefixes` として宣言します）、`TWILIO_*`（電話のスキルも使う）、`EMAIL_*`（メール送信の
 スクリプトも使う）です。これらを取り除くのは、**元のプロファイルのゲートウェイがそのアダプターを動かす場合だけ**
 です（`config.yaml` でそのプラットフォームが有効になっているか、認証情報がそろっていて明示的に無効に
 されていない場合）。`platforms.homeassistant.enabled: false` の元プロファイルは `HASS_TOKEN`

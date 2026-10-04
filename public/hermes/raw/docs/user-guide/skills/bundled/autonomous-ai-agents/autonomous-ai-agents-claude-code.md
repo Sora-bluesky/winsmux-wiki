@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）"
 description: "Claude Code CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md
-upstream_blob: 578f786ff5250c59d350c9e1ead62615170808b4
+upstream_blob: 93604424f0a186e7f14dc35f3b9efc5db4ac4834
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code
 ---
@@ -359,7 +359,7 @@ Bash(git commit *)      # Only git commit commands
 Bash(npm run lint:*)    # Pattern matching with wildcards
 WebSearch               # Web search capability
 WebFetch                # Web page fetching
-mcp__<server>__<tool>   # Specific MCP tool
+mcp__<server>__{tool}   # Specific MCP tool
 ```
 
 ## 設定 {#settings-configuration}

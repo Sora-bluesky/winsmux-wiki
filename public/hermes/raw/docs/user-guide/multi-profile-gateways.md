@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: 00ca1eae682e56c02b46f779f1be5abfb5618843
+upstream_blob: 7f41190a0b4803e2571625be6376483bb70c1a94
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -420,17 +420,15 @@ POST http://host:8644/p/coder/webhooks/<route>
   アダプタを持ちます。既定の待ち受けは
   `/p/<profile>/<the adapter's usual path>` をそのアダプタへ渡します。
   [多重化のもとでの受信ポート型のプラットフォーム](#inbound-port-platforms-under-the-multiplexer)を見てください。
-- **WhatsApp（ブリッジ）と Relay は、既定プロファイルが持つ共有の受け口です。**
-  多重化のもとでは、従属側のためにこれらを起動することはありません。`profiles/work/.env` に
-  `WHATSAPP_ENABLED=true` と書いても、それだけでは何も起きません。既定プロファイルで有効にして
-  設定する（受け取った内容は `profile_routes` でプロファイルへ振り分けられます）か、従属側では
-  無効にしてください。ゲートウェイは、起動を見送った従属側のプラットフォームごとに INFO の行を 1 つ
-  ログへ出します。どのプロファイルもそのプラットフォームを動かしていない場合は、受け持つ者がいないと
-  WARNING が出ます。`hermes gateway status --profile work` には
-  `whatsapp: not served under multiplex (shared ingress owned by default)` と表示されます。
-  ただ 1 つの例外は、`gateway.standalone:
-  true` で外れたプロファイルです。ほかの単独のゲートウェイと同じく、自分のゲートウェイで
-  WhatsApp のブリッジと中継を動かします。
+- **WhatsApp（ブリッジ）は、ペアリングしたプロファイルごとに動きます。** 従属側はそれぞれ
+  `hermes -p work whatsapp` でペアリングしてください。プロファイルごとに自分のセッションとブリッジのポートを使います。
+  ペアリングしていないプロファイルは `whatsapp_unpaired` として見送られ、ペアリングの手順が案内されます。
+  [WhatsApp を複数のプロファイルで使う設定](/hermes/docs/user-guide/messaging/whatsapp/#multiple-profiles)を見てください。
+- **Relay は、これまでどおり既定プロファイルが持つ共有の受け口です。** Relay は既定プロファイルで
+  有効にして設定し、受け取った内容は `profile_routes` でプロファイルへ振り分けてください。従属側だけに
+  Relay の設定がある場合は、受け持つ者がいないと報告されます。
+  `gateway.standalone: true` で外れたプロファイルは、ほかの単独のゲートウェイと同じく、
+  自分のゲートウェイで自前の中継を動かします。
 
 認証は URL に書かれたプロファイルに従います。接頭辞のない宛先は、これまでどおり
 既定の待ち受けの認証情報を使います。
@@ -676,7 +674,7 @@ Hindsight の URL —— なので、あるプロファイルの鍵がほかの�
 | やり取りの作業ディレクトリ（`terminal.cwd` が未設定のとき） | 単独のゲートウェイと同じ決まり。ローカルの実行先なら `$HOME`、それ以外は隔離環境の既定 | 多重化のプロセスを起動したディレクトリになることはない |
 | コマンドの承認（`command_allowlist`、「always」の選択） | そのプロファイル自身の `config.yaml` | 既定プロファイルの「always」が従属側のコマンドを前もって承認することはない。従属側の選択はその自分の設定に保存される |
 | 隔離環境への認証情報ファイルのマウント（`terminal.credential_files`）、`security.redact_secrets`、`browser.*` のエンジンと画面表示の指定、`lsp.*`、補助のプロバイダーの健康状態の印、`logs/mcp-stderr.log` | そのプロファイル自身の `config.yaml` / `.env` | 文書どおりの既定。起動元のプロファイルでキャッシュした値が使われることはない |
-| クラウド SDK の認証情報のクライアント（Bedrock の boto3 クライアントとモデルの探索、Azure Entra の認証情報）、認証情報で取ってくる一覧（DeepInfra、Copilot の文脈の上限、Nous の推論の上限、Ramp Router の effort、xAI / OpenRouter の画像モデル、独自エンドポイントの `/models`）、Camofox の VNC のアドレス、computer-use の補助の視覚の振り分け、スキルの同期の送り出し、リモートの実行先の確認の文面、学習した画像のトークンの費用、`display.skin`、ゲストの発行の待ち、バナーのスキル、元宝の「使用中」のアダプタ、Langfuse のクライアント | そのプロファイル自身の `.env` / `config.yaml` / `<home>/cache` | 文書どおりの既定。起動元のプロファイルでキャッシュした値やその認証情報が使われることはない |
+| クラウド SDK の認証情報のクライアント（Bedrock の boto3 クライアントとモデルの探索、Azure Entra の認証情報）、認証情報で取ってくる一覧（DeepInfra、Copilot の文脈の上限、Nous の推論の上限、Ramp Router の effort、xAI / OpenRouter の画像モデル、独自エンドポイントの `/models`）、Camofox の VNC のアドレス、computer-use の補助の視覚の振り分け、リモートの実行先の確認の文面、学習した画像のトークンの費用、`display.skin`、ゲストの発行の待ち、バナーのスキル、元宝の「使用中」のアダプタ、Langfuse のクライアント | そのプロファイル自身の `.env` / `config.yaml` / `<home>/cache` | 文書どおりの既定。起動元のプロファイルでキャッシュした値やその認証情報が使われることはない |
 | セッション検索のつまみ（`sessions.cjk_fts`、`sessions.search_slow_ms`） | そのプロファイルの `config.yaml` | 文書どおりの既定。既定プロファイルから橋渡しされた値が使われることはない |
 | RoomLink の機能の一覧と、それが離れた Bot に示す署名付きの実行方針（`approvals.mode`、`agent.max_turns`、`platform_toolsets.api_server`） | 依頼が名指しした、受け持たれているプロファイル（`/p/<profile>/v1/room-members/...`、RPC の `profile` 引数）。どの一覧にも `target_profile` が **必須** で、`HERMES_PROFILE` に頼ることはない | 招待や機能の取得は、問題の `target_profile` を名指しして失敗する。存在しないプロファイルは断られ、起動したプロファイルの設定から解決されることはない |
 | プラットフォームのプロキシ（`TELEGRAM_PROXY`、`DISCORD_PROXY`、`HTTPS_PROXY` など） | そのプロファイル自身の `.env` | 直接つなぐ。既定プロファイルのプロキシが使われることはない |

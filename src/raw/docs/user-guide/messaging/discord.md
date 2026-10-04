@@ -2,7 +2,7 @@
 title: "Discord"
 description: "Hermes Agent を Discord のボットとして設定する"
 upstream_path: user-guide/messaging/discord.md
-upstream_blob: 0c9f4b3348f6388b14fd2562165835b5c960562e
+upstream_blob: 8cd322ca9f559f3b36000abab367ca772ce181ac
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/discord
 ---
@@ -108,6 +108,10 @@ discord:
 
 `websocket_event_max_silence_seconds` だけは例外です。これは 1 つの観点（イベントの配信）だけを守るので、`0` にすると**その検査だけ**を見送ります。ready / ACK / 遅延の監視は続きます。ソケットが ESTABLISHED のままハートビートに ACK を返し続けながら、ゲートウェイのイベントを 1 件も届けないことがあります。ハートビートの ACK はイベント種別を持たないフレームなので、通信路側のどの検査でもその状態は見えません。既定値（4 時間）は、運用者が現場で観測した障害の長さに合わせたものです。人の少ないサーバーでは何時間もゲートウェイのイベントが 1 件も来ないことが正常にあり得るので、自分のところの流量が分かっていない限り、この上限はゆとりを持たせておいてください。
 
+:::tip[近道: 手順 5〜7 はウィザードに任せる]
+アプリケーションを作ってボットトークンをコピーしたら（手順 1〜4）、`hermes gateway setup` を実行して **Discord** を選びます。Hermes がトークンを Discord に問い合わせて確かめ、**Message Content Intent** がオフならそう知らせ（トグルへ直接飛べるリンク付き）、サーバー用の招待リンクをそのまま使える形で表示し、さらに自分をボットの所有者として許可リストに載せます。開発者モードは要りません。
+:::
+
 ## 手順 1: Discord アプリケーションを作る {#step-1-create-a-discord-application}
 
 1. [Discord 開発者ポータル](https://discord.com/developers/applications) を開き、Discord アカウントでサインインします。
@@ -135,7 +139,7 @@ discord:
 
 ## 手順 3: 特権ゲートウェイインテントを有効にする {#step-3-enable-privileged-gateway-intents}
 
-設定全体でいちばん重要な手順です。正しいインテントを有効にしていないと、ボットは Discord に接続できても**メッセージの本文を読めません**。
+設定全体でいちばん重要な手順です。Hermes は常にメッセージの本文の受け取りを Discord に求めるので、**Message Content Intent** がオフだと Discord は**ボットの接続を拒否**し、ボットはいつまでもオンラインになりません。
 
 **Bot** のページで **Privileged Gateway Intents** までスクロールすると、3 つのトグルがあります。
 
@@ -147,11 +151,11 @@ discord:
 
 **Server Members Intent と Message Content Intent の両方**を **ON** にしてください。
 
-- **Message Content Intent** がないと、ボットはメッセージのイベントを受け取っても本文が空になります。入力した内容が文字どおり見えません。
+- **Message Content Intent** がないと、Discord が接続を拒否します。`gateway.log` には "Discord rejected the connection because privileged Gateway Intents are not enabled" と出ます。
 - **Server Members Intent** がないと、許可利用者の一覧に対してユーザー名を解決できず、誰が話しかけているのかを判別できないことがあります。
 
 :::warning[Discord のボットが動かない原因の第 1 位はこれです]
-ボットはオンラインなのにメッセージへ一切応答しない場合、ほぼ確実に **Message Content Intent** が無効です。[開発者ポータル](https://discord.com/developers/applications) に戻り、アプリケーション → Bot → Privileged Gateway Intents と進んで、**Message Content Intent** が ON になっていることを確かめてください。そのあと **Save Changes** をクリックします。
+ボットがオフラインのままで、`gateway.log` に特権ゲートウェイインテント（privileged Gateway Intents）のことが書かれていれば、**Message Content Intent** が無効です。[開発者ポータル](https://discord.com/developers/applications) に戻り、アプリケーション → Bot → Privileged Gateway Intents と進んで、**Message Content Intent** が ON になっていることを確かめてください。そのあと **Save Changes** をクリックします。
 :::
 
 **サーバー数について:**
@@ -196,7 +200,7 @@ discord:
 次の形式で招待 URL を直接組み立てられます。
 
 ```
-https://discord.com/oauth2/authorize?client_id=YOUR_APP_ID&scope=bot+applications.commands&permissions=274878286912
+https://discord.com/oauth2/authorize?client_id=YOUR_APP_ID&scope=bot+applications.commands&permissions=309237763136
 ```
 
 `YOUR_APP_ID` は手順 1 の Application ID に置き換えてください。
@@ -213,6 +217,7 @@ https://discord.com/oauth2/authorize?client_id=YOUR_APP_ID&scope=bot+application
 
 ### 追加を推奨する権限 {#recommended-additional-permissions}
 
+- **Create Public Threads** — `/thread` や自動スレッド化で、ほかと切り離した会話を作る
 - **Send Messages in Threads** — スレッド内の会話で応答する
 - **Add Reactions** — 受け取ったことを示すためにリアクションを付ける
 
@@ -220,8 +225,13 @@ https://discord.com/oauth2/authorize?client_id=YOUR_APP_ID&scope=bot+application
 
 | 段階 | 権限の数値 | 含まれるもの |
 |-------|-------------------|-----------------|
-| 最小 | `117760` | View Channels、Send Messages、Read Message History、Attach Files |
-| 推奨 | `274878286912` | 上記すべてに加えて Embed Links、Send Messages in Threads、Add Reactions |
+| 最小 | `117760` | View Channels、Send Messages、Embed Links、Attach Files、Read Message History |
+| 推奨 | `309237763136` | 上記すべてに加えて Create Public Threads、Send Messages in Threads、Add Reactions |
+| 全部（`hermes gateway setup` が表示するもの） | `309240908864` | 推奨に加えて Connect と Speak（ボイスチャンネル） |
+
+すでに導入済みのボットに、新しく求めるようになった権限が自動で付くことはありません。
+以前の推奨 URL を使った場合は、上の URL でボットを招待し直して
+**Create Public Threads** を与えてください。
 
 ## 手順 6: サーバーに招待する {#step-6-invite-to-your-server}
 
@@ -261,7 +271,7 @@ Hermes Agent は、誰がボットとやり取りできるかを Discord のユ�
 hermes gateway setup
 ```
 
-尋ねられたら **Discord** を選び、ボットトークンとユーザー ID を貼り付けます。
+尋ねられたら **Discord** を選び、ボットトークンを貼り付けます。ウィザードはトークンを Discord に問い合わせて確かめ（間違ったトークンや古いトークンは保存する前に弾かれます）、特権インテントを点検し、招待リンクを表示して、ボットの所有者である自分を許可リストに載せるか尋ねます。ほかの利用者は、ユーザー ID かユーザー名で追加できます。
 
 ### 方法 B: 手作業での設定 {#option-b-manual-configuration}
 
@@ -855,7 +865,7 @@ Discord のフォーラムチャンネル（種別 15）は直接のメッセー
 
 ### ボットはオンラインなのにメッセージへ応答しない {#bot-is-online-but-not-responding-to-messages}
 
-**原因**: Message Content Intent が無効になっているか、アクセス方針が何も設定されていないために Discord の認可が閉じる側へ倒れています。
+**原因**: たいていは、アクセス方針が何も設定されていないために Discord の認可が閉じる側へ倒れています。（Message Content Intent が無効な場合は、ボットがそもそもオフラインのままになります。手順 3 を見てください。）
 
 **対処**:
 
@@ -907,6 +917,12 @@ Hermes 0.18 は、外部から到達できるアダプターについて意図�
 **原因**: ボットに必要な権限が足りていません。
 
 **対処**: 手順 5 の URL を使って正しい権限でボットを招待し直すか、サーバー設定 → ロール でボットのロールの権限を手作業で調整します。
+
+`/thread` が Discord のエラー `50001`（`Missing Access`）を返す場合は、親チャンネルでボットに
+実際に効いている権限を確かめてください。必要なのは **View Channel**、**Send
+Messages**、**Create Public Threads**、**Send Messages in Threads** です。親カテゴリーと
+チャンネルごとの権限の上書きも確認してください。そこで明示的に拒否されていると、
+サーバーのロールで与えた権限より優先されることがあります。
 
 ### ボットがオフラインのまま {#bot-is-offline}
 

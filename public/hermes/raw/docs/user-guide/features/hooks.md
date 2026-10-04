@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 0f48e8cb85d5b57c01a20bb4cba05f140fb70316
+upstream_blob: d4ea6fd0d87079f7a5497daeaa01d482faccf392
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -1017,7 +1017,7 @@ def my_callback(session_id: str | None, platform: str, **kwargs):
 | `session_id` | `str` または `None` | 出ていくセッションの ID。動いているセッションがなければ `None` のことがあります。 |
 | `platform` | `str` | `"cli"` か、メッセージングのプラットフォーム名（`"telegram"`、`"discord"` など）。 |
 
-**発火する場所:** CLI / TUI の片付けと、ゲートウェイの作り直しや停止の経路です。ゲートウェイの停止では、対応する `on_session_reset` なしで締めくくることがあります。
+**発火する場所:** CLI / TUI の片付け（`hermes -z` の単発実行の終わりも含みます。成功・失敗を問いません）と、ゲートウェイの作り直しや停止の経路です。ゲートウェイの停止では、対応する `on_session_reset` なしで締めくくることがあります。
 
 **戻り値:** 無視されます。
 

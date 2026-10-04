@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 6782dd9976aaf1112ed2646bfb33886d65c1deea
+upstream_blob: c58dd0f6d64bdabf1a484f89273aa92474083e80
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -203,7 +203,11 @@ Hermes はそのコミットを detached でチェックアウトし、`HEAD` �
 完全に一致することを確かめ、正式な入手元・入れたリビジョン・固定の状態を現在の
 プロファイルに記録します。`hermes plugins update` は固定されたプラグインを動かすことを拒みます。
 新しいコミットにするときは
-`hermes plugins install <source> --force --ref <new-commit>` で明示してください。
+`hermes plugins install <source> --force --ref <new-commit>` で明示してください。更新と同じく、
+入れたときと同じ入手元から強制的に入れ直した場合も、コードは置き換わりますが手元のファイルは残ります。
+git で追跡していないファイルや git が無視するファイルはそのまま残り、追跡しているファイルへの変更は
+`~/.hermes/plugins-backup/<name>-<sha>/` にコピーされます。別の入手元から入れ直すと、まっさらな状態から
+始まります。プラグインを完全に初期化したいときは、先に `hermes plugins remove` で取り除いてください。
 プロファイルに置かれるインストールの情報には、設定値・環境の値・秘密の情報・
 権限の付与はいっさい含まれません。
 

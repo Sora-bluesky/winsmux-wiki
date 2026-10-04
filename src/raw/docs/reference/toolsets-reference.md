@@ -2,7 +2,7 @@
 title: "ツールセット一覧"
 description: "Hermes の中核・複合・プラットフォーム・動的の各ツールセットをまとめた一覧です。"
 upstream_path: reference/toolsets-reference.md
-upstream_blob: 889b7a4d7dd2d02b348fe03906728bcb8ace8863
+upstream_blob: 13a9ab6b2d8d4ae8454a39fabdf900493698b3b2
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 ---
@@ -48,7 +48,7 @@ hermes tools                            # curses UI to enable/disable per platfo
 ```
 /tools list
 /tools disable browser
-/tools enable homeassistant
+/tools enable spotify
 ```
 
 ## 中核ツールセット {#core-toolsets}
@@ -68,7 +68,6 @@ hermes tools                            # curses UI to enable/disable per platfo
 | `feishu_doc` | `feishu_doc_read` | Feishu／Lark の文書の中身を読みます。Feishu の文書コメントに自動で返す仕組みが使います。 |
 | `feishu_drive` | `feishu_drive_add_comment`, `feishu_drive_list_comments`, `feishu_drive_list_comment_replies`, `feishu_drive_reply_comment` | Feishu／Lark のドライブでコメントを扱う操作です。コメント担当のエージェント専用で、`hermes-cli` などのメッセージ系ツールセットには出てきません。 |
 | `file` | `patch`, `read_file`, `search_files`, `write_file` | ファイルを読む、書く、探す、直す操作です。 |
-| `homeassistant` | `ha_call_service`, `ha_get_state`, `ha_list_entities`, `ha_list_services` | Home Assistant を通した家の機器の操作です。`HASS_TOKEN` を設定しているときだけ使えます。 |
 | `computer_use` | `computer_use` | cua-driver を通して、裏でデスクトップを操作します。カーソルや前面の位置を奪いません。ツールを扱えるモデルならどれでも動きます。macOS、Windows、Linux に対応し、`$PATH` の通った場所に `cua-driver` が要ります。 |
 | `context_engine` | (varies) | いま動いている context-engine のプラグインが出すツールです（プラグインが中身を入れるまでは空です）。 |
 | `image_gen` | `image_generate` | FAL.ai を使った、文章からの画像づくりです（希望すれば OpenAI や xAI も使えます）。 |
@@ -98,8 +97,8 @@ hermes tools                            # curses UI to enable/disable per platfo
 
 | ツールセット | `hermes-cli` との違い |
 |---------|-------------------------------|
-| `hermes-cli` | すべてが入ったツールセットで、対話的な CLI セッションで最初から使われます。file、terminal、web、browser、memory、skills、vision、image_gen、todo、tts、delegation、code_execution、cronjob、session_search、clarify、computer_use、Home Assistant、そして kanban のツールが入ります（いずれも実行時に check_fn で判定されます）。 |
-| `hermes-acp` | `clarify`、`cronjob`、`image_generate`、`text_to_speech`、`computer_use`、Home Assistant の四つのツール、kanban のツールを外します。IDE の中でのコードの作業に的を絞っています。 |
+| `hermes-cli` | すべてが入ったツールセットで、対話的な CLI セッションで最初から使われます。file、terminal、web、browser、memory、skills、vision、image_gen、todo、tts、delegation、code_execution、cronjob、session_search、clarify、computer_use、そして kanban のツールが入ります（いずれも実行時に check_fn で判定されます）。 |
+| `hermes-acp` | `clarify`、`cronjob`、`image_generate`、`text_to_speech`、`computer_use`、kanban のツールを外します。IDE の中でのコードの作業に的を絞っています。 |
 | `hermes-api-server` | `clarify`、`text_to_speech`、`computer_use`、kanban のツールを外します。それ以外はそのままで、人が応じられないプログラムからの利用に向いています。 |
 | `hermes-cron` | `hermes-cli` と同じです。 |
 | `hermes-telegram` | `hermes-cli` と同じです。 |
@@ -119,9 +118,10 @@ hermes tools                            # curses UI to enable/disable per platfo
 | `hermes-wecom-callback` | `hermes-cli` と同じです。 |
 | `hermes-weixin` | `hermes-cli` と同じです。 |
 | `hermes-yuanbao` | `hermes-cli` に `yb_*` の五つのツール（DM・グループ・スタンプ）を足します。 |
-| `hermes-homeassistant` | `hermes-cli` と同じです（Home Assistant のツールは初めから入っていて、`HASS_TOKEN` を設定すると動きだします）。 |
 | `hermes-webhook` | 安全な範囲に絞った内容で、`web_search`、`web_extract`、`vision_analyze`、`clarify` だけです。webhook から始まった実行には、端末もファイルもブラウザも渡しません。 |
 | `hermes-gateway` | gateway が内側で使う差配用のツールセットで、`hermes-<platform>` のすべてを合わせたものです。gateway がどんな送り元のメッセージでも受け取る必要があるときに使います。 |
+
+プラグインが提供するプラットフォームには、`hermes-gateway` に含まれない `hermes-<platform>` のまとまりが暗黙に用意されます。たとえば `hermes-homeassistant` は、カタログの `homeassistant` プラグインを入れれば引き続き解決されますが、初めから入っているツールセットではなくなりました。
 
 ## 動的なツールセット {#dynamic-toolsets}
 
@@ -137,7 +137,7 @@ mcp_servers:
     args: ["-y", "@modelcontextprotocol/server-github"]
 ```
 
-こうしてできた `mcp-github` は、`--toolsets` やプラットフォームの設定から名指しできます。サーバー名をそのまま書いた `github` も、別名として使えます。初めから入っているツールセットと同じ名前（`homeassistant`、`browser`）をサーバーに付けた場合、その名前は、初めから入っているツールと、そのサーバーの `mcp__<server>__*` のツールの**両方**を指します。どちらか一方がもう一方を隠すことはありません。
+こうしてできた `mcp-github` は、`--toolsets` やプラットフォームの設定から名指しできます。サーバー名をそのまま書いた `github` も、別名として使えます。初めから入っているツールセットと同じ名前（`browser`、`web`）をサーバーに付けた場合、その名前は、初めから入っているツールと、そのサーバーの `mcp__<server>__*` のツールの**両方**を指します。どちらか一方がもう一方を隠すことはありません。
 
 ### プラグインのツールセット {#plugin-toolsets}
 
@@ -165,7 +165,7 @@ custom_toolsets:
 
 一部のツールには、ツールセットに属しているかどうかとは別に、使えるかどうかの判定がもう一段あります。これらは `all`／`*` だけでは**有効になりません**。
 
-- **前提で決まる**ツール（browser、`computer_use`、`code_execution`、Feishu、Home Assistant、cronjob）は、その裏側の仕組みや資格情報を設定したときだけ現れます。
+- **前提で決まる**ツール（browser、`computer_use`、`code_execution`、Feishu、cronjob）は、その裏側の仕組みや資格情報を設定したときだけ現れます。
 - **進め方で決まる**ツール、つまり `kanban` のツールセットは、あえて自分で入れる形にしてあります。`all`／`*` では kanban は**有効になりません**。`kanban` を名指しで並べるか、`HERMES_KANBAN_TASK` を持つ差配役の作業係である必要があります。kanban のツールは共有している板の状態を書き換えるので、`all` のときでも切ったままにしてあります。
 
 ## `hermes tools` との関係 {#relationship-to-hermes-tools}

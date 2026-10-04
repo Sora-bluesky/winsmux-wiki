@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Unreal Mcp — Unreal Engine のエディタでシーン・アクター・レンダリングを自動化する"
 description: "Unreal Engine のエディタでシーン・アクター・レンダリングを自動化する"
 upstream_path: user-guide/skills/optional/creative/creative-unreal-mcp.md
-upstream_blob: 65aa94e9e1815c746be6c37b433fd360ba172c34
+upstream_blob: 8590766ed7a0bbcd33d515aea421d44c488c0341
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-unreal-mcp
 ---
@@ -129,7 +129,7 @@ Claude Code や Cursor などのための `.mcp.json` 形式のファイルを�
 （プラグインを有効にした、toolset を書いた、`RefreshTools` を実行した）だけにします。
 
 もう一方の先読みモード（Editor Preferences で `Enable Tool Search` を切った状態）は、すべての
-ツールをそれぞれ `mcp_unreal_engine_<tool>` として並べます。この場合、顔ぶれを調べるのは
+ツールをそれぞれ `mcp_unreal_engine_{tool}` として並べます。この場合、顔ぶれを調べるのは
 `hermes mcp install` や `configure` の時点になります。既定はツール検索モードで、この skill も
 それを前提にしています。API 呼び出しのたびにスキーマのトークンを積まずに済むので、そちらを
 選んでください。

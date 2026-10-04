@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 211 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `158fd63`（2026-10-03）時点。この一覧は上流の docs から機械生成しています。
+上流 `af8839d`（2026-10-04）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（58）
 
@@ -26,7 +26,7 @@ raw: /hermes/raw/skills.md
 | [Apple Reminders](/hermes/docs/user-guide/skills/bundled/apple/apple-apple-reminders/) | Apple Reminders via remindctl: add, list, complete | 2026-09-20 |
 | [Findmy](/hermes/docs/user-guide/skills/bundled/apple/apple-findmy/) | Track Apple devices/AirTags via FindMy.app on macOS | 2026-09-20 |
 | [Imessage](/hermes/docs/user-guide/skills/bundled/apple/apple-imessage/) | Send and receive iMessages/SMS via the imsg CLI on macOS | 2026-09-20 |
-| [Claude Code](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/) | Delegate coding to Claude Code CLI (features, PRs) | 2026-09-20 |
+| [Claude Code](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/) | Delegate coding to Claude Code CLI (features, PRs) | 2026-10-04 |
 | [Codex](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/) | Delegate coding to OpenAI Codex CLI (features, PRs) | 2026-09-20 |
 | [Computer Use](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use/) | Drive the desktop background-first; escalate on signal | 2026-09-20 |
 | [Hermes Agent](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/) | Use, configure, theme, extend, and orchestrate Hermes Agent | 2026-09-20 |
@@ -70,7 +70,7 @@ raw: /hermes/raw/skills.md
 | [Codebase Inspection](/hermes/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection/) | Inspect codebases w/ pygount: LOC, languages, ratios | 2026-09-20 |
 | [Dogfood](/hermes/docs/user-guide/skills/bundled/software-development/software-development-dogfood/) | Exploratory QA of web apps: find bugs, evidence, reports | 2026-09-20 |
 | [Github](/hermes/docs/user-guide/skills/bundled/software-development/software-development-github/) | GitHub via gh CLI: PRs, issues, reviews, repos, auth | 2026-09-20 |
-| [Hermes Agent Skill Authoring](/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/) | Author in-repo SKILL.md files: frontmatter and structure | 2026-09-20 |
+| [Hermes Agent Skill Authoring](/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/) | Author in-repo SKILL.md files: frontmatter and structure | 2026-10-04 |
 | [Inspecting Hermes Desktop Dom](/hermes/docs/user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom/) | Read the live Hermes desktop DOM/CSS over CDP | 2026-09-20 |
 | [Node Inspect Debugger](/hermes/docs/user-guide/skills/bundled/software-development/software-development-node-inspect-debugger/) | Debug Node.js via --inspect + Chrome DevTools Protocol CLI | 2026-09-20 |
 | [Python Debugpy](/hermes/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy/) | Debug Python: pdb REPL + debugpy remote (DAP) | 2026-09-23 |
@@ -125,9 +125,9 @@ raw: /hermes/raw/skills.md
 | [Simple English](/hermes/docs/user-guide/skills/optional/creative/creative-simple-english/) | Rewrite text to ASD-STE100 Simplified Technical English | 2026-09-20 |
 | [Sketch](/hermes/docs/user-guide/skills/optional/creative/creative-sketch/) | Throwaway HTML mockups: 2-3 design variants to compare | 2026-09-20 |
 | [Social Media Content Calendar](/hermes/docs/user-guide/skills/optional/creative/creative-social-media-content-calendar/) | Plan multi-platform social campaigns: briefs to posting | 2026-09-20 |
-| [System Atlas](/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/) | Build explorable isometric architecture atlases as HTML | 2026-09-20 |
+| [System Atlas](/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/) | Build explorable isometric architecture atlases as HTML | 2026-10-04 |
 | [Tldraw Offline](/hermes/docs/user-guide/skills/optional/creative/creative-tldraw-offline/) | Drive and script tldraw offline canvases with an agent | 2026-09-20 |
-| [Unreal Mcp](/hermes/docs/user-guide/skills/optional/creative/creative-unreal-mcp/) | Automate Unreal Engine editor scenes, actors, and renders | 2026-09-20 |
+| [Unreal Mcp](/hermes/docs/user-guide/skills/optional/creative/creative-unreal-mcp/) | Automate Unreal Engine editor scenes, actors, and renders | 2026-10-04 |
 | [Jupyter Notebook](/hermes/docs/user-guide/skills/optional/data-science/data-science-jupyter-notebook/) | Iterative Python via live Jupyter kernel (hamelnb) | 2026-09-20 |
 | [Actual Setup](/hermes/docs/user-guide/skills/optional/devops/devops-actual-setup/) | Set up Actual Computer (actual.inc) inference in Hermes | 2026-09-20 |
 | [Docker Management](/hermes/docs/user-guide/skills/optional/devops/devops-docker-management/) | Manage Docker containers, images, volumes, and Compose | 2026-09-20 |

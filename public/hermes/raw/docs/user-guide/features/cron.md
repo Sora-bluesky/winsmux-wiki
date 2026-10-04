@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: bdd214272479c0203f804456057223264a59e8f8
+upstream_blob: 2771e48cb8768a1b5a98efd39dd3749a99fb819c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -543,7 +543,7 @@ doctor がジョブや状態を書き換えることはありません。報告�
 | `"mattermost"` | Mattermost のホームチャンネル | |
 | `"email"` | メール | |
 | `"sms"` | Twilio 経由の SMS | |
-| `"homeassistant"` | Home Assistant | |
+| `"homeassistant"` | Home Assistant（プラグイン） | `HASS_HOME_CHANNEL` を使います。[`homeassistant` プラグイン](/hermes/docs/user-guide/messaging/homeassistant/)が必要です |
 | `"dingtalk"` | DingTalk | |
 | `"feishu"` | Feishu / Lark | |
 | `"wecom"` | WeCom | |

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成"
 description: "リポジトリ内の SKILL.md を書く: フロントマターと構成"
 upstream_path: user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring.md
-upstream_blob: 56c819a27b13fd417e50542ffc2a9f4a8674bfd8
+upstream_blob: 4f0af07a5628d7d7b3557f1a41e270b4c5e86bac
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring
 ---
@@ -149,7 +149,7 @@ metadata:
 
 ### 生のシェルではなく Hermes のツールを挙げます {#reference-hermes-tools-not-raw-shell}
 
-skill が何かの機能を必要とするときは、対応する Hermes のツールをバッククォートで示します: `terminal`, `read_file`, `write_file`, `patch`, `search_files`, `web_search`, `web_extract`, `browser_navigate`, `vision_analyze`, `delegate_task`, `cronjob`。エージェントがすでにラップ済みのシェルコマンドの名前は書かないでください（`grep` → `search_files`、`cat` → `read_file`、`sed`/`awk` → `patch`、`find`/`ls` → `search_files target='files'`）。CLI をラップする skill は、呼び出しを `terminal(command="<tool> ...", timeout=...)` の形で書きます。素のシェルの言い回し（「`foo --version` を実行する」）は、レビューで差し戻される規約違反です。skill が MCP サーバーに依存する場合は、その名前を挙げて Prerequisites に設定方法を書いてください。
+skill が何かの機能を必要とするときは、対応する Hermes のツールをバッククォートで示します: `terminal`, `read_file`, `write_file`, `patch`, `search_files`, `web_search`, `web_extract`, `browser_navigate`, `vision_analyze`, `delegate_task`, `cronjob`。エージェントがすでにラップ済みのシェルコマンドの名前は書かないでください（`grep` → `search_files`、`cat` → `read_file`、`sed`/`awk` → `patch`、`find`/`ls` → `search_files target='files'`）。CLI をラップする skill は、呼び出しを `terminal(command="{tool} ...", timeout=...)` の形で書きます。素のシェルの言い回し（「`foo --version` を実行する」）は、レビューで差し戻される規約違反です。skill が MCP サーバーに依存する場合は、その名前を挙げて Prerequisites に設定方法を書いてください。
 
 ### 自分の端末固有のパスは書きません {#never-use-machine-local-paths}
 

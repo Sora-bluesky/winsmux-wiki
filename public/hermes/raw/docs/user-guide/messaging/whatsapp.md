@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "WhatsApp"
 description: "内蔵の Baileys ブリッジを使って Hermes Agent を WhatsApp のボットとして設定する"
 upstream_path: user-guide/messaging/whatsapp.md
-upstream_blob: b2a85ef627946716738e76a98a4a0e0d19f6d1a0
+upstream_blob: 23b33ff06e3637d9205442a3cfefab99e58c8dcb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/whatsapp
 ---
@@ -32,6 +32,50 @@ WhatsApp は Business API の外にある第三者製のボットを公式には
 :::warning WhatsApp Web のプロトコルの更新
 WhatsApp は Web のプロトコルをときどき更新します。そのたびに第三者のブリッジが一時的に動かなくなることがあります。その場合、Hermes 側でブリッジの依存を更新します。WhatsApp の更新のあとにボットが止まったら、Hermes を最新版にしてから連携をやり直してください。
 :::
+
+## 複数のプロファイル {#multiple-profiles}
+
+ホストのマルチプレクサーは、プロファイルごとに別々の連携済み WhatsApp セッションを扱えます。
+`hermes -p work whatsapp` を実行して2つ目以降のプロファイルを連携し、そのプロファイルで WhatsApp を有効にしてください。
+WhatsApp を有効にしていても `creds.json` がないプロファイルは、
+`whatsapp_unpaired` の状態と、連携に使うコマンドを示したうえでスキップされます。
+
+`platforms.whatsapp.extra.bridge_port` を明示している場合は、その値が優先されます。指定がなければ、
+2つ目以降のプロファイルは 3001〜3999 のうち、ほかのプロファイルの記録が使っていない最初の空きポートを選び、
+次回以降の起動に備えて自分の `platforms/whatsapp/bridge_port` ファイルに保存します。運用する側がポート番号を書いたこのファイルを先に作っておくこともできます。
+ファイルを消すと、新しいポートが割り当てられます。起動したプロファイルはポート 3000 を使います。
+ただし、（2つ目以降のプロファイルとして使われたことがあって）このファイルをすでに持っている場合は、そのゲートウェイも
+`hermes send --to whatsapp:<chat_id>` も、記録されたポートを使い続けます。
+
+2つ目以降のプロファイルが、自分のポートですでに動いているブリッジを引き継ぐのは、自分のセッションの pidfile がそのプロセスを特定できる場合（pid、カーネル上の起動時刻、起動時のポート）だけです。
+これは、ゲートウェイがクラッシュしたときに残る状態です。
+正常に動いていないブリッジは、同じ特定方法で片付けられてから再起動されます。そのポートを使っているそれ以外のプロセスがあると、
+そのプロファイルだけが致命的なエラーになります。`platforms.whatsapp.extra.bridge_port` に別の空きポートを設定するか、
+ポートを使っているプロセスを止めてください。ほかの
+プロファイルは動き続けます。`hermes gateway status --profile work` は、共有の受け口ではなく、
+そのプロファイル自身の WhatsApp アダプターの状態を表示します。
+
+1つのゲートウェイにまとめず、プロファイルごとに別々のゲートウェイを動かす場合は、
+設定しない限りどれもポート 3000 を使います。それぞれのプロファイルの
+`config.yaml` で、別々のポートを割り当ててください。
+
+```yaml
+platforms:
+  whatsapp:
+    extra:
+      bridge_port: 3001        # one distinct port per profile
+```
+
+ゲートウェイは、動いているブリッジを、そのブリッジが `/health` で報告するセッションのディレクトリで見分けます。
+ほかのプロファイルのセッションを扱っているブリッジを引き継ぐことも、止めることもありません。
+このとき2つ目のプロファイルの WhatsApp は、ポートと相手のセッションを示した
+`whatsapp_bridge_foreign_session` で起動に失敗します。ポートを使っているのに `/health` に時間内に応答しないプロセスも、
+そのまま動かしておきます。このとき WhatsApp は、再試行できる
+`whatsapp_bridge_unresponsive` で失敗します。`hermes send --to whatsapp:<chat_id>` と cron の
+配信も同じ項目を確かめ、ほかのプロファイルのブリッジや、`/health` に失敗するブリッジを通しては何も送りません。
+`session_path` を上書きする場合は、プロファイルごとに別の値にしてください。同じ値にすると、プロファイル同士で
+1つの WhatsApp のログインを共有することになります。古い Hermes が起動したブリッジはセッションのディレクトリを報告しないので、
+ブリッジを更新したときと同じように一度だけ再起動されます。
 
 ## 二つの使い方 {#two-modes}
 

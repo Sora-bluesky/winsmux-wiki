@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールをツールセットごとにまとめた公式な一覧"
 upstream_path: reference/tools-reference.md
-upstream_blob: 04d0cf3c2d85791c01b31f1464b3477f2463d08d
+upstream_blob: e955b9d2c4d525d6d386ef9b6875e765601ae199
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -12,7 +12,7 @@ sources:
 
 このページでは、Hermes の組み込みツールをツールセットごとに説明します。何が使えるかは、動かしている環境、資格情報、有効にしているツールセットによって変わります。
 
-**ざっくりした数（現在の登録内容）:** 約 100 個のツールがあります。内訳は、ブラウザ用の中核ツール 10 個、CDP がある場合だけ現れるブラウザツール 2 個、ブラウザの保管庫ツール 5 個、それに `browser_exec`、ファイル操作 4 個、Home Assistant 4 個、ターミナル 2 個（`terminal`、`process_manage`）、デスクトップ GUI 用の 11 個（`read_terminal`、`close_terminal`、`desktop_preview`、`drive_preview`、`annotate_preview`、`read_window_below`、`focus_pane`、`react_to_message`、`gui_tour`、`show_tip`、`apply_layout` — デスクトップアプリのセッション限定）、ウェブ 2 個、Feishu 5 個、Spotify 7 個（同梱の `spotify` プラグインが登録します）、Yuanbao 5 個、かんばん 14 個（かんばんのディスパッチャーがエージェントを起動したときに登録されます）、プロジェクト 1 個（`desktop_project`。デスクトップ / GUI のセッション向け）、Discord 2 個、動画 3 個（`video_generate`、`xai_video_edit`、`xai_video_extend`）、そして単体のツールがいくつか（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob_manage`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`vision_analyze`、`video_analyze`、`todo_list`、`computer_use`、`x_search`）です。
+**ざっくりした数（現在の登録内容）:** 約 100 個のツールがあります。内訳は、ブラウザ用の中核ツール 10 個、CDP がある場合だけ現れるブラウザツール 2 個、ブラウザの保管庫ツール 5 個、それに `browser_exec`、ファイル操作 4 個、ターミナル 2 個（`terminal`、`process_manage`）、デスクトップ GUI 用の 11 個（`read_terminal`、`close_terminal`、`desktop_preview`、`drive_preview`、`annotate_preview`、`read_window_below`、`focus_pane`、`react_to_message`、`gui_tour`、`show_tip`、`apply_layout` — デスクトップアプリのセッション限定）、ウェブ 2 個、Feishu 5 個、Spotify 7 個（同梱の `spotify` プラグインが登録します）、Yuanbao 5 個、かんばん 14 個（かんばんのディスパッチャーがエージェントを起動したときに登録されます）、プロジェクト 1 個（`desktop_project`。デスクトップ / GUI のセッション向け）、Discord 2 個、動画 3 個（`video_generate`、`xai_video_edit`、`xai_video_extend`）、そして単体のツールがいくつか（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob_manage`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`vision_analyze`、`video_analyze`、`todo_list`、`computer_use`、`x_search`）です。
 
 :::tip MCP ツール
 Hermes は組み込みツールに加えて、MCP サーバーからツールを動的に読み込めます。MCP のツールは `mcp__<server>__` という接頭辞付きで現れます（たとえば `github` という MCP サーバーなら `mcp__github__create_issue`）。設定方法は [MCP 連携](/hermes/docs/user-guide/features/mcp/) をご覧ください。
@@ -123,15 +123,6 @@ Feishu の文書コメント処理専用です。ドライブ上のファイル�
 
 手元のファイルについては、伏せ字のない全体の読み取り（同じ版のファイルの全ページを含みます）か、成功した `write_file` があれば、ファイル全体の基準が手に入ります。そのあと一部だけを読み直しても、中身のバイトが変わらないかぎりこの基準は失われません。ファイルが変わった場合、まだ読んでいない場合、伏せ字や省略のある表示しか見ていない場合は、置き換える前にあらためて全体を読む必要があります。`patch` による部分的な編集はそのまま使えます。ターミナルのコマンドや `execute_code` から書き込んでも、`write_file` の基準にはなりません。
 
-## `homeassistant` ツールセット {#homeassistant-toolset}
-
-| ツール | 説明 | 必要な環境 |
-|------|-------------|----------------------|
-| `ha_call_service` | Home Assistant のサービスを呼んで機器を操作します。各ドメインで使えるサービスとその引数は ha_list_services で調べられます。 | — |
-| `ha_get_state` | Home Assistant のエンティティひとつについて、明るさ・色・温度の設定値・センサーの値といった属性も含めた詳しい状態を取得します。 | — |
-| `ha_list_entities` | Home Assistant のエンティティを一覧にします。ドメイン（light、switch、climate、sensor、binary_sensor、cover、fan など）や、エリア名（リビング、キッチン、寝室など）で絞り込めます。 | — |
-| `ha_list_services` | 機器を操作するために使える Home Assistant のサービス（アクション）を一覧にします。機器の種類ごとにどんな操作ができて、どんな引数を取るのかがわかります。ha_list_entities で見つけた機器の動かし方を調べるのに使います。 | — |
-
 ## `computer_use` ツールセット {#computeruse-toolset}
 
 | ツール | 説明 | 必要な環境 |
@@ -140,6 +131,8 @@ Feishu の文書コメント処理専用です。ドライブ上のファイル�
 
 :::note
 **Honcho のツール**（`honcho_profile`、`honcho_search`、`honcho_context`、`honcho_reasoning`、`honcho_conclude`）は組み込みではなくなりました。プラグインカタログにある Honcho メモリープロバイダーのプラグイン（`hermes plugins install honcho` で入れます）として使えます。導入と使い方は [メモリープロバイダー](/hermes/docs/user-guide/features/memory-providers/) をご覧ください。
+
+**Home Assistant のツール**（`ha_list_entities`、`ha_get_state`、`ha_list_services`、`ha_call_service`、ツールセット `homeassistant`）は組み込みではなくなりました。カタログにある `homeassistant` プラグイン（`hermes plugins install homeassistant` で入れます）から提供されます。[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/) をご覧ください。
 :::
 
 ## `image_gen` ツールセット {#imagegen-toolset}

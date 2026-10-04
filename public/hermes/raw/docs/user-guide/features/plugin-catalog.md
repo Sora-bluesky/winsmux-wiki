@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 8005cf156737a8a71b76a2ab42810ab99c57939d
+upstream_blob: 88b4d847ada09146120e0a19b44ac521b387d88e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -46,6 +46,7 @@ hermes plugins install <name>
 | 項目 | 意味 |
 |---|---|
 | `name` | `hermes plugins install` に渡すカタログ上のキー |
+| `description` | カードとインストール時の確認に表示する1行の説明。審査担当からの開示事項もここに含めます |
 | `repo` | そのプラグインの公開 git リポジトリ |
 | `sha` | 審査された**正確な 40 桁の 16 進コミット**。インストールはブランチの先端ではなくこの固定値をチェックアウトします |
 | `subdir` | モノレポの場合に、リポジトリ内のプラグインの場所を示すパス。`[A-Za-z0-9._/-]+` に合うふつうの相対パスにします（`..`、`.`、空の区切り、絶対パスやバックスラッシュの形は不可）（任意。既定はリポジトリの最上位） |
@@ -58,6 +59,7 @@ hermes plugins install <name>
 | `title` | カードに表示する人向けの名前。たとえば `NVIDIA App`（任意。省略時は `name`） |
 | `onboarding` | `true` にすると、デスクトップのオンボーディングカードで、ホスト型コネクタの隣にこのプラグインを並べます。対象は項目に書かれたプラットフォームです。選別されるのは公式の項目だけです（任意、既定は `false`） |
 | `docs_url` | 外部ドキュメントへのリンク（任意） |
+| `known_issues` | インストール時の確認に表示する短い注意書き。たとえば対応していないインストール方法など。知らせるためのもので、インストールを止めることはありません（任意） |
 | `version` | 固定した sha に付ける読みやすいラベル。たとえば `"1.4.0"`。CLI、カタログのカード、デスクトップの **Update to** ボタンでは `1.4.0 @ abcd1234` と表示されます（任意、見た目だけ） |
 | `image` | カタログのカードとプラグインページの見出しに使うバナー画像。2:1 で表示されます（1200×600 が使いやすく、他の比率は中央で切り取られます）。`raw.githubusercontent.com`、`github.com`、`*.githubusercontent.com` 上の `https` URL を指定します（任意）。審査の下で中身が変わらないよう、その項目のコミットに固定してください（`raw.githubusercontent.com/owner/repo/<sha>/...`） |
 | `screenshots` | プラグインページにギャラリーとして並ぶ画像、最大6枚。ホストの条件は `image` と同じです（任意）。これもコミットに固定してください |

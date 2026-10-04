@@ -2,7 +2,7 @@
 title: "インストール"
 description: "デスクトップ版パッケージ、ソースからのインストーラー、Docker、Nix、Termux の APT パッケージで Hermes Agent を導入する"
 upstream_path: getting-started/installation.md
-upstream_blob: c15289d75b92147bfaddc9ed2f516800c87ac548
+upstream_blob: 9409fe15420d0f82bb470d5c59600a7d4f3f1fea
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -169,6 +169,15 @@ Electron をソースからビルドするなら、Node のネイティブモジ
 ビルド用の前提条件は、完成品のデスクトップ版パッケージを入れる場合には当てはまりません。
 Linux の Chromium には、ディストリビューションが提供するシステムライブラリも必要です。
 
+glibc の Linux では、PM が管理する Node.js が `libatomic.so.1` にリンクしています。
+最小構成の Debian、Ubuntu、RHEL 系のイメージには、このライブラリが入っていません。
+ライブラリが見つからないときは、インストーラーと `hermes update` がディストリビューションのパッケージを入れます
+（apt と zypper では `libatomic1`、dnf/yum と apk では `libatomic`、pacman では `gcc-libs`）。
+root で動いていればパッケージマネージャーをそのまま実行し、そうでなければ `sudo -n` で実行します。
+対話的に実行した場合は、依存関係を入れる前に sudo のパスワードを 1 回だけ尋ねます。
+`--non-interactive` で実行した場合は、何も尋ねません。インストールを実行できなかったときは、
+見つかったパッケージマネージャー用の正確なコマンドがエラーに表示されます。
+
 :::tip Nix を使っている方へ
 Nix は **明示的にサポートされるインストール経路ではなくなりました**（ベストエフォートでの対応のみです）。すでに Nix を使っている場合（NixOS、macOS、Linux のいずれでも）、Nix flake、宣言的な NixOS モジュール、任意で使えるコンテナモードを備えた専用のセットアップ経路があります。**[Nix & NixOS のセットアップ](/hermes/docs/getting-started/nix-setup/)** ガイドをご覧ください。
 :::
@@ -212,8 +221,9 @@ Nix は **明示的にサポートされるインストール経路ではなく�
    ```
 
 現在のソースからのインストーラーは、Playwright の `--with-deps` ステップを実行しません。
-パッケージマネージャーごとに sudo で代わりに入れる仕組みもありません。PM が管理するのはツールのバイナリで、
-システムライブラリは管理者が用意します。
+Node.js 用の `libatomic`（前提条件を参照）を除けば、システムのパッケージも入れません。PM が管理するのはツールのバイナリで、
+システムライブラリは管理者が用意します。sudo を使えないサービス用ユーザーには、
+管理者に実行を頼むための正確な `libatomic` のコマンドが表示されます。
 [ブラウザ自動化](/hermes/docs/user-guide/features/browser/) と
 [メッセージングゲートウェイ](/hermes/docs/user-guide/messaging/) をご覧ください。
 

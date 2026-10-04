@@ -2,7 +2,7 @@
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: 61d76c1c02747bcb7132b8fcac73cf3ba4d131e5
+upstream_blob: d29bca692f580975b72a19b279406bffbc4579b9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -769,7 +769,7 @@ MCP の設定を変えたら、次を使ってください。
 /reload-mcp
 ```
 
-設定から MCP サーバーを読み込み直し、使える道具の一覧を作り直します。使える条件が揃ってから出てくる道具（Docker、`HASS_TOKEN`、OAuth など）を調べ直す、はっきりしたやり方でもあります。ふだんセッションの道具立ては固定なので、途中で資格情報や常駐プロセスが現れても、`/reload-mcp`、`/new`、文脈の圧縮のいずれかがないと拾われません。サーバー側から知らされる道具の変化については、上の[動いている最中に道具を見つける](#dynamic-tool-discovery)を見てください。
+設定から MCP サーバーを読み込み直し、使える道具の一覧を作り直します。使える条件が揃ってから出てくる道具（Docker、`HASS_TOKEN` のようなプラグインの資格情報、OAuth など）を調べ直す、はっきりしたやり方でもあります。ふだんセッションの道具立ては固定なので、途中で資格情報や常駐プロセスが現れても、`/reload-mcp`、`/new`、文脈の圧縮のいずれかがないと拾われません。サーバー側から知らされる道具の変化については、上の[動いている最中に道具を見つける](#dynamic-tool-discovery)を見てください。
 
 動いているメッセージングのゲートウェイ（`hermes gateway run`）は、`config.yaml` を自分でも見張っています。`mcp_servers` の項目を消すか `enabled: false` にすると、1 分ほどでそのサーバーとの接続が切られ、新しく足した項目は接続されます。最初の接続に失敗したサーバー（届かないホストや、まだトークンのない画面のない機械で動く OAuth のサーバーなど）は、原因を直しておけば、接続の待ち時間の決まり（30 秒から始まり、最大 10 分まで倍に伸びます）にしたがって自動でつなぎ直されます。編集を反映させるのに、再起動も `/reload-mcp` も要りません。
 

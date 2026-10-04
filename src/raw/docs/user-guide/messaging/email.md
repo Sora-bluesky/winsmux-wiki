@@ -2,7 +2,7 @@
 title: "メール"
 description: "IMAP/SMTP 経由で Hermes Agent をメール応対の相棒として設定する"
 upstream_path: user-guide/messaging/email.md
-upstream_blob: bc0da29640603300ac0a459c800bca1cffac434f
+upstream_blob: 37b3cced272b71a2994d882633001ba5c9df6b1a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/email
 ---
@@ -101,6 +101,10 @@ EMAIL_SMTP_HOST=smtp.gmail.com
 
 # Security (recommended)
 EMAIL_ALLOWED_USERS=your@email.com,colleague@work.com
+# Required: exact authserv-id on your receiving server's topmost
+# Authentication-Results header (Gmail: mx.google.com).
+# That server must strip inbound headers claiming this id before adding its own.
+EMAIL_AUTHSERV_ID=mx.google.com
 
 # Optional
 EMAIL_IMAP_PORT=993                    # Default: 993 (IMAP SSL)
@@ -180,7 +184,9 @@ platforms:
 
 許可リストの項目はアドレス全体で照合します。`alice` のようにドメインのない項目（たとえば `GATEWAY_ALLOWED_USERS` に書いたチャットのユーザー名）は、どのドメインの `alice@` も通しません。そうしたアドレスからのメールは、ペアリングやお断りの対象にもならず、そのまま捨てられます。
 
-Hermes がメッセージに応じるのは、受信側のメールサーバーが付けた `Authentication-Results` ヘッダーで `From:` のドメインが認証されている場合（DMARC、または整合した SPF/DKIM）だけです。これは誰でも受け付ける設定（`EMAIL_ALLOW_ALL_USERS` / `GATEWAY_ALLOW_ALL_USERS`）でも同じです。誰でも受け付ける設定はどの差出人も通しますが、会話もすべての返信も `From:` をもとに振り分けられるので、`From:` が偽装されていると、攻撃者の書いた文面がそのアドレスのセッションに入り、Hermes がそれをメールで送ってしまうからです。ペアリング用のコードとお断りのメールも同じく認証済みの `From:` が必要なので、偽装されたアドレスには送られません。お使いのメールサーバーがこのヘッダーを付けない場合は、危険を承知のうえで `platforms.email.require_authenticated_sender: false`（または `EMAIL_TRUST_FROM_HEADER=true`）を設定してください。設定しないと、受け付ける差出人からのメールでもこのヘッダーがなければ破棄され、ゲートウェイのログに `Dropping sender with unauthenticated From` の警告が出ます。いちばん上の `Authentication-Results` ヘッダー（お使いのサーバーが先頭に付けるもの。それより下のヘッダーは一切参照しません）に、固定した `authserv_id` がそのとおりに書かれていない場合も、同じ警告が出ます。このときは `platforms.email.authserv_id`（`EMAIL_AUTHSERV_ID`）を見直すよう示されます。`authserv_id` は、サーバーが書き込むホスト名と完全に一致させる必要があります。そのホスト名がメッセージごとに変わる場合は、`authserv_id` を設定しないでください。`EMAIL_ALLOWED_USERS` / `GATEWAY_ALLOWED_USERS` に載っているアドレスからのメールが、それ以外の理由で認証に失敗した場合（たとえば差出人の DKIM が壊れている、転送サービスが整合を崩しているなど）も、同じ警告とその判定結果を添えて破棄されます。この場合、無効にする方法の案内は出ません。それ以外の差出人の認証に失敗したメール（誰でも受け付ける設定での偽装された `From:` など）は、何も知らせずに破棄され、debug レベルのログにだけ記録されます。
+Hermes がメッセージに応じるのは、受信側のメールサーバーが付けた `Authentication-Results` ヘッダーで `From:` のドメインが認証されている場合（DMARC、または整合した SPF/DKIM）だけです。これは誰でも受け付ける設定（`EMAIL_ALLOW_ALL_USERS` / `GATEWAY_ALLOW_ALL_USERS`）でも同じです。誰でも受け付ける設定はどの差出人も通しますが、会話もすべての返信も `From:` をもとに振り分けられるので、`From:` が偽装されていると、攻撃者の書いた文面がそのアドレスのセッションに入り、Hermes がそれをメールで送ってしまうからです。ペアリング用のコードとお断りのメールも同じく認証済みの `From:` が必要なので、偽装されたアドレスには送られません。お使いのメールサーバーがこのヘッダーを付けない場合は、危険を承知のうえで `platforms.email.require_authenticated_sender: false`（または `EMAIL_TRUST_FROM_HEADER=true`）を設定してください。設定しないと、受け付ける差出人からのメールでもこのヘッダーがなければ破棄され、ゲートウェイのログに `Dropping sender with unauthenticated From` の警告が出ます。いちばん上の `Authentication-Results` ヘッダー（お使いのサーバーが先頭に付けるもの。それより下のヘッダーは一切参照しません）に、固定した `authserv_id` がそのとおりに書かれていない場合も、同じ警告が出ます。このときは `platforms.email.authserv_id`（`EMAIL_AUTHSERV_ID`）を見直すよう示されます。`authserv_id` は、そのヘッダーの最初の `;` より前にサーバーが書き込む authserv-id と完全に一致させる必要があります。`EMAIL_ALLOWED_USERS` / `GATEWAY_ALLOWED_USERS` に載っているアドレスからのメールが、それ以外の理由で認証に失敗した場合（たとえば差出人の DKIM が壊れている、転送サービスが整合を崩しているなど）も、同じ警告とその判定結果を添えて破棄されます。この場合、無効にする方法の案内は出ません。それ以外の差出人の認証に失敗したメール（誰でも受け付ける設定での偽装された `From:` など）は、何も知らせずに破棄され、debug レベルのログにだけ記録されます。
+
+**送信者の認証を有効にしている間は、`authserv_id` の固定が必須です。** `platforms.email.authserv_id`（`EMAIL_AUTHSERV_ID`）がないと、Hermes はお使いのサーバーの `Authentication-Results` ヘッダーと、差出人が書いたヘッダーとを見分けられません（自分ではヘッダーを付けない自前の MTA だと、差出人のヘッダーがいちばん上に残ります）。そのため、どのヘッダーも信用しません。認証済みの `From:` が必要なメッセージはすべて破棄され、ゲートウェイのログにはその旨が直し方とともに一度だけ出ます。設定する値は、サーバーが届けたメッセージを1通開き（「メッセージのソースを表示」や「原文を表示」など）、**いちばん上の** `Authentication-Results` ヘッダーで最初の `;` より前にある文字列を写して調べます。Gmail なら `mx.google.com` のようになります。この文字列がメッセージごとに変わるように見える場合、それは authserv-id ではなく、中継サーバーごとのホスト名です。RFC 8601 は authserv-id を管理ドメインを表す変わらない名前と定めているので、MTA 側で決まった名前を付けるように設定し（たとえば OpenDKIM / OpenDMARC の `AuthservID`）、その名前を固定してください。id が一致しても、それは固定であって出どころの証明ではありません。お使いの MTA が、自分のヘッダーを先頭に付ける前に、その id を名乗る受信済みの `Authentication-Results` ヘッダーを取り除いているかを確かめてください。変わらない id を固定できない場合は、`platforms.email.require_authenticated_sender: false`（または `EMAIL_TRUST_FROM_HEADER=true`）で明示的に無効にし、`From:` が書かれたとおりに信用されることを受け入れてください。
 
 :::warning
 **普段の運用では、専用の受信箱を用意して `EMAIL_ALLOWED_USERS` を設定してください。** メールのペアリングを既定で切ってあるのは、共有の受信箱には関係のない未読メールが溜まりがちで、Hermes がその相手に勝手に返事をするべきではないからです。
@@ -194,7 +200,7 @@ Hermes がメッセージに応じるのは、受信側のメールサーバー�
 |---------|----------|
 | 起動時に **"IMAP connection failed"** と出る | `EMAIL_IMAP_HOST` と `EMAIL_IMAP_PORT` を確かめてください。アカウントで IMAP が有効かどうかも見ます。Gmail なら設定の「メール転送と POP/IMAP」から有効にします。 |
 | 起動時に **"SMTP connection failed"** と出る | `EMAIL_SMTP_HOST` と `EMAIL_SMTP_PORT` を確かめてください。パスワードが合っているかも見ます（Gmail ならアプリパスワードを使います）。 |
-| **メールが届かない** | `EMAIL_ALLOWED_USERS` に差出人のアドレスが入っているか確かめてください。迷惑メールフォルダも見ます。自動返信を迷惑メール扱いにする提供元があります。 |
+| **メールが届かない** | `EMAIL_ALLOWED_USERS` に差出人のアドレスが入っているか確かめてください。ゲートウェイのログに `authserv-id is not configured` と出ている場合は、サーバーが書き込むいちばん上の `Authentication-Results` ヘッダーにある id をそのまま `EMAIL_AUTHSERV_ID` に設定してください。迷惑メールフォルダも見ます。自動返信を迷惑メール扱いにする提供元があります。 |
 | **"Authentication failed"** と出る | Gmail では普段のパスワードではなくアプリパスワードが必要です。先に二段階認証を有効にしてください。 |
 | **同じ返信が二重に届く** | ゲートウェイが一つだけ動いているか確かめてください。`hermes gateway status` で見られます。 |
 | **返事が遅い** | 巡回の間隔は既定で 15 秒です。`EMAIL_POLL_INTERVAL=5` にすると速くなります（そのぶん IMAP への接続は増えます）。 |
@@ -210,6 +216,7 @@ Hermes がメッセージに応じるのは、受信側のメールサーバー�
 
 - 主なパスワードではなく**アプリパスワード**を使います（二段階認証を使う Gmail では必須です）
 - `EMAIL_ALLOWED_USERS` を設定して、エージェントとやりとりできる相手を絞ります
+- `EMAIL_AUTHSERV_ID` に、受信側 MTA がいちばん上の `Authentication-Results` に付ける id をそのまま設定し、その MTA がこの id を名乗る受信済みのヘッダーを取り除いていることを確かめます
 - パスワードは `~/.hermes/.env` に保存されます。このファイルは守ってください（`chmod 600`）
 - 既定では IMAP が SSL（ポート 993）、SMTP が STARTTLS（ポート 587）を使います。通信は暗号化されます
 
@@ -227,5 +234,6 @@ Hermes がメッセージに応じるのは、受信側のメールサーバー�
 | `EMAIL_SMTP_PORT` | いいえ | `587` | SMTP サーバーのポート |
 | `EMAIL_POLL_INTERVAL` | いいえ | `15` | 受信箱を見に行く間隔（秒） |
 | `EMAIL_ALLOWED_USERS` | いいえ | — | 許可する差出人アドレスをカンマ区切りで |
+| `EMAIL_AUTHSERV_ID` | はい（送信者の認証を無効にしている場合を除く） | — | 受信側サーバーがいちばん上の `Authentication-Results` ヘッダーに書く authserv-id をそのまま。ないと、認証済みの `From:` が必要なメッセージはすべて破棄されます |
 | `EMAIL_HOME_ADDRESS` | いいえ | — | cron ジョブの既定の宛先 |
 | `EMAIL_ALLOW_ALL_USERS` | いいえ | `false` | すべての差出人を許可（おすすめしません） |

@@ -1,6 +1,153 @@
 {
-  "generatedAt": "2026-10-04",
+  "generatedAt": "2026-10-05",
   "entries": [
+    {
+      "date": "2026-10-04",
+      "sha": "ef4788a",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/plugins/application-declarations",
+          "title": "アプリケーション宣言",
+          "url": "/hermes/docs/developer-guide/plugins/application-declarations/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "developer-guide/stable-releases",
+          "title": "安定版リリースの受け入れと昇格",
+          "url": "/hermes/docs/developer-guide/stable-releases/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "reference/profile-commands",
+          "title": "プロファイルのコマンド早見表",
+          "url": "/hermes/docs/reference/profile-commands/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/configuring-models",
+          "title": "モデルの設定",
+          "url": "/hermes/docs/user-guide/configuring-models/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/codex-app-server-runtime",
+          "title": "Codex App-Server ランタイム（任意）",
+          "url": "/hermes/docs/user-guide/features/codex-app-server-runtime/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
+          "id": "user-guide/features/goals",
+          "title": "続く目標（Goal）",
+          "url": "/hermes/docs/user-guide/features/goals/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "スキルの仕組み",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
+          "id": "user-guide/features/subscription-proxy",
+          "title": "契約の中継サーバー",
+          "url": "/hermes/docs/user-guide/features/subscription-proxy/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/features/web-search",
+          "title": "Web 検索と本文抽出",
+          "url": "/hermes/docs/user-guide/features/web-search/"
+        },
+        {
+          "id": "user-guide/local-models",
+          "title": "ローカルモデル",
+          "url": "/hermes/docs/user-guide/local-models/"
+        },
+        {
+          "id": "user-guide/messaging/discord",
+          "title": "Discord",
+          "url": "/hermes/docs/user-guide/messaging/discord/"
+        },
+        {
+          "id": "user-guide/messaging/email",
+          "title": "メール",
+          "url": "/hermes/docs/user-guide/messaging/email/"
+        },
+        {
+          "id": "user-guide/messaging/matrix",
+          "title": "Matrix",
+          "url": "/hermes/docs/user-guide/messaging/matrix/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/profile-distributions",
+          "title": "プロファイル配布: エージェントまるごと共有する",
+          "url": "/hermes/docs/user-guide/profile-distributions/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        }
+      ]
+    },
     {
       "date": "2026-10-03",
       "sha": "77bdae7",

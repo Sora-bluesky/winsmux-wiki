@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインカタログへの登録申請"
 description: "Hermes プラグインカタログの登録ガイドライン全文です。申請前に確かめること、すべての掲載項目が従うルール、レビュアーが見る点をまとめています"
 upstream_path: developer-guide/plugins/catalog-submission.md
-upstream_blob: 05943bf1dda91a57d7cc5e4eddef9d01ca143458
+upstream_blob: 4eb0ac6813368fdc6960e29f6f828a427c8e0456
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission
 ---
@@ -72,7 +72,7 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
 
 ## 登録ルール {#admission-rules}
 
-<!-- admission-rules:start (mirrored in website/docs/developer-guide/plugins/catalog-submission.md; tests/plugin_catalog keeps them identical) -->
+<!-- admission-rules:start (mirrored in website/docs/developer-guide/plugins/catalog-submission.md; tests/website/test_catalog_rules_mirror.py keeps them identical) -->
 1. **人がマージする関門。** 掲載項目の追加は、`hermes-agent` リポジトリへの PR を
    メンテナーがレビューしてマージする方法*だけ*で行われます。
    自分で登録できるレジストリも、自動の取り込みもありません。

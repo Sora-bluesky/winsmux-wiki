@@ -2,7 +2,7 @@
 title: "アーキテクチャ"
 description: "Hermes Agent の内部構造 — 主要なサブシステム、実行経路、データの流れ、次に読むべき場所"
 upstream_path: developer-guide/architecture.md
-upstream_blob: 85fc06e3910f45184112c81951de09322ebac1ab
+upstream_blob: 1ceb6e1a6a0725c3949ddffba65984fb9851f442
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/architecture
 ---
@@ -125,8 +125,9 @@ hermes-agent/
 │
 ├── plugins/platforms/        # Bundled platform plugins: telegram, discord, slack,
 │                             #   whatsapp, matrix, mattermost, email, sms, dingtalk,
-│                             #   feishu, wecom, homeassistant, irc, line, teams,
-│                             #   google_chat, buzz, ntfy, photon, raft, simplex
+│                             #   feishu, wecom, irc, line, teams, google_chat,
+│                             #   buzz, ntfy, photon, raft, simplex
+│                             #   (Home Assistant: `homeassistant` catalog plugin)
 │
 ├── acp_adapter/              # ACP server (VS Code / Zed / JetBrains)
 ├── cron/                     # Scheduler (jobs.py, scheduler.py)

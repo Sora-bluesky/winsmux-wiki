@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: 6595498011751e8073d53db7c9613ce0e4b3f439
+upstream_blob: 1c26cba011c0ac45daccf42f0fe569a3f7b9a771
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -344,7 +344,7 @@ cron ジョブの結果は、対応しているどのプラットフォームに
 | メール | `email`, `email:<address>` | `email:alerts@example.com` |
 | Weixin | `weixin`, `weixin:<wxid>` | `weixin:wxid_abc123` |
 | Mattermost | `mattermost` または `mattermost:<channel_id>` | 名前だけなら Mattermost のホームへ届きます |
-| Home Assistant | `homeassistant` または `homeassistant:<conversation>` | 名前だけなら HA の会話へ届きます |
+| Home Assistant（プラグイン） | `homeassistant` または `homeassistant:<notify target>` | 名前だけなら `HASS_HOME_CHANNEL` へ届きます。`homeassistant` のカタログプラグインが必要です |
 | DingTalk | `dingtalk` または `dingtalk:<chat_id>` | 名前だけなら DingTalk へ届きます |
 | WeCom | `wecom` または `wecom:<chat_id>` | 名前だけなら WeCom へ届きます |
 | BlueBubbles | `bluebubbles` または `bluebubbles:<chat_guid>` | 名前だけなら BlueBubbles 経由で iMessage へ届きます |
