@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: d4ea6fd0d87079f7a5497daeaa01d482faccf392
+upstream_blob: b1c31b3339f118458516f1ae36b5bb130e3ea05a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -472,10 +472,13 @@ def register(ctx):
 | `subagent_start` | 観測役 | 子が組み立てられ、これから動くところ。戻り値は無視されます。 | `parent_session_id`、`parent_turn_id`、`parent_subagent_id`、`child_session_id`、`child_subagent_id`、`child_role`、`child_goal` | 子の目的に利用者やプロジェクトの内容が含まれることがあります。 |
 | `subagent_stop` | 観測役 | 子の終了。戻り値は無視されます。 | `parent_session_id`、`parent_turn_id`、`child_session_id`、`child_role`、`child_summary`、`child_status`、`tool_call_history`、`duration_ms` | 要約と、伏せ字にしたツールの履歴の情報から、プロジェクトの構成が読み取れることがあります。 |
 | `pre_gateway_dispatch` | 指示 / 制御 | 内部のものでない受信メッセージについて、認証 / ペアリング / 振り分けの前。最初の有効な `skip`、`rewrite`、`allow` が流れを決めます。 | `event`、`gateway`、`session_store` | 極めて強い権限を持つプロセス内のオブジェクトで、受信した利用者 / 経路のデータとホストの操作手段が見えます。 |
+| `post_gateway_admission` | 指示 / 制御（失敗時は通す） | 内部のものでないメッセージが受け入れられたあと。認証、一時停止 / 退避、返信待ち、実行中のセッション、スラッシュコマンドの各経路を抜けたあとで、確保済みのセッションの枠と、振り分け先のプロファイルの範囲の中で動きます。最初の `handled` の結果がエージェントのやり取りを飛ばし、それ以外（例外や時間切れを含みます）ではやり取りが動きます。 | `session_key`、`platform`、`source`（辞書の写し）、`message_id`、`text` | 受信した文章は信頼できない利用者のデータです。runner やセッションの保管庫の操作手段は渡されません。 |
 | `gateway_platform_event` | 観測役 | ゲートウェイのプロファイル単位の認可が通ったあと、対応するプラットフォーム固有のイベントがゲートウェイの境界で正規化されたとき（Telegram: リアクション、メッセージの編集。Discord: メッセージの編集 / 削除、スレッドの作成 / 改名）。戻り値は無視されます。 | `platform`、`event_type`、`payload`（イベント種別ごとの辞書 — 下のイベントごとの約束を参照） | 正規化された素の辞書の包みだけです。素の SDK のオブジェクト、アダプターの操作手段、ボットのクライアントが出ることはありません。 |
 | `pre_command` | 観測役 | 認識されたスラッシュコマンドがこれから振り分けられるところ、処理が動く前。CLI とゲートウェイの通常の振り分けで発火します。v1 では戻り値は無視されます（指示の形の辞書はデバッグで記録されます）。ゲートウェイで実行中のエージェントに割り込むコマンド（実行中の `/stop`、`/approve`）は意図して外してあります。制御のための逃げ道は、プラグインの手の届かないところに置く必要があります。 | `surface`（`"cli"` \| `"gateway"`）、`command`（正準の名前）、`alias_used`、`args_raw`、`session_key`、`platform` | `args_raw` には、コマンドのあとに打たれた利用者の内容や秘密の情報が含まれることがあります。 |
 | `pre_approval_request` | 観測役 | 問い合わせ、あるいは賢い承認の前。戻り値は無視されます。 | `command`、`description`、`pattern_key`、`pattern_keys`、`session_key`、`surface`、`turn_id`、`tool_call_id` | コマンドに秘密の情報が含まれることがあります。賢い観測の準備では伏せ字が強制されますが、入口によって伏せ字の扱いが同じとは限りません。 |
 | `post_approval_response` | 観測役 | 判断、時間切れ、あるいはゲートウェイの通知の失敗のあと。戻り値は無視されます。 | `command`、`description`、`pattern_key`、`pattern_keys`、`session_key`、`surface`、`turn_id`、`tool_call_id`、`choice`。賢い経路では `decided_by` が加わることがあります | コマンドの機微さは同じで、加えて判断の情報。 |
+| `on_human_input_request` | 観測役 | エージェントが人の入力を待って止まろうとするとき — sudo のパスワードの問い合わせ、`clarify` の質問、危険なコマンドの承認 — で、CLI、Ink の TUI / デスクトップ、ACP、ゲートウェイのプラットフォームが対象です。戻り値は無視されます。 | `kind`（`"sudo"` \| `"clarify"` \| `"approval"`）、`request_id`、`session_id`、`session_key`、`platform`、`prompt` | `prompt` は必ず伏せ字にされます。入力されたパスワードや答えが渡ることはありません。 |
+| `on_human_input_resolved` | 観測役 | `on_human_input_request` 1 回につきちょうど 1 回、待ちが終わったとき（答えた、飛ばした、時間切れ、取り下げ、失敗）。戻り値は無視されます。 | 要求と同じものに `outcome` が加わります | 結果だけで、答えそのものは渡りません。 |
 | `on_room_member_activity` | 観測役 | Bot モードのゲートウェイで、ホストされたグループチャットのメンバーのやり取りが動いている間、メンバーのセッションが出す実行時のイベント（ツールの開始 / 完了、承認の要求、メッセージ / 推論の差分、エラー）ごとに 1 回。受け手ごとにトークンの経路の外で待ち行列に入ります。戻り値は無視されます。 | `room_id`、`thread_id`、`member_id`、`turn_id`、`task_id`、`execution_generation`、`kind`、`seq`、`payload` | `payload` はクライアントに渡して安全なセッションのイベントの本体です。ツールの引数と結果、伏せ字にした承認のコマンド、逐次に流れるメンバーの文章。 |
 | `kanban_task_claimed` | 観測役 | 取り掛かりが確定したあと、ワーカーの起動の前にディスパッチャーのプロセスで。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id` | 盤 / タスク / プロファイル / 担当者の識別子。 |
 | `kanban_task_completed` | 観測役 | 完了と片付けのあと、ふつうはワーカーのプロセスで。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id`、`summary` | 要約にプロジェクトや利用者の内容が含まれることがあります。 |
@@ -1264,6 +1267,27 @@ def register(ctx):
 
 ---
 
+### `post_gateway_admission` {#postgatewayadmission}
+
+ゲートウェイで、**受け入れられた内部のものでないメッセージ 1 通につき 1 回**発火します。認可、ボットの受け入れ、一時停止 / 退避、返信待ちの割り込み（clarify、確認）、実行中のセッションの経路（進路の修正、処理中のコマンド）、待機中のスラッシュコマンドの振り分けを抜けたあとです。断られたもの、無視されたもの、内部のもの、制御のためのやり取りがここに届くことはありません。確保済みのセッションの枠の中で動くので、同じチャットに同時に来たメッセージはこの後ろで順番を待ちます。また、そのメッセージの**振り分け先のプロファイル**の範囲で動くので、走るのはそのプロファイルのプラグインだけです。
+
+メッセージを引き取るには `{"action": "handled", "reply": "..."}` を返します。エージェントのやり取りは飛ばされ、`reply`（空でない文字列のとき）がふだんの経路で届けられます。`reply` を省けば、何も返さずに引き取ります。それ以外の戻り値では、ふだんどおりエージェントのやり取りが動きます。
+
+```python
+def consume(session_key, platform, source, message_id, text, **kwargs):
+    if not text.startswith("follow up:"):
+        return None                       # ordinary agent turn
+    enqueue_follow_up(source, text)       # commit your own durable state first
+    return {"action": "handled", "reply": "Got it - queued."}
+
+def register(ctx):
+    ctx.register_hook("post_gateway_admission", consume)
+```
+
+**失敗時は通します。** 例外を出した、時間切れになった（`plugins.hook_callback_timeout`）、あるいは別のものを返したコールバックはログに記録され、メッセージはエージェントへ進みます。不具合のあるプラグイン 1 つが、プロファイルのやり取りを止めてしまうことはありません。失敗時に止める動きが必要なプラグインは、自分でエラーを受け止め、自前の失敗の返信を付けて `handled` を返します。渡される中身は写しです（`source` は `SessionSource.to_dict()`）。アダプターから直接送らず、代わりに `reply` を返してください。重複の除去と、確実に受け付けたことを残すのはプラグインの責任です。
+
+---
+
 ### `gateway_platform_event` {#gatewayplatformevent}
 
 対応しているプラットフォーム固有のイベントについて、ゲートウェイの通常のプロファイル単位の認可の判定が通った**あと**にだけ発火します。コールバックが受け取るのは素の辞書です。SDK のオブジェクト、アダプターの操作手段、ボットのクライアント、コールバックの文脈が、この安定した約束の一部になることはありません。
@@ -1307,7 +1331,7 @@ def register(ctx):
 
 ### `pre_approval_request` {#preapprovalrequest}
 
-承認の判断が求められる前に発火します。問い合わせを出す入口 — 対話型の CLI、Ink の TUI、ゲートウェイのプラットフォーム、ACP のクライアント — と、人に尋ねずに決まる `approvals.mode=smart` の判断（`surface="smart"`）を対象にします。賢いモードでは、補助の LLM が呼ばれる前にこのフックが動きます。
+承認の判断が求められる前に発火します。問い合わせを出す入口 — 対話型の CLI、Ink の TUI、ゲートウェイのプラットフォーム、ACP のクライアント — で、保護されたエージェントの指示ファイルへの書き込みの確認や、MCP / 保管庫の同意の確認も含みます。加えて、人に尋ねずに決まる `approvals.mode=smart` の判断（`surface="smart"`）を対象にします。賢いモードでは、補助の LLM が呼ばれる前にこのフックが動きます。
 
 独自の通知を組み込むならここが適しています。たとえば、許可 / 拒否の通知を出す macOS のメニューバーのアプリや、承認の要求を文脈ごと記録する監査のログです。
 
@@ -1332,7 +1356,7 @@ def my_callback(
 | `pattern_key` | `str` | 承認を起こした主な型のキー（たとえば `"rm_rf"`、`"sudo"`） |
 | `pattern_keys` | `list[str]` | 一致したすべての型のキー |
 | `session_key` | `str` | セッションの識別子。チャットごとに通知を分けるのに便利です |
-| `surface` | `str` | 対話型の CLI / TUI の問い合わせなら `"cli"`、プラットフォームの非同期の承認なら `"gateway"`、補助の LLM による自動の許可 / 拒否なら `"smart"` |
+| `surface` | `str` | 従来の対話型 CLI の問い合わせ（危険なコマンド、保護されたエージェントの指示ファイルへの書き込み、同意の確認）なら `"cli"`、プラットフォームの非同期の承認なら `"gateway"`（Ink の TUI とデスクトップアプリも、いまは `"gateway"` を報告します）、補助の LLM による自動の許可 / 拒否なら `"smart"`、MCP / 保管庫の確認なら呼び出し元の同意の入口（`"mcp-elicitation/<server>"`、`"mcp-trust/<server>"`、`"vault-payment"`） |
 
 **戻り値:** 無視されます。ここのフックは観測専用で、承認を覆したり先回りして答えたりはできません。ツールが承認の仕組みに届く前に遮るには [`pre_tool_call`](#pre_tool_call) を使ってください。
 
@@ -1392,6 +1416,69 @@ def log_decision(command, choice, session_key, **kwargs):
 
 def register(ctx):
     ctx.register_hook("post_approval_response", log_decision)
+```
+
+---
+
+### `on_human_input_request` {#onhumaninputrequest}
+
+Hermes が、人が何かを入力したりクリックしたりするのを待って止まる直前に発火します。どんな問い合わせでも、どこに出るものでも対象です。止まって待つ問い合わせはすべてこの 1 組のフックで拾えるので、通知（「Hermes があなたの返事を待っています」）を作るときに、問い合わせの種類ごとに別のフックを購読したり、ツールの引数を型で見分けたりする必要はありません。
+
+| `kind` | 問い合わせ | 出る場所 |
+|--------|--------|----------|
+| `"sudo"` | `sudo` のコマンドが走る前の、伏せ字で入力する sudo のパスワードの問い合わせ | 対話型の CLI、Ink の TUI / デスクトップ（`sudo.request` のカード）、`/dev/tty` への切り替え |
+| `"clarify"` | `clarify` ツールの質問 | CLI、Ink の TUI / デスクトップ、ゲートウェイのプラットフォーム |
+| `"approval"` | 危険なコマンド / 書き込みの承認、MCP の elicitation の同意、プラグインの承認の経路 | CLI、Ink の TUI / デスクトップ、ACP、ゲートウェイのプラットフォーム、`ctx.register_approval_transport` のプラグイン |
+
+補助の LLM が下す `approvals.mode=smart` の判断では、人に尋ねないので発火しません。すでに保留中の同じ問い合わせに合流するゲートウェイの承認でも発火しません（人に見えるのは 1 つの問い合わせで、この 1 組はそれに対して 1 回だけ発火します）。種類はあとから増えることがあるので、扱わない種類は無視してください。
+
+**コールバックの形:**
+
+```python
+def my_callback(kind: str, request_id: str, session_id: str, session_key: str,
+                platform: str, prompt: str, **kwargs):
+```
+
+| 引数 | 型 | 説明 |
+|-----------|------|-------------|
+| `kind` | `str` | `"sudo"`、`"clarify"`、`"approval"` のいずれか |
+| `request_id` | `str` | 問い合わせごとに一意です。対応する `on_human_input_resolved` にも同じ値が入ります |
+| `session_id` | `str` | 分かっていれば Hermes のセッション ID、分からなければ `""` |
+| `session_key` | `str` | セッション / チャットの振り分けのキー。チャットごとに通知を分けるのに便利です |
+| `platform` | `str` | ゲートウェイのプラットフォーム（`"telegram"`、`"discord"`、...）か、手元の入口（`"cli"`、`"tui"`、`"desktop"`、...） |
+| `prompt` | `str` | 人に尋ねている中身です。`sudo`/`approval` ならコマンド、`clarify` なら質問の文章です。`security.redact_secrets` が無効でも、必ず秘密の伏せ字処理を通してあります |
+
+sudo のパスワードと clarify の答えは、どちらのフックにも**決して**渡りません。**戻り値:** 無視されます。例外を出したコールバックはログに記録され、問い合わせはそのまま進みます。コールバックはこれから止まるスレッドの上で動くので、手早く済ませてください。ネットワークの呼び出し（プッシュ通知のサービス、Webhook）は裏のスレッドに任せます。
+
+### `on_human_input_resolved` {#onhumaninputresolved}
+
+`on_human_input_request` 1 回ごとに、待ちが終わったあとちょうど 1 回発火します。引数は同じで、`outcome` が加わります。
+
+| `kind` | `outcome` の値 |
+|--------|------------------|
+| `"sudo"` | `"provided"`、`"skipped"`（空の答え）、`"timeout"`、`"cancelled"`、`"error"` |
+| `"clarify"` | 入口ごとの結果: `"submitted"`、`"timed_out"`、`"cancelled"`、`"undelivered"`、`"terminated"`、`"error"` のいずれか |
+| `"approval"` | `"once"`、`"session"`、`"always"`、`"deny"`、`"timeout"`、`"cancelled"`、`"notify_failed"`、またはプラグインの経路が失敗したときの `"transport_<failure>"` |
+
+```python
+
+def push_notification(text):
+    ...  # call your push service here
+
+def register(ctx):
+    pending = {}
+
+    def on_request(kind, request_id, prompt, session_key, **kwargs):
+        pending[request_id] = threading.Timer(30, push_notification, (f"Hermes needs you ({kind}): {prompt[:80]}",))
+        pending[request_id].start()  # only page if nobody answers within 30s
+
+    def on_resolved(request_id, **kwargs):
+        timer = pending.pop(request_id, None)
+        if timer:
+            timer.cancel()
+
+    ctx.register_hook("on_human_input_request", on_request)
+    ctx.register_hook("on_human_input_resolved", on_resolved)
 ```
 
 ---

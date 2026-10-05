@@ -2,7 +2,7 @@
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: 6ce818afec34c64ed3e1ec38ceb982f2b7691370
+upstream_blob: 67d529647a4eab21cde3ae883fbb835fb82dd054
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---
@@ -168,17 +168,16 @@ memory(action="replace", target="memory",
 ```json
 {
   "success": false,
-  "error": "Memory at 2,100/2,200 chars. Adding this entry (250 chars) would exceed the limit. Consolidate now: use 'replace' to merge overlapping entries into shorter ones or 'remove' stale or less important entries (see current_entries below), then retry this add — all in this turn.",
+  "error": "Memory at 2,100/2,200 chars; adding this entry (250 chars) would exceed the limit by 153 chars. Retry as ONE 'operations' batch that removes or shortens (replace) stale entries from current_entries below to free at least 153 chars AND adds this entry — the limit is checked only on the batch result.",
   "current_entries": ["..."],
   "usage": "2,100/2,200"
 }
 ```
 
-エージェントはそのあと、こう動くはずです。
-1. いまの項目を読む（エラーの応答に載っています）
-2. 消せる項目、まとめられる項目を見つける
-3. `replace` で近い項目どうしをより短い形にまとめる
-4. そのうえで新しい項目を `add` する
+エージェントはそのあと、示された文字数以上を空け（項目を消すか、`replace` でより短くします）、
+新しい項目も足す `operations` のバッチを1つにまとめて出し直します。上限が確かめられるのは、
+バッチを最後まで当てた結果に対してだけです。`old_text` がどの項目にも当たらない `replace`/`remove` も
+同じように失敗し、いちばん近い項目が `closest_entries` に入って返ります。
 
 **うまいやり方:** 記憶が容量の 80% を超えたら（システムプロンプトの見出しで分かります）、新しいものを足す前に項目をまとめてください。たとえば「この案件は X を使う」という3つの別々の項目を、案件全体を言い表す1つの項目にまとめます。
 

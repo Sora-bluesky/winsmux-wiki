@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-05",
+  "generatedAt": "2026-10-06",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-10-05",
-      "attemptedAt": "2026-10-05",
+      "fetchedAt": "2026-10-06",
+      "attemptedAt": "2026-10-06",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -79,19 +79,19 @@
           "criteriaReason": null
         },
         {
-          "id": "stealth/space-bunny-alpha",
-          "name": "Space Bunny Alpha",
-          "ctx": 1000000,
+          "id": "stepfun/step-3.7-flash:free",
+          "name": "StepFun: Step 3.7 Flash",
+          "ctx": 262144,
           "tools": true,
-          "expires": "2026-10-05",
+          "expires": null,
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null
         },
         {
-          "id": "stepfun/step-3.7-flash:free",
-          "name": "StepFun: Step 3.7 Flash",
-          "ctx": 262144,
+          "id": "upstage/solar-mini4:free",
+          "name": "Upstage: Solar Mini 4",
+          "ctx": 524288,
           "tools": true,
           "expires": null,
           "freeBasis": "pricing",
@@ -103,8 +103,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-10-05",
-      "attemptedAt": "2026-10-05",
+      "fetchedAt": "2026-10-06",
+      "attemptedAt": "2026-10-06",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -289,26 +289,6 @@
           "criteriaReason": null
         },
         {
-          "id": "qwen/qwen3.8-27b:free",
-          "name": "Qwen: Qwen3.8 27B (free)",
-          "ctx": 262144,
-          "tools": true,
-          "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
-          "id": "stealth/space-bunny-alpha",
-          "name": "Space Bunny Alpha",
-          "ctx": 1000000,
-          "tools": true,
-          "expires": "2026-10-05",
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
           "id": "thinkingmachines/inkling-small:free",
           "name": "Thinking Machines: Inkling Small (free)",
           "ctx": 1048576,
@@ -333,8 +313,8 @@
     },
     "opencode": {
       "ok": true,
-      "fetchedAt": "2026-10-05",
-      "attemptedAt": "2026-10-05",
+      "fetchedAt": "2026-10-06",
+      "attemptedAt": "2026-10-06",
       "errorCode": null,
       "url": "https://opencode.ai/zen/v1/models",
       "models": [

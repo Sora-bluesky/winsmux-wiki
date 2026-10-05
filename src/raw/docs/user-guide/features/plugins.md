@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: c58dd0f6d64bdabf1a484f89273aa92474083e80
+upstream_blob: 62f2f1278c3dbe611a6006bd86d00142db1b2b0f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -189,7 +189,7 @@ hermes plugins enable <name>      # add to allow-list
 hermes plugins disable <name>     # remove from allow-list + add to disabled
 ```
 
-`hermes plugins install owner/repo` のあとに `Enable 'name' now? [y/N]` と聞かれます。既定は「いいえ」です。スクリプトから入れるときは `--enable` か `--no-enable` でこの確認を飛ばせます。
+`hermes plugins install owner/repo` のあとに `Enable 'name' now? [y/N]` と聞かれます。既定は「いいえ」です。スクリプトから入れるときは `--enable` か `--no-enable` でこの確認を飛ばせます。メモリプロバイダー（`__init__.py` で `MemoryProvider` を登録するプラグイン）の場合は、代わりに `Use 'name' as the memory provider now?` と聞かれます。「はい」（または `--enable`）を選ぶと `memory.provider` が設定されます。プロバイダーを有効にする切り替えはこれだけです。「いいえ」を選ぶと、設定は `hermes memory setup` に任せたままになります。
 
 同じ結果を再現できるようにするには、変わらないコミットをそのまま固定してください（タグ、ブランチ、
 短縮した SHA は受け付けられません）。
@@ -321,7 +321,7 @@ CLI / TUI / ゲートウェイ / ACP の画面に承認を出したいなら、
 |---|---|
 | **指示・制御** | `pre_tool_call`, `pre_llm_call`, `pre_verify`, `pre_gateway_dispatch` |
 | **変換** | `transform_tool_result`, `transform_terminal_output`, `transform_llm_output`, `pre_transcription` |
-| **観測** | `post_tool_call`, `post_llm_call`, `pre_api_request`, `post_api_request`, `api_request_error`, `pre_auxiliary_call`, `post_auxiliary_call`, `on_stream_start`, `on_stream_delta`, `on_stream_end`, `on_interim_message`, `on_session_start`, `on_session_end`, `on_session_finalize`, `on_session_reset`, `agent_loop_stopped`, `on_skill_lifecycle`, `subagent_start`, `subagent_stop`, `pre_approval_request`, `post_approval_response`, `pre_command`, `kanban_task_claimed`, `kanban_task_completed`, `kanban_task_blocked` |
+| **観測** | `post_tool_call`, `post_llm_call`, `pre_api_request`, `post_api_request`, `api_request_error`, `pre_auxiliary_call`, `post_auxiliary_call`, `on_stream_start`, `on_stream_delta`, `on_stream_end`, `on_interim_message`, `on_session_start`, `on_session_end`, `on_session_finalize`, `on_session_reset`, `agent_loop_stopped`, `on_skill_lifecycle`, `subagent_start`, `subagent_stop`, `pre_approval_request`, `post_approval_response`, `on_human_input_request`, `on_human_input_resolved`, `pre_command`, `kanban_task_claimed`, `kanban_task_completed`, `kanban_task_blocked` |
 
 この分類はいまの動きを説明するもので、これからの命名の規則を定めるものではありません。プラグインのミドルウェアは、引き続き別の登録先・別の面として扱われます。
 ## プラグインの種類 {#plugin-types}

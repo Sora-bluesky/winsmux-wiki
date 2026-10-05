@@ -8,6 +8,44 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-05
+
+- [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
+- [アーキテクチャ](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)
+- [cron の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cron-internals/)
+- [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- [プラグインカタログへの登録申請](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
+- [インストール](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
+- [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
+- [定期実行がうまくいかないとき](https://wiki.winsmux.dev/hermes/docs/guides/cron-troubleshooting/)
+- [外部サービス連携](https://wiki.winsmux.dev/hermes/docs/integrations/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
+- [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+- [キュレーター](https://wiki.winsmux.dev/hermes/docs/user-guide/features/curator/)
+- [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
+- [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
+- [プラグインカタログ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [ツールとツールセット](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tools/)
+- [ローカルモデル](https://wiki.winsmux.dev/hermes/docs/user-guide/local-models/)
+- [Discord](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/discord/)
+- [メール](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/email/)
+- [Home Assistant](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/homeassistant/)
+- [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
+- [Webhook](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/webhooks/)
+- [WhatsApp](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/whatsapp/)
+- [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
+- [プロファイル配布: エージェントまるごと共有する](https://wiki.winsmux.dev/hermes/docs/user-guide/profile-distributions/)
+- [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
+- [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
+- [Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/)
+- [Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/)
+- [System Atlas — 見て回れるアイソメトリックの構成アトラスを HTML で作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/)
+- [Unreal Mcp — Unreal Engine のエディタでシーン・アクター・レンダリングを自動化する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-unreal-mcp/)
+
 ## 2026-10-04
 
 - [アプリケーション宣言](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/application-declarations/)

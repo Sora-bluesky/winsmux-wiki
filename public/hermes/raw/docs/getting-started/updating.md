@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: f5ffa0fc2419f4d9012b904ffbaf32952973f73e
+upstream_blob: 335fef704fa726f9c769d740ef3df16ab39a8f33
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -167,15 +167,26 @@ git -C $repo rev-list --objects --missing=error --all | Out-Null; $LASTEXITCODE 
 
 ### 部分クローンで `.git` が大きくなり続けるとき {#git-keeps-growing-in-a-partial-clone}
 
-インストーラーが作るチェックアウトは部分クローンです。git はツリーと blob を必要になった時点でダウンロードし、
-そのたびに小さなパックを1つずつ書き出します。`hermes update` と `hermes update --check` は、
-これらを `git gc --auto`（git 自体の `gc.autoPackLimit`。既定は 50）でまとめ直すので、
-健全なチェックアウトでは何も起きません。また、そのチェックアウトで `maintenance.commit-graph.enabled`、
-`gc.writeCommitGraph`、`fetch.writeCommitGraph` を `false` に設定します。コミットグラフがまだ把握していないコミットに対して書き込みを行うと、それらのコミットのツリーがすべてダウンロードされてしまうからです。これらの設定は変えずにおき、
-`gc.auto` も既定のままにしてください。`gc.auto=0` にするとまとめ直しが止まります。数千個のパックがたまったチェックアウトでの
-最初のまとめ直しは完全な再パックになり、数分かかることがあります。更新は始める前にその旨を伝え、
-まとめ直しが 20 分を超えた場合は処理を止めて、次のコマンドを表示します。
-手でまとめ直すには、Hermes を閉じた状態で次を実行します。
+インストーラーが作るチェックアウトは blob なしの部分クローンです。コミットとディレクトリの一覧はすべて手元にあり、
+git はファイルの中身を必要になった時点でダウンロードし、そのたびに小さなパックを1つずつ書き出します。
+2026 年 9 月下旬のインストーラーは、代わりにツリーなし（`--filter=tree:0`）のクローンを作っていました。git は足りないツリーを要求するとき、
+すでに持っているツリーを伝えないため、ツリーなしのチェックアウトではチェックアウトのたびや、パスで絞った履歴をたどるたびに、
+ディレクトリ全体のスナップショットをまたダウンロードしていました。`hermes update`
+はそうしたチェックアウトを、更新の最後に1回だけ変換します。`git fetch --refetch --filter=blob:none`
+を1回実行してすべてのコミットとツリー（約 120 MB）を取得するので、以後の更新ではそれらを再ダウンロードしなくなります。この取得が
+失敗した場合、更新は警告を表示してそのまま続け、次回の更新で変換をやり直します。`hermes update` と `hermes update --check` は、
+そのチェックアウトで `maintenance.commit-graph.enabled`、`gc.writeCommitGraph`、`fetch.writeCommitGraph` を
+`false` に設定します。コミットグラフがまだ把握していないコミットに対して書き込みを行うと、
+それらのコミットのツリーがすべてダウンロードされてしまうからです。これらの設定は変えずにおき、`gc.auto` も
+既定のままにして、git 自体の自動 gc がパックをまとめ直せるようにしてください。
+
+`hermes update` は毎回、最大 60 秒をかけてこれらのパックを片付けます。前回の更新が止めたところから続きを行います。
+まず、含まれるオブジェクトがすべて別のパックにも保存されているパックを削除し、
+次に、残ったパックが 50 個を超えている間は小さいものから順に統合します。手元に保存されたものが失われることはなく、
+GitHub がそれを配信し続けていることにも依存しません。中断された `git fetch` が
+`.keep` ファイルで固定したまま残したパックも対象に含みます。git 自体の再パックはこれらに手を付けません。代わりに
+全部を一度に手でまとめ直すには、Hermes を閉じた状態で次を実行します（大きなチェックアウトでは完全な再パックになり、
+長い時間かかることがあります）。
 
 ```bash
 git -C "$repo" -c gc.writeCommitGraph=false gc --auto

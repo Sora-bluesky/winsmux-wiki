@@ -2,7 +2,7 @@
 title: "オブザーバーフック"
 description: "プラグイン向けの読み取り専用テレメトリ契約。イベントの系統、相関 ID、ペイロードの安全性"
 upstream_path: developer-guide/observer-hooks.md
-upstream_blob: 3d9c636706ff28aa6a117c1c0700fa2767aa19ae
+upstream_blob: 5c7e95c6ae877ba48b1958faf92d6a11949babdd
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/observer-hooks
 ---
@@ -200,6 +200,17 @@ API 系のフックは、エージェントループ内でのプロバイダー�
 
 ブロックされた経路やキャンセルされた経路でも `post_tool_call` は発火するので、
 テレメトリ系のプラグインはスパンをきれいに閉じられます。
+
+### 人の入力のライフサイクル {#human-input-lifecycle}
+
+`on_human_input_request` / `on_human_input_resolved` は、エージェントが人の応答を待って止まる
+すべての場面の前後で発火します。対象は、sudo のパスワード入力（`kind="sudo"`）、
+`clarify` の質問（`kind="clarify"`）、承認の確認
+（`kind="approval"`）で、CLI、TUI/Desktop、ACP、ゲートウェイの各プラットフォームで発火します。フィールドは
+`kind`、`request_id`（対になる 2 つのフックで共通）、`session_id`、`session_key`、
+`platform`、そして必ず伏せ字にされる `prompt` です。解決時のフックには `outcome` が加わります。
+入力されたパスワードや回答そのものは決して含まれません。スマート（補助 LLM による）承認では
+発火しません。実装は `tools/human_input_hooks.py` です。
 
 ### 承認のライフサイクル {#approval-lifecycle}
 

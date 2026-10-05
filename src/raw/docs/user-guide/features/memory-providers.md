@@ -2,7 +2,7 @@
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: 7b97e4cba8186d9b0b94e0577eae2c19fc46d98e
+upstream_blob: 5c38dc7b3136e7c57601beb8d0d8d225e1ea689e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
@@ -470,14 +470,14 @@ Hindsight は [vectorize-io](https://github.com/vectorize-io/hindsight) が保�
 
 **設定:**
 ```bash
-hermes plugins install hindsight   # from the plugin catalog
+hermes plugins install hindsight   # from the plugin catalog; answer "Use 'hindsight' as the memory provider now?"
 hermes memory setup                # select "hindsight"
 # Or manually:
 hermes config set memory.provider hindsight
 echo "HINDSIGHT_API_KEY=your-key" >> ~/.hermes/.env
 ```
 
-プラグインは `~/.hermes/plugins/hindsight/`（プロファイルごとのホーム）に置かれ、`config.yaml` の `plugins.enabled` で有効になります。`hermes memory setup`、`hermes memory status`、`hermes plugins list`、ダッシュボードの記憶の設定は、どれもカタログから入れたプラグインでそのまま使えます。手元に組み込むモードでは、最初に使うときにプラグインが Hermes の遅延導入の経路を通して `hindsight-all` を入れます。この経路は `security.allow_lazy_installs` に従います。
+プラグインは `~/.hermes/plugins/hindsight/`（プロファイルごとのホーム）に置かれます。記憶プロバイダーを有効にするのは `config.yaml` の `memory.provider` で、`plugins.enabled` ではありません。導入時の確認に「はい」と答える（または `--enable` を付ける）とこの値が設定され、断ると変わらないので、あとから `hermes memory setup` で選べます。`hermes plugins enable hindsight` を実行しても、記憶プロバイダーは有効になりません。`hermes memory setup`、`hermes memory status`、`hermes plugins list`、ダッシュボードの記憶の設定は、どれもカタログから入れたプラグインでそのまま使えます。手元に組み込むモードでは、最初に使うときにプラグインが Hermes の遅延導入の経路を通して `hindsight-all` を入れます。この経路は `security.allow_lazy_installs` に従います。
 
 **ローカルモードの画面:** `hindsight-embed -p hermes ui start`
 

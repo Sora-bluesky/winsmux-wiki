@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: a7cd53a10072a27fee843b9a6e505c04d1ed8cd8
+upstream_blob: 99727e86e290e4e342569feb83ef9fb5115262c1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -1001,7 +1001,9 @@ dashboard:
 Hermes はつねに loopback の信頼を保ち、`*`、`0.0.0.0/0`、
 `::/0` は断ります。ネットワークを信頼するということは、そのネットワークにいる
 すべてのコンテナや端末が転送の情報を渡せるということなので、正確な proxy の IP か、
-proxy だけのネットワークを選んでください。
+proxy だけのネットワークを選んでください。信頼する proxy として登録していないと、その proxy の後ろにいるクライアントは、
+パスワードでのログインの回数制限と、ネイティブのサインインの上限を proxy と共有することになり、
+認証の監査イベントには proxy のアドレスが記録されます。
 
 ```bash
 # Backend remains reachable only on this machine.

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md
-upstream_blob: c0b57016bc522da74f509ea5bdf1f3f3bf1e5459
+upstream_blob: ee27f91ebb5a1a50f79aeb6e9a8925a59c4b3cdc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tts
 ---
@@ -616,7 +616,7 @@ stt:
 
 | 置き換え文字       | 意味                                                              |
 |-------------------|----------------------------------------------------------------------|
-| `{input_path}`    | 入力する音声ファイルの絶対パス（もとの場所、読み取り専用） |
+| `{input_path}`    | 入力する音声ファイルの絶対パス（もとの場所、読み取り専用。`normalize: true` のときは 16 kHz モノラルの m4a） |
 | `{output_path}`   | コマンドが文字起こしを書き込むべき絶対パス             |
 | `{output_dir}`    | `{output_path}` の親ディレクトリ（whisper 系の道具で便利です）  |
 | `{format}`        | 設定した出力形式: `txt` / `json` / `srt` / `vtt`             |
@@ -645,6 +645,7 @@ stt:
 | `format`        | `txt`   | `txt` / `json` / `srt` / `vtt` のいずれか。`{output_path}` の拡張子を決めます。                       |
 | `language`      | `en`    | `{language}` に渡されます。既定は `stt.language`、それもなければ `en` です。                                     |
 | `model`         | 空   | `{model}` に渡されます。`transcribe_audio()` の `model=` 引数がこれを上書きします。                |
+| `normalize`     | `false` | コマンドを実行する前に、入力を 16 kHz モノラルの m4a に変換します（ffmpeg を使います）。このとき `{input_path}` は変換後のファイルを指します。 |
 
 #### 文字起こしのコマンド型の動きについての注意 {#stt-command-provider-behavior-notes}
 

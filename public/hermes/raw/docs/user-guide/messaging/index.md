@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 117c3ffae0acdd69034b1ec829c6d81dcf906bb0
+upstream_blob: c6584c76b6ae2b5f23f443d1d616e662fdec51d1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -685,7 +685,7 @@ macOS のローカルネットワークのプライバシー保護は、ソケ�
 エージェントは 1 つのゲートウェイプロセスの中でスレッドとして動きます。子プロセスになるのはツールのサブプロセス（ターミナルのコマンド、ブラウザー）だけで、これらがプロバイダーの認証情報を持つことはありません。動いているゲートウェイは、`auth.json` から取り込んだ `openai-codex` のログインについては、そのエントリが `exhausted` や `dead` になったあとプールが次にそれを選んだ時点で読み直します（`hermes auth add openai-codex` で追加したエントリは独立したアカウント扱いで、読み直されません）。すべてのセッションを一度に新しいログインへ切り替えたいときは、ゲートウェイを再起動します。ただし、いきなり終了させるのではなく、処理の終わりを待つ経路を選んでください。
 
 - `hermes gateway restart` は、ゲートウェイに（SIGUSR1 で）新しいターンを受け付けないよう伝え、実行中のターンが終わるのを `agent.restart_after_turn_timeout`（既定 1800 秒）まで待って終了し、launchd の `KeepAlive` に再起動させます。新しいプロセスは `auth.json` を最初から読み直します。
-- `launchctl kickstart -k gui/$UID/ai.hermes.gateway` は代わりに SIGTERM を送ります。ゲートウェイは実行中のチャットのターンを `agent.restart_drain_timeout`（既定は `0`。つまりすぐに中断します。利用者にはその旨が伝わり、次のメッセージでターンが再開します）のあとで中断し、cron の実行には `agent.cron_drain_timeout`（既定 30 秒）を与え、ツールのサブプロセスを終了させて自身も終了し、そのあと launchd が再起動します。古いプロセスからは何も残らないので、再起動したあともセッションが `401` で失敗するなら、別のゲートウェイプロセスにつながっています。`hermes gateway status`（と `launchctl list | grep hermes`）で 2 つ目の PID がないか確かめ、たとえば手で起動した `hermes gateway run` があれば、そちらも止めてください。
+- `launchctl kickstart -k gui/$UID/ai.hermes.gateway` は代わりに SIGTERM を送ります。ゲートウェイは実行中のチャットのターンを `agent.restart_drain_timeout`（既定は `0`。つまりすぐに中断します。利用者にはその旨が伝わり、次のメッセージでターンが再開します）のあとで中断し、cron の実行と api_server（`/v1`）の実行には `agent.cron_drain_timeout`（既定 30 秒）を与え、ツールのサブプロセスを終了させて自身も終了し、そのあと launchd が再起動します。古いプロセスからは何も残らないので、再起動したあともセッションが `401` で失敗するなら、別のゲートウェイプロセスにつながっています。`hermes gateway status`（と `launchctl list | grep hermes`）で 2 つ目の PID がないか確かめ、たとえば手で起動した `hermes gateway run` があれば、そちらも止めてください。
 :::
 
 :::info 複数のインストール

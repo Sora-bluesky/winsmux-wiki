@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 8d245291e9277cfc24b18b3014c33a8ed02f38a6
+upstream_blob: 664219778b69da17988031226ae6caa1a8fb022e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -434,7 +434,7 @@ python -c "from pm import sync_venv; sync_venv(['anthropic'], explicit=True)"
 ### pyproject.toml を編集したあとの同期 {#syncing-after-you-edit-pyprojecttoml}
 
 1. `pyproject.toml` を編集します。すべての依存関係を、
-   [Dependency Pinning Policy](https://github.com/NousResearch/hermes-agent/blob/main/AGENTS.md#dependency-pinning-policy)
+   [Dependency Pinning Policy](https://github.com/NousResearch/hermes-agent/blob/main/pm/AGENTS.md#dependency-pinning-policy)
    の要求どおりに固定します。プラットフォームの制限は PEP 508 のマーカーで表すか、extra 全体を
    `[tool.hermes.extras-platforms]` で制限します。
 2. ロックし直します。

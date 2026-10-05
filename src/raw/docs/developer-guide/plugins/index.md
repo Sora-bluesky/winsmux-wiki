@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: d35c2c422e7e36cb4ec9beb176bacc69f2a149b3
+upstream_blob: 9447a26faf33573156f2b5f7eae23f325148752a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -536,7 +536,7 @@ state はプロファイルスコープで、アトミックに置き換えら�
 
 ### Desktop の設定フォーム {#settings-form-in-the-desktop}
 
-マニフェストの `config_schema` に宣言した各キーは、Desktop アプリの **Capabilities → Plugins** タブ（プラグインの行にある歯車アイコン）でフィールドとして表示されます。Desktop 側のコードは不要です — バックエンドの `plugins.manage list` がスキーマと各キーの現在値を返し、保存すると `ctx.set_config()` と同じ書き込み経路を通るため、`plugins.entries.<id>.settings.<key>` があなたのプラグインが読み返す値になります。フォームは `type` によって表駆動されます。
+マニフェストの `config_schema` に宣言した各キーは、Desktop アプリの **Settings → Plugins** にあるプラグイン専用のページで、1行ずつ表示されます（このページは Capabilities → Plugins でプラグインの行にある歯車アイコンから開きます）。Desktop 側のコードは不要です — バックエンドの `plugins.manage list` がスキーマと各キーの現在値を返し、保存すると `ctx.set_config()` と同じ書き込み経路を通るため、`plugins.entries.<id>.settings.<key>` があなたのプラグインが読み返す値になります。フォームは `type` によって表駆動されます。
 
 | マニフェストの `type` | フィールド | 追加のキー |
 |---|---|---|
@@ -546,7 +546,7 @@ state はプロファイルスコープで、アトミックに置き換えら�
 | `list`、`dict` | JSON エディタ | |
 | `secret` | マスクされた入力 | `env: MY_PLUGIN_TOKEN` — 値が格納される `.env` 変数名（既定は `<PLUGIN_ID>_<KEY>` の大文字スネークケース） |
 
-すべてのエントリは `label`（キーの代わりに表示される名前）、`description`（フィールド下のヘルプテキスト）、`default`、`required` も受け付けます。
+すべてのエントリは `label`（または `title`。どちらも無い場合はキー名が文頭だけ大文字の形で表示され、`maps_api_key` なら "Maps API key" になります）、`description`（ラベルの下に出るヘルプテキスト）、`default`、`required`（その行に **Required** の印を付けます）も受け付けます。
 
 ```yaml
 config_schema:
@@ -1285,6 +1285,30 @@ def register(ctx):
 ```
 
 完全な `hermes <subcommand>`（例: `hermes kanban show`）を実行するには、`ctx.dispatch_tool("terminal", {"command": "hermes kanban show ..."})` のように `terminal` ツールでシェルアウトしてください — ヘッドレスなワーカーセッションにはプロセス内のスラッシュコマンドブリッジが存在せず、フックから Hermes を動かすためのサポートされた方法はツールです。
+
+### いま実行中の cron の回を知る {#know-which-cron-run-you-are-in}
+
+`ctx.current_cron_execution()` は、現在のコードが実行されている予約実行の回を返します。cron の外では `None` を返します。実行中に発火するどのフック（`pre_tool_call`、`post_tool_call`、`pre_llm_call` など）からも、ツールのハンドラからも使えます。値は変更できない `CronExecution` です。
+
+| フィールド | 意味 |
+|---|---|
+| `job_id`、`job_name` | cron ジョブ。 |
+| `execution_id` | 実行台帳（`hermes cron runs`）におけるこの回の行。 |
+| `source` | どの経路でこの回が起動されたか: `"builtin"`（組み込みのスケジューラ）、`"direct"`（スケジューラの外から起動された回。例: `hermes cron run`）、または外部スケジューラの名前。 |
+| `scheduled_instant` | この回が起動するスケジュール上の時点。手動実行などスケジュール外の回では `None` になるので、予約実行と手動実行を見分けるにはこのフィールドを確認します。 |
+| `started_at` | この回が始まった時刻。 |
+| `profile` | ジョブを所有するプロファイル。 |
+
+スケジューラがこの値を設定するのは、その回が実行権の取得に勝ったあとだけで、回が終わると消去します。値は回ごとに分かれているため、同時に起動した2つのジョブやプロファイルが互いの値を見ることはありません。モデルがこの値を偽造することもできません。フックの引数は Hermes が渡すもので、ツールのサブプロセス（terminal、`execute_code`）は別のインタプリタで動くからです。`delegate_task` で起動したサブエージェントは予約実行の回そのものではないため、`None` を受け取ります。
+
+```python
+def register(ctx):
+    def guard(*, tool_name, args, **kw):
+        run = ctx.current_cron_execution()
+        if tool_name == "deploy" and (run is None or run.scheduled_instant is None):
+            return {"action": "block", "message": "deploy only runs from its scheduled cron job"}
+    ctx.register_hook("pre_tool_call", guard)
+```
 
 ### Slack の Block Kit ボタンクリックを処理する {#handle-slack-block-kit-button-clicks}
 

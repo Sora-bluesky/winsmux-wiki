@@ -2,7 +2,7 @@
 title: "プラグインカタログへの登録申請"
 description: "Hermes プラグインカタログの登録ガイドライン全文です。申請前に確かめること、すべての掲載項目が従うルール、レビュアーが見る点をまとめています"
 upstream_path: developer-guide/plugins/catalog-submission.md
-upstream_blob: 4eb0ac6813368fdc6960e29f6f828a427c8e0456
+upstream_blob: f13e29b41a1ad6ec506a4f7bdeb824b1dd3f2295
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission
 ---
@@ -163,6 +163,12 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
 15. **同梱プラグインのスキンやフォークは掲載しません。** 同梱プラグインへの変更は
    `hermes-agent` への PR として出すもので、競合する掲載項目にはしません。また、ベンダーに似せたスキンを
    Nous のブランド名のもとで掲載することもありません。
+16. **1つのプラグインの系譜につき掲載は1件です。** 掲載済みのコミュニティプラグインのフォークは、
+   元のプラグインと実質的に異なる場合にだけ掲載します。たとえば、通信方式やアーキテクチャが違う場合や、
+   元のプラグインにない機能を備えていて、その機能を元の作者が断ったか、PR に30日間応答していない場合です。
+   掲載済みプラグインへの改善は、その作者への PR として上流に出します。名前の変更、ブランドの付け替え、小さな変更を
+   加えただけのフォークは、元のプラグインを優先して掲載を見送ります。掲載されたフォークは、開示行に由来を
+   明記します（`Derived from <entry>`）。
 <!-- admission-rules:end -->
 
 ## 掲載項目を更新する {#updating-your-entry}

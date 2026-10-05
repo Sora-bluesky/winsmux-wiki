@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 051c3767f0e7d3b7b49af5a086b6d5bf0f325592
+upstream_blob: c853f84c0a9e9a5486e1b31f7ed895bb0296e1d2
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -179,6 +179,8 @@ interface PluginContext {
   register: (c: PluginContribution) => () => void
   /** Register several at once; the returned disposer removes all of them. */
   registerMany: (cs: PluginContribution[]) => () => void
+  /** Own entry (+ sub-pages) under Settings → Plugins. Removed on disable/unload. */
+  registerSettingsPage: (page: PluginSettingsPage) => () => void
   /** REST to this plugin's own backend namespace (`/api/plugins/<id>`). */
   rest: <T>(path: string, opts?: PluginRestOptions) => Promise<T>
   /** Live WebSocket to this plugin's own namespace. Returns a disposer. */
@@ -233,6 +235,7 @@ interface Contribution {
 | 入力欄まわり | `COMPOSER_AREAS.*` | 描画の差し込み口、またはミドルウェアと添付の提供元 |
 | モデルメニューの行 | `MODEL_MENU_ROW_AREA` | `data: ModelMenuRowContribution` — モデルごとに、先頭のアイコンと末尾のバッジを付ける |
 | 外観の設定 | `APPEARANCE_AREAS.extra` | `render` — Settings → Appearance の末尾に足す操作 |
+| プラグインの設定ページ | `SETTINGS_PLUGINS_AREA`（`'settings.plugins'`） | `ctx.registerSettingsPage({ id, title, render, icon?, order?, children? })` を使います — Settings → Plugins の下に、サブページ付きの自分専用の項目を作ります |
 
 ### ペイン {#panes}
 
@@ -760,6 +763,49 @@ ctx.register({
   ステータスバーのメニューではなく、`APPEARANCE_AREAS.extra` のカードとしてマウントします。設定の
   *値*は、これまでどおり `host.settings`（許可された一覧のキー）と `THEMES_AREA` を通します。
 
+### プラグインの設定ページ（Settings → Plugins） {#plugin-settings-pages}
+
+**Settings → Plugins** は、プラグインの設定をまとめて置く唯一の場所です。並び方は WoW の AddOns の
+オプション画面に似ていて、設定を持つプラグインはそれぞれ Settings の縦の一覧に自分の項目を持ち、
+項目を選ぶとそのプラグインのサブページが開きます。設定のために専用のダイアログやペイン、サイドバーの行を
+作らないでください。代わりにページを登録します。
+
+```javascript
+ctx.registerSettingsPage?.({
+  id: 'settings',            // unique within your plugin
+  title: 'Weather',          // rail label + breadcrumb
+  icon: 'cloud',             // codicon name; a plug when omitted
+  order: 0,                  // ascending; ties sort by title
+  render: () => jsx(General, {}),        // the entry's landing page
+  children: [                // optional sub-pages, listed in this order
+    { id: 'units', title: 'Units', render: () => jsx(Units, {}) },
+    { id: 'alerts', title: 'Alerts', render: () => jsx(Alerts, {}) }
+  ]
+})
+```
+
+- ページはプラグインが存在するあいだ残ります。ほかのすべての `ctx` の登録と同じく、無効化や読み込み解除で
+  取り除かれ、戻り値の後始末関数を呼べばそれより前に取り除けます。
+- ページは設定用の部品（`ToggleRow`、`ListRow`、`SegmentedControl`、`Select*`）で組み立て、値は
+  `ctx.storage` に保存してください。そうすればコアの Settings と同じ見た目になります。各ページは
+  それぞれ専用のエラー境界の中で描画されます。
+- `registerSettingsPage` は新しい関数です。`?.` を付けておけば、古いホストでもプラグインは読み込まれます。
+  古いホストでは、`ctx.register({ area: SETTINGS_PLUGINS_AREA, id, title,
+  render, data: { icon, children } })` が同じことを省略せずに書いた形になります。
+- ディープリンク: `host.navigate(pluginSettingsHref('<your-plugin-id>', 'units'))`
+  （`/settings?tab=plugins&plugin=<id>&ppage=<sub-page>`）。サブページの id は自由に決められ、
+  予約済みのものはありません。
+- **エージェント側のプラグインには、ページが自動で付きます。** `plugin.yaml` の `config_schema` は
+  Settings → Plugins の下のフォームとして表示され、Settings のスコープ切り替えが対象にしているプロファイルに
+  `plugins.manage settings` を通して保存されます（`/settings?tab=plugins&agent=<key>`）。
+  Capabilities → Plugins でプラグインの行にある歯車は、Capabilities で選んでいるプロファイルについて
+  そのページを開きます。1 つのパッケージにまとめた場合（エージェント側と `desktop/plugin.js`）で、
+  デスクトップ側もページを登録しているときは、スキーマのフォームはその項目の **Agent settings** サブページとして
+  表示されるので、パッケージの項目は 1 つで済みます。
+
+`src/plugins/hello-runtime/plugin.runtime.js` が、実行時プラグインの完全な例です。ページ 1 つと
+サブページ 2 つを持ち、`ctx.storage` で値を保存しています。
+
 ### 外部の内容を埋め込む {#embedding-external-content}
 
 外部のウェブの内容（読み物の表示、ダッシュボード、ドキュメント）には、SDK の
@@ -1150,6 +1196,7 @@ URL は OS のディープリンクとしても働きます）。操作のボタ
 ```ts
 type DesktopSettingValues = {
   'backdrop.v1': boolean
+  chatTextScale: 90 | 100 | 110 | 125 | 150 | 175 // percent; Appearance → Chat Text Size
   'composerPopout.gesturesEnabled': boolean
   'intro-splash.v1': boolean
   'reasoning.collapsedByDefault': boolean
@@ -1173,6 +1220,20 @@ register(ctx) {
 }
 ```
 
+`chatTextScale` は利用者が選んだチャットの文字サイズです（既定は `110`）。ホストの
+`--chat-text-scale` という CSS 変数を通して、会話の記録と入力欄の文字（と行の高さ）を拡大・縮小します。
+読む文字を大きく、または小さくしたいプラグインやテーマは、利用者が選ぶのと同じ段階の値を設定します。
+ペインの寸法、行の間隔、画面の枠はコアが持ち続けます。受け付けるのは 6 段階の値だけです。
+段階にない数（`112`、`'125'`）は近い値に丸められず例外になるので、打ち間違いで利用者のサイズが
+知らないうちに戻ってしまうことはありません。ここにあるほかのキーと同じく、これは利用者の好みであって、
+プラグインが上書きするための値ではありません。書き込むのは UI での利用者の明示的な操作からにして
+（`register` の時点では決して書かない）、自分の描画を合わせるために読み取りや購読をしてください。
+
+```ts
+const dispose = host.settings.subscribe('chatTextScale', pct => setMyFontScale(pct / 100))
+ctx.onDispose(dispose)
+```
+
 調停: 上の許可の一覧は閉じています。知らないキーや、キーの型に合わない値は**同期的に**例外を
 投げ（`Unsupported desktop setting: …` /
 `Invalid value for desktop setting: …`）、何も書き込まれません。`host.settings` は
@@ -1186,6 +1247,7 @@ register(ctx) {
 | キー割り当ての表（`hermes.desktop.keybinds`） | `KEYBINDS_AREA` のコントリビューション | 表を直接書くと、ほかのすべてのプラグインのショートカットまで割り当て直してしまいます。この領域はプラグインごとにまとめ、プラグインと一緒に片付けます |
 | 今のテーマやモードの記録 | `THEMES_AREA`（テーマを登録し、利用者が選ぶ） | テーマの選択はウィンドウやプロファイルごとで、アプリが調停するものです。平らな好みではありません |
 | `pluginDecisions`（デスクトップのプラグインの有効・無効） | アプリの Plugins のタブ（読み取り専用の表示は別の SDK のフックです） | あるプラグインが別のプラグインの有効・無効を切り替えるのは、プラグイン同士の干渉そのものです |
+| チャットや入力欄の幅、発言どうしの間隔、セッション行の寸法 | まだ何もありません — コアの Appearance の設定として存在するようになって初めてキーになります（チャットの幅: #55287） | レイアウトはホストのものです。寸法の取り決めをプラグインが持つと、あらゆるテーマがレイアウトの取り決めになってしまいます |
 | `toolView.technical`、`embed-mode`、`titlebarAppActions`、`translucency.v2`、`user-bubble-transparency.v1`、`hermesDesktop.zoom.*` | それぞれの保存先を監査したあとで足す予定のキー | 一部はメインプロセスやウィンドウの枠を動かします。プラグインから書けるようにする前に、それぞれに専用の守りと持ち主の確認が要ります |
 
 移行 — `hermes-appearance-hub` は今、
@@ -1569,7 +1631,8 @@ register(ctx) {
 
 有効かどうかにかかわらず、すべてのプラグインが **Capabilities → Plugins** に並びます。利用者は
 そこでその場で切り替えたり（アプリの再起動は不要です）、フォルダーを開いたり、再走査したり
-できます。利用者の選択は覚えられます。
+できます。プラグイン自身の設定は **Settings → Plugins** に置きます
+（[プラグインの設定ページ](#plugin-settings-pages)）。利用者の選択は覚えられます。
 
 - まだ選んでいない場合 → そのプラグインの `defaultEnabled`（既定は `true`）に従います。
   `defaultEnabled: false` にすると、利用者が入れるまで何もしない、明示的に有効にする形の
@@ -1664,8 +1727,8 @@ CSP、権限の制御）が必要です。この経路を信頼の境界とし�
 |----------|---------|
 | ホスト | `host`（`.state.*`、`.settings`、`.notify`、`.notifyError`、`.navigate`、`.onEvent`、`.logs`、`.status`、`.restartGateway`、`.request`、`.composer`、`.sessions`、`.skills`、`.toolsets`、`.profiles`、`.pluginDecisions`） |
 | プラグインの取り決め | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
-| 領域の定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS`、`MODEL_MENU_ROW_AREA`、`SESSION_ROW_AREAS`、`SIDEBAR_NAV_PREFS_AREA`、`APPEARANCE_AREAS` |
-| 領域ごとの中身 | `RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider`、`SessionRowSlotContribution`、`SidebarNavPrefsContribution` |
+| 領域の定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS`、`MODEL_MENU_ROW_AREA`、`SESSION_ROW_AREAS`、`SIDEBAR_NAV_PREFS_AREA`、`APPEARANCE_AREAS`、`SETTINGS_PLUGINS_AREA` |
+| 領域ごとの中身 | `PluginSettingsPage`、`PluginSettingsSubpage`（と `pluginSettingsHref`）、`RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider`、`SessionRowSlotContribution`、`SidebarNavPrefsContribution` |
 | React と状態 | `useValue`、`atom`、`computed`、`useQuery`、`useMutation`、`useQueryClient`、`queryClient`、`Contribute`、`WorkspacePageHeaderControl` |
 | テーマ | `useTheme`、`requestTheme`、`setAccentOverride`、`$accentOverride`、`retintTheme`、`themeHue`、`DesktopTheme`、`DesktopThemeColors`。さらに OKLCH の計算（`hexToOklch`、`oklchToHex`、`oklchToSrgb255`、`mixOklab`、`maxChroma`、`hueDelta`、`normalizeHex`）と sRGB の測定（`contrastRatio` は `number | null` で、解析できない入力では null、それに `readableOn`） |
 | UI キット | `Button`、`Input`、`Textarea`、`Select*`、`Switch`、`Checkbox`、`SegmentedControl`、`Tabs*`、`Dialog*`、`ConfirmDialog`、`DropdownMenu*`、`ContextMenu*`、`Popover*`、`Tip`/`Tooltip*`、`Badge`、`Kbd`/`KbdGroup`、`SearchField`、`ScrollArea`、`Separator`、`Skeleton`、`GlyphSpinner`、`Loader`、`EmptyState`、`ErrorState`、`CopyButton`、`StatusDot`、`LogView`、`Codicon`、`DecodeText`、`SandboxedFrame` |
