@@ -34,6 +34,7 @@ Hermes Agent 0.21.5
 - [更新履歴（公式 docs への追随記録）](https://wiki.winsmux.dev/hermes/updates/)
 - [逆引き（やりたいことから探す索引）](https://wiki.winsmux.dev/hermes/howto/)
 - [Hermes Wingtips 日本語版（@witcheer による連載の全回を日本語で）](https://wiki.winsmux.dev/hermes/tips/)
+- [Hermes Workshop 日本語版（Teknium の機器カタログを日本語の 1 行で）](https://wiki.winsmux.dev/hermes/workshop/)
 - [トラブル（症状から対処を引く表）](https://wiki.winsmux.dev/hermes/trouble/)
 - [初めての方へ（段階式の道筋）](https://wiki.winsmux.dev/hermes/first/)
 - [料金と実例（費用構造と価格の実例）](https://wiki.winsmux.dev/hermes/cost/)
@@ -980,6 +981,7 @@ Hermes Agent 0.21.5
 - https://wiki.winsmux.dev/hermes/raw/trust.md
 - https://wiki.winsmux.dev/hermes/raw/updates-weekly.md
 - https://wiki.winsmux.dev/hermes/raw/updates.md
+- https://wiki.winsmux.dev/hermes/raw/workshop.md
 
 ## 正本
 

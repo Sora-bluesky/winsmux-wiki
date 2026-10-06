@@ -1,0 +1,218 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import workshop from '../../../../data/wiki/workshop.json';
+
+type WorkshopItem = {
+  id: string;
+  name: string;
+  price: string;
+};
+
+type WorkshopCategory = {
+  id: string;
+  name: string;
+  items: WorkshopItem[];
+};
+
+type WorkshopJa = {
+  categories?: Record<string, string>;
+  items?: Record<string, string>;
+};
+
+// 翻訳ファイルがまだ無い段階でも、英語名だけで表示できるようにする。
+const translationFiles = import.meta.glob<WorkshopJa>(
+  '../../../../data/wiki/workshop.ja.json',
+  { eager: true, import: 'default' },
+);
+const ja: WorkshopJa = Object.values(translationFiles)[0] ?? {};
+const source = 'https://teknium.io/hermes-devices/';
+const categories = workshop.categories as WorkshopCategory[];
+const byCat = categories.map((category) => ({
+  id: category.id,
+  name: category.name,
+  label: ja.categories?.[category.id]?.trim() || category.name,
+  items: category.items.map((item) => ({
+    ...item,
+    summary: ja.items?.[item.id]?.trim() ?? '',
+  })),
+}));
+const itemCount = byCat.reduce((sum, category) => sum + category.items.length, 0);
+const excludedCount = workshop.excluded.reduce((sum, category) => sum + category.count, 0);
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const summaryHtml = (summary: string) =>
+  escapeHtml(summary).replace(/`([^`]+)`/g, '<code>$1</code>');
+---
+
+<BaseLayout
+  rawPath="/hermes/raw/workshop.md"
+  title="Hermes Workshop 日本語版"
+  description="Nous Research の Teknium がまとめた、Hermes Agent とつなげる機器のカタログ『The Hermes Workshop』を日本語の 1 行で紹介する索引。"
+  sources={['https://teknium.io/hermes-devices/']}
+  prevOverride={null}
+  nextOverride={null}
+>
+  <article class="prose">
+    <h1>Hermes Workshop 日本語版</h1>
+    <p>
+      「The Hermes Workshop」は、Nous Research の
+      <a href="https://x.com/Teknium" target="_blank" rel="noopener">Teknium</a>
+      がまとめた、Hermes Agent を組み込んだりつないだりできる機器のカタログです。
+      このページでは {itemCount} 件・{byCat.length} 分類を日本語の 1 行で紹介し、名前から元のページの各機器の説明へ進めます。
+    </p>
+    <p>
+      隠し撮り・隠し録音の機器と、侵入検査用の道具（{excludedCount} 件）は、日本の法律に触れる使い方があるため載せていません。
+      <a href={source} target="_blank" rel="noopener">元のページ</a>で見られます。
+    </p>
+    <p>
+      Wi-Fi・Bluetooth・LoRa などの電波を出す機器を日本で使うには、技適マークが必要です。
+      総務省の
+      <a href="https://www.tele.soumu.go.jp/j/adm/monitoring/summary/qa/giteki_mark/" target="_blank" rel="noopener">技適マークの Q&amp;A</a>
+      をご覧ください。
+    </p>
+    <p class="wiki-note">日本語の文はこのサイトによる要約です。価格や仕様は元のページとメーカーの情報をご覧ください。</p>
+  </article>
+
+  <div class="hw-controls">
+    <input id="hw-search" type="search" placeholder="機器を検索" aria-label="機器を検索" />
+    <div class="hw-chips" role="group" aria-label="分類で絞り込み">
+      <button type="button" class="hw-chip active" data-cat="all" aria-pressed="true">すべて（{itemCount}）</button>
+      {byCat.map((category) => (
+        <button type="button" class="hw-chip" data-cat={category.id} aria-pressed="false">
+          {category.label}（{category.items.length}）
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="hw-groups">
+    {
+      byCat.map((category) => (
+        <section class="hw-group" data-cat={category.id}>
+          <h2 class="hw-cat">{category.label}</h2>
+          <div class="hw-list">
+            {category.items.map((item) => (
+              <div
+                class="hw-row"
+                data-want={`${item.name} ${item.summary} ${category.label} ${category.name}`.toLowerCase()}
+              >
+                <div class="hw-main">
+                  <span class="hw-want">
+                    <a href={`${source}#${encodeURIComponent(item.id)}`} target="_blank" rel="noopener">{item.name}</a>
+                  </span>
+                  {item.summary && <span class="hw-note" set:html={summaryHtml(item.summary)} />}
+                </div>
+                {item.price && <div class="hw-links"><span class="hw-price">{item.price}</span></div>}
+              </div>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+    <p id="hw-empty" class="hw-empty" hidden>該当する項目がありません。<a href="/hermes/search/">全文検索</a> を試してください。</p>
+  </div>
+
+  <p class="hw-date">元のページの確認日: <time datetime={workshop.fetchedAt}>{workshop.fetchedAt}</time></p>
+</BaseLayout>
+
+<style>
+  .wiki-note {
+    border: 1px solid #bfdbfe;
+    background: var(--color-accent-soft);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
+  }
+  .hw-controls { display: flex; flex-direction: column; gap: 0.75rem; margin: 1.25rem 0 1.25rem; }
+  #hw-search {
+    width: 100%; max-width: 420px; border: 1px solid var(--color-border-strong); border-radius: 8px;
+    padding: 0.6rem 0.9rem; font-size: 0.9rem; background: var(--color-bg); color: var(--color-fg);
+  }
+  .hw-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .hw-chip {
+    border: 1px solid var(--color-border); background: transparent; color: var(--color-fg-secondary);
+    border-radius: 999px; padding: 0.35rem 0.85rem; font-size: 0.8rem; cursor: pointer;
+  }
+  .hw-chip:hover { background: var(--color-bg-subtle); }
+  .hw-chip.active { background: var(--color-accent); border-color: var(--color-accent); color: #fff; font-weight: 600; }
+  .hw-groups { display: flex; flex-direction: column; gap: 1.5rem; }
+  .hw-cat { font-size: 0.9rem; font-weight: 600; color: var(--color-fg-muted); margin: 0 0 0.5rem; }
+  .hw-list { display: flex; flex-direction: column; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; }
+  .hw-row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+    padding: 0.75rem 1.1rem; border-bottom: 1px solid var(--color-border); background: var(--color-bg);
+  }
+  .hw-row:last-of-type { border-bottom: 0; }
+  .hw-row:hover { background: var(--color-bg-subtle); }
+  .hw-main { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; flex: 1 1 auto; overflow-wrap: anywhere; }
+  .hw-want { font-weight: 600; color: var(--color-fg); font-size: 0.92rem; }
+  .hw-want a { text-decoration: none; overflow-wrap: anywhere; }
+  .hw-want a:hover { text-decoration: underline; }
+  .hw-note { font-size: 0.8rem; color: var(--color-fg-muted); line-height: 1.55; }
+  .hw-links { display: flex; flex-direction: column; gap: 0.2rem; text-align: right; flex: 0 1 16rem; min-width: 0; overflow-wrap: anywhere; }
+  .hw-price { font-size: 0.8rem; color: var(--color-fg-secondary); }
+  .hw-row[hidden], .hw-group[hidden], .hw-empty[hidden] { display: none; }
+  @media (max-width: 640px) {
+    .hw-row { flex-direction: column; align-items: stretch; gap: 0.4rem; }
+    .hw-links { text-align: left; flex-basis: auto; }
+  }
+  .hw-date { margin-top: 1.5rem; font-size: 0.75rem; color: var(--color-fg-muted); }
+  .hw-empty { color: var(--color-fg-muted); font-size: 0.9rem; margin: 0; }
+</style>
+
+<script>
+  import { filterByQuery, normalizeText } from '../../../lib/search-aliases';
+  const search = document.getElementById('hw-search') as HTMLInputElement;
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.hw-chip')];
+  const groups = [...document.querySelectorAll<HTMLElement>('.hw-group')];
+  const empty = document.getElementById('hw-empty')!;
+  let cat = 'all';
+
+  const allRows = groups.flatMap((g) => [...g.querySelectorAll<HTMLElement>('.hw-row')].map((r) => ({ g, r })));
+
+  function apply() {
+    const hit = filterByQuery(allRows.map(({ r }) => normalizeText(r.dataset.want ?? '')), search.value);
+    let shown = 0;
+    const perGroup = new Map<HTMLElement, number>();
+    allRows.forEach(({ g, r }, i) => {
+      const okC = cat === 'all' || g.dataset.cat === cat;
+      const on = okC && hit[i];
+      r.hidden = !on;
+      if (on) {
+        shown++;
+        perGroup.set(g, (perGroup.get(g) ?? 0) + 1);
+      }
+    });
+    for (const g of groups) g.hidden = (perGroup.get(g) ?? 0) === 0;
+    empty.hidden = shown > 0;
+  }
+  search.addEventListener('input', apply);
+  for (const c of chips) {
+    c.addEventListener('click', () => {
+      cat = c.dataset.cat ?? 'all';
+      for (const x of chips) {
+        x.classList.toggle('active', x === c);
+        x.setAttribute('aria-pressed', String(x === c));
+      }
+      apply();
+    });
+  }
+  const params = new URLSearchParams(location.search);
+  const pCat = params.get('cat');
+  const pQ = params.get('q');
+  if (pCat) {
+    const chip = chips.find((c) => c.dataset.cat === pCat);
+    if (chip) chip.click();
+  }
+  if (pQ) {
+    search.value = pQ;
+    apply();
+  }
+</script>

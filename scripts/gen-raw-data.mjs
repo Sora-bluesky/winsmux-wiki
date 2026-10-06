@@ -1,4 +1,4 @@
-// データ駆動ページ（models / free / howto / tips / trouble / community / updates）の raw Markdown を
+// データ駆動ページ（models / free / howto / tips / workshop / trouble / community / updates）の raw Markdown を
 // 画面と同じ JSON から生成する。sync-public.mjs の先頭で import され、build のたびに追随する。
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -316,6 +316,65 @@ ${sections.join('\n\n')}
   await write('tips.md', body);
 }
 
+// workshop
+{
+  const w = await readJson('data/wiki/workshop.json');
+  let ja = {};
+  try {
+    ja = await readJson('data/wiki/workshop.ja.json');
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+
+  const source = 'https://teknium.io/hermes-devices/';
+  const translated = (map, id) => typeof map?.[id] === 'string' ? map[id].trim() : '';
+  const workshopText = (value) =>
+    mdText(String(value).replace(/\s+/g, ' ').trim()).replace(/([`*_[\]{}()!])/g, '\\$1');
+  const workshopSummary = (value) =>
+    value.split(/(`[^`]+`)/g).map((part) =>
+      /^`[^`]+`$/.test(part) ? inlineCode(part.slice(1, -1)) : workshopText(part),
+    ).join('');
+
+  const itemCount = w.categories.reduce((sum, category) => sum + category.items.length, 0);
+  const excludedCount = w.excluded.reduce((sum, category) => sum + category.count, 0);
+  const sections = w.categories.map((category) => {
+    const label = translated(ja.categories, category.id) || category.name;
+    const items = category.items.map((item) => {
+      const summary = translated(ja.items, item.id);
+      const url = `${source}#${encodeURIComponent(item.id)}`;
+      return `- [${workshopText(item.name)}](${url})${summary ? ' — ' + workshopSummary(summary) : ''}${item.price ? '（' + workshopshopPrice(item.price) + '）' : ''}`;
+    });
+    return `## ${workshopText(label)}\n\n${items.join('\n')}`;
+  });
+
+  function workshopshopPrice(price) {
+    return workshopText(price);
+  }
+
+  const body =
+    front(
+      'Hermes Workshop 日本語版',
+      'Nous Research の Teknium がまとめた、Hermes Agent とつなげる機器のカタログ『The Hermes Workshop』を日本語の 1 行で紹介する索引。',
+      'workshop.md',
+    ) +
+    `# Hermes Workshop 日本語版
+
+「The Hermes Workshop」は、Nous Research の [Teknium](https://x.com/Teknium) がまとめた、Hermes Agent を組み込んだりつないだりできる機器のカタログです。このページでは ${itemCount} 件・${w.categories.length} 分類を日本語の 1 行で紹介し、名前から元のページの各機器の説明へ進めます。
+
+隠し撮り・隠し録音の機器と、侵入検査用の道具（${excludedCount} 件）は、日本の法律に触れる使い方があるため載せていません。[元のページ](${source})で見られます。
+
+Wi-Fi・Bluetooth・LoRa などの電波を出す機器を日本で使うには、技適マークが必要です。総務省の[技適マークの Q&A](https://www.tele.soumu.go.jp/j/adm/monitoring/summary/qa/giteki_mark/)をご覧ください。
+
+日本語の文はこのサイトによる要約です。価格や仕様は元のページとメーカーの情報をご覧ください。
+
+${sections.join('\n\n')}
+
+元のページの確認日: ${workshopText(w.fetchedAt)}
+`;
+
+  await write('workshop.md', body);
+}
+
 // trouble
 {
   const t = await readJson('data/wiki/trouble.json');
@@ -429,4 +488,4 @@ ${changedPages}${digestSection}
   await write('updates-weekly.md', weeklyBody);
 }
 
-console.log('gen-raw-data: wrote models.md free.md howto.md tips.md trouble.md community.md updates.md updates-weekly.md');
+console.log('gen-raw-data: wrote models.md free.md howto.md tips.md workshop.md trouble.md community.md updates.md updates-weekly.md');

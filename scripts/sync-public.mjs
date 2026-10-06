@@ -68,6 +68,7 @@ const catalog = [
   ['/hermes/updates/', '更新履歴（公式 docs への追随記録）'],
   ['/hermes/howto/', '逆引き（やりたいことから探す索引）'],
   ['/hermes/tips/', 'Hermes Wingtips 日本語版（@witcheer による連載の全回を日本語で）'],
+  ['/hermes/workshop/', 'Hermes Workshop 日本語版（Teknium の機器カタログを日本語の 1 行で）'],
   ['/hermes/trouble/', 'トラブル（症状から対処を引く表）'],
   ['/hermes/first/', '初めての方へ（段階式の道筋）'],
   ['/hermes/cost/', '料金と実例（費用構造と価格の実例）'],

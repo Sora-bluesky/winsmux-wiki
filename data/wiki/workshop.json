@@ -1,0 +1,1729 @@
+{
+  "source": "https://teknium.io/hermes-devices/",
+  "fetchedAt": "2026-10-06",
+  "excluded": [
+    {
+      "id": "security-and-hacker-tools",
+      "name": "Security & Hacker Tools",
+      "count": 10,
+      "kind": "category"
+    },
+    {
+      "id": "spy-and-covert-gadgets",
+      "name": "Spy & Covert Gadgets",
+      "count": 12,
+      "kind": "category"
+    },
+    {
+      "id": "pwnagotchi",
+      "name": "Pwnagotchi",
+      "count": 1,
+      "kind": "item"
+    }
+  ],
+  "categories": [
+    {
+      "id": "hermes-native-gadgets",
+      "name": "Hermes-Native Gadgets",
+      "items": [
+        {
+          "id": "waveshare-esp32-s3-lcd-1-54",
+          "name": "Waveshare ESP32-S3-LCD-1.54",
+          "price": "~$15-19"
+        },
+        {
+          "id": "waveshare-esp32-s3-touch-amoled-1-75",
+          "name": "Waveshare ESP32-S3-Touch-AMOLED-1.75",
+          "price": "~$30-40"
+        },
+        {
+          "id": "waveshare-esp32-s3-touch-lcd-2-8",
+          "name": "Waveshare ESP32-S3-Touch-LCD-2.8",
+          "price": "~$20-26"
+        },
+        {
+          "id": "espressif-esp32-s3-box-3",
+          "name": "Espressif ESP32-S3-BOX-3",
+          "price": "~$50"
+        },
+        {
+          "id": "m5stack-cores3",
+          "name": "M5Stack CoreS3",
+          "price": "~$60"
+        }
+      ]
+    },
+    {
+      "id": "microcontrollers-and-dev-boards",
+      "name": "Microcontrollers & Dev Boards",
+      "items": [
+        {
+          "id": "esp32-p4",
+          "name": "ESP32-P4",
+          "price": ""
+        },
+        {
+          "id": "esp32-c6",
+          "name": "ESP32-C6",
+          "price": ""
+        },
+        {
+          "id": "waveshare-esp32-p4-7-touch",
+          "name": "Waveshare ESP32-P4 7\" touch",
+          "price": "~$47-56"
+        },
+        {
+          "id": "seeed-xiao-esp32s3-sense",
+          "name": "Seeed XIAO ESP32S3 Sense",
+          "price": "~$14"
+        },
+        {
+          "id": "sensecap-watcher",
+          "name": "SenseCAP Watcher",
+          "price": "~$61"
+        },
+        {
+          "id": "sensecap-indicator-d1",
+          "name": "SenseCAP Indicator D1",
+          "price": "~$49"
+        },
+        {
+          "id": "lilygo-t-deck-plus",
+          "name": "LilyGO T-Deck Plus",
+          "price": "~$71"
+        },
+        {
+          "id": "lilygo-t-lora-pager",
+          "name": "LilyGO T-Lora Pager",
+          "price": "~$87"
+        },
+        {
+          "id": "lilygo-t-watch-s3",
+          "name": "LilyGO T-Watch S3",
+          "price": "~$43"
+        },
+        {
+          "id": "adafruit-esp32-s3-feather",
+          "name": "Adafruit ESP32-S3 Feather",
+          "price": "~$25"
+        },
+        {
+          "id": "adafruit-qualia-esp32-s3",
+          "name": "Adafruit Qualia ESP32-S3",
+          "price": "~$20"
+        },
+        {
+          "id": "raspberry-pi-pico-2",
+          "name": "Raspberry Pi Pico 2",
+          "price": "~$5"
+        },
+        {
+          "id": "wch-ch32-risc-v-ch32fun",
+          "name": "WCH CH32 RISC-V + ch32fun",
+          "price": "~$0.10/chip"
+        },
+        {
+          "id": "xiaozhi-esp32",
+          "name": "xiaozhi-esp32",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "esp-claw",
+          "name": "ESP-Claw",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "esp-idf",
+          "name": "ESP-IDF",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "platformio",
+          "name": "PlatformIO",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "micropython",
+          "name": "MicroPython",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "circuitpython",
+          "name": "CircuitPython",
+          "price": "Free (OSS)"
+        }
+      ]
+    },
+    {
+      "id": "single-board-computers-and-edge-ai",
+      "name": "Single-Board Computers & Edge AI",
+      "items": [
+        {
+          "id": "raspberry-pi-5",
+          "name": "Raspberry Pi 5",
+          "price": "From $45 (1GB); 16GB $305"
+        },
+        {
+          "id": "raspberry-pi-zero-2-w",
+          "name": "Raspberry Pi Zero 2 W",
+          "price": "~$15"
+        },
+        {
+          "id": "raspberry-pi-ai-hat-2",
+          "name": "Raspberry Pi AI HAT+ 2",
+          "price": "~$200"
+        },
+        {
+          "id": "arduino-uno-q",
+          "name": "Arduino UNO Q",
+          "price": "$59 (2GB) / $79 (4GB)"
+        },
+        {
+          "id": "jetson-orin-nano-super",
+          "name": "Jetson Orin Nano Super",
+          "price": "~$399 (launched at $249)"
+        },
+        {
+          "id": "seeed-recomputer-j4012",
+          "name": "Seeed reComputer J4012",
+          "price": "~$1,450"
+        },
+        {
+          "id": "hailo-8l",
+          "name": "Hailo-8L",
+          "price": "~$70 (as Pi AI HAT+ 13 TOPS)"
+        },
+        {
+          "id": "google-coral",
+          "name": "Google Coral",
+          "price": ""
+        },
+        {
+          "id": "beagley-ai",
+          "name": "BeagleY-AI",
+          "price": "~$70"
+        },
+        {
+          "id": "milk-v-risc-v",
+          "name": "Milk-V (RISC-V)",
+          "price": "From ~$5 (Duo); larger boards vary"
+        },
+        {
+          "id": "framework-desktop",
+          "name": "Framework Desktop",
+          "price": "~$1,269-$3,449 (DIY, 32GB-128GB)"
+        },
+        {
+          "id": "balena-fleet-management",
+          "name": "balena (fleet management)",
+          "price": "Free (first 10 devices); paid plans from $159/mo"
+        }
+      ]
+    },
+    {
+      "id": "retro-fpga-handheld",
+      "name": "Retro, FPGA & Handheld Dev",
+      "items": [
+        {
+          "id": "analogue-pocket-openfpga",
+          "name": "Analogue Pocket (openFPGA)",
+          "price": "~$220"
+        },
+        {
+          "id": "modretro-chromatic",
+          "name": "ModRetro Chromatic",
+          "price": "~$200"
+        },
+        {
+          "id": "mister-fpga",
+          "name": "MiSTer FPGA",
+          "price": "~$200+"
+        },
+        {
+          "id": "playdate",
+          "name": "Playdate",
+          "price": "~$229"
+        },
+        {
+          "id": "anbernic-rg35xxsp",
+          "name": "Anbernic RG35XXSP",
+          "price": "~$60"
+        },
+        {
+          "id": "retroid-pocket-5",
+          "name": "Retroid Pocket 5",
+          "price": "~$199"
+        },
+        {
+          "id": "miyoo-mini-plus",
+          "name": "Miyoo Mini Plus",
+          "price": "~$55"
+        },
+        {
+          "id": "tinytapeout",
+          "name": "TinyTapeout",
+          "price": "~$100+"
+        }
+      ]
+    },
+    {
+      "id": "robots",
+      "name": "Robots",
+      "items": [
+        {
+          "id": "reachy-mini",
+          "name": "Reachy Mini",
+          "price": "$499 Wireless / $399 Lite"
+        },
+        {
+          "id": "lerobot",
+          "name": "LeRobot",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "so-101-arm",
+          "name": "SO-101 arm",
+          "price": "~$278 (Seeed Pro motor kit)"
+        },
+        {
+          "id": "lekiwi-mobile-so-101",
+          "name": "LeKiwi (mobile SO-101)",
+          "price": "~$480-$500 (DIY BOM)"
+        },
+        {
+          "id": "hopejr-diy-humanoid",
+          "name": "HOPEJr (DIY humanoid)",
+          "price": "~$3,000 (announced)"
+        },
+        {
+          "id": "open-duck-mini",
+          "name": "Open Duck Mini",
+          "price": "~$400 (DIY BOM)"
+        },
+        {
+          "id": "stack-chan",
+          "name": "Stack-chan",
+          "price": "~$99 (official M5Stack kit)"
+        },
+        {
+          "id": "anki-vector-wire-pod",
+          "name": "Anki Vector + wire-pod",
+          "price": ""
+        },
+        {
+          "id": "petoi-bittle-x",
+          "name": "Petoi Bittle X",
+          "price": "~$319-$469"
+        },
+        {
+          "id": "unitree-go2-g1",
+          "name": "Unitree Go2 / G1",
+          "price": "Go2 from $1,600; G1 from $13.5K"
+        },
+        {
+          "id": "turtlebot-4-ros-2",
+          "name": "TurtleBot 4 (ROS 2)",
+          "price": ""
+        },
+        {
+          "id": "irobot-create-3-ros-2",
+          "name": "iRobot Create 3 (ROS 2)",
+          "price": "~$300-$450"
+        },
+        {
+          "id": "waveshare-ugv-rover-ros-2",
+          "name": "Waveshare UGV Rover ROS 2",
+          "price": "~$535-$727"
+        },
+        {
+          "id": "waveshare-ugv-beast",
+          "name": "Waveshare UGV Beast",
+          "price": "~$265-$502"
+        },
+        {
+          "id": "mycobot-280-pi",
+          "name": "myCobot 280 Pi",
+          "price": "~$799"
+        },
+        {
+          "id": "ufactory-lite-6",
+          "name": "UFACTORY Lite 6",
+          "price": "~$3,349"
+        },
+        {
+          "id": "crazyflie-2-1-brushless",
+          "name": "Crazyflie 2.1 Brushless",
+          "price": "~$480"
+        },
+        {
+          "id": "ardupilot-px4",
+          "name": "ArduPilot / PX4",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "openbot",
+          "name": "OpenBot",
+          "price": "~$50 + phone"
+        },
+        {
+          "id": "frodobots",
+          "name": "FrodoBots",
+          "price": "~$349-$399"
+        },
+        {
+          "id": "feetech-servos",
+          "name": "Feetech servos",
+          "price": "~$14-$22 per STS3215"
+        },
+        {
+          "id": "huskylens-2",
+          "name": "HUSKYLENS 2",
+          "price": "~$90"
+        },
+        {
+          "id": "openmv",
+          "name": "OpenMV",
+          "price": "$165-$195"
+        },
+        {
+          "id": "luxonis-oak-depth-cams",
+          "name": "Luxonis OAK depth cams",
+          "price": "$269+"
+        },
+        {
+          "id": "seeed-recamera",
+          "name": "Seeed reCamera",
+          "price": "~$110"
+        },
+        {
+          "id": "grove-vision-ai-v2",
+          "name": "Grove Vision AI V2",
+          "price": "~$16"
+        },
+        {
+          "id": "rplidar-a1",
+          "name": "RPLIDAR A1",
+          "price": "~$99"
+        }
+      ]
+    },
+    {
+      "id": "music-synths-dsp",
+      "name": "Music, Synths & DSP",
+      "items": [
+        {
+          "id": "electrosmith-daisy-seed",
+          "name": "Electrosmith Daisy Seed",
+          "price": "~$30"
+        },
+        {
+          "id": "monome-norns",
+          "name": "monome norns",
+          "price": "~$900 (shield DIY ~$200)"
+        },
+        {
+          "id": "bela",
+          "name": "Bela",
+          "price": "~$130+"
+        },
+        {
+          "id": "zynthian",
+          "name": "Zynthian",
+          "price": "~$550 (kit) / DIY varies"
+        },
+        {
+          "id": "teenage-engineering-op-1-field",
+          "name": "Teenage Engineering OP-1 field",
+          "price": "~$1,999"
+        },
+        {
+          "id": "teenage-engineering-ep-133-k-o-ii",
+          "name": "Teenage Engineering EP-133 K.O. II",
+          "price": "~$299"
+        },
+        {
+          "id": "ableton-move",
+          "name": "Ableton Move",
+          "price": "~$449"
+        },
+        {
+          "id": "raspberry-pi-pico-picoadk-audio",
+          "name": "Raspberry Pi Pico (PicoADK/audio)",
+          "price": "~$40"
+        }
+      ]
+    },
+    {
+      "id": "wearables-body-sensors",
+      "name": "Wearables & Body Sensors",
+      "items": [
+        {
+          "id": "watchy",
+          "name": "Watchy",
+          "price": "~$80"
+        },
+        {
+          "id": "pinetime",
+          "name": "PineTime",
+          "price": "~$27"
+        },
+        {
+          "id": "bangle-js-2",
+          "name": "Bangle.js 2",
+          "price": "~$70"
+        },
+        {
+          "id": "pebble-core-devices",
+          "name": "Pebble (Core Devices)",
+          "price": ""
+        },
+        {
+          "id": "oura-ring-4",
+          "name": "Oura Ring 4",
+          "price": "~$349"
+        },
+        {
+          "id": "whoop-5-0-mg",
+          "name": "WHOOP 5.0 / MG",
+          "price": ""
+        },
+        {
+          "id": "ultrahuman-ring-air",
+          "name": "Ultrahuman Ring AIR",
+          "price": "~$349"
+        },
+        {
+          "id": "brilliant-labs-halo",
+          "name": "Brilliant Labs Halo",
+          "price": "~$299"
+        },
+        {
+          "id": "even-realities-g2",
+          "name": "Even Realities G2",
+          "price": "~$599"
+        },
+        {
+          "id": "plaud-notepin",
+          "name": "Plaud NotePin",
+          "price": "~$159"
+        }
+      ]
+    },
+    {
+      "id": "focus-presence-status",
+      "name": "Focus, Presence & Status Gadgets",
+      "items": [
+        {
+          "id": "busy-bar",
+          "name": "BUSY Bar",
+          "price": "$199"
+        },
+        {
+          "id": "blink-1-mk3",
+          "name": "blink(1) mk3",
+          "price": "$39.95"
+        },
+        {
+          "id": "luxafor-flag",
+          "name": "Luxafor Flag",
+          "price": "$59"
+        },
+        {
+          "id": "kuando-busylight",
+          "name": "Kuando Busylight",
+          "price": "$99"
+        },
+        {
+          "id": "muteme",
+          "name": "MuteMe",
+          "price": "$29.99"
+        },
+        {
+          "id": "flic-2",
+          "name": "Flic 2",
+          "price": "$34.99"
+        },
+        {
+          "id": "elgato-stream-deck-neo",
+          "name": "Elgato Stream Deck Neo",
+          "price": "$99.99"
+        },
+        {
+          "id": "ulanzi-tc001-awtrix",
+          "name": "Ulanzi TC001 (AWTRIX)",
+          "price": "$59.99"
+        },
+        {
+          "id": "time-timer",
+          "name": "Time Timer",
+          "price": "$24.95+"
+        },
+        {
+          "id": "ticktime-cube",
+          "name": "TickTime Cube",
+          "price": "$24.99"
+        }
+      ]
+    },
+    {
+      "id": "keyboards-peripherals",
+      "name": "Keyboards & Peripherals",
+      "items": [
+        {
+          "id": "zsa-voyager",
+          "name": "ZSA Voyager",
+          "price": "~$365"
+        },
+        {
+          "id": "zsa-moonlander",
+          "name": "ZSA Moonlander",
+          "price": "~$365"
+        },
+        {
+          "id": "keychron-q1-max",
+          "name": "Keychron Q1 Max",
+          "price": "~$230"
+        },
+        {
+          "id": "wooting-80he",
+          "name": "Wooting 80HE",
+          "price": "~$200"
+        },
+        {
+          "id": "work-louder-creator-micro",
+          "name": "Work Louder Creator Micro",
+          "price": "~$149"
+        },
+        {
+          "id": "elgato-stream-deck",
+          "name": "Elgato Stream Deck",
+          "price": "~$150"
+        },
+        {
+          "id": "ploopy-open-trackballs",
+          "name": "Ploopy (open trackballs)",
+          "price": "Varies (~CAD $40-150)"
+        },
+        {
+          "id": "smartknob",
+          "name": "SmartKnob",
+          "price": "Varies (DIY)"
+        },
+        {
+          "id": "logitech-mx-creative-console",
+          "name": "Logitech MX Creative Console",
+          "price": "~$200"
+        },
+        {
+          "id": "kinesis-advantage360-pro",
+          "name": "Kinesis Advantage360 Pro",
+          "price": "~$499"
+        }
+      ]
+    },
+    {
+      "id": "light-led-and-pixels",
+      "name": "Light, LED & Pixels",
+      "items": [
+        {
+          "id": "wled",
+          "name": "WLED",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "quinled-controllers",
+          "name": "QuinLED controllers",
+          "price": ""
+        },
+        {
+          "id": "athom-wled-music-controller",
+          "name": "Athom WLED music controller",
+          "price": "~$20-36"
+        },
+        {
+          "id": "awtrix-ng",
+          "name": "AWTRIX NG",
+          "price": "Free (noncommercial license)"
+        },
+        {
+          "id": "rpi-rgb-led-matrix",
+          "name": "rpi-rgb-led-matrix",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "open-lighting-architecture",
+          "name": "Open Lighting Architecture",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "enttec-open-dmx-usb",
+          "name": "ENTTEC Open DMX USB",
+          "price": "~$70"
+        }
+      ]
+    },
+    {
+      "id": "more-iot-light-sensors",
+      "name": "More Lights, Plugs & Sensors",
+      "items": [
+        {
+          "id": "nanoleaf-lines-shapes",
+          "name": "Nanoleaf (lines/shapes)",
+          "price": "$$"
+        },
+        {
+          "id": "govee-lan-api",
+          "name": "Govee (LAN API)",
+          "price": "$"
+        },
+        {
+          "id": "lifx",
+          "name": "LIFX",
+          "price": "$$"
+        },
+        {
+          "id": "sonoff-itead-flashable",
+          "name": "Sonoff / ITEAD (flashable)",
+          "price": "$"
+        },
+        {
+          "id": "aqara-fp2-presence",
+          "name": "Aqara FP2 presence",
+          "price": "$$"
+        },
+        {
+          "id": "ruuvi-tag",
+          "name": "Ruuvi Tag",
+          "price": "$$"
+        },
+        {
+          "id": "aranet4",
+          "name": "Aranet4",
+          "price": "$$$"
+        },
+        {
+          "id": "thirdreality-zigbee-matter",
+          "name": "ThirdReality (Zigbee/Matter)",
+          "price": "$"
+        },
+        {
+          "id": "switchbot-hub-sensors",
+          "name": "SwitchBot Hub/sensors",
+          "price": "$$"
+        }
+      ]
+    },
+    {
+      "id": "displays-hermes-paints",
+      "name": "Displays Hermes Paints",
+      "items": [
+        {
+          "id": "trmnl-byos-terminus",
+          "name": "TRMNL BYOS (Terminus)",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "trmnl-firmware",
+          "name": "TRMNL firmware",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "tronbyt-server",
+          "name": "Tronbyt server",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "inkypi",
+          "name": "InkyPi",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "pimoroni-inky-library",
+          "name": "Pimoroni Inky library",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "inkplate-arduino-library",
+          "name": "Inkplate Arduino library",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "seeed-reterminal-e1001",
+          "name": "Seeed reTerminal E1001",
+          "price": "~$69"
+        },
+        {
+          "id": "pimoroni-presto",
+          "name": "Pimoroni Presto",
+          "price": "~$78"
+        }
+      ]
+    },
+    {
+      "id": "audio-and-media",
+      "name": "Audio & Media",
+      "items": [
+        {
+          "id": "music-assistant",
+          "name": "Music Assistant",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "snapcast-multiroom",
+          "name": "Snapcast (multiroom)",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "volumio",
+          "name": "Volumio",
+          "price": "Free (MyVolumio tiers optional)"
+        },
+        {
+          "id": "jellyfin",
+          "name": "Jellyfin",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "kodi-libreelec",
+          "name": "Kodi / LibreELEC",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "sonos-soco",
+          "name": "Sonos (SoCo)",
+          "price": "Free (OSS)"
+        }
+      ]
+    },
+    {
+      "id": "voice-in-every-room",
+      "name": "Voice in Every Room",
+      "items": [
+        {
+          "id": "home-assistant-voice-pe",
+          "name": "Home Assistant Voice PE",
+          "price": "~$69"
+        },
+        {
+          "id": "futureproofhomes-satellite1",
+          "name": "FutureProofHomes Satellite1",
+          "price": "~$70 Dev Kit / ~$133 assembled"
+        },
+        {
+          "id": "respeaker-xvf3800-4-mic",
+          "name": "reSpeaker XVF3800 (4-mic)",
+          "price": "~$61"
+        },
+        {
+          "id": "respeaker-lite",
+          "name": "reSpeaker Lite",
+          "price": "~$27"
+        },
+        {
+          "id": "wyoming-protocol",
+          "name": "Wyoming protocol",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "piper-tts",
+          "name": "Piper TTS",
+          "price": "Free (OSS)"
+        }
+      ]
+    },
+    {
+      "id": "local-first-smart-home-devices",
+      "name": "Local-First Smart Home",
+      "items": [
+        {
+          "id": "shelly-relays-meters",
+          "name": "Shelly (relays, meters)",
+          "price": ""
+        },
+        {
+          "id": "shelly-pro-3em",
+          "name": "Shelly Pro 3EM",
+          "price": "~$129 (120A version, US store)"
+        },
+        {
+          "id": "athom-pre-flashed-esphome-tasmota-wled-plugs-bul",
+          "name": "Athom (pre-flashed ESPHome/Tasmota/WLED plugs, bulbs, switches)",
+          "price": "~$10-20 per plug"
+        },
+        {
+          "id": "sonoff",
+          "name": "Sonoff",
+          "price": ""
+        },
+        {
+          "id": "apollo-automation",
+          "name": "Apollo Automation",
+          "price": "~$38 (MSR-2), ~$110+ (AIR-1)"
+        },
+        {
+          "id": "everything-presence-one",
+          "name": "Everything Presence One",
+          "price": "~$65"
+        },
+        {
+          "id": "espresense",
+          "name": "ESPresense",
+          "price": "Free (OSS) + ~$5-10 ESP32 per room"
+        },
+        {
+          "id": "ratgdo",
+          "name": "ratgdo",
+          "price": "~$62 (ratgdo32), ~$94 (disco)"
+        },
+        {
+          "id": "konnected-blaq",
+          "name": "Konnected blaQ",
+          "price": "~$89"
+        },
+        {
+          "id": "konnected-alarm-panels",
+          "name": "Konnected (alarm panels)",
+          "price": "~$229 (Pro 12-zone kit)"
+        },
+        {
+          "id": "valetudo",
+          "name": "Valetudo",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "openmower",
+          "name": "OpenMower",
+          "price": ""
+        },
+        {
+          "id": "thingino",
+          "name": "Thingino",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "frigate-nvr",
+          "name": "Frigate NVR",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "go2rtc",
+          "name": "go2rtc",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "reolink-local-api-ha",
+          "name": "Reolink (local API, HA)",
+          "price": ""
+        },
+        {
+          "id": "airgradient",
+          "name": "AirGradient",
+          "price": "~$230 assembled, ~$138 kit"
+        },
+        {
+          "id": "ecowitt",
+          "name": "Ecowitt",
+          "price": "Varies (GW2000 gateway ~$50)"
+        },
+        {
+          "id": "openevse",
+          "name": "OpenEVSE",
+          "price": "Varies (controller ~$130, Wi-Fi kit ~$40)"
+        },
+        {
+          "id": "iotawatt",
+          "name": "IoTaWatt",
+          "price": "~$300-$430 depending on kit"
+        },
+        {
+          "id": "emporia-vue-on-esphome",
+          "name": "Emporia Vue on ESPHome",
+          "price": "Varies (Vue hardware) + Free (OSS) firmware"
+        },
+        {
+          "id": "victron-venus-os",
+          "name": "Victron Venus OS",
+          "price": "Free (OSS); GX hardware varies"
+        },
+        {
+          "id": "nuki-developer-api",
+          "name": "Nuki (developer API)",
+          "price": ""
+        },
+        {
+          "id": "switchbot-api",
+          "name": "SwitchBot API",
+          "price": "Free API; devices vary"
+        },
+        {
+          "id": "philips-hue-api",
+          "name": "Philips Hue API",
+          "price": ""
+        },
+        {
+          "id": "tp-link-kasa-python-kasa",
+          "name": "TP-Link Kasa (python-kasa)",
+          "price": "Free (OSS); plugs vary"
+        },
+        {
+          "id": "broadlink-ir-rf-blasters",
+          "name": "Broadlink IR/RF blasters",
+          "price": ""
+        }
+      ]
+    },
+    {
+      "id": "the-control-spine",
+      "name": "The Control Spine",
+      "items": [
+        {
+          "id": "home-assistant-mcp-server",
+          "name": "Home Assistant MCP Server",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "home-assistant-green",
+          "name": "Home Assistant Green",
+          "price": "~$199"
+        },
+        {
+          "id": "home-assistant-yellow",
+          "name": "Home Assistant Yellow",
+          "price": ""
+        },
+        {
+          "id": "ha-connect-zbt-2",
+          "name": "HA Connect ZBT-2",
+          "price": "~$49"
+        },
+        {
+          "id": "ha-connect-zwa-2",
+          "name": "HA Connect ZWA-2",
+          "price": "~$69"
+        },
+        {
+          "id": "smlight-slzb-06",
+          "name": "SMLIGHT SLZB-06",
+          "price": ""
+        },
+        {
+          "id": "esphome",
+          "name": "ESPHome",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "tasmota",
+          "name": "Tasmota",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "zigbee2mqtt",
+          "name": "Zigbee2MQTT",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "z-wave-js-ui",
+          "name": "Z-Wave JS UI",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "python-matter-server",
+          "name": "python-matter-server",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "openthread",
+          "name": "OpenThread",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "mosquitto-mqtt-broker",
+          "name": "Mosquitto (MQTT broker)",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "node-red",
+          "name": "Node-RED",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "openhab-alternative-hub",
+          "name": "openHAB (alternative hub)",
+          "price": "Free (OSS)"
+        }
+      ]
+    },
+    {
+      "id": "network",
+      "name": "Network",
+      "items": [
+        {
+          "id": "openwrt-one",
+          "name": "OpenWrt One",
+          "price": "~$89"
+        },
+        {
+          "id": "banana-pi-bpi-r4",
+          "name": "Banana Pi BPI-R4",
+          "price": ""
+        },
+        {
+          "id": "turris-omnia-ng",
+          "name": "Turris Omnia NG",
+          "price": "~$550-650 (EUR 538 incl. VAT)"
+        },
+        {
+          "id": "gl-inet-flint-2-mt6000",
+          "name": "GL.iNet Flint 2 (MT6000)",
+          "price": "~$170"
+        },
+        {
+          "id": "gl-inet-slate-7-be3600",
+          "name": "GL.iNet Slate 7 (BE3600)",
+          "price": "~$160"
+        },
+        {
+          "id": "openwrt",
+          "name": "OpenWrt",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "mikrotik-rest-api",
+          "name": "MikroTik + REST API",
+          "price": ""
+        },
+        {
+          "id": "opnsense-api",
+          "name": "OPNsense + API",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "protectli",
+          "name": "Protectli",
+          "price": ""
+        },
+        {
+          "id": "unifi",
+          "name": "UniFi",
+          "price": ""
+        },
+        {
+          "id": "pi-hole",
+          "name": "Pi-hole",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "adguard-home",
+          "name": "AdGuard Home",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "tailscale",
+          "name": "Tailscale",
+          "price": "Free personal tier"
+        },
+        {
+          "id": "netbox",
+          "name": "NetBox",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "network-ups-tools",
+          "name": "Network UPS Tools",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "proxmox",
+          "name": "Proxmox",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "truenas",
+          "name": "TrueNAS",
+          "price": "Free (OSS)"
+        }
+      ]
+    },
+    {
+      "id": "remote-hands-ip-kvm",
+      "name": "Remote Hands: IP-KVM",
+      "items": [
+        {
+          "id": "pikvm-http-api",
+          "name": "PiKVM + HTTP API",
+          "price": "~$270-$385"
+        },
+        {
+          "id": "jetkvm",
+          "name": "JetKVM",
+          "price": "~$100"
+        },
+        {
+          "id": "sipeed-nanokvm",
+          "name": "Sipeed NanoKVM",
+          "price": "~$35-$70 (Cube; Pro costs more)"
+        },
+        {
+          "id": "gl-inet-comet-gl-rm1",
+          "name": "GL.iNet Comet (GL-RM1)",
+          "price": "~$100"
+        }
+      ]
+    },
+    {
+      "id": "3d-printing",
+      "name": "3D Printing",
+      "items": [
+        {
+          "id": "klipper",
+          "name": "Klipper",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "moonraker-klipper-s-api",
+          "name": "Moonraker (Klipper's API)",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "mainsail-fluidd",
+          "name": "Mainsail / Fluidd",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "moonraker-ha-integration",
+          "name": "Moonraker HA integration",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "voron",
+          "name": "Voron",
+          "price": ""
+        },
+        {
+          "id": "sovol-sv08",
+          "name": "Sovol SV08",
+          "price": "~$500-600"
+        },
+        {
+          "id": "rat-rig",
+          "name": "Rat Rig",
+          "price": ""
+        },
+        {
+          "id": "bigtreetech-cb1",
+          "name": "BigTreeTech CB1",
+          "price": ""
+        },
+        {
+          "id": "prusa-core-one",
+          "name": "Prusa CORE One",
+          "price": "~$925 kit / ~$1,200 assembled (CORE One+)"
+        },
+        {
+          "id": "bambu-developer-mode",
+          "name": "Bambu Developer Mode",
+          "price": "Free (firmware feature)"
+        },
+        {
+          "id": "ha-bambulab",
+          "name": "ha-bambulab",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "bambu-lab-h2d",
+          "name": "Bambu Lab H2D",
+          "price": "From ~$1,899"
+        },
+        {
+          "id": "elegoo-centauri-carbon",
+          "name": "Elegoo Centauri Carbon",
+          "price": "~$300"
+        },
+        {
+          "id": "octoprint",
+          "name": "OctoPrint",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "obico-ai-failure-detect",
+          "name": "Obico (AI failure detect)",
+          "price": "Free self-hosted / paid cloud tiers"
+        },
+        {
+          "id": "spoolman",
+          "name": "Spoolman",
+          "price": "Free (OSS)"
+        }
+      ]
+    },
+    {
+      "id": "cnc-laser-plotter-pick-and-place",
+      "name": "CNC, Laser, Plotter, Pick-and-Place",
+      "items": [
+        {
+          "id": "makera-carvera-carvera-air",
+          "name": "Makera Carvera / Carvera Air",
+          "price": "~$5,300-5,800 (Carvera); ~$2,300-2,700 (Air)"
+        },
+        {
+          "id": "grblhal",
+          "name": "grblHAL",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "fluidnc",
+          "name": "FluidNC",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "gsender",
+          "name": "gSender",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "lightburn",
+          "name": "LightBurn",
+          "price": "$99 (Core) / $199 (Pro)"
+        },
+        {
+          "id": "lasergrbl",
+          "name": "LaserGRBL",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "sculpfun",
+          "name": "Sculpfun",
+          "price": ""
+        },
+        {
+          "id": "axidraw-python-api",
+          "name": "AxiDraw + Python API",
+          "price": "~$475+"
+        },
+        {
+          "id": "opulo-lumenpnp",
+          "name": "Opulo LumenPnP",
+          "price": "~$1,995"
+        },
+        {
+          "id": "openflexure-microscope",
+          "name": "OpenFlexure Microscope",
+          "price": ""
+        },
+        {
+          "id": "opentrons-flex",
+          "name": "Opentrons Flex",
+          "price": "From ~$26,400"
+        }
+      ]
+    },
+    {
+      "id": "pcb-and-silicon-pipeline",
+      "name": "PCB & Silicon Pipeline",
+      "items": [
+        {
+          "id": "kicad",
+          "name": "KiCad",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "jlcpcb",
+          "name": "JLCPCB",
+          "price": "Varies (PCBs from ~$2)"
+        },
+        {
+          "id": "pcbway",
+          "name": "PCBWay",
+          "price": ""
+        },
+        {
+          "id": "lcsc",
+          "name": "LCSC",
+          "price": ""
+        },
+        {
+          "id": "tiny-tapeout",
+          "name": "Tiny Tapeout",
+          "price": ""
+        }
+      ]
+    },
+    {
+      "id": "bench-instruments",
+      "name": "Bench Instruments",
+      "items": [
+        {
+          "id": "pyvisa",
+          "name": "PyVISA",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "rigol",
+          "name": "Rigol",
+          "price": "Varies (DHO804 scope ~$400-460)"
+        },
+        {
+          "id": "siglent",
+          "name": "Siglent",
+          "price": ""
+        },
+        {
+          "id": "rd6006-bench-psu-python",
+          "name": "RD6006 bench PSU (Python)",
+          "price": "~$100-200 (module vs. complete unit)"
+        },
+        {
+          "id": "sigrok",
+          "name": "sigrok",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "saleae",
+          "name": "Saleae",
+          "price": "From ~$499 (Logic 8)"
+        },
+        {
+          "id": "digilent-analog-discovery-3",
+          "name": "Digilent Analog Discovery 3",
+          "price": "~$379"
+        },
+        {
+          "id": "joulescope",
+          "name": "Joulescope",
+          "price": "~$999 (JS320)"
+        },
+        {
+          "id": "nordic-ppk2",
+          "name": "Nordic PPK2",
+          "price": "~$100"
+        },
+        {
+          "id": "glasgow-interface-explorer",
+          "name": "Glasgow Interface Explorer",
+          "price": "~$179 (revC, limited stock)"
+        },
+        {
+          "id": "black-magic-probe",
+          "name": "Black Magic Probe",
+          "price": "~$77 (V2.3)"
+        },
+        {
+          "id": "raspberry-pi-debug-probe",
+          "name": "Raspberry Pi Debug Probe",
+          "price": "~$12"
+        },
+        {
+          "id": "bus-pirate-6",
+          "name": "Bus Pirate 6",
+          "price": "~$83"
+        },
+        {
+          "id": "pinecil-ironos",
+          "name": "Pinecil + IronOS",
+          "price": "~$26-36"
+        },
+        {
+          "id": "nanovna",
+          "name": "NanoVNA",
+          "price": "~$60-130"
+        },
+        {
+          "id": "tinysa",
+          "name": "tinySA",
+          "price": "~$60-190 (Basic to Ultra+)"
+        },
+        {
+          "id": "topdon-tc001-thermal-cam",
+          "name": "Topdon TC001 thermal cam",
+          "price": "~$289"
+        }
+      ]
+    },
+    {
+      "id": "radio-sdr-and-mesh",
+      "name": "Radio, SDR & Mesh",
+      "items": [
+        {
+          "id": "hackrf-one-hackrf-pro",
+          "name": "HackRF One / HackRF Pro",
+          "price": "~$330 (One); ~$400 (Pro)"
+        },
+        {
+          "id": "rtl-sdr-blog-v4",
+          "name": "RTL-SDR Blog V4",
+          "price": "~$30-40"
+        },
+        {
+          "id": "krakensdr",
+          "name": "KrakenSDR",
+          "price": "~$775 (plus antennas)"
+        },
+        {
+          "id": "rtl-433",
+          "name": "rtl_433",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "readsb-flightaware-stick",
+          "name": "readsb + FlightAware stick",
+          "price": "~$37-46 (stick); readsb Free (OSS)"
+        },
+        {
+          "id": "gnu-radio",
+          "name": "GNU Radio",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "universal-radio-hacker",
+          "name": "Universal Radio Hacker",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "meshtastic-python-cli",
+          "name": "Meshtastic Python CLI",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "rak-meshtastic-kit",
+          "name": "RAK Meshtastic kit",
+          "price": "~$25-61"
+        },
+        {
+          "id": "heltec-wifi-lora-32-v3",
+          "name": "Heltec WiFi LoRa 32 V3",
+          "price": "~$18-20"
+        },
+        {
+          "id": "sensecap-t1000-e",
+          "name": "SenseCAP T1000-E",
+          "price": "~$40"
+        },
+        {
+          "id": "meshcore",
+          "name": "MeshCore",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "reticulum",
+          "name": "Reticulum",
+          "price": "Free (OSS)"
+        }
+      ]
+    },
+    {
+      "id": "home-security-and-surveillance",
+      "name": "Home Security & Surveillance",
+      "items": [
+        {
+          "id": "konnected-pro-alarm",
+          "name": "Konnected Pro Alarm Panel",
+          "price": "~$229"
+        },
+        {
+          "id": "esphome-alarm-control-panel",
+          "name": "ESPHome Alarm Control Panel",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "reolink-doorbell-local",
+          "name": "Reolink Video Doorbell (local)",
+          "price": ""
+        },
+        {
+          "id": "unifi-protect-api",
+          "name": "UniFi Protect",
+          "price": ""
+        },
+        {
+          "id": "amcrest-dahua-api",
+          "name": "Amcrest / Dahua IP cams",
+          "price": ""
+        },
+        {
+          "id": "wyze-docker-wyze-bridge",
+          "name": "docker-wyze-bridge",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "aqara-g5-pro",
+          "name": "Aqara Camera Hub G5 Pro",
+          "price": ""
+        },
+        {
+          "id": "shelly-blu-motion",
+          "name": "Shelly BLU Motion / Door-Window",
+          "price": ""
+        },
+        {
+          "id": "frient-sensors",
+          "name": "frient (Develco) Z sensors",
+          "price": ""
+        },
+        {
+          "id": "sonoff-sa-003-siren",
+          "name": "Zigbee sirens & keypads",
+          "price": ""
+        },
+        {
+          "id": "schlage-encode-matter",
+          "name": "Smart deadbolts (Matter/Z-Wave)",
+          "price": ""
+        },
+        {
+          "id": "2n-intercom-api",
+          "name": "2N IP Intercom (HTTP API)",
+          "price": ""
+        },
+        {
+          "id": "hikvision-isapi",
+          "name": "Hikvision ISAPI",
+          "price": ""
+        }
+      ]
+    },
+    {
+      "id": "pocket-linux-cyberdecks",
+      "name": "Pocket Linux & Cyberdecks",
+      "items": [
+        {
+          "id": "clockworkpi-uconsole",
+          "name": "ClockworkPi uConsole",
+          "price": "~$139"
+        },
+        {
+          "id": "clockwork-devterm",
+          "name": "Clockwork DevTerm",
+          "price": "~$219"
+        },
+        {
+          "id": "mnt-pocket-reform",
+          "name": "MNT Pocket Reform",
+          "price": "~$500"
+        },
+        {
+          "id": "beepy-sqfmi",
+          "name": "Beepy (SQFMI)",
+          "price": "~$79"
+        },
+        {
+          "id": "raspberry-pi-500",
+          "name": "Raspberry Pi 500+",
+          "price": "~$200"
+        }
+      ]
+    },
+    {
+      "id": "workshop-operations",
+      "name": "Workshop Operations",
+      "items": [
+        {
+          "id": "inventree",
+          "name": "InvenTree",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "homebox",
+          "name": "HomeBox",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "brother-ql",
+          "name": "brother_ql",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "python-escpos",
+          "name": "python-escpos",
+          "price": "Free (OSS)"
+        }
+      ]
+    },
+    {
+      "id": "where-to-find-more",
+      "name": "Where to Find More",
+      "items": [
+        {
+          "id": "crowd-supply",
+          "name": "Crowd Supply",
+          "price": ""
+        },
+        {
+          "id": "tindie",
+          "name": "Tindie",
+          "price": ""
+        },
+        {
+          "id": "adafruit-sparkfun-seeed-pimoroni",
+          "name": "Adafruit / SparkFun / Seeed / Pimoroni",
+          "price": ""
+        },
+        {
+          "id": "hackster",
+          "name": "Hackster",
+          "price": "Free"
+        },
+        {
+          "id": "oshwa-certified-projects",
+          "name": "OSHWA certified projects",
+          "price": "Free"
+        },
+        {
+          "id": "openhardware-io",
+          "name": "OpenHardware.io",
+          "price": "Free"
+        },
+        {
+          "id": "thingiverse-printables",
+          "name": "Thingiverse / Printables",
+          "price": "Free"
+        }
+      ]
+    },
+    {
+      "id": "firmware-agent-projects",
+      "name": "Firmware & Agent Projects",
+      "items": [
+        {
+          "id": "hermes-gadget-sdk",
+          "name": "Hermes Gadget SDK",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "hermes-familiar",
+          "name": "Hermes Familiar",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "esp-hermes-channel",
+          "name": "ESP-Hermes channel",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "caduceus-robot",
+          "name": "Caduceus robot",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "hermes32",
+          "name": "hermes32",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "hermes-agent-iot",
+          "name": "hermes-agent-iot",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "hermes-gadget-github",
+          "name": "hermes-gadget (GitHub)",
+          "price": "Free (OSS)"
+        },
+        {
+          "id": "rohitcraftsyt-hermes",
+          "name": "ROHITCRAFTSYT/Hermes",
+          "price": "Free (OSS)"
+        }
+      ]
+    }
+  ]
+}
