@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 62f2f1278c3dbe611a6006bd86d00142db1b2b0f
+upstream_blob: b413655aa76cabdc34afa9bb76db0b07f5b46f84
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -103,7 +103,7 @@ def register(ctx):
 | スラッシュコマンドを足す | `ctx.register_command(name, handler, description)` — CLI とゲートウェイのセッションに `/name` を足します |
 | コマンドからツールを呼ぶ | `ctx.dispatch_tool(name, args)` — 親エージェントの文脈を自動でつないだ状態で、登録済みのツールを呼びます |
 | CLI のコマンドを足す | `ctx.register_cli_command(name, help, setup_fn, handler_fn)` — `hermes <plugin> <subcommand>` を足します |
-| メッセージを差し込む | `ctx.inject_message(content, role="user", session_key=...)` - [メッセージを差し込む](#injecting-messages)を参照 |
+| メッセージを差し込む | `ctx.inject_message(content, role="user", session_key=... \| origin=...)` - [メッセージを差し込む](#injecting-messages)を参照 |
 | データファイルを同梱する | `Path(__file__).parent / "data" / "file.yaml"` |
 | スキルを同梱する | `ctx.register_skill(name, path)` — `plugin:skill` という名前空間になり、`skill_view("plugin:skill")` で読み込みます |
 | 環境変数を条件にする | plugin.yaml の `requires_env: [API_KEY]` — `hermes plugins install` の途中で入力を求められます |
@@ -113,6 +113,7 @@ def register(ctx):
 | 動画生成のバックエンドを登録する | `ctx.register_video_gen_provider(provider)` — [動画生成プロバイダーのプラグイン](/hermes/docs/developer-guide/video-gen-provider-plugin/)を参照 |
 | 文脈を圧縮するエンジンを登録する | `ctx.register_context_engine(engine)` — [コンテキストエンジンのプラグイン](/hermes/docs/developer-guide/context-engine-plugin/)を参照 |
 | ターミナルの実行環境（クラウドのサンドボックス）を登録する | `ctx.register_terminal_environment_provider(provider)` — [ターミナル環境のプラグイン](/hermes/docs/developer-guide/terminal-environment-plugin/)を参照 |
+| コンピュータ操作のドライバーを登録する | `ctx.register_computer_use_provider(provider)` — `computer_use.backend` で選ばれます。[コンピュータ操作バックエンドのプラグイン](/hermes/docs/developer-guide/plugins/#computer-use-backend-plugins)を参照 |
 | 人の承認を求める画面の出し先を決める | `ctx.register_approval_transport(name, present_fn)` — [承認の伝え方](#approval-transports)を参照 |
 | メモリのバックエンドを登録する | `plugins/memory/<name>/__init__.py` で `MemoryProvider` を継承 — [メモリプロバイダーのプラグイン](/hermes/docs/developer-guide/memory-provider-plugin/)を参照（別の探索の仕組みを使います） |
 | ホストが持つ LLM 呼び出しを走らせる | `ctx.llm.complete(...)` / `ctx.llm.complete_structured(...)` — 利用者が使っているモデルと認証をそのまま借りて1回だけ生成し、必要なら JSON スキーマで検証します。[プラグインからの LLM 利用](/hermes/docs/developer-guide/plugin-llm-access/)を参照 |
@@ -355,6 +356,7 @@ Hermes のプラグインは4種類です。
 | **文脈の圧縮のやり方** | コンテキストエンジンのプラグイン — `ctx.register_context_engine()` | [コンテキストエンジンのプラグイン](/hermes/docs/developer-guide/context-engine-plugin/) |
 | **画像生成のバックエンド**（DALL·E、SDXL など） | バックエンドのプラグイン — `ctx.register_image_gen_provider()` | [画像生成プロバイダーのプラグイン](/hermes/docs/developer-guide/image-gen-provider-plugin/) |
 | **動画生成のバックエンド**（Veo、Kling、Pixverse、Grok-Imagine、Runway など） | バックエンドのプラグイン — `ctx.register_video_gen_provider()` | [動画生成プロバイダーのプラグイン](/hermes/docs/developer-guide/video-gen-provider-plugin/) |
+| **コンピュータ操作のドライバー**（`computer_use` ツールの裏でデスクトップを操作するもの） | 1つだけ選ぶプロバイダーのプラグイン — `ctx.register_computer_use_provider()`。`computer_use.backend` で選ばれます | [コンピュータ操作バックエンドのプラグイン](/hermes/docs/developer-guide/plugins/#computer-use-backend-plugins) |
 | **音声合成のバックエンド**（Piper、VoxCPM、Kokoro、xtts、声の複製のスクリプトなど、どんな CLI でも） | 設定で書く方法（おすすめ） — `config.yaml` の `tts.providers.<name>` に `type: command` で宣言します。または Python のバックエンドのプラグイン — シェルのひな形では足りない Python SDK やストリーミングのエンジンには `ctx.register_tts_provider()` を使います。 | [音声合成の設定](/hermes/docs/user-guide/features/tts/#custom-command-providers) · [Python のプラグインのガイド](/hermes/docs/user-guide/features/tts/#python-plugin-providers) |
 | **音声認識のバックエンド**（whisper.cpp、独自の whisper のバイナリ、手元の音声認識の CLI など） | 設定で書く方法（おすすめ） — `config.yaml` の `stt.providers.<name>` に `type: command` で宣言するか、従来からある単一コマンドの抜け道として `HERMES_LOCAL_STT_COMMAND` を設定します。または Python のバックエンドのプラグイン — Python SDK のエンジン（OpenRouter、SenseAudio、Gemini-STT など）には `ctx.register_transcription_provider()` を使います。 | [音声認識の設定](/hermes/docs/user-guide/features/tts/#stt-custom-command-providers) · [Python のプラグインのガイド](/hermes/docs/user-guide/features/tts/#python-plugin-providers-stt) |
 | **MCP 経由の外部のツール**（ファイルシステム、GitHub、Linear、Notion など、どの MCP サーバーでも） | 設定で書く方法 — `config.yaml` に `command:` か `url:` を添えて `mcp_servers.<name>` を宣言します。Hermes がそのサーバーのツールを自動で見つけ、組み込みのツールと並べて登録します。 | [MCP](/hermes/docs/user-guide/features/mcp/) |
@@ -872,7 +874,7 @@ context:
 
 ## メッセージを差し込む {#injecting-messages}
 
-プラグインは `ctx.inject_message()` を使って、CLI の会話や、分かっているゲートウェイのセッションへメッセージを差し込めます。
+プラグインは `ctx.inject_message()` を使って、CLI の会話、分かっているゲートウェイのセッション、または指定したチャットで始める新しいゲートウェイのセッションへメッセージを差し込めます。
 
 ```python
 # Active CLI conversation
@@ -884,9 +886,22 @@ ctx.inject_message(
     role="user",
     session_key="agent:main:telegram:dm:123456789",
 )
+
+# Start (or continue) the session for a chat/thread, e.g. a Discord forum post the plugin just opened
+ctx.inject_message(
+    "Review the attached spec and post a plan here.",
+    origin={
+        "platform": "discord",
+        "chat_id": "1290000000000000000",   # the forum post (thread) id
+        "chat_type": "thread",
+        "thread_id": "1290000000000000000",
+        "user_id": "123456789012345678",    # who the turn runs as; must pass the gateway's allowlist
+        "user_name": "Desk Orchestrator",
+    },
+)
 ```
 
-**書き方:** `ctx.inject_message(content: str, role: str = "user", *, session_key: str | None = None) -> bool`
+**書き方:** `ctx.inject_message(content: str, role: str = "user", *, session_key: str | None = None, origin: Mapping[str, Any] | None = None) -> bool`
 
 CLI のとき:
 
@@ -898,14 +913,22 @@ CLI のとき:
 ゲートウェイのとき:
 
 - `session_key` が必須で、既存のゲートウェイのセッションを指していなければなりません。これは CLI のセッション ID ではなく、経路を決める安定したキーです。
-- Hermes は、そのセッションに保存されたプラットフォーム、チャット、スレッド、プロファイル、会話の履歴をそのまま使います。この API を通して新しいチャットの経路を渡すことはできません。
+- Hermes は、そのセッションに保存されたプラットフォーム、チャット、スレッド、プロファイル、会話の履歴をそのまま使います。プラグインが `session_key` を通してその経路を変えることはできません。
 - 配送の前に、Hermes は保存された経路を、ゲートウェイのいまの権限の規則に照らして確かめ直します。
 - アダプターの時点や上流の判断だけに頼っていた経路は、いまの本体の許可リスト、対の設定、明示的な全許可の設定から再確認できないかぎり拒まれます。
 - 差し込まれた文章は、必ず会話としての入力です。スラッシュコマンドを呼んだり、ツールを承認したり、保留中の確認や聞き返しに答えたりはできません。
 - 配送が終わるまで、経路と会話は固定されます。処理が始まる前に、話題の復元で経路が変わったり、セッションが入れ替わったりした場合、Hermes はその要求を捨てます。
 - 要求は、プラットフォームのアダプターの通常のメッセージの経路に入ります。動いているセッションでは、競合するターンを始めるのではなく、既存の「取り込み中」の待ち行列を使います。
 - 動いているゲートウェイが、非同期の配送のためにその要求を受け取ったとき `True` を返します。これは、エージェントのターンやプラットフォームへの配送が終わったことを示すものではありません。
-- `session_key` が無いとき、権限が与えられていないとき、要求を受け取れる動いているホストが無いときは `False` を返します。非同期に受け取ったあとで、セッションのキーが不明だったり経路が作れなかったりすることが分かった場合は、ゲートウェイのログに書かれます。
+- `session_key` と `origin` のどちらも無いとき（または両方あるとき）、権限が与えられていないとき、要求を受け取れる動いているホストが無いときは `False` を返します。非同期に受け取ったあとで、セッションのキーが不明だったり経路が作れなかったりすることが分かった場合は、ゲートウェイのログに書かれます。
+
+`origin` でセッションを始める（ゲートウェイのときだけ）:
+
+- `origin` は、保存されるセッションの発信元と同じ形（`SessionSource.to_dict()`）です。`platform` と `chat_id` が必須で、`chat_type`、`thread_id`、`user_id`、`user_name`、`chat_name` などの発信元の項目は任意です。まだセッションが無いときに使います。たとえば bot が書いたフォーラムの投稿は、Discord のようなプラットフォームでは bot 自身への受信メッセージとして届くことがありません。
+- セッションは、通常のセッションの経路を通って**プラグイン自身のプロファイル**（そのプラグインを読み込んだプラグインマネージャーのプロファイル）に作られます。プロンプトは新しく、履歴は空で、返信はそのチャットやスレッドに届きます。そのプロファイルでそのチャットにすでにセッションがあれば、文章は人間のメッセージとまったく同じようにそこへ加わります（「取り込み中」の待ち行列も同じく使われます）。そのため、同じスレッドで人間が続けて書き込むと、同じセッションが続きます。
+- プラグインがほかのプロファイルを対象にすることはできません。発信元が別の `profile` を指しているとき、ゲートウェイ自身のプロファイルの振り分けがそのチャットを別のプロファイルへ送るとき、プラグインのプロファイルをこのゲートウェイが受け持っていないとき、そのプロファイルに `platform` のつながったアダプターが無いときは、`False` を返します（理由はゲートウェイのログに書かれます）。ほかのプロファイルの bot を借りることはありません。複数のプロファイルをまとめて受け持つゲートウェイでは、ターンはプラグインのプロファイルのホームと秘密情報のもとで動きます。
+- 権限の確認は省かれません。発信元の利用者は、そのプロファイルについて、ゲートウェイのいまの許可リスト、対の設定、全許可の設定のいずれかを通る必要があります。`session_key` の経路と同じ確認です。許可されている `user_id` を選んでください。そうでないと、配送の時点で要求が捨てられ、ログに残ります。
+- 文章の扱いの規則も同じです。スラッシュコマンド、承認、確認への回答はできません。下の権限は、プラグイン自身のプロファイルの `config.yaml` から読まれます。
 
 Ink TUI（`hermes --tui`）と、デスクトップ / ダッシュボードのチャットは、3 つ目のホストです。これらは従来の CLI への参照を設定せず、メッセージのゲートウェイの差し込み口にも登録しません。この 2 つのホストを分けておくことで、動いているゲートウェイが TUI を上書きしたり、その逆が起きたりしないようにしています。渡すのは、一時的な UI のセッション ID ではなく、そのセッションの長く保たれる `session_key`（`ses_…` の id）です。Hermes は、そのセッションのプロンプトの待ち行列に文章を積みます。取り込み中のセッションは次のターンのためにメッセージを取っておき、手が空いているセッションはすぐにターンを始めます。動いている TUI のセッションではないキーは、メッセージのゲートウェイが動いていればそちらに任され、別のチャットへ回されることはありません。
 
@@ -921,7 +944,7 @@ plugins:
 ```
 
 :::warning
-ゲートウェイへの差し込みは、信頼できるプラグインにだけ与えてください。Hermes はこのホスト API の権限を確かめ、既存のセッションの経路に限定しますが、Python のプラグインは同じプロセスの中で動きますし、この設定はサンドボックスではありません。
+ゲートウェイへの差し込みは、信頼できるプラグインにだけ与えてください。Hermes はこのホスト API の権限を確かめ、既存のセッションの経路か、プラグイン自身のプロファイルでの新しいセッションに限定し、いまの権限の確認も行いますが、Python のプラグインは同じプロセスの中で動きますし、この設定はサンドボックスではありません。
 :::
 
 :::note

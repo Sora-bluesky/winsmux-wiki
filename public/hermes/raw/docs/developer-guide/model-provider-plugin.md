@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "モデルプロバイダーのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダー（推論バックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: 850fc5ce117f83ef64a2e8002a4675a6e597e249
+upstream_blob: e620d7e98a58c87dfc5e7f2cf9aabf3d958d5d9d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -103,6 +103,7 @@ author: Your Name
 | `display_name` | str | `hermes model` の選択画面に出る表示名です |
 | `description` | str | 選択画面での補足文です |
 | `signup_url` | str | 初回設定のときに出ます（「API キーはここで取得」） |
+| `hidden` | bool | 公開前の段階向けです。`listed()` が true になるまで、見つけるための画面（プロバイダーの選択画面、セットアップの一覧、ダッシュボードのアカウントのタブ）のどこにも出しません。既定では、利用者が名前を指定してサインインした時点（`hermes auth add <name>` がプールに行を書き込んだ時点）で true になります。名前での解決は一切制限されません |
 | `env_vars` | `tuple[str, ...]` | API キーの環境変数を優先順に並べたものです。末尾の `*_BASE_URL` の項目は、利用者によるベース URL の上書きとして扱われます |
 | `base_url` | str | 既定の推論エンドポイントです |
 | `models_url` | str | モデル一覧の URL を明示します（無ければ `{base_url}/models` に戻ります） |
@@ -485,6 +486,13 @@ register_provider(ProviderProfile(
 任意のフィールドは `audience`、`extra_authorize_params`、`extra_token_params`、`redirect_path`、
 `timeout_seconds`、`label` です。
 
+クライアントの秘密情報を自前の仲介サーバーの裏に置く機密クライアントでは、`token_url` の代わりに
+`token_request` を設定します。Hermes はこれを付与のためのフィールド（`grant_type`、`code` / `refresh_token`、
+`redirect_uri`、`code_verifier`）を渡して呼び出し、返ってきたトークンのエンドポイントの JSON をそのまま保存します。
+応答に新しい `refresh_token` がなければ、古いものを残します。仲介サーバーが無効になったと伝えてきた付与については
+`AuthError(..., relogin_required=True)` を発生させてください。プールの行は保存されている `expires_at_ms` より前に
+入れ替えられるので、中身を読めない（JWT ではない）アクセストークンも期限どおりに更新されます。補助クライアント（圧縮やタイトル付け）も、同じプールの行を借りて使います。
+
 ## 復帰とエラーの分類 {#recovery-and-error-classification}
 
 `kind: model-provider` のプラグインは、汎用のプラグインマネージャーでは**なく**プロバイダーの探索処理から
@@ -507,7 +515,7 @@ register_provider(ProviderProfile(name="example-oauth", auth_type="oauth_externa
 |---|---|
 | `classify_api_error(error, *, status_code, error_code, message, body, model)` | `agent.error_classifier.classify_api_error` が、**このプロバイダーだけ**の失敗について、汎用の `transform_api_error_classification` フックのあと、組み込みの処理の前に参照します。`message` は小文字化したエラー本文、`body` は解析済みの JSON 本文です（空のこともあります）。上書きするには `{"reason": <FailoverReason name>}` を返し、必要に応じて `retryable` / `should_compress` / `should_rotate_credential` / `should_fallback` / `error_context` を添えてください（課金、認証、model_not_found といった終端の理由では、明示しないかぎり `should_fallback: True` は `retryable: False` を意味します。フォールバックの連鎖は再試行しない判定のときにしか走らないからです。レート制限の理由は、組み込みの「再試行してからフォールバック」の形のままです）。`None`（または知らない理由）を返すと、組み込みの判定がそのまま使われます。例外は握りつぶされ、DEBUG でログに出ます。この判定は組み込みのときと同じ復帰処理を動かします。たとえば `billing` なら、一時的な 403 の冷却期間ではなく課金用の期間だけ、その資格情報を休ませます。 |
 | プラグインの資格情報での 401 | 中核に手を入れずに、資格情報のプールが扱います。失敗した行は試行ごとに 1 回 `refresh_credential` を通して更新され（1 セッションあたり 1 行につき最大 2 回）、更新後のトークンでクライアントを作り直してリクエストを再試行します。`None` や空を返したり例外を投げたりすると、その行は休ませます。そのあとリクエストは別の行に回るか、汎用の「サインインし直してください: `hermes auth add <name>`」という案内に落ちます。組み込みプロバイダー向けの案内に落ちることはありません。 |
-| 補助的な呼び出し | 補助クライアントの 401 も、同じプールの更新（`try_refresh_current` → `refresh_credential`）を通ります。 |
+| 補助的な呼び出し | `create_client` を同梱した `oauth_external` / `oauth_device_code` のプラグインは、プールの自分の行で補助タスクを受け持ちます（期限が近い行は先に入れ替えます）。補助クライアントの 401 も、同じプールの更新（`try_refresh_current` → `refresh_credential`）を通ります。 |
 
 中核に名前で書かれたままの復帰処理は、汎用の形に落とせない挙動です（プロバイダー固有のトークン保管庫の
 同期し直し、プランの等級による制限の壁、1 回しか使えない更新用トークンの隔離など）。そうしたものが

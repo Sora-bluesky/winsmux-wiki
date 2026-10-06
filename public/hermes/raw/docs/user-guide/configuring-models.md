@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "モデルの設定"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: 4cb72e94e87b1538fb8670cfd406a09e072bcd9c
+upstream_blob: cb36a867a7ef02217c7a5ba30400dd641ac01fec
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---
@@ -262,6 +262,27 @@ Hermes はこの宣言を、プロバイダの経路と実行時のモデル ID 
 ブロック内に置く形です。あるモデルでキャッシュの目印を明示的に切りたい場合は
 `prompt_caching: false` を指定します。省いた場合、Hermes は通常どおり
 プロバイダとモデルの対応状況を自分で判定します。
+
+OpenAI 互換のサーバーの中には、答えの全文を `reasoning` フィールドに入れ、
+`content` を空のまま返すものがあります。たいていのプロバイダはそこに表に出さない思考過程を
+入れるので、Hermes は既定では reasoning を返答として表示せず、代わりにやり直します。
+使っているサーバーのパーサーが本当に最終的な答えを `reasoning` に入れる場合は、
+`answer_in_reasoning` でそのモデルを対象に加えてください。
+
+```yaml
+providers:
+  local-vllm:
+    api: http://127.0.0.1:8000/v1
+    models:
+      my-reasoner:
+        answer_in_reasoning: true
+```
+
+プロバイダのすべてのモデルを対象にするには、プロバイダ単位の
+`capabilities:` ブロックにこの指定を書きます（`capabilities: {answer_in_reasoning: true}`）。Hermes は
+CLI でも TUI でもゲートウェイでも、毎ターン、使っている経路でこの指定を読み直します。そのため
+`/model` で同じプロバイダの別のモデルに切り替えても効いたままです。フォールバック先やほかのプロバイダには
+引き継がれません。OpenRouter の経路は、この指定があっても信用されません。
 
 :::note 以前の形式
 古い設定では、最上位に `custom_providers:` の一覧を使っていました（`api` ではなく `base_url` を書く形です）。いまも動きますし、`hermes update` の際に `providers:` の辞書へ自動で移行されます（設定の v12）。

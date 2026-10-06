@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "AWS Bedrock"
 description: "Hermes Agent を Amazon Bedrock で使う — ネイティブの Converse API、Anthropic SDK 経由の振り分け、Bedrock Mantle 経由の OpenAI モデル、IAM 認証、Guardrails、クロスリージョン推論"
 upstream_path: guides/aws-bedrock.md
-upstream_blob: 1ebb312223d5bbb8807ad860cac300e1f30295b2
+upstream_blob: a22526d19fa7d0031e70c28ec5db45e24a964a4a
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/aws-bedrock
 ---
@@ -21,7 +21,8 @@ Hermes は、モデルの系統ごとに最も適した API へ振り分けま�
 | モデルの系統 | 使う API | 理由 |
 |---|---|---|
 | Anthropic Claude | Anthropic SDK（`AnthropicBedrock`） | プロンプトキャッシュ、思考の予算、状況に応じた思考など、Converse では使えない機能があるため |
-| OpenAI GPT-5.5 / GPT-5.6（Sol、Terra、Luna） | Bedrock Mantle の **OpenAI Responses** エンドポイント（`bedrock-mantle.<region>.api.aws/openai/v1`） | これらは Mantle でしか動きません。モデルカードでも bedrock-runtime / Converse は非対応と書かれています |
+| OpenAI GPT-6（Astra、Sol、Luna）、GPT-6.1 Sol、GPT-5.6（Sol、Terra、Luna）、GPT-5.5 を素の `openai.*` ID で指定した場合 | Bedrock Mantle の **OpenAI Responses** エンドポイント（`bedrock-mantle.<region>.api.aws/openai/v1`） | Bedrock Mantle は、そのリージョン内で使う素の ID を受け付けます。`bedrock-runtime` は受け付けません |
+| 同じ OpenAI のモデルを `us.` または `global.` の推論プロファイル ID で指定した場合 | ネイティブの **Converse API**（`bedrock-runtime`） | クロスリージョンのプロファイルは `bedrock-runtime` にしかありません。モデルカードでも、そこでは Converse が対応済みと書かれています |
 | それ以外すべて（Nova、DeepSeek、Llama、GPT-OSS など） | ネイティブの **Converse API**（`bedrock-runtime`） | Guardrails、推論プロファイル、逐次配信など Bedrock の機能を一通り使えるため |
 
 3 つの経路はどれも同じ AWS の認証情報チェーンとリージョンの決め方を共有するので、別々に設定する必要はありません。Mantle のエンドポイントへのリクエストは、`AWS_BEARER_TOKEN_BEDROCK` が設定されていればそれで認証され、なければ通常の boto3 の認証情報チェーンを使って SigV4 で署名されます。
@@ -97,7 +98,7 @@ bedrock:
 
 ガードレールは、Converse の経路では `guardrailConfig` として、Claude の経路では Anthropic Bedrock SDK 経由の InvokeModel ヘッダーとして渡されます（そのためプロンプトキャッシュと思考はそのまま使えます）。ガードレールに引っかかったリクエストは、モデルの文章としてではなく、内容フィルターによる拒否として返ってきます。`stream_processing_mode` が効くのは Converse だけです。
 
-AWS は、`openai.gpt-5.x` 系のモデルが使う Mantle の Responses エンドポイントにはガードレールを適用しません（[AWS のドキュメント](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html)）。ガードレールが必要な場面では、Converse から提供されるモデルを選んでください。
+AWS は、素の `openai.gpt-*` ID が使う Mantle の Responses エンドポイントにはガードレールを適用しません（[AWS のドキュメント](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html)）。ガードレールが必要な場面では、`us.` や `global.` の OpenAI 推論プロファイルのように、Converse から提供されるモデルを選んでください。
 
 ### モデルの自動検出 {#model-discovery}
 
@@ -119,6 +120,8 @@ Hermes は Bedrock の **Converse API** 経路で、システムプロンプト�
 
 コンテキストウィンドウが Hermes の静的な一覧に載っていないモデルについては、わざと大きすぎるリクエストを決まった段階（およそ 130 万トークンと 220 万トークン）で送り、Bedrock の長さ検証エラーに含まれる `maximum` の値を読み取って、実際の上限を調べられます。こうして得た値は静的な一覧と同じメタデータキャッシュに入ります。古いキャッシュがモデルの実際のウィンドウより小さい値を報告している場合（たとえば 100 万トークンのウィンドウが正式提供される前に作られた項目など）は、自動的に破棄されて大きいほうの既知の値が使われます。
 
+実測でも静的な一覧でも分からないモデルには、Hermes は 128,000 トークンの予備値を使い、そのモデル名を示す WARNING をログに出します。`config.yaml` の `model.context_length` に、そのモデルの実際のウィンドウの大きさを設定してください。
+
 **アプリケーション推論プロファイル。** `arn:aws:bedrock:us-west-2:123456789012:application-inference-profile/abcdef123456` のような ARN はモデル名を含まないため、実測でも静的な一覧でも大きさを決められません。Hermes はその ARN のリージョンで `bedrock:GetInferenceProfile` を呼び、プロファイルが包んでいるモデルからウィンドウの大きさを決めます（Claude Sonnet 4.6 を包んでいるプロファイルなら 100 万トークン）。この権限がない場合は既定の 128,000 トークンが適用され、どのプロファイルかを示す WARNING が出ます。どちらの場合も `model.context_length` を明示すれば上書きできます。
 
 ## 使えるモデル {#available-models}
@@ -130,17 +133,23 @@ Bedrock のモデルは、オンデマンド呼び出しでは**推論プロフ�
 | Claude Sonnet 4.6 | `us.anthropic.claude-sonnet-4-6` | おすすめ。速度と能力のバランスが最も良い |
 | Claude Opus 4.6 | `us.anthropic.claude-opus-4-6-v1` | 最も高性能 |
 | Claude Haiku 4.5 | `us.anthropic.claude-haiku-4-5-20251001-v1:0` | Claude の中で最速 |
-| OpenAI GPT-5.6 Sol | `openai.gpt-5.6-sol` | OpenAI の最前線のモデル（Bedrock Mantle 経由） |
-| OpenAI GPT-5.6 Terra | `openai.gpt-5.6-terra` | バランス型（Bedrock Mantle 経由） |
-| OpenAI GPT-5.6 Luna | `openai.gpt-5.6-luna` | 高速で安価（Bedrock Mantle 経由） |
-| OpenAI GPT-5.5 | `openai.gpt-5.5` | 一世代前の OpenAI の主力（Bedrock Mantle 経由） |
+| OpenAI GPT-6 Astra | `openai.gpt-6-astra` | OpenAI でいちばん高性能なモデル。ウィンドウは 1,050,000 トークン |
+| OpenAI GPT-6.1 Sol | `openai.gpt-6.1-sol` | ウィンドウは 100 万トークン。Mantle のリージョン内アクセスは `us-east-1` だけです |
+| OpenAI GPT-6 Sol | `openai.gpt-6-sol` | コーディングやエージェント的な作業向け。ウィンドウは 1,050,000 トークン |
+| OpenAI GPT-6 Luna | `openai.gpt-6-luna` | 範囲を絞った大量の作業向け。ウィンドウは 1,050,000 トークン |
+| OpenAI GPT-5.6 Sol | `openai.gpt-5.6-sol` | ウィンドウは 1,050,000 トークン |
+| OpenAI GPT-5.6 Terra | `openai.gpt-5.6-terra` | バランス型。ウィンドウは 1,050,000 トークン |
+| OpenAI GPT-5.6 Luna | `openai.gpt-5.6-luna` | 高速で安価。ウィンドウは 1,050,000 トークン |
+| OpenAI GPT-5.5 | `openai.gpt-5.5` | Mantle のみ。推論プロファイルはありません |
 | Amazon Nova Pro | `us.amazon.nova-pro-v1:0` | Amazon の主力 |
 | Amazon Nova Micro | `us.amazon.nova-micro-v1:0` | 最速・最安 |
 | DeepSeek V3.2 | `deepseek.v3.2` | 性能の高いオープンモデル |
 | Llama 4 Scout 17B | `us.meta.llama4-scout-17b-instruct-v1:0` | Meta の最新モデル |
 
 :::info クロスリージョン推論
-`us.` で始まるモデルはクロスリージョン推論プロファイルを使い、AWS の複数リージョンにまたがって容量に余裕を持たせ、障害時は自動で切り替わります。`global.` で始まるモデルは、世界中の利用可能なリージョンへ振り分けられます。OpenAI の `openai.*` というモデル ID は、設定したリージョンの Bedrock Mantle から提供されるので、推論プロファイルの接頭辞は付きません。
+`us.` で始まるモデルはクロスリージョン推論プロファイルを使い、AWS の複数リージョンにまたがって容量に余裕を持たせ、障害時は自動で切り替わります。`global.` で始まるモデルは、世界中の利用可能なリージョンへ振り分けられます。
+
+OpenAI のモデルには、エンドポイントの形が 2 つあります。素の `openai.*` ID はリージョン内で使う形で、Hermes は設定したリージョンにある Bedrock Mantle の Responses エンドポイントへ送ります。`us.openai.*` と `global.openai.*` の ID はクロスリージョンの推論プロファイルで、Hermes はほかの推論プロファイルと同じく、Converse API を通して `bedrock-runtime` へ送ります。モデルがどのプロファイルを持ち、Mantle がどのリージョンで提供しているかは、AWS の各モデルカードに載っています。
 :::
 
 ## 会話の途中でモデルを切り替える {#switching-models-mid-session}

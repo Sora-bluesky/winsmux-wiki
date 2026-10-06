@@ -2,7 +2,7 @@
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: 1715f113397cbb4ec09e81b9cea38cfe49695993
+upstream_blob: d4dd84e6f97b801ab0650846a3e3e6989c9bf86c
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -825,14 +825,6 @@ hermes-agent の `pyproject.toml` に宣言されている追加機能を使う�
 services.hermes-agent.extraDependencyGroups = [ "messaging" ];
 ```
 
-```nix
-# Enable a memory provider
-services.hermes-agent = {
-  extraDependencyGroups = [ "mem0" ];
-  settings.memory.provider = "mem0";
-};
-```
-
 これらのグループは、ビルドのときに中核の依存関係の解決に加わります。要件どうしがぶつかれば、
 その解決が失敗することはあります。表はよく使うグループだけを載せています。すべての一覧とプラットフォームの条件は、
 `pyproject.toml` が正です。
@@ -849,7 +841,6 @@ services.hermes-agent = {
 | `anthropic` | Anthropic 純正の SDK（OpenRouter 経由なら不要です） |
 | `bedrock` | AWS Bedrock（boto3） |
 | `azure-identity` | Azure Entra ID による認証 |
-| `mem0` | Mem0 の記憶プロバイダー |
 | `modal` | Modal のターミナルバックエンド |
 | `daytona` | Daytona のターミナルバックエンド |
 | `exa` | Exa のウェブ検索 |

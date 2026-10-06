@@ -2,7 +2,7 @@
 title: "ストリーミング TTS の内部"
 description: "文分割チャンカー、ストリーミングプロバイダーの ABC、対応状況の表、ストリーミング TTS プロバイダーの追加方法"
 upstream_path: developer-guide/streaming-tts.md
-upstream_blob: c18df3ef8714bdb22f668850dc949f130303362b
+upstream_blob: dd8280b94a8694f6fac5328e0540e53401bf57b6
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/streaming-tts
 ---
@@ -69,6 +69,7 @@ tts:
 | gemini      | SSE（`streamGenerateContent?alt=sse`） | 対応         | `GEMINI_API_KEY` / `GOOGLE_API_KEY` |
 | xai         | WebSocket（`wss://api.x.ai/v1/tts`）   | 対応         | `XAI_API_KEY` を優先、なければ xAI の OAuth（サブスクリプションの bearer は従量課金の TTS で 403 になります） |
 | edge, piper, kitten, neutts, mistral, minimax, deepinfra, … | — | 非対応（文単位の同期処理で代替） | 通常どおり |
+| `streams_pcm` 付きのプラグイン `TTSProvider` | プラグインの `stream(format="pcm")` | 対応（`stream_sample_rate` のサンプルレートで） | プラグイン自身のもの |
 
 認証情報の取得はすべて `resolve_provider_secret()` を通ります
 （設定ファイル > 環境変数 / .env > 認証情報プール）。環境変数を直接読むことはありません。
@@ -87,6 +88,21 @@ tts:
 契約は ABC が守らせ、プロバイダーは登録先から見つけられるようになります。
 文のバッファ、停止イベント、音声の出口は、振り分け役（`stream_tts_to_speaker`）と
 ゲートウェイの受け手が面倒を見てくれます。
+
+## プラグインのプロバイダー {#plugin-providers}
+
+プラグインの `TTSProvider`（`ctx.register_tts_provider()` で登録したもの）は、本体に手を入れずにこの経路へ加われます。
+`streams_pcm = True` と正の値の `stream_sample_rate` を設定し、
+`stream(text, format="pcm", voice=, model=, speed=)` が int16 モノラルの PCM を順に返すようにします。
+`resolve_streaming_provider` はこれを（`tools.tts_streaming._PluginPCMStreamer` で）包み、
+同期処理の振り分け役（`tools.tts_tool_plugins`）と同じ規則で振り分けます。組み込みの名前は登録先まで届かず、
+同じ名前の `type: command` プロバイダーがあればそちらが優先され、プラグインには
+`synthesize()` と同じ `tts.voice` / `tts.model` / `tts.speed` が渡ります。設定でプラグインを指定していれば、
+まずそのプラグインでストリーミングします。`tts.streaming.provider: auto` のときは、組み込みの優先順位の一覧をすべて試したあとでだけ使われます。
+`streams_pcm`、`stream_sample_rate`、`is_available()` は、ストリーミング役を決めるたびに読み直されます。
+サンプルレートがない場合や、プロバイダーが使えないと答えた場合は、Hermes は文ごとの音声合成を続けます。
+組み込みのストリーミング役と同じく、読み上げのパイプラインは最大 3 文まで先読みします。そのため、プラグインの `stream()` は
+同時に呼ばれても動くようにしておく必要があります（同期の経路は `synthesize()` を 1 つずつ順に呼びますが、この経路はそうしません）。
 
 ## ゲートウェイでのストリーミング（プラットフォームアダプター） {#gateway-streaming-platform-adapters}
 

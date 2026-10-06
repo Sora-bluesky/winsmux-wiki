@@ -2,7 +2,7 @@
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: 5c38dc7b3136e7c57601beb8d0d8d225e1ea689e
+upstream_blob: dd4d6fcbaf969b624101b25048cdd8b50b96d87c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
@@ -25,8 +25,8 @@ hermes memory off        # disable external provider
 
 ```yaml
 memory:
-  provider: openviking   # or mem0, holographic, retaindb, byterover,
-                         # or honcho / hindsight / supermemory (plugin catalog — run
+  provider: openviking   # or holographic, retaindb, byterover,
+                         # or honcho / hindsight / supermemory / mem0 (plugin catalog — run
                          # `hermes plugins install <name>` first)
 ```
 
@@ -370,23 +370,27 @@ Hermes は OpenViking への要求に `User-Agent: openviking-memory-hermes/<ver
 
 ### Mem0 {#mem0}
 
+:::info プラグインカタログ
+Mem0 は Mem0 が保守しており、Hermes に同梱されるのではなく[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れます。ソースは [mem0ai/mem0 — integrations/hermes-plugin-mem0](https://github.com/mem0ai/mem0/tree/main/integrations/hermes-plugin-mem0) にあります。すでにある設定は自動で移行されます。[同梱の Mem0 から移る](#migrating-from-bundled-mem0)を参照してください。
+:::
+
 サーバー側で LLM が事実を抽出し、意味検索、順位の付け直し、重複の自動除去を行います。つなぎ方は 3 通りあります。**Platform**（Mem0 Cloud）、**自己ホストのダッシュボード**（Docker で自分が動かす Mem0 のサーバー）、**OSS**（自前の LLM とベクトルストアを使って、同じプロセス内で動かす Mem0）です。
 
 | | |
 |---|---|
 | **向いている用途** | 手のかからない記憶の管理 — 抽出は Mem0 が自動でやります |
-| **必要なもの** | `hermes memory setup` が PM で Mem0 の SDK を用意します。そのうえで API キー（platform）、動いている Mem0 のサーバー（自己ホストのダッシュボード）、または LLM とベクトルストア（OSS） |
+| **必要なもの** | `hermes plugins install mem0`（プラグインといっしょに Mem0 の SDK が入ります）。そのうえで API キー（platform）、動いている Mem0 のサーバー（自己ホストのダッシュボード）、または LLM とベクトルストア（OSS） |
 | **データの置き場所** | Mem0 Cloud（platform）、自分の Mem0 のサーバー（自己ホストのダッシュボード）、または同じプロセス内（OSS） |
 | **費用** | Mem0 の料金（platform）／無料（自己ホストまたは OSS） |
 
-Windows ARM64 のネイティブ環境では、追加パッケージ `mem0` の SDK は対象外です。HTTP 経由で外部の Mem0
-サーバーを使うのは別のモードです。リモートのサービスが使えても、同じプロセス内で動く SDK が
-その環境で動くとは限りません。
+mem0ai の SDK は、シェルか `~/.hermes/.env` で `MEM0_TELEMETRY=false` を設定しないかぎり、
+匿名の利用状況を PostHog へ送ります。
 
 **ツール（4 つ）:** `mem0_search`（意味検索。platform では順位の付け直しも任意で使えます。既定では無効）、`mem0_add`（事実をそのまま保存）、`mem0_update`（ID を指定して更新）、`mem0_delete`（ID を指定して削除）
 
 **設定（Platform）:**
 ```bash
+hermes plugins install mem0   # from the plugin catalog
 hermes memory setup    # select "mem0" → "Platform"
 # Or manually:
 hermes config set memory.provider mem0
@@ -449,6 +453,16 @@ echo "MEM0_API_KEY=your-admin-api-key" >> ~/.hermes/.env
 
 **モードの切り替え:** `hermes memory setup mem0 --mode <platform|selfhosted|oss>` を実行し直すか、`mem0.json` を直接編集してください。
 
+### 同梱の Mem0 から移る {#migrating-from-bundled-mem0}
+
+Mem0 は以前、Hermes のツリーの中に（また pip の追加パッケージ `hermes-agent[mem0]` として）同梱されていました。`config.yaml` にすでに `memory.provider: mem0` があるなら、ほとんどの利用者は何もする必要がありません。
+
+- `hermes update` が、このプロバイダーを指定しているすべてのプロファイルのホームにカタログのプラグインを入れます。
+- エージェントを最初に起動したとき（`hermes chat`、ゲートウェイ、デスクトップ）にまだプラグインが無ければ、Hermes がそれを入れ、入れたことを知らせます。
+- `security.allow_lazy_installs: false` のときは、エージェントの起動経路では何も入れず、代わりに実行すべき `hermes plugins install mem0` のコマンドをそのまま表示します。
+
+`memory.provider`、`$HERMES_HOME/mem0.json`、`.env` の `MEM0_*` のキー、そして Mem0 Cloud・自分の Mem0 のサーバー・手元の OSS ストアに保存された記憶には手を触れません。確かめるには `hermes memory status` と `hermes plugins list` を使います。
+
 ---
 
 ### Hindsight {#hindsight}
@@ -508,6 +522,7 @@ Hindsight は以前、Hermes のツリーの中に（また pip の追加パッ�
 - `hermes update` が、このプロバイダーを指定しているすべてのプロファイルのホームにカタログのプラグインを入れます。表示される各行には、どのプロファイルの話かが書かれます。ターミナルでは、プラグインが使う Python の依存パッケージを用意する前に確認を求めます。このプロバイダーを使うプロファイルが複数あるときは、質問は 1 回だけで、その答えがすべてのプロファイルに当てはまります。ターミナルが無い場合（デスクトップアプリ、スクリプト、サービス）は誰も答えられないので、`security.allow_lazy_installs` がオン（既定）のプロファイルは確認なしで用意します。これがオフのプロファイルには、代わりに `hermes -p <profile> plugins install hindsight` という実行すべきコマンドがそのまま示され、ほかのプロファイルの移行は続きます。
 - エージェントを最初に起動したとき（`hermes chat`、デスクトップ、ゲートウェイ、…）にまだプラグインが無ければ、Hermes が依存パッケージごとそれを入れて ``✓ Memory provider 'hindsight' moved out of core — installed its plugin from the catalog (memory.provider and your stored memories are unchanged; check its settings with `hermes memory status`).`` と表示します。メッセージングのプラットフォームでは、この行が最初の返信といっしょに届きます。
 - エージェント起動時の導入ができなかった場合は、外部の記憶なしで黙って動くのではなく、その理由が表示されます。`security.allow_lazy_installs: false` のときは、警告にそのプロファイル用の導入コマンドが示されます。オフラインのときや導入を断ったときは、エラーと同じコマンドが表示されます。
+- エージェントの起動時には、何も質問しません（ターミナルはチャットの入力欄が使っているためです）。そのため、Hermes に一度も同梱されたことのないカタログのプロバイダー（たとえば `mnemosyne`）は、起動時には入りません。警告にそのプロファイル用の `hermes plugins install <name>` が示されるので、それを実行するか、ダッシュボードまたはデスクトップの Plugins ページから入れてください。
 
 ディスク上で変わるのは次の点です。プラグインが `~/.hermes/plugins/hindsight/` に現れ、`config.yaml` に `plugins.enabled: [hindsight]` が加わります。`memory.provider`、`$HERMES_HOME/hindsight/config.json`、`.env` の `HINDSIGHT_API_KEY`、記憶の保管庫のデータには手を触れません。確かめるには `hermes memory status`（プロバイダーが動いているか）と `hermes plugins list`（プラグインが入って有効になっているか）を使います。
 
@@ -745,7 +760,7 @@ hermes memory setup
 |----------|---------|------|-------|-------------|----------------|
 | **Honcho**（プラグインカタログ） | クラウド／自己ホスト | 有料／無料 | 5 | `hermes plugins install honcho` | 対話的な利用者のモデリングとセッション範囲の文脈 |
 | **OpenViking** | 自己ホスト | 無料 | 6 | `openviking` とサーバー | ファイルシステム風の階層と段階的な読み込み |
-| **Mem0** | クラウド／自己ホスト | 無料／有料 | 4 | `mem0ai` | サーバー側の LLM 抽出と、自己ホスト／OSS のモード |
+| **Mem0**（プラグインカタログ） | クラウド／自己ホスト | 無料／有料 | 4 | `hermes plugins install mem0` | サーバー側の LLM 抽出と、自己ホスト／OSS のモード |
 | **Hindsight**（プラグインカタログ） | クラウド／ローカル | 無料／有料 | 3 | `hermes plugins install hindsight` | 知識グラフと reflect による統合 |
 | **Holographic** | ローカル | 無料 | 2 | 無し | HRR の代数と信頼度の採点 |
 | **RetainDB** | クラウド | 月額 20 ドル | 10 | `requests` | 差分圧縮 |
@@ -766,8 +781,9 @@ hermes memory setup
 
 記憶プロバイダーは Hermes 本体のツリーから、それぞれの作者のリポジトリへ移りつつあり、
 [プラグインカタログ](/hermes/docs/user-guide/features/plugins/)で配布されます。最初に移ったのは Hindsight で（[同梱の Hindsight から移る](#migrating-from-bundled-hindsight)を参照）、続いて Honcho（
-[同梱されていた Honcho からの移行](#upgrading-from-the-bundled-honcho)を参照）と Supermemory（
-[同梱の Supermemory から移る](#migrating-from-bundled-supermemory)を参照）が移りました。利用する側で変わることはありません。
+[同梱されていた Honcho からの移行](#upgrading-from-the-bundled-honcho)を参照）、Supermemory（
+[同梱の Supermemory から移る](#migrating-from-bundled-supermemory)を参照）、Mem0（
+[同梱の Mem0 から移る](#migrating-from-bundled-mem0)を参照）が移りました。利用する側で変わることはありません。
 プロバイダーの名前も、それが読む設定も、データの置き場所も、道具もそのままです。
 設定しているプロバイダーが Hermes に同梱されなくなったときは、`hermes update` が、そのプロバイダーを
 指定しているすべてのプロファイルにカタログのプラグインを入れます。デスクトップアプリから更新する場合は、

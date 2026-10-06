@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Nous Tool Gateway"
 description: "サブスクリプション 1 つで、すべてのツールを。Web 検索、画像生成、音声読み上げ、クラウドブラウザーを、追加の API キー無しで Nous Portal 経由に束ねます。"
 upstream_path: user-guide/features/tool-gateway.md
-upstream_blob: 05d6b45337c44f6ab8da620edb2785e684c69e32
+upstream_blob: 08b88881e7d30e0e20d6bf9b4acafb1ceb9bb39e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-gateway
 ---
@@ -167,6 +167,18 @@ hermes tools    # pick the tool → choose a direct provider (e.g. Firecrawl)
 web:
   backend: firecrawl   # Hermes now uses FIRECRAWL_API_KEY from .env
 ```
+
+### 自分のキーとゲートウェイを組み合わせる（Web のみ） {#mixing-your-own-key-and-the-gateway-web-only}
+
+Web 検索と Web 本文抽出は、それぞれ別の経路を選べます。デスクトップアプリで **Capabilities → Tools → Web Search & Scraping** を開きます。**Nous Subscription** の行にある **Use for Search** / **Use for Extract** を押すと、その機能がゲートウェイ経由になります。直接つなぐ行（たとえば **Firecrawl**）の同じボタンを押すと、自分のキーで使う経路になります。上部の **Search:** / **Extract:** の表示で、それぞれが今どちらの経路を通っているかがわかります。`config.yaml` では、機能ごとのキーに `nous` という値を入れると管理型の経路になります。
+
+```yaml
+web:
+  search_backend: firecrawl   # your FIRECRAWL_API_KEY
+  extract_backend: nous       # the Nous Tool Gateway (managed Firecrawl)
+```
+
+ツール全体として **Nous Subscription** を選ぶと（または `hermes tools` を実行すると）、機能ごとのキーは両方とも消え、検索も本文抽出もゲートウェイ経由に戻ります。
 
 ### 旧来の `use_gateway` フラグ（非推奨） {#legacy-usegateway-flag-deprecated}
 

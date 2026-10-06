@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: c9784b16d740e8b037475ac6f3abc6178d99c63a
+upstream_blob: be6fac376136cb49436fbb9205504bc685b0c66f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -138,7 +138,7 @@ WSL は代わりの手段の 1 つであって、現在の設計で必須とい�
 
 - Matrix のネイティブの暗号化対応アダプタは Linux 専用です。Windows では、対応している
   プロキシ経由の方法か、Linux の実行先を使ってください。
-- Windows ネイティブの ARM64 では、`mem0` と `google-chat` の SDK の追加機能、および
+- Windows ネイティブの ARM64 では、`google-chat` の SDK の追加機能と
   openWakeWord のエンジンが除外されます。Sherpa は Windows ネイティブの ARM64 に対応しており、
   その環境では呼びかけ語の検出に自動で使われる既定のエンジンです。
 - 手元で動かす Faster-Whisper の音声認識は、Windows ネイティブの ARM64 では除外されます。

@@ -31,7 +31,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-10-06
+最終取得: 2026-10-07
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -53,7 +53,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-10-06
+最終取得: 2026-10-07
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -88,11 +88,12 @@ APIキーもアカウントも要りません。リクエストは匿名で送�
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 
-最終取得: 2026-10-06
+最終取得: 2026-10-07
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
 | **deepseek-v4-flash-free**<br>`deepseek-v4-flash-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
+| **exo-free**<br>`exo-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **fledge-alpha-free**<br>`fledge-alpha-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **jev-1.13-free**<br>`jev-1.13-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **ling-3.0-flash-fin-free**<br>`ling-3.0-flash-fin-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |

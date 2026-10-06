@@ -2,7 +2,7 @@
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md
-upstream_blob: ee27f91ebb5a1a50f79aeb6e9a8925a59c4b3cdc
+upstream_blob: 78cd012620d86ff58d09d87605e5a3115518ea5e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tts
 ---
@@ -406,7 +406,7 @@ tts:
 | ファイルか標準入力から文章を読み、ファイルか標準出力に音声を書く CLI 1 本 | **コマンド型**（Python は不要） |
 | シェルのパイプでつないだ 2〜3 本の CLI | **コマンド型** |
 | Python の SDK だけで、CLI がない | **プラグイン** |
-| 生成の途中から少しずつ届けたいストリーミングのバイト列（生成中のボイスの吹き出し） | **プラグイン**（`stream()` を上書きします） |
+| 音声を合成しながら出力するエンジンで、読み上げの返事を最初の一文から始めたい | **プラグイン**（`streams_pcm` を設定し、`stream()` を上書きします） |
 | `hermes setup` が使う、声の一覧を返す API | **プラグイン**（`list_voices()` を上書きします） |
 | OAuth の更新の流れ（固定のトークンではないもの） | **プラグイン** |
 
@@ -467,7 +467,8 @@ def register(ctx):
 - `list_voices()` → `hermes tools` に出る `{id, display, language, gender, preview_url}` の辞書の一覧を返します。
 - `list_models()` → `{id, display, languages, max_text_length}` の辞書の一覧を返します。
 - `get_setup_schema()` → `{name, badge, tag, env_vars: [{key, prompt, url}]}` を返して、`hermes tools` / `hermes setup` の選択画面の行を作ります。これがなくてもプラグインは動きますが、選択画面での表示は最低限になります。
-- `stream(text, *, voice, model, format, **extra)` → 少しずつ届けるための、音声のバイト列を返す反復子です（既定では `NotImplementedError` になります）。
+- `stream(text, *, voice, model, format, **extra)` → 音声のバイト列を返す反復子です（既定では `NotImplementedError` になります）。
+- `streams_pcm = True` と `stream_sample_rate`（Hz） → 逐次の読み上げの経路（CLI / TUI の音声モード、デスクトップの読み上げ、ゲートウェイの逐次の音声）に加わります。このとき Hermes は、`synthesize()` に渡すのと同じ `tts.voice` / `tts.model` / `tts.speed` を使って `stream(text, format="pcm", voice=..., model=..., speed=...)` を呼び出し、そのサンプルレートの生の int16 リトルエンディアン・モノラル PCM が返ることを期待します。2 つの属性と `is_available()` は返事を始めるたびに読み込まれるので、そのときの状態を反映するプロパティにしてもかまいません。`synthesize()` と違い、`stream()` は前の音声を再生しているあいだに、続く最大 3 文に対して同時に呼ばれることがあるため、スレッドセーフでなければなりません。`stream_sample_rate` が正の値でない場合や、`is_available()` が `False` の場合、Hermes はこれまでどおり一文ずつ合成します。
 - `voice_compatible` のプロパティ → 出力が Opus と互換で、ゲートウェイにボイスの吹き出しとして届けさせたいなら `True` にします（既定は `False` で、ふつうの音声の添付になります）。
 - `warm()` / `release()` → 自分の提供元が `tts.provider` に設定されているあいだ、どこかの画面で音声出力が有効になったとき／あらゆる画面にまたがる最後の使用権が手放されたときに呼ばれます。手元のモデルサーバーの先読みや解放をここでどうぞ。どちらも既定では何もせず、例外はデバッグの記録に残るだけで切り替えを失敗させることはありません。
 
@@ -504,7 +505,7 @@ stt:
   mistral:
     model: "voxtral-mini-latest"  # voxtral-mini-latest, voxtral-mini-2602
   xai:
-    model: "grok-stt"         # xAI Grok STT
+    model: "grok-voice-transcribe-2.0"  # or grok-voice-transcribe-1.0
     language: ""              # optional ISO-639-1 hint; blank = use HERMES_LOCAL_STT_LANGUAGE if set, else "en"
 ```
 
@@ -535,7 +536,7 @@ HF_HUB_DISABLE_XET=1
 
 **Mistral API（Voxtral Transcribe）** — `MISTRAL_API_KEY` が要ります。Mistral の [Voxtral Transcribe](https://docs.mistral.ai/capabilities/audio/speech_to_text/) のモデルを使います。13 言語、話者の切り分け、単語ごとの時刻に対応します。`cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['mistral'], explicit=True)"` で入れてください。
 
-**xAI Grok STT** — `XAI_API_KEY` が要ります。`https://api.x.ai/v1/stt` に multipart/form-data で送ります。すでにチャットや読み上げで xAI を使っていて、API キーを 1 本にまとめたいなら良い選択です。自動判別の順番では Groq のあとになるので、確実に使いたいときは `stt.provider: xai` を明示してください。
+**xAI Grok STT** — `XAI_API_KEY`（または xAI の OAuth）が要ります。`https://api.x.ai/v1/stt` に multipart/form-data で送り、`model` を指定します（既定は `grok-voice-transcribe-2.0`。`grok-voice-transcribe-1.0` に固定したいときは `stt.xai.model` か `STT_XAI_MODEL` で指定します）。Hermes は必ずモデル名を指定するので、サーバー側の既定が変わっても、使うモデルが黙って切り替わることはありません。`stt.language: ""`（自動判別）のときは `format` の指定を外します。xAI では、文章の整形に言語の指定が必要なためです。すでにチャットや読み上げで xAI を使っていて、API キーを 1 本にまとめたいなら良い選択です。自動判別の順番では Mistral のあとになるので、確実に使いたいときは `stt.provider: xai` を明示してください。
 
 **手元のコマンドを使う受け皿** — Hermes に手元の文字起こしコマンドを直接呼ばせたいなら `HERMES_LOCAL_STT_COMMAND` を設定します。コマンドの雛形では `{input_path}`、`{output_dir}`、`{language}`、`{model}` の置き換え文字を使えます。Hermes は組み立てた雛形を引数の並びに分解し、シェルを通さずに実行します。だから `|`、`>`、`&&`、`;` といった記号は、そのままの文字として引数に渡ります。コマンドは `{output_dir}` の下のどこかに `.txt` の文字起こしを書かなければなりません。
 

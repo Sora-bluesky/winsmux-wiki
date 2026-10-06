@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: f15a4cc4f306d015cc975073c0ff1b68db0812f9
+upstream_blob: bd090ab7954df9debc712ab66722f736650e2ff1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -288,7 +288,7 @@ command_allowlist:
 
 これらのパターンは起動時に読み込まれ、以降のセッションでは黙って承認されます。
 
-書けるのは、コマンドそのものの文字列、シェル式のグロブ（`podman *`）、あるいは `script execution via heredoc` のような危険パターンのルールキー（承認の確認に表示される見出し）です。ルールキーはどの窓口でも尊重されます。人のいない窓口でも同じで、`cron_mode`/`single_query_mode`/`unattended_mode: deny` のもとで動く cron ジョブ、`hermes chat -q` の実行、webhook のセッションであっても、検出されたルールキーが `command_allowlist` にあるコマンドは実行されます。同じコマンドに対する Tirith のコンテンツ検査の指摘は、引き続きそれを止めます。
+書けるのは、コマンドそのものの文字列、シェル式のグロブ（`podman *`）、あるいは `script execution via heredoc` のような危険パターンのルールキー（承認の確認に表示される見出し）です。ルールキーはどの窓口でも尊重されます。人のいない窓口でも同じで、`cron_mode`/`single_query_mode`/`unattended_mode: deny` のもとで動く cron ジョブ、`hermes chat -q` の実行、webhook のセッションであっても、検出されたルールキーが `command_allowlist` にあるコマンドは実行されます。
 
 この設定は文字列の一覧でなければなりません。一覧を引用符付きの YAML/JSON 文字列として保存していた古い環境では、読み込み時にその一覧を復元し、`hermes config edit` で保存し直すよう警告を出します。それ以外の壊れた値は警告を出して無視されます。1 文字ずつの承認に化けることは決してありません。読み込みによって設定ファイルが書き換わることもありません。
 
@@ -793,44 +793,16 @@ security:
 `browser.auto_local_for_private_urls` にとってもプライベート扱いでなくなるので、
 そうしたページは引き続きクラウドのブラウザへ回ります。
 
-### Tirith による実行前のセキュリティ走査 {#tirith-pre-exec-security-scanning}
+### コマンドの中身の検査 {#content-level-command-checks}
 
-Hermes は、実行前にコマンドの中身を走査するために [tirith](https://github.com/sheeki03/tirith) を組み込んでいます。Tirith は、パターン照合だけでは取りこぼす脅威を見つけます。
+危険なコマンドの検出は、破壊的な動詞の一覧では取りこぼす、中身の形に関わる 2 つのパターンも見つけて知らせます。
 
-- 見た目のそっくりな URL のなりすまし（国際化ドメインを使った攻撃）
-- インタープリターへ流し込むパターン（`curl | bash`、`wget | sh`）
-- ターミナルへの注入攻撃
+- 秘密の情報を載せた `curl`/`wget` のリクエスト本文。秘密を表す名前の変数（`-d "k=$OPENAI_API_KEY"`）や認証情報のファイル（`-F file=@.env`、`-T ~/.ssh/id_rsa`、`--post-file=/etc/passwd`）を送るもの、あるいは認証情報のファイルをアップロードする `curl`/`wget` へパイプで流し込むものです。`Authorization` ヘッダーは API の通常の使い方なので、知らせる対象にはなりません。
+- 目に見えない、または書字方向を変える Unicode の制御文字（ゼロ幅スペース、右から左への上書き、分離の制御文字）。これがあると、承認したコマンドと実際に動くコマンドが別物になります。絵文字をつなぐ結合の並びは、知らせる対象になりません。
 
-Tirith は、有効なのに入っていない場合、版を固定した [PM のパッケージ](/hermes/docs/reference/package-management/#optional-security-tools)を求めます。
-PM は `pm/lock.json` にある成果物のハッシュを確かめ、cosign の検証が使えればそれも呼びます。来歴の検証で
-はっきり拒否された場合は、導入を中止します。起動時の導入の依頼は、遅延導入の方針に従って裏で行われます。
-導入状態の保持と復旧は PM が受け持ち、別の `.tirith-install-failed` の目印は使いません。
+どちらも、ほかの危険パターンと同じように、通常の承認の流れにかけられます。
 
-`security.tirith_path` を明示した場合は、その実行ファイルが無くても、その指定が優先されます。
-既定の名前のままなら、PM が選んだものより先に `PATH` を探します。
-外部のバイナリは、PM のハッシュと来歴の検証の対象外です。
-
-```yaml
-# In ~/.hermes/config.yaml
-security:
-  tirith_enabled: true       # Enable/disable tirith scanning (default: true)
-  tirith_path: "tirith"      # Path to tirith binary (default: PATH lookup)
-  tirith_timeout: 5          # Subprocess timeout in seconds
-  tirith_fail_open: true     # Allow execution when tirith is unavailable (default: true)
-```
-
-`tirith_fail_open` が `true`（既定）のときは、tirith が入っていなかったり時間切れになったりしても、コマンドはそのまま進みます。厳しい環境では `false` にして、tirith が使えないときはコマンドを止めてください。
-
-動作上の失敗（起動のエラー、時間切れ、異常終了）が 3 回続くと、壊れたバイナリがすべてのコマンドを止めてしまわないよう、走査を 5 分間休みます。その後は 1 つのコマンドが tirith を試し直し、走査が最後まで進めば（許可でも警告でも停止でも）通常の走査に戻ります。試し直しがまた失敗すると、5 分の休みを取り直します。
-
-PM が Tirith に対応しているのは Linux（x86_64 / aarch64）と macOS（x86_64 / arm64）です。
-既定のパスのままだと、ネイティブの Windows や Android/Termux など対応していない環境では、Tirith は
-飛ばされます。パターン照合の防護はそのまま動きます。Windows で PM 管理の
-Tirith パッケージを使いたい場合は、WSL の下で Hermes を動かしてください。
-
-Tirith の判定は承認の流れとつながります。安全なコマンドはそのまま通り、あやしいものも止められたものも、tirith の指摘の全文（深刻度、見出し、説明、より安全な代案）を添えて利用者の承認にかけられます。利用者は承認も拒否もできます。人のいない場面を安全に保つため、既定の選択は拒否です。
-
-Tirith の既知の誤検知が 2 つ「許可」に下げられており、確認が出ることはありません（cron では拒否されることもありません）。1 つは、対象が正当な `.app` の gTLD だけである `lookalike_tld` の警告、もう 1 つは、コマンドの中のすべての選択子が絵文字の直後の U+FE0F である場合の `variation_selector` の警告です（`🗞️ Journal/` や `▶️ Media/` のようなフォルダー名がこれにあたります）。文字や数字のあとに来る異体字選択子 — このルールが本来狙っている、隠しての難読化の合図 — は、これまでどおり確認を出します。
+以前の版では、外部の tirith スキャナーをここに同梱していました。これは取り除かれました。アップグレードすると `security.tirith_*` の設定は消え、代わりに何かが有効になることもありません。
 
 ### コンテキストファイルへの注入対策 {#context-file-injection-protection}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "外部サービス連携"
 description: ""
 upstream_path: integrations/index.md
-upstream_blob: eef29e5be73589efb43e8def3b61a08e881a616d
+upstream_blob: feed8d745cbf42615413afacd84d194b0dd7e6b3
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations
 ---
@@ -88,7 +88,7 @@ Hermes にはブラウザを操作する機能が一式そろっていて、サ�
 ## 記憶と個人向けの調整 {#memory-personalization}
 
 - **[組み込みのメモリ](/hermes/docs/user-guide/features/memory/)** — `MEMORY.md` と `USER.md` に、選び抜いた内容を残していく仕組みです。エージェントが個人的なメモと利用者の情報を上限付きで管理し、セッションをまたいで持ち越します。
-- **[メモリのプロバイダー](/hermes/docs/user-guide/features/memory-providers/)** — 外部の記憶サービスをつないで、より深く個人に合わせられます。Hermes に同梱されているのは 5 つで、OpenViking（段階的な検索）、Mem0（クラウドでの抽出）、Holographic（手元の SQLite）、RetainDB（ハイブリッド検索）、ByteRover（コマンド方式）です。Honcho（対話的な推論）、Hindsight（知識グラフ）、Supermemory（意味による想起）は、プラグインカタログから `hermes plugins install <name>` で入れられます。
+- **[メモリのプロバイダー](/hermes/docs/user-guide/features/memory-providers/)** — 外部の記憶サービスをつないで、より深く個人に合わせられます。Hermes に同梱されているのは 4 つで、OpenViking（段階的な検索）、Holographic（手元の SQLite）、RetainDB（ハイブリッド検索）、ByteRover（コマンド方式）です。Honcho（対話的な推論）、Hindsight（知識グラフ）、Supermemory（意味による想起）、Mem0（クラウドでの抽出）は、プラグインカタログから `hermes plugins install <name>` で入れられます。
 
 ## メッセージングサービス {#messaging-platforms}
 

@@ -2,7 +2,7 @@
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: 414c5c8f9f034c87a67f0abc9d24dbb609a1bfce
+upstream_blob: 60620e92c4429930a39024a06d2236c4639eee6d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -259,16 +259,16 @@ Hermes は、再利用とパッチ世代の連続性を、既存の `skills/.usa
 | `hermes.setup.completed` | 実行面（`cli`/`desktop`）、プロバイダー | セットアップでどのプロバイダーが選ばれ、それがどの実行面か。 |
 | `hermes.model_tokens.sum` | 呼び出しの役割、モデル、プロバイダー、補助タスク、トークンの種類 | モデル・プロバイダーごとのトークン量、プロンプトキャッシュの割合、補助的な処理（圧縮、タイトル、画像認識など）にかかる量。値はイベントの回数ではなくトークンの合計です。 |
 | `hermes.model_route.count` `ttft_bucket` | 最初のトークンまでの時間 | プロバイダー・モデルごとの体感の待ち時間。 |
-| `hermes.compression.count` | きっかけ、結果、コンテキストの埋まり具合の区分 | 圧縮がどれくらいの頻度で動くか、コンテキストがどこまで埋まるか、失敗していないか。 |
+| `hermes.compression.count` | きっかけ、結果、コンテキストの埋まり具合の区分、失敗の分類 | 圧縮がどれくらいの頻度で動くか、コンテキストがどこまで埋まるか、失敗していないか。`skipped` は、失敗しようがなかった場合です。ロックをほかが持っていた、要約できるものがなかった（モデルを呼んでいない）、利用者が止めた、新しい試行に置き換えられた、のいずれかです。パッケージスキーマ v4 からは、この行に `failure_class` も載ります。試行ログ自身の分類名で、決まった一覧から選びます。skipped の行ではスキップの理由（`lock_contended`、`insufficient_messages`、`no_compressible_window`、`empty_post_handoff_window`、`explicit_interrupt`、`attempt_superseded`、`snapshot_stale`）、failed の行では失敗の理由（`summary_auth_failure`、`summary_network_failure`、`summary_truncated_failure`、`summary_empty_content_failure`、`summary_overload_failure`、`summary_generation_aborted`、`summary_generation_failed`、`summary_overload_degraded`、`aux_model_fallback`、`feasibility_skip`、`stall_deterministic_fallback`、`stall_interrupted`、`would_grow`、`no_progress`、`commit_fence_cancelled`、`pool_saturated`、`session_split_failed`、`exception`、`rollback`）、成功なら `none` です。例外や巻き戻しの Python の型名は落とし（`exception:TimeoutError` は `exception` になります）、それ以外の値は `other`、分類のない失敗は `unknown` になります。 |
 | `hermes.model_switch.count` | 切り替え元・切り替え先のプロバイダー、実行面 | どのプロバイダーから離れ、どこへ移っているか。 |
 | `hermes.fallback.count` | 切り替え元・切り替え先のプロバイダー、エラーの分類 | 代替プロバイダーがどれくらいの頻度で、何が原因のターンを救っているか。 |
 | `hermes.slash_command.count` | コマンド、実行面 | どの組み込みコマンドが使われているか（`/retry`、`/undo`、`/new` は使いにくさのシグナルです）。スキルとプラグインのコマンドは `skill`/`plugin` として報告します。 |
 | `hermes.extension.install.count` | 種類、入手元、名前、結果 | カタログのどのスキル、MCP サーバー、プラグインがインストールされているか。`name` は、同梱・任意のスキル、`optional-mcps/` か `plugin-catalog/` の項目で、それ以外は `custom` です。 |
-| `hermes.memory.op.count` | 操作（`add`/`replace`/`remove`/`read`/`search`/`other`）、プロバイダー（`builtin`、同梱のメモリプラグイン、それ以外は `plugin`）、起点（`foreground`/`background_review`）、結果（`success`/`failed`/`rejected`） | 学習のループがメモリに書き込んでいるか、誰が求めたか（ユーザーのターンか背景レビューか）、書き込みが拒否されたり失敗したりする頻度。メモリの本文は含めません。 |
+| `hermes.memory.op.count` | 操作（`add`/`replace`/`remove`/`read`/`search`/`other`）、プロバイダー（`builtin`、同梱のメモリプラグイン、それ以外は `plugin`）、起点（`foreground`/`background_review`）、結果（`success`/`failed`/`rejected`）、失敗の分類 | 学習のループがメモリに書き込んでいるか、誰が求めたか（ユーザーのターンか背景レビューか）、書き込みが拒否されたり失敗したりする頻度と、その理由。パッケージスキーマ v4 からは、`failure_class` が理由を示します。組み込みのストアが返す拒否・失敗の1つずつに対応させた、決まった一覧から選びます。`no_match`（old_text がどの項目にも一致しなかった）、`ambiguous`（複数の項目に一致した）、`over_budget`（書き込むと文字数の上限を超える）、`would_empty`（まとめて実行すると最後の項目まで消える）、`drift`（ストアが元どおりに書き戻せない内容がファイルにある）、`read_failed`（ファイルはあるが読めない）、`retry_cap`（ターンごとのやり直しの回数を使い切った）、`scan_blocked`（内容が脅威のパターンに一致した）、`missing_content`、`missing_old_text`、`invalid_args`、`stale_entry`（保留中の書き込みの対象項目が変わった）、`disabled`（その書き込み先が設定でオフになっている）、`staged`（利用者の承認待ちで保留している）、`gate_refused`（書き込みの承認ゲートが止めた）です。プラグインのプロバイダーのツールがエラーを返した場合や例外を出した場合は `provider_error` / `exception`、成功なら `none`、それ以外は `other`/`unknown` です。まとめた操作は全部実行するか何もしないかのどちらかなので、拒否された一括操作では、どの操作の行にも、止めた操作の分類が載ります。メモリの本文、old_text、エラーの文言は含めません。 |
 | `hermes.curator.run.count` | きっかけ（`scheduled`/`manual`）、結果（`success`/`failed`/`skipped`）、アーカイブ・統合・パッチ・作成の件数の区分 | スキルのキュレーターが動いているか、実際に何かをまとめているか。試行のみの実行は `skipped` として報告します。定期の確認で、ほかのプロセスがすでに処理中だと分かった場合は何も記録しません。スキル名は含めません。 |
 | `hermes.delegation.run.count` | サブエージェント数の区分、深さ（`1`–`3`、`gte_4`）、モード（`foreground`/`background`）、結果（`success`/`partial`/`failed`/`cancelled`） | delegate_task の分岐がどれだけ広く深くなるか、子がすべて終わる頻度。いくつの完了単位に分かれても、1回の呼び出しにつき1行です。 |
 | `hermes.execution_backend.count` | 種類（`terminal`/`browser`/`code`）、バックエンド、結果、エラーの分類 | 実際の作業をどのサンドボックスが担い、それぞれどれだけ安定しているか。ターミナルのバックエンドは `terminal.backend` の値（それ以外は `other`）、ブラウザーのバックエンドは `local`、`lightpanda`、`cdp`、`camofox`、`extension`、同梱のクラウドプロバイダー（それ以外は `other`）、execute_code は `local` か `remote` です。コマンド自身が 0 以外で終わってもバックエンドとしては成功ですが、フォアグラウンドのコマンドがタイムアウトに達した場合は `failed`/`timeout` です。バックエンドに届く前にガードが拒否したターミナルと execute_code の呼び出し、TUI/Desktop のパス補完のために Hermes 自身が行う一覧取得、背景レビューとキュレーターの fork による呼び出しは数えません。 |
-| `hermes.platform.health` | プラットフォーム、イベント（`connect_ok`/`connect_failed`/`reconnect`/`disconnect`）、エラーの分類（`auth`/`network`/`rate_limited`/`config`/`other`） | どのメッセージングプラットフォームで接続の失敗や切断が起きているか、その理由。例外の型、HTTP ステータス、Hermes 自身の致命的なコードから分類し、エラーの文言は使いません。 |
+| `hermes.platform.health` | プラットフォーム、イベント（`connect_ok`/`connect_failed`/`reconnect`/`disconnect`）、エラーの分類（`auth`/`network`/`rate_limited`/`config`/`other`） | どのメッセージングプラットフォームで接続の失敗や切断が起きているか、その理由。`connect_failed` は、接続に失敗し続ける一続きの出来事を、プロファイル・プラットフォーム・UTC の日ごとに1回だけ数えます（再接続の見張り役によるやり直しは新しい行になりません。次に成功するとその一続きは終わり、翌日も失敗しているプラットフォームはまた数えます）。エラーの分類は、その一続きで最初に失敗したときのものを使います。例外の型、HTTP ステータス、Hermes 自身の致命的なコードから分類し、エラーの文言は使いません。 |
 | `hermes.platform.delivery` | プラットフォーム、結果（`sent`/`failed`）、失敗の分類（`rate_limited`/`too_long`/`auth`/`network`/`forbidden`/`other`） | プラットフォームごとに、返答がユーザーに届かない頻度（論理的な返答1件につき1回で、再試行も含みます）。 |
 | `hermes.gateway.reply_latency` | プラットフォーム、最初の応答までの区分（`lt_2s` … `gte_60s`） | 受け付けた受信メッセージから、目に見える最初の返答テキスト（ストリームの最初の塊か最終メッセージ）までの時間。 |
 | `hermes.cron.run` | 結果（`success`/`failed`/`missed`/`skipped`）、配信の種類（`local`/`platform`/`webhook`/`none`/`other`）、所要時間の区分 | 定期ジョブが動いているか、失敗していないか、ゲートや重複で飛ばされていないか、Hermes が止まっている間に取りこぼされていないか。ジョブ名、プロンプト、スケジュール、送り先は含めません。 |
@@ -413,6 +413,25 @@ Python への組み込みは除きます）、各間隔の上限は5
 | `hermes.feature_disabled.count` | 種類（`toolset`、`skill`、`plugin`、`platform`、`setting`、`memory`、`curator`、`compression`）、名前、実行面（`cli_tools`、`cli_config`、`cli_slash`、`tui`、`desktop`、`dashboard`）、イベント（`disabled`、`re_enabled`） | 利用者が何をオフにしているか。設定の書き込みそのものの時点で差分を取ります。既定でオンのツールセットの削除、スキルやプラグインの無効リストへの追加、既定で `true` の設定の false への変更（と、それぞれを元に戻したもの）です。名前を公開するのは同梱のものだけで、ツールセットのキー、同梱・カタログのスキル、同梱・カタログのプラグイン（メッセージングプラットフォームのプラグインは `platform` として報告）、`DEFAULT_CONFIG` のキーのパス（値は含めない）です。それ以外は `custom` です。カタログのスキルのアンインストールは `disabled` として数えます。記録するのはユーザーが使う入口（`hermes tools` / `config` / `skills` / `plugins`、チャットのスラッシュコマンド、TUI/Desktop、ダッシュボード）だけで、セットアップや移行では、それらの入口の中で移行が動いた場合（`hermes config migrate`、ダッシュボードから作成したプロファイル）でも記録しません。値が `${VAR}` のテンプレートの設定は比較しません。差分の計算と記録は、書き込みのあと、どの設定のロックの外でもバックグラウンドのスレッドで行います。（種類、名前、イベント）の組み合わせごとに、1日最大1回です。 |
 <!-- ---- end v5 signals ---- -->
 
+<!-- ---- iuf c1 ---- -->
+#### インストールと更新の失敗の理由 {#install-and-update-failure-reasons}
+
+パッケージスキーマ v4 から（v4 が canary だけだった間にその場で拡張しました）、既存の2つの指標が失敗の理由を示すようになりました。
+変更前に記録した行は古いフィールドの組み合わせのままで、そのままパッケージにできます。
+
+| 指標 | 追加した次元 | 答えたい問い |
+|---|---|---|
+| `hermes.extension.install.count` | 失敗の分類、レジストリ | スキル・プラグイン・MCP のインストールがなぜ失敗するか、skills-hub のどの取得元で失敗するか。`failure_class` は成功なら `none`、それ以外はインストールを止めた失敗の出口を表す、決まった一覧の名前です。スキルは `ambiguous`、`auth_rejected`、`fetch_failed`、`invalid_bundle`、`invalid_name`、`not_found`、`rate_limited`、`scan_blocked`、`stale_index`。プラグインは `already_installed`、`clone_failed`、`deps_declined`、`deps_failed`、`git_missing`、`incompatible`、`invalid_source`、`manifest_invalid`、`non_interactive`、`removed_from_catalog`、`scan_blocked`。MCP サーバーは `auth_required`、`bootstrap_failed`、`clone_failed`、`config_invalid`、`config_rejected`、`connect_failed`、`git_missing`、`missing_credentials`、`server_start_failed`。どの種類でも `exception`、`filesystem_error`、`network`、`other`、`permission` になることがあります。名前の付いた分類のないエラーが出た場合は、Python の型だけで分類します（`PermissionError` は `permission`、接続やタイムアウトのエラーは `network`、それ以外の `OSError` は `filesystem_error`、残りはすべて `exception` で、型名は落とします）。`registry` はスキルの行にだけ入ります。そのスキルを見つけた、または配った skills-hub のアダプターで、`browse-sh`、`clawhub`、`github`、`hermes-index`、`lobehub`、`official`、`skills-sh`、`url`、`well-known`（`tools/skills_hub_search.py::create_source_router` が組み立てるアダプターの ID）のどれかです。どのアダプターも答えなかったときは `unresolved`、組み込みの復元とプラグイン/MCP のすべての行では `none`、それ以外は `other` です。`failure_class` がその種類の一覧にない行、失敗なのに `none` の行、成功なのに値が入っている行、プラグイン/MCP の行でレジストリの名前を持つ行は無効です。識別子、URL、エラーの文言、パスは含めません。`name` は、これまでどおりカタログの名前か `custom` の規則に従います。 |
+| `hermes.update.run` | 失敗の分類 | `hermes update` がなぜ失敗するか。どこで失敗したか（`failed_stage`）と並べて見ます。結果が `failed` か `refused` のとき以外は `none` です。最終的な更新のレシートだけから導きます。`aborted_before_apply`、`build_failed`、`deps_failed`、`exception`、`fleet_stale`、`fleet_unverified`、`git_failed`、`interrupted`、`lock_held`、`managed_install`、`os_error`、`restart_failed`、`subprocess_failed`、それ以外は `other` です。Desktop のパッケージ版の自己更新は `unknown` を報告します（その RPC は段階を運びますが、理由は運びません）。実行を終わらせた例外は型名だけで読み、メッセージは使いません。更新のあと Windows でゲートウェイの再開に失敗した場合は `restart_failed` になります。すべての段階の印が通ったのに失敗した実行は、`other` ではなく、`failed_stage` が `verify`（再起動後の確認が `partial` を書いた）か `restart`（再起動を飛ばしたため、フリートに再起動が残っている）になりました。ビルドや再起動の印が失敗している `partial` の実行はその段階のままで、verify の段階の行が失敗になるのは、フリートに古い行か止まっている行があるときだけです。 |
+<!-- ---- end iuf c1 ---- -->
+<!-- ---- iuf c2 ---- -->
+#### 新規インストール {#fresh-installs}
+
+| 指標 | 次元 | 答えたい問い |
+|---|---|---|
+| `hermes.install.run` | インストーラー（`install_sh`、`install_ps1`、`other`）、結果（`success`、`failed`）、failed_stage（`prerequisites`、`repository`、`venv`、`python_deps`、`config`、`products`、`setup`、`gateway`、`complete`、`other`。成功なら `none`）、failure_class（`unsupported_platform`、`download_failed`、`download_digest_mismatch`、`uv_unusable`、`git_missing`、`curl_missing`、`libstdcxx_missing`、`git_extract_failed`、`dir_not_checkout`、`git_clone_failed`、`git_fetch_failed`、`local_changes_blocked`、`git_checkout_failed`、`git_reset_failed`、`commit_not_on_branch`、`filesystem_error`、`python_install_failed`、`deps_install_failed`、`products_build_failed`、`setup_failed`、`gateway_failed`、`interrupted`、`other`。成功なら `none`）、所要時間の区分（`lt_30s` … `gte_15m`） | 新しく `install.sh` / `install.ps1` を実行したとき、どれくらい成功するか。失敗するならどの段階で、決まった一覧のどの理由で失敗するか。インストーラーは同意の質問より前に動き、何も送信しません。最後まで通した実行（`--stage` / `-Stage` を1つだけ呼んだものは除くので、Desktop のブートストラップ用インストーラーが段階ごとに呼ぶものは数えません）は、`$HERMES_HOME/telemetry/shared_metrics/pending_installs/` に小さなローカルファイルを1つ残します。中身はこれらのトークン、ランダムな ID、開始と終了の時刻だけです（エラーの文言、パス、URL、ホスト名は含めません）。そのプロファイルで後に Hermes を起動したとき、その時点で収集がオンの場合に限り、1回だけ数えます。収集がオフの状態で起動した場合や、参加しないと答えた場合は、報告せずにファイルを消します。送信がオンの場合、この行を記録するのは、その UTC の日のパッケージが送信の同意ゲートを通れる日、つまりその日の 00:00 UTC 以前に送信の同意期間が始まっている日だけです。インストール中（setup の段階）に参加すると、同意期間は日の途中で始まります。そのため記録は、参加した日のパッケージ（これは送信されません）には入らず、翌日以降の最初の起動まで待ちます。収集がオンで送信がオフの場合は、最初の起動で行を記録し、この端末の中にとどめます。7日以内にどの起動にも数えられなかった記録は、報告せずに消します。古いインストールが後の Hermes のバージョンとして数えられることはありません。読めない記録も消します。Ctrl-C、SIGTERM、ターミナルを閉じたこと（SIGHUP）でインストールが止まった場合は、その段階の子プロセスがそれを受け取って独自のエラーで終了したときでも `interrupted` になります。段階が自分で処理して立て直した Ctrl-C（setup のプロバイダーの選択画面）では、インストールは止まりません。したがって失敗したインストールが数えられるのは、同じプロファイルで後のインストールか Hermes の起動が、収集がオンの状態で成功したときだけです。そのあとに何も続かない失敗したインストールは、数えられません。 |
+<!-- ---- end iuf c2 ---- -->
+
 ローカルの状態は次の場所に書き込まれます。
 
 ```text
@@ -427,9 +446,11 @@ $HERMES_HOME/telemetry/shared_metrics/outbox/*.json
 認識できないプラットフォームやインストールの値は `unknown` として出力し、生のプラットフォーム文字列、ホスト名、パスは含めません。
 すべてパッケージ化済みの集計行と、出力に成功したパッケージの行とファイルは、ローカルに30日間保持します。
 未処理のパッケージ行と、未出力の差分を持つカウンターは削除しません。
-既存の outbox ファイルでは、パッケージスキーマ v1 と v2 はそのままです。
-新しいパッケージは v3 を使います。
-v3 は `hermes.model_route.count`、`hermes.tool_call.count`、タスクのカウンターについて v2 のフィールドの組み合わせも受け付けるので、アップグレード前に記録したカウンターを安全に出し切れます。
+既存の outbox ファイルでは、パッケージスキーマ v1、v2、v3 はそのままです。
+新しいパッケージは v4 を使います。
+v4 は `hermes.compression.count` と `hermes.memory.op.count` に `failure_class` を加え、それらの v3 のフィールドの組み合わせも引き続き受け付けます（その場での拡張として、
+`hermes.extension.install.count` / `hermes.update.run` への `failure_class` と、前者への `registry` も加えており、それらの以前の v4 のフィールドの組み合わせも引き続き受け付けます）。
+v3 が `hermes.model_route.count`、`hermes.tool_call.count`、タスクのカウンターについて v2 のフィールドの組み合わせを受け付けたのと同じで、アップグレード前に記録したカウンターを安全に出し切れます。
 リポジトリ内のレジストリから導く語彙（ツール名、プラットフォーム、メモリプロバイダー、エラーの分類）は、JSON スキーマではパターンで範囲を限っています。
 正式な許可リストは `shared_metrics_contract.py` です。
 
@@ -512,8 +533,12 @@ telemetry:
 
 ターミナルでは「No thanks」が既定なので、Enter を押しただけで誰かが参加してしまうことはありません。
 ターミナルで Esc を押すか、ダッシュボードのバナーの ✕ を押した場合は、質問は答えのないまま残り、
-次の機会にまたたずねます。どの画面で答えても、両方のキーがプロファイルの `config.yaml` に書き込まれます。
+次の機会にまたたずねます。どの画面で答えても、両方のキーと `offer_version` がプロファイルの `config.yaml` に書き込まれます。
 どちらかのキーがすでにあるプロファイルでは、二度とたずねません。管理されたインストールでは、提案そのものを出しません。
+
+例外が1つあります。先行入力の修正より前は、`hermes chat` の起動中に押した Enter が、質問が出る前に「No thanks」を保存してしまうことがありました。
+そのため、`offer_version` なしで記録された「No thanks」には、どの画面でももう1回だけ、理由を添えて提案を出します。
+どんな反応でもそれで決着し、Esc やバナーの ✕ でも「No thanks」のまま確定します。参加すると答えたものは、二度とたずねません。
 あとから答えを変えるには、`hermes setup telemetry`、`hermes tools`、または Desktop の Settings ›
 Safety › Privacy & network を使います。
 

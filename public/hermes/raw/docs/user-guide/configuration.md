@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: c0a238e5731a96218ad41f6e45ed2918138cf432
+upstream_blob: 65d6c3e0b12667ffed6035ff9f55ead7532074e7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -1097,12 +1097,12 @@ OpenAI 互換のカスタムエンドポイントを指定します。認証に�
 | `nous` / `openrouter` など | 未設定 | そのプロバイダーを強制し、その認証を使う |
 | 任意 | 設定あり | カスタムエンドポイントを直接使う（プロバイダーは無視） |
 
-### ストリームの進行タイムアウト（Responses 系の経路） {#stream-progress-timeout-responses-routes}
+### ストリームの進行タイムアウト {#stream-progress-timeout}
 
-要約を Responses のストリームで受け取る場合（`openai-codex` プロバイダーや、補助クライアントが Responses API を通して扱う経路）は、2つのタイムアウトが互いに独立してかかります。
+要約をストリームで受け取る場合（圧縮は、chat-completions の経路でも Responses の経路でも常にストリームを使います。たとえば `openai-codex` や、独自の OpenAI 互換エンドポイントです）は、2つのタイムアウトが互いに独立してかかります。
 
 - `auxiliary.compression.timeout` — リクエスト全体にかけられる時間の上限（既定は120秒）。
-- `auxiliary.compression.no_progress_timeout` — **中身のある**イベント（テキストや推論の差分、または完了した出力項目）が届かない状態を、ストリームでどこまで許すかの時間です。これを超えると、その試行は `Codex auxiliary Responses stream stalled: no new output for Ns` で中断されます。未設定のときの既定値は**60秒**です。キープアライブやライフサイクルのフレーム（`response.in_progress`、ping）は進みとして数えません。中身のあるイベントが届くたびに計測はやり直されるので、遅くても進んでいる要約がこれで打ち切られることはありません。
+- `auxiliary.compression.no_progress_timeout` — **中身のある**イベント（テキストや推論の差分、または完了した出力項目）が届かない状態を、ストリームでどこまで許すかの時間です。これを超えると、その試行は中断され（`... stream stalled: no new output for Ns`）、通常の再試行とフォールバックの流れに引き継がれます。未設定のときの既定値は**60秒**です。chat-completions のストリームでは、この計測は最初のトークンが届いた時点で始まります。それより前は、リモートのエンドポイントにはメインのループと同じ「応答が止まったとみなすまでの猶予」が与えられます（プロバイダーの `providers.<id>.stale_timeout_seconds` が設定されていればその値、なければ180秒で、大きなプロンプトでは延び、o3 や DeepSeek R1 のような推論モデルでは600秒まで延びます。上限は `timeout` です）。そのため、黙って考えているモデルが途中で切られることはありません。手元のエンドポイント（localhost、LAN、Tailscale）では、何も返さないままのプリフィルを区切るのは `timeout` だけです。同じ決まりは、MoA の参照呼び出しを含む、ストリームを使うすべての補助タスクに当てはまります。キープアライブやライフサイクルのフレーム（`response.in_progress`、ping）は進みとして数えません。中身のあるイベントが届くたびに計測はやり直されるので、遅くても進んでいる要約がこれで打ち切られることはありません。
 
 `timeout` を上げるだけでは、進みを待つ時間は広がり**ません**。600秒に設定したリクエストでも、60秒間なにも届かなければ中断されます。この間隔を変えるには `no_progress_timeout` を設定してください。実際に使われる時間は `timeout` を超えず、ホスト側の強制期限やキャンセルがあればそちらが優先されます。ここで一番外側の上限になるのは、ホスト自身の無応答の許容時間です。エージェント内の圧縮は `compression.context_timeout_seconds`（既定は120秒。実際に使われる `auxiliary.compression.timeout` を下回らず、その値自体も最低300秒）が過ぎると無応答の要約モデルを見限り、ゲートウェイの事前圧縮は `compression.hygiene_timeout_seconds`（既定は30秒）が過ぎると見限ります。そのため、該当するホスト側の許容時間より大きい `no_progress_timeout` は、知らせもなくその時間で打ち切られます。このキーはタスクごとの設定（`auxiliary.<task>.no_progress_timeout`）なので、圧縮用に広げても、ほかの補助タスクには影響しません。正の数でない値はログに警告を出して無視され、既定の60秒が使われます。
 
@@ -1234,6 +1234,8 @@ agent:
 `agent.budget_warning_ratio` は、通常の会話でも委任された会話でも、既定では無効です。有限の `max_turns` と一緒に、`0` より大きく `1` より小さい値を設定すると、Hermes はそのしきい値に達したあと、モデルから見えるチェックポイントの通知を1つ、最新のツールの結果に追記します。この通知は会話のターンごとに改めて有効になり、各エージェントがそれぞれ持つ反復回数の上限を基準にします。追記先は現在のツールの結果の末尾だけで、それより前のターンには追記しません。ユーザーやシステムのメッセージを新たに作って足すこともなく、上限に達したときの既存の猶予の呼び出しも変えません。ディスパッチャーが管理するかんばんのワーカーには、既定で90%の時点で、ツールがまだ使えるうちに、完了に向けたチェックポイントの通知が届きます（比率を明示すると、このしきい値が変わります）。この通知が求めるのは、検証済みの完了か、あとに残る進捗のコメントです。まだ終わっていないのに成功と報告させるものではありません。
 
 `agent.api_max_retries` は、一時的なエラー（レート制限、接続の切断、5xx）が起きたとき、フォールバックプロバイダーへの切り替えが始まる**前に**、Hermes がプロバイダーの API 呼び出しを何回再試行するかを決めます。既定値は `3` で、合計4回試行します。[フォールバックプロバイダー](/hermes/docs/user-guide/features/fallback-providers/) を設定していて、より早く切り替えたい場合は、これを `0` に下げてください。そうすれば、メインのプロバイダーで最初に一時的なエラーが出た時点で、不安定なエンドポイントへの再試行を重ねずに、すぐフォールバックへ引き継ぎます。
+
+リセットの時刻を示すレート制限（`Retry-After`、または本文の `retry_after` フィールド）は、待ってから再試行します。待つのは1回の再試行あたり最大 600 秒です。進行中の状態表示には待ち時間が出て、プロバイダーが示していれば、制限が解ける時刻も出ます。例外が1つあります。Nous の無料ティア（サインインなし）では、人が見ているセッション（Desktop アプリ、TUI、`hermes` のターミナルでのチャット、ACP 対応のエディタ）は、60 秒を超える待ち時間を待ち続けません。無料ティアの一時停止はサービス全体にかかっていて、リセット前に再試行しても同じように断られるだけだからです。そのターンはすぐに終わり、制限がいつ解けるかを伝えます。フォールバックを設定していれば、先にそちらが動きます。人のいない実行（`hermes chat -q`、cron、メッセージングプラットフォーム、委任されたサブエージェント）は、そのまま待ち続けます。
 
 `agent.auto_recovery_cycles` は、再試行とフォールバックチェーンの両方を使い切った*あと*の安全網です。失敗の原因が一時的な障害（HTTP 5xx、`overloaded`/529 の応答、接続または読み込みのタイムアウト）で、まだ回答のテキストが届いていない場合、Hermes は「API failed after N retries」でターンを終えず、待ってから再び試します。試すのは最大でこの回数（既定は `5`）までで、間隔は15/30/60/60/60秒に揺らぎを加えたものです。プロバイダーが `Retry-After` ヘッダーを返した場合は、この間隔より優先します（120秒まで従います）。待っているあいだは、どの画面にも同じ内容が表示されます。CLI/TUI/Desktop では `⏳ Provider temporarily unavailable — retrying automatically in 30s (cycle 2/5); press Esc to stop`、メッセージングプラットフォームではステータスの吹き出し（`send /stop to cancel`）、API サーバーでは `hermes.status` の SSE イベント、cron ジョブではログの1行です。Esc を押す（または `/stop` を送る）と、待機はすぐに取り消されます。それでもフォールバックが先です。フォールバックチェーンを設定していれば、使い切ったときはこれまでどおり次のプロバイダーへ移り、この段階的な待機はチェーンに残りがなくなって初めて始まります。認証、支払い、リクエストの形式、利用資格、コンテンツポリシー、アカウントのポリシーのエラーは、この段階的な待機の対象になりません。無効にするには `0` を設定してください。
 
@@ -1555,8 +1557,8 @@ auxiliary:
   # Context compression timeout (separate from compression.* config)
   compression:
     timeout: 120               # seconds — compression summarizes long conversations, needs more time
-    # no_progress_timeout: 60   # Responses-stream routes (openai-codex) only: seconds a summary stream
-    #                           # may go without a substantive event before the attempt fails fast
+    # no_progress_timeout: 60   # seconds a streamed summary may go without a substantive chunk
+    #                           # before the attempt fails fast into retry/fallback
     # fallback_chain:           # Optional — providers to try on rate-limit / connectivity failure
     #   - provider: nous
     #     model: deepseek/deepseek-chat
@@ -2414,6 +2416,7 @@ stt:
   echo_transcripts: true       # Post raw transcripts back to the chat as 🎙️ "..." (default: true)
   provider: "local"            # "local" | "groq" | "openai" | "mistral" | "xai" | "elevenlabs" | "deepinfra" | ...
   language: "en"               # GLOBAL language hint for every provider (per-provider language wins); set "" for auto-detect
+  streaming: false             # live partial text while you speak (openai, xai, elevenlabs); see Voice Mode > Live transcription
   cloud_trim_silence: true     # trim long pauses with ffmpeg before uploading to a cloud provider (default: true)
   cloud_trim_threshold_db: -40 # audio quieter than this counts as silence
   cloud_trim_keep_ms: 300      # how much of each pause survives the trim (keeps natural pacing)
@@ -2434,6 +2437,9 @@ stt:
     language: ""               # per-provider override of stt.language
     timeout: 60                # seconds per transcription request; raise for self-hosted model cold starts
     max_retries: 1             # SDK transport retries (connection errors, 408/409/429/5xx); 0 = single attempt
+  xai:
+    model: "grok-voice-transcribe-2.0"  # or grok-voice-transcribe-1.0; sent on every request
+    language: ""               # per-provider override of stt.language
   # model: "whisper-1"         # Legacy fallback key still respected
 ```
 
@@ -2451,6 +2457,8 @@ stt:
 
 クラウドのプロバイダー（groq、openai、mistral、xai、elevenlabs、deepinfra）では、`ffmpeg` がインストールされていれば、既定で**アップロード前の無音の切り詰め**が行われます。音声メッセージ内の長い間を、ファイルをアップロードする前に手元で詰めます。自然な間合いが残るよう、各休止のうち `cloud_trim_keep_ms` の分は残します。音声が短くなれば、アップロードが速くなり、音声1分あたりの課金が下がり、リモートのモデルによる無音時のハルシネーションも減ります。12秒より短い音声はまったく切り詰めません（そこでは節約の効果に意味がなく、そもそもリクエストごとの最低料金を設けているプロバイダーもいくつかあります）。切り詰めはベストエフォートです。ffmpeg がない、切り詰めに失敗した、音声のほとんどが無音、または切り詰めても約10%未満しか減らない場合は、元のファイルをそのままアップロードします。常に元のファイルをアップロードしたいとき（たとえばクラウドのプロバイダーで音楽や環境音を文字起こしするとき）は、`stt.cloud_trim_silence: false` を設定してください。コマンド型とプラグインのプロバイダーには、切り詰めた音声は渡されません。
 
+プロバイダーの1リクエストあたりのアップロード上限（OpenAI/Groq/DeepInfra は 25 MB、Mistral と xAI は 500 MB、ElevenLabs は約 5 GB。さらに OpenAI の `gpt-4o-transcribe` 系と `whisper-1` にはモデルごとの長さの上限があります）を超える録音は、容量の小さい AAC に変換し直し、それでも大きすぎる場合は話の途切れで分割して、一つずつ文字起こしします。詳しくは [長い録音とアップロードの上限](/hermes/docs/user-guide/features/voice-mode/#long-recordings-and-upload-limits) を参照してください。
+
 明示的に選んだ `stt.provider` は厳密に守られます。そのプロバイダーが使えない場合、別のプロバイダーに切り替えることはせず、文字起こしはエラーになり、`hermes tools` を実行するよう案内が表示されます。プロバイダーが一度も選ばれていない場合に限り、Hermes は次の順で自動判定します: `local` → `groq` → `openai`。
 
 Groq と OpenAI のモデルの上書きは、環境変数で行います。
@@ -2458,6 +2466,7 @@ Groq と OpenAI のモデルの上書きは、環境変数で行います。
 ```bash
 STT_GROQ_MODEL=whisper-large-v3-turbo
 STT_OPENAI_MODEL=whisper-1
+STT_XAI_MODEL=grok-voice-transcribe-2.0
 GROQ_BASE_URL=https://api.groq.com/openai/v1
 STT_OPENAI_BASE_URL=https://api.openai.com/v1
 ```
@@ -2724,7 +2733,7 @@ web:
 | **Perplexity** | `PERPLEXITY_API_KEY` | ✔ | ✔（クエリに関連する抜粋） |
 | **Exa** | `EXA_API_KEY`（任意 — キーなしの無料ティアあり） | ✔ | ✔ |
 
-**バックエンドの選択:** 実行時には、保存されている `web.backend` の選択が常に使われます（`hermes tools` で設定します。`nous` を選ぶと、管理された Tool Gateway を経由します）。Web のバックエンドを一度も選んだことがない場合に限り、手元にある API キーから自動で判別します。`SEARXNG_URL` だけが設定されていれば SearXNG、`EXA_API_KEY` だけなら Exa、`TAVILY_API_KEY` だけなら Tavily、`PERPLEXITY_API_KEY` だけなら Perplexity、`PARALLEL_API_KEY` だけなら Parallel、`KEENABLE_API_KEY` だけなら Keenable が使われます。**選択もなく認証情報もまったくない**場合は、キーなしで使える無料ティアの輪（Exa / Parallel / Firecrawl / Keenable）をラウンドロビンで順に回り、レート制限に当たると自動で次の候補に切り替わります。詳しくは [Web 検索のガイド](/hermes/docs/user-guide/features/web-search/) を参照してください。一度選択すると、あとから `.env` にキーを追加しても経路は変わりません。`hermes tools` で Tavily、Firecrawl、Keenable を選んだ場合も、キーなしで動作します。
+**バックエンドの選択:** 実行時には、保存されている `web.backend` の選択が常に使われます（`hermes tools` で設定します。`nous` を選ぶと、管理された Tool Gateway を経由します）。Web のバックエンドを一度も選んだことがない場合に限り、手元にある API キーから自動で判別します。`SEARXNG_URL` だけが設定されていれば SearXNG、`EXA_API_KEY` だけなら Exa、`TAVILY_API_KEY` だけなら Tavily、`PERPLEXITY_API_KEY` だけなら Perplexity、`PARALLEL_API_KEY` だけなら Parallel、`KEENABLE_API_KEY` だけなら Keenable が使われます。**選択もなく認証情報もまったくない**場合は、キーなしで使える無料ティアの輪（Exa / Parallel / Firecrawl / Keenable）をラウンドロビンで順に回り、レート制限に当たると（検索では、提供元に断られた場合も）自動で次の候補に切り替わります。詳しくは [Web 検索のガイド](/hermes/docs/user-guide/features/web-search/) を参照してください。一度選択すると、あとから `.env` にキーを追加しても経路は変わりません。`hermes tools` で Tavily、Firecrawl、Keenable を選んだ場合も、キーなしで動作します。
 
 **SearXNG** は、70以上の検索エンジンにまとめて問い合わせる、無料でセルフホストできるプライバシー重視のメタ検索エンジンです。API キーは不要で、自分のインスタンスを `SEARXNG_URL` に設定するだけです（例: `http://localhost:8080`）。SearXNG は検索専用なので、`web_extract` を使うには本文抽出用のプロバイダーを別に用意する必要があります（`web.extract_backend` を設定します）。Docker でのセットアップ手順は [Web 検索のセットアップガイド](/hermes/docs/user-guide/features/web-search/) を参照してください。
 
@@ -2801,15 +2810,11 @@ discord:
 
 ## セキュリティ {#security}
 
-実行前のセキュリティスキャンと、シークレットの伏せ字化を設定します。
+シークレットの伏せ字化と、Web サイトのブロックリストを設定します。
 
 ```yaml
 security:
   redact_secrets: true           # Redact API key patterns in tool output and logs (on by default)
-  tirith_enabled: true           # Enable Tirith security scanning for terminal commands
-  tirith_path: "tirith"          # Path to tirith binary (default: "tirith" in $PATH)
-  tirith_timeout: 5              # Seconds to wait for tirith scan before timing out
-  tirith_fail_open: true         # Allow command execution if tirith is unavailable
   website_blocklist:             # See Website Blocklist section below
     enabled: false
     domains: []
@@ -2817,10 +2822,8 @@ security:
 ```
 
 - `redact_secrets` — `true` のとき、ツールの出力に含まれる API キー、トークン、パスワードらしきパターンを自動で検出し、会話のコンテキストやログに入る前に伏せ字にします。**既定でオンです**。デバッグや伏せ字処理の開発で、認証情報らしき文字列をそのまま見る必要がある場合に限り、明示的に `false` にしてください。シークレットを含むファイル（`.env` 形式のファイル、シェルの rc/profile ファイル、`HERMES_HOME` にある Hermes の `config.yaml` と、その `backups/config/` 内のコピー）を `read_file`、`search_files`、ターミナルの `cat`/`grep` で読んだ場合も、認証情報の形をした代入（`SOME_API_TOKEN: …`）は、値の見た目にかかわらず、再利用できない `«redacted-secret»` という印に置き換えられます。通常のソースコードやプロジェクトの設定ファイルでは、ベンダー固有の接頭辞のパターンだけが対象なので、`MAX_TOKENS: 100` のようなテスト用のデータが書き換えられることはありません。
-- `tirith_enabled` — `true` のとき、ターミナルコマンドを実行前に [Tirith](https://github.com/sheeki03/tirith) でスキャンし、危険なおそれのある操作を検出します。
-- `tirith_path` — tirith の実行ファイルのパスです。tirith を標準以外の場所にインストールした場合に設定します。
-- `tirith_timeout` — tirith のスキャンを待つ最大秒数です。スキャンがタイムアウトした場合、コマンドはそのまま実行されます。
-- `tirith_fail_open` — `true`（既定）のとき、tirith が使えない場合や失敗した場合でも、コマンドの実行を許可します。tirith が検証できないときにコマンドを止めたい場合は、`false` に設定します。
+
+以前の版には、同梱のコマンドスキャナー用の `tirith_*` キーもありました。このスキャナーは取り除かれ、アップグレードするとこれらのキーは消えます。コマンドの中身の検査については [コマンドの中身の検査](/hermes/docs/user-guide/security/#content-level-command-checks) で説明しています。
 
 ## Web サイトのブロックリスト {#website-blocklist}
 

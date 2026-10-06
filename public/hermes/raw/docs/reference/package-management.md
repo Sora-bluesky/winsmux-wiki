@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 664219778b69da17988031226ae6caa1a8fb022e
+upstream_blob: b50f6a55ec25c974377f95e91059b1a6de38c5a9
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -193,22 +193,20 @@ PM は依存マネージャーであって、プラグインのコードを閉�
 
 ## オプションのセキュリティツール {#optional-security-tools}
 
-固定版の `bws`、`tirith`、`iron-proxy` パッケージは、PM が
+固定版の `bws` と `iron-proxy` パッケージは、PM が
 `pm/security_packages.py` で管理します。そのバージョン、成果物の URL、SHA-256 ハッシュは
 `pm/lock.json` から取ります。ダウンロードと公開には共有のツールストアを使い、
 `$HERMES_HOME/bin` 配下の個別のインストーラーは使いません。
 
-Tirith と iron-proxy については、PM は固定された署名ファイルも取得し、
+iron-proxy については、PM は固定された署名ファイルも取得し、
 リリースのチェックサムが固定されたアーカイブを含んでいるかを確かめます。パッケージの配置時には、
-連携先の署名チェッカーを呼び出します。Cosign と GPG による検査は、
+連携先の署名チェッカーを呼び出します。GPG による検査は、
 実行ファイルがある場合に限って行われます。ロックされた来歴ファイルは引き続き存在し、
 ハッシュが一致していなければなりません。署名が明示的に拒否された場合は、インストールを中止します。
 外部の実行ファイルは、PM のハッシュと署名の保証の対象外です。
 
 `bws` と iron-proxy は、PM の選択を確認する前に、`PATH` 上の実行ファイルを優先します。
-Tirith は `security.tirith_path` を優先し、既定の名前については、PM の選択より前に `PATH` を使います。
-Tirith のパスを明示した場合、置き換えのための
-ダウンロードは決して起きません。必要時のインストールは PM のポリシーに従います。明示的なインストールコマンドは、
+必要時のインストールは PM のポリシーに従います。明示的なインストールコマンドは、
 `--force` 付きの要求も含めて、管理対象のエントリを検査し修復します。
 
 ## 開発者のワークフロー {#developer-workflow}

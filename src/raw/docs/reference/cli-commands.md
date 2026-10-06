@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: e9c28573fbc95d46471751ecbe115c4a3653a56e
+upstream_blob: c9a07b4b697d775c6cf775a4eba462b9a21f32bc
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -1460,7 +1460,7 @@ hermes hooks <subcommand>
 hermes memory <subcommand>
 ```
 
-外部メモリプロバイダのプラグインをセットアップ・管理します。同梱のプロバイダ: openviking、mem0、holographic、retaindb、byterover。honcho、hindsight、supermemory（プラグインカタログ）は `hermes plugins install <name>` のあとで使えます（`memory.provider` にすでに指定されているプロバイダなら、`hermes update` がこのインストールを自動で行います）。同時にアクティブにできる外部プロバイダは1つだけです。組み込みメモリ（MEMORY.md/USER.md）は常にアクティブです。
+外部メモリプロバイダのプラグインをセットアップ・管理します。同梱のプロバイダ: openviking、holographic、retaindb、byterover。honcho、hindsight、supermemory、mem0（プラグインカタログ）は `hermes plugins install <name>` のあとで使えます（`memory.provider` にすでに指定されているプロバイダなら、`hermes update` がこのインストールを自動で行います）。同時にアクティブにできる外部プロバイダは1つだけです。組み込みメモリ（MEMORY.md/USER.md）は常にアクティブです。
 
 サブコマンド:
 
@@ -1884,8 +1884,8 @@ hermes update [--gateway] [--check] [--plan] [--no-backup] [--backup] [--yes]
 追加の挙動:
 
 - **ゲートウェイの再起動。** 更新の成功後、Hermes は更新対象のホーム（そのルートと、配下のすべての `profiles/<name>`）で実行中のゲートウェイプロファイルをすべて自動的に再起動しようとし、新しいコードを反映させます。同じマシン上でも別の `HERMES_HOME` に属するゲートウェイや `hermes-gateway*` サービス（別のインストールや、`hermes update` を実行している一時的なホーム）は、出力に名前を示したうえで手を付けずに残します。更新を適用せずにゲートウェイだけ再起動したいときは `hermes gateway restart` を使ってください。
-- **再起動フェーズの復旧。** 新しく取得したツリーをインポート中に、プロセス内の再起動フェーズが中断された場合、監視下にあるゲートウェイプロファイルは、クリーンな Python プロセスを通じて再試行されます。systemd（`systemctl --user is-active`）によって独立に確認された再起動だけが verified として報告されます。単に終了コード 0 を返しただけの再起動は `relaunch_attempted` として記録され、それでも更新は保守的に失敗として扱われます。手動のゲートウェイと serve/dashboard のランタイムは、再起動の権限なしに強制終了されることはありません。それらは理由付きでスキップとして記録され、正確な再起動コマンドと共に不完全な更新レポートに残ります。
-- **更新レシート + フリートのバージョン確認。** 各実行は、`~/.hermes/logs/update_receipts/` に機械可読なレシートを書き込みます（更新前のフリート計画、各ステップ、理由付きのスキップ、再起動の結果。`latest.json` は最新のものを指します）。再起動フェーズの後、アップデータは各稼働中のゲートウェイの実行中コードを更新後のチェックアウトと照合し、プロファイルごとのバージョン行列を表示します。更新前のコードのままのゲートウェイがあると、正確な再起動コマンドと共に更新が失敗します（終了コード1）。
+- **再起動フェーズの復旧。** 新しく取得したツリーをインポート中に、プロセス内の再起動フェーズが中断された場合、監視下にあるゲートウェイプロファイルは、クリーンな Python プロセスを通じて再試行されます。systemd（`systemctl --user is-active`）によって独立に確認された再起動だけが verified として報告されます。単に終了コード 0 を返しただけの再起動は `relaunch_attempted` として記録され、再起動は未完了のまま残ります（`gateway_restart` のフォローアップになります。コード自体は入っているので、更新そのものは終了コード 0 で終わります）。手動のゲートウェイと serve/dashboard のランタイムは、再起動の権限なしに強制終了されることはありません。それらは理由付きでスキップとして記録され、正確な再起動コマンドと共に不完全な更新レポートに残ります。
+- **更新レシート + フリートのバージョン確認。** 各実行は、ルートの Hermes ホームにある `~/.hermes/logs/update_receipts/` に機械可読なレシートを書き込みます。固定したプロファイルから実行した場合も同じです（更新前のフリート計画、各ステップ、理由付きのスキップ、再起動の結果、フォローアップ。`latest.json` は最新のものを指し、更新の途中は `running` になります）。再起動フェーズの後、アップデータは各稼働中のゲートウェイの実行中コードを更新後のチェックアウトと照合し、プロファイルごとのバージョン行列を表示します。新しいコードが入っていれば、更新前のコードのままのゲートウェイがあっても更新は失敗しません。正確な再起動コマンドを添えた `⚠` の行を表示して終了コード 0 で終わり、`gateway_restart` のフォローアップを記録して、再起動を未完了のまま残します。CLI を起動するたびにそのことが警告され、次の `hermes update` で再試行されます。
 - **ローカルのソース変更。** git によるインストールでは、追跡中の汚れたファイルと未追跡のファイルは、ブランチのチェックアウトや pull の前に自動的にスタッシュされます（`git stash push --include-untracked`）。対話的なターミナルでの更新では、スタッシュを復元する前に確認を求めます。非対話的な更新では、既定でそれを復元します。管理されたインストールで、意図的なローカルのソース編集を成功した pull の後に破棄したい場合だけ `updates.non_interactive_local_changes: discard` を設定してください。スタッシュの復元が競合する、または pull が失敗した場合、手動での復旧のためにスタッシュはそのまま残されます。
 - **npm のロックファイルの変動。** スタッシュやブランチの切り替えの前に、Hermes は npm の install/build ステップが生成した、追跡中の `package-lock.json` の差分をベストエフォートでクリーンアップします。意図的なロックファイルの編集は、`hermes update` を実行する前にコミットするか手動でスタッシュしてください。
 - **ペアリングデータのスナップショット。** `--backup` が off でも、`hermes update` は `git pull` の前に `~/.hermes/pairing/` と Feishu のコメントルールの軽量なスナップショットを取ります。pull が編集中だったファイルを書き換えてしまった場合、`hermes backup restore --state pre-update` でロールバックできます。

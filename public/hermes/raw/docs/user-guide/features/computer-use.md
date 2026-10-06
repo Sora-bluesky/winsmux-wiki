@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コンピュータ操作"
 description: ""
 upstream_path: user-guide/features/computer-use.md
-upstream_blob: d8649e42a434f69b0d14a0eab22cdda6c2cc87e8
+upstream_blob: c1a2955e9c355981756562586369c47eaebab514
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use
 ---
@@ -518,11 +518,10 @@ computer_use:
 `cua-driver autostart disable`（または `schtasks /Delete /TN cua-driver-serve`）を実行して削除します。
 `computer_use.autostart` が false なら、Hermes がタスクを登録し直すことはありません。
 
-バックエンドをまるごと差し替える（テスト用）:
-
-```
-HERMES_COMPUTER_USE_BACKEND=noop   # records calls, no side effects
-```
+ドライバーをまるごと差し替える: `config.yaml` の `computer_use.backend` に、
+有効にするプロバイダーを1つ指定します（既定の `cua` か、インストール済みのプロバイダープラグイン。
+[コンピュータ操作バックエンドのプラグイン](/hermes/docs/developer-guide/plugins/#computer-use-backend-plugins)を参照）。
+`hermes tools` → Computer Use を開くと、インストール済みのプロバイダーがすべて表示されます。
 
 ### テレメトリ {#telemetry}
 

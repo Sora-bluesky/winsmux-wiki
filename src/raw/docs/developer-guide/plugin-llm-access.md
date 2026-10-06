@@ -2,7 +2,7 @@
 title: "プラグインからの LLM 呼び出し"
 description: "ctx.llm を使うと、プラグインの中からどんな LLM 呼び出しもできます。チャットでも構造化出力でも、同期でも非同期でも同じです。認証はホストが持ち、信頼ゲートは既定で閉じ、JSON Schema による検証も選べます。"
 upstream_path: developer-guide/plugin-llm-access.md
-upstream_blob: 5cb0f9e08c24ab0024ec23b5bf3cbaa5fcde1eec
+upstream_blob: e4a8063bcc3946d24b17ca3809ed393f243a4baa
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugin-llm-access
 ---
@@ -315,11 +315,51 @@ auxiliary:
 
 プラグインは、自分が持つタスクについてプロバイダーとモデルの既定値を登録できます。
 `auxiliary.<task>` にある運用側の設定はその既定値より優先され、実際に何を使うかを決めます。
+登録したタスクは、モデルを割り当てるすべての画面で、組み込みのタスクと同じ扱いの枠になります。
+`hermes model` →
+*Configure auxiliary models* の選択画面、ダッシュボードの Models ページ、デスクトップアプリの
+Settings → Models → Auxiliary のどれにも（組み込みのタスクのあとに、プラグインの `display_name` で）
+並び、組み込みのものと同じように固定・リセットしたり、古くなったプロバイダーの固定として印を付けたりできます。
 プラグインが使えるのは自分で登録したタスクだけで、知らない名前や他人のタスク名は、
 プロバイダーを呼ぶ前の段階で失敗します。`allow_task_override: true` は、Hermes に
 もともとある補助タスクを使わせるための、運用側からの明示的な許可です。これで
 他のプラグインのタスクが使えるようになるわけではありません。`task=` を省く
 （または `"auto"` にする）と、有効になっている本体のプロバイダーとモデルのままになります。
+
+#### 組み込みの枠を引き継ぐ {#inheriting-a-built-in-slot}
+
+`inherit_from` には、組み込みの補助タスク（`compression`、`mcp`、
+`vision` など）か、自分のプラグイン（またはそれより先に読み込まれたプラグイン）がすでに
+登録したタスクの名前を書きます。すると、運用側が自分のタスクに直接モデルを固定するまで、
+そのタスクは引き継ぎ元の枠のモデルを使います。
+
+```python
+def register(ctx):
+    ctx.register_auxiliary_task(
+        "classifier",
+        display_name="Classifier",
+        description="Classify input.",
+        inherit_from="compression",         # use whatever compression uses...
+        defaults={"timeout": 90},           # ...but give slow classifiers more room
+    )
+```
+
+- **登録時に写し取るのではなく、読むたびに解決します。** CLI・ダッシュボード・デスクトップアプリ・`config.yaml` のどこかで
+  `auxiliary.compression` を変えると、classifier も次の呼び出しから、プロファイルごとにそれに従います。
+- **優先順位:** 引き継ぎ元が土台になり、その上にプラグインの `defaults`、さらにその上に
+  運用側の `auxiliary.<task>` の設定が重なります。
+- **運用側の固定は、経路まるごとで優先されます。** `auxiliary.classifier` で
+  `auto` 以外のプロバイダー、モデル、`base_url` のどれかを設定すると、プロバイダー・モデル・接続先・
+  キー・推論の強さはすべてその設定から取られ、引き継ぎ元の経路の値が混ざることはありません。
+  `provider: auto` でモデルが空のときは「指定なし」の扱いなので、タスクは引き続き引き継ぎ元に従います
+  （「Reset all」やデスクトップアプリの *Follow &lt;base&gt;* ボタンが書き込むのはこの形です）。
+- **引き継ぎ元がおかしくても、プラグインは壊れません。** 存在しない名前や自分自身を指す
+  `inherit_from` は警告をログに残し、そのタスクは引き継ぎなしで登録されます。
+
+Models の設定画面では、固定されていない引き継ぎタスクが
+*inherits Compression · &lt;provider · model&gt;* のように表示されます。また
+`GET /api/model/auxiliary` は、そうした行について `inherit_from` と、実際に使われる値を示す `effective`
+`{provider, model, base_url}` を返します。
 
 ### 結果の属性 {#result-attributes}
 

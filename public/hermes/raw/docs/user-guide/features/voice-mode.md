@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "音声モード"
 description: "Hermes Agent とリアルタイムで音声のやりとりをする — CLI、Telegram、Discord（DM、テキストチャンネル、ボイスチャンネル）"
 upstream_path: user-guide/features/voice-mode.md
-upstream_blob: f119d16f938f0e8c3c70081b13d28daf1bb9a7d1
+upstream_blob: db7c8f10878917d58a0f19c662e3aa04ecd68536
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/voice-mode
 ---
@@ -175,6 +175,27 @@ hermes                # Start the interactive CLI
 **「stop」**とだけ言うと、手を使わずに音声での会話を終えられます。一致の判定はあえて厳しくしてあり、発話全体（大文字小文字は区別せず、前後の句読点は無視）が設定した言葉と一致する必要があります。そのため「stop doing that and try X instead」のような文は、これまでどおりエージェントに届きます。言葉の一覧は `config.yaml` の `voice.stop_phrases` で変えられます（例: `["stop", "goodbye hermes"]`）。`[]` にすると無効になります。言葉はどの言語でもかまいません（例: `stt.language: ru` と合わせて `["отбой", "стоп"]`）。デスクトップアプリも同じ一覧に従います。`voice.stop_phrases` を既定のままにしているあいだは、英語の言い回しもいくつか追加で受け付けます（「goodbye」「never mind」「cancel」など）。一覧を自分で書き換えると、それらは置き換えられます。音声チャットは、無音の周期が3回続いた場合（発話が検出されない場合）にも自動で終わります。
 
 音声チャット中に終了の言葉だけを**入力した**場合も、どの画面（CLI、TUI、デスクトップ）でも同じ扱いになります。そのメッセージはエージェントへ送られず、音声チャットを終わらせます。音声チャットの外で入力した「stop」は、ふつうのメッセージです。
+
+### その場で文字起こし（逐次の音声認識） {#live-transcription-streaming-stt}
+
+`stt.streaming: true` にすると、話し終えてからではなく、話しているあいだに文字起こしが進みます。話している途中の文字が見えるようになり（従来の CLI と TUI では入力欄のプレースホルダーに、Desktop では音声入力の小さな表示に出ます）、ファイルを丸ごと送り終えるのを待たずに、話し終えた時点で文字起こしができあがります。
+
+```yaml
+stt:
+  provider: openai        # or xai, elevenlabs
+  streaming: true
+  openai:
+    streaming_model: gpt-live-transcribe   # the default; the one OpenAI model that streams text mid-utterance
+```
+
+| 提供元 | 逐次の接続先 | 補足 |
+|---|---|---|
+| `openai` | Realtime の文字起こしセッション | 自分の `OPENAI_API_KEY` が必要です。Nous が管理する音声のゲートウェイは、ファイルの文字起こしにしか対応していません |
+| `xai` | `wss://api.x.ai/v1/stt` | `XAI_API_KEY` が必要です（逐次の音声認識では、Grok の OAuth ログインは使いません） |
+| `elevenlabs` | Scribe v2 realtime | `ELEVENLABS_API_KEY` |
+| プラグイン | `TranscriptionProvider.streaming_capable` | プラグインは `open_stream_session()` で対応を表明します |
+
+その場での文字起こしが使えるのは、CLI と TUI の音声モード、Desktop の音声入力です。ローカルの whisper、Groq、Mistral、DeepInfra は、これまでどおりファイルを送る方法を使います。逐次のセッションを開けなかったり、録音の途中で失敗したりした場合は、Hermes がいつもどおり録音を文字起こしします。そのため、この設定を有効にしても、録った音声が失われることはありません。
 
 ### 逐次読み上げ {#streaming-tts}
 
@@ -433,6 +454,7 @@ hermes gateway        # Start with existing configuration
 - 文字起こしがテキストチャンネルに出ます: `[Voice] @user: what you said`
 - エージェントの返事は、チャンネルに文字で送られると同時に、通話でも読み上げられます
 - 対象のテキストチャンネルは、`/voice join` を実行したチャンネルです
+- 別のテキストチャンネルで `/voice join` を実行すると、対象がそのチャンネルへ移ります。移る前に拾った発話は、文字起こしの途中でも、まだ話し終わっていなくても破棄され、新しいチャンネルには投稿されません
 
 ### 自分の声を拾わない仕組み {#echo-prevention}
 
@@ -440,7 +462,7 @@ hermes gateway        # Start with existing configuration
 
 ### 使える人の制限 {#access-control}
 
-音声でやりとりできるのは、`DISCORD_ALLOWED_USERS` に書かれた人だけです。それ以外の人の音声は、黙って無視されます。
+音声でやりとりできるのは、`DISCORD_ALLOWED_USERS` か `DISCORD_ALLOWED_ROLES` で許可された人だけです。ロールは、話す人が話すたびに確認します。それ以外の人の音声は、黙って無視されます。
 
 ```bash
 # ~/.hermes/.env
@@ -471,7 +493,7 @@ stt:
                                     # passes its path to the agent as part of the
                                     # inbound message, useful for custom pipelines
                                     # (diarization, alignment, archival, etc.)
-  provider: "local"                  # "local" (free) | "groq" | "openai" | "mistral" | "xai"
+  provider: "local"                  # "local" (free) | "groq" | "openai" | "mistral" | "xai" | "elevenlabs" | "deepinfra"
   local:
     model: "base"                    # tiny, base, small, medium, large-v3
     language: ""                     # optional ISO-639-1 hint; blank = use HERMES_LOCAL_STT_LANGUAGE if set, else auto-detect
@@ -539,9 +561,13 @@ DISCORD_ALLOWED_USERS=...
 | **OpenAI** | `gpt-4o-transcribe` | ふつう（およそ 2 秒） | 最良 | 有料 | 必要 |
 | **OpenAI** | `gpt-transcribe` | 速い | 最良 | 有料（1分 0.0045 ドル） | 必要 |
 | **Mistral** | `voxtral-mini-latest` | 速い | 良い | 有料 | 必要 |
-| **xAI** | `grok-stt` | 速い | 良い | 有料 | 必要 |
+| **xAI** | `grok-voice-transcribe-2.0` | 速い | 最良 | 有料（バッチで1時間 0.10 ドル） | 必要 |
 
 提供元の優先順（自動で切り替わります）: **local** > **groq** > **openai**
+
+### 長い録音とアップロードの上限 {#long-recordings-and-upload-limits}
+
+クラウドの提供元には、1 回のリクエストで送れる大きさに上限があります。OpenAI と Groq は 25 MB、Mistral は 500 MB（60 分）、xAI は 500 MB、ElevenLabs は 5 GB 弱です。OpenAI の一部のモデルには、1 回のリクエストで扱える長さの実質的な上限もあります。`gpt-4o-transcribe` と `gpt-4o-mini-transcribe` はおよそ 7.5 分（出力が 2,000 トークンまでのため）、`whisper-1` は 10 分です（各リクエストが既定の 60 秒のタイムアウト内に終わるようにするため）。ボイスメモ、音声の添付ファイル、音声モードの録音が、使っている提供元の上限を超えると、Hermes はまず小さな 16 kHz モノラルの AAC に変換し直します。たいていの録音は、これで 1 回のリクエストに収まります。それでも大きすぎる場合は、Hermes が話の切れ目で分割し、順番に文字起こしして文章をつなぎます。ローカルの提供元にはアップロードの上限がなく、分割もしません。どちらの手順にも ffmpeg が必要です。
 
 ### 読み上げの提供元の比較 {#tts-provider-comparison}
 

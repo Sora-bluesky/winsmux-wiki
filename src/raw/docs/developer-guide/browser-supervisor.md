@@ -2,7 +2,7 @@
 title: "ブラウザの CDP スーパーバイザ"
 description: "Hermes が JavaScript のネイティブなダイアログを見つけて応答するしくみと、常時つないだ CDP 経由で別オリジンの iframe を操作するしくみ。"
 upstream_path: developer-guide/browser-supervisor.md
-upstream_blob: 44a7823704c157a51851c7847dbff06c6b12b387
+upstream_blob: 2d8adef0acf297cb6a6447b79b650f6aeefaec3c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/browser-supervisor
 ---
@@ -100,6 +100,47 @@ Hermes の `task_id` ごとに、バックグラウンドのデーモンスレ�
 
 扱い方はタスク単位で決まり、ダイアログごとに上書きすることはできません。
 
+## 信頼済みプラグインからの CDP の利用 {#trusted-plugin-cdp-access}
+
+同じプロセスで動くプラグインのコードは、公開された 1 つの呼び出しを通して、
+タスクのスーパーバイザの接続に生の CDP コマンドを送れます。スーパーバイザ内部の
+呼び出し表やソケットに直接書き込む必要はありません。
+
+```python
+from tools.browser_supervisor import SUPERVISOR_REGISTRY
+from tools.browser_supervisor_capture import CapturedCDPInvalid
+
+cdp = SUPERVISOR_REGISTRY.capture(task_id)  # raises CapturedCDPInvalid if no attached supervisor
+reply = cdp.call("Runtime.evaluate", {"expression": "document.title", "returnByValue": True},
+                 session_id=cdp.page_session_id, timeout=5)
+title = reply["result"]["result"]["value"]
+```
+
+- `SUPERVISOR_REGISTRY.capture(task_id, *, timeout=10.0) -> CapturedCDP` は、
+  スーパーバイザがいま使っている WebSocket と、その上につながっている既定のページセッションを
+  固定して取り出します。スーパーバイザを起動したり、つなぎ直したり、操作先のページを切り替えたりはしません。
+- `CapturedCDP.call(method, params=None, *, session_id=None, timeout=10.0) -> dict`
+  は、CDP の生の応答（`{"id", "result"}`）を返します。`session_id=None` のときはブラウザ全体の
+  エンドポイント（`Target.*`）あてになります。ページ単位のドメインを使うときは `page_session_id` か、
+  自分でつないだセッションを渡してください。CDP がエラーを返すと `RuntimeError` が、
+  `timeout` までに応答がないと `TimeoutError` が発生します。呼び出しは応答が来るまでそのスレッドを止めるので、
+  作業用のスレッドから呼び、スーパーバイザ自身のイベントループからは呼ばないでください。
+- `CapturedCDP.is_valid()` は、スーパーバイザがつなぎ直すか、止まるか、レジストリで別のものに
+  置き換えられるまで true のままです。そのあとは `call` がすべて
+  `CapturedCDPInvalid` を発生させます。ソケットが切れた時点で応答待ちだった呼び出しも同じです。
+  取り出したハンドルが、新しい接続へ移ったスーパーバイザについていくことはありません。
+  取り出し直し、頼りにしている状態をもう一度確かめてください。
+- `page_session_id` は、取り出した時点での既定のページセッションです。そのあと
+  スーパーバイザで `focus_page` を呼んでも変わりません。
+- 自分でつないだセッション（`Target.attachToTarget`）は、自分で切り離します。`timeout` を
+  過ぎて届いた応答は捨てられるため、時間切れになった接続の呼び出しが、接続が閉じるまでセッションを
+  つないだままにすることがあります。つなぐ呼び出しの待ち時間は長めにしてください。
+
+これは、信頼されたコードが同じプロセス内で使うための継ぎ目です。同じプロセスの Python が
+もともと触れられる範囲を超える権限は与えず、オリジン・同意・ターゲットの持ち主についての
+決まりも一切強制しません。ページを操作するプラグインは、自分でそれを守る必要があります。
+モデルのツールとしては公開されておらず、設定で切り替えるスイッチもありません。
+
 ## エージェントから見える部分 {#agent-surface}
 
 ### `browser_dialog` ツール {#browserdialog-tool}
@@ -182,6 +223,7 @@ Browserbase では、iframe を操作する確実な方法はこれだけです�
 ## ファイルの配置 {#file-layout}
 
 - `tools/browser_supervisor.py` — `CDPSupervisor`、`SupervisorRegistry`、`PendingDialog`、`FrameInfo`
+- `tools/browser_supervisor_capture.py` — `CapturedCDP` / `CapturedCDPInvalid`。`SUPERVISOR_REGISTRY.capture` の裏にある、信頼済みプラグイン向けの CDP の継ぎ目
 - `tools/browser_dialog_tool.py` — `browser_dialog` ツールのハンドラ
 - `tools/browser_tool.py` — `browser_navigate` の開始フック、`browser_snapshot` への合流、`/browser connect` でのつなぎ直し、`_cleanup_browser_session` での片づけ
 - `toolsets.py` — `browser_dialog` を `browser`、`hermes-acp`、`hermes-api-server`、およびコアのツールセットに登録（CDP に届くかどうかで切り分け）

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 99727e86e290e4e342569feb83ef9fb5115262c1
+upstream_blob: 580b8a55f615e9b63eba794eafa3dca83e916ba7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -693,6 +693,7 @@ Nous のしくみを使うには、OAuth のクライアント ID（`agent:{id}`
 dashboard:
   oauth:
     client_id: agent:01HXYZ…             # required to engage the gate
+    token_leeway: 60                     # optional; seconds of clock-skew tolerance
 ```
 
 **環境変数** — 運用側からの上書きです。
@@ -704,6 +705,8 @@ dashboard:
 Hermes Agent の決まりごと（`~/.hermes/.env` は API キーや秘密のためだけのもの）にならい、手元の開発でも、社内の運用でも、自分で直接扱う配備でも、**これらの値は `config.yaml` に置くのが勧められる形です**。環境変数の道があるのは、置き場を提供する基盤が秘密を注ぎ込むときに、イメージの中の `config.yaml` を誰も書き換えずに配備ごとの `client_id` を渡せるようにするためで、それがおもな目的です。
 
 環境変数の値が空のときは設定なしとして扱われるので、用意されただけで中身の入っていない基盤側の秘密が、正しい `config.yaml` の値をうっかり覆い隠すことはありません。
+
+`dashboard.oauth.token_leeway`（config.yaml のみ）は、時計のずれをどこまで許すかを秒で指定する値です。JWT を確かめるときに、Portal のアクセストークンの `exp`/`nbf`/`iat` の主張に当てはめます。既定は `60`（RFC 7519 §4.1.4-4.1.6）で、時計が Portal より遅れているホストでもログインに失敗しません。`0` にすると厳密な検証に戻ります。不正な値（読み取れない・負・有限でない）を入れると、安全側に倒して `0` になります。自前運用の OIDC プロバイダには、同じ役割の `dashboard.oauth.self_hosted.id_token_leeway` があります。
 
 どちらにも client_id がない場合、差し込みは理由をはっきり伝え、管理画面の「失敗したら閉じる」待ち受けのエラーが、何を直せばよいかを正確に教えてくれます。
 
@@ -857,6 +860,7 @@ dashboard:
       issuer: https://auth.example.com/application/o/hermes/   # required
       client_id: hermes-dashboard                              # required
       scopes: "openid profile email"                           # optional (this is the default)
+      id_token_leeway: 60                                      # optional; seconds of clock-skew tolerance
 ```
 
 **環境変数** — 運用側からの上書きです（空でない値が入っていれば `config.yaml` より優先され、空の値は設定なしとして扱われます）。
@@ -871,7 +875,7 @@ dashboard:
 
 #### 何を確かめているか {#what-it-verifies}
 
-このしくみは、OpenID Connect の **ID トークン**（RS256 / ES256）を、見つけてきた `jwks_uri` に照らして確かめます。`iss` と `aud` の主張は、設定した `issuer` と `client_id` に釘付けにされます。標準の OIDC の主張は、管理画面のセッションに次のように対応します。
+このしくみは、OpenID Connect の **ID トークン**（RS256 / ES256）を、見つけてきた `jwks_uri` に照らして確かめます。`iss` と `aud` の主張は、設定した `issuer` と `client_id` に釘付けにされます。時刻の主張（`exp`/`nbf`/`iat`）は、60 秒の時計のずれを許して確かめます（RFC 7519 §4.1.4-4.1.6）。そのため、時計が身元の基盤より遅れている管理画面のホストでもログインに失敗しません。この幅は `config.yaml` の `dashboard.oauth.self_hosted.id_token_leeway` で調整できます（`60` より小さい値で厳しくなり、`0` で厳密な検証に戻ります。不正な値は安全側に倒して `0` になります）。標準の OIDC の主張は、管理画面のセッションに次のように対応します。
 
 | セッションの項目 | 主張 |
 |---------------|----------|

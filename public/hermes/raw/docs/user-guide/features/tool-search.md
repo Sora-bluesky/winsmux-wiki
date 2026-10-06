@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ツール検索"
 description: ""
 upstream_path: user-guide/features/tool-search.md
-upstream_blob: 4f32f076c35e6e18f0450bde13903338f9867c17
+upstream_blob: 06be76b336c6d20cf9b53abc0d13c2f9235eb222
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 ---
@@ -124,6 +124,7 @@ tools:
       - todo_list
       - process_manage
       - cronjob_manage
+      - manage_catalog
 ```
 
 既定の `defer` リストには、`hermes_cli/config_defaults.py` に挙がっている

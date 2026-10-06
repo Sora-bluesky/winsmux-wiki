@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 9447a26faf33573156f2b5f7eae23f325148752a
+upstream_blob: d85ff3e3fcd2c1d502dd3f05f283efcdd84ff3c2
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -28,6 +28,7 @@ Hermes にはいくつも異なるプラグイン可能なインターフェー�
 | **動画生成バックエンド** | [Video Generation Provider Plugins](/hermes/docs/developer-guide/video-gen-provider-plugin/) |
 | **Web 検索 / 抽出バックエンド** | [Web Search Provider Plugins](/hermes/docs/developer-guide/web-search-provider-plugin/) |
 | **クラウドブラウザバックエンド**（Browserbase 型の CDP セッションプロバイダー） | [Browser Provider Plugins](/hermes/docs/developer-guide/browser-provider-plugin/) |
+| **コンピューター操作のドライバー**（`computer_use` ツールの裏でデスクトップを操作するもの） | [Computer-use backend plugins](#computer-use-backend-plugins) — `ctx.register_computer_use_provider()` |
 | **シークレットマネージャーバックエンド**（vault / パスワードマネージャー / OS キーストア） | [Secret Source Plugins](/hermes/docs/developer-guide/secret-source-plugin/) |
 | **ダッシュボードの OIDC / 認証プロバイダー** | [Web Dashboard — custom providers](/hermes/docs/user-guide/features/web-dashboard/#custom-providers) — `ctx.register_dashboard_auth_provider()` |
 | **TTS バックエンド**（任意の CLI — Piper、VoxCPM、Kokoro、音声クローンなど） | [TTS custom command providers](/hermes/docs/user-guide/features/tts/#custom-command-providers) — 設定駆動で Python は不要 |
@@ -1287,6 +1288,17 @@ def register(ctx):
 
 完全な `hermes <subcommand>`（例: `hermes kanban show`）を実行するには、`ctx.dispatch_tool("terminal", {"command": "hermes kanban show ..."})` のように `terminal` ツールでシェルアウトしてください — ヘッドレスなワーカーセッションにはプロセス内のスラッシュコマンドブリッジが存在せず、フックから Hermes を動かすためのサポートされた方法はツールです。
 
+### エージェントのブラウザに生の CDP コマンドを送る {#send-raw-cdp-commands-to-the-agents-browser}
+
+ブラウザツールより下の層でエージェントのブラウザを操作する必要があるプラグインは、
+`SUPERVISOR_REGISTRY.capture(task_id)` で、そのタスクの稼働中のスーパーバイザー接続に固定された
+CDP ハンドルを取得し、`call(method, params=None, *, session_id=None, timeout=10.0)` で
+コマンドを送れます。その接続が切れると、ハンドルは `CapturedCDPInvalid` を送出し、
+新しい接続へ付け替えられることはありません。`CDPSupervisor` の非公開の属性を読み書きする代わりに、
+これを使ってください（非公開属性の読み書きはカタログで拒否されます）。これは信頼されたプロセス内の
+通信手段にすぎず、送信元・同意・所有者の確認は何もしてくれません。契約の全体は
+[Browser CDP Supervisor](/hermes/docs/developer-guide/browser-supervisor/#trusted-plugin-cdp-access) を参照してください。
+
 ### いま実行中の cron の回を知る {#know-which-cron-run-you-are-in}
 
 `ctx.current_cron_execution()` は、現在のコードが実行されている予約実行の回を返します。cron の外では `None` を返します。実行中に発火するどのフック（`pre_tool_call`、`post_tool_call`、`pre_llm_call` など）からも、ツールのハンドラからも使えます。値は変更できない `CronExecution` です。
@@ -1310,6 +1322,39 @@ def register(ctx):
             return {"action": "block", "message": "deploy only runs from its scheduled cron job"}
     ctx.register_hook("pre_tool_call", guard)
 ```
+
+### 自動化のブループリントを追加する {#add-automation-blueprints}
+
+`ctx.register_automation_blueprint(key, *, title, description, schedule_template, prompt_template, category="general", slots=(), deliver_default="origin", skills=(), tags=())` を呼ぶと、空欄を埋めるだけで使える自動化を [Automation Blueprints catalog](/hermes/docs/reference/automation-blueprints-catalog/) に追加できます。追加したものは、`/blueprint`（CLI、TUI、メッセンジャー）、ダッシュボードの Blueprints タブ、Desktop の Cron ページで組み込みのものと並んで表示され、プラグインの名前がラベルとして付きます。引数は組み込みの `AutomationBlueprint`（`cron/blueprint_catalog.py`）のフィールドと同じで、各スロットは `BlueprintSlot` のフィールドを持つ dict です。
+
+```python
+def register(ctx):
+    ctx.register_automation_blueprint(
+        "standup",
+        title="Team standup digest",
+        description="Every weekday, summarize what changed in a repo since yesterday.",
+        category="work",
+        schedule_template="{minute} {hour} * * 1-5",
+        prompt_template="Summarize yesterday's commits and open PRs for {repo} as a short standup digest.",
+        slots=[
+            {"name": "repo", "type": "text", "label": "Which repo?", "default": "acme/app"},
+            {"name": "time", "type": "time", "label": "What time?", "default": "09:15"},
+            {"name": "deliver", "type": "enum", "label": "Where to deliver?", "default": "origin",
+             "options": ["origin", "local"], "strict": False},
+        ],
+        tags=["work", "daily"],
+    )
+```
+
+ユーザーは `/blueprint teamtools:standup`（または単に `/blueprint standup`）を実行するか、Desktop やダッシュボードのフォームで選ぶと、これを使えます。
+
+- **キーには名前空間が付きます。** カタログ上のキーは `<plugin>:<key>`（`teamtools:standup`）になるので、プラグインが組み込みのブループリントやほかのプラグインのブループリントを置き換えることはできません。キーはそのまま渡してください。`:` を含むキーは拒否されます。
+- **スロットとテンプレート。** スロットの `type` は `time`（`HH:MM`）、`enum`、`weekdays`、`text` のいずれかです。`prompt_template` では、どのスロットも `{name}` の形で使えます。`schedule_template` では、スロット名に加えて `{minute}`/`{hour}`（`time` という名前のスロットから取られる）と `{dow}`（`recurrence`/`day` のスロットから取られ、なければ `*`）が使えます。`deliver` という名前のスロットには、Desktop とダッシュボードのフォームで、そのプロファイルの実際の配信先が選択肢として入ります。
+- **登録時に検証されます。** 未知のプレースホルダー、不正なスロットの型、重複したキー、解釈できないスケジュールがあると、警告をログに出してそのブループリントだけを飛ばします。プラグインの残りは通常どおり読み込まれます。すべてのスロットに既定値があるときは、Hermes が読み込み時に一度ブループリントを埋めてみるので、壊れたテンプレートはユーザーが初めて *Schedule it* を押したときではなく、その時点で失敗します。
+- **プロファイルごとです。** プラグインはプロファイルごとに読み込まれるので、ブループリントが一覧に出るのは、そのプラグインを有効にしたプロファイルだけです。
+- **ジョブはプラグインより長く残ります。** ブループリントで予約すると、プロンプトとスケジュールが埋められた普通の cron ジョブができます。プラグインを無効にしたりアンインストールしたりすると、ブループリントはカタログから消えますが、作られたジョブは動き続けます。ジョブの `skills` がプラグイン同梱のスキルを指している場合、プラグインが無効の間、そのジョブはそのスキルを飛ばします（飛ばしたことはログに残ります）。
+
+マニフェストでの機能宣言は要りません。スロットはただの dict なので、プラグインのホスト分離のもとでも動きます。
 
 ### Slack の Block Kit ボタンクリックを処理する {#handle-slack-block-kit-button-clicks}
 
@@ -1650,6 +1695,88 @@ description: Custom image generation backend
 **完全なガイド:** [Image Generation Provider Plugins](/hermes/docs/developer-guide/image-gen-provider-plugin/) — `ImageGenProvider` ABC の全体、`list_models()` / `get_setup_schema()` のメタデータ、`success_response()`/`error_response()` ヘルパー、base64 と URL 出力、ユーザーによる上書き、pip での配布。
 
 **参照例:** `plugins/image_gen/openai/`（OpenAI SDK 経由の DALL-E / GPT-Image）、`plugins/image_gen/openai-codex/`、`plugins/image_gen/xai/`（Grok の画像生成）。
+
+### Computer-use のバックエンドプラグイン {#computer-use-backend-plugins}
+
+`computer_use` ツールは、`ComputerUseBackend` ABC（`tools/computer_use/backend.py`）を通して、ただ1つの**ドライバー**とやり取りします。
+どれを使うかは `config.yaml` の `computer_use.backend` で選びます。既定は組み込みの cua-driver で、これも `plugins/computer_use/cua/` に
+普通のプロバイダーとして同梱されています。別のドライバーは、`~/.hermes/plugins/<name>/` に置いたプロバイダープラグインで、
+その `register(ctx)` が `ctx.register_computer_use_provider()` を呼びます。ディレクトリ名が、`computer_use.backend` に書く値になります。
+Computer-use のプロバイダーは、記憶プロバイダーやコンテキストエンジンと同じく、1つだけを選ぶ方式です。
+
+```python
+# ~/.hermes/plugins/my-driver/__init__.py
+from tools.computer_use.backend import (
+    ActionResult, CaptureResult, ComputerUseBackend, ComputerUseProvider,
+)
+
+class MyBackend(ComputerUseBackend):
+    def start(self): ...                    # open the driver session
+    def stop(self): ...                     # tear it down (also called at exit)
+    def is_available(self): return True
+    def capture(self, mode="som", app=None, pid=None, window_id=None):
+        return CaptureResult(mode=mode, width=1920, height=1080, png_b64=...)
+    def click(self, **kw): return ActionResult(ok=True, action="click")
+    def drag(self, **kw): return ActionResult(ok=True, action="drag")
+    def scroll(self, **kw): return ActionResult(ok=True, action="scroll")
+    def type_text(self, text, **kw): return ActionResult(ok=True, action="type")
+    def key(self, keys, **kw): return ActionResult(ok=True, action="key")
+    def list_apps(self): return []
+    def focus_app(self, app, raise_window=False): return ActionResult(ok=True, action="focus_app")
+    def set_value(self, value, element=None):
+        # A driver that can't do an action says so per call; the tool schema never changes.
+        return ActionResult(ok=False, action="set_value", code="unsupported_action",
+                            message="my-driver has no accessibility value setter")
+
+class MyDriverProvider(ComputerUseProvider):
+    name = "my-driver"
+    display_name = "My driver"
+
+    def create_backend(self, *, permission_mode):
+        return MyBackend()                  # permission_mode: standard | bounded | unrestricted
+
+    def is_available(self):                 # gates the tool; cheap, no network
+        return True
+
+    def doctor(self):                       # optional: `hermes computer-use doctor`
+        print("my-driver: ok")
+        return 0
+
+def register(ctx):
+    ctx.register_computer_use_provider(MyDriverProvider())
+```
+
+```yaml
+# ~/.hermes/plugins/my-driver/plugin.yaml
+name: my-driver
+version: 1.0.0
+description: Alternative computer-use driver   # shown in the picker
+```
+
+`hermes tools` → Computer Use で選ぶか（インストール済みのプロバイダーは、CLI でも Desktop のツールセットパネルでも cua-driver の下に並びます）、
+設定に直接書きます。`plugins.enabled` への登録は要りません。
+
+```yaml
+# config.yaml
+computer_use:
+  backend: my-driver     # default: cua
+```
+
+ルール:
+
+- **有効なプロバイダーは一度に1つだけです。** import されてインスタンスが作られるのは、選ばれたものだけです。選ばれていない
+  インストール済みのプロバイダーはディスクに置かれたままで、選択肢として（`plugin.yaml` から）一覧に出るだけです。
+  プロバイダーが自分で自分を有効にすることはありません。
+- **選択はプロファイルごとで、セッションがドライバーを起動するときに読まれます。** 設定した名前が見つからないと、
+  その名前とインストール済みのプロバイダーを示すエラーで呼び出しが失敗します。Hermes がほかのドライバーに切り替えて動くことはありません。
+- **モデルから見えるスキーマはどのプロバイダーでも同じ**なので、ドライバーを差し替えてもプロンプトキャッシュはそのまま使えます。
+  できない操作は、操作ごとに `ActionResult(ok=False, code="unsupported_action", ...)` で知らせてください。
+- 承認のゲート、Bot Desktop のリース、スクリーンショットの重複除去、要素数の上限、画像認識への振り分けは、すべてバックエンドより上の
+  ツール側で動きます。バックエンドが受け持つのは画面の操作だけです。
+- `hermes computer-use status`/`doctor`/`permissions` が cua-driver の確認をするのは、`cua` が選ばれているときだけです。
+  ほかのプロバイダーでは、その `is_available()` の結果を表示し、`doctor()` があればそれを実行します。
+- プロバイダーは稼働中のドライバーのセッションを返すため、プロセス内でしか読み込めません。
+  `plugins.isolation: host` のもとでは、ユーザーのプロバイダーは拒否され、読み込めなかったことが呼び出しの結果として返ります。
 
 ## Python でない拡張ポイント {#non-python-extension-surfaces}
 

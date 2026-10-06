@@ -2,7 +2,7 @@
 title: "ツールセット一覧"
 description: "Hermes の中核・複合・プラットフォーム・動的の各ツールセットをまとめた一覧です。"
 upstream_path: reference/toolsets-reference.md
-upstream_blob: 13a9ab6b2d8d4ae8454a39fabdf900493698b3b2
+upstream_blob: cf880409fb07bd92932b0e085a53c7cd245d2cc8
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 ---
@@ -76,10 +76,10 @@ hermes tools                            # curses UI to enable/disable per platfo
 | `memory` | `memory` | セッションをまたいで残る記憶の管理です。 |
 | `desktop_ui` | `annotate_preview`, `apply_layout`, `close_terminal`, `desktop_preview`, `drive_preview`, `focus_pane`, `gui_tour`, `react_to_message`, `read_terminal`, `read_window_below`, `show_tip` | Hermes のデスクトップアプリそのものに働きかける機能です。組み込みの端末ペインを読む・閉じる、アプリ内のブラウザを開く・読む・閉じる・操作する・書き込みを添える、アプリの背後にある OS の窓を見分ける、ペインを表に出す、メッセージにリアクションを付ける、案内を流す（アプリや下見のペインで画面の要素を光らせながら説明する）、画面の割り付けをあらかじめ用意した形に切り替える、といったことができます。デスクトップアプリから始まったセッションで有効になり、つなぎ先が手元でも SSH でも URL でも Hermes Cloud でも変わりません。CLI、TUI、メッセージ、定時実行のセッションには決して現れません。 |
 | `project` | `desktop_project` | デスクトップの[プロジェクト](/hermes/docs/user-guide/cli/)（名前を付けた、複数のフォルダーをまとめた作業場）を、`create`／`switch`／`list` の動作を選ぶひとつの道具で作って切り替えます。画面のある、デスクトップのセッション専用です。 |
+| `catalog` | `manage_catalog` | プラグインカタログとスキルハブを検索し、承認カードを通して、このチャットのプロファイルに項目をインストールします。デスクトップアプリから始まったセッションで有効になり、つなぎ先が手元でも SSH でも URL でも Hermes Cloud でも変わりません。CLI、TUI、メッセージ、定時実行のセッションには、設定のリストで名前が挙がっていても決して現れません。`all` には含まれません。既定では `tool_search` の後ろに控えています。外すには `agent.disabled_toolsets: [catalog]` を指定します。 |
 | `safe` | `image_generate`, `vision_analyze`, `web_extract`, `web_search` (via `includes`) | 読むだけの調べものと、素材づくりです。ファイルへの書き込みも、端末も、コードの実行もありません。 |
 | `search` | `web_search` | web の検索だけです（抜き出しは付きません）。 |
 | `session_search` | `session_search` | 過去のやりとりのセッションを探します。 |
-| `setup` | `manage_catalog` | デスクトップのセットアップ用プロファイルが、オンボーディングの間だけ使う面です。プラグインカタログとスキルハブを検索し、承認カードを通して項目をインストールします。`profile.yaml` に `role: setup` を持つプロファイルのセッションにだけ、バックエンドが付与します。ほかのプロファイルからは、設定のリスト、`HERMES_TUI_TOOLSETS`、`all` のどれで名前が挙がっていても取り除かれます。設定では変えられず、`hermes tools` にも出ません。 |
 | `skills` | `skill_manage`, `skill_view`, `skills_list` | スキルの作成・閲覧・更新・削除と、見て回る操作です。 |
 | `spotify` | `spotify_albums`, `spotify_devices`, `spotify_library`, `spotify_playback`, `spotify_playlists`, `spotify_queue`, `spotify_search` | Spotify をそのまま操作します（再生、順番待ち、検索、プレイリスト、アルバム、ライブラリ）。同梱の `spotify` プラグインが登録します。 |
 | `terminal` | `process_manage`, `terminal` | シェルのコマンドの実行と、裏で動くプロセスの管理です。 |
