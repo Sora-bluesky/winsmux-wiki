@@ -13,13 +13,14 @@ export function getStaticPaths() {
     Object.keys(files).map((k) => k.split('raw/docs/')[1].replace(/\.md$/, '').replace(/\/index$/, '')),
   );
   return Object.entries(files).map(([path, src]) => {
-    const slug = path.split('raw/docs/')[1].replace(/\.md$/, '').replace(/\/index$/, '');
-    return { params: { slug }, props: { src, existing: [...existing] } };
+    const rawRel = path.split('raw/docs/')[1];
+    const slug = rawRel.replace(/\.md$/, '').replace(/\/index$/, '');
+    return { params: { slug }, props: { src, existing: [...existing], rawRel } };
   });
 }
 
 const { slug } = Astro.params;
-const { src, existing } = Astro.props;
+const { src, existing, rawRel } = Astro.props;
 const existingSet = new Set(existing as string[]);
 const doc = buildDoc(`docs/${slug}`, src); // buildDoc resolves not-yet-translated mirror links
 
@@ -50,7 +51,7 @@ const next =
 <BaseLayout
   title={doc.title}
   description={doc.description}
-  rawPath={`/hermes/raw/docs/${slug}.md`}
+  rawPath={`/hermes/raw/docs/${rawRel}`}
   sources={doc.sources}
   hermesVersion={doc.hermesVersion}
   confidence={doc.confidence}

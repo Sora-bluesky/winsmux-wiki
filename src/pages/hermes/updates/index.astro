@@ -4,6 +4,16 @@
 // digests は週次の日本語要約（Opus 生成・レビュー後に追記）。
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import updates from '../../../../data/wiki-updates.json';
+import redirectsRaw from '../../../../public/_redirects?raw';
+
+// 消えた docs ページへのリンクを出さない（404 になる）。転送が設定されたページはリンクのまま。
+const docIds = Object.keys(import.meta.glob('../../../raw/docs/**/*.md')).map(
+  (k) => `/hermes/docs/${k.split('raw/docs/')[1].replace(/\.md$/, '').replace(/\/index$/, '')}/`,
+);
+const redirected = new Set(
+  redirectsRaw.split(/\r?\n/).filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.trim().split(/\s+/)[0]),
+);
+const linkable = (url: string) => !url.startsWith('/hermes/docs/') || docIds.includes(url) || redirected.has(url);
 
 type Entry = {
   date: string;
@@ -81,7 +91,7 @@ for (const e of entries) {
               <ul class="u-pages">
                 {e.pages.map((p) => (
                   <li>
-                    <a href={p.url}>{p.title}</a>
+                    {linkable(p.url) ? <a href={p.url}>{p.title}</a> : <span>{p.title}（削除）</span>}
                     <span class="u-id">{p.id}</span>
                   </li>
                 ))}
