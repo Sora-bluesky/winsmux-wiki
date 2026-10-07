@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md
-upstream_blob: 78cd012620d86ff58d09d87605e5a3115518ea5e
+upstream_blob: 726667c83cfd0f1044da58e896fb93716e6abd32
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tts
 ---
@@ -497,7 +497,7 @@ stt:
   provider: "local"           # "local" | "groq" | "openai" | "mistral" | "xai" | "elevenlabs" | "deepinfra"
   language: "en"              # Global language hint applied to every provider unless a per-provider language overrides it; set "" to restore auto-detect
   local:
-    model: "base"             # tiny, base, small, medium, large-v3
+    model: "base"             # tiny, base, small, medium, large-v3, turbo
     language: ""              # optional ISO-639-1 hint; blank = use HERMES_LOCAL_STT_LANGUAGE if set, else auto-detect
   groq:
     language: ""              # optional ISO-639-1 hint; blank = use HERMES_LOCAL_STT_LANGUAGE if set, else auto-detect

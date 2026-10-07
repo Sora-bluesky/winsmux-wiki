@@ -2,7 +2,7 @@
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: 9b249886cd672ab3361e6ed46799ccbda863a64f
+upstream_blob: 3b953e17424570ce47cce9963efe0cd9216de174
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---
@@ -421,7 +421,7 @@ skills:
 
 ## 外部の記憶プロバイダ {#external-memory-providers}
 
-MEMORY.md と USER.md の先にある、もっと深く長く残る記憶のために、Hermes は4つの外部の記憶プロバイダのプラグインを同梱しています — OpenViking、Holographic、RetainDB、ByteRover です。Honcho、Hindsight、Supermemory、Mem0 などほかのものは、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から `hermes plugins install <name>` で入れられます。
+MEMORY.md と USER.md の先にある、もっと深く長く残る記憶のために、Hermes は3つの外部の記憶プロバイダのプラグインを同梱しています — Holographic、RetainDB、ByteRover です。Honcho、Hindsight、Supermemory、Mem0、OpenViking などほかのものは、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から `hermes plugins install <name>` で入れられます。
 
 外部のプロバイダは、組み込みの記憶と**並んで**動き（置き換えることはありません）、知識のグラフ、意味での検索、事実の自動の抜き出し、セッションをまたいだ利用者の像づくりといった力を足します。
 

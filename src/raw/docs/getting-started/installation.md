@@ -2,7 +2,7 @@
 title: "インストール"
 description: "デスクトップ版パッケージ、ソースからのインストーラー、Docker、Nix、Termux の APT パッケージで Hermes Agent を導入する"
 upstream_path: getting-started/installation.md
-upstream_blob: 9409fe15420d0f82bb470d5c59600a7d4f3f1fea
+upstream_blob: 7fa27f20d688b5de276c114fd180f18e15b74e1c
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -33,8 +33,11 @@ Hermes Agent は 2 分もかからずに動く状態になります。
 任意で追加する連携機能には、引き続きネットワーク接続が必要な場合があります。
 
 `Hermes-Setup` というブートストラップ用のインストーラーは別物です。こちらはソースを
-ダウンロードしてインストールし、デスクトップアプリをビルドします。Light はリモート専用のビルド版で、
-ローカルの実行環境を同梱したものではありません。[Hermes Desktop](/hermes/docs/user-guide/desktop/) をご覧ください。
+ダウンロードしてインストールし、デスクトップアプリをビルドします。[Hermes Desktop](/hermes/docs/user-guide/desktop/) をご覧ください。
+
+リモート専用のデスクトップ版を別にダウンロードする形はありません。別の端末にある Hermes のバックエンドを
+デスクトップ版から使うには、上のパッケージのどれかを入れてから、**Settings → Gateways** で接続します。
+[リモートバックエンドへの接続](/hermes/docs/user-guide/desktop/#connecting-to-a-remote-backend) をご覧ください。
 
 :::note
 macOS 版のインストーラーは **Apple Silicon 専用** です。x86（Intel）プロセッサーの macOS は [対応プラットフォームに含まれていません](/hermes/docs/getting-started/platform-support/#unsupported)。

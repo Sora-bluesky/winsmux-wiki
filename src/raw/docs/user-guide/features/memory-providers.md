@@ -2,7 +2,7 @@
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: dd4d6fcbaf969b624101b25048cdd8b50b96d87c
+upstream_blob: 821cf09d8e8cefb1243ea3fd90bd1ae855778781
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
@@ -25,9 +25,9 @@ hermes memory off        # disable external provider
 
 ```yaml
 memory:
-  provider: openviking   # or holographic, retaindb, byterover,
-                         # or honcho / hindsight / supermemory / mem0 (plugin catalog — run
-                         # `hermes plugins install <name>` first)
+  provider: holographic  # or retaindb, byterover,
+                         # or honcho / hindsight / supermemory / mem0 / openviking (plugin
+                         # catalog — run `hermes plugins install <name>` first)
 ```
 
 ## しくみ {#how-it-works}
@@ -42,6 +42,8 @@ memory:
 6. **プロバイダーごとのツールを追加する**（エージェントが記憶を検索・保存・管理できるように）
 
 内蔵の記憶（MEMORY.md と USER.md）は、これまでとまったく同じように動き続けます。外部プロバイダーは足し算です。
+
+Hermes がプロバイダーに渡すもの（ターン、ツールの出力を含む会話の記録、呼び出しの検索語、セッション終了時と圧縮前の会話の記録、写された記憶の書き込み、委任の結果、そしてプロバイダー自身のツールの引数）はすべて、チャットのプラットフォームや cron への配信と同じ秘密情報の除去を先に通ります。そのため、ツールの出力に表示されてしまったキーは、プロバイダーが保存する前に伏せられます。配信時の除去と同じく、`security.redact_secrets: false` のときでも働きます。決まった形を持たない認証情報（任意のパスワードや、`key=value` や `Bearer` の文脈の外にある不透明なトークン）は検出されません。手元の会話の記録には元の文章がそのまま残ります。
 
 ## 使えるプロバイダー {#available-providers}
 
@@ -294,12 +296,16 @@ hermes honcho sync
 
 ### OpenViking {#openviking}
 
+:::info プラグインカタログ
+OpenViking は Volcengine が保守しており、Hermes に同梱されるのではなく[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れます。ソースは [volcengine/OpenViking — examples/hermes-plugin](https://github.com/volcengine/OpenViking/tree/main/examples/hermes-plugin) にあります。すでにある設定は自動で移行されます。[同梱の OpenViking から移る](#migrating-from-bundled-openviking)を参照してください。
+:::
+
 Volcengine（ByteDance）による文脈のデータベースです。ファイルシステム風の知識の階層、段階的な取り出し、6 分類への自動的な記憶の抽出を備えます。
 
 | | |
 |---|---|
 | **向いている用途** | 構造をたどって見て回れる、自己ホストの知識管理 |
-| **必要なもの** | OpenViking を初期化し、検証し、動かしていること |
+| **必要なもの** | `hermes plugins install openviking` を実行し、OpenViking を初期化し、検証し、動かしていること |
 | **データの置き場所** | 自己ホスト（手元またはクラウド） |
 | **費用** | 無料（オープンソース、AGPL-3.0） |
 
@@ -312,7 +318,8 @@ openviking-server init
 openviking-server doctor
 openviking-server
 
-# Then configure Hermes
+# Then install and configure the Hermes plugin
+hermes plugins install openviking
 hermes memory setup    # select "openviking"
 # Or manually:
 hermes config set memory.provider openviking
@@ -335,11 +342,13 @@ OpenViking のサーバー側の設定は `ov.conf` にあります（`--config`
 `ovcli.conf` にあります（`OPENVIKING_CLI_CONFIG_FILE` または
 `~/.openviking/ovcli.conf`）。
 
-エンドポイントがローカルで、何も待ち受けていない場合、Hermes は
-`openviking-server` を裏で起動します。このサーバーには、モデルプロバイダーの
-キー（埋め込みと VLM のモデル用）、`HOME`、
-`OPENVIKING_CONFIG_FILE` が渡されますが、ボット、ゲートウェイ、中継のトークンは決して渡されず、
-Hermes の `PYTHONPATH` も渡されません。サーバーがほかに必要とするものは `ov.conf` に書いてください。
+エンドポイントがローカルで、何も待ち受けていない場合、プラグインが
+`openviking-server` を裏で起動します。カタログに載っている版では、このサーバーは
+Hermes のプロセスの環境変数を（`PYTHONPATH` を除いて）すべて受け継ぎます。そこに設定された
+ボット、ゲートウェイ、中継のトークンも含まれます。これを避けたい場合は、Hermes より先に
+`openviking-server` を自分で起動しておけば、プラグインがサーバーを立ち上げることはありません。
+この修正は上流の
+[volcengine/OpenViking#5553](https://github.com/volcengine/OpenViking/pull/5553) で追跡されています。
 
 **主な特徴:**
 - 段階的な文脈の読み込み: L0（約 100 トークン）→ L1（約 2k）→ L2（全文）
@@ -365,6 +374,16 @@ Hermes の `PYTHONPATH` も渡されません。サーバーがほかに必要�
 Hermes は OpenViking への要求に `User-Agent: openviking-memory-hermes/<version>` を
 付けます。これは標準的な実行環境の識別子で、利用者ごとの識別子は含みませんし、
 要求が余分に増えることもありません。
+
+### 同梱の OpenViking から移る {#migrating-from-bundled-openviking}
+
+OpenViking は以前、Hermes のツリーの中に同梱されていました。`config.yaml` にすでに `memory.provider: openviking` があるなら、ほとんどの利用者は何もする必要がありません。
+
+- `hermes update` が、このプロバイダーを指定しているすべてのプロファイルのホームにカタログのプラグインを入れます。
+- エージェントを最初に起動したとき（`hermes chat`、ゲートウェイ、デスクトップ）にまだプラグインが無ければ、Hermes がそれを入れ、入れたことを知らせます。
+- `security.allow_lazy_installs: false` のときは、エージェントの起動経路では何も入れず、代わりに実行すべき `hermes plugins install openviking` のコマンドをそのまま表示します。
+
+`memory.provider`、`memory.openviking.*`、`.env` の `OPENVIKING_*` のキー、`~/.openviking/`、そして OpenViking のサーバーにある記憶には手を触れません。確かめるには `hermes memory status` と `hermes plugins list` を使います。
 
 ---
 
@@ -759,7 +778,7 @@ hermes memory setup
 | プロバイダー | 置き場所 | 費用 | ツール | 依存 | 独自の特徴 |
 |----------|---------|------|-------|-------------|----------------|
 | **Honcho**（プラグインカタログ） | クラウド／自己ホスト | 有料／無料 | 5 | `hermes plugins install honcho` | 対話的な利用者のモデリングとセッション範囲の文脈 |
-| **OpenViking** | 自己ホスト | 無料 | 6 | `openviking` とサーバー | ファイルシステム風の階層と段階的な読み込み |
+| **OpenViking**（プラグインカタログ） | 自己ホスト | 無料 | 6 | `hermes plugins install openviking` とサーバー | ファイルシステム風の階層と段階的な読み込み |
 | **Mem0**（プラグインカタログ） | クラウド／自己ホスト | 無料／有料 | 4 | `hermes plugins install mem0` | サーバー側の LLM 抽出と、自己ホスト／OSS のモード |
 | **Hindsight**（プラグインカタログ） | クラウド／ローカル | 無料／有料 | 3 | `hermes plugins install hindsight` | 知識グラフと reflect による統合 |
 | **Holographic** | ローカル | 無料 | 2 | 無し | HRR の代数と信頼度の採点 |
@@ -783,7 +802,10 @@ hermes memory setup
 [プラグインカタログ](/hermes/docs/user-guide/features/plugins/)で配布されます。最初に移ったのは Hindsight で（[同梱の Hindsight から移る](#migrating-from-bundled-hindsight)を参照）、続いて Honcho（
 [同梱されていた Honcho からの移行](#upgrading-from-the-bundled-honcho)を参照）、Supermemory（
 [同梱の Supermemory から移る](#migrating-from-bundled-supermemory)を参照）、Mem0（
-[同梱の Mem0 から移る](#migrating-from-bundled-mem0)を参照）が移りました。利用する側で変わることはありません。
+[同梱の Mem0 から移る](#migrating-from-bundled-mem0)を参照）、OpenViking（
+[同梱の OpenViking から移る](#migrating-from-bundled-openviking)を参照）が移りました。Holographic、RetainDB、
+ByteRover は 2026 年 10 月 15 日に本体から外れます。それぞれの単独のリポジトリは保守されておらず、
+新しい保守者を募っています。利用する側で変わることはありません。
 プロバイダーの名前も、それが読む設定も、データの置き場所も、道具もそのままです。
 設定しているプロバイダーが Hermes に同梱されなくなったときは、`hermes update` が、そのプロバイダーを
 指定しているすべてのプロファイルにカタログのプラグインを入れます。デスクトップアプリから更新する場合は、

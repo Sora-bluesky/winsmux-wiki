@@ -1,6 +1,178 @@
 {
-  "generatedAt": "2026-10-07",
+  "generatedAt": "2026-10-08",
   "entries": [
+    {
+      "date": "2026-10-07",
+      "sha": "5889412",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/browser-supervisor",
+          "title": "ブラウザの CDP スーパーバイザ",
+          "url": "/hermes/docs/developer-guide/browser-supervisor/"
+        },
+        {
+          "id": "developer-guide/cli-internals",
+          "title": "CLI の内部構造",
+          "url": "/hermes/docs/developer-guide/cli-internals/"
+        },
+        {
+          "id": "developer-guide/creating-skills",
+          "title": "スキルを作る",
+          "url": "/hermes/docs/developer-guide/creating-skills/"
+        },
+        {
+          "id": "developer-guide/model-provider-plugin",
+          "title": "モデルプロバイダーのプラグイン",
+          "url": "/hermes/docs/developer-guide/model-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/plugin-llm-access",
+          "title": "プラグインからの LLM 呼び出し",
+          "url": "/hermes/docs/developer-guide/plugin-llm-access/"
+        },
+        {
+          "id": "developer-guide/plugins/application-declarations",
+          "title": "アプリケーション宣言",
+          "url": "/hermes/docs/developer-guide/plugins/application-declarations/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "developer-guide/source-update-completion",
+          "title": "ソース版の更新の仕上げを誰が受け持つか",
+          "url": "/hermes/docs/developer-guide/source-update-completion/"
+        },
+        {
+          "id": "developer-guide/streaming-tts",
+          "title": "ストリーミング TTS の内部",
+          "url": "/hermes/docs/developer-guide/streaming-tts/"
+        },
+        {
+          "id": "getting-started/nix-setup",
+          "title": "Nix と NixOS のセットアップ",
+          "url": "/hermes/docs/getting-started/nix-setup/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "guides/aws-bedrock",
+          "title": "AWS Bedrock",
+          "url": "/hermes/docs/guides/aws-bedrock/"
+        },
+        {
+          "id": "integrations",
+          "title": "外部サービス連携",
+          "url": "/hermes/docs/integrations/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "reference/tools-reference",
+          "title": "組み込みツール一覧",
+          "url": "/hermes/docs/reference/tools-reference/"
+        },
+        {
+          "id": "reference/toolsets-reference",
+          "title": "ツールセット一覧",
+          "url": "/hermes/docs/reference/toolsets-reference/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/configuring-models",
+          "title": "モデルの設定",
+          "url": "/hermes/docs/user-guide/configuring-models/"
+        },
+        {
+          "id": "user-guide/features/computer-use",
+          "title": "コンピュータ操作",
+          "url": "/hermes/docs/user-guide/features/computer-use/"
+        },
+        {
+          "id": "user-guide/features/memory-providers",
+          "title": "記憶プロバイダー",
+          "url": "/hermes/docs/user-guide/features/memory-providers/"
+        },
+        {
+          "id": "user-guide/features/memory",
+          "title": "ずっと残る記憶",
+          "url": "/hermes/docs/user-guide/features/memory/"
+        },
+        {
+          "id": "user-guide/features/overview",
+          "title": "機能の概要",
+          "url": "/hermes/docs/user-guide/features/overview/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/tool-gateway",
+          "title": "Nous Tool Gateway",
+          "url": "/hermes/docs/user-guide/features/tool-gateway/"
+        },
+        {
+          "id": "user-guide/features/tool-search",
+          "title": "ツール検索",
+          "url": "/hermes/docs/user-guide/features/tool-search/"
+        },
+        {
+          "id": "user-guide/features/tts",
+          "title": "音声と読み上げ",
+          "url": "/hermes/docs/user-guide/features/tts/"
+        },
+        {
+          "id": "user-guide/features/voice-mode",
+          "title": "音声モード",
+          "url": "/hermes/docs/user-guide/features/voice-mode/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/features/web-search",
+          "title": "Web 検索と本文抽出",
+          "url": "/hermes/docs/user-guide/features/web-search/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/windows-native",
+          "title": "Windows（ネイティブ）ガイド",
+          "url": "/hermes/docs/user-guide/windows-native/"
+        }
+      ]
+    },
     {
       "date": "2026-10-06",
       "sha": "87612eb",

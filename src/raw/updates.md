@@ -8,6 +8,42 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-07
+
+- [ブラウザの CDP スーパーバイザ](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-supervisor/)
+- [CLI の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cli-internals/)
+- [スキルを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/creating-skills/)
+- [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- [プラグインからの LLM 呼び出し](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugin-llm-access/)
+- [アプリケーション宣言](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/application-declarations/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- [ソース版の更新の仕上げを誰が受け持つか](https://wiki.winsmux.dev/hermes/docs/developer-guide/source-update-completion/)
+- [ストリーミング TTS の内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/streaming-tts/)
+- [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
+- [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- [AWS Bedrock](https://wiki.winsmux.dev/hermes/docs/guides/aws-bedrock/)
+- [外部サービス連携](https://wiki.winsmux.dev/hermes/docs/integrations/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
+- [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
+- [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
+- [コンピュータ操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/computer-use/)
+- [記憶プロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
+- [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
+- [機能の概要](https://wiki.winsmux.dev/hermes/docs/user-guide/features/overview/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [Nous Tool Gateway](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-gateway/)
+- [ツール検索](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-search/)
+- [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
+- [音声モード](https://wiki.winsmux.dev/hermes/docs/user-guide/features/voice-mode/)
+- [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- [Web 検索と本文抽出](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-search/)
+- [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
+- [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
+
 ## 2026-10-06
 
 - [CLI の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cli-internals/)

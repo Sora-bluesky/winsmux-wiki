@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: d85ff3e3fcd2c1d502dd3f05f283efcdd84ff3c2
+upstream_blob: f69cc4180f3bac3a5eed6b3e537724814f7de4f1
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -74,6 +74,28 @@ Hermes は `plugin.json`、Agent Skills のフロントマター、固定され�
 ポータブル MCP の `env` に宣言された値は可視のパッケージデータであり、シークレット保管の仕組みではありません。`mcp.json` に認証情報を置かないでください。
 
 現在サポートされているポータブルのサブセットは、stdio と Streamable HTTP の MCP エントリです。ポータブルな `streamable-http` エントリは、Hermes の既存のネイティブなリモート MCP クライアント（URL ベースの `mcp_servers` 設定を支えるのと同じランタイム）を通じてルーティングされ、v1 の境界規則が適用されます: URL はユーザー情報やフラグメントを含まない絶対 http(s) でなければならず、プレーンな HTTP は `localhost` / ループバックホストに対してのみ許可され、設定されたヘッダーはクロスオリジンのリダイレクトを越えて転送されることはありません。旧来の `sse` エントリは報告されてスキップされます。Agent Plugins v1 は、trust、permissions、provenance、sandbox のいずれも定義していません。パッケージを有効化すると、その instructions とローカル実行ファイルには、他のインストール済み Hermes プラグインと同じフルトラストの扱いが与えられます。
+
+パッケージは、自分の MCP サーバーのうち1つに確認の関門を設けるよう Hermes に求めることができます。利用者が `config.yaml` に `trust: untrusted` と書いたときと同じ働きです。
+お金を使う、取引をする、メッセージを送る、アカウントを変更する、といったツールを持つサーバーに使ってください。
+スキルの指示だけに頼るのではなく、書き込みのできる呼び出しを1回ずつ利用者が承認する形になります。
+
+```json
+{
+  "extensions": {
+    "com.nousresearch.hermes": {
+      "servers": {
+        "trade": { "trust": "untrusted" }
+      }
+    }
+  }
+}
+```
+
+サーバー名は `mcp.json` のエントリと一致している必要があります。`untrusted` にすると、そのサーバーへのツール呼び出しのうち `readOnlyHint: true` の注記がないものはすべて、先に利用者に確認を求めます。
+答えられる人がいない場面（cron や無人での実行）では、安全側に倒して失敗します。
+指定できる値はほかに既定の `full` だけなので、パッケージは権限を狭めることはできても、広げることはできません。
+同じ名前のサーバーが `config.yaml` にあると、trust を含めてパッケージ側のエントリを置き換えます。この拡張は、ほかのハーネスでは無視されます。
+`trust` は、同じサーバーエントリの中で `app`、`requires`、`liveness` と並べて書けます（[アプリケーションの宣言](/hermes/docs/developer-guide/plugins/application-declarations/) を参照）。
 
 [rendered specification](https://agent-plugins.org/specification) は現在 v1.0.0 を Working Draft としていますが、[versioned specification repository](https://github.com/agentplugins/agent-plugins-spec/blob/main/spec/1.0.0.md) では Published として記録されています。Hermes は、どちらの可変なステータスラベルでもなく、正規の v1.0.0 スキーマ識別子と規範テキストに動作を紐づけています。これは Agent Plugins への完全準拠を主張するものではなく、明示的にサポートされるサブセットです。
 

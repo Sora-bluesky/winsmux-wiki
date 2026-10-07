@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "音声モード"
 description: "Hermes Agent とリアルタイムで音声のやりとりをする — CLI、Telegram、Discord（DM、テキストチャンネル、ボイスチャンネル）"
 upstream_path: user-guide/features/voice-mode.md
-upstream_blob: db7c8f10878917d58a0f19c662e3aa04ecd68536
+upstream_blob: 5dc8c86deeb8b5ddd4f604161be1d1f1ff3e0198
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/voice-mode
 ---
@@ -242,6 +242,24 @@ voice:
 仕組み: 音声ボタンを押すと、デスクトップから GPT-Live への WebRTC セッションが開きます。デスクトップが受け取るのはセッション ID と SDP の応答だけで、キーはゲートウェイのホストに残り、セッションを作るのもそのホストです（`POST /api/audio/voice-live/session`）。`session.delegation.created` が来るたびに、開いている会話でふつうのターンが 1 回動きます（吹き出しには話した内容が表示されます。直近の音声のやりとりは、システムプロンプトではなく、ターンごとの注記としてモデルへの入力に添えられるので、返事は読み上げやすい文章になります）。ツールの動きは「Hermes is working: terminal」のような控えめな文脈として音声側に渡されるので、尋ねれば何が起きているかを教えてくれます。最終的な答えは 1 文ずつ流れて返ってきます。止めるための言葉を言うと会話が終わります。`gpt-live` を選んでいてもキーが見つからないときは、知らせを出したうえで、ボタンが処理をつなげるモードに戻ります。
 
 このモードで使えないもの: Nous が管理する音声の中継（キーを直接使う場合だけです）、CLI/TUI（`/voice` は処理をつなげる流れのままです）、`tts` ツール（引き続き `tts.provider` を使います）。
+
+### 音声会話のモデル {#voice-chat-model}
+
+話しかけたターンは、文字で入力するときとは別の（たいていはもっと速い）モデルで動かせます。設定するのは補助モデルの `voice_chat` 枠です。Desktop なら Settings → Models → Auxiliary models、ターミナルなら `hermes model` → Auxiliary models、または config.yaml で設定します。
+
+```yaml
+auxiliary:
+  voice_chat:
+    provider: openrouter          # "auto" = the session's model (default)
+    model: google/gemini-3-flash-preview   # empty with a provider = that provider's fast model
+    reasoning_effort: none        # default: reasoning off on voice turns (see below)
+```
+
+音声のターンでは、既定で推論（reasoning）がオフになります。枠を `auto` のままにして、セッションのモデルが答える場合も同じです。推論をオフにできないモデル（gpt-6-astra、思考が必須の Claude、カタログで必須と示されている経路）では、代わりに受け付けられる最も低いレベルが使われます。実行時にオフの指定を拒んだ経路は記録され、次の音声のターンではそれを踏まえて動きます。好きなレベルを指定することもできます。`""` にすると、セッションの推論の強さを使います。
+
+この設定は、処理をつなげる方式のすべての音声ターンに効きます。CLI と TUI の音声モード、Desktop の音声会話、メッセージングプラットフォームのボイスメモが対象です。音声のターンでもツールはすべて使えます。変わるのは答えるモデルだけです。次に文字で送ったメッセージはセッションのモデルに戻り、ターンのあとのメモリやスキルの見直しもセッションのモデルで動きます。使用量は `voice_chat` タスクとして記録されるので、セッションのモデルは選んだものから変わりません。
+
+音声のモデルのせいで会話の圧縮（compaction）が起きることはありません。会話がすでにそのモデルのコンテキストウィンドウより大きいときは、そのターンだけセッションのモデルで動き、その旨が1回だけ知らされます。GPT-Live の音声会話はこの枠を使いません。GPT-Live では音声の層そのものがすでに速いモデルで、実際の作業はセッションのモデルに任せているからです。
 
 ### 割り込み {#barge-in}
 
@@ -495,7 +513,7 @@ stt:
                                     # (diarization, alignment, archival, etc.)
   provider: "local"                  # "local" (free) | "groq" | "openai" | "mistral" | "xai" | "elevenlabs" | "deepinfra"
   local:
-    model: "base"                    # tiny, base, small, medium, large-v3
+    model: "base"                    # tiny, base, small, medium, large-v3, turbo
     language: ""                     # optional ISO-639-1 hint; blank = use HERMES_LOCAL_STT_LANGUAGE if set, else auto-detect
   groq:
     language: ""                     # optional ISO-639-1 hint; blank = use HERMES_LOCAL_STT_LANGUAGE if set, else auto-detect

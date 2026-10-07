@@ -2,7 +2,7 @@
 title: "Chronos managed-cron の契約"
 description: "Chronos cron プロバイダーにおけるエージェントと NAS の間の通信契約"
 upstream_path: developer-guide/chronos-managed-cron-contract.md
-upstream_blob: c7d4c34f400a547d9666693e46c729f5644bbf39
+upstream_blob: e9ea6d481a76c026dfc64e6ae2196f2bd06863b0
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/chronos-managed-cron-contract
 ---
@@ -163,6 +163,10 @@ agent verifies the NAS JWT → store CAS claim → run_one_job → re-arm next o
 - **ふるまい:**
   - トークンが無効・欠落・偽造・期限切れ・aud 違い・purpose 違い → **401** で、実行はしません。
   - `job_id` がない → **400**。
+  - ゲートウェイがまだ起動中（ゼロまで縮めた状態からの起こし）→ 発火は、受け取った時点から数えて最大 7 秒、
+    ゲートウェイの起動が終わるのを待ちます。終わらなかったとき、またはその間にドレインが始まったときは
+    **503** `{"error": "gateway unreachable; retry"}` を `Retry-After: 60` 付きで返し、
+    何も確保しません（NAS が再試行します）。
   - 有効 → すぐに **202 `{"status": "accepted", "job_id": "..."}`** を返し、
     ジョブはバックグラウンドで実行します。実行前に 202 を返すので、エージェントのターンが長くても
     relay の HTTP タイムアウトに引っかかることはありません。

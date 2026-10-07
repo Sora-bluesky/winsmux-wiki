@@ -2,7 +2,7 @@
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: d29bca692f580975b72a19b279406bffbc4579b9
+upstream_blob: d1998d114a42b968a596d2dabd164ac759e2ac0a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -579,6 +579,10 @@ mcp_<server_name>_<tool_name>
 
 - **目に見えない Unicode の TAG 文字を取り除きます。** U+E0000〜U+E007F の範囲の文字は、端末やチャットの画面では何も表示されないのに、モデルからは完全に見えています。悪意のあるサーバーや乗っ取られたサーバーが、プロンプトへの仕込みを紛れ込ませる古典的な抜け道です。Hermes は道具の結果、リソースの中身、道具の説明文からこれを取り除きます。正当な絵文字のタグの並び（🏴󠁧󠁢󠁳󠁣󠁴󠁿 のような地域の旗）はそのまま残します。
 - **事業者独自の `_meta` は渡し、プロトコルが予約している項目は渡しません。** サーバーが道具の結果に `_meta` の対応表を付けてきたとき（`com.example/handoff` のような事業者ごとの名前空間）、Hermes はそれを結果の中身と一緒にモデルへ渡します。プロトコルが予約している接頭辞の下にある項目は落とします。`modelcontextprotocol` か `mcp` というラベルにもう 1 つラベルが続くもの、たとえば `modelcontextprotocol.io/...` や `tools.mcp.com/...` です。MCP の仕様にある名前の決まりに合わせています。モデルに見せるものが何も残らなければ、`_meta` の欄ごと省きます。
+
+### 画像の結果 {#image-results}
+
+`ImageContent` のブロック（スクリーンショット、描画したグラフ、ページの取り込みなど）は Hermes の画像キャッシュに保存され、そのパスが結果の中に `MEDIA:/path/to/image.png` として示されます。そのため、ファイルを添付できる画面であれば、どこからでもそのファイルを求められます。主モデルがツールの結果に含まれる画像を見られる場合は、画像そのものも結果に添付されるので、モデルは画像を直接読み取ります。MCP の結果も `vision_analyze` と同じ決まりに従います。`agent.image_input_mode`、明示的に設定した `auxiliary.vision` のバックエンド、モデルが画像に対応しているかどうかが、すべて効きます（[画像認識](/hermes/docs/user-guide/features/vision/#vision_analyze-has-the-same-dual-behavior)を参照）。添付した画像は、以降のターンのたびに送り直されるため、`vision.embed_target_bytes` まで縮小されます（1つの結果につき最大 4 枚）。テキスト専用のモデルには、パスだけが渡ります。
 
 ## MCP の補助の道具 {#mcp-utility-tools}
 

@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 580b8a55f615e9b63eba794eafa3dca83e916ba7
+upstream_blob: 7969cc9469042e5fe848a652859eb503d01e4884
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -1209,6 +1209,8 @@ npm run dev
 `http://localhost:5173` の Vite の開発用サーバーが、`/api` への要求を `http://127.0.0.1:9119` の FastAPI へ回します。
 
 画面側は React 19、TypeScript、Tailwind CSS v4、shadcn/ui 風の部品で作られています。本番向けの組み立ての出力は `hermes_cli/web_dist/` に置かれ、FastAPI のサーバーがそれを静的な SPA として配ります。
+
+組み立ては CPU とメモリを多く使うため（Vite 8 の Rust 製バンドラー Rolldown は複数のコアで並列に動きます）、**既定で使う資源に上限をかけています**。V8 のヒープに上限を設け（`--max-old-space-size`。コンテナのメモリ上限から決めます）、バンドラー本体のスレッド数を使えるコアの半分に抑えます（`RAYON_NUM_THREADS`）。これで、小さな VPS で組み立て中に起きがちな、CPU 使用率が 200% を超える急上昇やメモリ不足（OOM）を防ぎます（#63338）。上限は `HERMES_WEB_BUILD_MAX_OLD_SPACE_SIZE` / `HERMES_WEB_BUILD_THREADS` で変えられます。CPU を目いっぱい割けない環境では、`HERMES_WEB_BUILD_LIGHT=1` を設定すると上限がさらに厳しくなります（スレッド 1 本、ヒープ 1 GB）。
 
 ## 更新時の自動の組み立て {#automatic-build-on-update}
 

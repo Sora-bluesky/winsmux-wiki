@@ -2,7 +2,7 @@
 title: "画像の貼り付けと視覚認識"
 description: "クリップボードの画像を Hermes CLI に貼り付けて、マルチモーダルな画像解析を行います。"
 upstream_path: user-guide/features/vision.md
-upstream_blob: 4e777c42e340474da91b65bb86d27e60366f0e92
+upstream_blob: bff7b1dfa0f4e97441a73a46a20072af28a971e1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/vision
 ---
@@ -225,6 +225,8 @@ CLI のクリップボード、ゲートウェイ（Telegram や Discord の写�
 `vision_analyze` ツール自体も同じ振り分けに従います。いま使っている主モデルが画像対応で、**かつ**そのプロバイダーがツールの結果に画像を含められる場合（現在は Anthropic、OpenAI、Azure-OpenAI、Gemini 3.x 系）、`vision_analyze` は補助の説明役を飛ばして、画像そのものをマルチモーダルなツール結果として返します。主モデルは次のターンで画像をそのまま見ることになり、補助への呼び出しも、要約による情報の目減りも、余分な待ち時間もありません。例外が1つあり、いまのユーザーメッセージにすでに画像として添付されているものは埋め込み直しません。その場合の `vision_analyze` は「画像はすでに文脈にあります」という短い文章を返します（`region` を渡して一部を拡大する場合は、切り出した部分が埋め込まれます）。
 
 テキスト専用の主モデル（またはツール結果に画像を載せられないプロバイダー）では、`vision_analyze` は従来の経路に戻ります。設定した補助の画像モデルに説明を依頼し、その説明を文章として返します。どちらの場合も呼び出し方は同じで、実行時にどちらの経路を通るかをツールが判断します。
+
+画像をモデルに渡すほかのツールも、すべて同じ判断に従います。ブラウザのスクリーンショット、`computer_use` の画面の取り込み（主モデルが画像をそのまま受け取れない場合は、補助の画像モデルが説明します）、[MCP の画像の結果](/hermes/docs/user-guide/features/mcp/#image-results)です。ですから、`agent.image_input_mode: text` にすれば、これらすべてで画像そのものがモデルに渡らなくなります。
 
 ### Responses 系バックエンドでの SVG など非ラスター画像 {#svg-and-other-non-raster-images-on-responses-backends}
 

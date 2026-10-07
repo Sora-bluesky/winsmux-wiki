@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "キュレーター"
 description: "エージェントが作ったスキルを裏側で手入れする仕組み。利用状況の記録、古さの判定、書庫入れ、LLM によるレビュー"
 upstream_path: user-guide/features/curator.md
-upstream_blob: fcd16c1610f3fca87820e41468d8cc3f8c2116e5
+upstream_blob: 70ad423547180a393fa44d4fc5b405a0d59973aa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/curator
 ---
@@ -279,11 +279,16 @@ hermes curator adopt --all-unmanaged --yes       # skip the prompt
 スキルは、引き取った次の処理で `stale`（や `archived`）になると考えてください。
 それが狙いです。
 
-引き取りは、自律的な*改善*の道を開くものでもあります。バックグラウンドのレビューの
-フォークは、キュレーターの管理下にないスキルには手を入れません。ですから、自分の
-スキルが古くなっていることに気づいても、編集はせず、そのことを伝えて引き取りを
-すすめます。前面での（利用者の指示による）編集はこの影響を受けません。自分も
-エージェントも、頼めばいつでも自分のスキルを編集できます。
+引き取りが左右するのは*書庫入れ*だけです。バックグラウンドの自己改善のレビューは、
+学びを得たスキルであれば、どれにでも手を入れ、書き直し、補助ファイルを足せます
+（手書きのもの、URL から入れたもの、同梱のもの、ハブから入れたもの、外部のもの、
+固定したものを問いません）。ですから、学んだことは、誰が書いたかに関係なく、その作業を
+受け持つスキルに反映されます。こうした書き込みはすべてスキルの台帳に記録されます。
+書庫入れ（削除）ができるのはキュレーターの管理下にあるスキルだけで、固定したスキルは
+対象になりません。書き込みが反映される前に確かめたい場合は、
+`skills.write_approval` を有効にしてください（[エージェントのスキルの書き込みに関門を置く](/hermes/docs/user-guide/features/skills/#gating-agent-skill-writes-skillswrite_approval)を参照）。
+レビューが手を入れた同梱やハブ由来のスキルは、手元で変更したものとして扱われるので、
+`hermes update` / `hermes skills update` で上書きされなくなります。
 
 :::note `created_by` は方針の印であって、出どころの主張ではありません
 保存される項目の名前は `created_by` ですが、読まれ方は「自律的な手入れが

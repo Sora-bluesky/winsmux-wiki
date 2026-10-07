@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 65d6c3e0b12667ffed6035ff9f55ead7532074e7
+upstream_blob: c11b8cbe577d79532149d7082e8e2d68fc8a3dc2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -1406,6 +1406,7 @@ $ hermes model
 [ ] vision               currently: auto / main model
 [ ] title_generation     currently: openrouter / google/gemini-3-flash-preview
 [ ] tts_audio_tags       currently: auto / main model
+[ ] voice_chat           currently: auto / main model
 [ ] compression          currently: auto / main model
 [ ] approval             currently: auto / main model
 [ ] triage_specifier     currently: auto / main model
@@ -1417,6 +1418,8 @@ $ hermes model
 タスクを選び、プロバイダーを選び（OAuth のプロバイダーはブラウザーが開き、API キーのプロバイダーは入力を求められます）、モデルを選びます。変更は `config.yaml` の `auxiliary.<task>.*` に保存されます。メインモデルを選ぶ画面と同じ仕組みなので、新しく覚える書き方はありません。
 
 **Delegation** の項目だけは扱いが違います。これは `delegate_task` のサブエージェントが使うモデルを決める項目で、保存先は `auxiliary.*` ではなくトップレベルの `delegation.*` セクション（`delegation.provider` / `delegation.model`）です。サブエージェントは脇の LLM 呼び出しではなく、れっきとした子エージェントだからです。この項目の `auto` は「親エージェントのプロバイダー、モデル、認証情報を引き継ぐ」という意味です。
+
+**Voice chat** の項目では、音声モードで話しかけたターンに答えるモデルを選びます（ツールも使えます）。文字で入力したターンはメインモデルのままです。詳しくは[音声会話のモデル](/hermes/docs/user-guide/features/voice-mode/#voice-chat-model)を見てください。
 
 最初のやり取りのあとに Hermes がタイトルを自動生成しないようにするには、
 `auxiliary.title_generation.enabled: false` を設定します。手動でのタイトル付けは、その場合も
@@ -2421,7 +2424,7 @@ stt:
   cloud_trim_keep_ms: 300      # how much of each pause survives the trim (keeps natural pacing)
   # prompt: "Hermes, Teknium, Nous Research, kanban"   # Static vocabulary hint (see below)
   local:
-    model: "base"              # tiny, base, small, medium, large-v3
+    model: "base"              # tiny, base, small, medium, large-v3, turbo
     language: ""               # per-provider override of stt.language
     initial_prompt: ""         # optional whisper prompt to bias vocabulary/script (e.g. Simplified Chinese)
     vad: true                  # Silero VAD filter (default on) — silence never reaches whisper; false = raw behavior (music/ambient)
@@ -3080,7 +3083,7 @@ dashboard:
 - `trusted_proxies` — `X-Forwarded-Proto` と `X-Forwarded-For` を渡してよい IP アドレス、または範囲を限った CIDR ネットワークです。ループバックは設定しなくても信頼されます。TLS のリバースプロキシが別のコンテナやホストから接続してくる場合に設定します。できるだけプロキシの正確な IP を指定し、アドレスが変わる場合にだけ、小さな専用ネットワークを使ってください。ワイルドカードと `/0` のネットワークは受け付けません。
 - `oauth` / `basic_auth` / `drain_auth` — 同梱の dashboard-auth プラグインが読む、認証プロバイダーの設定です。drain のシークレット自体はここでは**設定しません**。環境変数 `HERMES_DASHBOARD_DRAIN_SECRET` で渡します。認証の設定手順の全体は [Web ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/) を参照してください。
 - `ws_ping_interval` / `ws_ping_timeout` — ループバック以外のアドレスで待ち受けるときの、WebSocket のキープアライブの調整です（ループバックの接続では ping を送りません）。遅延の大きい回線（Tailscale、遠くへの SSH トンネル）では、20秒の既定値のせいで本来起きないはずの 1006 の切断が起きることがあるので、値を上げてください。
-- `ssh_isolated_idle_grace_s`（既定は `900`）— SSH 経由でつなぐ、Desktop が管理する `hermes serve --isolated` のバックエンドは、わざと SSH セッションから切り離してあります。接続の途中でノートパソコンがスリープしても、バックエンドが止まらないようにするためです。以前は、スリープ中に画面を点けずに一時復帰（dark wake）して再接続するたびに、`state.db` を握ったままのバックエンドが1つずつ増えていました。現在は、クライアントの WebSocket がこの時間ずっと1つも接続されておらず、エージェントのターンも動いていなければ、バックエンドは自分で終了します（ターンが動いていれば生き続けます。ターンの状態が読み取れない場合も生き続けます）。ノートパソコンがスリープしたあとも、切り離されたバックエンドに長い作業を終わらせたい場合は、大きな値にしてください。こうしたバックエンドは、片側だけ切れたトンネルに気づけるように、間隔の長い WebSocket の ping（60秒ごと、タイムアウト10分）も送ります。
+- `ssh_isolated_idle_grace_s`（既定は `900`）— SSH 経由でつなぐ、Desktop が管理する `hermes serve --isolated` のバックエンドは、わざと SSH セッションから切り離してあります。接続の途中でノートパソコンがスリープしても、バックエンドが止まらないようにするためです。以前は、スリープ中に画面を点けずに一時復帰（dark wake）して再接続するたびに、`state.db` を握ったままのバックエンドが1つずつ増えていました。現在は、クライアントの WebSocket がこの時間ずっと1つも接続されておらず、エージェントのターンも動いていなければ、バックエンドは自分で終了します（ターンが動いていれば生き続けます。ターンの状態が読み取れない場合も生き続けます）。ノートパソコンがスリープしたあとも、切り離されたバックエンドに長い作業を終わらせたい場合は、大きな値にしてください。こうしたバックエンドは、片側だけ切れたトンネルに気づけるように、間隔の長い WebSocket の ping（60秒ごと、タイムアウト10分）も送ります。この待ち時間とは別に、リモートのホスト上にある Desktop の所有ロックが、同じ接続からあとで起動された新しいバックエンドを指すようになった時点で、古いバックエンドは（ターンとターンの合間に）終了します。そのため、再接続が立て続けに起きても、切り離されたバックエンドが積み重なることはありません。これは POSIX の SSH ホストにも、ネイティブの Windows の SSH ホストにも当てはまります。
 - `ws_orphan_reap_grace_s` — WebSocket から切り離されたセッションを、孤立セッションの回収処理が片づけるまでの猶予時間です。クライアントの再接続に時間がかかる場合は、キープアライブの値と一緒に上げてください。定期的なセッションの保守処理も、閉じたソケットの後片付けを最後まで済ませ、なくなった孤立タイマーを張り直します。そのため、最初の後片付けやタイマーが失われたというだけの理由で、切り離されたチャットが所有権のリース（占有権）を持ち続けることはありません。再接続すると、このタイマーは取り消されます。進行中の委任の作業と、正常に動いているターンは、これまでどおり孤立セッションの回収処理の通常のチェックで守られます。（`HERMES_TUI_WS_ORPHAN_REAP_GRACE_S` は、内部向けの上書きとして残っています。）
 - `ws_orphan_activity_stale_s`（既定は `600`）— 切り離された**実行中**のターンについて、活動の時計がどれだけ止まっていたら孤立セッションの回収処理が中断するかを決めます。この時計は `agent.turn_liveness` の監視役が見ているものと同じで、API の待ち、ストリームのトークン、ツールのハートビートで進みます。クライアントがいなくても、まだ活発に出力を生み出しているターンは、切り離されたまま最後まで動き続けます。ノートパソコンを閉じても、モバイルアプリをバックグラウンドに回しても、Desktop を更新しても、正常に動いている長いターンが取り消されることはもうありません。中断されるのは、本当に固まってしまったターンだけです。活動の有無に関係なく、猶予時間が過ぎた時点で中断したい場合は `0` にします（以前の動き）。
 - `startup_orphan_sweep`（既定は `true`）— 上の WebSocket の孤立タイマーはプロセスの中で動いているので、タイマーが発火する前にゲートウェイが再起動すると（更新、クラッシュ、systemd）、セッションの行が開いたまま永久に残ります。`/resume` やダッシュボードに、実体のない「実行中」の作業が出てしまいます。そこで、ゲートウェイが起動するたびに、stdio の TUI（`entry.main`）でも、Desktop やダッシュボード用の WebSocket サイドカー（`handle_ws`）でも、次の行を `end_reason: startup_orphan_reap` で閉じます。対象は、ソースが `tui` / `desktop` / `subagent` / `unknown`（トークン集計のガードが自分で作らざるをえなかった行）で、開始時刻**と**最新のメッセージの両方がセッションの TTL（`HERMES_TUI_SESSION_TTL_S`、既定は6時間）より古い行です。メッセージングプラットフォームのセッション（Telegram、Discord など）には一切触れません。メモリ上で動いているセッション（すでに再開したクライアントのもの）は対象外で、閉じられたセッションも引き続き再開できます。

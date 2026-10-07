@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: c9a07b4b697d775c6cf775a4eba462b9a21f32bc
+upstream_blob: 02fbc0a212c2488f627f8e75e17b3760a059aa9e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -1461,7 +1461,7 @@ hermes hooks <subcommand>
 hermes memory <subcommand>
 ```
 
-外部メモリプロバイダのプラグインをセットアップ・管理します。同梱のプロバイダ: openviking、holographic、retaindb、byterover。honcho、hindsight、supermemory、mem0（プラグインカタログ）は `hermes plugins install <name>` のあとで使えます（`memory.provider` にすでに指定されているプロバイダなら、`hermes update` がこのインストールを自動で行います）。同時にアクティブにできる外部プロバイダは1つだけです。組み込みメモリ（MEMORY.md/USER.md）は常にアクティブです。
+外部メモリプロバイダのプラグインをセットアップ・管理します。同梱のプロバイダ: holographic、retaindb、byterover。honcho、hindsight、supermemory、mem0、openviking（プラグインカタログ）は `hermes plugins install <name>` のあとで使えます（`memory.provider` にすでに指定されているプロバイダなら、`hermes update` がこのインストールを自動で行います）。同時にアクティブにできる外部プロバイダは1つだけです。組み込みメモリ（MEMORY.md/USER.md）は常にアクティブです。
 
 サブコマンド:
 

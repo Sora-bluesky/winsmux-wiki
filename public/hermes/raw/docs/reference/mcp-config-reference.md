@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "MCP 設定の早見表"
 description: "Hermes Agent の MCP 設定キー、絞り込みの動き、ユーティリティツールの方針をまとめた早見表です。"
 upstream_path: reference/mcp-config-reference.md
-upstream_blob: 4f8dd8d5a91751e1c73aab964195f5be22370560
+upstream_blob: f2dbceddd0812b7a788b276908f34021a06ba81d
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
 ---
@@ -73,7 +73,7 @@ mcp_servers:
 | `auth` | 文字列 | HTTP | 認証の方法です。`oauth` にすると PKCE 付きの OAuth 2.1 を使います |
 | `sampling` | マッピング | 両方 | サーバー側から LLM を呼びたいと言ってきたときの扱いです（MCP のガイドをご覧ください） |
 | `elicitation` | マッピング | 両方 | サーバー側から利用者に入力を求めてきたときの扱いです。`enabled`（既定は `true`）と、秒で指定する `timeout`（既定は `300`）があります。フォーム形式の要求は承認の画面を通り、URL 形式は断ります（MCP のガイドをご覧ください） |
-| `trust` | 文字列 | 両方 | 信頼の度合いです。`full`（既定）か `untrusted` を指定します。`untrusted` のサーバーでは、書き込みのできるツール呼び出し（`readOnlyHint: true` の注記が付いていないツールすべて）が、実行前に通常の承認画面で利用者の承認を求めます。`readOnlyHint` はサーバーが申告する*目安*にすぎません。嘘をつくサーバーにできるのは、読み取り専用だと偽ったツールの承認を省かせることまでで、それ以上の権限は得られません。自分で完全に管理していないサーバーは `untrusted` にしておいてください。呼び出しの途中で通信のセッションが切れたとき、その呼び出しを黙ってやり直すかどうかも、同じ目安で決まります。やり直すのは `readOnlyHint: true` のツールだけで、注記のない（書き込みのできる）ツールは `outcome_uncertain` のエラーを返します。つまり、使われていないセッションを切る Streamable-HTTP のサーバーでは、しばらく間が空いたあとの最初の注記なしの呼び出しが失敗することがあり、呼び直す前に結果を確かめる必要があります。知らない値が書かれていた場合は `untrusted` として扱います（安全側に倒します） |
+| `trust` | 文字列 | 両方 | 信頼の度合いです。`full`（既定）か `untrusted` を指定します。`untrusted` のサーバーでは、書き込みのできるツール呼び出し（`readOnlyHint: true` の注記が付いていないツールすべて）が、実行前に通常の承認画面で利用者の承認を求めます。`readOnlyHint` はサーバーが申告する*目安*にすぎません。嘘をつくサーバーにできるのは、読み取り専用だと偽ったツールの承認を省かせることまでで、それ以上の権限は得られません。自分で完全に管理していないサーバーは `untrusted` にしておいてください。呼び出しの途中で通信のセッションが切れたとき、その呼び出しを黙ってやり直すかどうかも、同じ目安で決まります。やり直すのは `readOnlyHint: true` のツールだけで、注記のない（書き込みのできる）ツールは `outcome_uncertain` のエラーを返します。つまり、使われていないセッションを切る Streamable-HTTP のサーバーでは、しばらく間が空いたあとの最初の注記なしの呼び出しが失敗することがあり、呼び直す前に結果を確かめる必要があります。知らない値が書かれていた場合は `untrusted` として扱います（安全側に倒します）。持ち運べるパッケージは、`plugin.json` で自分のサーバーに `untrusted` を求めることができます（[Portable Agent Plugins](/hermes/docs/developer-guide/plugins/#portable-agent-plugins-v1-packages) を参照）。同じ名前のエントリが `config.yaml` にあれば、常にそちらが優先されます |
 
 ## 環境変数の参照 {#environment-variable-references}
 
