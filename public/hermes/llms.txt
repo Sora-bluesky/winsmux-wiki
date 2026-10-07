@@ -491,6 +491,7 @@ Hermes Agent 0.21.5
 - [user-guide/which-file-does-what（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/which-file-does-what/)
 - [user-guide/windows-native（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
 - [user-guide/windows-wsl-quickstart（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-wsl-quickstart/)
+- [Hermes Agent完全構築ガイド（管理人そらの Zenn 連載・VPS で実際に動かした手順と画面）](https://zenn.dev/sora_biz/articles/hermes-vps-complete-guide)
 
 ## 今週の更新（エージェント向け）
 

@@ -1,0 +1,31 @@
+---
+import zennLinks from '../../data/wiki/zenn-links.json';
+
+interface Props {
+  path: string;
+}
+
+type ZennLink = { n: number | null; url: string; title: string; topic: string };
+
+const { path } = Astro.props;
+const normalizedPath = `${path.replace(/\/+$/, '')}/`;
+const links = (zennLinks.pages as Record<string, ZennLink[]>)[normalizedPath];
+---
+
+{
+  links && links.length > 0 && (
+    <aside class="mt-8 min-w-0 rounded-lg border border-border bg-bg-subtle p-4 text-sm text-fg-secondary" style="overflow-wrap: anywhere;">
+      <p class="m-0 font-semibold text-fg">VPS で実際に動かした記録（Zenn）</p>
+      <p class="mb-0 mt-2">このサイトの管理人（そら）が VPS で実際に動かした手順と画面は、Zenn の連載にまとめています。</p>
+      <ul class="mb-0 mt-3 list-none space-y-1 p-0">
+        {links.map((link) => (
+          <li>
+            <a href={link.url} target="_blank" rel="noopener" title={link.title}>
+              {link.n === null ? `Zenn の連載「${zennLinks.series}」` : `Zenn 第${link.n}回`}
+            </a>：{link.topic}
+          </li>
+        ))}
+      </ul>
+    </aside>
+  )
+}

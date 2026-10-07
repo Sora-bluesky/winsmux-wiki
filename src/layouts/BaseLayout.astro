@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import SearchModal from '../components/SearchModal.astro';
 import Sidebar from '../components/Sidebar.astro';
+import ZennLinks from '../components/ZennLinks.astro';
 import { PAGES } from '../lib/pages.mjs';
 import updatesData from '../../data/wiki-updates.json';
 
@@ -224,6 +225,7 @@ const next = hasOverride
         )
       }
       <slot />
+      <ZennLinks path={Astro.url.pathname} />
       {
         (prev || next) && (
           <nav class="mt-12 flex items-stretch justify-between gap-3 border-t border-border pt-6 text-sm" aria-label="前後のページ">

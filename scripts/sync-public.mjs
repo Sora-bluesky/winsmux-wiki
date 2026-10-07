@@ -8,6 +8,7 @@ await import('./gen-raw-data.mjs');
 const root = fileURLToPath(new URL('..', import.meta.url));
 const srcDir = join(root, 'src/raw');
 const destDir = join(root, 'public/hermes/raw');
+const zennLinks = JSON.parse(await readFile(join(root, 'data/wiki/zenn-links.json'), 'utf8'));
 
 await mkdir(destDir, { recursive: true });
 
@@ -101,6 +102,7 @@ const llms = `# Hermes Agent Wiki（非公式・日本語）
 ${versionLine}## ページ
 
 ${catalog.map(([path, label]) => `- [${label}](${site}${path})`).join('\n')}
+- [Hermes Agent完全構築ガイド（管理人そらの Zenn 連載・VPS で実際に動かした手順と画面）](${zennLinks.hub.url})
 
 ## 今週の更新（エージェント向け）
 
