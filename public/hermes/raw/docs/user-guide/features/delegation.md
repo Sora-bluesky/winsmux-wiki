@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: 95c4268fea6da71a4e22157cb0eeea0c12818519
+upstream_blob: b76aeab2740b5e18f3790c4b74a2242561d60b26
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -337,6 +337,7 @@ auxiliary:
 - `memory` — 共有の記憶へは書き込めません
 - `send_message` — プラットフォームをまたぐ副作用は起こせません
 - `cronjob` — 親の名前でさらに作業を予約することはできません
+- `start_chat` — ユーザーの名前でチャットを開くことはできません
 
 どちらの役割でも `execute_code`（プログラムからのツール呼び出し）は残るので、子は機械的な作業をまとめて片付けられます。
 
@@ -567,7 +568,7 @@ delegate_task(
 - サブエージェントはそれぞれ**自分のターミナルセッション**を持ちます（親とは別です）
 - サブエージェントは親の有効なツールセットを受け継ぎます。モデルが呼び出しごとに選んだり広げたりはできません
 - **入れ子の委任は選んで使うもの**です。さらに委任できるのは `role="orchestrator"` の子だけで、しかも `max_spawn_depth` を既定の 1（平ら）から上げたときだけです。全体で止めるには `orchestrator_enabled: false` を使います。
-- 末端のサブエージェントは `delegate_task`、`clarify`、`memory`、`send_message`、`cronjob` を呼べ**ません**。取りまとめ役のサブエージェントは `delegate_task` を持ち続けますが、ほかの制限はそのままです。どちらの役割でも `execute_code`（プログラムからのツール呼び出し）は残るので、子は推論の回数を使い切る代わりに、機械的な作業をまとめて片付けられます。
+- 末端のサブエージェントは `delegate_task`、`clarify`、`memory`、`send_message`、`cronjob`、`start_chat` を呼べ**ません**。取りまとめ役のサブエージェントは `delegate_task` を持ち続けますが、ほかの制限はそのままです。どちらの役割でも `execute_code`（プログラムからのツール呼び出し）は残るので、子は推論の回数を使い切る代わりに、機械的な作業をまとめて片付けられます。
 - **中止は所有権に従います。** `/stop` か、持ち主のセッションを閉じる・リセットすると、その配下のバックグラウンドの子と、その下で同期的に動く子孫が終わります。それぞれ、途中までの出力を持った中断の完了として返ります
 - 親の文脈に入るのは最終的なまとめだけなので、トークンの使い方が無駄になりません
 - サブエージェントは親の **API キー、プロバイダの設定、資格情報プール**を受け継ぎます（レート制限のときのキーの持ち回りが効きます）

@@ -12,9 +12,9 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 211 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 213 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `cc75e8f`（2026-10-07）時点。この一覧は上流の docs から機械生成しています。
+上流 `9d05e7f`（2026-10-08）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（58）
 
@@ -81,7 +81,7 @@ raw: /hermes/raw/skills.md
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-09-20 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/) | Use when a fetch fails: 403/429, paywall, WAF, bot wall | 2026-09-20 |
 
-## あとから入れる（152）
+## あとから入れる（154）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -196,7 +196,9 @@ raw: /hermes/raw/skills.md
 | [Stripe Projects](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/) | Provision SaaS services + sync creds via Stripe Projects | 2026-09-20 |
 | [Canvas](/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/) | Fetch Canvas LMS courses and assignments via API token | 2026-09-20 |
 | [Decision Questionnaire](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | Turn an unanswerable decision into a questionnaire doc | 2026-09-20 |
+| [First Task](/hermes/docs/user-guide/skills/optional/productivity/productivity-first-task/) | Run the first task chat that setup hands off | 2026-10-07 |
 | [Here Now](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | Publish sites to {slug}.here.now and store files in Drives | 2026-09-20 |
+| [Initiate Setup](/hermes/docs/user-guide/skills/optional/productivity/productivity-initiate-setup/) | Run the first-run setup chat in the Hermes desktop app | 2026-10-07 |
 | [Live Dashboard](/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/) | Build self-updating dashboards from live sources | 2026-09-18 |
 | [Memento Flashcards](/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/) | Spaced-repetition flashcards: create, review, quiz, export | 2026-09-20 |
 | [Property Listings](/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/) | Present property and rental listings as desktop cards | 2026-09-08 |

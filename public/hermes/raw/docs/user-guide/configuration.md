@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: c11b8cbe577d79532149d7082e8e2d68fc8a3dc2
+upstream_blob: fef1919ef0b54e6b0ce01fbba254e13e00ef7c8b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -3037,7 +3037,7 @@ network:
 
 ## オンボーディング {#onboarding}
 
-初めて使うときに出るオンボーディングのヒントと、手順に沿ってプロファイルを作る提案の設定です。
+初めて使うときに出るオンボーディングのヒントと、最初のメッセージで出す提案の設定です。
 
 ```yaml
 onboarding:
@@ -3045,8 +3045,8 @@ onboarding:
   seen: {}               # internal latch — leave empty
 ```
 
-- `profile_build` — プロファイルごとに、ゲートウェイ経由で届く最初のダイレクトメッセージで示す、プロファイル作成の流れを決めます（グループチャットでは示しません）。`"ask"`（既定）は、ユーザープロファイルの作成を提案します。この提案は**ユーザーが明示的に受け入れたときだけ進み、同意が前提です**。エージェントは何かを調べる前に必ず尋ね、接続済みのアカウントを黙って読むことはありません。`"off"` は簡単な紹介だけを表示します。この提案が出るのは、1つのプロファイルにつき多くても1回です。
-- `seen` — 内部の状態です。Hermes は表示したヒントを1つずつここに記録し、二度と出さないようにします。プロファイル作成の提案も、一度表示されるとここに記録されます。手で編集しないでください。すべてのヒントをもう一度見たいときは、`onboarding` セクションを丸ごと消します。
+- `profile_build` — いちばん最初のメッセージで出す提案を決めます。対象は TUI、デスクトップアプリ、メッセージングのダイレクトメッセージです（グループチャットでは出しません）。`"ask"`（既定）は、ユーザープロファイルの作成を提案します。この提案は**ユーザーが明示的に受け入れたときだけ進み、同意が前提です**。エージェントは何かを調べる前に必ず尋ね、接続済みのアカウントを黙って読むことはなく、確認できた事実はユーザーメモリに保存します。Microsoft Store 版のデスクトップアプリでは、提案の代わりに、`/initiate-setup` を案内する締めの1行が出ます（Telegram では `/initiate_setup`、Slack では `/hermes initiate-setup`）。最初のメッセージが `/initiate-setup` そのものだったときは提案を出しません。デスクトップアプリのセットアップ用プロファイルでも常に出しません。`"off"` が止めるのは提案だけで、エージェントは簡単な自己紹介をします。この提案が出るのは、1つのプロファイルにつき多くても1回です。`/initiate-setup` は、そのコンピューターについての短い事実のまとまりを送ります。詳しくは[セットアップのチャットがコンピューターについて知っていること](/hermes/docs/user-guide/desktop/#what-the-setup-chat-knows-about-your-computer)を参照してください。
+- `seen` — 内部の状態です。Hermes は表示したヒントを1つずつここに記録し、二度と出さないようにします。最初のメッセージで出す提案も、一度表示されるとここに記録されます。手で編集しないでください。すべてのヒントをもう一度見たいときは、`onboarding` セクションを丸ごと消します。
 
 ## ダッシュボード {#dashboard}
 

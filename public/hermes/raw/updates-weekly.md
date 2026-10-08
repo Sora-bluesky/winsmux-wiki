@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-10-08、対象期間 = 2026-10-02 〜 2026-10-08（JST）
+生成日 = 2026-10-09、対象期間 = 2026-10-03 〜 2026-10-09（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,36 +16,45 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-10-08 [Chronos managed-cron の契約](https://wiki.winsmux.dev/hermes/docs/developer-guide/chronos-managed-cron-contract/)
+- 2026-10-08 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- 2026-10-08 [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- 2026-10-08 [インストール](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
+- 2026-10-08 [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- 2026-10-08 [外部サービス連携](https://wiki.winsmux.dev/hermes/docs/integrations/)
+- 2026-10-08 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- 2026-10-08 [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
+- 2026-10-08 [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
+- 2026-10-08 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- 2026-10-08 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- 2026-10-08 [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+- 2026-10-08 [キュレーター](https://wiki.winsmux.dev/hermes/docs/user-guide/features/curator/)
+- 2026-10-08 [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
+- 2026-10-08 [記憶プロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
+- 2026-10-08 [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
+- 2026-10-08 [機能の概要](https://wiki.winsmux.dev/hermes/docs/user-guide/features/overview/)
+- 2026-10-08 [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
+- 2026-10-08 [画像の貼り付けと視覚認識](https://wiki.winsmux.dev/hermes/docs/user-guide/features/vision/)
+- 2026-10-08 [音声モード](https://wiki.winsmux.dev/hermes/docs/user-guide/features/voice-mode/)
+- 2026-10-08 [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- 2026-10-08 [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
 - 2026-10-07 [ブラウザの CDP スーパーバイザ](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-supervisor/)
 - 2026-10-07 [CLI の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cli-internals/)
 - 2026-10-07 [スキルを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/creating-skills/)
 - 2026-10-07 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
 - 2026-10-07 [プラグインからの LLM 呼び出し](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugin-llm-access/)
 - 2026-10-07 [アプリケーション宣言](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/application-declarations/)
-- 2026-10-07 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
-- 2026-10-07 [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
 - 2026-10-07 [ソース版の更新の仕上げを誰が受け持つか](https://wiki.winsmux.dev/hermes/docs/developer-guide/source-update-completion/)
 - 2026-10-07 [ストリーミング TTS の内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/streaming-tts/)
 - 2026-10-07 [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
-- 2026-10-07 [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
 - 2026-10-07 [AWS Bedrock](https://wiki.winsmux.dev/hermes/docs/guides/aws-bedrock/)
-- 2026-10-07 [外部サービス連携](https://wiki.winsmux.dev/hermes/docs/integrations/)
-- 2026-10-07 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
-- 2026-10-07 [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
 - 2026-10-07 [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
 - 2026-10-07 [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
-- 2026-10-07 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - 2026-10-07 [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
 - 2026-10-07 [コンピュータ操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/computer-use/)
-- 2026-10-07 [記憶プロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
-- 2026-10-07 [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
-- 2026-10-07 [機能の概要](https://wiki.winsmux.dev/hermes/docs/user-guide/features/overview/)
 - 2026-10-07 [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
 - 2026-10-07 [Nous Tool Gateway](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-gateway/)
 - 2026-10-07 [ツール検索](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-search/)
-- 2026-10-07 [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
-- 2026-10-07 [音声モード](https://wiki.winsmux.dev/hermes/docs/user-guide/features/voice-mode/)
-- 2026-10-07 [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
 - 2026-10-07 [Web 検索と本文抽出](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-search/)
 - 2026-10-07 [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
 - 2026-10-07 [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
@@ -59,13 +68,9 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-05 [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
 - 2026-10-05 [アーキテクチャ](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)
 - 2026-10-05 [cron の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cron-internals/)
-- 2026-10-05 [インストール](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
 - 2026-10-05 [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
 - 2026-10-05 [定期実行がうまくいかないとき](https://wiki.winsmux.dev/hermes/docs/guides/cron-troubleshooting/)
 - 2026-10-05 [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
-- 2026-10-05 [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
-- 2026-10-05 [キュレーター](https://wiki.winsmux.dev/hermes/docs/user-guide/features/curator/)
-- 2026-10-05 [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
 - 2026-10-05 [プラグインカタログ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
 - 2026-10-05 [ツールとツールセット](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tools/)
 - 2026-10-05 [ローカルモデル](https://wiki.winsmux.dev/hermes/docs/user-guide/local-models/)
@@ -76,7 +81,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-05 [WhatsApp](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/whatsapp/)
 - 2026-10-05 [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
 - 2026-10-05 [プロファイル配布: エージェントまるごと共有する](https://wiki.winsmux.dev/hermes/docs/user-guide/profile-distributions/)
-- 2026-10-05 [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
 - 2026-10-05 [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
 - 2026-10-05 [Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/)
 - 2026-10-05 [Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/)
@@ -84,7 +88,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-05 [Unreal Mcp — Unreal Engine のエディタでシーン・アクター・レンダリングを自動化する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-unreal-mcp/)
 - 2026-10-04 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
 - 2026-10-04 [プロファイルのコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/profile-commands/)
-- 2026-10-04 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
 - 2026-10-04 [Codex App-Server ランタイム（任意）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/codex-app-server-runtime/)
 - 2026-10-04 [フォールバックプロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/fallback-providers/)
 - 2026-10-04 [続く目標（Goal）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/goals/)
@@ -99,22 +102,12 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-03 [WeCom Callback（自社で作るアプリ）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/wecom-callback/)
 - 2026-10-03 [WeCom（企業向け WeChat）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/wecom/)
 - 2026-10-03 [Honcho — Hermes の Honcho メモリを設定し、うまく動かないときに直す](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/)
-- 2026-10-02 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
-- 2026-10-02 [画像生成プロバイダのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/image-gen-provider-plugin/)
-- 2026-10-02 [実行時のプロバイダー解決](https://wiki.winsmux.dev/hermes/docs/developer-guide/provider-runtime/)
-- 2026-10-02 [Webhook で GitHub の PR に自動でコメントする](https://wiki.winsmux.dev/hermes/docs/guides/webhook-github-pr-review/)
-- 2026-10-02 [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
-- 2026-10-02 [よくある質問とトラブル対処](https://wiki.winsmux.dev/hermes/docs/reference/faq/)
-- 2026-10-02 [画像生成](https://wiki.winsmux.dev/hermes/docs/user-guide/features/image-generation/)
-- 2026-10-02 [Git ワークツリー](https://wiki.winsmux.dev/hermes/docs/user-guide/git-worktrees/)
-- 2026-10-02 [Slack](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/slack/)
-- 2026-10-02 [WhatsApp Business（Cloud API）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/whatsapp-cloud/)
 
 ## 週次まとめ
 
-対象週: 2026-W40
+対象週: 2026-W41
 
-Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ版を複数の Hermes につなぐ話が更新され、プラグインの作り方や同梱のプラグイン、コンテキストエンジンのプラグインも新しい内容に揃いました。内部構造では、コンテキストの圧縮とキャッシュ、Multiplexing Gateway の内部構造、ゲートウェイのセッションライフサイクル、Relay 共有メトリクスが入れ替わっています。使う側では、インストールと更新、Windows（ネイティブ）ガイド、CLI コマンド一覧と環境変数、カンバンやプロファイル、Telegram・Discord・SimpleX Chat との連携が更新され、Brag や Baoyu Comic といったスキルの説明も加わりました。
+定期実行（cron）まわりが厚く更新され、Chronos managed-cron の契約や cron の内部構造、定期実行がうまくいかないときの対処が新しい内容になりました。プラグインでは作り方やカタログへの登録申請、アプリケーション宣言、プラグインからの LLM 呼び出し、モデルプロバイダーのプラグイン、デスクトップのプラグイン SDK が揃い、使う側では記憶プロバイダーやずっと残る記憶、音声と読み上げ、Hermes の管理画面、MCP、キュレーターの説明も更新されています。インストールや更新とアンインストール、Windows ネイティブ版と Nix のセットアップに加え、ゲートウェイやプロファイル、Discord・WhatsApp などのメッセージング、AWS Bedrock やローカルモデルの設定にも手が入りました。
 
 ## 正本
 

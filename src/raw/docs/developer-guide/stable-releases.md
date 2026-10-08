@@ -2,7 +2,7 @@
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 4d1dd8329bbf7ce3a4be0b45bdb5e42a070a75e0
+upstream_blob: 5fde40d8c6e448ccc436d64b0da08d8f60b02408
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -20,7 +20,7 @@ sources:
 ## 手順 {#order}
 
 1. `origin/main` と、リモートの試行 ref・マーカー ref（`rc.*` と
-   `abandoned-rc.*`）を最新にします。次の SemVer は、`0.21.4` を起点とする公開済みリリース系列だけから
+   `abandoned-rc.*`）を最新にします。次の SemVer は、`0.21.5`（旧来の CalVer による最後のリリース、v2026.9.24）を起点とする公開済みリリース系列だけから
    導きます。基準は、保護された R2 の安定版 head と、`vX.Y.Z` タグを持つ最新の公開済み非プレリリース
    GitHub リリースのうち、新しいほうです。バンドルを省いたリリースが動かすのは後者だけです。
    試行はバージョン系列を動かしません。次のバージョンにすでに最終 `vX.Y.Z` タグがある場合、

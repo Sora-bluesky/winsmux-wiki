@@ -929,6 +929,13 @@
     ],
     "creative-brag-slim": [
       "image-video"
+    ],
+    "productivity-first-task": [
+      "ai-agent",
+      "task"
+    ],
+    "productivity-initiate-setup": [
+      "ai-agent"
     ]
   }
 }

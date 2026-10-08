@@ -959,7 +959,13 @@
                       "id": "user-guide/skills/optional/productivity/productivity-decision-questionnaire"
                     },
                     {
+                      "id": "user-guide/skills/optional/productivity/productivity-first-task"
+                    },
+                    {
                       "id": "user-guide/skills/optional/productivity/productivity-here-now"
+                    },
+                    {
+                      "id": "user-guide/skills/optional/productivity/productivity-initiate-setup"
                     },
                     {
                       "id": "user-guide/skills/optional/productivity/productivity-live-dashboard"
@@ -1886,7 +1892,9 @@
     "user-guide/skills/optional/payments/payments-stripe-projects",
     "user-guide/skills/optional/productivity/productivity-canvas",
     "user-guide/skills/optional/productivity/productivity-decision-questionnaire",
+    "user-guide/skills/optional/productivity/productivity-first-task",
     "user-guide/skills/optional/productivity/productivity-here-now",
+    "user-guide/skills/optional/productivity/productivity-initiate-setup",
     "user-guide/skills/optional/productivity/productivity-live-dashboard",
     "user-guide/skills/optional/productivity/productivity-memento-flashcards",
     "user-guide/skills/optional/productivity/productivity-property-listings",

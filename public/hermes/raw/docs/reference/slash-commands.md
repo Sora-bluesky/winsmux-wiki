@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 708c8bb8f1769af558cfb2bde1bf11a1bcad8929
+upstream_blob: ef7342532ce646c3587c12e5271cec346add472d
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -114,6 +114,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/bundles` | 設定済みのスキルバンドル（複数のスキルをまとめて読み込む `/<name>` というスラッシュの別名）を一覧表示します。`~/.hermes/config.yaml` の `bundles:` の下で設定します。[スキルバンドル](/hermes/docs/user-guide/features/skills/#skill-bundles) も見てください。 |
 | `/learn <what to learn from>` | 説明したものから、繰り返し使えるスキルを抽出します。ディレクトリでも、URL でも、いま一緒に進めた手順でも、貼り付けたメモでも構いません。形式は自由で、エージェントが自分のツールで材料を集め、社内の執筆基準に沿って `SKILL.md` を書きます。CLI、メッセージングゲートウェイ、TUI、ダッシュボードの Skills ページで使えます。 |
 | `/plan [task]` | 実装計画を markdown で書き、動いているワークスペースの `.hermes/plans/` に保存します。計画だけで、実行はしません。引数を空にすると会話からタスクを推測します。（以前はバンドルされた `plan` スキルでしたが、Telegram や Discord のコマンドメニューの上限に引っかからないよう組み込みになりました。） |
+| `/initiate-setup`（別名: `/initiate_setup`） | 初回のセットアップを実行します。エージェントが利用者のことを知り、それに合わせて Hermes を設定します。`initiate-setup` スキルに、このセッションと端末についての短い事実のまとまり（使っている画面、入っているツール、OS、CPU、RAM、GPU、言語。詳しくは [セットアップのチャットがコンピューターについて知っていること](/hermes/docs/user-guide/desktop/#what-the-setup-chat-knows-about-your-computer) を参照）を添えて、通常の 1 ターンとして送ります。Microsoft Store 版のデスクトップアプリでは、いちばん最初のメッセージの最後に、これを実行するかどうかを尋ねる 1 行が付きます（[オンボーディング](/hermes/docs/user-guide/configuration/#onboarding) を参照）。CLI、メッセージングゲートウェイ、TUI、デスクトップアプリで使えます。デスクトップアプリでは、モデルが最初に返答する前に、Hermes 自身が最初の質問（名前、続いてアクセントカラー）を尋ねます。 |
 | `/init [notes]` | リポジトリを走査して `AGENTS.md` のプロジェクト指示を生成、または更新します（Codex の `/init` の移植です）。エージェントが読み取り専用のツールでマニフェスト、構成、ツールチェーンの設定を調べ、簡潔な `AGENTS.md` を書きます。すでにある場合は、書いてある内容を保ったままマージして更新します。notes を付けると重点を指定できます。CLI、メッセージングゲートウェイ、TUI で使えます。 |
 | `/cron` | 定期タスクを管理します（一覧、追加・作成、編集、一時停止、再開、実行、削除） |
 | `/suggestions [accept\|dismiss N\|catalog\|clear]`（別名: `/suggest`） | 提案された自動化を確認します。`/suggestions` で保留中の提案を一覧表示し、`/suggestions accept <id>` で提案された自動化を作り、`/suggestions dismiss <id>` で却下し、`/suggestions catalog` で選りすぐりの入門用自動化を追加し、`/suggestions clear` で処理済みの提案の記録を消します。受け入れたジョブは、今いる場所を配信元として引き継ぎます。 |
@@ -288,6 +289,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/init [notes]` | リポジトリを走査して `AGENTS.md` を生成、または更新します。 |
 | `/learn <what to learn from>` | 説明したものから、繰り返し使えるスキルを抽出します。 |
 | `/plan [task]` | 実装計画を markdown で書き、`.hermes/plans/` に保存します。実行はしません。 |
+| `/initiate-setup`（別名: `/initiate_setup`） | 初回のセットアップを実行します。エージェントが利用者のことを知り、それに合わせて Hermes を設定します。Slack では `/hermes initiate-setup` です。 |
 | `/bundles` | 設定済みのスキルバンドル（複数のスキルをまとめて読み込む `/<name>` の別名）を一覧表示します。 |
 | `/reload-skills`（別名: `/reload_skills`） | `~/.hermes/skills/` を走査し直して、新しく入れたスキルや消したスキルを反映します。 |
 | `/footer [on\|off\|status]` | 最終的な返答に付く実行情報のフッター（モデル、コンテキストの使用率、作業ディレクトリ）を出すかどうかを切り替えます。 |

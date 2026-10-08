@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: b1c31b3339f118458516f1ae36b5bb130e3ea05a
+upstream_blob: ea15a468b9540f79cb3027e75ad8923b11c5aedc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -959,7 +959,7 @@ def my_callback(session_id: str, completed: bool, interrupted: bool,
 1. **`agent/turn_finalizer.py`** — すべての `run_conversation()` の呼び出し（`agent/conversation_loop.py`）の最後、片付けがすべて終わったあと。やり取りがエラーになっても必ず発火します。
 2. **`cli.py`** — CLI の atexit の処理の中。ただし終了の時点でエージェントがやり取りの途中（`_agent_running=True`）だった場合**だけ**です。処理中の Ctrl+C や `/exit` を捕まえます。この場合は `completed=False`、`interrupted=True` になります。
 
-**戻り値:** 無視されます。
+**戻り値:** 無視されます。名前に反してこのフックは**やり取りのたびに**発火するので、ユーザーに何かを見せることはできません。セッションの終わりに何かを見せたいときは、[`on_session_finalize`](#on_session_finalize) からメッセージを返します。
 
 **使いどころ:** 溜めたものの書き出し、接続の後始末、セッションの状態の保存、セッションの長さの記録、`on_session_start` で用意した資源の片付け。
 
@@ -1021,7 +1021,28 @@ def my_callback(session_id: str | None, platform: str, **kwargs):
 
 **発火する場所:** CLI / TUI の片付け（`hermes -z` の単発実行の終わりも含みます。成功・失敗を問いません）と、ゲートウェイの作り直しや停止の経路です。ゲートウェイの停止では、対応する `on_session_reset` なしで締めくくることがあります。
 
-**戻り値:** 無視されます。
+**戻り値 — ユーザーにメッセージを見せる:** 空でない `str`、または `"message"` に文字列を入れた dict を返すと、Hermes がそれをお知らせとしてユーザーに見せます。モデルのやり取りになることはなく、アシスタントの返答を書き換えることもありません。何も見せないなら `None` を返します。表示される場所は次のとおりです。
+
+| 表示面 | 表示のされ方 |
+|---------|---------|
+| CLI の `/new` | 新しいセッションが始まる前に、端末へ表示されます。 |
+| CLI の終了 | 終了時のまとめ（`hermes --resume …`）の上に表示されます。 |
+| `hermes chat -q` / `-z` の単発実行 | **stderr** に出るので、stdout には答えだけが残ります。 |
+| TUI の `/new` | 新しいセッションの記録に、システムの行として出ます。 |
+| メッセージングのゲートウェイの `/new` や `/reset` | そのセッションを持っていたチャットへ、独立したメッセージとして送られます。 |
+| ゲートウェイの停止 / 再起動 | アダプターの接続が切れる前に、動いている各チャットへ送られます。 |
+
+見る人がいない場面では届きません。ゲートウェイでの放置による期限切れやキャッシュからの追い出し、TUI の終了、回収役や接続の切断で閉じられた TUI / Desktop のセッション、Desktop での新しいチャットやチャットの削除がそれにあたります。セッションを締めくくらない cron のジョブからも届きません。こうした場合、メッセージは捨てられますが、フック自体は動きます。
+
+```python
+def digest(session_id, **kwargs):
+    count = _edits.pop(session_id, 0)
+    if count:
+        return {"message": f"📝 This session edited {count} file(s)."}
+
+def register(ctx):
+    ctx.register_hook("on_session_finalize", digest)
+```
 
 **使いどころ:** セッションの ID が捨てられる前に最後の指標を残す、セッションごとの資源を閉じる、最後の計測のイベントを出す、溜まった書き込みを流し切る。
 

@@ -40,7 +40,7 @@
           "url": "https://openrouter.ai/docs/api-reference/limits"
         }
       ],
-      "checkedAt": "2026-10-02",
+      "checkedAt": "2026-10-09",
       "sources": [
         "https://openrouter.ai/docs/api-reference/limits"
       ],
@@ -89,7 +89,7 @@
           "url": "https://ai.google.dev/gemini-api/docs/pricing"
         }
       ],
-      "checkedAt": "2026-10-02",
+      "checkedAt": "2026-10-09",
       "sources": [
         "https://ai.google.dev/gemini-api/docs/pricing",
         "https://hermes-agent.nousresearch.com/docs/integrations/providers"

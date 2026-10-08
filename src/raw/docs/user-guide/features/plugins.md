@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: b413655aa76cabdc34afa9bb76db0b07f5b46f84
+upstream_blob: 2a6818c6fd92eccb0c436b8041a0987dacdf1a74
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -189,6 +189,10 @@ hermes plugins                    # interactive toggle (space to check/uncheck)
 hermes plugins enable <name>      # add to allow-list
 hermes plugins disable <name>     # remove from allow-list + add to disabled
 ```
+
+ツールの選択を保存している場合（`hermes tools` で保存し、`platform_toolsets` にツールセットが明示的に並んでいる場合）、プラグインを無効にするとそのツールセットも保存済みの一覧から外れ、有効にすると一覧に戻ります。
+CLI でも、Desktop / TUI / ダッシュボードの切り替えでも同じ動きです。選択を保存していなければ一覧には触れません。
+プラグインのツールセットは、もともと既定でオンになっているからです。
 
 `hermes plugins install owner/repo` のあとに `Enable 'name' now? [y/N]` と聞かれます。既定は「いいえ」です。スクリプトから入れるときは `--enable` か `--no-enable` でこの確認を飛ばせます。メモリプロバイダー（`__init__.py` で `MemoryProvider` を登録するプラグイン）の場合は、代わりに `Use 'name' as the memory provider now?` と聞かれます。「はい」（または `--enable`）を選ぶと `memory.provider` が設定されます。プロバイダーを有効にする切り替えはこれだけです。「いいえ」を選ぶと、設定は `hermes memory setup` に任せたままになります。
 

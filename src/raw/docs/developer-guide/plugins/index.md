@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: f69cc4180f3bac3a5eed6b3e537724814f7de4f1
+upstream_blob: aff9cf1cabc46bde9d5751f13bc38feb6b29f825
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -43,6 +43,18 @@ Hermes にはいくつも異なるプラグイン可能なインターフェー�
 
 :::caution サードパーティ製品向けプラグインは単体で配布する — core ツリーには入れない
 **他者のプロダクトやプロジェクト**と連携するプラグイン — 可観測性 / メトリクスバックエンド、ベンダー SaaS コネクタ、分析ダッシュボード、有料サービス連携など — は `NousResearch/hermes-agent` にマージされず、**単体のプラグインリポジトリ**として構築・配布されます。ユーザーはこれらを `~/.hermes/plugins/` にインストールするか、pip のエントリーポイント経由で導入します。このガイドの内容はすべて、単体リポジトリからでも同じように機能します。これは結合と保守に関する判断であって（core は速く動き、あなたのバックエンドを私たちは所有していません）、品質の基準ではありません — 優れたプラグインであっても、それ自身のリポジトリに属するべきことがあります。Nous Research の Discord の `#plugins-skills-and-skins` チャンネルで宣伝してください。方針の詳細は [CONTRIBUTING.md](https://github.com/NousResearch/hermes-agent/blob/main/CONTRIBUTING.md) を参照してください。
+:::
+
+:::tip すでに組み込み済み: 自作する前にここを確認する
+Hermes には、プラグイン作者向けに次の機能がすでに入っています。
+
+- **カタログの検査を手元で実行する:** `hermes plugins validate /path/to/your-plugin --install-deps` は、カタログの CI と同じ検査を実行します。[プラグインカタログへの提出](/hermes/docs/developer-guide/plugins/catalog-submission/)を参照してください。
+- **プラグインを切り離してテストする:** `hermes plugins doctor [path-or-id]` は、Hermes が使うのと同じ検出、マニフェストパーサー、`register(ctx)`、レジストリを、一時的な `HERMES_HOME` で実行します。[Plugin Doctor で検証する](#validate-with-plugin-doctor)を参照してください。
+- **更新をまたいで状態を保つ:** `plugin_data_dir()` と `plugin_db()` は、`hermes plugins update` や `remove` を経ても残り、使用中のプロファイルに従うデータディレクトリをプラグインに用意します。[永続的な状態を保存する](#store-durable-state)を参照してください。
+- **Python の依存関係を宣言する:** `plugin.yaml` の `python_dependencies` の下か、その隣に置いた `pyproject.toml` に並べます。[Python の依存関係](#python-dependencies)を参照してください。
+- **プラグインにスキルを同梱する:** `ctx.register_skill()` で登録します。[スキルを同梱する](#bundle-skills)を参照してください。
+- **特権が要るホストの機能を求める:** `capabilities:` の下に宣言すると、利用者には同意画面が 1 回だけ表示されます。[capabilities を宣言する](#declaring-capabilities)を参照してください。
+- **LLM を呼び出す:** `ctx.llm` を使います。認証情報はホストが持ち、信頼の関門は判断できないときに拒否する側へ倒れます。[プラグインからの LLM 利用](/hermes/docs/developer-guide/plugin-llm-access/)を参照してください。
 :::
 
 ## ポータブル Agent Plugins v1 パッケージ {#portable-agent-plugins-v1-packages}
@@ -154,7 +166,7 @@ cd ~/.hermes/plugins/calculator
 
 ### Plugin Doctor で検証する {#validate-with-plugin-doctor}
 
-`hermes plugins doctor [path-or-id]` は、Hermes 自身が使っているのと同じディレクトリ検出、マニフェストパーサー、名前空間付き import、`register(ctx)`、フックレジストリ、ツールレジストリを実行します。不正なフック名、`**kwargs` を受け取らないコールバック、登録の失敗、宣言済みとの登録済みツール/フックのずれを報告します。エラー時に終了コードを非ゼロにするには `--ci` を渡します。
+`hermes plugins doctor [path-or-id]` は、Hermes 自身が使っているのと同じディレクトリ検出、マニフェストパーサー、名前空間付き import、`register(ctx)`、フックレジストリ、ツールレジストリを実行します。不正なフック名、`**kwargs` を受け取らないコールバック、登録の失敗、宣言済みとの登録済みツール/フックのずれを報告します。`desktop/plugin.js` を持つパッケージでは、Desktop アプリがその古い複製を動かしているときにも警告します（[統合パッケージを開発する](/hermes/docs/developer-guide/desktop-plugin-sdk/#developing-a-unified-package)を参照）。エラー時に終了コードを非ゼロにするには `--ci` を渡します。
 
 ```bash
 hermes plugins doctor . --ci
@@ -178,6 +190,13 @@ provides_hooks:
 ```
 
 これは Hermes に次のことを伝えます。「私は calculator という名前のプラグインで、ツールとフックを提供します」。`provides_tools` と `provides_hooks` は、プラグインが登録するものの一覧です。
+
+`register()` が登録するツールは、すべて `provides_tools` に並べてください。このフィールドは、利用者が入れたプラグインのツールを読み込むかどうかを**決めません**。プラグインを有効にすれば、宣言の有無にかかわらず `register()` が登録したものはすべて使えます。このフィールドが実際に効くのは次の場面です。
+
+- **`hermes plugins validate`**: 登録されたツールが一覧と一致しないと「declared tools」の検査が失敗し、カタログへの受け入れが止まります。
+- **カタログの表示**: カタログやダッシュボード / Desktop の Plugins ページに出る「N tools」の表示と、ツール名での検索に使われます。
+- **ダッシュボードの認証の案内**: 「needs auth」の表示と `hermes auth <name>` コマンドの案内には、宣言したツールの利用可否チェックだけが使われます。
+- **同梱の `kind: platform` プラグインのみ**: アダプターの読み込みを後回しにしたまま、CLI/TUI のセッションで `tools.py` を読み込むかどうかを、このフィールドが切り替えます。[外向きのクライアントツール](/hermes/docs/developer-guide/adding-platform-adapters/#outbound-client-tools-provides_tools)を参照してください。
 
 追加できる任意のフィールドの例です。
 ```yaml

@@ -1,6 +1,123 @@
 {
-  "generatedAt": "2026-10-08",
+  "generatedAt": "2026-10-09",
   "entries": [
+    {
+      "date": "2026-10-08",
+      "sha": "508ca30",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/chronos-managed-cron-contract",
+          "title": "Chronos managed-cron の契約",
+          "url": "/hermes/docs/developer-guide/chronos-managed-cron-contract/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "getting-started/installation",
+          "title": "インストール",
+          "url": "/hermes/docs/getting-started/installation/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "integrations",
+          "title": "外部サービス連携",
+          "url": "/hermes/docs/integrations/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/mcp-config-reference",
+          "title": "MCP 設定の早見表",
+          "url": "/hermes/docs/reference/mcp-config-reference/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/curator",
+          "title": "キュレーター",
+          "url": "/hermes/docs/user-guide/features/curator/"
+        },
+        {
+          "id": "user-guide/features/mcp",
+          "title": "MCP（Model Context Protocol）",
+          "url": "/hermes/docs/user-guide/features/mcp/"
+        },
+        {
+          "id": "user-guide/features/memory-providers",
+          "title": "記憶プロバイダー",
+          "url": "/hermes/docs/user-guide/features/memory-providers/"
+        },
+        {
+          "id": "user-guide/features/memory",
+          "title": "ずっと残る記憶",
+          "url": "/hermes/docs/user-guide/features/memory/"
+        },
+        {
+          "id": "user-guide/features/overview",
+          "title": "機能の概要",
+          "url": "/hermes/docs/user-guide/features/overview/"
+        },
+        {
+          "id": "user-guide/features/tts",
+          "title": "音声と読み上げ",
+          "url": "/hermes/docs/user-guide/features/tts/"
+        },
+        {
+          "id": "user-guide/features/vision",
+          "title": "画像の貼り付けと視覚認識",
+          "url": "/hermes/docs/user-guide/features/vision/"
+        },
+        {
+          "id": "user-guide/features/voice-mode",
+          "title": "音声モード",
+          "url": "/hermes/docs/user-guide/features/voice-mode/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        }
+      ]
+    },
     {
       "date": "2026-10-07",
       "sha": "5889412",
@@ -10184,6 +10301,7 @@
     "2026-W35": "設定・Docker・環境変数まわりと、プラグイン開発（メモリプロバイダ、ターミナル環境プロバイダ、イベントフック）の解説が広く入れ替わった。ブラウザ自動操作、コンピュータ操作、定期実行タスク（cron）、サブエージェントへの委任、ツール検索といった実行系も更新されている。Slack・WeCom・Signal・Agentmail などの連携先と、Google Gemini やフォールバックプロバイダー、Nous Tool Gateway といったモデル側の記述も追随した。",
     "2026-W34": "Bot モードと Hermes デスクトップアプリを中心に更新が入った。定時実行の内部、cron での自動化、API サーバー、プログラムからの連携など、動かし続けるための記述が多い。AWS Bedrock やフォールバックプロバイダー、ずっと残る記憶、BlueBubbles・Telegram の連携も更新対象になっている。",
     "2026-W39": "Hermes Desktop とデスクトップ向けプラグイン SDK の解説がたびたび更新され、プラグインの作り方やプラグインカタログも新しい内容に揃いました。内部構造では、コンテキストの圧縮とキャッシュ、cron やゲートウェイ、実行時のプロバイダー解決、セッションの保存領域が入れ替わっています。使う側では、Hermes Agent の設定と CLI コマンド一覧、Nous Portal、プロファイルとセッションの説明が更新され、新しいページとしてアプリケーション宣言、ボットの画面、セッション保存領域の復旧が加わりました。",
-    "2026-W40": "Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ版を複数の Hermes につなぐ話が更新され、プラグインの作り方や同梱のプラグイン、コンテキストエンジンのプラグインも新しい内容に揃いました。内部構造では、コンテキストの圧縮とキャッシュ、Multiplexing Gateway の内部構造、ゲートウェイのセッションライフサイクル、Relay 共有メトリクスが入れ替わっています。使う側では、インストールと更新、Windows（ネイティブ）ガイド、CLI コマンド一覧と環境変数、カンバンやプロファイル、Telegram・Discord・SimpleX Chat との連携が更新され、Brag や Baoyu Comic といったスキルの説明も加わりました。"
+    "2026-W40": "Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ版を複数の Hermes につなぐ話が更新され、プラグインの作り方や同梱のプラグイン、コンテキストエンジンのプラグインも新しい内容に揃いました。内部構造では、コンテキストの圧縮とキャッシュ、Multiplexing Gateway の内部構造、ゲートウェイのセッションライフサイクル、Relay 共有メトリクスが入れ替わっています。使う側では、インストールと更新、Windows（ネイティブ）ガイド、CLI コマンド一覧と環境変数、カンバンやプロファイル、Telegram・Discord・SimpleX Chat との連携が更新され、Brag や Baoyu Comic といったスキルの説明も加わりました。",
+    "2026-W41": "定期実行（cron）まわりが厚く更新され、Chronos managed-cron の契約や cron の内部構造、定期実行がうまくいかないときの対処が新しい内容になりました。プラグインでは作り方やカタログへの登録申請、アプリケーション宣言、プラグインからの LLM 呼び出し、モデルプロバイダーのプラグイン、デスクトップのプラグイン SDK が揃い、使う側では記憶プロバイダーやずっと残る記憶、音声と読み上げ、Hermes の管理画面、MCP、キュレーターの説明も更新されています。インストールや更新とアンインストール、Windows ネイティブ版と Nix のセットアップに加え、ゲートウェイやプロファイル、Discord・WhatsApp などのメッセージング、AWS Bedrock やローカルモデルの設定にも手が入りました。"
   }
 }

@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: bd090ab7954df9debc712ab66722f736650e2ff1
+upstream_blob: 3e420e58a8fe70dce9ab20cd913cde4fc301bc24
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -51,7 +51,7 @@ approvals:
 | `timeout` | `300` | 承認の返事を待つ秒数です。これを過ぎると時間切れになります。 |
 | `cron_mode` | `deny` | [cron ジョブ](/hermes/docs/user-guide/features/cron/)が危険なコマンドの確認を出したとき、人がいない状態でどう振る舞うかです。`deny` はそのコマンドを止めます（エージェントは別の道を探すことになります）。`approve` は cron の文脈ですべて自動承認します。 |
 | `single_query_mode` | `deny` | 一回きりの [`hermes chat -q`](/hermes/docs/user-guide/cli/) セッションが危険なコマンドの確認を出したときの振る舞いです。`-q` のセッションは 1 ターンだけ動いて終了し、確認に答える人はいません。`deny` はそのコマンドを止め（エージェントは別の道を探すことになります）、`approve` は単発クエリの文脈ですべて自動承認します。`cron_mode` と同じ考え方です。 |
-| `unattended_mode` | `deny` | 人の付いていないプログラム的なプラットフォーム（webhook、msgraph_webhook、api_server）のセッションが危険なコマンドの確認を出したときの振る舞いです。こうした窓口には `/approve` に答えられる人がいないので、承認の時間切れまで待たずに、`deny` はそのコマンドをただちに止め（エージェントは別の道を探すことになります）、`approve` は無人の文脈ですべて自動承認します。`cron_mode` と同じ考え方です。 |
+| `unattended_mode` | `deny` | 人の付いていないプログラム的なプラットフォーム（webhook、msgraph_webhook、api_server）のセッションが危険なコマンドの確認を出したときの振る舞いです。こうした窓口には `/approve` に答えられる人がいないので、承認の時間切れまで待たずに、`deny` はそのコマンドをただちに止め（エージェントは別の道を探すことになります）、`approve` は無人の文脈ですべて自動承認します。例外として、クライアントが確認カードに答えられる api_server のセッション（`/v1/runs` とストリーミングの chat completions。`POST /v1/runs/{id}/approval` で答えます）には、承認の依頼がそのまま届きます。`cron_mode` と同じ考え方です。 |
 | `mcp_reload_confirm` | `true` | true のとき、`/reload-mcp` は MCP のツール一式を組み直す前に確認します。組み直すとプロバイダー側のプロンプトキャッシュが効かなくなるため（ツールのスキーマはシステムプロンプトに入っています）、次のメッセージで入力トークンを丸ごと送り直すことになります。**常に承認** を選ぶと、このキーが `false` に変わります。 |
 | `destructive_slash_confirm` | `true` | true のとき、セッションを壊す種類のスラッシュコマンド（`/clear`、`/new`、`/reset`、`/undo`）は、会話の状態を捨てる前に確認します。3 択のダイアログ（今回だけ承認 / 常に承認 / 取り消し）で、Telegram、Discord、Slack では各プラットフォームの はい / いいえ ボタンを使い、それ以外ではテキストで代替します。**常に承認** を選ぶと、このキーが `false` に変わります。TUI も `/clear`、`/new`、`/reset` のダイアログでこの設定に従います。`HERMES_TUI_NO_CONFIRM=1` を立てると、設定値にかかわらずそのダイアログを飛ばします。 |
 
@@ -83,7 +83,7 @@ YOLO モードは、いまのセッションで危険なコマンドの確認を
   ⚠ YOLO mode OFF — dangerous commands will require approval.
 ```
 
-YOLO モードは CLI でもゲートウェイのセッションでも使えます。内部では `HERMES_YOLO_MODE` 環境変数を立てており、コマンドを実行するたびにこれが確認されます。
+YOLO モードは CLI でもゲートウェイのセッションでも使えます。`/yolo` が効くのは、それを入力したセッションだけです。この設定はセッションと一緒に保存されるので、再起動しても残ります。メッセージングのチャットではゲートウェイを再起動しても続き、TUI とデスクトップアプリではセッションを開き直したり再開したりしても続きます。メッセージングのプラットフォームでは、`/new` と `/resume` で始めた次の会話は承認が元に戻った状態になります。
 
 YOLO が有効なあいだ、確認が飛ばされていることを忘れにくいように、Hermes は 2 つの表示を出し続けます。
 

@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-08",
+  "generatedAt": "2026-10-09",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-10-08",
-      "attemptedAt": "2026-10-08",
+      "fetchedAt": "2026-10-09",
+      "attemptedAt": "2026-10-09",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -20,7 +20,7 @@
         },
         {
           "id": "inclusionai/ling-3.0-flash-sante:free",
-          "name": "inclusionAI: Ling 3.0 Flash Sante (free)",
+          "name": "inclusionAI: Ling 3.0 Flash Sante",
           "ctx": 262144,
           "tools": true,
           "expires": null,
@@ -89,6 +89,16 @@
           "criteriaReason": null
         },
         {
+          "id": "stepfun/step-5-preview:free",
+          "name": "StepFun: Step 5 Preview",
+          "ctx": 1000000,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
           "id": "upstage/solar-mini4:free",
           "name": "Upstage: Solar Mini 4",
           "ctx": 524288,
@@ -103,8 +113,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-10-08",
-      "attemptedAt": "2026-10-08",
+      "fetchedAt": "2026-10-09",
+      "attemptedAt": "2026-10-09",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -177,16 +187,6 @@
           "freeBasis": "pricing",
           "criteria": false,
           "criteriaReason": "tools"
-        },
-        {
-          "id": "inclusionai/ling-3.0-flash-sante:free",
-          "name": "inclusionAI: Ling 3.0 Flash Sante (free)",
-          "ctx": 262144,
-          "tools": true,
-          "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
         },
         {
           "id": "inclusionai/ling-3.1-flash",
@@ -313,23 +313,13 @@
     },
     "opencode": {
       "ok": true,
-      "fetchedAt": "2026-10-08",
-      "attemptedAt": "2026-10-08",
+      "fetchedAt": "2026-10-09",
+      "attemptedAt": "2026-10-09",
       "errorCode": null,
       "url": "https://opencode.ai/zen/v1/models",
       "models": [
         {
           "id": "exo-free",
-          "name": null,
-          "ctx": null,
-          "tools": null,
-          "expires": null,
-          "freeBasis": "label",
-          "criteria": null,
-          "criteriaReason": null
-        },
-        {
-          "id": "fledge-alpha-free",
           "name": null,
           "ctx": null,
           "tools": null,
@@ -430,6 +420,16 @@
         },
         {
           "id": "space-bunny-free",
+          "name": null,
+          "ctx": null,
+          "tools": null,
+          "expires": null,
+          "freeBasis": "label",
+          "criteria": null,
+          "criteriaReason": null
+        },
+        {
+          "id": "step-5-preview-free",
           "name": null,
           "ctx": null,
           "tools": null,

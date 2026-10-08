@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: d6ea8e8c990289f65bf8ed7e8bbd55cd65b8e267
+upstream_blob: d3581e95f86ddee20c8f2d397bd555972f662c0c
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -219,7 +219,9 @@ hermes skills uninstall <skill-name>
 |-------|-------------|
 | [**canvas**](/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/) | API トークンで Canvas LMS の講義と課題を取得します。 |
 | [**decision-questionnaire**](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | 答えの出ない判断を、質問票の形の文書に組み替えます。 |
+| [**first-task**](/hermes/docs/user-guide/skills/optional/productivity/productivity-first-task/) | セットアップから引き継がれた最初のタスクのチャットを進めます。 |
 | [**here-now**](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | &#123;slug&#125;.here.now にサイトを公開し、ファイルを Drives に保管します。 |
+| [**initiate-setup**](/hermes/docs/user-guide/skills/optional/productivity/productivity-initiate-setup/) | Hermes のデスクトップアプリで、初回起動時のセットアップのチャットを進めます。 |
 | [**live-dashboard**](/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/) | ライブのデータ源から、自動で更新されるダッシュボードを作ります。 |
 | [**memento-flashcards**](/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/) | 間隔をあけて復習する単語カード。作成、復習、小テスト、書き出しに対応します。 |
 | [**property-listings**](/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/) | 物件や賃貸の情報を、デスクトップのカードとして並べて見せます。 |

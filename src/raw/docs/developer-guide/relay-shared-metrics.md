@@ -2,7 +2,7 @@
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: 1971cf08d9559b61c8c331abe238f33fb1f77067
+upstream_blob: 440075370809142113aa99a151ccc5e0d4843b67
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -533,7 +533,7 @@ telemetry:
 
 ターミナルでは「No thanks」が既定なので、Enter を押しただけで誰かが参加してしまうことはありません。
 ターミナルで Esc を押すか、ダッシュボードのバナーの ✕ を押した場合は、質問は答えのないまま残り、
-次の機会にまたたずねます。どの画面で答えても、両方のキーと `offer_version` がプロファイルの `config.yaml` に書き込まれます。
+次の機会にまたたずねます。Desktop の帯は、初回のオンボーディングを終えるか飛ばしたあとにだけ表示され、ようこそチャットを動かす内部のセットアップ用プロファイルには一度も表示されません。どの画面で答えても、両方のキーと `offer_version` がプロファイルの `config.yaml` に書き込まれます。
 どちらかのキーがすでにあるプロファイルでは、二度とたずねません。管理されたインストールでは、提案そのものを出しません。
 
 例外が1つあります。先行入力の修正より前は、`hermes chat` の起動中に押した Enter が、質問が出る前に「No thanks」を保存してしまうことがありました。

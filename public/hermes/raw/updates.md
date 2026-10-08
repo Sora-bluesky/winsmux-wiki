@@ -8,6 +8,31 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-08
+
+- [Chronos managed-cron の契約](https://wiki.winsmux.dev/hermes/docs/developer-guide/chronos-managed-cron-contract/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- [インストール](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
+- [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- [外部サービス連携](https://wiki.winsmux.dev/hermes/docs/integrations/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
+- [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+- [キュレーター](https://wiki.winsmux.dev/hermes/docs/user-guide/features/curator/)
+- [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
+- [記憶プロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
+- [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
+- [機能の概要](https://wiki.winsmux.dev/hermes/docs/user-guide/features/overview/)
+- [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
+- [画像の貼り付けと視覚認識](https://wiki.winsmux.dev/hermes/docs/user-guide/features/vision/)
+- [音声モード](https://wiki.winsmux.dev/hermes/docs/user-guide/features/voice-mode/)
+- [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
+
 ## 2026-10-07
 
 - [ブラウザの CDP スーパーバイザ](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-supervisor/)
@@ -2158,3 +2183,7 @@ Hermes Desktop とデスクトップ向けプラグイン SDK の解説がたび
 ## 週次まとめ 2026-W40
 
 Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ版を複数の Hermes につなぐ話が更新され、プラグインの作り方や同梱のプラグイン、コンテキストエンジンのプラグインも新しい内容に揃いました。内部構造では、コンテキストの圧縮とキャッシュ、Multiplexing Gateway の内部構造、ゲートウェイのセッションライフサイクル、Relay 共有メトリクスが入れ替わっています。使う側では、インストールと更新、Windows（ネイティブ）ガイド、CLI コマンド一覧と環境変数、カンバンやプロファイル、Telegram・Discord・SimpleX Chat との連携が更新され、Brag や Baoyu Comic といったスキルの説明も加わりました。
+
+## 週次まとめ 2026-W41
+
+定期実行（cron）まわりが厚く更新され、Chronos managed-cron の契約や cron の内部構造、定期実行がうまくいかないときの対処が新しい内容になりました。プラグインでは作り方やカタログへの登録申請、アプリケーション宣言、プラグインからの LLM 呼び出し、モデルプロバイダーのプラグイン、デスクトップのプラグイン SDK が揃い、使う側では記憶プロバイダーやずっと残る記憶、音声と読み上げ、Hermes の管理画面、MCP、キュレーターの説明も更新されています。インストールや更新とアンインストール、Windows ネイティブ版と Nix のセットアップに加え、ゲートウェイやプロファイル、Discord・WhatsApp などのメッセージング、AWS Bedrock やローカルモデルの設定にも手が入りました。

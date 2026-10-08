@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 88b4d847ada09146120e0a19b44ac521b387d88e
+upstream_blob: 6f90887b004474675d6ac01546e014ecb818820a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -134,18 +134,28 @@ hermes plugins enable <name>
 ```
 
 インストール時の確認画面には、クローンが始まる前に、その項目の機能のまとめ（宣言された
-ツール、フック、必要な環境変数）が表示されます。
+ツール、フック、必要な環境変数）が表示されます。端末ではそのあと「Enable now?」と聞かれるので、
+「はい」と答えれば上の 2 つのコマンドが 1 回で済みます（スクリプトでは `--enable` / `--no-enable` で
+この問いに答えられます）。
 
-カタログ上の名前と、プラグイン自身のマニフェスト上の名前は違うことがあります。`hermes
-plugins install` は入った名前を表示するので、`enable` にはそちらを渡します。たとえば
+カタログ上の名前と、プラグイン自身のマニフェスト上の名前は違うことがあります。そのあとの
+コマンド（`enable`、`disable`、`show`、`capabilities`、`update`、`remove`）は、どちらの名前でも
+受け付けます。カタログ上の名前は、Hermes が項目をクローンしたときに書いたインストール記録を通して
+解決されます。プラグイン自身のリポにあるファイルを通すことはありません。たとえば
 `touchdesigner` の項目（twozero の MCP サーバーと `touchdesigner-mcp` スキルをまとめた
 可搬型の Agent Plugins v1 パッケージ）は `td` として入ります。生成される MCP のツール名が
 プロバイダーの関数名の長さ制限に収まるよう、短くしてあります。
 
 ```bash
 hermes plugins install touchdesigner
-hermes plugins enable td
+hermes plugins enable touchdesigner   # same as: hermes plugins enable td
 ```
+
+Desktop アプリでは、エージェント側と Desktop 側（`desktop/plugin.js`）の両方を持つパッケージは
+1 行にまとまり、それぞれの側に 1 つずつ切り替えスイッチが付きます。パッケージをオンにすると
+（インストール画面の **Enable agent plugin after install**、または行の **Agent** スイッチ）、
+Desktop 側も一緒にオンになります。ただし、その側を自分でオフにしていた場合は別です。オフにする操作は
+側ごとのままです。Desktop 側はすべてのプロファイルで共有されているからです。
 
 可搬型のパッケージは stdio の MCP サーバーを同梱することもできます。`snyk` の項目は
 Snyk CLI（`npx -y snyk@<version> mcp`）を固定し、`snyk-security-scan` スキルを同梱しているので、

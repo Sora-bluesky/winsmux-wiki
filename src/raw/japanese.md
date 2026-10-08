@@ -5,7 +5,7 @@ sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
   - https://github.com/NousResearch/hermes-agent/issues
-hermes_version: "0.21.5"
+hermes_version: "0.21.6"
 confidence: medium
 raw: /hermes/raw/japanese.md
 ---
@@ -64,4 +64,4 @@ hermes config set display.language ja
 
 ## このページの更新
 
-上に挙げた番号は、毎週 GitHub で状態を見直します。閉じたもの、取り込まれたものが出れば、この本文を書き換えます。取得日は 2026-10-02 です。番号の現在の状態は、[NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) で直接確認できます。
+上に挙げた番号は、毎週 GitHub で状態を見直します。閉じたもの、取り込まれたものが出れば、この本文を書き換えます。取得日は 2026-10-09 です。番号の現在の状態は、[NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) で直接確認できます。

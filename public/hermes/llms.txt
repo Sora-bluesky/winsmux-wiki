@@ -2,7 +2,7 @@
 
 > 公式 docs の Quickstart / Installation / Messaging の順を日本語にしたもの。独自手順は作らない。正本: https://hermes-agent.nousresearch.com/docs/
 
-Hermes Agent 0.21.5
+Hermes Agent 0.21.6
 
 ## ページ
 
@@ -75,7 +75,6 @@ Hermes Agent 0.21.5
 - [developer-guide/model-provider-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
 - [developer-guide/multiplexing-gateway（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
 - [developer-guide/observer-hooks（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/observer-hooks/)
-- [developer-guide/onboarding-recommendations（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/onboarding-recommendations/)
 - [developer-guide/plugin-llm-access（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugin-llm-access/)
 - [developer-guide/plugins/application-declarations（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/application-declarations/)
 - [developer-guide/plugins/catalog-submission（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
@@ -443,7 +442,9 @@ Hermes Agent 0.21.5
 - [user-guide/skills/optional/payments/payments-stripe-projects（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/)
 - [user-guide/skills/optional/productivity/productivity-canvas（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/)
 - [user-guide/skills/optional/productivity/productivity-decision-questionnaire（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/)
+- [user-guide/skills/optional/productivity/productivity-first-task（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-first-task/)
 - [user-guide/skills/optional/productivity/productivity-here-now（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/)
+- [user-guide/skills/optional/productivity/productivity-initiate-setup（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-initiate-setup/)
 - [user-guide/skills/optional/productivity/productivity-live-dashboard（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/)
 - [user-guide/skills/optional/productivity/productivity-memento-flashcards（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/)
 - [user-guide/skills/optional/productivity/productivity-property-listings（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/)
@@ -543,7 +544,6 @@ Hermes Agent 0.21.5
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/model-provider-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/multiplexing-gateway.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/observer-hooks.md
-- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/onboarding-recommendations.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugin-llm-access.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugins/application-declarations.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugins/catalog-submission.md
@@ -911,7 +911,9 @@ Hermes Agent 0.21.5
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/payments/payments-stripe-projects.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-canvas.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-first-task.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-here-now.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-initiate-setup.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-live-dashboard.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-property-listings.md

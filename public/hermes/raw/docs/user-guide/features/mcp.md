@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: d1998d114a42b968a596d2dabd164ac759e2ac0a
+upstream_blob: 8ca23c4d8158c1fb7332a71a08fc4d365bd58754
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -291,7 +291,10 @@ PR を出してください。
 リンクを貼ったときに、ワンクリックの「Add &lt;server&gt;」ボタンを出します。あくまで
 案内でしかなく、導入はこれまでどおり検証済みのカタログと設定の道を通ります。遠隔で
 提供されている項目の多く（Atlassian、Sentry、Notion、Stripe、Vercel、Supabase など）が
-これを書いています。
+これを書いています。任意の `applications:`（アプリ名を 16 個まで）、`requires_app: true`
+（その MCP がローカルのアプリを必要とすることを示し、こうした項目はワンクリックのボタンとしては
+出されません）、`examples:`（できることを 1 行ずつ、6 つまで）は、デスクトップのアプリを
+操作する項目を説明するための欄です。
 
 GitHub をカタログに載せていないのは意図的です。GitHub が提供する MCP は、クライアントごとに
 自前の OAuth アプリを用意することを求めます（一般的な動的クライアント登録は拒否されます）。

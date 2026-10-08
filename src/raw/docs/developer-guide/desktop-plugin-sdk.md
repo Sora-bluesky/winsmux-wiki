@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: c853f84c0a9e9a5486e1b31f7ed895bb0296e1d2
+upstream_blob: 4277c1fe8e6b779c17f787d0745e51612ec52963
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -1478,6 +1478,31 @@ canvas へ描くときは、
 フォルダーが残ることはありません。目印も `plugin.js` も無い `desktop-plugins/<id>/` が残っていた
 場合は、そうした壊れた状態とみなして次の **Rescan** で置き換えます。一方、目印は無いが
 `plugin.js` は*ある*フォルダーは、手で入れた単体のプラグインなので、上書きされることはありません。
+
+#### 統合パッケージを開発する {#developing-a-unified-package}
+
+アプリが読み込むのは `desktop-plugins/<id>/` にある**複製**で、パッケージそのものではありません。
+入れたパッケージ（カタログ、Git の URL、`file://` のパス）の複製が更新されるのは、元の `plugin.js` が
+複製より新しく、しかも何かが更新を求めたとき（**Capabilities → Plugins** の **Rescan**、アプリからの
+インストールや更新、再起動）だけです。そのため `~/.hermes/plugins/<id>/desktop/plugin.js` をその場で
+書き換えても、それまで画面には何も反映されません。代わりに、`plugins/` へリンクしたチェックアウトから開発してください。
+
+```bash
+ln -s ~/src/my-plugin ~/.hermes/plugins/my-plugin
+```
+
+リンクしたパッケージの複製には `"linked": true` の印が付きます。アプリはチェックアウトの
+`desktop/plugin.js` を見張り、保存するたびに複製を同期し直して（更新日時ではなく中身で比べるので、
+`git stash pop` でも反映されます）、プラグインをその場で読み込み直します。カタログや Git から入れたものは、
+これまでどおり更新日時の規則に従います。
+
+`hermes plugins doctor <path-or-id>` は、複製が手元のソースと食い違っているときに警告を出し、
+見つけた複製の場所を示します。
+
+```text
+WARN: Desktop runs a stale copy of desktop/plugin.js (~/.hermes/desktop-plugins/my-plugin);
+your edits are not loaded. Refresh it with Capabilities → Plugins → Rescan …
+```
 
 有効にする切り替えが 2 つあるのは意図的で、どちらも既定は**無効**です。デスクトップ側は
 明示的に有効にする形で配られます。**Capabilities → Plugins** には並びますが、利用者が切り替えるまで

@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（240 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（239 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -207,7 +207,7 @@ raw: /hermes/raw/all.md
 - [Automated GitHub PR Comments with Webhooks](/hermes/docs/guides/webhook-github-pr-review/)
 - [xAI Grok OAuth (SuperGrok / X Premium+)](/hermes/docs/guides/xai-grok-oauth/)
 
-## Developer Guide（57）
+## Developer Guide（56）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -244,7 +244,6 @@ raw: /hermes/raw/all.md
 - [Model Provider Plugins](/hermes/docs/developer-guide/model-provider-plugin/)
 - [Multiplexing Gateway Internals](/hermes/docs/developer-guide/multiplexing-gateway/)
 - [Observer Hooks](/hermes/docs/developer-guide/observer-hooks/)
-- [Onboarding recommendations](/hermes/docs/developer-guide/onboarding-recommendations/)
 - [Plugin LLM Access](/hermes/docs/developer-guide/plugin-llm-access/)
 - [Build a Hermes Plugin](/hermes/docs/developer-guide/plugins/)
 - [Application declarations](/hermes/docs/developer-guide/plugins/application-declarations/)

@@ -1,6 +1,6 @@
 {
-  "sha": "cc75e8f",
-  "date": "2026-10-07",
+  "sha": "9d05e7f",
+  "date": "2026-10-08",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -1347,11 +1347,27 @@
       "source": "optional"
     },
     {
+      "slug": "productivity-first-task",
+      "name": "First Task",
+      "description": "Run the first task chat that setup hands off",
+      "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-first-task/",
+      "date": "2026-10-07",
+      "source": "optional"
+    },
+    {
       "slug": "productivity-here-now",
       "name": "Here Now",
       "description": "Publish sites to {slug}.here.now and store files in Drives",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/",
       "date": "2026-09-20",
+      "source": "optional"
+    },
+    {
+      "slug": "productivity-initiate-setup",
+      "name": "Initiate Setup",
+      "description": "Run the first-run setup chat in the Hermes desktop app",
+      "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-initiate-setup/",
+      "date": "2026-10-07",
       "source": "optional"
     },
     {

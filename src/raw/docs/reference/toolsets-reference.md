@@ -2,7 +2,7 @@
 title: "ツールセット一覧"
 description: "Hermes の中核・複合・プラットフォーム・動的の各ツールセットをまとめた一覧です。"
 upstream_path: reference/toolsets-reference.md
-upstream_blob: cf880409fb07bd92932b0e085a53c7cd245d2cc8
+upstream_blob: adaa21208b6b8a907a55244a00b551b15ed05cde
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 ---
@@ -80,6 +80,8 @@ hermes tools                            # curses UI to enable/disable per platfo
 | `safe` | `image_generate`, `vision_analyze`, `web_extract`, `web_search` (via `includes`) | 読むだけの調べものと、素材づくりです。ファイルへの書き込みも、端末も、コードの実行もありません。 |
 | `search` | `web_search` | web の検索だけです（抜き出しは付きません）。 |
 | `session_search` | `session_search` | 過去のやりとりのセッションを探します。 |
+| `setup` | `setup_choose` | デスクトップのセットアップ用プロファイルで、オンボーディングのときだけ使う機能です。質問や選択式のカードを 1 枚ずつ利用者に示します。セットアップ用プロファイル自身の設定（`platform_toolsets.cli`）で有効になり、このツールが渡されるのはデスクトップのセッションだけです。`all` には含まれません。`hermes tools` の一覧にも出ません。 |
+| `start_chat` | `start_chat` | 既存のプロファイル（指定がなければこのチャット自身のプロファイル）でデスクトップの新しいチャットを始め、最初のメッセージを送ります。タスクはそのチャットで、利用者の目に見える形で進みます。呼ぶたびに別のチャットが開きます。プロファイル自身の設定（`platform_toolsets.cli`）で有効になり、このツールが渡されるのはデスクトップのセッションだけです。`all` には含まれません。`hermes tools` の一覧にも出ません。サブエージェントには渡りません。 |
 | `skills` | `skill_manage`, `skill_view`, `skills_list` | スキルの作成・閲覧・更新・削除と、見て回る操作です。 |
 | `spotify` | `spotify_albums`, `spotify_devices`, `spotify_library`, `spotify_playback`, `spotify_playlists`, `spotify_queue`, `spotify_search` | Spotify をそのまま操作します（再生、順番待ち、検索、プレイリスト、アルバム、ライブラリ）。同梱の `spotify` プラグインが登録します。 |
 | `terminal` | `process_manage`, `terminal` | シェルのコマンドの実行と、裏で動くプロセスの管理です。 |
