@@ -103,6 +103,30 @@
     "title": "【第15回】記憶を捨てるな。Hermes AgentはClaude Codeの続きを引き継ぐ",
     "topic": "Claude Code の続きを引き継ぐ"
    }
+  ],
+  "/hermes/docs/user-guide/desktop/": [
+   {
+    "n": 7,
+    "url": "https://zenn.dev/sora_biz/articles/hermes-vps-07-desktop",
+    "title": "【第7回】Hermes AgentがMicrosoft Storeに来た。Windowsアプリで入れてVPSにつなぐ（旧版からの入れ替えも）",
+    "topic": "Windows に Store 版を入れて VPS につなぐ"
+   }
+  ],
+  "/hermes/docs/user-guide/windows-native/": [
+   {
+    "n": 7,
+    "url": "https://zenn.dev/sora_biz/articles/hermes-vps-07-desktop",
+    "title": "【第7回】Hermes AgentがMicrosoft Storeに来た。Windowsアプリで入れてVPSにつなぐ（旧版からの入れ替えも）",
+    "topic": "Windows に Store 版を入れて VPS につなぐ"
+   }
+  ],
+  "/hermes/docs/user-guide/multi-connection-desktop/": [
+   {
+    "n": 7,
+    "url": "https://zenn.dev/sora_biz/articles/hermes-vps-07-desktop",
+    "title": "【第7回】Hermes AgentがMicrosoft Storeに来た。Windowsアプリで入れてVPSにつなぐ（旧版からの入れ替えも）",
+    "topic": "Windows に Store 版を入れて VPS につなぐ"
+   }
   ]
  }
 }
