@@ -8,6 +8,28 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-09
+
+- [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- [developer-guide/onboarding-recommendations](https://wiki.winsmux.dev/hermes/docs/developer-guide/onboarding-recommendations/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
+- [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
+- [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
+- [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
+- [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
+- [プラグインカタログ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
+- [First Task — セットアップから引き継いだ最初のタスクのチャットを進める](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-first-task/)
+- [Initiate Setup — Hermes デスクトップアプリで初回セットアップのチャットを進める](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-initiate-setup/)
+
 ## 2026-10-08
 
 - [Chronos managed-cron の契約](https://wiki.winsmux.dev/hermes/docs/developer-guide/chronos-managed-cron-contract/)
@@ -1252,7 +1274,7 @@ raw: /hermes/raw/updates.md
 - [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
 - [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
 - [オブザーバーフック](https://wiki.winsmux.dev/hermes/docs/developer-guide/observer-hooks/)
-- [オンボーディングでのおすすめ](https://wiki.winsmux.dev/hermes/docs/developer-guide/onboarding-recommendations/)
+- [developer-guide/onboarding-recommendations](https://wiki.winsmux.dev/hermes/docs/developer-guide/onboarding-recommendations/)
 - [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
 - [worktree から TUI とデスクトップアプリを動かす](https://wiki.winsmux.dev/hermes/docs/developer-guide/worktree-ui-dev/)
 - [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)

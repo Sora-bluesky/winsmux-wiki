@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: d1a921f08169dfaad7126c637c91ac9ef4598d11
+upstream_blob: d7f2e1f37ec943c2a124663b8de111511549ff3d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -194,12 +194,27 @@ app-server のセッションは、構築時の cwd ではなく現在のワー�
 
 ### 大きすぎる prefetch の結果 {#oversized-prefetch-results}
 
-外部プロバイダーの `prefetch()` の結果が、設定した退避のしきい値を超えると、
-専用の退避ファイルに書き出され、設定に沿って先頭と末尾だけのプレビューに
-置き換えられます。プレビューにはファイルのパスが入るので、本当に必要になった
-ときにエージェントが全文を読めます。しきい値以下の結果はそのまま返されます。
+外部プロバイダーの `prefetch()` の結果は、既定では全文がそのまま返され、
+プロバイダーが関連度の順に並べた想起の結果が保たれます。ただし安全のための上限があり、
+`hooks.output_spill.max_chars` の 10 倍（最低でも 100,000 文字）を超えた分は、
+それでも退避されます。プロバイダー自身の想起の量は、この上限よりかなり小さく抑えてください。
+大きすぎる結果を退避させたいときは、使用中のプロファイルで次のように設定します:
 
-この動きは共通の `hooks.output_spill` の設定（既定では `10,000` 文字）を使います。
+```yaml
+memory:
+  prefetch_spill_enabled: true  # default: false
+```
+
+有効にすると、共通の `hooks.output_spill.max_chars` のしきい値（既定では `10,000` 文字）を
+超えた結果は専用の退避ファイルに書き出され、設定に沿った先頭と末尾のプレビューと、
+そのファイルのパスに置き換えられます。既定のプレビューに残るのは最初と最後の `500` 文字だけで、
+間の部分を取り戻すにはモデルがファイルを読む必要があります。しきい値以下の結果はそのままです。
+
+共通の `hooks.output_spill` のプレビューの長さと保存先の設定は引き続き効き、
+`hooks.output_spill.enabled: false` にすると、メモリ側で有効にしていても退避は行われません。
+どちらの設定も外部プロバイダーが登録された時点の値で固定されるので、既存のセッションに
+反映するには Hermes を再起動してください。組み込みのメモリと、通常のプラグインのフックでの
+退避には影響しません。
 [プラグイン — 大きすぎるコンテキストの退避](/hermes/docs/developer-guide/plugins/#oversized-context-spill) を参照してください。
 
 ## 圧縮前のチェックポイント（失敗したら止める） {#pre-compress-checkpoints-fail-closed}

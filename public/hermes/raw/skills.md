@@ -5,7 +5,7 @@ sources:
   - https://hermes-agent.nousresearch.com/docs/reference/skills-catalog
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
   - https://github.com/NousResearch/hermes-agent/tree/main/website/docs/user-guide/skills
-hermes_version: "0.21.3"
+hermes_version: "0.21.6"
 confidence: high
 raw: /hermes/raw/skills.md
 ---
@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 213 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `9d05e7f`（2026-10-08）時点。この一覧は上流の docs から機械生成しています。
+上流 `46d7718`（2026-10-09）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（58）
 

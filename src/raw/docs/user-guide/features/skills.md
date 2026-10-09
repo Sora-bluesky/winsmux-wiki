@@ -2,7 +2,7 @@
 title: "スキルの仕組み"
 description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェント管理のスキル、スキルのハブ"
 upstream_path: user-guide/features/skills.md
-upstream_blob: 53cc593f3e1099dd819cb5a958a358a90ecdda39
+upstream_blob: 041e8c2007fb0a2ed2a851686bd2edebd8590036
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -926,7 +926,7 @@ hermes skills update react --force   # Overwrite a skill you've edited locally
 手元で編集したスキル（ディスク上の内容が、入れたときに記録したハッシュと合わなくなったもの）は `hermes skills update` から**飛ばされる**ので、変更が黙って上書きされることはありません。それでも上流の版に置き換えたいときは `--force` を付けてください。
 
 :::tip GitHub の回数制限
-スキルのハブの操作は GitHub の API を使います。認証していない場合、1時間あたり60回という制限があります。インストールや検索の途中で制限のエラーが出たら、`.env` に `GITHUB_TOKEN` を設定すると1時間あたり5,000回まで上がります。この場合、エラーの文言にも対処の手がかりが添えられます。
+スキルのハブの操作は GitHub の API を使います。認証していない場合、1時間あたり60回という制限があります。1回のインストールで使う API 呼び出しは2回ほど（リポジトリとそのファイルツリー）です。スキルのファイル自体は `raw.githubusercontent.com` から取得し、こちらは制限の回数に数えられません。インストールや検索の途中で制限のエラーが出たら、`.env` に `GITHUB_TOKEN` を設定すると1時間あたり5,000回まで上がります。この場合、エラーの文言にも対処の手がかりが添えられます。
 :::
 
 ### 独自の tap を公開する {#publishing-a-custom-skill-tap}

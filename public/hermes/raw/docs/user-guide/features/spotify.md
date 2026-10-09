@@ -3,56 +3,52 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Spotify"
 description: ""
 upstream_path: user-guide/features/spotify.md
-upstream_blob: 1a2b628293a424aa20901461b011a4778841c90f
+upstream_blob: a1b66e7ec688581dc7a7ba97c510c669c108ee5b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/spotify
 ---
 
 # Spotify {#spotify}
 
-Hermes は Spotify を直接操作できます。再生、キュー、検索、プレイリスト、保存済みのトラックやアルバム、再生履歴まで、Spotify 公式の Web API と PKCE OAuth を使って扱えます。トークンは `~/.hermes/auth.json` に保存され、401 が返ったときは自動で更新されます。ログインは端末ごとに一度だけで済みます（リフレッシュトークンは 6 か月ほどで期限切れになるので、そのときは `hermes auth spotify` を実行し直してください）。
+Hermes は Spotify を操作できます。再生、キュー、検索、プレイリスト、保存済みのトラックやアルバム、再生履歴まで、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)にある公式の **`spotify` プラグイン** を通じて扱えます。このプラグインは Spotify の Web API と PKCE OAuth を使います。保守しているのは Nous Research で、置き場所は [NousResearch/hermes-spotify](https://github.com/NousResearch/hermes-spotify) です。Hermes 本体には含まれていません。トークンは `~/.hermes/auth.json` に保存され、401 が返ったときは自動で更新されます。ログインは端末ごとに一度だけで済みます（リフレッシュトークンは 6 か月ほどで期限切れになるので、そのときは `hermes spotify login` を実行し直してください）。
 
-Hermes に組み込みの OAuth 連携（Google、GitHub Copilot、Codex）とは違い、Spotify では利用者一人ひとりが自分用の小さな開発者アプリを登録する必要があります。Spotify は、誰でも使える公開 OAuth アプリを第三者が配布することを認めていないためです。作業は 2 分ほどで、`hermes auth spotify` が手順を案内してくれます。
+Hermes に組み込みの OAuth 連携とは違い、Spotify では利用者一人ひとりが自分用の小さな開発者アプリを登録する必要があります。Spotify は、誰でも使える公開 OAuth アプリを第三者が配布することを認めていないためです。作業は 2 分ほどで、`hermes spotify login` が手順を案内してくれます。
+
+## インストール {#install}
+
+```bash
+hermes plugins install spotify
+```
+
+プラグインはプロファイルごとにインストールします。別のプロファイルでも Spotify を使うなら、そちらにもインストールしてください（`hermes -p <profile> plugins install spotify`）。
+
+:::info Spotify を同梱していたリリースから更新する場合
+作業は要りません。すでに Spotify を使っていたプロファイル（`auth.json` に Spotify のログインがある、または `platform_toolsets` に `spotify` ツール群が載っている）には、`hermes update` がカタログからプラグインを自動でインストールします。その段階が実行できなかった場合は、そのプロファイルを初めて起動したときにインストールされます（このとき `security.allow_lazy_installs` の設定に従います）。ログイン情報、`spotify` ツール群、ツール名はそのまま引き継がれます。目に見える変化は一つだけで、`hermes auth spotify` が `hermes spotify login` になりました（`hermes auth status spotify` / `hermes auth logout spotify` も `hermes spotify status` / `hermes spotify logout` になっています）。古い書き方で実行すると、新しい書き方が表示されます。あとでプラグインを外した場合（`hermes plugins remove spotify`）は、外れたままになります。
+:::
 
 ## 事前に必要なもの {#prerequisites}
 
 - Spotify のアカウント。検索、プレイリスト、ライブラリ、履歴のツールは **無料プラン** でも動きます。再生の操作（再生、一時停止、スキップ、シーク、音量、キューへの追加、再生機器の切り替え）には **Premium** が必要です。
-- Hermes Agent がインストールされ、動いていること。
+- Hermes Agent がインストールされて動いており、`spotify` プラグインもインストール済みであること。
 - 再生系のツールを使うなら、**動作中の Spotify Connect 機器**。Web API が操作する相手が要るので、スマートフォン、パソコン、Web プレーヤー、スピーカーのどれかで Spotify アプリを開いておきます。何も動いていないと「no active device」というメッセージ付きの `403 Forbidden` が返ります。どれか一台で Spotify を開いてから、もう一度試してください。
 
 ## 設定 {#setup}
 
-### 一度で済ませる: `hermes tools` または初回設定 {#one-shot-hermes-tools-or-first-run-setup}
+### 1. ツール群を有効にする {#1-enable-the-toolset}
 
-いちばん速い道です。次を実行します。
-
-```bash
-hermes tools
-```
-
-`🎵 Spotify` までスクロールし、スペースキーでオンに切り替えて、`s` で保存します。同じ切り替えは初回の `hermes setup` / `hermes setup tools` の流れの中にもあります。Spotify は任意で有効にするものなので、そこで有効にしても `hermes tools` と同じ、プロバイダーに合わせた設定が走ります。
-
-Hermes はそのまま OAuth の手順に入ります。Spotify アプリをまだ持っていない場合は、その場で作成手順を案内してくれます。終わったときには、ツール群の有効化と認証の両方が一度に済んでいます。
-
-手順を分けて進めたい場合（あるいは後から認証をやり直す場合）は、次の 2 段階の流れを使ってください。
-
-### 2 段階の流れ {#two-step-flow}
-
-#### 1. ツール群を有効にする {#1-enable-the-toolset}
+プラグインの `spotify` ツール群は任意で有効にするものです。使わない人が API 呼び出しのたびに余分なツール定義を送らずに済むようにするためです。`hermes tools` で有効にする（`🔌 Spotify` をオンにして保存する）か、次のコマンドで有効にします。
 
 ```bash
-hermes tools
+hermes tools enable spotify
 ```
 
-`🎵 Spotify` をオンにして保存し、その場でウィザードが開いたら Ctrl+C で閉じます。ツール群は有効なままで、認証だけが後回しになります。
-
-#### 2. ログインウィザードを実行する {#2-run-the-login-wizard}
+### 2. ログインする {#2-log-in}
 
 ```bash
-hermes auth spotify
+hermes spotify login
 ```
 
-7 つの Spotify ツールは、手順 1 を済ませて初めてエージェントのツール群に現れます。既定ではオフなので、使わない人が API 呼び出しのたびに余分なツール定義を送らずに済みます。
+7 つの Spotify ツールは、ログインを済ませて初めてエージェントに届きます。
 
 `HERMES_SPOTIFY_CLIENT_ID` が設定されていない場合、Hermes がアプリ登録をその場で案内します。
 
@@ -91,10 +87,10 @@ ssh -N -L 43827:127.0.0.1:43827 user@remote-host
 ## 確認する {#verify}
 
 ```bash
-hermes auth status spotify
+hermes spotify status
 ```
 
-トークンがあるかどうかと、アクセストークンの期限を表示します。更新は自動です。Spotify API の呼び出しが 401 を返すと、クライアントがリフレッシュトークンを交換して一度だけやり直します。リフレッシュトークンは Hermes を再起動しても残るので、Spotify のアカウント設定でアプリの許可を取り消したり、`hermes auth logout spotify` を実行したりしない限り、認証をやり直す必要はありません。
+トークンがあるかどうかと、アクセストークンの期限を表示します。更新は自動です。Spotify API の呼び出しが 401 を返すと、クライアントがリフレッシュトークンを交換して一度だけやり直します。リフレッシュトークンは Hermes を再起動しても残るので、Spotify のアカウント設定でアプリの許可を取り消したり、`hermes spotify logout` を実行したりしない限り、認証をやり直す必要はありません。
 
 ## 使ってみる {#using-it}
 
@@ -233,7 +229,7 @@ cron の詳しい説明は [Cron Jobs](/hermes/docs/user-guide/features/cron/) �
 ## ログアウトする {#sign-out}
 
 ```bash
-hermes auth logout spotify
+hermes spotify logout
 ```
 
 `~/.hermes/auth.json` からトークンを削除します。アプリの設定も消したい場合は、`~/.hermes/.env` から `HERMES_SPOTIFY_CLIENT_ID`（設定していれば `HERMES_SPOTIFY_REDIRECT_URI` も）を削除するか、ウィザードをもう一度実行してください。
@@ -252,7 +248,7 @@ Spotify 側でアプリの許可を取り消すには、[Apps connected to your 
 
 **`429 Too Many Requests`** — Spotify の呼び出し回数の上限です。Hermes は分かりやすいエラーを返すので、1 分ほど待ってからやり直してください。これが続くなら、スクリプトで短い間隔の繰り返しを回している可能性が高いです。Spotify の割り当ては 30 秒ほどで戻ります。
 
-**`401 Unauthorized` が繰り返し出る** — リフレッシュトークンが無効になっています。たいていはアカウントからアプリを外したか、アプリそのものを削除した場合です。`hermes auth spotify` をもう一度実行してください。
+**`401 Unauthorized` が繰り返し出る** — リフレッシュトークンが無効になっています。たいていはアカウントからアプリを外したか、アプリそのものを削除した場合です。`hermes spotify login` をもう一度実行してください。
 
 **ウィザードがブラウザーを開かない** — SSH 越しの接続や、画面のないコンテナの中では、Hermes がそれを検知して自動起動を行いません。表示されたダッシュボードの URL をコピーして、手作業で開いてください。
 
@@ -261,7 +257,7 @@ Spotify 側でアプリの許可を取り消すには、[Apps connected to your 
 既定では、Hermes は同梱するすべてのツールに必要なスコープを要求します。権限を絞りたい場合は上書きしてください。
 
 ```bash
-hermes auth spotify --scope "user-read-playback-state user-modify-playback-state playlist-read-private"
+hermes spotify login --scope "user-read-playback-state user-modify-playback-state playlist-read-private"
 ```
 
 スコープの一覧は [Spotify Web API scopes](https://developer.spotify.com/documentation/web-api/concepts/scopes) にあります。ツールが必要とするより少ないスコープしか要求しなかった場合、そのツールの呼び出しは 403 で失敗します。
@@ -269,7 +265,7 @@ hermes auth spotify --scope "user-read-playback-state user-modify-playback-state
 ## 応用: Client ID とリダイレクト URI を自分で指定する {#advanced-custom-client-id-redirect-uri}
 
 ```bash
-hermes auth spotify --client-id <id> --redirect-uri http://localhost:3000/callback
+hermes spotify login --client-id <id> --redirect-uri http://localhost:3000/callback
 ```
 
 あるいは `~/.hermes/.env` に書いて固定しておくこともできます。

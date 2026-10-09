@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: d6c7fdd6dc2f7f0acd19aab35274b2bafdf3bb4b
+upstream_blob: 7f8700bd0566ef96809238bc6ac786b0487d8c24
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -401,6 +401,8 @@ GUI の後片付けを試しに見るには `hermes uninstall --gui --dry-run` �
 :::note
 **ソースのチェックアウト**（`hermes desktop` の開発ビルド）から `hermes uninstall --gui` を走らせると、`apps/desktop/{dist,release,node_modules}` とデスクトップのビルドの印が消えます。ワークスペース直下の `node_modules` は、TUI やダッシュボードなど他のワークスペースと共有しているので残ります。GUI がまた必要になったら `hermes desktop` で作り直してください。
 :::
+
+チェックアウトの中で一度デスクトップアプリをビルドしていれば、`hermes update` はそのアプリも最新に保ちます。アプリを一度も開かないサーバーでも同じです。画面のない Linux ホストや、デスクトップアプリ自身の Node の依存関係が入らない場合（たとえば `node-pty` には古すぎるコンパイラ）でも、更新は TUI と Web UI をビルドし、デスクトップのビルドは未了だと報告して `hermes uninstall --gui` を勧めます。そのアンインストールのあとの更新では、デスクトップアプリは飛ばされます。
 
 ## CLI 早見表: `hermes desktop` {#cli-reference-hermes-desktop}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: 821cf09d8e8cefb1243ea3fd90bd1ae855778781
+upstream_blob: 0fbd364a3081dd276d2adfbf0dfee128fbc54078
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
@@ -541,7 +541,7 @@ Hindsight は以前、Hermes のツリーの中に（また pip の追加パッ�
 
 - `hermes update` が、このプロバイダーを指定しているすべてのプロファイルのホームにカタログのプラグインを入れます。表示される各行には、どのプロファイルの話かが書かれます。ターミナルでは、プラグインが使う Python の依存パッケージを用意する前に確認を求めます。このプロバイダーを使うプロファイルが複数あるときは、質問は 1 回だけで、その答えがすべてのプロファイルに当てはまります。ターミナルが無い場合（デスクトップアプリ、スクリプト、サービス）は誰も答えられないので、`security.allow_lazy_installs` がオン（既定）のプロファイルは確認なしで用意します。これがオフのプロファイルには、代わりに `hermes -p <profile> plugins install hindsight` という実行すべきコマンドがそのまま示され、ほかのプロファイルの移行は続きます。
 - エージェントを最初に起動したとき（`hermes chat`、デスクトップ、ゲートウェイ、…）にまだプラグインが無ければ、Hermes が依存パッケージごとそれを入れて ``✓ Memory provider 'hindsight' moved out of core — installed its plugin from the catalog (memory.provider and your stored memories are unchanged; check its settings with `hermes memory status`).`` と表示します。メッセージングのプラットフォームでは、この行が最初の返信といっしょに届きます。
-- エージェント起動時の導入ができなかった場合は、外部の記憶なしで黙って動くのではなく、その理由が表示されます。`security.allow_lazy_installs: false` のときは、警告にそのプロファイル用の導入コマンドが示されます。オフラインのときや導入を断ったときは、エラーと同じコマンドが表示されます。
+- エージェント起動時の導入ができなかった場合は、外部の記憶なしで黙って動くのではなく、その理由が表示されます。`security.allow_lazy_installs: false` のときは、警告にそのプロファイル用の導入コマンドが示されます。オフラインのときや導入を断ったときは、エラーと同じコマンドが表示されます。導入に失敗したあと 1 時間以内のエージェント起動では、導入を試さずにコマンドを表示し直すだけです。`hermes update` は毎回やり直します。
 - エージェントの起動時には、何も質問しません（ターミナルはチャットの入力欄が使っているためです）。そのため、Hermes に一度も同梱されたことのないカタログのプロバイダー（たとえば `mnemosyne`）は、起動時には入りません。警告にそのプロファイル用の `hermes plugins install <name>` が示されるので、それを実行するか、ダッシュボードまたはデスクトップの Plugins ページから入れてください。
 
 ディスク上で変わるのは次の点です。プラグインが `~/.hermes/plugins/hindsight/` に現れ、`config.yaml` に `plugins.enabled: [hindsight]` が加わります。`memory.provider`、`$HERMES_HOME/hindsight/config.json`、`.env` の `HINDSIGHT_API_KEY`、記憶の保管庫のデータには手を触れません。確かめるには `hermes memory status`（プロバイダーが動いているか）と `hermes plugins list`（プラグインが入って有効になっているか）を使います。

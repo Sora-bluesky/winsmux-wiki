@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ツールとツールセット"
 description: "Hermes Agent のツールの全体像 — 何が使えるか、ツールセットの仕組み、ターミナルの実行先"
 upstream_path: user-guide/features/tools.md
-upstream_blob: 67553fe7e1f4df5b6324401937d23f2b2e7f7201
+upstream_blob: 3e1194b841c1712140b2f2fa432726d0809b6b1b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tools
 ---
@@ -57,7 +57,7 @@ hermes tools
 hermes tools
 ```
 
-よく使うツールセットには、`web`、`search`、`terminal`、`file`、`browser`、`vision`、`image_gen`、`skills`、`tts`、`todo`、`memory`、`session_search`、`cronjob`、`code_execution`、`delegation`、`clarify`、`messaging`、`spotify`、`discord`、`discord_admin`、`debugging`、`safe` があります。
+よく使うツールセットには、`web`、`search`、`terminal`、`file`、`browser`、`vision`、`image_gen`、`skills`、`tts`、`todo`、`memory`、`session_search`、`cronjob`、`code_execution`、`delegation`、`clarify`、`messaging`、`discord`、`discord_admin`、`debugging`、`safe` があります。
 
 `hermes-cli` や `hermes-telegram` といったサービス別のひとまとまりや、`mcp-<server>` のような動的な MCP のツールセットも含めた全体は、[ツールセット一覧](/hermes/docs/reference/toolsets-reference/)を参照してください。
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ローカルモデル"
 description: "モデルを自分の端末だけで動かします。アカウントも API キーも不要で、何も端末の外には出ません。"
 upstream_path: user-guide/local-models.md
-upstream_blob: d215eaad220b0e60ae9bbc9ffbc9a87902ba43ce
+upstream_blob: 5674e265d281d5fcd0fcf3f5cce48da6b757af53
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/local-models
 ---
@@ -82,6 +82,12 @@ Ctrl+C でダウンロードを一時停止し、同じモデルをもう一度�
 
 収まらないモデルも理由付きで表示に残るので、ハードウェアを増強すると
 何が使えるようになるかがいつでも分かります。
+
+Hermes がおすすめするのは、GPU かユニファイドメモリの中だけで動き、
+予測で毎秒 20 トークン以上出せるモデルのうち、いちばん品質の高いものです。
+端末のメーカーが別の既定モデルを決めていることもあり、その場合は
+そのモデルが収まる限りそちらをおすすめします。この基準に届くモデルが一つもないときは
+おすすめを出しませんが、収まるモデルならどれでも選べます。
 
 ## メモリ管理のしくみ {#how-memory-management-works}
 

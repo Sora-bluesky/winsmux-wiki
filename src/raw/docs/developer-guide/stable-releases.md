@@ -2,7 +2,7 @@
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 5fde40d8c6e448ccc436d64b0da08d8f60b02408
+upstream_blob: a2b91581fbed5af000952148219d0bfabcb0c433
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -409,6 +409,9 @@ R2 だけを読むソースの読み手を出荷する前に、明示的で保�
 バンドルを出荷した最後の成功した安定版リリースが、設定された R2 公開オリジン上に
 `releases/stable/release-candidates.json` を記録します。
 バンドルを省いたリリースはこれを置き換えません。
+基準がまだないときも、リリースではネイティブのスモークテストをすべて実行しますが、
+署名済みパッケージの更新の検証は省きます。存在しない `baseline-manifest` 入力を
+指定した場合は、リリースを止める問題になります。
 この記録は、実際の Windows ユニバーサル MSIX バンドル、macOS の ZIP、パッケージの
 来歴を特定します。次の実行では、これらの記録を自身の候補マニフェストと組み合わせ、
 既存のネイティブなバンドル更新ドライバーを使います。

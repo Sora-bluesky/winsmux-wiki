@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールをツールセットごとにまとめた公式な一覧"
 upstream_path: reference/tools-reference.md
-upstream_blob: 6c157c753563d2cdc83dc80c27fd8fe850489f30
+upstream_blob: 3b09094854ce0ffa0df7a24608ea3779da442b37
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -11,7 +11,7 @@ sources:
 
 このページでは、Hermes の組み込みツールをツールセットごとに説明します。何が使えるかは、動かしている環境、資格情報、有効にしているツールセットによって変わります。
 
-**ざっくりした数（現在の登録内容）:** 約 100 個のツールがあります。内訳は、ブラウザ用の中核ツール 10 個、CDP がある場合だけ現れるブラウザツール 2 個、ブラウザの保管庫ツール 5 個、それに `browser_exec`、ファイル操作 4 個、ターミナル 2 個（`terminal`、`process_manage`）、デスクトップ GUI 用の 11 個（`read_terminal`、`close_terminal`、`desktop_preview`、`drive_preview`、`annotate_preview`、`read_window_below`、`focus_pane`、`react_to_message`、`gui_tour`、`show_tip`、`apply_layout` — デスクトップアプリのセッション限定）、ウェブ 2 個、Feishu 5 個、Spotify 7 個（同梱の `spotify` プラグインが登録します）、Yuanbao 5 個、かんばん 14 個（かんばんのディスパッチャーがエージェントを起動したときに登録されます）、プロジェクト 1 個（`desktop_project`。デスクトップ / GUI のセッション向け）、Discord 2 個、動画 3 個（`video_generate`、`xai_video_edit`、`xai_video_extend`）、そして単体のツールがいくつか（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob_manage`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`vision_analyze`、`video_analyze`、`todo_list`、`computer_use`、`x_search`）です。
+**ざっくりした数（現在の登録内容）:** 約 100 個のツールがあります。内訳は、ブラウザ用の中核ツール 10 個、CDP がある場合だけ現れるブラウザツール 2 個、ブラウザの保管庫ツール 5 個、それに `browser_exec`、ファイル操作 4 個、ターミナル 2 個（`terminal`、`process_manage`）、デスクトップ GUI 用の 11 個（`read_terminal`、`close_terminal`、`desktop_preview`、`drive_preview`、`annotate_preview`、`read_window_below`、`focus_pane`、`react_to_message`、`gui_tour`、`show_tip`、`apply_layout` — デスクトップアプリのセッション限定）、ウェブ 2 個、Feishu 5 個、Yuanbao 5 個、かんばん 14 個（かんばんのディスパッチャーがエージェントを起動したときに登録されます）、プロジェクト 1 個（`desktop_project`。デスクトップ / GUI のセッション向け）、Discord 2 個、動画 3 個（`video_generate`、`xai_video_edit`、`xai_video_extend`）、そして単体のツールがいくつか（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob_manage`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`vision_analyze`、`video_analyze`、`todo_list`、`computer_use`、`x_search`）です。
 
 :::tip MCP ツール
 Hermes は組み込みツールに加えて、MCP サーバーからツールを動的に読み込めます。MCP のツールは `mcp__<server>__` という接頭辞付きで現れます（たとえば `github` という MCP サーバーなら `mcp__github__create_issue`）。設定方法は [MCP 連携](/hermes/docs/user-guide/features/mcp/) をご覧ください。
@@ -132,6 +132,8 @@ Feishu の文書コメント処理専用です。ドライブ上のファイル�
 **Honcho のツール**（`honcho_profile`、`honcho_search`、`honcho_context`、`honcho_reasoning`、`honcho_conclude`）は組み込みではなくなりました。プラグインカタログにある Honcho メモリープロバイダーのプラグイン（`hermes plugins install honcho` で入れます）として使えます。導入と使い方は [メモリープロバイダー](/hermes/docs/user-guide/features/memory-providers/) をご覧ください。
 
 **Home Assistant のツール**（`ha_list_entities`、`ha_get_state`、`ha_list_services`、`ha_call_service`、ツールセット `homeassistant`）は組み込みではなくなりました。カタログにある `homeassistant` プラグイン（`hermes plugins install homeassistant` で入れます）から提供されます。[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/) をご覧ください。
+
+**Spotify のツール**（`spotify_playback`、`spotify_devices`、`spotify_queue`、`spotify_search`、`spotify_playlists`、`spotify_albums`、`spotify_library`、ツールセット `spotify`）は組み込みではなくなりました。カタログにある `spotify` プラグインから提供されます（`hermes plugins install spotify` で入れてから、`hermes spotify login` を実行します）。[Spotify](/hermes/docs/user-guide/features/spotify/) をご覧ください。
 :::
 
 ## `image_gen` ツールセット {#imagegen-toolset}
@@ -385,20 +387,6 @@ Hermes が出すひとことも同じ間合いを共有するので、出した�
 | ツール | 説明 | 必要な環境 |
 |------|-------------|----------------------|
 | `discord_admin` | REST API から Discord のサーバーを管理します。ギルド・チャンネル・ロールの一覧、チャンネルの作成 / 編集 / 削除、ロールの付与、タイムアウト、キック、BAN ができます。 | `DISCORD_BOT_TOKEN` とボットの権限 |
-
-## `spotify` ツールセット {#spotify-toolset}
-
-同梱の `spotify` プラグインが登録します。OAuth のトークンが必要なので、`hermes auth spotify` を一度実行して認可してください。
-
-| ツール | 説明 | 必要な環境 |
-|------|-------------|----------------------|
-| `spotify_playback` | Spotify の再生を操作したり、いまの再生状態を調べたり、最近聴いた曲を取得したりします。 | Spotify の OAuth |
-| `spotify_devices` | Spotify Connect の機器を一覧にしたり、再生を別の機器へ移したりします。 | Spotify の OAuth |
-| `spotify_queue` | 再生待ちの一覧を確認したり、そこに曲を足したりします。 | Spotify の OAuth |
-| `spotify_search` | Spotify のカタログから、曲・アルバム・アーティスト・プレイリスト・番組・エピソードを検索します。 | Spotify の OAuth |
-| `spotify_playlists` | プレイリストの一覧、確認、作成、更新、中身の変更をします。 | Spotify の OAuth |
-| `spotify_albums` | Spotify のアルバム情報や、アルバムの収録曲を取得します。 | Spotify の OAuth |
-| `spotify_library` | 保存した曲やアルバムを一覧にしたり、保存したり、外したりします。 | Spotify の OAuth |
 
 ## `hermes-yuanbao` ツールセット {#hermes-yuanbao-toolset}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 4277c1fe8e6b779c17f787d0745e51612ec52963
+upstream_blob: a54df00fe3fb084d08cab3c8e7cfc4d57e9fdd16
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -196,6 +196,8 @@ interface PluginContext {
   addEventListener: (target: EventTarget, type: string, listener: EventListener, options?: AddEventListenerOptions | boolean) => () => void
   /** The curated OS door: native notification, open-external, reveal-in-file-manager, clipboard. */
   os: PluginOs
+  /** Lines in the core pet's speech bubble, attributed to this plugin (see "Pet bubble"). */
+  pet: PluginPet
   /** Plugin-scoped JSON persistence (keys live under `hermes.plugin.<id>.`). */
   storage: PluginStorage
 }
@@ -523,7 +525,8 @@ host.composer: {
 編集しているか）を自分の側で持ち、その id をここに渡します。1 つのプラグインの書き込みが
 別のセッションの入力欄に入ってしまうことはないと、この経路が保証します。
 
-**DOM への手出しからの移行**（この API を作るきっかけになった、保留中のカタログのプラグイン）:
+**DOM への手出しからの移行**（この API と兄弟の API を作るきっかけになった、保留中のカタログのプラグイン。
+pet-wallet の行は[ペットの吹き出し](#pet-bubble)の窓口を使います）:
 
 | プラグイン | 以前 | 今 |
 |---|---|---|
@@ -532,6 +535,7 @@ host.composer: {
 | prompt-enhancer (#116031) | エディターの子ノードをたどって文字列にし、チップの DOM を組み直して、`replaceChildren` と合成した `InputEvent` | `const draft = await host.composer.getDraft(sid)` → 加工 → `await host.composer.setDraft(sid, enhanced)`（チップはアプリ側で組み立てられます）。元に戻すのも `setDraft` をもう一度 |
 | memory-review (#115966) | `/memory …` に `host.request('slash.exec', { session_id, command })` — すでに SDK だけで完結 | 任意: 実行する代わりに `host.composer.insertText(sid, '/memory pending', { mode: 'prefix' })` でコマンドを利用者のために置いておく |
 | intelligent-tool-break (#115964) | 「Message」ボタンは「type /break」とトーストを出すだけ（入力欄には書かない） | `host.composer.setDraft(host.state.focusedSessionId.get(), '/break ')` のあと `host.composer.focus(null)` で、本来意図した動きに戻る |
+| pet-wallet (#135178) | 中核のペットを探す `document.querySelector('canvas[aria-label$=" pet"]')`、毎フレームそれを追いかける `document.body` 上の `position:fixed; z-index:9999` の重ね表示、文書全体に張ったキャプチャ段階のポインターのリスナー | `ctx.pet.say(text, { id: 'balance', tone?, ttlMs? })` — 中核の吹き出しが、ウィンドウ内でも切り離した状態でも、ペットの上にプラグイン名付きで表示します。`ctx.pet.visible` でペットがいないことがわかるので、そのときはステータスバーのチップに切り替えられます |
 
 表の `sessionId` は、プラグインの UI が紐づいているセッションの id です。入力欄の差し込み口の
 描画では `host.state.focusedSessionId.get()` です。
@@ -1037,6 +1041,9 @@ ctx.os.notify({ title, body?, silent?, icon?, activate?, onActivate?, actions? }
 ctx.os.openExternal(url)                   // OS default handler (browser, mail, spotify:) → Promise<boolean>
 ctx.os.revealPath(path)                    // reveal in Finder / Explorer → Promise<boolean>
 ctx.os.writeClipboard(text)                // system clipboard → Promise<boolean>
+ctx.pet.say(text, { id?, tone?, ttlMs? })   // line in the core pet's speech bubble → disposer
+ctx.pet.clear(id?)                         // drop one line (or all of yours)
+ctx.pet.visible                            // ReadableAtom<boolean> — is a pet on screen?
 host.navigate('/route')                    // hash-route navigation
 host.openSession(id, { profile?, intent? }) // open a stored session core-style;
                                            //   profile: soft-swap to that profile's backend first
@@ -1185,6 +1192,70 @@ URL は OS のディープリンクとしても働きます）。操作のボタ
 ほかの窓口（`openExternal`、`revealPath`、`writeClipboard`）は、その機能が使えないとき
 （古いデスクトップの外殻、素のブラウザー）に例外を投げるのではなく `false` を返します。橋渡しの
 有無を探るのではなく、この戻り値で分岐してください。
+
+### ペットの吹き出し — `ctx.pet` {#pet-bubble}
+
+中核のペット（petdex のマスコット。ウィンドウ内にいるときも、OS の別ウィンドウに切り離したときも
+あります）には吹き出しがあります。`ctx.pet` を使うと、プラグインはそこに短い一行を出せます。
+アプリの DOM からペットを探したり、自前の重ね表示をペットの上に浮かべたりする必要は
+ありません:
+
+```ts
+register(ctx) {
+  // Shows "DeepSeek ¥12.40 left" over the pet for 8 s, labelled "Pet Wallet".
+  const dispose = ctx.pet.say('DeepSeek ¥12.40 left', { id: 'balance', ttlMs: 8000 })
+
+  // Same id → replaces the line in place (a refreshed balance, a countdown).
+  ctx.pet.say('DeepSeek ¥11.90 left', { id: 'balance' })
+
+  // Tones: 'info' (default), 'wait' (clock glyph), 'error' (alert glyph).
+  ctx.pet.say('Codex 5h quota at 90%', { id: 'quota', tone: 'wait' })
+
+  dispose()              // remove early, or
+  ctx.pet.clear('quota') // by id, or ctx.pet.clear() for all of yours
+
+  // No pet on screen? Fall back to your own status-bar chip or pane.
+  const visible = ctx.pet.visible.get()
+}
+```
+
+```ts
+interface PluginPet {
+  say(text: string, options?: { id?: string; tone?: 'info' | 'wait' | 'error'; ttlMs?: number }): () => void
+  clear(id?: string): void
+  visible: ReadableAtom<boolean>
+}
+```
+
+ホストが保証するので、プラグイン側で気にしなくてよいこと:
+
+- **プレーンテキスト。** 制御文字と双方向テキストの上書き文字は取り除かれ、
+  空白はまとめて一行になり、文字列は 120 文字で打ち切られます。
+  テキストノードとして描かれるので、マークアップはそのまま文字として表示されます。
+- **出どころを明示。** 行の上にプラグインの名前（Plugins の一覧にある名前）が表示されるので、
+  利用者はプラグインの言葉とペット自身の言葉を見分けられます。
+- **短命。** 各行は `ttlMs` で消えます（既定は 6 秒、1〜30 秒の範囲に丸められます）。
+  値を出し続けるには、同じ `id` でもう一度 `say` してください。表示中の行は 1 つのプラグインに
+  つき最大 3 行で（あふれると最も古い行が外れます）、吹き出しにはすべてのプラグインのうち
+  最も新しい行が出ます。
+- **回数の制限。** `say` の呼び出しは、1 つのプラグインにつき 10 秒あたり 10 回までです。超えた分は
+  コンソールに警告を出して捨てられ、何もしない片付け関数が返ります。
+- **中核が優先。** エージェントがエラーになったときや利用者の返事を待っているときは、
+  中核の状態の吹き出しが優先されます。それが消えると、プラグインの行が（期限切れでなければ）
+  また表示されます。
+- **利用者のペットの設定が優先。** ペットを迎えていないときや、ペットをオフにしているときは、
+  何も表示されません。`ctx.pet.visible` でこれを見て分岐できます。
+- **一緒に片付く。** プラグインを無効にしたとき、読み込みを解除したとき、ホットリロードしたときは、
+  そのプラグインが出したままの行がすべて消えます。
+
+ウィンドウ内では、吹き出しが出るのはプラグインの行のときだけです（エージェントの状態はアプリ
+自身が表示します）。切り離した重ね表示のウィンドウでは、プラグインの行が中核の状態の行と
+吹き出しを分け合います。重ね表示は別のウィンドウでプラグインのコードを読み込まないので、
+メインのウィンドウが、ペットのほかの状態と一緒に表示中の行を送ります。
+
+ペットへのポインター操作（ドラッグ、Shift を押しながらのクリックでの切り離し、重ね表示のクリック）は
+ホストのもので、プラグイン用の差し込み口はありません。操作を用意するなら、パレットのコマンド、
+ステータスバーの項目、自前のペインを使ってください。
 
 ### デスクトップの外観の設定 — `host.settings` {#desktop-appearance-settings-hostsettings}
 
@@ -1752,7 +1823,7 @@ CSP、権限の制御）が必要です。この経路を信頼の境界とし�
 | 分類 | 公開されるもの |
 |----------|---------|
 | ホスト | `host`（`.state.*`、`.settings`、`.notify`、`.notifyError`、`.navigate`、`.onEvent`、`.logs`、`.status`、`.restartGateway`、`.request`、`.composer`、`.sessions`、`.skills`、`.toolsets`、`.profiles`、`.pluginDecisions`） |
-| プラグインの取り決め | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
+| プラグインの取り決め | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginPet`、`PetSayOptions`、`PetMessageTone`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
 | 領域の定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS`、`MODEL_MENU_ROW_AREA`、`SESSION_ROW_AREAS`、`SIDEBAR_NAV_PREFS_AREA`、`APPEARANCE_AREAS`、`SETTINGS_PLUGINS_AREA` |
 | 領域ごとの中身 | `PluginSettingsPage`、`PluginSettingsSubpage`（と `pluginSettingsHref`）、`RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider`、`SessionRowSlotContribution`、`SidebarNavPrefsContribution` |
 | React と状態 | `useValue`、`atom`、`computed`、`useQuery`、`useMutation`、`useQueryClient`、`queryClient`、`Contribute`、`WorkspacePageHeaderControl` |

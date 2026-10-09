@@ -3,14 +3,14 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "SSH / リモートホスト越しの OAuth"
 description: "Hermes をリモートのマシンやコンテナ、踏み台の向こうで動かしているときに、ブラウザを使う OAuth（Spotify、MCP サーバー）を完了させる方法"
 upstream_path: guides/oauth-over-ssh.md
-upstream_blob: 1e32549b94f07163cbd9969760cab0deca57a5a9
+upstream_blob: 4e8cfc9090d52a8ead1d311964df28c55995a4de
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/oauth-over-ssh
 ---
 
 # SSH / リモートホスト越しの OAuth {#oauth-over-ssh-remote-hosts}
 
-Hermes のプロバイダーのうち、**Spotify** と**リモートの MCP サーバー**（Linear、Sentry、Atlassian、Asana、Figma など）は、*ループバックへ戻ってくる* 方式の OAuth を使います。認証サーバーがブラウザを `http://127.0.0.1:<port>/callback` へ転送し、Hermes が立ち上げた小さな HTTP の待ち受けが認可コードを受け取るしくみです。
+Hermes のプロバイダーのうち、**Spotify**（カタログにある `spotify` プラグイン）と**リモートの MCP サーバー**（Linear、Sentry、Atlassian、Asana、Figma など）は、*ループバックへ戻ってくる* 方式の OAuth を使います。認証サーバーがブラウザを `http://127.0.0.1:<port>/callback` へ転送し、Hermes が立ち上げた小さな HTTP の待ち受けが認可コードを受け取るしくみです。
 
 Hermes とブラウザが同じマシンにあるなら、これは問題なく動きます。壊れるのは両者が別のマシンにあるときです。手元のノート PC のブラウザは**そのノート PC の** `127.0.0.1` を見に行きますが、待ち受けているのは**リモートのサーバーの** `127.0.0.1` だからです。
 
@@ -25,7 +25,7 @@ Hermes とブラウザが同じマシンにあるなら、これは問題なく�
 ssh -N -L 43827:127.0.0.1:43827 user@remote-host
 
 # In your existing SSH session on the remote machine:
-hermes auth spotify --no-browser
+hermes spotify login --no-browser
 # → Hermes prints an authorize URL. Open it in a browser on your laptop.
 # → Your browser redirects to 127.0.0.1:43827/callback, the tunnel forwards
 #   the request to the remote listener, login completes.
@@ -105,7 +105,7 @@ ssh -N -L 43827:127.0.0.1:43827 user@remote-host
 
 ```bash
 ssh user@remote-host
-hermes auth spotify --no-browser
+hermes spotify login --no-browser
 ```
 
 Hermes は SSH のセッションであることを見分けてブラウザの自動起動をやめ、認可用の URL と `Waiting for callback on http://127.0.0.1:<port>/callback` の行を表示します。

@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 02fbc0a212c2488f627f8e75e17b3760a059aa9e
+upstream_blob: d96a269e09144f391cfd7c5b200c7b51cb4f2764
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -622,10 +622,9 @@ hermes auth reset openrouter 2                           # Clear the cooldown on
 hermes auth refresh openai-codex work                    # Refresh one OAuth credential and clear its cooldown
 hermes auth status anthropic                             # Show auth status for a provider
 hermes auth logout anthropic                             # Log out and clear stored auth state
-hermes auth spotify                                      # Authenticate Hermes with Spotify via PKCE
 ```
 
-サブコマンド: `add`, `list`, `remove`, `reset`, `priority`, `refresh`, `status`, `logout`, `spotify`。サブコマンドなしで呼び出すと、対話型の管理ウィザードが起動します。
+サブコマンド: `add`, `list`, `remove`, `reset`, `priority`, `refresh`, `status`, `logout`。Spotify へのログインは、カタログにある `spotify` プラグインの `hermes spotify login` に移りました。サブコマンドなしで呼び出すと、対話型の管理ウィザードが起動します。
 
 ## `hermes usage` {#hermes-usage}
 

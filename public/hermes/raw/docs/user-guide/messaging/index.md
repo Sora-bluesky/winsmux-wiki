@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: c6584c76b6ae2b5f23f443d1d616e662fdec51d1
+upstream_blob: d194653a40cd46c6ddda676cfc1f67f84612115f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -644,6 +644,8 @@ hermes ALL=(root) NOPASSWD: /usr/bin/systemctl --no-ask-password reset-failed he
 :::
 
 よほどの理由がないかぎり、ユーザー側とシステム側のゲートウェイのユニットを両方入れたままにしないでください。起動・停止・状態確認の挙動があいまいになるため、両方を見つけると Hermes が警告します。
+
+入れたユニット（または launchd の plist）は、そこに固定された `HERMES_HOME` のものです。別のホームから起動したゲートウェイ（たまたま同じサービス名になるテスト用や使い捨てのホームなど）が、それを書き換えることはありません。`gateway run`、`start`、`restart`、`install --force` は両方のホームを示したメッセージを出して断り、ファイルには手を付けません。既存のサービスを意図して今のホームに向け直すときは、`hermes gateway install --force-unit-path` を実行してください。
 
 :::note コンテナの中では、システム側しか選べません
 `hermes gateway install`（と `hermes gateway setup` のウィザード）は、コンテナの中で動いていることを Hermes が見つけると、**ユーザー**側のサービスを入れることを断ります。ユーザーのユニットは `~/.config/systemd/user` に置かれるため、そのホームがホスト側からマウントされていると（podman や distrobox）、ホストの `systemd --user` が同じユニットを有効にして起動してしまいます。つまり、同じボットのトークンを取りにいくゲートウェイが 2 つ動くことになります。ゲートウェイはコンテナの主プロセスとして動かす（`hermes gateway run` に、コンテナの再起動の方針を付ける）か、systemd を PID 1 にしたコンテナなら、分けられたシステム側に入れてください。`sudo hermes gateway install --system --run-as-user <user>` です。

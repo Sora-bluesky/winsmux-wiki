@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: 3b953e17424570ce47cce9963efe0cd9216de174
+upstream_blob: 1d37fc71c688814498b6abfbef77bdeaac605984
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---
@@ -270,11 +270,29 @@ memory:
   memory_char_limit: 2200   # ~800 tokens
   user_char_limit: 1375     # ~500 tokens
   write_approval: false     # false = write freely (default) | true = require approval
+  prefetch_spill_enabled: false  # external recall stays intact unless explicitly enabled
 ```
 
 `memory_enabled` と `user_profile_enabled` の**両方**を `false` にすると、組み込みの保管場所は完全に切れます。`memory` ツールは仕様から外され、その案内のブロックもシステムプロンプトから外されるので、使えない道具の話をモデルが聞かされることはありません。`memory.provider` で指定した外部のプロバイダ（Hindsight、Mem0、Honcho、…）はこの影響を受けず、自分の道具を持ったままです — 組み込みのファイル*ではなく*、よその記憶の仕組みを使いたいときにこうします。`agent.disabled_toolsets` に `memory` を並べるのは、もっと重いスイッチです。外部プロバイダの道具まで隠してしまいます。
 
 `memory_enabled: false` だけにした場合（利用者の人物像は生きたまま）、ツールは残ります — 人物像の保管場所を支えているからです — が、システムプロンプトのほうは、記憶についての案内が丸ごと、人物像だけを扱う狭いブロックに差し替わります。ツールの仕様は `user` の宛先だけを見せ、切ってある `MEMORY.md` への直接の書き込みも下書きとしての書き込みもはねられます。逆の設定なら、見せるのは `memory` だけになり、`USER.md` への書き込みがはねられます。
+
+### 外部の記憶から呼び戻す量 {#external-recall-size}
+
+外部の記憶プロバイダは、先読みした文脈を既定で全部そのまま返します。
+上限は安全のための天井で、`hooks.output_spill.max_chars` の 10 倍（最低でも 100,000
+文字）です。それを超えた分は今もファイルへ逃がすので、暴走したプロバイダが
+コンテキストウィンドウをあふれさせることはありません。
+`memory.prefetch_spill_enabled: true` にすると、使用中のプロファイルでは、大きすぎる呼び戻しの結果を
+先頭と末尾のプレビューとファイルのパスに置き換えるようになります。繰り返し読み込む文脈は減らせますが、
+関連度の順に並んだ中ほどの部分は、モデルからすぐには見えなくなります。プロバイダ自身に呼び戻す量の上限があるなら、そちらを使うほうがおすすめです。
+
+この設定は、共通の `hooks.output_spill` のしきい値、プレビューの長さ、
+保存先のディレクトリを使います。`hooks.output_spill.enabled: false` にすれば、こちらも無効になります。通常のプラグインの
+フックは、記憶側のこの設定とは関係なく、既定どおりファイルへ逃がし続けます。設定は
+プロバイダの登録時に読み込まれるので、変えたら Hermes を再起動してください。
+設定の詳細は [大きすぎる先読みの結果](/hermes/docs/developer-guide/memory-provider-plugin/#oversized-prefetch-results)
+を参照してください。
 
 ## 記憶の書き込みを止めておく（`write_approval`） {#controlling-memory-writes-writeapproval}
 

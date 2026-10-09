@@ -2,7 +2,7 @@
 title: "ブラウザの CDP スーパーバイザ"
 description: "Hermes が JavaScript のネイティブなダイアログを見つけて応答するしくみと、常時つないだ CDP 経由で別オリジンの iframe を操作するしくみ。"
 upstream_path: developer-guide/browser-supervisor.md
-upstream_blob: 2d8adef0acf297cb6a6447b79b650f6aeefaec3c
+upstream_blob: 8dfcee65f7f09dc8d61fe7ee70e11df09c77544f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/browser-supervisor
 ---
@@ -119,11 +119,14 @@ title = reply["result"]["result"]["value"]
 - `SUPERVISOR_REGISTRY.capture(task_id, *, timeout=10.0) -> CapturedCDP` は、
   スーパーバイザがいま使っている WebSocket と、その上につながっている既定のページセッションを
   固定して取り出します。スーパーバイザを起動したり、つなぎ直したり、操作先のページを切り替えたりはしません。
-- `CapturedCDP.call(method, params=None, *, session_id=None, timeout=10.0) -> dict`
+- `CapturedCDP.call(method, params=None, *, session_id=None, timeout=10.0, before_send=None) -> dict`
   は、CDP の生の応答（`{"id", "result"}`）を返します。`session_id=None` のときはブラウザ全体の
   エンドポイント（`Target.*`）あてになります。ページ単位のドメインを使うときは `page_session_id` か、
   自分でつないだセッションを渡してください。CDP がエラーを返すと `RuntimeError` が、
-  `timeout` までに応答がないと `TimeoutError` が発生します。呼び出しは応答が来るまでそのスレッドを止めるので、
+  有限の `timeout` までに応答がないと `TimeoutError` が発生します。有限の待ち時間を指定すると、
+  キューへの受け入れも単調増加する時計の期限で区切られます。`timeout=None` にすると、応答が来るか
+  接続が閉じるまで応答を待ち続けます。セッションを取得する側は、自分の外側の期限を過ぎて届いた
+  接続先の ID も、後片付けのために持っておけます。呼び出しは応答が来るまでそのスレッドを止めるので、
   作業用のスレッドから呼び、スーパーバイザ自身のイベントループからは呼ばないでください。
 - `CapturedCDP.is_valid()` は、スーパーバイザがつなぎ直すか、止まるか、レジストリで別のものに
   置き換えられるまで true のままです。そのあとは `call` がすべて
@@ -134,7 +137,11 @@ title = reply["result"]["result"]["value"]
   スーパーバイザで `focus_page` を呼んでも変わりません。
 - 自分でつないだセッション（`Target.attachToTarget`）は、自分で切り離します。`timeout` を
   過ぎて届いた応答は捨てられるため、時間切れになった接続の呼び出しが、接続が閉じるまでセッションを
-  つないだままにすることがあります。つなぐ呼び出しの待ち時間は長めにしてください。
+  つないだままにすることがあります。大きな待ち時間を当て推量で決めるのではなく、`timeout=None` と、
+  取得を受け持つ作業スレッドを残しておく形を使い、遅れて届いた応答を自分で受け取って切り離してください。
+- `before_send` は、送信の直前にスーパーバイザのループ上で呼ばれる、信頼されたコード用の検証関数です。
+  同期で動き、処理を止めてはいけません。`None` を返せば送信され、例外を発生させれば送信を拒否します。
+  この中から capture や CDP の API を呼ばないでください。すでに送られたコマンドを取り消すことはできません。
 
 これは、信頼されたコードが同じプロセス内で使うための継ぎ目です。同じプロセスの Python が
 もともと触れられる範囲を超える権限は与えず、オリジン・同意・ターゲットの持ち主についての
