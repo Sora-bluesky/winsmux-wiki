@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "スキルを作る"
 description: "Hermes Agent 向けのスキルの作り方 — SKILL.md の書式、指針、公開まで"
 upstream_path: developer-guide/creating-skills.md
-upstream_blob: e03182ddf8572257f774b9b46ea6309a9e8e201f
+upstream_blob: 2b8edca03db2e960fff45aad66e22b0eae89014e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills
 ---
@@ -330,7 +330,7 @@ skills:
 
 断片はスキルのディレクトリを作業ディレクトリとして動き、出力は 4000 文字までに切られます。時間切れや異常終了で失敗したときは、スキル全体が壊れるのではなく、`[inline-shell error: ...]` という短い印が出ます。
 
-信頼の範囲について: コミュニティのハブから入れたスキルでは、このフラグがオンでも断片は自動では実行されません。ハブのインストール時の検査は、この記法を含むコミュニティのスキルを caution や dangerous と判定するとインストールを止めます。`--force` で入れたもの（あるいは、検査がこの書き方を見抜けるようになる前に入れたもの）が、検査で拒まれた動作を再び有効にしてはいけないからです。同梱のスキル、信頼済みのスキル、自分で作ったスキルは、これまでどおり展開されます。
+信頼の範囲について: コミュニティのハブから入れたスキルでは、このフラグがオンでも断片は自動では実行されません。ハブのインストール時の検査は、この記法を含むコミュニティのスキルを caution や dangerous と判定するとインストールを止めます。`--force` で入れたもの（あるいは、検査がこの書き方を見抜けるようになる前に入れたもの）が、検査で拒まれた動作を再び有効にしてはいけないからです。この扱いは、コミュニティからインストールしたものの中に入れ子になっているすべての `SKILL.md` と、`skills.external_dirs` を通して参照する別のプロファイルのインストールにも及びます。スキルのツリーにあるハブのロックファイル（`.hub/lock.json`）が読めない場合、そのツリー内のものは修復されるまで何も展開されません。同梱のスキル、信頼済みのスキル、自分で作ったスキルは、これまでどおり展開されます。
 
 ### 試してみる {#test-it}
 

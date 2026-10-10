@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 2a6818c6fd92eccb0c436b8041a0987dacdf1a74
+upstream_blob: bdf16ef015560a39e578e95c5288ecab77c466b4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -527,7 +527,7 @@ capabilities:
 `hermes plugins update` はその差分を示して改めて確認します。新しい権限は同意するまでオフの
 ままです。プラグインの更新が黙って手を広げることはありません。カタログの固定の更新は、
 もう一歩踏み込みます。新しい固定で、入っている版には無かったツール・フック・Python の依存・
-ホスト側の権限・デスクトップの画面が増えている場合、CLI は差分を示し、何かが動く前に `y/N` を
+ホスト側の権限・プロバイダーへのサインイン（`requires_auth`）・デスクトップの画面が増えている場合、CLI は差分を示し、何かが動く前に `y/N` を
 尋ねますし、デスクトップやダッシュボードの **Update** ボタンも同じ確認を開きます。断った場合
 （または対話できないセッションの場合）、プラグインは古い固定のままになります。
 

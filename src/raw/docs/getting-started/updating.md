@@ -2,7 +2,7 @@
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: c6508ab8beeba20429435529865abacadf0d282e
+upstream_blob: 6d49349b1a9cf13aa8fa4bf5df8e96e29fc236f9
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -33,8 +33,26 @@ sources:
 hermes update
 ```
 
-ソースのインストールは、ソースのチャンネルとして唯一有効な `main` を追いかけます。更新では
-PM を通じて依存関係を用意し、設定の変更点とプロセスの再起動結果を報告します。
+公式リポジトリのソースのチェックアウトは、**stable** チャンネルを追いかけます。つまり、
+GitHub で公開された最新の `vX.Y.Z` リリース（下書き、プレリリース、canary のタグは対象外です）を、
+そのコミットちょうどでチェックアウトします。`hermes update` もデスクトップアプリの更新ボタンも、
+リリースからリリースへ進むだけで、コミット単位では動きません。フォークやミラーは、引き続き自分の
+`main` ブランチを追いかけます。更新では PM を通じて依存関係を用意し、設定の変更点とプロセスの
+再起動結果を報告します。
+
+```bash
+hermes update --set-channel main     # follow every commit on main instead
+hermes update --set-channel stable   # back to releases only
+hermes update --channel main         # one run against main; nothing is saved
+```
+
+この選択は、インストールごとに
+`config.yaml` の `update.installs` に保存されます。チャンネルを一度も選んでいないインストールは
+前にしか進みません。最新のリリースより新しいチェックアウト（たとえば、この既定になる前に `main` を
+追いかけていたもの）は、さらに新しいリリースが出るまでその場に留まります。`--set-channel stable` を
+実行すると、たとえ古くなる場合でも、チェックアウトをリリースのコミットちょうどに固定します。
+Windows Store、MSIX、同梱デスクトップアプリのインストールは影響を受けません。これらのチャンネルは
+パッケージに焼き込まれています（下記を参照してください）。
 
 ### 同梱デスクトップアプリの更新 {#bundled-desktop-updates}
 
@@ -227,8 +245,8 @@ git -C "$repo" -c gc.writeCommitGraph=false gc --auto
 
 ### 既定以外のブランチに対して更新する: `--branch` {#updating-against-a-non-default-branch---branch}
 
-ソースのインストールは `origin/main` を追いかけます。その 1 回だけ
-別のブランチを使いたい場合は `--branch NAME` を渡します。
+`--branch NAME` は、選んでいるチャンネルの代わりにブランチの先端に対して更新する、
+その 1 回だけの上書き指定です。
 
 ```bash
 hermes update --branch release-candidate
@@ -284,7 +302,8 @@ git stash apply stash@{0}
 
 ### 確認だけする: `hermes update --check` {#preview-only-hermes-update---check}
 
-`hermes update --check` は、チェックアウトを `origin/main` と比べるだけで、
+`hermes update --check` は、チェックアウトを選んでいるチャンネルの更新先（既定では最新の stable リリース、
+main チャンネルでは `origin/main`）と比べるだけで、
 コードの適用、依存関係のインストール、ゲートウェイの再起動は行いません。比べる際に
 Git のメタデータを取得することがあるので、ファイルシステムへの書き込みがまったくないとは限りません。
 パッケージが持っているインストールでは、外部の更新方法を報告します。

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: 240a909630cfe2aca81edce1fe18a8f367fb0f36
+upstream_blob: fac8da071de9cf7f761e7d30ceefcabea0b7686c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -27,13 +27,24 @@ Hermes の実行はそのまま使えますが、Relay のスコープ、ミド�
 > `HERMES_NEMO_RELAY_ATIF_*` の設定を移行するときにこのファイルを作ります。旧来の環境変数そのものでは、
 > Relay のエクスポーターはもう設定されません。
 
-対応しているプラットフォームでは、Hermes が管理下のプロバイダー呼び出しとツール呼び出しを行うには NeMo Relay 0.9 が必要です。
+対応しているプラットフォームでは、Hermes が管理下のプロバイダー呼び出しとツール呼び出しを行うには NeMo Relay 0.10 が必要です。
 
 ## 実行時依存とデータの境界 {#runtime-dependency-and-data-boundary}
 
-Hermes は、範囲を限った `>=0.9,<0.10` の依存指定から、プラットフォーム別の `nemo-relay` ネイティブ wheel をインストールします。
+Hermes は、範囲を限った `>=0.10,<0.11` の依存指定から、プラットフォーム別の `nemo-relay` ネイティブ wheel をインストールします。
 公開パッケージは [NVIDIA NeMo Relay リポジトリ](https://github.com/NVIDIA/NeMo-Relay) からビルドされています。
 対応していないプラットフォームでは、別の実装をダウンロードするのではなく、上で説明した明示的な何もしないランタイムを使います。
+
+Relay 0.10 では、observability の設定に `version = 4` が必要です。独自の Python 製 LLM 実行インターセプトは `(name, request, context, next_call)` を受け取ります。
+context からは選ばれたリクエストのコーデックと、ストリーミングでない実行ではレスポンスのコーデックも参照できます。
+ネイティブプラグインは Relay 0.10 の ABI v7 向けにビルドし直し、`compat.relay` の下限を `0.10.0` にする必要があります。
+LLM 実行インターセプトを登録するワーカーは、コールバックを更新し、プロトコルのバインディングを生成し直す必要があります。
+アップグレードの確認項目の全体は、Relay の [0.10 移行ガイド](https://docs.nvidia.com/nemo/relay/reference/migration-guides) を参照してください。
+
+Relay 0.10 は、有効な Relay の設定があり、Hermes プロセスの環境に空でない `OTEL_EXPORTER_OTLP_ENDPOINT`（またはシグナル別の `OTEL_EXPORTER_OTLP_*_ENDPOINT`）があると、OpenTelemetry へのエクスポートを自動で始めます。
+その `gen_ai` スパンにはプロンプトとレスポンスのメッセージが含まれます。
+`hermes migrate relay` が生成するファイルは、0.9 と同じ動きを保つために `[components.config.opentelemetry] enabled = false` を設定します。
+このエクスポートを望まない場合は、手書きのファイルにも同じセクションを足すか、`OTEL_SDK_DISABLED=true` を設定してください。
 
 Relay の管理下実行が有効なときは、設定したインターセプターが実際の呼び出しに作用できるよう、プロバイダーへのリクエストとレスポンスが Hermes プロセス内のそのネイティブモジュールを通ります。
 これは共有メトリクスのデータの取り決めとは別のものです。
@@ -103,6 +114,100 @@ Hermes がセッションやタスクの論理的な作業ディレクトリを�
 Relay サブスクライバーから見えます。パスからはユーザー名、リポジトリ名、マウントの構成が分かることがあります。
 Relay は作業ディレクトリでイベントを絞り込みません。パスをホストの外に出したくない場合は、
 信頼できるローカルのコレクターを使うか、そのプロセスではリモートのエクスポーターを有効にしないでください。
+
+## 圧縮マーク {#compaction-marks}
+
+Relay のランタイムが動いているとき、Hermes は次の発生源ごとに、
+`data_schema: {"name": "hermes.compaction", "version": "1"}` を持つ Relay マークを1つ出します。
+
+- 戻ってきた `compress_context` の試行ごと（ブロックされたもの、
+  Codex に回されたもの、中断されたものを含みます）
+- マイクロ圧縮の各パス
+- 確定した、先回りのツール結果の刈り込みごと
+- Codex が自分で行い、Hermes が観測した Codex app-server の
+  スレッド圧縮ごと
+
+Relay のエクスポーターは別に設定するので、このマークに設定は要りません。
+ほかの履歴やリクエストの書き換えでは、まだマークを出しません。対象外なのは、OpenAI Responses のネイティブ圧縮とそのチェックポイント前の項目の刈り込み、
+プロバイダーに拒否されたあとの画像の縮小、リクエストだけの切り詰め、そして
+ターンが `compression_exhausted` で終わったあとにゲートウェイが自動で行うセッションのリセットです。
+このリセットは圧縮ではなく、セッションを新しい空のものに置き換えます。
+
+| マーク | 出るとき | Relay への影響 |
+|---|---|---|
+| `compaction` | `outcome: committed` で `scope: history` または `provider` | セッションのエージェントスコープの LLM 履歴の鮮度をリセットし、次の LLM 開始時に圧縮後の履歴全体を記録します |
+| `compaction.attempt` | それ以外の結果（`aborted`、`failed`、`skipped`、`blocked`、`other`） | なし |
+
+圧縮後の履歴を保存したあとでセッションの分割に失敗した確定も、
+`committed` のままです（モデルは次から圧縮後の履歴を見ます）。このとき
+`failure_class: session_split_failed` と `split_status: failed_not_indexed` が付きます。
+
+マークの親は、同じセッションで動いている `hermes.turn` です。ターンの外で圧縮が走る場合（ゲートウェイの衛生処理）は `hermes.session` スコープが親になります。
+`compression.in_place: false` のとき、ローテーションする確定はエージェントを子セッションへ移します。
+この子セッションは、後で Relay 管理下の LLM 呼び出しか次のターンがスコープを開くまで、Relay のスコープを持ちません。
+スコープがない間に子セッションで起きた圧縮（2回目のプリフライトのパスや、ターンの終わる前に走るマイクロ圧縮のパス）は、
+エージェントが開始した、動いている `hermes.turn` を親にします。そのときも
+`data.session_id` は子セッションを指します。
+Relay が計測しないターン（同じセッションで同時に走る2つ目のターン）や、
+バックグラウンドのレビューのような永続化から切り離されたフォークからはマークを出しません。
+それらの圧縮が書き換えるのは自分のトランスクリプトだけだからです。
+
+`data` は平らな構造なので、OpenTelemetry はすべてのフィールドを
+`nemo_relay.mark.data.<key>` に展開します。v1 のキーはすべてのマークに必ずあり、当てはまらない値は `null` です。
+分類を表すフィールドは、次の決まった集合から値を取ります。2つの要約側の識別子だけは例外です。
+
+| フィールド | v1 の値 |
+|---|---|
+| `kind` | `summarize`、`micro_summarize`、`prune_tool_results`、`provider_native` |
+| `scope` | `history`、`provider` |
+| `official` | `compress_context` の試行でだけ `true` |
+| `method` | `llm_summary`、`aux_fallback_main`、`deterministic_fallback`、`deterministic_prune`、`provider`、`none` |
+| `trigger` | `manual`、`turn_start_threshold`、`pre_api`、`post_tool`、`idle`、`engine_preflight`、`overflow`、`gateway_hygiene`、`between_turns`、`proactive_prune`、`provider`、`unknown` |
+| `trigger_class` | `auto`、`manual`、`overflow`、`provider`、`unknown` |
+| `outcome` | `committed`、`aborted`、`failed`、`skipped`、`blocked` |
+| `split_status` | `not_applicable`、`in_place_committed`、`rotated_committed`、`failed_not_indexed`、`aborted`、または `null` |
+| `token_count_method` | `estimate_rough`、または `null` |
+| `overflow_reason` | `context_overflow`、`payload_too_large`、`long_context_tier`（`trigger: overflow` の試行が立て直す元となった、プロバイダーの拒否に対するエラー分類器の理由）。それ以外のきっかけではすべて `null` |
+| `summarizer_provider`, `summarizer_model` | 決まった集合ではない自由形式です。Hermes が要約の呼び出しのために解決したプロバイダーとモデルの識別子で、試行が何も記録しなかった場合は `null` です。マイクロ圧縮のマークには `summarizer_model`（設定された要約モデル）だけが載ります |
+
+決まった集合の外の値は `other` になります。`failure_class` には、
+`hermes.compression.count` の分類に加えて試行だけの分類（`blocked:cooldown` のようなガードによる終了、
+`codex_auto_native` のような Codex への経路による終了、リースによる終了の `session_ownership_lost`、`session_ownership_unreadable`、
+`cooldown_state_unreadable`、`empty_transcript`（コンテキストエンジンがメッセージを1つも返さなかった）、
+`summary_model_benched`、マイクロ圧縮の結果）を使います。分類がないときは `none`、それ以外は `other` です。
+きっかけのラベルを渡さない自動の呼び出し元は `trigger: unknown` と
+`trigger_class: auto` になります。きっかけがまったくない記録は、
+両方とも `unknown` になります。`in_place` と `session_rotated` は、`split_status` が
+`in_place_committed` か `rotated_committed` のときだけ設定されます。`cache_break` は
+`scope: provider` では `null` です。
+
+数値のフィールドには効果（`tokens_before`、`tokens_after`、
+`tokens_reclaimed`、`messages_before`、`messages_after`、`items_dropped`）と
+所要時間（`duration_ms`、`summary_generation_ms`、`aux_call_duration_ms`、
+`queue_wait_ms`、`commit_ms`）が入ります。トークン数はメッセージだけを対象にしたおおまかな見積もりです
+（`token_count_method: estimate_rough`）。ペイロードには、メッセージの本文、
+要約の本文、注目トピック（`has_focus_topic` だけを載せます）、エラーの本文、
+ファイルパスは一切含まれません。`attempt_id` と `session_id` は突き合わせ用です。
+メトリクスのラベルには使わないでください。
+
+Codex app-server のターンはモデル呼び出しを Codex の中で行うので、Relay はそれらの
+LLM 開始を記録しません。その `compaction` マークは書き換えを記録しますが、鮮度の
+リセットが効くのは、同じセッションスコープで後から Hermes 側が行う LLM 呼び出しだけです。
+Hermes が強制した圧縮は、その `compress_context` の試行で1回だけ記録されます。
+次の Codex のターンは圧縮ターンからの通知を捨てるので、
+同じ圧縮をもう一度報告することはありません。
+
+v1 の既知の制約:
+
+- `gateway.telemetry.session_segments.on_compaction: true` のとき、ターンの外で
+  ローテーションする確定は、マークを出す前に古い Relay セッションを閉じてしまうため、
+  マークが失われます。現在この動きをする呼び出し元はありません。手動の
+  `/compress` はその通知をマークのあとまで遅らせ、ゲートウェイの
+  衛生処理はその場で圧縮します。
+- 後のバージョン向けに予約されていて v1 では出さないもの: `kind` の
+  `request_truncation` / `window_reduction`、`scope: request`、
+  `trigger: recovery`、`outcome: noop`、そして
+  `token_count_method: provider_usage`。
 
 ## プロセス全体のプラグインポリシーとプロファイルの分離 {#process-wide-plugin-policy-and-profile-isolation}
 
@@ -260,7 +365,7 @@ Hermes は、再利用とパッチ世代の連続性を、既存の `skills/.usa
 | `hermes.setup.completed` | 実行面（`cli`/`desktop`）、プロバイダー | セットアップでどのプロバイダーが選ばれ、それがどの実行面か。 |
 | `hermes.model_tokens.sum` | 呼び出しの役割、モデル、プロバイダー、補助タスク、トークンの種類 | モデル・プロバイダーごとのトークン量、プロンプトキャッシュの割合、補助的な処理（圧縮、タイトル、画像認識など）にかかる量。値はイベントの回数ではなくトークンの合計です。 |
 | `hermes.model_route.count` `ttft_bucket` | 最初のトークンまでの時間 | プロバイダー・モデルごとの体感の待ち時間。 |
-| `hermes.compression.count` | きっかけ、結果、コンテキストの埋まり具合の区分、失敗の分類 | 圧縮がどれくらいの頻度で動くか、コンテキストがどこまで埋まるか、失敗していないか。`skipped` は、失敗しようがなかった場合です。ロックをほかが持っていた、要約できるものがなかった（モデルを呼んでいない）、利用者が止めた、新しい試行に置き換えられた、のいずれかです。パッケージスキーマ v4 からは、この行に `failure_class` も載ります。試行ログ自身の分類名で、決まった一覧から選びます。skipped の行ではスキップの理由（`lock_contended`、`insufficient_messages`、`no_compressible_window`、`empty_post_handoff_window`、`explicit_interrupt`、`attempt_superseded`、`snapshot_stale`）、failed の行では失敗の理由（`summary_auth_failure`、`summary_network_failure`、`summary_truncated_failure`、`summary_empty_content_failure`、`summary_overload_failure`、`summary_generation_aborted`、`summary_generation_failed`、`summary_overload_degraded`、`aux_model_fallback`、`feasibility_skip`、`stall_deterministic_fallback`、`stall_interrupted`、`would_grow`、`no_progress`、`commit_fence_cancelled`、`pool_saturated`、`session_split_failed`、`exception`、`rollback`）、成功なら `none` です。例外や巻き戻しの Python の型名は落とし（`exception:TimeoutError` は `exception` になります）、それ以外の値は `other`、分類のない失敗は `unknown` になります。 |
+| `hermes.compression.count` | きっかけ、結果、コンテキストの埋まり具合の区分、失敗の分類 | 圧縮がどれくらいの頻度で動くか、コンテキストがどこまで埋まるか、失敗していないか。`skipped` は、失敗しようがなかった場合です。ロックをほかが持っていた、要約できるものがなかった（モデルを呼んでいない）、利用者が止めた、新しい試行に置き換えられた、のいずれかです。パッケージスキーマ v4 からは、この行に `failure_class` も載ります。試行ログ自身の分類名で、決まった一覧から選びます。skipped の行ではスキップの理由（`lock_contended`、`insufficient_messages`、`no_compressible_window`、`empty_post_handoff_window`、`explicit_interrupt`、`attempt_superseded`、`snapshot_stale`）、failed の行では失敗の理由（`summary_auth_failure`、`summary_network_failure`、`summary_truncated_failure`、`summary_empty_content_failure`、`summary_overload_failure`、`summary_generation_aborted`、`summary_generation_failed`、`summary_overload_degraded`、`aux_model_fallback`、`feasibility_skip`、`stall_deterministic_fallback`、`stall_interrupted`、`would_grow`、`no_progress`、`commit_fence_cancelled`、`pool_saturated`、`session_split_failed`、`empty_transcript`、`exception`、`rollback`）、問題のない成功なら `none` です。フォールバックを通して確定した成功は、その行の分類を保ちます。そのため、`success` の行で `failure_class` が `none` 以外なら「フォールバックで確定した」という意味です。決定的な要約（`summary_generation_failed`、`summary_overload_degraded`、`stall_deterministic_fallback`、または `feasibility_skip`。最後のものは、フォールバックが続いて要約モデルが外された場合も含みます）か、失敗した要約モデルの代わりにメインモデルを使った場合（`aux_model_fallback`）です。例外や巻き戻しの Python の型名は落とし（`exception:TimeoutError` は `exception` になります）、それ以外の値は `other`、分類のない失敗は `unknown` になります。 |
 | `hermes.model_switch.count` | 切り替え元・切り替え先のプロバイダー、実行面 | どのプロバイダーから離れ、どこへ移っているか。 |
 | `hermes.fallback.count` | 切り替え元・切り替え先のプロバイダー、エラーの分類 | 代替プロバイダーがどれくらいの頻度で、何が原因のターンを救っているか。 |
 | `hermes.slash_command.count` | コマンド、実行面 | どの組み込みコマンドが使われているか（`/retry`、`/undo`、`/new` は使いにくさのシグナルです）。スキルとプラグインのコマンドは `skill`/`plugin` として報告します。 |

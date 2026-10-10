@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "同梱のプラグイン"
 description: "Hermes Agent に最初から入っていて、節目ごとのフックで自動的に動くプラグイン群 — disk-cleanup とその仲間たち"
 upstream_path: user-guide/features/built-in-plugins.md
-upstream_blob: e0d0b776ac7e33c4d3ba4a8fc94efa04096ce201
+upstream_blob: f0f587aad4de3c870a3de200f608b0385d4b87ea
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins
 ---
@@ -248,6 +248,10 @@ agent_name = "Hermes Agent"
 model_name = "unknown"
 output_directory = "/home/you/.hermes/telemetry/nemo-relay/atif"
 filename_template = "trajectory-{session_id}.json"
+
+[components.config.opentelemetry]
+enabled = false
+endpoints = []
 
 [components.config.policy]
 unknown_component = "warn"

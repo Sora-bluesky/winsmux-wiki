@@ -2,7 +2,7 @@
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: 693d164ae164c9990cfcad7f74b98fcbba4d079c
+upstream_blob: cdc00273c93a8eea4c877b2ee8a9aa921a583c4d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -204,6 +204,55 @@ DB から履歴を読み直しても壊れません。またセッション行�
   （`max_compression_attempts`）。ここで先送りするとセッションが行き詰まります。毎ターン
   プロバイダーに跳ね返され、次の失敗でクールダウンがさらに伸びてしまうからです（#100661）。
   その試行も失敗した場合は、通常どおりクールダウンが記録されます。
+
+#### 試行ごとの記録 {#attempt-telemetry}
+
+結果を返した `compress_context` の呼び出しは、どれも中身を含まない INFO 行を 1 行ログに出します。
+形は `context compression attempt telemetry: {...}` で、ロガーは
+`agent.conversation_compression` です。メッセージの本文、要約の本文、
+注目する話題、エラーメッセージは決して含みません。
+
+- `trigger_source` は、その試行が走った理由です。値は `manual`、`idle`、
+  `turn_start_threshold`、`engine_preflight`、`pre_api`、`post_tool`、
+  `gateway_hygiene`、`overflow` のどれかです。ラベルを渡さない自動の呼び出し元では
+  `auto` になります。試行が始まる前に断られた場合（プールが埋まっていたとき）は
+  `unknown` になります。
+- `route` は、手元の圧縮器なら `hermes`、Codex のスレッドが圧縮を受け持つなら
+  `codex_app_server` です。
+- `commit_status` は `committed`、`aborted`、`failed`、`skipped`、`blocked` のどれかです。
+  `blocked` の試行は自動の安全装置に断られたもので、その `failure_class` が
+  どの安全装置かを示します（`blocked:cooldown`、`blocked:structural_backoff`、
+  `blocked:ineffective`）。セッションの貸し出し（lease）の下では、`session_ownership_lost`
+  （`skipped`）は別の経路がすでにセッションを切り替えたことを、
+  `session_ownership_unreadable` / `cooldown_state_unreadable`（`aborted`）は
+  その状態を読めなかったことを表します。`empty_transcript`（`aborted`）は、
+  エンジンがメッセージを 1 件も返さず、何も確定しなかったことを表します。
+- `attempt_id` はこの試行の名前、`session_id` は試行を始めたときのセッションです。
+  試行がその後、切り替わった子セッションに乗り移った場合や、より新しい試行（止まったときの
+  代替）が始まって巻き戻った場合でも変わりません。
+  圧縮器が動く前に止まった試行や、状態を巻き戻した試行は、
+  `method: none` を記録し、トークン数は出しません。前の試行の数字を流用することはありません。
+- `method` は、要約をどう作ったかを示します。値は `llm_summary`、
+  `aux_fallback_main`（要約用のモデルが失敗し、メインのモデルが書いたもの）、
+  `deterministic_fallback`（決まった目印による要約。`items_dropped` は置き換えた
+  メッセージの数）、`provider`（Codex）、`none` のどれかです。
+- `messages_before` / `messages_after` と `tokens_before` / `tokens_after` /
+  `tokens_reclaimed` は、確定の境界を越えた会話の記録を表します。
+  `/compress here N` で残した末尾の行や、境界の目印も含みます。
+  断られた候補や巻き戻された候補は会話の記録に届いていないので、その記録には
+  `messages_after`、`tokens_after`、`tokens_reclaimed`、
+  `items_dropped` がありません。
+  `token_count_method: estimate_rough` は、これらがメッセージだけを対象にした
+  大まかな推定値（システムプロンプトとツールのスキーマは除く）であることを示し、同じ条件で
+  比べられるようにしています。`tool_results_pruned` と `reasoning_items_pruned` は、
+  要約の前後に走った決め打ちの削除処理の回数です。
+
+任意で有効にする共有指標 `hermes.compression.count` は、大まかなきっかけ
+（`auto`、`manual`、`overflow`）だけを持ち、手元の圧縮器が実際に動かした試行だけを数えます。
+断られた試行と Codex に回った試行は、ログの行にしか出ません。
+NeMo Relay の実行環境が動いているときは、同じ記録に、細かな圧縮の処理と確定した先回りの削除を加えたものが、
+`hermes.compaction` の印としても出力されます
+（[NeMo Relay の共有指標](/hermes/docs/developer-guide/relay-shared-metrics/#compaction-marks)を参照）。
 
 ## 設定 {#configuration}
 

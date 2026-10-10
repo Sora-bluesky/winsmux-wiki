@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プロンプトの組み立て"
 description: "Hermes がシステムプロンプトをどう組み立て、キャッシュの安定性をどう保ち、その場限りの層をどう差し込むか"
 upstream_path: developer-guide/prompt-assembly.md
-upstream_blob: a7482ad24e6658ef9d89cf3012e7c1f2fc554b27
+upstream_blob: 5576353ea96094d4ca9b5faf0ca052177d99013a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/prompt-assembly
 ---
@@ -56,7 +56,12 @@ context の段の中では、共有されるプロジェクトのファイルが
 埋め込みモデルの説明は除外します。`Platform:` は、あえて同一性を判定する項目に入れていません。入口が切り替わっても
 （デスクトップ ↔ TUI）保存されているバイト列はそのままで、今の入口向けの案内はターンごとのユーザーメッセージの経路に
 一度だけ流します（`agent/surface_switch.py`）。こうしてキャッシュされる前半部分が生き残ります（#104414）。
-古いプロンプトは元どおり「ホストが文脈より前」という印を持ったままなので、
+`<available_skills>` の一覧も同じ方法で保ちます。毎ターン、その一覧を、セッションが今作るとしたらどうなるかという一覧と
+比べます（`agent/skills_index_delta.py`。`build_turn_context` から呼ばれるので、保存したプロンプトを戻すときだけでなく、
+長く動き続ける CLI・TUI・Desktop のエージェントでも比べます）。違い（一覧に増えた行や、消えた名前）があれば、
+同じ一度きりの案内の経路に乗せます。送るのは、その違いが変わったときだけです。プロセス内の一覧のキャッシュは
+スキルのファイルの指紋をキーにしているので、別のプロセスが書いた変更にも気づけます。一覧そのものは、
+次に組み立て直す節目（圧縮）でそろいます。古いプロンプトは元どおり「ホストが文脈より前」という印を持ったままなので、
 並べ替えの前に保存されたプロンプトも問題なく通ります。
 
 `skip_context_files` が指定されているとき（たとえばサブエージェントへの委任）は、SOUL.md は読み込まれず、コードに直接書かれた `DEFAULT_AGENT_IDENTITY` が使われます。

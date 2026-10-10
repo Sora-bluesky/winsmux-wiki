@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: d96a269e09144f391cfd7c5b200c7b51cb4f2764
+upstream_blob: 6eec70eb3181f086b9b637afcf9a23867eda92a6
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -113,7 +113,7 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes profile` | プロファイルを管理します — 複数の独立した Hermes インスタンス。 |
 | `hermes completion` | シェル補完スクリプトを表示します（bash/zsh/fish）。 |
 | `hermes --version` | バージョン情報を表示します。 |
-| `hermes update` | 最新のコードを取得して依存関係を再インストールします。`--check` はインストールせずに事前確認、`--backup` は pull 前の `HERMES_HOME` のスナップショットを取得します。 |
+| `hermes update` | 最新の安定版リリース（または選んだチャンネル）に更新し、依存関係を再インストールします。`--check` はインストールせずに事前確認、`--backup` は pull 前の `HERMES_HOME` のスナップショットを取得します。 |
 | `hermes uninstall` | システムから Hermes を削除します。 |
 
 ## `hermes chat` {#hermes-chat}
@@ -1866,13 +1866,13 @@ hermes update [--gateway] [--check] [--plan] [--no-backup] [--backup] [--yes]
 デスクトップのバンドル、Docker、Nix、Termux のパッケージは、それぞれ外部の更新の仕組みが引き続き担当します。
 [更新とアンインストール](/hermes/docs/getting-started/updating/) を参照してください。
 
-`hermes update` は、設定された更新用ブランチ（既定: `main`）を pull します。チェックアウトが別のブランチにある場合、Hermes は pull の前に更新用ブランチをチェックアウトすることがあります。更新の自動 stash フローの外にブランチ上の作業を残しておきたい場合は、更新前にコミットしてください。
+`hermes update` は、このインストールの更新チャンネルに従います。公式リポジトリのソースチェックアウトでは既定が `stable` で、GitHub で公開された最新の `vX.Y.Z` リリースのコミットそのものに合わせます。フォークやミラーでは既定が `main` です。`main` のすべてのコミットを追いたい場合は `hermes update --set-channel main` を実行します。`hermes update --set-channel stable` で元に戻せます。`main` チャンネルでは、チェックアウトが別のブランチにある場合、pull の前に更新用ブランチへ切り替えることがあります。更新の自動 stash フローの外にブランチ上の作業を残しておきたい場合は、更新前にコミットしてください。
 
 | オプション | 説明 |
 |--------|-------------|
 | `--install-id` | このインストールの識別子とパスを表示して終了します。 |
-| `--set-channel CHANNEL` | 更新は適用せずに、このソースのインストールの更新チャンネルを保存します。ソースのチャンネルとして有効なのは `main` だけです。バンドル版のアプリケーションはビルドのチャンネルが固定なので、チャンネルの変更を拒否します。 |
-| `--channel CHANNEL` | この実行に限ってソースのチャンネルを選びます（有効なのは `main` だけです）。 |
+| `--set-channel CHANNEL` | 更新は適用せずに、このソースのインストールの更新チャンネルを保存します。指定できるのは `stable`（公開されたリリース）か `main`（すべてのコミット）です。バンドル版のアプリケーションはビルドのチャンネルが固定なので、チャンネルの変更を拒否します。 |
+| `--channel CHANNEL` | この実行に限ってソースのチャンネルを選びます（`stable` か `main`）。設定は保存されません。 |
 | `--branch NAME` | この実行に使うソースのブランチを選びます。ソースのチャンネルの選択より優先されます。 |
 | `--gateway` | メッセージングの `/update` コマンドが使う内部モードです。プロンプトと進捗のストリーミングに、ターミナルの stdin を読む代わりに、ファイルベースの IPC を使います。ゲートウェイの再起動フラグではありません。 |
 | `--check` | pull・依存関係のインストール・何かの再起動をせずに、更新が利用可能かどうかを確認します。 |

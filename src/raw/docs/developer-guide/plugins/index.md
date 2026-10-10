@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: aff9cf1cabc46bde9d5751f13bc38feb6b29f825
+upstream_blob: 2697ca94e5ab56251840ef9cdca536ea3e075e49
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -238,6 +238,80 @@ calculator = "my_pkg:register"
 
 Hermes はこれらをインストール済みメタデータから読み取り、あなたのコードを import しません。そのため、`hermes plugins capabilities` と同意フローは、pip インストールでも正確な状態を保ちます。
 
+### ユーザーの Codex サインインを使う（コアが行うリクエスト） {#use-the-users-codex-sign-in-core-made-requests}
+
+ユーザーの ChatGPT / Codex サブスクリプションが必要なプラグイン（OpenAI
+Realtime のクライアントシークレットの発行、Codex のバックエンドのエンドポイントの呼び出しなど）は、
+`~/.codex/auth.json` や Hermes の `auth.json` を読んだり、更新したり、書き換えたり**してはいけません**。Codex のリフレッシュ
+トークンは1回しか使えません。プラグインが自分で更新すると、Hermes のロック付きの更新と競合し、
+負けた側のローテーションの連鎖が取り消されて、ユーザーはサインアウトされてしまいます。
+代わりに、リクエストを Hermes に任せてください。Hermes は自分の更新の経路で認証情報を解決し、
+`Authorization` を自分で付けて、レスポンスだけを返します。プラグインのコードがトークンを目にすることはありません。
+
+`plugin.yaml` でサインインを宣言します。
+
+```yaml
+name: live-voice
+requires_auth:
+  - openai-codex
+```
+
+そのうえで公開のヘルパーを呼びます。普通の関数なので、`register(ctx)` のコードだけでなく、ダッシュボードのプラグイン
+（`dashboard/plugin_api.py`）や同梱したモジュールからも import できます。
+
+```python
+from hermes_cli.plugin_provider_requests import ProviderNotSignedIn, credentialed_provider_request
+
+def mint_client_secret(session: dict) -> dict:
+    try:
+        resp = credentialed_provider_request(
+            "openai-codex", "POST", "https://api.openai.com/v1/realtime/client_secrets",
+            json={"session": session}, timeout=15)
+    except ProviderNotSignedIn as exc:
+        return {"ok": False, "error": str(exc)}  # tells the user how to sign in
+    if resp.status != 200:
+        return {"ok": False, "error": f"client secret failed ({resp.status}): {resp.text[:300]}"}
+    return {"ok": True, **resp.json()}
+```
+
+これは、`~/.codex/auth.json` を読み、トークンの期限が近いと
+`auth.openai.com/oauth/token` に POST して、結果を書き戻していた手作りのヘルパーを置き換えるものです。そのコードは削除してください。プラグイン側に更新の手順はもう残っていません。
+
+`credentialed_provider_request(provider, method, url, *, json=None, headers=None, timeout=30.0)`
+は `ProviderResponse`（`status`、`headers`、`body`、`.text`、`.json()`）を返します。
+決まりは次のとおりです。
+
+- **宣言したプラグインだけ。** 呼び出し元は、コールスタック上にファイルがあるプラグインです。
+  Hermes はそれをプラグインのディレクトリの下から見つけ、その
+  `plugin.yaml` を読みます。`requires_auth` にプロバイダーを載せていないプラグインや、
+  インストール済みのどのプラグインにも属さないコードは `PermissionError` になります。ヘルパーは
+  自分の関数の中から呼んでください。ヘルパーをそのまま `run_in_executor` に渡すと、
+  スタック上にプラグインのフレームが残らないため、呼び出しは拒否されます。
+- **プロバイダーのオリジンだけ。** `openai-codex` の場合、トークンが送られるのは
+  `https://chatgpt.com` と `https://api.openai.com` だけです。それ以外の URL では、リクエストを送る前に
+  `PermissionError` になります。Codex の認証情報が独自のゲートウェイへ向かうプロファイルも拒否されます。
+  そのキーはゲートウェイのものだからです。
+- **リダイレクトしない。** 3xx のレスポンスはそのまま返り、追いかけることはありません。そのため
+  ヘッダーが第三のホストに届くことはありません。
+- **プロファイル単位。** 使われる認証情報は、アクティブなプロファイルの Codex サインインです。
+  チャットが使うものと同じです（`hermes auth add openai-codex`、またはデスクトップアプリの Codex
+  サインイン）。サインインがない場合は `ProviderNotSignedIn` になり、そのメッセージに
+  サインインのコマンドが示されます。
+- 渡した `headers` も送られます。ただし、Hermes が付ける
+  `Authorization`（またはアカウント）のヘッダーを置き換えるものは除きます。
+
+`requires_auth` は `hermes plugins show <name>` とインストール時に表示されます。
+カタログの再ピン留めでこれが追加される場合は、更新の前にユーザーに確認します。capabilities と同じく、
+これは同意と見える化のためのものです。**サンドボックスではありません**。プロセス内のプラグインのコードは、
+ユーザーが読めるファイルなら何でも読めてしまいます。そうするプラグインはレビューで却下されます。
+
+**使用量のパネル:** 使用量のエンドポイントを自分で呼ばないでください。
+`agent.account_usage.fetch_account_usage("openai-codex", read_only=True)` を使います。これは
+`AccountUsageSnapshot`（プランと、`used_percent` と `reset_at` を持つセッション／週単位の枠）を返し、
+認証情報を更新したりローテーションしたりすることはありません。
+**サインアウト**はプラグインではなく Hermes の役割です。認証情報のファイルを削除するのではなく、
+ユーザーには `hermes auth logout openai-codex` を案内してください。
+
 ### マニフェスト v2 一覧 {#manifest-v2-reference}
 
 `plugin.yaml` は加算的な **v2 スキーマ**（#64165）にも対応しています。すべてのフィールドは省略可能です。`manifest_version` を持たないマニフェストは v1 マニフェストであり、今後も永続的に完全サポートされます。未知のフィールドは読み込みを壊しません — 警告付きで無視されます（前方互換性）。また、このバージョンの Hermes が理解できない新しい `manifest_version` でも、警告付きで読み込まれます。
@@ -254,6 +328,7 @@ Hermes はこれらをインストール済みメタデータから読み取り�
 | `homepage` | str | プロジェクトの URL。 |
 | `tags` | list of str | 自由形式の発見用タグ（例: `[gateway, telegram]`）。 |
 | `provides_locales` | list | 言語パックの宣言です。id（`- pl`）か `{id, endonym, rtl}` の対応を並べると、ローダーがその `locales/<id>[.tui\|.desktop].yaml` を自動で登録します。[言語パックを同梱する](#ship-a-language-pack) を参照してください。 |
+| `requires_auth` | list of str | プラグインが Hermes を通して使う、サインイン先のプロバイダー（現在は `openai-codex`）。`credentialed_provider_request` に必要です。インストール時と `hermes plugins show` に表示されます。[ユーザーの Codex サインインを使う](#use-the-users-codex-sign-in-core-made-requests) を参照してください。 |
 
 ```yaml
 # plugin.yaml — manifest v2 example
@@ -598,7 +673,7 @@ config_schema:
   api_key: {type: secret, env: MY_PLUGIN_API_KEY, description: "Personal access token"}
 ```
 
-**シークレットは `config.yaml` に一切触れません。** `secret` フィールドは `.env` の変数名と、値が設定済みかどうかだけを保持します。Desktop はプロバイダーの API キーと同じ認証情報の経路（`PUT /api/env`）で値を保存し、あなたのプラグインは `requires_env` のエントリとまったく同じように `os.environ.get("MY_PLUGIN_API_KEY")` で読み取ります。`plugins.manage settings` アクションは、シークレットキーの変更や、型または `choices` がスキーマと矛盾する値を拒否します。
+**シークレットは `config.yaml` に一切触れません。** `secret` フィールドは `.env` の変数名と、値が設定済みかどうかだけを保持します。Desktop はプロバイダーの API キーと同じ認証情報の経路（`PUT /api/env`）で値を保存し、あなたのプラグインは `requires_env` のエントリとまったく同じように、`agent.secret_scope` の `get_secret("MY_PLUGIN_API_KEY")` で読み取ります。`.env` や `auth.json`、ほかのツールの認証情報のファイルを自分で読まないでください（カタログのルール 11）。`plugins.manage settings` アクションは、シークレットキーの変更や、型または `choices` がスキーマと矛盾する値を拒否します。
 
 ## ステップ6: テストする {#step-6-test-it}
 
@@ -1592,12 +1667,12 @@ class MyPlatformAdapter(BasePlatformAdapter):
     async def disconnect(self): ...
 
 def check_requirements():
-    import os
-    return bool(os.environ.get("MYPLATFORM_TOKEN"))
+    from agent.secret_scope import get_secret
+    return bool(get_secret("MYPLATFORM_TOKEN"))
 
 def _env_enablement():
-    import os
-    tok = os.getenv("MYPLATFORM_TOKEN", "").strip()
+    from agent.secret_scope import get_secret
+    tok = (get_secret("MYPLATFORM_TOKEN") or "").strip()
     if not tok:
         return None
     return {"token": tok}
@@ -1652,8 +1727,8 @@ class MyMemoryProvider(MemoryProvider):
         return "my-memory"
 
     def is_available(self) -> bool:
-        import os
-        return bool(os.environ.get("MY_MEMORY_API_KEY"))
+        from agent.secret_scope import get_secret
+        return bool(get_secret("MY_MEMORY_API_KEY"))
 
     def initialize(self, session_id: str, **kwargs) -> None:
         self._session_id = session_id
