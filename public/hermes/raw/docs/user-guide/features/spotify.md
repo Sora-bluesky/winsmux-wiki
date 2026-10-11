@@ -3,14 +3,14 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Spotify"
 description: ""
 upstream_path: user-guide/features/spotify.md
-upstream_blob: a1b66e7ec688581dc7a7ba97c510c669c108ee5b
+upstream_blob: 99c7e5edbad8be9e68b7c6ee8cf251db6eec0eb5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/spotify
 ---
 
 # Spotify {#spotify}
 
-Hermes は Spotify を操作できます。再生、キュー、検索、プレイリスト、保存済みのトラックやアルバム、再生履歴まで、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)にある公式の **`spotify` プラグイン** を通じて扱えます。このプラグインは Spotify の Web API と PKCE OAuth を使います。保守しているのは Nous Research で、置き場所は [NousResearch/hermes-spotify](https://github.com/NousResearch/hermes-spotify) です。Hermes 本体には含まれていません。トークンは `~/.hermes/auth.json` に保存され、401 が返ったときは自動で更新されます。ログインは端末ごとに一度だけで済みます（リフレッシュトークンは 6 か月ほどで期限切れになるので、そのときは `hermes spotify login` を実行し直してください）。
+Hermes は Spotify を操作できます。再生、キュー、検索、プレイリスト、保存済みのトラックやアルバム、再生履歴まで、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)にある公式の **`spotify` プラグイン** を通じて扱えます。このプラグインは Spotify の Web API と PKCE OAuth を使います。保守しているのは Nous Research で、置き場所は [NousResearch/hermes-official-plugins](https://github.com/NousResearch/hermes-official-plugins/tree/main/spotify) です。Hermes 本体には含まれていません。トークンは `~/.hermes/auth.json` に保存され、401 が返ったときは自動で更新されます。ログインは端末ごとに一度だけで済みます（リフレッシュトークンは 6 か月ほどで期限切れになるので、そのときは `hermes spotify login` を実行し直してください）。
 
 Hermes に組み込みの OAuth 連携とは違い、Spotify では利用者一人ひとりが自分用の小さな開発者アプリを登録する必要があります。Spotify は、誰でも使える公開 OAuth アプリを第三者が配布することを認めていないためです。作業は 2 分ほどで、`hermes spotify login` が手順を案内してくれます。
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ツールセット一覧"
 description: "Hermes の中核・複合・プラットフォーム・動的の各ツールセットをまとめた一覧です。"
 upstream_path: reference/toolsets-reference.md
-upstream_blob: 198c1d86ab423162b5a0d105d738af049083c014
+upstream_blob: a0fcb5a40534923b068ab8613921927ca992c668
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 ---
@@ -59,7 +59,7 @@ hermes tools                            # curses UI to enable/disable per platfo
 | `browser` | `browser_back`, `browser_cdp`, `browser_click`, `browser_console`, `browser_dialog`, `browser_exec`, `browser_get_images`, `browser_navigate`, `browser_press`, `browser_scroll`, `browser_snapshot`, `browser_type`, `browser_vault_enter_code`, `browser_vault_fill`, `browser_vault_list`, `browser_vault_save_login`, `browser_vault_unlock`, `browser_vision` | ブラウザ操作の中核です。`browser_cdp` と `browser_dialog` は動かしている最中に判定され、セッションの開始時に CDP の接続先へ届くときだけ登録されます（`/browser connect`、`browser.cdp_url` の設定、Browserbase、Camofox のいずれか経由）。`browser_dialog` は、CDP の監視役がつながっているときに `browser_snapshot` が足す `pending_dialogs` と `frame_tree` の項目と組みで働きます。`browser.backend` が `browser-use` のときは、ほかのブラウザ用の道具の代わりに `browser_exec` が入ります。`browser_vault_*` の道具は、認証情報を入れる画面のためにブラウザと一緒に付いてきます。ちょっと調べたいときは `web`／`search` のまとまりの担当で、`web_search` はここにあえて入れていません。`disabled_toolsets: [browser]` にしても取り上げられないようにするためです（#64503）。 |
 | `clarify` | `clarify` | エージェントがはっきりさせたいことがあるとき、利用者に問いかけます。 |
 | `code_execution` | `execute_code` | Hermes のツールをプログラムから呼ぶ Python スクリプトを実行します。 |
-| `connections` | `manage_connections` | 利用者をアプリにつなぎます。対象は、Nous のゲートウェイを通して管理されるコネクターのアカウントと、カタログにある手元の MCP サーバーです。デスクトップでは、どの操作も利用者が決着をつけるまで待つカードとして出ます。デスクトップ以外では、管理されたアカウントの操作がアプリごとの接続用リンクを返します。 |
+| `connections` | `manage_connections` | 利用者をアプリにつなぎます。対象は、Nous のゲートウェイを通して管理されるコネクターのアカウントと、カタログにある手元の MCP サーバーです。アプリの 2 つ目の名前付きアカウントを加えたり、アカウントの名前を変えたりもできます。デスクトップでは、どの操作も利用者が決着をつけるまで待つカードとして出ます。デスクトップ以外では、管理されたアカウントの操作がアプリごとの接続用リンクを返します。 |
 | `coding` | composite (`file` + `terminal` + `search` + `web` + `skills` + `browser` + `todo` + `memory` + `session_search` + `clarify` + `code_execution` + `delegation` + `vision`) | ソフトウェアの作業向けにコードを中心へ据えた束です。ファイルの編集、端末、検索、web の資料、スキル、ブラウザ、任せる先の切り出し、コードの実行までそろいます。 |
 | `cronjob` | `cronjob_manage` | 繰り返す作業を予定に入れて管理します。 |
 | `debugging` | composite (`file` + `terminal` + `web`) | 不具合を追うための束です。ファイル、プロセスと端末、web の抜き出しと検索が入ります。 |

@@ -2,7 +2,7 @@
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: a2b91581fbed5af000952148219d0bfabcb0c433
+upstream_blob: d58a7181a36862e184e8a5551601f3ae4f5a807e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -29,14 +29,15 @@ sources:
    GitHub ドラフトを1つ作り、まさにその ref で `Stable Release` を起動します。試行番号は、
    そのバージョンの既存の試行 ref から決まります。
    クレームのメッセージには、コミット、試行番号、自動公開ポリシー、
-   `skipBundles` と `skipTests` のフラグ、そして
+   `skipBundles`、`skipTests`、`includeMacosIntel`、`includeTermux` のフラグ、そして
    単調増加で割り当てられるエポック1つが結び付けられます。このエポックがリリース日となり、
    すべてのマトリクス系統と再試行でのネイティブパッケージングの時刻になります。
    未解決の試行が1つでもあれば、バージョンを問わず新しい `release` はブロックされます。
 3. リモートの注釈付きタグオブジェクトの SHA、剥がした先のコミット、`GITHUB_REF`、
    `GITHUB_SHA`、チェックアウトした `HEAD`、そして `origin/main` 上の祖先関係が一致するものだけを受け入れます。
-4. ソース、Docker、Nix、PM バンドル、インストール/更新、Termux、Windows、
-   署名済みパッケージ、ネイティブアップグレードの受け入れグラフ全体を実行します。
+4. ソース、Docker、Nix、PM バンドル、インストール/更新、Windows、
+   署名済みパッケージ、ネイティブアップグレードの受け入れグラフ全体を実行します（クレームでオプトインした場合は、
+   macOS Intel と Termux も加わります）。
 5. テスト済みのバイト列から、バージョン付きで変更不可の Docker と R2 の成果物を push します。
    Docker イメージは自身のテストが通った時点で、試行 ref をタグにして push されます。
    `stable` や `latest` のエイリアスはまだ動かさず、公開のために再ビルドもしません。
@@ -80,7 +81,9 @@ python scripts/release.py release --commit "$(git rev-parse origin/main)" --bump
 どれでも受け入れられます。中止した試行は次の切り出しに何の制約も課しません。そもそもコミットに問題があって
 中止されたことが多いからです。`release` は、バージョンを問わず未解決の試行があるあいだも拒否します。
 拒否するときは、例外を出す前に、その試行のワークフロー実行の
-URL、`abandon` コマンド、再実行コマンドを表示します。
+URL、`abandon` コマンド、再実行コマンドを表示します。対話型のターミナルでは、そのあと
+`Abandon <ref> and cut a new attempt? [y/N]` と尋ねます。`y` と答えるとその試行を中止して次の試行を切り出し、
+既定は no です。標準入力か標準出力がターミナルでない場合は、尋ねずに例外を出します。
 
 試行 ref は公開のロックであって、SemVer のプレリリースではありません。表記は
 `v0.21.5-rc.1` ではなく `rc.1-v0.21.5` です。パッケージのバージョンは素の `0.21.5` のままです。
@@ -149,6 +152,48 @@ python scripts/release.py release --commit "$(git rev-parse origin/main)" --skip
 アップグレードの基準に使います。クレームを知っているすべての読み手（`complete`
 と保護された R2 の前進処理）は、スモークテストの結果がクレームの `skipTests` フラグと食い違う
 マニフェストを拒否します。緊急の修正にだけ使い、そのあとに通常のリリースを切り出してください。
+
+### macOS Intel と Termux はオプトイン {#macos-intel-and-termux-are-opt-in}
+
+安定版リリースは、クレームで求めない限り、macOS Intel（`darwin-x64`）のデスクトップバンドルも、
+Termux（Android aarch64）の APT パッケージもビルドしません。
+`main` は Intel の macOS に対応しておらず、その `macos-15-intel` のバンドル系統だけで
+1時間を大きく超えます。どちらも引き続きビルドできます:
+
+```sh
+python scripts/release.py release --commit "$(git rev-parse origin/main)" \
+  --include-macos-intel --include-termux --remote origin
+```
+
+| | 既定 | `--include-macos-intel` | `--include-termux` |
+|---|---|---|---|
+| `candidates-darwin-x64`、`transitions-darwin-x64`、`macos-packaged-x64` | 省略 | 実行 | 省略 |
+| `candidates-termux`、`termux-checks` | 省略 | 省略 | 実行 |
+
+省略用のフラグと同じく、`--include-macos-intel` と `--include-termux` はクレームに
+（`includeMacosIntel`、`includeTermux` として）書き込まれ、`admit` はそれらを
+`include-macos-intel` と `include-termux` として出力します。これらのキーを持たないクレーム
+（キーができる前に切り出したクレームはすべて該当します）は、値を `false` として読みます。関門は、
+オプトアウトしたジョブが `skipped` を報告することを求めます。また、プラットフォームをオプトインしていても、
+`--skip-bundles` / `--skip-tests` を付ければこれらのジョブは外れます。
+
+プラットフォームを外した場合、その行は候補マニフェスト、リリース本文のダウンロード表、
+ダウンロードページから消えます。2つのチャンネルは振る舞いが異なります:
+
+- **macOS Intel:** macOS の安定版フィードは1つだけ
+  （`releases/darwin/stable/stable-mac.yml`）で、`promote` はこれを
+  arm64 の系統だけで置き換えます。このフィードを使う Intel の Mac は、`--include-macos-intel` を付けて
+  リリースを切り出すまで更新を受け取りません。保護された R2 の head には3つのネイティブ
+  パッケージが載っており、macOS Intel を配布するプレビューチャンネルは、それが無いと
+  安定版の head へ引き上げて終了させることができません。
+- **Termux:** APT のインデックスは書き換えられないので、APT チャンネルは
+  前回のリリースのまま残ります。
+
+macOS Intel を外したリリースのあとで再びオプトインしたリリースには、公開済みの Intel の基準が
+無いので、初回のリリースと同じく Intel のアップグレード系統は省略されます。
+
+両プラットフォームのクレームのフラグ、それによって外れるジョブ、受け渡し物、ターゲット、スモークジョブは、
+`scripts/releases/optional_platforms.py` の1か所で定義されています。
 
 クレームの push が、アトミックなバージョンロックです。2つの呼び出し元が同じ次バージョンを
 導くことはあり得ますが、push に成功するのは1つだけです。負けた側は、勝った側のタグ付け者、時刻、
@@ -247,7 +292,8 @@ URL ではなくバージョンで、それが安全なのはこのためです�
 デスクトップのワークフローは `jobs` 入力を受け取り、グループは `darwin-arm64`、
 `darwin-x64`、`win32-arm64`、`win32-x64`、`win32-bundle`、`linux-x64`、
 `linux-arm64`、`termux` です。安定版はグループごとに1回ずつ呼び出しますが、linux の
-グループは本物の Linux ビルドができるまで待ちます。Mac の各アーキテクチャと Windows のバンドルは
+グループは本物の Linux ビルドができるまで待ち、オプトインの `darwin-x64` と
+`termux` のグループは、クレームに含まれている場合にだけ呼び出します。Mac の各アーキテクチャと Windows のバンドルは
 受領証をステージングし、各インストール系統は、自分のバイト列がステージングされた時点で
 自分の受領証から開始します。公開をブロックする合流点は `acceptance` ただ1つです。
 

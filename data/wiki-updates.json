@@ -1,6 +1,73 @@
 {
-  "generatedAt": "2026-10-11",
+  "generatedAt": "2026-10-12",
   "entries": [
+    {
+      "date": "2026-10-11",
+      "sha": "ef7634a",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/creating-skills",
+          "title": "スキルを作る",
+          "url": "/hermes/docs/developer-guide/creating-skills/"
+        },
+        {
+          "id": "developer-guide/memory-provider-plugin",
+          "title": "メモリープロバイダープラグイン",
+          "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/plugins/catalog-submission",
+          "title": "プラグインカタログへの登録申請",
+          "url": "/hermes/docs/developer-guide/plugins/catalog-submission/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/prompt-assembly",
+          "title": "プロンプトの組み立て",
+          "url": "/hermes/docs/developer-guide/prompt-assembly/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "user-guide/features/built-in-plugins",
+          "title": "同梱のプラグイン",
+          "url": "/hermes/docs/user-guide/features/built-in-plugins/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "スキルの仕組み",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        }
+      ]
+    },
     {
       "date": "2026-10-10",
       "sha": "4eb7501",

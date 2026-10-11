@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コントリビュート"
 description: "Hermes Agent へのコントリビュート方法（開発環境のセットアップ、コードスタイル、PR の流れ）"
 upstream_path: developer-guide/contributing.md
-upstream_blob: aed4c50fd6649d9b9eb0b70ba28e9e2c6f07b42d
+upstream_blob: f0253fe0a0f1cda50b54c19df0fc5799d32daf57
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/contributing
 ---
@@ -351,6 +351,8 @@ refactor/description   # Code restructuring
 2. **手動でテストする**: `hermes` を実行し、変更したコードの経路を実際に動かします
 3. **クロスプラットフォームへの影響を確認する**: macOS、Linux、WSL2、ネイティブの Windows を考慮します。ファイル I/O、プロセス管理、ターミナル処理、サブプロセス、シグナルに触れた場合は、`scripts/check-windows-footguns.py` を実行してください。
 4. **PR を絞る**: 1つの PR には論理的な変更を1つだけ含めます
+5. **プロンプトやツールスキーマを変えたとき**: `tests/ci/test_prompt_surface.py` が失敗した場合、その変更はすべてのセッションが送るシステムプロンプトかツールスキーマを変えています。`scripts/run-in-hermes-env python scripts/ci/prompt_surface.py render` で作り直し、スナップショットをコミットしてください。この部分の変更にはメンテナーの承認が必要です（[プロンプトの組み立て](/hermes/docs/developer-guide/prompt-assembly/#reviewing-changes-to-the-prompt-surface)を参照）。
+6. **設定キーやスラッシュコマンドを新しく足したとき**: `tests/ci/test_docs_drift.py` が失敗した場合、追加した `DEFAULT_CONFIG` のキーかスラッシュコマンドにドキュメントがありません。ドット区切りのキー名（`agent.max_turns`）を本文で触れるか、`website/docs/` 配下（通常は `user-guide/configuration.md`）の YAML の例に入れてください。スラッシュコマンドは `reference/slash-commands.md` に追加します。どうしてもドキュメントに載せないキーは、`python scripts/ci/check_docs_drift.py --update` を実行すると `scripts/ci/docs_drift_baseline.json` に追加され、レビュアーの目に入る形で残ります。このチェックが入った時点でドキュメントがなかったキーは、すでに baseline に登録済みです。キーをドキュメントに書いたことで失敗することはありません。
 
 ### PR の説明 {#pr-description}
 

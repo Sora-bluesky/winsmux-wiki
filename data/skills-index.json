@@ -1,6 +1,6 @@
 {
-  "sha": "6a2662a",
-  "date": "2026-10-10",
+  "sha": "1fd1827",
+  "date": "2026-10-11",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -568,6 +568,14 @@
       "description": "Make a verified AI presenter video from script + image",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-ai-presenter-video/",
       "date": "2026-09-20",
+      "source": "optional"
+    },
+    {
+      "slug": "creative-anatomy",
+      "name": "Anatomy",
+      "description": "Explain an idea as an interactive isometric machine figure",
+      "url": "/hermes/docs/user-guide/skills/optional/creative/creative-anatomy/",
+      "date": "2026-10-11",
       "source": "optional"
     },
     {

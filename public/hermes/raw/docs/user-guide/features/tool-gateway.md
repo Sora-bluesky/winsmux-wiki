@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Nous Tool Gateway"
 description: "サブスクリプション 1 つで、すべてのツールを。Web 検索、画像生成、音声読み上げ、クラウドブラウザーを、追加の API キー無しで Nous Portal 経由に束ねます。"
 upstream_path: user-guide/features/tool-gateway.md
-upstream_blob: 08d138097676341bdec55ba12be029b2df0b6274
+upstream_blob: 6ccee78fd2c76345f9c76cd262194480b82a87e8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-gateway
 ---
@@ -119,6 +119,28 @@ hermes tools          # Interactive picker for each tool category
 **Krea 2**（Medium、Large、Medium Turbo — 画風の参考画像を最大 10 枚まで、任意で Enhance による高解像度化）と Nous Portal の画像モデルは、それぞれ専用の行を持つのではなく、この同じモデル選択の中に並びます。これらには有料のサブスクリプションが必要で、無料のツール枠がまかなうのは FAL のモデルだけです。FAL 経由の Krea の ID（`fal-ai/krea/v2/...`）は、これまでどおり FAL.ai を直接使う行に残ります。Krea のゲートウェイがジョブを始める前にリクエストを断った場合（つながらないとき、またはゲートウェイ自身の再試行のあとに 429 が返ったとき）、Hermes は FAL の既定のモデルでやり直し、そのことを結果の `fallback_from` に示します。これを止めるには `image_gen.krea.fallback_to_fal: false` を設定します。元画像を渡したリクエストは、この切り替えの対象になりません。
 
 モデルの ID、速さ、料金は [画像生成](/hermes/docs/user-guide/features/image-generation/#supported-models) のページにまとめています。顔ぶれは移り変わります。`hermes tools` → Image Generation で、現在の一覧を確認できます。
+
+## 複数のコネクターアカウント {#multiple-connector-accounts}
+
+コネクターとは、Gmail のようにホストされたアプリで、エージェントは Nous のツールゲートウェイを通してそこに届きます（[ツール検索 → コネクター](/hermes/docs/user-guide/features/tool-search/#connectors-remote-tools) を参照）。1 つのアプリに 2 つ以上のアカウントをつなぐこともできます。たとえば Gmail の `home` と Gmail の `work` です。
+
+- **名前。** アカウントごとに 1〜32 文字の名前を付けます。使えるのは英小文字、数字、`-` で、先頭は英小文字か数字です。名前の無いアカウントには、アプリ側のアカウント表示名が出ます。
+- **既定は無し。** どのアカウントも既定にはなりません。名前付きのアカウントが複数あるアプリを使うよう頼むと、エージェントはどれを使うかを示さなければなりません。
+- **新しいアカウントの名前はエージェントが付けます。** 話した内容から名前を選び、迷うときは確認してきます。そのうえで、選んだ名前を伝えます。たとえば「Hermes named this Gmail account work. Rename it anytime.」という一文です。デスクトップアプリ、TUI、従来の CLI にこの一文が出ます。
+- **名前の変更。** アカウントの名前はいつでも変えられ、エージェントに頼むこともできます。名前の変更には、それに対応した Nous Portal のバージョンが必要です。対応するまでは「This Nous Portal cannot rename connector accounts yet.」と表示されます。
+- **つなぎ直しても何も消えません。** 壊れたアカウントをつなぎ直すと、同じ名前の新しいアカウントに置き換わります。古いものは引退済み（無効）として残ります。引退済みのアカウントは一覧に残りますが、折りたたまれて表示されます。
+- **削除は利用者の手で。** アカウントの削除は、利用者が自分で 1 つずつ行います。エージェントが削除することはありません。
+
+有効なアカウントが 2 つ以上あるコネクターでは、そのコネクターのどのツールにも `connector_alias` という項目が付き、指定できる値は自分のアカウント名です。有効なアカウントがすべて名前付きならこの項目は必須で、名前の無いものが混ざっていれば省略できます。
+
+名前付きのアカウントが複数あるのにエージェントがこの項目を省いたり、存在しない名前を指定したりすると、呼び出しは失敗し、エラーに正しい名前の一覧が示されます。実行したアカウントが名前付きなら、結果にそのアカウントが `account` として示されます。名前の無いアカウントでは、この項目は付きません。
+
+アカウントは次のどこからでも管理できます。
+
+- デスクトップアプリの **Connectors** ページ。
+- TUI: `/connectors`（[スラッシュコマンド](/hermes/docs/reference/slash-commands/#tools--skills) を参照）。
+- CLI: `hermes connectors`（[CLI コマンド](/hermes/docs/reference/cli-commands/#hermes-connectors) を参照）。
+- [Nous Portal](https://portal.nousresearch.com)。
 
 ---
 

@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-11",
+  "generatedAt": "2026-10-12",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-10-11",
-      "attemptedAt": "2026-10-11",
+      "fetchedAt": "2026-10-12",
+      "attemptedAt": "2026-10-12",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -123,8 +123,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-10-11",
-      "attemptedAt": "2026-10-11",
+      "fetchedAt": "2026-10-12",
+      "attemptedAt": "2026-10-12",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -323,33 +323,13 @@
     },
     "opencode": {
       "ok": true,
-      "fetchedAt": "2026-10-11",
-      "attemptedAt": "2026-10-11",
+      "fetchedAt": "2026-10-12",
+      "attemptedAt": "2026-10-12",
       "errorCode": null,
       "url": "https://opencode.ai/zen/v1/models",
       "models": [
         {
-          "id": "exo-free",
-          "name": null,
-          "ctx": null,
-          "tools": null,
-          "expires": null,
-          "freeBasis": "label",
-          "criteria": null,
-          "criteriaReason": null
-        },
-        {
           "id": "jev-1.13-free",
-          "name": null,
-          "ctx": null,
-          "tools": null,
-          "expires": null,
-          "freeBasis": "label",
-          "criteria": null,
-          "criteriaReason": null
-        },
-        {
-          "id": "ling-3.0-flash-fin-free",
           "name": null,
           "ctx": null,
           "tools": null,
@@ -400,16 +380,6 @@
         },
         {
           "id": "muse-spark-1.3-contributor-free",
-          "name": null,
-          "ctx": null,
-          "tools": null,
-          "expires": null,
-          "freeBasis": "label",
-          "criteria": null,
-          "criteriaReason": null
-        },
-        {
-          "id": "nemotron-3-ultra-free",
           "name": null,
           "ctx": null,
           "tools": null,

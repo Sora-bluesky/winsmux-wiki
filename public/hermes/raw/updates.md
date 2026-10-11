@@ -8,6 +8,21 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-11
+
+- [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- [スキルを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/creating-skills/)
+- [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
+- [プラグインカタログへの登録申請](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [プロンプトの組み立て](https://wiki.winsmux.dev/hermes/docs/developer-guide/prompt-assembly/)
+- [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [同梱のプラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/built-in-plugins/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
+
 ## 2026-10-10
 
 - [ブラウザの CDP スーパーバイザ](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-supervisor/)

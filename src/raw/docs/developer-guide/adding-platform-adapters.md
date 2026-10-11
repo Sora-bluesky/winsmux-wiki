@@ -2,7 +2,7 @@
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: e859aee5cbd7d83efb4fd7a7fac8fe7de1d79497
+upstream_blob: 56d6ea3e29a9bb0e6e20a2efc7c20ee5920fba81
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -236,7 +236,7 @@ gateway:
 ### サービス向けのアダプター: `trusted_inbound`、`display_tier`、`shared_env_prefixes` {#service-adapters-trustedinbound-displaytier-sharedenvprefixes}
 
 チャットのネットワークではなく、何かのサービスとの橋渡しをするアダプターのために、`ctx.register_platform(...)` と `PlatformEntry` には省略できる項目が3つあります。
-[Home Assistant のプラグイン](https://github.com/NousResearch/hermes-homeassistant)が、これを使う代表例です。
+[Home Assistant のプラグイン](https://github.com/NousResearch/hermes-official-plugins/tree/main/homeassistant)が、これを使う代表例です。
 
 | 項目 | 型と既定値 | 効き目 |
 |---|---|---|

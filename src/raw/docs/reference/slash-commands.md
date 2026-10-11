@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: ef7342532ce646c3587c12e5271cec346add472d
+upstream_blob: aa14bc2e20a8d5bcf011d8f14e7f284d9e7f0b98
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -121,6 +121,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/curator` | バックグラウンドでのスキルの手入れです。`status`、`run`、`pin`、`archive` があります。[Curator](/hermes/docs/user-guide/features/curator/) も見てください。 |
 | `/kanban <action>` | 複数のプロファイル・複数のプロジェクトにまたがる共同作業ボードを、チャットから離れずに操作します。`hermes kanban` でできることはひととおり使えます: `/kanban list`、`/kanban show t_abc`、`/kanban create "title" --assignee X`、`/kanban comment t_abc "text"`、`/kanban unblock t_abc`、`/kanban dispatch` など。複数ボードにも対応しています: `/kanban boards list`、`/kanban boards create <slug>`、`/kanban boards switch <slug>`、`/kanban --board <slug> <action>`。[Kanban のスラッシュコマンド](/hermes/docs/user-guide/features/kanban/#kanban-slash-command) も見てください。 |
 | `/reload-mcp`（別名: `/reload_mcp`） | config.yaml から MCP サーバーを読み直し、ツールが使えるかどうかを調べ直します（セッションの途中で用意できた認証情報やデーモンを拾えます） |
+| `/connectors` | TUI 専用です。コネクタのアカウント一覧を開きます。1アカウントにつき1行で、`app · name · status` の形で並びます。キー操作: ↑/↓ で選択、`r` で名前を変更（その場で入力します。Enter で保存、Esc で取り消し）、`a` でアカウントをもう1つ追加（アプリを選び、名前を入れてから、リンクを開きます）、`c` で選んだアカウントを再接続（修復が必要なとき、つまり失敗・期限切れ・取り消し・非アクティブのときだけ出ます）、`x` で削除（確認を求めます）、Tab で使われなくなった（retired）アカウントの表示・非表示を切り替え、Esc か `q` で閉じます。[Multiple connector accounts](/hermes/docs/user-guide/features/tool-gateway/#multiple-connector-accounts) を参照してください。 |
 | `/reload-skills`（別名: `/reload_skills`） | `~/.hermes/skills/` を走査し直して、新しく入れたスキルや消したスキルを反映します |
 | `/reload` | `.env` の変数を動いているセッションに読み直します（再起動せずに新しい API キーを拾えます） |
 | `/plugins` | インストール済みのプラグインとその状態を一覧表示します |
@@ -248,6 +249,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/new [name]`（別名: `/reset`） | 新しいセッションを始めます（セッション ID と履歴が新しくなります）。`[name]` を付けるとセッションの初期タイトルになります。末尾に `now`、`--yes`、`-y` を足すと確認ダイアログを飛ばせます（例: `/reset now`、`/new --yes my-experiment`）。 |
 | `/status` | セッションの情報を表示し、続けてローカルで作った **Session recap** のブロック（直近のターン数、よく使ったツール、触ったファイル、最新のプロンプトと返答）を出します。 |
 | `/stop` | 動いているバックグラウンドプロセスをすべて止め、実行中のエージェントを中断します。 |
+| `/pause [reason \| off]` | 全体の緊急停止です。[`hermes pause`](/hermes/docs/reference/cli-commands/) をチャットの中から使う形で、`/pause off` を送るまで、新しい cron・kanban・ゲートウェイの作業を保留にします。すでに動いている作業はふつうに最後まで進みます。停止中もスラッシュコマンドは使えるので、メッセージングだけで運用している人でもいつでも解除できます。 |
 | `/model [provider:model]` | モデルを表示、または変更します。プロバイダの切り替え（`/model zai:glm-5`）、独自のエンドポイント（`/model custom:model`）、名前を付けた独自プロバイダ（`/model custom:local:qwen`）、自動判別（`/model custom`）、OpenRouter のアカウントのプリセット（`/model @preset/<slug>`。アカウントに属するので、公開されたモデル一覧での確認を飛ばします）、ユーザーが決めた別名（`/model fav`、`/model grok`。[モデルの別名を自分で決める](#custom-model-aliases) を参照）に対応します。`--global` を付けると変更を config.yaml に残します。`--global` での選択（打ち込みでもピッカーでも）が成功すると、このチャットのセッション限りの上書きも外れるので、ゲートウェイを再起動したあとは config.yaml だけがモデルを決めます（`channel_overrides` でモデルを指定しているチャットはその上書きを保ったままです。チャンネル側の設定は、そのままだと config.yaml より優先されてしまうからです。CLI と TUI はセッションごとの固定をあえて残すので、再開するとそのチャットで使っていたモデルに戻ります）。**注意:** `/model` は、すでに設定済みのプロバイダの間でしか切り替えられません。新しいプロバイダを足したり API キーを設定したりするには、チャットの外のターミナルで `hermes model` を使ってください。**費用に関する注意:** セッションの途中でモデルを切り替えるとプロンプトキャッシュがリセットされるので（キャッシュのキーにモデルが含まれます）、次のメッセージは会話全体を入力の全額で読み直すことになります。 |
 | `/codex-runtime [auto\|codex_app_server\|on\|off]` | 任意で使える [Codex app-server ランタイム](/hermes/docs/user-guide/features/codex-app-server-runtime/) を切り替えます。設定は config.yaml の `model.openai_runtime` に残り、キャッシュされたエージェントを破棄するので、次のメッセージから新しいランタイムが使われます。次のセッションから有効になります。 |
 | `/personality [name]` | このセッションに重ねる人格を設定します。`/personality none`（または `default` / `neutral`）で外します。 |
@@ -317,9 +319,10 @@ hermes config set model.aliases.grok x-ai/grok-4
 - `/skills` の検索・閲覧・インストールは **CLI 専用**です。書き込み承認の確認用サブコマンド（`pending`、`approve`、`reject`、`diff`、`approval`）は、`skills.write_approval` が有効ならメッセージングプラットフォームでも動きます。`/memory` は**どちらの入り口でも**動きます。
 - `/verbose` は**既定では CLI 専用**ですが、`config.yaml` で `display.tool_progress_command: true` にするとメッセージングプラットフォームでも使えます。有効にすると `display.tool_progress` のモードを順に切り替え、設定に保存します。
 - `/focus` と `/verbose` は同じ抑制の経路（`display.tool_progress`）を共有するので、互いに矛盾することはありません。`/focus on` はツールの進捗表示を `off` に固定し、それまでのモードを `display.focus_saved_tool_progress` に控えておきます。`/focus off` でそれを戻します。フォーカス中に `/verbose` で切り替えると、モードの主導権が戻ってフォーカスのバッジは消えます。フォーカス表示は見た目だけのもので、会話の履歴もシステムプロンプトもモデルへ送るものも一切変えないので、プロンプトキャッシュへの影響はゼロです。
-- `/sethome`、`/restart`、`/approve`、`/deny`、`/topic`、`/platform`、`/commands` は**メッセージング専用**のコマンドです。
+- `/sethome`、`/restart`、`/approve`、`/deny`、`/topic`、`/platform`、`/pause`、`/commands` は**メッセージング専用**のコマンドです。
 - `/status`、`/egress`、`/version`、`/whoami`、`/bg`、`/btw`、`/queue`、`/steer`、`/voice`、`/reload-mcp`、`/reload-skills`、`/rollback`、`/diff`、`/debug`、`/fast`、`/approvals`、`/busy`、`/footer`、`/curator`、`/kanban`、`/topup`、`/login`、`/suggestions`、`/blueprint`、`/learn`、`/init`、`/sessions`、`/loop`、`/yolo` は、CLI とメッセージングゲートウェイの**どちらでも**動きます。
 - `/voice join`、`/voice channel`、`/voice leave` は Discord でしか意味がありません。
+- `/connectors` は **TUI 専用**です。
 - TUI では、`/sessions` は今の TUI プロセスで動いているセッションを表示します。保存済みや閉じたあとの記録には `/resume [name]` か `hermes --tui --resume <id-or-title>` を使ってください。
 
 ## 取り返しのつかないコマンドの確認 {#confirmation-prompts-for-destructive-commands}

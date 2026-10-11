@@ -608,6 +608,9 @@
                       "id": "user-guide/skills/optional/creative/creative-ai-presenter-video"
                     },
                     {
+                      "id": "user-guide/skills/optional/creative/creative-anatomy"
+                    },
+                    {
                       "id": "user-guide/skills/optional/creative/creative-archify"
                     },
                     {
@@ -1795,6 +1798,7 @@
     "user-guide/skills/optional/blockchain/blockchain-solana",
     "user-guide/skills/optional/communication/communication-one-three-one-rule",
     "user-guide/skills/optional/creative/creative-ai-presenter-video",
+    "user-guide/skills/optional/creative/creative-anatomy",
     "user-guide/skills/optional/creative/creative-archify",
     "user-guide/skills/optional/creative/creative-ascii-art",
     "user-guide/skills/optional/creative/creative-audiocraft-audio-generation",

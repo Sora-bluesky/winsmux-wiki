@@ -87,7 +87,7 @@ Wi-Fi・Bluetooth・LoRa などの電波を出す機器を日本で使うには�
 - [Waveshare UGV Rover ROS 2](https://teknium.io/hermes-devices/#waveshare-ugv-rover-ros-2) — ライダーと深度カメラを積んだ6輪の金属製 ROS 2 ローバーです。ESP32 側が JSON コマンドを受け付けるので、Hermes は Python や curl から簡単に動かせます。（~$535-$727）
 - [Waveshare UGV Beast](https://teknium.io/hermes-devices/#waveshare-ugv-beast) — サスペンションを備えた履帯式のオフロード AI ローバーで、PT 版にはパン・チルトカメラもあります。Hermes は JSON コマンドや SSH で操作し、Pi 上の画像認識と走行をつなげられます。（~$265-$502）
 - [myCobot 280 Pi](https://teknium.io/hermes-devices/#mycobot-280-pi) — 台座に Raspberry Pi 4 を内蔵した卓上の6軸アームです。Hermes が SSH で pymycobot を使って動かし、関節や把持の操作を MCP server や skill にまとめられます。（~$799）
-- [UFACTORY Lite 6](https://teknium.io/hermes-devices/#ufactory-lite-6) — 机に載る本格的な協働ロボットアームです。Hermes が xArm Python SDK で動作を計画・実行し、SDK の衝突検知や安全制限が LLM の書く動作の歯止めになります。（~$3,349）
+- [AgileX PiPER X](https://teknium.io/hermes-devices/#agilex-piper-x) — 研究向けの6軸卓上ロボットアームです。Hermes は piper\_sdk で CAN 越しに直接動かし、ROS の MoveIt で動作を計画し、SDK の EmergencyStop を緊急停止に使えます。（~$2,799）
 - [Crazyflie 2.1 Brushless](https://teknium.io/hermes-devices/#crazyflie-2-1-brushless) — 群飛行や研究向けの、重さ34gのオープンソース小型ドローンです。Hermes が cflib を使い Crazyradio 経由で飛ばし、検証済みの飛行スクリプトを skill として残せます。（~$480）
 - [ArduPilot / PX4](https://teknium.io/hermes-devices/#ardupilot-px4) — 空・陸・水上・水中の機体を扱うオープンソースのオートパイロット ArduPilot と PX4 です。Hermes が MAVLink でミッションを送り、まず SITL で予行してから実機を動かせます。（Free \(OSS\)）
 - [OpenBot](https://teknium.io/hermes-devices/#openbot) — Android スマホを頭脳にする安価なロボットカーです。Hermes が Python コントローラーで操作し、走行データの収集から学習、スマホへのモデル転送までを skill にまとめられます。（~$50 + phone）
@@ -405,4 +405,4 @@ Wi-Fi・Bluetooth・LoRa などの電波を出す機器を日本で使うには�
 - [hermes-gadget \(GitHub\)](https://teknium.io/hermes-devices/#hermes-gadget-github) — hermes-gadget は、LilyGo T-Deck 向けの LoRa メッシュ OS「SigurdOS」を公開する GitHub org です。SigurdOS は MeshCore と相互運用でき、Hermes は companion ノードで参加できます。（Free \(OSS\)）
 - [ROHITCRAFTSYT/Hermes](https://teknium.io/hermes-devices/#rohitcraftsyt-hermes) — これは Hermes Agent とは無関係の、名前だけが同じ別の ESP32 ボイスアシスタントです。16kHz の音声を HTTP の bridge に送る作りで、同じハードを Hermes の bridge に向けられます。（Free \(OSS\)）
 
-元のページの確認日: 2026-10-06
+元のページの確認日: 2026-10-12

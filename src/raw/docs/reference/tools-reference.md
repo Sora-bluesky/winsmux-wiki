@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールをツールセットごとにまとめた公式な一覧"
 upstream_path: reference/tools-reference.md
-upstream_blob: 3b09094854ce0ffa0df7a24608ea3779da442b37
+upstream_blob: 6ea9f9f7fc4c47119a56ee921936fe8fc1b603aa
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -67,7 +67,7 @@ Hermes は組み込みツールに加えて、MCP サーバーからツールを
 
 | ツール | 説明 | 必要な環境 |
 |------|-------------|----------------------|
-| `manage_connections` | 管理されたコネクター向けの操作: `status`、`connect`、`reconnect`（つながっていないものだけ直します。`force: true` なら動いているものも入れ直します）。MCP 向けの操作は `mcp: true` の対象だけで、カタログの項目を `install`、無効にしてある設定済みサーバーを `enable`、`authorize`（OAuth）です。デスクトップアプリ、ターミナル UI、従来の CLI では、どの操作でもカードが出て、対象がつながるか、飛ばされるか、300 秒の締め切りが来るまで待ちます。結果には対象が `connected`、`skipped`、`not_connected` のいずれかで並び、リンクは付きません。MCP の `install` は、その項目の設定値をカードで集め、OAuth があればカードから実行し（リンクは利用者が開きます。勝手には開きません）、サーバーがトークンを受け付けた時点で設定・トークン・値をまとめて保存します。つながった MCP の対象には `tools`（登録された名前）と `tools_listing` が付き、そのツールは同じターンのうちに `tool_describe`/`tool_call` から呼べます。`discovery_error` が付いた対象は認可はできているものの、ツールの一覧を取れなかった状態です。もう一度 `install` か `authorize` を呼べば、あらためて同意を求めずに一覧の取得だけをやり直せます。カードが出ない画面（メッセージングや台本からの実行）では、管理されたコネクターはアプリごとに `connect_url` を返し、利用者がそれを開きます。MCP の対象はその場で実行され、`authorize` と OAuth を伴う `install` は認可用の URL を返し、それ以外の install と `enable` は結果を報告し、資格情報が足りなければ設定すべき変数名を添えて `failed` で返ります。アカウントの接続解除や権限の取り消しはできません。 | — |
+| `manage_connections` | 管理されたコネクター向けの操作: `status`（コネクターごとに `accounts` を一覧します。名前、表示名、状態、有効かどうか）、`connect`、`reconnect`（つながっていないものだけ直します。`force: true` なら動いているものも入れ直します）、`rename`。connect や reconnect の対象にはアカウント名を付けられます（`{"name": "gmail", "alias": "work"}`）。新しい名前で connect するとアカウントがもう 1 つ増え、名前を付けて reconnect するとそのアカウントだけを直し、何も消しません。`rename` が受け取る対象は 1 つで、`{"name": "gmail", "alias": "work", "to": "office"}` の形です。`alias` には、名前の無いアカウントのアプリ側の表示名も指定できます。MCP 向けの操作は `mcp: true` の対象だけで、カタログの項目を `install`、無効にしてある設定済みサーバーを `enable`、`authorize`（OAuth）です。デスクトップアプリ、ターミナル UI、従来の CLI では、どの操作でもカードが出て、対象がつながるか、飛ばされるか、300 秒の締め切りが来るまで待ちます。結果には対象が `connected`、`skipped`、`not_connected` のいずれかで並び、リンクは付きません。MCP の `install` は、その項目の設定値をカードで集め、OAuth があればカードから実行し（リンクは利用者が開きます。勝手には開きません）、サーバーがトークンを受け付けた時点で設定・トークン・値をまとめて保存します。つながった MCP の対象には `tools`（登録された名前）と `tools_listing` が付き、そのツールは同じターンのうちに `tool_describe`/`tool_call` から呼べます。`discovery_error` が付いた対象は認可はできているものの、ツールの一覧を取れなかった状態です。もう一度 `install` か `authorize` を呼べば、あらためて同意を求めずに一覧の取得だけをやり直せます。カードが出ない画面（メッセージングや台本からの実行）では、管理されたコネクターはアプリごとに `connect_url` を返し、利用者がそれを開きます。MCP の対象はその場で実行され、`authorize` と OAuth を伴う `install` は認可用の URL を返し、それ以外の install と `enable` は結果を報告し、資格情報が足りなければ設定すべき変数名を添えて `failed` で返ります。アカウントの接続解除、削除、権限の取り消しはできません。これらは利用者が行います。 | — |
 
 1 回の呼び出しの締め切りは 5 分で、呼び出しが始まった時点でバックエンドが決めます。
 チャットを開き直しても、デスクトップを再起動しても延びません。このツールが現れるのは、

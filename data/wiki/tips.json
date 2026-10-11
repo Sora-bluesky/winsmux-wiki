@@ -2,7 +2,7 @@
  "series": "Hermes Wingtips",
  "author": "witcheer",
  "authorUrl": "https://x.com/witcheer",
- "updated": "2026-10-05",
+ "updated": "2026-10-12",
  "categories": [
   "メッセージとボット",
   "モデルとプロバイダ",
@@ -13,7 +13,7 @@
   "CLI とデスクトップ",
   "その他"
  ],
- "count": 91,
+ "count": 98,
  "items": [
   {
    "n": 1,
@@ -1969,6 +1969,166 @@
     "Telegram",
     "SOUL.md",
     "添付"
+   ]
+  },
+  {
+   "n": 92,
+   "date": "2026-10-05",
+   "url": "https://x.com/witcheer/status/2106998344337731926",
+   "feature": "hermes setup --portal",
+   "title_ja": "コマンド1本で Nous Portal にログインして使い始める",
+   "summary_ja": "`hermes setup --portal` でログインしてモデルを選ぶと、推論プロバイダが Nous になり Tool Gateway も有効になります。有料プランなら Web 検索や画像生成もキーなしで使えます。状態は `hermes portal info` で見ます。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "Nous Portal",
+     "url": "/hermes/docs/integrations/nous-portal/"
+    },
+    {
+     "title": "Nous Tool Gateway",
+     "url": "/hermes/docs/user-guide/features/tool-gateway/"
+    }
+   ],
+   "tags": [
+    "Nous Portal",
+    "setup --portal",
+    "Tool Gateway",
+    "OAuth",
+    "portal info"
+   ]
+  },
+  {
+   "n": 93,
+   "date": "2026-10-06",
+   "url": "https://x.com/witcheer/status/2107371954009247994",
+   "feature": "hermes-agent",
+   "title_ja": "スキルの名前を知らなくても、頼めば探して入れてくれる",
+   "summary_ja": "「フラッシュカード用のスキルを探して入れて」と普通の言葉で頼むと、エージェントが合うスキルを探してインストールします。ハブから入れるスキルはセキュリティ走査を通ります。Hermes の使い方は同梱の `hermes-agent` スキルが知っています。",
+   "category": "skill",
+   "links": [
+    {
+     "title": "スキルの仕組み",
+     "url": "/hermes/docs/user-guide/features/skills/"
+    },
+    {
+     "title": "Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる",
+     "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/"
+    }
+   ],
+   "tags": [
+    "skills install",
+    "Skills Hub",
+    "hermes-agent",
+    "スキル検索"
+   ]
+  },
+  {
+   "n": 94,
+   "date": "2026-10-07",
+   "url": "https://x.com/witcheer/status/2107731405987856566",
+   "feature": "@file:",
+   "title_ja": "ファイルの中身をメッセージにそのまま添える",
+   "summary_ja": "CLI で `@file:notes.md これを ToDo にして` と書くと、ファイルの中身を添えて送れます。`@file:notes.md:3-5` なら3〜5行目だけです。Telegram などのメッセージでは `@` の記法は展開されません。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "コンテキスト参照",
+     "url": "/hermes/docs/user-guide/features/context-references/"
+    }
+   ],
+   "tags": [
+    "@file",
+    "context references",
+    "添付",
+    "行範囲"
+   ]
+  },
+  {
+   "n": 95,
+   "date": "2026-10-08",
+   "url": "https://x.com/witcheer/status/2108082465923649911",
+   "feature": "/loop",
+   "title_ja": "同じ指示を今の会話の中で決まった間隔ごとに繰り返す",
+   "summary_ja": "`/loop 5m build.log を見てビルドが終わったら教えて` のように打つと、今のセッションの中でまず1回、その後は5分ごとにエージェントが動きます。止めるときは `/loop stop` です。人が見ていない時間に回したいときは cron ジョブを使います。",
+   "category": "定期実行",
+   "links": [
+    {
+     "title": "繰り返しのループ",
+     "url": "/hermes/docs/user-guide/features/loops/"
+    }
+   ],
+   "tags": [
+    "loop",
+    "proactive",
+    "ポーリング",
+    "ビルド監視"
+   ]
+  },
+  {
+   "n": 96,
+   "date": "2026-10-09",
+   "url": "https://x.com/witcheer/status/2108518464134484398",
+   "feature": "/undo",
+   "title_ja": "直前のやり取りを会話から取り消して、言い方を変えて聞き直す",
+   "summary_ja": "`/undo` を打つと、直前の自分のメッセージとエージェントの返事が履歴から消え、その前の時点から聞き直せます。CLI では既定で実行前に確認が出ます。戻るのは会話だけで、ファイルの変更はチェックポイントを有効にしたうえで `/rollback` で戻します。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    },
+    {
+     "title": "チェックポイントと /rollback",
+     "url": "/hermes/docs/user-guide/checkpoints-and-rollback/"
+    }
+   ],
+   "tags": [
+    "undo",
+    "rollback",
+    "取り消し",
+    "チェックポイント"
+   ]
+  },
+  {
+   "n": 97,
+   "date": "2026-10-11",
+   "url": "https://x.com/witcheer/status/2109184368052777380",
+   "feature": "clarify",
+   "title_ja": "作業に入る前に、確認したいことをまとめて質問してもらう",
+   "summary_ja": "メッセージに「先にいくつか質問して」と添えると、エージェントが `clarify` ツールで、選択肢か自由回答の質問を最大5問まとめて出します。デスクトップでは1枚のカードに並び、Telegram などでは1問ずつ届きます。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "組み込みツール一覧",
+     "url": "/hermes/docs/reference/tools-reference/"
+    }
+   ],
+   "tags": [
+    "clarify",
+    "質問",
+    "選択肢",
+    "確認"
+   ]
+  },
+  {
+   "n": 98,
+   "date": "2026-10-10",
+   "url": "https://x.com/witcheer/status/2108882539788050645",
+   "feature": "timezone",
+   "title_ja": "サーバーの場所に関係なく、自分の時刻帯で動かす",
+   "summary_ja": "`hermes config set timezone America/New_York` のように IANA 名で設定すると、エージェントの時計と cron がその時刻帯で動きます。ログはマシンの時刻のままです。`HERMES_TIMEZONE` があればそちらが優先です。",
+   "category": "定期実行",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    }
+   ],
+   "tags": [
+    "timezone",
+    "IANA",
+    "cron",
+    "タイムゾーン"
    ]
   }
  ]

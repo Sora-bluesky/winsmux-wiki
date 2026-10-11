@@ -2,7 +2,7 @@
 title: "プロンプトの組み立て"
 description: "Hermes がシステムプロンプトをどう組み立て、キャッシュの安定性をどう保ち、その場限りの層をどう差し込むか"
 upstream_path: developer-guide/prompt-assembly.md
-upstream_blob: 5576353ea96094d4ca9b5faf0ca052177d99013a
+upstream_blob: f51608d4bbb2a8a1c4693788bc52cc84df879c76
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/prompt-assembly
 ---
@@ -325,6 +325,23 @@ def build_context_files_prompt(cwd=None, skip_soul=False):
 - リポジトリーのルールを変えたいなら、プロジェクトの文脈ファイルを直します
 - 繰り返し使える手順がほしいなら、スキルを足すか直します
 - 全員に対する Hermes のプロンプトの組み立て方を変えたいなら、Python を変えて、コードへの貢献として扱います
+
+## プロンプトの面への変更をレビューする {#reviewing-changes-to-the-prompt-surface}
+
+**プロンプトの面**とは、標準のインストールが最初のユーザーのメッセージより前に送るもの、つまりシステムプロンプトと `tools[]` の配列のことです。コードを 1 行変えただけで、diff には現れないままどちらかが書き換わることがあります。ガイダンスの定数が別の段に移ったり、ツールセットにツールが増えたり、スキーマを書き換える処理が説明文を変えたりするからです。そこで、組み上がった面そのものをコミットし、コードと同じようにレビューします。
+
+- `scripts/ci/prompt_surface.py render` は、本番の組み立てのコード（`build_system_prompt_parts` とエージェント自身の `tools[]`）を通して面を組み上げ、`tests/fixtures/prompt_surface/` に書き出します。組み上げる面は 9 つです。4 つのモデル系統での `cli`（モデル名によってガイダンスとパッチの書式が変わるため）、コードのワークスペース内での `cli`、`desktop`、`telegram`、`discord`、`cron` です。組み上げには新しいホームを使います。時刻、ホストの OS、ネットワーク、ツールが使えるかどうか、マシン上のパスは固定されるので、ノートパソコンでも CI でも同じバイト列になります。登録されたツールはすべて使えるものとして数えるので、認証情報が要るスキーマもレビューの対象になります。
+- `tests/ci/test_prompt_surface.py` は、コミットされたスナップショットが古いと失敗します。面を変える PR には作り直したスナップショットを含め、レビューする人は Files タブで実際のプロンプトの文面とスキーマを読みます。
+- CI の **Prompt surface diff** のジョブが、PR のレビューのコメントに面ごとの要約を投稿します。トークン数の増減、プロンプトの変更箇所、追加・削除されたツールとパラメーターです。
+- `tests/fixtures/prompt_surface/` 以下の変更は、マージする前に **hermes-agent-core の承認**が必要です。
+
+面を動かす変更をしたあとは、次のコマンドで作り直してください。
+
+```bash
+scripts/run-in-hermes-env python scripts/ci/prompt_surface.py render
+```
+
+利用者側のカスタマイズ（`SOUL.md`、文脈ファイル、自分で入れたスキル、`platform_hints`、`agent.*` のガイダンスの切り替え）は、スナップショットにまったく影響しません。組み上げには標準の既定値と同梱のスキルだけを使います。
 
 ## なぜこう分けているのか {#why-prompt-assembly-is-split-this-way}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: d3581e95f86ddee20c8f2d397bd555972f662c0c
+upstream_blob: 8eaad46ba985c759483b9ff8c4d8c49ac3240639
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -62,6 +62,7 @@ hermes skills uninstall <skill-name>
 | スキル | 説明 |
 |-------|-------------|
 | [**ai-presenter-video**](/hermes/docs/user-guide/skills/optional/creative/creative-ai-presenter-video/) | 台本と画像から、検証済みの AI プレゼンター動画を作ります。 |
+| [**anatomy**](/hermes/docs/user-guide/skills/optional/creative/creative-anatomy/) | アイデアを、操作できるアイソメトリックな機械の図で説明します。 |
 | [**archify**](/hermes/docs/user-guide/skills/optional/creative/creative-archify/) | 検証済みの対話型 HTML ダイアグラムを作ります。上流で保守されています。 |
 | [**ascii-art**](/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/) | アスキーアート。pyfiglet、cowsay、boxes、画像からの変換に対応します。 |
 | [**audiocraft-audio-generation**](/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/) | AudioCraft。MusicGen で文章から音楽を、AudioGen で文章から効果音を作ります。 |

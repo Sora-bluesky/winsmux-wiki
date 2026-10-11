@@ -345,6 +345,7 @@ Hermes Agent 0.21.6
 - [user-guide/skills/optional/blockchain/blockchain-solana（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/blockchain/blockchain-solana/)
 - [user-guide/skills/optional/communication/communication-one-three-one-rule（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/communication/communication-one-three-one-rule/)
 - [user-guide/skills/optional/creative/creative-ai-presenter-video（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-ai-presenter-video/)
+- [user-guide/skills/optional/creative/creative-anatomy（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-anatomy/)
 - [user-guide/skills/optional/creative/creative-archify（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-archify/)
 - [user-guide/skills/optional/creative/creative-ascii-art（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/)
 - [user-guide/skills/optional/creative/creative-audiocraft-audio-generation（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/)
@@ -814,6 +815,7 @@ Hermes Agent 0.21.6
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/blockchain/blockchain-solana.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/communication/communication-one-three-one-rule.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-ai-presenter-video.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-anatomy.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-archify.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-ascii-art.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation.md

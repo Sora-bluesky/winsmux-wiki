@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 6eec70eb3181f086b9b637afcf9a23867eda92a6
+upstream_blob: c01bf9e3fb8cfe8763f53079c28aebd86006de81
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -97,6 +97,7 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes memory` | 外部メモリプロバイダを設定します。プラグイン固有のサブコマンド（例: `hermes honcho`）は、そのプロバイダが有効なときに自動的に登録されます。 |
 | `hermes acp` | エディタ連携用に、Hermes を ACP サーバーとして実行します。 |
 | `hermes mcp` | MCP サーバー設定を管理し、Hermes を MCP サーバーとして実行します。 |
+| `hermes connectors` | ホスト型コネクタのアカウントを一覧・接続・名前変更・切断します。 |
 | `hermes plugins` | Hermes Agent のプラグインを管理します（インストール・有効化・無効化・削除）。 |
 | `hermes portal` | Nous Portal の状態・サブスクリプションリンク・Tool Gateway ルーティングです。[Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/) を参照してください。 |
 | `hermes tools` | プラットフォームごとに有効なツールを設定します。 |
@@ -1459,7 +1460,7 @@ hermes hooks <subcommand>
 hermes memory <subcommand>
 ```
 
-外部メモリプロバイダのプラグインをセットアップ・管理します。同梱のプロバイダ: holographic、retaindb、byterover。honcho、hindsight、supermemory、mem0、openviking（プラグインカタログ）は `hermes plugins install <name>` のあとで使えます（`memory.provider` にすでに指定されているプロバイダなら、`hermes update` がこのインストールを自動で行います）。同時にアクティブにできる外部プロバイダは1つだけです。組み込みメモリ（MEMORY.md/USER.md）は常にアクティブです。
+外部メモリプロバイダのプラグインをセットアップ・管理します。同梱のプロバイダ: retaindb、byterover。honcho、hindsight、supermemory、mem0、openviking、holographic（プラグインカタログ）は `hermes plugins install <name>` のあとで使えます（`memory.provider` にすでに指定されているプロバイダなら、`hermes update` がこのインストールを自動で行います）。同時にアクティブにできる外部プロバイダは1つだけです。組み込みメモリ（MEMORY.md/USER.md）は常にアクティブです。
 
 サブコマンド:
 
@@ -1518,6 +1519,24 @@ MCP（Model Context Protocol）サーバーの設定を管理し、Hermes を MC
 | `login <name>` | OAuth ベースの MCP サーバーの再認証を強制します。 |
 
 [MCP Config Reference](/hermes/docs/reference/mcp-config-reference/)、[Use MCP with Hermes](/hermes/docs/guides/use-mcp-with-hermes/)、[MCP Server Mode](/hermes/docs/user-guide/features/mcp/#running-hermes-as-an-mcp-server) を参照してください。
+
+## `hermes connectors` {#hermes-connectors}
+
+```bash
+hermes connectors <subcommand>
+```
+
+ホスト型コネクタのアカウント（Nous のツールゲートウェイ経由で使う Gmail などのアプリ）を管理します。Nous Portal へのサインインが必要です。1つのアプリに名前付きのアカウントを複数持てます。[Multiple connector accounts](/hermes/docs/user-guide/features/tool-gateway/#multiple-connector-accounts) を参照してください。
+
+| サブコマンド | 説明 |
+|------------|-------------|
+| `list` | コネクタを一覧し、それぞれが接続済みかどうかを表示します。 |
+| `accounts [app] [--all]` | アカウントを一覧します。1つのアプリ分だけでも、全アプリ分でも出せます。`--all` を付けると、使われなくなった（retired）アカウントも含めます。 |
+| `connect <app> [--alias NAME] [--reconnect [--force]]` | アカウントを接続するためのリンクを表示し、接続が完了するか期限が来るまで待ちます。Ctrl-C で待機をやめられます。`--alias` はアカウントに名前を付けます。新しい名前を付けると、アカウントがもう1つ追加されます。`--reconnect` は指定したアカウントを修復し、何も削除しません。すでに接続済みのアカウントに対しては、そう表示するだけで何もしません（`--force` を付けた場合を除く）。 |
+| `rename <app> <name-or-label> --to <new>` | アカウントの名前を変更します。名前の無いアカウントは、アプリのラベルで指定します。 |
+| `disconnect <app> [--alias NAME] [--yes]` | アカウントを削除します。`--yes` を付けない限り、確認を求めます。 |
+
+名前の変更には、それに対応した Nous Portal のバージョンが必要です。対応するまでは「This Nous Portal cannot rename connector accounts yet.」と表示されます。
 
 ## `hermes plugins` {#hermes-plugins}
 

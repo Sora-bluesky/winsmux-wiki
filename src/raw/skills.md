@@ -12,9 +12,9 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 213 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 214 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `6a2662a`（2026-10-10）時点。この一覧は上流の docs から機械生成しています。
+上流 `1fd1827`（2026-10-11）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（58）
 
@@ -81,7 +81,7 @@ raw: /hermes/raw/skills.md
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-09-20 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/) | Use when a fetch fails: 403/429, paywall, WAF, bot wall | 2026-09-20 |
 
-## あとから入れる（154）
+## あとから入れる（155）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -99,6 +99,7 @@ raw: /hermes/raw/skills.md
 | [Solana](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-solana/) | Query Solana wallets, tokens, txs, and NFTs in USD | 2026-09-20 |
 | [One Three One Rule](/hermes/docs/user-guide/skills/optional/communication/communication-one-three-one-rule/) | 1-3-1 decision briefs: problem, three options, one pick | 2026-09-20 |
 | [Ai Presenter Video](/hermes/docs/user-guide/skills/optional/creative/creative-ai-presenter-video/) | Make a verified AI presenter video from script + image | 2026-09-20 |
+| [Anatomy](/hermes/docs/user-guide/skills/optional/creative/creative-anatomy/) | Explain an idea as an interactive isometric machine figure | 2026-10-11 |
 | [Archify](/hermes/docs/user-guide/skills/optional/creative/creative-archify/) | Validated interactive HTML diagrams, upstream-maintained | 2026-09-20 |
 | [Ascii Art](/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/) | ASCII art: pyfiglet, cowsay, boxes, image-to-ascii | 2026-09-20 |
 | [Audiocraft Audio Generation](/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/) | AudioCraft: MusicGen text-to-music, AudioGen text-to-sound | 2026-09-20 |

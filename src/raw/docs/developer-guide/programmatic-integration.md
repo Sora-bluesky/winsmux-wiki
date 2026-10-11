@@ -2,7 +2,7 @@
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 828b3151028a6cb23b107e359cf3a4323bc861d7
+upstream_blob: 3856f28082bf9c063a4f497c9d977c070b0febda
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -76,6 +76,7 @@ terminal.resize         clipboard.paste         image.attach
 | `truncate_before_row_id` | 切る対象のユーザーのターンを指す SQLite の整数の行 ID（`messages.id` / `row_id`）です。永続的な指定方法としてはこちらが望ましい形です。序数と行 ID の両方が渡された場合、ゲートウェイは両者が一致するか確認します（食い違えば `4030` を返します）。存在しない行 ID や古い行 ID は `4018` で拒否され、序数へ**戻ることはありません**。 |
 | `confirm_truncate` | 序数、メッセージ ID、行 ID のいずれかを送るときは必ず必要です。この送信が本当に巻き戻しであって、残っていたパラメーターをたまたま抱えたままの通常の送信ではないことを宣言します。対象を指定せずにこれだけ送るとコード `4004` で拒否されます。 |
 | `confirm_empty_truncate` | 切った結果、記録が空になる場合（序数 `0`）に追加で必要です。 |
+| `confirm_deep_truncate` | 切ると 2 つ以上のユーザーのターンが保管行きになる場合（最後のターンの再生成や編集より深い巻き戻し）に、利用者に確認したうえで送ります。このリリースでは、確認なしの深い巻き戻しはログに記録したうえでそのまま実行するので、古いクライアントも動き続けます。次のリリースでは、これをコード `4033` で拒否します（`error.data` に `archived_messages` と `archived_user_turns` が入り、何も書き込まれません）。 |
 
 `confirm_truncate` の付いていない切り詰めのパラメーターはコード `4004` または `4029` で拒否され、何も書き込まれません。巻き戻しを実装するホストは、利用者がそれを求めたその瞬間にフラグを立てる必要があり、通常の送信をまたいで切り詰めのパラメーターを状態として持ち越してはいけません。序数よりも `truncate_before_row_id`（再開時の `row_id` / `_row_id` から取れます）を優先し、序数は永続的な ID がまだ得られないときの互換用・暫定用の経路としてだけ残してください。
 

@@ -2,7 +2,7 @@
 title: "TUI"
 description: "Hermes の新しいターミナル画面を起動する — マウスが使えて、表示が豊かで、入力を待たせない"
 upstream_path: user-guide/tui.md
-upstream_blob: 8d2679c193283b32f62d4899593e3bff2162935f
+upstream_blob: d52c465901846f63f0afcf9523dd005375d610f3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/tui
 ---
@@ -130,6 +130,7 @@ macOS では、`F7` は物理的な F7 ファンクションキーを指しま�
 | `/details` | ツール呼び出しの詳細表示を切り替える（全体または区画ごと） |
 | `/usage` | トークン / 費用 / コンテキストの詳しいパネル |
 | `/agents`（別名 `/tasks`） | 観測用の重ね表示 — サブエージェントの系統図をリアルタイムに示し、停止や一時停止、枝ごとの費用 / トークン / ファイルの集計、やり取りごとの履歴を見られます |
+| `/connectors` | コネクタのアカウント一覧です。アカウントの名前変更・追加・再接続・削除ができ、使われなくなった（retired）アカウントも表示できます。キー操作は [Slash Commands](/hermes/docs/reference/slash-commands/#tools--skills) を参照してください |
 | `/reload` | 動いている TUI のプロセスに `~/.hermes/.env` を読み直させ、追加した API キーを再起動なしで反映します |
 | `/mouse [on\|off\|toggle\|wheel\|buttons\|all]` | マウス追跡の設定をその場で選びます（`config.yaml` の `display.mouse_tracking` にも保存されます）。`wheel`（1000+1006）はホイールのスクロールを残しつつ、tmux が入力行に「No image in clipboard」を連発する原因になるホバーのイベントを止めます。`buttons` はドラッグ選択を加えます。`all` が既定で、ホバーを使う表示まで含みます。 |
 

@@ -1,12 +1,12 @@
 ---
 title: "Hermes Wingtips 日本語版"
-description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」の #1〜#91（2026-10-04 まで）を日本語で"
+description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」の #1〜#98（2026-10-10 まで）を日本語で"
 raw: /hermes/raw/tips.md
 ---
 
 # Hermes Wingtips 日本語版
 
-「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは #1〜#91（2026-10-04 まで）の 91 回・8 分類を収録しています。英語の原文は @witcheer のサイト [hermes recipes](https://notwitcheer.github.io/hermes-recipes/wingtips/) にもまとまっています。
+「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは #1〜#98（2026-10-10 まで）の 98 回・8 分類を収録しています。英語の原文は @witcheer のサイト [hermes recipes](https://notwitcheer.github.io/hermes-recipes/wingtips/) にもまとまっています。
 
 日本語の文はこのサイトによる要約です。正確な内容は元のポストと公式ドキュメントをご覧ください。
 
@@ -42,6 +42,9 @@ raw: /hermes/raw/tips.md
 
 ## モデルとプロバイダ
 
+- **#92 コマンド1本で Nous Portal にログインして使い始める** — `hermes setup --portal` でログインしてモデルを選ぶと、推論プロバイダが Nous になり Tool Gateway も有効になります。有料プランなら Web 検索や画像生成もキーなしで使えます。状態は `hermes portal info` で見ます。
+  - 元のポスト: https://x.com/witcheer/status/2106998344337731926
+  - 関連: [Nous Portal](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/) / [Nous Tool Gateway](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-gateway/)
 - **#75 要約などの補助タスクだけ、思考の深さを下げる** — 会話の要約や画像の読み取りなどの補助タスクには、それぞれ `reasoning_effort` を設定できます。`low` や `none` にすると補助の呼び出しが速く安くなり、メインのチャットの設定は変わりません。
   - 元のポスト: https://x.com/witcheer/status/2100460797239415168
   - 関連: [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
@@ -83,6 +86,12 @@ raw: /hermes/raw/tips.md
 
 ## セッションと文脈
 
+- **#96 直前のやり取りを会話から取り消して、言い方を変えて聞き直す** — `/undo` を打つと、直前の自分のメッセージとエージェントの返事が履歴から消え、その前の時点から聞き直せます。CLI では既定で実行前に確認が出ます。戻るのは会話だけで、ファイルの変更はチェックポイントを有効にしたうえで `/rollback` で戻します。
+  - 元のポスト: https://x.com/witcheer/status/2108518464134484398
+  - 関連: [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/) / [チェックポイントと /rollback](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
+- **#94 ファイルの中身をメッセージにそのまま添える** — CLI で `@file:notes.md これを ToDo にして` と書くと、ファイルの中身を添えて送れます。`@file:notes.md:3-5` なら3〜5行目だけです。Telegram などのメッセージでは `@` の記法は展開されません。
+  - 元のポスト: https://x.com/witcheer/status/2107731405987856566
+  - 関連: [コンテキスト参照](https://wiki.winsmux.dev/hermes/docs/user-guide/features/context-references/)
 - **#89 今の会話を履歴ごと写して、別の方向を試す** — `/branch` を打つと、今のセッションが履歴ごと独立した写しとして分岐し、元の会話を残したまま別の案を試せます。`/branch plan-b` のように名前も付けられます。Telegram や Discord では分岐先が隣の新しいスレッドで開きます。
   - 元のポスト: https://x.com/witcheer/status/2105922267636965538
   - 関連: [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
@@ -152,6 +161,9 @@ raw: /hermes/raw/tips.md
 
 ## skill
 
+- **#93 スキルの名前を知らなくても、頼めば探して入れてくれる** — 「フラッシュカード用のスキルを探して入れて」と普通の言葉で頼むと、エージェントが合うスキルを探してインストールします。ハブから入れるスキルはセキュリティ走査を通ります。Hermes の使い方は同梱の `hermes-agent` スキルが知っています。
+  - 元のポスト: https://x.com/witcheer/status/2107371954009247994
+  - 関連: [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/) / [Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/)
 - **#80 決まったスキルを毎回のセッションで最初から使う** — `config.yaml` の `skills.auto_load` に並べたスキルは、CLI・ゲートウェイ・cron などの新しいセッションで最初から読み込まれます。1回の起動だけなら `hermes -s <skill>` を使います。
   - 元のポスト: https://x.com/witcheer/status/2102275176138178793
   - 関連: [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/) / [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
@@ -179,6 +191,12 @@ raw: /hermes/raw/tips.md
 
 ## 定期実行
 
+- **#98 サーバーの場所に関係なく、自分の時刻帯で動かす** — `hermes config set timezone America/New_York` のように IANA 名で設定すると、エージェントの時計と cron がその時刻帯で動きます。ログはマシンの時刻のままです。`HERMES_TIMEZONE` があればそちらが優先です。
+  - 元のポスト: https://x.com/witcheer/status/2108882539788050645
+  - 関連: [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- **#95 同じ指示を今の会話の中で決まった間隔ごとに繰り返す** — `/loop 5m build.log を見てビルドが終わったら教えて` のように打つと、今のセッションの中でまず1回、その後は5分ごとにエージェントが動きます。止めるときは `/loop stop` です。人が見ていない時間に回したいときは cron ジョブを使います。
+  - 元のポスト: https://x.com/witcheer/status/2108082465923649911
+  - 関連: [繰り返しのループ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/loops/)
 - **#90 質問に答えるだけで定期実行の自動化を作る** — `/blueprint learn-daily` を打つと、Hermes が学ぶトピックや時刻を1つずつ聞き、確認のあとで cron ジョブとして予約します。cron 構文は要りません。`/blueprint` だけなら型紙の一覧が出ます。
   - 元のポスト: https://x.com/witcheer/status/2106275419557126419
   - 関連: [Automation Blueprints カタログ](https://wiki.winsmux.dev/hermes/docs/reference/automation-blueprints-catalog/) / [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
@@ -259,6 +277,9 @@ raw: /hermes/raw/tips.md
 
 ## その他
 
+- **#97 作業に入る前に、確認したいことをまとめて質問してもらう** — メッセージに「先にいくつか質問して」と添えると、エージェントが `clarify` ツールで、選択肢か自由回答の質問を最大5問まとめて出します。デスクトップでは1枚のカードに並び、Telegram などでは1問ずつ届きます。
+  - 元のポスト: https://x.com/witcheer/status/2109184368052777380
+  - 関連: [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
 - **#84 起動時の MCP サーバーの同時接続数を決める** — Hermes の起動時、設定した MCP サーバーへ接続する数に上限を設けられます。`mcp.discovery_concurrency`（既定4、0で無制限）を上げると早く揃い、小さいマシンでは下げると負荷が抑えられます。
   - 元のポスト: https://x.com/witcheer/status/2103850251220042077
   - 関連: [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)

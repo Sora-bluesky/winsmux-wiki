@@ -2,14 +2,14 @@
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: 0fbd364a3081dd276d2adfbf0dfee128fbc54078
+upstream_blob: 4b3ddea5ffa0f2db6589362e1c861896b914c536
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
 
 # 記憶プロバイダー {#memory-providers}
 
-Hermes Agent には、外部の記憶プロバイダーのプラグインが 5 つ同梱されています。内蔵の MEMORY.md と USER.md を超えて、セッションをまたいで残る知識をエージェントに持たせるものです。Honcho、Hindsight、Supermemory などほかのものは、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れられます。外部プロバイダーは一度に**1 つ**しか動かせません。内蔵の記憶は、それと並んで常に動いています。
+Hermes Agent には、外部の記憶プロバイダーのプラグインが 2 つ（RetainDB と ByteRover）同梱されています。内蔵の MEMORY.md と USER.md を超えて、セッションをまたいで残る知識をエージェントに持たせるものです。Honcho、Hindsight、Supermemory、Holographic などほかのものは、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れられます。外部プロバイダーは一度に**1 つ**しか動かせません。内蔵の記憶は、それと並んで常に動いています。
 
 ## すぐに使い始める {#quick-start}
 
@@ -25,9 +25,9 @@ hermes memory off        # disable external provider
 
 ```yaml
 memory:
-  provider: holographic  # or retaindb, byterover,
-                         # or honcho / hindsight / supermemory / mem0 / openviking (plugin
-                         # catalog — run `hermes plugins install <name>` first)
+  provider: retaindb  # or byterover,
+                      # or honcho / hindsight / supermemory / mem0 / openviking / holographic
+                      # (plugin catalog — run `hermes plugins install <name>` first)
 ```
 
 ## しくみ {#how-it-works}
@@ -553,6 +553,10 @@ Hindsight が読むのは、`$HERMES_HOME/hindsight/config.json`（プロファ�
 
 ### Holographic {#holographic}
 
+:::info プラグインカタログ
+Holographic は [itpartypattaya](https://github.com/itpartypattaya/hermes-plugin-holographic) が保守しており、Hermes に同梱されるのではなく[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)から入れます。以前 Hermes のツリーの中に同梱されていたのと同じプロバイダーで、プロバイダーの名前も設定もデータベースも変わりません。すでにある設定は自動で移行されます。[同梱の Holographic から移る](#migrating-from-bundled-holographic)を参照してください。
+:::
+
 手元の SQLite に事実を貯める仕組みです。FTS5 の全文検索、信頼度の採点、そして組み合わせた代数的な問い合わせのための HRR（Holographic Reduced Representations）を備えます。
 
 | | |
@@ -566,7 +570,8 @@ Hindsight が読むのは、`$HERMES_HOME/hindsight/config.json`（プロファ�
 
 **設定:**
 ```bash
-hermes memory setup    # select "holographic"
+hermes plugins install holographic   # from the plugin catalog
+hermes memory setup                  # select "holographic"
 # Or manually:
 hermes config set memory.provider holographic
 ```
@@ -584,6 +589,20 @@ hermes config set memory.provider holographic
 - `reason` — 複数の実体にまたがる AND の組み合わせ問い合わせ
 - `contradict` — 矛盾する事実の自動検出
 - 非対称なフィードバックによる信頼度の採点（役に立てば +0.05、立たなければ -0.10）
+
+カタログのプラグインには独自のリリースノートがあり、この一覧にない設定項目もあります。いまのツールの操作と設定は、その [README](https://github.com/itpartypattaya/hermes-plugin-holographic) を見てください。
+
+#### 同梱の Holographic から移る {#migrating-from-bundled-holographic}
+
+Holographic は以前、Hermes のツリーの中に同梱されていました。`config.yaml` にすでに `memory.provider: holographic` があるなら、何もする必要はありません。
+
+- `hermes update` が、このプロバイダーを指定しているすべてのプロファイルのホームにカタログのプラグインを入れます。
+- エージェントを最初に起動したとき（`hermes chat`、ゲートウェイ、デスクトップ）にまだプラグインが無ければ、Hermes がそれを入れ、入れたことを知らせます。
+- `security.allow_lazy_installs: false` のときは、エージェントの起動経路では何も入れず、代わりに実行すべき `hermes plugins install holographic` のコマンドをそのまま表示します。
+
+貯めた事実（`$HERMES_HOME/memory_store.db`、または自分で設定した `db_path`）と `plugins.hermes-memory-store` の設定は以前とまったく同じように読み込まれるので、記憶が失われることはありません。確かめるには `hermes memory status` と `hermes plugins list` を使います。
+
+Nous Research が暫定的に用意したコピー（`NousResearch/hermes-plugin-holographic`、現在はアーカイブ済み）を URL 指定で入れていた場合は、`hermes plugins update holographic` を実行するとカタログの項目へ移ります。データはそのままの場所に残ります。
 
 ---
 
@@ -781,7 +800,7 @@ hermes memory setup
 | **OpenViking**（プラグインカタログ） | 自己ホスト | 無料 | 6 | `hermes plugins install openviking` とサーバー | ファイルシステム風の階層と段階的な読み込み |
 | **Mem0**（プラグインカタログ） | クラウド／自己ホスト | 無料／有料 | 4 | `hermes plugins install mem0` | サーバー側の LLM 抽出と、自己ホスト／OSS のモード |
 | **Hindsight**（プラグインカタログ） | クラウド／ローカル | 無料／有料 | 3 | `hermes plugins install hindsight` | 知識グラフと reflect による統合 |
-| **Holographic** | ローカル | 無料 | 2 | 無し | HRR の代数と信頼度の採点 |
+| **Holographic**（プラグインカタログ） | ローカル | 無料 | 2 | `hermes plugins install holographic` | HRR の代数と信頼度の採点 |
 | **RetainDB** | クラウド | 月額 20 ドル | 10 | `requests` | 差分圧縮 |
 | **ByteRover** | ローカル／クラウド | 無料／有料 | 3 | `brv` の CLI | 圧縮の直前の抽出 |
 | **Supermemory**（プラグインカタログ） | クラウド／自己ホスト | 無料／有料 | 4 | `hermes plugins install supermemory` | 文脈の囲い込み、セッションのグラフ取り込み、複数の入れ物 |
@@ -803,7 +822,8 @@ hermes memory setup
 [同梱されていた Honcho からの移行](#upgrading-from-the-bundled-honcho)を参照）、Supermemory（
 [同梱の Supermemory から移る](#migrating-from-bundled-supermemory)を参照）、Mem0（
 [同梱の Mem0 から移る](#migrating-from-bundled-mem0)を参照）、OpenViking（
-[同梱の OpenViking から移る](#migrating-from-bundled-openviking)を参照）が移りました。Holographic、RetainDB、
+[同梱の OpenViking から移る](#migrating-from-bundled-openviking)を参照）、Holographic（現在は itpartypattaya が保守。
+[同梱の Holographic から移る](#migrating-from-bundled-holographic)を参照）が移りました。RetainDB と
 ByteRover は 2026 年 10 月 15 日に本体から外れます。それぞれの単独のリポジトリは保守されておらず、
 新しい保守者を募っています。利用する側で変わることはありません。
 プロバイダーの名前も、それが読む設定も、データの置き場所も、道具もそのままです。

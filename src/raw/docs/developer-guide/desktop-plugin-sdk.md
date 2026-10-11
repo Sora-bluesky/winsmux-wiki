@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: a54df00fe3fb084d08cab3c8e7cfc4d57e9fdd16
+upstream_blob: c3ef14bdd6c52d4b8db82b32ca3fb2a472e4b02d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -365,6 +365,11 @@ ctx.registerMany([
 
 キー割り当ては設定画面で利用者が変えられます。`defaults` は最初の割り当てにすぎません。
 
+アプリ**自身**の操作（ブラウザーのパネルの切り替え、Settings を開く、入力欄にフォーカスする）を
+動かしたいときは、そのショートカットの `KeyboardEvent` を作って送ってはいけません。利用者が割り当てを
+変えているかもしれないからです。代わりに
+[`ctx.runAction(id)`](#run-app-actions) を呼んでください。
+
 ### テーマ {#themes}
 
 テーマのコントリビューションは、完全な `DesktopTheme` を `data` として渡します（名前、表示名、
@@ -409,8 +414,8 @@ host.onEvent('gateway.ready', () => {
 
 どちらの窓口もプロファイルごとに保存されるので、プラグインからの切り替えも手で選んだときと
 まったく同じように残ります。テーマを差し替えるのではなく*今の*テーマに色味を足したいときは、
-`setAccentOverride(hex)` を使い、`ctx.onDispose` で解除してください。単体で配られている
-[Accent Picker](https://github.com/NousResearch/hermes-desktop-accent-picker) の
+`setAccentOverride(hex)` を使い、`ctx.onDispose` で解除してください。公式の
+[Accent Picker](https://github.com/NousResearch/hermes-official-plugins/tree/main/accent-picker) の
 プラグインが、その実例です（そのままインストールできる完成したディスク型のプラグインでもあります）。
 
 #### チャット切り替えの見た目を整える — `data-session-switching` {#styling-the-chat-switch-data-session-switching}
@@ -535,6 +540,7 @@ pet-wallet の行は[ペットの吹き出し](#pet-bubble)の窓口を使いま
 | memory-review (#115966) | `/memory …` に `host.request('slash.exec', { session_id, command })` — すでに SDK だけで完結 | 任意: 実行する代わりに `host.composer.insertText(sid, '/memory pending', { mode: 'prefix' })` でコマンドを利用者のために置いておく |
 | intelligent-tool-break (#115964) | 「Message」ボタンは「type /break」とトーストを出すだけ（入力欄には書かない） | `host.composer.setDraft(host.state.focusedSessionId.get(), '/break ')` のあと `host.composer.focus(null)` で、本来意図した動きに戻る |
 | pet-wallet (#135178) | 中核のペットを探す `document.querySelector('canvas[aria-label$=" pet"]')`、毎フレームそれを追いかける `document.body` 上の `position:fixed; z-index:9999` の重ね表示、文書全体に張ったキャプチャ段階のポインターのリスナー | `ctx.pet.say(text, { id: 'balance', tone?, ttlMs? })` — 中核の吹き出しが、ウィンドウ内でも切り離した状態でも、ペットの上にプラグイン名付きで表示します。`ctx.pet.visible` でペットがいないことがわかるので、そのときはステータスバーのチップに切り替えられます |
+| browser-toggle | 組み込みのブラウザーのパネルのショートカットを装うための `document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'L', ctrlKey: true, shiftKey: true, … }))`。利用者が割り当てを変えたり外したりすると、何も言わずに動かなくなります | `ctx.runAction('view.showBrowser')` — 割り当てがどうであれ、ショートカットやパレットの項目と同じ処理を実行します（[アプリの操作を実行する](#run-app-actions)） |
 
 表の `sessionId` は、プラグインの UI が紐づいているセッションの id です。入力欄の差し込み口の
 描画では `host.state.focusedSessionId.get()` です。
@@ -1043,6 +1049,8 @@ ctx.os.writeClipboard(text)                // system clipboard → Promise<boole
 ctx.pet.say(text, { id?, tone?, ttlMs? })   // line in the core pet's speech bubble → disposer
 ctx.pet.clear(id?)                         // drop one line (or all of yours)
 ctx.pet.visible                            // ReadableAtom<boolean> — is a pet on screen?
+ctx.runAction('view.showBrowser')          // run a built-in app action → { ok: true } | { ok: false, reason, error }
+ctx.listActions()                          // [{ id, label, category }] — the ids runAction accepts
 host.navigate('/route')                    // hash-route navigation
 host.openSession(id, { profile?, intent? }) // open a stored session core-style;
                                            //   profile: soft-swap to that profile's backend first
@@ -1255,6 +1263,72 @@ interface PluginPet {
 ペットへのポインター操作（ドラッグ、Shift を押しながらのクリックでの切り離し、重ね表示のクリック）は
 ホストのもので、プラグイン用の差し込み口はありません。操作を用意するなら、パレットのコマンド、
 ステータスバーの項目、自前のペインを使ってください。
+
+### アプリの操作を実行する — `ctx.runAction` {#run-app-actions}
+
+アプリ自身のコマンド、つまりキーボードのショートカットやコマンドパレットの裏にある操作は、
+id を指定して実行できます。プラグインが受け取るのはショートカットが実行するのとまったく同じ処理なので、
+利用者が Settings ▸ Keyboard Shortcuts でそのショートカットの割り当てを変えても（外しても）、
+プラグイン側には何の影響もありません。
+
+```ts
+
+register(ctx) {
+  ctx.register({
+    id: 'browser',
+    area: TITLEBAR_AREAS.right,
+    render: () => jsx('button', { onClick: () => ctx.runAction('view.showBrowser'), children: 'Browser' })
+  })
+
+  // Results are values, never exceptions.
+  const result = ctx.runAction('nav.settings')
+  if (!result.ok) console.log(result.reason, result.error)
+
+  // Discover what is allowed (labels are localized, same as the shortcuts panel).
+  for (const { id, label } of ctx.listActions()) console.log(id, label)
+}
+```
+
+```ts
+interface PluginContext {
+  runAction(id: PluginAppActionId): PluginRunActionResult
+  listActions(): Array<{ id: PluginAppActionId; label: string; category: string }>
+}
+
+type PluginRunActionResult =
+  | { ok: true }
+  | { ok: false; reason: 'unknown' | 'denied' | 'unavailable'; error: string }
+```
+
+許されているのは表示と移動の操作だけです。`PluginAppActionId` は型としての union で、
+`PLUGIN_APP_ACTIONS` は実行時に使える同じ一覧です。
+
+| Id | 何をするか |
+|---|---|
+| `view.showBrowser` | ブラウザーのパネルを切り替えます |
+| `view.showFiles` | ファイルブラウザーを表示します |
+| `view.toggleSidebar` | 左のサイドバーを切り替えます |
+| `view.toggleRightSidebar` | 右側を切り替えます |
+| `view.toggleReview` | レビュー（git）のペインを切り替えます |
+| `view.toggleStatusbar` | ステータスバーを切り替えます |
+| `view.findInPage` | ページ内検索を開きます |
+| `composer.focus` | 入力欄にフォーカスします |
+| `session.new` | 新しいチャットを始めます |
+| `session.focusSearch` | セッションの検索にフォーカスします |
+| `conversation.scrollPageUp` / `conversation.scrollPageDown` | やり取りの記録を 1 ページ分スクロールします |
+| `nav.commandPalette` | コマンドパレットを切り替えます |
+| `nav.settings`, `nav.profiles`, `nav.capabilities`, `nav.messaging`, `nav.artifacts`, `nav.cron`, `nav.agents` | そのページを開きます |
+| `keybinds.openPanel` | Settings ▸ Keyboard Shortcuts を開きます |
+
+それ以外は拒否されます。アプリに実在するものの一覧に無い操作（アーカイブ、ピン留め、プロファイル・
+モデル・推論の切り替え、ターミナル、新しいウィンドウ、フォルダーを開く、HUD、タブを閉じる、…）には
+`{ ok: false, reason: 'denied' }` が、存在しない id には `reason: 'unknown'` が返ります。どちらの場合も
+何も実行されず、`[plugin:<id>] runAction: …` という警告がログに残ります。`reason: 'unavailable'` は、
+処理を持っているアプリの外枠がまだ組み込まれていない（起動のごく初期）という意味です。利用者の操作を
+きっかけにもう一度試してください。破壊的な操作や特権が要る操作（セッションの削除、サインアウト、承認、
+モデル・プロバイダーの変更、アップデート、終了）は、プラグインが実行できるアプリの操作ではありません。
+
+古いホストにも対応するなら、機能の有無を確かめてください: `ctx.runAction?.('view.showBrowser')`。
 
 ### デスクトップの外観の設定 — `host.settings` {#desktop-appearance-settings-hostsettings}
 
@@ -1822,7 +1896,7 @@ CSP、権限の制御）が必要です。この経路を信頼の境界とし�
 | 分類 | 公開されるもの |
 |----------|---------|
 | ホスト | `host`（`.state.*`、`.settings`、`.notify`、`.notifyError`、`.navigate`、`.onEvent`、`.logs`、`.status`、`.restartGateway`、`.request`、`.composer`、`.sessions`、`.skills`、`.toolsets`、`.profiles`、`.pluginDecisions`） |
-| プラグインの取り決め | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginPet`、`PetSayOptions`、`PetMessageTone`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
+| プラグインの取り決め | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginPet`、`PetSayOptions`、`PetMessageTone`、`PluginAppActionId`、`PluginAppActionInfo`、`PluginRunActionResult`、`PLUGIN_APP_ACTIONS`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
 | 領域の定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS`、`MODEL_MENU_ROW_AREA`、`SESSION_ROW_AREAS`、`SIDEBAR_NAV_PREFS_AREA`、`APPEARANCE_AREAS`、`SETTINGS_PLUGINS_AREA` |
 | 領域ごとの中身 | `PluginSettingsPage`、`PluginSettingsSubpage`（と `pluginSettingsHref`）、`RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider`、`SessionRowSlotContribution`、`SidebarNavPrefsContribution` |
 | React と状態 | `useValue`、`atom`、`computed`、`useQuery`、`useMutation`、`useQueryClient`、`queryClient`、`Contribute`、`WorkspacePageHeaderControl` |

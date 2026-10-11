@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 7f8700bd0566ef96809238bc6ac786b0487d8c24
+upstream_blob: 625bb2d88c91b030dedcd85ed9a6adb11c5187a7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -590,8 +590,8 @@ SHA の固定）と import の許可リストであって、隔離ではあり�
 - プラグインが持っていない側にはダッシュ（—）が出ます。デスクトップ側があるのに、エージェント側が
   選択したプロファイルに**入っていない**場合は **Install here** が出て、
   パッケージの出どころ（カタログの項目か git のリモート）から、そのプロファイルにだけ導入するダイアログを
-  埋めてくれます。[Accent Picker](https://github.com/NousResearch/hermes-desktop-accent-picker)
-  のような任意の追加機能は、**Install from Git** でそれぞれのリポジトリから導入します。
+  埋めてくれます。[Accent Picker](https://github.com/NousResearch/hermes-official-plugins/tree/main/accent-picker)
+  のような任意の追加機能は、プラグインカタログから導入します。
 - **アンインストール** — 選択したプロファイルの `plugins/` フォルダの下に導入された
   プラグイン（user または git での導入）には、名前の横にゴミ箱のボタンが付きます。
   確認を求めたうえで、そのプロファイルからプラグインのファイルと導入の

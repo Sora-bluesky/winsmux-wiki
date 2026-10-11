@@ -2,14 +2,14 @@
 title: "Home Assistant"
 description: "プラグインカタログの Home Assistant プラグインを使って、Hermes Agent からスマートホームを操作する。"
 upstream_path: user-guide/messaging/homeassistant.md
-upstream_blob: de531cd9aae6e15f6b72d8f36b9c0d1427885e1e
+upstream_blob: 7acf1ba2706ae6bf6a61e9f88619d6ab50770311
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/homeassistant
 ---
 
 # Home Assistant との連携 {#home-assistant-integration}
 
-Hermes Agent は [Home Assistant](https://www.home-assistant.io/) と、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)にある公式の **`homeassistant` プラグイン** を通じて連携します。このプラグインは Nous Research が [NousResearch/hermes-homeassistant](https://github.com/NousResearch/hermes-homeassistant) で保守しており、Hermes 本体には含まれていません。プラグインが提供するのは次の 2 つです。
+Hermes Agent は [Home Assistant](https://www.home-assistant.io/) と、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)にある公式の **`homeassistant` プラグイン** を通じて連携します。このプラグインは Nous Research が [NousResearch/hermes-official-plugins](https://github.com/NousResearch/hermes-official-plugins/tree/main/homeassistant) で保守しており、Hermes 本体には含まれていません。プラグインが提供するのは次の 2 つです。
 
 1. **ゲートウェイのプラットフォームとして** — WebSocket で状態の変化をリアルタイムに受け取り、その出来事に反応します
 2. **スマートホームのツールとして** — REST API 経由で機器の状態を調べたり操作したりする、LLM から呼べる 4 つのツール（`homeassistant` ツールセット）を提供します

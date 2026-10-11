@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ツール検索"
 description: ""
 upstream_path: user-guide/features/tool-search.md
-upstream_blob: 06be76b336c6d20cf9b53abc0d13c2f9235eb222
+upstream_blob: 8e54ef335d51fadd59a1ad24901e90185ea70707
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 ---
@@ -207,6 +207,15 @@ Portal で行います。同じツールはカタログからローカルの MCP
 有効にし、認可するところまで担当するので（`mcp: true` の対象）、サインイン
 していてもしていなくても存在します。サインインが要るのは、managed connector
 まわりの操作だけです。
+
+同じアプリのアカウントを 2 つ以上、それぞれに名前を付けてつなぐこともできます
+（[複数のコネクターアカウント](/hermes/docs/user-guide/features/tool-gateway/#multiple-connector-accounts) を参照）。
+有効なアカウントが 2 つ以上あるコネクターでは、そのツールそれぞれに
+`connector_alias` という引数が付き、指定できる値は自分のアカウント名です。
+ツールの説明にもその名前が並ぶので（`Accounts: home, work.`）、`tool_search` と
+`tool_describe` にも表示されます。コネクターの結果の項目には、呼び出しを
+実行したアカウントが名前付きなら、その名前が `account` として付きます。
+名前の無いアカウントでは、この項目は付きません。
 
 デスクトップ側のバックエンドが使うアカウント一覧と接続解除の API は、
 Portal のアカウント管理サービスを通ります。組織のメンバーシップ確認や

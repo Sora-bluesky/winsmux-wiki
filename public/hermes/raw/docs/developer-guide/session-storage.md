@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: ff6206f97ed71de0402bc7faa6dacdf0b6c38d36
+upstream_blob: 4058495da0edd63c48eaf6228b3842d1de0c1742
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -235,7 +235,7 @@ CREATE INDEX IF NOT EXISTS idx_messages_session_id ON messages(session_id, id);
 補足:
 - `tool_calls` は JSON の文字列として保存されます（ツール呼び出しオブジェクトの配列を直列化したもの）
 - `reasoning_details`、`codex_reasoning_items`、`codex_message_items` も JSON の文字列で保存されます
-- `reasoning_details` は履歴に必ず残ります。ただし chat-completions の通信で送り直すのは OpenRouter と Nous Portal に対してだけです（ほかの chat-completions の経路には、この項目を外した写しが渡ります。決まりの厳しいスキーマがこの項目を受け付けないためです）
+- `reasoning`、`reasoning_content`、`reasoning_details` は履歴に必ず残ります。chat-completions の通信では、アシスタントの各ターンが保存済みの推論を、その経路が読む項目に載せて送り直します（`agent/message_sanitization.py::route_reasoning_carriers`）。既定ではどこでも `reasoning_content` に載せます。これに加えて、OpenRouter 形式のゲートウェイ（OpenRouter、Kilo、Vercel AI Gateway、Nous Portal）では `reasoning` と `reasoning_details` にも載せます。Novita、MiniMax の `/v1`、TokenHub では `reasoning_details` に、ローカルのサーバー、Ollama、Upstage では `reasoning` に載せます。決まりの厳しいスキーマ（Mistral、Groq、Cerebras、SambaNova）には推論の項目を一切付けず、Fireworks には `reasoning_content` だけを付けます。推論を持たないツール呼び出しのターンを `" "` で埋めるのは DeepSeek、Kimi、MiMo だけです。経路が項目名を挙げて拒否したとき（"Extra inputs are not permitted, field: messages[N].reasoning_details"）は、Hermes がそのプロバイダー・ホスト・モデルの組について記録し、その項目を外して 1 回だけ再試行します。この記録はセッションのあいだだけ有効で、履歴には一切手を加えません。
 - デスクトップの履歴の復元では、REST と JSON-RPC（`session.resume`、`session.activate`、`session.history`）のどちらの表現でも、アシスタント側の付随データを残します。推論やツール呼び出しを含む行も同じです。REST は SQLite の JSON 文字列をそのまま返すことがあり、RPC は復号した項目を返しますが、デスクトップはどちらも受け付けます。Responses の最終的な返答が `codex_message_items` にしか入っておらず、`content` が空のこともあります。それでも正規の content が優先され、分析や注釈の項目が返答の本文へ格上げされることはありません。
 - `reasoning` には、生の推論テキストを出すプロバイダの場合にその本文が入ります
 - 推論だけで正常に終わった応答（`content` が空、`finish_reason=stop`、推論あり）には推論のテキストがそのまま返答として使われますが、アシスタントの行にその本文が `content` として書かれることはありません。`content` は空のままで、本文は `reasoning` や `reasoning_content` に入り、`api_content` が同じ文字列を持つので、次のリクエストでもバイト単位で同じ返答を再生できます。そのため履歴の画面では、返答ではなく推論として表示されます。

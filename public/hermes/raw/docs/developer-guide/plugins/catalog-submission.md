@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインカタログへの登録申請"
 description: "Hermes プラグインカタログの登録ガイドライン全文です。申請前に確かめること、すべての掲載項目が従うルール、レビュアーが見る点をまとめています"
 upstream_path: developer-guide/plugins/catalog-submission.md
-upstream_blob: 5de5d4ec2e2c3a6bc9361e53275bc54bb617038c
+upstream_blob: 06823c93ca7c291607aa405fcacebb9ef80e7565
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission
 ---
@@ -176,6 +176,20 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
    掲載済みプラグインへの改善は、その作者への PR として上流に出します。名前の変更、ブランドの付け替え、小さな変更を
    加えただけのフォークは、元のプラグインを優先して掲載を見送ります。掲載されたフォークは、開示行に由来を
    明記します（`Derived from <entry>`）。
+17. **スキャンできない実行ペイロードは含めません。** レビュアーとインストール時のスキャナーが、固定したコミットで
+   読むものはすべて、読めるソースでなければなりません。プラグインには、コンパイル済みのバイナリ（どの OS 向けでも、
+   ネイティブの実行ファイルやライブラリ。拡張子ではなくファイルヘッダーで判定します: ELF、Mach-O、PE/`MZ`、
+   WebAssembly）、コミットされた Python バイトコード（`.pyc`/`.pyo`。隣の `.py` の代わりに実行される、ソースなしの
+   キャッシュやハッシュを偽装したキャッシュも含みます）、中身がレビューできるソースではないアーカイブを含めてはいけません。
+   プレーンテキストのソースをまとめたもの（プラグインが展開する、`.py`/`.ts`/`.md` の `.tar.gz`）は、
+   ほかのソースと同じように読みます。バイナリを隠したアーカイブは認めません。スキャナーは機械語を読めませんし、
+   同じコミットに含めたチェックサムが証明するのは、そのコミット以降にファイルが変更されていないことだけで、
+   どこから来たファイルかは証明できません。プラグインにどうしてもネイティブのコンポーネントが必要な場合、そのバイナリは、
+   プラグインのリポジトリ自身の公開 GitHub Actions が同じリポジトリのソースからビルドし、そのワークフローとコミットに
+   結びつける GitHub のビルド証明（`actions/attest-build-provenance`）を付けたものに限ります。ゲートは、その証明を
+   固定したコミットと照合します（`gh attestation verify --repo <owner/repo> --source-digest
+   <pinned sha>`）。ユーザーの端末がセットアップ時に取得するバイナリは、上流ツールの公式な配布元から取得し、
+   チェックサムで固定し、開示している（ルール13）場合にだけ認めます。同梱することも、非公式のミラーから取得することも認めません。
 <!-- admission-rules:end -->
 
 ## 掲載項目を更新する {#updating-your-entry}

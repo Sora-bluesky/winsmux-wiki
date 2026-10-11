@@ -1,6 +1,6 @@
 {
   "source": "https://teknium.io/hermes-devices/",
-  "fetchedAt": "2026-10-06",
+  "fetchedAt": "2026-10-12",
   "excluded": [
     {
       "id": "security-and-hacker-tools",
@@ -346,9 +346,9 @@
           "price": "~$799"
         },
         {
-          "id": "ufactory-lite-6",
-          "name": "UFACTORY Lite 6",
-          "price": "~$3,349"
+          "id": "agilex-piper-x",
+          "name": "AgileX PiPER X",
+          "price": "~$2,799"
         },
         {
           "id": "crazyflie-2-1-brushless",
