@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインカタログへの登録申請"
 description: "Hermes プラグインカタログの登録ガイドライン全文です。申請前に確かめること、すべての掲載項目が従うルール、レビュアーが見る点をまとめています"
 upstream_path: developer-guide/plugins/catalog-submission.md
-upstream_blob: 06823c93ca7c291607aa405fcacebb9ef80e7565
+upstream_blob: df43fb33213cbd9a0aebd773ff689aabe4a73504
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission
 ---
@@ -126,12 +126,16 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
    `sys.modules[...]`、コアのモジュールのテーブルへの書き込み）。同じ継ぎ目を2つのプラグインが
    書き換えると、互いに気づかないまま壊し合い、コアのリリースのたびに両方が
    壊れるおそれがあります。`hermes plugins validate` は登録時にこれらを拒否します（`no
-   core override` チェック）。必要なフックが無い場合は、その内容を書いた issue を立ててください。
+   core override` チェック）。また、ドキュメントに載っていないコアのモジュールを import している箇所があれば、
+   その1つごとにファイルと行を示して警告します（警告だけで、不合格にはしません）。
+   必要なフックが無い場合は、その内容を書いた issue を立ててください。
    書き換えを掲載するより、継ぎ目を追加するほうを選びます。
-10. **依存関係のセキュリティ方針はプラグイン側が持ちます。** Hermes の14日間の
-   `exclude-newer` による隔離期間が対象にするのは、Hermes 自身の依存関係だけです。プラグインの
+10. **依存関係のセキュリティ方針はプラグイン側が持ちます。** Hermes の3日間の
+   `exclude-newer` による公開からの経過日数の検査が対象にするのは、Hermes 自身の依存関係だけで、
+   それも Hermes が依存関係をロックする時点に限られます。プラグインの
    `python_dependencies` / `pyproject.toml` は、プラグイン側の方針でインストールされます
-   （隔離期間はありませんが、Hermes のコアの制約の内側には収まります）。レビュアーは
+   （公開からの経過日数の検査はありません）。Hermes 自身がロックしているパッケージは Hermes がロックした
+   バージョンのまま保たれるため、プラグインがそのパッケージの別のバージョンを要求することはできません。レビュアーは
    固定した SHA での依存関係の一覧を読みます。下限だけの指定（上限の無い `>=X`）や、
    最新リリースを下限にした指定には、API 互換を保てる最も古い下限と上限を付けるよう
    依頼します。また作者には、自分でもリリースの隔離期間を設けること（CI で `uv --exclude-newer` を使う）

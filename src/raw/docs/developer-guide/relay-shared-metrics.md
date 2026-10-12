@@ -2,7 +2,7 @@
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: fac8da071de9cf7f761e7d30ceefcabea0b7686c
+upstream_blob: 967827e71a572b9e0a6f32a0f97c222ce7b81d98
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -308,8 +308,8 @@ Hermes のバージョン、OS の種類、アーキテクチャ、インスト�
 Hermes は、実行時のレジストリにすでに宣言されているツールセットから分類を導きます。
 独自のツールセットや認識できないツールセットは、ツール名やプラグイン名を出力するのではなく `other` にまとめます。
 同じ終端イベントからは、`tool_name`、`outcome`、`error_class` を持つ `hermes.tool.usage.count` も記録します。
-`tool_name` を出力するのは、リポジトリの静的な `toolsets.TOOLSETS` で宣言されたツール（実行時の独自ツールセットが作られる前に取得した `toolsets.BUILTIN_TOOL_NAMES`）だけです。MCP のツールは `mcp`、プラグインや独自のツールはすべて `plugin` として報告します。
-`error_class` は Hermes 自身の `error_type` の値（`tool_error`、`timeout`、`interrupted`、`invalid_arguments`、`blocked`、`contract_violation`）を対応付けたもので、例外クラス名などそれ以外の値は `exception` にまとめます。
+`tool_name` を出力するのは、リポジトリの静的な `toolsets.TOOLSETS` で宣言されたツール（実行時の独自ツールセットが作られる前に取得した `toolsets.BUILTIN_TOOL_NAMES`）と、Tool Search の橋渡しのツール（`tool_search`、`tool_describe`、`tool_call`）だけです。MCP のツールは `mcp`、ホスト型コネクターのツール（`connectors__*`）はツールの分類も `connector` として `connector`、プラグインや独自のツールはすべて `plugin` として報告します。コネクターのスラッグとツール名は出力しません。コネクターの呼び出しをまとめた `tool_call` の一括実行では、各項目をそれぞれ1回の呼び出しとして扱います。項目ごとに1行を記録し、`tool_call` の外側の呼び出しは重ねて数えません（どの項目も実行される前に拒否された一括実行は、`tool_call` として1回だけ数えます）。
+`error_class` は Hermes 自身の `error_type` の値（`tool_error`、`timeout`、`interrupted`、`invalid_arguments`、`blocked`、`contract_violation`）を対応付けたもので、例外クラス名などそれ以外の値は `exception` にまとめます。失敗したコネクターの項目は、その結果に入っているツールゲートウェイのエラーコードで分類します。`connection_required`（接続が必要、または期限切れ）、`not_allowed`、`alias`（別名が必要、または不明）、`invalid_arguments`、そしてバックエンド系のすべてのコード（提供元のエラー、レート制限、タイムアウト、ポリシーやゲートウェイの失敗）は `connector_backend` です。それ以外のコードは `tool_error` のままです。
 Hermes は、同じツール名の繰り返しや隣り合う呼び出しから再試行を推測しません。
 フックが明示的な再試行の関係を渡さない場合、再試行の区分は `unknown` になります。
 承認の判断は `hermes.tool_approval` mark として出し、ツール呼び出しに紐づくもの、または明示的に `unattributed` として記録します。
@@ -438,6 +438,16 @@ Desktop アプリが、フォーカスしているプロファイルのストア
 | `hermes.model_tool_quality.count` | プロバイダー、モデル、呼び出しの役割、問題（`none`、`invalid_json`、`unknown_tool`、`schema_mismatch`、`empty_arguments`、`repaired`） | どのモデルが壊れたツール呼び出しを出すか、Hermes がどれくらいの頻度で直す必要があったか。出力された呼び出しはすべて1回ずつ数える（問題のないものは `none`）ので、値は割合の分母になります。`empty_arguments` は必須パラメーターを持つツールの場合だけ数えます。`repaired` は、Hermes がツール名か引数の JSON を直して呼び出しを実行したという意味です。 |
 | `hermes.model_friction.count` | プロバイダー、モデル、シグナル（`retry`、`undo`、`interrupt`、`quick_abandon`、`switch_away`） | 利用者がどのモデルに手こずっているか。そのターンを出力したモデルに結び付けます。`/retry` と `/undo` は実行された場所で、対話的なターンを利用者が中断した場合、失敗したターンから60秒以内に終わったセッション、`/model` でそのモデルから切り替えた場合です。 |
 | `hermes.context_peak.count` | プロバイダー、モデル、最大の埋まり具合の区分、ウィンドウの区分（`lt_32k` … `gte_1m`）、上限への到達（`yes`/`no`） | セッションが各モデルのコンテキストウィンドウにどこまで近づくか、どれくらいの頻度であふれるか。閉じた会話1つにつき1行です。圧縮による切り替えで引き継がれたセッション ID は、最も埋まった区間の値で1回だけ報告します。`limit_hit` は、主の呼び出しが大きすぎるとして拒否された（コンテキストのあふれ、または HTTP 413）という意味で、Hermes が強制的な圧縮で対応する拒否です。 |
+
+#### Tool Search とコネクター {#tool-search-and-connectors}
+
+パッケージスキーマ v4 の中で追加しました。どの次元にも、コネクターのスラッグ、ツール名、検索語は現れません。
+
+| 指標 | 次元 | 答える問い |
+|---|---|---|
+| `hermes.tool_search.count` | 範囲（`local`、`connector`、`both`: 検索がどのカタログを読んだか）、ヒット数の区分（`0` … `gte_11`、返した別々のツールの数）、結果（`hits`、`no_hits`、`connector_unavailable`、`error`） | `tool_search` がツールを見つけられているか、ホスト型コネクター側の検索がどれくらいの頻度で失敗するか。`tool_search` の呼び出し1回につき1行です。 |
+| `hermes.tool_batch.count` | プロバイダー、モデル、件数の区分（論理的な呼び出しの数。`tool_call` の各項目を1回ずつ数えます）、コネクターの割合（`none`、`some`、`all`） | モデルが1回の返答にいくつの呼び出しを詰め込むか、そのうちどれくらいがコネクターの作業か。ツールを呼び出すモデルの返答1回につき1行です。 |
+| `hermes.connector_chain.count` | 事前の検索回数の区分（直前のコネクター実行から数えた `tool_search` の呼び出し回数）、先に説明を見たか（`yes`/`no`: そのツールが会話の中で先に `tool_describe` で指定されていたか）、結果（ツールの結果） | モデルがコネクターのツールを実行する前に検索と説明の確認をしているか、それを飛ばすと失敗が増えるか。実行したコネクターの項目1つにつき1行です。 |
 
 <!-- ---- v5 harness ---- -->
 #### エージェントのハーネスの精度 {#agent-harness-accuracy}

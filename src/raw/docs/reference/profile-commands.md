@@ -2,7 +2,7 @@
 title: "プロファイルのコマンド早見表"
 description: ""
 upstream_path: reference/profile-commands.md
-upstream_blob: 9f4f840f67da5bfd1f9adaa33b871364a74d95af
+upstream_blob: 7baf4a26a3e2e5bea9659f447f18537ed47895c3
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/profile-commands
 ---
@@ -207,12 +207,12 @@ Alias:   ~/.local/bin/work
 hermes profile alias <name> [options]
 ```
 
-`~/.local/bin/<name>` にあるシェルの別名スクリプトを作り直します。うっかり消してしまったときや、Hermes のインストール先を移したあとに更新したいときに使います。
+`~/.local/bin/<name>`（Windows では `<name>.bat`）にあるシェルの別名スクリプトを作り直します。うっかり消してしまったときや、Hermes のインストール先を移したあとに更新したいときに使います。
 
 | 引数 / オプション | 説明 |
 |-------------------|-------------|
 | `<name>` | 別名を作る、または更新するプロファイル。 |
-| `--remove` | 作るのではなく、ラッパースクリプトを取り除きます。 |
+| `--remove` | 作るのではなく、ラッパースクリプトを取り除きます。プロファイルが削除されて残った別名も取り除けます。その場合は別名の名前を渡します（`hermes doctor` で一覧を確認できます）。 |
 | `--name <alias>` | 別名を自分で決めます（既定はプロファイル名）。 |
 
 **例:**

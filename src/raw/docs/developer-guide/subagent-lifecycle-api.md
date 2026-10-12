@@ -2,7 +2,7 @@
 title: "公開されたサブエージェントのライフサイクル API"
 description: ""
 upstream_path: developer-guide/subagent-lifecycle-api.md
-upstream_blob: 7054afcdb7356a8da9966c1b1243085a26957a43
+upstream_blob: a2bd44613dde7f04bfd0e1b5820c59a5c7ce36be
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/subagent-lifecycle-api
 ---
@@ -15,6 +15,11 @@ sources:
 CLI でも、ゲートウェイでも、対話なしの実行でも、kanban のワーカーのセッションでも動きます。
 エージェントのターンが動いていないところで立ち上げようとすると、
 `No active Hermes parent session` を出して、閉じたまま失敗します。
+プラグインが `plugins.isolation: host` のもとで動いているときも、この窓口は使えます。
+
+要求には `goal`、`context`、`role`、`model`、`provider`、`allowed_toolsets`、
+`blocked_tools`、`working_directory`、`parent_session_id`、`correlation_id`、
+`metadata`、`timeout_seconds` を指定できます。ただし、後で説明する制限がかかります。
 
 ```python
 from agent.subagent_lifecycle import SubagentLaunchRequest
@@ -36,8 +41,14 @@ def launch_review(ctx):
 ```
 
 `SubagentHandle` はそのまま保存できる形で、版が付いた、中身の見えない権限を持っています。
-これを `status`、`wait`、`cancel`、`result`、`reconnect` に渡してください。壊れた
+要求とハンドルは、プラグインのホストとやり取りする記録を含め、対応付け（マッピング）の形で届くこともあります。
+ハンドルは `status`、`wait`、`cancel`、`steer`、`result`、`reconnect` に渡してください。壊れた
 ハンドルや偽造されたハンドルは `UNKNOWN` / `UNKNOWN_HANDLE` を返すだけで、子には触れません。
+
+`steer(handle, text)` は、子が次の反復の区切りに来たときに読むテキストを積み、
+子が舵取りを受け付けている間は `True` を返します。テキストが空のとき、知らないハンドルや
+偽造されたハンドルのとき、別の親セッションが持つハンドルのとき、子がすでに終わっているか
+舵取りを受け付けなくなっているときは `False` を返します。
 
 安定した状態は `PENDING`、`STARTING`、`RUNNING`、`SUCCEEDED`、`FAILED`、
 `INTERRUPTED`、`CANCEL_REQUESTED`、`CANCELLED`、`UNKNOWN` です。
@@ -60,8 +71,20 @@ def launch_review(ctx):
 プロセスの終了によって中断されたものとして扱ってください。
 
 要求は、閉じたまま失敗する側に倒してあります。goal・context・メタデータの大きさには
-上限があり、知らないツールセットや親より広いツールセットは拒まれます。ツール単位での
+上限があり、知らないツールセットや親より広いツールセットは拒まれます（プラグインが登録したツールセットは
+知っているものとして扱います）。ツール単位での
 遮断、作業ディレクトリの上書き、立ち上げごとのタイムアウトは、隔離を弱めずに
 Hermes が支えられるようになるまで、はっきり拒みます。子の範囲を狭めたいときは
 `allowed_toolsets` を使ってください。Hermes にもとからある、危険なツールを
 遮断する仕組みは、そのまま効いています。
+
+## 振り分け {#routing}
+
+子は、`delegate_task` の子とまったく同じように、`delegation` の設定（`provider`、`model`、`base_url`、
+`api_key`、`api_mode`、`request_overrides`）に従います。
+要求の `model` は、設定されたモデルより優先されます。省略できる `provider` には、
+この立ち上げで使う、設定済みのプロバイダーを指定します。優先順位は、要求 >
+delegation の設定 > 親 です。選ばれたプロバイダーは、自分の認証情報一式を使います。
+解決できないプロバイダーを指定すると、立ち上げの前に `SubagentLifecycleError` が発生します。
+コアは `provider` をモデルに見せません。選ぶのはプラグインで、たとえば
+運用者の設定から選びます。

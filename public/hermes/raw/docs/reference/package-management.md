@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 7f84060bb197768a4415c8b2642c78f01cd2970c
+upstream_blob: 7f3c2d7f107c6e63c3b1fda2814a75f3c2f2b61a
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -442,7 +442,7 @@ python -c "from pm import sync_venv; sync_venv(['anthropic'], explicit=True)"
    ```
 
    これは、CI が検査するのと同じ設定で、`pyproject.toml` から `uv.lock` を解決し直します。
-   14 日間の `exclude-newer` による隔離期間も含みます。環境は一切変えません。ロックがすでに最新なら、
+   3 日間の `exclude-newer` による公開からの経過日数の検査も含みます。環境は一切変えません。ロックがすでに最新なら、
    その旨を表示して何も書き込みません。（`hermes pm lock --bump NAME VERSION` は別の操作で、
    管理対象ツールを `pm/lock.json` で固定するものです。`uv.lock` には触れません。）
 3. アクティベーションスクリプトをもう一度 source して（`source ./activate`、PowerShell では
@@ -579,6 +579,18 @@ PM は、ハッシュの不一致、証明書の失敗、ローカルのファ�
 CDN へのフォールバックとして、欠けている範囲を1回だけ順番に取り直します。展開、
 検証、公開は繰り返しません。Python と npm のパッケージの要求は、
 引き続き uv と npm それぞれの再試行ポリシーに従います。
+
+## 公開からの経過日数とパッケージのミラー {#release-age-and-package-mirrors}
+
+Hermes 自身が依存する Python のパッケージは、Hermes がロックする時点で公開から3日以上たっている必要があります
+（uv の `exclude-newer` で、CI のロック検査が強制します）。これにより、公開されたばかりで乗っ取られているかもしれないリリースが
+`uv.lock` に入り込めないようにしています。利用者はそのロックからインストールします。プラグインのインストールや有効化では、
+Hermes がロックしているパッケージはすべてロックされたバージョンのまま保たれ、日付を検査し直すことはありません。そのため、
+アップロード日時を公開していないパッケージのミラーでも動きます。ミラーを設定するには、`pip.conf` の `index-url`（Hermes が uv に渡します）か
+`UV_INDEX_URL` を使います。
+
+この検査を行うのは `hermes pm lock` だけです。アップロード日時のないミラーに対して実行すると、
+`has no publish time` と表示して止まります。この手順では `https://pypi.org/simple` を使ってください。
 
 ## 診断 {#diagnostics}
 

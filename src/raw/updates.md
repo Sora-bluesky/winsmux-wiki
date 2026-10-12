@@ -8,6 +8,34 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-12
+
+- [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
+- [コントリビュート](https://wiki.winsmux.dev/hermes/docs/developer-guide/contributing/)
+- [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- [プラグインカタログへの登録申請](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
+- [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
+- [プロンプトの組み立て](https://wiki.winsmux.dev/hermes/docs/developer-guide/prompt-assembly/)
+- [セッションの保存領域](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
+- [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
+- [外部サービス連携](https://wiki.winsmux.dev/hermes/docs/integrations/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
+- [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
+- [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
+- [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [記憶プロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
+- [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
+- [機能の概要](https://wiki.winsmux.dev/hermes/docs/user-guide/features/overview/)
+- [Spotify](https://wiki.winsmux.dev/hermes/docs/user-guide/features/spotify/)
+- [Nous Tool Gateway](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-gateway/)
+- [ツール検索](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-search/)
+- [Home Assistant](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/homeassistant/)
+- [Anatomy — 考えを、操作できるアイソメトリックの機械の図で説明する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-anatomy/)
+- [TUI](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
+
 ## 2026-10-11
 
 - [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)

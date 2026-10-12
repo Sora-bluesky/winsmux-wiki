@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "モデルの設定"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: cb36a867a7ef02217c7a5ba30400dd641ac01fec
+upstream_blob: 9af82859b63af91111a3c0a4e22621f5d560daaf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---
@@ -55,7 +55,7 @@ Main model の行で **Change** をクリックします。
 
 ### サブスクリプションでの速度と、拡張コンテキスト {#subscription-speed-and-extended-context}
 
-速度は推論の深さ（reasoning effort）とは別の設定です。対応しているサブスクリプションのモデルでは、**Fast** を選ぶと Priority を、**Ultrafast** を選ぶと Astra の Ultrafast 枠を要求します。片方を選ぶともう片方は解除されます。選んだ速度はモデルごとに記憶され、新しいチャットにも引き継がれます。プロファイルの既定値は **Settings → Model → Main model → Speed**（`agent.service_tier`: `normal`、`fast`、`ultrafast` のいずれか）にあり、Ultrafast はそれを提供するモデルにだけ表示されます。古い設定が残っている場合は **Use standard speed** で解除できます。リクエストが受け付けられても、要求した枠で OpenAI が処理したとは限りません。
+速度は推論の深さ（reasoning effort）とは別の設定です。対応しているサブスクリプションのモデルでは、**Fast** を選ぶと Priority を、**Ultrafast** を選ぶと Ultrafast 枠を要求します。片方を選ぶともう片方は解除されます。選んだ速度はモデルごとに記憶され、新しいチャットにも引き継がれます。プロファイルの既定値は **Settings → Model → Main model → Speed**（`agent.service_tier`: `normal`、`fast`、`ultrafast` のいずれか）にあり、Ultrafast はそれを提供するモデルにだけ表示されます。サブスクリプションの場合は、アカウントの Codex カタログがそのモデルに Ultrafast を載せているときだけ表示されます。古い設定が残っている場合は **Use standard speed** で解除できます。リクエストが受け付けられても、要求した枠で OpenAI が処理したとは限りません。
 
 **GPT-6.1 Sol-900k** の選択肢は、Hermes が、条件を満たす GPT-6.1 Sol のモデルを見つけたときにそれをもとに作ります。`-900k` という接尾辞は手元でコンテキストの大きさを選ぶためのもので、OpenAI に送るモデル ID からは取り除かれます。Hermes は使えるコンテキストの上限をアカウントのカタログにある最大値までに抑えます。Codex が自分の予約分を差し引いた結果、実際に使えるコンテキストをもっと小さく報告することもあります。新しいモデルが出てこない場合は **Refresh models** を使ってください。モデルの取得に失敗したときは、互換性のための短期間だけ有効な手がかりを使い、それを取得に成功したアカウントのカタログとしてキャッシュすることはありません。
 

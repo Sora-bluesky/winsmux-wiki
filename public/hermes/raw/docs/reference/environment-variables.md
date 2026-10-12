@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 691c06571d4577c904d286478d7900239271c24c
+upstream_blob: 7ee649abd2a6ba2128419e94dba2978ce6d34231
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -222,7 +222,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 
 ### Langfuse による可観測性 {#langfuse-observability}
 
-同梱の [`observability/langfuse`](/hermes/docs/user-guide/features/built-in-plugins/#observabilitylangfuse) プラグイン用の環境変数です。`~/.hermes/.env` に設定してください。効かせるには、プラグイン自体も有効にしておく必要があります（`hermes plugins enable observability/langfuse` を実行するか、`hermes plugins` でチェックを入れます）。
+公式カタログのプラグイン [`langfuse`](https://github.com/NousResearch/hermes-official-plugins/tree/main/langfuse)（以前は `observability/langfuse` として同梱されていました）用の環境変数です。`~/.hermes/.env` に設定してください。効かせるには、先にプラグインをインストールしておく必要があります（`hermes plugins install langfuse`）。
 
 | 変数 | 説明 |
 |----------|-------------|
@@ -234,6 +234,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `HERMES_LANGFUSE_SAMPLE_RATE` | SDK の抽出率 0.0〜1.0（既定: `1.0`） |
 | `HERMES_LANGFUSE_MAX_CHARS` | 直列化したデータの項目ごとの切り詰め長（既定: `12000`） |
 | `HERMES_LANGFUSE_MAX_DEPTH` | 記録したツールの入出力で保つ入れ子の深さ。これを超えると値は `<max-depth>` になります（既定: `4`。おかしな値のときは警告して既定を使います） |
+| `HERMES_LANGFUSE_CAPTURE` | 内容をどこまで記録するかの設定です。`metadata`（内容は記録しない）、`sanitized`（既定。秘密情報を伏せたうえで切り詰める）、`full`（切り詰めだけ行う）のいずれかです |
 | `HERMES_LANGFUSE_DEBUG` | `true` にすると、プラグインの詳しいログを `agent.log` に出します |
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` / `LANGFUSE_BASE_URL` | Langfuse の SDK 標準の名前です。対応する `HERMES_LANGFUSE_*` が無いときの代わりとして受け付けます。 |
 
@@ -279,7 +280,6 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `TERMINAL_SSH_USER` | SSH のユーザー名 |
 | `TERMINAL_SSH_PORT` | SSH のポート（既定: 22） |
 | `TERMINAL_SSH_KEY` | 秘密鍵のパス |
-| `TERMINAL_SSH_PERSISTENT` | SSH での持続シェルを上書きします（既定: `TERMINAL_PERSISTENT_SHELL` に従います） |
 
 ## コンテナの資源（Docker、Singularity、Modal、Daytona） {#container-resources-docker-singularity-modal-daytona}
 
@@ -293,11 +293,13 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 
 ## 持続シェル {#persistent-shell}
 
+有効にしている間は、エクスポートした環境変数が次のコマンドへ引き継がれます。作業ディレクトリは常に引き継がれます。詳しくは[持続シェル](/hermes/docs/user-guide/configuration/#persistent-shell)を見てください。
+
 | 変数 | 説明 |
 |----------|-------------|
-| `TERMINAL_PERSISTENT_SHELL` | 手元以外のバックエンドで持続シェルを有効にします（既定: `true`）。config.yaml の `terminal.persistent_shell` でも設定できます |
-| `TERMINAL_LOCAL_PERSISTENT` | 手元のバックエンドで持続シェルを有効にします（既定: `false`） |
-| `TERMINAL_SSH_PERSISTENT` | SSH のバックエンドで持続シェルを上書きします（既定: `TERMINAL_PERSISTENT_SHELL` に従います） |
+| `TERMINAL_PERSISTENT_SHELL` | SSH のバックエンドで、エクスポートした環境変数をコマンドからコマンドへ引き継ぎます（既定: `true`）。config.yaml の `terminal.persistent_shell` でも設定できます |
+| `TERMINAL_SSH_PERSISTENT` | SSH のバックエンド向けの上書きです。`TERMINAL_PERSISTENT_SHELL` より優先されます（既定: そちらに従います） |
+| `TERMINAL_LOCAL_PERSISTENT` | 手元のバックエンドで、エクスポートした環境変数をコマンドからコマンドへ引き継ぎます（既定: `true`） |
 
 ## 外向き通信のプロキシ（サンドボックスに注入されます） {#egress-proxy-sandbox-injected}
 

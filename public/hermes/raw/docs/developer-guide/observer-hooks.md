@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "オブザーバーフック"
 description: "プラグイン向けの読み取り専用テレメトリ契約。イベントの系統、相関 ID、ペイロードの安全性"
 upstream_path: developer-guide/observer-hooks.md
-upstream_blob: 5c7e95c6ae877ba48b1958faf92d6a11949babdd
+upstream_blob: a9cfb60b9b1b0b9d13322f30c9e398f6d4a7df25
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/observer-hooks
 ---
@@ -338,8 +338,8 @@ def on_post_tool_call(**kwargs):
 
 ## すでに使っている例 {#existing-consumers}
 
-同梱の Langfuse プラグインは、ターン、プロバイダーへのリクエスト、ツール呼び出しについて、
-フックを直接使った可観測性の実装例になっています。
+公式の [Langfuse カタログプラグイン](https://github.com/NousResearch/hermes-official-plugins/tree/main/langfuse)は、ターン、プロバイダーへのリクエスト、
+ツール呼び出しについて、フックを直接使った可観測性の実装例になっています。
 
 NeMo Relay SDK との公式な統合は、Hermes のセッション、ターン、LLM、ツールの各
 ライフサイクルを Relay へ対応付けます。Relay が見つけたユーザーとシステムの設定、または

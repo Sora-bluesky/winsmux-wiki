@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ツール検索"
 description: ""
 upstream_path: user-guide/features/tool-search.md
-upstream_blob: 8e54ef335d51fadd59a1ad24901e90185ea70707
+upstream_blob: 75ed580ff3a226f4ffee47d5cdf7406be1416753
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 ---
@@ -165,8 +165,8 @@ tools:
 
 ## コネクター（リモートのツール） {#connectors-remote-tools}
 
-Nous Portal にサインインしていると、橋渡しは **コネクター** にも手が届く
-ようになります。これは、managed tool gateway が提供するリモートのツールです。
+橋渡しは **コネクター** にも手が届きます。これは、managed tool
+gateway が提供するリモートのツールです。
 ローカルに登録されることはありません。`tool_search` は各クエリを
 ゲートウェイにも送り、返ってきた候補を文書としてローカルのカタログに
 足します（`source: "connectors"` の印を付け、
@@ -192,8 +192,23 @@ tools:
                     # behaves exactly as if the feature didn't exist
 ```
 
-サインアウトしているとき（あるいはアカウントに対してゲートウェイが
-コネクターを提供していないとき）は、ここまでの話は一切見えません。
+コネクターを使うには Nous の ID が必要です。そのためにサインインする必要は
+ありません。Nous のアカウントがなければ、最初の `manage_connections` の操作
+（またはデスクトップアプリの Connectors ページを開くこと）で、無料の Nous ID が
+自動で作られます。どの画面から使っても同じです。この ID でモデルの提供元が
+変わることはありません。Nous の無料枠を同梱したビルド以外では、コネクターと
+managed tools のためだけに使われます。ID ができるまでは、`tool_search` は
+ゲートウェイに何も送らず、結果には「ホスト型のコネクターはまだ設定されて
+いない」「`manage_connections` で設定できる」と表示されます。使わないようにする
+には、次のように設定します。
+
+```yaml
+nous:
+  guest: false
+```
+
+この設定にしたとき、あるいはサインイン済みのアカウントに対してゲートウェイが
+コネクターを提供していないときは、ここまでの話は一切見えません。
 ローカルの検索はこのページの他の部分で説明したとおりに動き、モデルには
 エラーも出ません。
 
@@ -204,9 +219,8 @@ tools:
 飛ばされるまで待ち、結果を報告します。それ以外の場所では、利用者が開く
 ための接続リンクをアプリごとに返します。アカウントの接続解除は、利用者が
 Portal で行います。同じツールはカタログからローカルの MCP サーバーを入れて
-有効にし、認可するところまで担当するので（`mcp: true` の対象）、サインイン
-していてもしていなくても存在します。サインインが要るのは、managed connector
-まわりの操作だけです。
+有効にし、認可するところまで担当します（`mcp: true` の対象）。こちらの操作で
+Nous の ID が作られることはありません。
 
 同じアプリのアカウントを 2 つ以上、それぞれに名前を付けてつなぐこともできます
 （[複数のコネクターアカウント](/hermes/docs/user-guide/features/tool-gateway/#multiple-connector-accounts) を参照）。

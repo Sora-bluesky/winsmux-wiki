@@ -2,7 +2,7 @@
 title: "同梱のプラグイン"
 description: "Hermes Agent に最初から入っていて、節目ごとのフックで自動的に動くプラグイン群 — disk-cleanup とその仲間たち"
 upstream_path: user-guide/features/built-in-plugins.md
-upstream_blob: f0f587aad4de3c870a3de200f608b0385d4b87ea
+upstream_blob: 43a033d62ef4a64d7776b7dd90305c1428b943a5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins
 ---
@@ -59,7 +59,6 @@ hermes plugins disable disk-cleanup
 |---|---|---|
 | `disk-cleanup` | フック＋スラッシュコマンド | その場限りのファイルを自動で覚えておき、セッションの終わりに片づける |
 | `security-guidance` | フック | `write_file`／`patch` の中身から危ないコードの型を見つけ、警告を書き添える（あるいは書き込みを止める） — 全25ルール（Anthropic の `claude-plugins-official` にある型を Apache-2.0 のまま取り込んだもの） |
-| `observability/langfuse` | フック | ターン・LLM 呼び出し・ツールの動きを [Langfuse](https://langfuse.com) に記録する |
 | `teams_pipeline` | 単体 | Microsoft Teams の会議向けの一連の処理 — Graph を使い、書き起こしを起点に会議をまとめる |
 | `google_meet` | 単体 | Meet の通話に参加し、字幕をその場で書き起こし、必要なら音声で双方向にやり取りする |
 | `image_gen/openai` | 画像バックエンド | OpenAI の GPT Image 2 と 2.5 Flare／Sunburst による画像の生成と編集（API キーが要ります） |
@@ -140,76 +139,20 @@ hermes plugins disable disk-cleanup
 
 **まだできないこと:** 元になった Anthropic のプラグインには、さらに2つの層があります。ファイルに触れたエージェントのターンごとに差分を LLM が見直す層と、コミットの時点でファイルをまたいでデータの流れを追う層です。どちらもまだ移していません。エージェント自身は `delegate_task` を使って、必要なときにその見直しを走らせられます。
 
-### observability/langfuse {#observabilitylangfuse}
+### Langfuse（プラグインカタログへ移動） {#langfuse-moved-to-the-plugin-catalog}
 
-Hermes のターン、LLM の呼び出し、ツールの実行を [Langfuse](https://langfuse.com) に記録します。Langfuse は LLM の様子を見るためのオープンソースの基盤です。1ターンにつき1つの区間、API 呼び出しごとに1つの生成、ツール呼び出しごとに1つの観測が残ります。使用量の合計、種類ごとのトークン数、費用の見積もりは Hermes 本来の `agent.usage_pricing` の数字をそのまま使うので、Langfuse の画面には `hermes logs` と同じ内訳（入力／出力／`cache_read_input_tokens`／`cache_creation_input_tokens`／`reasoning_tokens`）が出ます。
-
-このプラグインは、うまくいかないときは黙って通す作りです。SDK が入っていない、資格情報がない、Langfuse が一時的に不調 — どの場合もフックの中で何もせずに終わります。エージェントの動きが妨げられることはありません。
-
-**設定（対話的に進める。こちらがおすすめです）:**
+Langfuse でのトレース記録は、Hermes に同梱されなくなりました。いまは公式の
+[`langfuse`](https://github.com/NousResearch/hermes-official-plugins/tree/main/langfuse) カタログプラグインとして提供されています。フック、`HERMES_LANGFUSE_*`
+の環境変数、記録のモードはこれまでと同じです。
 
 ```bash
-hermes tools          # → Langfuse Observability → Cloud or Self-Hosted
+hermes plugins install langfuse
 ```
 
-案内役が鍵を聞き取り、必要なら宣言済みの追加パッケージ `langfuse` を PM で用意して、
-`observability/langfuse` を有効にしてくれます。Hermes を立ち上げ直せば、次の
-ターンから記録が送られます。用意に失敗したら `hermes tools` からやり直してください。
-選んだ環境へ pip で SDK を入れないでください。
-
-**設定（自分で進める）:**
-
-ソースのチェックアウトで使う場合は、まず使う予定の Hermes ホームを指定して [PM の開発者向けワークフロー](/hermes/docs/reference/package-management/#developer-workflow)
-に沿って準備します。そのうえで、チェックアウトで用意した Python を使います。
-
-```bash
-python -c "import pm; pm.sync_venv(['langfuse'], explicit=True)"
-source ./activate
-python hermes plugins enable observability/langfuse
-```
-
-PowerShell で有効化するときは `. .\activate.ps1` を使います。続いて、有効なホームの
-`.env`（`$HERMES_HOME/.env`、ふつうは `~/.hermes/.env`）に資格情報を書きます。
-
-```bash
-HERMES_LANGFUSE_PUBLIC_KEY=pk-lf-...
-HERMES_LANGFUSE_SECRET_KEY=sk-lf-...
-HERMES_LANGFUSE_BASE_URL=https://cloud.langfuse.com   # or your self-hosted URL
-```
-
-**動き方:**
-
-| フック | ふるまい |
-|---|---|
-| `pre_api_request`／`pre_llm_call` | ターンごとの親となる区間「Hermes turn」を開きます（すでにあればそれを使います）。この API 呼び出しのために `generation` の子となる観測を始め、直近のやり取りを文字にしたものを入力として渡します。 |
-| `post_api_request`／`post_llm_call` | 生成を閉じ、`usage_details`、`cost_details`、`finish_reason`、応答の出力とツール呼び出しを添えます。ツール呼び出しがなく中身が空でなければ、そのターンも閉じます。 |
-| `pre_tool_call` | 中身を整えた `args` を添えて、`tool` の子となる観測を始めます。 |
-| `post_tool_call` | 中身を整えた `result` を添えてツールの観測を閉じます。`read_file` の中身は要約されます（先頭と末尾、それに省いた行数）。大きなファイルを読んでも `HERMES_LANGFUSE_MAX_CHARS` に収まるようにするためです。 |
-
-セッションのまとめ方は、`langfuse.propagate_attributes` を通して Hermes のセッション ID（下請けのエージェントならタスク ID）に合わせてあります。おかげで `hermes chat` の1回のセッションで起きたことは、Langfuse でも1つのセッションの下に集まります。
-
-**確かめる:**
-
-```bash
-hermes plugins list                 # observability/langfuse should show "enabled"
-hermes chat -q "hello"              # check the Langfuse UI for a "Hermes turn" trace
-```
-
-**細かい調整（`.env` に書きます）:**
-
-| 変数 | 既定値 | はたらき |
-|---|---|---|
-| `HERMES_LANGFUSE_ENV` | — | 記録に付ける環境の目印（`production`、`staging` など） |
-| `HERMES_LANGFUSE_RELEASE` | — | 版の目印 |
-| `HERMES_LANGFUSE_SAMPLE_RATE` | `1.0` | SDK に渡す抽出の割合（0.0〜1.0） |
-| `HERMES_LANGFUSE_MAX_CHARS` | `12000` | やり取りの中身・ツールの引数・ツールの結果を項目ごとに切り詰める長さ |
-| `HERMES_LANGFUSE_DEBUG` | `false` | プラグインの詳しい記録を `agent.log` に出す |
-
-Hermes を頭に付けた名前と、SDK が本来使う名前（`LANGFUSE_PUBLIC_KEY`、`LANGFUSE_SECRET_KEY`、`LANGFUSE_BASE_URL`）のどちらも使えます。両方あるときは Hermes を頭に付けたほうが優先されます。
-
-**速さについて:** Langfuse の接続先は最初のフック呼び出しのあと使い回されます。資格情報や SDK がないと分かった場合も、その判断が覚えられます。以降のフックは環境変数を調べ直したり設定を読み直したりせず、すぐに戻ります。
-
-**止める:** `hermes plugins disable observability/langfuse`。プラグイン自体は見つかったままですが、また有効にするまで中のコードは1行も動きません。
+`observability/langfuse` を有効にしていたプロファイルには、`hermes update` を実行したとき
+（または更新後に初めて起動したとき）にこのプラグインが自動でインストールされて有効になり、
+同じ Langfuse のプロジェクトへ引き続きトレースが送られます。設定、細かな調整、記録のモードは
+[プラグインの README](https://github.com/NousResearch/hermes-official-plugins/tree/main/langfuse) で説明されています。
 
 ### NeMo Relay の本体組み込み（移行にあたって） {#nemo-relay-native-integration-migration-note}
 

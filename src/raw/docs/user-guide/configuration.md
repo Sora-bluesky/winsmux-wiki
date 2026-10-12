@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: fef1919ef0b54e6b0ce01fbba254e13e00ef7c8b
+upstream_blob: 528b113e1d1a06088544d20ad92b01258e855ac0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -467,12 +467,12 @@ Hermes のプロセスが終了しても（`/quit`、TUI セッションを閉�
 
 ### SSH バックエンド {#ssh-backend}
 
-SSH でつないだリモートサーバー上でコマンドを実行します。接続の再利用には ControlMaster を使います（アイドル時のキープアライブは5分）。永続シェルは既定で有効で、状態（作業ディレクトリ、環境変数）がコマンドをまたいで残ります。
+SSH でつないだリモートサーバー上でコマンドを実行します。接続の再利用には ControlMaster を使います（アイドル時のキープアライブは5分）。コマンドは毎回新しい `ssh … bash -c` で実行されます。作業ディレクトリは常に引き継がれ、export した環境変数は `persistent_shell` が有効なとき（既定）に引き継がれます。[永続シェル](#persistent-shell) を参照してください。
 
 ```yaml
 terminal:
   backend: ssh
-  persistent_shell: true           # Keep a long-lived bash session (default: true)
+  persistent_shell: true           # Carry exported env vars between commands (default: true)
 ```
 
 **必須の環境変数:**
@@ -488,9 +488,9 @@ TERMINAL_SSH_USER=ubuntu
 |----------|---------|-------------|
 | `TERMINAL_SSH_PORT` | `22` | SSH のポート |
 | `TERMINAL_SSH_KEY` | （システムの既定） | SSH の秘密鍵のパス |
-| `TERMINAL_SSH_PERSISTENT` | `true` | 永続シェルを有効にする |
+| `TERMINAL_SSH_PERSISTENT` | `terminal.persistent_shell` に従う（`true`） | export した環境変数をコマンド間で引き継ぐ |
 
-**仕組み:** 初期化の時点で、`BatchMode=yes` と `StrictHostKeyChecking=accept-new` を付けて接続します。永続シェルは、リモートホスト上で `bash -l` のプロセスを1つ動かし続け、一時ファイルを介してやり取りします。`stdin_data` や `sudo` が必要なコマンドは、自動的に単発モードに切り替わります。
+**仕組み:** 初期化の時点で、`BatchMode=yes` と `StrictHostKeyChecking=accept-new` を付けて接続し、続いてリモートのログインシェルの環境を1回だけスナップショットファイルに取り込みます。以後のコマンドはどれも新しい `bash -c` として実行され、そのスナップショットを読み込み、記録している作業ディレクトリへ `cd` してから、指定したコマンドを実行します。
 
 **スキルや設定からの環境変数の受け渡し:** スキルが `required_environment_variables` で宣言した変数や、`terminal.env_passthrough` に並べた変数は、OpenSSH の `SendEnv` で転送されます。変数名は `ssh` のコマンドラインに載り、値はクライアントの環境変数として運ばれるので、リモートで実行するコマンドの文字列に値が含まれることはありません。リモートの `sshd` がこれらを受け入れる設定になっている必要があります。サーバーの `/etc/ssh/sshd_config` に次の行を追加し、sshd を再読み込みしてください。
 
@@ -739,43 +739,34 @@ terminal:
 
 ### 永続シェル {#persistent-shell}
 
-既定では、ターミナルコマンドは1つずつ別のサブプロセスで実行されます。そのため作業ディレクトリ、環境変数、シェル変数はコマンドごとにリセットされます。**永続シェル**を有効にすると、長く動き続ける bash プロセスを1つ、`execute()` の呼び出しをまたいで生かしておくので、状態がコマンド間で引き継がれます。
+**ローカル**と **SSH** のバックエンドでは、ターミナルコマンドはどれも新しい `bash` プロセスで実行されます。Hermes はログインシェルの環境（PATH、プロファイルで export した変数、関数、エイリアス）を1回だけ取り込み、最初のコマンドをそのスナップショットから始めます。設定が無効なら、すべてのコマンドがそこから始まります。設定が有効なら、各コマンドは export した変数を次のコマンドのために保存します。ただし保存されるのは export した変数だけなので、プロファイルの関数やエイリアスは最初のコマンドのあとは使えなくなります。
 
-いちばん役立つのは **SSH バックエンド**で、コマンドごとの接続のオーバーヘッドもなくなります。永続シェルは **SSH では既定で有効**で、ローカルバックエンドでは無効です。
+| 対象 | 設定が有効（既定） | 設定が無効 |
+|------|----------------------|-------------|
+| 作業ディレクトリ（`cd ~/project`） | 引き継がれる | 引き継がれる |
+| export した環境変数（`export FOO=bar`） | 引き継がれる | ログイン時の環境に戻る |
+| ふつうのシェル変数（`MY_VAR=hello`） | 引き継がれ**ない** | 引き継がれない |
+| セッションの途中で定義した関数・エイリアス | 引き継がれ**ない** | 引き継がれない |
+| ログイン時の環境（PATH、プロファイルで export した変数） | 常にある | 常にある |
+| プロファイルの関数・エイリアス | 最初のコマンドだけ | 常にある |
 
-```yaml
-terminal:
-  persistent_shell: true   # default — enables persistent shell for SSH
-```
+作業ディレクトリが常に引き継がれるのは、ファイル操作のツールが相対パスをそこから解決するためです。どちらのモードでも変数を残したいときは、`export` する（設定が有効な場合）か、シェルのプロファイルか `terminal.env_passthrough` に書いてください。
 
-無効にするには、次のコマンドを実行します。
+SSH バックエンドは `terminal.persistent_shell` を読みます。ローカルバックエンドには別のスイッチがあります。どちらも既定で有効です。各コマンドをログイン時の環境から始めるようにするには、次のように設定します。
 
 ```bash
-hermes config set terminal.persistent_shell false
+hermes config set terminal.persistent_shell false   # SSH
+export TERMINAL_LOCAL_PERSISTENT=false              # local
 ```
-
-**コマンドをまたいで保たれるもの:**
-- 作業ディレクトリ（`cd ~/project` の結果が次のコマンドにも残ります）
-- export した環境変数（`export FOO=bar`）
-- シェル変数（`MY_VAR=hello`）
 
 **優先順位:**
 
-| レベル | 変数 | 既定値 |
-|-------|----------|---------|
-| 設定 | `terminal.persistent_shell` | `true` |
-| SSH での上書き | `TERMINAL_SSH_PERSISTENT` | 設定に従う |
-| ローカルでの上書き | `TERMINAL_LOCAL_PERSISTENT` | `false` |
+| バックエンド | 変数 | 既定値 |
+|---------|----------|---------|
+| SSH | `TERMINAL_SSH_PERSISTENT`、なければ `terminal.persistent_shell`（`TERMINAL_PERSISTENT_SHELL`） | `true` |
+| ローカル | `TERMINAL_LOCAL_PERSISTENT` | `true` |
 
-バックエンドごとの環境変数が最も優先されます。ローカルバックエンドでも永続シェルを使いたい場合は、次のように設定します。
-
-```bash
-export TERMINAL_LOCAL_PERSISTENT=true
-```
-
-:::note
-`stdin_data` や sudo を必要とするコマンドは、自動的に単発モードに切り替わります。永続シェルの stdin は、すでに IPC プロトコルが使っているためです。
-:::
+Docker、Singularity、Modal、Daytona、Vercel Sandbox、プラグインのバックエンドは、これらの設定を無視します。
 
 各バックエンドについて詳しくは、[コードの実行](/hermes/docs/user-guide/features/code-execution/) と [README のターミナルの節](/hermes/docs/user-guide/features/tools/) を参照してください。
 
@@ -1960,7 +1951,7 @@ agent:
 | `auto` | **毎回の**ターンの最初の `fast_auto_seconds` 秒間のリクエスト | 最初の返信を素早く返したいとき。長いツールのループでは標準料金に切り替わります |
 | `cold` | 同じ時間枠。ただし、セッションの**最初のターン**（それまでの履歴がない状態）だけ | 会話の最初の返信を速くし、その後は標準料金にしたいとき |
 
-`/fast normal|fast|ultrafast|auto|cold` で、そのセッションのモードを切り替えます。`--global` を付けると `config.yaml` に保存され、次回以降も使われます。`/fast` だけを実行すると、現在のモードを表示します。
+`/fast normal|fast|ultrafast|auto|cold` で、そのセッションのモードを切り替えます（`/fast ultra` は `ultrafast` の短縮形です）。ChatGPT/Codex のサブスクリプションでは、アカウントの Codex モデルカタログが現在のモデルに Ultrafast を載せているときだけ Ultrafast が選べます。そうでない場合、バックエンドはリクエストを受け付けたうえで通常の速度で処理します。`--global` を付けると `config.yaml` に保存され、次回以降も使われます。`/fast` だけを実行すると、現在のモードを表示します。
 
 **料金の注意:** どちらのプロバイダーも、fast のリクエストには標準料金に倍率を掛けた額を請求します（Anthropic の場合、入力／出力それぞれ 100万トークン（MTok）あたり、Opus 5.5 で $8 / $40、Opus 5 と Opus 4.8 で $10 / $50）。この割増はプロンプトキャッシュの料金と重ねて適用されます。Hermes は Anthropic の応答ごとに、API が `usage.speed` で報告する速度をもとに料金を計算します。`auto`/`cold` を使うと、割増がかかるのは時間枠の中だけになります。fast のパラメーターは、それに対応した提供元直営のエンドポイント（`api.openai.com` / Codex のサブスクリプション、`api.anthropic.com`、`api.x.ai`）にだけ送られます。OpenRouter、Nous Portal、Copilot、Azure、Bedrock、カスタムの `base_url` の経路には、どのモードでも送られません。
 
