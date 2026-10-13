@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールをツールセットごとにまとめた公式な一覧"
 upstream_path: reference/tools-reference.md
-upstream_blob: 6ea9f9f7fc4c47119a56ee921936fe8fc1b603aa
+upstream_blob: 2b56f18270ddd43106f38806e8befde198bd47b7
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -11,7 +11,7 @@ sources:
 
 このページでは、Hermes の組み込みツールをツールセットごとに説明します。何が使えるかは、動かしている環境、資格情報、有効にしているツールセットによって変わります。
 
-**ざっくりした数（現在の登録内容）:** 約 100 個のツールがあります。内訳は、ブラウザ用の中核ツール 10 個、CDP がある場合だけ現れるブラウザツール 2 個、ブラウザの保管庫ツール 5 個、それに `browser_exec`、ファイル操作 4 個、ターミナル 2 個（`terminal`、`process_manage`）、デスクトップ GUI 用の 11 個（`read_terminal`、`close_terminal`、`desktop_preview`、`drive_preview`、`annotate_preview`、`read_window_below`、`focus_pane`、`react_to_message`、`gui_tour`、`show_tip`、`apply_layout` — デスクトップアプリのセッション限定）、ウェブ 2 個、Feishu 5 個、Yuanbao 5 個、かんばん 14 個（かんばんのディスパッチャーがエージェントを起動したときに登録されます）、プロジェクト 1 個（`desktop_project`。デスクトップ / GUI のセッション向け）、Discord 2 個、動画 3 個（`video_generate`、`xai_video_edit`、`xai_video_extend`）、そして単体のツールがいくつか（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob_manage`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`vision_analyze`、`video_analyze`、`todo_list`、`computer_use`、`x_search`）です。
+**ざっくりした数（現在の登録内容）:** 約 100 個のツールがあります。内訳は、ブラウザ用の中核ツール 10 個、CDP がある場合だけ現れるブラウザツール 2 個、ブラウザの保管庫ツール 5 個、それに `browser_exec`、ファイル操作 4 個、ターミナル 2 個（`terminal`、`process_manage`）、デスクトップ GUI 用の 11 個（`read_terminal`、`close_terminal`、`desktop_preview`、`drive_preview`、`annotate_preview`、`read_window_below`、`focus_pane`、`react_to_message`、`gui_tour`、`show_tip`、`set_theme` — デスクトップアプリのセッション限定）、ウェブ 2 個、Feishu 5 個、Yuanbao 5 個、かんばん 14 個（かんばんのディスパッチャーがエージェントを起動したときに登録されます）、プロジェクト 1 個（`desktop_project`。デスクトップ / GUI のセッション向け）、Discord 2 個、動画 3 個（`video_generate`、`xai_video_edit`、`xai_video_extend`）、そして単体のツールがいくつか（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob_manage`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`vision_analyze`、`video_analyze`、`todo_list`、`computer_use`、`x_search`）です。
 
 :::tip MCP ツール
 Hermes は組み込みツールに加えて、MCP サーバーからツールを動的に読み込めます。MCP のツールは `mcp__<server>__` という接頭辞付きで現れます（たとえば `github` という MCP サーバーなら `mcp__github__create_issue`）。設定方法は [MCP 連携](/hermes/docs/user-guide/features/mcp/) をご覧ください。
@@ -67,7 +67,7 @@ Hermes は組み込みツールに加えて、MCP サーバーからツールを
 
 | ツール | 説明 | 必要な環境 |
 |------|-------------|----------------------|
-| `manage_connections` | 管理されたコネクター向けの操作: `status`（コネクターごとに `accounts` を一覧します。名前、表示名、状態、有効かどうか）、`connect`、`reconnect`（つながっていないものだけ直します。`force: true` なら動いているものも入れ直します）、`rename`。connect や reconnect の対象にはアカウント名を付けられます（`{"name": "gmail", "alias": "work"}`）。新しい名前で connect するとアカウントがもう 1 つ増え、名前を付けて reconnect するとそのアカウントだけを直し、何も消しません。`rename` が受け取る対象は 1 つで、`{"name": "gmail", "alias": "work", "to": "office"}` の形です。`alias` には、名前の無いアカウントのアプリ側の表示名も指定できます。MCP 向けの操作は `mcp: true` の対象だけで、カタログの項目を `install`、無効にしてある設定済みサーバーを `enable`、`authorize`（OAuth）です。デスクトップアプリ、ターミナル UI、従来の CLI では、どの操作でもカードが出て、対象がつながるか、飛ばされるか、300 秒の締め切りが来るまで待ちます。結果には対象が `connected`、`skipped`、`not_connected` のいずれかで並び、リンクは付きません。MCP の `install` は、その項目の設定値をカードで集め、OAuth があればカードから実行し（リンクは利用者が開きます。勝手には開きません）、サーバーがトークンを受け付けた時点で設定・トークン・値をまとめて保存します。つながった MCP の対象には `tools`（登録された名前）と `tools_listing` が付き、そのツールは同じターンのうちに `tool_describe`/`tool_call` から呼べます。`discovery_error` が付いた対象は認可はできているものの、ツールの一覧を取れなかった状態です。もう一度 `install` か `authorize` を呼べば、あらためて同意を求めずに一覧の取得だけをやり直せます。カードが出ない画面（メッセージングや台本からの実行）では、管理されたコネクターはアプリごとに `connect_url` を返し、利用者がそれを開きます。MCP の対象はその場で実行され、`authorize` と OAuth を伴う `install` は認可用の URL を返し、それ以外の install と `enable` は結果を報告し、資格情報が足りなければ設定すべき変数名を添えて `failed` で返ります。アカウントの接続解除、削除、権限の取り消しはできません。これらは利用者が行います。 | — |
+| `manage_connections` | 管理されたコネクター向けの操作: `display`（デスクトップアプリ専用。ホストされているすべてのコネクターを、よく使われるアプリから順に並べたカードを表示し、アプリをクリックするとそのサインインが始まります。`connectors` に slug を渡すと、それらが「おすすめ」として先頭に固定されます。利用者が Continue を押すか 300 秒たつまで待ち、`connected`、`newly_connected`、`suggested` の slug を返します。締め切りで終わったときは `timed_out: true` が加わります。ほかの画面では `status` の一覧を返し、デスクトップアプリかポータルから接続するよう利用者に伝えます）、`status`（コネクターごとに `accounts` を一覧します。名前、表示名、状態、有効かどうか）、`connect`、`reconnect`（つながっていないものだけ直します。`force: true` なら動いているものも入れ直します）、`rename`。connect や reconnect の対象にはアカウント名を付けられます（`{"name": "gmail", "alias": "work"}`）。新しい名前で connect するとアカウントがもう 1 つ増え、名前を付けて reconnect するとそのアカウントだけを直し、何も消しません。`rename` が受け取る対象は 1 つで、`{"name": "gmail", "alias": "work", "to": "office"}` の形です。`alias` には、名前の無いアカウントのアプリ側の表示名も指定できます。MCP 向けの操作は `mcp: true` の対象だけで、カタログの項目を `install`、無効にしてある設定済みサーバーを `enable`、`authorize`（OAuth）です。デスクトップアプリ、ターミナル UI、従来の CLI では、どの操作でもカードが出て、対象がつながるか、飛ばされるか、300 秒の締め切りが来るまで待ちます。結果には対象が `connected`、`skipped`、`not_connected` のいずれかで並び、リンクは付きません。MCP の `install` は、その項目の設定値をカードで集め、OAuth があればカードから実行し（リンクは利用者が開きます。勝手には開きません）、サーバーがトークンを受け付けた時点で設定・トークン・値をまとめて保存します。つながった MCP の対象には `tools`（登録された名前）と `tools_listing` が付き、そのツールは同じターンのうちに `tool_describe`/`tool_call` から呼べます。`discovery_error` が付いた対象は認可はできているものの、ツールの一覧を取れなかった状態です。もう一度 `install` か `authorize` を呼べば、あらためて同意を求めずに一覧の取得だけをやり直せます。カードが出ない画面（メッセージングや台本からの実行）では、管理されたコネクターはアプリごとに `connect_url` を返し、利用者がそれを開きます。MCP の対象はその場で実行され、`authorize` と OAuth を伴う `install` は認可用の URL を返し、それ以外の install と `enable` は結果を報告し、資格情報が足りなければ設定すべき変数名を添えて `failed` で返ります。アカウントの接続解除、削除、権限の取り消しはできません。これらは利用者が行います。 | — |
 
 1 回の呼び出しの締め切りは 5 分で、呼び出しが始まった時点でバックエンドが決めます。
 チャットを開き直しても、デスクトップを再起動しても延びません。このツールが現れるのは、
@@ -185,22 +185,6 @@ Feishu の文書コメント処理専用です。ドライブ上のファイル�
 |------|-------------|----------------------|
 | `manage_catalog` | デスクトップのセッション専用で、既定では `tool_search` の後ろに控えています（必要になったときに読み込まれます）。`search` は、`query` に合うカタログのプラグインとハブのスキルを（必要なら `kind` を 1 つに絞って）一覧表示し、`id`、`kind`、`display`、`tier`、`platforms`、`installed`（このチャットのプロファイルに入っているか）を返します。何も変更しません。`install` は `items: [{kind, id}]` を受け取り、項目ごとに 1 行（Install、Advanced、Skip）が並ぶ承認カードを 1 枚表示します。カタログが知らない id や、この OS では動かないプラグインは、理由を添えて失敗として表示されます。承認された行は、カタログで審査済みのコミットで、このチャットのプロファイル（または Advanced で選んだプロファイル）にインストールされます。停止リスト、セキュリティスキャン、その場での有効化は Plugins タブと同じなので、プラグインの MCP ツールとスキルは、そのプロファイルで開いているチャットですぐに使えます。結果には各行が `connected`（`tools` と `skill` 付き）、`skipped`、`failed`（`detail` 付き）、`not_connected` のどれになったかが並びます。失敗した行も、インストール済みやスキップの行と同じく待ち状態を終わらせます。また、インストールを実行すると、ディスク上にあって有効になっていないカタログのプラグインが有効になります。モデルがソース、コミット、プロファイル、設定を渡すことはできません。ほかの場所で呼ぶと、代わりに実行すべき `hermes plugins install` / `hermes skills install` のコマンドを返します。 | — |
 
-## `setup` ツールセット {#setup-toolset}
-
-デスクトップのセットアップ用プロファイル自身の設定（`platform_toolsets.cli`）で有効になります。このツールが渡されるのはデスクトップのセッションだけで、CLI、`hermes -z`、cron、kanban、メッセージングのセッションには渡りません。`all` には含まれません。`hermes tools` の一覧にも出ません。
-
-| ツール | 説明 | 必要な環境 |
-|------|-------------|----------------------|
-| `setup_choose` | `setup` ツールセット経由でだけ使え、デスクトップのセッション専用です。`tools.tool_search.defer` のリストに名前が挙がっていない限り、後回しにされることはありません。セットアップのチャットにカードを 1 枚表示します。`kind` は `question`、`accent`、`theme`、`layout`、`connectors`、`plugins`、`tour`、`fork` のどれかで、`question` はカードの見出しです。`options` は必須です。最大 12 行の `{id, label, detail?}`（id は重複不可）を渡すと、アプリ自身の一覧の代わりにそれが並びます。`[]` を渡すと、選択式のカードではアプリの一覧を表示し、kind が `question` のときは自由記述の回答を求めます。`tour`（Quick tour、Show me everything、Skip）と `fork`（カードが表示された時点で、それまでに選んだアプリやプラグインとこのコンピューターから組み立てた最初のタスク 2 つ、続いて "I have something in mind"、"Help me set up this &lt;machine>"、"Let's figure it out together"）は、常にバックエンドが用意した行を表示します。名前のカード（`question` が "What should I call you?" のもの）には、アカウントのフルネームがバックエンドから 1 行として入ります。そのため、名前がモデルに届くのは、利用者がその行を選んだときの結果の中だけです。プラグインのカードは、Blender があればそれを選んだ状態で始まります。選択肢のあるカードでも、文字で打った回答を受け付けます。`multi_select` を使うと、複数の行を選べます。アクセントカラー、テーマ、レイアウトは、選んだ時点でアプリに反映されます。結果には `outcome`（`submitted`、`typed`、`cancelled`、または `notice` 付きの `no_answer`）、`picked`（選択肢の id、自由記述の回答、`multi_select` のときは id のリスト）、`said`（`typed` のとき、チャット欄に打たれた言葉のうち、カードのどの行の id にもラベルにも当たらないもの。何も選ばれず、記録もされません）、そして選んだものがカードの行のどれかであれば `label`（カードが各選択に表示していた名前。たとえば `#8a2be2` なら `Ultraviolet`）が入ります。コネクタの一覧が取れないとき（Nous のアカウントがなく、ゲストとしての登録を 1 回試みたあと）や、プラグインの一覧が空のときは、カードを表示せず、すぐに `notice` 付きの `no_answer` を返します。選んだものは引き継ぎ用に記録されます。`start_chat` が、選ばれたアプリとプラグインをタスクのチャットに渡し、そのチャットはまずそれらを接続・インストールします。ほかの場所で呼ぶとエラーを返します。 | — |
-
-## `start_chat` ツールセット {#startchat-toolset}
-
-プロファイル自身の設定（`platform_toolsets.cli`）で名前が挙がっているときだけ有効になります。このツールが渡されるのはデスクトップのセッションだけで、CLI、`hermes -z`、cron、kanban、メッセージングのセッションには渡りません。`all` には含まれません。`hermes tools` の一覧にも出ません。サブエージェントには渡りません。
-
-| ツール | 説明 | 必要な環境 |
-|------|-------------|----------------------|
-| `start_chat` | デスクトップアプリで新しいチャットを開き、`message` をその最初のユーザーメッセージとして送ります。呼び出し元のチャットには、新しいチャットのタイトル、プロファイル、Open ボタンを載せたカードが表示されます。利用者が呼び出し元のチャットを見ているときだけアプリは新しいチャットへ移動し、そうでなければ新しいチャットはサイドバーに現れます。新しいチャットは履歴のない状態で始まります。`profile` には既存のプロファイルを指定する必要があります（新しく作られることはありません）。省略すると、呼び出し元と同じプロファイルで動きます。新しいチャットの設定は、呼び出し元ではなく、そのチャット自身のプロファイルから取られます。`title`（最大 40 文字）はサイドバーに出るチャット名です。省略すると、チャットが自分でタイトルを付けます。呼ぶたびに別のチャットが開きます。同じ呼び出しを繰り返しても重複は取り除かれません。デスクトップのセットアップ用プロファイルのチャットから別のプロファイルへの呼び出しが `started` になると、オンボーディングが完了したものとして扱われます。結果は、新しいチャットの `session_id` と `profile` を伴う `started` か、`reason`（不明なプロファイル、空のメッセージ、長すぎるタイトル、デスクトップのチャット以外からの呼び出し）を伴う `rejected` です。 | — |
-
 ## `session_search` ツールセット {#sessionsearch-toolset}
 
 | ツール | 説明 | 必要な環境 |
@@ -240,7 +224,7 @@ Hermes のデスクトップアプリから始まったセッションで有効�
 | `react_to_message` | メッセージに絵文字ひとつでリアクションします。iMessage のタップバックのような見え方です。設定 → 外観（`display.message_reactions`）で有効にします。 | — |
 | `gui_tour` | その場で案内をします。画面を暗くし、要素を強調し、説明の吹き出しを添えます（driver.js）。Hermes アプリ自身の UI でも、プレビュー画面で開いているページでも使えます。手順を付けずに `start` を呼ぶと、アプリ組み込みのツアーが流れます（`preset` は `quick` か `full`、既定は `full`）。自分で作るツアーでは、`targets` が画面にあるものを洗い出し、`show` が順に説明し、`steps` を付けた `start` が利用者に「次へ / 戻る」の操作を渡します。 | — |
 | `show_tip` | 要素ひとつを、小さな色付きの吹き出しと矢印で指し示します。`gui_tour` の静かな兄弟で、画面は暗くならず、スポットライトも「次へ / 戻る」もありません。同じ `data-tour` の手がかりと、同じ `tour(action='targets')` による洗い出しを使います。 | — |
-| `apply_layout` | 利用者が作業場所の並べ替えを求めたときに、保存してあるレイアウトを Hermes デスクトップアプリへ適用します。組み込みは default（チャット + サイドバー）、focus（チャットのみ）、terminal-deck、quad で、プラグインや利用者が作ったものは id で指定します。画面をひとつだけ出したいなら `focus_pane` を使ってください。 | — |
+| `set_theme` | Hermes デスクトップアプリのアクセントカラー（色見本の id、`theme`、または `#rrggbb`）、ライト / ダーク / システムの表示モード、レイアウトのプリセット（Simple: `sidebar-left`、`sidebar-right`。Advanced: `default`、`basic`、`focus`、`terminal-deck`、`quad`。または保存したレイアウトの id）を設定します。結果には実際に適用した内容が入ります。知らない値を渡すと、使える id の一覧が返ってきます。`picker`（`accent` か `layout`）を指定すると、チャットに選択用のカードを表示し、利用者が選ぶまで最大 5 分待ちます。 | — |
 
 ### 案内ツアー {#tours}
 

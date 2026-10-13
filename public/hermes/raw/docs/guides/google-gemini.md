@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Google Gemini"
 description: "Hermes Agent を Google Gemini で使う方法。ネイティブの AI Studio API、API キーの設定、ツール呼び出し、ストリーミング、割り当ての考え方まで"
 upstream_path: guides/google-gemini.md
-upstream_blob: d486aa7b2a1db2942ca4abe72691f68027e802ee
+upstream_blob: 2eb6be2af90eb09ab478a283b68b28ad5070e158
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/google-gemini
 ---
@@ -127,6 +127,12 @@ Hermes は、もう一方のサービスの名前を挙げた案内を添えま�
 （プロキシなど）が書き換えられることはありません。エクスプレスのキーは、OAuth を使う
 [Vertex AI プロバイダ](/hermes/docs/guides/google-vertex/)とは別のもので、そちらは API キーを必要としません。
 
+`global` のロケーションでしか提供されていないモデル（Gemini 4 Argon）には、ロケーションを付けない
+エクスプレスのホストからは届きません。このホストは `us-central1` へつながるためです。こうしたモデルを使うときは、
+ベース URL をプロジェクト付きの形
+`https://aiplatform.googleapis.com/v1beta1/projects/<project>/locations/global`
+にしてください。Hermes が同じように `…/publishers/google` の形まで補います。
+
 :::warning すでにエクスプレスのキーを使っている方への注意
 以前の Hermes は `AQ.` という頭の文字を見分けて、そうしたキーを自動で
 `aiplatform.googleapis.com` へ振り向けていました。そのため、案内も「`GEMINI_API_KEY` に
@@ -144,6 +150,7 @@ Hermes は、もう一方のサービスの名前を挙げた案内を添えま�
 
 | モデル | ID | 補足 |
 |-------|----|-------|
+| Gemini 4 Argon | `gemini-4-argon` | 看板の推論モデル。入力と出力で共有する 1M の枠を持ち、長いデコードで最大 1M トークンまで出力できる |
 | Gemini 3.8 Flash | `gemini-3.8-flash` | 長い工程のエージェント作業やコーディングに強い、いちばん高性能な Flash |
 | Gemini 3.7 Flash | `gemini-3.7-flash` | 速度・性能・画像などの理解のバランスが良い、おすすめの既定値 |
 | Gemini 3.1 Pro Preview | `gemini-3.1-pro-preview` | 推論・数学・コーディングでいちばん高性能なモデル |
@@ -156,6 +163,33 @@ Hermes は、もう一方のサービスの名前を挙げた案内を添えま�
 :::info モデル ID
 `provider: gemini` のときは、`google/gemini-3.7-flash` のような OpenRouter 形式の ID ではなく、`gemini-3.7-flash` のような Gemini ネイティブのモデル ID を使ってください。
 :::
+
+### Gemini 4 Argon の推論の強さと長いデコード {#gemini-4-argon-reasoning-effort-and-long-decode}
+
+Gemini 4 Argon は常に思考します。Hermes は推論の強さ（`/reasoning`、
+`agent.reasoning_effort`）を、このモデルの `thinkingLevel` へ次のように割り当てます。
+
+| Hermes の推論の強さ | `thinkingLevel` | 出力全体の上限 |
+|---------------|-----------------|---------------------|
+| `none`, `minimal`, `low` | `low`（`none` のときは思考を表示しない） | 1 回のリクエストの上限 |
+| `medium`（Google の既定値） | `medium` | 1 回のリクエストの上限 |
+| `high` | `high` | 1 回のリクエストの上限 |
+| `xhigh` | `high` | 262,144 トークン（長いデコード） |
+| `max`, `ultra` | `high` | 1,048,576 トークンから入力分を引いた量（長いデコード） |
+
+長いデコードを使わない場合、1 回のリクエストは、ストリーミングなら 65,536 トークン
+（ストリーミングでなければ 32,768 トークン）を出力したところで止まります。この数には思考の分も含まれます。`xhigh` か `max` のときは、Hermes が
+`maxOutputTokens` を引き上げます。さらに、リクエストが 1 回分の上限に達してもまだ予算が残っているとき
+（`finishReason: CONTINUATION`）は、Google の
+`continuationToken` を付けて同じリクエストを送り直し、モデルが書き終えるまで続けます。こうして何回かに分けた応答は、1 つの返答にまとめられます。
+
+複数回に分けたときの使用量は、Google の課金と同じ数え方で報告されます。送り直すたびに
+プロンプトとそれまでの出力をもう一度読み込むので、入力の合計は実際の
+コンテキストよりはるかに大きくなります。Hermes は料金をこの合計で計算しますが、コンテキストの圧縮と
+コンテキストの残量表示には最初の 1 回目のプロンプトの大きさを渡します。そのため、長いデコードを使った 1 往復が原因で
+圧縮が早まることはありません。長いデコードが動くのはネイティブのエンドポイント（AI Studio と
+Vertex AI のエクスプレスモード）だけです。Google の `/openai` 互換エンドポイント、OpenRouter、
+OAuth を使う [Vertex AI プロバイダ](/hermes/docs/guides/google-vertex/)では、1 回のリクエストの上限で止まります。
 
 ### latest のエイリアス {#latest-aliases}
 

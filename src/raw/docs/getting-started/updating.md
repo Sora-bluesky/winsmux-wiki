@@ -2,7 +2,7 @@
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: 6d49349b1a9cf13aa8fa4bf5df8e96e29fc236f9
+upstream_blob: 3786223a91b378bbd91d16ea275086efbc82cfd0
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -50,7 +50,12 @@ hermes update --channel main         # one run against main; nothing is saved
 `config.yaml` の `update.installs` に保存されます。チャンネルを一度も選んでいないインストールは
 前にしか進みません。最新のリリースより新しいチェックアウト（たとえば、この既定になる前に `main` を
 追いかけていたもの）は、さらに新しいリリースが出るまでその場に留まります。`--set-channel stable` を
-実行すると、たとえ古くなる場合でも、チェックアウトをリリースのコミットちょうどに固定します。
+実行すると、たとえ古くなる場合でも、チェックアウトをリリースのコミットちょうどに固定します。この
+とき Desktop はその移動をリリースへのロールバックと表示し、`hermes update --check` は新しい更新を
+知らせる代わりに、チェックアウトのほうが新しいと伝えます。`main` 以外のチャンネルを選んだインストールに
+インストーラー（`install.sh`、`install.ps1`、または Hermes-Setup）をもう一度実行しても、チェックアウトは
+その場に留まります。チェックアウトを動かすのは `hermes update` だけです。明示的な `--commit` の固定は
+引き続き効きます。
 Windows Store、MSIX、同梱デスクトップアプリのインストールは影響を受けません。これらのチャンネルは
 パッケージに焼き込まれています（下記を参照してください）。
 

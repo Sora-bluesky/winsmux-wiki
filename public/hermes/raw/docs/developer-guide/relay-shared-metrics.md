@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: 967827e71a572b9e0a6f32a0f97c222ce7b81d98
+upstream_blob: 3af1e82395ae6dc43535d58cc987c070e3fa4db9
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -310,7 +310,7 @@ Hermes は、実行時のレジストリにすでに宣言されているツー�
 独自のツールセットや認識できないツールセットは、ツール名やプラグイン名を出力するのではなく `other` にまとめます。
 同じ終端イベントからは、`tool_name`、`outcome`、`error_class` を持つ `hermes.tool.usage.count` も記録します。
 `tool_name` を出力するのは、リポジトリの静的な `toolsets.TOOLSETS` で宣言されたツール（実行時の独自ツールセットが作られる前に取得した `toolsets.BUILTIN_TOOL_NAMES`）と、Tool Search の橋渡しのツール（`tool_search`、`tool_describe`、`tool_call`）だけです。MCP のツールは `mcp`、ホスト型コネクターのツール（`connectors__*`）はツールの分類も `connector` として `connector`、プラグインや独自のツールはすべて `plugin` として報告します。コネクターのスラッグとツール名は出力しません。コネクターの呼び出しをまとめた `tool_call` の一括実行では、各項目をそれぞれ1回の呼び出しとして扱います。項目ごとに1行を記録し、`tool_call` の外側の呼び出しは重ねて数えません（どの項目も実行される前に拒否された一括実行は、`tool_call` として1回だけ数えます）。
-`error_class` は Hermes 自身の `error_type` の値（`tool_error`、`timeout`、`interrupted`、`invalid_arguments`、`blocked`、`contract_violation`）を対応付けたもので、例外クラス名などそれ以外の値は `exception` にまとめます。失敗したコネクターの項目は、その結果に入っているツールゲートウェイのエラーコードで分類します。`connection_required`（接続が必要、または期限切れ）、`not_allowed`、`alias`（別名が必要、または不明）、`invalid_arguments`、そしてバックエンド系のすべてのコード（提供元のエラー、レート制限、タイムアウト、ポリシーやゲートウェイの失敗）は `connector_backend` です。それ以外のコードは `tool_error` のままです。
+`error_class` は Hermes 自身の `error_type` の値（`tool_error`、`timeout`、`interrupted`、`invalid_arguments`、`blocked`、`contract_violation`）を対応付けたもので、例外クラス名などそれ以外の値は `exception` にまとめます。失敗したコネクターの項目は、その結果に入っているツールゲートウェイのエラーコードで分類します。`connection_required`（接続が必要、または期限切れ）、`not_allowed`、`alias`（別名が必要、または不明）、`invalid_arguments`、そしてバックエンド系のすべてのコード（提供元のエラー、レート制限、タイムアウト、ポリシーやゲートウェイの失敗）は `connector_backend` です。それ以外のコードは `tool_error` のままです。Hermes 自身がファイル入力を拒否した場合も同じように数えます。拒否されたパスは `not_allowed`、存在しないファイルや大きすぎるファイルは `invalid_arguments`、アップロードの失敗は `connector_backend` です。
 Hermes は、同じツール名の繰り返しや隣り合う呼び出しから再試行を推測しません。
 フックが明示的な再試行の関係を渡さない場合、再試行の区分は `unknown` になります。
 承認の判断は `hermes.tool_approval` mark として出し、ツール呼び出しに紐づくもの、または明示的に `unattributed` として記録します。
@@ -649,7 +649,7 @@ telemetry:
 
 ターミナルでは「No thanks」が既定なので、Enter を押しただけで誰かが参加してしまうことはありません。
 ターミナルで Esc を押すか、ダッシュボードのバナーの ✕ を押した場合は、質問は答えのないまま残り、
-次の機会にまたたずねます。Desktop の帯は、初回のオンボーディングを終えるか飛ばしたあとにだけ表示され、ようこそチャットを動かす内部のセットアップ用プロファイルには一度も表示されません。どの画面で答えても、両方のキーと `offer_version` がプロファイルの `config.yaml` に書き込まれます。
+次の機会にまたたずねます。Desktop の帯は、初回のオンボーディングを終えるか飛ばしたあとにだけ表示されます。どの画面で答えても、両方のキーと `offer_version` がプロファイルの `config.yaml` に書き込まれます。
 どちらかのキーがすでにあるプロファイルでは、二度とたずねません。管理されたインストールでは、提案そのものを出しません。
 
 例外が1つあります。先行入力の修正より前は、`hermes chat` の起動中に押した Enter が、質問が出る前に「No thanks」を保存してしまうことがありました。

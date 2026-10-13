@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 6f90887b004474675d6ac01546e014ecb818820a
+upstream_blob: ff17d0b236161460e0cb63c9750158bdf6fb1db4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -153,7 +153,7 @@ hermes plugins enable touchdesigner   # same as: hermes plugins enable td
 
 Desktop アプリでは、エージェント側と Desktop 側（`desktop/plugin.js`）の両方を持つパッケージは
 1 行にまとまり、それぞれの側に 1 つずつ切り替えスイッチが付きます。パッケージをオンにすると
-（インストール画面の **Enable agent plugin after install**、または行の **Agent** スイッチ）、
+（インストール画面からインストールするとオンになります。行の **Agent** スイッチでもオンにできます）、
 Desktop 側も一緒にオンになります。ただし、その側を自分でオフにしていた場合は別です。オフにする操作は
 側ごとのままです。Desktop 側はすべてのプロファイルで共有されているからです。
 

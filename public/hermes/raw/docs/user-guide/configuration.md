@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 528b113e1d1a06088544d20ad92b01258e855ac0
+upstream_blob: e40a2188eeb24f065aaa32ed4e2bea8b1e65c2f8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -3034,10 +3034,12 @@ network:
 onboarding:
   profile_build: "ask"   # "ask" (default) | "off"
   seen: {}               # internal latch — leave empty
+  run: null              # desktop first-run onboarding: null (fresh install) | true | false
 ```
 
-- `profile_build` — いちばん最初のメッセージで出す提案を決めます。対象は TUI、デスクトップアプリ、メッセージングのダイレクトメッセージです（グループチャットでは出しません）。`"ask"`（既定）は、ユーザープロファイルの作成を提案します。この提案は**ユーザーが明示的に受け入れたときだけ進み、同意が前提です**。エージェントは何かを調べる前に必ず尋ね、接続済みのアカウントを黙って読むことはなく、確認できた事実はユーザーメモリに保存します。Microsoft Store 版のデスクトップアプリでは、提案の代わりに、`/initiate-setup` を案内する締めの1行が出ます（Telegram では `/initiate_setup`、Slack では `/hermes initiate-setup`）。最初のメッセージが `/initiate-setup` そのものだったときは提案を出しません。デスクトップアプリのセットアップ用プロファイルでも常に出しません。`"off"` が止めるのは提案だけで、エージェントは簡単な自己紹介をします。この提案が出るのは、1つのプロファイルにつき多くても1回です。`/initiate-setup` は、そのコンピューターについての短い事実のまとまりを送ります。詳しくは[セットアップのチャットがコンピューターについて知っていること](/hermes/docs/user-guide/desktop/#what-the-setup-chat-knows-about-your-computer)を参照してください。
+- `profile_build` — いちばん最初のメッセージで出す提案を決めます。対象は TUI、デスクトップアプリ、メッセージングのダイレクトメッセージです（グループチャットでは出しません）。`"ask"`（既定）は、ユーザープロファイルの作成を提案します。この提案は**ユーザーが明示的に受け入れたときだけ進み、同意が前提です**。エージェントは何かを調べる前に必ず尋ね、接続済みのアカウントを黙って読むことはなく、確認できた事実はユーザーメモリに保存します。`"off"` が止めるのは提案だけで、エージェントは簡単な自己紹介をします。この提案が出るのは、1つのプロファイルにつき多くても1回です。
 - `seen` — 内部の状態です。Hermes は表示したヒントを1つずつここに記録し、二度と出さないようにします。最初のメッセージで出す提案も、一度表示されるとここに記録されます。手で編集しないでください。すべてのヒントをもう一度見たいときは、`onboarding` セクションを丸ごと消します。
+- `run` — デスクトップアプリが次に起動したときに、初回のオンボーディング用チャットを開くかどうかです。設定していなければ、新しくインストールしたとき（セッションもプロファイルもまだ無いとき）だけ開きます。Hermes は、オンボーディングが始まると `true` を、終わるか飛ばされると `false` を書き込みます。アプリがどのプロファイルで動いていても、この値は常に既定のプロファイルの `config.yaml` に置かれます。二度と出したくなければ `false` にしてください。管理された環境へのインストールでは、管理用の設定でこの値を固定できます。
 
 ## ダッシュボード {#dashboard}
 

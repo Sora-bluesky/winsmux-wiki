@@ -443,9 +443,7 @@ Hermes Agent 0.21.7
 - [user-guide/skills/optional/payments/payments-stripe-projects（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/)
 - [user-guide/skills/optional/productivity/productivity-canvas（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/)
 - [user-guide/skills/optional/productivity/productivity-decision-questionnaire（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/)
-- [user-guide/skills/optional/productivity/productivity-first-task（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-first-task/)
 - [user-guide/skills/optional/productivity/productivity-here-now（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/)
-- [user-guide/skills/optional/productivity/productivity-initiate-setup（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-initiate-setup/)
 - [user-guide/skills/optional/productivity/productivity-live-dashboard（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/)
 - [user-guide/skills/optional/productivity/productivity-memento-flashcards（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/)
 - [user-guide/skills/optional/productivity/productivity-property-listings（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/)
@@ -913,9 +911,7 @@ Hermes Agent 0.21.7
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/payments/payments-stripe-projects.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-canvas.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-first-task.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-here-now.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-initiate-setup.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-live-dashboard.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-property-listings.md

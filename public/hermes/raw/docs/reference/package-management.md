@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 7f3c2d7f107c6e63c3b1fda2814a75f3c2f2b61a
+upstream_blob: 1a2e7d333615c931617a0d7f61a322e7d8222683
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -584,8 +584,8 @@ CDN へのフォールバックとして、欠けている範囲を1回だけ順
 
 Hermes 自身が依存する Python のパッケージは、Hermes がロックする時点で公開から3日以上たっている必要があります
 （uv の `exclude-newer` で、CI のロック検査が強制します）。これにより、公開されたばかりで乗っ取られているかもしれないリリースが
-`uv.lock` に入り込めないようにしています。利用者はそのロックからインストールします。プラグインのインストールや有効化では、
-Hermes がロックしているパッケージはすべてロックされたバージョンのまま保たれ、日付を検査し直すことはありません。そのため、
+`uv.lock` に入り込めないようにしています。利用者はそのロックからインストールします。また、プラグインのインストールや有効化で
+日付を検査し直すことはありません。そのため、
 アップロード日時を公開していないパッケージのミラーでも動きます。ミラーを設定するには、`pip.conf` の `index-url`（Hermes が uv に渡します）か
 `UV_INDEX_URL` を使います。
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: 11311d485b9ee4ce141a51034f68f634639ff70e
+upstream_blob: 83f672120e2f647c093deaad04755e4748ee736e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---
@@ -21,14 +21,14 @@ Hermes Agent は、量に上限があり、手を入れて整えられた記憶�
 | **MEMORY.md** | エージェント自身のメモ — 環境についての事実、決まりごと、学んだこと | 2,200 文字（約 800 トークン） |
 | **USER.md** | 利用者の人物像 — 好み、話し方の好み、期待していること | 1,375 文字（約 500 トークン） |
 
-どちらも `~/.hermes/memories/` に保存され、セッションの開始時に凍らせた写しとしてシステムプロンプトへ差し込まれます。エージェントは `memory` ツールで自分の記憶を管理します — 項目の追加、置き換え、削除ができます。
+どちらも `~/.hermes/memories/` に保存され、セッションの開始時に凍らせた写しとしてシステムプロンプトへ差し込まれます。エージェントは `memory` ツールで自分の記憶を管理します — 項目の追加、部分の書き換え（patch）、削除ができます。
 
 :::caution Hermes ホーム1つにつきエージェントは1つ
 2つのエージェントのプロセスを同じ Hermes のホームディレクトリに向けないでください。記憶の書き込みは自動で行われ、セッションの開始時にシステムプロンプトへ読み戻されます。そのため1つのホームを共有する2人の書き手は、互いの項目を積み重ねて、どちらも（そしてこちらも）書いた覚えのない状態を作り上げてしまいます。記憶は設計として[プロファイル](/hermes/docs/user-guide/profiles/)ごとに区切られています — 2つ目のエージェントには自分のプロファイルを与えてください。記憶を共有させたいなら、代わりに[外部の記憶プロバイダ](/hermes/docs/user-guide/features/memory-providers/)を使います。
 :::
 
 :::info
-文字数の上限は、記憶を要点に絞ったままにするためのものです。記憶は自動で詰め直され**ません**。書き込みが上限を超えそうなときは、`memory` ツールが黙って項目を落とすのではなくエラーを返します。エージェントはそのあと自分で場所を空けます — 同じターンのうちに項目をまとめたり消したりしてから、やり直します（[記憶がいっぱいになったときの動き](#what-happens-when-memory-is-full)を参照）。`replace` も同じく上限に縛られる点に注意してください。ある項目をより長いものに入れ替えれば、それでもあふれることがあります。収まるように新しい中身を短くするか、別の項目を消す必要があります。
+文字数の上限は、記憶を要点に絞ったままにするためのものです。記憶は自動で詰め直され**ません**。書き込みが上限を超えそうなときは、`memory` ツールが黙って項目を落とすのではなくエラーを返します。エージェントはそのあと自分で場所を空けます — 同じターンのうちに項目をまとめたり消したりしてから、やり直します（[記憶がいっぱいになったときの動き](#what-happens-when-memory-is-full)を参照）。`patch` も同じく上限に縛られる点に注意してください。項目を長くする patch は、それでもあふれることがあります。収まるように新しい文を短くするか、別の項目を消す必要があります。
 :::
 
 ## 記憶がシステムプロンプトにどう現れるか {#how-memory-appears-in-the-system-prompt}
@@ -90,25 +90,43 @@ User prefers concise responses, dislikes verbose explanations
 エージェントは `memory` ツールを次の操作で使います。
 
 - **add** — 新しい記憶の項目を足す
-- **replace** — 既にある項目を、新しい中身に置き換える（`old_text` による部分一致で探します）
+- **patch** — 既にある項目の中の一部分だけを置き換え、残りはそのまま保つ（`old_text` がその部分、`content` が置き換え後の文です）
 - **remove** — もう関係のなくなった項目を消す（`old_text` による部分一致で探します）
 
 `read` にあたる操作はありません — 記憶の中身は、セッションの開始時にシステムプロンプトへ自動で差し込まれます。エージェントは自分の記憶を、会話の文脈の一部として見ています。
 
+どのツール呼び出しにも、最上位の `target` が必要です。エージェントのメモなら `"memory"`、ユーザーのプロフィールなら `"user"` を指定します。
+バッチでは、その1つの宛先がすべての操作に使われます。
+
+```json
+{"target": "user", "operations": [{"action": "add", "content": "User prefers metric units"}]}
+```
+
+宛先が無いか null の場合や、操作の中に最上位と違う宛先が書かれている場合は、
+書き込みや承認待ちへの登録の前にエラーが返ります。中身を直してやり直してください。両方の記憶を更新したいときは、呼び出しを分けます。
+
 ### 部分一致で探す {#substring-matching}
 
-`replace` と `remove` の操作は、短くて重複のない部分一致で対象を探します — 項目の全文を渡す必要はありません。`old_text` に必要なのは、ちょうど1つの項目を言い当てられる、重複のない部分文字列だけです。
+`patch` と `remove` の操作は、短くて重複のない部分一致で対象を探します — 項目の全文を渡す必要はありません。`old_text` に必要なのは、ちょうど1つの項目を言い当てられる、重複のない部分文字列だけです。
 
 ```python
 # If memory contains "User prefers dark mode in all editors"
-memory(action="replace", target="memory",
-       old_text="dark mode",
-       content="User prefers light mode in VS Code, dark mode in terminal")
+memory(action="patch", target="memory",
+       old_text="dark mode in all editors",
+       content="light mode in VS Code, dark mode in terminal")
+# -> "User prefers light mode in VS Code, dark mode in terminal"
 ```
 
 その部分文字列が複数の項目に当たった場合は、もっと絞り込むよう求めるエラーが返ります。
 
-`replace` は、当たった**項目全体**を `content` で上書きします。`old_text` は項目を探すためだけに使われ、その部分だけが切り取られて置き換わるわけではありません。新しい `content` には、古い項目のうち残したい部分もすべて含めた、完全な新しい項目を書いてください。（項目の全文と同じ `old_text` を渡すと完全一致として扱われ、部分一致よりも優先されます。）
+`patch` は、当たった項目の中の `old_text` の部分だけを置き換え、ほかはすべて残します。その部分は
+項目の中に1回だけ現れなければなりません。2回以上現れると呼び出しははねられ、エージェントは前後の文も含めて
+やり直します。項目から文を消したいときは、その文を含むもっと長い部分を patch します。項目をまるごと書き直したいときは、
+項目の全文を `old_text` に渡します（項目の全文との完全一致は、部分一致よりも優先されます）。
+
+`replace` という操作はもうありません。これは当たった項目全体を上書きするものでしたが、モデルはこれを検索して入れ替える操作として使い、
+いくつもの事実を含む項目のほかの事実を消してしまっていました。いまは `replace` を呼ぶと、`patch` を使うよう示すエラーが返ります。
+この変更の前に承認待ちに回った書き込みは、回ったときの内容のまま適用されます。
 
 ## 2つの宛先 {#two-targets-explained}
 
@@ -169,15 +187,15 @@ memory(action="replace", target="memory",
 ```json
 {
   "success": false,
-  "error": "Memory at 2,100/2,200 chars; adding this entry (250 chars) would exceed the limit by 153 chars. Retry as ONE 'operations' batch that removes or shortens (replace) stale entries from current_entries below to free at least 153 chars AND adds this entry — the limit is checked only on the batch result.",
+  "error": "Memory at 2,100/2,200 chars; adding this entry (250 chars) would exceed the limit by 153 chars. Retry as ONE 'operations' batch that removes or shortens (patch) stale entries from current_entries below to free at least 153 chars AND adds this entry — the limit is checked only on the batch result.",
   "current_entries": ["..."],
   "usage": "2,100/2,200"
 }
 ```
 
-エージェントはそのあと、示された文字数以上を空け（項目を消すか、`replace` でより短くします）、
+エージェントはそのあと、示された文字数以上を空け（項目を消すか、`patch` で短くします）、
 新しい項目も足す `operations` のバッチを1つにまとめて出し直します。上限が確かめられるのは、
-バッチを最後まで当てた結果に対してだけです。`old_text` がどの項目にも当たらない `replace`/`remove` も
+バッチを最後まで当てた結果に対してだけです。`old_text` がどの項目にも当たらない `patch`/`remove` も
 同じように失敗し、いちばん近い項目が `closest_entries` に入って返ります。
 
 **うまいやり方:** 記憶が容量の 80% を超えたら（システムプロンプトの見出しで分かります）、新しいものを足す前に項目をまとめてください。たとえば「この案件は X を使う」という3つの別々の項目を、案件全体を言い表す1つの項目にまとめます。
@@ -316,7 +334,7 @@ memory:
 
 これが「エージェントが自分について間違った思い込みを保存した」への答えです。`write_approval: true` にしておけば、すべての保存 — とりわけ頼んでいない裏側からのもの — が、人物像に入る前にこちらの可否を待ちます。
 
-下書きに回った `replace` や `remove`（裏側の見直しは、関門が切れていてもこれらを下書きに回します）は、対象の項目の全文を記録し、`/memory pending` でそれを表示します。承認が適用されるのはまさにその項目だけです。書き込みが下書きに回ったあとでその項目が変わっていたら、書き込みは断られ、却下できるよう保留のまま残ります。この固定の仕組みができる前に下書きに回った `replace`/`remove` には確かめられる対象が無いので、これも断られます。却下してから、変更を作り直してください。`/memory approve` は、上書きしたり消したりしたすべての項目の全文を並べて示します。
+下書きに回った `patch` や `remove`（裏側の見直しは、関門が切れていてもこれらを下書きに回します）は、対象の項目の全文を記録し、`/memory pending` でそれを表示します。承認が適用されるのはまさにその項目だけです。書き込みが下書きに回ったあとでその項目が変わっていたら、書き込みは断られ、却下できるよう保留のまま残ります。この固定の仕組みができる前に下書きに回った `replace`/`patch`/`remove` には確かめられる対象が無いので、これも断られます。却下してから、変更を作り直してください。`/memory approve` は、上書きしたり消したりしたすべての項目の全文を並べて示します。
 
 ## 裏側の見直しの知らせ（`display.memory_notifications`） {#background-review-notifications-displaymemorynotifications}
 

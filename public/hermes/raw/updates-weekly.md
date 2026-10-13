@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-10-13、対象期間 = 2026-10-07 〜 2026-10-13（JST）
+生成日 = 2026-10-14、対象期間 = 2026-10-08 〜 2026-10-14（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,10 +16,23 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-10-13 [オブザーバーフック](https://wiki.winsmux.dev/hermes/docs/developer-guide/observer-hooks/)
+- 2026-10-13 [プラグインカタログへの登録申請](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
+- 2026-10-13 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- 2026-10-13 [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- 2026-10-13 [公開されたサブエージェントのライフサイクル API](https://wiki.winsmux.dev/hermes/docs/developer-guide/subagent-lifecycle-api/)
+- 2026-10-13 [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- 2026-10-13 [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
+- 2026-10-13 [プロファイルのコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/profile-commands/)
+- 2026-10-13 [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
+- 2026-10-13 [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
+- 2026-10-13 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- 2026-10-13 [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
+- 2026-10-13 [同梱のプラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/built-in-plugins/)
+- 2026-10-13 [ツール検索](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-search/)
 - 2026-10-12 [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
 - 2026-10-12 [コントリビュート](https://wiki.winsmux.dev/hermes/docs/developer-guide/contributing/)
 - 2026-10-12 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
-- 2026-10-12 [プラグインカタログへの登録申請](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
 - 2026-10-12 [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
 - 2026-10-12 [プロンプトの組み立て](https://wiki.winsmux.dev/hermes/docs/developer-guide/prompt-assembly/)
 - 2026-10-12 [セッションの保存領域](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
@@ -30,24 +43,19 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-12 [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
 - 2026-10-12 [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
 - 2026-10-12 [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
-- 2026-10-12 [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
 - 2026-10-12 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
 - 2026-10-12 [記憶プロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
 - 2026-10-12 [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
 - 2026-10-12 [機能の概要](https://wiki.winsmux.dev/hermes/docs/user-guide/features/overview/)
 - 2026-10-12 [Spotify](https://wiki.winsmux.dev/hermes/docs/user-guide/features/spotify/)
 - 2026-10-12 [Nous Tool Gateway](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-gateway/)
-- 2026-10-12 [ツール検索](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-search/)
 - 2026-10-12 [Home Assistant](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/homeassistant/)
 - 2026-10-12 [Anatomy — 考えを、操作できるアイソメトリックの機械の図で説明する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-anatomy/)
 - 2026-10-12 [TUI](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
 - 2026-10-11 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
 - 2026-10-11 [スキルを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/creating-skills/)
 - 2026-10-11 [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
-- 2026-10-11 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
-- 2026-10-11 [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
 - 2026-10-11 [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
-- 2026-10-11 [同梱のプラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/built-in-plugins/)
 - 2026-10-11 [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
 - 2026-10-11 [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
 - 2026-10-10 [ブラウザの CDP スーパーバイザ](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-supervisor/)
@@ -58,18 +66,16 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-10 [ローカルモデル](https://wiki.winsmux.dev/hermes/docs/user-guide/local-models/)
 - 2026-10-10 [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
 - 2026-10-09 [developer-guide/onboarding-recommendations](https://wiki.winsmux.dev/hermes/docs/developer-guide/onboarding-recommendations/)
-- 2026-10-09 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - 2026-10-09 [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
 - 2026-10-09 [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
 - 2026-10-09 [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
 - 2026-10-09 [プラグインカタログ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
 - 2026-10-09 [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
-- 2026-10-09 [First Task — セットアップから引き継いだ最初のタスクのチャットを進める](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-first-task/)
-- 2026-10-09 [Initiate Setup — Hermes デスクトップアプリで初回セットアップのチャットを進める](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-initiate-setup/)
+- 2026-10-09 [user-guide/skills/optional/productivity/productivity-first-task](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-first-task/)
+- 2026-10-09 [user-guide/skills/optional/productivity/productivity-initiate-setup](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-initiate-setup/)
 - 2026-10-08 [Chronos managed-cron の契約](https://wiki.winsmux.dev/hermes/docs/developer-guide/chronos-managed-cron-contract/)
 - 2026-10-08 [インストール](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
 - 2026-10-08 [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
-- 2026-10-08 [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
 - 2026-10-08 [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
 - 2026-10-08 [キュレーター](https://wiki.winsmux.dev/hermes/docs/user-guide/features/curator/)
 - 2026-10-08 [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
@@ -77,18 +83,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-08 [音声モード](https://wiki.winsmux.dev/hermes/docs/user-guide/features/voice-mode/)
 - 2026-10-08 [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
 - 2026-10-08 [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
-- 2026-10-07 [CLI の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cli-internals/)
-- 2026-10-07 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
-- 2026-10-07 [プラグインからの LLM 呼び出し](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugin-llm-access/)
-- 2026-10-07 [アプリケーション宣言](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/application-declarations/)
-- 2026-10-07 [ソース版の更新の仕上げを誰が受け持つか](https://wiki.winsmux.dev/hermes/docs/developer-guide/source-update-completion/)
-- 2026-10-07 [ストリーミング TTS の内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/streaming-tts/)
-- 2026-10-07 [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
-- 2026-10-07 [AWS Bedrock](https://wiki.winsmux.dev/hermes/docs/guides/aws-bedrock/)
-- 2026-10-07 [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
-- 2026-10-07 [コンピュータ操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/computer-use/)
-- 2026-10-07 [Web 検索と本文抽出](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-search/)
-- 2026-10-07 [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
 
 ## 週次まとめ
 

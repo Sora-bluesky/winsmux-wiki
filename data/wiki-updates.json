@@ -1,6 +1,83 @@
 {
-  "generatedAt": "2026-10-13",
+  "generatedAt": "2026-10-14",
   "entries": [
+    {
+      "date": "2026-10-13",
+      "sha": "3771fc7",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/observer-hooks",
+          "title": "オブザーバーフック",
+          "url": "/hermes/docs/developer-guide/observer-hooks/"
+        },
+        {
+          "id": "developer-guide/plugins/catalog-submission",
+          "title": "プラグインカタログへの登録申請",
+          "url": "/hermes/docs/developer-guide/plugins/catalog-submission/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "developer-guide/subagent-lifecycle-api",
+          "title": "公開されたサブエージェントのライフサイクル API",
+          "url": "/hermes/docs/developer-guide/subagent-lifecycle-api/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "reference/profile-commands",
+          "title": "プロファイルのコマンド早見表",
+          "url": "/hermes/docs/reference/profile-commands/"
+        },
+        {
+          "id": "reference/toolsets-reference",
+          "title": "ツールセット一覧",
+          "url": "/hermes/docs/reference/toolsets-reference/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/configuring-models",
+          "title": "モデルの設定",
+          "url": "/hermes/docs/user-guide/configuring-models/"
+        },
+        {
+          "id": "user-guide/features/built-in-plugins",
+          "title": "同梱のプラグイン",
+          "url": "/hermes/docs/user-guide/features/built-in-plugins/"
+        },
+        {
+          "id": "user-guide/features/tool-search",
+          "title": "ツール検索",
+          "url": "/hermes/docs/user-guide/features/tool-search/"
+        }
+      ]
+    },
     {
       "date": "2026-10-12",
       "sha": "d69a534",
@@ -404,12 +481,12 @@
         },
         {
           "id": "user-guide/skills/optional/productivity/productivity-first-task",
-          "title": "First Task — セットアップから引き継いだ最初のタスクのチャットを進める",
+          "title": "user-guide/skills/optional/productivity/productivity-first-task",
           "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-first-task/"
         },
         {
           "id": "user-guide/skills/optional/productivity/productivity-initiate-setup",
-          "title": "Initiate Setup — Hermes デスクトップアプリで初回セットアップのチャットを進める",
+          "title": "user-guide/skills/optional/productivity/productivity-initiate-setup",
           "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-initiate-setup/"
         }
       ]

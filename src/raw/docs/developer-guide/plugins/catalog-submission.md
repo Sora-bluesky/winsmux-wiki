@@ -2,7 +2,7 @@
 title: "プラグインカタログへの登録申請"
 description: "Hermes プラグインカタログの登録ガイドライン全文です。申請前に確かめること、すべての掲載項目が従うルール、レビュアーが見る点をまとめています"
 upstream_path: developer-guide/plugins/catalog-submission.md
-upstream_blob: df43fb33213cbd9a0aebd773ff689aabe4a73504
+upstream_blob: 61864aa0d79e7c1ce4d389a11c6de14b4828b907
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission
 ---
@@ -133,8 +133,8 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
    `exclude-newer` による公開からの経過日数の検査が対象にするのは、Hermes 自身の依存関係だけで、
    それも Hermes が依存関係をロックする時点に限られます。プラグインの
    `python_dependencies` / `pyproject.toml` は、プラグイン側の方針でインストールされます
-   （公開からの経過日数の検査はありません）。Hermes 自身がロックしているパッケージは Hermes がロックした
-   バージョンのまま保たれるため、プラグインがそのパッケージの別のバージョンを要求することはできません。レビュアーは
+   （公開からの経過日数の検査はありません）。ただし、Hermes 本体の制約の範囲内です。Hermes が厳密に固定した
+   バージョンは動かせません。レビュアーは
    固定した SHA での依存関係の一覧を読みます。下限だけの指定（上限の無い `>=X`）や、
    最新リリースを下限にした指定には、API 互換を保てる最も古い下限と上限を付けるよう
    依頼します。また作者には、自分でもリリースの隔離期間を設けること（CI で `uv --exclude-newer` を使う）

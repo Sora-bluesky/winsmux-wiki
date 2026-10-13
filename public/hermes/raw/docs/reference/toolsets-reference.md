@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ツールセット一覧"
 description: "Hermes の中核・複合・プラットフォーム・動的の各ツールセットをまとめた一覧です。"
 upstream_path: reference/toolsets-reference.md
-upstream_blob: 57cb2791b1f7513f7af21f32b7fa10a5ad235304
+upstream_blob: 330c0537c1d229244f15687e057ee54163ab83c0
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 ---
@@ -75,14 +75,12 @@ hermes tools                            # curses UI to enable/disable per platfo
 | `video_gen` | `video_generate`, `xai_video_edit`, `xai_video_extend` | プラグインが登録した基盤（xAI Grok-Imagine、FAL.ai の Veo 3.1／Pixverse v6／Kling 3.0／Kling O3）を使い、文章や画像から動画を作ります。画像を動かしたいときは `image_url` を渡し、文章から作るときは省きます。`xai_video_edit` と `xai_video_extend` は提供元に固有の編集・延長のツールで、xAI Imagine の資格情報があるときだけ使えます。 |
 | `kanban` | `kanban_attach`, `kanban_attach_url`, `kanban_attachments`, `kanban_block`, `kanban_comment`, `kanban_complete`, `kanban_create`, `kanban_heartbeat`, `kanban_link`, `kanban_list`, `kanban_request_changes`, `kanban_request_review`, `kanban_show`, `kanban_unblock` | 複数のエージェントで足並みをそろえるためのツールです。差配役が起こした作業係（`HERMES_KANBAN_TASK`）と、保存済みの選択に `kanban` が含まれるプラットフォームに登録されます（`hermes tools enable kanban --platform <p>`。`all`／`*` のまとめ指定では**有効になりません**）。作業係は仕事を終わりにする、正式な見直しを頼む、止まっていると伝える、生きていると知らせる、コメントする、続きの仕事を作ってつなげる、といったことができます。差配側のプロファイルには、これに加えて一覧や止め解除といった板を回すためのツールが付きます。`delegate_task` で生まれた子は板の持ち主にはなりません。子の側ではこのツールセットが定義から外されて無効になり、親から `HERMES_KANBAN_*` の環境変数が渡っていても、板を直に書き換える操作は実行時に弾かれます。 |
 | `memory` | `memory` | セッションをまたいで残る記憶の管理です。 |
-| `desktop_ui` | `annotate_preview`, `apply_layout`, `close_terminal`, `desktop_preview`, `drive_preview`, `focus_pane`, `gui_tour`, `react_to_message`, `read_terminal`, `read_window_below`, `show_tip` | Hermes のデスクトップアプリそのものに働きかける機能です。組み込みの端末ペインを読む・閉じる、アプリ内のブラウザを開く・読む・閉じる・操作する・書き込みを添える、アプリの背後にある OS の窓を見分ける、ペインを表に出す、メッセージにリアクションを付ける、案内を流す（アプリや下見のペインで画面の要素を光らせながら説明する）、画面の割り付けをあらかじめ用意した形に切り替える、といったことができます。デスクトップアプリから始まったセッションで有効になり、つなぎ先が手元でも SSH でも URL でも Hermes Cloud でも変わりません。CLI、TUI、メッセージ、定時実行のセッションには決して現れません。 |
+| `desktop_ui` | `annotate_preview`, `close_terminal`, `desktop_preview`, `drive_preview`, `focus_pane`, `gui_tour`, `react_to_message`, `read_terminal`, `read_window_below`, `set_theme`, `show_tip` | Hermes のデスクトップアプリそのものに働きかける機能です。組み込みの端末ペインを読む・閉じる、アプリ内のブラウザを開く・読む・閉じる・操作する・書き込みを添える、アプリの背後にある OS の窓を見分ける、ペインを表に出す、メッセージにリアクションを付ける、案内を流す（アプリや下見のペインで画面の要素を光らせながら説明する）、アクセントカラー、ライト / ダークの表示モード、画面の割り付けを設定する（または利用者が選ぶためのカードを出す）、といったことができます。デスクトップアプリから始まったセッションで有効になり、つなぎ先が手元でも SSH でも URL でも Hermes Cloud でも変わりません。CLI、TUI、メッセージ、定時実行のセッションには決して現れません。 |
 | `project` | `desktop_project` | デスクトップの[プロジェクト](/hermes/docs/user-guide/cli/)（名前を付けた、複数のフォルダーをまとめた作業場）を、`create`／`switch`／`list` の動作を選ぶひとつの道具で作って切り替えます。画面のある、デスクトップのセッション専用です。 |
 | `catalog` | `manage_catalog` | プラグインカタログとスキルハブを検索し、承認カードを通して、このチャットのプロファイルに項目をインストールします。デスクトップアプリから始まったセッションで有効になり、つなぎ先が手元でも SSH でも URL でも Hermes Cloud でも変わりません。CLI、TUI、メッセージ、定時実行のセッションには、設定のリストで名前が挙がっていても決して現れません。`all` には含まれません。既定では `tool_search` の後ろに控えています。外すには `agent.disabled_toolsets: [catalog]` を指定します。 |
 | `safe` | `image_generate`, `vision_analyze`, `web_extract`, `web_search` (via `includes`) | 読むだけの調べものと、素材づくりです。ファイルへの書き込みも、端末も、コードの実行もありません。 |
 | `search` | `web_search` | web の検索だけです（抜き出しは付きません）。 |
 | `session_search` | `session_search` | 過去のやりとりのセッションを探します。 |
-| `setup` | `setup_choose` | デスクトップのセットアップ用プロファイルで、オンボーディングのときだけ使う機能です。質問や選択式のカードを 1 枚ずつ利用者に示します。セットアップ用プロファイル自身の設定（`platform_toolsets.cli`）で有効になり、このツールが渡されるのはデスクトップのセッションだけです。`all` には含まれません。`hermes tools` の一覧にも出ません。 |
-| `start_chat` | `start_chat` | 既存のプロファイル（指定がなければこのチャット自身のプロファイル）でデスクトップの新しいチャットを始め、最初のメッセージを送ります。タスクはそのチャットで、利用者の目に見える形で進みます。呼ぶたびに別のチャットが開きます。プロファイル自身の設定（`platform_toolsets.cli`）で有効になり、このツールが渡されるのはデスクトップのセッションだけです。`all` には含まれません。`hermes tools` の一覧にも出ません。サブエージェントには渡りません。 |
 | `skills` | `skill_manage`, `skill_view`, `skills_list` | スキルの作成・閲覧・更新・削除と、見て回る操作です。 |
 | `terminal` | `process_manage`, `terminal` | シェルのコマンドの実行と、裏で動くプロセスの管理です。 |
 | `todo` | `todo_list` | セッションの中でやることの一覧を扱います。 |
