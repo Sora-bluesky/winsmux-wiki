@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ローカルモデル"
 description: "モデルを自分の端末だけで動かします。アカウントも API キーも不要で、何も端末の外には出ません。"
 upstream_path: user-guide/local-models.md
-upstream_blob: 5674e265d281d5fcd0fcf3f5cce48da6b757af53
+upstream_blob: fcf5460c6c42d24b30ab0b15935a4bf3c3ebc548
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/local-models
 ---
@@ -21,8 +21,9 @@ Hermes はオープンなモデルを、自分の端末のなかだけで動か�
 
 ## デスクトップでの提供状況とダウンロード {#desktop-availability-and-downloads}
 
-デスクトップの Local Models 画面は、canary ビルドで有効になっています。それ以外の
-デスクトップのビルドでは、起動時に `--local` フラグが必要です。ランタイムは最初から
+Local Models は、macOS・Windows・Linux（x64 と arm64）のデスクトップアプリでは、どのリリースの
+チャンネルでも最初から有効です。それ以外のプラットフォームでは、アプリを `--local` 付きで起動すると
+表示されます。ランタイムは最初から
 同梱されていることがあります。同梱されていない場合は、管理ツールのインストール経路に進みます。
 llama.cpp の最新版を適当にダウンロードすることはありません。
 

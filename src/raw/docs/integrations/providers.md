@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 17c3a2f62cf4aff51d90a0e691986f83b0351ac7
+upstream_blob: 7e85f0bea90d18ba075a2a414ff7304292c0db48
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -564,29 +564,54 @@ model:
 
 ### NVIDIA NIM {#nvidia-nim}
 
-Nemotron をはじめとするオープンソースのモデルを、[build.nvidia.com](https://build.nvidia.com)（無料の API キー）またはローカルの NIM エンドポイント経由で使えます。
+NVIDIA NIM プロバイダを使うと、Nemotron をはじめとするオープンソースのモデルを、NVIDIA がホストするサービスまたはローカルの NIM エンドポイント経由で使えます。ホスト型エンドポイントのモデル識別子と、ローカルへの導入手順は [build.nvidia.com/models](https://build.nvidia.com/models) にまとまっています。
+
+:::note 以下の例では Nemotron 3.5 Super VL を使います。テキストと画像の入力、推論、ツール呼び出しに対応したモデルです。
+
+#### クラウド（build.nvidia.com） {#cloud-buildnvidiacom}
+
+[build.nvidia.com/settings/api-keys](https://build.nvidia.com/settings/api-keys) でアカウントと無料の API キーを作成し、`~/.hermes/.env` に追加します。
 
 ```bash
-# Cloud (build.nvidia.com)
-hermes chat --provider nvidia --model nvidia/nemotron-3-super-120b-a12b
-# Requires: NVIDIA_API_KEY in ~/.hermes/.env
-
-# Local NIM endpoint — override base URL
-NVIDIA_BASE_URL=http://localhost:8000/v1 hermes chat --provider nvidia --model nvidia/nemotron-3-super-120b-a12b
+NVIDIA_API_KEY=nvapi-...
 ```
 
-`config.yaml` で恒久的に設定する場合は次のとおりです。
+続いてチャットを開始します。
+
+```bash
+hermes chat --provider nvidia --model nvidia/nemotron-3.5-super-vl-120b-a12b
+```
+
+:::note Hermes は `build.nvidia.com` へのリクエストに NIM の課金オリジンのヘッダを自動で付けます。これにより、消費が NVIDIA の課金ダッシュボードで正しいオリジンに計上されます。追加の設定は不要です。
+
+#### ローカルの NIM {#local-nim}
+
+DGX Spark、DGX Station、手元の GPU などのローカル環境やオンプレミスで運用する場合は、`~/.hermes/.env` で `NVIDIA_BASE_URL` に NIM のエンドポイントを設定します。
+
+```bash
+NVIDIA_API_KEY=local-no-auth
+NVIDIA_BASE_URL=http://localhost:8000/v1
+```
+
+:::note エンドポイントが認証を必要としない場合は、プレースホルダとして `local-no-auth` を指定します。認証が必要な場合は、そのエンドポイントの API キーを指定してください。
+
+続いて、エンドポイントが提供しているモデルを指定してチャットを開始します。
+
+```bash
+hermes chat --provider nvidia --model nvidia/nemotron-3.5-super-vl-120b-a12b
+```
+
+ローカルの NIM エンドポイントは、NVIDIA のホスト型サービスと同じ OpenAI 互換のチャット補完 API を提供します。エンドポイントを切り替えるときは `NVIDIA_BASE_URL` を書き換え、必要に応じて API キーとモデル名も合わせてください。
+
+#### 既定のモデルを設定する {#set-the-default-model}
+
+どちらの運用でも、プロバイダとモデル識別子を `config.yaml` に保存しておけば、起動のたびに指定する必要がなくなります。
+
 ```yaml
 model:
   provider: "nvidia"
-  default: "nvidia/nemotron-3-super-120b-a12b"
+  default: "nvidia/nemotron-3.5-super-vl-120b-a12b"
 ```
-
-:::tip ローカルの NIM
-オンプレミスでの運用（DGX Spark、手元の GPU）では `NVIDIA_BASE_URL=http://localhost:8000/v1` を設定します。NIM は build.nvidia.com と同じ OpenAI 互換のチャット補完 API を提供するので、クラウドとローカルの切り替えは環境変数 1 行の変更で済みます。
-:::
-
-Hermes は `build.nvidia.com` への全リクエストに NIM の課金オリジンのヘッダを自動で付けます。設定は不要です。これにより、消費が NVIDIA の課金ダッシュボードで正しいオリジンに計上されます。
 
 ### GMI Cloud {#gmi-cloud}
 

@@ -4,14 +4,14 @@ description: 公式 docs の全 URL の索引。正本は公式。
 sources:
   - https://hermes-agent.nousresearch.com/docs/
   - https://hermes-agent.nousresearch.com/docs/llms.txt
-hermes_version: "0.21.7"
+hermes_version: "0.22.0"
 confidence: high
 raw: /hermes/raw/all.md
 ---
 
 # すべて
 
-公式 docs の全ページ（239 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（243 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -207,7 +207,7 @@ raw: /hermes/raw/all.md
 - [Automated GitHub PR Comments with Webhooks](/hermes/docs/guides/webhook-github-pr-review/)
 - [xAI Grok OAuth (SuperGrok / X Premium+)](/hermes/docs/guides/xai-grok-oauth/)
 
-## Developer Guide（56）
+## Developer Guide（60）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -234,8 +234,12 @@ raw: /hermes/raw/all.md
 - [Cron Internals](/hermes/docs/developer-guide/cron-internals/)
 - [Desktop Plugin SDK (@hermes/plugin-sdk)](/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - [Egress proxy internals](/hermes/docs/developer-guide/egress-internals/)
+- [Classic gateway client](/hermes/docs/developer-guide/gateway-classic-cli/)
+- [Gateway command parity](/hermes/docs/developer-guide/gateway-command-parity/)
+- [Gateway local sessions](/hermes/docs/developer-guide/gateway-local-sessions/)
 - [Gateway Monitoring](/hermes/docs/developer-guide/gateway-monitoring/)
 - [Gateway Session Lifecycle](/hermes/docs/developer-guide/gateway-session-lifecycle/)
+- [Hosted rooms across local profile owners](/hermes/docs/developer-guide/hosted-profile-owners/)
 - [Image Generation Provider Plugins](/hermes/docs/developer-guide/image-gen-provider-plugin/)
 - [macOS bundle updates](/hermes/docs/developer-guide/macos-bundle-updates/)
 - [Memory Provider Plugins](/hermes/docs/developer-guide/memory-provider-plugin/)

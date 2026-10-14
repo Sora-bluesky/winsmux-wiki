@@ -2,7 +2,7 @@
 
 > 公式 docs の Quickstart / Installation / Messaging の順を日本語にしたもの。独自手順は作らない。正本: https://hermes-agent.nousresearch.com/docs/
 
-Hermes Agent 0.21.7
+Hermes Agent 0.22.0
 
 ## ページ
 
@@ -64,9 +64,13 @@ Hermes Agent 0.21.7
 - [developer-guide/desktop-plugin-sdk（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - [developer-guide/egress-internals（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/egress-internals/)
 - [developer-guide/extending-the-cli（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/extending-the-cli/)
+- [developer-guide/gateway-classic-cli（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
+- [developer-guide/gateway-command-parity（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
 - [developer-guide/gateway-internals（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- [developer-guide/gateway-local-sessions（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
 - [developer-guide/gateway-monitoring（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-monitoring/)
 - [developer-guide/gateway-session-lifecycle（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-session-lifecycle/)
+- [developer-guide/hosted-profile-owners（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/hosted-profile-owners/)
 - [developer-guide/image-gen-provider-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/image-gen-provider-plugin/)
 - [developer-guide/macos-bundle-updates（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/macos-bundle-updates/)
 - [developer-guide/memory-provider-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
@@ -532,9 +536,13 @@ Hermes Agent 0.21.7
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/desktop-plugin-sdk.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/egress-internals.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/extending-the-cli.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-classic-cli.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-command-parity.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-internals.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-local-sessions.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-monitoring.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-session-lifecycle.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/hosted-profile-owners.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/image-gen-provider-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/macos-bundle-updates.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/memory-provider-plugin.md

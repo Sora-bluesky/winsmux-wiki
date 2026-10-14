@@ -2,7 +2,7 @@
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: d58a7181a36862e184e8a5551601f3ae4f5a807e
+upstream_blob: 4beb11eb8a1cc9fc88e5a87db80b062a013fe3c6
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -22,22 +22,26 @@ sources:
 1. `origin/main` と、リモートの試行 ref・マーカー ref（`rc.*` と
    `abandoned-rc.*`）を最新にします。次の SemVer は、`0.21.5`（旧来の CalVer による最後のリリース、v2026.9.24）を起点とする公開済みリリース系列だけから
    導きます。基準は、保護された R2 の安定版 head と、`vX.Y.Z` タグを持つ最新の公開済み非プレリリース
-   GitHub リリースのうち、新しいほうです。バンドルを省いたリリースが動かすのは後者だけです。
+   GitHub リリースのうち、新しいほうです。デスクトップパッケージを1つもビルドしないリリースが動かすのは後者だけです。
    試行はバージョン系列を動かしません。次のバージョンにすでに最終 `vX.Y.Z` タグがある場合、
    その公開が終わるまで切り出しは拒否されます。
 2. 注釈付きの `rc.<N>-vX.Y.Z` 試行 ref をアトミックに push し、その上に非プレリリースの
-   GitHub ドラフトを1つ作り、まさにその ref で `Stable Release` を起動します。試行番号は、
+   GitHub ドラフトを1つ作り、既定ブランチから、その ref を `tag` 入力に指定して `Stable Release` を起動します。試行番号は、
    そのバージョンの既存の試行 ref から決まります。
    クレームのメッセージには、コミット、試行番号、自動公開ポリシー、
-   `skipBundles`、`skipTests`、`includeMacosIntel`、`includeTermux` のフラグ、そして
+   レーンの組（[レーン](#lanes)を参照）、そして
    単調増加で割り当てられるエポック1つが結び付けられます。このエポックがリリース日となり、
    すべてのマトリクス系統と再試行でのネイティブパッケージングの時刻になります。
    未解決の試行が1つでもあれば、バージョンを問わず新しい `release` はブロックされます。
-3. リモートの注釈付きタグオブジェクトの SHA、剥がした先のコミット、`GITHUB_REF`、
-   `GITHUB_SHA`、チェックアウトした `HEAD`、そして `origin/main` 上の祖先関係が一致するものだけを受け入れます。
-4. ソース、Docker、Nix、PM バンドル、インストール/更新、Windows、
-   署名済みパッケージ、ネイティブアップグレードの受け入れグラフ全体を実行します（クレームでオプトインした場合は、
-   macOS Intel と Termux も加わります）。
+3. リモートの注釈付きタグオブジェクトの SHA、剥がした先のコミット、そしてそのコミットの
+   `origin/main` 上の祖先関係が一致するものだけを受け入れます。実行そのものは、既定ブランチから起動した
+   `Stable Release` でなければなりません。ワークフローとリリース用スクリプトは `main` のものを使うので、
+   Actions のキャッシュは試行をまたいで1つのスコープを共有します。`GITHUB_SHA` は `main` の先端であり、
+   テスト対象のコミットではありません。配布物をテストまたはビルドするレーンには、すべて受け入れたコミットが渡されます。
+   これは `tests/ci/test_stable_release_commit_threading.py` にあるコミット受け渡しの lint が強制します。
+4. クレームに記録されたレーンを実行します。既定では、ソース、Docker、Nix、PM バンドル、
+   インストール/更新、Windows、署名済みパッケージ、ネイティブアップグレードの受け入れグラフ全体で、
+   macOS Intel と Termux は含みません。
 5. テスト済みのバイト列から、バージョン付きで変更不可の Docker と R2 の成果物を push します。
    Docker イメージは自身のテストが通った時点で、試行 ref をタグにして push されます。
    `stable` や `latest` のエイリアスはまだ動かさず、公開のために再ビルドもしません。
@@ -101,99 +105,94 @@ URL、`abandon` コマンド、再実行コマンドを表示します。対話�
 付けない場合は、明示的に公開するか、あとからテストが通ったクレームが順序どおりの解決を強制するまで、
 リリースはドラフトのままです。
 
-### バンドルやテストを省く {#skip-bundles-or-tests}
+### レーン {#lanes}
 
-`release` の2つのフラグで、パイプラインの一部を外せます。両方を同時に使うこともでき、
-`--autopublish` とも組み合わせられます。
+安定版リリースは、レーンの組でできています。ビルドレーンは利用者の手に届くものを作り、
+テストレーンはリリースの関門となるテストスイートです。`release` は既定の組から始めて、それを編集します:
 
 ```sh
-# Tag, GitHub release and Docker image only
-python scripts/release.py release --commit "$(git rev-parse origin/main)" --skip-bundles --remote origin
-# Emergency release: build and publish everything, run no tests
-python scripts/release.py release --commit "$(git rev-parse origin/main)" --skip-tests --remote origin
+# The default: everything except macOS Intel and Termux
+python scripts/release.py release --commit "$(git rev-parse origin/main)" --remote origin
+# Only the signed Windows bundles and the Docker image, no tests
+python scripts/release.py release --commit "$(git rev-parse origin/main)" --only windows,docker --remote origin
+# Everything except the signed Windows pipeline (the Store bundle still builds and is submitted)
+python scripts/release.py release --commit "$(git rev-parse origin/main)" --without windows --remote origin
+# Only the Store bundle: no Azure signing anywhere
+python scripts/release.py release --commit "$(git rev-parse origin/main)" --only windows-store --remote origin
+# Everything, plus macOS Intel, without the install/update E2E
+python scripts/release.py release --commit "$(git rev-parse origin/main)" --with macos-intel --without install-e2e --remote origin
 ```
 
-| | `--skip-bundles` | `--skip-tests` |
+`--only` は既定の組を置き換え、`--with` はレーンを加え、`--without`
+はレーンを外します。どれもカンマ区切りの名前を受け取り、繰り返し指定できます。`release --help`
+を実行すると、すべてのレーンが表示されます。
+
+| レーン | 既定 | 何を制御するか |
 |---|---|---|
-| ソース CI（`ci.yaml`）、Nix、Termux、Windows 実機、インストール/更新 E2E、ブートストラップの識別情報 | 実行 | 省略 |
-| Docker イメージ | ビルド・テスト・公開 | ビルドして公開、`tests/docker` は省略 |
-| ネイティブ PM バンドルの確認 | 省略 | 省略 |
-| デスクトップと Termux の候補 | 省略 | ビルド・署名・ステージングする。ネイティブのスモークテストとビルド内テストスイートは無し |
-| 署名済みパッケージのアップグレード受け入れ（`transitions-*`、`*-packaged`） | 省略 | 省略 |
-| 公開 | 最終タグ、GitHub リリース、Docker の `stable`/`latest` エイリアス | 通常のリリースと同じくすべて |
+| `docker` | オン | Docker イメージのビルドと公開 |
+| `windows` | オン | 署名済みの Windows x64・arm64 の MSIX とユニバーサルバンドル。更新チャンネルに使われます |
+| `windows-store` | オン | 署名なしの Microsoft Store バンドル。Partner Center に提出されます（Azure の署名は不要） |
+| `macos-arm64` | オン | macOS Apple Silicon の DMG と ZIP |
+| `macos-intel` | オフ | macOS Intel の DMG と ZIP。`main` では対応しておらず、そのランナーだけで1時間以上かかります |
+| `termux` | オフ | Termux（Android aarch64）の APT パッケージ |
+| `ci`, `nix`, `docker-tests`, `pm-bundle`, `windows-live`, `install-e2e`, `bootstrap-version` | オン | 単独のテストスイート |
+| `termux-checks` | オン | Termux の検証。`termux` がオンのときだけ実行されます |
+| `smoke` | オン | ビルドした各デスクトップパッケージのネイティブインストールとチャットのスモークテスト |
+| `upgrade` | オン | ビルドした各デスクトップパッケージの、署名済みパッケージのアップグレード受け入れ（OLD から NEW へ） |
 
-フラグはクレームのメッセージに書き込まれ、ワークフローの入力として渡されることはありません。
-`admit` がクレームから読み取り、`skip-bundles` と
-`skip-tests` を出力します。すべてのジョブ条件とすべての関門がその出力を読みます。
-復旧のための再実行でフラグを変えることはできません。フラグを変えるには、試行を `abandon` して
-切り出し直してください。
+レーンは互いに独立したスイッチです。ジョブは、必要なレーンがすべてオンのときだけ実行されます
+（`scripts/releases/lanes.py` の `JOB_LANES`）。そのため、ビルドされないものに対するテストレーンは何もしません。
+たとえば `macos-arm64` がオフのとき、`upgrade` は macOS の
+アップグレード系統を計画しません。
 
-関門は厳格なままです。`scripts.releases.stable gate` はフラグを読み、
-フラグが外すジョブにはすべて `skipped` の報告を、それ以外の関門対象
-ジョブにはすべて `success` の報告を求めます。フラグが外すはずのジョブが実行された場合も、
-リリースはブロックされます。どのフラグがどのジョブを外すかの表は、`scripts/releases/stable.py` の `SKIPPED_BY`
-ただ1つです。
+レーンの組はクレームのメッセージに書き込まれ（`"lanes": [...]`）、ワークフローの入力として渡されることはありません。
+`admit` がクレームからそれを読み取り、2つの出力を出します。
+`lanes`（レーンごとに1つのフラグ）と `jobs`（レーンが制御するジョブごとに1つの実行フラグ）です。
+そうしたジョブの `if` は、どれも自分の `jobs` の項目を読みます。何が実行されるかを決めるのは、レーンの表だけです。
+復旧のための再実行でそれを変えることはできません。レーンを変えるには、
+試行を `abandon` して切り出し直してください。
 
-**`--skip-bundles`。** ドラフト、Docker イメージ、最終タグ、GitHub リリースがリリースのすべてです。
-候補マニフェストは存在しないので、最終タグには
-`candidateManifestSha256: null` が記録されます。公開で動くのは Docker のエイリアスだけです。
-保護された R2 の安定版 head、App Installer と macOS のフィード、APT チャンネル、
-ダウンロードページ、`releases/stable/release-candidates.json`、署名済みパッケージの
-基準、Store への提出は、すべて前回のバンドル付きリリースのままです。公式リポジトリの
-ソースチェックアウトは
-`releases/stable/release-candidates.json` に従うので、これも前回の
-バンドル付きリリースのままになります。このリリースは、Docker の `stable` エイリアスが
-最終タグに結び付いたダイジェストを指した時点で完了です。シーケンサーは、R2 の head と並べてこのエイリアスを見て、
-どのリリースにまだ公開処理が必要かを判断します。
+関門は厳格なままです。`scripts.releases.stable gate` はレーンを読み、
+レーンが外すジョブにはすべて `skipped` の報告を、それ以外の関門対象ジョブにはすべて
+`success` の報告を求めます。レーンが外すはずのジョブが実行された場合も、
+リリースはブロックされます。レーンができる前に切り出したクレーム（`skipBundles`、`skipTests`、
+`includeMacosIntel`、`includeTermux`）は、同じジョブを関門としていたレーンの組として読まれます。
+`lanesRevision` を持たないクレームは、`windows` が Store
+バンドルも意味していた時期に切り出されたものなので、その `windows` は `windows` と `windows-store` の両方として読まれます。
 
-**`--skip-tests`。** すべての成果物が、通常のリリースと同じ方法でビルド・署名・ステージング・公開されます。
-候補マニフェストには、ネイティブのスモークテストがそれぞれ
-`skipped` として記録され、合格とは記録されません。次のリリースは、ほかと同じくこのマニフェストを
-アップグレードの基準に使います。クレームを知っているすべての読み手（`complete`
-と保護された R2 の前進処理）は、スモークテストの結果がクレームの `skipTests` フラグと食い違う
-マニフェストを拒否します。緊急の修正にだけ使い、そのあとに通常のリリースを切り出してください。
+リリースが公開するものは、ビルドしたものに従います:
 
-### macOS Intel と Termux はオプトイン {#macos-intel-and-termux-are-opt-in}
+- **Docker。** `docker` がオフのときはイメージをビルドも昇格もせず、最終
+  タグには `dockerManifestDigest: null` が記録されます。
+- **バンドル。** デスクトップと Termux のレーンが1つも無いときは候補マニフェストが存在せず、
+  最終タグには `candidateManifestSha256: null` が記録されます。
+- **デスクトップのチャンネルが動くのは、デスクトップの組がそろったときだけです**（`windows` と
+  `macos-arm64`）。一部だけの組でもパッケージはステージングされ、ビルドしたターゲットだけをちょうど載せた
+  候補マニフェストが記録され、`windows-store` がオンなら Store バンドルが提出されます。
+  Store だけのリリースにはパッケージの行が無く、Store
+  バンドルのファイルだけがあり、どのチャンネルも動かしません。保護された R2 の安定版 head、App Installer と macOS の
+  フィード、APT チャンネル、ダウンロードページ、
+  `releases/stable/release-candidates.json`、署名済みパッケージの基準は、
+  前回のそろったリリースのままです。公式リポジトリのソースチェックアウトは
+  `releases/stable/release-candidates.json` に従うので、これも動きません。
+- **完了。** デスクトップのチャンネルを進めるリリースは、保護された R2 の head がそれを指した時点で完了です。
+  Docker だけを動かすリリースは、`stable` エイリアスが最終タグに結び付いたダイジェストを指した時点で完了です。
+  どのチャンネルも動かさないリリースは、公開された時点で完了です。シーケンサーはこれらの目印を使って、
+  どのリリースにまだ公開処理が必要かを判断します。
+- **テスト無し。** 候補マニフェストには、ネイティブのスモークテストがそれぞれ `skipped` として記録され、
+  合格とは記録されません。クレームを知っているすべての読み手（`complete` と
+  保護された R2 の前進処理）は、スモークテストの結果がクレームの `smoke` レーンと食い違う
+  マニフェストを拒否します。次のそろったリリースは、ほかと同じくこのマニフェストをアップグレードの
+  基準に使います。テストを通していないリリースのあとには、通常のリリースを切り出してください。
 
-安定版リリースは、クレームで求めない限り、macOS Intel（`darwin-x64`）のデスクトップバンドルも、
-Termux（Android aarch64）の APT パッケージもビルドしません。
-`main` は Intel の macOS に対応しておらず、その `macos-15-intel` のバンドル系統だけで
-1時間を大きく超えます。どちらも引き続きビルドできます:
-
-```sh
-python scripts/release.py release --commit "$(git rev-parse origin/main)" \
-  --include-macos-intel --include-termux --remote origin
-```
-
-| | 既定 | `--include-macos-intel` | `--include-termux` |
-|---|---|---|---|
-| `candidates-darwin-x64`、`transitions-darwin-x64`、`macos-packaged-x64` | 省略 | 実行 | 省略 |
-| `candidates-termux`、`termux-checks` | 省略 | 省略 | 実行 |
-
-省略用のフラグと同じく、`--include-macos-intel` と `--include-termux` はクレームに
-（`includeMacosIntel`、`includeTermux` として）書き込まれ、`admit` はそれらを
-`include-macos-intel` と `include-termux` として出力します。これらのキーを持たないクレーム
-（キーができる前に切り出したクレームはすべて該当します）は、値を `false` として読みます。関門は、
-オプトアウトしたジョブが `skipped` を報告することを求めます。また、プラットフォームをオプトインしていても、
-`--skip-bundles` / `--skip-tests` を付ければこれらのジョブは外れます。
-
-プラットフォームを外した場合、その行は候補マニフェスト、リリース本文のダウンロード表、
-ダウンロードページから消えます。2つのチャンネルは振る舞いが異なります:
-
-- **macOS Intel:** macOS の安定版フィードは1つだけ
-  （`releases/darwin/stable/stable-mac.yml`）で、`promote` はこれを
-  arm64 の系統だけで置き換えます。このフィードを使う Intel の Mac は、`--include-macos-intel` を付けて
-  リリースを切り出すまで更新を受け取りません。保護された R2 の head には3つのネイティブ
-  パッケージが載っており、macOS Intel を配布するプレビューチャンネルは、それが無いと
-  安定版の head へ引き上げて終了させることができません。
-- **Termux:** APT のインデックスは書き換えられないので、APT チャンネルは
-  前回のリリースのまま残ります。
-
-macOS Intel を外したリリースのあとで再びオプトインしたリリースには、公開済みの Intel の基準が
-無いので、初回のリリースと同じく Intel のアップグレード系統は省略されます。
-
-両プラットフォームのクレームのフラグ、それによって外れるジョブ、受け渡し物、ターゲット、スモークジョブは、
-`scripts/releases/optional_platforms.py` の1か所で定義されています。
+macOS Intel を外した場合、その行は候補マニフェスト、リリース本文のダウンロード表、
+ダウンロードページから消えます。macOS の
+安定版フィードは1つだけ（`releases/darwin/stable/stable-mac.yml`）で、`promote` はこれを
+arm64 の系統だけで置き換えます。そのため、このフィードを使う Intel の Mac は、`--with macos-intel` を付けて
+リリースを切り出すまで更新を受け取りません。Termux を外した場合は APT の
+インデックスが書き換えられないので、APT チャンネルは前回のリリースのまま残ります。
+ターゲットを外したリリースのあとで、それを再び加えたリリースには、そのターゲットの公開済みの
+基準が無いので、初回のリリースと同じくそのターゲットのアップグレード系統は省略されます。
 
 クレームの push が、アトミックなバージョンロックです。2つの呼び出し元が同じ次バージョンを
 導くことはあり得ますが、push に成功するのは1つだけです。負けた側は、勝った側のタグ付け者、時刻、
@@ -212,7 +211,7 @@ python scripts/release.py abandon --version 0.21.5 --remote origin
 マーカーが中止の記録で、試行 ref は決して削除されません。
 バージョンは使用済みにならないので、次の切り出しは `rc.<N+1>-vX.Y.Z` になります。
 
-最終タグから `Stable Release` を手動で起動しないでください。復旧では、元の
+最終タグを指定して `Stable Release` を手動で起動しないでください。復旧では、元の
 クレーム ref、オブジェクト SHA、コミット、ドラフトのデータベース ID、自動公開ポリシー、
 省略フラグがそのまま保たれます。
 
@@ -292,8 +291,8 @@ URL ではなくバージョンで、それが安全なのはこのためです�
 デスクトップのワークフローは `jobs` 入力を受け取り、グループは `darwin-arm64`、
 `darwin-x64`、`win32-arm64`、`win32-x64`、`win32-bundle`、`linux-x64`、
 `linux-arm64`、`termux` です。安定版はグループごとに1回ずつ呼び出しますが、linux の
-グループは本物の Linux ビルドができるまで待ち、オプトインの `darwin-x64` と
-`termux` のグループは、クレームに含まれている場合にだけ呼び出します。Mac の各アーキテクチャと Windows のバンドルは
+グループは本物の Linux ビルドができるまで待ちます。また、`darwin-x64`、`termux`、
+そしてクレームがそのレーンを外しているほかのグループは呼び出しません。Mac の各アーキテクチャと Windows のバンドルは
 受領証をステージングし、各インストール系統は、自分のバイト列がステージングされた時点で
 自分の受領証から開始します。公開をブロックする合流点は `acceptance` ただ1つです。
 
@@ -482,7 +481,7 @@ R2 だけを読むソースの読み手を出荷する前に、明示的で保�
   見送っています。合格ではなく見送りとして報告されます。この関門に加える前に、安定させて
   CI で繰り返し通ることを示してください。
 - インストール/更新 E2E とネイティブの署名済みパッケージ受け入れは見送られて**いません**。
-  これらを外せるのは `--skip-tests` で切り出したクレームだけで、その場合、関門は
+  これらを外せるのは `install-e2e`、`smoke`、`upgrade` のレーンを含まないクレームだけで、その場合、関門は
   それらがスキップされていることを求めます。
 - PR 専用の履歴・ラベル・差分レビューの確認は、安定版のタグには適用されません。
   該当するソース CI のジョブは、変更されたパスにかかわらずすべて実行されます。

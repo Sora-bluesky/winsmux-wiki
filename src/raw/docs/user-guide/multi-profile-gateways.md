@@ -2,7 +2,7 @@
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: 7f41190a0b4803e2571625be6376483bb70c1a94
+upstream_blob: 54cce5fe9ed0cd7ee8ba717e52e00e52320f82fc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -728,6 +728,14 @@ status` は受け持ち中と報告します。再起動は要らず、ほかの
 変わりません。ほかのプロファイルのトークンを使い回して後から足されたプロファイルは、
 `duplicate_credential` のエラーで止め置かれ、2 つめの問い合わせ役として動き出すことは
 ありません。
+
+その場で受け持ちを増やすと、多重化しているプロセスの**プロファイルの確保**も広がります。
+新しいプロファイルの `gateway.lock` を取り、そのプロファイル専用のセッションの管理元を組み立てるので、
+`hermes -p <name>` は多重化しているプロセスを持ち主として見つけます（プロファイルごとのデーモンが
+はぐれて立ち上がることはありません）。次の `hermes gateway restart` でも、全体をきれいに確保し直せます。
+`state.db` を開けないプロファイルは**止め置かれ**、`Profile '<name>' not served` とログに出て
+`served_profiles` から外れますが、ほかのプロファイルは起動を続けます。保存先を直してから
+`hermes profile create` をもう一度実行するか、定期的な再走査を待ってください。
 
 ### 共有のボットのチャットをプロファイルへ振り分ける（`profile_routes`） {#routing-shared-bot-chats-to-profiles-profileroutes}
 

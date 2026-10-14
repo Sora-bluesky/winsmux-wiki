@@ -2,7 +2,7 @@
 title: "Multiplexing Gateway の内部構造"
 description: "1 つの gateway ですべてのプロファイルを受け持つモードの設計: スコープの組み立て、シークレットのスコープ、受信のルーティング、永続化"
 upstream_path: developer-guide/multiplexing-gateway.md
-upstream_blob: efea24c3a59e440d5752eec8466f0dee2049a863
+upstream_blob: 73abddcc321440f4385b8978f113184473d7748f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/multiplexing-gateway
 ---
@@ -57,7 +57,7 @@ HTTP リスナー、プロセスロック、状態の表示面は 1 つずつを
   contextvar ではなく、ただのモジュールのグローバル変数です。表しているのはデプロイの
   モードで、タスクごとの値ではないからです。役目はただ 1 つ、`get_secret()` の安全側に
   倒す動作を有効にすることです。
-- ダッシュボードや Desktop のバックエンド（`hermes serve`）にはそうしたフラグがないので、
+- ダッシュボードやリモート Desktop のバックエンド（`hermes serve`）にはそうしたフラグがないので、
   `hermes_cli/web_server.py::start_server` が起動の最後の手順として
   `tui_gateway.launch_profile_policy.activate_multi_profile_hosting_eagerly()` を呼びます。
   最初の `?profile=<other>` のリクエストを待たず、その端末に提供できるプロファイルのホームが

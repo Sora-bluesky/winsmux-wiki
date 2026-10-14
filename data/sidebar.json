@@ -1418,6 +1418,15 @@
               "id": "developer-guide/gateway-session-lifecycle"
             },
             {
+              "id": "developer-guide/gateway-local-sessions"
+            },
+            {
+              "id": "developer-guide/gateway-classic-cli"
+            },
+            {
+              "id": "developer-guide/gateway-command-parity"
+            },
+            {
               "id": "developer-guide/multiplexing-gateway"
             },
             {
@@ -2014,6 +2023,9 @@
     "developer-guide/micro-compaction",
     "developer-guide/gateway-internals",
     "developer-guide/gateway-session-lifecycle",
+    "developer-guide/gateway-local-sessions",
+    "developer-guide/gateway-classic-cli",
+    "developer-guide/gateway-command-parity",
     "developer-guide/multiplexing-gateway",
     "developer-guide/completion-backlog-delivery",
     "developer-guide/session-storage",

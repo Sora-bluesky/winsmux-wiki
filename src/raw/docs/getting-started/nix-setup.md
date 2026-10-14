@@ -2,7 +2,7 @@
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: d4dd84e6f97b801ab0650846a3e3e6989c9bf86c
+upstream_blob: b0ab8f777170ec7d56af953ee0b24df7fa339c46
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -676,7 +676,7 @@ macOS に相当する設定はありません。`RunAtLoad` を付けた `launch
 
 ### デスクトップ / ダッシュボードのバックエンドを動かす {#running-the-desktop-dashboard-backend}
 
-`gateway.enable` は、Telegram、Discord、Slack などのメッセージ用ゲートウェイを動かします。Hermes Desktop とブラウザのダッシュボードがつなぐ先は、*別の* プロセス、つまり `hermes serve` か `hermes dashboard` です。`backend.mode` はそのプロセスをゲートウェイと一緒に動かします。
+`gateway.enable` は、Telegram、Discord、Slack などのメッセージ用ゲートウェイを動かします。Hermes Desktop の**リモート**接続とブラウザのダッシュボードがつなぐ先は、*別の* プロセス、つまり `hermes serve` か `hermes dashboard` です（同じホストで動く Desktop は、`hermes gateway ensure` でゲートウェイそのものにつなぎます）。`backend.mode` はそのプロセスをゲートウェイと一緒に動かします。
 
 ```nix
 {
@@ -1034,7 +1034,7 @@ nix build .#checks.x86_64-linux.config-roundtrip    # merge script preserves use
 
 ### バックエンド（`hermes serve` / `hermes dashboard`） {#backend-hermes-serve-hermes-dashboard}
 
-このオプションは、Hermes Desktop とブラウザのダッシュボードがつなぐプロセスを、ゲートウェイと一緒に動かします。`container.enable` とは併用できません。
+このオプションは、Hermes Desktop のリモート接続とブラウザのダッシュボードがつなぐプロセスを、ゲートウェイと一緒に動かします。`container.enable` とは併用できません。
 
 | オプション | 型 | 既定値 | 説明 |
 |---|---|---|---|

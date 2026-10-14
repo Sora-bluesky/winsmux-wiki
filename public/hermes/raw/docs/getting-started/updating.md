@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: 3786223a91b378bbd91d16ea275086efbc82cfd0
+upstream_blob: 06413dcfba194b33b802b044dc91b38bcdba872f
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -138,6 +138,57 @@ Linux と macOS では、`hermes update` はこのインストールから動い
 - 一時停止が更新を妨げることはありません。ゲートウェイの一覧を取る、記録する、止める、のどれかができなかった場合は、止めたものを起動し直してその旨を伝え、一時停止の仕組みができる前と同じ形で更新を続けます。つまり、ゲートウェイは入れ替えの最中も動き続け、終わってから再起動されます。
 
 Windows では以前から、更新の前にゲートウェイを一時停止しています（依存関係の同期で置き換えるファイルをゲートウェイがロックするためです）。そして更新が完了したあと、ビルドのあとに再起動します。
+
+### ゲートウェイがセッションを持つ実行方式への移行 {#upgrading-to-the-gateway-owned-session-runtime}
+
+このリリースから、ホストごとに 1 つのゲートウェイが、ローカルのセッション（CLI、TUI、Desktop、
+API、ACP、cron、Bot Chat）をすべて受け持ちます。既存の環境で最初に更新したときに起きることは次のとおりです。
+
+- **`cron.bot_chat_delivery_timeout_seconds` は廃止されました。** Bot Chat の配信は、
+  宛先のプロファイルで動いているゲートウェイに受け付けられ、受領記録で追跡されます。cron の側で
+  時間切れを待つやり取りはもうありません。設定の移行 v51 がこのキーを削除し、一度だけお知らせを
+  出します（バージョンの書かれていない `config.yaml` からも削除します）。ゲートウェイが動いていない場合、その実行は
+  `delivery_failed` として記録され、自動では配信し直されません。
+- **古い Bot Chat の保留レコード**（`cron/bot_chat_pending/*.json`。廃止された
+  `hermes chat` の配信経路が残したもの）は、その後のスケジューラの周期で、元の ID のまま
+  宛先で動いている持ち主に引き渡されます。`claimed` のレコードは CLI でのやり取りが成否不明だったもので、
+  再送されることはありません。レコードは最終的な状態を付けたまま、証跡として残ります。
+- **切り替えのための再起動で中断された作業は、やり直されません。** ゲートウェイを初めて起動したとき、
+  やり取りの途中（`started`）だった入力と、動いていた管理下のワーカーは
+  `unknown` になり、その後ろに並んでいる入力は待たされます。セッションの中身を確かめたうえで、後続の入力が動く前に、
+  `hermes chat` で `/discard <admission_id>` を実行する（Desktop や TUI では同等の操作）か、
+  スクリプトから `hermes sessions discard <session> --yes` を実行して、了承済みにしてください。ゲートウェイが引き受けたまま終えていなかった cron の配信も、同じように
+  `unknown` で止められ、`delivery_failed` として記録されます。
+- **新しいゲートウェイが `state.db` に書き込んだあとは、元のリリースへ戻すことはサポートされません。**
+  [古いリリースへ戻す](#rolling-back-to-an-older-release)を参照してください。
+
+### 古いリリースへ戻す {#rolling-back-to-an-older-release}
+
+ゲートウェイの実行方式が書き込んだ `state.db` の上では、古いリリースは動きません。そうした操作が
+起こりうる箇所では、それぞれ履歴を壊す代わりに実行を拒否します。
+
+- **`hermes update`** は、いずれかのプロファイルの `state.db` にゲートウェイの実行方式の履歴が
+  あるあいだ、それより前の更新先（`--branch`、チャンネルの切り替え、固定したリリース）を
+  受け付けません。チェックアウトに触れる前に止まり、影響を受ける保存先と、元に戻す方法を
+  一覧で示します。
+- **更新済みの保存先の上で動かした古いリリース**（古いタグを手で `git checkout` した場合）は、
+  ゲートウェイの実行方式の履歴があるセッションを削除も整理もできません。`hermes sessions delete`
+  と `prune` は `Refused to delete a session that has gateway runtime history` で止まります。
+  古いリリースではこのメッセージがトレースバックの中に出るままで、`prune` はまとめて処理していた分を
+  すべて取り消します。
+- **動いているゲートウェイ**は、チェックアウトがそうしたリリースへ戻されると、約 30 秒以内に
+  自分で止まり、古いリリースが自分のゲートウェイを起動できるようにします。
+
+それでも戻したい場合は、更新済みのデータベースの上で古いリリースを動かすのではなく、
+更新前の状態を復元してください。
+
+1. `hermes gateway stop`
+2. 古いリリースをチェックアウトします。
+3. 更新前の最新のスナップショットを復元する（`/snapshot restore <id>`）か、
+   `hermes update --backup` で取った完全バックアップを復元します（`hermes import <backup.zip>`）。クイックスナップショットは
+   1 GiB を超える `state.db` を含めないので、大きな保存先には完全バックアップが必要です。
+
+更新後に作られたセッションとメッセージは、そのスナップショットには含まれません。
 
 ### ゲートウェイの再起動に時間がかかることがある理由 {#why-the-gateway-restart-can-take-a-while}
 

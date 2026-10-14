@@ -2,7 +2,7 @@
 title: "セッション保存領域の復旧"
 description: "別のプロセスがセッションデータベースの先行書き込みログの古いコピーを保持していると Hermes に言われたときの対処と、state.db の横にあるファイルの正体"
 upstream_path: user-guide/session-storage-recovery.md
-upstream_blob: aa1e522f3f7d9cd1722e54ca4af23463f0fee04e
+upstream_blob: ff545834a6382e50c78da573efb2ac3f2117f57e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/session-storage-recovery
 ---
@@ -82,6 +82,10 @@ Override with --force if you accept the risk.
 `--dry-run` によるプレビューは決して止められません。`--force` を付けると構わず実行します。表示されたプロセスが
 何もしていないと分かっている場合（たとえば自分で起動した読み取り専用のプロセス）にだけ使ってください。Desktop のコンソールで
 `sessions optimize` と入力したときも、同じ確認が行われます。
+
+ただし、ゲートウェイが動いているあいだの `hermes sessions prune` は例外です。`state.db` はゲートウェイが管理しているので、
+prune は読み取り専用の状態でプレビューを表示し、選んだセッションの削除はゲートウェイ自身が行います（ターンがまだ動いているセッションは
+とばします）。上のように拒否されるのは、ゲートウェイが動いておらず、ほかのプロセスがデータベースを使っている場合だけです。
 
 ## `state.db` の横に見つかることがあるファイル {#files-you-may-find-beside-statedb}
 

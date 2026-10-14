@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: c01bf9e3fb8cfe8763f53079c28aebd86006de81
+upstream_blob: 00f01645b714b572a5eadd0436f9010131209f01
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -145,7 +145,8 @@ hermes chat [options]
 | `--pass-session-id` | システムプロンプトにセッション ID を渡します。 |
 | `--ignore-user-config` | `~/.hermes/config.yaml` を無視し、組み込みの既定値を使います。`.env` の認証情報は読み込まれたままです。分離された CI 実行・再現可能なバグ報告・サードパーティ連携に便利です。 |
 | `--ignore-rules` | `AGENTS.md`、`SOUL.md`、`.cursorrules`、永続メモリ、プリロード済みスキルの自動注入をスキップします。完全に分離された実行にするには `--ignore-user-config` と組み合わせます。 |
-| `--safe-mode` | トラブルシューティングモード: すべてのカスタマイズ（ユーザー設定、ルール/メモリの注入、プラグイン、シェルフック、MCP サーバー）を無効化します（`--ignore-user-config` と `--ignore-rules` を暗黙に含みます）。問題が自分のセットアップ由来か Hermes 自体の問題かを切り分けるために使います。 |
+| `--safe-mode` | トラブルシューティングモード: すべてのカスタマイズ（ユーザー設定、ルール/メモリの注入、プラグイン、シェルフック、MCP サーバー）を無効化します（`--ignore-user-config` と `--ignore-rules` を暗黙に含みます）。ゲートウェイは、コードの既定値と明示したオプションだけをセッションに固定し、プロファイルを一切読まない独立したワーカープロセスでターンを実行します。そのため `config.yaml` が壊れていても止まりません。引き継ぐプロファイルの既定値がないので、`--model` の明示が必要です。接続先まですべて明示したいときは `--provider custom --base-url <url> --api-key <key>` と組み合わせてください。 |
+| `--base-url <url>` / `--api-key <key>` | `--provider custom` で使う、OpenAI 互換の接続先と、起動時だけに使うキーを明示します。キーは動いているゲートウェイのメモリ上にこのセッションのあいだだけ保持され、ディスクには書き込まれません。 |
 | `--source <tag>` | フィルタ用のセッションソースタグ（既定: `cli`。one-shot 実行は既定で `oneshot` となり、ピッカーには表示されません）。ユーザーのセッション一覧に出したくないサードパーティ連携には `tool` を使います。明示的な `--source` は、TUI やデスクトップのセッション内から起動した one-shot 実行でも、指定どおりに保存されます。 |
 | `--max-turns <N>` | 1つの会話ターンあたりの最大ツール呼び出し回数（既定: 500、または設定の `agent.max_turns`）。 |
 
@@ -161,7 +162,8 @@ hermes chat --quiet -q "Return only JSON"
 hermes chat -q "Inspect this repository" --format stream-json
 hermes chat --worktree -q "Review this repo and open a PR"
 hermes chat --ignore-user-config --ignore-rules -q "Repro without my personal setup"
-hermes chat --safe-mode -q "Is this bug mine or Hermes'?"
+hermes chat --safe-mode --model gpt-4.1 -q "Is this bug mine or Hermes'?"
+hermes chat --safe-mode --provider custom --base-url http://127.0.0.1:8000/v1 --model local -q "Isolate against a local server"
 ```
 
 ### `--format stream-json` — 構造化 JSONL 出力 {#--format-stream-json-structured-jsonl-output}
@@ -190,13 +192,9 @@ chat が回答して終了する場合（`-Q`、`chat --oneshot`、または非 
 
 #### 有限の chat 実行での委任 {#delegation-in-finite-chat-runs}
 
-chat が回答して終了する場合（`-Q`、`chat --oneshot`、または非 TTY の標準入出力でのクエリ）、`delegate_task` はその子タスクの完了を待ち、結果を同じターンで親に返します。バッチの子タスクは `delegation.max_concurrent_children` の範囲内で並列実行されたままです。親は CLI が終了する前の最終応答でその結果を使えます。
-
-- **自動的な join:** オプトインや背景モードの上書きは不要です。対話的な TTY のチャットとメッセージングセッションは、これまでどおりバックグラウンドでの委任を維持します。
-- **既存の安全策:** 委任の上限・タイムアウト・キャンセル・`approvals.single_query_mode` はそのまま適用されます。join してもコマンドが自動承認されるわけではなく、子タスクの成功も保証されません。結果とアーティファクトは確認してください。
-- **ターミナル完了:** これはバックグラウンドのターミナル通知の挙動や、上限付きの `terminal.oneshot_completion_wait_seconds` の終了待機を変えません。この設定は委任のタイムアウトではありません。
-
-委任はプロセスローカルのままです。親を中断・終了させると、未完了の子タスクはキャンセルされる場合があります。開始したプロセスより長く存続する必要がある作業には、永続的なスケジューラを使ってください。
+chat が回答して終了する場合、`delegate_task` は子タスクをバックグラウンドで動かすのではなく、その完了を待って
+結果を同じターンで返します。詳細と制約は
+[委任: 有限の chat 実行](/hermes/docs/user-guide/features/delegation/#finite-chat-runs)を参照してください。
 
 ### `hermes -z <prompt>` — スクリプト向け one-shot {#hermes--z-prompt-scripted-one-shot}
 
@@ -299,6 +297,7 @@ hermes gateway <subcommand>
 | サブコマンド | 説明 |
 |------------|-------------|
 | `run` | ゲートウェイをフォアグラウンドで実行します。WSL、Docker、Termux ではこちらを推奨します。 |
+| `ensure` | サービスを登録したり、すでに動いている持ち主を置き換えたりせずに、手元のセッション実行環境を探す、または起動を求めます。JSON を出力します。詳しくは後述します。 |
 | `start` | インストール済みの systemd/launchd バックグラウンドサービスを起動します。 |
 | `stop` | サービス（またはフォアグラウンドプロセス）を停止します。 |
 | `restart` | サービスを再起動します。 |
@@ -326,6 +325,16 @@ hermes gateway <subcommand>
 :::tip WSL ユーザーへ
 `hermes gateway start` の代わりに `hermes gateway run` を使ってください — WSL の systemd サポートは不安定です。永続化するには tmux で包んでください: `tmux new -s hermes 'hermes gateway run'`。詳細は [WSL FAQ](/hermes/docs/reference/faq/#wsl-gateway-keeps-disconnecting-or-hermes-gateway-start-fails) を参照してください。
 :::
+
+### 手元の実行環境の検出と起動 {#local-runtime-discovery-and-startup}
+
+`hermes gateway ensure [--json] [--timeout 60]` は、使用中のプロファイルのセッション実行環境を探すか起動し、
+JSON オブジェクトを 1 つ出力します（`state`、`reason_code`、そして認証付きの検出で互換性のある準備完了が確認できたときだけ
+`endpoint` が入ります。チケットや認証情報は決して含まれません）。
+すでに動いている、または起動中の持ち主がいれば、置き換えずにそれを待ちます。サービスを登録することもありません。
+終了コード `0` は準備完了を意味します。それ以外のコードは拒否か期限切れであって、代わりのものを起動してよいという意味ではありません。
+サービスの身元確認、`unsafe_control_permissions` の背景にあるホームディレクトリの権限方針、すべての終了コードは
+[ゲートウェイの内部構造: `hermes gateway ensure`](/hermes/docs/developer-guide/gateway-internals/#hermes-gateway-ensure)にあります。
 
 ## `hermes lsp` {#hermes-lsp}
 

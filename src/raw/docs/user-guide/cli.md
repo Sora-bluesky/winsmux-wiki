@@ -2,7 +2,7 @@
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md
-upstream_blob: 1e7a114528983a6c03bece18d64686a557966f86
+upstream_blob: c9b984c93801d937a33dd3b9bc6b953543ece011
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/cli
 ---
@@ -43,14 +43,15 @@ hermes chat --provider openrouter  # Force OpenRouter
 # With specific toolsets
 hermes chat --toolsets "web,terminal,skills"
 
-# Start with one or more skills preloaded
-hermes -s hermes-agent-dev,github-auth
-hermes chat -s github-pr-workflow -q "open a draft PR"
+# Start with one or more skills preloaded (rendered once into the session's prompt)
+hermes chat -s hermes-agent-dev,github-auth
 
 # Resume previous sessions
-hermes --continue             # Resume the most recent CLI session (-c)
 hermes --resume <session_id>  # Resume a specific session by ID (-r)
-hermes --resume latest        # Resume the most recent session (same as -c)
+hermes --resume "my thread"   # Resume by title (latest "#N" continuation in the lineage)
+hermes -c "my thread" --create-if-missing  # Resume that titled session, creating it if absent
+hermes --continue             # Resume the most recent session (bare -c)
+hermes --resume latest        # Same as bare -c
 hermes --resume latest --in ./dir  # Resume ./dir's latest session, staying in ./dir
 
 # Verbose mode (debug output)
@@ -64,6 +65,10 @@ hermes -w -z "Fix issue #123"     # Single query in worktree
 ### 作業ツリーの後片付け {#worktree-cleanup}
 
 `hermes -w` のセッションは、`<repo>/.worktrees/` の下に使い捨ての作業ツリーを作ります。
+`hermes --tui -w` では、ターミナルを閉じるとゲートウェイが持つセッションから切り離されます。
+その作業ツリーは、きれいな状態でも残ります。ターンがまだそこで動いているかもしれず、
+セッションを再開すると同じ作業ディレクトリを使うからです。セッションの作業が終わったら、
+確認して片づけてください。
 起動時には控えめな掃除処理が自動で走りますが（きれいな状態で、完全に取り込み済みで、
 一定の日数を過ぎた一時ツリーだけを消します）、残しておいたツリーや取り込み済みの
 ローカルブランチは、忙しい端末ではやはり溜まっていきます。次のコマンドで、
@@ -140,6 +145,15 @@ hermes plugins remove <plugin-name>
 を参照してください。
 
 ## 画面の構成 {#interface-layout}
+
+:::info 従来の CLI はゲートウェイのクライアントです
+`hermes chat`（と、`display.interface` が `cli` のときの引数なしの `hermes` の入力画面）は、もうターミナルのプロセスの中でエージェントを動かしません。プロファイルのゲートウェイを見つけるか起動し（`hermes gateway ensure`）、そこでセッションを作成または再開して、ゲートウェイのローカル WebSocket 経由で接続します。デスクトップのウィンドウ、TUI、Telegram のトピックが同時に開けるのと同じセッションです。ターミナルを閉じると接続が切り離されるだけで（`Detached; accepted work continues at the gateway.`）、ターンは取り消されません。作業ディレクトリ、`--model`、`--provider`、`--reasoning`、`--toolsets`、`--max-turns`、`--skills`、`--checkpoints`、`--yolo`、`--accept-hooks`、`--pass-session-id`、`--ignore-rules`、`--base-url`/`--api-key`、`--safe-mode`/`--ignore-user-config` は、セッションの作成時に固定されます。`--resume` で同じ値をもう一度指定することはできますが、変えることはできません。`--resume <id-or-title>` と `-c <title>` はセッションを名指しします。ゲートウェイは、読めるセッションの中からタイトルを解決し（まず ID の完全一致、次に最新の `"<title> #N"` の続き、そこから現在の最新の位置までたどります）、見つからなければ `No session found matching '…'` を表示します（終了コード 1）。引数なしの `-c` と `--resume latest` は、この作業場所でいちばん新しい CLI セッションをゲートウェイ経由で再開します。`-c <title> --create-if-missing` は、そのタイトルのセッションがなければ作成し、あれば再開します。そのため、プログラムから呼び出す側（Bot Mode の `Bot Chat` のターン）は、毎回決まった会話の流れを得られます。プロセス内のエージェントでしか意味のないオプション（`--image`、`--worktree`/`-w`、`--no-restore-cwd`、`--run-budget`、`--verbose`/`-v`、`--compact`、`-c <name>` なしの `--create-if-missing`）は、最初の時点で拒否されます（`Unsupported gateway CLI options: …`、終了コード 2）。拒否のメッセージには、フラグごとに、その機能がいまどこにあるか（TUI のフラグ、`config.yaml` のキー、`hermes` のサブコマンド）が示され、ローカルのエージェントに切り替わることはありません。`--safe-mode` / `--ignore-user-config` で起動するとプロファイルの既定モデルを読まないので、モデルを指定する必要があります。拒否のメッセージには `hermes chat --safe-mode --provider openrouter --model anthropic/claude-sonnet-4 -q "hello"` のような完全な例が表示されます。このモードで使えるスラッシュコマンドは `/stop`、`/approve <id> <choice>`、`/answer <id> <text>`、`/discard <admission_id>`、`/branch [title]`、`/model <model> [--provider name]`、`/compress [here [N] | <focus>] [--preview]`、`/yolo [on|off]`、`/help`、`/quit` です。ほかのスラッシュコマンドでは `Unsupported gateway CLI command; use /help.` と表示されます。すべてのスラッシュコマンドを使うには TUI（`hermes --tui`）を使ってください。
+:::
+
+終わりのある CLI のクエリが待ち行列に入っている間に、実行中のターンが所有者を失うと、CLI は
+終了コード `3` で終了します。受け付けられた入力は待ち行列に残ります。表示されたセッションを
+対話形式で再開し、状態の分からないターンを確かめ、`/discard <admission_id>` で確認済みにしてから
+続けてください。待ち行列にある入力を送り直さないでください。
 
 ![バナー、会話領域、固定された入力欄からなる Hermes CLI の画面構成を図案化したプレビュー。](https://hermes-agent.nousresearch.com/docs/img/docs/cli-layout.svg)
 *Hermes CLI のバナー、会話の流れ、固定された入力欄を、崩れやすい文字絵ではなく、安定した図としてドキュメント用に描いたものです。*
@@ -455,7 +469,7 @@ Hermes には届きません。改行には `Ctrl+Enter`（`Ctrl+J` として届
 | モード | 動作 |
 |------|----------|
 | `"interrupt"`（既定） | メッセージが動作中のターンの向きを変えます。表示済みの推論と完了した作業を残したまま、モデルの生成をやり直します。前面で動いているターミナルのコマンドは背面へ回され（強制終了はされず、終わったときに通知が届きます）、メッセージがすぐ読まれるようになります。ほかの実行中のツールは先に終わります |
-| `"queue"` | メッセージは黙って待ち行列に入り、エージェントが終わったあと、次のターンとして送られます |
+| `"queue"` | メッセージは待ち行列に入り、エージェントが終わったあと、次のターンとして送られます。待ち行列はゲートウェイ上にあり（クラッシュしても消えず、接続しているすべてのクライアントから見えます）、従来の `hermes chat` は、このキーの値にかかわらず常にこの動作になります。ターン中に入力した行はすべてゲートウェイの待ち行列に入ります。`interrupt` と `steer` は TUI とデスクトップでの動作です |
 | `"steer"` | メッセージは `/steer` を通じて現在の実行に差し込まれ、次のツール呼び出しのあとでエージェントに届きます — 中断も、新しいターンもありません |
 
 ```yaml
@@ -558,6 +572,7 @@ Messages:       28 (5 user, 18 tool calls)
 hermes --continue                          # Resume the most recent CLI session
 hermes -c                                  # Short form
 hermes -c "my project"                     # Resume a named session (latest in lineage)
+hermes -c "my project" --create-if-missing # Same, creating the titled session if none exists
 hermes --resume 20260225_143052_a1b2c3     # Resume a specific session by ID
 hermes --resume "refactoring auth"         # Resume by title
 hermes --resume latest                     # Resume the most recent session (same as -c)

@@ -2,7 +2,7 @@
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: 82bd01f0447a56ef29b74c77e15bc321d72f75f4
+upstream_blob: 0173a6f274a44562594cf4ee3b5ff481d44266cb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -55,6 +55,24 @@ curl http://localhost:8642/v1/chat/completions \
 ```
 
 Open WebUI や LobeChat、そのほかのフロントエンドにもつなげます。手順を追った説明は [Open WebUI との連携ガイド](/hermes/docs/user-guide/messaging/open-webui/) を見てください。
+
+## 会話と最終結果の扱い {#conversation-and-terminal-result-semantics}
+
+API へのリクエストは、ゲートウェイの永続的な受け付けキューを通ります。構造を持った画像の内容は、実行の最後まで構造を保ったまま扱われます。
+ゲートウェイのスラッシュコマンドとして解釈されることはありません。
+
+- `/v1/runs` と `/v1/responses` は、
+  `X-Hermes-Session-Key` で宣言された会話を保ちます。セッションや返答の連鎖を明示した場合はそちらが優先され、
+  その会話の識別が別のヘッダーへ移ることはありません。
+- `/v1/runs` の `conversation_history` が空でなければ、明示した
+  `session_id` があってもそちらが正になります。それ以外の場合、セッションの続きは、ターンを実行する時点で、
+  先に並んでいた作業が終わってから履歴を読み込みます。
+- run のポーリングと SSE は、`cancelled` か `failed` かで食い違いません。Responses も同じ
+  最終ステータスと `response.cancelled` / `response.failed` イベントを使い、診断用の文が
+  含まれていても変わりません。Chat Completions は、中断されたターンには `finish_reason: "cancelled"`、
+  失敗には `"error"` を返し、成功を示す `"stop"` は返しません。
+- セッションチャットの返答には `status` が付き、そのストリームも対応する run の最終イベントを
+  伝えます。アシスタントの締めくくりのフレームが来たこと自体は、実行が成功した証拠にはなりません。
 
 ## エンドポイント {#endpoints}
 
@@ -453,10 +471,26 @@ gateway:
 
 安全にやり直せる形で作りたいときは、`Idempotency-Key` のヘッダー（見える ASCII 文字で 1〜255 文字）を送ってください。Hermes は仕事を始める前に、この鍵を確実に押さえます。まったく同じ内容でやり直せば、もとの `run_id` が HTTP 202 と `Idempotency-Replayed: true` とともに返ります。これはゲートウェイを再起動したあとでも、実行が完了・失敗・取り消しになったあとでも同じです。同じ鍵を違う JSON の中身で使い回すと、HTTP 409 とコード `idempotency_key_conflict` が返ります。鍵は認証済みの API のプロファイルや資格情報ごとに分けられ、最後に状態が変わってから 24 時間保たれます。クライアント側は他人に推し量れない固有の鍵を使い、関係のない操作で使い回さないでください。このヘッダーがないリクエストは従来どおりの動きで、必ず新しい実行を作ります。
 
+ゲートウェイが受け付けられなかった実行は鍵を押さえたまま残らないので、まったく同じ内容でやり直しても安全です。プロファイルが
+後片付けや引退の最中のとき、または状態データベースのロックが書き込みの時間切れを過ぎても解けないときは、`POST /v1/runs`
+と実行の操作は HTTP 503（`runtime_draining` または `storage_unavailable`）を `Retry-After` 付きで返します。
+操作の本文の形が崩れていれば 400 `invalid_params` を返します。持ち主・世代・識別を理由に断る場合は、
+これまでどおり 409 です。
+
 `session_id` がすでにある Hermes のセッションを指していて、`conversation_history` も
 `previous_response_id` も渡されていないときは、そのセッションのいま使われている記録を
 読み込みます。セッションの順番待ちの仕組みが、同時に書こうとするものを一列に並べ、
 待たされたあとには記録を読み直します。
+
+**API のセッションは API 専用のセッションです。** ここでの `session_id` と、
+`X-Hermes-Session-Id` のヘッダー（`/v1/chat/completions` と `/v1/responses` で使うもの）が
+指せるのは、API サーバーが作ったセッションか、これから作るセッションだけです。CLI、TUI、Desktop、ACP、
+メッセージングの会話といった、ほかの入り口が持っているセッションには結び付けられません。そうしたリクエストは、
+受け付けの前に HTTP 409 とエラーコード `permission_denied` で断られます。実行は作られず、
+`Idempotency-Key` の予約も残らず、まったく同じ内容でやり直しても再び 409 が返ります。これは、
+API サーバーが他人の記録の上で、生きている持ち主と並行して自前のエージェントを走らせていた以前の動きに代わるものです。
+ほかの入り口の会話で作業したいときは、OpenAI 互換の経路ではなく、ゲートウェイの WebSocket
+（共有セッションへの `prompt.submit`）からつないでください。
 
 ### GET /v1/runs/\{run_id\} {#get-v1runsrunid}
 
@@ -477,7 +511,7 @@ gateway:
 
 `model` には、リクエストで指定したものがそのまま返ります。終わった実行では、`runtime` がその往復を実際に担った提供元とモデルの組です。[予備のプロバイダー](/hermes/docs/user-guide/features/fallback-providers/) へ切り替わったあとは控えの組が入るので、費用の割り当てのために問い合わせる仕組みは、その実行を正しい提供元に付けられます。`usage.cache_read_tokens` と `usage.cache_write_tokens` は、そのセッションでプロンプトのキャッシュを読んだぶんと書いたぶんです。おかげで、キャッシュから読んだ入力が満額の入力として数えられることはありません。`runtime` の形は `/v1/chat/completions` や `/v1/responses` のものと同じです。`route_source` は実行環境がどう選ばれたかを示し（`global`、`raw_request`、`model_routes`）、`model` や `provider` を指定したリクエストには `requested: {provider, model}` も付くので、求めた組と実際に担った組を見比べられます。できごとの流れに出る `run.completed` にも、同じ `usage` と `runtime` の項目が載ります。
 
-終わりの状態（`completed`、`failed`、`cancelled`、`interrupted`）になったあとも、問い合わせと画面の突き合わせのために状態はしばらく残ります。実行中にゲートウェイが終了した場合、その実行はエージェントに停止を求めるより先に `interrupted`（エラーは `Gateway shutdown interrupted the run.`、終了時のできごとは `run.interrupted`）として書き残されます。そのため、永続的な実行が再起動をまたいで `running` のまま残ることはなく、中断されたターンから遅れて届いた結果がこれを上書きすることもありません。
+終わりの状態（`completed`、`failed`、`cancelled`、`interrupted`）になったあとも、問い合わせと画面の突き合わせのために状態はしばらく残ります。実行中にゲートウェイが終了した場合、その実行はエージェントに停止を求めるより先に `interrupted`（エラーは `Gateway shutdown interrupted the run.`、終了時のできごとは `run.interrupted`）として書き残されます。そのため、永続的な実行が再起動をまたいで `running` のまま残ることはなく、中断されたターンから遅れて届いた結果がこれを上書きすることもありません。ただし、正規の実行で、ターンの途中に持ち主が再起動したものは `unknown` を返します。これは終わりの状態ではありません。そのセッションの後続のターンは、`POST /v1/runs/{run_id}/resolve-unknown`（後述）で確認が取れるまで待ちます。
 
 ゲートウェイがまだ後片付けの最中のとき（ターンが動いている状態での `hermes gateway stop` / `restart`、または SIGTERM）は、終わっていない実行のすべてに、新しいターンの受け付けをやめた時点から `shutdown_requested_at`（Unix 秒）が付きます。ターンはまだ処理されているので `status` は `running` のままですが、この項目が見えた側は、プロセスが終わりに向かっていて、遅くとも後片付けに使える時間が尽きた時点でその実行が `interrupted` で終わることが分かります。終わりの状態になった実行に、この項目が後から付くことはありません。
 
@@ -538,6 +572,51 @@ ID を JSON でも逐次送りでもそのまま返すので、圧縮のあと�
 実行は、実際にその仕事が終わるまで、状態の問い合わせ・承認・停止の操作・同時実行の
 数え上げから見え続けます。つながっている SSE の購読者は、これまでどおり受け取り続けます。
 
+### POST /v1/runs/\{run_id\}/resolve-unknown {#post-v1runsrunidresolve-unknown}
+
+権限を持つ持ち主が再起動したあと、すでに引き受けられていたターンは実行の結果が分からなくなり、
+`GET /v1/runs/{run_id}` はそれを
+`"status": "unknown"`（終わりの状態ではありません）と返します。Hermes は、失われた先頭を繰り返し実行する危険を冒さず、
+そのセッションの後続の作業を止めておきます。その本文から `admission_id` と
+`execution_generation` を正確に読み取り、失われた実行が終わらないことを
+確認として送ってください。
+
+```json
+{
+  "admission_id": "adm_abc123",
+  "execution_generation": 7
+}
+```
+
+このリクエストは、ほかの実行の操作と同じく認証され、実行の持ち主の範囲に限られます。
+ホスト型ルームから呼ぶ場合は、既存の `stop` の許可が要ります。成功した応答は、
+正規の最終受領（`outcome: "interrupted"`）に `run_id` を加えたものです。これにより
+FIFO が一度だけ解放され、結果の分からない先頭を繰り返すことなく、後ろに並んでいた作業の実行が予定されます。
+すでに確定した解決とまったく同じものを繰り返すと、同じ受領（200）が返るので、応答が失われたあとのやり直しも安全です。
+世代が古いか整数でない場合、またはいま結果不明の状態ではない実行の場合は、`409 stale_generation` が返ります。
+経路の実行に属さない受け付け ID には `409 not_found` が返ります。
+本文はこの 2 つの項目だけをちょうど含んでいる必要があり、そうでなければサーバーは `400 invalid_params` を返します。
+
+ホスト型ルームの本拠は、メンバーの `unknown` の実行を次の問い合わせのときにこの方法で解決し、
+ルームの作業を中断済み（"member gateway restarted"）として落ち着かせます。古いリリースのルームの本拠は
+`unknown` の状態を知らないので、更新されるまでは食い違った実行の状態を伝えます。
+
+この回復の操作は、正規のセッション権限が有効なときにだけ、`features.run_unknown_resolution` として、
+また `run_unknown_resolution` のエンドポイントとして公開されます。従来の API 実行モードでは公開されません。通常の
+`POST /v1/runs/{run_id}/stop` はあえて別のままで、結果の分からない受け付けに対しては
+`409 unknown_execution` を返します。
+
+この版で作られた受け付けでは、外からは中身の見えない実行の持ち主の範囲が、正規の受け付けと一体で
+保存され、終わりの状態も含めて、その受け付けの操作と状態の寿命のあいだ保たれます。これはサーバー内部の状態であり、
+bearer の資格情報でも、モデルへの入力でも、API の応答の項目でもありません。鍵のないリクエストは
+これまでどおり冪等ではないので、本文が同じでも別々の実行が作られます。
+以前の鍵のない受け付けには、保存された持ち主の範囲がないため、アダプターの再起動のあとも安全側に倒れて失敗し続けます。
+後から安全に補うことはできません。以前の鍵付きの
+実行は、既存の冪等性の台帳を使い続けます。セッションを明示的に引退させると、
+正規の受け付けの中身と、回復できる持ち主が消されます。
+やり直しの台帳と正規の受け付けは別々のデータベースのトランザクションなので、
+この回復の操作は、全体として厳密に一度だけ実行されることを約束するものではありません。
+
 ### POST /v1/runs/\{run_id\}/stop {#post-v1runsrunidstop}
 
 走っているエージェントの往復に割り込みます。この経路はすぐに `{"status": "stopping"}` を返し、その裏で Hermes が、いま動いているエージェントに次の安全な切れ目で止まるよう頼みます。
@@ -549,6 +628,23 @@ ID を JSON でも逐次送りでもそのまま返すので、圧縮のあと�
 
 人の判断を待っている実行について、保留中の承認に答えます（たとえば、承認の方針でせき止められたツールの呼び出しです）。本文には承認の判断を入れます。判断が記録されると、実行が再開します。この経路は `/v1/capabilities` で `run_approval` という機能として公開されているので、外部の画面は承認の問いかけを出す前に対応しているかを調べられます。
 
+正規のゲートウェイの持ち主がいる場合、`GET /v1/runs/{run_id}` は
+`pending_controls` を出します。使う `prompt_id` と `execution_generation` は、
+つながっている WebSocket の閲覧側と同じです。いまの識別を正確に添えて答えてください。
+
+```json
+{"request_id": "<prompt_id>", "execution_generation": 3, "choice": "once"}
+```
+
+正規の操作は、識別のない答えやまとめての答えを受け付けません。古い世代、
+ほかの prompt の ID、すでに決着した実行には HTTP 409 が返ります。既存の実行の認証と、
+ホスト型ルームでの承認の制限は、これまでどおり適用されます。
+
+### POST /v1/runs/\{run_id\}/clarify {#post-v1runsrunidclarify}
+
+正規の確認の問いには、`request_id`、`execution_generation`、
+`answer`（文字列）で答えます。この認証付きのエンドポイントと WebSocket の `clarify.respond` は、
+待っている同じツールに答えを渡します。答えても、推論のターンがもう一度送られることはありません。
 MCP の信頼ゲートでの同意（`trust: untrusted` と設定したサーバーにある、書き込みのできるツール）も同じ形で現れます。実行は `approval.request` のイベントを出し、この経路で答えが出るまで `waiting_for_approval` で待ちます（`once` ならツールを実行し、`deny` なら止めます）。
 
 ## Jobs の API（裏で動く予定の仕事） {#jobs-api-background-scheduled-work}

@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 7ee649abd2a6ba2128419e94dba2978ce6d34231
+upstream_blob: 5a4858215d97a9ac999d7485f9afc53ab16cdfc5
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -828,14 +828,14 @@ Microsoft Teams のプラットフォーム用アダプター（Bot Framework / 
 | `HERMES_ACCEPT_HOOKS` | `config.yaml` に書かれた未確認のシェルのフックを、端末での確認なしに自動で承認します。`--accept-hooks` や `hooks_auto_accept: true` と同じです。 |
 | `HERMES_IGNORE_USER_CONFIG` | `~/.hermes/config.yaml` を読まず、組み込みの既定値を使います（`.env` の資格情報は読みます）。`--ignore-user-config` と同じです。 |
 | `HERMES_IGNORE_RULES` | `AGENTS.md`、`SOUL.md`、`.cursorrules`、記憶、あらかじめ読み込むスキルの自動の差し込みをやめます。`--ignore-rules` と同じです。 |
-| `HERMES_SAFE_MODE` | 切り分け用の方式で、あらゆる作り込みを無効にします。プラグインの探索、MCP サーバーの読み込み、シェルのフックの登録をとばします。`--safe-mode` が自動で設定します（こちらは上の 2 つも設定します）。 |
+| `HERMES_SAFE_MODE` | 以前からある、プロセス内で効く切り分け用のスイッチです。そのプロセスでは、プラグインの探索、MCP サーバーの読み込み、シェルのフックの登録をとばします。`hermes chat --safe-mode` はもうこの変数を設定しません。代わりにゲートウェイが安全側の方針をセッションに固定し、隔離したワーカーで実行します。そのため、動いているデーモンの環境が書き換わることはありません。 |
 | `HERMES_TOOL_PROGRESS` | config-v12 を下限にして以降は使えません。この変数は無視されます。`config.yaml` の `display.tool_progress` を使ってください。 |
 | `HERMES_TOOL_PROGRESS_MODE` | ツールの進み具合の表示を指定する、互換のために残っている変数です（ゲートウェイは今も予備として読みます）。`config.yaml` の `display.tool_progress` をおすすめします。 |
 | `HERMES_HUMAN_DELAY_MODE` / `HERMES_HUMAN_DELAY_MIN_MS` / `HERMES_HUMAN_DELAY_MAX_MS` | もう読まれません。返事の間合いは、プロファイルごとの `config.yaml` の `human_delay`（`mode`、`min_ms`、`max_ms`）で決めるので、多重化したプロファイルはそれぞれ別の間合いを保てます。 |
 | `HERMES_QUIET` | 必須でない出力を抑えます（`true`/`false`） |
 | `CODEX_HOME` | [Codex app-server のランタイム](/hermes/docs/user-guide/features/codex-app-server-runtime/) を有効にしているとき、Codex CLI が設定と認証を読むディレクトリを上書きします（既定: `~/.codex`）。Hermes の移行処理は、管理する設定の塊を `<CODEX_HOME>/config.toml` へ書きます。 |
 | `HERMES_KANBAN_TASK` | かんばんのディスパッチャーがワーカーを起動するときに設定します（タスクの UUID）。ワーカーと、そこから起動される `hermes-tools` の MCP の子プロセスが引き継ぐので、かんばんのツールが正しく制御されます。手で設定しないでください。 |
-| `HERMES_ACP_SKIP_CONFIGURED_MCP` | [ACP のホスト](/hermes/docs/user-guide/features/acp/#host-integration) が、起動する Hermes の子プロセスに設定します。`1` にすると、ACP の JSON-RPC のやり取りを始める前に `config.yaml` の MCP サーバーを起動しなくなります。セッションの MCP サーバーを `session/new` で自分から渡すホスト向けです。ACP のセッションが渡したサーバーは従来どおり登録されます。ほかの値では既定のままです。手で設定しないでください。 |
+| `HERMES_ACP_SKIP_CONFIGURED_MCP` | 廃止されました。もう読み込まれず、効果もありません。`hermes acp` はゲートウェイのデーモンを見る側にすぎず、`config.yaml` の MCP サーバーを自分で起動することはありません。ゲートウェイが起動時にそのプロファイルの `mcp_servers` を立ち上げ（ACP 向けには `platform_toolsets.acp` で絞り込みます）、エディターが `session/new` で渡す `mcpServers` も、どちらの場合もゲートウェイがつなぎます。[ACP のホスト連携](/hermes/docs/user-guide/features/acp/#host-integration) を参照してください。 |
 | `HERMES_API_TIMEOUT` | LLM の API 呼び出しのタイムアウト（秒。既定: `1800`） |
 | `HERMES_API_CALL_STALE_TIMEOUT` | 逐次配信でない呼び出しが固まったと見なすまでの時間（秒。既定: `90`）。設定しなければ手元の提供元では自動で無効になり、とても大きな文脈では長くなることがあります。`config.yaml` の `providers.<id>.stale_timeout_seconds` や `providers.<id>.models.<model>.stale_timeout_seconds` でも設定できます。 |
 | `HERMES_STREAM_READ_TIMEOUT` | 逐次配信のソケットの読み取りのタイムアウト（秒。既定: `120`）。手元の提供元では自動で `HERMES_API_TIMEOUT` まで延びます。手元の LLM で長いコード生成が途切れるなら増やしてください。 |

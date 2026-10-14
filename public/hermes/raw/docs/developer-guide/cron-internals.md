@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: 1c26cba011c0ac45daccf42f0fe569a3f7b9a771
+upstream_blob: 70106b13f40b4eb26a3e1ad1d265f16fa9092aad
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -69,7 +69,8 @@ cron のサブシステムは、決まった時刻にタスクを実行する仕
 
 ### `last_status` に入る値 {#laststatus-literals}
 
-`last_status` に入る値は決まっていて、書き込むのは `cron.jobs.mark_job_run` だけです。表示する側
+`last_status` は、実行が終わったときに `cron.jobs.mark_job_run` が書き込み、配信が待ち行列に
+入った場合は、後述の配信結果の書き戻しによって 1 回だけ書き換えられます。表示する側
 （`hermes cron list` と `doctor`、`cronjob_manage` ツール、Web ダッシュボードのバッジ、
 デスクトップの定期実行インスペクタ）はどれも値ごとに意味を明示的に対応づけます。
 「利用者の手元に結果が届いた」の判定を `== "ok"` で済ませてはいけません。
@@ -77,9 +78,37 @@ cron のサブシステムは、決まった時刻にタスクを実行する仕
 | 値 | 意味 | 詳細が入るフィールド |
 |---------|---------|--------------|
 | `ok` | エージェントの実行が成功し、宛先がある場合は配信も確認できた | — |
+| `delivery_queued` | エージェントの実行は成功し、送信は消えずに残る配信待ち行列へ引き渡されたが、まだ結果が確定していない（途中の状態） | `last_delivery_queued` |
 | `error` | エージェントの実行が失敗した | `last_error` |
 | `delivery_failed` | エージェントの実行は成功したが、出力が宛先まで届かなかった | `last_delivery_error`（`last_error` は `null`） |
 | `blocked_config` | 実行前の検証で弾き、無駄な実行を防いだ | `last_error` |
+
+### 待ち行列に入った配信の流れと書き戻し {#queued-delivery-lifecycle-and-write-back}
+
+配信先と `execution_id` を持つエージェントの実行は、その場では送信しません。内容を
+`cron/delivery_queue.py`（プロファイルの `cron/deliveries.db` で、
+`execution_id` をキーにしたもの）へ引き渡し、`last_status = "delivery_queued"` と、台帳の
+`delivery_outcome = "queued"` を記録します。ゲートウェイの定期的な後片付けの処理が、動いているアダプタを通して
+待ち行列を送り出します（`scheduler.drain_delivery_queue`）。各行が確保されるのは多くても 1 回だけです
+（`pending → delivering → delivered | failed | suppressed`）。確保したゲートウェイが送信の途中で
+止まった行は `unknown` として締め出され、再送されることはありません。
+
+続いて `cron/delivery_outcome.py::settle_queued_delivery` が、確定した結果を、
+その配信を待ち行列に入れた実行へ書き戻します。
+
+| 待ち行列の行 | 台帳の `delivery_outcome` | ジョブの `last_status` / `last_delivery_error` |
+|---|---|---|
+| `delivered` | `delivered` | `ok` / `null` |
+| `suppressed` | `suppressed` | `ok` / `null` |
+| `failed` | `failed` | `delivery_failed` / 送信時のエラー |
+| `unknown` | `failed` | `delivery_failed` / 「送信の結果が不明で、再送もしなかった」 |
+
+これは両方の側から呼ばれます。送り出し側は行の結果を確定させた直後に、実行側は自分の記録を済ませた直後に呼びます。
+送り出しが、実行側の `mark_job_run` の書き込みより先に終わることがあるためです。
+どの書き込みも `execution_id` で締め出されます（その ID が、ジョブの台帳上の最新の試行であり、記録された最新の完了でもある
+必要があります）。そのため何度呼んでも結果は同じで、あとの実行の状態を書き換えることもありません。台帳が動くのは
+`queued` から確定した結果への 1 方向だけです。ゲートウェイがその行を送り出すまで、`last_status` は `delivery_queued` のままで、
+`hermes cron list` には「実行は終わり、配信はまだ進行中」と表示されます。
 
 ### ジョブの状態 {#job-lifecycle-states}
 
@@ -214,6 +243,11 @@ False` を返す場合は、警告を出したうえで組み込みのものに�
 そのまま実行を続けます。
 
 CLI モードでは、cron ジョブは `hermes cron` のコマンドを実行したときか、CLI のセッションが動いている間だけ実行されます。
+
+ゲートウェイがセッションの実行環境を持つ方式へ移るときの注意点（廃止された
+`cron.bot_chat_delivery_timeout_seconds` キー、古い `cron/bot_chat_pending/` の記録、
+切り替えのための再起動で中断された実行）は、
+[更新](/hermes/docs/getting-started/updating/#upgrading-to-the-gateway-owned-session-runtime)にまとめてあります。
 
 ### ゼロまで縮退させるためのマネージド cron（Chronos） {#managed-cron-chronos-for-scale-to-zero}
 
@@ -357,7 +391,7 @@ cron ジョブの結果は、対応しているどのプラットフォームに
 
 **Telegram のトピック**には `telegram:<chat_id>:<thread_id>` を使います（例: `telegram:-1001234567890:17585`）。**Slack のスレッド**の場合、3つ目の区切りは親メッセージの `thread_ts` です（例: `slack:C0123ABCD45:1700000000.000100`）。つまり既存のメッセージにぶら下げて返すときにだけ使えます。
 
-**Bot Chat**（`bot-chat`、`bot-chat:<profile>`）はゲートウェイのアダプタではなく、その端末の中だけで完結する疑似プラットフォームです。メールボックスを備えた正規の常駐の持ち主がいれば、手が空いていても塞がっていても、その相手がすぐに確実な受け取りとして受理し、届いたターンを実行するのはその持ち主だけです。`scheduler_delivery._deliver_to_bot_chat` は宛先を `get_profile_dir`、またはジョブが今使っている `get_hermes_home` から割り出し、送り元のホーム・ジョブの ID・消えずに残る `execution_id`・宛先のホームから受領票の ID を組み立て、持ち主を探す前にその受領票を確かめます。受領票がすでにあるときは、CLI へ落とす経路は決して使われません。メールボックスを持つ持ち主がいない場合は、これまでどおり `hermes [-p <profile>] chat --in ~ -c "Bot Chat" --create-if-missing -Q --query-file <tmp>` と通常の所有権の締め出しを使います。どちらの経路でも届くのは本物の受信ターンであって、会話の写しではありません。受理されて確保された受領票は、その ID を `last_delivery_queued` に記録します。配信の集約は、受理の知らせを本当のエラーから除いたうえで、実行結果に `delivery_outcome=queued` を記録します。成功したジョブは `last_status=delivery_queued` になります。宛先が混ざっている場合、本当のエラーがあればそちらが優先されて失敗として扱われ、受理済みの受領票の情報は残ります。最後まで終わったかどうかを決める正は、宛先のプロファイル側に残る受領票です。受理はその時点で受け付けられたという記録であって、届いたことの証拠ではありません。cron の履歴上の状態が、あとから受領票の完了を自動で追いかけることもありません。bot-chat の宛先は `all` という一括指定の対象から外れ、配信前の資格情報の事前確認からも外れます。宛先が bot-chat だけの外部ワーカーはゲートウェイの配信待ち行列を通らず、ほかの宛先が混ざる場合はこれまでどおりゲートウェイへ引き渡します。`cron.bot_chat_delivery_timeout_seconds`（既定は600）が上限を与えるのは、従来のサブプロセスの経路だけです。
+**Bot Chat**（`bot-chat`、`bot-chat:<profile>`）はゲートウェイのアダプタではなく、その端末の中だけで完結する疑似プラットフォームです。メールボックスを備えた正規の常駐の持ち主がいれば、手が空いていても塞がっていても、その相手がすぐに確実な受け取りとして受理し、届いたターンを実行するのはその持ち主だけです。`scheduler_delivery._deliver_to_bot_chat` は宛先を `get_profile_dir`、またはジョブが今使っている `get_hermes_home` から割り出し、送り元のホーム・ジョブの ID・消えずに残る `execution_id`・宛先のホームから受領票の ID を組み立て、持ち主を探す前にその受領票を確かめます。まだ Bot Chat がないプロファイルでは、最初の配信のときに管理役がそれを作ります（廃止された CLI 経路の `--create-if-missing` と同じ意味です）。手元の CLI へ落とす経路はありません。管理役が動いていなければ、その実行は `delivery_failed` として記録され、理由が `last_delivery_error` に入り、出力は `hermes cron runs` に残ります。自動で配信し直すことはなく、スケジューラがそのプロファイルの保存先に書き込む 2 人目になることもありません。届くのは本物の受信ターンであって、会話の写しではありません。受理されて確保された受領票は、その ID を `last_delivery_queued` に記録します。配信の集約は、受理の知らせを本当のエラーから除いたうえで、実行結果に `delivery_outcome=queued` を記録します。成功したジョブは `last_status=delivery_queued` になります。宛先が混ざっている場合、本当のエラーがあればそちらが優先されて失敗として扱われ、受理済みの受領票の情報は残ります。最後まで終わったかどうかを決める正は、宛先のプロファイル側に残る受領票です。受理はその時点で受け付けられたという記録であって、届いたことの証拠ではありません。Bot Chat への送信がゲートウェイの配信待ち行列を通った場合（エージェントの実行）は、送り出し側の送信が返った時点で、前述の書き戻しが cron の実行結果を確定させます。このとき `ok`/`delivered` は、宛先の管理役がそのターンを**受け付けた**ことを意味し、`last_delivery_queued` には、Bot Chat のターンがまだ動いているかもしれない受領票の ID が残ります。その場で行われた Bot Chat への配信（`no_agent` のジョブや、宛先が Bot Chat だけの外部ワーカー）は待ち行列を通らないので、その実行は `last_status=delivery_queued` / `delivery_outcome=queued` のままです。あとで受領票が完了しても、それを cron の履歴へ書き戻すものはありません。bot-chat の宛先は `all` という一括指定の対象から外れ、配信前の資格情報の事前確認からも外れます。宛先が bot-chat だけの外部ワーカーはゲートウェイの配信待ち行列を通らず、ほかの宛先が混ざる場合はこれまでどおりゲートウェイへ引き渡します。
 
 ### 結果に添える定型文 {#response-wrapping}
 

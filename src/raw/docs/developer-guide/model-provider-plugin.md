@@ -2,7 +2,7 @@
 title: "モデルプロバイダーのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダー（推論バックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: e620d7e98a58c87dfc5e7f2cf9aabf3d958d5d9d
+upstream_blob: df1fbda3fd64e07fe9980a541a582d80c1601c9d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -24,7 +24,7 @@ sources:
 3. **インストール済みのプラグイン** — `$HERMES_HOME/plugins/<name>/`（`hermes plugins install owner/repo` がクローンする場所）— `plugin.yaml` が `kind: model-provider` と宣言しているときだけ読み込まれます。それ以外の種類は、汎用の PluginManager の担当です
 4. **従来の単一ファイル** — `<repo>/providers/<name>.py` — ツリー外の editable インストール向けの後方互換です
 
-手順 2 と 3 は**プロファイルの HOME ごと**に効きます。複数のプロファイルを 1 プロセスで受け持つ場合（多重化ゲートウェイや、デスクトップアプリの `hermes serve`）、検索した時点で結び付いている `$HERMES_HOME` のプラグインが解決されるので、あるプロファイルに入れたプラグインは別のプロファイルからは見えません。使いたいプロファイルすべてにインストールしてください（`hermes -p <profile> plugins install ...`）。
+手順 2 と 3 は**プロファイルの HOME ごと**に効きます。複数のプロファイルを 1 プロセスで受け持つ場合（ローカルの Desktop がつながる多重化ゲートウェイや、`hermes serve` のバックエンド）、検索した時点で結び付いている `$HERMES_HOME` のプラグインが解決されるので、あるプロファイルに入れたプラグインは別のプロファイルからは見えません。使いたいプロファイルすべてにインストールしてください（`hermes -p <profile> plugins install ...`）。
 
 **同じ名前なら、利用者のプラグインが同梱のものを上書きします。** `register_provider()` は後から書いたほうが勝つからです。`$HERMES_HOME/plugins/model-providers/gmi/` というディレクトリを置けば、リポジトリを触らずに組み込みの GMI のプロファイルを置き換えられます。
 

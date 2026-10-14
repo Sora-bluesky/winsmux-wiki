@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "定期実行がうまくいかないとき"
 description: "Hermes の定期実行でよく起きる不具合を切り分けて直します。ジョブが動かない、配信が届かない、スキルが読み込めない、動きが遅いといった症状をあつかいます"
 upstream_path: guides/cron-troubleshooting.md
-upstream_blob: 29090c4d4b074940a2ed44a200b00bfa6eeccb1c
+upstream_blob: 14a7aef87f8da9b8ca3b244ab822a41c7c664160
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/cron-troubleshooting
 ---
@@ -42,7 +42,7 @@ hermes cron list
 
 定期実行のジョブは、ゲートウェイの裏で動く時計スレッドが動かしています。この時計は 60 秒ごとに時を刻みます。ふつうの CLI のチャットを開いているだけでは、ジョブは**動きません**。
 
-放っておいてもジョブが動く状態にしたいなら、ゲートウェイを動かしておく必要があります（前面で動かすなら `hermes gateway`、サービスとして入れてあるなら `hermes gateway start`）。その場かぎりの切り分けであれば、`hermes cron tick` で時計を手動で 1 目盛り進められます。
+放っておいてもジョブが動く状態にしたいなら、ゲートウェイを動かしておく必要があります（前面で動かすなら `hermes gateway`、サービスとして入れてあるなら `hermes gateway start`）。その場かぎりの切り分けであれば、`hermes cron tick` で時計を手動で 1 目盛り進められます。ただし、この手動の 1 目盛りもゲートウェイを必要とします。このコマンドがゲートウェイを起動することはなく、ゲートウェイが動いていなければエージェントのジョブは飛ばされます（ログに残り、`hermes cron list` にも表示されます）。飛ばされたジョブは、`hermes gateway start` のあとの次の目盛りまで動きません。
 
 **デスクトップアプリの場合:** デスクトップの主バックエンドは自前の時計を持っていて、**ローカルにあるすべてのプロファイル**の定期実行を見ています。そのため、別のプロファイルのバックエンドが眠っていても、そのプロファイルのジョブは動き続けます（デスクトップは使っていないプロファイルのバックエンドを 10 分ほどで眠らせます）。予定したジョブを動かすために、そのプロファイルを開いたままにしておく必要はありません。
 

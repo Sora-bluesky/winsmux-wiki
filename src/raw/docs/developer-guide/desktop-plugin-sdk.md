@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: c3ef14bdd6c52d4b8db82b32ca3fb2a472e4b02d
+upstream_blob: 867cd223c5d9e2a0f5a19d20154fb9e4c1e66c4c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -1032,6 +1032,12 @@ host.state.profile          // ReadableAtom<string>
 host.state.viewport         // ReadableAtom<{ width, height, narrow }>
 ```
 
+`gatewayActivationEpoch` は SDK の名前付きエクスポートです: `import { gatewayActivationEpoch } from '@hermes/plugin-sdk'`。
+これは正規の有効化カウンターを読みます。このカウンターは、有効な経路が選ばれるたびに変わり、
+同じプロファイルで接続元が入れ替わった場合も変わります。非同期の処理の前に、経路と一緒に `const epoch = gatewayActivationEpoch()`
+を控えておき、状態を変えたり UI に反映したりする前に、控えた経路と
+`gatewayActivationEpoch() === epoch` の両方を確かめてください。この読み取り専用のカウンターは、認証情報でも、権限の付与でも、ゲートウェイやセッションの永続的な識別子でもありません。
+
 `host.state.gateway` は WebSocket の接続のことで、チャットのターンが動いているかどうかでは
 ありません。ソケットが `open` のままターンの途中ということもありますし、同時に別のセッションが
 待機中ということもあります。入力欄やプラグインの操作を無効にするときは、**今見ているセッションの**
@@ -1093,13 +1099,13 @@ cron、かんばんなど）。`host.requestProfile` は `host.profileRoutes()` 
 意識するプラグインは記述子を渡して、同じプロファイル名を出す 2 つの登録元がぶつからないように
 してください。
 
-プールされたプロファイルのバックエンドを冷えた状態から起こす可能性のある呼び出しは、既定では
-バックグラウンドの優先度でつなぎに行きます。バックグラウンドの接続は、ユーザーの操作のために
-プールが空けておく枠を決して使えません。呼び出しがユーザーの操作そのもの（保存、ボタンの押下、
+別のプロファイルへの接続を開く必要がある呼び出しは、既定ではバックグラウンドの優先度でつなぎに行きます。
+そのプロファイルへの接続に一度失敗すると、再接続の待ち時間が続いている間、バックグラウンドの呼び出しは
+定期処理のたびにつなぎ直すのではなく、すぐに失敗します（`Backend for "<profile>" is reconnecting; retry after it settles.`）。
+呼び出しがユーザーの操作そのもの（保存、ボタンの押下、
 ダイアログを開く）であるときは、
-`host.requestProfile(route, method, params, undefined, { spawnPriority: 'foreground' })` を渡してください。
-そうしないと、温まったバックエンドでプールが埋まっているとき、枠が空くのを 30 秒のタイムアウトまで
-待ったうえで失敗します。定期的な問い合わせや、一覧を温めておく処理には、既定のバックグラウンドを使ってください。
+`host.requestProfile(route, method, params, undefined, { spawnPriority: 'foreground' })`
+を渡して、すぐにつなぎに行くようにしてください。定期的な問い合わせや、一覧を温めておく処理には、既定のバックグラウンドを使ってください。
 
 `host.openWorkspace(id, { render, title?, minWidth?, onClose? })` は、プラグインが描いた画面を
 **作業領域の中心**（セッションのタイルやプレビューが使うのと同じ中央の場所）にタブとして
@@ -1755,10 +1761,10 @@ host.onEvent('plugin.rss-reader.feed.updated', ({ payload }) => refreshFeeds(pay
 
 | 呼び出し元が動いている場所 | 届く先 |
 |---|---|
-| `hermes serve`（Desktop のバックエンド）: `plugin_api.py` の経路、プラグインのスラッシュコマンド、エージェントのターンの中のツールとフック | つながっているすべての Desktop のウィンドウ |
-| `dashboard.turn_isolation` の計算用の子プロセス（隔離したターンのツールとフック） | ホストとの管を通って `hermes serve` へ中継され、そこからすべてのウィンドウへ |
+| Desktop がつながっているプロセス（ローカルの Desktop が接続するホストのゲートウェイ、またはリモートの `hermes serve`）: `plugin_api.py` の経路、プラグインのスラッシュコマンド、エージェントのターンの中のツールとフック | そのプロセスにつながっているすべての Desktop のウィンドウ |
+| `dashboard.turn_isolation` の計算用の子プロセス（隔離したターンのツールとフック） | ホストとの管を通って親プロセスへ中継され、そこからつながっているすべてのウィンドウへ |
 | stdio の TUI（端末での `hermes`） | その端末のクライアント |
-| `hermes gateway run`（メッセージングのプラットフォーム）、`hermes chat`、cron、`hermes plugins validate` | どこにも届きません。そのプロセスには Desktop のクライアントがつながっていないので、呼び出しはログに残るだけで何もしません |
+| `hermes chat`、cron、`hermes plugins validate`、または Desktop のウィンドウがつながっていないゲートウェイ | どこにも届きません。そのプロセスには Desktop のクライアントがつながっていないので、呼び出しはログに残るだけで何もしません |
 
 `tui_gateway.server` の内部を読み込む代わりに、これを使ってください。接続ごとに中身を変えた、
 プラグイン専用のフレームが要るなら、これまでどおり `ctx.socket('/events')` のほうが

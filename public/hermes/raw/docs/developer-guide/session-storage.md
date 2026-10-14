@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: 4058495da0edd63c48eaf6228b3842d1de0c1742
+upstream_blob: d3a6c86141a2791464d963df151d4fcf90a432ea
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -13,6 +13,13 @@ sources:
 Hermes Agent は SQLite のデータベース（`~/.hermes/state.db`）を使い、セッションの
 メタデータ、メッセージ履歴の全文、モデル設定を、CLI とゲートウェイの
 どちらのセッションでも残し続けます。以前のセッションごとの JSONL ファイル方式を置き換えたものです。
+
+正規のセッションに書き込むのは、そのプロファイルのゲートウェイ**だけ**です。`hermes chat`、
+TUI、Desktop（ローカル）、API サーバー、ACP、cron、Bot Chat、Kanban のワーカーはクライアントであり、
+`/api/ws` を通じてゲートウェイのセッション管理に入力を受け付けてもらいます（
+[ゲートウェイのローカルセッション](/hermes/docs/developer-guide/gateway-local-sessions/)を参照）。別プロセスで動く管理下の
+ワーカーは、その持ち主を通じて書き込みます（`RuntimeSessionStore` の RPC）。会話の記録を書くために
+自分で `state.db` を開くことはありません。
 
 ソースファイル: `hermes_state.py`（窓口）と、その兄弟にあたる `hermes_state_*.py` 群（スキーマ、fts、検索、圧縮、可搬性、ゲートウェイ、ほか）
 
@@ -61,7 +68,7 @@ CLI の起動処理は、Hermes のほかの部分を import する前に `_appl
 ### デスクトップのプロファイル分離と圧縮の世代 {#desktop-profile-isolation-and-compaction-generations}
 
 名前付きのプロファイルは、それぞれ自分の `$HERMES_HOME/state.db` に会話の記録を持ちます。1 つの
-`hermes serve` プロセスが複数のプロファイルを受け持っている場合も同じです。セッションの途中で
+プロセス（複数のプロファイルをまとめて扱うゲートウェイ、または `hermes serve`）が複数のプロファイルを受け持っている場合も同じです。セッションの途中で
 エージェントを組み直すとき（Bot Chat の機能更新と `tools.configure`）は、そのセッションの
 データベースハンドルを保ったまま、組み立ての間そのプロファイルのホームに結び付けておく必要があります。
 役目を終えるエージェントを解放するときに、後継が引き継いだハンドルを閉じてはいけません。
@@ -126,13 +133,27 @@ CLI の起動処理は、Hermes のほかの部分を import する前に `_appl
 ├── compression_locks     — Cross-process compression locking
 ├── async_delegations     — Async delegation bookkeeping
 ├── delivery_obligations  — Gateway outbox (owed replies); created lazily by gateway/delivery_ledger.py
+├── runtime_epoch         — Session authority's owner epoch + instance id (one row)
+├── session_admissions    — Durable per-session input FIFO (queued → started → terminal; unknown on owner loss)
+├── worker_executions     — Managed worker/child/cron/kanban executions bound to a session and epoch
+├── worker_receipts       — Ordered, digest-checked results a managed worker reported
 └── schema_version        — Single-row table tracking migration state
 ```
+
+`session_admissions`、`worker_executions`、`worker_receipts` は `ON DELETE RESTRICT` で
+`sessions` を参照します。セッションを削除または整理するときは、同じトランザクションの中で
+終了済みの台帳の行を片付け、作業が動いている間や `unknown` のままの間は実行を拒否します。
+持ち主が落ちたときに `started` だった入力は、次に持ち主が起動したときに `unknown` になり、
+やり直されることはありません。その後ろの入力は、これが解決されるまで待ちます（`prompt.resolve_unknown`）。
 
 `hermes sessions recover` を実行すると、上のうち行を持つテーブルが復旧先の
 データベースへコピーされます（FTS の索引と `schema_version` は作り直されます）。
 コピー元にあれば、必要になったときだけ作られる `delivery_obligations` の台帳も対象になり、
-その行数は `sessions` や `messages` と同じように検証されます。
+その行数は `sessions` や `messages` と同じように検証されます。実行時の台帳にあたる 4 つのテーブル
+（`runtime_epoch`、`session_admissions`、`worker_executions`、`worker_receipts`）は、
+一覧に載せたうえで対象外として報告され、コピーはされません。台帳が欠けていると、開始済みの処理を
+やり直したり、別の持ち主のワーカーを引き取ったりするおそれがあるためです。`hermes backup` による完全な復元なら、
+台帳を丸ごと残し、起動時の突き合わせに使います。
 
 設計上の要点は次のとおりです。
 - **WAL モード**により、読み手が複数いても書き手が 1 つなら並行して動きます（ゲートウェイの複数プラットフォーム対応）
@@ -263,6 +284,25 @@ FTS5 のテーブルは、`messages` テーブルへの INSERT、UPDATE、DELETE
 FTS の作り直しが進んでいても二重に索引されません）、索引対象の 3 列すべてを
 扱います。正確な SQL は `hermes_state_common.py` の `SCHEMA_SQL` にあります。
 
+
+## ダッシュボードでの閲覧と持ち主による保守 {#dashboard-browsing-and-owner-maintenance}
+
+セッションの閲覧では、`state.db` を読み取り専用で開きます。GET による一覧、検索、詳細、
+メッセージ、統計、書き出しは、存在しないデータベースを作ったり、0 バイトのファイルを隔離したり、
+古いスキーマを合わせ直したり、自動アーカイブを動かしたりすることはありません。初期化されていない
+保存先や互換性のない保存先には、持ち主の起動や復旧の案内を付けて HTTP 503 を返します。
+複数のプロファイルをまとめる集計では、スキーマの失敗をプロファイルごとの `errors` の一覧で報告します。
+
+保存先の初期化と突き合わせは、そのプロファイルのゲートウェイが起動時に行います。
+単独で動かす `serve` のバックエンドは、これまでどおり起動時の突き合わせ用ワーカーを持ちます。
+`sessions.auto_archive` を設定している場合は、閲覧とは関係なく、ゲートウェイの起動時と定期的な片付け、
+または単独のバックエンドの保守用タイマーで引き続き働きます。明示的に変更を加えるエンドポイントは、これまでどおり書き込みます。
+
+SQLite の WAL を読む側も、共有メモリによる調整には加わります。`mode=ro`
+でも、空の WAL/SHM の付随ファイルを作ったり、SHM の読み取り位置を更新したりすることがあります。読み取り専用の約束が
+禁じているのは、正規のスキーマやデータへの書き込み、修復、チェックポイントです。動作中の
+SQLite の調整用ファイルまで書き換え不可にするものではありません。
+
 ## スキーマのバージョンと移行 {#schema-version-and-migrations}
 
 現在のスキーマバージョン: **31**
@@ -297,8 +337,9 @@ FTS の作り直しが進んでいても二重に索引されません）、索�
 
 ## 書き込み競合の扱い {#write-contention-handling}
 
-hermes のプロセスが複数（ゲートウェイ、CLI のセッション、worktree のエージェント）あっても、
-`state.db` は 1 つを共有します。`SessionDB` クラスは書き込みの競合を次のように処理します。
+今も複数のプロセスが 1 つの `state.db` を開きます。ゲートウェイ（正規のセッションに書き込む側）、
+読み取り専用で閲覧する側（ダッシュボード、`hermes sessions list`）、保守用のコマンド、
+セッション以外のテーブルに書き込む側です。`SessionDB` クラスは書き込みの競合を次のように処理します。
 
 - **SQLite のタイムアウトを短く**（既定の 30 秒ではなく 1 秒）
 - **アプリ側での再試行に制限時間を設ける**。ランダムな揺らぎを持たせます（最初の 2 秒は 20〜150 ミリ秒、そのあとは 250 ミリ秒〜1 秒）。持ち時間は通常の書き込みが 20 秒、会話記録の書き込みが 60 秒（失敗するとそのターンが打ち切られるため）、記録目的だけの活動ログの書き込みが 0.5 秒です

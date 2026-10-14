@@ -2,7 +2,7 @@
 title: "ACP の内部"
 description: "ACP アダプタのしくみ — 起動から終了まで、セッション、イベントの橋渡し、承認、ツールの表示"
 upstream_path: developer-guide/acp-internals.md
-upstream_blob: 1c5fed2e7e22771e48a09bf2f362424eb6debd95
+upstream_blob: 0e619ccddb8d44bb4c248f1b335452b96b8460c3
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/acp-internals
 ---
@@ -34,6 +34,15 @@ hermes acp / hermes-acp / python -m acp_adapter
 ```
 
 標準出力は ACP の JSON-RPC のやり取り専用です。人が読むログは標準エラー出力へ送られます。
+
+### ゲートウェイの終了結果の反映 {#gateway-terminal-projection}
+
+`acp_adapter/gateway_server.py` は、送信したその受付（admission）そのものの完了を待ちます。受付がキャンセルされた場合は
+`stopReason: cancelled` を返し、失敗した場合は `end_turn` を報告せずに ACP のリクエストエラーを発生させます。通常どおり
+完了したときは、これまでどおり `end_turn` を返します。モデルの応答を待っている間にキャンセルされると、
+`Operation interrupted: waiting for model response` というローカルの状態メッセージは表示されません。ただし、実際に
+途中まで出力されたアシスタントのテキストはそのまま見えます。終了結果はゲートウェイが返す構造化された実行結果から決まり、
+アシスタントの文面やセッション全体のキャンセルフラグからは決まりません。
 
 ## 主な構成要素 {#major-components}
 

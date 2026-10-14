@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: cdc00273c93a8eea4c877b2ee8a9aa921a583c4d
+upstream_blob: 1a27aa0f42e31c9935c2ae1852b3810d8b60fa93
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -14,7 +14,7 @@ Hermes Agent は二重の圧縮システムと Anthropic のプロンプトキ�
 長い会話でもコンテキストウィンドウの消費を効率よく管理します。
 
 ソースファイル: `agent/context_engine.py`（ABC）、`agent/context_compressor.py`（既定のエンジン）、
-`agent/prompt_caching.py`、`gateway/run_turn.py`（セッションの衛生管理）、`agent/compression_facade.py`（`_compress_context` を検索してください）
+`agent/prompt_caching.py`、`gateway/run_turn_hygiene.py`（セッションの衛生管理）、`agent/compression_facade.py`（`_compress_context` を検索してください）
 
 ## Bedrock のコンテキストウィンドウのキャッシュ {#bedrock-context-window-cache}
 
@@ -75,7 +75,7 @@ Hermes には、それぞれ独立して動く 2 つの圧縮の層がありま�
 
 ### 1. ゲートウェイのセッション衛生管理（しきい値 85%） {#1-gateway-session-hygiene-85-threshold}
 
-`gateway/run_turn.py` にあります（`Session hygiene` を検索してください）。これは**安全網**にあたるもので、
+`gateway/run_turn_hygiene.py` にあります（`Session hygiene` を検索してください）。これは**安全網**にあたるもので、
 エージェントがメッセージを処理する前に動きます。ターンとターンのあいだにセッションが
 大きくなりすぎたとき（たとえば Telegram / Discord で夜のあいだに溜まった場合）に、API の失敗を防ぎます。
 
@@ -316,6 +316,12 @@ auxiliary:
 
 `in_place: false` にすると、従来のローテーションする経路に戻ります。この場合、圧縮のたびに新しいセッション ID が作られ、`parent_session_id` で前のものとつながります。
 
+正規の `/compress` も、そのセッションで固定された `compression.in_place` と
+`min_tail_user_messages` の設定を使います。その場で圧縮するモードでは、いまの物理的なやり取りの記録を論理的に保管（ソフトアーカイブ）し、
+ローテーションするモードでは後継のセッションを公開します。どちらのモードでも、論理上の受け付けの持ち主と、
+これまでに発行した入力の ID は変わりません。やり取りの記録、世代、リビジョン、再試行の受領記録はまとめて確定します。
+セーフモードのセッションでは、プロファイルの圧縮設定ではなくコードの既定値を使います。
+
 ### 補助モデルでの実現可能性と、末尾をどれだけ残すか {#auxiliary-feasibility-and-tail-retention}
 
 補助側の圧縮モデルが小さいと、実際に圧縮が始まる点は下がりますが、選ばれる末尾の方針そのものは変わりません。`lean` モードでは、末尾を選ぶための予算は**メインモデルのコンテキストウィンドウ**を基準にしたままです。その 2.5% を取り、10K〜25K トークンの範囲に収めたうえで、そのウィンドウの 20% を超えないようにします（10K の下限だけでも 16K のローカルウィンドウの 61% にあたるので、この上限がないと小さいモデルでは「保護された」末尾がリクエスト全体になり、圧縮しても何も取り戻せませんでした）。たとえばメインが 1M、補助が 512K のモデルなら、実現可能性の判定で発動点が 850K から 512K へ下がっても、末尾の予算は 25K のままです。明示的に `legacy` を指定した場合は、代わりに `threshold_tokens × target_ratio` を計算し直します（512K × 0.20 で 102,400 トークン）。これらは末尾を選ぶための予算であって、圧縮後のコンテキスト全体に対する厳密な上限ではありません。保護されたメッセージ、境界の位置合わせ、要約、アンカーの分だけトークンが増えることがあります。
@@ -516,6 +522,17 @@ max_summary_tokens   = min(200,000 × 0.05, 12,000) = 10,000
 末尾に残します。モデルが自分で求めた出力を使えるようにするためです。ただし、その 1 回だけで
 入力の予算（コンテキストウィンドウから出力用の確保分を引いたもの）の 20% を超える回は要約されることがあり、
 古い画像も外されて、圧縮で空きを作れるようにします。
+
+#### 圧縮をまたいだ読み込み済みスキル {#loaded-skills-across-a-compaction}
+
+スキルの指示がいつまでもそのまま残るわけではありませんが、消えたときには必ずモデルに伝わります。
+圧縮の処理で差し替えられたり要約で消えたりした `skill_view` の結果には、大きさにかかわらず
+`[SKILL_PRUNED: content lost in compression; reload with skill_view(name='…')]` が付き、要約の
+`## Pruned Skills` にそのスキルが一つずつ並びます。`/skill-name` でその場に読み込んだスキル、バンドル、
+重ねて呼び出したスキル、ゲートウェイのチャンネルで自動的に読み込んだスキルも、そのターンが要約されるときに同じ印が付きます。
+要約には、スキルの本文ではなく、そのターンで打ち込まれたとおりの文（`/skill-name do X`）が引用されます。
+境界のあとで読み込み直せば、スキルの全文がまた返ります。`-s` や
+`skills.auto_load` で前もって読み込んだスキルはシステムプロンプトの中にあり、圧縮されることはありません。
 
 ### 段階 2: 境界の決定 {#phase-2-determine-boundaries}
 

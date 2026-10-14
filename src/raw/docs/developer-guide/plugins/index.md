@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: e21dc01aae7b3b92ec955f4bf7387335960033ee
+upstream_blob: 5ac5838684ab8c002bc098e5c37effa0952432c9
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -107,6 +107,22 @@ Hermes は `plugin.json`、Agent Skills のフロントマター、固定され�
 指定できる値はほかに既定の `full` だけなので、パッケージは権限を狭めることはできても、広げることはできません。
 同じ名前のサーバーが `config.yaml` にあると、trust を含めてパッケージ側のエントリを置き換えます。この拡張は、ほかのハーネスでは無視されます。
 `trust` は、同じサーバーエントリの中で `app`、`requires`、`liveness` と並べて書けます（[アプリケーションの宣言](/hermes/docs/developer-guide/plugins/application-declarations/) を参照）。
+
+長時間動くサーバーは、Hermes 専用のツール呼び出しの `timeout`（秒）を `plugin.json` で宣言することもできます。ほかのサーバーの既定値は変わりません。
+
+```json
+{
+  "extensions": {
+    "com.nousresearch.hermes": {
+      "servers": { "analysis": { "timeout": 1000 } }
+    }
+  }
+}
+```
+
+値は正の有限の数で、プラットフォームのスレッド待機の上限以内でなければなりません。この値はサーバーごとのネイティブな `timeout` に対応し、省略すると従来どおり `timeouts.mcp.tool_call` が使われます。同じ名前のネイティブな `mcp_servers` エントリがある場合は、タイムアウトも含めてパッケージ側のエントリ全体を置き換えます。この設定で延びるのは待ち時間の上限だけで、キャンセルや権限の方針は変わりません。サーバー内部で分析の締め切りがあるなら別に設定し、その結果がクライアントへ届くまでの時間も残しておいてください。この拡張は、ほかのハーネスでは無視されます。
+
+サーバーごとに明示した MCP 呼び出しの時間枠は、Hermes の外側のツール実行器にも伝わります。時間枠が、同時に実行するバッチの共通の締め切りを超える呼び出しは、直接呼ばれてもツール検索経由で呼ばれても、順番待ちの区切りとして1つずつ実行されます。その呼び出しは自分専用の時間枠を持ち、同じモデル応答に含まれるほかのツールの時間は延ばしません。もっと短い既存の MCP 呼び出しは、通常どおり並列に受け付けられます。中断と承認の扱いは変わりません。
 
 [rendered specification](https://agent-plugins.org/specification) は現在 v1.0.0 を Working Draft としていますが、[versioned specification repository](https://github.com/agentplugins/agent-plugins-spec/blob/main/spec/1.0.0.md) では Published として記録されています。Hermes は、どちらの可変なステータスラベルでもなく、正規の v1.0.0 スキーマ識別子と規範テキストに動作を紐づけています。これは Agent Plugins への完全準拠を主張するものではなく、明示的にサポートされるサブセットです。
 

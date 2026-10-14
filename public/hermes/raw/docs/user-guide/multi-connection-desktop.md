@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "デスクトップ版を複数の Hermes につなぐ"
 description: ""
 upstream_path: user-guide/multi-connection-desktop.md
-upstream_blob: 294d2ddeabc2fc6a312168ab28a59638cb4e44d6
+upstream_blob: 8a7f7ec42cfc1985598cad928ef357878ae467fb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-connection-desktop
 ---
@@ -192,10 +192,15 @@ instance itself is not touched — you can add it again any time.」*（イン�
   チャット、セッション、記憶は、そのプロファイルを持つマシンの上にあります。
   そのインスタンスを直接使っているときとまったく同じです。
 
-`(connection, profile)` の組ごとに、専用のバックエンドとソケットが用意されます。
-これらはローカルのプロファイルごとのバックエンドと同じように、使われていないものから
-片付けられていきます。別のゲートウェイを見ているあいだも、裏のエージェントは応答を
-返し続けます。
+`(connection, profile)` の組ごとに専用のソケットが用意され、デスクトップはつないだ
+ゲートウェイの情報を控えておくので、次に開いたときも同じ接続に加わります。別のゲートウェイを
+見ているあいだも、裏のエージェントは応答を返し続けます。デスクトップが*リモート*のゲートウェイを
+立ち上げたり片付けたりすることはありません。それぞれのゲートウェイは自分で寿命を持っています。
+**ローカル**のプロファイルでは、最初に開いたときに `hermes gateway ensure` が走ります。これは
+そのプロファイルで動いているゲートウェイにつなぎ、無ければプロファイルごとの常駐ゲートウェイを
+導入して起動します（使えるなら systemd/launchd のサービスとして、無ければ切り離したデーモンとして）。
+このゲートウェイはアプリを閉じても動き続けます。使われていないからといって止まることはなく、
+`hermes gateway stop` で止めるまで残ります。
 
 承認のボタンは、そのときに選んでいるプロファイルではなく、セッションを持っている
 バックエンドへ戻ります。ローカルの二番目以降のプロファイルでは、セッションの結び付きが

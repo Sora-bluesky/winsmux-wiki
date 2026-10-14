@@ -2,7 +2,7 @@
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 3856f28082bf9c063a4f497c9d977c070b0febda
+upstream_blob: cfa6ff772b9da3ced2a614d565c77c477dec38a8
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -141,6 +141,7 @@ GET  /v1/runs/{id}               Run status
 GET  /v1/runs/{id}/events        SSE stream of lifecycle events
 POST /v1/runs/{id}/approval      Resolve a pending approval
 POST /v1/runs/{id}/steer         Inject mid-run guidance at the next tool boundary
+POST /v1/runs/{id}/resolve-unknown Acknowledge an exact restart-unknown admission
 POST /v1/runs/{id}/stop          Interrupt the run
 GET  /v1/capabilities            Machine-readable feature flags
 POST /v1/browser-control/register Register a browser controller
@@ -200,6 +201,23 @@ OpenAI のクライアントとの互換のためには `/v1/models` を、Herme
 | 終わりきらずに止まった（反復回数の上限、途中で切れた返答や部分的な返答） | `failed` | `run.failed` | `completed: false`、該当する場合は `partial`、`turn_exit_reason`（例: `max_iterations_reached(60/60)`）、代わりの文章があれば `output` |
 
 同じ内容の中で、`completed` と報告しつつ `completed: false` や `partial: true` が付くことはありません。同じ決まりは `/api/sessions/{id}/chat/stream` にも当てはまります。こちらの `assistant.completed` の内容には本当の `completed` / `partial` / `interrupted` のフラグが入り、終了時のイベントは `run.completed`、`run.failed`、`run.cancelled` のいずれかになります。
+
+`POST /v1/runs/{id}/resolve-unknown` は、正規の管理元（canonical authority）が行う復旧の操作であって、
+状態を自由に書き換えるための汎用の操作ではありません。実行の状態に示された `admission_id` と、
+整数の `execution_generation` を、そのとおりに送ってください。サーバーは、管理元が比較と置き換え（compare-and-set）を行う前に、
+認証済みの持ち主、選んだプロファイル、パスで指定した実行、API の主体、対象のセッション、
+受け付け、世代を結び付けます。
+解決すると、失われた先頭の実行は中断として片付き、FIFO の次の項目が動き出します。
+先頭の実行を列に戻すことはありません。旧来の実行モードではこのエンドポイントが告知されないので、
+`features.run_unknown_resolution` で機能の有無を確かめてください。
+
+新しい正規の API の受け付けでは、受け付けの行に中身の見えない持ち主の範囲（owner scope）が残ります。
+そのため、キー付きの実行もキーなしの実行も、その正規の受け付けが残っている間は、アダプターの再起動後でも認可できます。
+キーなしのリクエストの意味は変わりません。同じ内容を送れば、これまでどおり別々の実行が作られます。
+更新前に作られたキーなしの受け付けには持ち主の範囲がなく、再起動後は意図的に解決できないままです。後から安全に補える認証情報の持ち主がないためです。
+既存のキー付きの記録は、これまでどおり再実行台帳（replay ledger）からの復旧経路を持ちます。セッションを明示的に退役させると
+正規の中身が消えるので、この持ち主による復旧の経路もそこで終わります。再実行の予約と正規の受け付けは今も別々の
+データベースを使うため、このエンドポイントは全体として「ちょうど1回」の保証を与えるものではありません。
 
 ---
 
