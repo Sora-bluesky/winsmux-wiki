@@ -2,7 +2,7 @@
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: 013f338954d6970884e191bfb8057b4b0d52df4a
+upstream_blob: 2bbe9c975b39010e93990c18012178cf2791625d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -151,8 +151,11 @@ Ink と Desktop は、いまも旧来の `image.attach`/`file.attach` の RPC �
 受け入れの ACK ではありません。再試行と実行は権限元の永続的な FIFO が受け持ち、スキルの
 内容は、キャッシュされたシステムの先頭部分を変えずに、利用者のメッセージのまま扱われます。
 
-それ以外のコマンドは `unsupported_command` を返します。シェルの quick command、プラグインの実行、
-バンドル、設定や実行環境の変更、ライフサイクルのコマンド、承認や秘密情報の
+`type: exec` の quick command とプラグインのスラッシュコマンドには `session:control` が必要で、
+メッセージングのゲートウェイ自身の quick/プラグイン振り分けを通して実行されます（スラッシュのアクセスポリシー、
+無害化した環境変数での実行と30秒の上限、出力の伏せ字処理、プラグインのセッション環境変数）。
+
+それ以外のコマンドは `unsupported_command` を返します。設定や実行環境の変更、ライフサイクルのコマンド、承認や秘密情報の
 スラッシュショートカットは提供していません。世代に結び付いた既存の承認と中断の
 RPC は別のままです。カタログに載る範囲は、確認済みのこの実行範囲より広くなっています。
 

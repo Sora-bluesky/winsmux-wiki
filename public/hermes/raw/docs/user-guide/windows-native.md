@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: be6fac376136cb49436fbb9205504bc685b0c66f
+upstream_blob: 245ae47e663002c87f8538144c88f5895a3162f6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -31,12 +31,13 @@ iex (irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/script
 **インストーラのオプション**を渡すには、スクリプトブロックの形を使います。
 
 ```powershell
-& ([scriptblock]::Create((irm https://hermes-agent.nousresearch.com/install.ps1))) -NonInteractive -Branch main
+& ([scriptblock]::Create((irm https://hermes-agent.nousresearch.com/install.ps1))) -NonInteractive -Channel main
 ```
 
 | 引数 | 用途 |
 |---|---|
-| `-Branch NAME` | 取得するブランチを選びます。既定は `main` です。 |
+| `-Channel stable\|main` | `stable`（既定）: 最新の公開リリースを入れます。`main`: すべてのコミットを追い、`hermes update --set-channel main` と同じように保存されます。`$env:HERMES_INSTALL_CHANNEL` を設定すると、ふつうの `irm \| iex` でもチャネルを指定できます。 |
+| `-Branch NAME` | 取得するブランチを選びます。既定は `main` です。ほかのブランチを選ぶと、その先頭のコミットが入ります。 |
 | `-Commit SHA` | ブランチを取得したあと、特定のコミットを選びます。 |
 | `-HermesHome PATH` | データディレクトリを選びます。 |
 | `-InstallDir PATH` | ソースのチェックアウトを置くディレクトリを選びます。 |

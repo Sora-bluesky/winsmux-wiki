@@ -8,6 +8,51 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-15
+
+- [ACP の内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/acp-internals/)
+- [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- [cron の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cron-internals/)
+- [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
+- [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
+- [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
+- [ローカルのプロファイル所有者をまたぐホスト型ルーム](https://wiki.winsmux.dev/hermes/docs/developer-guide/hosted-profile-owners/)
+- [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
+- [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- [セッションの保存領域](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
+- [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
+- [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
+- [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- [定期実行がうまくいかないとき](https://wiki.winsmux.dev/hermes/docs/guides/cron-troubleshooting/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
+- [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
+- [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [ACP ホスト連携](https://wiki.winsmux.dev/hermes/docs/user-guide/features/acp/)
+- [API サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
+- [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+- [キュレーター](https://wiki.winsmux.dev/hermes/docs/user-guide/features/curator/)
+- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [カンバン（マルチエージェント盤）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/kanban/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- [ローカルモデル](https://wiki.winsmux.dev/hermes/docs/user-guide/local-models/)
+- [A2A（エージェント間連携）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/a2a/)
+- [デスクトップ版を複数の Hermes につなぐ](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-connection-desktop/)
+- [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
+- [セッション保存領域の復旧](https://wiki.winsmux.dev/hermes/docs/user-guide/session-storage-recovery/)
+- [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
+- [TUI](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
+
 ## 2026-10-14
 
 - [プラグインカタログへの登録申請](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
@@ -2314,3 +2359,7 @@ Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ�
 ## 週次まとめ 2026-W41
 
 定期実行（cron）まわりが厚く更新され、Chronos managed-cron の契約や cron の内部構造、定期実行がうまくいかないときの対処が新しい内容になりました。プラグインでは作り方やカタログへの登録申請、アプリケーション宣言、プラグインからの LLM 呼び出し、モデルプロバイダーのプラグイン、デスクトップのプラグイン SDK が揃い、使う側では記憶プロバイダーやずっと残る記憶、音声と読み上げ、Hermes の管理画面、MCP、キュレーターの説明も更新されています。インストールや更新とアンインストール、Windows ネイティブ版と Nix のセットアップに加え、ゲートウェイやプロファイル、Discord・WhatsApp などのメッセージング、AWS Bedrock やローカルモデルの設定にも手が入りました。
+
+## 週次まとめ 2026-W42
+
+ゲートウェイの内部まわりが厚く更新され、コマンド対応表やローカルセッション、Multiplexing Gateway の内部構造、ゲートウェイをいくつも同時に動かす手順が新しい内容になりました。プラグインでは、デスクトップのプラグイン SDK やモデルプロバイダーのプラグイン、カタログへの登録申請の説明が手直しされ、オブザーバーフックやサブエージェントのライフサイクル API の説明にも手が入りました。ほかに、セッションの保存領域とその復旧、デスクトップ版を複数の Hermes につなぐ方法、考えをアイソメトリックの機械の図で説明する Anatomy スキルのページが更新されています。

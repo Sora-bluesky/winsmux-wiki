@@ -2,7 +2,7 @@
 title: "インストール"
 description: "デスクトップ版パッケージ、ソースからのインストーラー、Docker、Nix、Termux の APT パッケージで Hermes Agent を導入する"
 upstream_path: getting-started/installation.md
-upstream_blob: 7fa27f20d688b5de276c114fd180f18e15b74e1c
+upstream_blob: 550f867a20d136bec70edd4138dfb6b9e5edc6e7
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -81,6 +81,10 @@ PM は既定でブラウザ用とコンピュータ操作用のツールも入�
 既定のブラウザドライバー（Browser Use CLI の中核である browser-harness）はふつうの Python の依存パッケージなので、
 デスクトップアプリを含め、どのインストールにも最初から入っています。
 そのほかの任意ツールは、それぞれの機能ごとのインストール手順で入れます。
+
+新しくインストールすると最新の安定版リリースが入り、以後 `hermes update` もそのチャンネルを追いかけます（[更新](/hermes/docs/getting-started/updating/)を参照してください）。代わりに
+`main` の最新を入れたい場合は、POSIX では `--channel main`、Windows では `-Channel main` を渡します
+（ワンライナーの場合は、先に `HERMES_INSTALL_CHANNEL=main` を設定します）。
 
 ブラウザ用ツールを入れたくない場合は、POSIX では `--skip-browser`、Windows では `-SkipBrowser`
 を渡します。コンピュータ操作のドライバーなら `--skip-computer-use` /

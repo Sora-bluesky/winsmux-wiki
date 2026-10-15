@@ -2,7 +2,7 @@
 title: "gateway のローカルセッション"
 description: "ローカルの CLI/TUI セッションを正規の gateway 受付として扱う仕組み"
 upstream_path: developer-guide/gateway-local-sessions.md
-upstream_blob: 173ed3e5c415a2b95c299f5c906f40af7f5f9c4a
+upstream_blob: 8da45145e8ee63da6b57d081885e63929257a2a9
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-local-sessions
 ---
@@ -76,7 +76,11 @@ OpenAI API からローカルセッションへの紐付け（affinity）を実�
   ネイティブのローカル経路の ID は、サーバーが所有する `Platform.LOCAL` のままです。source が
   メッセージングやネイティブの信頼を与えることはありません。TUI の既定の選択には `project` が加わり、GUI には
   クライアント画面用のツールセット（`project`、`desktop_ui`、`catalog`）が加わります。GUI ポリシーは
-  `HERMES_DESKTOP` にも、接続するビューアーの ID にも左右されません。
+  `HERMES_DESKTOP` にも、接続するビューアーの ID にも左右されません。`toolsets` を明示しない場合、
+  gateway は `session.create` が指定する `cwd` をもとに、コーディング向けの構え（コードのワークスペースでは
+  `agent.coding_context: focus`、`agent/coding_context.py`）を適用します。これは作成時に1回だけ決まり、
+  クライアントが選択として送ることはありません。適用するのは `session.create` だけで、`source: tool` には適用しません。
+  Kanban のワーカー、cron ジョブ、A2A、ホストされたルーム、移行された旧形式の行は、プロファイルのツールセットを保ちます。
 - 作成時に任意で指定できるフラットな項目は、`cwd`（gateway のローカルに既存の絶対パスのディレクトリ）、
   `model`（デーモンに設定されたプロバイダーでの空でないモデル識別子）、`toolsets`
   （確立済みのツールセット名を明示した配列。空の配列も可）です。未知のツールセットや

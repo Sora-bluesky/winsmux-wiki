@@ -16,10 +16,10 @@ raw: /hermes/raw/free.md
 
 | 経路 | 登録・APIキー | 無料になる範囲 | 利用条件 | 公式の設定手順 | 説明の確認日 |
 |---|---|---|---|---|---|
-| Nous Portal Free | 登録が必要。APIキーは不要 | 無料モデルのモデル利用料 | 標準のレート制限。月次クレジットは0 | [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/) | 2026-10-02 |
-| OpenRouter :free | 登録とAPIキーが必要 | 末尾に:freeが付くモデルのモデル利用料 | 1分あたりと1日あたりの回数制限あり。最新値は公式ページで確認 | [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits) | 2026-10-09 |
+| Nous Portal Free | 登録が必要。APIキーは不要 | 無料モデルのモデル利用料 | 標準のレート制限。月次クレジットは0 | [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/) | 2026-10-16 |
+| OpenRouter :free | 登録とAPIキーが必要 | 末尾に:freeが付くモデルのモデル利用料 | 1分あたりと1日あたりの回数制限あり。最新値は公式ページで確認 | [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits) | 2026-10-16 |
 | OpenCode Free | 登録もAPIキーも不要 | 末尾に-freeが付く対象モデルのモデル利用料 | 無料の提供は予告なく出入りする。動作は未検証 | [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) | 2026-09-18 |
-| Google AI Studio（Gemini） | Google AI StudioのAPIキーが必要 | Gemini APIの無料枠 | 無料枠では入力データがGoogleの改善に使われる | [Google Geminiガイド](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/) / [Gemini APIの料金](https://ai.google.dev/gemini-api/docs/pricing) | 2026-10-09 |
+| Google AI Studio（Gemini） | Google AI StudioのAPIキーが必要 | Gemini APIの無料枠 | 無料枠では入力データがGoogleの改善に使われる | [Google Geminiガイド](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/) / [Gemini APIの料金](https://ai.google.dev/gemini-api/docs/pricing) | 2026-10-16 |
 
 ここで扱う経路は代表例です。GroqやCerebrasなど、カスタムエンドポイントの無料枠は、公式資料の[対応例](https://wiki.winsmux.dev/hermes/docs/integrations/providers/#other-compatible-providers)と[レシピ集](https://wiki.winsmux.dev/hermes/docs/integrations/providers/#cookbook-together-ai-groq-perplexity)で確認してください。
 
@@ -31,7 +31,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-10-15
+最終取得: 2026-10-16
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -41,7 +41,7 @@ raw: /hermes/raw/free.md
 | **Poolside: Laguna XS 2.1**<br>`poolside/laguna-xs-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-10-31 |
 | **MissingNo**<br>`stealth/missingno`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **StepFun: Step 3.7 Flash**<br>`stepfun/step-3.7-flash:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **StepFun: Step 5 Preview**<br>`stepfun/step-5-preview:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **StepFun: Step 5 Preview**<br>`stepfun/step-5-preview:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Upstage: Solar Mini 4**<br>`upstage/solar-mini4:free`<br>入力・出力の基本単価0（取得時点） | 524,288 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 
 ## OpenRouter :free
@@ -52,7 +52,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-10-15
+最終取得: 2026-10-16
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -68,6 +68,7 @@ raw: /hermes/raw/free.md
 | **NVIDIA: Nemotron 3 Ultra (free)**<br>`nvidia/nemotron-3-ultra-550b-a55b:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3.5 Content Safety (free)**<br>`nvidia/nemotron-3.5-content-safety:free`<br>入力・出力の基本単価0（取得時点） | 128,000 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |
 | **NVIDIA: Nemotron 3.5 Lightning (free)**<br>`nvidia/nemotron-3.5-lightning:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **NVIDIA: Nemotron 3.5 Super VL (free)**<br>`nvidia/nemotron-3.5-super-vl:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Free Models Router**<br>`openrouter/free`<br>入力・出力の基本単価0（取得時点） | 200,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Poolside: Laguna S 2.1 (free)**<br>`poolside/laguna-s-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-10-31 |
 | **Poolside: Laguna XS 2.1 (free)**<br>`poolside/laguna-xs-2.1:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-10-31 |
@@ -84,19 +85,20 @@ APIキーもアカウントも要りません。リクエストは匿名で送�
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 
-最終取得: 2026-10-15
+最終取得: 2026-10-16
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
 | **cat-jam-free**<br>`cat-jam-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
+| **deepseek-v4.1-flash-free**<br>`deepseek-v4.1-flash-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **jev-1.13-free**<br>`jev-1.13-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **longcat-2.5-preview-free**<br>`longcat-2.5-preview-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **mimo-v2.6-flash-free**<br>`mimo-v2.6-flash-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **muse-spark-1.2-contributor-free**<br>`muse-spark-1.2-contributor-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **muse-spark-1.3-contributor-free**<br>`muse-spark-1.3-contributor-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **nemotron-3.5-lightning-free**<br>`nemotron-3.5-lightning-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
+| **nemotron-3.5-super-vl-free**<br>`nemotron-3.5-super-vl-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 | **space-bunny-free**<br>`space-bunny-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
-| **step-5-preview-free**<br>`step-5-preview-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
 
 ## Google AI Studio（Gemini）
 

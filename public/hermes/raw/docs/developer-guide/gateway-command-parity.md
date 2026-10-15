@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイのコマンド対応表"
 description: "共有ゲートウェイ上で、ローカルの各クライアントがスラッシュコマンドをどう扱うか"
 upstream_path: developer-guide/gateway-command-parity.md
-upstream_blob: 6e3891ee11a2a2fbbb038b327a287dedfe5e62a6
+upstream_blob: c34d8f2876f4f185cf57f9a11f626241f4be4163
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-command-parity
 ---
@@ -123,7 +123,7 @@ sources:
 | `/suggestions` (/suggest) | read (bare only) | HermesCLI._handle_suggestions_command | slash.exec | slash.exec | refused |  |
 | `/timestamps` (/ts) | refused | HermesCLI._handle_timestamps_command | slash.exec: refused | slash.exec: refused | refused | client-local (cli_only) |
 | `/title` | control | HermesCLI._cmd_title | canonical route | action: title | refused |  |
-| `/tools` | refused | HermesCLI._handle_tools_command | canonical route | slash.exec: refused | refused | client-local (cli_only) |
+| `/tools` | refused | HermesCLI._handle_tools_command | refused: not available yet | slash.exec: refused | refused | client-local (cli_only) |
 | `/toolsets` | read | HermesCLI.show_toolsets | slash.exec | unavailable: terminal | refused | client-local (cli_only) |
 | `/topic` | refused | messaging-only: unknown command | slash.exec: refused | slash.exec: refused | refused | messaging-only |
 | `/topup` | read | HermesCLI._show_billing | sidecar: billing.state | slash.exec | refused |  |

@@ -2,7 +2,7 @@
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: 06413dcfba194b33b802b044dc91b38bcdba872f
+upstream_blob: ff24de02d181b534f5f9f367ab5ac270d49bb65b
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -52,10 +52,18 @@ hermes update --channel main         # one run against main; nothing is saved
 追いかけていたもの）は、さらに新しいリリースが出るまでその場に留まります。`--set-channel stable` を
 実行すると、たとえ古くなる場合でも、チェックアウトをリリースのコミットちょうどに固定します。この
 とき Desktop はその移動をリリースへのロールバックと表示し、`hermes update --check` は新しい更新を
-知らせる代わりに、チェックアウトのほうが新しいと伝えます。`main` 以外のチャンネルを選んだインストールに
-インストーラー（`install.sh`、`install.ps1`、または Hermes-Setup）をもう一度実行しても、チェックアウトは
-その場に留まります。チェックアウトを動かすのは `hermes update` だけです。明示的な `--commit` の固定は
-引き続き効きます。
+知らせる代わりに、チェックアウトのほうが新しいと伝えます。
+
+インストーラー（`install.sh`、`install.ps1`、Hermes-Setup）も、新しいインストールには最新の安定版リリースを
+入れます。チャンネルを一度も選んでいないインストールにインストーラーをもう一度実行した場合、そのリリースが
+チェックアウトの子孫にあたるときだけ、そのリリースへ移します。それ以外のチェックアウト（`main` を追いかけて
+いたものや、すでにリリースより先にあるもの）はその場に留まり、移すかどうかは `hermes update` が決めます。
+その際、チェックアウトがすでに使っているセッションの保存形式より古いリリースへの移動を
+拒否します。`main` 以外のチャンネルを選んだインストールでは、もう一度実行してもチェックアウトはその場に
+留まります。チェックアウトを動かすのは `hermes update` だけです。
+代わりに `main` の最新を入れたい場合は、`--channel main` を渡します（`install.ps1` では `-Channel main`、
+`irm | iex` のワンライナーでは事前に `HERMES_INSTALL_CHANNEL=main` を設定します）。インストーラーはこの選択を、
+`hermes update --set-channel main` と同じように保存します。明示的な `--commit` の固定は引き続き効きます。
 Windows Store、MSIX、同梱デスクトップアプリのインストールは影響を受けません。これらのチャンネルは
 パッケージに焼き込まれています（下記を参照してください）。
 

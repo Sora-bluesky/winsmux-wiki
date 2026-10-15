@@ -1,6 +1,223 @@
 {
-  "generatedAt": "2026-10-15",
+  "generatedAt": "2026-10-16",
   "entries": [
+    {
+      "date": "2026-10-15",
+      "sha": "32056f2",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/acp-internals",
+          "title": "ACP の内部",
+          "url": "/hermes/docs/developer-guide/acp-internals/"
+        },
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/cron-internals",
+          "title": "cron の内部構造",
+          "url": "/hermes/docs/developer-guide/cron-internals/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/gateway-classic-cli",
+          "title": "従来型のゲートウェイクライアント",
+          "url": "/hermes/docs/developer-guide/gateway-classic-cli/"
+        },
+        {
+          "id": "developer-guide/gateway-command-parity",
+          "title": "ゲートウェイのコマンド対応表",
+          "url": "/hermes/docs/developer-guide/gateway-command-parity/"
+        },
+        {
+          "id": "developer-guide/gateway-internals",
+          "title": "ゲートウェイの内部",
+          "url": "/hermes/docs/developer-guide/gateway-internals/"
+        },
+        {
+          "id": "developer-guide/gateway-local-sessions",
+          "title": "gateway のローカルセッション",
+          "url": "/hermes/docs/developer-guide/gateway-local-sessions/"
+        },
+        {
+          "id": "developer-guide/hosted-profile-owners",
+          "title": "ローカルのプロファイル所有者をまたぐホスト型ルーム",
+          "url": "/hermes/docs/developer-guide/hosted-profile-owners/"
+        },
+        {
+          "id": "developer-guide/model-provider-plugin",
+          "title": "モデルプロバイダーのプラグイン",
+          "url": "/hermes/docs/developer-guide/model-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/multiplexing-gateway",
+          "title": "Multiplexing Gateway の内部構造",
+          "url": "/hermes/docs/developer-guide/multiplexing-gateway/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/programmatic-integration",
+          "title": "外部プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "developer-guide/session-storage",
+          "title": "セッションの保存領域",
+          "url": "/hermes/docs/developer-guide/session-storage/"
+        },
+        {
+          "id": "developer-guide/stable-releases",
+          "title": "安定版リリースの受け入れと昇格",
+          "url": "/hermes/docs/developer-guide/stable-releases/"
+        },
+        {
+          "id": "getting-started/nix-setup",
+          "title": "Nix と NixOS のセットアップ",
+          "url": "/hermes/docs/getting-started/nix-setup/"
+        },
+        {
+          "id": "getting-started/platform-support",
+          "title": "対応プラットフォーム",
+          "url": "/hermes/docs/getting-started/platform-support/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "guides/cron-troubleshooting",
+          "title": "定期実行がうまくいかないとき",
+          "url": "/hermes/docs/guides/cron-troubleshooting/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/configuring-models",
+          "title": "モデルの設定",
+          "url": "/hermes/docs/user-guide/configuring-models/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/acp",
+          "title": "ACP ホスト連携",
+          "url": "/hermes/docs/user-guide/features/acp/"
+        },
+        {
+          "id": "user-guide/features/api-server",
+          "title": "API サーバー",
+          "url": "/hermes/docs/user-guide/features/api-server/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/curator",
+          "title": "キュレーター",
+          "url": "/hermes/docs/user-guide/features/curator/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/kanban",
+          "title": "カンバン（マルチエージェント盤）",
+          "url": "/hermes/docs/user-guide/features/kanban/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/local-models",
+          "title": "ローカルモデル",
+          "url": "/hermes/docs/user-guide/local-models/"
+        },
+        {
+          "id": "user-guide/messaging/a2a",
+          "title": "A2A（エージェント間連携）",
+          "url": "/hermes/docs/user-guide/messaging/a2a/"
+        },
+        {
+          "id": "user-guide/multi-connection-desktop",
+          "title": "デスクトップ版を複数の Hermes につなぐ",
+          "url": "/hermes/docs/user-guide/multi-connection-desktop/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        },
+        {
+          "id": "user-guide/session-storage-recovery",
+          "title": "セッション保存領域の復旧",
+          "url": "/hermes/docs/user-guide/session-storage-recovery/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        },
+        {
+          "id": "user-guide/tui",
+          "title": "TUI",
+          "url": "/hermes/docs/user-guide/tui/"
+        }
+      ]
+    },
     {
       "date": "2026-10-14",
       "sha": "b866dee",
@@ -10889,6 +11106,7 @@
     "2026-W34": "Bot モードと Hermes デスクトップアプリを中心に更新が入った。定時実行の内部、cron での自動化、API サーバー、プログラムからの連携など、動かし続けるための記述が多い。AWS Bedrock やフォールバックプロバイダー、ずっと残る記憶、BlueBubbles・Telegram の連携も更新対象になっている。",
     "2026-W39": "Hermes Desktop とデスクトップ向けプラグイン SDK の解説がたびたび更新され、プラグインの作り方やプラグインカタログも新しい内容に揃いました。内部構造では、コンテキストの圧縮とキャッシュ、cron やゲートウェイ、実行時のプロバイダー解決、セッションの保存領域が入れ替わっています。使う側では、Hermes Agent の設定と CLI コマンド一覧、Nous Portal、プロファイルとセッションの説明が更新され、新しいページとしてアプリケーション宣言、ボットの画面、セッション保存領域の復旧が加わりました。",
     "2026-W40": "Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ版を複数の Hermes につなぐ話が更新され、プラグインの作り方や同梱のプラグイン、コンテキストエンジンのプラグインも新しい内容に揃いました。内部構造では、コンテキストの圧縮とキャッシュ、Multiplexing Gateway の内部構造、ゲートウェイのセッションライフサイクル、Relay 共有メトリクスが入れ替わっています。使う側では、インストールと更新、Windows（ネイティブ）ガイド、CLI コマンド一覧と環境変数、カンバンやプロファイル、Telegram・Discord・SimpleX Chat との連携が更新され、Brag や Baoyu Comic といったスキルの説明も加わりました。",
-    "2026-W41": "定期実行（cron）まわりが厚く更新され、Chronos managed-cron の契約や cron の内部構造、定期実行がうまくいかないときの対処が新しい内容になりました。プラグインでは作り方やカタログへの登録申請、アプリケーション宣言、プラグインからの LLM 呼び出し、モデルプロバイダーのプラグイン、デスクトップのプラグイン SDK が揃い、使う側では記憶プロバイダーやずっと残る記憶、音声と読み上げ、Hermes の管理画面、MCP、キュレーターの説明も更新されています。インストールや更新とアンインストール、Windows ネイティブ版と Nix のセットアップに加え、ゲートウェイやプロファイル、Discord・WhatsApp などのメッセージング、AWS Bedrock やローカルモデルの設定にも手が入りました。"
+    "2026-W41": "定期実行（cron）まわりが厚く更新され、Chronos managed-cron の契約や cron の内部構造、定期実行がうまくいかないときの対処が新しい内容になりました。プラグインでは作り方やカタログへの登録申請、アプリケーション宣言、プラグインからの LLM 呼び出し、モデルプロバイダーのプラグイン、デスクトップのプラグイン SDK が揃い、使う側では記憶プロバイダーやずっと残る記憶、音声と読み上げ、Hermes の管理画面、MCP、キュレーターの説明も更新されています。インストールや更新とアンインストール、Windows ネイティブ版と Nix のセットアップに加え、ゲートウェイやプロファイル、Discord・WhatsApp などのメッセージング、AWS Bedrock やローカルモデルの設定にも手が入りました。",
+    "2026-W42": "ゲートウェイの内部まわりが厚く更新され、コマンド対応表やローカルセッション、Multiplexing Gateway の内部構造、ゲートウェイをいくつも同時に動かす手順が新しい内容になりました。プラグインでは、デスクトップのプラグイン SDK やモデルプロバイダーのプラグイン、カタログへの登録申請の説明が手直しされ、オブザーバーフックやサブエージェントのライフサイクル API の説明にも手が入りました。ほかに、セッションの保存領域とその復旧、デスクトップ版を複数の Hermes につなぐ方法、考えをアイソメトリックの機械の図で説明する Anatomy スキルのページが更新されています。"
   }
 }

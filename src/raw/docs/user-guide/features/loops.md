@@ -2,7 +2,7 @@
 title: "繰り返しのループ"
 description: "セッションの中で、決まった間隔ごとにプロンプトを流し直す — Claude Code の /loop に対する Hermes なりの答え"
 upstream_path: user-guide/features/loops.md
-upstream_blob: 9f47cdd1f0fd8b506eb00ed0b55be6a642426a73
+upstream_blob: 6185e27965f3f029feca0ed722d22463348ee02c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/loops
 ---
@@ -33,6 +33,14 @@ sources:
 1. **ループを受け付けた** — `↻ Loop set (every 5m): check the deploy status…`
 2. **1回目はすぐ起きる** — 次のアイドル確認のタイミング（ゲートウェイなら次の 15 秒ごとの見張り）で、Hermes が起床の合図を差し込み、いまの状態に対して普通のターンを1回走らせます。
 3. **繰り返す** — そのあとは5分ごとに、停止条件が発火するか、こちらが止めるまで続きます。
+
+ループが立っているあいだは、どの画面でもループが見えるところに出ていて、次に起きるまでの残り時間がその場で減っていきます。
+
+| 画面 | 出る場所 |
+|---|---|
+| Classic CLI | プロンプトの上にある作業中の欄に1行出ます: `↻ loop · every 5m · 2 runs · next in 4m · <prompt>`（分刻みで、最後の1分だけ秒で表示します。起きて動いているあいだは `running now`、一時停止中はその理由が出ます）。Ctrl+R でたたむと `↻ loop next in 4m` まで縮みます。 |
+| TUI | ゴールの帯の下に同じ行が出ます。 |
+| Desktop | 入力欄の上のループのカードに `Loop active · 2 runs · next 00:04:12` と出て、1秒ごとに数えていきます。 |
 
 スラッシュコマンドも同じ手軽さでループにできます。
 

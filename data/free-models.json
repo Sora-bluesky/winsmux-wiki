@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-15",
+  "generatedAt": "2026-10-16",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-10-15",
-      "attemptedAt": "2026-10-15",
+      "fetchedAt": "2026-10-16",
+      "attemptedAt": "2026-10-16",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -71,7 +71,7 @@
         {
           "id": "stepfun/step-5-preview:free",
           "name": "StepFun: Step 5 Preview",
-          "ctx": 1000000,
+          "ctx": 1048576,
           "tools": true,
           "expires": null,
           "freeBasis": "pricing",
@@ -93,8 +93,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-10-15",
-      "attemptedAt": "2026-10-15",
+      "fetchedAt": "2026-10-16",
+      "attemptedAt": "2026-10-16",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -219,6 +219,16 @@
           "criteriaReason": null
         },
         {
+          "id": "nvidia/nemotron-3.5-super-vl:free",
+          "name": "NVIDIA: Nemotron 3.5 Super VL (free)",
+          "ctx": 1000000,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
           "id": "openrouter/free",
           "name": "Free Models Router",
           "ctx": 200000,
@@ -273,13 +283,23 @@
     },
     "opencode": {
       "ok": true,
-      "fetchedAt": "2026-10-15",
-      "attemptedAt": "2026-10-15",
+      "fetchedAt": "2026-10-16",
+      "attemptedAt": "2026-10-16",
       "errorCode": null,
       "url": "https://opencode.ai/zen/v1/models",
       "models": [
         {
           "id": "cat-jam-free",
+          "name": null,
+          "ctx": null,
+          "tools": null,
+          "expires": null,
+          "freeBasis": "label",
+          "criteria": null,
+          "criteriaReason": null
+        },
+        {
+          "id": "deepseek-v4.1-flash-free",
           "name": null,
           "ctx": null,
           "tools": null,
@@ -349,7 +369,7 @@
           "criteriaReason": null
         },
         {
-          "id": "space-bunny-free",
+          "id": "nemotron-3.5-super-vl-free",
           "name": null,
           "ctx": null,
           "tools": null,
@@ -359,7 +379,7 @@
           "criteriaReason": null
         },
         {
-          "id": "step-5-preview-free",
+          "id": "space-bunny-free",
           "name": null,
           "ctx": null,
           "tools": null,

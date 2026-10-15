@@ -2,7 +2,7 @@
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 4beb11eb8a1cc9fc88e5a87db80b062a013fe3c6
+upstream_blob: 5add96e6090a9ee8c49baed6f751dc71d98d895f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -302,6 +302,10 @@ URL ではなくバージョンで、それが安全なのはこのためです�
 `acceptance` が最終的に拒否する署名済み候補のコストは払うことになります。
 `smoke-win32-universal` ジョブは廃止されました。アーキテクチャごとの MSIX スモークテストが各
 アーキテクチャを確かめ、Windows のインストール系統は両方のアーキテクチャで `.msixbundle` をインストールします。
+Stable はこの2つの MSIX スモークテストを、アーキテクチャごとの呼び出しではなく、`win32-bundle` の呼び出しの中で
+組み立てと並べて実行します。そのため組み立ては、遅いほうのアーキテクチャのスモークテストを待たずに、両方のビルドが
+済んだ時点で始まります。それでもどちらかのスモークテストが失敗すれば、バンドルの呼び出し（つまり
+`candidate-manifest`）は失敗します。
 
 ## タグの名前空間と受領証 {#tag-namespaces-and-receipts}
 
