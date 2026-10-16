@@ -42,35 +42,12 @@
       ],
       "checkedAt": "2026-10-16",
       "sources": [
-        "https://openrouter.ai/docs/api-reference/limits"
+        "https://openrouter.ai/docs/api-reference/limits",
+        "https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/models.py"
       ],
       "notes": [
         "利用にはOpenRouterへの登録とAPIキーが必要です。",
         "無料モデルには1分あたりと1日あたりの回数制限があります。現在の数値は公式の利用制限ページで確認してください。"
-      ]
-    },
-    {
-      "key": "opencode",
-      "title": "OpenCode Free",
-      "signup": "登録もAPIキーも不要",
-      "freeScope": "末尾に-freeが付く対象モデルのモデル利用料",
-      "conditions": "無料の提供は予告なく出入りする。動作は未検証",
-      "officialSetup": [
-        {
-          "label": "AIプロバイダーの設定",
-          "url": "/hermes/docs/integrations/providers/"
-        }
-      ],
-      "checkedAt": "2026-09-18",
-      "sources": [
-        "https://hermes-agent.nousresearch.com/docs/integrations/providers",
-        "https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/providers.py",
-        "https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/models.py"
-      ],
-      "notes": [
-        "APIキーもアカウントも要りません。リクエストは匿名で送られます。",
-        "公式資料では、無料の提供は予告なく出入りするとされています。",
-        "この経路は実機での動作を確認していません。"
       ]
     },
     {
@@ -106,7 +83,7 @@
     "steps": [
       "モデルを選ぶ: 右上の歯車から設定を開き、左の「モデル」を選ぶ。上のプルダウンでプロバイダー（例: Nous Portal）、下のプルダウンでモデル（例: upstage/solar-pro4:free）を選び、「適用」を押す。上部の「適用対象」で、どのプロファイルに適用するかを選べる。",
       "Nous Portal をつなぐ: 設定の「プロバイダー」から「アカウント」を開き、「アカウントを接続」の一覧で Nous Portal を選ぶ。あとは画面の案内に従ってサインインする。",
-      "OpenRouter の API キーを入れる: 設定の「プロバイダー」から「API キー」を開き、OpenRouter の行の「OpenRouter キーを貼り付け」にキーを貼る。OpenCode Free はキーが要らないので、この操作は不要。",
+      "OpenRouter の API キーを入れる: 設定の「プロバイダー」から「API キー」を開き、OpenRouter の行の「OpenRouter キーを貼り付け」にキーを貼る。",
       "モデルのプルダウンには id がそのまま並び、この版の画面では無料の印は出ていなかった。末尾の :free や -free は提供元ごとの表記なので、無料かどうかはこのページの表の料金の根拠と、各経路の条件で確かめる。"
     ]
   }

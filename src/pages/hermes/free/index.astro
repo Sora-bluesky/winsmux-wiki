@@ -3,7 +3,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import catalogData from '../../../../data/free-models.json';
 import notesData from '../../../../data/free-notes.json';
 
-type SourceKey = 'nous' | 'openrouter' | 'opencode';
+type SourceKey = 'nous' | 'openrouter';
 type RouteKey = SourceKey | 'gemini';
 
 type Model = {
@@ -72,7 +72,6 @@ const NO_CATALOG =
 const WARNINGS = [
   'Hermesはコンテキスト長が分からないモデルに256Kの既定値を当てて処理します。この一覧では推定せず「未確認」と表示します。',
   '無料モデルや無料の提供は予告なく入れ替わります。',
-  'OpenCode FreeはAPIキーも登録も不要ですが、この経路の動作は未検証です。',
   'Tool Gatewayの検索・画像・音声など、モデル以外の機能は別料金になる場合があります。',
   'Hermesのモデル選択では、ツール非対応モデルを一覧から除く処理はOpenRouterにだけあります。このページはAPIにある無料モデルを掲載し、条件判定を別列で示します。',
 ];
@@ -130,7 +129,6 @@ const OFFICIAL_LABELS: Record<string, string> = {
 const DATA_LABELS: Record<SourceKey, string> = {
   nous: 'Nous Portal のモデル一覧 API',
   openrouter: 'OpenRouter のモデル一覧 API',
-  opencode: 'OpenCode のモデル一覧 API',
 };
 const officialPages = routeUrls
   .filter((u) => !isCode(u))
@@ -192,6 +190,11 @@ const showDesktop = typeof notes.desktop.verifiedAt === 'string';
         </tbody>
       </table>
     </div>
+
+    <p>
+      キーなしで OpenCode の無料モデル（名前が -free で終わるもの）を使う経路は、Hermes が 2026-09-18 に削除しました。OpenCode Zen の API キーを設定すると Hermes の一覧にも -free のモデルが出ますが、料金と動作はこのページでは確かめていません。
+      <a href="https://github.com/NousResearch/hermes-agent/commit/998f614c7f" target="_blank" rel="noopener">Hermesでの経路削除</a>
+    </p>
 
     <p>
       ここで扱う経路は代表例です。GroqやCerebrasなど、カスタムエンドポイントの無料枠は、公式資料の

@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 
 const SCRIPT = fileURLToPath(new URL('./mirror-free-models.mjs', import.meta.url));
 const BASE_FIXTURES = fileURLToPath(new URL('./fixtures/free-models/', import.meta.url));
-const SOURCE_KEYS = ['nous', 'openrouter', 'opencode'];
+const SOURCE_KEYS = ['nous', 'openrouter'];
 const TODAY = '2026-09-15';
 
 function makeSandbox(t, copies = SOURCE_KEYS) {
@@ -98,12 +98,9 @@ test('通常の fixture から無料モデルを安定ソートして生成す�
 
   assert.equal(catalog.sources.nous.models.length, 7);
   assert.equal(catalog.sources.openrouter.models.length, 7);
-  assert.equal(catalog.sources.opencode.models.length, 7);
 
   assert.ok(catalog.sources.nous.models.every((model) => model.freeBasis === 'pricing'));
   assert.ok(catalog.sources.nous.models.every((model) => model.criteria === true));
-  assert.ok(catalog.sources.opencode.models.every((model) => model.freeBasis === 'label'));
-  assert.ok(catalog.sources.opencode.models.every((model) => model.criteria === null));
 
   const dots = byId(catalog.sources.openrouter, 'dots-studio/dots-3-note-preview:free');
   assert.equal(dots.expires, '2026-09-30');
@@ -157,12 +154,10 @@ test('HTTP 失敗時は検証済みの前回値をソース単位で保持する
 
   assert.equal(after.sources.openrouter.ok, true);
   assert.equal(after.sources.openrouter.fetchedAt, '2026-09-16');
-  assert.equal(after.sources.opencode.ok, true);
-  assert.equal(after.sources.opencode.fetchedAt, '2026-09-16');
 });
 
 test('前回値がない HTTP 失敗は取得日 null と空一覧になる', (t) => {
-  const ctx = makeSandbox(t, ['openrouter', 'opencode']);
+  const ctx = makeSandbox(t, ['openrouter']);
   run(ctx);
 
   const source = readCatalog(ctx).sources.nous;
@@ -214,7 +209,7 @@ test('OpenRouter の total_count 不一致は pagination エラーにする', (t
 });
 
 test('壊れた前回ブロックは失敗時の保持値に使わない', (t) => {
-  const ctx = makeSandbox(t, ['openrouter', 'opencode']);
+  const ctx = makeSandbox(t, ['openrouter']);
   writeFileSync(
     ctx.outFile,
     JSON.stringify({
@@ -388,5 +383,4 @@ test('--check は失敗を表示しても exit 0 で、出力ファイルを書�
     stdout,
     /openrouter: upstream=10 total_count=10 ok=true errorCode=null free=7 criteria_true=5 conflicts=0/,
   );
-  assert.match(stdout, /opencode: upstream=10 total_count=n\/a ok=true errorCode=null free=7/);
 });

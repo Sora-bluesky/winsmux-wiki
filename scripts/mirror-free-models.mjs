@@ -1,5 +1,5 @@
 // 無料モデル一覧（/hermes/free/）のデータミラー。
-// 既定: 3 つの公開 API を取得し、ソースごとに検証して data/free-models.json を原子的に置換する。
+// 既定: 2 つの公開 API を取得し、ソースごとに検証して data/free-models.json を原子的に置換する。
 // --check: 取得結果を表示するだけで、ファイルは更新しない。
 // 取得失敗時は、検証できた前回成功値をソース単位で保持する。
 import fs from 'node:fs';
@@ -21,11 +21,6 @@ const SOURCES = [
     key: 'openrouter',
     url: 'https://openrouter.ai/api/v1/models',
     kind: 'priced',
-  },
-  {
-    key: 'opencode',
-    url: 'https://opencode.ai/zen/v1/models',
-    kind: 'opencode',
   },
 ];
 
@@ -121,8 +116,6 @@ function criteriaOf(ctx, tools) {
 }
 
 function modelFrom(item, freeBasis) {
-  // OpenCode の応答には今のところ長さ・tools・期限が無く null になるが、
-  // 将来返ってきたら他の source と同じ正規化で受ける（一律 null にしない）
   const ctx = contextLength(item.context_length);
   const tools = toolsSupport(item.supported_parameters);
   const { criteria, criteriaReason } = criteriaOf(ctx, tools);
@@ -221,15 +214,6 @@ function selectFreeModels(source, data) {
   const conflicts = [];
 
   for (const item of data) {
-    if (source.kind === 'opencode') {
-      const lower = item.id.toLowerCase();
-      // 上流 hermes_cli/models.py と同じ: -free で終わり、鍵が要る ox-alpha-free（完全一致）だけ除く
-      if (lower.endsWith('-free') && lower !== 'ox-alpha-free') {
-        models.push(modelFrom(item, 'label'));
-      }
-      continue;
-    }
-
     const prompt = priceKind(item.pricing?.prompt);
     const completion = priceKind(item.pricing?.completion);
     const labeledFree = item.id.endsWith(':free');

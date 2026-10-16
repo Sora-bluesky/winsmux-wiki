@@ -18,8 +18,9 @@ raw: /hermes/raw/free.md
 |---|---|---|---|---|---|
 | Nous Portal Free | 登録が必要。APIキーは不要 | 無料モデルのモデル利用料 | 標準のレート制限。月次クレジットは0 | [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/) | 2026-10-16 |
 | OpenRouter :free | 登録とAPIキーが必要 | 末尾に:freeが付くモデルのモデル利用料 | 1分あたりと1日あたりの回数制限あり。最新値は公式ページで確認 | [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits) | 2026-10-16 |
-| OpenCode Free | 登録もAPIキーも不要 | 末尾に-freeが付く対象モデルのモデル利用料 | 無料の提供は予告なく出入りする。動作は未検証 | [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) | 2026-09-18 |
 | Google AI Studio（Gemini） | Google AI StudioのAPIキーが必要 | Gemini APIの無料枠 | 無料枠では入力データがGoogleの改善に使われる | [Google Geminiガイド](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/) / [Gemini APIの料金](https://ai.google.dev/gemini-api/docs/pricing) | 2026-10-16 |
+
+キーなしで OpenCode の無料モデル（名前が -free で終わるもの）を使う経路は、Hermes が 2026-09-18 に削除しました。OpenCode Zen の API キーを設定すると Hermes の一覧にも -free のモデルが出ますが、料金と動作はこのページでは確かめていません。 [Hermesでの経路削除](https://github.com/NousResearch/hermes-agent/commit/998f614c7f)
 
 ここで扱う経路は代表例です。GroqやCerebrasなど、カスタムエンドポイントの無料枠は、公式資料の[対応例](https://wiki.winsmux.dev/hermes/docs/integrations/providers/#other-compatible-providers)と[レシピ集](https://wiki.winsmux.dev/hermes/docs/integrations/providers/#cookbook-together-ai-groq-perplexity)で確認してください。
 
@@ -75,31 +76,6 @@ raw: /hermes/raw/free.md
 | **Thinking Machines: Inkling Small (free)**<br>`thinkingmachines/inkling-small:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Thinking Machines: Inkling (free)**<br>`thinkingmachines/inkling:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 
-## OpenCode Free
-
-APIキーもアカウントも要りません。リクエストは匿名で送られます。
-
-公式資料では、無料の提供は予告なく出入りするとされています。
-
-この経路は実機での動作を確認していません。
-
-公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
-
-最終取得: 2026-10-16
-
-| モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
-|---|---:|---|---|---|
-| **cat-jam-free**<br>`cat-jam-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
-| **deepseek-v4.1-flash-free**<br>`deepseek-v4.1-flash-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
-| **jev-1.13-free**<br>`jev-1.13-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
-| **longcat-2.5-preview-free**<br>`longcat-2.5-preview-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
-| **mimo-v2.6-flash-free**<br>`mimo-v2.6-flash-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
-| **muse-spark-1.2-contributor-free**<br>`muse-spark-1.2-contributor-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
-| **muse-spark-1.3-contributor-free**<br>`muse-spark-1.3-contributor-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
-| **nemotron-3.5-lightning-free**<br>`nemotron-3.5-lightning-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
-| **nemotron-3.5-super-vl-free**<br>`nemotron-3.5-super-vl-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
-| **space-bunny-free**<br>`space-bunny-free`<br>提供元の無料表記。料金未確認 | 未確認 | 未確認 | 判定できない | 終了日未記載 |
-
 ## Google AI Studio（Gemini）
 
 無料枠では、入力データがGoogleの製品改善に使われます。
@@ -114,7 +90,6 @@ Hermesの公式資料には、個人向けのGoogle AI Pro / UltraでHermesに�
 
 - Hermesはコンテキスト長が分からないモデルに256Kの既定値を当てて処理します。この一覧では推定せず「未確認」と表示します。
 - 無料モデルや無料の提供は予告なく入れ替わります。
-- OpenCode FreeはAPIキーも登録も不要ですが、この経路の動作は未検証です。
 - Tool Gatewayの検索・画像・音声など、モデル以外の機能は別料金になる場合があります。
 - Hermesのモデル選択では、ツール非対応モデルを一覧から除く処理はOpenRouterにだけあります。このページはAPIにある無料モデルを掲載し、条件判定を別列で示します。
 
@@ -124,7 +99,7 @@ Hermesの公式資料には、個人向けのGoogle AI Pro / UltraでHermesに�
 
 1. モデルを選ぶ: 右上の歯車から設定を開き、左の「モデル」を選ぶ。上のプルダウンでプロバイダー（例: Nous Portal）、下のプルダウンでモデル（例: upstage/solar-pro4:free）を選び、「適用」を押す。上部の「適用対象」で、どのプロファイルに適用するかを選べる。
 2. Nous Portal をつなぐ: 設定の「プロバイダー」から「アカウント」を開き、「アカウントを接続」の一覧で Nous Portal を選ぶ。あとは画面の案内に従ってサインインする。
-3. OpenRouter の API キーを入れる: 設定の「プロバイダー」から「API キー」を開き、OpenRouter の行の「OpenRouter キーを貼り付け」にキーを貼る。OpenCode Free はキーが要らないので、この操作は不要。
+3. OpenRouter の API キーを入れる: 設定の「プロバイダー」から「API キー」を開き、OpenRouter の行の「OpenRouter キーを貼り付け」にキーを貼る。
 4. モデルのプルダウンには id がそのまま並び、この版の画面では無料の印は出ていなかった。末尾の :free や -free は提供元ごとの表記なので、無料かどうかはこのページの表の料金の根拠と、各経路の条件で確かめる。
 
 ## 正本へのリンク
@@ -133,18 +108,16 @@ Hermesの公式資料には、個人向けのGoogle AI Pro / UltraでHermesに�
 
 - [Nous Portal](https://portal.nousresearch.com)
 - [OpenRouter の利用制限](https://openrouter.ai/docs/api-reference/limits)
-- [Hermes 公式ドキュメント: AI プロバイダーの設定](https://hermes-agent.nousresearch.com/docs/integrations/providers)
 - [Gemini API の料金](https://ai.google.dev/gemini-api/docs/pricing)
+- [Hermes 公式ドキュメント: AI プロバイダーの設定](https://hermes-agent.nousresearch.com/docs/integrations/providers)
 
 ### 一覧の取得元（毎日取得）
 
 - [Nous Portal のモデル一覧 API](https://inference-api.nousresearch.com/v1/models)
 - [OpenRouter のモデル一覧 API](https://openrouter.ai/api/v1/models)
-- [OpenCode のモデル一覧 API](https://opencode.ai/zen/v1/models)
 
 ### 判定の根拠（Hermes のソース、rev 59c20a51aa）
 
 - [hermes_cli/nous_account.py](https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/nous_account.py)
-- [hermes_cli/providers.py](https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/providers.py)
 - [hermes_cli/models.py](https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/hermes_cli/models.py)
 - [agent/model_metadata.py](https://github.com/NousResearch/hermes-agent/blob/59c20a51aa/agent/model_metadata.py)

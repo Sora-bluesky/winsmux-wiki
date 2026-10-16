@@ -94,7 +94,6 @@ ${rows.join('\n')}
   const WARNINGS = [
     'Hermesはコンテキスト長が分からないモデルに256Kの既定値を当てて処理します。この一覧では推定せず「未確認」と表示します。',
     '無料モデルや無料の提供は予告なく入れ替わります。',
-    'OpenCode FreeはAPIキーも登録も不要ですが、この経路の動作は未検証です。',
     'Tool Gatewayの検索・画像・音声など、モデル以外の機能は別料金になる場合があります。',
     'Hermesのモデル選択では、ツール非対応モデルを一覧から除く処理はOpenRouterにだけあります。このページはAPIにある無料モデルを掲載し、条件判定を別列で示します。',
   ];
@@ -216,7 +215,6 @@ ${notes.desktop.steps.map((step, index) => `${index + 1}. ${mdText(step)}`).join
   const DATA_LABELS = {
     nous: 'Nous Portal のモデル一覧 API',
     openrouter: 'OpenRouter のモデル一覧 API',
-    opencode: 'OpenCode のモデル一覧 API',
   };
   const officialPages = routeUrls
     .filter((u) => !isCode(u))
@@ -243,6 +241,8 @@ ${INTRO.join('\n\n')}
 | 経路 | 登録・APIキー | 無料になる範囲 | 利用条件 | 公式の設定手順 | 説明の確認日 |
 |---|---|---|---|---|---|
 ${comparisonRows.join('\n')}
+
+キーなしで OpenCode の無料モデル（名前が -free で終わるもの）を使う経路は、Hermes が 2026-09-18 に削除しました。OpenCode Zen の API キーを設定すると Hermes の一覧にも -free のモデルが出ますが、料金と動作はこのページでは確かめていません。 [Hermesでの経路削除](https://github.com/NousResearch/hermes-agent/commit/998f614c7f)
 
 ここで扱う経路は代表例です。GroqやCerebrasなど、カスタムエンドポイントの無料枠は、公式資料の[対応例](${abs('/hermes/docs/integrations/providers/#other-compatible-providers')})と[レシピ集](${abs('/hermes/docs/integrations/providers/#cookbook-together-ai-groq-perplexity')})で確認してください。
 
