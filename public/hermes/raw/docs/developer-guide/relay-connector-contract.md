@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Relay ↔ Connector 契約"
 description: "Hermes gateway の relay アダプターと外部コネクターのあいだの通信契約（実験的）"
 upstream_path: developer-guide/relay-connector-contract.md
-upstream_blob: bc8ffa9fb398794695d12e951f7760ee632ab7ce
+upstream_blob: 45e831ecef85a5d0d6c51ed7493acdfc8dee5be2
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-connector-contract
 ---
@@ -161,7 +161,16 @@ HMAC 署名することはありません（認証済みのソケットが、古
 転送には返事が要らない（プロバイダーはすでに満足している）ので、HTTP POST ではなく、
 `inbound` と同じ外向き WS 上を `passthrough_forward` フレームで流れます。gateway はデコードした
 リクエストを通常のエージェント経路で処理します（Discord のインタラクションは `MessageEvent` にデコードされ、
-メッセージと同じように扱われます。返信は送信経路または `follow_up` 経路から出ていきます）。`bufferId` は、
+メッセージと同じように扱われます。返信は送信経路または `follow_up` 経路から出ていきます）。
+スレッド内で送られたインタラクション（partial の `channel.type` が 10、11、12 のいずれか）は、
+テキスト経路のスレッドメッセージと同じキーで扱われます。つまり `chat_type: thread`、`thread_id` = スレッドのチャンネル ID、
+`parent_chat_id` = `channel.parent_id` です。connector がそのインタラクションに結び付ける権限（capability binding）も、
+同じフィールドを導き出さなければなりません。そうしないと、あとから来る `follow_up` が、vault が一度も結び付けていない
+セッションを指してしまいます。生のインタラクションにはチャットのラベルがないため、gateway はテキスト経路がそのチャットについて
+最後に運んだ `chat_name` / `chat_topic` をこれに与えます（観測した値として記録するので、再起動しても残ります）。
+ユーザー名はインタラクション自体から決めます。サーバーのニックネーム、なければグローバル名、それもなければユーザー名の順です。
+テキストメッセージで connector が付ける `user_display_name` も同じ順で決めなければなりません。そうしないと、2つの経路で
+同じユーザーが別の名前になります。`bufferId` は、
 転送がバッファーされたとき（Phase 5 §5.3 のバッファー専用への切り替え）に付き、
 gateway は確実に引き渡したあとでこれに ack を返します。
 

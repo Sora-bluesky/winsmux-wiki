@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: ef9c3794281e2d57d53956e86b318a8400a9649f
+upstream_blob: dff97a0364af815246d7ac55a764fb7f1dea21da
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -85,6 +85,8 @@ docker run -d \
 :::note ゲートウェイのログの行き先
 振り分けの全体像（プロファイルごとのゲートウェイ、ダッシュボード、起動時の調整役、コンテナ全体の `docker logs`）は、下の[ログの行き先](#where-the-logs-go)の節を参照してください。
 :::
+
+TUI も、ローカルのバックエンドとしてこの見守られたゲートウェイを使います。メッセージングのプラットフォームを何も設定していないときも同じです。対話的に `--tui` で立ち上げると、登録済みの s6 のゲートウェイが自動で起動し、準備が整うまで待ちます。通常の名前付きプロファイルは、自分を受け持つルートのゲートウェイにつながります。`gateway.standalone: true` を明示したプロファイルは、自分用に登録された枠を使います。クライアントの起動時に、サービスを入れたり、s6 を通さずに管理外のプロセスを立てたりすることはありません。
 
 :::note 人の見ていないゲートウェイでのツールの堂々巡りの強制停止
 人が見ていないゲートウェイと cron のセッションでは、`non_interactive_hard_stop_enabled` によって、ツールの堂々巡りを強制的に止める仕組みが既定で働きます。対話的な CLI、TUI、デスクトップ、ACP のセッションでは警告だけにとどまります。人の見ていない環境でこれを外すには、そのプロファイルの `config.yaml` にこう書きます。
@@ -357,6 +359,10 @@ s6 のコンテナにはログの出口が 4 つあり、「`docker logs` にゲ
 | **ダッシュボード**（`HERMES_DASHBOARD=1` のとき） | `docker logs <container>`（接頭辞なし） | `docker logs -f hermes`。ゲートウェイの行と混ざります |
 | **起動時の調整役**（コンテナが立ち上がるたびに、どのプロファイルのゲートウェイを戻したかを記録します） | `${HERMES_HOME}/logs/container-boot.log`（追記だけの記録） | `tail -F ~/.hermes/logs/container-boot.log` |
 | **Hermes 全体のログ**（`agent.log`、`errors.log`） | `${HERMES_HOME}/logs/`（プロファイルを見分けます） | `docker exec hermes hermes logs --follow [--level WARNING] [--session <id>]` |
+
+端末の入出力がある対話的なコンテナ（`docker run -it ... --tui` や `bash` など）では、前面で動くコマンドが端末を使います。エントリーポイントは既定で `S6_LOGGING=2` と `S6_CMD_USE_TERMINAL=1` を設定するので、見守られているゲートウェイとダッシュボードの出力がその画面を上書きすることはありません。両者のコンソール出力は、コンテナ内の `/run/uncaught-logs/current` にある、s6 の回転する受け皿のログへ送られます。プロファイルごとのゲートウェイのログファイルと、通常の Hermes のログは、上の表の場所でこれまでどおり見られます。受け皿のディレクトリは実行時だけの置き場なので、コンテナを再起動したり削除したりすると残りません。
+
+人の見ていない（ヘッドレスの）コンテナでは、これまでどおりサービスの出力を `docker logs` へ流します。`S6_LOGGING` と `S6_CMD_USE_TERMINAL` を明示して設定した場合は、こうした対話時の既定値よりそちらが優先されます。
 
 知っておくと役立つことが 2 つあります。
 

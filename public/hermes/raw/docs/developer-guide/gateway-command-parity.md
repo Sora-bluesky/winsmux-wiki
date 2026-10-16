@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイのコマンド対応表"
 description: "共有ゲートウェイ上で、ローカルの各クライアントがスラッシュコマンドをどう扱うか"
 upstream_path: developer-guide/gateway-command-parity.md
-upstream_blob: c34d8f2876f4f185cf57f9a11f626241f4be4163
+upstream_blob: 1266472871a380d7a36bb6b2769681200a4de753
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-command-parity
 ---
@@ -31,13 +31,14 @@ sources:
 このローカルセッション（次のターンと `config.get`）に適用します。config.yaml への保存は、
 ハンドラー自体が保存する場合だけです。`client-local (cli_only)` のコマンドは、クライアントのターミナルや UI の機能です。
 
-登録済みコマンドは 102 個で、内訳は control 28、read 18、refused 56 です。
+登録済みコマンドは 103 個で、内訳は control 29、read 18、refused 56 です。
 
 | コマンド | ゲートウェイ（`slash.exec`） | 従来型 CLI | Ink | Desktop | ACP | 備考 |
 |---|---|---|---|---|---|---|
 | `/agents` (/tasks) | refused | HermesCLI._handle_agents_command | delegation.pause | slash.exec: refused | refused | ゲートウェイ全体が対象です。すべてのチャットで動いているエージェントと、プロセスの非同期ジョブを一覧表示します |
 | `/approvals` | control | HermesCLI._handle_approvals_command | slash.exec | slash.exec | refused | per-session setting (gateway handler) |
 | `/approve` | control | messaging-only: unknown command | slash.exec | slash.exec | refused | messaging-only |
+| `/autoprune` | control | HermesCLI._handle_autoprune_command | slash.exec | slash.exec | refused |  |
 | `/battery` | refused | HermesCLI._handle_battery_command | sidecar: system.battery (preference not saved) | slash.exec: refused | refused | client-local (cli_only) |
 | `/bg` | refused | HermesCLI._handle_background_command | prompt.background | action: background | refused |  |
 | `/blueprint` (/bp) | control | HermesCLI._handle_blueprint_command | slash.exec | slash.exec | refused |  |

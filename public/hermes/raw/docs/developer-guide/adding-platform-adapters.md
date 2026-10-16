@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: 56d6ea3e29a9bb0e6e20a2efc7c20ee5920fba81
+upstream_blob: 5f23b286fdf9cb0730b75f9694a86cc15c526551
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -826,7 +826,7 @@ async def disconnect(self):
 
 | アダプター | 型 | 込み入り具合 | 参考になるところ |
 |---------|---------|------------|-------------------|
-| `bluebubbles.py` | REST + Webhook | 中 | 単純な REST API との連携 |
-| `weixin.py` | 長めのポーリング + CDN | 高 | メディアの扱い、暗号化 |
+| `plugins/platforms/bluebubbles/adapter.py` | REST + Webhook | 中 | 単純な REST API との連携 |
+| `plugins/platforms/weixin/adapter.py` | 長めのポーリング + CDN | 高 | メディアの扱い、暗号化 |
 | `plugins/platforms/wecom/callback_adapter.py` | コールバック / Webhook | 中 | HTTP サーバー、AES の暗号、複数アプリ |
 | `plugins/platforms/irc/adapter.py` | 長めのポーリング + IRC の規約 | 高 | 範囲を区切ったトークンの錠を持つ、機能の揃ったプラグインのアダプター |

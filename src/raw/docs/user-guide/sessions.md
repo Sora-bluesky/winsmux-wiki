@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: b1bb98c423bbe6157aa7649ebe71efd3d7859300
+upstream_blob: 8189bbb719559f69e838c8ac08398f3575bd5d32
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -1140,24 +1140,25 @@ state.db が正本になる前に作られたセッションでは、`~/.hermes/
 
 - ゲートウェイの会話は、しばらく使わなくても残ります。区切りたいときは `/new` か `/reset` を使ってください
 - リセットの前に、エージェントは期限を迎えるセッションから記憶と skill を保存します
-- 自動の整理（#54189 以降は**既定で有効**）: `sessions.auto_prune` が `true` のとき、終了したセッションのうち `sessions.retention_days`（既定 90）の間なにも起きていないものが、CLI・ゲートウェイ・cron の起動時に整理されます
+- 自動の整理（**既定では無効**。使うときは自分で有効にします）: `sessions.auto_prune` が `true` のとき、終了したセッションのうち `sessions.retention_days`（既定 90）の間なにも起きていないものが、CLI・ゲートウェイ・cron の起動時に整理されます
+- **ディスクが少ないときの確認。** `config.yaml` に `sessions.auto_prune` のキーがない間、Hermes はセッションの開始時に `state.db` を置いたディスクの空きを調べます（ファイルシステムへの呼び出し 2 回だけで、目に見える負荷はありません）。空きが少ないとき（空きが 2 GB 未満、または残りが 20 GB 未満で空きが 10% 未満）は、一度だけたずねます。従来の CLI は起動時にたずね、TUI と Desktop はお知らせを出し、ゲートウェイはホームのチャンネルに質問を投稿します。この確認では、整理するとどれくらいの履歴が消えるかを見積もり（保存されているバイト数で重みを付けるので、古い小さなメッセージがたくさんあっても多めに出ません）、整理してもディスクの問題が*解決しない*ときはそうはっきり伝えます（`retention_days` より古いセッションがない場合や、履歴がディスク全体のごく一部でしかない場合）。履歴を消すと `state.db` の中に空きができますが、下で説明する自動の `VACUUM` は 1 回の整理ではほとんど動かないので、`hermes sessions optimize` を実行して空きをディスクに戻してください。答えは `/autoprune on`、`/autoprune off`（すべて残し、二度とたずねません）、`/autoprune later`（1 週間後にもう一度知らせます）のどれかです。`/autoprune` だけを打つと、いまの状態が表示されます
 - `sessions.retention_days` は `>= 0` の整数の日数でなければなりません。負の値（や、値がないこと）は受け付けられません。起動時の整理処理は、許される範囲を示した警告を記録したうえで、未来の日付を区切りにして「全部」を消しにいくようなことはせず、その回の整理を飛ばします。整理そのものを止めたいときの切り替えは `sessions.auto_prune: false` です
 - 実際に行が消えた整理のあと、`state.db` は次の**両方**の条件を満たしたときだけ `VACUUM` してディスクを取り戻します。前回の `VACUUM` の成功から `sessions.min_vacuum_interval_days`（既定 30）以上たっていること、**かつ**ファイルのページの 25% 以上が取り戻せる状態であること（`PRAGMA freelist_count / page_count`）。中身の詰まったデータベースが、数 MB のために全体を書き直す代価を払うことはありません（SQLite は普通の DELETE ではファイルを縮めません）
 - 整理は `sessions.min_interval_hours`（既定 24）につき最大 1 回だけ走ります。最後に実行した時刻は `state.db` 自身に記録されるので、同じ `HERMES_HOME` を使うすべての Hermes のプロセスで共有されます
 
-整理をしないと `state.db` は際限なく大きくなります。ゲートウェイと cron を組み合わせた環境で、数週間のうちに数 GB になったという報告があります。終了したセッションをすべて永久に残しておきたい場合（#54189 より前の動き）は、`~/.hermes/config.yaml` で止められます。
+整理をしないと `state.db` は際限なく大きくなります。ゲートウェイと cron を組み合わせた環境で、数週間のうちに数 GB になったという報告があります。大きくなりすぎないようにするには、`~/.hermes/config.yaml` で有効にしてください（`/autoprune on` と答えても同じです）。
 
 ```yaml
 sessions:
-  auto_prune: false         # default is true — set false to keep all history
+  auto_prune: true          # default is false — true deletes ended sessions past retention_days
   retention_days: 90        # keep ended sessions active within this window
   vacuum_after_prune: true  # reclaim disk space after a pruning sweep
   min_vacuum_interval_days: 30 # don't rewrite the DB more often than this
   min_interval_hours: 24    # don't re-run the sweep more often than this
 ```
 
-これらのキーをすでに自分で設定してある環境では、その値がそのまま保たれます。
-設定していないキーだけが新しい既定値になります。
+これらのキーを自分で設定してある環境では、その値がそのまま保たれます。
+設定していないキーだけが既定値に従います。
 
 消えるのは**終了した**セッションだけです。動いているセッションは、どれだけ古くても
 自動で整理されることはありません。終了したセッションは最後のメッセージからの
@@ -1229,5 +1230,5 @@ hermes sessions prune --older-than 30 --yes
 ```
 
 :::tip
-自動の整理は**既定で有効**です。終了したセッションのうち `sessions.retention_days`（既定 90）の間なにも起きていないものが起動時に消され、動いているセッションには手が付きません（上の [自動の後片付け](#automatic-cleanup) を参照）。セッションの履歴は `session_search` で過去の会話を思い出すもとになるので、終了したセッションもすべて残しておきたい場合は、`config.yaml` で `sessions.auto_prune: false` にするか、`retention_days` を大きくしてください。自動の整理を切っていても、一度だけ片付けたいときは `hermes sessions prune` が使えます（まったく整理しなかった場合に実際に起きた例: セッション約 1000 件で 384 MB になった `state.db` が、FTS5 への書き込みと `/resume` の一覧表示を遅くしました）。
+自動の整理は**既定では無効**です。`state.db` を置いたディスクの空きが少なくなると、Hermes が一度だけたずねます（上の [自動の後片付け](#automatic-cleanup) を参照）。有効にすると、終了したセッションのうち `sessions.retention_days`（既定 90）の間なにも起きていないものが起動時に消され、動いているセッションには手が付きません。セッションの履歴は `session_search` で過去の会話を思い出すもとになるので、どうするかは自分で決めてください。`/autoprune on|off` で切り替えるか、`config.yaml` の `sessions.auto_prune` で設定します。自動の整理を切っていても、一度だけ片付けたいときは `hermes sessions prune` が使えます（まったく整理しなかった場合に実際に起きた例: セッション約 1000 件で 384 MB になった `state.db` が、FTS5 への書き込みと `/resume` の一覧表示を遅くしました）。
 :::

@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-10-16、対象期間 = 2026-10-10 〜 2026-10-16（JST）
+生成日 = 2026-10-17、対象期間 = 2026-10-11 〜 2026-10-17（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,25 +16,29 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-10-16 [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
+- 2026-10-16 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- 2026-10-16 [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
+- 2026-10-16 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- 2026-10-16 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- 2026-10-16 [インストール](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
+- 2026-10-16 [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- 2026-10-16 [ブラウザの自動操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/browser/)
+- 2026-10-16 [繰り返しのループ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/loops/)
+- 2026-10-16 [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
 - 2026-10-15 [ACP の内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/acp-internals/)
 - 2026-10-15 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
 - 2026-10-15 [cron の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cron-internals/)
 - 2026-10-15 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - 2026-10-15 [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
-- 2026-10-15 [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
-- 2026-10-15 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
-- 2026-10-15 [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
 - 2026-10-15 [ローカルのプロファイル所有者をまたぐホスト型ルーム](https://wiki.winsmux.dev/hermes/docs/developer-guide/hosted-profile-owners/)
 - 2026-10-15 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
 - 2026-10-15 [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
-- 2026-10-15 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
 - 2026-10-15 [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
 - 2026-10-15 [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
 - 2026-10-15 [セッションの保存領域](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
-- 2026-10-15 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
 - 2026-10-15 [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
 - 2026-10-15 [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
-- 2026-10-15 [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
 - 2026-10-15 [定期実行がうまくいかないとき](https://wiki.winsmux.dev/hermes/docs/guides/cron-troubleshooting/)
 - 2026-10-15 [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 - 2026-10-15 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
@@ -89,12 +93,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-11 [スキルを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/creating-skills/)
 - 2026-10-11 [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
 - 2026-10-11 [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
-- 2026-10-10 [ブラウザの CDP スーパーバイザ](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-supervisor/)
-- 2026-10-10 [画像生成プロバイダのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/image-gen-provider-plugin/)
-- 2026-10-10 [SSH / リモートホスト越しの OAuth](https://wiki.winsmux.dev/hermes/docs/guides/oauth-over-ssh/)
-- 2026-10-10 [繰り返しのループ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/loops/)
-- 2026-10-10 [ツールとツールセット](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tools/)
-- 2026-10-10 [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
 
 ## 週次まとめ
 

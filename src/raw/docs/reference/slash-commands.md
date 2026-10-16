@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 1408565e9dfb3a67721f214080d7eb096b97dc78
+upstream_blob: 4add1c493fa539511b9fb606ec5ae9112c8a46f3
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -97,6 +97,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/approvals [manual\|smart\|off]` | 危険なコマンドの承認モード（設定に残るもの）を表示、または設定します。 |
 | `/footer [on\|off\|status]` | 最終的な返答に付くゲートウェイの実行情報のフッター（モデル、コンテキストの使用率、作業ディレクトリ）を出すかどうかを切り替えます。 |
 | `/busy [queue\|steer\|interrupt\|status]` | Hermes が作業している最中にメッセージを送ったときの動きを決めます。新しいメッセージを予約する、ターンの途中で方向を伝える、すぐ中断する、のいずれかです。CLI とメッセージングゲートウェイの両方で使えます。 |
+| `/autoprune [on\|off\|later\|status]` | 終了した古いセッションを自動で整理（prune）するかを決めます（既定はオフ）。`state.db` を置いているディスクの空きが少なくなると、Hermes が一度だけ尋ねます。`on`/`off` を選ぶと `sessions.auto_prune` に保存され、質問はそれで終わります。`later` を選ぶと1週間後にもう一度知らせます。CLI、TUI、Desktop、メッセージングゲートウェイで使えます（Slack では `/hermes autoprune`）。 |
 | `/indicator [kaomoji\|emoji\|unicode\|ascii]` | CLI 専用。TUI の処理中インジケーターの見た目を選びます。 |
 | `/timestamps [on\|off\|status]` | CLI 専用。メッセージと `/history` に `[HH:MM]` の時刻を出すかどうかを切り替えます。 |
 | `/wake [on\|off\|status]` | CLI 専用。「Hey Hermes」というウェイクワードの待ち受けを切り替えます。 |

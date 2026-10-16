@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: 2bbe9c975b39010e93990c18012178cf2791625d
+upstream_blob: a1fc57fb2fdce6aa53078ae1d34b3142ba16dc4b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -549,14 +549,15 @@ CLI は `load_cli_config()` を使い、既定値をコードに持っていま�
 
 ## サービスのアダプター {#platform-adapters}
 
-ほとんどのメッセージングサービスは、`plugins/platforms/<name>/adapter.py` というプラグインの形で入っています。昔からのアダプターがいくつか `gateway/platforms/` に直接残っています。どれも `gateway/platforms/base.py` の `BasePlatformAdapter` を継承しています。
+メッセージングサービスはどれも、`plugins/platforms/<name>/` の下にプラグインのアダプターとして入っています。`gateway/platforms/` に残っているのは、土台のクラスと、HTTP で受け付けるアダプター（`api_server`、`webhook`、`msgraph_webhook`）だけです。どれも `gateway/platforms/base.py` の `BasePlatformAdapter` を継承しています。
 
 ```text
 plugins/platforms/                  # plugin-packaged adapters (one dir each)
 ├── telegram/adapter.py     # Telegram Bot API (long polling or webhook)
 ├── discord/adapter.py      # Discord bot via discord.py
 ├── slack/adapter.py        # Slack Socket Mode
-├── whatsapp/adapter.py     # WhatsApp Business Cloud API
+├── whatsapp/adapter.py     # WhatsApp via the local Baileys bridge
+├── whatsapp_cloud/adapter.py # WhatsApp Business Cloud API
 ├── matrix/adapter.py       # Matrix via mautrix (optional E2EE)
 ├── mattermost/adapter.py   # Mattermost WebSocket API
 ├── email/adapter.py        # Email via IMAP/SMTP
@@ -566,16 +567,16 @@ plugins/platforms/                  # plugin-packaged adapters (one dir each)
 ├── wecom/adapter.py        # WeCom (WeChat Work) callback
 ├── line/adapter.py         # LINE Messaging API
 ├── teams/adapter.py        # Microsoft Teams
+├── signal/adapter.py       # Signal via signal-cli HTTP daemon (SSE + JSON-RPC)
 ├── irc/adapter.py          # IRC (canonical scoped-lock example)
+├── bluebubbles/adapter.py  # Apple iMessage via BlueBubbles macOS server
+├── weixin/adapter.py       # Weixin (personal WeChat) via iLink Bot API
+├── qqbot/                  # QQ Bot (Tencent QQ) via Official API v2
+├── yuanbao/adapter.py      # Yuanbao (Tencent) DM/group WebSocket
 └── …                       # google_chat, ntfy, photon, raft, simplex, …
 
-gateway/platforms/                  # core base + legacy direct adapters
+gateway/platforms/                  # core base + HTTP ingress adapters
 ├── base.py              # BasePlatformAdapter — shared logic for all platforms
-├── signal.py            # Signal via signal-cli REST API
-├── weixin.py            # Weixin (personal WeChat) via iLink Bot API
-├── bluebubbles.py       # Apple iMessage via BlueBubbles macOS server
-├── qqbot/               # QQ Bot (Tencent QQ) via Official API v2 (sub-package)
-├── yuanbao.py           # Yuanbao (Tencent) DM/group adapter
 ├── msgraph_webhook.py   # Microsoft Graph change-notification webhook (Teams, Outlook, etc.)
 ├── webhook.py           # Inbound/outbound webhook adapter
 └── api_server.py        # REST API server adapter

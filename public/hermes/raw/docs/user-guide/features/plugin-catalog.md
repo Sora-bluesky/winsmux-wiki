@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: ff17d0b236161460e0cb63c9750158bdf6fb1db4
+upstream_blob: 71d4c915d684fb7841758692ea454df9a66777db
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -19,7 +19,7 @@ hermes plugins install <name>
 
 見て選びたいときは **[/docs/plugins](https://hermes-agent.nousresearch.com/plugins)** を開いてください。
 カテゴリ（メモリ、デスクトップ、プラットフォーム、Web とブラウザ、ツール、音声、自動化、
-モデル）ごとに棚が分かれていて、検索、ティア絞り込み（公式 / コミュニティ）、機能チップ、
+モデル）ごとに棚が分かれていて、検索、ティア絞り込み（公式 / 認証済み / コミュニティ）、機能チップ、
 そして各項目のコピーできるインストールコマンドが並びます。
 
 カード（クリックできます）ごとに専用ページ `/docs/plugins/<name>` もあります。
@@ -50,7 +50,7 @@ hermes plugins install <name>
 | `repo` | そのプラグインの公開 git リポジトリ |
 | `sha` | 審査された**正確な 40 桁の 16 進コミット**。インストールはブランチの先端ではなくこの固定値をチェックアウトします |
 | `subdir` | モノレポの場合に、リポジトリ内のプラグインの場所を示すパス。`[A-Za-z0-9._/-]+` に合うふつうの相対パスにします（`..`、`.`、空の区切り、絶対パスやバックスラッシュの形は不可）（任意。既定はリポジトリの最上位） |
-| `tier` | `official`（NousResearch が保守）または `community` |
+| `tier` | `official`（NousResearch が保守）、`verified`（統合する製品を持つ信頼できる企業から提供されたものだと Nous チームが確認済み）、または `community`。`official` と `verified` を設定できるのは Nous のメンテナーだけです |
 | `category` | 並ぶ棚。`desktop`（既定）、`memory`、`platform`、`web`、`tools`、`voice`、`automation`、`models`、`general` |
 | `maintainer` | そのプラグインの持ち主 |
 | `capabilities` | 宣言されたツール、フック、ミドルウェア、必要な環境変数 |

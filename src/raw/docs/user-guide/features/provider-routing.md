@@ -2,7 +2,7 @@
 title: "提供元の振り分け"
 description: "OpenRouter の提供元の優先設定を書いて、費用・速度・品質のどれを重く見るかを決めます。"
 upstream_path: user-guide/features/provider-routing.md
-upstream_blob: ecd7c3259c431ace69c565bb2e31151e4007e0ae
+upstream_blob: 6cb93cd855d7d334a958b25d386211f5345b75b3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/provider-routing
 ---
@@ -197,7 +197,7 @@ provider_routing:
 提供元の振り分けの設定は、エージェントとの会話の要求と、反復の上限に達したときの要約の要求に、`extra_body.provider` の項目として付いて OpenRouter へ渡ります。（`extra_body` は OpenAI の Python SDK の引数名で、JSON の要求では最上位の `provider` という項目になります。）圧縮やタイトル生成といった補助的な処理は、`auxiliary.<task>.extra_body` の下で別に設定します。
 
 - **CLI で使うとき** — `~/.hermes/config.yaml` に書き、起動時に読み込まれます
-- **ゲートウェイで使うとき** — 同じ設定ファイルを、ゲートウェイの起動時に読み込みます
+- **ゲートウェイで使うとき** — 同じ設定ファイルです。メッセージングのプラットフォームからのターンは、ゲートウェイの起動時に読み込んだ内容を使います。手元の `hermes chat` / TUI のセッションは、ゲートウェイがそのセッションを作るときに自分のプロファイルから読み込みます。そのため、編集はゲートウェイを再起動しなくても次の新しいセッションから効き、開いているセッションは作られたときの値のままです
 
 振り分けの設定は `config.yaml` から読まれ、`AIAgent` を作るときの引数として渡されます。
 

@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: c931e0940ebf04eadc96fc754f47f04a8f895204
+upstream_blob: 85549b7cd4a8ab91bf9cad81ef0699a25ddb0ce8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -1000,7 +1000,7 @@ slack:
       performance implications.
 ```
 
-見出しに書くのは Slack のチャンネル ID です（チャンネル詳細 →「概要」の下の方で調べられます）。そのチャンネルのすべてのメッセージに、その場限りのシステムの指示として差し込まれます。
+見出しに書くのは Slack のチャンネル ID です（チャンネル詳細 →「概要」の下の方で調べられます）。そのチャンネルのすべてのメッセージに、スラッシュコマンドのターン（`/hermes <question>` と、Slack 本来の `/<command>`）も含めて、その場限りのシステムの指示として差し込まれます。
 
 ## チャンネルごとのスキルの割り当て {#per-channel-skill-bindings}
 
@@ -1026,7 +1026,7 @@ slack:
 ```
 
 覚えておくこと:
-- 割り当てはチャンネル ID で決まります。割り当てのあるチャンネルのスレッドは、親のチャンネルの割り当てを引き継ぎます。
+- 割り当てはチャンネル ID で決まります。割り当てのあるチャンネルのスレッドは、親のチャンネルの割り当てを引き継ぎます。スラッシュコマンド（`/hermes <question>`）で始まったセッションでも、この割り当てが読み込まれます。
 - スキルが読まれるのはセッションの始まりだけです（新しいセッション）。割り当てを変えたときは、`/new` を実行すると効きます。
 - `channel_prompts` と組み合わせると、スキルの指示の上にチャンネルごとの口調や制約を重ねられます。
 
