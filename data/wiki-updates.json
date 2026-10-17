@@ -1,6 +1,103 @@
 {
-  "generatedAt": "2026-10-17",
+  "generatedAt": "2026-10-18",
   "entries": [
+    {
+      "date": "2026-10-17",
+      "sha": "3d73e36",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/adding-platform-adapters",
+          "title": "プラットフォームアダプターを追加する",
+          "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
+        },
+        {
+          "id": "developer-guide/architecture",
+          "title": "アーキテクチャ",
+          "url": "/hermes/docs/developer-guide/architecture/"
+        },
+        {
+          "id": "developer-guide/gateway-command-parity",
+          "title": "ゲートウェイのコマンド対応表",
+          "url": "/hermes/docs/developer-guide/gateway-command-parity/"
+        },
+        {
+          "id": "developer-guide/gateway-internals",
+          "title": "ゲートウェイの内部",
+          "url": "/hermes/docs/developer-guide/gateway-internals/"
+        },
+        {
+          "id": "developer-guide/relay-connector-contract",
+          "title": "Relay ↔ Connector 契約",
+          "url": "/hermes/docs/developer-guide/relay-connector-contract/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/docker",
+          "title": "Hermes の Docker 設定",
+          "url": "/hermes/docs/user-guide/docker/"
+        },
+        {
+          "id": "user-guide/features/computer-use",
+          "title": "コンピュータ操作",
+          "url": "/hermes/docs/user-guide/features/computer-use/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/provider-routing",
+          "title": "提供元の振り分け",
+          "url": "/hermes/docs/user-guide/features/provider-routing/"
+        },
+        {
+          "id": "user-guide/features/vision",
+          "title": "画像の貼り付けと視覚認識",
+          "url": "/hermes/docs/user-guide/features/vision/"
+        },
+        {
+          "id": "user-guide/messaging/slack",
+          "title": "Slack",
+          "url": "/hermes/docs/user-guide/messaging/slack/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        }
+      ]
+    },
     {
       "date": "2026-10-16",
       "sha": "fc0a15d",

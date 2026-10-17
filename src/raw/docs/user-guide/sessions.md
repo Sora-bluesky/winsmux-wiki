@@ -2,7 +2,7 @@
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 8189bbb719559f69e838c8ac08398f3575bd5d32
+upstream_blob: 22dbb6974399ff3ff5e8ef2921812fbee4dc03eb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -223,6 +223,8 @@ hermes --resume 20250305_091523_a1b2c3 --no-restore-cwd
 ```
 
 移動したことは `↪ restored workspace dir: …` の行で分かります。復元に失敗しても、再開そのものが壊れることはありません。
+
+アイドル状態のセッションを再開すると、プロファイルのいまの設定が読み込まれます。対象はツールセット、MCP サーバー、`terminal` の設定、`max_turns`、チェックポイント、既定の推論の強さです。セッションのモデル、起動時のフラグ、`/reasoning` や作業場所に加えた変更はそのまま残ります。違いが1つでもあるとプロンプトキャッシュの先頭部分が新しく作り直されるので、再開後の最初のターンは割高になります。`terminal` の設定を変えると、`terminal.timeout` のような関係のなさそうな項目でも、それまでの `cd` がセッションのディレクトリに戻されます。
 
 ### 作業場所でセッションを絞り込む {#filtering-sessions-by-workspace}
 
@@ -661,6 +663,15 @@ hermes sessions archive --newer-than 5h
 # Archive by title substring, preview first
 hermes sessions archive --title "dry run" --dry-run
 hermes sessions archive --title "dry run" --yes
+```
+
+アーカイブの対象は、既定では終了したセッションです。Desktop など、ゲートウェイが
+持つローカルのセッションは「終了」にならないので、コマンドは条件に合ったのに
+開いたままのため飛ばしたセッションの数を知らせます。それらもアーカイブするには
+`--include-open` を付けます（`prune` が開いているセッションを消すことはありません）。
+
+```bash
+hermes sessions archive --title "Review Hermes" --include-open --yes
 ```
 
 絞り込みは少なくとも 1 つ必要です。条件なしの `hermes sessions archive` は、
@@ -1141,7 +1152,7 @@ state.db が正本になる前に作られたセッションでは、`~/.hermes/
 - ゲートウェイの会話は、しばらく使わなくても残ります。区切りたいときは `/new` か `/reset` を使ってください
 - リセットの前に、エージェントは期限を迎えるセッションから記憶と skill を保存します
 - 自動の整理（**既定では無効**。使うときは自分で有効にします）: `sessions.auto_prune` が `true` のとき、終了したセッションのうち `sessions.retention_days`（既定 90）の間なにも起きていないものが、CLI・ゲートウェイ・cron の起動時に整理されます
-- **ディスクが少ないときの確認。** `config.yaml` に `sessions.auto_prune` のキーがない間、Hermes はセッションの開始時に `state.db` を置いたディスクの空きを調べます（ファイルシステムへの呼び出し 2 回だけで、目に見える負荷はありません）。空きが少ないとき（空きが 2 GB 未満、または残りが 20 GB 未満で空きが 10% 未満）は、一度だけたずねます。従来の CLI は起動時にたずね、TUI と Desktop はお知らせを出し、ゲートウェイはホームのチャンネルに質問を投稿します。この確認では、整理するとどれくらいの履歴が消えるかを見積もり（保存されているバイト数で重みを付けるので、古い小さなメッセージがたくさんあっても多めに出ません）、整理してもディスクの問題が*解決しない*ときはそうはっきり伝えます（`retention_days` より古いセッションがない場合や、履歴がディスク全体のごく一部でしかない場合）。履歴を消すと `state.db` の中に空きができますが、下で説明する自動の `VACUUM` は 1 回の整理ではほとんど動かないので、`hermes sessions optimize` を実行して空きをディスクに戻してください。答えは `/autoprune on`、`/autoprune off`（すべて残し、二度とたずねません）、`/autoprune later`（1 週間後にもう一度知らせます）のどれかです。`/autoprune` だけを打つと、いまの状態が表示されます
+- **ディスクが少ないときの確認。** `config.yaml` に `sessions.auto_prune` のキーがない間、Hermes はセッションの開始時に `state.db` を置いたディスクの空きを調べます（ファイルシステムへの呼び出し 2 回だけで、目に見える負荷はありません）。空きが少ないとき（空きが 2 GB 未満、または残りが 20 GB 未満で空きが 10% 未満）は、一度だけたずねます。従来の CLI は起動時にたずね（空きが少ない状態で最初に起動したときはバックグラウンドで測るだけで、質問は次の起動から出ます。そのため起動がデータベースを待つことはありません）、TUI と Desktop はお知らせを出し、ゲートウェイはホームのチャンネルに質問を投稿します。この確認では、整理するとどれくらいの履歴が消えるかを見積もり（保存されているバイト数で重みを付けるので、古い小さなメッセージがたくさんあっても多めに出ません）、整理してもディスクの問題が*解決しない*ときはそうはっきり伝えます（`retention_days` より古いセッションがない場合や、履歴がディスク全体のごく一部でしかない場合）。履歴を消すと `state.db` の中に空きができますが、下で説明する自動の `VACUUM` は 1 回の整理ではほとんど動かないので、`hermes sessions optimize` を実行して空きをディスクに戻してください。答えは `/autoprune on`、`/autoprune off`（すべて残し、二度とたずねません）、`/autoprune later`（1 週間後にもう一度知らせます）のどれかです。`/autoprune` だけを打つと、いまの状態が表示されます
 - `sessions.retention_days` は `>= 0` の整数の日数でなければなりません。負の値（や、値がないこと）は受け付けられません。起動時の整理処理は、許される範囲を示した警告を記録したうえで、未来の日付を区切りにして「全部」を消しにいくようなことはせず、その回の整理を飛ばします。整理そのものを止めたいときの切り替えは `sessions.auto_prune: false` です
 - 実際に行が消えた整理のあと、`state.db` は次の**両方**の条件を満たしたときだけ `VACUUM` してディスクを取り戻します。前回の `VACUUM` の成功から `sessions.min_vacuum_interval_days`（既定 30）以上たっていること、**かつ**ファイルのページの 25% 以上が取り戻せる状態であること（`PRAGMA freelist_count / page_count`）。中身の詰まったデータベースが、数 MB のために全体を書き直す代価を払うことはありません（SQLite は普通の DELETE ではファイルを縮めません）
 - 整理は `sessions.min_interval_hours`（既定 24）につき最大 1 回だけ走ります。最後に実行した時刻は `state.db` 自身に記録されるので、同じ `HERMES_HOME` を使うすべての Hermes のプロセスで共有されます

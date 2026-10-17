@@ -2,7 +2,7 @@
 title: "ダッシュボードを広げる"
 description: "Hermes の Web ダッシュボード向けにテーマとプラグインを作ります — 配色、書体、レイアウト、独自のタブ、外枠のスロット、ページごとのスロット、そして裏側の API ルート"
 upstream_path: user-guide/features/extending-the-dashboard.md
-upstream_blob: 3b63b41beec63938911b7c33d15b432c8b8f0afa
+upstream_blob: 1fafafd4e9d2cf55e8876128e3a765b5990c9623
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/extending-the-dashboard
 ---
@@ -751,6 +751,17 @@ async def do_action(body: dict):
 
 プラグインの API のルートは、ダッシュボードのふだんの認証の関門の後ろにあります — 認証していない要求はプラグインのルートに届く前に `401` になり、止めてあるプラグインのルートへの要求はその場で断られます。とはいえ、**信用できないプラグインを動かしているなら `--host 0.0.0.0` で外に向けてダッシュボードを開かないでください** — 認証を通ったセッションからは、そのルートにも手が届いてしまいます。
 
+#### イベントループを止めない {#dont-block-the-event-loop}
+
+既定の `plugins.isolation: in_process` では、API のハンドラーはゲートウェイのイベントループの上で動きます。
+これは、ほかのダッシュボード、Desktop、チャットの要求すべてに応えているのと同じループです。処理を止めてしまうハンドラー（`time.sleep`、
+同期型の HTTP クライアント、時間のかかるファイルの走査）があると、それが戻るまで全部が待たされます。3 秒眠るハンドラーがひとつあるだけで、
+無関係な `/api/status` が数秒遅れ、Desktop の接続が時間切れになることもあります。`async def` と非同期の
+I/O を使うか、止まる処理を `await asyncio.to_thread(...)` でループの外へ逃がしてください（ふつうの `def` のハンドラーも
+ワーカースレッドで動きます）。`plugins.isolation: host` にすると、ハンドラーは別のプロセスで動きます
+（[プラグインホスト](/hermes/docs/user-guide/features/plugins/#running-plugins-out-of-process-pluginsisolation)）。そこで遅いハンドラーが待たせるのは
+そのプロファイルのホスト側プラグインへの要求だけで、60 秒たっても応答がないものには HTTP 504 が返ります。
+
 #### Hermes の内側に触れる {#accessing-hermes-internals}
 
 裏側のルートはダッシュボードの処理の中で動くので、hermes-agent のコードから直接読み込めます。
@@ -814,6 +825,13 @@ Tailwind のクラスや `style=` の直書きでは足りない見た目が必�
 | 2 | `<repo>/plugins/memory/<name>/dashboard/` | `bundled` |
 | 2 | `<repo>/plugins/<name>/dashboard/` | `bundled` |
 | 3 | `./.hermes/plugins/<name>/dashboard/` | `project` — `HERMES_ENABLE_PROJECT_PLUGINS` が設定されているときだけ |
+
+ひとつのゲートウェイで複数のプロファイルを扱っているとき、ゲートウェイを起動したときとは別のプロファイルへの要求では、
+まずそのプロファイル自身の `plugins/<name>/dashboard/` を見て、次にルートの `~/.hermes/plugins/<name>/dashboard/` を見ます
+（単独で `hermes --profile <name> dashboard` を動かしていたときと同じです。同じ名前でぶつかったら、そのプロファイル自身のものが勝ちます）。
+そのあとに同梱のものを見ます。どれを使うかは、そのプロファイルの `plugins.enabled` / `plugins.disabled` で決まります。そのプラグインの
+API は、ルートのプラグインのものも含め、そのプロファイルの[プラグインホスト](/hermes/docs/user-guide/features/plugins/#running-plugins-out-of-process-pluginsisolation)で動き、
+ゲートウェイの中で動くことはありません。
 
 見つけた結果は、ダッシュボードの処理ごとに覚えておかれます。新しいプラグインを足したら、次のどちらかをしてください。
 

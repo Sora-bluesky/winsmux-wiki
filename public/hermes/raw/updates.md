@@ -8,6 +8,27 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-17
+
+- [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
+- [アーキテクチャ](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)
+- [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
+- [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- [Relay ↔ Connector 契約](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-connector-contract/)
+- [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
+- [コンピュータ操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/computer-use/)
+- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
+- [プラグインカタログ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [提供元の振り分け](https://wiki.winsmux.dev/hermes/docs/user-guide/features/provider-routing/)
+- [画像の貼り付けと視覚認識](https://wiki.winsmux.dev/hermes/docs/user-guide/features/vision/)
+- [Slack](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/slack/)
+- [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
+
 ## 2026-10-16
 
 - [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)

@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: cdcdfcaba106e5804d239d75b58f845fa2d48674
+upstream_blob: 668b809069f0e322402ff4138466fd9d8e60c40c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -263,8 +263,10 @@ terminal:
 直近1日以内に書き込みがあれば残り、最後の書き込みから1日たつと消えます。
 アイドル状態の項目を削除する前に、Hermes は、その項目の中（または、もう存在しない作業用の一時パスの中）を
 作業ディレクトリにしたまま動いているプロセス（テスト実行のあとに残されたヘッドレスブラウザーなど）を止め、
-そこを指している `git worktree` の登録も取り除きます。各項目は削除の直前にもう一度確かめられるので、
-プロセスを止めているあいだに書き込みがあった項目は残ります。削除したもの、止めたプロセス、その再確認で残した項目は、すべて `~/.hermes/logs/scratch-prune.log` に記録されます。`hermes doctor`
+そこを指している `git worktree` の登録も取り除きます。ただし、Hermes 自身が起動していまも追跡しているプロセス（バックグラウンドの
+`terminal` のプロセス、ゲートウェイ、CLI のセッション、それらが起動してまだ子プロセスのままのもの）は止めません。
+それらが中で作業しているアイドル状態の項目は、削除せずに残します。各項目は削除の直前にもう一度確かめられるので、
+プロセスを止めているあいだに書き込みがあった項目は残ります。削除したもの、止めたプロセス、残した項目は、すべて `~/.hermes/logs/scratch-prune.log` に記録されます。`hermes doctor`
 はこのディレクトリとそのサイズを表示し、
 `cache/` の下のほかの場所にある、どの自動削除処理の対象にもなっていない 1 GB 超のディレクトリについて警告します。
 

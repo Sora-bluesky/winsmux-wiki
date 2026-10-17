@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コードの実行"
 description: "RPC でツールを呼べる Python の実行環境。何手もかかる作業を1ターンに畳み込みます"
 upstream_path: user-guide/features/code-execution.md
-upstream_blob: f373bb26dab932497f19780a8b6806589cb141cb
+upstream_blob: 800fbf18f4d00119466586d1d6416fb3dbe44e56
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/code-execution
 ---
@@ -238,6 +238,8 @@ code_execution:
 :::
 
 名前に `KEY`、`TOKEN`、`SECRET`、`PASSWORD`、`CREDENTIAL`、`PASSWD`、`AUTH` を含む環境変数は除かれます。渡されるのは安全な系統の変数（`PATH`、`HOME`、`LANG`、`SHELL`、`PYTHONPATH`、`VIRTUAL_ENV` など）だけです。
+
+承認: ゲートウェイのセッションでは、台本が動く前に台本全体を承認します。ローカルの CLI、TUI、Desktop、ACP のセッションでは、自分で打ち込んだターンに台本全体の確認は出ません。台本の中の Python レベルのファイル操作やプロセス操作は確認なしで動き、確認が出るのは `terminal()` の呼び出しだけです。差し込まれたターンや自動処理のターンでは、台本全体の確認が残ります。詳しくは [`execute_code` の台本](/hermes/docs/user-guide/security/#execute-code-scripts) を参照してください。
 
 ### スキルが宣言した環境変数の受け渡し {#skill-environment-variable-passthrough}
 

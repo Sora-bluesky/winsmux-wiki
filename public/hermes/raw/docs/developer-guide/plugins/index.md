@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 9cfb32e985d94d9a17ae485b7f9d500826cf8696
+upstream_blob: e6c64a4f5211444517dcf67b517c2f9852c2e90c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -1359,6 +1359,20 @@ async def _handle_check(raw_args: str) -> str:
 
 def register(ctx):
     ctx.register_command("check", handler=_handle_check, description="Run async check")
+```
+
+**ハンドラーが動く場所:** スラッシュコマンドのハンドラーは、そのセッションを持つゲートウェイのプロセスの中で動きます。利用者が従来の `hermes chat` CLI でコマンドを打った場合も同じです。ハンドラーは利用者の端末やディレクトリで動いているわけではないので、次の点に注意してください。
+
+- 表示したい文字列は戻り値として返してください。`print()` はゲートウェイの標準出力に書き込まれるだけで、利用者の目には届きません。
+- セッションの作業ディレクトリは `os.getcwd()` ではなく `agent.runtime_cwd.resolve_agent_cwd()` から取ってください。前者はゲートウェイ自身のディレクトリを返します。相対パスはこのディレクトリを基準に解決します。
+- セッションの識別情報は `os.environ` ではなく、`gateway.session_context.get_session_env("HERMES_SESSION_PLATFORM")` やほかの `HERMES_SESSION_*` の名前で読んでください。
+
+```python
+from agent.runtime_cwd import resolve_agent_cwd
+
+def _handle_todo(raw_args: str) -> str:
+    todo = resolve_agent_cwd() / "TODO.md"  # the session's folder, not the gateway's
+    return todo.read_text() if todo.exists() else "No TODO.md here."
 ```
 
 ### スラッシュコマンドからツールをディスパッチする {#dispatch-tools-from-slash-commands}

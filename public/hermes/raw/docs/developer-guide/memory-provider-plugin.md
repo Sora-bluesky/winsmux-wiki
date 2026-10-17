@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: e307a615a370c6b292b44cd0f492eb51b452e224
+upstream_blob: 9ea6b0bd8802ccc4113a08ea8f42662e83c140ad
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -434,13 +434,25 @@ def sync_turn(self, user_content, assistant_content, *, session_id="", messages=
 保存先のパスは **必ず** `initialize()` に渡される `hermes_home` の値を使ってください。`~/.hermes` を直接書き込んではいけません。
 
 ```python
-# CORRECT — profile-scoped
-from hermes_constants import get_hermes_home
-data_dir = get_hermes_home() / "my-provider"
+# CORRECT — profile-scoped, bound on the instance
+def initialize(self, session_id, **kwargs):
+    self._data_dir = Path(kwargs["hermes_home"]) / "my-provider"
 
 # WRONG — shared across all profiles
 data_dir = Path("~/.hermes/my-provider").expanduser()
 ```
+
+### 複数のプロファイルを扱うゲートウェイ {#multiplexed-gateways}
+
+1 つのゲートウェイのプロセスが複数のプロファイルを同時に受け持つことがあり、それぞれのターンは別々のスレッドで並行して動きます。エージェントごとに専用の `MemoryManager` と専用のプロバイダーのインスタンスがあり、それぞれ 1 つのプロファイル向けに初期化されます。プロバイダーは次を守る必要があります。
+
+- **読み込むたびに新しいインスタンスを返す。** `register(ctx)` ではプロバイダーを生成してください（`ctx.register_memory_provider(MyProvider())`）。モジュール単位のシングルトンを渡してはいけません。別のプロファイルのマネージャーがすでに結びつけたインスタンスは、マネージャーが初期化を拒み、`memory_provider_instance_shared` をログに残します。
+- **`initialize()` で結びつける。** 保存先、パス、クライアント、バンク、テナントはすべて `hermes_home` キーワード（と、`initialize` の中で `get_secret()` を通して読んだ秘密情報）から導き、その結びつきを `self` に保持してください。
+- **プロファイル固有のものをモジュールやクラスの単位に置かない。** 全体で共有する「現在の保存先」を持たず、呼び出しのたびに共有の結びつきを付け替えることもしないでください。2 つのプロファイルの呼び出しは交互に入り込むので、呼び出しごとの付け替えは競合を起こします。
+
+残りの半分はマネージャーが強制します。ツール呼び出しとすべてのライフサイクルフック（`prefetch`、`queue_prefetch`、`sync_turn`、`on_memory_write`、`on_session_end` など）は、インスタンスを初期化したプロファイルからしか実行されません。複数のプロファイルを扱うゲートウェイでは、プロファイルを名乗らない呼び出し元は拒否され、その拒否はプロファイルの `errors.log`（`hermes logs errors`）と `gateway.log` に `memory_caller_profile_unresolved` として記録されます。バックグラウンドのフックは、持ち主のプロファイルの `HERMES_HOME` で動きます。`handle_tool_call(..., **kwargs)` には `hermes_home`、`agent_identity`、`caller_gsk` も渡されます。これらはインスタンスがすでに結びついているプロファイルを示すので、確認のために使うのはかまいませんが、ここから結びつけ直さないでください。
+
+Hermes はプロバイダーの内部までは検証できません。プロセス全体で共有する結びつきを持つプロバイダーは、こうした検査があっても複数のプロファイルのメモリーを混ぜてしまいます。
 
 ## テスト {#testing}
 

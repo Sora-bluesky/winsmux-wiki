@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 615fe36e5c771403bedf60bcd577d7e2cb8a3cb0
+upstream_blob: a4dc957b0862291e4dbf90cf6479591761092f84
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -540,8 +540,9 @@ You → /reload
 ### DELETE /api/sessions/\{session_id\} {#delete-apisessionssessionid}
 
 セッションとそのメッセージの履歴を消します。リクエストには、クライアントが `GET /api/sessions/{id}/mutation-snapshot` から読み取った変更用の識別情報（`request_id`、
-`expected_revision`、`expected_generation`）を付ける必要があります。付いていない場合は `409
-mutation_identity_required` を返します。削除はそのプロファイルのゲートウェイが実行するので、
+`expected_revision`、`expected_generation`）を付ける必要があります。一部だけ付いている場合は `409
+mutation_identity_required` を、まったく付いていない場合（Desktop 0.22.2 以前）は `409
+client_upgrade_required` を返します。バックエンドは、リビジョンによる防護なしに変更を適用することはありません。削除はそのプロファイルのゲートウェイが実行するので、
 ターンが実行中か待ち行列にあるセッションは `409 session_busy` で、最後のターンがゲートウェイの再起動をまたいで失われたセッションは `409 unknown_execution` で断られます。どちらの場合も何も消えません。
 実行済みのターンがあるセッションを消すと、`state_meta` テーブルに小さな終端の受領記録（tombstone）が残ります。中身は受け付けとワーカーの識別情報だけで、ユーザーの文面と履歴は取り除かれています。
 この記録があるので、同じ削除をそのままやり直したとき（あるいは、消したセッションを宛先にした API の実行をやり直したとき）に、セッションを作り直さずに同じ答えを返せます。また、消した ID が再び取り込まれるのも防ぎます。

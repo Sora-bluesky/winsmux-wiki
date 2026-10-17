@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ツールとツールセット"
 description: "Hermes Agent のツールの全体像 — 何が使えるか、ツールセットの仕組み、ターミナルの実行先"
 upstream_path: user-guide/features/tools.md
-upstream_blob: 3e1194b841c1712140b2f2fa432726d0809b6b1b
+upstream_blob: 127608bcb2fccb54f33d5f221d63e292a7e6508d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tools
 ---
@@ -238,6 +238,37 @@ process(action="write", session_id="proc_abc123", data="y")  # Send input
 ```
 
 PTY のモード（`pty=true`）を使うと、Codex や Claude Code のような対話的な CLI の道具が動きます。
+
+前面で走らせるコマンドのうち、裏に回す仕掛けが末尾の `&` だけのもの（たとえば
+`python3 -m http.server 8765 &` や `cd app && npm start > app.log 2>&1 &`）は、
+`&` を取り除いたうえで `background=true` として実行され、結果には `session_id` を添えた
+`auto_backgrounded` の注記が付きます。ほかの裏で走らせるコマンドと同じ承認チェックも通ります。
+ほかのコマンドが混ざった形（`server & curl ...`、`a; b &`、複数行のスクリプト）、`nohup`/`disown`/`setsid`
+で包んだもの、コマンド置換（`$(...)`、バッククォート、`<(...)`）、そして `&` を外すと承認の区分が
+変わってしまうコマンドは、これまでどおり案内を添えて断られます。どの部分を走らせ続けるべきかを、
+Hermes が安全に見分けられないからです。
+
+### 静かなプロセスを何度も待つとき {#repeated-waits-on-a-quiet-process}
+
+まだ走っていて新しい出力が何もないプロセスに対して、エージェントが `process(action="wait")` か `process(action="poll")` を
+2回続けて呼ぶと、Hermes はそのプロセスの `notify_on_complete` を有効にし、結果の中でエージェントに確認をやめるよう伝えます。
+終了（終了コードと最後の出力）は、あとから別のメッセージとして届きます。そのためエージェントは、変化のない確認のたびにモデルを
+呼び出す代わりに、ほかの作業をしたりターンを終えたりできます。新しい出力が出る、プロセスが終わる、あるいはそのプロセスに対して
+ほかの操作をすると、回数は数え直しになります。
+
+これが効くのは、終了の知らせがエージェントに届く場所です。対話型の CLI（対話型の
+`hermes chat -q` を含む）、TUI とデスクトップアプリ、メッセージアプリのチャットが該当します。対話しない `hermes chat -q`、
+1回きりの `hermes -z`、定時実行のジョブ、Kanban のワーカー、状態を持たない API リクエスト、任された子エージェントは、
+あとから届く終了の知らせを受け取れないので、これまでの動きのままです。`display.background_process_notifications: off`
+にしているプロファイルも同じです（そこでは終了の知らせがエージェントのターンを始めることがありません）。終了の知らせがほかの誰かに
+届くプロセス（別のセッションのプロセスや、引き継がれていない子エージェントのプロセス）を確認する場合も、ふつうの問い合わせのままです。
+管理者が決めた設定や `${VAR}` の値も考慮されます。
+どこでもふつうの問い合わせのままにしたい場合は、次のように設定します。
+
+```yaml
+terminal:
+  process_wait_auto_notify: false
+```
 
 裏で走らせて終わったコマンドは、その終了状態と拾った出力を、いま使っているプロファイルの中に持ち続けます。そのコマンドを始めた会話（または、それが圧縮されて続いたもの）に戻ったうえで、元の `session_id` を使い、出力は `process(action="log")` で、終了状態は `process(action="poll")` で読んでください。関係のない会話や、持ち主となるセッションが結びついていない要求からは、たとえプロセスの手がかりがぴたりと分かっていても、残された控えは読めません。`process(action="list")` は、いまの作業や会話について残っている結果も一緒に並べます。
 

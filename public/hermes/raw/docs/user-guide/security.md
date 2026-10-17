@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: 3e420e58a8fe70dce9ab20cd913cde4fc301bc24
+upstream_blob: f4ea9afbadddce00277ce541d63d91f3c46ef462
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -245,6 +245,16 @@ approvals:
 :::info
 **コンテナでの省略**: `docker`、`singularity`、`modal`、`daytona`、`vercel_sandbox` のバックエンドで動いているときは、コンテナそのものがセキュリティの境界になるため、危険なコマンドの検査は **飛ばされます**。コンテナの中の破壊的なコマンドは、ホストを傷つけられません。
 :::
+
+### `execute_code` の台本 {#execute-code-scripts}
+
+[`execute_code`](/hermes/docs/user-guide/features/code-execution/) で動かす台本は `subprocess`、`os`、`shutil` を直接呼べるので、その呼び出しは上のパターンをまったく通りません。そのため、メッセージングや API などのゲートウェイのセッションでは、台本が動き始める前に台本全体について一度だけたずねます。拒否された台本や、答えのなかった台本は動きません。`cron_mode`、`single_query_mode`、`unattended_mode` は、コマンドと同じように台本についてもすぐに可否を決めます。YOLO と `mode: off` では確認を省きます。
+
+ローカルのセッション（従来の CLI、TUI、Desktop、ACP のエディター）は、代わりに対話型 CLI の規則に従います。`manual`（と `smart`）では、セッションを見ている利用者が打ち込んだターンには**台本全体の承認がありません**。台本の中の Python レベルのファイル操作やプロセス操作は確認なしで動き、確認が出るのは台本の `terminal()` の呼び出しだけです。それぞれがセッション自身のプロンプトでたずねます。ゲートウェイ1つで動く仕組みになる前の CLI と同じです。この免除には、見ている利用者が送ったターンであることと、台本が動き始めるときに承認に答えられる利用者がつながっていることの両方が必要です。次のものは、ローカルのセッションでも台本全体の承認が残ります。
+
+- そのセッションで誰も打ち込んでいないターン: プラグインの `inject_message` のターン、委任の完了、バックグラウンドのプロセスや監視パターンのお知らせ、`/loop` の刻み、ハートビート、ホストされたルームのタスク
+- `delegate_task` の子と、`/bg` / `/btw` の脇のタスク
+- 承認できる利用者が誰もつながっていない間に動く、利用者のターン
 
 ### 承認の流れ（CLI） {#approval-flow-cli}
 

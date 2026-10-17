@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "LSP — 意味を読み取る診断"
 description: "本物の言語サーバー（pyright、gopls、rust-analyzer など）を、write_file と patch の書き込み後チェックにつなぎます。"
 upstream_path: user-guide/features/lsp.md
-upstream_blob: a5e188c437dd0ddd6b0ee1ca18d13186d0892082
+upstream_blob: d580741915982a10bd08f2585ec681a6512df8fa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/lsp
 ---
@@ -39,10 +39,26 @@ LSP が動くかどうかは、**git のワークスペースかどうか**で�
 
 具体的には、`write_file` や `patch` が成功するたびに次のことが起きます。
 
-1. Hermes がそのファイルの現在の診断を基準として控えます。
-2. 書き込みを実行します。
-3. 言語サーバーに問い合わせ直し、もともと基準にあった診断をふるい落として、
-   新しく出てきたものだけを差し出します。
+1. Hermes が書き込みを実行し、新しい内容を言語サーバーへ送ります。
+   書き込みが判定を待つのは、ツール呼び出し全体がおよそ 80 ms に
+   収まっているあいだだけです。
+2. サーバーが対応していれば、Hermes は判定を直接求めます。
+   TypeScript（`typescript-language-server`）は同期の診断要求に答え、
+   pyright はドキュメント単位の取得（pull）に答えます。温まったサーバーなら
+   たいてい 10〜90 ms で返ってきます。判定に診断が含まれていれば、Hermes は
+   編集前の内容に対する判定と比べて、新しく出てきたものだけを残します。
+3. その時間内に届いた判定は、ツールの結果の `lsp_diagnostics` に入ります。
+   それより遅い判定（サーバーが温まっていない、ファイルがとても大きいなど）は、
+   そのセッションの**次の**ツール結果に、`LSP
+   diagnostics introduced by your earlier edit of <path>` という見出しで添えられます。
+   チェックがまだ走っているうちにモデルがターンを終えようとすると、Hermes は
+   最大 5 秒それを待ちます。見つかった問題は、答えを受け入れる前に新しい
+   メッセージとしてモデルに渡るので、1回きりの `hermes chat -q` の実行でも
+   ちゃんと目に入ります。それより前のメッセージが書き換えられることはありません。
+
+同じファイルがチェックの終わる前にもう一度編集された場合、新しいほうのチェックは
+前の編集の基準に対して走ります。最初の編集で入った誤りは、2回目の編集で
+直っていない限り、そのまま報告されます。
 
 エージェントには、こんな内容が見えます。
 

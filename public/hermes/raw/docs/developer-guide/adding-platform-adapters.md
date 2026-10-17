@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: 5f23b286fdf9cb0730b75f9694a86cc15c526551
+upstream_blob: 4631713eb36ad2555e009ceb040a79076f847b3f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -213,7 +213,7 @@ gateway:
 | ゲートウェイでのアダプターの生成 | 組み込みの `_BUILTIN_ADAPTERS` の表より先に登録簿を見る |
 | 設定の読み取り | `Platform._missing_()` がどんなプラットフォーム名でも受け付ける |
 | つながっているプラットフォームの検査 | 登録簿の `validate_config()` が呼ばれる |
-| 利用者の認可 | `allowed_users_env` と `allow_all_env` が調べられる |
+| 利用者の認可 | `allowed_users_env` と `allow_all_env` が調べられる。`group_allowed_chats_env` と `allowlist_suppresses_pairing`（後述） |
 | 環境変数だけでの自動有効化 | `env_enablement_fn` が `PlatformConfig.extra` と `home_channel` を用意する |
 | YAML 設定の橋渡し | `apply_yaml_config_fn` が `config.yaml` のキーを環境変数や extras に置き換える |
 | cron での配信 | `cron_deliver_env_var` によって `deliver=<name>` が使えるようになる |
@@ -268,6 +268,53 @@ def register(ctx):
 ```
 
 これらの項目があるかどうかは、上の例のように `dataclasses.fields(PlatformEntry)` で確かめてください。そうすれば、まだこれらの項目を持たない古い Hermes の本体でも、プラグインを読み込めます。
+
+## チャット系プラットフォームの認可の項目 {#authorization-fields-for-chat-platforms}
+
+`PlatformEntry` には、任意の項目がさらに2つあります。どちらも、以前は本体が同梱プラットフォーム向けに
+決め打ちしていた gateway の認可の振る舞いを受け持ちます。これらを宣言すれば、プラグインのプラットフォームも同じように振る舞います。
+
+| 項目 | 型 / 既定値 | 効果 |
+|---|---|---|
+| `group_allowed_chats_env` | `str = ''` | グループやフォーラムの**チャット** ID をカンマ区切りで入れる環境変数です。一覧にあるチャットからのメッセージは、`user_id` がなくても（匿名の管理者やチャンネルの投稿など）すべて認可されます。Telegram は `TELEGRAM_GROUP_ALLOWED_CHATS` を、QQ Bot は `QQ_GROUP_ALLOWED_USERS` を宣言しています。 |
+| `allowlist_suppresses_pairing` | `bool = False` | そのプラットフォームの `allowed_users_env`（または `group_allowed_chats_env`）が設定されているとき、知らない相手からの DM にはペアリングコードを送らず、無視します。持ち主がすでにアクセスを絞っているからです。同梱のチャット系プラットフォームの多くが、これを設定しています。 |
+
+```python
+kwargs = dict(name="my_chat", label="My Chat", adapter_factory=MyChatAdapter, check_fn=check_requirements,
+              allowed_users_env="MY_CHAT_ALLOWED_USERS", allow_all_env="MY_CHAT_ALLOW_ALL_USERS")
+known = {f.name for f in dataclasses.fields(PlatformEntry)}
+for key, value in (("group_allowed_chats_env", "MY_CHAT_GROUP_ALLOWED_CHATS"),
+                   ("allowlist_suppresses_pairing", True)):
+    if key in known:  # older cores reject unknown kwargs
+        kwargs[key] = value
+ctx.register_platform(**kwargs)
+```
+
+## プラットフォームプラグイン向けの公開ヘルパー {#public-helpers-for-platform-plugins}
+
+プラットフォームのアダプターは、ツールのプラグインよりも多くの本体の機能を必要とします。次の名前は公開されています。`hermes plugins
+validate` はこれらについて非公開 import の警告を出さず、名前とシグネチャはリリースをまたいで変わりません。`gateway.*`、`tools.*`、`hermes_cli.*` の下にあるそれ以外のものは内部用で、検証ツールはその import を1つずつ一覧に出します。
+
+| 必要なもの | import |
+|---|---|
+| アダプターの基底クラス、送信結果、メディアキャッシュのヘルパー | `gateway.platforms.base`（公開されている名前） |
+| SSRF に安全な HTTP クライアント（接続時の IP 検証、リダイレクトごとの再確認、共有の keepalive 上限） | `from gateway.platforms.helpers import platform_http_client` |
+| 自前で組み立てるための、そのクライアントの部品 | `gateway.platforms.base.ssrf_redirect_guard`（httpx の `response` フック）、`tools.url_safety.create_ssrf_safe_async_client`、`tools.url_safety.is_safe_url`、`gateway.platforms._http_client_limits.platform_httpx_limits` |
+| 独自の DM / グループの方針（`dm_policy` / `group_policy` / 許可リスト） | `from gateway.platforms.access_policy_mixin import OwnAccessPolicyMixin` |
+| ネイティブのボタンから承認を確定する | `from tools.approval import resolve_gateway_approval` |
+| ネイティブの確認（clarify）ボタン | `tools.clarify_gateway`：`get_pending(clarify_id)`（保留中の項目か `None` を返します。`session_key`、`choices`、`multi_select` を読みます）、`resolve_gateway_clarify(clarify_id, text)`、`mark_awaiting_text(clarify_id)`、`SKIPPED` |
+| `setup_fn` のウィザードの手順 | `hermes_cli.gateway_setup_wizard`：`print_setup_header(title)`、`confirm_reconfigure(label, *env_vars)`、`offer_home_channel(home_var, user_id, what)`、`save_env_values(**values)`、`prompt_csv(text, default)`。入力の問いかけは `hermes_cli.setup`（`prompt`、`prompt_choice`、`prompt_yes_no`）から、出力は `hermes_cli.cli_output`（`print_info`、`print_success`、`print_warning`、`print_error`）から、`.env` へのアクセスは `hermes_cli.config`（`save_env_value`、`get_env_value`）を通します |
+
+```python
+from gateway.platforms.helpers import platform_http_client
+
+async def connect(self) -> bool:
+    # timeout=30.0 and follow_redirects=True by default; any other httpx.AsyncClient kwarg passes through.
+    self._http = platform_http_client(headers={"User-Agent": "my-chat-bot/1.0"})
+    ...
+```
+
+確認への回答が済んだとき、時間切れになったとき、取り消されたときには、`get_pending()` は `None` を返します。そのため、クリックに応じて動く前に、戻り値がカードを描いたときの項目と同一のものかを比べてください。
 
 ## 単独で送るときの拡張 {#standalone-send-path-extensions}
 
@@ -700,16 +747,13 @@ await self.handle_message(event)
 
 ### 9. 任意: プラットフォームへの助言 {#9-optional-platform-hints}
 
-**`agent/prompt_builder.py`** — そのプラットフォームに表示の制約がある（マークダウンが使えない、メッセージの長さに上限があるなど）なら、`PLATFORM_HINTS` の dict に項目を足します。これで、そのプラットフォーム向けの案内がシステムプロンプトに差し込まれます。
+**`ctx.register_platform` の `platform_hint=`** — そのプラットフォームに表示の制約がある（マークダウンが使えない、メッセージの長さに上限があるなど）なら、登録の項目に助言を宣言します（文面は `adapter_hint.py` のような軽い別ファイルに置きます）。助言はシステムプロンプトに差し込まれます。`agent/prompt_builder.py::PLATFORM_HINTS` が持つのは本体側の画面の分だけです。
 
 ```python
-PLATFORM_HINTS = {
-    # ...
-    "newplat": (
-        "You are chatting via NewPlat. It supports markdown formatting "
-        "but has a 4000-character message limit."
-    ),
-}
+PLATFORM_HINT = (
+    "You are chatting via NewPlat. It supports markdown formatting "
+    "but has a 4000-character message limit."
+)
 ```
 
 助言がすべてのプラットフォームに要るわけではありません。エージェントの振る舞いを変えるべきときにだけ足してください。
