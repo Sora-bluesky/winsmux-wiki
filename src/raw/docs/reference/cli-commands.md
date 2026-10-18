@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 00f01645b714b572a5eadd0436f9010131209f01
+upstream_blob: c82066bdb9877766fde0a26a7652445f3ddbdfb6
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -181,7 +181,7 @@ hermes chat -q "Summarize this repository" --format stream-json
 | `text` | `text` — ストリーミングされるアシスタントのテキスト差分 |
 | `tool_use` | `name`；ツール引数が取得できたときは `input` |
 | `tool_result` | `name`, `output`（5000 文字で上限）, `duration_ms`, `is_error` |
-| `result` | `session_id`, `exit_code`, `text`, `tokens`（`input`, `output`, `total`, `cache_read`, `cache_write`）, `duration_ms`；ターンが失敗したときは `error` |
+| `result` | `session_id`, `exit_code`, `text`, `tokens`（`input`, `output`, `total`, `cache_read`, `cache_write`）, `duration_ms`；ターンが失敗したときは `error`；実行がゲートウェイのストリームに追いつけなくなって接続し直したときは `replay_gap: true`。この場合 `text` イベントは途中で止まっています（ここでの `text` は返答の全文のままです） |
 
 会話が始まると、その終端のレコードは常に `result` です — Ctrl-C で中断された場合の `exit_code: 130` も含みます。このレコードを完了信号として扱ってください。プロセスの終了コードはその `exit_code` と一致します。
 

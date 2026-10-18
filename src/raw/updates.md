@@ -8,6 +8,28 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-18
+
+- [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
+- [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
+- [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- [ローカルのプロファイル所有者をまたぐホスト型ルーム](https://wiki.winsmux.dev/hermes/docs/developer-guide/hosted-profile-owners/)
+- [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [API サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
+- [コードの実行](https://wiki.winsmux.dev/hermes/docs/user-guide/features/code-execution/)
+- [ダッシュボードを広げる](https://wiki.winsmux.dev/hermes/docs/user-guide/features/extending-the-dashboard/)
+- [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
+- [LSP — 意味を読み取る診断](https://wiki.winsmux.dev/hermes/docs/user-guide/features/lsp/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [ツールとツールセット](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tools/)
+- [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
+- [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
+
 ## 2026-10-17
 
 - [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)

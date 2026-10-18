@@ -2,7 +2,7 @@
 title: "オブザーバーフック"
 description: "プラグイン向けの読み取り専用テレメトリ契約。イベントの系統、相関 ID、ペイロードの安全性"
 upstream_path: developer-guide/observer-hooks.md
-upstream_blob: a9cfb60b9b1b0b9d13322f30c9e398f6d4a7df25
+upstream_blob: 4eab86d065a320231b913e78ccdbc2fbc1f368dc
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/observer-hooks
 ---
@@ -104,6 +104,7 @@ telemetry_schema_version = "hermes.observer.v1"
 | `on_session_end` | `run_conversation` の呼び出しが終わったとき。中断されたターンや未完了のターンも含みます。 |
 | `on_session_finalize` | CLI やゲートウェイが、動作中のセッション識別子を破棄するとき。 |
 | `on_session_reset` | CLI やゲートウェイが、古いセッション識別子から新しいものへ切り替えるとき。 |
+| `on_session_delete` | セッションの削除、または意図的なアーカイブが確定したとき（どちらかは `reason` に入ります）。 |
 
 よく使うフィールドには `session_id`、`completed`、`interrupted`、`reason`、
 `old_session_id`、`new_session_id` があります（取得できる場合）。

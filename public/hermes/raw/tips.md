@@ -1,12 +1,12 @@
 ---
 title: "Hermes Wingtips 日本語版"
-description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」の #1〜#98（2026-10-10 まで）を日本語で"
+description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」の #1〜#99（2026-10-12 まで）を日本語で"
 raw: /hermes/raw/tips.md
 ---
 
 # Hermes Wingtips 日本語版
 
-「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは #1〜#98（2026-10-10 まで）の 98 回・8 分類を収録しています。英語の原文は @witcheer のサイト [hermes recipes](https://notwitcheer.github.io/hermes-recipes/wingtips/) にもまとまっています。
+「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは #1〜#99（2026-10-12 まで）の 99 回・8 分類を収録しています。英語の原文は @witcheer のサイト [hermes recipes](https://notwitcheer.github.io/hermes-recipes/wingtips/) にもまとまっています。
 
 日本語の文はこのサイトによる要約です。正確な内容は元のポストと公式ドキュメントをご覧ください。
 
@@ -250,6 +250,9 @@ raw: /hermes/raw/tips.md
 
 ## CLI とデスクトップ
 
+- **#99 エージェントの返答をそのままクリップボードにコピーする** — ターミナルのチャットで `/copy` と打つと、直前の返答がクリップボードに入り、メールや文書にそのまま貼れます。`/copy 2` のように数字を付けると後ろから N 番目の返答をコピーします。CLI 専用のコマンドです。
+  - 元のポスト: https://x.com/witcheer/status/2109554664605725085
+  - 関連: [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
 - **#77 作業の終わりや確認待ちを端末のベルで知らせる** — `display.bell_on_complete` を有効にするとターンが終わったとき、`display.bell_on_prompt` なら承認などの確認待ちで端末のベルが鳴ります。SSH 越しでも鳴り、Ghostty などではデスクトップ通知も出ます。既定はオフです。
   - 元のポスト: https://x.com/witcheer/status/2101229280185270718
   - 関連: [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/) / [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)

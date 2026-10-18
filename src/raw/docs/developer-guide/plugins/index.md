@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: e6c64a4f5211444517dcf67b517c2f9852c2e90c
+upstream_blob: b5c2cd8ab7871d8d0046e2b7bca21bf7610c8e4b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -848,6 +848,39 @@ skill_view("my-workflow")              # → built-in version (unchanged)
 古い `shutil.copy2` パターン（スキルを `~/.hermes/skills/` へコピーする）は今でも動作しますが、組み込みスキルとの名前衝突のリスクを生みます。新しいプラグインには `ctx.register_skill()` を使ってください。
 :::
 
+### スキルの一覧を読む {#read-the-skill-catalog}
+
+エージェントから見えるスキルを表示するプラグイン（一覧画面、「このスキルを開く」、インストール済みのコピーとのずれの確認など）は、
+スキルのディレクトリを自分でたどらず、`skills_list` と `skill_view` のツールが使っているのと同じヘルパーを呼んでください。
+次の名前は公開されていて、互換性の約束の対象です。
+
+| インポート | 得られるもの |
+|---|---|
+| `tools.skills_tool.find_all_skills(*, skip_disabled=False)` | 読み込めるスキルを `{"name", "description", "category"}` の辞書で返します。`skills_list` が使う走査と同じもので、結果はキャッシュされ、先に見つかったものが優先され、プラットフォームと環境による絞り込みがかかります。`name` は `skill_view()` にそのまま渡せる値です。 |
+| `tools.skills_tool.sort_skills(skills)` | 唯一の並び順（カテゴリ、次に名前）で並べます。 |
+| `tools.skills_tool.skill_search_dirs()` | `(roots, active_dir)` を返します。優先順（プロジェクト、ローカル、`create_dir`、外部）に並んだ `(tier, dir)` のルートと、使用中のプロファイルのスキルディレクトリです。 |
+| `tools.skills_tool.skill_lookup_path_error(name)` | `name` が絶対パスか `..` を含むときはエラー文字列を、それ以外は `None` を返します。探す前に必ず確認してください。 |
+| `tools.skills_tool.locate_skill(name, local_category_name, roots)` | `roots` の中から 1 つの名前を探し、`(error_json, skill_dir, skill_md)` を返します。階層の優先順位、同じ階層での名前の衝突の拒否、プロジェクトスキルの隔離チェックが適用されます。`local_category_name` は追加で試す相対パスで（カテゴリの絞り込みではありません）、必要なとき以外は `None` を渡してください。`skill_md` が入るのは `error_json` が `None` のときだけです。 |
+| `tools.skills_sync.dir_hash(directory)` | 同梱スキルの同期が保存しているパッケージのハッシュです。利用者のコピーがインストール時のままかどうかを判定できます。 |
+| `tools.skill_usage.read_skill_name(skill_md, fallback)` | `SKILL.md` の frontmatter にある `name:` を返し、なければ `fallback` を返します。 |
+
+```python
+from tools.skills_tool import find_all_skills, locate_skill, skill_lookup_path_error, skill_search_dirs, sort_skills
+
+def list_skills():
+    return sort_skills(find_all_skills())
+
+def open_skill(name):
+    if err := skill_lookup_path_error(name):
+        return err
+    roots, _active = skill_search_dirs()
+    error, _skill_dir, skill_md = locate_skill(name, None, roots)
+    return error or skill_md.read_text(encoding="utf-8-sig", errors="replace")
+```
+
+プラグインが登録したスキル（`ctx.register_skill`）は、これらのルートの下のディスク上にはありません。`find_all_skills()`
+が返すのはディスク上の一覧だけです。
+
 ### 言語パックを同梱する {#ship-a-language-pack}
 
 プラグインは、UI の言語を追加したり、既存の言語の言い回しを差し替えたりできます。しかも全部の画面に一度に効きます。
@@ -1112,6 +1145,8 @@ def register(ctx):
 | [`on_session_end`](/hermes/docs/user-guide/features/hooks/#on_session_end) | すべての `run_conversation` 呼び出しの終わり + CLI の終了 | `session_id: str, completed: bool, interrupted: bool, model: str, platform: str` | 無視される |
 | [`on_session_finalize`](/hermes/docs/user-guide/features/hooks/#on_session_finalize) | CLI / ゲートウェイがアクティブなセッションを分解する | `session_id: str \| None, platform: str` | 無視される |
 | [`on_session_reset`](/hermes/docs/user-guide/features/hooks/#on_session_reset) | ゲートウェイが新しいセッションキーに入れ替える（`/new`、`/reset`） | `session_id: str, platform: str` | 無視される |
+| [`on_session_delete`](/hermes/docs/user-guide/features/hooks/#on_session_delete) | セッションの削除または意図的なアーカイブが確定する（すべての画面、一括の掃除、prune を含む） | `session_id: str, reason: str, profile: str \| None`、任意で `deleted_ids: list[str]`、`sessions_dir: str` | 無視される |
+| [`post_compaction`](/hermes/docs/user-guide/features/hooks/#post_compaction) | 圧縮が確定する（自動、`/compress`、ゲートウェイ、Codex、micro、prune のどの経路でも） | `session_id: str, old_session_id: str, kind: str, reason: str, before_tokens: int \| None, after_tokens: int \| None, messages_removed: int \| None` | 無視される |
 | [`gateway_platform_event`](/hermes/docs/user-guide/features/hooks/#gateway_platform_event) | 認可済みのプラットフォーム固有イベントが、ゲートウェイの境界で正規化される（現時点では Telegram のリアクション） | `platform: str, event_type: str, payload: dict` | 無視される |
 | `kanban_task_claimed` | kanban タスクがクレームされる（ディスパッチャプロセス、ワーカーが起動する前） | `task_id: str, board: str \| None, assignee: str \| None, run_id: int \| None, profile_name: str` | 無視される |
 | `kanban_task_completed` | kanban タスクが完了する（ワーカープロセス） | `task_id, board, assignee, run_id, profile_name, summary: str \| None` | 無視される |
@@ -1335,7 +1370,7 @@ def register(ctx):
 | パラメータ | 型 | 説明 |
 |-----------|------|-------------|
 | `name` | `str` | 先頭のスラッシュを除いたコマンド名（例: `"lcm"`、`"mystatus"`） |
-| `handler` | `Callable[[str], str \| None]` | 生の引数文字列で呼ばれる。`async` でもよい。 |
+| `handler` | `Callable[[str], str \| None]` | 生の引数文字列と、ハンドラーが宣言した呼び出し元セッションのキーワード（下記参照）で呼ばれる。`async` でもよい。 |
 | `description` | `str` | `/help`、自動補完、Telegram のボットメニューに表示される |
 
 **`register_cli_command()` との主な違い:**
@@ -1344,21 +1379,32 @@ def register(ctx):
 |---|---|---|
 | 呼び出し方 | セッション内で `/name` | ターミナルで `hermes name` |
 | 動作する場所 | CLI セッション、Telegram、Discord など | ターミナルのみ |
-| ハンドラーが受け取るもの | 生の引数文字列 | argparse の `Namespace` |
+| ハンドラーが受け取るもの | 生の引数文字列（＋任意で受け取れるセッションの情報） | argparse の `Namespace` |
 | 用途 | 診断、状態確認、簡単な操作 | 複雑なサブコマンドツリー、セットアップウィザード |
 
 **衝突の保護:** プラグインが組み込みコマンド（`help`、`model`、`new` など）と衝突する名前を登録しようとすると、登録は警告ログとともに黙って拒否されます。組み込みコマンドは常に優先されます。
 
-**非同期ハンドラー:** ゲートウェイのディスパッチは非同期ハンドラーを自動的に検出して await します。そのため、同期・非同期どちらの関数も使えます。
+**呼び出し元セッションの情報:** ハンドラーは、次のキーワード引数のどれか（すべて受け取るなら `**kwargs`）を宣言すると、どのチャットとセッションから呼ばれたかを知ることができます。どれも宣言しないハンドラーはこれまでどおり引数 1 つの `handler(raw_args)` で呼ばれるので、既存のプラグインに影響はありません。
+
+| キーワード | 値 |
+|---|---|
+| `session_id` | 呼び出し元セッションの ID です（あとで `on_session_reset` が `old_session_id` として知らせるもの）。そのチャットにまだセッションがなければ空です。 |
+| `session_key` | 呼び出し元チャットのルーティングキーです。 |
+| `platform` | コマンドがどこから来たかです。`telegram`、`discord`、…、`local`（ゲートウェイが持つ CLI / Desktop のセッション）、`cli`、`tui`、`desktop`。 |
+| `source` | ゲートウェイがコマンドをディスパッチしたときは、アダプターから得た `gateway.session.SessionSource`（`user_id`、`chat_id`、`chat_type`、`thread_id` など）です。それ以外は `None` です。 |
+
+メッセージングプラットフォーム、従来の CLI、TUI、Desktop のどの画面からもこれらが渡されます。同期ハンドラーはゲートウェイのエグゼキューターで動き、非同期ハンドラーは await されます。これは以前と同じです。
 
 ```python
-async def _handle_check(raw_args: str) -> str:
-    result = await some_async_operation()
-    return f"Check result: {result}"
+def _handle_whoami(raw_args: str, *, session_id: str = "", platform: str = "", source=None) -> str:
+    user = source.user_id if source is not None else "local user"
+    return f"{user} on {platform}, session {session_id or '(none yet)'}"
 
 def register(ctx):
-    ctx.register_command("check", handler=_handle_check, description="Run async check")
+    ctx.register_command("whoami", handler=_handle_whoami, description="Show the calling session")
 ```
+
+`source` は通信経路上の身元であって、権限を与えるものではありません。認可は変わらない ID（`source.user_id`、`source.chat_id`）で行い、表示名やコマンドの文字列では決して判断しないでください。重要なコマンドが `source=None` を受け取ったときは、実行しない側に倒してください。ハンドラーの例外はそのまま上に伝わります。Hermes が引数を減らして呼び直すことはありません。
 
 **ハンドラーが動く場所:** スラッシュコマンドのハンドラーは、そのセッションを持つゲートウェイのプロセスの中で動きます。利用者が従来の `hermes chat` CLI でコマンドを打った場合も同じです。ハンドラーは利用者の端末やディレクトリで動いているわけではないので、次の点に注意してください。
 

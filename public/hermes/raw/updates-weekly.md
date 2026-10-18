@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-10-18、対象期間 = 2026-10-12 〜 2026-10-18（JST）
+生成日 = 2026-10-19、対象期間 = 2026-10-13 〜 2026-10-19（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,26 +16,37 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
-- 2026-10-17 [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
+- 2026-10-18 [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
+- 2026-10-18 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- 2026-10-18 [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
+- 2026-10-18 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- 2026-10-18 [ローカルのプロファイル所有者をまたぐホスト型ルーム](https://wiki.winsmux.dev/hermes/docs/developer-guide/hosted-profile-owners/)
+- 2026-10-18 [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
+- 2026-10-18 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- 2026-10-18 [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
+- 2026-10-18 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- 2026-10-18 [API サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
+- 2026-10-18 [コードの実行](https://wiki.winsmux.dev/hermes/docs/user-guide/features/code-execution/)
+- 2026-10-18 [ダッシュボードを広げる](https://wiki.winsmux.dev/hermes/docs/user-guide/features/extending-the-dashboard/)
+- 2026-10-18 [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
+- 2026-10-18 [LSP — 意味を読み取る診断](https://wiki.winsmux.dev/hermes/docs/user-guide/features/lsp/)
+- 2026-10-18 [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- 2026-10-18 [ツールとツールセット](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tools/)
+- 2026-10-18 [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- 2026-10-18 [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
+- 2026-10-18 [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
 - 2026-10-17 [アーキテクチャ](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)
-- 2026-10-17 [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
-- 2026-10-17 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
 - 2026-10-17 [Relay ↔ Connector 契約](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-connector-contract/)
 - 2026-10-17 [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
-- 2026-10-17 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - 2026-10-17 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
 - 2026-10-17 [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
 - 2026-10-17 [コンピュータ操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/computer-use/)
 - 2026-10-17 [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
-- 2026-10-17 [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
 - 2026-10-17 [プラグインカタログ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
-- 2026-10-17 [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
 - 2026-10-17 [提供元の振り分け](https://wiki.winsmux.dev/hermes/docs/user-guide/features/provider-routing/)
 - 2026-10-17 [画像の貼り付けと視覚認識](https://wiki.winsmux.dev/hermes/docs/user-guide/features/vision/)
 - 2026-10-17 [Slack](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/slack/)
-- 2026-10-17 [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
 - 2026-10-16 [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
-- 2026-10-16 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
 - 2026-10-16 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
 - 2026-10-16 [インストール](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
 - 2026-10-16 [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
@@ -45,9 +56,7 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-15 [ACP の内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/acp-internals/)
 - 2026-10-15 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
 - 2026-10-15 [cron の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cron-internals/)
-- 2026-10-15 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - 2026-10-15 [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
-- 2026-10-15 [ローカルのプロファイル所有者をまたぐホスト型ルーム](https://wiki.winsmux.dev/hermes/docs/developer-guide/hosted-profile-owners/)
 - 2026-10-15 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
 - 2026-10-15 [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
 - 2026-10-15 [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
@@ -60,14 +69,11 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-15 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - 2026-10-15 [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
 - 2026-10-15 [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
-- 2026-10-15 [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
 - 2026-10-15 [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
 - 2026-10-15 [ACP ホスト連携](https://wiki.winsmux.dev/hermes/docs/user-guide/features/acp/)
-- 2026-10-15 [API サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
 - 2026-10-15 [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
 - 2026-10-15 [キュレーター](https://wiki.winsmux.dev/hermes/docs/user-guide/features/curator/)
 - 2026-10-15 [カンバン（マルチエージェント盤）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/kanban/)
-- 2026-10-15 [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
 - 2026-10-15 [ローカルモデル](https://wiki.winsmux.dev/hermes/docs/user-guide/local-models/)
 - 2026-10-15 [A2A（エージェント間連携）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/a2a/)
 - 2026-10-15 [デスクトップ版を複数の Hermes につなぐ](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-connection-desktop/)
@@ -89,15 +95,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-13 [プロファイルのコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/profile-commands/)
 - 2026-10-13 [同梱のプラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/built-in-plugins/)
 - 2026-10-13 [ツール検索](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-search/)
-- 2026-10-12 [コントリビュート](https://wiki.winsmux.dev/hermes/docs/developer-guide/contributing/)
-- 2026-10-12 [プロンプトの組み立て](https://wiki.winsmux.dev/hermes/docs/developer-guide/prompt-assembly/)
-- 2026-10-12 [外部サービス連携](https://wiki.winsmux.dev/hermes/docs/integrations/)
-- 2026-10-12 [記憶プロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
-- 2026-10-12 [機能の概要](https://wiki.winsmux.dev/hermes/docs/user-guide/features/overview/)
-- 2026-10-12 [Spotify](https://wiki.winsmux.dev/hermes/docs/user-guide/features/spotify/)
-- 2026-10-12 [Nous Tool Gateway](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-gateway/)
-- 2026-10-12 [Home Assistant](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/homeassistant/)
-- 2026-10-12 [Anatomy — 考えを、操作できるアイソメトリックの機械の図で説明する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-anatomy/)
 
 ## 週次まとめ
 

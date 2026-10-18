@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 802d78fda9933a694813291bf2c52deb48d4a577
+upstream_blob: b59ade9aea9006dd10e0f48e44ba93b983a78b13
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -468,6 +468,8 @@ def register(ctx):
 | `on_session_end` | 観測役 | 正準には、やり取りの締めくくりごとに。CLI / TUI の終了では、項目の減った以前からの形も追加であります。戻り値は無視されます。 | 正準: `session_id`、`task_id`、`turn_id`、`completed`、`failed`、`interrupted`、`turn_exit_reason`、`model`、`platform`。終了の経路では `reason`/`api_request_id` が加わったり、項目が欠けたりします。 | ID、モデル / プラットフォーム、結果。正準の中身にメッセージの本文はありません。 |
 | `on_session_finalize` | 観測役 | `finalize_session` を通した CLI / TUI / ゲートウェイの片付け。ゲートウェイの停止では、作り直しなしで締めくくることがあります。戻り値は無視されます。 | 入口によって変わる `session_id`、`platform`、必要に応じて `reason`、`old_session_id`、`new_session_id` | セッションと経路の識別子。 |
 | `on_session_reset` | 観測役 | CLI / TUI のセッションの区切りと、ゲートウェイで置き換えのセッションができたあと。戻り値は無視されます。 | CLI: `session_id`、`platform`、`reason`。TUI: `session_id`、`platform`。ゲートウェイ: それらに加えて `reason`、`old_session_id`、`new_session_id` | セッションと経路の識別子。 |
+| `on_session_delete` | 観測役 | セッションの削除、または意図的なアーカイブが確定したあと（CLI、TUI、デスクトップ / ダッシュボード、ゲートウェイの API、一括の掃除、刈り込み）。戻り値は無視されます。 | `session_id`、`reason`、`profile`、任意で `deleted_ids`（複数の行が消えたときはその全件）、`sessions_dir` | セッションの識別子だけ。メッセージの内容は含みません。 |
+| `post_compaction` | 観測役 | 圧縮が確定するたびに1回。どの経路でも発火します: エージェントのループ内の自動・手動の圧縮（CLI、TUI、デスクトップ、ゲートウェイの整理、あふれからの回復）、ゲートウェイの `/compress`（`session.mutate compress`）、Codex app-server の圧縮、小さな圧縮、ツール結果の先回りの刈り込み。何も変わらなかった試み（中止、阻止、拒否）では発火しません。時間の上限があり、戻り値は無視されます。 | `session_id`、`old_session_id`、`kind`、`reason`、`before_tokens`、`after_tokens`、`messages_removed` | 識別子と件数だけ。 |
 | `agent_loop_stopped` | 観測役 | 実際に動いていたエージェントが中断された直後 — ゲートウェイの `_interrupt_and_clear_session` か、TUI / デスクトップの `session.interrupt`。戻り値は無視されます。 | `session_key`、`platform`、`reason`、`invalidation_reason` | セッション / 経路の識別子と中断の理由。メッセージの本文はありません。 |
 | `on_skill_lifecycle` | 観測役 | スキルの利用の状態が確定的に変わったあと。戻り値は無視されます。 | `action`、`skill_name`、`provenance`、`task_id`、`session_id`、`use_count`、`reused`、`reuse_after_patch` | 手元のスキル名と出どころが見えます。 |
 | `subagent_start` | 観測役 | 子が組み立てられ、これから動くところ。戻り値は無視されます。 | `parent_session_id`、`parent_turn_id`、`parent_subagent_id`、`child_session_id`、`child_subagent_id`、`child_role`、`child_goal` | 子の目的に利用者やプロジェクトの内容が含まれることがあります。 |
@@ -1075,9 +1077,62 @@ def my_callback(session_id: str, platform: str, **kwargs):
 
 ---
 
+### `on_session_delete` {#onsessiondelete}
+
+セッションが実際になくなったとき、**操作ごとに1回、トランザクションが確定したあとで**発火します。対象は削除（1件ずつ、まとめて、空のセッションの一括掃除、保存期間による刈り込み、実体のない行を刈り込む保守、プロファイルの修復）と、意図的なアーカイブです。どの画面からの操作も最後は同じ `SessionDB` のメソッドに行き着くので、CLI（`hermes sessions delete|prune|archive`、`/exit --delete`）、TUI、デスクトップ / ダッシュボード（1件ずつ・まとめての削除、アーカイブ）、ゲートウェイの API サーバーのすべてで発火します。セッションごとの状態をディスクに持つプラグインは、セッションの保存先を定期的に見に行かなくても後片付けができます。
+
+**コールバックの形:**
+
+```python
+def my_callback(session_id: str, reason: str, profile: str | None, **kwargs):
+```
+
+| 引数 | 型 | 説明 |
+|-----------|------|-------------|
+| `session_id` | `str` | 操作の対象になったセッション。常にあります。 |
+| `reason` | `str` | `"delete"`、`"archive"`、`"empty_sweep"`、`"prune"`、`"ghost_prune"`、`"profile_repair"` のどれか。 |
+| `profile` | `str \| None` | セッションの保存先を持つプロファイル（ルートのホームなら `"default"`）。どのプロファイルのホームにも属さない保存先なら `None`。 |
+| `deleted_ids` | `list[str]`、任意 | 消えたすべての行。連鎖して削除された委任先の子セッション、圧縮のつながりの行、まとめて削除したときの各行も含みます。複数の行が消えたときにあります。 |
+| `sessions_dir` | `str`、任意 | 呼び出し側が渡したときの、そのプロファイルの `sessions/` ディレクトリ。 |
+
+**発火する場所:** 確定したあとだけで、しかも何かが変わったときだけです。知らない ID、すでにアーカイブ済みのものへのアーカイブ、アーカイブの解除では発火しません。`reason="archive"` は、利用者がそのセッションを隠したことを意味します（やり取りの記録は残り、アーカイブを解除できます）。アイドル状態での自動アーカイブの一括処理と、プロファイルへの取り込みでは発火しません。コールバックが失敗しても、ほかの観測役と同じくログに残して飛ばすだけで、削除そのものが失敗することはありません。中身にメッセージの内容は含まれません。
+
+**届く範囲:** そのプロセスの中だけです。コールバックは、削除を確定したプロセスでしか走りません。プロセスをまたいで確実に届ける経路ではなく、ちょうど1回だけ届くという保証もありません。コールバックから外部へ何かを起こす場合は、呼び出しが抜けたり重なったりしても困らない作りにしてください。
+
+**戻り値:** 無視されます。
+
+**使いどころ:** セッションごとに横に置いたデータベースやキャッシュのディレクトリを消す、利用者がチャットをアーカイブしたときに結びついたタスクを閉じる、「セッションが削除された」という分析を出す。
+
+---
+
 ツールのスキーマ、処理、進んだフックの型まで含めた全体の説明は、**[プラグインを作る手引き](/hermes/docs/developer-guide/plugins/)** を参照してください。
 
 ---
+
+### `post_compaction` {#postcompaction}
+
+圧縮が**確定した**あとに1回発火します。これにより、プラグイン（メモリーのプロバイダー、コンテキストエンジン、外部の知識の保存先）は、前に差し込んだ細かい情報がいま要約で消えたことに気づき、ふつうは次の `pre_llm_call` で差し込み直せます。
+
+**コールバックの形:**
+
+```python
+def my_callback(session_id: str, kind: str, reason: str, **kwargs):
+```
+
+| 引数 | 型 | 説明 |
+|-----------|------|-------------|
+| `session_id` | `str` | 圧縮したやり取りの記録をいま持っているセッション。 |
+| `old_session_id` | `str` | 圧縮で新しいセッションへ切り替わった場合の、圧縮を始めたときのセッション。その場で圧縮したときは `""`。 |
+| `kind` | `str` | `"summarize"`（完全な圧縮）、`"micro_summarize"`、`"prune_tool_results"`、`"provider_native"`（Codex app-server）のどれか。 |
+| `reason` | `str` | きっかけ: `"manual"`（`/compress`）、`"pre_api"`、`"post_tool"`、`"overflow"`、`"gateway_hygiene"`、`"between_turns"`、`"proactive_prune"`、`"provider"`、`"unknown"` のどれか。 |
+| `before_tokens` / `after_tokens` | `int \| None` | やり取りの記録の、圧縮前と圧縮後のおおよそのトークン数。分からないとき（Codex がスレッドを持っているとき）は `None`。 |
+| `messages_removed` | `int \| None` | 圧縮前のメッセージ数から圧縮後の数を引いたもの。分からないときは `None`。 |
+
+**発火する場所:** エージェントのループの中で、圧縮をしたプロセスで発火します（CLI、TUI、デスクトップのバックエンド、ゲートウェイのエージェント、cron）。ゲートウェイの `/compress` では、確定したあとにゲートウェイで発火します。何も変わらなかった試み（要約の中止、待ち時間による阻止、大きくなるための拒否）と、バックグラウンドのレビュー用に分けた処理では何も発火しません。
+
+**戻り値:** 無視されます。例外を出したコールバックはログに残して飛ばします。圧縮はすでに確定しているので影響を受けません。コールバックには `plugins.hook_callback_timeout` の時間の上限がかかります。
+
+**使いどころ:** 圧縮のあとにセッションの文脈を差し込み直す、外部の索引を更新する、圧縮の回数を数える。
 
 ### `agent_loop_stopped` {#agentloopstopped}
 
@@ -2005,7 +2060,7 @@ printf '{}\n'
 
 ### 同意の考え方 {#consent-model}
 
-`(event, command)` の組ごとに、Hermes がそれを初めて見たときに利用者へ承認を求め、その判断を `~/.hermes/shell-hooks-allowlist.json` に残します。以降の実行（CLI でもゲートウェイでも）では確認を飛ばします。従来の CLI は、ゲートウェイのセッションを開く前に自分の端末で確認します。ゲートウェイは、手元のセッション（CLI、TUI、デスクトップ）が作られるか再開されるたびに `hooks:` と許可一覧を読み直します。そのため、ゲートウェイの起動後に足した・承認した・外した・取り消したフックは、その時点から反映されます。
+`(event, command)` の組ごとに、Hermes がそれを初めて見たときに利用者へ承認を求め、その判断を `~/.hermes/shell-hooks-allowlist.json` に残します。以降の実行（CLI でもゲートウェイでも）では確認を飛ばします。従来の CLI は、ゲートウェイのセッションを開く前に自分の端末で確認します。ゲートウェイは、手元のセッション（CLI、TUI、デスクトップ）が作られるか再開されるたびに `hooks:` と許可一覧を読み直します。そのため、ゲートウェイの起動後に足した・承認した・外した・取り消したフックは、その時点から反映されます。プロファイルの許可一覧や `hooks:` のブロックへの変更（承認、`hermes hooks revoke`、編集）は、セッションが開かなくても、ゲートウェイが受け持つすべてのプロファイルで約 30 秒以内に反映されます。
 
 対話の確認を通らずに済む逃げ道が 3 つあり、どれか 1 つで足ります。
 
@@ -2013,7 +2068,7 @@ printf '{}\n'
 2. `HERMES_ACCEPT_HOOKS=1` の環境変数
 3. `~/.hermes/config.yaml` の `hooks_auto_accept: true`
 
-端末のない実行（ゲートウェイ、cron、CI）ではこの 3 つのどれかが要ります。そうでないと、新しく足したフックは黙って登録されないまま警告だけが残ります。`hermes gateway run --accept-hooks` は（ゲートウェイでの `HERMES_ACCEPT_HOOKS=1` と同じく）、そのゲートウェイが受け持つすべてのプロファイルのフックを承認します。起動後に足されたフックも含みます。
+確認を求めるのは、前面で動く `hermes chat`（または `hermes rl`）だけです。ゲートウェイ、cron、`hermes mcp serve`、`hermes acp`、CI は、標準入力が端末に見える場合でも（Windows のログイン項目のランチャーから開く隠れたコンソールがそうです）確認を求めません。そのため、この 3 つのどれかか、許可一覧の項目が要ります。そうでないと、新しく足したフックは登録されないままになり、警告にはそのフックが抜けているプロファイルの許可一覧のファイル（既定以外のプロファイルなら `profiles/<name>/shell-hooks-allowlist.json`）の名前が出ます。`hermes gateway run --accept-hooks` は（ゲートウェイでの `HERMES_ACCEPT_HOOKS=1` と同じく）、そのゲートウェイが受け持つすべてのプロファイルのフックを承認します。起動後に足されたフックも含みます。
 
 **スクリプトの編集は黙って信頼されます。** 許可一覧の鍵は、スクリプトのハッシュではなく、そのままのコマンドの文字列です。ディスク上でスクリプトを直しても同意は無効になりません。`hermes hooks doctor` が更新時刻のずれを知らせるので、編集に気づいて、承認し直すかどうかを判断できます。
 
@@ -2040,7 +2095,7 @@ printf '{}\n'
 |---------|--------------|
 | `hermes hooks list` | 設定されたフックを、照合の条件、時間の上限、同意の状態とともに出します |
 | `hermes hooks test <event> [--for-tool X] [--payload-file F]` | 合成した中身に対して、一致するすべてのフックを発火させ、解釈された応答を表示します |
-| `hermes hooks revoke <command>` | `<command>` に一致する許可一覧の項目をすべて消します（ゲートウェイは、次に手元のセッションが開いた時点でそのフックを走らせなくなります。メッセージング専用のゲートウェイでは再起動のときです） |
+| `hermes hooks revoke <command>` | `<command>` に一致する許可一覧の項目をすべて消します（動いているゲートウェイは、約 30 秒以内にそのフックを走らせなくなります） |
 | `hermes hooks doctor` | 設定されたすべてのフックについて、実行の権限、許可一覧の状態、更新時刻のずれ、JSON の出力の正しさ、おおよその実行時間を調べます |
 
 ### セキュリティ {#security}

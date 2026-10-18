@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Git ワークツリー"
 description: "git のワークツリーと独立したチェックアウトを使って、同じリポジトリで複数の Hermes エージェントを安全に動かします"
 upstream_path: user-guide/git-worktrees.md
-upstream_blob: b2d130198f836fe1bf5522ad2970ec0b54b41621
+upstream_blob: 675f677f8f675f4db0869929f728a82af293a824
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/git-worktrees
 ---
@@ -53,8 +53,8 @@ Hermes はリポジトリの中に `.worktrees/my-experiment/` を作り（ブ�
 `hermes/my-experiment` で、`worktree_sync: false` にしていない限り、取得し直した直後のリモートの先端を基点にします）、
 そのセッションのターミナルツールとファイルツールの向き先をそこへ切り替えます。再起動は不要です。
 名前を省略すると `hermes-<id>` という形のランダムな名前のツリーになります。`/worktree` だけを実行すると現在のツリーが表示され、`/worktree list` はすべてのツリーを一覧します。
-セッションを終了するとき、そのツリーは push されていないコミットがある場合にだけ残ります。この挙動は
-`hermes -w` とまったく同じです。
+セッションを終了するとき、きれいな状態で push 済みのツリーは削除されます。コミットしていない変更や
+push していないコミットがあるツリーでは、`hermes -w` と同じく、残す・退避する・削除するのどれにするかを尋ねられます。
 
 ### git で手動で作る {#manually-with-git}
 
@@ -182,6 +182,89 @@ hermes -w -z "Fix issue #123"
 ```
 
 エージェントを同時に動かしたい場合は、ターミナルを複数開いてそれぞれで `hermes -w` を実行してください。実行するたびに、専用のワークツリーとブランチが自動で用意されます。
+
+### 作業が残ったままセッションを終えるとき {#leaving-a-session-with-unfinished-work}
+
+対話型の `hermes -w` セッション（従来の CLI でも `--tui` でも）を終了するとき、その
+ワークツリーにコミットしていない変更や push していないコミットがあると、Hermes は次のように尋ねます。
+
+- **ワークツリーを残す**（既定。Enter や Esc を押したときもこれになります）— 何も変わりません。
+- **退避してから削除する** — 作業中の状態をまるごと退避し（下記参照）、セッションの終了処理が
+  終わる前にツリーを削除します。そのため、大きなツリーでも途中で打ち切られることはありません。
+  Hermes は元に戻すための `hermes worktree restore` コマンドを表示します。退避に失敗した場合、
+  ツリーは残されます。
+- **削除して変更を捨てる** — 自分で明示的に選んだときだけ実行されます。
+
+単発の実行（`-q`、`-z`）、cron のジョブ、ゲートウェイのセッション、ターミナルのない状態での終了では
+質問しません。ツリーは残され、あとで古いワークツリーの掃除処理が片づけます。コミットが push 済みで
+きれいな状態のツリーは、質問せずに削除されます。
+
+## 古いワークツリーの掃除と復元 {#stale-worktree-sweep-and-restore}
+
+Hermes がワークツリーを作ったリポジトリ（`hermes -w`、`/worktree new`、サブエージェントの
+ワークツリー分離、デスクトップアプリの git ペイン）は、使用中のプロファイルの
+`<HERMES_HOME>/worktree_repos.json` に記録されます。`hermes -w` の起動時と、cron のタイマーから
+6時間ごとに、Hermes はそれぞれのリポジトリの `.worktrees/` を掃除します。
+
+| ツリー | 判断 |
+|---|---|
+| 区分ごとの期間（`hermes-*`/`subagent-*` は24時間、名前付きのツリーは72時間）を超えて使われておらず、きれいな状態で、取り込み済みまたは push 済み | 削除 |
+| 区分ごとの期間を超えて使われておらず、コミットしていない変更や push していないコミットがある | **退避してから削除** |
+| 動作中の hermes のロックを持つもの、または作業ディレクトリ（Linux では開いているファイルも）が中にある動作中のプロセスがあるもの | 触らない |
+| ファイル、`HEAD`、reflog の動きが区分ごとの期間より新しい（削除されたファイルは、そのフォルダを通じて数えます） | 触らない |
+| カンバンのタスク用ツリー（`t_<hex>`） | 触らない（カンバンの GC が管理します） |
+| サブモジュールがあるもの: インデックス内の gitlink、またはツリーの `modules/` の下に残っているサブモジュールのリポジトリ（`git submodule deinit` の後でも） | 残す（`keep-submodule-work`: 退避にはサブモジュールの参照先しか記録されないため）。きれいで取り込み済みのツリーが削除されるのは、サブモジュールが一度も初期化されていない場合だけです |
+| 中のどこかに埋め込まれたリポジトリがあるもの（gitignore されているかどうかを問わず。例: `build/tool/.git`） | 残す（`keep-unarchivable`） |
+| 作業ツリーごとの参照（`refs/worktree/*`、`refs/bisect/*`、`refs/rewritten/*`）からしかたどれないコミットがあるもの | 残す（`keep-worktree-refs`: これらの参照はツリーと一緒に消えるため） |
+| `worktrees.archive_max_file_mb` より大きい追跡外のファイルがあるもの | 残す（`keep-large-untracked`） |
+
+**無視対象のファイル。** 無視対象のファイル（`.env` のコピー、キャッシュ、ビルドやテストの出力）は
+退避されず、ツリーと一緒に削除されます。唯一の例外は、無視対象のフォルダの中にある入れ子の
+git リポジトリで、これがあるとツリーは残されます。
+
+同じ確認は、きれいで取り込み済みのツリーにも行われます。また、変更の有無の確認では、
+`status.showUntrackedFiles=no` で隠れてしまうファイルや、skip-worktree / assume-unchanged が
+付いていてもインデックスと中身が異なるファイルも数えます。
+
+退避は `refs/hermes/archive/<tree>` に保存されるコミットで、ツリーの `HEAD`、ステージ済みの変更、
+ステージしていない変更、追跡外のファイルを含みます（`node_modules/` や `.venv/` のように
+`.gitignore` で除外しているファイルは含まれません）。退避は一時的なインデックスを使って作るので、
+ツリーそのものが書き換えられることはありません。退避を作れなかった場合、ツリーは残されます。
+退避を作っている最中にツリーに入られたり、ステージ済みの変更が動いたり（`git add`、
+`git apply --cached`）した場合も、退避は保存されたうえでツリーは残されます。ファイルの中身は
+バイト単位でそのまま保存・復元されます。`.gitattributes`、`info/attributes`、`core.attributesFile`
+の改行やフィルターの規則は適用されません。`worktrees.archive_max_file_mb` より大きい追跡外の
+ファイルは退避から外され、退避の中に一覧として記録されたうえで、ツリーは残されます。終了時の
+**Archive** の選択肢とサブエージェントの結果にも、そのことが表示されます。リモートに存在する
+ブランチ（開いている PR）は残されます。そうでなければ、退避がそのコミットを保持し、ローカルの
+ブランチは削除されます。
+
+```bash
+hermes worktree list                 # trees plus archives (name, age, branch, reason)
+hermes worktree prune --dry-run      # every archive/remove/skip decision and why; changes nothing
+hermes worktree restore lane-x       # recreate .worktrees/lane-x with its branch, staged and untracked files
+hermes worktree restore lane-x --path ../lane-x-review
+```
+
+復元すると、ブランチが無くなっているか、まだ退避した時点の `HEAD` を指している場合は、
+ブランチも元に戻ります。そうでない場合、ツリーはそのコミットで detached の状態で戻ります。
+`worktrees.archive_retention_days` より古い退避は、掃除処理が削除します。
+
+```yaml
+worktrees:
+  archive_dirty: true          # false = never remove dirty/unpushed trees (the old behaviour)
+  archive_max_file_mb: 50      # untracked files above this are not archived; their tree is kept
+  archive_retention_days: 30   # 0 keeps archives forever
+  max_total_gb: 0              # optional budget for idle trees; oldest are archived + removed first
+```
+
+ツリーの数に上限はありません。何百ものサブエージェントを並列で動かしても、それぞれが作業している
+あいだは自分のツリーを持ち続けます。`max_total_gb` が追い出すのは、区分ごとの期間を超えて
+使われていないツリーだけです。
+
+サブエージェントのワークツリー（`delegation.worktree_isolation: true`）も、子の作業が終わったときに
+同じ規則に従います。きれいなツリーは削除され、コミットや編集のあるツリーは退避してから削除されます。
+ブランチは、親が取り込めるように残されます。
 
 ## まとめると {#putting-it-all-together}
 

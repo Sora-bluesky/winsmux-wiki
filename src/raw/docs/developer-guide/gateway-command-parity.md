@@ -2,7 +2,7 @@
 title: "ゲートウェイのコマンド対応表"
 description: "共有ゲートウェイ上で、ローカルの各クライアントがスラッシュコマンドをどう扱うか"
 upstream_path: developer-guide/gateway-command-parity.md
-upstream_blob: 6176698928426ad0b9488d4d90d9b016e1746a53
+upstream_blob: 59891960ca2eec57c719d411bcc02902ca130918
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-command-parity
 ---
@@ -132,7 +132,7 @@ sources:
 | `/usage` | read (bare only (`reset` refused)) | HermesCLI._handle_usage_command | canonical route | slash.exec | slash.exec |  |
 | `/verbose` | control | HermesCLI._toggle_verbose | config.set | unavailable: terminal | slash.exec | per-session setting (gateway handler) |
 | `/version` (/v) | read | HermesCLI._cmd_version | slash.exec | slash.exec | slash.exec |  |
-| `/voice` | control | HermesCLI._handle_voice_command | canonical route | unavailable: composer-voice | slash.exec | per-session setting (gateway handler) |
+| `/voice` | control | HermesCLI._handle_voice_command | sidecar: voice.toggle; `tts` refused | unavailable: composer-voice | slash.exec | per-session setting (gateway handler) |
 | `/wake` | refused | HermesCLI._handle_wake_command | local | action: wake | slash.exec: refused | client-local (cli_only) |
 | `/whoami` | read | HermesCLI._handle_whoami_command | slash.exec | slash.exec | slash.exec |  |
 | `/worktree` | refused | HermesCLI._handle_worktree_command | slash.exec: refused | slash.exec: refused | slash.exec: refused | client-local (cli_only) |

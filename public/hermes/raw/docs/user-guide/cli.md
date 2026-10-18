@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md
-upstream_blob: 25561c48be77cd602e0f3354fbc1c96b8912c124
+upstream_blob: 3afc1a35d1f9de25ba6131049938be2d027f8af4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/cli
 ---
@@ -70,16 +70,19 @@ hermes -w -z "Fix issue #123"     # Single query in worktree
 その作業ツリーは、きれいな状態でも残ります。ターンがまだそこで動いているかもしれず、
 セッションを再開すると同じ作業ディレクトリを使うからです。セッションの作業が終わったら、
 確認して片づけてください。
-起動時には控えめな掃除処理が自動で走りますが（きれいな状態で、完全に取り込み済みで、
-一定の日数を過ぎた一時ツリーだけを消します）、残しておいたツリーや取り込み済みの
-ローカルブランチは、忙しい端末ではやはり溜まっていきます。次のコマンドで、
-自分の意思で回収してください。
+`hermes -w` の起動時と、cron のタイマーから6時間ごとに、掃除処理が自動で走ります。
+使われていない、きれいで取り込み済みのツリーは削除され、使われていないツリーのうち
+コミットしていない変更や push していないコミットを持つものは**退避してから削除**されます
+（`hermes worktree restore <name>` で元に戻せます。
+[古い作業ツリーの掃除](/hermes/docs/user-guide/git-worktrees/#stale-worktree-sweep-and-restore)を参照してください）。
+次のコマンドで、自分の意思で回収したり中身を確かめたりできます。
 
 ```bash
-hermes worktree list              # audit: age, size, verdict, reason per tree
-hermes worktree list --json       # machine-readable audit (trees, external trees, branches)
-hermes worktree prune             # remove safe trees + delete merged branches
-hermes worktree prune --dry-run   # show the plan without changing anything
+hermes worktree list              # audit: age, size, verdict, reason per tree + archives
+hermes worktree list --json       # machine-readable audit (trees, external trees, branches, archives)
+hermes worktree prune             # run the sweep now + delete merged branches
+hermes worktree prune --dry-run   # print every archive/remove/skip decision and why; changes nothing
+hermes worktree restore <name>    # recreate an archived tree (add --path DIR to put it elsewhere)
 hermes worktree prune --older-than 7   # only reap trees idle for 7+ days
 hermes worktree prune --trees-only     # leave local branches alone
 hermes worktree prune --branches-only  # leave worktrees alone
@@ -89,15 +92,17 @@ hermes worktree prune --branches-only  # leave worktrees alone
 `list` の出力に読み取り専用として表示されるだけで、消されることはありません。唯一の例外は
 管理情報です。ディレクトリがもう存在しない登録は `git worktree prune` で取り除かれます
 （ファイルには一切触りません）。`--older-than DAYS` は回収の対象を絞り込む方向にしか働きません。
-実際の作業が残っているツリーは、この指定にかかわらず、どれだけ古くても残ります。
+その実行で古い作業ツリーの掃除が退避・削除する対象も同じで、使われていない期間が DAYS に
+満たないツリーには決して触りません。
 
 セッションの中では `/worktree prune [--dry-run]` が同じことをします（そのセッション自身が
 動いているツリーには決して触りません）。
 
 安全のための保証（どのモードでも、どれだけ古くても変わりません）:
 
-- コミットしていない**追跡中**の変更が消えることはありません。
-- **まだ push していない固有のコミット**が消えることはありません。上流で rebase や squash で
+- コミットしていない変更と**まだ push していない固有のコミット**は、元に戻せる退避
+  （`refs/hermes/archive/<tree>`）を作らずに消されることはありません。
+  `worktrees.archive_dirty: false` にすれば、一切消されません。上流で rebase や squash で
   取り込まれたコミットは `git cherry` のパッチ等価判定で検出され、取り込み済みとして
   扱われます。これがあるおかげで、いちばん多い「PR は取り込み済みなのにツリーが永久に
   残る」という無駄をようやく回収できます。
@@ -111,16 +116,27 @@ hermes worktree prune --branches-only  # leave worktrees alone
   削除されますが**ブランチの参照は残る**ので、そのレーンは
   `git worktree add .worktrees/<name> <branch>` ひとつで元に戻せます。リモートに
   つながらない場合、ツリーはそのまま残されます。
-- **動作中の hermes セッションが使っている**ツリーには触りません。
+- **使用中**のツリーには触りません。動作中の hermes セッションのロックがあるもの、または
+  作業ディレクトリ（Linux では開いているファイルも）がツリーの中にある、動作中のプロセスが
+  あるものが該当します。各ツリーは、退避や削除の直前と、退避を作り終えた直後にもう一度
+  確認され、その間に変化したツリーは残されます。
 - **追跡外のファイルだけの一時作業**（PR 本文の下書き、メモなど）は、ツリーを削除する前に
   `~/.hermes/archive/worktree-prune/` へ退避されます。捨てられることはありません。
+- **作り直せないものを退避せずに消すことはありません**。ツリーの中に、埋め込まれた
+  リポジトリ（gitignore されたものも含む）、作業ツリーごとの参照（`refs/worktree/*`、
+  `refs/bisect/*`）からしかたどれないコミット、退避のサイズ上限を超える追跡外のファイルの
+  いずれかがあれば、そのツリーは残されます。無視対象のファイル（`.env` のコピー、キャッシュ、
+  ビルドの出力）は退避されず、ツリーと一緒に削除されます。ただし、無視対象のフォルダの中に
+  入れ子の git リポジトリがあれば、ツリーは残されます。詳しくは
+  [無視対象のファイル](/hermes/docs/user-guide/git-worktrees/#stale-worktree-sweep-and-restore)を参照してください。
 - ブランチの削除は名前ではなく中身で判断します。コミットがすべて上流にあるローカル
   ブランチは削除しても安全です。固有の作業を持つブランチ、チェックアウト中のブランチ、
   `main`/`master`/`develop` は常に残ります。
 
-同じ控えめな掃除処理は cron のスケジューラからも走ります（バックグラウンドで、最短でも
-6時間に1回まで）。おかげで、誰も何日も `hermes -w` を起動しないゲートウェイ専用の端末でも、
-CLI セッションの合間に取り込み済みの一時ツリーが溜まらなくなりました。
+同じ掃除処理は cron のスケジューラからも走ります（バックグラウンドで、プロファイルごとに
+最短でも6時間に1回まで）。対象は、そのプロファイルが作業ツリーを作ったことのあるすべての
+リポジトリです。おかげで、誰も何日も `hermes -w` を起動しないゲートウェイ専用の端末でも、
+CLI セッションの合間に一時ツリーが溜まらなくなりました。
 
 `.worktrees/` が10ツリーまたは5GBを超えると、起動時にこれらのコマンドを案内する
 1行のお知らせが出ます。

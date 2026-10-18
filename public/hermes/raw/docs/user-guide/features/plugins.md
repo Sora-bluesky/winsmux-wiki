@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 7f7d7e9317f0c0d784f84b94eab717b051f42bf4
+upstream_blob: 2adc9abb550e8a7e03bb7efd7e8fdc928d976f0b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -108,6 +108,7 @@ def register(ctx):
 | コマンドからツールを呼ぶ | `ctx.dispatch_tool(name, args)` — 親エージェントの文脈を自動でつないだ状態で、登録済みのツールを呼びます |
 | CLI のコマンドを足す | `ctx.register_cli_command(name, help, setup_fn, handler_fn)` — `hermes <plugin> <subcommand>` を足します |
 | メッセージを差し込む | `ctx.inject_message(content, role="user", session_key=... \| origin=...)` - [メッセージを差し込む](#injecting-messages)を参照 |
+| 状態メッセージを投稿して書き換える | `handle = ctx.post_message(text)` のあと `handle.edit(text)` — [書き換えられるメッセージを投稿する](#posting-a-live-message)を参照 |
 | データファイルを同梱する | `Path(__file__).parent / "data" / "file.yaml"` |
 | スキルを同梱する | `ctx.register_skill(name, path)` — `plugin:skill` という名前空間になり、`skill_view("plugin:skill")` で読み込みます |
 | 環境変数を条件にする | plugin.yaml の `requires_env: [API_KEY]` — `hermes plugins install` の途中で入力を求められます |
@@ -129,7 +130,7 @@ def register(ctx):
 
 - `print()` を呼ぶのではなく、**文章を戻り値として返します**。print した出力はゲートウェイの標準出力に出るだけで、利用者のチャットには届きません。
 - **セッションの作業ディレクトリは `agent.runtime_cwd.resolve_agent_cwd()` で読みます**。`os.getcwd()` はゲートウェイ自身のディレクトリを返すので使いません。ハンドラーが動いているあいだ、ゲートウェイはセッションのディレクトリを固定しています。
-- **セッションの素性は `gateway.session_context.get_session_env("HERMES_SESSION_PLATFORM")`**（と、`HERMES_SESSION_ID` や `HERMES_SESSION_KEY` などほかの `HERMES_SESSION_*` の名前）で読み、`os.environ` からは読みません。これらの値はハンドラーの前後でセッションごとに結びつけられるので、ハンドラーが始めた裏の処理は、そのセッションを親として記録します。
+- **呼び出し元のセッションはハンドラーのキーワード引数で受け取ります。** `session_id`、`session_key`、`platform`、`source`（送り主の `SessionSource`）を宣言すれば Hermes が渡します。引数 1 つのハンドラーはこれまでどおりそのまま動きます。同じ値はハンドラーの前後で `HERMES_SESSION_*` としても結びつけられる（`gateway.session_context.get_session_env` で読み、`os.environ` からは決して読みません）ので、ハンドラーが始めた裏の処理は、そのセッションを親として記録します。
 
 従来の CLI は、ハンドラーが動いているあいだずっと返事を待ちます。Ctrl+C で止まるのは待つことであって、ハンドラーではありません。ハンドラーはゲートウェイの中で最後まで動き、その返事は表示されません。コマンドはゲートウェイへの専用のつながりで動くので、実行中もそのセッションの入力・割り込み・ほかのコマンドが止められることはありません。
 
@@ -343,7 +344,7 @@ CLI / TUI / ゲートウェイ / ACP の画面に承認を出したいなら、
 |---|---|
 | **指示・制御** | `pre_tool_call`, `pre_llm_call`, `pre_verify`, `pre_gateway_dispatch` |
 | **変換** | `transform_tool_result`, `transform_terminal_output`, `transform_llm_output`, `pre_transcription` |
-| **観測** | `post_tool_call`, `post_llm_call`, `pre_api_request`, `post_api_request`, `api_request_error`, `pre_auxiliary_call`, `post_auxiliary_call`, `on_stream_start`, `on_stream_delta`, `on_stream_end`, `on_interim_message`, `on_session_start`, `on_session_end`, `on_session_finalize`, `on_session_reset`, `agent_loop_stopped`, `on_skill_lifecycle`, `subagent_start`, `subagent_stop`, `pre_approval_request`, `post_approval_response`, `on_human_input_request`, `on_human_input_resolved`, `pre_command`, `kanban_task_claimed`, `kanban_task_completed`, `kanban_task_blocked` |
+| **観測** | `post_tool_call`, `post_llm_call`, `pre_api_request`, `post_api_request`, `api_request_error`, `pre_auxiliary_call`, `post_auxiliary_call`, `on_stream_start`, `on_stream_delta`, `on_stream_end`, `on_interim_message`, `on_session_start`, `on_session_end`, `on_session_finalize`, `on_session_reset`, `post_compaction`, `on_session_delete`, `agent_loop_stopped`, `on_skill_lifecycle`, `subagent_start`, `subagent_stop`, `pre_approval_request`, `post_approval_response`, `on_human_input_request`, `on_human_input_resolved`, `pre_command`, `kanban_task_claimed`, `kanban_task_completed`, `kanban_task_blocked` |
 
 この分類はいまの動きを説明するもので、これからの命名の規則を定めるものではありません。プラグインのミドルウェアは、引き続き別の登録先・別の面として扱われます。
 ## プラグインの種類 {#plugin-types}
@@ -902,6 +903,57 @@ context:
 入れたばかりのプラグインや同梱のプラグインの既定は `not enabled` です。`hermes plugins list` はこの3つを区別して表示するので、はっきりオフにしたものと、有効にされるのを待っているだけのものを見分けられます。
 
 動いているセッションでは、`/plugins` がいま読み込まれているプラグインを表示します。
+
+## 書き換えられるメッセージを投稿する {#posting-a-live-message}
+
+プラグインは、自分が働いている会話にメッセージを 1 つ投稿し、あとからその同じメッセージを書き換えられます。
+どのチャンネルでも使え、プラットフォームごとのコードは要りません。進み具合をその場で見せたいとき（時間のかかる
+ツールが動いている間のチェックリストや、計画の見直しに合わせて変わる計画カードなど）に使います。
+
+```python
+def run_migration(args, **kwargs):
+    status = ctx.post_message("Migrating: 0/3 tables")
+    for i, table in enumerate(TABLES, 1):
+        migrate(table)
+        status.edit(f"Migrating: {i}/3 tables")
+    status.edit("Migration done ✓")
+    return tool_result({"migrated": len(TABLES)})
+```
+
+**書き方:** `ctx.post_message(text: str) -> PluginMessage` と
+`PluginMessage.edit(text: str) -> dict` です。すでにゲートウェイのイベントループ上で動いている `async` のコード
+（非同期のフックやスラッシュコマンドのハンドラー）からは、代わりに `await ctx.apost_message(text)` と `await handle.aedit(text)`
+を使ってください。そこでは同期版はループを止めてしまう代わりに `error: "on_event_loop"` で断ります。
+
+**どの会話に出るか。** いまの会話とは、呼び出し元のコードに結びついたセッションのことです。そのセッションのターンで動くツールの
+ハンドラーやフック、そのセッションのスラッシュコマンド、そのセッションに対して発火したフックが該当します。プラグインがチャットを
+名指しすることはないので、ほかの場所には投稿できません。プラグインが自分で始めたスレッドはこの結びつきを引き継ぎません
+（引き継がせたいときは `contextvars.copy_context().run(...)` で始めてください）。タイマー、cron
+の実行、動いているゲートウェイのないプロセスには、会話そのものがありません。
+
+**例外を投げません。** どの呼び出しも結果を返します。`handle.ok`、`handle.message_id`、`handle.error`
+は直前の操作の結果を表します。`edit()` は `{"ok", "message_id", "edited"}` を返し、新しいメッセージを投稿し直したときは
+`"fallback": True` も付けます。エラーコードは次のとおりです。`no_conversation`（呼び出し元に何も結びついていない、セッションが動いていない、または別のプロファイルのセッションである）、
+`gateway_unavailable`、`adapter_unavailable`、`send_failed`、`edit_failed`、`on_event_loop`、`timeout`。
+投稿が断られたときも返ってくるハンドルの `edit()` は同じように断られるので、うまくいく前提のコードに
+分岐は要りません。`timeout` は、ゲートウェイが 30 秒以内に応答しなかったという意味です。操作は続いていて、
+結果はあとからハンドルに届きます（その間は `handle.pending` が true です）。次の `edit()` はまずその結果を待つので、
+投稿が遅くても、ハンドルから書き換えられないメッセージが残ることはありません。プラットフォームが書き換えを断ったり例外を出したりしたときは、書き換えに対応していないプラットフォームと同じように、新しいメッセージの投稿に切り替わります。投稿と書き換えはすべて `plugin_message plugin=<id> op=post|edit ...` としてログに残ります。
+
+画面ごとの動きは次のとおりです。
+
+| 画面 | `post_message` | `edit` |
+|---|---|---|
+| 書き換えに対応したメッセージングプラットフォーム（Telegram、Discord、Slack、Matrix など） | アダプターの通常の `send` でチャットやスレッドに送る | 同じメッセージをその場で書き換える |
+| 書き換えに対応していないプラットフォーム（SMS、メール、`edit_message` を実装していないプラグインのアダプター） | `send` | 新しいメッセージを送り、ハンドルはそちらを追う（`edited: False, fallback: True`） |
+| Desktop と Ink TUI | セッションを見ている人へのキー付きのお知らせ（Desktop のトースト、TUI のステータス行） | そのお知らせをその場で置き換える |
+| 従来の CLI（`hermes chat`） | お知らせの行として順番待ちに入り、次のターンの終わりに表示される（従来の CLI には、その場で更新できるお知らせ欄がない） | 書き換えるたびに行が 1 つずつ順番待ちに入る |
+
+文字列はプラットフォームのメッセージの上限で省略記号を付けて切り詰められます（分割はされません）。中身はプレーンテキストです。
+アダプターが独自の書式で表示することはありますが、プラグインはそれに頼らないでください。許可は要りません。
+メッセージが届くのは、すでにそのプラグインを呼び出した会話だけだからです。
+プロセスの外にあるプラグインホストで動くプラグイン（`plugins.isolation: host`）では、`ctx.post_message` は使えません。
+ハンドルがゲートウェイのイベントループと動いているアダプターに結びついているためです。
 
 ## メッセージを差し込む {#injecting-messages}
 

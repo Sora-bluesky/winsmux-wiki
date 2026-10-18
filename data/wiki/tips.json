@@ -2,7 +2,7 @@
  "series": "Hermes Wingtips",
  "author": "witcheer",
  "authorUrl": "https://x.com/witcheer",
- "updated": "2026-10-12",
+ "updated": "2026-10-19",
  "categories": [
   "メッセージとボット",
   "モデルとプロバイダ",
@@ -13,7 +13,7 @@
   "CLI とデスクトップ",
   "その他"
  ],
- "count": 98,
+ "count": 99,
  "items": [
   {
    "n": 1,
@@ -2129,6 +2129,27 @@
     "IANA",
     "cron",
     "タイムゾーン"
+   ]
+  },
+  {
+   "n": 99,
+   "date": "2026-10-12",
+   "url": "https://x.com/witcheer/status/2109554664605725085",
+   "feature": "/copy",
+   "title_ja": "エージェントの返答をそのままクリップボードにコピーする",
+   "summary_ja": "ターミナルのチャットで `/copy` と打つと、直前の返答がクリップボードに入り、メールや文書にそのまま貼れます。`/copy 2` のように数字を付けると後ろから N 番目の返答をコピーします。CLI 専用のコマンドです。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    }
+   ],
+   "tags": [
+    "copy",
+    "clipboard",
+    "クリップボード",
+    "コピー"
    ]
   }
  ]

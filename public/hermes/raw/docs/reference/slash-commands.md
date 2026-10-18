@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 4add1c493fa539511b9fb606ec5ae9112c8a46f3
+upstream_blob: 2cfd74a74a6c68853472ce085701e60971036897
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -72,7 +72,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/bg <prompt>` | プロンプトを別のバックグラウンドセッションで実行します。エージェントが独立して処理するので、今のセッションは他の作業に使えます。タスクが終わると結果がパネルで出ます。[CLI のバックグラウンドセッション](/hermes/docs/user-guide/cli/#background-sessions) も見てください。 |
 | `/btw <question>` | 進行中の会話を止めずに、**今の会話について**ちょっとした質問をします。読み取り専用の記録のスナップショットに対して補助の LLM を 1 回呼んで答えるので、動いているセッションの履歴とプロンプトキャッシュには触れず、今のターンもそのまま続きます。まっさらな文脈で別の作業をさせたいときは `/bg` を使ってください。 |
 | `/branch [--here] [name]`（別名: `/fork`） | 今のセッションを、独立した写しとして分岐させます（別の道を試せます）。Discord、Telegram、Slack、Matrix では、分岐したほうが**隣に並ぶ新しいスレッド**として開き、いま使っているチャットは元のセッションのまま残ります。`--here` を付けると、逆にいまのチャットのほうを分岐先に切り替えます（#66023 より前の動きです）。CLI やスレッドの無いプラットフォームでは、つねにその場で分岐します。従来型の CLI では `/handoff` と同じくターンの途中では断られます。いま返ってきている応答が終わるのを待ってから、もう一度実行してください。 |
-| `/worktree [new [name]\|list]` | **CLI 専用。** セッションの途中で、隔離された git の worktree を確認したり作ったりします（Copilot CLI の `/worktree new` に着想を得ています）。引数なしの `/worktree` は今の worktree を表示し、`/worktree list` はリポジトリの worktree を並べ、`/worktree new [name]` は `.worktrees/` の下に worktree を作って（取得したてのリモートの先端から分岐し、`worktree_sync` の設定に従います）、セッションのターミナルとファイル系のツールをそこへ向け直します。名前を付けたものはその名前を使い（ブランチは `hermes/<name>`）、付けなかったものはランダムな `hermes-<id>` になります。終了時、push していないコミットがある場合だけ worktree は残ります。`hermes -w` と同じライフサイクルです。[Git の worktree](/hermes/docs/user-guide/git-worktrees/) も見てください。 |
+| `/worktree [new [name]\|list]` | **CLI 専用。** セッションの途中で、隔離された git の worktree を確認したり作ったりします（Copilot CLI の `/worktree new` に着想を得ています）。引数なしの `/worktree` は今の worktree を表示し、`/worktree list` はリポジトリの worktree を並べ、`/worktree new [name]` は `.worktrees/` の下に worktree を作って（取得したてのリモートの先端から分岐し、`worktree_sync` の設定に従います）、セッションのターミナルとファイル系のツールをそこへ向け直します。名前を付けたものはその名前を使い（ブランチは `hermes/<name>`）、付けなかったものはランダムな `hermes-<id>` になります。終了時、未コミットの変更か push していないコミットがあれば、残す・アーカイブする・削除するのどれにするかを尋ねられます。`hermes -w` と同じライフサイクルです。[Git の worktree](/hermes/docs/user-guide/git-worktrees/) も見てください。 |
 | `/handoff <platform>` | **CLI 専用。** 今のセッションをメッセージングプラットフォーム（Telegram、Discord、Slack、WhatsApp、Signal、Matrix）へ引き継ぎます。ゲートウェイがすぐに受け取り、スレッドに対応しているプラットフォームでは新しいスレッドを作り（Telegram のトピック、Discord のテキストチャンネルのスレッド、Slack と Matrix のメッセージに紐づくスレッド）、引き継ぎ先を CLI の session_id に結び直して、役割込みの記録をまるごと再生します。さらに合成のユーザーターンを 1 つ差し込むので、エージェントが新しい場所で動いていることを確認できます。成功すると CLI は `/resume` のヒントを出してきれいに終了します。ローカルではいつでも `/resume <title>` で再開できます。ターンの途中では断られます。ゲートウェイが動いていることと、引き継ぎ先のプラットフォームにホームチャンネルが設定されていること（引き継ぎ先のチャットで `/sethome` を実行）が必要です。[プラットフォームをまたぐ引き継ぎ](/hermes/docs/user-guide/sessions/#cross-platform-handoff) も見てください。 |
 | `/journey [list\|delete <id>\|edit <id>]`（別名: `/learning`、`/memory-graph`） | 覚えたスキルと記憶をたどる学習の道のりのタイムラインを開きます。従来の CLI、TUI のオーバーレイ、デスクトップアプリ（Star Map パネル）で使えます。メッセージングプラットフォームでは使えません。[学習の道のり](/hermes/docs/user-guide/features/memory/#learning-journey-journey) も見てください。 |
 
