@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: b318eaafb0f0123c9a2b0b34fc5ac0810652acd3
+upstream_blob: 2ab887a536b0885f9251df05e80ae2ba2b718f7c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -900,6 +900,22 @@ Hermes は次のようにします。
 
 トピックはそれぞれ自分の会話の履歴、モデルの状態、ツールの実行、セッション ID を持ちます。切り分けのキーは `agent:main:telegram:dm:{chat_id}:{thread_id}` で、設定で決める DM のトピックの切り分けと同じです。
 
+### ルートの DM に送ったメッセージ {#messages-sent-in-the-root-dm}
+
+Telegram のクライアントによっては、ルートの DM（General / **All Messages**）で打ったメッセージを `message_thread_id` なしで届けるものがあります。既定では、Hermes はそうしたメッセージを続きとして扱い、**いちばん最近使っていたトピック**で答えます（待合いからの復帰）。
+
+ルートの DM に送るメッセージごとに新しいセッションにしたい場合は、`dm_topic_auto_transfer` を有効にします。
+
+```yaml
+gateway:
+  platforms:
+    telegram:
+      extra:
+        dm_topic_auto_transfer: true   # default: false
+```
+
+有効にすると、ルートの DM にふつうのメッセージを送ったとき、Hermes は新しいトピックを作り（自動の題名付けで改名されるまでは「Hermes Chat」という名前です）、そこで新しいセッションを始めて、そのトピックの中に返事を書きます。ルートの DM で打ったスラッシュコマンドは待合いのコマンドのままで、トピックを作ることはありません。トピックを作れなかった場合（たとえば BotFather で Threaded Mode をオフにしていた場合）、Hermes は既定の動きに戻り、いちばん最近使っていたトピックで答えます。この設定が意味を持つのは `/topic` のモードが有効なあいだだけです。最上位の `telegram.extra.dm_topic_auto_transfer` のキー（デスクトップの Settings に出るもの）でも同じように使えます。
+
 ### 自動で改名されるトピック {#auto-renamed-topics}
 
 Hermes が（最初のやり取りのあと、自動の題名付けの処理で）トピックのセッションの題名を作ると、Telegram のトピック自体もそれに合わせて改名されます。たとえば「New Topic」が「Database migration plan」になります。改名はできる範囲で行われ、失敗しても記録に残るだけで、セッションは壊れません。
@@ -951,6 +967,7 @@ Hermes はセッションの題名で確認し、文脈のために最後のア�
 - `extra.dm_topics` で宣言したトピックは**決して自動で改名されません**。複数セッションのモードが有効でも、運用者が決めた名前が保たれます
 - `extra.disable_topic_auto_rename: true` を設定すると、そのチャットの**すべて**のトピック（Threaded Mode でその場で作られたトピックも含む）で自動の改名が止まります
 - フォーラムを有効にした DM の General（上部にピン留めされた）トピックは、Telegram がそのメッセージを `message_thread_id=1` で届けても thread_id なしで届けても、ルートの待合いとして扱われます
+- ルートの待合いに届いたメッセージは、その利用者がいちばん最近結び付いたトピックへ回されます。`extra.dm_topic_auto_transfer: true` の場合は、代わりに `createForumTopic` で新しいトピックを開きます（その呼び出しに失敗したら、いちばん最近のトピックに戻ります）
 - ルートの待合いの案内は、**（プロファイル, チャット）**ごとに 30 秒に 1 通までに絞られます。トピックのモードが有効なのを忘れてルートに 10 個の指示を書いた利用者に 10 通が返ることはありませんし、1 つのチャット id を共有する 2 つの多重化されたプロファイルが互いの案内を抑え合うこともありません
 - BotFather の設定の画像は、**（プロファイル, チャット）**ごとに 5 分に 1 回までです。Threads Settings が無効なまま `/topic` を繰り返しても、同じ画像が再送されることはありません
 - トピックの中で始めた `/bg <prompt>` は、結果を同じトピックへ返します。裏で動くセッションが、持ち主のトピックの自動の改名を起こすことはありません

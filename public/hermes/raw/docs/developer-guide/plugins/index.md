@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: b5c2cd8ab7871d8d0046e2b7bca21bf7610c8e4b
+upstream_blob: 47e5ac56975a5e49d79d5fb3c4e775676f6a8f63
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -84,6 +84,7 @@ hermes plugins enable <plugin-name>
 
 Hermes は `plugin.json`、Agent Skills のフロントマター、固定されたコンポーネントの配置、`mcp.json`、解決済みパス、シンボリックリンクの内包関係をローカルで検証します。パッケージの読み込み中に JSON スキーマを取得することはありません。不正なスキルや MCP エントリは、有効な兄弟コンポーネントがまだ読み込める場合、その境界だけでスキップされます。`PLUGIN_ROOT` は解決済みのパッケージルートを指します。`PLUGIN_DATA` は Hermes が管理する、プロファイルスコープの書き込み可能なディレクトリを指します。
 ポータブル MCP の `env` に宣言された値は可視のパッケージデータであり、シークレット保管の仕組みではありません。`mcp.json` に認証情報を置かないでください。
+ユーザーの環境変数を stdio サーバーへそのまま渡すには（そうしないと Hermes は MCP サーバーに絞り込んだ環境しか渡しません）、`"NAME": "${NAME}"` の形で宣言します。値はユーザーのシェルかプロファイルの `.env` から取られます。その変数が未設定（または空）なら、このエントリは無かったものとして扱われます。サーバーには `${NAME}` という文字列がそのまま渡ることはなく、`NAME` はこの行が無い場合と同じ値（ふつうは未設定）のままです。省略可能な変数も安心して渡せます。
 
 現在サポートされているポータブルのサブセットは、stdio と Streamable HTTP の MCP エントリです。ポータブルな `streamable-http` エントリは、Hermes の既存のネイティブなリモート MCP クライアント（URL ベースの `mcp_servers` 設定を支えるのと同じランタイム）を通じてルーティングされ、v1 の境界規則が適用されます: URL はユーザー情報やフラグメントを含まない絶対 http(s) でなければならず、プレーンな HTTP は `localhost` / ループバックホストに対してのみ許可され、設定されたヘッダーはクロスオリジンのリダイレクトを越えて転送されることはありません。旧来の `sse` エントリは報告されてスキップされます。Agent Plugins v1 は、trust、permissions、provenance、sandbox のいずれも定義していません。パッケージを有効化すると、その instructions とローカル実行ファイルには、他のインストール済み Hermes プラグインと同じフルトラストの扱いが与えられます。
 
@@ -331,6 +332,87 @@ def mint_client_secret(session: dict) -> dict:
 **サインアウト**はプラグインではなく Hermes の役割です。認証情報のファイルを削除するのではなく、
 ユーザーには `hermes auth logout openai-codex` を案内してください。
 
+### 自前の OAuth クライアントを使う（Google などの API） {#use-your-own-oauth-client-google-and-other-apis}
+
+ユーザー自身の OAuth クライアント（たとえば Google Cloud の「デスクトップ アプリ」クライアント）でサードパーティの API を呼ぶプラグインは、同意フローを実行することも、リフレッシュトークンを保存したり更新したりすることもありません。クライアントを宣言すれば、許可（grant）は Hermes が管理します。
+
+```yaml
+name: gemini-voice
+requires_env:
+  - name: GEMINI_VOICE_CLIENT_ID
+  - name: GEMINI_VOICE_CLIENT_SECRET
+    secret: true
+oauth:
+  - id: google
+    authorize_url: https://accounts.google.com/o/oauth2/v2/auth
+    token_url: https://oauth2.googleapis.com/token
+    scopes:
+      - https://www.googleapis.com/auth/calendar.events.owned
+      - https://www.googleapis.com/auth/documents
+    client_id_env: GEMINI_VOICE_CLIENT_ID
+    client_secret_env: GEMINI_VOICE_CLIENT_SECRET  # optional: a public PKCE client has none
+    hosts: [www.googleapis.com, docs.googleapis.com]
+    authorize_params: {access_type: offline, prompt: consent}  # Google issues a refresh token only with these
+```
+
+ユーザーはターミナルから `hermes auth add gemini-voice:google`（プラグインのキー、コロン、エントリの `id`）を実行して、一度だけサインインします。これはモデルプロバイダー用のヘルパーが行うのと同じ PKCE ログインで、`127.0.0.1` へのループバックのリダイレクトを使い、Hermes がリモートのホストで動いているときは SSH トンネルのヒントを出します。IdP が許可したスコープが宣言より少なければ、何も保存されません。`hermes auth status|refresh|logout
+gemini-voice:google` で、許可の表示・更新・削除ができます。許可は有効なプロファイルの `auth.json` に保存されます。Hermes は使うときに残り時間が2分を切っていれば更新し、ゲートウェイや cron の下でサインインを始めることはありません。
+
+プラグインは同じヘルパーを通して API を呼びます。プロバイダーにはエントリの `id` を指定します。
+
+```python
+from hermes_cli.auth_constants import AuthError
+from hermes_cli.plugin_provider_requests import ProviderNotSignedIn, credentialed_provider_request
+
+def create_document(title: str) -> dict:
+    try:
+        resp = credentialed_provider_request(
+            "google", "POST", "https://docs.googleapis.com/v1/documents", json={"title": title}, timeout=20)
+    except ProviderNotSignedIn as exc:
+        return {"ok": False, "error": str(exc)}  # names `hermes auth add gemini-voice:google`
+    except AuthError as exc:
+        return {"ok": False, "error": f"{exc.code}: {exc}"}
+    return {"ok": resp.status < 300, "status": resp.status, "body": resp.json()}
+```
+
+上の Codex のルールに加えて、次のルールが適用されます。
+
+- **HTTPS のみ。** `authorize_url`、`token_url`、`hosts` のすべてのエントリは
+  `https` です（ループバックの例外はありません）。それ以外は `hermes plugins validate` と
+  カタログの審査で不合格になります。
+- **宣言したホストのみ。** ベアラートークンは、エントリの `hosts` について `https://<host>`（ポート 443）にだけ送られ、
+  ホスト名は完全一致で照合されます（サブドメインは含みません）。それ以外の URL、`http`、
+  ユーザー情報を含む URL では、リクエストを送る前に `PermissionError` が発生します。
+  サインイン先プロバイダーのドメイン外にあるホストは警告となり、レビュアーが確認します。
+- **自前のクライアント変数。** `client_id_env` と `client_secret_env` には
+  プラグイン自身の変数を指定します。Hermes 自身が使う変数（プロバイダーの API キーや
+  プラットフォームのトークン）は拒否されます。Hermes はこれらの値を `token_url` へ送るためです。
+- **プラグイン自身の許可。** 許可は呼び出したプラグインのキーの下に保存されるので、
+  同じ `id` を宣言した別のプラグインはそれを使えません。また、同じ名前の Hermes のサインインよりも、
+  プラグイン自身のエントリが優先されます。
+- **許可は宣言に従う。** 許可は、どのエントリに対して作られたかを覚えています。
+  トークン URL、ホスト、スコープ、クライアント変数を変えたプラグインのバージョンは、
+  ユーザーがもう一度サインインするまで `ProviderNotSignedIn` を受け取ります。また、カタログの再固定で
+  `oauth` エントリが追加されたり、その認可ホスト、トークンホスト、ホスト、スコープが変わったりする場合は、
+  更新の前に確認を求めます。
+- **エラー。** `ProviderNotSignedIn` は、未サインイン、取り消し済み、またはサインイン後にエントリが
+  変わったことを表します。`AuthError` のコードは、`oauth_client_id_missing` と
+  `oauth_client_secret_missing`（変数が設定されていない）、`invalid_client`、
+  `unauthorized_client` と `invalid_scope`（IdP がクライアントを拒否した。ユーザーが
+  直す必要がある）、`oauth_refresh_failed`（ネットワークかサーバーのエラー。時間をおいて再試行する）です。
+  取り消された許可（`invalid_grant`）は廃止扱いになり、次にサインインするまで
+  ネットワークには何も送られません。エラーはトレースバック、例外の連鎖、リクエストオブジェクトを
+  含まずにプラグインへ届くので、どのエラーからもトークン、リフレッシュトークン、
+  クライアントシークレットにたどり着けません。
+- **サインインと削除。** `hermes auth add` はブラウザーを開く前に、コード、クライアントシークレット、
+  トークンがそれぞれどのホストに送られるかを表示します。また、ゲートウェイ、cron、エージェントの
+  セッションからは実行できません。`hermes plugins remove` はそのプラグインの許可を削除し、
+  `hermes auth logout <plugin>:<id>` はプラグインを削除したあとでも使えます。
+
+`hermes plugins validate` は `oauth:` ブロックと、そのクライアント変数が宣言されているかを確認し、
+プラグインのコードにトークン URL が書かれていると警告します。
+`requires_auth` と同じく、これは同意と可視化のための仕組みであって、サンドボックスではありません。
+
 ### マニフェスト v2 一覧 {#manifest-v2-reference}
 
 `plugin.yaml` は加算的な **v2 スキーマ**（#64165）にも対応しています。すべてのフィールドは省略可能です。`manifest_version` を持たないマニフェストは v1 マニフェストであり、今後も永続的に完全サポートされます。未知のフィールドは読み込みを壊しません — 警告付きで無視されます（前方互換性）。また、このバージョンの Hermes が理解できない新しい `manifest_version` でも、警告付きで読み込まれます。
@@ -348,6 +430,7 @@ def mint_client_secret(session: dict) -> dict:
 | `tags` | list of str | 自由形式の発見用タグ（例: `[gateway, telegram]`）。 |
 | `provides_locales` | list | 言語パックの宣言です。id（`- pl`）か `{id, endonym, rtl}` の対応を並べると、ローダーがその `locales/<id>[.tui\|.desktop].yaml` を自動で登録します。[言語パックを同梱する](#ship-a-language-pack) を参照してください。 |
 | `requires_auth` | list of str | プラグインが Hermes を通して使う、サインイン先のプロバイダー（現在は `openai-codex`）。`credentialed_provider_request` に必要です。インストール時と `hermes plugins show` に表示されます。[ユーザーの Codex サインインを使う](#use-the-users-codex-sign-in-core-made-requests) を参照してください。 |
+| `oauth` | list of mappings | プラグインが Hermes を通して使う OAuth クライアント。`id`、`authorize_url`、`token_url`、`scopes`、`client_id_env`、省略可能な `client_secret_env`、`hosts`、省略可能な `authorize_params` を持ちます。`hermes auth add <plugin>:<id>` でサインインし、`credentialed_provider_request` を通して使います。[自前の OAuth クライアントを使う](#use-your-own-oauth-client-google-and-other-apis) を参照してください。 |
 
 ```yaml
 # plugin.yaml — manifest v2 example
@@ -693,6 +776,25 @@ config_schema:
 ```
 
 **シークレットは `config.yaml` に一切触れません。** `secret` フィールドは `.env` の変数名と、値が設定済みかどうかだけを保持します。Desktop はプロバイダーの API キーと同じ認証情報の経路（`PUT /api/env`）で値を保存し、あなたのプラグインは `requires_env` のエントリとまったく同じように、`agent.secret_scope` の `get_secret("MY_PLUGIN_API_KEY")` で読み取ります。`.env` や `auth.json`、ほかのツールの認証情報のファイルを自分で読まないでください（カタログのルール 11）。`plugins.manage settings` アクションは、シークレットキーの変更や、型または `choices` がスキーマと矛盾する値を拒否します。
+
+**ポータブルパッケージ（`plugin.json`）** では、同じスキーマを Hermes のベンダー名前空間の下に宣言します。Agent Plugins v1 は未知のトップレベルのフィールドを受け付けないためです。
+
+```json
+{
+  "extensions": {
+    "com.nousresearch.hermes": {
+      "config_schema": {
+        "api_key": { "type": "secret", "env": "MY_PLUGIN_API_KEY" },
+        "show_chip": { "type": "bool", "default": true, "label": "Show the status-bar chip" }
+      }
+    }
+  }
+}
+```
+
+`env` に指定した変数を `mcp.json` がそのまま渡している（`"env": { "MY_PLUGIN_API_KEY": "${MY_PLUGIN_API_KEY}" }`）シークレットは、すぐに MCP サーバーへ届きます。保存のあと、Hermes はそのプラグインのサーバーのうち、解決後の起動入力が変わったもの（新しいキーは該当し、トグルは該当しません）に接続し直します。そのため、このフォームはユーザーがサーバーのキーを設定する場所にもなります。
+
+**ポーリングせずに保存に反応する。** 保存のたびに `plugin.<id>.settings.changed` が通知されます（ペイロードは `{ written: [...keys] }`。シークレットだけの保存では空のリストになります）。これにより、Desktop 側はすぐに設定を読み直せます。`ctx.onEvent('plugin.my-plugin.settings.changed', reload)` のように書きます。値は自分の `plugin_api.py` から、`hermes_cli.config` の `load_config_readonly()` で（`plugins.entries.<id>.settings`）読み取り、無ければスキーマの既定値を使います。
 
 ## ステップ6: テストする {#step-6-test-it}
 

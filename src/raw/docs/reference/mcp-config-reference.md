@@ -2,7 +2,7 @@
 title: "MCP 設定の早見表"
 description: "Hermes Agent の MCP 設定キー、絞り込みの動き、ユーティリティツールの方針をまとめた早見表です。"
 upstream_path: reference/mcp-config-reference.md
-upstream_blob: f2dbceddd0812b7a788b276908f34021a06ba81d
+upstream_blob: 86b311a1a307e23e69e3d39bf7054d805289db6a
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
 ---
@@ -87,7 +87,7 @@ mcp_servers:
       GITHUB_PERSONAL_ACCESS_TOKEN: "${env:GITHUB_TOKEN}"   # same as "${GITHUB_TOKEN}"
 ```
 
-値は、いま使っているプロファイルの秘密情報の範囲から解決されます（見つからなければプロセスの環境変数を見ます）。ですので、秘密の値は `~/.hermes/.env` に置いてください。設定されていない変数は、書いたままの文字列として残ります。ただし、リモートのサーバーの `url` や `headers` では例外です。そこで `${VAR}` をそのまま送ると必ず 401 になり、資格情報が間違っているように見えてしまうため、接続は安全側に倒して失敗させ、サーバーの状態にその変数名を出します（`MCP server 'name': ${VAR} in url/headers is not set in this profile's .env or secret source`）。プロファイルの `.env`（またはその秘密情報の取得元）を直してください。次に接続を試みるとき、参照はあらためて展開されます。
+値は、いま使っているプロファイルの秘密情報の範囲から解決されます（見つからなければプロセスの環境変数を見ます）。ですので、秘密の値は `~/.hermes/.env` に置いてください。設定されていない（または空の）変数は、書いたままの文字列として残ります。ただし、例外が 2 つあります。1 つ目は stdio サーバーの `env` の項目で、値全体が未設定の変数 1 つへの参照になっているもの（`GHIDRA_INSTALL_DIR: "${GHIDRA_INSTALL_DIR}"`）です。これはその項目が無いものとして扱われます。サーバーには書いたままの文字列は渡らず、その変数は、その行が無かったときにサーバーが受け取る値のままになります（たいていは未設定です。`PATH`・`HOME`・`TERM` などの基本的な変数は、Hermes がどのサーバーにも渡す値のままです）。そのため、設定やプラグインから、あってもなくてもよい変数を安全に引き渡せます。設定されている変数は、その値がたまたま `${...}` のように見えても、常にそのまま渡されます。値の一部に参照を含むだけのもの（`"${OPT_DIR}/bin"`）は、書いたままの文字列を含んだ形で渡されます。2 つ目は、リモートのサーバーの `url` や `headers` です。そこで `${VAR}` をそのまま送ると必ず 401 になり、資格情報が間違っているように見えてしまうため、接続は安全側に倒して失敗させ、サーバーの状態にその変数名を出します（`MCP server 'name': ${VAR} in url/headers is not set in this profile's .env or secret source`）。プロファイルの `.env`（またはその秘密情報の取得元）を直してください。次に接続を試みるとき、参照はあらためて展開されます。
 
 ### コンテキスト変数 {#context-variables}
 

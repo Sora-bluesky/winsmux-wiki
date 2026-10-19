@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: c82066bdb9877766fde0a26a7652445f3ddbdfb6
+upstream_blob: 65e5414d81439011b248d1fd757efea95a05f92e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -72,7 +72,7 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes status` | エージェント・認証・プラットフォームの状態を表示します。 |
 | `hermes usage` | セッションなしで、設定済みアカウントのレートリミットウィンドウ（`/usage` ブロック相当）を表示します。スクリプト向けの `--json` もあります。 |
 | `hermes cron` | cron スケジューラを確認・実行します。 |
-| `hermes pause` / `hermes resume` | グローバルな緊急停止です: resume するまで、新規の cron 発火（組み込みティッカー・管理 cron webhook・ミスファイア救済）・kanban ディスパッチ・ゲートウェイターンが一切開始しません。進行中の作業は決して強制終了されません。 |
+| `hermes pause` / `hermes resume` | グローバルな緊急停止です: resume するまで、新規の cron 発火（組み込みティッカー・管理 cron webhook・ミスファイア救済）・kanban ディスパッチ・ゲートウェイターンが一切開始しません。対話型 CLI・TUI・Desktop のターンもゲートウェイターンなので同じく保留になり、それぞれの画面に「Hermes is paused」と理由、「run `hermes resume`」が表示されます。すでに動いているターンは最後まで進みます。進行中の作業は決して強制終了されません。 |
 | `hermes kanban` | マルチプロファイルのコラボレーションボード（タスク・リンク・ディスパッチャ）。 |
 | `hermes project` | 名前付きのマルチフォルダワークスペース（プロジェクト）を管理します。デスクトップのセッショングルーピングの基点となり、kanban ボードに紐付いている場合はタスクに決定的な worktree + ブランチ規則を与えます。状態はプロファイル単位です。 |
 | `hermes webhook` | イベント駆動での起動用に、動的な webhook サブスクリプションを管理します。 |
@@ -1565,6 +1565,7 @@ hermes plugins [subcommand]
 | `install <identifier> [--force] [--ref COMMIT_SHA] [--allow-removed]` | Hermes プラグインカタログ（そのままのエントリ名）、Git URL、または `owner/repo` の省略形からプラグインをインストールします。カタログ名は、レビュー済みの40桁の16進数コミット SHA に解決され、宣言された機能を表示します。ソース、チェックアウトしたリビジョン、入れ子になったカタログの出自のブロックは、インストーラの `plugins/.install-metadata.json` に記録されます。プラグインディレクトリ内の `.hermes-catalog.json` のコピーは利便性のためだけのもので、決して信頼されません。生の URL はカスタム（未レビュー）ソースとしてフラグ付けされます。`--ref` は完全な SHA でカスタムのピンを選び、実際にチェックアウトした SHA を記録します。`--allow-removed`（危険）は、インストール時に削除済みプラグインのブロックリストを回避し、そのインストールを更新・有効化・ロード時の kill-list チェックからも除外します。 |
 | `search [term] [--json]` | Hermes プラグインカタログを検索します（エントリ名、説明、宣言されたツールにマッチします。`term` を省略するとすべて一覧します）。カタログはリポジトリ内（`plugin-catalog/`）でキュレーションされ、6時間キャッシュで生きているリポジトリから更新され、オフライン時はリポジトリ内のコピーにフォールバックします。カタログ化されている ≠ 監査済みです — 受け入れはエントリをレビューするもので、コードをレビューするものではありません。 |
 | `update <name>` | カタログからのインストールは、レビュー済みのカタログの SHA にピンを付け直します。カスタムの Git インストールは、記録されたソースやフィードから更新します。PM は、コードを公開する前に有効なプラグインの依存関係を検証します。明示したカスタムのピンは、`install --force --ref <new-commit>` を使ったときだけ動きます。 |
+| `update [--yes]` | 名前を付けずに実行すると、`update <name>` で更新できるインストール済みのプラグイン（カタログのピン付け直し、または Git の pull）をすべて一覧にし、対象外になったものとその理由も示してから、`Update all N? [Y/n]` と確認します。そのあと、1 つずつ単体の更新と同じ経路で更新します（プラグインごとの同意の確認はそのまま出ます）。1 つ失敗しても残りは続け、どれか失敗すると終了コード 1 で終わります。端末がない環境では、`--yes` を付けない限り何も更新しません。`--yes` を付けても同意は安全側のままで、新しい権限は与えられません。 |
 | `remove <name>`（別名: `rm`, `uninstall`） | インストール済みのプラグインを削除します。 |
 | `enable <name>` | 無効化されたプラグインを有効化します。 |
 | `disable <name>` | プラグインを削除せずに無効化します。 |

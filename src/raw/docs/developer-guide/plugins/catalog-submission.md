@@ -2,7 +2,7 @@
 title: "プラグインカタログへの登録申請"
 description: "Hermes プラグインカタログの登録ガイドライン全文です。申請前に確かめること、すべての掲載項目が従うルール、レビュアーが見る点をまとめています"
 upstream_path: developer-guide/plugins/catalog-submission.md
-upstream_blob: 61864aa0d79e7c1ce4d389a11c6de14b4828b907
+upstream_blob: 942bea6d4f9f47a5c38fd1b51c45177ec9d3c255
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission
 ---
@@ -109,7 +109,9 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
 8. **Desktop プラグインは SDK の範囲内にとどめます。** `desktop/plugin.js` は
    Desktop のレンダラー内で、アプリと同じ全権限で動きます（ローダーが隔離するのは
    エラーであって、権限ではありません）。そのため掲載されるものはプラグイン SDK しか使えません。
-   プロトタイプの書き換え（`X.prototype.y =`、`Object.defineProperty(...prototype`）は禁止、
+   レンダラーやブラウザーのオブジェクトのプロトタイプの書き換え（`Storage.prototype.y =`、
+   `Object.defineProperty(...prototype`）は禁止です。ただし、同梱したライブラリが自分で宣言した
+   クラスにフィールドを設定するのは問題ありません（three.js など）。
    `eval`/`new Function` も禁止、`import()` で読み込めるのは `@hermes/plugin-sdk`
    / `react` だけです（アプリのバンドルのチャンク、blob や http の URL も対象）。script タグの
    注入も禁止で、アプリ内部のストアや、アプリ自身のマークアップに手を伸ばすことも禁止です
@@ -148,7 +150,11 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
    同時に動かしているときに、別のプロファイルのキーを拾うことがあります）。サブスクリプションの
    サインイン（現時点では Codex / ChatGPT）は、`requires_auth` を付けた
    `credentialed_provider_request` を通してだけ使います。こうすると Hermes がトークンを付けて送るので、
-   プラグインがトークンを手元に持つことはありません。プラグインは `.env` ファイル、Hermes の `auth.json`、
+   プラグインがトークンを手元に持つことはありません。サードパーティの API 用の
+   OAuth クライアント（たとえばユーザー自身の Google Cloud クライアント）は、`plugin.yaml` の `oauth:` の下に宣言し、
+   `hermes auth add <plugin>:<id>` でサインインして、同じヘルパーを通して使います。このトークンも
+   Hermes が保存して更新します。その `authorize_url`、`token_url`、
+   `hosts` は `https` のみで、`hosts` はスコープの対象となる API のものでなければなりません。プラグインは `.env` ファイル、Hermes の `auth.json`、
    ほかのツールのログイン情報（ベンダーの CLI のトークンファイル、ブラウザのプロファイル、キーチェーン）、
    そのほかの認証情報の保管場所を直接読むことはなく、OAuth トークンを更新、ローテーション、
    書き込みすることも、ほかのベンダーのクライアントとして振る舞うこともしません。プラグインに必要な

@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-19",
+  "generatedAt": "2026-10-20",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-10-19",
-      "attemptedAt": "2026-10-19",
+      "fetchedAt": "2026-10-20",
+      "attemptedAt": "2026-10-20",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -69,16 +69,6 @@
           "criteriaReason": null
         },
         {
-          "id": "stepfun/step-5-preview:free",
-          "name": "StepFun: Step 5 Preview",
-          "ctx": 1048576,
-          "tools": true,
-          "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
           "id": "upstage/solar-mini4:free",
           "name": "Upstage: Solar Mini 4",
           "ctx": 524288,
@@ -93,8 +83,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-10-19",
-      "attemptedAt": "2026-10-19",
+      "fetchedAt": "2026-10-20",
+      "attemptedAt": "2026-10-20",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -162,6 +152,16 @@
           "id": "liquid/lfm-2.5-2.6b:free",
           "name": "LiquidAI: LFM2.5-2.6B (free)",
           "ctx": 65536,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "minimax/minimax-m3.1-flash:free",
+          "name": "MiniMax: MiniMax M3.1 Flash (free)",
+          "ctx": 1000000,
           "tools": true,
           "expires": null,
           "freeBasis": "pricing",

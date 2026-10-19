@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: 1efe1662a818b23a2d8ed99b73c8d684a6ee5822
+upstream_blob: 2dc4175ba35c8854c80ed2faa707427f071c24ed
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -274,6 +274,8 @@ delegation:
 ```
 
 省略すると、サブエージェントは親と同じモデルを使います。
+
+デスクトップでは、同じキーを **Settings → Model → Subagents** で設定できます（[デスクトップ](/hermes/docs/user-guide/desktop/#subagent-models-and-limits)を参照）。このページで編集するのは **Applies to** で選んだプロファイルです。変更が効くのは **Apply** を押したあとに起動したサブエージェントで、メインのモデルや、すでに動いている子が変わることはありません。
 
 ### 費用の戦略: 計画は最上位のモデル、作業は安いモデル {#cost-strategy-frontier-planner-inexpensive-workers}
 

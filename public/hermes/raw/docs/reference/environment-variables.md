@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 5a4858215d97a9ac999d7485f9afc53ab16cdfc5
+upstream_blob: ca0e4c0aca4034ed44465c1c3ff318287ec76f81
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -792,7 +792,7 @@ Microsoft Teams のプラットフォーム用アダプター（Bot Framework / 
 | `HERMES_WECOM_TEXT_BATCH_DELAY_SECONDS` / `_SPLIT_DELAY_SECONDS` | WeCom のまとめ方の調整。 |
 | `HERMES_VISION_DOWNLOAD_TIMEOUT` | 画像を視覚のモデルへ渡す前に、取得するのを待つ時間（秒。既定: `30`）。 |
 | `HERMES_VISION_MAX_CONCURRENCY` | プロセス全体で、画像の**変換やサイズ変更**を同時に走らせる上限（`auxiliary.vision.max_concurrency` の上書き。既定: ホストの CPU のコア数で、上限なし）。CPU を使う変換の段だけを抑えるので、動画のコマを一気に展開してもすべてのコアを食い尽くしてイベントループを止めることがありません。LLM の呼び出し自体は同時に走ったままです。`< 1` の値は無視されます。 |
-| `HERMES_RESTART_DRAIN_TIMEOUT` | ゲートウェイ: `/restart` のとき、動いている処理が終わるのを待つ秒数。過ぎたら再起動を強行します（既定: `900`）。 |
+| `HERMES_RESTART_DRAIN_TIMEOUT` | ゲートウェイ: `agent.restart_drain_timeout` を上書きします。ゲートウェイが停止または再起動したあと、進行中のチャットのターンを中断するまでに動かし続けてよい秒数です（既定: `0`、すぐに中断します）。[ゲートウェイ再起動時の待ち時間](/hermes/docs/user-guide/configuration/#gateway-restart-drain)を参照してください。 |
 | `HERMES_GATEWAY_PLATFORM_CONNECT_TIMEOUT` | ゲートウェイの起動時と再接続時の、プラットフォームごとの接続の待ち時間（秒。`0` や負の値なら無制限に待ちます）。接続の試行*と*、Discord のアダプターの準備待ちの両方に効くので、同期するスラッシュコマンドが多いアカウントでも起動の途中で切られません。`config.yaml` の `gateway.platform_connect_timeout`（既定 `30`）から引き継がれ、この環境変数を明示すればそちらが勝ちます。 |
 | `HERMES_GATEWAY_BUSY_INPUT_MODE` | 処理中に入力が来たときのゲートウェイの既定の振る舞い: `queue`、`steer`、`interrupt`。有効なプロファイルでは `/busy` で上書きできます。 |
 | `HERMES_GATEWAY_BUSY_ACK_ENABLED` | エージェントが処理中に入力が来たとき、ゲートウェイが受け取りの合図（⚡/⏳/⏩）を送るか（既定: `true`）。`false` にするとこのメッセージだけを止められます。入力は従来どおり溜められ、向きを変え、割り込みます。黙るのはチャットへの返事だけです。`config.yaml` の `display.busy_ack_enabled` から引き継がれます。 |

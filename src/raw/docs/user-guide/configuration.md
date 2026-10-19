@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: fc5d1897c731a39ff57457360fcb9afb731a156f
+upstream_blob: 1d75272845b1814393557a43c46248222c1b60de
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -1138,6 +1138,43 @@ agent:
 Hermes はこのメッセージを自動で待ち行列に戻しません。順序と冪等性（何度実行しても結果が
 同じになること）を確実に保証できないまま戻すと、同じメッセージを2回処理するおそれがあるからです。
 0以下の値を指定した場合は、既定の5秒が使われます。
+
+## ゲートウェイ再起動時の待ち時間 {#gateway-restart-drain}
+
+ゲートウェイが止まるときや再起動するとき（SIGTERM、`hermes update`、`hermes gateway stop`、または
+`hermes gateway restart` / `/restart` の最後の段階）、`agent.restart_drain_timeout` は、実行中のチャットの
+ターンを中断するまでに何秒そのまま走らせておくかを決めます。
+
+```yaml
+agent:
+  restart_drain_timeout: 0          # default: interrupt in-flight chat turns at once
+  cron_drain_timeout: 30            # floor for cron jobs and api_server (/v1) runs
+  restart_after_turn_timeout: 1800  # /restart and `gateway restart`: wait for turns BEFORE stopping
+```
+
+既定の `0` では、再起動すると実行中のターンはすぐに中断されます。そのターンは中断済みとして片付き、
+やり直されることはありません。TUI とデスクトップではそのターンに「Gateway restarting」（または「Gateway
+shutting down」）の通知が出るので、Hermes がつながり直したらメッセージを送り直してください。
+その後ろに待っていたメッセージは残り、新しいゲートウェイで順番どおりに実行されます。
+
+ターンを最後まで終わらせたい場合は、正の値を設定します。
+
+```yaml
+agent:
+  restart_drain_timeout: 60
+```
+
+待ち時間を長くすると、再起動や更新のたびに最大でその時間だけ待つことになります。`HERMES_RESTART_DRAIN_TIMEOUT`
+を設定すると、設定ファイルの値より優先されます。
+
+:::caution systemd の `TimeoutStopSec`
+生成される systemd のユニットは、`TimeoutStopSec` をこの値から決めます。
+`restart_drain_timeout` と `cron_drain_timeout` + 10 秒の大きいほうに 30 秒の余裕を足した値で、最低でも 60 秒です
+（`gateway/restart.py` の `resolve_systemd_timeout_stop_sec`）。`restart_drain_timeout` を大きくしたら、
+`hermes gateway install` を実行し直して、ユニットに新しい待ち時間を反映させてください。そうしないと、待っている途中で
+systemd がゲートウェイを SIGKILL で強制終了します。launchd は停止の待ち時間を 60 秒までに制限するので、macOS では
+待ち時間はその範囲に収まる分に限られます。
+:::
 
 ## セッション停滞の監視 {#session-stall-watchdog}
 

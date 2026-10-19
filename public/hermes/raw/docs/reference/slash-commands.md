@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 2cfd74a74a6c68853472ce085701e60971036897
+upstream_blob: f5016dc32bf14f3f5e8c88fa068754819c2d0e41
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -53,7 +53,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/diff [staged\|all\|session] [--stat] [path...]` | 作業ディレクトリの git の変更を表示します。既定では、ステージしていない変更と追跡外のファイルを出します。`staged` はコミット待ちの内容、`all` は HEAD からのすべて、`session` はここで Hermes が変更したものの累積差分（保持されている最古のチェックポイントを基準にします。チェックポイントを有効にしている必要があり、`/rollback diff <N>` を補うものです）を表示します。`--stat` は変更されたファイルの要約だけを出し、パスを引数に渡すと差分の対象を絞れます。 |
 | `/snapshot [create\|restore <id>\|prune]`（別名: `/snap`） | Hermes の設定・状態のスナップショットを作る、または復元します。`create [label]` で保存、`restore <id>` でその時点に戻し、`prune [N]` で古いものを削除します。引数なしなら一覧を出します。データベースの復元は SQLite のバックアップ API を通して書き込むので、動いているプロセス（ゲートウェイ、ダッシュボード）からも復元後のデータが安全に見えます。他のプロセスがデータベースを開いたままでこの経路が失敗した場合、破損の危険を冒すより復元を断ります。掴んでいるプロセスを止めてからやり直してください。 |
 | `/stop` | 動いているバックグラウンドプロセスをすべて止めます |
-| `/queue <prompt>`（別名: `/q`） | 次のターンに送るプロンプトを予約します（今動いているエージェントの返答は中断しません）。CLI では、引数なしの `/queue` で予約中のプロンプトの一覧が出ます。送られる前に、`/queue list`、`/queue edit N <new prompt>`、`/queue rm N`、`/queue move A B`、`/queue clear` で中身を確認・整理できます。管理用の語で始まるプロンプトは、`/queue add <prompt>` で強制的に予約できます。 |
+| `/queue <prompt>`（別名: `/q`） | 次のターンに送るプロンプトを予約します（今動いているエージェントの返答は中断しません）。CLI では、引数なしの `/queue` で予約中のプロンプトの一覧が出ます。送られる前に、`/queue list`、`/queue edit N <new prompt>`、`/queue rm N`、`/queue move A B`、`/queue clear` で中身を確認・整理できます。管理用の語で始まるプロンプトは、`/queue add <prompt>` で強制的に予約できます。ゲートウェイのセッションでは、実行中に予約したプロンプトは、そのセッション用のゲートウェイの共有キューに入ります。`list`/`rm`/`edit`/`clear` はそこに予約されたすべてのプロンプト（ほかのウィンドウから予約したものも含みます）に対して働きます。`move` は、ゲートウェイが預かっているプロンプトには使えません。ゲートウェイは予約された順に実行するためです。 |
 | `/steer <prompt>` | 実行の途中で、**次のツール呼び出しの後に**エージェントへ届くメモを差し込みます。中断も、新しいユーザーターンも起きません。テキストは今のツールが終わった時点で直前のツール結果の内容に追記され、ツール呼び出しのループを壊さずにエージェントへ新しい文脈を渡せます。作業の途中で方向を微調整したいとき（たとえばテスト実行中に「認証まわりに集中して」と伝えたいとき）に使います。 |
 | `/goal <text>` | Hermes がターンをまたいで目指し続ける常設の目標を設定します。Ralph ループに対する Hermes なりの答えです。各ターンの後に補助の判定モデルが目標の達成可否を判断し、まだなら Hermes が自動で続けます。サブコマンドは `/goal status`、`/goal pause`、`/goal resume`、`/goal clear` です。予算は既定で 20 ターン（`goals.max_turns`）。ユーザーが実際にメッセージを送ると継続ループより優先され、状態は `/resume` しても残ります。ひととおりの流れは [常設の目標](/hermes/docs/user-guide/features/goals/) を見てください。 |
 | `/subgoal <text>` | ループの途中で、ユーザーが決めた条件を今の目標に追加します。継続用のプロンプトはすべてのサブゴールをそのままエージェントに見せ、判定モデルも DONE / CONTINUE の判断材料に入れます。つまり、元の目標**と**すべてのサブゴールが満たされるまで目標は完了になりません。サブコマンドは `/subgoal`（一覧）、`/subgoal remove <N>`、`/subgoal clear` です。`/goal` が動いている必要があります。 |
@@ -250,6 +250,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/new [name]`（別名: `/reset`） | 新しいセッションを始めます（セッション ID と履歴が新しくなります）。`[name]` を付けるとセッションの初期タイトルになります。末尾に `now`、`--yes`、`-y` を足すと確認ダイアログを飛ばせます（例: `/reset now`、`/new --yes my-experiment`）。 |
 | `/status` | セッションの情報を表示し、続けてローカルで作った **Session recap** のブロック（直近のターン数、よく使ったツール、触ったファイル、最新のプロンプトと返答）を出します。 |
 | `/stop` | 動いているバックグラウンドプロセスをすべて止め、実行中のエージェントを中断します。 |
+| `/discard` | 再起動で Hermes が失ったターンを捨て、このチャットで予約されていたメッセージを再び動かします。失われたターンは再実行しません（もう一度送るかどうかは本人にしか分かりません）。そのターンは中断されたものとして記録されます。失われたターンで会話を止めたとき、Hermes がこのコマンドを案内します。Slack では `/hermes discard` を使います。 |
 | `/pause [reason \| off]` | 全体の緊急停止です。[`hermes pause`](/hermes/docs/reference/cli-commands/) をチャットの中から使う形で、`/pause off` を送るまで、新しい cron・kanban・ゲートウェイの作業を保留にします。すでに動いている作業はふつうに最後まで進みます。停止中もスラッシュコマンドは使えるので、メッセージングだけで運用している人でもいつでも解除できます。 |
 | `/model [provider:model]` | モデルを表示、または変更します。プロバイダの切り替え（`/model zai:glm-5`）、独自のエンドポイント（`/model custom:model`）、名前を付けた独自プロバイダ（`/model custom:local:qwen`）、自動判別（`/model custom`）、OpenRouter のアカウントのプリセット（`/model @preset/<slug>`。アカウントに属するので、公開されたモデル一覧での確認を飛ばします）、ユーザーが決めた別名（`/model fav`、`/model grok`。[モデルの別名を自分で決める](#custom-model-aliases) を参照）に対応します。`--global` を付けると変更を config.yaml に残します。`--global` での選択（打ち込みでもピッカーでも）が成功すると、このチャットのセッション限りの上書きも外れるので、ゲートウェイを再起動したあとは config.yaml だけがモデルを決めます（`channel_overrides` でモデルを指定しているチャットはその上書きを保ったままです。チャンネル側の設定は、そのままだと config.yaml より優先されてしまうからです。CLI と TUI はセッションごとの固定をあえて残すので、再開するとそのチャットで使っていたモデルに戻ります）。**注意:** `/model` は、すでに設定済みのプロバイダの間でしか切り替えられません。新しいプロバイダを足したり API キーを設定したりするには、チャットの外のターミナルで `hermes model` を使ってください。**費用に関する注意:** セッションの途中でモデルを切り替えるとプロンプトキャッシュがリセットされるので（キャッシュのキーにモデルが含まれます）、次のメッセージは会話全体を入力の全額で読み直すことになります。 |
 | `/codex-runtime [auto\|codex_app_server\|on\|off]` | 任意で使える [Codex app-server ランタイム](/hermes/docs/user-guide/features/codex-app-server-runtime/) を切り替えます。設定は config.yaml の `model.openai_runtime` に残り、キャッシュされたエージェントを破棄するので、次のメッセージから新しいランタイムが使われます。次のセッションから有効になります。 |
@@ -319,7 +320,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 - `/skills` の検索・閲覧・インストールは **CLI 専用**です。書き込み承認の確認用サブコマンド（`pending`、`approve`、`reject`、`diff`、`approval`）は、`skills.write_approval` が有効ならメッセージングプラットフォームでも動きます。`/memory` は**どちらの入り口でも**動きます。
 - `/verbose` は**既定では CLI 専用**ですが、`config.yaml` で `display.tool_progress_command: true` にするとメッセージングプラットフォームでも使えます。有効にすると `display.tool_progress` のモードを順に切り替え、設定に保存します。
 - `/focus` と `/verbose` は同じ抑制の経路（`display.tool_progress`）を共有するので、互いに矛盾することはありません。`/focus on` はツールの進捗表示を `off` に固定し、それまでのモードを `display.focus_saved_tool_progress` に控えておきます。`/focus off` でそれを戻します。フォーカス中に `/verbose` で切り替えると、モードの主導権が戻ってフォーカスのバッジは消えます。フォーカス表示は見た目だけのもので、会話の履歴もシステムプロンプトもモデルへ送るものも一切変えないので、プロンプトキャッシュへの影響はゼロです。
-- `/sethome`、`/restart`、`/approve`、`/deny`、`/topic`、`/platform`、`/pause`、`/commands` は**メッセージング専用**のコマンドです。
+- `/sethome`、`/restart`、`/approve`、`/deny`、`/topic`、`/platform`、`/pause`、`/discard`、`/commands` は**メッセージング専用**のコマンドです。
 - `/status`、`/egress`、`/version`、`/whoami`、`/bg`、`/btw`、`/queue`、`/steer`、`/voice`、`/reload-mcp`、`/reload-skills`、`/rollback`、`/diff`、`/debug`、`/fast`、`/approvals`、`/busy`、`/footer`、`/curator`、`/kanban`、`/topup`、`/login`、`/suggestions`、`/blueprint`、`/learn`、`/init`、`/sessions`、`/loop`、`/yolo` は、CLI とメッセージングゲートウェイの**どちらでも**動きます。
 - `/voice join`、`/voice channel`、`/voice leave` は Discord でしか意味がありません。
 - `/connectors` は **TUI 専用**です。

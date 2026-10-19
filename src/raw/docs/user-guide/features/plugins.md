@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 2adc9abb550e8a7e03bb7efd7e8fdc928d976f0b
+upstream_blob: b60711f46ae60c48f5c95c8e96e711f2cdd9d411
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -417,6 +417,8 @@ hermes plugins install user/repo             # install from Git, then prompt Ena
 hermes plugins install user/repo --enable    # request enable; dependency consent still applies
 hermes plugins install user/repo --no-enable # install but leave disabled (no prompt)
 hermes plugins update my-plugin              # pull latest (local edits are autostashed and re-applied)
+hermes plugins update                        # list every plugin with an update, then "Update all N? [Y/n]"
+hermes plugins update --yes                  # same, without the question (scripts, cron; required without a terminal)
 hermes plugins remove my-plugin              # uninstall; also drops it from plugins.enabled/disabled/entries
                                              # and resets memory.provider when it was the live provider
 hermes plugins enable my-plugin              # add to allow-list
@@ -443,7 +445,17 @@ pip のエントリーポイントのプラグインは、それを持つ配布�
 `0` にすると止まります。その結果は `hermes pm status` と
 デスクトップの同期状況の画面で見られます。別の間隔を設定すれば、1 日 1 回という固い上限があるわけではありません。
 
-既定では、更新するには `hermes plugins update NAME` を実行する必要があります。
+`hermes plugins update` を名前なしで実行すると、同じ確認を行い、更新できるプラグインを一覧にします。
+対象はカタログから入れたもの（審査済みのカタログのコミットに固定し直されます）と、追跡している Git のインストール
+（pull されます）です。飛ばすプラグインについても、すべて名前と理由を示します。理由は、固定されている、修正が必要、
+状態が分からない、Hermes が更新しない pip の配布パッケージである、のいずれかです。端末では一度だけ確認したあと、
+`hermes plugins update NAME` と同じ経路で 1 つずつ更新するので、新しい権限、広がったカタログの固定、
+スキャンの指摘は、プラグインごとに改めて確認されます。1 つが失敗しても残りは止まりません。最後の要約には、
+更新できたもの、すでに最新だったもの、失敗したものとその理由が並びます（1 つでも失敗すれば終了コードは 1 です）。
+端末が無い場合は一覧を表示するだけで、`--yes` を付けない限り何も更新しません。`--yes` を付けた場合、
+同意の確認は、対話できないほかの更新と同じく安全側に倒れます（新しい権限は付与されず、広がったカタログの固定は適用されません）。
+
+既定では、プラグインが更新されるのは `hermes plugins update` を実行したときだけです。
 `plugins.auto_apply: true` を設定すると、追跡している Git のプラグインは人の手を介さずに更新されるようになります。
 どちらの経路でも、更新時のセキュリティスキャンが走ります。自動適用は、固定したもの・
 手で入れたもの・記録とずれたもの・pip の配布パッケージの行は扱いません。
@@ -544,7 +556,7 @@ capabilities:
 `hermes plugins update` はその差分を示して改めて確認します。新しい権限は同意するまでオフの
 ままです。プラグインの更新が黙って手を広げることはありません。カタログの固定の更新は、
 もう一歩踏み込みます。新しい固定で、入っている版には無かったツール・フック・Python の依存・
-ホスト側の権限・プロバイダーへのサインイン（`requires_auth`）・デスクトップの画面が増えている場合、CLI は差分を示し、何かが動く前に `y/N` を
+ホスト側の権限・プロバイダーへのサインイン（`requires_auth`）・新しいか変わった OAuth のクライアント（`oauth:`）・デスクトップの画面が増えている場合、CLI は差分を示し、何かが動く前に `y/N` を
 尋ねますし、デスクトップやダッシュボードの **Update** ボタンも同じ確認を開きます。断った場合
 （または対話できないセッションの場合）、プラグインは古い固定のままになります。
 
