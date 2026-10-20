@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: ca0e4c0aca4034ed44465c1c3ff318287ec76f81
+upstream_blob: f34cec7f944c132b1b675dfca49ec8270d5950bd
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -177,7 +177,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `AGENT_BROWSER_ARGS` | Chromium を起動するときの追加の引数（カンマ区切りか改行区切り）。root で動かしている場合や、AppArmor で制限された非特権のユーザー名前空間（Ubuntu 23.10 以降、DGX Spark、多くのコンテナイメージ）では、Hermes が `--no-sandbox,--disable-dev-shm-usage` を自動で足します。これを手で設定するのは、それを上書きしたいときや、別の引数を足したいときだけにしてください。 |
 | `AGENT_BROWSER_ENGINE` | 手元のブラウザのエンジン: `auto`（既定 — CDP 経由の Chromium 系）、`lightpanda`（Browser Use のモードでは `lightpanda serve` を起動し、組み込みのツールは agent-browser へ `--engine lightpanda` を渡します）、`chrome` のいずれか。config.yaml の `browser.engine` と同じです。 |
 | `FAL_KEY` | 画像生成（[fal.ai](https://fal.ai/)） |
-| `KREA_API_KEY` | Krea 2 での画像生成に使う Krea の API キー（[krea.ai](https://krea.ai/)） |
+| `KREA_API_KEY` | Krea 3 と Krea 2 での画像生成に使う Krea の API キー（[krea.ai](https://krea.ai/)） |
 | `GROQ_API_KEY` | Groq の Whisper による音声認識の API キー（[groq.com](https://groq.com/)） |
 | `ELEVENLABS_API_KEY` | ElevenLabs の上位の読み上げ音声（[elevenlabs.io](https://elevenlabs.io/)） |
 | `PORCUPINE_ACCESS_KEY` | Picovoice Porcupine の呼びかけ語の認識エンジン（[console.picovoice.ai](https://console.picovoice.ai/)） — Porcupine を選んだときに必要で、openWakeWord と sherpa にはキーが要りません |

@@ -2,7 +2,7 @@
 title: "ターミナル環境プロバイダプラグイン"
 description: ""
 upstream_path: developer-guide/terminal-environment-plugin.md
-upstream_blob: aca7424bdd44796b525e2457cc08c444742894cb
+upstream_blob: de6afbe5529aa56980987d46c0ac3f5380eefade
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/terminal-environment-plugin
 ---
@@ -32,6 +32,8 @@ Sandbox、SSH）は本体リポジトリの `tools/environments/` にありま�
 | システムプロンプトに載る実行環境の説明 | `is_remote`、`env_description` |
 | 危険なコマンドの承認を省くかどうか | `skip_container_guards` |
 | コンテナ内のパスと作業ディレクトリの扱い | `is_container` |
+| `terminal.cwd` が未設定か使えないときに、コマンドを始める場所 | `default_cwd` |
+| Bot Desktop、`computer_use`、ブラウザをターミナルに追従させる | `supports_streams` + 環境オブジェクトの `exec_prefix()` |
 | 同期したキャッシュファイルのパス変換 | `cache_path_base` |
 | 起動する子プロセスから秘密情報を取り除く処理 | `strip_env_keys` |
 | セッションごとのサンドボックス分離（`container_persistent: false`） | `session_isolated_when_nonpersistent` |
@@ -136,6 +138,73 @@ hermes config set terminal.backend acmebox
 
 `BaseEnvironment` を継承すると、ファイル同期やバックグラウンドプロセスまわりの共通処理を
 そのまま使えるのでおすすめですが、必須ではありません。
+
+## 起動時の作業ディレクトリ {#starting-directory}
+
+`default_cwd` を定義しない場合、プラグインのバックエンドは `/root` から始まります。また `is_container` が有効なら、
+ホスト側のパスに見える `terminal.cwd` は `/root` に置き換えられます。別の場所から始めたいときは、
+サンドボックス内の絶対パスを返してください。
+
+```python
+    @property
+    def default_cwd(self):
+        return "/home/acme"
+```
+
+ホームディレクトリがサンドボックスの起動後にしか分からない場合は、代わりに `"~"` を返します。
+すると Hermes は `create_environment()` に `cwd="~"` を渡し（ホスト側で展開することはありません）、
+環境オブジェクトのほうで、解決したホームの絶対パスを `self.cwd` に設定します。
+
+```python
+class AcmeBoxEnvironment(BaseEnvironment):
+    def __init__(self, *, cwd, timeout, sandbox):
+        if cwd == "~":
+            cwd = sandbox.home()  # e.g. "/home/acme"
+        super().__init__(cwd=cwd, timeout=timeout)
+```
+
+Hermes はバックエンドの既定値として `~` をそのまま保持するので、新しいサンドボックスはそれぞれ自分のホームを解決します。
+各環境が解決したパスは、その環境ごとに記録されます。
+コマンドが `cwd="~"` 付きで届くこともありますが、`BaseEnvironment` はすでにそこへ正しく `cd` します。
+そのホーム配下へ `cd` した場合は、その場所が後続のコマンドにも引き継がれ、
+ファイル操作ツールで相対パスを解決する起点にもなります。この仕組みがないと、
+`/home/acme/project` のようなサンドボックス内のパスが、ホスト側のパスとみなされて捨てられてしまいます。
+
+`default_cwd` はコマンドを実行するたびに読み込まれるので、軽い処理にしてください（ネットワーク呼び出しはしない）。
+相対パスは無視されます。Hermes がホスト側を起点に解釈してしまうためです。
+
+## Bot Desktop と `computer_use` {#bot-desktop-and-computeruse}
+
+画面、`computer_use`、ブラウザは、stdin と stdout を開いたままの常駐プロセスをサンドボックス内で起動することで、
+Docker・SSH・Singularity のサンドボックスへターミナルと一緒に移ります。
+プラグインのバックエンドも、同じ方法でこれに対応できます。
+
+1. プロバイダに `supports_streams = True` を設定します。すると `bot_desktop.placement: auto`
+   は、拒否する代わりに画面をそのバックエンドの中に置くようになります。
+2. 環境オブジェクトに `exec_prefix(*, user=None, interactive=True)` メソッドを持たせます。
+   このメソッドは、後ろに続くものをサンドボックス内で stdin と stdout を開いたまま実行する、
+   ローカル側の argv（`docker exec -i <container>` のような形）を返します。いま実行できない場合は
+   `None` を返します。Hermes は `bash -c <script>` を別々の語として後ろに付け足すので、
+   クライアントはそれを手を加えずにそのまま渡す必要があり、サンドボックスには `bash` が必要です。
+   `user` は実行するアカウント名です。バックエンドがユーザーを切り替えられない場合は無視してかまいません。
+   コマンドを1つの文字列にせず、リストで返してください。
+
+```python
+class AcmeBoxEnvironment:
+    def exec_prefix(self, *, user=None, interactive=True):
+        return ["acmebox", "exec", "--stdin", self.sandbox_id, "--"]
+```
+
+サンドボックスのイメージには、デスクトップ一式（Xvnc、Xfce、Chromium、
+`cua-driver`）が別途必要です。`nousresearch/hermes-sandbox:desktop` にはそろっています。Bot Desktop と
+ブラウザは、作業用の一時ファイルを環境オブジェクトの `get_temp_dir()` の下に置きます。
+`BaseEnvironment` を継承せず、このメソッドも持たない環境には、`BaseEnvironment` と同じ既定の動作が使われます。
+
+`exec_prefix()` と `~` によるホームの解決は、どちらも環境オブジェクトそのものを読むので、
+同じプロセス内で読み込んだプラグインでしか動きません。
+`plugins.isolation: host` の下では、環境オブジェクトは中身の見えない代理オブジェクトとして Hermes に届きます。
+そのため Bot Desktop は `supports_streams` のバックエンドを、その設定名を示すメッセージとともに拒否し、
+`default_cwd = "~"` は文字どおりの `~` のままになります。
 
 ## セッション分離の考え方 {#session-isolation-semantics}
 

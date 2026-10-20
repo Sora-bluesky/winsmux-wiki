@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: b60711f46ae60c48f5c95c8e96e711f2cdd9d411
+upstream_blob: a9cb9b480989b93433d8cbc486d35abc1b50e450
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -417,6 +417,7 @@ hermes plugins install user/repo             # install from Git, then prompt Ena
 hermes plugins install user/repo --enable    # request enable; dependency consent still applies
 hermes plugins install user/repo --no-enable # install but leave disabled (no prompt)
 hermes plugins update my-plugin              # pull latest (local edits are autostashed and re-applied)
+hermes plugins update my-plugin --force      # same, accepting a caution security-scan verdict without the question
 hermes plugins update                        # list every plugin with an update, then "Update all N? [Y/n]"
 hermes plugins update --yes                  # same, without the question (scripts, cron; required without a terminal)
 hermes plugins remove my-plugin              # uninstall; also drops it from plugins.enabled/disabled/entries
@@ -758,6 +759,18 @@ hermes plugins pack export --enabled-only       # only plugins.enabled
 | **safe** | ふつうに入ります。追加の表示はありません |
 | **caution** | 指摘が表示され、`Install anyway? [y/N]` に答えます（または `--force` を付けます） |
 | **dangerous** | 止まります。`--force` でも**通りません** |
+
+`hermes plugins update` も、入っているコピーを置き換える前に、新しいコードを同じ規則で検査します。
+そのため、更新で危ないコードが入ったプラグインは、動く前に指摘されます。Git からの更新で caution と判定されると
+`Update anyway? [y/N]` と聞かれます。`hermes plugins update NAME --force` を使うと、聞かれずにそのまま受け入れます。
+Hermes Desktop では、同じ指摘がダイアログに表示され、**Update anyway** ボタンが付きます。カタログからの更新は
+確認済みの固定先へ移るだけなので、caution と判定されても聞かれません。どの場合も、更新を
+受け入れるまでは何も変わりません。
+
+Git から入れたプラグインでは、直近の更新確認で新しいコミットが見つかると、Hermes Desktop に
+**Update** ボタンが表示されます。この確認はゲートウェイが
+`plugins.auto_update_check_hours`（既定は 24）ごとに行い、`hermes plugins check-updates`
+を実行すればその場で行えます。
 
 `hermes plugins update` で、更新後のツリーが dangerous と判定された場合は、指摘を確認して
 有効にし直すまで、そのプラグインは無効になります。dangerous で止めるときは、その原因に

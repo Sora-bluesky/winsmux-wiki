@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 71d4c915d684fb7841758692ea454df9a66777db
+upstream_blob: 6680c136fe52d78b9f2d75ae3248c418e26a80c3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -56,7 +56,7 @@ hermes plugins install <name>
 | `requires_hermes` | 必要な Hermes の最低バージョン。たとえば `>=0.19`（任意） |
 | `platforms` | OS の制限。空ならすべて（任意） |
 | `title` | カードに表示する人向けの名前。たとえば `NVIDIA App`（任意。省略時は `name`） |
-| `onboarding` | `true` にすると、デスクトップのオンボーディングカードで、ホスト型コネクタの隣にこのプラグインを並べます。対象は項目に書かれたプラットフォームです。選別されるのは公式の項目だけです（任意、既定は `false`） |
+| `onboarding` | `true` にすると、デスクトップのオンボーディングカードで、ホスト型コネクタの隣にこのプラグインを並べます。対象は項目に書かれたプラットフォームです。選別されるのは公式または検証済みの項目だけです（任意、既定は `false`） |
 | `docs_url` | 外部ドキュメントへのリンク（任意） |
 | `known_issues` | インストール時の確認に表示する短い注意書き。たとえば対応していないインストール方法など。知らせるためのもので、インストールを止めることはありません（任意） |
 | `version` | 固定した sha に付ける読みやすいラベル。たとえば `"1.4.0"`。CLI、カタログのカード、デスクトップの **Update to** ボタンでは `1.4.0 @ abcd1234` と表示されます（任意、見た目だけ） |

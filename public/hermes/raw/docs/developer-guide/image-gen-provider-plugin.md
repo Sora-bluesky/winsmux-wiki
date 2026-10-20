@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "画像生成プロバイダのプラグイン"
 description: "Hermes Agent 向けに画像生成のバックエンドのプラグインを作る方法"
 upstream_path: developer-guide/image-gen-provider-plugin.md
-upstream_blob: 3f8a603c279ec5883972481f231237ff91b77ebd
+upstream_blob: 6b1edf902f79e6cae58b4ce525c56226caabb587
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/image-gen-provider-plugin
 ---
@@ -122,7 +122,7 @@ class MyBackendImageGenProvider(ImageGenProvider):
         # text-only: {"modalities": ["text"], "max_reference_images": 0}.
         # Optional keys: "supports_upscale" (bool) adds an `upscale` param, and
         # "creative_controls" lists the controls you honor from `creativity`,
-        # `intensity`, `complexity`, `movement`. Only declared controls appear
+        # `intensity`, `complexity`, `movement`, `thinking`, `resolution`. Only declared controls appear
         # in the schema and reach generate() as kwargs. "source_image_role": "style"
         # tells the model that image inputs set the look and are not edited.
         return {"modalities": ["text", "image"], "max_reference_images": 4}

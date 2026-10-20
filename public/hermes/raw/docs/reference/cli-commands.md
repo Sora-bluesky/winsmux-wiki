@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 65e5414d81439011b248d1fd757efea95a05f92e
+upstream_blob: 51258b4bd6d108ccc73d466e208665731a2c3ceb
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -315,6 +315,7 @@ hermes gateway <subcommand>
 | オプション | 説明 |
 |--------|-------------|
 | `--all` | `start` / `restart` / `stop` において: 現在アクティブな `HERMES_HOME` だけでなく、**すべてのプロファイル**のゲートウェイに対して操作します。複数のプロファイルを並行運用していて、`hermes update` の後にまとめて再起動したいときに便利です。 |
+| `-y`, `--yes` | `stop` / `restart` において: ゲートウェイがチャットのターン、cron ジョブ、バックグラウンドの委任を実行中の場合、コマンドはそれらを一覧し、中断する前に `y/N` で確認します。`--yes` を付けると、この確認を飛ばします。確認を出す端末がない場合（スクリプトや cron）は、`--yes` を付けない限り実行を断ります。`--interrupt` は同じ意味の別名です。 |
 | `--no-supervise` | `run` において: s6-overlay の Docker イメージ内で、自動監視をオプトアウトし、s6 以前のフォアグラウンド動作にします — ゲートウェイはコンテナのメインプロセスとして動作し、自動再起動はありません。s6 イメージ以外では no-op です。`HERMES_GATEWAY_NO_SUPERVISE=1` を設定することと同等です。 |
 | `--external-supervisor` | `run` において: ラッパー側が提供するプロセスマネージャがフォアグラウンドのゲートウェイを所有していることを宣言します。`sudo`、`env -i`、その他のラッパーが launchd/systemd のネイティブな環境マーカーを取り除いてしまう場合に使います。チャット内での再起動やアップデートは、独立したプロセスを立ち上げる代わりに、そのマネージャへ制御を戻して終了します。 |
 

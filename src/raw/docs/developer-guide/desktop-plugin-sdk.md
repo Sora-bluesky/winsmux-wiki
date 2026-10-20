@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 24a0e136b8302b4811af920b3e8f58c5a480ee7a
+upstream_blob: 2b2eb438b771125e9b61034415351202b93799ff
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -1167,6 +1167,34 @@ const busy = useValue(host.state.busy)
 影響しません。`host` のどの窓口も非同期で安全です。内部の処理から同期的に投げられた例外
 （素のブラウザーでデスクトップの橋渡しが無い場合など）は、`.catch()` で受け取れる拒否になり、
 エラー境界での異常終了にはなりません。
+
+#### ツール実行中の進み具合 — `tool.progress` {#tool-progress-event}
+
+ツール呼び出しの実行中に、MCP サーバーが `notifications/progress`（MCP 仕様の進捗通知の経路です。
+Hermes はすべての `tools/call` に `_meta.progressToken` を付けて受信を申し出ています）を送ると、
+それが `tool.progress` イベントとしてレンダラーに届きます。標準のツール行では、タイマーの横に
+`42% · <message>` の形で表示されます。プラグインは独自の表示を描くこともできます。
+
+```javascript
+ctx.onEvent('tool.progress', ({ session_id, payload }) => {
+  // payload: { tool_id, name, progress, total, percent, message }
+  if (payload.name.startsWith('mcp__meshy__')) showRefineProgress(payload.tool_id, payload.percent, payload.message)
+})
+ctx.onEvent('tool.complete', ({ payload }) => clearRefineProgress(payload.tool_id))
+```
+
+| フィールド | 型 | 意味 |
+|---|---|---|
+| `tool_id` | `string` | 呼び出しの ID。その呼び出しの `tool.start` / `tool.complete` と同じ `tool_id` です |
+| `name` | `string` | 登録されたツール名（`mcp__<server>__<tool>`） |
+| `progress` | `number` | サーバーが送ってきた進捗の生の値 |
+| `total` | `number \| null` | サーバーが送ってきた全体量（送られた場合のみ） |
+| `percent` | `number \| null` | `total` があるときは `0`–`100`（四捨五入し、範囲内に収めた値）、ないときは `null` |
+| `message` | `string \| null` | サーバーが送ってきた進捗メッセージ |
+
+イベントは、1 回の呼び出しにつき 500 ms に最大 1 回まで間引かれます。ただし最初の更新と、
+`total` に達した更新は必ず届きます。会話の記録には保存されないので、セッションを開き直すと
+完了した行だけが表示されます。
 
 `ctx.os` は、選び抜かれた OS への窓口です。プラグインがアプリのウィンドウの外へ手を伸ばす
 経路をすべて、そのプラグインに紐づけて 1 つの名前空間にまとめてあります。`ctx.os.notify` は

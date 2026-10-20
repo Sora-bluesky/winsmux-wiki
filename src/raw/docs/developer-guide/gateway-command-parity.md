@@ -2,7 +2,7 @@
 title: "ゲートウェイのコマンド対応表"
 description: "共有ゲートウェイ上で、ローカルの各クライアントがスラッシュコマンドをどう扱うか"
 upstream_path: developer-guide/gateway-command-parity.md
-upstream_blob: 794b7e36a9dc76e8e764b350826b1581bd1f8a58
+upstream_blob: 3dbfe2e671bcaaa1d83d22cbd7aaf2b73275dab6
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-command-parity
 ---
@@ -30,7 +30,7 @@ sources:
 このローカルセッション（次のターンと `config.get`）に適用します。config.yaml への保存は、
 ハンドラー自体が保存する場合だけです。`client-local (cli_only)` のコマンドは、クライアントのターミナルや UI の機能です。
 
-登録済みコマンドは 104 個で、内訳は control 29、read 18、refused 57 です。
+登録済みコマンドは 104 個で、内訳は control 29、read 19、refused 56 です。
 
 | コマンド | ゲートウェイ（`slash.exec`） | 従来型 CLI | Ink | Desktop | ACP | 備考 |
 |---|---|---|---|---|---|---|
@@ -53,7 +53,7 @@ sources:
 | `/config` | refused | HermesCLI.show_config | canonical route | action: config | slash.exec: refused | client-local (cli_only) |
 | `/context` (/ctx) | read | HermesCLI._show_context_breakdown | slash.exec | slash.exec | slash.exec | TUI セッションでは、main の /context をカテゴリ表付きでその場で表示します |
 | `/copy` | refused | HermesCLI._handle_copy_command | local | unavailable: terminal | slash.exec: refused | client-local (cli_only) |
-| `/cron` | refused | HermesCLI._handle_cron_command | slash.exec | unavailable: terminal | slash.exec: refused | TUI セッションでは、値なしの `/cron` と `/cron list [--all]` がプロファイルのジョブを読み取ります。client-local (cli_only) |
+| `/cron` | read（値なし / `list`。add/edit/pause/resume/run/remove は control で、classic CLI 自身のコマンドソケットからだけ受け付けます） | HermesCLI._handle_cron_command | slash.exec | unavailable: terminal | slash.exec | client-local (cli_only) |
 | `/curator` | control | HermesCLI._handle_curator_command | slash.exec | unavailable: advanced | slash.exec |  |
 | `/debug` | control | HermesCLI._handle_debug_command | slash.exec | slash.exec | slash.exec | ログを公開のペーストサービスにアップロードします |
 | `/deny` | control | messaging-only: unknown command | slash.exec | slash.exec | slash.exec | messaging-only |

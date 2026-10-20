@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ボットの画面"
 description: ""
 upstream_path: user-guide/features/bot-screen.md
-upstream_blob: 1f90b8f7dcf661e7358de3b53d12c9ebcc90aa5e
+upstream_blob: 35af80df88e61831a171ca775750b3b0a27b6d5e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/bot-screen
 ---
@@ -224,7 +224,8 @@ hermes -p research computer-use screen start   # another bot's screen
 |---|---|---|
 | `local` | ゲートウェイホスト | ターミナル、画面、ブラウザ、`computer_use` のすべてが、ゲートウェイを動かしているマシンを共有します。 |
 | `docker`、`ssh`、`singularity` | **サンドボックスの中** | Xvnc + Xfce、Chromium、cua-driver は、ターミナルが使うのと同じ `docker exec` / `ssh` の経路で起動され、コンテナの中または SSH 先のホストで動きます。ペインにはサンドボックスの画面が映り、ホストのデスクトップには一切触れられません。 |
-| `modal`、`daytona`、`vercel_sandbox` | **拒否** | これらのバックエンドは、まだディスプレイを持てません。エージェント用に選んだサンドボックスの横で、ホスト上に黙って画面を動かす代わりに、`Start` が理由を説明し、`placement: gateway` を案内します。 |
+| `supports_streams` を宣言したプラグインのバックエンド | **サンドボックスの中** | 上と同じです。プラグイン自身の実行経路を通して動きます。 |
+| `modal`、`daytona`、`vercel_sandbox`、その他のプラグインのバックエンド | **拒否** | これらのバックエンドは、まだディスプレイを持てません。エージェント用に選んだサンドボックスの横で、ホスト上に黙って画面を動かす代わりに、`Start` が理由を説明し、`placement: gateway` を案内します。 |
 
 `placement: gateway` を指定すると、従来の動き（ターミナルがサンドボックスで動いていても、画面は
 ゲートウェイホストに置く）を明示的に選べます。`placement:

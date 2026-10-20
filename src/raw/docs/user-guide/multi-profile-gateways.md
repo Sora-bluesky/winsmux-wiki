@@ -2,7 +2,7 @@
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: 54cce5fe9ed0cd7ee8ba717e52e00e52320f82fc
+upstream_blob: a2d5cee5925019ada3cecf641d25f0ce3c0ebedd
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -1178,6 +1178,14 @@ hermes config set gateway.auto_multiplex_migration false
 固定した値は、プロファイル自身のファイルより優先されます。効くのは**自動の**経路だけです。`hermes gateway migrate --multiplex` ははっきりした依頼なので、
 それでも移行します（断ったあとで改めて移行するときも、これを使うのが正式なやり方です）。
 設定が無いか `true` なら、上で説明した既定のふるまいのままです。
+
+同じ設定は、既定のプロファイルだけで起動したゲートウェイにも効きます。
+ふつうは、2 つ目のプロファイルを作ると（Desktop の New Agent か
+`hermes profile create`）、そのゲートウェイは再起動なしで、その場ですべてのプロファイルを受け持ち始めます。
+`auto_multiplex_migration: false` にしていると、自分のプロファイルだけを受け持ち続け、新しいプロファイルは
+その理由で断られます。`hermes gateway migrate --multiplex` を実行するか、キーを `true` に戻すまでそのままです。
+キーはプロファイルを読み直すたびに読み込まれるので、戻した設定は再起動なしでおよそ
+30 秒以内に効きます。
 
 はっきりしたコマンドのほうは違います。プロファイルが 2 つ以上あり、独立して動くほかのゲートウェイが
 **1 つも無い**ときに `hermes gateway migrate --multiplex` を実行すると、残っているひと手間だけを

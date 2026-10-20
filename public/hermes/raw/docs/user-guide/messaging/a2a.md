@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "A2A（エージェント間連携）"
 description: ""
 upstream_path: user-guide/messaging/a2a.md
-upstream_blob: 3331a88455f90094c1e941d214dd575facc99b2c
+upstream_blob: 8a31dc2ef11d0f4ace5d345c703f9bc007c5d254
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/a2a
 ---
@@ -132,7 +132,7 @@ a2a_agents:
 |---|---|---|
 | `A2A_PEER_TOKENS` | _(未設定)_ | 相手ごとの認証情報 `name:token,…`（こちらを推奨） |
 | `A2A_BEARER_TOKEN` | _(未設定)_ | 共有のトークン。相手の識別は呼び出し元 IP に頼ることになります |
-| `A2A_HOST` | `127.0.0.1` | 待ち受けるホスト。トークンを設定したときだけ広げられます |
+| `A2A_HOST` | `127.0.0.1` | 待ち受けるホスト。トークンを設定したときだけ広げられます。`::1` や `::` のような IPv6 の表記も、そのままでも角かっこ付き（`[::1]`）でも使えます |
 | `A2A_PORT` | `9900` | 受信用のポート |
 | `A2A_AGENT_NAME` | ホスト名から生成 | Agent Card に載せる名前 |
 | `A2A_PUBLIC_URL` | _(未設定)_ | カードに掲げる、実際につながる URL（リバースプロキシや k8s 向け） |
