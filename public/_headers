@@ -1,3 +1,9 @@
+/*
+  # 全ページ共通（2026-10-21 sora 了承）。HSTS は 1 年・サブドメインは含めない・preload なし。CSP は入れていない（インラインのスクリプトがあるため）
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
 /hermes/raw/*
   Content-Type: text/markdown; charset=utf-8
   # HTML 版と同内容の原文。Google の索引からは外し（重複排除）、取得は妨げない（llms.txt の参照先）
