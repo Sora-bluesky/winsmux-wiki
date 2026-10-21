@@ -67,7 +67,7 @@ jobs:
 
       - run: |
           mkdir -p "$WRANGLER_HOME"
-          npm install --prefix "$WRANGLER_HOME" wrangler@4.88.0
+          npm install --prefix "$WRANGLER_HOME" wrangler@4.151.3
         env:
           WRANGLER_HOME: ${{ runner.temp }}/w
 
