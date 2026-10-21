@@ -20,9 +20,7 @@ const links = (zennLinks.pages as Record<string, ZennLink[]>)[normalizedPath];
       <ul class="mb-0 mt-3 list-none space-y-1 p-0">
         {links.map((link) => (
           <li>
-            <a href={link.url} target="_blank" rel="noopener" title={link.title}>
-              {link.n === null ? `Zenn の連載「${zennLinks.series}」` : `Zenn 第${link.n}回`}
-            </a>：{link.topic}
+            <a href={link.url} target="_blank" rel="noopener" title={link.title}>{link.n === null ? `Zenn の連載「${zennLinks.series}」` : `Zenn 第${link.n}回`}</a>：{link.topic}
           </li>
         ))}
       </ul>
