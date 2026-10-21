@@ -185,6 +185,8 @@ function scheduleLastmodSummary() {
 
 export default defineConfig({
   output: 'static',
+  // Astro 7 で既定が 'jsx' に変わった（インライン要素の間の空白が消える）。6 系と同じ出力を保つ
+  compressHTML: true,
   site: SITE_URL,
   trailingSlash: 'always',
   integrations: [
