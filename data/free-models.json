@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-21",
+  "generatedAt": "2026-10-22",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-10-21",
-      "attemptedAt": "2026-10-21",
+      "fetchedAt": "2026-10-22",
+      "attemptedAt": "2026-10-22",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -93,8 +93,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-10-21",
-      "attemptedAt": "2026-10-21",
+      "fetchedAt": "2026-10-22",
+      "attemptedAt": "2026-10-22",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -264,6 +264,16 @@
           "ctx": 262144,
           "tools": true,
           "expires": "2026-10-31",
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "recursive/flint-v1.0:free",
+          "name": "Recursive: Flint (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null

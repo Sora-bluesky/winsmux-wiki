@@ -3,7 +3,7 @@ title: このサイトについて
 description: 運営者、データの扱い、免責。プライバシーポリシーを兼ねます。
 sources:
   - https://hermes-agent.nousresearch.com/docs/
-hermes_version: "0.22.2"
+hermes_version: "0.22.4"
 confidence: high
 raw: /hermes/raw/about.md
 ---

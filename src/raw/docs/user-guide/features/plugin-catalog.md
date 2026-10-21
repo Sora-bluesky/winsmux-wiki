@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 6680c136fe52d78b9f2d75ae3248c418e26a80c3
+upstream_blob: ee2a8bd161af619bef656527d9c5756a6aaad992
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -86,8 +86,8 @@ hermes plugins install <name>
   `window.hermesDesktop` ブリッジの全機能、他のプラグインの保存領域）。守ってくれるのは
   上に書いた信頼の考え方です。人が固定されたコミットそのものを読み、インストールされるのは
   そのコミットである、という点。加えて仕掛けが2つあります。受け入れ時の `desktop surface`
-  lint がプラグイン SDK の外へ出る分かりやすい手口を拒みます（組み込みのプロトタイプへの
-  パッチ、`eval`、`@hermes/plugin-sdk`/`react` 以外の読み込み、リモートのスクリプトの取り込み）。
+  lint がプラグイン SDK の外へ出る分かりやすい手口を拒みます（
+  `eval`、`@hermes/plugin-sdk`/`react` 以外の読み込み、リモートのスクリプトの取り込み）。
   そしてアプリのローダーが読み込み時にも SDK 以外の import をもう一度拒みます。lint は `<script` を含む正規表現
   （リテラル、または `.replace()`/`.split()`/`.match()` にそのまま渡すか `.test()`/`.exec()` で使う
   `new RegExp(...)` のパターン文字列）を、注入ではなく本来の役目どおりの無害化処理として扱います。

@@ -1,5 +1,105 @@
 {
   "entries": {
+    "x-alexandermann-grandfather-safety-system": {
+      "hash": "8cc52aa24edea28b",
+      "status": "translated"
+    },
+    "x-coldemailchris-gtm-tam-slack-agent": {
+      "hash": "597ed0c3b09c4be2",
+      "status": "translated"
+    },
+    "x-nixxin-medianama-editorial-agents": {
+      "hash": "07a7260930357941",
+      "status": "translated"
+    },
+    "x-alexcovo-eth-vapi-consulting-deal": {
+      "hash": "be04f652875fdc8e",
+      "status": "translated"
+    },
+    "x-thomasbekkers-it-support-agent": {
+      "hash": "4925cfbb424c7eec",
+      "status": "translated"
+    },
+    "linkedin-theanimeshs-founderos-seven-assistants": {
+      "hash": "6fb82f857f6efb74",
+      "status": "translated"
+    },
+    "x-advaitraykar-elmo-narrated-demos": {
+      "hash": "3e5881b1a9c30bfc",
+      "status": "translated"
+    },
+    "x-gsabin86-photo-to-cad": {
+      "hash": "c7987267cc78da47",
+      "status": "translated"
+    },
+    "x-michaelgannotti-gabriel-pm-fleet": {
+      "hash": "b3780b4ec253848f",
+      "status": "translated"
+    },
+    "x-stefanmaier-football-manager-ares": {
+      "hash": "8ad85cb9ea30fb60",
+      "status": "translated"
+    },
+    "x-tborges77-imax-seat-hunt": {
+      "hash": "7a99099b3269ba1f",
+      "status": "translated"
+    },
+    "reddit-physical-economist27-solo-it-department": {
+      "hash": "70db95018ae265ae",
+      "status": "translated"
+    },
+    "reddit-sanvell-drainlaying-admin": {
+      "hash": "e4ee6408610154f4",
+      "status": "translated"
+    },
+    "reddit-purgii-field-service-repair-check": {
+      "hash": "c1bb2e5d8ccf997b",
+      "status": "translated"
+    },
+    "reddit-bob-lobsta-band-manager": {
+      "hash": "41dc52e71acdcda5",
+      "status": "translated"
+    },
+    "reddit-rgreen192-mealie-kroger-meal-planning": {
+      "hash": "308daa5b1067d0af",
+      "status": "translated"
+    },
+    "reddit-rpg36-school-tutor-sync": {
+      "hash": "0b98f5683d15e712",
+      "status": "translated"
+    },
+    "x-marc-bara-client-invoice-mcp": {
+      "hash": "f0862955a830fdf4",
+      "status": "translated"
+    },
+    "x-michaelversluis-energy-advisory-rbac-gateway": {
+      "hash": "06b7533e6b26f5e9",
+      "status": "translated"
+    },
+    "x-lecaj-food-beverage-ops-profiles": {
+      "hash": "052c9cbb27dccd6d",
+      "status": "translated"
+    },
+    "x-trevin-kids-profile-daughter": {
+      "hash": "69f5f78876859f27",
+      "status": "translated"
+    },
+    "blog-virtualizationhowto-netbox-homelab-inventory": {
+      "hash": "353b8c5bad5a73a4",
+      "status": "translated"
+    },
+    "blog-ickas-gym-booking-menu-fixtures": {
+      "hash": "39dbb1482ea9ca6e",
+      "status": "translated"
+    },
+    "blog-technodrone-family-budget-whatsapp-bot": {
+      "hash": "c3e071252a93df05",
+      "status": "translated"
+    },
+    "github-setasoma-mushroom-grow-tent": {
+      "hash": "75ee47401ea358bd",
+      "status": "translated"
+    },
     "blog-razorpay-employee-agents": {
       "hash": "cf5873010dc2b1d3",
       "status": "translated"
@@ -1338,10 +1438,6 @@
     },
     "reddit-research-agent": {
       "hash": "99abae04cd8b8ece",
-      "status": "translated"
-    },
-    "alexcovo-movies": {
-      "hash": "4fb0224b38a874fb",
       "status": "translated"
     },
     "mvanhorn-business-ops": {

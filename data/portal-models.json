@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-10-20",
+  "fetchedAt": "2026-10-21",
   "source": "https://inference-api.nousresearch.com/v1/models",
-  "count": 426,
+  "count": 425,
   "counts": {
-    "text": 382,
+    "text": 391,
     "embeddings": 34,
-    "other": 10
+    "other": 0
   },
   "models": [
     {
@@ -177,6 +177,18 @@
       "free": false
     },
     {
+      "id": "anthropic/claude-haiku-5.5",
+      "name": "Anthropic: Claude Haiku 5.5",
+      "type": "text",
+      "ctx": 1000000,
+      "inPerM": 0.1,
+      "outPerM": 0.5,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
       "id": "anthropic/claude-haiku-5.5:batch",
       "name": "Anthropic: Claude Haiku 5.5 (batch)",
       "type": "text",
@@ -267,6 +279,18 @@
       "ctx": 1050000,
       "inPerM": 1,
       "outPerM": 5,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "anthropic/claude-sonnet-5.5",
+      "name": "Anthropic: Claude Sonnet 5.5",
+      "type": "text",
+      "ctx": 1000000,
+      "inPerM": 2,
+      "outPerM": 10,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -477,6 +501,18 @@
       "free": false
     },
     {
+      "id": "anthropic/claude-opus-5.5",
+      "name": "Anthropic: Claude Opus 5.5",
+      "type": "text",
+      "ctx": 1000000,
+      "inPerM": 4,
+      "outPerM": 20,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
       "id": "anthropic/claude-opus-5.5:batch",
       "name": "Anthropic: Claude Opus 5.5 (batch)",
       "type": "text",
@@ -505,11 +541,11 @@
       "name": "Xiaomi: MiMo-V2.6-Flash",
       "type": "text",
       "ctx": 1050000,
-      "inPerM": 0.05,
-      "outPerM": 0.12,
+      "inPerM": 0.1,
+      "outPerM": 0.28,
       "listInPerM": 0.14,
       "listOutPerM": 0.28,
-      "discount": 64,
+      "discount": 29,
       "free": false
     },
     {
@@ -853,8 +889,8 @@
       "name": "Z.ai: GLM Flash Latest",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.0471,
-      "outPerM": 0.12,
+      "inPerM": 0.0413,
+      "outPerM": 0.0773,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -1081,8 +1117,8 @@
       "name": "DeepSeek: DeepSeek V4 Flash Latest",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.0168,
-      "outPerM": 0.1129,
+      "inPerM": 0.0422,
+      "outPerM": 0.1729,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -1298,7 +1334,7 @@
       "type": "text",
       "ctx": 1048576,
       "inPerM": 0.238,
-      "outPerM": 24,
+      "outPerM": 16,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -1545,6 +1581,18 @@
       "free": true
     },
     {
+      "id": "anthropic/claude-sonnet-5",
+      "name": "Anthropic: Claude Sonnet 5",
+      "type": "text",
+      "ctx": 1000000,
+      "inPerM": 2,
+      "outPerM": 10,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
       "id": "anthropic/claude-sonnet-5:batch",
       "name": "Anthropic: Claude Sonnet 5 (batch)",
       "type": "text",
@@ -1595,6 +1643,18 @@
     {
       "id": "~anthropic/claude-fable-latest",
       "name": "Anthropic: Claude Fable Latest",
+      "type": "text",
+      "ctx": 1000000,
+      "inPerM": 10,
+      "outPerM": 50,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "anthropic/claude-fable-5",
+      "name": "Anthropic: Claude Fable 5",
       "type": "text",
       "ctx": 1000000,
       "inPerM": 10,
@@ -1671,6 +1731,18 @@
       "ctx": 262144,
       "inPerM": 0.2,
       "outPerM": 1.15,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "anthropic/claude-opus-4.8",
+      "name": "Anthropic: Claude Opus 4.8",
+      "type": "text",
+      "ctx": 1000000,
+      "inPerM": 5,
+      "outPerM": 25,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -1886,7 +1958,7 @@
       "type": "text",
       "ctx": 1048576,
       "inPerM": 0.238,
-      "outPerM": 24,
+      "outPerM": 16,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -2029,8 +2101,8 @@
       "name": "DeepSeek: DeepSeek V4 Flash 0423",
       "type": "text",
       "ctx": 1048576,
-      "inPerM": 0.04,
-      "outPerM": 0.136,
+      "inPerM": 0.0404,
+      "outPerM": 0.45,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -2055,9 +2127,9 @@
       "ctx": 1050000,
       "inPerM": 0.3045,
       "outPerM": 0.609,
-      "listInPerM": 0.435,
-      "listOutPerM": 0.87,
-      "discount": 30,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
       "free": false
     },
     {
@@ -2067,9 +2139,9 @@
       "ctx": 1050000,
       "inPerM": 0.119,
       "outPerM": 0.238,
-      "listInPerM": 0.14,
-      "listOutPerM": 0.28,
-      "discount": 15,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
       "free": false
     },
     {
@@ -2089,11 +2161,11 @@
       "name": "MoonshotAI: Kimi K2.6",
       "type": "text",
       "ctx": 262144,
-      "inPerM": 0.4227,
-      "outPerM": 1.78,
+      "inPerM": 0.4493,
+      "outPerM": 1.892,
       "listInPerM": 0.95,
       "listOutPerM": 4,
-      "discount": 56,
+      "discount": 53,
       "free": false
     },
     {
@@ -2103,6 +2175,18 @@
       "ctx": 8192,
       "inPerM": 0.2,
       "outPerM": 0,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "anthropic/claude-opus-4.7",
+      "name": "Anthropic: Claude Opus 4.7",
+      "type": "text",
+      "ctx": 1000000,
+      "inPerM": 5,
+      "outPerM": 25,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -2565,6 +2649,18 @@
       "free": false
     },
     {
+      "id": "anthropic/claude-sonnet-4.6",
+      "name": "Anthropic: Claude Sonnet 4.6",
+      "type": "text",
+      "ctx": 1000000,
+      "inPerM": 3,
+      "outPerM": 15,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
       "id": "anthropic/claude-sonnet-4.6:batch",
       "name": "Anthropic: Claude Sonnet 4.6 (batch)",
       "type": "text",
@@ -2622,6 +2718,18 @@
       "listInPerM": 1,
       "listOutPerM": 3.2,
       "discount": 40,
+      "free": false
+    },
+    {
+      "id": "anthropic/claude-opus-4.6",
+      "name": "Anthropic: Claude Opus 4.6",
+      "type": "text",
+      "ctx": 1000000,
+      "inPerM": 5,
+      "outPerM": 25,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
       "free": false
     },
     {
@@ -3441,6 +3549,18 @@
       "free": false
     },
     {
+      "id": "anthropic/claude-haiku-4.5",
+      "name": "Anthropic: Claude Haiku 4.5",
+      "type": "text",
+      "ctx": 200000,
+      "inPerM": 1,
+      "outPerM": 5,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
       "id": "anthropic/claude-haiku-4.5:batch",
       "name": "Anthropic: Claude Haiku 4.5 (batch)",
       "type": "text",
@@ -3927,18 +4047,6 @@
       "ctx": 1048576,
       "inPerM": 0.1,
       "outPerM": 0.4,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "google/gemini-2.5-flash-lite:batch",
-      "name": "Google: Gemini 2.5 Flash Lite (batch)",
-      "type": "text",
-      "ctx": 1048576,
-      "inPerM": 0.05,
-      "outPerM": 0.2,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -4827,126 +4935,6 @@
       "ctx": 1048576,
       "inPerM": 0.9,
       "outPerM": 2.83,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "anthropic/claude-opus-5.5",
-      "name": "Claude Opus 5-5",
-      "type": "other",
-      "ctx": 1000000,
-      "inPerM": 4,
-      "outPerM": 20,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "anthropic/claude-sonnet-5.5",
-      "name": "Claude Sonnet 5-5",
-      "type": "other",
-      "ctx": 1000000,
-      "inPerM": 2,
-      "outPerM": 10,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "anthropic/claude-haiku-5.5",
-      "name": "Claude Haiku 5-5",
-      "type": "other",
-      "ctx": 1000000,
-      "inPerM": 0.1,
-      "outPerM": 0.5,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "anthropic/claude-sonnet-5",
-      "name": "Claude Sonnet 5",
-      "type": "other",
-      "ctx": 1000000,
-      "inPerM": 2,
-      "outPerM": 10,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "anthropic/claude-fable-5",
-      "name": "Claude Fable 5",
-      "type": "other",
-      "ctx": 1048576,
-      "inPerM": 10,
-      "outPerM": 50,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "anthropic/claude-opus-4.8",
-      "name": "Claude Opus 4.8",
-      "type": "other",
-      "ctx": 1000000,
-      "inPerM": 5,
-      "outPerM": 25,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "anthropic/claude-opus-4.7",
-      "name": "Claude Opus 4.7",
-      "type": "other",
-      "ctx": 1000000,
-      "inPerM": 5,
-      "outPerM": 25,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "anthropic/claude-opus-4.6",
-      "name": "Claude Opus 4.6",
-      "type": "other",
-      "ctx": 1000000,
-      "inPerM": 5,
-      "outPerM": 25,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "anthropic/claude-sonnet-4.6",
-      "name": "Claude Sonnet 4.6",
-      "type": "other",
-      "ctx": 1000000,
-      "inPerM": 3,
-      "outPerM": 15,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "anthropic/claude-haiku-4.5",
-      "name": "Claude Haiku 4.5",
-      "type": "other",
-      "ctx": 409600,
-      "inPerM": 1,
-      "outPerM": 5,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,

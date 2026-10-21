@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 1a2e7d333615c931617a0d7f61a322e7d8222683
+upstream_blob: 14eed929746397a55fbe370f2d1eaf08ab581d4f
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -553,6 +553,7 @@ hermes pm install chromium
 | `pm update [names...]` | 上流のバージョンを問い合わせ、ツールの固定版を変更し、変わったツールをインストールします。 |
 | `pm update --check` | 書き込みをせずに問い合わせだけを行います。終了コード 1 は更新があることを意味する場合があります。エラーと区別するには出力を確認してください。 |
 | `pm update --target TARGET` | 指定したターゲット向けにバージョンを解決します。 |
+| `pm update --skip-target TARGET` | TARGET の固定を変えずに残します（複数回指定できます）。たとえば termux のプールが上流に追いついていない間の `linux-arm64-bionic` に使います。以後の実行でも、そのパッケージは最新として報告されます。`pm lock --bump NAME VERSION` はすべてのターゲットを指定のバージョンに固定し直し、`pm update --termux` は使われなくなった `linux-arm64-bionic` の行を固定し直します。 |
 | `pm update --uv` / `--npm` | Python または npm の依存関係の解決結果も更新します。 |
 | `pm update --termux [--check]` | ローリング方式のプールから外された termux プールのアーカイブ（ランタイムライブラリの固定表と bionic のロック行）を固定し直します。`--check` は書き込みをせずに報告し、外された固定版があれば終了コード 1 を返します。 |
 | `pm install --target TARGET NAME...` | 明示したクロスターゲットのパッケージを、ホストのインストール済み実行環境として記録せずに配置します。win32 の `git` ターゲットは自己展開形式の PortableGit アーカイブに固定されています。配置するときは提供元の展開プログラムを実行するため、Windows のホストが必要です。 |
@@ -586,7 +587,8 @@ Hermes 自身が依存する Python のパッケージは、Hermes がロック�
 （uv の `exclude-newer` で、CI のロック検査が強制します）。これにより、公開されたばかりで乗っ取られているかもしれないリリースが
 `uv.lock` に入り込めないようにしています。利用者はそのロックからインストールします。また、プラグインのインストールや有効化で
 日付を検査し直すことはありません。そのため、
-アップロード日時を公開していないパッケージのミラーでも動きます。ミラーを設定するには、`pip.conf` の `index-url`（Hermes が uv に渡します）か
+アップロード日時を公開していないパッケージのミラーでも動きます。唯一の例外は CA の信頼ストア（`certifi`）です。
+乗っ取られた CA を信頼しなくするリリースは、出たその日にロックします。待っている間は、問題のあるルート証明書が信頼されたままになるからです。ミラーを設定するには、`pip.conf` の `index-url`（Hermes が uv に渡します）か
 `UV_INDEX_URL` を使います。
 
 この検査を行うのは `hermes pm lock` だけです。アップロード日時のないミラーに対して実行すると、

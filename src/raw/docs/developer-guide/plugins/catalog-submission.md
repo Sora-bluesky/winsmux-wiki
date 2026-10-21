@@ -2,7 +2,7 @@
 title: "プラグインカタログへの登録申請"
 description: "Hermes プラグインカタログの登録ガイドライン全文です。申請前に確かめること、すべての掲載項目が従うルール、レビュアーが見る点をまとめています"
 upstream_path: developer-guide/plugins/catalog-submission.md
-upstream_blob: 942bea6d4f9f47a5c38fd1b51c45177ec9d3c255
+upstream_blob: ab145ca0ef59a930f32f9002f11d9e8af8bd608c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission
 ---
@@ -110,7 +110,7 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
    Desktop のレンダラー内で、アプリと同じ全権限で動きます（ローダーが隔離するのは
    エラーであって、権限ではありません）。そのため掲載されるものはプラグイン SDK しか使えません。
    レンダラーやブラウザーのオブジェクトのプロトタイプの書き換え（`Storage.prototype.y =`、
-   `Object.defineProperty(...prototype`）は禁止です。ただし、同梱したライブラリが自分で宣言した
+   `Object.defineProperty(...prototype`）は禁止です。これはレビュアーが手作業で確かめます（lint では検出しません）。ただし、同梱したライブラリが自分で宣言した
    クラスにフィールドを設定するのは問題ありません（three.js など）。
    `eval`/`new Function` も禁止、`import()` で読み込めるのは `@hermes/plugin-sdk`
    / `react` だけです（アプリのバンドルのチャンク、blob や http の URL も対象）。script タグの

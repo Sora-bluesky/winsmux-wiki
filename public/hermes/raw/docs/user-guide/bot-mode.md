@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Bot Mode"
 description: "Hermes のプロファイルを、名前を持つ Bot の一覧に変えます。それぞれが自分のチャット、役割、モデル、記憶、スキル、アバターを持ちます。Bot は定期タスクをこなし、グループチャットを共有し、互いにメッセージを送り合います。"
 upstream_path: user-guide/bot-mode.md
-upstream_blob: 3170f64b9d877c1d720b200b9ac761e714fa9dd3
+upstream_blob: fa085b9792d94dcbd2136ea9c407d3341a1a02bf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/bot-mode
 ---
@@ -72,7 +72,7 @@ Bot の唯一のチャットで `/new`（や `/reset`）を打つと、その関
 - **モデルとプロバイダーの固定** — その Bot に専用のモデルを割り当てます。Hermes が知っているプロバイダーとモデルの組み合わせなら何でも使え、別々のモデルで動く Bot を並べて運用できます。設定しなければ、起動したプロファイルの設定を引き継ぎます。Bot Chat の入力欄からモデルを選ぶと、その選択はそのチャットに残ります（アプリを開き直しても残ります）。Bot のプロファイル側のモデルを変更すると、そちらが改めて優先されます。
 - **独自の SOUL.md** — その Bot の人格と、常に効く指示です。
 - **スキル単位、ツールセット単位、MCP サーバー単位の有効化** — その専門役に必要な機能だけに印を付けます。
-- **主プロファイルから API キーを複製** — 既定で有効です。Bot はそれぞれ自分の認証情報の保管先を持ちます。固定の API キーはそこへ複製されますが、1 回きりの OAuth ログイン（Anthropic、OpenAI Codex、xAI）は複製されません。その Bot 自身で `hermes -p <name> auth add <provider>` を実行してログインしてください。詳しくは [プロファイルはそれぞれ自分の認証情報を持ちます](/hermes/docs/user-guide/profiles/#every-profile-owns-its-credentials) をご覧ください。
+- **主プロファイルから API キーを複製** — 既定で有効です。Bot はそれぞれ自分の認証情報の保管先を持ちます。固定の API キーはそこへ複製されますが、1 回きりの OAuth ログイン（Anthropic、OpenAI Codex、xAI）は複製されません。その Bot 自身で `hermes -p <name> auth add <provider>` を実行してログインしてください。詳しくは [OAuth ログインは複製されず共有されます](/hermes/docs/user-guide/profiles/#clone-everything---clone-all) をご覧ください。
 
 ### どの端末に置くかを選ぶ（"Create on"） {#choosing-which-machine-it-lives-on-create-on}
 

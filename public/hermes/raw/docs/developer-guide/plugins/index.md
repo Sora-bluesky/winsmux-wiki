@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 47e5ac56975a5e49d79d5fb3c4e775676f6a8f63
+upstream_blob: f2d6d1623a73ee1e85652938baf3b88b4d654758
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -107,8 +107,41 @@ Hermes は `plugin.json`、Agent Skills のフロントマター、固定され�
 サーバー名は `mcp.json` のエントリと一致している必要があります。`untrusted` にすると、そのサーバーへのツール呼び出しのうち `readOnlyHint: true` の注記がないものはすべて、先に利用者に確認を求めます。
 答えられる人がいない場面（cron や無人での実行）では、安全側に倒して失敗します。
 指定できる値はほかに既定の `full` だけなので、パッケージは権限を狭めることはできても、広げることはできません。
-同じ名前のサーバーが `config.yaml` にあると、trust を含めてパッケージ側のエントリを置き換えます。この拡張は、ほかのハーネスでは無視されます。
+同じ名前のサーバーが `config.yaml` にあると、trust を含めてパッケージ側のエントリを置き換えます。ただし、パッケージが宣言した費用と支出上限（後述）は、そのエントリが自分で設定しない限り引き継がれます。この拡張は、ほかのハーネスでは無視されます。
 `trust` は、同じサーバーエントリの中で `app`、`requires`、`liveness` と並べて書けます（[アプリケーションの宣言](/hermes/docs/developer-guide/plugins/application-declarations/) を参照）。
+
+ツールがお金やクレジットを消費するサーバーは、呼び出し1回ごとの費用と、チャットごとの予算を宣言できます。
+すると Hermes は、承認の確認画面にその費用とチャットの累計を表示します。また、そのチャットが
+`spend_limit` を超えることになる呼び出しは、利用者がそのサーバーを信頼済みにしていても、先に確認を求めます。
+
+```json
+{
+  "extensions": {
+    "com.nousresearch.hermes": {
+      "servers": {
+        "renders": {
+          "trust": "untrusted",
+          "costs": {
+            "create_image": 20,
+            "animate": { "credits": [5, 20], "note": "per animation" }
+          },
+          "spend_limit": 100,
+          "cost_unit": "credits"
+        }
+      }
+    }
+  }
+}
+```
+
+`costs` のキーは、サーバーが一覧に出しているとおりの MCP ツール名です。費用には、
+0 以上の数値、`[min, max]` の範囲、または `credits`（数値か範囲）と短い `note` を持つオブジェクトを書けます。
+`spend_limit` は省略でき（`0` または未指定なら上限なし）、`cost_unit` の既定値は `credits` です。
+表の形が正しくないと、パッケージは問題のキーを示すエラーを出して読み込みに失敗します。これらはネイティブの
+`tool_costs`、`spend_limit`、`cost_unit` キーに対応します（
+[ツールの費用と支出上限](/hermes/docs/user-guide/features/mcp/#tool-costs-and-spend-limits) を参照）。
+費用はサーバーについての事実なので、利用者が同じ名前で書いた
+`config.yaml` のエントリ（利用者が trust を広げるときに使うもの）があっても、そのエントリがそのキーを自分で設定しない限り残ります。利用者の `spend_limit` は優先され、`0` にすれば上限を外せます。
 
 長時間動くサーバーは、Hermes 専用のツール呼び出しの `timeout`（秒）を `plugin.json` で宣言することもできます。ほかのサーバーの既定値は変わりません。
 

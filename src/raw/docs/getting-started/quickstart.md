@@ -2,7 +2,7 @@
 title: "Hermes Agent クイックスタート"
 description: "Hermes Agent との最初の会話まで。インストールからおしゃべりできるまで 5 分"
 upstream_path: getting-started/quickstart.md
-upstream_blob: 6e921e288b94b5cd264cb66e9c2c7747a7b2dba6
+upstream_blob: 5c82a75ee2240a9c0cbe9e705f2eff9a0866fe4b
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/quickstart
 ---
@@ -380,6 +380,7 @@ hermes acp
 
 ## 次の一歩 {#next-steps}
 
+- **[User Stories](/hermes/docs/user-stories/)**: コミュニティの実際の使い方の例です。Hermes に最初に何を任せればよいか迷ったら、ここから見るのがおすすめです
 - **[CLI の案内](/hermes/docs/user-guide/cli/)** — 端末での使い方を身につける
 - **[設定](/hermes/docs/user-guide/configuration/)** — 自分に合わせて調整する
 - **[メッセージのゲートウェイ](/hermes/docs/user-guide/messaging/)** — Telegram、Discord、Slack、WhatsApp、Signal、メール、Home Assistant、Teams などにつなぐ

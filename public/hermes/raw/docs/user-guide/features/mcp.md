@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: c42d98a39e6d00a0889f1a508769577ec1e68921
+upstream_blob: 4c567fb6c922288173ebf558223da87f57a0c509
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -973,6 +973,32 @@ mcp_servers:
     sampling:
       enabled: false
 ```
+
+## ツールの費用と支出の上限 {#tool-costs-and-spend-limits}
+
+MCP サーバーの中には、呼び出すたびに実際のお金やクレジットを使うものがあります（画像・動画・3D の生成、有料 API など）。サーバーの設定項目には、ツールごとの費用と、チャットごとの予算を書いておけます。
+
+```yaml
+mcp_servers:
+  renders:
+    command: "render-mcp"
+    trust: untrusted
+    tool_costs:
+      create_image: 20                                   # about 20 credits per call
+      animate: {credits: [5, 20], note: "per animation"}  # a range, with a short note
+      get_status: 0                                       # free; same as leaving it out
+    spend_limit: 100     # per chat; 0 or absent = no limit
+    cost_unit: credits   # label in prompts (default: credits)
+```
+
+- 承認の確認画面に費用が表示されます。`Costs about 20 credits.` や `Costs 5-20 credits (per animation).` のように出て、そのチャットですでに使っている場合は `This chat has used about 40 credits on 'renders' (limit 100).` も添えられます。
+- Hermes はチャットごと・サーバーごとに累計を記録します。費用が設定されたツールの呼び出しのうち、承認して実行を始めたものすべてについて、宣言された数値（範囲なら上限の値）を足していきます。断られた呼び出しや止められた呼び出しは加算されません。サーバーが呼び出しを受け取る前に落ちた場合は加算されますが、これは早めに確認を求める側に倒すためです。累計はメモリ上にだけあり、1 つの会話のための予算です。サービス提供元の請求額ではありません。
+- コンテキストの圧縮や `/branch` で会話が新しいセッション ID に引き継がれても、累計はその会話についていきます。新しいチャットを始めると（CLI の `/new`、Desktop の新しいチャット）累計も新しくなります。メッセージングプラットフォームでは累計がチャットに属するので、そこで `/new` をしても累計は残ります。cron の実行はそれぞれ自分の累計を持ちます。Hermes を再起動すると、すべての累計がリセットされます。
+- `spend_limit` を設定すると、費用のある呼び出しでチャットの累計が上限を超えそうなときは、先に確認を求めます。ふだん確認を出さない `trust: full` のサーバーでも同じです。そのあと同じチャットで費用のある呼び出しをするたびに、また確認を求めます（「このセッションでは許可」を選んでも止まりません）。答えられる人がいない場面（cron ジョブ、`hermes chat -q`、承認者のいないゲートウェイ）では、呼び出しは実行されずに拒否され、モデルには再試行しないよう伝えられます。
+- 上限に届くまでは、`trust: full` のサーバーは費用のあるツールも確認なしで実行します。`trust: untrusted` のサーバーでは、書き込みのできる呼び出しはもともとすべて確認を求めるので、その確認画面に費用が載るようになります。`readOnlyHint: true` が付いたツールは、予算の都合で必要にならない限り確認を出しません。
+- `tool_costs`、`spend_limit`、`cost_unit` の書き方が正しくないと、そのサーバーは問題のキー名を示すエラーとともに読み込まれません。設定した予算が黙って無視されることはありません。サーバーが提供していないツール名を `tool_costs` に書いた場合（打ち間違いや、Hermes が表示に付ける `mcp_<server>_` という接頭辞をそのまま写した場合）は、接続時の警告でその名前が示されます。サーバー自身のツール名を使ってください。
+
+[持ち運べるプラグインパッケージ](/hermes/docs/developer-guide/plugins/#portable-agent-plugins-v1-packages) も、自分のサーバーについて同じ表を宣言できます。同じ名前の `mcp_servers` 項目を自分で足した場合（たとえば `trust: full` を設定するため）でも、自分の項目でそれらのキーを設定しない限り、パッケージ側の `tool_costs`、`spend_limit`、`cost_unit` がそのまま効きます。`spend_limit: 0` でパッケージの上限を無効にでき、`tool_costs: {}` でパッケージの費用設定を外せます。
 
 ## MCP の問いかけへの対応 {#mcp-elicitation-support}
 

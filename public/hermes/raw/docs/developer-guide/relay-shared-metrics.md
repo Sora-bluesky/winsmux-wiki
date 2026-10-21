@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: f0eb605665f3434512c8de9acfea782b8b2f750c
+upstream_blob: 147cc683c12eac21dca4cac947b6e2407e850a0d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -637,8 +637,11 @@ telemetry:
 - `enabled` と同じく、`send` はプロファイルが持つ設定で、管理側スコープの設定で
   上書きされることはありません。
 
-どちらのキーも、プロファイルごとに1回だけたずねます。どの画面でも答えは同じ3つです
-（Send to Nous / Local only / No thanks）。
+どちらのキーも、プロファイルごとに1回だけたずねます。どの画面でも答えは同じ2つです
+（Share with Nous / No thanks）。どちらの答えも両方のキーを設定します。「Share with Nous」は
+`enabled: true, send: true` を書き込み、「No thanks」は両方を false にします。キーを分けたままにしているのは、
+送信側が自分専用の関門を持ち続けるためです。送信せずに収集だけする選択肢は、もう提示しません。
+設定ファイルを手で編集すれば、今でもその状態にできます。
 
 | 画面 | 提案が出る場所 |
 | --- | --- |
@@ -655,8 +658,12 @@ telemetry:
 例外が1つあります。先行入力の修正より前は、`hermes chat` の起動中に押した Enter が、質問が出る前に「No thanks」を保存してしまうことがありました。
 そのため、`offer_version` なしで記録された「No thanks」には、どの画面でももう1回だけ、理由を添えて提案を出します。
 どんな反応でもそれで決着し、Esc やバナーの ✕ でも「No thanks」のまま確定します。参加すると答えたものは、二度とたずねません。
-あとから答えを変えるには、`hermes setup telemetry`、`hermes tools`、または Desktop の Settings ›
-Safety › Privacy & network を使います。
+
+以前の提案には、送信せずに収集だけする3つ目の答え（「Local
+only」/「Keep on this computer」）がありました。それを選んだプロファイルはその設定のまま残り、
+再びたずねることはありません。何も送信されません。こうしたプロファイルでは、Desktop のスイッチはオフと表示され、
+`hermes tools` の行には「collecting locally」と表示されます。あとから答えを変えるには、`hermes setup telemetry`、`hermes tools`、または Desktop の Settings ›
+Safety › Privacy & network を使います。どれも、同じオン・オフの切り替え1つだけを提示します。
 
 **パッケージを送信するのは、その期間全体が記録済みの同意期間に収まるときだけです。**
 同意は、共有メトリクスの SQLite ストア（`send_consent_windows`）に明示的な区間として保存します。

@@ -4,7 +4,7 @@ description: 公式 developer-guide の索引。Hermes 本体を拡張・貢献�
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/architecture
   - https://hermes-agent.nousresearch.com/docs/llms.txt
-hermes_version: "0.22.2"
+hermes_version: "0.22.4"
 confidence: high
 raw: /hermes/raw/dev.md
 ---
