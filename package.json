@@ -11,6 +11,7 @@
     "dev": "node scripts/sync-public.mjs && astro dev",
     "build": "node scripts/sync-public.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
+    "test": "node --test \"scripts/*.test.mjs\"",
     "astro": "astro"
   },
   "dependencies": {
