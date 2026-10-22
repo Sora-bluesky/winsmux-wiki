@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "アーキテクチャ"
 description: "Hermes Agent の内部構造 — 主要なサブシステム、実行経路、データの流れ、次に読むべき場所"
 upstream_path: developer-guide/architecture.md
-upstream_blob: 0a026fb1e767f96763f89101e2e51335fee91865
+upstream_blob: fa3a6ebf8684ad856fe8f14159e4f51e87ef0049
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/architecture
 ---
@@ -110,7 +110,7 @@ hermes-agent/
 │   ├── credential_files.py   # File-based credential passthrough
 │   ├── env_passthrough.py    # Env var passthrough for sandboxes
 │   ├── ansi_strip.py         # ANSI escape stripping
-│   └── environments/         # Terminal backends (local, docker, ssh, modal, daytona, singularity)
+│   └── environments/         # Terminal backends (local, docker, ssh, modal, daytona, vercel_sandbox)
 │
 ├── gateway/                  # Messaging platform gateway
 │   ├── run.py                # GatewayRunner facade — message dispatch (+ run_*.py siblings)
@@ -219,7 +219,7 @@ CLI・ゲートウェイ・cron・ACP・補助的な呼び出しが共通して�
 
 ### ツールの仕組み {#tool-system}
 
-中央のツール登録簿（`tools/registry.py`）に、およそ 28 のツールセットにまたがる 70 以上のツールが登録されています。各ツールのファイルは読み込まれた時点で自分を登録します。登録簿はスキーマの収集、振り分け、利用可否の判定、エラーの包み込みを担当します。ターミナル系のツールは 7 つの実行基盤（ローカル、Docker、SSH、Daytona、Modal、Singularity、Vercel Sandbox）に対応します。
+中央のツール登録簿（`tools/registry.py`）に、およそ 28 のツールセットにまたがる 70 以上のツールが登録されています。各ツールのファイルは読み込まれた時点で自分を登録します。登録簿はスキーマの収集、振り分け、利用可否の判定、エラーの包み込みを担当します。ターミナル系のツールは、組み込みの 6 つの実行基盤（ローカル、Docker、SSH、Daytona、Modal、Vercel Sandbox）に加えて、プラグインの実行基盤（Singularity など）に対応します。
 
 → [ツールのランタイム](/hermes/docs/developer-guide/tools-runtime/)
 

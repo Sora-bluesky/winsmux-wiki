@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "MCP 設定の早見表"
 description: "Hermes Agent の MCP 設定キー、絞り込みの動き、ユーティリティツールの方針をまとめた早見表です。"
 upstream_path: reference/mcp-config-reference.md
-upstream_blob: 0d4aab6f0edcbcf7418bbb50013ac89ecdf9d185
+upstream_blob: 44d25bc19bae30f9665f7c418a2dcf102e6fbccb
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
 ---
@@ -73,6 +73,7 @@ mcp_servers:
 | `auth` | 文字列 | HTTP | 認証の方法です。`oauth` にすると PKCE 付きの OAuth 2.1 を使います |
 | `sampling` | マッピング | 両方 | サーバー側から LLM を呼びたいと言ってきたときの扱いです（MCP のガイドをご覧ください） |
 | `elicitation` | マッピング | 両方 | サーバー側から利用者に入力を求めてきたときの扱いです。`enabled`（既定は `true`）と、秒で指定する `timeout`（既定は `300`）があります。フォーム形式の要求は承認の画面を通り、URL 形式は断ります（MCP のガイドをご覧ください） |
+| `events` | 真偽値 | 両方 | 試験段階の MCP イベントのクライアントで、webhook で配信します（既定は `false`）。このサーバー用に `list_event_types`、`subscribe_event`、`unsubscribe_event` を登録します。`platforms.webhook.extra.public_url`（HTTPS）と、稼働中のゲートウェイが必要です。Hermes が購読を更新するのはサーバーに接続している間だけなので、`lazy: true` や `idle_timeout_seconds` を使うと、次の接続で購読し直すまで購読が切れることがあります。[MCP Events](/hermes/docs/user-guide/features/mcp/#mcp-events-experimental) をご覧ください |
 | `trust` | 文字列 | 両方 | 信頼の度合いです。`full`（既定）か `untrusted` を指定します。`untrusted` のサーバーでは、書き込みのできるツール呼び出し（`readOnlyHint: true` の注記が付いていないツールすべて）が、実行前に通常の承認画面で利用者の承認を求めます。`readOnlyHint` はサーバーが申告する*目安*にすぎません。嘘をつくサーバーにできるのは、読み取り専用だと偽ったツールの承認を省かせることまでで、それ以上の権限は得られません。自分で完全に管理していないサーバーは `untrusted` にしておいてください。呼び出しの途中で通信のセッションが切れたとき、その呼び出しを黙ってやり直すかどうかも、同じ目安で決まります。やり直すのは `readOnlyHint: true` のツールだけで、注記のない（書き込みのできる）ツールは `outcome_uncertain` のエラーを返します。つまり、使われていないセッションを切る Streamable-HTTP のサーバーでは、しばらく間が空いたあとの最初の注記なしの呼び出しが失敗することがあり、呼び直す前に結果を確かめる必要があります。知らない値が書かれていた場合は `untrusted` として扱います（安全側に倒します）。持ち運べるパッケージは、`plugin.json` で自分のサーバーに `untrusted` を求めることができます（[Portable Agent Plugins](/hermes/docs/developer-guide/plugins/#portable-agent-plugins-v1-packages) を参照）。同じ名前のエントリが `config.yaml` にあれば、常にそちらが優先されます |
 | `tool_costs` | マッピング | 両方 | 各ツールの費用を、MCP のツール名をキーにして書きます。値は 0 以上の数値、`[min, max]` の範囲、または `{credits: <number or range>, note: "per animation"}` の形です。承認の確認では、その費用と、そのチャットでの累計が表示されます。費用を書いていないツールと費用が 0 のツールには影響しません。[Tool costs and spend limits](/hermes/docs/user-guide/features/mcp/#tool-costs-and-spend-limits) をご覧ください |
 | `spend_limit` | 数値 | 両方 | このサーバーの費用付きツールに使える、チャットごとの予算です（`0` か未指定なら上限なし）。費用付きの呼び出しでチャットの累計がこの予算を超える場合は、`trust: full` のサーバーでも実行前に確認を求めます。答える人がいない場面（cron や `chat -q`）では実行を断ります |
@@ -173,6 +174,12 @@ Hermes は、MCP サーバーごとに次のユーティリティの包みを登
 - `list_prompts`
 - `get_prompt`
 
+イベント関連（`events: true` のサーバーだけ）:
+
+- `list_event_types`
+- `subscribe_event`
+- `unsubscribe_event`
+
 ### リソースを使わない {#disable-resources}
 
 ```yaml
@@ -196,6 +203,8 @@ tools:
 - プロンプトを使う設定にした
 - でもプロンプト関連のツールが出てこない
 - サーバーがプロンプトに対応していないから
+
+イベントのユーティリティは例外です。MCP SDK はサーバーの `events` 能力を解析の途中で落としてしまうため、Hermes はそれを確かめられず、`events: true` が設定されていれば常に登録します。
 
 ## `enabled: false` {#enabled-false}
 

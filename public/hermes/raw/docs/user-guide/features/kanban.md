@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: d45fc03ec9db9511f0abb453f522eef8b2044ca3
+upstream_blob: 7d8751f1747c559ccdf7898877a6d37fec7f1002
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -525,7 +525,7 @@ kanban_complete(summary="decomposed into 2 research tasks + 1 writer; linked dep
 
 理由は 3 つあります。
 
-1. **バックエンドの移しやすさ。** 端末のツールがリモートのバックエンド（Docker / Modal / Singularity / SSH）を向いているワーカーは、`hermes kanban complete` をコンテナの*中*で実行してしまいます。そこには `hermes` が入っておらず、`~/.hermes/kanban.db` もマウントされていません。カンバンのツールはエージェント自身の Python のプロセスで動くので、端末のバックエンドが何であれ必ず `~/.hermes/kanban.db` に届きます。
+1. **バックエンドの移しやすさ。** 端末のツールがリモートのバックエンド（Docker / Modal / SSH / プラグインのサンドボックス）を向いているワーカーは、`hermes kanban complete` をコンテナの*中*で実行してしまいます。そこには `hermes` が入っておらず、`~/.hermes/kanban.db` もマウントされていません。カンバンのツールはエージェント自身の Python のプロセスで動くので、端末のバックエンドが何であれ必ず `~/.hermes/kanban.db` に届きます。
 2. **シェルの引用符で壊れない。** `--metadata '{"files": [...]}'` を shlex と argparse に通すのは、潜んだ落とし穴です。構造化されたツールの引数なら、その工程を丸ごと飛ばせます。
 3. **エラーが分かりやすい。** ツールの結果は、モデルが推論できる構造化された JSON であって、解釈しなければならない標準エラー出力の文字列ではありません。
 

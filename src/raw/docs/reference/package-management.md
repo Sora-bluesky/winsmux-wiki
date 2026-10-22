@@ -2,7 +2,7 @@
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 14eed929746397a55fbe370f2d1eaf08ab581d4f
+upstream_blob: e4d8c81cc9891dfc31e44ab935bc27aafa79ee1d
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -513,7 +513,10 @@ Python の依存関係の作業には、公開されている `pm` モジュー�
 アプリの環境をビルドするには、呼び出し元の Python で PM がすでに起動できる状態になっている必要があります。
 これらのビルドはインタープリターのブートストラップではありません。稼働中のアプリの
 インポートを変えたり、選択中の環境を置き換えたりはしません。Nix の宣言的な uv2nix によるビルドは、
-引き続き Nix が所有します。関係のないプロジェクトやエージェントの
+引き続き Nix が所有します。`nix develop` は今も uv2nix で依存関係をビルドしますが、
+実行には `pm/lock.json` が固定するインタープリターを使います（uv2nix は tarball のインタープリターに対して
+venv をビルドできないため、ロックから取るのはインタープリターだけです）。
+関係のないプロジェクトやエージェントの
 サンドボックス向けのパッケージマネージャーのコマンドは、Hermes 自体を管理しません。
 
 ## コマンド {#commands}
@@ -548,8 +551,8 @@ hermes pm install chromium
 | コマンド | 効果 |
 |---|---|
 | `pm lock` | `pyproject.toml` から `uv.lock` をロックし直します。環境は変えず、ロックが最新なら何も書き込みません。 |
-| `pm lock --bump NAME VERSION` | 対応するターゲットの成果物を解決してハッシュを取り、ツールの固定版を `pm/lock.json` に書き込みます。 |
-| `pm update [names...]` | 上流のバージョンを問い合わせ、ツールの固定版を変更し、変わったツールをインストールします。 |
+| `pm lock --bump NAME VERSION` | 対応するターゲットの成果物を解決してハッシュを取り、ツールの固定版を `pm/lock.json` に書き込んで、`scripts/install.sh` と `scripts/install.ps1` のブートストラップ用の固定版を作り直します。 |
+| `pm update [names...]` | 上流のバージョンを問い合わせ、ツールの固定版を変更し、インストーラーのブートストラップ用の固定版を作り直して、変わったツールをインストールします。 |
 | `pm update --check` | 書き込みをせずに問い合わせだけを行います。終了コード 1 は更新があることを意味する場合があります。エラーと区別するには出力を確認してください。 |
 | `pm update --target TARGET` | 指定したターゲット向けにバージョンを解決します。 |
 | `pm update --skip-target TARGET` | TARGET の固定を変えずに残します（複数回指定できます）。たとえば termux のプールが上流に追いついていない間の `linux-arm64-bionic` に使います。以後の実行でも、そのパッケージは最新として報告されます。`pm lock --bump NAME VERSION` はすべてのターゲットを指定のバージョンに固定し直し、`pm update --termux` は使われなくなった `linux-arm64-bionic` の行を固定し直します。 |

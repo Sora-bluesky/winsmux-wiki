@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: 4c567fb6c922288173ebf558223da87f57a0c509
+upstream_blob: b8a03dc55f5a437b296fada6e6fe38bc8b05602d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -19,7 +19,7 @@ MCP を使うと、Hermes Agent を外部の道具サーバーにつなげます
 すでにどこかにある道具を Hermes に使わせたいと思ったことがあるなら、たいていは MCP がいちばん素直なやり方です。
 
 :::tip Claude Code から移ってきた方へ
-`~/.claude.json` の `mcpServers` の部分は、Hermes の `config.yaml` では `mcp_servers` にあたります。`hermes import-agent claude-code` を実行すれば、スキルや指示文と一緒に自動で移せます。[他のエージェントから取り込む](/hermes/docs/user-guide/import-from-other-agents/)を見てください。
+`~/.claude.json` の `mcpServers` の部分は、Hermes の `config.yaml` では `mcp_servers` にあたります。`agent-importers` プラグインの `hermes import-agent claude-code` を実行すれば、スキルや指示文と一緒に移せます。[他のエージェントから取り込む](/hermes/docs/user-guide/import-from-other-agents/)を見てください。
 :::
 
 ## MCP でできること {#what-mcp-gives-you}
@@ -497,6 +497,7 @@ Hermes は `~/.hermes/config.yaml` の `mcp_servers` から MCP の設定を読�
 | `max_lifetime_seconds` | 数値 | 起動からこの時間が経ったら stdio のサーバーを作り直します（`0` は作り直さない、これが既定）。次に使うときに、気づかないうちに立ち上げ直されます。 |
 | `enabled` | 真偽値 | `false` なら、Hermes はそのサーバーをまるごと飛ばします |
 | `supports_parallel_tool_calls` | 真偽値 | `true` なら、このサーバーの道具を同時に動かすことがあります |
+| `events` | 真偽値 | `true` なら、このサーバー用に試験中の MCP イベントの道具を登録します（既定は `false`）。[MCP イベント](#mcp-events-experimental)を見てください |
 | `tools` | 対応表 | サーバーごとの道具の絞り込みと、補助の道具の扱い |
 
 ### いちばん短い stdio の例 {#minimal-stdio-example}
@@ -1017,104 +1018,82 @@ mcp_servers:
 
 既定の 5 分という制限時間は、ゲートウェイの承認の既定に合わせたものです。すぐには返事ができない場所にいる人でも、サーバーがあきらめる前に答えられます。サーバーごとの数字（要求、承諾、辞退、エラー）も記録されます。
 
-## Hermes 自身を MCP サーバーとして動かす {#running-hermes-as-an-mcp-server}
+## MCP イベント（試験中） {#mcp-events-experimental}
 
-MCP サーバーに**つなぐ**だけでなく、Hermes 自身が MCP サーバーに**なる**こともできます。ほかの MCP 対応のエージェント（Claude Code、Cursor、Codex、その他どの MCP クライアントでも）が、Hermes のメッセージ機能を使えるようになります。会話を並べる、やりとりの履歴を読む、つないであるサービス全部にメッセージを送る、といったことです。
+MCP サーバーの中には、向こう側で何か起きたとき（新しいメールが届いた、障害が起きた、フィードに新しい項目が出た）に、
+エージェントへ知らせられるものがあります。使うのは
+[MCP イベントの設計案](https://github.com/modelcontextprotocol/experimental-ext-triggers-events/blob/main/docs/design-sketch-proposal.md)にある `events/*` のメソッドです。
+この提案はまだワーキンググループの草案の段階です。Hermes が実装しているのは、そのうち **webhook** で届ける方式です。
+サーバーが出来事を 1 件ずつゲートウェイの [webhook の受け口](/hermes/docs/user-guide/messaging/webhooks/)へ POST し、
+1 件ごとに、ほかの webhook のルートと同じようにエージェントの実行が始まります。
 
-### どんなときに使うか {#when-to-use-this}
+サーバーごとに有効にし、webhook の受け口の公開 HTTPS アドレスを Hermes に教えてください（サーバーは
+暗号化しない HTTP の呼び戻し先を受け付けないので、ポート 8644 の手前に TLS を終端するリバースプロキシかトンネルを置きます）。
 
-- Claude Code や Cursor などのコーディングのエージェントに、Hermes 経由で Telegram / Discord / Slack のメッセージを読み書きさせたい
-- Hermes につないだメッセージのサービス全部への橋渡しを、1 つの MCP サーバーで済ませたい
-- すでに各サービスにつないだ Hermes のゲートウェイが動いている
+```yaml
+mcp_servers:
+  ambush:
+    url: "https://example.com/mcp"
+    events: true          # registers the event utility tools for this server
 
-### すぐ使い始める {#quick-start}
-
-```bash
-hermes mcp serve
+platforms:
+  webhook:
+    enabled: true
+    extra:
+      public_url: "https://hermes.example.com"
 ```
 
-これで stdio の MCP サーバーが立ち上がります。プロセスの面倒を見るのは、あなたではなく MCP のクライアントです。
+これで、そのサーバーに補助の道具が 3 つ増えます。
 
-### MCP クライアントの設定 {#mcp-client-configuration}
+- `list_event_types`: サーバーが出している出来事の種類と、それぞれへの今の購読
+- `subscribe_event`: 出来事の引数、届いたときに何をするか
+  （`instructions`、2000 文字まで）、各実行の結果をどこへ送るか（`deliver`、
+  `deliver_chat_id`）を指定して購読します。購読は人の見ていないところでエージェントを動かすので、
+  1 件ごとに承認を求められます。承認の画面には、指示文と送り先が省略なしで出ます。
+- `unsubscribe_event`: 購読をやめます
 
-MCP クライアントの設定に Hermes を書き足します。たとえば Claude Code の `~/.claude/claude_desktop_config.json` なら、こうです。
+購読は 1 件ずつ、その場で作る webhook のルートとして保存されます（`hermes webhook list` で見えます）。ルートごとに
+`whsec_` の署名用の秘密の値が付きます。サーバーから得た許可と、再送の位置を示すカーソルは、その横の
+`mcp_event_subscriptions.json` に置かれます。そのため、ルート自体が変わるのは、指示文や送り先を変えて
+購読し直したときだけです。Hermes はサーバーからの署名付きの確認の問いかけに答え、出来事を
+`eventId` で重複なしにし、MCP の接続がつながっている間は、サーバーが認めた期限が切れる前に購読を更新します
+（つなぎ直すたびにも更新します）。`lazy: true` や
+`idle_timeout_seconds` を使うと接続が常にあるわけではないので、次につながって購読し直すまでの間、
+購読が切れることがあります。サーバーが更新を
+決定的に断った場合（権限の取り消し、出来事の種類の廃止、引数が無効になった）はルートを消します。それ以外の
+失敗は、間を空けながら再試行します。webhook のダッシュボードでルートを止めると
+購読は期限切れのまま放っておかれ、戻すと購読し直します。サーバーが購読を終わらせた場合は、
+Hermes がルートを消し、`deliver` の送り先に知らせます。出来事が届くのは
+`hermes gateway run` が動いている間だけです。出来事の中身は、JSON で 32,000 文字までなら
+そのまま実行に渡り、切り詰めたときはその旨の注記が付きます。出来事の中身は外から来たデータなので、イベントによる実行は
+ほかの webhook のルートと同じ、制限付きの webhook 用の道具の組み合わせで動きます。
+受け口のルートごとの回数制限（`platforms.webhook.extra.rate_limit`、既定は 1 分に 30 回）は
+出来事の配達にもかかります。サーバーは断られた配達を再送しないことがあるので、頻繁に起きる出来事の種類では
+上げておいてください。
+
+まだ対応していないもの: `poll` と `push` で届ける方式と、`gateway.multiplex_profiles` の下にある
+2 つ目以降のプロファイルからの購読。
+
+## Hermes 自身を MCP サーバーとして動かす {#running-hermes-as-an-mcp-server}
+
+Hermes 自身が MCP サーバーに**なる**こともできます。Claude Code、Claude Desktop、Cursor、Codex など、どの MCP クライアントからでも、メッセージの会話を並べて読む、新しいメッセージを待つ、Hermes がつながっているすべてのサービスにメッセージを送る、といったことができ、必要なら Hermes 自身の Web、ブラウザー、画像の読み取り、画像生成、スキル、読み上げ（TTS）の道具も呼べます。これは公式の **mcp-serve** プラグインとして配られています。
+
+```bash
+hermes plugins install mcp-serve
+```
 
 ```json
 {
   "mcpServers": {
     "hermes": {
       "command": "hermes",
-      "args": ["mcp", "serve"]
+      "args": ["mcp-serve"]
     }
   }
 }
 ```
 
-Hermes を決まった場所に入れてある場合は、こう書きます。
-
-```json
-{
-  "mcpServers": {
-    "hermes": {
-      "command": "/home/user/.hermes/hermes-agent/venv/bin/hermes",
-      "args": ["mcp", "serve"]
-    }
-  }
-}
-```
-
-### 使える道具 {#available-tools}
-
-この MCP サーバーは 10 個の道具を出します。OpenClaw のチャンネル橋渡しと同じ顔ぶれに、Hermes ならではのチャンネル閲覧を足したものです。
-
-| 道具 | 説明 |
-|------|------|
-| `conversations_list` | 動いているメッセージの会話を並べます。サービスで絞ったり、名前で探したりできます。 |
-| `conversation_get` | セッションキーを指定して、1 つの会話の詳しい情報を取ります。 |
-| `messages_read` | ある会話の最近のやりとりを読みます。 |
-| `attachments_fetch` | 特定のメッセージから、文章以外の添付（画像やメディア）を取り出します。 |
-| `events_poll` | ある位置から先の、新しい会話の出来事を取りに行きます。 |
-| `events_wait` | 次の出来事が来るまで待ち続けます（ほぼその場で分かります）。 |
-| `messages_send` | サービスを指定してメッセージを送ります（`telegram:123456`、`discord:#general` など）。 |
-| `channels_list` | すべてのサービスにまたがって、送れる相手を並べます。 |
-| `permissions_list_open` | この橋渡しのあいだに見えた、承認待ちの要求を並べます。 |
-| `permissions_respond` | 承認待ちの要求を、許すか断るかします。 |
-
-### 出来事の仕組み {#event-system}
-
-この MCP サーバーには、Hermes のセッションのデータベースを見張って新しいメッセージを拾う橋渡しが入っています。MCP のクライアントは、入ってくる会話をほぼその場で知ることができます。
-
-```
-# Poll for new events (non-blocking)
-events_poll(after_cursor=0)
-
-# Wait for next event (blocks up to timeout)
-events_wait(after_cursor=42, timeout_ms=30000)
-```
-
-出来事の種類は `message`、`approval_requested`、`approval_resolved` です。
-
-出来事の待ち行列はメモリの中にあって、橋渡しがつながった時点から始まります。それより前のメッセージは `messages_read` で読めます。
-
-### 指定できること {#options}
-
-```bash
-hermes mcp serve              # Normal mode
-hermes mcp serve --verbose    # Debug logging on stderr
-```
-
-### どう動いているか {#how-it-works}
-
-この MCP サーバーは、会話の情報を Hermes のセッションの保管場所から直接読みます。`~/.hermes/state.db` が本体で、`sessions.json` は古い形への備えとして残してあるだけです。裏で動くスレッドがデータベースを見張って新しいメッセージを拾い、メモリの中に出来事の待ち行列を保ちます。メッセージを送るときは、定時配信や `hermes send` コマンドを動かしているのと同じ内部の送信の仕組み（`tools/send_message_tool.py`）を使います。
-
-読み取りの操作（会話を並べる、履歴を読む、出来事を拾う）には、ゲートウェイが動いている必要は**ありません**。送信の操作には**必要です**。各サービスのつなぎ役が、つながった状態でないといけないからです。
-
-### 今のところの限界 {#current-limits}
-
-- 組み込みの `hermes mcp serve` が出すのは、今のところ **stdio だけ**の MCP サーバーです。HTTP の MCP サーバーが要るなら別の仲立ちを動かすか、もっとよくあるやり方として、Hermes の MCP の**クライアント**側を使ってください。こちらはすでに stdio と HTTP の両方を話せます（`mcp_servers.yaml` や `config.yaml` の `url` と `headers`。上の [HTTP のサーバー](#http-servers)を見てください）。
-- 出来事の見張りは約 200 ミリ秒ごとで、ファイルの更新時刻を見て無駄な読み込みを飛ばします
-- `claude/channel` の通知の手順にはまだ対応していません
-- 送れるのは文章だけです（`messages_send` でメディアや添付は送れません）
+以前は `hermes mcp serve` として組み込まれていました。`"args": ["mcp", "serve"]` と設定してある MCP クライアントは、これを `["mcp-serve"]` に書き換えてください。道具の名前と引数は変わりません。今 `hermes mcp serve` を実行すると、新しい書き方と導入のコマンドが表示されます。道具の一覧、`--tools` のモード、その安全のための制限は、[プラグインの README](https://github.com/NousResearch/hermes-official-plugins/tree/main/mcp-serve) にまとめてあります。
 
 ## 関連する資料 {#related-docs}
 

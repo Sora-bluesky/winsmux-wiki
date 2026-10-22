@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: a9cb9b480989b93433d8cbc486d35abc1b50e450
+upstream_blob: 46d79ded23f9d375d7823d689633a9c869d6da85
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -114,6 +114,7 @@ def register(ctx):
 | pip で配布する | `[project.entry-points."hermes_agent.plugins"]` |
 | ゲートウェイのプラットフォームを登録する（Discord、Telegram、IRC など） | `ctx.register_platform(name, label, adapter_factory, check_fn, ...)` — [プラットフォームのアダプターを足す](/hermes/docs/developer-guide/adding-platform-adapters/)を参照 |
 | 画像生成のバックエンドを登録する | `ctx.register_image_gen_provider(provider)` — [画像生成プロバイダーのプラグイン](/hermes/docs/developer-guide/image-gen-provider-plugin/)を参照 |
+| 委任の方針を登録する（`delegate_task` の各サブエージェントをどこへ振り分けるか） | `ctx.register_delegation_provider(provider)` — [委任プロバイダーのプラグイン](/hermes/docs/developer-guide/delegation-provider-plugin/)を参照 |
 | 動画生成のバックエンドを登録する | `ctx.register_video_gen_provider(provider)` — [動画生成プロバイダーのプラグイン](/hermes/docs/developer-guide/video-gen-provider-plugin/)を参照 |
 | 文脈を圧縮するエンジンを登録する | `ctx.register_context_engine(engine)` — [コンテキストエンジンのプラグイン](/hermes/docs/developer-guide/context-engine-plugin/)を参照 |
 | ターミナルの実行環境（クラウドのサンドボックス）を登録する | `ctx.register_terminal_environment_provider(provider)` — [ターミナル環境のプラグイン](/hermes/docs/developer-guide/terminal-environment-plugin/)を参照 |
@@ -157,6 +158,7 @@ def register(ctx):
 | `plugins/`（直下） | 一般のプラグイン — ツール、フック、スラッシュコマンド、CLI のコマンド、同梱のスキル | `PluginManager`（種別: `standalone` か `backend`） |
 | `plugins/platforms/<name>/` | ゲートウェイのチャンネルのアダプター（`ctx.register_platform()`） | `PluginManager`（種別: `platform`、1階層深い） |
 | `plugins/image_gen/<name>/` | 画像生成のバックエンド（`ctx.register_image_gen_provider()`） | `PluginManager`（種別: `backend`、1階層深い） |
+| `plugins/delegation/<name>/` | 委任の方針（`ctx.register_delegation_provider()`）。`default` は現在の振り分けです | `PluginManager`（種別: `backend`、1階層深い） |
 | `plugins/memory/<name>/` | メモリのプロバイダー（`MemoryProvider` を継承） | `plugins/memory/__init__.py` にある**専用の読み込み**（種別: `exclusive` — 同時に有効なのは1つ） |
 | `plugins/context_engine/<name>/` | 文脈を圧縮するエンジン（`ctx.register_context_engine()`） | `plugins/context_engine/__init__.py` にある**専用の読み込み**（同時に有効なのは1つ） |
 | `plugins/model-providers/<name>/` | LLM プロバイダーの定義（`register_provider(ProviderProfile(...))`） | `providers/__init__.py` にある**専用の読み込み**（最初の `get_provider_profile()` の呼び出しで初めて走査されます） |
@@ -375,6 +377,7 @@ Hermes のプラグインは4種類です。
 | **メモリのバックエンド**（Honcho、Mem0、Supermemory など） | メモリのプラグイン — `plugins/memory/<name>/` で `MemoryProvider` を継承 | [メモリプロバイダーのプラグイン](/hermes/docs/developer-guide/memory-provider-plugin/) |
 | **文脈の圧縮のやり方** | コンテキストエンジンのプラグイン — `ctx.register_context_engine()` | [コンテキストエンジンのプラグイン](/hermes/docs/developer-guide/context-engine-plugin/) |
 | **画像生成のバックエンド**（DALL·E、SDXL など） | バックエンドのプラグイン — `ctx.register_image_gen_provider()` | [画像生成プロバイダーのプラグイン](/hermes/docs/developer-guide/image-gen-provider-plugin/) |
+| **委任の方針**（サブエージェントごとにプロファイルや名前付きのモデルを選ぶもの） | バックエンドのプラグイン — `ctx.register_delegation_provider()`。`delegation.backend` で選ばれます | [委任プロバイダーのプラグイン](/hermes/docs/developer-guide/delegation-provider-plugin/) |
 | **動画生成のバックエンド**（Veo、Kling、Pixverse、Grok-Imagine、Runway など） | バックエンドのプラグイン — `ctx.register_video_gen_provider()` | [動画生成プロバイダーのプラグイン](/hermes/docs/developer-guide/video-gen-provider-plugin/) |
 | **コンピュータ操作のドライバー**（`computer_use` ツールの裏でデスクトップを操作するもの） | 1つだけ選ぶプロバイダーのプラグイン — `ctx.register_computer_use_provider()`。`computer_use.backend` で選ばれます | [コンピュータ操作バックエンドのプラグイン](/hermes/docs/developer-guide/plugins/#computer-use-backend-plugins) |
 | **音声合成のバックエンド**（Piper、VoxCPM、Kokoro、xtts、声の複製のスクリプトなど、どんな CLI でも） | 設定で書く方法（おすすめ） — `config.yaml` の `tts.providers.<name>` に `type: command` で宣言します。または Python のバックエンドのプラグイン — シェルのひな形では足りない Python SDK やストリーミングのエンジンには `ctx.register_tts_provider()` を使います。 | [音声合成の設定](/hermes/docs/user-guide/features/tts/#custom-command-providers) · [Python のプラグインのガイド](/hermes/docs/user-guide/features/tts/#python-plugin-providers) |
@@ -860,7 +863,8 @@ plugins:
   処理中だった呼び出しはツールのエラーを返し、Hermes はホストを再起動してプラグインを読み込み直します（再試行の回数には上限があります）。
 - **一部の機能はプロセス内のコードを必要とします。** これらを使うプラグインは読み込まれず、理由がはっきり示されたうえで失敗します。
   対象は、ゲートウェイのプラットフォームアダプター（`register_platform`）、承認の受け渡し、Telegram などのプラットフォームのハンドラー、
-  独自の SDK クライアントを作るモデルプロバイダーのプロファイル（`create_client`）、ストリーミングや websocket を使うダッシュボードの
+  独自の SDK クライアントを作るモデルプロバイダーのプロファイル（`create_client`）、ターミナルのバックエンド（そのバックエンドのコマンドがこの理由で失敗します。
+  `singularity` プラグインがその一例です）、ストリーミングや websocket を使うダッシュボードの
   エンドポイント、Hermes のモジュールに monkeypatch を当てるプラグインです。これらは `isolation: in_process` で動かしてください。
 
 **共有の環境で固定する。** `plugins.isolation` は普通のプロファイル設定なので、プロファイルの `config.yaml` を

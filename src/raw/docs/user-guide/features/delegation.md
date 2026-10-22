@@ -2,7 +2,7 @@
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: 2dc4175ba35c8854c80ed2faa707427f071c24ed
+upstream_blob: 659927389bf2b8799fd9f02f2448f89908f6539a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -291,7 +291,51 @@ delegation:
 
 解決の順番は、まず `delegation.base_url`（直接の接続先）が優先され、次に `delegation.provider`（実行時のプロバイダの仕組みで解決される、資格情報一式）が使われ、どちらも設定していなければ子は親のプロバイダと資格情報を受け継ぎます。`delegation.model` はどの場合にも効き、これが空なら子は親のモデルを受け継ぎます。`delegation.base_url` と一緒に `delegation.provider` を設定すると、明示した接続先はそのままに、そのプロバイダのリクエストの上書きと最大出力トークン数が子に引き継がれます。明示的な `delegation.request_overrides` の辞書は、どの分岐でも尊重され、実行時に導かれた値の上へ重なります（後述の[設定](#configuration)を参照）。
 
-なお、この固定は全体に効きます。`delegate_task` にはタスクごとのモデルの指定がないので、束の中のどの子も、設定した委任用のモデルで動きます。もっと強いモデルが要る、質にこだわる小作業には、そのセッションでは `delegation.model` を設定しないでおくか、その作業を[かんばんボード](/hermes/docs/user-guide/features/kanban/#per-task-model-override)へ回してください。そちらはタスクごとのモデルの上書きに対応しています。
+なお、この固定は全体に効きます。既定の方式では `delegate_task` にタスクごとのモデルの指定がないので、束の中のどの子も、設定した委任用のモデルで動きます。もっと強いモデルが要る、質にこだわる小作業には、そのセッションでは `delegation.model` を設定しないでおくか、委任の方式のプラグイン（後述）を使うか、その作業を[かんばんボード](/hermes/docs/user-guide/features/kanban/#per-task-model-override)へ回してください。そちらはタスクごとのモデルの上書きに対応しています。
+
+### 委任の方式（`delegation.backend`） {#delegation-strategies-delegationbackend}
+
+`delegation.backend` は、各タスクをどうやってサブエージェントにするかを選びます。`default`（既定値）は、ここまでに説明した動きのすべてです。方式のプラグインを使うと、あなたが決めた選択肢の中から、モデルがタスクごとに選べるようになります。
+
+- **サブエージェントごとのプロファイル**（`profile_routes`）: 各子は、あなたの Hermes のプロファイルのどれかとして動き、そのプロファイルのモデル、資格情報、スキル、人格を使います。
+- **名前付きのモデルの対応表**（`model_map`）: 名前の付いた選択肢（`fast`、`deep` など）を、それぞれ説明とプロバイダ／モデルを添えて並べておくと、モデルがタスクごとにひとつを選びます。
+
+どちらも公式の `advanced-delegation` プラグインが提供します。このプラグインは、`hermes delegation config`（モデルの振り分け先の作成・編集・削除と、プロファイルの選択）と、スラッシュコマンドの `/delegation` も追加します。`model_map` か `profile_routes` が有効な間は、`delegation.model` / `delegation.provider` は効きません。振り分け先の設定が決めます。
+
+各方式の設定は `delegation.backends.<backend name>` の下に置きます。
+
+```yaml
+delegation:
+  backend: model_map
+  backends:
+    model_map:
+      options:
+        - name: fast
+          description: Cheap and quick; lookups, summaries, simple edits.
+          provider: openrouter
+          model: google/gemini-3-flash-preview
+        - name: deep
+          description: Slow and careful; hard debugging and design work.
+          provider: anthropic
+          model: claude-opus-5
+          reasoning_effort: high
+          service_tier: fast            # optional; refused at spawn if this route has no fast tier
+      default: fast                     # optional: option for tasks that set none
+    profile_routes:                     # read when backend: profile_routes
+      profiles:
+        - name: coder
+          description: Writes and refactors code; runs tests.
+```
+
+モデルに見えるのは、あなたが設定した名前と説明だけで、プロバイダ、モデル、キーの生の値は一切見えません。バックエンドで振り分けたタスクの結果には、それぞれ `route` が付きます。中身は、バックエンド、選択肢またはプロファイルの名前、そして子が実際に動いたプロバイダ、モデル、推論の強さ、速度の区分です（予備のプロバイダが代わりに動いたときは `fallback_activated: true`）。自分で書くときは[委任プロバイダーのプラグイン](/hermes/docs/developer-guide/delegation-provider-plugin/)を参照してください。
+
+**失敗ははっきり返し、黙って切り替えることはしません。** 選んだバックエンドが見つからない（プラグインが入っていない、または無効）か、動けないと報告してきたときは、`delegate_task` がバックエンドの名前と直し方を示すツールのエラーを返し、サブエージェントはひとつも起動しません。既定の振り分けで子を黙って動かすことは決してありません。束の中で、バックエンドが振り分けられないタスク（知らない選択肢、選んだバックエンドが受け付けない引数、存在しないプロファイル、その振り分け先にない `service_tier`、知らない `reasoning_effort`、資格情報の不足）は、そのタスクだけが断られます。その結果の項目には `status: "error"`、理由、`route.refused: true` が入り、ほかのタスクはそのまま動きます。自分の `fallback_providers` を持たないモデルの振り分け先は、`delegation.fallback_providers` を使います。振り分け先に `fallback_providers: []` を書くと、そこだけ予備への切り替えが無効になります。プロファイルの振り分け先は、そのプロファイル自身の予備の順番を使います。
+
+**既定に戻すには。** `/delegation default`（`advanced-delegation` プラグインのコマンド）は、いまのセッションを既定のバックエンドに切り替えます。`/delegation <backend> --global` は、`/model` と同じ決まりで、`delegation.backend` を `config.yaml` に書き込みます。セッションでの切り替えは、次の `delegate_task` の呼び出しから振り分けを変え、会話が終わるまで（`/new`、`/resume`、自動のリセット）続きます。一方、モデルに見えるタスクごとの引数（選択肢やプロファイルの名前）は `config.yaml` に従い、次のセッションから変わります。ツールの一覧は、キャッシュされるプロンプトの一部だからです。それまでの間に、前のバックエンドの引数を送ってきたタスク（`profile_routes` に切り替えたあとの `option`）は断られます。そのときのメッセージには、セッションのバックエンド、その引数、直し方（`/delegation <backend> --global` のあと `/new`。`/new` は保存されたバックエンドで始まるためです。または `/delegation <saved backend>` で戻す）が示されます。新しいバックエンドの既定の振り分けで動くことは決してありません。プラグインがないときは、`hermes config set delegation.backend default` で既定に戻せます。
+
+:::note プロファイルの振り分け先は資格情報を共有する
+`delegation.backends.profile_routes` にプロファイルを並べると、このプロファイルのサブエージェントが、そのプロファイルの資格情報、資格情報のプール、`SOUL.md`、端末のポリシーを使えるようになります。並べるのは、キーと端末の使い道を、このプロファイルのエージェントに任せてもよいと思えるプロファイルだけにしてください。
+:::
 
 ## `/review` コマンド {#the-review-command}
 

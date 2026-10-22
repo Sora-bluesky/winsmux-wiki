@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ターミナル環境プロバイダプラグイン"
 description: ""
 upstream_path: developer-guide/terminal-environment-plugin.md
-upstream_blob: de6afbe5529aa56980987d46c0ac3f5380eefade
+upstream_blob: a25924fd9c8d3f19f069386af8ea08baca8b442c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/terminal-environment-plugin
 ---
@@ -11,8 +11,10 @@ sources:
 # ターミナル環境プロバイダプラグイン {#terminal-environment-provider-plugins}
 
 Hermes は、差し替えのきく**ターミナルバックエンド**の集まりを通してシェルコマンドを実行します。
-組み込みのバックエンド（local、Docker、Singularity、Modal、Daytona、Vercel
-Sandbox、SSH）は本体リポジトリの `tools/environments/` にあります。一方、社外の
+組み込みのバックエンド（local、Docker、Modal、Daytona、Vercel Sandbox、SSH）は
+本体リポジトリの `tools/environments/` にあります。公式の
+[Singularity/Apptainer プラグイン](https://github.com/NousResearch/hermes-official-plugins/tree/main/singularity)
+は、このページの内容をひととおり実装した例です。一方、社外の
 サンドボックス事業者は**プラグイン**として組み込みます。`~/.hermes/plugins/` に置いた
 独立したプラグインリポジトリがバックエンドを登録し、利用者は `config.yaml` の
 `terminal.backend` で、組み込みのものとまったく同じように選べます。
@@ -112,7 +114,7 @@ hermes config set terminal.backend acmebox
 ## ルール {#rules}
 
 - **予約されている名前があります。** 組み込みバックエンドの名前（`local`、`docker`、
-  `singularity`、`modal`、`managed_modal`、`daytona`、`vercel_sandbox`、`ssh`）と
+  `modal`、`managed_modal`、`daytona`、`vercel_sandbox`、`ssh`）と
   ぶつかる登録は拒否されます。プラグインはバックエンドを増やすものであって、
   本体のバックエンドを覆い隠すことは決してありません。
 - **`create_environment` は `**kwargs` を受け取れること。** 知らないキーは黙って
@@ -139,6 +141,15 @@ hermes config set terminal.backend acmebox
 
 `BaseEnvironment` を継承すると、ファイル同期やバックグラウンドプロセスまわりの共通処理を
 そのまま使えるのでおすすめですが、必須ではありません。
+
+## イメージ {#images}
+
+バックエンドは、自分のイメージ設定（`config_schema` のキーか、ドキュメントに書いておく
+`terminal.<name>_image` のキー）を自分で読みます。Hermes が `image=` を渡すのは、タスクごとに
+上書きするときだけです。バッチ実行（`batch_runner.py`）でプロンプトごとに別のコンテナを使うと、
+そのイメージが有効なバックエンドの `<name>_image` として登録され、その値が
+`create_environment(image=...)` に届きます。それ以外のときの `image` は `""` なので、
+自分の設定値を使ってください。
 
 ## 起動時の作業ディレクトリ {#starting-directory}
 
@@ -177,7 +188,7 @@ Hermes はバックエンドの既定値として `~` をそのまま保持す�
 ## Bot Desktop と `computer_use` {#bot-desktop-and-computeruse}
 
 画面、`computer_use`、ブラウザは、stdin と stdout を開いたままの常駐プロセスをサンドボックス内で起動することで、
-Docker・SSH・Singularity のサンドボックスへターミナルと一緒に移ります。
+Docker と SSH のサンドボックス（および Singularity プラグインのもの）へターミナルと一緒に移ります。
 プラグインのバックエンドも、同じ方法でこれに対応できます。
 
 1. プロバイダに `supports_streams = True` を設定します。すると `bot_desktop.placement: auto`
@@ -201,11 +212,11 @@ class AcmeBoxEnvironment:
 ブラウザは、作業用の一時ファイルを環境オブジェクトの `get_temp_dir()` の下に置きます。
 `BaseEnvironment` を継承せず、このメソッドも持たない環境には、`BaseEnvironment` と同じ既定の動作が使われます。
 
-`exec_prefix()` と `~` によるホームの解決は、どちらも環境オブジェクトそのものを読むので、
-同じプロセス内で読み込んだプラグインでしか動きません。
-`plugins.isolation: host` の下では、環境オブジェクトは中身の見えない代理オブジェクトとして Hermes に届きます。
-そのため Bot Desktop は `supports_streams` のバックエンドを、その設定名を示すメッセージとともに拒否し、
-`default_cwd = "~"` は文字どおりの `~` のままになります。
+ターミナルのバックエンドは、同じプロセスの中でしか動きません。ターミナルツール、ファイルツール、
+`exec_prefix()`、`~` によるホームの解決は、どれも環境オブジェクトそのものを操作するからです。
+`plugins.isolation: host` の下では、このオブジェクトはホストとの境界を越えられません。そのため環境を作る時点で、
+`plugins.isolation: in_process` という設定名を示すメッセージとともに拒否されます（ホストがサンドボックスを起動する前です）。
+Bot Desktop も `supports_streams` のバックエンドを同じように拒否します。
 
 ## セッション分離の考え方 {#session-isolation-semantics}
 

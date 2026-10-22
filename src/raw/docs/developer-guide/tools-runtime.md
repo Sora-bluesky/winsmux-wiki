@@ -2,7 +2,7 @@
 title: "ツールの実行基盤"
 description: "ツールの登録簿、ツールセット、振り分け、ターミナル環境の動き"
 upstream_path: developer-guide/tools-runtime.md
-upstream_blob: 3c844f03f0d03ec6ed61825f29e958fb261b2180
+upstream_blob: 606fd221c9890dffd8a1990cd2761c8af58ee93b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime
 ---
@@ -215,10 +215,10 @@ Return result string (or JSON error)
 - local
 - docker
 - ssh
-- singularity
 - modal
 - daytona
 - vercel_sandbox
+- `ctx.register_terminal_environment_provider` で登録したプラグインの実行基盤（`singularity` など）
 
 さらに次にも対応します。
 

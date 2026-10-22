@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コツとベストプラクティス"
 description: "Hermes Agent を最大限に活かすための実践的なアドバイス。プロンプトのコツ、CLI のショートカット、コンテキストファイル、メモリ、コスト最適化、セキュリティ"
 upstream_path: guides/tips.md
-upstream_blob: 5866aafdcc71f0ddcd9f59afd7a4b55f10e5d43a
+upstream_blob: b5055abf076e3d35017a8d805b4b6ea582ebca6f
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/tips
 ---
@@ -221,7 +221,7 @@ $OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
 Hermes は実行前に、すべてのコマンドを危険なパターンの一覧と突き合わせます。再帰的な削除、SQL の DROP、curl の出力をシェルへ流し込む形などが含まれます。本番でこれを無効にしないでください。理由があって存在する仕組みです。
 
 :::warning
-コンテナ系のバックエンド（Docker、Singularity、Modal、Daytona）で動かしているときは、コンテナ自体が安全の境界になるため、危険なコマンドの検査は**省略されます**。コンテナのイメージをきちんと固めておいてください。
+コンテナ系のバックエンド（Docker、Modal、Daytona、または Singularity などのコンテナ用プラグイン）で動かしているときは、コンテナ自体が安全の境界になるため、危険なコマンドの検査は**省略されます**。コンテナのイメージをきちんと固めておいてください。
 :::
 
 ### メッセージ連携のボットには許可リストを {#use-allowlists-for-messaging-bots}

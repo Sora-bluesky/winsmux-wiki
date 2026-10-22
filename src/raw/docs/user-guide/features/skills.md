@@ -2,7 +2,7 @@
 title: "スキルの仕組み"
 description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェント管理のスキル、スキルのハブ"
 upstream_path: user-guide/features/skills.md
-upstream_blob: 7c6b06930e51886ba1729ff175870980014cf758
+upstream_blob: 4ecbd750b5a31c79535a2c333e7a69a0813d2078
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -1106,4 +1106,4 @@ hermes skills reset google-workspace --restore --yes
 /skills list
 ```
 
-公式の追加スキルは、いまも `official/security/1password` や `official/migration/openclaw-migration` のような識別子を使います。
+公式の追加スキルは、いまも `official/security/1password` や `official/mcp/fastmcp` のような識別子を使います。

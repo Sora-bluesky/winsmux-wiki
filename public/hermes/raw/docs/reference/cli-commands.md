@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: e6cc93fbc0da95d7f32583c17d0d92f116e144cc
+upstream_blob: 893a18d96d75c22ee0167123abe7e10532e3d756
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -97,7 +97,7 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes journey`（別名 `learning`, `memory-graph`） | 学習したスキル + メモリの時系列タイムラインです。 |
 | `hermes memory` | 外部メモリプロバイダを設定します。プラグイン固有のサブコマンド（例: `hermes honcho`）は、そのプロバイダが有効なときに自動的に登録されます。 |
 | `hermes acp` | エディタ連携用に、Hermes を ACP サーバーとして実行します。 |
-| `hermes mcp` | MCP サーバー設定を管理し、Hermes を MCP サーバーとして実行します。 |
+| `hermes mcp` | MCP サーバー設定を管理します。Hermes を MCP サーバーとして動かす機能は [mcp-serve プラグイン](/hermes/docs/user-guide/features/mcp/#running-hermes-as-an-mcp-server)が受け持ちます。 |
 | `hermes connectors` | ホスト型コネクタのアカウントを一覧・接続・名前変更・切断します。 |
 | `hermes plugins` | Hermes Agent のプラグインを管理します（インストール・有効化・無効化・削除）。 |
 | `hermes portal` | Nous Portal の状態・サブスクリプションリンク・Tool Gateway ルーティングです。[Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/) を参照してください。 |
@@ -106,8 +106,8 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes pets` | CLI・TUI・デスクトップアプリ全体に表示される [petdex](/hermes/docs/user-guide/features/pets/) のアニメーションペットを参照・インストール・選択します。サブコマンド: `list`, `install`, `select`, `show`, `off`, `scale`, `remove`, `doctor`。 |
 | `hermes sessions` | セッションの参照・エクスポート・整理・リネーム・削除を行います。 |
 | `hermes insights` | トークン/コスト/アクティビティの分析を表示します。 |
-| `hermes claw` | OpenClaw 移行用のヘルパーです。 |
-| `hermes import-agent` | Claude Code（`~/.claude`）または Codex CLI（`~/.codex`）のセットアップをインポートします。 |
+| `hermes claw` | OpenClaw からの移行（`migrate`、`cleanup`）です。[`agent-importers`](/hermes/docs/user-guide/import-from-other-agents/) プラグインが提供します。`hermes claw migrate` は `hermes import-agent openclaw` と同じです。 |
+| `hermes import-agent` | OpenClaw、Claude Code、Codex CLI、Cursor のセットアップをインポートします（[`agent-importers`](/hermes/docs/user-guide/import-from-other-agents/) プラグインが提供します）。 |
 | `hermes dashboard` | 設定・API キー・セッションを管理するための Web ダッシュボードを起動します。 |
 | `hermes serve` | Hermes バックエンドサーバーを起動します（ヘッドレス。デスクトップアプリとリモートバックエンドを支えます）。 |
 | `hermes desktop`（別名 `gui`） | ネイティブの Electron デスクトップアプリをビルド・起動します。 |
@@ -371,6 +371,8 @@ hermes setup [model|tts|terminal|gateway|tools|agent] [--non-interactive] [--res
 
 **再訪ユーザー（設定済み）:** そのままフルの再設定ウィザードに入ります — すべてのプロンプトで現在の値がデフォルトとして表示され、Enter で維持、または新しい値を入力できます。メニューはありません。
 
+**ほかのエージェントから移ってきた場合:** 初回の実行で OpenClaw、Claude Code、Codex CLI、Cursor のセットアップ（`~/.openclaw`、`~/.claude`、`~/.codex`、`~/.cursor`）が見つかると、まず **「… からセットアップをインポートしますか？」** と尋ねます（既定は「はい」）。複数見つかった場合は、続いてチェックリストからどれを取り込むか選びます。セットアップは [`agent-importers`](/hermes/docs/user-guide/import-from-other-agents/) プラグインをカタログからインストールし（すでに入っていればそのまま使います）、選んだものごとにインポートを実行します。インポートは事前に内容を見せ、何かを変える前に確認を求めます（以前の組み込みの手順と同じく、OpenClaw の許可リストに入った API キーとボットのトークンも含みます）。何も見つからない場合、「いいえ」と答えた場合、`--non-interactive` の場合、ダッシュボードから始めたセットアップの場合は、質問も出ず、何もインストールされません。すでに設定済みの環境では、代わりに `hermes import-agent` を実行してください。
+
 ウィザード全体ではなく1つの区分だけを行う:
 
 | 区分 | 説明 |
@@ -558,7 +560,7 @@ hermes migrate <type>
 | `--apply` | `config.yaml` をその場で書き換えます（既定: dry-run、書き込みなし）。 |
 | `--no-backup` | 適用時の、`config.yaml` のタイムスタンプ付きバックアップをスキップします。 |
 
-> `hermes claw migrate`（OpenClaw の設定を Hermes へ one-shot でインポートする機能）と混同しないでください — `hermes migrate` はトップレベルの設定書き換えコマンドです。
+> `hermes import-agent openclaw`（OpenClaw の設定を Hermes へ one-shot でインポートする機能）と混同しないでください — `hermes migrate` はトップレベルの設定書き換えコマンドです。
 
 ## `hermes codex-runtime` {#hermes-codex-runtime}
 
@@ -1332,7 +1334,7 @@ hermes skills search react --source skills-sh
 hermes skills search https://mintlify.com/docs --source well-known
 hermes skills inspect official/security/1password
 hermes skills inspect skills-sh/vercel-labs/json-render/json-render-react
-hermes skills install official/migration/openclaw-migration
+hermes skills install official/mcp/fastmcp
 hermes skills install skills-sh/anthropics/skills/pdf --force
 hermes skills install https://sharethis.chat/SKILL.md                     # Direct URL (+ referenced support files)
 hermes skills install https://example.com/SKILL.md --name my-skill        # Override name when frontmatter has none
@@ -1515,14 +1517,13 @@ cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['acp'], explici
 hermes mcp <subcommand>
 ```
 
-MCP（Model Context Protocol）サーバーの設定を管理し、Hermes を MCP サーバーとして実行します。
+MCP（Model Context Protocol）サーバーの設定を管理します。Hermes 自身を MCP サーバーとして動かす機能は `mcp-serve` プラグインへ移りました（`hermes plugins install mcp-serve` のあと `hermes mcp-serve` を実行します）。`hermes mcp serve` と打つと、この新しい書き方が表示されます。
 
 | サブコマンド | 説明 |
 |------------|-------------|
 | *(なし)* または `picker` | 対話的なカタログピッカー — Nous 承認済みの MCP を参照してインストール/有効化/無効化します。 |
 | `catalog` | Nous 承認済みの MCP を一覧します（プレーンテキスト、スクリプト可）。 |
 | `install <name>` | カタログの項目をインストールします（例: `hermes mcp install deepwiki`）。 |
-| `serve [-v\|--verbose]` | Hermes を MCP サーバーとして実行します — 会話を他のエージェントに公開します。 |
 | `add <name> [--url URL] [--command CMD] [--auth oauth\|header] [--args ...]` | 自動ツール検出付きで、カスタムの MCP サーバーを追加します。`--args` は残りの argv を stdio コマンドに渡すので、最後に置いてください。 |
 | `remove <name>`（別名: `rm`） | 設定から MCP サーバーを削除します。 |
 | `list`（別名: `ls`） | 設定済みの MCP サーバーを一覧します。 |
@@ -1684,10 +1685,22 @@ hermes insights [--days N] [--source platform]
 | `--days <n>` | 直近 `n` 日を分析します（既定: 30）。 |
 | `--source <platform>` | `cli`、`telegram`、`discord` などのソースでフィルタします。 |
 
-## `hermes claw` {#hermes-claw}
+## `hermes import-agent` {#hermes-import-agent}
 
 ```bash
-hermes claw migrate [options]
+hermes plugins install agent-importers   # once; the command comes from this official plugin
+hermes import-agent [openclaw|claude-code|codex|cursor] [options]
+```
+
+**OpenClaw**（`~/.openclaw`）、**Claude Code**（`~/.claude`）、**OpenAI Codex CLI**（`~/.codex`）、**Cursor**（`~/.cursor`）のセットアップを Hermes にインポートします。指示とルールはメモリの項目に、`Bash(...)` の権限ルールは `command_allowlist`/`approvals.deny` に、MCP サーバーは `mcp_servers` に入り、スキルはコピーされます。必ず先にプレビューを表示します。API キーと認証情報は一切インポートしません。例外は、`--migrate-secrets` を渡したときの OpenClaw の許可リストに入ったキーだけです。`--sync` は、登録済みの Claude Code、Codex、Cursor のソースのうち変更があったものを再インポートします。新しくインストールした環境では、これらのエージェントのどれかが見つかると、`hermes setup` がプラグインのインストールとインポートの実行を申し出ます。
+
+このコマンドは、`hermes claw`（OpenClaw からの移行）と一緒に、本体から公式の `agent-importers` プラグインへ移りました。その書き方はプラグインでもそのまま使えます。プラグインが無い状態で `hermes import-agent` や `hermes claw` を実行すると、インストール用のコマンドが表示されます。オプションと対応表については **[インポートのガイド](/hermes/docs/user-guide/import-from-other-agents/)** を参照してください。
+
+### OpenClaw: `hermes import-agent openclaw` {#openclaw-hermes-import-agent-openclaw}
+
+```bash
+hermes import-agent openclaw [options]    # same as the older spelling: hermes claw migrate [options]
+hermes claw cleanup [--source <path>] [--dry-run] [--yes]
 ```
 
 OpenClaw のセットアップを Hermes に移行します。`~/.openclaw`（またはカスタムパス）から読み込み、`~/.hermes` に書き込みます。古いディレクトリ名（`~/.clawdbot`、`~/.moltbot`）や設定ファイル名（`clawdbot.json`、`moltbot.json`）も自動的に検出します。
@@ -1704,7 +1717,9 @@ OpenClaw のセットアップを Hermes に移行します。`~/.openclaw`（�
 | `--skill-conflict <mode>` | スキル名の衝突の扱い: `skip`（既定）、`overwrite`、または `rename`。 |
 | `--yes` | 確認プロンプトをスキップします。 |
 
-### 何が移行されるか {#what-gets-migrated}
+`hermes claw cleanup` は、移行を終えたあとに残った OpenClaw のディレクトリの名前を `*.pre-migration` に変えます（これ以降 OpenClaw は動かなくなります。元に戻すには名前を戻してください）。
+
+#### 何が移行されるか {#what-gets-migrated}
 
 移行は、persona、メモリ、スキル、モデルプロバイダ、メッセージングプラットフォーム、エージェントの動作、セッションポリシー、MCP サーバー、TTS など、30以上の区分をカバーします。項目は Hermes の相当物へ**直接インポート**されるか、手動レビュー用に**アーカイブ**されます。
 
@@ -1714,45 +1729,26 @@ OpenClaw のセットアップを Hermes に移行します。`~/.openclaw`（�
 
 **API キーの解決**は、優先順に3つのソースを確認します: 設定値 → `~/.openclaw/.env` → `auth-profiles.json`。すべてのトークンフィールドは、プレーンな文字列、環境変数テンプレート（`${VAR}`）、SecretRef オブジェクトのいずれにも対応します。
 
-完全な設定キーの対応表、SecretRef の扱いの詳細、移行後のチェックリストについては **[full migration guide](/hermes/docs/guides/migrate-from-openclaw/)** を参照してください。
+完全な設定キーの対応表、SecretRef の扱いの詳細、移行後のチェックリストについては **[移行ガイドの全文](/hermes/docs/guides/migrate-from-openclaw/)** を参照してください。
 
-### 例 {#examples}
+#### 例 {#examples}
 
 ```bash
 # Preview what would be migrated
-hermes claw migrate --dry-run
+hermes import-agent openclaw --dry-run
 
 # Full migration (all compatible settings, no secrets)
-hermes claw migrate --preset full
+hermes import-agent openclaw --preset full
 
 # Full migration including API keys
-hermes claw migrate --preset full --migrate-secrets
+hermes import-agent openclaw --preset full --migrate-secrets
 
 # Migrate user data only (no secrets), overwrite conflicts
-hermes claw migrate --preset user-data --overwrite
+hermes import-agent openclaw --preset user-data --overwrite
 
 # Migrate from a custom OpenClaw path
-hermes claw migrate --source /home/user/old-openclaw
+hermes import-agent openclaw --source /home/user/old-openclaw
 ```
-
-## `hermes import-agent` {#hermes-import-agent}
-
-```bash
-hermes import-agent [claude-code|codex] [options]
-```
-
-**Claude Code**（`~/.claude`）または **OpenAI Codex CLI**（`~/.codex`）のセットアップを Hermes にインポートします。`CLAUDE.md`/`AGENTS.md` の指示をメモリの項目に、`Bash(...)` 権限の許可/拒否ルールを `command_allowlist`/`approvals.deny` に、MCP サーバーを `config.yaml` の `mcp_servers` に、スキルディレクトリを `~/.hermes/skills/` にマッピングします。常に適用前にプレビューを表示し、API キーと認証情報は一切インポートされません。
-
-| オプション | 説明 |
-| --- | --- |
-| `agent` | `claude-code` または `codex`（既定: 自動検出）。 |
-| `--source <path>` | カスタムのソースディレクトリ（既定: `~/.claude` または `~/.codex`）。 |
-| `--dry-run` | プレビューのみ — 何も書き込みません。 |
-| `--overwrite` | 競合する MCP サーバー/スキルを置き換えます（既定: スキップ）。 |
-| `--yes`, `-y` | 確認プロンプトをスキップします。 |
-| `--sync` | 最後のインポート以降にファイルが変更された、以前インポート済みのすべてのソースを再インポートします。プロンプトは出ません。プレビューには `--dry-run` と組み合わせてください。 |
-
-インポートが成功するたびに、そのソースが `~/.hermes/import-sync.json` に登録されます。`hermes import-agent --sync` は、その後、ファイルが変更された登録済みのソースを再インポートします（インポート済みの Claude Code / Codex のセットアップを最新に保つ、cron に適した方法です）。マッピング表の全体については **[import guide](/hermes/docs/user-guide/import-from-other-agents/)** を参照してください。
 
 ## `hermes serve` {#hermes-serve}
 

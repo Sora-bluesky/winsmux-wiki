@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 1d75272845b1814393557a43c46248222c1b60de
+upstream_blob: 4468904026f40b78cd8f376619c2870f1fe47ab3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -223,11 +223,11 @@ git でインストールした場合、Hermes は更新用のブランチをチ
 
 ## ターミナルバックエンドの設定 {#terminal-backend-configuration}
 
-Hermes は7種類のターミナルバックエンドに対応しています。どれを選ぶかで、エージェントのシェルコマンドが実際にどこで実行されるかが決まります。手元のマシン、Docker コンテナ、SSH 経由のリモートサーバー、Modal のクラウドのサンドボックス（直接、または Nous が管理するゲートウェイ経由）、Daytona のワークスペース、Vercel Sandbox、Singularity/Apptainer のコンテナのいずれかです。
+Hermes には6種類のターミナルバックエンドが付属しています。どれを選ぶかで、エージェントのシェルコマンドが実際にどこで実行されるかが決まります。手元のマシン、Docker コンテナ、SSH 経由のリモートサーバー、Modal のクラウドのサンドボックス（直接、または Nous が管理するゲートウェイ経由）、Daytona のワークスペース、Vercel Sandbox のいずれかです。プラグインでさらに追加でき、公式の [Singularity/Apptainer](#singularityapptainer-backend) バックエンドもその1つです。
 
 ```yaml
 terminal:
-  backend: local    # local | docker | ssh | modal | daytona | vercel_sandbox | singularity
+  backend: local    # local | docker | ssh | modal | daytona | vercel_sandbox | <plugin backend>
   cwd: "."          # Gateway/cron working directory (CLI always uses launch dir)
   temp_dir: ""      # Session temp root; empty = TMPDIR, else ~/.hermes/cache/terminal
   font_family: ""   # Desktop terminal font; e.g. "MesloLGS NF"
@@ -236,7 +236,6 @@ terminal:
   env_passthrough: []  # Env var names to forward to sandboxed execution (terminal + execute_code)
   client_env_passthrough: []  # Extra non-secret toolchain names (e.g. GEM_HOME) a local CLI/TUI session's tools take from its launching shell
   sync_back_max_bytes: 2147483648  # Remote backends: refuse to extract a state archive larger than this (bytes)
-  singularity_image: "docker://nousresearch/hermes-sandbox:desktop"  # Container image for Singularity backend
   modal_image: "nousresearch/hermes-sandbox:desktop"                 # Container image for Modal backend
   daytona_image: "nousresearch/hermes-sandbox:desktop"               # Container image for Daytona backend
 ```
@@ -293,7 +292,7 @@ Modal、Daytona、Vercel Sandbox のようなクラウドのサンドボック�
 | **modal** | Modal のクラウドのサンドボックス | 完全（クラウドの VM） | 使い捨てのクラウド計算資源、評価（evals） |
 | **daytona** | Daytona のワークスペース | 完全（クラウドのコンテナ） | マネージドなクラウド開発環境 |
 | **vercel_sandbox** | Vercel Sandbox | 完全（クラウドの microVM） | スナップショットでファイルシステムを保持するクラウド実行 |
-| **singularity** | Singularity/Apptainer のコンテナ | 名前空間（--containall） | HPC クラスター、共有マシン |
+| **singularity**（プラグイン） | Singularity/Apptainer のコンテナ | 名前空間（--containall） | HPC クラスター、共有マシン |
 
 ### ローカルバックエンド {#local-backend}
 
@@ -597,7 +596,11 @@ OIDC トークンは有効期限が短いため、正式なデプロイ方法と
 
 ### Singularity/Apptainer バックエンド {#singularityapptainer-backend}
 
-[Singularity/Apptainer](https://apptainer.org) のコンテナでコマンドを実行します。Docker を使えない HPC クラスターや共有マシン向けに作られています。
+[Singularity/Apptainer](https://apptainer.org) のコンテナでコマンドを実行します。Docker を使えない HPC クラスターや共有マシン向けに作られています。これは公式の [`singularity` プラグイン](https://github.com/NousResearch/hermes-official-plugins/tree/main/singularity)です（以前はコアに組み込まれていました。すでにこのバックエンドを使っているプロファイルには `hermes update` がインストールします）。次のコマンドで入れます。
+
+```bash
+hermes plugins install singularity
+```
 
 ```yaml
 terminal:
@@ -608,11 +611,11 @@ terminal:
   container_persistent: true       # Writable overlay persists across sessions
 ```
 
-**必要なもの:** `$PATH` に `apptainer` または `singularity` のバイナリがあること。
+**必要なもの:** `singularity` プラグインと、`$PATH` にある `apptainer` または `singularity` のバイナリ。
 
 **イメージの扱い:** Docker の URL（`docker://...`）は自動で SIF ファイルに変換され、キャッシュされます。既存の `.sif` ファイルはそのまま使われます。
 
-**作業用の一時ディレクトリ:** 次の順で決まります: `TERMINAL_SCRATCH_DIR` → `TERMINAL_SANDBOX_DIR/singularity` → `/scratch/$USER/hermes-agent`（HPC の慣例）→ `~/.hermes/sandboxes/singularity`。
+**作業用の一時ディレクトリ:** 次の順で決まります: `TERMINAL_SCRATCH_DIR` → `/scratch` に書き込めるときは `/scratch/$USER/hermes-agent`（HPC の慣例）→ `TERMINAL_SANDBOX_DIR/singularity`（既定は `~/.hermes/sandboxes/singularity`）。
 
 **分離:** `--containall --no-home` を使い、ホストのホームディレクトリをマウントせずに名前空間を完全に分離します。
 
@@ -625,7 +628,7 @@ terminal:
 - **SSH** — `TERMINAL_SSH_HOST` と `TERMINAL_SSH_USER` の両方を設定する必要があります。どちらかが欠けていると、Hermes はわかりやすいエラーをログに出します。
 - **Modal** — 環境変数 `MODAL_TOKEN_ID` か `~/.modal.toml` が必要です。確認するには `hermes doctor` を実行します。
 - **Daytona** — `DAYTONA_API_KEY` が必要です。サーバー URL の設定は Daytona SDK が行います。
-- **Singularity** — `$PATH` に `apptainer` か `singularity` が必要です。HPC クラスターではよく入っています。
+- **Singularity** — `singularity` プラグイン（`hermes plugins install singularity`）と、`$PATH` にある `apptainer` か `singularity` が必要です。HPC クラスターではよく入っています。
 
 迷ったときは、`terminal.backend` を `local` に戻し、まずそこでコマンドが動くことを確かめてください。
 
@@ -780,7 +783,7 @@ export TERMINAL_LOCAL_PERSISTENT=false              # local
 | SSH | `TERMINAL_SSH_PERSISTENT`、なければ `terminal.persistent_shell`（`TERMINAL_PERSISTENT_SHELL`） | `true` |
 | ローカル | `TERMINAL_LOCAL_PERSISTENT` | `true` |
 
-Docker、Singularity、Modal、Daytona、Vercel Sandbox、プラグインのバックエンドは、これらの設定を無視します。
+Docker、Modal、Daytona、Vercel Sandbox、プラグインのバックエンド（Singularity を含む）は、これらの設定を無視します。
 
 各バックエンドについて詳しくは、[コードの実行](/hermes/docs/user-guide/features/code-execution/) と [README のターミナルの節](/hermes/docs/user-guide/features/tools/) を参照してください。
 
@@ -2966,6 +2969,10 @@ delegate ツールで起動するサブエージェントの動きを設定し�
 
 ```yaml
 delegation:
+  backend: default                          # Delegation strategy routing each task: "default" = the keys below, or a plugin backend (model_map, profile_routes, ...)
+  # backends:                               # Each plugin backend's own settings, keyed by its backend name
+  #   model_map:
+  #     options: [...]
   # model: "google/gemini-3-flash-preview"  # Override model (empty = inherit parent)
   # provider: "openrouter"                  # Override provider (empty = inherit parent)
   # base_url: "http://localhost:1234/v1"    # Direct OpenAI-compatible endpoint (takes precedence over provider)
@@ -2982,6 +2989,8 @@ delegation:
   orchestrator_enabled: true                # Global kill switch. When false, role="orchestrator" is ignored and every child is forced to leaf regardless of max_spawn_depth.
   oneshot_max_children: 2                   # Total subagents a one-shot run (hermes chat -q / --oneshot) may spawn; 0 = unlimited. Interactive and gateway sessions are never capped by this.
 ```
+
+**委任の戦略（`backend`）:** `delegation.backend` は、各サブエージェントの経路を決める戦略プラグインを選びます。`default` は下のキーに従います（キーが空なら親の経路を使います）。`model_map`（タスクごとに名前付きのモデルを使う）や `profile_routes`（タスクごとに Hermes のプロファイルを使う）といったプラグインの戦略は、`delegation.backends.<backend name>` から設定を読みます。プラグインが見つからないか無効になっているバックエンドは、安全側に倒れて止まります。子を別の経路で動かす代わりに、`delegate_task` がそのバックエンド名と直し方（`/delegation default`、または `hermes config set delegation.backend default`）を示したツールエラーを返します。独自の `fallback_providers` を持たないバックエンドの経路は、`delegation.fallback_providers` を使います。詳しくは [サブエージェントへの委任 → 委任の戦略](/hermes/docs/user-guide/features/delegation/#delegation-strategies-delegationbackend) を参照してください。
 
 **サブエージェントの provider:model の上書き:** 既定では、サブエージェントは親エージェントのプロバイダーとモデルを引き継ぎます。`delegation.provider` と `delegation.model` を設定すると、サブエージェントを別の provider:model の組み合わせに振り分けられます。たとえば、メインのエージェントには高価な推論モデルを使わせつつ、範囲の狭いサブタスクには安くて速いモデルを使う、といった使い方ができます。
 

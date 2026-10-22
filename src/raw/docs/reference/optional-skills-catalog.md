@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: df16db21de2620e8d680810f9c12ee4b099a5c16
+upstream_blob: 835f842e326c928dbbc8884a88776af5ed63e182
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -157,12 +157,6 @@ hermes skills uninstall <skill-name>
 | [**fastmcp**](/hermes/docs/user-guide/skills/optional/mcp/mcp-fastmcp/) | Python 製の MCP サーバーを作り、試し、公開します。 |
 | [**mcp-oauth-remote-gateway**](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/) | 画面のないゲートウェイで、遠隔の MCP サーバーの OAuth を手作業で通します。 |
 | [**mcporter**](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcporter/) | 端末から MCP のサーバーやツールを一覧し、認証し、呼び出します。 |
-
-## migration {#migration}
-
-| スキル | 説明 |
-|-------|-------------|
-| [**openclaw-migration**](/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/) | OpenClaw の環境（記憶、スキル）を Hermes に取り込みます。 |
 
 ## mlops {#mlops}
 

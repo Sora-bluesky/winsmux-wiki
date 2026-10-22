@@ -2,7 +2,7 @@
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: ff24de02d181b534f5f9f367ab5ac270d49bb65b
+upstream_blob: 0b72940538facbb2510565bcb80f4634da79aa04
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -220,6 +220,19 @@ API、ACP、cron、Bot Chat）をすべて受け持ちます。既存の環境�
 保守されている更新スクリプトが見当たらない場合（たとえばウイルス対策ソフトに隔離されたときです）、旧来の更新の受け渡し処理は、引き渡しに成功したと報告せずに失敗します。もう一度試す前に、インストールを修復し、セキュリティソフトの隔離レポートを確認してください。ウイルス対策そのものを止めるのはやめてください。保守されている更新処理は、成功を報告する前に、CLI の読み込み、Windows の実行ファイルのヘッダー、ASAR のヘッダーと同梱された main のエントリ、ローカルのモジュールエントリを持つ読み取り可能な画面側の HTML、最初のモジュールファイル、現在のビルド刻印を確かめます。これらは最低限の成果物チェックであって、依存関係の全数監査でも、アプリやバックエンドを実際に起動する試験でもありません。Python が見つからないことは、デスクトップアプリの終了を待つ前に報告します。依存関係の修復は、更新の一部としてそのまま実行できます。Electron は、その構成であればバックエンドを止める前に受け渡しの前提条件を確かめます。旧来のフラットな更新構成も引き続き使えるため、更新用のファイルの欠落がすべてバックエンド停止の前に見つかるわけではありません。
 
 Windows では、パッケージ作成の途中で開き直されたデスクトップアプリを、用意したビルドへ切り替える直前にもう一度停止します。この後始末の対象は、そのチェックアウトのデスクトップリリース配下にある実行ファイルだけで、無関係なインストールは止めません。ロックが残っていた場合は、名前の付け替えのエラーを見逃さずに、切り替えそのものを失敗させます。
+
+### 取得が `not a git repository` で失敗するとき {#fetch-fails-with-not-a-git-repository}
+
+インストール先の `.git` フォルダーは残っているのに git がそれを受け付けなくなっている場合、`hermes update` は "This Hermes checkout's git data is damaged" と表示して止まります。`HEAD` がなくなったか空になった、または `.git` ファイルが指す先のフォルダーが消えた、という状態です。更新の強制終了、書き込み途中のクラッシュ、同期ソフトやウイルス対策ソフトによる `.git` への干渉で、こうなることがあります。このようなチェックアウトでは、どの更新も取得できません。何も書き込まれていないので、更新のために一時停止したゲートウェイは、変更前のままのコードで再び起動されます。
+
+修復するには、インストーラーをもう一度実行します。インストーラーは壊れたチェックアウトを `hermes-agent.broken-<timestamp>` という名前で脇へ移し（何も削除しません）、新しくクローンし直します。設定、セッション、その他のデータはチェックアウトの外にあるので、そのまま残ります。エラーには、そのチェックアウト用の正確なコマンドが表示されます。既定の場所なら次のとおりです。
+
+- Linux / macOS / WSL2: `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`
+- Windows (PowerShell): `iex (irm https://hermes-agent.nousresearch.com/install.ps1)`
+
+別の場所にインストールしたチェックアウトでは、表示されたコマンドのとおり、そのディレクトリをもう一度渡す必要があります（Linux/macOS では `bash -s -- --dir <path>`、Windows では `-InstallDir <path>`）。渡さないと、インストーラーは既定の場所のほうを修復してしまいます。
+
+Hermes がまた動くようになったら、`.broken-*` フォルダーは削除してかまいません。
 
 ### 取得が `should_include_obj should only be called on existing objects` で失敗するとき {#fetch-fails-with-shouldincludeobj-should-only-be-called-on-existing-objects}
 

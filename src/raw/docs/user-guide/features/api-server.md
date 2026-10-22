@@ -2,7 +2,7 @@
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: 7e890da60a4c532b1ea009735e8fd13f6bbdb456
+upstream_blob: 2d920eb64d9cbb54ed2e31052163032acc33ea1a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -71,6 +71,11 @@ API へのリクエストは、ゲートウェイの永続的な受け付けキ�
   最終ステータスと `response.cancelled` / `response.failed` イベントを使い、診断用の文が
   含まれていても変わりません。Chat Completions は、中断されたターンには `finish_reason: "cancelled"`、
   失敗には `"error"` を返し、成功を示す `"stop"` は返しません。
+- 繰り返しの上限（`agent.max_turns`）を使い切ったターンでも、それまでに分かったことをエージェントが
+  まとめて答えます。Chat Completions はその文章を `finish_reason: "length"` と
+  `hermes.error_code: "iteration_budget_exhausted"` 付きで返し、
+  Responses は `status: "incomplete"` を返します。この内容は、取り消しではなく、途中で止まった作業への
+  使える答えとして扱ってください。
 - セッションチャットの返答には `status` が付き、そのストリームも対応する run の最終イベントを
   伝えます。アシスタントの締めくくりのフレームが来たこと自体は、実行が成功した証拠にはなりません。
 

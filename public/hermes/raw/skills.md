@@ -12,9 +12,9 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 212 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 211 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `efa7ade`（2026-10-21）時点。この一覧は上流の docs から機械生成しています。
+上流 `36f7966`（2026-10-22）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（58）
 
@@ -81,7 +81,7 @@ raw: /hermes/raw/skills.md
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-09-20 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/) | Use when a fetch fails: 403/429, paywall, WAF, bot wall | 2026-09-20 |
 
-## あとから入れる（153）
+## あとから入れる（152）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -155,7 +155,6 @@ raw: /hermes/raw/skills.md
 | [Fastmcp](/hermes/docs/user-guide/skills/optional/mcp/mcp-fastmcp/) | Build, test, and deploy Python MCP servers | 2026-09-20 |
 | [Mcp Oauth Remote Gateway](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/) | Manual OAuth for remote MCP servers on headless gateways | 2026-09-20 |
 | [Mcporter](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcporter/) | List, auth, and call MCP servers/tools from the terminal | 2026-09-20 |
-| [Openclaw Migration](/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/) | Import an OpenClaw setup (memories, skills) into Hermes | 2026-09-29 |
 | [Accelerate](/hermes/docs/user-guide/skills/optional/mlops/mlops-accelerate/) | Run PyTorch training across GPUs with minimal changes | 2026-09-20 |
 | [Chroma](/hermes/docs/user-guide/skills/optional/mlops/mlops-chroma/) | Embedding database for RAG and semantic search | 2026-09-20 |
 | [Clip](/hermes/docs/user-guide/skills/optional/mlops/mlops-clip/) | Zero-shot image classification and image-text search | 2026-09-20 |

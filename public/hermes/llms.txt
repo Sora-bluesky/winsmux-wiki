@@ -61,6 +61,7 @@ Hermes Agent 0.22.4
 - [developer-guide/contributing（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/contributing/)
 - [developer-guide/creating-skills（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/creating-skills/)
 - [developer-guide/cron-internals（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/cron-internals/)
+- [developer-guide/delegation-provider-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/delegation-provider-plugin/)
 - [developer-guide/desktop-plugin-sdk（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - [developer-guide/egress-internals（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/egress-internals/)
 - [developer-guide/extending-the-cli（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/extending-the-cli/)
@@ -405,7 +406,6 @@ Hermes Agent 0.22.4
 - [user-guide/skills/optional/mcp/mcp-fastmcp（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-fastmcp/)
 - [user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/)
 - [user-guide/skills/optional/mcp/mcp-mcporter（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-mcporter/)
-- [user-guide/skills/optional/migration/migration-openclaw-migration（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
 - [user-guide/skills/optional/mlops/mlops-accelerate（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-accelerate/)
 - [user-guide/skills/optional/mlops/mlops-chroma（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-chroma/)
 - [user-guide/skills/optional/mlops/mlops-clip（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-clip/)
@@ -533,6 +533,7 @@ Hermes Agent 0.22.4
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/contributing.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/creating-skills.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/cron-internals.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/delegation-provider-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/desktop-plugin-sdk.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/egress-internals.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/extending-the-cli.md
@@ -877,7 +878,6 @@ Hermes Agent 0.22.4
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/mcp/mcp-fastmcp.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/mcp/mcp-mcporter.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/migration/migration-openclaw-migration.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/mlops/mlops-accelerate.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/mlops/mlops-chroma.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/mlops/mlops-clip.md

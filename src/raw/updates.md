@@ -8,6 +8,21 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-22
+
+- [プラグインカタログへの登録申請](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
+- [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
+- [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
+- [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
+- [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
+- [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
+- [プラグインカタログ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
+
 ## 2026-10-21
 
 - [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
@@ -2474,3 +2489,7 @@ Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ�
 ## 週次まとめ 2026-W42
 
 ゲートウェイの内部まわりが厚く更新され、コマンド対応表やローカルセッション、Multiplexing Gateway の内部構造、ゲートウェイをいくつも同時に動かす手順が新しい内容になりました。プラグインでは、デスクトップのプラグイン SDK やモデルプロバイダーのプラグイン、カタログへの登録申請の説明が手直しされ、オブザーバーフックやサブエージェントのライフサイクル API の説明にも手が入りました。ほかに、セッションの保存領域とその復旧、デスクトップ版を複数の Hermes につなぐ方法、考えをアイソメトリックの機械の図で説明する Anatomy スキルのページが更新されています。
+
+## 週次まとめ 2026-W43
+
+プラグインまわりが広く更新され、プラグインの作り方やカタログへの登録申請、デスクトップのプラグイン SDK、画像生成プロバイダやターミナル環境プロバイダのプラグインのページに手が入りました。ゲートウェイでは、コマンド対応表やいくつも同時に動かす手順が引き続き更新され、オブザーバーフックやイベントフック、サブエージェントへの委任の説明も見直されています。ほかに、クイックスタートや設定、CLI コマンド一覧、MCP、カンバン、Telegram、Hermes Desktop、A2A（エージェント間連携）、安定版リリースの受け入れと昇格のページが新しい内容になりました。

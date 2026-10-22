@@ -821,14 +821,6 @@
                   ]
                 },
                 {
-                  "label": "migration",
-                  "items": [
-                    {
-                      "id": "user-guide/skills/optional/migration/migration-openclaw-migration"
-                    }
-                  ]
-                },
-                {
                   "label": "mlops",
                   "items": [
                     {
@@ -1513,6 +1505,9 @@
                   "id": "developer-guide/terminal-environment-plugin"
                 },
                 {
+                  "id": "developer-guide/delegation-provider-plugin"
+                },
+                {
                   "id": "developer-guide/plugins/application-declarations"
                 },
                 {
@@ -1867,7 +1862,6 @@
     "user-guide/skills/optional/mcp/mcp-fastmcp",
     "user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway",
     "user-guide/skills/optional/mcp/mcp-mcporter",
-    "user-guide/skills/optional/migration/migration-openclaw-migration",
     "user-guide/skills/optional/mlops/mlops-accelerate",
     "user-guide/skills/optional/mlops/mlops-training-axolotl",
     "user-guide/skills/optional/mlops/mlops-chroma",
@@ -2061,6 +2055,7 @@
     "developer-guide/web-search-provider-plugin",
     "developer-guide/browser-provider-plugin",
     "developer-guide/terminal-environment-plugin",
+    "developer-guide/delegation-provider-plugin",
     "developer-guide/plugins/application-declarations",
     "developer-guide/plugins/catalog-submission",
     "developer-guide/creating-skills",

@@ -2,7 +2,7 @@
 title: "ボットの画面"
 description: ""
 upstream_path: user-guide/features/bot-screen.md
-upstream_blob: 35af80df88e61831a171ca775750b3b0a27b6d5e
+upstream_blob: d71cc779591fda6bfb839e93fd495471c2c6a67f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/bot-screen
 ---
@@ -16,7 +16,7 @@ Xfce の画面で、その様子は Hermes Desktop にライブで映ります�
 **操作を返して**、いまサインインしたセッションのまま続きを任せられます。
 アプリを閉じてもノート PC の電源を切っても、ボットは作業を続けます。
 画面はあなたの端末ではなく、ゲートウェイホスト側にあるからです。ゲートウェイが
-`terminal` をサンドボックスで動かしている場合（`terminal.backend: docker`、`ssh`、`singularity`）は、
+`terminal` をサンドボックスで動かしている場合（`terminal.backend: docker`、`ssh`、または `singularity` のようなストリーミング対応のプラグインバックエンド）は、
 画面はシェルと並んで**そのサンドボックスの中**に置かれます。そのため、ボットの `computer_use` と
 ブラウザが、あなたの決めた境界の外で操作することはありません（
 [画面が動く場所](#where-the-screen-runs)を参照してください）。
@@ -222,7 +222,7 @@ hermes -p research computer-use screen start   # another bot's screen
 | `terminal.backend` | `placement: auto`（既定） | 意味 |
 |---|---|---|
 | `local` | ゲートウェイホスト | ターミナル、画面、ブラウザ、`computer_use` のすべてが、ゲートウェイを動かしているマシンを共有します。 |
-| `docker`、`ssh`、`singularity` | **サンドボックスの中** | Xvnc + Xfce、Chromium、cua-driver は、ターミナルが使うのと同じ `docker exec` / `ssh` の経路で起動され、コンテナの中または SSH 先のホストで動きます。ペインにはサンドボックスの画面が映り、ホストのデスクトップには一切触れられません。 |
+| `docker`、`ssh`、`singularity`（プラグイン） | **サンドボックスの中** | Xvnc + Xfce、Chromium、cua-driver は、ターミナルが使うのと同じ `docker exec` / `ssh` の経路で起動され、コンテナの中または SSH 先のホストで動きます。ペインにはサンドボックスの画面が映り、ホストのデスクトップには一切触れられません。 |
 | `supports_streams` を宣言したプラグインのバックエンド | **サンドボックスの中** | 上と同じです。プラグイン自身の実行経路を通して動きます。 |
 | `modal`、`daytona`、`vercel_sandbox`、その他のプラグインのバックエンド | **拒否** | これらのバックエンドは、まだディスプレイを持てません。エージェント用に選んだサンドボックスの横で、ホスト上に黙って画面を動かす代わりに、`Start` が理由を説明し、`placement: gateway` を案内します。 |
 

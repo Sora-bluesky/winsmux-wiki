@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent クイックスタート"
 description: "Hermes Agent との最初の会話まで。インストールからおしゃべりできるまで 5 分"
 upstream_path: getting-started/quickstart.md
-upstream_blob: 5c82a75ee2240a9c0cbe9e705f2eff9a0866fe4b
+upstream_blob: b3304561ffd7b107f716069107c8282c9c652551
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/quickstart
 ---
@@ -93,6 +93,8 @@ hermes setup --portal
 :::
 
 :::info 初期設定の 3 つのやり方
+OpenClaw、Claude Code、Codex CLI、Cursor から移ってきましたか？ 入れたばかりの状態で `hermes setup` を実行し、これらのどれかがパソコンに見つかると、まずその設定を取り込むかどうかを聞いてきます（取り込みのために `agent-importers` プラグインを入れます。[ほかのエージェントからの取り込み](/hermes/docs/user-guide/import-from-other-agents/)を参照）。
+
 入れたばかりの状態で `hermes setup` を実行すると、3 つのやり方から選べます。
 
 - **Quick Setup（Nous Portal）** — OAuth でログインするだけで、API キーの管理は不要です。モデルと Tool Gateway のツールがまとめて用意され、料金は [Nous Portal の購読](/hermes/docs/integrations/nous-portal/) に付きます。おすすめの近道です。

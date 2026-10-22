@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: f2d6d1623a73ee1e85652938baf3b88b4d654758
+upstream_blob: 16170694ef234267a0e57a50c7006f47a2c9a011
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -27,6 +27,7 @@ Hermes にはいくつも異なるプラグイン可能なインターフェー�
 | **動画生成バックエンド** | [Video Generation Provider Plugins](/hermes/docs/developer-guide/video-gen-provider-plugin/) |
 | **Web 検索 / 抽出バックエンド** | [Web Search Provider Plugins](/hermes/docs/developer-guide/web-search-provider-plugin/) |
 | **クラウドブラウザバックエンド**（Browserbase 型の CDP セッションプロバイダー） | [Browser Provider Plugins](/hermes/docs/developer-guide/browser-provider-plugin/) |
+| **委任の方針**（サブエージェントごとにプロファイルや名前付きのモデルを選ぶもの） | [Delegation Provider Plugins](/hermes/docs/developer-guide/delegation-provider-plugin/) — `ctx.register_delegation_provider()` |
 | **コンピューター操作のドライバー**（`computer_use` ツールの裏でデスクトップを操作するもの） | [Computer-use backend plugins](#computer-use-backend-plugins) — `ctx.register_computer_use_provider()` |
 | **シークレットマネージャーバックエンド**（vault / パスワードマネージャー / OS キーストア） | [Secret Source Plugins](/hermes/docs/developer-guide/secret-source-plugin/) |
 | **ダッシュボードの OIDC / 認証プロバイダー** | [Web Dashboard — custom providers](/hermes/docs/user-guide/features/web-dashboard/#custom-providers) — `ctx.register_dashboard_auth_provider()` |
@@ -529,6 +530,9 @@ dependencies = [
 - **`--yes-deps`** を付けると依存関係の質問に前もって答えたことになり、画面のない環境でのインストール（CI、SSH
   での自動化、コンテナのエントリポイント）でも拒否されずに、宣言された依存関係を用意します。
   `--no-deps` とは同時に使えません。
+- **何もインストールしない `pyproject.toml`**（`dependencies = []` で、`[build-system]`、extras、
+  dependency groups もないもの）は、宣言がないものとして扱われます。依存関係の質問は出ず、
+  プラグインを有効にしても更新しても、依存関係の環境はそのまま変わりません。
 - **`python_runtime: external`** は、sidecar の依存関係を共有の和集合から外します。
   Hermes はその Python ランタイムをインストールせず、その宣言も変更しません。
 - **読み込むものが何もないのはエラー** — `hermes plugins validate` は、`__init__.py`、
@@ -1553,6 +1557,37 @@ from agent.runtime_cwd import resolve_agent_cwd
 def _handle_todo(raw_args: str) -> str:
     todo = resolve_agent_cwd() / "TODO.md"  # the session's folder, not the gateway's
     return todo.read_text() if todo.exists() else "No TODO.md here."
+```
+
+### ユーザーに選択肢から選んでもらう {#ask-the-user-to-pick-an-option}
+
+同期のスラッシュコマンドのハンドラーは、`ctx.ask_choice(question, choices)` を使って、コマンドを実行したユーザーに選択肢を1つ選んでもらえます。ユーザーが答えるまで処理は止まり、選ばれた選択肢の `value` か `None` を返します。各画面には、エージェントの `clarify` の質問と同じ形で表示されます。
+
+| 画面 | ユーザーに見えるもの |
+|---|---|
+| Telegram、Discord、Slack | 選択肢ごとのボタン（と「Other」）が付いたカード |
+| そのほかのメッセージングプラットフォーム | 番号付きの一覧。ユーザーは番号かラベルで返信します |
+| 従来の CLI、Ink TUI、Desktop | clarify の選択画面 |
+
+選択肢は文字列（ラベルと値を兼ねます）か、dict `{"value", "label", "description"}` で書きます。description はラベルの後ろに表示されます。値やラベルを入力した場合も、大文字・小文字を問わずその選択肢が選ばれます。ユーザーがキャンセルしたとき、選択肢にないものを入力したとき、clarify の待ち時間（`agent.clarify_timeout`）が過ぎたときは、`ask_choice` は `None` を返します。尋ねる相手がいない場面でも `None` を返します。フック、cron ジョブ、非同期のハンドラー（待つと、答えを届けるイベントループが止まってしまうため）がそうです。その場合、ハンドラーは文字で使い方を返す動作に戻ります。
+
+```python
+_MODES = [
+    {"value": "default", "label": "Default", "description": "delegation.model / parent model"},
+    {"value": "model_map", "label": "Model routes", "description": "per-task model map"},
+    {"value": "profile_routes", "label": "Profiles", "description": "delegate to other profiles"},
+]
+
+def register(ctx):
+    def delegation(raw_args: str) -> str:
+        mode = raw_args.strip() or ctx.ask_choice("Delegation mode", _MODES)
+        if mode not in {m["value"] for m in _MODES}:
+            return "Usage: /delegation default|model_map|profile_routes"
+        ctx.set_config("mode", mode)
+        return f"Delegation mode: {mode}"
+
+    ctx.register_command("delegation", delegation, description="Switch the delegation mode",
+                         args_hint="[mode]")
 ```
 
 ### スラッシュコマンドからツールをディスパッチする {#dispatch-tools-from-slash-commands}

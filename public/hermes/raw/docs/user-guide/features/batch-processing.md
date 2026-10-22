@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "まとめて処理する"
 description: "エージェントの軌跡を大量に生成する — 並列処理、途中経過の保存、ツールセットの配分"
 upstream_path: user-guide/features/batch-processing.md
-upstream_blob: cb86017543bf43b584b578304a8235cd1d0fd188
+upstream_blob: e1fc9175def1bd46c96d9893090602cbc30f0162
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/batch-processing
 ---
@@ -54,7 +54,7 @@ python batch_runner.py --list_distributions
 
 次の項目は、必要に応じて足せます。
 
-- `image` または `docker_image`: この指示文のサンドボックスに使うコンテナイメージ（Docker、Modal、Singularity のいずれの実行基盤でも働きます）
+- `image` または `docker_image`: この指示文のサンドボックスに使うコンテナイメージ（Docker、Modal、Daytona のほか、Singularity などのプラグインの実行基盤でも働きます）
 - `cwd`: この仕事のターミナルで使う作業ディレクトリの指定
 
 ## 設定できる項目 {#configuration-options}

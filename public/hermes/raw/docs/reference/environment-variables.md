@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: f34cec7f944c132b1b675dfca49ec8270d5950bd
+upstream_blob: d3711e79fa1ae04eb03551fc5878094b72f2efe2
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -253,7 +253,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 
 | 変数 | 説明 |
 |----------|-------------|
-| `TERMINAL_ENV` | バックエンド: `local`、`docker`、`ssh`、`singularity`、`modal`、`daytona`、`vercel_sandbox` |
+| `TERMINAL_ENV` | バックエンド: `local`、`docker`、`ssh`、`modal`、`daytona`、`vercel_sandbox`、またはプラグインのバックエンド（`singularity`） |
 | `HERMES_DOCKER_BINARY` | Hermes が呼び出すコンテナのコマンドを上書きします（`podman`、`/usr/local/bin/docker` など）。設定しなければ `PATH` 上の `docker` か `podman` を自動で探します。両方入っていて既定でないほうを使いたいときや、コマンドが `PATH` の外にあるときに必要です。 |
 | `TERMINAL_DOCKER_IMAGE` | Docker のイメージ（既定: `nousresearch/hermes-sandbox:desktop`） |
 | `TERMINAL_DOCKER_FORWARD_ENV` | Docker のターミナルセッションへ明示的に渡す環境変数名の JSON 配列。なお、スキルが宣言した `required_environment_variables` は自動で渡されるので、どのスキルも宣言していない変数のときだけ必要です。 |
@@ -261,7 +261,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `TERMINAL_DOCKER_ENV` | Docker のターミナルセッション内に設定する追加の環境変数の JSON オブジェクト（たとえば `{"FOO":"bar"}`） |
 | `TERMINAL_DOCKER_EXTRA_ARGS` | `docker run` へ渡す追加の引数の JSON 配列（たとえば `["--memory","4g"]`） |
 | `TERMINAL_DOCKER_MOUNT_CWD_TO_WORKSPACE` | 上級者向けの任意設定: 起動時の作業ディレクトリを Docker の `/workspace` にマウントします（`true`/`false`。既定: `false`） |
-| `TERMINAL_SINGULARITY_IMAGE` | Singularity のイメージか `.sif` のパス |
+| `TERMINAL_SINGULARITY_IMAGE` | Singularity のイメージか `.sif` のパス（[`singularity` プラグイン](https://github.com/NousResearch/hermes-official-plugins/tree/main/singularity)が読み取ります） |
 | `TERMINAL_MODAL_IMAGE` | Modal のコンテナイメージ |
 | `TERMINAL_DAYTONA_IMAGE` | Daytona のサンドボックスのイメージ |
 | `TERMINAL_VERCEL_RUNTIME` | Vercel Sandbox のランタイム（`node24`、`node22`、`python3.13`） |
@@ -281,7 +281,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `TERMINAL_SSH_PORT` | SSH のポート（既定: 22） |
 | `TERMINAL_SSH_KEY` | 秘密鍵のパス |
 
-## コンテナの資源（Docker、Singularity、Modal、Daytona） {#container-resources-docker-singularity-modal-daytona}
+## コンテナの資源（Docker、Modal、Daytona、コンテナ型のプラグインのバックエンド） {#container-resources-docker-modal-daytona-container-plugin-backends}
 
 | 変数 | 説明 |
 |----------|-------------|

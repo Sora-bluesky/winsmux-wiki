@@ -1,6 +1,6 @@
 {
-  "sha": "efa7ade",
-  "date": "2026-10-21",
+  "sha": "36f7966",
+  "date": "2026-10-22",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -1016,14 +1016,6 @@
       "description": "List, auth, and call MCP servers/tools from the terminal",
       "url": "/hermes/docs/user-guide/skills/optional/mcp/mcp-mcporter/",
       "date": "2026-09-20",
-      "source": "optional"
-    },
-    {
-      "slug": "migration-openclaw-migration",
-      "name": "Openclaw Migration",
-      "description": "Import an OpenClaw setup (memories, skills) into Hermes",
-      "url": "/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/",
-      "date": "2026-09-29",
       "source": "optional"
     },
     {

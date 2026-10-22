@@ -2,7 +2,7 @@
 title: "モデルプロバイダーのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダー（推論バックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: df1fbda3fd64e07fe9980a541a582d80c1601c9d
+upstream_blob: 9442cc979bccf7892d92572d47c15ef08349b605
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -106,6 +106,7 @@ author: Your Name
 | `env_vars` | `tuple[str, ...]` | API キーの環境変数を優先順に並べたものです。末尾の `*_BASE_URL` の項目は、利用者によるベース URL の上書きとして扱われます |
 | `base_url` | str | 既定の推論エンドポイントです |
 | `models_url` | str | モデル一覧の URL を明示します（無ければ `{base_url}/models` に戻ります） |
+| `supports_streaming` | `bool \| None` | `None`（既定）は通信方式の既定の動きをそのまま使います。`True` にすると、ストリーミングに対応した `external_process` のクライアントがホスト側のストリーミングを使うようになります。`False` はプロバイダーのストリーミングを止めます。ACP の URL や、セッション単位でストリーミングを止める設定のほうが、引き続き優先されます。有効にするのは、選んだ API モードのストリーミングの約束事（取り消しと後始末を含む）をクライアントが実装している場合だけにしてください。 |
 | `auth_type` | str | `api_key` \| `oauth_device_code` \| `oauth_external` \| `copilot` \| `aws_sdk` \| `external_process` |
 | `auth_handler` | `Callable \| None` | プロバイダー自身が持つ `hermes auth add/status/logout/refresh <name>` の処理です。[プロバイダー自身が持つ認証](#provider-owned-auth-auth_handler-refresh_credential)を参照してください |
 | `refresh_credential` | `Callable \| None` | プール内の OAuth の行を、プロバイダー自身が更新する処理です。同じ節を参照してください |

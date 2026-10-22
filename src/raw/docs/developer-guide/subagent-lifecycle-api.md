@@ -2,7 +2,7 @@
 title: "公開されたサブエージェントのライフサイクル API"
 description: ""
 upstream_path: developer-guide/subagent-lifecycle-api.md
-upstream_blob: a2bd44613dde7f04bfd0e1b5820c59a5c7ce36be
+upstream_blob: 56d9388d0758835e59fd2dfed714764d42c8003e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/subagent-lifecycle-api
 ---
@@ -88,3 +88,7 @@ delegation の設定 > 親 です。選ばれたプロバイダーは、自分�
 解決できないプロバイダーを指定すると、立ち上げの前に `SubagentLifecycleError` が発生します。
 コアは `provider` をモデルに見せません。選ぶのはプラグインで、たとえば
 運用者の設定から選びます。
+
+ライフサイクル API は `delegation.backend` を見ません。子を立ち上げるプラグインが、振り分け先をすでに決めているからです。
+`delegate_task` がモデルのサブエージェントをどう振り分けるかを変えたいときは、
+[委任プロバイダーのプラグイン](/hermes/docs/developer-guide/delegation-provider-plugin/)を書きます。

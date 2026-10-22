@@ -16,9 +16,9 @@ raw: /hermes/raw/free.md
 
 | 経路 | 登録・APIキー | 無料になる範囲 | 利用条件 | 公式の設定手順 | 説明の確認日 |
 |---|---|---|---|---|---|
-| Nous Portal Free | 登録が必要。APIキーは不要 | 無料モデルのモデル利用料 | 標準のレート制限。月次クレジットは0 | [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/) | 2026-10-16 |
-| OpenRouter :free | 登録とAPIキーが必要 | 末尾に:freeが付くモデルのモデル利用料 | 1分あたりと1日あたりの回数制限あり。最新値は公式ページで確認 | [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits) | 2026-10-16 |
-| Google AI Studio（Gemini） | Google AI StudioのAPIキーが必要 | Gemini APIの無料枠 | 無料枠では入力データがGoogleの改善に使われる | [Google Geminiガイド](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/) / [Gemini APIの料金](https://ai.google.dev/gemini-api/docs/pricing) | 2026-10-16 |
+| Nous Portal Free | 登録が必要。APIキーは不要 | 無料モデルのモデル利用料 | 標準のレート制限。月次クレジットは0 | [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/) | 2026-10-23 |
+| OpenRouter :free | 登録とAPIキーが必要 | 末尾に:freeが付くモデルのモデル利用料 | 1分あたりと1日あたりの回数制限あり。最新値は公式ページで確認 | [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits) | 2026-10-23 |
+| Google AI Studio（Gemini） | Google AI StudioのAPIキーが必要 | Gemini APIの無料枠 | 無料枠では入力データがGoogleの改善に使われる | [Google Geminiガイド](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/) / [Gemini APIの料金](https://ai.google.dev/gemini-api/docs/pricing) | 2026-10-23 |
 
 キーなしで OpenCode の無料モデル（名前が -free で終わるもの）を使う経路は、Hermes が 2026-09-18 に削除しました。OpenCode Zen の API キーを設定すると Hermes の一覧にも -free のモデルが出ますが、料金と動作はこのページでは確かめていません。 [Hermesでの経路削除](https://github.com/NousResearch/hermes-agent/commit/998f614c7f)
 
@@ -32,7 +32,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-10-22
+最終取得: 2026-10-23
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -53,7 +53,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-10-22
+最終取得: 2026-10-23
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -64,7 +64,6 @@ raw: /hermes/raw/free.md
 | **Google: Lyria 3 Clip Preview**<br>`google/lyria-3-clip-preview`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |
 | **Google: Lyria 3 Pro Preview**<br>`google/lyria-3-pro-preview`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |
 | **LiquidAI: LFM2.5-2.6B (free)**<br>`liquid/lfm-2.5-2.6b:free`<br>入力・出力の基本単価0（取得時点） | 65,536 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **MiniMax: MiniMax M3.1 Flash (free)**<br>`minimax/minimax-m3.1-flash:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3 Nano Omni (free)**<br>`nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`<br>入力・出力の基本単価0（取得時点） | 256,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3 Super (free)**<br>`nvidia/nemotron-3-super-120b-a12b:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3 Ultra (free)**<br>`nvidia/nemotron-3-ultra-550b-a55b:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |

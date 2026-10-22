@@ -2,7 +2,7 @@
 title: "ツールとツールセット"
 description: "Hermes Agent のツールの全体像 — 何が使えるか、ツールセットの仕組み、ターミナルの実行先"
 upstream_path: user-guide/features/tools.md
-upstream_blob: 127608bcb2fccb54f33d5f221d63e292a7e6508d
+upstream_blob: f3bb93f4c8219b262093eb6a5754dad6292998bf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tools
 ---
@@ -76,7 +76,7 @@ hermes tools
 | `local` | 手元の機械で実行（既定） | 開発、信用できる作業 |
 | `docker` | 切り離されたコンテナ | 安全性、再現性 |
 | `ssh` | 離れたサーバー | 隔離、エージェントを自分のコードから遠ざける |
-| `singularity` | HPC 向けのコンテナ | クラスタでの計算、root なし |
+| `singularity`（プラグイン） | HPC 向けのコンテナ | クラスタでの計算、root なし |
 | `modal` | クラウドでの実行 | サーバーレス、規模を伸ばす |
 | `daytona` | クラウドの砂場としての作業場 | 消えずに残る、離れた開発環境 |
 | `vercel_sandbox` | Vercel Sandbox のクラウド上の microVM | スナップショットに支えられたファイルシステムが残るクラウドでの実行 |
@@ -86,7 +86,7 @@ hermes tools
 ```yaml
 # In ~/.hermes/config.yaml
 terminal:
-  backend: local    # or: docker, ssh, singularity, modal, daytona, vercel_sandbox
+  backend: local    # or: docker, ssh, modal, daytona, vercel_sandbox, or a plugin backend (singularity)
   cwd: "."          # Working directory
   timeout: 180      # Command timeout in seconds
 ```
@@ -146,7 +146,11 @@ TERMINAL_SSH_KEY=~/.ssh/id_rsa
 
 ### Singularity / Apptainer {#singularityapptainer}
 
+公式プラグイン（[`singularity`](https://github.com/NousResearch/hermes-official-plugins/tree/main/singularity)）です。以前は本体に組み込まれていました。すでに使っているプロファイルには、`hermes update` がこのプラグインを入れます。
+
 ```bash
+hermes plugins install singularity
+
 # Pre-build SIF for parallel workers
 apptainer build ~/python.sif docker://python:3.11-slim
 
@@ -197,7 +201,7 @@ VERCEL_OIDC_TOKEN="$(vc project token)" hermes chat
 
 ```yaml
 terminal:
-  backend: docker  # or singularity, modal, daytona, vercel_sandbox
+  backend: docker  # or modal, daytona, vercel_sandbox, singularity (plugin)
   container_cpu: 1              # CPU cores (default: 1)
   container_memory: 5120        # Memory in MB (default: 5GB)
   container_disk: 51200         # Disk in MB (default: 50GB)

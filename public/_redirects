@@ -25,3 +25,5 @@
 /hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-merge-reconciler/ /hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-agent-merge-conflict-arbiter/ 301
 # 上流が削除したページで、同じ主題を自前ページが扱うもの
 /hermes/docs/user-guide/free-tier/                                                       /hermes/free/                                                                            301
+# 上流で agent-importers plugin へ移った skill（後継は OpenClaw 移行ガイド）
+/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/     /hermes/docs/guides/migrate-from-openclaw/                                              301

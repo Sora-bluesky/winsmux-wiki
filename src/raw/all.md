@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（243 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（244 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -207,7 +207,7 @@ raw: /hermes/raw/all.md
 - [Automated GitHub PR Comments with Webhooks](/hermes/docs/guides/webhook-github-pr-review/)
 - [xAI Grok OAuth (SuperGrok / X Premium+)](/hermes/docs/guides/xai-grok-oauth/)
 
-## Developer Guide（60）
+## Developer Guide（61）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -232,6 +232,7 @@ raw: /hermes/raw/all.md
 - [Background completion backlogs](/hermes/docs/developer-guide/completion-backlog-delivery/)
 - [Context Engine Plugins](/hermes/docs/developer-guide/context-engine-plugin/)
 - [Cron Internals](/hermes/docs/developer-guide/cron-internals/)
+- [Delegation Provider Plugins](/hermes/docs/developer-guide/delegation-provider-plugin/)
 - [Desktop Plugin SDK (@hermes/plugin-sdk)](/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - [Egress proxy internals](/hermes/docs/developer-guide/egress-internals/)
 - [Classic gateway client](/hermes/docs/developer-guide/gateway-classic-cli/)

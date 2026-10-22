@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: b59ade9aea9006dd10e0f48e44ba93b983a78b13
+upstream_blob: 71209c03370f5c4889b2961939389cd078b578ec
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -2067,7 +2067,7 @@ printf '{}\n'
 2. `HERMES_ACCEPT_HOOKS=1` の環境変数
 3. `~/.hermes/config.yaml` の `hooks_auto_accept: true`
 
-確認を求めるのは、前面で動く `hermes chat`（または `hermes rl`）だけです。ゲートウェイ、cron、`hermes mcp serve`、`hermes acp`、CI は、標準入力が端末に見える場合でも（Windows のログイン項目のランチャーから開く隠れたコンソールがそうです）確認を求めません。そのため、この 3 つのどれかか、許可一覧の項目が要ります。そうでないと、新しく足したフックは登録されないままになり、警告にはそのフックが抜けているプロファイルの許可一覧のファイル（既定以外のプロファイルなら `profiles/<name>/shell-hooks-allowlist.json`）の名前が出ます。`hermes gateway run --accept-hooks` は（ゲートウェイでの `HERMES_ACCEPT_HOOKS=1` と同じく）、そのゲートウェイが受け持つすべてのプロファイルのフックを承認します。起動後に足されたフックも含みます。
+確認を求めるのは、前面で動く `hermes chat`（または `hermes rl`）だけです。ゲートウェイ、cron、`hermes mcp-serve --tools`（mcp-serve プラグイン）、`hermes acp`、CI は、標準入力が端末に見える場合でも（Windows のログイン項目のランチャーから開く隠れたコンソールがそうです）確認を求めません。そのため、この 3 つのどれかか、許可一覧の項目が要ります。そうでないと、新しく足したフックは登録されないままになり、警告にはそのフックが抜けているプロファイルの許可一覧のファイル（既定以外のプロファイルなら `profiles/<name>/shell-hooks-allowlist.json`）の名前が出ます。`hermes gateway run --accept-hooks` は（ゲートウェイでの `HERMES_ACCEPT_HOOKS=1` と同じく）、そのゲートウェイが受け持つすべてのプロファイルのフックを承認します。起動後に足されたフックも含みます。
 
 **スクリプトの編集は黙って信頼されます。** 許可一覧の鍵は、スクリプトのハッシュではなく、そのままのコマンドの文字列です。ディスク上でスクリプトを直しても同意は無効になりません。`hermes hooks doctor` が更新時刻のずれを知らせるので、編集に気づいて、承認し直すかどうかを判断できます。
 
