@@ -2,7 +2,7 @@
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: 659927389bf2b8799fd9f02f2448f89908f6539a
+upstream_blob: 8040ba38c30494f427529d3af8bb0864b56d9baa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -331,7 +331,7 @@ delegation:
 
 **失敗ははっきり返し、黙って切り替えることはしません。** 選んだバックエンドが見つからない（プラグインが入っていない、または無効）か、動けないと報告してきたときは、`delegate_task` がバックエンドの名前と直し方を示すツールのエラーを返し、サブエージェントはひとつも起動しません。既定の振り分けで子を黙って動かすことは決してありません。束の中で、バックエンドが振り分けられないタスク（知らない選択肢、選んだバックエンドが受け付けない引数、存在しないプロファイル、その振り分け先にない `service_tier`、知らない `reasoning_effort`、資格情報の不足）は、そのタスクだけが断られます。その結果の項目には `status: "error"`、理由、`route.refused: true` が入り、ほかのタスクはそのまま動きます。自分の `fallback_providers` を持たないモデルの振り分け先は、`delegation.fallback_providers` を使います。振り分け先に `fallback_providers: []` を書くと、そこだけ予備への切り替えが無効になります。プロファイルの振り分け先は、そのプロファイル自身の予備の順番を使います。
 
-**既定に戻すには。** `/delegation default`（`advanced-delegation` プラグインのコマンド）は、いまのセッションを既定のバックエンドに切り替えます。`/delegation <backend> --global` は、`/model` と同じ決まりで、`delegation.backend` を `config.yaml` に書き込みます。セッションでの切り替えは、次の `delegate_task` の呼び出しから振り分けを変え、会話が終わるまで（`/new`、`/resume`、自動のリセット）続きます。一方、モデルに見えるタスクごとの引数（選択肢やプロファイルの名前）は `config.yaml` に従い、次のセッションから変わります。ツールの一覧は、キャッシュされるプロンプトの一部だからです。それまでの間に、前のバックエンドの引数を送ってきたタスク（`profile_routes` に切り替えたあとの `option`）は断られます。そのときのメッセージには、セッションのバックエンド、その引数、直し方（`/delegation <backend> --global` のあと `/new`。`/new` は保存されたバックエンドで始まるためです。または `/delegation <saved backend>` で戻す）が示されます。新しいバックエンドの既定の振り分けで動くことは決してありません。プラグインがないときは、`hermes config set delegation.backend default` で既定に戻せます。
+**既定に戻すには。** `/delegation default`（`advanced-delegation` プラグインのコマンド）は、`delegation.backend` を `config.yaml` に保存し、次のセッション（`/new`）から効きます。いま動いている会話は、始めたときのバックエンドで振り分けを続けます。モデルに見えるタスクごとの選択肢（選択肢やプロファイルの名前）はキャッシュされるツールの一覧の一部で、振り分けと選択肢は一緒に切り替わるためです。`delegation.backend` を手で書き換えた場合も同じ動きになります。`/delegation <backend> --now` を使うと、いまの会話のツールも次のターンで作り直されるので、そこから新しいバックエンドで振り分け、その選択肢を示すようになります。その代わりに、プロンプトのキャッシュが一度外れます（文脈の圧縮はどのみちツールを作り直すので、そのときにも保存したバックエンドが反映されます）。会話のバックエンドが受け付けない引数を送ってきたタスクは断られます。そのときのメッセージには、バックエンド、その引数、直し方（`/delegation <backend> --now`、または `/new`）が示されます。バックエンドの既定の振り分けで動くことは決してありません。プラグインがないときは、`hermes config set delegation.backend default` で既定に戻せます。
 
 :::note プロファイルの振り分け先は資格情報を共有する
 `delegation.backends.profile_routes` にプロファイルを並べると、このプロファイルのサブエージェントが、そのプロファイルの資格情報、資格情報のプール、`SOUL.md`、端末のポリシーを使えるようになります。並べるのは、キーと端末の使い道を、このプロファイルのエージェントに任せてもよいと思えるプロファイルだけにしてください。

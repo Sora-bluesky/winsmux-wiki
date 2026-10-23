@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Merger Model — M&A の EPS 増加・希薄化ワークブックを Excel で作る"
 description: "M&A の EPS 増加・希薄化ワークブックを Excel で作る"
 upstream_path: user-guide/skills/optional/finance/finance-merger-model.md
-upstream_blob: 97a0dbfa073c9b2e74f8f227ff6fee07af613782
+upstream_blob: 2a4d10d9bdf158d688f2b5209f4e2c997611584e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-merger-model
 ---
@@ -154,7 +154,7 @@ M&A 取引の EPS 増加・希薄化分析を作ります。プロフォーマ�
 - **設定していない場合**は、次で代替します:
   - 米国の開示資料は `web_search` / `web_extract` で SEC EDGAR（`https://www.sec.gov/cgi-bin/browse-edgar`）を参照します
   - プレスリリースや決算資料は企業の IR ページを参照します
-  - 対話型のデータポータルには `browser_navigate` を使います
+  - 対話型のデータポータルには `browser_exec` を使います
   - ユーザーから提供されたデータ（文脈に見当たらないときは、はっきり尋ねます）
 - **数字を作ってはいけません。** 倍率、取引事例、開示上の数値の出どころを確かめられない場合は、そのセルを `[UNSOURCED]` と印を付けてユーザーに伝えます。
 

@@ -2,7 +2,7 @@
 title: "Sketch — 使い捨ての HTML モックアップ。見比べるための案を 2〜3 通り作る"
 description: "使い捨ての HTML モックアップ。見比べるための案を 2〜3 通り作る"
 upstream_path: user-guide/skills/optional/creative/creative-sketch.md
-upstream_blob: 0adfb7fc13f660c8455deb8ef96b184aff87860a
+upstream_blob: 1f3e0fd011d2ae5080b9263cee47a30db0446c92
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-sketch
 ---
@@ -108,14 +108,18 @@ sketches/
 
 ブラウザーで開いてください。崩れていたら、見せる前に直します。
 
-**案は目で確かめます。Hermes のブラウザーのツールを使ってください。** HTML を書いて描画を祈るのではなく、1 案ずつ読み込んで実際に見ます:
+**案は目で確かめます。Hermes の `browser_exec` を使ってください。** HTML を書いて描画を祈るのではなく、1 案ずつ読み込んで実際に見ます:
 
 ```
-browser_navigate(url="file:///absolute/path/to/sketches/001-calm-editorial/index.html")
-browser_vision(question="Does this layout look clean and readable? Any visible bugs (overlapping text, unstyled elements, broken images)?")
+browser_exec(code='''
+# Checking sketch 001 renders cleanly
+new_tab("file:///absolute/path/to/sketches/001-calm-editorial/index.html")
+wait_for_load()
+capture_screenshot()
+''')
 ```
 
-`browser_vision` は、ページに実際に出ているものの説明と、スクリーンショットの場所を返します。ソースを読むだけでは見つからない崩れ（フォントの読み込みが黙って失敗している、flex の入れ物がつぶれている、など）を拾えます。直しては読み込み直し、どの案もきちんと見えるようにします。
+添付されたスクリーンショットを見て、レイアウトがすっきりして読みやすいか、目に見える不具合（文字の重なり、スタイルの当たっていない要素、壊れた画像）がないかを確かめます（画像を見られないモデルでは、表示されたパスを `vision_analyze` に渡して同じことを尋ねます）。ソースを読むだけでは見つからない崩れ（フォントの読み込みが黙って失敗している、flex の入れ物がつぶれている、など）を拾えます。直しては同じ URL で読み込み直し（`goto_url(...)`）、どの案もきちんと見えるようにします。
 
 素早く始めるための、**CSS のリセットとシステムフォントの既定の指定**:
 
@@ -230,8 +234,8 @@ One sentence on the principle driving this variant.
 terminal("mkdir -p sketches/001-calm-editorial")
 write_file("sketches/001-calm-editorial/index.html", "<!doctype html>...")
 write_file("sketches/001-calm-editorial/README.md", "## Variant: Calm editorial\n...")
-browser_navigate(url="file://$(pwd)/sketches/001-calm-editorial/index.html")
-browser_vision(question="How does this look? Any obvious layout issues?")
+browser_exec(code='new_tab("file:///abs/path/sketches/001-calm-editorial/index.html"); wait_for_load(); capture_screenshot()')
+# then check the screenshot: any obvious layout issues?
 ```
 
 これを案の数だけ繰り返し、最後に比較の表を出します。

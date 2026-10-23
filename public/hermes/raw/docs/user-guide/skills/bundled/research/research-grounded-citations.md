@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Grounded Citations — 回答や文書を、出典を示せる形に裏付ける"
 description: "回答や文書を、出典を示せる形に裏付ける"
 upstream_path: user-guide/skills/bundled/research/research-grounded-citations.md
-upstream_blob: 0e80bac0dca53fd80a3a3126422414d2387dd0c8
+upstream_blob: 6bcfb153d7deef67cad6797410ecf252a22bc9df
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/research/research-grounded-citations
 ---
@@ -67,7 +67,7 @@ Perplexity のように `Sources:` の一覧を末尾に置きます。`url → 
 
 ふつうの道具立て以外には何も要りません。`scripts/sources.py` は標準ライブラリだけで動く Python 3 です。
 情報の取得は、その環境で使えるものを使います。`web_search`、`web_extract`、
-`browser_navigate`、`terminal`（curl や各種 CLI）などです。
+`browser_exec`、`terminal`（curl や各種 CLI）などです。
 
 台帳の置き場所: `$HERMES_HOME/cache/citations/ledger.json`（プロファイルごとに分かれます）。
 作業ごとに変えたいときは `--ledger <path>` か `HERMES_CITATION_LEDGER` で上書きします。
@@ -109,7 +109,7 @@ python "$S" verify draft.md                        # catch bad citations
 書き込んだ続きの作業なら、作り直さないでください。台帳を使い回すほうが番号が安定します。
 
 ② **情報源は取得したその場で登録します。** `web_search` / `web_extract` /
-`browser_navigate` / 取得のたびに、URL を `sources.py add` に渡します
+`browser_exec` / 取得のたびに、URL を `sources.py add` に渡します
 （生の JSON をそのまま `sources.py ingest` に流してもかまいません）。これを文章を書く
 *前に* やってください。あとから記憶を頼りに登録するのが、この skill が防ごうとしている
 失敗のしかたです。

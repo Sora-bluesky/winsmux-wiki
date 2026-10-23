@@ -1,6 +1,6 @@
 {
-  "sha": "36f7966",
-  "date": "2026-10-22",
+  "sha": "709e2ad",
+  "date": "2026-10-23",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -55,7 +55,7 @@
       "name": "Computer Use",
       "description": "Drive the desktop background-first; escalate on signal",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "bundled"
     },
     {
@@ -143,7 +143,7 @@
       "name": "Popular Web Designs",
       "description": "54 real design systems (Stripe, Linear, Vercel) as HTML/CSS",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "bundled"
     },
     {
@@ -215,7 +215,7 @@
       "name": "Airtable",
       "description": "Airtable REST API via curl",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-airtable/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "bundled"
     },
     {
@@ -295,7 +295,7 @@
       "name": "Product Price Monitor",
       "description": "Watch product, flight, or listing prices; alert on target",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-product-price-monitor/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "bundled"
     },
     {
@@ -343,7 +343,7 @@
       "name": "Grounded Citations",
       "description": "Ground answers and documents in cited, verifiable sources",
       "url": "/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "bundled"
     },
     {
@@ -375,7 +375,7 @@
       "name": "Dogfood",
       "description": "Exploratory QA of web apps: find bugs, evidence, reports",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-dogfood/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "bundled"
     },
     {
@@ -391,7 +391,7 @@
       "name": "Hermes Agent Skill Authoring",
       "description": "Author in-repo SKILL.md files: frontmatter and structure",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/",
-      "date": "2026-10-04",
+      "date": "2026-10-23",
       "source": "bundled"
     },
     {
@@ -575,7 +575,7 @@
       "name": "Anatomy",
       "description": "Explain an idea as an interactive isometric machine figure",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-anatomy/",
-      "date": "2026-10-11",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -775,7 +775,7 @@
       "name": "Sketch",
       "description": "Throwaway HTML mockups: 2-3 design variants to compare",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-sketch/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -895,7 +895,7 @@
       "name": "3 Statement Model",
       "description": "Build integrated IS/BS/CF financial workbooks in Excel",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-3-statement-model/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -903,7 +903,7 @@
       "name": "Comps Analysis",
       "description": "Build comparable-company valuation workbooks in Excel",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-comps-analysis/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -911,7 +911,7 @@
       "name": "Dcf Model",
       "description": "Build discounted cash flow valuation workbooks in Excel",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-dcf-model/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -927,7 +927,7 @@
       "name": "Lbo Model",
       "description": "Build leveraged buyout workbooks with IRR/MOIC in Excel",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-lbo-model/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -935,7 +935,7 @@
       "name": "Merger Model",
       "description": "Build M&A accretion/dilution workbooks in Excel",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-merger-model/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -1359,7 +1359,7 @@
       "name": "Live Dashboard",
       "description": "Build self-updating dashboards from live sources",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/",
-      "date": "2026-09-18",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -1567,7 +1567,7 @@
       "name": "Unbroker",
       "description": "Autonomously remove your info from data-broker sites",
       "url": "/hermes/docs/user-guide/skills/optional/security/security-unbroker/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -1575,7 +1575,7 @@
       "name": "Web Pentest",
       "description": "Authorized web pentest: recon, proof-based exploits, report",
       "url": "/hermes/docs/user-guide/skills/optional/security/security-web-pentest/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -1591,7 +1591,7 @@
       "name": "Reddit Reading",
       "description": "Read Reddit: subreddits, search, threads, users",
       "url": "/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -1655,7 +1655,7 @@
       "name": "Har Derived Api Client",
       "description": "Record a site's XHR into a HAR, derive an HTTP client",
       "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {
@@ -1663,7 +1663,7 @@
       "name": "Page Agent",
       "description": "Embed an in-page natural-language GUI copilot in web apps",
       "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/",
-      "date": "2026-09-20",
+      "date": "2026-10-23",
       "source": "optional"
     },
     {

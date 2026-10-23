@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 16170694ef234267a0e57a50c7006f47a2c9a011
+upstream_blob: 149d4c847543e8015b80684efef4676ae8a8ad60
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -157,7 +157,7 @@ Hermes は `plugin.json`、Agent Skills のフロントマター、固定され�
 
 値は正の有限の数で、プラットフォームのスレッド待機の上限以内でなければなりません。この値はサーバーごとのネイティブな `timeout` に対応し、省略すると従来どおり `timeouts.mcp.tool_call` が使われます。同じ名前のネイティブな `mcp_servers` エントリがある場合は、タイムアウトも含めてパッケージ側のエントリ全体を置き換えます。この設定で延びるのは待ち時間の上限だけで、キャンセルや権限の方針は変わりません。サーバー内部で分析の締め切りがあるなら別に設定し、その結果がクライアントへ届くまでの時間も残しておいてください。この拡張は、ほかのハーネスでは無視されます。
 
-その Hermes が知らないサーバーエントリのキー（新しいリリースで追加されたもの）は警告を出して無視され、`hermes plugins validate` がそのキーを一覧に出しますが、パッケージ自体はインストールされます。この決まりより前のリリースでは、代わりにパッケージが拒否されます。また、キーを無視したリリースは意図したより安全でない動きをすることがあるため、新しいキーを宣言するときは、カタログの `requires_hermes` で対応する最低バージョンもあわせて指定してください。
+その Hermes が知らないサーバーエントリのキー（新しいリリースで追加されたもの）は警告を出して無視され、`hermes plugins validate` がそのキーを一覧に出しますが、パッケージ自体はインストールされます。この決まりより前のリリースでは、代わりにパッケージが拒否されます。また、キーを無視したリリースは意図したより安全でない動きをすることがあるため、新しいキーを宣言するときは、カタログの `requires_hermes` で対応する最低バージョンもあわせて指定してください。`plugin.json` には `requires_hermes` の項目がないため、持ち運べるパッケージにとって最低バージョンを決められるのは、このカタログ側の指定だけです。カタログ名でインストールしようとすると古い Hermes では拒否され、`hermes plugins update` は Hermes が更新されるまで、インストール済みの固定バージョンをそのまま保ちます。
 
 サーバーごとに明示した MCP 呼び出しの時間枠は、Hermes の外側のツール実行器にも伝わります。時間枠が、同時に実行するバッチの共通の締め切りを超える呼び出しは、直接呼ばれてもツール検索経由で呼ばれても、順番待ちの区切りとして1つずつ実行されます。その呼び出しは自分専用の時間枠を持ち、同じモデル応答に含まれるほかのツールの時間は延ばしません。もっと短い既存の MCP 呼び出しは、通常どおり並列に受け付けられます。中断と承認の扱いは変わりません。
 
@@ -1209,16 +1209,16 @@ ctx.register_tool(
 
 ### 組み込みツールを上書きする {#overriding-a-built-in-tool}
 
-組み込みツールを自分の実装で置き換えるには（例えば既定のブラウザツールをヘッド付き Chrome の CDP バックエンドに切り替える、
+組み込みツールを自分の実装で置き換えるには（例えば
 `web_search` を独自の企業内インデックスに置き換えるなど）、`override=True` を渡します。
 
 ```python
 def register(ctx):
     ctx.register_tool(
-        name="browser_navigate",             # same name as the built-in
-        toolset="plugin_my_browser",         # your own toolset namespace
+        name="web_search",                   # same name as the built-in
+        toolset="plugin_my_search",          # your own toolset namespace
         schema={...},
-        handler=my_custom_navigate,
+        handler=my_corporate_search,
         override=True,                       # explicit opt-in
     )
 ```

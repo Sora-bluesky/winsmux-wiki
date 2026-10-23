@@ -2,7 +2,7 @@
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: e4d8c81cc9891dfc31e44ab935bc27aafa79ee1d
+upstream_blob: bea6754db2ac9741bca4e6bc4889aa7bb71cfd88
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -513,9 +513,9 @@ Python の依存関係の作業には、公開されている `pm` モジュー�
 アプリの環境をビルドするには、呼び出し元の Python で PM がすでに起動できる状態になっている必要があります。
 これらのビルドはインタープリターのブートストラップではありません。稼働中のアプリの
 インポートを変えたり、選択中の環境を置き換えたりはしません。Nix の宣言的な uv2nix によるビルドは、
-引き続き Nix が所有します。`nix develop` は今も uv2nix で依存関係をビルドしますが、
-実行には `pm/lock.json` が固定するインタープリターを使います（uv2nix は tarball のインタープリターに対して
-venv をビルドできないため、ロックから取るのはインタープリターだけです）。
+引き続き Nix が所有します。`nix develop` は今も uv2nix で依存関係をビルドし、
+その venv を `pm/lock.json` が固定するインタープリターに付け替えます（uv2nix は tarball のインタープリターに対して
+ビルドできないためです）。シェルの uv、node、npm、ripgrep、ffmpeg もロックのビルドです。
 関係のないプロジェクトやエージェントの
 サンドボックス向けのパッケージマネージャーのコマンドは、Hermes 自体を管理しません。
 
@@ -531,8 +531,8 @@ hermes pm install chromium
 
 | コマンド | 効果 |
 |---|---|
-| `pm install [names...]` | 名前を指定したパッケージをインストールします。名前を指定しない場合は、必要なツールと Python を用意し、そのツールを PATH に置いてから、`all` extra を同期します。名前なしのインストールでは、既定のオプションツール（`agent-browser` と Chromium、`cua-driver`）もインストールします。これらのダウンロードに失敗しても警告が出るだけで、インストール自体は失敗しません。以前に断ったパッケージの名前を指定すると、その選択を取り消せます。 |
-| `pm install --without NAME` | 既定のオプションパッケージ `NAME`（`agent-browser` か `cua-driver`）を除いて名前なしのインストールを行い、その選択を記録します。以降の名前なしのインストールと `hermes update` でも除外されます。インストーラーの `--skip-browser` / `-SkipBrowser` と `--skip-computer-use` / `-SkipComputerUse` はこれを使っています。 |
+| `pm install [names...]` | 名前を指定したパッケージをインストールします。名前を指定しない場合は、必要なツールと Python を用意し、そのツールを PATH に置いてから、`all` extra を同期します。名前なしのインストールでは、既定のオプションツール（Hermes が起動するブラウザーの `chromium` と、`cua-driver`）もインストールします。これらのダウンロードに失敗しても警告が出るだけで、インストール自体は失敗しません。以前に断ったパッケージの名前を指定すると、その選択を取り消せます。 |
+| `pm install --without NAME` | 既定のオプションパッケージ `NAME`（`chromium` か `cua-driver`）を除いて名前なしのインストールを行い、その選択を記録します。以降の名前なしのインストールと `hermes update` でも除外されます。インストーラーの `--skip-browser` / `-SkipBrowser` と `--skip-computer-use` / `-SkipComputerUse`（`--without cua-driver`）はこれを使っています。ブラウザーを除く指定は旧来の名前 `--without agent-browser` を渡します。これはどの PM のリリースでも受け付けられ、このリリースでは `chromium` として読みます。その名前で記録された選択でも、引き続き `chromium` は除外されます。 |
 | `pm install --tools-only` | そのツール一式をインストールして PATH に置き、そこで止めます。venv の同期は行いません。 |
 | `pm env [names...]` | インストール済みパッケージについて、PM が追加する環境変数の値を JSON で出力します。足りないパッケージはインストールしませんが、Hermes をコールドスタートした場合は、先に自分用の Python 実行環境を用意することがあります。 |
 | `pm doctor` | インストール済みツールの識別情報、ファイル、ダイジェストをロックと照合します。 |

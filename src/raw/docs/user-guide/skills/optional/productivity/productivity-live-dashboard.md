@@ -2,7 +2,7 @@
 title: "Live Dashboard — 生の情報源から、自動で更新されるダッシュボードを作る"
 description: "生の情報源から、自動で更新されるダッシュボードを作る"
 upstream_path: user-guide/skills/optional/productivity/productivity-live-dashboard.md
-upstream_blob: 9640b311fba8a61044a2fa2999e84f4026b09b0c
+upstream_blob: 03a381f7820b5d4d4ef425b3672f2e1acd2461c9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-live-dashboard
 ---
@@ -48,7 +48,7 @@ sources:
 
 ## 事前に必要なもの {#prerequisites}
 
-- ダッシュボードが読みに行く情報源への接続が、少なくとも1つあること。メールやカレンダーは `himalaya` か `google-workspace`、Web サイトは `web_extract` か `browser_navigate`、ローカルのファイルは `read_file` で読みます。1つも設定されていない場合は、成果物を書く前に、手順 1 で情報源を決め直します。
+- ダッシュボードが読みに行く情報源への接続が、少なくとも1つあること。メールやカレンダーは `himalaya` か `google-workspace`、Web サイトは `web_extract` か `browser_exec`、ローカルのファイルは `read_file` で読みます。1つも設定されていない場合は、成果物を書く前に、手順 1 で情報源を決め直します。
 - 定期実行のための `cronjob`。
 - 任意: `desktop_preview` ツール（Hermes デスクトップアプリのセッション）。ツールセットにこれがある場合、ダッシュボードはアプリ内のプレビュー欄に表示されます。ない場合は、ユーザーにファイルのパスを伝えます。
 
@@ -60,7 +60,7 @@ sources:
 
 ### 2. 各情報源を実際に1回読んで確かめる {#2-verify-each-source-with-one-live-read}
 
-情報源ごとに、範囲を限った読み取りをいま手前で1回行います。メールやカレンダーは接続用の skill（`himalaya`、`google-workspace`）、Web サイトは `web_extract` か `browser_navigate`、ローカルのファイルは `read_file` で読みます。実際に何が取得できたかを記録してください。ログインの壁、権限の不足、空の結果は、最初の定期実行ではなく、ここで表に出てきます。失敗した情報源は外すか、別のものに差し替えます。すべての項目の情報源が実際のデータを返したか、ユーザーとはっきり決め直したら完了です。
+情報源ごとに、範囲を限った読み取りをいま手前で1回行います。メールやカレンダーは接続用の skill（`himalaya`、`google-workspace`）、Web サイトは `web_extract` か `browser_exec`、ローカルのファイルは `read_file` で読みます。実際に何が取得できたかを記録してください。ログインの壁、権限の不足、空の結果は、最初の定期実行ではなく、ここで表に出てきます。失敗した情報源は外すか、別のものに差し替えます。すべての項目の情報源が実際のデータを返したか、ユーザーとはっきり決め直したら完了です。
 
 ### 3. ダッシュボードの成果物を作る {#3-build-the-dashboard-artifact}
 

@@ -2,7 +2,7 @@
 title: "Nous Portal"
 description: "1 つの定額契約で 300 以上のフロンティアモデルと Tool Gateway が使える、Hermes Agent の推奨構成"
 upstream_path: integrations/nous-portal.md
-upstream_blob: 40868778f378f02ef844d446c7bf550e82c71dc8
+upstream_blob: f820099af7db31e62c24384565eb658938aea7f2
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/nous-portal
 ---
@@ -60,7 +60,7 @@ Portal はエコシステム全体から選ばれたエージェント向けモ�
 | **Web 検索と本文抽出** | Nous が運用 | エージェント向けの検索とページ全文の抽出。検索用の API キーも、レート制限の見張りも要りません。 |
 | **画像生成** | FAL | 1 つのエンドポイントで 9 モデル。FLUX 2 Klein 9B、FLUX 2 Pro、Z-Image Turbo、Nano Banana Pro（Gemini 3 Pro Image）、GPT Image 1.5、GPT Image 2、Ideogram V3、Recraft V4 Pro、Qwen Image。 |
 | **音声合成** | OpenAI TTS | OpenAI のキーを別に用意しなくても高品質な音声合成が使えます。各メッセージングサービスで[音声モード](/hermes/docs/user-guide/features/voice-mode/)が有効になります。 |
-| **クラウドのブラウザ操作** | Browser Use | `browser_navigate`、`browser_click`、`browser_type`、`browser_vision` 用のヘッドレス Chromium セッション。Browserbase のアカウントは不要です。 |
+| **クラウドのブラウザ操作** | Browser Use | `browser_exec` が CDP 越しに操作する、クラウドのヘッドレス Chromium セッション。Browserbase のアカウントは不要です。 |
 | **クラウドの端末サンドボックス** | Modal | コード実行用のサーバーレス端末サンドボックス（任意の追加オプション）。 |
 
 ゲートウェイを使わずに同じことをそろえるなら、ウェブ検索のアカウント、FAL のアカウント、Browser Use のアカウント、OpenAI のキー、Modal のアカウントが必要です。登録が 5 回、管理画面が 5 つ、チャージの手続きが 5 通り。ゲートウェイなら、その全部が 1 つの契約を通ります。

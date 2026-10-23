@@ -2,7 +2,7 @@
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: b0ab8f777170ec7d56af953ee0b24df7fa339c46
+upstream_blob: d378b55f79cd1e5430fdddd109b9f3abf062d4e8
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -909,8 +909,9 @@ services.hermes-agent.settings.plugins.enabled = [
 
 ### 開発用シェル {#dev-shell}
 
-この flake は、ロックから決まるインタープリターと `dev` の依存グループを備えた、編集可能な Python 環境を提供します。
-`HERMES_PYTHON` がそのインタープリターを指します。リポジトリ直下の `.venv` に
+この flake は、`dev` の依存グループを備えた編集可能な Python の venv を提供します。動くのは
+`pm/lock.json` が固定するインタープリターです。`HERMES_PYTHON` と `VIRTUAL_ENV` がこの venv を指し、
+`PYTHONPATH` は要りません。リポジトリ直下の `.venv` に
 Python の依存を入れることはしません。シェルには Node.js と実行時のツールも入っています。
 npm のフックが、JS のワークスペースの入力が変わったときにそれを更新します。
 

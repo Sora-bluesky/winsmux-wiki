@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ツール検索"
 description: ""
 upstream_path: user-guide/features/tool-search.md
-upstream_blob: 75ed580ff3a226f4ffee47d5cdf7406be1416753
+upstream_blob: 81c1017e7a6bae5b11484dbd17a9121ed4c2ca61
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 ---
@@ -194,8 +194,11 @@ tools:
 
 コネクターを使うには Nous の ID が必要です。そのためにサインインする必要は
 ありません。Nous のアカウントがなければ、最初の `manage_connections` の操作
-（またはデスクトップアプリの Connectors ページを開くこと）で、無料の Nous ID が
-自動で作られます。どの画面から使っても同じです。この ID でモデルの提供元が
+（またはデスクトップアプリの Connectors ページからアプリをつなぐこと）で、無料の Nous ID が
+自動で作られます。どの画面から使っても同じです。Connectors ページを開くだけでは
+ID は作られません。ID ができるまでは、Nous Portal の公開カタログにあるホスト型の
+アプリが一覧に出ます。このカタログはサインインなしで見られます。
+この ID でモデルの提供元が
 変わることはありません。Nous の無料枠を同梱したビルド以外では、コネクターと
 managed tools のためだけに使われます。ID ができるまでは、`tool_search` は
 ゲートウェイに何も送らず、結果には「ホスト型のコネクターはまだ設定されて

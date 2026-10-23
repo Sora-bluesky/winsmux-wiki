@@ -2,7 +2,7 @@
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: dff97a0364af815246d7ac55a764fb7f1dea21da
+upstream_blob: 5517c3ff95c6452acacd92ed3fc71e657f313767
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -536,7 +536,7 @@ docker run -d \
 - 見守りとゾンビプロセスの片付けのための s6-overlay。
 
 Chromium は `npx playwright install` ではなく PM を通して用意します。ビルドは、
-解決した実行ファイルの場所を `/etc/hermes/agent-browser-executable-path` に記録します。
+解決した実行ファイルの場所を `/etc/hermes/chromium-executable-path` に記録し、Hermes はブラウザを起動するときにそれを読みます。
 `PLAYWRIGHT_BROWSERS_PATH` は、データのマウントの外にある `/opt/hermes/tools` を指します。
 
 接尾辞の付かない（`-desktop` でない）タグも含め、どのイメージにも Playwright の軽い headless shell ではなく
@@ -913,7 +913,7 @@ docker exec -u root hermes chmod 0755 /opt/hermes
 
 ### ブラウザの道具が動かない {#browser-tools-not-working}
 
-Playwright には共有メモリが要ります。docker run のコマンドに `--shm-size=1g` を足してください。
+Chromium には共有メモリが要ります。docker run のコマンドに `--shm-size=1g` を足してください。
 
 ```sh
 docker run -d \

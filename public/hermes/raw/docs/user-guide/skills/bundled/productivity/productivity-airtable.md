@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Airtable — curl で使う Airtable REST API"
 description: "curl で使う Airtable REST API"
 upstream_path: user-guide/skills/bundled/productivity/productivity-airtable.md
-upstream_blob: e0150b437cda002a2a17341e98ee7a528fdea9f7
+upstream_blob: 3166b0a6738a62a88efafc0e2e34bd30305e1ed1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-airtable
 ---
@@ -237,7 +237,7 @@ done
 
 ## Hermes 向けの注意点 {#important-notes-for-hermes}
 
-- **必ず `terminal` ツールから `curl` を使います。** `web_extract`（認証ヘッダーを送れません）や `browser_navigate`（画面での認証が必要で遅いです）は使わないでください。
+- **必ず `terminal` ツールから `curl` を使います。** `web_extract`（認証ヘッダーを送れません）や `browser_exec`（画面での認証が必要で遅いです）は使わないでください。
 - **`AIRTABLE_API_KEY` は `${HERMES_HOME:-~/.hermes}/.env` から子プロセスへ自動で渡ります。** この skill が読み込まれていれば、`curl` を呼ぶたびに export し直す必要はありません。
 - **式の中の波かっこの扱いに気をつけます。** ヒアドキュメントの本文では `{Status}` はそのままの文字です。シェルの引数でも、`{...}` のブレース展開の文脈でなければ `{Status}` は安全です。ただし、動的な文字列を URL に差し込むときは `python urllib.parse.quote` を通してください。
 - **整形には `jq`（入っていないこともあります）より `python -m json.tool`（どの環境にもあります）を使います。** 絞り込みや項目の取り出しが必要なときだけ `jq` を持ち出します。

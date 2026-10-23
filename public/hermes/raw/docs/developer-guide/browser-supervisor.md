@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ブラウザの CDP スーパーバイザ"
 description: "Hermes が JavaScript のネイティブなダイアログを見つけて応答するしくみと、常時つないだ CDP 経由で別オリジンの iframe を操作するしくみ。"
 upstream_path: developer-guide/browser-supervisor.md
-upstream_blob: 8dfcee65f7f09dc8d61fe7ee70e11df09c77544f
+upstream_blob: 198ebe66cc6faeb2aa988f89a57e4dec81b18af8
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/browser-supervisor
 ---
@@ -17,21 +17,20 @@ CDP スーパーバイザは、Hermes のブラウザ操作に長く残ってい
    ダイアログが開いていることに気づけず、そのあとのツール呼び出しが固まるか、
    理由の分からないエラーになります。
 2. **別オリジンの iframe（OOPIF）** は、最上位の `Runtime.evaluate` からは見えません。
-   エージェントは DOM のスナップショットで iframe のノードを見ることはできますが、
+   エージェントは DOM で iframe のノードを見ることはできますが、
    子ターゲットに CDP のセッションをつながないかぎり、その中でクリックも入力も
    評価もできません。
 
 スーパーバイザは、ブラウザのタスクごとにバックエンドの CDP エンドポイントへ WebSocket を
-つなぎっぱなしにし、待機中のダイアログとフレームの構造を `browser_snapshot` に載せ、
+つなぎっぱなしにし、待機中のダイアログとフレームの構造を自分のスナップショットで追い、
 明示的に応答するための `browser_dialog` ツールを用意することで、この両方を解決します。
 
 ## 対応している実行基盤 {#backend-support}
 
 | 実行基盤 | ダイアログの検出 | ダイアログへの応答 | フレームツリー | `browser_cdp(frame_id=...)` 経由の OOPIF での `Runtime.evaluate` |
 |---|---|---|---|---|
-| ローカルの Chrome（`--remote-debugging-port`）/ `/browser connect` | ✓ | ✓ ひととおり対応 | ✓ | ✓ |
+| ローカルの Chromium（`browser_exec` のために Hermes が起動するもの）/ `/browser connect` | ✓ | ✓ ひととおり対応 | ✓ | ✓ |
 | Browserbase | ✓（ブリッジ経由） | ✓ ひととおり対応（ブリッジ経由） | ✓ | ✓ |
-| Camofox | ✗ CDP なし（REST のみ） | ✗ | DOM スナップショットで部分的に | ✗ |
 
 **Browserbase のくせ。** Browserbase の CDP プロキシは内部で Playwright を使っていて、
 ネイティブなダイアログを 10ms ほどで自動的に閉じてしまうため、`Page.handleJavaScriptDialog`
@@ -46,7 +45,8 @@ JSON の本文を返して、差し込んだスクリプトがそれを読み取
 エージェントから見れば、どちらの場合も同じ `browser_dialog(action=...)` の
 使い方になります。
 
-Camofox は対象外です。CDP の口がなく、REST のみだからです。
+カタログのプラグインである Camofox（`hermes plugins install camofox`）は、CDP の口がない
+REST のみのブラウザを動かすため、スーパーバイザの対象にはなりません。
 
 ## 構成 {#architecture}
 
@@ -71,9 +71,9 @@ Hermes の `task_id` ごとに、バックグラウンドのデーモンスレ�
 
 ### 起動から終了まで {#lifecycle}
 
-- **開始:** `SupervisorRegistry.get_or_start(task_id, cdp_url)`。`browser_navigate`、
-  Browserbase のセッション作成、`/browser connect` から呼ばれます。
-  何度呼んでも結果は同じです。
+- **開始:** `SupervisorRegistry.get_or_start(task_id, cdp_url)`。`browser_exec` が
+  セッションにつながるとき（ローカル、クラウドの提供元、CDP の上書きのいずれでも）と、
+  `/browser connect` のときに呼ばれます。何度呼んでも結果は同じです。
 - **停止:** セッションの片づけ、または `/browser disconnect` のとき。asyncio の
   タスクを取り消し、WebSocket を閉じ、状態を捨てます。
 - **エンドポイントが落ちたとき:** つなぎ終えたあとに切れた場合、スーパーバイザは
@@ -90,12 +90,12 @@ Hermes の `task_id` ごとに、バックグラウンドのデーモンスレ�
 
 `config.yaml` の `browser.dialog_policy` で設定します。
 
-- **`must_respond`**（既定）— ダイアログを捕まえて `browser_snapshot` に載せ、
+- **`must_respond`**（既定）— ダイアログを捕まえて `pending_dialogs` に載せ、
   `browser_dialog(action=...)` が明示的に呼ばれるのを待ちます。安全のため 300 秒待っても
   応答がなければ、自動で閉じてログに残します。動きのおかしいエージェントが
   いつまでも止まったままになるのを防ぎます。
-- `auto_dismiss` — 記録したうえですぐ閉じます。エージェントは、あとから
-  `browser_snapshot` の中の `browser_state` で知ることになります。
+- `auto_dismiss` — 記録したうえですぐ閉じます。あとから
+  `recent_dialogs` に現れます。
 - `auto_accept` — 記録したうえで承諾します（`beforeunload` で、そのまま
   きれいに次のページへ移りたいときに便利です）。
 
@@ -161,13 +161,12 @@ browser_dialog(action, prompt_text=None, dialog_id=None)
 - `prompt_text=...` → `prompt()` のダイアログに渡す文字列
 - `dialog_id=...` → ダイアログが複数たまっているときに、どれかを指定します（まれです）
 
-このツールは応答するためだけのものです。エージェントは呼ぶ前に、待機中のダイアログを
-`browser_snapshot` の出力から読み取ります。
+このツールは応答するためだけのものです。待機中のダイアログが 1 つだけなら、
+`dialog_id` は省略できます。
 
-### `browser_snapshot` の拡張 {#browsersnapshot-extension}
+### スーパーバイザのスナップショット {#supervisor-snapshot}
 
-スーパーバイザがつながっているとき、これまでのスナップショットの出力に
-3 つの項目が加わります。
+スーパーバイザがつながっているあいだ、`CDPSupervisor.snapshot()` は 3 つの項目を持ちます。
 
 ```json
 {
@@ -204,22 +203,18 @@ browser_dialog(action, prompt_text=None, dialog_id=None)
   抑えています。上限に達したときは `truncated: true` が出るので、全体が必要なエージェントは
   `browser_cdp` で `Page.getFrameTree` を使えます。
 
-これらのためにツールのスキーマが増えることはありません。エージェントは、
-もともと取得しているスナップショットを読むだけです。
-
 ### 使えるかどうかの切り分け {#availability-gating}
 
-どちらの機能も `_browser_cdp_check`（CDP のエンドポイントに届くときだけ
-スーパーバイザは動けます）で切り分けられます。Camofox や実行基盤のないセッションでは、
-ダイアログのツールは表に出ず、スナップショットにも新しい項目は載りません。
-スキーマが無駄に膨らむこともありません。
+`browser_dialog` と `browser_cdp` は、CDP に届くかどうかで切り分けられます（CDP の
+エンドポイントに届くときだけスーパーバイザは動けます）。届かないときはダイアログのツールが
+表に出ないので、スキーマが無駄に膨らむこともありません。
 
 ## 別オリジンの iframe の操作 {#cross-origin-iframe-interaction}
 
 `browser_cdp(frame_id=...)` は、CDP の呼び出し（とくに `Runtime.evaluate`）を、
 スーパーバイザがすでにつないでいる WebSocket と OOPIF の子の `sessionId` を通して
-振り分けます。エージェントは `browser_snapshot.frame_tree.children[]` のうち
-`is_oopif=true` のものから frame_id を拾い、`browser_cdp` に渡します。同一オリジンの
+振り分けます。エージェントはスーパーバイザの `frame_tree.children[]` のうち
+`is_oopif=true` のもの（または `browser_cdp` 経由の `Page.getFrameTree`）から frame_id を拾い、`browser_cdp` に渡します。同一オリジンの
 iframe（専用の CDP セッションがないもの）では、最上位の `Runtime.evaluate` から
 `contentWindow` / `contentDocument` を使います。`frame_id` が OOPIF でないものを
 指していた場合、スーパーバイザはその代わりの手を示すエラーを返します。
@@ -233,13 +228,13 @@ Browserbase では、iframe を操作する確実な方法はこれだけです�
 - `tools/browser_supervisor.py` — `CDPSupervisor`、`SupervisorRegistry`、`PendingDialog`、`FrameInfo`
 - `tools/browser_supervisor_capture.py` — `CapturedCDP` / `CapturedCDPInvalid`。`SUPERVISOR_REGISTRY.capture` の裏にある、信頼済みプラグイン向けの CDP の継ぎ目
 - `tools/browser_dialog_tool.py` — `browser_dialog` ツールのハンドラ
-- `tools/browser_tool.py` — `browser_navigate` の開始フック、`browser_snapshot` への合流、`/browser connect` でのつなぎ直し、`_cleanup_browser_session` での片づけ
+- `tools/browser_session_cdp.py` — `ensure_cdp_supervisor` / `stop_cdp_supervisor`、`/browser connect` でのつなぎ直し、ダイアログの扱い方の設定
+- `tools/browser_session_lifecycle.py` — セッションごとの片づけ（スーパーバイザを最初に止めます）
 - `toolsets.py` — `browser_dialog` を `browser`、`hermes-acp`、`hermes-api-server`、およびコアのツールセットに登録（CDP に届くかどうかで切り分け）
 - `hermes_cli/config.py` — `browser.dialog_policy` と `browser.dialog_timeout_s` の既定値
 
 ## やらないこと {#non-goals}
 
-- Camofox でのダイアログの検出と操作（上流側の穴。別途追いかけています）
 - ダイアログやフレームのイベントを利用者へその場で流すこと（ゲートウェイ側のフックが必要になります）
 - ダイアログの履歴をセッションをまたいで残すこと（メモリ上だけです）
 - iframe ごとに別のダイアログの扱い方を決めること（エージェントは `dialog_id` で表現できます）

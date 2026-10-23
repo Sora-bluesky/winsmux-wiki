@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Computer Use — デスクトップを裏側から操作し、必要なときだけ前面に出す"
 description: "デスクトップを裏側から操作し、必要なときだけ前面に出す"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use.md
-upstream_blob: b8543e43fd3c576e4db54ed70cb718082d5ad80e
+upstream_blob: 9e7c5c15c7daae8a2825d0ee6c41ae104594a155
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use
 ---
@@ -206,8 +206,8 @@ computer_use(action="click", element=7, delivery_mode="foreground")
 `computer_use` はデスクトップ専用で、ブラウザのページの中身に触れる経路は持っていません
 （`cua_browser_*` のようなアクションはありません）。ページの DOM を読む、あるいは操作する場合は、
 リンクの文字でのクリック、フォームへの入力、画面遷移のいずれも、
-別の `browser_navigate` / `browser_click` / `browser_type` / `browser_snapshot`
-ツールを使ってください（Browser Use CLI のバックエンドが有効なら `browser_exec` です）。今の仕様は、それぞれのスキーマに書かれています。
+別の `browser_exec` ツール（headless な Chromium を動かす Python の CDP ヘルパー）を使ってください。
+今の仕様は、そのスキーマに書かれています。
 `computer_use` は、ブラウザの *枠* の部分（アドレスバー、権限の確認、拡張機能のポップアップ、OS の
 ダイアログ）と、ページの中身ではない画面上のものに使ってください。
 
@@ -323,7 +323,7 @@ CLI では、見えているものを言葉で説明するだけで構いませ�
 
 ## `computer_use` を使わないほうがよい場面 {#when-not-to-use-computeruse}
 
-- **別系統の headless な `browser_*` ツールでできる Web の自動化** — こちらは
+- **別系統の headless な `browser_exec` ツールでできる Web の自動化** — こちらは
   本物の headless Chromium を使うので、利用者の画面上のブラウザを操作するより確実です。
   `computer_use` は、利用者の実際のネイティブアプリが必要な作業のときに使ってください。Finder / エクスプローラー / ファイル、
   メール / Outlook / Thunderbird、ネイティブのチャットアプリ、Figma、Logic、ゲームなど、

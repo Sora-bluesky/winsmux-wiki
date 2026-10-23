@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Dcf Model — Excel で DCF 法の企業価値評価ワークブックを作る"
 description: "Excel で DCF 法の企業価値評価ワークブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-dcf-model.md
-upstream_blob: c3a6500c56978cdf318fa7808b3ef53be7b4f409
+upstream_blob: 6d2710e81bd1f3feb3560fe816a8c802c8f65879
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-dcf-model
 ---
@@ -1291,7 +1291,7 @@ DCF モデルを渡す前に確かめます。
 - **無ければ**、次で代替します。
   - 米国の開示資料は SEC EDGAR（`https://www.sec.gov/cgi-bin/browse-edgar`）に対する `web_search` / `web_extract`
   - プレスリリースや決算資料は企業の IR ページ
-  - 対話的なデータポータルには `browser_navigate`
+  - 対話的なデータポータルには `browser_exec`
   - 使う人から渡されたデータ（文脈に無いなら、はっきり尋ねます）
 - **でっち上げは厳禁です。** 倍率、過去の取引、開示された数値の出どころを示せないなら、そのセルに `[UNSOURCED]` と印を付け、使う人に伝えてください。
 

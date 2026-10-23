@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Dogfood — Web アプリを探索的にテストする: バグ、証拠、報告書"
 description: "Web アプリを探索的にテストする: バグ、証拠、報告書"
 upstream_path: user-guide/skills/bundled/software-development/software-development-dogfood.md
-upstream_blob: 953add5b009d89dd030d8db8d9f22a265f52e6e0
+upstream_blob: 0e00dfa16cca805bb89bcd371f7d90e0a54ef0a1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-dogfood
 ---
@@ -34,11 +34,11 @@ Web アプリを探索的にテストします。バグを見つけ、証拠を�
 
 ## 概要 {#overview}
 
-この skill は、ブラウザ用のツール群を使って Web アプリを体系的に探索テストする手順を示します。アプリの中を移動し、要素を操作し、問題の証拠を残して、構造化されたバグ報告書を作ります。
+この skill は、`browser_exec` を使って Web アプリを体系的に探索テストする手順を示します。アプリの中を移動し、要素を操作し、問題の証拠を残して、構造化されたバグ報告書を作ります。
 
 ## 事前に必要なもの {#prerequisites}
 
-- ブラウザ用のツール群が使えること（`browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_vision`, `browser_console`, `browser_scroll`, `browser_back`, `browser_press`）
+- `browser` ツールセット（`browser_exec`）が有効になっていること。`browser_exec` は、補助関数（`new_tab`, `goto_url`, `wait_for_load`, `page_info`, `js`, `fill_input`, `click_at_xy`, `capture_screenshot`, `cdp`）を読み込み済みの状態で Python を実行します。ブラウザの状態は呼び出しをまたいで残りますが、Python の変数は残りません。
 - 利用者から渡される対象の URL と、テストの範囲
 
 ## 入力 {#inputs}
@@ -72,52 +72,55 @@ Web アプリを探索的にテストします。バグを見つけ、証拠を�
 
 ### 第2段階: 探索 {#phase-2-explore}
 
-計画に挙げたページや機能それぞれについて、次を行います。
+各手順の操作は、1回の `browser_exec` 呼び出しにまとめます。計画に挙げたページや機能それぞれについて、次を行います。
 
-1. ページへ**移動**します:
+1. **コンソールを監視するフックを入れてから移動します。** 読み込み中に出たエラーも拾えるよう、移動する前にタブへフックを登録します:
+   ```python
+   # Open page with console-error capture
+   HOOK = """window.__qa_errors = [];
+   const _e = console.error;
+   console.error = (...a) => { window.__qa_errors.push(a.map(String).join(' ')); _e(...a); };
+   addEventListener('error', e => window.__qa_errors.push('uncaught: ' + e.message));
+   addEventListener('unhandledrejection', e => window.__qa_errors.push('rejection: ' + String(e.reason)));"""
+   new_tab('about:blank')  # first call only: the hook binds to the current tab
+   cdp('Page.addScriptToEvaluateOnNewDocument', source=HOOK)
+   goto_url("https://example.com/page")
+   wait_for_load()
+   print(page_info())
+   print(js('window.__qa_errors || []'))
    ```
-   browser_navigate(url="https://example.com/page")
+   あとの呼び出しでページを移動するときも、その呼び出しの最初でフックを登録し直してください。表に出ない JS エラーは価値の高い発見です。
+
+2. **ページの構造を読み取ります** — 画面に見えている操作できる要素を、表示領域内の中心座標つきで一覧にします（役割や名前が必要なときは `cdp('Accessibility.getFullAXTree')` を使い、Python 側で絞り込みます）:
+   ```python
+   # List interactive elements
+   print(js("""(() => [...document.querySelectorAll('a,button,input,select,textarea,[role=button]')]
+     .filter(e => e.offsetParent).slice(0, 80).map((e, i) => { const r = e.getBoundingClientRect();
+       return {i, tag: e.tagName, text: (e.innerText || e.value || e.getAttribute('aria-label') || '').trim().slice(0, 60),
+               id: e.id, name: e.name, x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2)}; }))()"""))
    ```
 
-2. DOM の構造を把握するため、**スナップショットを取ります**:
-   ```
-   browser_snapshot()
-   ```
+3. **ページを目で見て評価します:** `capture_screenshot()` を呼び、添付された画像で、レイアウトの崩れ、壊れた要素、アクセシビリティの問題がないかを確かめます。モデルが画像を見られない場合は、表示されたパスを `vision_analyze` に渡してください。
 
-3. JavaScript のエラーがないか、**コンソールを確認します**:
-   ```
-   browser_console(clear=true)
-   ```
-   ページを移動するたび、また大きな操作をするたびに行ってください。表に出ない JS エラーは価値の高い発見です。
-
-4. ページを目で見て評価し、操作できる要素を把握するため、**注釈つきのスクリーンショットを撮ります**:
-   ```
-   browser_vision(question="Describe the page layout, identify any visual issues, broken elements, or accessibility concerns", annotate=true)
-   ```
-   `annotate=true` を付けると、操作できる要素に番号つきの `[N]` ラベルが重ねて表示されます。各 `[N]` は、以降のブラウザコマンドで使う ref `@eN` に対応します。
-
-5. 操作できる要素を**順に試します**:
-   - ボタンとリンクをクリックする: `browser_click(ref="@eN")`
-   - フォームに入力する: `browser_type(ref="@eN", text="test input")`
-   - キーボード操作を試す: `browser_press(key="Tab")`, `browser_press(key="Enter")`
-   - 内容をスクロールする: `browser_scroll(direction="down")`
+4. 操作できる要素を**順に試します**:
+   - ボタンとリンクをクリックする: `js("document.querySelector('#submit').click()")`、または手順2で得た中心座標を使って `click_at_xy(x, y)`
+   - フォームに入力する: `fill_input('input[name=email]', 'test input')`
+   - キーボード操作を試す: `cdp('Input.dispatchKeyEvent', type='keyDown', key='Tab', code='Tab', windowsVirtualKeyCode=9)` に続けて対応する `keyUp` を送り、`js('document.activeElement.outerHTML.slice(0, 200)')` でフォーカスがどこへ移ったかを確かめます。Enter キーも同じ形で、`key='Enter'`, `code='Enter'`, `windowsVirtualKeyCode=13` を使います
+   - 内容をスクロールする: `js('window.scrollBy(0, 800)')`
+   - 前のページへ戻る: `js('history.back()')` のあとに `wait_for_load()`
    - 不正な値でフォームの検証を試す
    - 空のまま送信してみる
 
-6. **操作するたびに**、次を確認します:
-   - コンソールのエラー: `browser_console()`
-   - 見た目の変化: `browser_vision(question="What changed after the interaction?")`
-   - 期待した動きと実際の動きの差
+5. **操作するたびに**、同じ呼び出しの中で次を確認します:
+   - コンソールのエラー: `print(js('window.__qa_errors || []'))`
+   - 見た目の変化: `capture_screenshot()` を撮って、前のものと見比べる
+   - 期待した動きと実際の動きの差（`page_info()`、または該当する要素を `js()` で読む）
 
 ### 第3段階: 証拠を集める {#phase-3-collect-evidence}
 
 見つかった問題ごとに、次を行います。
 
-1. 問題が写った**スクリーンショットを撮ります**:
-   ```
-   browser_vision(question="Capture and describe the issue visible on this page", annotate=false)
-   ```
-   レスポンスの `screenshot_path` を控えておいてください。報告書から参照します。
+1. 問題が写った**スクリーンショットを撮ります**: `capture_screenshot()` は保存先のパスを表示します。そのファイルを、内容がわかる名前（例: `issue-03-broken-login.png`）で `{output_dir}/screenshots/` にコピーしてください。報告書から参照します。
 
 2. **詳細を記録します**:
    - 問題が起きた URL
@@ -161,22 +164,26 @@ Web アプリを探索的にテストします。バグを見つけ、証拠を�
 
 ## ツール一覧 {#tools-reference}
 
-| ツール | 用途 |
+ブラウザの操作はすべて `browser_exec` の呼び出しです。上で使った補助関数と書き方をまとめます。
+
+| 操作 | `browser_exec` での書き方 |
 |------|---------|
-| `browser_navigate` | URL を開く |
-| `browser_snapshot` | DOM のテキストスナップショットを取る（アクセシビリティツリー） |
-| `browser_click` | ref（`@eN`）または文字列で要素をクリックする |
-| `browser_type` | 入力欄に文字を入れる |
-| `browser_scroll` | ページを上下にスクロールする |
-| `browser_back` | ブラウザの履歴を1つ戻る |
-| `browser_press` | キーボードのキーを押す |
-| `browser_vision` | スクリーンショット + AI による分析。要素にラベルを付けるには `annotate=true` |
-| `browser_console` | JS コンソールの出力とエラーを取得する |
+| URL を開く | 最初に一度 `new_tab(url)`（フックを登録する前なら `new_tab('about:blank')`）、以降は `goto_url(url)`。続けて `wait_for_load()` |
+| ページの状態 | `page_info()` |
+| DOM / アクセシビリティツリー | `js(...)` で取り出すか、`cdp('Accessibility.getFullAXTree')` を Python 側で絞り込む |
+| クリック | `js("document.querySelector(sel).click()")` または `click_at_xy(x, y)` |
+| 入力欄に文字を入れる | `fill_input(selector, text)` |
+| スクロール | `js('window.scrollBy(0, 800)')` |
+| 前のページへ戻る | `js('history.back()')` |
+| キーを押す | `cdp('Input.dispatchKeyEvent', type='keyDown', key=..., code=..., windowsVirtualKeyCode=...)` + `keyUp` |
+| スクリーンショット | `capture_screenshot()`（結果に画像が添付されます。テキストだけのモデルはパスを `vision_analyze` に渡します） |
+| JS コンソールのエラー | `cdp('Page.addScriptToEvaluateOnNewDocument', source=HOOK)` でフックを入れ、`js('window.__qa_errors || []')` で読む |
 
 ## コツ {#tips}
 
-- **ページを移動したあとと、大きな操作をしたあとは、必ず `browser_console()` を確認してください。** 表に出ない JS エラーは、もっとも価値のある発見の1つです。
-- 操作できる要素の位置を考えたいときや、スナップショットの ref がはっきりしないときは、**`browser_vision` に `annotate=true` を付けてください**。
+- **ページを移動したあとと、大きな操作をしたあとは、必ず `window.__qa_errors` を読んでください。** 表に出ない JS エラーは、もっとも価値のある発見の1つです。
+- **ひとまとまりの手順は1回の `browser_exec` 呼び出しにまとめてください**（移動、待機、取り出し、操作、エラー確認） — やり取りの回数が減り、フックも外れません。
+- 要素の位置を考えたいときや、DOM から取り出した内容がはっきりしないときは、**`capture_screenshot()` を撮ってください**。`click_at_xy` には、要素の一覧で得た中心座標を渡します。
 - **正しい値と不正な値の両方でテストしてください** — フォームの検証まわりのバグはよくあります。
 - **長いページはスクロールしてください** — 画面の下の方の内容に表示崩れがあるかもしれません。
 - **移動の流れをテストしてください** — 複数段階の処理は、最初から最後までクリックして通してみます。

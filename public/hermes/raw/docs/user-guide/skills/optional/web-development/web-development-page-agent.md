@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Page Agent — Web アプリの中に、自然言語で操作できる相棒を組み込む"
 description: "Web アプリの中に、自然言語で操作できる相棒を組み込む"
 upstream_path: user-guide/skills/optional/web-development/web-development-page-agent.md
-upstream_blob: f8332ab3dd5a9e110460e4f30d90eeeab06abdff
+upstream_blob: c9292e5937491897ce985eadec5b1098b926b811
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/web-development/web-development-page-agent
 ---
@@ -46,7 +46,7 @@ alibaba/page-agent（https://github.com/alibaba/page-agent 、スター 17,000 �
 
 ## こんなときは使いません {#when-not-to-use-this-skill}
 
-- **Hermes 自身にブラウザを操作させたい** → Hermes に組み込みのブラウザツール（Browserbase / Camofox）を使ってください。page-agent は *逆向き* のものです。
+- **Hermes 自身にブラウザを操作させたい** → Hermes に組み込みの `browser_exec` ツール（ローカルの Chromium、またはクラウド上のブラウザ）を使ってください。page-agent は *逆向き* のものです。
 - **組み込まずに、タブをまたぐ自動操作をしたい** → Playwright、browser-use、あるいは page-agent の Chrome 拡張を使ってください
 - **画面を見て位置を判断してほしい** → page-agent は DOM のテキストしか見ません。画像も扱えるブラウザエージェントを使ってください
 

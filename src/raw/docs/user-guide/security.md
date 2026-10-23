@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: de8b981505901d3eaf8f816a07b25b0e2de4c778
+upstream_blob: 232a4eec9dc2d13954f28ab7d90f49499d797f0b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -745,7 +745,7 @@ security:
       - "/etc/hermes/blocked-sites.txt"
 ```
 
-止めた URL が要求されると、ツールはそのドメインが方針で止められている旨のエラーを返します。この拒否リストは `web_search`、`web_extract`、`browser_navigate`、そして URL を扱えるすべてのツールに効きます。
+止めた URL が要求されると、ツールはそのドメインが方針で止められている旨のエラーを返します。この拒否リストは `web_search`、`web_extract`、`browser_exec`、そして URL を扱えるすべてのツールに効きます。
 
 詳しくは設定ガイドの [ウェブサイトの拒否リスト](/hermes/docs/user-guide/configuration/#website-blocklist)を参照してください。
 

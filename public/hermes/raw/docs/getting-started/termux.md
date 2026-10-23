@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Android / Termux"
 description: "署名付きの Termux APT リポジトリから Android に Hermes Agent を導入する"
 upstream_path: getting-started/termux.md
-upstream_blob: cd6ccc8c246bf60cabe8120c5a525703d9795d82
+upstream_blob: 4862ec51f6aff832b7739756898a0a5394c945bf
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/termux
 ---
@@ -146,7 +146,9 @@ Android は、バックグラウンドで動いている Termux のプロセス�
 パッケージには `nemo-relay` エクスポーターが入っていません。同梱しているビルド
 ツールチェーンが、この環境に対応していないためです。
 
-Electron、ローカルの Chromium、デスクトップの computer-use ツールも入っていません。
+Electron、同梱の Chromium、デスクトップの computer-use ツールも入っていません。
+ブラウザのツールは、`PATH` 上にシステムの `chromium` があればそれを起動します（リポジトリが提供していれば `pkg install chromium` で入ります）。
+無い場合はブラウザ操作が使えず、ブラウザのツールがその旨を伝えます。
 ローカルの Docker デーモンは Termux の環境にはありません。リモートの
 サービスには、それぞれに必要な条件と接続上の制限があります。
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: cfa6ff772b9da3ced2a614d565c77c477dec38a8
+upstream_blob: 53501465c10100377a628c67d211bb4fc5cb2488
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -61,7 +61,7 @@ terminal.resize         clipboard.paste         image.attach
 
 `session.active_list`、`session.activate`、`session.close` は、TUI のセッション切り替えが使う「そのプロセスの中で今動いているセッション」を操作するためのものです。保存済みの記録を探すときは `session.list` や `/resume` を使い、これらのメソッドは TUI ゲートウェイのプロセスで現在開いているセッションにだけ使ってください。
 
-同じ認証済みゲートウェイの中では、動いているセッションを再開したり呼び出したりしても、前の接続が置き換わるのではなく、イベントの受け取り手がもう一つ増えるだけです。ストリーミングと端末のイベントは接続中のすべてのクライアントに届き、片方のクライアントが切断しても、別のクライアントが見ているセッションは終わりません。送信の排他制御と、設定された「実行中の入力の扱い」の方針はそのまま生きています。接続しているクライアントはそのセッションのサブエージェントに指示を差し込めますが、ブラウザーコントローラーの結果を受け取れるのは、そのコントローラーを登録した接続だけです。これは、別々のゲートウェイのプロセスが同じセッションに書き込めるようになるという意味ではありませんし、持ち主のプロセスを再起動してもプロンプトの受け付けが残るという意味でもありません。
+同じ認証済みゲートウェイの中では、動いているセッションを再開したり呼び出したりしても、前の接続が置き換わるのではなく、イベントの受け取り手がもう一つ増えるだけです。ストリーミングと端末のイベントは接続中のすべてのクライアントに届き、片方のクライアントが切断しても、別のクライアントが見ているセッションは終わりません。送信の排他制御と、設定された「実行中の入力の扱い」の方針はそのまま生きています。接続しているクライアントはそのセッションのサブエージェントに指示を差し込めます。これは、別々のゲートウェイのプロセスが同じセッションに書き込めるようになるという意味ではありませんし、持ち主のプロセスを再起動してもプロンプトの受け付けが残るという意味でもありません。
 
 ### `session.create` でのモデルの上書き {#model-overrides-on-sessioncreate}
 
@@ -145,8 +145,6 @@ POST /v1/runs/{id}/steer         Inject mid-run guidance at the next tool bounda
 POST /v1/runs/{id}/resolve-unknown Acknowledge an exact restart-unknown admission
 POST /v1/runs/{id}/stop          Interrupt the run
 GET  /v1/capabilities            Machine-readable feature flags
-POST /v1/browser-control/register Register a browser controller
-GET  /v1/browser-control/ws       Browser-controller WebSocket
 GET  /v1/models                  Lists hermes-agent
 GET  /api/model/options          Provider-aware picker inventory
 GET  /health, /health/detailed
@@ -154,10 +152,8 @@ GET  /health, /health/detailed
 
 準備の手順、ヘッダー（`X-Hermes-Session-Id`、`X-Hermes-Session-Key`）、フロントエンドとのつなぎ方は [API サーバー](/hermes/docs/user-guide/features/api-server/) にあります。
 
-ブラウザーの拡張機能は、既定では無効になっているコントローラーのプロトコルを
-自分から有効にして、Hermes の会話を開いたそのブラウザーのセッションを操作できます。API と
-ダッシュボードは、principal に結び付いた 1 つの仲介役と、明示的に許可された
-機能の一覧を共有しています。[ブラウザー拡張機能からの操作](/hermes/docs/user-guide/features/api-server/#browser-extension-control) を参照してください。
+ブラウザー拡張機能のコントローラーのプロトコルは削除されました。すでに動かしているブラウザーを Hermes に操作させたい場合は、
+`browser.cdp_url` か `/browser connect` を使います。[ブラウザー拡張機能からの操作（削除済み）](/hermes/docs/user-guide/features/api-server/#browser-extension-control-removed) を参照してください。
 
 ### モデル一覧が見られる場所 {#model-catalog-surfaces}
 

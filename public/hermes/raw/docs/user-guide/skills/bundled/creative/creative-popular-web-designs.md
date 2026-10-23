@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Popular Web Designs — 実在する 54 のデザインシステム（Stripe、Linear、Vercel）を HTML/CSS で"
 description: "実在する 54 のデザインシステム（Stripe、Linear、Vercel）を HTML/CSS で"
 upstream_path: user-guide/skills/bundled/creative/creative-popular-web-designs.md
-upstream_blob: 5352e475029381e10a0c0768f5ff294994b37304
+upstream_blob: 81b3e48737981057a37f10a841e78a7d085f3b0d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-popular-web-designs
 ---
@@ -53,7 +53,7 @@ HTML/CSS を生成するときにそのまま使える、実在する 54 のデ�
 
 - CDN で使える代替フォントと、貼り付けるだけの Google Fonts の `<link>` タグ
 - 本文用と等幅用の CSS font-family の指定
-- HTML の作成には `write_file` を、確認には `browser_vision` を使うという念押し
+- HTML の作成には `write_file` を、確認には `browser_exec`（`capture_screenshot()`）を使うという念押し
 
 ## HTML 生成の型 {#html-generation-pattern}
 
@@ -92,7 +92,7 @@ HTML/CSS を生成するときにそのまま使える、実在する 54 のデ�
 ```
 
 ファイルは `write_file` で書き、`generative-widgets` の流れ（cloudflared のトンネル）で配信し、
-見た目が正しいかどうかを `browser_vision` で確かめます。
+`browser_exec` で結果を確かめます。ページを開いて `capture_screenshot()` を実行し、その画像を見て見た目が正しいかどうかを確認します。
 
 ## フォント代替の早見表 {#font-substitution-reference}
 

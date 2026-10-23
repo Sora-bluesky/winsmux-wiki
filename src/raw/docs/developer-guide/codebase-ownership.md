@@ -2,7 +2,7 @@
 title: "コードベース所有マップ"
 description: "どのディレクトリがどのサブシステムに属し、それぞれの正しいドキュメント入口はどこにあるか"
 upstream_path: developer-guide/codebase-ownership.md
-upstream_blob: 5507aafef6ff08406f247ec3ff99d215cfa87c71
+upstream_blob: 88469f6668f770516afb11be6d820debfaba7ad0
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/codebase-ownership
 ---
@@ -23,7 +23,7 @@ Hermes は大きなリポジトリですが、たいていの変更はちょう�
 | スキル（同梱・追加） | `skills/`, `optional-skills/` | [スキルを作る](/hermes/docs/developer-guide/creating-skills/) |
 | cron / 定時実行のジョブ | `cron/` | [cron の内部構造](/hermes/docs/developer-guide/cron-internals/) |
 | セッションの保存 | `hermes_state.py`, `hermes_state_*.py` | [セッションの保存](/hermes/docs/developer-guide/session-storage/) |
-| ブラウザまわり一式 | `tools/browser_tool.py`, `tools/browser_supervisor.py`, `tools/browser_cdp_tool.py` | [ブラウザのスーパーバイザ](/hermes/docs/developer-guide/browser-supervisor/) |
+| ブラウザまわり一式 | `tools/browser_use_cli.py`（`browser_exec`）, `tools/browser_session*.py`, `tools/browser_launcher.py`, `tools/browser_supervisor.py`, `tools/browser_cdp_tool.py` | [ブラウザのスーパーバイザ](/hermes/docs/developer-guide/browser-supervisor/) |
 | 送信ファイアウォール | `agent/proxy_sources/iron_proxy.py` | [送信プロキシの内部構造](/hermes/docs/developer-guide/egress-internals/) |
 | ACP（IDE 連携） | `acp_adapter/` | [ACP の内部構造](/hermes/docs/developer-guide/acp-internals/) |
 | デスクトップアプリ | `apps/desktop/` | [デスクトップ用プラグイン SDK](/hermes/docs/developer-guide/desktop-plugin-sdk/), [worktree UI の開発](/hermes/docs/developer-guide/worktree-ui-dev/) |

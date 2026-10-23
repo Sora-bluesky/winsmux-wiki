@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: d3711e79fa1ae04eb03551fc5878094b72f2efe2
+upstream_blob: dba43302610104aeb1e9dd263fbe055750a0eca4
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -167,15 +167,10 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `BROWSERBASE_PROJECT_ID` | Browserbase のプロジェクト ID |
 | `BROWSER_USE_API_KEY` | Browser Use のクラウドブラウザの API キー（[browser-use.com](https://browser-use.com/)） |
 | `FIRECRAWL_BROWSER_TTL` | Firecrawl のブラウザセッションの保持時間（秒。既定: 300） |
-| `BROWSER_CDP_URL` | 手元のブラウザの Chrome DevTools Protocol の URL（`/browser connect` で設定します。たとえば `ws://localhost:9222`） |
-| `CAMOFOX_URL` | 検知回避のためのブラウザサーバー Camofox の、手元でのアドレス（既定: `http://localhost:9377`）。アドレスを指すだけで、これで Camofox が選ばれるわけではありません。`hermes tools` から Camofox を選んでください（`browser.cloud_provider: camofox`） |
-| `CAMOFOX_API_KEY` | 認証のある遠隔の Camofox サーバーへ Authorization ヘッダーとして送る bearer トークン（任意） |
-| `CAMOFOX_USER_ID` | 共有の可視セッション向けに、外部で管理する Camofox のユーザー ID（任意） |
-| `CAMOFOX_SESSION_KEY` | `CAMOFOX_USER_ID` でタブを作るときに使う Camofox のセッションキー（任意） |
-| `CAMOFOX_ADOPT_EXISTING_TAB` | `true` にすると、新しいタブを作る前に既存の Camofox のタブを再利用します |
+| `BROWSER_CDP_URL` | ブラウザのツールが Chromium を起動する代わりにつなぐ Chrome DevTools Protocol のエンドポイント（`/browser connect` で設定します。たとえば `ws://localhost:9222`。`browser.cdp_url` と同じです） |
+| `CAMOFOX_*` | Camofox プラグイン（`hermes plugins install camofox`）だけが読みます。Hermes 本体は無視します。 |
 | `BROWSER_INACTIVITY_TIMEOUT` | ブラウザセッションを操作しないまま置いておける時間（秒） |
-| `AGENT_BROWSER_ARGS` | Chromium を起動するときの追加の引数（カンマ区切りか改行区切り）。root で動かしている場合や、AppArmor で制限された非特権のユーザー名前空間（Ubuntu 23.10 以降、DGX Spark、多くのコンテナイメージ）では、Hermes が `--no-sandbox,--disable-dev-shm-usage` を自動で足します。これを手で設定するのは、それを上書きしたいときや、別の引数を足したいときだけにしてください。 |
-| `AGENT_BROWSER_ENGINE` | 手元のブラウザのエンジン: `auto`（既定 — CDP 経由の Chromium 系）、`lightpanda`（Browser Use のモードでは `lightpanda serve` を起動し、組み込みのツールは agent-browser へ `--engine lightpanda` を渡します）、`chrome` のいずれか。config.yaml の `browser.engine` と同じです。 |
+| `AGENT_BROWSER_*` | もう読みません。更新時に、プロファイルの `.env` にある値は、config 側のキーが未設定であれば config へ写されます（`browser.engine: auto` と `browser.headed: false` は未設定とみなします。相対パスの `AGENT_BROWSER_PROFILE` は絶対パスになります）: `AGENT_BROWSER_EXECUTABLE_PATH` → `browser.executable_path`、`AGENT_BROWSER_PROFILE` → `browser.user_data_dir`、`AGENT_BROWSER_ARGS` → `browser.chromium_args`、`AGENT_BROWSER_HEADED` → `browser.headed`、`AGENT_BROWSER_ENGINE` → `browser.engine`。 |
 | `FAL_KEY` | 画像生成（[fal.ai](https://fal.ai/)） |
 | `KREA_API_KEY` | Krea 3 と Krea 2 での画像生成に使う Krea の API キー（[krea.ai](https://krea.ai/)） |
 | `GROQ_API_KEY` | Groq の Whisper による音声認識の API キー（[groq.com](https://groq.com/)） |
@@ -947,7 +942,7 @@ compression:
 | `AUXILIARY_VISION_API_KEY` | `AUXILIARY_VISION_BASE_URL` と組みで使う API キー |
 
 :::note
-`AUXILIARY_WEB_EXTRACT_*` の変数はもう使いません。`web_extract` とブラウザのスナップショットは、補助の LLM を使わなくなりました。長いページやスナップショットは決まったやり方で切り詰められ、全文はディスクに保存されて `read_file` でページ送りできます。
+`AUXILIARY_WEB_EXTRACT_*` の変数はもう使いません。`web_extract` は、補助の LLM を使わなくなりました。長いページは決まったやり方で切り詰められ、全文はディスクに保存されて `read_file` でページ送りできます。
 :::
 
 処理ごとに直接つなぐエンドポイントについては、Hermes はその処理に設定された API キーか `OPENAI_API_KEY` を使います。そうした独自のエンドポイントに `OPENROUTER_API_KEY` を使い回すことはありません。

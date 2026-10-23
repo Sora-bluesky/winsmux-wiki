@@ -2,7 +2,7 @@
 title: "委任プロバイダーのプラグイン"
 description: ""
 upstream_path: developer-guide/delegation-provider-plugin.md
-upstream_blob: 80b8f40472c3f87cdb1f5734387313f04076ccdf
+upstream_blob: d6095adc21fbdd32306f6fb026f1200677992236
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/delegation-provider-plugin
 ---
@@ -26,7 +26,7 @@ sources:
 `ctx.register_delegation_provider()` という接続口から登録されています。もっとも小さい完全な例でもあります。
 設定されたバックエンドがインストールされていない、または利用できないと報告した場合は、**安全側に倒して止まります**（fail closed）。
 `delegate_task` はバックエンド名と直し方を示すツールエラーを返し、子は1つも起動せず、そのスキーマのパラメーターも
-現れません。セッションごとにバックエンドを切り替えることもできます（後述の `agent.delegation_backends`）。
+現れません。バックエンドは `/delegation` で切り替えられます（後述の `agent.delegation_backends`）。
 
 ## ひな形 {#skeleton}
 
@@ -149,7 +149,7 @@ hermes plugins enable delegation-tiers
 
 プロバイダーの既定が使われた場合、`reasoning_effort` は `null` です。フォールバックのプロバイダーが代わりに動いた場合は `fallback_activated: true` が加わります。`default` のバックエンドの子では、結果の項目は変わりません。
 
-## 選択画面の表示情報とセッションの切り替え {#picker-metadata-and-session-switching}
+## 選択画面の表示情報とバックエンドの切り替え {#picker-metadata-and-switching-backends}
 
 `display_name` と `summary`（利用者向けの1行。モデルには決して見せません）は、`/delegation` のような選択画面で
 あなたのバックエンドの表示に使われます。プラグインからは `ctx.delegation_backends` を使います（メソッドは同じで、`list_backends()` は
@@ -159,30 +159,29 @@ Hermes のプロセスに作用します。本体のコードは `agent.delegati
 | 呼び出し | 動き |
 |---|---|
 | `list_backends() -> list[BackendInfo]` | 先頭に `default`、続いて登録されたすべてのバックエンドを返します。それぞれ `name`、`label`、`description`、`available`、`reason`（利用できないときの直し方）を持ちます。 |
-| `get_session_backend(session_key) -> str \| None` | そのセッションの切り替え先です。`config.yaml` に従っているときは `None` です。 |
-| `set_session_backend(session_key, name \| None)` | 1つのセッションだけを切り替えます（`None` で解除）。動かせないバックエンドを指定すると、理由を添えて `ValueError` を送出します。 |
-| `set_global_backend(name, *, session_key="")` | 有効なプロファイルの `config.yaml` に `delegation.backend` を書き込み、そのセッションの切り替えを外します。パッケージマネージャーで管理されたインストールでは `PermissionError` を送出します。 |
+| `set_global_backend(name, *, session_key="", apply_now=False)` | 有効なプロファイルの `config.yaml` に `delegation.backend` を書き込みます。`apply_now=True` を付けると、`session_key` が指すセッションのツール一覧も、そのセッションの次のターンで作り直します。パッケージマネージャーで管理されたインストールでは `PermissionError` を、動かせないバックエンド（または `session_key` なしの `apply_now`）では理由を添えて `ValueError` を送出します。そのときは何も書き込みません。 |
 
 モデルの経路を編集するプラグインのコマンドは、対話型のモデル選択画面を自分の見出しで使い回せます。
 `hermes_cli.auth_model_picker.prompt_model_selection(model_ids, current_model="", title="Select the model for this route:")`
 は選ばれたモデルの id を返し、取り消されたときは `None` を返します。
 
-`session_key` は、プラグインのコマンドのハンドラーが受け取る `session_key` です。セッションを切り替えると、
-そのセッションの次の `delegate_task` の呼び出しから振り分けが変わります。一方で `delegate_task` のスキーマ（あなたのパラメーター）は
-`config.yaml` に従います。キャッシュされたプロンプトの一部で、会話の途中で作り直されることがないからです。そのため
-切り替えのあとも、モデルが前のバックエンドのパラメーターを送ってくることがあります。本体は、そのパラメーターを捨てて
-新しいバックエンドの既定の経路でタスクを実行するのではなく、セッションのバックエンドが宣言していないパラメーターを持つタスクを
-1つずつ断ります（ほかの断りと同じく、タスク単位で安全側に倒して止まります）。
+`session_key` は、プラグインのコマンドのハンドラーが受け取る `session_key` です。セッションは、自分の
+`delegate_task` のスキーマ（あなたのパラメーター）の作成元になったバックエンドで振り分けます。本体はそのバックエンドをセッションのツールと一緒に記録し、
+ツールと一緒にセッションの行に固定するので、そのセッションを引き継ぐ新しいエージェント（ゲートウェイや `--resume`）は両方を復元します。
+スキーマはキャッシュされたプロンプトの一部なので、保存しても、`delegation.backend` を手で書き換えても、動いているセッションには何も起きず、
+次のセッション（`/new`）から効きます。`apply_now=True`（`/delegation <backend> --now` が渡すもの）を使うと、
+代わりにそのセッションのツールを次のターンで作り直し、振り分けもそれに合わせて移ります。利用者が選んだうえでのプロンプトキャッシュの 1 回の破棄で、
+`/skills install --now` と同じ任意の選択です。コンテキストの圧縮はどのみちツールを作り直すので、保存されたバックエンドを拾います。
+セッションのバックエンドが宣言していないパラメーターを持つタスク（モデルが勝手に作ったもの）は、そのタスクだけが断られます。
+捨てられて既定の経路で実行されることはありません。
 
 ```text
-Task 0: this session's delegation backend is 'profile_routes', which does not take 'option' (declared by
-'model_map'), so this task was not started. Run `/delegation profile_routes --global` then `/new` for a
-session whose delegate_task choices match 'profile_routes', or `/delegation model_map` to switch this
-session back to the saved backend.
+Task 0: the delegation backend is 'profile_routes', which does not take 'option' (declared by 'model_map'), so
+this task was not started. This session's delegate_task was built for another backend: run
+`/delegation profile_routes --now` to rebuild this session's delegate_task for 'profile_routes', or start a new
+session with /new.
 ```
 
-`/new` は保存されたバックエンド（`delegation.backend`）で始まるので、直し方は、まずセッションで選んだものを保存するか、
-保存されているものを名指しする形になります。セッションが `config.yaml` に従っている場合（会話の途中で設定が変わった場合）は、直し方は `/new` だけです。
 インストールされているどのバックエンドも宣言していないパラメーターも同じように断られ、その場合は先頭に「Resend it without ...」と付きます。
 
 ## プロンプトのキャッシュ {#prompt-caching}

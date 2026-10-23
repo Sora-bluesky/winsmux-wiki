@@ -2,7 +2,7 @@
 title: "ボットの画面"
 description: ""
 upstream_path: user-guide/features/bot-screen.md
-upstream_blob: d71cc779591fda6bfb839e93fd495471c2c6a67f
+upstream_blob: de65327fbf46f91afbdadacb9f31370198d1b1c9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/bot-screen
 ---
@@ -30,7 +30,7 @@ Cookie があります。画面は作業のための場所であって、セキ�
 動くプロセス（同じホストの別のボットや、ボット自身の `terminal` ツールも含みます）は、
 ペインやリースを通らずに直接それらへ触れられます。リースは `computer_use` とブラウザ系ツールに
 かけたツール側の柵であって、OS の仕組みではありません。OS ユーザーより広い境界が 1 つあります。
-Chromium の DevTools ポート（ドックの Browser と agent-browser の起動は、エージェントが接続できるよう
+Chromium の DevTools ポート（ドックの Browser と、Hermes が起動するすべての Chromium は、エージェントが接続できるよう
 ループバックにこれを公開します）には、ホスト上の**どの**ローカルユーザーでも到達でき、
 Chromium にはユーザーごとに制限する手段がありません。ボットごとに別の OS ユーザーで動かすことは
 対象外です。その分離が必要な場合や、ホストに信頼できないローカルユーザーがいる場合は、
@@ -169,9 +169,9 @@ slim でも `-desktop` でも、どのイメージにも PM が固定したフ�
 ## 引き継ぎ後も残るブラウザのセッション {#browser-sessions-that-survive-the-handoff}
 
 画面が動いている間、ボットのブラウザツールとドックの **Browser** アイコンは
-同じブラウザです。agent-browser が操作する Chromium で、ボットごとに永続する
+同じブラウザです。`browser_exec` が操作する Chromium で、ボットごとに永続する
 user-data-dir を 1 つ持ちます（`<HERMES_HOME>/bot-desktop/browser-profile`。自分で固定したい場合は
-`AGENT_BROWSER_PROFILE` を設定します。`~` は展開され、`pin` のような相対パスは
+`browser.user_data_dir` を設定します。`~` は展開され、`pin` のような相対パスは
 そのボットの `HERMES_HOME` を基準に解決されます。つまり `<HERMES_HOME>/pin` です）。
 引き継ぎ中に Browser をクリックすると、
 ボット自身のウィンドウと Cookie の中に入れます。そこでサインインしたものは、そのあともボットが
@@ -182,25 +182,25 @@ user-data-dir を 1 つ持ちます（`<HERMES_HOME>/bot-desktop/browser-profile
 その目印になるのがパネルのレイアウトファイル
 `<HERMES_HOME>/bot-desktop/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml` です。
 このファイルがある間、ランチャーはパネルに手を加えません。そのため
-`AGENT_BROWSER_EXECUTABLE_PATH` や `AGENT_BROWSER_PROFILE` を変えて画面を
+`browser.executable_path` や `browser.user_data_dir` を変えて画面を
 再起動しても、Browser アイコンは付け直されません。このファイルを削除すると、次の
 `screen start` のときに、その時点で入っているものからドックが作り直されます。
 
-ドックとボットがどの Chromium を使うか: `AGENT_BROWSER_EXECUTABLE_PATH` を明示すればそれが
+ドックとボットがどの Chromium を使うか: `browser.executable_path` を明示すればそれが
 優先されます。指定がなければ、Hermes は PM が管理する Chromium を使い、
 それが使えなければシステムの `chromium` / `google-chrome` に切り替えます。
 ただし `kernel.apparmor_restrict_unprivileged_userns=1` のホスト（Ubuntu 23.10 以降）で
 root 以外のユーザーが動かす場合は、この順が逆になります。そこでは PM が管理するビルドが
 サンドボックスを準備できず `FATAL: No usable sandbox!` で終了する一方、ディストリビューションの
 Chromium にはそれを許可する AppArmor プロファイルが付いているからです。この選び方がホストに合わない場合は、
-ゲートウェイの環境に `AGENT_BROWSER_EXECUTABLE_PATH=/usr/bin/chromium`（または Chrome のパス）を
-設定してください。公式の Docker イメージは `AGENT_BROWSER_EXECUTABLE_PATH` を、ウィンドウを描ける
-PM 固定のフル版 Chromium に向けているので、ドックの Browser アイコンはそれを使います。`-desktop` のタグには
+ボットの `config.yaml` に `browser.executable_path: /usr/bin/chromium`（または Chrome のパス）を
+設定してください。公式の Docker イメージは、PM 固定のフル版 Chromium を `/etc/hermes/chromium-executable-path` に
+記録しています。このビルドはウィンドウを描けるので、ドックの Browser アイコンはそれを使います。`-desktop` のタグには
 ディストリビューションの `chromium` も入っています。固定ビルドのサンドボックスを拒むホストでは、
-`AGENT_BROWSER_EXECUTABLE_PATH=/usr/bin/chromium` を設定してください。Playwright の *headless shell* が
+`browser.executable_path: /usr/bin/chromium` を設定してください。Playwright の *headless shell* が
 アイコンに使われることはありません。それしかブラウザがないときは、画面付きのブラウザ（`apt-get install chromium`）を
 入れるまで、ペインと `screen status` は **no headed browser** と報告します。
-ドックのアイコンは、そのコンテナで agent-browser が使うのと同じサンドボックス設定でブラウザを起動するので、
+ドックのアイコンは、そのコンテナで Hermes の Chromium 起動処理が使うのと同じサンドボックス設定でブラウザを起動するので、
 人が使う Browser とボットのブラウザはまったく同じものになります。
 
 ## CLI {#cli}
@@ -245,7 +245,7 @@ terminal` を指定するとサンドボックスへの配置を強制し、サ�
 サンドボックスには、デスクトップ一式が必要です。`nousresearch/hermes-sandbox:desktop` は、
 すべてのコンテナ系バックエンド（Docker、Modal、Daytona、
 Singularity）の既定のイメージです。`nikolaik/python-nodejs` をベース（Python 3.13 / Node 26）に、
-TigerVNC、Xfce のコンポーネント、画面付きの Chromium、`agent-browser`、`cua-driver`、
+TigerVNC、Xfce のコンポーネント、画面付きの Chromium、`cua-driver`、
 そしてベースに足りなかった普段使いのツール（jq、ripgrep、fd、tmux、rsync、イメージの `pn` ユーザー用の sudo）を
 加えたものです。既定のユーザーは以前の既定と同じく root なので、シェルでの作業の流れは
 変わりません。自分で固定したイメージには手を付けません。その場合、画面はこのイメージか
@@ -270,13 +270,12 @@ Singularity / Apptainer では、同じイメージが SIF に変換されます
 ドキュメントと照らし合わせて確かめたもので、実際に動かして試したものではありません。
 
 SSH のホストはバックエンドに指定した先そのものなので、デスクトップ一式もそのホスト自身が
-持っている必要があります。同じバイナリ（TigerVNC、Xfce、`cua-driver`、見つけられる Chromium を伴った
-`agent-browser`）が、**対話しないログインセッション**から使えることが条件です。
+持っている必要があります。同じバイナリ（TigerVNC、Xfce、`cua-driver`、画面付きの Chromium）が、**対話しないログインセッション**から使えることが条件です。
 この最後の点が、デスクトップのイメージから作ったホストと `docker exec` との違いです。
 Dockerfile の `ENV` は ssh のセッションには届かないので、イメージは
 `PLAYWRIGHT_BROWSERS_PATH` を `/etc/environment` にも書き込み、PAM に適用させています。
-自前のホストでも同じ設定が必要です。ないと、`agent-browser` はローカルのシェルでは動くのに、
-ssh 経由では「Chrome not found」と報告します。
+自前のホストでも同じ設定が必要です。ないと、ローカルのシェルでは動くのに、
+ssh 経由ではブラウザが Chromium を見つけられません。
 
 **以前の既定からの移行。** すでにある Docker のサンドボックスは、
 置き換えずにそのまま残します。`docker_image` が未設定で、永続化されたコンテナが

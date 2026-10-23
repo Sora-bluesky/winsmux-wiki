@@ -2,7 +2,7 @@
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: 7d8751f1747c559ccdf7898877a6d37fec7f1002
+upstream_blob: dacb7c60466f003936f1e062f46db23c3e2f564d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -937,7 +937,7 @@ WebSocket はもう一段だけ加えています。ダッシュボードの一�
 
 ### 拡張する {#extending-it}
 
-このプラグインは Hermes のダッシュボードのプラグインの標準的な約束事に従っています。マニフェストの全一覧、外枠の差し込み口、ページごとの差し込み口、プラグイン SDK については [ダッシュボードの拡張](/hermes/docs/user-guide/features/extending-the-dashboard/) を参照してください。列の追加、カードの見た目の作り込み、テナントで絞った配置、`tab.override` による丸ごとの差し替えまで、このプラグインを分岐させずに表現できます。
+このプラグインは Hermes のダッシュボードのプラグインの標準的な約束事に従っています。マニフェストの全一覧、外枠の差し込み口、ページごとの差し込み口、プラグイン SDK については [ダッシュボードの拡張](/hermes/docs/user-guide/features/extending-the-dashboard/) を参照してください。列の追加、テナントで絞った配置、`tab.override` による丸ごとの差し替えまで、このプラグインを分岐させずに表現できます。ダッシュボードにはカードごとの差し込み口はありません。デスクトップアプリの盤では、プラグインは `KANBAN_CARD_AREAS.badges` という追加先を通じて、カードごとのラベルを足せます（[デスクトップのプラグイン SDK](/hermes/docs/developer-guide/desktop-plugin-sdk/#kanban-card-badges) を参照）。
 
 消さずに無効にするには、`config.yaml` に `dashboard.plugins.kanban.enabled: false` を追加してください（または `plugins/kanban/dashboard/manifest.json` を削除します）。
 

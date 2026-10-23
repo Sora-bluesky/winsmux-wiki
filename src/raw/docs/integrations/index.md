@@ -2,7 +2,7 @@
 title: "外部サービス連携"
 description: ""
 upstream_path: integrations/index.md
-upstream_blob: 4dedd4eba8500ca55d6ce1483b8e4c8abe0224f8
+upstream_blob: 373c6c64904aad83c1e8cb9bb8d247094b8a31d4
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations
 ---
@@ -52,12 +52,14 @@ web:
 
 ## ブラウザ操作 {#browser-automation}
 
-Hermes にはブラウザを操作する機能が一式そろっていて、サイトの閲覧・フォームの入力・情報の取り出しを、次のいずれかの方式で行えます。
+Hermes にはブラウザを操作する機能が一式そろっていて、`browser_exec`（CDP 越しに Python で操作します）を通じて、サイトの閲覧・フォームの入力・情報の取り出しができます。ブラウザを動かす場所は次から選べます。
 
 - **Browser Use Cloud** — 検出されにくい設定の Chromium を提供するサービスです。住宅用プロキシ、CAPTCHA の突破、使い回せるブラウザプロファイルが付きます
 - **Browserbase** — もう 1 つのクラウドブラウザです。管理されたブラウザ、ボット検出対策、CAPTCHA の突破、住宅用プロキシがそろっています
 - **手元の Chromium 系ブラウザ（CDP 接続）** — いま動かしている Chrome、Brave、Chromium、Edge に `/browser connect` でつなぎます
-- **手元の Chromium** — `agent-browser` コマンドで画面を出さずに動かします
+- **手元の Chromium** — Hermes が自分で起動する、画面を出さない手元の Chromium です（既定）
+
+検知回避のブラウザ Camofox は、カタログのプラグインとして提供されています: `hermes plugins install camofox`。
 
 設定と使い方は [ブラウザ操作](/hermes/docs/user-guide/features/browser/) を見てください。
 

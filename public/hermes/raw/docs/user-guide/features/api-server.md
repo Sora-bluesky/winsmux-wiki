@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: 2d920eb64d9cbb54ed2e31052163032acc33ea1a
+upstream_blob: e927f32e92dd71f16055c92d25284501071c8f28
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -376,85 +376,17 @@ API サーバーの安定した窓口を、外部の画面や指揮役、プラ�
 
 ダッシュボードやブラウザの画面、管理の仕組みをつなぐときは、この経路を使ってください。動いている Hermes の版が実行・逐次送り・取り消し・セッションの継続に対応しているかを、Python の内部に踏み込まずに調べられます。
 
-## ブラウザ拡張からの操作 {#browser-extension-control}
+## ブラウザ拡張からの操作（廃止） {#browser-extension-control-removed}
 
-Hermes は、いまの Hermes のセッションに結びついたブラウザのセッションを操る、認証済みの拡張へ
-ブラウザ関連のツールを振り分けられます。この機能は既定では無効です。使うには
-`browser.extension_control.enabled` を `true` にしてください。
-
-```yaml
-browser:
-  extension_control:
-    enabled: true
-```
-
-手元の API の経路にも、API サーバーの bearer キーが要ります。操作役として登録できるのは、
-すでにあるサーバーのセッションに対してだけです。Hermes は操作役の主体を、認証済みのサーバーの
-状態から導きます。クライアントが送ってきた `principal_id` は無視されます。
-
-いま何ができるかは `GET /v1/capabilities` で分かります。
-`browser_extension_control` のオブジェクトが、この機能が有効かどうか、
-やり取りの版、通信路の名前、そして許されている操作の一覧そのものを返します。
-
-```text
-controller.noop
-browser_back
-browser_click
-browser_navigate
-browser_press
-browser_screenshot
-browser_scroll
-browser_snapshot
-browser_tab_activate
-browser_tabs
-browser_type
-```
-
-この一覧にないものを求めても、除かれます。生の CDP、好きなスクリプトの実行、コンソールへの
-アクセス、アップロード、画像の抽出、視覚の機能は、この操作のやり取りには含まれません。
-
-リクエストに結びついた操作役がいないとき、あるいは機能が無効なときは、Hermes はこれまでどおりの
-ブラウザの裏側を使い続けます。ゲートウェイが操作役の主体と通信路の系統をリクエストに結びつけたら、
-その拡張の道筋が正となります。操作役がいない、どれか決まらない、切れている、力不足、といった場合は
-黙って別の手元やクラウドのブラウザに乗り換えたりせず、閉じる側に倒れて失敗します。
-どの操作役かがはっきり決まったあとは、その結果もエラーも正であり、
-Hermes が同じ操作を別の裏側でやり直すことはありません。
-
-### 手元の API での登録 {#local-api-registration}
-
-1. `protocol_version`、`session_id`、`controller_id`、`browser_profile_id`、そして求める
-   `capabilities` を添えて、認証済みの `POST /v1/browser-control/register` を送ります。
-2. Hermes は 30 秒で切れる一度きりの引換券と、絞り込まれてサーバー側に結びつけられた操作の範囲を返します。
-3. `hermes-browser-control-v1` と
-   `hermes-browser-control-ticket.<ticket>` の 2 つの WebSocket の副プロトコルを添えて
-   `GET /v1/browser-control/ws` を開きます。
-
-引換券をクエリ文字列で受け付けることはありません。知らない、期限切れ、使い回し、形が
-おかしい引換券は、WebSocket に切り替わる前にはじかれます。
-
-### 操作役とやり取りする枠 {#controller-frames}
-
-Hermes は `browser.controller.command` という枠を送ります。中身は `command_id`、
-`action`、書き換えられない `arguments`、ブラウザと操作役の ID、そしてもとになった
-`tool_call_id` です。操作役は `browser.controller.result` で、同じ `command_id`、
-きっちり真偽値の `ok`、そして `result` か `error` のどちらかを返します。
-取り消しや時間切れでは `browser.controller.cancel` が出て、遅れて届いた結果は捨てられます。
-
-思わぬ接続の切断があると操作役は切断中の扱いになり、すでに走っている仕事はそれぞれの
-もとの期限まで保たれます。同じ主体、プロファイル、セッション、操作役の ID、ブラウザの
-プロファイル、通信路の身元でつなぎ直せば、保留になっていた取り消しが片づくまで新しい仕事を
-入れないまま、通信路だけが入れ替わります。つなぎ直しのときに取り決めた機能が変わることは
-あります。機能は身元を決める項目ではないからです。同じ認証済みセッションの道筋で操作役の ID や
-ブラウザのプロファイルが違えば、それは丸ごとの入れ替えです。後継が使えるようになる前に、
-古い保留中の仕事は取り消されます。意図してきっぱり切り離したいときは、認証済みの操作役の通信路で
-`browser.controller.detach` を送ってください。保留中の仕事がその場で取り消されます。
-ただ接続を閉じただけなら、復帰できる切断として扱われます。
-
-認証済みのダッシュボードの通信路も、登録・結果・生存確認・機能・持ち主の扱いを、
-自分の Gateway の RPC とイベントの経路で同じように備えています。どちらの通信路でも、
-主体、プロファイル、セッション、操作役、ブラウザのプロファイル、通信路の系統、機能のすべてが
-一意にぴたりと一致してはじめて選ばれます。いったん選ばれたら、操作役の失敗は正であり、
-別のブラウザの裏側でやり直されることはありません。
+ブラウザ拡張の操作役プロトコル（`POST /v1/browser-control/register`、
+`GET /v1/browser-control/ws`、`/v1/artifacts/*` の各経路、ダッシュボードの
+`browser.controller.*` RPC、設定キー `browser.extension_control`）は
+廃止されました。このプロトコルが中継していたのは旧来の `browser_navigate`/`browser_click`/… ツールで、
+これらはもうありません。いまのブラウザ自動操作は、CDP を通じた `browser_exec` で行います。
+すでに起動しているブラウザを Hermes に操作させたいときは、`config.yaml` の `browser.cdp_url` か `/browser connect` で
+そのブラウザの DevTools の接続先を指定してください。詳しくは
+[CDP で自分のブラウザを使う](/hermes/docs/user-guide/features/browser/#your-own-browser-via-cdp-browser-connect)を参照してください。
+アップグレードすると、`config.yaml` に残っている `browser.extension_control` の設定は取り除かれます。
 
 ## リクエストごとのモデルの指定 {#per-request-model-selection}
 

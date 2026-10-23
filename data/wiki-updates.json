@@ -1,6 +1,178 @@
 {
-  "generatedAt": "2026-10-23",
+  "generatedAt": "2026-10-24",
   "entries": [
+    {
+      "date": "2026-10-23",
+      "sha": "9c6454b",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/architecture",
+          "title": "アーキテクチャ",
+          "url": "/hermes/docs/developer-guide/architecture/"
+        },
+        {
+          "id": "developer-guide/delegation-provider-plugin",
+          "title": "委任プロバイダーのプラグイン",
+          "url": "/hermes/docs/developer-guide/delegation-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/model-provider-plugin",
+          "title": "モデルプロバイダーのプラグイン",
+          "url": "/hermes/docs/developer-guide/model-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/subagent-lifecycle-api",
+          "title": "公開されたサブエージェントのライフサイクル API",
+          "url": "/hermes/docs/developer-guide/subagent-lifecycle-api/"
+        },
+        {
+          "id": "developer-guide/terminal-environment-plugin",
+          "title": "ターミナル環境プロバイダプラグイン",
+          "url": "/hermes/docs/developer-guide/terminal-environment-plugin/"
+        },
+        {
+          "id": "developer-guide/tools-runtime",
+          "title": "ツールの実行基盤",
+          "url": "/hermes/docs/developer-guide/tools-runtime/"
+        },
+        {
+          "id": "getting-started/quickstart",
+          "title": "Hermes Agent クイックスタート",
+          "url": "/hermes/docs/getting-started/quickstart/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "guides/migrate-from-openclaw",
+          "title": "OpenClaw から移ってくる",
+          "url": "/hermes/docs/guides/migrate-from-openclaw/"
+        },
+        {
+          "id": "guides/tips",
+          "title": "コツとベストプラクティス",
+          "url": "/hermes/docs/guides/tips/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/mcp-config-reference",
+          "title": "MCP 設定の早見表",
+          "url": "/hermes/docs/reference/mcp-config-reference/"
+        },
+        {
+          "id": "reference/optional-skills-catalog",
+          "title": "オプションスキルの一覧",
+          "url": "/hermes/docs/reference/optional-skills-catalog/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "user-guide/checkpoints-and-rollback",
+          "title": "チェックポイントと /rollback",
+          "url": "/hermes/docs/user-guide/checkpoints-and-rollback/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/api-server",
+          "title": "API サーバー",
+          "url": "/hermes/docs/user-guide/features/api-server/"
+        },
+        {
+          "id": "user-guide/features/batch-processing",
+          "title": "まとめて処理する",
+          "url": "/hermes/docs/user-guide/features/batch-processing/"
+        },
+        {
+          "id": "user-guide/features/bot-screen",
+          "title": "ボットの画面",
+          "url": "/hermes/docs/user-guide/features/bot-screen/"
+        },
+        {
+          "id": "user-guide/features/computer-use",
+          "title": "コンピュータ操作",
+          "url": "/hermes/docs/user-guide/features/computer-use/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/kanban",
+          "title": "カンバン（マルチエージェント盤）",
+          "url": "/hermes/docs/user-guide/features/kanban/"
+        },
+        {
+          "id": "user-guide/features/mcp",
+          "title": "MCP（Model Context Protocol）",
+          "url": "/hermes/docs/user-guide/features/mcp/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "スキルの仕組み",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
+          "id": "user-guide/features/tools",
+          "title": "ツールとツールセット",
+          "url": "/hermes/docs/user-guide/features/tools/"
+        },
+        {
+          "id": "user-guide/import-from-other-agents",
+          "title": "他のエージェントから取り込む",
+          "url": "/hermes/docs/user-guide/import-from-other-agents/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/skills/optional/migration/migration-openclaw-migration",
+          "title": "user-guide/skills/optional/migration/migration-openclaw-migration",
+          "url": "/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/"
+        }
+      ]
+    },
     {
       "date": "2026-10-22",
       "sha": "501fb4c",
@@ -2517,7 +2689,7 @@
         },
         {
           "id": "user-guide/skills/optional/migration/migration-openclaw-migration",
-          "title": "Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む",
+          "title": "user-guide/skills/optional/migration/migration-openclaw-migration",
           "url": "/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/"
         }
       ]
@@ -3317,7 +3489,7 @@
         },
         {
           "id": "user-guide/skills/optional/migration/migration-openclaw-migration",
-          "title": "Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む",
+          "title": "user-guide/skills/optional/migration/migration-openclaw-migration",
           "url": "/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/"
         },
         {
@@ -5200,7 +5372,7 @@
         },
         {
           "id": "user-guide/skills/optional/migration/migration-openclaw-migration",
-          "title": "Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む",
+          "title": "user-guide/skills/optional/migration/migration-openclaw-migration",
           "url": "/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/"
         },
         {
@@ -6804,7 +6976,7 @@
         },
         {
           "id": "user-guide/skills/optional/migration/migration-openclaw-migration",
-          "title": "Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む",
+          "title": "user-guide/skills/optional/migration/migration-openclaw-migration",
           "url": "/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/"
         },
         {
@@ -10632,7 +10804,7 @@
         },
         {
           "id": "user-guide/skills/optional/migration/migration-openclaw-migration",
-          "title": "Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む",
+          "title": "user-guide/skills/optional/migration/migration-openclaw-migration",
           "url": "/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/"
         },
         {

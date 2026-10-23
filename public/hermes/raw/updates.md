@@ -8,6 +8,42 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-23
+
+- [アーキテクチャ](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)
+- [委任プロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/delegation-provider-plugin/)
+- [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [公開されたサブエージェントのライフサイクル API](https://wiki.winsmux.dev/hermes/docs/developer-guide/subagent-lifecycle-api/)
+- [ターミナル環境プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/terminal-environment-plugin/)
+- [ツールの実行基盤](https://wiki.winsmux.dev/hermes/docs/developer-guide/tools-runtime/)
+- [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
+- [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- [OpenClaw から移ってくる](https://wiki.winsmux.dev/hermes/docs/guides/migrate-from-openclaw/)
+- [コツとベストプラクティス](https://wiki.winsmux.dev/hermes/docs/guides/tips/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
+- [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
+- [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
+- [チェックポイントと /rollback](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [API サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
+- [まとめて処理する](https://wiki.winsmux.dev/hermes/docs/user-guide/features/batch-processing/)
+- [ボットの画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/bot-screen/)
+- [コンピュータ操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/computer-use/)
+- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
+- [カンバン（マルチエージェント盤）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/kanban/)
+- [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
+- [ツールとツールセット](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tools/)
+- [他のエージェントから取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/import-from-other-agents/)
+- [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
+- [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
+- [user-guide/skills/optional/migration/migration-openclaw-migration](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
+
 ## 2026-10-22
 
 - [プラグインカタログへの登録申請](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
@@ -547,7 +583,7 @@ raw: /hermes/raw/updates.md
 - [Baoyu Infographic — インフォグラフィック: 21 種類のレイアウト × 21 種類のスタイル (信息图, 可视化)](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/creative/creative-baoyu-infographic/)
 - [Baoyu Article Illustrator — 記事の挿絵。型 × 画風 × 配色をそろえて作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/)
 - [Baoyu Comic — 知識まんが（知识漫画）。学習向け、伝記、手引き](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/)
-- [Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
+- [user-guide/skills/optional/migration/migration-openclaw-migration](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
 
 ## 2026-09-29
 
@@ -715,7 +751,7 @@ raw: /hermes/raw/updates.md
 - [Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/)
 - [Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy/)
 - [Minecraft Modpack Server — MOD 入りの Minecraft サーバーを立てる（CurseForge、Modrinth）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server/)
-- [Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
+- [user-guide/skills/optional/migration/migration-openclaw-migration](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
 - [Evaluating Llms Harness — lm-eval-harness で LLM を評価する（MMLU、GSM8K など）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness/)
 - [Torchtitan — PyTorch の 4D 並列で LLM を大規模に事前学習する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-torchtitan/)
 - [Memento Flashcards — 間隔反復の暗記カード: 作成・復習・クイズ・書き出し](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/)
@@ -1106,7 +1142,7 @@ raw: /hermes/raw/updates.md
 - [Fastmcp — Python で MCP サーバーを作り、試し、公開する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-fastmcp/)
 - [Mcp Oauth Remote Gateway — 画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/)
 - [Mcporter — MCP のサーバーやツールを、端末から一覧・認証・呼び出しする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-mcporter/)
-- [Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
+- [user-guide/skills/optional/migration/migration-openclaw-migration](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
 - [Accelerate — PyTorch の学習を、ほとんど書き換えずに複数の GPU で走らせる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-accelerate/)
 - [Chroma — RAG と意味検索のための埋め込みデータベース](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-chroma/)
 - [Clip — 学習なしでの画像の分類と、画像と文章での検索](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-clip/)
@@ -1430,7 +1466,7 @@ raw: /hermes/raw/updates.md
 - [Stocks — Yahoo 経由の株価、履歴、検索、比較、暗号資産](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/finance/finance-stocks/)
 - [Fastmcp — Python で MCP サーバーを作り、試し、公開する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-fastmcp/)
 - [Mcp Oauth Remote Gateway — 画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/)
-- [Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
+- [user-guide/skills/optional/migration/migration-openclaw-migration](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
 - [Evaluating Llms Harness — lm-eval-harness で LLM を評価する（MMLU、GSM8K など）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness/)
 - [Obliteratus — OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-obliteratus/)
 - [Tensorrt Llm — NVIDIA の GPU で LLM の推論を高い処理量で動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-tensorrt-llm/)
@@ -2226,7 +2262,7 @@ raw: /hermes/raw/updates.md
 - [Fastmcp — Python で MCP サーバーを作り、試し、公開する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-fastmcp/)
 - [Mcp Oauth Remote Gateway — 画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/)
 - [Mcporter — MCP のサーバーやツールを、端末から一覧・認証・呼び出しする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-mcporter/)
-- [Openclaw Migration — OpenClaw の設定（記憶、skill）を Hermes に取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
+- [user-guide/skills/optional/migration/migration-openclaw-migration](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
 - [Accelerate — PyTorch の学習を、ほとんど書き換えずに複数の GPU で走らせる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-accelerate/)
 - [Chroma — RAG と意味検索のための埋め込みデータベース](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-chroma/)
 - [Clip — 学習なしでの画像の分類と、画像と文章での検索](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-clip/)

@@ -2,14 +2,14 @@
 title: "ブラウザプロバイダプラグイン"
 description: "Hermes Agent 向けのクラウドブラウザバックエンドプラグインを作る方法"
 upstream_path: developer-guide/browser-provider-plugin.md
-upstream_blob: 465e43e61f0b400a1d5dccd261e03cc569473333
+upstream_blob: 72a1a342ca0db2f505a9cbadb552a235a4375f35
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/browser-provider-plugin
 ---
 
 # ブラウザプロバイダプラグインを作る {#building-a-browser-provider-plugin}
 
-ブラウザプロバイダプラグインは、クラウドモードの `browser_*` ツール呼び出し（ページを開く、クリックする、画面を撮る、など）を引き受ける**クラウドブラウザのバックエンド**を登録します。組み込みのプロバイダ（Browserbase、Browser Use、Firecrawl）は、いずれも `plugins/browser/<name>/` にプラグインとして同梱されています。新しいものを足したい場合も、同梱のものを差し替えたい場合も、その隣にディレクトリを 1 つ置くだけです。
+ブラウザプロバイダプラグインは、**クラウドブラウザのバックエンド**を登録します。`browser.cloud_provider` でそれが選ばれていると、`browser_exec`（と CDP 系のツール `browser_cdp`、`browser_dialog`、`browser_vault`）は、ローカルの Chromium の代わりに、そのプラグインが作った遠隔のブラウザセッションを操作します。組み込みのプロバイダ（Browserbase、Browser Use、Firecrawl）は、いずれも `plugins/browser/<name>/` にプラグインとして同梱されています。新しいものを足したい場合も、同梱のものを差し替えたい場合も、その隣にディレクトリを 1 つ置くだけです。
 
 :::tip
 ブラウザのバックエンドは、Hermes が扱う**バックエンドプラグイン**のうちの 1 つです。ほかにもそれぞれ専用の抽象基底クラスを持つものとして、[ウェブ検索プロバイダプラグイン](/hermes/docs/developer-guide/web-search-provider-plugin/)（この抽象基底クラスは、あえてそれに合わせた形にしています）、[画像生成](/hermes/docs/developer-guide/image-gen-provider-plugin/)、[動画生成](/hermes/docs/developer-guide/video-gen-provider-plugin/)、[メモリプロバイダ](/hermes/docs/developer-guide/memory-provider-plugin/)、[コンテキストエンジン](/hermes/docs/developer-guide/context-engine-plugin/)、[シークレットソース](/hermes/docs/developer-guide/secret-source-plugin/)、[モデルプロバイダ](/hermes/docs/developer-guide/model-provider-plugin/) があります。一般のツール・フック・CLI のプラグインについては [Hermes プラグインを作る](/hermes/docs/developer-guide/plugins/) を参照してください。
@@ -17,9 +17,9 @@ sources:
 
 ## どうつながっているか {#how-it-fits-together}
 
-ブラウザプロバイダは、ブラウザの操作そのものを実装するわけでは**ありません**。実装するのは**セッションの出し入れ**です。遠隔のブラウザセッションを作り、CDP の websocket URL を返し、終わったらセッションを片付けます。ページを実際に動かすのは Hermes 自身のブラウザまわり（`agent-browser` と `tools/browser_tool.py`）で、返ってきた CDP の URL につないで操作します。そのため、どのプロバイダでも `browser_*` のツール一式がそのまま使えます。
+ブラウザプロバイダは、ブラウザの操作そのものを実装するわけでは**ありません**。実装するのは**セッションの出し入れ**です。遠隔のブラウザセッションを作り、CDP の websocket URL を返し、終わったらセッションを片付けます。Hermes は返ってきた CDP の URL を `browser_exec` に渡し、ページはそこから操作されます。そのため、どのプロバイダでもブラウザのツール一式（`browser_exec`、`browser_cdp`、`browser_dialog`、`browser_vault`）がそのまま使えます。
 
-どのプロバイダを使うかは `config.yaml` の `browser.cloud_provider` で決まります。`tools/browser_tool.py` の振り分けは登録簿を引くだけで、プロバイダごとの分岐は入っていません。
+どのプロバイダを使うかは `config.yaml` の `browser.cloud_provider` で決まります。`tools/browser_session_cloud.py` の解決処理は登録簿を引くだけで、プロバイダごとの分岐は入っていません。
 
 ## 見つけ方 {#discovery}
 
@@ -87,7 +87,7 @@ class MyBackendProvider(BrowserProvider):
         """Create a remote browser session; return the session-metadata contract."""
         session = my_api.create_browser(...)
         return {
-            "session_name": f"my-backend-{task_id}",  # unique agent-browser session name
+            "session_name": f"my-backend-{task_id}",  # unique session name
             "bb_session_id": session.id,              # provider session ID (for cleanup)
             "cdp_url": session.cdp_ws_url,            # CDP websocket URL
             "features": {"stealth": True},            # feature flags you enabled
@@ -107,14 +107,14 @@ class MyBackendProvider(BrowserProvider):
 
 `create_session()` は少なくとも `session_name`、`bb_session_id`、`cdp_url`、`features` を返す必要があります。知っておきたい癖が 2 つあります。
 
-- **`bb_session_id` は昔の名残のキー名**で、`tools/browser_tool.py` との互換のためにそのまま残しています。どのベンダーを使っていても、ここに入るのは*自分の*プロバイダのセッション ID です。名前を変えないでください。
+- **`bb_session_id` は昔の名残のキー名**で、ブラウザのセッションを扱うコードとの互換のためにそのまま残しています。どのベンダーを使っていても、ここに入るのは*自分の*プロバイダのセッション ID です。名前を変えないでください。
 - `create_session()` は**例外を投げてかまいません**。認証情報が足りないときは `ValueError`、通信や API の失敗なら `RuntimeError` です。呼び出し側がそれを利用者に見せます。これは `close_session` や `emergency_cleanup` とは違う点で、あちらは決して例外を投げてはいけません。
 
 `external_call_id` というキーを足すと、ゲートウェイ経由の課金に対応できます。
 
 ### `get_setup_schema()` — `hermes tools` の選択肢に出す {#getsetupschema-the-hermes-tools-picker-row}
 
-これを実装しておくと、Browser Automation の選択肢に正式な項目として並び、API キーの入力欄やインストール時の処理も付けられます。
+これを実装しておくと、Browser Automation の選択肢に正式な項目として並び、API キーの入力欄も付けられます（任意の `post_setup` キーには、選ばれたあとに走らせるインストール処理の名前を書きます）。
 
 ```python
 def get_setup_schema(self) -> dict:
@@ -127,7 +127,6 @@ def get_setup_schema(self) -> dict:
              "prompt": "My Backend API key",
              "url": "https://mybackend.example"},
         ],
-        "post_setup": "agent_browser",   # ensures local Chromium is installed (agent-browser itself resolves via npx)
     }
 ```
 

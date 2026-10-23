@@ -2,7 +2,7 @@
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールをツールセットごとにまとめた公式な一覧"
 upstream_path: reference/tools-reference.md
-upstream_blob: 2b56f18270ddd43106f38806e8befde198bd47b7
+upstream_blob: 27f14469f6e14ba617e5c78133d29f2e6ade4362
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -11,7 +11,7 @@ sources:
 
 このページでは、Hermes の組み込みツールをツールセットごとに説明します。何が使えるかは、動かしている環境、資格情報、有効にしているツールセットによって変わります。
 
-**ざっくりした数（現在の登録内容）:** 約 100 個のツールがあります。内訳は、ブラウザ用の中核ツール 10 個、CDP がある場合だけ現れるブラウザツール 2 個、ブラウザの保管庫ツール 5 個、それに `browser_exec`、ファイル操作 4 個、ターミナル 2 個（`terminal`、`process_manage`）、デスクトップ GUI 用の 11 個（`read_terminal`、`close_terminal`、`desktop_preview`、`drive_preview`、`annotate_preview`、`read_window_below`、`focus_pane`、`react_to_message`、`gui_tour`、`show_tip`、`set_theme` — デスクトップアプリのセッション限定）、ウェブ 2 個、Feishu 5 個、Yuanbao 5 個、かんばん 14 個（かんばんのディスパッチャーがエージェントを起動したときに登録されます）、プロジェクト 1 個（`desktop_project`。デスクトップ / GUI のセッション向け）、Discord 2 個、動画 3 個（`video_generate`、`xai_video_edit`、`xai_video_extend`）、そして単体のツールがいくつか（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob_manage`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`vision_analyze`、`video_analyze`、`todo_list`、`computer_use`、`x_search`）です。
+**ざっくりした数（現在の登録内容）:** 約 85 個のツールがあります。内訳は、ブラウザ 4 個（`browser_exec`、`browser_cdp`、`browser_dialog`、`browser_vault`）、ファイル操作 4 個、ターミナル 2 個（`terminal`、`process_manage`）、デスクトップ GUI 用の 11 個（`read_terminal`、`close_terminal`、`desktop_preview`、`drive_preview`、`annotate_preview`、`read_window_below`、`focus_pane`、`react_to_message`、`gui_tour`、`show_tip`、`set_theme` — デスクトップアプリのセッション限定）、ウェブ 2 個、Feishu 5 個、Yuanbao 5 個、かんばん 14 個（かんばんのディスパッチャーがエージェントを起動したときに登録されます）、プロジェクト 1 個（`desktop_project`。デスクトップ / GUI のセッション向け）、Discord 2 個、動画 3 個（`video_generate`、`xai_video_edit`、`xai_video_extend`）、そして単体のツールがいくつか（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob_manage`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`vision_analyze`、`video_analyze`、`todo_list`、`computer_use`、`x_search`）です。
 
 :::tip MCP ツール
 Hermes は組み込みツールに加えて、MCP サーバーからツールを動的に読み込めます。MCP のツールは `mcp__<server>__` という接頭辞付きで現れます（たとえば `github` という MCP サーバーなら `mcp__github__create_issue`）。設定方法は [MCP 連携](/hermes/docs/user-guide/features/mcp/) をご覧ください。
@@ -19,27 +19,14 @@ Hermes は組み込みツールに加えて、MCP サーバーからツールを
 
 ## `browser` ツールセット {#browser-toolset}
 
-| ツール | 説明 | 必要な環境 |
-|------|-------------|----------------------|
-| `browser_back` | ブラウザの履歴をひとつ戻り、前のページを開きます。先に browser_navigate を呼んでおく必要があります。 | — |
-| `browser_click` | スナップショットに出てくる参照 ID（'@e5' など）で指定した要素をクリックします。参照 ID はスナップショットの出力に角かっこで示されます。先に browser_navigate と browser_snapshot を呼んでおく必要があります。 | — |
-| `browser_console` | 現在のページのブラウザコンソール出力と JavaScript のエラーを取得します。console.log/warn/error/info のメッセージと、捕捉されなかった JS の例外を返します。黙って起きている JavaScript のエラー、失敗した API 呼び出し、アプリの警告を見つけるのに使います。先に… | — |
-| `browser_get_images` | 現在のページにあるすべての画像を、URL と代替テキスト付きで一覧にします。vision ツールで解析したい画像を探すときに便利です。先に browser_navigate を呼んでおく必要があります。 | — |
-| `browser_navigate` | ブラウザで URL を開きます。セッションを初期化し、ページを読み込みます。ほかのブラウザツールより先に呼ぶ必要があります。ちょっとした情報を取りたいだけなら、軽い取得用のツールが使えるならそちらのほうが速くて安上がりです。ブラウザツールは、次のような場合に使ってください… | — |
-| `browser_press` | キーボードのキーを押します。フォームの送信（Enter）、移動（Tab）、ショートカットに便利です。先に browser_navigate を呼んでおく必要があります。 | — |
-| `browser_scroll` | ページを指定した方向にスクロールします。いま表示されている範囲の上や下にある内容を出したいときに使います。先に browser_navigate を呼んでおく必要があります。 | — |
-| `browser_snapshot` | 現在のページのアクセシビリティツリーを、文字ベースのスナップショットとして取得します。browser_click や browser_type で使う参照 ID（@e1、@e2 など）付きで、操作できる要素を返します。full=false（既定）は操作できる要素だけの簡潔な表示、full=true は… | — |
-| `browser_type` | 参照 ID で指定した入力欄に文字を入力します。いったん中身を消してから、新しい文字を入力します。先に browser_navigate と browser_snapshot を呼んでおく必要があります。 | — |
-| `browser_vision` | 現在のページのスクリーンショットを撮り、見た目を確かめられるようにします。ページがどう見えているかを知る必要があるとき、とくに CAPTCHA、目視での確認課題、複雑なレイアウト、文字のスナップショットでは大事な視覚情報が抜け落ちる場面で使います。視覚に対応したモデルではスクリーンショットをそのまま添付し、そうでなければ補助の視覚モデルに… | — |
-
-## `browser` ツールセット（CDP がある場合だけ現れるツール） {#browser-toolset-cdp-gated-tools}
-
-この 2 つは `browser` ツールセットに属しますが、セッションの開始時に Chrome DevTools Protocol の接続先に届く場合だけ登録されます。届く経路は `/browser connect`、`browser.cdp_url` の設定、Browserbase のセッション、Camofox のいずれかです。
+`browser_exec` と `browser_vault` は、ブラウザのセッションを操作します。対象は、Hermes が起動した Chromium、クラウドのブラウザ、`/browser connect` でつないだブラウザのいずれかです。`browser_cdp` と `browser_dialog` は、CDP の接続先が設定されている間（`/browser connect`、`BROWSER_CDP_URL`、`browser.cdp_url`）だけ提供され、そのブラウザに対して働きます。Hermes が起動したセッションやクラウドのセッションには現れません。[ブラウザ操作](/hermes/docs/user-guide/features/browser/) を参照してください。
 
 | ツール | 説明 | 必要な環境 |
 |------|-------------|----------------------|
-| `browser_cdp` | Chrome DevTools Protocol のコマンドをそのまま送ります。上位の `browser_*` ツールでは手が届かないブラウザ操作のための逃げ道です。https://chromedevtools.github.io/devtools-protocol/ を参照してください。 | CDP の接続先 |
-| `browser_dialog` | JavaScript の標準ダイアログ（alert / confirm / prompt / beforeunload）に応答します。先に `browser_snapshot` を呼んでください。応答待ちのダイアログはその `pending_dialogs` に出ます。そのうえで `browser_dialog(action='accept'\|'dismiss')` を呼びます。 | CDP の接続先 |
+| `browser_exec` | あらかじめ import されたヘルパー（`new_tab`、`goto_url`、`wait_for_load`、`page_info`、`js`、`fill_input`、`click_at_xy`、`capture_screenshot`、`cdp`、`ensure_real_tab`）を使う Python を実行して、本物のウェブブラウザを操作します。ブラウザの状態は呼び出しをまたいで残りますが、Python の変数は残りません。`session` で同時に進む作業を分けられます。`timeout_s` の既定は 300 です（最大 1800）。 | `terminal` ツールセット |
+| `browser_cdp` | Chrome DevTools Protocol のコマンドをそのまま送ります。`browser_exec` のヘルパーでは手が届かないブラウザ操作のための逃げ道です。https://chromedevtools.github.io/devtools-protocol/ を参照してください。 | CDP の接続先 |
+| `browser_dialog` | ページを止めている JavaScript の標準ダイアログ（alert / confirm / prompt / beforeunload）に応答します: `browser_dialog(action='accept'\|'dismiss')`。`prompt()` には `prompt_text` を、複数が順番待ちしているときは `dialog_id` を添えます。 | CDP の接続先 |
+| `browser_vault` | 保存してあるログイン情報、パスワード、カード、住所、ワンタイムコードを、秘密を会話に出さずに現在のページで使います。操作: `list`、`fill`、`save_login`、`enter_code`、`unlock`。 | — |
 
 ## `clarify` ツールセット {#clarify-toolset}
 

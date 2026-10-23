@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "アーキテクチャ"
 description: "Hermes Agent の内部構造 — 主要なサブシステム、実行経路、データの流れ、次に読むべき場所"
 upstream_path: developer-guide/architecture.md
-upstream_blob: fa3a6ebf8684ad856fe8f14159e4f51e87ef0049
+upstream_blob: 4d92e5c5668dc069c3fc904d4443373e1409ff2c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/architecture
 ---
@@ -103,7 +103,9 @@ hermes-agent/
 │   ├── process_registry.py   # Background process management
 │   ├── file_tools.py         # read_file, write_file, patch, search_files
 │   ├── web_tools.py          # web_search, web_extract
-│   ├── browser_tool.py       # Browser automation tools facade (+ browser_tool_*.py siblings)
+│   ├── browser_use_cli.py    # browser_exec — Python over CDP (browser-harness)
+│   ├── browser_session.py    # Per-task browser sessions (+ browser_session_*.py siblings)
+│   ├── browser_launcher.py   # Local Chromium launch, reuse and orphan reaping
 │   ├── code_execution_tool.py # execute_code sandbox
 │   ├── delegate_tool.py      # Subagent delegation
 │   ├── mcp_tool.py           # MCP client facade (+ mcp_tool_*.py siblings)

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: 147cc683c12eac21dca4cac947b6e2407e850a0d
+upstream_blob: 7d49802e120c8702bc2ecc86d416ba81236bdca3
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -373,7 +373,7 @@ Hermes は、再利用とパッチ世代の連続性を、既存の `skills/.usa
 | `hermes.memory.op.count` | 操作（`add`/`replace`/`remove`/`read`/`search`/`other`）、プロバイダー（`builtin`、同梱のメモリプラグイン、それ以外は `plugin`）、起点（`foreground`/`background_review`）、結果（`success`/`failed`/`rejected`）、失敗の分類 | 学習のループがメモリに書き込んでいるか、誰が求めたか（ユーザーのターンか背景レビューか）、書き込みが拒否されたり失敗したりする頻度と、その理由。パッケージスキーマ v4 からは、`failure_class` が理由を示します。組み込みのストアが返す拒否・失敗の1つずつに対応させた、決まった一覧から選びます。`no_match`（old_text がどの項目にも一致しなかった）、`ambiguous`（複数の項目に一致した）、`over_budget`（書き込むと文字数の上限を超える）、`would_empty`（まとめて実行すると最後の項目まで消える）、`drift`（ストアが元どおりに書き戻せない内容がファイルにある）、`read_failed`（ファイルはあるが読めない）、`retry_cap`（ターンごとのやり直しの回数を使い切った）、`scan_blocked`（内容が脅威のパターンに一致した）、`missing_content`、`missing_old_text`、`invalid_args`、`stale_entry`（保留中の書き込みの対象項目が変わった）、`disabled`（その書き込み先が設定でオフになっている）、`staged`（利用者の承認待ちで保留している）、`gate_refused`（書き込みの承認ゲートが止めた）です。プラグインのプロバイダーのツールがエラーを返した場合や例外を出した場合は `provider_error` / `exception`、成功なら `none`、それ以外は `other`/`unknown` です。まとめた操作は全部実行するか何もしないかのどちらかなので、拒否された一括操作では、どの操作の行にも、止めた操作の分類が載ります。メモリの本文、old_text、エラーの文言は含めません。 |
 | `hermes.curator.run.count` | きっかけ（`scheduled`/`manual`）、結果（`success`/`failed`/`skipped`）、アーカイブ・統合・パッチ・作成の件数の区分 | スキルのキュレーターが動いているか、実際に何かをまとめているか。試行のみの実行は `skipped` として報告します。定期の確認で、ほかのプロセスがすでに処理中だと分かった場合は何も記録しません。スキル名は含めません。 |
 | `hermes.delegation.run.count` | サブエージェント数の区分、深さ（`1`–`3`、`gte_4`）、モード（`foreground`/`background`）、結果（`success`/`partial`/`failed`/`cancelled`） | delegate_task の分岐がどれだけ広く深くなるか、子がすべて終わる頻度。いくつの完了単位に分かれても、1回の呼び出しにつき1行です。 |
-| `hermes.execution_backend.count` | 種類（`terminal`/`browser`/`code`）、バックエンド、結果、エラーの分類 | 実際の作業をどのサンドボックスが担い、それぞれどれだけ安定しているか。ターミナルのバックエンドは `terminal.backend` の値（それ以外は `other`）、ブラウザーのバックエンドは `local`、`lightpanda`、`cdp`、`camofox`、`extension`、同梱のクラウドプロバイダー（それ以外は `other`）、execute_code は `local` か `remote` です。コマンド自身が 0 以外で終わってもバックエンドとしては成功ですが、フォアグラウンドのコマンドがタイムアウトに達した場合は `failed`/`timeout` です。バックエンドに届く前にガードが拒否したターミナルと execute_code の呼び出し、TUI/Desktop のパス補完のために Hermes 自身が行う一覧取得、背景レビューとキュレーターの fork による呼び出しは数えません。 |
+| `hermes.execution_backend.count` | 種類（`terminal`/`browser`/`code`）、バックエンド、結果、エラーの分類 | 実際の作業をどのサンドボックスが担い、それぞれどれだけ安定しているか。ターミナルのバックエンドは `terminal.backend` の値（それ以外は `other`）、ブラウザーのバックエンドは `local`、`lightpanda`、`cdp`、同梱のクラウドプロバイダーのいずれか（それ以外は `other`。`camofox` と `extension` は旧来のラベルとしてスキーマに残っています）、execute_code は `local` か `remote` です。コマンド自身が 0 以外で終わってもバックエンドとしては成功ですが、フォアグラウンドのコマンドがタイムアウトに達した場合は `failed`/`timeout` です。バックエンドに届く前にガードが拒否したターミナルと execute_code の呼び出し、TUI/Desktop のパス補完のために Hermes 自身が行う一覧取得、背景レビューとキュレーターの fork による呼び出しは数えません。 |
 | `hermes.platform.health` | プラットフォーム、イベント（`connect_ok`/`connect_failed`/`reconnect`/`disconnect`）、エラーの分類（`auth`/`network`/`rate_limited`/`config`/`other`） | どのメッセージングプラットフォームで接続の失敗や切断が起きているか、その理由。`connect_failed` は、接続に失敗し続ける一続きの出来事を、プロファイル・プラットフォーム・UTC の日ごとに1回だけ数えます（再接続の見張り役によるやり直しは新しい行になりません。次に成功するとその一続きは終わり、翌日も失敗しているプラットフォームはまた数えます）。エラーの分類は、その一続きで最初に失敗したときのものを使います。例外の型、HTTP ステータス、Hermes 自身の致命的なコードから分類し、エラーの文言は使いません。 |
 | `hermes.platform.delivery` | プラットフォーム、結果（`sent`/`failed`）、失敗の分類（`rate_limited`/`too_long`/`auth`/`network`/`forbidden`/`other`） | プラットフォームごとに、返答がユーザーに届かない頻度（論理的な返答1件につき1回で、再試行も含みます）。 |
 | `hermes.gateway.reply_latency` | プラットフォーム、最初の応答までの区分（`lt_2s` … `gte_60s`） | 受け付けた受信メッセージから、目に見える最初の返答テキスト（ストリームの最初の塊か最終メッセージ）までの時間。 |
@@ -568,7 +568,14 @@ v4 は `hermes.compression.count` と `hermes.memory.op.count` に `failure_clas
 `hermes.extension.install.count` / `hermes.update.run` への `failure_class` と、前者への `registry` も加えており、それらの以前の v4 のフィールドの組み合わせも引き続き受け付けます）。
 v3 が `hermes.model_route.count`、`hermes.tool_call.count`、タスクのカウンターについて v2 のフィールドの組み合わせを受け付けたのと同じで、アップグレード前に記録したカウンターを安全に出し切れます。
 リポジトリ内のレジストリから導く語彙（ツール名、プラットフォーム、メモリプロバイダー、エラーの分類）は、JSON スキーマではパターンで範囲を限っています。
-正式な許可リストは `shared_metrics_contract.py` です。
+正式な許可リストは `shared_metrics_contract.py` です。Hermes がもう出さなくなった値も、
+古いバージョンが記録したカウンターを出し切れるよう、旧来の値として引き続き受け付けます。
+削除された組み込みのブラウザーツール（`browser_navigate`、
+`browser_snapshot`、`browser_click`、`browser_type`、`browser_scroll`、
+`browser_back`、`browser_press`、`browser_console`、`browser_get_images`、
+`browser_vision`）は有効なツール名のままで、`camofox` も有効なブラウザーの
+バックエンドのラベルのままです。Camofox はいまは `camofox` のカタログプラグインとして提供されるので、そのツールは
+`plugin` として報告されます。
 
 各パッケージには、ランダムな UUID として生成した `install_id` が含まれます。
 スキーマ上のフィールド名とは違い、現在の範囲は1つの `HERMES_HOME` なので、正確には永続的な仮名のプロファイル識別子です。

@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 2b2eb438b771125e9b61034415351202b93799ff
+upstream_blob: 620f9a285d0e3112a4b2ea01be766fb403fb54e4
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -45,6 +45,10 @@ Hermes では「プラグイン」という言葉がいくつかの別物を指�
   ソケットの状態、モデル、プロファイル、表示領域。`gateway` はターンの進行中ではなく WebSocket です。
 - **`host.*` の操作** — 選び抜かれた安全な動詞です。トースト表示、画面移動、ログの追尾、
   ゲートウェイの再起動、ゲートウェイのイベントの購読。
+- **`ctx.preview`** — いま選んでいるセッションのプレビュー用ブラウザーのページで JavaScript を
+  実行します。既定では閉じています。プラグインが `capabilities:
+  ['preview.executeJavaScript']` を宣言し、利用者がページの生成元ごとに許可して使えるようになります
+  （[プレビューのページで動かすスクリプト](#preview-page-scripts)）。
 - **`host.request`** — ゲートウェイの JSON-RPC の窓口です。セッション、設定、スキル、cron など、
   アプリ自身が呼んでいるものすべて。
 - **`captureGatewayFileDownload()`** — ゲートウェイのファイルを保存する操作を、REST での読み取りを
@@ -161,6 +165,9 @@ interface HermesPlugin {
    *  for opt-in plugins: they inventory in Capabilities ▸ Plugins, off until the
    *  user flips the switch. */
   defaultEnabled?: boolean
+  /** Sensitive doors this plugin uses, declared up front. Today:
+   *  'preview.executeJavaScript' (ctx.preview). An undeclared door refuses. */
+  capabilities?: readonly string[]
   /** Called once at load; wire contributions through `ctx`. */
   register: (ctx: PluginContext) => void
 }
@@ -197,6 +204,9 @@ interface PluginContext {
   os: PluginOs
   /** Lines in the core pet's speech bubble, attributed to this plugin (see "Pet bubble"). */
   pet: PluginPet
+  /** Script in the preview Browser page — declared capability + per-origin user consent
+   *  (see "Preview page scripts"). */
+  preview: PluginPreview
   /** Plugin-scoped JSON persistence (keys live under `hermes.plugin.<id>.`). */
   storage: PluginStorage
 }
@@ -236,6 +246,7 @@ interface Contribution {
 | テーマ | `THEMES_AREA` | `DesktopTheme` としての `data` |
 | 入力欄まわり | `COMPOSER_AREAS.*` | 描画の差し込み口、またはミドルウェアと添付の提供元 |
 | モデルメニューの行 | `MODEL_MENU_ROW_AREA` | `data: ModelMenuRowContribution` — モデルごとに、先頭のアイコンと末尾のバッジを付ける |
+| Kanban のカードのバッジ | `KANBAN_CARD_AREAS.badges` | `data: KanbanCardBadgeContribution` — カードごとの短い文字ラベル。描くのはボード側 |
 | 外観の設定 | `APPEARANCE_AREAS.extra` | `render` — Settings → Appearance の末尾に足す操作 |
 | プラグインの設定ページ | `SETTINGS_PLUGINS_AREA`（`'settings.plugins'`） | `ctx.registerSettingsPage({ id, title, render, icon?, order?, children? })` を使います — Settings → Plugins の下に、サブページ付きの自分専用の項目を作ります |
 
@@ -458,12 +469,91 @@ host.onEvent('gateway.ready', () => {
 ### 入力欄の拡張 {#composer-extensions}
 
 `COMPOSER_AREAS`（`top`、`bottom`、`underside`、`leading`、`actions`、
-`attachments`、`middleware`）を使うと、メッセージの入力欄のまわりに操作を足したり、添付の提供元を
+`attachments`、`middleware`、`contextMenu`）を使うと、メッセージの入力欄のまわりに操作を足したり、添付の提供元を
 用意したり、送信前に下書きを加工したり（`handler(draft) => draft | null` を持つ
 `ComposerMiddleware`）できます。`top` は入力の上の帯、`bottom` は入力の格子の下の行で、どちらも
 入力欄の枠の内側にあります。`underside` は入力欄全体の**下**に浮かぶ帯で、自前の枠を持ちません。
 入力の枠の外に置きたい提案のピルや状態の案内の置き場所です（next-prompt のプラグインは、
 「next prompt」のピルをここに描画しています）。
+
+### 入力欄の右クリックメニュー — 入力欄を右クリックしたときの行 {#composer-context-menu}
+
+`COMPOSER_AREAS.contextMenu` は、利用者が**入力欄**（メインの入力欄か、メッセージを編集する入力欄）を
+右クリックしたときにアプリが開くメニューへ行を足します。
+コントリビューションはデータで、中身はアプリが右クリックのたびに 1 回呼ぶ `items(context)` 関数です。
+行はアプリが自前のメニュー項目で描くので、フォーカス、見た目、キーボードでの移動が
+組み込みの項目と同じになります。プラグインがメニューの DOM に触ることはありません。
+
+```javascript
+
+ctx.register({
+  id: 'spelling',
+  area: COMPOSER_AREAS.contextMenu,
+  data: {
+    // context = { word: string | null, selection: string } — nothing else.
+    items: ({ word }) => {
+      if (!word || isKnown(word)) return []
+
+      return [
+        ...suggest(word).slice(0, 5).map(suggestion => ({
+          label: suggestion,
+          // Runs after the menu closed, with the caret back in the composer.
+          onSelect: action => action.replaceWord(suggestion)
+        })),
+        { label: ctx.i18n.t('addToDictionary'), onSelect: () => void host.spellcheck.addWord(word) }
+      ]
+    }
+  }
+})
+```
+
+```ts
+interface ComposerContextMenuContext {
+  word: string | null // the word under the caret (or at the selection's start)
+  selection: string // the selected composer text, '' when the caret is collapsed
+}
+
+interface ComposerContextMenuItem {
+  label: string // plain text: controls/bidi overrides stripped, clamped to 80 chars
+  disabled?: boolean
+  onSelect: (action: ComposerContextMenuAction) => void
+}
+
+interface ComposerContextMenuAction extends ComposerContextMenuContext {
+  replaceWord(text: string): boolean // one line, <= 200 chars
+}
+```
+
+**アプリが受け持つこと。** クリックが入力欄の上だったかどうかはアプリが判定します。それ以外の
+入力（設定画面の入力欄、API キー、ダイアログ、会話の表示）では、提供元に問い合わせることはありません。
+提供元に見えるのは 2 つの文字列 — 単語と、入力欄で選択している文字列（最大 2,000 文字）— だけで、
+要素、`Range`、それ以外の文字列は見えません。
+提供元に許された編集は `replaceWord` だけです。利用者が右クリックした単語そのものを
+Chromium 自身の編集コマンドで置き換え、使えるのは 1 回きりです。入力欄のその位置に
+もうその単語が無いときは、何も変えずに `false` を返します。
+それ以外のことには [`host.composer`](#composer-draft-api--read-and-write-the-live-input) を使ってください。
+
+**調停。** プラグインごとに専用の区画があり、アプリ自身のスペルチェックの行の後ろ、
+切り取り / コピー / 貼り付けの前に置かれます。プラグインはプラグイン ID の順
+（コードポイント順、その次にコントリビューション ID の順）に並び、読み込み順や `order` は関係しません。
+1 つのプラグインが出せるのは、全コントリビューションを合わせて**最大 6 行**で、超えた行は
+捨てられます。例外を投げる提供元、配列以外を返す提供元、文字列のラベルか `onSelect` 関数を
+持たない行は何も足さず、ほかの行はそのまま残ります。`onSelect` が投げた例外はログに残るだけで、
+外へは送られません。`ctx.register` で登録した行は、プラグインを読み込み解除したり無効にしたりすると
+消えます。そのとき開いているメニューからも消えます。
+
+#### スペルチェックの辞書 — `host.spellcheck` {#spell-check-dictionary-hostspellcheck}
+
+```ts
+host.spellcheck.addWord(word: string): Promise<boolean>
+host.spellcheck.removeWord(word: string): Promise<boolean>
+```
+
+アプリの Chromium のスペルチェック辞書に単語を 1 つ足したり、取り除いたりします。これで
+アプリ全体で赤い下線が消えます（または戻ります）。メインプロセスが受け取るのは、範囲の決まった 1 語だけです。
+文字、結合記号、数字、語中の `'` / `-` からなり、文字を 1 つ以上含み、64 文字以内であること。
+それ以外は辞書に触れずに `false` で解決します。古いデスクトップのシェルでも同じです。
+辞書を一覧したり読んだりする方法はありません。
 
 ### 入力欄の下書き API — 今の入力を読み書きする {#composer-draft-api-read-and-write-the-live-input}
 
@@ -726,6 +816,94 @@ ctx.register({
 `decorate({ provider })` が
 `{ icon: <img alt="" src={providerSvgDataUrl(provider)} /> }` を返すだけで出せます。DOM を読む必要が無く、
 メニューのマークアップが変わっても行は動き続けます。
+
+#### Kanban のカードのバッジ {#kanban-card-badges}
+
+`KANBAN_CARD_AREAS.badges` は、Kanban のカードのタイルに小さな文字ラベルを付けます。
+テナント、CI の状態、見積もりなどです。コントリビューションは `decorate(card)` を用意し、
+ボードはその戻り値を、カードのタイトルの上にある決まった行にチップとして描きます。
+カードのマークアップ、レイアウト、ドラッグ&ドロップ、クリック、右クリックメニューはボードのもののままで、
+どのプラグインもバッジを付けていないカードでは、この行は場所を取りません。
+
+```ts
+
+  KANBAN_CARD_AREAS,
+  KANBAN_CARD_BADGE_HUES,
+  type KanbanCardBadgeContribution
+} from '@hermes/plugin-sdk'
+
+interface KanbanCard {            // frozen; identity and routing fields only
+  id: string                      // task id (t_…): key your own per-card data by it
+  status: string                  // the column: 'triage', 'ready', 'running', …
+  tenant: string | null
+  assignee: string | null
+}
+interface KanbanCardBoard {       // frozen; shared by every card on the board
+  tenants: readonly string[]      // every tenant on the board (its filter menu's list)
+}
+interface KanbanCardBadge {
+  label: string                   // plain text
+  tone?: KanbanCardBadgeTone      // 'neutral' (default) or one of KANBAN_CARD_BADGE_HUES
+  tooltip?: string                // plain text hover line
+}
+
+ctx.register({
+  area: KANBAN_CARD_AREAS.badges,
+  id: 'tenant',
+  data: {
+    // `tenants` lets you give each tenant on the board its own hue instead of
+    // hashing blind (two tenants can hash to the same one).
+    decorate: ({ tenant }, { tenants }) =>
+      tenant
+        ? { label: tenant, tone: KANBAN_CARD_BADGE_HUES[distinctIndex(tenant, tenants) % 12], tooltip: `Tenant: ${tenant}` }
+        : null
+  } satisfies KanbanCardBadgeContribution
+})
+```
+
+`decorate(card, board)` は、バッジを 1 つ、配列、または何も言うことがないカードには `null` を
+返せます。カードの情報には文章（タイトル、本文、要約、コメント、実行結果）は含まれません。
+ほかに必要なものは、`id` をキーに自分のデータから引いてください
+（自分のバックエンドへの `ctx.rest`、`ctx.storage`）。どちらの情報も凍結されています。
+
+**ボードが受け付けるもの**（`KANBAN_CARD_BADGE_LIMITS`）:
+
+- **文字だけ。** `label` と `tooltip` は文字列でなければならず、マークアップではなく文字として
+  描かれます。制御文字、bidi の上書き、ゼロ幅の文字は取り除かれ、空白はまとめられ、
+  24 文字（`label`）または 160 文字（`tooltip`）を超える部分は省略記号で短くされます。
+  空のラベルや文字列でないラベルは無視されます。それ以外の項目（`render`、`html`、スタイル）も
+  無視されます。
+- **決まった色の組。** `tone` は `'neutral'` か、12 色の
+  `KANBAN_CARD_BADGE_HUES`（`'red'`、`'orange'`、… `'pink'`。アプリの識別色を色相順に並べたもので、
+  `PROFILE_SWATCHES` と同じ組）のどれかです。それ以外は neutral で描かれます。
+  実際の色はボードがテーマに合わせて選びます。
+- **1 枚のカードにつき、プラグインごとに 2 つまで。** この領域へのそのプラグインの
+  全コントリビューションを合わせて数えます。超えたバッジは捨てられます。
+- **出どころの表示。** どのバッジのツールチップも末尾がプラグインの名前で終わるので、
+  利用者はどのプラグインが描いたのかをいつでも見分けられます。
+
+**調停。** すべてのプラグインのバッジが横に並びます。ほかのプラグインのバッジを隠したり、
+並べ替えたり、見た目を変えたりすることはできません。行の順は、プラグイン ID、
+コントリビューション ID、`decorate` が返した順の順です。ここではコントリビューションの
+`order` は無視されるので、読み込み順や競り合いでバッジを動かすことはできません。
+**例外を投げた**装飾関数は何も足さず（ログは 1 回だけ）、行の残りはそのまま描かれます。
+
+**更新と後片付け。** `decorate()` は、登録内容が変わったとき、カードの id、status、tenant、
+assignee が変わったとき、ボードのテナントの一覧が変わったときに再実行されます。なので、
+純粋な引き当てにしておいてください。自分のデータが変わったとき（利用者が自分の設定ページで
+新しい色を固定したときなど）は、同じ `id` で `ctx.register` をもう一度呼びます。
+新しい登録が古いものと入れ替わり、ボードが描き直されます。手元には最新の後片付け関数を
+持っておいてください。最初のものを呼ぶと、入れ替えた登録が消えてしまいます。無効化、再読み込み、
+読み込み解除のときは、ホストがコントリビューションを取り除き、カードはそのバッジ抜きで描き直されます。
+`ctx.onDispose` で元に戻すものはありません。
+
+**DOM を書き換えて飾っていたプラグインの移行**（kanban-tenant-labels）: 経路のポーリング、
+`MutationObserver`、タイルの照合、差し込んでいた `<span>`、Kanban プラグインのクエリの
+キャッシュの読み取りを消してください。飾り付けの全体が、上の
+`ctx.register` の呼び出し 1 つになります。重ならない色の割り当ては、クエリのキャッシュの
+スナップショットではなく `board.tenants` の上で動き、固定していた色は
+`KANBAN_CARD_BADGE_HUES` に対応させます（12 色は同じ `hsl(n×30 68% 58%)` の組で、
+並び順も同じです）。
 
 ### 外観の設定 {#appearance-settings}
 
@@ -1364,6 +1542,56 @@ type PluginRunActionResult =
 
 古いホストにも対応するなら、機能の有無を確かめてください: `ctx.runAction?.('view.showBrowser')`。
 
+### プレビューのページで動かすスクリプト — `ctx.preview` {#preview-page-scripts}
+
+`ctx.preview.executeJavaScript(code)` は、いま選んでいるセッションのプレビュー用ブラウザーのタブ
+（`drive_preview` とプレビューの案内ツアーが使うのと同じゲストの実行役）で `code` を実行し、
+スクリプトの最後の値で解決します。そのページは利用者がサインインしているページのこともあり、
+そこで動くスクリプトはそのセッションを読めてしまいます。この窓口は既定では閉じていて、
+呼び出しはすべて**アプリ**が調停します。
+
+1. **宣言する。** プラグインの既定のエクスポートに、この機能を書きます。
+
+   ```js
+   export default {
+     id: 'page-tools',
+     name: 'Page Tools',
+     capabilities: ['preview.executeJavaScript'],
+     register(ctx) {
+       ctx.register({ area: PALETTE_AREA, id: 'title', data: {
+         id: 'pageTools.title', label: 'Copy page title',
+         run: async () => ctx.os.writeClipboard(String(await ctx.preview.executeJavaScript('document.title')))
+       } })
+     }
+   }
+   ```
+
+   宣言していないプラグインは、どの呼び出しも拒否されます。何も尋ねず、
+   何も実行しません。
+2. **利用者が生成元ごとに許可する。** ページの生成元で最初に呼び出したとき、
+   アプリが持つダイアログが、プラグインと生成元（`https://mail.example.com`）を示して出ます。
+   *Allow on this site* を選ぶと、そのプラグインとその生成元への許可が保存されます。*Don't
+   allow*（または Esc）を選ぶと、アプリを終了するまで拒否され、次に起動したときにまた尋ねます。
+   許可は **Capabilities → Plugins** のそのプラグインの行に一覧され、
+   1 つずつ取り消せます。取り消した生成元では、また尋ねます。
+3. **Web の生成元だけ。** `http(s)://host[:port]` です。`about:blank`、`data:`、
+   `file:` のページは、許可を 1 つのサイトに絞れないので拒否されます。
+4. **生成元はページの中で確かめ直す。** スクリプトはページ内の
+   `window.location.origin` の確認の後ろで動くので、同意の確認から実行までのあいだにページが移動すると、
+   別のサイトで動いてしまうのではなく拒否されます。
+
+```js
+ctx.preview.isAvailable()             // declared AND a live Browser page in this window (not consent)
+await ctx.preview.executeJavaScript(code)
+// rejects: undeclared · 'No preview page is open.' · non-web origin ·
+//          '<Plugin> is not allowed to run scripts on <origin>.' · page changed origin
+```
+
+ページにはこの窓口からだけ触ってください。`<webview>` を探したり作ったりすると
+（`document.querySelector('webview')`）、宣言と同意を回り込むことになり、
+カタログの `desktop surface` の lint（`preview guest
+reach`）で失敗します。別ウィンドウに切り出したブラウザーはつながっていません。
+
 ### デスクトップの外観の設定 — `host.settings` {#desktop-appearance-settings-hostsettings}
 
 `host.settings` は、Desktop のローカルな外観の好みのうち、プラグインがネイティブの Settings の
@@ -1910,7 +2138,10 @@ ctx.storage.remove('lastTab')
 確認しています。それを 2 つの仕掛けが支えます。受け入れのときの `desktop surface` の lint と、
 読み込み側の許可一覧です（`@hermes/plugin-sdk` と `react*` だけで、それ以外は静的でも動的でも、
 `https:` の URL も含めて `import` すると読み込みに失敗します）。どちらもサンドボックスでは
-ありません。将来、遠隔の出どころへの窓口を作るなら、その前に本物の境界（iframe や worker、
+ありません。そのうえで、アプリの外にある利用者のデータに触る窓口には、さらに関門があります。
+`ctx.preview.executeJavaScript` には、宣言した機能と、利用者の生成元ごとの同意が要ります
+（[プレビューのページで動かすスクリプト](#preview-page-scripts)）。
+将来、遠隔の出どころへの窓口を作るなら、その前に本物の境界（iframe や worker、
 CSP、権限の制御）が必要です。この経路を信頼の境界として扱わないでください。
 
 ## つまずきやすいところ {#pitfalls}
@@ -1952,10 +2183,10 @@ CSP、権限の制御）が必要です。この経路を信頼の境界とし�
 
 | 分類 | 公開されるもの |
 |----------|---------|
-| ホスト | `host`（`.state.*`、`.settings`、`.notify`、`.notifyError`、`.navigate`、`.onEvent`、`.logs`、`.status`、`.restartGateway`、`.request`、`.composer`、`.sessions`、`.skills`、`.toolsets`、`.profiles`、`.pluginDecisions`） |
+| ホスト | `host`（`.state.*`、`.settings`、`.notify`、`.notifyError`、`.navigate`、`.onEvent`、`.logs`、`.status`、`.restartGateway`、`.request`、`.composer`、`.spellcheck`、`.sessions`、`.skills`、`.toolsets`、`.profiles`、`.pluginDecisions`） |
 | プラグインの取り決め | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginPet`、`PetSayOptions`、`PetMessageTone`、`PluginAppActionId`、`PluginAppActionInfo`、`PluginRunActionResult`、`PLUGIN_APP_ACTIONS`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
-| 領域の定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS`、`MODEL_MENU_ROW_AREA`、`SESSION_ROW_AREAS`、`SIDEBAR_NAV_PREFS_AREA`、`APPEARANCE_AREAS`、`SETTINGS_PLUGINS_AREA` |
-| 領域ごとの中身 | `PluginSettingsPage`、`PluginSettingsSubpage`（と `pluginSettingsHref`）、`RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider`、`SessionRowSlotContribution`、`SidebarNavPrefsContribution` |
+| 領域の定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS`、`MODEL_MENU_ROW_AREA`、`KANBAN_CARD_AREAS`、`SESSION_ROW_AREAS`、`SIDEBAR_NAV_PREFS_AREA`、`APPEARANCE_AREAS`、`SETTINGS_PLUGINS_AREA` |
+| 領域ごとの中身 | `PluginSettingsPage`、`PluginSettingsSubpage`（と `pluginSettingsHref`）、`RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider`、`ComposerContextMenuProvider`（と `ComposerContextMenuItem`、`ComposerContextMenuContext`、`ComposerContextMenuAction`）、`SessionRowSlotContribution`、`KanbanCardBadgeContribution`（と `KanbanCard`、`KanbanCardBoard`、`KanbanCardBadge`、`KanbanCardBadgeTone`、`KANBAN_CARD_BADGE_HUES`、`KANBAN_CARD_BADGE_LIMITS`）、`SidebarNavPrefsContribution` |
 | React と状態 | `useValue`、`atom`、`computed`、`useQuery`、`useMutation`、`useQueryClient`、`queryClient`、`Contribute`、`WorkspacePageHeaderControl` |
 | テーマ | `useTheme`、`requestTheme`、`setAccentOverride`、`$accentOverride`、`retintTheme`、`themeHue`、`DesktopTheme`、`DesktopThemeColors`。さらに OKLCH の計算（`hexToOklch`、`oklchToHex`、`oklchToSrgb255`、`mixOklab`、`maxChroma`、`hueDelta`、`normalizeHex`）と sRGB の測定（`contrastRatio` は `number | null` で、解析できない入力では null、それに `readableOn`） |
 | UI キット | `Button`、`Input`、`Textarea`、`Select*`、`Switch`、`Checkbox`、`SegmentedControl`、`Tabs*`、`Dialog*`、`ConfirmDialog`、`DropdownMenu*`、`ContextMenu*`、`Popover*`、`Tip`/`Tooltip*`、`Badge`、`Kbd`/`KbdGroup`、`SearchField`、`ScrollArea`、`Separator`、`Skeleton`、`GlyphSpinner`、`Loader`、`EmptyState`、`ErrorState`、`CopyButton`、`StatusDot`、`LogView`、`Codicon`、`DecodeText`、`SandboxedFrame` |

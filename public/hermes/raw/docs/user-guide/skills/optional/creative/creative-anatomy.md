@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Anatomy — 考えを、操作できるアイソメトリックの機械の図で説明する"
 description: "考えを、操作できるアイソメトリックの機械の図で説明する"
 upstream_path: user-guide/skills/optional/creative/creative-anatomy.md
-upstream_blob: c16d962c7dcfbe06676e5fbcc5e90b2f85bb71a2
+upstream_blob: a59fe061f85e08a580d93127bab35df2738458f1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-anatomy
 ---
@@ -62,7 +62,7 @@ cd "$WORK/figures/dial-indicator" && node build.mjs && node build.mjs --light
 
 **自分の作ったものを見る。** 上流の作業手順には「PNG はすべて読む」とあります。Hermes では、キャプチャ 1 枚ずつに `vision_analyze` を使うということです。4 倍の拡大は、高 DPR のキャプチャか `--zoom` のキャプチャに対して、その `region` 切り抜きを使います。「良く見えるか」ではなく、「フランジ側のパイプはフランジ面で終わっているか」のように具体的に尋ねます。
 
-**ブラウザ。** キャプチャ、操作、線の端、3D の各チェックは、ループバックの DevTools ポートでヘッドレス Chrome を起動します。使うのは、設定されていれば `CHROME_PATH`、次に Hermes のブラウザツールが入れる Playwright のヘッドレスシェル（Playwright のキャッシュにある `chromium_headless_shell-*`）、最後にシステムの Chrome か Chromium です。ヘッドレスシェルを優先してください。WebGL のレイヤーを SwiftShader で描画し、外部への接続を一切しません。通常のデスクトップ版 Chrome は、使い捨てのプロファイルでも Google のサービスへ裏で接続します。また `TMPDIR` が長いパスのとき（Hermes のプロファイルごとの作業用ディレクトリはそうなりがちです）は起動に失敗し、「Socket path too long」のあと「Chrome did not start」と出ます。どうしても使う場合は、そのコマンドだけ `TMPDIR` を短いディレクトリにしてください。図をビルドするだけならブラウザは要りません。
+**ブラウザ。** キャプチャ、操作、線の端、3D の各チェックは、ループバックの DevTools ポートでヘッドレス Chrome を起動します。使うのは、設定されていれば `CHROME_PATH`、次に Playwright のヘッドレスシェルが入っていればそれ（Playwright のキャッシュにある `chromium_headless_shell-*`。たとえば `npx playwright install chromium` で入ります）、最後にシステムの Chrome か Chromium です。ヘッドレスシェルを優先してください。WebGL のレイヤーを SwiftShader で描画し、外部への接続を一切しません。通常のデスクトップ版 Chrome は、使い捨てのプロファイルでも Google のサービスへ裏で接続します。また `TMPDIR` が長いパスのとき（Hermes のプロファイルごとの作業用ディレクトリはそうなりがちです）は起動に失敗し、「Socket path too long」のあと「Chrome did not start」と出ます。どうしても使う場合は、そのコマンドだけ `TMPDIR` を短いディレクトリにしてください。図をビルドするだけならブラウザは要りません。
 
 **時間のかかる実行。** `node build.mjs --audit` は密度の高い Hero で約 2 分かかり、3D の周回監査を全部回すと、部品 30 個で 15〜20 分かかります。これらは `terminal(background=true, notify=true)` で実行し、そのあいだ別の作業を進めます。
 

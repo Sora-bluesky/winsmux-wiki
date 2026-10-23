@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 893a18d96d75c22ee0167123abe7e10532e3d756
+upstream_blob: ab9b8f31126d0492cdacd7957cf2ea36ac579341
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -371,7 +371,7 @@ hermes setup [model|tts|terminal|gateway|tools|agent] [--non-interactive] [--res
 
 **再訪ユーザー（設定済み）:** そのままフルの再設定ウィザードに入ります — すべてのプロンプトで現在の値がデフォルトとして表示され、Enter で維持、または新しい値を入力できます。メニューはありません。
 
-**ほかのエージェントから移ってきた場合:** 初回の実行で OpenClaw、Claude Code、Codex CLI、Cursor のセットアップ（`~/.openclaw`、`~/.claude`、`~/.codex`、`~/.cursor`）が見つかると、まず **「… からセットアップをインポートしますか？」** と尋ねます（既定は「はい」）。複数見つかった場合は、続いてチェックリストからどれを取り込むか選びます。セットアップは [`agent-importers`](/hermes/docs/user-guide/import-from-other-agents/) プラグインをカタログからインストールし（すでに入っていればそのまま使います）、選んだものごとにインポートを実行します。インポートは事前に内容を見せ、何かを変える前に確認を求めます（以前の組み込みの手順と同じく、OpenClaw の許可リストに入った API キーとボットのトークンも含みます）。何も見つからない場合、「いいえ」と答えた場合、`--non-interactive` の場合、ダッシュボードから始めたセットアップの場合は、質問も出ず、何もインストールされません。すでに設定済みの環境では、代わりに `hermes import-agent` を実行してください。
+**ほかのエージェントから移ってきた場合:** 初回の実行で OpenClaw、Claude Code、Codex CLI、Cursor のセットアップ（`~/.openclaw`、`~/.claude`、`~/.codex`、`~/.cursor`）が見つかると、まず **「… からセットアップをインポートしますか？」** と尋ねます（既定は「はい」）。複数見つかった場合は、続いてチェックリストからどれを取り込むか選びます。セットアップは [`agent-importers`](/hermes/docs/user-guide/import-from-other-agents/) プラグインをカタログからインストールし（すでに入っていればそのまま使います）、選んだものごとにインポートを実行します。インポートは事前に内容を見せ、何かを変える前に確認を求めます（以前の組み込みの手順と同じく、OpenClaw の許可リストに入った API キーとボットのトークンも含みます）。インポートでモデルとそのキーが取り込まれた場合、そのあとのクイックセットアップでは **「インポートしたモデル（…）をそのまま使いますか、それとも Nous Portal に切り替えますか？」** と尋ねます（既定はそのまま使う方で、その場合は Nous Portal へのログインを飛ばします）。何も見つからない場合、「いいえ」と答えた場合、`--non-interactive` の場合、ダッシュボードから始めたセットアップの場合は、質問も出ず、何もインストールされません。すでに設定済みの環境では、代わりに `hermes import-agent` を実行してください。
 
 ウィザード全体ではなく1つの区分だけを行う:
 

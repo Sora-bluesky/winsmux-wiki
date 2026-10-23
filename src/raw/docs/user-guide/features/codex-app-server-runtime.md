@@ -2,7 +2,7 @@
 title: "Codex App-Server ランタイム（任意）"
 description: ""
 upstream_path: user-guide/features/codex-app-server-runtime.md
-upstream_blob: 60b865ace05e4bdc310931837e9e058e1101af1d
+upstream_blob: db80c5d40b4802c6c815a98d74ec216347e03f4f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/codex-app-server-runtime
 ---
@@ -22,7 +22,7 @@ OpenAI Codex は使っていないという場合、`hermes setup --portal` を�
 - OpenAI のエージェントのターンを、**ChatGPT のサブスクリプション**で動かせます（API キーは要りません）。Codex CLI と同じ認証の流れを使います。
 - **Codex 自身のツール群とサンドボックス**を使えます。端末の操作・読み・書き・検索は `shell`、構造化された編集は `apply_patch`、段取りは `update_plan` が担当し、いずれも seatbelt や landlock のサンドボックスの中で動きます。
 - **Codex 純正のプラグイン**（Linear、GitHub、Gmail、Calendar、Canva など）を `codex plugin` で入れてあれば、それがそのまま移され、Hermes のセッションでも有効になります。
-- **Hermes 側の充実したツールも一緒についてきます。** web_search、web_extract、ブラウザの自動操作、画像の読み取り、画像生成、スキル、TTS が MCP のコールバック経由で動きます。Codex は自分が持っていないツールについて Hermes を呼び返します。
+- **Hermes 側の充実したツールも一緒についてきます。** web_search、web_extract、画像の読み取り、画像生成、スキル、TTS が MCP のコールバック経由で動きます。Codex は自分が持っていないツールについて Hermes を呼び返します。
 - **記憶とスキルの促しもそのまま働きます。** Codex のイベントは Hermes のメッセージの形へ投影されるので、自己改善のループから見ると、いつもどおりの会話ログに見えます。
 - **Hermes のペルソナも一緒に届きます。** 組み立てたシステムプロンプト（SOUL.md、MEMORY.md/USER.md、チャンネルごとの `system_prompt` の上書き）は、スレッドが始まるときに一度だけ developer instructions として Codex のスレッドへ送られます。Codex に内蔵の人格は無効になるので、あなたのペルソナと張り合うことはありません。
 
@@ -65,7 +65,6 @@ OpenAI Codex は使っていないという場合、`hermes setup --portal` を�
 Codex に無いツールを呼び返せるように、Hermes は自分自身を MCP サーバーとして登録します。コールバック経由で使えるのは次のものです。
 
 - **`web_search`** / **`web_extract`** — Firecrawl を使います。構造のある内容を取るときは、素朴な取得よりきれいに出ることが多いです。
-- **`browser_navigate` / `browser_click` / `browser_type` / `browser_press` / `browser_snapshot` / `browser_scroll` / `browser_back` / `browser_get_images` / `browser_console` / `browser_vision`** — Camofox か Browserbase を使った、ひととおりのブラウザ自動操作です。
 - **`vision_analyze`** — 画像を調べるために別の画像認識モデルを呼びます（画像を会話に読み込む Codex の `view_image` とは別のものです）。
 - **`image_generate`** — Hermes の image_gen のプラグイン連携による画像生成です。
 - **`skill_view` / `skills_list`** — Hermes のスキルの蔵書から読み出します。
@@ -97,7 +96,7 @@ Codex に無いツールを呼び返せるように、Hermes は自分自身を 
 Codex ランタイムの作業役の中で動くものは次のとおりです。
 - Codex のツール一式（shell、apply_patch、update_plan、view_image、web_search）。実際の作業はここで自前にこなします
 - 移された Codex のプラグイン（Linear、GitHub など）
-- browser_*、画像の読み取り、image_gen、スキル、TTS のための Hermes のツールコールバック
+- web、画像の読み取り、image_gen、スキル、TTS のための Hermes のツールコールバック
 
 MCP のコールバックが出しているおかげで、次のものも動きます。
 - **`kanban_complete` / `kanban_request_review` / `kanban_request_changes` / `kanban_block` / `kanban_comment` / `kanban_heartbeat`** — 作業役が結果を引き渡すためのツールです。割り振り役が設定した環境変数 `HERMES_KANBAN_TASK` を読み、正しく門を通し、`HERMES_KANBAN_DB` で指定されたボードごとの SQLite の DB へ書きます。これらがコールバックに無いと、このランタイムの作業役は作業自体はできても報告を返せず、割り振り役の待ち時間が尽きるまで止まったままになります。
@@ -117,7 +116,7 @@ MCP のコールバックが出しているおかげで、次のものも動き�
 | `delegate_task` のサブエージェント | あり | 使えません（エージェントループの文脈が要る） |
 | `memory`、`session_search`、`todo` | あり | 使えません（エージェントループの文脈が要る） |
 | `web_search`、`web_extract` | あり | あり（MCP のコールバック経由） |
-| ブラウザの自動操作（Camofox / Browserbase） | あり | あり（MCP のコールバック経由） |
+| ブラウザの自動操作（`browser_exec`、`browser_cdp`、`browser_dialog`、`browser_vault`） | あり | 使えません（MCP のコールバックで公開されていない） |
 | `vision_analyze`、`image_generate` | あり | あり（MCP のコールバック経由） |
 | ユーザーのターンに添えた画像（スクリーンショット、貼り付けた画像、`/image`） | あり（ネイティブのマルチモーダル） | あり。app-server の画像入力（data/http の URL）か手元の画像のパスとしてそのまま送られ、テキストの目印に置き換えられることはありません |
 | `skill_view`、`skills_list` | あり | あり（MCP のコールバック経由） |
@@ -429,7 +428,7 @@ Hermes の `mcp_servers` の設定は、Codex が期待する TOML の形へ自�
 
 ## Hermes のツールコールバック（あたらしい MCP サーバー） {#hermes-tool-callback-the-new-mcp-server}
 
-Codex 内蔵のツールはシェル、ファイル操作、patch を担いますが、web 検索、ブラウザの自動操作、画像の読み取り、画像生成などは持っていません。Codex のターンでもそれらを使えるように、Hermes は自分自身を MCP サーバーとして `~/.codex/config.toml` に登録します。
+Codex 内蔵のツールはシェル、ファイル操作、patch を担いますが、web 検索、画像の読み取り、画像生成などは持っていません。Codex のターンでもそれらを使えるように、Hermes は自分自身を MCP サーバーとして `~/.codex/config.toml` に登録します。
 
 ```toml
 [mcp_servers.hermes-tools]
@@ -442,9 +441,9 @@ tool_timeout_sec = 600.0
 
 モデルが `web_search`（またはほかの公開された Hermes のツール）を呼ぶと、Codex は stdio 経由で `hermes_tools_mcp_server` のサブプロセスを立ち上げ、要求は `model_tools.handle_function_call()` を通って処理され、結果はほかの MCP の応答と同じように Codex へ投影されます。
 
-**コールバック経由で使えるツール:** `web_search`、`web_extract`、`browser_navigate`、`browser_click`、`browser_type`、`browser_press`、`browser_snapshot`、`browser_scroll`、`browser_back`、`browser_get_images`、`browser_console`、`browser_vision`、`vision_analyze`、`image_generate`、`skill_view`、`skills_list`、`text_to_speech`。
+**コールバック経由で使えるツール:** `web_search`、`web_extract`、`vision_analyze`、`image_generate`、`skill_view`、`skills_list`、`text_to_speech`。
 
-**使えないツール:** `delegate_task`、`memory`、`session_search`、`todo`。これらは動いている AIAgent の文脈（ループの途中の状態）がないと呼び出せず、状態を持たない MCP のコールバックでは動かせません。これらが必要なときは、既定の Hermes のランタイム（`/codex-runtime auto`）を使ってください。
+**使えないツール:** `delegate_task`、`memory`、`session_search`、`todo`、そしてブラウザのツール。これらは動いている AIAgent の文脈（ループの途中の状態）がないと呼び出せず、状態を持たない MCP のコールバックでは動かせません。これらが必要なときは、既定の Hermes のランタイム（`/codex-runtime auto`）を使ってください。
 
 ## 無効にする {#disabling}
 
@@ -521,7 +520,7 @@ tool_timeout_sec = 600.0
                                                         ▼
         ┌──────────────────────────────────────────────────────────┐
         │  hermes_tools_mcp_server.py (subprocess on demand)        │
-        │   web_search, web_extract, browser_*, vision_analyze,    │
+        │   web_search, web_extract, vision_analyze,               │
         │   image_generate, skill_view, skills_list, text_to_speech│
         └──────────────────────────────────────────────────────────┘
 ```

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Reddit Reading — Reddit を読む。サブレディット、検索、スレッド、ユーザー"
 description: "Reddit を読む。サブレディット、検索、スレッド、ユーザー"
 upstream_path: user-guide/skills/optional/social-media/social-media-reddit-reading.md
-upstream_blob: 728f6d5a3ba566fb8616f963d4bd63a3cbd30482
+upstream_blob: b1b0635d4a71db4ab216da5023e10aabac92aa10
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/social-media/social-media-reddit-reading
 ---
@@ -42,7 +42,7 @@ Reddit の中身、つまりサブレディットの一覧、サイト全体や�
 
 - 「r/LocalLLaMA では X がどう言われている？」「Y についての Reddit のスレッドを探して」
   「この Reddit のスレッドを要約して」「u/someone は最近何を投稿している？」
-- 利用者が渡してきた `reddit.com` の URL すべて。`web_extract`、`browser_navigate`、
+- 利用者が渡してきた `reddit.com` の URL すべて。`web_extract`、`browser_exec`、
   `.json` の各エンドポイントは、サーバーの IP からはどれも通りません（403 か「人間であることを証明してください」の壁です）。
   この skill が、いま通る道です。
 - 投稿、投票、メッセージ送信など、ユーザーとしてのログインが要ることには使えません。
@@ -128,7 +128,7 @@ python3 scripts/reddit.py --json search "topic"                  # machine-reada
 - `www.reddit.com/…/.json`、`api.reddit.com`、`old.reddit.com` は、データセンターの IP に対しては
   403 か、中身の無い「Welcome to Reddit」の外枠を返します。そこへ逃げないでください。ブラウザの
   User-Agent を名乗るのもだめです（これも 403 です）。
-- `r.jina.ai` と `browser_navigate` ツールも同じ壁（「blocked by network security」や人間確認）に当たります。
+- `r.jina.ai` と `browser_exec` ツールも同じ壁（「blocked by network security」や人間確認）に当たります。
   `blocked-page-recovery` の Wayback を通る道なら、保存されていた**古い**スレッドは拾えますが、
   新しいものは取れません。
 - 認証なしのスレッドのフィードには、投稿と第一階層のコメントしか入りません（Reddit がフィードの件数を

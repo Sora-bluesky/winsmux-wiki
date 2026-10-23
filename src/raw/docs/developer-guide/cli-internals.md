@@ -2,7 +2,7 @@
 title: "CLI の内部構造"
 description: "hermes_cli の成り立ち — スラッシュコマンドの振り分け、設定の読み込み、スキンエンジン、トランザクション方式の更新パイプライン、プロセス同定のルール"
 upstream_path: developer-guide/cli-internals.md
-upstream_blob: 5728006c804cd6578163b20dc35f2958a9a574db
+upstream_blob: 510507aa2bf296c9000b7d27fa0fc308c7f9d601
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cli-internals
 ---
@@ -110,31 +110,80 @@ systemd で力ずくの再起動に切り替えたときは、そのユニット
 極端に長いユニット側の設定でも子プロセスの待機があふれることはありません。0・不明・無限の段階は
 先ほどの読み替えを使います。応答中の処理を止めきるときの設定は、これによって変わりません。
 
-## Nous 無料枠のサインイン {#nous-free-tier-sign-in}
+## Nous のサインイン {#nous-sign-in}
 
-サインインの仕上げは `settle_after_upgrade` という1つの関数が受け持ちます。無料枠の身元の上にアカウントを保存する
-すべての呼び出し元（CLI の `upgrade_guest`、デスクトップのポーラー）がこれを呼びます。この関数は、
-ウェルカム用の経路にある設定を、アカウントのホストと、その枠で推奨される既定のモデル
-（`models.recommended_nous_default_model`。`GET /api/model/recommended-default` と共通）へ移します。
+Nous のサインインは、どれもふつうのデバイスコードによるログインです。サインインの仕上げは `settle_after_upgrade` という1つの関数が受け持ち、
+完了1回につき1回呼ばれます。この関数は、ウェルカム用の経路にある設定を、
+アカウントのホストと、その枠で推奨される既定のモデル（`models.recommended_nous_default_model`。
+`GET /api/model/recommended-default` と共通）へ移します。
 
 共通の流れ・状態・文言は `anon_sign_in.py` に、CLI での表示は
-`anon_sign_in_cli.py` にあります。`anon_auth.py` は身元、昇格のポーリング、仕上げを受け持ち、
-既存のサインイン API を再公開しています。流れの中で使う身元と保存の協力役は、
-呼び出した時点で `anon_auth` を通して解決します。モジュール属性を monkeypatch で差し替えられる継ぎ目を残すためです。
+`anon_sign_in_cli.py` にあります。`anon_auth.py` は身元と仕上げを受け持ち、サインインの
+API を再公開しています。流れの中で使う身元と保存の協力役は、呼び出した時点で `anon_auth` を通して解決します。
+モジュール属性を monkeypatch で差し替えられる継ぎ目を残すためです。
 
 サインインそのものは1つの組み立てでできています。`anon_auth.run_sign_in()` は `SignInState` を順に返します（`Code`、
-`Waiting`、`Completed`、`Declined`、`Superseded`、`TimedOut`、`Retired`、`Failed`、
-`AlreadySignedIn`、`Unavailable`）。現在の状態は自分で読み取り、2 回の待機をまたいで1つの絶対的な期限を保ち、
-昇格の完了**と**トークンの付与がそろったときだけ保存し、完了1回につき
+`Waiting`、`Completed`、`Cancelled`、`TimedOut`、`Failed`、`AlreadySignedIn`）。デバイスコードを
+要求し、1つの期限のなかでトークンのエンドポイントをポーリングし（コードの期限が切れたら `TimedOut`）、アカウントを保存して、
 `settle_after_upgrade` をちょうど1回実行します。保存や仕上げの失敗を例外として外へ漏らすことはなく、
-`Failed` に変えます。どの状態も自分の `.copy`（チャット用の文面。生の例外、URL、`hermes` の動詞は含みません）と
-`.copy_terminal` を持っているので、呼び出し側が理由を文字列に対応付けることはありません。`cancelled()` は試行を止めます。`cancel_wins_after_promotion` は、
-サーバー側ですでに引き継ぎが完了していたときにどうするかを決めます。デスクトップは `True` のままです（DELETE は
-「この端末では使わない」という意味です）。ゲートウェイは `False` を渡します（後から来た試行で置き換わっても、利用者が実際に承認した
-引き継ぎを捨ててはならないためです）。`scope` に入るのは前提条件の確認と保存のブロックの間だけで、`yield` やネットワークの待機をまたぐことはありません。
-`run_in_executor` は contextvars を引き継がないためです。`upgrade_guest`（`hermes auth upgrade`）、CLI の `/login` ハンドラー、デスクトップの
-昇格ポーラーは、これの上に載った表示役です。キャンセルの確認と保存を不可分にしたい画面は `persist_guard` を渡します。デスクトップにある、ふつうの「別の Nous アカウントをつなぐ」デバイスコードのログインは
-別の経路（`_nous_plain_poller`）で、今後も別のままにしておく必要があります。
+`Failed` に変えます。ディスクに無料枠があってもなくても動きます。`Completed.email` は
+アクセストークンの `email` クレームから取ります。`Completed.handoff` はゲストの引き継ぎ結果の行（何が移ったか、何をつなぎ直すか）を持ち、
+`Completed.handoff_status` は最新の記録をフィールドとして持ちます
+（`guest_handoff.wire_status`: 公開用の見え方に、その `lines` を加えたもの）。結果を自分で表示する画面のためのものです。どの状態も自分の `.copy`（チャット用の文面。
+生の例外、URL、`hermes` の動詞は含みません）と `.copy_terminal` を持っているので、呼び出し側が
+理由を文字列に対応付けることはありません。`cancelled()` は、トークンのポーリング中は少なくとも1秒に1回、
+保存の前にもう1回確認されます。キャンセルは必ず優先され、何も保存されません。TLS の検証は
+`_resolve_verify` から来るので、`HERMES_CA_BUNDLE` などの設定が効きます。`scope` に入るのは
+前提条件の確認と保存のブロックの間だけで、`yield` やネットワークの待機をまたぐことはありません。
+`run_in_executor` は contextvars を引き継がないためです。`replace_account=True` を付けると、サインイン済みのインストールでも
+もう一度サインインできます（デスクトップの「別のアカウントをつなぐ」）。付けなければ、サインイン済みのインストールには
+ネットワークに出る前に `AlreadySignedIn` が返ります。`upgrade_guest`（`hermes auth upgrade`）、CLI と TUI の
+`/login`、ゲートウェイの `/login`、デスクトップの開始経路は、これの上に載った表示役です。キャンセルの確認と保存を
+不可分にしたい画面は `persist_guard` を渡します。`hermes model` と
+`hermes auth add nous` は `_login_nous` を使い続けます（`--portal-url`、`--ca-bundle`、`--insecure`
+と、共有ストアからの取り込みを持っているためです）。これも同じふつうのデバイスログインで、引き継ぎの結果も
+同じように表示します。アカウントを保存するサインインはどれも（`run_sign_in`、`_login_nous`、`hermes auth add
+nous`、課金のための追加認証、ツール設定でのログイン）、ロックを手放したあとで自分で
+`settle_after_upgrade` を1回呼びます。引き継ぎの実行役が仕上げをすることはありません。
+
+### サインイン後のゲストの引き継ぎ {#guest-handoff-after-a-sign-in}
+
+どの書き込み役であっても、無料枠の身元の上に Nous のアカウントを保存すると、`hermes_cli/guest_handoff.py` が
+その身元につないでいたアプリをアカウントへ引き渡します。アカウント自身の Bearer トークンを付けて
+`POST /api/anonymous/claim {"token": "<anon_...>"}` を送ります。事前に利用者へ確認はせず、結果はあとから表示します
+（`hermes auth status nous`。デスクトップはサインインのポーリングの `handoff_status` から読み取り、移動がまだ再試行中のあいだは
+`GET /api/providers/oauth/nous/handoff?since=&wait=` のロングポーリングからも読み取ります。こちらは
+記録の `updated_at` が変わった時点で応答します）。仕組みは2つに分かれています。
+
+- `note_replacement` は、もっとも低い2つの書き込みの継ぎ目（`auth._store_provider_state` と
+  `auth_nous._write_shared_nous_state`）で、呼び出し元の認証ストアのロックを持ったまま動き、保留中の記録を書くだけです。
+  記録は共有の Nous ストアの隣にある `guest_handoff.json` に置かれ、
+  `anon_` 認証情報のハッシュをキーにします。そのため、1つの無料枠の身元を共有するプロファイルは、記録も引き取りの要求も1つを共有します。
+- 共有ストアがどの身元を持つかを変えるのは、サインインだけです。`_write_shared_nous_state` の
+  呼び出し元はどれも `renewal` を宣言します。トークンの更新（`renewal=True`）がそこで別の身元を置き換えることはありません
+  （身元とは、ゲストなら `anon_` 認証情報、アカウントなら JWT の `sub` です）。そのため、あるプロファイルの
+  アカウントを更新しても、別のプロファイルが作ったゲストが置き換わることはありません。その更新結果は、保持している
+  身元の隣に `renewal` として置かれ、同じアカウントのほかのプロファイルは、次に使う1回限りの
+  更新トークンをそこから読みます。
+- `drain` は、このプロファイルの期限が来た記録それぞれに1回ずつ試行し、それぞれの結果を返します。リクエストを
+  送るので、認証ストアのロックの外でだけ動きます。どのサインインの画面も保存の直後にこれを呼び
+  （`run_sign_in` は `persist_guard` を手放したあと）、無料枠の整合処理、
+  `hermes auth status`、`hermes auth upgrade` も呼びます。移すのはアプリだけで、設定の仕上げ
+  （`settle_after_upgrade`）はアカウントを保存したサインインの側に残ります。
+- 一時的なエラーで再試行中になった移動は、長く動き続ける Nous のプロセスがどれも起動する再試行の
+  ワーカーが仕上げます（ゲストかどうかに関係なく `start_nous_auth_keepalive` が起動します）。各回で、
+  そのプロセス自身のプロファイルを処理します。
+- 試行の回数を数えることと、記録を借り受けること（約 30 秒は期限が来ない扱いにする）は、リクエストを送り出す前に
+  ロックを取った1回の書き込みで行います。そのため、応答が失われても回数は数えられ、2つの実行が同じ記録を送ることもありません。
+
+応答の扱いは次のとおりです。`claimed` は何が移ったかを記録します（アカウントのトークンを更新するのは
+`cohort_carried` のときだけです。`connectors` を含まない応答は「何も移らなかった」ではなく、不明として読みます）。
+`unknown_token` は Gone として扱い、以前に試行していれば「たぶん移った」と読みます（成功の応答が失われた場合です）。
+`already_retired` も Gone です。最終とするのは、あとの試行で変わりようのないコードだけです
+（`client_not_allowed`、`account_locked`、`invalid_request`）。それ以外の応答（401 や未知の
+コードを含む）と通信の失敗はすべて、1分後、10分後、1時間後、6時間後に再試行し
+（Retry-After があれば従います）、それでもだめなら記録は Failed になります。Claimed の記録が開き直されることはなく、利用者向けの文面に
+サーバーのコードが出ることもありません。アプリのスラッグは表示名で示します（`tools.tool_labels.app_title`）。
 
 ## プロセスの同定: argv の部分文字列から推測しない {#process-identity-never-infer-it-from-argv-substrings}
 

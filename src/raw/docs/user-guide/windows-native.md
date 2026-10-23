@@ -2,7 +2,7 @@
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: 245ae47e663002c87f8538144c88f5895a3162f6
+upstream_blob: 9a02f8a9ddb71fd7cea9f5fe2801fa3dd9634906
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -264,14 +264,14 @@ hermes gateway uninstall   # Removes schtasks entry, Startup shortcut, pid file
 
 ## ブラウザツール {#browser-tool}
 
-ブラウザの準備は、選んだ実行方式によって異なります。組み込みの方式では、PM が版を固定した
-`agent-browser` と Chromium のパッケージを用意します。Browser Use は
-`hermes tools` を通して、管理された独自の CLI をインストールします。自己完結型の
-MSIX には、対応するブラウザツールが中身に含まれています。
+ブラウザツール（`browser_exec`）は、Hermes の Python 実行環境の一部です。
+手元でブラウズするときは、PM がインストールする版を固定した Chromium を Hermes が起動します
+（見つからない場合は `hermes pm install chromium`）。別の Chromium 系のバイナリを使うには `browser.executable_path`
+を設定します。クラウドのブラウザは `hermes tools` で選びます。自己完結型の MSIX には、ブラウザツールが中身に含まれています。
 
-Windows の ARM64 では、版を固定した Chromium と `agent-browser` の実行ファイルが
-Windows の x64 エミュレーションで動くことがあります。これは ARM64 ネイティブの Python の実行環境とは異なります。
-実行方式の選び方は [ブラウザの自動操作](/hermes/docs/user-guide/features/browser/) を参照してください。
+Windows の ARM64 では、版を固定した Chromium は x64 ビルドで、Windows の
+x64 エミュレーションで動きます。これは ARM64 ネイティブの Python の実行環境とは異なります。
+ブラウザの入手元については [ブラウザの自動操作](/hermes/docs/user-guide/features/browser/) を参照してください。
 
 ## Windows で Hermes を動かすときの実務的なメモ {#running-hermes-on-windows-practical-notes}
 
@@ -357,14 +357,10 @@ Linux と macOS では、POSIX の慣用句である `os.kill(pid, 0)` は何も
 いま動いているプロセスにだけ設定した状態です。シェルを閉じて開き直すか、システムのプロパティ → 環境変数でユーザーの範囲に設定してください。新しい PowerShell のウィンドウで `echo $env:EDITOR` を実行すると確認できます。
 
 **ブラウザツールは起動するが、ツールの処理が時間切れになる。**
-`hermes doctor` と `hermes pm doctor` を実行してください。選ばれているブラウザの実行方式は `hermes tools` で
-確認できます。署名付きのアプリの中身に、無関係な版の Playwright を
+`hermes doctor` と `hermes pm doctor` を実行してください。選ばれているブラウザのプロバイダーは `hermes tools` で
+確認できます。Chromium の初回起動が遅いときは、`browser.command_timeout`（起動タイムアウトの下限。秒単位）で
+待ち時間を延ばせます。署名付きのアプリの中身に、無関係な版の Playwright を
 インストールしないでください。
-
-**`agent-browser` が Node のバージョンに関するエラーを出す。**
-`hermes pm doctor` を実行し、どの Hermes の起動用ファイルがそのプロセスを起動したかを確認してください。
-管理された Node の版は PM が用意します。Hermes を直すために、無関係なシステムの Node の
-インストールを削除しないでください。
 
 **CLI で中国語・日本語・アラビア語の文字が `?` になる。**
 UTF-8 の標準入出力の調整が働いていません。`HERMES_DISABLE_WINDOWS_UTF8` が設定されていないことを確認してください（`Get-ChildItem env:HERMES_DISABLE_WINDOWS_UTF8`）。空なのに `?` のままなら、コンソール（とても古い `cmd.exe`）が UTF-8 にまったく対応していない可能性があります。Windows Terminal に切り替えてください。

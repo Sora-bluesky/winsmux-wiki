@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 4468904026f40b78cd8f376619c2870f1fe47ab3
+upstream_blob: 9caa4602aca1767670287933f06a0bac8ced709a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -2122,7 +2122,7 @@ tool_loop_guardrails:
 強制停止は**リプレイ**、つまり同じ呼び出しが何も変わらず、あいだに何も起きないまま繰り返されるケースを捕まえるためのものです。正当な試行の繰り返しは対象にしません。
 
 - **編集してから再実行するのは、ループではありません。** 変更を伴う呼び出し（`write_file`、`patch`、成功した `terminal`/`execute_code`、ブラウザーの操作、ジョブ／メッセージ／cron の変更）が成功すると、まだ数えられている失敗中の呼び出しすべてに「進展あり」の印が付きます。その次の同一の再試行（修正後に失敗していたテストを再実行する、クリック後にスナップショットを取り直す）は、ブロックに向けて積み上がるのではなく、新しい連続として数え直されます。
-- **中身の違う失敗コマンドは診断であって、ループではありません。** 0以外の終了コードが普通の出力であるツール（`terminal`、`execute_code`、プロセスのポーリング用ツール、`browser_navigate`、`web_extract`）では、`same_tool_failure` のしきい値は警告を出すだけで、停止はさせません。これらを止められるのは、あいだに変更がないまま引数まで完全に同じ呼び出しを繰り返した場合か、同一の結果が続いた場合だけです。
+- **中身の違う失敗コマンドは診断であって、ループではありません。** 0以外の終了コードが普通の出力であるツール（`terminal`、`execute_code`、プロセスのポーリング用ツール、`browser_exec`、`web_extract`）では、`same_tool_failure` のしきい値は警告を出すだけで、停止はさせません。これらを止められるのは、あいだに変更がないまま引数まで完全に同じ呼び出しを繰り返した場合か、同一の結果が続いた場合だけです。
 - **停止で終わるのはターンであって、セッションではありません。** エージェントは、どのガードレールがなぜ作動したかを返信します。「continue」と返信すると、ターンごとのカウンターを新しくして再開します。
 
 ### ターンごとの暴走ループの上限 {#per-turn-runaway-loop-caps}
@@ -2792,37 +2792,67 @@ web:
 
 ## ブラウザー {#browser}
 
-ブラウザーの自動操作の動きを設定します。
+ブラウザーの自動操作の動きを設定します。ブラウザーのキーはすべて `browser:` の下に置きます。
+ブラウザーの取得元（ローカルの Chromium、クラウドのプロバイダー、Lightpanda、`/browser connect`、普段使いのプロファイル）がどう組み合わさるかは、[ブラウザー機能のページ](/hermes/docs/user-guide/features/browser/) を参照してください。
 
 ```yaml
 browser:
-  inactivity_timeout: 120        # Seconds before auto-closing idle sessions
-  command_timeout: 30             # Timeout in seconds for browser commands (screenshot, navigate, etc.)
-  record_sessions: false         # Auto-record browser sessions as WebM videos to ~/.hermes/browser_recordings/
-  # Optional CDP override — when set, Hermes attaches directly to your own
-  # Chromium-family browser (via /browser connect) rather than starting a headless browser.
+  inactivity_timeout: 120        # Seconds before an idle browser is closed
+  command_timeout: 30            # Chromium launch timeout floor (seconds)
+  headed: false                  # true = visible Chromium window (local); keeps the browser open between turns
+  engine: auto                   # auto (Chromium) | lightpanda ("chrome" is accepted as auto)
+  # Local Chromium launched by Hermes
+  executable_path: ""            # Chromium binary override; "" = the packaged Chromium
+  user_data_dir: ""              # Persistent profile shared by every session; "" = fresh profile per session
+  chromium_args: []              # Extra Chromium command-line flags, e.g. ["--lang=de-DE"]
+  # Cloud browser selection (written by `hermes tools` → Browser Automation)
+  cloud_provider: local          # local | browserbase | browser-use | firecrawl | nous | <provider plugin>; unset = autodetect from credentials
+  auto_local_for_private_urls: true  # With a cloud provider, open LAN/localhost URLs in a local Chromium
+  allow_private_urls: false      # Allow private/internal addresses (localhost, 192.168.x.x, ...)
+  # Optional CDP override — when set, the browser tools attach to your own
+  # Chromium-family browser (as /browser connect does) instead of launching one.
   cdp_url: ""
-  # Dialog supervisor — controls how native JS dialogs (alert / confirm / prompt)
-  # are handled when a CDP backend is attached (Browserbase, local Chromium-family
-  # browser via /browser connect). Ignored on Camofox and default local agent-browser mode.
+  use_real_profile: false        # Browse on a managed copy of your real browser profile (opt-in)
+  # Dialog supervisor — how native JS dialogs (alert / confirm / prompt / beforeunload) are handled
   dialog_policy: must_respond    # must_respond | auto_dismiss | auto_accept
   dialog_timeout_s: 300          # Safety auto-dismiss under must_respond (seconds)
-  camofox:
-    managed_persistence: false   # When true, Camofox sessions persist cookies/logins across restarts
-    user_id: ""                  # Optional externally managed Camofox userId
-    session_key: ""              # Optional session key sent when Hermes creates a tab
-    adopt_existing_tab: false    # Reuse an existing tab for this identity before creating one
 ```
+
+**実行ファイルの探し方。** Hermes は、次の順に探して最初に見つかった Chromium を起動します。
+`browser.executable_path` → Hermes のパッケージマネージャーで入れた Chromium
+（`hermes pm install chromium`）→ `/etc/hermes/chromium-executable-path`（公式の
+Docker イメージ）→ `PATH` 上にあるシステムの `chromium` / `chromium-browser`（Termux や、
+パッケージ版のない環境向け）。どれも見つからないときは、黙って失敗するのではなく、
+ブラウザーツールが手がかりを表示します。
+
+**ブラウザー操作を止めるには。** ブラウザー用の設定スイッチはありません。`hermes tools`
+（または `hermes tools disable browser [--platform NAME]`）で `browser` ツールセットを無効にしてください。
 
 **ダイアログのポリシー:**
 
-- `must_respond`（既定） — ダイアログを捕捉して `browser_snapshot.pending_dialogs` に載せ、エージェントが `browser_dialog(action=...)` を呼ぶのを待ちます。`dialog_timeout_s` 秒たっても応答がなければ、ページの JS スレッドがいつまでも止まったままにならないよう、ダイアログを自動で閉じます。
-- `auto_dismiss` — 捕捉して、すぐに閉じます。それでもエージェントはあとから、`browser_snapshot.recent_dialogs` にある `closed_by="auto_policy"` 付きの記録でダイアログを確認できます。
+- `must_respond`（既定） — ダイアログを捕捉して、エージェントが `browser_dialog(action=...)` を呼ぶのを待ちます。`dialog_timeout_s` 秒たっても応答がなければ、ページの JS スレッドがいつまでも止まったままにならないよう、ダイアログを自動で閉じます。
+- `auto_dismiss` — 捕捉して、すぐに閉じます。
 - `auto_accept` — 捕捉して、すぐに承諾します。`beforeunload` の確認をしつこく出すページで役立ちます。
 
 ダイアログを扱う流れの全体は、[ブラウザー機能のページ](/hermes/docs/user-guide/features/browser/#browser_dialog) を参照してください。
 
-ブラウザーのツールセットは、複数のプロバイダーに対応しています。Browserbase と Browser Use の設定、およびローカルの Chromium 系ブラウザーを CDP でつなぐ設定の詳細は、[ブラウザー機能のページ](/hermes/docs/user-guide/features/browser/) を参照してください。
+**削除されたキー（自動で移行されます）。** `browser.backend` はなくなり、ブラウザーを動かす経路は
+`browser_exec` だけになりました。古い `backend: off`（引用符の有無を問わず）は削除され、代わりに
+`browser` ツールセットを無効にするよう案内する通知が 1 度だけ出ます。通知は `hermes update` が表示するか、
+Hermes が起動時に設定を移行した場合は、最初のセッションの冒頭に警告として表示されます。それ以外の値も削除され、
+その値と、何に置き換わったかを示すメモが出ます（`camofox` は Camofox プラグイン、`local` は browser_exec が起動するパッケージ版の Chromium、
+クラウド名は `browser.cloud_provider`）。
+`snapshot_threshold`、`record_sessions`、`allow_unsafe_evaluate`、`restrict_evaluate` は、
+削除された組み込みのブラウザーツール用のキーで、いまは効果がありません。
+`browser.camofox.*` のキーはコアではなく、Camofox プラグイン（`hermes plugins install camofox`）が読みます。
+以前の `AGENT_BROWSER_*` 環境変数はもう読まれません。更新時、対応するキーが未設定であれば、
+プロファイルの `.env` にある値がそのキーへコピーされます
+（`AGENT_BROWSER_EXECUTABLE_PATH` → `executable_path`、`AGENT_BROWSER_PROFILE` → `user_data_dir`、
+`AGENT_BROWSER_ARGS` → `chromium_args`、`AGENT_BROWSER_HEADED` → `headed`、`AGENT_BROWSER_ENGINE` → `engine`）。
+以前は環境変数がこれらを上書きしていたため、`engine: auto` と `headed: false` は未設定として扱われます。
+相対パスの `AGENT_BROWSER_PROFILE` は作業ディレクトリを基準に解決されていたので、その絶対パス
+（設定を移行したプロセスの作業ディレクトリが基準）として書き込まれます。あわせて、固定したパスを示す通知が
+同じ方法で表示されるので、ブラウザーのログイン状態がそこに残っているか確かめられます。
 
 ## タイムゾーン {#timezone}
 
@@ -2888,7 +2918,7 @@ security:
       - "/etc/hermes/blocked-sites.txt"
 ```
 
-有効にすると、ブロック対象のドメインのパターンに一致する URL は、Web ツールやブラウザーツールが動く前に拒否されます。これは `web_search`、`web_extract`、`browser_navigate` のほか、URL にアクセスするすべてのツールに適用されます。
+有効にすると、ブロック対象のドメインのパターンに一致する URL は、Web ツールやブラウザーツールが動く前に拒否されます。これは `web_search`、`web_extract`、ブラウザーでのページ移動のほか、URL にアクセスするすべてのツールに適用されます。
 
 ドメインのルールでは、次の形式を使えます。
 - 完全一致のドメイン: `admin.example.com`

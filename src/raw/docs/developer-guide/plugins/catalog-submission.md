@@ -2,7 +2,7 @@
 title: "プラグインカタログへの登録申請"
 description: "Hermes プラグインカタログの登録ガイドライン全文です。申請前に確かめること、すべての掲載項目が従うルール、レビュアーが見る点をまとめています"
 upstream_path: developer-guide/plugins/catalog-submission.md
-upstream_blob: ab145ca0ef59a930f32f9002f11d9e8af8bd608c
+upstream_blob: 06a3d197f3645ce4db22c5f4a571622e5f6cee5a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission
 ---
@@ -172,8 +172,14 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
    送信は、ユーザーが有効にしたときだけ行います。レビュアーはこれらを、掲載項目の
    PR に開示事項として要約します。レビューで開示されていない挙動が見つかった場合は、修正を依頼します。
 14. **互換性のメタデータは正確に書きます。** `requires_hermes` は SemVer の下限
-   （`">=0.21.5"`）で書き、CalVer の日付にはしません。また現在のリリースより新しい値にもしません
-   （そうなっているとローダーがプラグインを読み飛ばします）。`version` は固定したコードと一致させ、
+   （`">=0.21.5"`）で書き、CalVer の日付にはしません。また現在のリリースより新しい値にもしません。
+   エントリーの `requires_hermes` は実際に効きます。カタログ名でのインストールは、それが受け付けない Hermes では
+   断られ、`hermes plugins update` は Hermes が更新されるまで、入っているプラグインを今の固定のまま据え置きます。
+   同じ下限を `plugin.yaml` にも書いてください。古い Hermes はそちらだけを見るからです
+   （合わないとローダーがプラグインを読み飛ばします）。持ち運びできるパッケージ
+   （`plugin.json`）には `requires_hermes` の項目がないので、カタログのエントリーの
+   `requires_hermes` が唯一の下限になります。パッケージが新しい Hermes を必要とする
+   （古いリリースが無視するサーバー宣言のキーを使うなど）場合は設定してください。`version` は固定したコードと一致させ、
    Python の依存関係は Hermes のコアの制約のもとで解決できるようにします
    （CI が実行するのは `hermes plugins validate --install-deps` です）。
 15. **同梱プラグインのスキンやフォークは掲載しません。** 同梱プラグインへの変更は

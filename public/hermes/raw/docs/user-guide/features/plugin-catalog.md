@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: ee2a8bd161af619bef656527d9c5756a6aaad992
+upstream_blob: eed367d16e1c5c8826aaac3bac0a0022fdb30edc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -54,7 +54,7 @@ hermes plugins install <name>
 | `category` | 並ぶ棚。`desktop`（既定）、`memory`、`platform`、`web`、`tools`、`voice`、`automation`、`models`、`general` |
 | `maintainer` | そのプラグインの持ち主 |
 | `capabilities` | 宣言されたツール、フック、ミドルウェア、必要な環境変数 |
-| `requires_hermes` | 必要な Hermes の最低バージョン。たとえば `>=0.19`（任意） |
+| `requires_hermes` | 必要な Hermes の最低バージョン。たとえば `>=0.19`（任意）。実際に効きます。古い Hermes に入れようとすると、必要なバージョンを示して断られ、`hermes plugins update` は Hermes を更新するまで入っているバージョンを据え置きます。`search` と `info` にはそのまま載り、新しい Hermes が必要だと示されます |
 | `platforms` | OS の制限。空ならすべて（任意） |
 | `title` | カードに表示する人向けの名前。たとえば `NVIDIA App`（任意。省略時は `name`） |
 | `onboarding` | `true` にすると、デスクトップのオンボーディングカードで、ホスト型コネクタの隣にこのプラグインを並べます。対象は項目に書かれたプラットフォームです。選別されるのは公式または検証済みの項目だけです（任意、既定は `false`） |

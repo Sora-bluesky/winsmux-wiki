@@ -2,7 +2,7 @@
 title: "Unbroker — データブローカーサイトから自分の情報を自動で削除する"
 description: "データブローカーサイトから自分の情報を自動で削除する"
 upstream_path: user-guide/skills/optional/security/security-unbroker.md
-upstream_blob: 7a14567d7dbeabb6b2b58663e89fbb7858167d94
+upstream_blob: 431cbadf08d029c1c9fd6e39c5b1cf1e27d7aa36
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-unbroker
 ---
@@ -43,7 +43,7 @@ Python の CLI（`scripts/pdd.py`）が、決定論的な状態を一手に管�
 ブローカーのデータベース、ティア計画、台帳、下書き、レポート、**メール送信（SMTP）、確認リンクの
 ポーリング（IMAP）、自律アクションのキュー（`next`）**です。あなた（エージェント）は、ネイティブ
 ツールでスキャンとフォーム操作を担当します。検索と Web フォームには `web_extract` と
-`browser_navigate` を、定期的な再スキャンには `cronjob` を使います。
+`browser_exec` を、定期的な再スキャンには `cronjob` を使います。
 
 ## 自律性の取り決め {#autonomy-contract}
 
@@ -92,14 +92,14 @@ Python の CLI（`scripts/pdd.py`）が、決定論的な状態を一手に管�
   - メール自動化、認証情報が要る／要らないの 2 択があります。
     - **ブラウザモード（パスワード不要）: `setup --email-mode browser`。** エージェントは
       オプトアウト／CCPA メールを送信し、確認リンクを、オペレーターの**ログイン済み Web メール**上で
-      `browser_*` ツールを使って開きます。何も保存されません。これには Hermes がオペレーター自身の
+      `browser_exec` を使って開きます。何も保存されません。これには Hermes がオペレーター自身の
       ログイン済みブラウザを指している必要があり、クラウドブラウザは**不可**です。ヘッドレスの
       クラウドブラウザ（Browserbase）は Web メールのセッションを持たず、それ自体が Web メールや
       セッション連動のブローカーゲート（例: PeopleConnect のガイドモード）で Cloudflare／DataDome の
       関門にかかります。オペレーターの実際の Chrome を CDP 経由で操作してください。
       `chrome --remote-debugging-port=9222 --user-data-dir="$HOME/.hermes/chrome-debug"` を起動し
       （Default プロファイルではなく、Web メールに一度サインインした専用のデバッグプロファイル）、
-      ブラウザツールを `127.0.0.1:9222` に接続します。**`$PDD cdp` がこれを代わりに起動します**
+      Hermes のブラウザを `/browser connect` で `127.0.0.1:9222` に接続します。**`$PDD cdp` がこれを代わりに起動します**
       （Chrome／Chromium／Brave／Edge を見つけ、専用プロファイルでデタッチ起動し、CDP エンドポイントを
       表示します。`--check` でテスト、`--print` でコマンド表示）。`references/methods.md` の
       「Browser backends: scan vs execute」を参照してください。
@@ -159,7 +159,7 @@ PDD="python scripts/pdd.py"
   副作用がないため、並列化と再試行を安全に行えます。行動する*前に*露出の全体像を得ておくことが、
   下記のクラスタ重複排除と優先順位付けを可能にします。**既定では、親が `web_extract` プローブを直接
   駆動します** — 多くの人物検索サイトは、氏名／電話／住所の結果を静的 HTML でレンダリングするため、
-  `web_extract` が数秒で読み取ります。`browser_*` へのエスカレーションは、JS のみのわずかなサイトに
+  `web_extract` が数秒で読み取ります。`browser_exec` へのエスカレーションは、JS のみのわずかなサイトに
   限り、`delegate_task` サブエージェントへのエスカレーションは、本当に*推論*が重い作業（大規模な同名
   異人／親族の判別）に限ります。**ブラウザツールのサブエージェントに大量のブローカーリストを渡して
   クロールさせては いけません** — 実地では、ブラウザ操作が重いためこれが何度もタイムアウトしました
@@ -239,7 +239,7 @@ PDD="python scripts/pdd.py"
    **`batch` ごとに 1 つの `delegate_task` サブエージェントを並列に立ち上げ、そのバッチの用意済みの
    `brief` を渡します** — 全ブローカーを自分で逐次スキャンしてはいけません。`scan_inline` では、
    わずかなブローカーを自分でスキャンします。いずれにせよ、各ブローカーは `references/methods.md` の
-   ラダー（`web_extract` → `site:` プローブ → `browser_navigate` → `scrapling`）で**すべての**
+   ラダー（`web_extract` → `site:` プローブ → `browser_exec` → `scrapling`）で**すべての**
    `search_vectors` エントリを通し、404 は判断不能（`not_found` ではない）、`antibot` が設定されていて
    ステルスブラウザがないときは `blocked` を記録し、対象者か同名異人／親族かを確認してから記録します。
    `$PDD record <subject> <broker> <found|not_found|indirect_exposure|blocked> --found <bool> --evidence '{"listing_urls":[...]}'`。
@@ -251,15 +251,15 @@ PDD="python scripts/pdd.py"
    DELETION レーンを完了します。代わりに `prefer_suppression`（**PeopleConnect** — 削除は抑制を消し
    再掲載を止めない）を持つときは、抑制フローを行って維持し、Delete ボタンは意図的なデータ消去のときだけ
    使います。方法ごとに次のとおりです。
-   - **web_form** → `optout_url` を `browser_navigate`／`browser_type`／`browser_click` で駆動し、
-     `disclosure_fields` だけを送信し、確認をスクリーンショットに撮り、それからアクションの `after` の
+   - **web_form** → `optout_url` を `browser_exec`（`new_tab` ＋ `wait_for_load`、`fill_input`、送信は `js()` のクリック）で駆動し、
+     `disclosure_fields` だけを送信し、確認を `capture_screenshot()` で撮り、それからアクションの `after` の
      record コマンドを実行します。プレイブックは削除権の `send-email` フォローアップで終わることが
      あります — それを行います（掲載の抑制だけでなく完全な消去）。
     - **email** → `$PDD send-email <subject> <broker> --kind <ccpa|gdpr|generic> --to <addr>
       --listing <url>` が、記録と開示を 1 ステップで行います（宛先はブローカーレコードが宣言する
       アドレスに固定。`next` は居住地から kind を選び、対象でない人に CCPA／GDPR を主張しません）。
       **browser** モードでは、宛先固定の `compose` ペイロードを返します。`compose.to` 宛の新規メッセージを、
-      `compose.subject`／`compose.body` を厳密にそのまま、オペレーターの Web メール上で `browser_*` を
+      `compose.subject`／`compose.body` を厳密にそのまま、オペレーターの Web メール上で `browser_exec` を
       使って作成し、送信します（パスワード不要）。**programmatic** モードでは SMTP 送信します。`next` は、
       人の関与が要るフォーム（電話コールバック／政府 ID）も、削除メールがあればそこへ回します — これが
       **レスキューレーン**（検証済みの Whitepages パターン）です。下書きのみのときは `render-email` ＋

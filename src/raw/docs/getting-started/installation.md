@@ -2,7 +2,7 @@
 title: "インストール"
 description: "デスクトップ版パッケージ、ソースからのインストーラー、Docker、Nix、Termux の APT パッケージで Hermes Agent を導入する"
 upstream_path: getting-started/installation.md
-upstream_blob: 550f867a20d136bec70edd4138dfb6b9e5edc6e7
+upstream_blob: 7f9b2b2ac26986bfcee3dddced676555ba03124f
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -74,12 +74,13 @@ aarch64 の Android 端末では [Termux の APT パッケージ](/hermes/docs/g
 スクリプトはソースをクローンし、uv を用意したうえで、依存パッケージの準備を
 PM に任せます。PM は、バージョンを固定した Python、Node.js、npm、ripgrep、FFmpeg を用意します。ソースからの
 インストールでは Python の `all` extra が選ばれます。任意の extra がすべて入るわけではありません。
-PM は既定でブラウザ用とコンピュータ操作用のツールも入れます。`agent-browser`
-と、バージョンを固定した Chromium、それに
+PM は既定でブラウザ用とコンピュータ操作用のツールも入れます。Hermes がローカルでのブラウザ操作に使う、
+バージョンを固定した Chromium（Chrome for Testing）と、
 `cua-driver`（コンピュータ操作のドライバー。macOS、Windows、glibc の Linux が対象）です。
 ダウンロードに失敗してもインストールそのものは最後まで進み、再試行用のコマンドが表示されます。
-既定のブラウザドライバー（Browser Use CLI の中核である browser-harness）はふつうの Python の依存パッケージなので、
-デスクトップアプリを含め、どのインストールにも最初から入っています。
+`browser_exec` の裏で動くブラウザドライバー（Browser Use CLI の中核である browser-harness）はふつうの Python の依存パッケージなので、
+デスクトップアプリを含め、どのインストールにも最初から入っています。PM に Chromium のビルドが無い環境（Android/Termux、
+musl の Linux）では、Hermes は代わりに `PATH` 上のシステムの `chromium` を使います。
 そのほかの任意ツールは、それぞれの機能ごとのインストール手順で入れます。
 
 新しくインストールすると最新の安定版リリースが入り、以後 `hermes update` もそのチャンネルを追いかけます（[更新](/hermes/docs/getting-started/updating/)を参照してください）。代わりに
@@ -89,7 +90,7 @@ PM は既定でブラウザ用とコンピュータ操作用のツールも入�
 ブラウザ用ツールを入れたくない場合は、POSIX では `--skip-browser`、Windows では `-SkipBrowser`
 を渡します。コンピュータ操作のドライバーなら `--skip-computer-use` /
 `-SkipComputerUse` です。Hermes はこれらの選択を覚えていて、あとのインストールや
-`hermes update` でも入れ直しません。入れたくなったら `hermes pm install agent-browser` か
+`hermes update` でも入れ直しません。入れたくなったら `hermes pm install chromium` か
 `hermes pm install cua-driver` を実行すると、ツールが入り、この選択も取り消されます。
 
 スクリプトは起動用のランチャーを作り、データディレクトリを用意します。対話モードで実行した場合は、
@@ -205,8 +206,8 @@ Nix は **明示的にサポートされるインストール経路ではなく�
 ソースからのインストーラーは、実際にサービスを動かすユーザーで実行してください。そのユーザーのホーム、ツール置き場、
 設定、ランチャーは、すべてそのユーザーの持ち物である必要があります。
 
-1. 管理者として、ソースからのビルドに必要な前提条件と、使うブラウザのバックエンドが必要とする
-   Linux のライブラリを入れます。
+1. 管理者として、ソースからのビルドに必要な前提条件と、Chromium が必要とする
+   Linux のライブラリ（サービスがローカルでブラウザを操作する場合だけ）を入れます。
 2. サービス用ユーザーとして、通常のインストーラーを実行します。
 
    ```bash

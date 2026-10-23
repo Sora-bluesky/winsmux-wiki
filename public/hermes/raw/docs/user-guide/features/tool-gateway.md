@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Nous Tool Gateway"
 description: "サブスクリプション 1 つで、すべてのツールを。Web 検索、画像生成、音声読み上げ、クラウドブラウザーを、追加の API キー無しで Nous Portal 経由に束ねます。"
 upstream_path: user-guide/features/tool-gateway.md
-upstream_blob: e5a9c7d85a68c21c4099bb6e47e2e1152ce695f8
+upstream_blob: 47135fd6b9b3f8ed3e5a1d4bc6f501f455b01a35
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-gateway
 ---
@@ -23,7 +23,7 @@ Tool Gateway は、有料の [Nous Portal](https://portal.nousresearch.com) サ�
 | 🔍 | **Web 検索と本文抽出** | Nous が運用する、エージェント向けの Web 検索と、ページ全文の抽出。スケーリングはゲートウェイ側が引き受けるので、レート制限を気にする必要はありません。 |
 | 🎨 | **画像生成** | **Nous Subscription** の 1 行で、FAL のカタログ、Krea のネイティブモデル、Nous Portal の画像モデルをまとめて使えます。**Krea 3**、**FLUX 2**、**GPT Image**、**Nano Banana**、**Seedream**、**Ideogram**、**Recraft**、**Qwen**、**Krea 2** などです。モデルは `hermes tools` で一度選ぶだけで、そこに最新の一覧が出ます。 |
 | 🔊 | **音声読み上げ** | OpenAI の TTS 音声が `text_to_speech` ツールにつながっています。Telegram にボイスメモを投げる、パイプライン用の音声を作る、何かを読み上げさせる、といった使い方ができます。 |
-| 🌐 | **クラウドブラウザーの自動操作** | Browser Use 経由のヘッドレス Chromium セッション。`browser_navigate`、`browser_click`、`browser_type`、`browser_vision` といったエージェント操作の基本部品が、Browserbase のアカウント無しで使えます。 |
+| 🌐 | **クラウドブラウザーの自動操作** | Browser Use 経由の、クラウド上のヘッドレス Chromium セッション。CDP を通じて `browser_exec` で操作し、Browserbase のアカウントは要りません。 |
 
 4 つとも、Nous のサブスクリプションに対する従量課金です。組み合わせは自由で、Web と画像はゲートウェイに任せつつ TTS だけ自前の ElevenLabs キーを使う、あるいは全部を Nous 経由にする、どちらもできます。
 
@@ -89,8 +89,8 @@ Tool Gateway は**有料サブスクリプション**の機能です。ゲート
 
 Nous のモデルを選ぶ（`hermes model`）と、ゲートウェイのバックエンドをツール単位で選ぶチェックリストが出ます。その動きは、いまの設定を尊重します。
 
-- 別のバックエンドを明示的に指定してあるツール（例: `web.backend: searxng`、`browser.cloud_provider: camofox`）は**そもそも提示されません**。選択がうっかり上書きされることはありません。
-- 環境変数だけで設定されているツール（例: `SEARXNG_URL`、`CAMOFOX_URL`）は、自分のバックエンドを保つという注記付きで、**チェックが外れた状態**で提示されます。
+- 別のバックエンドを明示的に指定してあるツール（例: `web.backend: searxng`、`browser.cloud_provider: browserbase`）は**そもそも提示されません**。選択がうっかり上書きされることはありません。
+- 環境変数だけで設定されているツール（例: `SEARXNG_URL`、`BROWSER_USE_API_KEY`）は、自分のバックエンドを保つという注記付きで、**チェックが外れた状態**で提示されます。
 - 本当に未設定のツールだけが、あらかじめチェックされた状態になります。
 - 断った選択は残ります。チェックを外したままチェックリストを確定すると、その後 Nous のモデルに切り替えたときにも、あらかじめチェックされることはありません（`config.yaml` の `tool_gateway_declined_tools` に保存されます。あとでチェックを入れれば、その記録は消えます）。
 

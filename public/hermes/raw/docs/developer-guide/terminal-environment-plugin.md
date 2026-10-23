@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ターミナル環境プロバイダプラグイン"
 description: ""
 upstream_path: developer-guide/terminal-environment-plugin.md
-upstream_blob: a25924fd9c8d3f19f069386af8ea08baca8b442c
+upstream_blob: 324e5e0595ce5b0c97c7b933f12260169b3fbcae
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/terminal-environment-plugin
 ---
@@ -141,6 +141,31 @@ hermes config set terminal.backend acmebox
 
 `BaseEnvironment` を継承すると、ファイル同期やバックグラウンドプロセスまわりの共通処理を
 そのまま使えるのでおすすめですが、必須ではありません。
+
+## ファイルツールとホストのファイルシステム {#file-tools-and-the-host-filesystem}
+
+`read_file`、`write_file`、`patch`、`search_files` は環境の `execute()` を通るので、
+コマンドから見えるのとまったく同じファイルを見ます。
+唯一の例外は `uses_host_filesystem = True` を宣言している環境です（宣言しているのは組み込みの
+`LocalEnvironment` だけです）。その場合、ファイルツールはホストを直接読み書き・検索し、同梱の
+ripgrep を実行し、ホスト上のパスを stat し、大きすぎるツール出力をそのまま
+`~/.hermes/cache/spillover` に書き出し、LSP の診断を有効にします。
+
+コマンドを閉じ込めるために `LocalEnvironment` を継承するバックエンド（パスを隠したり、読み取り専用で
+マウントしたり、コマンドに専用の `$TMPDIR` を与えたりする bubblewrap などのホスト用サンドボックス）は
+`True` を受け継ぐので、これを無効にしなければなりません。無効にしないと、ファイルツールが
+サンドボックスを素通りします。
+
+```python
+from tools.environments.local import LocalEnvironment
+
+class AcmeJailEnvironment(LocalEnvironment):
+    uses_host_filesystem = False  # file tools run inside the jail, via execute()
+```
+
+`LocalEnvironment` を継承しないバックエンドでは設定しないでください。既定値は
+`False` です。Hermes v0.22.5 以前はこの属性を無視し、`LocalEnvironment` を継承したすべての
+クラスでホスト向けの高速経路を使うので、`requires_hermes` はそれより新しい版に固定してください。
 
 ## イメージ {#images}
 

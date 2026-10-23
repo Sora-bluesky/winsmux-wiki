@@ -2,7 +2,7 @@
 title: "Web 検索と本文抽出"
 description: "複数のバックエンドプロバイダで Web を検索し、ページ本文を抽出します。無料で自前運用できる SearXNG にも対応しています。"
 upstream_path: user-guide/features/web-search.md
-upstream_blob: adfb43dfc75317bb99d808fdb5b5cc9c21c22a5e
+upstream_blob: 2d52120f7385b1797565b50593965b0b50b1e4c8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-search
 ---
@@ -68,7 +68,7 @@ Web 系の認証情報が **まったくない** まっさらな環境でも、`
 
 ### 切り詰めが邪魔になるとき {#when-truncation-gets-in-the-way}
 
-抽出後の markdown ではなく生きた DOM そのものが必要なとき — たとえば JS を多用したページで抽出結果がほとんど空になる場合 — は、代わりに `browser_navigate` と `browser_snapshot` を使ってください。ブラウザツールは生きたアクセシビリティツリーを返します（巨大なページには、こちらはこちらでスナップショットの上限があります）。
+抽出後の markdown ではなく生きた DOM そのものが必要なとき — たとえば JS を多用したページで抽出結果がほとんど空になる場合 — は、代わりに `browser_exec` を使ってください。`new_tab(url)` と `wait_for_load()` でページを開き、`page_info()` か `js()` による DOM の抽出で中身を読みます。実際に描画された、生きたページを相手に動きます。
 
 ---
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コントリビュート"
 description: "Hermes Agent へのコントリビュート方法（開発環境のセットアップ、コードスタイル、PR の流れ）"
 upstream_path: developer-guide/contributing.md
-upstream_blob: f0253fe0a0f1cda50b54c19df0fc5799d32daf57
+upstream_blob: f8767accc25af8908b44f81778d013cc3934bc49
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/contributing
 ---
@@ -135,7 +135,7 @@ sweeper には PR を閉じてはいけない場面を示します（迷った�
    恒久的なフットプリントを残さず、どの MCP ホストからも再利用でき、組み込みの MCP クライアント経由で使えます。
 6. **新しいコアツール** — 根幹にかかわり、ほぼすべての利用者に広く役立ち、
    ターミナルとファイルや MCP サーバーでは届かない場合だけです（terminal、read_file、web_search、
-   browser_navigate）。
+   browser_exec）。
 
 ## よくあるコントリビュートの入口 {#common-contribution-paths}
 

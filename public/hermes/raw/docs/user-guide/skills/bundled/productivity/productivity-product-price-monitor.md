@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Product Price Monitor — 商品・航空券・出品の価格を見張り、目標に届いたら知らせる"
 description: "商品・航空券・出品の価格を見張り、目標に届いたら知らせる"
 upstream_path: user-guide/skills/bundled/productivity/productivity-product-price-monitor.md
-upstream_blob: 0c84cdf645f2fd3912cb49e25b7e86f285f952a3
+upstream_blob: 4c321ac9ba946c8fd5cf4035fa39ed4c258310ea
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-product-price-monitor
 ---
@@ -57,7 +57,7 @@ sources:
 
 ### 3. 実際の値を 1 回取って基準にし、そのうえで予定を組む {#3-establish-a-live-baseline-then-schedule}
 
-`web_extract` か `browser_navigate` で範囲を絞って実際の値を取り、取得した時刻・掲載価格・手数料や税・在庫・条件を記録します。その場での取得が一度成功するまでは、予定を組まないでください。見張りの取り決め（品物、条件、基準にした観測）を `~/.hermes/price-watches/<watch-slug>.json` の状態ファイルに書いてから、ジョブを作ります:
+`web_extract` か `browser_exec` で範囲を絞って実際の値を取り、取得した時刻・掲載価格・手数料や税・在庫・条件を記録します。その場での取得が一度成功するまでは、予定を組まないでください。見張りの取り決め（品物、条件、基準にした観測）を `~/.hermes/price-watches/<watch-slug>.json` の状態ファイルに書いてから、ジョブを作ります:
 
 ```
 cronjob(action="create",

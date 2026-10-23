@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Lbo Model — IRR / MOIC 付きの LBO ワークブックを Excel で作る"
 description: "IRR / MOIC 付きの LBO ワークブックを Excel で作る"
 upstream_path: user-guide/skills/optional/finance/finance-lbo-model.md
-upstream_blob: f5e9ed08ccaebbd5a4db0693b8adbf438c3c5270
+upstream_blob: cd16a4634813f25d6ccfb1cb600834da0e18ee54
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-lbo-model
 ---
@@ -301,7 +301,7 @@ python /path/to/excel-author/scripts/recalc.py model.xlsx
 - **設定していない場合**は、次で代替します:
   - 米国の開示資料は `web_search` / `web_extract` で SEC EDGAR（`https://www.sec.gov/cgi-bin/browse-edgar`）を参照します
   - プレスリリースや決算資料は企業の IR ページを参照します
-  - 対話型のデータポータルには `browser_navigate` を使います
+  - 対話型のデータポータルには `browser_exec` を使います
   - ユーザーから提供されたデータ（文脈に見当たらないときは、はっきり尋ねます）
 - **数字を作ってはいけません。** 倍率、取引事例、開示上の数値の出どころを確かめられない場合は、そのセルを `[UNSOURCED]` と印を付けてユーザーに伝えます。
 

@@ -2,7 +2,7 @@
 title: "ツールとツールセット"
 description: "Hermes Agent のツールの全体像 — 何が使えるか、ツールセットの仕組み、ターミナルの実行先"
 upstream_path: user-guide/features/tools.md
-upstream_blob: f3bb93f4c8219b262093eb6a5754dad6292998bf
+upstream_blob: 9059cffeefc17658429fe2e7dbdaf0f5b0f7b549
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tools
 ---
@@ -30,7 +30,7 @@ Hermes には、Web の検索、ブラウザの自動操作、ターミナルで
 | **Web** | `web_search`、`web_extract` | Web を検索し、ページの中身を取り出します。 |
 | **X の検索** | `x_search` | xAI の組み込みの `x_search` という Responses のツールを通して、X（Twitter）の投稿とスレッドを検索します — xAI の資格情報（SuperGrok の OAuth か `XAI_API_KEY`）が要ります。既定では切れていて、`hermes tools` → 🐦 X (Twitter) Search から入れます。 |
 | **ターミナルとファイル** | `terminal`、`process`、`read_file`、`patch` | コマンドを実行し、ファイルを扱います。 |
-| **ブラウザ** | `browser_navigate`、`browser_snapshot`、`browser_vision` | 文字と視覚の両方に対応した、対話的なブラウザの自動操作です。 |
+| **ブラウザ** | `browser_exec`、`browser_cdp`、`browser_dialog`、`browser_vault` | ブラウザの自動操作です。`browser_exec` は CDP を通じて Python で Chromium を動かします（スクリーンショットも撮れます）。Camofox のブラウザは、カタログにある別のプラグインです（`hermes plugins install camofox`）。 |
 | **メディア** | `vision_analyze`、`image_generate`、`text_to_speech` | 複数の形式にまたがる分析と生成です。 |
 | **エージェントの采配** | `todo`、`clarify`、`execute_code`、`delegate_task` | 計画立て、確認、コードの実行、子エージェントへの委任です。 |
 | **記憶と思い出し** | `memory`、`session_search` | ずっと残る記憶と、セッションの検索です。 |

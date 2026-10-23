@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ツールの実行基盤"
 description: "ツールの登録簿、ツールセット、振り分け、ターミナル環境の動き"
 upstream_path: developer-guide/tools-runtime.md
-upstream_blob: 606fd221c9890dffd8a1990cd2761c8af58ee93b
+upstream_blob: 54da8906603bd0904cd2d087bfe00e0439833808
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime
 ---
@@ -78,7 +78,7 @@ def discover_builtin_tools(tools_dir=None):
 
 - **API キーがあるか** — ウェブ検索なら `lambda: bool(os.environ.get("SERP_API_KEY"))` など
 - **サービスが動いているか** — Honcho のサーバーが設定されているかを確かめる、など
-- **実行ファイルが入っているか** — ブラウザ操作のツール向けに `playwright` があるかを確かめる、など
+- **依存パッケージが入っているか** — `browser_exec` 向けに `browser-harness` を import できるかを確かめる、など
 
 `registry.get_definitions()` がモデルに渡すスキーマの一覧を組み立てるとき、各ツールの `check_fn()` を実行します。
 
@@ -119,7 +119,7 @@ if entry.check_fn:
 
 4. **登録簿での絞り込み** — 解決したツール名の集合が `registry.get_definitions()` に渡され、そこで `check_fn` による絞り込みが行われ、OpenAI 形式のスキーマが返ります。
 
-5. **スキーマの動的な書き換え** — 絞り込みのあと、`execute_code` と `browser_navigate` のスキーマが調整され、実際に絞り込みを通過したツールだけを指すようになります（使えないツールをモデルが思い込みで呼ぶのを防ぎます）。
+5. **スキーマの動的な書き換え** — 絞り込みのあと、`execute_code`、`browser_cdp`、`delegate_task` などのスキーマが調整され、実際に絞り込みを通過したツールだけを指すようになります（使えないツールをモデルが思い込みで呼ぶのを防ぎます）。
 
 ### 昔のツールセット名 {#legacy-toolset-names}
 

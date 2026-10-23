@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "3 Statement Model — Excel で IS/BS/CF が連動する財務ブックを作る"
 description: "Excel で IS/BS/CF が連動する財務ブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-3-statement-model.md
-upstream_blob: 38202b5d538fe640641461595f9062bcdd17652d
+upstream_blob: b9432601e9a11e9d748ab720f44a7fe78d011890
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-3-statement-model
 ---
@@ -443,7 +443,7 @@ Excel で反復計算を有効にします: ファイル → オプション →
 - **そうでなければ**、次の順で代替します。
   - 米国の提出書類は `web_search` / `web_extract` で SEC EDGAR（`https://www.sec.gov/cgi-bin/browse-edgar`）を当たります
   - プレスリリースや決算資料は企業の IR ページを見ます
-  - 対話型のデータポータルには `browser_navigate` を使います
+  - 対話型のデータポータルには `browser_exec` を使います
   - 利用者から提供されたデータを使います（文脈にない場合は、はっきり尋ねてください）
 - **決して作り話をしないでください**。倍率、過去事例、提出書類の数値の出所を示せないときは、そのセルを `[UNSOURCED]` と印を付けて利用者に伝えます。
 

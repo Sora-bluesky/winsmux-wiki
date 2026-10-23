@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Har Derived Api Client — サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす"
 description: "サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす"
 upstream_path: user-guide/skills/optional/web-development/web-development-har-derived-api-client.md
-upstream_blob: c800c5136f0f07976884f5b4d8646354dd6cd31c
+upstream_blob: f8c24aa8fef908a42db12f9e0bfb781ae2e0d8e7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client
 ---
@@ -44,8 +44,8 @@ Cookie をそのまま持ち越すのであって、偽造するのではあり�
 要りますが、割り出しは標準ライブラリーだけで、再現には `requests` か `httpx`
 （あるいは `curl`）があれば足ります。
 
-**Hermes のブラウザーの経路すべて**に対応します。既定のローカルの
-`browser_navigate` はもちろん、クラウドやリモートの各種（Browserbase、
+**Hermes のブラウザーの経路すべて**に対応します。`browser_exec` が操作する既定のローカルの
+Chromium はもちろん、クラウドやリモートの各種（Browserbase、
 Browser-Use、Firecrawl）、そして `/browser connect` でつなぐ CDP の窓口も含みます。
 記録用のスクリプトが 2 本あるのは、自分で起動したブラウザーと、CDP でつないだ
 ブラウザーとで HAR の取り方が違うからです（「実行のしかた」を参照）。
@@ -54,7 +54,7 @@ Browser-Use、Firecrawl）、そして `/browser connect` でつなぐ CDP の�
 
 - 「&lt;website> 用の CLI やクライアントを作って」— クリックを自動化するのではなく、API を割り出します。
 - 「このサイトに公開 API はないけれど、ページは明らかに JSON を取ってきている」
-- 同じ問い合わせで `browser_navigate` を何度も回そうとしているとき。手を止めて、窓口を一度だけ割り出してください。
+- 同じ問い合わせで `browser_exec` のページ移動を何度も回そうとしているとき。手を止めて、窓口を一度だけ割り出してください。
 - 入力補完・検索・フィード・購入手続きの XHR を読み解きたいとき。
 - クラウド（Browserbase / Browser-Use / Firecrawl）や `/browser connect` でセッションを記録済みで、ブラウザーを借り直さずに API がほしいとき。
 
@@ -76,8 +76,7 @@ Browser-Use、Firecrawl）、そして `/browser connect` でつなぐ CDP の�
 
 | ブラウザーの経路 | Hermes からの届き方 | 記録に使うもの |
 |---|---|---|
-| ローカルの `browser_navigate`（既定。agent-browser/Playwright） | ローカルで起動する | `har_capture.py` |
-| Camofox（`CAMOFOX_URL` を設定） | ローカルの REST/CDP | CDP を公開していれば `har_capture_cdp.py`、なければ自分で操作します |
+| ローカルの Chromium（`browser_exec` の既定のブラウザー） | ローカルで起動する | `har_capture.py` |
 | Browserbase / Browser-Use / Firecrawl（クラウド） | **CDP**（`cdpUrl`） | `har_capture_cdp.py` |
 | `/browser connect <url>` / `BROWSER_CDP_URL` | **CDP** | `har_capture_cdp.py` |
 
@@ -117,7 +116,7 @@ python3 scripts/har_to_client.py out.har --host SITE --max-body 400
 har_capture.py <url> <out.har> [--wait S] [--headed] [--action SPEC ...]
   action SPEC:  fill:SELECTOR:TEXT | press:SELECTOR:KEY | click:SELECTOR
                 goto:URL | sleep:SECONDS      (run in order after page load)
-  use when Hermes LAUNCHED the browser (local browser_navigate default)
+  use when Hermes LAUNCHED the browser (local browser_exec default)
 
 har_capture_cdp.py <cdp_url> <out.har> [--goto URL] [--wait S] [--action SPEC ...]
   same action SPEC; attaches to an existing CDP browser and does NOT close it
@@ -133,7 +132,7 @@ har_to_client.py <in.har> [--host SUBSTR] [--include-static] [--max-body N]
 ## 手順 {#procedure}
 
 0. **経路に合わせて記録用のスクリプトを選びます**（「実行のしかた」の表を参照）。ローカルで起動したなら `har_capture.py`、CDP で届いているなら `har_capture_cdp.py` です。Hermes では、クラウドやリモートを使っているときに `/browser connect` が CDP の窓口を教えてくれます。
-1. **操作を見つけます。** `browser_navigate`（または `--headed` を付けた記録）でサイトを開き、どのセレクターに入力・クリックすればよいかを確かめ、開発者ツールのネットワークで JSON の XHR が飛ぶことを確認します。
+1. **操作を見つけます。** `browser_exec`（`new_tab(url)` と `wait_for_load()`、または `--headed` を付けた記録）でサイトを開き、`js()` でどのセレクターに入力・クリックすればよいかを確かめ、JSON の XHR が飛ぶことを確認します: `js("performance.getEntriesByType('resource').filter(e => ['xmlhttprequest','fetch'].includes(e.initiatorType)).map(e => e.name)")`。
 2. **HAR を記録します。** `terminal` ツールから実行してください。目当ての通信に届くよう `--action` を並べます。入力欄を `fill` してから、遅らせて飛ぶ XHR に間に合うだけ `sleep` し、最後には必ず `--wait` を置いて、遅れて返ってくる応答も書き出させます。どちらの記録用スクリプトも応答の本文を埋め込むので、割り出したクライアントは本物のデータの形を見られます。
 3. **割り出します。** `har_to_client.py --host <domain>` を実行し、メソッド、URL とパスの型（数字や UUID の区間は `{id}` にまとめられます）、クエリーのパラメーター、リクエスト本文の JSON、そして `### Replay hints` の欄を読み取ります。
 4. **クライアントを書きます。** 同じメソッド・パス・クエリー・本文で、リクエストをそっくり再現します。サイトが実際に必要とするヘッダーを送ってください。少なくとも、再現の手がかりにある **User-Agent** はそのまま写します。Cookie や認証・トークンのヘッダーが挙がっていれば、それも一緒に送ります。
@@ -165,7 +164,7 @@ for p in r.json()["pages"]:
 - **`record_har_content="embed"` は HAR を大きくします。** 表示する量は `--max-body` で抑えてください。ファイル自体も、画像や動画の多いページでは大きくなります。
 - **窓口は移り変わります。** サイトは内部の API を予告なく変えます。クライアントが動かなくなったら、URL を手で直すのではなく、記録から割り出しまでの流れをもう一度回してください。
 - **記録用のスクリプトを間違えると、HAR が空になるか、そもそもできません。** クラウドや CDP の経路で `har_capture.py` を使っても何も記録されません（意図したものではなく、自分でローカルにブラウザーを立ち上げてしまうためです）。`har_capture_cdp.py` には窓口が要ります。Hermes では `/browser connect` か `BROWSER_CDP_URL` から取ってください。経路と記録用のスクリプトを合わせましょう（「実行のしかた」の表）。
-- **ヘッドレス Chrome の UA は目立ちます。** ローカルや agent-browser での記録では `HeadlessChrome/...` という User-Agent になり、この「Headless」の文字を見ているサイトがあります。クラウド（Browserbase / Browser-Use）は本物のデスクトップ版 Chrome の UA を送るので、そこから割り出したクライアントのほうが素直に動きます。ブラウザーでは通ったのにヘッドレス由来のクライアントが 403 になるなら、窓口が変わったと決めつける前に、「Headless」入りの UA をふつうの Chrome の UA に差し替えてみてください。
+- **ヘッドレス Chrome の UA は目立ちます。** ローカルのヘッドレスでの記録では `HeadlessChrome/...` という User-Agent になり、この「Headless」の文字を見ているサイトがあります。クラウド（Browserbase / Browser-Use）は本物のデスクトップ版 Chrome の UA を送るので、そこから割り出したクライアントのほうが素直に動きます。ブラウザーでは通ったのにヘッドレス由来のクライアントが 403 になるなら、窓口が変わったと決めつける前に、「Headless」入りの UA をふつうの Chrome の UA に差し替えてみてください。
 - **CDP での記録はブラウザーを閉じません。** `har_capture_cdp.py` は自分の持ち物でないブラウザーにつなぎ、そのまま動かし続けます。Hermes が面倒を見ているクラウドやリモートのセッションでは、これが正しい振る舞いです。閉じる処理を足さず、持ち主側に片づけさせてください。
 
 ## 検証 {#verification}

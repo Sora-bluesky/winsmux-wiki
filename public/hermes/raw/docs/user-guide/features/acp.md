@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ACP ホスト連携"
 description: "ACP に対応したエディタや共同作業ツールの中で Hermes Agent を使う"
 upstream_path: user-guide/features/acp.md
-upstream_blob: 4c235539e838d7d5d219d0c84d61e79fa43616af
+upstream_blob: 8bcb68b08a2985b03dda091a0b1ce1f7e573cd5a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/acp
 ---
@@ -119,8 +119,8 @@ hermes acp --check
 
 ### ブラウザ系ツール（任意） {#browser-tools-optional}
 
-ブラウザ系のツール（`browser_navigate`、`browser_click` など）は npm パッケージの
-`agent-browser` と Chromium に依存していて、Python のパッケージには含まれていません。
+ブラウザ系のツール（`browser_exec` と、CDP 系のツール `browser_cdp`、
+`browser_dialog`、`browser_vault`）には手元の Chromium が要りますが、これは Python のパッケージには含まれていません。
 次のコマンドで入れてください。
 
 ```bash
@@ -132,9 +132,8 @@ hermes acp --setup-browser --yes     # accept the download non-interactively
 
 このコマンドが行うことは次のとおりです。
 
-- Node.js 26 が無ければ `~/.hermes/node/` に入れる
-- そのディレクトリを指定して `npm install -g agent-browser @askjo/camofox-browser` を実行する（`npm` の `--prefix` が Hermes 管理下の書き込み可能な Node を指すため、管理者権限は要りません）
-- Playwright の Chromium を入れる。システムに Chrome や Chromium が見つかればそれを使う
+- Hermes が固定したバージョンの Chromium（`chromium` パッケージ）をパッケージマネージャーで入れる。Node.js や npm は使わない
+- `browser_exec` が初めてブラウザを必要としたときに、Hermes がその Chromium を自分で起動する
 
 この処理は何度実行しても安全です。2 回目以降は済んでいる部分を飛ばすので短時間で終わります。
 

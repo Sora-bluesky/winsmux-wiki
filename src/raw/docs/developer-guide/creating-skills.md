@@ -2,7 +2,7 @@
 title: "スキルを作る"
 description: "Hermes Agent 向けのスキルの作り方 — SKILL.md の書式、指針、公開まで"
 upstream_path: developer-guide/creating-skills.md
-upstream_blob: 2b8edca03db2e960fff45aad66e22b0eae89014e
+upstream_blob: 8e2f55063029940a061efeaee5d6bb08dc5906b9
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills
 ---
@@ -65,7 +65,7 @@ metadata:
     requires_toolsets: [web]            # Optional — only show when these toolsets are active
     requires_tools: [web_search]        # Optional — only show when these tools are available
     fallback_for_toolsets: [browser]    # Optional — hide when these toolsets are active
-    fallback_for_tools: [browser_navigate]  # Optional — hide when these tools exist
+    fallback_for_tools: [browser_exec]  # Optional — hide when these tools exist
     config:                              # Optional — config.yaml settings the skill needs
       - key: my.setting
         description: "What this setting controls"
@@ -125,7 +125,7 @@ metadata:
     requires_toolsets: [web]           # Hide if the web toolset is NOT active
     requires_tools: [web_search]       # Hide if web_search tool is NOT available
     fallback_for_toolsets: [browser]   # Hide if the browser toolset IS active
-    fallback_for_tools: [browser_navigate]  # Hide if browser_navigate IS available
+    fallback_for_tools: [browser_exec]  # Hide if browser_exec IS available
 ```
 
 | 項目 | 動き |
