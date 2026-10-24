@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 620f9a285d0e3112a4b2ea01be766fb403fb54e4
+upstream_blob: 42ce5c71bad6397523cafbd36287340a9d3a8bdf
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -248,6 +248,7 @@ interface Contribution {
 | モデルメニューの行 | `MODEL_MENU_ROW_AREA` | `data: ModelMenuRowContribution` — モデルごとに、先頭のアイコンと末尾のバッジを付ける |
 | Kanban のカードのバッジ | `KANBAN_CARD_AREAS.badges` | `data: KanbanCardBadgeContribution` — カードごとの短い文字ラベル。描くのはボード側 |
 | 外観の設定 | `APPEARANCE_AREAS.extra` | `render` — Settings → Appearance の末尾に足す操作 |
+| ツールのメディア | `TOOL_MEDIA_RENDERER_AREA`（`'transcript.toolMedia'`） | `data: { tools, render }` — 自分のパッケージのツールが作った `MEDIA:` のファイルを描く（[ツールのメディアの描き手](#tool-media-renderers)） |
 | プラグインの設定ページ | `SETTINGS_PLUGINS_AREA`（`'settings.plugins'`） | `ctx.registerSettingsPage({ id, title, render, icon?, order?, children? })` を使います — Settings → Plugins の下に、サブページ付きの自分専用の項目を作ります |
 
 ### ペイン {#panes}
@@ -1051,10 +1052,30 @@ ctx.register({
   area: TRANSCRIPT_DIRECTIVE_AREA,
   data: {
     name: 'task', // the model writes ::task{id="BB-12"}
-    render: ({ attrs, streaming }) => jsx(TaskCard, { taskId: attrs.id, streaming })
+    render: ({ attrs, sessionId, streaming }) => jsx(TaskCard, { taskId: attrs.id, sessionId, streaming })
   }
 })
 ```
+
+`render` には `{ attrs, source, streaming, sessionId }` が渡されます。`sessionId` は、
+そのカードを表示している会話の記録がどのチャットのものかを示します（保存済みの ID、なければ実行時の ID。
+そのチャットにまだセッションがないあいだは `null`）。これを `host.composer` の操作に渡すと、
+隣に開いた別のチャットが入力欄を握っていても、カードの操作は**その**チャットに届きます。
+
+```javascript
+function TaskCard({ taskId, sessionId }) {
+  const next = () => {
+    // Older hosts don't pass sessionId (undefined): fall back to the active
+    // composer, which is what `null` addresses.
+    const sent = host.composer.submit(sessionId ?? null, `Continue task ${taskId}`)
+    if (!sent) host.notify({ kind: 'warning', message: 'Open that chat to continue' })
+  }
+  return jsx('button', { onClick: next, children: 'Next' })
+}
+```
+
+宛先付きの操作は、失敗したら何もしない側に倒れます。カードのチャットに見えている入力欄がなければ、
+`submit` は `false` を返し、ほかの場所には何も送られません。
 
 この面を安全に保つために、ホストが守らせている決まりがあります。
 
@@ -1092,6 +1113,91 @@ ctx.register({
 `{ ok: false, error }` で解決します。`error` は `too_long`（`maxLength` 付き）、`throttled`（`retryAfterMs` 付き）、`invalid`、
 `undelivered`（受け取る入力欄が画面上になかった）のいずれかです。部品を「保存済み」と表示する前に、
 この結果を確かめてください。
+
+### ツールのメディアの描き手 — 自分のツールが作ったファイルを描く {#tool-media-renderers}
+
+まとめたパッケージ（エージェントのツールとデスクトップ側の半分）は、**自分のツール**が作ったメディアを
+Desktop がどう見せるかを決められます。アシスタントの返答が `MEDIA:` の行でファイルを届けると、
+Desktop は会話の記録をさかのぼり、そのパスを最初に結果に書いたツール呼び出しを探します。そのツールを持つプラグインが
+ツール名に対して描き手を登録していれば、組み込みのプレーヤーの代わりにあなたのコンポーネントが表示されます。
+
+```javascript
+
+export default {
+  id: 'sound-fx', // the desktop half of the `sound-fx` package
+  register(ctx) {
+    // Older Desktops don't export the area: keep your old path there.
+    if (typeof sdk.TOOL_MEDIA_RENDERER_AREA !== 'string') return
+
+    ctx.register({
+      id: 'sound-card',
+      area: sdk.TOOL_MEDIA_RENDERER_AREA,
+      data: {
+        tools: ['sound_fx_generate'], // a tool this package's plugin.yaml registers
+        render: props => jsx(SoundCard, props)
+      }
+    })
+  }
+}
+
+function SoundCard({ file, args, result, sessionId, fallback }) {
+  const [src, setSrc] = useState(null)
+  useEffect(() => {
+    let live = true
+    file.resolveUrl().then(url => live && setSrc(url), () => live && setSrc(''))
+    return () => { live = false }
+  }, [file])
+
+  if (file.kind !== 'audio' || src === '') return fallback // the built-in player
+  return jsxs('figure', {
+    children: [
+      jsx('figcaption', { children: args.prompt ?? file.name }),
+      src && jsx('audio', { controls: true, src })
+    ]
+  })
+}
+```
+
+`render` に渡されるもの:
+
+| Prop | 中身 |
+|------|------------|
+| `file` | `{ path, name, kind, mime, resolveUrl() }`。`path` は、`MEDIA:` の行に書かれたとおりの、**バックエンド側の**マシン上のパスです。自分で開かないでください。`resolveUrl()` は、ローカルでもリモートでも、このウィンドウが読み込める URL を返します。音声と動画には範囲指定で流す経路、それ以外には data URL（ホストのファイル読み込みの上限あり）で、会話を持つバックエンドから読みます。大きなファイル（3D モデルなど）は、自前の `plugin_api.py` の経路を `ctx.rest` と `path` で呼ぶほうが向いています。 |
+| `toolName`、`toolCallId` | ファイルを作った呼び出し。 |
+| `args`、`result` | その呼び出しの引数と結果（結果はツールが返したまま。オブジェクトか文字列）。開き直したチャットでは履歴から組み立て直すので、欄は用心して読んでください。`args` に表示用のキー（`context` やラベル）が入ることがあり、`result` は実行時には JSON の文字列だったものが、解析済みで届くことがあります。 |
+| `sessionId` | そのファイルを表示している会話のチャット（指示子の `sessionId` と同じ意味）、または `null`。 |
+| `fallback` | このファイル向けの組み込みのプレーヤー。自分で描かないものには、これ（または `null`）を返します。 |
+
+ホストが保証すること:
+
+- **持ち主の判定は出どころで決まり、ファイルの種類では決まりません。** 名乗りが認められるのは、
+  自分のパッケージのコードが登録したツールだけです。同じパッケージの `plugin.yaml` のプラグインが `ctx.register_tool` で登録した
+  ネイティブのツールか、持ち運べるパッケージが宣言した MCP サーバーのツールです（末尾の `*` は前方一致、例:
+  `mcp__meshy__*`）。バックエンドはパッケージごとに正確なツール名を知らせる
+  （`plugins.manage list` → `tools`。チャット自身のバックエンドとプロファイルから）ので、
+  コアのツール（`text_to_speech`）やほかのプラグインのツールへの名乗り、エージェント側の半分がない
+  単独のデスクトップのプラグインからの名乗りは、コンソールに警告を出して断られます。
+- **それ以外はすべて組み込みのプレーヤーのままです。** コアの音声の返答、ほかのツールのファイル、
+  利用者のアップロード、どのツールも作っていないパスがそうです。パス全体を結果に書いた最初の成功した
+  呼び出しが作り手なので、あとの `ls`、読み込み、ファイルを入力に取るプラグインのツールは数に入らず、
+  ファイルをその場で書き換えても別のツールの持ち物にはなりません。利用者が先に書いたパス（アップロードや、
+  プロンプトに打った出力先のパス）には作り手がいません。失敗した呼び出し（実行時の失敗、または
+  `error` / `success: false` を含む保存済みの結果）は何も作りません。
+- **失敗しても安全側に倒れます。** 例外を投げたり `null` を返したりする描き手、無効にされたプラグイン、
+  持ち主を知らせられない古いバックエンド、エージェント側の半分が読み込まれていないツールは、どれも
+  組み込みのプレーヤーに戻ります。まだつながっていない MCP サーバーは何も持っていません。名乗られたツールに
+  持ち主がいないあいだ、Desktop は間隔を広げながら上限付きで持ち主を読み直し、`reload.mcp` のあとや
+  プラグインの一覧が変わったときにも読み直すので、サーバーが立ち上がればカードが現れます。
+- **デスクトップ側の半分をパッケージと組み合わせるのは、このアプリだけです。**
+  `.hermes-package.json` の目印はインストーラーと整合の処理が書き込みます。デスクトップ専用のリポジトリに
+  同梱されたものは、インストールのときに捨てられます。
+- **ほかの画面は変わりません。** ツールは今までどおり素の `MEDIA:` の行を出し、
+  CLI、TUI、メッセージングのプラットフォームは、これまでどおりファイルを届けます。
+
+この領域ができる前は、独自のカードを出すには、プラグインがモデルに自前の `::directive` を
+書かせる必要がありました。そのためにはスキルの指示が要り、Desktop 以外の利用者には生の指示子の行が
+残っていました。描き手を使えば、ツールはどの画面でも通じる普通の `MEDIA:` のタグを返し、
+Desktop だけがそれを格上げします。
 
 ### マウントに紐づく装飾（`Contribute`） {#mount-scoped-chrome-contribute}
 
@@ -1230,6 +1336,8 @@ ctx.os.notify({ title, body?, silent?, icon?, activate?, onActivate?, actions? }
 ctx.os.openExternal(url)                   // OS default handler (browser, mail, spotify:) → Promise<boolean>
 ctx.os.revealPath(path)                    // reveal in Finder / Explorer → Promise<boolean>
 ctx.os.writeClipboard(text)                // system clipboard → Promise<boolean>
+ctx.files.requestFolder()                  // the app's folder picker → { ok, folder: { id, name, path } | null }
+ctx.files.readText(folder, 'notes/a.md')   // folder = 'data' or a granted folder's id; path is relative
 ctx.pet.say(text, { id?, tone?, ttlMs? })   // line in the core pet's speech bubble → disposer
 ctx.pet.clear(id?)                         // drop one line (or all of yours)
 ctx.pet.visible                            // ReadableAtom<boolean> — is a pet on screen?
@@ -1411,6 +1519,65 @@ URL は OS のディープリンクとしても働きます）。操作のボタ
 ほかの窓口（`openExternal`、`revealPath`、`writeClipboard`）は、その機能が使えないとき
 （古いデスクトップの外殻、素のブラウザー）に例外を投げるのではなく `false` を返します。橋渡しの
 有無を探るのではなく、この戻り値で分岐してください。
+
+### ファイル — `ctx.files` {#plugin-files}
+
+`ctx.files` は、Desktop が動いているコンピューターのファイルにプラグインが触るための、唯一の
+認められた方法です。プラグインが届くフォルダーは、ちょうど 2 種類です。
+
+- **自分のデータのフォルダー**（ハンドルは `'data'`）。そのプラグイン専用で、いつでも使え、
+  確認も出ません。`ctx.storage` には大きすぎるキャッシュ、索引、書き出しに使います。
+- **利用者が許可したフォルダー**。`ctx.files.requestFolder()` はアプリ自身のフォルダー選択画面を開きます
+  （題にはプラグインの名前が入り、文言は変えられません）。許可は再起動をまたいでプラグインごとに覚えられ、
+  **Capabilities → Plugins → Folder access** のそのプラグインの下に並び、利用者はいつでもそこで
+  取り消せます。プラグインをアンインストールすると、その許可も消えます。
+
+どの呼び出しも、フォルダーのハンドルと、**そのフォルダーからの相対**パスを指定します。アプリの
+メインプロセスが呼び出しを 1 つずつ確かめます。`..`、絶対パス、ドライブ文字、フォルダーの外を指す
+シンボリックリンクは、正規化されずに断られます。Hermes 自身のデータ（`config.yaml`、`.env`、
+認証情報、プロファイルのある Hermes のホーム、全プラグインのデータと許可の記録があるアプリのデータのフォルダー）
+には届きません。Hermes のデータを含むか、その中にあるフォルダー（書き方は問いません。バインドマウント、
+macOS の firmlink、WSL の共有、`\\localhost\C$` の共有も数に入ります）、`~/.ssh` のような鍵のフォルダー、
+`/proc` のようなカーネルのファイルシステム（どこにマウントされていても）は、そもそも許可できず、
+アプリが利用者に理由を伝えます。読み書きするのは普通のファイルだけです。パイプ、デバイス、ハードリンクのファイルは
+断られ、アプリの確認と開くあいだにリンクへ差し替えられたファイルは、たどらずに断られます。
+
+```ts
+// First run: ask once, remember the handle.
+let vault = (await ctx.files.folders())[0]
+if (!vault) {
+  const picked = await ctx.files.requestFolder()
+  if (!picked.ok || !picked.folder) return   // cancelled, refused, or an older app
+  vault = picked.folder
+}
+
+const listing = await ctx.files.list(vault.id, 'notes')        // { ok, entries: [{ name, path, isDirectory }], truncated }
+const note = await ctx.files.readText(vault.id, 'notes/a.md')  // { ok, text, size, mtimeMs }
+await ctx.files.writeText(vault.id, 'notes/b.md', '# B\n', { exclusive: true }) // refuses to replace a file
+await ctx.files.rename(vault.id, 'notes/b.md', 'c.md')         // same folder only
+await ctx.files.trash(vault.id, 'notes/c.md')                  // OS trash, recoverable
+await ctx.files.readDataUrl(vault.id, 'img/cover.png')         // { ok, url: 'data:image/png;base64,…' }
+await ctx.files.stat(vault.id, 'notes/a.md')                   // { ok, exists, isDirectory?, size?, mtimeMs? }
+await ctx.files.writeText('data', 'index.json', JSON.stringify(index))
+await ctx.files.release(vault.id)                              // give the folder back
+```
+
+どのメンバーも例外を投げません。`dataFolder` は文字列 `'data'` です。`folders()` は
+`{ id, name, path }` の配列で解決します（アプリに窓口がなければ空）。
+`release(id)` はフォルダーを返せたら `true`、それ以外は `false` で解決します。
+ほかのメンバーはすべて `{ ok: true, … }` か
+`{ ok: false, error, message }` で解決し、`error` は次のいずれかです。`invalid-path`、`outside-folder`、`protected`、
+`not-granted`（取り消された、またはほかのプラグインのフォルダー）、`folder-missing`、
+`folder-changed`（許可したフォルダーが移動・置き換えられた。もう一度頼んでください）、
+`not-found`、`exists`、`is-directory`、`not-a-directory`、`not-a-file`、
+`binary`、`too-large`、`sensitive-file`（`.env` や SSH の鍵などは、許可したフォルダーの中でも、
+OS が同じ名前とみなすどの書き方でも断られ、名前の変更もごみ箱への移動もできません）、
+`io-error`、`unavailable`（窓口のないアプリのビルド。`ctx.files?.…` で機能の有無を確かめてください）。
+上限は、文字の読み書きが 4 MiB まで、data URL が 16 MiB まで、一覧が 10,000 件までです。上限を超えた読み込みは
+切り詰められず、断られます。書き込むには親のフォルダーが存在している必要があります。
+
+パスは Desktop が動いているマシン上のもので、リモートのバックエンド上のものではありません。
+バックエンドのファイルを扱うには、プラグインの `ctx.rest` の経路を通してください。
 
 ### ペットの吹き出し — `ctx.pet` {#pet-bubble}
 
@@ -2104,6 +2271,9 @@ const tab = ctx.storage.get('lastTab', 'summary')
 ctx.storage.remove('lastTab')
 ```
 
+ファイル（保管庫、メモのフォルダー、書き出し）には [`ctx.files`](#plugin-files) を使います。
+自分のデータのフォルダーと、利用者が許可したフォルダーを扱えます。
+
 ## 同梱のプラグイン {#bundled-plugins}
 
 プラグインは、ツリー内の `apps/desktop/src/plugins/<id>/plugin.tsx` として配れます
@@ -2141,7 +2311,11 @@ ctx.storage.remove('lastTab')
 ありません。そのうえで、アプリの外にある利用者のデータに触る窓口には、さらに関門があります。
 `ctx.preview.executeJavaScript` には、宣言した機能と、利用者の生成元ごとの同意が要ります
 （[プレビューのページで動かすスクリプト](#preview-page-scripts)）。
-将来、遠隔の出どころへの窓口を作るなら、その前に本物の境界（iframe や worker、
+ファイルへの読み書きも同じ決まりに従います。カタログのプラグインは、生の `window.hermesDesktop` の
+ファイルの橋渡しではなく、[`ctx.files`](#plugin-files) を通して読み書きしてください。`ctx.files` は
+メインプロセスで強制されるので、それを使うプラグイン（や、そのプラグインが扱う信用できない文字列、
+たとえばモデルが出したメモの名前）は、利用者が許可したフォルダーの外に出られません。生の橋渡しには
+その制限がないので、カタログの審査では `ctx.files` を求めます。将来、遠隔の出どころへの窓口を作るなら、その前に本物の境界（iframe や worker、
 CSP、権限の制御）が必要です。この経路を信頼の境界として扱わないでください。
 
 ## つまずきやすいところ {#pitfalls}
@@ -2184,7 +2358,7 @@ CSP、権限の制御）が必要です。この経路を信頼の境界とし�
 | 分類 | 公開されるもの |
 |----------|---------|
 | ホスト | `host`（`.state.*`、`.settings`、`.notify`、`.notifyError`、`.navigate`、`.onEvent`、`.logs`、`.status`、`.restartGateway`、`.request`、`.composer`、`.spellcheck`、`.sessions`、`.skills`、`.toolsets`、`.profiles`、`.pluginDecisions`） |
-| プラグインの取り決め | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginOs`、`PluginPet`、`PetSayOptions`、`PetMessageTone`、`PluginAppActionId`、`PluginAppActionInfo`、`PluginRunActionResult`、`PLUGIN_APP_ACTIONS`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
+| プラグインの取り決め | `HermesPlugin`、`PluginContext`、`PluginContribution`、`PluginStorage`、`PluginFiles`、`PluginFolder`、`PluginFileEntry`、`PluginFilesResult`、`PluginOs`、`PluginPet`、`PetSayOptions`、`PetMessageTone`、`PluginAppActionId`、`PluginAppActionInfo`、`PluginRunActionResult`、`PLUGIN_APP_ACTIONS`、`PluginRestOptions`、`PluginNativeNotificationInput`、`PluginNotificationAction`、`HermesOpenTarget`、`Contribution` |
 | 領域の定数 | `PANES_AREA`、`ROUTES_AREA`、`SIDEBAR_NAV_AREA`、`STATUSBAR_AREAS`、`TITLEBAR_AREAS`、`WORKSPACE_PAGE_HEADER_AREA`、`PALETTE_AREA`、`KEYBINDS_AREA`、`THEMES_AREA`、`COMPOSER_AREAS`、`MODEL_MENU_ROW_AREA`、`KANBAN_CARD_AREAS`、`SESSION_ROW_AREAS`、`SIDEBAR_NAV_PREFS_AREA`、`APPEARANCE_AREAS`、`SETTINGS_PLUGINS_AREA` |
 | 領域ごとの中身 | `PluginSettingsPage`、`PluginSettingsSubpage`（と `pluginSettingsHref`）、`RouteContribution`、`SidebarNavContribution`、`StatusbarItem`、`TitlebarTool`、`PaletteContribution`、`KeybindContribution`、`ComposerMiddleware`、`ComposerAttachmentProvider`、`ComposerContextMenuProvider`（と `ComposerContextMenuItem`、`ComposerContextMenuContext`、`ComposerContextMenuAction`）、`SessionRowSlotContribution`、`KanbanCardBadgeContribution`（と `KanbanCard`、`KanbanCardBoard`、`KanbanCardBadge`、`KanbanCardBadgeTone`、`KANBAN_CARD_BADGE_HUES`、`KANBAN_CARD_BADGE_LIMITS`）、`SidebarNavPrefsContribution` |
 | React と状態 | `useValue`、`atom`、`computed`、`useQuery`、`useMutation`、`useQueryClient`、`queryClient`、`Contribute`、`WorkspacePageHeaderControl` |

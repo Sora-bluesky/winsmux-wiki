@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: b8a03dc55f5a437b296fada6e6fe38bc8b05602d
+upstream_blob: 754de7fe2d4639c7db96dd9633c9dd7a15dea42b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -906,6 +906,13 @@ Streamable HTTP: Server returned an error response (HTTP 400 from POST http://ho
 本文が HTML なら URL が MCP の接続先ではなくウェブページを指しています。`hermes logs --level debug` を
 使うと、つなぎにいくたびにどの接続先を使ったかまで出せます。
 
+### サーバーの応答が大きすぎる {#a-servers-response-is-too-large}
+
+Hermes は、1 つの HTTP 応答、またはストリームで届く応答の 1 つの SSE イベントにつき、10 MiB まで
+受け取ります。大きな `tools/list` のカタログや道具の結果（たとえばエディターのスクリーンショット）も収まります。
+古い SSE の転送方式（`transport: sse`）では、MCP SDK がイベントごとに 1 MiB までに制限していて、引き上げる
+方法はありません。そのサーバーが Streamable HTTP にも対応しているなら、項目から `transport: sse` を外してください。
+
 ### 道具が出てこない {#tools-not-appearing}
 
 考えられる原因です。
@@ -995,15 +1002,16 @@ mcp_servers:
 - 承認の確認画面に費用が表示されます。`Costs about 20 credits.` や `Costs 5-20 credits (per animation).` のように出て、そのチャットですでに使っている場合は `This chat has used about 40 credits on 'renders' (limit 100).` も添えられます。
 - Hermes はチャットごと・サーバーごとに累計を記録します。費用が設定されたツールの呼び出しのうち、承認して実行を始めたものすべてについて、宣言された数値（範囲なら上限の値）を足していきます。断られた呼び出しや止められた呼び出しは加算されません。サーバーが呼び出しを受け取る前に落ちた場合は加算されますが、これは早めに確認を求める側に倒すためです。累計はメモリ上にだけあり、1 つの会話のための予算です。サービス提供元の請求額ではありません。
 - コンテキストの圧縮や `/branch` で会話が新しいセッション ID に引き継がれても、累計はその会話についていきます。新しいチャットを始めると（CLI の `/new`、Desktop の新しいチャット）累計も新しくなります。メッセージングプラットフォームでは累計がチャットに属するので、そこで `/new` をしても累計は残ります。cron の実行はそれぞれ自分の累計を持ちます。Hermes を再起動すると、すべての累計がリセットされます。
-- `spend_limit` を設定すると、費用のある呼び出しでチャットの累計が上限を超えそうなときは、先に確認を求めます。ふだん確認を出さない `trust: full` のサーバーでも同じです。そのあと同じチャットで費用のある呼び出しをするたびに、また確認を求めます（「このセッションでは許可」を選んでも止まりません）。答えられる人がいない場面（cron ジョブ、`hermes chat -q`、承認者のいないゲートウェイ）では、呼び出しは実行されずに拒否され、モデルには再試行しないよう伝えられます。
+- `spend_limit` を設定すると、費用のある呼び出しでチャットの累計が上限を超えそうなときは、先に確認を求めます。ふだん確認を出さない `trust: full` のサーバーでも同じです。そのあと同じチャットで費用のある呼び出しをするたびに、また確認を求めます。このときの確認には Allow Once と Deny しか出ず、そのツールに以前 Session や Always と答えていても止まりません。答えられる人がいない場面（cron ジョブ、`hermes chat -q`、承認者のいないゲートウェイ）では、呼び出しは実行されずに拒否され、モデルには再試行しないよう伝えられます。
 - 上限に届くまでは、`trust: full` のサーバーは費用のあるツールも確認なしで実行します。`trust: untrusted` のサーバーでは、書き込みのできる呼び出しはもともとすべて確認を求めるので、その確認画面に費用が載るようになります。`readOnlyHint: true` が付いたツールは、予算の都合で必要にならない限り確認を出しません。
+- [YOLO](/hermes/docs/user-guide/security/#yolo-mode)（`/yolo`、`--yolo`）と `approvals.mode: off` は、`trust: untrusted` の確認を飛ばします（`/yolo` はそのチャット、`--yolo` はそのプロセス、`approvals.mode: off` はそのプロファイルが対象です）。ただし支出の上限は飛ばしません。上限より下なら費用のある呼び出しは確認なしで実行され、上限を超えそうな呼び出しは引き続き確認を求めます（`approvals.mode: off` の cron ジョブのように答えられる人がいない場面では拒否されます）。
 - `tool_costs`、`spend_limit`、`cost_unit` の書き方が正しくないと、そのサーバーは問題のキー名を示すエラーとともに読み込まれません。設定した予算が黙って無視されることはありません。サーバーが提供していないツール名を `tool_costs` に書いた場合（打ち間違いや、Hermes が表示に付ける `mcp_<server>_` という接頭辞をそのまま写した場合）は、接続時の警告でその名前が示されます。サーバー自身のツール名を使ってください。
 
 [持ち運べるプラグインパッケージ](/hermes/docs/developer-guide/plugins/#portable-agent-plugins-v1-packages) も、自分のサーバーについて同じ表を宣言できます。同じ名前の `mcp_servers` 項目を自分で足した場合（たとえば `trust: full` を設定するため）でも、自分の項目でそれらのキーを設定しない限り、パッケージ側の `tool_costs`、`spend_limit`、`cost_unit` がそのまま効きます。`spend_limit: 0` でパッケージの上限を無効にでき、`tool_costs: {}` でパッケージの費用設定を外せます。
 
 ## MCP の問いかけへの対応 {#mcp-elicitation-support}
 
-MCP サーバーは、道具を実行している途中で、決まった形の入力を利用者に尋ねられます（`elicitation/create` という手順。mcp の Python SDK 1.11.0 以降）。Hermes は**入力欄の形**の問いかけを、いつもの承認の画面に流します。CLI や TUI では対話的な問いかけとして、Telegram や Slack のようなゲートウェイでは承認のボタンとして出るので、セッションがどこにあってもあなたのところへ届きます。**URL の形**の問いかけ（サーバーが外部の URL に案内するもの）は、対応していないものとして断ります。
+MCP サーバーは、道具を実行している途中で、決まった形の入力を利用者に尋ねられます（`elicitation/create` という手順。mcp の Python SDK 1.11.0 以降）。Hermes は**入力欄の形**の問いかけを、いつもの承認の画面に流します。CLI や TUI では対話的な問いかけとして、Telegram や Slack のようなゲートウェイでは承認のボタンとして出るので、セッションがどこにあってもあなたのところへ届きます。それぞれの答えはその 1 回の問いかけだけに効くので、確認には Allow Once と Deny しか出ません。YOLO や `approvals.mode: off` が代わりに答えることはありません。サーバーは許可を求めているのではなく、利用者に質問しているからです。**URL の形**の問いかけ（サーバーが外部の URL に案内するもの）は、対応していないものとして断ります。
 
 問いかけはサーバーごとに**既定で有効**です。`elicitation` の欄で設定します。
 

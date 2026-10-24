@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 9caa4602aca1767670287933f06a0bac8ced709a
+upstream_blob: 1f66c5d4ad176121c0cf601788f15efc7da2ad8b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -3045,7 +3045,7 @@ delegation:
 
 **優先順位:** 設定の `delegation.base_url` → 設定の `delegation.provider` → 親のプロバイダー（継承）。設定の `delegation.model` → 親のモデル（継承）。`provider` を書かずに `model` だけを設定すると、親の認証情報はそのままで、モデル名だけが変わります（OpenRouter のように、同じプロバイダーの中でモデルを切り替えたいときに便利です）。
 
-**単発実行:** 1回で終わる `hermes chat -q` / `--oneshot` のセッションには、委任の結果を受け取るあとのターンも、学んだことを生かすあとのセッションもありません。そのため、使う機能を絞って動きます。`skill_manage` は提供されません（スキルは引き続き一覧に出ており、`skill_view` で読み込めます）。システムプロンプトのスキルの節は、作業の進め方に関するスキルではなく、分野の知識に関するスキルだけを読み込むよう求めます。さらに `oneshot_max_children` が、その実行で起動できるサブエージェントの合計数を制限します（既定は `2`、`0` なら無制限）。上限を超えると、`delegate_task` はツールのエラーを返し、エージェントに委任せず自分で作業を終えるよう伝えます。
+**単発実行:** 1回で終わる `hermes chat -q` / `--oneshot` のセッションには、委任の結果を受け取るあとのターンも、学んだことを生かすあとのセッションもありません。そのため、使う機能を絞って動きます。システムプロンプトのスキルの節は、作業の進め方に関するスキルではなく、分野の知識に関するスキルだけを読み込むよう求めます（`skill_manage` は引き続き使えるので、その実行でもスキルを書けます）。さらに `oneshot_max_children` が、その実行で起動できるサブエージェントの合計数を制限します（既定は `2`、`0` なら無制限）。上限を超えると、`delegate_task` はツールのエラーを返し、エージェントに委任せず自分で作業を終えるよう伝えます。
 
 **幅と深さ:** `max_concurrent_children` は、1回のバッチで並列に動かすサブエージェントの数の上限です（既定は `3`。最小は1で、最大はありません）。環境変数 `DELEGATION_MAX_CONCURRENT_CHILDREN` でも設定できます。モデルがこの上限より長い `tasks` 配列を渡すと、`delegate_task` は黙って切り詰めるのではなく、上限を説明するツールのエラーを返します。`max_spawn_depth` は委任のツリーの深さを決めます（1〜3の範囲に収められます）。既定の `1` では、委任は平らです。子は孫を起動できず、`role="orchestrator"` を渡しても、何も知らせずに `leaf` として扱われます。`2` に上げるとオーケストレーターの子が末端（leaf）の孫を起動でき、`3` にすると3階層のツリーになります。オーケストレーションを使うかどうかはエージェントが呼び出しごとに決め、使うときは `role="orchestrator"` を指定して明示的に有効にします。`orchestrator_enabled: false` にすると、それに関係なく、すべての子が末端に戻されます。費用は掛け算で増えます。`max_spawn_depth: 3` と `max_concurrent_children: 3` の組み合わせなら、ツリーは 3×3×3 = 27 の末端エージェントが同時に動くところまで広がります。使い方のパターンは [サブエージェントへの委任 → 深さの上限と入れ子の取りまとめ](/hermes/docs/user-guide/features/delegation/#depth-limit-and-nested-orchestration) を参照してください。
 

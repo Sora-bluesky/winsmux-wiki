@@ -2,7 +2,7 @@
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: 83f672120e2f647c093deaad04755e4748ee736e
+upstream_blob: 3bde00ee5eeebdf1a6aa8133d9e82c7d9c69cf79
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---
@@ -387,7 +387,7 @@ auxiliary:
     enabled: true              # false = skip automatic post-turn forks
 ```
 
-`enabled: false` にすると、ターンのあとの自動の分身は生まれなくなります。手で呼ぶ `/refine` はそのまま動きます。
+`enabled: false` にすると、ターンのあとの自動の分身は生まれなくなります。手で呼ぶ `/refine` は、focus のテキストを付けても付けなくても、そのまま動きます。
 
 ### 見直しの費用に上限を設ける（`max_input_tokens`） {#capping-review-cost-maxinputtokens}
 

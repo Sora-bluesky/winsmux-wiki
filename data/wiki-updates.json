@@ -1,6 +1,333 @@
 {
-  "generatedAt": "2026-10-24",
+  "generatedAt": "2026-10-25",
   "entries": [
+    {
+      "date": "2026-10-24",
+      "sha": "b6b56a8",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/architecture",
+          "title": "アーキテクチャ",
+          "url": "/hermes/docs/developer-guide/architecture/"
+        },
+        {
+          "id": "developer-guide/browser-provider-plugin",
+          "title": "ブラウザプロバイダプラグイン",
+          "url": "/hermes/docs/developer-guide/browser-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/browser-supervisor",
+          "title": "ブラウザの CDP スーパーバイザ",
+          "url": "/hermes/docs/developer-guide/browser-supervisor/"
+        },
+        {
+          "id": "developer-guide/cli-internals",
+          "title": "CLI の内部構造",
+          "url": "/hermes/docs/developer-guide/cli-internals/"
+        },
+        {
+          "id": "developer-guide/codebase-ownership",
+          "title": "コードベース所有マップ",
+          "url": "/hermes/docs/developer-guide/codebase-ownership/"
+        },
+        {
+          "id": "developer-guide/contributing",
+          "title": "コントリビュート",
+          "url": "/hermes/docs/developer-guide/contributing/"
+        },
+        {
+          "id": "developer-guide/creating-skills",
+          "title": "スキルを作る",
+          "url": "/hermes/docs/developer-guide/creating-skills/"
+        },
+        {
+          "id": "developer-guide/delegation-provider-plugin",
+          "title": "委任プロバイダーのプラグイン",
+          "url": "/hermes/docs/developer-guide/delegation-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/gateway-internals",
+          "title": "ゲートウェイの内部",
+          "url": "/hermes/docs/developer-guide/gateway-internals/"
+        },
+        {
+          "id": "developer-guide/plugins/catalog-submission",
+          "title": "プラグインカタログへの登録申請",
+          "url": "/hermes/docs/developer-guide/plugins/catalog-submission/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/programmatic-integration",
+          "title": "外部プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "developer-guide/terminal-environment-plugin",
+          "title": "ターミナル環境プロバイダプラグイン",
+          "url": "/hermes/docs/developer-guide/terminal-environment-plugin/"
+        },
+        {
+          "id": "developer-guide/tools-runtime",
+          "title": "ツールの実行基盤",
+          "url": "/hermes/docs/developer-guide/tools-runtime/"
+        },
+        {
+          "id": "getting-started/installation",
+          "title": "インストール",
+          "url": "/hermes/docs/getting-started/installation/"
+        },
+        {
+          "id": "getting-started/nix-setup",
+          "title": "Nix と NixOS のセットアップ",
+          "url": "/hermes/docs/getting-started/nix-setup/"
+        },
+        {
+          "id": "getting-started/termux",
+          "title": "Android / Termux",
+          "url": "/hermes/docs/getting-started/termux/"
+        },
+        {
+          "id": "integrations",
+          "title": "外部サービス連携",
+          "url": "/hermes/docs/integrations/"
+        },
+        {
+          "id": "integrations/nous-portal",
+          "title": "Nous Portal",
+          "url": "/hermes/docs/integrations/nous-portal/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "reference/tools-reference",
+          "title": "組み込みツール一覧",
+          "url": "/hermes/docs/reference/tools-reference/"
+        },
+        {
+          "id": "reference/toolsets-reference",
+          "title": "ツールセット一覧",
+          "url": "/hermes/docs/reference/toolsets-reference/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/docker",
+          "title": "Hermes の Docker 設定",
+          "url": "/hermes/docs/user-guide/docker/"
+        },
+        {
+          "id": "user-guide/features/acp",
+          "title": "ACP ホスト連携",
+          "url": "/hermes/docs/user-guide/features/acp/"
+        },
+        {
+          "id": "user-guide/features/api-server",
+          "title": "API サーバー",
+          "url": "/hermes/docs/user-guide/features/api-server/"
+        },
+        {
+          "id": "user-guide/features/bot-screen",
+          "title": "ボットの画面",
+          "url": "/hermes/docs/user-guide/features/bot-screen/"
+        },
+        {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザの自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/features/codex-app-server-runtime",
+          "title": "Codex App-Server ランタイム（任意）",
+          "url": "/hermes/docs/user-guide/features/codex-app-server-runtime/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/kanban",
+          "title": "カンバン（マルチエージェント盤）",
+          "url": "/hermes/docs/user-guide/features/kanban/"
+        },
+        {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
+          "id": "user-guide/features/tool-gateway",
+          "title": "Nous Tool Gateway",
+          "url": "/hermes/docs/user-guide/features/tool-gateway/"
+        },
+        {
+          "id": "user-guide/features/tool-search",
+          "title": "ツール検索",
+          "url": "/hermes/docs/user-guide/features/tool-search/"
+        },
+        {
+          "id": "user-guide/features/tools",
+          "title": "ツールとツールセット",
+          "url": "/hermes/docs/user-guide/features/tools/"
+        },
+        {
+          "id": "user-guide/features/web-search",
+          "title": "Web 検索と本文抽出",
+          "url": "/hermes/docs/user-guide/features/web-search/"
+        },
+        {
+          "id": "user-guide/import-from-other-agents",
+          "title": "他のエージェントから取り込む",
+          "url": "/hermes/docs/user-guide/import-from-other-agents/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use",
+          "title": "Computer Use — デスクトップを裏側から操作し、必要なときだけ前面に出す",
+          "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use/"
+        },
+        {
+          "id": "user-guide/skills/bundled/creative/creative-popular-web-designs",
+          "title": "Popular Web Designs — 実在する 54 のデザインシステム（Stripe、Linear、Vercel）を HTML/CSS で",
+          "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-airtable",
+          "title": "Airtable — curl で使う Airtable REST API",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-airtable/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-product-price-monitor",
+          "title": "Product Price Monitor — 商品・航空券・出品の価格を見張り、目標に届いたら知らせる",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-product-price-monitor/"
+        },
+        {
+          "id": "user-guide/skills/bundled/research/research-grounded-citations",
+          "title": "Grounded Citations — 回答や文書を、出典を示せる形に裏付ける",
+          "url": "/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/"
+        },
+        {
+          "id": "user-guide/skills/bundled/software-development/software-development-dogfood",
+          "title": "Dogfood — Web アプリを探索的にテストする: バグ、証拠、報告書",
+          "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-dogfood/"
+        },
+        {
+          "id": "user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring",
+          "title": "Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成",
+          "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-anatomy",
+          "title": "Anatomy — 考えを、操作できるアイソメトリックの機械の図で説明する",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-anatomy/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-sketch",
+          "title": "Sketch — 使い捨ての HTML モックアップ。見比べるための案を 2〜3 通り作る",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-sketch/"
+        },
+        {
+          "id": "user-guide/skills/optional/finance/finance-3-statement-model",
+          "title": "3 Statement Model — Excel で IS/BS/CF が連動する財務ブックを作る",
+          "url": "/hermes/docs/user-guide/skills/optional/finance/finance-3-statement-model/"
+        },
+        {
+          "id": "user-guide/skills/optional/finance/finance-comps-analysis",
+          "title": "Comps Analysis — Excel で類似企業比較の評価ブックを作る",
+          "url": "/hermes/docs/user-guide/skills/optional/finance/finance-comps-analysis/"
+        },
+        {
+          "id": "user-guide/skills/optional/finance/finance-dcf-model",
+          "title": "Dcf Model — Excel で DCF 法の企業価値評価ワークブックを作る",
+          "url": "/hermes/docs/user-guide/skills/optional/finance/finance-dcf-model/"
+        },
+        {
+          "id": "user-guide/skills/optional/finance/finance-lbo-model",
+          "title": "Lbo Model — IRR / MOIC 付きの LBO ワークブックを Excel で作る",
+          "url": "/hermes/docs/user-guide/skills/optional/finance/finance-lbo-model/"
+        },
+        {
+          "id": "user-guide/skills/optional/finance/finance-merger-model",
+          "title": "Merger Model — M&A の EPS 増加・希薄化ワークブックを Excel で作る",
+          "url": "/hermes/docs/user-guide/skills/optional/finance/finance-merger-model/"
+        },
+        {
+          "id": "user-guide/skills/optional/productivity/productivity-live-dashboard",
+          "title": "Live Dashboard — 生の情報源から、自動で更新されるダッシュボードを作る",
+          "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/"
+        },
+        {
+          "id": "user-guide/skills/optional/security/security-unbroker",
+          "title": "Unbroker — データブローカーサイトから自分の情報を自動で削除する",
+          "url": "/hermes/docs/user-guide/skills/optional/security/security-unbroker/"
+        },
+        {
+          "id": "user-guide/skills/optional/security/security-web-pentest",
+          "title": "Web Pentest — 許可を得た Web ペンテスト: 偵察、証拠ベースの攻撃、レポート",
+          "url": "/hermes/docs/user-guide/skills/optional/security/security-web-pentest/"
+        },
+        {
+          "id": "user-guide/skills/optional/social-media/social-media-reddit-reading",
+          "title": "Reddit Reading — Reddit を読む。サブレディット、検索、スレッド、ユーザー",
+          "url": "/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/"
+        },
+        {
+          "id": "user-guide/skills/optional/web-development/web-development-har-derived-api-client",
+          "title": "Har Derived Api Client — サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす",
+          "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client/"
+        },
+        {
+          "id": "user-guide/skills/optional/web-development/web-development-page-agent",
+          "title": "Page Agent — Web アプリの中に、自然言語で操作できる相棒を組み込む",
+          "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/"
+        },
+        {
+          "id": "user-guide/windows-native",
+          "title": "Windows（ネイティブ）ガイド",
+          "url": "/hermes/docs/user-guide/windows-native/"
+        }
+      ]
+    },
     {
       "date": "2026-10-23",
       "sha": "9c6454b",

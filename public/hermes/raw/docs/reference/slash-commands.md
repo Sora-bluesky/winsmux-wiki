@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 895fba92bc0b264291e9657b537a5dd7265fe613
+upstream_blob: 00fd3815f4c6eecdc2d7e310b2337041b46ee33d
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -281,7 +281,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/subgoal <text>` | ループの途中で、動いている `/goal` に条件を追加します（`/subgoal`、`/subgoal remove <N>`、`/subgoal clear`）。 |
 | `/heartbeat every <interval> <prompt>`（別名: `/hb`） | このセッションが待機中のときに繰り返し入ってくるプロンプトを設定します。サブコマンドは `status`、`pause`、`resume`、`clear` です。Slack では `/hermes heartbeat …` を使ってください。 |
 | `/loop [interval] <prompt> [--times N] [--until <condition>]`（別名: `/proactive`） | このセッションで、プロンプトを一定の間隔で繰り返し実行します。サブコマンドは `status`、`pause`、`resume`、`stop` です。[ループ](/hermes/docs/user-guide/features/loops/) も見てください。 |
-| `/refine [focus]` | 記憶とスキルの自己改善レビューを今すぐ走らせます。focus の指示を付けることもできます。Slack では `/hermes refine …` を使ってください。 |
+| `/refine [focus]` | 記憶とスキルの自己改善レビューを今すぐ走らせます。focus の指示を付けることもできます。しばらく放っておいたチャットでも、先にメッセージを送らずに使えます。保存された会話を見直し、結果を同じチャットに投稿します。Slack では `/hermes refine …` を使ってください。 |
 | `/review [instructions]` | 直前まで話していた成果物（PR、コード、ドキュメント）を対象に、独立したレビュー用サブエージェントを立ち上げます。レビューは終わり次第このチャットに戻ってきます。Slack では `/hermes review …` を使ってください。 |
 | `/moa <prompt>` | プロンプトを 1 つ、既定の [Mixture of Agents](/hermes/docs/user-guide/features/mixture-of-agents/) プリセットで実行してから、セッションのモデルに戻します。 |
 | `/branch [--here] [name]`（別名: `/fork`） | 今のセッションを分岐させます。スレッドを扱えるプラットフォーム（Discord、Telegram、Slack、Matrix）では、分岐したほうが隣に並ぶ新しいスレッドで開き、このチャットは元のセッションのまま残ります。`--here` を付けると、このチャットのほうを分岐先に切り替えます。 |

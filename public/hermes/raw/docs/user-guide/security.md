@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: 232a4eec9dc2d13954f28ab7d90f49499d797f0b
+upstream_blob: 65fbd1e0e4fe2be81a424967643feb342232d2bb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -60,7 +60,7 @@ approvals:
 |------|----------|
 | **smart**（既定） | 補助の LLM に危険度を判定させます。危険の少ないコマンド（たとえば `python -c "print('hello')"`）は、そのコマンドにかぎって自動承認されます。本当に危険なコマンドは自動で拒否されます。判断がつかないものは、人への確認に上げます。 |
 | **manual** | 危険なコマンドでは必ず利用者に確認します。 |
-| **off** | 承認の検査をすべて止めます。`--yolo` を付けて動かすのと同じです。どのコマンドも確認なしで実行されます。 |
+| **off** | 承認の検査をすべて止めます。`--yolo` を付けて動かすのと同じです。どのコマンドも確認なしで実行され、`trust: untrusted` の MCP サーバーへの書き込みの呼び出しも、信頼の確認を出さずに実行されます。ただし MCP サーバーに宣言された支出の上限は、引き続き確認を求めます（[YOLO モード](#yolo-mode)を参照）。 |
 
 :::warning
 `approvals.mode: off` にすると、安全のための確認がすべて無くなります。信頼できる環境（CI/CD、コンテナなど）だけで使ってください。
@@ -94,6 +94,12 @@ YOLO が有効なあいだ、確認が飛ばされていることを忘れにく
 :::danger
 YOLO モードは、そのセッションで危険なコマンドの安全確認を **すべて** 止めます。ただし後述の絶対禁止リストだけは **例外** です。生成されるコマンドを完全に信頼できるときだけ使ってください（たとえば、使い捨ての環境で走らせる、十分に試した自動化スクリプトなど）。
 :::
+
+YOLO と `approvals.mode: off` は、MCP の [`trust: untrusted`](/hermes/docs/reference/mcp-config-reference/) の確認も飛ばします。信頼していないサーバーにある書き込みのできるツールが、それぞれの経路のふだんの届く範囲で、確認なしに実行されます。`/yolo` が効くのは、それを打ち込んだチャットだけです（別のチャットでは引き続き確認されます）。`--yolo` と `HERMES_YOLO_MODE` は、それを渡された Hermes のプロセスのセッションに効きます。`approvals.mode: off` は、そのプロファイルのすべてのチャットと cron ジョブに効きます。次のものは飛ばし**ません**。
+
+- **MCP サーバーの支出の上限。** 宣言された [`spend_limit`](/hermes/docs/user-guide/features/mcp/#tool-costs-and-spend-limits) を超えそうな呼び出しは引き続き確認を求め、答えられる人がいない場面（cron ジョブ、`hermes chat -q`）では拒否されます。この上限は利用者が決めた予算であって、安全のための確認ではありません。
+- **MCP サーバーからの問いかけ**（[elicitation](/hermes/docs/user-guide/features/mcp/#mcp-elicitation-support)）。これは許可ではなく、入力を求めるものです。
+- [認証情報の保管庫](/hermes/docs/user-guide/features/credential-vault/#paying-and-filling-addresses)による**支払いカードの入力の確認**（カードをページに渡すもの）と、MCP のイベント購読（常に待ち受けるきっかけを仕込むもの）。
 
 セッションを壊す種類のスラッシュコマンド（`/clear`、`/new` / `/reset`、`/undo`、`/quit --delete` — `/exit --delete` は別名）については、CLI も実行前に確認を出します。[スラッシュコマンド — 破壊的なコマンドの確認](/hermes/docs/reference/slash-commands/#confirmation-prompts-for-destructive-commands)を参照してください。
 

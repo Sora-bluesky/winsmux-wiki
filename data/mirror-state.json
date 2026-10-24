@@ -72,9 +72,9 @@
       "translatedAt": "2026-10-14T23:48:21.607Z"
     },
     "developer-guide/desktop-plugin-sdk.md": {
-      "blob": "620f9a285d0e3112a4b2ea01be766fb403fb54e4",
+      "blob": "42ce5c71bad6397523cafbd36287340a9d3a8bdf",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.168Z"
+      "translatedAt": "2026-10-24T23:12:49.447Z"
     },
     "developer-guide/egress-internals.md": {
       "blob": "dde37d99ace8f900d6f23431db168637c191dda4",
@@ -112,9 +112,9 @@
       "translatedAt": "2026-10-06T22:54:10.662Z"
     },
     "developer-guide/plugins/index.md": {
-      "blob": "149d4c847543e8015b80684efef4676ae8a8ad60",
+      "blob": "e1b20105471edcc4bc80f659e8dea363441faeb2",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.173Z"
+      "translatedAt": "2026-10-24T23:12:49.453Z"
     },
     "developer-guide/programmatic-integration.md": {
       "blob": "53501465c10100377a628c67d211bb4fc5cb2488",
@@ -417,9 +417,9 @@
       "translatedAt": "2026-10-01T22:47:09.509Z"
     },
     "reference/mcp-config-reference.md": {
-      "blob": "44d25bc19bae30f9665f7c418a2dcf102e6fbccb",
+      "blob": "48e0c66eb13514cc3d194dfa1ed74afeaf0995f7",
       "status": "translated",
-      "translatedAt": "2026-10-22T22:47:25.260Z"
+      "translatedAt": "2026-10-24T23:12:49.450Z"
     },
     "reference/model-catalog.md": {
       "blob": "e0b98a3ed705138505456a765e47c72bfccd4d1e",
@@ -442,9 +442,9 @@
       "translatedAt": "2026-09-20T23:06:07.193Z"
     },
     "reference/slash-commands.md": {
-      "blob": "895fba92bc0b264291e9657b537a5dd7265fe613",
+      "blob": "00fd3815f4c6eecdc2d7e310b2337041b46ee33d",
       "status": "translated",
-      "translatedAt": "2026-10-20T22:44:13.243Z"
+      "translatedAt": "2026-10-24T23:12:49.449Z"
     },
     "reference/tools-reference.md": {
       "blob": "27f14469f6e14ba617e5c78133d29f2e6ade4362",
@@ -472,9 +472,9 @@
       "translatedAt": "2026-10-21T22:45:33.355Z"
     },
     "user-guide/configuration.md": {
-      "blob": "9caa4602aca1767670287933f06a0bac8ced709a",
+      "blob": "1f66c5d4ad176121c0cf601788f15efc7da2ad8b",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.195Z"
+      "translatedAt": "2026-10-24T23:12:49.434Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "0e8e083d29713e3cf45d6b3cbc49700bd0cde974",
@@ -567,9 +567,9 @@
       "translatedAt": "2026-10-14T23:48:21.650Z"
     },
     "user-guide/features/delegation.md": {
-      "blob": "8040ba38c30494f427529d3af8bb0864b56d9baa",
+      "blob": "dfe081aee7732c3ed8e7da0c2492cbb0dab9ed07",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.204Z"
+      "translatedAt": "2026-10-24T23:12:49.442Z"
     },
     "user-guide/features/deliverable-mode.md": {
       "blob": "ea042049b33d23d91df269bdf350c9411c35ffd4",
@@ -642,9 +642,9 @@
       "translatedAt": "2026-10-17T22:47:14.261Z"
     },
     "user-guide/features/mcp.md": {
-      "blob": "b8a03dc55f5a437b296fada6e6fe38bc8b05602d",
+      "blob": "754de7fe2d4639c7db96dd9633c9dd7a15dea42b",
       "status": "translated",
-      "translatedAt": "2026-10-22T22:47:25.281Z"
+      "translatedAt": "2026-10-24T23:12:49.443Z"
     },
     "user-guide/features/memory-providers.md": {
       "blob": "4b3ddea5ffa0f2db6589362e1c861896b914c536",
@@ -652,9 +652,9 @@
       "translatedAt": "2026-10-11T22:45:59.683Z"
     },
     "user-guide/features/memory.md": {
-      "blob": "83f672120e2f647c093deaad04755e4748ee736e",
+      "blob": "3bde00ee5eeebdf1a6aa8133d9e82c7d9c69cf79",
       "status": "translated",
-      "translatedAt": "2026-10-13T22:45:55.948Z"
+      "translatedAt": "2026-10-24T23:12:49.440Z"
     },
     "user-guide/features/mixture-of-agents.md": {
       "blob": "18abd47e9e10e883e10e54d9755308d917af6e72",
@@ -987,9 +987,9 @@
       "translatedAt": "2026-09-16T22:39:41.194Z"
     },
     "user-guide/security.md": {
-      "blob": "232a4eec9dc2d13954f28ab7d90f49499d797f0b",
+      "blob": "65fbd1e0e4fe2be81a424967643feb342232d2bb",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.215Z"
+      "translatedAt": "2026-10-24T23:12:49.439Z"
     },
     "user-guide/sessions.md": {
       "blob": "22dbb6974399ff3ff5e8ef2921812fbee4dc03eb",
@@ -2436,5 +2436,5 @@
       "translatedAt": "2026-10-23T22:51:08.237Z"
     }
   },
-  "snapshotCommit": "709e2adec518ea4808fb4df320637685ab9c2709"
+  "snapshotCommit": "a480a27e76dcad8da7665408e54c6ec270c10f14"
 }
