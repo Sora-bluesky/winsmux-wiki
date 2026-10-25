@@ -217,6 +217,7 @@ high_quality = dataset.filter(lambda doc: quality_clf(doc["text"]) > 0.5)
 
 ```python
 from nemo_curator import get_client
+import dask_cuda
 
 # Initialize GPU cluster
 client = get_client(cluster_type="gpu", n_workers=8)

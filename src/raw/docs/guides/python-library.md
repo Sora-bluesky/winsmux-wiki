@@ -194,7 +194,7 @@ python batch_runner.py --input prompts.jsonl --output results.jsonl
 プロンプトごとに専用の `task_id` と分離された環境が割り当てられます。独自のバッチ処理を組みたい場合は、`AIAgent` を直接使って書けます。
 
 ```python
-
+import concurrent.futures
 from run_agent import AIAgent
 
 prompts = [
@@ -255,7 +255,7 @@ async def chat(request: ChatRequest):
 ### Discord ボット {#discord-bot}
 
 ```python
-
+import discord
 from run_agent import AIAgent
 
 client = discord.Client(intents=discord.Intents.default())
@@ -284,7 +284,7 @@ client.run("YOUR_DISCORD_TOKEN")
 ```python
 #!/usr/bin/env python3
 """CI step: auto-review a PR diff."""
-
+import subprocess
 from run_agent import AIAgent
 
 diff = subprocess.check_output(["git", "diff", "main...HEAD"]).decode()

@@ -37,6 +37,7 @@ mkdir -p ~/.hermes/scripts
 ```
 
 ```python title="~/.hermes/scripts/watch-site.py"
+import hashlib, json, os, urllib.request
 
 URL = "https://example.com/pricing"
 STATE_FILE = os.path.expanduser("~/.hermes/scripts/.watch-site-state.json")
@@ -139,7 +140,7 @@ Otherwise, provide a concise summary of the activity." --name "Repo watcher" --d
 一定の間隔でデータを取得してファイルに保存し、時間の経過とともに傾向をつかみます。このパターンは収集を担うスクリプトと、分析を担うエージェントを組み合わせます。
 
 ```python title="~/.hermes/scripts/collect-prices.py"
-
+import json, os, urllib.request
 from datetime import datetime
 
 DATA_DIR = os.path.expanduser("~/.hermes/data/prices")

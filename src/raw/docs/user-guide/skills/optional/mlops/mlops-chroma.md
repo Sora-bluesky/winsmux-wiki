@@ -71,6 +71,7 @@ npm install chromadb @chroma-core/default-embed
 ### 基本の使い方（Python） {#basic-usage-python}
 
 ```python
+import chromadb
 
 # Create client
 client = chromadb.Client()
@@ -354,6 +355,7 @@ retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
 ```python
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core import VectorStoreIndex, StorageContext
+import chromadb
 
 # Initialize Chroma
 db = chromadb.PersistentClient(path="./chroma_db")
@@ -381,7 +383,7 @@ response = query_engine.query("What is machine learning?")
 # Terminal: chroma run --path ./chroma_db --port 8000
 
 # Connect to server
-
+import chromadb
 from chromadb.config import Settings
 
 client = chromadb.HttpClient(

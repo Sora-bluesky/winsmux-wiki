@@ -141,7 +141,7 @@ har_to_client.py <in.har> [--host SUBSTR] [--include-static] [--max-body N]
 実際にやってみた例（Wikipedia の search-title を割り出して、そのまま呼んだもの）:
 
 ```python
-
+import requests
 r = requests.get(
     "https://en.wikipedia.org/w/rest.php/v1/search/title",
     params={"q": "frank herbert", "limit": 5},

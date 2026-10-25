@@ -1,6 +1,6 @@
 {
-  "sha": "a480a27",
-  "date": "2026-10-24",
+  "sha": "1f91da2",
+  "date": "2026-10-25",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -391,7 +391,7 @@
       "name": "Hermes Agent Skill Authoring",
       "description": "Author in-repo SKILL.md files: frontmatter and structure",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/",
-      "date": "2026-10-23",
+      "date": "2026-10-24",
       "source": "bundled"
     },
     {

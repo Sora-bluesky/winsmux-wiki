@@ -67,7 +67,8 @@ pip install torch torchvision ftfy regex tqdm
 ### 学習なしでの分類 {#zero-shot-classification}
 
 ```python
-
+import torch
+import clip
 from PIL import Image
 
 # Load model
@@ -216,6 +217,7 @@ print(similarities.shape)  # (10, 3)
 
 ```python
 # Store CLIP embeddings in Chroma/FAISS
+import chromadb
 
 client = chromadb.Client()
 collection = client.create_collection("image_embeddings")

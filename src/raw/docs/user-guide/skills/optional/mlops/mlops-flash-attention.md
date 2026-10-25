@@ -38,6 +38,8 @@ Flash Attention は、IO を意識したタイル分割と再計算によって�
 
 **PyTorch 標準の機能を使う（いちばん簡単。PyTorch 2.2 以降）**:
 ```python
+import torch
+import torch.nn.functional as F
 
 q = torch.randn(2, 8, 512, 64, device='cuda', dtype=torch.float16)  # [batch, heads, seq, dim]
 k = torch.randn(2, 8, 512, 64, device='cuda', dtype=torch.float16)
@@ -96,7 +98,7 @@ attn_weights = torch.softmax(q @ k.transpose(-2, -1) / math.sqrt(d_k), dim=-1)
 out = attn_weights @ v
 
 # After (Flash Attention)
-
+import torch.nn.functional as F
 out = F.scaled_dot_product_attention(q, k, v, attn_mask=mask)
 ```
 
@@ -113,6 +115,7 @@ with sdpa_kernel(SDPBackend.FLASH_ATTENTION):
 次のコードは、Flash Attention ありとなしの実行時間を測って並べて表示します。
 
 ```python
+import torch.utils.benchmark as benchmark
 
 def test_attention(use_flash):
     q, k, v = [torch.randn(2, 8, 2048, 64, device='cuda', dtype=torch.float16) for _ in range(3)]
@@ -230,8 +233,9 @@ out = flash_attn_func(
 次のコードは、1 回あたりの実行時間と使ったメモリ量を表示します。
 
 ```python
-
+import torch
 from flash_attn import flash_attn_func
+import time
 
 q, k, v = [torch.randn(4, 4096, 32, 64, device='cuda', dtype=torch.float16) for _ in range(3)]
 
@@ -292,7 +296,7 @@ python setup.py install
 FA3 は、FA2 の `flash_attn` とは別に `flash_attn_interface` という独自のモジュールを持っています。FP8 は**順伝播だけ**の経路で、入力は `float8_e4m3fn` である必要があります。
 
 ```python
-
+import torch
 from flash_attn_interface import flash_attn_func  # FA3 (hopper build), not `flash_attn`
 
 # q, k, v: [batch, seqlen, nheads, headdim]
@@ -351,7 +355,7 @@ Flash Attention の効果は、系列が長いほど大きくなります。
 
 GPU が Flash Attention に対応しているか確かめます。次のコードで、GPU の世代を表す数値が表示されます。
 ```python
-
+import torch
 print(torch.cuda.get_device_capability())
 # Should be ≥(7, 5) for Turing+
 ```

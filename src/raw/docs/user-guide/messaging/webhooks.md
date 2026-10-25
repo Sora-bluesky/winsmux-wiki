@@ -204,6 +204,8 @@ platforms:
 
 ```python
 # ~/.hermes/scripts/todoist-hermes-label.py
+import json
+import sys
 
 payload = json.load(sys.stdin)
 labels = payload.get("payload", {}).get("labels", [])

@@ -175,7 +175,7 @@ urls = [r["url"] for r in results[:5]]
 content = web_extract(urls)
 
 # Save for the analysis step
-
+import json, os
 with open(os.path.expanduser("~/.hermes/cache/scratch/ai-funding-data.json"), "w") as f:
     json.dump({"search_results": results, "extracted": content["results"]}, f)
 print(f"Collected {len(results)} results, extracted {len(content['results'])} pages")

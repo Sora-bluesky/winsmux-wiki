@@ -241,6 +241,7 @@ print(f"CE Loss Recovered: {trainer.metrics['ce_loss_score']}")
 ```python
 from transformer_lens import HookedTransformer
 from sae_lens import SAE
+import torch
 
 model = HookedTransformer.from_pretrained("gpt2-small", device="cuda")
 sae = SAE.from_pretrained(  # v6 returns just the SAE

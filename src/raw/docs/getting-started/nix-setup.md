@@ -2,7 +2,7 @@
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: d378b55f79cd1e5430fdddd109b9f3abf062d4e8
+upstream_blob: a87b913776e3582fd2f44710fdd1364891482147
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -371,7 +371,7 @@ Nix 利用者がよく変えたい項目をまとめた早見表です。
 | 作業ディレクトリにプロジェクトの前提を置く | `documents."AGENTS.md"` | `./documents/AGENTS.md` |
 | デスクトップアプリやダッシュボード用のバックエンドを動かす | `backend.mode` | `"serve"` または `"dashboard"` |
 | MCP のツールサーバーを追加する | `mcpServers.<name>` | [MCP サーバー](#mcp-servers)を参照 |
-| Discord / Telegram / Slack を有効にする | `extraDependencyGroups` | `[ "messaging" ]` |
+| パッケージに入っていない追加機能を足す | `extraDependencyGroups` | `[ "google-meet" ]` |
 | ホストのディレクトリをコンテナへマウントする | `container.extraVolumes` | `[ "/data:/data:rw" ]` |
 | コンテナから GPU を使えるようにする | `container.extraOptions` | `[ "--gpus" "all" ]` |
 | Docker ではなく Podman を使う | `container.backend` | `"podman"` |
@@ -818,12 +818,14 @@ services.hermes-agent.extraPythonPackages = [
 
 ### 追加の依存グループ（`extraDependencyGroups`） {#optional-dependency-groups-extradependencygroups}
 
-hermes-agent の `pyproject.toml` に宣言されている追加機能を使うには、`extraDependencyGroups` を指定して、ビルド時に封じた venv へ含めます。既定の `[all]` に入っていない追加機能では、これが必須です。Nix では読み取り専用のストアに実行時インストールができないからです。
+hermes-agent の `pyproject.toml` に宣言されている追加機能を使うには、`extraDependencyGroups` を指定して、ビルド時に封じた venv へ含めます。選んだパッケージにまだ入っていない追加機能では、これが必須です。Nix では読み取り専用のストアに実行時インストールができないからです。
 
 ```nix
-# Enable Discord, Telegram, Slack
-services.hermes-agent.extraDependencyGroups = [ "messaging" ];
+# Add Google Meet support on top of what the package ships
+services.hermes-agent.extraDependencyGroups = [ "google-meet" ];
 ```
+
+`extraDependencyGroups` と `extraPythonPackages` は、選んだパッケージにもともと入っているグループに**付け足す**もので、置き換えることはありません。`default` パッケージには、`messaging`、`voice`、`exa` をはじめ、下の表にあるグループがすでに入っているので、それらを指定しても何も変わりません。`pkgs.hermes-agent.override { extraDependencyGroups = [ ... ]; }` でも同じです。ビルドを小さくしたいときは、小さいパッケージから始めてください。`package = inputs.hermes-agent.packages.${system}.minimal;`（または `#messaging`）を使うか、`.override { defaultDependencyGroups = [ ]; }` で入っているグループを外し、欲しいものだけを並べます。
 
 これらのグループは、ビルドのときに中核の依存関係の解決に加わります。要件どうしがぶつかれば、
 その解決が失敗することはあります。表はよく使うグループだけを載せています。すべての一覧とプラットフォームの条件は、
@@ -883,7 +885,9 @@ services.hermes-agent = {
     nixpkgs.overlays = [ hermes-agent.overlays.default ];
     # Then:
     #   pkgs.hermes-agent.override { extraPythonPackages = [...]; }
-    #   pkgs.hermes-agent.override { extraDependencyGroups = [ "voice" ]; }
+    #   pkgs.hermes-agent.override { extraDependencyGroups = [ "google-meet" ]; }
+    # Both add to the groups the default package ships. To drop those:
+    #   pkgs.hermes-agent.override { defaultDependencyGroups = [ ]; }
   };
 }
 ```
@@ -1029,7 +1033,7 @@ nix build .#checks.x86_64-linux.config-roundtrip    # merge script preserves use
 | `extraPackages` | `listOf package` | `[]` | エージェントが使える追加パッケージ。hermes ユーザーのプロファイルに入るので、ターミナルのコマンド、スキル、cron ジョブのどこからでも見えます |
 | `extraPlugins` | `listOf package` | `[]` | `$HERMES_HOME/plugins/` へシンボリックリンクするディレクトリ型プラグインのパッケージ。それぞれ `plugin.yaml` を含む必要があります |
 | `extraPythonPackages` | `listOf package` | `[]` | エントリーポイント型プラグインの検出のため PYTHONPATH に追加する Python パッケージ。選んだパッケージの `python.pkgs` を使ってください |
-| `extraDependencyGroups` | `listOf str` | `[]` | 封じた venv に含める pyproject.toml の追加機能（たとえば `["voice"]`）。uv が解決するので衝突しません |
+| `extraDependencyGroups` | `listOf str` | `[]` | `package` にもともと入っているグループに付け足す pyproject.toml の追加機能（たとえば `["google-meet"]`）。uv が解決するので衝突しません |
 | `restart` | `str` | `"always"` | systemd の `Restart=` の方針。macOS では使われません。 |
 | `restartSec` | `int` | `5` | systemd の `RestartSec=` の値。macOS では使われません。 |
 

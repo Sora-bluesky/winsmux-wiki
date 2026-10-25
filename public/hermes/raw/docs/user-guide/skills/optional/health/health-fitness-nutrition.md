@@ -123,7 +123,7 @@ QUERY="$1"
 ENCODED=$(python -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$QUERY")
 curl -s "https://wger.de/api/v2/exercise/search/?term=${ENCODED}&language=english&format=json" \
   | python -c "
-
+import json,sys
 data=json.load(sys.stdin)
 for s in data.get('suggestions',[])[:10]:
     d=s.get('data',{})
@@ -136,7 +136,7 @@ for s in data.get('suggestions',[])[:10]:
 EXERCISE_ID="$1"
 curl -s "https://wger.de/api/v2/exerciseinfo/${EXERCISE_ID}/?format=json" \
   | python -c "
-
+import json,sys,html,re
 data=json.load(sys.stdin)
 trans=[t for t in data.get('translations',[]) if t.get('language')==2]
 t=trans[0] if trans else data.get('translations',[{}])[0]
@@ -158,7 +158,7 @@ if imgs: print(f\"Image     : {imgs[0].get('image','')}\")
 FILTER="$1"  # e.g. "muscles=4" or "category=11" or "equipment=3"
 curl -s "https://wger.de/api/v2/exercise/?${FILTER}&language=2&status=2&limit=20&format=json" \
   | python -c "
-
+import json,sys
 data=json.load(sys.stdin)
 print(f'Found {data.get(\"count\",0)} exercises.')
 for ex in data.get('results',[]):
@@ -178,7 +178,7 @@ API_KEY="${USDA_API_KEY:-DEMO_KEY}"
 ENCODED=$(python -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$FOOD")
 curl -s "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${API_KEY}&query=${ENCODED}&pageSize=5&dataType=Foundation,SR%20Legacy" \
   | python -c "
-
+import json,sys
 data=json.load(sys.stdin)
 foods=data.get('foods',[])
 if not foods: print('No foods found.'); sys.exit()
@@ -199,7 +199,7 @@ FDC_ID="$1"
 API_KEY="${USDA_API_KEY:-DEMO_KEY}"
 curl -s "https://api.nal.usda.gov/fdc/v1/food/${FDC_ID}?api_key=${API_KEY}" \
   | python -c "
-
+import json,sys
 d=json.load(sys.stdin)
 print(f\"Food: {d.get('description','N/A')}\")
 print(f\"{'Nutrient':<40} {'Amount':>8} {'Unit'}\")

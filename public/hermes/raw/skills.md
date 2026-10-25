@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 211 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `a480a27`（2026-10-24）時点。この一覧は上流の docs から機械生成しています。
+上流 `1f91da2`（2026-10-25）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（58）
 
@@ -70,7 +70,7 @@ raw: /hermes/raw/skills.md
 | [Codebase Inspection](/hermes/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection/) | Inspect codebases w/ pygount: LOC, languages, ratios | 2026-09-20 |
 | [Dogfood](/hermes/docs/user-guide/skills/bundled/software-development/software-development-dogfood/) | Exploratory QA of web apps: find bugs, evidence, reports | 2026-10-23 |
 | [Github](/hermes/docs/user-guide/skills/bundled/software-development/software-development-github/) | GitHub via gh CLI: PRs, issues, reviews, repos, auth | 2026-09-20 |
-| [Hermes Agent Skill Authoring](/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/) | Author in-repo SKILL.md files: frontmatter and structure | 2026-10-23 |
+| [Hermes Agent Skill Authoring](/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/) | Author in-repo SKILL.md files: frontmatter and structure | 2026-10-24 |
 | [Inspecting Hermes Desktop Dom](/hermes/docs/user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom/) | Read the live Hermes desktop DOM/CSS over CDP | 2026-09-20 |
 | [Node Inspect Debugger](/hermes/docs/user-guide/skills/bundled/software-development/software-development-node-inspect-debugger/) | Debug Node.js via --inspect + Chrome DevTools Protocol CLI | 2026-09-20 |
 | [Python Debugpy](/hermes/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy/) | Debug Python: pdb REPL + debugpy remote (DAP) | 2026-09-23 |

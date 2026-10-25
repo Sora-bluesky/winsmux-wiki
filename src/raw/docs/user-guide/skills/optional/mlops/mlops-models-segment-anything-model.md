@@ -89,7 +89,7 @@ wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
 ### SamPredictor を使った基本の流れ {#basic-usage-with-sampredictor}
 
 ```python
-
+import numpy as np
 from segment_anything import sam_model_registry, SamPredictor
 
 # Load model
@@ -121,7 +121,7 @@ best_mask = masks[np.argmax(scores)]
 ### HuggingFace Transformers から使う {#huggingface-transformers}
 
 ```python
-
+import torch
 from PIL import Image
 from transformers import SamModel, SamProcessor
 
@@ -362,6 +362,7 @@ python scripts/export_onnx_model.py \
 ### ONNX モデルを使う {#use-onnx-model}
 
 ```python
+import onnxruntime
 
 # Load ONNX model
 ort_session = onnxruntime.InferenceSession("sam_onnx.onnx")
@@ -385,6 +386,7 @@ masks = ort_session.run(
 ### 使い方 1: アノテーションツール {#workflow-1-annotation-tool}
 
 ```python
+import cv2
 
 # Load model
 predictor = SamPredictor(sam)

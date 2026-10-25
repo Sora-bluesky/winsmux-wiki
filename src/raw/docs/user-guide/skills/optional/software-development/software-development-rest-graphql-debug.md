@@ -93,7 +93,7 @@ terminal("""curl -X POST https://api.example.com/graphql \\
 
 ```python
 execute_code('''
-
+import os, requests
 resp = requests.post(
     "https://api.example.com/graphql",
     json={"query": "{ user(id: 1) { name email } }"},
@@ -112,7 +112,7 @@ print(data.get("data"))
 
 ```python
 execute_code('''
-
+import requests
 resp = requests.get(
     "https://api.example.com/users/1",
     headers={"Authorization": "Bearer <TOKEN>"},
@@ -147,7 +147,7 @@ Python では必ずタプルでタイムアウトを渡してください。`req
 
 ```python
 execute_code('''
-
+import requests
 from requests.exceptions import ConnectTimeout, ReadTimeout
 try:
     requests.get(url, timeout=(3.05, 30))
@@ -176,7 +176,7 @@ terminal('curl -s -o /dev/null -w "%{http_code}\\n" -H "Authorization: Bearer $T
 
 # Decode JWT exp claim — handles base64url padding correctly
 execute_code('''
-
+import json, base64, os
 tok = os.environ["TOKEN"]
 payload = tok.split(".")[1]
 payload += "=" * (-len(payload) % 4)
@@ -222,7 +222,7 @@ requests.post(url, files={"file": open("doc.pdf", "rb")})
 
 ```python
 execute_code('''
-
+import requests
 resp = requests.post(url, json=payload, timeout=10)
 print(f"status={resp.status_code}")
 print(f"headers={dict(resp.headers)}")
@@ -287,6 +287,7 @@ else:
 
 ```python
 execute_code('''
+import time, requests
 
 def with_backoff(method, url, **kwargs):
     for attempt in range(5):
@@ -322,6 +323,7 @@ def with_backoff(method, url, **kwargs):
 
 ```python
 execute_code('''
+import requests
 
 def validate_user(data: dict) -> list[str]:
     errors = []
@@ -348,7 +350,7 @@ API の更新後、新しい外部サービスをつなぐとき、あるいは 
 
 ```python
 execute_code('''
-
+import requests
 resp = requests.post(url, json=payload, headers=headers, timeout=10)
 request_id = (
     resp.headers.get("X-Request-Id")
@@ -377,6 +379,7 @@ Repro:       curl -X POST … (auth: <REDACTED>)
 これを `tests/` に置き、`terminal('pytest tests/test_api_smoke.py -v')` で実行します。
 
 ```python
+import os, requests, pytest
 
 BASE_URL = os.environ.get("API_BASE_URL", "https://api.example.com")
 TOKEN    = os.environ.get("API_TOKEN", "")
@@ -448,6 +451,7 @@ terminal('openssl s_client -connect api.example.com:443 -servername api.example.
 
 ```python
 execute_code('''
+import os, requests
 
 token = os.environ["API_TOKEN"]
 base  = "https://api.example.com"

@@ -113,6 +113,7 @@ curl -s "$BASE/api/doc/$DOC/script-status" -H "Authorization: Bearer $TOKEN"
 確認済み）:
 
 ```js
+import { createShapeId, toRichText } from 'tldraw'   // primitives: import, not globals
 
 export default function ({ editor, helpers, signal }) {
   editor.run(() => {                                 // batch = one undo step

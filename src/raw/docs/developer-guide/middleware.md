@@ -209,6 +209,7 @@ def normalize_terminal_workdir(**kwargs):
 このプラグインは、プロバイダーの呼び出しを包み、プロバイダーの生の応答をそのまま返します。
 
 ```python
+import time
 
 def register(ctx):
     ctx.register_middleware("llm_execution", time_llm_execution)

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 1f66c5d4ad176121c0cf601788f15efc7da2ad8b
+upstream_blob: 5c7e70e1af4c440d33bd31ba4c5ab5e632950d2c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -344,6 +344,7 @@ Hermes のデータには `HERMES_HOME` を、アカウントのホームディ�
 
 ```python
 from pathlib import Path
+import os
 
 hermes_home = Path(os.environ["HERMES_HOME"])
 real_home = Path(os.environ.get("HERMES_REAL_HOME", os.environ["HOME"]))
@@ -961,6 +962,13 @@ agent:
 あるプラットフォームの保存済みの設定にまだ載っていても、必ず取り除かれます。
 `hermes tools` の UI で15以上のプラットフォームの行を編集する代わりに、
 「X をどこでも無効にする」ためのスイッチを1つで済ませたいときに使ってください。
+
+取り除くのはツール単位です。そのため、ここに並べたツールセットは、同じツールを含む
+有効なツールセットからも、そのツールを取り除きます。たとえば `search`（中身は `web_search` だけ）は、
+有効な `web` から `web_search` を外します。`hermes tools list` と `hermes doctor` は、
+このようにツールを失った有効なツールセットを知らせます。また、`hermes tools` でツールセットを有効にすると
+（チェックリスト、`hermes tools enable`、デスクトップアプリ、ダッシュボードのどれでも）、有効なツールセットで
+すべて賄えるようになった項目は、ここから消えます。
 
 リストを空にするか、このキー自体を書かなければ、何も起きません。
 
@@ -3046,7 +3054,7 @@ delegation:
 
 **優先順位:** 設定の `delegation.base_url` → 設定の `delegation.provider` → 親のプロバイダー（継承）。設定の `delegation.model` → 親のモデル（継承）。`provider` を書かずに `model` だけを設定すると、親の認証情報はそのままで、モデル名だけが変わります（OpenRouter のように、同じプロバイダーの中でモデルを切り替えたいときに便利です）。
 
-**単発実行:** 1回で終わる `hermes chat -q` / `--oneshot` のセッションには、委任の結果を受け取るあとのターンも、学んだことを生かすあとのセッションもありません。そのため、使う機能を絞って動きます。システムプロンプトのスキルの節は、作業の進め方に関するスキルではなく、分野の知識に関するスキルだけを読み込むよう求めます（`skill_manage` は引き続き使えるので、その実行でもスキルを書けます）。さらに `oneshot_max_children` が、その実行で起動できるサブエージェントの合計数を制限します（既定は `2`、`0` なら無制限）。上限を超えると、`delegate_task` はツールのエラーを返し、エージェントに委任せず自分で作業を終えるよう伝えます。
+**単発実行:** 1回で終わる `hermes chat -q` / `--oneshot` のセッションには、委任の結果を受け取るあとのターンも、学んだことを生かすあとのセッションもありません。そのため、使う機能を絞って動きます。システムプロンプトのスキルの節は、作業の進め方に関するスキルではなく、分野の知識に関するスキルだけを読み込むよう求めます（`skill_manage` は引き続き使えるので、その実行でもスキルを書けます）。さらに `oneshot_max_children` が、その実行で起動できるサブエージェントの合計数を制限します（既定は `2`、`0` なら無制限）。上限を超えると、`delegate_task` はツールのエラーを返し、エージェントに委任せず自分で作業を終えるよう伝えます。単発実行には途中で答えたり方向を変えたりする人もいないので、`clarify` ツールを外し、システムプロンプトにある「ターンの途中で方向を変える」ことについての注意書きも外して動きます。さらに `delegate_task` のスキーマから、動いている子を操作するための引数（`action` の list/steer/stop、`subagent_id`、`message`）を除きます。子はその呼び出しの中で終わるまで待ち合わせるので、操作すべき動作中の子が存在することはないからです。
 
 **幅と深さ:** `max_concurrent_children` は、1回のバッチで並列に動かすサブエージェントの数の上限です（既定は `3`。最小は1で、最大はありません）。環境変数 `DELEGATION_MAX_CONCURRENT_CHILDREN` でも設定できます。モデルがこの上限より長い `tasks` 配列を渡すと、`delegate_task` は黙って切り詰めるのではなく、上限を説明するツールのエラーを返します。`max_spawn_depth` は委任のツリーの深さを決めます（1〜3の範囲に収められます）。既定の `1` では、委任は平らです。子は孫を起動できず、`role="orchestrator"` を渡しても、何も知らせずに `leaf` として扱われます。`2` に上げるとオーケストレーターの子が末端（leaf）の孫を起動でき、`3` にすると3階層のツリーになります。オーケストレーションを使うかどうかはエージェントが呼び出しごとに決め、使うときは `role="orchestrator"` を指定して明示的に有効にします。`orchestrator_enabled: false` にすると、それに関係なく、すべての子が末端に戻されます。費用は掛け算で増えます。`max_spawn_depth: 3` と `max_concurrent_children: 3` の組み合わせなら、ツリーは 3×3×3 = 27 の末端エージェントが同時に動くところまで広がります。使い方のパターンは [サブエージェントへの委任 → 深さの上限と入れ子の取りまとめ](/hermes/docs/user-guide/features/delegation/#depth-limit-and-nested-orchestration) を参照してください。
 
@@ -3129,6 +3137,27 @@ onboarding:
 - `profile_build` — いちばん最初のメッセージで出す提案を決めます。対象は TUI、デスクトップアプリ、メッセージングのダイレクトメッセージです（グループチャットでは出しません）。`"ask"`（既定）は、ユーザープロファイルの作成を提案します。この提案は**ユーザーが明示的に受け入れたときだけ進み、同意が前提です**。エージェントは何かを調べる前に必ず尋ね、接続済みのアカウントを黙って読むことはなく、確認できた事実はユーザーメモリに保存します。`"off"` が止めるのは提案だけで、エージェントは簡単な自己紹介をします。この提案が出るのは、1つのプロファイルにつき多くても1回です。
 - `seen` — 内部の状態です。Hermes は表示したヒントを1つずつここに記録し、二度と出さないようにします。最初のメッセージで出す提案も、一度表示されるとここに記録されます。手で編集しないでください。すべてのヒントをもう一度見たいときは、`onboarding` セクションを丸ごと消します。
 - `run` — デスクトップアプリが次に起動したときに、初回のオンボーディング用チャットを開くかどうかです。設定していなければ、新しくインストールしたとき（セッションもプロファイルもまだ無いとき）だけ開きます。Hermes は、オンボーディングが始まると `true` を、終わるか飛ばされると `false` を書き込みます。アプリがどのプロファイルで動いていても、この値は常に既定のプロファイルの `config.yaml` に置かれます。二度と出したくなければ `false` にしてください。管理された環境へのインストールでは、管理用の設定でこの値を固定できます。
+
+## Webapp {#webapp}
+
+ゲートウェイは、[デスクトップのワークスペースをブラウザで](/hermes/docs/user-guide/desktop/#use-the-desktop-workspace-from-a-browser)使うための画面を、専用の待ち受け口で配信できます。自分で有効にするまでは止まっています。
+
+```yaml
+webapp:
+  enabled: false     # true: the gateway serves the Webapp
+  host: 127.0.0.1    # 127.0.0.1, ::1 or localhost; or 0.0.0.0 / :: for other machines (dashboard sign-in required)
+  port: 9120         # fixed, so the browser's address stays the same across gateway restarts
+  public_url: ""     # the https:// address a reverse proxy or tunnel serves the Webapp at (sign-in required)
+```
+
+- `enabled` — ゲートウェイは起動時にこの値を読みます。変えたら、ゲートウェイを再起動してください（`hermes gateway restart`）。
+- `host` — `127.0.0.1`、`::1`、`localhost` のどれかにすると、Webapp はこの端末の中だけで使えます。`0.0.0.0` か `::` にすると、ほかの端末からもつながるようになり、[ダッシュボードのサインイン用プロバイダー](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)が必要になります。プロバイダーが無いと、ゲートウェイはネイティブのクライアント向けにだけ配信し、その理由は `hermes webapp --status` で確かめられます。プロバイダーを追加したら、ゲートウェイを再起動してください。これ以外の値にすると、`127.0.0.2` のような別のループバックアドレスであっても、Webapp は止まったままです。
+- `port` — このポートがほかで使われているときも、ゲートウェイはネイティブのクライアント向けにだけ配信し、その理由を `hermes webapp --status` が伝えます。このときは、ほかのプログラムが受け取ってしまったおそれがあるので、Webapp のブラウザ用サインインも作り直します。そのため、ポートが空いたら、開いていたタブのために `hermes webapp` をもう一度実行する必要があります。
+- `public_url` — 自分で動かしているリバースプロキシやトンネルが、Webapp を独自のアドレスで配信する（`host:port` へ転送する）ときに設定します。設定すると、`host` がループバックでもダッシュボードのサインインが有効になります。また、Webapp が受け付ける外からのホスト名はこの1つだけになり、サインイン後に戻るコールバックもこの値をもとに組み立てられます。サインイン用プロバイダーが無ければ、`0.0.0.0` のときと同じく、ゲートウェイはネイティブのクライアント向けにだけ配信します。値は `http://` か `https://` で始まり、認証情報・クエリ・フラグメントを含まないアドレスにしてください。それ以外の値では Webapp は止まったままです。`dashboard.public_url` は `hermes dashboard` 用の設定で、Webapp には使われません。
+
+サインインが有効になるのは、`host` が `0.0.0.0` か `::` のとき、または host の値にかかわらず `public_url` を設定したときです。このとき `hermes webapp` は Webapp のアドレス（`public_url` を設定していればそのアドレスで、サインイン後はここへ戻ります）を開くので、ダッシュボードのアカウントでサインインしてください。このコマンドが出す一度だけ使えるリンクで開けるのは、サインインの要らない Webapp だけです。ネイティブのクライアント（CLI、TUI、デスクトップアプリ）はサインインしません。ゲートウェイがそれらのために用意している待ち受け口は、設定がどうであってもサインインを求めないからです。
+
+Webapp の設定は、そのプロファイルを配信しているゲートウェイの設定から読まれます。ゲートウェイが配信する名前付きのプロファイルでは既定のプロファイルの設定から、単独で動くプロファイルではそのプロファイル自身の設定から読まれます。
 
 ## ダッシュボード {#dashboard}
 

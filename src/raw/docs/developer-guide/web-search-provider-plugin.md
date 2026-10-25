@@ -52,6 +52,7 @@ plugins/web/my-backend/
 # plugins/web/my-backend/provider.py
 from __future__ import annotations
 
+import os
 from typing import Any, Dict, List
 
 from agent.web_search_provider import WebSearchProvider

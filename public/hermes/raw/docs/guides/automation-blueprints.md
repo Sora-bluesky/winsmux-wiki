@@ -233,6 +233,7 @@ Be concise. This goes to the on-call channel." \
 **きっかけ:** 予定（30 分ごと）
 
 ```python title="~/.hermes/scripts/check-uptime.py"
+import urllib.request, json, time
 
 ENDPOINTS = [
     {"name": "API", "url": "https://api.example.com/health"},

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインからの LLM 呼び出し"
 description: "ctx.llm を使うと、プラグインの中からどんな LLM 呼び出しもできます。チャットでも構造化出力でも、同期でも非同期でも同じです。認証はホストが持ち、信頼ゲートは既定で閉じ、JSON Schema による検証も選べます。"
 upstream_path: developer-guide/plugin-llm-access.md
-upstream_blob: e4a8063bcc3946d24b17ca3809ed393f243a4baa
+upstream_blob: d1ec91e8cb2e0512b7b962007680a63ca16fc7f9
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugin-llm-access
 ---
@@ -504,6 +504,91 @@ plugins:
 * **費用。** どの呼び出しも、ユーザーが料金を払っているプロバイダーに対して走ります。
   ゲートウェイのメッセージひとつひとつに `complete()` をループで回すときは、
   トークンの消費をよく考えてください。
+
+## セッション自身のエージェントに聞く（`ctx.side_question`） {#asking-the-sessions-own-agent-ctxsidequestion}
+
+`ctx.llm` は、プラグインが渡した内容しか知らない新しい呼び出しを実行します。
+これに対して `ctx.side_question` は、セッション*自身*のエージェントに聞きます。
+同じモデル、同じシステムプロンプト（メモリも含む）、ここまでの会話すべてに、
+プラグインからの質問をひとつ足して送ります。そのターンで送ったばかりのリクエストを
+そのまま使い直すので、プロバイダーのプロンプトキャッシュはまだ温まっていて、
+呼び出しの大半はキャッシュの読み出しで済みます。
+
+答えが会話そのものに左右されるときに使ってください。たとえば、ユーザーが次に打ちそうな
+プロンプトを提案する、そのターンで何をしたかにラベルを付ける、セッションに
+続きの対応が要るかを判断する、といった用途です。セッションの中身が要らないものには
+`ctx.llm` を使ってください。そのほうが安く、リースの規則もありません。
+
+```python
+import threading
+
+def register(ctx):
+    def on_post_llm_call(**kwargs):
+        token = kwargs.get("side_question_token")
+        if token is None:  # no consented plugin loaded, or not a user turn
+            return
+        # post_llm_call is time-bounded: never wait for the model inside the hook.
+        threading.Thread(target=_suggest, args=(token,), daemon=True).start()
+
+    def _suggest(token):
+        answer = ctx.side_question(
+            token, "Suggest the user's most likely next prompt in one short line.")
+        if answer:
+            ctx.state.set("next_prompt", answer)
+
+    ctx.register_hook("post_llm_call", on_post_llm_call)
+```
+
+プラグインは `plugin.yaml` でこの機能を宣言し、ユーザーがそれを許可する必要があります
+（同意画面には「各ターンのあとで、エージェントに短い質問をします。エージェントには
+メモリを含むセッション全体が見え、メインモデルのトークンを使います。」と表示されます）。
+
+```yaml
+capabilities:
+  - llm.side_question
+```
+
+### リースの規則 {#lease-rules}
+
+* 読み込まれているプラグインのうち少なくともひとつがこの機能を持っていると、
+  `post_llm_call` は `side_question_token`（文字列）を受け取ります。そうでなければ `None` です。
+  cron の実行と、委任されたサブエージェントのターンには、常に `None` が渡ります。
+  誰もその結果を待っていないので、追加の質問はトークンを使うだけになるからです。
+* **1ターンに1回だけで、全プラグインで共有します。** どのプラグインのフックにも同じ
+  トークンが渡り、最初の `ctx.side_question` の呼び出しが、成功しても失敗しても
+  それを使い切ります。この機能を持たないプラグインが呼ぶと `None` が返り、
+  トークンは使われません。
+* トークンは **60 秒** で失効します。セッションが次のターンを始めた時点でも失効します。
+* トークンは、それを発行したターンのプロファイルに属します。別のプロファイルの
+  プラグインコンテキストが呼ぶと `None` が返り、トークンは使われません。
+* `prompt` は空でない文字列で、長さは **4096 文字** までです。
+* `timeout` の既定は **15 秒** で、上限は 60 秒です。リクエストの準備も含めた、
+  呼び出し全体にかかる時間です。
+
+### 返ってくるもの {#what-you-get-back}
+
+エージェントの返答のテキストか、`None` です。`None` は、呼び出しが拒否されたか
+失敗したことを表します。たとえば、Mixture-of-Agents のランタイム、エージェントを
+プロバイダーとして使うランタイム（ACP、外部プロセスのプロバイダー、Codex の app-server）、
+そのターンのあとでモデルが変わったセッション（
+`auxiliary.voice_chat` に回された音声チャットのターンは、その直後に元へ戻ります）、
+プロバイダー側で実行される（サーバー側の）ツールを含むリクエスト、タイムアウト、
+プロバイダーのエラー、空の返答がそうです。再試行はなく、
+代わりのモデルもありません。
+
+この呼び出しはツールを一切実行せず（返答の中のツール呼び出しは捨てられます）、
+会話記録にも書き込みません。トークンは、そのトークンを発行したターンのセッションに
+課金され（その後にセッション ID が切り替わっていても同じです）、使用量には
+`plugin_side_question:<plugin id>` として記録されます。
+`/btw` の `side_question` とは別に数えられます。モデル、ツール、
+システムプロンプト、出力の長さは選べません。どれを変えても、温まったキャッシュが
+使えなくなるからです。短く答えてほしいときは、プロンプトでそう頼んでください。
+
+観測用のプラグインからは、この呼び出しは補助呼び出しとして見えます。
+`pre_auxiliary_call` / `post_auxiliary_call` が、
+`aux_task="plugin_side_question"` と、質問したプラグインを指す `plugin_id` を付けて
+発火します。ターン単位の `pre_api_request` /
+`post_api_request` は、この呼び出しでは発火しません。
 
 ## プラグインの全体像の中での位置づけ {#where-this-fits-in-the-plugin-surface}
 

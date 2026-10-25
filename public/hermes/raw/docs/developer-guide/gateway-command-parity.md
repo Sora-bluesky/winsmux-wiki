@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイのコマンド対応表"
 description: "共有ゲートウェイ上で、ローカルの各クライアントがスラッシュコマンドをどう扱うか"
 upstream_path: developer-guide/gateway-command-parity.md
-upstream_blob: 3dbfe2e671bcaaa1d83d22cbd7aaf2b73275dab6
+upstream_blob: d1b7defb5c7f786d7c7b37407783fc0af2749730
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-command-parity
 ---
@@ -59,7 +59,7 @@ sources:
 | `/debug` | control | HermesCLI._handle_debug_command | slash.exec | slash.exec | slash.exec | ログを公開のペーストサービスにアップロードします |
 | `/deny` | control | messaging-only: unknown command | slash.exec | slash.exec | slash.exec | messaging-only |
 | `/diff` | read | HermesCLI._handle_diff_command | slash.exec | slash.exec | slash.exec |  |
-| `/discard` | refused | messaging-only: unknown command | slash.exec: refused | slash.exec: refused | prompt.resolve_unknown | messaging-only |
+| `/discard` | refused | HermesCLI._handle_discard_command | slash.exec: refused | slash.exec: refused | prompt.resolve_unknown |  |
 | `/egress` | control | HermesCLI._cmd_egress | slash.exec | slash.exec | slash.exec |  |
 | `/export` | refused | HermesCLI._handle_export_command | slash.exec: refused | action: export | slash.exec: refused | client-local (cli_only) |
 | `/fast` | control | HermesCLI._handle_fast_command | config.get, config.set | unavailable: advanced | slash.exec | per-session setting (gateway handler) |

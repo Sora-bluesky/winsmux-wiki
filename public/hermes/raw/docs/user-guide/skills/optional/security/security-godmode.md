@@ -82,7 +82,7 @@ Python 環境で使う場合は、読み込む前に `ruamel.yaml==0.18.17` を�
 
 ```python
 # In execute_code — use the loader to avoid exec-scoping issues:
-
+import os
 exec(open(os.path.expanduser(
     os.path.join(os.environ.get("HERMES_HOME", os.path.expanduser("~/.hermes")), "skills/security/godmode/scripts/load_godmode.py")
 )).read())
@@ -304,7 +304,7 @@ print(result['content'][:500])
 
 ```python
 # Full pipeline example via execute_code
-
+import os, json
 from openai import OpenAI
 
 client = OpenAI(

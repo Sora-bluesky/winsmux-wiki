@@ -44,7 +44,7 @@ pip install accelerate
 
 **PyTorch のスクリプトを書き換える**（4 行）:
 ```python
-
+import torch
 + from accelerate import Accelerator
 
 + accelerator = Accelerator()
@@ -75,6 +75,7 @@ accelerate launch train.py
 **もとのスクリプト**:
 ```python
 # train.py
+import torch
 
 model = torch.nn.Linear(10, 2).to('cuda')
 optimizer = torch.optim.Adam(model.parameters())
@@ -92,7 +93,7 @@ for epoch in range(10):
 **Accelerate を使った場合**（4 行を足しています）:
 ```python
 # train.py
-
+import torch
 from accelerate import Accelerator  # +1
 
 accelerator = Accelerator()  # +2

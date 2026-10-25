@@ -11,9 +11,9 @@ raw: /hermes/raw/dev.md
 
 # developer-guide
 
-Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（61 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
+Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（62 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
 
-## Developer Guide（61）
+## Developer Guide（62）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -32,6 +32,7 @@ Hermes Agent 本体を拡張したり、上流に貢献したりする人向け�
 - [Billing Lifecycle (TUI)](/hermes/docs/developer-guide/billing-lifecycle/)
 - [Browser Provider Plugins](/hermes/docs/developer-guide/browser-provider-plugin/)
 - [Browser CDP Supervisor](/hermes/docs/developer-guide/browser-supervisor/)
+- [Browser Vault Plugins](/hermes/docs/developer-guide/browser-vault-plugin/)
 - [Chronos Managed-Cron Contract](/hermes/docs/developer-guide/chronos-managed-cron-contract/)
 - [CLI Internals](/hermes/docs/developer-guide/cli-internals/)
 - [Codebase Ownership Map](/hermes/docs/developer-guide/codebase-ownership/)

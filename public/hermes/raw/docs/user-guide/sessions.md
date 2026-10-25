@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 22dbb6974399ff3ff5e8ef2921812fbee4dc03eb
+upstream_blob: 2f3c2d93b8e7ae1ed4eef35fab5e3f8ea6a64942
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -758,14 +758,14 @@ hermes sessions repair-routing --max-gap-seconds 300
 `hermes sessions repair-prompts` で、すでに傷んでいる行を探せます。
 
 この走査は慎重です。修復を提案するのは、保存されたプロンプトに
-`## Skill Safety` の案内がなく、**しかも**保存されている `tools[]` の固定に
+`skill_manage` についての案内の行がなく、**しかも**保存されている `tools[]` の固定に
 `skill_manage`（これがあれば必ずその案内が出ます）が含まれているときだけです。読める固定が
 ない行や、`memory` だけの固定（これは正当な `toolsets: [memory]` の設定でもあります）の行は、
 **確かめられない**ものとして報告され、この走査では変更されません。必要なら
 `SESSION_ID` を指定してはっきり消してください。
 memory だけの行も、ひとりでに直せる状態になります。セッションを再開すると、その
 `tools[]` の固定がツール全体を固定し直すので、そのあとの走査では
-Skill Safety の案内がないまま `skill_manage` があることが分かり、消されます。
+その案内の行がないまま `skill_manage` があることが分かり、消されます。
 
 ```bash
 # Report verified candidates and unverifiable rows; writes nothing
@@ -1192,6 +1192,20 @@ sessions:
 プラットフォームのセッション（Telegram、Discord など）、TUI やデスクトップの
 セッション、固定したセッション、ターンや圧縮が進行中のセッションは、
 この整理で閉じられることはありません。
+
+**誰も閉じなかったローカルのセッション。** CLI、TUI、デスクトップのセッションで、
+最後に見ていた画面が閉じずに消えた場合（ターミナルを強制終了した、接続が切れた、
+開いたままゲートウェイを停止・再起動した）、ゲートウェイはその
+`sessions.orphan_end_grace_s` 秒後にセッションを終了します（既定は `300`、`0` なら終了しません）。
+終了理由は `end_reason: ws_orphan_reap` です（再起動後なら `startup_orphan_reap` になり、
+最後の動きから 6 時間たつまでは終了しません。何もしていない従来の CLI は、次に使うときにしか
+つなぎ直さないからです）。`orphan_end_grace_s` が未設定のあいだは、従来の
+`dashboard.ws_orphan_reap_grace_s: 0` でこの処理を止められ、
+`dashboard.startup_orphan_sweep: false` で再起動後の終了を止められます。
+まだ動いているターンはそのまま動き続け、落ち着いた時点でセッションが終了します。
+中断したターンで止まっているセッションは、Discard するまで開いたままです。
+猶予のうちに画面がつなぎ直せば、セッションは開いたままになります。
+終了しても何も失われません。セッションは再開でき、次のメッセージで同じ id のまま開き直されます。
 
 ### 大きすぎる会話記録への備え {#oversized-transcript-guards}
 

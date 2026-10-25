@@ -202,7 +202,7 @@ Compute Budget Checklist:
 実験が進むあいだ、実際の支出も追いかけます。
 ```python
 # Simple cost tracker pattern
-
+import json, os
 from datetime import datetime
 
 COST_LOG = "results/cost_log.jsonl"
@@ -347,6 +347,7 @@ If ANY step fails → mark as [CITATION NEEDED], inform scientist
 
 ```python
 # Fetch BibTeX via DOI
+import requests
 
 def doi_to_bibtex(doi: str) -> str:
     response = requests.get(
@@ -599,7 +600,7 @@ cp experiment.py results/exp_003/experiment_snapshot.py
 
 ```python
 # Standard analysis pattern
-
+import json, os
 from pathlib import Path
 
 results = {}
@@ -1039,7 +1040,7 @@ chktex main.tex -q -n2 -n24 -n13 -n1
 # 2. Verify all citations exist in .bib
 # Extract \cite{...} from .tex, check each against .bib
 python3 -c "
-
+import re
 tex = open('main.tex').read()
 bib = open('references.bib').read()
 cites = set(re.findall(r'\\\\cite[tp]?{([^}]+)}', tex))
@@ -1052,7 +1053,7 @@ for cite_group in cites:
 
 # 3. Verify all referenced figures exist on disk
 python3 -c "
-
+import re, os
 tex = open('main.tex').read()
 figs = re.findall(r'\\\\includegraphics(?:\[.*?\])?{([^}]+)}', tex)
 for fig in figs:
@@ -1062,7 +1063,7 @@ for fig in figs:
 
 # 4. Check for duplicate \label definitions
 python3 -c "
-
+import re
 from collections import Counter
 tex = open('main.tex').read()
 labels = re.findall(r'\\\\label{([^}]+)}', tex)
@@ -1196,7 +1197,7 @@ ML では arXiv への投稿が当たり前になっていますが、時期と�
 # (before choosing a title)
 pip install arxiv
 python -c "
-
+import arxiv
 results = list(arxiv.Search(query='ti:\"Your Exact Title\"', max_results=5).results())
 print(f'Found {len(results)} matches')
 for r in results: print(f'  {r.title} ({r.published.year})')
@@ -1476,6 +1477,7 @@ delegate_task("Draft the Experiments section. Read all result files in results/.
 ```python
 # In execute_code:
 from semanticscholar import SemanticScholar
+import requests
 
 sch = SemanticScholar()
 results = sch.search_paper("attention mechanism transformers", limit=5)

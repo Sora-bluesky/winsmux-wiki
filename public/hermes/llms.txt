@@ -52,6 +52,7 @@ Hermes Agent 0.22.5
 - [developer-guide/billing-lifecycle（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/billing-lifecycle/)
 - [developer-guide/browser-provider-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-provider-plugin/)
 - [developer-guide/browser-supervisor（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-supervisor/)
+- [developer-guide/browser-vault-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-vault-plugin/)
 - [developer-guide/chronos-managed-cron-contract（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/chronos-managed-cron-contract/)
 - [developer-guide/cli-internals（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/cli-internals/)
 - [developer-guide/codebase-ownership（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/codebase-ownership/)
@@ -524,6 +525,7 @@ Hermes Agent 0.22.5
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/billing-lifecycle.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/browser-provider-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/browser-supervisor.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/browser-vault-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/chronos-managed-cron-contract.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/cli-internals.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/codebase-ownership.md

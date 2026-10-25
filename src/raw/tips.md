@@ -1,17 +1,23 @@
 ---
 title: "Hermes Wingtips 日本語版"
-description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」の #1〜#99（2026-10-12 まで）を日本語で"
+description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」の #1〜#108（2026-10-22 まで）を日本語で"
 raw: /hermes/raw/tips.md
 ---
 
 # Hermes Wingtips 日本語版
 
-「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは #1〜#99（2026-10-12 まで）の 99 回・8 分類を収録しています。英語の原文は @witcheer のサイト [hermes recipes](https://notwitcheer.github.io/hermes-recipes/wingtips/) にもまとまっています。
+「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは #1〜#108（2026-10-22 まで）の 108 回・8 分類を収録しています。英語の原文は @witcheer のサイト [hermes recipes](https://notwitcheer.github.io/hermes-recipes/wingtips/) にもまとまっています。
 
 日本語の文はこのサイトによる要約です。正確な内容は元のポストと公式ドキュメントをご覧ください。
 
 ## メッセージとボット
 
+- **#106 止まっていた間の Telegram のメッセージを起動時に受け取る** — 既定では、ゲートウェイが止まっている間に届いた Telegram のメッセージは起動時に捨てられます。`hermes config set platforms.telegram.extra.drop_pending_on_cold_boot false` で、次の起動時に順番どおり受け取れます。その間に送ったコマンドも起動時に実行されます。
+  - 元のポスト: https://x.com/witcheer/status/2112083830148649392
+  - 関連: [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
+- **#104 外出先からチャットひとつでゲートウェイを再起動する** — ボットとのチャットで `/restart` を送ると、動いている処理を終えてからゲートウェイが再起動し、戻ったときに送った人のチャットへ通知が届きます。Telegram などメッセージング専用のコマンドで、CLI では使えません。
+  - 元のポスト: https://x.com/witcheer/status/2111359054593544454
+  - 関連: [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
 - **#91 PDF やグラフをファイルとしてチャットに届けてもらう** — Telegram などで「PDF で送って」と頼むと、エージェントが作ったファイルが添付で届きます。グラフは画像、表は `.xlsx` で届きます。毎回そうしてほしいときは `~/.hermes/SOUL.md` にその旨を書いておきます。
   - 元のポスト: https://x.com/witcheer/status/2106632278839337357
   - 関連: [成果物モード（チャットに届く生成ファイル）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/deliverable-mode/)
@@ -42,6 +48,9 @@ raw: /hermes/raw/tips.md
 
 ## モデルとプロバイダ
 
+- **#102 難しい作業のときだけ、対応モデルに深く考えさせる** — `/reasoning high` と打つと、推論の深さを変えられるモデルでは、このセッションのあいだ答える前により深く考えます。トークンと待ち時間は増えます。`--global` を付けると `config.yaml` に残ります。既定は `medium` です。
+  - 元のポスト: https://x.com/witcheer/status/2110629244850385200
+  - 関連: [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/) / [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
 - **#92 コマンド1本で Nous Portal にログインして使い始める** — `hermes setup --portal` でログインしてモデルを選ぶと、推論プロバイダが Nous になり Tool Gateway も有効になります。有料プランなら Web 検索や画像生成もキーなしで使えます。状態は `hermes portal info` で見ます。
   - 元のポスト: https://x.com/witcheer/status/2106998344337731926
   - 関連: [Nous Portal](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/) / [Nous Tool Gateway](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-gateway/)
@@ -86,6 +95,9 @@ raw: /hermes/raw/tips.md
 
 ## セッションと文脈
 
+- **#108 内蔵の記憶はそのままに、外部の記憶プロバイダーを足す** — `hermes memory setup` で、一覧から外部の記憶プロバイダーを選んで設定できます。内蔵の MEMORY.md と USER.md は並んで動き続けます。外部は一度に1つで、Honcho や Hindsight などカタログから配る分は、先に `hermes plugins install <名前>` で入れます。
+  - 元のポスト: https://x.com/witcheer/status/2113170993082765672
+  - 関連: [記憶プロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
 - **#96 直前のやり取りを会話から取り消して、言い方を変えて聞き直す** — `/undo` を打つと、直前の自分のメッセージとエージェントの返事が履歴から消え、その前の時点から聞き直せます。CLI では既定で実行前に確認が出ます。戻るのは会話だけで、ファイルの変更はチェックポイントを有効にしたうえで `/rollback` で戻します。
   - 元のポスト: https://x.com/witcheer/status/2108518464134484398
   - 関連: [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/) / [チェックポイントと /rollback](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
@@ -161,6 +173,9 @@ raw: /hermes/raw/tips.md
 
 ## skill
 
+- **#107 スキルのハブで GitHub の回数制限に当たらないようにする** — スキルのハブは GitHub の API を使うため、認証なしでは1時間60回までです。`hermes config set GITHUB_TOKEN <トークン>` で `.env` に保存すると、1時間5,000回まで上がります。インストールや検索の途中で制限のエラーが出たときの対処です。
+  - 元のポスト: https://x.com/witcheer/status/2112446219070968105
+  - 関連: [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
 - **#93 スキルの名前を知らなくても、頼めば探して入れてくれる** — 「フラッシュカード用のスキルを探して入れて」と普通の言葉で頼むと、エージェントが合うスキルを探してインストールします。ハブから入れるスキルはセキュリティ走査を通ります。Hermes の使い方は同梱の `hermes-agent` スキルが知っています。
   - 元のポスト: https://x.com/witcheer/status/2107371954009247994
   - 関連: [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/) / [Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/)
@@ -224,6 +239,9 @@ raw: /hermes/raw/tips.md
 
 ## 承認と安全
 
+- **#105 未信頼の MCP サーバーのツールに承認を求めさせる** — `config.yaml` の MCP サーバーの設定に `trust: untrusted` を足すと、サーバーが読み取り専用（`readOnlyHint: true`）と申告したツールと許可済みのツールを除き、実行前に承認を求めます。YOLO や `approvals.mode: off` ではこの確認は省かれます。
+  - 元のポスト: https://x.com/witcheer/status/2111721017336881281
+  - 関連: [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
 - **#83 拒否されたコマンドの言い換えをやめさせる** — 審査役に続けて拒否されると、エージェントに作業を止めて報告し、手動の実行か `/approve` を頼むよう指示が出ます。回数は `approvals.denial_breaker_threshold`（既定3、0で無効）で決まります。
   - 元のポスト: https://x.com/witcheer/status/2103395194963980527
   - 関連: [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
@@ -250,6 +268,15 @@ raw: /hermes/raw/tips.md
 
 ## CLI とデスクトップ
 
+- **#103 よく使うモデルに星を付けて、選択画面のいちばん上に出す** — デスクトップのモデル選択で、行の左にある星をクリックすると、そのモデルが一番上の Favorites 欄に並びます。コンポーザーなどモデルを選ぶ場所すべてに出ます。もう一度クリックすれば外れます。
+  - 元のポスト: https://x.com/witcheer/status/2110996667893764440
+  - 関連: [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- **#101 ウィンドウを閉じてもトレイに隠れてセッションが動き続ける** — Settings → Appearance → Window layout → Minimize to tray を入れると、トレイが使える環境ではメインウィンドウを閉じても隠れるだけで、セッションは動き続けます。戻すときはトレイの Show Hermes を使います。
+  - 元のポスト: https://x.com/witcheer/status/2110279446741839926
+  - 関連: [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- **#100 ソースから入れた Hermes を main の最新に合わせて更新する** — 公式リポジトリからソースで入れた Hermes の `hermes update` は、既定の stable チャンネルで公開リリースから次のリリースへ進みます。main の全コミットを追うなら `hermes update --set-channel main`、戻すなら `--set-channel stable` です。同梱版のデスクトップアプリなどは対象外です。
+  - 元のポスト: https://x.com/witcheer/status/2109909502187524193
+  - 関連: [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
 - **#99 エージェントの返答をそのままクリップボードにコピーする** — ターミナルのチャットで `/copy` と打つと、直前の返答がクリップボードに入り、メールや文書にそのまま貼れます。`/copy 2` のように数字を付けると後ろから N 番目の返答をコピーします。CLI 専用のコマンドです。
   - 元のポスト: https://x.com/witcheer/status/2109554664605725085
   - 関連: [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)

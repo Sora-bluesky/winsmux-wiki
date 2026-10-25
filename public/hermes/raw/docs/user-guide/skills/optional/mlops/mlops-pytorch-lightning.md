@@ -45,7 +45,8 @@ pip install lightning
 **PyTorch を Lightning に書き換える**（3 ステップ）:
 
 ```python
-
+import lightning as L
+import torch
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
 

@@ -95,6 +95,7 @@ node scripts/eval.mjs "document.querySelectorAll('[data-slot]').length"
 Promise を待てる eval が付いています。
 
 ```js
+import { CDP, SELECTORS } from './scripts/perf/lib/cdp.mjs'
 
 const cdp = await CDP.connect({ port: 9222, match: '5174' })
 const out = await cdp.eval(`JSON.stringify({

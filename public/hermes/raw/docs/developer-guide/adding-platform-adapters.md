@@ -246,6 +246,7 @@ gateway:
 | `shared_env_prefixes` | `tuple[str, ...] = ()` | そのプラットフォームが、チャンネル以外の機能（たとえば同じプラグインのツール）と共有している環境変数の接頭辞です（Home Assistant なら `('HASS_',)`）。[プロファイルを複製する](/hermes/docs/user-guide/profiles/)とき、この接頭辞のキーが消されるのは、複製元のプロファイルが実際にアダプターを動かしている場合だけです。そのため、ツールしか使っていないプロファイルでは認証情報が残ります。 |
 
 ```python
+import dataclasses
 
 def register(ctx):
     kwargs = dict(

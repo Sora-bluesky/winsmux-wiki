@@ -1225,7 +1225,7 @@ cron のジョブに事前チェックのスクリプト（`script=` でひも�
 
 ```python
 # pre-check script
-
+import json, sys
 latest = fetch_latest_issue_count()
 prev = read_state("issue_count")
 if latest == prev:
@@ -1291,7 +1291,7 @@ cronjob(action="create", name="nightly-analysis",
 ```python
 #!/usr/bin/env python
 # ~/.hermes/scripts/new-rows.py
-
+import json, sqlite3
 conn = sqlite3.connect("/home/me/data/app.db")
 n = conn.execute(
     "SELECT COUNT(*) FROM messages WHERE ts > strftime('%s','now','-2 hours')"

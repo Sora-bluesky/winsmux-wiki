@@ -44,6 +44,7 @@ plugins/image_gen/my-backend/
 ```python
 # plugins/image_gen/my-backend/__init__.py
 from typing import Any, Dict, List, Optional
+import os
 
 from agent.image_gen_provider import (
     DEFAULT_ASPECT_RATIO,

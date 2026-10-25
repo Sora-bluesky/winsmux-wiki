@@ -245,6 +245,8 @@ class EvalHarnessCallback(Callback):
 **ステップ 4: 学習曲線を描く**
 
 ```python
+import json
+import matplotlib.pyplot as plt
 
 # Load all results
 steps = []
@@ -313,6 +315,8 @@ done < models.txt
 **ステップ 3: 比較表を作る**
 
 ```python
+import json
+import pandas as pd
 
 models = [
     "meta-llama-Llama-2-7b-hf",

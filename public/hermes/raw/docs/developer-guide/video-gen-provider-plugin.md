@@ -50,6 +50,7 @@ plugins/video_gen/my-backend/
 ```python
 # plugins/video_gen/my-backend/__init__.py
 from typing import Any, Dict, List, Optional
+import os
 
 from agent.video_gen_provider import (
     VideoGenProvider,

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: ab9b8f31126d0492cdacd7957cf2ea36ac579341
+upstream_blob: b9d0edff7db1ccc135fd1a5240fe4bd166068eb0
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -110,6 +110,7 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes import-agent` | OpenClaw、Claude Code、Codex CLI、Cursor のセットアップをインポートします（[`agent-importers`](/hermes/docs/user-guide/import-from-other-agents/) プラグインが提供します）。 |
 | `hermes dashboard` | 設定・API キー・セッションを管理するための Web ダッシュボードを起動します。 |
 | `hermes serve` | Hermes バックエンドサーバーを起動します（ヘッドレス。デスクトップアプリとリモートバックエンドを支えます）。 |
+| `hermes webapp` | Desktop のワークスペースを、ゲートウェイが配信する形でブラウザに開きます。 |
 | `hermes desktop`（別名 `gui`） | ネイティブの Electron デスクトップアプリをビルド・起動します。 |
 | `hermes profile` | プロファイルを管理します — 複数の独立した Hermes インスタンス。 |
 | `hermes completion` | シェル補完スクリプトを表示します（bash/zsh/fish）。 |
@@ -1799,6 +1800,55 @@ hermes dashboard --port 8080 --no-open
 # From a profile alias — routes to the machine dashboard with the
 # profile preselected in the sidebar switcher (attach if running)
 worker dashboard
+```
+
+## `hermes webapp` {#hermes-webapp}
+
+```bash
+hermes webapp [options]
+```
+
+Hermes Desktop のワークスペースを、ふつうのブラウザで開きます。設定で `webapp.enabled` が `true` のとき
+（[設定 → Webapp](/hermes/docs/user-guide/configuration/#webapp)）、ゲートウェイがこれを専用のリスナーで配信します。
+このコマンドは、Webapp のバンドルが古ければビルドし、ゲートウェイが動いていなければ起動し、
+1回だけ使えるサインインリンクを開きます。チャットはそのゲートウェイの上で動きます。CLI、Desktop、メッセージングが
+使うのと同じゲートウェイです。[デスクトップアプリ → Desktop のワークスペースをブラウザから使う](/hermes/docs/user-guide/desktop/#use-the-desktop-workspace-from-a-browser)を参照してください。
+
+リンクの有効期限は60秒で、使えるのは1回だけです。ブラウザはこのリンクを、そのタブで保持するサインイン状態と引き換えます。
+リンクを受け取れるのは自分の OS ユーザーだけです。ゲートウェイはこのコマンドに、自分専用の
+制御ソケットを通して応答します。Linux では、ブラウザの接続が自分の OS ユーザーのものかをゲートウェイが確かめます。
+Windows では何も確かめませんが、リンクはブラウザを起動するコマンドラインの中だけを通り、ほかの
+標準ユーザーはそれを読めません。macOS、BSD 系、WSL ではどちらも成り立たないため、コマンドはリンクを表示して
+自分で開いてもらう形にし、ブラウザの起動側へ渡すことはありません。
+使われるまでは、そのリンクでブラウザが自分としてサインインできてしまうので、人に見せないでください。
+
+既定のゲートウェイが配信する名前付きプロファイルの場合（`hermes -p work webapp`）、Webapp はそのプロファイルで
+開きます。
+
+ダッシュボードのサインインゲートの内側では（`webapp.host: 0.0.0.0` または `::` のとき、あるいは `webapp.public_url` を設定したとき）、
+コマンドは1回限りのリンクの代わりに、サインイン後に戻ってくる Webapp のアドレスを開きます。
+`webapp.public_url` を設定していればその URL、LAN では Web Access Start が Nous のサインインを登録したアドレス
+（`webapp/sign-in-registration.json`。それがまだこのマシンの LAN アドレスと Webapp のポートである間に限ります）、
+それ以外はループバックのアドレスで、パスワードプロバイダーか、そのために手で設定したサインインを配信します。
+そこではダッシュボードのアカウントでサインインします。ゲートウェイが
+Webapp を配信できないときは、コマンドがその理由を伝えます。ゲートウェイは Webapp の設定を起動時に読むので、原因を直したら
+`hermes gateway restart` を実行してください。まだビルドされていない Webapp のバンドルは
+例外です。このコマンドがビルドし、動いているゲートウェイがすぐに配信します。
+
+| オプション | 説明 |
+|--------|-------------|
+| `--no-open` | ブラウザを開かずに、1回限りのリンク（サインインゲートの内側ではアドレス）を表示します |
+| `--skip-build` | 既存の `apps/desktop/dist-webapp` をそのまま使います |
+| `--force-build` | ビルドの受領記録が最新でも、バンドルをビルドし直します |
+| `--build-only` | バンドルをビルドして止まります |
+| `--status` | 動いているゲートウェイが Webapp を配信しているか、どのアドレスで配信しているかを表示します |
+| `--sign-out` | すべてのブラウザをサインアウトさせます。リンクでサインインしたタブは新しいリンクが必要になり、サインインゲートの内側ではすべてのログインがサインインし直しになります。それらのログインが持っていたアカウントのトークンも、Webapp では使えなくなります。自分でサインインしたネイティブアプリはサインインしたままです。接続は閉じられ、コマンドがその数を報告します。起動途中のゲートウェイは待ちます。動いているゲートウェイがなければ、保存されている認証情報を置き換えます |
+
+```bash
+# Turn it on once, then open it
+hermes config set webapp.enabled true
+hermes gateway restart
+hermes webapp
 ```
 
 ## `hermes profile` {#hermes-profile}

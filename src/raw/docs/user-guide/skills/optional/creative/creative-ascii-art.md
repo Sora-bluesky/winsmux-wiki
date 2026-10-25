@@ -257,7 +257,7 @@ curl -s 'https://ascii.co.uk/art/cat' -o ~/.hermes/cache/scratch/ascii_art.html
 **手順 2 — pre タグから作品を取り出す:**
 
 ```python
-
+import os, re, html
 with open(os.path.expanduser('~/.hermes/cache/scratch/ascii_art.html')) as f:
     text = f.read()
 arts = re.findall(r'<pre[^>]*>(.*?)</pre>', text, re.DOTALL)

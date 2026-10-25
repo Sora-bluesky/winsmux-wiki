@@ -64,6 +64,7 @@ pip install dspy[all]           # All providers
 ### 基本の例: 質問に答える {#basic-example-question-answering}
 
 ```python
+import dspy
 
 # Configure your language model
 lm = dspy.Claude(model="claude-sonnet-4-5-20250929")
@@ -86,6 +87,7 @@ print(response.answer)  # "Paris"
 ### 考える手順を書かせる {#chain-of-thought-reasoning}
 
 ```python
+import dspy
 
 lm = dspy.Claude(model="claude-sonnet-4-5-20250929")
 dspy.settings.configure(lm=lm)
@@ -242,6 +244,7 @@ optimized_module = optimizer.compile(qa, trainset=trainset)
 #### 複数段の処理 {#multi-stage-pipeline}
 
 ```python
+import dspy
 
 class MultiHopQA(dspy.Module):
     def __init__(self):
@@ -270,7 +273,7 @@ result = qa_system(question="Who wrote the book that inspired the movie Blade Ru
 #### 最適化つきの RAG システム {#rag-system-with-optimization}
 
 ```python
-
+import dspy
 from dspy.retrieve.chromadb_rm import ChromadbRM
 
 # Configure retriever
@@ -304,6 +307,7 @@ optimized_rag = optimizer.compile(rag, trainset=trainset)
 ### Anthropic Claude {#anthropic-claude}
 
 ```python
+import dspy
 
 lm = dspy.Claude(
     model="claude-sonnet-4-5-20250929",
@@ -376,7 +380,7 @@ print(result.person.age)   # 35
 ### 書き方 2: 条件を課しながら最適化する {#pattern-2-assertion-driven-optimization}
 
 ```python
-
+import dspy
 from dspy.primitives.assertions import assert_transform_module, backtrack_handler
 
 class MathQA(dspy.Module):
@@ -400,7 +404,7 @@ class MathQA(dspy.Module):
 ### 書き方 3: 答えをそろえる {#pattern-3-self-consistency}
 
 ```python
-
+import dspy
 from collections import Counter
 
 class ConsistentQA(dspy.Module):

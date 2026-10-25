@@ -134,7 +134,7 @@ scripts/run_tests.sh tests/path/to/test_file.py --showlocals --tb=long
 ## レシピ 4: どんな例外でも事後解析する {#recipe-4-post-mortem-on-any-exception}
 
 ```python
-
+import pdb, sys
 try:
     run_the_thing()
 except Exception:
@@ -151,7 +151,7 @@ python -m pdb -c continue script.py
 REPL や jupyter では、全体にフックを仕掛けるやり方もあります。
 
 ```python
-
+import sys
 def excepthook(etype, value, tb):
     import pdb; pdb.post_mortem(tb)
 sys.excepthook = excepthook
@@ -186,7 +186,7 @@ python -m pm.build_env --source . --out .venv --group dev --group test
 エントリポイントの先頭近く（またはデバッグしたい関数の中）に、次を足します。
 
 ```python
-
+import debugpy
 debugpy.listen(("127.0.0.1", 5678))
 print("debugpy listening on 5678, waiting for client...", flush=True)
 debugpy.wait_for_client()
@@ -229,6 +229,7 @@ echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 
 ```python
 # ~/.hermes/cache/scratch/dap_client.py
+import socket, json, itertools, time, sys
 
 HOST, PORT = "127.0.0.1", 5678
 s = socket.create_connection((HOST, PORT))
@@ -314,7 +315,7 @@ gateway は Node 製 TUI の子プロセスとして動きます。やり方は 
 **A. gateway のソースを書き換える:**
 ```python
 # tui_gateway/server.py near the top of serve()
-
+import debugpy
 debugpy.listen(("127.0.0.1", 5678))
 debugpy.wait_for_client()
 ```
@@ -391,7 +392,7 @@ scripts/run_tests.sh tests/the_test.py   # confirm it fails under the isolated r
 **「非同期のハンドラがデッドロックする」**
 ```python
 # Add at handler entry
-
+import remote_pdb; remote_pdb.set_trace(host="127.0.0.1", port=4444)
 ```
 ハンドラを動かします。`nc 127.0.0.1 4444` でつなぎ、`w` で止まっているフレームを見て、`!import asyncio; asyncio.all_tasks()` でほかに何が残っているかを見ます。
 

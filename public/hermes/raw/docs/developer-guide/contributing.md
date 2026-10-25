@@ -300,7 +300,7 @@ except UnicodeDecodeError:
 `os.setsid()`、`os.killpg()`、シグナル処理はプラットフォームによって異なります。
 
 ```python
-
+import platform
 if platform.system() != "Windows":
     kwargs["preexec_fn"] = os.setsid
 ```

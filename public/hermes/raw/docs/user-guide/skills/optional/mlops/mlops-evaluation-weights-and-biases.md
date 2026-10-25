@@ -64,6 +64,7 @@ export WANDB_API_KEY=your_api_key_here
 ### 実験管理の基本 {#basic-experiment-tracking}
 
 ```python
+import wandb
 
 # Initialize a run
 run = wandb.init(
@@ -98,6 +99,8 @@ wandb.finish()
 ### PyTorch と組み合わせる {#with-pytorch}
 
 ```python
+import torch
+import wandb
 
 # Initialize
 wandb.init(project="pytorch-demo", config={
@@ -217,6 +220,8 @@ wandb.log({"predictions": table})
 ### 4. モデルのチェックポイント {#4-model-checkpointing}
 
 ```python
+import torch
+import wandb
 
 # Save model checkpoint
 checkpoint = {
@@ -396,6 +401,7 @@ run.link_artifact(model_artifact, 'model-registry/production-models')
 
 ```python
 from transformers import Trainer, TrainingArguments
+import wandb
 
 # Initialize W&B
 wandb.init(project="hf-transformers")
@@ -425,6 +431,7 @@ trainer.train()
 ```python
 from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import WandbLogger
+import wandb
 
 # Create W&B logger
 wandb_logger = WandbLogger(
@@ -444,7 +451,7 @@ trainer.fit(model, datamodule=dm)
 ### Keras/TensorFlow {#kerastensorflow}
 
 ```python
-
+import wandb
 from wandb.integration.keras import WandbMetricsLogger, WandbModelCheckpoint
 
 # Initialize
@@ -469,6 +476,7 @@ model.fit(
 
 ```python
 # Log custom visualizations
+import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots()
 ax.plot(x, y)
@@ -556,6 +564,7 @@ wandb.log({"predictions": predictions_table})
 ### 5. 接続が不安定なときはオフラインモードを使う {#5-use-offline-mode-for-unstable-connections}
 
 ```python
+import os
 
 # Enable offline mode
 os.environ["WANDB_MODE"] = "offline"

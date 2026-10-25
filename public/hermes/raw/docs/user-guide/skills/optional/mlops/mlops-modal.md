@@ -71,6 +71,7 @@ modal setup  # Opens browser for authentication
 ### GPU で Hello World {#hello-world-with-gpu}
 
 ```python
+import modal
 
 app = modal.App("hello-gpu")
 
@@ -89,6 +90,7 @@ def main():
 ### 推論の窓口を作る {#basic-inference-endpoint}
 
 ```python
+import modal
 
 app = modal.App("text-generation")
 image = modal.Image.debian_slim().pip_install("transformers", "torch", "accelerate")

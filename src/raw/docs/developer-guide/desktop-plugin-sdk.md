@@ -93,6 +93,8 @@ Hermes では「プラグイン」という言葉がいくつかの別物を指�
 
 ```javascript
 // ~/.hermes/desktop-plugins/hello/plugin.js
+import { host, haptic, useValue } from '@hermes/plugin-sdk'
+import { jsx, jsxs } from 'react/jsx-runtime'
 
 function HelloPane() {
   const gateway = useValue(host.state.gateway)
@@ -295,6 +297,7 @@ data: {
 サイドバーのナビの行（やパレットのコマンド）と組み合わせてください。
 
 ```javascript
+import { ROUTES_AREA, SIDEBAR_NAV_AREA } from '@hermes/plugin-sdk'
 
 ctx.registerMany([
   {
@@ -321,6 +324,7 @@ id を書きます。どこからでも `host.navigate('/my-page')` でそのル
 （`{ id, label?, icon?, detail?, variant?, menuItems?, … }`）としての `data` を使ってください。
 
 ```javascript
+import { STATUSBAR_AREAS, TITLEBAR_AREAS } from '@hermes/plugin-sdk'
 
 ctx.register({
   id: 'count',
@@ -349,6 +353,7 @@ ctx.register({
 ### パレットのコマンドとキー割り当て {#palette-commands-and-keybinds}
 
 ```javascript
+import { PALETTE_AREA, KEYBINDS_AREA } from '@hermes/plugin-sdk'
 
 ctx.registerMany([
   {
@@ -388,6 +393,7 @@ ctx.registerMany([
 色など）。組み込みのものと同じようにテーマの選択画面に現れます。
 
 ```javascript
+import { THEMES_AREA } from '@hermes/plugin-sdk'
 
 ctx.register({ id: 'noir', area: THEMES_AREA, data: myDesktopTheme })
 ```
@@ -397,6 +403,7 @@ ctx.register({ id: 'noir', area: THEMES_AREA, data: myDesktopTheme })
 （`setTheme`、`setMode`、`previewTheme`）。
 
 ```javascript
+import { Button, useTheme } from '@hermes/plugin-sdk'
 
 function ThemePicker() {
   const { availableThemes, setTheme, themeName } = useTheme()
@@ -416,6 +423,7 @@ function ThemePicker() {
 リセットしてしまうことはありません。
 
 ```javascript
+import { host, requestTheme } from '@hermes/plugin-sdk'
 
 host.onEvent('gateway.ready', () => {
   if (!requestTheme('noir')) {
@@ -486,6 +494,7 @@ host.onEvent('gateway.ready', () => {
 組み込みの項目と同じになります。プラグインがメニューの DOM に触ることはありません。
 
 ```javascript
+import { COMPOSER_AREAS, host } from '@hermes/plugin-sdk'
 
 ctx.register({
   id: 'spelling',
@@ -567,6 +576,7 @@ host.spellcheck.removeWord(word: string): Promise<boolean>
 まだセッションの id を持たない新しい下書きです。
 
 ```javascript
+import { host } from '@hermes/plugin-sdk'
 
 // Append to the active composer (modes: 'block' | 'inline' | 'prefix';
 // 'prefix' seats a slash command at the start). Acknowledged like setDraft:
@@ -644,6 +654,7 @@ pet-wallet の行は[ペットの吹き出し](#pet-bubble)の窓口を使いま
 負担もかかりません。
 
 ```ts
+import { SESSION_ROW_AREAS, type SessionRowSlotContribution } from '@hermes/plugin-sdk'
 
 ctx.register({
   area: SESSION_ROW_AREAS.trailing,
@@ -712,6 +723,7 @@ id は**保存された**セッションの id です。実行時の id は、�
 #### モデルのピルの表示名の提供元 {#model-pill-label-providers}
 
 ```ts
+import { COMPOSER_AREAS, type ComposerModelPillContext, type ComposerModelPillProvider } from '@hermes/plugin-sdk'
 
 interface ComposerModelPillContext {
   model: string            // the model slug the pill would show
@@ -776,6 +788,7 @@ register(ctx) {
 星、サブメニュー、クリック時の動作はコアのままです。
 
 ```ts
+import { MODEL_MENU_ROW_AREA, type ModelMenuRowContribution } from '@hermes/plugin-sdk'
 
 interface ModelMenuRowContext {
   provider: string  // provider slug: 'anthropic', 'openrouter', …
@@ -827,7 +840,7 @@ ctx.register({
 どのプラグインもバッジを付けていないカードでは、この行は場所を取りません。
 
 ```ts
-
+import {
   KANBAN_CARD_AREAS,
   KANBAN_CARD_BADGE_HUES,
   type KanbanCardBadgeContribution
@@ -1046,6 +1059,7 @@ props は明示的な許可の一覧で、`ComponentProps<'iframe'>` ではあ�
 メッセージの中に自作のコンポーネントを表示できます。
 
 ```javascript
+import { TRANSCRIPT_DIRECTIVE_AREA } from '@hermes/plugin-sdk'
 
 ctx.register({
   id: 'task-card',
@@ -1122,6 +1136,9 @@ Desktop は会話の記録をさかのぼり、そのパスを最初に結果に
 ツール名に対して描き手を登録していれば、組み込みのプレーヤーの代わりにあなたのコンポーネントが表示されます。
 
 ```javascript
+import * as sdk from '@hermes/plugin-sdk'
+import { useEffect, useState } from 'react'
+import { jsx, jsxs } from 'react/jsx-runtime'
 
 export default {
   id: 'sound-fx', // the desktop half of the `sound-fx` package
@@ -1206,6 +1223,7 @@ Desktop だけがそれを格上げします。
 代わりにその中で `<Contribute>` を描画してください。
 
 ```javascript
+import { Contribute, WORKSPACE_PAGE_HEADER_AREA } from '@hermes/plugin-sdk'
 
 jsx(Contribute, {
   area: WORKSPACE_PAGE_HEADER_AREA,
@@ -1222,6 +1240,7 @@ jsx(Contribute, {
 操作部品を置きたい位置に書いてください。
 
 ```javascript
+import { WorkspacePageHeaderControl } from '@hermes/plugin-sdk'
 
 jsx(WorkspacePageHeaderControl, {
   id: 'my-page:switcher', // namespace with your slug
@@ -1242,6 +1261,7 @@ jsx(WorkspacePageHeaderControl, {
 変わりません。
 
 ```ts
+import { SIDEBAR_NAV_PREFS_AREA, type SidebarNavPrefsContribution } from '@hermes/plugin-sdk'
 
 // Payload (`data`) of a sidebarNav.prefs contribution
 interface SidebarNavPrefsContribution {
@@ -1651,6 +1671,8 @@ id を指定して実行できます。プラグインが受け取るのはシ�
 プラグイン側には何の影響もありません。
 
 ```ts
+import { TITLEBAR_AREAS } from '@hermes/plugin-sdk'
+import { jsx } from 'react/jsx-runtime'
 
 register(ctx) {
   ctx.register({
@@ -1964,6 +1986,7 @@ validate` は、パックの `<lang>.desktop.yaml` をこの一覧と照らし�
 取得のループを自作しないでください。
 
 ```javascript
+import { useQuery, useMutation, useQueryClient, atom, computed, useValue } from '@hermes/plugin-sdk'
 
 function MyPanel() {
   const { data, isLoading } = useQuery({
@@ -1980,6 +2003,7 @@ function MyPanel() {
 （`ctx.socket` のフレームが届いたときなど）、共有の `queryClient` を読み込んでください。
 
 ```javascript
+import { queryClient } from '@hermes/plugin-sdk'
 
 ctx.socket('/events', () => {
   queryClient.invalidateQueries({ queryKey: ['my-plugin', 'items'] })

@@ -116,6 +116,9 @@ rm -rf .claude/    # remove Claude Code-specific artifacts
 nginx も要りません。
 
 ```javascript
+import http from 'node:http';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const API_PORT = parseInt(process.env.API_PORT || '4747');
 const DIST_DIR = process.argv[2] || './dist';

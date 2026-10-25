@@ -157,6 +157,8 @@ pip install lambda-cloud-client
 ### 認証 {#authentication}
 
 ```python
+import os
+import lambda_cloud_client
 
 # Configure with API key
 configuration = lambda_cloud_client.Configuration(
@@ -389,7 +391,8 @@ python train.py --epochs 100 --checkpoint-dir /lambda/nfs/storage/checkpoints
 
 ```python
 # train_ddp.py
-
+import torch
+import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 def main():
@@ -414,6 +417,7 @@ torchrun --nproc_per_node=8 train_ddp.py
 ### 途中経過をファイルシステムに保存する {#checkpoint-to-filesystem}
 
 ```python
+import os
 
 checkpoint_dir = "/lambda/nfs/my-storage/checkpoints"
 os.makedirs(checkpoint_dir, exist_ok=True)

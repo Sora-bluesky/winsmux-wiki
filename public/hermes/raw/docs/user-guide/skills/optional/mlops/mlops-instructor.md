@@ -63,7 +63,7 @@ pip install "instructor[all]"        # All providers
 ### 基本の例: ユーザー情報を取り出す {#basic-example-extract-user-data}
 
 ```python
-
+import instructor
 from pydantic import BaseModel
 from anthropic import Anthropic
 
@@ -358,7 +358,7 @@ for task in tasks:
 ### Anthropic Claude {#anthropic-claude}
 
 ```python
-
+import instructor
 from anthropic import Anthropic
 
 client = instructor.from_anthropic(

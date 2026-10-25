@@ -168,7 +168,7 @@ secrets:
 Hermes のリポジトリにあるテストキット（`tests/secret_sources/conformance.py`）を、プラグインのテストで継承してください。
 
 ```python
-
+import pytest
 from tests.secret_sources.conformance import SecretSourceConformance
 
 class TestMyVaultConformance(SecretSourceConformance):

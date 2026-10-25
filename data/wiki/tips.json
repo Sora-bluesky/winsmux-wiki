@@ -2,7 +2,7 @@
  "series": "Hermes Wingtips",
  "author": "witcheer",
  "authorUrl": "https://x.com/witcheer",
- "updated": "2026-10-19",
+ "updated": "2026-10-26",
  "categories": [
   "メッセージとボット",
   "モデルとプロバイダ",
@@ -13,7 +13,7 @@
   "CLI とデスクトップ",
   "その他"
  ],
- "count": 99,
+ "count": 108,
  "items": [
   {
    "n": 1,
@@ -2150,6 +2150,202 @@
     "clipboard",
     "クリップボード",
     "コピー"
+   ]
+  },
+  {
+   "n": 100,
+   "date": "2026-10-13",
+   "url": "https://x.com/witcheer/status/2109909502187524193",
+   "feature": "hermes update --set-channel main",
+   "title_ja": "ソースから入れた Hermes を main の最新に合わせて更新する",
+   "summary_ja": "公式リポジトリからソースで入れた Hermes の `hermes update` は、既定の stable チャンネルで公開リリースから次のリリースへ進みます。main の全コミットを追うなら `hermes update --set-channel main`、戻すなら `--set-channel stable` です。同梱版のデスクトップアプリなどは対象外です。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "更新とアンインストール",
+     "url": "/hermes/docs/getting-started/updating/"
+    }
+   ],
+   "tags": [
+    "update",
+    "set-channel",
+    "stable",
+    "main",
+    "アップデート"
+   ]
+  },
+  {
+   "n": 101,
+   "date": "2026-10-14",
+   "url": "https://x.com/witcheer/status/2110279446741839926",
+   "feature": "Minimize to tray",
+   "title_ja": "ウィンドウを閉じてもトレイに隠れてセッションが動き続ける",
+   "summary_ja": "Settings → Appearance → Window layout → Minimize to tray を入れると、トレイが使える環境ではメインウィンドウを閉じても隠れるだけで、セッションは動き続けます。戻すときはトレイの Show Hermes を使います。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "Hermes Desktop",
+     "url": "/hermes/docs/user-guide/desktop/"
+    }
+   ],
+   "tags": [
+    "Minimize to tray",
+    "system tray",
+    "トレイ",
+    "常駐"
+   ]
+  },
+  {
+   "n": 102,
+   "date": "2026-10-15",
+   "url": "https://x.com/witcheer/status/2110629244850385200",
+   "feature": "/reasoning high",
+   "title_ja": "難しい作業のときだけ、対応モデルに深く考えさせる",
+   "summary_ja": "`/reasoning high` と打つと、推論の深さを変えられるモデルでは、このセッションのあいだ答える前により深く考えます。トークンと待ち時間は増えます。`--global` を付けると `config.yaml` に残ります。既定は `medium` です。",
+   "category": "モデルとプロバイダ",
+   "links": [
+    {
+     "title": "Hermes Agent の設定",
+     "url": "/hermes/docs/user-guide/configuration/"
+    },
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    }
+   ],
+   "tags": [
+    "reasoning",
+    "reasoning_effort",
+    "思考の深さ",
+    "推論"
+   ]
+  },
+  {
+   "n": 103,
+   "date": "2026-10-16",
+   "url": "https://x.com/witcheer/status/2110996667893764440",
+   "feature": "Favorites",
+   "title_ja": "よく使うモデルに星を付けて、選択画面のいちばん上に出す",
+   "summary_ja": "デスクトップのモデル選択で、行の左にある星をクリックすると、そのモデルが一番上の Favorites 欄に並びます。コンポーザーなどモデルを選ぶ場所すべてに出ます。もう一度クリックすれば外れます。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "Hermes Desktop",
+     "url": "/hermes/docs/user-guide/desktop/"
+    }
+   ],
+   "tags": [
+    "Favorites",
+    "model picker",
+    "お気に入り",
+    "モデル選択"
+   ]
+  },
+  {
+   "n": 104,
+   "date": "2026-10-17",
+   "url": "https://x.com/witcheer/status/2111359054593544454",
+   "feature": "/restart",
+   "title_ja": "外出先からチャットひとつでゲートウェイを再起動する",
+   "summary_ja": "ボットとのチャットで `/restart` を送ると、動いている処理を終えてからゲートウェイが再起動し、戻ったときに送った人のチャットへ通知が届きます。Telegram などメッセージング専用のコマンドで、CLI では使えません。",
+   "category": "メッセージとボット",
+   "links": [
+    {
+     "title": "スラッシュコマンド早見表",
+     "url": "/hermes/docs/reference/slash-commands/"
+    }
+   ],
+   "tags": [
+    "restart",
+    "gateway",
+    "再起動",
+    "Telegram"
+   ]
+  },
+  {
+   "n": 105,
+   "date": "2026-10-18",
+   "url": "https://x.com/witcheer/status/2111721017336881281",
+   "feature": "trust: untrusted",
+   "title_ja": "未信頼の MCP サーバーのツールに承認を求めさせる",
+   "summary_ja": "`config.yaml` の MCP サーバーの設定に `trust: untrusted` を足すと、サーバーが読み取り専用（`readOnlyHint: true`）と申告したツールと許可済みのツールを除き、実行前に承認を求めます。YOLO や `approvals.mode: off` ではこの確認は省かれます。",
+   "category": "承認と安全",
+   "links": [
+    {
+     "title": "MCP 設定の早見表",
+     "url": "/hermes/docs/reference/mcp-config-reference/"
+    }
+   ],
+   "tags": [
+    "MCP",
+    "trust",
+    "untrusted",
+    "readOnlyHint",
+    "承認"
+   ]
+  },
+  {
+   "n": 106,
+   "date": "2026-10-19",
+   "url": "https://x.com/witcheer/status/2112083830148649392",
+   "feature": "drop_pending_on_cold_boot",
+   "title_ja": "止まっていた間の Telegram のメッセージを起動時に受け取る",
+   "summary_ja": "既定では、ゲートウェイが止まっている間に届いた Telegram のメッセージは起動時に捨てられます。`hermes config set platforms.telegram.extra.drop_pending_on_cold_boot false` で、次の起動時に順番どおり受け取れます。その間に送ったコマンドも起動時に実行されます。",
+   "category": "メッセージとボット",
+   "links": [
+    {
+     "title": "Telegram",
+     "url": "/hermes/docs/user-guide/messaging/telegram/"
+    }
+   ],
+   "tags": [
+    "Telegram",
+    "drop_pending_on_cold_boot",
+    "cold boot",
+    "取りこぼし"
+   ]
+  },
+  {
+   "n": 107,
+   "date": "2026-10-20",
+   "url": "https://x.com/witcheer/status/2112446219070968105",
+   "feature": "GITHUB_TOKEN",
+   "title_ja": "スキルのハブで GitHub の回数制限に当たらないようにする",
+   "summary_ja": "スキルのハブは GitHub の API を使うため、認証なしでは1時間60回までです。`hermes config set GITHUB_TOKEN <トークン>` で `.env` に保存すると、1時間5,000回まで上がります。インストールや検索の途中で制限のエラーが出たときの対処です。",
+   "category": "skill",
+   "links": [
+    {
+     "title": "スキルの仕組み",
+     "url": "/hermes/docs/user-guide/features/skills/"
+    }
+   ],
+   "tags": [
+    "GITHUB_TOKEN",
+    "Skills Hub",
+    "rate limit",
+    "回数制限"
+   ]
+  },
+  {
+   "n": 108,
+   "date": "2026-10-22",
+   "url": "https://x.com/witcheer/status/2113170993082765672",
+   "feature": "hermes memory setup",
+   "title_ja": "内蔵の記憶はそのままに、外部の記憶プロバイダーを足す",
+   "summary_ja": "`hermes memory setup` で、一覧から外部の記憶プロバイダーを選んで設定できます。内蔵の MEMORY.md と USER.md は並んで動き続けます。外部は一度に1つで、Honcho や Hindsight などカタログから配る分は、先に `hermes plugins install <名前>` で入れます。",
+   "category": "セッションと文脈",
+   "links": [
+    {
+     "title": "記憶プロバイダー",
+     "url": "/hermes/docs/user-guide/features/memory-providers/"
+    }
+   ],
+   "tags": [
+    "memory provider",
+    "memory setup",
+    "Honcho",
+    "Mem0",
+    "記憶"
    ]
   }
  ]

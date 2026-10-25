@@ -101,7 +101,7 @@ curl -s --max-time 10 \
 # Extract titles and URLs from JSON
 curl -s --max-time 10 "${SEARXNG_URL}/search?q=fastapi&format=json&limit=5" \
   | python3 -c "
-
+import json, sys
 data = json.load(sys.stdin)
 for r in data.get('results', []):
     print(r.get('title',''))
@@ -118,6 +118,7 @@ for r in data.get('results', []):
 `requests` ライブラリを使って、Python から SearXNG の REST API を直接呼びます:
 
 ```python
+import os, requests, urllib.parse
 
 base_url = os.environ.get("SEARXNG_URL", "")
 if not base_url:

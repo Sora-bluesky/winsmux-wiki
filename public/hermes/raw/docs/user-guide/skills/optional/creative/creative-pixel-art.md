@@ -151,7 +151,8 @@ pixel_art("in.png", "out.png", preset="snes", palette="PICO_8", block=6)
 ### Python（読み込んで使う） {#python-import}
 
 ```python
-
+import sys
+import os
 sys.path.insert(0, os.path.expanduser("~/.hermes/skills/creative/pixel-art/scripts"))
 from pixel_art import pixel_art
 from pixel_art_video import pixel_art_video

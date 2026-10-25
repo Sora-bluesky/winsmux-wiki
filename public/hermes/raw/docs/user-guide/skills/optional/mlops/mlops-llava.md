@@ -78,6 +78,7 @@ from llava.mm_utils import get_model_name_from_path, process_images, tokenizer_i
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN
 from llava.conversation import conv_templates
 from PIL import Image
+import torch
 
 # Load model
 model_path = "liuhaotian/llava-v1.5-7b"
@@ -302,6 +303,7 @@ llm = LLaVALLM()
 ### Gradio のアプリ {#gradio-app}
 
 ```python
+import gradio as gr
 
 def chat(image, text, history):
     response = ask_llava(model, image, text)

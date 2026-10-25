@@ -48,6 +48,7 @@ print(summary)
 
 ```python
 from hermes_tools import search_files, read_file
+import json
 
 # Find all config files and extract database settings
 matches = search_files("database", path=".", file_glob="*.yaml", limit=20)
@@ -63,6 +64,7 @@ print(json.dumps(configs, indent=2))
 
 ```python
 from hermes_tools import web_search, web_extract
+import json
 
 # Search, extract, and summarize in one turn
 results = web_search("Rust async runtime comparison 2025", limit=5)
@@ -105,6 +107,7 @@ print(f"Fixed {fixed} files out of {len(matches.get('matches', []))} matches")
 
 ```python
 from hermes_tools import terminal, read_file
+import json
 
 # Run tests, parse results, and report
 result = terminal("cd /project && python -m pytest --tb=short -q 2>&1", timeout=120)

@@ -366,6 +366,7 @@ ntn workers deploy --name my-worker
 
 `src/index.ts`:
 ```typescript
+import { Worker } from "@notionhq/workers";
 
 const worker = new Worker();
 export default worker;

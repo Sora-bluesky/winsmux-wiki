@@ -145,7 +145,7 @@ Hermes には Graph 認証のスモークテストが同梱されています。
 
 ```python
 python -c "
-
+import asyncio
 from tools.microsoft_graph_auth import MicrosoftGraphTokenProvider
 provider = MicrosoftGraphTokenProvider.from_env()
 token = asyncio.run(provider.get_access_token())

@@ -72,6 +72,7 @@ pip install -U openai-whisper
 ### 基本の文字起こし {#basic-transcription}
 
 ```python
+import whisper
 
 # Load model
 model = whisper.load_model("base")
@@ -194,6 +195,7 @@ whisper spanish.mp3 --task translate
 ## まとめて処理する {#batch-processing}
 
 ```python
+import os
 
 audio_files = ["file1.mp3", "file2.mp3", "file3.mp3"]
 
@@ -227,6 +229,7 @@ for segment in segments:
 ## GPU で速くする {#gpu-acceleration}
 
 ```python
+import whisper
 
 # Automatically uses GPU if available
 model = whisper.load_model("turbo")

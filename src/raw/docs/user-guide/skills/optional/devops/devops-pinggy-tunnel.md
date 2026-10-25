@@ -205,7 +205,7 @@ ssh -p 443 -L4300:localhost:4300 -R0:localhost:8000 free@a.pinggy.io
 ```bash
 # 1. Tiny capturing server: every request gets appended to ~/.hermes/cache/scratch/webhook-hits.log
 cat >~/.hermes/cache/scratch/webhook-server.py <<'PY'
-
+import http.server, json, datetime, pathlib
 LOG = pathlib.Path("~/.hermes/cache/scratch/webhook-hits.log").expanduser()
 class H(http.server.BaseHTTPRequestHandler):
     def _capture(self):

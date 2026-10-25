@@ -83,7 +83,7 @@ pip install -e .
 何より先に、使える GPU を確認します。
 ```bash
 python3 -c "
-
+import torch
 if torch.cuda.is_available():
     gpu = torch.cuda.get_device_name(0)
     vram = torch.cuda.get_device_properties(0).total_memory / 1024**3

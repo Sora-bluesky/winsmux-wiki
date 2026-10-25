@@ -44,6 +44,10 @@ API キーを使った端から端までの連携、独自の処理ロジック�
 # tools/weather_tool.py
 """Weather Tool -- look up current weather for a location."""
 
+import json
+import os
+import logging
+
 logger = logging.getLogger(__name__)
 
 # --- Availability check ---

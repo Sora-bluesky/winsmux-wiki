@@ -77,7 +77,7 @@ pip install transformers torch torchaudio
 ### 文章から音楽を作る（AudioCraft） {#basic-text-to-music-audiocraft}
 
 ```python
-
+import torchaudio
 from audiocraft.models import MusicGen
 
 # Load model
@@ -102,6 +102,7 @@ torchaudio.save("output.wav", wav[0].cpu(), sample_rate=32000)
 
 ```python
 from transformers import AutoProcessor, MusicgenForConditionalGeneration
+import scipy
 
 # Load model and processor
 processor = AutoProcessor.from_pretrained("facebook/musicgen-small")
@@ -199,6 +200,7 @@ AudioCraft Architecture:
 
 ```python
 from audiocraft.models import MusicGen
+import torchaudio
 
 model = MusicGen.get_pretrained('facebook/musicgen-medium')
 
@@ -230,6 +232,7 @@ for i, audio in enumerate(wav):
 
 ```python
 from audiocraft.models import MusicGen
+import torchaudio
 
 # Load melody model
 model = MusicGen.get_pretrained('facebook/musicgen-melody')
@@ -271,7 +274,7 @@ processor = AutoProcessor.from_pretrained("facebook/musicgen-medium")
 model = MusicgenForConditionalGeneration.from_pretrained("facebook/musicgen-medium")
 
 # Load audio to continue
-
+import torchaudio
 audio, sr = torchaudio.load("intro.wav")
 
 # Process with text and audio
@@ -337,6 +340,7 @@ wav = model.generate_with_style([None], style_audio, sr)
 
 ```python
 from audiocraft.models import AudioGen
+import torchaudio
 
 model = AudioGen.get_pretrained('facebook/audiogen-medium')
 model.set_generation_params(duration=10)
@@ -361,6 +365,8 @@ for i, audio in enumerate(wav):
 
 ```python
 from audiocraft.models import CompressionModel
+import torch
+import torchaudio
 
 # Load EnCodec
 model = CompressionModel.get_pretrained('facebook/encodec_32khz')
@@ -390,7 +396,8 @@ torchaudio.save("reconstructed.wav", decoded[0].cpu(), sample_rate=32000)
 ### 進め方 1: 音楽を作る一連の流れ {#workflow-1-music-generation-pipeline}
 
 ```python
-
+import torch
+import torchaudio
 from audiocraft.models import MusicGen
 
 class MusicGenerator:
@@ -435,9 +442,10 @@ generator.save(audio, "epic_music.wav")
 ### 進め方 2: 効果音をまとめて作る {#workflow-2-sound-design-batch-processing}
 
 ```python
-
+import json
 from pathlib import Path
 from audiocraft.models import AudioGen
+import torchaudio
 
 def batch_generate_sounds(sound_specs, output_dir):
     """
@@ -482,7 +490,9 @@ results = batch_generate_sounds(sounds, "sound_effects/")
 ### 進め方 3: Gradio で試せる画面を作る {#workflow-3-gradio-demo}
 
 ```python
-
+import gradio as gr
+import torch
+import torchaudio
 from audiocraft.models import MusicGen
 
 model = MusicGen.get_pretrained('facebook/musicgen-small')

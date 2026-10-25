@@ -1,6 +1,58 @@
 {
-  "generatedAt": "2026-10-25",
+  "generatedAt": "2026-10-26",
   "entries": [
+    {
+      "date": "2026-10-25",
+      "sha": "a1e6b2f",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "reference/mcp-config-reference",
+          "title": "MCP 設定の早見表",
+          "url": "/hermes/docs/reference/mcp-config-reference/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/mcp",
+          "title": "MCP（Model Context Protocol）",
+          "url": "/hermes/docs/user-guide/features/mcp/"
+        },
+        {
+          "id": "user-guide/features/memory",
+          "title": "ずっと残る記憶",
+          "url": "/hermes/docs/user-guide/features/memory/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        }
+      ]
+    },
     {
       "date": "2026-10-24",
       "sha": "b6b56a8",

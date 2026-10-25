@@ -2,7 +2,7 @@
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: dfe081aee7732c3ed8e7da0c2492cbb0dab9ed07
+upstream_blob: 27abe023e6815344ac5fcaa8fbced190402b73f2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -588,7 +588,7 @@ delegate_task(
 
 **費用の注意:** `max_spawn_depth: 3` と `max_concurrent_children: 3` なら、ツリーは 3×3×3 = 27 個の末端エージェントが同時に動くところまで広がります。階層がひとつ増えるごとに費用は掛け算になります。`max_spawn_depth` を上げるのは、意図してからにしてください。
 
-**一度きりの実行は別枠で区切られます。** `hermes chat -q` / `--oneshot` のセッションが起動できるサブエージェントは、合計で `delegation.oneshot_max_children` まで（既定は `2`、`0` なら無制限）です。一度きりの実行には結果を受け取るあとのターンがなく、ベンチマークの記録を見ると、その起動のほとんどは並行して進める作業ではなく「自分の作業を独立に見直させる」ものでした。そうした子はどれも、冷えた状態のシステムプロンプトを払い直し、リポジトリを読み直します。対話のセッションとゲートウェイのセッションは影響を受けません。
+**一度きりの実行は別枠で区切られます。** `hermes chat -q` / `--oneshot` のセッションが起動できるサブエージェントは、合計で `delegation.oneshot_max_children` まで（既定は `2`、`0` なら無制限）です。一度きりの実行には結果を受け取るあとのターンがなく、ベンチマークの記録を見ると、その起動のほとんどは並行して進める作業ではなく「自分の作業を独立に見直させる」ものでした。そうした子はどれも、冷えた状態のシステムプロンプトを払い直し、リポジトリを読み直します。対話のセッションとゲートウェイのセッションは影響を受けません。一度きりの実行では、子が `delegate_task` の呼び出しの中で終わるまで待ち合わせるので、そのスキーマからは動いている子を操作するための引数（`action` の list/steer/stop、`subagent_id`、`message`）が除かれます。
 
 ## 終わりのあるチャット実行 {#finite-chat-runs}
 

@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: e1b20105471edcc4bc80f659e8dea363441faeb2
+upstream_blob: 7f16af6e439fb5bf5fc762cbb67c15bdba4cd2fe
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -277,7 +277,7 @@ def register(ctx):
         ctx.register_tool(...)   # register under a non-conflicting name
 ```
 
-既知の capability id は `tools.override`、`llm.provider_override`、`llm.model_override`、`llm.agent_id_override`、`llm.profile_override`、`llm.task_override` です（正本のレジストリは `hermes_cli/plugin_capabilities.py`）。未知の id は無視されます。旧来の capability ごとの設定キー（`plugins.entries.<id>.allow_tool_override` など）も依然として動作しますが非推奨です — ユーザーが単一の、監査可能な同意画面を得られるように、代わりに capability を宣言してください。capability は同意と監査であり、**サンドボックスではありません**。それらは host の API サーフェスをゲートするだけです。
+既知の capability id は `tools.override`、`llm.provider_override`、`llm.model_override`、`llm.agent_id_override`、`llm.profile_override`、`llm.task_override`、`llm.side_question`（ターンのあとでセッション自身のエージェントに質問します。[プラグインからの LLM 呼び出し](/hermes/docs/developer-guide/plugin-llm-access/#asking-the-sessions-own-agent-ctxside_question)を参照）、`gateway.platform_actions` です（正本のレジストリは `hermes_cli/plugin_capabilities.py`）。未知の id は無視されます。旧来の capability ごとの設定キー（`plugins.entries.<id>.allow_tool_override` など）も依然として動作しますが非推奨です — ユーザーが単一の、監査可能な同意画面を得られるように、代わりに capability を宣言してください。capability は同意と監査であり、**サンドボックスではありません**。それらは host の API サーフェスをゲートするだけです。
 
 **pip で配布されるプラグイン**には、インストール後の `plugin.yaml` ディレクトリがありません。そのため、代わりに配布メタデータで capability を宣言します。companion となる `hermes_agent.plugin_capabilities` エントリーポイントグループを使います。各宣言は `<plugin-id>.<capability-id>` という名前で、`hermes_agent.plugins` エントリーポイントと同じオブジェクトを指します。
 
@@ -620,6 +620,9 @@ UNIT_CONVERT = {
 ```python
 """Tool handlers — the code that runs when the LLM calls each tool."""
 
+import json
+import math
+
 # Safe globals for expression evaluation — no file/network access
 _SAFE_MATH = {
     "abs": abs, "round": round, "min": min, "max": max,
@@ -707,6 +710,8 @@ def unit_convert(args: dict, **kwargs) -> str:
 
 ```python
 """Calculator plugin — registration."""
+
+import logging
 
 from . import schemas, tools
 
@@ -1140,6 +1145,7 @@ PM が以前に生成したプロジェクトファイルが、これらのリ�
 同意、ワークスペースへの参加、最新かどうかの確認は、同じ宣言を使います。
 PM は、プラグインを有効にする前に、その依存関係を core の要件とあわせて準備します。
 生成されるワークスペースが、プラグインのディレクトリや同梱のロックファイルを書き換えることはありません。
+また、依存関係の解決はインストールしているインタープリターのプラットフォームに対してだけ行います。ほかのプラットフォーム向けの wheel を出していない依存関係があっても、プラグインは止まりません。
 依存関係が競合すると受け入れは拒否され、以前の選択がそのまま残ります。
 PM がほかのプラグインを自動で無効にすることはありません。
 
@@ -1265,6 +1271,17 @@ def register(ctx):
     ctx.register_hook("on_session_end", on_session_end)
 ```
 
+### ユーザーに見せる前に返答を書き換える {#rewrite-the-reply-before-the-user-sees-it}
+
+`transform_llm_output` フックは、できあがった返答を書き換えます。ただ、その時点でユーザーはたいてい、返答がストリーミングで流れてくるのをもう見ています。内容を伏せる、絞り込む、止めるといった理由で、プラグインが返答を先に見る必要があるときは、`hold_stream=True` を渡してください。
+
+```python
+def register(ctx):
+    ctx.register_hook("transform_llm_output", redact, hold_stream=True)
+```
+
+すると、そのプラグインを読み込むプロファイルのすべてのセッションで、返答のストリーミングが止まります。フックの一覧ページに挙げた画面では、ユーザーには入力中や考え中の表示が出て、そのあと書き換え後の最終的な返答だけが表示されます。そのターンでは、ツール呼び出しの合間の解説は捨てられます。また、フックが例外を出したりタイムアウトしたりすると、ユーザーには元の返答の代わりに「返答を保留しました」という短い通知が届きます。フッターや見た目の調整のような飾りの書き換えでは、このフラグを付けずにおき、返答がストリーミングされ続けるようにしてください。画面ごとの詳細は [書き換えが終わるまで返答を止める](/hermes/docs/user-guide/features/hooks/#hold-stream) にあります。
+
 ### フック一覧 {#hook-reference}
 
 各フックは **[Event Hooks reference](/hermes/docs/user-guide/features/hooks/#plugin-hooks)** に、コールバックのシグネチャ、パラメータの表、正確な発火タイミング、例まで含めて完全に文書化されています。ここではその要約を示します。
@@ -1345,6 +1362,8 @@ hooks:
 ```python
 """Memory plugin — recalls relevant context from a vector store."""
 
+import httpx
+
 MEMORY_API = "https://your-memory-api.example.com"
 
 def recall_context(session_id, user_message, is_first_turn, **kwargs):
@@ -1391,6 +1410,7 @@ def register(ctx):
 ```python
 """Analytics plugin — tracks turn metadata without injecting context."""
 
+import logging
 logger = logging.getLogger(__name__)
 
 def log_turn(session_id, user_message, model, is_first_turn, **kwargs):

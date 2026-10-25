@@ -241,6 +241,7 @@ Hermes のデスクトップアプリから始まったセッションで有効�
 同じ仕組みは、デスクトップアプリに用意された（エージェントによらない）案内も支えています。機能ごとに専用の手ほどきを同梱できます。
 
 ```ts
+import { startTour, showTourStep, stopTour } from '@/lib/tour'
 
 startTour([
   { selector: '[data-tour="composer"]', title: 'Composer', text: 'Type here.' },

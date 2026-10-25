@@ -2,7 +2,7 @@
 title: "プラグインカタログへの登録申請"
 description: "Hermes プラグインカタログの登録ガイドライン全文です。申請前に確かめること、すべての掲載項目が従うルール、レビュアーが見る点をまとめています"
 upstream_path: developer-guide/plugins/catalog-submission.md
-upstream_blob: 06a3d197f3645ce4db22c5f4a571622e5f6cee5a
+upstream_blob: 6561a2a0c82f451acc922a40cbbb3f61efa7e56d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission
 ---
@@ -205,6 +205,14 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
    固定したコミットと照合します（`gh attestation verify --repo <owner/repo> --source-digest
    <pinned sha>`）。ユーザーの端末がセットアップ時に取得するバイナリは、上流ツールの公式な配布元から取得し、
    チェックサムで固定し、開示している（ルール13）場合にだけ認めます。同梱することも、非公式のミラーから取得することも認めません。
+18. **パスワードマネージャーは、その開発元から出したものに限ります。** `browser_vault` のログイン用バックエンド
+   （`ctx.register_login_backend`）を登録するプラグインは、パスワードマネージャーの開発元が自分のリポジトリから
+   申請した `tier: verified` か、Nous が保守する `tier: official` でだけ掲載します。コミュニティ段階のもの、
+   フォーク、第三者によるログイン用バックエンドの掲載は断ります。Hermes はプラグインを読み込むときにも同じ規則を
+   適用します。ログイン用バックエンドを受け入れるのは、Hermes に同梱されたプラグインか、このカタログから `verified` か
+   `official` の段階で、レビュー済みの固定コミットのまま入れたプラグインだけで、その判定には Hermes 自身の導入記録を使います
+   （プラグインの中のファイルは使いません）。ローカルのディレクトリ、Git の URL、`--ref`、`--allow-removed`、
+   プロジェクト、pip からの導入は拒否され、これを緩める設定はありません。
 <!-- admission-rules:end -->
 
 ## 掲載項目を更新する {#updating-your-entry}

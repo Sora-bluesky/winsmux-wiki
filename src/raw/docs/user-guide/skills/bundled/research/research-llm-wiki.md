@@ -343,7 +343,7 @@ The index is sectioned by type. Each entry is one line: wikilink + summary.
 ① **孤立したページ:** ほかのページから `[[wikilinks]]` で入ってくるリンクがないページを探します。
 ```python
 # Use execute_code for this — programmatic scan across all wiki pages
-
+import os, re
 from collections import defaultdict
 wiki = "<WIKI_PATH>"
 # Scan all .md files in entities/, concepts/, comparisons/, queries/

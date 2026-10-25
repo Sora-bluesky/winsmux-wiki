@@ -71,6 +71,7 @@ pip install xformers  # Optional: memory-efficient attention
 
 ```python
 from diffusers import DiffusionPipeline
+import torch
 
 # Load pipeline (auto-detects model type)
 pipe = DiffusionPipeline.from_pretrained(
@@ -93,6 +94,7 @@ image.save("output.png")
 
 ```python
 from diffusers import AutoPipelineForText2Image
+import torch
 
 pipe = AutoPipelineForText2Image.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0",
@@ -200,6 +202,7 @@ image = pipe(prompt, num_inference_steps=20).images[0]
 ### 同じ結果を再現する {#reproducible-generation}
 
 ```python
+import torch
 
 generator = torch.Generator(device="cuda").manual_seed(42)
 
@@ -273,6 +276,7 @@ result = pipe(
 
 ```python
 from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
+import torch
 
 # Load ControlNet for edge conditioning
 controlnet = ControlNetModel.from_pretrained(
@@ -445,6 +449,7 @@ images = pipe(
 
 ```python
 from diffusers import StableDiffusionXLPipeline, DPMSolverMultistepScheduler
+import torch
 
 # 1. Load SDXL with optimizations
 pipe = StableDiffusionXLPipeline.from_pretrained(
@@ -471,6 +476,7 @@ image = pipe(
 
 ```python
 from diffusers import AutoPipelineForText2Image, LCMScheduler
+import torch
 
 # Use LCM for 4-8 step generation
 pipe = AutoPipelineForText2Image.from_pretrained(

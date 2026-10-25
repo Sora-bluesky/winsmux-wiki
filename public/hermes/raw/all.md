@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（244 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（245 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -207,7 +207,7 @@ raw: /hermes/raw/all.md
 - [Automated GitHub PR Comments with Webhooks](/hermes/docs/guides/webhook-github-pr-review/)
 - [xAI Grok OAuth (SuperGrok / X Premium+)](/hermes/docs/guides/xai-grok-oauth/)
 
-## Developer Guide（61）
+## Developer Guide（62）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -226,6 +226,7 @@ raw: /hermes/raw/all.md
 - [Billing Lifecycle (TUI)](/hermes/docs/developer-guide/billing-lifecycle/)
 - [Browser Provider Plugins](/hermes/docs/developer-guide/browser-provider-plugin/)
 - [Browser CDP Supervisor](/hermes/docs/developer-guide/browser-supervisor/)
+- [Browser Vault Plugins](/hermes/docs/developer-guide/browser-vault-plugin/)
 - [Chronos Managed-Cron Contract](/hermes/docs/developer-guide/chronos-managed-cron-contract/)
 - [CLI Internals](/hermes/docs/developer-guide/cli-internals/)
 - [Codebase Ownership Map](/hermes/docs/developer-guide/codebase-ownership/)

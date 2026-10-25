@@ -323,7 +323,7 @@ Create a daily funding report → attach "ai-funding-daily-report" skill
 
 ```python
 # ~/.hermes/scripts/check_competitors.py
-
+import requests, json
 # Fetch competitor release notes, diff against last run
 # Print summary to stdout — agent analyzes and reports
 ```

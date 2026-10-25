@@ -2,7 +2,7 @@
 title: "Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成"
 description: "リポジトリ内の SKILL.md を書く: フロントマターと構成"
 upstream_path: user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring.md
-upstream_blob: b76b4813239d52a2288c0c2f8b307c7593abd8c3
+upstream_blob: cc363d7d7df1ea2eeecb278fe2d51352dafa44b1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring
 ---
@@ -90,9 +90,9 @@ metadata:
 ### `description` のルール（厳格 — バリデータの 1024 は基準ではありません） {#description-rules-hardline-the-validators-1024-is-not-the-standard}
 
 - **60 文字以内。** 一文で書き、ピリオドで終えます。
-- 実装ではなく、何ができるかを書きます。skill 名を繰り返さないでください。
+- 実装ではなく、何ができるかを書きます。skill 名もそのカテゴリ名も繰り返さないでください（索引ではカテゴリ名が skill の上に表示されます）。
 - 宣伝めいた語（"powerful"、"comprehensive"、"seamless"、"advanced"）は使いません。
-- システムプロンプトの skill 索引は 57 文字で切って "..." を付けるので、呼び出し条件と機能はその範囲内で完結している必要があります。
+- 60 文字は、システムプロンプトの skill 索引が表示する幅です。`skill_manage` はこれを超える新しい説明や変更した説明を拒否し、索引はそれより長い古い説明を単語の区切りで切り詰めます。
 - 説明に `:` が入る場合は二重引用符で囲んでください。囲まないと YAML がマッピングとして解析し、ドキュメント生成が落ちます。引用符は 60 文字に数えません。
 
 良い例: `Track named companies for material news with cited digests.`

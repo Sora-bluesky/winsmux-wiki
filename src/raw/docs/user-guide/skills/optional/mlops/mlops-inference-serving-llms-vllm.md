@@ -233,7 +233,7 @@ for output in outputs:
     })
 
 # Save to file
-
+import json
 with open("results.jsonl", "w") as f:
     for result in results:
         f.write(json.dumps(result) + "\n")

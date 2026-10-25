@@ -184,6 +184,7 @@ Hermes の関数呼び出し用プロンプトの雛形に沿っており、次�
 軌跡はふつうの JSONL です。JSON Lines を読めるものなら何でも読み込めます。
 
 ```python
+import json
 
 def load_trajectories(path: str):
     """Load trajectory entries from a JSONL file."""

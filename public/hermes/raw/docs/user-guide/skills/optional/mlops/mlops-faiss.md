@@ -70,6 +70,8 @@ pip install faiss-gpu
 ### 基本の使い方 {#basic-usage}
 
 ```python
+import faiss
+import numpy as np
 
 # Create sample data (1000 vectors, 128 dimensions)
 d = 128
@@ -205,6 +207,7 @@ results = vectorstore.similarity_search("query", k=5)
 
 ```python
 from llama_index.vector_stores.faiss import FaissVectorStore
+import faiss
 
 # Create FAISS index
 d = 1536

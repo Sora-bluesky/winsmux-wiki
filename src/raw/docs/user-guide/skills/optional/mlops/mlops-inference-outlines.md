@@ -68,7 +68,7 @@ pip install outlines vllm  # vLLM for high-throughput
 次のコードは、Transformers のモデルを包んで、答えが 3 つの選択肢のどれかに必ずなるようにします。
 
 ```python
-
+import outlines
 from typing import Literal
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -93,7 +93,7 @@ print(sentiment)  # "positive" (guaranteed one of these)
 
 ```python
 from pydantic import BaseModel
-
+import outlines
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class User(BaseModel):
@@ -135,7 +135,7 @@ Outlines は、出力の型から組み立てたオートマトンを使って�
 - **必ず妥当**: おかしな出力が出ることはありません
 
 ```python
-
+import outlines
 from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -202,7 +202,7 @@ Outlines は、`from_*` の関数を通じて、手元と API の両方のバッ
 #### Transformers（Hugging Face） {#transformers-hugging-face}
 
 ```python
-
+import outlines
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 model = outlines.from_transformers(
@@ -216,7 +216,7 @@ result = model(prompt, YourModel)
 #### llama.cpp {#llamacpp}
 
 ```python
-
+import outlines
 from llama_cpp import Llama
 
 llm = Llama("./models/llama-3.1-8b-instruct.Q4_K_M.gguf", n_gpu_layers=35, n_ctx=4096)
@@ -228,7 +228,7 @@ result = model(prompt, YourModel)
 #### vLLM（たくさんさばきたいとき） {#vllm-high-throughput}
 
 ```python
-
+import outlines
 from vllm import LLM
 
 llm = LLM("meta-llama/Llama-3.1-8B-Instruct", tensor_parallel_size=2)
@@ -240,7 +240,7 @@ result = model(prompt, YourModel)
 #### OpenAI（サーバー側で JSON の形を守らせる） {#openai-server-side-constrained-json}
 
 ```python
-
+import outlines
 from openai import OpenAI
 
 client = OpenAI()
@@ -318,7 +318,7 @@ print(app.status)  # Status.PENDING (or APPROVED/REJECTED)
 
 ```python
 from pydantic import BaseModel
-
+import outlines
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class CompanyInfo(BaseModel):
@@ -446,7 +446,7 @@ print(f"    {func.body}")
 次のコードは、複数の文をひとまとめに渡して、それぞれから人の情報を取り出します。
 
 ```python
-
+import outlines
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from pydantic import BaseModel
 
@@ -480,7 +480,7 @@ for person in people:
 次のコードは、基本の使い方、GPU と dtype の指定、よく使われるモデルの読み込みを順に示します。
 
 ```python
-
+import outlines
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 MODEL_NAME = "microsoft/Phi-3-mini-4k-instruct"
@@ -492,7 +492,7 @@ model = outlines.from_transformers(
 )
 
 # GPU + dtype configuration is set on the HF model itself
-
+import torch
 model = outlines.from_transformers(
     AutoModelForCausalLM.from_pretrained(MODEL_NAME, device_map="cuda", torch_dtype=torch.float16),
     AutoTokenizer.from_pretrained(MODEL_NAME),
@@ -515,7 +515,7 @@ for name in [
 次のコードは、GGUF のモデルを読み込み、文脈の長さや GPU に載せる層の数を指定します。
 
 ```python
-
+import outlines
 from llama_cpp import Llama
 
 # Load GGUF model
@@ -535,7 +535,7 @@ model = outlines.from_llamacpp(llm)
 次のコードは、GPU 1 枚、複数枚、量子化ありのそれぞれの読み込み方を示します。
 
 ```python
-
+import outlines
 from vllm import LLM
 
 # Single GPU

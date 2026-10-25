@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 46d79ded23f9d375d7823d689633a9c869d6da85
+upstream_blob: 880521209b00506d2816b440df7d75e576908838
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -48,6 +48,8 @@ description: A minimal example plugin
 
 ```python
 """Minimal Hermes plugin — registers a tool and a hook."""
+
+import json
 
 def register(ctx):
     # --- Tool: hello_world ---
@@ -590,6 +592,7 @@ hermes plugins capabilities my-plugin   # one plugin, declared vs granted
 
 権限が与えられているか、*あるいは*古いキーが設定されていれば、その関門は開きます。
 いまの設定はそのままで動き続けます。
+`llm.side_question` には古いキーがありません。同意の手順で宣言され、権限が与えられたときだけ開きます。
 
 :::warning サンドボックスではありません
 権限は**同意と監査のための層**であって、隔離ではありません。プラグインはふつうの
@@ -840,8 +843,8 @@ plugins:
 
 プラグインの側は何も変わりません。これまでと同じ `ctx` を受け取り、ツール・フック・スラッシュコマンド・スキル・
 プロバイダーのオブジェクト（画像や動画の生成、Web 検索、ブラウザー、TTS/STT、メモリー、コンテキストエンジン、
-モデルプロバイダーのプロファイル）をまったく同じように登録します。Hermes の側には、ホストを呼び出す対応する項目が
-登録されます。ダッシュボード向けのプラグイン API もホストが提供します。同梱のプラグインは引き続きプロセス内で動きます。
+シークレットの取得元、`@` のコンテキスト参照、モデルプロバイダーのプロファイル）をまったく同じように登録します。Hermes の側には、ホストを呼び出す対応する項目が
+登録され、値はプロバイダーの基底クラスが宣言する型のままで受け渡されます（シークレットの取得元の `fetch()` は `Path` を受け取り、`FetchResult` を返します）。ダッシュボード向けのプラグイン API もホストが提供します。同梱のプラグインは引き続きプロセス内で動きます。
 プロセス内で動くダッシュボードの API ハンドラーはゲートウェイのイベントループを共有するので、ループを止めてはいけません（
 [イベントループを止めない](/hermes/docs/user-guide/features/extending-the-dashboard/#dont-block-the-event-loop)を参照）。
 

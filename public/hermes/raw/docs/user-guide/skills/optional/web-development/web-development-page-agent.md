@@ -85,6 +85,7 @@ npm install page-agent
 自分の LLM の接続先をつないで動かします。**評価用の CDN を実際の利用者に届けてはいけません。**
 
 ```javascript
+import { PageAgent } from 'page-agent'
 
 const agent = new PageAgent({
     model: 'qwen3.5-plus',

@@ -397,7 +397,7 @@ register_provider(ProviderProfile(name="myprovider", api_mode="mydialect", ...))
 `refresh_credential` は、プラグインが保存したプール内のトークンを、資格情報のプールがどう**回す**かです。
 
 ```python
-
+import uuid
 from providers import register_provider
 from providers.base import ProviderProfile
 

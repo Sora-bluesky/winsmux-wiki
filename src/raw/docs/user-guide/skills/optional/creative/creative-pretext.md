@@ -83,7 +83,7 @@ DOM を使わない文字組みで、ブラウザで動く作品を作ります�
 
 ```html
 <script type="module">
-
+import {
   prepare, layout,                   // use-case 1: simple height
   prepareWithSegments, layoutWithLines,  // use-case 2a: fixed-width lines
   layoutNextLineRange, materializeLineRange, // use-case 2b: streaming / variable width

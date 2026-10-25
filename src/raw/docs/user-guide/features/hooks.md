@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 71209c03370f5c4889b2961939389cd078b578ec
+upstream_blob: dfb103090c5961d1d6d956774a3519db6fde783c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -61,7 +61,7 @@ events:
 #### handler.py {#handlerpy}
 
 ```python
-
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -124,6 +124,8 @@ events:
 
 ```python
 # ~/.hermes/hooks/long-task-alert/handler.py
+import os
+import httpx
 
 THRESHOLD = 10
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
@@ -155,7 +157,7 @@ events:
 
 ```python
 # ~/.hermes/hooks/command-logger/handler.py
-
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -189,6 +191,7 @@ events:
 
 ```python
 # ~/.hermes/hooks/session-webhook/handler.py
+import httpx
 
 WEBHOOK_URL = "https://your-service.example.com/hermes-events"
 
@@ -249,6 +252,8 @@ events:
 ```python
 """Run ~/.hermes/BOOT.md on every gateway startup."""
 
+import logging
+import threading
 from pathlib import Path
 
 logger = logging.getLogger("hooks.boot-md")
@@ -450,7 +455,7 @@ def register(ctx):
 | `transform_terminal_output` | 変換 | 前面のプロセスの出力を上限付きで受け取ったあと、最後の出力の制限の前。最初の文字列が出力を置き換えます。 | `command`、`output`、`returncode`、`task_id`、`env_type` | コマンドや出力に資格情報が含まれることがあります。 |
 | `pre_transcription` | 変換 | プロバイダーが決まったあと、どのバックエンド（組み込み、コマンド型、プラグインが登録したもの）が呼ばれるよりも前に、音声認識の振り分け役が発火させます。辞書の結果は登録の順に適用され、項目ごとに最後の書き手が勝ちます（`prompt`、`language`、`model`。`file_path` は読み取り専用です）。 | `file_path`、`provider`、`model`、`language`、`prompt`、`source` | 最後のプロンプトは音声と一緒に、設定された音声認識のプロバイダーへ送られます。フックの戻り値に秘密の情報を入れないでください。 |
 | `pre_llm_call` | 指示 / 制御 | ループの前に、やり取りごとに 1 回。有効な文字列 / `{"context": ...}` の戻り値はすべてつなげられ、利用者のメッセージへ差し込まれます。 | `session_id`、`task_id`、`turn_id`、`user_message`、`conversation_history`、`is_first_turn`、`model`、`platform`、`parent_session_id`、`sender_id` | 利用者のメッセージと会話の履歴が丸ごと。 |
-| `post_llm_call` | 観測役 | 中断されずに成功したやり取りの締めくくり。戻り値は無視されます。 | `session_id`、`task_id`、`turn_id`、`user_message`、`assistant_response`、`conversation_history`、`model`、`platform` | プロンプト、応答、履歴が丸ごと。 |
+| `post_llm_call` | 観測役 | 中断されずに成功したやり取りの締めくくり。戻り値は無視されます。 | `session_id`、`task_id`、`turn_id`、`user_message`、`assistant_response`、`conversation_history`、`model`、`platform`、`side_question_token` | プロンプト、応答、履歴が丸ごと。 |
 | `transform_llm_output` | 変換 | `post_llm_call` と最後の配信の前。最初の空でない文字列が応答を置き換えます。 | `response_text`、`session_id`、`model`、`platform` | 最後のアシスタントの文章が丸ごと。 |
 | `pre_verify` | 指示 / 制御 | 編集したコードの確認の関門で、上限付きに。最初の有効な続行 / 遮断の指示がやり取りを続けさせます。 | `session_id`、`platform`、`model`、`coding`、`attempt`、`final_response`、`changed_paths` | 下書きの応答と変更されたパス。 |
 | `pre_api_request` | 観測役 | プロバイダーへの試みごとに、送る直前。戻り値は無視されます。 | `task_id`、`turn_id`、`api_request_id`、`session_id`、`user_message`、`conversation_history`、`platform`、`model`、`provider`、`base_url`、`api_mode`、`api_call_count`、`retry_count`、`request_messages`、`message_count`、`tool_count`、`approx_input_tokens`、`request_char_count`、`max_tokens`、`started_at`、`middleware_trace`、`request` | 機微さが高いです。以前からある `user_message`、`conversation_history`、`request_messages` は意図して素のままです。整えられた `request` のほうを使ってください。 |
@@ -592,7 +597,7 @@ return {"action": "modify", "args": {"new_string": "fixed content"}}
 **例 — ツールの呼び出しの監査の記録:**
 
 ```python
-
+import json, logging
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -649,6 +654,7 @@ def my_callback(tool_name: str, args: dict, result: str, task_id: str,
 
 ```python
 from collections import Counter, defaultdict
+import json
 
 _tool_counts = Counter()
 _error_counts = Counter()
@@ -718,6 +724,7 @@ return None
 **例 — 記憶の呼び出し:**
 
 ```python
+import httpx
 
 MEMORY_API = "https://your-memory-api.example.com"
 
@@ -772,6 +779,7 @@ def my_callback(session_id: str, user_message: str, assistant_response: str,
 | `conversation_history` | `list` | やり取りが終わったあとのメッセージの一覧全体の写し |
 | `model` | `str` | モデルの識別子 |
 | `platform` | `str` | セッションが動いている場所 |
+| `side_question_token` | `str \| None` | [`ctx.side_question`](/hermes/docs/developer-guide/plugin-llm-access/#asking-the-sessions-own-agent-ctxside_question) 用の1回限りのトークンで、そのセッションのプロファイルにあるすべてのプラグインが共有します。読み込まれたプラグインが `llm.side_question` の権限を持っていない限り `None` で、cron の実行とサブエージェントのやり取りでは常に `None` です |
 
 **発火する場所:** `agent/turn_finalizer.py`（`agent/conversation_loop.py` の `run_conversation()` が呼ぶ `finalize_turn()`）の中、ツールのループが最後の応答とともに抜けたあとです。`if final_response and not interrupted` で守られているので、利用者がやり取りの途中で割り込んだ場合や、エージェントが応答を作れないまま反復の上限に達した場合は発火**しません**。
 
@@ -782,6 +790,7 @@ def my_callback(session_id: str, user_message: str, assistant_response: str,
 **例 — 外部の記憶へ同期する:**
 
 ```python
+import httpx
 
 MEMORY_API = "https://your-memory-api.example.com"
 
@@ -802,7 +811,7 @@ def register(ctx):
 **例 — 応答の長さを追う:**
 
 ```python
-
+import logging
 logger = logging.getLogger(__name__)
 
 def log_response_length(session_id, assistant_response, model, **kwargs):
@@ -984,7 +993,7 @@ def register(ctx):
 **例 — セッションの長さを追う:**
 
 ```python
-
+import time, logging
 logger = logging.getLogger(__name__)
 
 _start_times = {}
@@ -1198,6 +1207,7 @@ def my_callback(parent_session_id: str | None,
 **例 — サブエージェントの生成を記録する:**
 
 ```python
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -1260,7 +1270,7 @@ def my_callback(parent_session_id: str, child_role: str | None,
 **例 — 取りまとめの活動を記録する:**
 
 ```python
-
+import logging
 logger = logging.getLogger(__name__)
 
 def log_subagent(parent_session_id, child_role, child_status, duration_ms, **kwargs):
@@ -1448,6 +1458,7 @@ def my_callback(
 **例 — macOS でデスクトップの通知を出す:**
 
 ```python
+import subprocess
 
 def notify_approval(command, description, session_key, **kwargs):
     title = "Hermes needs approval"
@@ -1544,6 +1555,7 @@ sudo のパスワードと clarify の答えは、どちらのフックにも**�
 | `"approval"` | `"once"`、`"session"`、`"always"`、`"deny"`、`"timeout"`、`"cancelled"`、`"notify_failed"`、またはプラグインの経路が失敗したときの `"transport_<failure>"` |
 
 ```python
+import threading
 
 def push_notification(text):
     ...  # call your push service here
@@ -1675,7 +1687,7 @@ def my_callback(tool_name: str, args: dict, result: str, task_id: str, **kwargs)
 **使いどころ:** `web_extract` の出力から組織固有の個人情報を伏せる、長い JSON のツールの応答に要約の見出しを付ける、`read_file` の結果に検索で補った手がかりを差し込む、`delegate_task` のサブエージェントの報告をプロジェクト固有の形へ書き換える。
 
 ```python
-
+import re
 SECRET = re.compile(r"sk-[A-Za-z0-9]{32,}")
 
 def redact_secrets(tool_name, result, **kwargs):
@@ -1766,9 +1778,12 @@ def my_callback(
 CLI の逐次表示が有効なとき、足すだけの変換は逐次の本文のあとに表示されます。
 応答を置き換える変換は、逐次の本文のあとに全文が、逐次表示のあとの変換である
 ことを示す札とともに表示されるので、置き換えた内容が黙って失われることは
-ありません。
+ありません。TUI、デスクトップアプリ、そして逐次表示したメッセージをその場で編集するメッセージングのチャットでは、
+やり取りが終わった時点で、逐次表示した返信が書き換え後の内容に置き換わります。フックは書き上がった文章に対して
+走るので、逐次表示の間は書き換える前の返信が見えています。
 
 ```python
+import os, re
 
 def spongebob(response_text, **kwargs):
     if os.environ.get("SPONGEBOB_MODE") != "on":
@@ -1780,6 +1795,34 @@ def register(ctx):
 ```
 
 このフックは、空でなく中断もされていない応答であることを条件にしています。停止のボタンによる中断や空のやり取りでは発火しません。例外は警告として記録され、エージェントの実行を壊しません。
+
+#### 書き換えが終わるまで返信を止めておく（`hold_stream=True`） {#hold-stream}
+
+フックは書き上がった返信に対して走るので、逐次表示が有効だと、利用者は書き換える前の文章が届くのを見てから、それが置き換わるのを見ることになります。利用者より先に返信を見る必要があるプラグイン（伏せ字、ポリシーのフィルター）は、登録するときにそう宣言します。
+
+```python
+def register(ctx):
+    ctx.register_hook("transform_llm_output", redact, hold_stream=True)
+```
+
+あるプロファイルで読み込まれたプラグインが逐次表示を止めている間、そのプロファイルのセッションは、返信を書き換え後の最終版としてだけ表示します。
+
+| 表示先 | 返信を止めている間 | やり取りが終わったとき |
+|---|---|---|
+| メッセージング（Telegram、Discord、Slack、Matrix など） | プラットフォームの入力中の表示だけ。下書き、編集、ネイティブの逐次メッセージは出ません | 書き換え後の内容を、ふつうのメッセージとして1回送ります（長いものはほかの返信と同じように分割されます） |
+| Relay 経由の Slack | 入力中の表示だけ。`chat.*Stream` のメッセージは出ません | 書き換え後の内容を1回送ります |
+| TUI、デスクトップアプリ、従来の CLI、ACP のエディター | いつもの処理中 / 考え中の表示だけ。返信の文章は出ません | 書き換え後の内容を1回表示します |
+| API サーバー（`/v1/chat/completions`、`/v1/responses`、逐次の場合） | 応答の流れは開いたまま、文章は流れません | 書き換え後の内容が、応答の唯一の文章になります |
+
+ほかに止められるもの:
+
+- **途中の発言**（ツールの呼び出しの合間にモデルが送る文章、`display.interim_assistant_messages`）は `transform_llm_output` を通らないので、止めているやり取りでは捨てられます。モデルの文脈には残りますが、隠した状態で保存されるので、セッションを再開したり開き直したりしても（TUI、デスクトップアプリ、ダッシュボード、従来の CLI）表示されません。利用者に届かなかったほかのモデルの文章もすべて同じです。Hermes がやり直しのために送り返した答え（あとから出た言語サーバーのエラー、終了時の確認）、続きの前に出力の上限で切れた返信、知らないツールの呼び出しがこれに当たります。
+- **やり取りがどう終わっても、必ずフックを通ります。** 続きのたびに出力の上限で切れた返信、繰り返しの上限に達したときのまとめ、プロバイダーや圧縮のエラー、中断など、やり取りの最後の文章は、`transform_llm_output` が見たあとでなければ利用者に届きません。モデルの文章は書き換え後の内容として保存されます。
+- **フックが失敗すると、返信は出しません。** どのフックも返信を書き換えず、どれかが例外を投げたり時間切れになったりした場合、利用者には元の返信ではなく、「返信を差し止めた」という短い知らせが届きます。
+- **フックの顔ぶれはやり取りの間は固定です。** 止めているやり取りは、途中でプラグインが探し直されても、始まった時点で読み込まれていた `transform_llm_output` のフックを使います。
+- **ツールの進み具合と推論**は返信ではないので、それぞれの設定（`display.tool_progress`、`display.show_reasoning`）に従います。プラグインが見ていないモデルの出力を利用者に届けてはいけない場合は、これらも切ってください。
+
+`hold_stream` が効くのは `transform_llm_output` だけです。ほかのフックに付けても、警告とともに無視されます。これを付けずに `transform_llm_output` を登録したプラグインは、ふつうの逐次表示のままです。
 
 ### API の要求の観測のフック {#api-request-observer-hooks}
 
@@ -1799,7 +1842,7 @@ def register(ctx):
 
 #### `pre_auxiliary_call` / `post_auxiliary_call` {#preauxiliarycall-postauxiliarycall}
 
-補助の LLM の呼び出し — セッションの題名付け、文脈の圧縮、MoA の助言役とまとめ役、画像、承認の分類、記憶などの周辺の作業 — は、主のツールのループの外で動き、`pre_api_request` / `post_api_request` を発火させ**ません**（あちらはやり取りの範囲に留まるので、やり取りごとに追跡するプラグインが周辺の通信をうっかり見ることはありません）。代わりに `pre_auxiliary_call` / `post_auxiliary_call` を購読してください。プロバイダーへの実際の試みごとに 1 回（再試行と代替も含めて）、同じ中身の形に加えて `aux_task`（作業の名前。たとえば `title_generation`、`compression`、`moa_aggregator`、`vision`）とともに発火します。`session_id` / `task_id` / `turn_id` は、やり取りの下で動いている場合は親のやり取りのもの、そうでなければ空です。`api_request_id`（`aux-…`）は 1 つの論理的な呼び出しのすべての試みで共通で、`retry_count` がそれらを区別します。どちらも観測専用で、開く側へ倒れます。例外を投げたり時間切れになったりしたコールバックは記録され、補助の作業は続きます。`post_auxiliary_call` は、試みが例外を投げた場合に `error` / `error_type` を、応答が流れとして返された場合に `streaming: True`（このとき `usage`/`response` は `None`）を運びます。
+補助の LLM の呼び出し — セッションの題名付け、文脈の圧縮、MoA の助言役とまとめ役、画像、承認の分類、記憶などの周辺の作業 — は、主のツールのループの外で動き、`pre_api_request` / `post_api_request` を発火させ**ません**（あちらはやり取りの範囲に留まるので、やり取りごとに追跡するプラグインが周辺の通信をうっかり見ることはありません）。代わりに `pre_auxiliary_call` / `post_auxiliary_call` を購読してください。プロバイダーへの実際の試みごとに 1 回（再試行と代替も含めて）、同じ中身の形に加えて `aux_task`（作業の名前。たとえば `title_generation`、`compression`、`moa_aggregator`、`vision`、プラグインの [`ctx.side_question`](/hermes/docs/developer-guide/plugin-llm-access/#asking-the-sessions-own-agent-ctxside_question) では `plugin_side_question` で、このときは尋ねたプラグインの `plugin_id` も運びます）とともに発火します。`session_id` / `task_id` / `turn_id` は、やり取りの下で動いている場合は親のやり取りのもの、そうでなければ空です。`api_request_id`（`aux-…`）は 1 つの論理的な呼び出しのすべての試みで共通で、`retry_count` がそれらを区別します。どちらも観測専用で、開く側へ倒れます。例外を投げたり時間切れになったりしたコールバックは記録され、補助の作業は続きます。`post_auxiliary_call` は、試みが例外を投げた場合に `error` / `error_type` を、応答が流れとして返された場合に `streaming: True`（このとき `usage`/`response` は `None`）を運びます。
 
 ### `on_skill_lifecycle` {#onskilllifecycle}
 
@@ -2174,6 +2217,7 @@ hooks:
 署名は、GitHub の Webhook とまったく同じように確かめてください。
 
 ```python
+import hashlib, hmac
 
 def verify(body: bytes, header: str, secret: str) -> bool:
     expected = "sha256=" + hmac.new(secret.encode(), body, hashlib.sha256).hexdigest()
