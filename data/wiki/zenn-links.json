@@ -13,7 +13,8 @@
     "n": null,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-complete-guide",
     "title": "Hermes Agent完全構築ガイド｜VPSに常駐する自分専用AIエージェントの作り方",
-    "topic": "連載の目次"
+    "topic": "連載の目次",
+    "real": "月 1,800 円ほどの国内 VPS に Hermes を常駐させ、スマホの Telegram から使っている実録です"
    }
   ],
   "/hermes/entities/vps/": [
@@ -21,7 +22,8 @@
     "n": 1,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-01-deploy",
     "title": "【第1回】サーバー代は月1,800円で足りる。Hermes AgentはVPSで24時間動き続ける",
-    "topic": "VPS に置く"
+    "topic": "VPS に置く",
+    "real": "XServer VPS 6GB（月 1,800 円ほど）を選びました。シリアルコンソールでは Ctrl+V の貼り付けが効かず、パスワードが通らないことがありました"
    }
   ],
   "/hermes/entities/docker/": [
@@ -29,7 +31,8 @@
     "n": 4,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-04-install",
     "title": "【第4回】Hermes AgentをDockerで隔離して動かす方法",
-    "topic": "Docker で隔離して動かす"
+    "topic": "Docker で隔離して動かす",
+    "real": "被害を小さくするため、local ではなく Docker を選びました。Bot に最初の 1 通を送るまでは「Chat not found」で起動に失敗しました"
    }
   ],
   "/hermes/concepts/gateway/": [
@@ -37,13 +40,15 @@
     "n": 5,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-05-oauth-discord",
     "title": "【第5回】コマンドを覚えるな。Hermes AgentはDiscordで話しかけるだけで動く",
-    "topic": "Discord でつなぐ"
+    "topic": "Discord でつなぐ",
+    "real": "テスト用のサーバーに Bot を招待し、Message Content Intent を ON にしました"
    },
    {
     "n": 6,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-06-systemd",
     "title": "【第6回】気づいたら止まっている、をなくせ。Hermes Agentはsystemdでいつも動き続け、落ちてもすぐ戻る",
-    "topic": "systemd で動かし続ける"
+    "topic": "systemd で動かし続ける",
+    "real": "SSH を切っても Telegram の「hello」に返事が来ました。受信だけが黙って止まったこともあります（v0.17.0 からは自動で戻ります）"
    }
   ],
   "/hermes/concepts/cron/": [
@@ -51,7 +56,8 @@
     "n": 9,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-09-cron",
     "title": "【第9回】いつもの作業を毎回自分でやるな。Hermes Agentが決めた時刻や間隔で自動でこなす",
-    "topic": "決めた時刻に動かす"
+    "topic": "決めた時刻に動かす",
+    "real": "6 週間止めていたジョブを再開すると、取りこぼした分が 1 回だけすぐに実行されました"
    }
   ],
   "/hermes/concepts/skills/": [
@@ -59,7 +65,8 @@
     "n": 10,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-10-skills",
     "title": "【第10回】毎回教えるな。Hermes Agentは使えば使うほど自分で賢くなる",
-    "topic": "skill で賢くする"
+    "topic": "skill で賢くする",
+    "real": "作った skill の呼び出し名は、ハイフンではなくアンダースコアでした"
    }
   ],
   "/hermes/guide/skills/": [
@@ -67,7 +74,8 @@
     "n": 10,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-10-skills",
     "title": "【第10回】毎回教えるな。Hermes Agentは使えば使うほど自分で賢くなる",
-    "topic": "skill で賢くする"
+    "topic": "skill で賢くする",
+    "real": "作った skill の呼び出し名は、ハイフンではなくアンダースコアでした"
    }
   ],
   "/hermes/concepts/memory/": [
@@ -75,25 +83,29 @@
     "n": 12,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-12-memory",
     "title": "【第12回】好みを毎回言うな。Hermes AgentはMemoryで覚えている",
-    "topic": "Memory で覚えさせる"
+    "topic": "Memory で覚えさせる",
+    "real": "Telegram で名前を覚えさせ、新しい会話でも「そら」と呼ばれました"
    },
    {
     "n": 13,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-13-obsidian",
     "title": "【第13回】メモを自分で探すな。Hermes AgentはObsidianを記憶として読む",
-    "topic": "Obsidian を記憶として読む"
+    "topic": "Obsidian を記憶として読む",
+    "real": "Hermes にテストノートを書かせ、VPS 側の Vault に保存されるのを確かめました"
    },
    {
     "n": 14,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-14-session-search",
     "title": "【第14回】毎回最初から話すな。Hermes Agentは前回の続きからそのまま動く",
-    "topic": "前回の続きから動く"
+    "topic": "前回の続きから動く",
+    "real": "「覚えてる？」では過去の会話を探さず、「思い出して教えて」なら探しました"
    },
    {
     "n": 16,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-16-secondbrain",
     "title": "【第16回】同じことを二度調べさせるな。Hermes Agentは作業履歴からセカンドブレインを作る",
-    "topic": "作業履歴からセカンドブレインを作る"
+    "topic": "作業履歴からセカンドブレインを作る",
+    "real": "自分の PC 側の変換が 23 日間止まっていて、Vault の履歴が古いままだったことがあります"
    }
   ],
   "/hermes/from-claude-code/": [
@@ -101,7 +113,8 @@
     "n": 15,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-15-import-ai-sessions",
     "title": "【第15回】記憶を捨てるな。Hermes AgentはClaude Codeの続きを引き継ぐ",
-    "topic": "Claude Code の続きを引き継ぐ"
+    "topic": "Claude Code の続きを引き継ぐ",
+    "real": "Claude Code 1,272 件と Codex 2,218 件、計 3,490 件の作業履歴を取り込みました。最初の送信は約 19MiB でした"
    }
   ],
   "/hermes/docs/user-guide/desktop/": [
@@ -109,7 +122,8 @@
     "n": 7,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-07-desktop",
     "title": "【第7回】Hermes AgentがMicrosoft Storeに来た。Windowsアプリで入れてVPSにつなぐ（旧版からの入れ替えも）",
-    "topic": "Windows に Store 版を入れて VPS につなぐ"
+    "topic": "Windows に Store 版を入れて VPS につなぐ",
+    "real": "接続先を変えたあと「保存して再接続」を押さないと、自分の PC 上のローカルにつながったままでした"
    }
   ],
   "/hermes/docs/user-guide/windows-native/": [
@@ -117,7 +131,8 @@
     "n": 7,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-07-desktop",
     "title": "【第7回】Hermes AgentがMicrosoft Storeに来た。Windowsアプリで入れてVPSにつなぐ（旧版からの入れ替えも）",
-    "topic": "Windows に Store 版を入れて VPS につなぐ"
+    "topic": "Windows に Store 版を入れて VPS につなぐ",
+    "real": "接続先を変えたあと「保存して再接続」を押さないと、自分の PC 上のローカルにつながったままでした"
    }
   ],
   "/hermes/docs/user-guide/multi-connection-desktop/": [
@@ -125,7 +140,8 @@
     "n": 7,
     "url": "https://zenn.dev/sora_biz/articles/hermes-vps-07-desktop",
     "title": "【第7回】Hermes AgentがMicrosoft Storeに来た。Windowsアプリで入れてVPSにつなぐ（旧版からの入れ替えも）",
-    "topic": "Windows に Store 版を入れて VPS につなぐ"
+    "topic": "Windows に Store 版を入れて VPS につなぐ",
+    "real": "接続先を変えたあと「保存して再接続」を押さないと、自分の PC 上のローカルにつながったままでした"
    }
   ]
  }

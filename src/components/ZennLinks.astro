@@ -5,7 +5,8 @@ interface Props {
   path: string;
 }
 
-type ZennLink = { n: number | null; url: string; title: string; topic: string };
+// real: その回で管理人が実際にやったこと・困ったこと（1 文）。無い回は出さない
+type ZennLink = { n: number | null; url: string; title: string; topic: string; real?: string };
 
 const { path } = Astro.props;
 const normalizedPath = `${path.replace(/\/+$/, '')}/`;
@@ -21,6 +22,7 @@ const links = (zennLinks.pages as Record<string, ZennLink[]>)[normalizedPath];
         {links.map((link) => (
           <li>
             <a href={link.url} target="_blank" rel="noopener" title={link.title}>{link.n === null ? `Zenn の連載「${zennLinks.series}」` : `Zenn 第${link.n}回`}</a>：{link.topic}
+            {link.real && <span class="mt-0.5 block text-xs text-fg-muted">{link.real}</span>}
           </li>
         ))}
       </ul>
