@@ -4,7 +4,15 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import howto from '../../../../data/wiki/howto.json';
 
-type Item = { category: string; want: string; note: string; tags?: string[]; links: { title: string; url: string }[] };
+type Item = {
+  category: string;
+  want: string;
+  note: string;
+  tags?: string[];
+  links: { title: string; url: string }[];
+  // 管理人が実際にやったこと（出典は本人の Zenn 連載）。無い項目は出さない
+  real?: { text: string; url: string; label: string };
+};
 const categories = howto.categories as string[];
 const items = howto.items as Item[];
 const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.category === c) }));
@@ -45,10 +53,13 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
           <h2 class="hw-cat">{c.name}</h2>
           <div class="hw-list">
             {c.items.map((i) => (
-              <div class="hw-row" data-want={`${i.want} ${i.note} ${i.links.map((l) => l.title).join(' ')} ${(i.tags ?? []).join(' ')}`.toLowerCase()}>
+              <div class="hw-row" data-want={`${i.want} ${i.note} ${i.links.map((l) => l.title).join(' ')} ${(i.tags ?? []).join(' ')} ${i.real?.text ?? ''}`.toLowerCase()}>
                 <div class="hw-main">
                   <span class="hw-want">{i.want}</span>
                   <span class="hw-note">{i.note}</span>
+                  {i.real && (
+                    <span class="hw-real">そらの実例：{i.real.text}（<a href={i.real.url} target="_blank" rel="noopener">{i.real.label}</a>）</span>
+                  )}
                 </div>
                 <div class="hw-links">
                   {i.links.map((l, li) => (
@@ -103,6 +114,8 @@ const byCat = categories.map((c) => ({ name: c, items: items.filter((i) => i.cat
   .hw-main { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
   .hw-want { font-weight: 600; color: var(--color-fg); font-size: 0.92rem; }
   .hw-note { font-size: 0.8rem; color: var(--color-fg-muted); line-height: 1.55; }
+  .hw-real { font-size: 0.8rem; color: var(--color-fg-secondary); line-height: 1.55; }
+  .hw-real a { position: relative; z-index: 2; } /* 行全体を覆う .hw-primary::after より上に置く（1 だと隠れた） */
   .hw-links { display: flex; flex-direction: column; gap: 0.2rem; text-align: right; flex-shrink: 0; }
   .hw-links a { font-size: 0.8rem; white-space: nowrap; text-decoration: none; }
   .hw-links a:hover { text-decoration: underline; }

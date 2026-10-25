@@ -276,7 +276,11 @@ ${linkList2(codeSources)}
   const sections = h.categories.map((cat) => {
     const items = h.items
       .filter((i) => i.category === cat)
-      .map((i) => `- **${i.want}** — ${i.note}${i.links?.length ? '\n  - ' + linkList(i.links) : ''}`);
+      .map(
+        (i) =>
+          `- **${i.want}** — ${i.note}${i.links?.length ? '\n  - ' + linkList(i.links) : ''}` +
+          (i.real ? `\n  - そらの実例：${i.real.text}（[${i.real.label}](${i.real.url})）` : ''),
+      );
     return `## ${cat}\n\n${items.join('\n')}`;
   });
   const body =

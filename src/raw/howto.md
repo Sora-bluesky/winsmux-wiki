@@ -16,6 +16,7 @@ raw: /hermes/raw/howto.md
   - [インストール](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/) / [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
 - **Windows で使いたい** — WSL なしでそのまま動きます。POSIX 環境が要る用途だけ WSL2 側を見てください
   - [Windows（ネイティブ）](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/) / [Windows（WSL2）](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-wsl-quickstart/)
+  - そらの実例：普段使いの Windows ノート PC に Desktop 版を入れ、VPS の Hermes につなぎ替えました（[Zenn 第7回](https://zenn.dev/sora_biz/articles/hermes-vps-07-desktop)）
 - **Android のスマホで動かしたい** — Termux 上で直接動かす手順です。ティア 2 の扱いで壊れることがあります
   - [Termux（Android）](https://wiki.winsmux.dev/hermes/docs/getting-started/termux/)
 - **何から読めばいいか知りたい** — 経験の度合いと目的別に、読む順番が示されています
@@ -26,6 +27,7 @@ raw: /hermes/raw/howto.md
   - [TUI](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
 - **アプリや管理画面から使いたい** — どちらも CLI と同じ設定・セッション・記憶を共有します
   - [デスクトップアプリ](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/) / [管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+  - そらの実例：接続先を変えたあと「保存して再接続」を押さないと、自分の PC 上のローカルにつながったままでした（[Zenn 第7回](https://zenn.dev/sora_biz/articles/hermes-vps-07-desktop)）
 - **Claude Code や Codex の設定を引き継ぎたい** — 指示・許可リスト・MCP サーバー・skill・記憶をコマンド 1 つで取り込みます
   - [他のエージェントから取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/import-from-other-agents/)
 
@@ -33,8 +35,10 @@ raw: /hermes/raw/howto.md
 
 - **Telegram から話しかけたい** — BotFather でトークンを作って渡すだけです。公開 URL は要りません
   - [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
+  - そらの実例：Bot に最初の 1 通を送るまでは、起動の知らせが「Chat not found」で失敗しました（[Zenn 第4回](https://zenn.dev/sora_biz/articles/hermes-vps-04-install)）
 - **Discord のサーバーで使いたい** — DM でもチャンネルでも動きます。返事をする条件の表が最初にあります
   - [Discord](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/discord/)
+  - そらの実例：テスト用のサーバーを作って Bot を招待し、使える人を数字の ID で指定しました（[Zenn 第5回](https://zenn.dev/sora_biz/articles/hermes-vps-05-oauth-discord)）
 - **Slack のワークスペースで使いたい** — Socket Mode を使うので、動かす環境をインターネットに公開せずに済みます
   - [Slack](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/slack/)
 - **LINE から話しかけたい** — 公式の Messaging API を使います。同梱のプラグインを有効にするだけです
@@ -56,8 +60,10 @@ raw: /hermes/raw/howto.md
 
 - **毎朝ニュースを届けさせたい** — テーマを調べて要約し、Telegram や Discord へ毎朝送る作例です
   - [毎朝のブリーフィングボット](https://wiki.winsmux.dev/hermes/docs/guides/daily-briefing-bot/)
+  - そらの実例：「morning-news」 というジョブを毎朝 7 時に登録し、ニュースの要約を Telegram で受け取りました（[Zenn 第9回](https://zenn.dev/sora_biz/articles/hermes-vps-09-cron)）
 - **決まった時刻に自動で走らせたい** — しくみは前者、監視やレポートなどの実務的な型は後者にあります
   - [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/) / [cron で自動化する](https://wiki.winsmux.dev/hermes/docs/guides/automate-with-cron/)
+  - そらの実例：止めていたジョブを 6 週間ぶりに再開すると、取りこぼした分は 1 回だけすぐに実行されました（[Zenn 第9回](https://zenn.dev/sora_biz/articles/hermes-vps-09-cron)）
 - **定期実行が動かない原因を突き止めたい** — ジョブが走らない・配信が届かない・skill が読めないを症状別に切り分けます
   - [定期実行がうまくいかないとき](https://wiki.winsmux.dev/hermes/docs/guides/cron-troubleshooting/)
 - **LLM を使わず監視スクリプトだけ回したい** — スクリプトを時間どおり走らせ、標準出力をそのままチャットへ届けます
@@ -108,6 +114,7 @@ raw: /hermes/raw/howto.md
   - [Egress プロキシ](https://wiki.winsmux.dev/hermes/docs/user-guide/egress/) / [iron-proxy](https://wiki.winsmux.dev/hermes/docs/user-guide/egress/iron-proxy/)
 - **コンテナに閉じ込めて動かしたい** — Hermes 自体を Docker で動かす形と、端末の実行先だけを Docker にする形があります
   - [Docker で動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
+  - そらの実例：Docker の中で動かし、Telegram から頼んだファイル一覧が承認なしで実行されるのを確かめました。守りは承認ではなくコンテナが担います（[Zenn 第6回](https://zenn.dev/sora_biz/articles/hermes-vps-06-systemd)）
 - **壊れたファイルを巻き戻したい** — 裏側の git リポジトリに自動で残るスナップショットから戻します
   - [チェックポイントと /rollback](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
 - **作業中のリポジトリを汚さず任せたい** — git のワークツリーで作業場所を分け、同じリポジトリを安全に共有します
@@ -119,18 +126,23 @@ raw: /hermes/raw/howto.md
 
 - **サーバーに常駐させて動かし続けたい** — サービスとして入れる手順が前者にあります。ゲートウェイ自体の説明は後者です
   - [チームで使う Telegram アシスタント](https://wiki.winsmux.dev/hermes/docs/guides/team-telegram-assistant/) / [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
+  - そらの実例：SSH を切ったあとも、スマホの Telegram から「hello」と送ると返事が来ました（[Zenn 第6回](https://zenn.dev/sora_biz/articles/hermes-vps-06-systemd)）
 - **会話や好みを覚えさせたい** — 記憶のしくみが前者、どのファイルが何を担うかの対応表が後者です
   - [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/) / [どのファイルが何をするのか](https://wiki.winsmux.dev/hermes/docs/user-guide/which-file-does-what/)
+  - そらの実例：Telegram で名前を覚えさせ、新しい会話でも「そら」と呼ばれるのを確かめました（[Zenn 第12回](https://zenn.dev/sora_biz/articles/hermes-vps-12-memory)）
 - **話し方や性格を決めたい** — 設定の全体像が前者、SOUL.md に何を書くかの実践が後者です
   - [人格と SOUL.md](https://wiki.winsmux.dev/hermes/docs/user-guide/features/personality/) / [SOUL.md を使う](https://wiki.winsmux.dev/hermes/docs/guides/use-soul-with-hermes/)
 - **skill を自作したい** — SKILL.md の書式と公開までが前者、探し方や入れ方を含む全体が後者です
   - [スキルを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/creating-skills/) / [スキルを使いこなす](https://wiki.winsmux.dev/hermes/docs/guides/work-with-skills/)
+  - そらの実例：「summarize-to-japanese」 という skill を作り、毎朝 7 時のジョブに付けました（[Zenn 第10回](https://zenn.dev/sora_biz/articles/hermes-vps-10-skills)）
 - **使える skill を探したい** — 最初から入っているものが前者、コマンドで追加するものが後者です
   - [同梱スキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/skills-catalog/) / [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
+  - そらの実例：管理画面の BROWSE HUB で「duckduckgo」を検索し、最初から入っていると表示されるのを確かめました（[Zenn 第10回](https://zenn.dev/sora_biz/articles/hermes-vps-10-skills)）
 - **用途ごとにエージェントを分けたい** — 設定を分ける単位が前者、名前を持つ Bot の一覧に見せる形が後者です
   - [プロファイル](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/) / [Bot モード](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
 - **前の会話を探して再開したい** — セッションの保存・再開・検索と、プラットフォームごとの追跡の話です
   - [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
+  - そらの実例：「覚えてる？」と聞くと過去の会話を探さず、「思い出して教えて」と頼むと探してくれました（[Zenn 第14回](https://zenn.dev/sora_biz/articles/hermes-vps-14-session-search)）
 - **コマンドや設定項目を調べたい** — 端末のコマンド、対話中のスラッシュコマンド、config.yaml の書き方です
   - [CLI コマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/) / [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/) / [設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - **困ったときに調べたい** — つまずきやすい箇所の対処が前者、うまく使うためのコツが後者です

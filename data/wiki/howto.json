@@ -61,7 +61,12 @@
         "quickstart",
         "windows",
         "wsl"
-      ]
+      ],
+      "real": {
+        "text": "普段使いの Windows ノート PC に Desktop 版を入れ、VPS の Hermes につなぎ替えました",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-07-desktop",
+        "label": "Zenn 第7回"
+      }
     },
     {
       "category": "導入",
@@ -138,7 +143,12 @@
         "dashboard",
         "desktop",
         "web"
-      ]
+      ],
+      "real": {
+        "text": "接続先を変えたあと「保存して再接続」を押さないと、自分の PC 上のローカルにつながったままでした",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-07-desktop",
+        "label": "Zenn 第7回"
+      }
     },
     {
       "category": "導入",
@@ -170,7 +180,12 @@
       "tags": [
         "messaging",
         "telegram"
-      ]
+      ],
+      "real": {
+        "text": "Bot に最初の 1 通を送るまでは、起動の知らせが「Chat not found」で失敗しました",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-04-install",
+        "label": "Zenn 第4回"
+      }
     },
     {
       "category": "つなぐ",
@@ -185,7 +200,12 @@
       "tags": [
         "discord",
         "messaging"
-      ]
+      ],
+      "real": {
+        "text": "テスト用のサーバーを作って Bot を招待し、使える人を数字の ID で指定しました",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-05-oauth-discord",
+        "label": "Zenn 第5回"
+      }
     },
     {
       "category": "つなぐ",
@@ -333,7 +353,12 @@
         "bot",
         "briefing",
         "daily"
-      ]
+      ],
+      "real": {
+        "text": "「morning-news」 というジョブを毎朝 7 時に登録し、ニュースの要約を Telegram で受け取りました",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-09-cron",
+        "label": "Zenn 第9回"
+      }
     },
     {
       "category": "自動化",
@@ -353,7 +378,12 @@
         "automate",
         "cron",
         "with"
-      ]
+      ],
+      "real": {
+        "text": "止めていたジョブを 6 週間ぶりに再開すると、取りこぼした分は 1 回だけすぐに実行されました",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-09-cron",
+        "label": "Zenn 第9回"
+      }
     },
     {
       "category": "自動化",
@@ -755,7 +785,12 @@
       ],
       "tags": [
         "docker"
-      ]
+      ],
+      "real": {
+        "text": "Docker の中で動かし、Telegram から頼んだファイル一覧が承認なしで実行されるのを確かめました。守りは承認ではなくコンテナが担います",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-06-systemd",
+        "label": "Zenn 第6回"
+      }
     },
     {
       "category": "安全",
@@ -822,7 +857,12 @@
         "messaging",
         "team",
         "telegram"
-      ]
+      ],
+      "real": {
+        "text": "SSH を切ったあとも、スマホの Telegram から「hello」と送ると返事が来ました",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-06-systemd",
+        "label": "Zenn 第6回"
+      }
     },
     {
       "category": "運用",
@@ -844,7 +884,12 @@
         "memory",
         "what",
         "which"
-      ]
+      ],
+      "real": {
+        "text": "Telegram で名前を覚えさせ、新しい会話でも「そら」と呼ばれるのを確かめました",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-12-memory",
+        "label": "Zenn 第12回"
+      }
     },
     {
       "category": "運用",
@@ -886,7 +931,12 @@
         "skills",
         "with",
         "work"
-      ]
+      ],
+      "real": {
+        "text": "「summarize-to-japanese」 という skill を作り、毎朝 7 時のジョブに付けました",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-10-skills",
+        "label": "Zenn 第10回"
+      }
     },
     {
       "category": "運用",
@@ -906,7 +956,12 @@
         "catalog",
         "optional",
         "skills"
-      ]
+      ],
+      "real": {
+        "text": "管理画面の BROWSE HUB で「duckduckgo」を検索し、最初から入っていると表示されるのを確かめました",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-10-skills",
+        "label": "Zenn 第10回"
+      }
     },
     {
       "category": "運用",
@@ -940,7 +995,12 @@
       ],
       "tags": [
         "sessions"
-      ]
+      ],
+      "real": {
+        "text": "「覚えてる？」と聞くと過去の会話を探さず、「思い出して教えて」と頼むと探してくれました",
+        "url": "https://zenn.dev/sora_biz/articles/hermes-vps-14-session-search",
+        "label": "Zenn 第14回"
+      }
     },
     {
       "category": "運用",
