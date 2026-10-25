@@ -68,6 +68,34 @@ const hermesVersion = indexRaw.match(/^hermes_version:\s*"?([^"\n]+)"?\s*$/m)?.[
     </a>
   </section>
 
+  <section class="admin" aria-labelledby="from-admin">
+    <div class="admin-head">
+      <h2 id="from-admin">管理人より</h2>
+      <span class="admin-by">そら（<a href="https://x.com/sora_biz" target="_blank" rel="noopener">@sora_biz</a>）</span>
+    </div>
+    <div class="admin-cols">
+      <div>
+        <h3>このサイトを作った理由</h3>
+        <p>
+          Hermes Agent には、日本語のドキュメントがありません。英語の公式ドキュメントのところで止まってしまう人を減らしたくて、日本語版を作りました。公式ドキュメントを毎日取り込んで日本語にし、「〜したい」から引ける<a href="/hermes/howto/">逆引き</a>と、症状から原因をたどる<a href="/hermes/trouble/">表</a>を足しています。公式の日本語版が出たら、このサイトは役目を終えます。
+        </p>
+      </div>
+      <div>
+        <h3>そらの Hermes の使い方</h3>
+        <ul>
+          <li><b>動かしている場所</b>：月 1,800 円ほどの国内 VPS に常駐させています。家の PC を起動しておかなくても、スマホの Telegram から話しかけられます</li>
+          <li><b>毎朝の定時実行</b>：Teknium と Nous Research の Hermes についての投稿を集めさせ、日本語の要約を Telegram に届けさせています。コードは書かず、チャットで頼んだだけです</li>
+          <li><b>いちばん多い使い方は調べもの</b>：たとえば Reddit での評判を調べさせ、関心の高い話題を 5 つにまとめさせました</li>
+          <li><b>重い作業は自宅の PC へ</b>：VPS から、自宅 PC（RTX 4070）の Claude Code や Codex、ローカルモデルに回しています</li>
+          <li><b>困ったこと</b>：Telegram の受信だけが、何も言わずに止まったことがあります（v0.17.0 からは自動で戻ります）</li>
+        </ul>
+        <p class="admin-more">
+          手順と画面は Zenn の連載「<a href="https://zenn.dev/sora_biz/articles/hermes-vps-complete-guide" target="_blank" rel="noopener">Hermes Agent 完全構築ガイド</a>」にまとめています。
+        </p>
+      </div>
+    </div>
+  </section>
+
   <section class="section">
     <h2>よく使うページ</h2>
     <div class="used">
@@ -144,6 +172,17 @@ const hermesVersion = indexRaw.match(/^hermes_version:\s*"?([^"\n]+)"?\s*$/m)?.[
   .card .go { display: inline-block; margin-top: auto; padding-top: 0.6rem; font-size: 0.82rem; font-weight: 700; color: var(--color-accent); }
   .card.start { border-color: #c9d3ff; background: var(--color-accent-soft); }
 
+  .admin { border-top: 1px solid var(--color-border); padding: 1.2rem 0 1rem; margin-bottom: 0.4rem; }
+  .admin-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem; margin-bottom: 0.8rem; }
+  .admin-head h2 { font-size: 1.15rem; margin: 0; }
+  .admin-by { font-size: 0.82rem; color: var(--color-fg-muted); }
+  .admin-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; }
+  .admin h3 { font-size: 0.95rem; margin: 0 0 0.4rem; }
+  .admin p, .admin li { font-size: 0.9rem; line-height: 1.85; color: var(--color-fg-secondary); }
+  .admin p { margin: 0; }
+  .admin ul { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+  .admin li b { color: var(--color-fg); }
+  .admin .admin-more { margin-top: 0.6rem; font-size: 0.85rem; }
   .section { padding: 0.5rem 0 1rem; }
   .section h2 { font-size: 1rem; margin: 0 0 0.6rem; }
   .used { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -172,6 +211,7 @@ const hermesVersion = indexRaw.match(/^hermes_version:\s*"?([^"\n]+)"?\s*$/m)?.[
 
   @media (max-width: 860px) {
     h1 { font-size: 1.75rem; }
+    .admin-cols { grid-template-columns: 1fr; }
     .grid { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 560px) {

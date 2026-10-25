@@ -31,6 +31,22 @@ raw: /hermes/raw/index.md
 - [ふだんの使いかた](/hermes/guide/) — よく使うページの案内
 - [どこまで任せるか](/hermes/trust/) と [運用](/hermes/ops/) — 任せかたと常時稼働
 
+## 管理人より
+
+### このサイトを作った理由
+
+Hermes Agent には、日本語のドキュメントがありません。英語の公式ドキュメントのところで止まってしまう人を減らしたくて、日本語版を作りました。公式ドキュメントを毎日取り込んで日本語にし、「〜したい」から引ける[逆引き](/hermes/howto/)と、症状から原因をたどる[表](/hermes/trouble/)を足しています。公式の日本語版が出たら、このサイトは役目を終えます。
+
+### そらの Hermes の使い方
+
+- **動かしている場所**：月 1,800 円ほどの国内 VPS に常駐させています。家の PC を起動しておかなくても、スマホの Telegram から話しかけられます
+- **毎朝の定時実行**：Teknium と Nous Research の Hermes についての投稿を集めさせ、日本語の要約を Telegram に届けさせています。コードは書かず、チャットで頼んだだけです
+- **いちばん多い使い方は調べもの**：たとえば Reddit での評判を調べさせ、関心の高い話題を 5 つにまとめさせました
+- **重い作業は自宅の PC へ**：VPS から、自宅 PC（RTX 4070）の Claude Code や Codex、ローカルモデルに回しています
+- **困ったこと**：Telegram の受信だけが、何も言わずに止まったことがあります（v0.17.0 からは自動で戻ります）
+
+手順と画面は Zenn の連載「[Hermes Agent 完全構築ガイド](https://zenn.dev/sora_biz/articles/hermes-vps-complete-guide)」にまとめています。（管理人: そら / [@sora_biz](https://x.com/sora_biz)）
+
 ## 動画で学ぶ（外部の解説動画）
 
 - [Hermes Agent Masterclass（Tonbi's AI Garage）](https://www.youtube.com/watch?v=BeWUUclCin0&list=PLmpUb_PWAkDx-VWjh00tVCji794xAa_IX) — 導入から実際に動かすところまでを扱う YouTube の連続講座。音声は英語だが、プレーヤーの設定 → 音声トラック → 日本語 で日本語音声に切り替えられる
