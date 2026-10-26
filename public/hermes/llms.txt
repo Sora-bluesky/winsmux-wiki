@@ -57,6 +57,7 @@ Hermes Agent 0.22.5
 - [developer-guide/cli-internals（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/cli-internals/)
 - [developer-guide/codebase-ownership（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/codebase-ownership/)
 - [developer-guide/completion-backlog-delivery（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/completion-backlog-delivery/)
+- [developer-guide/config-backend（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/config-backend/)
 - [developer-guide/context-compression-and-caching（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
 - [developer-guide/context-engine-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-engine-plugin/)
 - [developer-guide/contributing（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/contributing/)
@@ -530,6 +531,7 @@ Hermes Agent 0.22.5
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/cli-internals.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/codebase-ownership.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/completion-backlog-delivery.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/config-backend.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/context-compression-and-caching.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/context-engine-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/contributing.md

@@ -2,7 +2,7 @@
 title: "プロバイダーを追加する"
 description: "Hermes Agent に新しい推論プロバイダーを追加する方法 — 認証、実行時の解決、CLI の導線、アダプター、テスト、ドキュメント"
 upstream_path: developer-guide/adding-providers.md
-upstream_blob: 2bf4ef8efde1420469ad187733d213cc6dd32cbc
+upstream_blob: 1cd0964858a4ae75faca65a0a7e90596b2ff6d96
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-providers
 ---
@@ -135,7 +135,7 @@ Hermes は会話の履歴を、内部では OpenAI の chat-completions の形�
 
 次のどれかが必要なプロバイダーでは、以下の長いチェックリストを使ってください。
 
-- OAuth やトークンの更新（Nous Portal、Codex、Qwen Portal、Copilot）
+- OAuth やトークンの更新（Nous Portal、Codex、Qwen Portal）
 - 新しいアダプターが要る、OpenAI とは違う形の API（Anthropic Messages、Codex Responses）
 - 独自のエンドポイント判定や、複数の地域への接続試行（z.ai、Kimi）
 - 選び抜いた固定のモデル一覧、または `/models` からの取得

@@ -2,7 +2,7 @@
 title: "実行時のプロバイダー解決"
 description: "Hermes が実行時にプロバイダー・資格情報・API モード・補助モデルをどう決めているか"
 upstream_path: developer-guide/provider-runtime.md
-upstream_blob: 60f1638b1f931f7db52ba9c2ff6d12d99978ef64
+upstream_blob: 04801d675f57840b188ebd0f3ce58e9a811e4d4e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/provider-runtime
 ---
@@ -66,7 +66,6 @@ Hermes はこうしたフィールドを、メインのストリーム、Relay �
 - OpenRouter
 - Nous Portal
 - OpenAI Codex
-- Copilot / Copilot ACP
 - Anthropic (ネイティブ)
 - Google / Gemini (`gemini`)
 - Alibaba / DashScope (`alibaba`、`alibaba-coding-plan`)

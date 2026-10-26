@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "モデルカタログ"
 description: "OpenRouter と Nous Portal のモデル選択リストを組み立てる、遠隔に置かれた一覧ファイルです。"
 upstream_path: reference/model-catalog.md
-upstream_blob: e0b98a3ed705138505456a765e47c72bfccd4d1e
+upstream_blob: 19ee831a2d9c12968411f854d12e6a2ade369558
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/model-catalog
 ---
@@ -33,7 +33,7 @@ https://hermes-agent.nousresearch.com/docs/api/model-catalog.json
     "openrouter": {
       "metadata": {},
       "models": [
-        {"id": "z-ai/glm-5.2",         "description": "default", "default": true},
+        {"id": "z-ai/glm-5.3",         "description": "default", "default": true},
         {"id": "moonshotai/kimi-k3",   "description": "recommended", "metadata": {}},
         {"id": "openai/gpt-5.4",       "description": ""}
       ]
@@ -41,7 +41,7 @@ https://hermes-agent.nousresearch.com/docs/api/model-catalog.json
     "nous": {
       "metadata": {},
       "models": [
-        {"id": "z-ai/glm-5.2", "default": true},
+        {"id": "z-ai/glm-5.3", "default": true},
         {"id": "anthropic/claude-opus-4.7"},
         {"id": "moonshotai/kimi-k3"}
       ]

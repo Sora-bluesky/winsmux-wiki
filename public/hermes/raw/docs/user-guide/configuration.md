@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 5c7e70e1af4c440d33bd31ba4c5ab5e632950d2c
+upstream_blob: 4a58d3d824b8730afe86c4d6e189d0099ffe262b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -161,7 +161,7 @@ delegation:
 
 Cursor 形式の SecretRef の書き方も使えます。`${env:VAR_NAME}` は `${VAR_NAME}` とまったく同じように解決されます（`env:` というプレフィックスは取り除かれます）。そのため、Cursor や Claude の設定からコピーした MCP やプロバイダーの設定例は、`config.yaml` でも `mcp_servers` ブロックでも、書き換えずにそのまま使えます。それ以外の SecretRef の参照元（`${file:...}`、`${vault:...}`、`${bitwarden:...}`）は、その場では解決**されません**。外部のシークレット用バックエンドは、起動時に `secrets:` ブロックを通じて値を環境変数に注入するので、代わりに `${env:NAME}` の形で参照してください。未知のプレフィックスは1回だけ警告を出し、書いたとおりに残ります。
 
-AI プロバイダーの設定（OpenRouter、Anthropic、Copilot、カスタムエンドポイント、セルフホストの LLM、フォールバックモデルなど）については、[AI プロバイダー](/hermes/docs/integrations/providers/) を参照してください。
+AI プロバイダーの設定（OpenRouter、Anthropic、カスタムエンドポイント、セルフホストの LLM、フォールバックモデルなど）については、[AI プロバイダー](/hermes/docs/integrations/providers/) を参照してください。
 
 ### プロバイダーのタイムアウト {#provider-timeouts}
 
@@ -259,14 +259,14 @@ terminal:
 実際のストレージに書き込まれます。システムプロンプトでは、このディレクトリを作業用の一時
 ディレクトリとして示しています。Hermes がこれらを設定するのは、まだ設定されていないときだけです。
 ユーザーや OS がエクスポートした `TMPDIR`（macOS の `/var/folders`、Windows の `%TEMP%`）はそのまま残ります。中の項目は、
-**24時間アイドル状態**になると、起動時に（1時間に最大1回）削除されます。内部のどこかで
+**24時間アイドル状態**になると、起動の直後に始まるバックグラウンドのプロセスによって削除されます（1時間に最大1回。起動時にこの処理の完了を待つことはなく、コマンドがすぐに終了しても処理は最後まで続きます）。内部のどこかで
 直近1日以内に書き込みがあれば残り、最後の書き込みから1日たつと消えます。ハードリンクされたファイルは書き込みとして数えません
 （`git clone --local` はクローン元のリポジトリとパックファイルを共有するため、数えるとクローン元での作業によってクローンがいつまでも残ってしまいます）。
 アイドル状態の項目を削除する前に、Hermes は、その項目の中（または、もう存在しない作業用の一時パスの中）を
 作業ディレクトリにしたまま動いているプロセス（テスト実行のあとに残されたヘッドレスブラウザーなど）を止め、
 そこを指している `git worktree` の登録も取り除きます。ただし、Hermes 自身が起動していまも追跡しているプロセス（バックグラウンドの
-`terminal` のプロセス、ゲートウェイ、CLI のセッション、それらが起動してまだ子プロセスのままのもの）は止めません。
-それらが中で作業しているアイドル状態の項目は、削除せずに残します。各項目は削除の直前にもう一度確かめられるので、
+`terminal` のプロセス、ゲートウェイ、CLI のセッション、それらが起動してまだ子プロセスのままのもの）は止めません。Hermes のコマンドを起動したシェル（とその親プロセス）も、そのコマンドが終了したあとであっても止めません。
+それらが中で作業しているアイドル状態の項目は、削除せずに残します。プロセスを調べられない処理では、何も止めず、プロセスが中で作業しているかもしれない項目も削除しません。各項目は削除の直前にもう一度確かめられるので、
 プロセスを止めているあいだに書き込みがあった項目は残ります。削除したもの、止めたプロセス、残した項目は、すべて `~/.hermes/logs/scratch-prune.log` に記録されます。ユーザーが読み取りや削除をできないファイルを含む項目
 （多くは、バインドマウントへ書き込んだ Docker コンテナが残した root 所有の出力）は、中身を確かめられないまま一部だけ消すことはしません。
 削除するためのコマンド（`sudo rm -rf '<path>'`、Docker が入っていれば代わりの `docker run … rm -rf`）を添えて1回だけログに記録し、
@@ -1019,6 +1019,7 @@ compression:
   protect_first_n: 3                                # Non-system head messages pinned across compactions (0 = pin nothing)
   in_place: true                                    # Compact on the same session id (no rotation) — see below
   idle_compact_after_seconds: 0                     # Opt-in idle compaction (0 = disabled) — see below
+  prepare_ahead: false                              # Opt-in: prepare the next summary in the background — see below
   hygiene_hard_message_limit: 5000                  # Gateway safety valve — see below
   hygiene_timeout_seconds: 30                       # Max seconds of NO summary-model output before hygiene compression is cut off
   hygiene_total_ceiling_seconds: 600                # Absolute cap on the hygiene wait even while tokens are still streaming
@@ -1069,6 +1070,8 @@ auxiliary:
 `threshold_tokens` は、圧縮が発動するトークン数に、任意で**絶対値の上限**を設けます。設定すると、圧縮は比率で決まる `threshold` と、この絶対値のうち低いほうで発動します。そのため、どのモデルを使っていても、このトークン数より後に圧縮が遅れることはありません。1回の呼び出しあたりのコストに固定の上限を設けたいときに使います。たとえば `threshold_tokens: 256000` にすると、1M のウィンドウを持つモデルを 500K ではなく 256K で圧縮します。この上限はモデルのコンテキスト長を超えないよう調整されるため、ウィンドウより大きい値を指定しても効果はありません。既定値は `null` です（無効。比率で決まるしきい値だけを使います）。この上限はモデルの切り替えやフォールバックの発動後も維持されます。
 
 `idle_compact_after_seconds` は、サイズで決まる `threshold` を補う、**明示的に有効にしたときだけ働く、時間ベースの**発動条件です。既定値は `0`（無効）です。0より大きくすると、その秒数以上やり取りがなかったあとに再開したセッションは、最初の返信の前に、それまでにたまった履歴をまとめて圧縮します。そのため、長く続くスレッド（たとえば数時間後に戻ってきた Telegram の会話）で、古くなったコンテキスト全体を以降のターンのたびに読み直すことがなくなります。コンテキストがすでに圧縮後の目標（`threshold × target_ratio`）以下であれば発動しません。また、ほかの自動圧縮と同じく、失敗後のクールダウン、短い間隔での繰り返しの防止、セッションごとのロックという保護にも従います。例: `idle_compact_after_seconds: 1800` にすると、30分アイドルが続いたあとに圧縮します。
+
+`prepare_ahead`（既定は `false`）は、セッションが圧縮の発動条件に近づくと、ツールの実行中やターンの合間に、次の圧縮の要約をバックグラウンドで書いておきます。用意する要約は、圧縮1回につき1つです。自動の圧縮が発動したとき、要約の対象のメッセージがまだ同じであれば（プラグインによる文章の編集は問題ありませんが、メッセージが削られたり巻き戻されたりした場合は同じとはみなしません）、その時点で要約を呼び出す代わりに用意しておいた要約を使い、それより新しいメッセージはすべて要約に含めず、圧縮しない末尾部分に残します。圧縮が発動した時点で、用意する要約をまだ書いている途中なら、圧縮は書き直さずに、その完了を待ちます（待つのは通常の圧縮の制限時間内です）。用意した要約がない場合や、もう対象と合わなくなった場合は、このオプションがないときとまったく同じように圧縮が動きます。使われずに終わるかもしれない補助の要約呼び出しを1回分使うことになり、手動の `/compress`、プラグインのコンテキストエンジン、ネイティブ／アプリサーバー側の圧縮には適用されません。圧縮の要約にコンテキストを書き足すメモリープロバイダーを使っている場合は、用意した要約がすべて捨てられることになるため、最初の圧縮のあとで自動的に無効になります。
 
 `proactive_prune_tokens` は、古いツールの結果の中身を刈り込む処理を有効にします。この処理は `threshold` とは独立して動き、LLM を使わず、毎回同じ規則で行われます。コンテキストウィンドウの大きいモデルでは、`threshold` による圧縮（ウィンドウの約50%）はめったに発動しません。そのため、かさばるツールの出力（ターミナルに出た大量の出力、読み込んだファイル、Web から抜き出した内容）が履歴に残ったまま、以降のターンのたびに送り直されます。送り直す履歴が `proactive_prune_tokens`（既定は `0` = 無効。有効にするなら `48000` から試してください）を超えると、この処理は同一の結果を1つにまとめ、古くて大きすぎるツールの結果を要約します。直近の `protect_last_n` 件のメッセージには手を付けず、モデルも呼び出しません。ツール呼び出しの引数は実行の記録なので、刈り込みで書き換えられることはありません。要約を作るモデルには、プロンプトに含める写しのために、上限付きの別の書き出し処理があります。*圧迫*時の処理も同じく、簡略化するのはツールの結果の本文だけです。意味を踏まえた完全な圧縮の最中も、引き継がれる先頭部分・末尾部分の行ではツールの結果の簡略化がそのまま保たれ（そのため大きすぎる末尾部分も圧縮できます）、一方でツール呼び出しの引数は1バイトも変わりません。有効にした場合の先回りの刈り込みでは、対象となるツールの結果の本文の簡略化はこれまでどおり確定されます。そのため `proactive_prune_min_reclaim_tokens`（既定は `4096`）によって、キャッシュを途切れさせる確定がときどきに抑えられます。`proactive_prune_min_result_chars`（既定は `8000`。200以上に制限）は、これより小さいツールの結果には手を付けない、というサイズを決めます。この処理は組み込みの `compressor` エンジンでだけ動きます。ほかのコンテキストエンジンでは何もしません。
 
@@ -1555,7 +1558,7 @@ auxiliary:
 
 `base_url` を設定すると、Hermes はプロバイダーの指定を無視して、そのエンドポイントを直接呼び出します（認証には `api_key` か `OPENAI_API_KEY` を使います）。`provider` だけを設定した場合は、そのプロバイダーに組み込まれた認証と base URL を使います。
 
-補助タスクで使えるプロバイダー: `auto`、`main`、[プロバイダーのレジストリ](/hermes/docs/reference/environment-variables/) にある任意のプロバイダー（`openrouter`、`nous`、`openai-codex`、`copilot`、`copilot-acp`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry`）、または `providers:` の辞書に名前を付けて登録したカスタムプロバイダー（例: `provider: "beans"`）。
+補助タスクで使えるプロバイダー: `auto`、`main`、[プロバイダーのレジストリ](/hermes/docs/reference/environment-variables/) にある任意のプロバイダー（`openrouter`、`nous`、`openai-codex`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry`）、または `providers:` の辞書に名前を付けて登録したカスタムプロバイダー（例: `provider: "beans"`）。
 
 ローカルの OpenAI 互換サーバーは、それぞれの名前でも指定できます。`provider: ollama`（`vllm`、`llamacpp`、`llama.cpp` も同様）に `http://127.0.0.1:11434` のような `base_url` と空の `api_key` を組み合わせると、仮のキーを使ってカスタムエンドポイント経由で振り分けられます。また、base_url が `host:port` だけの場合は、末尾に `/v1` が自動で付きます。
 
@@ -2015,7 +2018,7 @@ agent:
 
 `/fast normal|fast|ultrafast|auto|cold` で、そのセッションのモードを切り替えます（`/fast ultra` は `ultrafast` の短縮形です）。ChatGPT/Codex のサブスクリプションでは、アカウントの Codex モデルカタログが現在のモデルに Ultrafast を載せているときだけ Ultrafast が選べます。そうでない場合、バックエンドはリクエストを受け付けたうえで通常の速度で処理します。`--global` を付けると `config.yaml` に保存され、次回以降も使われます。`/fast` だけを実行すると、現在のモードを表示します。
 
-**料金の注意:** どちらのプロバイダーも、fast のリクエストには標準料金に倍率を掛けた額を請求します（Anthropic の場合、入力／出力それぞれ 100万トークン（MTok）あたり、Opus 5.5 で $8 / $40、Opus 5 と Opus 4.8 で $10 / $50）。この割増はプロンプトキャッシュの料金と重ねて適用されます。Hermes は Anthropic の応答ごとに、API が `usage.speed` で報告する速度をもとに料金を計算します。`auto`/`cold` を使うと、割増がかかるのは時間枠の中だけになります。fast のパラメーターは、それに対応した提供元直営のエンドポイント（`api.openai.com` / Codex のサブスクリプション、`api.anthropic.com`、`api.x.ai`）にだけ送られます。OpenRouter、Nous Portal、Copilot、Azure、Bedrock、カスタムの `base_url` の経路には、どのモードでも送られません。
+**料金の注意:** どちらのプロバイダーも、fast のリクエストには標準料金に倍率を掛けた額を請求します（Anthropic の場合、入力／出力それぞれ 100万トークン（MTok）あたり、Opus 5.5 で $8 / $40、Opus 5 と Opus 4.8 で $10 / $50）。この割増はプロンプトキャッシュの料金と重ねて適用されます。Hermes は Anthropic の応答ごとに、API が `usage.speed` で報告する速度をもとに料金を計算します。`auto`/`cold` を使うと、割増がかかるのは時間枠の中だけになります。fast のパラメーターは、それに対応した提供元直営のエンドポイント（`api.openai.com` / Codex のサブスクリプション、`api.anthropic.com`、`api.x.ai`）にだけ送られます。OpenRouter、Nous Portal、Azure、Bedrock、カスタムの `base_url` の経路には、どのモードでも送られません。
 
 **プロンプトキャッシュ:** リクエストごとに変わるのはリクエスト単位のこのパラメーターだけで、システムプロンプト、ツール、メッセージはバイト単位で同一のままです。ただし Anthropic は速度ごとに別々のプロンプトキャッシュを持つので、Anthropic では `auto`/`cold` の時間枠の境目のたびに、会話の先頭部分が新しい速度で書き直されます。Anthropic で長いセッションを続けるなら、`fast` か `normal` にしておくと、温まったキャッシュを1つに保てます。
 
@@ -3050,7 +3053,7 @@ delegation:
 ```
 **送信形式（`api_mode`）:** Hermes は `delegation.base_url` から送信形式を自動で判別します（例: パスが `/anthropic` で終わるなら `anthropic_messages`。Codex、Anthropic のネイティブ API、Kimi-coding のホスト名は、これまでどおりの判別を使います）。この判別規則では分類できないエンドポイント（たとえば Azure AI Foundry、MiniMax、Zhipu GLM、Anthropic 形式のバックエンドの前に置いた LiteLLM のプロキシ）では、`delegation.api_mode` に `chat_completions`、`codex_responses`、`anthropic_messages` のいずれかを明示的に設定します。空のまま（既定）にしておくと、自動判別が使われます。
 
-委任のプロバイダーは、CLI やゲートウェイの起動時と同じ方法で認証情報を解決します。設定済みのプロバイダーはすべて使えます（`openrouter`、`nous`、`copilot`、`zai`、`kimi-coding`、`minimax`、`minimax-cn`）。プロバイダーを設定すると、正しい base URL、API キー、API モードが自動で決まるので、認証情報を手作業でつなぎ込む必要はありません。
+委任のプロバイダーは、CLI やゲートウェイの起動時と同じ方法で認証情報を解決します。設定済みのプロバイダーはすべて使えます（`openrouter`、`nous`、`zai`、`kimi-coding`、`minimax`、`minimax-cn`）。プロバイダーを設定すると、正しい base URL、API キー、API モードが自動で決まるので、認証情報を手作業でつなぎ込む必要はありません。
 
 **優先順位:** 設定の `delegation.base_url` → 設定の `delegation.provider` → 親のプロバイダー（継承）。設定の `delegation.model` → 親のモデル（継承）。`provider` を書かずに `model` だけを設定すると、親の認証情報はそのままで、モデル名だけが変わります（OpenRouter のように、同じプロバイダーの中でモデルを切り替えたいときに便利です）。
 
@@ -3152,7 +3155,7 @@ webapp:
 
 - `enabled` — ゲートウェイは起動時にこの値を読みます。変えたら、ゲートウェイを再起動してください（`hermes gateway restart`）。
 - `host` — `127.0.0.1`、`::1`、`localhost` のどれかにすると、Webapp はこの端末の中だけで使えます。`0.0.0.0` か `::` にすると、ほかの端末からもつながるようになり、[ダッシュボードのサインイン用プロバイダー](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)が必要になります。プロバイダーが無いと、ゲートウェイはネイティブのクライアント向けにだけ配信し、その理由は `hermes webapp --status` で確かめられます。プロバイダーを追加したら、ゲートウェイを再起動してください。これ以外の値にすると、`127.0.0.2` のような別のループバックアドレスであっても、Webapp は止まったままです。
-- `port` — このポートがほかで使われているときも、ゲートウェイはネイティブのクライアント向けにだけ配信し、その理由を `hermes webapp --status` が伝えます。このときは、ほかのプログラムが受け取ってしまったおそれがあるので、Webapp のブラウザ用サインインも作り直します。そのため、ポートが空いたら、開いていたタブのために `hermes webapp` をもう一度実行する必要があります。
+- `port` — 単独で動くプロファイルのゲートウェイには、既定のゲートウェイとは別のポートが必要です。ポートを設定していない単独のプロファイルでは、**Settings → Web Access → Start** がポートを1つ選び（9120 より大きい空きポートのうち、ほかのプロファイルが使っていない最初のもの）、ここに保存します。自分で設定したポートを置き換えることはありません。このポートがほかで使われているときも、ゲートウェイはネイティブのクライアント向けにだけ配信し、その理由を `hermes webapp --status` が伝えます。このときは、ほかのプログラムが受け取ってしまったおそれがあるので、Webapp のブラウザ用サインインも作り直します。そのため、ポートが空いたら、開いていたタブのために `hermes webapp` をもう一度実行する必要があります。
 - `public_url` — 自分で動かしているリバースプロキシやトンネルが、Webapp を独自のアドレスで配信する（`host:port` へ転送する）ときに設定します。設定すると、`host` がループバックでもダッシュボードのサインインが有効になります。また、Webapp が受け付ける外からのホスト名はこの1つだけになり、サインイン後に戻るコールバックもこの値をもとに組み立てられます。サインイン用プロバイダーが無ければ、`0.0.0.0` のときと同じく、ゲートウェイはネイティブのクライアント向けにだけ配信します。値は `http://` か `https://` で始まり、認証情報・クエリ・フラグメントを含まないアドレスにしてください。それ以外の値では Webapp は止まったままです。`dashboard.public_url` は `hermes dashboard` 用の設定で、Webapp には使われません。
 
 サインインが有効になるのは、`host` が `0.0.0.0` か `::` のとき、または host の値にかかわらず `public_url` を設定したときです。このとき `hermes webapp` は Webapp のアドレス（`public_url` を設定していればそのアドレスで、サインイン後はここへ戻ります）を開くので、ダッシュボードのアカウントでサインインしてください。このコマンドが出す一度だけ使えるリンクで開けるのは、サインインの要らない Webapp だけです。ネイティブのクライアント（CLI、TUI、デスクトップアプリ）はサインインしません。ゲートウェイがそれらのために用意している待ち受け口は、設定がどうであってもサインインを求めないからです。

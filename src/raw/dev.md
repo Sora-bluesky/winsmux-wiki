@@ -11,9 +11,9 @@ raw: /hermes/raw/dev.md
 
 # developer-guide
 
-Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（62 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
+Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（63 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
 
-## Developer Guide（62）
+## Developer Guide（63）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -37,6 +37,7 @@ Hermes Agent 本体を拡張したり、上流に貢献したりする人向け�
 - [CLI Internals](/hermes/docs/developer-guide/cli-internals/)
 - [Codebase Ownership Map](/hermes/docs/developer-guide/codebase-ownership/)
 - [Background completion backlogs](/hermes/docs/developer-guide/completion-backlog-delivery/)
+- [Config Backend Seam](/hermes/docs/developer-guide/config-backend/)
 - [Context Engine Plugins](/hermes/docs/developer-guide/context-engine-plugin/)
 - [Cron Internals](/hermes/docs/developer-guide/cron-internals/)
 - [Delegation Provider Plugins](/hermes/docs/developer-guide/delegation-provider-plugin/)

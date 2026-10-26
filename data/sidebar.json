@@ -1443,6 +1443,9 @@
               "id": "developer-guide/provider-runtime"
             },
             {
+              "id": "developer-guide/config-backend"
+            },
+            {
               "id": "developer-guide/programmatic-integration"
             }
           ]
@@ -2040,6 +2043,7 @@
     "developer-guide/session-storage",
     "developer-guide/state-db-recovery",
     "developer-guide/provider-runtime",
+    "developer-guide/config-backend",
     "developer-guide/programmatic-integration",
     "developer-guide/adding-tools",
     "developer-guide/adding-providers",

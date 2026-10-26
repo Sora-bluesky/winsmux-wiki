@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "フォールバックプロバイダー"
 description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: 32d698c02023208ecd21edcfeddbcf2ac0adb678
+upstream_blob: 849e6ee68ba23aff2a8459a4ed8eb3755434cc8c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
@@ -70,8 +70,6 @@ Google 純正の API エンドポイントでは、いずれも純正の Gemini 
 | OpenRouter | `openrouter` | `OPENROUTER_API_KEY` |
 | Nous Portal | `nous` | `hermes setup --portal`（新規）または `hermes auth add nous`（OAuth） |
 | OpenAI Codex | `openai-codex` | `hermes model` → **ChatGPT または Codex のサブスクリプション**（ChatGPT OAuth） |
-| GitHub Copilot | `copilot` | `COPILOT_GITHUB_TOKEN`、`GH_TOKEN`、または `GITHUB_TOKEN` |
-| GitHub Copilot ACP | `copilot-acp` | 外部プロセス（エディター連携） |
 | Anthropic | `anthropic` | `ANTHROPIC_API_KEY` または Claude Code の認証情報 |
 | z.ai / GLM | `zai` | `GLM_API_KEY` |
 | Kimi / Moonshot | `kimi-coding` | `KIMI_API_KEY` |

@@ -2,7 +2,7 @@
 title: "Hermes Agent クイックスタート"
 description: "Hermes Agent との最初の会話まで。インストールからおしゃべりできるまで 5 分"
 upstream_path: getting-started/quickstart.md
-upstream_blob: b3304561ffd7b107f716069107c8282c9c652551
+upstream_blob: 0d7c3a7e542ecbb10ad77544edde7175fa12f616
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/quickstart
 ---
@@ -143,8 +143,6 @@ Blank Slate は `platform_toolsets.cli` の一覧と `agent.disabled_toolsets` �
 | **OpenCode Go** | オープンなモデルを月 10 ドルの購読で使う | `OPENCODE_GO_API_KEY` を設定 |
 | **DeepSeek** | DeepSeek の API を直接使う | `DEEPSEEK_API_KEY` を設定 |
 | **NVIDIA NIM** | build.nvidia.com か手元の NIM で Nemotron のモデルを使う | `NVIDIA_API_KEY` を設定（任意で `NVIDIA_BASE_URL`） |
-| **GitHub Copilot** | GitHub Copilot の購読（GPT-5.x、Claude、Gemini など） | `hermes model` から OAuth、または `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` |
-| **GitHub Copilot ACP** | Copilot の ACP エージェントを裏側に使う（手元の `copilot` CLI を起動します） | `hermes model`（`copilot` CLI と `copilot login` が必要） |
 | **Vercel AI Gateway** | Vercel AI Gateway による振り分け | `AI_GATEWAY_API_KEY` を設定 |
 | **Custom Endpoint** | VLLM、SGLang、Ollama など OpenAI 互換の API なら何でも | ベース URL と API キーを設定 |
 

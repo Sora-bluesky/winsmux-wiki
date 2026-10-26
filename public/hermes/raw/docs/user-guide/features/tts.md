@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md
-upstream_blob: 3c62222592ae8d4c31cdd7d54e10e8af4f54d355
+upstream_blob: 2a42e8b048d37b6d4e8ce1036a7764d49e2e8c87
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tts
 ---
@@ -230,6 +230,22 @@ ffmpeg がないと、Edge TTS、MiniMax TTS、NeuTTS、KittenTTS、Piper の音
 :::tip
 ffmpeg を入れずにボイスの吹き出しを使いたいなら、OpenAI、ElevenLabs、Mistral のいずれかに切り替えてください。
 :::
+
+### ElevenLabs：エージェントが選ぶ声 {#elevenlabs-agent-selected-voices}
+
+`tts.provider: elevenlabs` にして `ELEVENLABS_API_KEY` を設定しておくと、エージェントは `text_to_speech` を呼ぶたびに別の声を選べます。たとえば台本の登場人物ごとに声を変える、といった使い方です。ElevenLabs 版の `text_to_speech` には、ほかの提供元にはない項目が 2 つ増えています（ほかの提供元では、設定した声がそのまま使われます）。
+
+- `voice_id` は、その呼び出しで使う声を選びます。省くと `tts.elevenlabs.voice_id` が使われます。設定が書き換えられることはありません。
+- `find_voices` は、読み上げる代わりに声を探します。既定では 1 ページに 20 件（最大 100 件）の声を返し、次のページは `next_page` で取得します。
+  - `source: library`（既定）は公開の Voice Library を検索します。コミュニティが作った何千もの声があり、よく使われているものから順に並びます。ライブラリの声は、先に保存しなくても `voice_id` を指定すればそのまま使えます。ただし ElevenLabs が API からの利用を認めているのは有料プランだけで、一部の声はクレジットの消費率が高めです（`credit_rate` に表示されます）。
+  - `source: account` は、自分のアカウントにある声を一覧にします。最初から用意されている声に加えて、自分で保存した声、複製した声、デザインした声も含まれます。
+  - 絞り込み：自由入力の `query`、`gender`、`age`、`accent`、`language`（`en` のような ISO コード）。ライブラリではさらに `use_case`（例：`characters_animation`）と `sort`（`usage_character_count_1y`、`trending`、`cloned_by_count`、`created_date`）も使えます。
+
+ライブラリの検索は、声の名前と説明に含まれる語を文字どおりに照らし合わせます。「orc」ならオークの声が見つかりますが、「dwarf」では何も見つかりません。そのためエージェントには、見つからないときは声の響きを言葉で表して探すよう指示してあります（たとえば「gravelly old」に `age: old` と `use_case: characters_animation` を組み合わせます）。
+
+ElevenLabs の API キーには、読み上げに **Text to Speech** の権限、検索に **Voices: Read** の権限が必要です。
+
+エージェント自身は声を聞けません。それぞれの声のラベルと説明をもとに選びます。結果には必ず `preview_url` が付いているので、その声に決める前に開いて聞いてみてください。
 
 ### xAI のカスタムボイス（声の複製） {#xai-custom-voices-voice-cloning}
 

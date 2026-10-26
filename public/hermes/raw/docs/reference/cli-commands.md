@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: b9d0edff7db1ccc135fd1a5240fe4bd166068eb0
+upstream_blob: 982d1e91fa13bd188bb0c3044b55c6e94fc62c2c
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -133,7 +133,7 @@ hermes chat [options]
 | `--oneshot` | `-q`/`--query-file` と併用: 対話セッションを開始する代わりに、クエリに回答して終了します（0.21 より前の単一クエリの挙動）。非 TTY の標準入出力と `-Q` では暗黙に有効になります。 |
 | `-m`, `--model <model>` | この実行だけモデルを上書きします。 |
 | `-t`, `--toolsets <csv>` | カンマ区切りのツールセットを有効にします。 |
-| `--provider <provider>` | プロバイダを強制します: `auto`, `openrouter`, `nous`, `openai-codex`（別名 `chatgpt`, `chatgpt-codex`）, `copilot-acp`, `copilot`, `anthropic`, `gemini`, `huggingface`, `novita`（別名 `novita-ai`, `novitaai`）, `openai-api`, `zai`, `kimi-coding`, `kimi-coding-cn`, `minimax`, `minimax-cn`, `minimax-oauth`, `kilocode`, `xiaomi`, `arcee`, `gmi`, `upstage`（別名 `solar`）, `alibaba`, `alibaba-cn`, `alibaba-coding-plan`（別名 `alibaba_coding`）, `alibaba-coding-plan-cn`, `alibaba-token-plan`, `alibaba-token-plan-cn`, `deepseek`, `nvidia`, `ollama-cloud`, `xai`（別名 `grok`）, `xai-oauth`（別名 `grok-oauth`）, `qwen-oauth`, `bedrock`, `opencode-zen`, `opencode-go`, `commandcode`, `commandcode-anthropic`, `ai-gateway`, `azure-foundry`, `lmstudio`, `stepfun`, `tencent-tokenhub`（別名 `tencent`, `tokenhub`）, `router`（別名 `ramp-router`, `ramp`）, `nebius-token-factory`（別名 `nebius`, `nebius-tf`, `tokenfactory`）, `tencent-tokenplan`（別名 `tokenplan`, `tencent-lkeap`）。 |
+| `--provider <provider>` | プロバイダを強制します: `auto`, `openrouter`, `nous`, `openai-codex`（別名 `chatgpt`, `chatgpt-codex`）, `anthropic`, `gemini`, `huggingface`, `novita`（別名 `novita-ai`, `novitaai`）, `openai-api`, `zai`, `kimi-coding`, `kimi-coding-cn`, `minimax`, `minimax-cn`, `minimax-oauth`, `kilocode`, `xiaomi`, `arcee`, `gmi`, `upstage`（別名 `solar`）, `alibaba`, `alibaba-cn`, `alibaba-coding-plan`（別名 `alibaba_coding`）, `alibaba-coding-plan-cn`, `alibaba-token-plan`, `alibaba-token-plan-cn`, `deepseek`, `nvidia`, `ollama-cloud`, `xai`（別名 `grok`）, `xai-oauth`（別名 `grok-oauth`）, `qwen-oauth`, `bedrock`, `opencode-zen`, `opencode-go`, `commandcode`, `commandcode-anthropic`, `ai-gateway`, `azure-foundry`, `lmstudio`, `stepfun`, `tencent-tokenhub`（別名 `tencent`, `tokenhub`）, `router`（別名 `ramp-router`, `ramp`）, `nebius-token-factory`（別名 `nebius`, `nebius-tf`, `tokenfactory`）, `tencent-tokenplan`（別名 `tokenplan`, `tencent-lkeap`）。 |
 | `-s`, `--skills <name>` | セッション用に1つ以上のスキルをプリロードします（繰り返し指定可、カンマ区切りも可）。 |
 | `-v`, `--verbose` | 詳細な出力です。 |
 | `-Q`, `--quiet` | プログラム向けモード: バナー/スピナー/ツールプレビューを抑制します。 |
@@ -246,8 +246,8 @@ hermes model
 ```
 
 次のような場合に使います:
-- **新しいプロバイダを追加する**（OpenRouter、Anthropic、Copilot、DeepSeek、カスタムなど）
-- OAuth 対応のプロバイダにログインする（Anthropic、Copilot、Codex、Nous Portal）
+- **新しいプロバイダを追加する**（OpenRouter、Anthropic、DeepSeek、カスタムなど）
+- OAuth 対応のプロバイダにログインする（Anthropic、Codex、Nous Portal）
 - API キーを入力・更新する
 - プロバイダ固有のモデル一覧から選ぶ
 - カスタム/自前ホストのエンドポイントを設定する
@@ -282,7 +282,7 @@ hermes model
 ```
 
 :::info OpenRouter のモデルしか見えない場合
-OpenRouter しか設定していない場合、`/model` には OpenRouter のモデルしか表示されません。他のプロバイダ（Anthropic、DeepSeek、Copilot など）を追加するには、セッションを終了してターミナルから `hermes model` を実行してください。
+OpenRouter しか設定していない場合、`/model` には OpenRouter のモデルしか表示されません。他のプロバイダ（Anthropic、DeepSeek など）を追加するには、セッションを終了してターミナルから `hermes model` を実行してください。
 :::
 
 `--global` での切り替え時には、プロバイダとベース URL の変更もモデルとともに `config.yaml` に永続化されます。カスタムエンドポイントから切り替える際は、古くなったベース URL が消去され、他のプロバイダに漏れ込むのを防ぎます。
@@ -1818,8 +1818,10 @@ Hermes Desktop のワークスペースを、ふつうのブラウザで開き�
 リンクを受け取れるのは自分の OS ユーザーだけです。ゲートウェイはこのコマンドに、自分専用の
 制御ソケットを通して応答します。Linux では、ブラウザの接続が自分の OS ユーザーのものかをゲートウェイが確かめます。
 Windows では何も確かめませんが、リンクはブラウザを起動するコマンドラインの中だけを通り、ほかの
-標準ユーザーはそれを読めません。macOS、BSD 系、WSL ではどちらも成り立たないため、コマンドはリンクを表示して
-自分で開いてもらう形にし、ブラウザの起動側へ渡すことはありません。
+標準ユーザーはそれを読めません。macOS、BSD 系、illumos ではどちらも成り立たないため、コマンドはリンクをブラウザの起動側へ渡しません。
+代わりに、自分の OS ユーザーだけが読めるページ（ゲートウェイのホームにある `webapp/launch-*.html`）にリンクを書き込み、そのページを開きます。ブラウザを開けない環境と
+WSL では、リンクを表示して自分で開いてもらいます。macOS では、ブラウザが自分から見えない場所で開くことがあります（SSH 越しに実行したとき、Mac 本体の画面に開く場合など）。
+どこにも開かなかったときは、`hermes webapp --no-open` を実行するとリンクが表示されます。
 使われるまでは、そのリンクでブラウザが自分としてサインインできてしまうので、人に見せないでください。
 
 既定のゲートウェイが配信する名前付きプロファイルの場合（`hermes -p work webapp`）、Webapp はそのプロファイルで

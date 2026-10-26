@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 7e85f0bea90d18ba075a2a414ff7304292c0db48
+upstream_blob: 5b8f0504cb5ec3204f6641e16d962d3de3ec948a
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -20,8 +20,6 @@ LLM につなぐ手段が少なくとも 1 つ必要です。`hermes model` を�
 |----------|-------|
 | **Nous Portal** | `hermes model`（OAuth、サブスクリプション制） |
 | **OpenAI Codex** | `hermes model` → **ChatGPT or Codex Subscription**（ChatGPT の OAuth。Codex のモデルを使います） |
-| **GitHub Copilot** | `hermes model`（OAuth デバイスコードフロー、`COPILOT_GITHUB_TOKEN`、`GH_TOKEN`、または `gh auth token`） |
-| **GitHub Copilot ACP** | `hermes model`（ローカルで `copilot --acp --stdio` を起動します） |
 | **Anthropic** | `hermes model`（Claude Max + 追加利用クレジットを OAuth で。Anthropic の API キーや手動の setup-token にも対応 — 下の注記を参照） |
 | **OpenRouter** | `~/.hermes/.env` に `OPENROUTER_API_KEY`、または `hermes auth add openrouter --type oauth`（OpenRouter の PKCE 方式でブラウザーからログインし、キーを資格情報プールに保存します） |
 | **Ramp Router** | `~/.hermes/.env` に `RAMP_ROUTER_API_KEY`（provider: `router`、別名: `ramp-router`、`ramp`、`router.com`。Responses ネイティブのゲートウェイで、アカウント単位の最新カタログを持ちます） |
@@ -207,70 +205,19 @@ model:
 `--provider claude` と `--provider claude-code` も `--provider anthropic` の短縮形として使えます。
 :::
 
-### GitHub Copilot {#github-copilot}
+### GitHub Copilot（labs プラグイン） {#github-copilot-labs-plugin}
 
-Hermes は GitHub Copilot を第一級のプロバイダとして扱い、2 つのモードを用意しています。
-
-**`copilot` — Copilot API に直接つなぐ方式**（おすすめ）。GitHub Copilot の契約を使って、Copilot API 経由で GPT-5.x、Claude、Gemini などのモデルにアクセスします。
+GitHub Copilot のプロバイダ（Copilot API を使う `copilot` と、ACP 経由で Copilot CLI を使う `copilot-acp`）は、Hermes に組み込まれなくなりました。現在は `github-copilot` という **labs プラグイン**として提供されています。Nous Research が作ったものですが、サポートの対象外です。
 
 ```bash
-hermes chat --provider copilot --model gpt-5.4
+hermes plugins install github-copilot
 ```
 
-**認証の選択肢**（この順に確認されます）:
+すでに `copilot` や `copilot-acp` を使っているプロファイル（メインのモデル、フォールバック、補助、委任、MoA、cron のいずれか）では、`hermes update` を実行したとき、または次にエージェントやゲートウェイを起動したときに、このプラグインが自動でインストールされます。
 
-1. `COPILOT_GITHUB_TOKEN` 環境変数
-2. `GH_TOKEN` 環境変数
-3. `GITHUB_TOKEN` 環境変数
-4. `gh auth token` の CLI へのフォールバック
+サインインは `hermes auth add copilot`（デバイスコードでのログイン）で行うか、`COPILOT_GITHUB_TOKEN`、`GH_TOKEN`、`GITHUB_TOKEN` のいずれかを設定します。`gh` CLI や Copilot CLI でのログインは読み込まれなくなりました。それらに頼っていた場合は `hermes auth add copilot` を実行してください。
 
-トークンが見つからない場合、`hermes model` が **OAuth デバイスコードログイン**を案内します。Copilot CLI や opencode と同じフローです。
-
-:::warning トークンの種類
-Copilot API は従来型の Personal Access Token（`ghp_*`）に**対応していません**。使えるトークンの種類は次のとおりです。
-
-| 種類 | 接頭辞 | 取得方法 |
-|------|--------|------------|
-| OAuth トークン | `gho_` | `hermes model` → GitHub Copilot → Login with GitHub |
-| Fine-grained PAT | `github_pat_` | GitHub Settings → Developer settings → Fine-grained tokens（**Copilot Requests** の権限が必要） |
-| GitHub App のトークン | `ghu_` | GitHub App のインストール経由 |
-
-`gh auth token` が `ghp_*` のトークンを返す場合は、代わりに `hermes model` から OAuth で認証してください。
-:::
-
-:::info Hermes における Copilot 認証の挙動
-Hermes は対応するトークン（`gho_*`、`github_pat_*`、`ghu_*`）を `api.githubcopilot.com` へ直接送り、Copilot 固有のヘッダ（`Editor-Version`、`Copilot-Integration-Id`、`Openai-Intent`、`x-initiator`）を付けます。
-
-HTTP 401 が返ったとき、Hermes はフォールバックの前に一度だけ認証情報の復旧を試みます。
-
-1. 通常の優先順位のチェーン（`COPILOT_GITHUB_TOKEN` → `GH_TOKEN` → `GITHUB_TOKEN` → `gh auth token`）でトークンを取り直す
-2. 更新したヘッダで共有の OpenAI クライアントを組み直す
-3. リクエストを 1 回だけ再送する
-
-古いコミュニティ製のプロキシには `api.github.com/copilot_internal/v2/token` の交換フローを使うものがあります。このエンドポイントは一部のアカウント種別では使えないことがあります（404 が返ります）。そのため Hermes はトークンを直接使う認証を主経路に据え、堅牢性は実行時の認証情報の更新と再送で担保しています。
-:::
-
-**API のルーティング**: GPT-5 以降のモデル（`gpt-5-mini` を除く）は自動的に Responses API を使います。それ以外のモデル（GPT-4o、Claude、Gemini など）は Chat Completions を使います。モデルは Copilot の最新カタログから自動で検出されます。
-
-**`copilot-acp` — Copilot ACP のエージェントバックエンド**。ローカルの Copilot CLI をサブプロセスとして起動します。
-
-```bash
-hermes chat --provider copilot-acp --model copilot-acp
-# Requires the GitHub Copilot CLI in PATH and an existing `copilot login` session
-```
-
-**恒久的な設定:**
-```yaml
-model:
-  provider: "copilot"
-  default: "gpt-5.4"
-```
-
-| 環境変数 | 説明 |
-|---------------------|-------------|
-| `COPILOT_GITHUB_TOKEN` | Copilot API 用の GitHub トークン（最優先） |
-| `HERMES_COPILOT_ACP_COMMAND` | Copilot CLI のバイナリのパスを上書きします（既定: `copilot`） |
-| `HERMES_COPILOT_ACP_ARGS` | ACP の引数を上書きします（既定: `--acp --stdio`） |
+設定方法、使えるモデル、環境変数については [github-copilot プラグインのドキュメント](https://github.com/NousResearch/hermes-labs-plugins/tree/main/github-copilot)を参照してください。
 
 ### 第一級の API キープロバイダ {#first-class-api-key-providers}
 
@@ -1322,7 +1269,7 @@ Hermes は、モデルとプロバイダに合ったコンテキストウィン�
 8. **[models.dev](https://models.dev)** — 100 以上のプロバイダ、3800 以上のモデルについて、プロバイダごとのコンテキスト長を持つコミュニティ運営のレジストリ
 9. **フォールバックの既定値** — モデル系統ごとの大まかなパターン（既定は 128K）
 
-たいていの環境では、これでそのまま動きます。仕組みはプロバイダを意識していて、同じモデルでも提供元によってコンテキストの上限は変わります（たとえば `claude-opus-4.6` は Anthropic 直なら 1M ですが、GitHub Copilot 経由では 128K です）。
+たいていの環境では、これでそのまま動きます。仕組みはプロバイダを意識していて、同じモデルでも提供元によってコンテキストの上限は変わります（たとえば `claude-opus-4.6` は Anthropic 直なら 1M ですが、一部の再販業者やアグリゲーターを経由すると小さくなります）。
 
 コンテキスト長を明示するには、モデルの設定に `context_length` を足します。
 
@@ -1716,7 +1663,7 @@ fallback_model:
 
 フォールバックが働くと、会話を失わずにセッションの途中でモデルとプロバイダが入れ替わります。連鎖は 1 件ずつ順に試され、発動は 1 セッションにつき 1 回だけです。
 
-対応するプロバイダ: `openrouter`、`nous`、`novita`、`openai-codex`、`copilot`、`copilot-acp`、`anthropic`、`gemini`、`qwen-oauth`、`huggingface`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`bedrock`、`ai-gateway`、`azure-foundry`、`opencode-zen`、`opencode-go`、`commandcode`、`commandcode-anthropic`、`kilocode`、`xiaomi`、`arcee`、`gmi`、`actual`、`stepfun`、`lmstudio`、`alibaba`、`alibaba-coding-plan`、`tencent-tokenhub`、`tencent-tokenplan`、`nebius-token-factory`、`router`、`custom`。
+対応するプロバイダ: `openrouter`、`nous`、`novita`、`openai-codex`、`anthropic`、`gemini`、`qwen-oauth`、`huggingface`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`bedrock`、`ai-gateway`、`azure-foundry`、`opencode-zen`、`opencode-go`、`commandcode`、`commandcode-anthropic`、`kilocode`、`xiaomi`、`arcee`、`gmi`、`actual`、`stepfun`、`lmstudio`、`alibaba`、`alibaba-coding-plan`、`tencent-tokenhub`、`tencent-tokenplan`、`nebius-token-factory`、`router`、`custom`。
 
 :::tip
 フォールバックの設定は `config.yaml` だけで行います（対話的にやるなら `hermes fallback` です）。どんなときに発動するのか、連鎖がどう進むのか、補助タスクや委任とどう関わるのかについては、[フォールバックのプロバイダ](/hermes/docs/user-guide/features/fallback-providers/)を参照してください。

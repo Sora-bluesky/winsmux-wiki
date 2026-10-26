@@ -2,7 +2,7 @@
 title: "モデルプロバイダーのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダー（推論バックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: 9442cc979bccf7892d92572d47c15ef08349b605
+upstream_blob: 8a4dd97e6d32615ddcad4187938404c8884924f4
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -107,14 +107,14 @@ author: Your Name
 | `base_url` | str | 既定の推論エンドポイントです |
 | `models_url` | str | モデル一覧の URL を明示します（無ければ `{base_url}/models` に戻ります） |
 | `supports_streaming` | `bool \| None` | `None`（既定）は通信方式の既定の動きをそのまま使います。`True` にすると、ストリーミングに対応した `external_process` のクライアントがホスト側のストリーミングを使うようになります。`False` はプロバイダーのストリーミングを止めます。ACP の URL や、セッション単位でストリーミングを止める設定のほうが、引き続き優先されます。有効にするのは、選んだ API モードのストリーミングの約束事（取り消しと後始末を含む）をクライアントが実装している場合だけにしてください。 |
-| `auth_type` | str | `api_key` \| `oauth_device_code` \| `oauth_external` \| `copilot` \| `aws_sdk` \| `external_process` |
+| `auth_type` | str | `api_key` \| `oauth_device_code` \| `oauth_external` \| `aws_sdk` \| `external_process` \| プラグインが定義した任意の値（その場合、ログインはプロバイダー自身が持ちます） |
 | `auth_handler` | `Callable \| None` | プロバイダー自身が持つ `hermes auth add/status/logout/refresh <name>` の処理です。[プロバイダー自身が持つ認証](#provider-owned-auth-auth_handler-refresh_credential)を参照してください |
 | `refresh_credential` | `Callable \| None` | プール内の OAuth の行を、プロバイダー自身が更新する処理です。同じ節を参照してください |
 | `classify_api_error` | `Callable \| None` | そのプロバイダーに限ったエラー分類の上書きです。[復帰とエラーの分類](#recovery-and-error-classification)を参照してください |
 | `fallback_models` | `tuple[str, ...]` | 一覧の取得に失敗したときに出す、選りすぐりの候補です。`/model` の選択画面だけでなく、初回の `hermes setup` / `hermes model` の API キー入力の流れでも使われます（どちらも同じやり方で一覧を解決します。`fetch_models()` の結果に、選りすぐりを先頭にして `fallback_models` を混ぜます。取得が `None` を返すか例外を投げた場合は `fallback_models` だけになります） |
 | `supports_vision` | bool | そのプロバイダーの API が、**ツールの結果**メッセージの中に画像を含められることを宣言します（プロバイダー全体としての通信上の能力です）。モデルごとの、利用者が送る画像の扱いは、このフラグではなく `model_capabilities` や models.dev から決まります |
 | `model_capabilities` | `dict[str, dict[str, Any]]` | `model_overrides` のスキーマで書く、モデルごとの能力の宣言です。[モデルの能力を宣言する](#declaring-model-capabilities)を参照してください |
-| `default_headers` | `dict[str, str]` | すべてのリクエストに付きます（たとえば Copilot の `Editor-Version`）。既定の `fetch_models()` による一覧取得のリクエストにも付きます |
+| `default_headers` | `dict[str, str]` | すべてのリクエストに付きます（たとえば IDE のサブスクリプション型の API が求める `Editor-Version` ヘッダー）。既定の `fetch_models()` による一覧取得のリクエストにも付きます。読み込みの時点で計算すると重い値（リリース番号を含む User-Agent など）は、`providers.base.LazyHeaders({"User-Agent": lambda: hermes_user_agent("MyAgent")})` を使えば後回しにできます。これは、呼び出し可能な値が最初に読まれたときに実行される `dict` です（`hermes_user_agent` は `hermes_cli.version_info` にあります） |
 | `fixed_temperature` | Any | `None` なら呼び出し側の値を使います。`OMIT_TEMPERATURE` という番兵を入れると temperature をまったく送りません（Kimi） |
 | `default_max_tokens` | `int \| None` | プロバイダー単位の max_tokens の上限です（Nvidia は 16384） |
 | `unsupported_response_formats` | `tuple` | API がはっきり拒否する `response_format` の種類です。補助的なリクエストは、確実に 400 を食らう代わりにこれらを省きます（DeepSeek は `("json_schema",)`） |
@@ -222,6 +222,134 @@ class AcmeProfile(ProviderProfile):
         return None
 ```
 
+## ProviderProfile のフィールドとフック {#providerprofile-fields-and-hooks}
+
+`providers/base.py` が宣言するすべてのフィールドとフックを、宣言順に並べます。名前が `()` で終わるものはサブクラスで上書きするメソッドで、
+残りは dataclass のフィールドです（`picker_catalog` やデバイスログイン用のものなど、いくつかは呼び出し可能なオブジェクトを受け取ります）。
+エンドポイントごとに働くフック（`client_headers`、`request_headers`、`max_tokens_param`）はリクエストの `base_url` を受け取り、
+自分のものでないエンドポイントには `None` / `{}` を返します。`responses_*` と `message_carrier_*` のフィールド、および推論の再生にかかわるフックは、
+プロファイルが `hostnames` に挙げたホストでだけ効きます。頻繁に呼ばれる経路のフックは、意味の欄に別の記載がないかぎり、
+副作用がなく軽い（I/O をしない）ものにしてください。
+
+| 名前 | 意味 | 既定値 |
+|---|---|---|
+| `name` | 正式なプロバイダー ID です（`model.provider`、`--provider`） | 必須 |
+| `api_mode` | 固定の通信方式です。`api_mode_for_model()` を使うとモデルごとに変えられます | `"chat_completions"` |
+| `aliases` | `get_provider_profile()` が解決する別名です | `()` |
+| `display_name` | 選択画面に出る表示名です | `""` |
+| `description` | 選択画面での補足文です | `""` |
+| `signup_url` | 初期設定のときに出ます | `""` |
+| `hidden` | 公開前の段階向けです。`listed()` が true になるまで、見つけるための画面に出しません。名前での解決はそのまま使えます | `False` |
+| `env_vars` | API キーの環境変数を優先順に並べたものです。末尾の `*_BASE_URL` の項目はベース URL の上書きになります | `()` |
+| `base_url` | 既定の推論エンドポイントです | `""` |
+| `models_url` | モデル一覧のエンドポイントを明示します（無ければ `{base_url}/models`） | `""` |
+| `auth_type` | `api_key` \| `oauth_device_code` \| `oauth_external` \| `external_process` \| `aws_sdk` \| プラグインが定義した値 | `"api_key"` |
+| `supports_streaming` | `None` は通信方式の既定の動きを保ち、`True` はプロセス型のクライアントでストリーミングを使うようにし、`False` はストリーミングを止めます | `None` |
+| `supports_health_check` | `False` にすると、`hermes doctor` は `/models` への疎通チェックを飛ばします | `True` |
+| `supports_model_listing` | `False` にすると、`fetch_models()` は通信をせずに `None` を返します | `True` |
+| `auth_handler` | プロバイダー自身が持つ `hermes auth add\|status\|logout\|refresh <name>` の処理です。真を返すと「処理した」の意味になります | `None` |
+| `refresh_credential` | プール内の OAuth の行を更新し、更新後のフィールドを返します | `None` |
+| `classify_api_error` | このプロバイダーの失敗についてのエラー分類です。組み込みの処理より先に走ります | `None` |
+| `supports_vision` | API がツールの結果メッセージの中の画像を受け付けます | `False` |
+| `supports_vision_tool_messages` | API がリスト形式（マルチパート）のツールメッセージの中身を受け付けます | `True` |
+| `supports_prompt_cache_key` | Chat Completions のエンドポイントが `prompt_cache_key` を仕様として載せています | `False` |
+| `native_reasoning_details_type` | このプロファイルだけが受け取る、名前空間付きの `<provider>.native_assistant` という推論の運び手です | `None` |
+| `process_command` | 外部プロセスの既定のバイナリです | `""` |
+| `process_args` | 外部プロセスの既定の引数の並びです | `()` |
+| `process_command_env_vars` | バイナリを上書きする環境変数です（優先順） | `()` |
+| `process_args_env_var` | 引数を上書きする環境変数です（shlex で分割されます） | `""` |
+| `fallback_models` | 一覧の取得に失敗したときに選択画面に出す、選りすぐりの候補です | `()` |
+| `model_aliases` | 短い名前 → モデル ID の対応です。`/model <alias>` はまずここで解決されます | `{}` |
+| `hostname` | URL からプロバイダーを逆引きするための基本のホスト名です（空なら `base_url` から導きます） | `""` |
+| `default_headers` | すべてのリクエストと、既定の一覧取得に付くヘッダーです | `{}` |
+| `fixed_temperature` | `None` なら呼び出し側の値を使い、`OMIT_TEMPERATURE` なら temperature を決して送りません | `None` |
+| `default_max_tokens` | プロバイダー単位の max_tokens の上限です | `None` |
+| `unsupported_response_formats` | 補助的なリクエストが省く `response_format` の種類です | `()` |
+| `default_aux_model` | 補助的な作業に使う安いモデルです。空ならメインのモデルを使います | `""` |
+| `model_capabilities` | `model_overrides` のスキーマで書く、モデルごとのメタデータです | `{}` |
+| `account_card` | アカウントのタブに出すカードの上書き `{name, flow, cli_command, docs_url}` です（デスクトップ／ダッシュボード） | `{}` |
+| `account_status` | そのカードに出す現在の状態です。サブプロセスもネットワークも使いません | `None`（`auth.get_auth_status(name)`） |
+| `start_device_login` | アプリ内でのデバイスコードによるサインインです。`{user_code, verification_url, expires_in, interval, state}` を返します | `None` |
+| `poll_device_login` | そのログインの状態を 1 回問い合わせます。`{status, interval?, credential?, message?}` を返します | `None` |
+| `save_device_login` | 承認された資格情報を保存します（中核はセッションのプロファイルの範囲でこれを呼びます） | `None` |
+| `model_setup_flow` | そのプロバイダー独自の `hermes model` の手順です（資格情報の入力、一覧、保存） | `None`（`auth_type` に応じた共通の流れ） |
+| `setup_reasoning_efforts` | 初期設定の選択画面がモデルごとに示す推論の強度です。`()` なら推論の制御はありません | `None`（共通の段階） |
+| `fetch_account_usage()` | 組み込みの利用状況の取得処理がそのプロバイダーを受け持っていないときに返す `/usage` のスナップショットです | `None` |
+| `resolve_aux_model()` | 補助的な作業に使う安いモデルの ID を、その時点の情報から返します。結果はキャッシュされ、例外は投げません | `""`（`default_aux_model` を使う） |
+| `get_hostname()` | URL からの判定に使うプロバイダーのホスト名です | `hostname`、無ければ `base_url` から |
+| `prepare_messages()` | codex のサニタイズのあと、developer ロールの差し替えの前に行うメッセージの前処理です | そのまま通す |
+| `build_extra_body()` | プロバイダー固有の `extra_body` のフィールドです | `{}` |
+| `default_reasoning_config()` | `agent.reasoning_effort` が未設定のときに送る推論の設定です | `None` |
+| `build_api_kwargs_extras()` | `(extra_body_additions, top_level_kwargs)` への振り分けです | `({}, {})` |
+| `build_client_kwargs_extras()` | OpenAI クライアントの kwargs の既定値です（明示的な設定が優先されます。I/O はしません） | `{}` |
+| `default_vision_model()` | そのプロバイダーの既定の画像認識モデルの ID です | `None` |
+| `get_model_context_length()` | プロバイダーが根拠を持って示すコンテキストの上限です。利用者の明示的な上書きが優先されます | `None` |
+| `get_usage_cost()` | 正規化された利用量から求める `CostResult` です（見積もりは決して `actual` にしません） | `None` |
+| `get_max_tokens()` | 利用者が何も設定していないときの、モデルごとの max_tokens の上限です | `default_max_tokens` |
+| `supported_reasoning_efforts()` | モデルの推論の強度の語彙です。`None` は不明、`()` はなし、タプルならその範囲に収めます。I/O はしません | `None` |
+| `api_mode_for_model()` | このプロバイダーがそのモデルを提供する通信方式です。`api_key` は解決のときにだけ渡されます | `None`（固定の `api_mode`） |
+| `client_headers()` | `base_url` 向けに作るクライアントの既定のヘッダーです（画像を含むリクエストでは `has_images` が渡されます） | `None`（固定の `default_headers`） |
+| `request_headers()` | `base_url` 向けの、リクエストごとの `extra_headers` です。ターンの最初の呼び出しでは `user_initiated` が渡されます | `{}` |
+| `max_tokens_param()` | `base_url` に対して `"max_completion_tokens"` と `"max_tokens"` のどちらを使うかです | `None`（中核の推測） |
+| `listed()` | 見つけるための画面にそのプロバイダーを出してよいかどうかです | `hidden` でプールに行が無い場合を除き `True` |
+| `create_client()` | プロバイダー固有のクライアントオブジェクトです（ACP の中継、ネイティブ SDK） | `None`（標準のクライアント） |
+| `setup_status()` | 外部プロセスのログイン状態 `{available, logged_in, plan, detail, login_command}` です | `None` |
+| `discover_models()` | 推論を行わずに得る、外部プロセスの選択画面の候補 `[{id, label, note}]` です | `None`（`fallback_models`） |
+| `fetch_models()` | その時点のモデル ID の一覧です | `{models_url or base_url}/models` への GET |
+| `hostnames` | この API を提供するホスト（とそのサブドメイン）です。そこを指す `custom` のエンドポイントや補助クライアントが、このプロバイダーとして認識されます | `()` |
+| `metadata_hostnames` | モデルのメタデータのためだけにこの一覧を識別するホストです（資格情報は別） | `()` |
+| `models_dev_id` | `name` と異なる場合の、models.dev でのプロバイダー ID です | `""` |
+| `live_context_length()` | 資格情報を使って取得したその時点の一覧から得るコンテキスト長です。永続キャッシュのあとに参照されます | `None` |
+| `normalize_model_id()` | モデルのプロバイダー固有の ID を返します（別名、一覧の修復） | `None`（共通の正規化） |
+| `ambient_credentials` | 資格情報が環境にもともと備わっているものです。自動検出はされず、設定されていなければ補助のフォールバックでは飛ばされます | `False` |
+| `resolve_api_key_secret()` | プロバイダー自身が決める `(runtime_api_key, source)` です | `None`（環境変数／プールの順での解決） |
+| `runtime_base_url()` | 資格情報から導くベース URL です | `None`（環境変数か既定値） |
+| `prepare_pool_entry()` | 選ばれたプールの行の秘密情報を、実行時のキーに変えます | 秘密情報をそのまま使う |
+| `seed_pool_credentials(suppressed_sources, explicitly_configured)` | プロバイダーが自分で用意するプールの行 `{source, access_token, base_url, label}` です。`suppressed_sources` にある出所は飛ばします（素の値なので、`plugins.isolation: host` のもとでも動きます）。上書きすると、環境変数からの共通の行の用意を置き換えます（用意するものが無ければ `[]` を返します） | 上書きしなければ環境変数からの共通の行の用意 |
+| `remove_credential_source()` | `hermes auth remove` のための `(sources_to_suppress, hints)` です | `None`（共通の削除） |
+| `refresh_runtime_credentials()` | `unauthorized` \| `stale` \| `auxiliary_unauthorized` のときに `(api_key, base_url)` を作り直します。エラーの経路でだけ使われます | `None` |
+| `is_stale_credential_error()` | 認証以外のエラーが、実は資格情報が古くなったことを意味するかどうかを判定します（副作用なし） | `False` |
+| `credential_refresh_notice()` | 実行時の更新に成功したあとに出す状態の行です | `""`（共通の文言） |
+| `request_rejection_hint()` | エンドポイントがどの経路も完全に拒否したときに、利用者へ見せる行です | `()` |
+| `external_auth_evidence()` | サブプロセスを使わずに得る、外部 CLI のログインの証拠 `(verified, source)` です | `None`（バイナリが見つかること） |
+| `missing_credentials_hint()` | 「No usable credentials found」というメッセージ（実行時の解決、CLI とデスクトップの準備確認）のすべてに付け足す 1 文です。たとえばそのプロバイダーのサインイン用のコマンドです | `None` |
+| `responses_replay_item_ids` | 再生する Responses の `message` の項目が、自分の `id` を保ちます | `True` |
+| `responses_prompt_cache_key` | Responses の本文に `prompt_cache_key` を含めます | `True` |
+| `responses_issuer_kind` | ここで作られた暗号化済みの推論に付けて保存する、発行元の印です | `""`（URL から導く） |
+| `responses_trusts_completed_status` | `False` にすると、推論だけの `completed` の応答のあとも続けます | `True` |
+| `responses_native_compaction` | `False` にすると、`context_management` を決して送りません | `True` |
+| `responses_profile_reasoning` | `True` にすると、`reasoning` は `reasoning_payload()` に要約を加えたものになり、`include` は付けません | `False` |
+| `message_carrier_opaque` | 中身を読めない推論のかたまりを入れる、アシスタントのトップレベルのキーです（ストリームで最後に届いたものが勝ちます） | `""` |
+| `message_carrier_text` | 読める推論の文章を入れる、アシスタントのトップレベルのキーです（ストリームの断片はつなげられます） | `""` |
+| `replays_tool_call_signatures` | ツール呼び出しが Gemini の `extra_content` の署名を保ちます | `False` |
+| `reasoning_payload()` | モデルに対してそのまま送る `reasoning` オブジェクトです（一覧に合わせて範囲に収めます） | `None` |
+| `replay_message_carriers()` | 再生するアシスタントのメッセージに戻す、取り込み済みの `message_carrier_*` の値です | `{}` |
+| `replays_function_thought_signature()` | 再生するツール呼び出しが `function.thought_signature` を保ちます | `False` |
+| `picker_catalog` | `(force_refresh) -> list`。そのプロバイダー独自のモデル選択画面の一覧で、共通の取得より先に試されます | `None` |
+| `static_models` | 固定の一覧のうち、このプロバイダーの行として返す選りすぐりの ID です（プロファイルの HOME ごとに参照され、共有の表には写されません） | `()` |
+| `catalog_credential_files` | 更新時刻が、キャッシュされたすべての一覧の指紋に加わる資格情報ファイルです | `()` |
+| `probe_models()` | このプロバイダーが受け持つ `/models` の問い合わせの結果 `(ids or None, probed_url, resolved_base_url)` です | `None`（共通の HTTP の問い合わせ） |
+| `invalidate_catalog_cache()` | プロセス内に覚えている一覧を捨てます（`/model --refresh`） | 何もしない |
+| `picker_after` | プロバイダーの一覧で、この行の直前に来るプロバイダーのスラッグです | `""`（末尾に追加） |
+| `picker_group` | `(group_id, label, description)`。対話的な選択画面で、同じグループの行をまとめます | `()` |
+| `catalog_aliases` | `aliases` をモデルの一覧での正規化にも使います | `False` |
+| `aggregator` | 一覧が多くのベンダーのモデルをまとめて提供します | `False` |
+| `provider_overlay` | models.dev のキーで引く定義に対する HermesOverlay のフィールドです | `{}` |
+| `overlay_aliases` | `provider_overlay` の定義に正規化される追加の名前です | `()` |
+| `registry_auth_type` | 資格情報の解決が初期設定の流れと異なるときの、認証の登録簿の行の `auth_type` です | `""`（`auth_type`） |
+| `base_url_env_var` | `env_vars` に無い場合に、登録簿の行の `base_url` を上書きする環境変数です | `""` |
+| `registry_after` | 優先順の走査で、この行の直前に来る登録簿の ID です | `""`（末尾に追加） |
+
+### `model_setup_flow` 向けの公開ヘルパー {#public-helpers-for-a-modelsetupflow}
+
+プロバイダー独自の `hermes model` の手順では、中核の設定の規則を自分で実装し直す代わりに、次のヘルパーを呼んでください。
+
+| ヘルパー | 役割 |
+|---|---|
+| `hermes_cli.model_setup.persist_model_selection(model, provider, *, base_url=None, api_mode=None)` | `model:` の節を書き込み（`provider` と、指定があればそのあとに `base_url` / `api_mode`）、エンドポイントに直接書かれた資格情報を取り除き、`config.yaml` を保存して、それまで有効だった OAuth プロバイダーを無効にします。保存した節を返します。 |
+| `hermes_cli.model_setup.note_setup_failure(failure_class)` | モデルを選ばずに流れが終わった理由（`"auth"`、`"no_models"` など）を、利用者が同意した場合にだけ集めるプロバイダー設定の指標に記録します。追跡されている流れの外では何もしません。 |
+| `agent.secret_scope.secret_source_label(name)` | 環境変数 `name` を供給した秘密情報の出所プラグインを示す、`" (from Bitwarden)"` のような接尾辞を返します。`.env` やシェルの値なら `""` です。 |
+
 ## アカウントの利用状況 {#account-usage}
 
 モデルプロバイダーのプラグインは、`ProviderProfile.fetch_account_usage` を
@@ -256,24 +384,58 @@ def fetch_account_usage(self, *, api_key=None, base_url=None):
 
 ## 外部プロセス（ACP）のプロバイダー {#external-process-acp-providers}
 
-標準入出力でやり取りするエージェント CLI は、HTTP のエンドポイントではありません。`auth_type="external_process"` を設定し、バイナリの起動方法を書き、`create_client` でクライアントを渡してください。中核部分に手を入れる必要はありません。`hermes -m <name>`、`/model`、資格情報の解決、実行時の解決、補助クライアント（圧縮や画像認識）はどれも、プロバイダー名ではなく `auth_type` を見て動くからです。ツリー内の例は `plugins/model-providers/copilot-acp/` です。
+標準入出力でやり取りするエージェント CLI は、HTTP のエンドポイントではありません。`auth_type="external_process"` を設定し、バイナリの起動方法を書き、`create_client` でクライアントを渡してください。中核部分に手を入れる必要はありません。`hermes -m <name>`、`/model`、資格情報の解決、実行時の解決、補助クライアント（圧縮や画像認識）はどれも、プロバイダー名ではなく `auth_type` を見て動くからです。ツリー外で実際に動く例として、[`github-copilot` の labs プラグイン](https://github.com/NousResearch/hermes-labs-plugins/tree/main/github-copilot)にある `copilot-acp` プロバイダーがあります（そのクライアントは、下で説明する公開の `ACPClient` を継承しています）。
 
 | フィールド | 用途 |
 |---|---|
-| `process_command` | 既定のバイナリです。たとえば `"copilot"` |
-| `process_args` | 既定の引数の並びです。たとえば `("--acp", "--stdio")` |
+| `process_command` | 既定のバイナリです。たとえば `"kimchi"` |
+| `process_args` | 既定の引数の並びです。たとえば `("--mode", "acp")` |
 | `process_command_env_vars` | バイナリを上書きする環境変数です。並べた順に確認されます |
 | `process_args_env_var` | 引数を上書きする環境変数です（shlex で分割されます） |
 
+`process_command_env_vars` と `process_args_env_var` に書く名前は、何を実行するかを決める権限を持ちます。そのため Hermes の汎用の環境変数の書き込み処理（ダッシュボード、MCP やコネクターのインストール、`save_env_value`）はこれらを拒みます。`.env` かシェルで設定してください。
+
 `create_client` が返すクライアントは、`client_kwargs` で `command` と `args` を受け取ります。そのクライアントがすでに完成していて非同期でも安全なら、クラス属性として `HERMES_SKIP_TRANSPORT_WRAP = True` / `HERMES_SKIP_ASYNC_WRAP = True` を宣言してください。補助クライアントが HTTP の通信アダプターを通して呼び直さなくなります。
+
+#### 公開の ACP クライアント: `agent.acp_client.ACPClient` {#the-public-acp-client-agentacpclientacpclient}
+
+標準入出力で [Agent Client Protocol](https://agentclientprotocol.com) を話すエージェント CLI には、自前の中継を書く代わりに、`create_client` から `ACPClient`（またはそのサブクラス）を返してください。これは OpenAI クライアントと同じ使い方ができる窓口（`client.chat.completions.create(...)`、ストリーミングも含む）です。リクエストごとに短命な ACP セッションを 1 つ開始し、要求されたモデルを ACP 越しに適用し（`session/set_config_option`、使えなければ `session/set_model`）、Hermes のツールをプロンプトの層での橋渡しとして転送し、セッションの cwd の中での `fs/read_text_file` / `fs/write_text_file` に Hermes のファイル安全の規則に従って応え、権限の要求は取り消し、`list_models(timeout_seconds=...)` でセッションのモデルを一覧にします。`HERMES_SKIP_*` の 2 つの属性はすでに宣言されています。
+
+```python
+from agent.acp_client import ACPClient
+
+class MyAgentClient(ACPClient):
+    default_command = "myagent"            # used only when the caller passes no command/args
+    default_args = ("--acp",)
+    command_env_vars = ("MYAGENT_ACP_COMMAND",)
+    args_env_var = "MYAGENT_ACP_ARGS"
+    marker_base_url = "acp://myagent"
+    placeholder_model = "myagent-acp"      # "session default": never sent as a model selection
+    label = "MyAgent ACP"                  # product name in errors and logs
+    auth_required_hint = "Run `myagent login`, then retry."  # optional: added to ACP's auth-required error (-32000)
+
+    def model_entry_disabled(self, entry):  # optional: vendor _meta marking a model unavailable
+        return False
+
+    def early_exit_error(self, stderr_text):  # optional: friendlier error for a known crash banner
+        return None
+
+class MyAgentProfile(ProviderProfile):
+    def create_client(self, **client_kwargs):
+        return MyAgentClient(**client_kwargs)
+```
+
+クラス属性は、プロファイルの `process_*` のフィールドと揃えておいてください。ほかの種類の `session/update` を描画するには、`_handle_server_message(msg, *, process, cwd, text_parts, reasoning_parts, allow_file_requests=True)` を上書きします（それ以外の種類については `super()` を呼んでください）。`hermes_cli.auth.resolve_external_process_provider_credentials(name)` は、`fetch_models()` での問い合わせに使えるよう、解決済みの `command`/`args`/`base_url` を返します。
+
+`agent.copilot_acp_client.CopilotACPClient` は、以前の GitHub Copilot 向けの起動の既定値を持つ、`ACPClient` の非推奨の別名です。このモジュールは、これに固定している一覧掲載のプラグインのために、以前に公開していたものをすべて残しています（`ACP_MARKER_BASE_URL`、以前の非公開のヘルパー、`Popen` を差し替えるための `subprocess`）。そのいずれかの名前に最初にアクセスすると、プロセスごとに 1 回だけ警告が出ます。代わりに `ACPClient` を継承してください（`placeholder_model` には自分の仮の ID を設定します）。この別名は、少なくとも 2 回のマイナーリリースのあいだ残ります。
 
 ### API キーを使わないプラグインを選択画面に出す {#picker-rows-for-non-api-key-plugins}
 
-登録されたプロファイルはどれもスラッグで `CANONICAL_PROVIDERS` に加わるので（`bedrock` のように組み込みと同じスラッグを宣言し直したプラグインは重複が取り除かれ、二重には出ません）、外部プロセス型や OAuth 型のプラグインも、`copilot-acp` と並んで `hermes model`、`/model`、デスクトップのモデル選択に現れます。出るかどうかを決めるのは `auth_type` ではなく資格情報です。
+登録されたプロファイルはどれもスラッグで `CANONICAL_PROVIDERS` に加わるので（`bedrock` のように組み込みと同じスラッグを宣言し直したプラグインは重複が取り除かれ、二重には出ません）、外部プロセス型や OAuth 型のプラグインも、組み込みのプロバイダーと並んで `hermes model`、`/model`、デスクトップのモデル選択に現れます。出るかどうかを決めるのは `auth_type` ではなく資格情報です。
 
 | `auth_type` | 行が出る／`authenticated` になる条件 | モデル一覧 |
 |---|---|---|
-| `external_process` | バイナリが見つかるとき（`process_command` か `process_command_env_vars` のどれかが `PATH` にある）、または `base_url` が `acp+tcp://…` のとき。`hermes auth status` が報告するのと同じ構造的な条件です。バイナリが見つかることは、デスクトップのモデル選択が明示的な項目だけを絞り込むときに使うサインイン済みの証拠（`auth_verified`）でもあるので、同梱の ACP プロバイダーと同じようにそこにも出ます | `fetch_models()`（自前のサブプロセスでの問い合わせ）。無ければ `fallback_models` |
+| `external_process` | バイナリが見つかるとき（`process_command` か `process_command_env_vars` のどれかが `PATH` にある）、または `base_url` が `acp+tcp://…` のとき。`hermes auth status` が報告するのと同じ構造的な条件です。バイナリが見つかることは、デスクトップのモデル選択が明示的な項目だけを絞り込むときに使うサインイン済みの証拠（`auth_verified`）でもあるので、ほかのサインイン済みのプロバイダーと同じようにそこにも出ます | `fetch_models()`（自前のサブプロセスでの問い合わせ）。無ければ `fallback_models` |
 | `oauth_external` / `oauth_device_code` | 資格情報のプールに、そのスラッグの行があり、トークンが有効（期限切れでない）なとき。`hermes auth status <name>` と `list_available_providers().authenticated` はどちらもプールを読みます。`refresh_token` と `refresh_credential` のフックを持つ期限切れの行は `needs_refresh` と報告されます | プール内のトークンを使った `fetch_models()`。無ければ `fallback_models`（最低 1 つは宣言してください） |
 
 一覧のキャッシュは、プロファイルの `process_command_env_vars` / `process_args_env_var` の値をキーにしています。そのため `HERMES_<X>_COMMAND` を別のバイナリに向ければ、モデルを探し直します。実行ファイルが見つかることはログイン済みの確認ではありません。認証していない CLI でも一覧には出て、サブプロセスは最初に使われたときに失敗を報告します。
@@ -338,7 +500,7 @@ register_provider(ProviderProfile(
 | `env_vars`（URL 以外の項目） | `api_key_env_vars` | API キーの行で、かつプロファイルが `env_vars` を設定している |
 | `env_vars`（末尾の `*_BASE_URL` / `*_URL` の項目） | `base_url_env_var` | プロファイルがそれを宣言している。宣言していなければ組み込みの環境変数（たとえば `GMI_BASE_URL`）のまま |
 
-これが起きるのは**利用者の**プラグイン（`$HERMES_HOME/plugins/model-providers/` か、インストールされた `kind: model-provider` のプラグイン）のときだけです。同梱のプロファイルが組み込みの行を書き換えることはありませんし、`copilot`、`kimi-coding`、`kimi-coding-cn`、`zai` は独自の資格情報の解決を保ちます。プロファイルが空のままにしたフィールドは、組み込みの値が残ります。`*_BASE_URL` の環境変数は、それでもどちらより優先されます。
+これが起きるのは**利用者の**プラグイン（`$HERMES_HOME/plugins/model-providers/` か、インストールされた `kind: model-provider` のプラグイン）のときだけです。同梱のプロファイルが組み込みの行を書き換えることはありませんし、`kimi-coding`、`kimi-coding-cn`、`zai` は独自の資格情報の解決を保ちます。プロファイルが空のままにしたフィールドは、組み込みの値が残ります。`*_BASE_URL` の環境変数は、それでもどちらより優先されます。
 
 ## api_mode の選び方 {#apimode-selection}
 
@@ -377,11 +539,11 @@ register_provider(ProviderProfile(name="myprovider", api_mode="mydialect", ...))
 | `api_key` | 1 つの環境変数が固定の API キーを持ちます | ほとんどのプロバイダー |
 | `oauth_device_code` | デバイスコードによる OAuth の流れです | Nous Portal。ツリー外のプラグインは `auth_handler` 経由 |
 | `oauth_external` | 利用者は別の場所でサインインし、トークンが `auth.json` に入ります | Anthropic OAuth、MiniMax OAuth、Qwen Portal、Nous Portal |
-| `copilot` | GitHub Copilot のトークン更新の流れです | `copilot` プラグインのみ |
+| *プラグインが定義した値* | それ以外の値です。ログインと更新はプロバイダー自身が持ちます（`auth_handler`、`refresh_credential`、後述の資格情報のフック）。認証の登録簿の行が異なる場合は、`registry_auth_type` でその行を指定します | たとえば [`github-copilot` の labs プラグイン](https://github.com/NousResearch/hermes-labs-plugins/tree/main/github-copilot)の `copilot` |
 | `aws_sdk` | AWS SDK の資格情報の連鎖（IAM ロール、プロファイル、環境変数） | `bedrock` プラグインのみ |
-| `external_process` | エージェントが起動するサブプロセスが認証を担います（[外部プロセスのプロバイダー](#external-process-acp-providers)を参照） | `copilot-acp` プラグイン、ツリー外の ACP プラグイン |
+| `external_process` | エージェントが起動するサブプロセスが認証を担います（[外部プロセスのプロバイダー](#external-process-acp-providers)を参照） | ツリー外の ACP プラグイン（たとえば `github-copilot` の labs プラグインの `copilot-acp`） |
 
-どのプロファイルも、宣言した `auth_type` のもとで Hermes の認証の登録簿に写されます（例外は 2 つ。`env_vars` が空の `api_key` のプロファイルと、集約型・利用者指定のスラッグである `openrouter`/`custom`、それに独自の更新処理を持つ組み込みの `copilot`/`kimi-coding`/`zai` です）。そのため `hermes auth`、
+どのプロファイルも、宣言した `auth_type` のもとで Hermes の認証の登録簿に写されます（例外は 2 つ。`env_vars` が空の `api_key` のプロファイルと、集約型・利用者指定のスラッグである `openrouter`/`custom`、それに独自の更新処理を持つ組み込みの `kimi-coding`/`kimi-coding-cn`/`zai` です）。そのため `hermes auth`、
 `--provider <name>`、実行時の解決は、形がどうであれそれを受け付けます。違うのは、ログインを
 誰が行うかです。`api_key` のプロファイルには組み込みのキー入力と環境変数の解決が付きます。それ以外の
 `auth_type` は**プロバイダー自身が持つ**形で、プラグインが次の 2 つのフックを用意します。API キー以外の

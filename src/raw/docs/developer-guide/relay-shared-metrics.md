@@ -2,7 +2,7 @@
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: 7d49802e120c8702bc2ecc86d416ba81236bdca3
+upstream_blob: 99d60e9b4d1c2dcf644a306f53e106761d0e3b9b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -301,6 +301,9 @@ Hermes のバージョン、OS の種類、アーキテクチャ、インスト�
 エンゲージメント（`hermes.engagement.*`）と、人が見ている実行だけを数える行（タスクの費用、セッションごとのツールの使用、モデルとの摩擦）は、この値ができる前と同じく `one_shot` を `interactive` と同じに扱います。`background` と `delegated` の実行は人が見ていないので、そこから外します。
 `one_shot` ができる前に書かれたパッケージは、こうした実行を `interactive` として持っており、それでも検証を通ります。
 `hermes -z` は `os._exit` で抜けるので、atexit のフックに頼らず、終了する前に自分でメトリクスのセッションを閉じます。
+ゲートウェイと compute-host の正常な停止、SIGTERM を受けた kanban ワーカーの停止、親を失った slash ワーカーの停止も `os._exit` で抜けるので、同じフラッシュを最大 3 秒まで行います。
+各ランタイムの終了時のフラッシュ、出力、送信の処理は、それぞれそのランタイム自身のプロファイルに結び付きます。そのため、複数のプロファイルを受け持つプロセスでも、プロファイルごとにそれぞれの収集と送信の同意が適用されます。
+前回のターンのあとで収集をオフにしたプロファイルは、メモリ上の行を書き込まずに捨てます。
 
 ツールの呼び出しはそれぞれ、`hermes.tool_call` という名前の Relay ツールライフサイクルで表します。
 終端のカウンターに含まれるのは、範囲を限ったツールの分類、結果、承認の結果だけです。
@@ -349,6 +352,9 @@ Hermes は、再利用とパッチ世代の連続性を、既存の `skills/.usa
 - `local_model_provider_used`（`yes`/`no`）: メインのモデルか補助タスクのどれかが、ローカルまたは自前のサーバーで動いているかどうかです
   （Ollama/LM Studio/llama.cpp のようなローカルのプロバイダー ID、またはループバックやプライベートネットワークのベース URL）。
   URL そのものはローカルにとどまります。
+- `compression_prepare_ahead`（`on`/`off`）: プロファイルの設定で `compression.prepare_ahead`（事前準備した圧縮）がオンになっているかどうかです。
+  エージェントと同じ真偽の判定で読み（未設定か false なら `off`）、ほかのスナップショットのフィールドと同じく、プロファイル自身の `config.yaml` から読み取ります（管理側スコープの上書きは読みません）。
+  このフィールドができる前に数えたスナップショットはこの値を持ちませんが、それでもパッケージにできます。
 
 ### 判断材料のメトリクス {#decision-data-metrics}
 
@@ -448,6 +454,16 @@ Desktop アプリが、フォーカスしているプロファイルのストア
 | `hermes.tool_search.count` | 範囲（`local`、`connector`、`both`: 検索がどのカタログを読んだか）、ヒット数の区分（`0` … `gte_11`、返した別々のツールの数）、結果（`hits`、`no_hits`、`connector_unavailable`、`error`） | `tool_search` がツールを見つけられているか、ホスト型コネクター側の検索がどれくらいの頻度で失敗するか。`tool_search` の呼び出し1回につき1行です。 |
 | `hermes.tool_batch.count` | プロバイダー、モデル、件数の区分（論理的な呼び出しの数。`tool_call` の各項目を1回ずつ数えます）、コネクターの割合（`none`、`some`、`all`） | モデルが1回の返答にいくつの呼び出しを詰め込むか、そのうちどれくらいがコネクターの作業か。ツールを呼び出すモデルの返答1回につき1行です。 |
 | `hermes.connector_chain.count` | 事前の検索回数の区分（直前のコネクター実行から数えた `tool_search` の呼び出し回数）、先に説明を見たか（`yes`/`no`: そのツールが会話の中で先に `tool_describe` で指定されていたか）、結果（ツールの結果） | モデルがコネクターのツールを実行する前に検索と説明の確認をしているか、それを飛ばすと失敗が増えるか。実行したコネクターの項目1つにつき1行です。 |
+
+#### 事前準備した圧縮 {#prepared-compaction}
+
+パッケージスキーマ v4 の中で追加しました。`compression.prepare_ahead` をオンにしたインストール（スナップショットの `compression_prepare_ahead` を参照）が、使える要約を得ているのか、
+それとも誰も使わないパスにコストを払っているのか、その完了を待たされているのか、差し込んだ圧縮が失敗しているのかに答えます。
+どの次元にも、トランスクリプトの本文、ウィンドウの位置、要約、不一致の文言は現れません。自由記述の差し込み不一致の理由は、決まったコードにまとめます。
+
+| メトリクス | 次元 | 答える問い |
+|---|---|---|
+| `hermes.prepared_compaction.count` | イベント（`pass_started`、`pass_completed`、`pass_failed`、`pass_cancelled`、`used`、`discarded`、`compaction_failed`、`auto_disabled`、`skipped_busy`、`internal_error`）、起点（`tool_batch`、`turn_end`: パスを始めたフック。圧縮側のイベントでは `none`）、理由（`none`、`fresh_required`、`provider_context`、`other_session`、`head_moved`、`transcript_shorter`、`shape_changed`、`rewound`、`text_changed`、`running_not_fit`、`wait_timeout`、`host_cancelled`、`pass_failed_while_waiting`、`superseded`、`session_boundary`、`agent_released`、`compaction_aborted`、`aux_fallback_main`）、失敗の分類（`hermes.compression.count` の語彙。イベントが失敗でなければ `none`）、待ち時間の区分（`none`、`lt_1s`、`1s_to_5s`、`5s_to_30s`、`30s_to_120s`、`gte_120s`: 圧縮が実行中のパスをどれだけ待ったか） | 事前準備のパスが元を取れているか、取れていないならなぜか。パス側（バックグラウンドのスレッドから）: `pass_started`、`pass_completed`（要約を公開した）、`pass_failed`（要約処理が何も返さなかった。分類は、その場で試行していたら記録したはずのもので、要約の終端の失敗が優先されます）、`pass_cancelled`（パスが自分の取り消しイベントを見た。理由は `superseded`、`session_boundary`、`agent_released`、`wait_timeout`、`host_cancelled` のいずれかで、取り消した側が設定します）、`skipped_busy`（同時に動かせるパスは2つまでというプロセス全体の上限で、パスが断られた。ツールの一括実行ごとではなく、断られたウィンドウごとに1回数えます）、`internal_error`（失敗の分類は `exception`）です。圧縮側: `used`（要約が圧縮後のトランスクリプトに差し込まれた。差し込んだその時点で数えます。パスが要約モデルからメインモデルにフォールバックした場合、理由は `aux_fallback_main`）、`discarded`（完了した、または実行中の要約を圧縮が使わなかった。差し込み不一致のコードと、待ち時間があればそれを持ちます。セッションの区切りで捨てた場合は `session_boundary`、エージェントの解放（キャッシュからの追い出し、巻き戻し、終了、1回きりの実行や管理下のワーカーのターンの終わり）では `agent_released`、圧縮が要約を受け取ったものの、差し込む前に中断したか何もせずに終わった場合は `compaction_aborted` になります）、`compaction_failed`（事前準備した要約を差し込んだものの確定しなかった圧縮で、試行の分類を持ちます）、`auto_disabled`（メモリプロバイダーのコンテキストを必要とする最初の圧縮で、そのエージェントのパスがオフになった）です。1つのパスが両方の側で数えられることがあるので、両側を足し合わせないでください。実行中のパスが合わなかった場合や区切りで捨てられた場合は、`discarded` と `pass_cancelled` の両方になります（待っている圧縮を区切りが起こした場合は、区切りの側から `discarded` を1回だけ数えます）。 |
 
 <!-- ---- v5 harness ---- -->
 #### エージェントのハーネスの精度 {#agent-harness-accuracy}
@@ -564,7 +580,7 @@ $HERMES_HOME/telemetry/shared_metrics/outbox/*.json
 既存の outbox ファイルでは、パッケージスキーマ v1、v2、v3 はそのままです。
 新しいパッケージは v4 を使います。
 v4 は `hermes.compression.count` と `hermes.memory.op.count` に `failure_class` を加え、それらの v3 のフィールドの組み合わせも引き続き受け付けます（追加の値だけによるその場での拡張として、v4 が安定版のリリースに出たあとにも、
-`hermes.extension.install.count` / `hermes.update.run` への `failure_class` と、前者への `registry` も加えており、それらの以前の v4 のフィールドの組み合わせも引き続き受け付けます）。
+`hermes.extension.install.count` / `hermes.update.run` への `failure_class` と、前者への `registry` も加えており、それらの以前の v4 のフィールドの組み合わせも引き続き受け付けます。`hermes.prepared_compaction.count` と、スナップショットの任意の `compression_prepare_ahead` も同じ形で加わりました）。
 v3 が `hermes.model_route.count`、`hermes.tool_call.count`、タスクのカウンターについて v2 のフィールドの組み合わせを受け付けたのと同じで、アップグレード前に記録したカウンターを安全に出し切れます。
 リポジトリ内のレジストリから導く語彙（ツール名、プラットフォーム、メモリプロバイダー、エラーの分類）は、JSON スキーマではパターンで範囲を限っています。
 正式な許可リストは `shared_metrics_contract.py` です。Hermes がもう出さなくなった値も、

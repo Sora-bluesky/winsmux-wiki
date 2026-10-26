@@ -2,7 +2,7 @@
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: 508469f99c7bd849e26cc75a4cb3d7a79b8df0bb
+upstream_blob: 52694bf6a9d163a0a4d40952ec1ff030a9336483
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -307,6 +307,21 @@ set `maintenance.commit-graph.enabled`, `gc.writeCommitGraph` and `fetch.writeCo
 `false` in that checkout, because a commit-graph write over commits the graph has not seen yet
 downloads every one of their trees. Leave those settings alone, and leave `gc.auto` at its
 default so git's own automatic gc can still fold packs.
+
+Hermes keeps the commit-graph current itself, because without one every version lookup walks the
+whole history: each `hermes update` (after the new code is in place) and each `hermes -w` launch
+update a missing or day-old graph in the background, at most once every 6 hours, with
+`git commit-graph write --reachable --split --no-changed-paths`, which reads commits only and never
+downloads a tree. The update does not wait for it, and a write still running after 10 minutes is
+stopped (asked to exit first, so git removes its own lock). A failed or stopped write is logged to
+`logs/agent.log`. A checkout that is a linked worktree or submodule refreshes the graph of the
+repository it shares objects with. A repo with `core.commitGraph=false` in its own, your global or
+the system git config is left without a graph. A
+`commit-graph.lock` or `multi-pack-index.lock` that a killed git left behind is removed by the same
+stale-lock sweep as `index.lock` once it is 10 minutes old and no git process of any form (`git`,
+`git-commit-graph`, `git.exe`, ...) is running; when Hermes cannot list running processes, no lock is
+removed. In a repo you
+launch `hermes -w` from, only those object-store locks are swept, never `index.lock` or `HEAD.lock`.
 
 Each `hermes update` also spends at most 60 seconds cleaning those packs up, picking up where the
 previous update stopped. It deletes packs whose every object is also stored in another pack, then

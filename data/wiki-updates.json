@@ -1,6 +1,428 @@
 {
-  "generatedAt": "2026-10-26",
+  "generatedAt": "2026-10-27",
   "entries": [
+    {
+      "date": "2026-10-26",
+      "sha": "0800a2e",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/adding-platform-adapters",
+          "title": "プラットフォームアダプターを追加する",
+          "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
+        },
+        {
+          "id": "developer-guide/adding-tools",
+          "title": "ツールを追加する",
+          "url": "/hermes/docs/developer-guide/adding-tools/"
+        },
+        {
+          "id": "developer-guide/browser-vault-plugin",
+          "title": "ブラウザ vault プラグイン",
+          "url": "/hermes/docs/developer-guide/browser-vault-plugin/"
+        },
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/contributing",
+          "title": "コントリビュート",
+          "url": "/hermes/docs/developer-guide/contributing/"
+        },
+        {
+          "id": "developer-guide/cron-internals",
+          "title": "cron の内部構造",
+          "url": "/hermes/docs/developer-guide/cron-internals/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/gateway-command-parity",
+          "title": "ゲートウェイのコマンド対応表",
+          "url": "/hermes/docs/developer-guide/gateway-command-parity/"
+        },
+        {
+          "id": "developer-guide/gateway-local-sessions",
+          "title": "gateway のローカルセッション",
+          "url": "/hermes/docs/developer-guide/gateway-local-sessions/"
+        },
+        {
+          "id": "developer-guide/image-gen-provider-plugin",
+          "title": "画像生成プロバイダのプラグイン",
+          "url": "/hermes/docs/developer-guide/image-gen-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/middleware",
+          "title": "ミドルウェア",
+          "url": "/hermes/docs/developer-guide/middleware/"
+        },
+        {
+          "id": "developer-guide/model-provider-plugin",
+          "title": "モデルプロバイダーのプラグイン",
+          "url": "/hermes/docs/developer-guide/model-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/plugin-llm-access",
+          "title": "プラグインからの LLM 呼び出し",
+          "url": "/hermes/docs/developer-guide/plugin-llm-access/"
+        },
+        {
+          "id": "developer-guide/plugins/catalog-submission",
+          "title": "プラグインカタログへの登録申請",
+          "url": "/hermes/docs/developer-guide/plugins/catalog-submission/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/secret-source-plugin",
+          "title": "シークレットソースプラグイン",
+          "url": "/hermes/docs/developer-guide/secret-source-plugin/"
+        },
+        {
+          "id": "developer-guide/trajectory-format",
+          "title": "軌跡の形式",
+          "url": "/hermes/docs/developer-guide/trajectory-format/"
+        },
+        {
+          "id": "developer-guide/video-gen-provider-plugin",
+          "title": "動画生成プロバイダプラグイン",
+          "url": "/hermes/docs/developer-guide/video-gen-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/web-search-provider-plugin",
+          "title": "ウェブ検索プロバイダのプラグイン",
+          "url": "/hermes/docs/developer-guide/web-search-provider-plugin/"
+        },
+        {
+          "id": "getting-started/nix-setup",
+          "title": "Nix と NixOS のセットアップ",
+          "url": "/hermes/docs/getting-started/nix-setup/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "guides/automate-with-cron",
+          "title": "cron であらゆる作業を自動化する",
+          "url": "/hermes/docs/guides/automate-with-cron/"
+        },
+        {
+          "id": "guides/automation-blueprints",
+          "title": "自動化の型紙",
+          "url": "/hermes/docs/guides/automation-blueprints/"
+        },
+        {
+          "id": "guides/delegation-patterns",
+          "title": "委任と並行作業",
+          "url": "/hermes/docs/guides/delegation-patterns/"
+        },
+        {
+          "id": "guides/microsoft-graph-app-registration",
+          "title": "Microsoft Graph のアプリケーションを登録する",
+          "url": "/hermes/docs/guides/microsoft-graph-app-registration/"
+        },
+        {
+          "id": "guides/python-library",
+          "title": "Hermes を Python ライブラリとして使う",
+          "url": "/hermes/docs/guides/python-library/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "reference/tools-reference",
+          "title": "組み込みツール一覧",
+          "url": "/hermes/docs/reference/tools-reference/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/code-execution",
+          "title": "コードの実行",
+          "url": "/hermes/docs/user-guide/features/code-execution/"
+        },
+        {
+          "id": "user-guide/features/credential-vault",
+          "title": "パスワードとログイン",
+          "url": "/hermes/docs/user-guide/features/credential-vault/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/messaging/webhooks",
+          "title": "Webhook",
+          "url": "/hermes/docs/user-guide/messaging/webhooks/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-notion",
+          "title": "Notion — Notion API と ntn CLI: ページ、データベース、Markdown、Workers",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/"
+        },
+        {
+          "id": "user-guide/skills/bundled/research/research-arxiv",
+          "title": "Arxiv — arXiv の論文をキーワード・著者・分野・ID で探す",
+          "url": "/hermes/docs/user-guide/skills/bundled/research/research-arxiv/"
+        },
+        {
+          "id": "user-guide/skills/bundled/research/research-llm-wiki",
+          "title": "Llm Wiki — Karpathy の LLM Wiki: 相互にリンクした markdown のナレッジベースを作り、問い合わせる",
+          "url": "/hermes/docs/user-guide/skills/bundled/research/research-llm-wiki/"
+        },
+        {
+          "id": "user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring",
+          "title": "Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成",
+          "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/"
+        },
+        {
+          "id": "user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom",
+          "title": "Inspecting Hermes Desktop Dom — 動いている Hermes デスクトップの DOM/CSS を CDP で読む",
+          "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom/"
+        },
+        {
+          "id": "user-guide/skills/bundled/software-development/software-development-python-debugpy",
+          "title": "Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）",
+          "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-ascii-art",
+          "title": "Ascii Art — アスキーアート: pyfiglet、cowsay、boxes、画像からの変換",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-audiocraft-audio-generation",
+          "title": "Audiocraft Audio Generation — AudioCraft。MusicGen で文章から音楽、AudioGen で文章から音",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-concept-diagrams",
+          "title": "Concept Diagrams — フラットで最小限の教材向け SVG を HTML として作る",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-concept-diagrams/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-pixel-art",
+          "title": "Pixel Art — 時代ごとの色数でドット絵を作る（NES、Game Boy、PICO-8）",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-pixel-art/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-pretext",
+          "title": "Pretext — DOM を使わない文字組みで、ブラウザで動く作品を作る",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-pretext/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-tldraw-offline",
+          "title": "Tldraw Offline — tldraw のオフラインキャンバスをエージェントで操作・スクリプト化する",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-tldraw-offline/"
+        },
+        {
+          "id": "user-guide/skills/optional/devops/devops-pinggy-tunnel",
+          "title": "Pinggy Tunnel — Pinggy を使い、SSH 経由でインストール不要の localhost トンネルを張る",
+          "url": "/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/"
+        },
+        {
+          "id": "user-guide/skills/optional/health/health-fitness-nutrition",
+          "title": "Fitness Nutrition — wger / USDA を使ったトレーニング計画・マクロ栄養素・身体指標の計算",
+          "url": "/hermes/docs/user-guide/skills/optional/health/health-fitness-nutrition/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-accelerate",
+          "title": "Accelerate — PyTorch の学習を、ほとんど書き換えずに複数の GPU で走らせる",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-accelerate/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-chroma",
+          "title": "Chroma — RAG と意味検索のための埋め込みデータベース",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-chroma/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-clip",
+          "title": "Clip — 学習なしでの画像の分類と、画像と文章での検索",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-clip/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness",
+          "title": "Evaluating Llms Harness — lm-eval-harness で LLM を評価する（MMLU、GSM8K など）",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases",
+          "title": "Weights And Biases — W&B で ML の実験・sweep・モデルレジストリ・ダッシュボードを記録する",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-faiss",
+          "title": "Faiss — 10 億件規模でも速い、ベクトルの類似検索",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-faiss/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-flash-attention",
+          "title": "Flash Attention — 長い系列を扱う Transformer の学習と推論を速くする",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-flash-attention/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-inference-outlines",
+          "title": "Outlines — Outlines: JSON・正規表現・Pydantic で形を決めた LLM の生成",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-inference-outlines/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-inference-serving-llms-vllm",
+          "title": "Serving Llms Vllm — vLLM: 高スループットな LLM 配信、OpenAI API、量子化",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-inference-serving-llms-vllm/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-instructor",
+          "title": "Instructor — LLM の出力を Pydantic で検証しながら決まった形で受け取る",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-instructor/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-lambda-labs",
+          "title": "Lambda Labs — ML の学習用に、必要なときだけ GPU を借りるクラウド",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-lambda-labs/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-llava",
+          "title": "Llava — 画像について話せるモデル: 質問応答、説明文づくり、対話",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-llava/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-modal",
+          "title": "Modal — ML の処理やモデル API を、サーバー管理なしで GPU に載せる",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-modal/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-models-segment-anything-model",
+          "title": "Segment Anything Model — SAM: 点・ボックス・マスクで指示するゼロショット画像セグメンテーション",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-models-segment-anything-model/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-nemo-curator",
+          "title": "Nemo Curator — LLM の学習データを整える: 重複除去・絞り込み・個人情報の伏せ字化",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-nemo-curator/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-obliteratus",
+          "title": "Obliteratus — OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-obliteratus/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-pytorch-lightning",
+          "title": "Pytorch Lightning — 分散学習まで組み込まれた、すっきりした学習ループ",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-pytorch-lightning/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-research-dspy",
+          "title": "Dspy — DSPy: 宣言的に言語モデルのプログラムを書き、プロンプトを自動で最適化し、RAG を作る",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-research-dspy/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-saelens",
+          "title": "Saelens — スパースオートエンコーダを学習させてモデルの特徴を読み解く",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-saelens/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-stable-diffusion",
+          "title": "Stable Diffusion — 文章からの画像生成、部分の描き直し、画像からの画像生成",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-stable-diffusion/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-whisper",
+          "title": "Whisper — 99 の言語で音声を文字にし、翻訳する",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-whisper/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-drug-discovery",
+          "title": "Drug Discovery — 創薬研究: ChEMBL 検索、薬らしさ、相互作用",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-drug-discovery/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-gitnexus-explorer",
+          "title": "Gitnexus Explorer — コードベースの知識グラフを対話的な Web UI で見る",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-gitnexus-explorer/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-research-paper-writing",
+          "title": "Research Paper Writing — NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-searxng-search",
+          "title": "Searxng Search — 70 以上の検索エンジンをまとめて引く、鍵の要らない無料の検索",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-searxng-search/"
+        },
+        {
+          "id": "user-guide/skills/optional/security/security-godmode",
+          "title": "Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN",
+          "url": "/hermes/docs/user-guide/skills/optional/security/security-godmode/"
+        },
+        {
+          "id": "user-guide/skills/optional/software-development/software-development-rest-graphql-debug",
+          "title": "Rest Graphql Debug — REST/GraphQL API を調べる: ステータスコード、認証、スキーマ、再現手順",
+          "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug/"
+        },
+        {
+          "id": "user-guide/skills/optional/web-development/web-development-har-derived-api-client",
+          "title": "Har Derived Api Client — サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす",
+          "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client/"
+        },
+        {
+          "id": "user-guide/skills/optional/web-development/web-development-page-agent",
+          "title": "Page Agent — Web アプリの中に、自然言語で操作できる相棒を組み込む",
+          "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/"
+        },
+        {
+          "id": "user-guide/tui",
+          "title": "TUI",
+          "url": "/hermes/docs/user-guide/tui/"
+        }
+      ]
+    },
     {
       "date": "2026-10-25",
       "sha": "a1e6b2f",

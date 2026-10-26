@@ -2,7 +2,7 @@
 title: "契約の中継サーバー"
 description: "Nous Portal の契約（や他の OAuth プロバイダー）を、外部アプリ向けの OpenAI 互換エンドポイントとして使えるようにします。"
 upstream_path: user-guide/features/subscription-proxy.md
-upstream_blob: 666969772bcf671228da387d0977ab00a8e842db
+upstream_blob: b2b9ce097d84273cfe0d1b56ae794ac2aa789c50
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/subscription-proxy
 ---
@@ -205,8 +205,7 @@ Web ページからのリクエストはすべて断ります（どんな `Origi
 ## この先: 他の OAuth プロバイダー {#future-more-oauth-providers}
 
 アダプターの仕組みは差し替えられるようになっています。新しいプロバイダー
-（HuggingFace、GitHub Copilot のチャットのエンドポイント、OAuth 経由の
-Anthropic など）を足すには、`hermes_cli/proxy/adapters/<provider>.py` に
+（HuggingFace、OAuth 経由の Anthropic など）を足すには、`hermes_cli/proxy/adapters/<provider>.py` に
 `UpstreamAdapter` を実装して、`adapters/__init__.py` に登録します。
 プロトコルの段階で OpenAI 互換でないプロバイダー（たとえば Anthropic の
 Messages API）は変換の層が要るので、いまの形では対象外です。

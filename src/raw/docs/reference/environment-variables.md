@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: dba43302610104aeb1e9dd263fbe055750a0eca4
+upstream_blob: fb1f9b10bd8f17753fc366c65009e4dd4dbf92c4
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -29,14 +29,8 @@ Hermes は環境変数をプロセスの環境から読み、利用者が管理�
 | `HERMES_CODEX_BASE_URL` | `openai-codex`（ChatGPT の契約）の提供元を、既定の Codex バックエンドではなくプロキシ経由にします。この資格情報を使うすべての場面、つまりプールの解決、補助・生のクライアント、401/429 での資格情報の切り替えに効きます。これを設定しない場合は、`model.provider: openai-codex` の下の `model.base_url` が次点の上書きになります。 |
 | `LM_API_KEY` | LM Studio（`lmstudio` の提供元）の API キー。手元のサーバーでは形だけの値でかまわないことが多いです |
 | `LM_BASE_URL` | LM Studio のベース URL（既定: `http://localhost:1234/v1`） |
-| `COPILOT_GITHUB_TOKEN` | Copilot API 用の GitHub トークン — 最優先（OAuth の `gho_*` か、細かい権限の PAT `github_pat_*`。従来型の PAT `ghp_*` は**使えません**） |
-| `GH_TOKEN` | GitHub のトークン — Copilot では 2 番目に参照されます（`gh` CLI も使います） |
-| `GITHUB_TOKEN` | GitHub のトークン — Copilot では 3 番目に参照されます |
-| `HERMES_COPILOT_ACP_COMMAND` | Copilot の ACP CLI のパスを上書きします（既定: `copilot`） |
-| `COPILOT_CLI_PATH` | `HERMES_COPILOT_ACP_COMMAND` の別名 |
-| `HERMES_COPILOT_ACP_ARGS` | Copilot の ACP 引数を上書きします（既定: `--acp --stdio`） |
-| `COPILOT_ACP_BASE_URL` | Copilot ACP のベース URL を上書きします |
-| `COPILOT_API_BASE_URL` | Copilot API（`copilot` の提供元）のベース URL を上書きします |
+| `GH_TOKEN` | GitHub のトークン（`gh` CLI も使います）。Hermes が `GITHUB_TOKEN` を読む場面では、どこでもこちらも参照されます |
+| `GITHUB_TOKEN` | GitHub API にアクセスするための GitHub のトークン（Skills Hub、git の資格情報、更新確認に使います。下の Skills Hub の行も見てください） |
 | `GLM_API_KEY` | z.ai / ZhipuAI GLM の API キー（[z.ai](https://z.ai)） |
 | `ZAI_API_KEY` | `GLM_API_KEY` の別名 |
 | `Z_AI_API_KEY` | `GLM_API_KEY` の別名 |
