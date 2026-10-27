@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: fb1f9b10bd8f17753fc366c65009e4dd4dbf92c4
+upstream_blob: aba60dadc4e228696d153883a378a8402af5d85d
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -566,7 +566,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `HERMES_DASHBOARD_BASIC_AUTH_USERNAME` | 同梱のユーザー名 / パスワード方式（`plugins/dashboard_auth/basic`）で使うユーザー名。パスワードと一緒に設定すると、この方式が有効になります。`dashboard.basic_auth.username` より優先されます。 |
 | `HERMES_DASHBOARD_BASIC_AUTH_PASSWORD` | この方式で使う平文のパスワード（読み込み時にメモリー上でハッシュ化されます）。設定の `password_hash` より優先されるので、環境変数で入れ替えられます。`dashboard.basic_auth.password` より優先されます。 |
 | `HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH` | この方式で使う scrypt のパスワードハッシュ（平文が残らないのでこちらがおすすめ）。`python -c "from plugins.dashboard_auth.basic import hash_password; print(hash_password('PW'))"` で作れます。`dashboard.basic_auth.password_hash` より優先されます。 |
-| `HERMES_DASHBOARD_BASIC_AUTH_SECRET` | この方式の、状態を持たないセッショントークンに署名する HMAC のキー（32 バイト以上。base64 / 16 進 / そのままの文字列）。再起動をまたいでセッションを保ちたい場合や、複数のワーカーで共有する場合は明示的に設定してください。空だとプロセスごとにランダムになり、再起動のたびにログアウトします。`dashboard.basic_auth.secret` より優先されます。 |
+| `HERMES_DASHBOARD_BASIC_AUTH_SECRET` | この方式の、状態を持たないセッショントークンに署名する HMAC のキー（32 バイト以上。base64 / 16 進 / そのままの文字列）。再起動をまたいでセッションを保ちたい場合や、複数のワーカーで共有する場合は明示的に設定してください。空だとプロセスごとにランダムになり、再起動のたびにログアウトします。`$(openssl rand -base64 32)` のように、シェルで展開されないまま残った文字列が値に入っている場合は、エラーを出してその値を無視し、代わりにプロセスごとのランダムなキーを使います。`dashboard.basic_auth.secret` より優先されます。 |
 | `HERMES_DASHBOARD_BASIC_AUTH_TTL_SECONDS` | この方式のアクセストークンの有効時間（既定 12 時間）。`dashboard.basic_auth.session_ttl_seconds` より優先されます。 |
 | `HERMES_DASHBOARD_OAUTH_CLIENT_ID` | 認証付き / 公開のダッシュボードで使う OAuth のクライアント ID（`agent:{instance_id}`）。設定すると Nous の方式（`plugins/dashboard_auth/nous`）が有効になります。`dashboard.oauth.client_id` より優先されます。`hermes dashboard register` で発行してください。 |
 | `HERMES_DASHBOARD_SESSION_TOKEN` | ダッシュボードの取り扱いに注意が要る `/api` の経路で使う、プロセスごとのセッショントークン。`hermes dashboard` を起動した側（デスクトップの外枠、リンク型の連携）が発行します。親プロセスが渡した値はそのまま保たれ、`~/.hermes/.env` に `HERMES_DASHBOARD_SESSION_TOKEN` の行があっても置き換わりません。設定が無ければ、サーバーが起動のたびに新しいトークンを作ります。 |

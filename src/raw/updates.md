@@ -10,6 +10,10 @@ raw: /hermes/raw/updates.md
 
 ## 2026-10-27
 
+- [A2A（エージェント間連携）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/a2a/)
+
+## 2026-10-27
+
 - [プロバイダーを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-providers/)
 - [設定バックエンドの境界（seam）](https://wiki.winsmux.dev/hermes/docs/developer-guide/config-backend/)
 - [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)

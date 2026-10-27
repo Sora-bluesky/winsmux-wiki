@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-10-27、対象期間 = 2026-10-21 〜 2026-10-27（JST）
+生成日 = 2026-10-28、対象期間 = 2026-10-22 〜 2026-10-28（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,6 +16,7 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-10-27 [A2A（エージェント間連携）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/a2a/)
 - 2026-10-27 [プロバイダーを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-providers/)
 - 2026-10-27 [設定バックエンドの境界（seam）](https://wiki.winsmux.dev/hermes/docs/developer-guide/config-backend/)
 - 2026-10-27 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
@@ -178,10 +179,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-22 [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
 - 2026-10-22 [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
 - 2026-10-22 [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
-- 2026-10-21 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
-- 2026-10-21 [画像生成](https://wiki.winsmux.dev/hermes/docs/user-guide/features/image-generation/)
-- 2026-10-21 [カンバンの作業レーン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/kanban-worker-lanes/)
-- 2026-10-21 [A2A（エージェント間連携）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/a2a/)
 
 ## 週次まとめ
 

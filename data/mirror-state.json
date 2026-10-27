@@ -182,9 +182,9 @@
       "translatedAt": "2026-09-18T22:41:13.106Z"
     },
     "getting-started/nix-setup.md": {
-      "blob": "a87b913776e3582fd2f44710fdd1364891482147",
+      "blob": "8e97f284b01b481a43507f639c56ed85b56c1cf1",
       "status": "translated",
-      "translatedAt": "2026-10-25T22:49:03.795Z"
+      "translatedAt": "2026-10-27T22:51:04.075Z"
     },
     "getting-started/platform-support.md": {
       "blob": "400706b2e71abfae3c0a8da9c47df8c2a6d8bd50",
@@ -407,9 +407,9 @@
       "translatedAt": "2026-09-12T22:39:58.861Z"
     },
     "reference/environment-variables.md": {
-      "blob": "fb1f9b10bd8f17753fc366c65009e4dd4dbf92c4",
+      "blob": "aba60dadc4e228696d153883a378a8402af5d85d",
       "status": "translated",
-      "translatedAt": "2026-10-26T22:56:07.753Z"
+      "translatedAt": "2026-10-27T22:51:04.082Z"
     },
     "reference/faq.md": {
       "blob": "a0d1d67d7a7c22808fec65f42bc4f5a3c04be6dc",
@@ -427,9 +427,9 @@
       "translatedAt": "2026-10-26T22:56:07.754Z"
     },
     "reference/optional-skills-catalog.md": {
-      "blob": "835f842e326c928dbbc8884a88776af5ed63e182",
+      "blob": "5351974c7412241c66f07e8bab981b9df5fd3e22",
       "status": "translated",
-      "translatedAt": "2026-10-22T22:47:25.260Z"
+      "translatedAt": "2026-10-27T22:51:04.083Z"
     },
     "reference/profile-commands.md": {
       "blob": "7baf4a26a3e2e5bea9659f447f18537ed47895c3",
@@ -482,14 +482,14 @@
       "translatedAt": "2026-10-14T23:48:21.642Z"
     },
     "user-guide/desktop.md": {
-      "blob": "c5905fd0cfd097a08e47647c6e3ce756d95be98f",
+      "blob": "b8c2384cfb5e259f53c8a9e060e14b7e1e97f406",
       "status": "translated",
-      "translatedAt": "2026-10-26T22:56:07.763Z"
+      "translatedAt": "2026-10-27T22:51:04.085Z"
     },
     "user-guide/docker.md": {
-      "blob": "5517c3ff95c6452acacd92ed3fc71e657f313767",
+      "blob": "04b04008f85238372e543f3d4244de529d6a4c28",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.199Z"
+      "translatedAt": "2026-10-27T22:51:04.087Z"
     },
     "user-guide/egress/index.md": {
       "blob": "90ccbb8a05e663ba816b4ac1e8bef7bca32eed5b",
@@ -742,9 +742,9 @@
       "translatedAt": "2026-09-25T22:58:06.429Z"
     },
     "user-guide/features/web-dashboard.md": {
-      "blob": "a4dc957b0862291e4dbf90cf6479591761092f84",
+      "blob": "237ea018e25acb2f2c92a902b7f7b777e87bc536",
       "status": "translated",
-      "translatedAt": "2026-10-17T22:47:14.270Z"
+      "translatedAt": "2026-10-27T22:51:04.090Z"
     },
     "user-guide/features/web-search.md": {
       "blob": "2d52120f7385b1797565b50593965b0b50b1e4c8",
@@ -1932,9 +1932,9 @@
       "translatedAt": "2026-09-20T22:40:21.530Z"
     },
     "user-guide/skills/optional/security/security-unbroker.md": {
-      "blob": "431cbadf08d029c1c9fd6e39c5b1cf1e27d7aa36",
+      "blob": "48d457e673ccf7ecd1ee9a4a4cae1043f109cab9",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.224Z"
+      "translatedAt": "2026-10-27T22:51:04.091Z"
     },
     "user-guide/skills/optional/security/security-web-pentest.md": {
       "blob": "9a54ef8eceaa12f499d9d48c3d6d159bf3d97ab7",
@@ -2441,10 +2441,10 @@
       "translatedAt": "2026-10-25T22:49:03.827Z"
     },
     "developer-guide/config-backend.md": {
-      "blob": "8c3afdf9499752bd40ba25ad7b324a9054ba5461",
+      "blob": "158fd4fa42c48f272b75ed3388d4b8364c83cb0e",
       "status": "translated",
-      "translatedAt": "2026-10-26T22:56:07.776Z"
+      "translatedAt": "2026-10-27T22:51:04.092Z"
     }
   },
-  "snapshotCommit": "1ae3c55e4bb16f495ebf0536a5672782d903e15e"
+  "snapshotCommit": "7ee6d99c4f16df08cd6ca0b2c34abb81014db2ba"
 }

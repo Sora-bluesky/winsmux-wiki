@@ -1,15 +1,15 @@
 ---
-title: "Unbroker — データブローカーサイトから自分の情報を自動で削除する"
-description: "データブローカーサイトから自分の情報を自動で削除する"
+title: "Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）"
+description: "データブローカーサイトから自分の情報を削除する（氏名または電話番号から）"
 upstream_path: user-guide/skills/optional/security/security-unbroker.md
-upstream_blob: 431cbadf08d029c1c9fd6e39c5b1cf1e27d7aa36
+upstream_blob: 48d457e673ccf7ecd1ee9a4a4cae1043f109cab9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-unbroker
 ---
 
 # Unbroker {#unbroker}
 
-データブローカーサイトから自分の情報を自動で削除します。
+データブローカーサイトから、氏名または電話番号をもとに自分の情報を削除します。
 
 ## skill の情報 {#skill-metadata}
 
@@ -43,7 +43,8 @@ Python の CLI（`scripts/pdd.py`）が、決定論的な状態を一手に管�
 ブローカーのデータベース、ティア計画、台帳、下書き、レポート、**メール送信（SMTP）、確認リンクの
 ポーリング（IMAP）、自律アクションのキュー（`next`）**です。あなた（エージェント）は、ネイティブ
 ツールでスキャンとフォーム操作を担当します。検索と Web フォームには `web_extract` と
-`browser_exec` を、定期的な再スキャンには `cronjob` を使います。
+`browser_exec` を、定期的な再スキャンには `cronjob` を使います。実行は電話番号だけからでも始められ
+（迷惑電話の対策）、オプトアウトと並行して FTC の Do Not Call 登録を一度だけ行う手続き（`dnc`）も使えます。
 
 ## 自律性の取り決め {#autonomy-contract}
 
@@ -54,8 +55,10 @@ Python の CLI（`scripts/pdd.py`）が、決定論的な状態を一手に管�
 - **設定の選択をオペレーターに尋ねてはいけません。** `$PDD setup --auto` が機能を検出し、有効な設定の
   なかで最も自律的なものを自ら選びます。
 - **個々の送信の前で立ち止まってはいけません**（`autonomy=full`、既定のとき）。インテークで記録した
-  同意が、T0–T2 のオプトアウトに対する常時の承認になります。（`autonomy=assisted` は慎重なオペレーター
-  向けに送信ごとの確認を復活させます。`next` の出力にある `confirm_first` フラグに従ってください。）
+  同意が、T0–T2 のオプトアウトに対する常時の承認になります。唯一の例外は、`confirm_first: true` が
+  付いたアクションです（`dnc_register` には常に付きます。これはインテークの同意ではカバーされない登録簿への
+  申し込みだからです）。このアクションは、どのモードでもオペレーターの承諾を待ちます。（`autonomy=assisted`
+  は慎重なオペレーター向けに、すべての送信に `confirm_first` を付けます。）
 - **人にしかできない作業のために実行を中断してはいけません。** それは記録し（`record ... human_task_queued
   --reason "..."`）、そのまま進めます。すべて最後のダイジェストに一度だけ表れます。
 - **実行全体を `$PDD next <subject>` に対するループとして回してください** — これは、いま取るべき
@@ -74,6 +77,8 @@ Python の CLI（`scripts/pdd.py`）が、決定論的な状態を一手に管�
 - 「オプトアウトして」「Spokeo／Whitepages などから私を消して」「ドキシングのあと片付けをして」。
 - 「定期的なプライバシー監視を設定して」（ブローカーは人物を再掲載します）。
 - どのブローカーがまだ誰かの情報を公開しているか、そしてその理由を確認するとき。
+- 「自分の番号に迷惑電話がかかってきてばかりいる」 — 電話番号から始める対策: 番号が掲載されている場所を
+  見つけてオプトアウトし、Do Not Call Registry に登録し、定期的に再チェックします。
 
 ## 事前に必要なもの {#prerequisites}
 
@@ -130,14 +135,15 @@ PDD="python scripts/pdd.py"
 | `$PDD setup --auto` | **自律セットアップ**: 機能を検出し、最も自律的で有効な設定を選ぶ（質問なし） |
 | `$PDD doctor` | 準備状況の確認: 設定、ブローカー数、どの強化が有効／利用可能か |
 | `$PDD cdp [--check] [--print] [--port N]` | フェーズ 2 のブラウザ＋Web メール向けに、オペレーターの Chrome を CDP で起動／検出する（専用のデバッグプロファイル。Web メール送信とセッション連動ゲートの通過を確実にする方法） |
-| `$PDD intake --full-name "..." [--alias ...] [--email ... --phone ...] [--city --state] [--prior-location "City,ST"] --consent` | 同意済みの対象者を作成。別名＋複数のメール／電話＋過去の居住地を取り込み、`subject_id` を表示する |
+| `$PDD intake --full-name "..." [--alias ...] [--email ... --phone ...] [--focus-phone ...] [--city --state] [--prior-location "City,ST"] --consent` | 同意済みの対象者を作成。別名＋複数のメール／電話＋過去の居住地を取り込み、`subject_id` を表示する。電話番号から始める（迷惑電話対策の）実行では、`--phone` だけ＋`--focus-phone`（対策の対象となる番号）から始めてもよく、氏名がなくても警告が出るだけで必須ではない |
 | `$PDD next <subject>` | **自律ループの駆動役**: いま取るべき順序どおりのエージェントアクション＋人向けダイジェスト＋`next_wake_at` |
 | `$PDD brokers [--priority crucial]` | 人物検索ブローカーのデータベース（キュレーション＋ライブ）を一覧する |
 | `$PDD refresh-brokers` | 最新の BADBOOL 人物検索リスト**と CA データブローカー登録簿**を取得する（キャッシュが古いと `next` が自動で再キュー投入する） |
 | `$PDD registry [--search NAME]` | 州の登録簿カバレッジ（CA は約 545 件取り込み済み。VT／OR／TX のポータルを提示）。DROP／メールのレーンであり、スキャン対象ではない |
 | `$PDD drop <subject> [--filed]` | **一発の法的レバー**: 1 件の CA DROP 請求で、登録済みの全ブローカーから削除する。`--filed` で記録する |
+| `$PDD dnc <subject> [--filed]` | **迷惑電話へのレバー**: 対象者の米国の個人番号を FTC の National Do Not Call Registry に登録する（セールス電話は 31 日以内に止まり、期限はない）。`--filed` で記録する |
 | `$PDD plan <subject> [--priority crucial]` | ブローカーごとのティア＋方法＋`search_vectors`＋開示すべき正確なフィールド |
-| `$PDD plan <subject> --batch` | **集約ビュー**: 台帳の状態を重ね、次のアクションでブローカーをグループ化し（未スキャン／発見／間接／ブロック／進行中／完了）、所有クラスタを畳み込み、**`found` クラスタを親優先で並べて専用の `parent_playbook` を出力**し、`next_actions` を表示する |
+| `$PDD plan <subject> --batch` | **集約ビュー**: 台帳の状態を重ね、次のアクションでブローカーをグループ化し（未スキャン／検索不能／発見／間接／ブロック／進行中／人／完了／未発見。廃業したブローカーは除外され、`defunct` の下に一覧される）、所有クラスタを畳み込み、**`found` クラスタを親優先で並べて専用の `parent_playbook` を出力**し、`next_actions` を表示する |
 | `$PDD fanout <subject> [--priority crucial] [--size 5]` | ブローカーを並列 `delegate_task` サブエージェントにまとめる（大規模な実行では自動。5 件のバッチ — 8 件以上はタイムアウトする） |
 | `$PDD record <subject> <broker> <state> [--found true] [--evidence JSON] [--disclosed F --channel C] [--reason "..."]` | 台帳を更新する（検証付きの状態機械）。**`next_recheck_at` を自動で刻む** |
 | `$PDD show <subject> <broker>` | あるケースの記録済み状態＋証跡＋開示ログを読み戻す（親がサブエージェントの `found` を、掲載 URL を再導出せずに再検証できるように） |
@@ -234,7 +240,7 @@ PDD="python scripts/pdd.py"
    `verify_removal`（期限の来た再チェック）、`optout_web_form`／`optout_email_send`（フェーズ 2、
    プレイブックのステップ付きで親優先）、`indirect_email_send`、`stealth_rescan`。人にしかできない作業は
    アクションとして現れず、`q.human_digest` に蓄積されます。`autonomy=full` では止まらずにアクションを
-   実行し、`assisted` モードでは `confirm_first` に従います。
+   実行します。ただし `confirm_first: true` が付いたアクションは例外で、どのモードでもオペレーターを待ちます。
 4. **スキャン（`next` がそう言ったら）。** `fanout_scan` では `$PDD fanout <subject>` を実行し、
    **`batch` ごとに 1 つの `delegate_task` サブエージェントを並列に立ち上げ、そのバッチの用意済みの
    `brief` を渡します** — 全ブローカーを自分で逐次スキャンしてはいけません。`scan_inline` では、
@@ -265,8 +271,9 @@ PDD="python scripts/pdd.py"
       **レスキューレーン**（検証済みの Whitepages パターン）です。下書きのみのときは `render-email` ＋
       ダイジェストエントリにフォールバックします。
    - **captcha** → ソフト／マネージドの課題は既定のクラウドブラウザで自動的にクリアされます（通常どおり
-     進めます）。ブラウザが通れないハードで対話的／挙動ベースの課題だけを `blocked` と記録します
-     （ステルス／オペレーターブラウザのパス用に再キュー投入）。ソルバーサービスは決して使いません。
+     進めます）。ブラウザが通れないハードで対話的／挙動ベースの課題は、理由を添えて
+     `human_task_queued` と記録します（`blocked` のケースは再スキャンされ、掲載を再発見してオプトアウトを
+     再キュー投入してしまいます）。ソルバーサービスは決して使いません。
    - **phone_callback / account / gov_id / fax / mail / voice（T3）** で*削除メールがない*とき →
      エージェントのアクションには決してしません。`next` はすでにこれらをダイジェストへ回しています。
      記録します。`$PDD record <subject> <broker> human_task_queued --reason "..."`。
@@ -286,6 +293,33 @@ PDD="python scripts/pdd.py"
    ループを対象者に対して再実行する `cronjob` を 1 つ作成します（プロンプト例: *「&lt;subject_id> の
    unbroker ループを実行して: `$PDD next` してすべてのアクションを実行して」*）。処理の期間、確認の
    ポーリング、再出現の掃引はすべて同じキューを流れるため、ケースは人の手をまったくかけずに前進し続けます。
+
+## 迷惑電話の対策（電話番号から始める実行） {#spam-call-scrubber-phone-led-run}
+
+迷惑電話がやまない番号は、ほぼ必ず人物検索サイトに公開されています。リスト業者はそこから番号を
+入手しているのです。同じエンジンを、番号を起点にして使います。
+
+1. **番号からのインテーク。** `$PDD intake --phone "+1-555-0100" --focus-phone "+1-555-0100"
+   --full-name "..." --email ... --consent`。`--focus-phone` は対策の対象となる番号を示します。この番号は
+   検索ベクトルに加えられ、オプトアウトフォームで開示する `phone` フィールドにも（`phones[0]` の代わりに）
+   使われます。スキャンに氏名は必須ではありません — 電話／メール／住所のベクトルが実行され、実行可能な
+   ベクトルがないブローカーは `unsearchable` としてグループ化されます（クロールから除外され、ループを
+   詰まらせることはありません）。それでも、インテークでは氏名と連絡先メールを集めておいてください。
+   どのオプトアウトフォームや法的請求にも必要になります。
+2. **ループは変わりません。** `$PDD next <subject>` が、同じクロール／オプトアウト／再チェックのキューを
+   駆動します。電話番号の逆引きサイト（ライブのキュレーションレコードのうち 14 件が `by: phone` を宣言。
+   キュレーション済みブローカーのうち 5 件は廃業しており、ドメインが失効しているため計画から除外）は電話の
+   ベクトルでスキャンされ、再チェックのスケジュールが番号の再掲載を見張ります
+   （対象者の `rescan_interval_days` に従います）。
+3. **DNC の一発登録。** 米国の個人番号であれば、`next` は `dnc_register` も一度だけ提示します。FTC の
+   National Do Not Call Registry です（無料、期限なし、セールス電話は 31 日以内に止まります。1 回で最大 3
+   番号まで、番号ごとに確認メールが 1 通届くので、それぞれ 72 時間以内にリンクを開きます）。`$PDD
+   dnc <subject>` は手順を表示し、`$PDD dnc <subject> --filed` は登録を記録し、
+   `$PDD dnc <subject> --declined` は、実際には行っていない登録を記録することなく、対象者をこの手続きから
+   外します。提示されるのは電話番号から始める実行（`--focus-phone`）で、かつ NANP の番号の場合だけで、
+   常に `confirm_first` が付きます — インテークの同意がカバーするのはブローカーからの削除であり、新たな
+   登録簿への開示ではないからです。DNC が止めるのは合法的な
+   テレマーケターであって、詐欺師ではありません。リスト業者の名簿を断つのはブローカーからの削除なので、両方を行ってください。
 
 ## 落とし穴 {#pitfalls}
 
@@ -317,8 +351,9 @@ PDD="python scripts/pdd.py"
   を付けます。有料ティアでの保持はレポートに記します。
 - **ソフト CAPTCHA は既定でクリアされます。ハードなものと戦わないでください。** 既定のクラウドブラウザは
   マネージド／ソフトの課題を通常動作として通します（対象のブローカーは T1 のまま）。本当に通れない
-  ハードで対話的なものは `blocked` と記録し、ステルス／オペレーターブラウザのパスに任せます — 第三者の
-  ソルバーサービスや指紋偽装は決して使いません。
+  ハードで対話的なものは `human_task_queued --reason "..."` と記録し、ダイジェストに常駐する 1 件の
+  タスクとして留めます（`blocked` のケースは再スキャンされ、掲載を再発見してオプトアウトを再キュー投入して
+  しまいます） — 第三者のソルバーサービスや指紋偽装は決して使いません。
 - **ブローカーのページは変わります。** フローが壊れたら、推測する代わりに `$PDD record ... blocked` と
   記録し、`references/brokers/` のブローカーファイルに再検証のフラグを立てます。
 - **フィールド未検証のレコードは送信前に確認してください。** `confidence: auto` のレコードは BADBOOL の

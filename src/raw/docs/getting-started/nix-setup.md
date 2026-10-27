@@ -2,7 +2,7 @@
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: a87b913776e3582fd2f44710fdd1364891482147
+upstream_blob: 8e97f284b01b481a43507f639c56ed85b56c1cf1
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -694,6 +694,26 @@ macOS に相当する設定はありません。`RunAtLoad` を付けた `launch
 :::warning ループバック以外のアドレスにバインドする場合
 既定のアドレスは `127.0.0.1` です。それ以外のアドレスにすると、ダッシュボードの認証ゲートが有効になります。サーバーは、バインドしたアドレスと違う `Host` ヘッダーの付いたリクエストも拒否します。これは DNS リバインディングへの備えです。クライアントが実際に使う名前かアドレスにバインドしてください。
 :::
+
+### Webapp を動かす {#running-the-webapp}
+
+このパッケージには、[Webapp](/hermes/docs/user-guide/desktop/#use-the-desktop-workspace-from-a-browser)（ブラウザで使う Hermes Desktop）がビルド済みの状態で入っています。そのため実行時には何もビルドしません。ストアは読み取り専用です。設定で有効にすると、ゲートウェイが Webapp を配信します（[設定 → Webapp](/hermes/docs/user-guide/configuration/#webapp) を参照）。
+
+```nix
+{
+  services.hermes-agent = {
+    enable = true;
+    gateway.enable = true;
+    settings.webapp = {
+      enabled = true;
+      host = "127.0.0.1";
+      port = 9120;
+    };
+  };
+}
+```
+
+開くには `hermes webapp` を実行します。ループバック以外の `host` や `public_url` を使う場合は、ダッシュボードと同じく、[ダッシュボードのサインインプロバイダー](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)のどれかが必要です。`nix build .#webapp` を実行すると、このバンドルだけを単独でビルドできます。ラッパーが `HERMES_WEBAPP_DIST` をそのバンドルに向けているので、`hermes webapp --force-build` を実行しても作り直すものがなく、その旨が表示されます。
 
 ### 動いているか確かめる {#verify-it-works}
 

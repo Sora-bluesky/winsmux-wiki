@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: c5905fd0cfd097a08e47647c6e3ce756d95be98f
+upstream_blob: b8c2384cfb5e259f53c8a9e060e14b7e1e97f406
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -322,6 +322,12 @@ YAML を書く代わりに、きちんとした UI からプロバイダー・�
 
 初回のセットアップは統一されたオーバーレイのデザインシステムで作り直されました。**Choose provider later** を選べば、プロバイダーの設定を飛ばして先にアプリへ入れます。
 
+#### 表示の設定の保存場所 {#where-your-display-preferences-live}
+
+表示の設定は、コンピューターごとに1つ、Hermes のルートのホームにある `ui-preferences.json` に保存されます（既定では `~/.hermes/ui-preferences.json`。`HERMES_HOME` を独自に指定している場合はそのホームのルートで、プロファイルのフォルダになることはありません）。対象は、テーマとライト／ダークのモード、セッション一覧の密度とサイドバーのレイアウト、ステータスバーに出す項目、トランスクリプトとツールの表示、サウンド、キーバインド、保存したレイアウト、モデル選択のお気に入り、そしてすでに見たか飛ばしたヒント・ツアー・初回のオンボーディングです。そのコンピューター上のデスクトップアプリと、そのコンピューターが配信する [Webapp](#use-the-desktop-workspace-from-a-browser) を開くすべてのブラウザが、同じファイルを読み書きします。どこかで変えると、ほかにも伝わります。デスクトップアプリのウィンドウには数秒以内に、Webapp のタブにはフォーカスが戻ったとき、または10秒ほどのうちに届きます。テーマ、モード、密度など、開いているウィンドウがもともとウィンドウ間でそろえている設定はすぐに描き直され、それ以外は次にウィンドウやタブを読み込んだときに反映されます。これは、別のデバイス、プライベートウィンドウ、同じ Webapp の別のアドレス（`127.0.0.1`、LAN のアドレス、`webapp.public_url`）でも同じです。
+
+このファイルはコンピューターに属するもので、ゲートウェイへの接続やプロファイルに属するものではありません。リモートのゲートウェイや、いくつものゲートウェイにつないだデスクトップアプリも、自分のコンピューターの設定を使い続けます。もともとプロファイルごとの設定（あるプロファイル用に選んだテーマなど）は、ファイルの中でもプロファイルごとのままです。認証情報、サインイン、許可した権限、下書き、ウィンドウごとの状態（開いているタブ、ペインの配置、スクロール位置、拡大率）はこのファイルには書き込まれず、それぞれのウィンドウやブラウザに残ります。アプリやブラウザが初めてこのファイルに出会ったとき（あるいはファイルが見つからなかったとき）は、自分が持っていてファイルにない設定を書き加え、ファイルにすでにある値はそのまま採用します。既存の値を上書きすることはなく、ファイルにないからといって手元の設定が消されることもありません。アプリやブラウザが自分で補った既定値（たとえば `voice.auto_tts` から引き継いだ読み上げ）は書き加えられないので、別の場所で選んだ設定を置き換えてしまうことはありません。ファイルが壊れた場合は、新しいファイルの隣に `ui-preferences.json.corrupt-<timestamp>` として残され、開いているすべてのウィンドウとタブが自分の設定を新しいファイルへ書き戻します。ファイルはあるのに読めない場合（たとえばパーミッションが変わったとき）は、変更はそれぞれのウィンドウで保留され、読めるようになった時点で保存されます。
+
 #### プロファイルごとの設定: 「Applies to」の範囲 {#per-profile-settings-the-applies-to-scope}
 
 [プロファイル](/hermes/docs/user-guide/profiles/)が2つ以上あるとき、設定ファイルに書き込まれる設定ページ（**Model、Workspace、Safety、Memory & Context、Voice、Chat、Advanced、Tools & Keys**）に加えて、**Providers → Custom Endpoints** と **Messaging** のオーバーレイには、共通の **Applies to** のチップ列が上部に出ます。ここで、編集がどのプロファイルに向かうかを選びます。
@@ -541,17 +547,19 @@ hermes config set desktop.manage_launcher_entry false
 cat >> ~/.hermes/.env <<'EOF'
 HERMES_DASHBOARD_BASIC_AUTH_USERNAME=admin
 HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=choose-a-strong-password
+EOF
 # Recommended: a stable signing secret so sessions survive restarts.
 # Without it a random key is generated per boot and you'll be logged out
-# on every restart.
-HERMES_DASHBOARD_BASIC_AUTH_SECRET=$(openssl rand -base64 32)
-EOF
+# on every restart. This runs openssl, so the secret is unique to you.
+echo "HERMES_DASHBOARD_BASIC_AUTH_SECRET=$(openssl rand -base64 32)" >> ~/.hermes/.env
 chmod 600 ~/.hermes/.env
 
 # 2. Run the backend bound to a reachable address. The non-loopback bind
 #    engages the auth gate; the username/password provider handles login.
 hermes serve --host 0.0.0.0 --port 9119
 ```
+
+以前のこの手順では、シークレットの行を引用符付きのヒアドキュメントの中に書いていたため、ランダムな値ではなく `$(openssl rand -base64 32)` という文字列そのものが保存されていました。`grep BASIC_AUTH_SECRET ~/.hermes/.env` でその文字列が表示された場合は、その行を新しく生成したシークレットに置き換えて、バックエンドを再起動してください。
 
 デスクトップアプリからつなげるようにしておきたい間は、その `hermes serve` のプロセスを動かし続けてください。止まれば、アプリはバックエンドに届かなくなります。`systemd`、`tmux`、あるいは好きなプロセス管理の仕組みの下で動かし、ログアウトや再起動をまたいでも残るようにしてください。
 
@@ -620,6 +628,14 @@ SHA の固定）と import の許可リストであって、隔離ではあり�
 `register()` が例外を投げたプラグインは巻き戻され、その行にエラーとともに **Failed** と表示されます。
 **⌘K → Reload desktop plugins** は、導入済みの `plugin.js` をすべて読み直します。
 インストーラーがその場で置き換えたものも含みます。
+
+[Webapp](#use-the-desktop-workspace-from-a-browser) は、それを配信するホストに導入されたデスクトップのプラグインを、
+タブがどのプロファイルにあっても、そのホストの Hermes のルートにある `desktop-plugins` フォルダから読み込みます。
+プラグインのフォルダを追加・削除すると数秒で反映されます。編集した `plugin.js` は、ブラウザからはホストのファイルを
+監視できないため、**⌘K → Reload desktop plugins** で読み込まれます。エージェントとデスクトップが一体になったパッケージのデスクトップ側は、
+そのホストのネイティブの Desktop がフォルダへ複製した時点で現れます。
+デスクトップのプラグインの導入と削除は、ネイティブの Desktop から行うか、フォルダを直接操作してください。プラグインのフォルダへの
+アクセス（`ctx.files`）はブラウザでは使えません。
 
 **Capabilities → Plugins** は、Hermes を拡張するものすべてを扱う唯一の場所です。
 **プラグイン1つにつき1行**で、スイッチの列が2つあります。
@@ -736,6 +752,10 @@ hermes logs gui -f
 ブートストラップの目印のファイルが無くても、インストールをやり直すことはありません。
 
 Linux では、Chromium 自身のエラーは `HERMES_HOME/logs/desktop-chromium.log` に出ます。シェル自体が落ちた場合は、アプリの `Crashpad/` ディレクトリ（Electron のユーザーデータのディレクトリの中、`connection.json` の隣）にミニダンプが残ります。ウィンドウが消え、ジャーナルに `SIGTRAP` が出ているなら、そのログの `FATAL:` の行が、どのチェックが発火したかを示します。バグ報告に添えてください。どこにもアップロードされません。
+
+Ubuntu 23.10 以降では、`kernel.apparmor_restrict_unprivileged_userns=1` のせいで、AppArmor のプロファイルを持たないプログラムでは Chromium のユーザー名前空間のサンドボックスが使えません。`hermes desktop` は Hermes のバイナリ自体を通してこれを確かめ、そのうえで Chromium の setuid ヘルパー `chrome-sandbox`（root 所有、モード 4755）を使います。このヘルパーは、ビルドし直すたびに改めて `sudo` を求めます。おすすめはこのヘルパーを使う方法です。ヘルパーも用意できない場合、Desktop は `--no-sandbox` で起動し、ランチャーが両方のコマンドを、ヘルパーのほうを先にして表示します。
+
+`hermes desktop --install-apparmor-profile` は、ビルドし直しても効き続ける代わりの方法で、使うかどうかは自分で選びます。`/etc/apparmor.d/` の下に、このアプリのパスにユーザー名前空間を許すプロファイルを導入します（sudo が必要です）。Chrome や VS Code も同じ許可を受けていますが、それは root 所有のバイナリに対してです。このアプリのパスはたいてい自分のアカウントで書き込めるチェックアウトの中にあるので、自分の権限で動くプログラムなら、どれでもそこに自前のバイナリを置いて、この制限が差し止めているユーザー名前空間を手に入れられます。自分のアカウントにとっては、制限を切るのとほぼ同じです。このコマンドは、AppArmor のパターン文字（`? * [ ] { } ^ " \` と表示できない文字。apparmor.d(5) の "Globbing" を参照）を含む導入先のパスを受け付けません。何かを書き込む前に `apparmor_parser --skip-kernel-load` でプロファイルを検査し、読み込みに失敗した場合はファイルを削除して元に戻します。
 
 Python の依存関係が壊れた場合は、そのインストールの `hermes pm repair` を実行してください。
 そのあとデスクトップを再起動します。当て推量の `venv` のパスや PM の記録を消さないでください。

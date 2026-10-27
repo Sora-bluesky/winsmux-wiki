@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: a4dc957b0862291e4dbf90cf6479591761092f84
+upstream_blob: 237ea018e25acb2f2c92a902b7f7b777e87bc536
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -1158,15 +1158,18 @@ Hermes デスクトップ版は、別の端末（VPS、自宅のサーバー、T
 cat >> ~/.hermes/.env <<'EOF'
 HERMES_DASHBOARD_BASIC_AUTH_USERNAME=admin
 HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=choose-a-strong-password
-# Recommended: a stable signing secret so sessions survive restarts.
-HERMES_DASHBOARD_BASIC_AUTH_SECRET=$(openssl rand -base64 32)
 EOF
+# Recommended: a stable signing secret so sessions survive restarts.
+# This runs openssl, so the secret is unique to you.
+echo "HERMES_DASHBOARD_BASIC_AUTH_SECRET=$(openssl rand -base64 32)" >> ~/.hermes/.env
 chmod 600 ~/.hermes/.env
 
 # 2. Run the dashboard bound to a reachable address. The non-loopback bind
 #    engages the auth gate; the username/password provider handles login.
 hermes dashboard --no-open --host 0.0.0.0 --port 9119
 ```
+
+この手順の以前の版では、秘密の行を引用符付きのヒアドキュメントの中に書いていました。そのため、ランダムな値ではなく `$(openssl rand -base64 32)` という文字列がそのまま保存されてしまいます。`grep BASIC_AUTH_SECRET ~/.hermes/.env` でこの文字列が出てきたら、その行を新しく生成した秘密に置き換えて、管理画面を再起動してください。
 
 そのままの文字を残したくないなら、代わりに `HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH` に scrypt のハッシュを入れてください。設定できる項目の全体は[利用者名とパスワードのしくみ](#usernamepassword-provider-no-oauth-idp)を参照してください。
 

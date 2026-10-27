@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 211 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `1ae3c55`（2026-10-26）時点。この一覧は上流の docs から機械生成しています。
+上流 `7ee6d99`（2026-10-27）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（58）
 
@@ -223,7 +223,7 @@ raw: /hermes/raw/skills.md
 | [Godmode](/hermes/docs/user-guide/skills/optional/security/security-godmode/) | Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN | 2026-09-20 |
 | [Oss Forensics](/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/) | GitHub supply-chain forensics: recovery, IOCs, reporting | 2026-09-20 |
 | [Sherlock](/hermes/docs/user-guide/skills/optional/security/security-sherlock/) | Find accounts for a username across 400+ platforms | 2026-09-20 |
-| [Unbroker](/hermes/docs/user-guide/skills/optional/security/security-unbroker/) | Autonomously remove your info from data-broker sites | 2026-10-23 |
+| [Unbroker](/hermes/docs/user-guide/skills/optional/security/security-unbroker/) | Remove your info from data-broker sites, by name or phone | 2026-10-27 |
 | [Web Pentest](/hermes/docs/user-guide/skills/optional/security/security-web-pentest/) | Authorized web pentest: recon, proof-based exploits, report | 2026-10-23 |
 | [Openhue](/hermes/docs/user-guide/skills/optional/smart-home/smart-home-openhue/) | Control Philips Hue lights, scenes, rooms via OpenHue CLI | 2026-09-20 |
 | [Reddit Reading](/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/) | Read Reddit: subreddits, search, threads, users | 2026-10-23 |

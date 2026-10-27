@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: 835f842e326c928dbbc8884a88776af5ed63e182
+upstream_blob: 5351974c7412241c66f07e8bab981b9df5fd3e22
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -251,7 +251,7 @@ hermes skills uninstall <skill-name>
 | [**godmode**](/hermes/docs/user-guide/skills/optional/security/security-godmode/) | LLM の制限を外します。Parseltongue、GODMODE、ULTRAPLINIAN。 |
 | [**oss-forensics**](/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/) | GitHub のサプライチェーン調査。復旧、侵害の痕跡、報告書の作成。 |
 | [**sherlock**](/hermes/docs/user-guide/skills/optional/security/security-sherlock/) | あるユーザー名のアカウントを 400 以上のサービスから探します。 |
-| [**unbroker**](/hermes/docs/user-guide/skills/optional/security/security-unbroker/) | 名簿業者のサイトから、自分の情報を自動で削除させます。 |
+| [**unbroker**](/hermes/docs/user-guide/skills/optional/security/security-unbroker/) | 名前や電話番号をもとに、名簿業者のサイトから自分の情報を削除させます。 |
 | [**web-pentest**](/hermes/docs/user-guide/skills/optional/security/security-web-pentest/) | 許可を得たうえでのウェブ侵入テスト。調査、証拠付きの実証、報告まで。 |
 
 ## smart-home {#smart-home}

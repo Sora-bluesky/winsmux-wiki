@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: 5517c3ff95c6452acacd92ed3fc71e657f313767
+upstream_blob: 04b04008f85238372e543f3d4244de529d6a4c28
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -178,6 +178,33 @@ dashboard:
 :::
 
 ダッシュボードを別のコンテナで動かすこと**は**できますが、そのコンテナがホストの PID と ネットワークの名前空間を共有している必要があります（たとえば `network_mode: host`。リポジトリ自身の `docker-compose.yml` の `dashboard` サービスがそうしています）。ゲートウェイが生きているかどうかの検出には、ゲートウェイのプロセスと PID の名前空間を共有していることが要るので、この制限が当てはまるのは、PID の名前空間を共有しないブリッジネットワークの独立したコンテナで動かすダッシュボードだけです。
+
+## Webapp を動かす {#running-the-webapp}
+
+イメージには [Webapp](/hermes/docs/user-guide/desktop/)（ブラウザで使う Hermes デスクトップ）がビルド済みで入っています。マウントした `config.yaml` で有効にすると、ゲートウェイが専用のポートでこれを配信します（[設定 → Webapp](/hermes/docs/user-guide/configuration/#webapp)を参照してください）。
+
+```yaml
+webapp:
+  enabled: true
+  host: 0.0.0.0
+  port: 9120
+  public_url: "http://localhost:9120"  # the address your browser opens
+```
+
+ダッシュボードのときと同じように、ポートを公開し、サインインの提供元を設定します。
+
+```sh
+docker run -d \
+  --name hermes \
+  --restart unless-stopped \
+  -v ~/.hermes:/opt/data \
+  -p 9120:9120 \
+  -e HERMES_DASHBOARD_BASIC_AUTH_USERNAME=admin \
+  -e HERMES_DASHBOARD_BASIC_AUTH_PASSWORD="$(openssl rand -hex 16)" \
+  nousresearch/hermes-agent gateway run
+```
+
+`host` がループバック以外のアドレスなら、[ダッシュボードの認証の提供元](#running-the-dashboard)のどれか 1 つが必要です。提供元がないと、待ち受けそのものが始まりません。`public_url` を設定しないと、コンテナの中で `hermes webapp` が表示するリンクは、公開したアドレスではなくコンテナ自身のアドレスになります。
 
 ## 対話的に動かす（CLI のチャット） {#running-interactively-cli-chat}
 
