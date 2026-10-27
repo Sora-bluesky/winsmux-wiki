@@ -8,6 +8,30 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-27
+
+- [プロバイダーを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-providers/)
+- [設定バックエンドの境界（seam）](https://wiki.winsmux.dev/hermes/docs/developer-guide/config-backend/)
+- [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- [実行時のプロバイダー解決](https://wiki.winsmux.dev/hermes/docs/developer-guide/provider-runtime/)
+- [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
+- [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [モデルカタログ](https://wiki.winsmux.dev/hermes/docs/reference/model-catalog/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [フォールバックプロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/fallback-providers/)
+- [契約の中継サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/subscription-proxy/)
+- [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
+- [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
+- [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
+- [セッション保存領域の復旧](https://wiki.winsmux.dev/hermes/docs/user-guide/session-storage-recovery/)
+
 ## 2026-10-26
 
 - [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)

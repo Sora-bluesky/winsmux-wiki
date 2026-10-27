@@ -2,6 +2,118 @@
   "generatedAt": "2026-10-27",
   "entries": [
     {
+      "date": "2026-10-27",
+      "sha": "86d85f9",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/adding-providers",
+          "title": "プロバイダーを追加する",
+          "url": "/hermes/docs/developer-guide/adding-providers/"
+        },
+        {
+          "id": "developer-guide/config-backend",
+          "title": "設定バックエンドの境界（seam）",
+          "url": "/hermes/docs/developer-guide/config-backend/"
+        },
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/model-provider-plugin",
+          "title": "モデルプロバイダーのプラグイン",
+          "url": "/hermes/docs/developer-guide/model-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/provider-runtime",
+          "title": "実行時のプロバイダー解決",
+          "url": "/hermes/docs/developer-guide/provider-runtime/"
+        },
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "getting-started/quickstart",
+          "title": "Hermes Agent クイックスタート",
+          "url": "/hermes/docs/getting-started/quickstart/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/model-catalog",
+          "title": "モデルカタログ",
+          "url": "/hermes/docs/reference/model-catalog/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
+          "id": "user-guide/features/subscription-proxy",
+          "title": "契約の中継サーバー",
+          "url": "/hermes/docs/user-guide/features/subscription-proxy/"
+        },
+        {
+          "id": "user-guide/features/tts",
+          "title": "音声と読み上げ",
+          "url": "/hermes/docs/user-guide/features/tts/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        },
+        {
+          "id": "user-guide/session-storage-recovery",
+          "title": "セッション保存領域の復旧",
+          "url": "/hermes/docs/user-guide/session-storage-recovery/"
+        }
+      ]
+    },
+    {
       "date": "2026-10-26",
       "sha": "0800a2e",
       "upstream": null,
