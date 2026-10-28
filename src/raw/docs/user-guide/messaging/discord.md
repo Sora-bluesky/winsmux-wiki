@@ -2,7 +2,7 @@
 title: "Discord"
 description: "Hermes Agent を Discord のボットとして設定する"
 upstream_path: user-guide/messaging/discord.md
-upstream_blob: 8cd322ca9f559f3b36000abab367ca772ce181ac
+upstream_blob: 87b45133c7674cc4383e5fae704146116ce81710
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/discord
 ---
@@ -786,6 +786,26 @@ discord:
 ### 問い合わせの見た目 {#prompt-layout}
 
 対話形式の問い合わせ（コマンドの承認、`clarify` の質問、スラッシュコマンドの確認）は、同じ見た目を共有します。**ふつうのメッセージ**が中身をすべて持ち — コマンドと、それが確認対象になった理由、承認の期限、あるいは質問と返信のしかた — その下の**埋め込みカード**は見出しだけで、ボタンはカードの下に並びます。判断に必要なものはすべて本文にあるので、埋め込みを隠したり切り離したりする環境でも問い合わせは正しく読めますし、埋め込みを表示する環境でも同じ内容が二度出ることはありません。
+
+`approvals.discord_prompt_timeout` は、コマンドの承認、確認の質問、更新の問い合わせ、
+スラッシュコマンドの確認で Discord に表示されるボタンを、どれだけの時間押せるようにしておくかを決めます。
+既定は 300 秒で、最小は 30 秒です。上限は `approvals.timeout` と同じく、
+プラットフォームで問題なく扱える値までです。
+
+これとは別に、`approvals.timeout` は、コマンドが承認をどれだけ待つかを決めます。
+コマンドの待ち時間と Discord のボタンの両方を 1 時間にするには、使っているプロファイルの
+`config.yaml` で両方を設定します。
+
+```yaml
+approvals:
+  timeout: 3600
+  discord_prompt_timeout: 3600
+```
+
+コマンド承認のカードは、それぞれ自分の承認依頼にだけ対応します。その依頼が承認・却下された、
+取り消された、または期限切れになった時点で、Discord 側の表示時間がまだ残っていても、カードのボタンは使えなくなります。
+Discord 側の時間のほうが短い場合は、ボタンが使えなくなるだけで、
+承認の待ち時間そのものが延びたり打ち切られたりすることはありません。
 
 ## ホームチャンネル {#home-channel}
 

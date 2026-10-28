@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: b8c2384cfb5e259f53c8a9e060e14b7e1e97f406
+upstream_blob: c1de9ee675efe88893c8b85613bdca37b7575668
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -633,7 +633,7 @@ SHA の固定）と import の許可リストであって、隔離ではあり�
 タブがどのプロファイルにあっても、そのホストの Hermes のルートにある `desktop-plugins` フォルダから読み込みます。
 プラグインのフォルダを追加・削除すると数秒で反映されます。編集した `plugin.js` は、ブラウザからはホストのファイルを
 監視できないため、**⌘K → Reload desktop plugins** で読み込まれます。エージェントとデスクトップが一体になったパッケージのデスクトップ側は、
-そのホストのネイティブの Desktop がフォルダへ複製した時点で現れます。
+ホスト自身がフォルダへ複製するので、ネイティブの Desktop を一度も動かさない画面のないホストでも現れます。
 デスクトップのプラグインの導入と削除は、ネイティブの Desktop から行うか、フォルダを直接操作してください。プラグインのフォルダへの
 アクセス（`ctx.files`）はブラウザでは使えません。
 

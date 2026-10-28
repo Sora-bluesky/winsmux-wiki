@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: 6e315619f22387697b0aaad59cd4afb60ee54435
+upstream_blob: d59dca2c3a799730a32b2540cf0d508c4cf0a81c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -278,7 +278,7 @@ hermes cron tick
 
 - `pause` — ジョブは残したまま、予約するのをやめます
 - `resume` — ジョブをふたたび有効にします。一時停止している間に実行時刻が来ていた繰り返しジョブは、その枠を実行待ちのまま保つので、次の tick で埋め合わせの実行が 1 回だけ走ります（`cron.catch_up_missed: false` のときは飛ばした記録を残します）。黙って次の実行時刻へ進んでしまうことはありません。それ以外の場合は、次の実行時刻を計算します
-- `run` — 次のスケジューラーの tick でジョブを発火させます
+- `run` — 次のスケジューラーの tick でジョブを発火させます。手で実行した分は追加の発火として扱われます。予定どおりの実行はそのまま行われ、`repeat` の回数も減りません。そのため、`in 30m` のリマインダーを試しに発火させても、本来のリマインダーはなくなりません（すでに実行時刻を迎えている枠で手動実行した場合は、それが予定どおりの実行そのものになります）
 - `remove` — まるごと削除します
 - `edit` — 予定・プロンプト・配信などを変えます
 - `tick` — スケジューラーの処理を 1 回だけ回して終了します（システムの crontab やほかの外部スケジューラー向けです）。

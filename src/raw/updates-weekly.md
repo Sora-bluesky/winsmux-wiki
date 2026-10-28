@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-10-28、対象期間 = 2026-10-22 〜 2026-10-28（JST）
+生成日 = 2026-10-29、対象期間 = 2026-10-23 〜 2026-10-29（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,9 +16,16 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-10-28 [設定バックエンドの境界（seam）](https://wiki.winsmux.dev/hermes/docs/developer-guide/config-backend/)
+- 2026-10-28 [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
+- 2026-10-28 [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- 2026-10-28 [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
+- 2026-10-28 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- 2026-10-28 [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
+- 2026-10-28 [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- 2026-10-28 [Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
 - 2026-10-27 [A2A（エージェント間連携）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/a2a/)
 - 2026-10-27 [プロバイダーを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-providers/)
-- 2026-10-27 [設定バックエンドの境界（seam）](https://wiki.winsmux.dev/hermes/docs/developer-guide/config-backend/)
 - 2026-10-27 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
 - 2026-10-27 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
 - 2026-10-27 [実行時のプロバイダー解決](https://wiki.winsmux.dev/hermes/docs/developer-guide/provider-runtime/)
@@ -27,10 +34,8 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-27 [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
 - 2026-10-27 [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 - 2026-10-27 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
-- 2026-10-27 [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
 - 2026-10-27 [モデルカタログ](https://wiki.winsmux.dev/hermes/docs/reference/model-catalog/)
 - 2026-10-27 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
-- 2026-10-27 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
 - 2026-10-27 [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
 - 2026-10-27 [フォールバックプロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/fallback-providers/)
 - 2026-10-27 [契約の中継サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/subscription-proxy/)
@@ -55,7 +60,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-26 [軌跡の形式](https://wiki.winsmux.dev/hermes/docs/developer-guide/trajectory-format/)
 - 2026-10-26 [動画生成プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/video-gen-provider-plugin/)
 - 2026-10-26 [ウェブ検索プロバイダのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/web-search-provider-plugin/)
-- 2026-10-26 [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
 - 2026-10-26 [cron であらゆる作業を自動化する](https://wiki.winsmux.dev/hermes/docs/guides/automate-with-cron/)
 - 2026-10-26 [自動化の型紙](https://wiki.winsmux.dev/hermes/docs/guides/automation-blueprints/)
 - 2026-10-26 [委任と並行作業](https://wiki.winsmux.dev/hermes/docs/guides/delegation-patterns/)
@@ -135,7 +139,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-24 [外部サービス連携](https://wiki.winsmux.dev/hermes/docs/integrations/)
 - 2026-10-24 [Nous Portal](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 - 2026-10-24 [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
-- 2026-10-24 [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
 - 2026-10-24 [ACP ホスト連携](https://wiki.winsmux.dev/hermes/docs/user-guide/features/acp/)
 - 2026-10-24 [API サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
 - 2026-10-24 [ボットの画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/bot-screen/)
@@ -162,23 +165,18 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-24 [Lbo Model — IRR / MOIC 付きの LBO ワークブックを Excel で作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/finance/finance-lbo-model/)
 - 2026-10-24 [Merger Model — M&A の EPS 増加・希薄化ワークブックを Excel で作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/finance/finance-merger-model/)
 - 2026-10-24 [Live Dashboard — 生の情報源から、自動で更新されるダッシュボードを作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/)
-- 2026-10-24 [Unbroker — データブローカーサイトから自分の情報を自動で削除する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
 - 2026-10-24 [Web Pentest — 許可を得た Web ペンテスト: 偵察、証拠ベースの攻撃、レポート](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-web-pentest/)
 - 2026-10-24 [Reddit Reading — Reddit を読む。サブレディット、検索、スレッド、ユーザー](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/)
 - 2026-10-24 [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
 - 2026-10-23 [公開されたサブエージェントのライフサイクル API](https://wiki.winsmux.dev/hermes/docs/developer-guide/subagent-lifecycle-api/)
 - 2026-10-23 [OpenClaw から移ってくる](https://wiki.winsmux.dev/hermes/docs/guides/migrate-from-openclaw/)
 - 2026-10-23 [コツとベストプラクティス](https://wiki.winsmux.dev/hermes/docs/guides/tips/)
-- 2026-10-23 [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
 - 2026-10-23 [チェックポイントと /rollback](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
 - 2026-10-23 [まとめて処理する](https://wiki.winsmux.dev/hermes/docs/user-guide/features/batch-processing/)
 - 2026-10-23 [コンピュータ操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/computer-use/)
 - 2026-10-23 [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
 - 2026-10-23 [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
 - 2026-10-23 [user-guide/skills/optional/migration/migration-openclaw-migration](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/migration/migration-openclaw-migration/)
-- 2026-10-22 [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
-- 2026-10-22 [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
-- 2026-10-22 [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
 
 ## 週次まとめ
 

@@ -8,6 +8,17 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-28
+
+- [設定バックエンドの境界（seam）](https://wiki.winsmux.dev/hermes/docs/developer-guide/config-backend/)
+- [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
+- [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- [Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
+
 ## 2026-10-27
 
 - [A2A（エージェント間連携）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/a2a/)
@@ -194,7 +205,7 @@ raw: /hermes/raw/updates.md
 - [Lbo Model — IRR / MOIC 付きの LBO ワークブックを Excel で作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/finance/finance-lbo-model/)
 - [Merger Model — M&A の EPS 増加・希薄化ワークブックを Excel で作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/finance/finance-merger-model/)
 - [Live Dashboard — 生の情報源から、自動で更新されるダッシュボードを作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/)
-- [Unbroker — データブローカーサイトから自分の情報を自動で削除する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
+- [Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
 - [Web Pentest — 許可を得た Web ペンテスト: 偵察、証拠ベースの攻撃、レポート](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-web-pentest/)
 - [Reddit Reading — Reddit を読む。サブレディット、検索、スレッド、ユーザー](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/)
 - [Har Derived Api Client — サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client/)
@@ -1399,7 +1410,7 @@ raw: /hermes/raw/updates.md
 - [Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-godmode/)
 - [Oss Forensics — GitHub サプライチェーンのフォレンジック: 復元・IOC・報告](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/)
 - [Sherlock — 400 以上のサービスからユーザー名でアカウントを探す](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-sherlock/)
-- [Unbroker — データブローカーサイトから自分の情報を自動で削除する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
+- [Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
 - [Web Pentest — 許可を得た Web ペンテスト: 偵察、証拠ベースの攻撃、レポート](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-web-pentest/)
 - [Openhue — OpenHue CLI で Philips Hue の照明・シーン・部屋を操作する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/smart-home/smart-home-openhue/)
 - [Reddit Reading — Reddit を読む。サブレディット、検索、スレッド、ユーザー](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/)
@@ -1683,7 +1694,7 @@ raw: /hermes/raw/updates.md
 - [Scrapling — 目立たないブラウザ操作と Cloudflare 回避でサイトを収集する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-scrapling/)
 - [Searxng Search — 70 以上の検索エンジンをまとめて引く、鍵の要らない無料の検索](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-searxng-search/)
 - [Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-godmode/)
-- [Unbroker — データブローカーサイトから自分の情報を自動で削除する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
+- [Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
 - [Reddit Reading — Reddit を読む。サブレディット、検索、スレッド、ユーザー](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/)
 - [Ast Grep — ast-grep で構文木を見ながらコードを検索・書き換えする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/)
 - [Code Wiki — どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/)
@@ -2521,7 +2532,7 @@ raw: /hermes/raw/updates.md
 - [Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-godmode/)
 - [Oss Forensics — GitHub サプライチェーンのフォレンジック: 復元・IOC・報告](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/)
 - [Sherlock — 400 以上のサービスからユーザー名でアカウントを探す](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-sherlock/)
-- [Unbroker — データブローカーサイトから自分の情報を自動で削除する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
+- [Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-unbroker/)
 - [Web Pentest — 許可を得た Web ペンテスト: 偵察、証拠ベースの攻撃、レポート](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-web-pentest/)
 - [Openhue — OpenHue CLI で Philips Hue の照明・シーン・部屋を操作する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/smart-home/smart-home-openhue/)
 - [Ast Grep — ast-grep で構文木を見ながらコードを検索・書き換えする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/)

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 42ce5c71bad6397523cafbd36287340a9d3a8bdf
+upstream_blob: 81d1bfc3e16beab4b06420d128df17280af493b6
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -1045,8 +1045,23 @@ props は明示的な許可の一覧で、`ComponentProps<'iframe'>` ではあ�
 封じ込めです。外部の内容は、アプリにも、その保存領域にも、preload の橋渡しにも
 手が届きません。
 
+*Webapp（ブラウザーのタブ）:* ページの Content-Security-Policy は `data:` の文書にもかかってしまうため、
+`data:text/html` の src には直接移動せず、ゲートウェイのゲスト用の外枠
+（`/assets/webapp-guest.html`。独自のポリシーを持ち、生成元は同じく不透明で、サンドボックスのトークンも同じです）を
+通して描画します。スクリプトはネイティブの Desktop と同じように動きます。ゲストが `parent` に送ったメッセージは
+`event.source === ref.current.contentWindow` の状態で届き、そのウィンドウに送ったメッセージは
+ゲストに届きます。`onLoad` はゲストの文書が読み込まれたときに発火します（外枠が同じウィンドウから
+`{type: 'hermes-guest-loaded'}` のメッセージを 1 つ送ってそれを知らせるので、ゲストからのメッセージは
+種類で絞り込んでください）。送り先は `top` ではなく
+`parent` にしてください。外枠がその間に挟まっているからです。マウントのあとで `sandbox` を変えると、
+Webapp では枠が新しく作り直されます（`ref.current` が新しくなり、ゲストは新しいトークンで起動し直し、
+`onLoad` がもう一度発火します）。そのため、最初の枠を持ち続けるのではなく、枠が必要になったときに
+`ref.current` を読んでください。ネイティブの Desktop で直接置いた枠は、要素とその時点の文書を保ったままで、
+新しいトークンは次の移動から効きます。
+
 *後片付け:* ただの React の要素です。ペインやページをアンマウントすれば、枠とその実行環境が
-消えます。アプリ側には何も登録されません。
+消えます。アプリ側にはこのために何も登録されません（Webapp はゲスト用の外枠を 1 つの共有のリスナーで
+振り分けていて、そのリスナーは枠を弱い参照でしか持ちません）。
 
 **rss-reader** (#115972) の移行: 仮置きの `/preview` → 501 →
 `host.openWorkspace('rss-browser')` → 空の `RssBrowserFrame` → `ctx.os.openExternal`

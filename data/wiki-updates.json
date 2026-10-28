@@ -1,6 +1,53 @@
 {
-  "generatedAt": "2026-10-28",
+  "generatedAt": "2026-10-29",
   "entries": [
+    {
+      "date": "2026-10-28",
+      "sha": "e6e4df6",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/config-backend",
+          "title": "設定バックエンドの境界（seam）",
+          "url": "/hermes/docs/developer-guide/config-backend/"
+        },
+        {
+          "id": "getting-started/nix-setup",
+          "title": "Nix と NixOS のセットアップ",
+          "url": "/hermes/docs/getting-started/nix-setup/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/optional-skills-catalog",
+          "title": "オプションスキルの一覧",
+          "url": "/hermes/docs/reference/optional-skills-catalog/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/docker",
+          "title": "Hermes の Docker 設定",
+          "url": "/hermes/docs/user-guide/docker/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/skills/optional/security/security-unbroker",
+          "title": "Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）",
+          "url": "/hermes/docs/user-guide/skills/optional/security/security-unbroker/"
+        }
+      ]
+    },
     {
       "date": "2026-10-27",
       "sha": "b07f992",
@@ -896,7 +943,7 @@
         },
         {
           "id": "user-guide/skills/optional/security/security-unbroker",
-          "title": "Unbroker — データブローカーサイトから自分の情報を自動で削除する",
+          "title": "Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）",
           "url": "/hermes/docs/user-guide/skills/optional/security/security-unbroker/"
         },
         {
@@ -6617,7 +6664,7 @@
         },
         {
           "id": "user-guide/skills/optional/security/security-unbroker",
-          "title": "Unbroker — データブローカーサイトから自分の情報を自動で削除する",
+          "title": "Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）",
           "url": "/hermes/docs/user-guide/skills/optional/security/security-unbroker/"
         },
         {
@@ -8021,7 +8068,7 @@
         },
         {
           "id": "user-guide/skills/optional/security/security-unbroker",
-          "title": "Unbroker — データブローカーサイトから自分の情報を自動で削除する",
+          "title": "Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）",
           "url": "/hermes/docs/user-guide/skills/optional/security/security-unbroker/"
         },
         {
@@ -12059,7 +12106,7 @@
         },
         {
           "id": "user-guide/skills/optional/security/security-unbroker",
-          "title": "Unbroker — データブローカーサイトから自分の情報を自動で削除する",
+          "title": "Unbroker — データブローカーサイトから自分の情報を削除する（氏名または電話番号から）",
           "url": "/hermes/docs/user-guide/skills/optional/security/security-unbroker/"
         },
         {

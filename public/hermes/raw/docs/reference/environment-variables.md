@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: aba60dadc4e228696d153883a378a8402af5d85d
+upstream_blob: 736aeba849aef0cb6e1cdee6c986d6de2555a9c6
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -123,6 +123,9 @@ Hermes は環境変数をプロセスの環境から読み、利用者が管理�
 | `HERMES_LOCAL_STT_COMMAND` | 手元で音声認識をするコマンドの雛形（任意）。`{input_path}`、`{output_dir}`、`{language}`、`{model}` を差し込めます |
 | `HERMES_LOCAL_STT_LANGUAGE` | 音声認識で使う既定の言語のヒント。`config.yaml` に提供元ごとの `language` を設定していないとき、`local`（faster-whisper）の提供元、`HERMES_LOCAL_STT_COMMAND`、手元の `whisper` CLI への切り替え（既定: `en`）、Groq、xAI が使います |
 | `HERMES_HOME` | 設定と利用者データを置くホームを選びます。値の中の `~` や `$VAR` は展開されるので（fish は `VAR=~/…` の中の `~` を展開しません）、現在のディレクトリからの相対にはなりません。既定は POSIX では `~/.hermes`、Windows では `%LOCALAPPDATA%\hermes` で、公式の Docker イメージは `/opt/data` を使います。プロファイルや実行時の状況によって、より個別のホームが選ばれることもあります。 |
+| `HERMES_CONFIG_BACKEND` | プロファイルの `config.yaml` のうち、利用者が設定する層をどこで読み書きするかを選びます。`file`（既定）は手元の `config.yaml`、`remote` は [Remote Config](/hermes/docs/user-guide/remote-config/) です。これ以外の値を指定した場合や、リモートのバックエンドが設定を返せない場合、Hermes は既定値で代用せず、起動時にエラーを出して止まります。`.env` で明示的に空の値を指定すると、シェルに残っている古い値が `file` に戻ります。この値は起動時の環境、起動したホームの `.env`、管理用の `.env` から読み取り、`config.yaml` からは読みません。[設定のバックエンド](/hermes/docs/developer-guide/config-backend/) を参照してください。 |
+| `HERMES_CONFIG_REMOTE_URL` | [Remote Config](/hermes/docs/user-guide/remote-config/) の配信基盤のベース URL です（既定は `https://config-config.nousresearch.com`。使えるのは `https://` だけで、素の `http://` はループバック宛てに限ります。URL にユーザー情報は含められません）。設定をどこから取ってくるかを示すもので、どの設定よりも先に必要になるため、環境変数になっています。 |
+| `HERMES_CONFIG_INSTANCE_ID` | [Remote Config](/hermes/docs/user-guide/remote-config/) の配信基盤における、このエージェントの ID です。`HERMES_CONFIG_BACKEND=remote` のときは必須です。最初に設定を読み込む時点で配信基盤がこの ID を必要とするため、環境変数になっています。 |
 | `HERMES_DISABLE_WINDOWS_UTF8` | **Windows 専用。** `1` にすると UTF-8 の入出力の下駄（`configure_windows_stdio()`）を切り、コンソールのロケールのコードページに戻します。文字化けの原因を切り分けるときには便利ですが、ふだんの運用で正しい設定であることはまずありません |
 | `HERMES_KANBAN_HOME` | かんばんの盤（DB、作業場、ワーカーのログ）の土台になる共有の Hermes ルートを上書きします。指定が無ければ `get_default_hermes_root()`（有効なプロファイルの親）になります。テストや変わった構成で役に立ちます |
 | `HERMES_KANBAN_BOARD` | このプロセスで使うかんばんの盤を固定します。`~/.hermes/kanban/current` より優先されます。ディスパッチャーはこれをワーカーの子プロセスの環境に入れるので、ワーカーは物理的に別の盤のタスクを見られません。既定は `default` です。slug の条件は、小文字の英数字とハイフンとアンダースコアで 1〜64 文字です |

@@ -64,6 +64,9 @@
           "id": "user-guide/managed-scope"
         },
         {
+          "id": "user-guide/remote-config"
+        },
+        {
           "id": "user-guide/configuring-models"
         },
         {
@@ -1671,6 +1674,7 @@
     "user-guide/configuration",
     "user-guide/which-file-does-what",
     "user-guide/managed-scope",
+    "user-guide/remote-config",
     "user-guide/configuring-models",
     "user-guide/secrets/index",
     "user-guide/secrets/bitwarden",

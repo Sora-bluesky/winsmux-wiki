@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 2a47b33bdcb919a3e1cad3bd0dda4fba0379d741
+upstream_blob: 0d8585cb1a04ccbba5d07a5e2959da61dceee83c
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -542,7 +542,7 @@ hermes pm install chromium
 | `pm doctor` | インストール済みツールの識別情報、ファイル、ダイジェストをロックと照合します。 |
 | `pm repair` | 記録済みの Python 依存関係セットを新しい世代で作り直し、検証してから選択します。固定バージョン、機能、プラグインの設定は更新しません。 |
 | `pm status` | 最新の同期・更新の受領記録を JSON で出力します。受領記録が無ければ、その旨を表示します。 |
-| `pm gc` | 参照されていないツールストアのエントリ、削除できるダウンロードの部分ファイル、使われていないリース管理下の Python の世代、そして削除されたチェックアウトの `installs/INSTALL_KEY/` の状態を削除します（対象は、まだ存在する `.worktrees/` ディレクトリから取り除かれた worktree と、データのルートの下にあるクローンです。このプロセスから見えないチェックアウト、たとえばデータのルートを共有するコンテナから見たホスト側のインストールは残します。インストールのロックや世代のリースがまだ保持されている状態も残します）。起動時に走る worktree の掃除役も、そうして孤立した状態のディレクトリを回収します。 |
+| `pm gc` | 参照されていないツールストアのエントリ、削除できるダウンロードの部分ファイル、使われていないリース管理下の Python の世代、そして削除されたチェックアウトの `installs/INSTALL_KEY/` の状態を削除します（対象は、まだ存在する `.worktrees/` ディレクトリから取り除かれた worktree と、データのルートの下にあるクローンです。それ以外の場所で見つからなくなったチェックアウト、たとえばデータのルートを共有するコンテナから見たホスト側のインストールは、その状態が同期も起動もされないまま `worktrees.install_state_retention_days`（既定は 14、0 なら無期限）の日数を過ぎるまで残します。インストールのロックや世代のリースがまだ保持されている状態は、常に残します）。起動時に走る worktree の掃除役も、そうして孤立した状態のディレクトリを回収します。 |
 
 `pm env` は、認証情報を含め、親プロセスから引き継いだ変数を出力しません。それでも
 出力にはローカルのインストールパスが含まれることがあるので、共有する前に内容を確認してください。

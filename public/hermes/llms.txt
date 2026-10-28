@@ -274,6 +274,7 @@ Hermes Agent 0.22.5
 - [user-guide/multi-profile-gateways（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
 - [user-guide/profile-distributions（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/profile-distributions/)
 - [user-guide/profiles（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
+- [user-guide/remote-config（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/remote-config/)
 - [user-guide/secrets/bitwarden（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/bitwarden/)
 - [user-guide/secrets/command（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/command/)
 - [user-guide/secrets（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/)
@@ -748,6 +749,7 @@ Hermes Agent 0.22.5
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/multi-profile-gateways.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/profile-distributions.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/profiles.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/remote-config.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/secrets/bitwarden.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/secrets/command.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/secrets/index.md

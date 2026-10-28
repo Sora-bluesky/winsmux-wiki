@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 7f16af6e439fb5bf5fc762cbb67c15bdba4cd2fe
+upstream_blob: ffa5f10f8c0584a638bbf945ec9d5c634c7f704c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -459,6 +459,7 @@ def create_document(title: str) -> dict:
 | `python_dependencies` | list of str | 宣言した Python の要件（例: `"requests>=2.0,<3"`）。インストール時には同意を求める。有効化すると、既存の core・追加パッケージ・有効なプラグインの和集合とあわせて、候補を PM に受け入れる。準備が成功すると、環境と設定がトランザクションとして反映される。失敗したときは、以前の選択と有効なプラグインの集合がそのまま残る。同意しなかった場合、インストールしたプラグインは無効のままになる。上限を固定すること。 |
 | `python_runtime` | str | `external` — プラグインが自身のインタプリタ/venv を管理する（サイドカーパターン）。Hermes は何もインストールせず、既存の `pyproject.toml` にも触れない。 |
 | `config_schema` | mapping | `plugins.entries.<id>.settings` 以下のキーを記述する JSON-schema 風の説明: `api_url: {type: str, default: "", description: "...", required: false}`。読み込み時に検証され、不一致はキー名と期待する型を示す実用的な警告としてログに出る — 読み込みエラーにはならない。型は `str`、`int`、`float`、`bool`、`list`、`dict`（と JSON-schema の別名）、`secret`。Desktop の Plugins タブの設定フォームも駆動する — [Desktop の設定フォーム](#settings-form-in-the-desktop) を参照。 |
+| `config_keys` | list | プラグインのコードが読み取る、Hermes 自身の設定セクション内のドット区切りのパス（例: `memory.retaindb`）。各パスはそのパス自体と、その下にあるすべてのキーを対象にします。そのため `hermes config get/set` は、そのキーに「not a recognized config key」という警告を出さずに、正しいキーとして扱います。ただし、そうなるのはプラグインがアクティブなとき（有効化されているか、`memory.provider` で選ばれているとき）だけです。パスは少なくとも2階層の深さが必要です。また、Hermes がすでに定義しているパスは無視されるので、この宣言のせいでセクション内のほかの場所のタイプミスが見逃されることはありません。自分のプラグインだけで使う設定は `config_schema` に書いてください。この項目は、プラグインが読み取るコアのセクションに限って使います。ポータブルな `plugin.json` パッケージでは、`extensions."com.nousresearch.hermes".config_keys` の下に書きます。 |
 | `license` | str | SPDX 形式のライセンス id（例: `MIT`）。 |
 | `homepage` | str | プロジェクトの URL。 |
 | `tags` | list of str | 自由形式の発見用タグ（例: `[gateway, telegram]`）。 |

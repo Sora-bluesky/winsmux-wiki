@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 237ea018e25acb2f2c92a902b7f7b777e87bc536
+upstream_blob: 0600b755b0aa7bdb62c9a8dedf875f8914c9b19b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -857,6 +857,36 @@ curl -s http://<host>:9119/api/status | jq '.auth_required, .auth_providers'
 
 `basic` は、差し込みの口のひとつの実装にすぎません。どの差し込みでもパスワードのしくみを登録できます。`DashboardAuthProvider` を継いだクラスに `supports_password = True` を置き、`complete_password_login(*, username, password) -> Session` を書きます（断るときは `InvalidCredentialsError`、後ろの保管所が落ちているときは `ProviderError` を投げます）。パスワードだけのしくみなら、OAuth の `start_login` と `complete_login` は `NotImplementedError` のままで構いません。LDAP での照合、資格情報のデータベース、そのほか飛ばし合いを使わない認証の道は、ここから作れます。入力の面も、経路も、合鍵も、更新も、枠組みが引き受けてくれます。
 
+### 配備用セッショントークンのしくみ（トークンだけで動かす配備向け） {#deployment-session-token-provider-token-only-deployments}
+
+同梱の `plugins/dashboard_auth/session_token` の差し込みは、**配備用のセッショントークン**（`HERMES_DASHBOARD_SESSION_TOKEN`）を、関門のある形でそのまま使える正式な資格情報にします。秘密の管理の道具で配備している環境が、もともと用意している形です。共有のトークンが1つだけあり（nix/agenix は復号したファイルとして渡し、Nix のモジュールは `backend.sessionTokenFile` から `HERMES_DASHBOARD_SESSION_TOKEN=file:<path>` を設定します）、Hermes Desktop のリモートゲートウェイの **「Session token」** の欄がそれを差し出します。このしくみがなかったころは、トークンだけを用意して loopback 以外に割り当てると、安全側に閉じる関門に引っかかり、配備がそもそも求めていない basic 認証や OAuth の資格情報を運用者が用意させられていました。
+
+この環境変数が用意されていると、しくみはひとりでに登録され、`verify_session` が差し出された資格情報をそれと定時間で比べます。トークンの形で動くクライアントが使う2つの道、つまり REST の `Authorization: Bearer` の道と、`/api/ws` の `?token=` による切り替えの資格情報は、どちらもこの継ぎ目を通るので、用意したトークン1つで両方が許されます。**ブラウザでのサインインの流れはありません**。`/login` にはサインインのボタンの代わりに、資格情報をどこから渡すかを説明する覚え書きが出ます。また、自動の SSO の転送でこのしくみが選ばれることもありません。
+
+:::warning トークンはパスワードと同じように扱ってください
+用意したトークンを持っている人は、誰でも管理画面のすべてを使えます。トークンは秘密の管理の道具から用意し（Nix store のパスは決して使わないでください）、入れ替えるときは秘密を配備し直します。入れ替えると、クライアントに保存されている写しがすべて無効になり、新しいトークンを貼り付けるまで、Desktop では「HTTP は届くのに WebSocket が失敗する」という形で表れます。その後ろには利用者ごとの身元がありません。共有の配備やインターネットに向けた配備では、[Nous Research](#default-provider-nous-research) か[自前の OIDC](#self-hosted-oidc-provider) のしくみを選んでください。
+:::
+
+**有効にする条件と止め方。** 登録するかどうかは資格情報そのもので決まります。`HERMES_DASHBOARD_SESSION_TOKEN` が設定されるまで、このしくみは何もしません（環境変数が勝ちます。`file:<path>` は起動時に読まれ、ファイルがない・空のときははっきりとエラーで止まります）。トークンは内側だけで使い（loopback での SPA の利用や、デスクトップが立ち上げる裏方など）、関門の認証は basic 認証や OAuth で行いたい場合は、このしくみを止めてください。
+
+```yaml
+dashboard:
+  session_token_auth:
+    enabled: false
+```
+
+トークンで守られた配備は、どの端末からでも確かめられます。
+
+```bash
+curl -s http://<host>:9119/api/status | jq '.auth_required, .auth_providers'
+# true
+# ["session-token"]
+
+curl -s -o /dev/null -w '%{http_code}\n' \
+  -H "Authorization: Bearer $TOKEN" http://<host>:9119/api/auth/me
+# 200
+```
+
 ### 自前の OIDC のしくみ {#self-hosted-oidc-provider}
 
 自分で身元の基盤を動かしているなら、同梱の `plugins/dashboard_auth/self_hosted` の差し込みが、**標準の OpenID Connect** を使って管理画面をそこで認証します。基盤ごとの専用のコードも要らず、Nous Portal も関わりません。規格に沿った OIDC のサーバーで確かめられていて、どれでも動きます。
@@ -893,6 +923,8 @@ dashboard:
 身元の基盤の側では、認可コードと PKCE（S256）の方式を使う**公開の**アプリケーション（クライアント）を登録し、管理画面の戻り先を許される戻り先 URI に加えてください。戻り先は `<dashboard public URL>/auth/callback` です（proxy の後ろで管理画面がどう公開の URL を導くかは[公開 URL の上書き](#public-url-override)を参照）。
 
 #### 何を確かめているか {#what-it-verifies}
+
+サインインできるアカウントは、どれもマシンの持ち主であるあなたとして振る舞います。自前のログインのしくみを使うときは、身元の基盤の側でアプリを自分のアカウントだけに絞ってください（たとえば Okta のアプリの割り当て、Microsoft Entra の「Assignment required」、自分だけに限った Google Workspace のアプリなど）。そうしないと、これまでどおり、基盤が通した人は誰でもすべてを使えてしまいます。
 
 このしくみは、OpenID Connect の **ID トークン**（RS256 / ES256）を、見つけてきた `jwks_uri` に照らして確かめます。`iss` と `aud` の主張は、設定した `issuer` と `client_id` に釘付けにされます。時刻の主張（`exp`/`nbf`/`iat`）は、60 秒の時計のずれを許して確かめます（RFC 7519 §4.1.4-4.1.6）。そのため、時計が身元の基盤より遅れている管理画面のホストでもログインに失敗しません。この幅は `config.yaml` の `dashboard.oauth.self_hosted.id_token_leeway` で調整できます（`60` より小さい値で厳しくなり、`0` で厳密な検証に戻ります。不正な値は安全側に倒して `0` になります）。標準の OIDC の主張は、管理画面のセッションに次のように対応します。
 

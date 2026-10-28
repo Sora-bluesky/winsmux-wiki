@@ -2,7 +2,7 @@
 title: "Git ワークツリー"
 description: "git のワークツリーと独立したチェックアウトを使って、同じリポジトリで複数の Hermes エージェントを安全に動かします"
 upstream_path: user-guide/git-worktrees.md
-upstream_blob: 675f677f8f675f4db0869929f728a82af293a824
+upstream_blob: 96361e4920130c0f5360a0a560c4e1d29126cfdd
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/git-worktrees
 ---
@@ -255,6 +255,9 @@ worktrees:
   archive_max_file_mb: 50      # untracked files above this are not archived; their tree is kept
   archive_retention_days: 30   # 0 keeps archives forever
   max_total_gb: 0              # optional budget for idle trees; oldest are archived + removed first
+  install_state_retention_days: 14  # dependency state of a missing checkout outside .worktrees/ and
+                               # the data root, unused this long, is reclaimed; 0 keeps it forever.
+                               # Read from the root profile's config: its profiles share installs/
 ```
 
 ツリーの数に上限はありません。何百ものサブエージェントを並列で動かしても、それぞれが作業している

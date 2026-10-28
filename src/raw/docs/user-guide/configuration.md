@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 4a58d3d824b8730afe86c4d6e189d0099ffe262b
+upstream_blob: eaae3d8521cf8bcadffe7a76c40c8713ab18adad
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -2661,6 +2661,36 @@ group_sessions_per_user: true  # true = per-user isolation in groups/channels, f
 - スレッドは、どちらの設定でも親チャンネルから分離されたままです。`true` の場合は、スレッドの中でも参加者ごとに専用のセッションが作られます。
 
 動作の詳細と例については、[セッション](/hermes/docs/user-guide/sessions/) と [Discord ガイド](/hermes/docs/user-guide/messaging/discord/) を参照してください。
+
+## ネイティブのホスト型ルームでのディスカッションの上限 {#native-hosted-room-discussion-limits}
+
+サーバーがホストするネイティブのルームでは、各ディスカッションの中で、次のディスカッションの上限を
+すべてのメンバーが共有します。この上限は、サービスが所有するネイティブのホスト型ルームすべてに適用されます。
+Desktop のレンダラーが動かすルームや、ミラーされたルームには適用されません。
+
+```yaml
+hosted_rooms:
+  discussion:
+    max_rounds: 3      # Default maximum scheduling rounds per discussion
+    max_messages: 10   # Default total visible bot replies across all members
+```
+
+どちらのキーも省略できます。省略したキーには、これまでと互換性のある既定値
+（3ラウンド、10件の返信）が使われます。値は正の整数でなければなりません。`0`、負の値、
+`null`、真偽値、文字列（引用符で囲んだ数値や `"unlimited"` も含みます）、小数は
+受け付けません。無効な値はゲートウェイのログに警告を出したうえで無視され、
+既定値が使われます。そのため、書き間違えてもグループチャットが止まることはありません。たとえば
+`max_rounds: 6` と `max_messages: 30` を設定すると、上限を保ったままディスカッションの枠を広げられます
+（この場合、5人のメンバーがいるルームでも、10件の返信で止まらなくなります）。
+
+これらのキーは、ルームのストアを持つ Hermes ホーム（`shared-state.db` と同じ場所にあるルートのホーム）の
+`config.yaml` に設定してください。ルームの個々のメンバーのプロファイル設定に書くのではありません。
+ゲートウェイが提供するルームにも、Desktop/TUI のバックエンドが提供するルームにも同じように適用されます。
+各サーバープロセスはこれらの値を起動時に1回だけ読み込みます。変更したら、そのルームのストアを共有している
+プロセスをすべて再起動してください。
+
+これらはあくまで上限で、目標値でもなければ、タスクの完了を保証するものでもありません。ディスカッションは
+上限より早く終わることもあり、停止（Stop）や承認のゲートも引き続き有効です。
 
 ## 許可されていない DM への対応 {#unauthorized-dm-behavior}
 

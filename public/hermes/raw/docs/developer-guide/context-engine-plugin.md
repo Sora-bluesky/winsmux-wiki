@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コンテキストエンジンのプラグイン"
 description: "組み込みの ContextCompressor を置き換えるコンテキストエンジンのプラグインを作る方法"
 upstream_path: developer-guide/context-engine-plugin.md
-upstream_blob: 8ffc9822a03425565e4e05c79999f75cb71aa68d
+upstream_blob: 1fae25c8b207f02bdf7bb2d408d24c7a75973024
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-engine-plugin
 ---
@@ -283,6 +283,8 @@ def clone_for_agent(self):
 ```
 
 `on_session_reset()` は `/new` や `/reset` のときに呼ばれ、全体を落とさずにセッションごとの状態を消します。
+
+手動の `/compress` は、どの画面から実行しても（従来の CLI、TUI、Desktop、メッセージング、ACP）組み込みのコンプレッサーではなく、作ったエンジンの `compress()` を `force=True` と任意の焦点トピック付きで呼び出します。圧縮した履歴が確定すると、エンジンは `on_session_start(session_id, boundary_reason="compression", old_session_id=...)` を受け取ります（その場で圧縮した場合は、同じ ID が 2 回渡されます）。動いているエージェントが無いセッションでは、その圧縮のためだけに新しいエンジンのインスタンスが作られることがあります。そのインスタンスは、続けて `on_session_end()` も受け取ります。
 
 ## 設定 {#configuration}
 

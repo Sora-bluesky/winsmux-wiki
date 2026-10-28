@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（246 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（247 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -25,7 +25,7 @@ raw: /hermes/raw/all.md
 - [Platform Support](/hermes/docs/getting-started/platform-support/)
 - [Android / Termux](/hermes/docs/getting-started/termux/)
 
-## Using Hermes（31）
+## Using Hermes（32）
 
 - [CLI](/hermes/docs/user-guide/cli/)
 - [TUI (Ink terminal UI)](/hermes/docs/user-guide/tui/)
@@ -48,6 +48,7 @@ raw: /hermes/raw/all.md
 - [Connecting Desktop to Many Hermes Instances](/hermes/docs/user-guide/multi-connection-desktop/)
 - [Running Many Gateways at Once](/hermes/docs/user-guide/multi-profile-gateways/)
 - [Profile Distributions: Share a Whole Agent](/hermes/docs/user-guide/profile-distributions/)
+- [Remote Config](/hermes/docs/user-guide/remote-config/)
 - [Secrets](/hermes/docs/user-guide/secrets/)
 - [Bitwarden Secrets Manager](/hermes/docs/user-guide/secrets/bitwarden/)
 - [Command Helper Secret Source](/hermes/docs/user-guide/secrets/command/)
