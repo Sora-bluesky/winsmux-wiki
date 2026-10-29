@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md
-upstream_blob: 2adca4b4c50e9bbbc35a5cd374a2521bf376df8d
+upstream_blob: d88f366bcee32c1a8aa55f8cce9a71cc70494f36
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/cli
 ---
@@ -424,7 +424,7 @@ skills:
 登録されます。スキル名がそのままコマンドになります。
 
 ```
-/gif-search funny cats
+/excalidraw sketch the request flow for our API
 /axolotl help me fine-tune Llama 3 on my dataset
 /github-pr-workflow create a PR for the auth refactor
 

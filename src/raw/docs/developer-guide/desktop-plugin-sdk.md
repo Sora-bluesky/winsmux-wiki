@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 81d1bfc3e16beab4b06420d128df17280af493b6
+upstream_blob: 2d30cc7059aaac031f7368032067e49dcf4bd0c5
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -2079,7 +2079,12 @@ canvas へ描くときは、
 ```
 
 `desktop/plugin.js` の側は、ごく普通のディスク型のプラグインです。取り決めも読み込みも同じで、
-`ctx.rest('/…')` は隣にある `plugin_api.py` に届きます。導入も共有も削除もフォルダー 1 つで
+`ctx.rest('/…')` は隣にある `plugin_api.py` に届きます。
+単体でインストールする場合と同じく、パッケージの最上位に `plugin.js` を置いても動きます。
+このときは最上位の `plugin.js` が `desktop/plugin.js` より優先され、パッケージのフォルダー全体が
+デスクトップ側として複製されます（`.git` と `__pycache__` は除きます）。フォルダーの中にシンボリック
+リンクがあったり、大きさが 64 MB 以上だったりすると、何も複製されません。
+導入も共有も削除もフォルダー 1 つで
 済みます。アプリの置き場所にある複製は、元の `plugin.js` が変わると更新され（`hermes plugins update`
 か、**Rescan**）、パッケージのフォルダーが消えれば一緒に消えます。この複製こそが、デスクトップ側を
 **アプリ単位**にしているものです。パッケージを持つプロファイルがいくつあっても複製は 1 つだけで、

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Comfyui — 拡散モデルのワークフローで画像・動画・音声を生成する"
 description: "拡散モデルのワークフローで画像・動画・音声を生成する"
 upstream_path: user-guide/skills/optional/creative/creative-comfyui.md
-upstream_blob: e490349a2544fe592906c8465c1c9bab1520abc8
+upstream_blob: aba8707c504daf0990684831a9f95c9cbe8fa648
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-comfyui
 ---
@@ -23,7 +23,6 @@ sources:
 | ライセンス | MIT |
 | 対応プラットフォーム | macos, linux, windows |
 | タグ | `comfyui`, `image-generation`, `stable-diffusion`, `flux`, `sd3`, `wan-video`, `hunyuan-video`, `creative`, `generative-ai`, `video-generation` |
-| 関連 skill | [`stable-diffusion`](/hermes/docs/user-guide/skills/optional/mlops/mlops-stable-diffusion/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

@@ -2,7 +2,7 @@
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: 2ab887a536b0885f9251df05e80ae2ba2b718f7c
+upstream_blob: 557ecc24a24977ed14706ad96fc2267f404b7784
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -174,7 +174,7 @@ platforms:
         priority_mode: prepend  # prepend | append | replace
         priority:
           - my_plugin_command
-          - songsee          # skill commands work here too
+          - excalidraw       # skill commands work here too
 ```
 
 `priority_mode` は、あなたの一覧が Hermes の組み込みの優先の一覧とどう組み合わさるかを決めます。

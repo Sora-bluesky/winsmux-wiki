@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: d59dca2c3a799730a32b2540cf0d508c4cf0a81c
+upstream_blob: 74bb4a150d6f76b961ccf6bc85e05d776953a5ca
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -210,6 +210,32 @@ cronjob(
 :::note 分離
 エージェントの実行は、それぞれ自分の `workdir` をその実行に固有のタスク識別子へひも付けます。そのため workdir 付きのジョブは、プロセス全体の端末の状態を書き換えたり、同時に走る実行どうしでパスを漏らしたりせずに、通常の並列プールを使います。cron ぜんたいの同時実行数を絞りたいときは `cron.max_parallel_jobs` を設定してください。
 :::
+
+## ジョブごとのタイムゾーン {#per-job-timezone}
+
+既定では、ジョブの cron 式はプロファイルのタイムゾーン（`config.yaml` の `timezone:`）で読まれます。代わりにジョブごとに自分のタイムゾーンを固定することもできるので、ひとつのプロファイルで複数の市場を受け持てます。
+
+```bash
+hermes cron create "0 9 * * 1-5" --timezone Asia/Hong_Kong "HK market open brief"
+hermes cron create "0 9 * * 1-5" --timezone America/New_York "US market open brief"
+```
+
+- 式は、固定したタイムゾーンの**現地の時計の時刻**として読まれます。`0 9 * * *` はそのタイムゾーンの 09:00 に発火し、そのタイムゾーンで夏時間が切り替わっても 09:00 のままです。
+- 指定を省くと（編集のときは `--timezone ""` を渡すと）、プロファイルのタイムゾーンを引き継ぎます。この項目を持たないジョブは、これまでとまったく同じように動きます。
+- オフセットの付いていない一度きりの時刻（`2026-06-01T09:00:00`）も、ジョブのタイムゾーンで読まれます。自分でオフセットを持っている時刻は、それだけですでに特定の時点を指しています。
+- タイムゾーンを変えると `next_run_at` がすぐに計算し直されるので、次の発火は新しいタイムゾーンの現地時刻で行われます。
+- `interval` のジョブは決まった長さの間隔で動き、現地の時計の時刻を持たないので、固定しても何も変わりません。
+
+## 埋め合わせの猶予 {#catch-up-window}
+
+取りこぼした cron の回が遅れて実行されるのは、埋め合わせの猶予の内側に限られます。猶予はジョブの周期の半分で、2 分から 2 時間の範囲に収められます。`--grace-minutes` を使うと、これをジョブごとに上書きできます（0〜1440）。
+
+```bash
+hermes cron edit market-open --grace-minutes 0    # never catch up: skip a missed occurrence
+hermes cron edit market-open --grace-minutes 180  # run up to 3h late
+```
+
+`0` は埋め合わせをまったくしないという意味で、`--grace-minutes ""` を渡すと計算で決まる猶予に戻ります。これが効くのは cron 式だけです。`once` と `interval` の予定には取りこぼす現地の時計の時刻がないので、埋め合わせるものもありません。
 
 ## ジョブを編集する {#editing-jobs}
 

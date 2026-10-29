@@ -2,10 +2,15 @@
 title: "インストール"
 description: "デスクトップ版パッケージ、ソースからのインストーラー、Docker、Nix、Termux の APT パッケージで Hermes Agent を導入する"
 upstream_path: getting-started/installation.md
-upstream_blob: 7f9b2b2ac26986bfcee3dddced676555ba03124f
+upstream_blob: bd1a6539237d9daa6924369790b2b4873329c661
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
+
+<head>
+  <title>Hermes Agent のインストール: 公式ガイド | Nous Research</title>
+  <meta property="og:title" content="Hermes Agent のインストール: 公式ガイド | Nous Research" />
+</head>
 
 # インストール {#installation}
 

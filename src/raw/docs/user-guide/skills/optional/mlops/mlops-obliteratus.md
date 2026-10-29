@@ -2,7 +2,7 @@
 title: "Obliteratus — OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）"
 description: "OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）"
 upstream_path: user-guide/skills/optional/mlops/mlops-obliteratus.md
-upstream_blob: 08d659b00306ff799340dfbee7e03369567efa5e
+upstream_blob: 198a62da0b3ba0867dcca0d4b40a0e51ec2962b7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mlops/mlops-obliteratus
 ---
@@ -23,7 +23,7 @@ OBLITERATUS: LLM の拒否応答を取り除きます（diff-in-means）。
 | 依存関係 | `obliteratus`, `torch`, `transformers`, `bitsandbytes`, `accelerate`, `safetensors` |
 | 対応プラットフォーム | linux, macos |
 | タグ | `Abliteration`, `Uncensoring`, `Refusal-Removal`, `LLM`, `Weight-Projection`, `SVD`, `Mechanistic-Interpretability`, `HuggingFace`, `Model-Surgery` |
-| 関連 skill | [`serving-llms-vllm`](/hermes/docs/user-guide/skills/optional/mlops/mlops-inference-serving-llms-vllm/), [`llama-cpp`](/hermes/docs/user-guide/skills/optional/mlops/mlops-inference-llama-cpp/), [`huggingface-tokenizers`](/hermes/docs/user-guide/skills/optional/mlops/mlops-huggingface-tokenizers/) |
+| 関連 skill | [`serving-llms-vllm`](/hermes/docs/user-guide/skills/optional/mlops/mlops-inference-serving-llms-vllm/), [`llama-cpp`](/hermes/docs/user-guide/skills/optional/mlops/mlops-inference-llama-cpp/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

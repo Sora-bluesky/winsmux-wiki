@@ -2,7 +2,7 @@
 title: "成果物モード（チャットに届く生成ファイル）"
 description: "生成したグラフ・PDF・表計算などのファイルを、エージェントがメッセージアプリの標準の添付として送り届けるしくみ"
 upstream_path: user-guide/features/deliverable-mode.md
-upstream_blob: ea042049b33d23d91df269bdf350c9411c35ffd4
+upstream_blob: dc35c889ed271984b799f9303be379b690ceafee
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/deliverable-mode
 ---
@@ -24,9 +24,8 @@ WhatsApp、Signal など）で動かしているとき、生成したファイ�
 3 つの部品が組み合わさっています。
 
 1. **ファイルを作るツールをエージェントが持っている。** matplotlib でグラフを描く
-   `execute_code`、Word 文書の `docx` スキル、表計算の `xlsx` スキル、
-   PDF の `pdf` と `latex-pdf-report` スキル、スライドの
-   `powerpoint` スキル、画像の `image_generate`、
+   `execute_code`、Word 文書・表計算・スライドの `microsoft-office` スキル、
+   PDF の `pdf` と `latex-pdf-report` スキル、画像の `image_generate`、
    音声の `text_to_speech` などです。
 
 2. **窓口がエージェントの返事からファイルの場所を探す。** 対応する拡張子で終わる

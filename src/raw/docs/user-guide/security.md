@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: 65fbd1e0e4fe2be81a424967643feb342232d2bb
+upstream_blob: 2e0d44d0373ee1b0ecd077c173077963b706a02b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -49,6 +49,7 @@ approvals:
 |---|---|---|
 | `mode` | `smart` | 危険なシェルコマンドに対する承認の方針です。下の表を参照してください。 |
 | `timeout` | `300` | 承認の返事を待つ秒数です。これを過ぎると時間切れになります。 |
+| `discord_prompt_timeout` | `300` | Discord の対話用ボタン（承認、聞き返し、更新、スラッシュコマンドの確認）を押せる状態にしておく秒数です。最小は 30 です。[Discord](/hermes/docs/user-guide/messaging/discord/) を参照してください。 |
 | `cron_mode` | `deny` | [cron ジョブ](/hermes/docs/user-guide/features/cron/)が危険なコマンドの確認を出したとき、人がいない状態でどう振る舞うかです。`deny` はそのコマンドを止めます（エージェントは別の道を探すことになります）。`approve` は cron の文脈ですべて自動承認します。 |
 | `single_query_mode` | `deny` | 一回きりの [`hermes chat -q`](/hermes/docs/user-guide/cli/) セッションが危険なコマンドの確認を出したときの振る舞いです。`-q` のセッションは 1 ターンだけ動いて終了し、確認に答える人はいません。`deny` はそのコマンドを止め（エージェントは別の道を探すことになります）、`approve` は単発クエリの文脈ですべて自動承認します。`cron_mode` と同じ考え方です。 |
 | `unattended_mode` | `deny` | 人の付いていないプログラム的なプラットフォーム（webhook、msgraph_webhook、api_server）のセッションが危険なコマンドの確認を出したときの振る舞いです。こうした窓口には `/approve` に答えられる人がいないので、承認の時間切れまで待たずに、`deny` はそのコマンドをただちに止め（エージェントは別の道を探すことになります）、`approve` は無人の文脈ですべて自動承認します。例外として、クライアントが確認カードに答えられる api_server のセッション（`/v1/runs` とストリーミングの chat completions。`POST /v1/runs/{id}/approval` で答えます）には、承認の依頼がそのまま届きます。`cron_mode` と同じ考え方です。 |
@@ -772,16 +773,41 @@ URL を扱えるツール（ウェブ検索、ウェブ抽出、画像認識、�
 
 #### あえてプライベートな URL を許す {#intentionally-allowing-private-urls}
 
-環境によっては、内部やプライベートの URL へのアクセスがどうしても要ります。`home.arpa` を RFC 1918 の空間に解決する家庭のネットワーク、LAN からしか見えない Ollama / llama.cpp の窓口、社内の情報共有サイト、クラウドのメタデータの調査などです。そうした場合のために、全体で外す設定があります。
+環境によっては、内部やプライベートの URL へのアクセスがどうしても要ります。`home.arpa` を RFC 1918 の空間に解決する家庭のネットワーク、LAN からしか見えない Ollama / llama.cpp の窓口、社内の情報共有サイトなどです。そうした場合のために、全体で外す設定があります。
 
 ```yaml
 security:
   allow_private_urls: true   # default: false
 ```
 
-有効にすると、ウェブのツール、ブラウザ、画像認識の URL 取得、ゲートウェイのメディアのダウンロードは、RFC 1918 / ループバック / リンクローカル / CGNAT / クラウドのメタデータ宛てを断らなくなります。**これは意図して信頼の線を引き直す設定です。** プロンプトインジェクションで与えられた URL をエージェントがローカルのネットワークに対して叩いても許容できるマシンでだけ有効にしてください。外部に面したゲートウェイでは切ったままにすべきです。
+有効にすると、ウェブのツール、ブラウザ、画像認識の URL 取得、ゲートウェイのメディアのダウンロードは、RFC 1918 / ループバック / リンクローカル / CGNAT 宛てを断らなくなります。クラウドのメタデータの窓口（`169.254.169.254`、`metadata.google.internal` など）は、この設定を有効にしても止められたままです。**これは意図して信頼の線を引き直す設定です。** プロンプトインジェクションで与えられた URL をエージェントがローカルのネットワークに対して叩いても許容できるマシンでだけ有効にしてください。外部に面したゲートウェイでは切ったままにすべきです。
 
 ホスト名の部分一致による防護（元の IP が公開のものでも、そっくりに見せる Unicode のドメインの細工を止めます）は、この設定にかかわらず効き続けます。
+
+#### `allow_private_urls` が守る範囲と守らない範囲 {#what-allowprivateurls-covers-and-what-it-doesnt}
+
+この設定が守るのは、Hermes 自身が行う取得と、遠隔のブラウザに渡す取得です。
+プライベートなホストへのあらゆる経路を止めるわけではありません。`false` のときは次のようになります。
+
+| 窓口 | プライベートな URL（`localhost`、`192.168.x.x`、...） |
+|---|---|
+| `web_extract` | どのバックエンドも呼ぶ前に断られます。`true` にしても、ホスト型の抽出バックエンドは自分のサーバーから取得するので、手元の LAN には届きません。 |
+| `vision_analyze` の URL 取得、画像・動画の結果のダウンロード、ゲートウェイのメディアのダウンロード | 断られます |
+| `browser.auto_local_for_private_urls: false` にしたクラウドのプロバイダー上、`/browser connect`（CDP）の接続先、または Docker/SSH/Modal のターミナルバックエンドでの `browser_exec` | 断られます（`Blocked: URL targets a private or internal address`） |
+| それと同じバックエンドでの `browser_cdp` による生の CDP 呼び出し | プライベートなページの URL は断られます |
+| `browser.auto_local_for_private_urls: true`（既定）にしたクラウドのプロバイダー上の `browser_exec` | Hermes のホスト上にあるローカルの Chromium サイドカーで **開きます**（[ハイブリッドな振り分け](/hermes/docs/user-guide/features/browser/#hybrid-routing-cloud-for-public-urls-local-for-lanlocalhost)） |
+| ローカルのターミナルバックエンドと組み合わせた、ローカルの Chromium での `browser_exec` | **開きます**: ブラウザが届く先は、どれもターミナルからでも届く場所です |
+| `terminal`（`curl http://localhost` など） | **開きます**: URL の防護はありません |
+
+クラウドのメタデータの窓口は、`terminal` 以外のすべての行で断られます。サイドカーと
+ローカルの Chromium も例外ではありません。`browser_exec` のコード、生の CDP 呼び出しの
+引数、そこから注入するスクリプトに書かれたメタデータの URL は、ブラウザに届く前に断られます。この検査が読むのは
+エージェントが書いた URL で、その後のブラウザの動きまでは見張りません。そのため、公開のページがメタデータのアドレスへ
+リダイレクトしたり、そこから取得したりする場合は、この検査では止まりません。クラウドの VM では、メタデータのサービスを
+ネットワークの側でも塞いでください（ホップ数の上限を 1 にした IMDSv2、ファイアウォールのルール）。クラウドのプロバイダーを
+設定したままエージェントのブラウザをプライベートなホストから遠ざけるには、`browser.auto_local_for_private_urls: false` にします。これがいちばん効くのは
+ホスト型の環境（Docker、VPS）です。そこではサイドカーから、ホスト自身のループバックの
+サービスとその LAN が見えてしまうためです。
 
 #### ローカルプロキシの fake-ip の範囲 {#local-proxy-fake-ip-ranges}
 

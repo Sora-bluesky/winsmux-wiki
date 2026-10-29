@@ -2,7 +2,7 @@
 title: "WhatsApp"
 description: "内蔵の Baileys ブリッジを使って Hermes Agent を WhatsApp のボットとして設定する"
 upstream_path: user-guide/messaging/whatsapp.md
-upstream_blob: 23b33ff06e3637d9205442a3cfefab99e58c8dcb
+upstream_blob: fd69d7af519f7e723a5dd85417622764520290c8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/whatsapp
 ---
@@ -238,6 +238,12 @@ whatsapp:
 ```
 
 `send_read_receipts` が `true` のとき、アダプターは個別・グループ・メンションの絞り込みを通ったメッセージを既読にします。弾かれたメッセージ（許可リストにない相手からのものなど）は既読になりません。プライバシーへの配慮から初期状態では無効です。この設定を変えると、次に接続するときブリッジの子プロセスが自動で立ち上げ直されます。
+
+Hermes が送ったメッセージが届いたか、読まれたかは `gateway.log` に記録されます。状態が変わるたびに1行ずつ書かれます（`server_ack`、`delivered`、`read`、`played`、または WhatsApp のエラーコード付きの `error`）。グループでは、相手ごとの受信や既読の知らせがそれぞれ `recipient=` 付きの別の行になります。連携している電話で人が打ち込んだメッセージは記録されません。
+
+```
+[WhatsApp] WhatsApp delivery status: message=3EB0A1 chat=15551234567@s.whatsapp.net status=read at=1760000000
+```
 
 ---
 

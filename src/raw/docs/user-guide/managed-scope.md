@@ -2,7 +2,7 @@
 title: "管理者による適用範囲"
 description: "システム全体の管理用ディレクトリを使い、管理者が固定して利用者側では変更できない設定と秘密情報を配る仕組みです"
 upstream_path: user-guide/managed-scope.md
-upstream_blob: 46f9654477fe5efaf25e095b7738f6fa39d49eb4
+upstream_blob: 6a10e285c0c4f2fd91b354bad4887e073e2ab6e1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/managed-scope
 ---
@@ -88,6 +88,11 @@ model:
 「管理下」とは言えないからです。「環境変数は config.yaml より優先される」という通常の決まりが
 反転するのはここだけで、それも管理下の層が指定した特定のキーにのみ当てはまります。
 :::
+
+管理下の `config.yaml` が空でない `terminal.backend` を固定している場合、プロファイルの
+`.env` が存在するのに読み込めないとき（サンドボックスの起動ツールがファイルを渡さず、
+中のキーを環境変数として渡す場合など）は、警告を出したうえで「ファイルが無い」ものとして扱われます。
+この固定が無い場合は、これまでどおり読み込みエラーで Hermes が停止します。
 
 ## 何が管理下にあるのかを見る {#seeing-whats-managed}
 

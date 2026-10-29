@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: 5351974c7412241c66f07e8bab981b9df5fd3e22
+upstream_blob: b6a9115984c30b299466449c919c912fcd45bc00
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -40,6 +40,7 @@ hermes skills uninstall <skill-name>
 | [**dynamic-workflow**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/) | 計画をコードで書いて並列に展開し、敵対的な検証と段階的な実行を行います。 |
 | [**grok**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/) | xAI Grok Build CLI にコーディングを任せます（機能追加、PR 作成）。 |
 | [**honcho**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/) | Hermes 向けに Honcho の記憶機能を設定し、不具合を切り分けます。 |
+| [**opencode**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/) | OpenCode CLI にコーディングを任せます（機能追加、PR のレビュー）。 |
 | [**openhands**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/) | OpenHands CLI にコーディングを任せます（モデルを選ばず、LiteLLM 対応）。 |
 
 ## blockchain {#blockchain}
@@ -64,7 +65,6 @@ hermes skills uninstall <skill-name>
 | [**anatomy**](/hermes/docs/user-guide/skills/optional/creative/creative-anatomy/) | アイデアを、操作できるアイソメトリックな機械の図で説明します。 |
 | [**archify**](/hermes/docs/user-guide/skills/optional/creative/creative-archify/) | 検証済みの対話型 HTML ダイアグラムを作ります。上流で保守されています。 |
 | [**ascii-art**](/hermes/docs/user-guide/skills/optional/creative/creative-ascii-art/) | アスキーアート。pyfiglet、cowsay、boxes、画像からの変換に対応します。 |
-| [**audiocraft-audio-generation**](/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/) | AudioCraft。MusicGen で文章から音楽を、AudioGen で文章から効果音を作ります。 |
 | [**auteur**](/hermes/docs/user-guide/skills/optional/creative/creative-auteur/) | 映画のような、賞を狙える水準の Web ページを設計して作ります。 |
 | [**baoyu-article-illustrator**](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-article-illustrator/) | 記事の挿絵。種類 × 画風 × 配色をそろえて描きます。 |
 | [**baoyu-comic**](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/) | 知識マンガ（知识漫画）。学習向け、伝記、手順解説に対応します。 |
@@ -73,6 +73,7 @@ hermes skills uninstall <skill-name>
 | [**comfyui**](/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/) | 拡散モデルのワークフローで画像、動画、音声を生成します。 |
 | [**concept-diagrams**](/hermes/docs/user-guide/skills/optional/creative/creative-concept-diagrams/) | 平面的で装飾を抑えた学習用の SVG 図版を HTML として作ります。 |
 | [**creative-ideation**](/hermes/docs/user-guide/skills/optional/creative/creative-creative-ideation/) | 創作の現場で使われてきた発想法を名指しで呼び出し、アイデアを出します。 |
+| [**design-md**](/hermes/docs/user-guide/skills/optional/creative/creative-design-md/) | Google の DESIGN.md 形式のトークン仕様ファイルを作成、検証、書き出しします。 |
 | [**draw-your-font**](/hermes/docs/user-guide/skills/optional/creative/creative-draw-your-font/) | 手書き文字の写真から、そのまま使える TTF フォントを作ります。 |
 | [**dream-loop**](/hermes/docs/user-guide/skills/optional/creative/creative-dream-loop/) | コンセプトアートとの忠実度を確かめるループで、見栄えのする 3D シーンを作ります。 |
 | [**excalidraw**](/hermes/docs/user-guide/skills/optional/creative/creative-excalidraw/) | 手描き風の Excalidraw JSON 図（構成図、フロー図、シーケンス図）を作ります。 |
@@ -158,6 +159,13 @@ hermes skills uninstall <skill-name>
 | [**mcp-oauth-remote-gateway**](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/) | 画面のないゲートウェイで、遠隔の MCP サーバーの OAuth を手作業で通します。 |
 | [**mcporter**](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcporter/) | 端末から MCP のサーバーやツールを一覧し、認証し、呼び出します。 |
 
+## media {#media}
+
+| スキル | 説明 |
+|-------|-------------|
+| [**gif-search**](/hermes/docs/user-guide/skills/optional/media/media-gif-search/) | curl と jq を使い、Tenor で GIF を検索してダウンロードします。 |
+| [**songsee**](/hermes/docs/user-guide/skills/optional/media/media-songsee/) | CLI で音声のスペクトログラムや特徴量（メル、クロマ、MFCC）を出します。 |
+
 ## mlops {#mlops}
 
 | スキル | 説明 |
@@ -165,39 +173,35 @@ hermes skills uninstall <skill-name>
 | [**accelerate**](/hermes/docs/user-guide/skills/optional/mlops/mlops-accelerate/) | PyTorch の学習を、書き換えを最小限にして複数 GPU で走らせます。 |
 | [**axolotl**](/hermes/docs/user-guide/skills/optional/mlops/mlops-training-axolotl/) | Axolotl。YAML で LLM を追加学習します（LoRA、DPO、GRPO）。 |
 | [**chroma**](/hermes/docs/user-guide/skills/optional/mlops/mlops-chroma/) | RAG と意味検索のための埋め込みデータベースです。 |
-| [**clip**](/hermes/docs/user-guide/skills/optional/mlops/mlops-clip/) | 学習なしでの画像分類と、画像と文章をまたぐ検索を行います。 |
+
 | [**dspy**](/hermes/docs/user-guide/skills/optional/mlops/mlops-research-dspy/) | DSPy。宣言的に言語モデルを組み、プロンプトを自動で最適化し、RAG を作ります。 |
 | [**evaluating-llms-harness**](/hermes/docs/user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness/) | lm-eval-harness。LLM をベンチマークで測ります（MMLU、GSM8K など）。 |
 | [**faiss**](/hermes/docs/user-guide/skills/optional/mlops/mlops-faiss/) | 10 億件規模でも速いベクトル類似検索です。 |
 | [**flash-attention**](/hermes/docs/user-guide/skills/optional/mlops/mlops-flash-attention/) | 長い系列を扱う Transformer の学習と推論を速くします。 |
-| [**guidance**](/hermes/docs/user-guide/skills/optional/mlops/mlops-guidance/) | 文法で LLM の出力を縛り、壊れない JSON を保証します。 |
-| [**huggingface-hub**](/hermes/docs/user-guide/skills/optional/mlops/mlops-models-huggingface-hub/) | HuggingFace の hf CLI。モデルやデータセットの検索、取得、アップロードを行います。 |
-| [**huggingface-tokenizers**](/hermes/docs/user-guide/skills/optional/mlops/mlops-huggingface-tokenizers/) | 高速な BPE/WordPiece の分割と、独自語彙の学習を行います。 |
-| [**instructor**](/hermes/docs/user-guide/skills/optional/mlops/mlops-instructor/) | LLM の出力を構造化し、Pydantic で検証します。 |
+
 | [**lambda-labs**](/hermes/docs/user-guide/skills/optional/mlops/mlops-lambda-labs/) | 機械学習の学習用に、必要なときだけ GPU クラウドを借ります。 |
 | [**llama-cpp**](/hermes/docs/user-guide/skills/optional/mlops/mlops-inference-llama-cpp/) | llama.cpp による手元での GGUF 推論と、HF Hub でのモデル探しです。 |
-| [**llava**](/hermes/docs/user-guide/skills/optional/mlops/mlops-llava/) | 画像を見ながらの対話。視覚的な質問応答、説明文の生成、画像についての会話を扱います。 |
+
 | [**modal**](/hermes/docs/user-guide/skills/optional/mlops/mlops-modal/) | 機械学習のジョブとモデル API のための、サーバー管理不要な GPU クラウドです。 |
 | [**nemo-curator**](/hermes/docs/user-guide/skills/optional/mlops/mlops-nemo-curator/) | LLM の学習データを整えます。重複除去、絞り込み、個人情報の伏せ字化。 |
 | [**obliteratus**](/hermes/docs/user-guide/skills/optional/mlops/mlops-obliteratus/) | OBLITERATUS。差分平均法で LLM の応答拒否を取り除きます。 |
-| [**outlines**](/hermes/docs/user-guide/skills/optional/mlops/mlops-inference-outlines/) | Outlines。JSON、正規表現、Pydantic に沿った形で LLM に生成させます。 |
+
 | [**peft**](/hermes/docs/user-guide/skills/optional/mlops/mlops-peft/) | 限られた GPU メモリでも、LoRA で大きな LLM を追加学習します。 |
-| [**pinecone**](/hermes/docs/user-guide/skills/optional/mlops/mlops-pinecone/) | 本番の RAG と検索に使う、運用込みのベクトルデータベースです。 |
+
 | [**pytorch-fsdp**](/hermes/docs/user-guide/skills/optional/mlops/mlops-pytorch-fsdp/) | 大きなモデルを、完全に分割したデータ並列で学習します。 |
 | [**pytorch-lightning**](/hermes/docs/user-guide/skills/optional/mlops/mlops-pytorch-lightning/) | 見通しのよい学習ループを書け、分散学習も最初から使えます。 |
-| [**qdrant**](/hermes/docs/user-guide/skills/optional/mlops/mlops-qdrant/) | 本番の RAG を支えるベクトル検索エンジンです。 |
+
 | [**saelens**](/hermes/docs/user-guide/skills/optional/mlops/mlops-saelens/) | 疎な自己符号化器を学習させ、モデルが何を捉えているかを読み解きます。 |
 | [**segment-anything-model**](/hermes/docs/user-guide/skills/optional/mlops/mlops-models-segment-anything-model/) | SAM。点、枠、マスクを手がかりに、学習なしで画像を切り分けます。 |
 | [**serving-llms-vllm**](/hermes/docs/user-guide/skills/optional/mlops/mlops-inference-serving-llms-vllm/) | vLLM。LLM を大量にさばく配信、OpenAI 互換 API、量子化に対応します。 |
 | [**simpo**](/hermes/docs/user-guide/skills/optional/mlops/mlops-simpo/) | 参照モデルなしの選好アライメント。DPO より手順が簡単です。 |
 | [**slime**](/hermes/docs/user-guide/skills/optional/mlops/mlops-slime/) | Megatron と SGLang を使い、LLM を強化学習で仕上げます。 |
-| [**stable-diffusion**](/hermes/docs/user-guide/skills/optional/mlops/mlops-stable-diffusion/) | 文章からの画像生成、部分の描き直し、画像からの画像生成を行います。 |
+
 | [**tensorrt-llm**](/hermes/docs/user-guide/skills/optional/mlops/mlops-tensorrt-llm/) | NVIDIA の GPU で、LLM の推論をまとめて大量にさばきます。 |
 | [**torchtitan**](/hermes/docs/user-guide/skills/optional/mlops/mlops-torchtitan/) | PyTorch の 4 次元並列で、LLM を大規模に事前学習します。 |
-| [**trl-fine-tuning**](/hermes/docs/user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning/) | TRL。LLM の RLHF に向けた SFT、DPO、GRPO、RLOO の報酬モデリングです。 |
+
 | [**unsloth**](/hermes/docs/user-guide/skills/optional/mlops/mlops-training-unsloth/) | Unsloth。LoRA/QLoRA の追加学習が 2〜5 倍速く、VRAM も少なく済みます。 |
-| [**weights-and-biases**](/hermes/docs/user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases/) | W&B。機械学習の実験、探索、モデル登録、ダッシュボードを記録します。 |
-| [**whisper**](/hermes/docs/user-guide/skills/optional/mlops/mlops-whisper/) | 99 の言語で音声を文字に起こし、翻訳します。 |
+
 
 ## payments {#payments}
 
@@ -211,11 +215,14 @@ hermes skills uninstall <skill-name>
 
 | スキル | 説明 |
 |-------|-------------|
+| [**airtable**](/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/) | curl で Airtable の REST API を呼び出します。レコードの作成・読み取り・更新・削除、絞り込み、upsert に対応します。 |
+| [**box**](/hermes/docs/user-guide/skills/optional/productivity/productivity-box/) | Box でクラウド上のファイル、共有、検索、メタデータを管理します。 |
 | [**canvas**](/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/) | API トークンで Canvas LMS の講義と課題を取得します。 |
 | [**decision-questionnaire**](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | 答えの出ない判断を、質問票の形の文書に組み替えます。 |
 | [**here-now**](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | &#123;slug&#125;.here.now にサイトを公開し、ファイルを Drives に保管します。 |
 | [**live-dashboard**](/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/) | ライブのデータ源から、自動で更新されるダッシュボードを作ります。 |
 | [**memento-flashcards**](/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/) | 間隔をあけて復習する単語カード。作成、復習、小テスト、書き出しに対応します。 |
+| [**notion**](/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/) | Notion API と ntn CLI。ページ、データベース、Markdown、Workers を扱います。 |
 | [**property-listings**](/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/) | 物件や賃貸の情報を、デスクトップのカードとして並べて見せます。 |
 | [**shop**](/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/) | 商品の検索、購入手続き、配送状況の確認、返品まで扱います。 |
 | [**shopify**](/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/) | curl で Shopify の Admin/Storefront GraphQL API を呼び出します。 |
@@ -233,9 +240,10 @@ hermes skills uninstall <skill-name>
 | [**drug-discovery**](/hermes/docs/user-guide/skills/optional/research/research-drug-discovery/) | 創薬。ChEMBL の検索、医薬品らしさの評価、相互作用の確認を行います。 |
 | [**duckduckgo-search**](/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/) | ddgs 経由で、鍵も費用も要らないウェブ、ニュース、画像の検索を行います。 |
 | [**gitnexus-explorer**](/hermes/docs/user-guide/skills/optional/research/research-gitnexus-explorer/) | コードベースの知識グラフを、触って動かせるウェブ画面として提供します。 |
+| [**llm-wiki**](/hermes/docs/user-guide/skills/optional/research/research-llm-wiki/) | Karpathy が提唱した LLM 向けの方式で、相互にリンクした Markdown の知識ベースを作り、問い合わせます。 |
 | [**osint-investigation**](/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/) | 公開記録と制裁リストから、お金の流れを追います。 |
 | [**parallel-cli**](/hermes/docs/user-guide/skills/optional/research/research-parallel-cli/) | エージェント向けのウェブ検索、深掘り調査、情報の肉付けを行います。 |
-| [**pinecone-research**](/hermes/docs/user-guide/skills/optional/research/research-pinecone-research/) | Pinecone を使い、エージェントの RAG と長期の記憶を実現します。 |
+
 | [**qmd**](/hermes/docs/user-guide/skills/optional/research/research-qmd/) | 手元のメモ、文書、書き起こしを、複数の方式を組み合わせて横断検索します。 |
 | [**research-paper-writing**](/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/) | NeurIPS/ICML/ICLR 向けの機械学習論文を、構想から投稿まで書き上げます。 |
 | [**rss-feeds**](/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/) | RSS、Atom、JSON のフィードを読みます。ページの裏に隠れたフィードも見つけます。 |
@@ -272,7 +280,11 @@ hermes skills uninstall <skill-name>
 | [**ast-grep**](/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/) | ast-grep で、構文木を踏まえた構造的なコード検索と書き換えを行います。 |
 | [**code-wiki**](/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/) | どんなコードベースからでも、解説文書と Mermaid の図を生成します。 |
 | [**grill-me**](/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/) | 実装に入る前に、計画を厳しく問いただす面談を行います。 |
+| [**hermes-agent-skill-authoring**](/hermes/docs/user-guide/skills/optional/software-development/software-development-hermes-agent-skill-authoring/) | リポジトリ内に置く SKILL.md を書きます。フロントマターと構成を整えます。 |
+| [**inspecting-hermes-desktop-dom**](/hermes/docs/user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom/) | 動いている Hermes デスクトップの DOM/CSS を CDP 経由で読み取ります。 |
+| [**node-inspect-debugger**](/hermes/docs/user-guide/skills/optional/software-development/software-development-node-inspect-debugger/) | --inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグします。 |
 | [**pr-lens**](/hermes/docs/user-guide/skills/optional/software-development/software-development-pr-lens/) | コードの変更を、動くアーキテクチャ図やデータフロー図の SVG として描きます。 |
+| [**python-debugpy**](/hermes/docs/user-guide/skills/optional/software-development/software-development-python-debugpy/) | Python をデバッグします。pdb の REPL と、debugpy による遠隔デバッグ（DAP）に対応します。 |
 | [**rest-graphql-debug**](/hermes/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug/) | REST/GraphQL API の切り分け。状態コード、認証、スキーマ、再現手順。 |
 | [**subagent-driven-development**](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) | delegate_task のサブエージェントで計画を実行します（2 段階の点検つき）。 |
 

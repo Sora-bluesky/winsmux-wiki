@@ -2,7 +2,7 @@
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 0d8585cb1a04ccbba5d07a5e2959da61dceee83c
+upstream_blob: ea477f61952f00c831bd1b693dcffc8af81f0380
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -499,6 +499,7 @@ Python の依存関係の作業には、公開されている `pm` モジュー�
 | `pm.build_environment(source=..., out=..., explicit=True)` | 呼び出し側が所有する新しい出力をビルドして検証します。プラグインの検出やアプリの選択は行いません。 |
 | `pm.lock_project(source, explicit=True)` | 環境を選択せずに、明示したプロジェクトのロックを更新します。 |
 | `pm.ensure_environment(name, requirements, explicit=True)` | 分離された依存関係の世代を用意して選択し、その Python のパスを返します。 |
+| `pm.ensure_project_environment(name, project, extras=..., explicit=True)` | プロジェクトのロック済み依存関係について、分離された世代を用意して選択します。プロジェクト自体はインストールしません。その Python のパスを返します。 |
 | `pm.ensure_python_tool(name, requirements, executable, explicit=True)` | 分離されたツールを用意し、その実行ファイルのパスを返します。 |
 | `pm.environment_python(name)` / `pm.python_tool(name, executable)` | 何もインストールせずに、選択中のパスを読み取ります。 |
 | `pm.venv_is_current()` | アプリの依存関係が最新かを、準備済みの PM ワーカーに問い合わせます。マネージャーの実行環境が使えない場合は false を返します。 |
@@ -540,6 +541,7 @@ hermes pm install chromium
 | `pm env [names...]` | インストール済みパッケージについて、PM が追加する環境変数の値を JSON で出力します。足りないパッケージはインストールしませんが、Hermes をコールドスタートした場合は、先に自分用の Python 実行環境を用意することがあります。 |
 | `pm doctor` | インストール済みツールの識別情報、ファイル、ダイジェストをロックと照合します。 |
 | `pm repair` | 記録済みの Python 依存関係セットを新しい世代で作り直し、検証してから選択します。固定バージョン、機能、プラグインの設定は更新しません。 |
+| `pm environment NAME --extra EXTRA` / `--requirement REQ` | 分離された補助環境 `HERMES_HOME/environments/NAME` を最新の状態にし、その Python のパスだけを stdout に出力します（進行状況は stderr に出ます）。スキルのようなシェルからの呼び出し向けで、たとえば `PY="$(hermes pm environment documents --extra documents --extra documents-pdf)"` のように使います。`--extra` は `pyproject.toml` で宣言された extras の固定済み要件をインストールし、`--requirement` は範囲を限った臨時の要件を受け取ります。この環境は独自のロックを記録し、新しい世代がビルドされるのは、要件のセットか Python の固定版が変わったときだけです。同時に呼び出された場合は環境のロックで順番に処理され、作り直しは新しい世代に作られるので、前の世代をすでに使っている呼び出し側のファイルは残ります。明示的なインストールなので、必要時インストールが無効な環境でも実行されます。結果の環境に `pip install` は決してしないでください。 |
 | `pm status` | 最新の同期・更新の受領記録を JSON で出力します。受領記録が無ければ、その旨を表示します。 |
 | `pm gc` | 参照されていないツールストアのエントリ、削除できるダウンロードの部分ファイル、使われていないリース管理下の Python の世代、そして削除されたチェックアウトの `installs/INSTALL_KEY/` の状態を削除します（対象は、まだ存在する `.worktrees/` ディレクトリから取り除かれた worktree と、データのルートの下にあるクローンです。それ以外の場所で見つからなくなったチェックアウト、たとえばデータのルートを共有するコンテナから見たホスト側のインストールは、その状態が同期も起動もされないまま `worktrees.install_state_retention_days`（既定は 14、0 なら無期限）の日数を過ぎるまで残します。インストールのロックや世代のリースがまだ保持されている状態は、常に残します）。起動時に走る worktree の掃除役も、そうして孤立した状態のディレクトリを回収します。 |
 

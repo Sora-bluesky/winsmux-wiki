@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインカタログへの登録申請"
 description: "Hermes プラグインカタログの登録ガイドライン全文です。申請前に確かめること、すべての掲載項目が従うルール、レビュアーが見る点をまとめています"
 upstream_path: developer-guide/plugins/catalog-submission.md
-upstream_blob: 6561a2a0c82f451acc922a40cbbb3f61efa7e56d
+upstream_blob: 858a07fa78fb5ff37db5b48ead6509026691f70c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission
 ---
@@ -118,7 +118,9 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
    注入も禁止で、アプリ内部のストアや、アプリ自身のマークアップに手を伸ばすことも禁止です
    （コアの UI のスタイルを変える、隠す、クリックする、書き換える目的で、`document` から `data-slot` / `data-tour` / `data-sidebar` / `data-testid`
    の要素を取得することや、`document.body` の MutationObserver を使うこと）。
-   `hermes plugins validate` は登録時にこれらを拒否します（`desktop surface` チェック）。
+   `hermes plugins validate` は登録時にこれらを拒否します（`desktop surface` チェック）。また、
+   `window.hermesDesktop` のブリッジを直接呼び出している箇所や、それ以外の方法でアプリのマークアップを選択している箇所
+   （CSS テキスト内や `closest()` での `[data-slot]`、`[data-tree-*]`）については、レビュアー向けに警告を出します。
    SDK に無い機能が必要なプラグインは、回避策で書き換えるのではなく SDK のフックを依頼してください。
 9. **Hermes のコアを実行時に上書きしないこと。** 掲載されるプラグインが Hermes を拡張できるのは、
    公開されている接続面だけです。フック、ミドルウェア、プロバイダープロファイル、その他の
@@ -128,7 +130,8 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
    `sys.modules[...]`、コアのモジュールのテーブルへの書き込み）。同じ継ぎ目を2つのプラグインが
    書き換えると、互いに気づかないまま壊し合い、コアのリリースのたびに両方が
    壊れるおそれがあります。`hermes plugins validate` は登録時にこれらを拒否します（`no
-   core override` チェック）。また、ドキュメントに載っていないコアのモジュールを import している箇所があれば、
+   core override` チェック）。また、ドキュメントに載っていないコアのモジュールを import している箇所や、
+   渡されたコアのオブジェクトの内部メソッドを呼び出している箇所（`db._execute_write(...)`）があれば、
    その1つごとにファイルと行を示して警告します（警告だけで、不合格にはしません）。
    必要なフックが無い場合は、その内容を書いた issue を立ててください。
    書き換えを掲載するより、継ぎ目を追加するほうを選びます。

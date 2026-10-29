@@ -2,7 +2,7 @@
 title: "Meeting Action Items — 会議メモから、根拠付きの決定事項・担当者・チケットを起こす"
 description: "会議メモから、根拠付きの決定事項・担当者・チケットを起こす"
 upstream_path: user-guide/skills/bundled/productivity/productivity-meeting-action-items.md
-upstream_blob: e25810984ea68817d1b872984b16a90136df62b5
+upstream_blob: 4bc39457a88be6b827c00624e22c751fe67e49ef
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items
 ---
@@ -22,7 +22,7 @@ sources:
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Meetings`, `Action-Items`, `Follow-Up`, `Productivity` |
-| 関連 skill | [`teams-meeting-pipeline`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline/), [`google-workspace`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/), [`notion`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/) |
+| 関連 skill | [`teams-meeting-pipeline`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline/), [`google-workspace`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/), [`notion`](/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

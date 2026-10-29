@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ブラウザの自動操作"
 description: "browser_exec で本物のブラウザを操ります。Hermes が立ち上げる Chromium、クラウドのブラウザ、Lightpanda、CDP でつなぐ自分の Chrome のどれでも使え、ウェブとのやり取り、フォームの入力、情報の取り出しなどができます。"
 upstream_path: user-guide/features/browser.md
-upstream_blob: 9234b6bcebaaca6aa575562abb78f5ddeb83f124
+upstream_blob: e7f96a28b7f1d23c1d1d6d634b4dbd98243eabf6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/browser
 ---
@@ -111,6 +111,13 @@ Desktop アプリを含むどのインストールにも最初から入ってい
 - **自動での片づけ。** ブラウザは `browser.inactivity_timeout`
   秒（既定は 120）動きがないとき、Hermes が終了するとき、そしてプロセスが落ちたときは
   迷子の掃除によって閉じられます。
+- **私設のホストにも届きます。** 端末の裏方（バックエンド）が手元にあるときは、手元の
+  Chromium は `localhost` や LAN のアドレスを開けます。
+  `security.allow_private_urls` の設定は関係ありません。端末から届かない場所には、ブラウザも届かないからです。
+  私設のアドレスへの守りが働くのは、端末からは届かないネットワークにブラウザが届くとき
+  （クラウドのプロバイダ、`/browser connect` の接続先、
+  Docker/SSH/Modal の端末の裏方）です。エージェントが書いたクラウドのメタデータの URL は、
+  常に断られます。
 
 **どの Chromium を使うか。** Hermes は、次のうち最初に見つかったものを使います。
 
@@ -260,8 +267,13 @@ IPv6 のループバック `::1`、リンクローカルの `169.254.x.x`）に�
 スクリーンショットを撮り、同時に `https://github.com` から情報を取り出せます。
 クラウドのプロバイダが私設の URL を目にすることはありません。
 
-この働きは**既定で有効**です。止めたい（すべての URL を設定した
-クラウドのプロバイダに回したい）ときは、こうします。
+この働きは**既定で有効**で、
+`security.allow_private_urls` には左右されません。この設定が守るのはクラウドのブラウザとウェブの
+道具です。脇役は Hermes の動く機械の上で動くので、この設定がオフでも私設のホストを開きます。
+端末から `curl http://localhost` を打つのと同じことです。そのため、ホスティングした
+Hermes（Docker や VPS）では、エージェントが脇役を通して、その機械自身の
+ループバックのサービスやその LAN を見て回れます。私設の URL を断りたい
+（すべての URL を設定したクラウドのプロバイダに回したい）ときは、こうします。
 
 ```yaml
 # ~/.hermes/config.yaml
@@ -270,15 +282,19 @@ browser:
   auto_local_for_private_urls: false
 ```
 
-自動の振り分けを止めると、`browser.allow_private_urls: true` も設定していない限り、
-私設の URL は `"Blocked: URL targets a private or internal address"` と言って断られます
-（この設定を入れるとクラウドのプロバイダが試みますが、
-Browserbase などはこちらの LAN に届かないので、たいていうまくいきません）。
+自動の振り分けを止めると、私設の URL は
+`"Blocked: URL targets a private or internal address"` と言って断られます。ただし
+`security.allow_private_urls: true`（または古い書き方の `browser.allow_private_urls: true`）も設定したときは別で、
+私設の URL はクラウドのプロバイダに渡されます。とはいえ Browserbase などはこちらの LAN に
+届かないので、たいていは役に立ちません。クラウドのメタデータの URL（`169.254.169.254`、
+`metadata.google.internal`）は、`browser_exec` のコードや生の CDP の引数に書かれていれば、
+脇役を含むどの経路でも断られます。ただし、ページが自分でそこへ転送する場合は断られません
+（[セキュリティ](/hermes/docs/user-guide/security/#what-allow_private_urls-covers-and-what-it-doesnt)を見てください）。
 
 脇役は[上](#local-chromium-default)で説明した手元の Chromium と同じものなので、
-その Chromium が入っている必要があります。公開の URL から私設のアドレスへ、ページを開いたあとに
-転送されるものは今も止められます（内部への転送という抜け道で、公開の経路から
-こちらの LAN に届くことはできません）。
+その Chromium が入っている必要があります。どちらに振り分けるかは、
+`browser_exec` のコードに書かれた URL から決まります。公開のページがあとから私設のアドレスへ転送しても、
+クラウドのブラウザに残ったままで、クラウドのブラウザはこちらのネットワークに届きません。
 
 ## 本物のプロファイルで見て回る（自分のログインを使う） {#real-profile-browsing-use-your-own-logins}
 

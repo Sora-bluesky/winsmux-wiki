@@ -67,14 +67,14 @@
       "translatedAt": "2026-10-23T22:51:08.165Z"
     },
     "developer-guide/cron-internals.md": {
-      "blob": "70106b13f40b4eb26a3e1ad1d265f16fa9092aad",
+      "blob": "b00c317f9eae5193387f4cf3140415cfe54b9bd8",
       "status": "translated",
-      "translatedAt": "2026-10-25T22:52:26.923Z"
+      "translatedAt": "2026-10-29T23:06:10.706Z"
     },
     "developer-guide/desktop-plugin-sdk.md": {
-      "blob": "81d1bfc3e16beab4b06420d128df17280af493b6",
+      "blob": "2d30cc7059aaac031f7368032067e49dcf4bd0c5",
       "status": "translated",
-      "translatedAt": "2026-10-28T22:52:48.298Z"
+      "translatedAt": "2026-10-29T23:06:10.710Z"
     },
     "developer-guide/egress-internals.md": {
       "blob": "dde37d99ace8f900d6f23431db168637c191dda4",
@@ -172,9 +172,9 @@
       "translatedAt": "2026-09-16T22:39:41.138Z"
     },
     "getting-started/installation.md": {
-      "blob": "7f9b2b2ac26986bfcee3dddced676555ba03124f",
+      "blob": "bd1a6539237d9daa6924369790b2b4873329c661",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.175Z"
+      "translatedAt": "2026-10-29T23:06:10.712Z"
     },
     "getting-started/learning-path.md": {
       "blob": "6ddce59518667babf1122eb07d2f8b6836050fe0",
@@ -397,9 +397,9 @@
       "translatedAt": "2026-10-26T22:56:07.745Z"
     },
     "reference/cli-commands.md": {
-      "blob": "982d1e91fa13bd188bb0c3044b55c6e94fc62c2c",
+      "blob": "baf1febbc5075d673e9b0d4de789ce5572a9d688",
       "status": "translated",
-      "translatedAt": "2026-10-26T22:56:07.749Z"
+      "translatedAt": "2026-10-29T23:06:10.716Z"
     },
     "reference/cli-symbols.md": {
       "blob": "76d0fcd513551ad62992ffc06f63494b1ad2bed9",
@@ -427,9 +427,9 @@
       "translatedAt": "2026-10-26T22:56:07.754Z"
     },
     "reference/optional-skills-catalog.md": {
-      "blob": "5351974c7412241c66f07e8bab981b9df5fd3e22",
+      "blob": "b6a9115984c30b299466449c919c912fcd45bc00",
       "status": "translated",
-      "translatedAt": "2026-10-27T22:51:04.083Z"
+      "translatedAt": "2026-10-29T23:06:10.717Z"
     },
     "reference/profile-commands.md": {
       "blob": "7baf4a26a3e2e5bea9659f447f18537ed47895c3",
@@ -437,14 +437,14 @@
       "translatedAt": "2026-10-12T22:45:40.788Z"
     },
     "reference/skills-catalog.md": {
-      "blob": "0c17cbbd927af3001b7fed43d71cb655b1bfa59b",
+      "blob": "96d45c9ef334ba80976d97963c6b989dd97084ea",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.193Z"
+      "translatedAt": "2026-10-29T23:06:10.719Z"
     },
     "reference/slash-commands.md": {
-      "blob": "00fd3815f4c6eecdc2d7e310b2337041b46ee33d",
+      "blob": "176a8fb91a734a5a7c1fc5036d956b8a186ea106",
       "status": "translated",
-      "translatedAt": "2026-10-24T23:12:49.449Z"
+      "translatedAt": "2026-10-29T23:06:10.721Z"
     },
     "reference/tools-reference.md": {
       "blob": "27f14469f6e14ba617e5c78133d29f2e6ade4362",
@@ -467,14 +467,14 @@
       "translatedAt": "2026-10-22T22:47:25.261Z"
     },
     "user-guide/cli.md": {
-      "blob": "2adca4b4c50e9bbbc35a5cd374a2521bf376df8d",
+      "blob": "d88f366bcee32c1a8aa55f8cce9a71cc70494f36",
       "status": "translated",
-      "translatedAt": "2026-10-21T22:45:33.355Z"
+      "translatedAt": "2026-10-29T23:06:10.722Z"
     },
     "user-guide/configuration.md": {
-      "blob": "eaae3d8521cf8bcadffe7a76c40c8713ab18adad",
+      "blob": "889057dc257ea622fb6a627be9b59aa2b99bd07e",
       "status": "translated",
-      "translatedAt": "2026-10-28T22:52:48.312Z"
+      "translatedAt": "2026-10-29T23:06:10.728Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "0e8e083d29713e3cf45d6b3cbc49700bd0cde974",
@@ -482,9 +482,9 @@
       "translatedAt": "2026-10-14T23:48:21.642Z"
     },
     "user-guide/desktop.md": {
-      "blob": "c1de9ee675efe88893c8b85613bdca37b7575668",
+      "blob": "d60ee040a0e48a8600506bb49db5b2f5a51741f5",
       "status": "translated",
-      "translatedAt": "2026-10-28T22:52:48.314Z"
+      "translatedAt": "2026-10-29T23:06:10.730Z"
     },
     "user-guide/docker.md": {
       "blob": "04b04008f85238372e543f3d4244de529d6a4c28",
@@ -517,9 +517,9 @@
       "translatedAt": "2026-10-22T22:47:25.270Z"
     },
     "user-guide/features/browser.md": {
-      "blob": "9234b6bcebaaca6aa575562abb78f5ddeb83f124",
+      "blob": "e7f96a28b7f1d23c1d1d6d634b4dbd98243eabf6",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.202Z"
+      "translatedAt": "2026-10-29T23:06:10.732Z"
     },
     "user-guide/features/built-in-plugins.md": {
       "blob": "43a033d62ef4a64d7776b7dd90305c1428b943a5",
@@ -557,9 +557,9 @@
       "translatedAt": "2026-09-24T22:55:05.663Z"
     },
     "user-guide/features/cron.md": {
-      "blob": "d59dca2c3a799730a32b2540cf0d508c4cf0a81c",
+      "blob": "74bb4a150d6f76b961ccf6bc85e05d776953a5ca",
       "status": "translated",
-      "translatedAt": "2026-10-28T22:52:56.655Z"
+      "translatedAt": "2026-10-29T23:06:10.735Z"
     },
     "user-guide/features/curator.md": {
       "blob": "c89fab7267bac4c6d2120c06c0487c201c82b29f",
@@ -567,14 +567,14 @@
       "translatedAt": "2026-10-14T23:48:21.650Z"
     },
     "user-guide/features/delegation.md": {
-      "blob": "46a4a4f11bfe3a906150d14ba155a421cdce391f",
+      "blob": "bbfb81aef84fc4f33b7d784d2e72e6b91bed1a3f",
       "status": "translated",
-      "translatedAt": "2026-10-26T22:56:07.765Z"
+      "translatedAt": "2026-10-29T23:06:10.738Z"
     },
     "user-guide/features/deliverable-mode.md": {
-      "blob": "ea042049b33d23d91df269bdf350c9411c35ffd4",
+      "blob": "dc35c889ed271984b799f9303be379b690ceafee",
       "status": "translated",
-      "translatedAt": "2026-09-19T22:59:30.023Z"
+      "translatedAt": "2026-10-29T23:06:10.738Z"
     },
     "user-guide/features/document-extraction.md": {
       "blob": "308c0e894b83222219fc325850677b271acc1204",
@@ -687,9 +687,9 @@
       "translatedAt": "2026-10-16T22:46:20.845Z"
     },
     "user-guide/features/skills.md": {
-      "blob": "4ecbd750b5a31c79535a2c333e7a69a0813d2078",
+      "blob": "ba9dd6e2e7639df0cae0a266b5a4b4797479aa81",
       "status": "translated",
-      "translatedAt": "2026-10-22T22:47:25.286Z"
+      "translatedAt": "2026-10-29T23:06:10.739Z"
     },
     "user-guide/features/skins.md": {
       "blob": "dbf4b2f749294294982d93c9ed846d4e5fb9db2d",
@@ -767,9 +767,9 @@
       "translatedAt": "2026-10-23T22:51:08.211Z"
     },
     "user-guide/managed-scope.md": {
-      "blob": "46f9654477fe5efaf25e095b7738f6fa39d49eb4",
+      "blob": "6a10e285c0c4f2fd91b354bad4887e073e2ab6e1",
       "status": "translated",
-      "translatedAt": "2026-08-20T16:08:36.002Z"
+      "translatedAt": "2026-10-29T23:06:10.740Z"
     },
     "user-guide/messaging/a2a.md": {
       "blob": "c6e26aebbf76e695ccb2dd7893526b955524c0fe",
@@ -907,9 +907,9 @@
       "translatedAt": "2026-09-25T22:58:06.460Z"
     },
     "user-guide/messaging/telegram.md": {
-      "blob": "2ab887a536b0885f9251df05e80ae2ba2b718f7c",
+      "blob": "557ecc24a24977ed14706ad96fc2267f404b7784",
       "status": "translated",
-      "translatedAt": "2026-10-19T22:45:56.232Z"
+      "translatedAt": "2026-10-29T23:06:10.742Z"
     },
     "user-guide/messaging/webhooks.md": {
       "blob": "bc413bfe35981156f60fc0a472426d84ad4a1a5f",
@@ -937,9 +937,9 @@
       "translatedAt": "2026-10-01T22:47:09.520Z"
     },
     "user-guide/messaging/whatsapp.md": {
-      "blob": "23b33ff06e3637d9205442a3cfefab99e58c8dcb",
+      "blob": "fd69d7af519f7e723a5dd85417622764520290c8",
       "status": "translated",
-      "translatedAt": "2026-10-04T22:47:27.586Z"
+      "translatedAt": "2026-10-29T23:06:10.743Z"
     },
     "user-guide/messaging/yuanbao.md": {
       "blob": "e85b9da27673cdd2b662ac52ac313f9d15ac285c",
@@ -987,14 +987,14 @@
       "translatedAt": "2026-09-16T22:39:41.194Z"
     },
     "user-guide/security.md": {
-      "blob": "65fbd1e0e4fe2be81a424967643feb342232d2bb",
+      "blob": "2e0d44d0373ee1b0ecd077c173077963b706a02b",
       "status": "translated",
-      "translatedAt": "2026-10-24T23:12:49.439Z"
+      "translatedAt": "2026-10-29T23:06:10.746Z"
     },
     "user-guide/sessions.md": {
-      "blob": "2f3c2d93b8e7ae1ed4eef35fab5e3f8ea6a64942",
+      "blob": "13b6703c63fd7a9ba985c6c38413e8598b18a716",
       "status": "translated",
-      "translatedAt": "2026-10-25T22:49:03.821Z"
+      "translatedAt": "2026-10-29T23:06:10.748Z"
     },
     "user-guide/skills/bundled/apple/apple-apple-notes.md": {
       "blob": "d845e5b31985bb38ddf388f816a66993f4d3f177",
@@ -1017,9 +1017,9 @@
       "translatedAt": "2026-09-20T22:40:21.482Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md": {
-      "blob": "93604424f0a186e7f14dc35f3b9efc5db4ac4834",
+      "blob": "315ecf7fefd6767565c66f75b9825a020ae21f58",
       "status": "translated",
-      "translatedAt": "2026-10-04T22:47:27.747Z"
+      "translatedAt": "2026-10-29T23:06:10.749Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex.md": {
       "blob": "7e88ecfa76a4e91da58808ce871f09d7f1b15603",
@@ -1032,13 +1032,13 @@
       "translatedAt": "2026-10-23T22:51:08.216Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md": {
-      "blob": "a0f39f317ed7b1041c381b9aaada2845b8a873b8",
+      "blob": "9e1a056cab6761f93a6cbd96f8fd32367c6cdfd9",
       "status": "translated",
-      "translatedAt": "2026-09-25T22:58:06.502Z"
+      "translatedAt": "2026-10-29T23:06:10.749Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode.md": {
       "blob": "c458d8d33eb51ab12551ee1ac9271f2b650740b7",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T23:06:07.241Z"
     },
     "user-guide/skills/bundled/creative/creative-architecture-diagram.md": {
@@ -1062,9 +1062,9 @@
       "translatedAt": "2026-09-29T22:49:53.526Z"
     },
     "user-guide/skills/bundled/creative/creative-claude-design.md": {
-      "blob": "050dbf1b42a1a4aa69e2f3b27cde69f6bfc1f180",
+      "blob": "d919921e431506d849e218daaa1eb538e04eeb39",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.242Z"
+      "translatedAt": "2026-10-29T23:06:10.750Z"
     },
     "user-guide/skills/bundled/creative/creative-comfyui.md": {
       "blob": "4c8d4dcc7d7362c57976428996e85cea0f9e80f3",
@@ -1073,7 +1073,7 @@
     },
     "user-guide/skills/bundled/creative/creative-design-md.md": {
       "blob": "6e9a3fa8d27389bc2f1e037dacdea9145685bc24",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T23:06:07.242Z"
     },
     "user-guide/skills/bundled/creative/creative-excalidraw.md": {
@@ -1097,9 +1097,9 @@
       "translatedAt": "2026-09-20T23:06:07.244Z"
     },
     "user-guide/skills/bundled/creative/creative-popular-web-designs.md": {
-      "blob": "81b3e48737981057a37f10a841e78a7d085f3b0d",
+      "blob": "dacb1d456855416bfcb35d199da4614b73de4a57",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.217Z"
+      "translatedAt": "2026-10-29T23:06:10.751Z"
     },
     "user-guide/skills/bundled/creative/creative-pretext.md": {
       "blob": "f94cd035ebcc6b71ee7c0fad60153ca6e37cf172",
@@ -1168,12 +1168,12 @@
     },
     "user-guide/skills/bundled/media/media-gif-search.md": {
       "blob": "31d0e03eb88298fe59401d3959079befc56b75e0",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T22:40:21.488Z"
     },
     "user-guide/skills/bundled/media/media-songsee.md": {
       "blob": "dd1e1d3d5eec34513c887adcc96e3cd123ea57ed",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T22:40:21.488Z"
     },
     "user-guide/skills/bundled/media/media-youtube-content.md": {
@@ -1213,22 +1213,22 @@
     },
     "user-guide/skills/bundled/productivity/productivity-airtable.md": {
       "blob": "3166b0a6738a62a88efafc0e2e34bd30305e1ed1",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-23T22:51:08.218Z"
     },
     "user-guide/skills/bundled/productivity/productivity-box.md": {
       "blob": "6f4620becb2f673598c6f83e03ecd9130a0def70",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T23:06:07.245Z"
     },
     "user-guide/skills/bundled/productivity/productivity-document-to-action-items.md": {
-      "blob": "bb7b6c0bfebc14a214efacd2a46f35cf5211ddcf",
+      "blob": "7b5e5c2c6e2990fee9d69e9cac5ecf0b6163f02f",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.245Z"
+      "translatedAt": "2026-10-29T23:06:10.751Z"
     },
     "user-guide/skills/bundled/productivity/productivity-docx.md": {
       "blob": "707a695d0157f4be36dc7dbc6bf1afebe0837220",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T23:06:07.246Z"
     },
     "user-guide/skills/bundled/productivity/productivity-google-workspace.md": {
@@ -1242,9 +1242,9 @@
       "translatedAt": "2026-09-20T22:40:21.490Z"
     },
     "user-guide/skills/bundled/productivity/productivity-meeting-action-items.md": {
-      "blob": "e25810984ea68817d1b872984b16a90136df62b5",
+      "blob": "4bc39457a88be6b827c00624e22c751fe67e49ef",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.247Z"
+      "translatedAt": "2026-10-29T23:06:10.752Z"
     },
     "user-guide/skills/bundled/productivity/productivity-nano-pdf.md": {
       "blob": "602100d582af51644adfa35b38963abf6b9e2134",
@@ -1253,7 +1253,7 @@
     },
     "user-guide/skills/bundled/productivity/productivity-notion.md": {
       "blob": "b198d73f60c7e805e5067a6ba8e68bd035711fdd",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.959Z"
     },
     "user-guide/skills/bundled/productivity/productivity-ocr-and-documents.md": {
@@ -1262,13 +1262,13 @@
       "translatedAt": "2026-09-19T22:42:36.368Z"
     },
     "user-guide/skills/bundled/productivity/productivity-pdf.md": {
-      "blob": "ddf2d91450fa4c0db62fc37bdba565fb96355ccf",
+      "blob": "330f50718f947e37f5eddf5108c2eb019cbeb3f8",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.247Z"
+      "translatedAt": "2026-10-29T23:06:10.753Z"
     },
     "user-guide/skills/bundled/productivity/productivity-powerpoint.md": {
       "blob": "c90ac0690d2bbbc061cdecb24e2a6515179d9002",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T23:06:07.248Z"
     },
     "user-guide/skills/bundled/productivity/productivity-product-price-monitor.md": {
@@ -1287,13 +1287,13 @@
       "translatedAt": "2026-09-20T22:40:21.490Z"
     },
     "user-guide/skills/bundled/productivity/productivity-weekly-review-planning.md": {
-      "blob": "0e13a1b3b63dc246ddcc536316f9647e0c80dc8f",
+      "blob": "d9019437b1fc4078f22e8c2a29934ec1f2a678fe",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.249Z"
+      "translatedAt": "2026-10-29T23:06:10.754Z"
     },
     "user-guide/skills/bundled/productivity/productivity-xlsx.md": {
       "blob": "235b232d73f554ec8fbf3624e10a35652efd1eec",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T23:06:07.249Z"
     },
     "user-guide/skills/bundled/research/research-arxiv.md": {
@@ -1323,7 +1323,7 @@
     },
     "user-guide/skills/bundled/research/research-llm-wiki.md": {
       "blob": "b449baadfde4200ba715898027cc86b402862e73",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.961Z"
     },
     "user-guide/skills/bundled/research/research-research-paper-writing.md": {
@@ -1348,22 +1348,22 @@
     },
     "user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring.md": {
       "blob": "cc363d7d7df1ea2eeecb278fe2d51352dafa44b1",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:49:03.822Z"
     },
     "user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom.md": {
       "blob": "516f42bbb930c47583d59f1a3a5ccba45a545fa8",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.961Z"
     },
     "user-guide/skills/bundled/software-development/software-development-node-inspect-debugger.md": {
       "blob": "90fd243bce8585a56e667c58d95fc597f581a1ac",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T23:06:07.252Z"
     },
     "user-guide/skills/bundled/software-development/software-development-python-debugpy.md": {
       "blob": "d0d8fe7b4b79737ab851dfbbd6804433665ab0f9",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.962Z"
     },
     "user-guide/skills/bundled/software-development/software-development-requesting-code-review.md": {
@@ -1417,9 +1417,9 @@
       "translatedAt": "2026-10-02T22:46:55.517Z"
     },
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands.md": {
-      "blob": "e05bfa83e0bafd87f24bbe32880d679209c35f4f",
+      "blob": "b5789d0a42a044e6876609a69138dccbda8c2544",
       "status": "translated",
-      "translatedAt": "2026-09-20T22:40:21.495Z"
+      "translatedAt": "2026-10-29T23:06:10.755Z"
     },
     "user-guide/skills/optional/blockchain/blockchain-evm.md": {
       "blob": "32865877213aa868c45baf295412b1ab9e42308d",
@@ -1443,7 +1443,7 @@
     },
     "user-guide/skills/optional/creative/creative-audiocraft-audio-generation.md": {
       "blob": "ae2b0d903a03e3f215092f6103dfe850771b2049",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.962Z"
     },
     "user-guide/skills/optional/creative/creative-baoyu-article-illustrator.md": {
@@ -1472,9 +1472,9 @@
       "translatedAt": "2026-09-20T23:06:07.258Z"
     },
     "user-guide/skills/optional/creative/creative-heartmula.md": {
-      "blob": "fa91ac23e221b93ce1f07ddcb390be433b50437a",
+      "blob": "6ef31849b3fe6b3a1ff84be7e6e4b6b27641d526",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.258Z"
+      "translatedAt": "2026-10-29T23:06:10.757Z"
     },
     "user-guide/skills/optional/creative/creative-hyperframes.md": {
       "blob": "b5c04a0a21c73a99ddf9139cadb0e4f6b2ce90cc",
@@ -1482,9 +1482,9 @@
       "translatedAt": "2026-09-20T23:06:07.259Z"
     },
     "user-guide/skills/optional/creative/creative-kanban-video-orchestrator.md": {
-      "blob": "fa9efde06d45ab0be9ee2e4d816af33699848c86",
+      "blob": "3515ae317dfcf2b1f5bae2a9474e80da4f6822a3",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.259Z"
+      "translatedAt": "2026-10-29T23:06:10.758Z"
     },
     "user-guide/skills/optional/creative/creative-meme-generation.md": {
       "blob": "2842e94e5f90450a36679dbda7937e408cd71551",
@@ -1572,14 +1572,14 @@
       "translatedAt": "2026-10-23T22:51:08.221Z"
     },
     "user-guide/skills/optional/finance/finance-dcf-model.md": {
-      "blob": "6d2710e81bd1f3feb3560fe816a8c802c8f65879",
+      "blob": "55cfb97dc1582add2c831e0dad4877d185df3641",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.222Z"
+      "translatedAt": "2026-10-29T23:06:10.759Z"
     },
     "user-guide/skills/optional/finance/finance-excel-author.md": {
-      "blob": "60a9dc20bc8341070832472d7bfb7d874e5baec6",
+      "blob": "ed1a459f602fa9ca14d106809adc1aa5cea3581b",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.263Z"
+      "translatedAt": "2026-10-29T23:06:10.759Z"
     },
     "user-guide/skills/optional/finance/finance-lbo-model.md": {
       "blob": "cd16a4634813f25d6ccfb1cb600834da0e18ee54",
@@ -1597,9 +1597,9 @@
       "translatedAt": "2026-09-20T22:40:21.505Z"
     },
     "user-guide/skills/optional/finance/finance-pptx-author.md": {
-      "blob": "22b1bd39fea5d00748cf5b90bc37b3ab8a1fcc65",
+      "blob": "8ad8c51d18ffbd234c0702356d0c2cba1b59755e",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.265Z"
+      "translatedAt": "2026-10-29T23:06:10.760Z"
     },
     "user-guide/skills/optional/finance/finance-stocks.md": {
       "blob": "0fd703752c2ba551e82b4be1b0d598dba5c603e2",
@@ -1658,7 +1658,7 @@
     },
     "user-guide/skills/optional/mlops/mlops-clip.md": {
       "blob": "e9266e443b29d3f229ce6d1fa26bac387efa465e",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.966Z"
     },
     "user-guide/skills/optional/mlops/mlops-faiss.md": {
@@ -1673,22 +1673,22 @@
     },
     "user-guide/skills/optional/mlops/mlops-guidance.md": {
       "blob": "d8f7de7512a1f21224c9067aed93f14d32bd62f9",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T22:40:21.511Z"
     },
     "user-guide/skills/optional/mlops/mlops-huggingface-tokenizers.md": {
       "blob": "723cf707a7f70671d76eb38c5fcc8314366560c0",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T22:40:21.511Z"
     },
     "user-guide/skills/optional/mlops/mlops-inference-outlines.md": {
       "blob": "6e247586b9e242ef3d39826401fc99cc3d81bf46",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.968Z"
     },
     "user-guide/skills/optional/mlops/mlops-instructor.md": {
       "blob": "323b03847d9124ef34ba84d23654738cb3cea38b",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.968Z"
     },
     "user-guide/skills/optional/mlops/mlops-lambda-labs.md": {
@@ -1698,7 +1698,7 @@
     },
     "user-guide/skills/optional/mlops/mlops-llava.md": {
       "blob": "bd50b50ab43dbd45d4d925df23b1f1b4ec6feac4",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.970Z"
     },
     "user-guide/skills/optional/mlops/mlops-modal.md": {
@@ -1717,9 +1717,9 @@
       "translatedAt": "2026-10-25T22:52:26.971Z"
     },
     "user-guide/skills/optional/mlops/mlops-obliteratus.md": {
-      "blob": "08d659b00306ff799340dfbee7e03369567efa5e",
+      "blob": "198a62da0b3ba0867dcca0d4b40a0e51ec2962b7",
       "status": "translated",
-      "translatedAt": "2026-10-25T22:52:26.971Z"
+      "translatedAt": "2026-10-29T23:06:10.761Z"
     },
     "user-guide/skills/optional/mlops/mlops-peft.md": {
       "blob": "f5ed6889a9865843e5ad62b512db43c8eb889b80",
@@ -1728,7 +1728,7 @@
     },
     "user-guide/skills/optional/mlops/mlops-pinecone.md": {
       "blob": "d9e57578dde69f352442c4a7a2ee908e8123f547",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T22:40:21.516Z"
     },
     "user-guide/skills/optional/mlops/mlops-pytorch-fsdp.md": {
@@ -1743,7 +1743,7 @@
     },
     "user-guide/skills/optional/mlops/mlops-qdrant.md": {
       "blob": "c167093093087e04da877eb1cba431e1a30e3b45",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T22:40:21.518Z"
     },
     "user-guide/skills/optional/mlops/mlops-research-dspy.md": {
@@ -1768,7 +1768,7 @@
     },
     "user-guide/skills/optional/mlops/mlops-stable-diffusion.md": {
       "blob": "8bc55a8d88c5c0b138a5a1ebe24525a4fe07f76e",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.973Z"
     },
     "user-guide/skills/optional/mlops/mlops-tensorrt-llm.md": {
@@ -1788,7 +1788,7 @@
     },
     "user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning.md": {
       "blob": "d46746137ad327c1289134659272e02c0482f576",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T22:40:21.522Z"
     },
     "user-guide/skills/optional/mlops/mlops-training-unsloth.md": {
@@ -1798,7 +1798,7 @@
     },
     "user-guide/skills/optional/mlops/mlops-whisper.md": {
       "blob": "458316b67c1a106dea1d93020c31c421dd185ff3",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.974Z"
     },
     "user-guide/skills/optional/payments/payments-mpp-agent.md": {
@@ -1837,14 +1837,14 @@
       "translatedAt": "2026-09-20T23:06:07.269Z"
     },
     "user-guide/skills/optional/productivity/productivity-shopify.md": {
-      "blob": "9b718d69479d29a96532d9d842b76d794438a3d1",
+      "blob": "6ea97dd0dc6378abf322ceb658c8c4cc562e24ea",
       "status": "translated",
-      "translatedAt": "2026-09-20T22:40:21.525Z"
+      "translatedAt": "2026-10-29T23:07:10.241Z"
     },
     "user-guide/skills/optional/productivity/productivity-siyuan.md": {
-      "blob": "7451ee8d71fee691f0c8fb1076d733ca7197ee27",
+      "blob": "242ac1619ba4687bc1b32b5437b0b457bb37181e",
       "status": "translated",
-      "translatedAt": "2026-09-20T22:40:21.526Z"
+      "translatedAt": "2026-10-29T23:07:10.242Z"
     },
     "user-guide/skills/optional/productivity/productivity-telephony.md": {
       "blob": "b0b2116092e8c89154ed2f2ae3b012903e62a04f",
@@ -1893,7 +1893,7 @@
     },
     "user-guide/skills/optional/research/research-pinecone-research.md": {
       "blob": "dd6a9eb0796dbb9745d557f7f991b3dbcce50c4a",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T22:40:21.528Z"
     },
     "user-guide/skills/optional/research/research-qmd.md": {
@@ -1977,9 +1977,9 @@
       "translatedAt": "2026-10-25T22:49:03.823Z"
     },
     "user-guide/which-file-does-what.md": {
-      "blob": "fdd9f43de58c65c964ff1b954d634dab2575b13a",
+      "blob": "6c9f21e31d1853ab695692f9037332bb4212844b",
       "status": "translated",
-      "translatedAt": "2026-09-18T22:41:13.568Z"
+      "translatedAt": "2026-10-29T23:07:10.274Z"
     },
     "user-guide/windows-native.md": {
       "blob": "9a02f8a9ddb71fd7cea9f5fe2801fa3dd9634906",
@@ -2027,9 +2027,9 @@
       "translatedAt": "2026-09-18T22:41:13.282Z"
     },
     "user-guide/skills/optional/creative/creative-comfyui.md": {
-      "blob": "e490349a2544fe592906c8465c1c9bab1520abc8",
+      "blob": "aba8707c504daf0990684831a9f95c9cbe8fa648",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.277Z"
+      "translatedAt": "2026-10-29T23:06:10.756Z"
     },
     "user-guide/skills/optional/research/research-research-paper-writing.md": {
       "blob": "94f7c9bf8193864c5004330d57670c999c1fba3b",
@@ -2053,7 +2053,7 @@
     },
     "user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases.md": {
       "blob": "d94837dd03c6ad235a0d86dffb025f9c1f0e0b9f",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.980Z"
     },
     "user-guide/skills/optional/mlops/mlops-evaluation-evaluating-llms-harness.md": {
@@ -2123,7 +2123,7 @@
     },
     "user-guide/skills/optional/mlops/mlops-models-huggingface-hub.md": {
       "blob": "ee1cd9e093f5bc4a9ac3060fe3d64b91c57bcf36",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T22:40:21.538Z"
     },
     "user-guide/skills/bundled/software-development/software-development-codebase-inspection.md": {
@@ -2181,9 +2181,9 @@
       "translatedAt": "2026-10-23T22:51:08.230Z"
     },
     "user-guide/features/credential-vault.md": {
-      "blob": "f4531f625985609183825a3f862b2039ff018096",
+      "blob": "b023c8c7953e0aefab46140487df83a6ca1928f6",
       "status": "translated",
-      "translatedAt": "2026-10-25T22:49:03.823Z"
+      "translatedAt": "2026-10-29T23:06:10.733Z"
     },
     "user-guide/free-tier.md": {
       "blob": "c03e502406b34d7e0a09fa2c9915aa4eb6494f99",
@@ -2301,9 +2301,9 @@
       "translatedAt": "2026-09-14T22:41:51.876Z"
     },
     "user-guide/skills/optional/creative/creative-auteur.md": {
-      "blob": "9f1a066061f9a9ca1400449c4a5879799288089c",
+      "blob": "c4a4878ea08a91c921db84ed36a2e83fb9ecaf98",
       "status": "translated",
-      "translatedAt": "2026-09-18T22:41:13.373Z"
+      "translatedAt": "2026-10-29T23:06:10.756Z"
     },
     "user-guide/skills/optional/creative/creative-ip-as-logo.md": {
       "blob": "54ec430c54c8dc788dc8dd04dbe13b4d4d51793a",
@@ -2336,9 +2336,9 @@
       "translatedAt": "2026-10-06T22:54:12.216Z"
     },
     "user-guide/features/bot-screen.md": {
-      "blob": "de65327fbf46f91afbdadacb9f31370198d1b1c9",
+      "blob": "1e7a3e4f5298240d2680ea0d1c7bb0fee0b58c82",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.234Z"
+      "translatedAt": "2026-10-29T23:06:10.731Z"
     },
     "developer-guide/macos-bundle-updates.md": {
       "blob": "3e1aa2aab2a5c50bd258068193c9d814d3a5a77f",
@@ -2366,9 +2366,9 @@
       "translatedAt": "2026-10-20T22:44:13.259Z"
     },
     "reference/package-management.md": {
-      "blob": "0d8585cb1a04ccbba5d07a5e2959da61dceee83c",
+      "blob": "ea477f61952f00c831bd1b693dcffc8af81f0380",
       "status": "translated",
-      "translatedAt": "2026-10-28T22:52:48.326Z"
+      "translatedAt": "2026-10-29T23:06:10.718Z"
     },
     "user-guide/switching-to-source.md": {
       "blob": "766782bed736ffa0bbb0ff70d3c46212547257a4",
@@ -2391,9 +2391,9 @@
       "translatedAt": "2026-09-28T22:47:58.504Z"
     },
     "developer-guide/plugins/catalog-submission.md": {
-      "blob": "6561a2a0c82f451acc922a40cbbb3f61efa7e56d",
+      "blob": "858a07fa78fb5ff37db5b48ead6509026691f70c",
       "status": "translated",
-      "translatedAt": "2026-10-25T22:49:03.825Z"
+      "translatedAt": "2026-10-29T23:06:10.711Z"
     },
     "user-guide/skills/optional/productivity/productivity-first-task.md": {
       "blob": "9153daa48b2bc88a21d7ceb9956a8709951c6060",
@@ -2436,9 +2436,9 @@
       "translatedAt": "2026-10-23T22:51:08.237Z"
     },
     "developer-guide/browser-vault-plugin.md": {
-      "blob": "b538b352e127672be0e0fa0f66a14fc1d7bb9de8",
+      "blob": "ec33caa5f860bad16cc0047fa7a8f3d435c1218a",
       "status": "translated",
-      "translatedAt": "2026-10-25T22:49:03.827Z"
+      "translatedAt": "2026-10-29T23:06:10.702Z"
     },
     "developer-guide/config-backend.md": {
       "blob": "4a921560f6945a42644901c9ba164abc53751da1",
@@ -2449,7 +2449,72 @@
       "blob": "33194e5cf054492ccf94d5e28251467e4ed2aba3",
       "status": "translated",
       "translatedAt": "2026-10-28T22:52:48.328Z"
+    },
+    "user-guide/skills/bundled/productivity/productivity-microsoft-office.md": {
+      "blob": "b9a6dd6cdf39bca0cddd12b4670218598c289c7c",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:06:10.752Z"
+    },
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode.md": {
+      "blob": "e65213a67731bf9f34b5915977326e95e8f0d440",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:06:10.754Z"
+    },
+    "user-guide/skills/optional/creative/creative-design-md.md": {
+      "blob": "397f1f34fb14ea09e7c3aafd6c13db2d5e1419aa",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:06:10.757Z"
+    },
+    "user-guide/skills/optional/media/media-gif-search.md": {
+      "blob": "2f971e0892bfc28286a83936ad75df8c1165f48e",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:06:10.760Z"
+    },
+    "user-guide/skills/optional/media/media-songsee.md": {
+      "blob": "ff791fef0bbdfe05a5ad3f73cb8536abfd5c93bf",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:06:10.761Z"
+    },
+    "user-guide/skills/optional/productivity/productivity-airtable.md": {
+      "blob": "75ea68c20cfb0dfc106ca1d3dc7cc52befa2a629",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:06:10.762Z"
+    },
+    "user-guide/skills/optional/productivity/productivity-box.md": {
+      "blob": "e3ba0f0b88bb7532c1feb2f949c4e0dd53b866ec",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:07:10.208Z"
+    },
+    "user-guide/skills/optional/productivity/productivity-notion.md": {
+      "blob": "56a2627004a576a842e7446dd0d8c1f3c7420866",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:07:10.240Z"
+    },
+    "user-guide/skills/optional/research/research-llm-wiki.md": {
+      "blob": "8f79702f7ae4bc2776da6d39b67dd4d3269b753c",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:07:10.243Z"
+    },
+    "user-guide/skills/optional/software-development/software-development-hermes-agent-skill-authoring.md": {
+      "blob": "1bd4ecea0ede5460d253801bfcb1a51de3943ef3",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:07:10.271Z"
+    },
+    "user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom.md": {
+      "blob": "5ae1f73c16e13d347429aea23eb8974e40898088",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:07:10.272Z"
+    },
+    "user-guide/skills/optional/software-development/software-development-node-inspect-debugger.md": {
+      "blob": "57bdc0cc3b3ff582d514b30c614704fad645b69b",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:07:10.272Z"
+    },
+    "user-guide/skills/optional/software-development/software-development-python-debugpy.md": {
+      "blob": "78c5b7ba50256b1f2667ad076d2648262bcad097",
+      "status": "translated",
+      "translatedAt": "2026-10-29T23:07:10.273Z"
     }
   },
-  "snapshotCommit": "0c74cc682dc81bf78b78a1737b3ee77a820ccb79"
+  "snapshotCommit": "088f657ecf77674c7b8e2ededf4e3576d82e042c"
 }

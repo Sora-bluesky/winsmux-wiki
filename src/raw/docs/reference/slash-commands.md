@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 00fd3815f4c6eecdc2d7e310b2337041b46ee33d
+upstream_blob: 176a8fb91a734a5a7c1fc5036d956b8a186ea106
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -160,7 +160,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 
 | コマンド | 説明 |
 |---------|-------------|
-| `/<skill-name>` | インストール済みのスキルを、必要なときに呼び出すコマンドとして読み込みます。例: `/gif-search`、`/github-pr-workflow`、`/excalidraw`。 |
+| `/<skill-name>` | インストール済みのスキルを、必要なときに呼び出すコマンドとして読み込みます。例: `/youtube-content`、`/github-pr-workflow`、`/excalidraw`。 |
 | `/skills ...` | レジストリと公式の任意スキルのカタログから、スキルを検索、閲覧、確認、インストール、監査、公開、設定します。 |
 
 ### クイックコマンド {#quick-commands}

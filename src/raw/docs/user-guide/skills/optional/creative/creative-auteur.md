@@ -2,7 +2,7 @@
 title: "Auteur — 映画のように演出された、賞レベルの Web ページを設計して作る"
 description: "映画のように演出された、賞レベルの Web ページを設計して作る"
 upstream_path: user-guide/skills/optional/creative/creative-auteur.md
-upstream_blob: 9f1a066061f9a9ca1400449c4a5879799288089c
+upstream_blob: c4a4878ea08a91c921db84ed36a2e83fb9ecaf98
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-auteur
 ---
@@ -22,7 +22,7 @@ sources:
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `web-design`, `cinematic`, `scroll-animation`, `design-system`, `anti-slop`, `frontend` |
-| 関連 skill | [`popular-web-designs`](/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/), [`design-md`](/hermes/docs/user-guide/skills/bundled/creative/creative-design-md/), [`p5js`](/hermes/docs/user-guide/skills/bundled/creative/creative-p5js/) |
+| 関連 skill | [`popular-web-designs`](/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/), [`design-md`](/hermes/docs/user-guide/skills/optional/creative/creative-design-md/), [`p5js`](/hermes/docs/user-guide/skills/bundled/creative/creative-p5js/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Weekly Review Planning — 週ごとの仕切り直し: 約束、止まっている仕事、来週の計画"
 description: "週ごとの仕切り直し: 約束、止まっている仕事、来週の計画"
 upstream_path: user-guide/skills/bundled/productivity/productivity-weekly-review-planning.md
-upstream_blob: 0e13a1b3b63dc246ddcc536316f9647e0c80dc8f
+upstream_blob: d9019437b1fc4078f22e8c2a29934ec1f2a678fe
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning
 ---
@@ -23,7 +23,7 @@ sources:
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Weekly-Review`, `Planning`, `Tasks`, `Calendar`, `Productivity` |
-| 関連 skill | [`obsidian`](/hermes/docs/user-guide/skills/bundled/note-taking/note-taking-obsidian/), [`notion`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/), [`airtable`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-airtable/), [`google-workspace`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/), [`email-inbox-triage`](/hermes/docs/user-guide/skills/bundled/email/email-email-inbox-triage/) |
+| 関連 skill | [`obsidian`](/hermes/docs/user-guide/skills/bundled/note-taking/note-taking-obsidian/), [`notion`](/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/), [`airtable`](/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/), [`google-workspace`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/), [`email-inbox-triage`](/hermes/docs/user-guide/skills/bundled/email/email-email-inbox-triage/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

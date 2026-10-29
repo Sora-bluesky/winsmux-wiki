@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ボットの画面"
 description: ""
 upstream_path: user-guide/features/bot-screen.md
-upstream_blob: de65327fbf46f91afbdadacb9f31370198d1b1c9
+upstream_blob: 1e7a3e4f5298240d2680ea0d1c7bb0fee0b58c82
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/bot-screen
 ---
@@ -90,6 +90,10 @@ WebSocket のブリッジは、リースのファイルを読み直すまでの�
   止められることはありません。だれも使っていない画面は
   `bot_desktop.idle_stop_minutes`（既定は 30）が過ぎると止まり、次に使うときに戻ってきます。
   つまりインスタンスがデスクトップのぶんを負担するのは、そこで何かが動いている間だけです。
+  この時間は画面自身も見ているので、画面を起動したゲートウェイがいなくなったまま
+  再起動しない場合も、画面は止まります。人が引き継いだ画面は、その人のビューアーが使い続けている間は
+  残ります。ただし、この時間の 4 倍、かつ少なくとも 10 分のあいだ何にも使われなかった場合
+  （接続が切れて、そのまま戻ってこなかったビューアーなど）は、やはり止まり、操作権はエージェントに戻ります。
   小さなインスタンス向けの目安: 4 GB でデスクトップは動き、ブラウザを使った引き継ぎに
   余裕が出るのは 8 GB からです。
 

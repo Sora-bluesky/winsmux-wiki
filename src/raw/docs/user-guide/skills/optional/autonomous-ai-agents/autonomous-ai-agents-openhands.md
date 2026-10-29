@@ -2,7 +2,7 @@
 title: "Openhands — OpenHands CLI にコーディングを任せる（モデルを選ばない、LiteLLM）"
 description: "OpenHands CLI にコーディングを任せる（モデルを選ばない、LiteLLM）"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands.md
-upstream_blob: e05bfa83e0bafd87f24bbe32880d679209c35f4f
+upstream_blob: b5789d0a42a044e6876609a69138dccbda8c2544
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands
 ---
@@ -22,7 +22,7 @@ OpenHands CLI にコーディングを任せます（モデルを選ばない、
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos |
 | タグ | `Coding-Agent`, `OpenHands`, `Model-Agnostic`, `LiteLLM` |
-| 関連 skill | [`claude-code`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/), [`codex`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/), [`opencode`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode/), [`hermes-agent`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/) |
+| 関連 skill | [`claude-code`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/), [`codex`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/), [`opencode`](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/), [`hermes-agent`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

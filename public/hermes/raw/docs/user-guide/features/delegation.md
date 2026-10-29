@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: 46a4a4f11bfe3a906150d14ba155a421cdce391f
+upstream_blob: bbfb81aef84fc4f33b7d784d2e72e6b91bed1a3f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -599,7 +599,8 @@ delegate_task(
 CLI が終了する前に、その結果を最後の返答に使えます。
 
 - **自動で合流します:** 有効にする設定やバックグラウンドモードの上書きは要りません。
-  TTY の対話チャットとメッセージングのセッションでは、これまでどおりバックグラウンドで委任します。
+  TTY の対話チャットでは、これまでどおりバックグラウンドで委任します。メッセージングのセッションは
+  `delegation.gateway_mode` に従います（後述）。
 - **入力ごとの方針:** CLI は、終わりのある実行として扱うことを、受け付けたプロンプトと一緒に記録します。
   対話セッションを再開した場合も同じです。そのセッションの作成時の方針、ほかの閲覧者、
   デーモンの環境は変えません。
@@ -615,6 +616,61 @@ CLI が終了する前に、その結果を最後の返答に使えます。
 CLI を閉じても、ゲートウェイが持つターンは終了せず、切り離されるだけです。子の実行は
 その所有者のプロセス内にとどまるので、所有者が再起動しても残す必要がある作業には、
 永続的なスケジューラーを使ってください。
+
+## 途中経過のメッセージを出さないメッセージングのチャット {#messaging-chats-without-interim-messages}
+
+メッセージ系のプラットフォームでは、バックグラウンドの委任は親に、1 行の状況報告を送って
+ターンを終えるよう伝えます。そのプラットフォームで `display.interim_assistant_messages` が
+無効だと、その状況報告がターンの最終的な回答になるので、チャットには「作業中です」という
+メッセージが届き、本当の回答は 2 通目のメッセージとして届くことになります。これを調整するのが
+`delegation.gateway_mode` です。
+
+```yaml
+delegation:
+  gateway_mode: auto   # auto (default) | inline | background
+```
+
+- **`auto`:** 最終的に決まった `display.interim_assistant_messages`（全体の値、
+  `display.platforms.<platform>` での上書き、またはそのプラットフォームの既定値）が無効な
+  メッセージングのチャットでは、ターンの中で子と合流します。親は `delegate_task` の呼び出しの中で待ち、
+  そこで結果を受け取って、完成した回答を 1 通だけ送ります。途中経過のメッセージが有効なチャット、
+  API サーバー、ローカルのセッション、webhook では、これまでどおりバックグラウンドで委任します。
+- **`inline`:** すべてのゲートウェイのセッションが、ターンの中で子と合流します。
+- **`background`**（別名 `async`）: すべてのゲートウェイのセッションが、バックグラウンドでの委任を続けます。
+
+inline のセッションの `delegate_task` は、結果が呼び出しの中で返ると説明し、動いている子を
+操作するための引数（`action` の list/steer/stop、`subagent_id`、`message`）を除きます。
+一度きりの実行と同じスキーマです。待っている間は入力中の表示が出たままで、ターンはほかの
+時間のかかるツールの呼び出しと同じようにふるまいます。`/stop` で子は止まり、既定の
+`busy_input_mode: interrupt` のもとでは、続けて送ったメッセージでも止まります（子はそれぞれ、
+途中までの出力を持った中断の結果を返します）。`queue` のもとでは、続けて送ったメッセージは
+そのターンが終わるのを待ちます。入れ子の委任は変わりません。
+
+`agent.gateway_notify_interval`（既定は 180 秒）を超えて続く inline のターンにも、これまでどおり
+定期的な「まだ作業中です」の知らせが届きます。この知らせは `display.long_running_notifications`
+で別に制御されていて、Telegram、Slack、Discord、WhatsApp では既定で有効です。1 ターンの
+メッセージを 1 通だけにしたいなら、そのプラットフォームでこちらも `off` にしてください
+（`generic` は知らせの文言を変えるだけです）。
+
+```yaml
+display:
+  interim_assistant_messages: false
+  platforms:
+    telegram:
+      long_running_notifications: false
+```
+
+このモードはセッションのツールのスキーマの一部で、スキーマは会話と一緒に固定されます。
+`gateway_mode` や `interim_assistant_messages` の変更は、次のセッション（`/new`）から効きます。
+動いているチャットは、ゲートウェイの再起動、エージェントのキャッシュからの追い出し、文脈の圧縮、
+`/reload-mcp` をまたいでも、始めたときのモードを保ちます。予定された心拍のターンは、そのターン
+自身についてだけ途中経過のメッセージを止め、チャットのモードは変えません。例外がひとつあります。
+Hermes を更新したあとの最初のターンでは、セッションのツールの定義が新しいコードから作り直される
+ので、そのターンでチャットはいまの設定に切り替わります。
+
+`delegate_task` を `tools.tool_search.defer` に並べると、そのセッションでは inline が無効になります。
+モデルは通常の（バックグラウンドの）`delegate_task` のスキーマを `tool_describe` を通じて読み込み、
+委任はモデルに見えているスキーマに従うからです。
 
 ## 寿命と残り方 {#lifetime-and-durability}
 
@@ -700,6 +756,7 @@ delegation:
   max_iterations: 250                       # Max turns per child (default: 250)
   # max_concurrent_children: 10             # Parallel children per batch (default: 10)
   # independent_completions: false          # true = each task/group returns as it finishes (default: one message per call)
+  # gateway_mode: auto                      # auto | inline | background (see Messaging chats without interim messages)
   # worktree_isolation: false               # Give each child its own git worktree (see Worktree Isolation above)
   # max_spawn_depth: 1                      # Tree depth (floor 1, no ceiling, default 1 = flat). Raise to 2 to allow orchestrator children to spawn leaves; 3+ for deeper trees.
   # orchestrator_enabled: true              # Disable to force all children to leaf role.

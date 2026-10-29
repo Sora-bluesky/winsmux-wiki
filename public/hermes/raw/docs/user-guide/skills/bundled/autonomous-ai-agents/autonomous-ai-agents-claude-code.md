@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）"
 description: "Claude Code CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md
-upstream_blob: 93604424f0a186e7f14dc35f3b9efc5db4ac4834
+upstream_blob: 315ecf7fefd6767565c66f75b9825a020ae21f58
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code
 ---
@@ -23,7 +23,7 @@ Claude Code CLI にコーディングを任せます（機能追加、PR）。
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Coding-Agent`, `Claude`, `Anthropic`, `Code-Review`, `Refactoring`, `PTY`, `Automation` |
-| 関連 skill | [`codex`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/), [`hermes-agent`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/), [`opencode`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode/) |
+| 関連 skill | [`codex`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/), [`hermes-agent`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/), [`opencode`](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

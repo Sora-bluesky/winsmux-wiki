@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Siyuan — SiYuan のナレッジベースを API から読み書きする"
 description: "SiYuan のナレッジベースを API から読み書きする"
 upstream_path: user-guide/skills/optional/productivity/productivity-siyuan.md
-upstream_blob: 7451ee8d71fee691f0c8fb1076d733ca7197ee27
+upstream_blob: 242ac1619ba4687bc1b32b5437b0b457bb37181e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-siyuan
 ---
@@ -23,7 +23,7 @@ SiYuan のナレッジベースを API から読み書きします。
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `SiYuan`, `Notes`, `Knowledge Base`, `PKM`, `API` |
-| 関連 skill | [`obsidian`](/hermes/docs/user-guide/skills/bundled/note-taking/note-taking-obsidian/), [`notion`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/) |
+| 関連 skill | [`obsidian`](/hermes/docs/user-guide/skills/bundled/note-taking/note-taking-obsidian/), [`notion`](/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

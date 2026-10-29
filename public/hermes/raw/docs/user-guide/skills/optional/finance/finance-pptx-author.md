@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Pptx Author — python-pptx でヘッドレスに PowerPoint 資料を作る"
 description: "python-pptx でヘッドレスに PowerPoint 資料を作る"
 upstream_path: user-guide/skills/optional/finance/finance-pptx-author.md
-upstream_blob: 22b1bd39fea5d00748cf5b90bc37b3ab8a1fcc65
+upstream_blob: 8ad8c51d18ffbd234c0702356d0c2cba1b59755e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-pptx-author
 ---
@@ -23,7 +23,7 @@ python-pptx を使い、ヘッドレスで PowerPoint 資料を作ります。
 | ライセンス | Apache-2.0 |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `powerpoint`, `pptx`, `python-pptx`, `presentation`, `finance` |
-| 関連 skill | [`excel-author`](/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/), [`powerpoint`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-powerpoint/) |
+| 関連 skill | [`excel-author`](/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/), [`microsoft-office`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -37,7 +37,7 @@ python-pptx を使い、ヘッドレスで PowerPoint 資料を作ります。
 
 [anthropics/financial-services](https://github.com/anthropics/financial-services) にある Anthropic の `pptx-author` と `pitch-deck` skill をもとにしています。原典の MCP / Office-JS を使う分岐は落としてあり、ここではヘッドレスの Python を前提にします。
 
-スライド、発表者ノート、埋め込み、メディアまで扱う本格的な PowerPoint 作成なら、標準で入っている `powerpoint` skill を使ってください。この skill は、モデルの数値に裏付けられた資料（提案資料、投資委員会向けメモ、決算メモ）のように、どの数字も元のワークブックまでたどれることが求められる場面向けの、より軽い作り方です。
+スライド、発表者ノート、埋め込み、メディアまで扱う本格的な PowerPoint 作成なら、標準で入っている `microsoft-office` skill を使ってください。この skill は、モデルの数値に裏付けられた資料（提案資料、投資委員会向けメモ、決算メモ）のように、どの数字も元のワークブックまでたどれることが求められる場面向けの、より軽い作り方です。
 
 ## 成果物の決まり {#output-contract}
 
@@ -46,9 +46,38 @@ python-pptx を使い、ヘッドレスで PowerPoint 資料を作ります。
 
 ## 準備 {#setup}
 
+`python` で `pptx` をすでに import できる場合（Hermes の Docker イメージには入っています）は、それをそのまま使います。
+そうでなく `hermes` が PATH にあるなら、Hermes のホーム配下に、共有でバージョンを固定した
+documents 環境を Hermes に作らせます（複数のエージェントから同時に実行しても安全です）。
+Hermes のない Docker サンドボックスでは、このブロックがサンドボックスのホームに、同じ固定バージョンで venv を作ります。
+microsoft-office/pdf skill と同じブロックです。Hermes を動かしているインタープリターには、
+決して `pip install` しないでください:
+
 ```bash
-pip install "python-pptx>=0.6"
+python -c "import pptx" 2>/dev/null && PY=python || if command -v hermes >/dev/null 2>&1; then
+  PY="$(hermes pm environment documents --extra documents --extra documents-pdf)"
+else
+  PY="$HOME/.cache/hermes-docs-venv/bin/python"
+  "$PY" -c "import docx, openpyxl, pptx, reportlab, pypdf, pdfplumber, pypdfium2" 2>/dev/null || (
+    # Safe to run from several agents at once: each caller builds a private venv,
+    # a symlink publishes the first finished one atomically, the others delete theirs.
+    mkdir -p "$HOME/.cache" && cd "$HOME/.cache" && stage="$(mktemp -d hermes-docs-venv.XXXXXX)" || exit 1
+    old="$(readlink hermes-docs-venv)"  # an earlier build that no longer imports, if any
+    python3 -m venv "$stage" &&
+      "$stage/bin/python" -m pip install -q --disable-pip-version-check python-docx==1.2.0 openpyxl==3.1.5 python-pptx==1.0.2 reportlab==5.1.0 pypdf==6.21.2 pdfplumber==0.11.10 pypdfium2==5.14.0 &&
+      "$stage/bin/python" -c "import docx, openpyxl, pptx, reportlab, pypdf, pdfplumber, pypdfium2" &&
+      if [ -z "$old" ]; then python3 -c 'import os, sys; os.symlink(*sys.argv[1:])' "$stage" hermes-docs-venv
+      elif [ "$(readlink hermes-docs-venv)" = "$old" ]; then
+        ln -s "$stage" "$stage.lnk" && python3 -c 'import os, sys; os.replace(*sys.argv[1:])' "$stage.lnk" hermes-docs-venv &&
+          case "$old" in hermes-docs-venv.??????) rm -rf "$old" ;; esac
+      fi 2>/dev/null
+    [ "$(readlink hermes-docs-venv)" = "$stage" ] || rm -rf "$stage" "$stage.lnk"
+  )
+fi
+export PY
 ```
+
+資料を作る Python は `"$PY"` で実行します。
 
 ## 基本の作法 {#core-conventions}
 
@@ -185,8 +214,8 @@ slide.shapes.title.text = f"Implied share price of ${implied_mid:.2f} (base case
 ## この skill を使わないほうがよい場面 {#when-not-to-use-this-skill}
 
 - PowerPoint を開いた状態で作業していて、Office の MCP が使える場合 — 開いているファイルを直接操作するほうが向いています。
-- 金融以外の資料（全社会議、マーケティング資料など） — 汎用の `powerpoint` skill を使ってください。
-- アニメーション、画面切り替え、発表者ノートを多用する資料 — 汎用の `powerpoint` skill を使ってください。
+- 金融以外の資料（全社会議、マーケティング資料など） — 汎用の `microsoft-office` skill を使ってください。
+- アニメーション、画面切り替え、発表者ノートを多用する資料 — 汎用の `microsoft-office` skill を使ってください。
 
 ## 出典 {#attribution}
 

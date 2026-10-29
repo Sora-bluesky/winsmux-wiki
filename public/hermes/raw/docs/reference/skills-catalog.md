@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "同梱 skill カタログ"
 description: "Hermes Agent に最初から入っている skill の一覧"
 upstream_path: reference/skills-catalog.md
-upstream_blob: 0c17cbbd927af3001b7fed43d71cb655b1bfa59b
+upstream_blob: 96d45c9ef334ba80976d97963c6b989dd97084ea
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/skills-catalog
 ---
@@ -33,7 +33,6 @@ Hermes は `hermes update` のたびに同梱 skill を同期しますが、同�
 | [`codex`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/) | コーディングを OpenAI Codex CLI に任せます（機能追加や PR）。 | `autonomous-ai-agents/codex` |
 | [`computer-use`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use/) | まず裏側でデスクトップを操作し、必要な合図が出たら前面に切り替えます。 | `autonomous-ai-agents/computer-use` |
 | [`hermes-agent`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/) | Hermes Agent を使い、設定し、見た目を変え、拡張し、まとめて動かします。 | `autonomous-ai-agents/hermes-agent` |
-| [`opencode`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode/) | コーディングを OpenCode CLI に任せます（機能追加や PR レビュー）。 | `autonomous-ai-agents/opencode` |
 
 ## creative {#creative}
 
@@ -43,7 +42,7 @@ Hermes は `hermes update` のたびに同梱 skill を同期しますが、同�
 | [`ascii-video`](/hermes/docs/user-guide/skills/bundled/creative/creative-ascii-video/) | 動画や音声を色付きアスキーアートの MP4／GIF に変換します。 | `creative/ascii-video` |
 | [`baoyu-infographic`](/hermes/docs/user-guide/skills/bundled/creative/creative-baoyu-infographic/) | インフォグラフィック。21 種のレイアウト × 21 種のスタイル（信息图, 可视化）。 | `creative/baoyu-infographic` |
 | [`claude-design`](/hermes/docs/user-guide/skills/bundled/creative/creative-claude-design/) | 単発の HTML 作品をデザインします（LP・スライド・試作）。 | `creative/claude-design` |
-| [`design-md`](/hermes/docs/user-guide/skills/bundled/creative/creative-design-md/) | Google の DESIGN.md トークン仕様ファイルを書き、検証し、書き出します。 | `creative/design-md` |
+
 | [`humanizer`](/hermes/docs/user-guide/skills/bundled/creative/creative-humanizer/) | 文章から AI らしい言い回しを取り除き、自分の声を足します。 | `creative/humanizer` |
 | [`manim-video`](/hermes/docs/user-guide/skills/bundled/creative/creative-manim-video/) | Manim CE のアニメーション。3Blue1Brown 風の数学・アルゴリズム動画を作ります。 | `creative/manim-video` |
 | [`p5js`](/hermes/docs/user-guide/skills/bundled/creative/creative-p5js/) | p5.js のスケッチ。ジェネラティブアート、シェーダー、対話的な作品、3D。 | `creative/p5js` |
@@ -67,8 +66,7 @@ Hermes は `hermes update` のたびに同梱 skill を同期しますが、同�
 
 | Skill | 説明 | パス |
 |-------|-------------|------|
-| [`gif-search`](/hermes/docs/user-guide/skills/bundled/media/media-gif-search/) | curl と jq で Tenor の GIF を検索・ダウンロードします。 | `media/gif-search` |
-| [`songsee`](/hermes/docs/user-guide/skills/bundled/media/media-songsee/) | 音声のスペクトログラムや特徴量（メル、クロマ、MFCC）を CLI で求めます。 | `media/songsee` |
+
 | [`youtube-content`](/hermes/docs/user-guide/skills/bundled/media/media-youtube-content/) | YouTube の文字起こしを、要約・スレッド・ブログ記事に変えます。 | `media/youtube-content` |
 
 ## note-taking {#note-taking}
@@ -81,20 +79,19 @@ Hermes は `hermes update` のたびに同梱 skill を同期しますが、同�
 
 | Skill | 説明 | パス |
 |-------|-------------|------|
-| [`airtable`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-airtable/) | curl 経由の Airtable REST API。レコードの作成・取得・更新・削除、絞り込み、upsert。 | `productivity/airtable` |
-| [`box`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-box/) | Box でクラウド上のファイル、共有、検索、メタデータを扱います。 | `productivity/box` |
+
 | [`document-to-action-items`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items/) | 文書から、出典付きで義務・期限・作業を取り出します。 | `productivity/document-to-action-items` |
-| [`docx`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-docx/) | Word の .docx ファイルを作成・閲覧・編集し、ひな形化やレビューをします。 | `productivity/docx` |
+
 | [`google-workspace`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/) | gws CLI か Python で Gmail、カレンダー、ドライブ、ドキュメント、スプレッドシートを扱います。 | `productivity/google-workspace` |
 | [`maps`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-maps/) | OpenStreetMap／OSRM で住所変換、地点検索、経路、タイムゾーンを調べます。 | `productivity/maps` |
 | [`meeting-action-items`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items/) | 議事メモを、出典付きの決定事項・担当者・チケットに変えます。 | `productivity/meeting-action-items` |
-| [`notion`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/) | Notion API と ntn CLI。ページ、データベース、マークダウン、Workers。 | `productivity/notion` |
+| [`microsoft-office`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/) | Word、PowerPoint、Excel のファイルを作成・閲覧・編集します。 | `productivity/microsoft-office` |
 | [`pdf`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/) | PDF ファイルの作成、閲覧、結合、入力、OCR、文字の編集。 | `productivity/pdf` |
-| [`powerpoint`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-powerpoint/) | python-pptx で .pptx のスライドを作成・閲覧・編集します。 | `productivity/powerpoint` |
+
 | [`product-price-monitor`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-product-price-monitor/) | 商品・航空券・出品の価格を見張り、目標額になったら知らせます。 | `productivity/product-price-monitor` |
 | [`teams-meeting-pipeline`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline/) | Teams 会議の要約、ジョブの再実行、Graph のサブスクリプション。 | `productivity/teams-meeting-pipeline` |
 | [`weekly-review-planning`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning/) | 週次の棚卸し。約束したこと、止まっている作業、来週の計画。 | `productivity/weekly-review-planning` |
-| [`xlsx`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-xlsx/) | Excel の .xlsx ブックや CSV を作成・閲覧・編集します。 | `productivity/xlsx` |
+
 
 ## research {#research}
 
@@ -103,7 +100,7 @@ Hermes は `hermes update` のたびに同梱 skill を同期しますが、同�
 | [`arxiv`](/hermes/docs/user-guide/skills/bundled/research/research-arxiv/) | arXiv の論文を、キーワード・著者・分野・ID で検索します。 | `research/arxiv` |
 | [`competitor-news-monitor`](/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/) | 指定した企業の重要なニュースを見張り、出典付きのまとめを作ります。 | `research/competitor-news-monitor` |
 | [`grounded-citations`](/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/) | 回答や文書を、引用できて確かめられる出典に結び付けます。 | `research/grounded-citations` |
-| [`llm-wiki`](/hermes/docs/user-guide/skills/bundled/research/research-llm-wiki/) | Karpathy の LLM Wiki。相互リンクしたマークダウンの知識ベースを作って引きます。 | `research/llm-wiki` |
+
 
 ## social-media {#social-media}
 
@@ -118,10 +115,7 @@ Hermes は `hermes update` のたびに同梱 skill を同期しますが、同�
 | [`codebase-inspection`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-codebase-inspection/) | pygount でコードベースを調べます。行数、使用言語、その比率。 | `software-development/codebase-inspection` |
 | [`dogfood`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-dogfood/) | Web アプリを手探りで検証します。不具合を見つけ、証拠を残し、報告します。 | `software-development/dogfood` |
 | [`github`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-github/) | gh CLI で GitHub を扱います。PR、issue、レビュー、リポジトリ、認証。 | `software-development/github` |
-| [`hermes-agent-skill-authoring`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/) | リポジトリ内の SKILL.md を書きます。frontmatter と構成の作法。 | `software-development/hermes-agent-skill-authoring` |
-| [`inspecting-hermes-desktop-dom`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom/) | CDP 経由で、動いている Hermes デスクトップの DOM／CSS を読みます。 | `software-development/inspecting-hermes-desktop-dom` |
-| [`node-inspect-debugger`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-node-inspect-debugger/) | --inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグします。 | `software-development/node-inspect-debugger` |
-| [`python-debugpy`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-python-debugpy/) | Python のデバッグ。pdb の対話環境と debugpy のリモート接続（DAP）。 | `software-development/python-debugpy` |
+
 | [`requesting-code-review`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/) | コミット前のレビュー。安全性の走査、品質の関門、自動修正。 | `software-development/requesting-code-review` |
 | [`simplify-code`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-simplify-code/) | 直近のコード変更を、4 つのエージェントが並行して整理します。 | `software-development/simplify-code` |
 | [`spike`](/hermes/docs/user-guide/skills/bundled/software-development/software-development-spike/) | 作り込む前に思い付きを確かめる、使い捨ての実験。 | `software-development/spike` |

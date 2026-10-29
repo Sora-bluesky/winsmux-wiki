@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Excel Author — openpyxl でヘッドレスに監査できる財務ワークブックを作る"
 description: "openpyxl でヘッドレスに監査できる財務ワークブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-excel-author.md
-upstream_blob: 60a9dc20bc8341070832472d7bfb7d874e5baec6
+upstream_blob: ed1a459f602fa9ca14d106809adc1aa5cea3581b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-excel-author
 ---
@@ -23,7 +23,7 @@ openpyxl でヘッドレスに、監査できる財務ワークブックを作�
 | ライセンス | Apache-2.0 |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `excel`, `openpyxl`, `finance`, `spreadsheet`, `modeling` |
-| 関連 skill | [`xlsx`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-xlsx/), [`pptx-author`](/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/), [`dcf-model`](/hermes/docs/user-guide/skills/optional/finance/finance-dcf-model/), [`comps-analysis`](/hermes/docs/user-guide/skills/optional/finance/finance-comps-analysis/), [`lbo-model`](/hermes/docs/user-guide/skills/optional/finance/finance-lbo-model/), [`3-statement-model`](/hermes/docs/user-guide/skills/optional/finance/finance-3-statement-model/) |
+| 関連 skill | [`microsoft-office`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/), [`pptx-author`](/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/), [`dcf-model`](/hermes/docs/user-guide/skills/optional/finance/finance-dcf-model/), [`comps-analysis`](/hermes/docs/user-guide/skills/optional/finance/finance-comps-analysis/), [`lbo-model`](/hermes/docs/user-guide/skills/optional/finance/finance-lbo-model/), [`3-statement-model`](/hermes/docs/user-guide/skills/optional/finance/finance-3-statement-model/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -45,9 +45,37 @@ openpyxl でヘッドレスに、監査できる財務ワークブックを作�
 
 ## 準備 {#setup}
 
+`python` ですでに `openpyxl` を import できるなら、それを使います（Hermes の Docker イメージには最初から入っています）。
+そうでない場合、`hermes` が PATH にあれば、Hermes に任せて Hermes のホーム配下に共有のドキュメント用環境を作らせます。この環境はバージョンが固定されていて、
+複数のエージェントから同時に実行しても問題ありません。Hermes のない Docker サンドボックスでは、
+下のブロックがサンドボックスのホームに同じ固定バージョンで venv を作ります。このブロックは
+microsoft-office/pdf の skill と同じものです。Hermes を動かしているインタープリターには、決して `pip install` しないでください。
+
 ```bash
-pip install "openpyxl>=3.0"
+python -c "import openpyxl" 2>/dev/null && PY=python || if command -v hermes >/dev/null 2>&1; then
+  PY="$(hermes pm environment documents --extra documents --extra documents-pdf)"
+else
+  PY="$HOME/.cache/hermes-docs-venv/bin/python"
+  "$PY" -c "import docx, openpyxl, pptx, reportlab, pypdf, pdfplumber, pypdfium2" 2>/dev/null || (
+    # Safe to run from several agents at once: each caller builds a private venv,
+    # a symlink publishes the first finished one atomically, the others delete theirs.
+    mkdir -p "$HOME/.cache" && cd "$HOME/.cache" && stage="$(mktemp -d hermes-docs-venv.XXXXXX)" || exit 1
+    old="$(readlink hermes-docs-venv)"  # an earlier build that no longer imports, if any
+    python3 -m venv "$stage" &&
+      "$stage/bin/python" -m pip install -q --disable-pip-version-check python-docx==1.2.0 openpyxl==3.1.5 python-pptx==1.0.2 reportlab==5.1.0 pypdf==6.21.2 pdfplumber==0.11.10 pypdfium2==5.14.0 &&
+      "$stage/bin/python" -c "import docx, openpyxl, pptx, reportlab, pypdf, pdfplumber, pypdfium2" &&
+      if [ -z "$old" ]; then python3 -c 'import os, sys; os.symlink(*sys.argv[1:])' "$stage" hermes-docs-venv
+      elif [ "$(readlink hermes-docs-venv)" = "$old" ]; then
+        ln -s "$stage" "$stage.lnk" && python3 -c 'import os, sys; os.replace(*sys.argv[1:])' "$stage.lnk" hermes-docs-venv &&
+          case "$old" in hermes-docs-venv.??????) rm -rf "$old" ;; esac
+      fi 2>/dev/null
+    [ "$(readlink hermes-docs-venv)" = "$stage" ] || rm -rf "$stage" "$stage.lnk"
+  )
+fi
+export PY
 ```
+
+モデルを組み立てる Python は `"$PY"` で実行します。
 
 ## 中心となる作法（ここは譲れません） {#core-conventions-non-negotiable}
 

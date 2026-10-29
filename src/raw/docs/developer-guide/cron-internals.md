@@ -2,7 +2,7 @@
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: 70106b13f40b4eb26a3e1ad1d265f16fa9092aad
+upstream_blob: b00c317f9eae5193387f4cf3140415cfe54b9bd8
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -16,6 +16,7 @@ cron のサブシステムは、決まった時刻にタスクを実行する仕
 | ファイル | 役割 |
 |------|---------|
 | `cron/jobs.py` | ジョブのモデル、保存、`jobs.json` への不可分な読み書き |
+| `cron/jobs_time.py` | ジョブごとの `timezone` / `grace_minutes` の設定。値の検証、壊れた値があっても止まらない読み込み、実行時刻の走査で使うタイムゾーン |
 | `cron/scheduler.py` | スケジューラのループ。実行時刻が来たジョブの検出、実行、繰り返し回数の管理 |
 | `tools/cronjob_tools.py` | モデルから見える `cronjob_manage` ツールの登録とハンドラ |
 | `gateway/run.py` | ゲートウェイとの連携。常駐ループの中で cron を刻む |
@@ -33,6 +34,28 @@ cron のサブシステムは、決まった時刻にタスクを実行する仕
 | **ISO 形式の時刻** | `2025-01-15T09:00:00` | 一回きり。指定した時刻ちょうどに実行します |
 
 モデルから見えるのは `cronjob_manage` ツール1つだけで、その中で操作を切り替えます。`create`、`list`、`update`、`pause`、`resume`、`run`、`remove` があります。
+
+## ジョブごとのタイムゾーン {#per-job-timezone}
+
+`compute_next_run(schedule, last_run_at, *, timezone=...)` は、タイムゾーンを*ジョブの固定指定 → プロファイルの
+`timezone` → 基準のオフセット*の順に決めます。そして `next_run_at` を進める呼び出し元は**すべて**、ジョブの固定指定を渡します
+（前進させる各箇所、実行の確保の経路、再開と予約の入れ直し、復旧の経路、利用枠の上限や到達不能のときの計画処理）。
+1 か所でも渡し忘れると、保存された時刻と式が別々のタイムゾーンで解釈されるため、立て続けの再実行や、
+回の飛ばしとなって表れます。
+
+振り分けの経路でも、計算と同じく固定指定が欠かせません。`_evaluate_due_job` は `_DueJob` を
+`_ensure_aware(raw, zone_for_job(job))` で組み立てるので、その先のすべての判定がジョブの時計で行われます。
+タイムゾーンを固定したジョブは **`_repair_timezone_shifted_cron` をまるごと飛ばします**。この補修は、
+タイムゾーンが変わったときにプロファイルのタイムゾーンに*追従する*ジョブのためのものです。固定したジョブでは、
+保存されたオフセットがプロファイルのものと違っていて当然なので、補修の壁時計での比較
+（`_stored_wall_clock_is_future`）が、実行時刻の来た回をまだ未来のものと読み違え、次の回へ起点を移してしまいます。
+そうなると、ジョブは何の知らせもなく一度も実行されません。`compute_next_run` を直すだけでは
+足りないのはこのためです。
+
+`timezone` と `grace_minutes` は（`schedule` の中ではなく）記録の最上位にある項目で、作成と更新の両方の入り口で
+`jobs_time.normalize_*` によって検証されます。保存された値が壊れていた場合は、値ごとに 1 回だけ警告を出して
+プロファイルのタイムゾーンに戻します。60 秒ごとの走査が、壊れた記録 1 件のせいで止まってはいけないからです。
+移行作業は要りません。古い保存データにはこれらのキーがないだけで、読み込む側はどれも `.get()` を使っています。
 
 ## ジョブの保存先 {#job-storage}
 

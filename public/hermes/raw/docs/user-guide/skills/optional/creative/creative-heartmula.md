@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Heartmula — HeartMuLa: 歌詞とタグから Suno のように曲を作る"
 description: "HeartMuLa: 歌詞とタグから Suno のように曲を作る"
 upstream_path: user-guide/skills/optional/creative/creative-heartmula.md
-upstream_blob: fa91ac23e221b93ce1f07ddcb390be433b50437a
+upstream_blob: 6ef31849b3fe6b3a1ff84be7e6e4b6b27641d526
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-heartmula
 ---
@@ -23,7 +23,7 @@ HeartMuLa: 歌詞とタグから Suno のように曲を作ります。
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos |
 | タグ | `music`, `audio`, `generation`, `ai`, `heartmula`, `heartcodec`, `lyrics`, `songs` |
-| 関連 skill | [`audiocraft-audio-generation`](/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/), [`songwriting-and-ai-music`](/hermes/docs/user-guide/skills/bundled/creative/creative-songwriting-and-ai-music/) |
+| 関連 skill | [`songwriting-and-ai-music`](/hermes/docs/user-guide/skills/bundled/creative/creative-songwriting-and-ai-music/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Popular Web Designs — 実在する 54 のデザインシステム（Stripe、Linear、Vercel）を HTML/CSS で"
 description: "実在する 54 のデザインシステム（Stripe、Linear、Vercel）を HTML/CSS で"
 upstream_path: user-guide/skills/bundled/creative/creative-popular-web-designs.md
-upstream_blob: 81b3e48737981057a37f10a841e78a7d085f3b0d
+upstream_blob: dacb1d456855416bfcb35d199da4614b73de4a57
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-popular-web-designs
 ---
@@ -39,8 +39,8 @@ HTML/CSS を生成するときにそのまま使える、実在する 54 のデ�
   案を複数出す、手元の HTML 成果物を確かめる、AI くさいデザインを避ける）。
   よく知られたブランド風に、しっかり設計したページを求められたときは、この skill と
   組み合わせてください。`claude-design` が進行を受け持ち、この skill が視覚の語彙を供給します。
-- **`design-md`** — 成果物が、描画されたものではなく DESIGN.md というトークン仕様の
-  ファイルである場合に使います。
+- **`design-md`**（任意。導入するには `hermes skills install official/creative/design-md`）—
+  成果物が、描画されたものではなく DESIGN.md というトークン仕様のファイルである場合に使います。
 
 ## 使い方 {#how-to-use}
 

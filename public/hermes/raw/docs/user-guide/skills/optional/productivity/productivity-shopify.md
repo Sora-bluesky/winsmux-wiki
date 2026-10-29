@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Shopify — curl で Shopify の Admin / Storefront GraphQL API を使う"
 description: "curl で Shopify の Admin / Storefront GraphQL API を使う"
 upstream_path: user-guide/skills/optional/productivity/productivity-shopify.md
-upstream_blob: 9b718d69479d29a96532d9d842b76d794438a3d1
+upstream_blob: 6ea97dd0dc6378abf322ceb658c8c4cc562e24ea
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-shopify
 ---
@@ -23,7 +23,7 @@ curl で Shopify の Admin / Storefront GraphQL API を使います。
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Shopify`, `E-commerce`, `Commerce`, `API`, `GraphQL` |
-| 関連 skill | [`airtable`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-airtable/), [`xurl`](/hermes/docs/user-guide/skills/bundled/social-media/social-media-xurl/) |
+| 関連 skill | [`airtable`](/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/), [`xurl`](/hermes/docs/user-guide/skills/bundled/social-media/social-media-xurl/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

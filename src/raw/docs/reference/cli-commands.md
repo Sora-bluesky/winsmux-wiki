@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 982d1e91fa13bd188bb0c3044b55c6e94fc62c2c
+upstream_blob: baf1febbc5075d673e9b0d4de789ce5572a9d688
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -1670,6 +1670,7 @@ hermes sessions <subcommand>
 | `repair` | 壊れた `state.db` のスキーマを修復します（例: `table messages_fts already exists`）。これにより隠れていたセッションが再び現れます。先にバックアップが作られます。 |
 | `repair-routing` | ルーティングの identity を失って、セッション行の中に取り残されたゲートウェイの会話を再接続します（再起動後にチャットが「時間を遡って」しまう現象）。既定では dry-run です。`--apply` で採用を実行します（先にゲートウェイを停止してください）。`--max-gap-seconds N` で連続性のウィンドウを調整できます。曖昧でないケースだけが修復されます。詳細は [Sessions → Repair Stranded Gateway Sessions](/hermes/docs/user-guide/sessions/#repair-stranded-gateway-sessions) を参照してください。 |
 | `repair-prompts` | #122822 より前の、保守のための圧縮の不具合で劣化したことが確かめられる、保存済みのシステムプロンプトを報告します。既定では報告だけです。`--apply` で確認できた行を消し、次のターンで作り直させます。`--json` は機械で読める形式で出力します（`--apply` と組み合わせると対話なしで動きます）。`session_id` を明示すると破壊的な上書きになり、正常なプロンプトでも消せてしまいます。読み取れる tools[] の固定がない行や、メモリーだけの固定しかない行は、確認できないものとして報告され、走査では変更されません（メモリーだけのセッションを再開するとツール一式が固定し直され、その後の走査で消せるようになります）。`--apply` のあとは、修復した行を反映させるために、動いているゲートウェイを再起動してください。詳細は [Sessions → Repair Degraded Stored Prompts](/hermes/docs/user-guide/sessions/#repair-degraded-stored-prompts) を参照してください。 |
+| `refresh-prompts` | 続いているセッションが、次のターンで、保存済みのシステムプロンプトを今の `SOUL.md`、スキル、コンテキストファイルから作り直すようにします。会話の履歴とセッション ID はそのまま残ります。プロファイルのプロンプトの元になるファイルを更新したあとに実行してください。`--session ID`（ID または一意に決まる先頭部分）を付けると、対象を1つのセッションに絞れます。`--json` は記録されたエポックとセッション数を出力し、`-p/--profile` を付けると別のプロファイルが対象になります。ゲートウェイが動いたままでも使え（再起動は不要です）、再起動をまたいでも効果は残ります。作り直す各セッションでは、プロンプトキャッシュのミスが1回発生します。詳細は [Sessions → Refresh Prompts After a Profile Update](/hermes/docs/user-guide/sessions/#refresh-prompts-after-a-profile-update) を参照してください。 |
 | `repair-profiles` | 間違ったプロファイルに紛れ込んだ、セッション・ルーティング・Telegram のトピック・音声モードの状態を整えます（別プロファイルのストアにある行、セッションキーと矛盾するラベル、プロファイルを跨いで参照している親リンク、削除済みプロファイルのインデックス行）。既定では dry-run です。`--apply` は、各ストアをスナップショットした後に修復を実行します（先にゲートウェイを停止してください）。`--legacy-main rekey\|move` は、名前付きプロファイルのストア内にある `agent:main` 行の扱いを決めます。自動化には `--json` を使います。詳細は [Sessions → Repair State Crossed Between Profiles](/hermes/docs/user-guide/sessions/#repair-state-crossed-between-profiles) を参照してください。 |
 | `recover` | 壊れた `state.db` を、オフラインかつ非破壊的な方法で、別のクリーンなデータベースへ復旧します。 |
 | `retitle-skills` | `/skill` で開いたセッションのタイトルを、ユーザーが実際に入力した内容に基づいて再生成します。`--apply` を渡さない限り、変更内容を一覧するだけです。 |

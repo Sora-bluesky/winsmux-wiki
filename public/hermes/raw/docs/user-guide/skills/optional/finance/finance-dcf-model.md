@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Dcf Model — Excel で DCF 法の企業価値評価ワークブックを作る"
 description: "Excel で DCF 法の企業価値評価ワークブックを作る"
 upstream_path: user-guide/skills/optional/finance/finance-dcf-model.md
-upstream_blob: 6d2710e81bd1f3feb3560fe816a8c802c8f65879
+upstream_blob: 55cfb97dc1582add2c831e0dad4877d185df3641
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/finance/finance-dcf-model
 ---
@@ -646,7 +646,7 @@ B105: =B88/(1+(E48-0.07))      // Doesn't recalculate full DCF
 
 **なぜ誤りか:**
 - データの出どころを確かめられません
-- xlsx skill の要件を満たしません
+- `microsoft-office` skill の要件を満たしません
 - 監査に耐えません
 - あとで直す手間が増えます
 
@@ -711,7 +711,7 @@ Revenue Growth FY2,9%,12%,15%
 **なぜ誤りか:**
 - 入力と数式を見分けられません
 - 中身を追うことができなくなります
-- xlsx skill の要件に反します
+- `microsoft-office` skill の要件に反します
 
 **代わりに:** 決め打ちの入力はすべて青文字、数式はすべて黒文字、別シートへの参照は緑にします
 
@@ -771,14 +771,14 @@ Revenue Growth FY2,9%,12%,15%
 
 ## Excel ファイルの作成 {#excel-file-creation}
 
-**この skill は、表計算の操作をすべて `xlsx` skill に任せます。** xlsx skill が用意しているのは次のものです。
+**この skill は、表計算の操作をすべて `microsoft-office` skill に任せます。** この skill が用意しているのは次のものです。
 
 - 数式の書き方の統一ルール
 - 数値書式の作法
 - `recalc.py` スクリプトによる数式の自動再計算
 - ひととおりのエラーチェックと検証
 
-この skill が作る Excel ファイルは、数式エラーがゼロであることと再計算を済ませることを含め、xlsx skill の要件をすべて満たさなければなりません。
+この skill が作る Excel ファイルは、数式エラーがゼロであることと再計算を済ませることを含め、`microsoft-office` skill の要件をすべて満たさなければなりません。
 
 ## 品質の物差し {#quality-rubric}
 
@@ -861,11 +861,11 @@ python recalc.py AAPL_DCF_Model_2025-10-12.xlsx 30
 
 ### 見た目の決まりごと {#formatting-standards}
 
-**重要**: 数式の書き方と数値書式の作法は xlsx skill に従います。DCF の skill は、そこに見た目の決まりごとを足します。
+**重要**: 数式の書き方と数値書式の作法は `microsoft-office` skill に従います。DCF の skill は、そこに見た目の決まりごとを足します。
 
 **色の使い方 — 2 つの層**:
 
-**層 1: フォント色（xlsx skill で必須）**
+**層 1: フォント色（`microsoft-office` skill で必須）**
 - **青文字（RGB: 0,0,255）**: 決め打ちの入力すべて（株価、株式数、過去の実績、前提）
 - **黒文字（RGB: 0,0,0）**: 数式と計算結果すべて
 - **緑文字（RGB: 0,128,0）**: 別シートへの参照（WACC シートの参照など）
@@ -914,7 +914,7 @@ python recalc.py AAPL_DCF_Model_2025-10-12.xlsx 30
 
 **罫線は必須です。** 罫線の無いモデルは顧客に出せません。
 
-**数値書式**（xlsx skill の基準に従います）:
+**数値書式**（`microsoft-office` skill の基準に従います）:
 - **年度**: 文字列として扱います（"2,024" ではなく "2024"）
 - **パーセント**: `0.0%`（小数第 1 位まで）
 - **金額**: 百万単位は `$#,##0`、1 株あたりは `$#,##0.00`。単位は必ず見出しに書きます（"Revenue ($mm)"）
@@ -924,7 +924,7 @@ python recalc.py AAPL_DCF_Model_2025-10-12.xlsx 30
 
 **セルのコメント（決め打ちの入力すべてに必須）**:
 
-xlsx skill のとおり、決め打ちの値には出典を記したセルのコメントが必要です。書式は "Source: [System/Document], [Date], [Reference], [URL if applicable]" です。
+`microsoft-office` skill のとおり、決め打ちの値には出典を記したセルのコメントが必要です。書式は "Source: [System/Document], [Date], [Reference], [URL if applicable]" です。
 
 **重要**: コメントはセルを作るのと同時に付けます。最後にまとめてはいけません。
 
@@ -1229,7 +1229,7 @@ WACC = (Cost of Equity × Equity Weight) + (After-tax Cost of Debt × Debt Weigh
 ### モデルを組んでいるあいだ {#during-model-construction}
 
 1. **openpyxl で Excel モデルを組みます**（決め打ちの値ではなく数式で）
-2. **数式の書き方と見た目は xlsx skill の作法に従います**
+2. **数式の書き方と見た目は `microsoft-office` skill の作法に従います**
 3. **塗りつぶしの色は、頼まれたときや、ブランドの指定があるときだけあてます**
 
 ### モデルを渡す前に（必須） {#before-delivering-model-mandatory}

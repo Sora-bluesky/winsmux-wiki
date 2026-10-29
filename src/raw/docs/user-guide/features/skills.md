@@ -2,7 +2,7 @@
 title: "スキルの仕組み"
 description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェント管理のスキル、スキルのハブ"
 upstream_path: user-guide/features/skills.md
-upstream_blob: 4ecbd750b5a31c79535a2c333e7a69a0813d2078
+upstream_blob: ba9dd6e2e7639df0cae0a266b5a4b4797479aa81
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -80,10 +80,10 @@ hermes skills opt-in --sync      # undo: remove the marker and re-seed now
 
 ```bash
 # In the CLI or any messaging platform:
-/gif-search funny cats
+/excalidraw sketch the request flow for our API
 /axolotl help me fine-tune Llama 3 on my dataset
 /github-pr-workflow create a PR for the auth refactor
-/songsee analyze the frequency spread of this mix
+/youtube-content summarize https://youtu.be/dQw4w9WgXcQ
 
 # Just the skill name loads it and lets the agent ask what you need:
 /excalidraw
@@ -793,6 +793,7 @@ Hermes は GitHub のリポジトリや、GitHub を土台にした tap から�
 - [anthropics/skills](https://github.com/anthropics/skills)
 - [huggingface/skills](https://github.com/huggingface/skills)
 - [NVIDIA/skills](https://github.com/NVIDIA/skills) — NVIDIA が検証したスキル（署名された `skill.oms.sig` と、運営のための `skill-card.md` 付き）
+- [wandb/skills](https://github.com/wandb/skills)、[qdrant/skills](https://github.com/qdrant/skills)、[pinecone-io/skills](https://github.com/pinecone-io/skills) — 各社が自社の製品向けに出しているスキル
 - [garrytan/gstack](https://github.com/garrytan/gstack)
 - [K-Dense-AI/scientific-agent-skills](https://github.com/K-Dense-AI/scientific-agent-skills) と [synthetic-sciences/openscience](https://github.com/synthetic-sciences/openscience) — およそ480本の科学研究向けスキル（バイオインフォマティクス、化学、物理、機械学習の学習、学術のためのツール）で、`science` という1つのカテゴリにまとめられています。信頼はコミュニティの段階で、どのインストールもセキュリティ走査を受けます。多くは自前のライセンスを持つ第三者のツールを包んでいるので（GPL のものもあり、KEGG は学術以外の利用に商用ライセンスが要ります）、スキルごとの前提条件を確認してください。
 
@@ -912,7 +913,7 @@ hermes skills install skills-sh/anthropics/skills/pdf --force
 |-------|--------|--------|
 | `builtin` | Hermes に同梱 | 常に信頼されます |
 | `official` | リポジトリの `optional-skills/` | 組み込みの信頼で、第三者向けの警告は出ません |
-| `trusted` | `openai/skills`、`anthropics/skills`、`huggingface/skills`、`NVIDIA/skills` などの信頼された登録所やリポジトリ | コミュニティの入手元より緩やかな方針 |
+| `trusted` | `openai/skills`、`anthropics/skills`、`huggingface/skills`、`NVIDIA/skills`、`wandb/skills`、`qdrant/skills`、`pinecone-io/skills` などの信頼された登録所やリポジトリ | コミュニティの入手元より緩やかな方針 |
 | `community` | それ以外すべて（`skills.sh`、well-known の窓口、独自の GitHub のリポジトリ、たいていの市場） | dangerous でない指摘は `--force` で越えられます。`dangerous` の判定は遮断されたままです |
 
 ### 更新の流れ {#update-lifecycle}

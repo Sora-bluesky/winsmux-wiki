@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Document To Action Items — 書類から、出典付きの義務・期限・作業を取り出す"
 description: "書類から、出典付きの義務・期限・作業を取り出す"
 upstream_path: user-guide/skills/bundled/productivity/productivity-document-to-action-items.md
-upstream_blob: bb7b6c0bfebc14a214efacd2a46f35cf5211ddcf
+upstream_blob: 7b5e5c2c6e2990fee9d69e9cac5ecf0b6163f02f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items
 ---
@@ -23,7 +23,7 @@ sources:
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Documents`, `OCR`, `Action-Items`, `Deadlines`, `Extraction` |
-| 関連 skill | [`pdf`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/), [`pdf`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/), [`docx`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-docx/), [`notion`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/) |
+| 関連 skill | [`pdf`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/), [`microsoft-office`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/), [`notion`](/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -33,7 +33,7 @@ sources:
 
 # 書類から作業項目へ {#document-to-action-items}
 
-書類を、出典の付いた事実と、提案としての作業に変えます。ここで取り出したものは法的な助言ではありません。読み取りの確からしさが低い箇所や、言い回しがあいまいな箇所は、そのまま見える形で残す必要があります。取り出す仕組みそのものは `pdf` / `pdf` / `docx` の skill が担い、この skill は取り出したあとの扱いを担います。
+書類を、出典の付いた事実と、提案としての作業に変えます。ここで取り出したものは法的な助言ではありません。読み取りの確からしさが低い箇所や、言い回しがあいまいな箇所は、そのまま見える形で残す必要があります。取り出す仕組みそのものは `pdf` と `microsoft-office` の skill が担い、この skill は取り出したあとの扱いを担います。
 
 ## 使いどころ {#when-to-use}
 

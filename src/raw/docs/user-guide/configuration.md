@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: eaae3d8521cf8bcadffe7a76c40c8713ab18adad
+upstream_blob: 889057dc257ea622fb6a627be9b59aa2b99bd07e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -168,7 +168,7 @@ AI プロバイダーの設定（OpenRouter、Anthropic、カスタムエンド�
 
 非ストリーミングでの停滞した呼び出しの検知には `providers.<id>.stale_timeout_seconds` を設定でき、モデルごとに上書きするには `providers.<id>.models.<model>.stale_timeout_seconds` を使います。こちらは旧来の環境変数 `HERMES_API_CALL_STALE_TIMEOUT` より優先されます。同じキーは、ストリーミングでの停滞ストリームの期限としても使われます。明示的に設定した値はそのまま使われます。コンテキストの大きさに応じた暗黙のティア（50kトークン超で240秒、100k超で300秒）と推論モデル向けの下限は、既定の180秒にだけ適用されます。そのため、明示的な値を設定すると、応答の止まったストリームを待つ時間を短くできます。
 
-これらを設定しなければ、旧来の既定値（`HERMES_API_TIMEOUT=1800` 秒、`HERMES_API_CALL_STALE_TIMEOUT=90` 秒、ネイティブの Anthropic は900秒）のままです。非ストリーミングでの停滞の検知は、暗黙の設定のままならローカルのエンドポイントでは自動で無効になり、コンテキストが非常に大きいときは期限が長く伸びることがあります。AWS Bedrock には現在適用されません（`bedrock_converse` と AnthropicBedrock SDK のどちらの経路も、独自のタイムアウト設定を持つ boto3 を使うためです）。コメント付きの設定例は [`cli-config.yaml.example`](https://github.com/NousResearch/hermes-agent/blob/main/cli-config.yaml.example) を参照してください。
+これらを設定しなければ、旧来の既定値（`HERMES_API_TIMEOUT=1800` 秒、`HERMES_API_CALL_STALE_TIMEOUT=90` 秒、ネイティブの Anthropic は900秒）のままです。非ストリーミングでの停滞の検知は、暗黙の設定のままならローカルのエンドポイントでは自動で無効になり、コンテキストが非常に大きいときは期限が長く伸びることがあります。AWS Bedrock（`providers.bedrock`）では、決まったリクエストタイムアウトが、boto3 の Converse クライアント（`bedrock_converse`）と AnthropicBedrock SDK クライアントのソケット読み取りタイムアウトとして使われます。この値はリクエストごとに、そのとき使っているモデルに合わせて選ばれるので、`/model` でモデルを切り替えたときやフォールバックしたときは、切り替え先のモデルの値が使われます。接続タイムアウトは固定のままです（Converse では botocore の60秒、AnthropicBedrock では10秒）。また、読み取りタイムアウトが区切るのはソケットの1回ごとの読み取りで、呼び出し全体ではありません。設定しなければ、Converse では botocore の読み取り60秒、AnthropicBedrock では900秒のままです。コメント付きの設定例は [`cli-config.yaml.example`](https://github.com/NousResearch/hermes-agent/blob/main/cli-config.yaml.example) を参照してください。
 
 ## 更新の挙動 {#update-behavior}
 
@@ -2848,7 +2848,8 @@ browser:
   # Cloud browser selection (written by `hermes tools` → Browser Automation)
   cloud_provider: local          # local | browserbase | browser-use | firecrawl | nous | <provider plugin>; unset = autodetect from credentials
   auto_local_for_private_urls: true  # With a cloud provider, open LAN/localhost URLs in a local Chromium
-  allow_private_urls: false      # Allow private/internal addresses (localhost, 192.168.x.x, ...)
+                                     # (ignores allow_private_urls; false = refuse them instead)
+  allow_private_urls: false      # Legacy alias of security.allow_private_urls (guards cloud/CDP browsers, not the local Chromium)
   # Optional CDP override — when set, the browser tools attach to your own
   # Chromium-family browser (as /browser connect does) instead of launching one.
   cdp_url: ""
@@ -3058,6 +3059,7 @@ delegation:
   max_spawn_depth: 1                        # Delegation tree depth cap (1-3, clamped). 1 = flat (default): parent spawns leaves that cannot delegate. 2 = orchestrator children can spawn leaf grandchildren. 3 = three levels.
   orchestrator_enabled: true                # Global kill switch. When false, role="orchestrator" is ignored and every child is forced to leaf regardless of max_spawn_depth.
   oneshot_max_children: 2                   # Total subagents a one-shot run (hermes chat -q / --oneshot) may spawn; 0 = unlimited. Interactive and gateway sessions are never capped by this.
+  gateway_mode: auto                        # Gateway sessions: auto | inline | background. auto = join children inside the turn (one answer) on a messaging chat whose display.interim_assistant_messages is off. See Subagent Delegation → Messaging chats without interim messages.
 ```
 
 **委任の戦略（`backend`）:** `delegation.backend` は、各サブエージェントの経路を決める戦略プラグインを選びます。`default` は下のキーに従います（キーが空なら親の経路を使います）。`model_map`（タスクごとに名前付きのモデルを使う）や `profile_routes`（タスクごとに Hermes のプロファイルを使う）といったプラグインの戦略は、`delegation.backends.<backend name>` から設定を読みます。プラグインが見つからないか無効になっているバックエンドは、安全側に倒れて止まります。子を別の経路で動かす代わりに、`delegate_task` がそのバックエンド名と直し方（`/delegation default`、または `hermes config set delegation.backend default`）を示したツールエラーを返します。独自の `fallback_providers` を持たないバックエンドの経路は、`delegation.fallback_providers` を使います。詳しくは [サブエージェントへの委任 → 委任の戦略](/hermes/docs/user-guide/features/delegation/#delegation-strategies-delegationbackend) を参照してください。

@@ -2,7 +2,7 @@
 title: "Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 description: "Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md
-upstream_blob: a0f39f317ed7b1041c381b9aaada2845b8a873b8
+upstream_blob: 9e1a056cab6761f93a6cbd96f8fd32367c6cdfd9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent
 ---
@@ -22,7 +22,7 @@ Hermes Agent を使う、設定する、見た目を変える、拡張する、�
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `hermes`, `setup`, `configuration`, `multi-agent`, `spawning`, `cli`, `gateway`, `bots`, `bot-mode`, `features`, `themes`, `skins`, `desktop-plugins`, `tui-widgets`, `petdex`, `development` |
-| 関連 skill | [`claude-code`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/), [`codex`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/), [`opencode`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode/) |
+| 関連 skill | [`claude-code`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/), [`codex`](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/), [`opencode`](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -159,23 +159,37 @@ terminal(command="hermes chat -q 'Set up CI/CD for ~/myapp'", background=true)
 
 ### 対話的な PTY モード（tmux 経由） {#interactive-pty-mode-via-tmux}
 
-Hermes は prompt_toolkit を使っており、本物の端末を必要とします。対話的に立ち上げるときは tmux を使ってください。
+Hermes は prompt_toolkit を使っており、本物の端末を必要とします。対話的に立ち上げるときは tmux を使ってください。文字と `Enter` は、`send-keys` を 2 回に分けて送ります。1 回の呼び出しで文字と Enter をまとめて送ると、Hermes にはひとかたまりで届くため、Enter が送信ではなくメッセージ内の改行として扱われてしまいます。どちらの手順も、決まった秒数だけ待つのではなく、入力プロンプトの `❯` が出るまで待ちます（これは既定のスキンの記号です。スキンを変えている場合は、そのスキンのプロンプト記号に置き換えてください）。初回の起動は数秒どころではなく長くかかることがあり、プロンプトが出る前に送った入力は失われるためです。
 
 ```
 # Start
 terminal(command="tmux new-session -d -s agent1 -x 120 -y 40 'hermes'", timeout=10)
 
-# Wait for startup, then send a message
-terminal(command="sleep 8 && tmux send-keys -t agent1 'Build a FastAPI auth service' Enter", timeout=15)
+# Wait for the input prompt (❯), then send a message
+terminal(command="for i in $(seq 90); do tmux capture-pane -t agent1 -p | grep -q "❯" && break; sleep 1; done; tmux capture-pane -t agent1 -p | grep -q "❯" && tmux send-keys -t agent1 'Build a FastAPI auth service' && sleep 0.5 && tmux send-keys -t agent1 Enter", timeout=100)
 
 # Read output
 terminal(command="sleep 20 && tmux capture-pane -t agent1 -p", timeout=5)
 
 # Send follow-up
-terminal(command="tmux send-keys -t agent1 'Add rate limiting middleware' Enter", timeout=5)
+terminal(command="tmux send-keys -t agent1 'Add rate limiting middleware' && sleep 0.5 && tmux send-keys -t agent1 Enter", timeout=5)
 
 # Exit
-terminal(command="tmux send-keys -t agent1 '/exit' Enter && sleep 2 && tmux kill-session -t agent1", timeout=10)
+terminal(command="tmux send-keys -t agent1 '/exit' && sleep 0.5 && tmux send-keys -t agent1 Enter && sleep 2 && tmux kill-session -t agent1", timeout=10)
+```
+
+**tmux がない場合**（`command -v tmux` を実行しても何も表示されない場合。たとえば古い Hermes の Docker イメージなど）: Hermes を PTY 付きのバックグラウンドプロセスとして動かし、`process_manage` で操作します。標準入力が使えるのは `pty=true` のときだけです。文字を送り、少し間を置いてから、Enter キー（`"\r"`）を独立した `write` として送ってください。理由は tmux のときと同じで、文字の直後に届いた Enter は貼り付けの一部と見なされ、改行になってしまうからです。Enter を送るときは `submit` ではなく `write` を使います。最初の書き込みの前に、入力プロンプトが出るまで待ってください。Hermes は起動中に端末の色を問い合わせ、そのあと入力を捨てるため、プロンプトが出る前に書き込んだ文字は何も言われずに消えてしまいます。
+
+```
+terminal(command="hermes", background=true, pty=true)   # returns session_id
+process_manage(action="log", session_id="<id>", limit=20)   # repeat, with terminal(command="sleep 1") between, until the ❯ prompt line shows
+process_manage(action="write", session_id="<id>", data="Build a FastAPI auth service")
+terminal(command="sleep 0.5")
+process_manage(action="write", session_id="<id>", data="\r")
+process_manage(action="log", session_id="<id>", limit=40)   # read the screen
+process_manage(action="write", session_id="<id>", data="/exit")
+terminal(command="sleep 0.5")
+process_manage(action="write", session_id="<id>", data="\r")
 ```
 
 ### 複数のエージェントを組み合わせる {#multi-agent-coordination}
@@ -183,15 +197,15 @@ terminal(command="tmux send-keys -t agent1 '/exit' Enter && sleep 2 && tmux kill
 ```
 # Agent A: backend
 terminal(command="tmux new-session -d -s backend -x 120 -y 40 'hermes -w'", timeout=10)
-terminal(command="sleep 8 && tmux send-keys -t backend 'Build REST API for user management' Enter", timeout=15)
+terminal(command="for i in $(seq 90); do tmux capture-pane -t backend -p | grep -q "❯" && break; sleep 1; done; tmux capture-pane -t backend -p | grep -q "❯" && tmux send-keys -t backend 'Build REST API for user management' && sleep 0.5 && tmux send-keys -t backend Enter", timeout=100)
 
 # Agent B: frontend
 terminal(command="tmux new-session -d -s frontend -x 120 -y 40 'hermes -w'", timeout=10)
-terminal(command="sleep 8 && tmux send-keys -t frontend 'Build React dashboard for user management' Enter", timeout=15)
+terminal(command="for i in $(seq 90); do tmux capture-pane -t frontend -p | grep -q "❯" && break; sleep 1; done; tmux capture-pane -t frontend -p | grep -q "❯" && tmux send-keys -t frontend 'Build React dashboard for user management' && sleep 0.5 && tmux send-keys -t frontend Enter", timeout=100)
 
 # Check progress, relay context between them
 terminal(command="tmux capture-pane -t backend -p | tail -30", timeout=5)
-terminal(command="tmux send-keys -t frontend 'Here is the API schema from the backend agent: ...' Enter", timeout=5)
+terminal(command="tmux send-keys -t frontend 'Here is the API schema from the backend agent: ...' && sleep 0.5 && tmux send-keys -t frontend Enter", timeout=5)
 ```
 
 ### セッションを再開する {#session-resume}
@@ -210,7 +224,7 @@ terminal(command="tmux new-session -d -s resumed 'hermes --resume 20260225_14305
 - **コードを編集させるエージェントを立ち上げるときは `-w`（worktree モード）を使う** — git の衝突を防げます
 - **一回きりのモードではタイムアウトを設定する** — 込み入った作業は 5〜10 分かかることがあります
 - **投げっぱなしでよいときは `hermes chat -q` を使う** — PTY は要りません
-- **対話的なセッションには tmux を使う** — 生の PTY モードだと、prompt_toolkit との間で `\r` と `\n` の食い違いが起きます
+- **tmux が入っているなら、対話的なセッションには tmux を優先する** — `capture-pane` なら描画された画面をそのまま読めますが、PTY のバックグラウンド実行で代用した場合に読めるのは生の出力ログだけです
 - **決まった時刻に動かしたいとき**は、プロセスを立ち上げるのではなく `cronjob` ツールを使ってください。配信と再試行まで面倒を見てくれます
 - **「delegate_task が N 件で頭打ちになる」という報告** — `references/delegate-task-concurrency-diagnosis.md` を参照してください。Hermes には頭打ちになる経路が実際に 3 つあります。そのどれも起きていないなら、モデルが自分で手加減したうえで「ランタイムの上限だ」と理由づけしています。
 - **「外部のアプリから Nous Portal のサブスクや OAuth を使えるか」** — `references/portal-auth-for-third-party-apps.md` を参照してください。3 つの層（プラグインなのかアプリなのか、Portal が実際に何を公開しているのか、ローカルの仲介プロキシという選択肢）を順に説明してください。

@@ -2,7 +2,7 @@
 title: "Claude Design — 単発の HTML 成果物をデザインします（ランディングページ、スライド、プロトタイプ）"
 description: "単発の HTML 成果物をデザインします（ランディングページ、スライド、プロトタイプ）"
 upstream_path: user-guide/skills/bundled/creative/creative-claude-design.md
-upstream_blob: 050dbf1b42a1a4aa69e2f3b27cde69f6bfc1f180
+upstream_blob: d919921e431506d849e218daaa1eb538e04eeb39
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-claude-design
 ---
@@ -22,7 +22,7 @@ sources:
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `design`, `html`, `prototype`, `ux`, `ui`, `creative`, `artifact`, `deck`, `motion`, `design-system` |
-| 関連 skill | [`design-md`](/hermes/docs/user-guide/skills/bundled/creative/creative-design-md/), [`popular-web-designs`](/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/), [`excalidraw`](/hermes/docs/user-guide/skills/optional/creative/creative-excalidraw/), [`architecture-diagram`](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) |
+| 関連 skill | [`design-md`](/hermes/docs/user-guide/skills/optional/creative/creative-design-md/), [`popular-web-designs`](/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/), [`excalidraw`](/hermes/docs/user-guide/skills/optional/creative/creative-excalidraw/), [`architecture-diagram`](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -36,7 +36,7 @@ sources:
 
 ねらいは、Claude Design の役に立つデザインの振る舞いとセンスを保ちつつ、通常のエージェント環境には存在しないホスト版の裏方のしくみを取り除くことです。
 
-**始める前に、ほかの Web デザイン系 skill があるか確認してください。`popular-web-designs`（Stripe、Linear、Vercel、Notion などの、そのまま貼って使えるデザインシステム）や `design-md`（Google の DESIGN.md トークン仕様の書式）などです。** 特定ブランドの見た目にしたいなら、`popular-web-designs` をこの skill と一緒に読み込んで、見た目の語彙をそちらから供給させます。成果物が描画された作品ではなくトークンの仕様ファイルなら、代わりに `design-md` を使います。判断表は下にあります。
+**始める前に、ほかの Web デザイン系 skill があるか確認してください。`popular-web-designs`（Stripe、Linear、Vercel、Notion などの、そのまま貼って使えるデザインシステム）や `design-md`（Google の DESIGN.md トークン仕様の書式。オプションの skill で、`hermes skills install official/creative/design-md` を実行すると導入できます）などです。** 特定ブランドの見た目にしたいなら、`popular-web-designs` をこの skill と一緒に読み込んで、見た目の語彙をそちらから供給させます。成果物が描画された作品ではなくトークンの仕様ファイルなら、代わりに `design-md` を使います。判断表は下にあります。
 
 ## この skill と `popular-web-designs` と `design-md` の使い分け {#when-to-use-this-skill-vs-popular-web-designs-vs-design-md}
 

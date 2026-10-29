@@ -2,7 +2,7 @@
 title: "どのファイルが何をするのか"
 description: "SOUL.md と USER.md と MEMORY.md と AGENTS.md の違い。エージェントが持つファイルを1ページにまとめ、誰が書き、いつエージェントの目に入るのかを示します"
 upstream_path: user-guide/which-file-does-what.md
-upstream_blob: fdd9f43de58c65c964ff1b954d634dab2575b13a
+upstream_blob: 6c9f21e31d1853ab695692f9037332bb4212844b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/which-file-does-what
 ---
@@ -44,7 +44,7 @@ sources:
 
 ### 「セッションの途中で名前を伝えたのに、聞いていないかのように振る舞う」 {#i-told-it-my-name-mid-session-and-it-acted-like-it-never-heard-it}
 
-エージェントが名前をメモリに保存したのなら、その保存自体は成功しています。`memory` ツールの応答か `hermes journey list` で確かめられます。起きているのは、先ほどの固定スナップショットの話です。システムプロンプトはセッションの途中で更新されないため、*差し込まれた*メモリの塊はセッション開始時のままなのです。伝えた内容は会話の中に残っているので、そのセッション中もエージェントは使えますし、保存された項目は次のセッションからシステムプロンプトに入ります。同じことは、セッションが動いている最中に `SOUL.md` や `AGENTS.md` を書き換えた場合にも当てはまります。文脈はセッション開始時に組み立てられるので、変更を反映させたいならセッションを開き直してください。
+エージェントが名前をメモリに保存したのなら、その保存自体は成功しています。`memory` ツールの応答か `hermes journey list` で確かめられます。起きているのは、先ほどの固定スナップショットの話です。システムプロンプトはセッションの途中で更新されないため、*差し込まれた*メモリの塊はセッション開始時のままなのです。伝えた内容は会話の中に残っているので、そのセッション中もエージェントは使えますし、保存された項目は次のセッションからシステムプロンプトに入ります。同じことは、セッションが動いている最中に `SOUL.md` や `AGENTS.md` を書き換えた場合にも当てはまります。文脈はセッション開始時に組み立てられるので、変更を反映させたいならセッションを開き直してください。ゲートウェイ経由で長く続けていて、リセットしたくない会話の場合は、`hermes sessions refresh-prompts` を実行すると、履歴はそのままで次のターンから更新後のファイルが使われるようになります（[プロファイル更新後にプロンプトを反映させる](/hermes/docs/user-guide/sessions/#refresh-prompts-after-a-profile-update) を参照してください）。
 
 :::tip 迷ったときの早見表
 - エージェントの**話し方**を変えたい → `~/.hermes/SOUL.md` を編集します。[パーソナリティと SOUL.md](/hermes/docs/user-guide/features/personality/)。
