@@ -472,9 +472,9 @@
       "translatedAt": "2026-10-29T23:06:10.722Z"
     },
     "user-guide/configuration.md": {
-      "blob": "889057dc257ea622fb6a627be9b59aa2b99bd07e",
+      "blob": "bac17a9b104d347d88aee8246f7670f48ab81a7e",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.728Z"
+      "translatedAt": "2026-10-30T22:48:45.569Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "0e8e083d29713e3cf45d6b3cbc49700bd0cde974",
@@ -557,9 +557,9 @@
       "translatedAt": "2026-09-24T22:55:05.663Z"
     },
     "user-guide/features/cron.md": {
-      "blob": "74bb4a150d6f76b961ccf6bc85e05d776953a5ca",
+      "blob": "f4f915b46f70d296e187061935c318adaa775fa0",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.735Z"
+      "translatedAt": "2026-10-30T22:48:45.576Z"
     },
     "user-guide/features/curator.md": {
       "blob": "c89fab7267bac4c6d2120c06c0487c201c82b29f",
@@ -2516,5 +2516,5 @@
       "translatedAt": "2026-10-29T23:07:10.273Z"
     }
   },
-  "snapshotCommit": "088f657ecf77674c7b8e2ededf4e3576d82e042c"
+  "snapshotCommit": "6bb377a51d5c8e279a7a5e34d717d653d421d064"
 }

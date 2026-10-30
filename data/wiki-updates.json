@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-30",
+  "generatedAt": "2026-10-31",
   "entries": [
     {
       "date": "2026-10-30",
-      "sha": null,
-      "upstream": "088f657",
+      "sha": "925d1a2",
+      "upstream": null,
       "pages": [
         {
           "id": "developer-guide/browser-vault-plugin",
@@ -152,9 +152,19 @@
           "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/"
         },
         {
+          "id": "user-guide/skills/bundled/productivity/productivity-box",
+          "title": "user-guide/skills/bundled/productivity/productivity-box",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-box/"
+        },
+        {
           "id": "user-guide/skills/bundled/productivity/productivity-document-to-action-items",
           "title": "Document To Action Items — 書類から、出典付きの義務・期限・作業を取り出す",
           "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-docx",
+          "title": "user-guide/skills/bundled/productivity/productivity-docx",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-docx/"
         },
         {
           "id": "user-guide/skills/bundled/productivity/productivity-meeting-action-items",
@@ -162,14 +172,29 @@
           "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items/"
         },
         {
+          "id": "user-guide/skills/bundled/productivity/productivity-microsoft-office",
+          "title": "Microsoft Office — Word・PowerPoint・Excel ファイルを作成・読み取り・編集する",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/"
+        },
+        {
           "id": "user-guide/skills/bundled/productivity/productivity-pdf",
           "title": "Pdf — PDF ファイルの作成・読み取り・結合・フォーム入力・OCR・テキスト編集",
           "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/"
         },
         {
+          "id": "user-guide/skills/bundled/productivity/productivity-powerpoint",
+          "title": "user-guide/skills/bundled/productivity/productivity-powerpoint",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-powerpoint/"
+        },
+        {
           "id": "user-guide/skills/bundled/productivity/productivity-weekly-review-planning",
           "title": "Weekly Review Planning — 週ごとの仕切り直し: 約束、止まっている仕事、来週の計画",
           "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-xlsx",
+          "title": "user-guide/skills/bundled/productivity/productivity-xlsx",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-xlsx/"
         },
         {
           "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode",
@@ -180,6 +205,11 @@
           "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands",
           "title": "Openhands — OpenHands CLI にコーディングを任せる（モデルを選ばない、LiteLLM）",
           "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-audiocraft-audio-generation",
+          "title": "user-guide/skills/optional/creative/creative-audiocraft-audio-generation",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-audiocraft-audio-generation/"
         },
         {
           "id": "user-guide/skills/optional/creative/creative-auteur",
@@ -232,9 +262,74 @@
           "url": "/hermes/docs/user-guide/skills/optional/media/media-songsee/"
         },
         {
+          "id": "user-guide/skills/optional/mlops/mlops-clip",
+          "title": "user-guide/skills/optional/mlops/mlops-clip",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-clip/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases",
+          "title": "user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-guidance",
+          "title": "user-guide/skills/optional/mlops/mlops-guidance",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-guidance/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-huggingface-tokenizers",
+          "title": "user-guide/skills/optional/mlops/mlops-huggingface-tokenizers",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-huggingface-tokenizers/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-inference-outlines",
+          "title": "user-guide/skills/optional/mlops/mlops-inference-outlines",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-inference-outlines/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-instructor",
+          "title": "user-guide/skills/optional/mlops/mlops-instructor",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-instructor/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-llava",
+          "title": "user-guide/skills/optional/mlops/mlops-llava",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-llava/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-models-huggingface-hub",
+          "title": "user-guide/skills/optional/mlops/mlops-models-huggingface-hub",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-models-huggingface-hub/"
+        },
+        {
           "id": "user-guide/skills/optional/mlops/mlops-obliteratus",
           "title": "Obliteratus — OBLITERATUS: LLM の拒否応答を取り除く（diff-in-means）",
           "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-obliteratus/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-pinecone",
+          "title": "user-guide/skills/optional/mlops/mlops-pinecone",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-pinecone/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-qdrant",
+          "title": "user-guide/skills/optional/mlops/mlops-qdrant",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-qdrant/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-stable-diffusion",
+          "title": "user-guide/skills/optional/mlops/mlops-stable-diffusion",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-stable-diffusion/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning",
+          "title": "user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning/"
+        },
+        {
+          "id": "user-guide/skills/optional/mlops/mlops-whisper",
+          "title": "user-guide/skills/optional/mlops/mlops-whisper",
+          "url": "/hermes/docs/user-guide/skills/optional/mlops/mlops-whisper/"
         },
         {
           "id": "user-guide/skills/optional/productivity/productivity-airtable",
@@ -267,6 +362,11 @@
           "url": "/hermes/docs/user-guide/skills/optional/research/research-llm-wiki/"
         },
         {
+          "id": "user-guide/skills/optional/research/research-pinecone-research",
+          "title": "user-guide/skills/optional/research/research-pinecone-research",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-pinecone-research/"
+        },
+        {
           "id": "user-guide/skills/optional/software-development/software-development-hermes-agent-skill-authoring",
           "title": "Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成",
           "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-hermes-agent-skill-authoring/"
@@ -290,11 +390,6 @@
           "id": "user-guide/which-file-does-what",
           "title": "どのファイルが何をするのか",
           "url": "/hermes/docs/user-guide/which-file-does-what/"
-        },
-        {
-          "id": "user-guide/skills/bundled/productivity/productivity-microsoft-office",
-          "title": "Microsoft Office — Word・PowerPoint・Excel ファイルを作成・読み取り・編集する",
-          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/"
         }
       ]
     },
