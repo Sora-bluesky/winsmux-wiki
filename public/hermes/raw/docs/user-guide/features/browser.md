@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ブラウザの自動操作"
 description: "browser_exec で本物のブラウザを操ります。Hermes が立ち上げる Chromium、クラウドのブラウザ、Lightpanda、CDP でつなぐ自分の Chrome のどれでも使え、ウェブとのやり取り、フォームの入力、情報の取り出しなどができます。"
 upstream_path: user-guide/features/browser.md
-upstream_blob: e7f96a28b7f1d23c1d1d6d634b4dbd98243eabf6
+upstream_blob: c2673bc30b7bd988fa6c2a2de8fb0880b7a2e44d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/browser
 ---
@@ -287,7 +287,7 @@ browser:
 `security.allow_private_urls: true`（または古い書き方の `browser.allow_private_urls: true`）も設定したときは別で、
 私設の URL はクラウドのプロバイダに渡されます。とはいえ Browserbase などはこちらの LAN に
 届かないので、たいていは役に立ちません。クラウドのメタデータの URL（`169.254.169.254`、
-`metadata.google.internal`）は、`browser_exec` のコードや生の CDP の引数に書かれていれば、
+`metadata.google.internal`）は、`browser_exec` のコードや、生の CDP 呼び出しが取りに行く URL に書かれていれば、
 脇役を含むどの経路でも断られます。ただし、ページが自分でそこへ転送する場合は断られません
 （[セキュリティ](/hermes/docs/user-guide/security/#what-allow_private_urls-covers-and-what-it-doesnt)を見てください）。
 

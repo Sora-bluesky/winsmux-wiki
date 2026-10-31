@@ -1,6 +1,6 @@
 {
-  "sha": "6bb377a",
-  "date": "2026-10-30",
+  "sha": "c419cf7",
+  "date": "2026-10-31",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -63,7 +63,7 @@
       "name": "Hermes Agent",
       "description": "Use, configure, theme, extend, and orchestrate Hermes Agent",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/",
-      "date": "2026-10-28",
+      "date": "2026-10-31",
       "source": "bundled"
     },
     {
@@ -215,7 +215,7 @@
       "name": "Microsoft Office",
       "description": "Create, read, and edit Word, PowerPoint, and Excel files",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/",
-      "date": "2026-10-28",
+      "date": "2026-10-31",
       "source": "bundled"
     },
     {
@@ -223,7 +223,7 @@
       "name": "Pdf",
       "description": "PDF files: create, read, merge, fill, OCR, edit text",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/",
-      "date": "2026-10-28",
+      "date": "2026-10-31",
       "source": "bundled"
     },
     {
@@ -815,7 +815,7 @@
       "name": "Excel Author",
       "description": "Build auditable financial workbooks headless via openpyxl",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/",
-      "date": "2026-10-28",
+      "date": "2026-10-31",
       "source": "optional"
     },
     {
@@ -847,7 +847,7 @@
       "name": "Pptx Author",
       "description": "Build PowerPoint decks headless with python-pptx",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/",
-      "date": "2026-10-28",
+      "date": "2026-10-31",
       "source": "optional"
     },
     {

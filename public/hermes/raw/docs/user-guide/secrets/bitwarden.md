@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Bitwarden Secrets Manager"
 description: ""
 upstream_path: user-guide/secrets/bitwarden.md
-upstream_blob: 00cf5059d96429be936be49aced4d91e41602131
+upstream_blob: 21c56606391c986077f49f53e598996b955f1afb
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/secrets/bitwarden
 ---
@@ -132,8 +132,8 @@ secrets:
 | `project_id` | `""` | 取り込み元のプロジェクトの UUID です。 |
 | `server_url` | `""` | Bitwarden の地域、または自前ホストのエンドポイントです。空なら `bws` の既定（US Cloud、`https://vault.bitwarden.com`）になります。EU Cloud なら `https://vault.bitwarden.eu`、自前ホストなら自分の URL を設定します。`bws` のサブプロセスへ `BWS_SERVER_URL` として渡されます。 |
 | `cache_ttl_seconds` | `300` | プロセス内やディスク上の取得結果を、どれだけの時間そのまま使い回すかです。`0` にすると、新しいキャッシュの再利用をしなくなります。 |
-| `encrypted_cache.enabled` | `false` | 最後に成功した取得結果を、AES-GCM で暗号化したキャッシュとして `~/.hermes/cache/bws_cache.enc.json` に保存します。 |
-| `encrypted_cache.max_stale_seconds` | `0` | 暗号化キャッシュを有効にしているとき、そのキャッシュを使えるのはネットワークの不調やタイムアウトのあとだけで、しかもここに設定した古さまでに限られます。認証の失敗では、古いシークレットが使われることはありません。暗号化された書き込みに成功すると、以前の平文の `cache/bws_cache.json` は削除されます。 |
+| `encrypted_cache.enabled` | `false` | 最後に成功した取得結果を、AES-GCM で暗号化したキャッシュとして `~/.hermes/bws_cache.enc.json` に保存します。 |
+| `encrypted_cache.max_stale_seconds` | `0` | 暗号化キャッシュを有効にしているとき、そのキャッシュを使えるのはネットワークの不調やタイムアウトのあとだけで、しかもここに設定した古さまでに限られます。認証の失敗では、古いシークレットが使われることはありません。暗号化された書き込みに成功すると、平文の `bws_cache.json` は削除されます。 |
 | `override_existing` | `true` | true のとき、Bitwarden の値が環境にすでにある値を上書きします（Web アプリでの入れ替えが実際に効くようにするためです）。手元では `.env` やシェルの export を勝たせたいなら `false` にします。 |
 | `auto_install` | `true` | 実行ファイルがどこにも無いとき、PM で版を固定した `bws` のパッケージを求めます。PM の遅延インストールの方針も適用されます。 |
 

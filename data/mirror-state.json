@@ -472,9 +472,9 @@
       "translatedAt": "2026-10-29T23:06:10.722Z"
     },
     "user-guide/configuration.md": {
-      "blob": "bac17a9b104d347d88aee8246f7670f48ab81a7e",
+      "blob": "4fc9743e63966f33cdfe1a44062ce4f7ff4fe05c",
       "status": "translated",
-      "translatedAt": "2026-10-30T22:48:45.569Z"
+      "translatedAt": "2026-10-31T22:50:24.723Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "0e8e083d29713e3cf45d6b3cbc49700bd0cde974",
@@ -482,9 +482,9 @@
       "translatedAt": "2026-10-14T23:48:21.642Z"
     },
     "user-guide/desktop.md": {
-      "blob": "d60ee040a0e48a8600506bb49db5b2f5a51741f5",
+      "blob": "c1c961dccff254733a328ab61379455aa4a84860",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.730Z"
+      "translatedAt": "2026-10-31T22:50:24.729Z"
     },
     "user-guide/docker.md": {
       "blob": "04b04008f85238372e543f3d4244de529d6a4c28",
@@ -517,9 +517,9 @@
       "translatedAt": "2026-10-22T22:47:25.270Z"
     },
     "user-guide/features/browser.md": {
-      "blob": "e7f96a28b7f1d23c1d1d6d634b4dbd98243eabf6",
+      "blob": "c2673bc30b7bd988fa6c2a2de8fb0880b7a2e44d",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.732Z"
+      "translatedAt": "2026-10-31T22:50:24.730Z"
     },
     "user-guide/features/built-in-plugins.md": {
       "blob": "43a033d62ef4a64d7776b7dd90305c1428b943a5",
@@ -817,9 +817,9 @@
       "translatedAt": "2026-10-11T22:45:07.855Z"
     },
     "user-guide/messaging/index.md": {
-      "blob": "3bef1150036c265512b96f9e6198e05b07eb980e",
+      "blob": "2e832d57ae2a87588c2c92492bd477a72de48555",
       "status": "translated",
-      "translatedAt": "2026-10-26T22:56:07.769Z"
+      "translatedAt": "2026-10-31T22:50:24.732Z"
     },
     "user-guide/messaging/irc.md": {
       "blob": "4fd21061621fc5e44a64222b7813561b41b28dd9",
@@ -857,9 +857,9 @@
       "translatedAt": "2026-09-18T22:41:13.193Z"
     },
     "user-guide/messaging/photon.md": {
-      "blob": "9d70a0aae16717f966cd97b9666322143dbd3eae",
+      "blob": "531ff232b084b7f80be0e52a79086b223413e0f0",
       "status": "translated",
-      "translatedAt": "2026-09-25T22:58:06.493Z"
+      "translatedAt": "2026-10-31T22:50:24.733Z"
     },
     "user-guide/messaging/qqbot.md": {
       "blob": "5ad299bece6b25f5d8bd4f5af8fee9f0d61e368d",
@@ -907,9 +907,9 @@
       "translatedAt": "2026-09-25T22:58:06.460Z"
     },
     "user-guide/messaging/telegram.md": {
-      "blob": "557ecc24a24977ed14706ad96fc2267f404b7784",
+      "blob": "c769604fdb0378b8caca08f9d42468528bbe72ed",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.742Z"
+      "translatedAt": "2026-10-31T22:50:24.735Z"
     },
     "user-guide/messaging/webhooks.md": {
       "blob": "bc413bfe35981156f60fc0a472426d84ad4a1a5f",
@@ -967,9 +967,9 @@
       "translatedAt": "2026-10-22T22:47:25.289Z"
     },
     "user-guide/secrets/bitwarden.md": {
-      "blob": "00cf5059d96429be936be49aced4d91e41602131",
+      "blob": "21c56606391c986077f49f53e598996b955f1afb",
       "status": "translated",
-      "translatedAt": "2026-09-25T22:58:06.456Z"
+      "translatedAt": "2026-10-31T22:50:24.736Z"
     },
     "user-guide/secrets/command.md": {
       "blob": "002e95c604e66c8e273d8ca5eb3b885e80708f16",
@@ -982,14 +982,14 @@
       "translatedAt": "2026-09-18T22:52:16.671Z"
     },
     "user-guide/secrets/onepassword.md": {
-      "blob": "a5a0898a451029ecbc2b8ffc2cb5c05024dc88d8",
+      "blob": "906be936ed2d86764daa67fb04ca561318e4d46b",
       "status": "translated",
-      "translatedAt": "2026-09-16T22:39:41.194Z"
+      "translatedAt": "2026-10-31T22:50:24.737Z"
     },
     "user-guide/security.md": {
-      "blob": "2e0d44d0373ee1b0ecd077c173077963b706a02b",
+      "blob": "29f09c33cfc3db5206de20e7136e0062db45d71b",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.746Z"
+      "translatedAt": "2026-10-31T22:50:24.739Z"
     },
     "user-guide/sessions.md": {
       "blob": "13b6703c63fd7a9ba985c6c38413e8598b18a716",
@@ -1032,9 +1032,9 @@
       "translatedAt": "2026-10-23T22:51:08.216Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md": {
-      "blob": "9e1a056cab6761f93a6cbd96f8fd32367c6cdfd9",
+      "blob": "0cc9f2b5e642b2f3d62acff94d8613dae5ead9cd",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.749Z"
+      "translatedAt": "2026-10-31T22:50:24.741Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode.md": {
       "blob": "c458d8d33eb51ab12551ee1ac9271f2b650740b7",
@@ -1262,9 +1262,9 @@
       "translatedAt": "2026-09-19T22:42:36.368Z"
     },
     "user-guide/skills/bundled/productivity/productivity-pdf.md": {
-      "blob": "330f50718f947e37f5eddf5108c2eb019cbeb3f8",
+      "blob": "a19428dfc0dcd3661a4d39887020d3bf129a6a43",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.753Z"
+      "translatedAt": "2026-10-31T22:50:24.742Z"
     },
     "user-guide/skills/bundled/productivity/productivity-powerpoint.md": {
       "blob": "c90ac0690d2bbbc061cdecb24e2a6515179d9002",
@@ -1577,9 +1577,9 @@
       "translatedAt": "2026-10-29T23:06:10.759Z"
     },
     "user-guide/skills/optional/finance/finance-excel-author.md": {
-      "blob": "ed1a459f602fa9ca14d106809adc1aa5cea3581b",
+      "blob": "31f5a5d175faf918a7d110b85990ecc48113b1e9",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.759Z"
+      "translatedAt": "2026-10-31T22:50:24.742Z"
     },
     "user-guide/skills/optional/finance/finance-lbo-model.md": {
       "blob": "cd16a4634813f25d6ccfb1cb600834da0e18ee54",
@@ -1597,9 +1597,9 @@
       "translatedAt": "2026-09-20T22:40:21.505Z"
     },
     "user-guide/skills/optional/finance/finance-pptx-author.md": {
-      "blob": "8ad8c51d18ffbd234c0702356d0c2cba1b59755e",
+      "blob": "023ff881a609322c99b05b74b25719b25643ac65",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.760Z"
+      "translatedAt": "2026-10-31T22:50:24.743Z"
     },
     "user-guide/skills/optional/finance/finance-stocks.md": {
       "blob": "0fd703752c2ba551e82b4be1b0d598dba5c603e2",
@@ -2451,9 +2451,9 @@
       "translatedAt": "2026-10-28T22:52:48.328Z"
     },
     "user-guide/skills/bundled/productivity/productivity-microsoft-office.md": {
-      "blob": "b9a6dd6cdf39bca0cddd12b4670218598c289c7c",
+      "blob": "13ad3ae9e1d81b790cd6641e37acb43049b43d14",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.752Z"
+      "translatedAt": "2026-10-31T22:50:24.743Z"
     },
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode.md": {
       "blob": "e65213a67731bf9f34b5915977326e95e8f0d440",
@@ -2516,5 +2516,5 @@
       "translatedAt": "2026-10-29T23:07:10.273Z"
     }
   },
-  "snapshotCommit": "6bb377a51d5c8e279a7a5e34d717d653d421d064"
+  "snapshotCommit": "c419cf7c864ac0ee511dbd9f7091a8bba0b567ee"
 }

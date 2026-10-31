@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: bac17a9b104d347d88aee8246f7670f48ab81a7e
+upstream_blob: 4fc9743e63966f33cdfe1a44062ce4f7ff4fe05c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -360,6 +360,8 @@ real_home = Path(os.environ.get("HERMES_REAL_HOME", os.environ["HOME"]))
 **永続的なコンテナを、Hermes の各プロセスで共有します。** `container_persistent: true` と `docker_mount_cwd_to_workspace: false`（どちらも既定値）の組み合わせでは、同じプロファイルのセッションは、そのプロファイル本来のサンドボックスを共有します。このモードでは Desktop で作業ディレクトリを選んでもワークスペース用の別のサンドボックスは作られないため、CLI と Desktop は引き続き同じファイルにアクセスできます。ホストのワークスペースのマウントを有効にした場合は、永続的なコンテナがプロファイルと選択したワークスペースの組み合わせごとに分かれます。同じワークスペースのセッションは1つのコンテナを共有し、ワークスペースが違えば別々のままです。`delegate_task` のサブエージェントは親のコンテナを使います。
 
 以前のビルドでは、マウントが無効でも Desktop のフォルダごとに専用のサンドボックスが作られていました。それらのディレクトリ（`TERMINAL_SANDBOX_DIR/docker` の下にある `*_ws_*`。既定ではプロファイルの Hermes ホーム内の `sandboxes/docker`）は削除されずに残りますが、ターミナルやファイルパネルからはもう使われません。まだ必要なものがあれば、プロファイルのサンドボックスの `workspace` か `home` にコピーしてください。
+
+名前付きプロファイルでは、そのプロファイルのゲートウェイのチャット、Desktop のセッション、cron ジョブ、Kanban ワーカーが、すべてプロファイル専用の1つのサンドボックス（`TERMINAL_SANDBOX_DIR/docker` の下にある `profile_<name>-*`）を使います。以前のビルドでは、そのプロファイルとして起動したゲートウェイ（`hermes -p <name> gateway`）と、その cron や Kanban の作業が、プロファイルのホーム内にある別の `default` サンドボックスを使っていました。このディレクトリも削除されずに残りますが、もう使われません。まだ必要なものがあれば、上と同じ方法でコピーしてください。
 
 ターミナル、ファイル、`execute_code` の呼び出しは、選択されたコンテナの中で `docker exec` を使って実行されます。インストールしたパッケージ、`/workspace` 内のファイル、そして**バックグラウンドプロセス**は、そのコンテナを使う呼び出しどうし、Hermes プロセスどうしの間で引き継がれます。TUI セッションを閉じても、`/quit` を実行しても、新しく `hermes` を起動しても、それだけではコンテナは削除されません。次のプロセスがラベルを手がかりにそのコンテナを再利用できます。破棄される正確な条件は、下の**コンテナのライフサイクル**を参照してください。
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "1Password"
 description: ""
 upstream_path: user-guide/secrets/onepassword.md
-upstream_blob: a5a0898a451029ecbc2b8ffc2cb5c05024dc88d8
+upstream_blob: 906be936ed2d86764daa67fb04ca561318e4d46b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/secrets/onepassword
 ---
@@ -156,7 +156,7 @@ secrets:
 
 ## キャッシュ {#caching}
 
-参照をすべて取り出せた場合、その結果はプロセス内と、ディスク上の `<hermes_home>/cache/op_cache.json`（アトミックに、モード `0600` で書かれます）にキャッシュされます。短命な `hermes` の実行が続いても、参照ごとに `op` を呼び直さずに済むためです。このキャッシュには次の性質があります。
+参照をすべて取り出せた場合、その結果はプロセス内と、ディスク上の `<hermes_home>/op_cache.json`（アトミックに、モード `0600` で書かれます）にキャッシュされます。短命な `hermes` の実行が続いても、参照ごとに `op` を呼び直さずに済むためです。このキャッシュには次の性質があります。
 
 - 保存するのは解決したシークレットの**値**だけです。サービスアカウントのトークンや生の認証情報は入りません（認証情報は指紋にしてキャッシュのキーへ混ぜます）。
 - トークン、アカウント、`OP_SESSION_*` の変数、参照の顔ぶれのいずれかが変わると無効になります。

@@ -1,6 +1,23 @@
 {
-  "generatedAt": "2026-10-31",
+  "generatedAt": "2026-11-01",
   "entries": [
+    {
+      "date": "2026-10-31",
+      "sha": "de16336",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        }
+      ]
+    },
     {
       "date": "2026-10-30",
       "sha": "925d1a2",

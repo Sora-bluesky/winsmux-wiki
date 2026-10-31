@@ -8,6 +8,11 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-10-31
+
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+
 ## 2026-10-30
 
 - [ブラウザ保管庫プラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-vault-plugin/)

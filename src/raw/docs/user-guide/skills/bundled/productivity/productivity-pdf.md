@@ -2,7 +2,7 @@
 title: "Pdf — PDF ファイルの作成・読み取り・結合・フォーム入力・OCR・テキスト編集"
 description: "PDF ファイルの作成・読み取り・結合・フォーム入力・OCR・テキスト編集"
 upstream_path: user-guide/skills/bundled/productivity/productivity-pdf.md
-upstream_blob: 330f50718f947e37f5eddf5108c2eb019cbeb3f8
+upstream_blob: a19428dfc0dcd3661a4d39887020d3bf129a6a43
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-pdf
 ---
@@ -59,14 +59,15 @@ PDF ファイルの作成、読み取り、結合、フォーム入力、OCR、�
     PY="$HOME/.cache/hermes-docs-venv/bin/python"
     "$PY" -c "import docx, openpyxl, pptx, reportlab, pypdf, pdfplumber, pypdfium2" 2>/dev/null || (
       # Safe to run from several agents at once: each caller builds a private venv,
-      # a symlink publishes the first finished one atomically, the others delete theirs.
+      # a symlink publishes the first finished one atomically, the others delete theirs;
+      # a published build is replaced and deleted only while it still fails to import.
       mkdir -p "$HOME/.cache" && cd "$HOME/.cache" && stage="$(mktemp -d hermes-docs-venv.XXXXXX)" || exit 1
-      old="$(readlink hermes-docs-venv)"  # an earlier build that no longer imports, if any
+      old="$(readlink hermes-docs-venv)"  # the published build, if any (another agent may have just published it)
       python3 -m venv "$stage" &&
         "$stage/bin/python" -m pip install -q --disable-pip-version-check python-docx==1.2.0 openpyxl==3.1.5 python-pptx==1.0.2 reportlab==5.1.0 pypdf==6.21.2 pdfplumber==0.11.10 pypdfium2==5.14.0 &&
         "$stage/bin/python" -c "import docx, openpyxl, pptx, reportlab, pypdf, pdfplumber, pypdfium2" &&
         if [ -z "$old" ]; then python3 -c 'import os, sys; os.symlink(*sys.argv[1:])' "$stage" hermes-docs-venv
-        elif [ "$(readlink hermes-docs-venv)" = "$old" ]; then
+        elif [ "$(readlink hermes-docs-venv)" = "$old" ] && ! "$old/bin/python" -c "import docx, openpyxl, pptx, reportlab, pypdf, pdfplumber, pypdfium2" 2>/dev/null; then
           ln -s "$stage" "$stage.lnk" && python3 -c 'import os, sys; os.replace(*sys.argv[1:])' "$stage.lnk" hermes-docs-venv &&
             case "$old" in hermes-docs-venv.??????) rm -rf "$old" ;; esac
         fi 2>/dev/null

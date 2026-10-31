@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: 557ecc24a24977ed14706ad96fc2267f404b7784
+upstream_blob: c769604fdb0378b8caca08f9d42468528bbe72ed
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -641,6 +641,19 @@ Hermes Agent は Telegram のグループチャットでも動きますが、い
 - BotFather でボットの `@username` を変えると自動で反映されます。ゲートウェイを再起動しなくても、Hermes はメンションの振り分けで新しい名前を追います。`bot` で終わらない収集品（Fragment）のユーザー名にも対応しています。
 - 特定の Telegram のフォーラムのトピックで Hermes を黙らせたい場合は `telegram.ignored_threads` を使ってください。そのグループが本来なら自由に応答したり、メンションで応答したりする設定でも黙ります
 - `telegram.require_mention` を設定しないか false にした場合、Hermes はこれまでどおりの開かれたグループの振る舞いになり、見られるふつうのグループのメッセージに応答します
+
+### グループでボットが黙っていられるようにする {#letting-the-bot-stay-silent-in-a-group}
+
+グループのすべてのメッセージを読むボットは、自分が応じなくてよいメッセージに対して、`[SILENT]`（またはほかの[沈黙のトークン](/hermes/docs/user-guide/messaging/#intentional-silence-tokens)）だけを返せます。その沈黙がそのまま通るかどうかは、メッセージが誰に向けられているかで決まります。
+
+| グループのメッセージ | 沈黙のトークンだけを返したとき |
+|---|---|
+| ボットをメンションしている、ボットに返信している、`mention_patterns` に一致する、または `/command` である | 短い案内に置き換えられます。ボットへの質問が消えてしまうことはありません |
+| ほかのメンバーへの返信である、または冒頭でほかの人を @メンションしている | 黙ったままになります |
+| それ以外のメッセージで、`?` を含まない | 黙ったままになります |
+| それ以外のメッセージで、`?` を含む（ボットへの質問かもしれないため） | 案内に置き換えられます |
+
+ボット自身の素性がまだ分からない間や、送り手が分からないメッセージ、またはチャットとして投稿されたメッセージ（つながっているチャンネルの投稿、匿名の管理者）への返信にも、案内が出ます。説明文のないボイスメモや音声ファイルにも案内が出ます。話した言葉がメッセージの本文に入っていないからです。フォーラムのトピックの最初のメッセージは、ほかのメンバーへの返信とはみなされません。
 
 ### 1 つのグループに複数の Hermes のボットがいる場合 {#multiple-hermes-bots-in-one-group}
 

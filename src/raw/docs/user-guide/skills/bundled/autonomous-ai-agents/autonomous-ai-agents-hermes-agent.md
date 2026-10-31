@@ -2,7 +2,7 @@
 title: "Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 description: "Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md
-upstream_blob: 9e1a056cab6761f93a6cbd96f8fd32367c6cdfd9
+upstream_blob: 0cc9f2b5e642b2f3d62acff94d8613dae5ead9cd
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent
 ---
@@ -159,14 +159,14 @@ terminal(command="hermes chat -q 'Set up CI/CD for ~/myapp'", background=true)
 
 ### 対話的な PTY モード（tmux 経由） {#interactive-pty-mode-via-tmux}
 
-Hermes は prompt_toolkit を使っており、本物の端末を必要とします。対話的に立ち上げるときは tmux を使ってください。文字と `Enter` は、`send-keys` を 2 回に分けて送ります。1 回の呼び出しで文字と Enter をまとめて送ると、Hermes にはひとかたまりで届くため、Enter が送信ではなくメッセージ内の改行として扱われてしまいます。どちらの手順も、決まった秒数だけ待つのではなく、入力プロンプトの `❯` が出るまで待ちます（これは既定のスキンの記号です。スキンを変えている場合は、そのスキンのプロンプト記号に置き換えてください）。初回の起動は数秒どころではなく長くかかることがあり、プロンプトが出る前に送った入力は失われるためです。
+Hermes は prompt_toolkit を使っており、本物の端末を必要とします。対話的に立ち上げるときは tmux を使ってください。`tmux send-keys -t agent1 'text' Enter` のように 1 回の呼び出しで送っても、メッセージは送信されます。Hermes は、短時間にまとめて届いた入力の最後に Enter が 1 つだけある場合、そのあと入力が 0.25 秒途切れた時点で送信として扱うためです。一方、複数行を貼り付けたときに含まれる Enter は改行のまま残ります。下の手順では、少し間を置いてから `Enter` を独立した呼び出しで送っています。こうするとすぐに送信され、このタイミングにも左右されません。どちらの手順も、決まった秒数だけ待つのではなく、入力プロンプトの `❯` が出るまで待ちます（これは既定のスキンの記号です。スキンを変えている場合は、そのスキンのプロンプト記号に置き換えてください）。初回の起動は数秒どころではなく長くかかることがあり、プロンプトが出る前に送った入力は失われるためです。
 
 ```
 # Start
 terminal(command="tmux new-session -d -s agent1 -x 120 -y 40 'hermes'", timeout=10)
 
 # Wait for the input prompt (❯), then send a message
-terminal(command="for i in $(seq 90); do tmux capture-pane -t agent1 -p | grep -q "❯" && break; sleep 1; done; tmux capture-pane -t agent1 -p | grep -q "❯" && tmux send-keys -t agent1 'Build a FastAPI auth service' && sleep 0.5 && tmux send-keys -t agent1 Enter", timeout=100)
+terminal(command="for i in $(seq 90); do tmux capture-pane -t agent1 -p | grep -q '❯' && break; sleep 1; done; tmux capture-pane -t agent1 -p | grep -q '❯' && tmux send-keys -t agent1 'Build a FastAPI auth service' && sleep 0.5 && tmux send-keys -t agent1 Enter", timeout=100)
 
 # Read output
 terminal(command="sleep 20 && tmux capture-pane -t agent1 -p", timeout=5)
@@ -178,7 +178,7 @@ terminal(command="tmux send-keys -t agent1 'Add rate limiting middleware' && sle
 terminal(command="tmux send-keys -t agent1 '/exit' && sleep 0.5 && tmux send-keys -t agent1 Enter && sleep 2 && tmux kill-session -t agent1", timeout=10)
 ```
 
-**tmux がない場合**（`command -v tmux` を実行しても何も表示されない場合。たとえば古い Hermes の Docker イメージなど）: Hermes を PTY 付きのバックグラウンドプロセスとして動かし、`process_manage` で操作します。標準入力が使えるのは `pty=true` のときだけです。文字を送り、少し間を置いてから、Enter キー（`"\r"`）を独立した `write` として送ってください。理由は tmux のときと同じで、文字の直後に届いた Enter は貼り付けの一部と見なされ、改行になってしまうからです。Enter を送るときは `submit` ではなく `write` を使います。最初の書き込みの前に、入力プロンプトが出るまで待ってください。Hermes は起動中に端末の色を問い合わせ、そのあと入力を捨てるため、プロンプトが出る前に書き込んだ文字は何も言われずに消えてしまいます。
+**tmux がない場合**（`command -v tmux` を実行しても何も表示されない場合。たとえば古い Hermes の Docker イメージなど）: Hermes を PTY 付きのバックグラウンドプロセスとして動かし、`process_manage` で操作します。標準入力が使えるのは `pty=true` のときだけです。`submit` は文字に加えて、キーボードが送るのと同じ Enter キーを送ります。Hermes はこれを、1 回の呼び出しで送る tmux の `send-keys` と同じように送信として扱います。下の手順では代わりに、文字を `write` で書き込み、少し間を置いてから Enter（`"\r"`）だけを `write` で書き込みます。この方法なら、入力がまとめて届くタイミングに左右されません。最初の書き込みの前に、入力プロンプトが出るまで待ってください。Hermes は起動中に端末の色を問い合わせ、そのあと入力を捨てるため、プロンプトが出る前に書き込んだ文字は何も言われずに消えてしまいます。
 
 ```
 terminal(command="hermes", background=true, pty=true)   # returns session_id
@@ -197,11 +197,11 @@ process_manage(action="write", session_id="<id>", data="\r")
 ```
 # Agent A: backend
 terminal(command="tmux new-session -d -s backend -x 120 -y 40 'hermes -w'", timeout=10)
-terminal(command="for i in $(seq 90); do tmux capture-pane -t backend -p | grep -q "❯" && break; sleep 1; done; tmux capture-pane -t backend -p | grep -q "❯" && tmux send-keys -t backend 'Build REST API for user management' && sleep 0.5 && tmux send-keys -t backend Enter", timeout=100)
+terminal(command="for i in $(seq 90); do tmux capture-pane -t backend -p | grep -q '❯' && break; sleep 1; done; tmux capture-pane -t backend -p | grep -q '❯' && tmux send-keys -t backend 'Build REST API for user management' && sleep 0.5 && tmux send-keys -t backend Enter", timeout=100)
 
 # Agent B: frontend
 terminal(command="tmux new-session -d -s frontend -x 120 -y 40 'hermes -w'", timeout=10)
-terminal(command="for i in $(seq 90); do tmux capture-pane -t frontend -p | grep -q "❯" && break; sleep 1; done; tmux capture-pane -t frontend -p | grep -q "❯" && tmux send-keys -t frontend 'Build React dashboard for user management' && sleep 0.5 && tmux send-keys -t frontend Enter", timeout=100)
+terminal(command="for i in $(seq 90); do tmux capture-pane -t frontend -p | grep -q '❯' && break; sleep 1; done; tmux capture-pane -t frontend -p | grep -q '❯' && tmux send-keys -t frontend 'Build React dashboard for user management' && sleep 0.5 && tmux send-keys -t frontend Enter", timeout=100)
 
 # Check progress, relay context between them
 terminal(command="tmux capture-pane -t backend -p | tail -30", timeout=5)

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Photon iMessage"
 description: ""
 upstream_path: user-guide/messaging/photon.md
-upstream_blob: 9d70a0aae16717f966cd97b9666322143dbd3eae
+upstream_blob: 531ff232b084b7f80be0e52a79086b223413e0f0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/photon
 ---
@@ -228,7 +228,7 @@ Photon iMessage status
 - **cron や単独での送信には、ゲートウェイが動いている必要があります。** プロセスの外からの
   送信（cron のジョブ、`hermes send`、ダッシュボード）は、ゲートウェイが
   立ち上げたサイドカーを使い回します。ポートとトークンは
-  `<hermes-home>/runtime/photon-sidecar.json` から読みます。このファイルはサイドカーが
+  `<hermes-home>/photon-sidecar.json` から読みます。このファイルはサイドカーが
   健全性の確認を通った時点で書かれ、止まると消えます。単独での送信が
   ゲートウェイは動いていないようだと言ってきたら、まずゲートウェイを起動（または再起動）してください。
 - **共有回線・無料枠の回線からは、新しい相手に会話を始められません。**

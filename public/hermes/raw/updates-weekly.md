@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-10-31、対象期間 = 2026-10-25 〜 2026-10-31（JST）
+生成日 = 2026-11-01、対象期間 = 2026-10-26 〜 2026-11-01（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,6 +16,8 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-10-31 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- 2026-10-31 [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
 - 2026-10-30 [ブラウザ保管庫プラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/browser-vault-plugin/)
 - 2026-10-30 [cron の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cron-internals/)
 - 2026-10-30 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
@@ -27,12 +29,10 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-30 [同梱 skill カタログ](https://wiki.winsmux.dev/hermes/docs/reference/skills-catalog/)
 - 2026-10-30 [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
 - 2026-10-30 [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
-- 2026-10-30 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - 2026-10-30 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
 - 2026-10-30 [ボットの画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/bot-screen/)
 - 2026-10-30 [ブラウザの自動操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/browser/)
 - 2026-10-30 [パスワードとログイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-vault/)
-- 2026-10-30 [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
 - 2026-10-30 [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
 - 2026-10-30 [成果物モード（チャットに届く生成ファイル）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/deliverable-mode/)
 - 2026-10-30 [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
@@ -178,9 +178,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-26 [Har Derived Api Client — サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client/)
 - 2026-10-26 [Page Agent — Web アプリの中に、自然言語で操作できる相棒を組み込む](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/)
 - 2026-10-26 [TUI](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
-- 2026-10-25 [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
-- 2026-10-25 [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
-- 2026-10-25 [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
 
 ## 週次まとめ
 

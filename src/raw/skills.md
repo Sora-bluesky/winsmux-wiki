@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 194 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `6bb377a`（2026-10-30）時点。この一覧は上流の docs から機械生成しています。
+上流 `c419cf7`（2026-10-31）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（44）
 
@@ -29,7 +29,7 @@ raw: /hermes/raw/skills.md
 | [Claude Code](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/) | Delegate coding to Claude Code CLI (features, PRs) | 2026-10-28 |
 | [Codex](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/) | Delegate coding to OpenAI Codex CLI (features, PRs) | 2026-09-20 |
 | [Computer Use](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use/) | Drive the desktop background-first; escalate on signal | 2026-10-23 |
-| [Hermes Agent](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/) | Use, configure, theme, extend, and orchestrate Hermes Agent | 2026-10-28 |
+| [Hermes Agent](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/) | Use, configure, theme, extend, and orchestrate Hermes Agent | 2026-10-31 |
 | [Architecture Diagram](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) | Dark-themed SVG architecture/cloud/infra diagrams as HTML | 2026-09-20 |
 | [Ascii Video](/hermes/docs/user-guide/skills/bundled/creative/creative-ascii-video/) | ASCII video: convert video/audio to colored ASCII MP4/GIF | 2026-09-20 |
 | [Baoyu Infographic](/hermes/docs/user-guide/skills/bundled/creative/creative-baoyu-infographic/) | Infographics: 21 layouts x 21 styles (信息图, 可视化) | 2026-09-29 |
@@ -48,8 +48,8 @@ raw: /hermes/raw/skills.md
 | [Google Workspace](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/) | Gmail, Calendar, Drive, Docs, Sheets via gws CLI or Python | 2026-09-21 |
 | [Maps](/hermes/docs/user-guide/skills/bundled/productivity/productivity-maps/) | Geocode, POIs, routes, timezones via OpenStreetMap/OSRM | 2026-09-20 |
 | [Meeting Action Items](/hermes/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items/) | Turn meeting notes into cited decisions, owners, tickets | 2026-10-28 |
-| [Microsoft Office](/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/) | Create, read, and edit Word, PowerPoint, and Excel files | 2026-10-28 |
-| [Pdf](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/) | PDF files: create, read, merge, fill, OCR, edit text | 2026-10-28 |
+| [Microsoft Office](/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/) | Create, read, and edit Word, PowerPoint, and Excel files | 2026-10-31 |
+| [Pdf](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/) | PDF files: create, read, merge, fill, OCR, edit text | 2026-10-31 |
 | [Product Price Monitor](/hermes/docs/user-guide/skills/bundled/productivity/productivity-product-price-monitor/) | Watch product, flight, or listing prices; alert on target | 2026-10-23 |
 | [Teams Meeting Pipeline](/hermes/docs/user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline/) | Teams meeting summaries, job replay, Graph subscriptions | 2026-09-20 |
 | [Weekly Review Planning](/hermes/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning/) | Weekly reset: commitments, stalled work, next-week plan | 2026-10-28 |
@@ -129,11 +129,11 @@ raw: /hermes/raw/skills.md
 | [3 Statement Model](/hermes/docs/user-guide/skills/optional/finance/finance-3-statement-model/) | Build integrated IS/BS/CF financial workbooks in Excel | 2026-10-23 |
 | [Comps Analysis](/hermes/docs/user-guide/skills/optional/finance/finance-comps-analysis/) | Build comparable-company valuation workbooks in Excel | 2026-10-23 |
 | [Dcf Model](/hermes/docs/user-guide/skills/optional/finance/finance-dcf-model/) | Build discounted cash flow valuation workbooks in Excel | 2026-10-28 |
-| [Excel Author](/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/) | Build auditable financial workbooks headless via openpyxl | 2026-10-28 |
+| [Excel Author](/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/) | Build auditable financial workbooks headless via openpyxl | 2026-10-31 |
 | [Lbo Model](/hermes/docs/user-guide/skills/optional/finance/finance-lbo-model/) | Build leveraged buyout workbooks with IRR/MOIC in Excel | 2026-10-23 |
 | [Merger Model](/hermes/docs/user-guide/skills/optional/finance/finance-merger-model/) | Build M&A accretion/dilution workbooks in Excel | 2026-10-23 |
 | [Polymarket](/hermes/docs/user-guide/skills/optional/finance/finance-polymarket/) | Query Polymarket: markets, prices, orderbooks, history | 2026-09-20 |
-| [Pptx Author](/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/) | Build PowerPoint decks headless with python-pptx | 2026-10-28 |
+| [Pptx Author](/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/) | Build PowerPoint decks headless with python-pptx | 2026-10-31 |
 | [Stocks](/hermes/docs/user-guide/skills/optional/finance/finance-stocks/) | Stock quotes, history, search, compare, crypto via Yahoo | 2026-09-20 |
 | [Minecraft Modpack Server](/hermes/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server/) | Host modded Minecraft servers (CurseForge, Modrinth) | 2026-09-20 |
 | [Pokemon Player](/hermes/docs/user-guide/skills/optional/gaming/gaming-pokemon-player/) | Play Pokemon via headless emulator + RAM reads | 2026-09-20 |

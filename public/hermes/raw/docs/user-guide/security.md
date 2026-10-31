@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: 2e0d44d0373ee1b0ecd077c173077963b706a02b
+upstream_blob: 29f09c33cfc3db5206de20e7136e0062db45d71b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -367,7 +367,7 @@ Proposed command_allowlist additions (from approval history, last 90 days):
 | 種類 | 例 |
 |----------|----------|
 | OS の資格情報の保管場所 | `~/.ssh/`（鍵、`authorized_keys`）、`~/.aws/`、`~/.kube/`、`/etc/sudoers`、`~/.netrc` |
-| Hermes の秘密情報の保管場所 | HERMES_HOME 配下（有効なプロファイルと全体の root の両方）の `.env`、`.anthropic_oauth.json`、`auth/google_oauth.json`、Bitwarden のキャッシュ（`cache/bws_cache.json`、`cache/bws_cache.enc.json`）、`vault/`、`browser-profile/`、`mcp-tokens/`、`pairing/`。制御用のファイル（`auth.json`、`config.yaml`、`webhook_subscriptions.json`）は読み取りが拒否されますが、書き込みはできます。 |
+| Hermes の秘密情報の保管場所 | HERMES_HOME 配下（有効なプロファイルと全体の root の両方）の `.env`、`.anthropic_oauth.json`、`auth/google_oauth.json`、Bitwarden と 1Password のキャッシュ（`bws_cache.json`、`bws_cache.enc.json`、`op_cache.json`）、Photon サイドカーのトークン（`photon-sidecar.json`）、`vault/`、`browser-profile/`、`mcp-tokens/`、`pairing/`。制御用のファイル（`auth.json`、`config.yaml`、`webhook_subscriptions.json`）は読み取りが拒否されますが、書き込みはできます。 |
 | Windows の NT / デバイス名前空間のパス | `\??\...`、`\\.\...`、`\\?\UNC\...`、`\\?\GLOBALROOT...` — どのプラットフォームでも、読み取りも書き込みも拒否されます。Windows では、こうしたパスを *解決するだけ* で（たとえば `\??\UNC\host\share`）外向きの SMB 認証が走り、利用者の NTLM ハッシュが漏れることがあります。これらの接頭辞は、ふつうのパス正規化も回避します。ふつうの長いローカルパス（`\\?\C:\...`）や素の UNC 共有（`\\server\share`）は影響を受けません。 |
 
 プロジェクトの中にある `.env`、`.env.local`、`.env.production`、`.envrc` は、ディスク上のどこにあっても **読み取りが拒否** されますが（ファイル系のツールは読み取りを断ります）、書き込みはできます。エージェントは代わりに作ったり編集したりできて、ただ中身を読み返せない、ということです。
@@ -795,15 +795,17 @@ security:
 | `web_extract` | どのバックエンドも呼ぶ前に断られます。`true` にしても、ホスト型の抽出バックエンドは自分のサーバーから取得するので、手元の LAN には届きません。 |
 | `vision_analyze` の URL 取得、画像・動画の結果のダウンロード、ゲートウェイのメディアのダウンロード | 断られます |
 | `browser.auto_local_for_private_urls: false` にしたクラウドのプロバイダー上、`/browser connect`（CDP）の接続先、または Docker/SSH/Modal のターミナルバックエンドでの `browser_exec` | 断られます（`Blocked: URL targets a private or internal address`） |
-| それと同じバックエンドでの `browser_cdp` による生の CDP 呼び出し | プライベートなページの URL は断られます |
+| それと同じバックエンドでの `browser_cdp` による生の CDP 呼び出し | プライベートなページを開いているあいだは断られます。呼び出しが取得する絶対形式の `http(s)://` の URL（`url` 引数、スクリプト、注入する HTML）がプライベートな場合も断られます。スキームを省いた `//host` の URL は、クラウドのメタデータかどうかだけが検査されます |
 | `browser.auto_local_for_private_urls: true`（既定）にしたクラウドのプロバイダー上の `browser_exec` | Hermes のホスト上にあるローカルの Chromium サイドカーで **開きます**（[ハイブリッドな振り分け](/hermes/docs/user-guide/features/browser/#hybrid-routing-cloud-for-public-urls-local-for-lanlocalhost)） |
 | ローカルのターミナルバックエンドと組み合わせた、ローカルの Chromium での `browser_exec` | **開きます**: ブラウザが届く先は、どれもターミナルからでも届く場所です |
 | `terminal`（`curl http://localhost` など） | **開きます**: URL の防護はありません |
 
 クラウドのメタデータの窓口は、`terminal` 以外のすべての行で断られます。サイドカーと
-ローカルの Chromium も例外ではありません。`browser_exec` のコード、生の CDP 呼び出しの
-引数、そこから注入するスクリプトに書かれたメタデータの URL は、ブラウザに届く前に断られます。この検査が読むのは
-エージェントが書いた URL で、その後のブラウザの動きまでは見張りません。そのため、公開のページがメタデータのアドレスへ
+ローカルの Chromium も例外ではありません。`browser_exec` のコード、生の CDP 呼び出しが
+取得する URL、そこから注入するスクリプトや HTML に書かれたメタデータの URL は、ブラウザに届く前に断られます。呼び出しが取得しない生の CDP の
+引数は検査されません。入力する文字（`Input.*`）、ダイアログへの返答、Cookie の対象範囲の URL、
+リクエストの遮断や横取りのパターンがそれにあたります。この検査が読むのはエージェントが書いた URL の文字列そのもので、
+実行時に組み立てられる URL（文字列の連結、エスケープ）や、ブラウザが取り除くタブや改行で分割された URL は対象外です。その後のブラウザの動きまでは見張りません。そのため、公開のページがメタデータのアドレスへ
 リダイレクトしたり、そこから取得したりする場合は、この検査では止まりません。クラウドの VM では、メタデータのサービスを
 ネットワークの側でも塞いでください（ホップ数の上限を 1 にした IMDSv2、ファイアウォールのルール）。クラウドのプロバイダーを
 設定したままエージェントのブラウザをプライベートなホストから遠ざけるには、`browser.auto_local_for_private_urls: false` にします。これがいちばん効くのは
