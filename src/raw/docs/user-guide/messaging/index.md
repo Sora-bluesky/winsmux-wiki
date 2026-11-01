@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 2e832d57ae2a87588c2c92492bd477a72de48555
+upstream_blob: 4ae9870408ab7dce7527ac72294997ffbdded731
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -277,7 +277,7 @@ hermes gateway install --force
 
 ### `/model` の変更を保持する {#persistent-model-overrides}
 
-ゲートウェイのチャットで `/model` を切り替えると、そのセッションに適用され、いまでは**ゲートウェイを再起動しても残ります**。モデルとプロバイダーの選択はセッションストアに保存され、再起動後の最初の利用時に復元されます（認証情報は読み込み時に改めて解決され、ディスクに書かれることはありません）。`/new`（または `/reset`）でこの上書きは消えます。`/model <name> --global` なら、その代わりに `config.yaml` へ書き込みます。`/model <name> --once` は 1 ターンだけ適用されます。
+ゲートウェイのチャットで `/model` を切り替えると、そのセッションに適用され、いまでは**ゲートウェイを再起動しても残ります**。モデルとプロバイダーの選択はセッションストアに保存され、再起動後の最初の利用時に復元されます（認証情報は読み込み時に改めて解決され、ディスクに書かれることはありません）。`/model reset` を使うと、会話はそのままでこの上書きだけが消えます。`/new`（または `/reset`）を使うと、上書きが消えて会話も新しく始まります。`/model <name> --global` なら、その代わりに `config.yaml` へ書き込みます。`/model <name> --once` は 1 ターンだけ適用されます。
 
 ### 配送の確実さ {#delivery-reliability}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: c769604fdb0378b8caca08f9d42468528bbe72ed
+upstream_blob: 066ccd2ddce501aa33c009c5180817aa73fd095f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -653,7 +653,7 @@ Hermes Agent は Telegram のグループチャットでも動きますが、い
 | それ以外のメッセージで、`?` を含まない | 黙ったままになります |
 | それ以外のメッセージで、`?` を含む（ボットへの質問かもしれないため） | 案内に置き換えられます |
 
-ボット自身の素性がまだ分からない間や、送り手が分からないメッセージ、またはチャットとして投稿されたメッセージ（つながっているチャンネルの投稿、匿名の管理者）への返信にも、案内が出ます。説明文のないボイスメモや音声ファイルにも案内が出ます。話した言葉がメッセージの本文に入っていないからです。フォーラムのトピックの最初のメッセージは、ほかのメンバーへの返信とはみなされません。
+ボット自身の素性がまだ分からない間や、送り手が分からないメッセージ、またはチャットとして投稿されたメッセージ（つながっているチャンネルの投稿、匿名の管理者）への返信にも、案内が出ます。説明文のないボイスメモ、ビデオメモ、音声ファイルにも案内が出ます。話した言葉がメッセージの本文に入っていないからです。フォーラムのトピックの最初のメッセージは、ほかのメンバーへの返信とはみなされません。
 
 ### 1 つのグループに複数の Hermes のボットがいる場合 {#multiple-hermes-bots-in-one-group}
 

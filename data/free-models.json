@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-01",
+  "generatedAt": "2026-11-02",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-01",
-      "attemptedAt": "2026-11-01",
+      "fetchedAt": "2026-11-02",
+      "attemptedAt": "2026-11-02",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -53,8 +53,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-01",
-      "attemptedAt": "2026-11-01",
+      "fetchedAt": "2026-11-02",
+      "attemptedAt": "2026-11-02",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [

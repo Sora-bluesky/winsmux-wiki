@@ -1,6 +1,6 @@
 {
   "source": "https://teknium.io/hermes-devices/",
-  "fetchedAt": "2026-10-26",
+  "fetchedAt": "2026-11-02",
   "excluded": [
     {
       "id": "security-and-hacker-tools",
@@ -1744,6 +1744,163 @@
       ]
     },
     {
+      "id": "pocket-desktop-robots",
+      "name": "Pocket & Desktop Robots",
+      "items": [
+        {
+          "id": "pololu-3pi-plus-2040",
+          "name": "Pololu 3pi+ 2040",
+          "price": "$194.95"
+        },
+        {
+          "id": "arduino-alvik",
+          "name": "Arduino Alvik",
+          "price": "$140"
+        },
+        {
+          "id": "sphero-bolt-plus",
+          "name": "Sphero BOLT+",
+          "price": "$199"
+        },
+        {
+          "id": "sphero-rvr-plus",
+          "name": "Sphero RVR+",
+          "price": "$339"
+        },
+        {
+          "id": "root-rt1-coding-robot",
+          "name": "Root rt1 Coding Robot",
+          "price": "$249.99"
+        },
+        {
+          "id": "thymio-wireless",
+          "name": "Thymio Wireless",
+          "price": "$172.19"
+        },
+        {
+          "id": "lego-education-cs-ai-kit",
+          "name": "LEGO Education Computer Science & AI Kit",
+          "price": "$529.95"
+        },
+        {
+          "id": "kitronik-move-motor",
+          "name": "Kitronik :MOVE Motor",
+          "price": "$35.95"
+        },
+        {
+          "id": "dfrobot-maqueen-plus-v3",
+          "name": "DFRobot Maqueen Plus V3",
+          "price": "$69.90"
+        },
+        {
+          "id": "m5stack-roverc-pro",
+          "name": "M5Stack RoverC Pro",
+          "price": "$65"
+        },
+        {
+          "id": "hp-robots-otto",
+          "name": "HP Robots Otto",
+          "price": "$169.99"
+        },
+        {
+          "id": "hiwonder-xarm-1s",
+          "name": "Hiwonder xArm 1S",
+          "price": "$199.99"
+        },
+        {
+          "id": "petoi-nybble-q",
+          "name": "Petoi Nybble Q",
+          "price": "$435"
+        },
+        {
+          "id": "mangdang-mini-pupper-2",
+          "name": "MangDang Mini Pupper 2",
+          "price": "$649"
+        },
+        {
+          "id": "xgo-lite3",
+          "name": "XGO-lite3",
+          "price": "$599"
+        },
+        {
+          "id": "xgo-rider2",
+          "name": "XGO-Rider2",
+          "price": "$549"
+        },
+        {
+          "id": "hiwonder-puppypi",
+          "name": "Hiwonder PuppyPi",
+          "price": "$589.99"
+        },
+        {
+          "id": "freenove-robot-dog-kit",
+          "name": "Freenove Robot Dog Kit for Raspberry Pi",
+          "price": "$129.99"
+        },
+        {
+          "id": "duckiebot-db21j",
+          "name": "Duckietown Duckiebot DB21J",
+          "price": "$769"
+        }
+      ]
+    },
+    {
+      "id": "drones-air-water",
+      "name": "Drones, ROVs & Autonomous Boats",
+      "items": [
+        {
+          "id": "blue-robotics-bluerov2",
+          "name": "Blue Robotics BlueROV2",
+          "price": "$4,900"
+        },
+        {
+          "id": "blue-robotics-blueboat",
+          "name": "Blue Robotics BlueBoat",
+          "price": "$4,400"
+        },
+        {
+          "id": "blue-robotics-navigator",
+          "name": "Blue Robotics Navigator Flight Controller",
+          "price": "$220"
+        },
+        {
+          "id": "blue-robotics-ping360",
+          "name": "Blue Robotics Ping360 Scanning Sonar",
+          "price": "$2,750"
+        },
+        {
+          "id": "qysea-fifish-e-go-developer",
+          "name": "QYSEA FIFISH E-GO Developer ROV",
+          "price": "$6,714"
+        },
+        {
+          "id": "modalai-stinger-vision-fpv",
+          "name": "ModalAI Stinger Vision FPV",
+          "price": "$3,399.99"
+        },
+        {
+          "id": "freefly-astro-max",
+          "name": "Freefly Astro Max (NDAA/Blue)",
+          "price": "$28,995"
+        },
+        {
+          "id": "parrot-anafi-usa",
+          "name": "Parrot ANAFI USA",
+          "price": "~$7,000"
+        },
+        {
+          "id": "vex-air-drone",
+          "name": "VEX AIR Competition Drone",
+          "price": "$699"
+        },
+        {
+          "id": "ark-pi6x",
+          "name": "ARK Electronics ARK Pi6X",
+          "price": "$665"
+        }
+      ]
+    },
+    {
       "id": "microcontrollers-and-dev-boards",
       "name": "Microcontrollers & Dev Boards",
       "items": [
@@ -2005,6 +2162,96 @@
           "id": "elegoo-centauri-carbon",
           "name": "Elegoo Centauri Carbon",
           "price": "~$300"
+        },
+        {
+          "id": "elegoo-saturn-4-ultra-16k",
+          "name": "Elegoo Saturn 4 Ultra 16K",
+          "price": "$649.99"
+        },
+        {
+          "id": "elegoo-mars-5-ultra",
+          "name": "Elegoo Mars 5 Ultra",
+          "price": "$284"
+        },
+        {
+          "id": "formlabs-form-4",
+          "name": "Formlabs Form 4",
+          "price": "from $2,625"
+        },
+        {
+          "id": "snapmaker-u1",
+          "name": "Snapmaker U1",
+          "price": "$749"
+        },
+        {
+          "id": "prusa-xl-five-head",
+          "name": "Prusa XL+ Five-Head",
+          "price": "$3,899"
+        },
+        {
+          "id": "bambu-lab-p2s",
+          "name": "Bambu Lab P2S",
+          "price": "$549 ($449 on sale)"
+        },
+        {
+          "id": "creality-k2-plus",
+          "name": "Creality K2 Plus",
+          "price": "$999"
+        },
+        {
+          "id": "qidi-plus5",
+          "name": "QIDI Plus5",
+          "price": "$749"
+        },
+        {
+          "id": "flsun-s1-pro",
+          "name": "FLSUN S1 Pro",
+          "price": "$799"
+        },
+        {
+          "id": "elegoo-orangestorm-giga",
+          "name": "Elegoo OrangeStorm Giga",
+          "price": "$2,499"
+        },
+        {
+          "id": "raise3d-pro3",
+          "name": "Raise3D Pro3",
+          "price": "$2,999"
+        },
+        {
+          "id": "cocoa-press-2-1",
+          "name": "Cocoa Press 2.1",
+          "price": "$1,499 kit / $4,499 assembled"
+        },
+        {
+          "id": "eazao-zero",
+          "name": "Eazao Zero",
+          "price": "$899"
+        },
+        {
+          "id": "3d-potterbot-scara-v4",
+          "name": "3D PotterBot Scara V4",
+          "price": "$19,500+"
+        },
+        {
+          "id": "openscan-mini",
+          "name": "OpenScan Mini",
+          "price": "$232–$386"
+        },
+        {
+          "id": "bambu-lab-ams-ht",
+          "name": "Bambu Lab AMS HT",
+          "price": "$139 ($119 on sale)"
+        },
+        {
+          "id": "re3d-gigabotx-2",
+          "name": "re:3D GigabotX 2",
+          "price": "from $20,800"
+        },
+        {
+          "id": "3devo-filament-maker-two",
+          "name": "3devo Filament Maker TWO",
+          "price": "Quote (~€17,900 EU)"
         }
       ]
     },
@@ -2051,6 +2298,1087 @@
           "id": "silhouette-cameo-5-alpha-plus",
           "name": "Silhouette Cameo 5 Alpha Plus",
           "price": "$399.99"
+        },
+        {
+          "id": "sienci-altmill-mk2",
+          "name": "Sienci AltMill MK2",
+          "price": "$2,790"
+        },
+        {
+          "id": "sienci-longmill-mk3",
+          "name": "Sienci LongMill MK3",
+          "price": "$1,400"
+        },
+        {
+          "id": "carbide3d-shapeoko-5-1-pro",
+          "name": "Carbide 3D Shapeoko 5.1 Pro",
+          "price": "$3,550"
+        },
+        {
+          "id": "carbide3d-nomad-3",
+          "name": "Carbide 3D Nomad 3",
+          "price": "$2,800"
+        },
+        {
+          "id": "genmitsu-4040-pro-max",
+          "name": "Genmitsu 4040-PRO MAX",
+          "price": "$949"
+        },
+        {
+          "id": "v1-engineering-lowrider-4",
+          "name": "V1 Engineering LowRider 4",
+          "price": "~$614 + router"
+        },
+        {
+          "id": "buildbotics-cnc-controller",
+          "name": "Buildbotics CNC Controller",
+          "price": "$499"
+        },
+        {
+          "id": "snapmaker-artisan",
+          "name": "Snapmaker Artisan",
+          "price": "$2,099"
+        },
+        {
+          "id": "xtool-p2s",
+          "name": "xTool P2S",
+          "price": "$2,999"
+        },
+        {
+          "id": "xtool-f2-ultra",
+          "name": "xTool F2 Ultra",
+          "price": "$5,299"
+        },
+        {
+          "id": "flux-beamo-ii",
+          "name": "FLUX beamo II",
+          "price": "$1,490"
+        },
+        {
+          "id": "creality-falcon2-pro",
+          "name": "Creality Falcon2 Pro",
+          "price": "From $899"
+        },
+        {
+          "id": "omtech-maker-mf2028-100",
+          "name": "OMTech Maker MF2028-100",
+          "price": "$3,999.99"
+        },
+        {
+          "id": "commarker-b4",
+          "name": "ComMarker B4",
+          "price": "From $1,399"
+        },
+        {
+          "id": "glowforge-pro-hd",
+          "name": "Glowforge Pro HD",
+          "price": "$7,999"
+        },
+        {
+          "id": "shaper-origin-gen2",
+          "name": "Shaper Origin (Gen 2)",
+          "price": "$2,699"
+        },
+        {
+          "id": "langmuir-crossfire-pro",
+          "name": "Langmuir CrossFire PRO",
+          "price": "$3,195"
+        },
+        {
+          "id": "wazer-pro",
+          "name": "WAZER Pro",
+          "price": "$18,999"
+        },
+        {
+          "id": "mayku-multiplier",
+          "name": "Mayku Multiplier",
+          "price": "$10,499"
+        },
+        {
+          "id": "onefinity-elite-gen2",
+          "name": "Onefinity Elite (Gen 2)",
+          "price": "$2,195"
+        }
+      ]
+    },
+    {
+      "id": "textiles-merch",
+      "name": "T-Shirts, Merch & Textiles",
+      "items": [
+        {
+          "id": "epson-surecolor-f1070",
+          "name": "Epson SureColor F1070",
+          "price": "$4,995"
+        },
+        {
+          "id": "epson-surecolor-f2270",
+          "name": "Epson SureColor F2270",
+          "price": "$12,995"
+        },
+        {
+          "id": "epson-surecolor-g6070",
+          "name": "Epson SureColor G6070",
+          "price": "$14,995"
+        },
+        {
+          "id": "mimaki-txf150-75",
+          "name": "Mimaki TxF150-75",
+          "price": "$8,495"
+        },
+        {
+          "id": "epson-surecolor-f570-pro",
+          "name": "Epson SureColor F570 Pro",
+          "price": "$3,099"
+        },
+        {
+          "id": "sawgrass-sg1000",
+          "name": "Sawgrass SG1000",
+          "price": "$1,799.95"
+        },
+        {
+          "id": "epson-ecotank-et-15000-sublimation",
+          "name": "Epson EcoTank ET-15000 (sublimation conversion)",
+          "price": "~$600"
+        },
+        {
+          "id": "brother-pe900",
+          "name": "Brother PE900",
+          "price": "$1,179.99"
+        },
+        {
+          "id": "brother-luminaire-xp3",
+          "name": "Brother Luminaire XP3",
+          "price": "$20,999.99"
+        },
+        {
+          "id": "bernette-b70-deco",
+          "name": "bernette b70 DECO",
+          "price": "~$1,699"
+        },
+        {
+          "id": "janome-mb-7",
+          "name": "Janome MB-7",
+          "price": "$9,999"
+        },
+        {
+          "id": "ricoma-em-1010",
+          "name": "Ricoma EM-1010",
+          "price": "$4,799"
+        },
+        {
+          "id": "melco-summit",
+          "name": "Melco SUMMIT",
+          "price": "From $17,495"
+        },
+        {
+          "id": "barudan-pro3",
+          "name": "Barudan Pro3 + BNET Enterprise",
+          "price": "Dealer quote"
+        },
+        {
+          "id": "kniterate-digital-knitting-machine",
+          "name": "Kniterate Digital Knitting Machine",
+          "price": "$15,999"
+        },
+        {
+          "id": "ayab-shield-kit-brother-kh",
+          "name": "AYAB Shield Kit v1.4TH (Brother KH-9xx)",
+          "price": "$45.85 + Arduino Uno"
+        },
+        {
+          "id": "toika-eeva-es-computer-assist-loom",
+          "name": "Toika Eeva ES Computer-Assist Loom",
+          "price": "From $16,900"
+        },
+        {
+          "id": "exile-screenmaker-cts",
+          "name": "EXILE SCREENMAKER CTS",
+          "price": "$12,999"
+        },
+        {
+          "id": "hotronix-fusion-iq",
+          "name": "Hotronix Fusion IQ",
+          "price": "$2,850"
+        }
+      ]
+    },
+    {
+      "id": "crafts-art-machines",
+      "name": "Crafts, Cutters & Art Machines",
+      "items": [
+        {
+          "id": "graphtec-ce8000-60",
+          "name": "Graphtec CE8000-60",
+          "price": "$1,995"
+        },
+        {
+          "id": "roland-gs2-24",
+          "name": "Roland VersaSTUDIO GS2-24",
+          "price": "$1,995"
+        },
+        {
+          "id": "silhouette-portrait-4",
+          "name": "Silhouette Portrait 4",
+          "price": "$199.99"
+        },
+        {
+          "id": "uscutter-titan-2",
+          "name": "USCutter TITAN 2",
+          "price": "$1,299"
+        },
+        {
+          "id": "brother-scanncut-sdx125e",
+          "name": "Brother ScanNCut DX SDX125E",
+          "price": "$449.99"
+        },
+        {
+          "id": "mimaki-cg-60ar",
+          "name": "Mimaki CG-60AR",
+          "price": "$1,154"
+        },
+        {
+          "id": "bantam-tools-nextdraw",
+          "name": "Bantam Tools NextDraw",
+          "price": "$949"
+        },
+        {
+          "id": "bantam-tools-artframe",
+          "name": "Bantam Tools ArtFrame",
+          "price": "$2,942"
+        },
+        {
+          "id": "bantam-tools-watercolorbot",
+          "name": "Bantam Tools WaterColorBot",
+          "price": "$699"
+        },
+        {
+          "id": "bantam-tools-eggbot",
+          "name": "Bantam Tools EggBot",
+          "price": "$449"
+        },
+        {
+          "id": "uuna-tek-idraw-h-se",
+          "name": "UUNA TEK iDraw H SE",
+          "price": "$839"
+        },
+        {
+          "id": "line-us",
+          "name": "Line-us",
+          "price": "~$130"
+        },
+        {
+          "id": "makelangelo-5",
+          "name": "Makelangelo 5",
+          "price": "~$350"
+        },
+        {
+          "id": "roland-versastudio-bn2-20a",
+          "name": "Roland VersaSTUDIO BN2-20A",
+          "price": "$7,495"
+        },
+        {
+          "id": "roland-versastudio-bd-8",
+          "name": "Roland VersaSTUDIO BD-8",
+          "price": "$11,595"
+        },
+        {
+          "id": "oasis-mini",
+          "name": "Oasis Mini",
+          "price": "$129"
+        },
+        {
+          "id": "sisyphus-executive-mini",
+          "name": "Sisyphus Executive Mini",
+          "price": "$890"
+        },
+        {
+          "id": "cricut-maker-5",
+          "name": "Cricut Maker 5",
+          "price": "$399"
+        },
+        {
+          "id": "cricut-mug-press",
+          "name": "Cricut Mug Press",
+          "price": "$149.99"
+        },
+        {
+          "id": "eufymake-e1",
+          "name": "eufyMake E1",
+          "price": "$2,409"
+        },
+        {
+          "id": "ripple-maker-ii",
+          "name": "Ripple Maker II",
+          "price": "~$2,300"
+        }
+      ]
+    },
+    {
+      "id": "studio-fab",
+      "name": "Kilns, Electronics Fab & Studio Gear",
+      "items": [
+        {
+          "id": "bartlett-genesis-2",
+          "name": "Bartlett Genesis 2.0",
+          "price": "$408"
+        },
+        {
+          "id": "pico-tc-08",
+          "name": "Pico Technology TC-08",
+          "price": "~$499"
+        },
+        {
+          "id": "whizoo-controleo3",
+          "name": "Whizoo Controleo3",
+          "price": "$149"
+        },
+        {
+          "id": "voltera-v-one",
+          "name": "Voltera V-One",
+          "price": "$3,500"
+        },
+        {
+          "id": "weller-wxsmart",
+          "name": "Weller WXsmart",
+          "price": "$1,663"
+        },
+        {
+          "id": "axxsolder-3",
+          "name": "AxxSolder 3",
+          "price": "$160"
+        },
+        {
+          "id": "xgecu-t48-minipro",
+          "name": "XGecu T48 + minipro",
+          "price": "~$69"
+        },
+        {
+          "id": "half-decent-scale",
+          "name": "Half Decent Scale",
+          "price": "$139"
+        },
+        {
+          "id": "shimpo-vl-whisper",
+          "name": "Shimpo VL-Whisper",
+          "price": "$1,799"
+        },
+        {
+          "id": "plustek-opticfilm-8200i-ai",
+          "name": "Plustek OpticFilm 8200i Ai",
+          "price": "~$499"
+        },
+        {
+          "id": "jobo-cpp-3",
+          "name": "JOBO CPP-3",
+          "price": "$4,389"
+        }
+      ]
+    },
+    {
+      "id": "shop-machines",
+      "name": "Shop Machines & Power Tools",
+      "items": [
+        {
+          "id": "tormach-1100mx",
+          "name": "Tormach 1100MX",
+          "price": "$29,594"
+        },
+        {
+          "id": "tormach-770mx",
+          "name": "Tormach 770MX",
+          "price": "$24,950"
+        },
+        {
+          "id": "tormach-8l",
+          "name": "Tormach 8L CNC Lathe",
+          "price": "$12,395"
+        },
+        {
+          "id": "pocket-nc-v2-10",
+          "name": "Penta Pocket NC V2-10",
+          "price": "$7,499"
+        },
+        {
+          "id": "touchdro-tda-420",
+          "name": "TouchDRO TDA-420 / TDA-410",
+          "price": "$299"
+        },
+        {
+          "id": "precision-matthews-pm-30mv",
+          "name": "Precision Matthews PM-30MV",
+          "price": "$2,999"
+        },
+        {
+          "id": "precision-matthews-pm-1228vf-lb",
+          "name": "Precision Matthews PM-1228VF-LB",
+          "price": "$4,799"
+        },
+        {
+          "id": "sawstop-pcs-3hp",
+          "name": "SawStop Professional Cabinet Saw 3HP",
+          "price": "$3,881"
+        },
+        {
+          "id": "laguna-14bx",
+          "name": "Laguna 14|BX Bandsaw",
+          "price": "$1,934"
+        },
+        {
+          "id": "nova-voyager-dvr",
+          "name": "NOVA Voyager DVR Drill Press",
+          "price": "$2,229.99"
+        },
+        {
+          "id": "laguna-revo-18-36",
+          "name": "Laguna Revo 18|36 Lathe",
+          "price": "$3,284"
+        },
+        {
+          "id": "miller-multimatic-220-ac-dc",
+          "name": "Miller Multimatic 220 AC/DC",
+          "price": "$4,285"
+        },
+        {
+          "id": "tormek-t-8-original",
+          "name": "Tormek T-8 Original",
+          "price": "$1,066"
+        },
+        {
+          "id": "jet-jpj-12bhh",
+          "name": "JET JPJ-12BHH Planer/Jointer",
+          "price": "~$6,489"
+        }
+      ]
+    },
+    {
+      "id": "shop-power-signaling",
+      "name": "Shop Power, Interlocks & Signaling",
+      "items": [
+        {
+          "id": "aeotec-heavy-duty-smart-switch-gen5",
+          "name": "Aeotec Heavy Duty Smart Switch Gen5",
+          "price": "$104.99"
+        },
+        {
+          "id": "zooz-zen16-multirelay",
+          "name": "Zooz ZEN16 800LR MultiRelay",
+          "price": "$35.95"
+        },
+        {
+          "id": "leviton-gen2-smart-breaker",
+          "name": "Leviton 2nd Gen Smart Circuit Breaker",
+          "price": "$236.63 + LWHEM"
+        },
+        {
+          "id": "waveshare-modbus-poe-eth-relay-c",
+          "name": "Waveshare Modbus POE ETH Relay (C)",
+          "price": "$51.99"
+        },
+        {
+          "id": "kincony-kc868-a8v3",
+          "name": "KinCony KC868-A8v3",
+          "price": "$80"
+        },
+        {
+          "id": "fabman-bridge-fb-v2",
+          "name": "Fabman Bridge FB-V2",
+          "price": "€249 + €49/mo"
+        },
+        {
+          "id": "m5stack-dial-v1-1",
+          "name": "M5Stack Dial v1.1",
+          "price": "$34.90"
+        },
+        {
+          "id": "idem-es-p-230001-e-stop-station",
+          "name": "IDEM ES-P-230001 E-Stop Station",
+          "price": "$43"
+        },
+        {
+          "id": "patlite-la6-poe",
+          "name": "PATLITE LA6-POE",
+          "price": "$761"
+        },
+        {
+          "id": "patlite-nhv6-network-signal-tower",
+          "name": "PATLITE NHV6 Network Signal Tower",
+          "price": "$1,191"
+        },
+        {
+          "id": "patlite-lr6-usb",
+          "name": "PATLITE LR6-USB",
+          "price": "$229 + tiers"
+        },
+        {
+          "id": "adafruit-usb-tower-light-5125",
+          "name": "Adafruit Tri-Color USB Tower Light",
+          "price": "$74.95"
+        },
+        {
+          "id": "cyberpower-cp1500pfclcd",
+          "name": "CyberPower CP1500PFCLCD",
+          "price": "$274.95"
+        }
+      ]
+    },
+    {
+      "id": "motion-industrial-io",
+      "name": "Motion, Motors & Industrial I/O",
+      "items": [
+        {
+          "id": "arduino-opta-wifi",
+          "name": "Arduino Opta WiFi",
+          "price": "$199"
+        },
+        {
+          "id": "revpi-connect-5",
+          "name": "Revolution Pi Connect 5",
+          "price": "$723"
+        },
+        {
+          "id": "industrial-shields-raspberry-plc-21",
+          "name": "Industrial Shields Raspberry PLC 21",
+          "price": "~€633 (~$735)"
+        },
+        {
+          "id": "automationdirect-p1am-200",
+          "name": "AutomationDirect P1AM-200",
+          "price": "$109"
+        },
+        {
+          "id": "automationdirect-click-plus-c2-03cpu-2",
+          "name": "AutomationDirect CLICK PLUS C2-03CPU-2",
+          "price": "$277"
+        },
+        {
+          "id": "moxa-iologik-e1212",
+          "name": "Moxa ioLogik E1212",
+          "price": "$280"
+        },
+        {
+          "id": "advantech-adam-6050-d1",
+          "name": "Advantech ADAM-6050-D1",
+          "price": "$246"
+        },
+        {
+          "id": "odrive-s1",
+          "name": "ODrive S1",
+          "price": "$149"
+        },
+        {
+          "id": "mjbots-moteus-r4-11",
+          "name": "mjbots moteus r4.11",
+          "price": "$94"
+        },
+        {
+          "id": "pololu-tic-36v4",
+          "name": "Pololu Tic 36v4",
+          "price": "$62.95"
+        },
+        {
+          "id": "pololu-jrk-g2-24v13",
+          "name": "Pololu Jrk G2 24v13",
+          "price": "$109.95"
+        },
+        {
+          "id": "teknic-clearpath-sc",
+          "name": "Teknic ClearPath-SC",
+          "price": "$318+"
+        },
+        {
+          "id": "stepperonline-ess23-rs20",
+          "name": "StepperOnline ESS23-RS20",
+          "price": "$63.48"
+        },
+        {
+          "id": "robotis-dynamixel-xm430-w350",
+          "name": "ROBOTIS DYNAMIXEL XM430-W350-T + U2D2",
+          "price": "$310 + $37"
+        },
+        {
+          "id": "durapulse-gs10-vfd",
+          "name": "AutomationDirect DURApulse GS10 (GS11N-21P0)",
+          "price": "$170"
+        },
+        {
+          "id": "actuonix-p16-p-lac",
+          "name": "Actuonix P16-P + LAC",
+          "price": "$90 + $30"
+        },
+        {
+          "id": "igus-dryve-d1",
+          "name": "igus dryve D1",
+          "price": "$654"
+        },
+        {
+          "id": "bigtreetech-octopus-pro",
+          "name": "BIGTREETECH Octopus Pro V1.1",
+          "price": "$83.65"
+        }
+      ]
+    },
+    {
+      "id": "metrology-inspection",
+      "name": "Measurement & Inspection",
+      "items": [
+        {
+          "id": "mitutoyo-500-171-32",
+          "name": "Mitutoyo ABSOLUTE Digimatic Caliper 500-171-32",
+          "price": "$237"
+        },
+        {
+          "id": "mitutoyo-usb-itn",
+          "name": "Mitutoyo USB Input Tool Direct (USB-ITN)",
+          "price": "$249"
+        },
+        {
+          "id": "mitutoyo-293-330-32",
+          "name": "Mitutoyo Coolant Proof Micrometer 293-330-32",
+          "price": "$299.99"
+        },
+        {
+          "id": "mitutoyo-543-783b",
+          "name": "Mitutoyo ABSOLUTE Digimatic Indicator ID-S 543-783B",
+          "price": "$239.99"
+        },
+        {
+          "id": "mitutoyo-570-412",
+          "name": "Mitutoyo ABSOLUTE Digimatic Height Gage 570-412",
+          "price": "~$1,196"
+        },
+        {
+          "id": "sylvac-s-cal-evo-smart",
+          "name": "Sylvac S_Cal EVO Smart",
+          "price": "$540"
+        },
+        {
+          "id": "igaging-origincal-dataconnect",
+          "name": "iGaging OriginCal IP54 + DataConnect USB Kit",
+          "price": "~$204"
+        },
+        {
+          "id": "wixey-wr300bt",
+          "name": "Wixey WR300BT Smart Angle Gauge",
+          "price": "$64.99"
+        },
+        {
+          "id": "bosch-glm165-27cgl",
+          "name": "Bosch BLAZE GLM165-27CGL",
+          "price": "$229"
+        },
+        {
+          "id": "leica-disto-d2",
+          "name": "Leica DISTO D2",
+          "price": "$255"
+        },
+        {
+          "id": "ohaus-scout-stx",
+          "name": "OHAUS Scout STX123",
+          "price": "$827 + kit"
+        },
+        {
+          "id": "dino-lite-am4113t",
+          "name": "Dino-Lite AM4113T",
+          "price": "$429"
+        },
+        {
+          "id": "andonstar-ad249sm-plus",
+          "name": "Andonstar AD249SM-Plus",
+          "price": "$249"
+        },
+        {
+          "id": "nix-spectro-2",
+          "name": "Nix Spectro 2",
+          "price": "$1,450"
+        },
+        {
+          "id": "nix-mini-3",
+          "name": "Nix Mini 3",
+          "price": "$129"
+        },
+        {
+          "id": "mark-10-series-5",
+          "name": "Mark-10 Series 5 Force Gauge (M5-50)",
+          "price": "$1,250"
+        },
+        {
+          "id": "monarch-act-3x",
+          "name": "Monarch ACT-3X Panel Tachometer",
+          "price": "$498 + sensor"
+        },
+        {
+          "id": "wagner-orion-950",
+          "name": "Wagner Orion 950",
+          "price": "$645"
+        },
+        {
+          "id": "mitutoyo-sj-220",
+          "name": "Mitutoyo Surftest SJ-220",
+          "price": "$3,410"
+        }
+      ]
+    },
+    {
+      "id": "shop-controls-tending",
+      "name": "Machine Tending & Shop Controls",
+      "items": [
+        {
+          "id": "farmloop-stage-2-px",
+          "name": "FarmLoop Stage 2 Kit (Bambu P/X series)",
+          "price": "$146 + subscription"
+        },
+        {
+          "id": "chitu-platecycler-c1",
+          "name": "Chitu Systems PlateCycler C1",
+          "price": "$99.99"
+        },
+        {
+          "id": "ufactory-gripper-g2",
+          "name": "UFACTORY Gripper G2",
+          "price": "$2,300"
+        },
+        {
+          "id": "robotiq-hand-e",
+          "name": "Robotiq Hand-E",
+          "price": "$4,725"
+        },
+        {
+          "id": "ufactory-xarm-vacuum-gripper",
+          "name": "UFACTORY xArm Vacuum Gripper",
+          "price": "$600"
+        },
+        {
+          "id": "wlkata-conveyor-belt-ms4220",
+          "name": "WLKATA Conveyor Belt Set + MS4220 Driver",
+          "price": "$560"
+        },
+        {
+          "id": "ufactory-lite-6",
+          "name": "UFACTORY Lite 6",
+          "price": "$3,500"
+        },
+        {
+          "id": "ufactory-xarm-6",
+          "name": "UFACTORY xArm 6",
+          "price": "$9,500"
+        },
+        {
+          "id": "dobot-mg400",
+          "name": "Dobot MG400",
+          "price": "$3,780"
+        },
+        {
+          "id": "mycobot-320-pi",
+          "name": "Elephant Robotics myCobot 320 Pi",
+          "price": "$2,399"
+        },
+        {
+          "id": "fairino-fr3",
+          "name": "Fairino FR3",
+          "price": "$6,799"
+        },
+        {
+          "id": "3dconnexion-spacemouse-pro-wireless",
+          "name": "3Dconnexion SpaceMouse Pro Wireless",
+          "price": "$329"
+        },
+        {
+          "id": "xkeys-xk-3-foot-pedal",
+          "name": "X-keys XK-3 USB Foot Pedal",
+          "price": "$149.95"
+        },
+        {
+          "id": "xkeys-xk-24",
+          "name": "X-keys XK-24 Programmable Keypad",
+          "price": "$159.95"
+        },
+        {
+          "id": "novation-launchpad-x",
+          "name": "Novation Launchpad X",
+          "price": "$219.99"
+        },
+        {
+          "id": "akai-apc-mini-mk2",
+          "name": "Akai APC mini mk2",
+          "price": "$79"
+        },
+        {
+          "id": "intech-grid-en16",
+          "name": "Intech Studio Grid EN16",
+          "price": "$189"
+        },
+        {
+          "id": "xhc-whb04b-6",
+          "name": "XHC WHB04B-6 Wireless MPG Pendant",
+          "price": "~$184"
+        }
+      ]
+    },
+    {
+      "id": "shop-environment-safety",
+      "name": "Shop Air, Dust & Fire Safety",
+      "items": [
+        {
+          "id": "ivac-pro-blast-gate",
+          "name": "iVAC Pro Blast Gate",
+          "price": "$152.95"
+        },
+        {
+          "id": "oneida-supercell-14-gal",
+          "name": "Oneida Supercell (14 Gal. Mobile)",
+          "price": "$3,199"
+        },
+        {
+          "id": "harvey-gyro-air-g-700",
+          "name": "Harvey Gyro Air G-700",
+          "price": "$2,499"
+        },
+        {
+          "id": "jet-afs-1000c",
+          "name": "JET AFS-1000C",
+          "price": "$699.99"
+        },
+        {
+          "id": "bofa-ad-oracle-iq",
+          "name": "Donaldson BOFA AD Oracle iQ",
+          "price": "$4,432.70"
+        },
+        {
+          "id": "weller-zero-smog-shield-pro",
+          "name": "Weller Zero Smog Shield Pro",
+          "price": "$266"
+        },
+        {
+          "id": "awair-element",
+          "name": "Awair Element",
+          "price": "$299"
+        },
+        {
+          "id": "purpleair-touch",
+          "name": "PurpleAir Touch",
+          "price": "$209"
+        },
+        {
+          "id": "iqair-airvisual-pro",
+          "name": "IQAir AirVisual Pro",
+          "price": "$329.99"
+        },
+        {
+          "id": "first-alert-smco410",
+          "name": "First Alert SMCO410 Z-Wave Smoke & CO",
+          "price": "$64.99"
+        },
+        {
+          "id": "blazecut-t-series-s",
+          "name": "BlazeCut T Series with Pressure Switch",
+          "price": "$369"
+        },
+        {
+          "id": "serin-cn105-controller",
+          "name": "Serin CN105 ESP32 Controller",
+          "price": "$40"
+        },
+        {
+          "id": "mitsubishi-kumo-wifi-adapter",
+          "name": "Mitsubishi PAC-USWHS002-WF-2 Wi-Fi Adapter",
+          "price": "$229"
+        },
+        {
+          "id": "midea-cube-50-dehumidifier",
+          "name": "Midea Cube 50-Pint Dehumidifier",
+          "price": "$299"
+        }
+      ]
+    },
+    {
+      "id": "photo-fulfillment",
+      "name": "Product Photo & Fulfillment",
+      "items": [
+        {
+          "id": "edelkrone-sliderplus-v6",
+          "name": "edelkrone SliderPLUS v6",
+          "price": "$890"
+        },
+        {
+          "id": "cognisys-stackshot-3x",
+          "name": "Cognisys StackShot 3X",
+          "price": "$609"
+        },
+        {
+          "id": "edelkrone-headplus-v3",
+          "name": "edelkrone HeadPLUS v3",
+          "price": "$1,990"
+        },
+        {
+          "id": "comxim-mtxruwslpro",
+          "name": "ComXim MTxRUWSLPro turntable",
+          "price": "from $136"
+        },
+        {
+          "id": "amaran-ray-360c",
+          "name": "amaran Ray 360c",
+          "price": "$429"
+        },
+        {
+          "id": "amaran-t2c",
+          "name": "amaran T2c",
+          "price": "$199"
+        },
+        {
+          "id": "ipevo-v4k-pro",
+          "name": "IPEVO V4K PRO",
+          "price": "~$169"
+        },
+        {
+          "id": "dymo-m25",
+          "name": "DYMO M25 Postal Scale",
+          "price": "$79"
+        },
+        {
+          "id": "fairbanks-ultegra-ii",
+          "name": "Fairbanks Ultegra II",
+          "price": "$472"
+        },
+        {
+          "id": "rollo-wireless-x1040",
+          "name": "Rollo Wireless X1040",
+          "price": "$279.99"
+        },
+        {
+          "id": "zebra-zt231",
+          "name": "Zebra ZT231",
+          "price": "~$1,449"
+        },
+        {
+          "id": "brother-td-4550dnwb",
+          "name": "Brother TD-4550DNWB",
+          "price": "$968"
+        },
+        {
+          "id": "epson-colorworks-cw-c4000",
+          "name": "Epson ColorWorks CW-C4000",
+          "price": "$2,499"
+        },
+        {
+          "id": "better-pack-555esa",
+          "name": "Better Pack 555eSA",
+          "price": "$1,674.45"
+        },
+        {
+          "id": "aie-300a1",
+          "name": "AIE-300A1 Impulse Sealer",
+          "price": "$661.92"
+        }
+      ]
+    },
+    {
+      "id": "home-lab-brew-grow",
+      "name": "Home Lab, Brewing & Grow",
+      "items": [
+        {
+          "id": "atlas-scientific-ezo-ph-circuit",
+          "name": "Atlas Scientific EZO-pH Circuit",
+          "price": "$45.99"
+        },
+        {
+          "id": "atlas-scientific-wi-fi-hydroponics-kit",
+          "name": "Atlas Scientific Wi-Fi Hydroponics Kit",
+          "price": "$644.99"
+        },
+        {
+          "id": "dfrobot-gravity-ph-kit-v2",
+          "name": "DFRobot Gravity Analog pH Kit V2",
+          "price": "$39.50"
+        },
+        {
+          "id": "atlas-scientific-ezo-pmp",
+          "name": "Atlas Scientific EZO-PMP Dosing Pump",
+          "price": "$94.99"
+        },
+        {
+          "id": "ika-plate-rct-digital",
+          "name": "IKA Plate (RCT digital)",
+          "price": "$1,280"
+        },
+        {
+          "id": "ocean-st-vis-microspectrometer",
+          "name": "Ocean Optics Ocean ST (VIS)",
+          "price": "$1,820"
+        },
+        {
+          "id": "adafruit-as7341-spectral-sensor",
+          "name": "Adafruit AS7341 Spectral Sensor",
+          "price": "$18.95"
+        },
+        {
+          "id": "gaudilabs-qpocketpcr",
+          "name": "GaudiLabs qPocketPCR",
+          "price": "€599"
+        },
+        {
+          "id": "tilt-hydrometer",
+          "name": "Tilt Hydrometer",
+          "price": "$135"
+        },
+        {
+          "id": "kegland-brewzilla-gen-4-1",
+          "name": "KegLand BrewZilla Gen 4.1 (35L)",
+          "price": "$599.99"
+        },
+        {
+          "id": "rapt-temperature-controller",
+          "name": "RAPT Temperature Controller",
+          "price": "$137.99"
+        },
+        {
+          "id": "inkbird-itc-308-wifi",
+          "name": "Inkbird ITC-308-WIFI",
+          "price": "$50.99"
+        },
+        {
+          "id": "brewblox-spark-4",
+          "name": "Brewblox Spark 4",
+          "price": "~$184"
+        },
+        {
+          "id": "fireboard-2-pro",
+          "name": "FireBoard 2 Pro",
+          "price": "$319"
+        },
+        {
+          "id": "flame-boss-550",
+          "name": "Flame Boss 550",
+          "price": "$429"
+        },
+        {
+          "id": "ac-infinity-controller-69-pro",
+          "name": "AC Infinity Controller 69 Pro",
+          "price": "$79.99"
+        },
+        {
+          "id": "trolmaster-hydro-x-pro",
+          "name": "TrolMaster Hydro-X Pro",
+          "price": "$2,069.95"
+        },
+        {
+          "id": "bluelab-guardian-monitor-wifi",
+          "name": "Bluelab Guardian Monitor Wi-Fi",
+          "price": "$459"
+        },
+        {
+          "id": "inkbird-ihc-200-wifi",
+          "name": "Inkbird IHC-200-WIFI",
+          "price": "$62.99"
+        },
+        {
+          "id": "neptune-apex-a3",
+          "name": "Neptune Systems A3 Apex",
+          "price": "$791.99"
+        },
+        {
+          "id": "robo-tank-reef-pi-deluxe-kit",
+          "name": "Robo-Tank reef-pi Deluxe Kit",
+          "price": "$209.95"
         }
       ]
     },

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: ffa5f10f8c0584a638bbf945ec9d5c634c7f704c
+upstream_blob: 744df7b219bf944ad27791e18a28fc332bce7d81
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -1310,7 +1310,7 @@ def register(ctx):
 | `kanban_task_completed` | kanban タスクが完了する（ワーカープロセス） | `task_id, board, assignee, run_id, profile_name, summary: str \| None` | 無視される |
 | `kanban_task_blocked` | kanban タスクがブロックされる（ワーカープロセス） | `task_id, board, assignee, run_id, profile_name, reason: str \| None` | 無視される |
 
-ほとんどのフックは fire-and-forget な observer で、戻り値は無視されます。例外は、会話にコンテキストを注入できる `pre_llm_call` と、block / approve の指示を返せる `pre_tool_call` です。
+ほとんどのフックは fire-and-forget な observer で、戻り値は無視されます。例外は、会話にコンテキストを注入したり、モデルに届く前にそのターンを止めたりできる `pre_llm_call` と、block / approve の指示を返せる `pre_tool_call` です。
 
 すべてのコールバックは、前方互換性のために `**kwargs` を受け入れるべきです。フックのコールバックがクラッシュした場合、それはログに記録されてスキップされます。他のフックとエージェントは通常どおり続行します。
 
@@ -1320,7 +1320,7 @@ kanban のライフサイクルフックは、board の DB 変更がコミット
 
 ### `pre_llm_call` のコンテキスト注入 {#prellmcall-context-injection}
 
-これは戻り値が意味を持つ唯一のフックです。`pre_llm_call` のコールバックが `"context"` キーを持つ dict（または単純な文字列）を返すと、Hermes はそのテキストを**現在のターンのユーザーメッセージ**に注入します。これは、メモリプラグイン、RAG インテグレーション、ガードレール、そしてモデルに追加のコンテキストを提供する必要のあるあらゆるプラグインのための仕組みです。
+`pre_llm_call` のコールバックが `"context"` キーを持つ dict（または単純な文字列）を返すと、Hermes はそのテキストを**現在のターンのユーザーメッセージ**に注入します。これは、メモリプラグイン、RAG インテグレーション、ガードレール、そしてモデルに追加のコンテキストを提供する必要のあるあらゆるプラグインのための仕組みです。
 
 #### 戻り値の形式 {#return-format}
 
@@ -1331,11 +1331,20 @@ return {"context": "Recalled memories:\n- User prefers dark mode\n- Last project
 # Plain string (equivalent to the dict form above)
 return "Recalled memories:\n- User prefers dark mode"
 
+# Block the turn before it reaches the model (DLP / policy plugins)
+return {"action": "block", "message": "Blocked by policy: prompt contains a customer ID."}
+
 # Return None or don't return → no injection (observer-only)
 return None
 ```
 
 `"context"` キーを持つ非 None・非空の戻り値（あるいは非空の単純な文字列）は、すべて集約され、現在のターンのユーザーメッセージに追記されます。
+
+`{"action": "block", "message": "..."}` を返すと、**推論リクエストを一切送る前に**そのターンを拒否します。メッセージはモデルの返答の代わりにユーザーへ表示され、アシスタントの返答として保存されます（そのため会話の記録は通常どおり `user → assistant` の組を保ち、`--resume` も使えます）。そのターンではモデルを一度も呼び出さず、結果には `turn_exit_reason: "blocked_by_plugin_pre_llm_call"` が付きます。最初の block が採用され、メッセージのない block は無視されます。
+
+止められたプロンプトは `[Message withheld: a pre_llm_call policy hook blocked it.]` として保存されます。以降のターンで再生されるのも、圧縮の要約、`session_search`、外部のメモリプロバイダー、バックグラウンドのメモリ見直しが読むのも、このプレースホルダーです。そのため、そのプロンプトがこのターンでも後のターンでもモデルに届くことはありません。ユーザーが入力した内容は表示用のメタデータとしてだけ残るので、CLI の `--resume` の振り返り、TUI、デスクトップアプリ、ダッシュボードには引き続き表示されます。このフックはターン開始時の圧縮より前に実行され、止められたターンでは圧縮、タイトル付け、外部メモリの事前取得と同期が行われません。
+
+block が効くのは、コールバックがそれを返したときだけです。例外を出したコールバックや、`plugins.hook_callback_timeout`（既定は 30 秒）を超えて動き続けたコールバックはログに記録されてスキップされ、ターンはそのまま進みます。そのため、ポリシー用のフックは自分のエラーを自分で捕捉し、判断できないときは block を返すようにしてください。モデルのメタデータの問い合わせ（新しいセッションで `/models` からコンテキスト長を調べる処理など）は、このフックより前に実行されることがありますが、メッセージの内容は含みません。
 
 #### 大きすぎるコンテキストの溢れ {#oversized-context-spill}
 

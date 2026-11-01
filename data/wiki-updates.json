@@ -1,6 +1,83 @@
 {
-  "generatedAt": "2026-11-01",
+  "generatedAt": "2026-11-02",
   "entries": [
+    {
+      "date": "2026-11-01",
+      "sha": "d83f033",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザの自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/photon",
+          "title": "Photon iMessage",
+          "url": "/hermes/docs/user-guide/messaging/photon/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/secrets/bitwarden",
+          "title": "Bitwarden Secrets Manager",
+          "url": "/hermes/docs/user-guide/secrets/bitwarden/"
+        },
+        {
+          "id": "user-guide/secrets/onepassword",
+          "title": "1Password",
+          "url": "/hermes/docs/user-guide/secrets/onepassword/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent",
+          "title": "Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる",
+          "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-microsoft-office",
+          "title": "Microsoft Office — Word・PowerPoint・Excel ファイルを作成・読み取り・編集する",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-pdf",
+          "title": "Pdf — PDF ファイルの作成・読み取り・結合・フォーム入力・OCR・テキスト編集",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/"
+        },
+        {
+          "id": "user-guide/skills/optional/finance/finance-excel-author",
+          "title": "Excel Author — openpyxl でヘッドレスに監査できる財務ワークブックを作る",
+          "url": "/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/"
+        },
+        {
+          "id": "user-guide/skills/optional/finance/finance-pptx-author",
+          "title": "Pptx Author — python-pptx でヘッドレスに PowerPoint 資料を作る",
+          "url": "/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/"
+        }
+      ]
+    },
     {
       "date": "2026-10-31",
       "sha": "de16336",

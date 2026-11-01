@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: dfb103090c5961d1d6d956774a3519db6fde783c
+upstream_blob: 93b09426b1676c07dc0a6085d746620594f06e65
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -383,7 +383,7 @@ def register(ctx):
     ctx.register_hook("post_llm_call", my_sync_callback)
     ctx.register_hook("on_session_start", my_init_callback)
     ctx.register_hook("on_session_end", my_cleanup_callback)
-    # Kanban board lifecycle (dependency-wait blocking may fire inside its transaction):
+    # Kanban board lifecycle (each fires after its board write commits):
     ctx.register_hook("kanban_task_claimed", my_claim_callback)     # dispatcher process
     ctx.register_hook("kanban_task_completed", my_done_callback)    # worker process
     ctx.register_hook("kanban_task_blocked", my_blocked_callback)   # worker process
@@ -454,7 +454,7 @@ def register(ctx):
 | `transform_tool_result` | 変換 | `post_tool_call` のあと、会話への追加の前。最初の文字列が結果を置き換えます。 | `tool_name`、`args`、`result`、`task_id`、`session_id`、`tool_call_id`、`turn_id`、`api_request_id`、`duration_ms`、`status`、`error_type`、`error_message` | モデルへ渡る結果と引数が丸ごと見えます。 |
 | `transform_terminal_output` | 変換 | 前面のプロセスの出力を上限付きで受け取ったあと、最後の出力の制限の前。最初の文字列が出力を置き換えます。 | `command`、`output`、`returncode`、`task_id`、`env_type` | コマンドや出力に資格情報が含まれることがあります。 |
 | `pre_transcription` | 変換 | プロバイダーが決まったあと、どのバックエンド（組み込み、コマンド型、プラグインが登録したもの）が呼ばれるよりも前に、音声認識の振り分け役が発火させます。辞書の結果は登録の順に適用され、項目ごとに最後の書き手が勝ちます（`prompt`、`language`、`model`。`file_path` は読み取り専用です）。 | `file_path`、`provider`、`model`、`language`、`prompt`、`source` | 最後のプロンプトは音声と一緒に、設定された音声認識のプロバイダーへ送られます。フックの戻り値に秘密の情報を入れないでください。 |
-| `pre_llm_call` | 指示 / 制御 | ループの前に、やり取りごとに 1 回。有効な文字列 / `{"context": ...}` の戻り値はすべてつなげられ、利用者のメッセージへ差し込まれます。 | `session_id`、`task_id`、`turn_id`、`user_message`、`conversation_history`、`is_first_turn`、`model`、`platform`、`parent_session_id`、`sender_id` | 利用者のメッセージと会話の履歴が丸ごと。 |
+| `pre_llm_call` | 指示 / 制御 | ループの前に、やり取りごとに 1 回。有効な文字列 / `{"context": ...}` の戻り値はすべてつなげられ、利用者のメッセージへ差し込まれます。最初の有効な `{"action": "block", "message": ...}` は、推論の要求を一度も送らないうちにそのやり取りを終わらせます。 | `session_id`、`task_id`、`turn_id`、`user_message`、`conversation_history`、`is_first_turn`、`model`、`platform`、`parent_session_id`、`sender_id` | 利用者のメッセージと会話の履歴が丸ごと。 |
 | `post_llm_call` | 観測役 | 中断されずに成功したやり取りの締めくくり。戻り値は無視されます。 | `session_id`、`task_id`、`turn_id`、`user_message`、`assistant_response`、`conversation_history`、`model`、`platform`、`side_question_token` | プロンプト、応答、履歴が丸ごと。 |
 | `transform_llm_output` | 変換 | `post_llm_call` と最後の配信の前。最初の空でない文字列が応答を置き換えます。 | `response_text`、`session_id`、`model`、`platform` | 最後のアシスタントの文章が丸ごと。 |
 | `pre_verify` | 指示 / 制御 | 編集したコードの確認の関門で、上限付きに。最初の有効な続行 / 遮断の指示がやり取りを続けさせます。 | `session_id`、`platform`、`model`、`coding`、`attempt`、`final_response`、`changed_paths` | 下書きの応答と変更されたパス。 |
@@ -489,7 +489,7 @@ def register(ctx):
 | `on_room_member_activity` | 観測役 | Bot モードのゲートウェイで、ホストされたグループチャットのメンバーのやり取りが動いている間、メンバーのセッションが出す実行時のイベント（ツールの開始 / 完了、承認の要求、メッセージ / 推論の差分、エラー）ごとに 1 回。受け手ごとにトークンの経路の外で待ち行列に入ります。戻り値は無視されます。 | `room_id`、`thread_id`、`member_id`、`turn_id`、`task_id`、`execution_generation`、`kind`、`seq`、`payload` | `payload` はクライアントに渡して安全なセッションのイベントの本体です。ツールの引数と結果、伏せ字にした承認のコマンド、逐次に流れるメンバーの文章。 |
 | `kanban_task_claimed` | 観測役 | 取り掛かりが確定したあと、ワーカーの起動の前にディスパッチャーのプロセスで。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id` | 盤 / タスク / プロファイル / 担当者の識別子。 |
 | `kanban_task_completed` | 観測役 | 完了と片付けのあと、ふつうはワーカーのプロセスで。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id`、`summary` | 要約にプロジェクトや利用者の内容が含まれることがあります。 |
-| `kanban_task_blocked` | 観測役 | ブロックへの遷移のあと。依存の待ちの経路では、そのトランザクションを抜ける前に発火します。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id`、`reason` | 理由にプロジェクトや利用者の内容が含まれることがあります。 |
+| `kanban_task_blocked` | 観測役 | ブロックへの遷移が確定したあと。依存の待ちによるものも含みます。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id`、`reason` | 理由にプロジェクトや利用者の内容が含まれることがあります。 |
 | `on_kanban_worker_spawned` | 観測役 | `spawn_fn` が返り、ワーカーの PID が保存されたあと。振り分けのロックの中で動くので、コールバックは速く保ってください。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id`、`worker_pid`、`workspace_path` | `workspace_path` はファイルシステムのパスで、プロジェクトの構成や利用者名が読み取れることがあります。 |
 | `on_kanban_worker_exited` | 観測役 | まわりに由来します。`detect_crashed_workers` が PID の死んだタスクを回収し、その回収が確定したあと。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id`、`worker_pid`、`exit_kind`、`exit_code`、`outcome`、`retry_status` | 識別子と終了の情報だけ。 |
 | `on_kanban_worker_stale_claim` | 観測役 | TTL の切れた取り掛かりが回収されたあと。PID が生きている延長では発火しません。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id`、`worker_pid`、`heartbeat_stale`、`retry_status` | 識別子と取り掛かりの情報だけ。 |
@@ -699,6 +699,12 @@ def my_callback(session_id: str, user_message: str, conversation_history: list,
 **発火する場所:** `agent/turn_context.py`（`agent/conversation_loop.py` の `run_conversation()` のためのやり取りの準備）の中、文脈の圧縮のあと、主の `while` のループの前です。`run_conversation()` の呼び出しごと（つまり利用者のやり取りごと）に 1 回発火し、ツールのループの中の API 呼び出しごとではありません。
 
 **戻り値:** コールバックが `"context"` のキーを持つ辞書か、空でない素の文字列を返すと、その文章がいまのやり取りの利用者のメッセージへ足されます。差し込まないときは `None` を返します。
+
+`{"action": "block", "message": "..."}` を返すと、**推論の要求を一度も送らないうちに**そのやり取りを差し止めます。そのメッセージはモデルの返答の代わりに利用者へ表示され、アシスタントの返答として保存されます（そのため記録はふつうの `user → assistant` の組のままで、`--resume` も動きます）。そのやり取りではモデルが一度も呼ばれず、結果には `turn_exit_reason: "blocked_by_plugin_pre_llm_call"` が入ります。最初の遮断が勝ちます。メッセージのない遮断は無視されます。
+
+遮断されたプロンプトは `[Message withheld: a pre_llm_call policy hook blocked it.]` として保存されます。以降のやり取りで再生されるのも、圧縮の要約、`session_search`、外部の記憶のプロバイダー、背後での記憶の見直しが読むのも、この置き換えの文言です。そのため、そのプロンプトがこのやり取りでも以降のやり取りでもモデルに届くことはありません。利用者が打った内容は表示用の情報としてだけ残るので、CLI の `--resume` の振り返り、TUI、デスクトップアプリ、ダッシュボードにはそのまま表示されます。このフックはやり取りの開始時の圧縮より前に動き、遮断されたやり取りでは、圧縮、題名付け、外部の記憶の先読み / 同期が行われません。
+
+遮断が効くのは、コールバックが実際にそれを返したときだけです。例外を投げたコールバックや、`plugins.hook_callback_timeout`（既定 30 秒）を超えて動き続けたコールバックは記録されて飛ばされ、やり取りはそのまま進みます。そのため方針のフックは、自分のエラーを自分で捕まえ、判断がつかないときは遮断を返すようにしてください。モデルの情報の問い合わせ（新しいセッションで `/models` に文脈の長さを確かめるものなど）は、このフックより前に動くことがあります。こうした問い合わせはメッセージの内容を運びません。
 
 ```python
 # Inject context
@@ -1860,7 +1866,7 @@ def register(ctx):
 
 #### `kanban_task_blocked` {#kanbantaskblocked}
 
-ふつうのブロックへの遷移のあとに発火します。依存の待ちの経路では、その書き込みのトランザクションを抜ける前に呼ばれます。その `reason` には、プロジェクトや利用者の内容が含まれることがあります。
+ブロックへの遷移が確定したあとに発火します。依存の待ちによるものも含むので、コールバックは盤を読み書きできます。その `reason` には、プロジェクトや利用者の内容が含まれることがあります。
 
 カンバンの 3 つのフックはどれも観測専用で、`task_id`、`profile_name`、`board`、`assignee`、`run_id` を運びます。完了ではこれに `summary` が、ブロックでは `reason` が加わります。
 
@@ -1963,14 +1969,18 @@ Windows では、`command` が実在するスクリプトのファイルで始�
 // Inject context for pre_llm_call:
 {"context": "Today is Friday, 2026-04-17"}
 
+// Block the turn before any inference request (pre_llm_call); both shapes accepted:
+{"action": "block", "message": "Blocked by policy: prompt contains a customer ID"}
+{"decision": "block", "reason": "Blocked by policy: prompt contains a customer ID"}
+
 // Keep the agent going at the verify gate (pre_verify); both shapes accepted:
 {"action": "continue", "message": "Run the formatter, then finish."}
 {"decision": "block",  "reason":  "Run the formatter, then finish."}
 
 // Silent no-op — any empty / non-matching output is fine:
 ```
+
 後述する `pre_tool_call` の終了コード 2 を除き、壊れた JSON、ふつうの 0 以外の終了コード、時間切れは、既定では開く側へ倒れます。警告を記録しますが、エージェントのループは止めません。`fail_closed` のフックでは、後述のとおり振る舞いが変わります。
-壊れた JSON、0 以外の終了コード、時間切れは警告を記録しますが、エージェントのループを止めることは決してありません。
 
 ### 終了コード 2 = 遮断（Claude Code / Cursor と互換） {#exit-code-2-block-claude-code-cursor-compatible}
 

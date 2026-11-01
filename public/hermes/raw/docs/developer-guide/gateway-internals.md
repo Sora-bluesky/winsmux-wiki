@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: 99b18a350fe9536ef3ce8a35c25ecfccc99ed685
+upstream_blob: 4d8af44658b60ed9b67dd08f3c225b911d4e7aa4
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -714,6 +714,12 @@ _register_completion_watcher` → `run_notifications.py::arm_process_watcher`）
 受け入れを拒否されたときは、確保したバッチの兄弟をすべて返却し、試行回数は消費しません。
 実際の配達エラーは、上限のある再試行の方針をそのまま保ちます。認識できた生の API の経路は、
 永続化したメッセージングの発信元の後に解決し、使えないときは静かに先送りします。形の崩れた経路は引き続き警告を出します。
+
+セッションが処理中のあいだに届いた完了は、キューに入ったひとつのターンにまとめられます
+（`session_automation.py::_admit_folded_completion`）。同じ経路の完了がすでに FIFO のいちばん最後で待っている場合、
+新しい完了は、両方をまとめた受け入れ（両方の文面、すべての発生元の身元、「N background process results」という見出し）でそれを置き換え、
+待っていた行は同じトランザクションの中で取り消します。まとめるのは末尾だけなので、完了の後にキューへ入ったプロンプトは
+2つの完了のあいだの位置を保ちます。待っていた行が先に引き受けられた場合、新しい完了は単独でキューに並びます。
 
 cron の実行には専用のセッションがあります。続きのやり取りができる対象の配達は、
 返信先の会話に写したり、その会話の起点を作ったりできます。対象は、発信元、発信元がないときのホームへの代替、利用者が書いたプラットフォーム名だけのホーム、

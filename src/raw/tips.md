@@ -1,12 +1,12 @@
 ---
 title: "Hermes Wingtips 日本語版"
-description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」の #1〜#108（2026-10-22 まで）を日本語で"
+description: "Nous Research の @witcheer による X の連載「Hermes Wingtips」の #1〜#113（2026-10-29 まで）を日本語で"
 raw: /hermes/raw/tips.md
 ---
 
 # Hermes Wingtips 日本語版
 
-「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは #1〜#108（2026-10-22 まで）の 108 回・8 分類を収録しています。英語の原文は @witcheer のサイト [hermes recipes](https://notwitcheer.github.io/hermes-recipes/wingtips/) にもまとまっています。
+「Hermes Wingtips」は、Nous Research の [@witcheer](https://x.com/witcheer) による X の連載です。1 回にひとつ、Hermes Agent の機能や設定を紹介しています。このページは #1〜#113（2026-10-29 まで）の 113 回・8 分類を収録しています。英語の原文は @witcheer のサイト [hermes recipes](https://notwitcheer.github.io/hermes-recipes/wingtips/) にもまとまっています。
 
 日本語の文はこのサイトによる要約です。正確な内容は元のポストと公式ドキュメントをご覧ください。
 
@@ -173,6 +173,9 @@ raw: /hermes/raw/tips.md
 
 ## skill
 
+- **#111 終えた作業に名前を付けてスキルとして残す** — 繰り返しそうな作業を終えたら「いまやったことを `weekly-update` という名前のスキルとして保存して」と頼みます。入っているスキルは自動でスラッシュコマンドになるので、次からは `/weekly-update` と打てば同じ手順を読み込みます。
+  - 元のポスト: https://x.com/witcheer/status/2114650743500382473
+  - 関連: [コツとベストプラクティス](https://wiki.winsmux.dev/hermes/docs/guides/tips/) / [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
 - **#107 スキルのハブで GitHub の回数制限に当たらないようにする** — スキルのハブは GitHub の API を使うため、認証なしでは1時間60回までです。`hermes config set GITHUB_TOKEN <トークン>` で `.env` に保存すると、1時間5,000回まで上がります。インストールや検索の途中で制限のエラーが出たときの対処です。
   - 元のポスト: https://x.com/witcheer/status/2112446219070968105
   - 関連: [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
@@ -206,6 +209,9 @@ raw: /hermes/raw/tips.md
 
 ## 定期実行
 
+- **#112 「in」で始めて、一度だけ動く予約を作る** — 予定を `in 30m`・`in 2h`・`in 1d` のように「in」で始めると、その時間がたったあとに1回だけ実行されるジョブになります。`hermes cron create "in 2h" "<頼みごと>"` の形で作れます。`every 2h` や `30m` だけの書き方は繰り返しになります。
+  - 元のポスト: https://x.com/witcheer/status/2115428373564375354
+  - 関連: [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
 - **#98 サーバーの場所に関係なく、自分の時刻帯で動かす** — `hermes config set timezone America/New_York` のように IANA 名で設定すると、エージェントの時計と cron がその時刻帯で動きます。ログはマシンの時刻のままです。`HERMES_TIMEZONE` があればそちらが優先です。
   - 元のポスト: https://x.com/witcheer/status/2108882539788050645
   - 関連: [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
@@ -268,6 +274,9 @@ raw: /hermes/raw/tips.md
 
 ## CLI とデスクトップ
 
+- **#113 チャットから頼んで、別のプロジェクトへ移る** — デスクトップのプロジェクトは、複数のフォルダーをまとめて名前を付けた作業場です。「このチャットを Recipe Box プロジェクトに切り替えて」と頼むと、`desktop_project` ツールがチャットをそのプロジェクトへ移し、作業場所を主フォルダーへ移します。一覧を頼めば、いま有効なものも表示されます。
+  - 元のポスト: https://x.com/witcheer/status/2115817431616598488
+  - 関連: [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
 - **#103 よく使うモデルに星を付けて、選択画面のいちばん上に出す** — デスクトップのモデル選択で、行の左にある星をクリックすると、そのモデルが一番上の Favorites 欄に並びます。コンポーザーなどモデルを選ぶ場所すべてに出ます。もう一度クリックすれば外れます。
   - 元のポスト: https://x.com/witcheer/status/2110996667893764440
   - 関連: [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
@@ -307,6 +316,12 @@ raw: /hermes/raw/tips.md
 
 ## その他
 
+- **#110 エージェントのブラウザを見える窓で開く** — 既定では画面なしで動く手元のブラウザを、`browser.headed: true` で見える Chromium の窓として開けます。サインインや CAPTCHA に手で割り込めて、ターンのあいだも窓が開いたままなので、会話中はログインの状態が保たれます。クラウドのブラウザには効きません。
+  - 元のポスト: https://x.com/witcheer/status/2115013131865117001
+  - 関連: [ブラウザの自動操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/browser/)
+- **#109 プラグインカタログを語で探して入れる** — `hermes plugins search <語>` で、名前・説明・足すツールを手がかりにプラグインカタログを探し、`hermes plugins install <名前>` で入れられます。カタログはコードの監査ではなく、入れた直後は無効なので、ソースを確かめてから有効にします。
+  - 元のポスト: https://x.com/witcheer/status/2113910871046947127
+  - 関連: [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
 - **#97 作業に入る前に、確認したいことをまとめて質問してもらう** — メッセージに「先にいくつか質問して」と添えると、エージェントが `clarify` ツールで、選択肢か自由回答の質問を最大5問まとめて出します。デスクトップでは1枚のカードに並び、Telegram などでは1問ずつ届きます。
   - 元のポスト: https://x.com/witcheer/status/2109184368052777380
   - 関連: [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)

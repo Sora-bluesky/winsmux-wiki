@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 4fc9743e63966f33cdfe1a44062ce4f7ff4fe05c
+upstream_blob: 808b59c20239d3a480c7599a8477b3001a03289c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -217,7 +217,7 @@ updates:
 
 `config.yaml` 自体のその時点のコピー（`hermes setup` が書き換える前、`hermes migrate` が編集する前、ファイルの読み込みに成功するたび、読み込みに失敗したときに取られます）は `backups/config/config.yaml.<reason>.<timestamp>` に保存されます。同じ内容の繰り返しは保存されず、理由ごとに最新の5つだけが残るので、`config.yaml` の横にコピーがたまり続けることはありません。`config.yaml` が壊れている場合、Hermes は組み込みの既定値ではなく最新の `good` コピーを使って動作し、YAML が直るまで起動のたびに警告を出します。壊れたファイルそのものには一切手を加えません。
 
-git でインストールした場合、Hermes は更新用のブランチをチェックアウトしたり pull したりする前に、変更のある追跡対象ファイルと未追跡ファイルを自動で stash します。ターミナルで対話的に更新するときは、その stash を戻す前に確認を求めます。対話なしの更新（デスクトップアプリやチャットアプリ、ゲートウェイ、`--yes`）では `updates.non_interactive_local_changes` の設定に従います。`stash` は pull が成功したあとにソースへの手元の変更を戻し、`discard` は pull が成功したあとに更新処理が作った stash を捨てます。`discard` は、ソースへの手元の変更を残す想定がない管理下のインストールでだけ使ってください。
+git でインストールした場合、Hermes は更新用のブランチをチェックアウトしたり pull したりする前に、変更のある追跡対象ファイルと、更新で追加されるパスにある未追跡ファイルを自動で stash します。更新で書き込まれない未追跡ファイルは、そのまま残ります。ターミナルで対話的に更新するときは、何かを stash する前に、変更を残すかどうかを確認します。「いいえ」と答えると、stash のエントリーを残さずに変更を削除します。対話なしの更新（デスクトップアプリやチャットアプリ、ゲートウェイ、`--yes`）では `updates.non_interactive_local_changes` の設定に従います。`stash` は pull が成功したあとにソースへの手元の変更を戻し、`discard` は pull が成功したあとに更新処理が作った stash を捨てます。`discard` は、ソースへの手元の変更を残す想定がない管理下のインストールでだけ使ってください。
 
 その stash の前に、Hermes は npm の install や build で生じた、追跡対象の `package-lock.json` の差分も元に戻します。意図してロックファイルを編集した場合は、更新する前にコミットするか、手動で stash してください。
 
@@ -1359,6 +1359,7 @@ Hermes には、ストリーミング用に独立した複数のタイムアウ�
 |---------|---------|----------------|--------------|
 | ソケットの読み取りタイムアウト | 120秒 | 自動で1800秒に引き上げ | `HERMES_STREAM_READ_TIMEOUT` |
 | 停滞ストリームの検知 | 180秒 | 上限の900秒まで引き上げ（`agent.local_stream_stale_timeout`） | `HERMES_STREAM_STALE_TIMEOUT` |
+| ストリームの最大存続時間（任意で有効化） | オフ（`0`） | 同じ | `agent.stream_max_lifetime` |
 | 非ストリーミングの停滞検知 | 90秒 | 暗黙の既定値のままなら自動で無効 | `providers.<id>.stale_timeout_seconds` または `HERMES_API_CALL_STALE_TIMEOUT` |
 | Responses の最初のイベントの監視 | 120秒 | 同じ上限の900秒まで引き上げ（`agent.local_stream_stale_timeout`） | `HERMES_CODEX_TTFB_TIMEOUT_SECONDS` |
 | API 呼び出し（非ストリーミング） | 1800秒 | 変更なし | `providers.<id>.request_timeout_seconds` / `timeout_seconds` または `HERMES_API_TIMEOUT` |
@@ -1369,6 +1370,8 @@ Hermes には、ストリーミング用に独立した複数のタイムアウ�
 **停滞ストリームの検知**は、SSE のキープアライブの ping は届くのに、実際の内容が届かない接続を切断します。ローカルのプロバイダー（プレフィル中にキープアライブの ping を送らない）では、既定値が基本の180秒ではなく、有限の上限である900秒に引き上げられます。この値は `agent.local_stream_stale_timeout` か環境変数 `HERMES_LOCAL_STREAM_STALE_TIMEOUT` で変更できます。
 
 **Responses の最初のイベントの監視**（Codex / `codex_responses` のトランスポート。Responses のトランスポートで宣言したカスタムプロバイダーも含みます）は、接続を受け付けたのに120秒以内にストリームのイベントを1つも出さないリクエストを中断し、接続し直します。大きなコンテキストをプレフィルしているローカルサーバーは、正常に動いていてもそれより長く黙ったままになることがあります。そのためローカルのエンドポイントでは、暗黙の既定値が停滞ストリームの検知と同じ上限（`agent.local_stream_stale_timeout` / `HERMES_LOCAL_STREAM_STALE_TIMEOUT`、900秒）まで引き上げられます。`HERMES_CODEX_TTFB_TIMEOUT_SECONDS` を明示的に設定した場合は、常にその値がそのまま使われます（`0` にするとこの監視は無効になります）。
+
+**ストリームの最大存続時間**は、1つのストリーミング応答にかかる実際の経過時間の合計に上限を設ける設定で、必要なときだけ有効にします。停滞の検知はチャンクが届くたびにリセットされます。そのため、データを送り続けているのにいつまでも終わらないストリーム（チャンクを少しずつ流し続けるゲートウェイや、暴走した生成など）は、いつまでも切断されません。こうしたストリームを打ち切るには、`agent.stream_max_lifetime`（秒）を設定します。接続は停滞による切断と同じ方法で切られ、そのあとは再試行するか、途中まで届いた応答の続きを生成します。実際に適用される停滞ストリームのタイムアウトより前に発動することはありません。また、プロバイダーは応答を返していたので、この打ち切りは停滞ストリームのサーキットブレーカー（`HERMES_STREAM_STALE_GIVEUP`）の回数には数えられません。この上限がかかるのは Chat Completions と Anthropic Messages のストリームだけです。Codex/Responses のストリーム（`codex_responses`。Responses のトランスポートで宣言したカスタムプロバイダーも含みます）と Bedrock のストリームには上限がかかりません。正常な動作でも長時間ストリーミングが続く、長い推論のターンを実行する場合は、`0`（既定値）のままにしておいてください。
 
 **非ストリーミングの停滞検知**は、応答のないまま長く待たされている非ストリーミングの呼び出しを打ち切ります。長いプレフィル中の誤検知を避けるため、Hermes は既定ではローカルのエンドポイントでこの検知を無効にしています。`providers.<id>.stale_timeout_seconds`、`providers.<id>.models.<model>.stale_timeout_seconds`、`HERMES_API_CALL_STALE_TIMEOUT` のいずれかを明示的に設定した場合は、ローカルのエンドポイントでもその値が守られます。
 

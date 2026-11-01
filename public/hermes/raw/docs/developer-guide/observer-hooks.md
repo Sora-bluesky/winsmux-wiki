@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "オブザーバーフック"
 description: "プラグイン向けの読み取り専用テレメトリ契約。イベントの系統、相関 ID、ペイロードの安全性"
 upstream_path: developer-guide/observer-hooks.md
-upstream_blob: 4eab86d065a320231b913e78ccdbc2fbc1f368dc
+upstream_blob: 58a527062ecdab6e152140d6c51b77c0df024eb6
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/observer-hooks
 ---
@@ -65,7 +65,7 @@ telemetry_schema_version = "hermes.observer.v1"
 
 | フック | 戻り値の扱い |
 | --- | --- |
-| `pre_llm_call` | 文字列または `{"context": "..."}` を返すと、現在のユーザーメッセージに一時的なコンテキストを差し込めます。 |
+| `pre_llm_call` | 文字列または `{"context": "..."}` を返すと、現在のユーザーメッセージに一時的なコンテキストを差し込めます。`{"action": "block", "message": "..."}` を返すと、推論リクエストを送る前にそのターンを終わらせられます（メッセージがそのまま返信になり、プロンプトは差し止められたことを示すプレースホルダーとして保存されます。詳しくは[イベントフック](/hermes/docs/user-guide/features/hooks/)を参照してください）。例外を投げたコールバックやタイムアウトしたコールバックは読み飛ばされるので、それが原因でターンが止まることはありません。 |
 | `pre_tool_call` | `{"action": "block", "message": "..."}` を返すと実行前にツールを止められます。`{"action": "modify", "args": {...}}` を返すとツールの入力引数を書き換えられます。 |
 | `transform_tool_result` | `post_tool_call` のあとに、ツールの結果を差し替える文字列を返せます。 |
 | `transform_llm_output` | 最終的なアシスタント本文を差し替える文字列を返せます。 |

@@ -2,7 +2,7 @@
  "series": "Hermes Wingtips",
  "author": "witcheer",
  "authorUrl": "https://x.com/witcheer",
- "updated": "2026-10-26",
+ "updated": "2026-11-02",
  "categories": [
   "メッセージとボット",
   "モデルとプロバイダ",
@@ -13,7 +13,7 @@
   "CLI とデスクトップ",
   "その他"
  ],
- "count": 108,
+ "count": 113,
  "items": [
   {
    "n": 1,
@@ -2346,6 +2346,117 @@
     "Honcho",
     "Mem0",
     "記憶"
+   ]
+  },
+  {
+   "n": 109,
+   "date": "2026-10-24",
+   "url": "https://x.com/witcheer/status/2113910871046947127",
+   "feature": "hermes plugins search",
+   "title_ja": "プラグインカタログを語で探して入れる",
+   "summary_ja": "`hermes plugins search <語>` で、名前・説明・足すツールを手がかりにプラグインカタログを探し、`hermes plugins install <名前>` で入れられます。カタログはコードの監査ではなく、入れた直後は無効なので、ソースを確かめてから有効にします。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "プラグイン",
+     "url": "/hermes/docs/user-guide/features/plugins/"
+    }
+   ],
+   "tags": [
+    "plugins search",
+    "plugin catalog",
+    "プラグイン",
+    "カタログ"
+   ]
+  },
+  {
+   "n": 110,
+   "date": "2026-10-27",
+   "url": "https://x.com/witcheer/status/2115013131865117001",
+   "feature": "browser.headed",
+   "title_ja": "エージェントのブラウザを見える窓で開く",
+   "summary_ja": "既定では画面なしで動く手元のブラウザを、`browser.headed: true` で見える Chromium の窓として開けます。サインインや CAPTCHA に手で割り込めて、ターンのあいだも窓が開いたままなので、会話中はログインの状態が保たれます。クラウドのブラウザには効きません。",
+   "category": "その他",
+   "links": [
+    {
+     "title": "ブラウザの自動操作",
+     "url": "/hermes/docs/user-guide/features/browser/"
+    }
+   ],
+   "tags": [
+    "browser.headed",
+    "headed mode",
+    "Chromium",
+    "CAPTCHA",
+    "ブラウザ"
+   ]
+  },
+  {
+   "n": 111,
+   "date": "2026-10-26",
+   "url": "https://x.com/witcheer/status/2114650743500382473",
+   "feature": "save as a skill",
+   "title_ja": "終えた作業に名前を付けてスキルとして残す",
+   "summary_ja": "繰り返しそうな作業を終えたら「いまやったことを `weekly-update` という名前のスキルとして保存して」と頼みます。入っているスキルは自動でスラッシュコマンドになるので、次からは `/weekly-update` と打てば同じ手順を読み込みます。",
+   "category": "skill",
+   "links": [
+    {
+     "title": "コツとベストプラクティス",
+     "url": "/hermes/docs/guides/tips/"
+    },
+    {
+     "title": "スキルの仕組み",
+     "url": "/hermes/docs/user-guide/features/skills/"
+    }
+   ],
+   "tags": [
+    "skill",
+    "slash command",
+    "スキル化",
+    "スラッシュコマンド"
+   ]
+  },
+  {
+   "n": 112,
+   "date": "2026-10-28",
+   "url": "https://x.com/witcheer/status/2115428373564375354",
+   "feature": "hermes cron create \"in 2h\"",
+   "title_ja": "「in」で始めて、一度だけ動く予約を作る",
+   "summary_ja": "予定を `in 30m`・`in 2h`・`in 1d` のように「in」で始めると、その時間がたったあとに1回だけ実行されるジョブになります。`hermes cron create \"in 2h\" \"<頼みごと>\"` の形で作れます。`every 2h` や `30m` だけの書き方は繰り返しになります。",
+   "category": "定期実行",
+   "links": [
+    {
+     "title": "定期実行タスク（cron）",
+     "url": "/hermes/docs/user-guide/features/cron/"
+    }
+   ],
+   "tags": [
+    "cron",
+    "one-shot",
+    "in 2h",
+    "リマインダー",
+    "一度きり"
+   ]
+  },
+  {
+   "n": 113,
+   "date": "2026-10-29",
+   "url": "https://x.com/witcheer/status/2115817431616598488",
+   "feature": "desktop_project switch",
+   "title_ja": "チャットから頼んで、別のプロジェクトへ移る",
+   "summary_ja": "デスクトップのプロジェクトは、複数のフォルダーをまとめて名前を付けた作業場です。「このチャットを Recipe Box プロジェクトに切り替えて」と頼むと、`desktop_project` ツールがチャットをそのプロジェクトへ移し、作業場所を主フォルダーへ移します。一覧を頼めば、いま有効なものも表示されます。",
+   "category": "CLI とデスクトップ",
+   "links": [
+    {
+     "title": "組み込みツール一覧",
+     "url": "/hermes/docs/reference/tools-reference/"
+    }
+   ],
+   "tags": [
+    "desktop_project",
+    "project",
+    "Hermes Desktop",
+    "プロジェクト"
    ]
   }
  ]

@@ -2,7 +2,7 @@
 title: "Mattermost"
 description: "Hermes Agent を Mattermost のボットとして設定する"
 upstream_path: user-guide/messaging/mattermost.md
-upstream_blob: 5d86dc71c49abc3437dab1e8e40067dd306b0000
+upstream_blob: 3f40d86dfe6a9d0cb22e7b1ac83bf963fe88ccc6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/mattermost
 ---
@@ -103,23 +103,27 @@ DM の場合は、ボットとのダイレクトメッセージを開くだけ�
 
 ## ステップ 4: 自分の Mattermost ユーザー ID を調べる {#step-4-find-your-mattermost-user-id}
 
-Hermes Agent は、誰がボットとやり取りできるかを Mattermost のユーザー ID で管理します。調べ方は次のとおりです。
+Hermes Agent は、誰がボットとやり取りできるかを Mattermost のユーザー ID で管理します。ユーザー ID は、プロフィールのダイアログ（アバター → プロフィール）には表示されません。
 
-1. **アバター**（左上）→ **プロフィール** をクリックします。
-2. プロフィールのダイアログにユーザー ID が表示されます。クリックすると控えられます。
+次のどれかの方法で調べてください（Mattermost の [ユーザー ID の確認方法](https://docs.mattermost.com/administration-guide/configure/user-management-configuration-settings#identify-a-users-id) も参考になります）。
+
+1. **システムコンソール**（システム管理者向け）: **ユーザー管理** → **ユーザー** と進み、自分のユーザーを開きます。ユーザー設定のページに ID が載っています。
+2. **ブラウザー**（どの利用者でも使えます）: Mattermost にログインしたまま、新しいタブで `https://your-mattermost-server/api/v4/users/me` を開きます。表示される `id` の値が自分のユーザー ID です。
+3. **ボットトークンを使って API で調べる**: 自分のユーザー名で問い合わせます。返ってきた結果の `id` の値が自分のユーザー ID です。
+
+   ```bash
+   curl -s -H "Authorization: Bearer YOUR_BOT_TOKEN" \
+     https://your-mattermost-server/api/v4/users/username/YOUR_USERNAME
+   ```
+
+   ボットトークンで `/api/v4/users/me` を呼び出さないでください。返ってくるのは自分ではなく **ボットの** ID です。
+4. **mmctl**（システム管理者向け）: `mmctl user list --all` を実行すると、利用者ごとに `<id>: <username> (<email>)` の形で一行ずつ表示されます。
 
 ユーザー ID は `3uo8dkh1p7g1mfk49ear5fzs5c` のような 26 文字の英数字です。
 
 :::warning
 ユーザー ID は、ユーザー名とは **別のもの** です。ユーザー名は `@` のあとに続くもの（例 `@alice`）です。ユーザー ID のほうは、Mattermost が内部で使う長い英数字の識別子です。
 :::
-
-**別のやり方**: API からユーザー ID を取ることもできます。
-
-```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" \
-  https://your-mattermost-server/api/v4/users/me | jq .id
-```
 
 :::tip
 **チャンネル ID** を知りたいときは、チャンネル名 → **情報を表示** をクリックします。情報のパネルにチャンネル ID が出ます。ホームチャンネルを手で設定するときに必要になります。

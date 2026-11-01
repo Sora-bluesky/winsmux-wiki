@@ -8,6 +8,23 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-01
+
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [ブラウザの自動操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/browser/)
+- [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
+- [Photon iMessage](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/photon/)
+- [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
+- [Bitwarden Secrets Manager](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/bitwarden/)
+- [1Password](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/onepassword/)
+- [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
+- [Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/)
+- [Microsoft Office — Word・PowerPoint・Excel ファイルを作成・読み取り・編集する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/)
+- [Pdf — PDF ファイルの作成・読み取り・結合・フォーム入力・OCR・テキスト編集](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/)
+- [Excel Author — openpyxl でヘッドレスに監査できる財務ワークブックを作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/)
+- [Pptx Author — python-pptx でヘッドレスに PowerPoint 資料を作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/)
+
 ## 2026-10-31
 
 - [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
