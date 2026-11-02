@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 description: "Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md
-upstream_blob: 0cc9f2b5e642b2f3d62acff94d8613dae5ead9cd
+upstream_blob: 140220925f4318c434094e6c53190dae1d35f296
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent
 ---
@@ -18,7 +18,7 @@ Hermes Agent を使う、設定する、見た目を変える、拡張する、�
 |---|---|
 | 提供元 | 最初から入っています |
 | パス | `skills/autonomous-ai-agents/hermes-agent` |
-| バージョン | `3.2.0` |
+| バージョン | `3.3.0` |
 | 作者 | Hermes Agent + Teknium |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
@@ -116,6 +116,7 @@ $HERMES_HOME/skills/        Installed skills
 | AGENTS.md / .hermes.md / CLAUDE.md といったプロジェクトの決まりごと | `references/project-context-files.md` |
 | 秘密情報の伏せ字化、個人情報、承認モード、「権限をリセットしたい」 | `references/security-privacy.md` |
 | 委任、cron、キュレーター、かんばん | `references/background-systems.md` |
+| `hermes project` のワークスペース、複数のフォルダーをまとめたプロジェクト、デスクトップアプリのサイドバーのグループ | `references/projects-and-folders.md` |
 | MCP サーバー（追加、カタログ、`hermes mcp`） | `references/native-mcp.md` |
 | Webhook の経路とイベント起点の実行 | `references/webhooks.md` |
 | 独自のテーマ / スキン（「synthwave のテーマ」「金色の ● を変えたい」） | `references/themes.md` + `templates/skin.yaml` |

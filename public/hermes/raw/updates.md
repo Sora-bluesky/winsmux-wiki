@@ -10,6 +10,15 @@ raw: /hermes/raw/updates.md
 
 ## 2026-11-02
 
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [キュレーター](https://wiki.winsmux.dev/hermes/docs/user-guide/features/curator/)
+- [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
+- [他のエージェントから取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/import-from-other-agents/)
+
+## 2026-11-02
+
 - [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
 - [オブザーバーフック](https://wiki.winsmux.dev/hermes/docs/developer-guide/observer-hooks/)
 - [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)

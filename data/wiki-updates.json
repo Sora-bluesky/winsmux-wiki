@@ -1,6 +1,43 @@
 {
-  "generatedAt": "2026-11-02",
+  "generatedAt": "2026-11-03",
   "entries": [
+    {
+      "date": "2026-11-02",
+      "sha": "3403ad9",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/curator",
+          "title": "キュレーター",
+          "url": "/hermes/docs/user-guide/features/curator/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "スキルの仕組み",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
+          "id": "user-guide/import-from-other-agents",
+          "title": "他のエージェントから取り込む",
+          "url": "/hermes/docs/user-guide/import-from-other-agents/"
+        }
+      ]
+    },
     {
       "date": "2026-11-02",
       "sha": "6ad7e75",

@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 808b59c20239d3a480c7599a8477b3001a03289c
+upstream_blob: a3ce2a708f909181320cc2da1481de14d7c1f188
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -92,6 +92,24 @@ runtime:
 値を `0`、`false`、`null` のいずれかにします。Windows や、
 リミットを変更できないサンドボックスでは、
 リミットを変えずにそのまま起動を続けます。
+
+glibc を使う Linux では、ゲートウェイ、`hermes serve`、`hermes dashboard` は、プロセスが作れる
+malloc アリーナの数にも上限を設けます。
+
+```yaml
+runtime:
+  malloc_arena_max: 4
+```
+
+上限を設けないと、glibc は新しいスレッドごとに専用のアリーナを割り当て（CPU コア1つにつき最大8個）、
+各アリーナで解放されたページも手放さずに持ち続けます。そのため、短時間で終わるワーカースレッドを
+大量に使う長時間稼働のゲートウェイは、解放済みなのに OS へ返されないメモリを数百 MB も抱え込むことになります。
+この上限は、サーバーがスレッドを1つも起動しないうちに起動時に設定され、
+Hermes のサーバープロセス自体にだけ適用されます。そこから実行するコマンド（ターミナルのツール、
+MCP サーバー、ビルド）は glibc の既定のままです。`MALLOC_ARENA_MAX`（または
+`GLIBC_TUNABLES=glibc.malloc.arena_max=…`）を明示的に指定した場合は、起動前に export したものでも、
+プロファイルの `.env` に書いたものでも、そちらが優先されます。glibc の既定のままにするには、値を `0`、`false`、`null` のいずれかにします。
+ほかのプラットフォームでは、この設定は無視されます。
 
 ## データベースの設定 {#database-settings}
 
@@ -1913,6 +1931,19 @@ agent:
 ```
 
 Hermes はこの値を、Responses 系の経路でだけ、Responses のトップレベルの `text: {verbosity: ...}` フィールドとして送ります。`chat_completions`、Anthropic、xAI へのリクエストでは送らず、空の値や未知の値のときは何も送りません。`request_overrides` で設定した構造化出力（`text.format`）は、変更されずにそのまま渡されます。
+
+### OpenAI Daybreak（`daybreak`） {#openai-daybreak-daybreak}
+
+[Daybreak](https://help.openai.com/en/articles/20001258-openai-daybreak-trusted-access-for-cyber-overview) は、OpenAI のサイバーセキュリティ向けの信頼済みアクセス（Trusted Access for Cyber）プログラムです。承認されたアカウントは、対応するモデルで、許可を得たセキュリティ作業を拒否されることが少なくなります。ChatGPT/Codex のサブスクリプション（`openai-codex`）では、Hermes からこれを要求できます。
+
+```yaml
+agent:
+  daybreak: false   # true = request Daybreak Blue on models your account is approved for
+```
+
+Desktop では、モデルのメニューでモデルのオプションを開きます。**Daybreak** のスイッチは **Fast** の隣に表示されますが、サインインしているアカウントの Codex カタログで Daybreak の対象になっているモデルにしか表示されません。Daybreak を利用できないアカウントには表示されません。このスイッチは Codex 自身の切り替えと同じくプロファイル全体に効き、次のターンから適用されます。
+
+リクエストのたびにカタログを確認し直すので、`access_programs.cyber: daybreak_blue` が送られるのは、スイッチがオンで、**かつ**そのリクエストのアカウントとモデルがカタログに載っている場合だけです。カタログに載っていないモデルに切り替えた場合、アクセス権のないアカウントにローテーションした場合、カタログを読み取れない場合は、通常のリクエストが送られます。API キーの経路や、オプトインの `codex_app_server` ランタイムでは送られません。また、これを使うのは自分自身のチャットのターン（Desktop、TUI、CLI）だけです。メッセージングプラットフォームでのチャット、ホスティングされたルーム、A2A のピア、サードパーティの `--source tool` 連携、エディター（ACP）のクライアント、cron ジョブ、サブエージェントでは、通常の安全対策が使われます。OpenAI は Daybreak をサードパーティや下流の利用者に使わせることを認めておらず、こうしたチャットの相手は別の人である可能性があるためです。この設定でアクセス権が得られるわけではありません。承認するのは OpenAI です。
 
 :::note OpenRouter 経由で使う適応型の思考のモデル（Claude 4.6+、Fable/Mythos クラス）
 これらのモデルは*適応型*の思考を使うため、通常の `reasoning.effort`

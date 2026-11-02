@@ -1,6 +1,6 @@
 {
-  "sha": "5aa8df7",
-  "date": "2026-11-01",
+  "sha": "2b5ffeb",
+  "date": "2026-11-02",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -63,7 +63,7 @@
       "name": "Hermes Agent",
       "description": "Use, configure, theme, extend, and orchestrate Hermes Agent",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/",
-      "date": "2026-10-31",
+      "date": "2026-11-02",
       "source": "bundled"
     },
     {

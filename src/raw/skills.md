@@ -5,7 +5,7 @@ sources:
   - https://hermes-agent.nousresearch.com/docs/reference/skills-catalog
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
   - https://github.com/NousResearch/hermes-agent/tree/main/website/docs/user-guide/skills
-hermes_version: "0.22.5"
+hermes_version: "0.22.6"
 confidence: high
 raw: /hermes/raw/skills.md
 ---
@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 194 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `5aa8df7`（2026-11-01）時点。この一覧は上流の docs から機械生成しています。
+上流 `2b5ffeb`（2026-11-02）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（44）
 
@@ -29,7 +29,7 @@ raw: /hermes/raw/skills.md
 | [Claude Code](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/) | Delegate coding to Claude Code CLI (features, PRs) | 2026-10-28 |
 | [Codex](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/) | Delegate coding to OpenAI Codex CLI (features, PRs) | 2026-09-20 |
 | [Computer Use](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use/) | Drive the desktop background-first; escalate on signal | 2026-10-23 |
-| [Hermes Agent](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/) | Use, configure, theme, extend, and orchestrate Hermes Agent | 2026-10-31 |
+| [Hermes Agent](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/) | Use, configure, theme, extend, and orchestrate Hermes Agent | 2026-11-02 |
 | [Architecture Diagram](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) | Dark-themed SVG architecture/cloud/infra diagrams as HTML | 2026-09-20 |
 | [Ascii Video](/hermes/docs/user-guide/skills/bundled/creative/creative-ascii-video/) | ASCII video: convert video/audio to colored ASCII MP4/GIF | 2026-09-20 |
 | [Baoyu Infographic](/hermes/docs/user-guide/skills/bundled/creative/creative-baoyu-infographic/) | Infographics: 21 layouts x 21 styles (信息图, 可视化) | 2026-09-29 |

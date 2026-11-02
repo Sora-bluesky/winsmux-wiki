@@ -2,7 +2,7 @@
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: cc26317befe8a9f0668de7ba3047a88ab44af7fd
+upstream_blob: 99773172dbc84db5fdd8c45473780943558ef885
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -26,24 +26,29 @@ Hermes の実行はそのまま使えますが、Relay のスコープ、ミド�
 > `HERMES_NEMO_RELAY_ATIF_*` の設定を移行するときにこのファイルを作ります。旧来の環境変数そのものでは、
 > Relay のエクスポーターはもう設定されません。
 
-対応しているプラットフォームでは、Hermes が管理下のプロバイダー呼び出しとツール呼び出しを行うには NeMo Relay 0.10 が必要です。
+対応しているプラットフォームでは、Hermes が管理下のプロバイダー呼び出しとツール呼び出しを行うには NeMo Relay 0.11 が必要です。
 
 ## 実行時依存とデータの境界 {#runtime-dependency-and-data-boundary}
 
-Hermes は、範囲を限った `>=0.10,<0.11` の依存指定から、プラットフォーム別の `nemo-relay` ネイティブ wheel をインストールします。
+Hermes は、範囲を限った `>=0.11,<0.12` の依存指定から、プラットフォーム別の `nemo-relay` ネイティブ wheel をインストールします。
 公開パッケージは [NVIDIA NeMo Relay リポジトリ](https://github.com/NVIDIA/NeMo-Relay) からビルドされています。
 対応していないプラットフォームでは、別の実装をダウンロードするのではなく、上で説明した明示的な何もしないランタイムを使います。
 
-Relay 0.10 では、observability の設定に `version = 4` が必要です。独自の Python 製 LLM 実行インターセプトは `(name, request, context, next_call)` を受け取ります。
+observability の設定の `version = 4` は Relay 0.10 で導入されました。独自の Python 製 LLM 実行インターセプトは `(name, request, context, next_call)` を受け取ります。
 context からは選ばれたリクエストのコーデックと、ストリーミングでない実行ではレスポンスのコーデックも参照できます。
 ネイティブプラグインは Relay 0.10 の ABI v7 向けにビルドし直し、`compat.relay` の下限を `0.10.0` にする必要があります。
 LLM 実行インターセプトを登録するワーカーは、コールバックを更新し、プロトコルのバインディングを生成し直す必要があります。
-アップグレードの確認項目の全体は、Relay の [0.10 移行ガイド](https://docs.nvidia.com/nemo/relay/reference/migration-guides) を参照してください。
+アップグレードの確認項目の全体は、Relay の [0.10 移行ガイド](https://github.com/NVIDIA/NeMo-Relay/blob/0.10.0/docs/reference/migration-guides.mdx) を参照してください。
 
 Relay 0.10 は、有効な Relay の設定があり、Hermes プロセスの環境に空でない `OTEL_EXPORTER_OTLP_ENDPOINT`（またはシグナル別の `OTEL_EXPORTER_OTLP_*_ENDPOINT`）があると、OpenTelemetry へのエクスポートを自動で始めます。
 その `gen_ai` スパンにはプロンプトとレスポンスのメッセージが含まれます。
 `hermes migrate relay` が生成するファイルは、0.9 と同じ動きを保つために `[components.config.opentelemetry] enabled = false` を設定します。
 このエクスポートを望まない場合は、手書きのファイルにも同じセクションを足すか、`OTEL_SDK_DISABLED=true` を設定してください。
+
+Relay 0.11 でも、設定のバージョンと Python のインターセプトのコールバックの形は変わりません。
+Relay のプラグインやエクスポーターを設定している場合は、アップグレードする前に [0.11 移行ガイド](https://github.com/NVIDIA/NeMo-Relay/blob/0.11.0/docs/reference/migration-guides.mdx) を確認してください。
+OTLP のトレース、ログ、メトリクスを自動で送るエクスポーターは、リモートの送り先には HTTPS が必要です。
+ただし、その送り先のホストを明示的に許可リストに入れている場合は除きます。
 
 Relay の管理下実行が有効なときは、設定したインターセプターが実際の呼び出しに作用できるよう、プロバイダーへのリクエストとレスポンスが Hermes プロセス内のそのネイティブモジュールを通ります。
 これは共有メトリクスのデータの取り決めとは別のものです。

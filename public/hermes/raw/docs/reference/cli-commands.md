@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 62a0d99484163158314e00b79b58f1d7477a077d
+upstream_blob: 229c23a34754fe7f9c8df6d8401964ebe7d52234
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -74,7 +74,7 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes cron` | cron スケジューラを確認・実行します。 |
 | `hermes pause` / `hermes resume` | グローバルな緊急停止です: resume するまで、新規の cron 発火（組み込みティッカー・管理 cron webhook・ミスファイア救済）・kanban ディスパッチ・ゲートウェイターンが一切開始しません。対話型 CLI・TUI・Desktop のターンもゲートウェイターンなので同じく保留になり、それぞれの画面に「Hermes is paused」と理由、「run `hermes resume`」が表示されます。すでに動いているターンは最後まで進みます。進行中の作業は決して強制終了されません。 |
 | `hermes kanban` | マルチプロファイルのコラボレーションボード（タスク・リンク・ディスパッチャ）。 |
-| `hermes project` | 名前付きのマルチフォルダワークスペース（プロジェクト）を管理します。デスクトップのセッショングルーピングの基点となり、kanban ボードに紐付いている場合はタスクに決定的な worktree + ブランチ規則を与えます。状態はプロファイル単位です。 |
+| `hermes project` | 名前付きのマルチフォルダワークスペース（プロジェクト）を管理します。デスクトップのセッショングルーピングの基点となります。プライマリフォルダを持つプロジェクトに紐付いた kanban タスクは、既定で決定的な worktree + ブランチを使います。状態はプロファイル単位です。 |
 | `hermes webhook` | イベント駆動での起動用に、動的な webhook サブスクリプションを管理します。 |
 | `hermes hooks` | `config.yaml` で宣言されたシェルスクリプトフックを確認・承認・削除します。 |
 | `hermes doctor` | 設定と依存関係の問題を診断します。 |
@@ -743,7 +743,7 @@ hermes kanban [--board <slug>] <action> [options]
 | `boards show` / `boards current` | 現在アクティブなボードの名前、DB パス、タスク数を表示します。 |
 | `boards rename <slug> "<name>"` | ボードの表示名を変更します。slug は不変です。 |
 | `boards rm <slug>` | ボードをアーカイブ（既定）または完全に削除します。`--delete` はアーカイブ手順をスキップします。アーカイブされたボードは `boards/_archived/<slug>-<ts>/` に移動します。`default` では拒否されます。 |
-| `create "<title>"` | アクティブなボードに新しいタスクを作成します。フラグ: `--body`、`--assignee`、`--parent`（繰り返し可）、`--workspace scratch\|worktree\|dir:<path>`、`--tenant`、`--priority`、`--triage`、`--idempotency-key`、`--max-runtime`、`--max-retries`、`--skill`（繰り返し可）。 |
+| `create "<title>"` | アクティブなボードに新しいタスクを作成します。フラグ: `--body`、`--assignee`、`--parent`（繰り返し可）、`--workspace scratch\|worktree\|dir:<path>`、`--project <id-or-slug>`（タスクをプロジェクトに紐付けます。プロジェクトにプライマリフォルダがあれば、既定でその配下の worktree + ブランチを使います）、`--tenant`、`--priority`、`--triage`、`--idempotency-key`、`--max-runtime`、`--max-retries`、`--skill`（繰り返し可）。 |
 | `list` / `ls` | アクティブなボードのタスクを一覧します。`--mine`、`--assignee`、`--status`、`--tenant`、`--archived`、`--json` でフィルタできます。 |
 | `show <id>` | コメントとイベント付きでタスクを表示します。機械向けの出力には `--json`。 |
 | `assign <id> <profile>` | 割り当て、または再割り当てします。割り当て解除には `none` を使います。タスクが実行中のときは拒否されます。 |
@@ -855,7 +855,7 @@ tail -f ~/.hermes/proxy/iron-proxy.log | jq  # daemon + per-request log (line-de
 hermes project <create|list|show|add-folder|remove-folder|rename|set-primary|use|archive|restore|bind-board>
 ```
 
-プロジェクトは、複数のフォルダ/リポジトリをまとめられる、人間が名付けたワークスペースです。デスクトップのセッショングルーピングの基点となり、kanban ボードに紐付いている場合は、タスクに決定的な worktree + ブランチ規則を与えます。状態はプロファイル単位です。
+プロジェクトは、複数のフォルダ/リポジトリをまとめられる、人間が名付けたワークスペースです。デスクトップのセッショングルーピングの基点となります。また、プロジェクトに紐付いた kanban タスク（`hermes kanban create --project <slug>` で作ったもの、または kanban ダッシュボードでプロジェクトに紐付けたボード上のもの）は、既定でプロジェクトのプライマリフォルダ配下に決定的な worktree + ブランチを持ちます（プロジェクトにプライマリフォルダがある場合）。状態はプロファイル単位です。
 
 | サブコマンド | 説明 |
 |------------|-------------|
@@ -869,7 +869,7 @@ hermes project <create|list|show|add-folder|remove-folder|rename|set-primary|use
 | `use` | アクティブなプロジェクトを設定します。 |
 | `archive` | プロジェクトをアーカイブします（復元可能）。 |
 | `restore` | アーカイブされたプロジェクトを復元します。 |
-| `bind-board` | このプロジェクトに kanban ボードを紐付けます。 |
+| `bind-board` | kanban ボードをプロジェクトに記録します。ボードが存在し、プロジェクトにプライマリフォルダがある場合は、ボードの既定の作業ディレクトリをそのフォルダに向けます。ボード上のタスクをプロジェクトに紐付けるわけではありません。 |
 
 ## `hermes webhook` {#hermes-webhook}
 

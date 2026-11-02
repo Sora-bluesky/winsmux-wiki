@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 736aeba849aef0cb6e1cdee6c986d6de2555a9c6
+upstream_blob: 8692eee673ff05202fe5ef97c2e8e83465190aeb
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -583,7 +583,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `HERMES_DESKTOP_IGNORE_EXISTING` | `1` にすると、バックエンドを決めるときにインストール済みの実行環境（`~/.hermes/hermes-agent`、Windows では `%LOCALAPPDATA%\hermes\hermes-agent`）を飛ばします。ローカルのバックエンドは起動せず、Desktop は接続するかインストールするかの選択を表示します。同梱の実行環境、`HERMES_DESKTOP_HERMES_ROOT`、パッケージ化されていないソースのチェックアウト、`HERMES_DESKTOP_HERMES` はこれまでどおり優先されます。この起動の間にインストールした実行環境は使われます。`hermes desktop --ignore-existing` と同じです。 |
 | `HERMES_DESKTOP_CWD` | デスクトップのチャットのセッションで最初に使うプロジェクトのディレクトリ。`hermes desktop --cwd` が設定します。 |
 | `HERMES_DESKTOP_PYTHON` | バックエンドで使う Python の絶対パス。ソースを取得した構成で Electron が自動で探すより先に見られます。作業ツリーの開発補助（[作業ツリーからの TUI / デスクトップ開発](/hermes/docs/developer-guide/worktree-ui-dev/) を参照）が、共有の仮想環境を使い回すために利用します。 |
-| `HERMES_DESKTOP_DEV_SERVER` | Electron の外枠が、同梱のバンドルの代わりに読み込む Vite の開発サーバーの URL（たとえば `http://127.0.0.1:5174`）。`npm run dev` が自動で設定します。アプリ自体をいじるときだけ関係します。 |
+| `HERMES_DESKTOP_DEV_SERVER` | Electron の外枠が、同梱のバンドルの代わりに読み込む Vite の開発サーバーの URL（たとえば `http://127.0.0.1:5174`）。`npm run dev` が自動で設定します。アプリ自体をいじるときだけ関係します。この変数を引き継いだバックエンドは、その描画側のオリジンも CORS と WebSocket へのアップグレードで信頼します。 |
 | `HERMES_DESKTOP_CDP_PORT` | DOM や CSS を調べる道具のために、描画側が `127.0.0.1` で開ける Chrome DevTools Protocol のポートを上書きします（既定 `9222`）。開発サーバーでの実行（`npm run dev`、`hgui`）では自動で開きますが、パッケージ版では決して開かず、ここに何を書いても変わりません。開発時の実行で閉じたいときは `off` にしてください。このポートに届くものは、描画側でコードを実行できます。 |
 | `HERMES_DESKTOP_NVIDIA_SWIFTSHADER` | （Linux のデスクトップ版で、NVIDIA のみ）EGL の検査が壊れているドライバー系列（`580.x`、#40077）で描画を SwiftShader に回す EGL の代替経路を上書きします。`1` は代替経路を強制的に有効にします。将来の系列で同じクラッシュが再発し、まだ対象の一覧に入っていないときの復旧手段です。`0` は代替経路を使わず、自己責任でネイティブの GPU 経路を使います。別の条件ですでに GPU が無効になっている場合（リモート表示、WSLg、`HERMES_DESKTOP_DISABLE_GPU=0`）には、強制的な有効化は効きません。 |
 | `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY` | （デスクトップ側）アプリ内の更新確認（`Help → Check for Updates…` と、控えめに出る更新の帯）は、これらの標準の変数が示すプロキシを通って `api.github.com` に届きます。`NO_PROXY` の除外も尊重され、`curl`、`npm`、`git` と同じ作法です。設定が無ければ直接つなぎます。 |

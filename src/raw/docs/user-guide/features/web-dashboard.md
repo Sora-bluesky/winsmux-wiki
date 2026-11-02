@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 0600b755b0aa7bdb62c9a8dedf875f8914c9b19b
+upstream_blob: 03f82beedde4a3a7107c08189df60610022581c4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -1238,13 +1238,34 @@ hermes dashboard --no-open --host 0.0.0.0 --port 9119
 
 ## CORS {#cors}
 
-このウェブサーバーは、CORS を localhost の出どころだけに絞っています。
+このウェブサーバーが CORS を認め、ブラウザからの WebSocket への切り替え（upgrade）を受け付けるのは、自分自身の出どころに対してだけです。つまり、
+サーバーが割り当てられているポートでの loopback の出どころ（`localhost`、`127.0.0.1`、`[::1]`）です。既定の `hermes dashboard` なら
+`http://127.0.0.1:9119`、自分で選んだ `--port`、あるいはデスクトップ版のバックエンドが割り当てる一時的な
+ポートがこれにあたります。パッケージ版のデスクトップアプリは `file://` から読み込まれるので、影響を受けません。
 
-- `http://localhost:9119` / `http://127.0.0.1:9119`（本番）
-- `http://localhost:3000` / `http://127.0.0.1:3000`
-- `http://localhost:5173` / `http://127.0.0.1:5173`（Vite の開発用サーバー）
+デスクトップ版の開発用ビルドが起こしたバックエンドは、そのビルド自身の描画側（renderer）も信頼します（受け継いだ loopback の
+`HERMES_DESKTOP_DEV_SERVER` で、たとえば [`hgui` のスロット](/hermes/docs/developer-guide/worktree-ui-dev/#hgui--desktop-app-from-the-worktree)
+なら `5174+N` です）。決まった開発用サーバーのポートを信頼することはありません。`5173` や `5174` で動く Vite のアプリを含め、
+ほかのローカルのポートから配られたページには CORS のヘッダーが付かず、WebSocket への切り替えも断られます。そのため、
+そうしたページはセッションの合鍵を読むことも、ターミナルを開くこともできません。
 
-自分で決めたポートでサーバーを動かすと、その出どころは自動で加えられます。
+ポート転送（`ssh -L 8000:localhost:9119`、`docker -p 8080:9119`）を通して届いた場合でも、
+管理画面自身のページは WebSocket への切り替えを開けます。切り替えの送り先とちょうど同じホストと
+ポートを名指しする Origin は、そのページ自身だとみなされるからです。
+
+別の loopback のポートで動き、`Host` をバックエンドのアドレスに書き換えるリバースプロキシ（`127.0.0.1:9119` の前に置いた
+`https://localhost:8443` の nginx など）を使う場合は、そのアドレスを `dashboard.public_url`
+（Webapp では `webapp.public_url`）に設定する必要があります。そうすると、そのとおりの出どころ（スキーム、ホスト、ポート）も
+信頼されるようになります。ほかの loopback のポートは、それでも信頼されません。`0.0.0.0` や `::` に割り当てた場合も同じ決まりが当てはまります。
+サインインのクッキーは `SameSite=Lax` なので、ブラウザは同じホストの別のポートにあるページからもそれを送るからです。
+
+デスクトップ版の開発用ビルドは、SSH 越しに起こすバックエンドにもこの変数を渡し、以前に別の描画側の URL 向けに
+起こしたバックエンドは置き換えます。デスクトップ版が同じ端末のゲートウェイへ開くソケットは、Origin を持たない、
+引換券つきの使い捨てのネイティブ接続です。そのため開発用ビルドは、すでに動いている手元のゲートウェイを
+立ち上げ直さずに使えますし、自分で起こすゲートウェイにはこの変数を渡しません（そのゲートウェイは開発のセッションが
+終わっても動き続けるからです）。開発用の描画側の Origin を、デスクトップ版が起こしたのではないバックエンド
+（たとえば自分で立ち上げて直接つなぐ離れたバックエンド）に示す接続の場合に限り、そのバックエンドを、
+`HERMES_DESKTOP_DEV_SERVER` にビルドの描画側の URL を設定して起動しておく必要があります。
 
 ## 開発 {#development}
 
@@ -1260,7 +1281,7 @@ npm install
 npm run dev
 ```
 
-`http://localhost:5173` の Vite の開発用サーバーが、`/api` への要求を `http://127.0.0.1:9119` の FastAPI へ回します。
+`http://localhost:5173` の Vite の開発用サーバーが、`/api` への要求を WebSocket も含めて `http://127.0.0.1:9119` の FastAPI へ回します（別のバックエンドを使うときは `HERMES_DASHBOARD_URL` を設定します）。セッションの合鍵は、サーバー側でバックエンドから読み取ります。WebSocket への切り替えは `Host` と `Origin` を変えずに転送するので、ページの Origin は自分が接続したホストとポートを名指しすることになり、バックエンドはポート `5173` を信頼しなくても、それを同じ出どころとして受け入れます。`HERMES_DASHBOARD_URL` がバックエンドへのポート転送を指している場合（たとえば `ssh -L 8000:localhost:9119` を通した `http://127.0.0.1:8000`）も同じです。Vite 自身の CORS は切ってあるので、ほかのローカルのページが開発用サーバーから合鍵を読み取ることもできません。
 
 画面側は React 19、TypeScript、Tailwind CSS v4、shadcn/ui 風の部品で作られています。本番向けの組み立ての出力は `hermes_cli/web_dist/` に置かれ、FastAPI のサーバーがそれを静的な SPA として配ります。
 

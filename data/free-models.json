@@ -1,23 +1,13 @@
 {
-  "generatedAt": "2026-11-02",
+  "generatedAt": "2026-11-03",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-02",
-      "attemptedAt": "2026-11-02",
+      "fetchedAt": "2026-11-03",
+      "attemptedAt": "2026-11-03",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
-        {
-          "id": "ornith/ornith-1.5-122b:free",
-          "name": "Ornith: Ornith 1.5 122B",
-          "ctx": 262144,
-          "tools": true,
-          "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
         {
           "id": "reflection/beam-1.0-501b-a23b:free",
           "name": "Reflection: Beam 1.0 501B A23B",
@@ -53,8 +43,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-02",
-      "attemptedAt": "2026-11-02",
+      "fetchedAt": "2026-11-03",
+      "attemptedAt": "2026-11-03",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -203,7 +193,7 @@
           "name": "Thinking Machines: Inkling Small (free)",
           "ctx": 1048576,
           "tools": true,
-          "expires": null,
+          "expires": "2026-11-04",
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null
@@ -213,7 +203,7 @@
           "name": "Thinking Machines: Inkling (free)",
           "ctx": 1048576,
           "tools": true,
-          "expires": null,
+          "expires": "2026-11-04",
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null

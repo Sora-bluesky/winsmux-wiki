@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: a01dea612a2c3628e12b56d13dfd66dd994bb2f3
+upstream_blob: 88fd95c0c406e9f7fe8e4dd662ec4ceee24bfeb2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -64,7 +64,7 @@ hermes webapp
 ブラウザで選んだファイルや、貼り付け・ドロップした画像は、通常の添付の流れに入る前にアクティブなプロファイルの下へ一時的に置かれます。上限は1ファイルあたり **16 MiB** です。ホストのファイルはブラウザのダウンロードマネージャーでダウンロードされ、対応している音声や動画は、サーバーのファイルアクセス規則に従ってその場で再生されます。別オリジンの URL に対する **Save Image** には CORS が必要で、上限は **25 MiB**、制限時間は **30秒** です。ウェブサイトへのリンクは別のタブで開きます。明示的な URL のプレビューはポップアップを開けないサンドボックス化された iframe を使うので、埋め込みを拒むサイトには **Open in browser** を使ってください。ネイティブ専用の機能は Electron に残ります。グローバルショートカット、常に最前面に出るオーバーレイ、OS のウィンドウの検査、外部ターミナルの起動、アップデーターです。
 
 ゲートウェイがセッションを管理するようになる前に書かれたチャットは、履歴は表示されますが、引き取る（adopt）まではブラウザから続けられません。ホストで一度 `hermes sessions adopt` を実行するか（別のプロファイルなら `hermes -p <profile>
-sessions adopt`）、ネイティブのデスクトップアプリ、TUI、CLI のどれかで一度開いてください。
+sessions adopt`）、ネイティブのデスクトップアプリ、TUI、CLI のどれかで一度開いてください。スマートフォンのアプリがダッシュボードのログインを通じて独自のラベル（`mobile`、`ios`）で始めたチャットもこれに含まれ、引き取ればデスクトップのチャットと同じように続けられます。別の WebUI プロセスが独自のエージェントで書き込んだ行や、古い cron・サブエージェントの実行は、読み取り専用のままです。
 
 ### スマートフォンや別のコンピューターから開く {#open-it-from-your-phone-or-another-computer}
 

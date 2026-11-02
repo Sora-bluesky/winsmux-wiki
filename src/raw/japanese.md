@@ -5,7 +5,7 @@ sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
   - https://github.com/NousResearch/hermes-agent/issues
-hermes_version: "0.22.5"
+hermes_version: "0.22.6"
 confidence: medium
 raw: /hermes/raw/japanese.md
 ---

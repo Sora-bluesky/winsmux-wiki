@@ -397,9 +397,9 @@
       "translatedAt": "2026-10-26T22:56:07.745Z"
     },
     "reference/cli-commands.md": {
-      "blob": "62a0d99484163158314e00b79b58f1d7477a077d",
+      "blob": "229c23a34754fe7f9c8df6d8401964ebe7d52234",
       "status": "translated",
-      "translatedAt": "2026-11-02T04:44:18.628Z"
+      "translatedAt": "2026-11-02T22:37:46.940Z"
     },
     "reference/cli-symbols.md": {
       "blob": "76d0fcd513551ad62992ffc06f63494b1ad2bed9",
@@ -407,9 +407,9 @@
       "translatedAt": "2026-09-12T22:39:58.861Z"
     },
     "reference/environment-variables.md": {
-      "blob": "736aeba849aef0cb6e1cdee6c986d6de2555a9c6",
+      "blob": "8692eee673ff05202fe5ef97c2e8e83465190aeb",
       "status": "translated",
-      "translatedAt": "2026-10-28T22:52:48.305Z"
+      "translatedAt": "2026-11-02T22:37:46.947Z"
     },
     "reference/faq.md": {
       "blob": "a0d1d67d7a7c22808fec65f42bc4f5a3c04be6dc",
@@ -472,9 +472,9 @@
       "translatedAt": "2026-10-29T23:06:10.722Z"
     },
     "user-guide/configuration.md": {
-      "blob": "808b59c20239d3a480c7599a8477b3001a03289c",
+      "blob": "a3ce2a708f909181320cc2da1481de14d7c1f188",
       "status": "translated",
-      "translatedAt": "2026-11-01T22:52:43.168Z"
+      "translatedAt": "2026-11-02T22:37:46.953Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "0e8e083d29713e3cf45d6b3cbc49700bd0cde974",
@@ -482,9 +482,9 @@
       "translatedAt": "2026-10-14T23:48:21.642Z"
     },
     "user-guide/desktop.md": {
-      "blob": "a01dea612a2c3628e12b56d13dfd66dd994bb2f3",
+      "blob": "88fd95c0c406e9f7fe8e4dd662ec4ceee24bfeb2",
       "status": "translated",
-      "translatedAt": "2026-11-02T04:44:18.640Z"
+      "translatedAt": "2026-11-02T22:37:46.956Z"
     },
     "user-guide/docker.md": {
       "blob": "04b04008f85238372e543f3d4244de529d6a4c28",
@@ -742,9 +742,9 @@
       "translatedAt": "2026-09-25T22:58:06.429Z"
     },
     "user-guide/features/web-dashboard.md": {
-      "blob": "0600b755b0aa7bdb62c9a8dedf875f8914c9b19b",
+      "blob": "03f82beedde4a3a7107c08189df60610022581c4",
       "status": "translated",
-      "translatedAt": "2026-10-28T22:52:48.323Z"
+      "translatedAt": "2026-11-02T22:37:46.958Z"
     },
     "user-guide/features/web-search.md": {
       "blob": "2d52120f7385b1797565b50593965b0b50b1e4c8",
@@ -1032,9 +1032,9 @@
       "translatedAt": "2026-10-23T22:51:08.216Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md": {
-      "blob": "0cc9f2b5e642b2f3d62acff94d8613dae5ead9cd",
+      "blob": "140220925f4318c434094e6c53190dae1d35f296",
       "status": "translated",
-      "translatedAt": "2026-10-31T22:50:24.741Z"
+      "translatedAt": "2026-11-02T22:37:46.959Z"
     },
     "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode.md": {
       "blob": "c458d8d33eb51ab12551ee1ac9271f2b650740b7",
@@ -2246,9 +2246,9 @@
       "translatedAt": "2026-10-16T22:46:20.851Z"
     },
     "developer-guide/relay-shared-metrics.md": {
-      "blob": "cc26317befe8a9f0668de7ba3047a88ab44af7fd",
+      "blob": "99773172dbc84db5fdd8c45473780943558ef885",
       "status": "translated",
-      "translatedAt": "2026-11-01T22:52:43.182Z"
+      "translatedAt": "2026-11-02T22:37:46.962Z"
     },
     "developer-guide/state-db-recovery.md": {
       "blob": "c33820b54605d34f661069de0484b666d6b7bf27",
@@ -2516,5 +2516,5 @@
       "translatedAt": "2026-10-29T23:07:10.273Z"
     }
   },
-  "snapshotCommit": "5aa8df742c81ca7d993d94a0bc80b27edd65dc0c"
+  "snapshotCommit": "2b5ffeb5fafbbcd1d476b87587154a50b704f73d"
 }
