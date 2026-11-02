@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: ea477f61952f00c831bd1b693dcffc8af81f0380
+upstream_blob: 188aa0c8012f7a9c9276f3e55fc07666c282505d
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -540,7 +540,7 @@ hermes pm install chromium
 | `pm install --without NAME` | 既定のオプションパッケージ `NAME`（`chromium` か `cua-driver`）を除いて名前なしのインストールを行い、その選択を記録します。以降の名前なしのインストールと `hermes update` でも除外されます。インストーラーの `--skip-browser` / `-SkipBrowser` と `--skip-computer-use` / `-SkipComputerUse`（`--without cua-driver`）はこれを使っています。ブラウザーを除く指定は旧来の名前 `--without agent-browser` を渡します。これはどの PM のリリースでも受け付けられ、このリリースでは `chromium` として読みます。その名前で記録された選択でも、引き続き `chromium` は除外されます。 |
 | `pm install --tools-only` | そのツール一式をインストールして PATH に置き、そこで止めます。venv の同期は行いません。 |
 | `pm env [names...]` | インストール済みパッケージについて、PM が追加する環境変数の値を JSON で出力します。足りないパッケージはインストールしませんが、Hermes をコールドスタートした場合は、先に自分用の Python 実行環境を用意することがあります。 |
-| `pm doctor` | インストール済みツールの識別情報、ファイル、ダイジェストをロックと照合します。 |
+| `pm doctor` | インストール済みツールの識別情報、ファイル、ダイジェストをロックと照合し、PM の uv キャッシュに壊れたエントリが無いかも調べます。`--repair` を付けると、そうしたエントリを削除し、次に必要になったときに取得し直されるようにします。 |
 | `pm repair` | 記録済みの Python 依存関係セットを新しい世代で作り直し、検証してから選択します。固定バージョン、機能、プラグインの設定は更新しません。 |
 | `pm environment NAME --extra EXTRA` / `--requirement REQ` | 分離された補助環境 `HERMES_HOME/environments/NAME` を最新の状態にし、その Python のパスだけを stdout に出力します（進行状況は stderr に出ます）。スキルのようなシェルからの呼び出し向けで、たとえば `PY="$(hermes pm environment documents --extra documents --extra documents-pdf)"` のように使います。`--extra` は `pyproject.toml` で宣言された extras の固定済み要件をインストールし、`--requirement` は範囲を限った臨時の要件を受け取ります。この環境は独自のロックを記録し、新しい世代がビルドされるのは、要件のセットか Python の固定版が変わったときだけです。同時に呼び出された場合は環境のロックで順番に処理され、作り直しは新しい世代に作られるので、前の世代をすでに使っている呼び出し側のファイルは残ります。明示的なインストールなので、必要時インストールが無効な環境でも実行されます。結果の環境に `pip install` は決してしないでください。 |
 | `pm status` | 最新の同期・更新の受領記録を JSON で出力します。受領記録が無ければ、その旨を表示します。 |
@@ -615,6 +615,7 @@ Hermes 自身が依存する Python のパッケージは、Hermes がロック�
 - **新しい環境には再起動が必要:** 影響を受ける Hermes のプロセスを再起動してください。稼働中のインポートに、2つ目の site-packages ツリーを足さないでください。
 - **依存関係の衝突:** `hermes pm status` の結果を確認してください。受け入れを再試行する前に、プラグインの要件を直してください。
 - **Python の依存関係が壊れた:** `hermes pm repair` を実行してから、Hermes を再起動してください。修復では、プラグインの設定を読み直さずに、選択中の世代に保存されたワークスペースとロックを再現します。記録が読めない、または保存されたロックが無い場合は、依存関係を減らしたセットを選ぶのではなく、失敗として終わります。世代がまだ無い場合は、同梱またはコミット済みのロックと、記録済みの機能セットを使って修復します。
+- **キャッシュ済みのパッケージが壊れた**（`The wheel is invalid`、`RECORD file is invalid`）: インストール中にマシンが止まると、ファイルが空だったり NUL で埋まっていたりする uv のキャッシュエントリが残ることがあります。インストール処理は、壊れたパッケージを PM の uv キャッシュから自動で削除して再試行します。`hermes pm doctor` はそうしたエントリを報告し、`hermes pm doctor --repair` で削除できます。新しくダウンロードし直しても同じパッケージが不正なままなら、パッケージの配布元が壊れた wheel を配信しています。
 - **依存関係のインストールが中断した:** 起動時に、依存関係を有効にする前に同じ PM の修復が要求されます。自動の試行回数には上限があります。`pm repair` で明示的に再試行できます。修復に失敗した場合は、以前の選択と再試行のマーカーが残ります。
 - **Python の実行ファイルやアプリのソースが壊れた:** パッケージの所有者を通じて修復するか、インストールし直してください。これらのファイルが無いと PM は動けません。依存関係の修復で、署名済みペイロードのファイルが書き換えられることはありません。
 - **不明なパッケージや extra:** 宣言された名前を使ってください。`pm install` が受け取るのはパッケージ名で、Python の extra 名や pip の指定ではありません。

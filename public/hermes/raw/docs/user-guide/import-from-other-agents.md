@@ -1,22 +1,22 @@
 ---
 license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025 Nous Research. See https://wiki.winsmux.dev/hermes/licenses.txt"
 title: "他のエージェントから取り込む"
-description: "OpenClaw（~/.openclaw）、Claude Code（~/.claude）、OpenAI Codex CLI（~/.codex）、Cursor（~/.cursor）の設定を、コマンド1つで Hermes へ取り込みます。指示・ルール・許可リスト・MCP サーバー・スキル・メモリが対象です。"
+description: "OpenClaw（~/.openclaw）、Claude Code（~/.claude）、OpenAI Codex CLI（~/.codex）、Cursor（~/.cursor）、Grok Bot、OpenBot の設定を、コマンド1つで Hermes へ取り込みます。指示・ルール・許可リスト・MCP サーバー・スキル・メモリ、Grok Bot / OpenBot のルーティンが対象です。"
 upstream_path: user-guide/import-from-other-agents.md
-upstream_blob: 691b500e1ea28b6459ac12c557862b796f089272
+upstream_blob: 1fdf9ed44a629a3a7e603df48b5d911145f4615e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/import-from-other-agents
 ---
 
 # 他のエージェントから取り込む {#import-from-other-agents}
 
-`hermes import-agent` は、今使っている **OpenClaw**、**Claude Code**、**OpenAI Codex CLI**、**Cursor** の設定を、コマンド1つで Hermes へ取り込みます。書き込みの前に必ず項目ごとの計画が表示され、`--dry-run` ではディスクに一切触れません。
+`hermes import-agent` は、今使っている **OpenClaw**、**Claude Code**、**OpenAI Codex CLI**、**Cursor**、**Grok Bot**、**OpenBot** の設定を、コマンド1つで Hermes へ取り込みます。書き込みの前に必ず項目ごとの計画が表示され、`--dry-run` ではディスクに一切触れません。
 
 このコマンドは、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)にある公式の **`agent-importers` プラグイン**が提供します。管理しているのは Nous Research で、置き場所は [NousResearch/hermes-official-plugins](https://github.com/NousResearch/hermes-official-plugins/tree/main/agent-importers) です。
 
 ## かんたんな方法: `hermes setup` {#the-easy-way-hermes-setup}
 
-新しく入れた直後に `hermes setup` を実行すると、ほかの何よりも先に `~/.openclaw`（または旧名の `~/.clawdbot` / `~/.moltbot`）、`~/.claude`、`~/.codex`、`~/.cursor` があるかを調べます。見つかると、見つかったものの名前を入れて **「Claude Code から設定を取り込みますか？」** と尋ねます。複数見つかった場合は、続けてチェックリストからどれを取り込むかを選びます（最初は全部にチェックが入っています）。「はい」と答えると、setup はカタログから `agent-importers` プラグインを入れ（すでに入っていれば入れません）、選んだものごとに下で説明する取り込みを実行します。内容の確認と承認の手順もそのまま含まれます。OpenClaw の場合は、以前 Hermes に組み込まれていた OpenClaw 用の手順と同じく `--migrate-secrets` を渡すので、API キーやボットのトークンも引き継がれ、このあとのプロバイダーとメッセージングの設定はすでに埋まった状態になります。続けて Quick Setup を選び、取り込みでモデルがそのキーと一緒に引き継がれていた場合は、そのモデルをそのまま使うか（既定）、Nous Portal に切り替えるかを setup が尋ねます。「いいえ」と答えた場合や、これらのフォルダーが1つもない場合は、何もインストールされません。すでに設定を済ませている場合は、下のコマンドを使ってください。
+新しく入れた直後に `hermes setup` を実行すると、ほかの何よりも先に `~/.openclaw`（または旧名の `~/.clawdbot` / `~/.moltbot`）、`~/.claude`、`~/.codex`、`~/.cursor`、Grok Bot のデスクトップアプリ（または `~/Downloads` にある `grok-bot-export*` ファイル）、OpenBot があるかを調べます。見つかると、見つかったものの名前を入れて **「Claude Code から設定を取り込みますか？」** と尋ねます。複数見つかった場合は、続けてチェックリストからどれを取り込むかを選びます（最初は全部にチェックが入っています）。「はい」と答えると、setup はカタログから `agent-importers` プラグインを入れ（すでに入っていれば入れません）、選んだものごとに下で説明する取り込みを実行します。内容の確認と承認の手順もそのまま含まれます。OpenClaw の場合は、以前 Hermes に組み込まれていた OpenClaw 用の手順と同じく `--migrate-secrets` を渡すので、API キーやボットのトークンも引き継がれ、このあとのプロバイダーとメッセージングの設定はすでに埋まった状態になります。続けて Quick Setup を選び、取り込みでモデルがそのキーと一緒に引き継がれていた場合は、そのモデルをそのまま使うか（既定）、Nous Portal に切り替えるかを setup が尋ねます。「いいえ」と答えた場合や、これらのフォルダーが1つもない場合は、何もインストールされません。すでに設定を済ませている場合は、`hermes migrate` を実行すると同じ案内が表示されます。`hermes migrate <agent>`（`openclaw`、`claude-code`、`codex`、`cursor`、`grok-bot`、`openbot`）を実行すれば、1つのエージェントから取り込めます（プラグインが入っていなければ、そのときに入れます）。または、下のコマンドを使ってください。
 
 ## 手で実行する {#by-hand}
 
@@ -75,6 +75,25 @@ Claude の `Bash(npm run test:*)` という前方一致のルールは、`npm ru
 | `skills/**/<name>/`（`SKILL.md` を含むディレクトリ。カテゴリ用のフォルダーで分けてあってもかまいません） | `~/.hermes/skills/cursor-imports/<name>/` |
 
 `.mdc` のフロントマター（`description`、`globs`、`alwaysApply`）は Cursor のルールエンジンが振り分けに使う情報なので取り除かれ、ルールの本文だけが取り込まれます。スキルは `SKILL.md` を含むフォルダーのことなので、`skills/shipping/land-it/` は `cursor-imports/land-it/` として取り込まれます。別々のフォルダーに同じ名前のスキルが2つある場合は、重複として報告されます。
+
+### Grok Bot {#grok-bot}
+
+Grok Bot は Bot・ルーティン・スキルをクラウド上のアカウントに保存していて、書き出し用のボタンがありません。そのため、Bot ごとに自分自身を書き出してもらいます。`hermes migrate grok-bot`（または `hermes import-agent grok-bot`）を実行すると、書き出したファイルがまだない場合は、Bot のチャットに貼り付けるメッセージが表示されます。Bot は何も変更せずに `grok-bot-export.json` を書き出します（または JSON のブロックを1つ返信します）。それをダウンロードして、`hermes import-agent grok-bot --source <file>` を実行してください。`~/Downloads/grok-bot-export*` という名前で保存したファイルは、`--source` を付けなくても見つかります。これを Bot ごとに繰り返し、その Bot の仕事を受け持たせたいプロファイルに取り込みます（`hermes -p <profile> ...`）。
+
+| Grok Bot | Hermes |
+|---|---|
+| スケジュールで動くルーティン | 同じスケジュール・タイムゾーン・スキルを持つ [cron ジョブ](/hermes/docs/user-guide/features/cron/) `<Bot>: <routine>`。**一時停止**の状態で作られます |
+| イベント（Slack、GitHub、メール、Webhook など）で動くルーティン | 指示ときっかけの内容が `grok-bot-import/<bot>-event-routines.md` に保存されるので、それをもとに作り直します |
+| スキル | `skills/grok-bot-imports/<name>/` |
+| Bot が覚えていること / 利用者についての情報 | `memories/MEMORY.md` / `memories/USER.md` |
+| Bot の役割 | `SOUL.md`（Hermes の既定の内容のままの場合）。そうでなければメモリ項目 |
+| リモート MCP の URL を持つアプリ | `config.yaml` の `mcp_servers` |
+
+ルーティンは一時停止の状態で取り込まれます。Grok 側のルーティンがまだ動いている間に、二重に実行されないようにするためです。Grok Bot 側でルーティンを止めてから `hermes cron resume <id>` を実行するか（各 ID は取り込み時に表示されます）、`--activate-routines` を渡してください。ジョブの出力先を指定するには `hermes cron edit <id> --deliver telegram` を使います。資格情報らしきキーを含む書き出しファイルは受け付けず、トークンのような形の文字列は伏せられます。
+
+### OpenBot {#openbot}
+
+`hermes migrate openbot`（または `hermes import-agent openbot`）は、OpenBot デスクトップアプリのローカルデータベース（`~/Library/Application Support/OpenBot`、`~/.config/OpenBot`、`%APPDATA%\OpenBot` のいずれかにある `openbot.db`。読み取り専用で開くので、OpenBot は起動したままでかまいません）と、`~/OpenBot/Agents` の下にある各エージェントのワークスペースを読み込みます。ルーティンは同じスケジュールとタイムゾーンを持つ一時停止中の cron ジョブになり、エージェントの説明は `SOUL.md`（またはメモリ項目）に、メモリは `memories/MEMORY.md` に、ワークスペースのスキルは `skills/openbot-imports/` に、MCP サーバーは `config.yaml` に入ります。このとき、秘密を思わせる環境変数は取り除かれます。`--bot <name>` で取り込むエージェントを選べます。`hermes -p <profile> ...` を使えば、エージェントに専用のプロファイルを持たせられます。チャットとプロバイダーのアカウントは OpenBot に残ります。
 
 ## 決して取り込まれないもの {#what-is-never-imported}
 

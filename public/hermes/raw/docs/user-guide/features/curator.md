@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "キュレーター"
 description: "エージェントが作ったスキルを裏側で手入れする仕組み。利用状況の記録、古さの判定、書庫入れ、LLM によるレビュー"
 upstream_path: user-guide/features/curator.md
-upstream_blob: c89fab7267bac4c6d2120c06c0487c201c82b29f
+upstream_blob: 07a7700610c94da06671de01838eded3b2948264
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/curator
 ---
@@ -48,7 +48,7 @@ sources:
 既定では、キュレーターは**整理だけ**を行います。決まった手順の無操作判定がスキルに古い印を付け、長く使われていないものを書庫に入れます。踏み込んだ LLM の**統合**（傘づくり、重なるスキルの併合）は既定でオフです。実行のたびに補助モデルのトークンを使い、手元のスキル群の構造を大きく変えるからです。使うときは `curator.consolidate: true` にするか、その場かぎりで `hermes curator run --consolidate` を実行してください。
 :::
 
-固定されたスキルは、キュレーターの自動遷移からも、エージェント自身の `skill_manage` ツールからも手出しできません。下の[スキルを固定する](#pinning-a-skill)を参照してください。
+固定されたスキルはキュレーターの自動遷移で飛ばされ、エージェントの `skill_manage` ツールもそれを**削除**しようとすると拒みます。ただし、編集や手直しは通ります。エージェントにスキルを一切変えさせたくないときは、固定ではなくロックしてください。下の[スキルを固定する](#pinning-a-skill)と[スキルをロックする](#locking-a-skill)を参照してください。
 
 ## 設定 {#configuration}
 
@@ -113,6 +113,8 @@ hermes curator pause          # stop runs until resumed
 hermes curator resume
 hermes curator pin <skill>    # never auto-transition this skill
 hermes curator unpin <skill>
+hermes curator lock <skill>   # the agent may not change it
+hermes curator unlock <skill>
 hermes curator adopt <skill>    # hand an unmanaged skill to the curator
 hermes curator adopt --all-unmanaged   # hand over every unmanaged skill
 hermes curator list-unmanaged   # itemize skills with no provenance marker
@@ -315,8 +317,10 @@ hermes curator adopt --all-unmanaged --yes       # skip the prompt
 - 固定されたスキルは、すべての自動遷移を素通りします
 - 書庫入りしたものは `hermes curator restore <name>` で戻せます
 
-特定のスキルを絶対に触られないようにしたいとき — たとえば頼りにしている手書きのスキル —
-は、`hermes curator pin <name>` を使ってください。次の節で説明します。
+エージェント製のスキルを書庫入りから守りたいときは、
+`hermes curator pin <name>` を使ってください。エージェントにスキルを一切変えさせたくないとき —
+たとえば頼りにしている手書きのスキル — は、`hermes curator lock <name>` を使います。
+どちらも以下で説明します。
 
 ## スキルを固定する {#pinning-a-skill}
 
@@ -340,7 +344,37 @@ cron のどれかのジョブの `skills:` に名前があるスキルは、**�
 
 ごく一部の**保護された組み込みスキル**は、`curator.prune_builtins` の設定や固定の有無、LLM の判断に関わらず、書庫入りも統合もされないものとしてコードに直接書き込めます。これらは要になる使い勝手を支えているので、黙って書庫入りすると、そのスラッシュコマンドが何の知らせもなく「Unknown command」のエラーに変わってしまいます。（この集合はいま空です。最初の1つだった `plan` は、ディスク上にスキルを持たない組み込みの `/plan` コマンドへ昇格しました。）保護された組み込みスキルはキュレーターの候補の一覧から完全に外されるので、統合の処理がそれらを目にすることはありません。
 
-「削除されない」よりも強い保証がほしいとき — たとえば、エージェントに読ませたまま中身を完全に凍結したいとき — は、`~/.hermes/skills/<name>/SKILL.md` を自分のエディタで直接編集してください。固定が守るのはツール経由の削除であって、自分のファイル操作ではありません。
+「削除されない」よりも強い保証がほしいとき — エージェントに読ませて使わせたまま、スキルの中身を凍結したいとき — は、ロックしてください（次の節）。固定もロックも、自分で行う編集は妨げません。自分のエディタでも、デスクトップのスキルエディタでも、いつでも編集できます。
+
+## スキルをロックする {#locking-a-skill}
+
+固定は書庫入りを止めるものです。ロックは、**エージェントがスキルを変えること自体**を止めます。そのあいだもスキルはこれまでとまったく同じように読めて、スキルの一覧に載り、自動で読み込まれ、使えます。
+
+```bash
+hermes curator lock <skill>
+hermes curator unlock <skill>
+hermes curator status          # lists locked skills
+```
+
+デスクトップでは、**Capabilities → Skills** を開いてスキルを選び、そのロックのスイッチを切り替えます。
+
+スキルをロックすると、エージェントが書き込めるあらゆる経路がそれを拒みます。ふつうのターンでも、cron のジョブでも、サブエージェントでも、バックグラウンドの自己改善のレビューでも、キュレーターの処理でも同じで、`--yolo` のもとでも変わりません。
+
+- **`skill_manage`** は、`patch`、`edit`、`write_file`、`remove_file`、`delete` を、単発の形でも一括の形でも拒みます。
+- **`write_file` と `patch`** は、スキルのディレクトリの中にあるパス（`SKILL.md`、`references/`、`scripts/` など）をすべて拒みます。
+- **`terminal`** は、そこへ書き込むコマンドを拒みます。リダイレクトと `tee`、`cp`/`mv`/`rm`/`touch`/`mkdir`/`chmod`、`sed -i`/`perl -i`、スキルのツリーの中での `git` の変更、そこへのアーカイブの展開、そしてそのスキルを名指しするインラインの `python -c`/`bash -c` のコードが対象で、`cd` でスキルの中に移ったあとでも同じです。スキルを読むことや、スキルのスクリプトを実行することはそのままできます。
+- キュレーターは、ロックされたスキルを書庫入りさせません。
+- エージェントはロックを外せません。`terminal` は `hermes curator unlock` を拒みますし、ロックの記録（`skills/.usage.json`）も、どれか1つでもスキルがロックされているあいだは同じように守られます。拒むときには、望んでいた変更の内容を説明するようエージェントに伝えるので、それを見て判断できます。
+
+自分で行う編集は制限されません。自分のエディタやデスクトップのスキルエディタでファイルを編集するのは、いつでもできます。エージェントにまた変更を許すには、`hermes curator unlock <skill>` を実行するか、スイッチを戻します。
+
+この印は `~/.hermes/skills/.usage.json` のそのスキルの記録に `"locked": true` として保存されます。`pinned` と同じ補助ファイルなので、ロックは**プロファイルごと**です。`hermes -p work curator lock deploy-runbook` は、そのプロファイルの写しだけをロックします。プロファイルの中で見つかるスキルなら、どれでもロックできます（手書きのもの、エージェント製のもの、同梱のもの、ハブから入れたもの）。見つからない名前を渡すと、`lock` は断ります。
+
+ロックにできないこと:
+
+- これは**方針の確認であって、サンドボックスではありません。** terminal の確認はコマンドの書き込み先を読むだけなので、独自の処理でスキルに書き込むスクリプトや `execute_code` は調べられません。確実な境界が必要なときは、ファイルシステムの権限と組み合わせてください。
+- `.usage.json` が壊れていると、バックグラウンドの処理は拒まれます（安全側に倒します）が、ふつうのターンはそのまま進むので、ファイル1つが壊れただけでスキルの編集がすべて止まることはありません。ファイルを直すか、`hermes curator unlock <skill>` を実行して書き直してください。
+- 手元で変更していない同梱のスキルやハブのスキルを、`hermes update` / `hermes skills update` が更新するのは止め**ません**。これらは自分で打つコマンドであって、エージェントによる書き込みではないからです。
 
 ## 利用状況の記録 {#usage-telemetry}
 

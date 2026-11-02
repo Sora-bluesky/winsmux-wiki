@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 819280965fd8b3cf1600a5f9d95b30bbc59f7368
+upstream_blob: 62a0d99484163158314e00b79b58f1d7477a077d
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -67,7 +67,7 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes send` | 設定済みのメッセージングプラットフォーム（Telegram, Discord, Slack, Signal, SMS など）へ one-shot メッセージを送信します。シェルスクリプト・cron ジョブ・CI フック・監視デーモンから便利に使えます — エージェントループも LLM も使いません。 |
 | `hermes peer` | 他のマシンの peer Hermes ゲートウェイを登録し、そのエージェントの正規の Bot Chat に DM を送ります（`hermes peer dm <peer>[/<agent>] "…"`）。マシン間の bot-to-bot メッセージングを支える transport です。 |
 | `hermes secrets` | `~/.hermes/.env` の代わりに、プロセス起動時に API キーを外部シークレットソース（現状 Bitwarden Secrets Manager）から取得できるよう管理します。 |
-| `hermes migrate` | 廃止されたモデルや非推奨の設定への参照を診断し、（オプションで）`config.yaml` を書き換えます（例: `migrate xai`）。 |
+| `hermes migrate` | ほかのエージェントから乗り換えます（`migrate grok-bot`、`migrate claude-code` など。引数なしなら自動で検出します）。または、廃止されたモデルや非推奨の設定に合わせて `config.yaml` を書き換えます（`migrate xai`）。 |
 | `hermes codex-runtime` | `/codex-runtime` の非対話版: `migrate [--dry-run] [--json]` は選択したプロファイル向けに `~/.codex/config.toml` の Hermes 管理ブロックを再生成します。[Codex app-server runtime](/hermes/docs/user-guide/features/codex-app-server-runtime/#running-the-migration-from-a-script) を参照してください。 |
 | `hermes status` | エージェント・認証・プラットフォームの状態を表示します。 |
 | `hermes usage` | セッションなしで、設定済みアカウントのレートリミットウィンドウ（`/usage` ブロック相当）を表示します。スクリプト向けの `--json` もあります。 |
@@ -545,13 +545,18 @@ hermes secrets bw <subcommand>          # short alias
 ## `hermes migrate` {#hermes-migrate}
 
 ```bash
-hermes migrate <type>
+hermes migrate                 # find another agent's setup here and offer to import it
+hermes migrate <agent>         # openclaw, claude-code, codex, cursor, grok-bot or openbot
+hermes migrate <type>          # xai, relay
 ```
 
-廃止されたモデルや非推奨の設定への参照を診断し、（オプションで）現在アクティブな `config.yaml` を書き換えます。書き換えの前には、元の `config.yaml` のタイムスタンプ付きバックアップが取られます（`--no-backup` でスキップ）。
+引数なしの `hermes migrate` は、このコンピューターで OpenClaw、Claude Code、Codex CLI、Cursor、Grok Bot、OpenBot を探し、見つかったもののインポートを提案します。初回の `hermes setup` が行うのと同じ手順です（ただしセットアップ独自の選択は含みません。OpenClaw のキーは `hermes migrate openclaw --migrate-secrets` を使ったときだけ取り込まれます）。`hermes migrate <agent>` は、何も検出されなくてもそのエージェントからインポートします。[`agent-importers`](/hermes/docs/user-guide/import-from-other-agents/) プラグインが入っていなければカタログからインストールし、続いて `hermes import-agent <agent>` を実行します（内容を見せてから確認を求めます）。`--source`、`--dry-run`、`--overwrite`、`-y` を受け付けます。`grok-bot` と `openbot` はさらに `--activate-routines` と `--bot <name>` を、`openclaw` は `--migrate-secrets` を受け付けます（API キーとボットのトークンは、これを付けたときだけ取り込まれます。初回のセットアップは自動でこれを付けるので、そこが違います）。
+
+`xai` と `relay` のタイプは、廃止されたモデルや非推奨の設定への参照を診断し、（オプションで）現在アクティブな `config.yaml` を書き換えます。書き換えの前には、元の `config.yaml` のタイムスタンプ付きバックアップが取られます（`--no-backup` でスキップ）。
 
 | サブコマンド | 説明 |
 |------------|-------------|
+| `openclaw`, `claude-code`, `codex`, `cursor`, `grok-bot`, `openbot` | そのエージェントのセットアップをインポートします（上記参照）。 |
 | `xai` | `config.yaml` を走査し、2026年5月15日に廃止予定の xAI モデルへの参照を検出し、（`--apply` 付きで）xAI の移行ガイドに沿った公式の後継モデルへ書き換えます。既定は dry-run です。 |
 
 移行サブコマンド共通のフラグ:
@@ -560,8 +565,6 @@ hermes migrate <type>
 |------|-------------|
 | `--apply` | `config.yaml` をその場で書き換えます（既定: dry-run、書き込みなし）。 |
 | `--no-backup` | 適用時の、`config.yaml` のタイムスタンプ付きバックアップをスキップします。 |
-
-> `hermes import-agent openclaw`（OpenClaw の設定を Hermes へ one-shot でインポートする機能）と混同しないでください — `hermes migrate` はトップレベルの設定書き換えコマンドです。
 
 ## `hermes codex-runtime` {#hermes-codex-runtime}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "スキルの仕組み"
 description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェント管理のスキル、スキルのハブ"
 upstream_path: user-guide/features/skills.md
-upstream_blob: ba9dd6e2e7639df0cae0a266b5a4b4797479aa81
+upstream_blob: 08869b701ad935c5c7b5128414010876c37ef578
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -690,6 +690,12 @@ patch / delete / write_file / remove_file）は、反映されずに**待たさ�
 （チャットの吹き出し向けに差分は切り詰められます。全文は CLI か、待ち行列の JSON
 ファイルで読んでください）。メモリの書き込みにも
 `memory.write_approval` という同じ関門があります。[メモリの書き込みを制御する](/hermes/docs/user-guide/features/memory/#controlling-memory-writes-write_approval)を参照してください。
+
+ある*特定の*スキルだけは、エージェントに一切変えさせたくない場合は、そのスキルをロックします。
+`hermes curator lock <skill>` を実行してください（Desktop ならロックのスイッチを使います）。ロックしたスキルは
+これまでどおり読めて、自動での読み込みもされますが、`skill_manage`、`write_file`、`patch`、`terminal`
+はどれも、どの種類のセッションでもそのスキルを変えることを拒みます。利用者自身による編集はそのままできます。
+[スキルをロックする](/hermes/docs/user-guide/features/curator/#locking-a-skill)を参照してください。
 
 > これとは別の `skills.guard_agent_created` の設定は、内容を走査するもの
 > （危ないパターンの経験則）であって、承認の関門ではありません。この2つは
