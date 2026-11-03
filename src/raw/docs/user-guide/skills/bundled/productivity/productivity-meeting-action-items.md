@@ -2,7 +2,7 @@
 title: "Meeting Action Items — 会議メモから、根拠付きの決定事項・担当者・チケットを起こす"
 description: "会議メモから、根拠付きの決定事項・担当者・チケットを起こす"
 upstream_path: user-guide/skills/bundled/productivity/productivity-meeting-action-items.md
-upstream_blob: 4bc39457a88be6b827c00624e22c751fe67e49ef
+upstream_blob: c653c1bb6bbc9e278e4bd56b5db86e1445d7a989
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items
 ---
@@ -22,7 +22,7 @@ sources:
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Meetings`, `Action-Items`, `Follow-Up`, `Productivity` |
-| 関連 skill | [`teams-meeting-pipeline`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline/), [`google-workspace`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/), [`notion`](/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/) |
+| 関連 skill | [`teams-meeting-pipeline`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline/), [`google-workspace`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -79,7 +79,7 @@ sources:
 
 ### 4. 既存の記録と突き合わせる {#4-reconcile-existing-records}
 
-利用者が使っている管理ツールの連携機能（`notion`、`github-issues` など、その仕事を扱っているもの）を読み込みます。何かを作る前に、対応する未完了の項目がないか検索してください。定例会議は重複チケットの温床です。担当者・期日・状態が食い違っている場合は、黙って上書きせず、そのまま残して確認にまわします。新規作成すべきものと更新すべきものが区別できていれば、この段階は完了です。
+利用者が使っている管理ツールの連携機能（Notion、`github-issues` など、その仕事を扱っているもの）を読み込みます。何かを作る前に、対応する未完了の項目がないか検索してください。定例会議は重複チケットの温床です。担当者・期日・状態が食い違っている場合は、黙って上書きせず、そのまま残して確認にまわします。新規作成すべきものと更新すべきものが区別できていれば、この段階は完了です。
 
 ### 5. フォローアップ一式を用意する {#5-prepare-the-follow-up-package}
 

@@ -2,7 +2,7 @@
 title: "スキルを作る"
 description: "Hermes Agent 向けのスキルの作り方 — SKILL.md の書式、指針、公開まで"
 upstream_path: developer-guide/creating-skills.md
-upstream_blob: 8e2f55063029940a061efeaee5d6bb08dc5906b9
+upstream_blob: f3dc99eb02f2563e485e11181af178a5932cb8c9
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills
 ---
@@ -135,7 +135,7 @@ metadata:
 | `fallback_for_toolsets` | 挙げたツールセットのどれかが使えるとき、スキルは**隠れます** |
 | `fallback_for_tools` | 挙げたツールのどれかが使えるとき、スキルは**隠れます** |
 
-**`fallback_for_*` の使いどころ:** 本命のツールが使えないときの代わりになるスキルを作れます。たとえば `fallback_for_tools: [web_search]` を付けた `duckduckgo-search` スキルは、API キーが要るウェブ検索ツールが設定されていないときにだけ出てきます。
+**`fallback_for_*` の使いどころ:** 本命のツールが使えないときの代わりになるスキルを作れます。たとえば `fallback_for_tools: [web_search]` を付けた curl を使う検索スキルは、`web_search` ツールが無効になっているときにだけ出てきます。
 
 **`requires_*` の使いどころ:** あるツールが揃っているときにだけ意味を持つスキルを作れます。たとえば `requires_toolsets: [web]` を付けたウェブ収集の手順スキルは、ウェブ系のツールを切っているときにプロンプトを無駄に埋めません。
 

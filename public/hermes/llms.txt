@@ -2,7 +2,7 @@
 
 > 公式 docs の Quickstart / Installation / Messaging の順を日本語にしたもの。独自手順は作らない。正本: https://hermes-agent.nousresearch.com/docs/
 
-Hermes Agent 0.22.6
+Hermes Agent 0.22.7
 
 ## ページ
 
@@ -332,7 +332,6 @@ Hermes Agent 0.22.6
 - [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/)
 - [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/)
 - [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/)
-- [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/)
 - [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/)
 - [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/)
 - [user-guide/skills/optional/blockchain/blockchain-evm（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/blockchain/blockchain-evm/)
@@ -421,20 +420,16 @@ Hermes Agent 0.22.6
 - [user-guide/skills/optional/mlops/mlops-torchtitan（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-torchtitan/)
 - [user-guide/skills/optional/mlops/mlops-training-axolotl（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-training-axolotl/)
 - [user-guide/skills/optional/mlops/mlops-training-unsloth（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-training-unsloth/)
-- [user-guide/skills/optional/payments/payments-mpp-agent（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/)
 - [user-guide/skills/optional/payments/payments-stripe-link-cli（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/)
 - [user-guide/skills/optional/payments/payments-stripe-projects（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/)
-- [user-guide/skills/optional/productivity/productivity-airtable（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/)
 - [user-guide/skills/optional/productivity/productivity-box（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-box/)
 - [user-guide/skills/optional/productivity/productivity-canvas（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/)
 - [user-guide/skills/optional/productivity/productivity-decision-questionnaire（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/)
 - [user-guide/skills/optional/productivity/productivity-here-now（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/)
 - [user-guide/skills/optional/productivity/productivity-live-dashboard（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/)
 - [user-guide/skills/optional/productivity/productivity-memento-flashcards（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/)
-- [user-guide/skills/optional/productivity/productivity-notion（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/)
 - [user-guide/skills/optional/productivity/productivity-property-listings（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/)
 - [user-guide/skills/optional/productivity/productivity-shop（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/)
-- [user-guide/skills/optional/productivity/productivity-shopify（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/)
 - [user-guide/skills/optional/productivity/productivity-siyuan（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/)
 - [user-guide/skills/optional/productivity/productivity-telephony（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-telephony/)
 - [user-guide/skills/optional/research/research-bioinformatics（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-bioinformatics/)
@@ -442,7 +437,6 @@ Hermes Agent 0.22.6
 - [user-guide/skills/optional/research/research-darwinian-evolver（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-darwinian-evolver/)
 - [user-guide/skills/optional/research/research-domain-intel（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-domain-intel/)
 - [user-guide/skills/optional/research/research-drug-discovery（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-drug-discovery/)
-- [user-guide/skills/optional/research/research-duckduckgo-search（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/)
 - [user-guide/skills/optional/research/research-gitnexus-explorer（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-gitnexus-explorer/)
 - [user-guide/skills/optional/research/research-llm-wiki（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-llm-wiki/)
 - [user-guide/skills/optional/research/research-osint-investigation（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/)
@@ -451,7 +445,6 @@ Hermes Agent 0.22.6
 - [user-guide/skills/optional/research/research-research-paper-writing（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/)
 - [user-guide/skills/optional/research/research-rss-feeds（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/)
 - [user-guide/skills/optional/research/research-scrapling（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-scrapling/)
-- [user-guide/skills/optional/research/research-searxng-search（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-searxng-search/)
 - [user-guide/skills/optional/security/security-1password（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-1password/)
 - [user-guide/skills/optional/security/security-godmode（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-godmode/)
 - [user-guide/skills/optional/security/security-oss-forensics（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/)
@@ -790,7 +783,6 @@ Hermes Agent 0.22.6
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/blockchain/blockchain-evm.md
@@ -879,20 +871,16 @@ Hermes Agent 0.22.6
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/mlops/mlops-torchtitan.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/mlops/mlops-training-axolotl.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/mlops/mlops-training-unsloth.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/payments/payments-mpp-agent.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/payments/payments-stripe-link-cli.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/payments/payments-stripe-projects.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-airtable.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-box.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-canvas.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-here-now.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-live-dashboard.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-notion.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-property-listings.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-shop.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-shopify.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-siyuan.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/productivity/productivity-telephony.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-bioinformatics.md
@@ -900,7 +888,6 @@ Hermes Agent 0.22.6
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-darwinian-evolver.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-domain-intel.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-drug-discovery.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-duckduckgo-search.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-gitnexus-explorer.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-llm-wiki.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-osint-investigation.md
@@ -909,7 +896,6 @@ Hermes Agent 0.22.6
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-research-paper-writing.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-rss-feeds.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-scrapling.md
-- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/research/research-searxng-search.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/security/security-1password.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/security/security-godmode.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/skills/optional/security/security-oss-forensics.md

@@ -2,7 +2,7 @@
 title: "Stripe Projects — Stripe Projects で SaaS を用意し、認証情報を同期する"
 description: "Stripe Projects で SaaS を用意し、認証情報を同期する"
 upstream_path: user-guide/skills/optional/payments/payments-stripe-projects.md
-upstream_blob: 8e94eba01457bd62396d82a479b678472e563701
+upstream_blob: f9339d33eb452ccad6e9a129500d6bf3a1f2af2d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/payments/payments-stripe-projects
 ---
@@ -22,7 +22,7 @@ Stripe Projects で SaaS を用意し、認証情報を同期します。
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos |
 | タグ | `Payments`, `Stripe`, `Projects`, `Provisioning`, `Infrastructure` |
-| 関連 skill | [`stripe-link-cli`](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/), [`mpp-agent`](/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/) |
+| 関連 skill | [`stripe-link-cli`](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

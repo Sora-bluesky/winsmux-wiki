@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Stripe Link Cli — Stripe Link を使ったエージェントの支払い — カード、SPT、承認"
 description: "Stripe Link を使ったエージェントの支払い — カード、SPT、承認"
 upstream_path: user-guide/skills/optional/payments/payments-stripe-link-cli.md
-upstream_blob: d3ea09efb577259521249934429a801e07f2a248
+upstream_blob: 44e986836a06791529763ff31bbb2d37cc97cdfe
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/payments/payments-stripe-link-cli
 ---
@@ -23,7 +23,7 @@ Stripe Link を使ったエージェントの支払いです — カード、SPT
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos |
 | タグ | `Payments`, `Stripe`, `Link`, `Checkout`, `MPP` |
-| 関連 skill | [`mpp-agent`](/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/), [`stripe-projects`](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/) |
+| 関連 skill | [`stripe-projects`](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -46,7 +46,7 @@ Stripe Link を使ったエージェントの支払いです — カード、SPT
 - 「Link にログインして」「Link のウォレットにつないで」
 - 販売側の API から `www-authenticate: ... method="stripe"` 付きの HTTP 402 が返ってきたとき
 
-有料の API 呼び出し（決済フォームのない HTTP 402）をしたい場合、`card` の道筋は合いません。同じ skill の SPT を使うか、`mpp-agent` skill に引き渡してください。
+有料の API 呼び出し（決済フォームのない HTTP 402）をしたい場合、`card` の道筋は合いません。同じ skill の SPT を使うか、x402/MPP の支払いには `pay` プラグインをインストールしてください（`hermes plugins install pay`）。
 
 ## 事前に必要なもの {#prerequisites}
 

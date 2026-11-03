@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: b6a9115984c30b299466449c919c912fcd45bc00
+upstream_blob: 23b4ab1671b5b956c41ae83b4efc50d3ba6d4a16
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -39,7 +39,6 @@ hermes skills uninstall <skill-name>
 | [**blackbox**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/) | 複数モデルを使う Blackbox AI の CLI にコーディング作業を任せます。 |
 | [**dynamic-workflow**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/) | 計画をコードで書いて並列に展開し、敵対的な検証と段階的な実行を行います。 |
 | [**grok**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/) | xAI Grok Build CLI にコーディングを任せます（機能追加、PR 作成）。 |
-| [**honcho**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/) | Hermes 向けに Honcho の記憶機能を設定し、不具合を切り分けます。 |
 | [**opencode**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/) | OpenCode CLI にコーディングを任せます（機能追加、PR のレビュー）。 |
 | [**openhands**](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/) | OpenHands CLI にコーディングを任せます（モデルを選ばず、LiteLLM 対応）。 |
 
@@ -207,7 +206,6 @@ hermes skills uninstall <skill-name>
 
 | スキル | 説明 |
 |-------|-------------|
-| [**mpp-agent**](/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/) | HTTP 402 を返す API に、Machine Payments Protocol（MPP）で支払います。 |
 | [**stripe-link-cli**](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/) | Stripe Link によるエージェントの支払い。カード、SPT、承認に対応します。 |
 | [**stripe-projects**](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/) | Stripe Projects で SaaS を用意し、資格情報を同期します。 |
 
@@ -215,17 +213,14 @@ hermes skills uninstall <skill-name>
 
 | スキル | 説明 |
 |-------|-------------|
-| [**airtable**](/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/) | curl で Airtable の REST API を呼び出します。レコードの作成・読み取り・更新・削除、絞り込み、upsert に対応します。 |
 | [**box**](/hermes/docs/user-guide/skills/optional/productivity/productivity-box/) | Box でクラウド上のファイル、共有、検索、メタデータを管理します。 |
 | [**canvas**](/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/) | API トークンで Canvas LMS の講義と課題を取得します。 |
 | [**decision-questionnaire**](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | 答えの出ない判断を、質問票の形の文書に組み替えます。 |
 | [**here-now**](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | &#123;slug&#125;.here.now にサイトを公開し、ファイルを Drives に保管します。 |
 | [**live-dashboard**](/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/) | ライブのデータ源から、自動で更新されるダッシュボードを作ります。 |
 | [**memento-flashcards**](/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/) | 間隔をあけて復習する単語カード。作成、復習、小テスト、書き出しに対応します。 |
-| [**notion**](/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/) | Notion API と ntn CLI。ページ、データベース、Markdown、Workers を扱います。 |
 | [**property-listings**](/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/) | 物件や賃貸の情報を、デスクトップのカードとして並べて見せます。 |
 | [**shop**](/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/) | 商品の検索、購入手続き、配送状況の確認、返品まで扱います。 |
-| [**shopify**](/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/) | curl で Shopify の Admin/Storefront GraphQL API を呼び出します。 |
 | [**siyuan**](/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/) | SiYuan のノートを API 経由で検索し、編集します。 |
 | [**telephony**](/hermes/docs/user-guide/skills/optional/productivity/productivity-telephony/) | Twilio の電話番号の取得、SMS/MMS の送受信、AI による発信を行います。 |
 
@@ -238,7 +233,6 @@ hermes skills uninstall <skill-name>
 | [**darwinian-evolver**](/hermes/docs/user-guide/skills/optional/research/research-darwinian-evolver/) | Imbue の進化ループで、プロンプト、正規表現、SQL、コードを育てます。 |
 | [**domain-intel**](/hermes/docs/user-guide/skills/optional/research/research-domain-intel/) | サブドメイン、SSL 証明書、WHOIS、DNS を、相手に触れずに調べます。 |
 | [**drug-discovery**](/hermes/docs/user-guide/skills/optional/research/research-drug-discovery/) | 創薬。ChEMBL の検索、医薬品らしさの評価、相互作用の確認を行います。 |
-| [**duckduckgo-search**](/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/) | ddgs 経由で、鍵も費用も要らないウェブ、ニュース、画像の検索を行います。 |
 | [**gitnexus-explorer**](/hermes/docs/user-guide/skills/optional/research/research-gitnexus-explorer/) | コードベースの知識グラフを、触って動かせるウェブ画面として提供します。 |
 | [**llm-wiki**](/hermes/docs/user-guide/skills/optional/research/research-llm-wiki/) | Karpathy が提唱した LLM 向けの方式で、相互にリンクした Markdown の知識ベースを作り、問い合わせます。 |
 | [**osint-investigation**](/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/) | 公開記録と制裁リストから、お金の流れを追います。 |
@@ -248,7 +242,6 @@ hermes skills uninstall <skill-name>
 | [**research-paper-writing**](/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/) | NeurIPS/ICML/ICLR 向けの機械学習論文を、構想から投稿まで書き上げます。 |
 | [**rss-feeds**](/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/) | RSS、Atom、JSON のフィードを読みます。ページの裏に隠れたフィードも見つけます。 |
 | [**scrapling**](/hermes/docs/user-guide/skills/optional/research/research-scrapling/) | 目立たない閲覧と Cloudflare の回避でサイトを収集します。 |
-| [**searxng-search**](/hermes/docs/user-guide/skills/optional/research/research-searxng-search/) | 70 以上の検索エンジンをまとめて引く、鍵も費用も要らないメタ検索です。 |
 
 ## security {#security}
 

@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 88fd95c0c406e9f7fe8e4dd662ec4ceee24bfeb2
+upstream_blob: 6785b69e9fabe45aec907526e27c7c457e4ea5a0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -73,7 +73,7 @@ sessions adopt`）、ネイティブのデスクトップアプリ、TUI、CLI �
 - **This network:** 同じ Wi-Fi にいるデバイスから `http://<this computer's address>:<port>` を開きます。ポートは `webapp.port` です（別の値にしていないか、独立したプロファイル用に Start が選んだのでなければ 9120）。これは素の HTTP で、通信は暗号化されないため、同じネットワークにいるほかの人に読まれるおそれがあります。また、上の **素の HTTP で使えなくなるもの** に挙げた機能はブラウザが無効にします。信頼できるネットワークでだけ使ってください。
 - **My own URL:** すでに運用している HTTPS のアドレス（Tailscale Serve、トンネル、リバースプロキシ）で、`http://127.0.0.1:<port>` へ転送するものです。`webapp.public_url` として保存されます。ルーターからそのポートを直接転送することは絶対にしないでください。
 
-**Start** は、Webapp がないか古ければビルドし（`hermes webapp` が行うのと同じビルドで、初回は数分かかることがあります）、サインイン用のアドレスが変わっていれば Nous アカウントに登録し、`webapp:` の設定を保存してゲートウェイを再起動します。ゲートウェイはその設定を起動時に読みます。チャットが動いている間はゲートウェイが再起動を断ります。その場合ペインに **Restart needed** と表示され、設定は次の再起動で反映されます。**Restart gateway** を使えば、チャットが終わった時点で再起動します。**Stop** も同じ流れで Webapp をオフにします。この端末だけで使うために有効にした Webapp（Web Access を使わずに `webapp.enabled: true` にしたもの）は、この端末で配信中として表示されます。
+**Start** は、Webapp がないか古ければビルドし（`hermes webapp` が行うのと同じビルドで、初回は数分かかることがあります）、サインイン用のアドレスが変わっていれば Nous アカウントに登録し、`webapp:` の設定を保存してゲートウェイを再起動します。ゲートウェイはその設定を起動時に読みます。処理が終わるまでは、いまどの段階にいるかと Start を始めてからの経過時間がペインに表示されます。処理の途中で開いたペインにも表示されます。チャットが動いている間はゲートウェイが再起動を断ります。その場合ペインに **Restart needed** と表示され、設定は次の再起動で反映されます。**Restart gateway** を使えば、チャットが終わった時点で再起動します。**Stop** も同じ流れで Webapp をオフにします。この端末だけで使うために有効にした Webapp（Web Access を使わずに `webapp.enabled: true` にしたもの）は、この端末で配信中として表示されます。
 
 Web Access が変えるのは `webapp:` の設定だけで、`webapp.port` はそのまま保ちます。`dashboard.public_url` には触れないので、別に公開している単体のダッシュボードは自分のアドレスを保ちます。Web Access の Nous サインインは専用のサインインクライアントを使います。これは最初の Start で Nous アカウントに登録され、ゲートウェイのホーム（`webapp/sign-in-registration.json`）に保存されます。Start は `.env` の `HERMES_DASHBOARD_OAUTH_CLIENT_ID` を読むことも書くこともないので、Web Access をオンにしても単体のダッシュボードの Nous サインインは変わりません。自前のゲートウェイを持つ独立したプロファイルは、専用のポートで Webapp を配信します。そのプロファイルの `webapp.port` が未設定なら、最初の Start が 9120 より上でほかのどのプロファイルも使っていない最初の空きポートを選び、そのプロファイルの `webapp.port` として保存するので、再起動してもアドレスは変わりません。自分で設定した `webapp.port` は常にそのまま保たれます。`hermes update` は、どれかのプロファイルで Webapp が有効になっていれば Webapp をビルドし直します。
 そのビルドに失敗すると、`hermes webapp` でビルドし直すまで、ゲートウェイは Webapp を利用できないと報告し、ページにもそう表示されます。

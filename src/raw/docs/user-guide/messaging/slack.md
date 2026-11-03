@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: 85549b7cd4a8ab91bf9cad81ef0699a25ddb0ce8
+upstream_blob: 3fc5d503f07157451358e7fb207f86eeece3fa5e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -632,6 +632,15 @@ slack:
   # Opt-in; default off. Env: SLACK_THREAD_REQUIRE_MENTION.
   thread_require_mention: false
 
+  # Let a bare silence marker stand on unaddressed replies in a channel
+  # thread the bot follows. Without it, when a human in that thread talks
+  # to someone else without @mentioning them and the model answers with
+  # only [SILENT], Hermes posts the "model returned only a silence marker"
+  # notice instead. DMs (1:1 and group), @mentions of the bot, and flat
+  # (reply_in_thread: false) channels are unaffected.
+  # Opt-in; default off. Env: SLACK_THREAD_FOLLOWUP_SILENCE.
+  thread_followup_silence: false
+
   # Per-channel force-mention override — the opposite direction of
   # free_response_channels. Channels listed here ALWAYS require an
   # explicit @mention, even when require_mention is false globally.
@@ -659,7 +668,7 @@ slack:
 :::
 
 :::note ボットに向けたものではないメッセージでの黙る合図
-ボットが人のメッセージに[黙るためのトークン](/hermes/docs/user-guide/messaging/#intentional-silence-tokens)だけで答えた場合、Hermes はふつう代わりに短いお知らせを投稿し、質問が答えのないまま残らないようにします。Slack では、ほかの人を @ で呼んで始まったメッセージや、`free_response_channels` のチャンネルで自分のスレッドを始める、呼びかけのない最上位のメッセージ（既定の `reply_in_thread: true` のとき）なら、トークンのまま黙っていてかまいません。1 対 1 の DM、ボットへの呼びかけ、コマンド、リアクションによる呼び出し、ボットが加わっている会話（スレッドや、`reply_in_thread: false` のチャンネル）でのふつうの続きには、これまでどおりお知らせが出ます。
+ボットが人のメッセージに[黙るためのトークン](/hermes/docs/user-guide/messaging/#intentional-silence-tokens)だけで答えた場合、Hermes はふつう代わりに短いお知らせを投稿し、質問が答えのないまま残らないようにします。Slack では、ほかの人を @ で呼んで始まったメッセージや、`free_response_channels` のチャンネルで自分のスレッドを始める、呼びかけのない最上位のメッセージ（既定の `reply_in_thread: true` のとき）なら、トークンのまま黙っていてかまいません。1 対 1 の DM、ボットへの呼びかけ、コマンド、リアクションによる呼び出し、ボットが加わっている会話（スレッドや、`reply_in_thread: false` のチャンネル）でのふつうの続きには、これまでどおりお知らせが出ます。人どうしが @ で呼ばずに話すことの多いスレッドでは、`thread_followup_silence: true` にすると、チャンネルのスレッドでボットに向けられていない返信にも、トークンのまま黙っていられるようになります。DM（1 対 1 もグループも）、ボットへの呼びかけ、スレッドを使わないチャンネルでは、これまでどおりお知らせが出ます。
 :::
 
 :::info

@@ -536,9 +536,6 @@
                       "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok"
                     },
                     {
-                      "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho"
-                    },
-                    {
                       "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode"
                     },
                     {
@@ -873,9 +870,6 @@
                   "label": "payments",
                   "items": [
                     {
-                      "id": "user-guide/skills/optional/payments/payments-mpp-agent"
-                    },
-                    {
                       "id": "user-guide/skills/optional/payments/payments-stripe-link-cli"
                     },
                     {
@@ -886,9 +880,6 @@
                 {
                   "label": "productivity",
                   "items": [
-                    {
-                      "id": "user-guide/skills/optional/productivity/productivity-airtable"
-                    },
                     {
                       "id": "user-guide/skills/optional/productivity/productivity-box"
                     },
@@ -908,16 +899,10 @@
                       "id": "user-guide/skills/optional/productivity/productivity-memento-flashcards"
                     },
                     {
-                      "id": "user-guide/skills/optional/productivity/productivity-notion"
-                    },
-                    {
                       "id": "user-guide/skills/optional/productivity/productivity-property-listings"
                     },
                     {
                       "id": "user-guide/skills/optional/productivity/productivity-shop"
-                    },
-                    {
-                      "id": "user-guide/skills/optional/productivity/productivity-shopify"
                     },
                     {
                       "id": "user-guide/skills/optional/productivity/productivity-siyuan"
@@ -946,9 +931,6 @@
                       "id": "user-guide/skills/optional/research/research-drug-discovery"
                     },
                     {
-                      "id": "user-guide/skills/optional/research/research-duckduckgo-search"
-                    },
-                    {
                       "id": "user-guide/skills/optional/research/research-gitnexus-explorer"
                     },
                     {
@@ -971,9 +953,6 @@
                     },
                     {
                       "id": "user-guide/skills/optional/research/research-scrapling"
-                    },
-                    {
-                      "id": "user-guide/skills/optional/research/research-searxng-search"
                     }
                   ]
                 },
@@ -1749,7 +1728,6 @@
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok",
-    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode",
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands",
     "user-guide/skills/optional/blockchain/blockchain-evm",
@@ -1838,20 +1816,16 @@
     "user-guide/skills/optional/mlops/mlops-tensorrt-llm",
     "user-guide/skills/optional/mlops/mlops-torchtitan",
     "user-guide/skills/optional/mlops/mlops-training-unsloth",
-    "user-guide/skills/optional/payments/payments-mpp-agent",
     "user-guide/skills/optional/payments/payments-stripe-link-cli",
     "user-guide/skills/optional/payments/payments-stripe-projects",
-    "user-guide/skills/optional/productivity/productivity-airtable",
     "user-guide/skills/optional/productivity/productivity-box",
     "user-guide/skills/optional/productivity/productivity-canvas",
     "user-guide/skills/optional/productivity/productivity-decision-questionnaire",
     "user-guide/skills/optional/productivity/productivity-here-now",
     "user-guide/skills/optional/productivity/productivity-live-dashboard",
     "user-guide/skills/optional/productivity/productivity-memento-flashcards",
-    "user-guide/skills/optional/productivity/productivity-notion",
     "user-guide/skills/optional/productivity/productivity-property-listings",
     "user-guide/skills/optional/productivity/productivity-shop",
-    "user-guide/skills/optional/productivity/productivity-shopify",
     "user-guide/skills/optional/productivity/productivity-siyuan",
     "user-guide/skills/optional/productivity/productivity-telephony",
     "user-guide/skills/optional/research/research-bioinformatics",
@@ -1859,7 +1833,6 @@
     "user-guide/skills/optional/research/research-darwinian-evolver",
     "user-guide/skills/optional/research/research-domain-intel",
     "user-guide/skills/optional/research/research-drug-discovery",
-    "user-guide/skills/optional/research/research-duckduckgo-search",
     "user-guide/skills/optional/research/research-gitnexus-explorer",
     "user-guide/skills/optional/research/research-llm-wiki",
     "user-guide/skills/optional/research/research-osint-investigation",
@@ -1868,7 +1841,6 @@
     "user-guide/skills/optional/research/research-research-paper-writing",
     "user-guide/skills/optional/research/research-rss-feeds",
     "user-guide/skills/optional/research/research-scrapling",
-    "user-guide/skills/optional/research/research-searxng-search",
     "user-guide/skills/optional/security/security-1password",
     "user-guide/skills/optional/security/security-godmode",
     "user-guide/skills/optional/security/security-oss-forensics",

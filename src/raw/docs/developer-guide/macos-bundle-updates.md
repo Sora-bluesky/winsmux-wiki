@@ -2,7 +2,7 @@
 title: "macOS バンドルの更新"
 description: ""
 upstream_path: developer-guide/macos-bundle-updates.md
-upstream_blob: 3e1aa2aab2a5c50bd258068193c9d814d3a5a77f
+upstream_blob: 2b64815975e6185710927ee10e3277ccaa7c3f4e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/macos-bundle-updates
 ---
@@ -44,11 +44,12 @@ ID に短いコミット SHA が含まれるため、異なるコミットのビ
 条件を満たした受け手のマニフェストを変更しないまま保つことで、移行先のチャンネルが先に進んだあとでも、
 オフラインだったプレビュー版が移行できます。移行後の更新は移行先が担います。
 
-現在のワークフローは、同梱版を ARM64 と Intel のランナーでビルドします。
-Light 版はクライアントとフィードの振り分けが別になっていますが、この変更ではリリースのマトリクスに含まれていません。
+現在のワークフローは、同梱版を ARM64 のランナーだけでビルドします。Intel (x64) 向けの
+ビルドはありません。Light 版はクライアントとフィードの振り分けが別になっていますが、
+この変更ではリリースのマトリクスに含まれていません。
 
-`python -m scripts.releases.r2 finalize` には、アーキテクチャごとに1つずつ、
-`arm64-CHANNEL-mac.yml` と `x64-CHANNEL-mac.yml` という名前のメタデータファイルが必要です。バージョン、
+`python -m scripts.releases.r2 finalize` には、`arm64-CHANNEL-mac.yml` という名前の
+メタデータファイルがちょうど1つ必要です。バージョン、
 バリアント、アーキテクチャ、ハッシュが誤っているものや、従来のパスのフィールドが食い違っているものは拒否されます。
 参照されている ZIP/DMG はそれぞれ読み戻され、SHA-512 とサイズが照合されます。
 公開の際は、稼働中のバージョンを確認し、ETag を条件にして置き換え、

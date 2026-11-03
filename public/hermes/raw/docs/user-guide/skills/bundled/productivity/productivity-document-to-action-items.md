@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Document To Action Items — 書類から、出典付きの義務・期限・作業を取り出す"
 description: "書類から、出典付きの義務・期限・作業を取り出す"
 upstream_path: user-guide/skills/bundled/productivity/productivity-document-to-action-items.md
-upstream_blob: 7b5e5c2c6e2990fee9d69e9cac5ecf0b6163f02f
+upstream_blob: d7a65103e934ad59034cbd5772984608d408064d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items
 ---
@@ -23,7 +23,7 @@ sources:
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Documents`, `OCR`, `Action-Items`, `Deadlines`, `Extraction` |
-| 関連 skill | [`pdf`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/), [`microsoft-office`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/), [`notion`](/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/) |
+| 関連 skill | [`pdf`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/), [`microsoft-office`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -83,7 +83,7 @@ sources:
 
 ### 7. 記録を作って確かめる {#7-create-and-verify-records}
 
-承認された保存先を使います。`notion`、カレンダー、`xlsx` で作る表計算、あるいは別の管理ツールです。書類とページの出どころを添え、必要のない機微な文面は写さないようにします。書き込んだ先から記録を読み返して、担当・期限・リンクを確かめます。書き込みが成否の分からない形でタイムアウトしたときは、やり直す前に、その記録が既にできていないかを探します。承認されたすべての作業が確認できたら、この手順は終わりです。
+承認された保存先を使います。Notion、カレンダー、`xlsx` で作る表計算、あるいは別の管理ツールです。書類とページの出どころを添え、必要のない機微な文面は写さないようにします。書き込んだ先から記録を読み返して、担当・期限・リンクを確かめます。書き込みが成否の分からない形でタイムアウトしたときは、やり直す前に、その記録が既にできていないかを探します。承認されたすべての作業が確認できたら、この手順は終わりです。
 
 ## つまずきやすいところ {#pitfalls}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 93b09426b1676c07dc0a6085d746620594f06e65
+upstream_blob: cea0f7b4ac85b7cfc51b8aa81766e831bf40e525
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -1951,6 +1951,14 @@ Windows では、`command` が実在するスクリプトのファイルで始�
 `profile` は、そのフックを発火させた Hermes のプロファイル名です（プロファイルの外では `"default"`）。1 つの
 スクリプトで、多重化されたゲートウェイの背後のすべてのプロファイルに対応できます。子のプロセスは、その
 プロファイルの `HERMES_HOME` でも動きます。ツール以外のイベント（`pre_llm_call`、`subagent_stop`、セッションのライフサイクル）では、`tool_name` と `tool_input` は `null` です。`extra` の辞書は、そのイベント固有のキーワード引数（`user_message`、`conversation_history`、`child_role`、`duration_ms` など）をすべて運びます。直列化できない値は、省かれるのではなく文字列にされます。
+
+`extra.kanban_task_id` は、フックを発火させた実行が受け持つ盤のタスクを示します。
+ふつうのセッション、委任された子、プロセス内で動く cron の実行では、そのプロセスが
+ワーカーの環境を引き継いでいても空になります。`extra.task_id` はこれまでどおり
+やり取り / セッションの意味のままです。方針のフックでは、作業場所のパスから推し量るのではなく、
+この盤の身元を使ってください。フックの子のプロセスからは、これまでどおりワーカーの身元を示す
+環境変数が取り除かれます。中身のメタデータがあっても、ワーカーの権限が与えられるわけではありません。
+共通の送信 Webhook の中身を組み立てる処理にも、同じ項目が含まれます。
 
 **標準出力 — 任意の応答:**
 

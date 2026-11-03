@@ -31,9 +31,7 @@
 /hermes/docs/user-guide/skills/bundled/creative/creative-design-md/ /hermes/docs/user-guide/skills/optional/creative/creative-design-md/ 301
 /hermes/docs/user-guide/skills/bundled/media/media-gif-search/ /hermes/docs/user-guide/skills/optional/media/media-gif-search/ 301
 /hermes/docs/user-guide/skills/bundled/media/media-songsee/ /hermes/docs/user-guide/skills/optional/media/media-songsee/ 301
-/hermes/docs/user-guide/skills/bundled/productivity/productivity-airtable/ /hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/ 301
 /hermes/docs/user-guide/skills/bundled/productivity/productivity-box/ /hermes/docs/user-guide/skills/optional/productivity/productivity-box/ 301
-/hermes/docs/user-guide/skills/bundled/productivity/productivity-notion/ /hermes/docs/user-guide/skills/optional/productivity/productivity-notion/ 301
 /hermes/docs/user-guide/skills/bundled/research/research-llm-wiki/ /hermes/docs/user-guide/skills/optional/research/research-llm-wiki/ 301
 /hermes/docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring/ /hermes/docs/user-guide/skills/optional/software-development/software-development-hermes-agent-skill-authoring/ 301
 /hermes/docs/user-guide/skills/bundled/software-development/software-development-inspecting-hermes-desktop-dom/ /hermes/docs/user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom/ 301
@@ -43,3 +41,6 @@
 /hermes/docs/user-guide/skills/bundled/productivity/productivity-docx/ /hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/ 301
 /hermes/docs/user-guide/skills/bundled/productivity/productivity-powerpoint/ /hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/ 301
 /hermes/docs/user-guide/skills/bundled/productivity/productivity-xlsx/ /hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/ 301
+/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/ /hermes/docs/user-guide/features/honcho/ 301
+/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/ /hermes/docs/user-guide/features/web-search/ 301
+/hermes/docs/user-guide/skills/optional/research/research-searxng-search/ /hermes/docs/user-guide/features/web-search/ 301

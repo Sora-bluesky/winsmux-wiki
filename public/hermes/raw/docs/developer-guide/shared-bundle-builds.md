@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "共有バンドルビルド"
 description: ""
 upstream_path: developer-guide/shared-bundle-builds.md
-upstream_blob: 64033875c2c8f60d9b1ca353b77e3b6fd868de52
+upstream_blob: b25603e5b99ffcec47b595341f959a6f1266dd1e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/shared-bundle-builds
 ---
@@ -313,9 +313,11 @@ PM のバイナリのダウンロードアーカイブと、ネイティブの u
 - ネイティブのステージングが古いエントリーを削除するのは、ビルドが所有するツールストアの中だけです。
   ユーザーのマシン全体のストアは削除しません。
 - ネイティブのステージングは、変更可能な環境をオフラインで作り直すために `uv-cache/` を残します。
-  展開済みの wheel と、インデックス・リビジョンのメタデータはコピーしますが、重複する
-  wheel の ZIP と、キャッシュされた sdist の `src/` ツリー（Rust の `target/` の出力を含む）は
-  コピーの前に除外します。プロバイダーのキャッシュは変わりません。ネイティブの署名は、ビルド専用の成果物を
+  展開済みの wheel、ビルド済みの wheel の ZIP、インデックス・リビジョンのメタデータはコピーしますが、
+  キャッシュされた sdist の `src/` ツリー（Rust の `target/` の出力を含む）はコピーの前に除外します。
+  macOS と Linux では、uv の wheel のエントリーは `archive-v0/` を指す相対シンボリックリンクのままなので、
+  展開済みの各 wheel は1回だけ同梱されます。Windows では、uv はシンボリックリンクの代わりにポインターファイルを書き出します。
+  プロバイダーのキャッシュは変わりません。ネイティブの署名は、ビルド専用の成果物を
   走査せずに、展開済みのバイナリに届きます。
 - PM ランタイムとアプリケーションのビルドは、プロバイダーの永続的な uv キャッシュを共有します。
   CI が復元・保存するのはそのキャッシュで、一時的なビルド用の HOME ではありません。ビルドに失敗しても、

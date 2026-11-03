@@ -1,6 +1,205 @@
 {
-  "generatedAt": "2026-11-03",
+  "generatedAt": "2026-11-04",
   "entries": [
+    {
+      "date": "2026-11-04",
+      "sha": null,
+      "upstream": "8112254",
+      "pages": [
+        {
+          "id": "developer-guide/creating-skills",
+          "title": "スキルを作る",
+          "url": "/hermes/docs/developer-guide/creating-skills/"
+        },
+        {
+          "id": "developer-guide/macos-bundle-updates",
+          "title": "macOS バンドルの更新",
+          "url": "/hermes/docs/developer-guide/macos-bundle-updates/"
+        },
+        {
+          "id": "developer-guide/shared-bundle-builds",
+          "title": "共有バンドルビルド",
+          "url": "/hermes/docs/developer-guide/shared-bundle-builds/"
+        },
+        {
+          "id": "developer-guide/stable-releases",
+          "title": "安定版リリースの受け入れと昇格",
+          "url": "/hermes/docs/developer-guide/stable-releases/"
+        },
+        {
+          "id": "getting-started/platform-support",
+          "title": "対応プラットフォーム",
+          "url": "/hermes/docs/getting-started/platform-support/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/optional-skills-catalog",
+          "title": "オプションスキルの一覧",
+          "url": "/hermes/docs/reference/optional-skills-catalog/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "スキルの仕組み",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        },
+        {
+          "id": "user-guide/features/web-search",
+          "title": "Web 検索と本文抽出",
+          "url": "/hermes/docs/user-guide/features/web-search/"
+        },
+        {
+          "id": "user-guide/messaging/slack",
+          "title": "Slack",
+          "url": "/hermes/docs/user-guide/messaging/slack/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-document-to-action-items",
+          "title": "Document To Action Items — 書類から、出典付きの義務・期限・作業を取り出す",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-meeting-action-items",
+          "title": "Meeting Action Items — 会議メモから、根拠付きの決定事項・担当者・チケットを起こす",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-microsoft-office",
+          "title": "Microsoft Office — Word・PowerPoint・Excel ファイルを作成・読み取り・編集する",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-pdf",
+          "title": "Pdf — PDF ファイルの作成・読み取り・結合・フォーム入力・OCR・テキスト編集",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/"
+        },
+        {
+          "id": "user-guide/skills/bundled/productivity/productivity-weekly-review-planning",
+          "title": "Weekly Review Planning — 週ごとの仕切り直し: 約束、止まっている仕事、来週の計画",
+          "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning/"
+        },
+        {
+          "id": "user-guide/skills/optional/finance/finance-excel-author",
+          "title": "Excel Author — openpyxl でヘッドレスに監査できる財務ワークブックを作る",
+          "url": "/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/"
+        },
+        {
+          "id": "user-guide/skills/optional/finance/finance-pptx-author",
+          "title": "Pptx Author — python-pptx でヘッドレスに PowerPoint 資料を作る",
+          "url": "/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/"
+        },
+        {
+          "id": "user-guide/skills/optional/payments/payments-stripe-link-cli",
+          "title": "Stripe Link Cli — Stripe Link を使ったエージェントの支払い — カード、SPT、承認",
+          "url": "/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/"
+        },
+        {
+          "id": "user-guide/skills/optional/payments/payments-stripe-projects",
+          "title": "Stripe Projects — Stripe Projects で SaaS を用意し、認証情報を同期する",
+          "url": "/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/"
+        },
+        {
+          "id": "user-guide/skills/optional/productivity/productivity-shop",
+          "title": "Shop — Shop の商品検索、購入手続き、注文追跡、返品",
+          "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/"
+        },
+        {
+          "id": "user-guide/skills/optional/productivity/productivity-siyuan",
+          "title": "Siyuan — SiYuan のナレッジベースを API から読み書きする",
+          "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-parallel-cli",
+          "title": "Parallel Cli — エージェント向けのウェブ検索・深い調査・情報の補完",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-parallel-cli/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-scrapling",
+          "title": "Scrapling — 目立たないブラウザ操作と Cloudflare 回避でサイトを収集する",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-scrapling/"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-03",
+      "sha": "f76595d",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/relay-shared-metrics",
+          "title": "Relay 共有メトリクス",
+          "url": "/hermes/docs/developer-guide/relay-shared-metrics/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent",
+          "title": "Hermes Agent — Hermes Agent を使う、設定する、見た目を変える、拡張する、束ねる",
+          "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/"
+        }
+      ]
+    },
     {
       "date": "2026-11-02",
       "sha": "3403ad9",
@@ -531,7 +730,7 @@
         },
         {
           "id": "user-guide/skills/optional/productivity/productivity-airtable",
-          "title": "Airtable — curl で使う Airtable REST API",
+          "title": "user-guide/skills/optional/productivity/productivity-airtable",
           "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/"
         },
         {
@@ -541,12 +740,12 @@
         },
         {
           "id": "user-guide/skills/optional/productivity/productivity-notion",
-          "title": "Notion — Notion API と ntn CLI: ページ、データベース、Markdown、Workers",
+          "title": "user-guide/skills/optional/productivity/productivity-notion",
           "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/"
         },
         {
           "id": "user-guide/skills/optional/productivity/productivity-shopify",
-          "title": "Shopify — curl で Shopify の Admin / Storefront GraphQL API を使う",
+          "title": "user-guide/skills/optional/productivity/productivity-shopify",
           "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/"
         },
         {
@@ -1231,7 +1430,7 @@
         },
         {
           "id": "user-guide/skills/optional/research/research-searxng-search",
-          "title": "Searxng Search — 70 以上の検索エンジンをまとめて引く、鍵の要らない無料の検索",
+          "title": "user-guide/skills/optional/research/research-searxng-search",
           "url": "/hermes/docs/user-guide/skills/optional/research/research-searxng-search/"
         },
         {
@@ -4067,7 +4266,7 @@
         },
         {
           "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
-          "title": "Honcho — Hermes の Honcho メモリを設定し、うまく動かないときに直す",
+          "title": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
           "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/"
         }
       ]
@@ -6721,7 +6920,7 @@
         },
         {
           "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
-          "title": "Honcho — Hermes の Honcho メモリを設定し、うまく動かないときに直す",
+          "title": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
           "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/"
         },
         {
@@ -7186,7 +7385,7 @@
         },
         {
           "id": "user-guide/skills/optional/payments/payments-mpp-agent",
-          "title": "Mpp Agent — Machine Payments Protocol (MPP) で HTTP 402 の API に支払う",
+          "title": "user-guide/skills/optional/payments/payments-mpp-agent",
           "url": "/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/"
         },
         {
@@ -7226,7 +7425,7 @@
         },
         {
           "id": "user-guide/skills/optional/productivity/productivity-shopify",
-          "title": "Shopify — curl で Shopify の Admin / Storefront GraphQL API を使う",
+          "title": "user-guide/skills/optional/productivity/productivity-shopify",
           "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/"
         },
         {
@@ -7261,7 +7460,7 @@
         },
         {
           "id": "user-guide/skills/optional/research/research-duckduckgo-search",
-          "title": "Duckduckgo Search — ddgs でキー不要の無料 Web・ニュース・画像検索",
+          "title": "user-guide/skills/optional/research/research-duckduckgo-search",
           "url": "/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/"
         },
         {
@@ -7306,7 +7505,7 @@
         },
         {
           "id": "user-guide/skills/optional/research/research-searxng-search",
-          "title": "Searxng Search — 70 以上の検索エンジンをまとめて引く、鍵の要らない無料の検索",
+          "title": "user-guide/skills/optional/research/research-searxng-search",
           "url": "/hermes/docs/user-guide/skills/optional/research/research-searxng-search/"
         },
         {
@@ -8435,7 +8634,7 @@
         },
         {
           "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
-          "title": "Honcho — Hermes の Honcho メモリを設定し、うまく動かないときに直す",
+          "title": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
           "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/"
         },
         {
@@ -8635,7 +8834,7 @@
         },
         {
           "id": "user-guide/skills/optional/payments/payments-mpp-agent",
-          "title": "Mpp Agent — Machine Payments Protocol (MPP) で HTTP 402 の API に支払う",
+          "title": "user-guide/skills/optional/payments/payments-mpp-agent",
           "url": "/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/"
         },
         {
@@ -8665,7 +8864,7 @@
         },
         {
           "id": "user-guide/skills/optional/productivity/productivity-shopify",
-          "title": "Shopify — curl で Shopify の Admin / Storefront GraphQL API を使う",
+          "title": "user-guide/skills/optional/productivity/productivity-shopify",
           "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/"
         },
         {
@@ -8685,7 +8884,7 @@
         },
         {
           "id": "user-guide/skills/optional/research/research-duckduckgo-search",
-          "title": "Duckduckgo Search — ddgs でキー不要の無料 Web・ニュース・画像検索",
+          "title": "user-guide/skills/optional/research/research-duckduckgo-search",
           "url": "/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/"
         },
         {
@@ -8725,7 +8924,7 @@
         },
         {
           "id": "user-guide/skills/optional/research/research-searxng-search",
-          "title": "Searxng Search — 70 以上の検索エンジンをまとめて引く、鍵の要らない無料の検索",
+          "title": "user-guide/skills/optional/research/research-searxng-search",
           "url": "/hermes/docs/user-guide/skills/optional/research/research-searxng-search/"
         },
         {
@@ -12173,7 +12372,7 @@
         },
         {
           "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
-          "title": "Honcho — Hermes の Honcho メモリを設定し、うまく動かないときに直す",
+          "title": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
           "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/"
         },
         {
@@ -12628,7 +12827,7 @@
         },
         {
           "id": "user-guide/skills/optional/payments/payments-mpp-agent",
-          "title": "Mpp Agent — Machine Payments Protocol (MPP) で HTTP 402 の API に支払う",
+          "title": "user-guide/skills/optional/payments/payments-mpp-agent",
           "url": "/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/"
         },
         {
@@ -12668,7 +12867,7 @@
         },
         {
           "id": "user-guide/skills/optional/productivity/productivity-shopify",
-          "title": "Shopify — curl で Shopify の Admin / Storefront GraphQL API を使う",
+          "title": "user-guide/skills/optional/productivity/productivity-shopify",
           "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/"
         },
         {
@@ -12708,7 +12907,7 @@
         },
         {
           "id": "user-guide/skills/optional/research/research-duckduckgo-search",
-          "title": "Duckduckgo Search — ddgs でキー不要の無料 Web・ニュース・画像検索",
+          "title": "user-guide/skills/optional/research/research-duckduckgo-search",
           "url": "/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/"
         },
         {
@@ -12748,7 +12947,7 @@
         },
         {
           "id": "user-guide/skills/optional/research/research-searxng-search",
-          "title": "Searxng Search — 70 以上の検索エンジンをまとめて引く、鍵の要らない無料の検索",
+          "title": "user-guide/skills/optional/research/research-searxng-search",
           "url": "/hermes/docs/user-guide/skills/optional/research/research-searxng-search/"
         },
         {

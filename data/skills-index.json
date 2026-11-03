@@ -1,6 +1,6 @@
 {
-  "sha": "2b5ffeb",
-  "date": "2026-11-02",
+  "sha": "8112254",
+  "date": "2026-11-03",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -183,7 +183,7 @@
       "name": "Document To Action Items",
       "description": "Extract cited obligations, deadlines, tasks from documents",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items/",
-      "date": "2026-10-28",
+      "date": "2026-11-03",
       "source": "bundled"
     },
     {
@@ -207,7 +207,7 @@
       "name": "Meeting Action Items",
       "description": "Turn meeting notes into cited decisions, owners, tickets",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items/",
-      "date": "2026-10-28",
+      "date": "2026-11-03",
       "source": "bundled"
     },
     {
@@ -215,7 +215,7 @@
       "name": "Microsoft Office",
       "description": "Create, read, and edit Word, PowerPoint, and Excel files",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/",
-      "date": "2026-10-31",
+      "date": "2026-11-03",
       "source": "bundled"
     },
     {
@@ -223,7 +223,7 @@
       "name": "Pdf",
       "description": "PDF files: create, read, merge, fill, OCR, edit text",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/",
-      "date": "2026-10-31",
+      "date": "2026-11-03",
       "source": "bundled"
     },
     {
@@ -247,7 +247,7 @@
       "name": "Weekly Review Planning",
       "description": "Weekly reset: commitments, stalled work, next-week plan",
       "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning/",
-      "date": "2026-10-28",
+      "date": "2026-11-03",
       "source": "bundled"
     },
     {
@@ -400,14 +400,6 @@
       "description": "Delegate coding to xAI Grok Build CLI (features, PRs)",
       "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/",
       "date": "2026-09-20",
-      "source": "optional"
-    },
-    {
-      "slug": "autonomous-ai-agents-honcho",
-      "name": "Honcho",
-      "description": "Configure and troubleshoot Honcho memory for Hermes",
-      "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/",
-      "date": "2026-10-02",
       "source": "optional"
     },
     {
@@ -815,7 +807,7 @@
       "name": "Excel Author",
       "description": "Build auditable financial workbooks headless via openpyxl",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/",
-      "date": "2026-10-31",
+      "date": "2026-11-03",
       "source": "optional"
     },
     {
@@ -847,7 +839,7 @@
       "name": "Pptx Author",
       "description": "Build PowerPoint decks headless with python-pptx",
       "url": "/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/",
-      "date": "2026-10-31",
+      "date": "2026-11-03",
       "source": "optional"
     },
     {
@@ -1115,19 +1107,11 @@
       "source": "optional"
     },
     {
-      "slug": "payments-mpp-agent",
-      "name": "Mpp Agent",
-      "description": "Pay HTTP 402 APIs via Machine Payments Protocol (MPP)",
-      "url": "/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/",
-      "date": "2026-09-20",
-      "source": "optional"
-    },
-    {
       "slug": "payments-stripe-link-cli",
       "name": "Stripe Link Cli",
       "description": "Agent payments via Stripe Link — cards, SPT, approvals",
       "url": "/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/",
-      "date": "2026-09-20",
+      "date": "2026-11-03",
       "source": "optional"
     },
     {
@@ -1135,15 +1119,7 @@
       "name": "Stripe Projects",
       "description": "Provision SaaS services + sync creds via Stripe Projects",
       "url": "/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/",
-      "date": "2026-09-20",
-      "source": "optional"
-    },
-    {
-      "slug": "productivity-airtable",
-      "name": "Airtable",
-      "description": "Airtable REST API via curl",
-      "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/",
-      "date": "2026-10-28",
+      "date": "2026-11-03",
       "source": "optional"
     },
     {
@@ -1195,14 +1171,6 @@
       "source": "optional"
     },
     {
-      "slug": "productivity-notion",
-      "name": "Notion",
-      "description": "Notion API + ntn CLI: pages, databases, markdown, Workers",
-      "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/",
-      "date": "2026-10-28",
-      "source": "optional"
-    },
-    {
       "slug": "productivity-property-listings",
       "name": "Property Listings",
       "description": "Present property and rental listings as desktop cards",
@@ -1215,15 +1183,7 @@
       "name": "Shop",
       "description": "Shop catalog search, checkout, order tracking, returns",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/",
-      "date": "2026-09-20",
-      "source": "optional"
-    },
-    {
-      "slug": "productivity-shopify",
-      "name": "Shopify",
-      "description": "Query Shopify Admin/Storefront GraphQL APIs via curl",
-      "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/",
-      "date": "2026-10-28",
+      "date": "2026-11-03",
       "source": "optional"
     },
     {
@@ -1231,7 +1191,7 @@
       "name": "Siyuan",
       "description": "Query and edit a SiYuan knowledge base via its API",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/",
-      "date": "2026-10-28",
+      "date": "2026-11-03",
       "source": "optional"
     },
     {
@@ -1283,14 +1243,6 @@
       "source": "optional"
     },
     {
-      "slug": "research-duckduckgo-search",
-      "name": "Duckduckgo Search",
-      "description": "Free keyless web, news, and image search via ddgs",
-      "url": "/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/",
-      "date": "2026-09-20",
-      "source": "optional"
-    },
-    {
       "slug": "research-gitnexus-explorer",
       "name": "Gitnexus Explorer",
       "description": "Serve an interactive codebase knowledge graph web UI",
@@ -1319,7 +1271,7 @@
       "name": "Parallel Cli",
       "description": "Agent-native web search, deep research, and enrichment",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-parallel-cli/",
-      "date": "2026-09-20",
+      "date": "2026-11-03",
       "source": "optional"
     },
     {
@@ -1351,15 +1303,7 @@
       "name": "Scrapling",
       "description": "Scrape sites with stealth browsing and Cloudflare bypass",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-scrapling/",
-      "date": "2026-09-20",
-      "source": "optional"
-    },
-    {
-      "slug": "research-searxng-search",
-      "name": "Searxng Search",
-      "description": "Free keyless meta-search aggregating 70+ engines",
-      "url": "/hermes/docs/user-guide/skills/optional/research/research-searxng-search/",
-      "date": "2026-09-20",
+      "date": "2026-11-03",
       "source": "optional"
     },
     {

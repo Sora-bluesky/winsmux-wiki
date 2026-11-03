@@ -2,7 +2,7 @@
 title: "Web 検索と本文抽出"
 description: "複数のバックエンドプロバイダで Web を検索し、ページ本文を抽出します。無料で自前運用できる SearXNG にも対応しています。"
 upstream_path: user-guide/features/web-search.md
-upstream_blob: 2d52120f7385b1797565b50593965b0b50b1e4c8
+upstream_blob: 1288ee9e391d6030261ecdaa456021ed935d01af
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-search
 ---
@@ -517,19 +517,3 @@ web:
 ### `web_extract` が `[TRUNCATED]` フッター付きの短い本文を返す {#webextract-returns-truncated-content-with-a-truncated-footer}
 
 文字数の予算を超えたページでは、これが正常な動作です。フッターには、整形済みの全文が入ったディスク上のファイル名と、省かれた中間部分を読み進めるための `read_file` の正確な呼び出し方が書かれています。その場でもっと多く見たい場合は、`config.yaml` の `web.extract_char_limit` を引き上げるか、呼び出し時に大きめの `char_limit` を渡してください。
-
----
-
-## 追加のスキル: `searxng-search` {#optional-skill-searxng-search}
-
-`curl` で直接 SearXNG を使う必要があるエージェント向け（たとえば Web ツール一式が使えないときの代替手段として）には、追加スキルの `searxng-search` を入れてください。
-
-```bash
-hermes skills install official/research/searxng-search
-```
-
-これを入れると、エージェントは次のことを覚えます。
-- `curl` や Python で SearXNG の JSON API を呼ぶ
-- カテゴリ（`general`、`news`、`science` など）で絞り込む
-- ページ送りとエラー時の処理をこなす
-- SearXNG につながらないときに、うまく別の手に切り替える

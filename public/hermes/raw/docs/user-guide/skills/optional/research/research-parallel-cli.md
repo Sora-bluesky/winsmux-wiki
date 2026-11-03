@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Parallel Cli — エージェント向けのウェブ検索・深い調査・情報の補完"
 description: "エージェント向けのウェブ検索・深い調査・情報の補完"
 upstream_path: user-guide/skills/optional/research/research-parallel-cli.md
-upstream_blob: 3892ebbda620e8c1cc356a57a2b885354b1c9e53
+upstream_blob: c0584b85c8ee8ef1f02d394769753f3538a2e5c4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-parallel-cli
 ---
@@ -23,7 +23,7 @@ sources:
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Research`, `Web`, `Search`, `Deep-Research`, `Enrichment`, `CLI` |
-| 関連 skill | [`duckduckgo-search`](/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/), [`mcporter`](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcporter/) |
+| 関連 skill | [`mcporter`](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcporter/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

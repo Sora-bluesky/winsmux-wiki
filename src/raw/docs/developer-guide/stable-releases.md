@@ -2,7 +2,7 @@
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 9777c69ea428e634515e13eb06dd1089c4737e68
+upstream_blob: c9b960dbf29374e51e53b10b177015111614670a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -41,7 +41,7 @@ sources:
    これは `tests/ci/test_stable_release_commit_threading.py` にあるコミット受け渡しの lint が強制します。
 4. クレームに記録されたレーンを実行します。既定では、ソース、Docker、Nix、PM バンドル、
    インストール/更新、Windows、署名済みパッケージ、ネイティブアップグレードの受け入れグラフ全体で、
-   macOS Intel と Termux は含みません。
+   Termux は含みません。
 5. テスト済みのバイト列から、バージョン付きで変更不可の Docker と R2 の成果物を push します。
    Docker イメージは自身のテストが通った時点で、試行 ref をタグにして push されます。
    `stable` や `latest` のエイリアスはまだ動かさず、公開のために再ビルドもしません。
@@ -111,7 +111,7 @@ URL、`abandon` コマンド、再実行コマンドを表示します。対話�
 テストレーンはリリースの関門となるテストスイートです。`release` は既定の組から始めて、それを編集します:
 
 ```sh
-# The default: everything except macOS Intel and Termux
+# The default: everything except Termux
 python scripts/release.py release --commit "$(git rev-parse origin/main)" --remote origin
 # Only the signed Windows bundles and the Docker image, no tests
 python scripts/release.py release --commit "$(git rev-parse origin/main)" --only windows,docker --remote origin
@@ -119,8 +119,8 @@ python scripts/release.py release --commit "$(git rev-parse origin/main)" --only
 python scripts/release.py release --commit "$(git rev-parse origin/main)" --without windows --remote origin
 # Only the Store bundle: no Azure signing anywhere
 python scripts/release.py release --commit "$(git rev-parse origin/main)" --only windows-store --remote origin
-# Everything, plus macOS Intel, without the install/update E2E
-python scripts/release.py release --commit "$(git rev-parse origin/main)" --with macos-intel --without install-e2e --remote origin
+# Everything, plus Termux, without the install/update E2E
+python scripts/release.py release --commit "$(git rev-parse origin/main)" --with termux --without install-e2e --remote origin
 ```
 
 `--only` は既定の組を置き換え、`--with` はレーンを加え、`--without`
@@ -133,7 +133,6 @@ python scripts/release.py release --commit "$(git rev-parse origin/main)" --with
 | `windows` | オン | 署名済みの Windows x64・arm64 の MSIX とユニバーサルバンドル。更新チャンネルに使われます |
 | `windows-store` | オン | 署名なしの Microsoft Store バンドル。Partner Center に提出されます（Azure の署名は不要） |
 | `macos-arm64` | オン | macOS Apple Silicon の DMG と ZIP |
-| `macos-intel` | オフ | macOS Intel の DMG と ZIP。`main` では対応しておらず、そのランナーだけで1時間以上かかります |
 | `termux` | オフ | Termux（Android aarch64）の APT パッケージ |
 | `ci`, `nix`, `docker-tests`, `pm-bundle`, `windows-live`, `install-e2e`, `bootstrap-version` | オン | 単独のテストスイート |
 | `termux-checks` | オン | Termux の検証。`termux` がオンのときだけ実行されます |
@@ -157,7 +156,8 @@ python scripts/release.py release --commit "$(git rev-parse origin/main)" --with
 `success` の報告を求めます。レーンが外すはずのジョブが実行された場合も、
 リリースはブロックされます。レーンができる前に切り出したクレーム（`skipBundles`、`skipTests`、
 `includeMacosIntel`、`includeTermux`）は、同じジョブを関門としていたレーンの組として読まれます。
-`lanesRevision` を持たないクレームは、`windows` が Store
+macOS Intel はもうビルドされないので、そうしたクレームが読み込めるのは、
+`includeMacosIntel` が無いか `false` の場合だけです。`lanesRevision` を持たないクレームは、`windows` が Store
 バンドルも意味していた時期に切り出されたものなので、その `windows` は `windows` と `windows-store` の両方として読まれます。
 
 リリースが公開するものは、ビルドしたものに従います:
@@ -185,11 +185,11 @@ python scripts/release.py release --commit "$(git rev-parse origin/main)" --with
   マニフェストを拒否します。次のそろったリリースは、ほかと同じくこのマニフェストをアップグレードの
   基準に使います。テストを通していないリリースのあとには、通常のリリースを切り出してください。
 
-macOS Intel を外した場合、その行は候補マニフェスト、リリース本文のダウンロード表、
-ダウンロードページから消えます。macOS の
+macOS Intel はどのリリースでもビルドされません。候補マニフェスト、リリース本文のダウンロード表、
+ダウンロードページには Intel の Mac 向けの行がありません。macOS の
 安定版フィードは1つだけ（`releases/darwin/stable/stable-mac.yml`）で、`promote` はこれを
-arm64 の系統だけで置き換えます。そのため、このフィードを使う Intel の Mac は、`--with macos-intel` を付けて
-リリースを切り出すまで更新を受け取りません。Termux を外した場合は APT の
+arm64 の系統だけから書き出します。そのため、このフィードを使う Intel の Mac には
+更新が届きません。Termux を外した場合は APT の
 インデックスが書き換えられないので、APT チャンネルは前回のリリースのまま残ります。
 ターゲットを外したリリースのあとで、それを再び加えたリリースには、そのターゲットの公開済みの
 基準が無いので、初回のリリースと同じくそのターゲットのアップグレード系統は省略されます。
@@ -294,10 +294,10 @@ Store の突き合わせは、フィードとエイリアスがすでに最新�
 ダウンロードできるジョブ成果物を残しません。
 
 デスクトップのワークフローは `jobs` 入力を受け取り、グループは `darwin-arm64`、
-`darwin-x64`、`win32-arm64`、`win32-x64`、`win32-bundle`、`linux-x64`、
-`linux-arm64`、`termux` です。安定版はグループごとに1回ずつ呼び出しますが、linux の
-グループは本物の Linux ビルドができるまで待ちます。また、`darwin-x64`、`termux`、
-そしてクレームがそのレーンを外しているほかのグループは呼び出しません。Mac の各アーキテクチャと Windows のバンドルは
+`win32-arm64`、`win32-x64`、`win32-bundle`、`linux-x64`、`linux-arm64`、
+`termux` です。安定版はグループごとに1回ずつ呼び出しますが、linux の
+グループは本物の Linux ビルドができるまで待ちます。また、`termux` と、
+クレームがそのレーンを外しているほかのグループは呼び出しません。Mac のアーキテクチャと Windows のバンドルは
 受領証をステージングし、各インストール系統は、自分のバイト列がステージングされた時点で
 自分の受領証から開始します。公開をブロックする合流点は `acceptance` ただ1つです。
 

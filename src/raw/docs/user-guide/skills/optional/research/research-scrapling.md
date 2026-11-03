@@ -2,7 +2,7 @@
 title: "Scrapling — 目立たないブラウザ操作と Cloudflare 回避でサイトを収集する"
 description: "目立たないブラウザ操作と Cloudflare 回避でサイトを収集する"
 upstream_path: user-guide/skills/optional/research/research-scrapling.md
-upstream_blob: bc2a876dbcbeca1b709f08a06fa0430d98a404ad
+upstream_blob: c308257f784e71d9b5bf8a57efeb62c2fdd13a74
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-scrapling
 ---
@@ -22,7 +22,7 @@ sources:
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Web Scraping`, `Browser`, `Cloudflare`, `Stealth`, `Crawling`, `Spider` |
-| 関連 skill | [`duckduckgo-search`](/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/), [`domain-intel`](/hermes/docs/user-guide/skills/optional/research/research-domain-intel/) |
+| 関連 skill | [`domain-intel`](/hermes/docs/user-guide/skills/optional/research/research-domain-intel/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

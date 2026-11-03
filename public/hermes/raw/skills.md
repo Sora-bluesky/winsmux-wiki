@@ -5,16 +5,16 @@ sources:
   - https://hermes-agent.nousresearch.com/docs/reference/skills-catalog
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
   - https://github.com/NousResearch/hermes-agent/tree/main/website/docs/user-guide/skills
-hermes_version: "0.22.6"
+hermes_version: "0.22.7"
 confidence: high
 raw: /hermes/raw/skills.md
 ---
 
 # skill
 
-公式の skill ページ 194 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 187 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `2b5ffeb`（2026-11-02）時点。この一覧は上流の docs から機械生成しています。
+上流 `8112254`（2026-11-03）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（44）
 
@@ -44,15 +44,15 @@ raw: /hermes/raw/skills.md
 | [Himalaya](/hermes/docs/user-guide/skills/bundled/email/email-himalaya/) | Himalaya CLI: IMAP/SMTP email from terminal | 2026-09-20 |
 | [Youtube Content](/hermes/docs/user-guide/skills/bundled/media/media-youtube-content/) | YouTube transcripts to summaries, threads, blogs | 2026-09-20 |
 | [Obsidian](/hermes/docs/user-guide/skills/bundled/note-taking/note-taking-obsidian/) | Read, search, create, and edit notes in the Obsidian vault | 2026-09-20 |
-| [Document To Action Items](/hermes/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items/) | Extract cited obligations, deadlines, tasks from documents | 2026-10-28 |
+| [Document To Action Items](/hermes/docs/user-guide/skills/bundled/productivity/productivity-document-to-action-items/) | Extract cited obligations, deadlines, tasks from documents | 2026-11-03 |
 | [Google Workspace](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/) | Gmail, Calendar, Drive, Docs, Sheets via gws CLI or Python | 2026-09-21 |
 | [Maps](/hermes/docs/user-guide/skills/bundled/productivity/productivity-maps/) | Geocode, POIs, routes, timezones via OpenStreetMap/OSRM | 2026-09-20 |
-| [Meeting Action Items](/hermes/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items/) | Turn meeting notes into cited decisions, owners, tickets | 2026-10-28 |
-| [Microsoft Office](/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/) | Create, read, and edit Word, PowerPoint, and Excel files | 2026-10-31 |
-| [Pdf](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/) | PDF files: create, read, merge, fill, OCR, edit text | 2026-10-31 |
+| [Meeting Action Items](/hermes/docs/user-guide/skills/bundled/productivity/productivity-meeting-action-items/) | Turn meeting notes into cited decisions, owners, tickets | 2026-11-03 |
+| [Microsoft Office](/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/) | Create, read, and edit Word, PowerPoint, and Excel files | 2026-11-03 |
+| [Pdf](/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/) | PDF files: create, read, merge, fill, OCR, edit text | 2026-11-03 |
 | [Product Price Monitor](/hermes/docs/user-guide/skills/bundled/productivity/productivity-product-price-monitor/) | Watch product, flight, or listing prices; alert on target | 2026-10-23 |
 | [Teams Meeting Pipeline](/hermes/docs/user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline/) | Teams meeting summaries, job replay, Graph subscriptions | 2026-09-20 |
-| [Weekly Review Planning](/hermes/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning/) | Weekly reset: commitments, stalled work, next-week plan | 2026-10-28 |
+| [Weekly Review Planning](/hermes/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning/) | Weekly reset: commitments, stalled work, next-week plan | 2026-11-03 |
 | [Arxiv](/hermes/docs/user-guide/skills/bundled/research/research-arxiv/) | Search arXiv papers by keyword, author, category, or ID | 2026-09-20 |
 | [Competitor News Monitor](/hermes/docs/user-guide/skills/bundled/research/research-competitor-news-monitor/) | Watch named companies for material news; cited digests | 2026-09-18 |
 | [Grounded Citations](/hermes/docs/user-guide/skills/bundled/research/research-grounded-citations/) | Ground answers and documents in cited, verifiable sources | 2026-10-23 |
@@ -67,7 +67,7 @@ raw: /hermes/raw/skills.md
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-09-20 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/) | Use when a fetch fails: 403/429, paywall, WAF, bot wall | 2026-09-20 |
 
-## あとから入れる（149）
+## あとから入れる（142）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -78,7 +78,6 @@ raw: /hermes/raw/skills.md
 | [Blackbox](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/) | Delegate coding tasks to the Blackbox AI multi-model CLI | 2026-09-20 |
 | [Dynamic Workflow](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/) | Plan-in-code fan-outs, adversarial verification, waves | 2026-09-19 |
 | [Grok](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/) | Delegate coding to xAI Grok Build CLI (features, PRs) | 2026-09-20 |
-| [Honcho](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/) | Configure and troubleshoot Honcho memory for Hermes | 2026-10-02 |
 | [Opencode](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/) | Delegate coding to OpenCode CLI (features, PR review) | 2026-10-28 |
 | [Openhands](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/) | Delegate coding to OpenHands CLI (model-agnostic, LiteLLM) | 2026-10-28 |
 | [Evm](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-evm/) | Read-only EVM client: wallets, tokens, gas across 8 chains | 2026-09-20 |
@@ -129,11 +128,11 @@ raw: /hermes/raw/skills.md
 | [3 Statement Model](/hermes/docs/user-guide/skills/optional/finance/finance-3-statement-model/) | Build integrated IS/BS/CF financial workbooks in Excel | 2026-10-23 |
 | [Comps Analysis](/hermes/docs/user-guide/skills/optional/finance/finance-comps-analysis/) | Build comparable-company valuation workbooks in Excel | 2026-10-23 |
 | [Dcf Model](/hermes/docs/user-guide/skills/optional/finance/finance-dcf-model/) | Build discounted cash flow valuation workbooks in Excel | 2026-10-28 |
-| [Excel Author](/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/) | Build auditable financial workbooks headless via openpyxl | 2026-10-31 |
+| [Excel Author](/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/) | Build auditable financial workbooks headless via openpyxl | 2026-11-03 |
 | [Lbo Model](/hermes/docs/user-guide/skills/optional/finance/finance-lbo-model/) | Build leveraged buyout workbooks with IRR/MOIC in Excel | 2026-10-23 |
 | [Merger Model](/hermes/docs/user-guide/skills/optional/finance/finance-merger-model/) | Build M&A accretion/dilution workbooks in Excel | 2026-10-23 |
 | [Polymarket](/hermes/docs/user-guide/skills/optional/finance/finance-polymarket/) | Query Polymarket: markets, prices, orderbooks, history | 2026-09-20 |
-| [Pptx Author](/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/) | Build PowerPoint decks headless with python-pptx | 2026-10-31 |
+| [Pptx Author](/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/) | Build PowerPoint decks headless with python-pptx | 2026-11-03 |
 | [Stocks](/hermes/docs/user-guide/skills/optional/finance/finance-stocks/) | Stock quotes, history, search, compare, crypto via Yahoo | 2026-09-20 |
 | [Minecraft Modpack Server](/hermes/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server/) | Host modded Minecraft servers (CurseForge, Modrinth) | 2026-09-20 |
 | [Pokemon Player](/hermes/docs/user-guide/skills/optional/gaming/gaming-pokemon-player/) | Play Pokemon via headless emulator + RAM reads | 2026-09-20 |
@@ -167,37 +166,31 @@ raw: /hermes/raw/skills.md
 | [Torchtitan](/hermes/docs/user-guide/skills/optional/mlops/mlops-torchtitan/) | Pretrain LLMs at scale with PyTorch 4D parallelism | 2026-09-20 |
 | [Axolotl](/hermes/docs/user-guide/skills/optional/mlops/mlops-training-axolotl/) | Axolotl: YAML LLM fine-tuning (LoRA, DPO, GRPO) | 2026-09-20 |
 | [Unsloth](/hermes/docs/user-guide/skills/optional/mlops/mlops-training-unsloth/) | Unsloth: 2-5x faster LoRA/QLoRA fine-tuning, less VRAM | 2026-09-20 |
-| [Mpp Agent](/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/) | Pay HTTP 402 APIs via Machine Payments Protocol (MPP) | 2026-09-20 |
-| [Stripe Link Cli](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/) | Agent payments via Stripe Link — cards, SPT, approvals | 2026-09-20 |
-| [Stripe Projects](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/) | Provision SaaS services + sync creds via Stripe Projects | 2026-09-20 |
-| [Airtable](/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/) | Airtable REST API via curl | 2026-10-28 |
+| [Stripe Link Cli](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/) | Agent payments via Stripe Link — cards, SPT, approvals | 2026-11-03 |
+| [Stripe Projects](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/) | Provision SaaS services + sync creds via Stripe Projects | 2026-11-03 |
 | [Box](/hermes/docs/user-guide/skills/optional/productivity/productivity-box/) | Box manages cloud files, sharing, search, and metadata | 2026-10-28 |
 | [Canvas](/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/) | Fetch Canvas LMS courses and assignments via API token | 2026-09-20 |
 | [Decision Questionnaire](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | Turn an unanswerable decision into a questionnaire doc | 2026-09-20 |
 | [Here Now](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | Publish sites to {slug}.here.now and store files in Drives | 2026-09-20 |
 | [Live Dashboard](/hermes/docs/user-guide/skills/optional/productivity/productivity-live-dashboard/) | Build self-updating dashboards from live sources | 2026-10-23 |
 | [Memento Flashcards](/hermes/docs/user-guide/skills/optional/productivity/productivity-memento-flashcards/) | Spaced-repetition flashcards: create, review, quiz, export | 2026-09-20 |
-| [Notion](/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/) | Notion API + ntn CLI: pages, databases, markdown, Workers | 2026-10-28 |
 | [Property Listings](/hermes/docs/user-guide/skills/optional/productivity/productivity-property-listings/) | Present property and rental listings as desktop cards | 2026-09-08 |
-| [Shop](/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/) | Shop catalog search, checkout, order tracking, returns | 2026-09-20 |
-| [Shopify](/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/) | Query Shopify Admin/Storefront GraphQL APIs via curl | 2026-10-28 |
-| [Siyuan](/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/) | Query and edit a SiYuan knowledge base via its API | 2026-10-28 |
+| [Shop](/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/) | Shop catalog search, checkout, order tracking, returns | 2026-11-03 |
+| [Siyuan](/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/) | Query and edit a SiYuan knowledge base via its API | 2026-11-03 |
 | [Telephony](/hermes/docs/user-guide/skills/optional/productivity/productivity-telephony/) | Provision Twilio numbers, SMS/MMS, and AI outbound calls | 2026-09-20 |
 | [Bioinformatics](/hermes/docs/user-guide/skills/optional/research/research-bioinformatics/) | Gateway to 400+ genomics and computational biology skills | 2026-09-20 |
 | [Blogwatcher](/hermes/docs/user-guide/skills/optional/research/research-blogwatcher/) | Monitor blogs and RSS/Atom feeds via blogwatcher-cli tool | 2026-09-05 |
 | [Darwinian Evolver](/hermes/docs/user-guide/skills/optional/research/research-darwinian-evolver/) | Evolve prompts/regex/SQL/code with Imbue's evolution loop | 2026-09-20 |
 | [Domain Intel](/hermes/docs/user-guide/skills/optional/research/research-domain-intel/) | Passive recon of subdomains, SSL certs, WHOIS, and DNS | 2026-09-20 |
 | [Drug Discovery](/hermes/docs/user-guide/skills/optional/research/research-drug-discovery/) | Drug discovery: ChEMBL search, drug-likeness, interactions | 2026-09-20 |
-| [Duckduckgo Search](/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/) | Free keyless web, news, and image search via ddgs | 2026-09-20 |
 | [Gitnexus Explorer](/hermes/docs/user-guide/skills/optional/research/research-gitnexus-explorer/) | Serve an interactive codebase knowledge graph web UI | 2026-09-20 |
 | [Llm Wiki](/hermes/docs/user-guide/skills/optional/research/research-llm-wiki/) | Karpathy's LLM Wiki: build/query interlinked markdown KB | 2026-10-28 |
 | [Osint Investigation](/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/) | Follow the money via public records and sanctions data | 2026-09-20 |
-| [Parallel Cli](/hermes/docs/user-guide/skills/optional/research/research-parallel-cli/) | Agent-native web search, deep research, and enrichment | 2026-09-20 |
+| [Parallel Cli](/hermes/docs/user-guide/skills/optional/research/research-parallel-cli/) | Agent-native web search, deep research, and enrichment | 2026-11-03 |
 | [Qmd](/hermes/docs/user-guide/skills/optional/research/research-qmd/) | Hybrid local search over notes, docs, and transcripts | 2026-09-20 |
 | [Research Paper Writing](/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/) | Write ML papers for NeurIPS/ICML/ICLR: design→submit | 2026-09-20 |
 | [Rss Feeds](/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/) | Read RSS, Atom, JSON feeds; discover feeds behind a page | 2026-09-20 |
-| [Scrapling](/hermes/docs/user-guide/skills/optional/research/research-scrapling/) | Scrape sites with stealth browsing and Cloudflare bypass | 2026-09-20 |
-| [Searxng Search](/hermes/docs/user-guide/skills/optional/research/research-searxng-search/) | Free keyless meta-search aggregating 70+ engines | 2026-09-20 |
+| [Scrapling](/hermes/docs/user-guide/skills/optional/research/research-scrapling/) | Scrape sites with stealth browsing and Cloudflare bypass | 2026-11-03 |
 | [1Password](/hermes/docs/user-guide/skills/optional/security/security-1password/) | Set up op CLI, sign in, and read or inject secrets | 2026-09-20 |
 | [Godmode](/hermes/docs/user-guide/skills/optional/security/security-godmode/) | Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN | 2026-09-20 |
 | [Oss Forensics](/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/) | GitHub supply-chain forensics: recovery, IOCs, reporting | 2026-09-20 |

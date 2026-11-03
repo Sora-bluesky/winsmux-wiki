@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 8692eee673ff05202fe5ef97c2e8e83465190aeb
+upstream_blob: e072bab825f71dbbcfabd92e8b937f2f4169c515
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -207,9 +207,8 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 
 | 変数 | 使うスキル | 説明 |
 |----------|---------------|-------------|
-| `NOTION_API_KEY` | `notion` | Notion の連携トークン。 |
+| `NOTION_API_KEY` | Teams の会議パイプライン | Notion への書き出し先で使う Notion の連携トークン。 |
 | `LINEAR_API_KEY` | `linear` | Linear の個人用 API キー。 |
-| `AIRTABLE_API_KEY` | `airtable` | Airtable の個人用アクセストークン。 |
 | `TENOR_API_KEY` | `gif-search` | GIF 検索に使う Tenor の API キー。 |
 
 ### Langfuse による可観測性 {#langfuse-observability}
@@ -368,6 +367,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `SLACK_ALLOW_ALL_USERS` | どの Slack 利用者でもボットを動かせるようにします（開発時のみ）。 |
 | `SLACK_ALLOW_BOTS` | ほかの Slack のボットからのメッセージを受け取るか: `none`（既定）、`mentions`、`all`。自分自身のメッセージは常に無視します。 |
 | `SLACK_THREAD_REQUIRE_MENTION` | Slack のスレッドでの返信には @メンションを必須にしつつ、最上位でメンション不要のチャンネルはそのまま残します |
+| `SLACK_THREAD_FOLLOWUP_SILENCE` | Slack のチャンネルのスレッドで、ボット宛てでない返信に沈黙の印だけで応じたときは、そのまま黙っておきます。「予期しない沈黙」の通知は投稿しません（既定 `false`） |
 | `SLACK_HOME_CHANNEL` | 定時実行の配信先になる既定の Slack のチャンネル |
 | `SLACK_HOME_CHANNEL_NAME` | Slack の既定チャンネルの表示名 |
 | `GOOGLE_CHAT_PROJECT_ID` | Pub/Sub のトピックを置く GCP のプロジェクト（無ければ `GOOGLE_CLOUD_PROJECT` を見ます） |

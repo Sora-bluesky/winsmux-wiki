@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Weekly Review Planning — 週ごとの仕切り直し: 約束、止まっている仕事、来週の計画"
 description: "週ごとの仕切り直し: 約束、止まっている仕事、来週の計画"
 upstream_path: user-guide/skills/bundled/productivity/productivity-weekly-review-planning.md
-upstream_blob: d9019437b1fc4078f22e8c2a29934ec1f2a678fe
+upstream_blob: e930ed4e3bddc5acf0d60760fcec36a3fed3fada
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning
 ---
@@ -23,7 +23,7 @@ sources:
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Weekly-Review`, `Planning`, `Tasks`, `Calendar`, `Productivity` |
-| 関連 skill | [`obsidian`](/hermes/docs/user-guide/skills/bundled/note-taking/note-taking-obsidian/), [`notion`](/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/), [`airtable`](/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/), [`google-workspace`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/), [`email-inbox-triage`](/hermes/docs/user-guide/skills/bundled/email/email-email-inbox-triage/) |
+| 関連 skill | [`obsidian`](/hermes/docs/user-guide/skills/bundled/note-taking/note-taking-obsidian/), [`google-workspace`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-google-workspace/), [`email-inbox-triage`](/hermes/docs/user-guide/skills/bundled/email/email-email-inbox-triage/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 
@@ -57,7 +57,7 @@ sources:
 
 ### 3. 受け皿を空にする {#3-clear-capture-inboxes}
 
-タスクの受け皿、メモ（`obsidian`、`notion`）、目印を付けたメール（スレッド単位の仕分けは `email-inbox-triage` が受け持ちます）、そのほか決めておいた受け皿を見ます。それぞれを、次にやること・案件・返事待ち・日付を決めたもの・いつか・参考・書庫入り・削除の提案のどれかに変えます。範囲の了解が出るまでは実際に変えないでください。手つかずのまま残った件数を数えて伝えられたら、この手順は完了です。
+タスクの受け皿、メモ（`obsidian`、Notion）、目印を付けたメール（スレッド単位の仕分けは `email-inbox-triage` が受け持ちます）、そのほか決めておいた受け皿を見ます。それぞれを、次にやること・案件・返事待ち・日付を決めたもの・いつか・参考・書庫入り・削除の提案のどれかに変えます。範囲の了解が出るまでは実際に変えないでください。手つかずのまま残った件数を数えて伝えられたら、この手順は完了です。
 
 ### 4. 動いている案件を突き合わせる {#4-reconcile-active-projects}
 

@@ -2,7 +2,7 @@
 title: "Shop — Shop の商品検索、購入手続き、注文追跡、返品"
 description: "Shop の商品検索、購入手続き、注文追跡、返品"
 upstream_path: user-guide/skills/optional/productivity/productivity-shop.md
-upstream_blob: da757d540f1256403f6875a47f7abfbcb37aee3c
+upstream_blob: c094eb871bbe6afe7d3176245b89d25c5aa1c058
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-shop
 ---
@@ -22,7 +22,7 @@ Shop の商品検索、購入手続き、注文追跡、返品を扱います。
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
 | タグ | `Shopping`, `E-commerce`, `Shop`, `Products`, `Orders`, `Returns`, `Checkout`, `Reorder` |
-| 関連 skill | [`shopify`](/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/), [`maps`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-maps/) |
+| 関連 skill | [`maps`](/hermes/docs/user-guide/skills/bundled/productivity/productivity-maps/) |
 
 ## 参考: SKILL.md 全文 {#reference-full-skillmd}
 

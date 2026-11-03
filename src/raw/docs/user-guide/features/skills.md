@@ -2,7 +2,7 @@
 title: "スキルの仕組み"
 description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェント管理のスキル、スキルのハブ"
 upstream_path: user-guide/features/skills.md
-upstream_blob: 08869b701ad935c5c7b5128414010876c37ef578
+upstream_blob: 11c4ab0c7463e45c58c29276dee3e078d02cb072
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -292,7 +292,7 @@ metadata:
 | `requires_toolsets` | 並べたツール群が使えないとき、スキルは**隠れます**。使えるときに現れます。 |
 | `requires_tools` | 同じですが、個々のツールを見ます。 |
 
-**例:** 組み込みの `duckduckgo-search` スキルは `fallback_for_toolsets: [web]` を使っています。`FIRECRAWL_API_KEY` を設定していれば web のツール群が使えるのでエージェントは `web_search` を使い、DuckDuckGo のスキルは隠れたままです。API キーが無ければ web のツール群が使えないので、DuckDuckGo のスキルが控えとして自動で現れます。
+**例:** `fallback_for_toolsets: [web]` を宣言した、curl で検索するスキルは、web のツール群が使える間は隠れたままで、web のツール群が無効になったときにだけ現れます。こうしてエージェントは、検索の手段を失わずに済みます。
 
 条件の項目を何も持たないスキルは、これまでどおり常に表示されます。
 
@@ -799,7 +799,7 @@ Hermes は GitHub のリポジトリや、GitHub を土台にした tap から�
 - [anthropics/skills](https://github.com/anthropics/skills)
 - [huggingface/skills](https://github.com/huggingface/skills)
 - [NVIDIA/skills](https://github.com/NVIDIA/skills) — NVIDIA が検証したスキル（署名された `skill.oms.sig` と、運営のための `skill-card.md` 付き）
-- [wandb/skills](https://github.com/wandb/skills)、[qdrant/skills](https://github.com/qdrant/skills)、[pinecone-io/skills](https://github.com/pinecone-io/skills) — 各社が自社の製品向けに出しているスキル
+- [wandb/skills](https://github.com/wandb/skills)、[qdrant/skills](https://github.com/qdrant/skills)、[pinecone-io/skills](https://github.com/pinecone-io/skills)、[makenotion/skills](https://github.com/makenotion/skills)、[Airtable/skills](https://github.com/Airtable/skills)、[Shopify/Shopify-AI-Toolkit](https://github.com/Shopify/Shopify-AI-Toolkit) — 各社が自社の製品向けに出しているスキル
 - [garrytan/gstack](https://github.com/garrytan/gstack)
 - [K-Dense-AI/scientific-agent-skills](https://github.com/K-Dense-AI/scientific-agent-skills) と [synthetic-sciences/openscience](https://github.com/synthetic-sciences/openscience) — およそ480本の科学研究向けスキル（バイオインフォマティクス、化学、物理、機械学習の学習、学術のためのツール）で、`science` という1つのカテゴリにまとめられています。信頼はコミュニティの段階で、どのインストールもセキュリティ走査を受けます。多くは自前のライセンスを持つ第三者のツールを包んでいるので（GPL のものもあり、KEGG は学術以外の利用に商用ライセンスが要ります）、スキルごとの前提条件を確認してください。
 
@@ -919,7 +919,7 @@ hermes skills install skills-sh/anthropics/skills/pdf --force
 |-------|--------|--------|
 | `builtin` | Hermes に同梱 | 常に信頼されます |
 | `official` | リポジトリの `optional-skills/` | 組み込みの信頼で、第三者向けの警告は出ません |
-| `trusted` | `openai/skills`、`anthropics/skills`、`huggingface/skills`、`NVIDIA/skills`、`wandb/skills`、`qdrant/skills`、`pinecone-io/skills` などの信頼された登録所やリポジトリ | コミュニティの入手元より緩やかな方針 |
+| `trusted` | `openai/skills`、`anthropics/skills`、`huggingface/skills`、`NVIDIA/skills`、`wandb/skills`、`qdrant/skills`、`pinecone-io/skills`、`makenotion/skills`、`Airtable/skills`、`Shopify/Shopify-AI-Toolkit` などの信頼された登録所やリポジトリ | コミュニティの入手元より緩やかな方針 |
 | `community` | それ以外すべて（`skills.sh`、well-known の窓口、独自の GitHub のリポジトリ、たいていの市場） | dangerous でない指摘は `--force` で越えられます。`dangerous` の判定は遮断されたままです |
 
 ### 更新の流れ {#update-lifecycle}

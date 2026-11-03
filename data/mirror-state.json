@@ -62,9 +62,9 @@
       "translatedAt": "2026-10-25T22:52:26.922Z"
     },
     "developer-guide/creating-skills.md": {
-      "blob": "8e2f55063029940a061efeaee5d6bb08dc5906b9",
+      "blob": "f3dc99eb02f2563e485e11181af178a5932cb8c9",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.165Z"
+      "translatedAt": "2026-11-03T22:50:25.030Z"
     },
     "developer-guide/cron-internals.md": {
       "blob": "b00c317f9eae5193387f4cf3140415cfe54b9bd8",
@@ -187,9 +187,9 @@
       "translatedAt": "2026-10-27T22:51:04.075Z"
     },
     "getting-started/platform-support.md": {
-      "blob": "400706b2e71abfae3c0a8da9c47df8c2a6d8bd50",
+      "blob": "5db054f36bfb60cff54c193cdeca807433e0bcfa",
       "status": "translated",
-      "translatedAt": "2026-10-21T22:45:33.345Z"
+      "translatedAt": "2026-11-03T22:50:25.034Z"
     },
     "getting-started/quickstart.md": {
       "blob": "0d7c3a7e542ecbb10ad77544edde7175fa12f616",
@@ -202,9 +202,9 @@
       "translatedAt": "2026-10-23T22:51:08.178Z"
     },
     "getting-started/updating.md": {
-      "blob": "52694bf6a9d163a0a4d40952ec1ff030a9336483",
+      "blob": "44a3fc0203ea1e2d287db9e4524dec0851bb2d07",
       "status": "translated",
-      "translatedAt": "2026-10-26T22:56:07.741Z"
+      "translatedAt": "2026-11-03T22:50:25.036Z"
     },
     "guides/agent-email-address.md": {
       "blob": "a879b8ace8d934265cd2bf7b4d5d8a8317ac90c8",
@@ -407,9 +407,9 @@
       "translatedAt": "2026-09-12T22:39:58.861Z"
     },
     "reference/environment-variables.md": {
-      "blob": "8692eee673ff05202fe5ef97c2e8e83465190aeb",
+      "blob": "e072bab825f71dbbcfabd92e8b937f2f4169c515",
       "status": "translated",
-      "translatedAt": "2026-11-02T22:37:46.947Z"
+      "translatedAt": "2026-11-03T22:50:25.040Z"
     },
     "reference/faq.md": {
       "blob": "a0d1d67d7a7c22808fec65f42bc4f5a3c04be6dc",
@@ -427,9 +427,9 @@
       "translatedAt": "2026-10-26T22:56:07.754Z"
     },
     "reference/optional-skills-catalog.md": {
-      "blob": "b6a9115984c30b299466449c919c912fcd45bc00",
+      "blob": "23b4ab1671b5b956c41ae83b4efc50d3ba6d4a16",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.717Z"
+      "translatedAt": "2026-11-03T22:44:28.088Z"
     },
     "reference/profile-commands.md": {
       "blob": "7baf4a26a3e2e5bea9659f447f18537ed47895c3",
@@ -457,9 +457,9 @@
       "translatedAt": "2026-10-23T22:51:08.189Z"
     },
     "user-guide/bot-mode.md": {
-      "blob": "fa085b9792d94dcbd2136ea9c407d3341a1a02bf",
+      "blob": "14df51a6dd8d6b593909c16eba5f5a26c08a2a99",
       "status": "translated",
-      "translatedAt": "2026-10-21T22:45:33.354Z"
+      "translatedAt": "2026-11-03T22:50:25.042Z"
     },
     "user-guide/checkpoints-and-rollback.md": {
       "blob": "56ebcb06490b26d9204b51f0241c473786670b1e",
@@ -482,9 +482,9 @@
       "translatedAt": "2026-10-14T23:48:21.642Z"
     },
     "user-guide/desktop.md": {
-      "blob": "88fd95c0c406e9f7fe8e4dd662ec4ceee24bfeb2",
+      "blob": "6785b69e9fabe45aec907526e27c7c457e4ea5a0",
       "status": "translated",
-      "translatedAt": "2026-11-02T22:37:46.956Z"
+      "translatedAt": "2026-11-03T22:50:25.044Z"
     },
     "user-guide/docker.md": {
       "blob": "04b04008f85238372e543f3d4244de529d6a4c28",
@@ -607,9 +607,9 @@
       "translatedAt": "2026-10-02T22:46:55.500Z"
     },
     "user-guide/features/hooks.md": {
-      "blob": "93b09426b1676c07dc0a6085d746620594f06e65",
+      "blob": "cea0f7b4ac85b7cfc51b8aa81766e831bf40e525",
       "status": "translated",
-      "translatedAt": "2026-11-01T22:52:43.172Z"
+      "translatedAt": "2026-11-03T22:50:25.049Z"
     },
     "user-guide/features/image-generation.md": {
       "blob": "8badf33d14f9fcb368d9f0d697264037cce38532",
@@ -687,9 +687,9 @@
       "translatedAt": "2026-10-16T22:46:20.845Z"
     },
     "user-guide/features/skills.md": {
-      "blob": "08869b701ad935c5c7b5128414010876c37ef578",
+      "blob": "11c4ab0c7463e45c58c29276dee3e078d02cb072",
       "status": "translated",
-      "translatedAt": "2026-11-02T04:44:18.644Z"
+      "translatedAt": "2026-11-03T22:50:25.056Z"
     },
     "user-guide/features/skins.md": {
       "blob": "dbf4b2f749294294982d93c9ed846d4e5fb9db2d",
@@ -747,9 +747,9 @@
       "translatedAt": "2026-11-02T22:37:46.958Z"
     },
     "user-guide/features/web-search.md": {
-      "blob": "2d52120f7385b1797565b50593965b0b50b1e4c8",
+      "blob": "1288ee9e391d6030261ecdaa456021ed935d01af",
       "status": "translated",
-      "translatedAt": "2026-10-23T22:51:08.210Z"
+      "translatedAt": "2026-11-03T22:50:25.057Z"
     },
     "user-guide/features/x-search.md": {
       "blob": "86318db7d287d2f50b44d97b85cf2f32aab4e758",
@@ -887,9 +887,9 @@
       "translatedAt": "2026-09-27T22:49:12.662Z"
     },
     "user-guide/messaging/slack.md": {
-      "blob": "85549b7cd4a8ab91bf9cad81ef0699a25ddb0ce8",
+      "blob": "3fc5d503f07157451358e7fb207f86eeece3fa5e",
       "status": "translated",
-      "translatedAt": "2026-10-16T22:46:20.847Z"
+      "translatedAt": "2026-11-03T22:50:25.059Z"
     },
     "user-guide/messaging/sms.md": {
       "blob": "d8cc112e065ef6f3ce9890664d390525a22c0c37",
@@ -907,9 +907,9 @@
       "translatedAt": "2026-09-25T22:58:06.460Z"
     },
     "user-guide/messaging/telegram.md": {
-      "blob": "066ccd2ddce501aa33c009c5180817aa73fd095f",
+      "blob": "fa1eb3798f361204518f3cf7818288e7620b4e94",
       "status": "translated",
-      "translatedAt": "2026-11-01T22:52:43.178Z"
+      "translatedAt": "2026-11-03T22:50:25.061Z"
     },
     "user-guide/messaging/webhooks.md": {
       "blob": "bc413bfe35981156f60fc0a472426d84ad4a1a5f",
@@ -987,9 +987,9 @@
       "translatedAt": "2026-10-31T22:50:24.737Z"
     },
     "user-guide/security.md": {
-      "blob": "29f09c33cfc3db5206de20e7136e0062db45d71b",
+      "blob": "8a07e2f74824a9f2c352d9e1d32e4ca06eb0f893",
       "status": "translated",
-      "translatedAt": "2026-10-31T22:50:24.739Z"
+      "translatedAt": "2026-11-03T22:50:25.063Z"
     },
     "user-guide/sessions.md": {
       "blob": "13b6703c63fd7a9ba985c6c38413e8598b18a716",
@@ -1222,9 +1222,9 @@
       "translatedAt": "2026-09-20T23:06:07.245Z"
     },
     "user-guide/skills/bundled/productivity/productivity-document-to-action-items.md": {
-      "blob": "7b5e5c2c6e2990fee9d69e9cac5ecf0b6163f02f",
+      "blob": "d7a65103e934ad59034cbd5772984608d408064d",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.751Z"
+      "translatedAt": "2026-11-03T22:50:25.064Z"
     },
     "user-guide/skills/bundled/productivity/productivity-docx.md": {
       "blob": "707a695d0157f4be36dc7dbc6bf1afebe0837220",
@@ -1242,9 +1242,9 @@
       "translatedAt": "2026-09-20T22:40:21.490Z"
     },
     "user-guide/skills/bundled/productivity/productivity-meeting-action-items.md": {
-      "blob": "4bc39457a88be6b827c00624e22c751fe67e49ef",
+      "blob": "c653c1bb6bbc9e278e4bd56b5db86e1445d7a989",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.752Z"
+      "translatedAt": "2026-11-03T22:50:25.064Z"
     },
     "user-guide/skills/bundled/productivity/productivity-nano-pdf.md": {
       "blob": "602100d582af51644adfa35b38963abf6b9e2134",
@@ -1262,9 +1262,9 @@
       "translatedAt": "2026-09-19T22:42:36.368Z"
     },
     "user-guide/skills/bundled/productivity/productivity-pdf.md": {
-      "blob": "a19428dfc0dcd3661a4d39887020d3bf129a6a43",
+      "blob": "0925a4053259f01800c1e43bad83f079d6568b55",
       "status": "translated",
-      "translatedAt": "2026-10-31T22:50:24.742Z"
+      "translatedAt": "2026-11-03T22:44:28.079Z"
     },
     "user-guide/skills/bundled/productivity/productivity-powerpoint.md": {
       "blob": "c90ac0690d2bbbc061cdecb24e2a6515179d9002",
@@ -1287,9 +1287,9 @@
       "translatedAt": "2026-09-20T22:40:21.490Z"
     },
     "user-guide/skills/bundled/productivity/productivity-weekly-review-planning.md": {
-      "blob": "d9019437b1fc4078f22e8c2a29934ec1f2a678fe",
+      "blob": "e930ed4e3bddc5acf0d60760fcec36a3fed3fada",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:06:10.754Z"
+      "translatedAt": "2026-11-03T22:50:25.065Z"
     },
     "user-guide/skills/bundled/productivity/productivity-xlsx.md": {
       "blob": "235b232d73f554ec8fbf3624e10a35652efd1eec",
@@ -1413,7 +1413,7 @@
     },
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho.md": {
       "blob": "fa2a6c5f6720bbcb197a6c8637802c51c610f37a",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-02T22:46:55.517Z"
     },
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands.md": {
@@ -1577,9 +1577,9 @@
       "translatedAt": "2026-10-29T23:06:10.759Z"
     },
     "user-guide/skills/optional/finance/finance-excel-author.md": {
-      "blob": "31f5a5d175faf918a7d110b85990ecc48113b1e9",
+      "blob": "7f843c14e440815b1373619af1244934fa47e434",
       "status": "translated",
-      "translatedAt": "2026-10-31T22:50:24.742Z"
+      "translatedAt": "2026-11-03T22:44:28.084Z"
     },
     "user-guide/skills/optional/finance/finance-lbo-model.md": {
       "blob": "cd16a4634813f25d6ccfb1cb600834da0e18ee54",
@@ -1597,9 +1597,9 @@
       "translatedAt": "2026-09-20T22:40:21.505Z"
     },
     "user-guide/skills/optional/finance/finance-pptx-author.md": {
-      "blob": "023ff881a609322c99b05b74b25719b25643ac65",
+      "blob": "b0c4ac840f35d550c8949b3e3d05e7dcdf6c882a",
       "status": "translated",
-      "translatedAt": "2026-10-31T22:50:24.743Z"
+      "translatedAt": "2026-11-03T22:44:28.084Z"
     },
     "user-guide/skills/optional/finance/finance-stocks.md": {
       "blob": "0fd703752c2ba551e82b4be1b0d598dba5c603e2",
@@ -1803,18 +1803,18 @@
     },
     "user-guide/skills/optional/payments/payments-mpp-agent.md": {
       "blob": "d0c12eb5f66db8fe525427b73f156ea82f1a774b",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T23:06:07.267Z"
     },
     "user-guide/skills/optional/payments/payments-stripe-link-cli.md": {
-      "blob": "d3ea09efb577259521249934429a801e07f2a248",
+      "blob": "44e986836a06791529763ff31bbb2d37cc97cdfe",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.268Z"
+      "translatedAt": "2026-11-03T22:50:25.065Z"
     },
     "user-guide/skills/optional/payments/payments-stripe-projects.md": {
-      "blob": "8e94eba01457bd62396d82a479b678472e563701",
+      "blob": "f9339d33eb452ccad6e9a129500d6bf3a1f2af2d",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.268Z"
+      "translatedAt": "2026-11-03T22:44:28.085Z"
     },
     "user-guide/skills/optional/productivity/productivity-canvas.md": {
       "blob": "90f44f1a61895e171d45d07300e7d6f8e2144106",
@@ -1832,19 +1832,19 @@
       "translatedAt": "2026-09-25T22:58:06.457Z"
     },
     "user-guide/skills/optional/productivity/productivity-shop.md": {
-      "blob": "da757d540f1256403f6875a47f7abfbcb37aee3c",
+      "blob": "c094eb871bbe6afe7d3176245b89d25c5aa1c058",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.269Z"
+      "translatedAt": "2026-11-03T22:44:28.086Z"
     },
     "user-guide/skills/optional/productivity/productivity-shopify.md": {
       "blob": "6ea97dd0dc6378abf322ceb658c8c4cc562e24ea",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-29T23:07:10.241Z"
     },
     "user-guide/skills/optional/productivity/productivity-siyuan.md": {
-      "blob": "242ac1619ba4687bc1b32b5437b0b457bb37181e",
+      "blob": "f6ca53aac0e67e24ae657412df31bbfd85ce0506",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:07:10.242Z"
+      "translatedAt": "2026-11-03T22:44:28.086Z"
     },
     "user-guide/skills/optional/productivity/productivity-telephony.md": {
       "blob": "b0b2116092e8c89154ed2f2ae3b012903e62a04f",
@@ -1873,7 +1873,7 @@
     },
     "user-guide/skills/optional/research/research-duckduckgo-search.md": {
       "blob": "7cc4a475f6c3259c9650b332030c9352332343de",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-09-20T22:40:21.527Z"
     },
     "user-guide/skills/optional/research/research-gitnexus-explorer.md": {
@@ -1887,9 +1887,9 @@
       "translatedAt": "2026-09-20T23:06:07.270Z"
     },
     "user-guide/skills/optional/research/research-parallel-cli.md": {
-      "blob": "3892ebbda620e8c1cc356a57a2b885354b1c9e53",
+      "blob": "c0584b85c8ee8ef1f02d394769753f3538a2e5c4",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.271Z"
+      "translatedAt": "2026-11-03T22:44:28.087Z"
     },
     "user-guide/skills/optional/research/research-pinecone-research.md": {
       "blob": "dd6a9eb0796dbb9745d557f7f991b3dbcce50c4a",
@@ -1902,13 +1902,13 @@
       "translatedAt": "2026-09-20T22:40:21.528Z"
     },
     "user-guide/skills/optional/research/research-scrapling.md": {
-      "blob": "bc2a876dbcbeca1b709f08a06fa0430d98a404ad",
+      "blob": "c308257f784e71d9b5bf8a57efeb62c2fdd13a74",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.272Z"
+      "translatedAt": "2026-11-03T22:44:28.088Z"
     },
     "user-guide/skills/optional/research/research-searxng-search.md": {
       "blob": "89de0e9a2634e4adf1aa2979d86c8d4f899e100d",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-25T22:52:26.975Z"
     },
     "user-guide/skills/optional/security/security-1password.md": {
@@ -2341,9 +2341,9 @@
       "translatedAt": "2026-10-29T23:06:10.731Z"
     },
     "developer-guide/macos-bundle-updates.md": {
-      "blob": "3e1aa2aab2a5c50bd258068193c9d814d3a5a77f",
+      "blob": "2b64815975e6185710927ee10e3277ccaa7c3f4e",
       "status": "translated",
-      "translatedAt": "2026-09-25T22:58:06.503Z"
+      "translatedAt": "2026-11-03T22:50:25.066Z"
     },
     "developer-guide/pm-audit-status.md": {
       "blob": "d91cc20f151850173b68225fe1bdf4aed5c78186",
@@ -2351,9 +2351,9 @@
       "translatedAt": "2026-09-25T22:58:06.504Z"
     },
     "developer-guide/shared-bundle-builds.md": {
-      "blob": "64033875c2c8f60d9b1ca353b77e3b6fd868de52",
+      "blob": "b25603e5b99ffcec47b595341f959a6f1266dd1e",
       "status": "translated",
-      "translatedAt": "2026-09-25T22:58:06.504Z"
+      "translatedAt": "2026-11-03T22:50:25.067Z"
     },
     "developer-guide/source-update-completion.md": {
       "blob": "cc093846ed301d265db6b031a0d5db4d4b2d6764",
@@ -2361,14 +2361,14 @@
       "translatedAt": "2026-10-06T22:54:12.272Z"
     },
     "developer-guide/stable-releases.md": {
-      "blob": "9777c69ea428e634515e13eb06dd1089c4737e68",
+      "blob": "c9b960dbf29374e51e53b10b177015111614670a",
       "status": "translated",
-      "translatedAt": "2026-10-20T22:44:13.259Z"
+      "translatedAt": "2026-11-03T22:50:25.067Z"
     },
     "reference/package-management.md": {
-      "blob": "188aa0c8012f7a9c9276f3e55fc07666c282505d",
+      "blob": "c4e911940cb9eb9f8fc9b2205594157383950aaa",
       "status": "translated",
-      "translatedAt": "2026-11-02T04:44:18.637Z"
+      "translatedAt": "2026-11-03T22:50:25.068Z"
     },
     "user-guide/switching-to-source.md": {
       "blob": "766782bed736ffa0bbb0ff70d3c46212547257a4",
@@ -2451,9 +2451,9 @@
       "translatedAt": "2026-10-28T22:52:48.328Z"
     },
     "user-guide/skills/bundled/productivity/productivity-microsoft-office.md": {
-      "blob": "13ad3ae9e1d81b790cd6641e37acb43049b43d14",
+      "blob": "74dfb0b7bcf22ca821359f0b595aab62852f4bfa",
       "status": "translated",
-      "translatedAt": "2026-10-31T22:50:24.743Z"
+      "translatedAt": "2026-11-03T22:44:28.083Z"
     },
     "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode.md": {
       "blob": "e65213a67731bf9f34b5915977326e95e8f0d440",
@@ -2477,7 +2477,7 @@
     },
     "user-guide/skills/optional/productivity/productivity-airtable.md": {
       "blob": "75ea68c20cfb0dfc106ca1d3dc7cc52befa2a629",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-29T23:06:10.762Z"
     },
     "user-guide/skills/optional/productivity/productivity-box.md": {
@@ -2487,7 +2487,7 @@
     },
     "user-guide/skills/optional/productivity/productivity-notion.md": {
       "blob": "56a2627004a576a842e7446dd0d8c1f3c7420866",
-      "status": "translated",
+      "status": "deleted",
       "translatedAt": "2026-10-29T23:07:10.240Z"
     },
     "user-guide/skills/optional/research/research-llm-wiki.md": {
@@ -2516,5 +2516,5 @@
       "translatedAt": "2026-10-29T23:07:10.273Z"
     }
   },
-  "snapshotCommit": "2b5ffeb5fafbbcd1d476b87587154a50b704f73d"
+  "snapshotCommit": "8112254f8a934626032579cae967b25b7795836d"
 }

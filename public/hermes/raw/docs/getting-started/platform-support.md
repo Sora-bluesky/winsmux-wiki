@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "対応プラットフォーム"
 description: "Hermes Agent が対応している OS、配布方法、機能の一覧"
 upstream_path: getting-started/platform-support.md
-upstream_blob: 400706b2e71abfae3c0a8da9c47df8c2a6d8bd50
+upstream_blob: 5db054f36bfb60cff54c193cdeca807433e0bcfa
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/platform-support
 ---
@@ -41,18 +41,15 @@ Hermes Agent は多くのプラットフォームと配布方法に対応して�
 
 ### ビルド対象とサポートの優先度 {#build-targets-and-support-priority}
 
-安定版のリリースでは、macOS のデスクトップ版のバンドルを Apple Silicon（`arm64`）向けにだけビルドします。
-Intel の macOS（`x64`）向けのバンドルと Termux の APT パッケージは**既定ではビルドされません**。
-リリースにこれらが含まれるのは、
-`release.py release --with macos-intel` か `--with termux` を付けてリリースを作ったときだけです。
-macOS Intel を含まないリリースは、macOS で共有している安定版の更新フィードを、arm64 だけのフィードに置き換えます。
-そのため、デスクトップ版のバンドルから入れた Intel の Mac には、
-`--with macos-intel` を付けたリリースが作られるまで更新が届きません。Termux を含まないリリースでは、
-Termux の APT チャンネルは前のリリースのままです。
+リリースでは、macOS のデスクトップ版のバンドルを Apple Silicon（`arm64`）向けにだけビルドします。
+Intel の macOS（`x64`）向けのバンドルをビルドしたりテストしたりするリリースや CI のワークフローはありません。
+macOS の更新フィードは arm64 向けだけなので、以前のデスクトップ版のバンドルから入れた Intel の Mac には
+更新が届きません。Termux の APT パッケージは**既定ではビルドされません**。
+リリースに含まれるのは、`release.py release --with termux` を付けてリリースを作ったときだけです。
+Termux を含まないリリースでは、Termux の APT チャンネルは前のリリースのままです。
 ブートストラップ用のインストーラー `Hermes-Setup.dmg` は Apple Silicon 向けにしかビルドされていないため、
 Intel の Mac では「この Mac には対応していません」と表示されます。Intel の Mac では、
-[CLI](/hermes/docs/getting-started/installation/#linux--macos--wsl2) を入れて
-`hermes desktop` を実行するか、`darwin-x64` のバンドルを含んだリリースからそれを使ってください。
+[CLI](/hermes/docs/getting-started/installation/#linux--macos--wsl2) を入れて `hermes desktop` を実行してください。
 Linux のデスクトップ版のパッケージ作成はリリースのワークフローで無効にしています。ただし、ローカルでの
 AppImage のビルドと、Linux ネイティブのパッケージマネージャー向けバンドルの確認は用意されています。
 
@@ -65,7 +62,7 @@ AppImage のビルドと、Linux ネイティブのパッケージマネージ�
 
 - aarch64 以外の端末での Android / Termux（aarch64 は APT パッケージで[対応しています](/hermes/docs/getting-started/termux/)）
 - AUR からの導入（役に立つならパッチを本体に取り込むかもしれません &lt;3）
-- 32 ビット x86 の macOS。Intel の x86_64 向けのデスクトップ版のバンドルは、`--with macos-intel` を付けて作ったリリースでだけビルドされます。
+- 32 ビット x86 の macOS と、Intel の x86_64 向けの macOS デスクトップ版のバンドル（どちらもビルドしていません）。
 - `pypi` からの導入（例: `uv tool install hermes-agent`、`pip install hermes-agent` など）
 - `brew` からの導入（`brew install hermes-agent`）
 

@@ -2,7 +2,7 @@
 title: "Microsoft Office — Word・PowerPoint・Excel ファイルを作成・読み取り・編集する"
 description: "Word・PowerPoint・Excel ファイルを作成・読み取り・編集します"
 upstream_path: user-guide/skills/bundled/productivity/productivity-microsoft-office.md
-upstream_blob: 13ad3ae9e1d81b790cd6641e37acb43049b43d14
+upstream_blob: 74dfb0b7bcf22ca821359f0b595aab62852f4bfa
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office
 ---
@@ -80,7 +80,7 @@ Excel（`.xlsx`、`.csv`）のファイルをオフラインで作成・読み�
       mkdir -p "$HOME/.cache" && cd "$HOME/.cache" && stage="$(mktemp -d hermes-docs-venv.XXXXXX)" || exit 1
       old="$(readlink hermes-docs-venv)"  # the published build, if any (another agent may have just published it)
       python3 -m venv "$stage" &&
-        "$stage/bin/python" -m pip install -q --disable-pip-version-check python-docx==1.2.0 openpyxl==3.1.5 python-pptx==1.0.2 reportlab==5.1.0 pypdf==6.21.2 pdfplumber==0.11.10 pypdfium2==5.14.0 &&
+        "$stage/bin/python" -m pip install -q --disable-pip-version-check python-docx==1.2.0 openpyxl==3.1.5 python-pptx==1.0.2 reportlab==5.1.0 pypdf==6.21.4 pdfplumber==0.11.10 pypdfium2==5.14.0 &&
         "$stage/bin/python" -c "import docx, openpyxl, pptx, reportlab, pypdf, pdfplumber, pypdfium2" &&
         if [ -z "$old" ]; then python3 -c 'import os, sys; os.symlink(*sys.argv[1:])' "$stage" hermes-docs-venv
         elif [ "$(readlink hermes-docs-venv)" = "$old" ] && ! "$old/bin/python" -c "import docx, openpyxl, pptx, reportlab, pypdf, pdfplumber, pypdfium2" 2>/dev/null; then

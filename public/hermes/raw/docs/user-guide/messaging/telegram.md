@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: 066ccd2ddce501aa33c009c5180817aa73fd095f
+upstream_blob: fa1eb3798f361204518f3cf7818288e7620b4e94
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -15,6 +15,20 @@ Hermes Agent は、機能をひととおり備えた会話ボットとして Tel
 ## すぐに設定する（ダッシュボードとデスクトップアプリ） {#quick-setup-dashboard-and-desktop-app}
 
 [ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/) と [デスクトップアプリ](/hermes/docs/user-guide/desktop/) の **Messaging → Telegram** のページには、**Create with QR** のボタンがあります。そのコードを Telegram で読み取る（またはリンクを開く）と、Hermes がボットを作り、あなたの Telegram のユーザー ID を検出し、`TELEGRAM_BOT_TOKEN` と `TELEGRAM_ALLOWED_USERS` をプロファイルの `.env` に書き込んで、ゲートウェイを再起動します。自分でボットを作りたい場合は、下の手作業の手順に従ってください。
+
+## Team Gateway を使う Hermes Cloud {#hermes-cloud-with-team-gateway}
+
+Team Gateway を有効にした Hermes Cloud のインスタンスでは、Telegram（それに Discord と Slack）からのメッセージは、共有の Hermes ボットを通ってエージェントに届きます。そこでは自分専用のボットは動きません。使っていないときにインスタンスがスリープできるよう、ゲートウェイが起動のたびに直接接続をオフにするためです。Telegram のカードには、**Create with QR** の代わりに **Via Team Gateway** と表示されます。
+
+エージェントに誰がアクセスできるかを Nous Portal が管理している場合（Portal で作ったエージェント）は、Portal からアカウントを紐付けてください。カードには紐付け済みのアカウントが一覧表示され、**Link accounts in Nous Portal** ボタンを押すと Portal でそのエージェントが開きます。紐付け用のコードは、エージェントの **Message platforms** から取得します。
+
+それ以外の場合は、カード自体からアカウントを紐付けます。
+
+1. **Link Telegram** をクリックします。Hermes が `/link AB12CD` のような一回限りのメッセージと、QR コード、**Open Telegram** ボタンを表示します。
+2. スマートフォンで QR コードを読み取って（またはボタンをクリックして）共有ボットを開き、使いたい Telegram アカウントからそのメッセージを送ります。
+3. ボットがメッセージを受け取ると、カードにそのアカウントが表示されます。以降は、共有ボットにメッセージを送ればエージェントと話せます。
+
+ボタンを使うには、ゲートウェイが動いている必要があります。Team Gateway との接続を保っているのがゲートウェイだからです。共有ボットではなく、それと並べて自分のボットを動かしたい場合は、インスタンスの環境で `GATEWAY_RELAY_ALLOW_DIRECT_PLATFORMS=true` を設定してください。この場合は Telegram との接続が開いたままになるため、インスタンスはスリープしなくなります。
 
 ## 手順 1: BotFather でボットを作る {#step-1-create-a-bot-via-botfather}
 
