@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-04",
+  "generatedAt": "2026-11-05",
   "entries": [
     {
       "date": "2026-11-04",
-      "sha": null,
-      "upstream": "8112254",
+      "sha": "9e8f58d",
+      "upstream": null,
       "pages": [
         {
           "id": "developer-guide/creating-skills",
@@ -117,6 +117,11 @@
           "url": "/hermes/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning/"
         },
         {
+          "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
+          "title": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho",
+          "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/"
+        },
+        {
           "id": "user-guide/skills/optional/finance/finance-excel-author",
           "title": "Excel Author — openpyxl でヘッドレスに監査できる財務ワークブックを作る",
           "url": "/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/"
@@ -125,6 +130,11 @@
           "id": "user-guide/skills/optional/finance/finance-pptx-author",
           "title": "Pptx Author — python-pptx でヘッドレスに PowerPoint 資料を作る",
           "url": "/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/"
+        },
+        {
+          "id": "user-guide/skills/optional/payments/payments-mpp-agent",
+          "title": "user-guide/skills/optional/payments/payments-mpp-agent",
+          "url": "/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/"
         },
         {
           "id": "user-guide/skills/optional/payments/payments-stripe-link-cli",
@@ -137,14 +147,34 @@
           "url": "/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/"
         },
         {
+          "id": "user-guide/skills/optional/productivity/productivity-airtable",
+          "title": "user-guide/skills/optional/productivity/productivity-airtable",
+          "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/"
+        },
+        {
+          "id": "user-guide/skills/optional/productivity/productivity-notion",
+          "title": "user-guide/skills/optional/productivity/productivity-notion",
+          "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/"
+        },
+        {
           "id": "user-guide/skills/optional/productivity/productivity-shop",
           "title": "Shop — Shop の商品検索、購入手続き、注文追跡、返品",
           "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/"
         },
         {
+          "id": "user-guide/skills/optional/productivity/productivity-shopify",
+          "title": "user-guide/skills/optional/productivity/productivity-shopify",
+          "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/"
+        },
+        {
           "id": "user-guide/skills/optional/productivity/productivity-siyuan",
           "title": "Siyuan — SiYuan のナレッジベースを API から読み書きする",
           "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-duckduckgo-search",
+          "title": "user-guide/skills/optional/research/research-duckduckgo-search",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/"
         },
         {
           "id": "user-guide/skills/optional/research/research-parallel-cli",
@@ -155,6 +185,11 @@
           "id": "user-guide/skills/optional/research/research-scrapling",
           "title": "Scrapling — 目立たないブラウザ操作と Cloudflare 回避でサイトを収集する",
           "url": "/hermes/docs/user-guide/skills/optional/research/research-scrapling/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-searxng-search",
+          "title": "user-guide/skills/optional/research/research-searxng-search",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-searxng-search/"
         }
       ]
     },

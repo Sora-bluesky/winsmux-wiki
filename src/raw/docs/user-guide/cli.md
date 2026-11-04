@@ -2,7 +2,7 @@
 title: "CLI 画面"
 description: "Hermes Agent のターミナル画面を使いこなす — コマンド、キー操作、人格設定など"
 upstream_path: user-guide/cli.md
-upstream_blob: d88f366bcee32c1a8aa55f8cce9a71cc70494f36
+upstream_blob: 5f610b4ddd49bf210bffc434bda7faee0fc8944c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/cli
 ---
@@ -608,6 +608,26 @@ display:
 ```
 
 これは幅の狭いターミナルや、ツールの引数に非常に長いファイルパスが入る場面で役に立ちます。
+
+### 画像のその場表示 {#inline-images}
+
+画像は会話の流れの中にそのまま表示されます。自分で添付した画像（`/paste`、`/image`、ドラッグ＆ドロップ）は自分のメッセージの下に、成功したツール呼び出しが作った、または見たローカルの画像（`vision_analyze`、`image_generate`、ブラウザやコンピューター操作のスクリーンショット）はそのツールの行の下に出ます。`read_file` は画像を読めないので、画像は表示されません。同じ設定が [TUI](/hermes/docs/user-guide/tui/) の表示も決めます。
+
+```yaml
+# ~/.hermes/config.yaml
+display:
+  inline_images: auto   # auto | kitty | iterm | unicode | off
+```
+
+- **`auto`** は、kitty と Ghostty では元の解像度のまま画像を描きます（kitty のグラフィックスプロトコルと Unicode のプレースホルダーを使います）。従来の CLI では、iTerm2、WezTerm、Konsole でも元の解像度で描きます（iTerm2 のインライン画像プロトコルで、あらかじめ確保した行の上に描きます）。VS Code のターミナルでは、従来の CLI が起動時に画像表示が有効かどうかをターミナルに問い合わせ（`terminal.integrated.enableImages`。返事には10ミリ秒ほどかかります）、有効なら元の解像度で描き、無効ならときどき有効にするよう勧めるヒントを出します。それ以外の環境（tmux、GNU screen、VS Code への SSH 接続、kitty/Ghostty 以外での TUI など）では、フルカラーの半ブロック文字で描きます。
+- **`kitty`** は kitty のプロトコルを強制します。たとえば、`set -g allow-passthrough on` を設定した tmux の中で従来の CLI を使う場合です。
+- **`iterm`** は、従来の CLI で iTerm2 のプロトコルを強制します（TUI ではこの値は `auto` として扱われます）。
+- **`unicode`** は常に半ブロック文字を使います。
+- **`off`** は、これまでどおりファイルのパスだけを表示します。
+
+描かれるのはローカルのファイルだけで、リモートの画像 URL は取りに行きません。Sixel 対応のターミナルでは半ブロック文字で描きます。
+
+ターミナルの大きさを変えると、CLI は会話の流れを描き直します。kitty と半ブロック文字の画像は描き直しのあとも表示されますが、iTerm2 のプロトコルで描いた画像（iTerm2、WezTerm、Konsole）は、描き直した画面では空白の行になり、その上のスクロールバックにだけ残ります。
 
 ## セッションの管理 {#session-management}
 

@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: e072bab825f71dbbcfabd92e8b937f2f4169c515
+upstream_blob: b10491fa9ba1b4197585e4546372d47de43766d7
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -195,6 +195,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `BRV_API_KEY` | ByteRover の API キー（任意。クラウド同期用で、既定では手元優先です）（[app.byterover.dev](https://app.byterover.dev)） |
 | `SUPERMEMORY_API_KEY` | プロフィールの呼び出しとセッションの取り込みを備えた、意味づけに基づく長期記憶（[supermemory.ai](https://supermemory.ai)） |
 | `DAYTONA_API_KEY` | Daytona のクラウドのサンドボックス（[daytona.io](https://daytona.io/)） |
+| `SPRITES_TOKEN` | Sprites のクラウドのサンドボックス。[`sprites` プラグイン](https://github.com/NousResearch/hermes-plugin-sprites)が読み取ります（[fly.io/sprites](https://fly.io/sprites)） |
 | `VERCEL_TOKEN` | Vercel Sandbox のアクセストークン（[vercel.com](https://vercel.com/)） |
 | `VERCEL_PROJECT_ID` | Vercel のプロジェクト ID（`VERCEL_TOKEN` と一緒に必要です） |
 | `VERCEL_TEAM_ID` | Vercel のチーム ID（`VERCEL_TOKEN` と一緒に必要です） |
@@ -243,7 +244,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 
 | 変数 | 説明 |
 |----------|-------------|
-| `TERMINAL_ENV` | バックエンド: `local`、`docker`、`ssh`、`modal`、`daytona`、`vercel_sandbox`、またはプラグインのバックエンド（`singularity`） |
+| `TERMINAL_ENV` | バックエンド: `local`、`docker`、`ssh`、`modal`、`daytona`、`vercel_sandbox`、またはプラグインのバックエンド（`singularity`、`sprites`） |
 | `HERMES_DOCKER_BINARY` | Hermes が呼び出すコンテナのコマンドを上書きします（`podman`、`/usr/local/bin/docker` など）。設定しなければ `PATH` 上の `docker` か `podman` を自動で探します。両方入っていて既定でないほうを使いたいときや、コマンドが `PATH` の外にあるときに必要です。 |
 | `TERMINAL_DOCKER_IMAGE` | Docker のイメージ（既定: `nousresearch/hermes-sandbox:desktop`） |
 | `TERMINAL_DOCKER_FORWARD_ENV` | Docker のターミナルセッションへ明示的に渡す環境変数名の JSON 配列。なお、スキルが宣言した `required_environment_variables` は自動で渡されるので、どのスキルも宣言していない変数のときだけ必要です。 |

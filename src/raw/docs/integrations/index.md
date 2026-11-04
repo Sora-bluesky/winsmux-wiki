@@ -2,7 +2,7 @@
 title: "外部サービス連携"
 description: ""
 upstream_path: integrations/index.md
-upstream_blob: 373c6c64904aad83c1e8cb9bb8d247094b8a31d4
+upstream_blob: 2a44cef7cf775b454755a68e1d00cb725b12d5c3
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations
 ---
@@ -21,7 +21,7 @@ Hermes は複数の AI 推論プロバイダーに最初から対応していま
 
 - **[AI プロバイダー](/hermes/docs/integrations/providers/)** — OpenRouter、Anthropic、OpenAI、Google、そして OpenAI 互換のエンドポイント全般です。画像認識・ストリーミング・ツール利用といった機能に対応しているかどうかを、Hermes がプロバイダーごとに自動で判別します。
 - **[プロバイダーの経路制御](/hermes/docs/user-guide/features/provider-routing/)** — OpenRouter へのリクエストを実際にどのプロバイダーが処理するかを細かく指定できます。並び替え、許可リスト、拒否リスト、優先順位の明示によって、費用・速度・品質のどれを取るかを調整できます。
-- **[予備のプロバイダー](/hermes/docs/user-guide/features/fallback-providers/)** — 主に使うモデルでエラーが出たとき、控えの LLM プロバイダーへ自動的に切り替えます。メインのモデルの切り替えに加えて、画像認識・圧縮・Web 抽出といった補助処理だけを別に切り替えることもできます。
+- **[予備のプロバイダー](/hermes/docs/user-guide/features/fallback-providers/)** — 主に使うモデルでエラーが出たとき、控えの LLM プロバイダーへ自動的に切り替えます。メインのモデルの切り替えに加えて、画像認識・圧縮・タイトル生成といった補助処理だけを別に切り替えることもできます。
 
 ## ツールサーバー（MCP） {#tool-servers-mcp}
 

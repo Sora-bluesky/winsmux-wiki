@@ -2,7 +2,7 @@
 title: "AWS Bedrock"
 description: "Hermes Agent を Amazon Bedrock で使う — ネイティブの Converse API、Anthropic SDK 経由の振り分け、Bedrock Mantle 経由の OpenAI モデル、IAM 認証、Guardrails、クロスリージョン推論"
 upstream_path: guides/aws-bedrock.md
-upstream_blob: a22526d19fa7d0031e70c28ec5db45e24a964a4a
+upstream_blob: 695df4f56b6c3875c344755c43c75a725146b8e1
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/aws-bedrock
 ---
@@ -20,7 +20,7 @@ Hermes は、モデルの系統ごとに最も適した API へ振り分けま�
 | モデルの系統 | 使う API | 理由 |
 |---|---|---|
 | Anthropic Claude | Anthropic SDK（`AnthropicBedrock`） | プロンプトキャッシュ、思考の予算、状況に応じた思考など、Converse では使えない機能があるため |
-| OpenAI GPT-6（Astra、Sol、Luna）、GPT-6.1 Sol、GPT-5.6（Sol、Terra、Luna）、GPT-5.5 を素の `openai.*` ID で指定した場合 | Bedrock Mantle の **OpenAI Responses** エンドポイント（`bedrock-mantle.<region>.api.aws/openai/v1`） | Bedrock Mantle は、そのリージョン内で使う素の ID を受け付けます。`bedrock-runtime` は受け付けません |
+| OpenAI GPT-6（Astra、Sol、Luna）、GPT-6.1（Sol、Terra）、GPT-5.6（Sol、Terra、Luna）、GPT-5.5、GPT-5.4 を素の `openai.*` ID で指定した場合 | Bedrock Mantle の **OpenAI Responses** エンドポイント（`bedrock-mantle.<region>.api.aws/openai/v1`） | Bedrock Mantle は、そのリージョン内で使う素の ID を受け付けます。`bedrock-runtime` は受け付けません |
 | 同じ OpenAI のモデルを `us.` または `global.` の推論プロファイル ID で指定した場合 | ネイティブの **Converse API**（`bedrock-runtime`） | クロスリージョンのプロファイルは `bedrock-runtime` にしかありません。モデルカードでも、そこでは Converse が対応済みと書かれています |
 | それ以外すべて（Nova、DeepSeek、Llama、GPT-OSS など） | ネイティブの **Converse API**（`bedrock-runtime`） | Guardrails、推論プロファイル、逐次配信など Bedrock の機能を一通り使えるため |
 
@@ -119,7 +119,9 @@ Hermes は Bedrock の **Converse API** 経路で、システムプロンプト�
 
 コンテキストウィンドウが Hermes の静的な一覧に載っていないモデルについては、わざと大きすぎるリクエストを決まった段階（およそ 130 万トークンと 220 万トークン）で送り、Bedrock の長さ検証エラーに含まれる `maximum` の値を読み取って、実際の上限を調べられます。こうして得た値は静的な一覧と同じメタデータキャッシュに入ります。古いキャッシュがモデルの実際のウィンドウより小さい値を報告している場合（たとえば 100 万トークンのウィンドウが正式提供される前に作られた項目など）は、自動的に破棄されて大きいほうの既知の値が使われます。
 
-実測でも静的な一覧でも分からないモデルには、Hermes は 128,000 トークンの予備値を使い、そのモデル名を示す WARNING をログに出します。`config.yaml` の `model.context_length` に、そのモデルの実際のウィンドウの大きさを設定してください。
+Anthropic・OpenAI・xAI のモデルで静的な一覧に行がない場合、Hermes は汎用のモデルカタログ（`agent/model_metadata.py`）にあるそのモデル系統のウィンドウを使います。これにより、Bedrock 用の一覧が更新される前でも、新しいティアに実際のウィンドウが割り当てられます。ほかのベンダーのカタログの行は、ベンダーに直接つないだ場合のウィンドウで、Bedrock で提供される値を超えることがあります（Llama 3 8B は Bedrock では 8K です）。そのため、それらのモデルにはカタログの値を流用しません。
+
+どこにも情報がないモデルには、Hermes は 128,000 トークンの予備値を使い、そのモデル名を示す WARNING をログに出します。バナー、ステータスバー、`/usage`、`/model`、ゲートウェイのセッション行では、このウィンドウに `fallback` と表示され、検出した上限と取り違えないようになっています。`config.yaml` の `model.context_length`（または `model_overrides.bedrock.<model id>.context_window`）に、そのモデルの実際のウィンドウの大きさを設定してください。
 
 **アプリケーション推論プロファイル。** `arn:aws:bedrock:us-west-2:123456789012:application-inference-profile/abcdef123456` のような ARN はモデル名を含まないため、実測でも静的な一覧でも大きさを決められません。Hermes はその ARN のリージョンで `bedrock:GetInferenceProfile` を呼び、プロファイルが包んでいるモデルからウィンドウの大きさを決めます（Claude Sonnet 4.6 を包んでいるプロファイルなら 100 万トークン）。この権限がない場合は既定の 128,000 トークンが適用され、どのプロファイルかを示す WARNING が出ます。どちらの場合も `model.context_length` を明示すれば上書きできます。
 
@@ -134,12 +136,14 @@ Bedrock のモデルは、オンデマンド呼び出しでは**推論プロフ�
 | Claude Haiku 4.5 | `us.anthropic.claude-haiku-4-5-20251001-v1:0` | Claude の中で最速 |
 | OpenAI GPT-6 Astra | `openai.gpt-6-astra` | OpenAI でいちばん高性能なモデル。ウィンドウは 1,050,000 トークン |
 | OpenAI GPT-6.1 Sol | `openai.gpt-6.1-sol` | ウィンドウは 100 万トークン。Mantle のリージョン内アクセスは `us-east-1` だけです |
+| OpenAI GPT-6.1 Terra | `openai.gpt-6.1-terra` | バランス型の Terra ティア。ウィンドウは 1,050,000 トークン |
 | OpenAI GPT-6 Sol | `openai.gpt-6-sol` | コーディングやエージェント的な作業向け。ウィンドウは 1,050,000 トークン |
 | OpenAI GPT-6 Luna | `openai.gpt-6-luna` | 範囲を絞った大量の作業向け。ウィンドウは 1,050,000 トークン |
 | OpenAI GPT-5.6 Sol | `openai.gpt-5.6-sol` | ウィンドウは 1,050,000 トークン |
 | OpenAI GPT-5.6 Terra | `openai.gpt-5.6-terra` | バランス型。ウィンドウは 1,050,000 トークン |
 | OpenAI GPT-5.6 Luna | `openai.gpt-5.6-luna` | 高速で安価。ウィンドウは 1,050,000 トークン |
 | OpenAI GPT-5.5 | `openai.gpt-5.5` | Mantle のみ。推論プロファイルはありません |
+| OpenAI GPT-5.4 | `openai.gpt-5.4` | ウィンドウは 1,050,000 トークン |
 | Amazon Nova Pro | `us.amazon.nova-pro-v1:0` | Amazon の主力 |
 | Amazon Nova Micro | `us.amazon.nova-micro-v1:0` | 最速・最安 |
 | DeepSeek V3.2 | `deepseek.v3.2` | 性能の高いオープンモデル |

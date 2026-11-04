@@ -2,7 +2,7 @@
 title: "フォールバックプロバイダー"
 description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: 849e6ee68ba23aff2a8459a4ed8eb3755434cc8c
+upstream_blob: b3130556342755fac31d458d0ad960ab7962b2f8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
@@ -221,7 +221,6 @@ Hermes は脇のタスクに、別の軽量なモデルを使います。タス�
 |------|-------------|-----------|
 | 画像認識 | 画像の解析、ブラウザーのスクリーンショット | `auxiliary.vision` |
 | 圧縮 | コンテキスト圧縮の要約 | `auxiliary.compression` |
-| Skills Hub | スキルの検索と発見 | `auxiliary.skills_hub` |
 | MCP | MCP の補助的な処理 | `auxiliary.mcp` |
 | 承認 | コマンド承認の賢い判定 | `auxiliary.approval` |
 | タイトル生成 | セッションのタイトルの要約 | `auxiliary.title_generation` |
@@ -241,7 +240,7 @@ fallback_providers / fallback_model → skip the task (warn)
 
 タスクごとの連鎖がいちばん的確なので、書かれていればそれが優先されます。トップレベルの `fallback_providers` の連鎖はメインのエージェントが使うのと同じ方針なので、無料のみ・同一プロバイダーのみといったフォールバックの決まりごとも、`auto` の補助タスクにそのまま適用されます。
 
-**組み込みのテキスト用探索連鎖（圧縮、Web 抽出、タイトル生成など）:**
+**組み込みのテキスト用探索連鎖（圧縮、タイトル生成など）:**
 
 ```text
 OpenRouter → Nous Portal → Custom endpoint → Codex OAuth →
@@ -275,10 +274,6 @@ auxiliary:
     fallback_chain:              # optional, task-specific fallback policy
       - provider: openrouter
         model: inclusionai/ring-2.6-1t:free
-
-  skills_hub:
-    provider: "auto"
-    model: ""
 
   mcp:
     provider: "auto"
@@ -454,7 +449,6 @@ cronjob(
 | 補助タスク全般 — プロバイダー明示 | 容量エラーのとき `fallback_chain`（設定していれば）→ メインエージェントのモデル → 警告して送出。認証エラー（401）は `fallback_chain` だけをたどります | `auxiliary.<task>.fallback_chain` |
 | 画像認識 | 上記の多層方式に加え、OpenRouter への内部的な再試行 | `auxiliary.vision` |
 | コンテキスト圧縮 | 上記の多層方式。どの層も使えない場合は要約なしに劣化します | `auxiliary.compression` |
-| Skills hub | 上記の多層方式 | `auxiliary.skills_hub` |
 | MCP の補助処理 | 上記の多層方式 | `auxiliary.mcp` |
 | 承認の判定 | 上記の多層方式 | `auxiliary.approval` |
 | タイトル生成 | 上記の多層方式 | `auxiliary.title_generation` |

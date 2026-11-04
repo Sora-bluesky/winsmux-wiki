@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ACP ホスト連携"
 description: "ACP に対応したエディタや共同作業ツールの中で Hermes Agent を使う"
 upstream_path: user-guide/features/acp.md
-upstream_blob: 8bcb68b08a2985b03dda091a0b1ce1f7e573cd5a
+upstream_blob: 02a807814249869598540c9abeabaf5e0748acb9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/acp
 ---
@@ -327,6 +327,19 @@ ACP モードは CLI と同じ Hermes の設定を使います。
 - `~/.hermes/state.db`
 
 プロバイダの決定も Hermes の通常の仕組みどおりなので、ACP でも現在設定されているプロバイダと認証情報がそのまま引き継がれます。また Hermes は、初めて接続する ACP クライアント向けに端末での認証方法（`--setup`）を提示します。これを選ぶと Hermes の対話式のモデル・プロバイダ設定が開きます。
+
+### サービス階層の選択 {#service-tier-picker}
+
+`configOptions` を表示できる ACP クライアントでは、対応しているモデルの経路について
+**Service tier**（サービス階層）を選べます。選択肢は **Normal**、**Fast**、**Auto**、**Cold** で、
+モデルとアカウントの利用資格の確認を通った場合は **Ultrafast** も加わります。選択肢を用意し、
+選ばれた値が有効かどうかを確かめるのはゲートウェイです。対応していない経路では、この選択欄は表示されません。
+
+選んだ値が効くのはそのセッションの次のやり取りからで、Hermes のすべてのセッションに及ぶわけではありません。
+また `config.yaml` にも書き込まれません。同じゲートウェイのセッションが生きている間は、エディタを
+再読み込みしても選択は保たれます。接続している別のクライアントで変更した場合も、ACP の選択欄に反映されます。
+上限付きで動く Auto と Cold のモードについては、[スラッシュコマンド一覧の `/fast` の項目](/hermes/docs/reference/slash-commands/)
+を参照してください。
 
 ## ホスト側から渡される設定 {#host-integration}
 

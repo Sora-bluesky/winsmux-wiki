@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ツールとツールセット"
 description: "Hermes Agent のツールの全体像 — 何が使えるか、ツールセットの仕組み、ターミナルの実行先"
 upstream_path: user-guide/features/tools.md
-upstream_blob: 9059cffeefc17658429fe2e7dbdaf0f5b0f7b549
+upstream_blob: 92da7b0baa6617e2e9b06a1d3708e4dbc5cacd46
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tools
 ---
@@ -78,6 +78,7 @@ hermes tools
 | `docker` | 切り離されたコンテナ | 安全性、再現性 |
 | `ssh` | 離れたサーバー | 隔離、エージェントを自分のコードから遠ざける |
 | `singularity`（プラグイン） | HPC 向けのコンテナ | クラスタでの計算、root なし |
+| `sprites`（プラグイン） | 状態を保つ Fly.io のクラウドの砂場 | チェックポイントと復元ができる、消えずに残るクラウド環境 |
 | `modal` | クラウドでの実行 | サーバーレス、規模を伸ばす |
 | `daytona` | クラウドの砂場としての作業場 | 消えずに残る、離れた開発環境 |
 | `vercel_sandbox` | Vercel Sandbox のクラウド上の microVM | スナップショットに支えられたファイルシステムが残るクラウドでの実行 |
@@ -87,7 +88,7 @@ hermes tools
 ```yaml
 # In ~/.hermes/config.yaml
 terminal:
-  backend: local    # or: docker, ssh, modal, daytona, vercel_sandbox, or a plugin backend (singularity)
+  backend: local    # or: docker, ssh, modal, daytona, vercel_sandbox, or a plugin backend (singularity, sprites)
   cwd: "."          # Working directory
   timeout: 180      # Command timeout in seconds
 ```
@@ -158,6 +159,16 @@ apptainer build ~/python.sif docker://python:3.11-slim
 # Configure
 hermes config set terminal.backend singularity
 hermes config set terminal.singularity_image ~/python.sif
+```
+
+### Sprites {#sprites}
+
+プラグイン（[`sprites`](https://github.com/NousResearch/hermes-plugin-sprites)）です。Fly.io 上の、状態を保つ [Sprite](https://fly.io/sprites) の中でコマンドを実行します。詳しくは [Sprites の実行先](/hermes/docs/user-guide/configuration/#sprites-backend)を参照してください。
+
+```bash
+hermes plugins install NousResearch/hermes-plugin-sprites --enable
+hermes config set terminal.backend sprites
+# Add SPRITES_TOKEN to ~/.hermes/.env
 ```
 
 ### Modal（サーバーレスのクラウド） {#modal-serverless-cloud}

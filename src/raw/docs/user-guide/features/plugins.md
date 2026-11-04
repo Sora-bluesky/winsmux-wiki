@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 880521209b00506d2816b440df7d75e576908838
+upstream_blob: 1f24022828d6cadbc5ff983caaa62a9eb617fd31
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -42,6 +42,10 @@ Hermes を起動すると、自分のツールが組み込みのツールと並�
 name: hello-world
 version: "1.0"
 description: A minimal example plugin
+provides_tools:
+  - hello_world
+provides_hooks:
+  - post_tool_call
 ```
 
 **`~/.hermes/plugins/hello-world/__init__.py`**
@@ -81,7 +85,7 @@ def register(ctx):
     )
 
     # --- Hook: log every tool call ---
-    def on_tool_call(tool_name, params, result):
+    def on_tool_call(tool_name, args, result, **kwargs):
         print(f"[hello-world] tool called: {tool_name}")
 
     ctx.register_hook("post_tool_call", on_tool_call)

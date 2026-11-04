@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: a3ce2a708f909181320cc2da1481de14d7c1f188
+upstream_blob: d67b49225d81a1a480f37eed61b32d378806c6c6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -240,7 +240,7 @@ git でインストールした場合、Hermes は更新用のブランチをチ
 
 ## ターミナルバックエンドの設定 {#terminal-backend-configuration}
 
-Hermes には6種類のターミナルバックエンドが付属しています。どれを選ぶかで、エージェントのシェルコマンドが実際にどこで実行されるかが決まります。手元のマシン、Docker コンテナ、SSH 経由のリモートサーバー、Modal のクラウドのサンドボックス（直接、または Nous が管理するゲートウェイ経由）、Daytona のワークスペース、Vercel Sandbox のいずれかです。プラグインでさらに追加でき、公式の [Singularity/Apptainer](#singularityapptainer-backend) バックエンドもその1つです。
+Hermes には6種類のターミナルバックエンドが付属しています。どれを選ぶかで、エージェントのシェルコマンドが実際にどこで実行されるかが決まります。手元のマシン、Docker コンテナ、SSH 経由のリモートサーバー、Modal のクラウドのサンドボックス（直接、または Nous が管理するゲートウェイ経由）、Daytona のワークスペース、Vercel Sandbox のいずれかです。プラグインでさらに追加でき、公式の [Singularity/Apptainer](#singularityapptainer-backend) バックエンドや [Sprites](#sprites-backend) バックエンドもその例です。
 
 ```yaml
 terminal:
@@ -297,7 +297,7 @@ terminal:
 
 `terminal.font_family` は、Hermes Desktop に組み込まれたターミナルのフォントを設定します。手元にインストール済みのフォントファミリー名を1つ（例: `MesloLGS NF`）か、CSS のフォントスタックを指定できます。Hermes は同梱の JetBrains Mono のスタックをフォールバックとして後ろに付け足し、空にすると既定のフォントのままになります。このプロファイル単位の設定は **Settings → Appearance → Terminal Font** でも変更できます。Google Fonts のダウンロードや、システムフォントへのアクセス許可は必要ありません。
 
-Modal、Daytona、Vercel Sandbox のようなクラウドのサンドボックスでは、`container_persistent: true` を設定すると、サンドボックスを作り直してもファイルシステムの状態が残るよう Hermes が試みます。稼働中の同じサンドボックス、PID 空間、バックグラウンドプロセスが、あとでも動き続けていることまでは保証しません。
+Modal、Daytona、Vercel Sandbox、Sprites のようなクラウドのサンドボックスでは、`container_persistent: true` を設定すると、サンドボックスを作り直してもファイルシステムの状態が残るよう Hermes が試みます。稼働中の同じサンドボックス、PID 空間、バックグラウンドプロセスが、あとでも動き続けていることまでは保証しません。
 
 ### バックエンドの概要 {#backend-overview}
 
@@ -310,6 +310,7 @@ Modal、Daytona、Vercel Sandbox のようなクラウドのサンドボック�
 | **daytona** | Daytona のワークスペース | 完全（クラウドのコンテナ） | マネージドなクラウド開発環境 |
 | **vercel_sandbox** | Vercel Sandbox | 完全（クラウドの microVM） | スナップショットでファイルシステムを保持するクラウド実行 |
 | **singularity**（プラグイン） | Singularity/Apptainer のコンテナ | 名前空間（--containall） | HPC クラスター、共有マシン |
+| **sprites**（プラグイン） | Fly.io 上の Sprite | 完全（クラウドの microVM） | セッションをまたいで状態が残るクラウドのサンドボックス |
 
 ### ローカルバックエンド {#local-backend}
 
@@ -643,6 +644,31 @@ terminal:
 
 **分離:** `--containall --no-home` を使い、ホストのホームディレクトリをマウントせずに名前空間を完全に分離します。
 
+### Sprites バックエンド {#sprites-backend}
+
+コマンドを [Sprite](https://fly.io/sprites) の中で実行します。Sprite は Fly.io 上で動く、状態を保持できるクラウドのサンドボックスで、チェックポイントの保存と復元ができます。このバックエンドは [`sprites` プラグイン](https://github.com/NousResearch/hermes-plugin-sprites) として提供されています。次のコマンドでプラグインをインストールし、バックエンドとして選んでください。
+
+```bash
+hermes plugins install NousResearch/hermes-plugin-sprites --enable
+hermes config set terminal.backend sprites
+```
+
+インストールの途中で、プラグインが使う Python の依存パッケージ（`sprites-py`）を追加してよいか確認されます。インストールが終わったら Hermes を再起動してください。
+
+```yaml
+terminal:
+  backend: sprites
+  container_persistent: true       # Keep the Sprite between sessions (default)
+```
+
+**必要なもの:** `~/.hermes/.env` に設定した `SPRITES_TOKEN`。トークンは、Fly.io のダッシュボードにある組織の Sprites の設定画面で作成します。`sprite login` を実行するだけでは、Hermes が使えるトークンは手に入りません。
+
+**状態の保持:** 永続化した Sprite はセッションが終わっても動き続け、次回は名前で再開されます。名前はプロファイルごとに分かれます。既定のプロファイルでは `hermes-{task_id}`、名前付きのプロファイルでは `hermes-{profile}-{task_id}-{digest}`（長さに収まるよう短縮されます）です。Sprite 自身のファイルシステムが正となるコピーなので、ホストへは何も書き戻されません。`container_persistent: false` にすると、実行のたびに固有の名前の Sprite が作られ、後片付けのときに削除されます。
+
+**共有のしかた:** ゲートウェイと WebUI のセッションは、それぞれ専用の Sprite を使います。`delegate_task` のサブエージェントは親の Sprite を共有し、セッションを持たない処理（CLI、cron）はプロファイルの既定の Sprite を共有します。
+
+**任意の設定**は `plugins.entries.sprites.settings` の下に置きます（Plugins ハブでも変更できます）。`name_prefix`（すべての Sprite 名の `hermes-` の部分を置き換えます）、`scope`（`session` か、プロファイルごとに Sprite を1つにする `instance`）、そして新しく作る Sprite に使う `image`、`max_cpus`、`max_ram_gb`、`max_disk_gb` です。無効な値があるとバックエンドは起動せず、`hermes doctor` がその値を示します。詳しくは [プラグインの README](https://github.com/NousResearch/hermes-plugin-sprites#settings) を参照してください。
+
 ### ターミナルバックエンドのよくある問題 {#common-terminal-backend-issues}
 
 ターミナルのコマンドがすぐに失敗する場合や、ターミナルツールが無効と表示される場合は、次を確認してください。
@@ -653,6 +679,7 @@ terminal:
 - **Modal** — 環境変数 `MODAL_TOKEN_ID` か `~/.modal.toml` が必要です。確認するには `hermes doctor` を実行します。
 - **Daytona** — `DAYTONA_API_KEY` が必要です。サーバー URL の設定は Daytona SDK が行います。
 - **Singularity** — `singularity` プラグイン（`hermes plugins install singularity`）と、`$PATH` にある `apptainer` か `singularity` が必要です。HPC クラスターではよく入っています。
+- **Sprites** — `sprites` プラグインと `SPRITES_TOKEN` が必要です。`hermes doctor` を実行すると、トークン、SDK、名前付けのチェック結果が表示されます。
 
 迷ったときは、`terminal.backend` を `local` に戻し、まずそこでコマンドが動くことを確かめてください。
 
@@ -662,7 +689,7 @@ terminal:
 
 - 書き戻しは、バックオフを挟みながら最大3回まで再試行します。2 GiB を超えるリモートのアーカイブは展開しません。状態のツリーがそれより大きい場合は、`config.yaml` で `terminal.sync_back_max_bytes`（バイト単位）を設定して上限を引き上げてください。リモートの `~/.hermes/` の下にある使用中のソケット（例: `gateway.sock`）は、転送を失敗させずにスキップします。
 - ダウンロードしたアーカイブは、システムの一時ディレクトリの下（`hermes-sync-back-<pid>-*`）にいったん置かれます。強制終了されたプロセスが残したものは、次の書き戻しのときに回収されます。
-- Docker と Singularity はバインドマウント（ホストのファイルシステムをそのまま見せる方式）を使うので、この仕組みは必要ありません。
+- Docker と Singularity はバインドマウント（ホストのファイルシステムをそのまま見せる方式）を使うので、この仕組みは必要ありません。Sprites も独自の永続的なファイルシステムを持っているので、書き戻しは行いません。
 - 対象になるのは Hermes の状態（`~/.hermes/`）で、サンドボックス内の任意の作業ファイルは**対象外**です。大事な成果物は、サンドボックスが破棄される前にエージェントに明示的に外へコピーさせてください（例: `scp`、`modal volume put`）。
 
 ### Docker のボリュームマウント {#docker-volume-mounts}
@@ -1665,14 +1692,6 @@ auxiliary:
     timeout: 30
     language: ""
 
-  # Skills hub — skill matching and search
-  skills_hub:
-    provider: "auto"
-    model: ""
-    base_url: ""
-    api_key: ""
-    timeout: 30
-
   # MCP tool dispatch
   mcp:
     provider: "auto"
@@ -1737,7 +1756,7 @@ auxiliary:
 | `model` | そのプロバイダーでのモデル名 |
 | `base_url` | （任意）OpenAI 互換のカスタムエンドポイント |
 
-`fallback_chain` は、`compression`、`vision`、`approval`、`skills_hub`、`mcp` など、どの補助タスクでも使えます。
+`fallback_chain` は、`compression`、`vision`、`approval`、`mcp` など、どの補助タスクでも使えます。
 
 ### 画像認識のネイティブ埋め込みの上限（トップレベルの `vision:`） {#native-vision-embed-budgets-top-level-vision}
 

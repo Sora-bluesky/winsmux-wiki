@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プロバイダーを追加する"
 description: "Hermes Agent に新しい推論プロバイダーを追加する方法 — 認証、実行時の解決、CLI の導線、アダプター、テスト、ドキュメント"
 upstream_path: developer-guide/adding-providers.md
-upstream_blob: 1cd0964858a4ae75faca65a0a7e90596b2ff6d96
+upstream_blob: 542f8ff34de36680dacbc127b649603b3320621a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-providers
 ---
@@ -265,9 +265,7 @@ API キーを直接使うプロバイダーなら、安くて速い補助モデ�
 脇で走る処理には、次のようなものがあります。
 
 - 画像の内容のまとめ
-- Web から抜き出した本文のまとめ
 - 文脈の圧縮のためのまとめ
-- セッション検索のまとめ
 - メモリの書き出し
 
 そのプロバイダーに手頃な補助の既定値がないと、脇の処理がよくない形で切り替わったり、思いがけず高価な主モデルを使ってしまったりします。

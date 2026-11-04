@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-11-04、対象期間 = 2026-10-29 〜 2026-11-04（JST）
+生成日 = 2026-11-05、対象期間 = 2026-10-30 〜 2026-11-05（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -38,14 +38,21 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-04 [Microsoft Office — Word・PowerPoint・Excel ファイルを作成・読み取り・編集する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/)
 - 2026-11-04 [Pdf — PDF ファイルの作成・読み取り・結合・フォーム入力・OCR・テキスト編集](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/)
 - 2026-11-04 [Weekly Review Planning — 週ごとの仕切り直し: 約束、止まっている仕事、来週の計画](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning/)
+- 2026-11-04 [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/)
 - 2026-11-04 [Excel Author — openpyxl でヘッドレスに監査できる財務ワークブックを作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/)
 - 2026-11-04 [Pptx Author — python-pptx でヘッドレスに PowerPoint 資料を作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/)
+- 2026-11-04 [user-guide/skills/optional/payments/payments-mpp-agent](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/)
 - 2026-11-04 [Stripe Link Cli — Stripe Link を使ったエージェントの支払い — カード、SPT、承認](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/)
 - 2026-11-04 [Stripe Projects — Stripe Projects で SaaS を用意し、認証情報を同期する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/)
+- 2026-11-04 [user-guide/skills/optional/productivity/productivity-airtable](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/)
+- 2026-11-04 [user-guide/skills/optional/productivity/productivity-notion](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/)
 - 2026-11-04 [Shop — Shop の商品検索、購入手続き、注文追跡、返品](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/)
+- 2026-11-04 [user-guide/skills/optional/productivity/productivity-shopify](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/)
 - 2026-11-04 [Siyuan — SiYuan のナレッジベースを API から読み書きする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/)
+- 2026-11-04 [user-guide/skills/optional/research/research-duckduckgo-search](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/)
 - 2026-11-04 [Parallel Cli — エージェント向けのウェブ検索・深い調査・情報の補完](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-parallel-cli/)
 - 2026-11-04 [Scrapling — 目立たないブラウザ操作と Cloudflare 回避でサイトを収集する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-scrapling/)
+- 2026-11-04 [user-guide/skills/optional/research/research-searxng-search](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-searxng-search/)
 - 2026-11-03 [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
 - 2026-11-03 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - 2026-11-03 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
@@ -111,10 +118,7 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-30 [user-guide/skills/optional/mlops/mlops-stable-diffusion](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-stable-diffusion/)
 - 2026-10-30 [user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning/)
 - 2026-10-30 [user-guide/skills/optional/mlops/mlops-whisper](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mlops/mlops-whisper/)
-- 2026-10-30 [user-guide/skills/optional/productivity/productivity-airtable](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/)
 - 2026-10-30 [Box — クラウド上のファイル、共有、検索、メタデータを管理します](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-box/)
-- 2026-10-30 [user-guide/skills/optional/productivity/productivity-notion](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/)
-- 2026-10-30 [user-guide/skills/optional/productivity/productivity-shopify](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/)
 - 2026-10-30 [Llm Wiki — Karpathy の LLM Wiki: 相互にリンクした markdown のナレッジベースを作り、問い合わせる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-llm-wiki/)
 - 2026-10-30 [user-guide/skills/optional/research/research-pinecone-research](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-pinecone-research/)
 - 2026-10-30 [Hermes Agent Skill Authoring — リポジトリ内の SKILL.md を書く: フロントマターと構成](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-hermes-agent-skill-authoring/)
@@ -122,12 +126,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-10-30 [Node Inspect Debugger — --inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-node-inspect-debugger/)
 - 2026-10-30 [Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-python-debugpy/)
 - 2026-10-30 [どのファイルが何をするのか](https://wiki.winsmux.dev/hermes/docs/user-guide/which-file-does-what/)
-- 2026-10-29 [設定バックエンドの境界層](https://wiki.winsmux.dev/hermes/docs/developer-guide/config-backend/)
-- 2026-10-29 [コンテキストエンジンのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-engine-plugin/)
-- 2026-10-29 [カンバン（マルチエージェント盤）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/kanban/)
-- 2026-10-29 [Git ワークツリー](https://wiki.winsmux.dev/hermes/docs/user-guide/git-worktrees/)
-- 2026-10-29 [Discord](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/discord/)
-- 2026-10-29 [リモート設定](https://wiki.winsmux.dev/hermes/docs/user-guide/remote-config/)
 
 ## 週次まとめ
 

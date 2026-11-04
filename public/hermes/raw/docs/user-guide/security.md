@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: 8a07e2f74824a9f2c352d9e1d32e4ca06eb0f893
+upstream_blob: 1aaf5031de0e95a54b06ab33cc513c6a1f1fc2f5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -250,7 +250,7 @@ approvals:
 | `podman --remote`/`-r`/`--url`/`--connection`/`--identity`、`CONTAINER_HOST=` | Podman の遠隔デーモンへの向き先変更 |
 
 :::info
-**コンテナでの省略**: `docker`、`modal`、`daytona`、`vercel_sandbox` のバックエンド（または `singularity` のようなコンテナ型のプラグインのバックエンド）で動いているときは、コンテナそのものがセキュリティの境界になるため、危険なコマンドの検査は **飛ばされます**。コンテナの中の破壊的なコマンドは、ホストを傷つけられません。
+**コンテナでの省略**: `docker`、`modal`、`daytona`、`vercel_sandbox` のバックエンド（または `singularity` や `sprites` のようなコンテナ型のプラグインのバックエンド）で動いているときは、コンテナそのものがセキュリティの境界になるため、危険なコマンドの検査は **飛ばされます**。コンテナの中の破壊的なコマンドは、ホストを傷つけられません。
 :::
 
 ### `execute_code` の台本 {#execute-code-scripts}
@@ -599,6 +599,7 @@ terminal:
 | **ssh** | 別のマシン | ✅ あり | 別のサーバーで動かす場合 |
 | **docker** | コンテナ | ❌ 飛ばします（コンテナが境界） | 本番のゲートウェイ |
 | **singularity**（プラグイン） | コンテナ | ❌ 飛ばします | HPC の環境 |
+| **sprites**（プラグイン） | クラウドのマイクロ VM | ❌ 飛ばします | 状態を保てるクラウドのサンドボックス |
 | **modal** | クラウドのサンドボックス | ❌ 飛ばします | 伸縮するクラウドでの隔離 |
 | **daytona** | クラウドのサンドボックス | ❌ 飛ばします | 残しておけるクラウドの作業場所 |
 | **vercel_sandbox** | クラウドのマイクロ VM | ❌ 飛ばします | スナップショットを残せるクラウド実行 |

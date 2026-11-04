@@ -2,7 +2,7 @@
 title: "TUI"
 description: "Hermes の新しいターミナル画面を起動する — マウスが使えて、表示が豊かで、入力を待たせない"
 upstream_path: user-guide/tui.md
-upstream_blob: b95d4cdb583a310cf04375bd4a60a8166068502e
+upstream_blob: 86029dbdec8ae047a98bf03edf82be60a405ad0a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/tui
 ---
@@ -251,6 +251,7 @@ display:
                              #   buttons — adds 1002 for terminal-side drag selection
                              #   all     — adds 1003 for hover (scrollbar paginate-on-hover,
                              #             link mouseenter, etc.)
+  inline_images: auto        # auto | kitty | iterm | unicode | off — see the CLI guide's "Inline Images"
 ```
 
 実行中に切り替えるには次のコマンドを使います。

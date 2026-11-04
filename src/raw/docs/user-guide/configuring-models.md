@@ -2,7 +2,7 @@
 title: "モデルの設定"
 description: ""
 upstream_path: user-guide/configuring-models.md
-upstream_blob: 0e8e083d29713e3cf45d6b3cbc49700bd0cde974
+upstream_blob: 3e15fe3b8a97ddeaa7bfd996c3fd5f90849770d9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models
 ---
@@ -12,7 +12,7 @@ sources:
 Hermes には、モデルを割り当てる枠が 2 種類あります。
 
 - **メインモデル** — エージェントが考えるのに使うモデルです。利用者のメッセージ、ツール呼び出しの繰り返し、逐次表示される応答は、すべてこのモデルを通ります。
-- **補助モデル** — エージェントが脇に逃がす、小さめの仕事です。コンテキストの圧縮、画像の解析、Web ページの要約、承認の判定、MCP のツール振り分け、セッション名の生成、スキルの検索が該当します。それぞれに専用の枠があり、個別に上書きできます。
+- **補助モデル** — エージェントが脇に逃がす仕事です。コンテキストの圧縮、画像の解析、承認の判定、セッション名の生成、`/review` によるレビュー、音声チャットの返答などが該当します。それぞれに専用の枠があり、個別に上書きできます。ダッシュボードに表示される枠は、[補助モデルを決める](#setting-auxiliary-models)にまとめています。
 
 このページでは、その両方をダッシュボードから設定する方法を説明します。設定ファイルや CLI のほうがよければ、末尾の[別のやり方](#alternative-methods)へ飛んでください。クラウドの提供元ではなく自分の端末でモデルを動かしたい場合は、[ローカルモデル](/hermes/docs/user-guide/local-models/)をご覧ください。
 
@@ -93,7 +93,7 @@ hermes config set security.allow_data_training_tiers_noninteractive true
 
 ## 補助モデルを決める {#setting-auxiliary-models}
 
-**Show auxiliary** をクリックすると、11 個の仕事の枠が現れます。
+**Show auxiliary** をクリックすると、補助の仕事ごとに 1 行ずつ枠が現れます（プラグインが枠を追加することもあります）。
 
 ![補助モデルのパネルを開いたところ](https://hermes-agent.nousresearch.com/img/docs/dashboard-models/auxiliary-expanded.png)
 
@@ -107,13 +107,15 @@ hermes config set security.allow_data_training_tiers_noninteractive true
 | **Vision** | メインモデルが画像に対応していないとき。`google/gemini-2.5-flash` や `gpt-4o-mini` を指定します。 |
 | **Compression** | コンテキストをまとめるだけのために Opus や M2.7 で推論トークンを燃やしているとき。速いチャットモデルなら 50 分の 1 の費用で同じ仕事をこなします。 |
 | **Approval** | `approval_mode: smart` のとき。速くて安いモデル（haiku、flash、gpt-5-mini）が、危険の少ないコマンドを自動承認してよいか判断します。ここに高価なモデルを置くのは無駄です。 |
-| **Web Extract** | `web_extract` をよく使うとき。圧縮と同じ理屈で、要約に推論は要りません。 |
-| **Skills Hub** | `hermes skills search` が使います。たいてい `auto` のままで十分です。 |
+| **Review** | `/review` でレビューを担当するサブエージェントです。`auto` ではメインモデルを使います。レビューには別の（多くはより強力な）モデルを固定するのも手です。詳しくは[レビュー用のモデル](/hermes/docs/user-guide/features/delegation/#review-model)をご覧ください。 |
 | **MCP** | MCP のツールの振り分けです。たいてい `auto` のままで十分です。 |
+| **Voice Chat** | 音声チャットで声に出して返す返答です。メインモデルより速いモデルを指定します。音声でのやり取りでは既定で推論が切られており、GPT-Live の音声チャットはこの枠を使いません。詳しくは[音声チャットのモデル](/hermes/docs/user-guide/features/voice-mode/#voice-chat-model)をご覧ください。 |
 | **Triage Specifier** | Kanban の仕分け役（`hermes kanban specify`）を担当します。ざっくり 1 行で書かれた話を、具体的な仕様に膨らませます。安くて有能なモデルが向いています。 |
 | **Kanban Decomposer** | Kanban のタスク分解を担当します。仕分けされたタスクを、専門プロファイル向けの子タスクの網に分けます。 |
 | **Profile Describer** | プロファイルの説明文の生成（`hermes profile describe --auto` やダッシュボードの自動生成ボタン）を担当します。短く安く済む呼び出しです。 |
 | **Curator** | スキルの使われ方を見直す curator の処理を担当します。推論モデルだと数分かかることがあるので、安めの補助モデルにする価値がしばしばあります。 |
+
+ダッシュボードに出てこない仕事も含め、`config.yaml` で指定できる補助モデルのほかの設定については、[補助モデル](/hermes/docs/user-guide/configuration/#auxiliary-models)をご覧ください。
 
 ### 仕事ごとの上書き {#per-task-override}
 
@@ -132,8 +134,8 @@ hermes config set security.allow_data_training_tiers_noninteractive true
 ドロップダウンの中身は次のとおりです。
 
 - **Main model** — メインの行で Change をクリックするのと同じです。
-- **All auxiliary tasks** — このモデルを 11 個の補助の枠すべてに一度で割り当てます。脇の仕事を全部まとめて安い軽量モデルに寄せたいときに便利です。
-- **仕事ごとの項目** — Vision、Web Extract、Compression などです。それぞれの仕事にいま割り当てられているモデルには `current` の印が付きます。
+- **All auxiliary tasks** — このモデルを、このページにある補助の枠すべてに一度で割り当てます。脇の仕事を全部まとめて安い軽量モデルに寄せたいときに便利です。
+- **仕事ごとの項目** — Vision、Review、Compression などです。それぞれの仕事にいま割り当てられているモデルには `current` の印が付きます。
 
 いま何かに割り当てられているカードには `main` または `aux · <task>` のバッジが付くので、過去に使ったモデルのどれがどこで使われているか、ひと目で分かります。
 

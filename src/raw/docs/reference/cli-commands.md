@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 229c23a34754fe7f9c8df6d8401964ebe7d52234
+upstream_blob: bd2430ae53089ee8bd35d53dc2119dcd6722147e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -228,7 +228,7 @@ HERMES_INFERENCE_MODEL=anthropic/claude-sonnet-4.6 hermes -z "…"
 
 #### `--usage-file` — パイプライン向け JSON 使用状況レポート {#--usage-file-json-usage-report-for-pipelines}
 
-`hermes -z "…" --usage-file /path/report.json` は、実行後に機械可読な使用状況レポートを書き出します: `estimated_cost_usd`、`input_tokens` / `output_tokens` / `cache_read_tokens` / `cache_write_tokens` / `reasoning_tokens` / `total_tokens`、`api_calls`、`model`、`provider`、`session_id`、`service_tier`、`completed` / `failed` / `partial` / `interrupted` の各フラグ、そして `turn_exit_reason`（`completed` が false になった理由、例: `max_iterations_reached(3/3)`）。これらのトップレベルのカウンタは**メインのエージェントループ**だけを対象にしています。同じ実行内で行われる補助的な LLM 呼び出し（タイトル生成、vision、コンテキスト圧縮、`web_extract`、バックグラウンドレビューなど）は `auxiliary` の下に別途レポートされます — 同じ合計値とタスク別の `by_task` マップです — そして `total_including_auxiliary`（`estimated_cost_usd`、`total_tokens`、`api_calls`）が課金対象の総計です。このレポートは**実行が失敗した場合でも**書き出されるため、バッチパイプラインは常に費用を追跡できます。`-z`/`--oneshot` の外では何も影響せず、使用状況の書き出しが壊れても実行自体の結果を隠すことはありません。
+`hermes -z "…" --usage-file /path/report.json` は、実行後に機械可読な使用状況レポートを書き出します: `estimated_cost_usd`、`input_tokens` / `output_tokens` / `cache_read_tokens` / `cache_write_tokens` / `reasoning_tokens` / `total_tokens`、`api_calls`、`model`、`provider`、`session_id`、`service_tier`、`completed` / `failed` / `partial` / `interrupted` の各フラグ、そして `turn_exit_reason`（`completed` が false になった理由、例: `max_iterations_reached(3/3)`）。これらのトップレベルのカウンタは**メインのエージェントループ**だけを対象にしています。同じ実行内で行われる補助的な LLM 呼び出し（タイトル生成、vision、コンテキスト圧縮、バックグラウンドレビューなど）は `auxiliary` の下に別途レポートされます — 同じ合計値とタスク別の `by_task` マップです — そして `total_including_auxiliary`（`estimated_cost_usd`、`total_tokens`、`api_calls`）が課金対象の総計です。このレポートは**実行が失敗した場合でも**書き出されるため、バッチパイプラインは常に費用を追跡できます。`-z`/`--oneshot` の外では何も影響せず、使用状況の書き出しが壊れても実行自体の結果を隠すことはありません。
 
 ```bash
 hermes -z "summarize this repo" --usage-file ~/.hermes/cache/scratch/usage.json

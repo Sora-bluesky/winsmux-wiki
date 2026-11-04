@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 5b8f0504cb5ec3204f6641e16d962d3de3ec948a
+upstream_blob: 02d1a310945984f21b60eedea4e3980436e88890
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -62,7 +62,7 @@ LLM につなぐ手段が少なくとも 1 つ必要です。`hermes model` を�
 | **LM Studio** | `hermes model` → 「LM Studio」（provider: `lmstudio`、任意で `LM_API_KEY`） |
 | **カスタムエンドポイント** | `hermes model` → 「Custom endpoint」を選ぶ（`config.yaml` に保存されます） |
 
-組み込みの OpenCode 系 2 プロバイダはいずれも、会話ごとに変わる不透明な `x-opencode-session` ヘッダをすべてのリクエストに付けて送ります（全トランスポートのメインのやり取りに加えて、圧縮、タイトル生成、承認の確認、スキルハブの照会、`/btw` の脇道の質問といった補助的な呼び出しにも付きます。やり取りが終わったあとに裏で走るものも含みます。ヘッドレスで動く Kanban の `specify`/`decompose` と、ダッシュボードの見積もり呼び出しでは、タスクごとのキーを使います）。OpenCode はこれを使って 1 つの会話を同じバックエンドに固定し、プロンプトキャッシュを温かいまま保ちます。値は Hermes のセッション ID（または Kanban のタスク ID）から導出したもので、個人情報は含みません。
+組み込みの OpenCode 系 2 プロバイダはいずれも、会話ごとに変わる不透明な `x-opencode-session` ヘッダをすべてのリクエストに付けて送ります（全トランスポートのメインのやり取りに加えて、圧縮、タイトル生成、承認の確認、`/btw` の脇道の質問といった補助的な呼び出しにも付きます。やり取りが終わったあとに裏で走るものも含みます。ヘッドレスで動く Kanban の `specify`/`decompose` と、ダッシュボードの見積もり呼び出しでは、タスクごとのキーを使います。レビューパネルからデスクトップアプリでコミットメッセージを生成する場合のように、動いているセッションがまったく無い単発の呼び出しでは、その都度新しい使い捨てのキーを送ります）。OpenCode はこれを使って 1 つの会話を同じバックエンドに固定し、プロンプトキャッシュを温かいまま保ちます。値は Hermes のセッション ID（または Kanban のタスク ID）から導出したもので、個人情報は含みません。
 
 組み込みの OpenCode 系 2 プロバイダは、それぞれ `opencode.ai` 上の自分の中継先に固定されています（`opencode-zen` は `/zen/v1`、`opencode-go` は `/zen/go/v1`）。別の中継先のまま残った `model.base_url` は、選んだプロバイダの中継先に直されます。どの中継先を使うかは選んだモデル（`-m`、`/model`、フォールバックの項目、チャンネルごとの上書き）で決まるので、Zen のモデルから Go にしかないモデルへ切り替えても、リクエストが Zen へ送られることはありません。このモデルごとの振り分けは、セッションを再開したとき（`hermes --resume`、`/resume`、TUI やデスクトップアプリの再開経路）にも適用し直されます。そのセッションが別の OpenCode モデルで動いていたあいだに記録された通信形式や中継先の URL が、再開後のモデルに持ち越されることはありません。ID に `-vision` の印が付く OpenCode のモデル（たとえば `deepseek-v4-flash-vision-exp`）は、models.dev に載る前から画像を扱えるものとして扱われるので、`agent.image_input_mode: auto` なら `supports_vision` を上書きしなくても画像がそのまま添付されます。`providers:` の下に自分で定義したプロバイダの名前がこの系統のスラッグで始まる場合（たとえば `opencode-go-bridge`）、モデルごとの API モードの振り分けと `/v1` の扱いはその系統のものが適用されますが、`base_url` は書いたとおりに使われます。実際に指している中継先に合わせて名前を付けてください。補助的な処理（`auxiliary.compression`、タイトル生成、画像認識、MoA）を OpenCode のプロバイダに向けた場合も同じモデルごとの表に従うので、`gpt-5.6-luna` のような Responses 専用のモデルや、`minimax-m2.5` のような Anthropic 方式のモデルも、メインの会話とまったく同じように動きます。
 
@@ -112,7 +112,7 @@ Groups = x25519:secp256r1:secp384r1:x448
 :::
 
 :::warning
-Nous Portal や Codex、カスタムエンドポイントを使っている場合でも、一部のツール（画像認識、ウェブ要約、MoA）は別枠の「補助」モデルを使います。既定（`auxiliary.*.provider: "auto"`）では、Hermes はこれらのタスクを**メインのチャットモデル** — `hermes model` で選んだのと同じモデル — に流します。タスクごとに個別に上書きして、より安価で高速なモデル（たとえば OpenRouter 上の Gemini Flash）へ振り分けることもできます。[補助モデル](/hermes/docs/user-guide/configuration/#auxiliary-models)を参照してください。
+Nous Portal や Codex、カスタムエンドポイントを使っている場合でも、一部の機能（画像認識、圧縮、MoA）は別枠の「補助」モデルを使います。既定（`auxiliary.*.provider: "auto"`）では、Hermes はこれらのタスクを**メインのチャットモデル** — `hermes model` で選んだのと同じモデル — に流します。タスクごとに個別に上書きして、より安価で高速なモデル（たとえば OpenRouter 上の Gemini Flash）へ振り分けることもできます。[補助モデル](/hermes/docs/user-guide/configuration/#auxiliary-models)を参照してください。
 :::
 
 :::tip Nous Tool Gateway

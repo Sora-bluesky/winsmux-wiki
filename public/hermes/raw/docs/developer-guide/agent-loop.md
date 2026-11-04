@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "エージェントループの内部"
 description: "AIAgent の実行、API モード、ツール、コールバック、フォールバックの挙動を詳しくたどる"
 upstream_path: developer-guide/agent-loop.md
-upstream_blob: 17bc53ea47ac56ec54ab55ee2f1a9fa11868d442
+upstream_blob: e43afe0de936b01d37a3a54fc8ad75912e1fc91b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/agent-loop
 ---
@@ -200,7 +200,7 @@ for each tool_call in response.tool_calls:
 4. 401/403 のときは、切り替える前に資格情報の更新を試す
 5. Codex Responses のターンが推論だけの出力で足踏みしたとき（見える本文もツール呼び出しもないまま、続きの取得が3回続いたとき）も、`incomplete_response` を理由として次のフォールバックへ切り替えます。足踏みで繰り返しの上限を使い切っていた場合、切り替え先には猶予として上限付きの呼び出しが1回だけ与えられます
 
-フォールバックの仕組みは、脇で走る処理にも別立てで効きます。画像の解析、圧縮、Web からの本文抽出は、それぞれ独自の切り替え順を持っていて、設定の `auxiliary.*` の節で決められます。
+フォールバックの仕組みは、脇で走る処理にも別立てで効きます。画像の解析、圧縮、タイトルの生成は、それぞれ独自の切り替え順を持っていて、設定の `auxiliary.*` の節で決められます。
 
 ## 圧縮と保存 {#compression-and-persistence}
 

@@ -32,14 +32,21 @@ raw: /hermes/raw/updates.md
 - [Microsoft Office — Word・PowerPoint・Excel ファイルを作成・読み取り・編集する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/productivity/productivity-microsoft-office/)
 - [Pdf — PDF ファイルの作成・読み取り・結合・フォーム入力・OCR・テキスト編集](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/productivity/productivity-pdf/)
 - [Weekly Review Planning — 週ごとの仕切り直し: 約束、止まっている仕事、来週の計画](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/productivity/productivity-weekly-review-planning/)
+- [user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho/)
 - [Excel Author — openpyxl でヘッドレスに監査できる財務ワークブックを作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/finance/finance-excel-author/)
 - [Pptx Author — python-pptx でヘッドレスに PowerPoint 資料を作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/)
+- [user-guide/skills/optional/payments/payments-mpp-agent](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-mpp-agent/)
 - [Stripe Link Cli — Stripe Link を使ったエージェントの支払い — カード、SPT、承認](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/)
 - [Stripe Projects — Stripe Projects で SaaS を用意し、認証情報を同期する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/)
+- [user-guide/skills/optional/productivity/productivity-airtable](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-airtable/)
+- [user-guide/skills/optional/productivity/productivity-notion](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-notion/)
 - [Shop — Shop の商品検索、購入手続き、注文追跡、返品](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/)
+- [user-guide/skills/optional/productivity/productivity-shopify](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-shopify/)
 - [Siyuan — SiYuan のナレッジベースを API から読み書きする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/)
+- [user-guide/skills/optional/research/research-duckduckgo-search](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-duckduckgo-search/)
 - [Parallel Cli — エージェント向けのウェブ検索・深い調査・情報の補完](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-parallel-cli/)
 - [Scrapling — 目立たないブラウザ操作と Cloudflare 回避でサイトを収集する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-scrapling/)
+- [user-guide/skills/optional/research/research-searxng-search](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-searxng-search/)
 
 ## 2026-11-03
 

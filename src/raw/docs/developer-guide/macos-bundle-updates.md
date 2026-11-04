@@ -2,7 +2,7 @@
 title: "macOS バンドルの更新"
 description: ""
 upstream_path: developer-guide/macos-bundle-updates.md
-upstream_blob: 2b64815975e6185710927ee10e3277ccaa7c3f4e
+upstream_blob: 8f7b82b97a29743beb82042e47281cbeefa0211a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/macos-bundle-updates
 ---
@@ -80,7 +80,7 @@ Squirrel.Mac が署名済みのアプリを受け入れるのを待ちます。�
 公開には Apple の認証情報が必要です。公証は既存の署名後フックが担うため、
 electron-builder 側の2つ目の公証経路は無効にしています。
 公開ゲートは、署名、ステープルされたチケット、Gatekeeper の評価を検証します。
-Darwin の公開ジョブは、両方のネイティブビルドを待ってから、チャンネルへの書き込みを1つずつ順に行います。
+Darwin の公開ジョブは、arm64 のビルドとそのスモークテストが終わるのを待ってから、チャンネルへの書き込みを1つずつ順に行います。
 
 ## 検証の限界 {#verification-limits}
 

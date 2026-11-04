@@ -2,7 +2,7 @@
 title: "実行時のプロバイダー解決"
 description: "Hermes が実行時にプロバイダー・資格情報・API モード・補助モデルをどう決めているか"
 upstream_path: developer-guide/provider-runtime.md
-upstream_blob: 04801d675f57840b188ebd0f3ce58e9a811e4d4e
+upstream_blob: d41b4a886ac01f1d2d96b00bb867446bbd9e9150
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/provider-runtime
 ---
@@ -168,9 +168,7 @@ Codex は Responses API を使う別経路です。
 次のような補助的な仕事は、
 
 - 画像の読み取り
-- Web から抜き出した内容の要約
 - コンテキスト圧縮のための要約
-- スキルハブの操作
 - MCP の補助的な操作
 - メモリーの書き出し
 

@@ -1,13 +1,23 @@
 {
-  "generatedAt": "2026-11-04",
+  "generatedAt": "2026-11-05",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-04",
-      "attemptedAt": "2026-11-04",
+      "fetchedAt": "2026-11-05",
+      "attemptedAt": "2026-11-05",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
+        {
+          "id": "meituan/longcat-2.5:free",
+          "name": "Meituan: LongCat 2.5",
+          "ctx": 1048576,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
         {
           "id": "reflection/beam-1.0-501b-a23b:free",
           "name": "Reflection: Beam 1.0 501B A23B",
@@ -53,8 +63,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-04",
-      "attemptedAt": "2026-11-04",
+      "fetchedAt": "2026-11-05",
+      "attemptedAt": "2026-11-05",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -204,26 +214,6 @@
           "ctx": 1048576,
           "tools": true,
           "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
-          "id": "thinkingmachines/inkling-small:free",
-          "name": "Thinking Machines: Inkling Small (free)",
-          "ctx": 1048576,
-          "tools": true,
-          "expires": "2026-11-04",
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
-          "id": "thinkingmachines/inkling:free",
-          "name": "Thinking Machines: Inkling (free)",
-          "ctx": 1048576,
-          "tools": true,
-          "expires": "2026-11-04",
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null
