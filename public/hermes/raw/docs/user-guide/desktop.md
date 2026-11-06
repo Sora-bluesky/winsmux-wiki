@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: fd0b9f1380e665da0d5c65d557795d6d5d752476
+upstream_blob: 56a871e09cfe2e38c0d9e068d0509910f8737928
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -49,6 +49,7 @@ hermes webapp
 するとゲートウェイが `http://127.0.0.1:9120` で Webapp を配信します（ホストとポートは [設定 → Webapp](/hermes/docs/user-guide/configuration/#webapp) を参照してください）。`hermes webapp` は、バンドルが古ければビルドし、ゲートウェイが動いていなければ起動し、1回だけ使えるサインイン用のリンクを開きます。チャットはそのゲートウェイ上で動きます。CLI、ネイティブのデスクトップアプリ、メッセージングを受け持つのと同じプロセスなので、どの画面からも同じ1つの会話と1つのキューが見えます。
 
 **サインイン。** リンクは60秒以内に1回だけ使えます。ブラウザはこのリンクをサインイン状態に引き換えてそのタブに保持するので、再読み込みしてもサインインしたままで、ゲートウェイを再起動しても同じです。新しいタブや URL だけを直接開いた場合は、中身ではなく手順の案内が表示されます。新しいリンクが要るときは `hermes webapp` をもう一度実行してください。**New Window**、プロファイルのウィンドウ、セッションのポップアウトは、それぞれ専用の1回限りのリンクでサインインを引き継ぎます。Linux では、ブラウザの接続が自分の OS ユーザーのものかをゲートウェイが確かめます。Windows では、リンクはブラウザを起動するコマンドラインの中だけを通り、ほかの一般ユーザーはそれを読めません。macOS、BSD 系、illumos ではどちらも成り立たないため、コマンドは自分の OS ユーザーだけが読めるページ（ゲートウェイのホームにある `webapp` フォルダ内）にリンクを書き込み、そのページを開きます。起動側に見えるのはそのページのパスだけです。macOS では、ブラウザが自分からは見えない場所で開くことがあります（SSH 越しに使っていて、Mac 本体の画面で開く場合など）。どこにも開かなかったときは、`hermes webapp --no-open` を実行してリンクを表示させてください。ブラウザを開けない場合（`--no-open` を付けたときや、BSD 系・illumos での SSH セッション）と、WSL（Windows のブラウザが WSL の中継を通してゲートウェイにつながる環境）では、代わりに1回限りのリンクが表示されるので、それを自分で開いてください。このリンクは使われるまでブラウザを本人としてサインインさせられるので、人に見せないでください。`hermes webapp --sign-out` は全タブを一度にサインアウトさせます。開いている接続は Bot Desktop のビューアーも含めて閉じ、各タブにはサインインの案内が表示されます。後述のサインインゲートを使っている場合は、ダッシュボードのアカウントでサインインしたすべてのブラウザもサインアウトし、それぞれサインインし直す必要があります。そうしたログインが Cookie に保持するアカウントのトークンは、Webapp ではそのログインとしてしか使えず（ゲートウェイは、接続の URL でもトークンの更新でも、それを bearer トークンとしては受け付けません）、ログインと一緒に失効します。ゲートウェイに自分でサインインしたネイティブの Hermes アプリは、サインインしたままです。
+デプロイ用のセッショントークン（`HERMES_DASHBOARD_SESSION_TOKEN`。[Deployment session-token provider](/hermes/docs/user-guide/features/web-dashboard/#deployment-session-token-provider-token-only-deployments) を参照）も、セッショントークンのプロバイダーが有効な間は、それだけで Webapp に使えます。bearer トークンとして `X-Hermes-Session-Token` ヘッダー（Desktop が REST で送るもの）に入れるか、接続の URL に付けて使います。
 
 名前付きのプロファイルなら、`hermes -p work webapp` で `work` の Webapp が開きます。既定のゲートウェイが受け持つプロファイルは、その Webapp を共有します。独立したプロファイルが自前のゲートウェイを持つ場合は、その設定で有効にすれば、そのゲートウェイが専用の Webapp を配信します。
 
@@ -485,7 +486,7 @@ hermes config set desktop.manage_launcher_entry false
 
 | フラグ               | 説明                                                                                      |
 | -------------------- | ----------------------------------------------------------------------------------------- |
-| `--skip-build`       | npm の install/package を飛ばし、`apps/desktop/release` にある展開済みのアプリを起動する |
+| `--skip-build`       | pnpm の install/package を飛ばし、`apps/desktop/release` にある展開済みのアプリを起動する |
 | `--force-build`      | 内容のスタンプが一致していても、完全な再ビルドを強制する                                  |
 | `--build-only`       | デスクトップアプリをビルドするが起動しない（`hermes update` が使う）                      |
 | `--source`           | パッケージ済みのアプリではなく `apps/desktop/dist` に対して `electron .` で起動する           |
@@ -818,12 +819,12 @@ ssh-keygen -R <host>
 
 ```bash
 ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ \
-  bash -c 'cd "$HOME/.hermes/hermes-agent/apps/desktop" && CSC_IDENTITY_AUTO_DISCOVERY=false npm run pack'
+  bash -c 'cd "$HOME/.hermes/hermes-agent/apps/desktop" && CSC_IDENTITY_AUTO_DISCOVERY=false pnpm run pack'
 ```
 
-**ミラーが要るその他のネイティブのダウンロード（Windows での `get-windows` のビルド済みバイナリなど）**は、npm のキーを `$HERMES_HOME/npmrc`（Windows なら `%LOCALAPPDATA%\hermes\npmrc`、それ以外なら `~/.hermes/npmrc`）に置いてください。たとえば `node_get_windows_binary_host_mirror=https://<mirror>/sindresorhus/get-windows/releases/download/` のように書きます。更新処理が起動する `npm ci` / `npm run`（デスクトップ、web、TUI のビルド）はすべて、このファイルがあれば `NPM_CONFIG_USERCONFIG` をそこへ向けるので、設定は `hermes update` をまたいで残ります。リポジトリ直下の `.npmrc` は git の管理下にあって更新のたびに自動で退避されますし、`~/.npmrc` は、デスクトップへの引き継ぎが GUI の環境を受け継ぐために見落とされることがあります。自分で設定した `NPM_CONFIG_USERCONFIG` が上書きされることはありません。
+**ミラーが要るその他のネイティブのダウンロード（Windows での `get-windows` のビルド済みバイナリなど）**は、npm のキーを `$HERMES_HOME/npmrc`（Windows なら `%LOCALAPPDATA%\hermes\npmrc`、それ以外なら `~/.hermes/npmrc`）に置いてください。たとえば `node_get_windows_binary_host_mirror=https://<mirror>/sindresorhus/get-windows/releases/download/` のように書きます。更新処理が起動する依存関係のインストールとビルド（デスクトップ、web、TUI のビルド）はすべて、このファイルがあれば `NPM_CONFIG_USERCONFIG` をそこへ向け（pnpm はレジストリと認証の設定をこのファイルから読みます）、それ以外のキーは `npm_config_<key>` という環境変数として依存関係のインストールスクリプトに渡します。そのため設定は `hermes update` をまたいで残ります。`~/.npmrc` は、デスクトップへの引き継ぎが GUI の環境を受け継ぐために見落とされることがあります。自分で設定した `NPM_CONFIG_USERCONFIG` が上書きされることはありません。
 
-**`get-windows` が無い、あるいは中途半端に入っている場合**、ビルドはもう失敗しません。`[stage-native-deps] get-windows not installed ... read_window_below will be unavailable in this build` と表示して、`read_window_below` のツールを載せずに出荷します。パッケージのディレクトリはあるのに読み込めない場合（Hermes のウィンドウが動いたまま Windows のその場での更新が中断されたとき、導入のログに `TAR_ENTRY_ERROR` が出ます）、同じ警告がそのディレクトリの名前を示し、次の `hermes desktop --force-build` か更新が、npm の導入の前にそれを消してパッケージを展開し直します。その前に Hermes のウィンドウとゲートウェイをすべて閉じて、展開がまた中断されないようにしてください。ネイティブのバインディングや macOS のヘルパーが欠けたパッケージも同様に、ビルドを失敗させるのではなく、ウィンドウの列挙なしで出荷されます。
+**`get-windows` が無い、あるいは中途半端に入っている場合**、ビルドはもう失敗しません。`[stage-native-deps] get-windows not installed ... read_window_below will be unavailable in this build` と表示して、`read_window_below` のツールを載せずに出荷します。パッケージのディレクトリはあるのに読み込めない場合（Hermes のウィンドウが動いたまま Windows のその場での更新が中断されたとき、導入のログに `TAR_ENTRY_ERROR` が出ます）、同じ警告がそのディレクトリの名前を示し、次の `hermes desktop --force-build` か更新が、pnpm の導入の前にそれを消してパッケージを展開し直します。その前に Hermes のウィンドウとゲートウェイをすべて閉じて、展開がまた中断されないようにしてください。ネイティブのバインディングや macOS のヘルパーが欠けたパッケージも同様に、ビルドを失敗させるのではなく、ウィンドウの列挙なしで出荷されます。
 
 壊れたキャッシュの zip を手で消すには次のようにします。
 
@@ -837,26 +838,26 @@ rm -f "$HOME/.cache/electron"/electron-*.zip            # Linux
 アプリ自体に手を入れたいなら、リポジトリのルートで一度ワークスペースの依存関係を入れてから、`apps/desktop` で開発サーバーを動かします。
 
 ```bash
-npm install          # from repo root — links apps/desktop, web, apps/shared
+pnpm install         # from repo root — links apps/desktop, web, apps/shared
 cd apps/desktop
-npm run dev          # Vite renderer + Electron, which boots the Python backend
+pnpm run dev         # Vite renderer + Electron, which boots the Python backend
 ```
 
 特定のチェックアウトにアプリを向けたり、実際の設定から切り離して動かしたりもできます。
 
 ```bash
-HERMES_DESKTOP_HERMES_ROOT=/path/to/clone npm run dev
-HERMES_HOME=$HOME/.hermes/cache/scratch/throwaway npm run dev
-npm run dev:fake-boot   # exercise the startup overlay with deterministic delays
+HERMES_DESKTOP_HERMES_ROOT=/path/to/clone pnpm run dev
+HERMES_HOME=$HOME/.hermes/cache/scratch/throwaway pnpm run dev
+pnpm run dev:fake-boot   # exercise the startup overlay with deterministic delays
 ```
 
 インストーラーを作るには次のようにします。
 
 ```bash
-npm run dist:mac     # DMG + zip
-npm run dist:win     # NSIS + MSI
-npm run dist:linux   # AppImage + deb + rpm
-npm run pack         # unpacked app under release/ (no installer)
+pnpm run dist:mac     # DMG + zip
+pnpm run dist:win     # NSIS + MSI
+pnpm run dist:linux   # AppImage + deb + rpm
+pnpm run pack         # unpacked app under release/ (no installer)
 ```
 
 macOS と Windows の署名・公証は、必要な資格情報が環境にあれば自動で走ります（macOS なら `CSC_LINK` / `CSC_KEY_PASSWORD` / `APPLE_*`、Windows なら `WIN_CSC_*`）。

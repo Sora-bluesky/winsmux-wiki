@@ -1,6 +1,6 @@
 {
-  "sha": "9f9b9f5",
-  "date": "2026-11-05",
+  "sha": "6b21d05",
+  "date": "2026-11-07",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -1407,7 +1407,7 @@
       "name": "Inspecting Hermes Desktop Dom",
       "description": "Read the live Hermes desktop DOM/CSS over CDP",
       "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom/",
-      "date": "2026-10-28",
+      "date": "2026-11-06",
       "source": "optional"
     },
     {
@@ -1415,7 +1415,7 @@
       "name": "Node Inspect Debugger",
       "description": "Debug Node.js via --inspect + Chrome DevTools Protocol CLI",
       "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-node-inspect-debugger/",
-      "date": "2026-10-28",
+      "date": "2026-11-06",
       "source": "optional"
     },
     {

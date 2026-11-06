@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "インストール"
 description: "デスクトップ版パッケージ、ソースからのインストーラー、Docker、Nix、Termux の APT パッケージで Hermes Agent を導入する"
 upstream_path: getting-started/installation.md
-upstream_blob: bd1a6539237d9daa6924369790b2b4873329c661
+upstream_blob: 86d20858d488548a292fb62201d66d6bc4bb2508
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -78,7 +78,7 @@ aarch64 の Android 端末では [Termux の APT パッケージ](/hermes/docs/g
 ### ソースからのインストーラーが行うこと {#what-the-source-installer-does}
 
 スクリプトはソースをクローンし、uv を用意したうえで、依存パッケージの準備を
-PM に任せます。PM は、バージョンを固定した Python、Node.js、npm、ripgrep、FFmpeg を用意します。ソースからの
+PM に任せます。PM は、バージョンを固定した Python、Node.js、npm、pnpm、ripgrep、FFmpeg を用意します。ソースからの
 インストールでは Python の `all` extra が選ばれます。任意の extra がすべて入るわけではありません。
 PM は既定でブラウザ用とコンピュータ操作用のツールも入れます。Hermes がローカルでのブラウザ操作に使う、
 バージョンを固定した Chromium（Chrome for Testing）と、

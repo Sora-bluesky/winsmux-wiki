@@ -32,7 +32,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-11-06
+最終取得: 2026-11-07
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -50,7 +50,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-11-06
+最終取得: 2026-11-07
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -63,7 +63,6 @@ raw: /hermes/raw/free.md
 | **LiquidAI: LFM2.5-2.6B (free)**<br>`liquid/lfm-2.5-2.6b:free`<br>入力・出力の基本単価0（取得時点） | 65,536 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3 Nano Omni (free)**<br>`nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`<br>入力・出力の基本単価0（取得時点） | 256,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3 Ultra (free)**<br>`nvidia/nemotron-3-ultra-550b-a55b:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **NVIDIA: Nemotron 3.5 Content Safety (free)**<br>`nvidia/nemotron-3.5-content-safety:free`<br>入力・出力の基本単価0（取得時点） | 128,000 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |
 | **NVIDIA: Nemotron 3.5 Lightning (free)**<br>`nvidia/nemotron-3.5-lightning:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **NVIDIA: Nemotron 3.5 Super VL (free)**<br>`nvidia/nemotron-3.5-super-vl:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Free Models Router**<br>`openrouter/free`<br>入力・出力の基本単価0（取得時点） | 200,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |

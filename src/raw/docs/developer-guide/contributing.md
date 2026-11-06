@@ -2,7 +2,7 @@
 title: "コントリビュート"
 description: "Hermes Agent へのコントリビュート方法（開発環境のセットアップ、コードスタイル、PR の流れ）"
 upstream_path: developer-guide/contributing.md
-upstream_blob: f8767accc25af8908b44f81778d013cc3934bc49
+upstream_blob: dbb5a1d8eaddc92a72a79d0c9c1e9de56b92dadf
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/contributing
 ---
@@ -152,6 +152,7 @@ sweeper には PR を閉じてはいけない場面を示します（迷った�
 | **Git**              | `git-lfs` 拡張をインストールしておきます                                                        |
 | **Python 3.14** | 現在の開発では PM が固定したインタープリターを使います。パッケージのメタデータにある広めの指定 `>=3.11,<3.15` は古いアップデーターを動かし続けるためのもので、古い Python で現在のランタイムが動くという意味ではありません。 |
 | **Node.js** | PM が固定したバージョンか、ルートの `package.json` の engines が受け付けるバージョンを使います |
+| **pnpm** | ルートの `package.json` の `devEngines` で固定されたバージョンと完全に同じものを使います。`source ./activate` を実行すると用意されます |
 
 ### PM による開発環境 {#pm-developer-environment}
 
@@ -222,15 +223,19 @@ PM で作った環境を変更するために、pip や uv のコマンドを直
 
 ### JavaScript のワークスペースと Web サイト {#javascript-workspaces-and-website}
 
-リポジトリのルートで `npm ci` を実行すると、デスクトップ、TUI、ダッシュボード、
-共有の JS ワークスペースが揃います。Web サイトは別扱いです。
+リポジトリのルートで `pnpm install --frozen-lockfile` を実行すると、デスクトップ、
+TUI、ダッシュボード、共有の JS ワークスペースが揃います。ルートの `package.json` は pnpm のバージョンを
+`devEngines` で固定しています（`source ./activate` を実行すると、そのバージョンがそのまま用意されます）。Hermes のビルドと
+`hermes update` はそれ以外のバージョンの pnpm を受け付けません。ただし、`pnpm install` を直接実行したときはバージョンを
+確認しません。また、ルートの `preinstall` スクリプトが `npm install` の実行を拒否します。Web サイトは別の npm
+プロジェクトです。
 
 ```bash
 npm ci --prefix website
 npm run build:fast --prefix website
 ```
 
-それぞれの `package.json` の engines が受け付ける Node/npm のバージョンを使ってください。
+それぞれの `package.json` の engines が受け付ける Node のバージョンを使ってください。
 デスクトップのネイティブ依存関係には、プラットフォームのビルドツールチェーンが必要になることもあります。
 
 ロゴとアイコンは `assets/nous-girl-*.svg` と

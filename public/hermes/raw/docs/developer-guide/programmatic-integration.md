@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: 53501465c10100377a628c67d211bb4fc5cb2488
+upstream_blob: 1e5cee65502be56f51c308341c3da53c3f177e3d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -40,7 +40,38 @@ hermes acp --setup          # interactive provider/model setup for ACP terminal 
 
 ## TUI ゲートウェイの JSON-RPC {#tui-gateway-json-rpc}
 
-`tui_gateway/server.py` は、Ink 製の TUI（`hermes --tui`）と、ダッシュボードに組み込まれた PTY ブリッジが話している相手です。外部のホストからでも、stdio 越し（または `tui_gateway/ws.py` を使った WebSocket 越し）に同じプロトコルで話しかけられます。
+`tui_gateway/server.py` は、Ink 製の TUI（`hermes --tui`）、デスクトップアプリ、ダッシュボードに組み込まれた PTY ブリッジの裏側にある、メソッドとイベントの一覧です。Ink 製の TUI は、プロファイルで共有しているゲートウェイに WebSocket（`/api/ws`、プロトコルは `hermes-gateway-v1`、接続ごとに使い捨てのチケット）でつながります。外部のホストからでも、stdio 越し（`tui_gateway/entry.py`）または WebSocket 越し（`tui_gateway/ws.py`）に同じフレームで話しかけられます。
+
+### Node のクライアント: `@hermes/shared/gateway-client` {#a-node-client-hermessharedgateway-client}
+
+Ink 製の TUI が使うゲートウェイのクライアントは `apps/shared`（`@hermes/shared`）に置かれているので、ほかの Node 製のフロントエンドも Ink のソースをコンパイルせずに使えます。このクライアントは、チケットを使って持ち主のプロセスに接続し、`session.create` の前に `runtime.describe` を読み、`hermes-gateway-v1` 向けに要求と結果を変換し（`@hermes/shared/gateway-canonical`）、間隔を空けながら再接続し、いなくなった持ち主の確保を 1 分あたり決まった回数まで試し直し、型の付いたイベントを送り出します（`@hermes/shared/gateway-types`）。
+
+クライアント自身は、接続がどこから来るのかを知りません。呼び出し側が `connect(start, recover)` を渡します。これは `{url, protocols, profile_id, instance_id}` を返す関数で、再接続のたびにもう一度実行されます（チケットは 1 回しか使えないためです）。Ink は自前の補助処理 `gateway_bootstrap.py` を渡します。それ以外の手元のクライアントは、`hermes gateway attach --json`（このクライアントを切り出したときに追加されたもの、#142159）を実行し（最初の呼び出しでは `--start` を、復旧を求められたときは `--recover` を付けます）、返ってきた `url` と `protocols` を渡せば使えます。
+
+```ts
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
+
+import { GatewayClient } from '@hermes/shared/gateway-client'
+import type { AnyGatewayEvent } from '@hermes/shared/gateway-types'
+
+const gw = new GatewayClient({
+  connect: async (start, recover) => {
+    const flags = start ? ['--start'] : recover ? ['--recover'] : []
+    const { stdout } = await promisify(execFile)('hermes', ['gateway', 'attach', '--json', ...flags])
+    const { url, protocols, endpoint } = JSON.parse(stdout)
+
+    return { url, protocols, profile_id: endpoint.profile_id, instance_id: endpoint.instance_id }
+  }
+})
+
+gw.on('event', (event: AnyGatewayEvent) => { /* … */ })
+gw.start()
+gw.drain()
+const session = await gw.request('session.create', {})
+```
+
+`hermes gateway attach` は、接続できる持ち主がいないとき、判定結果を stdout に出して 0 以外の終了コードで終わります。そのため `execFile` が失敗し、クライアントは間隔を空けて再試行します。セッションはゲートウェイの端末クライアント向けの方針である `source: "tui"` で作られ、`runtime.describe` でそれを提供していない持ち主に対しては `session.create` が断ります。そのほかのオプション（`terminalConnectFailure`、`attachUrl`、`sidecarUrl`、タイムアウト、`toolProgress`、`onLifecycle`、`text`、`fallbackWebSocket`）の説明は `GatewayClientOptions` にあります。ブラウザーで使っても安全なモジュールは `apps/shared/src/` に、Node 専用のもの（クライアント本体と `prompt-history`）は `apps/shared/src/node/` に置かれています。また `apps/shared/src/node/boundary.test.ts` は、パッケージのプログラムに別のワークスペースのファイルが入り込むと失敗します。
 
 ### メソッド一覧（抜粋） {#method-catalog-selected}
 
@@ -58,6 +89,8 @@ delegation.status       subagent.interrupt      subagent.steer
 spawn_tree.save / list / load
 terminal.resize         clipboard.paste         image.attach
 ```
+
+プラグインは、`plugin.<plugin_id>.<name>` という形のメソッド（`ctx.register_rpc`）と、種類が `plugin.<plugin_id>.<event>` のセッションイベント（`ctx.emit_to_session`）を追加できます。詳しくは [プラグインの RPC メソッドとセッションイベント](/hermes/docs/developer-guide/plugins/#talk-to-your-own-frontend-plugin-rpc-methods-and-session-events) を参照してください。
 
 `session.active_list`、`session.activate`、`session.close` は、TUI のセッション切り替えが使う「そのプロセスの中で今動いているセッション」を操作するためのものです。保存済みの記録を探すときは `session.list` や `/resume` を使い、これらのメソッドは TUI ゲートウェイのプロセスで現在開いているセッションにだけ使ってください。
 

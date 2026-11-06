@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 27f3c1065ee49fd3994525afe2d2f50b3eed05b1
+upstream_blob: dd05d4537eb79861a08e921177d77a52af9eda25
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -237,7 +237,7 @@ updates:
 
 git でインストールした場合、Hermes は更新用のブランチをチェックアウトしたり pull したりする前に、変更のある追跡対象ファイルと、更新で追加されるパスにある未追跡ファイルを自動で stash します。更新で書き込まれない未追跡ファイルは、そのまま残ります。ターミナルで対話的に更新するときは、何かを stash する前に、変更を残すかどうかを確認します。「いいえ」と答えると、stash のエントリーを残さずに変更を削除します。対話なしの更新（デスクトップアプリやチャットアプリ、ゲートウェイ、`--yes`）では `updates.non_interactive_local_changes` の設定に従います。`stash` は pull が成功したあとにソースへの手元の変更を戻し、`discard` は pull が成功したあとに更新処理が作った stash を捨てます。`discard` は、ソースへの手元の変更を残す想定がない管理下のインストールでだけ使ってください。
 
-その stash の前に、Hermes は npm の install や build で生じた、追跡対象の `package-lock.json` の差分も元に戻します。意図してロックファイルを編集した場合は、更新する前にコミットするか、手動で stash してください。
+その stash の前に、Hermes は npm のインストールで WhatsApp ブリッジと Photon サイドカーに残る、追跡対象の `package-lock.json` の差分も元に戻します。意図してロックファイルを編集した場合は、更新する前にコミットするか、手動で stash してください。
 
 ## ターミナルバックエンドの設定 {#terminal-backend-configuration}
 

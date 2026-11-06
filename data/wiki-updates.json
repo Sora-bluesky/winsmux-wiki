@@ -1,6 +1,133 @@
 {
-  "generatedAt": "2026-11-06",
+  "generatedAt": "2026-11-07",
   "entries": [
+    {
+      "date": "2026-11-06",
+      "sha": "723c028",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/adding-platform-adapters",
+          "title": "プラットフォームアダプターを追加する",
+          "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
+        },
+        {
+          "id": "developer-guide/gateway-command-parity",
+          "title": "ゲートウェイのコマンド対応表",
+          "url": "/hermes/docs/developer-guide/gateway-command-parity/"
+        },
+        {
+          "id": "developer-guide/memory-provider-plugin",
+          "title": "メモリープロバイダープラグイン",
+          "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
+        },
+        {
+          "id": "getting-started/official-domains",
+          "title": "公式ドメインとフィッシング対策",
+          "url": "/hermes/docs/getting-started/official-domains/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/checkpoints-and-rollback",
+          "title": "チェックポイントと /rollback",
+          "url": "/hermes/docs/user-guide/checkpoints-and-rollback/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/docker",
+          "title": "Hermes の Docker 設定",
+          "url": "/hermes/docs/user-guide/docker/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/tts",
+          "title": "音声と読み上げ",
+          "url": "/hermes/docs/user-guide/features/tts/"
+        },
+        {
+          "id": "user-guide/features/voice-mode",
+          "title": "音声モード",
+          "url": "/hermes/docs/user-guide/features/voice-mode/"
+        },
+        {
+          "id": "user-guide/messaging/feishu",
+          "title": "Feishu / Lark",
+          "url": "/hermes/docs/user-guide/messaging/feishu/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/mattermost",
+          "title": "Mattermost",
+          "url": "/hermes/docs/user-guide/messaging/mattermost/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        },
+        {
+          "id": "user-guide/skills/optional/devops/devops-hermes-s6-container-supervision",
+          "title": "Hermes S6 Container Supervision — Hermes の Docker イメージで s6 サービスを直したり調べたりする",
+          "url": "/hermes/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision/"
+        },
+        {
+          "id": "user-guide/tui",
+          "title": "TUI",
+          "url": "/hermes/docs/user-guide/tui/"
+        }
+      ]
+    },
     {
       "date": "2026-11-05",
       "sha": "5e2e09a",

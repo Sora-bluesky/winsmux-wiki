@@ -8,6 +8,33 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-06
+
+- [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
+- [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
+- [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
+- [公式ドメインとフィッシング対策](https://wiki.winsmux.dev/hermes/docs/getting-started/official-domains/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
+- [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
+- [チェックポイントと /rollback](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
+- [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
+- [音声モード](https://wiki.winsmux.dev/hermes/docs/user-guide/features/voice-mode/)
+- [Feishu / Lark](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/feishu/)
+- [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
+- [Mattermost](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/mattermost/)
+- [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
+- [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
+- [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
+- [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
+- [Hermes S6 Container Supervision — Hermes の Docker イメージで s6 サービスを直したり調べたりする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision/)
+- [TUI](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
+
 ## 2026-11-05
 
 - [プロバイダーを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-providers/)

@@ -2,7 +2,7 @@
 title: "チェックポイントと /rollback"
 description: "シャドウの git リポジトリと自動スナップショットで、破壊的な操作からファイルを守るしくみです"
 upstream_path: user-guide/checkpoints-and-rollback.md
-upstream_blob: a08d5f54f66d1b5ca393440fdc25f3cde3db09c2
+upstream_blob: c25efd0e083748a9c4dba1b2718ee48a11898142
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback
 ---
@@ -224,6 +224,30 @@ Use /rollback <N> --all to restore those too.
 
 台帳が空のとき（この機能より前に作られた保管場所、あるいは Hermes がそのプロジェクトで
 まだ何も書き込んでいない場合）、`/rollback` は自動的に完全な復元に切り替わります。
+
+## `/undo` は、取り消したターンで変わったファイルを示します {#undo-lists-the-files-the-undone-turns-changed}
+
+`/undo` が巻き戻すのは会話だけで、ファイルには一切触れません。チェックポイントが有効で、
+取り消したターンがプロジェクト内のファイルを変更していた場合は、`/undo` がそのファイル名と
+`/rollback` への案内を 1 行だけ添えます。
+
+```
+/undo
+↶ Files changed in the undone turns: app.js, notes.md. Run /rollback to see checkpoints and restore them.
+```
+
+この行にはチェックポイントの名前は出ません。`/rollback` を実行して一覧を見てから、戻したいものを
+（番号かハッシュで）選んでください。ファイルの一覧は、分かる範囲で示すものです。取り消したターンが
+始まったころに取られたチェックポイントとプロジェクトを比べた結果で、何が変わったかを示すだけです。
+復元で何が戻るかまでは示しません。この行を出すときに何かが書き込まれることはありません。チェックポイントがオフのとき、
+または取り消したターンのどれもチェックポイントを取っていないときは、`/undo` の表示はこれまでとまったく同じです。
+エディタ（ACP）とゲートウェイのチャットクライアントは `/rollback` を実行しないので、この行は出ません。
+
+ディレクトリ全体を対象にした `/rollback` は、残っている中でいちばん新しいチャットのターンも取り消します（上の手順 4）。
+ただし、それはそのターンがチェックポイントを作った場合か、チェックポイントより後のターンである場合に限ります。
+`/undo` のあとに残したターンはチェックポイントより前に終わっているので、そのまま残ります。
+チェックポイントにはそれぞれ正確な時刻が記録されます。古いバージョンで作られたチェックポイントは秒単位の時刻しか分からないため、
+同じ秒の中にある残したターンも、取り消されずに残ります。
 
 ## 1 つのファイルだけ戻す {#single-file-restore}
 

@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 2d30cc7059aaac031f7368032067e49dcf4bd0c5
+upstream_blob: 0ab244c5c57c9af878003a060dce8efe5c81a2a3
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -19,7 +19,7 @@ sources:
 読み込むモジュールは `@hermes/plugin-sdk` の 1 つだけで、そこから全部が手に入ります。アプリの
 現在の状態、ゲートウェイの JSON-RPC の窓口、プラグイン専用の REST とソケットの名前空間、
 React Query、そしてアプリ自身の UI キットです。おかげでプラグインの UI は何もしなくても
-アプリに馴染みます。リポジトリのクローンも、`npm run build` も、アプリのソースへのパッチも要りません。
+アプリに馴染みます。リポジトリのクローンも、`pnpm run build` も、アプリのソースへのパッチも要りません。
 ファイルを `$HERMES_HOME/desktop-plugins/<id>/plugin.js` に置けば、アプリが数秒で読み込み、
 保存のたびにその場で入れ替えます。
 
@@ -1981,7 +1981,7 @@ host.i18n.languageOptions(): LanguageOption[]   // bundled ∪ registered ∪ ba
 英語側の項目が**関数**になっている場合（``results: n => `${n} results` ``）、パックでは
 **位置で指定するプレースホルダー**（引数の順に `{0}`、`{1}`）を使った普通の文字列を渡します。
 マージの際に、同じ呼び出し形の関数に包まれます。キーの一覧は `locales/_keys.desktop.json` に
-公開されています（`apps/desktop` で `npm run i18n:keys` を実行して再生成し、コミットします。CI はこのファイルが `en.ts` と一致することを確認します）。`hermes plugins
+公開されています（`apps/desktop` で `pnpm run i18n:keys` を実行して再生成し、コミットします。CI はこのファイルが `en.ts` と一致することを確認します）。`hermes plugins
 validate` は、パックの `<lang>.desktop.yaml` をこの一覧と照らし合わせて検査します。
 
 `host.i18n.registerAppLocale` は、`ctx` を参照できないコードから同じことをするための呼び出しです。

@@ -2,7 +2,7 @@
 title: "Inspecting Hermes Desktop Dom — 動いている Hermes デスクトップの DOM/CSS を CDP で読む"
 description: "動いている Hermes デスクトップの DOM/CSS を CDP で読む"
 upstream_path: user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom.md
-upstream_blob: 5ae1f73c16e13d347429aea23eb8974e40898088
+upstream_blob: 922c561dbc77c4f3fca8328f3d05acd65647a880
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom
 ---
@@ -35,7 +35,7 @@ sources:
 ## 概要 {#overview}
 
 `apps/desktop` を開発していて、利用者が同じアプリ（`hgui` /
-`npm run dev`）を動かしているときは、その人が見ている画面の**実際に描画された DOM**
+`pnpm run dev`）を動かしているときは、その人が見ている画面の**実際に描画された DOM**
 を読めます。計算後のスタイル、位置と大きさ、どの CSS ルールが実際に勝ったか、
 コンソールの出力まで分かるので、`.tsx` から推測して外すことがなくなります。
 
@@ -143,14 +143,14 @@ cd apps/desktop
 HERMES_HOME=$HOME/.hermes/cache/scratch/cdp-probe-home \
 HERMES_DESKTOP_DEV_SERVER=http://127.0.0.1:5174 \
 HERMES_DESKTOP_CDP_PORT=9333 \
-  npx electron . --user-data-dir=$HOME/.hermes/cache/scratch/cdp-probe-userdata
+  pnpm exec electron . --user-data-dir=$HOME/.hermes/cache/scratch/cdp-probe-userdata
 ```
 
 `--user-data-dir` を分けると Electron の単一インスタンスのロックを避けられるので、動いている
 `hgui` とぶつかりません。`HERMES_HOME` を分けることで、本物のセッションからも離せます。
 同じ理由で、ポートも 9222 以外を選んでください。バックグラウンドで動かし、終わったら止めます。
 
-性能計測の仕組みも一緒に使いたい場合は、`npm run perf:serve` が一時的な `HERMES_HOME` を
+性能計測の仕組みも一緒に使いたい場合は、`pnpm run perf:serve` が一時的な `HERMES_HOME` を
 組み込んだ同じことをしてくれます。
 
 ## 落とし穴 {#pitfalls}

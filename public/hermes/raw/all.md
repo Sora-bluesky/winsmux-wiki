@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（248 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（249 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -209,7 +209,7 @@ raw: /hermes/raw/all.md
 - [Automated GitHub PR Comments with Webhooks](/hermes/docs/guides/webhook-github-pr-review/)
 - [xAI Grok OAuth (SuperGrok / X Premium+)](/hermes/docs/guides/xai-grok-oauth/)
 
-## Developer Guide（63）
+## Developer Guide（64）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -257,6 +257,7 @@ raw: /hermes/raw/all.md
 - [Build a Hermes Plugin](/hermes/docs/developer-guide/plugins/)
 - [Application declarations](/hermes/docs/developer-guide/plugins/application-declarations/)
 - [Submitting to the Plugin Catalog](/hermes/docs/developer-guide/plugins/catalog-submission/)
+- [Public plugin API](/hermes/docs/developer-guide/plugins/public-api/)
 - [PM audit remediation status](/hermes/docs/developer-guide/pm-audit-status/)
 - [Programmatic Integration](/hermes/docs/developer-guide/programmatic-integration/)
 - [Relay ↔ Connector Contract](/hermes/docs/developer-guide/relay-connector-contract/)

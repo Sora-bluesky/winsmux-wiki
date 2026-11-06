@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "gateway のローカルセッション"
 description: "ローカルの CLI/TUI セッションを正規の gateway 受付として扱う仕組み"
 upstream_path: developer-guide/gateway-local-sessions.md
-upstream_blob: f8e0fd810cbb9440943f037080c10ca3234d7907
+upstream_blob: 78536116f642bd9fcdc0aa88beb9fff96bf9e893
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-local-sessions
 ---
@@ -66,7 +66,7 @@ ID ではありません。作成受領記録は元の所有者を保ち、受�
   そうしたログインがクッキーに保つプロバイダーのトークンは、それだけではそこで使えません。Webapp のリスナーが
   bearer トークンやソケットの `?token=` を受け付け、リフレッシュトークンを更新するのは、そのトークンを
   ネイティブアプリの RFC 8252 サインインに渡した場合だけです（ダイジェストは期限が切れるまで gateway のホームの
-  `webapp/native-sign-in-tokens.json` に保存されます）。そのため、ネイティブアプリはサインアウトや再起動をまたいでもサインインしたままです。
+  `webapp/native-sign-in-tokens.json` に保存されます）。そのため、ネイティブアプリはサインアウトや再起動をまたいでもサインインしたままです。デプロイ用のセッショントークン（`HERMES_DASHBOARD_SESSION_TOKEN`）も、セッショントークンのプロバイダーが有効な間は、そこで bearer トークンや `?token=` として使えます。こちらにはリフレッシュトークンはありません。
 - HTTP の変更系リクエストの関門。確認済みのダッシュボードの Session、ネイティブ HTTP の所有者許可、
   または許可された旧来のセッショントークンが受け入れられた後です。
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 03f82beedde4a3a7107c08189df60610022581c4
+upstream_blob: 4434d031aa76f5e0aea130a8b6a8b3ce5f043829
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -104,7 +104,7 @@ FastAPI、Uvicorn、それに各プラットフォーム向けの PTY の補助�
 ソースから導入する場合は、[PM の開発者向けワークフロー](/hermes/docs/reference/package-management/#developer-workflow)を使います。
 メッセージ連携や音声の追加分は別に指定するもので、`all` には含まれません。
 
-依存するものを入れずに `hermes dashboard` を実行すると、何を入れればよいか教えてくれます。画面側がまだ組み立てられておらず `npm` が使えるなら、最初の起動時に自動で組み立てられます。
+依存するものを入れずに `hermes dashboard` を実行すると、何を入れればよいか教えてくれます。画面側がまだ組み立てられていなければ、Hermes が用意する Node と pnpm を使って、最初の起動時に自動で組み立てられます。
 
 チャットのタブは `hermes dashboard` の起動につねに付いてきます。ブラウザに埋め込まれたチャットの面（PTY と WebSocket ごしに TUI を動かすもの）は、追加のフラグなしでいつでも使えます。
 
@@ -861,7 +861,7 @@ curl -s http://<host>:9119/api/status | jq '.auth_required, .auth_providers'
 
 同梱の `plugins/dashboard_auth/session_token` の差し込みは、**配備用のセッショントークン**（`HERMES_DASHBOARD_SESSION_TOKEN`）を、関門のある形でそのまま使える正式な資格情報にします。秘密の管理の道具で配備している環境が、もともと用意している形です。共有のトークンが1つだけあり（nix/agenix は復号したファイルとして渡し、Nix のモジュールは `backend.sessionTokenFile` から `HERMES_DASHBOARD_SESSION_TOKEN=file:<path>` を設定します）、Hermes Desktop のリモートゲートウェイの **「Session token」** の欄がそれを差し出します。このしくみがなかったころは、トークンだけを用意して loopback 以外に割り当てると、安全側に閉じる関門に引っかかり、配備がそもそも求めていない basic 認証や OAuth の資格情報を運用者が用意させられていました。
 
-この環境変数が用意されていると、しくみはひとりでに登録され、`verify_session` が差し出された資格情報をそれと定時間で比べます。トークンの形で動くクライアントが使う2つの道、つまり REST の `Authorization: Bearer` の道と、`/api/ws` の `?token=` による切り替えの資格情報は、どちらもこの継ぎ目を通るので、用意したトークン1つで両方が許されます。**ブラウザでのサインインの流れはありません**。`/login` にはサインインのボタンの代わりに、資格情報をどこから渡すかを説明する覚え書きが出ます。また、自動の SSO の転送でこのしくみが選ばれることもありません。
+この環境変数が用意されていると、しくみはひとりでに登録され、`verify_session` が差し出された資格情報をそれと定時間で比べます。トークンの形で動くクライアントが使う2つの道、つまり REST（Desktop の「Session token」の接続は、トークンを `X-Hermes-Session-Token` ヘッダーに入れて送ります。`Authorization` ヘッダーで bearer トークンを送っても通り、両方が送られたときはそちらが優先されます。専用のヘッダーで通るのは、このしくみのトークンだけです）と、`/api/ws` の `?token=` による切り替えの資格情報は、どちらもこの継ぎ目を通るので、用意したトークン1つで両方が許されます。**ブラウザでのサインインの流れはありません**。`/login` にはサインインのボタンの代わりに、資格情報をどこから渡すかを説明する覚え書きが出ます。また、自動の SSO の転送でこのしくみが選ばれることもありません。
 
 :::warning トークンはパスワードと同じように扱ってください
 用意したトークンを持っている人は、誰でも管理画面のすべてを使えます。トークンは秘密の管理の道具から用意し（Nix store のパスは決して使わないでください）、入れ替えるときは秘密を配備し直します。入れ替えると、クライアントに保存されている写しがすべて無効になり、新しいトークンを貼り付けるまで、Desktop では「HTTP は届くのに WebSocket が失敗する」という形で表れます。その後ろには利用者ごとの身元がありません。共有の配備やインターネットに向けた配備では、[Nous Research](#default-provider-nous-research) か[自前の OIDC](#self-hosted-oidc-provider) のしくみを選んでください。
@@ -1278,8 +1278,8 @@ hermes dashboard --no-open
 
 # Terminal 2: start the Vite dev server with HMR
 cd web/
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 `http://localhost:5173` の Vite の開発用サーバーが、`/api` への要求を WebSocket も含めて `http://127.0.0.1:9119` の FastAPI へ回します（別のバックエンドを使うときは `HERMES_DASHBOARD_URL` を設定します）。セッションの合鍵は、サーバー側でバックエンドから読み取ります。WebSocket への切り替えは `Host` と `Origin` を変えずに転送するので、ページの Origin は自分が接続したホストとポートを名指しすることになり、バックエンドはポート `5173` を信頼しなくても、それを同じ出どころとして受け入れます。`HERMES_DASHBOARD_URL` がバックエンドへのポート転送を指している場合（たとえば `ssh -L 8000:localhost:9119` を通した `http://127.0.0.1:8000`）も同じです。Vite 自身の CORS は切ってあるので、ほかのローカルのページが開発用サーバーから合鍵を読み取ることもできません。
@@ -1290,7 +1290,7 @@ npm run dev
 
 ## 更新時の自動の組み立て {#automatic-build-on-update}
 
-`hermes update` を実行すると、`npm` があれば画面側が自動で組み立て直されます。これで管理画面がコードの更新に付いていきます。`npm` が入っていない場合、更新は画面側の組み立てを飛ばし、`hermes dashboard` が最初の起動時に組み立てます。
+`hermes update` を実行すると、Hermes が用意する Node と pnpm を使って、画面側が自動で組み立て直されます。これで管理画面がコードの更新に付いていきます。更新の際にそれらを用意できない場合（たとえば遅延インストールを無効にしているとき）は、画面側の組み立てを飛ばし、`hermes dashboard` が最初の起動時に組み立てます。
 
 ## 見た目と差し込み {#themes-plugins}
 

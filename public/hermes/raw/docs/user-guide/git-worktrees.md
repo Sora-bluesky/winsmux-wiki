@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Git ワークツリー"
 description: "git のワークツリーと独立したチェックアウトを使って、同じリポジトリで複数の Hermes エージェントを安全に動かします"
 upstream_path: user-guide/git-worktrees.md
-upstream_blob: 96361e4920130c0f5360a0a560c4e1d29126cfdd
+upstream_blob: 6b108b56ea0d6717c24f36973866bb19ed386809
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/git-worktrees
 ---
@@ -283,4 +283,4 @@ worktrees:
 
 ## 複数のワークツリーにまたがって UI を開発する {#developing-the-ui-surfaces-across-worktrees}
 
-TypeScript で書かれた画面（`ui-tui/`、`apps/desktop/`）には、それぞれ `node_modules` が必要です。ワークツリーごとに `npm ci` をやり直すと、これがブランチの数だけ増えていきます。複数のワークツリーから TUI やデスクトップアプリに手を入れるなら、[TUI & Desktop from Worktrees](/hermes/docs/developer-guide/worktree-ui-dev/) を参照してください。シンボリックリンクで 1 つのインストールを共有する `htui` / `hgui` というヘルパーを紹介しています。
+TypeScript で書かれた画面（`ui-tui/`、`apps/desktop/`）には、それぞれ `node_modules` が必要です。ワークツリーごとに `pnpm install` をやり直すと、ブランチごとに同じインストールを繰り返すことになります。複数のワークツリーから TUI やデスクトップアプリに手を入れるなら、[TUI & Desktop from Worktrees](/hermes/docs/developer-guide/worktree-ui-dev/) を参照してください。シンボリックリンクで 1 つのインストールを共有する `htui` / `hgui` というヘルパーを紹介しています。

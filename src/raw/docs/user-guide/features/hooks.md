@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: cea0f7b4ac85b7cfc51b8aa81766e831bf40e525
+upstream_blob: 2a4d4c312a5073299cc01a4f99f89ac7cd862481
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -396,6 +396,7 @@ def register(ctx):
 - **時間の上限のある**フック（`post_tool_call` / `pre_llm_call` のような要となる経路の観測役に加えて、方針のフックである `pre_tool_call`）で Python のプラグインのコールバックが `plugins.hook_callback_timeout`（既定 30 秒、`0` で無効、最大 600）より長く**止まった**場合、作業役の終了を待たずに切り離されるので、エージェントのループは続きます。時間切れになった、あるいはまだ動いている `pre_tool_call` のコールバックは**閉じる側へ倒れます**（ツールを遮断します）。他の上限のあるフックは開く側へ倒れます（飛ばします）。呼び出し元のスレッドで動く約束のあるフック（`subagent_stop`）が、時間の上限のある作業役へ移されることはありません。シェルのフックは、項目ごとの `timeout` を自分で持ちます。
 - 下の一覧は説明のためのものです。**観測役**は戻り値を無視し、**変換**は最初の有効な文字列の置き換えを受け取り、**指示 / 制御**のフックは文書化された戻り値の形を使います。プラグインのミドルウェアは別の登録簿であり別の入口で、もう 1 つのフックの種類ではありません。
 - `turn_id`、`api_request_id`、`task_id`、`session_id`、`api_call_count` のような突き合わせのための項目はフックごとに異なり、無いこともあります。ID は中身を読まない不透明なものとして扱ってください。
+- ツールのフックには `conversation_id` も渡されます。これは会話の最初のセッション ID です。圧縮によってセッションが切り替わり `session_id` が置き換わっても変わらず、委任されたサブエージェントも委任元と同じ値を持ちます。会話ごとの状態は、これをキーにして持ってください。
 - 実行時に有効なイベント名は `hermes_cli.plugins.VALID_HOOKS` が決めます。`hermes hooks list` は設定されたシェル / 送信の Webhook のフックを並べるもので、使えるすべてのイベントを並べるものではありません。`hermes hooks test <event>` は、無効なイベントを渡したときにだけ有効な一覧を示します。
 
 ### キャッシュを壊さないシステムプロンプトの節 {#cache-safe-system-prompt-sections}
@@ -424,8 +425,8 @@ def register(ctx):
 - 置き場所の目印は `after_memory` だけです。節は ID 順に並べられ、記憶 /
   プロファイルの文脈のあと、セッションの情報の前に出ます。プラグインが
   中核のプロンプトの内容を並べ替えたり置き換えたりすることはできません。
-- 呼び出し可能なものには、`session_id`、`model`、`provider`、`platform`、
-  `profile_name`、`cwd` を持つ読み取り専用のマッピングが渡されます。これは
+- 呼び出し可能なものには、`session_id`、`conversation_id`、`model`、`provider`、
+  `platform`、`profile_name`、`cwd` を持つ読み取り専用のマッピングが渡されます。これは
   **新しいセッションにつき 1 回**動きます。その描画された内容は圧縮の時点で
   固定され、プロセスの再起動や再開のあとは、すでに保存されたシステム
   プロンプト全文から回復されます。既存のセッションでプラグインの状態が
@@ -449,9 +450,9 @@ def register(ctx):
 
 | フック | 種類 | 発火のタイミングと戻り値の扱い | 明示的に渡される項目 | プライバシー / 機微さ |
 |---|---|---|---|---|
-| [`pre_tool_call`](#pre_tool_call) | 指示 / 制御 | 実行の前に 1 回。有効な `block` はどの `approve` よりも優先され（そのあと最初の有効な `approve`）、`modify` の戻り値はツールの引数へ浅くマージされます。 | `tool_name`、`args`、`task_id`、`session_id`、`tool_call_id`、`turn_id`、`api_request_id`、`middleware_trace` | 素の引数には、利用者の内容、パス、コマンド、秘密の情報が含まれることがあります。 |
-| `post_tool_call` | 観測役 | 遮断、エラー、成功のいずれの結果のあとにも。戻り値は無視されます。 | `tool_name`、`args`、`result`、`task_id`、`session_id`、`tool_call_id`、`turn_id`、`api_request_id`、`duration_ms`、`status`、`error_type`、`error_message`、`middleware_trace` | 結果やエラーの文章には、任意のツールや利用者の内容、秘密の情報が含まれることがあります。 |
-| `transform_tool_result` | 変換 | `post_tool_call` のあと、会話への追加の前。最初の文字列が結果を置き換えます。 | `tool_name`、`args`、`result`、`task_id`、`session_id`、`tool_call_id`、`turn_id`、`api_request_id`、`duration_ms`、`status`、`error_type`、`error_message` | モデルへ渡る結果と引数が丸ごと見えます。 |
+| [`pre_tool_call`](#pre_tool_call) | 指示 / 制御 | 実行の前に 1 回。有効な `block` はどの `approve` よりも優先され（そのあと最初の有効な `approve`）、`modify` の戻り値はツールの引数へ浅くマージされます。 | `tool_name`、`args`、`task_id`、`session_id`、`conversation_id`、`tool_call_id`、`turn_id`、`api_request_id`、`middleware_trace` | 素の引数には、利用者の内容、パス、コマンド、秘密の情報が含まれることがあります。 |
+| `post_tool_call` | 観測役 | 遮断、エラー、成功のいずれの結果のあとにも。戻り値は無視されます。 | `tool_name`、`args`、`result`、`task_id`、`session_id`、`conversation_id`、`tool_call_id`、`turn_id`、`api_request_id`、`duration_ms`、`status`、`error_type`、`error_message`、`middleware_trace` | 結果やエラーの文章には、任意のツールや利用者の内容、秘密の情報が含まれることがあります。 |
+| `transform_tool_result` | 変換 | `post_tool_call` のあと、会話への追加の前。最初の文字列が結果を置き換えます。 | `tool_name`、`args`、`result`、`task_id`、`session_id`、`conversation_id`、`tool_call_id`、`turn_id`、`api_request_id`、`duration_ms`、`status`、`error_type`、`error_message` | モデルへ渡る結果と引数が丸ごと見えます。 |
 | `transform_terminal_output` | 変換 | 前面のプロセスの出力を上限付きで受け取ったあと、最後の出力の制限の前。最初の文字列が出力を置き換えます。 | `command`、`output`、`returncode`、`task_id`、`env_type` | コマンドや出力に資格情報が含まれることがあります。 |
 | `pre_transcription` | 変換 | プロバイダーが決まったあと、どのバックエンド（組み込み、コマンド型、プラグインが登録したもの）が呼ばれるよりも前に、音声認識の振り分け役が発火させます。辞書の結果は登録の順に適用され、項目ごとに最後の書き手が勝ちます（`prompt`、`language`、`model`。`file_path` は読み取り専用です）。 | `file_path`、`provider`、`model`、`language`、`prompt`、`source` | 最後のプロンプトは音声と一緒に、設定された音声認識のプロバイダーへ送られます。フックの戻り値に秘密の情報を入れないでください。 |
 | `pre_llm_call` | 指示 / 制御 | ループの前に、やり取りごとに 1 回。有効な文字列 / `{"context": ...}` の戻り値はすべてつなげられ、利用者のメッセージへ差し込まれます。最初の有効な `{"action": "block", "message": ...}` は、推論の要求を一度も送らないうちにそのやり取りを終わらせます。 | `session_id`、`task_id`、`turn_id`、`user_message`、`conversation_history`、`is_first_turn`、`model`、`platform`、`parent_session_id`、`sender_id` | 利用者のメッセージと会話の履歴が丸ごと。 |
@@ -1686,7 +1687,7 @@ def register(ctx):
 def my_callback(tool_name: str, args: dict, result: str, task_id: str, **kwargs) -> str | None:
 ```
 
-渡される中身には `session_id`、`tool_call_id`、`turn_id`、`api_request_id`、`duration_ms`、`status`、`error_type`、`error_message` も含まれます。`result` はツールの振り分けが返した最後の結果で、これと `args` には任意の利用者 / ツールの内容や秘密の情報が含まれ得ます。
+渡される中身には `session_id`、`conversation_id`、`tool_call_id`、`turn_id`、`api_request_id`、`duration_ms`、`status`、`error_type`、`error_message` も含まれます。`result` はツールの振り分けが返した最後の結果で、これと `args` には任意の利用者 / ツールの内容や秘密の情報が含まれ得ます。
 
 **戻り値:** 最初の `str` が結果を置き換えます（空文字列も含みます）。`None` なら変わりません。
 

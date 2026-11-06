@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 187 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `9f9b9f5`（2026-11-05）時点。この一覧は上流の docs から機械生成しています。
+上流 `6b21d05`（2026-11-07）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（44）
 
@@ -203,8 +203,8 @@ raw: /hermes/raw/skills.md
 | [Code Wiki](/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/) | Generate wiki docs + Mermaid diagrams for any codebase | 2026-09-20 |
 | [Grill Me](/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/) | Adversarial plan interview before implementation | 2026-09-20 |
 | [Hermes Agent Skill Authoring](/hermes/docs/user-guide/skills/optional/software-development/software-development-hermes-agent-skill-authoring/) | Author in-repo SKILL.md files: frontmatter and structure | 2026-10-28 |
-| [Inspecting Hermes Desktop Dom](/hermes/docs/user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom/) | Read the live Hermes desktop DOM/CSS over CDP | 2026-10-28 |
-| [Node Inspect Debugger](/hermes/docs/user-guide/skills/optional/software-development/software-development-node-inspect-debugger/) | Debug Node.js via --inspect + Chrome DevTools Protocol CLI | 2026-10-28 |
+| [Inspecting Hermes Desktop Dom](/hermes/docs/user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom/) | Read the live Hermes desktop DOM/CSS over CDP | 2026-11-06 |
+| [Node Inspect Debugger](/hermes/docs/user-guide/skills/optional/software-development/software-development-node-inspect-debugger/) | Debug Node.js via --inspect + Chrome DevTools Protocol CLI | 2026-11-06 |
 | [Pr Lens](/hermes/docs/user-guide/skills/optional/software-development/software-development-pr-lens/) | Draw code changes as animated architecture/data-flow SVGs | 2026-09-19 |
 | [Python Debugpy](/hermes/docs/user-guide/skills/optional/software-development/software-development-python-debugpy/) | Debug Python: pdb REPL + debugpy remote (DAP) | 2026-10-28 |
 | [Rest Graphql Debug](/hermes/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug/) | Debug REST/GraphQL APIs: status codes, auth, schemas, repro | 2026-09-20 |

@@ -2,7 +2,7 @@
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: 8e97f284b01b481a43507f639c56ed85b56c1cf1
+upstream_blob: 3a1860db935225ab9b767ee717ff50a1aa8c1869
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -937,7 +937,7 @@ services.hermes-agent.settings.plugins.enabled = [
 `pm/lock.json` が固定するインタープリターです。`HERMES_PYTHON` と `VIRTUAL_ENV` がこの venv を指し、
 `PYTHONPATH` は要りません。リポジトリ直下の `.venv` に
 Python の依存を入れることはしません。シェルには Node.js と実行時のツールも入っています。
-npm のフックが、JS のワークスペースの入力が変わったときにそれを更新します。
+pnpm のフックが、JS のワークスペースの入力が変わったときにそれを更新します。
 
 ```bash
 cd hermes-agent
@@ -954,7 +954,7 @@ hermes chat
 ```bash
 cd hermes-agent
 direnv allow    # one-time
-# Nix reuses its built Python environment; the npm hook checks JS inputs.
+# Nix reuses its built Python environment; the pnpm hook checks JS inputs.
 ```
 
 ### flake のチェック {#flake-checks}

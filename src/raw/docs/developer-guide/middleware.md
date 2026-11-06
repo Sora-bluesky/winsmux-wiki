@@ -2,7 +2,7 @@
 title: "ミドルウェア"
 description: "LLM 呼び出しとツール呼び出しの挙動を変えるプラグインのミドルウェア。契約、実行順序、例"
 upstream_path: developer-guide/middleware.md
-upstream_blob: 913a99e86e72e7207a7eee6a5166de7eceaef3ac
+upstream_blob: b4d4174acafaa82741c19791eed57c2b3466a2a4
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/middleware
 ---
@@ -78,6 +78,9 @@ def on_tool_execution(**kwargs):
     result = kwargs["next_call"](kwargs["args"])
     return result
 ```
+
+フックと同じく、`**kwargs` を持たないコールバックは、引数として名前を挙げたフィールドだけを受け取ります。
+そのため、後でペイロードにフィールドが追加されても、そのコールバックが動かなくなることはありません。
 
 複数のプラグインが同じ種類の実行系ミドルウェアを登録した場合、Hermes は登録順に
 入れ子のチェーンとして実行します。ミドルウェアの失敗はフェイルオープンです。

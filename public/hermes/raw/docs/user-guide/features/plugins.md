@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: ea6678d4c36c5616d13690aa953d43c90ddb1f0d
+upstream_blob: c1dc0b6d3785e00bf8002b2a15695149c2df1fa6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -137,7 +137,7 @@ def register(ctx):
 
 - `print()` を呼ぶのではなく、**文章を戻り値として返します**。print した出力はゲートウェイの標準出力に出るだけで、利用者のチャットには届きません。
 - **セッションの作業ディレクトリは `agent.runtime_cwd.resolve_agent_cwd()` で読みます**。`os.getcwd()` はゲートウェイ自身のディレクトリを返すので使いません。ハンドラーが動いているあいだ、ゲートウェイはセッションのディレクトリを固定しています。
-- **呼び出し元のセッションはハンドラーのキーワード引数で受け取ります。** `session_id`、`session_key`、`platform`、`source`（送り主の `SessionSource`）を宣言すれば Hermes が渡します。引数 1 つのハンドラーはこれまでどおりそのまま動きます。同じ値はハンドラーの前後で `HERMES_SESSION_*` としても結びつけられる（`gateway.session_context.get_session_env` で読み、`os.environ` からは決して読みません）ので、ハンドラーが始めた裏の処理は、そのセッションを親として記録します。
+- **呼び出し元のセッションはハンドラーのキーワード引数で受け取ります。** `session_id`、`session_key`、`platform`、`source`（送り主の `SessionSource`）を宣言すれば Hermes が渡します。引数 1 つのハンドラーはこれまでどおりそのまま動きます。同じ値はハンドラーの前後で `HERMES_SESSION_*` としても結びつけられる（`from gateway.session_context import get_session_env` で読み、`os.environ` からは決して読みません）ので、ハンドラーが始めた裏の処理は、そのセッションを親として記録します。
 
 従来の CLI は、ハンドラーが動いているあいだずっと返事を待ちます。Ctrl+C で止まるのは待つことであって、ハンドラーではありません。ハンドラーはゲートウェイの中で最後まで動き、その返事は表示されません。コマンドはゲートウェイへの専用のつながりで動くので、実行中もそのセッションの入力・割り込み・ほかのコマンドが止められることはありません。
 
@@ -564,7 +564,7 @@ hermes://plugin/install?catalog=<name>             # reviewed catalog entry at i
 済みます。同じ画面は、リンクを使わずに **Capabilities →
 Plugins → Install from Git** からも開けます。古い形式の `hermes://plugin-agent/…` と
 `hermes://plugin-desktop/…` の URL も、同じダイアログへ流れます。開発用のビルド
-（`npm run dev`）では、スキームは `hermes-dev://` です。
+（`pnpm run dev`）では、スキームは `hermes-dev://` です。
 
 Web サイト側に SDK は要りません。ふつうのアンカーで動きます。
 

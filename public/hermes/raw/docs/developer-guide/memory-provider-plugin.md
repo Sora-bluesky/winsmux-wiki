@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: 79d5eaec159bff09e26981fb552788f728191bdb
+upstream_blob: 74cadc7b025e74a4598f155f825523346f975687
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -135,7 +135,17 @@ class MyMemoryProvider(MemoryProvider):
 | `gateway_session_key` | チャットごとにセッションを分けるための、メッセージングのチャットの安定した識別子。 |
 | `user_id`, `user_id_alt`, `user_name`, `chat_id` | ゲートウェイの識別情報。ある場合に含まれます。 |
 | `agent_identity` | 有効なプロファイル名（ある場合）。 |
+| `resumed` | このセッション ID で以前のターンが実行されていた場合は `True` です（エージェントが保存済みの会話記録の続きから動く場合です。たとえば `--resume`、再起動後のゲートウェイのチャット、開き直した Desktop/TUI のセッションなど）。新しいセッション ID では `False` です（サブエージェント、cron での実行、新しいチャットなど）。コピーした履歴から始まる `/branch` の子は `True` です。プロセスの途中で行う `/resume` は、これではなく `on_session_switch()` を通じて届きます。 |
+| `message_count` | このセッション ID にすでに保存されているメッセージの数。TUI や Desktop では送信中のプロンプトも数に入ることがあるため、新しいチャットでも `resumed` が `False` のまま `1` になることがあります。 |
 | `agent_workspace`, `agent_context` | 実行時のエージェントの範囲。`agent_workspace` は `hermes` です。`agent_context` はスケジューラーからの実行なら `cron`、`delegate_task` で生まれた子なら `subagent`、それ以外は `primary` になります。primary 以外の値のときは自動での書き込みを飛ばしてください。 |
+
+省略可能なキーは `kwargs.get(...)` で読んでください。古い Hermes のバージョンでは、新しく加わったキー（`resumed`、
+`message_count`）が渡されません。
+
+`on_turn_start(turn_number, message, **kwargs)` には、`model`（ターン開始時点でのそのターンの主モデルの ID。
+未設定なら `""`、mixture-of-agents ではプリセット名）と、そのターンの発言者を示す
+`author_id`、`author_name`、`author_is_bot` が渡されます。必要なキーワードだけを宣言してください。マネージャーは、
+プロバイダーのシグネチャーが受け付けるキーワードだけを渡します。
 
 `os.getcwd()` が会話のワークスペースを表すとは考えないでください。1 つの Desktop
 やゲートウェイのバックエンドが、複数のセッションを受け持つことがあるためです。`cwd` がなく、ディレクトリで
@@ -187,10 +197,11 @@ app-server のセッションは、構築時の cwd ではなく現在のワー�
 | `on_profile_created(profile_name, hermes_home)` | このプロバイダーを選んでいるプロファイルが作られたとき（複製したプロファイルは `memory.provider` を引き継ぎます）。CLI、ダッシュボード、Desktop のどこから作っても呼ばれます | プロファイルごとの状態（ピアやホストのエントリーなど）を用意する |
 | `on_profile_renamed(old_name, new_name, hermes_home)` | そのプロファイルの名前が変わったとき（`hermes_home` は新しいディレクトリ） | 古い名前で保存していた状態のキーを付け替える |
 
-この 2 つのプロファイル用フックは、初期化していないインスタンスの上で、そのプロファイルの保存先と、そのプロファイル自身の `.env`
-の秘密情報を結びつけた状態で実行されます。そのプロファイルの `.env` に無いキーは未設定として扱われ、呼び出し元の環境が
+この 2 つのプロファイル用フックは、初期化していないインスタンスの上で、そのプロファイルの保存先と、そのプロファイル自身の
+秘密情報（`.env` と、設定済みの秘密情報の取得元。1Password など）を結びつけた状態で実行されます。そこに無いキーは未設定として扱われ、呼び出し元の環境が
 使われることはありません。例外（`SystemExit` も含む）はログに記録されるだけで、作成や名前の変更を失敗させることはありません。これらのフックは、
 どの画面から操作しても作成・名前変更の要求の中で実行されるので、ネットワークを使う処理はバックグラウンドのスレッドで行ってください。
+`plugins.isolation: host` の設定では、フックのためだけに起動したプラグインホストは、フックが戻った時点で停止します。
 
 組み込みの `replace` と `remove` では、`metadata["previous_content"]` に、組み込みの保存先の
 ロックをかけた状態で選ばれたエントリーの全文が入ります。通知は、書き込みや一括処理がすべて
@@ -270,15 +281,45 @@ Hermes に同梱されているプロバイダーは、どれもチェックポ�
 初期化時には、有効なプロバイダー名を挙げた警告が記録され、拒否のたびに解除の
 ための項目として `compression.checkpoint_required` が示されます。
 
-この仕組みは、Hermes の要約機能だけでなく、圧縮を行うすべての主体に効きます。
+この仕組みは、Hermes の要約機能だけでなく、ホストが動かす圧縮のすべての主体に効きます。
 サーバー側のネイティブ圧縮（`compression.codex_responses_native`）は、仕組みが
 有効な間は抑止されます。ターン後の小刻みな圧縮（`compression.micro_compact`）は
 エージェント初期化時に強制的に無効化されます（古いやり取りを回転する要約に
 吸収してしまい、その経路にはチェックポイントのフックがないためです）。
+ツールの実行結果を先回りして刈り込む処理（`compression.proactive_prune_tokens`）は、
+呼び出し箇所で抑止されます（既定では無効なので、既定のインストールではここで抑止するものはありません）。
 `codex_app_server` の API モードもエージェント初期化時に拒否されます。codex
 エージェントは自分のスレッドを自分で圧縮し、圧縮前と言える正しい区切りが
-存在しないため、必要なチェックポイントを保証できないからです。チェックポイントを
-理解する Hermes の圧縮機能だけが、情報を失う書き換えを行える唯一の主体になります。
+存在しないため、必要なチェックポイントを保証できないからです。
+プラグインのコンテキストエンジンの `compress()` も対象になります。ホストはその前に
+`on_pre_compress()` を呼びます。対象外なのは、`compress()` の外で（たとえば
+`on_turn_complete()` から）ホストの会話記録のメッセージを削除したり書き換えたりする、プラグインのコンテキストエンジンです。
+ホストはその経路ではチェックポイントを取れず、現時点ではそうしたエンジンを拒否することもありません。
+
+### 仕組みが有効なときのフォーク {#forks-under-an-armed-gate}
+
+Hermes は、プロバイダーを持たない 2 つめのエージェントを 4 か所で動かします（委任された
+サブエージェント、キュレーターの処理、バッチ実行、Feishu のコメントへの応答）。仕組みが無効なら、これらはプロバイダーを持たないままです。
+`checkpoint_required` が有効な場合は、こうしたフォークにも同じ仕組みが効き、最初の圧縮が
+`BLOCKED_MISSING_PREREQUISITE` で失敗してしまいます。そのためフォークは設定されたプロバイダーを読み込み、
+`agent_context="subagent"` で初期化します（`platform` と、フォークに親セッションがある場合は
+`parent_session_id` で、どの種類のフォークかを見分けられます）。切り離されたレビューと `/btw` のフォークは別です。
+これらは何も保存しないので、仕組みは適用されません。その結果、次の 2 つのことが起こります。
+
+- **フォークごとに `initialize()` が 1 回呼ばれます** — ネットワーク越しの保存先なら、
+  フォークを起動するたびに 1 往復の通信が発生します。
+- **フォークの会話記録も保存先に届きます**。経路は `on_pre_compress()` です。
+
+フォークのプロンプトは `skip_memory=True` のときのままです。組み込みの
+MEMORY.md/USER.md の保存先は `agent_context="subagent"` では読み込まれません。ただし、
+フォークが `memory` ツールセットを求めた場合は別で、そのときは仕組みの有無にかかわらず保存先が読み込まれます。
+
+`agent_context="subagent"` のとき、プロバイダーがこのラベルを読むかどうかにかかわらず、
+ホストはそれ以外の呼び出しをすべて止めます。`prefetch()`/`queue_prefetch()` も、
+`sync_turn()`、`on_turn_start()`、`on_session_end()`、`on_delegation()` も呼ばれません。
+`initialize()`、`on_session_switch()`、`on_pre_compress()` は引き続き実行されるので、
+チェックポイント対応のプロバイダーは、primary 以外での書き込みをどう扱う場合でも、`on_pre_compress()` では必ず保存してください。
+そこで保存を飛ばすと、チェックポイントの取り決めを破る（保存せずに成功を返す）か、フォークが最初の圧縮で止まってしまいます。
 
 プロバイダーが受け取る内容は、宣言した API のバージョンによって変わります。
 バージョン 1 のプロバイダー（暗黙の既定であり、これまでのすべてのプロバイダー）は
@@ -370,6 +411,9 @@ def write_config_fields(self, values: dict, hermes_home: str) -> None:
     # json.JSONDecodeError counts) to refuse the save (shown as a 400), e.g. when your file does not parse.
     ...
 ```
+
+`write_config_fields` を実装せずに `storage=STORAGE_PROVIDER` を宣言すると、保存は 501 を返します。
+読み込みに失敗したプロバイダーでは 503 が返ります。未知の `storage` の値では設定パネルが表示されず、保存も拒否されます。
 
 ## 設定の保存 {#save-config}
 

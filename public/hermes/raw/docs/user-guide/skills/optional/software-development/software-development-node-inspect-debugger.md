@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Node Inspect Debugger — --inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする"
 description: "--inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする"
 upstream_path: user-guide/skills/optional/software-development/software-development-node-inspect-debugger.md
-upstream_blob: 57bdc0cc3b3ff582d514b30c614704fad645b69b
+upstream_blob: b786dde6aa164259c5e491a092b7fca555088d6b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-node-inspect-debugger
 ---
@@ -200,11 +200,11 @@ TUI は Ink と tsx で作られています。よくあるのは次の2つの�
 
 ### 開発中の Ink コンポーネント1つをデバッグする {#debugging-a-single-ink-component-under-dev}
 
-`ui-tui/package.json` には `npm run dev`（tsx --watch）があります。tsx を直接動かして `--inspect-brk` を足します。
+`ui-tui/package.json` には `pnpm run dev`（tsx --watch）があります。tsx を直接動かして `--inspect-brk` を足します。
 
 ```bash
 cd <hermes-agent-repo>/ui-tui
-npm run build    # produce dist/ once so transpile isn't needed on first load
+pnpm run build   # produce dist/ once so transpile isn't needed on first load
 node --inspect-brk dist/entry.js
 # In another terminal:
 node inspect -p <node pid>

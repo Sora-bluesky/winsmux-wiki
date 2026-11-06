@@ -2,7 +2,7 @@
 title: "ダッシュボードを広げる"
 description: "Hermes の Web ダッシュボード向けにテーマとプラグインを作ります — 配色、書体、レイアウト、独自のタブ、外枠のスロット、ページごとのスロット、そして裏側の API ルート"
 upstream_path: user-guide/features/extending-the-dashboard.md
-upstream_blob: 1fafafd4e9d2cf55e8876128e3a765b5990c9623
+upstream_blob: 8a671d4f26565e822e116a3b8d21ee8841fdeb96
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/extending-the-dashboard
 ---
@@ -15,7 +15,7 @@ Hermes の Web ダッシュボード（`hermes dashboard`）は、コードを�
 2. **UI プラグイン** — `manifest.json` と JavaScript のバンドルを収めたディレクトリです。タブを1つ足したり、組み込みのページを差し替えたり、ページごとのスロットで補ったり、名前の付いた外枠のスロットに部品を差し込んだりします。
 3. **裏側のプラグイン** — そのプラグインのディレクトリに置く Python ファイルで、FastAPI の `router` を公開します。ルートは `/api/plugins/<name>/` の下に載り、プラグインの UI から呼び出せます。
 
-3つとも**動かしたまま置くだけ**で効きます。リポジトリを複製する必要も、`npm run build` を走らせる必要も、ダッシュボードの元のコードに手を入れる必要もありません。このページが3つすべての拠り所になります。
+3つとも**動かしたまま置くだけ**で効きます。リポジトリを複製する必要も、`pnpm run build` を走らせる必要も、ダッシュボードの元のコードに手を入れる必要もありません。このページが3つすべての拠り所になります。
 
 ダッシュボードをただ使いたいだけなら [Web ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/)をご覧ください。端末の CLI の見た目を変えたい（Web ダッシュボードではない）場合は[スキンとテーマ](/hermes/docs/user-guide/features/skins/)へどうぞ — CLI のスキンの仕組みは、ダッシュボードのテーマとは別物です。
 

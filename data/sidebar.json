@@ -1457,6 +1457,9 @@
                 },
                 {
                   "id": "developer-guide/plugins/catalog-submission"
+                },
+                {
+                  "id": "developer-guide/plugins/public-api"
                 }
               ]
             },
@@ -1983,6 +1986,7 @@
     "developer-guide/delegation-provider-plugin",
     "developer-guide/plugins/application-declarations",
     "developer-guide/plugins/catalog-submission",
+    "developer-guide/plugins/public-api",
     "developer-guide/creating-skills",
     "developer-guide/extending-the-cli",
     "developer-guide/tools-runtime",

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: c4e911940cb9eb9f8fc9b2205594157383950aaa
+upstream_blob: 2537aed4cfd5bbe7c1a5f5f1288f7f2201b396c0
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -407,7 +407,7 @@ scripts/run-in-hermes-env python scripts/release.py --help
 python -c "import sys, pm; print(sys.executable); print(pm.__file__)"
 python -c "import httpx; print(httpx.__file__)"
 node --version
-npm --version
+pnpm --version
 hermes --version
 ```
 
@@ -433,15 +433,19 @@ python -m pm.cli status
 次に起動するプロセスからその内容が反映されます。編集後は、影響を受ける CLI、ゲートウェイ、バックエンドを再起動してください。
 Python のソースだけを変えた場合、依存関係をすべて入れ直す必要はありません。
 
-JavaScript のワークスペースは、リポジトリのルートで `npm ci` を一度実行してから、
+JavaScript のワークスペースは、リポジトリのルートで `pnpm install --frozen-lockfile` を一度実行してから、
 該当するワークスペースのコマンドを実行します。たとえば次のとおりです。
 
 ```bash
-npm run build --workspace ui-tui
-npm run dev --workspace apps/desktop
+pnpm --dir ui-tui run build
+pnpm --dir apps/desktop run dev
 ```
 
-Web サイトは別扱いです。`npm ci --prefix website` を実行してから、
+アクティベーションは、ルートの `package.json` が `devEngines` で固定している pnpm のバージョンを用意します。
+Hermes のビルドと `hermes update` は、それ以外の pnpm のバージョンでは実行を拒否します（`pnpm install` を直接実行した場合は検査されません）。また、ルートの `preinstall` スクリプトは
+`npm install` を拒否します（npx やほかの npm コマンドは警告を出すだけです）。
+
+Web サイトは別の npm プロジェクトです。`npm ci --prefix website` を実行してから、
 `npm run build:fast --prefix website` を実行します。PM のアクティベーションが提供するのはツールで、これらの
 `node_modules` ディレクトリやビルド済みの成果物は含みません。ネイティブのデスクトップビルドには追加の
 要件があり、[デスクトップのビルドガイド](https://github.com/NousResearch/hermes-agent/blob/main/apps/desktop/BUILDING.md)にまとまっています。
@@ -605,7 +609,7 @@ hermes pm install chromium
 | `pm update --check` | 書き込みをせずに問い合わせだけを行います。終了コード 1 は更新があることを意味する場合があります。エラーと区別するには出力を確認してください。 |
 | `pm update --target TARGET` | 指定したターゲット向けにバージョンを解決します。 |
 | `pm update --skip-target TARGET` | TARGET の固定を変えずに残します（複数回指定できます）。たとえば termux のプールが上流に追いついていない間の `linux-arm64-bionic` に使います。以後の実行でも、そのパッケージは最新として報告されます。`pm lock --bump NAME VERSION` はすべてのターゲットを指定のバージョンに固定し直し、`pm update --termux` は使われなくなった `linux-arm64-bionic` の行を固定し直します。 |
-| `pm update --uv` / `--npm` | Python または npm の依存関係の解決結果も更新します。 |
+| `pm update --uv` / `--pnpm` | Python の依存関係の解決結果（`uv.lock`）か、JavaScript の依存関係の解決結果（`pnpm-lock.yaml`）も更新します。 |
 | `pm update --termux [--check]` | ローリング方式のプールから外された termux プールのアーカイブ（ランタイムライブラリの固定表と bionic のロック行）を固定し直します。`--check` は書き込みをせずに報告し、外された固定版があれば終了コード 1 を返します。 |
 | `pm install --target TARGET NAME...` | 明示したクロスターゲットのパッケージを、ホストのインストール済み実行環境として記録せずに配置します。win32 の `git` ターゲットは自己展開形式の PortableGit アーカイブに固定されています。配置するときは提供元の展開プログラムを実行するため、Windows のホストが必要です。 |
 | `pm bundle --out DIR [--ref REF]` | ソースのスナップショット、ネイティブツール、facts、Python の依存関係を配置します。署名済みのデスクトップインストーラーは作りません。 |
@@ -635,8 +639,8 @@ PM は、ツールのダウンロード、成果物のハッシュ計算、
 PM は、ハッシュの不一致、証明書の失敗、ローカルのファイルシステムのエラー、その他の
 恒久的な失敗は再試行しません。確認が成功したあとに範囲指定の GET が 403 や 404 を返した場合は、
 CDN へのフォールバックとして、欠けている範囲を1回だけ順番に取り直します。展開、
-検証、公開は繰り返しません。Python と npm のパッケージの要求は、
-引き続き uv と npm それぞれの再試行ポリシーに従います。
+検証、公開は繰り返しません。Python と JavaScript のパッケージの要求は、
+引き続き uv と pnpm それぞれの再試行ポリシーに従います。
 
 ## 公開からの経過日数とパッケージのミラー {#release-age-and-package-mirrors}
 
@@ -650,6 +654,10 @@ Hermes 自身が依存する Python のパッケージは、Hermes がロック�
 
 この検査を行うのは `hermes pm lock` だけです。アップロード日時のないミラーに対して実行すると、
 `has no publish time` と表示して止まります。この手順では `https://pypi.org/simple` を使ってください。
+
+JavaScript のワークスペースの依存関係も、`pnpm-workspace.yaml` の `minimumReleaseAge`（単位は分で、`20160` は14日）を通じて同じ規則に従います。
+例外は `minimumReleaseAgeExclude` に列挙します。CI は `pnpm-lock.yaml` からインストールするときにこの規則を強制します。ソース、バンドル、Docker でのインストールは、
+コミット済みのロックをそのまま信頼します。
 
 ## 診断 {#diagnostics}
 

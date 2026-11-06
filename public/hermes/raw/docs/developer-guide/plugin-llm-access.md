@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインからの LLM 呼び出し"
 description: "ctx.llm を使うと、プラグインの中からどんな LLM 呼び出しもできます。チャットでも構造化出力でも、同期でも非同期でも同じです。認証はホストが持ち、信頼ゲートは既定で閉じ、JSON Schema による検証も選べます。"
 upstream_path: developer-guide/plugin-llm-access.md
-upstream_blob: d1ec91e8cb2e0512b7b962007680a63ca16fc7f9
+upstream_blob: 0c2552778317d88a70921d61d4073852b2c65845
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugin-llm-access
 ---
@@ -326,6 +326,37 @@ Settings → Models → Auxiliary のどれにも（組み込みのタスクの�
 もともとある補助タスクを使わせるための、運用側からの明示的な許可です。これで
 他のプラグインのタスクが使えるようになるわけではありません。`task=` を省く
 （または `"auto"` にする）と、有効になっている本体のプロバイダーとモデルのままになります。
+
+#### プラグインのフロントエンドから使う: `llm.oneshot` {#from-the-plugins-frontend-llmoneshot}
+
+プラグインのフロントエンド（デスクトップアプリのページや、ゲートウェイにつながったチャットのフロントエンド）は、
+Python のサブプロセスを使わずに、ゲートウェイの JSON-RPC メソッド `llm.oneshot` を通して
+同じタスクを実行できます。
+
+```json
+{"method": "llm.oneshot", "params": {
+  "task": "classifier",
+  "instructions": "Classify the ticket.",
+  "input": "<ticket text>",
+  "schema": {"type": "object", "properties": {"label": {"type": "string"}}, "required": ["label"]},
+  "redact": true
+}}
+```
+
+- `task` には、組み込みの補助タスクか、読み込まれているプラグインが登録したタスクを指定します。
+  `ctx.llm` と同じように `auxiliary.<task>` を通して解決されます。知らないキーを渡すと、
+  メインのモデルで実行されることはなく、拒否されます（`invalid_params`、`field: task`）。
+  省略したときは `title_generation` になります。
+- `schema`（JSON Schema のオブジェクト）を渡すと、プロンプトとプロバイダーの JSON モードの両方で
+  JSON を求めます。返答は `{"text": ..., "parsed": <value>}` の形です。JSON でない答えや、
+  スキーマに合わない答えはエラーになります。`jsonschema` パッケージ（必須の依存関係ではありません）が
+  入っていない環境では、`schema` を付けた要求はモデルを呼ぶ前に拒否されます。
+- `redact: true` にすると、モデルに渡す前に、`input` に含まれる秘密の情報を
+  エージェントの伏せ字処理で隠します。
+- `session_id` を渡すと、自分でモデルを指定していないタスク、つまり
+  `auxiliary.<task>.provider` が `auto`（既定値）のタスクに、そのセッションのモデルを貸します。
+  プロバイダーやモデルを明示的に設定したタスクは、その設定のままです。`ctx.llm` と同じく、
+  明示的な設定はセッションの経路より優先されます。
 
 #### 組み込みの枠を引き継ぐ {#inheriting-a-built-in-slot}
 

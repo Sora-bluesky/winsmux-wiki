@@ -1,15 +1,15 @@
 ---
 title: "worktree から TUI とデスクトップアプリを動かす"
-description: "checkout ごとに npm install をやり直さずに、Ink の TUI と Electron のデスクトップアプリを git の worktree から動かす"
+description: "checkout ごとに pnpm install をやり直さずに、Ink の TUI と Electron のデスクトップアプリを git の worktree から動かす"
 upstream_path: developer-guide/worktree-ui-dev.md
-upstream_blob: 464365f642add12650147bd104236cc683f9d19e
+upstream_blob: 4253c7a368f1668ea44259ff14e19b14a6a0364b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/worktree-ui-dev
 ---
 
 # worktree から TUI とデスクトップアプリを動かす {#tui-desktop-from-worktrees}
 
-Python のコア部分は、どの [git worktree](/hermes/docs/user-guide/git-worktrees/) からでも問題なく動きます。`cd` して `hermes` と打つだけです。ところが TypeScript 側の 2 つの画面はそうはいきません。`ui-tui/` と `apps/desktop/` はどちらも中身の入った `node_modules` を必要とし、worktree ごとに `npm ci` をやり直すのは時間がかかるうえ、checkout しているブランチの数だけ数ギガバイトを重複して抱えることになります。
+Python のコア部分は、どの [git worktree](/hermes/docs/user-guide/git-worktrees/) からでも問題なく動きます。`cd` して `hermes` と打つだけです。ところが TypeScript 側の 2 つの画面はそうはいきません。`ui-tui/` と `apps/desktop/` はどちらも中身の入った `node_modules` を必要とし、worktree ごとに `pnpm install` をやり直すのは時間がかかるうえ、checkout しているブランチの数だけそれを繰り返すことになります。
 
 `htui` と `hgui` は、その穴を埋めるための 2 つのシェル関数です。どちらも **いま作業している worktree から** 画面を起動しつつ、`node_modules` は正となる 1 つの checkout から借りてきます。使い捨てのブランチにかかるコストが、インストールではなくシンボリックリンク 1 本で済むわけです。
 
@@ -17,13 +17,13 @@ Python のコア部分は、どの [git worktree](/hermes/docs/user-guide/git-wo
 
 ## 依存関係を共有する仕組み {#the-deps-sharing-model}
 
-ひとつの checkout を **依存関係用の checkout** と決めます。実際に `npm install` を走らせるのはそこだけです。ほかの worktree はそこにリンクし、自分のロックファイルが食い違ったときにだけ、その worktree の中でインストールし直します（依存関係を上げたブランチが、古いパッケージのまま黙って動いてしまってはいけないからです）。
+ひとつの checkout を **依存関係用の checkout** と決めます。実際に `pnpm install` を走らせるのはそこだけです。ほかの worktree はそこにリンクし、自分のロックファイルが食い違ったときにだけ、その worktree の中でインストールし直します（依存関係を上げたブランチが、古いパッケージのまま黙って動いてしまってはいけないからです）。
 
 ```mermaid
 flowchart TD
-    A[htui / hgui in a worktree] --> B{package-lock.json<br/>matches deps checkout?}
+    A[htui / hgui in a worktree] --> B{pnpm-lock.yaml<br/>matches deps checkout?}
     B -- yes --> C[symlink node_modules<br/>from deps checkout]
-    B -- no --> D[local npm ci<br/>in this worktree]
+    B -- no --> D[local pnpm install<br/>in this worktree]
     C --> E[launch surface]
     D --> E
 ```
@@ -58,7 +58,7 @@ htui() {
 
 ## `hgui` — worktree からデスクトップアプリを動かす {#hgui-desktop-app-from-the-worktree}
 
-デスクトップアプリには、リポジトリのルートと `apps/desktop/` の両方の依存関係、Vite のサーバー、Python のバックエンドが必要です。標準の `npm run dev` は Vite をポート `5174` に固定します。さらに Electron は、既定で CDP のポート `9222` を使い、ユーザーデータのディレクトリに対して多重起動を防ぐロックをかけます。Vite のポートを変えるだけでは、デスクトップを 2 つ動かせません。
+デスクトップアプリには、リポジトリのルートと `apps/desktop/` の両方の依存関係、Vite のサーバー、Python のバックエンドが必要です。標準の `pnpm run dev` は Vite をポート `5174` に固定します。さらに Electron は、既定で CDP のポート `9222` を使い、ユーザーデータのディレクトリに対して多重起動を防ぐロックをかけます。Vite のポートを変えるだけでは、デスクトップを 2 つ動かせません。
 
 次の **zsh** の例では、起動ごとにスロット（`HGUI_SLOT`、既定は `0`）をはっきり割り当てます。ターミナルごとに別のスロットを使ってください。下の[共通の関数](#shared-helpers)を使い、`lsof` が必要です。
 
@@ -79,11 +79,11 @@ hgui() (
   deps="${HERMES_GUI_DEPS_CHECKOUT:-$HERMES_MAIN_CHECKOUT}"
   desktop="$root/apps/desktop"
 
-  if cmp -s "$root/package-lock.json" "$deps/package-lock.json"; then
+  if cmp -s "$root/pnpm-lock.yaml" "$deps/pnpm-lock.yaml"; then
     _hermes_link_deps "$desktop" "$deps/apps/desktop" || return 1
     _hermes_link_deps "$root" "$deps" || return 1
   else
-    ( cd "$root" && npm ci ) || return 1
+    ( cd "$root" && pnpm install --frozen-lockfile ) || return 1
   fi
 
   cd "$desktop" || return 1
@@ -100,7 +100,7 @@ hgui() (
 
   # Mirror the dev scripts, replacing their fixed ports. No repo edits needed.
   concurrently -k -n "vite,electron" \
-    "node scripts/assert-root-install.mjs && npm run clean:renderer && vite --host 127.0.0.1 --port $vite_port --strictPort" \
+    "node scripts/assert-root-install.mjs && pnpm run clean:renderer && vite --host 127.0.0.1 --port $vite_port --strictPort" \
     "tsc --build tsconfig.electron.json && wait-on http://127.0.0.1:$vite_port && node scripts/bundle-electron-main.mjs --dev && electron ."
 )
 ```
@@ -159,7 +159,7 @@ _hermes_link_deps() {
 ```
 
 :::info ロックファイルが一致したときだけリンクする理由
-中身が食い違った `node_modules` へのシンボリックリンクは、何もインストールしないより悪い状態です。その worktree のロックファイルが宣言していないパッケージでビルドしてしまうからです。`package-lock.json` をバイト単位で比べるのは、安くて確実な見張りになります。ロックが同じなら借りても安全、違うならその場で `npm ci`、というわけです。Vite は `server.fs.allow` を適用する前にシンボリックリンクの実体パスを解決するので、`apps/desktop/vite.config.ts` では `node_modules` の実体の場所を許可リストに入れてあります。
+中身が食い違った `node_modules` へのシンボリックリンクは、何もインストールしないより悪い状態です。その worktree のロックファイルが宣言していないパッケージでビルドしてしまうからです。`pnpm-lock.yaml` をバイト単位で比べるのは、安くて確実な見張りになります。ロックが同じなら借りても安全、違うならその場で `pnpm install --frozen-lockfile`、というわけです。Vite は `server.fs.allow` を適用する前にシンボリックリンクの実体パスを解決するので、`apps/desktop/vite.config.ts` では `node_modules` の実体の場所を許可リストに入れてあります。
 :::
 
 ## あわせて読む {#see-also}

@@ -11,9 +11,9 @@ raw: /hermes/raw/dev.md
 
 # developer-guide
 
-Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（63 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
+Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（64 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
 
-## Developer Guide（63）
+## Developer Guide（64）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -61,6 +61,7 @@ Hermes Agent 本体を拡張したり、上流に貢献したりする人向け�
 - [Build a Hermes Plugin](/hermes/docs/developer-guide/plugins/)
 - [Application declarations](/hermes/docs/developer-guide/plugins/application-declarations/)
 - [Submitting to the Plugin Catalog](/hermes/docs/developer-guide/plugins/catalog-submission/)
+- [Public plugin API](/hermes/docs/developer-guide/plugins/public-api/)
 - [PM audit remediation status](/hermes/docs/developer-guide/pm-audit-status/)
 - [Programmatic Integration](/hermes/docs/developer-guide/programmatic-integration/)
 - [Relay ↔ Connector Contract](/hermes/docs/developer-guide/relay-connector-contract/)

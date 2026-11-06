@@ -86,6 +86,7 @@ Hermes Agent 0.23.0
 - [developer-guide/plugins/application-declarations（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/application-declarations/)
 - [developer-guide/plugins/catalog-submission（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
 - [developer-guide/plugins（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [developer-guide/plugins/public-api（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
 - [developer-guide/pm-audit-status（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/pm-audit-status/)
 - [developer-guide/programmatic-integration（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
 - [developer-guide/prompt-assembly（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/prompt-assembly/)
@@ -538,6 +539,7 @@ Hermes Agent 0.23.0
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugins/application-declarations.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugins/catalog-submission.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugins/index.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/plugins/public-api.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/pm-audit-status.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/programmatic-integration.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/prompt-assembly.md

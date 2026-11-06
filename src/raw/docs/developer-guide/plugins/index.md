@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 744df7b219bf944ad27791e18a28fc332bce7d81
+upstream_blob: 4d2e6955e00e6527951e142a1a4bad5922036ab1
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -701,9 +701,15 @@ def unit_convert(args: dict, **kwargs) -> str:
 1. **シグネチャ:** `def my_handler(args: dict, **kwargs) -> str`
 2. **戻り値:** 常に JSON 文字列。成功も失敗も同じです。
 3. **決して raise しない:** すべての例外を捕捉し、代わりにエラー JSON を返します。
-4. **`**kwargs` を受け入れる:** Hermes はコンテキストのキーワード（`task_id`、`session_id`、`user_task`、
-   `parent_agent`、...）を注入し、あなたのシグネチャが名前を挙げているものだけを転送するので、`def handler(args)` でも
+4. **`**kwargs` を受け入れる:** Hermes はコンテキストのキーワード（`task_id`、`session_id`、`conversation_id`、
+   `user_task`、`parent_agent`、...）を注入し、あなたのシグネチャが名前を挙げているものだけを転送するので、`def handler(args)` でも
    動作します。`**kwargs` は、加算的に増えていく完全なコンテキストに参加するための方法です。
+5. **会話ごとの状態は `conversation_id` をキーにして持つ:** `session_id` は、いまのトランスクリプトの区切りを指す名前です。
+   ローテーションする圧縮（`compression.in_place: false`）が働くと、会話の途中で別のものに置き換わります。
+   `conversation_id` は会話の最初のセッションの ID で、変わることはありません。`/new` と
+   `/branch` は新しい会話を始めます。委任されたサブエージェントの呼び出しには、サブエージェント自身の `session_id` と、
+   委任元の `conversation_id` が付きます。呼び出しにセッションがない場合（たとえば `execute_code` スクリプトの中から
+   ツールを呼んだとき）は、どちらも空になります。
 
 ## ステップ5: 登録を書く {#step-5-write-the-registration}
 
@@ -1475,6 +1481,29 @@ def register(ctx):
 - ミドルウェアのペイロードは、observer のテレメトリフィールドと並んで `middleware_schema_version`（`hermes.middleware.v1`）を持ちます。
 - 未知の種類は失敗せず警告付きで登録されます。そのため、新しい Hermes 向けに書かれたプラグインでも、古い Hermes でそのまま読み込まれます。
 
+### セッションごとのコマンドに専用の環境変数を渡す {#give-each-sessions-commands-its-own-environment-variables}
+
+ツールは、そのセッションを受け持つプロセスの中で動きます。共有ゲートウェイの場合、それはゲートウェイのデーモンです。そのため、会話を表示しているターミナルやペインにある変数は、エージェントが実行するコマンドの環境には入っていません。`ctx.register_session_env(names, resolver)` を使うと、コマンドに手を加えずにこの隔たりを埋められます。
+
+```python
+def pane_env(session_id):
+    pane = find_pane_showing(session_id)  # your plugin's own lookup
+    if pane is None:
+        return {}  # the commands keep the gateway's own values
+    return {"MY_PANE": pane.id, "MY_PANE_SOCKET": pane.socket or None}
+
+def register(ctx):
+    ctx.register_session_env(["MY_PANE", "MY_PANE_SOCKET"], pane_env)
+```
+
+- Hermes は、セッションのためにローカルのプロセスを起動するたびに `resolver(session_id)` を呼びます。対象は、フォアグラウンドまたはバックグラウンドの `terminal` コマンド、`execute_code` からの `terminal()` 呼び出し、そしてセッションの `HERMES_SESSION_*` 変数を受け取るその他のサブプロセスです。値はその時点で読まれるので、状況が変わったとき（会話が別のペインに移ったときなど）は次のコマンドから反映されます。
+- `session_id` は、そのプロセスを動かす対象のセッションです。サブエージェントのコマンドにはサブエージェントの ID が渡されます。親の値を使う必要があるときは、resolver の中でその ID を親セッションに対応づけてください。
+- 宣言した名前から文字列への対応を返してください。値が `None` の名前は、プロセスの環境から削除されます。含めなかった名前は、ゲートウェイ自身の値のままです。宣言していない名前は無視されます。
+- 宣言した名前が共有のシェルスナップショットに保存されることはありません。そのため、あるセッションの値が別のセッションの後のコマンドに届くことはなく、これらの名前を `export` しても次のコマンドには引き継がれません。
+- 名前は有効な環境変数名でなければなりません。`HERMES_*` の名前は拒否されます（core のものだからです）。サブプロセスの環境を消去するときに取り除かれるプロバイダーや Hermes の認証情報の名前も、返した値から取り除かれます。
+- raise した resolver はログに記録され、何も渡しません。コマンドはそのまま実行されます。起動のたびに呼ばれるので、速く、ローカルで完結する処理にしてください。
+- 値が適用されるのは、ローカルのターミナルバックエンドだけです。リモートのバックエンド（Docker、SSH、Modal などのサンドボックス）には渡りません。
+
 ### CLI コマンドを登録する {#register-cli-commands}
 
 プラグインは、独自の `hermes <plugin>` サブコマンドツリーを追加できます。
@@ -1579,14 +1608,19 @@ def register(ctx):
 
 - 表示したい文字列は戻り値として返してください。`print()` はゲートウェイの標準出力に書き込まれるだけで、利用者の目には届きません。
 - セッションの作業ディレクトリは `os.getcwd()` ではなく `agent.runtime_cwd.resolve_agent_cwd()` から取ってください。前者はゲートウェイ自身のディレクトリを返します。相対パスはこのディレクトリを基準に解決します。
-- セッションの識別情報は `os.environ` ではなく、`gateway.session_context.get_session_env("HERMES_SESSION_PLATFORM")` やほかの `HERMES_SESSION_*` の名前で読んでください。
+- セッションの識別情報は `os.environ` ではなく、`get_session_env("HERMES_SESSION_PLATFORM")`、`get_session_env("HERMES_SESSION_CHAT_ID")` やほかの `HERMES_SESSION_*` の名前で読んでください。関数そのものを `from gateway.session_context import get_session_env` で import してください。この名前が公開の接点で、`hermes plugins validate` は `import gateway.session_context` を非公開の import として報告します。
 
 ```python
 from agent.runtime_cwd import resolve_agent_cwd
+from gateway.session_context import get_session_env
 
 def _handle_todo(raw_args: str) -> str:
     todo = resolve_agent_cwd() / "TODO.md"  # the session's folder, not the gateway's
     return todo.read_text() if todo.exists() else "No TODO.md here."
+
+def _handle_where(raw_args: str) -> str:
+    platform = get_session_env("HERMES_SESSION_PLATFORM")  # unbound: falls back to os.environ, then ""
+    return f"{platform or 'local'} chat {get_session_env('HERMES_SESSION_CHAT_ID') or '(none)'}"
 ```
 
 ### ユーザーに選択肢から選んでもらう {#ask-the-user-to-pick-an-option}
@@ -1680,6 +1714,62 @@ def register(ctx):
 ```
 
 完全な `hermes <subcommand>`（例: `hermes kanban show`）を実行するには、`ctx.dispatch_tool("terminal", {"command": "hermes kanban show ..."})` のように `terminal` ツールでシェルアウトしてください — ヘッドレスなワーカーセッションにはプロセス内のスラッシュコマンドブリッジが存在せず、フックから Hermes を動かすためのサポートされた方法はツールです。
+
+### 自前のフロントエンドとやり取りする: プラグインの RPC メソッドとセッションイベント {#talk-to-your-own-frontend-plugin-rpc-methods-and-session-events}
+
+ゲートウェイの JSON-RPC クライアントであるフロントエンド（共有ゲートウェイに接続したターミナルのフロントエンドや、
+`/api/ws` につなぐ独自の Web クライアント）は、自分の Python 側を呼び出せます。また、Python 側は、1 つのセッションを
+表示しているクライアントにイベントを送れます。
+
+```python
+def register(ctx):
+    def pane_state(params, *, session_id, **kwargs):
+        # session_id is the session the call named (None for a sessionless call), already authorized.
+        state = load_state(session_id)
+        ctx.emit_to_session(session_id, "pane.changed", {"rows": len(state)})
+        return {"rows": state}
+
+    ctx.register_rpc("pane.state", pane_state)
+```
+
+クライアントは、任意の JSON パラメータ（`session_id` でセッションを指定します）を付けて `plugin.<plugin_id>.pane.state` を呼び出し、
+種類が `plugin.<plugin_id>.pane.changed` のイベントフレームを待ち受けます。
+
+```json
+{"jsonrpc": "2.0", "id": 7, "method": "plugin.my-plugin.pane.state", "params": {"session_id": "local-…", "page": 2}}
+```
+
+- **名前は必ず自分の名前空間に入ります**（`<plugin_id>` は `ctx.plugin_id` です）。`ctx.register_rpc(name, handler)`
+  は `plugin.<plugin_id>.<name>` を提供し、`ctx.emit_to_session(session_id, event, payload=None)` は
+  `plugin.<plugin_id>.<event>` を送ります。`name` と `event` は、名前空間を付けないドット区切りの名前（各区切りは `[A-Za-z0-9_-]`）で、
+  `broadcast_plugin_event` と同じ決まりです。id が `[a-z0-9_-]{1,64}` に当てはまらないプラグイン（
+  `image_gen/x` のようなカテゴリのプラグイン）は登録できず、呼び出すと `ValueError` が発生します。
+- **ハンドラー**は、ゲートウェイのループの外で、所有するプロファイルのスコープの中で `handler(params, session_id=...)` として
+  呼ばれます。`async def` でもかまいません。その場合はそのワーカースレッドの中にある専用のイベントループで動き、
+  ゲートウェイのループで動くことはありません。プラグインのスラッシュコマンドと同じです。`**kwargs` を受け入れてください。今後のリリースでコンテキストが増えることがあります。戻り値は
+  JSON にエンコードできる必要があり、それが呼び出しの `result` になります。例外が起きたときや、JSON にエンコードできない値を返したときは、
+  エラー `4001`、理由 `plugin_rpc_failed`、`error.data.detail` に例外の文字列を入れて応答します。呼び出しが
+  戻るまで、そのクライアントのリクエストの枠はふさがったままなので、処理は短くしてください。時間のかかる処理はスレッドで始め、
+  `emit_to_session` で結果を知らせます。
+- **アンロードするとメソッドは消えます。** プラグインを無効にするか削除すると、そのメソッドは未知のメソッドと同じく
+  `-32601` を返します。
+- **セッションイベントは、そのセッションを表示しているクライアントにだけ届きます。** イベントはそのセッションのイベントストリームに流れ、
+  いま接続しているクライアントに届くほか、再接続したクライアントでは再生されます。`session_id` には、会話の ID と、そのエージェントの現在の
+  ID（圧縮でエージェントには新しい ID が付きます）のどちらを渡してもよいので、ツールやフックは受け取った `session_id` をそのまま渡せます。
+  `payload` は JSON の dict です。表示中のクライアントがフレームを受け取ったときは `True` を返し、表示しているクライアントが
+  いないときや、このプロセスにそのセッションがないときは `False` を返します。`ctx` を持たないコードからは、`hermes_cli.plugin_events.emit_plugin_session_event(plugin_id, session_id, event, payload)`
+  で同じ呼び出しができます。
+- **動作する場所:** セッションを所有するゲートウェイです（セッションの権限を持つもので、接続したフロントエンドが使う共有の
+  `hermes gateway run` ゲートウェイなどがそうです）。それを持たないバックエンドは、メソッドに
+  `-32601` で応答します。それを持たないプロセス（`hermes chat`、cron、
+  `dashboard.turn_isolation` の計算用の子プロセス）では、`emit_to_session` は `False` を返します。
+
+**セキュリティ。** プラグインのメソッドには、そのゲートウェイでのプラグインのスラッシュコマンドと同じ関門がかかります。接続には
+`session:control` の capability が必要で、`session_id` を指定する呼び出しは、そのセッションの
+認可を通らなければなりません（正しいプロファイルであること、ローカルのセッションの所有者であること、置き換えられた会話は読み取り専用であること）。
+それ以外では、ゲートウェイが認証したクライアントなら、どのプラグインメソッドでも任意のパラメータで呼び出せます。Hermes は
+メソッドごとに呼び出し元を確かめません（`SECURITY.md` §2.6、ルール 4）。プラグインのメソッドはプラグインのツールと同じように扱い、
+パラメータを検証し、プラグイン自身のデータと操作を超えるものをメソッド経由で公開しないでください。
 
 ### エージェントのブラウザに生の CDP コマンドを送る {#send-raw-cdp-commands-to-the-agents-browser}
 

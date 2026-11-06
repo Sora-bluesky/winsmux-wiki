@@ -2,7 +2,7 @@
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: 4d8af44658b60ed9b67dd08f3c225b911d4e7aa4
+upstream_blob: ed0b18c76d69eb0cd7a04c2989e99dafe2a07bdc
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -336,7 +336,6 @@ CLI の費用と学習データ利用への同意は、ゲートウェイの探�
 | `gateway/hooks.py` | フックの発見・読み込みと、ライフサイクルイベントの振り分け |
 | `gateway/mirror.py` | `send_message` のための、セッションをまたいだメッセージの写し |
 | `gateway/status.py` | プロファイル単位のゲートウェイのためのトークンロック管理 |
-| `gateway/builtin_hooks/` | 常に登録されるフックの置き場 (同梱されているものはありません) |
 | `gateway/platform_registry.py` | アダプターの登録簿、生成処理、同梱サービスプラグインの遅延ローダー |
 | `plugins/platforms/<name>/` | 同梱のメッセージングアダプター (多くのサービスは `adapter.py` と `plugin.yaml` の組) |
 | `gateway/platforms/` | 共通の `base.py` と、昔からの直接アダプター (Signal、API サーバー、Webhook など) |
@@ -437,6 +436,58 @@ POSIX では、ローカルの起動処理は、プロファイルのディレ�
 サービスとして残すかどうかは、セットアップで別に選ぶ任意のものです。取り込みや対話のない
 セットアップでは、取り込んだ設定を理由に、入っていないサービスを導入しません。
 [サービスの導入は任意](#optional-service-installation) を参照してください。
+
+## `hermes gateway attach` {#hermes-gateway-attach}
+
+`hermes gateway attach --json` は、自前の UI を持ち、ゲートウェイへ自分で接続するローカルのクライアントのための、公開の接続手順です。
+このコマンドは `hermes_cli/gateway_runtime_attach.py::attach_gateway` を実行します。これは Ink の TUI の `ui-tui/scripts/gateway_bootstrap.py` が
+内部で使っているのと同じ関数なので、どちらのクライアントでも、探索、起動、回復の進み方と
+判定の結果が同じになります。
+
+| フラグ | 意味 |
+|------|---------|
+| (なし) | 有効なプロファイルを受け持つ持ち主を探します。持ち主を起動することはありません。 |
+| `--start` | `ensure` と同じように、持ち主がいる状態にします (クライアントを初めて起動するときに使います)。 |
+| `--recover` | 持ち主を探し、準備ができていない (落ちた、アイドル終了で終わった、停止された、または古い Hermes のゲートウェイが応答した) ときは、持ち主がいる状態にします。Ink が `OWNER_RECOVERY_LIMIT` でしているように、クライアントがこれを使う回数には上限を設けてください。そうすれば、落ちては起動を繰り返す持ち主が休みなく再起動されることはありません。 |
+| `--timeout S` | `--start`/`--recover` での起動の期限です (既定は `60`)。探索とチケットの発行は、それぞれ最大 5 秒ずつ加わります。`--start` と `--recover` は同時に指定できません。 |
+
+サービスが入っていないとき、`attach` はアイドル終了付きの管理されていないゲートウェイを起動します。このゲートウェイは、
+クライアント、アダプター、ジョブのどれにも必要とされなくなると自分で止まり、次の `attach --start` で新しいものが起動します。
+`attach` が起動したのが入っているサービスなら、`ensure` のときと同じように動き続けます。再起動でターンの終わりを
+待っている間 (`draining`/`restart_wait`) も接続できるため、クライアントは保留中のプロンプトにまだ答えられます。
+起動時の方針 (モデル、プロバイダー、ツールセット、cwd、かんばんのボード) は `session.create` で指定するものです。
+このコマンドは、デーモンを起動する前に、それらの変数を自分の環境から取り除きます。
+
+成功すると (終了コード `0`)、JSON を1行出力します。中身は `ensure` の項目 (`state`、`reason_code`、`detail`、
+`endpoint`、`client_code_sha`) に、次のものを加えたものです。
+
+```json
+{"url": "ws://127.0.0.1:<port>/api/ws", "protocol": "hermes-gateway-v1",
+ "protocols": ["hermes-gateway-v1", "hermes-gateway-ticket.<ticket>"], "ticket": "<ticket>"}
+```
+
+`endpoint` には、`profile_id`、`instance_id`、`capabilities`、`code_sha` などの探索の
+項目が入ります。`url` へは、`protocols` を WebSocket のサブプロトコルに指定し、ループバックから、**`Origin` ヘッダーを
+付けずに** 接続して、サーバーが `protocol` を選んだことを確かめてください。そのうえで `hermes-gateway-v1` でやり取りします。
+まず `runtime.describe` で持ち主の `session.create` の取り決めを確かめ、次に `session.create` か
+`session.resume` を呼びます。`client_code_sha` と `endpoint.code_sha` が違うときは、ゲートウェイが
+`hermes update` の後も古いまま動き続けています。古いコードに接続し続けるのではなく、ゲートウェイを再起動してください (`hermes gateway restart`)。
+
+チケットは、その WebSocket の唯一の認証情報です。チケットは、制御ソケットの
+`session-ticket` の操作 (目的は `interactive`、範囲は `profile`) で、同じ利用者のソケット、Windows では
+SID を確かめる名前付きパイプを通して発行されます。既定の多重化の仕組みが受け持つプロファイルは、
+多重化の仕組みの制御ソケットからチケットを受け取ります。チケットは1回限りで、呼び出し側のプロファイルとその
+持ち主の `instance_id` に結び付き、30 秒で期限が切れます。`attach` はチケットを、呼び出したプロセスのためだけに標準出力へ出し、
+ログには決して残しません。新しく接続するたび、また再接続するたびに、`attach` をもう一度実行してください。
+
+接続できる持ち主がいないときは、JSON に `message` が加わり、`url` と `ticket` は含まれません。`message` は
+Ink が表示する判定です。まず `gateway <state>: <reason_code>` (コードがないときは `not ready`) の行があり、
+続いて、拒否の対処法の各行、または起動に失敗したときの伏せ字処理済みの出力の各行ごとに、`gateway <state>: …` という行が1行ずつ並びます。
+同じ文は標準エラー出力にも出ます。終了コードは、その判定に対する `ensure` のものと同じです。
+持ち主には接続できたのにチケットを発行できなかった (持ち主がいなくなったか、許可を拒んだ) ときの
+判定は `inaccessible`/`ticket_unavailable` (終了コード `7`) で、`detail` には上限付きの原因か、ローカルでの
+修復コマンドが入ります。`attach` をもう一度実行してください。引数が正しくないときは、`ensure` の
+`invalid_invocation` の行を出して終了コード `2` で終わります。
 
 ## 全体の眺め {#architecture-overview}
 
@@ -642,7 +693,7 @@ cron のジョブの配信は、ゲートウェイのセッション履歴には
 | `agent:end` | エージェントが終わって返事を返したとき |
 | `command:*` | いずれかのスラッシュコマンドが実行されたとき |
 
-フックは `gateway/builtin_hooks/` (置き場としては用意されていますが、配布物ではいまのところ空で、`_register_builtin_hooks()` は何もしない雛形です) と `<profile home>/hooks/` (自分で入れたもの。既定のプロファイルなら `~/.hermes/hooks/`、多重化しているときは受け持つプロファイルごとに1つのディレクトリ。パスは読み込み時ではなく呼び出し時に決まります) から見つけられます。フックはそれぞれ、`HOOK.yaml` という定義ファイルと `handler.py` を置いたディレクトリです。
+フックは `<profile home>/hooks/` (自分で入れたもの。既定のプロファイルなら `~/.hermes/hooks/`、多重化しているときは受け持つプロファイルごとに1つのディレクトリ。パスは読み込み時ではなく呼び出し時に決まります) から見つけられます。フックはそれぞれ、`HOOK.yaml` という定義ファイルと `handler.py` を置いたディレクトリです。
 
 ## メモリープロバイダーとの連携 {#memory-provider-integration}
 

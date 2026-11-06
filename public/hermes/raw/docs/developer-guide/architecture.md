@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "アーキテクチャ"
 description: "Hermes Agent の内部構造 — 主要なサブシステム、実行経路、データの流れ、次に読むべき場所"
 upstream_path: developer-guide/architecture.md
-upstream_blob: 4d92e5c5668dc069c3fc904d4443373e1409ff2c
+upstream_blob: 0fd7f080823a1a52df6a44a6142ed79246e2d7f4
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/architecture
 ---
@@ -122,7 +122,6 @@ hermes-agent/
 │   ├── hooks.py              # Hook discovery and lifecycle events
 │   ├── mirror.py             # Cross-session message mirroring
 │   ├── status.py             # Token locks, profile-scoped process tracking
-│   ├── builtin_hooks/        # Extension point for always-registered hooks (none shipped)
 │   └── platforms/            # Core ingress adapters: api_server, webhook,
 │                             #   msgraph_webhook
 │
