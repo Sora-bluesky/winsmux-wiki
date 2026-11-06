@@ -13,5 +13,10 @@
   # サイト内検索の入力画面。検索結果に出しても読者の役に立たないので索引から外す（サイトマップからも除外・astro.config.mjs の NOINDEX）
   X-Robots-Tag: noindex
 
+/hermes/docs/*
+  # 公式ドキュメントの訳。2026-10-17 の判定条件（独自 9/34 以下・トップが 10-02 から再クロールなし）を 11-06 に満たしたため Google の索引から外す。
+  # googlebot だけに限り、ページ本体と llms.txt は残す（他の検索エンジンと LLM からの参照は妨げない）。サイトマップから外すのは索引から外れたのを確かめてから
+  X-Robots-Tag: googlebot: noindex
+
 /hermes/llms.txt
   Content-Type: text/plain; charset=utf-8
