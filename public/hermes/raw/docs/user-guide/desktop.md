@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 6785b69e9fabe45aec907526e27c7c457e4ea5a0
+upstream_blob: fd0b9f1380e665da0d5c65d557795d6d5d752476
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -52,7 +52,7 @@ hermes webapp
 
 名前付きのプロファイルなら、`hermes -p work webapp` で `work` の Webapp が開きます。既定のゲートウェイが受け持つプロファイルは、その Webapp を共有します。独立したプロファイルが自前のゲートウェイを持つ場合は、その設定で有効にすれば、そのゲートウェイが専用の Webapp を配信します。
 
-**別の端末から。** `webapp.host` を `0.0.0.0` にすると、ゲートウェイは[ダッシュボードのサインインゲート](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)を必須にします（信頼できる LAN や VPN ならユーザー名とパスワード、インターネットに面するなら OAuth/OIDC）。自分で運用しているリバースプロキシやトンネルの後ろに置く場合は、ホストはループバックのままにして、代わりに `webapp.public_url` にそれが配信するアドレスを設定します。こちらも同じサインインが必要です。そのうえで `hermes webapp` は Webapp のアドレスを開くので、そこでダッシュボードのアカウントでサインインします。開くアドレスは、`webapp.public_url` が設定されていればそれ、LAN では **Web Access → Start** が Nous のサインイン先として登録したアドレス（それがまだこの端末のアドレスと Webapp のポートである間に限ります）、どちらでもなければループバックのアドレスです（パスワードのプロバイダーか、そのアドレス向けに手で設定したサインインを使います）。1回限りのリンクが使えるのは、サインインの要らない Webapp だけです。リモートでは HTTPS を強くおすすめします。
+**別の端末から。** `webapp.host` を `0.0.0.0` にすると、ゲートウェイは[ダッシュボードのサインインゲート](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)を必須にします（信頼できる LAN や VPN ならユーザー名とパスワード、インターネットに面するなら OAuth/OIDC）。自分で運用しているリバースプロキシやトンネルを同じ端末で動かしていて、その後ろに置く場合は、ホストはループバックのままにして、代わりに `webapp.public_url` にそれが配信するアドレスを設定します。こちらも同じサインインが必要です。別のコンテナや別の端末にあるプロキシは、そのループバックのアドレスに届きません。[Docker → Behind a tunnel or reverse proxy](/hermes/docs/user-guide/docker/#webapp-behind-a-proxy) を参照してください。そのうえで `hermes webapp` は Webapp のアドレスを開くので、そこでダッシュボードのアカウントでサインインします。開くアドレスは、`webapp.public_url` が設定されていればそれ、LAN では **Web Access → Start** が Nous のサインイン先として登録したアドレス（それがまだこの端末のアドレスと Webapp のポートである間に限ります）、どちらでもなければループバックのアドレスです（パスワードのプロバイダーか、そのアドレス向けに手で設定したサインインを使います）。1回限りのリンクが使えるのは、サインインの要らない Webapp だけです。リモートでは HTTPS を強くおすすめします。
 
 **素の HTTP で使えなくなるもの。** ループバック以外の素の HTTP のアドレスでは、セキュアコンテキストが必要な機能をブラウザが無効にします（`http://localhost` と `http://127.0.0.1` はセキュアとみなされます）。対象は、ボットの画面ビューアー、マイク（ディクテーション、ライブ音声、リモートのウェイクワード）、クリップボードの読み取り（ターミナルへの貼り付け、画像の貼り付け）、システム通知です。ボットの画面とライブ音声は、開く代わりにその旨を表示します。ブラウザが開くアドレス（`webapp.public_url`、なければ **Start** がサインイン先として登録した LAN のアドレス）が別のホストの素の HTTP であるときは、`hermes webapp` と `hermes webapp --status` が注意書きを表示します。これらの機能を使い続けるには、Webapp を HTTPS（`webapp.public_url`）で開くか、`127.0.0.1` への SSH トンネルを通して開いてください。
 

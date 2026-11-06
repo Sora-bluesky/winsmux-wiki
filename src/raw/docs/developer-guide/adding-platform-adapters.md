@@ -2,7 +2,7 @@
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: 4631713eb36ad2555e009ceb040a79076f847b3f
+upstream_blob: 8acb17d89767e67b0616a6faff31b9b4b80f5f59
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -301,7 +301,7 @@ validate` はこれらについて非公開 import の警告を出さず、名�
 | SSRF に安全な HTTP クライアント（接続時の IP 検証、リダイレクトごとの再確認、共有の keepalive 上限） | `from gateway.platforms.helpers import platform_http_client` |
 | 自前で組み立てるための、そのクライアントの部品 | `gateway.platforms.base.ssrf_redirect_guard`（httpx の `response` フック）、`tools.url_safety.create_ssrf_safe_async_client`、`tools.url_safety.is_safe_url`、`gateway.platforms._http_client_limits.platform_httpx_limits` |
 | 独自の DM / グループの方針（`dm_policy` / `group_policy` / 許可リスト） | `from gateway.platforms.access_policy_mixin import OwnAccessPolicyMixin` |
-| ネイティブのボタンから承認を確定する | `from tools.approval import resolve_gateway_approval` |
+| ネイティブのボタンから承認を確定する | `from tools.approval import resolve_gateway_approval_card`（カードのリクエスト ID を渡します。`resolve_gateway_approval` のほうは、保留中のリクエストのうち一番古いものに答えます） |
 | ネイティブの確認（clarify）ボタン | `tools.clarify_gateway`：`get_pending(clarify_id)`（保留中の項目か `None` を返します。`session_key`、`choices`、`multi_select` を読みます）、`resolve_gateway_clarify(clarify_id, text)`、`mark_awaiting_text(clarify_id)`、`SKIPPED` |
 | `setup_fn` のウィザードの手順 | `hermes_cli.gateway_setup_wizard`：`print_setup_header(title)`、`confirm_reconfigure(label, *env_vars)`、`offer_home_channel(home_var, user_id, what)`、`save_env_values(**values)`、`prompt_csv(text, default)`。入力の問いかけは `hermes_cli.setup`（`prompt`、`prompt_choice`、`prompt_yes_no`）から、出力は `hermes_cli.cli_output`（`print_info`、`print_success`、`print_warning`、`print_error`）から、`.env` へのアクセスは `hermes_cli.config`（`save_env_value`、`get_env_value`）を通します |
 

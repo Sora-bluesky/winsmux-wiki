@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Feishu / Lark"
 description: "Hermes Agent を Feishu または Lark の Bot として設定します"
 upstream_path: user-guide/messaging/feishu.md
-upstream_blob: 21cecb31fbb2a7181b521ba5285f8901aa040c16
+upstream_blob: 3e1996633e66a6f178825532ddf4746abbd0d396
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu
 ---
@@ -297,6 +297,10 @@ Bot が送った対話型カードのボタンを押すなどの操作がある�
 ゲートウェイからの更新確認は、素のテキスト返信に落とさず、Feishu の `Yes` / `No` カードで出します。`hermes update --gateway` が確認を求めるとき、アダプターは選ばれた答えを Hermes の `.update_response` ファイルに記録し、カードをその場で確定後の表示に差し替えます。
 
 カードの操作イベントは `MessageType.COMMAND` として送られるので、通常のコマンド処理の流れをそのまま通ります。
+
+**確認の質問**にもカードを使います。エージェントが `clarify` ツールで選択式の質問をすると、カードには選択肢ごとに番号付きのボタンが 1 つずつと、「✏️ Other (type answer)」のボタンが並びます。ボタンを押すとすぐに回答となり、カードはチャットにいる全員の画面でその場で更新されます。「Other」を押すとテキストの入力待ちに切り替わり、次に送ったメッセージが回答になります。ボタンを押す代わりに、番号や選択肢の文言を入力しても答えられます。自由に答える形式の質問は、素のテキストで届きます。承認のボタンと同じ認可の確認がかかるので、答えられるのは許可された利用者だけです。
+
+**選択肢が決まっているスラッシュコマンド**（`/reasoning`、`/fast`）は、選択用のカードを送ります。1 回押すだけで設定が反映され、カードは選んだ内容で確定し、続いてそのコマンドの確認メッセージがチャットに届きます。
 
 **コマンドの承認**もこの仕組みで動きます。エージェントが危険なコマンドを実行しようとすると、Allow Once / Session / Always / Deny のボタンが付いた対話型カードを送ります。利用者がボタンを押すと、カード操作のコールバックが承認の判断をエージェントへ返します。
 

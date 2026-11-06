@@ -1,6 +1,113 @@
 {
-  "generatedAt": "2026-11-05",
+  "generatedAt": "2026-11-06",
   "entries": [
+    {
+      "date": "2026-11-05",
+      "sha": "5e2e09a",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/adding-providers",
+          "title": "プロバイダーを追加する",
+          "url": "/hermes/docs/developer-guide/adding-providers/"
+        },
+        {
+          "id": "developer-guide/agent-loop",
+          "title": "エージェントループの内部",
+          "url": "/hermes/docs/developer-guide/agent-loop/"
+        },
+        {
+          "id": "developer-guide/macos-bundle-updates",
+          "title": "macOS バンドルの更新",
+          "url": "/hermes/docs/developer-guide/macos-bundle-updates/"
+        },
+        {
+          "id": "developer-guide/provider-runtime",
+          "title": "実行時のプロバイダー解決",
+          "url": "/hermes/docs/developer-guide/provider-runtime/"
+        },
+        {
+          "id": "developer-guide/stable-releases",
+          "title": "安定版リリースの受け入れと昇格",
+          "url": "/hermes/docs/developer-guide/stable-releases/"
+        },
+        {
+          "id": "guides/aws-bedrock",
+          "title": "AWS Bedrock",
+          "url": "/hermes/docs/guides/aws-bedrock/"
+        },
+        {
+          "id": "integrations",
+          "title": "外部サービス連携",
+          "url": "/hermes/docs/integrations/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/configuring-models",
+          "title": "モデルの設定",
+          "url": "/hermes/docs/user-guide/configuring-models/"
+        },
+        {
+          "id": "user-guide/features/acp",
+          "title": "ACP ホスト連携",
+          "url": "/hermes/docs/user-guide/features/acp/"
+        },
+        {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/tools",
+          "title": "ツールとツールセット",
+          "url": "/hermes/docs/user-guide/features/tools/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/tui",
+          "title": "TUI",
+          "url": "/hermes/docs/user-guide/tui/"
+        }
+      ]
+    },
     {
       "date": "2026-11-04",
       "sha": "9e8f58d",
@@ -13728,6 +13835,7 @@
     "2026-W41": "定期実行（cron）まわりが厚く更新され、Chronos managed-cron の契約や cron の内部構造、定期実行がうまくいかないときの対処が新しい内容になりました。プラグインでは作り方やカタログへの登録申請、アプリケーション宣言、プラグインからの LLM 呼び出し、モデルプロバイダーのプラグイン、デスクトップのプラグイン SDK が揃い、使う側では記憶プロバイダーやずっと残る記憶、音声と読み上げ、Hermes の管理画面、MCP、キュレーターの説明も更新されています。インストールや更新とアンインストール、Windows ネイティブ版と Nix のセットアップに加え、ゲートウェイやプロファイル、Discord・WhatsApp などのメッセージング、AWS Bedrock やローカルモデルの設定にも手が入りました。",
     "2026-W42": "ゲートウェイの内部まわりが厚く更新され、コマンド対応表やローカルセッション、Multiplexing Gateway の内部構造、ゲートウェイをいくつも同時に動かす手順が新しい内容になりました。プラグインでは、デスクトップのプラグイン SDK やモデルプロバイダーのプラグイン、カタログへの登録申請の説明が手直しされ、オブザーバーフックやサブエージェントのライフサイクル API の説明にも手が入りました。ほかに、セッションの保存領域とその復旧、デスクトップ版を複数の Hermes につなぐ方法、考えをアイソメトリックの機械の図で説明する Anatomy スキルのページが更新されています。",
     "2026-W43": "プラグインまわりが広く更新され、プラグインの作り方やカタログへの登録申請、デスクトップのプラグイン SDK、画像生成プロバイダやターミナル環境プロバイダのプラグインのページに手が入りました。ゲートウェイでは、コマンド対応表やいくつも同時に動かす手順が引き続き更新され、オブザーバーフックやイベントフック、サブエージェントへの委任の説明も見直されています。ほかに、クイックスタートや設定、CLI コマンド一覧、MCP、カンバン、Telegram、Hermes Desktop、A2A（エージェント間連携）、安定版リリースの受け入れと昇格のページが新しい内容になりました。",
-    "2026-W44": "プラグインまわりが広く更新され、プラグインの作り方やデスクトップのプラグイン SDK、モデル・画像生成・動画生成・ウェブ検索のプロバイダのプラグイン、コンテキストエンジンやブラウザ保管庫のプラグインのページに手が入りました。設定では、設定バックエンドの境界層やリモート設定、環境変数、プロバイダーの追加と実行時の解決、フォールバックプロバイダーの説明が見直されています。ほかに、cron の内部構造と定期実行タスク、Nix と Docker のセットアップ、Hermes Desktop、管理画面、カンバン、Git ワークツリーに加え、Notion や Airtable、Box、OpenCode、Node.js と Python のデバッガ、vLLM や Faiss などのスキルのページが新しい内容になりました。"
+    "2026-W44": "プラグインまわりが広く更新され、プラグインの作り方やデスクトップのプラグイン SDK、モデル・画像生成・動画生成・ウェブ検索のプロバイダのプラグイン、コンテキストエンジンやブラウザ保管庫のプラグインのページに手が入りました。設定では、設定バックエンドの境界層やリモート設定、環境変数、プロバイダーの追加と実行時の解決、フォールバックプロバイダーの説明が見直されています。ほかに、cron の内部構造と定期実行タスク、Nix と Docker のセットアップ、Hermes Desktop、管理画面、カンバン、Git ワークツリーに加え、Notion や Airtable、Box、OpenCode、Node.js と Python のデバッガ、vLLM や Faiss などのスキルのページが新しい内容になりました。",
+    "2026-W45": "プロバイダーまわりが広く更新され、プロバイダーの追加や実行時の解決、フォールバック、AWS Bedrock のページに手が入りました。設定・CLI コマンド・環境変数・プラグイン・イベントフックに加え、ゲートウェイと Slack・Telegram・Mattermost、Hermes Desktop のページも見直されています。スキルでは Office・PDF・Excel・PowerPoint を扱うものや Stripe の支払いまわりが新しい内容になり、Notion・Airtable・Shopify・DuckDuckGo・SearXNG などのオプションスキルは公式から外れました。"
   }
 }

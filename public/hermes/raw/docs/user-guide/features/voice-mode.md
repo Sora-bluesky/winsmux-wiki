@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "音声モード"
 description: "Hermes Agent とリアルタイムで音声のやりとりをする — CLI、Telegram、Discord（DM、テキストチャンネル、ボイスチャンネル）"
 upstream_path: user-guide/features/voice-mode.md
-upstream_blob: 5dc8c86deeb8b5ddd4f604161be1d1f1ff3e0198
+upstream_blob: 003c45f78331576bb038fa0bda16471cbdfa3ade
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/voice-mode
 ---
@@ -216,7 +216,7 @@ Hermes Desktop が**離れた場所のゲートウェイ**につながってい�
 
 クライアント側で設定するものはありません。提供元とキーについては、話し相手になっているプロファイルが唯一の正本で、ゲートウェイが自分で処理した場合とまったく同じです。キーはセッションのあいだだけデスクトップのメモリに置かれ、クライアントのディスクへ書かれることはありません。
 
-ゲートウェイを動かしている機械でしか動けない提供元（手元の whisper、`edge` の TTS、コマンド型の提供元、プラグイン）は、自動的に中継の道（`/api/audio/transcribe` と読み上げ用の WebSocket）に戻ります。この窓口を持たない古い基盤も同様です。すべての提供元で中継を使わせたい場合は、次のように設定します。
+ゲートウェイを動かしている機械でしか動けない提供元（手元の whisper、`edge` の TTS、コマンド型の提供元、プラグイン）は、自動的に中継の道（`/api/audio/transcribe` と読み上げ用の WebSocket）に戻ります。この窓口を持たない古い基盤も同様です。Webapp（デスクトップの画面をブラウザで開いたもの）は、常に中継を使います。ブラウザのタブからは、オリジンをまたぐリクエストを受け付けない提供元（Nous が管理する音声など）を呼べないうえ、キーもホスト側に置いたままになるからです。すべての提供元で中継を使わせたい場合は、次のように設定します。
 
 ```yaml
 voice:
@@ -512,11 +512,12 @@ stt:
                                     # inbound message, useful for custom pipelines
                                     # (diarization, alignment, archival, etc.)
   provider: "local"                  # "local" (free) | "groq" | "openai" | "mistral" | "xai" | "elevenlabs" | "deepinfra"
+  language: "en"                     # global hint for every provider; set "" to auto-detect
   local:
     model: "base"                    # tiny, base, small, medium, large-v3, turbo
-    language: ""                     # optional ISO-639-1 hint; blank = use HERMES_LOCAL_STT_LANGUAGE if set, else auto-detect
+    language: ""                     # optional ISO-639-1 hint; blank = stt.language, then HERMES_LOCAL_STT_LANGUAGE, then auto-detect
   groq:
-    language: ""                     # optional ISO-639-1 hint; blank = use HERMES_LOCAL_STT_LANGUAGE if set, else auto-detect
+    language: ""                     # optional ISO-639-1 hint; blank = stt.language, then HERMES_LOCAL_STT_LANGUAGE, then auto-detect
   # model: "whisper-1"              # Legacy: used when provider is not set
 
 # Text-to-Speech
@@ -542,6 +543,8 @@ tts:
     model: neuphonic/neutts-air-q4-gguf
     device: cpu
 ```
+
+提供元ごとの言語設定を空にしておくと、環境変数を見る前に、全体の `stt.language` の値（既定は `"en"`）が使われます。自動で言語を判定する条件や、コマンド型の基盤での制限については、[STT の言語の決まり方](/hermes/docs/user-guide/configuration/#speech-to-text-stt)をご覧ください。
 
 ### 環境変数 {#environment-variables}
 

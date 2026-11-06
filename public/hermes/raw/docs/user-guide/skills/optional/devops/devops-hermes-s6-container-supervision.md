@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes S6 Container Supervision — Hermes の Docker イメージで s6 サービスを直したり調べたりする"
 description: "Hermes の Docker イメージで s6 サービスを直したり調べたりする"
 upstream_path: user-guide/skills/optional/devops/devops-hermes-s6-container-supervision.md
-upstream_blob: 94998a5d0a1c063d4bc95a9a2a2e12cbbd735d7c
+upstream_blob: 3143a03ea7715ccbb1b05793e62948d465c7f9ee
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision
 ---
@@ -57,16 +57,17 @@ Hermes Agent をただ動かしたくて Docker を使いたいだけなら、�
 │   │   ├── seed .env / config.yaml / SOUL.md
 │   │   └── skills_sync.py
 │   └── 02-reconcile-profiles          ← hermes_cli.container_boot
-│       ├── chown /run/service (hermes-writable for runtime register)
+│       ├── mkdir+chown /run/hermes-service (hermes-owned gateway scandir; /run/service stays root)
 │       └── walk $HERMES_HOME/profiles/<name>/gateway_state.json
-│           → recreate /run/service/gateway-<name>/
+│           → recreate /run/hermes-service/gateway-<name>/
 │           → auto-start only those with prior_state == "running"
 │
 ├── s6-rc.d (static services, in /etc/s6-overlay/s6-rc.d/)
 │   ├── main-hermes/run                ← exec sleep infinity (no-op slot)
-│   └── dashboard/run                  ← if HERMES_DASHBOARD=1, runs `hermes dashboard`
+│   ├── dashboard/run                  ← if HERMES_DASHBOARD=1, runs `hermes dashboard`
+│   └── profile-gateways/run           ← `s6-setuidgid hermes s6-svscan /run/hermes-service`
 │
-├── /run/service (s6-svscan watches; tmpfs)
+├── /run/hermes-service (hermes s6-svscan from s6-rc `profile-gateways` watches; tmpfs)
 │   ├── gateway-coder/                 ← runtime-registered per-profile
 │   │   ├── type        ("longrun")
 │   │   ├── run         ("#!/command/with-contenv sh ... exec s6-setuidgid hermes hermes -p coder gateway run")
@@ -105,7 +106,7 @@ Hermes Agent をただ動かしたくて Docker を使いたいだけなら、�
 
 そこで、振り分け役を通して s6-overlay 本来の CMD パターンを使っています。`ENTRYPOINT ["/opt/hermes/docker/entrypoint-dispatch.sh"]` を置き、PID 1 のときはそこから `/init /opt/hermes/docker/main-wrapper.sh "$@"` を exec します。ユーザーの引数の前にこのラッパーが自動で足されるので、`docker run <image> --version` は `/init main-wrapper.sh --version` になり、`--version` が /init 側の POSIX シェルに横取りされません。ラッパーは `s6-setuidgid` で hermes に切り替えてから、選ばれたプログラムを exec します。そのプログラムの終了コードがそのままコンテナの終了コードになり、s6 導入前の tini と同じ約束事が保たれます。entrypoint が PID 1 でないとき（Fly Machines、`docker run --init`）は、振り分け役が `/init` をまるごと飛ばし（そのままでは `can only run as pid 1` で止まってしまいます）、s6 の補助コマンドの PATH を戻し、stage2-hook.sh を実行してから main-wrapper.sh を直に exec します。この経路では監視サービスは動きません（#38349）。
 
-代わりに手放したもの: 本体の hermes は s6 の監視下にありません。これは tini だった頃（s6 導入前のイメージ）の挙動とまったく同じです。**新しく**保証されたのはダッシュボードの監視だけで、`/run/service/` 配下のプロファイルごとの gateway は完全に監視されます。
+代わりに手放したもの: 本体の hermes は s6 の監視下にありません。これは tini だった頃（s6 導入前のイメージ）の挙動とまったく同じです。**新しく**保証されたのはダッシュボードの監視だけで、`/run/hermes-service/` 配下のプロファイルごとの gateway は完全に監視されます。
 
 ## すぐ使える手順 {#quick-recipes}
 
@@ -120,7 +121,7 @@ docker exec <c> sh -c 'cat /proc/1/comm; readlink /proc/1/exe'
 
 ```sh
 # /command/ isn't on docker-exec PATH — use absolute path
-docker exec <c> /command/s6-svstat /run/service/gateway-<name>
+docker exec <c> /command/s6-svstat /run/hermes-service/gateway-<name>
 # "up (pid …) … seconds"            → running
 # "down (exitcode N) … seconds, normally up, want up, …" → s6 wants it up but the process keeps exiting (crash loop)
 # "down … normally up, ready …"     → user stopped it
@@ -129,9 +130,9 @@ docker exec <c> /command/s6-svstat /run/service/gateway-<name>
 ### サービスを手で上げ下げする {#bring-a-service-updown-manually}
 
 ```sh
-docker exec <c> /command/s6-svc -u /run/service/gateway-<name>   # up
-docker exec <c> /command/s6-svc -d /run/service/gateway-<name>   # down
-docker exec <c> /command/s6-svc -t /run/service/gateway-<name>   # SIGTERM (restart)
+docker exec <c> /command/s6-svc -u /run/hermes-service/gateway-<name>   # up
+docker exec <c> /command/s6-svc -d /run/hermes-service/gateway-<name>   # down
+docker exec <c> /command/s6-svc -t /run/hermes-service/gateway-<name>   # SIGTERM (restart)
 ```
 
 ### cont-init の復元ログを眺める {#watch-the-cont-init-reconciler-log}
@@ -177,6 +178,10 @@ cont-init の復元処理は hermes として動きます（`02-reconcile-profil
 ### `docker exec` で書いたファイルは root 所有になる {#files-written-by-docker-exec-are-root-owned}
 
 `docker exec` は既定で root として動きます。`--user hermes` を渡すか、次回起動時の stage2 の chown に任せてください。`$HERMES_HOME/profiles/<name>/` の下に root で手作業のファイルを書かないこと — 次の復元処理で直りはしますが、その最中の処理が権限エラーに当たることがあります。
+
+### root のコードに `/run/hermes-service` の中で作業させない {#root-code-must-not-work-inside-runhermes-service}
+
+gateway の scandir は hermes の所有なので、hermes はその中のものを何でも rename して、代わりにシンボリックリンクを置いておけます。そこで root が書き込みや chmod、chown をすると、そのシンボリックリンクの先をたどってしまいます。そのため root による登録では、各枠をまず `/run/.hermes-service.staging`（root 所有、0700、同じ tmpfs 上）で組み立て、1 回の `rename` で公開します。また `S6ServiceManager` は root として呼ばれたとき、`s6-svc`、`s6-svwait`、`s6-svscanctl` を `s6-setuidgid hermes` 経由で実行します。root 側に新しくコードを足すときも、この経路に沿わせてください。
 
 ### サービスの枠はあるのに s6-svstat が「s6-supervise not running」と言う {#service-slot-exists-but-s6-svstat-says-s6-supervise-not-running}
 

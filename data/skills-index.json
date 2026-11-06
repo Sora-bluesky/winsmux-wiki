@@ -1,6 +1,6 @@
 {
-  "sha": "ed1afb0",
-  "date": "2026-11-04",
+  "sha": "9f9b9f5",
+  "date": "2026-11-05",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -727,7 +727,7 @@
       "name": "Hermes S6 Container Supervision",
       "description": "Modify or debug s6 services in the Hermes Docker image",
       "url": "/hermes/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision/",
-      "date": "2026-09-20",
+      "date": "2026-11-04",
       "source": "optional"
     },
     {

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: fa1eb3798f361204518f3cf7818288e7620b4e94
+upstream_blob: a26226ad9fa79e90d2cc1a6ae3ea599a482ef028
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -698,6 +698,15 @@ gateway:
 ```
 
 正当な用途で流量の多いボットが、5 分で 1 つのチャットに 20 件を超えて投稿する場合も見張りに引っかかります。そのゲートウェイでは `max_events` を上げてください。
+
+同じブロックは、その上限に達するよりずっと前に、ボット同士のやり取りを打ち切る役目も持っています。あなたのメッセージが、ひと続きのやり取りの始まりです。そのあとはボットのメッセージ 1 件ごとに 1 ホップと数え、`max_hops`（既定は 4）を超えると、それ以降のボットのメッセージではエージェントが動かなくなります。1 つのやり取りの中で同じ文章を繰り返すボットは、1 回と数えます。`bot_replies_expect_reply: false`（既定）のとき、Hermes は、Hermes 自身の返信に答えているボットには応答しません。また Hermes は、実行中に出す案内をボットへ送ることもありません。処理中や中断を受け付けたという知らせ、進捗や状態の行、「not processed」や再試行の案内、モデルの切り替え（フォールバック）の知らせがそれにあたります。ボットが受け取るのは、モデルの返信だけです。
+
+```yaml
+gateway:
+  bot_loop_guard:
+    max_hops: 4
+    bot_replies_expect_reply: false
+```
 
 グループの会話の本文とメディアの説明文は、メッセージが他の参加者も名指ししているとき、すべてのメンションを残します（`@research_bot , @ops_bot are you both listening?` は `research_bot` にそのまま届きます）。このボットだけが呼ばれている場合は、これまでどおり自分の名前は取り除かれるので、`@hermes_bot 2` のような短い答えも効きます。グループでのやり取りには、チャンネルごとの文脈にボット自身の Telegram のユーザー名も載るので、残されたメンションのどれが自分宛てなのかをモデルが判断できます。スラッシュコマンドは、これまでどおり通常のコマンドの整理を通ります。
 

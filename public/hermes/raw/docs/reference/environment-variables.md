@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: b10491fa9ba1b4197585e4546372d47de43766d7
+upstream_blob: bbb2c14e9a823d562e6a94532c5337cd607d429a
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -121,7 +121,7 @@ Hermes は環境変数をプロセスの環境から読み、利用者が管理�
 | `HERMES_MODEL` | プロセス単位でモデル名を上書きします（定時実行の仕組みが使います。ふだんは `config.yaml` のほうをおすすめします） |
 | `VOICE_TOOLS_OPENAI_KEY` | OpenAI の音声認識・読み上げで優先して使われる OpenAI のキー |
 | `HERMES_LOCAL_STT_COMMAND` | 手元で音声認識をするコマンドの雛形（任意）。`{input_path}`、`{output_dir}`、`{language}`、`{model}` を差し込めます |
-| `HERMES_LOCAL_STT_LANGUAGE` | 音声認識で使う既定の言語のヒント。`config.yaml` に提供元ごとの `language` を設定していないとき、`local`（faster-whisper）の提供元、`HERMES_LOCAL_STT_COMMAND`、手元の `whisper` CLI への切り替え（既定: `en`）、Groq、xAI が使います |
+| `HERMES_LOCAL_STT_LANGUAGE` | 音声認識で使う言語のヒントの最後の予備です。提供元ごとの `language` と全体の `stt.language` がどちらも空のときだけ使われます。コマンドで動くバックエンド（`HERMES_LOCAL_STT_COMMAND`、手元の `whisper` CLI）は、ヒントが決まらないときに独自の既定値（`en`）を使うことがあります。 |
 | `HERMES_HOME` | 設定と利用者データを置くホームを選びます。値の中の `~` や `$VAR` は展開されるので（fish は `VAR=~/…` の中の `~` を展開しません）、現在のディレクトリからの相対にはなりません。既定は POSIX では `~/.hermes`、Windows では `%LOCALAPPDATA%\hermes` で、公式の Docker イメージは `/opt/data` を使います。プロファイルや実行時の状況によって、より個別のホームが選ばれることもあります。 |
 | `HERMES_CONFIG_BACKEND` | プロファイルの `config.yaml` のうち、利用者が設定する層をどこで読み書きするかを選びます。`file`（既定）は手元の `config.yaml`、`remote` は [Remote Config](/hermes/docs/user-guide/remote-config/) です。これ以外の値を指定した場合や、リモートのバックエンドが設定を返せない場合、Hermes は既定値で代用せず、起動時にエラーを出して止まります。`.env` で明示的に空の値を指定すると、シェルに残っている古い値が `file` に戻ります。この値は起動時の環境、起動したホームの `.env`、管理用の `.env` から読み取り、`config.yaml` からは読みません。[設定のバックエンド](/hermes/docs/developer-guide/config-backend/) を参照してください。 |
 | `HERMES_CONFIG_REMOTE_URL` | [Remote Config](/hermes/docs/user-guide/remote-config/) の配信基盤のベース URL です（既定は `https://config-config.nousresearch.com`。使えるのは `https://` だけで、素の `http://` はループバック宛てに限ります。URL にユーザー情報は含められません）。設定をどこから取ってくるかを示すもので、どの設定よりも先に必要になるため、環境変数になっています。 |

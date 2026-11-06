@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: d67b49225d81a1a480f37eed61b32d378806c6c6
+upstream_blob: 27f3c1065ee49fd3994525afe2d2f50b3eed05b1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -2532,7 +2532,7 @@ stt:
   enabled: true                # Auto-transcribe inbound voice messages (default: true)
   echo_transcripts: true       # Post raw transcripts back to the chat as 🎙️ "..." (default: true)
   provider: "local"            # "local" | "groq" | "openai" | "mistral" | "xai" | "elevenlabs" | "deepinfra" | ...
-  language: "en"               # GLOBAL language hint for every provider (per-provider language wins); set "" for auto-detect
+  language: "en"               # Global hint; a nonempty provider language wins. Blank falls back to HERMES_LOCAL_STT_LANGUAGE, then auto-detect
   streaming: false             # live partial text while you speak (openai, xai, elevenlabs); see Voice Mode > Live transcription
   cloud_trim_silence: true     # trim long pauses with ffmpeg before uploading to a cloud provider (default: true)
   cloud_trim_threshold_db: -40 # audio quieter than this counts as silence
@@ -2540,7 +2540,7 @@ stt:
   # prompt: "Hermes, Teknium, Nous Research, kanban"   # Static vocabulary hint (see below)
   local:
     model: "base"              # tiny, base, small, medium, large-v3, turbo
-    language: ""               # per-provider override of stt.language
+    language: ""               # blank inherits stt.language, then HERMES_LOCAL_STT_LANGUAGE
     initial_prompt: ""         # optional whisper prompt to bias vocabulary/script (e.g. Simplified Chinese)
     vad: true                  # Silero VAD filter (default on) — silence never reaches whisper; false = raw behavior (music/ambient)
     vad_min_silence_ms: 500    # min silence (ms) that splits speech chunks when vad is on
@@ -2548,19 +2548,50 @@ stt:
     logprob_threshold: -1.0        # ...AND avg_logprob < this (both must hit — quiet real speech survives)
     unload_after_idle_seconds: 0   # 0=never unload (default); e.g. 300 = release the model after 5min idle
   groq:
-    language: ""               # per-provider override of stt.language
+    language: ""               # blank inherits stt.language, then HERMES_LOCAL_STT_LANGUAGE
   openai:
     model: "whisper-1"         # whisper-1 | gpt-4o-mini-transcribe | gpt-4o-transcribe | gpt-transcribe
-    language: ""               # per-provider override of stt.language
+    language: ""               # blank inherits stt.language, then HERMES_LOCAL_STT_LANGUAGE
     timeout: 60                # seconds per transcription request; raise for self-hosted model cold starts
     max_retries: 1             # SDK transport retries (connection errors, 408/409/429/5xx); 0 = single attempt
   xai:
     model: "grok-voice-transcribe-2.0"  # or grok-voice-transcribe-1.0; sent on every request
-    language: ""               # per-provider override of stt.language
+    language: ""               # blank inherits stt.language, then HERMES_LOCAL_STT_LANGUAGE
   # model: "whisper-1"         # Legacy fallback key still respected
 ```
 
-言語は、**すべての** STT プロバイダー（local、groq、openai、mistral、xai、elevenlabs、deepinfra、コマンド型のプロバイダー、プラグイン）で同じ順序で決まります: `stt.<provider>.language` → `stt.language` → `HERMES_LOCAL_STT_LANGUAGE` 環境変数 → プロバイダーの自動判定。**既定値は `stt.language: "en"` です**。Whisper の自動判定は、短い音声やなまりのある音声で言語をよく取り違え、その結果、音声メッセージが別の言語で文字起こしされてしまいます。英語以外を話す場合は、`stt.language` に自分の言語コード（例: `"es"`、`"zh"`、`"uk"`）を一度設定してください。複数の言語で使う場合は `""` にすると、自動判定に戻ります。
+全プロバイダー共通の言語の決定処理は、`stt.<provider>.language`、`stt.language`、`HERMES_LOCAL_STT_LANGUAGE` の順に調べ、**最初に見つかった空でない文字列**を使います。
+
+```text
+stt.<provider>.language -> stt.language -> HERMES_LOCAL_STT_LANGUAGE -> no language hint
+```
+
+値を空にしても「自動判定を強制する」という意味にはならず、**次の設定元に進む**という意味になります。ElevenLabs では、プロバイダー独自の別名として `stt.elevenlabs.language_code` も使えます。**全体の既定値は `stt.language: "en"` です**。そのため、プロバイダーの言語だけを空にしても、結果は英語になります。別の言語に固定するには、プロバイダーごとの設定か全体の設定に、`"zh"`、`"es"`、`"uk"` のような言語コードを設定してください。
+
+プラグインのフックがリクエスト単位で上書きしない場合は、次のように決まります。
+
+| プロバイダーの言語 | 全体の言語 | `HERMES_LOCAL_STT_LANGUAGE` | 決まるヒント |
+| --- | --- | --- | --- |
+| `""` | `"en"` | 未設定 | `en` |
+| `"zh"` | `""` | 未設定 | `zh` |
+| `""` | `""` | `en` | `en` |
+| `""` | `""` | 未設定 | なし |
+
+**ローカルの faster-whisper** で言語を自動判定させるには、次のように設定します。
+
+```yaml
+stt:
+  provider: local
+  language: ""
+  local:
+    language: ""
+```
+
+あわせて、プロセスの環境変数や `.env` に `HERMES_LOCAL_STT_LANGUAGE` の上書きがあれば消してください。それでも、空でないプロバイダーの設定や `pre_transcription` フックがあれば、それによって言語が選ばれることがあります。
+
+ヒントが何も決まらなかった場合、faster-whisper と組み込みのクラウド用ハンドラーは言語の引数を付けずに送り、プラグインのプロバイダーには `None` が渡されます。
+
+コマンド型のバックエンドには、さらに独自の動きがあります。`local_command` は、`stt.local.language` をプロバイダーの設定として使います。名前付きのコマンド型プロバイダーは、まず自身のコマンド設定（`stt.providers.<name>`、または旧来の `stt.<name>` ブロック）にある `language` を使い、それがなければ共通の決定処理の順にたどります。どちらの場合も、言語が決まらなければ `{language}` のプレースホルダーには `en` が入ります。独自のテンプレートでは、このプレースホルダーを使わないようにしたり、使うエンジン独自の自動判定のオプションを指定したりできます。そのため、faster-whisper が使えず `local` が Whisper の CLI に切り替わった場合は、同じように空の設定にしていても、今のところ自動判定になるとは限りません。コマンド型のプロバイダーの設定方法は [コマンド型のプロバイダー](/hermes/docs/user-guide/features/tts/#stt-custom-command-providers) を参照してください。
 
 `stt.openai.timeout` と `stt.openai.max_retries` は、`openai`、`groq`、`deepinfra` の各プロバイダーが共有する OpenAI SDK の文字起こしクライアントの動きを決めます（プロバイダーごとの同等の設定はまだなく、SDK もこれらの値を環境変数から読み込みません）。既定値が以前の固定値（30秒／再試行なし）ではなく `60` / `1` になっているのは、セルフホストの OpenAI 互換エンドポイントでは、最初のリクエストでモデルを読み込むのに30秒より長くかかることがあり、以前はその音声メッセージがそのまま失われていたためです。その代わり、到達できないバックエンドに対しては、Hermes があきらめるまで、音声メッセージを最大で「2回の試行 × タイムアウト」の時間だけ待たせることになります。以前の動きに戻すには `timeout: 30` と `max_retries: 0` を設定してください。
 
@@ -2569,7 +2600,7 @@ stt:
 プロバイダーごとの動き:
 
 - `local` は、手元のマシンで動く `faster-whisper` を使います。`python -c "import pm; pm.sync_venv(['stt-whisper'], explicit=True)"` で別途インストールしてください。無音時のハルシネーション（ありもしない文字起こし）への対策は既定で有効です。Silero VAD フィルターで無音や雑音が Whisper に届かないようにし、区間をまたいだ条件付けを無効にし、モデル自身が「おそらく発話ではない」*かつ*「信頼度が低い」と判定した区間を捨てます。発話以外の音声（音楽、環境音）を対策なしの元の動きで文字起こししたいときは、`stt.local.vad: false` を設定してください。低いレイテンシで文字起こしできるよう、モデルは音声メッセージの合間もメモリに読み込まれたままです。使われていないときにモデルを自動で解放するには、`stt.local.unload_after_idle_seconds`（例: 5分なら `300`）を設定してください。CUDA のホストでは GPU メモリが解放されます（ローカルの LLM と GPU を共有しているときに一番効果があります）。CPU の場合、そのメモリはプロセスが再利用できるようになりますが、プロセスが別の用途でその領域を必要とするまで、OS から見た使用量は減らないことがあります。次の音声メッセージが届くと、モデルは自動的に読み込み直されます。
-- `groq` は Groq の Whisper 互換エンドポイントを使い、`GROQ_API_KEY` を読み込みます。`stt.groq.language`（または全体に効く `HERMES_LOCAL_STT_LANGUAGE` 環境変数）を指定すると、自動判定を省いてレイテンシを減らせます。
+- `groq` は Groq の Whisper 互換エンドポイントを使い、`GROQ_API_KEY` を読み込みます。ヒントを固定するには `stt.groq.language` か `stt.language` を設定してください。`HERMES_LOCAL_STT_LANGUAGE` が使われるのは、その両方が空のときだけです。
 - `openai` は OpenAI の音声 API を使い、`VOICE_TOOLS_OPENAI_KEY` を読み込みます。
 
 クラウドのプロバイダー（groq、openai、mistral、xai、elevenlabs、deepinfra）では、`ffmpeg` がインストールされていれば、既定で**アップロード前の無音の切り詰め**が行われます。音声メッセージ内の長い間を、ファイルをアップロードする前に手元で詰めます。自然な間合いが残るよう、各休止のうち `cloud_trim_keep_ms` の分は残します。音声が短くなれば、アップロードが速くなり、音声1分あたりの課金が下がり、リモートのモデルによる無音時のハルシネーションも減ります。12秒より短い音声はまったく切り詰めません（そこでは節約の効果に意味がなく、そもそもリクエストごとの最低料金を設けているプロバイダーもいくつかあります）。切り詰めはベストエフォートです。ffmpeg がない、切り詰めに失敗した、音声のほとんどが無音、または切り詰めても約10%未満しか減らない場合は、元のファイルをそのままアップロードします。常に元のファイルをアップロードしたいとき（たとえばクラウドのプロバイダーで音楽や環境音を文字起こしするとき）は、`stt.cloud_trim_silence: false` を設定してください。コマンド型とプラグインのプロバイダーには、切り詰めた音声は渡されません。
@@ -2750,7 +2781,13 @@ hosted_rooms:
 プロセスをすべて再起動してください。
 
 これらはあくまで上限で、目標値でもなければ、タスクの完了を保証するものでもありません。ディスカッションは
-上限より早く終わることもあり、停止（Stop）や承認のゲートも引き続き有効です。
+上限より早く終わることもあり、停止（Stop）や承認のゲートも引き続き有効です。上限に達すると
+ディスカッションは一時停止します。ルームで **Continue**（`groups.continue`）を使うと、`max_rounds` と `max_messages` の枠を
+もう1回分追加できます。追加できるのは、1つのディスカッションにつき最大5回までです。
+
+返答するメンバーを自動で選ぶように設定したルーム（ルームの設定で `routing: auto`）では、宛先が指定されていないメッセージ1件ごとに、
+`auxiliary.group_router` を通じて、JSON を返す短いモデル呼び出しを1回行います
+（プロバイダー、モデル、タイムアウトは、ほかの補助タスクと同じように設定できます。既定のタイムアウトは20秒です）。
 
 ## 許可されていない DM への対応 {#unauthorized-dm-behavior}
 
@@ -3115,6 +3152,7 @@ delegation:
   #     provider:
   #       sort: throughput
   max_concurrent_children: 3                # Parallel children per batch (floor 1, no ceiling). Also via DELEGATION_MAX_CONCURRENT_CHILDREN env var.
+  prefix_stagger_seconds: 0                 # Prompt-cache warm-up for batches: siblings start when the first child's response starts streaming; N (max 60) only caps that wait, it is not a fixed stagger. 0 = off.
   worktree_isolation: false                 # Give each child its own git worktree branched from HEAD (local backend + git repos only; inspired by Muse Code). See Subagent Delegation → Worktree Isolation.
   max_spawn_depth: 1                        # Delegation tree depth cap (1-3, clamped). 1 = flat (default): parent spawns leaves that cannot delegate. 2 = orchestrator children can spawn leaf grandchildren. 3 = three levels.
   orchestrator_enabled: true                # Global kill switch. When false, role="orchestrator" is ignored and every child is forced to leaf regardless of max_spawn_depth.
@@ -3153,6 +3191,8 @@ delegation:
 **幅と深さ:** `max_concurrent_children` は、1回のバッチで並列に動かすサブエージェントの数の上限です（既定は `3`。最小は1で、最大はありません）。環境変数 `DELEGATION_MAX_CONCURRENT_CHILDREN` でも設定できます。モデルがこの上限より長い `tasks` 配列を渡すと、`delegate_task` は黙って切り詰めるのではなく、上限を説明するツールのエラーを返します。`max_spawn_depth` は委任のツリーの深さを決めます（1〜3の範囲に収められます）。既定の `1` では、委任は平らです。子は孫を起動できず、`role="orchestrator"` を渡しても、何も知らせずに `leaf` として扱われます。`2` に上げるとオーケストレーターの子が末端（leaf）の孫を起動でき、`3` にすると3階層のツリーになります。オーケストレーションを使うかどうかはエージェントが呼び出しごとに決め、使うときは `role="orchestrator"` を指定して明示的に有効にします。`orchestrator_enabled: false` にすると、それに関係なく、すべての子が末端に戻されます。費用は掛け算で増えます。`max_spawn_depth: 3` と `max_concurrent_children: 3` の組み合わせなら、ツリーは 3×3×3 = 27 の末端エージェントが同時に動くところまで広がります。使い方のパターンは [サブエージェントへの委任 → 深さの上限と入れ子の取りまとめ](/hermes/docs/user-guide/features/delegation/#depth-limit-and-nested-orchestration) を参照してください。
 
 **子プロセスの通知:** サブエージェントが起動したバックグラウンドプロセスの完了通知と監視通知は、親の会話に送られますが、既定では親の側で**抑制されます**。成果物は、子がまとめた結果だからです。これらの通知も届けるには（どのサブエージェントからのものかを添えて届きます）、`delegation.surface_child_process_notifications: true` を設定します。委任の結果そのものが抑制されることはありません。[サブエージェントへの委任 → 子のバックグラウンドプロセスの通知](/hermes/docs/user-guide/features/delegation/#child-background-process-notifications) を参照してください。
+
+**バッチでのプロンプトキャッシュの温め:** 1つの `tasks` バッチに含まれる子どうしは、同じツールと同じシステムプロンプトの骨組みを送ります。違うのは目標だけです（タスクごとに異なる `context` を渡した場合は、システムプロンプトの末尾も違います）。一斉に起動すると、どの子の最初のリクエストもプロバイダーのプロンプトキャッシュに当たらず、共通の先頭部分の料金を丸ごと払うことになります。`prefix_stagger_seconds: N` を設定すると、最初の子はすぐに起動し、同じプロバイダー／モデルを使うほかの子は、最初の子の応答がストリーミングで返り始めるとき（その時点で、最初の子のリクエストがキャッシュに書き込まれています）、最初の子が終わるとき、N 秒たったときのうち、いちばん早いときまで待ちます。N はこの1回の待ち時間の上限で、子と子の起動の間隔ではありません。N がいくつであっても、ほかの子は通常、先頭の子から最初のトークンが返ってくるまでの時間（time-to-first-token）ほど遅れて起動します。代わりに、バッチ全体の時間がこの最初のトークンまでの時間およそ1回分だけ延びます。Hermes がプロンプトキャッシュを使わない経路（Anthropic 以外のほとんどのモデル）や、別のモデルに振り分けられた子は、待たずに起動します。先頭になるのは常にバッチの最初のタスクです。タスク 0 がキャッシュを使わない経路や別の経路にある場合は、あとのタスクどうしがキャッシュを使う経路を共有していても、バッチ内で待ち合わせはしません。また、タスクが1つだけの単位（たとえば `independent_completions` を使うとき）は待つことがありません。既定ではオフ（`0`）です。
 
 ## 確認の質問（clarify） {#clarify}
 
@@ -3245,9 +3285,9 @@ webapp:
 ```
 
 - `enabled` — ゲートウェイは起動時にこの値を読みます。変えたら、ゲートウェイを再起動してください（`hermes gateway restart`）。
-- `host` — `127.0.0.1`、`::1`、`localhost` のどれかにすると、Webapp はこの端末の中だけで使えます。`0.0.0.0` か `::` にすると、ほかの端末からもつながるようになり、[ダッシュボードのサインイン用プロバイダー](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)が必要になります。プロバイダーが無いと、ゲートウェイはネイティブのクライアント向けにだけ配信し、その理由は `hermes webapp --status` で確かめられます。プロバイダーを追加したら、ゲートウェイを再起動してください。これ以外の値にすると、`127.0.0.2` のような別のループバックアドレスであっても、Webapp は止まったままです。
+- `host` — `127.0.0.1`、`::1`、`localhost` のどれかにすると、Webapp はこの端末の中だけで使えます。`0.0.0.0` か `::` にすると、ほかの端末からもつながるようになり、[ダッシュボードのサインイン用プロバイダー](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)が必要になります。プロバイダーが無いと、ゲートウェイはネイティブのクライアント向けにだけ配信し、その理由は `hermes webapp --status` で確かめられます。プロバイダーを追加したら、ゲートウェイを再起動してください。これ以外の値にすると、`127.0.0.2` のような別のループバックアドレスであっても、Webapp は止まったままです。コンテナの中では `0.0.0.0` にしてください。公開したポートや別のコンテナにあるプロキシからは、コンテナのループバックに届かないためです（[Docker → Webapp を動かす](/hermes/docs/user-guide/docker/#running-the-webapp)）。
 - `port` — 単独で動くプロファイルのゲートウェイには、既定のゲートウェイとは別のポートが必要です。ポートを設定していない単独のプロファイルでは、**Settings → Web Access → Start** がポートを1つ選び（9120 より大きい空きポートのうち、ほかのプロファイルが使っていない最初のもの）、ここに保存します。自分で設定したポートを置き換えることはありません。このポートがほかで使われているときも、ゲートウェイはネイティブのクライアント向けにだけ配信し、その理由を `hermes webapp --status` が伝えます。このときは、ほかのプログラムが受け取ってしまったおそれがあるので、Webapp のブラウザ用サインインも作り直します。そのため、ポートが空いたら、開いていたタブのために `hermes webapp` をもう一度実行する必要があります。
-- `public_url` — 自分で動かしているリバースプロキシやトンネルが、Webapp を独自のアドレスで配信する（`host:port` へ転送する）ときに設定します。設定すると、`host` がループバックでもダッシュボードのサインインが有効になります。また、Webapp が受け付ける外からのホスト名はこの1つだけになり、サインイン後に戻るコールバックもこの値をもとに組み立てられます。サインイン用プロバイダーが無ければ、`0.0.0.0` のときと同じく、ゲートウェイはネイティブのクライアント向けにだけ配信します。値は `http://` か `https://` で始まり、認証情報・クエリ・フラグメントを含まないアドレスにしてください。それ以外の値では Webapp は止まったままです。`dashboard.public_url` は `hermes dashboard` 用の設定で、Webapp には使われません。
+- `public_url` — 自分で動かしているリバースプロキシやトンネルが、Webapp を独自のアドレスで配信する（`host:port` へ転送する）ときに設定します。設定すると、`host` がループバックでもダッシュボードのサインインが有効になります。その場合は、Webapp が受け付ける外からのホスト名もこの1つだけになり、サインイン後に戻るコールバックもこの値をもとに組み立てられます。サインイン用プロバイダーが無ければ、`0.0.0.0` のときと同じく、ゲートウェイはネイティブのクライアント向けにだけ配信します。値は `http://` か `https://` で始まり、認証情報・クエリ・フラグメントを含まないアドレスにしてください。それ以外の値では Webapp は止まったままです。`dashboard.public_url` は `hermes dashboard` 用の設定で、Webapp には使われません。一方、`dashboard.trusted_proxies` は Webapp にも使われます。Webapp がプロキシの `X-Forwarded-*` ヘッダーを受け入れるのは、ループバックと、そこに並べたアドレスからだけです（[Docker → トンネルやリバースプロキシの後ろに置く](/hermes/docs/user-guide/docker/#webapp-behind-a-proxy)）。
 
 サインインが有効になるのは、`host` が `0.0.0.0` か `::` のとき、または host の値にかかわらず `public_url` を設定したときです。このとき `hermes webapp` は Webapp のアドレス（`public_url` を設定していればそのアドレスで、サインイン後はここへ戻ります）を開くので、ダッシュボードのアカウントでサインインしてください。このコマンドが出す一度だけ使えるリンクで開けるのは、サインインの要らない Webapp だけです。ネイティブのクライアント（CLI、TUI、デスクトップアプリ）はサインインしません。ゲートウェイがそれらのために用意している待ち受け口は、設定がどうであってもサインインを求めないからです。
 
@@ -3286,7 +3326,7 @@ dashboard:
 - `theme` — ダッシュボードの見た目のテーマです。
 - `show_token_analytics` — 既定ではオフです。Analytics ページや、トークン数・費用の数字は、**手元で見積もった下限の値**です（補助モデルの呼び出し、再試行、フォールバック、キャッシュへの書き込みは含みません）。そのため、プロバイダーの請求額よりずっと低く出ることがあります。請求額ではないと理解したうえでのみ `true` にしてください。
 - `public_url` — 設定すると、OAuth の `redirect_uri` を組み立てるもとになる URL の先頭部分（スキーム + ホスト + 任意のパスのプレフィックス）として、この値がそのまま使われます。`X-Forwarded-*` ヘッダーを確実には転送しないリバースプロキシの後ろに置くときに設定します。空のままにすると、プロキシのヘッダーから組み立て直します。
-- `trusted_proxies` — `X-Forwarded-Proto` と `X-Forwarded-For` を渡してよい IP アドレス、または範囲を限った CIDR ネットワークです。ループバックは設定しなくても信頼されます。TLS のリバースプロキシが別のコンテナやホストから接続してくる場合に設定します。できるだけプロキシの正確な IP を指定し、アドレスが変わる場合にだけ、小さな専用ネットワークを使ってください。ワイルドカードと `/0` のネットワークは受け付けません。
+- `trusted_proxies` — `X-Forwarded-Proto` と `X-Forwarded-For` を渡してよい IP アドレス、または範囲を限った CIDR ネットワークです。ループバックは設定しなくても信頼されます。TLS のリバースプロキシが別のコンテナやホストから接続してくる場合に設定します。できるだけプロキシの正確な IP を指定し、アドレスが変わる場合にだけ、小さな専用ネットワークを使ってください。ワイルドカードと `/0` のネットワークは受け付けません。ゲートウェイの [Webapp](#webapp) の待ち受け口も、同じリストを読みます。
 - `oauth` / `basic_auth` / `drain_auth` — 同梱の dashboard-auth プラグインが読む、認証プロバイダーの設定です。drain のシークレット自体はここでは**設定しません**。環境変数 `HERMES_DASHBOARD_DRAIN_SECRET` で渡します。認証の設定手順の全体は [Web ダッシュボード](/hermes/docs/user-guide/features/web-dashboard/) を参照してください。
 - `ws_ping_interval` / `ws_ping_timeout` — ループバック以外のアドレスで待ち受けるときの、WebSocket のキープアライブの調整です（ループバックの接続では ping を送りません）。遅延の大きい回線（Tailscale、遠くへの SSH トンネル）では、20秒の既定値のせいで本来起きないはずの 1006 の切断が起きることがあるので、値を上げてください。
 - `ssh_isolated_idle_grace_s`（既定は `900`）— SSH 経由でつなぐ、Desktop が管理する `hermes serve --isolated` のバックエンドは、わざと SSH セッションから切り離してあります。接続の途中でノートパソコンがスリープしても、バックエンドが止まらないようにするためです。以前は、スリープ中に画面を点けずに一時復帰（dark wake）して再接続するたびに、`state.db` を握ったままのバックエンドが1つずつ増えていました。現在は、クライアントの WebSocket がこの時間ずっと1つも接続されておらず、エージェントのターンも動いていなければ、バックエンドは自分で終了します（ターンが動いていれば生き続けます。ターンの状態が読み取れない場合も生き続けます）。ノートパソコンがスリープしたあとも、切り離されたバックエンドに長い作業を終わらせたい場合は、大きな値にしてください。こうしたバックエンドは、片側だけ切れたトンネルに気づけるように、間隔の長い WebSocket の ping（60秒ごと、タイムアウト10分）も送ります。この待ち時間とは別に、リモートのホスト上にある Desktop の所有ロックが、同じ接続からあとで起動された新しいバックエンドを指すようになった時点で、古いバックエンドは（ターンとターンの合間に）終了します。そのため、再接続が立て続けに起きても、切り離されたバックエンドが積み重なることはありません。これは POSIX の SSH ホストにも、ネイティブの Windows の SSH ホストにも当てはまります。

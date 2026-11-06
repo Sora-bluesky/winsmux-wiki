@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-11-05",
+  "generatedAt": "2026-11-06",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-05",
-      "attemptedAt": "2026-11-05",
+      "fetchedAt": "2026-11-06",
+      "attemptedAt": "2026-11-06",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
         {
           "id": "meituan/longcat-2.5:free",
-          "name": "Meituan: LongCat 2.5",
+          "name": "LongCat-2.5:Free",
           "ctx": 1048576,
           "tools": true,
           "expires": null,
@@ -63,8 +63,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-05",
-      "attemptedAt": "2026-11-05",
+      "fetchedAt": "2026-11-06",
+      "attemptedAt": "2026-11-06",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [

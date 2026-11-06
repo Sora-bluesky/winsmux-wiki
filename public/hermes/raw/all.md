@@ -4,24 +4,25 @@ description: 公式 docs の全 URL の索引。正本は公式。
 sources:
   - https://hermes-agent.nousresearch.com/docs/
   - https://hermes-agent.nousresearch.com/docs/llms.txt
-hermes_version: "0.22.7"
+hermes_version: "0.23.0"
 confidence: high
 raw: /hermes/raw/all.md
 ---
 
 # すべて
 
-公式 docs の全ページ（247 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（248 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
-## Getting Started（7）
+## Getting Started（8）
 
 - [Installation](/hermes/docs/getting-started/installation/)
 - [Quickstart](/hermes/docs/getting-started/quickstart/)
 - [Learning Path](/hermes/docs/getting-started/learning-path/)
 - [Updating](/hermes/docs/getting-started/updating/)
 - [Nix Setup](/hermes/docs/getting-started/nix-setup/)
+- [Official Domains & Phishing Safety](/hermes/docs/getting-started/official-domains/)
 - [Platform Support](/hermes/docs/getting-started/platform-support/)
 - [Android / Termux](/hermes/docs/getting-started/termux/)
 

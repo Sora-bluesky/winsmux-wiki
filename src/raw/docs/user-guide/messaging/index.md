@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 4ae9870408ab7dce7527ac72294997ffbdded731
+upstream_blob: 127c17bc060eac4158d7122160a021592bbfd1af
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -417,6 +417,17 @@ hermes pairing revoke telegram 123456789  # Remove access
 ```
 
 ペアリングコードは 1 時間で失効し、回数制限があり、暗号的な乱数から作られます。
+
+### チャットにいるほかのボット {#other-bots-in-a-chat}
+
+Hermes は、プラットフォームが送信者をボットだと示したときに、その送信者をボットとして扱います（Discord、Slack、Telegram、Feishu、QQ のギルド、Mattermost のボットアカウント）。イベントにボットかどうかの印が付かないプラットフォーム（Matrix、Signal、IRC、Mattermost の個人アクセストークンで動くボットなど）では、相手のユーザー ID を `config.yaml` のそのプラットフォームの `bot_users` に並べてください。
+
+```yaml
+mattermost:
+  bot_users: ["peer_bot_user_id"]
+```
+
+ボットからのメッセージを受け入れるのは、そのプラットフォームの `*_ALLOW_BOTS` の設定で許可したときだけです。Hermes がボットに送るのはモデルの返信だけで、動作中の通知（作業中や割り込みの受け取り確認、進捗、「処理されませんでした」や再試行の案内、モデルのフォールバックや無応答の警告、委任の失敗の通知）は一切送りません。また、ボットから呼びかけられても、黙ったまま返事をしないことがあります。やり取りを打ち切るのは `gateway.bot_loop_guard` です。あなたが最後にメッセージを送ってからボットのメッセージが `max_hops` 件（既定は 4）に達したところで止め、同じメッセージの繰り返しは 1 件と数えます。また、Hermes が届けた返信にボットが答えてきても、`bot_replies_expect_reply: true` でないかぎり、それには返事をしません。`enabled: false` にすると、これらの決まりはすべて無効になります。
 
 ### 管理者と一般の利用者 {#admins-vs-regular-users}
 

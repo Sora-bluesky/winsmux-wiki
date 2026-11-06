@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: 8daaaa56cb4b5dd7c969ead4c5842bb82f6709fc
+upstream_blob: c6337a6cf87d6fc9616f237906f1756f9f0e2203
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -290,7 +290,7 @@ assistant gateway install     # creates hermes-gateway-assistant service
 プロファイルごとに別のサービス名が付き、互いに独立して動きます。
 
 :::note 公式 Docker イメージの中では
-プロファイルごとのゲートウェイは [s6-overlay](https://github.com/just-containers/s6-overlay)（コンテナ内の PID 1）が管理します。そのため `hermes profile create <name>` を実行すると、`/run/service/gateway-<name>/` に s6 のサービス枠が自動で登録されます。`hermes -p <name> gateway start/stop/restart` は素のプロセスを起動する代わりに `s6-svc` へ渡されるので、落ちても自動で再起動し、`docker restart` しても直前に動いていたゲートウェイの組み合わせが保たれます。詳しくは[プロファイルごとのゲートウェイ管理](/hermes/docs/user-guide/docker/#per-profile-gateway-supervision)を参照してください。
+プロファイルごとのゲートウェイは [s6-overlay](https://github.com/just-containers/s6-overlay)（コンテナ内の PID 1）が管理します。そのため `hermes profile create <name>` を実行すると、`/run/hermes-service/gateway-<name>/` に s6 のサービス枠が自動で登録されます。`hermes -p <name> gateway start/stop/restart` は素のプロセスを起動する代わりに `s6-svc` へ渡されるので、落ちても自動で再起動し、`docker restart` しても直前に動いていたゲートウェイの組み合わせが保たれます。詳しくは[プロファイルごとのゲートウェイ管理](/hermes/docs/user-guide/docker/#per-profile-gateway-supervision)を参照してください。
 :::
 
 ## プロファイルを設定する {#configuring-profiles}

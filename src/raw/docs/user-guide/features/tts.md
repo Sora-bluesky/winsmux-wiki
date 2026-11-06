@@ -2,7 +2,7 @@
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md
-upstream_blob: 2a42e8b048d37b6d4e8ce1036a7764d49e2e8c87
+upstream_blob: f25b800e821ca896fa291d7061534f848f922dff
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tts
 ---
@@ -510,20 +510,22 @@ Telegram、Discord、WhatsApp、Slack、Signal に届いた音声メッセージ
 # In ~/.hermes/config.yaml
 stt:
   provider: "local"           # "local" | "groq" | "openai" | "mistral" | "xai" | "elevenlabs" | "deepinfra"
-  language: "en"              # Global language hint applied to every provider unless a per-provider language overrides it; set "" to restore auto-detect
+  language: "en"              # Global hint; blank falls back to HERMES_LOCAL_STT_LANGUAGE, then auto-detect
   local:
     model: "base"             # tiny, base, small, medium, large-v3, turbo
-    language: ""              # optional ISO-639-1 hint; blank = use HERMES_LOCAL_STT_LANGUAGE if set, else auto-detect
+    language: ""              # blank inherits stt.language, then HERMES_LOCAL_STT_LANGUAGE
   groq:
-    language: ""              # optional ISO-639-1 hint; blank = use HERMES_LOCAL_STT_LANGUAGE if set, else auto-detect
+    language: ""              # blank inherits stt.language, then HERMES_LOCAL_STT_LANGUAGE
   openai:
     model: "whisper-1"        # whisper-1, gpt-4o-mini-transcribe, gpt-4o-transcribe, gpt-transcribe
   mistral:
     model: "voxtral-mini-latest"  # voxtral-mini-latest, voxtral-mini-2602
   xai:
     model: "grok-voice-transcribe-2.0"  # or grok-voice-transcribe-1.0
-    language: ""              # optional ISO-639-1 hint; blank = use HERMES_LOCAL_STT_LANGUAGE if set, else "en"
+    language: ""              # blank inherits stt.language, then HERMES_LOCAL_STT_LANGUAGE
 ```
+
+この例で提供元ごとの言語を空にしている箇所は、全体の `"en"` を引き継ぎます。空にしても自動判別にはなりません。優先順位、自動判別にする設定の例、コマンド型のバックエンドでの制限については、[文字起こしの言語の決まり方](/hermes/docs/user-guide/configuration/#speech-to-text-stt)を見てください。
 
 ### 提供元ごとの詳しい話 {#provider-details}
 
@@ -546,7 +548,7 @@ HF_HUB_DISABLE_XET=1
 
 `HF_HUB_DISABLE_XET=1` を付けると、ダウンロードはミラーの通常の HTTP 経路を通ります。付けないと、`HF_ENDPOINT` に従わない Xet CAS のホストへ接続しにいきます。
 
-**Groq API** — `GROQ_API_KEY` が要ります。無料で使えるクラウドの文字起こしがほしいときの、良い受け皿になります。言語が分かっている音声なら、`stt.groq.language`（または全体に効く環境変数 `HERMES_LOCAL_STT_LANGUAGE`）を設定すると Whisper の自動判別を省けて、待ち時間が短くなります。
+**Groq API** — `GROQ_API_KEY` が要ります。無料で使えるクラウドの文字起こしがほしいときの、良い受け皿になります。Groq だけに効く言語の指定には `stt.groq.language` を、全体に効く指定には `stt.language` を使います。`HERMES_LOCAL_STT_LANGUAGE` が使われるのは、どちらの設定にも空でない指定がないときだけです。こうして決めた結果、言語の指定が何も残らなければ、Groq の Whisper が言語を自動で判別します。
 
 **OpenAI API** — まず `VOICE_TOOLS_OPENAI_KEY` を見て、なければ `OPENAI_API_KEY` に落ちます。`whisper-1`、`gpt-4o-mini-transcribe`、`gpt-4o-transcribe`、`gpt-transcribe` に対応します。
 
@@ -659,7 +661,7 @@ stt:
 |-----------------|---------|------------------------------------------------------------------------------------------------------|
 | `timeout`       | `300`   | 秒数です。過ぎるとプロセスの一群ごと終了させます（Unix は `start_new_session`、Windows は `taskkill /T`）。     |
 | `format`        | `txt`   | `txt` / `json` / `srt` / `vtt` のいずれか。`{output_path}` の拡張子を決めます。                       |
-| `language`      | `en`    | `{language}` に渡されます。既定は `stt.language`、それもなければ `en` です。                                     |
+| `language`      | `en`    | `{language}` に渡されます。[文字起こしの言語の決まり方](/hermes/docs/user-guide/configuration/#speech-to-text-stt)に従い、どれも決まらなければ最後は `en` になります。 |
 | `model`         | 空   | `{model}` に渡されます。`transcribe_audio()` の `model=` 引数がこれを上書きします。                |
 | `normalize`     | `false` | コマンドを実行する前に、入力を 16 kHz モノラルの m4a に変換します（ffmpeg を使います）。このとき `{input_path}` は変換後のファイルを指します。 |
 
@@ -693,7 +695,7 @@ stt:
 2. **`stt.provider` が `command:` を持つ `stt.providers.<name>` に一致** → コマンド型の実行へ（[文字起こしのコマンド型の提供元](#stt-custom-command-providers)を参照）。同じ名前のプラグインより優先されます。
 3. **`stt.provider` がプラグインで登録された `TranscriptionProvider` に一致** → プラグインへ。
    - プラグインの `is_available()` が `False` を返す場合（資格情報か SDK が足りない）、そのプラグインを名指しした「使えません」というエラーが返ります。よくある「No STT provider available」というメッセージ**ではありません**。
-   - そうでなければ、プラグインの `transcribe()` が `model`（公開されている `model=` の引数から。なければ `stt.<provider>.model`）と `language`（`stt.<provider>.language` から）とともに呼ばれます。
+   - そうでなければ、プラグインの `transcribe()` が `model`（公開されている `model=` の引数から。なければ `stt.<provider>.model`）と、決まった `language` の指定（[文字起こしの言語の決まり方](/hermes/docs/user-guide/configuration/#speech-to-text-stt)を参照）とともに呼ばれます。
 4. **どれにも一致しない** → 「No STT provider available」のエラーになります。
 
 #### 提供元ごとの設定の置き場所 {#per-provider-config-namespace}
@@ -710,7 +712,7 @@ stt:
     # own config.yaml access in __init__/is_available/transcribe
 ```
 
-この節から `model` と `language` は自動で渡されます。それ以外は、プラグインが自分で読めます。
+それ以外のプラグイン固有のキーは、プラグインが自分で読みます。
 
 #### 最小のプラグイン {#minimal-plugin}
 

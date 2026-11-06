@@ -8,6 +8,29 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-05
+
+- [プロバイダーを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-providers/)
+- [エージェントループの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/agent-loop/)
+- [macOS バンドルの更新](https://wiki.winsmux.dev/hermes/docs/developer-guide/macos-bundle-updates/)
+- [実行時のプロバイダー解決](https://wiki.winsmux.dev/hermes/docs/developer-guide/provider-runtime/)
+- [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- [AWS Bedrock](https://wiki.winsmux.dev/hermes/docs/guides/aws-bedrock/)
+- [外部サービス連携](https://wiki.winsmux.dev/hermes/docs/integrations/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
+- [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [モデルの設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuring-models/)
+- [ACP ホスト連携](https://wiki.winsmux.dev/hermes/docs/user-guide/features/acp/)
+- [フォールバックプロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/fallback-providers/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [ツールとツールセット](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tools/)
+- [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
+- [TUI](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
+
 ## 2026-11-04
 
 - [スキルを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/creating-skills/)
@@ -2930,3 +2953,7 @@ Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ�
 ## 週次まとめ 2026-W44
 
 プラグインまわりが広く更新され、プラグインの作り方やデスクトップのプラグイン SDK、モデル・画像生成・動画生成・ウェブ検索のプロバイダのプラグイン、コンテキストエンジンやブラウザ保管庫のプラグインのページに手が入りました。設定では、設定バックエンドの境界層やリモート設定、環境変数、プロバイダーの追加と実行時の解決、フォールバックプロバイダーの説明が見直されています。ほかに、cron の内部構造と定期実行タスク、Nix と Docker のセットアップ、Hermes Desktop、管理画面、カンバン、Git ワークツリーに加え、Notion や Airtable、Box、OpenCode、Node.js と Python のデバッガ、vLLM や Faiss などのスキルのページが新しい内容になりました。
+
+## 週次まとめ 2026-W45
+
+プロバイダーまわりが広く更新され、プロバイダーの追加や実行時の解決、フォールバック、AWS Bedrock のページに手が入りました。設定・CLI コマンド・環境変数・プラグイン・イベントフックに加え、ゲートウェイと Slack・Telegram・Mattermost、Hermes Desktop のページも見直されています。スキルでは Office・PDF・Excel・PowerPoint を扱うものや Stripe の支払いまわりが新しい内容になり、Notion・Airtable・Shopify・DuckDuckGo・SearXNG などのオプションスキルは公式から外れました。

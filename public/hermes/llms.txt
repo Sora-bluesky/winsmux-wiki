@@ -2,7 +2,7 @@
 
 > 公式 docs の Quickstart / Installation / Messaging の順を日本語にしたもの。独自手順は作らない。正本: https://hermes-agent.nousresearch.com/docs/
 
-Hermes Agent 0.22.7
+Hermes Agent 0.23.0
 
 ## ページ
 
@@ -109,6 +109,7 @@ Hermes Agent 0.22.7
 - [getting-started/installation（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
 - [getting-started/learning-path（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/learning-path/)
 - [getting-started/nix-setup（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
+- [getting-started/official-domains（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/official-domains/)
 - [getting-started/platform-support（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
 - [getting-started/quickstart（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
 - [getting-started/termux（日本語版）](https://wiki.winsmux.dev/hermes/docs/getting-started/termux/)
@@ -560,6 +561,7 @@ Hermes Agent 0.22.7
 - https://wiki.winsmux.dev/hermes/raw/docs/getting-started/installation.md
 - https://wiki.winsmux.dev/hermes/raw/docs/getting-started/learning-path.md
 - https://wiki.winsmux.dev/hermes/raw/docs/getting-started/nix-setup.md
+- https://wiki.winsmux.dev/hermes/raw/docs/getting-started/official-domains.md
 - https://wiki.winsmux.dev/hermes/raw/docs/getting-started/platform-support.md
 - https://wiki.winsmux.dev/hermes/raw/docs/getting-started/quickstart.md
 - https://wiki.winsmux.dev/hermes/raw/docs/getting-started/termux.md

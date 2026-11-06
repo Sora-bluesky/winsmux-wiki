@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 8c361c113910187cdfc3563523586c71dba4e8e2
+upstream_blob: 36af38ebd0214d8855d0f5da30e29fc02e89ca7e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -43,10 +43,11 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/new [name]`（別名: `/reset`） | 新しいセッションを始めます（セッション ID と履歴が新しくなります）。`[name]` を付けるとセッションの初期タイトルになります。たとえば `/new my-experiment` なら、最初から `my-experiment` という名前が付いた新しいセッションが開くので、あとから `/resume` や `/sessions` で見つけやすくなります。末尾に `now`、`--yes`、`-y` を足すと確認ダイアログを飛ばせます（例: `/reset now`、`/new --yes my-experiment`）。 |
 | `/clear` | 画面を消して新しいセッションを始めます |
 | `/history` | 会話の履歴を表示します（`/timestamps` の設定に従います） |
-| `/save` | 今の会話を保存します |
+| `/save <json\|md\|html> [filename] [redact]` | 今のセッションを、JSON のスナップショット、Markdown の記録、単体で開ける HTML ページのいずれかとして書き出します（`markdown` と `snapshot` も別名として使えます）。`redact` を付けると、書き出す前に API キー、トークン、認証情報を消します。この指定は省略できるファイル名のあと、必ず最後に置きます（例: `/save md notes.md redact`）。セッションがリモートのゲートウェイで動いていても、ファイルは手元の端末に書き出されます（`session.export` を持たない古いゲートウェイでは、既定の名前の JSON をゲートウェイ自身のホストに保存することしかできません）。CLI と TUI では、`filename` は今のディレクトリを基準に解決され、指定しなければ `~/.hermes/sessions/saved/` の下に自動で名前を付けて保存します。デスクトップでは保存ダイアログが開きます（`filename` を指定していれば、その名前が入った状態で開きます）。引数なしの `/save` は、従来の CLI では使い方を表示し、TUI とデスクトップでは JSON で保存します。 |
 | `/prompt`（別名: `/compose`） | 次に送るプロンプトを、その場の入力欄ではなく `$EDITOR`（markdown）で書きます。長いプロンプト、複数行のプロンプト、書式を整えたいプロンプトに向いています。 |
 | `/retry` | 直前のメッセージを送り直します（エージェントに再送します） |
 | `/undo` | 直前のユーザーとアシスタントのやり取りを取り消します |
+| `/rewind [N \| fork N]` | **さかのぼってやり直します**（従来の CLI。待機中で入力欄が空のときに `Esc Esc` を押しても開きます）。これまでのプロンプトが新しい順に並んだピッカーが開き、選んだものの中身を確かめられます。`Enter` を押すと、そのプロンプトが編集できる状態で入力欄に戻ります。編集して送ると、セッションはそのプロンプトの直前まで巻き戻り（それより後のメッセージは `/undo` と同じくアーカイブされます）、新しいテキストが送られます。`Esc Esc`、`Ctrl+C`、または空のまま送信して取り消した場合は、何も消えません。`f` を押すと、代わりに分岐します。そのプロンプトより前の履歴だけを持つ新しいセッションが作られ、プロンプトは入力済みの状態で置かれます（送信はされません）。元のセッションはそのまま残ります。`/rewind N` は N 番目のプロンプトを直接編集し、`/rewind fork N` はその手前で分岐します。 |
 | `/title` | 今のセッションにタイトルを付けます（書き方: /title My Session Name） |
 | `/compress [here [N] \| focus topic]` | 会話のコンテキストを手動で圧縮します（記憶を書き出してから要約します）。`/compress here [N]` は直近 N 往復（既定は 2）だけをそのまま残し、それ以外を要約します。圧縮の境目を自分で決められます。focus のトピックを付けると、全体要約で何を残すかを絞り込めます。 |
 | `/rollback` | ファイルシステムのチェックポイントを一覧表示、または復元します（書き方: /rollback [number]） |
@@ -125,7 +126,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/connectors` | TUI 専用です。コネクタのアカウント一覧を開きます。1アカウントにつき1行で、`app · name · status` の形で並びます。キー操作: ↑/↓ で選択、`r` で名前を変更（その場で入力します。Enter で保存、Esc で取り消し）、`a` でアカウントをもう1つ追加（アプリを選び、名前を入れてから、リンクを開きます）、`c` で選んだアカウントを再接続（修復が必要なとき、つまり失敗・期限切れ・取り消し・非アクティブのときだけ出ます）、`x` で削除（確認を求めます）、Tab で使われなくなった（retired）アカウントの表示・非表示を切り替え、Esc か `q` で閉じます。[Multiple connector accounts](/hermes/docs/user-guide/features/tool-gateway/#multiple-connector-accounts) を参照してください。 |
 | `/reload-skills`（別名: `/reload_skills`） | `~/.hermes/skills/` を走査し直して、新しく入れたスキルや消したスキルを反映します |
 | `/reload` | `.env` の変数を動いているセッションに読み直します（再起動せずに新しい API キーを拾えます） |
-| `/plugins` | インストール済みのプラグインとその状態を一覧表示します |
+| `/plugins [update\|auto-update [on\|off]]` | インストール済みのプラグインとその状態を一覧表示します。`update` は更新のあるプラグインをすべて更新し、`auto-update` はプラグインを自動で更新するかどうかを表示、または設定します |
 | `/pet [list\|<slug>]` | [petdex](/hermes/docs/user-guide/features/pets/) のマスコットを切り替える、または迎え入れます。`/pet` でペインを開閉し、`/pet list` でインストール済みのペットを表示し、`/pet <slug>` で特定のペットを迎え入れます。 |
 | `/hatch <description>`（別名: `/generate-pet`） | 設定した画像生成バックエンド（OpenRouter / Nous Portal）を使い、テキストの説明からまったく新しい petdex のペットを作ります。[ペット](/hermes/docs/user-guide/features/pets/) も見てください。 |
 
@@ -261,6 +262,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/sethome`（別名: `/set-home`） | 今のチャットを、配信先となるプラットフォームのホームチャンネルに設定します。 |
 | `/compress [here [N] \| focus topic]` | 会話のコンテキストを手動で圧縮します。`/compress here [N]` は直近 N 往復（既定は 2）をそのまま残し、それ以外を要約します。focus のトピックを付けると、全体要約で何を残すかを絞り込めます。 |
 | `/topic [off\|help\|session-id]` | **Telegram の個人チャット専用。** ユーザーが自分で管理する複数セッションのトピックモードを操作します。`/topic` で有効にする、または状態を表示し、`/topic off` で無効にして紐づけを消し、`/topic help` で使い方を表示し、トピックの中で `/topic <session-id>` と打つと以前のセッションを復元します。[個人チャットの複数セッションモード](/hermes/docs/user-guide/messaging/telegram/#multi-session-dm-mode-topic) も見てください。 |
+| `/save <json\|md\|html> [filename] [redact]` | 今のセッションを JSON、Markdown、HTML のいずれかで書き出し、そのファイルをチャットに送ります。引数なしの `/save` は使い方を表示します。`redact` を付けると、先に秘密の情報を消してから書き出します。 |
 | `/title [name]` | セッションのタイトルを設定、または表示します。 |
 | `/resume [name]` | 名前を付けて保存したセッションを再開します。 |
 | `/sessions [all] [search <query>]` | このチャットの過去のセッションを一覧表示します。今使っているセッションには `(current)` の印が付きます。`/sessions search <query>` はタイトルや ID の一致で絞り込みます（最近使ったものが先に出ます）。`/sessions all` は発生元をまたいで一覧表示します（管理者専用。管理者でない場合は案内が出て、チャットの範囲の一覧が返ります）。 |
@@ -316,7 +318,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 
 ## 補足 {#notes}
 
-- `/skin`、`/snapshot`、`/export`、`/import`、`/reload`、`/tools`、`/toolsets`、`/browser`、`/config`、`/cron`、`/platforms`、`/paste`、`/image`、`/statusbar`、`/battery`、`/focus`、`/plugins`、`/indicator`、`/wake`、`/journey`、`/redraw`、`/clear`、`/history`、`/save`、`/copy`、`/handoff`、`/prompt`、`/pet`、`/hatch`、`/timestamps`、`/subscription`、`/quit` は **CLI 専用**のコマンドです。
+- `/skin`、`/snapshot`、`/export`、`/import`、`/reload`、`/tools`、`/toolsets`、`/browser`、`/config`、`/cron`、`/platforms`、`/paste`、`/image`、`/statusbar`、`/battery`、`/focus`、`/plugins`、`/indicator`、`/wake`、`/journey`、`/redraw`、`/clear`、`/history`、`/copy`、`/handoff`、`/prompt`、`/pet`、`/hatch`、`/timestamps`、`/subscription`、`/quit` は **CLI 専用**のコマンドです。
 - `/skills` の検索・閲覧・インストールは **CLI 専用**です。書き込み承認の確認用サブコマンド（`pending`、`approve`、`reject`、`diff`、`approval`）は、`skills.write_approval` が有効ならメッセージングプラットフォームでも動きます。`/memory` は**どちらの入り口でも**動きます。
 - `/verbose` は**既定では CLI 専用**ですが、`config.yaml` で `display.tool_progress_command: true` にするとメッセージングプラットフォームでも使えます。有効にすると `display.tool_progress` のモードを順に切り替え、設定に保存します。
 - `/focus` と `/verbose` は同じ抑制の経路（`display.tool_progress`）を共有するので、互いに矛盾することはありません。`/focus on` はツールの進捗表示を `off` に固定し、それまでのモードを `display.focus_saved_tool_progress` に控えておきます。`/focus off` でそれを戻します。フォーカス中に `/verbose` で切り替えると、モードの主導権が戻ってフォーカスのバッジは消えます。フォーカス表示は見た目だけのもので、会話の履歴もシステムプロンプトもモデルへ送るものも一切変えないので、プロンプトキャッシュへの影響はゼロです。

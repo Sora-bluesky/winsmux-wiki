@@ -5,7 +5,7 @@ sources:
   - https://hermes-agent.nousresearch.com/docs/reference/skills-catalog
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
   - https://github.com/NousResearch/hermes-agent/tree/main/website/docs/user-guide/skills
-hermes_version: "0.22.7"
+hermes_version: "0.23.0"
 confidence: high
 raw: /hermes/raw/skills.md
 ---
@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 187 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `ed1afb0`（2026-11-04）時点。この一覧は上流の docs から機械生成しています。
+上流 `9f9b9f5`（2026-11-05）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（44）
 
@@ -118,7 +118,7 @@ raw: /hermes/raw/skills.md
 | [Jupyter Notebook](/hermes/docs/user-guide/skills/optional/data-science/data-science-jupyter-notebook/) | Iterative Python via live Jupyter kernel (hamelnb) | 2026-09-20 |
 | [Actual Setup](/hermes/docs/user-guide/skills/optional/devops/devops-actual-setup/) | Set up Actual Computer (actual.inc) inference in Hermes | 2026-09-20 |
 | [Docker Management](/hermes/docs/user-guide/skills/optional/devops/devops-docker-management/) | Manage Docker containers, images, volumes, and Compose | 2026-09-20 |
-| [Hermes S6 Container Supervision](/hermes/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision/) | Modify or debug s6 services in the Hermes Docker image | 2026-09-20 |
+| [Hermes S6 Container Supervision](/hermes/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision/) | Modify or debug s6 services in the Hermes Docker image | 2026-11-04 |
 | [Inference Sh Cli](/hermes/docs/user-guide/skills/optional/devops/devops-inference-sh-cli/) | Run 150+ AI apps (image, video, LLM) via inference.sh CLI | 2026-09-20 |
 | [Pinggy Tunnel](/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/) | Zero-install localhost tunnels over SSH via Pinggy | 2026-09-20 |
 | [Setup Wizard Generator](/hermes/docs/user-guide/skills/optional/devops/devops-setup-wizard-generator/) | Generate a bash wizard guiding a human through manual setup | 2026-09-20 |

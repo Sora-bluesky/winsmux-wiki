@@ -2,7 +2,7 @@
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: af1411a614cd3975bee7501da40a795849fce406
+upstream_blob: 8de2f29d51be8dc4076d662c0f6320932261e8d2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -1115,7 +1115,7 @@ hermes gateway migrate --multiplex             # apply (asks for confirmation on
 ### Docker / Hermes Cloud（s6 が監視するコンテナ） {#docker-hermes-cloud-s6-supervised-container}
 
 公式のイメージのなかでは、どのプロファイルにも s6 の枠
-（`/run/service/gateway-<profile>`）があります。コンテナの起動処理は *名前付きの* 枠をすべて
+（`/run/hermes-service/gateway-<profile>`）があります。コンテナの起動処理は *名前付きの* 枠をすべて
 down として登録し、その自動起動の意図を root の枠にまとめるので、まっさらな起動の時点で
 もう多重化しています。**その場での** 更新でも、揃えるためにコンテナを再起動する必要は
 なくなりました。`hermes gateway migrate --multiplex`（と `hermes

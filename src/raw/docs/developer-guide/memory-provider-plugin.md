@@ -2,7 +2,7 @@
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: 9ea6b0bd8802ccc4113a08ea8f42662e83c140ad
+upstream_blob: 79d5eaec159bff09e26981fb552788f728191bdb
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -183,6 +183,13 @@ app-server のセッションは、構築時の cwd ではなく現在のワー�
 | `on_pre_compress(messages)` | コンテキスト圧縮の前 | 捨てられる前に気づきを保存する |
 | `on_memory_write(action, target, content, metadata=None)` | 組み込みメモリーへの書き込み時 | 自前のバックエンドにも同じ内容を残す |
 | `shutdown()` | プロセス終了時 | 接続の後始末 |
+| `on_profile_created(profile_name, hermes_home)` | このプロバイダーを選んでいるプロファイルが作られたとき（複製したプロファイルは `memory.provider` を引き継ぎます）。CLI、ダッシュボード、Desktop のどこから作っても呼ばれます | プロファイルごとの状態（ピアやホストのエントリーなど）を用意する |
+| `on_profile_renamed(old_name, new_name, hermes_home)` | そのプロファイルの名前が変わったとき（`hermes_home` は新しいディレクトリ） | 古い名前で保存していた状態のキーを付け替える |
+
+この 2 つのプロファイル用フックは、初期化していないインスタンスの上で、そのプロファイルの保存先と、そのプロファイル自身の `.env`
+の秘密情報を結びつけた状態で実行されます。そのプロファイルの `.env` に無いキーは未設定として扱われ、呼び出し元の環境が
+使われることはありません。例外（`SystemExit` も含む）はログに記録されるだけで、作成や名前の変更を失敗させることはありません。これらのフックは、
+どの画面から操作しても作成・名前変更の要求の中で実行されるので、ネットワークを使う処理はバックグラウンドのスレッドで行ってください。
 
 組み込みの `replace` と `remove` では、`metadata["previous_content"]` に、組み込みの保存先の
 ロックをかけた状態で選ばれたエントリーの全文が入ります。通知は、書き込みや一括処理がすべて
@@ -343,6 +350,25 @@ def get_config_schema(self):
 :::tip 最小限のスキーマと全部入りのスキーマ
 `get_config_schema()` に入れた項目は、`hermes memory setup` の途中ですべて質問されます。設定項目が多いプロバイダーは、スキーマを最小限にとどめてください。入れるのは、利用者が **必ず** 設定しなければならないもの（API キーや必須の認証情報）だけにします。任意の設定は、設定ファイルの一覧（たとえば `$HERMES_HOME/myprovider.json`）に書いておき、設定の途中で全部を聞かないようにします。こうすると、細かい設定にも対応しながら、初期設定はすばやく終わります。例としては [Supermemory のプロバイダー](https://github.com/supermemoryai/hermes-supermemory)（プラグインカタログに載っているもの）を見てください。質問するのは API キーだけで、他の項目はすべて `supermemory.json` にあります。
 :::
+
+### プロバイダー自身が管理する保存先 {#provider-owned-storage}
+
+`config_schema.py` の既定は `storage=STORAGE_FLAT_JSON` で、設定パネルのために本体が
+`$HERMES_HOME/<name>/config.json` を読み書きします。設定が独自の構成になっているプロバイダー
+（1 つのファイルに複数のプロファイルを持つ、設定の隣に OAuth トークンを置くなど）は `storage=STORAGE_PROVIDER` を宣言し、
+次の 2 つのメソッドを実装します。この場合、本体がそのファイルを開くことはありません。
+
+```python
+def read_config_fields(self, hermes_home: str) -> dict:
+    # Stored natives by field key (absent = unset), plus what a blank field resolves to.
+    return {"values": {"workspace": "ws1"}, "placeholders": {"aiPeer": "hermes_coder"}}
+
+def write_config_fields(self, values: dict, hermes_home: str) -> None:
+    # Only submitted keys; None clears one. Non-blank secrets arrive here too; core saves them to
+    # .env under env_key only after this returns. Raise ValueError (a subclass such as
+    # json.JSONDecodeError counts) to refuse the save (shown as a 400), e.g. when your file does not parse.
+    ...
+```
 
 ## 設定の保存 {#save-config}
 

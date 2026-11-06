@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: 04b04008f85238372e543f3d4244de529d6a4c28
+upstream_blob: 0cb953d5475b597c940b73cb340e43932543d7e5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -191,6 +191,8 @@ webapp:
   public_url: "http://localhost:9120"  # the address your browser opens
 ```
 
+コンテナの中では `host: 0.0.0.0` のままにしてください。既定の `127.0.0.1` はコンテナ自身のループバックで、公開したポートからも、別のコンテナで動くプロキシからも届きません。なお、この設定にしていても、コンテナの中で `hermes webapp --status` を実行すると `Serving at http://127.0.0.1:9120` と表示されます。そのアドレスでも実際に配信しているからです。
+
 ダッシュボードのときと同じように、ポートを公開し、サインインの提供元を設定します。
 
 ```sh
@@ -205,6 +207,61 @@ docker run -d \
 ```
 
 `host` がループバック以外のアドレスなら、[ダッシュボードの認証の提供元](#running-the-dashboard)のどれか 1 つが必要です。提供元がないと、待ち受けそのものが始まりません。`public_url` を設定しないと、コンテナの中で `hermes webapp` が表示するリンクは、公開したアドレスではなくコンテナ自身のアドレスになります。
+
+### トンネルやリバースプロキシの後ろに置く {#webapp-behind-a-proxy}
+
+Cloudflare Tunnel、Caddy、Traefik、nginx のどれかが別のコンテナで動き、自分の HTTPS のアドレスで Webapp を配信するときは、次の 3 つをすべて設定してください。
+
+```yaml
+webapp:
+  enabled: true
+  host: 0.0.0.0                              # reachable from the proxy's container
+  port: 9120
+  public_url: "https://hermes.example.com"   # the address the browser opens
+dashboard:
+  trusted_proxies:
+    - "172.30.0.0/24"                        # a network only the proxy and Hermes are on
+```
+
+- **`host: 0.0.0.0`**: 既定の `127.0.0.1` のままだとプロキシからの接続が拒まれ、Cloudflare はこれを **502 Bad Gateway** として報告します。
+- **`public_url`**: プロキシが TLS を終端し、暗号化しない HTTP で転送するので、これがないと Webapp はサインインのコールバックを `http://hermes.example.com/auth/callback` として組み立てます。これは、サインインの提供元に登録した `https://` のコールバックと一致しません。
+- **`dashboard.trusted_proxies`**: Webapp の待ち受けはダッシュボードと同じプロキシの一覧を読み、`X-Forwarded-*` のヘッダを、ループバックとこの一覧にあるアドレスからだけ受け取ります。プロキシを信頼させると、その `X-Forwarded-Proto: https` が Hermes に届き、サインインのクッキーに `Secure` が付きます。プロキシの正確な IP か、プロキシと Hermes だけが共有するネットワークなら範囲を限った CIDR を書いてください。`*`、`0.0.0.0/0`、`::/0` は Hermes が拒みます。
+
+Cloudflare Tunnel では `cloudflared` が外へ向けて接続するので、ポートを公開する必要はありません。Hermes とネットワークを共有しさえすれば足ります。`trusted_proxies` のためにサブネットを固定した Compose の例を挙げます。
+
+```yaml
+services:
+  hermes:
+    image: nousresearch/hermes-agent
+    command: gateway run
+    restart: unless-stopped
+    volumes:
+      - ~/.hermes:/opt/data
+    networks: [tunnel]
+  cloudflared:
+    image: cloudflare/cloudflared
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    restart: unless-stopped
+    networks: [tunnel]
+networks:
+  tunnel:
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+```
+
+トンネルの公開ホスト名には、サービスとして `http://hermes:9120` を指定してください。
+
+### ダッシュボードと並べて動かす {#webapp-next-to-the-dashboard}
+
+ダッシュボード（`HERMES_DASHBOARD=1`、9119 番のポート）と Webapp（9120 番のポート）は、1 つのコンテナの中で、それぞれ別のホスト名で動かせます。`dashboard.public_url` はダッシュボードのアドレス、`webapp.public_url` は Webapp のアドレスで、どちらも相手の値は読みません。サインインの提供元は共通なので、上で設定したユーザー名とパスワード、Nous、OIDC のどれでも両方にサインインできます。
+
+ユーザー名とパスワードは、そのまま両方で使えます。Nous のサインインには、もうひと手間要ります。Nous Portal のサインイン用クライアントは 1 つのコールバックのアドレスで登録され、Webapp はダッシュボードと同じ `HERMES_DASHBOARD_OAUTH_CLIENT_ID`（または `dashboard.oauth.client_id`）でサインインします。そのため、1 つのクライアントでまかなえるのは 2 つのホスト名のうち片方だけです。
+
+- **Webapp だけで Nous のサインインを使う:** Portal の [Local Dashboards](https://portal.nousresearch.com/local-dashboards) のページか `hermes dashboard register --redirect-uri` で、Webapp のコールバック `https://<webapp host>/auth/callback` を使ってクライアントを登録します（[ダッシュボードを登録する](/hermes/docs/user-guide/features/web-dashboard/#registering-a-dashboard)を参照してください）。このインストールにすでにダッシュボードのクライアントがあるなら、`hermes dashboard register` はそのクライアントをその場で書き換えるので、ダッシュボードのコールバックも移ってしまいます。また、Webapp のアドレスを `HERMES_DASHBOARD_PUBLIC_URL` に書き込みます。
+- **両方で Nous のサインインを使う:** ネイティブのデスクトップ版の **Settings → Web Access** は、Webapp 専用のクライアントを登録し（`webapp/sign-in-registration.json` に保存されます）、ダッシュボードのクライアントには手を付けません。ただし、これは同じ端末のデスクトップアプリからしか使えないので、画面のないコンテナ向けのコマンドはまだありません。それができるまでは、Nous のクライアントを片方のホスト名に登録し、もう片方ではユーザー名とパスワードでサインインしてください。どちらのログイン画面にも両方の提供元が出ますが、クライアントを登録していないほうのホスト名では Nous のサインインは失敗します。
 
 ## 対話的に動かす（CLI のチャット） {#running-interactively-cli-chat}
 
@@ -275,12 +332,12 @@ Hermes は[複数のプロファイル](/hermes/docs/reference/profile-commands/
 
 `hermes profile create <name>` で作ったプロファイルには、次が付きます。
 
-- `/run/service/gateway-<name>/` に専用の s6 のサービス枠。実行時に動的に登録されるので、コンテナを作り直す必要はありません。
+- `/run/hermes-service/gateway-<name>/` に専用の s6 のサービス枠。実行時に動的に登録されるので、コンテナを作り直す必要はありません。
 - 落ちたときの自動再起動。間隔は `s6-supervise` が調整します。
 - `${HERMES_HOME}/logs/gateways/<name>/current` にプロファイルごとの回転するログ（1 MB × 10 世代）。
 - コンテナの再起動をまたいだ状態の保存。起動時の調整役が各プロファイルのディレクトリから `gateway_state.json` を読み、最後に記録された状態が `running` だったプロファイルの枠だけを立ち上げ直します。再起動しても止まったままになるのは、あなたが明示的に止めた（`hermes gateway stop`）ゲートウェイだけです。コンテナの再起動、イメージの更新、思わぬ終了では記録が `running` のまま残るので、次の起動でゲートウェイは自動で立ち上がります。
 
-**ホスト**側から、バインドマウントした `~/.hermes` に対して作ったプロファイルは、ディレクトリはできても枠はできません（ホストのプロセスからはコンテナの `/run/service` に手が届かないためです）。コンテナの中で `hermes -p <name> gateway start` を実行すると、足りない枠がその場で登録されて立ち上がります。`docker restart` は要りません。これをするのは `start` だけで、しかも本物のプロファイルのディレクトリ（`SOUL.md` があるもの）に限られます。登録されていないプロファイルへの `stop`/`restart` や、打ち間違えた `-p` の名前は、これまでどおり `✗ no such gateway` で失敗します。
+**ホスト**側から、バインドマウントした `~/.hermes` に対して作ったプロファイルは、ディレクトリはできても枠はできません（ホストのプロセスからはコンテナの `/run/hermes-service` に手が届かないためです）。コンテナの中で `hermes -p <name> gateway start` を実行すると、足りない枠がその場で登録されて立ち上がります。`docker restart` は要りません。これをするのは `start` だけで、しかも本物のプロファイルのディレクトリ（`SOUL.md` があるもの）に限られます。登録されていないプロファイルへの `stop`/`restart` や、打ち間違えた `-p` の名前は、これまでどおり `✗ no such gateway` で失敗します。
 
 ホストで実行する操作のコマンドは、コンテナの中からも同じように使えます。
 
@@ -300,7 +357,7 @@ docker exec hermes hermes -p coder gateway status
 docker exec hermes hermes profile delete coder
 ```
 
-裏では、コンテナの中の `hermes gateway start/stop/restart` は横取りされ、正しいサービスのディレクトリに対する `s6-svc` へ渡されます。s6 のコマンドを直接覚える必要はありません。見守り役の生の状態を見たいときは `/command/s6-svstat /run/service/gateway-<name>` を使ってください（`/command/` が PATH に入るのは見守りの木から生まれたプロセスだけなので、`docker exec` から呼ぶときは絶対パスで渡します）。
+裏では、コンテナの中の `hermes gateway start/stop/restart` は横取りされ、正しいサービスのディレクトリに対する `s6-svc` へ渡されます。s6 のコマンドを直接覚える必要はありません。見守り役の生の状態を見たいときは `/command/s6-svstat /run/hermes-service/gateway-<name>` を使ってください（`/command/` が PATH に入るのは見守りの木から生まれたプロセスだけなので、`docker exec` から呼ぶときは絶対パスで渡します）。
 
 ### コンテナの外から複数のプロファイルへ届かせる {#reaching-more-than-one-profile-from-outside-the-container}
 
@@ -589,7 +646,7 @@ Chromium は `npx playwright install` ではなく PM を通して用意しま�
 
 PID 1 の道では、`/init` は次を行います。
 1. root として `/etc/cont-init.d/01-hermes-setup`（= `docker/stage2-hook.sh`）を実行します。UID / GID の付け替え（任意）、ボリュームの持ち主の修正、初回起動での `.env` / `config.yaml` / `SOUL.md` の用意、`HERMES_SKIP_CONFIG_MIGRATION=1` でなければ対話なしの設定の移行、同梱スキルの反映を行います。
-2. `/etc/cont-init.d/02-reconcile-profiles`（= `hermes_cli.container_boot`）を実行します。`$HERMES_HOME/profiles/<name>/` をたどり、プロファイルごとのゲートウェイの s6 のサービス枠を `/run/service/gateway-<profile>/` に作り直し、最後に記録された状態が `running` だったものだけを自動で立ち上げます（[プロファイルごとのゲートウェイ管理](#per-profile-gateway-supervision)を参照してください）。
+2. `/etc/cont-init.d/02-reconcile-profiles`（= `hermes_cli.container_boot`）を実行します。`$HERMES_HOME/profiles/<name>/` をたどり、プロファイルごとのゲートウェイの s6 のサービス枠を `/run/hermes-service/gateway-<profile>/` に作り直し、最後に記録された状態が `running` だったものだけを自動で立ち上げます（[プロファイルごとのゲートウェイ管理](#per-profile-gateway-supervision)を参照してください）。
 3. 固定の `main-hermes` と `dashboard` の s6-rc のサービスを始めます。
 4. コンテナの CMD を主のプログラムとして exec します（`/opt/hermes/docker/main-wrapper.sh`）。これは `docker run` に渡された引数を次のように振り分けます。
    - 引数なし → `hermes`（既定）
@@ -635,7 +692,7 @@ docker exec -e HERMES_DOCKER_EXEC_AS_ROOT=1 hermes <cmd>
 
 ### プロファイルごとのゲートウェイ管理 {#per-profile-gateway-supervision}
 
-`hermes profile create <name>` で作ったプロファイルには、`/run/service/gateway-<name>/` に s6 が見守るゲートウェイのサービスが自動で登録され、コンテナの再起動をまたいで状態を保ったまま自動で立ち上がります。利用者から見た流れと操作のコマンドは、上の[複数プロファイルへの対応](#multi-profile-support)を参照してください。
+`hermes profile create <name>` で作ったプロファイルには、`/run/hermes-service/gateway-<name>/` に s6 が見守るゲートウェイのサービスが自動で登録され、コンテナの再起動をまたいで状態を保ったまま自動で立ち上がります。利用者から見た流れと操作のコマンドは、上の[複数プロファイルへの対応](#multi-profile-support)を参照してください。
 
 **s6 より前のイメージに比べた、見守りの利点:**
 
@@ -644,7 +701,7 @@ docker exec -e HERMES_DOCKER_EXEC_AS_ROOT=1 hermes <cmd>
 - `docker restart`、イメージの更新（`docker compose up -d --force-recreate`）、思わぬ終了があっても、動いていたゲートウェイは保たれます。cont-init の調整役が `$HERMES_HOME/profiles/<name>/gateway_state.json` を読み、最後に記録された状態が `running` なら枠を立ち上げ直します。`stopped` が記録され、再起動しても止まったままになるのは、明示的な `hermes gateway stop` だけです。再起動や更新のときにコンテナや s6 が送る SIGTERM は「まだ動いている」として扱われ、自動で立ち上がります。
 - プロファイルごとのゲートウェイのログは `$HERMES_HOME/logs/gateways/<profile>/current` に残り（`s6-log` が回転させます）、調整役の動きは起動のたびに `$HERMES_HOME/logs/container-boot.log` へ書き足されます。振り分けの全体像は[ログの行き先](#where-the-logs-go)を参照してください。
 
-コンテナの中の `hermes status --full` は `Manager: s6 (container supervisor)` と表示します。見守り役の生の様子を見たいときは `/command/s6-svstat /run/service/gateway-<name>` を使ってください（`/command/` が PATH に入るのは見守りの木のプロセスだけなので、`docker exec` から呼ぶときは絶対パスで渡します）。
+コンテナの中の `hermes status --full` は `Manager: s6 (container supervisor)` と表示します。見守り役の生の様子を見たいときは `/command/s6-svstat /run/hermes-service/gateway-<name>` を使ってください（`/command/` が PATH に入るのは見守りの木のプロセスだけなので、`docker exec` から呼ぶときは絶対パスで渡します）。
 
 ## 更新する {#upgrading}
 

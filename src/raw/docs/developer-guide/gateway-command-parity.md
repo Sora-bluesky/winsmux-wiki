@@ -2,7 +2,7 @@
 title: "ゲートウェイのコマンド対応表"
 description: "共有ゲートウェイ上で、ローカルの各クライアントがスラッシュコマンドをどう扱うか"
 upstream_path: developer-guide/gateway-command-parity.md
-upstream_blob: d1b7defb5c7f786d7c7b37407783fc0af2749730
+upstream_blob: ef91436a66338f9bc3b40ab83abb07ac30077e2c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-command-parity
 ---
@@ -30,7 +30,7 @@ sources:
 このローカルセッション（次のターンと `config.get`）に適用します。config.yaml への保存は、
 ハンドラー自体が保存する場合だけです。`client-local (cli_only)` のコマンドは、クライアントのターミナルや UI の機能です。
 
-登録済みコマンドは 104 個で、内訳は control 29、read 19、refused 56 です。
+登録済みコマンドは 105 個で、内訳は control 29、read 19、refused 57 です。
 
 | コマンド | ゲートウェイ（`slash.exec`） | 従来型 CLI | Ink | Desktop | ACP | 備考 |
 |---|---|---|---|---|---|---|
@@ -107,6 +107,7 @@ sources:
 | `/resume` | refused | HermesCLI._handle_resume_command | local | picker: session | slash.exec: refused | メッセージングのチャットのセッションを切り替えます。ローカルのクライアントは ID で再開します |
 | `/retry` | refused | HermesCLI._cmd_retry | canonical route | action: retry | session.mutate rewind + resubmit |  |
 | `/review` | control | HermesCLI._handle_review_command | slash.exec | slash.exec | slash.exec |  |
+| `/rewind` | refused | HermesCLI._handle_rewind_command | local | unavailable: terminal | slash.exec: refused | client-local (cli_only) |
 | `/rollback` | refused | HermesCLI._handle_rollback_command | rollback.diff, rollback.list, rollback.restore | action: rollback | slash.exec: refused | ファイルシステムのチェックポイントを復元します |
 | `/save` | refused | HermesCLI.save_conversation | canonical route | action: save | slash.exec: refused | ゲートウェイのハンドラーはゲートウェイのホスト上にファイルを書き出します。Desktop は `session.export` のテキストを自前のダイアログで保存します |
 | `/sessions` | refused | HermesCLI._handle_sessions_command | local | picker: session | slash.exec: refused | メッセージングの発信元ごとに絞った一覧です（`/sessions all` にはメッセージングの管理者が必要です） |

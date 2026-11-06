@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Mattermost"
 description: "Hermes Agent を Mattermost のボットとして設定する"
 upstream_path: user-guide/messaging/mattermost.md
-upstream_blob: 3f40d86dfe6a9d0cb22e7b1ac83bf963fe88ccc6
+upstream_blob: ee71bc342ab78a267463760a2fe850c9fb709df3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/mattermost
 ---
@@ -163,6 +163,12 @@ MATTERMOST_ALLOWED_USERS=3uo8dkh1p7g1mfk49ear5fzs5c
 
 # Optional: channels where bot responds without @mention (comma-separated channel IDs)
 # MATTERMOST_FREE_RESPONSE_CHANNELS=channel_id_1,channel_id_2
+
+# Optional: peer bot user IDs. Posts from Mattermost bot accounts (props.from_bot) are
+# recognised on their own; list personal-access-token bots here. These senders use the bot
+# loop guard; set MATTERMOST_ALLOW_BOTS=all (or mentions) only when bot-to-bot messages are
+# intentional. The config.yaml spelling is `mattermost: bot_users: [...]`.
+# MATTERMOST_BOT_USERS=peer_bot_user_id_1,peer_bot_user_id_2
 ```
 
 `~/.hermes/config.yaml` で調整できる、任意の振る舞いの設定です。

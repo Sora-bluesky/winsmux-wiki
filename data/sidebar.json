@@ -27,6 +27,9 @@
         },
         {
           "id": "getting-started/learning-path"
+        },
+        {
+          "id": "getting-started/official-domains"
         }
       ]
     },
@@ -1597,6 +1600,7 @@
     "getting-started/nix-setup",
     "getting-started/updating",
     "getting-started/learning-path",
+    "getting-started/official-domains",
     "user-guide/cli",
     "user-guide/tui",
     "user-guide/desktop",
