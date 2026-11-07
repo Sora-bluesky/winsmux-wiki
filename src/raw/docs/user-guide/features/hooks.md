@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 2a4d4c312a5073299cc01a4f99f89ac7cd862481
+upstream_blob: 8545fc02750397c135ea549f934af8aff10e99ad
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -426,7 +426,10 @@ def register(ctx):
   プロファイルの文脈のあと、セッションの情報の前に出ます。プラグインが
   中核のプロンプトの内容を並べ替えたり置き換えたりすることはできません。
 - 呼び出し可能なものには、`session_id`、`conversation_id`、`model`、`provider`、
-  `platform`、`profile_name`、`cwd` を持つ読み取り専用のマッピングが渡されます。これは
+  `platform`、`profile_name`、`cwd`、`client`、`client_version` を持つ読み取り専用の
+  マッピングが渡されます（`client`/`client_version` は、セッションを作ったクライアントが
+  `session.create` で申告した名前と版で、何も送らなかったときは `""` です。自己申告の
+  ラベルなので、これを根拠に何かを許可することは決してしないでください）。これは
   **新しいセッションにつき 1 回**動きます。その描画された内容は圧縮の時点で
   固定され、プロセスの再起動や再開のあとは、すでに保存されたシステム
   プロンプト全文から回復されます。既存のセッションでプラグインの状態が

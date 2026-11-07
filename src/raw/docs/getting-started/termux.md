@@ -2,7 +2,7 @@
 title: "Android / Termux"
 description: "署名付きの Termux APT リポジトリから Android に Hermes Agent を導入する"
 upstream_path: getting-started/termux.md
-upstream_blob: 4862ec51f6aff832b7739756898a0a5394c945bf
+upstream_blob: 69d3f0b6c32fafc48c48566553d5886c24fcff9c
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/termux
 ---
@@ -29,6 +29,7 @@ APT のチャンネルは 2 つあり、
 どちらのチャンネルも同じ鍵で署名しています。
 
 パッケージには Python、Node.js、npm、uv、ripgrep、ffmpeg と、それらの実行に必要なライブラリが入っています。
+初めて `hermes dashboard` を実行したときに、pnpm をダウンロードし、Web UI に必要な JavaScript の依存関係を導入します。
 ネイティブの Python wheel と TUI は、パッケージを作る前に CI でビルドします。
 そのため導入時に、端末側で中核の依存関係をコンパイルしたり、土台となる Python
 環境を組み立てたりすることはありません。パッケージは bionic 向けに固定したインタープリターの

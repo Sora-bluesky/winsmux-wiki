@@ -2,7 +2,7 @@
 title: "コントリビュート"
 description: "Hermes Agent へのコントリビュート方法（開発環境のセットアップ、コードスタイル、PR の流れ）"
 upstream_path: developer-guide/contributing.md
-upstream_blob: dbb5a1d8eaddc92a72a79d0c9c1e9de56b92dadf
+upstream_blob: 1262d661121ab70f513a3cbb4f0f99abbf5b98e1
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/contributing
 ---
@@ -152,7 +152,7 @@ sweeper には PR を閉じてはいけない場面を示します（迷った�
 | **Git**              | `git-lfs` 拡張をインストールしておきます                                                        |
 | **Python 3.14** | 現在の開発では PM が固定したインタープリターを使います。パッケージのメタデータにある広めの指定 `>=3.11,<3.15` は古いアップデーターを動かし続けるためのもので、古い Python で現在のランタイムが動くという意味ではありません。 |
 | **Node.js** | PM が固定したバージョンか、ルートの `package.json` の engines が受け付けるバージョンを使います |
-| **pnpm** | ルートの `package.json` の `devEngines` で固定されたバージョンと完全に同じものを使います。`source ./activate` を実行すると用意されます |
+| **pnpm** | `pm/lock.json` で固定されたバージョンと完全に同じものを使います。`source ./activate` を実行すると用意されます |
 
 ### PM による開発環境 {#pm-developer-environment}
 
@@ -224,11 +224,15 @@ PM で作った環境を変更するために、pip や uv のコマンドを直
 ### JavaScript のワークスペースと Web サイト {#javascript-workspaces-and-website}
 
 リポジトリのルートで `pnpm install --frozen-lockfile` を実行すると、デスクトップ、
-TUI、ダッシュボード、共有の JS ワークスペースが揃います。ルートの `package.json` は pnpm のバージョンを
-`devEngines` で固定しています（`source ./activate` を実行すると、そのバージョンがそのまま用意されます）。Hermes のビルドと
-`hermes update` はそれ以外のバージョンの pnpm を受け付けません。ただし、`pnpm install` を直接実行したときはバージョンを
-確認しません。また、ルートの `preinstall` スクリプトが `npm install` の実行を拒否します。Web サイトは別の npm
-プロジェクトです。
+TUI、ダッシュボード、共有の JS ワークスペースが揃います。pnpm のバージョンは `pm/lock.json` で固定されています
+（`source ./activate`、PowerShell では `. .\activate.ps1` を実行すると、そのバージョンがそのまま
+用意されます）。ライフサイクルスクリプトを実行するインストールでは、`pnpm install` を直接実行した場合や
+フィルターを付けて実行した場合も含めて、それ以外の pnpm を受け付けません。ルートの `preinstall` スクリプトが
+`pm/lock.json` の pnpm を要求し（`npm install` の実行も拒否します）、さらに pnpm 10 と 11 では
+ルートの `engines.pnpm` の範囲によっても拒否されるためです。pnpm 12 は、
+`--ignore-scripts`、`--lockfile-only`（`pnpm-lock.yaml` を書き出します）、`pnpm fetch` のときにはルートの `preinstall` を実行しません。
+そのため、こうした場面では別のバージョンの pnpm 12 でも拒否されません。CI では、変更されたすべてのロックファイルを
+固定したバージョンの pnpm で `--frozen-lockfile` を付けてインストールします。Web サイトは別の npm プロジェクトです。
 
 ```bash
 npm ci --prefix website

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインからの LLM 呼び出し"
 description: "ctx.llm を使うと、プラグインの中からどんな LLM 呼び出しもできます。チャットでも構造化出力でも、同期でも非同期でも同じです。認証はホストが持ち、信頼ゲートは既定で閉じ、JSON Schema による検証も選べます。"
 upstream_path: developer-guide/plugin-llm-access.md
-upstream_blob: 0c2552778317d88a70921d61d4073852b2c65845
+upstream_blob: 22efc71c202d0c17caf0346a10d1c2186b76f36a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugin-llm-access
 ---
@@ -327,36 +327,85 @@ Settings → Models → Auxiliary のどれにも（組み込みのタスクの�
 他のプラグインのタスクが使えるようになるわけではありません。`task=` を省く
 （または `"auto"` にする）と、有効になっている本体のプロバイダーとモデルのままになります。
 
-#### プラグインのフロントエンドから使う: `llm.oneshot` {#from-the-plugins-frontend-llmoneshot}
+#### プラグインのフロントエンドから使う: プラグインの RPC メソッド {#from-the-plugins-frontend-a-plugin-rpc-method}
 
-プラグインのフロントエンド（デスクトップアプリのページや、ゲートウェイにつながったチャットのフロントエンド）は、
-Python のサブプロセスを使わずに、ゲートウェイの JSON-RPC メソッド `llm.oneshot` を通して
-同じタスクを実行できます。
+プラグインのフロントエンド（デスクトップアプリのページや、共有のゲートウェイにつながったクライアント）は、
+自分ではモデルを呼びません。同じプラグインの Python 側を
+[プラグインの RPC メソッド](/hermes/docs/developer-guide/plugins/#talk-to-your-own-frontend-plugin-rpc-methods-and-session-events)を通して呼び、
+そのハンドラーが、プラグインの登録したタスクで `ctx.llm` を呼びます。プラグインの
+RPC 呼び出しは、ハンドラーが戻るまで、そのクライアントからのリクエストの列を止めたままにします。そのためハンドラーは、
+モデルの呼び出しをスレッドで始めてすぐにジョブの id を返し、
+結果はセッションのイベントとして届けます。
 
-```json
-{"method": "llm.oneshot", "params": {
-  "task": "classifier",
-  "instructions": "Classify the ticket.",
-  "input": "<ticket text>",
-  "schema": {"type": "object", "properties": {"label": {"type": "string"}}, "required": ["label"]},
-  "redact": true
-}}
+```python
+import contextvars
+import threading
+import uuid
+
+from agent.redact import redact_sensitive_text
+
+CHART = {"type": "object", "properties": {"kind": {"type": "string"}}, "required": ["kind"]}
+
+def register(ctx):
+    ctx.register_auxiliary_task("chart_writer", display_name="Charts", description="Pick chart kinds.")
+    slots = threading.BoundedSemaphore(4)  # model calls in flight
+
+    def write_chart(params, *, session_id, **kwargs):
+        if not session_id:
+            raise ValueError("chart.write needs a session_id")
+        job = uuid.uuid4().hex
+        text = redact_sensitive_text(str(params.get("text", "")), force=True)
+
+        def run():
+            try:
+                result = ctx.llm.complete_structured(
+                    instructions="Pick a chart kind for this data.",
+                    input=[{"type": "text", "text": text}],
+                    json_schema=CHART,
+                    task="chart_writer",
+                )
+                if result.parsed is None:
+                    raise ValueError("the model did not answer with JSON")
+                payload = {"job": job, "chart": result.parsed}
+            except Exception as exc:
+                payload = {"job": job, "error": str(exc)}
+            finally:
+                slots.release()
+            ctx.emit_to_session(session_id, "chart.written", payload)
+
+        if not slots.acquire(blocking=False):
+            raise RuntimeError("chart.write is busy: wait for a chart.written event")
+        try:
+            # copy_context: the thread keeps the call's profile scope, which ctx.llm reads.
+            threading.Thread(target=contextvars.copy_context().run, args=(run,), daemon=True).start()
+        except Exception:
+            slots.release()  # run() never started, so it never releases
+            raise
+        return {"job": job}
+
+    ctx.register_rpc("chart.write", write_chart)
 ```
 
-- `task` には、組み込みの補助タスクか、読み込まれているプラグインが登録したタスクを指定します。
-  `ctx.llm` と同じように `auxiliary.<task>` を通して解決されます。知らないキーを渡すと、
-  メインのモデルで実行されることはなく、拒否されます（`invalid_params`、`field: task`）。
-  省略したときは `title_generation` になります。
-- `schema`（JSON Schema のオブジェクト）を渡すと、プロンプトとプロバイダーの JSON モードの両方で
-  JSON を求めます。返答は `{"text": ..., "parsed": <value>}` の形です。JSON でない答えや、
-  スキーマに合わない答えはエラーになります。`jsonschema` パッケージ（必須の依存関係ではありません）が
-  入っていない環境では、`schema` を付けた要求はモデルを呼ぶ前に拒否されます。
-- `redact: true` にすると、モデルに渡す前に、`input` に含まれる秘密の情報を
-  エージェントの伏せ字処理で隠します。
-- `session_id` を渡すと、自分でモデルを指定していないタスク、つまり
-  `auxiliary.<task>.provider` が `auto`（既定値）のタスクに、そのセッションのモデルを貸します。
-  プロバイダーやモデルを明示的に設定したタスクは、その設定のままです。`ctx.llm` と同じく、
-  明示的な設定はセッションの経路より優先されます。
+フロントエンドは
+`{"method": "plugin.<plugin_id>.chart.write", "params": {"session_id": "…", "text": "…"}}` を送ると、
+すぐに `{"job": "…"}` を受け取り、そのあとチャート（または `error`）を、
+同じ `job` を持つセッションのイベント `plugin.<plugin_id>.chart.written` として受け取ります。
+モデルの呼び出しをハンドラーの中でそのまま行うと、モデルが答えるまで、そのクライアントが同じ接続で送る次のリクエストが、
+中断や承認の返事も含めて止まってしまいます。セマフォは `llm.oneshot` にあった呼び出し元ごとの上限の代わりで、
+四つが実行中のときに来た五つめの呼び出しは拒否されます。ハンドラーそのものの中で例外が起きると、
+その呼び出しには理由 `plugin_rpc_failed` が返ります。
+
+- **境界で伏せ字にする。** `agent.redact.redact_sensitive_text` は
+  [公開プラグイン API](/hermes/docs/developer-guide/plugins/public-api/) の一部です。モデルに送るテキストのように、
+  秘密の情報が決して端末の外に出てはいけない場所では `force=True` を渡してください。そうすると、
+  運用側が `security.redact_secrets: false` で伏せ字処理を切っていても、秘密の情報を隠します。
+  `force=True` を付けなければ、その設定に従います。
+- **タスクが経路を決める。** `task=` には自分のプラグインが登録したタスクを指定する必要があります。
+  そのため、モデルを選ぶのは運用側の `auxiliary.<task>` の設定で、
+  フロントエンドが別の経路を選ぶことはできません。
+- **`parsed` を確かめる。** 返答が JSON でないとき、これは `None` になります。
+  `json_schema` に合わない返答は、任意の `jsonschema` パッケージが入っていれば `ValueError` を出します。
+  入っていなければ、スキーマとの照合は行われません。
 
 #### 組み込みの枠を引き継ぐ {#inheriting-a-built-in-slot}
 

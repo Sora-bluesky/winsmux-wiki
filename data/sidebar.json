@@ -1052,14 +1052,6 @@
                       "id": "user-guide/skills/optional/web-development/web-development-scrollcraft"
                     }
                   ]
-                },
-                {
-                  "label": "yuanbao",
-                  "items": [
-                    {
-                      "id": "user-guide/skills/optional/yuanbao/yuanbao-yuanbao"
-                    }
-                  ]
                 }
               ]
             }
@@ -1871,7 +1863,6 @@
     "user-guide/skills/optional/web-development/web-development-page-agent",
     "user-guide/skills/optional/web-development/web-development-publish-site",
     "user-guide/skills/optional/web-development/web-development-scrollcraft",
-    "user-guide/skills/optional/yuanbao/yuanbao-yuanbao",
     "user-guide/messaging/index",
     "user-guide/messaging/telegram",
     "user-guide/messaging/discord",

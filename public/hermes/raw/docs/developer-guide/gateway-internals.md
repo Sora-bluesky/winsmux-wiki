@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: ed0b18c76d69eb0cd7a04c2989e99dafe2a07bdc
+upstream_blob: d5dbff3985ed556b0529244291b9ddd7eca24e94
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -59,6 +59,10 @@ Desktop と Ink は、認証済みの `session.control.read`、`process.list`、
 サブエージェントの読み取りには、セッション ID が同じというだけでなく、いまの親が生きたオブジェクトとして
 祖先にあることが要ります。末尾は 16 KiB までです。見つからない子や役目を終えた子は
 `available: false` を返します。これは読み取りであり、子への指示や停止の操作ではありません。
+
+`subagent.list` の行には `child_session_id` も入ります。これは子自身の保存されたセッションです
+(まだないうちは `null`)。子の保存された会話記録は、動いている間も終わった後も、
+`subagent_id` を付けた `session.transcript` で読めます ([ゲートウェイのローカルセッション](/hermes/docs/developer-guide/gateway-local-sessions/) を参照)。
 
 管理されたワーカーの方針では、プロセスとサブエージェントの読み取りに `unsupported_projection` を返します。
 持ち主のプロセス内の登録簿では、別のインタープリターの様子を正しく描けないからです。
@@ -137,7 +141,8 @@ Ink と Desktop は、いまも旧来の `image.attach`/`file.attach` の RPC �
 プロファイルのホームから権限元を決めます。そのため、回復、FIFO の順番、ちょうど1回の決着はプロファイルごとに保たれ、
 二番手のプロファイルの行が既定のプロファイルの台帳に入ることはありません。配信中の二番手のプロファイルの
 クライアントは、既定のホームの記述 (`served_profiles`) から多重化の仕組みを見つけ、
-自分の `profile_id` でその制御ソケットに接続します。
+自分の `profile_id` でその制御ソケットに接続します
+([ローカルの制御ソケット](#local-control-socket-public-client-contract))。
 
 ## 共有権限元のローカルのスラッシュコマンド {#shared-authority-local-slash-commands}
 
@@ -247,6 +252,31 @@ HTTP/WebSocket の窓口が `SessionAuthority` に結び付いているとき、
 ACP と、終わりのある CLI の閲覧側は、受け入れた
 入力が unknown の実行の後ろで止まると、回復のための明示的な通知を出して切り離されます。受け入れた入力は
 キューに残ります。送り直すのではなく、失われたターンを解決してから続けてください。
+
+## 非公開の制御リクエストのワーカー {#private-control-request-workers}
+
+POSIX の制御の待ち受けは、自分専用の実行器 (executor) を2つ持ちます。ひとつはホスト型の生産者 (producer) の
+リクエスト用、もうひとつはそれ以外のすべての制御リクエスト用です。`hosted-producer` の操作は、
+`hosted-attest` と `identify` を通して同期的に呼び返し、そのあと持ち主のループで正式なセッションの作業を待ちます。
+そのため、その呼び返しが、それを待っている生産者の後ろに並んではいけません。また、どちらのプールも、
+セッションの作業が使うループの既定の実行器を占有しません。各プールのワーカー数は
+`ThreadPoolExecutor` の既定値で、キューに上限はありません。同じ種類の遅いリクエストが同時に十分な数届けば、
+いまも互いの後ろに並びます。分けたことで取り除かれるのは、生産者と呼び返しの間の依存の循環だけです。
+リクエストの割り当ては、既存の相手と包み (envelope) の検査の代わりにはなりません。
+
+待ち受けを止めると、キューにある作業を取り消し、両方のプールを退役させます。すでに動いている
+処理は、既存の RPC の期限をそのまま持ちます。再起動した待ち受けは新しいプールを使います。
+Windows の名前付きパイプの待ち受けは、これまでどおりネイティブなワーカーのライフサイクルで動きます。
+
+ホスト型ルームの回復は、方針のチェックポイントの作業より前に、保存された停止を処理します。
+結果の定まらない正式な試行が解決されるのは、そのタスクと実行の世代をちょうど指定した保存済みの Stop があり、
+かつメンバーがその試行を動いていないと報告したときだけです。
+ルームのタスクを取り消し済みにする前に、メンバーの正式なキューが取り消しを認めなければなりません。
+動いていない `unknown` の試行そのものは、認めたことにはなりません。
+解決すると、メンバーのキューが実際に確定した結果が報告されます。その持ち主がターンの完成した答えを
+まだ持っていた (決着の書き込みだけが失敗した) ときは、答えが確定され、ルームはタスクを取り消すのではなく、
+それを決着させて一度だけ公開します。結果の定まらない試行の破棄も、同じ規則に従います。
+これにより履歴が保たれ、失われたターンをやり直さずに、次のグループの入力へ進めます。
 
 ## 非公開のネイティブな HTTP 認証 {#private-native-http-authentication}
 
@@ -438,6 +468,111 @@ POSIX では、ローカルの起動処理は、プロファイルのディレ�
 セットアップでは、取り込んだ設定を理由に、入っていないサービスを導入しません。
 [サービスの導入は任意](#optional-service-installation) を参照してください。
 
+## ローカルの制御ソケット (公開のクライアントの取り決め) {#local-control-socket-public-client-contract}
+
+各ゲートウェイは、ローカルの制御ソケットで待ち受けています。同じマシンのクライアントは、これを使って、
+自分のプロファイルを受け持つゲートウェイを見つけ、Python を起動せずに WebSocket のチケットを受け取ります。
+公開されている操作は3つで、`identify` (読み取り専用)、`resolve-profile`、`session-ticket` の公開の形です。
+それ以外の操作、`session-ticket` の引数 `subject` と `scope`、`interactive` 以外の目的は、
+Hermes の内部向け (Desktop、ダッシュボード、更新処理) で、変わることがあります。
+ゲートウェイの起動や回復は、これまでどおり `hermes gateway attach --start` / `--recover` で行います
+([下記](#hermes-gateway-attach))。
+
+**包み (envelope)。** 1つの接続で運ぶリクエストは1つです。UTF-8 の JSON オブジェクト1つと `\n` (最大
+64 KiB) を送ると、返事の行が1行 (最大 512 KiB) 返り、サーバーが接続を閉じます。リクエストは
+`{"protocol": 1, "id": 1, "verb": "<verb>", "params": {...}}` の形で、`protocol` は整数の `1`、
+`id` は整数か 128 文字以内の文字列です。`resolve-profile` と `session-ticket` は、
+ほかの最上位のキーや、オブジェクトでない `params` を拒否します。返事は `{"ok": true, "protocol": 1, "id": <your id>, "result": {...}}` か
+`{"ok": false, "protocol": 1, "id": <your id>, "error": "<text>"}` です。下に挙げる `error` の文字列も
+取り決めの一部です。
+
+**`resolve-profile`** は `{"home": "<absolute profile home>"}` を受け取り、
+`hermes gateway attach` の探索がそのホームについて出すのと同じ判定を返します (接続できない判定でも
+`ok: true` です)。余計なもののない絶対パスを送ってください。`.` や `..` の部分、続けて重ねた区切り文字、
+末尾の区切り文字を含むパスは、無効な引数として拒否されます。パスの中のシンボリックリンクは解決されます。
+
+| 項目 | 意味 |
+|---|---|
+| `resolve_protocol` | `1` |
+| `state`、`reason_code`、`detail` | 探索の判定です。`ready`、`draining`、`starting`、`absent`、`inaccessible`、`incompatible`、`conflict` のどれかで、上限付きのコードと対処法が付きます |
+| `attachable` | `ready` か、再起動でターンの終わりを待っている状態 (`draining`/`restart_wait`) です |
+| `update_fenced` | 更新が導入先を押さえています。`hermes gateway attach --start` はこの判定をそのままは返さないため、起動したいクライアントは CLI を通します |
+| `control` | `self` (プロファイル自身のソケット)、`host` (受け持つかもしれないプロファイルに代わって答える多重化の仕組み)、`null` (このゲートウェイのルートの外にあるホーム) のどれかです |
+| `message` | 接続できないときに、`attach --json` が出力する `gateway <state>: <reason>` の各行です |
+| `endpoint` | `null` か、`attach --json` の `endpoint` に `ws_url`、`ws_protocol`、`ticket_protocol_prefix` を加えたものです |
+| `install_code_sha` | いまディスクに導入されているコミットです。`endpoint.code_sha` と違うときは、ゲートウェイが `hermes update` の後も古いまま動き続けています |
+
+**`session-ticket` の公開の形:** `{"profile_id": <endpoint.profile_id>, "instance_id":
+<endpoint.instance_id>, "purpose": "interactive"}` を送ります。機械的に問い合わせを繰り返すクライアントは、
+`"restart_wait": "refuse"` も付けます。`profile_id` は `resolve-profile` が返したものをそのまま (ゲートウェイは
+文字列として比べます)、答えたのと同じソケットへ送ってください。返事に `profile_id`、`instance_id`、
+`runtime_protocol: 1` がそのまま返っていることを確かめてください。その `ticket` は `expires_in_seconds` (30) で期限が切れます。
+次に、`ws_url` へ、サブプロトコル `[ws_protocol, ticket_protocol_prefix + ticket]` を指定し、ループバックから、
+`Origin` ヘッダーを付けずに接続して、サーバーが `ws_protocol` を選んだことを確かめてください。
+接続と再接続のたびに、新しいチケットを発行してください。
+
+| 場合 | `error` |
+|---|---|
+| `resolve-profile`: 包みが正しくない | `PermissionError: invalid resolve envelope` |
+| `resolve-profile`: `params` が絶対パスの `home` 1つだけではない | `PermissionError: invalid resolve parameters` |
+| その操作より古いゲートウェイ | `unknown verb: 'resolve-profile'` (と `supported_verbs`)。`hermes gateway attach --json` を使ってください |
+| 相手が自分の OS の利用者だと確かめられない | `PermissionError: authenticated runtime bootstrap unavailable` |
+| `session-ticket`: 包みが正しくない | `PermissionError: invalid bootstrap envelope` |
+| 引数が足りない、知らない引数がある、`restart_wait` が `refuse` 以外 | `PermissionError: invalid bootstrap parameters` (`restart_wait` より古い持ち主もこれを返します。付けずに一度だけ再試行してください) |
+| `resolve-profile` の後に持ち主が再起動した | `PermissionError: stale runtime instance`。もう一度 resolve してください |
+| このゲートウェイが受け持たないプロファイル、知らない目的 | `PermissionError: bootstrap binding rejected` |
+| 未使用のチケットが 1024 個ある | `PermissionError: bootstrap capacity exhausted` |
+
+**待ち合わせ場所。** ソケットのノードと、それを指す `gateway.sock.path` は、クライアントがプロファイルのホームの中で
+触れる唯一のファイルです。これらは待ち合わせ場所であって、Hermes のデータではありません。ロック、状態ファイル、
+設定は読まないでください。まずプロファイルのホームを試し、名前付きのプロファイル `<root>/profiles/<name>` (名前が
+`.` で始まらないもの) なら、次にルートを試します。ルートの多重化の仕組みは、自分が受け持つプロファイルに代わって答えます。
+どの候補も、Python の `Path.resolve` と同じように正規化してから使います。
+
+- **POSIX (Linux、macOS):** 候補は、自分が持ち主で、ほかの人が書き込めないディレクトリでなければなりません
+  (グループで書き込めるホームには、Python が行うグループの非公開性の確認が要ります。CLI を使ってください)。
+  `<candidate>/gateway.sock` があればそれを使います。これは自分が持ち主で、グループやほかの人のアクセスがない
+  ソケットでなければなりません。なければ `<candidate>/gateway.sock.path` を読みます (リンクをたどらずに開きます。
+  自分が持ち主の通常のファイルで、モード 0600、4096 バイト以内)。その指し先は絶対パスで、
+  `hermes-gw-<sha256 of the canonical home, 16 hex>/control.sock` で終わり、自分が持ち主の 0700 のディレクトリの中にある、
+  自分が持ち主の 0600 のソケットでなければなりません。指し先の一時ディレクトリのルートを、自分の `TMPDIR` と比べないでください。
+  **launchd** が起動したゲートウェイは独自の `$TMPDIR` (`/var/folders/…/T/`) を持っていて、正しいのは指し先のファイルのほうです。
+  ノードがない、または接続を拒まれた (落ちたゲートウェイの残りもの) ときは、次の候補を試します。
+  それ以外の検査に失敗したときは拒否として扱います。そこで止め、次の候補は試さないでください。
+- **Windows:** パイプ `\\.\pipe\hermes-gateway-<sha256 of the normcased canonical home, 16 hex>` を使います。
+  クライアントは、答えを信頼する前に、パイプのサーバーが自分の SID で動いていることを確かめなければなりません。
+  確かめられないクライアント (Node) は、接続のたびに `hermes gateway attach --json` を使います。
+
+`resolve-profile` に最初に答えた候補に尋ねてください。プロファイル自身のソケットから `profile_mismatch` が返ったときは、
+次の候補を試します。それ以外は、その答えが判定で、そのソケットがチケットを発行します。
+どの候補も答えないときは、ゲートウェイは動いていません。
+
+**セキュリティの考え方。** 境界は、同じマシンの同じ OS の利用者です。ソケットが TCP のポートになることはありません。
+POSIX では、ソケットはほかの人が書き込めないホーム (または 0700 の非公開のディレクトリ) の中にあるモード 0600 のもので、
+ゲートウェイは接続のたびに、カーネルから相手の uid を読み取ります (Linux では `SO_PEERCRED`、macOS では `getpeereid`)。
+チケットは自分と同じ uid にだけ発行し、相手の認証情報を報告しない環境では一切発行しません。
+Windows では、パイプに利用者の SID だけを許可する保護された DACL を付け、リモートのクライアントを拒み、
+最初のインスタンスを確保し、クライアントのトークンの SID がゲートウェイのものと同じであることを求めます。
+チケットは 256 ビットの乱数で、ハッシュとしてだけ保存され、30 秒間有効で、1回限り使え、
+ゲートウェイのインスタンス、プロファイル、目的に結び付き、ゲートウェイが止まると取り消されます。
+チケットで認証できるのは `/api/ws` だけです。ゲートウェイはチケットをログに残しません。クライアントも、チケット、
+サブプロトコルの一覧、CLI の標準出力をログに残したり、チケットを URL に入れたりしてはいけません。`resolve-profile` は
+認証情報を持たず、`identify` と同じように、接続できる相手ならだれにでも答えます。ホームの中を見る前に、
+答えるゲートウェイのルートと照らし合わせます。解決したホームは、ゲートウェイ自身のホームか、
+そのすぐ下の名前付きのプロファイル `<root>/profiles/<name>` でなければなりません。そのため、ルートの外へ出る
+シンボリックリンクは外側に解決され、拒否されます。そのうえで初めて、非公開のオーバーレイの
+`gateway.lock` のリンクをたどります。たどる先も、同じ確認に合格する持ち主のホームに限られます。それ以外のホームには
+`control: null` 付きの `profile_mismatch` を返し、ルートの外では何も開かず、作らず、変えません
+(外へ届く呼び出しは、ホームのパスの解決と、ルートの中の
+`gateway.lock` のリンクだけです)。受け付けたホームに対しては、探索と同じことをします。受け持っていないプロファイルの、
+同じ利用者のロックが古い Hermes によってモード 0644 のまま残っていれば、
+`hermes gateway attach` と同じように 0600 に狭めます。どれも、すでに自分の利用者や root として
+動いているコードから守るものではありません。
+
+この取り決めは `apps/shared/src/node/control-socket.vectors.json` で固定されています。どの言語のクライアントでも
+再生できるリクエストと返事の組で、
+`tests/gateway/test_control_socket_vectors.py` がゲートウェイに対して実行します。
+
 ## `hermes gateway attach` {#hermes-gateway-attach}
 
 `hermes gateway attach --json` は、自前の UI を持ち、ゲートウェイへ自分で接続するローカルのクライアントのための、公開の接続手順です。
@@ -480,6 +615,8 @@ SID を確かめる名前付きパイプを通して発行されます。既定�
 多重化の仕組みの制御ソケットからチケットを受け取ります。チケットは1回限りで、呼び出し側のプロファイルとその
 持ち主の `instance_id` に結び付き、30 秒で期限が切れます。`attach` はチケットを、呼び出したプロセスのためだけに標準出力へ出し、
 ログには決して残しません。新しく接続するたび、また再接続するたびに、`attach` をもう一度実行してください。
+制御ソケットと直接やり取りするクライアントは、プロセスを起動せずに同じ判定とチケットを得られます。
+[ローカルの制御ソケット](#local-control-socket-public-client-contract) を参照してください。
 
 接続できる持ち主がいないときは、JSON に `message` が加わり、`url` と `ticket` は含まれません。`message` は
 Ink が表示する判定です。まず `gateway <state>: <reason_code>` (コードがないときは `not ready`) の行があり、
@@ -631,7 +768,6 @@ plugins/platforms/                  # plugin-packaged adapters (one dir each)
 ├── bluebubbles/adapter.py  # Apple iMessage via BlueBubbles macOS server
 ├── weixin/adapter.py       # Weixin (personal WeChat) via iLink Bot API
 ├── qqbot/                  # QQ Bot (Tencent QQ) via Official API v2
-├── yuanbao/adapter.py      # Yuanbao (Tencent) DM/group WebSocket
 └── …                       # google_chat, ntfy, photon, raft, simplex, …
 
 gateway/platforms/                  # core base + HTTP ingress adapters

@@ -2,7 +2,7 @@
 title: "ツールセット一覧"
 description: "Hermes の中核・複合・プラットフォーム・動的の各ツールセットをまとめた一覧です。"
 upstream_path: reference/toolsets-reference.md
-upstream_blob: 4173fd7ec6ffe38de04b1589166a7aa115750a06
+upstream_blob: e6e4c508cacb6cfcf3277f6dec2636f41b8118f4
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 ---
@@ -88,7 +88,6 @@ hermes tools                            # curses UI to enable/disable per platfo
 | `video` | `video_analyze` | 動画を読み取って中身をつかむためのツールです（初めから入ってはいません。`--toolsets` で名指しして足します）。 |
 | `web` | `web_extract`, `web_search` | web の検索と、ページの中身の抜き出しです。 |
 | `x_search` | `x_search` | xAI に組み込まれた `x_search` の Responses ツールを使い、公開された X を読むだけで見て回ります。X API の認証付きの読み取りやアカウントの操作には `xurl` のスキルを使ってください。初めは切ってあります。`hermes tools` から自分で入れてください。xAI の資格情報（SuperGrok の OAuth か `XAI_API_KEY`）を設定したときだけ、この定義が登録されます。 |
-| `yuanbao` | `yb_query_group_info`, `yb_query_group_members`, `yb_search_sticker`, `yb_send_dm`, `yb_send_sticker` | Yuanbao の DM やグループの操作と、スタンプの検索です。`hermes-yuanbao` にだけ登録されます。 |
 
 ## プラットフォームのツールセット {#platform-toolsets}
 
@@ -116,11 +115,10 @@ hermes tools                            # curses UI to enable/disable per platfo
 | `hermes-wecom` | `hermes-cli` と同じです。 |
 | `hermes-wecom-callback` | `hermes-cli` と同じです。 |
 | `hermes-weixin` | `hermes-cli` と同じです。 |
-| `hermes-yuanbao` | `hermes-cli` に `yb_*` の五つのツール（DM・グループ・スタンプ）を足します。 |
 | `hermes-webhook` | 安全な範囲に絞った内容で、`web_search`、`web_extract`、`vision_analyze`、`clarify` だけです。webhook から始まった実行には、端末もファイルもブラウザも渡しません。 |
 | `hermes-gateway` | gateway が内側で使う差配用のツールセットで、`hermes-<platform>` のすべてを合わせたものです。gateway がどんな送り元のメッセージでも受け取る必要があるときに使います。 |
 
-プラグインが提供するプラットフォームには、`hermes-gateway` に含まれない `hermes-<platform>` のまとまりが暗黙に用意されます。たとえば `hermes-homeassistant` は、カタログの `homeassistant` プラグインを入れれば引き続き解決されますが、初めから入っているツールセットではなくなりました。
+プラグインが提供するプラットフォームには、`hermes-gateway` に含まれない `hermes-<platform>` のまとまりが暗黙に用意されます。たとえば `hermes-homeassistant` と `hermes-yuanbao` は、カタログの `homeassistant` / `yuanbao` プラグインを入れれば引き続き解決されますが、どちらも初めから入っているツールセットではなくなりました。
 
 ## 動的なツールセット {#dynamic-toolsets}
 

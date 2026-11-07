@@ -2,7 +2,7 @@
 title: "オプションスキルの一覧"
 description: "hermes-agent に同梱されている公式のオプションスキル。hermes skills install official/<category>/<skill> で導入します"
 upstream_path: reference/optional-skills-catalog.md
-upstream_blob: 23b4ab1671b5b956c41ae83b4efc50d3ba6d4a16
+upstream_blob: 2fa9b830239578e2191035bee890ba55363fd38f
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/optional-skills-catalog
 ---
@@ -290,12 +290,6 @@ hermes skills uninstall <skill-name>
 | [**page-agent**](/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/) | ウェブアプリの画面に、言葉で操作できる相棒を組み込みます。 |
 | [**publish-site**](/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/) | GitHub / Cloudflare / Netlify Pages へ、版を管理しながらサイトを公開します。 |
 | [**scrollcraft**](/hermes/docs/user-guide/skills/optional/web-development/web-development-scrollcraft/) | スクロールで動く上質なランディングページを作ります。スクロールがそのままタイムラインになります。 |
-
-## yuanbao {#yuanbao}
-
-| スキル | 説明 |
-|-------|-------------|
-| [**yuanbao**](/hermes/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao/) | Yuanbao（元宝）のグループ。利用者への @mention、情報やメンバーの照会。 |
 
 ---
 

@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 4434d031aa76f5e0aea130a8b6a8b3ce5f043829
+upstream_blob: 2478c7e07d6b3684f0224d8dc7437a97c4a32642
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -397,8 +397,8 @@ CLI を使わずに、メッセージ連携の利用者を認めたり取り消�
 ブラウザから、どのメッセージ連携のプラットフォームにも Hermes をつなげます。
 `hermes setup gateway` と同じことができます。このページには、対応しているすべての経路
 （Telegram、Discord、Slack、Matrix、Mattermost、WhatsApp、Signal、BlueBubbles / iMessage、
-メール、SMS / Twilio、DingTalk、Feishu / Lark、WeCom、WeChat、QQ Bot、Yuanbao、それに
-API サーバーと Webhook の受け口）が、今つながっているかどうかとともに並びます。
+メール、SMS / Twilio、DingTalk、Feishu / Lark、WeCom、WeChat、QQ Bot、それに
+API サーバーと Webhook の受け口）が、今つながっているかどうかとともに並びます。導入したプラグインが加えるプラットフォーム（Yuanbao、Home Assistant など）も並びます。
 
 - **設定** — プラットフォームごとに、その経路に要る項目だけが並ぶ入力の面が開きます（ボットの合鍵、アプリの合鍵、サーバーの URL、通す相手の一覧など）。秘密はパスワードの入力欄として描かれ、伏せた形で収められます。空のままにした項目は、今の値がそのまま残ります。必須の項目には印が付き、確かめられます。「設定の手引き」のリンクから、そのプラットフォームの資格情報の説明へ行けます。
 - **有効 / 無効** — 経路を入り切りします。資格情報はディスクに残り、動いているかどうかだけが変わります。

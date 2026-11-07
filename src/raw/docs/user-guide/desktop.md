@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 56a871e09cfe2e38c0d9e068d0509910f8737928
+upstream_blob: 054e3648aa787dc24624b1499b76366c42a61092
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -78,6 +78,16 @@ sessions adopt`）、ネイティブのデスクトップアプリ、TUI、CLI �
 
 Web Access が変えるのは `webapp:` の設定だけで、`webapp.port` はそのまま保ちます。`dashboard.public_url` には触れないので、別に公開している単体のダッシュボードは自分のアドレスを保ちます。Web Access の Nous サインインは専用のサインインクライアントを使います。これは最初の Start で Nous アカウントに登録され、ゲートウェイのホーム（`webapp/sign-in-registration.json`）に保存されます。Start は `.env` の `HERMES_DASHBOARD_OAUTH_CLIENT_ID` を読むことも書くこともないので、Web Access をオンにしても単体のダッシュボードの Nous サインインは変わりません。自前のゲートウェイを持つ独立したプロファイルは、専用のポートで Webapp を配信します。そのプロファイルの `webapp.port` が未設定なら、最初の Start が 9120 より上でほかのどのプロファイルも使っていない最初の空きポートを選び、そのプロファイルの `webapp.port` として保存するので、再起動してもアドレスは変わりません。自分で設定した `webapp.port` は常にそのまま保たれます。`hermes update` は、どれかのプロファイルで Webapp が有効になっていれば Webapp をビルドし直します。
 そのビルドに失敗すると、`hermes webapp` でビルドし直すまで、ゲートウェイは Webapp を利用できないと報告し、ページにもそう表示されます。
+
+### 1つの Webapp からほかのゲートウェイにつなぐ {#reach-your-other-gateways-from-one-webapp}
+
+Webapp の **Settings → Gateways** には、ネイティブアプリと同じ **Saved connections** の一覧があります。見た目が同じなだけでなく、一覧そのものが共通です。一覧は端末ごとに1つで、その端末の Hermes のホームにある `gateway-connections.json`（本人だけが読み書きでき、`ui-preferences.json` と同じ場所にあります）に保存されます。ネイティブアプリで接続を追加・編集・削除すると、再起動しなくても Webapp に反映されます。逆向きも同じです。この変更のあとでネイティブアプリを初めて起動すると、既存の接続が同じ ID のまま取り込まれるので、設定し直す必要はありません。
+
+保存した各ゲートウェイは、Webapp のゲートウェイ切り替えと、サイドバーのゲートウェイごとのグループに加わります。ブラウザが直接やり取りするのは、これまでどおりページを配信しているゲートウェイだけです。そのゲートウェイが、リクエストやソケットを1つずつ保存先のゲートウェイへ中継します。このとき、ネイティブアプリとまったく同じように、そのゲートウェイ用に保存した認証情報を付けます。セッショントークンなら `X-Hermes-Session-Token` ヘッダーに入れ、サインインなら bearer トークンを使い、接続に保存した追加のヘッダーも一緒に送ります。中継先のゲートウェイ側では何も設定する必要がありません。
+
+この Webapp にサインインできる人は誰でも、この端末に保存されたすべてのゲートウェイを、保存された認証情報の持ち主として使えます。その人に使わせてよいゲートウェイだけを保存してください。保存したゲートウェイから返ってきた内容が、この Webapp のページとして実行されることはありません。サンドボックス化するコンテンツポリシーのもとで配信され、ブラウザにはコピーが残らず、そのゲートウェイの外へリダイレクトすることもできません。接続を削除すると、開いているソケットはすぐに閉じます。
+
+Webapp のタブと、そこから開くウィンドウは、ページを配信しているゲートウェイ上で動きます。そのため **Open in new window** と **Set as default** が出るのは、そのゲートウェイ自身のプロファイルだけです。別のゲートウェイのプロファイルは、ゲートウェイ切り替えから開いてください。別のゲートウェイ上のチャットはタブの中にとどまり、ポップアウトしようとしてもウィンドウは開かず、その旨が表示されます。
 
 ### Webapp のターミナル {#terminal-in-the-webapp}
 
@@ -821,7 +831,7 @@ ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ \
   bash -c 'cd "$HOME/.hermes/hermes-agent/apps/desktop" && CSC_IDENTITY_AUTO_DISCOVERY=false pnpm run pack'
 ```
 
-**ミラーが要るその他のネイティブのダウンロード（Windows での `get-windows` のビルド済みバイナリなど）**は、npm のキーを `$HERMES_HOME/npmrc`（Windows なら `%LOCALAPPDATA%\hermes\npmrc`、それ以外なら `~/.hermes/npmrc`）に置いてください。たとえば `node_get_windows_binary_host_mirror=https://<mirror>/sindresorhus/get-windows/releases/download/` のように書きます。更新処理が起動する依存関係のインストールとビルド（デスクトップ、web、TUI のビルド）はすべて、このファイルがあれば `NPM_CONFIG_USERCONFIG` をそこへ向け（pnpm はレジストリと認証の設定をこのファイルから読みます）、それ以外のキーは `npm_config_<key>` という環境変数として依存関係のインストールスクリプトに渡します。そのため設定は `hermes update` をまたいで残ります。`~/.npmrc` は、デスクトップへの引き継ぎが GUI の環境を受け継ぐために見落とされることがあります。自分で設定した `NPM_CONFIG_USERCONFIG` が上書きされることはありません。
+**ミラーが要るその他のネイティブのダウンロード（Windows での `get-windows` のビルド済みバイナリなど）**は、npm のキーを `$HERMES_HOME/npmrc`（Windows なら `%LOCALAPPDATA%\hermes\npmrc`、それ以外なら `~/.hermes/npmrc`）に置いてください。たとえば `node_get_windows_binary_host_mirror=https://<mirror>/sindresorhus/get-windows/releases/download/` のように書きます。更新処理が起動する依存関係のインストールとビルド（デスクトップ、web、TUI のビルド）はすべて、このファイルがあれば `NPM_CONFIG_USERCONFIG` をそこへ向け（pnpm はレジストリと認証の設定をこのファイルから読みます）、それ以外のキーは `npm_config_<key>` という環境変数としてビルドの子プロセスに渡します（`get-windows` のビルド済みバイナリを取ってくるのは node-pre-gyp で、ビルドの途中で `stage-native-deps.mjs` がそれを動かします）。そのため設定は `hermes update` をまたいで残ります。認証情報（`_authToken`、`_auth`、`_password`、そのほか `_` で始まるキーや `//host/:` のキー）、スコープ付きのキー（`@scope:registry`）、`otp`、`key`、`cert`、`key[]=` の配列の行は、インストールスクリプトには渡されません。Hermes 自身が行う npm のダウンロード（バージョンを固定したツールのアーカイブや、`hermes pm update` の照会）も、同じファイルの `registry=` を使います。このファイルがあると、それらのビルドとダウンロードでは `~/.npmrc` の代わりにこのファイルが使われます（npm の userconfig の規則によるもので、2つが合わさることはありません）。そのため、必要な `registry=` や認証の行は `~/.npmrc` からこのファイルへ写しておいてください。`~/.npmrc` は、デスクトップへの引き継ぎが GUI の環境を受け継ぐために見落とされることがあります。自分で設定した `NPM_CONFIG_USERCONFIG` が上書きされることはありません。Hermes がそれらのビルドのために入れる pnpm と npm の実行ファイルも、同じ `registry=`（または `npm_config_registry`）から取得されます。これは素の `http://` で配信する LAN 内のミラーでも構いません。[Release age and package mirrors](/hermes/docs/reference/package-management/#release-age-and-package-mirrors) を参照してください。
 
 **`get-windows` が無い、あるいは中途半端に入っている場合**、ビルドはもう失敗しません。`[stage-native-deps] get-windows not installed ... read_window_below will be unavailable in this build` と表示して、`read_window_below` のツールを載せずに出荷します。パッケージのディレクトリはあるのに読み込めない場合（Hermes のウィンドウが動いたまま Windows のその場での更新が中断されたとき、導入のログに `TAR_ENTRY_ERROR` が出ます）、同じ警告がそのディレクトリの名前を示し、次の `hermes desktop --force-build` か更新が、pnpm の導入の前にそれを消してパッケージを展開し直します。その前に Hermes のウィンドウとゲートウェイをすべて閉じて、展開がまた中断されないようにしてください。ネイティブのバインディングや macOS のヘルパーが欠けたパッケージも同様に、ビルドを失敗させるのではなく、ウィンドウの列挙なしで出荷されます。
 
@@ -841,6 +851,8 @@ pnpm install         # from repo root — links apps/desktop, web, apps/shared
 cd apps/desktop
 pnpm run dev         # Vite renderer + Electron, which boots the Python backend
 ```
+
+Windows x64 では、最初の `pnpm run dev`（と `profile:main`）が `get-windows` のネイティブバインディングを `node_modules` に取ってきます。依存関係のインストールではそのスクリプトが飛ばされるためです。取得に失敗したり2分以上かかったりした場合、dev は `read_window_below` なしで起動し、次回にもう一度試します。この取得では、ミラーやプロキシの設定を環境変数（`npm_config_node_get_windows_binary_host_mirror`、`HTTP_PROXY`、`npm_config_proxy`）からしか読まず、`.npmrc` からは読みません。
 
 特定のチェックアウトにアプリを向けたり、実際の設定から切り離して動かしたりもできます。
 

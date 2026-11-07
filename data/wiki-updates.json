@@ -1,6 +1,173 @@
 {
-  "generatedAt": "2026-11-07",
+  "generatedAt": "2026-11-08",
   "entries": [
+    {
+      "date": "2026-11-07",
+      "sha": "9c0e778",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/architecture",
+          "title": "アーキテクチャ",
+          "url": "/hermes/docs/developer-guide/architecture/"
+        },
+        {
+          "id": "developer-guide/contributing",
+          "title": "コントリビュート",
+          "url": "/hermes/docs/developer-guide/contributing/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/gateway-internals",
+          "title": "ゲートウェイの内部",
+          "url": "/hermes/docs/developer-guide/gateway-internals/"
+        },
+        {
+          "id": "developer-guide/gateway-local-sessions",
+          "title": "gateway のローカルセッション",
+          "url": "/hermes/docs/developer-guide/gateway-local-sessions/"
+        },
+        {
+          "id": "developer-guide/memory-provider-plugin",
+          "title": "メモリープロバイダープラグイン",
+          "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/middleware",
+          "title": "ミドルウェア",
+          "url": "/hermes/docs/developer-guide/middleware/"
+        },
+        {
+          "id": "developer-guide/plugin-llm-access",
+          "title": "プラグインからの LLM 呼び出し",
+          "url": "/hermes/docs/developer-guide/plugin-llm-access/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/plugins/public-api",
+          "title": "プラグインの公開 API",
+          "url": "/hermes/docs/developer-guide/plugins/public-api/"
+        },
+        {
+          "id": "developer-guide/programmatic-integration",
+          "title": "外部プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "developer-guide/shared-bundle-builds",
+          "title": "共有バンドルビルド",
+          "url": "/hermes/docs/developer-guide/shared-bundle-builds/"
+        },
+        {
+          "id": "developer-guide/worktree-ui-dev",
+          "title": "worktree から TUI とデスクトップアプリを動かす",
+          "url": "/hermes/docs/developer-guide/worktree-ui-dev/"
+        },
+        {
+          "id": "getting-started/installation",
+          "title": "インストール",
+          "url": "/hermes/docs/getting-started/installation/"
+        },
+        {
+          "id": "getting-started/nix-setup",
+          "title": "Nix と NixOS のセットアップ",
+          "url": "/hermes/docs/getting-started/nix-setup/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "user-guide/bot-mode",
+          "title": "Bot Mode",
+          "url": "/hermes/docs/user-guide/bot-mode/"
+        },
+        {
+          "id": "user-guide/checkpoints-and-rollback",
+          "title": "チェックポイントと /rollback",
+          "url": "/hermes/docs/user-guide/checkpoints-and-rollback/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/extending-the-dashboard",
+          "title": "ダッシュボードを広げる",
+          "url": "/hermes/docs/user-guide/features/extending-the-dashboard/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/git-worktrees",
+          "title": "Git ワークツリー",
+          "url": "/hermes/docs/user-guide/git-worktrees/"
+        },
+        {
+          "id": "user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom",
+          "title": "Inspecting Hermes Desktop Dom — 動いている Hermes デスクトップの DOM/CSS を CDP で読む",
+          "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom/"
+        },
+        {
+          "id": "user-guide/skills/optional/software-development/software-development-node-inspect-debugger",
+          "title": "Node Inspect Debugger — --inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする",
+          "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-node-inspect-debugger/"
+        },
+        {
+          "id": "user-guide/tui",
+          "title": "TUI",
+          "url": "/hermes/docs/user-guide/tui/"
+        }
+      ]
+    },
     {
       "date": "2026-11-06",
       "sha": "723c028",

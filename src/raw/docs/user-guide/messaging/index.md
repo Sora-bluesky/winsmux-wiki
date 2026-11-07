@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 127c17bc060eac4158d7122160a021592bbfd1af
+upstream_blob: c496af4714295def2c80c9638c296dc950764f70
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -56,7 +56,7 @@ CLI のマイク入力モード、メッセージングでの音声返信、Disc
 | BlueBubbles | — | ✅ | ✅ | — | ✅ | ✅ | — |
 | Photon (iMessage) | ✅ | ✅ | ✅ | — | ✅ | ✅ | — |
 | QQ | ✅ | ✅ | ✅ | — | — | ✅ | — |
-| Yuanbao | ✅ | ✅ | ✅ | — | — | ✅ | ✅ |
+| Yuanbao（Labs プラグイン） | ✅ | ✅ | ✅ | — | — | ✅ | ✅ |
 | Microsoft Teams | — | ✅ | — | ✅ | — | ✅ | — |
 | LINE | — | ✅ | ✅ | — | — | ✅ | — |
 | ntfy | — | — | — | — | — | — | — |
@@ -95,7 +95,7 @@ flowchart TB
     wx[Weixin]
     bb[BlueBubbles]
     qq[QQ]
-    yb[Yuanbao]
+    yb["Yuanbao (plugin)"]
     ms[Microsoft Teams]
     api["API Server<br/>(OpenAI-compatible)"]
     wh[Webhooks]
@@ -787,7 +787,7 @@ hermes gateway status                # Check status, including registration drif
 | Weixin | `hermes-weixin` | ターミナルを含む全ツール |
 | BlueBubbles | `hermes-bluebubbles` | ターミナルを含む全ツール |
 | QQBot | `hermes-qqbot` | ターミナルを含む全ツール |
-| Yuanbao | `hermes-yuanbao` | ターミナルを含む全ツール |
+| Yuanbao（Labs プラグイン） | `hermes-yuanbao` | 全ツール + `yuanbao` Hermes Labs プラグインが提供する `yb_*` のツール（グループ・DM・スタンプ用） |
 | Microsoft Teams | `hermes-teams` | ターミナルを含む全ツール |
 | API Server | `hermes-api-server` | 全ツール（`clarify` と `text_to_speech` を除く。プログラムからの利用には対話する相手がいないため） |
 | Webhooks | `hermes-webhook` | ターミナルを含む全ツール |
@@ -1024,7 +1024,7 @@ display:
 - [BlueBubbles の設定（iMessage）](/hermes/docs/user-guide/messaging/bluebubbles/)
 - [Photon の設定（iMessage）](/hermes/docs/user-guide/messaging/photon/)
 - [QQBot の設定](/hermes/docs/user-guide/messaging/qqbot/)
-- [Yuanbao の設定](/hermes/docs/user-guide/messaging/yuanbao/)
+- [Yuanbao](/hermes/docs/user-guide/messaging/yuanbao/)（Hermes Labs プラグイン）
 - [Microsoft Teams の設定](/hermes/docs/user-guide/messaging/teams/)
 - [Teams の会議の処理経路](/hermes/docs/user-guide/messaging/teams-meetings/)
 - [Microsoft Graph の Webhook 受信](/hermes/docs/user-guide/messaging/msgraph-webhook/)

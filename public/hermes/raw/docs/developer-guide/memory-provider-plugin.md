@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: 74cadc7b025e74a4598f155f825523346f975687
+upstream_blob: 2be9752f68051d537a14eb1248c54b185b2916c2
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -146,6 +146,21 @@ class MyMemoryProvider(MemoryProvider):
 未設定なら `""`、mixture-of-agents ではプリセット名）と、そのターンの発言者を示す
 `author_id`、`author_name`、`author_is_bot` が渡されます。必要なキーワードだけを宣言してください。マネージャーは、
 プロバイダーのシグネチャーが受け付けるキーワードだけを渡します。
+
+さらに `previous_message` も渡されます。これは、Hermes が持っている会話記録から取り出した、このターンより前に利用者が送った最後のメッセージの本文です
+（最初のターンや、そのメッセージが画像だけだった場合は `""`）。ユーザーの役割で記録された既知の
+実行時の行（続行を促す合図、タスク一覧のスナップショット、単発の
+バックグラウンド処理の完了通知や監視条件の一致通知、圧縮の要約、ターンの途中で送られた `/steer`
+メッセージ）は飛ばされます。また、ゲートウェイが付けるタイムスタンプの前置きは取り除かれ、`message` と同じように秘密情報が消されます。
+画像を含むターンでは、Hermes は思い出したメモリーと、プラグインやゲートウェイの注記をテキストとしてメッセージに付け足しますが、
+`previous_message` はそれらを含まない、そのターン自身の本文です。ただし、
+これはできる範囲での対応です。古い Hermes が保存した画像のターンや、あとで修復や圧縮によって別のターンとまとめられたターンには、
+プラグインやゲートウェイの注記が残ったままです。また、
+再起動後にゲートウェイが送り直すその他の実行時の通知（cron の配信、プロセスの
+ハートビート、監視の無効化やまとめた完了の通知）が紛れ込むこともあります。
+セッションを再開したプロセス（`hermes chat --resume`、再起動後のゲートウェイ）は前の
+ターンの終わりの処理を実行していません。そのため、`queue_prefetch()` で想起の準備をするプロバイダーは、
+自前で会話記録を保存していなくても、この値を使ってその処理をやり直せます。古い Hermes では渡されないので、`kwargs.get` で読んでください。
 
 `os.getcwd()` が会話のワークスペースを表すとは考えないでください。1 つの Desktop
 やゲートウェイのバックエンドが、複数のセッションを受け持つことがあるためです。`cwd` がなく、ディレクトリで

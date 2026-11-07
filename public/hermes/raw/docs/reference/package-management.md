@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 2537aed4cfd5bbe7c1a5f5f1288f7f2201b396c0
+upstream_blob: 28badcf8624aa21aa0edad4dba983a85b6a0741b
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -441,9 +441,14 @@ pnpm --dir ui-tui run build
 pnpm --dir apps/desktop run dev
 ```
 
-アクティベーションは、ルートの `package.json` が `devEngines` で固定している pnpm のバージョンを用意します。
-Hermes のビルドと `hermes update` は、それ以外の pnpm のバージョンでは実行を拒否します（`pnpm install` を直接実行した場合は検査されません）。また、ルートの `preinstall` スクリプトは
-`npm install` を拒否します（npx やほかの npm コマンドは警告を出すだけです）。
+アクティベーションは、`pm/lock.json` が固定している pnpm のバージョンを用意します。
+ライフサイクルスクリプトを実行するインストールは、直接またはフィルター付きで実行した `pnpm install` も含めて、それ以外の pnpm では実行を拒否します。ルートの `preinstall` スクリプトは `pm/lock.json` の pnpm を必須とし、
+`npm install` も拒否します。さらに pnpm 10 と 11 は、ルートの `engines.pnpm` の範囲（`^12`）でも拒否されます（pnpm 12 は `engines.pnpm` を自分自身と比べません）。pnpm 12 は、
+`--ignore-scripts`、`--lockfile-only`（install、add、remove、update）、`pnpm fetch` のときはルートの `preinstall` を実行しません。そのため、これらの操作では固定版以外の pnpm 12 も通ってしまいます。こうして書かれた
+ロックファイルを最後に食い止めるのは CI です。`pnpm-lock.yaml` が変わるたびに JS の検査が走り、
+固定版の pnpm を使って `--frozen-lockfile` 付きでインストールします（インストール済みのツリーがキャッシュされている場合は
+`--lockfile-only` も付けます）。これで確かめられるのは、ロックファイルがマニフェストと公開からの経過日数のポリシーに合っていることで、
+どの pnpm が書いたかまではわかりません。`pnpm_config_user_agent` でユーザーエージェントを上書きした場合も拒否されます。
 
 Web サイトは別の npm プロジェクトです。`npm ci --prefix website` を実行してから、
 `npm run build:fast --prefix website` を実行します。PM のアクティベーションが提供するのはツールで、これらの
@@ -614,6 +619,12 @@ hermes pm install chromium
 | `pm install --target TARGET NAME...` | 明示したクロスターゲットのパッケージを、ホストのインストール済み実行環境として記録せずに配置します。win32 の `git` ターゲットは自己展開形式の PortableGit アーカイブに固定されています。配置するときは提供元の展開プログラムを実行するため、Windows のホストが必要です。 |
 | `pm bundle --out DIR [--ref REF]` | ソースのスナップショット、ネイティブツール、facts、Python の依存関係を配置します。署名済みのデスクトップインストーラーは作りません。 |
 
+Nix の flake は、`pnpm-lock.yaml` が解決する pnpm ストアを、1つの固定出力ハッシュ
+`nix/pnpm-deps-hash` で固定しています。`pm update --pnpm` はこのハッシュを更新しません。
+`pnpm-lock.yaml` を変えたら、そのたびに `nix run .#update-pnpm-lockfile` を実行する
+（[Nix のセットアップ](/hermes/docs/getting-started/nix-setup/#updating-the-pnpm-lockfile)）か、
+`nix` ワークフローの `pnpm-deps-hash` ジョブが報告するハッシュをコピーしてください。
+
 完全なデスクトップビルダーは、JavaScript の画面もビルドし、ランチャーを生成して、
 ネイティブのパッケージ化を呼び出します。メンテナーは
 [Building the Desktop Installers](https://github.com/NousResearch/hermes-agent/blob/main/apps/desktop/BUILDING.md) を参照できます。
@@ -656,8 +667,23 @@ Hermes 自身が依存する Python のパッケージは、Hermes がロック�
 `has no publish time` と表示して止まります。この手順では `https://pypi.org/simple` を使ってください。
 
 JavaScript のワークスペースの依存関係も、`pnpm-workspace.yaml` の `minimumReleaseAge`（単位は分で、`20160` は14日）を通じて同じ規則に従います。
-例外は `minimumReleaseAgeExclude` に列挙します。CI は `pnpm-lock.yaml` からインストールするときにこの規則を強制します。ソース、バンドル、Docker でのインストールは、
+ある範囲に合うバージョンがそれより新しいものしかない場合、`hermes pm update --pnpm` は止まり、通すのに必要なエントリを表示します。たとえば
+`- pele@1.13.0  # <why it cannot wait>` のような形です（マニフェストとロックの一時的なコピーで更新を繰り返して、これらを洗い出します）。例外にするには、
+`minimumReleaseAgeExclude` にその正確な `name@version` の形で追加します（名前だけやグロブは、
+今後のリリースをすべて例外にしてしまうので使いません）。同じ行にインラインコメントで理由を書き、
+更新をもう一度実行してください。ロックファイルがそのバージョンを含まなくなると、更新はロックと同じ変更の中でそのエントリを削除します。
+pnpm 自身の `minimumReleaseAgeExcludePrune` は無効のままにしています。有効にすると、利用者のビルドも含め、インストールのたびに
+`pnpm-workspace.yaml` が書き換えられてしまうためです。CI は `pnpm-lock.yaml` からインストールするときにこのポリシーを強制します。ソース、バンドル、Docker でのインストールは、
 コミット済みのロックをそのまま信頼します。
+
+PM 自身が使う、npm で配布されているツール（pnpm と npm）は、`pm/lock.json` で `registry.npmjs.org` の
+URL に固定されています。ただし PM は、これらを利用者の npm レジストリからダウンロードします。参照する順番は
+`npm_config_registry`、それが無ければ `npm_config_userconfig` が指す npmrc の `registry=`、
+それも無ければ `$HERMES_HOME/npmrc`（存在する場合）、最後に `~/.npmrc` です。このレジストリは素の `http://` でも構いません（LAN 内の Verdaccio や
+Nexus など）。PM が使う前に、バイト列がロックの SHA256 と一致していなければなりません。素の http で
+256 MiB を超えるダウンロードは中止され、素の http のリダイレクトはレジストリと同じホストに留まる必要があります。
+レジストリに到達できない、ファイルが無い、送られてくるデータが多すぎる、別の場所へリダイレクトされる、といった場合、
+PM は自身が固定している HTTPS のアーカイブに切り替えます。それ以外のダウンロードは、すべて HTTPS に限られます。
 
 ## 診断 {#diagnostics}
 

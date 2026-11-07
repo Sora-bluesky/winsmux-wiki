@@ -12,9 +12,9 @@ raw: /hermes/raw/skills.md
 
 # skill
 
-公式の skill ページ 187 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
+公式の skill ページ 186 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `6b21d05`（2026-11-07）時点。この一覧は上流の docs から機械生成しています。
+上流 `28ad767`（2026-11-07）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（44）
 
@@ -67,7 +67,7 @@ raw: /hermes/raw/skills.md
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-09-20 |
 | [Blocked Page Recovery](/hermes/docs/user-guide/skills/bundled/web/web-blocked-page-recovery/) | Use when a fetch fails: 403/429, paywall, WAF, bot wall | 2026-09-20 |
 
-## あとから入れる（142）
+## あとから入れる（141）
 
 - 入れると使えるようになります。入れ方は [Work with Skills](/hermes/docs/guides/work-with-skills/) にあります。
 
@@ -214,7 +214,6 @@ raw: /hermes/raw/skills.md
 | [Page Agent](/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/) | Embed an in-page natural-language GUI copilot in web apps | 2026-10-23 |
 | [Publish Site](/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/) | Versioned site deploys to GitHub/Cloudflare/Netlify Pages | 2026-09-20 |
 | [Scrollcraft](/hermes/docs/user-guide/skills/optional/web-development/web-development-scrollcraft/) | Premium scroll-driven landing pages; scroll = timeline | 2026-09-13 |
-| [Yuanbao](/hermes/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao/) | Yuanbao (元宝) groups: @mention users, query info/members | 2026-09-19 |
 
 ## その他（1）
 

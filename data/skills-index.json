@@ -1,5 +1,5 @@
 {
-  "sha": "6b21d05",
+  "sha": "28ad767",
   "date": "2026-11-07",
   "skills": [
     {
@@ -1488,14 +1488,6 @@
       "description": "Premium scroll-driven landing pages; scroll = timeline",
       "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-scrollcraft/",
       "date": "2026-09-13",
-      "source": "optional"
-    },
-    {
-      "slug": "yuanbao-yuanbao",
-      "name": "Yuanbao",
-      "description": "Yuanbao (元宝) groups: @mention users, query info/members",
-      "url": "/hermes/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao/",
-      "date": "2026-09-19",
       "source": "optional"
     }
   ]

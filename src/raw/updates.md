@@ -8,6 +8,41 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-07
+
+- [アーキテクチャ](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)
+- [コントリビュート](https://wiki.winsmux.dev/hermes/docs/developer-guide/contributing/)
+- [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
+- [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
+- [ミドルウェア](https://wiki.winsmux.dev/hermes/docs/developer-guide/middleware/)
+- [プラグインからの LLM 呼び出し](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugin-llm-access/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
+- [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
+- [共有バンドルビルド](https://wiki.winsmux.dev/hermes/docs/developer-guide/shared-bundle-builds/)
+- [worktree から TUI とデスクトップアプリを動かす](https://wiki.winsmux.dev/hermes/docs/developer-guide/worktree-ui-dev/)
+- [インストール](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
+- [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
+- [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
+- [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
+- [チェックポイントと /rollback](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
+- [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [ダッシュボードを広げる](https://wiki.winsmux.dev/hermes/docs/user-guide/features/extending-the-dashboard/)
+- [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- [Git ワークツリー](https://wiki.winsmux.dev/hermes/docs/user-guide/git-worktrees/)
+- [Inspecting Hermes Desktop Dom — 動いている Hermes デスクトップの DOM/CSS を CDP で読む](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom/)
+- [Node Inspect Debugger — --inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-node-inspect-debugger/)
+- [TUI](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
+
 ## 2026-11-06
 
 - [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)

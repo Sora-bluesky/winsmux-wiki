@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 8625a62939fb44e4bd362e8b23fbde3d17993492
+upstream_blob: da6f622ced28538b2c0abab1c9d8fd063653be57
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -103,6 +103,7 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes tools` | プラットフォームごとに有効なツールを設定します。 |
 | `hermes computer-use` | Computer Use（cua-driver）バックエンドをインストールまたは確認します（macOS/Windows/Linux）。 |
 | `hermes pets` | CLI・TUI・デスクトップアプリ全体に表示される [petdex](/hermes/docs/user-guide/features/pets/) のアニメーションペットを参照・インストール・選択します。サブコマンド: `list`, `install`, `select`, `show`, `off`, `scale`, `remove`, `doctor`。 |
+| `hermes clipboard image` | この端末のクリップボードにある画像をファイルに書き出します（スクリプトから使うときは `--json`）。この端末の中だけで完結し、ゲートウェイもセッションストアも使いません。 |
 | `hermes sessions` | セッションの参照・エクスポート・整理・リネーム・削除を行います。 |
 | `hermes insights` | トークン/コスト/アクティビティの分析を表示します。 |
 | `hermes claw` | OpenClaw からの移行（`migrate`、`cleanup`）です。[`agent-importers`](/hermes/docs/user-guide/import-from-other-agents/) プラグインが提供します。`hermes claw migrate` は `hermes import-agent openclaw` と同じです。 |
@@ -1641,6 +1642,42 @@ cua-driver が既に存在する場合、Hermes はそのバージョンとラ�
 権限モードとケーパビリティマニフェストの承認は、ランタイムの起動に属します。bounded モードでは、Hermes は Cua の正規の `--capability-manifest` と `--approve-capability-manifest` フラグを渡します。すべての MCP トランスポートは、そのランタイム内に専用のライフサイクルセッションを持ちます。公開されるセッション名は、カーソルとセッションの状態を表すラベルであり、ランタイムを所有したり共有したりするものではありません。
 
 `hermes update` は、cua-driver が PATH 上にある場合、更新の最後に upstream のインストーラを自動的に再実行するため、ほとんどのユーザーは `--upgrade` を手動で呼ぶ必要はありません。次回の Hermes の更新を待たずに、upstream が出した修正を今すぐ使いたいときに使ってください。
+
+## `hermes clipboard` {#hermes-clipboard}
+
+```bash
+hermes clipboard image --out PATH [--json]
+```
+
+クリップボードの画像を `PATH` に書き出します（無ければ作り、あれば上書きします）。取り出し方は、CLI と
+TUI が画像の貼り付けに使うものと同じです。macOS では `pngpaste`、次に `osascript`、Windows では PowerShell（`powershell`、次に
+`pwsh`）、Linux では WSL 上なら `powershell.exe`、次に Wayland 上の `wl-paste`、次に `xclip` の順に試します。書き出される画像は
+PNG です。ただし、コピーした画像*ファイル*（Windows/WSL のファイルドロップ）は、そのままの形でコピーされます。このコマンドが
+読むのはこの端末のクリップボードだけです。動いているゲートウェイは要らず、セッションストアや
+プロファイルのファイルも読みません。そのため、ゲートウェイが別の端末で動いているクライアントでも、ユーザーが操作している端末でこのコマンドを呼べます。
+NixOS のコンテナモードでは、ほかのすべての `hermes` サブコマンドと同じく、このコマンドも管理されたコンテナの中で動きます。
+そのため、ホストのクリップボードは見えず、`--out` もコンテナの中のパスになります。
+
+| オプション | 説明 |
+|--------|-------------|
+| `--out PATH` | 書き込み先のファイルです（必須）。親ディレクトリが無ければ作ります。画像はまず同じディレクトリの一時ファイルに取り出され、そのあと名前を変えて `PATH` に置き換えられます。そのため、どこで失敗しても、既存の `PATH` は元のまま残ります。既存のファイルはパーミッションのビットを引き継ぎます（0600 の一時ファイルは、ほかの人から読めないままです）。`PATH` がシンボリックリンクの場合は、通常のファイルに置き換えられます。 |
+| `--json` | stdout に JSON オブジェクトを1つ出力します。付けない場合、成功するとパスを出力し、失敗すると stderr に1行を出力します。 |
+
+| 終了コード | `reason` | 意味 |
+|-----------|----------|---------|
+| `0` | （なし、`ok: true`） | 画像が `path` に書き込まれました。 |
+| `1` | `no_image` | クリップボードに画像がありません（または、PNG に変換できない画像でした）。 |
+| `3` | `no_tool` | このプラットフォーム用のクリップボードツールが1つもインストールされていません。試した順に `tools` に並びます。 |
+| `4` | `write_failed` | `--out` に書き込めません。ディレクトリに書き込めないか作れない、既存の `PATH` がディレクトリか読み取り専用になっている、または最後の名前の変更に失敗した、のいずれかです。 |
+| `2` | （JSON なし） | 引数パーサーが出す、使い方の誤りによるエラーです。 |
+
+`--json` の応答（今あるキーは変わりませんが、新しいキーが増えることはあります。`path` は `ok` が true のときだけ読んでください）:
+
+```json
+{"ok": true, "path": "/home/me/paste.png", "mime": "image/png", "bytes": 48213}
+{"ok": false, "reason": "no_image", "message": "the clipboard holds no image"}
+{"ok": false, "reason": "no_tool", "tools": ["wl-paste", "xclip"], "message": "no clipboard tool found; install one of: wl-paste, xclip"}
+```
 
 ## `hermes pets` {#hermes-pets}
 

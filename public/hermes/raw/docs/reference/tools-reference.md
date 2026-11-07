@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "組み込みツール一覧"
 description: "Hermes の組み込みツールをツールセットごとにまとめた公式な一覧"
 upstream_path: reference/tools-reference.md
-upstream_blob: 27f14469f6e14ba617e5c78133d29f2e6ade4362
+upstream_blob: 49d01eabbc844f52d31fda378a10dcb8a78c71bd
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/tools-reference
 ---
@@ -12,7 +12,7 @@ sources:
 
 このページでは、Hermes の組み込みツールをツールセットごとに説明します。何が使えるかは、動かしている環境、資格情報、有効にしているツールセットによって変わります。
 
-**ざっくりした数（現在の登録内容）:** 約 85 個のツールがあります。内訳は、ブラウザ 4 個（`browser_exec`、`browser_cdp`、`browser_dialog`、`browser_vault`）、ファイル操作 4 個、ターミナル 2 個（`terminal`、`process_manage`）、デスクトップ GUI 用の 11 個（`read_terminal`、`close_terminal`、`desktop_preview`、`drive_preview`、`annotate_preview`、`read_window_below`、`focus_pane`、`react_to_message`、`gui_tour`、`show_tip`、`set_theme` — デスクトップアプリのセッション限定）、ウェブ 2 個、Feishu 5 個、Yuanbao 5 個、かんばん 14 個（かんばんのディスパッチャーがエージェントを起動したときに登録されます）、プロジェクト 1 個（`desktop_project`。デスクトップ / GUI のセッション向け）、Discord 2 個、動画 3 個（`video_generate`、`xai_video_edit`、`xai_video_extend`）、そして単体のツールがいくつか（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob_manage`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`vision_analyze`、`video_analyze`、`todo_list`、`computer_use`、`x_search`）です。
+**ざっくりした数（現在の登録内容）:** 約 85 個のツールがあります。内訳は、ブラウザ 4 個（`browser_exec`、`browser_cdp`、`browser_dialog`、`browser_vault`）、ファイル操作 4 個、ターミナル 2 個（`terminal`、`process_manage`）、デスクトップ GUI 用の 11 個（`read_terminal`、`close_terminal`、`desktop_preview`、`drive_preview`、`annotate_preview`、`read_window_below`、`focus_pane`、`react_to_message`、`gui_tour`、`show_tip`、`set_theme` — デスクトップアプリのセッション限定）、ウェブ 2 個、Feishu 5 個、かんばん 14 個（かんばんのディスパッチャーがエージェントを起動したときに登録されます）、プロジェクト 1 個（`desktop_project`。デスクトップ / GUI のセッション向け）、Discord 2 個、動画 3 個（`video_generate`、`xai_video_edit`、`xai_video_extend`）、そして単体のツールがいくつか（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob_manage`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`vision_analyze`、`video_analyze`、`todo_list`、`computer_use`、`x_search`）です。
 
 :::tip MCP ツール
 Hermes は組み込みツールに加えて、MCP サーバーからツールを動的に読み込めます。MCP のツールは `mcp__<server>__` という接頭辞付きで現れます（たとえば `github` という MCP サーバーなら `mcp__github__create_issue`）。設定方法は [MCP 連携](/hermes/docs/user-guide/features/mcp/) をご覧ください。
@@ -122,6 +122,8 @@ Feishu の文書コメント処理専用です。ドライブ上のファイル�
 **Home Assistant のツール**（`ha_list_entities`、`ha_get_state`、`ha_list_services`、`ha_call_service`、ツールセット `homeassistant`）は組み込みではなくなりました。カタログにある `homeassistant` プラグイン（`hermes plugins install homeassistant` で入れます）から提供されます。[Home Assistant](/hermes/docs/user-guide/messaging/homeassistant/) をご覧ください。
 
 **Spotify のツール**（`spotify_playback`、`spotify_devices`、`spotify_queue`、`spotify_search`、`spotify_playlists`、`spotify_albums`、`spotify_library`、ツールセット `spotify`）は組み込みではなくなりました。カタログにある `spotify` プラグインから提供されます（`hermes plugins install spotify` で入れてから、`hermes spotify login` を実行します）。[Spotify](/hermes/docs/user-guide/features/spotify/) をご覧ください。
+
+**Yuanbao のツール**（`yb_query_group_info`、`yb_query_group_members`、`yb_send_dm`、`yb_search_sticker`、`yb_send_sticker`、ツールセット `yuanbao`）は組み込みではなくなりました。Hermes Labs の `yuanbao` プラグイン（`hermes plugins install yuanbao` で入れます）から提供されます。[Yuanbao](/hermes/docs/user-guide/messaging/yuanbao/) をご覧ください。
 :::
 
 ## `image_gen` ツールセット {#imagegen-toolset}
@@ -360,15 +362,3 @@ Hermes が出すひとことも同じ間合いを共有するので、出した�
 | ツール | 説明 | 必要な環境 |
 |------|-------------|----------------------|
 | `discord_admin` | REST API から Discord のサーバーを管理します。ギルド・チャンネル・ロールの一覧、チャンネルの作成 / 編集 / 削除、ロールの付与、タイムアウト、キック、BAN ができます。 | `DISCORD_BOT_TOKEN` とボットの権限 |
-
-## `hermes-yuanbao` ツールセット {#hermes-yuanbao-toolset}
-
-`hermes-yuanbao` のプラットフォーム用ツールセットでのみ登録されます。Yuanbao はテンセントのチャットアプリで、これらのツールはその DM・グループ・スタンプの API を操作します。
-
-| ツール | 説明 | 必要な環境 |
-|------|-------------|----------------------|
-| `yb_query_group_info` | グループ（アプリ内では「派 / Pai」と呼ばれます）の基本情報、つまり名前・オーナー・人数を調べます。 | Yuanbao の資格情報 |
-| `yb_query_group_members` | グループのメンバーを調べます（`@` のメンション、名前からの人探し、ボットの一覧に使います）。 | Yuanbao の資格情報 |
-| `yb_send_dm` | グループ内の相手に個別のメッセージを送ります。メディアのファイルも添えられます。 | Yuanbao の資格情報 |
-| `yb_search_sticker` | Yuanbao に組み込まれたスタンプ（TIM face）のカタログを、キーワードで検索します。 | Yuanbao の資格情報 |
-| `yb_send_sticker` | 組み込みのスタンプを、いまの Yuanbao のチャットへ送ります。 | Yuanbao の資格情報 |

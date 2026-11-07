@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "アーキテクチャ"
 description: "Hermes Agent の内部構造 — 主要なサブシステム、実行経路、データの流れ、次に読むべき場所"
 upstream_path: developer-guide/architecture.md
-upstream_blob: 0fd7f080823a1a52df6a44a6142ed79246e2d7f4
+upstream_blob: 23ce42e2ef917de017fcb1638e59488479538368
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/architecture
 ---
@@ -129,8 +129,9 @@ hermes-agent/
 │                             #   whatsapp, matrix, mattermost, email, sms, dingtalk,
 │                             #   feishu, wecom, irc, line, teams, google_chat,
 │                             #   buzz, ntfy, photon, raft, simplex, whatsapp_cloud,
-│                             #   signal, weixin, bluebubbles, qqbot, yuanbao
-│                             #   (Home Assistant: `homeassistant` catalog plugin)
+│                             #   signal, weixin, bluebubbles, qqbot
+│                             #   (Home Assistant: `homeassistant` catalog plugin;
+│                             #    Yuanbao: `yuanbao` Hermes Labs plugin)
 │
 ├── acp_adapter/              # ACP server (VS Code / Zed / JetBrains)
 ├── cron/                     # Scheduler (jobs.py, scheduler.py)

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: 3a1860db935225ab9b767ee717ff50a1aa8c1869
+upstream_blob: 64fe44b68f3e80fd2fad112f1c895f802b0149f4
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -957,6 +957,23 @@ cd hermes-agent
 direnv allow    # one-time
 # Nix reuses its built Python environment; the pnpm hook checks JS inputs.
 ```
+
+### pnpm のロックファイルを更新する {#updating-the-pnpm-lockfile}
+
+この flake は、JavaScript で作られた部分をすべて、ひとつの固定出力（fixed-output）の pnpm ストアからビルドします。
+そのストアのハッシュは `nix/pnpm-deps-hash` に書かれています。パッケージの追加、削除、解決し直しを伴う `pnpm-lock.yaml` の変更があると、
+このハッシュが変わります。ハッシュを更新するまで、フロントエンドのビルドはすべてハッシュの不一致で失敗します。`hermes pm update --pnpm`、普通の
+`pnpm install`、`nix develop` のシェルフックはロックファイルを書き換えますが、
+ハッシュは書き換えません。チェックアウトしたディレクトリで、次のコマンドを実行してください。
+
+```bash
+nix run .#update-pnpm-lockfile
+```
+
+このコマンドは、`pnpm-lock.yaml` を各マニフェストに合わせて最新の状態にし、`.#pnpm-deps` をビルドし直して
+新しいハッシュを取り出し、それを `nix/pnpm-deps-hash` に書き込んだうえで、`.#tui`、`.#web`、
+`.#webapp`、`.#desktop` をビルドします。Nix を使えない場合は、CI の `nix` ワークフローにある
+`pnpm-deps-hash` ジョブが表示するハッシュをコピーしてください。
 
 ### flake のチェック {#flake-checks}
 

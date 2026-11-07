@@ -2,7 +2,7 @@
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: d3a6c86141a2791464d963df151d4fcf90a432ea
+upstream_blob: 9a7589ada870811671d770407f6c524aac182030
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -126,7 +126,6 @@ CLI の起動処理は、Hermes のほかの部分を import する前に `_appl
 ├── session_model_usage   — Per-model/per-task usage attribution rows
 ├── messages_fts          — FTS5 virtual table (content + tool_name + tool_calls)
 ├── messages_fts_trigram  — FTS5 virtual table with trigram tokenizer (CJK / substring search)
-├── messages_fts_cjk      — FTS5 virtual table with cjk_unicode61 tokenizer
 ├── state_meta            — Key/value metadata table
 ├── gateway_routing       — Gateway routing metadata
 ├── compression_locks     — Cross-process compression locking

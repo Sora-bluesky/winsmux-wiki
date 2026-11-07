@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインの公開 API"
 description: "プラグインが import してよい Hermes のモジュールと名前の一覧です。それ以外の Hermes の import には hermes plugins validate が警告を出します"
 upstream_path: developer-guide/plugins/public-api.md
-upstream_blob: 6bb29d23f772461ca13f734e125039cf7fa17ffa
+upstream_blob: 0e68213f3d7c0e9bc1f42857889dbdd8bb3bb162
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/public-api
 ---
@@ -112,3 +112,5 @@ sources:
 | `tools.skills_sync` | `dir_hash` | plugins/index.md § スキルカタログを読み取る |
 | `tools.skill_usage` | `read_skill_name` | plugins/index.md § スキルカタログを読み取る |
 | `gateway.session_context` | `get_session_env` | plugins/index.md § プラットフォームプラグイン：セッションの識別情報はタスクローカルなコンテキストから読み取る |
+| `agent.redact` | `redact_sensitive_text` | plugin-llm-access.md § プラグインのフロントエンドから：プラグインの RPC メソッド（秘密情報を決して外に出してはいけない場面では `force=True`） |
+| `hermes_cli.plugin_session` | `session_client` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：どのクライアントがセッションを作成したか |

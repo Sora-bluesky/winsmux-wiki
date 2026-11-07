@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: c1dc0b6d3785e00bf8002b2a15695149c2df1fa6
+upstream_blob: 115af2b389c74fca9586a5868da04f9477e9f334
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -1115,6 +1115,7 @@ plugins:
 
 - `os.getcwd()` はゲートウェイ自身のディレクトリで、すべてのセッションで共通です。Hermes がこれを変えることはありません。フックやツールが動いているセッションの作業ディレクトリが欲しいときは `ctx.session_cwd()` を使ってください。CLI・TUI・Desktop のセッションなら始めたときのワークスペース、チャットならプロファイルのターミナルの cwd を返します（無いときは `""`）。サブプロセスには `cwd=` として渡してください。動いているターンからセッションを読むので、セッションのために動くコード、つまりターンのフック、ツールのハンドラー、承認のフックで使えます。`pre_gateway_dispatch` のような受信時のフックは、メッセージがどのセッションにも受け付けられる前に動きます。そこではプロファイルのターミナルの cwd を返し、設定が無ければ `""` を返します。
 - `ctx.session_surface()` は、呼び出したセッションのクライアントの名前を返します。`"cli"`、`"tui"`、`"desktop"`、`"acp"`、またはメッセージングのプラットフォーム（`"telegram"` など）です。セッションの外では `""` です。
+- `hermes_cli.plugin_session.session_client()` は、呼び出したローカルのセッションを作ったクライアントを、そのクライアントが `session.create` で名乗ったとおりに返します（`{"name": "my-client", "version": "1.2.0"}`。`version` は送られたときだけ付きます）。セッションの外、メッセージングのチャット、名前を送らなかったクライアント（いまは TUI、Desktop、従来の CLI、ACP のどれも名前を送りません）では `None` を返します。`plugins.isolation: host` のもとでは、プラグインのプロセスにセッションの文脈がありません。代わりに、システムプロンプトのセクションで `info["client"]` を読んでください。この名前はクライアントが自分で付けたラベルで、認証ではありません。これを理由に何かを許可したり、確認を省いたりしないでください。
 - `print()` の出力は、ターミナルではなくゲートウェイの `gateway-stdio.log` に書かれます。代わりに `logging` を使ってください。
 - `input()` はファイルの終わり（EOF）を受け取ります。ゲートウェイにはターミナルがありません。ツールの結果かスラッシュコマンドを通して尋ねてください。
 
