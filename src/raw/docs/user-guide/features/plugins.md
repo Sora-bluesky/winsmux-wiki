@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 115af2b389c74fca9586a5868da04f9477e9f334
+upstream_blob: a251c80661ff40aabe95682708c07e7ebfe60342
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -351,7 +351,7 @@ CLI / TUI / ゲートウェイ / ACP の画面に承認を出したいなら、
 |---|---|
 | **指示・制御** | `pre_tool_call`, `pre_llm_call`, `pre_verify`, `pre_gateway_dispatch` |
 | **変換** | `transform_tool_result`, `transform_terminal_output`, `transform_llm_output`, `pre_transcription` |
-| **観測** | `post_tool_call`, `post_llm_call`, `pre_api_request`, `post_api_request`, `api_request_error`, `pre_auxiliary_call`, `post_auxiliary_call`, `on_stream_start`, `on_stream_delta`, `on_stream_end`, `on_interim_message`, `on_session_start`, `on_session_end`, `on_session_finalize`, `on_session_reset`, `post_compaction`, `on_session_delete`, `agent_loop_stopped`, `on_skill_lifecycle`, `subagent_start`, `subagent_stop`, `pre_approval_request`, `post_approval_response`, `on_human_input_request`, `on_human_input_resolved`, `pre_command`, `kanban_task_claimed`, `kanban_task_completed`, `kanban_task_blocked` |
+| **観測** | `post_tool_call`, `post_llm_call`, `pre_api_request`, `post_api_request`, `api_request_error`, `pre_auxiliary_call`, `post_auxiliary_call`, `on_stream_start`, `on_stream_delta`, `on_stream_end`, `on_interim_message`, `on_session_start`, `on_session_end`, `on_session_finalize`, `on_session_reset`, `post_compaction`, `post_curator_run`, `on_session_delete`, `agent_loop_stopped`, `on_skill_lifecycle`, `subagent_start`, `subagent_stop`, `pre_approval_request`, `post_approval_response`, `on_human_input_request`, `on_human_input_resolved`, `pre_command`, `kanban_task_claimed`, `kanban_task_completed`, `kanban_task_blocked` |
 
 この分類はいまの動きを説明するもので、これからの命名の規則を定めるものではありません。プラグインのミドルウェアは、引き続き別の登録先・別の面として扱われます。
 ## プラグインの種類 {#plugin-types}
@@ -1051,12 +1051,12 @@ ctx.inject_message(
 
 **書き方:** `ctx.inject_message(content: str, role: str = "user", *, session_key: str | None = None, origin: Mapping[str, Any] | None = None) -> bool`
 
-従来の CLI が自分のプロセスの中でプラグインを動かすとき（ゲートウェイのセッションが無いとき）:
+プラグインは手元のどの画面（従来の CLI、TUI、Desktop）でもゲートウェイの中で動きます。そのため、差し込んだメッセージが進行中の作業を取り消すことはありません。
 
-- エージェントが**待ち状態**（入力待ち）なら、そのメッセージは次の入力として並び、新しいターンを始めます。
-- エージェントが**ターンの途中**（動いている最中）なら、そのメッセージは進行中の処理に割り込みます。利用者が新しいメッセージを打って Enter を押したときと同じです。
+- 対象のセッションが**待ち状態**なら、そのメッセージは新しいターンを始めます。
+- **ターンの途中**なら、そのメッセージはそのセッションの待ち行列で待ち、いまのターンが終わってから次のターンとして動きます。動いているツールが割り込まれることはありません。
 - `"user"` 以外の役割では、内容の頭に `[role]` が付きます（例: `[system] ...`）。
-- 並べられたら `True` を返します。
+- ホストがメッセージを受け取ったら `True` を返します（下に書くホストごとの規則を参照）。
 
 セッションのキーが無いとき（`session_key` と `origin` を両方とも省いたとき）に、プラグインがゲートウェイ（またはそのプラグインホスト）で動いている場合は、ゲートウェイがチャットを選びます。従来の CLI、TUI、Desktop のセッションでは、プラグインはここで動きます。
 

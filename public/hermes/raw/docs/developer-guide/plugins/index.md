@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: ef2ebbb0d29ccb94db3e36e0c6db2f6aa3f3af93
+upstream_blob: 14d2073d721a1185f4d3ffb996d483d9a7694116
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -1311,6 +1311,7 @@ def register(ctx):
 | [`on_session_reset`](/hermes/docs/user-guide/features/hooks/#on_session_reset) | ゲートウェイが新しいセッションキーに入れ替える（`/new`、`/reset`） | `session_id: str, platform: str` | 無視される |
 | [`on_session_delete`](/hermes/docs/user-guide/features/hooks/#on_session_delete) | セッションの削除または意図的なアーカイブが確定する（すべての画面、一括の掃除、prune を含む） | `session_id: str, reason: str, profile: str \| None`、任意で `deleted_ids: list[str]`、`sessions_dir: str` | 無視される |
 | [`post_compaction`](/hermes/docs/user-guide/features/hooks/#post_compaction) | 圧縮が確定する（自動、`/compress`、ゲートウェイ、Codex、micro、prune のどの経路でも） | `session_id: str, old_session_id: str, kind: str, reason: str, before_tokens: int \| None, after_tokens: int \| None, messages_removed: int \| None` | 無視される |
+| [`post_curator_run`](/hermes/docs/user-guide/features/hooks/#post_curator_run) | キュレーターの1回の実行が、レポートのディレクトリを書き出した | `run_dir: str, run_json_path: str, report_md_path: str, dry_run: bool` | 無視される |
 | [`gateway_platform_event`](/hermes/docs/user-guide/features/hooks/#gateway_platform_event) | 認可済みのプラットフォーム固有イベントが、ゲートウェイの境界で正規化される（現時点では Telegram のリアクション） | `platform: str, event_type: str, payload: dict` | 無視される |
 | `kanban_task_claimed` | kanban タスクがクレームされる（ディスパッチャプロセス、ワーカーが起動する前） | `task_id: str, board: str \| None, assignee: str \| None, run_id: int \| None, profile_name: str` | 無視される |
 | `kanban_task_completed` | kanban タスクが完了する（ワーカープロセス） | `task_id, board, assignee, run_id, profile_name, summary: str \| None` | 無視される |

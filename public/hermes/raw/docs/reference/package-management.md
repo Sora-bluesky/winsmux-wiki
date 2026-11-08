@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 28badcf8624aa21aa0edad4dba983a85b6a0741b
+upstream_blob: cd3dc09283646ca6e3bd6fc69db9e791e532a546
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -449,6 +449,20 @@ pnpm --dir apps/desktop run dev
 固定版の pnpm を使って `--frozen-lockfile` 付きでインストールします（インストール済みのツリーがキャッシュされている場合は
 `--lockfile-only` も付けます）。これで確かめられるのは、ロックファイルがマニフェストと公開からの経過日数のポリシーに合っていることで、
 どの pnpm が書いたかまではわかりません。`pnpm_config_user_agent` でユーザーエージェントを上書きした場合も拒否されます。
+
+リポジトリのルートと JS ワークスペースの各フォルダーでは、依存関係をインストールしたり解決したりする npm のコマンドはすべて拒否されます（`npm install` は `--ignore-scripts`、
+`--package-lock-only`、`--force` の有無にかかわらず拒否され、`npm ci`、`update`、`dedupe`、`uninstall`、
+`link` も同様です）。これらのフォルダーにはどれも `engine-strict=true` を指定した `.npmrc` があり、
+`package.json` が、どの npm も満たせない `engines.npm` を宣言しているためです。`npm rebuild` と
+`npm pkg set` は拒否されません。`--engine-strict=false` を明示すると、
+この拒否を無効にできます。
+
+`npx`、`npm exec`、`npm run` は引き続き使えるので、MCP サーバーやツールはこれまでどおり起動します。
+ただし `engine-strict` は、チェックアウト内のどこでも効きます。これらのフォルダーに加えて、
+自前の `package.json` を持たないすべてのフォルダー（`agent/`、
+`tools/`、Docker イメージの `/opt/hermes`）でも、ルートの `.npmrc` を通じて効きます。そうした場所では、パッケージ自体か、
+それが取り込むオプションでない依存関係のどれかが、現在の Node や npm では満たせない `engines` を宣言していると、`npx` はそのパッケージのインストールを拒否します。
+チェックアウトの外であれば、警告が出るだけで済む場面です。
 
 Web サイトは別の npm プロジェクトです。`npm ci --prefix website` を実行してから、
 `npm run build:fast --prefix website` を実行します。PM のアクティベーションが提供するのはツールで、これらの

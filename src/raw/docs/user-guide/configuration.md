@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: dd05d4537eb79861a08e921177d77a52af9eda25
+upstream_blob: de5b4568ba07540cc7e50ebe42ba7d8d50887015
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -3195,14 +3195,14 @@ delegation:
 
 ## 確認の質問（clarify） {#clarify}
 
-Hermes が確認の質問への返答をどれだけ待つかを設定します。1つの値ですべての画面に効きます（従来の CLI のモーダル、TUI や Desktop のカード、メッセージングゲートウェイ）。正式なキーは `agent.clarify_timeout` です（既定は `3600` 秒。`0` 以下なら無制限）。旧来のトップレベルの `clarify.timeout` も、明示的に設定されていれば今も使われます。
+Hermes が確認の質問への返答をどれだけ待つかを設定します。1つの値ですべての画面に効きます（従来の CLI のモーダル、TUI や Desktop のカード、メッセージングゲートウェイ）。正式なキーは `agent.clarify_timeout` です（既定は `90` 秒。`0` 以下なら無制限）。旧来のトップレベルの `clarify.timeout` も、明示的に設定されていれば今も使われます。
 
 ```yaml
 agent:
-  clarify_timeout: 3600        # Seconds to wait for user clarification response (0 or less = unlimited)
+  clarify_timeout: 90          # Seconds to wait for user clarification response (0 or less = unlimited)
 ```
 
-時間切れになると、エージェントは `"outcome": "timed_out"` を受け取って待機を解き（ユーザーがすでに確定した回答は残ります）、自分の判断で作業を続けます。確認の質問が、ツール全般に共通する1回ごとの期限（`timeouts.tools.sequential_call`）で打ち切られることはありません。待ち時間を区切るのは `agent.clarify_timeout` だけです。
+時間切れになると、エージェントは `"outcome": "timed_out"` を受け取って待機を解き（ユーザーがすでに確定した回答は残ります）、自分の判断で作業を続けます。メッセージングプラットフォームでは、回答の代わりに別のメッセージを送ると、その時点で質問は取り消され、エージェントはそのメッセージを受けて作業を続けます。確認の質問が、ツール全般に共通する1回ごとの期限（`timeouts.tools.sequential_call`）で打ち切られることはありません。待ち時間を区切るのは `agent.clarify_timeout` だけです。
 
 ## コンテキストファイル（SOUL.md、AGENTS.md） {#context-files-soulmd-agentsmd}
 

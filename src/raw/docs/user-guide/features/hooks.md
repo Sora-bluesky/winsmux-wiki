@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 8545fc02750397c135ea549f934af8aff10e99ad
+upstream_blob: 8dfbf40a340178eed3912f236078026fea718671
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -478,6 +478,7 @@ def register(ctx):
 | `on_session_reset` | 観測役 | CLI / TUI のセッションの区切りと、ゲートウェイで置き換えのセッションができたあと。戻り値は無視されます。 | CLI: `session_id`、`platform`、`reason`。TUI: `session_id`、`platform`。ゲートウェイ: それらに加えて `reason`、`old_session_id`、`new_session_id` | セッションと経路の識別子。 |
 | `on_session_delete` | 観測役 | セッションの削除、または意図的なアーカイブが確定したあと（CLI、TUI、デスクトップ / ダッシュボード、ゲートウェイの API、一括の掃除、刈り込み）。戻り値は無視されます。 | `session_id`、`reason`、`profile`、任意で `deleted_ids`（複数の行が消えたときはその全件）、`sessions_dir` | セッションの識別子だけ。メッセージの内容は含みません。 |
 | `post_compaction` | 観測役 | 圧縮が確定するたびに1回。どの経路でも発火します: エージェントのループ内の自動・手動の圧縮（CLI、TUI、デスクトップ、ゲートウェイの整理、あふれからの回復）、ゲートウェイの `/compress`（`session.mutate compress`）、Codex app-server の圧縮、小さな圧縮、ツール結果の先回りの刈り込み。何も変わらなかった試み（中止、阻止、拒否）では発火しません。時間の上限があり、戻り値は無視されます。 | `session_id`、`old_session_id`、`kind`、`reason`、`before_tokens`、`after_tokens`、`messages_removed` | 識別子と件数だけ。 |
+| `post_curator_run` | 観測役 | キュレーターの 1 回分の処理が、実行ごとの報告（`logs/curator/<run>/run.json` + `REPORT.md`）を書き出したあと、その処理を動かしたプロセスで。戻り値は無視されます。 | `run_dir`、`run_json_path`、`report_md_path`、`dry_run` | 手元のファイルシステムのパス。報告にはスキル名が出ます。 |
 | `agent_loop_stopped` | 観測役 | 実際に動いていたエージェントが中断された直後 — ゲートウェイの `_interrupt_and_clear_session` か、TUI / デスクトップの `session.interrupt`。戻り値は無視されます。 | `session_key`、`platform`、`reason`、`invalidation_reason` | セッション / 経路の識別子と中断の理由。メッセージの本文はありません。 |
 | `on_skill_lifecycle` | 観測役 | スキルの利用の状態が確定的に変わったあと。戻り値は無視されます。 | `action`、`skill_name`、`provenance`、`task_id`、`session_id`、`use_count`、`reused`、`reuse_after_patch` | 手元のスキル名と出どころが見えます。 |
 | `subagent_start` | 観測役 | 子が組み立てられ、これから動くところ。戻り値は無視されます。 | `parent_session_id`、`parent_turn_id`、`parent_subagent_id`、`child_session_id`、`child_subagent_id`、`child_role`、`child_goal` | 子の目的に利用者やプロジェクトの内容が含まれることがあります。 |
@@ -1151,6 +1152,27 @@ def my_callback(session_id: str, kind: str, reason: str, **kwargs):
 **戻り値:** 無視されます。例外を出したコールバックはログに残して飛ばします。圧縮はすでに確定しているので影響を受けません。コールバックには `plugins.hook_callback_timeout` の時間の上限がかかります。
 
 **使いどころ:** 圧縮のあとにセッションの文脈を差し込み直す、外部の索引を更新する、圧縮の回数を数える。
+
+### `post_curator_run` {#postcuratorrun}
+
+キュレーターの 1 回分の処理が、実行ごとの報告のディレクトリを書き出したあとに 1 回発火します。これにより、プラグインやシェルのフックは `logs/curator/` を定期的に見に行かなくても、キュレーターが変えた内容に応じて動けます（新しいスキルを別のプロファイルへ回す、アーカイブを取り消す、監査の記録を書くなど）。
+
+**コールバックの形:**
+
+```python
+def my_callback(run_dir: str, run_json_path: str, report_md_path: str, dry_run: bool, **kwargs):
+```
+
+| 引数 | 型 | 説明 |
+|-----------|------|-------------|
+| `run_dir` | `str` | プロファイルの `logs/curator/` の下にある、その実行の報告のディレクトリ。 |
+| `run_json_path` | `str` | `run.json`。プログラムで読むための記録です（追加、アーカイブ、統合、刈り込み、状態の遷移、cron の書き換え）。 |
+| `report_md_path` | `str` | `REPORT.md`。人が読むための報告です。 |
+| `dry_run` | `bool` | 下見（`hermes curator run --dry-run`）のときは `True` です。このとき報告には「変わるはずのこと」が並ぶだけで、実際には何もアーカイブも書き換えもされていません。報告をもとに何かする前に、この値を確かめてください。 |
+
+**発火する場所:** その処理を動かしたプロセス（ゲートウェイの定期的なキュレーターの実行、または `hermes curator run`）で、そのプロファイルのもと、2 つのファイルが書き出されたあとに発火します。報告のディレクトリを作れなかった処理では何も発火しません。
+
+**戻り値:** 無視されます。例外を出したコールバックはログに残して飛ばします。キュレーターの処理には影響しません。
 
 ### `agent_loop_stopped` {#agentloopstopped}
 

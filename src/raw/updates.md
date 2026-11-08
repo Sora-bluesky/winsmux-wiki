@@ -8,6 +8,38 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-08
+
+- [アーキテクチャ](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)
+- [コントリビュート](https://wiki.winsmux.dev/hermes/docs/developer-guide/contributing/)
+- [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
+- [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
+- [プラグインからの LLM 呼び出し](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugin-llm-access/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
+- [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
+- [セッションの保存領域](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
+- [ソース版の更新の仕上げを誰が受け持つか](https://wiki.winsmux.dev/hermes/docs/developer-guide/source-update-completion/)
+- [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
+- [Android / Termux](https://wiki.winsmux.dev/hermes/docs/getting-started/termux/)
+- [更新とアンインストール](https://wiki.winsmux.dev/hermes/docs/getting-started/updating/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [オプションスキルの一覧](https://wiki.winsmux.dev/hermes/docs/reference/optional-skills-catalog/)
+- [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
+- [組み込みツール一覧](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
+- [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
+- [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
+- [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- [パスワードとログイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-vault/)
+- [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
+- [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
+- [Yuanbao](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/yuanbao/)
+- [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
+- [user-guide/skills/optional/yuanbao/yuanbao-yuanbao](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao/)
+
 ## 2026-11-07
 
 - [アーキテクチャ](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)
@@ -1702,7 +1734,7 @@ raw: /hermes/raw/updates.md
 - [Har Derived Api Client — サイトの XHR を HAR に記録し、そこから HTTP クライアントを起こす](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client/)
 - [Page Agent — Web アプリの中に、自然言語で操作できる相棒を組み込む](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/)
 - [Publish Site — サイトに版を付けて GitHub / Cloudflare / Netlify の Pages へ公開します](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/)
-- [Yuanbao — 元宝のグループで、ユーザーへの @ メンション、グループ情報やメンバーの照会を行います](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao/)
+- [user-guide/skills/optional/yuanbao/yuanbao-yuanbao](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/yuanbao/yuanbao-yuanbao/)
 - [TUI](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
 - [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
 - [Windows（WSL2）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-wsl-quickstart/)

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コントリビュート"
 description: "Hermes Agent へのコントリビュート方法（開発環境のセットアップ、コードスタイル、PR の流れ）"
 upstream_path: developer-guide/contributing.md
-upstream_blob: 1262d661121ab70f513a3cbb4f0f99abbf5b98e1
+upstream_blob: c1efc2277e9254e4f67f57d037430304b0ef8cc5
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/contributing
 ---
@@ -239,6 +239,20 @@ TUI、ダッシュボード、共有の JS ワークスペースが揃います�
 npm ci --prefix website
 npm run build:fast --prefix website
 ```
+
+リポジトリのルートと JS ワークスペースの各フォルダーでは、依存関係をインストールまたは解決するコマンドを npm がすべて拒否します（`--ignore-scripts`、
+`--package-lock-only`、`--force` を付けても付けなくても `npm install` は拒否され、`npm ci`、`update`、`dedupe`、`uninstall`、
+`link` も同様です）。これらのフォルダーにはそれぞれ `engine-strict=true` を指定した `.npmrc` があり、
+`package.json` では、どの npm も満たせない `engines.npm` を宣言しているためです。`npm rebuild` と
+`npm pkg set` は拒否されません。`--engine-strict=false` を明示的に指定すると、
+この拒否を無効にできます。
+
+`npx`、`npm exec`、`npm run` はこれまでどおり使えるため、MCP サーバーやツールは問題なく起動します。
+ただし `engine-strict` は、チェックアウト内のどこでも適用されます。これらのフォルダーに加えて、
+独自の `package.json` を持たないすべてのフォルダー（`agent/`、
+`tools/`、Docker イメージの `/opt/hermes`）でも、ルートの `.npmrc` を通じて適用されます。そうした場所では、パッケージ自体か、
+それが取り込むオプションでない依存関係のどれかが、現在の Node や npm では満たせない `engines` を宣言していると、
+`npx` はそのパッケージのインストールを拒否します。チェックアウトの外であれば、警告が出るだけで済むところです。
 
 それぞれの `package.json` の engines が受け付ける Node のバージョンを使ってください。
 デスクトップのネイティブ依存関係には、プラットフォームのビルドツールチェーンが必要になることもあります。
