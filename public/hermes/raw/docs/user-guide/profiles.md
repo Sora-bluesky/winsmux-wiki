@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: c6337a6cf87d6fc9616f237906f1756f9f0e2203
+upstream_blob: d90f1e635c99b5ab87a29fa6b635fa4af50ce7b5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -175,7 +175,7 @@ hermes profile create twin --clone --clone-channels   # keep the source's bots a
 まず専用の写しとして実体化します。複製が元のファイルへ書き込んでしまうことはありません。
 
 :::tip Honcho の記憶とプロファイル
-Honcho を有効にしていると、複製の操作にあわせて新しいプロファイル専用の AI ピアが自動で作られ、ユーザーのワークスペースは共有されます。プロファイルごとに独自の観察と人物像が育っていきます。詳しくは [Honcho -- Multi-agent / Profiles](/hermes/docs/user-guide/features/memory-providers/#honcho) を参照してください。
+記憶プロバイダーは、自分を選んでいるプロファイルが作られたときや名前を変えられたときに、フック（通知を受けて処理を差し込む仕組み）を受け取ります。Honcho（1.2.0 以降）はこのフックを使い、複製したプロファイルに、同じユーザーのワークスペースの中で専用の AI ピアを用意します。プロファイルの名前を変えても、そのピアは引き継がれます。インポートしたプロファイルでは、`hermes honcho sync` を実行してください。プロファイルごとに独自の観察と人物像が育っていきます。詳しくは [Honcho -- Multi-agent / Profiles](/hermes/docs/user-guide/features/memory-providers/#honcho) を参照してください。
 :::
 
 ## プロファイルを使う {#using-profiles}

@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-09",
+  "generatedAt": "2026-11-10",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-09",
-      "attemptedAt": "2026-11-09",
+      "fetchedAt": "2026-11-10",
+      "attemptedAt": "2026-11-10",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -22,16 +22,6 @@
           "id": "reflection/beam-1.0-501b-a23b:free",
           "name": "Reflection: Beam 1.0 501B A23B",
           "ctx": 262144,
-          "tools": true,
-          "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
-          "id": "stealth/crouton-alpha",
-          "name": "Crouton Alpha",
-          "ctx": 1048576,
           "tools": true,
           "expires": null,
           "freeBasis": "pricing",
@@ -63,8 +53,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-09",
-      "attemptedAt": "2026-11-09",
+      "fetchedAt": "2026-11-10",
+      "attemptedAt": "2026-11-10",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -209,8 +199,8 @@
           "criteriaReason": null
         },
         {
-          "id": "stealth/crouton-alpha",
-          "name": "Crouton Alpha",
+          "id": "thinkingmachines/inkling-2-small:free",
+          "name": "Thinking Machines: Inkling 2 Small (free)",
           "ctx": 1048576,
           "tools": true,
           "expires": null,

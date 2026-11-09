@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 8dfbf40a340178eed3912f236078026fea718671
+upstream_blob: c867d976e8f12fb2d52052b451012c098a42e7ee
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -473,6 +473,7 @@ def register(ctx):
 | `on_interim_message` | 観測役 | 最後の答えより前に、ループの途中のアシスタントのメッセージが表に出たときに送られます（逐次でもそうでなくても）。戻り値は無視されます。 | `text`、`already_streamed`、`turn_id`、`iteration`、`session_id`、`model`、`provider`、`surface` | 途中のアシスタントの文章が丸ごと。 |
 | `transform_api_error_classification` | 変換 | プロバイダーへの試みが失敗するたび、組み込みの分類の先頭で。すべてのコールバックが動き、そのあと有効な `reason` を持つ最初の辞書が勝ちます（全部動かしてから先頭を選ぶ形）。飛ばされた有効な結果は実行時の警告を記録します。Python のプラグイン専用です。 | `provider`、`model`、`status_code`、`error_type`、`error_code`、`error_message`、`error_body`、`error`、`approx_tokens`、`context_length`、`num_messages` | `error_message` と `error_body` には、素のプロバイダーや利用者のデータが含まれることがあります。 |
 | `on_session_start` | 観測役 | 新しいセッションの最初のやり取り。戻り値は無視されます。 | `session_id`、`model`、`platform` | 識別子と経路の情報だけ。 |
+| `on_session_open` | 観測役 | クライアントが手元のセッションを作るか開くたびに 1 回（CLI、TUI、Desktop、ACP、kanban / A2A のワーカー）。ゲートウェイの中で、そのセッションのプロファイルのもと、最初のやり取りの前に発火します。メッセージングのチャットでは発火しません。時間の上限があり、戻り値は無視されます。 | `session_id`、`platform`、`reason`（`create` か `resume`） | セッションの識別子だけ。 |
 | `on_session_end` | 観測役 | 正準には、やり取りの締めくくりごとに。CLI / TUI の終了では、項目の減った以前からの形も追加であります。戻り値は無視されます。 | 正準: `session_id`、`task_id`、`turn_id`、`completed`、`failed`、`interrupted`、`turn_exit_reason`、`model`、`platform`。終了の経路では `reason`/`api_request_id` が加わったり、項目が欠けたりします。 | ID、モデル / プラットフォーム、結果。正準の中身にメッセージの本文はありません。 |
 | `on_session_finalize` | 観測役 | `finalize_session` を通した CLI / TUI / ゲートウェイの片付け。ゲートウェイの停止では、作り直しなしで締めくくることがあります。戻り値は無視されます。 | 入口によって変わる `session_id`、`platform`、必要に応じて `reason`、`old_session_id`、`new_session_id` | セッションと経路の識別子。 |
 | `on_session_reset` | 観測役 | CLI / TUI のセッションの区切りと、ゲートウェイで置き換えのセッションができたあと。戻り値は無視されます。 | CLI: `session_id`、`platform`、`reason`。TUI: `session_id`、`platform`。ゲートウェイ: それらに加えて `reason`、`old_session_id`、`new_session_id` | セッションと経路の識別子。 |
@@ -954,6 +955,38 @@ def init_session(session_id, model, platform, **kwargs):
 
 def register(ctx):
     ctx.register_hook("on_session_start", init_session)
+```
+
+---
+
+### `on_session_open` {#onsessionopen}
+
+クライアントが手元のセッションを**作るか開いた**ときに発火します。`hermes`、TUI、Desktop で新しいチャットを始めたときや、`hermes --resume` / セッションの選択画面で保存済みのセッションを開き直したときです。モデルが会話を見る前に準備を整えるのに使います。たとえば、メモリーのプラグインが最近の文脈を先に読み込んだり、ステータスバーがセッションを開いた状態として表示したりできます。[`on_session_start`](#on_session_start) とは別のフックです。あちらはエージェントの最初のやり取りの間に発火し、開き直したときには発火しません。
+
+**コールバックの形:**
+
+```python
+def my_callback(session_id: str, platform: str, reason: str, **kwargs):
+```
+
+| 引数 | 型 | 説明 |
+|-----------|------|-------------|
+| `session_id` | `str` | 開かれたセッション |
+| `platform` | `str` | セッションを作った入口: `cli`、`tui`、`desktop`、`acp`、... |
+| `reason` | `str` | セッションにまだメッセージがない間（新しいチャット）は `create`、会話が入っているとき（保存済みのチャットを開き直したとき）は `resume` |
+
+**発火する場所:** ゲートウェイの中（`gateway/session_open.py`）で、クライアントの接続が、まだつながっていなかった手元のセッションにつながったときです。発火するのは開くごとに 1 回で、すでに開いているセッションをクライアントが読み直しても、ソケットが切れたあとにつなぎ直しても、もう一度発火することはありません。2 つのクライアントが同じセッションを開けば 2 回発火します。セッションを持つプロファイルの中で動くので、複数のプロファイルを受け持つゲートウェイでも、各プロファイルのプラグインには自分のセッションだけが見えます。コールバックは専用のスレッドで動きます。セッションを開く処理がコールバックを待つことはありませんが、そのセッションの次のやり取りは待ちます。待つのは最大 5 秒で、`plugins.hook_callback_timeout` のほうが長ければその時間までです。それを過ぎるとやり取りは先に進み、コールバックはそのまま動き続けます。あるセッションのコールバックがまだ動いている間に同じセッションがさらに開かれた場合、それらは 1 回の呼び出しにまとめられて後ろで待ちます。コールバックが終わったときに、最後に開いたときの内容で 1 回だけ発火します。`--safe-mode` / `--ignore-user-config` のセッションでは何も発火しません。メッセージングのチャット（Telegram、Discord など）では発火しません。そちらは最初のメッセージでセッションが始まるので、`on_session_start` を使ってください。
+
+**戻り値:** 無視されます。
+
+**例 — 最初のやり取りの前にメモリーを読み込んでおく:**
+
+```python
+def warm(session_id, platform, reason, **kwargs):
+    _cache[session_id] = load_recent_notes(limit=20)
+
+def register(ctx):
+    ctx.register_hook("on_session_open", warm)
 ```
 
 ---

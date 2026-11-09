@@ -1,6 +1,68 @@
 {
-  "generatedAt": "2026-11-09",
+  "generatedAt": "2026-11-10",
   "entries": [
+    {
+      "date": "2026-11-09",
+      "sha": "d136545",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/contributing",
+          "title": "コントリビュート",
+          "url": "/hermes/docs/developer-guide/contributing/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/messaging/discord",
+          "title": "Discord",
+          "url": "/hermes/docs/user-guide/messaging/discord/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/messaging/whatsapp",
+          "title": "WhatsApp",
+          "url": "/hermes/docs/user-guide/messaging/whatsapp/"
+        },
+        {
+          "id": "user-guide/multi-connection-desktop",
+          "title": "デスクトップ版を複数の Hermes につなぐ",
+          "url": "/hermes/docs/user-guide/multi-connection-desktop/"
+        }
+      ]
+    },
     {
       "date": "2026-11-08",
       "sha": "25ed153",

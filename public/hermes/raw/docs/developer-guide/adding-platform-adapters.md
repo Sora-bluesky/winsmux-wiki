@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: 8acb17d89767e67b0616a6faff31b9b4b80f5f59
+upstream_blob: 7a110475f51183edfa0c7a86e117569cb3ab13a7
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -222,7 +222,7 @@ gateway:
 | Webhook でのプラットフォームをまたぐ配信 | 知っているプラットフォームかどうかを登録簿で確かめる |
 | `/update` コマンドの可否 | `allow_update_command` のフラグ |
 | チャンネルの一覧 | プラグインのプラットフォームも数え上げに含まれる |
-| システムプロンプトへの助言 | `platform_hint` が LLM の文脈に差し込まれる |
+| システムプロンプトへの助言 | `platform_hint` が LLM の文脈に差し込まれる。`platform_hint_tool_notes`（`{tool: sentence}`）は、セッションがそのツールを持っているときだけ書き足される |
 | メッセージの分割 | 賢く分けるための `max_message_length` |
 | 個人情報の伏せ字 | `pii_safe` のフラグ |
 | `hermes status` | プラグインのプラットフォームを組み込みのものと並べて1行ずつ表示し、判定にはゲートウェイ自身の設定済みチェックを使う |
@@ -302,7 +302,8 @@ validate` はこれらについて非公開 import の警告を出さず、名�
 | SSRF に安全な HTTP クライアント（接続時の IP 検証、リダイレクトごとの再確認、共有の keepalive 上限） | `from gateway.platforms.helpers import platform_http_client` |
 | 自前で組み立てるための、そのクライアントの部品 | `gateway.platforms.base.ssrf_redirect_guard`（httpx の `response` フック）、`tools.url_safety.create_ssrf_safe_async_client`、`tools.url_safety.is_safe_url`、`gateway.platforms._http_client_limits.platform_httpx_limits` |
 | 独自の DM / グループの方針（`dm_policy` / `group_policy` / 許可リスト） | `from gateway.platforms.access_policy_mixin import OwnAccessPolicyMixin` |
-| ネイティブのボタンから承認を確定する | `from tools.approval import resolve_gateway_approval_card`（カードのリクエスト ID を渡します。`resolve_gateway_approval` のほうは、保留中のリクエストのうち一番古いものに答えます） |
+| ネイティブのボタンから承認を確定する | `from tools.approval import resolve_gateway_approval_card`（カードのリクエスト ID を渡します。ID なしで呼んでも何も確定しません。どのリクエストも、最初は「拒否」しか選べない状態で始まります。`_send_exec_approval_prompt` を通して描画してください。そうすれば、カードにコマンド全体が表示された時点で、基底の `send_exec_approval` がその印を外せます。`resolve_gateway_approval` のほうは、保留中のリクエストのうち一番古いものに答えます） |
+| 承認を求めた本人以外からのクリックを断る（`approvals.approvers` で承認できる人を絞っているとき） | `from gateway.approval_actor import approval_refusal, refusal_text`：確定する前に `approval_refusal(session_key, clicker_id, extra=self.config.extra, request_id=...)` を呼びます。結果が `None` でなければ、それは承認を求めた人の名前です。その場合は `refusal_text(name)` を使ってクリックした人にだけ返事をし、承認は保留のままにします。そのあと `resolve_gateway_approval_card(session_key, choice, request_id, actor_id=clicker_id, extra=self.config.extra)` で確定します。この関数は、確定する項目と照らし合わせて、クリックした人を同じクリティカルセクションの中で確かめ直します |
 | ネイティブの確認（clarify）ボタン | `tools.clarify_gateway`：`get_pending(clarify_id)`（保留中の項目か `None` を返します。`session_key`、`choices`、`multi_select` を読みます）、`resolve_gateway_clarify(clarify_id, text)`、`mark_awaiting_text(clarify_id)`、`SKIPPED` |
 | `setup_fn` のウィザードの手順 | `hermes_cli.gateway_setup_wizard`：`print_setup_header(title)`、`confirm_reconfigure(label, *env_vars)`、`offer_home_channel(home_var, user_id, what)`、`save_env_values(**values)`、`prompt_csv(text, default)`。入力の問いかけは `hermes_cli.setup`（`prompt`、`prompt_choice`、`prompt_yes_no`）から、出力は `hermes_cli.cli_output`（`print_info`、`print_success`、`print_warning`、`print_error`）から、`.env` へのアクセスは `hermes_cli.config`（`save_env_value`、`get_env_value`）を通します |
 
@@ -493,9 +494,9 @@ ctx.register_platform(
 )
 ```
 
-このフックが要る理由を説明します。組み込みのプラットフォーム（Telegram、Discord、Slack など）は `tools/send_message_tool.py` に REST を直接叩く補助を持っているので、ゲートウェイを同じプロセスで抱えなくても cron から配信できます。一方、プラグインのプラットフォームはこれまで `_gateway_runner_ref()` に頼っていて、これはゲートウェイのプロセスの外では `None` を返します。そのため `standalone_sender_fn` がないと、cron 側の送信は `No live adapter for platform '<name>'` で失敗します。
+このフックが要る理由を説明します。動いているアダプターには `_gateway_runner_ref()` を通してしか届かず、これはゲートウェイのプロセスの外では `None` を返します。そのため `standalone_sender_fn` がないと、cron 側の送信は `No live adapter for platform '<name>'` で失敗します。同梱のプラットフォームも、これと同じフックを使っています。Telegram のプロセス外の送信役（`hermes send`、`send_message` ツール、単独で走る cron の配信）は `plugins/platforms/telegram/standalone.py::standalone_send` で、Signal のものは `plugins/platforms/signal/standalone.py` です。本体がこれらに届くのは、プラットフォームの登録簿を通してだけです。
 
-この関数には、動いているアダプターが受け取るのと同じ `pconfig` と `chat_id` に加えて、任意のキーワード引数 `thread_id`、`media_files`、`force_document` が渡ります。`{"success": True, "message_id": ...}` を返せば配信できたものとして扱われ、`{"error": "..."}` を返すとその文言が cron の `delivery_errors` に出ます。関数の中で起きた例外は振り分け役が受け止め、`Plugin standalone send failed: <reason>` として報告されます。参考になる実装は `plugins/platforms/{irc,teams,google_chat}/adapter.py` にあります。
+この関数には、動いているアダプターが受け取るのと同じ `pconfig` と `chat_id` に加えて、任意のキーワード引数 `thread_id`、`media_files`、`force_document` が渡ります。あとから追加された任意のキーワード引数は、それを（名前で、または `**kwargs` を通して）宣言している送信役にだけ渡されます。そのため、上のシグネチャのとおりに書いた送信役はそのまま動き続けます。`notify=True`（cron の `cron.delivery.notify`。通知を控えめにするモードのもとでも、この配信では通知を鳴らすべきだという意味です）がその一例で、Telegram の送信役はこれを受け取ります。`{"success": True, "message_id": ...}` を返せば配信できたものとして扱われ、`{"error": "..."}` を返すとその文言が cron の `delivery_errors` に出ます。関数の中で起きた例外は振り分け役が受け止め、`Plugin standalone send failed: <reason>` として報告されます。参考になる実装は `plugins/platforms/{irc,teams,google_chat}/adapter.py` にあります。
 
 ## 環境変数を `hermes config` に出す {#surfacing-env-vars-in-hermes-config}
 

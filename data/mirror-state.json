@@ -7,9 +7,9 @@
       "translatedAt": "2026-10-14T23:48:21.601Z"
     },
     "developer-guide/adding-platform-adapters.md": {
-      "blob": "8acb17d89767e67b0616a6faff31b9b4b80f5f59",
+      "blob": "7a110475f51183edfa0c7a86e117569cb3ab13a7",
       "status": "translated",
-      "translatedAt": "2026-11-06T00:06:11.879Z"
+      "translatedAt": "2026-11-09T22:51:09.669Z"
     },
     "developer-guide/adding-providers.md": {
       "blob": "542f8ff34de36680dacbc127b649603b3320621a",
@@ -57,9 +57,9 @@
       "translatedAt": "2026-10-28T22:52:48.291Z"
     },
     "developer-guide/contributing.md": {
-      "blob": "c1efc2277e9254e4f67f57d037430304b0ef8cc5",
+      "blob": "f5d4ee14521d5cfa81e8a6a1fe2de4a74e739fc9",
       "status": "translated",
-      "translatedAt": "2026-11-08T22:48:26.361Z"
+      "translatedAt": "2026-11-09T22:51:09.677Z"
     },
     "developer-guide/creating-skills.md": {
       "blob": "f3dc99eb02f2563e485e11181af178a5932cb8c9",
@@ -112,9 +112,9 @@
       "translatedAt": "2026-11-07T22:58:47.850Z"
     },
     "developer-guide/plugins/index.md": {
-      "blob": "14d2073d721a1185f4d3ffb996d483d9a7694116",
+      "blob": "dcbc411cfddad033dc82350dbdb278e50122d7ab",
       "status": "translated",
-      "translatedAt": "2026-11-08T22:48:26.370Z"
+      "translatedAt": "2026-11-09T22:51:09.686Z"
     },
     "developer-guide/programmatic-integration.md": {
       "blob": "a62754a5fbee6079e02a768cbdc4a281ef44baba",
@@ -182,9 +182,9 @@
       "translatedAt": "2026-09-18T22:41:13.106Z"
     },
     "getting-started/nix-setup.md": {
-      "blob": "64fe44b68f3e80fd2fad112f1c895f802b0149f4",
+      "blob": "ccff056839e8758d029d0e554c9a389f4bf4f1ec",
       "status": "translated",
-      "translatedAt": "2026-11-07T22:58:47.858Z"
+      "translatedAt": "2026-11-09T22:51:26.060Z"
     },
     "getting-started/platform-support.md": {
       "blob": "5db054f36bfb60cff54c193cdeca807433e0bcfa",
@@ -607,9 +607,9 @@
       "translatedAt": "2026-10-02T22:46:55.500Z"
     },
     "user-guide/features/hooks.md": {
-      "blob": "8dfbf40a340178eed3912f236078026fea718671",
+      "blob": "c867d976e8f12fb2d52052b451012c098a42e7ee",
       "status": "translated",
-      "translatedAt": "2026-11-08T22:48:26.386Z"
+      "translatedAt": "2026-11-09T22:51:09.698Z"
     },
     "user-guide/features/image-generation.md": {
       "blob": "8badf33d14f9fcb368d9f0d697264037cce38532",
@@ -647,9 +647,9 @@
       "translatedAt": "2026-10-24T23:12:49.443Z"
     },
     "user-guide/features/memory-providers.md": {
-      "blob": "4b3ddea5ffa0f2db6589362e1c861896b914c536",
+      "blob": "c9274add900e067818127e3f631e278b748478f2",
       "status": "translated",
-      "translatedAt": "2026-10-11T22:45:59.683Z"
+      "translatedAt": "2026-11-09T22:51:09.702Z"
     },
     "user-guide/features/memory.md": {
       "blob": "3bde00ee5eeebdf1a6aa8133d9e82c7d9c69cf79",
@@ -817,9 +817,9 @@
       "translatedAt": "2026-10-11T22:45:07.855Z"
     },
     "user-guide/messaging/index.md": {
-      "blob": "c496af4714295def2c80c9638c296dc950764f70",
+      "blob": "a58252807728ef0017b33282d3ae5b31162982b9",
       "status": "translated",
-      "translatedAt": "2026-11-07T22:58:47.883Z"
+      "translatedAt": "2026-11-09T22:51:09.706Z"
     },
     "user-guide/messaging/irc.md": {
       "blob": "4fd21061621fc5e44a64222b7813561b41b28dd9",
@@ -907,9 +907,9 @@
       "translatedAt": "2026-09-25T22:58:06.460Z"
     },
     "user-guide/messaging/telegram.md": {
-      "blob": "3c49c5e8f9f1d12d3e7f061612fac61dcca3fac5",
+      "blob": "9f1b102bee73807f736a0f519038c5f6a69e57f5",
       "status": "translated",
-      "translatedAt": "2026-11-08T22:48:26.393Z"
+      "translatedAt": "2026-11-09T22:51:09.711Z"
     },
     "user-guide/messaging/webhooks.md": {
       "blob": "bc413bfe35981156f60fc0a472426d84ad4a1a5f",
@@ -962,9 +962,9 @@
       "translatedAt": "2026-10-04T22:47:27.640Z"
     },
     "user-guide/profiles.md": {
-      "blob": "c6337a6cf87d6fc9616f237906f1756f9f0e2203",
+      "blob": "d90f1e635c99b5ab87a29fa6b635fa4af50ce7b5",
       "status": "translated",
-      "translatedAt": "2026-11-06T00:06:11.941Z"
+      "translatedAt": "2026-11-09T22:51:09.713Z"
     },
     "user-guide/secrets/bitwarden.md": {
       "blob": "21c56606391c986077f49f53e598996b955f1afb",
@@ -987,9 +987,9 @@
       "translatedAt": "2026-10-31T22:50:24.737Z"
     },
     "user-guide/security.md": {
-      "blob": "1aaf5031de0e95a54b06ab33cc513c6a1f1fc2f5",
+      "blob": "f30125fb2ff5e90755c073b704a97e0bfb620e28",
       "status": "translated",
-      "translatedAt": "2026-11-04T22:47:46.109Z"
+      "translatedAt": "2026-11-09T22:51:09.717Z"
     },
     "user-guide/sessions.md": {
       "blob": "03d8eb59d99e97d786667f3f85c14e02a9873d5d",
@@ -2241,9 +2241,9 @@
       "translatedAt": "2026-11-01T22:52:43.180Z"
     },
     "developer-guide/relay-connector-contract.md": {
-      "blob": "45e831ecef85a5d0d6c51ed7493acdfc8dee5be2",
+      "blob": "38e7cd1a55dbf60cc089a080319fd2275293af61",
       "status": "translated",
-      "translatedAt": "2026-10-16T22:46:20.851Z"
+      "translatedAt": "2026-11-09T22:51:09.720Z"
     },
     "developer-guide/relay-shared-metrics.md": {
       "blob": "99773172dbc84db5fdd8c45473780943558ef885",
@@ -2366,9 +2366,9 @@
       "translatedAt": "2026-11-04T22:47:46.111Z"
     },
     "reference/package-management.md": {
-      "blob": "cd3dc09283646ca6e3bd6fc69db9e791e532a546",
+      "blob": "cbd03ca376102a6cf968ddbfce634001f9311a29",
       "status": "translated",
-      "translatedAt": "2026-11-08T22:48:26.397Z"
+      "translatedAt": "2026-11-09T22:51:09.723Z"
     },
     "user-guide/switching-to-source.md": {
       "blob": "766782bed736ffa0bbb0ff70d3c46212547257a4",
@@ -2521,10 +2521,10 @@
       "translatedAt": "2026-11-06T00:06:11.948Z"
     },
     "developer-guide/plugins/public-api.md": {
-      "blob": "0e68213f3d7c0e9bc1f42857889dbdd8bb3bb162",
+      "blob": "b9b87fb512ea1ccd0f9ebb356d065981c370541e",
       "status": "translated",
-      "translatedAt": "2026-11-07T22:58:47.890Z"
+      "translatedAt": "2026-11-09T22:51:09.724Z"
     }
   },
-  "snapshotCommit": "4e4cf69d9b70368a378e456d088abac86816c277"
+  "snapshotCommit": "0e28218d19f04d7df0bcafbede975cfa73ce1794"
 }

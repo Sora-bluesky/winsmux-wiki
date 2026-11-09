@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 14d2073d721a1185f4d3ffb996d483d9a7694116
+upstream_blob: dcbc411cfddad033dc82350dbdb278e50122d7ab
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -1611,6 +1611,7 @@ def register(ctx):
 - 表示したい文字列は戻り値として返してください。`print()` はゲートウェイの標準出力に書き込まれるだけで、利用者の目には届きません。
 - セッションの作業ディレクトリは `os.getcwd()` ではなく `agent.runtime_cwd.resolve_agent_cwd()` から取ってください。前者はゲートウェイ自身のディレクトリを返します。相対パスはこのディレクトリを基準に解決します。
 - セッションの識別情報は `os.environ` ではなく、`get_session_env("HERMES_SESSION_PLATFORM")`、`get_session_env("HERMES_SESSION_CHAT_ID")` やほかの `HERMES_SESSION_*` の名前で読んでください。関数そのものを `from gateway.session_context import get_session_env` で import してください。この名前が公開の接点で、`hermes plugins validate` は `import gateway.session_context` を非公開の import として報告します。
+- 「このターンで誰が尋ねたか」（認可や出どころの確認）を知りたいときは、`HERMES_SESSION_ACTOR_ID` / `HERMES_SESSION_ACTOR_NAME` を読んでください。`HERMES_SESSION_USER_ID` はセッションの経路を表す値で、共有チャット（Telegram の observe モード）では空になります。そのため、この値から配信先を組み立て直すコードでは、配信先が共有の会話のまま変わりません。
 
 ```python
 from agent.runtime_cwd import resolve_agent_cwd

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コントリビュート"
 description: "Hermes Agent へのコントリビュート方法（開発環境のセットアップ、コードスタイル、PR の流れ）"
 upstream_path: developer-guide/contributing.md
-upstream_blob: c1efc2277e9254e4f67f57d037430304b0ef8cc5
+upstream_blob: f5d4ee14521d5cfa81e8a6a1fe2de4a74e739fc9
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/contributing
 ---
@@ -183,6 +183,31 @@ hermes --version
 PM の有効化は、ツールと Python の依存関係を同期してからシェルに追加します。
 JS のワークスペースのインストールや、ランチャー・シェル設定の書き換えは行いません。`deactivate` を実行すると、元のシェル環境に戻り、関数も削除されます。
 
+### 開発者向けコマンド（`just`） {#developer-commands}
+
+`just` を引数なしで実行すると、開発者向けコマンドがすべて一覧表示されます。各レシピはこのリポジトリ内のスクリプトかツールを1つ呼び出すだけなので、下のコマンドは
+`just` がなくても実行できます。lefthook の pre-commit フックも同じレシピを呼び出します。
+
+| レシピ | 実行される内容 |
+|---|---|
+| `just setup` | `setup-hermes.sh --runtime-only --test-environment`（PowerShell では `setup-hermes.ps1 -RuntimeOnly`） |
+| `just check` | `scripts/check` で、マージを止める lint チェックをすべて実行します。`just check --only health` のように指定すると、実行するチェックを選べます |
+| `just fix` | 固定したバージョンの ruff を `--fix` 付きで実行し、続けて `pnpm -r fix` を実行します |
+| `just test <paths>` | `scripts/run_tests.sh <paths>`。フラグを付けていても、パスを指定しないと実行を拒否します |
+| `just test-all` | Python のテストスイート全体 |
+| `just js-install`、`just check-js`、`just test-js` | `pnpm install --frozen-lockfile`、`pnpm -r check`、`pnpm -r test`（`@hermes/ink` をビルドしたあと） |
+| `just desktop`、`just tui` | デスクトップと TUI の開発サーバー |
+| `just docs-install`、`just docs-build` | Web サイトの `npm ci` と `build:fast` |
+| `just docs-generate`、`just docs-check` | 前者はスキルのドキュメントページを再生成し、後者は CI が実行するドキュメントのチェックをすべて実行します（コミット済みのページとの一致、リンク、図） |
+| `just lock` | `scripts/relock.sh`。`pyproject.toml` を変更したあとに `uv.lock` を更新し、続けて再同期します |
+| `just check-repo-guards`、`just check-uv-lock` | repo-guards の履歴・コントリビューター・サプライチェーンの各ステップと、`uv.lock` のチェック。どちらも `scripts/ci/local_step.sh` を通じて、`origin/main` とのマージベースを基準に実行します |
+| `just check-icons`、`just lint-docker`、`just check-plugin-catalog`、`just check-nix` | コミット済みアイコンのチェック、コンテナの入力ファイルに対する hadolint と shellcheck、カタログの検証、`nix flake check` |
+| `just test-catalog`、`just test-whatsapp-bridge`、`just test-rust` | プラグインカタログのテスト、WhatsApp ブリッジの node テスト（`just js-install-whatsapp-bridge` のあと）、ブートストラップインストーラーの `cargo test --lib` |
+
+Python を実行するレシピは `scripts/run-in-hermes-env` を経由するので、
+一度も有効化していないシェルでも動きます。新しい開発者向けコマンドは、`scripts/` 配下のスクリプトと、
+それを呼び出すレシピの組み合わせで作ります。レシピ自体にはロジックを持たせません。
+
 ### 手動の開発・テスト環境 {#manual-development-and-test-environment}
 
 まず [PM の開発者向けワークフロー](/hermes/docs/reference/package-management/#developer-workflow)で Python 3.14 を準備してください。
@@ -224,7 +249,7 @@ PM で作った環境を変更するために、pip や uv のコマンドを直
 
 ### JavaScript のワークスペースと Web サイト {#javascript-workspaces-and-website}
 
-リポジトリのルートで `pnpm install --frozen-lockfile` を実行すると、デスクトップ、
+リポジトリのルートで `pnpm install --frozen-lockfile`（`just js-install`）を実行すると、デスクトップ、
 TUI、ダッシュボード、共有の JS ワークスペースが揃います。pnpm のバージョンは `pm/lock.json` で固定されています
 （`source ./activate`、PowerShell では `. .\activate.ps1` を実行すると、そのバージョンがそのまま
 用意されます）。ライフサイクルスクリプトを実行するインストールでは、`pnpm install` を直接実行した場合や
@@ -233,7 +258,8 @@ TUI、ダッシュボード、共有の JS ワークスペースが揃います�
 ルートの `engines.pnpm` の範囲によっても拒否されるためです。pnpm 12 は、
 `--ignore-scripts`、`--lockfile-only`（`pnpm-lock.yaml` を書き出します）、`pnpm fetch` のときにはルートの `preinstall` を実行しません。
 そのため、こうした場面では別のバージョンの pnpm 12 でも拒否されません。CI では、変更されたすべてのロックファイルを
-固定したバージョンの pnpm で `--frozen-lockfile` を付けてインストールします。Web サイトは別の npm プロジェクトです。
+固定したバージョンの pnpm で `--frozen-lockfile` を付けてインストールします。Web サイトは別の npm プロジェクトです
+（`just docs-install`、`just docs-build`）。
 
 ```bash
 npm ci --prefix website
@@ -258,7 +284,7 @@ npm run build:fast --prefix website
 デスクトップのネイティブ依存関係には、プラットフォームのビルドツールチェーンが必要になることもあります。
 
 ロゴとアイコンは `assets/nous-girl-*.svg` と
-`assets/backgrounds/` から生成されます。`node scripts/generate-icons.mjs` は、
+`assets/backgrounds/` から生成されます。`node scripts/generate-icons.mjs`（`just icons`）は、
 Hermes ランタイムの Python（`HERMES_PYTHON`、未設定なら PATH 上の `python`）でこれらを描画します。Pillow と
 resvg-py はコアの依存関係です。生成された PNG/ICO/ICNS はコミットしないでください。
 
@@ -267,9 +293,12 @@ resvg-py はコアの依存関係です。生成された PNG/ICO/ICNS はコミ
 どのホストでも正規のテストランナーを使います。
 
 ```bash
-scripts/run_tests.sh
-scripts/run_tests.sh tests/agent/ -v
+just test-all
+just test tests/agent/ -v
 ```
+
+どちらのレシピも `scripts/run_tests.sh` を呼び出します。`just test` はパスを指定しないと実行を拒否し、
+`just test-all` はテストスイート全体を実行します。
 
 Windows では、このスクリプトを Bash から実行します。ローカルの `.venv` や `venv` に
 pytest が入っていない場合、ランナーは上で指定した `HERMES_PYTHON` を使います。ランナーは

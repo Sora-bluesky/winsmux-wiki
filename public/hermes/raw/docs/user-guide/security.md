@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: 1aaf5031de0e95a54b06ab33cc513c6a1f1fc2f5
+upstream_blob: f30125fb2ff5e90755c073b704a97e0bfb620e28
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -54,6 +54,7 @@ approvals:
 | `cron_mode` | `deny` | [cron ジョブ](/hermes/docs/user-guide/features/cron/)が危険なコマンドの確認を出したとき、人がいない状態でどう振る舞うかです。`deny` はそのコマンドを止めます（エージェントは別の道を探すことになります）。`approve` は cron の文脈ですべて自動承認します。 |
 | `single_query_mode` | `deny` | 一回きりの [`hermes chat -q`](/hermes/docs/user-guide/cli/) セッションが危険なコマンドの確認を出したときの振る舞いです。`-q` のセッションは 1 ターンだけ動いて終了し、確認に答える人はいません。`deny` はそのコマンドを止め（エージェントは別の道を探すことになります）、`approve` は単発クエリの文脈ですべて自動承認します。`cron_mode` と同じ考え方です。 |
 | `unattended_mode` | `deny` | 人の付いていないプログラム的なプラットフォーム（webhook、msgraph_webhook、api_server）のセッションが危険なコマンドの確認を出したときの振る舞いです。こうした窓口には `/approve` に答えられる人がいないので、承認の時間切れまで待たずに、`deny` はそのコマンドをただちに止め（エージェントは別の道を探すことになります）、`approve` は無人の文脈ですべて自動承認します。例外として、クライアントが確認カードに答えられる api_server のセッション（`/v1/runs` とストリーミングの chat completions。`POST /v1/runs/{id}/approval` で答えます）には、承認の依頼がそのまま届きます。`cron_mode` と同じ考え方です。 |
+| `approvers` | `["*"]` | メッセージングのチャットで、保留中の承認に誰が答えられるかです。`["*"]` なら、参加を認められたメンバーの誰でも答えられます。`[]` または利用者 ID の一覧にすると、依頼した本人、一覧の ID の利用者、プラットフォームの管理者だけが答えられます。[共有チャットで承認に答えられる人](#who-can-answer-an-approval-in-a-shared-chat-approvalsapprovers)を参照してください。 |
 | `mcp_reload_confirm` | `true` | true のとき、`/reload-mcp` は MCP のツール一式を組み直す前に確認します。組み直すとプロバイダー側のプロンプトキャッシュが効かなくなるため（ツールのスキーマはシステムプロンプトに入っています）、次のメッセージで入力トークンを丸ごと送り直すことになります。**常に承認** を選ぶと、このキーが `false` に変わります。 |
 | `destructive_slash_confirm` | `true` | true のとき、セッションを壊す種類のスラッシュコマンド（`/clear`、`/new`、`/reset`、`/undo`）は、会話の状態を捨てる前に確認します。3 択のダイアログ（今回だけ承認 / 常に承認 / 取り消し）で、Telegram、Discord、Slack では各プラットフォームの はい / いいえ ボタンを使い、それ以外ではテキストで代替します。**常に承認** を選ぶと、このキーが `false` に変わります。TUI も `/clear`、`/new`、`/reset` のダイアログでこの設定に従います。`HERMES_TUI_NO_CONFIRM=1` を立てると、設定値にかかわらずそのダイアログを飛ばします。 |
 
@@ -290,7 +291,31 @@ approvals:
 - 承認するときは **yes**、**y**、**approve**、**ok**、**go** のいずれかを返します
 - 拒否するときは **no**、**n**、**deny**、**cancel** のいずれかを返します
 
+メッセージングでの承認では、全文を読めないコマンドの承認を求めることはありません。コマンドが長すぎて承認カードに収まらないときは、Hermes はまずコマンド全体を別のメッセージとして送り（必要なら複数のメッセージに分けます）、カードにはプレビューを短くしたことが書かれます。コマンド全体を表示できない場合（送信に失敗した、またはコマンド自体に 3 つのバッククォートによるフェンスが含まれている場合）、カードには **拒否** しか出ません。そうしたコマンドは CLI かデスクトップアプリで確かめてください。長いメッセージを分けずに切り詰めるプラットフォーム（ntfy、DingTalk、Photon、LINE）では、プレーンテキストの確認で、答え方の説明をコマンドより前に置きます。それでもコマンドが途中で切れてしまう場合は、確認には `/deny` しか出ず、同じ「プレビューを短くしました」という知らせが表示されます。
+
 ゲートウェイを動かすと、`HERMES_EXEC_ASK=1` 環境変数が自動で設定されます。
+
+#### 共有チャットで承認に答えられる人（`approvals.approvers`） {#who-can-answer-an-approval-in-a-shared-chat-approvalsapprovers}
+
+既定では、チャットへの参加を認められたメンバーなら誰でも、誰のメッセージがきっかけかに関係なく、保留中の承認に答えられます。グループやチャンネル、共有のスレッドでは、代わりにそれぞれの承認を依頼した本人に結びつけることができます。
+
+```yaml
+approvals:
+  approvers: []            # default ["*"]: any admitted member answers
+  # approvers: ["U024BE7LH", "123456789"]   # requester + these chat user ids + admins
+```
+
+`approvers` を `["*"]` から絞ると、コマンドを承認・拒否できるのは次の人だけになります。
+
+- その確認を出したターンを始めたメッセージの送り主
+- `approvers` に挙げた利用者 ID の人。ID は各プラットフォーム独自の形式で書きます（Slack なら `U…`、Telegram なら数字の ID、Matrix なら `@user:server`）
+- 承認が出たチャットの、プラットフォームの管理者。DM では `allow_admin_from`、グループでは `group_allow_admin_from` で決まり（スラッシュコマンドと同じ範囲です。DM の管理者がグループの管理者になるわけではありません）、そのチャットを受け取ったボットのプロファイルの設定が使われます。
+
+別々の依頼者 2 人が同じコマンドを同時に出した場合は、それぞれに確認が 1 つずつ出るので、一方の答えがもう一方の分を決めてしまうことはありません。
+
+それ以外の人がボタンを押したり、リアクションを付けたり、`/approve` や `/deny`、あるいは単に「yes」と送ったりすると、*Only &lt;name&gt; can answer this approval.* という知らせが返ります。コマンドは保留のままなので、依頼した本人はあとから答えられます。プラットフォームが本人だけに見える返信に対応していれば、その知らせはボタンを押した人にしか見えません。Slack のエフェメラルメッセージ、Discord のエフェメラルな返信、Telegram のコールバックのアラート、Feishu のトースト、Teams のカードの応答がそれにあたります。Matrix、WhatsApp、リレーでは、代わりにチャットに投稿されます。
+
+この設定は承認が出た時点で読まれるので、プロファイルを多重化している場合は、それぞれのプロファイル自身の `config.yaml` で決まります。ホスト側の窓口（CLI、TUI、Desktop、API サーバー）はホストとして答えるので、影響を受けません。Matrix では、独自のより厳しい `MATRIX_APPROVAL_REQUIRE_SENDER`（既定で有効）がそのまま効きます。QQBot は、もともとそのセッションの利用者からのクリックしか受け付けません。
 
 ### 恒久的な許可リスト {#permanent-allowlist}
 

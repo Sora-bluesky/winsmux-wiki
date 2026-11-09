@@ -2,7 +2,7 @@
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: cd3dc09283646ca6e3bd6fc69db9e791e532a546
+upstream_blob: cbd03ca376102a6cf968ddbfce634001f9311a29
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -207,6 +207,11 @@ Matrix の `python-olm` のように、コンパイラーや CMake が
 ダウンロードの失敗やツールの不足）であれば、外されることはありません。その場合、更新は
 何も公開しないうちに失敗するので、次の更新で古い venv がもう一度走査され、その extra が
 再試行されます。自分で要求した extra がビルドできない場合は、これまでどおりインストールが失敗します。
+古いインストールとして扱われるのは、Hermes が入っていて、しかも PM がビルドしたものではない venv だけです。PM がビルドする環境には、
+どのインタープリターを使った場合でも（`pm.build_env --python` を含みます）、`pyvenv.cfg` に `hermes-pm-built = true` が記録されます。
+このキーができる前にビルドされた環境は、PM 自身の Python で動いています（その `pyvenv.cfg` の `home` が
+PM のツールストアの中にあります）。どちらも引き継ぎの対象にはならず、中身が空の `uv venv` も対象外です。それ以外の、ツリー内にある Hermes
+がインストールされた `venv/` や `.venv/` は読み取られます。`uv` を使って手作業で作った開発者用の venv も含みます。
 
 ### 必要時インストールのポリシー {#lazy-install-policy}
 
@@ -440,6 +445,10 @@ pnpm --dir ui-tui run build
 pnpm --dir apps/desktop run dev
 ```
 
+`just` を使うと、これらの開発者向けコマンドをレシピとして呼び出せます（`just js-install`、`just desktop`、
+`just tui`、`just check`、`just test <paths>`）。各レシピは、ここに示したコマンドを実行します。
+[開発者向けコマンド](/hermes/docs/developer-guide/contributing/#developer-commands)を参照してください。
+
 アクティベーションは、`pm/lock.json` が固定している pnpm のバージョンを用意します。
 ライフサイクルスクリプトを実行するインストールは、直接またはフィルター付きで実行した `pnpm install` も含めて、それ以外の pnpm では実行を拒否します。ルートの `preinstall` スクリプトは `pm/lock.json` の pnpm を必須とし、
 `npm install` も拒否します。さらに pnpm 10 と 11 は、ルートの `engines.pnpm` の範囲（`^12`）でも拒否されます（pnpm 12 は `engines.pnpm` を自分自身と比べません）。pnpm 12 は、
@@ -464,7 +473,7 @@ pnpm --dir apps/desktop run dev
 チェックアウトの外であれば、警告が出るだけで済む場面です。
 
 Web サイトは別の npm プロジェクトです。`npm ci --prefix website` を実行してから、
-`npm run build:fast --prefix website` を実行します。PM のアクティベーションが提供するのはツールで、これらの
+`npm run build:fast --prefix website` を実行します（`just docs-install`、`just docs-build` でも実行できます）。PM のアクティベーションが提供するのはツールで、これらの
 `node_modules` ディレクトリやビルド済みの成果物は含みません。ネイティブのデスクトップビルドには追加の
 要件があり、[デスクトップのビルドガイド](https://github.com/NousResearch/hermes-agent/blob/main/apps/desktop/BUILDING.md)にまとまっています。
 

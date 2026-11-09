@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: 64fe44b68f3e80fd2fad112f1c895f802b0149f4
+upstream_blob: ccff056839e8758d029d0e554c9a389f4bf4f1ec
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -98,7 +98,7 @@ hermes --tui
 git clone https://github.com/NousResearch/hermes-agent.git
 cd hermes-agent
 nix develop
-hermes setup
+hermes-checkout setup
 ```
 
 </details>
@@ -940,12 +940,17 @@ services.hermes-agent.settings.plugins.enabled = [
 Python の依存を入れることはしません。シェルには Node.js と実行時のツールも入っています。
 pnpm のフックが、JS のワークスペースの入力が変わったときにそれを更新します。
 
+このシェルに入っても、実行される `hermes` は変わりません。`hermes` はインストール済みの Hermes のままなので、
+チェックアウトで作業している間もそのまま使い続けられます。`hermes-checkout` はこのチェックアウトのコードを実行し、
+同じ引数を受け付けます。保存された状態に影響する変更を試すときは、別の `HERMES_HOME` を指定してください。
+既定では、どちらのコマンドも同じものを読むからです。
+
 ```bash
 cd hermes-agent
 nix develop
 "$HERMES_PYTHON" -c "import sys; print(sys.executable); print(sys.version)"
-hermes setup
-hermes chat
+hermes-checkout --version
+HERMES_HOME="$PWD/.scratch/home" hermes-checkout chat
 ```
 
 ### direnv（おすすめ） {#direnv-recommended}

@@ -2,7 +2,7 @@
 title: "記憶プロバイダー"
 description: "外部の記憶プロバイダーのプラグイン — Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory"
 upstream_path: user-guide/features/memory-providers.md
-upstream_blob: 4b3ddea5ffa0f2db6589362e1c861896b914c536
+upstream_blob: c9274add900e067818127e3f631e278b748478f2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
 ---
@@ -178,7 +178,7 @@ Honcho は会話を「メッセージをやり取りするピア」としてモ�
 hermes profile create coder --clone
 ```
 
-`--clone` は `honcho.json` に `hermes.coder` のホストの区画を作り、`aiPeer: "coder"`、共有の `workspace`、引き継いだ `peerName`、`recallMode`、`writeFrequency`、`observation` などを設定します。AI 側のピアは先に Honcho 上で作られるので、最初のメッセージの前から存在します。
+`--clone`（`memory.provider: honcho` の設定も引き継ぎます）を使うと、Honcho のプラグインが `honcho.json` に `hermes_coder` のホストの区画を作り、`aiPeer: "coder"`、共有の `workspace`、引き継いだ `peerName`、`recallMode`、`writeFrequency`、`observation` などを設定します。AI 側のピアは先に Honcho 上で作られるので、最初のメッセージの前から存在します。`hermes profile rename` でプロファイル名を変えると、プラグインがそのホストの区画のキーを付け替え、ピアはそのまま残ります。どちらの動きも、プロファイル用のフックを備えたバージョンの Honcho プラグインが必要です。
 
 ### すでにあるプロファイルに、Honcho のピアを埋める {#existing-profiles-backfill-honcho-peers}
 
@@ -186,7 +186,7 @@ hermes profile create coder --clone
 hermes honcho sync
 ```
 
-すべての Hermes のプロファイルを走査し、ホストの区画が無いものには作り、既定の `hermes` の区画から設定を引き継ぎ、新しい AI 側のピアを先に作ります。何度実行しても結果は同じで、すでにホストの区画があるプロファイルは飛ばします。
+すべての Hermes のプロファイルを走査し、ホストの区画が無いものには作り、既定の `hermes` の区画から設定を引き継ぎ、新しい AI 側のピアを先に作ります。何度実行しても結果は同じで、すでにホストの区画があるプロファイルは飛ばします。この処理は `hermes update` では自動で行われなくなりました。Honcho を設定する前に作ったプロファイルがある場合は、このコマンドを一度実行してください。
 
 ### プロファイルごとの観測 {#per-profile-observation}
 

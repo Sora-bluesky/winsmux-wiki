@@ -2,7 +2,7 @@
 title: "プラグインの公開 API"
 description: "プラグインが import してよい Hermes のモジュールと名前の一覧です。それ以外の Hermes の import には hermes plugins validate が警告を出します"
 upstream_path: developer-guide/plugins/public-api.md
-upstream_blob: 0e68213f3d7c0e9bc1f42857889dbdd8bb3bb162
+upstream_blob: b9b87fb512ea1ccd0f9ebb356d065981c370541e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/public-api
 ---
@@ -87,6 +87,8 @@ sources:
 | `gateway.platforms.access_policy_mixin` | `OwnAccessPolicyMixin` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `tools.approval` | `resolve_gateway_approval` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `tools.approval` | `resolve_gateway_approval_card` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
+| `gateway.approval_actor` | `approval_refusal` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
+| `gateway.approval_actor` | `refusal_text` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `tools.clarify_gateway` | `get_pending` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `tools.clarify_gateway` | `resolve_gateway_clarify` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `tools.clarify_gateway` | `mark_awaiting_text` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Relay ↔ Connector 契約"
 description: "Hermes gateway の relay アダプターと外部コネクターのあいだの通信契約（実験的）"
 upstream_path: developer-guide/relay-connector-contract.md
-upstream_blob: 45e831ecef85a5d0d6c51ed7493acdfc8dee5be2
+upstream_blob: 38e7cd1a55dbf60cc089a080319fd2275293af61
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-connector-contract
 ---
@@ -426,6 +426,11 @@ gateway はアクションの辞書を渡してトランスポートを呼びま
 
 `get_chat_info(chat_id)` は別に中継される呼び出しで、少なくとも
 `{name, type}` を返します。
+
+**分割された `send` は、失われたチャンクを報告できません。** `send` の結果には一部だけ届いたことを示すフィールドがないため、
+gateway は、全体が届いた場合と、connector が内容を分割したうえでチャンクを落としたり切り詰めたりした場合とを見分けられません。
+そのため、プレビューが短縮された実行承認カードの前に、証拠として完全なコマンドを先に送るのは、そのコマンドが1通のメッセージに収まる場合（`max_message_length`）だけです。
+それより長いコマンドでは、カードは Deny（拒否）しか選べない状態になります。
 
 **`metadata.profile`（多重化の往復）。** チャットを宛先とする送信フレームはすべて、
 `metadata` に、gateway が受信時に取り込んだテナントの識別子（`scope_id`、`user_id`）を載せます。

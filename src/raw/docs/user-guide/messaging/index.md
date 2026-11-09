@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: c496af4714295def2c80c9638c296dc950764f70
+upstream_blob: a58252807728ef0017b33282d3ae5b31162982b9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -233,6 +233,12 @@ hermes gateway install --force
 プロセスを再起動します。既定値の `0` なら、これまでどおりの `Type=simple` の
 挙動のままです。この設定は Linux と systemd 専用で、ふつうの
 ネットワーク切断をイベントループの異常として扱うことはありません。
+
+`Type=notify` のときは、ゲートウェイが受け持つすべてのプロファイルのアダプターが
+プロファイルごとに 1 つずつ接続し終えてから、準備完了を報告します。2 つ目以降のプロファイルでは、
+接続を始める前に、その接続に割り当てた時間に余裕を足した分を systemd の `EXTEND_TIMEOUT_USEC` で伝えます。
+そのため、プロファイルの多い大きな構成では、起動に systemd の既定の起動タイムアウトである
+90 秒を超えても待ってもらえます。一方で、途中で進まなくなった起動はこれまでどおり強制終了されます。
 
 ## チャットの中で使うコマンド {#chat-commands-inside-messaging}
 
