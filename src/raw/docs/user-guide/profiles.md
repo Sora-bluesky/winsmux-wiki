@@ -2,7 +2,7 @@
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: d90f1e635c99b5ab87a29fa6b635fa4af50ce7b5
+upstream_blob: da63112aaca50b82e8cf53189a662d21128c9f54
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -51,8 +51,7 @@ sources:
 
 ```bash
 hermes profile create coder       # creates profile + "coder" command alias
-coder setup                       # configure API keys and model
-coder chat                        # start chatting
+coder chat                        # start chatting (keys and model come from the current profile)
 ```
 
 これだけです。`coder` は独自の設定・記憶・状態を持つ、独立した Hermes プロファイルになりました。
@@ -69,7 +68,10 @@ coder chat                        # start chatting
 hermes profile create mybot
 ```
 
-同梱スキルを入れた新しいプロファイルができます。`mybot setup` を実行すると、API キー・モデル・ゲートウェイのトークンを設定できます。
+同梱スキルを入れた新しいプロファイルができます。API キー（ボットのトークンと許可リストは除きます）とモデルはいま使っているプロファイルから受け継ぎ、ログイン情報は既定のプロファイルのものを共有します。Desktop のボットページで既定になっている「Share keys & accounts」と同じ動きです。ゲートウェイのトークンは `mybot setup` を実行して設定してください。
+
+- `--isolated-auth` を付けると、ログイン情報（`auth.json`）を共有せずに一度だけコピーします。名前付きのプロファイルをもとに作った場合は、常にそのプロファイルのログイン情報のコピーが渡されます。ただし、サブスクリプションのログイン（使い捨ての OAuth）はコピーできないため、そのプロバイダについては新しいプロファイルが既定のプロファイルのログインを読みます。その旨は `profile create` が表示します。
+- `--no-credentials` を付けると、キーもログイン情報もモデルもコピーしません。作成後に `mybot setup` を実行してください。
 
 このプロファイルをカンバンのワーカーとして使うつもりなら（あるいはカンバンのオーケストレーターから仕事を割り振ってほしいなら）、作成時に `--description "<role>"` を付けて、何が得意なのかをオーケストレーターに伝えておきます。
 
@@ -107,7 +109,7 @@ hermes profile create backup --clone-all
 設定・API キー・人格・すべての記憶・スキル・プラグインまで、**まるごと**コピーします。動く状態のスナップショットです。プロファイルごとの履歴（セッション履歴、`state.db`、`backups/`、`state-snapshots/`、`checkpoints/`）は対象外です。これらは元のプロファイルに属するもので、数十 GB に達することもあります。既定のプロファイルから複製するときは、ローカルモデル用の実行環境のディレクトリ（`models/`、`runtimes/`、`node/`。ダウンロードした重みと管理下のバイナリで、必要になれば取り直されます）も、`hermes backup` と同じく対象外になります。**cron ジョブも複製されません**。cron ジョブは元のプロファイルとその配信チャンネルに結びついた予定作業なので、複製先がそれを引き継ぐと同じジョブが二重に走ってしまいます（ゲートウェイが 2 つ、ジョブ ID は同じ）。新しいプロファイルの `cron/` は空の状態から始まります。履歴と cron ジョブまで含めた完全なバックアップが必要なら、`hermes profile export` か `hermes backup` を使ってください。
 
 :::note OAuth ログインはコピーせず共有します
-Anthropic（Claude Pro/Max）、OpenAI Codex、xAI の OAuth ログインは**使い捨てのリフレッシュトークン**を使います。コピーしても 2 つ目の資格情報にはならず、1 つの資格情報を 2 人で持っている状態になり、どちらかが先に更新した時点で他方のコピーは失効します。そのため `--clone-all`（およびダッシュボードによる資格情報のミラーリング）は、複製先から OAuth の行を落とします。新しいプロファイルは、ルートの `~/.hermes/auth.json` からログイン情報を読み続けます。どのプロファイルの中でトークンを更新しても、その結果はルートに書き戻されるので、すべてのプロファイルがログインしたままになります。静的な API キーは従来どおりコピーされます。あるプロファイルに独自の OAuth ログインを持たせたいときは、そのプロファイルで `hermes -p <name> auth add <provider>` を実行してください。このログインはプロファイル自身の `auth.json` に保存されます。ルートにまだそのプロバイダのログインがない場合も同じです。以後、そのプロファイルはルートのログインではなくこちらを使います。ルートの `auth.json` は変更されません。ログインを保存できなかったときは、`Added` と表示せずにエラーで終わります。
+Anthropic（Claude Pro/Max）、OpenAI Codex、xAI の OAuth ログインは**使い捨てのリフレッシュトークン**を使います。コピーしても 2 つ目の資格情報にはならず、1 つの資格情報を 2 人で持っている状態になり、どちらかが先に更新した時点で他方のコピーは失効します。そのため `--clone-all`（および `--isolated-auth` や名前付きのプロファイルから作ったときのログイン情報のコピー）は、コピー先から OAuth の行を落とします。新しいプロファイルは、ルートの `~/.hermes/auth.json` からログイン情報を読み続けます。どのプロファイルの中でトークンを更新しても、その結果はルートに書き戻されるので、すべてのプロファイルがログインしたままになります。静的な API キーは従来どおりコピーされます。あるプロファイルに独自の OAuth ログインを持たせたいときは、そのプロファイルで `hermes -p <name> auth add <provider>` を実行してください。このログインはプロファイル自身の `auth.json` に保存されます。ルートにまだそのプロバイダのログインがない場合も同じです。以後、そのプロファイルはルートのログインではなくこちらを使います。ルートの `auth.json` は変更されません。ログインを保存できなかったときは、`Added` と表示せずにエラーで終わります。
 :::
 
 ### 特定のプロファイルから複製する {#clone-from-a-specific-profile}

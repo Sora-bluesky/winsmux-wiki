@@ -1,6 +1,78 @@
 {
-  "generatedAt": "2026-11-10",
+  "generatedAt": "2026-11-11",
   "entries": [
+    {
+      "date": "2026-11-10",
+      "sha": "5d95359",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/adding-platform-adapters",
+          "title": "プラットフォームアダプターを追加する",
+          "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
+        },
+        {
+          "id": "developer-guide/contributing",
+          "title": "コントリビュート",
+          "url": "/hermes/docs/developer-guide/contributing/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/plugins/public-api",
+          "title": "プラグインの公開 API",
+          "url": "/hermes/docs/developer-guide/plugins/public-api/"
+        },
+        {
+          "id": "developer-guide/relay-connector-contract",
+          "title": "Relay ↔ Connector 契約",
+          "url": "/hermes/docs/developer-guide/relay-connector-contract/"
+        },
+        {
+          "id": "getting-started/nix-setup",
+          "title": "Nix と NixOS のセットアップ",
+          "url": "/hermes/docs/getting-started/nix-setup/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/memory-providers",
+          "title": "記憶プロバイダー",
+          "url": "/hermes/docs/user-guide/features/memory-providers/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        }
+      ]
+    },
     {
       "date": "2026-11-09",
       "sha": "d136545",

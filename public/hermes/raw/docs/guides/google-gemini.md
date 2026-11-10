@@ -3,14 +3,14 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Google Gemini"
 description: "Hermes Agent を Google Gemini で使う方法。ネイティブの AI Studio API、API キーの設定、ツール呼び出し、ストリーミング、割り当ての考え方まで"
 upstream_path: guides/google-gemini.md
-upstream_blob: 2eb6be2af90eb09ab478a283b68b28ad5070e158
+upstream_blob: f3f6dca36d7557d43783d514d636da787ceae342
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/google-gemini
 ---
 
 # Google Gemini {#google-gemini}
 
-Hermes Agent は Google Gemini をネイティブのプロバイダとして扱い、**Google AI Studio / Gemini API** を使います。OpenAI 互換のエンドポイントではありません。これにより Hermes は、内部で持っている OpenAI 形式のメッセージとツールのやり取りを Gemini ネイティブの `generateContent` API へ変換しつつ、ツール呼び出し、ストリーミング、画像などを含む入力、Gemini 固有の応答メタデータをそのまま活かせます。
+Hermes Agent は Google Gemini をネイティブのプロバイダとして扱い、**Google AI Studio / Gemini API** を使います。OpenAI 互換のエンドポイントではありません。これにより Hermes は、内部で持っている OpenAI 形式のメッセージとツールのやり取りを Gemini ネイティブの API（Gemini 3 以降は [Interactions API](#interactions-api)、それより前のモデルは `generateContent`）へ変換しつつ、ツール呼び出し、ストリーミング、画像などを含む入力、Gemini 固有の応答メタデータをそのまま活かせます。
 
 ## 事前に必要なもの {#prerequisites}
 
@@ -96,7 +96,7 @@ Google は OpenAI 互換のエンドポイントも公開しています。
 https://generativelanguage.googleapis.com/v1beta/openai/
 ```
 
-Hermes のエージェントセッションでは、上に挙げた Gemini ネイティブのエンドポイントを選んでください。Hermes にはネイティブの Gemini アダプタが入っているので、複数往復のツール利用、ツールの実行結果、ストリーミング、画像などを含む入力、Gemini の応答メタデータを、そのまま Gemini の `generateContent` API に対応づけられます。OpenAI 互換のエンドポイントは、どうしても OpenAI API との互換性が必要なときには役に立ちます。
+Hermes のエージェントセッションでは、上に挙げた Gemini ネイティブのエンドポイントを選んでください。Hermes にはネイティブの Gemini アダプタが入っているので、複数往復のツール利用、ツールの実行結果、ストリーミング、画像などを含む入力、Gemini の応答メタデータを、そのまま Gemini ネイティブの API に対応づけられます。OpenAI 互換のエンドポイントは、どうしても OpenAI API との互換性が必要なときには役に立ちます。
 
 以前に `GEMINI_BASE_URL` を `/openai` の URL に設定していた場合は、削除するか次のように書き換えます。
 
@@ -111,6 +111,38 @@ Google のホストのルートだけを書いたベース URL は、自動で�
 Gemini の経路を通るのは、ベース URL が `generativelanguage.googleapis.com` か、下で説明する Vertex AI の
 エクスプレス用のホストを指しているときだけです。ほかのホストにあるプロキシは OpenAI 互換のエンドポイントとして
 扱われるので、`/openai` の形の URL で設定してください。
+
+### Interactions API {#interactions-api}
+
+Google AI Studio では、Hermes は Gemini 3 以降のモデル（と `gemini-*-latest`
+のエイリアス）を、Google がこれらのモデル向けにすすめている
+[Interactions API](https://aistudio.google.com/docs/interactions-overview) を通して送ります。
+Gemini 2.x と Gemma のモデルは `generateContent` を使います。
+
+どちらの API を使うかは、すべてのモデルまとめてでも、モデルごとにでも、自分で選べます。
+
+```yaml
+providers:
+  gemini:
+    gemini_api: generate_content    # every Gemini model
+    models:
+      gemini-3.8-flash:
+        gemini_api: interactions    # except this one
+```
+
+どの設定にも `interactions`、`generate_content`、`auto`（既定値。上で説明した振り分けです）のいずれかを
+指定します。モデルごとの設定は、プロバイダ全体の設定より優先されます。変更は次のリクエストから反映され、
+起動し直す必要はありません。Gemini 2.x はトークンの予算で思考の量を調整しますが、Interactions API には
+それに当たる設定がありません。そのため、2.x のモデルを `interactions` に固定すると、その予算は
+使われなくなります。
+
+Hermes は Interactions を状態を持たない形（`store: false`）で呼び出します。つまり、`generateContent` と同じく
+毎回のリクエストで会話全体を送るので、Google 側に会話の写しは残らず、プロンプトのキャッシュもこれまでどおり
+働きます。例外は長いデコード（Gemini 4 で推論の強さが `xhigh` 以上のとき）です。Google は何回かに分けた
+こうした応答を、保存されたインタラクションからしか続けられないため、これらのリクエストでは `store: true` を
+設定します。その場合、Google は標準の期間（有料枠では 55 日、無料枠では 1 日）だけデータを保持します。
+Interactions が使えるのは AI Studio のホスト（`generativelanguage.googleapis.com`）だけです。Vertex AI の
+エクスプレスやプロキシのベース URL では、常に `generateContent` が使われます。
 
 ### Vertex AI のエクスプレスモードのキー {#vertex-ai-express-mode-keys}
 
@@ -150,6 +182,7 @@ Hermes は、もう一方のサービスの名前を挙げた案内を添えま�
 
 | モデル | ID | 補足 |
 |-------|----|-------|
+| Gemini 4 Carbon | `gemini-4-carbon` | いちばん強力な推論モデル。1 往復あたりの思考は Argon より多く、枠、長いデコード、料金は Argon と同じ。有料枠のみ |
 | Gemini 4 Argon | `gemini-4-argon` | 看板の推論モデル。入力と出力で共有する 1M の枠を持ち、長いデコードで最大 1M トークンまで出力できる |
 | Gemini 3.8 Flash | `gemini-3.8-flash` | 長い工程のエージェント作業やコーディングに強い、いちばん高性能な Flash |
 | Gemini 3.7 Flash | `gemini-3.7-flash` | 速度・性能・画像などの理解のバランスが良い、おすすめの既定値 |
@@ -166,7 +199,7 @@ Hermes は、もう一方のサービスの名前を挙げた案内を添えま�
 
 ### Gemini 4 Argon の推論の強さと長いデコード {#gemini-4-argon-reasoning-effort-and-long-decode}
 
-Gemini 4 Argon は常に思考します。Hermes は推論の強さ（`/reasoning`、
+以下の内容は、Gemini 4 Carbon でもすべて Argon と同じように動きます。Gemini 4 Argon は常に思考します。Hermes は推論の強さ（`/reasoning`、
 `agent.reasoning_effort`）を、このモデルの `thinkingLevel` へ次のように割り当てます。
 
 | Hermes の推論の強さ | `thinkingLevel` | 出力全体の上限 |

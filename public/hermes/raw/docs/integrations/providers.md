@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 02d1a310945984f21b60eedea4e3980436e88890
+upstream_blob: 3f750fa9e81eb149b48dd5097d30cdfd41a1ebe3
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -1323,6 +1323,8 @@ providers:
 ```
 
 各エントリが受け付けるのは、`api`（エンドポイントのベース URL。`base_url`/`url` も別名として使えます）、`name`（任意の表示名。既定は辞書のキー）、`key_env` かインラインの `api_key` か `key_cmd`（後述）、`transport`（`chat_completions` / `anthropic_messages` / `codex_responses`）、`default_model`、`models`、`context_length`、`discover_models`、`extra_body`、`extra_headers`、`session_affinity_header`（会話 ID を載せるヘッダーの名前。セッションを意識するプロキシ向けで、設定しないかぎり無効です）、`ssl_ca_cert` / `ssl_verify`、`catalog_provider`（後述）、そしてエントリを消さずに隠すための `enabled: false` です。
+
+組み込みプロバイダと同じ名前をキーにしたエントリ（`openrouter:`、`Anthropic:`、`deepseek:` など。大文字・小文字は問いません）が独自の `api`/`base_url` を設定している場合、その名前はそのエントリ**そのもの**を指します。`--provider openrouter`、`/model`、`hermes model`、ダッシュボードはどれもこれを `custom:openrouter` として保存し、毎回のターンはあなたのエンドポイントに送られます。エントリがキー（`api_key` か `key_env`）を宣言していればそのキーが使われ、組み込みプロバイダ用の環境変数のキーは一切送られません。キーのないエントリは、`custom:<name>` と同じく組み込みプロバイダ用の環境変数のキーを代わりに使います。エンドポイントを持たない同名のブロック（たとえば `providers.openrouter: {request_timeout_seconds: 300}`）は、組み込みプロバイダの設定を調整するだけです。`model.provider` に指定した組み込みプロバイダがこうしたエントリに置き換えられている場合は、`hermes doctor` が警告を出します。
 
 #### コマンドで発行する認証情報（`key_cmd`） {#command-minted-credentials-keycmd}
 

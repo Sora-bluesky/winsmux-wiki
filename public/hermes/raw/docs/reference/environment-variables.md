@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: c69e09dd961cbcc4a76827fec58232c4e4628bb6
+upstream_blob: 4649be4ed11475187f310ce97fe5f34c33d71d48
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -332,6 +332,9 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `TELEGRAM_BOTS_REQUIRE_MENTION` | 有効にすると、ほかのボットからのメッセージは `@thisbot` と明示しないと応答しません。引用の返信だけでは無視されるので、ボット同士が延々と返信し合うのを止められます。人からの返信には影響しません。既定: `false`。`telegram.bots_require_mention` と同じです。 |
 | `TELEGRAM_REPLY_TO_MODE` | 返信を紐づける挙動: `off`、`first`（既定）、`all`。Discord と同じ考え方です。 |
 | `TELEGRAM_IGNORED_THREADS` | ボットが決して応答しない Telegram のフォーラムのトピック / スレッド ID をカンマ区切りで |
+| `TELEGRAM_ALLOWED_TOPICS` | ボットが受け持つ Telegram のフォーラムのトピック / スレッド ID をカンマ区切りで。設定すると、それ以外のグループやフォーラムのトピックからのメッセージは無視されます（チャットやトピックごとに、最初に無視したときだけ INFO でログに残ります）。個別のチャットは絞り込みの対象になりません。Telegram の General トピックは ID `1` として扱われます。`TELEGRAM_IGNORED_THREADS` より先に適用されます。`config.yaml` の `telegram.allowed_topics` と同じです。 |
+| `TELEGRAM_FREE_RESPONSE_CHATS` | `require_mention` を無視して、グループのすべてのメッセージに Hermes が応答するチャット ID をカンマ区切りで。`telegram.free_response_chats` と同じです。 |
+| `TELEGRAM_FREE_RESPONSE_TOPICS` | フォーラムのトピック 1 つに限って `require_mention` を無視する、`<chat_id>:<thread_id>` の組をカンマ区切りで。Telegram の General トピックはスレッド ID `1` として扱われます。`telegram.free_response_topics` と同じです。 |
 | `TELEGRAM_PROXY` | Telegram への接続に使うプロキシの URL — `HTTPS_PROXY` より優先されます。`http://`、`https://`、`socks5://` に対応します |
 | `DISCORD_BOT_TOKEN` | Discord のボットのトークン |
 | `DISCORD_ALLOWED_USERS` | ボットを使える Discord のユーザー ID をカンマ区切りで |
@@ -765,7 +768,7 @@ Microsoft Teams のプラットフォーム用アダプター（Bot Framework / 
 
 | 変数 | 説明 |
 |----------|-------------|
-| `HERMES_TELEGRAM_TEXT_BATCH_DELAY_SECONDS` | 溜めた Telegram の文章を送り出すまでの待ち時間（既定: `0.6`）。 |
+| `HERMES_TELEGRAM_TEXT_BATCH_DELAY_SECONDS` | 1,024 文字を超える Telegram の文章を送り出すまでの待ち時間（既定: `1.5`）。それより短い文章は、状況に合わせて 0.18 秒 / 0.24 秒ですぐに送る仕組みがそのまま使われます。 |
 | `HERMES_TELEGRAM_TEXT_BATCH_SPLIT_DELAY_SECONDS` | Telegram の 1 通が長さの上限を超えて分割されたとき、分割した塊のあいだに置く間隔（既定: `2.0`）。 |
 | `HERMES_SIMPLEX_TEXT_BATCH_DELAY` | 立て続けに届いた文章を 1 つの MessageEvent にまとめるための静かな時間（秒。既定: `0.8`）。Telegram の文章のまとめ方と同じ考え方です。 |
 | `HERMES_TELEGRAM_MEDIA_BATCH_DELAY_SECONDS` | 溜めた Telegram のメディアを送り出すまでの待ち時間（既定: `0.6`）。 |

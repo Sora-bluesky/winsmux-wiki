@@ -9,7 +9,7 @@ sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/line
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
   - https://hermes-agent.nousresearch.com/docs/guides/work-with-skills
-hermes_version: "0.23.0"
+hermes_version: "0.23.1"
 confidence: high
 raw: /hermes/raw/first.md
 ---

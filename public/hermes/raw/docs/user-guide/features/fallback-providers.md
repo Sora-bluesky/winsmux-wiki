@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "フォールバックプロバイダー"
 description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: b3130556342755fac31d458d0ad960ab7962b2f8
+upstream_blob: 781f6e12a9c0cf351b572059b495db7100c3fc59
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
@@ -30,7 +30,7 @@ Hermes Agent には、プロバイダー側で問題が起きてもセッショ�
 hermes fallback
 ```
 
-`hermes fallback` は `hermes model` と同じプロバイダー選択画面をそのまま使います。プロバイダーの一覧も、認証情報の入力も、検証のしかたも同じです。連鎖の管理には `add`、`list`（別名 `ls`）、`remove`（別名 `rm`）、`clear` のサブコマンドを使います。変更内容は `config.yaml` のトップレベルにある `fallback_providers:` のリストへ保存されます。
+`hermes fallback` は `hermes model` と同じプロバイダー選択画面をそのまま使います。プロバイダーの一覧も、認証情報の入力も、検証のしかたも同じです。連鎖の管理には `add`、`list`（別名 `ls`）、`remove`（別名 `rm`）、`clear` のサブコマンドを使い、連鎖が正しく動くかどうかは `check` で確かめます（[連鎖の確認](#checking-the-chain)を参照）。変更内容は `config.yaml` のトップレベルにある `fallback_providers:` のリストへ保存されます。
 
 YAML を直接書きたい場合は、`~/.hermes/config.yaml` のトップレベルに `fallback_providers` のリストを追加します。
 
@@ -61,6 +61,20 @@ Google 純正の API エンドポイントでは、いずれも純正の Gemini 
 :::note `fallback_model` と `fallback_providers` の違い
 `fallback_providers`（複数形・リスト）が現行の設定の形で、複数の控えを順に試せます。`fallback_model`（単数形）は控えを 1 つだけ指定する古いキーです。Hermes は後方互換のためにこちらも今なお尊重しますが、`hermes fallback` が書き込むのは現行の `fallback_providers` キーで、書き込みのときに古い設定を移行します。両方が設定されている場合は `fallback_providers` が優先されます。
 :::
+
+### 連鎖の確認 {#checking-the-chain}
+
+`hermes fallback check` を使うと、エージェントのセッションを起動しなくても、フォールバックの切り替えが各エントリーまで進んだときにそのエントリーが動くかどうかを確かめられます。
+
+```bash
+hermes fallback check            # static: resolve each entry and its credentials, no inference
+hermes fallback check --live     # also send one minimal request per entry, in parallel
+hermes fallback check --live --json
+```
+
+各エントリーは、フォールバックの切り替えが解決するときとまったく同じやり方で解決されます（その `provider`、`model`、`base_url` と `api_key`/`key_env`）。連鎖を順にたどることはしないので、あるエントリーの問題が別のエントリーに隠れて見えなくなることはありません。`--live` は、静的な確認で準備ができているエントリーごとに、そのプロバイダー自身の API（OpenAI 互換、Anthropic Messages、Codex Responses、Bedrock、ACP）を通じて短い補完のリクエストを 1 回送ります。再試行はしません（SDK の再試行は切ってあります。ストリーミングを拒む Anthropic のエンドポイントに対しては、アダプターがいつも行う非ストリーミングでの再送が 1 回だけ行われます）。別のプロバイダーが代わりに答えることもありません。空の応答や壊れた応答、状態が `failed`/`cancelled` の応答、選択肢にエラーを報告している応答（OpenRouter の `finish_reason: "error"`）は失敗として数えます（トークン上限に達した `incomplete` は、答えたものとして数えます）。HTTP 200 の本文に載せて中継されたプロバイダーのエラーは、そこに書かれたリクエストエラーと同じように報告されます。プロバイダーが別のモデルを報告した場合、そのエントリーは `model_mismatch` として失敗します（要求したモデルの日付付きスナップショット、たとえば `gpt-4o` に対する `gpt-4o-2024-08-06` は一致として数えます）。報告されたモデルが何の裏付けにもならない場合は、モデルの確認を飛ばします。Anthropic Messages と Codex Responses のアダプターは実際に応答したモデルを明かさず、Azure はデプロイ名ではなく元のモデルを報告し、ルーターのメタモデル（`openrouter/auto`、`@preset/...`、`<model>@preset/...`）は自分が選んだモデルの名前で答え、Bedrock の ARN はそのまま返ってこず、ローカルやプライベートネットワークのサーバー（llama.cpp、LM Studio、Ollama、LAN 内のマシン）は仮の名前を報告することが多いからです。ライブのリクエストのタイムアウトは、プロバイダーに `request_timeout_seconds` が設定されていればその値（切り替えのときと同じです）、なければ 30 秒です。ストリーミングのリクエストでは、このタイムアウトは答え全体ではなく、1 回ごとの読み取りに適用されます。Bedrock（AWS SDK の認証情報チェーン）や外部プロセスのプロバイダーは、静的な確認に通っても経路が解決できるというだけの意味です。実際に動くことを確かめるには `--live` を使ってください。静的モードは推論のリクエストを送りませんが、認証情報はセッションと同じやり方で解決するので、期限の近い OAuth トークンが更新されて保存されることがあります。`provider: auto`（呼び出しごとにバックエンドを選ぶ）や `provider: moa`（複数のモデルへ振り分けるプリセット）のエントリーは決まった 1 つの経路ではないため、ライブのリクエストは送られず、静的な確認の判定のままになります。ライブのリクエストは、フォールバックの切り替えが組み立てるのと同じクライアントへ送られます。Nous と Codex のエントリーでは、切り替えのときと同じく、そのクライアントが保存済みのログイン情報を使います。
+
+準備ができていないエントリーが 1 つでもあると、コマンドは終了ステータス 1 で終わります。そのため、cron ジョブや CI でこの結果を通過の条件にできます。`--json` を付けると、`profile`、`live`、`ready`、`checked_at` と、エントリーごとの結果（`provider`、`model`、`base_url`、`api_mode`、`auth_source`、`configured`、`auth_ready`、`inference_ready`、`latency_ms`、`model_returned`、`error_class`、`error`、`ready`、`status`）を出力します。`status` は `ready`、`ready (static)`、`config`、`auth`、`model_mismatch`、`live_response`（使える補完が含まれていない応答）、またはリクエストが失敗した場合の `live_<reason>`（`live_auth`、`live_timeout`、`live_rate_limit`、`live_model_not_found` など）のいずれかです。認証情報が表示されることはなく、プロバイダーのエラー文は伏せ字にされます。別のプロファイルの連鎖を確かめるには `hermes -p <profile> fallback check` を使います。
 
 ### 対応プロバイダー {#supported-providers}
 

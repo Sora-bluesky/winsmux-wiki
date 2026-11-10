@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: de5b4568ba07540cc7e50ebe42ba7d8d50887015
+upstream_blob: ec6e8f179ecbf8910f58ad2044c37f377ecb869f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -749,7 +749,7 @@ Hermes は、並べた変数をそれぞれまず現在のシェルから探し�
 
 ### ホストのユーザーでのコンテナ実行 {#running-the-container-as-your-host-user}
 
-既定では、Docker コンテナは `root`（UID 0）として動きます。`/workspace` やほかのバインドマウント内で作られたファイルはホスト上で root の所有になるため、セッションのあとホストのエディターで編集するには、先に `sudo chown` で所有者を変えなければなりません。Linux では、Hermes が root のコンテナを停止して削除するとき、そのコンテナ専用のサンドボックスのバインドマウント（`TERMINAL_SANDBOX_DIR` の下の `/root` と `/workspace`）にあるファイルの所有者を、先にユーザーへ戻します（`docker_volumes` やマウントしたホストのディレクトリは対象外で、rootless Docker と userns-remap の環境では行いません）。これらのサンドボックスのファイルは、所有者が誰であっても setuid/setgid ビットとファイルケーパビリティも外されます。そのため、コンテナがそこに残したものをホストで実行しても、昇格した権限で動くことはありません。削除されずに長く使われるコンテナでは、セッションが切り離されるとき、もう一度つながるとき、古いコンテナの一掃処理で削除される前に、（所有者は変えずに）この取り外しが行われます。`terminal.docker_run_as_host_user` フラグを使うと、すべてのマウントと、削除されずに長く使われるコンテナについて、これを解消できます。
+既定では、Docker コンテナは `root`（UID 0）として動きます。`/workspace` やほかのバインドマウント内で作られたファイルはホスト上で root の所有になるため、セッションのあとホストのエディターで編集するには、先に `sudo chown` で所有者を変えなければなりません。Linux では、Hermes が root のコンテナを停止して削除するとき、そのコンテナ専用のサンドボックスのバインドマウント（`TERMINAL_SANDBOX_DIR` の下の `/root` と `/workspace`）にあるファイルの所有者を、先にユーザーへ戻します（`docker_volumes` やマウントしたホストのディレクトリは対象外で、rootless Docker と userns-remap の環境では行いません）。これらのサンドボックスのファイルは、所有者が誰であっても setuid/setgid ビットとファイルケーパビリティも外されます。そのため、コンテナがそこに残したものをホストで実行しても、昇格した権限で動くことはありません。削除されずに長く使われるコンテナでは、セッションが切り離されるとき、もう一度つながるとき、古いコンテナの一掃処理で削除される前に、（所有者は変えずに）この取り外しが行われます。エージェントが `MEDIA:` で送るファイルをゲートウェイが読めない場合（動作中のコンテナ内にある、root 所有で `chmod 600` の成果物など）は、配信の直前にそのファイルだけが、そのコンテナを通じてユーザーの所有に戻されます。そのため、コンテナの後片付けを待たずに届きます。ファイルのモード（権限）は、エージェントが設定したままです。`terminal.docker_run_as_host_user` フラグを使うと、すべてのマウントと、削除されずに長く使われるコンテナについて、これを解消できます。
 
 ```yaml
 terminal:

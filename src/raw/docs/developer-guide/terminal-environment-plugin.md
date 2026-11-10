@@ -2,7 +2,7 @@
 title: "ターミナル環境プロバイダプラグイン"
 description: ""
 upstream_path: developer-guide/terminal-environment-plugin.md
-upstream_blob: 324e5e0595ce5b0c97c7b933f12260169b3fbcae
+upstream_blob: a2b4cc8270c506778f452ba1ee6301f71082cf6f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/terminal-environment-plugin
 ---
@@ -140,6 +140,31 @@ hermes config set terminal.backend acmebox
 
 `BaseEnvironment` を継承すると、ファイル同期やバックグラウンドプロセスまわりの共通処理を
 そのまま使えるのでおすすめですが、必須ではありません。
+
+## バックグラウンドプロセスと `cleanup()` {#background-processes-and-cleanup}
+
+ローカル以外のバックエンドで動くバックグラウンドコマンド（`terminal(background=true)`）の状態は、
+それを起動した環境オブジェクトを通して定期的に確認（ポーリング）されます。Hermes がその環境を片付けるとき
+（セッション終了時、使われないまま放置されたときの回収、接続に失敗したあとの追い出しで `cleanup()` を呼ぶとき）は、
+それらのプロセスに `lost` の印を付けて、ポーリングを止めます。
+これを行うのは、`cleanup()` が例外を投げずに戻った場合（または、サンドボックスがすでに消えていることを
+404 /「not found」で知らせてきた場合）だけです。片付けに失敗したときは、
+サンドボックスがまだ動いたままになっているかもしれないからです。
+
+`cleanup()` が接続を切るだけで、ジョブはその後も動き続け、同じ環境オブジェクトから引き続き
+たどり着ける場合（組み込みの SSH バックエンドは、次の `execute()` で再接続します）は、そのことを宣言してください。
+そうすれば、ポーリングが本当の終了コードを最後まで受け取り続けます。
+
+```python
+class AcmeEnvironment(BaseEnvironment):
+    cleanup_stops_processes = False  # cleanup() disconnects; jobs survive and stay reachable
+```
+
+既定値は `True` です。`cleanup()` が戻った時点で、その環境オブジェクトから見たプロセスはなくなったものとして扱われます
+（サンドボックスと一緒に終了したか、もうその環境を通してはたどり着けない状態です）。
+この既定値は、この属性を宣言していないダックタイピングの環境にも当てはまります。そのため、
+`cleanup()` から例外を投げるのは、サンドボックスがまだ生きているかもしれないあいだだけにしてください。いったん
+破棄したあとに起きた失敗（スナップショットの記録処理やクライアントの終了処理など）は、例外を投げずにログに残してください。
 
 ## ファイルツールとホストのファイルシステム {#file-tools-and-the-host-filesystem}
 

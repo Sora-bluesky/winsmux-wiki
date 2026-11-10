@@ -2,7 +2,7 @@
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: 7a110475f51183edfa0c7a86e117569cb3ab13a7
+upstream_blob: 866344cc3a2affdc18a16b9bd2975b134967d63b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -302,7 +302,8 @@ validate` はこれらについて非公開 import の警告を出さず、名�
 | 自前で組み立てるための、そのクライアントの部品 | `gateway.platforms.base.ssrf_redirect_guard`（httpx の `response` フック）、`tools.url_safety.create_ssrf_safe_async_client`、`tools.url_safety.is_safe_url`、`gateway.platforms._http_client_limits.platform_httpx_limits` |
 | 独自の DM / グループの方針（`dm_policy` / `group_policy` / 許可リスト） | `from gateway.platforms.access_policy_mixin import OwnAccessPolicyMixin` |
 | ネイティブのボタンから承認を確定する | `from tools.approval import resolve_gateway_approval_card`（カードのリクエスト ID を渡します。ID なしで呼んでも何も確定しません。どのリクエストも、最初は「拒否」しか選べない状態で始まります。`_send_exec_approval_prompt` を通して描画してください。そうすれば、カードにコマンド全体が表示された時点で、基底の `send_exec_approval` がその印を外せます。`resolve_gateway_approval` のほうは、保留中のリクエストのうち一番古いものに答えます） |
-| 承認を求めた本人以外からのクリックを断る（`approvals.approvers` で承認できる人を絞っているとき） | `from gateway.approval_actor import approval_refusal, refusal_text`：確定する前に `approval_refusal(session_key, clicker_id, extra=self.config.extra, request_id=...)` を呼びます。結果が `None` でなければ、それは承認を求めた人の名前です。その場合は `refusal_text(name)` を使ってクリックした人にだけ返事をし、承認は保留のままにします。そのあと `resolve_gateway_approval_card(session_key, choice, request_id, actor_id=clicker_id, extra=self.config.extra)` で確定します。この関数は、確定する項目と照らし合わせて、クリックした人を同じクリティカルセクションの中で確かめ直します |
+| 承認に答えてはいけない人からのクリックを断る（`approvals.approvers` で承認できる人を絞っているときの、承認を求めた本人以外の人。チャットで `allow_admin_from` を設定しているときの、`/approve` / `/deny` を許されていない人） | `from gateway.approval_actor import approval_refusal, refusal_text`：確定する前に `approval_refusal(session_key, clicker_id, extra=self.config.extra, request_id=..., choice=choice)` を呼びます（`choice` を渡すと、チャットのスラッシュコマンドの管理者チェックが、その回答に当たる `/approve` か `/deny` で判定できます）。結果が `None` でなければ、それは承認を求めた人の名前です。その場合は `refusal_text(name)` を使ってクリックした人にだけ返事をし、承認は保留のままにします。そのあと `resolve_gateway_approval_card(session_key, choice, request_id, actor_id=clicker_id, extra=self.config.extra)` で確定します。この関数は、確定する項目と照らし合わせて、クリックした人を同じクリティカルセクションの中で確かめ直します。スラッシュコマンドの確認（slash-confirm）や確認（clarify）のボタンが押されたときも、同じように `slash_confirm_refusal(session_key, confirm_id, clicker_id, extra=...)` と `clarify_refusal(clarify_id, clicker_id, extra=...)` を使います。呼ぶのは `slash_confirm.resolve` / `resolve_gateway_clarify` / `mark_awaiting_text` の前です |
+| ピッカーのカード（`send_model_picker` / `send_choice_picker`）や `/update` の問いかけで、開いた本人以外からのクリックを断る | `from gateway.approval_actor import picker_refusal, update_prompt_refusal, refusal_text`：ピッカーを送ったときのコールバックを渡して `picker_refusal(on_selected, clicker_id, extra=self.config.extra)` を呼ぶか、`update_prompt_refusal(clicker_id, extra=self.config.extra)` を呼びます。結果が `None` でなければ、それは開いた人の名前です。その場合は `refusal_text(name)` を使ってクリックした人にだけ返事をし、カードは開いたままにします。開いた本人と、そのチャットの範囲の管理者は常に通ります |
 | ネイティブの確認（clarify）ボタン | `tools.clarify_gateway`：`get_pending(clarify_id)`（保留中の項目か `None` を返します。`session_key`、`choices`、`multi_select` を読みます）、`resolve_gateway_clarify(clarify_id, text)`、`mark_awaiting_text(clarify_id)`、`SKIPPED` |
 | `setup_fn` のウィザードの手順 | `hermes_cli.gateway_setup_wizard`：`print_setup_header(title)`、`confirm_reconfigure(label, *env_vars)`、`offer_home_channel(home_var, user_id, what)`、`save_env_values(**values)`、`prompt_csv(text, default)`。入力の問いかけは `hermes_cli.setup`（`prompt`、`prompt_choice`、`prompt_yes_no`）から、出力は `hermes_cli.cli_output`（`print_info`、`print_success`、`print_warning`、`print_error`）から、`.env` へのアクセスは `hermes_cli.config`（`save_env_value`、`get_env_value`）を通します |
 
@@ -316,6 +317,111 @@ async def connect(self) -> bool:
 ```
 
 確認への回答が済んだとき、時間切れになったとき、取り消されたときには、`get_pending()` は `None` を返します。そのため、クリックに応じて動く前に、戻り値がカードを描いたときの項目と同一のものかを比べてください。
+
+### 会話のモデル設定を読み取る {#read-a-conversations-model-settings}
+
+`BasePlatformAdapter.get_session_model_settings(source)` は、ネイティブの設定画面のための、同期で動く読み取り専用の
+取得口です。想定している利用者は **Inline のプラットフォームプラグイン**です。
+その設定画面は今のところ、ゲートウェイの実行役が非公開で持っている「セッションごとのモデルの上書き」の対応表を読み、
+設定済みの既定値と組み合わせています。下の `list_session_model_picker_providers` と合わせれば、
+設定画面でのモデル・プロバイダー・セッションキーの表示と、ピッカーの一覧の両方を、
+その非公開の対応表を読まずに済む形へ移せます。生のエンドポイントは、一覧との突き合わせのために本体の中に残ります。
+伏せ字にした表示用の URL は、実際の処理に使う入力ではありません。モデルの切り替えはこの移行に含まれません。
+Inline は設定画面で選ばれたモデルを反映するために、今も非公開の `GatewayRunner._handle_model_command` を呼んでいます。
+これらの口は追加されるだけで、プラグインのソースやインストール済みのコピーが変わることはありません。
+
+```python
+# In a BasePlatformAdapter subclass, using the SessionSource built for this conversation:
+settings = self.get_session_model_settings(source)
+if settings is not None:
+    current_model = settings["model"]
+    current_provider = settings["provider"]
+    current_base_url = settings["base_url"]
+```
+
+戻り値は、毎回新しく作られる `SessionModelSettings` の dict です（型の import:
+`from gateway.platforms.session_model import SessionModelSettings`）。中身はちょうど
+`session_key`、`model`、`provider`、`base_url` の 4 つで、どれも文字列です。どちらの向きにも切り離されています。
+この dict を書き換えても会話には影響せず、あとでモデルを切り替えても、前に返した結果は変わりません。
+実行役に結び付いていないアダプターや、弾かれたプロファイルの経路では
+`None` が返ります。結び付いているアダプターなら、**セッションがなくても**設定済みの既定値が返ります。
+
+各設定では、メモリ上にある空でないセッションの上書き（それがなければ保存済みの選択）がチャンネルの既定値
+（モデル・プロバイダー）より優先され、その次に、そのセッションを持つプロファイルで設定されたモデルの設定が使われます。チャンネルのモデルと
+プロバイダーの既定値はそれぞれ別々に効き、プロバイダーだけを上書きする場合も同じです。表示用の `base_url` は、
+選ばれたプロバイダーが変わっても、それとは別に全体で設定されたエンドポイントへ戻ります。
+そのため、違うプロバイダーのものになることがあります。このプロバイダーとエンドポイントの組を、振り分け先の情報として見せないでください。
+モデルとエンドポイントがないときは `""`、プロバイダーがないときは `"openrouter"` になります。これは Inline の今の表示と同じです。
+平らな `model: name` の書き方と、対応表の形（`default`、または従来の `model`）の両方に対応しています。
+プロファイルを選ぶのは、ソースがすでに持っている振り分けの識別情報か、ソースのコピーに対してアダプターの正規の
+振り分け解決役を使った結果です。呼び出し側のソースは書き換えられません。
+
+これは**設定の表示のための写し**で、認証情報や、動いている推論の中身をのぞくための API ではありません。
+セッションやエージェントを作ったり、保存済みの上書きをメモリに読み込んだり、
+プロバイダーの認証情報を解決したり、プロバイダーに問い合わせたり、設定を変えたりはしません。保存済みの `/model` の選択が
+再起動のあとまだ読み込まれていないときは、セッションの保存先から読み取ります。実行中の一時的なフォールバックは報告されません。
+返るのは名前を挙げた 4 つの項目だけで、キー、トークン、認証情報のプール、ヘッダーが
+写されることはありません。エンドポイントのユーザー情報、クエリ、フラグメントは省かれます（読み取れない URL は
+`""` になります）。エンドポイントのパスは残るので、エンドポイントのパスに認証情報を入れないでください。
+この表示用の URL を使って、プロバイダーへのリクエストを組み立てないでください。これはプロセス内のプラットフォーム
+アダプター向けの API で、ホストされたプラグイン向けの RPC ではありません。設定を書き込む口や推論（reasoning）の API は増やさず、
+従来の上書きの見え方と、既存のモデル切り替えの振る舞いはすべてそのままです。
+
+### 会話のモデルピッカーのプロバイダーを一覧にする {#list-a-conversations-model-picker-providers}
+
+`BasePlatformAdapter.list_session_model_picker_providers(source, *, max_models=100,
+include_moa=True)` は、これと対になる、一覧のための同期の口です。表示用の取得口と同じく、
+ソースの正規化、セッションを持つプロファイルの設定の範囲、セッション > チャンネル > 設定 の優先順位、
+保存済みの選択へのフォールバックを使います。実行役がないときや弾かれた経路では `None` を返します。
+結び付いているアダプターなら、セッションがなくても設定済みのプロバイダーを一覧にできます。
+セッションやエージェントを作ったり、上書きを読み込み直したり、会話の設定を変えたりはしません。
+
+本体は、**生の実効エンドポイント**、今のモデルとプロバイダー、設定済みの `providers`、
+カスタムプロバイダー（組み込みの `/model` ピッカーが使うのと同じ、まとめた見え方）、
+`model_catalog.excluded_providers` を、ピッカーの一覧の実装に渡します。
+セッションを持つプロファイルの範囲は、一覧を作る呼び出しのあいだずっと結び付いたままです。この
+メソッドを `asyncio.to_thread` 経由で呼んだときも同じです。表示用の URL を探索に渡さないでください。
+カスタムエンドポイントへのその場での問い合わせは止めてあります。この問い合わせは、見つけたモデルを設定に保存してしまうことがあるからです。
+設定済みやキャッシュ済みのカスタムモデルの一覧は、生のエンドポイントとの突き合わせも含めて、引き続き使われます。
+一覧は、組み込みの `/model` ピッカーと同じ、待たされない経路で作られます。外部の一覧はディスクの
+キャッシュから取り、古くなったものはそのプロファイルのもとで裏で更新します。ファイルの読み込みと、ローカルの LM Studio への
+短い問い合わせ（1.5 秒で時間切れ）は残るので、**このメソッドは
+イベントループの外で動かしてください**。`max_models` はプロバイダーごとの目安で、全体の厳密な上限ではありません。
+厳選型やまとめ役のプロバイダーには上限がかからないことがあります。`include_moa` は、合成の MoA の行を含めるかどうかです。
+
+戻り値は、毎回新しく作られる `SessionModelPickerProvider` の dict を並べた、切り離されたリストです
+（型の import: `from gateway.platforms.session_model import SessionModelPickerProvider`）。
+含まれるのは、許可された次の項目だけです。
+
+| 項目 | 型 | Inline での使い道 |
+| --- | --- | --- |
+| `slug` | `str` | モデルを選ぶときの識別と、プロバイダーごとのまとめ |
+| `name` | `str` | プロバイダーのボタンと、モデルのページの見出し |
+| `models` | `list[str]` | モデルの選択肢。リストは別々に写されます |
+| `total_models` | `int` | プロバイダーやまとまりごとの数と、ページ送りの文言 |
+| `is_current` | `bool` | 今のプロバイダーの印 |
+
+エンドポイントの項目、API キー、トークン、認証情報のプール、ヘッダー、一覧にない将来の付帯情報は
+返りません。行やモデルのリストを書き換えても、一覧・設定・セッションのオブジェクトは変わらず、
+あとで一覧が変わっても、前に返した結果は変わりません。これは表示のためのデータで、実行時の
+認証情報でも、設定を書き込む口でもありません。一覧を作るときのエラーはそのまま上がってくるので、アダプターの側で扱ってください。
+
+```python
+import asyncio
+
+# Feature-detect for older Hermes: leave model selection unavailable (or retain an
+# explicitly supported legacy implementation) when the seam is absent. Never replace
+# the raw endpoint with get_session_model_settings()["base_url"].
+list_providers = getattr(self, "list_session_model_picker_providers", None)
+providers = None
+if callable(list_providers):
+    providers = await asyncio.to_thread(list_providers, source, max_models=100, include_moa=True)
+```
+
+これらの口は Inline の移行を可能にするもので、移行そのものを届けるわけではありません。カタログの項目を更新しても、
+すでにインストールされたプラグインは新しくなりません。Inline がこれらのメソッドを取り入れ、利用者が
+インストール済みのプラグインを別途更新する必要があります。Inline の非公開のモデル切り替えのコマンドは、
+この読み取り専用の約束の外にあります。
 
 ## 単独で送るときの拡張 {#standalone-send-path-extensions}
 

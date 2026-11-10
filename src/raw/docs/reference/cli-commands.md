@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: da6f622ced28538b2c0abab1c9d8fd063653be57
+upstream_blob: d624534dddfc211a595202730f1be6cf0fb1ae71
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -308,7 +308,7 @@ hermes gateway <subcommand>
 | `install` | systemd（Linux）または launchd（macOS）のバックグラウンドサービスとしてインストールします。 |
 | `uninstall` | インストール済みのサービスを削除します。 |
 | `setup` | メッセージングプラットフォームの対話的セットアップです。 |
-| `migrate` | プロファイルごとの単独ゲートウェイを1つのホストゲートウェイに統合します（`--multiplex`、唯一のモードです — `hermes update` は実際の境界がブロックしない限り自動的に実行します）。再実行すると、途中まで移行済みのホストが収束します。ディスク上のマニフェストは再開用の記録であり、ロールバック用ではありません（`--standalone` はありません）。プリフライトチェック（bot トークンの重複、`/p/<profile>/` の ingress を持たないセカンダリのポートバインダー）を実行し、ブロックされた場合は何も変更しません。フラグ: `--dry-run`, `-y`/`--yes`。[Migrating from per-profile gateways](/hermes/docs/user-guide/multi-profile-gateways/#migrating-from-per-profile-gateways) を参照してください。 |
+| `migrate` | プロファイルごとの単独ゲートウェイを1つのホストゲートウェイに統合します（`--multiplex`、唯一のモードです — `hermes update` は実際の境界がブロックしない限り自動的に実行します）。再実行すると、途中まで移行済みのホストが収束します。ディスク上のマニフェストは再開用の記録であり、ロールバック用ではありません（`--standalone` はありません）。プリフライトチェック（bot トークンの重複、`/p/<profile>/` の ingress を持たないセカンダリのポートバインダー）を実行し、ブロックされた場合は何も変更しません。フラグ: `--dry-run`, `-y`/`--yes`。`--backends [--json]` を付けると、移行する代わりに serve/dashboard のバックグラウンドサービスとその所有者を報告します。サービス、ユニット、plist、台帳はどれも変更しません（通常の起動時の記録処理は行われます。[ダッシュボードのバックグラウンドサービスを報告する](/hermes/docs/user-guide/features/web-dashboard/#reporting-dashboard-background-services)を参照してください）。[Migrating from per-profile gateways](/hermes/docs/user-guide/multi-profile-gateways/#migrating-from-per-profile-gateways) を参照してください。 |
 | `migrate-legacy` | リネーム前のインストールから残った古い `hermes.service` ユニットを削除します。プロファイル単位のユニット（`hermes-gateway-<profile>.service`）や関係のないサービスは一切触れません。フラグ: `--dry-run`, `-y`/`--yes`。 |
 | `enroll` | 実験的機能: このゲートウェイを relay コネクタに登録し、コネクタ対応プラットフォーム用の relay 認証情報を保存します。[Hermes Relay](/hermes/docs/user-guide/messaging/relay/) を参照してください。 |
 
@@ -1465,6 +1465,7 @@ hermes fallback <subcommand>
 | `add` | プロバイダ + モデルを選び（`hermes model` と同じピッカー）、チェーンに追加します |
 | `remove`（別名: `rm`） | チェーンから削除する項目を選びます |
 | `clear` | フォールバックの項目をすべて削除します |
+| `check [--live] [--json]` | 各項目が、使える認証情報で解決できるかを確認します（`--live`: 静的に準備が整っている固定ルートの項目ごとに、その項目自身のプロバイダ/モデルへ最小限のリクエストを1回だけ送ります。ほかのプロバイダ/モデルには送りません）。準備が整っていない項目が1つでもあると、終了コード 1 で終わります。エージェントのセッションは作成されません |
 
 [Fallback Providers](/hermes/docs/user-guide/features/fallback-providers/) を参照してください。
 
@@ -1918,7 +1919,7 @@ hermes profile <subcommand>
 |------------|-------------|
 | `list` | すべてのプロファイルを一覧します。 |
 | `use <name>` | 既定のプロファイルを固定して設定します。 |
-| `create <name> [--clone] [--clone-all] [--clone-from <source>] [--no-alias]` | 新しいプロファイルを作成します。`--clone` は、アクティブなプロファイルから設定、`.env`、`SOUL.md`、スキル、キュレーションされた `MEMORY.md`/`USER.md` のメモリファイルをコピーします。`--clone-all` はすべての状態をコピーします。`--clone-from` はソースのプロファイルを指定し、`--clone-all` と組み合わせない限り設定のクローンを暗黙に含みます。 |
+| `create <name> [--clone] [--clone-all] [--clone-from <source>] [--no-alias] [--isolated-auth] [--no-credentials]` | 新しいプロファイルを作成します。既定では、アクティブなプロファイルの API キー（bot トークンは除きます）とモデルを引き継ぎ、ログイン情報は既定のプロファイルと共有します（名前付きプロファイルから作成した場合は、代わりにそのプロファイルのログイン情報がコピーされます）。`--isolated-auth` を付けると、ログイン情報を共有せずにコピーします。`--no-credentials` を付けると、これらを何も引き継ぎません。`--clone` は、アクティブなプロファイルから設定、`.env`、`SOUL.md`、スキル、キュレーションされた `MEMORY.md`/`USER.md` のメモリファイルをコピーします。`--clone-all` はすべての状態をコピーします。`--clone-from` はソースのプロファイルを指定し、`--clone-all` と組み合わせない限り設定のクローンを暗黙に含みます。 |
 | `delete <name> [-y]` | プロファイルを削除します。 |
 | `show <name>` | プロファイルの詳細（ホームディレクトリ、設定など）を表示します。 |
 | `alias <name> [--remove] [--name NAME]` | プロファイルへ素早くアクセスするためのラッパースクリプトを管理します。 |

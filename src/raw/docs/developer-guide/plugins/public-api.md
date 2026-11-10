@@ -2,7 +2,7 @@
 title: "プラグインの公開 API"
 description: "プラグインが import してよい Hermes のモジュールと名前の一覧です。それ以外の Hermes の import には hermes plugins validate が警告を出します"
 upstream_path: developer-guide/plugins/public-api.md
-upstream_blob: b9b87fb512ea1ccd0f9ebb356d065981c370541e
+upstream_blob: 0ed33db205c472233a5c4f8f1f90076205a3773c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/public-api
 ---
@@ -24,6 +24,7 @@ sources:
 |---|---|---|
 | `agent.account_usage` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `agent.acp_client` | モジュール全体 | developer-guide / plugins のドキュメント |
+| `agent.browser_page_backend` | `BrowserPageBackend` | developer-guide / plugins のドキュメント |
 | `agent.browser_provider` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `agent.context_engine` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `agent.credential_pool` | モジュール全体 | developer-guide / plugins のドキュメント |
@@ -41,6 +42,8 @@ sources:
 | `agent.terminal_env_provider` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `agent.transports` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `agent.transports.chat_completions` | モジュール全体 | developer-guide / plugins のドキュメント |
+| `agent.vault_backends.base` | `LoginBackend` | developer-guide / plugins のドキュメント |
+| `agent.vault_store` | `VaultItemMeta` | developer-guide / plugins のドキュメント |
 | `agent.video_gen_provider` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `agent.web_search_provider` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `cli` | モジュール全体 | developer-guide / plugins のドキュメント |
@@ -89,6 +92,10 @@ sources:
 | `tools.approval` | `resolve_gateway_approval_card` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `gateway.approval_actor` | `approval_refusal` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `gateway.approval_actor` | `refusal_text` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
+| `gateway.approval_actor` | `slash_confirm_refusal` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
+| `gateway.approval_actor` | `clarify_refusal` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
+| `gateway.approval_actor` | `picker_refusal` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
+| `gateway.approval_actor` | `update_prompt_refusal` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `tools.clarify_gateway` | `get_pending` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `tools.clarify_gateway` | `resolve_gateway_clarify` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `tools.clarify_gateway` | `mark_awaiting_text` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
@@ -105,6 +112,8 @@ sources:
 | `hermes_cli.setup` | `prompt_choice` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `hermes_cli.setup` | `prompt_yes_no` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `hermes_cli.cli_output` | モジュール全体 | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
+| `gateway.platforms.session_model` | `SessionModelPickerProvider` | adding-platform-adapters.md § 会話ごとのモデル設定とモデル選択プロバイダー（BasePlatformAdapter） |
+| `gateway.platforms.session_model` | `SessionModelSettings` | adding-platform-adapters.md § 会話ごとのモデル設定とモデル選択プロバイダー（BasePlatformAdapter） |
 | `tools.skills_tool` | `find_all_skills` | plugins/index.md § スキルカタログを読み取る |
 | `tools.skills_tool` | `sort_skills` | plugins/index.md § スキルカタログを読み取る |
 | `tools.skills_tool` | `skill_search_dirs` | plugins/index.md § スキルカタログを読み取る |

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ダッシュボードを広げる"
 description: "Hermes の Web ダッシュボード向けにテーマとプラグインを作ります — 配色、書体、レイアウト、独自のタブ、外枠のスロット、ページごとのスロット、そして裏側の API ルート"
 upstream_path: user-guide/features/extending-the-dashboard.md
-upstream_blob: 8a671d4f26565e822e116a3b8d21ee8841fdeb96
+upstream_blob: 51d8ab83313ea64cd70d4dbdea30cb523a5556b8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/extending-the-dashboard
 ---
@@ -550,7 +550,7 @@ SDK.fetchJSON("/api/plugins/my-plugin/data")
   .catch((err) => console.error("API call failed:", err));
 ```
 
-`fetchJSON` はセッションの認証トークンを添え、失敗は例外として投げ、JSON も自動で読み解きます。
+`fetchJSON` はセッションの認証トークンを添え、失敗は例外として投げ、JSON も自動で読み解きます。`fetchJSON` と `authedFetch` が呼び出す先は、このダッシュボード自身のオリジンに限られます。別のホストを指す絶対 URL は、セッションのトークンを付けて送られることはなく、呼び出しそのものが拒否されます。そのため、外部の URL（CDN 上のファイルやゲームサーバーなど）を取得するときは、ふつうの `fetch` を使ってください。
 
 #### Hermes の組み込みのエンドポイントを呼ぶ {#calling-built-in-hermes-endpoints}
 

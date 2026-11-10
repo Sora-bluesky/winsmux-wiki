@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: dcbc411cfddad033dc82350dbdb278e50122d7ab
+upstream_blob: 5a60af1708dbcb0c461b33e5ace7af951c7ef868
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -1311,7 +1311,7 @@ def register(ctx):
 | [`on_session_delete`](/hermes/docs/user-guide/features/hooks/#on_session_delete) | セッションの削除または意図的なアーカイブが確定する（すべての画面、一括の掃除、prune を含む） | `session_id: str, reason: str, profile: str \| None`、任意で `deleted_ids: list[str]`、`sessions_dir: str` | 無視される |
 | [`post_compaction`](/hermes/docs/user-guide/features/hooks/#post_compaction) | 圧縮が確定する（自動、`/compress`、ゲートウェイ、Codex、micro、prune のどの経路でも） | `session_id: str, old_session_id: str, kind: str, reason: str, before_tokens: int \| None, after_tokens: int \| None, messages_removed: int \| None` | 無視される |
 | [`post_curator_run`](/hermes/docs/user-guide/features/hooks/#post_curator_run) | キュレーターの1回の実行が、レポートのディレクトリを書き出した | `run_dir: str, run_json_path: str, report_md_path: str, dry_run: bool` | 無視される |
-| [`gateway_platform_event`](/hermes/docs/user-guide/features/hooks/#gateway_platform_event) | 認可済みのプラットフォーム固有イベントが、ゲートウェイの境界で正規化される（現時点では Telegram のリアクション） | `platform: str, event_type: str, payload: dict` | 無視される |
+| [`gateway_platform_event`](/hermes/docs/user-guide/features/hooks/#gateway_platform_event) | 認可済みのプラットフォーム固有イベントが、ゲートウェイの境界で正規化される（Telegram のリアクションとメッセージの編集、Discord のメッセージの編集と削除、スレッドの作成と名前変更。詳しくは[イベントごとの契約](/hermes/docs/user-guide/features/hooks/#gateway_platform_event)を参照） | `platform: str, event_type: str, payload: dict` | 無視される |
 | `kanban_task_claimed` | kanban タスクがクレームされる（ディスパッチャプロセス、ワーカーが起動する前） | `task_id: str, board: str \| None, assignee: str \| None, run_id: int \| None, profile_name: str` | 無視される |
 | `kanban_task_completed` | kanban タスクが完了する（ワーカープロセス） | `task_id, board, assignee, run_id, profile_name, summary: str \| None` | 無視される |
 | `kanban_task_blocked` | kanban タスクがブロックされる（ワーカープロセス） | `task_id, board, assignee, run_id, profile_name, reason: str \| None` | 無視される |
@@ -1323,6 +1323,57 @@ def register(ctx):
 kanban のライフサイクルフックは、board の DB 変更がコミットされた**後**に発火するため、コールバックは常に永続化された状態を見ることになり、SQLite の書き込みロックを保持することは決してありません。kanban のワーカーは別個の `hermes -p <profile> chat -q` サブプロセスとして動作するため、`kanban_task_claimed` は**ディスパッチャ**プロセスで発火し、`kanban_task_completed` / `kanban_task_blocked` は**ワーカー**プロセスで発火します — すべての遷移を中央で観測するにはディスパッチャでフックし、タスクごとのセッション内コンテキストが必要ならワーカーでフックしてください。
 
 **API リクエストフック**は、生のプロバイダーリクエストに対する observer で、ターンごとの `pre_llm_call` / `post_llm_call` ペアより一段下の階層です。ツールを呼ぶ1つのターンは複数の API リクエストを発生させ、これらのフックはそのそれぞれの前後で発火します。これらは（トレーシング、コスト計算、レイテンシダッシュボードなどの）可観測性プラグインのために存在します。`request` と `response` の kwargs は、サニタイズ済みでサイズ上限のある、プロバイダーのペイロードの JSON ビュー（機密キーは redact され、長い文字列は truncate され、SDK のオブジェクトは正規化される）で、`usage` はプレーンなトークンサマリーの dict です。すべてのペイロードは相関フィールド `turn_id`、`api_request_id`、`task_id`、`session_id`、`api_call_count` を持つため、プラグインはリクエスト、ツール呼び出し、ターンをつなぎ合わせられます。`api_request_error` はプロバイダーの呼び出しが raise したときに発火し、`status_code`、`retry_count` / `max_retries`、`retryable`、`reason`、そして `type` と `message` を持つ `error` dict を追加します。
+
+### 各フックが発火する場所 {#hook-fire-sites}
+
+`hermes_cli.plugins.VALID_HOOKS` にあるどの名前にも、core の中でそのフックを発火させる箇所が少なくとも1つあります。この表には、それぞれのフックを発火させる関数を載せているので、実際の呼び出しとペイロードをコードで確かめられます。パスはリポジトリのルートからの相対パスです。フックを追加するときは、同じ変更の中でこの表にもその行を追加してください。
+
+| フック | 発火させる箇所 |
+|------|----------|
+| `pre_tool_call` | `hermes_cli/plugins.py` `_dispatch_pre_tool_call_hooks`。呼び出し元は `agent/tool_executor.py` `_pre_tool_block`、`agent/agent_runtime_helpers.py` `_pre_tool_block_message`、`model_tools.py` `_pre_dispatch_guards` |
+| `post_tool_call` | `model_tools.py` `_emit_post_tool_call_hook` |
+| `transform_terminal_output` | `tools/terminal_tool_result.py` `_apply_output_transform_hook` |
+| `transform_tool_result` | `model_tools.py` `_apply_transform_tool_result_hook` |
+| `transform_llm_output` | `agent/turn_finalizer.py` `apply_llm_output_transform` |
+| `pre_llm_call` | `agent/turn_context.py` `_collect_pre_llm_call_context` |
+| `post_llm_call` | `agent/turn_finalizer.py` `_apply_output_hooks` |
+| `on_stream_start` / `on_stream_end` | `agent/stream_delivery.py` `StreamDeliveryMixin._emit_stream_start` / `_emit_stream_end` |
+| `on_stream_delta` | `agent/stream_delivery.py` `StreamDeliveryMixin._fire_stream_delta`（テキスト）と `_fire_reasoning_delta`（推論） |
+| `on_interim_message` | `agent/stream_delivery.py` `StreamDeliveryMixin._emit_interim_assistant_message` |
+| `pre_verify` | `hermes_cli/plugins.py` `get_pre_verify_continue_message`。呼び出し元は `agent/turn_stop_gates.py` `_pre_verify_nudge` |
+| `pre_api_request` | `agent/turn_api_request.py` `_fire_pre_api_request_hook` |
+| `post_api_request` | `agent/turn_response_intake.py` `_fire_post_api_request_hook` |
+| `api_request_error` | `agent/api_request_hooks.py` `ApiRequestHooksMixin._invoke_api_request_error_hook` |
+| `pre_auxiliary_call` / `post_auxiliary_call` | `agent/auxiliary_hooks.py` `_AuxCallHooks.pre` / `_AuxCallHooks.post` |
+| `transform_api_error_classification` | `hermes_cli/plugins.py` `get_plugin_error_classification`。呼び出し元は `agent/error_classifier.py` `_plugin_verdict` |
+| `on_session_start` | `agent/conversation_loop.py` `_restore_or_build_system_prompt` |
+| `on_session_end` | `agent/turn_finalizer.py` `finalize_turn`。中断で終了したときは `hermes_cli/cli_shutdown.py` `_invoke_interrupted_session_end`、`tui_gateway/session_lifecycle.py` `_finalize_session` |
+| `on_session_finalize` | `hermes_cli/lifecycle.py` `finalize_session`。呼び出し元は `hermes_cli/cli_session_mixin.py` `CLISessionMixin._notify_session_boundary`、`hermes_cli/cli_shutdown.py` `_notify_session_finalize`、`tui_gateway/session_lifecycle.py` `_notify_session_boundary`、`gateway/run_shutdown_session_end.py` `GatewaySessionEndMixin._finalize_session_off_loop` |
+| `on_session_reset` | `hermes_cli/cli_session_mixin.py` `CLISessionMixin._notify_session_boundary`、`tui_gateway/session_registry.py` `_start_session_services`、`gateway/slash_commands_session.py` `GatewaySessionCommandsMixin._handle_reset_command`、`gateway/run_shutdown_session_end.py` `GatewaySessionEndMixin._reset_session_off_loop` |
+| `on_session_delete` | `hermes_state_common.py` `emit_session_deleted` |
+| `on_session_open` | `gateway/session_open.py` `_Open._deliver` |
+| `on_skill_lifecycle` | `tools/skill_usage.py` `_emit_skill_lifecycle` |
+| `subagent_start` | `tools/delegate_tool.py` `_build_child_agent` |
+| `subagent_stop` | `tools/delegate_tool_results.py` `_fire_subagent_stop_hooks` |
+| `pre_gateway_dispatch` | `gateway/run_inbound_hooks.py` `GatewayInboundHooksMixin._hm_pre_gateway_dispatch_hook`。webhook とリレーからの受信では `gateway/platforms/webhook_ingress.py` `_admit_once` |
+| `post_gateway_admission` | `gateway/run_inbound_consumer.py` `run_post_admission_hook`、`gateway/platforms/webhook_ingress.py` `_admit_once` |
+| `agent_loop_stopped` | `gateway/run_agent_cache.py` `GatewayAgentCacheMixin._interrupt_and_clear_session`、`tui_gateway/session_lifecycle.py` `_interrupt_session_turn` |
+| `pre_approval_request` / `post_approval_response` | `tools/approval_context.py` `_fire_approval_hook`。呼び出し元は `tools/approval.py`、`tools/approval_prompt.py`、`tools/approval_gateway_wait.py`、`tools/approval_smart.py`、`tools/file_tools_write_guards.py` |
+| `on_human_input_request` / `on_human_input_resolved` | `tools/human_input_hooks.py` `human_input_request` |
+| `on_room_member_activity` | `tui_gateway/hosted_room_member_activity.py` `emit_room_member_activity` |
+| `pre_transcription` | `tools/transcription_command.py` `_apply_pre_transcription_hook` |
+| `kanban_task_claimed` | `hermes_cli/kanban_db.py` `claim_task`（`_fire_task_hook` 経由） |
+| `kanban_task_completed` | `hermes_cli/kanban_db.py` `complete_task`（`_fire_task_hook` 経由）、`hermes_cli/kanban_swarm.py` `create_swarm` |
+| `kanban_task_blocked` | `hermes_cli/kanban_db.py` `block_task`（`_fire_task_hook` 経由） |
+| `on_kanban_worker_spawned` | `hermes_cli/kanban_db.py` `_fire_worker_spawned_hook` |
+| `on_kanban_worker_exited` | `hermes_cli/kanban_db_dispatch.py` `detect_crashed_workers` |
+| `on_kanban_worker_stale_claim` | `hermes_cli/kanban_db.py` `release_stale_claims` |
+| `on_kanban_task_updated` | `hermes_cli/kanban_db.py` `notify_task_updated` |
+| `on_kanban_dispatch_tick` | `hermes_cli/kanban_db.py` `_fire_dispatch_tick_hook` |
+| `gateway_platform_event` | `gateway/run_adapters.py` `GatewayAdapterLifecycleMixin._handle_gateway_platform_event`（イベントは Telegram と Discord のアダプターから届く） |
+| `pre_command` | `hermes_cli/plugins.py` `fire_pre_command_hook`。呼び出し元は `cli.py` `HermesCLI.process_command`、`gateway/run_inbound_hooks.py` `GatewayInboundHooksMixin._hm_command_hooks`、`gateway/session_commands.py` |
+| `post_compaction` | `agent/compaction_events.py` `fire_post_compaction` |
+| `post_curator_run` | `agent/curator.py` `_notify_post_curator_run` |
 
 ### `pre_llm_call` のコンテキスト注入 {#prellmcall-context-injection}
 
@@ -1611,7 +1662,7 @@ def register(ctx):
 - 表示したい文字列は戻り値として返してください。`print()` はゲートウェイの標準出力に書き込まれるだけで、利用者の目には届きません。
 - セッションの作業ディレクトリは `os.getcwd()` ではなく `agent.runtime_cwd.resolve_agent_cwd()` から取ってください。前者はゲートウェイ自身のディレクトリを返します。相対パスはこのディレクトリを基準に解決します。
 - セッションの識別情報は `os.environ` ではなく、`get_session_env("HERMES_SESSION_PLATFORM")`、`get_session_env("HERMES_SESSION_CHAT_ID")` やほかの `HERMES_SESSION_*` の名前で読んでください。関数そのものを `from gateway.session_context import get_session_env` で import してください。この名前が公開の接点で、`hermes plugins validate` は `import gateway.session_context` を非公開の import として報告します。
-- 「このターンで誰が尋ねたか」（認可や出どころの確認）を知りたいときは、`HERMES_SESSION_ACTOR_ID` / `HERMES_SESSION_ACTOR_NAME` を読んでください。`HERMES_SESSION_USER_ID` はセッションの経路を表す値で、共有チャット（Telegram の observe モード）では空になります。そのため、この値から配信先を組み立て直すコードでは、配信先が共有の会話のまま変わりません。
+- 「このターンで誰が尋ねたか」（認可や出どころの確認）を知りたいときは、`HERMES_SESSION_ACTOR_ID` / `HERMES_SESSION_ACTOR_NAME` を読んでください。そのターンの発言者が1人に決まらないとき（別のメンバーのメッセージがそのターンに合流したとき）は、どちらも空になります。これはプロセス内でも、ターミナルや `execute_code` の子プロセスでも同じなので、空なら「特定の誰でもない」として扱ってください。`HERMES_SESSION_USER_ID` はセッションの経路を表す値で、共有チャット（Telegram の observe モード）では空になります。そのため、この値から配信先を組み立て直すコードでは、配信先が共有の会話のまま変わりません。
 
 ```python
 from agent.runtime_cwd import resolve_agent_cwd

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイのセッションライフサイクル"
 description: "ゲートウェイにおける SessionSource・SessionEntry・SessionStore、セッションキーの規則、マルチユーザーの分離"
 upstream_path: developer-guide/gateway-session-lifecycle.md
-upstream_blob: ccbec078e8cdfcb2000060a004c611d30b3fbfa1
+upstream_blob: afa8cbdfd2fde794867c9a2e560df2f6115d50b6
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-session-lifecycle
 ---
@@ -446,7 +446,7 @@ adapter._pending_messages: Dict[session_key, MessageEvent]
     └── Single "next-up" slot per session. Overwritten on repeat sends
         (burst collapse). Shared with photo-burst follow-ups.
 
-self._queued_events: Dict[session_key, List[MessageEvent]]
+SessionState.conversation.queued_events: List[MessageEvent]  (one per session_key)
     └── Overflow buffer. Each /queue invocation appends here when the
         slot is occupied. Promoted one-at-a-time after each drain.
 ```
@@ -463,7 +463,7 @@ _enqueue_fifo(session_key, event, adapter)
 └───────────────────────────────────────┘
        │ No
        ▼
-Append to _queued_events[session_key] (overflow tail)
+Append to the session's queued_events (overflow tail)
 ```
 
 ### キューからの取り出し／繰り上げ（`_promote_queued_event`） {#dequeue-promotion-promotequeuedevent}
@@ -472,7 +472,7 @@ Append to _queued_events[session_key] (overflow tail)
 
 - `pending_event is None`（枠が空だった）のときは、あふれた分の先頭を新しいイベントとして返します。
 - `pending_event` があるときは、あふれた分の先頭を次の再帰のために枠へ置いておきます。
-- 使えるアダプターがない場合は、`_queued_events` に戻します（黙って捨てません）。
+- 使えるアダプターがない場合は、そのセッションの `queued_events` に戻します（黙って捨てません）。
 
 ### キューの深さ {#queue-depth}
 
@@ -504,7 +504,7 @@ interrupt_for_session` を、ルーティングキーと、起動した側の永
 ### FIFO の不変条件 {#fifo-invariant}
 
 `/queue` を1回呼ぶと、エージェントの完全なターンがちょうど1回、FIFO の順で、まとめられることなく
-生まれます。1枠の `_pending_messages` とあふれた分を受ける `_queued_events` という設計によって、
+生まれます。1枠の `_pending_messages` とあふれた分を受ける `queued_events` という設計によって、
 ターンの最中にメッセージを繰り返し送っても、処理の順番が入れ替わらないようになっています。
 
 ---

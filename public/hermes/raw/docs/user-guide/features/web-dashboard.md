@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 2478c7e07d6b3684f0224d8dc7437a97c4a32642
+upstream_blob: 8030352b83f8cdbe05d3aaf64df331dae478644b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -435,6 +435,29 @@ API サーバーと Webhook の受け口）が、今つながっているかど�
 :::warning セキュリティ
 管理画面は、API キーや秘密の入った `.env` を読み書きします。既定では `127.0.0.1` に割り当てられ、手元の端末からしか触れず、ログインも要りません。loopback 以外のアドレス（`0.0.0.0` を含みます）に割り当てると[認証の関門](#authentication-gated-mode)が働き、認証のしくみ（利用者名とパスワード、または OAuth）を設定するまでサーバーは起動しません。
 :::
+
+## 管理画面を裏で動かすサービスを確かめる {#reporting-dashboard-background-services}
+
+Hermes が `hermes dashboard` や `hermes serve` のためのサービスを自分で登録することはありません。そのため、
+裏で動いているものがあれば、それはすべて手で用意したものです。たとえば、このページから写した systemd のユニット、launchd の plist、Nix の
+`hermes-backend` ユニット、Docker イメージの `dashboard` スロットや Compose のサイドカー、デスクトップ版の SSH
+バックエンドなどです。それらを、それぞれの今の持ち主とあわせて一覧にするには、次のコマンドを実行します。
+
+```bash
+hermes gateway migrate --backends --dry-run          # human-readable report
+hermes gateway migrate --backends --dry-run --json   # the same report as JSON
+```
+
+報告には、バックエンドごとに次のものが出ます。まず監視役です（systemd ならユニット名、スコープ、ユニットファイル。launchd なら
+ラベルと plist。ほかに Nix による管理、s6 のスロット、コンテナ、デスクトップ版、切り離されたプロセス、不明のいずれか）。次に、
+そのバックエンドが受け持つ `HERMES_HOME`、そして持ち主の状態です。バックエンドの移行はまだ使えません。この報告は、
+何かを止めたり、再起動したり、強制終了したりすることは一切なく、サービスのファイル、ユニット、plist、台帳を編集したり書き込んだりすることもなく、ネットワークへの
+接続も開きません。走査が失敗した場合でも、終了コードは 0 です。ただし、ほかの
+`hermes` コマンドと同じく、Hermes のふつうの起動処理は先に走ります。`HERMES_HOME` の構成と既定の `SOUL.md` がなければ作り、
+`HERMES_HOME/installs/` の下に導入の記録を残し、`logs/agent.log` と `logs/errors.log` を開き、
+`cache/scratch` を片づけます。動いているバックエンドは、ユニットの名前にかかわらず、何を動かしているかで見つけ出します。
+有効になっていても動いていないユニットは、名前が `hermes-serve*`、
+`hermes-dashboard*`、`hermes-backend*` のいずれかに当てはまるときだけ一覧に出ます。
 
 ## `/reload` スラッシュコマンド {#reload-slash-command}
 

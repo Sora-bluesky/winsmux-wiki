@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: a58252807728ef0017b33282d3ae5b31162982b9
+upstream_blob: 012071fd3cc5ff61b075e22c191cbef8d4506958
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -466,6 +466,8 @@ gateway:
 ```
 
 **以前との互換性:** ある範囲について `allow_admin_from` を設定していない場合、その範囲では層の区分が無効になり、許可された利用者は全員がすべてを使えます。すでに動いている環境はそのまま動き続けます。区分が欲しくなったときに有効にしてください。
+
+**プロンプトに答えることは、コマンドを実行するのと同じ扱いです。** 危険なコマンドの承認に答えることは `/approve` か `/deny` を実行することにあたり、スラッシュコマンドの確認（`/reset`、`/reload-mcp` など）に答えると、そのコマンドが実行されます。そのため、層で分けている範囲では、管理者でない人はほかの方法でもこれらに答えられません。`yes` / `always` とだけ入力しても、確認の返事を入力しても、プラットフォーム標準のボタン（Telegram、Discord、Slack、Matrix、Feishu、Teams、WhatsApp Cloud、QQ Bot、relay）を押しても、同じ *⛔ /approve is admin-only here* という通知が返り、プロンプトは管理者が答えるまで保留のままになります。`user_allowed_commands` に `approve`（あるいは `deny`、または確認の対象になっているコマンド）を加えると、そのコマンドを入力できるようになるのとまったく同じように、メンバーも答えられるようになります。確認のための質問（clarify）はコマンドではないので、影響を受けません。[`approvals.approvers`](/hermes/docs/user-guide/security/#who-can-answer-an-approval-in-a-shared-chat-approvalsapprovers) で答えられる人を絞っている場合はそちらが優先され、依頼した本人、一覧にある ID の人、そして管理者が答えられます。
 
 #### 自分の権限を確かめる {#inspecting-your-access}
 

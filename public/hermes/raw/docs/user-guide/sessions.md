@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セッション"
 description: "セッションの保存、再開、検索、管理、そしてプラットフォームごとのセッションの追い方"
 upstream_path: user-guide/sessions.md
-upstream_blob: 03d8eb59d99e97d786667f3f85c14e02a9873d5d
+upstream_blob: bf7c48f35c7db35a03816e0d6011e095580d2bcf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/sessions
 ---
@@ -292,7 +292,7 @@ CLI のセッションで `/handoff <platform>` を使うと、進行中の会�
 
 6. これ以降、会話はそのプラットフォーム側にあります。新しいスレッドで返信してください。そのチャンネルで許可された人は同じセッションを共有し、あとから実際のユーザーがスレッドへ書き込んでも自然に合流できます。スレッドのセッションは `user_id` を含めずにキーを作るからです。
 
-**CLI へ戻す:** デスクトップへ戻りたくなったら、`/resume <title>`（シェルからなら `hermes -r "<title>"`）を実行すれば、プラットフォーム側で止まったところから続けられます。
+**CLI へ戻す:** デスクトップへ戻りたくなったら、`/resume <title>`（シェルからなら `hermes -r "<title>"`）を実行すれば、プラットフォーム側で止まったところから続けられます。もう一度引き継ぐと、会話は新しい Telegram のトピックへ移ります。前のトピックでは、次のメッセージから新しい会話が始まります。
 
 **うまくいかない場合:**
 
