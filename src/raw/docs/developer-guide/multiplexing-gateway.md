@@ -2,7 +2,7 @@
 title: "Multiplexing Gateway の内部構造"
 description: "1 つの gateway ですべてのプロファイルを受け持つモードの設計: スコープの組み立て、シークレットのスコープ、受信のルーティング、永続化"
 upstream_path: developer-guide/multiplexing-gateway.md
-upstream_blob: 73abddcc321440f4385b8978f113184473d7748f
+upstream_blob: 22fadd34458fb39ccd4e29d98e7227ffd06aa2cb
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/multiplexing-gateway
 ---
@@ -116,6 +116,56 @@ scope unwound in finally
 どちらのスコープも `contextvars` なので、`copy_context()` を通じて executor の
 ワーカースレッドに伝わり、決まった順に巻き戻されます。`os.environ` には一切、何も
 書き込みません。
+
+### 1 つのスコープ値 {#one-scope-value}
+
+スコープ、ホームの上書き、シークレットのスコープ、ターミナルのポリシーは、1 つの contextvar に
+入った 1 つの変更できない値 `hermes_scope.ScopeState` にまとまっています。スコープは
+`hermes_scope.Scope(tenant, agent, actor, owner=, can_administer=)` です。
+
+- `actor` は `Principal(id)`（人）か `System(reason)`（cron、kanban、
+  定期的な保守作業）のどちらかです。
+- `owner` はエージェントのただ 1 つの持ち主です。個人のエージェントなら `Principal`、共有のエージェントなら
+  `Group` です。個人のエージェントでも、持ち主が共有していればほかの人が
+  使えます。
+- `can_administer` は、その操作がエージェント自体（キー、設定、プラグイン、cron、削除）を
+  変更してよいかどうかを表します。どのターンでも、エージェントのメモリと skill は
+  これまでどおり更新されます。ホストされたスコープでは、署名付きの主張（claim）をもとに両方を指定しなければなりません。
+  ローカルのスコープでは、既定でローカルの利用者が持ち主となり、管理もできます。
+- `TurnScope` は `session`、`turn`、`fence` を加えます。最後のものは、そのターンの受け入れを
+  確保したときの `Fence(epoch, generation)` です（`agent.runtime_scope.claim_fence(row)`）。
+
+スコープをプロファイルの状態に変えるのは `agent/runtime_scope.py` だけで、
+ほかのモジュールは行いません。
+
+- `bind_profile_scope(home)` は、スコープと 3 つの要素すべてを
+  1 つの変更として組み込み、抜けるときに取り除きます。プロセス自身のホームは起動時の
+  扱いを保ち、それ以外のホームはそのプロファイルのソースから中身を満たして、
+  ルーティング済みの印をつけます。ホストされたスコープの中では拒否します。
+- `bind_state(scope, ...)` は、その変更のトークンを返します。呼び出しをまたいでトークンを持ち続けるホスト
+  （TUI のターン、管理されたワーカー）や、意図して一部だけを組み込むホスト向けです。
+- `bind_turn(session_id, turn_id, fence)` は、組み込まれたスコープの中でターンに印をつけます。
+
+ホストされたスコープの中で組み込むときは、テナント、エージェント、actor、持ち主、
+管理権限を変えてはなりません。それ以外の組み込みは `ScopeSwitchRefused` を送出します。
+
+リセットは自分の変更を取り除き、それより後の変更をやり直します。ただし、結果の状態にもう
+存在しないスコープの中で行われた変更は除きます。そのため、古い、重複した、順序が
+乱れた、あるいは複製したコンテキストから行われたリセットでも、行き着く先は組み込みを丸ごと
+行った場合にできる状態のどれかで、あるプロファイルのホームと別のプロファイルのシークレットが並ぶことは決してありません。ホストされた
+エージェントから、そこへ入ったときの組み込み以外のリセットで抜けると
+`ScopeSwitchRefused` を送出します。
+
+従来のセッター（`set_hermes_home_override`、`set_secret_scope`、
+`set_terminal_scope`、`install_profile_terminal_scope`）は引き続き動きます。
+組み込まれたスコープの中で別のプロファイルを指定して呼ぶと、ローカルのインストールではスコープ全体が
+そちらへ移り、ホストされた環境では `ScopeSwitchRefused` を送出します。組み込まれた
+スコープの一部だけを消す呼び出し（`set_secret_scope(None)`、`set_terminal_scope(None)`）は拒否されます。
+生のターミナルポリシー（セッションで凍結されたポリシー）は
+`bind_terminal_policy(policy, profile_home=...)` を通します。これは組み込まれたスコープの中では、
+組み込まれたエージェントが持つポリシーだけを受け付けます。コード健全性のルール HX016 は、相対 import 経由も含めて、
+新しく直接呼び出すコードを阻止します。既存の呼び出しは、その関数を次に
+編集するときに移行します。
 
 ## Workstream A: コンテキストローカルなシークレットのスコープ {#workstream-a-context-local-secret-scope}
 

@@ -2,7 +2,7 @@
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: 3fc5d503f07157451358e7fb207f86eeece3fa5e
+upstream_blob: 1f28a36d7143a97eb3b7926199ee76f296b7ba97
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -654,9 +654,6 @@ slack:
   mention_patterns:
     - "hey hermes"
     - "hermes,"
-
-  # Text prepended to every outgoing message
-  reply_prefix: ""
 ```
 
 :::tip `strict_mention` を使う場面

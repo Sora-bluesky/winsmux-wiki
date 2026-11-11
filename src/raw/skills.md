@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 186 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `7ad8d98`（2026-11-10）時点。この一覧は上流の docs から機械生成しています。
+上流 `b5f15a6`（2026-11-11）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（44）
 
@@ -192,7 +192,7 @@ raw: /hermes/raw/skills.md
 | [Rss Feeds](/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/) | Read RSS, Atom, JSON feeds; discover feeds behind a page | 2026-09-20 |
 | [Scrapling](/hermes/docs/user-guide/skills/optional/research/research-scrapling/) | Scrape sites with stealth browsing and Cloudflare bypass | 2026-11-03 |
 | [1Password](/hermes/docs/user-guide/skills/optional/security/security-1password/) | Set up op CLI, sign in, and read or inject secrets | 2026-09-20 |
-| [Godmode](/hermes/docs/user-guide/skills/optional/security/security-godmode/) | Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN | 2026-09-20 |
+| [Godmode](/hermes/docs/user-guide/skills/optional/security/security-godmode/) | Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN | 2026-11-11 |
 | [Oss Forensics](/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/) | GitHub supply-chain forensics: recovery, IOCs, reporting | 2026-09-20 |
 | [Sherlock](/hermes/docs/user-guide/skills/optional/security/security-sherlock/) | Find accounts for a username across 400+ platforms | 2026-09-20 |
 | [Unbroker](/hermes/docs/user-guide/skills/optional/security/security-unbroker/) | Remove your info from data-broker sites, by name or phone | 2026-10-27 |

@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: 8030352b83f8cdbe05d3aaf64df331dae478644b
+upstream_blob: b4baaaebdbbfcff761973e7336ad9f6e6812d82b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -1172,6 +1172,27 @@ def register(ctx):
 同梱の最初の使い手は **drain** のしくみです（`plugins/dashboard_auth/drain`）。`nous-account-service` が `HERMES_DASHBOARD_DRAIN_SECRET` を通してエージェントごとの秘密を用意し、このしくみが届いた合鍵をそれと時間の変わらない比較で確かめ、`/api/gateway/drain` を機械の認証が使える入口として登録します。**失敗したら閉じます**。弱い、あるいは短い秘密（256 ビット未満）は登録の時点で断られ、その入口は無効のままです。環境変数が未設定なら何もしません。ふるまいのつまみ（`scope`、`min_secret_chars`）は `config.yaml` の `dashboard.drain_auth` の下にあります。
 
 自作のしくみも、同じやり方で `supports_token` と `verify_token` を実装して、機械が認証できる入口を出せます。
+
+### ピアパス（`/api/peer`） {#peer-passes-apipeer}
+
+しくみは**ピアパス**も受け付けられます（`supports_peer_pass = True` と `verify_peer_pass(token=...)`）。ピアパスとは、あるエージェントに宛てて発行される短命なトークンです。これがあれば、別の Hermes エージェントが、そのエージェントの `API_SERVER_KEY` を持たずに、管理画面を通してこのエージェントの API サーバーを呼び出せます。
+
+- `/api/peer/<path>` は、要求を loopback 上のゲートウェイの API サーバーへ転送し、その途中で API サーバーのキーを付け加えます。`/api/peer/p/<profile>/<path>` は特定のプロファイルひとつに届きます。プロファイルは、API サーバーの `/p/<profile>/` の前置きと同じ名前で指定します（`hermes` は、その名前のプロファイルがない限り、既定のプロファイルを指します）。
+- 道ごとに、パスが持っていなければならない権限が決まっています。
+  `agents:message` で使えるのは `hermes peer` が使う操作で、範囲はエージェントの Bot Chat の中だけです（Bot Chat は、ピアからのメッセージがすべて届くひとつのセッションです）。具体的には、稼働の確認、機能の照会、Bot Chat を探すことと作ること、その読み取り、チャットのやり取り（通常とストリーミング）、その中での実行（開始、状況、イベント、停止）です。
+  やり取りのたびにエージェントのツールが端末も含めて使われるので、メッセージ用のパスを持つ人は、エージェントに作業をさせられることになります。
+  メッセージ用のやり取りが運ぶのはメッセージだけです（実行の場合は Bot Chat のセッション ID も運びます）。モデル、システムプロンプト、履歴を選ぶには `agents:control` が要ります。
+  `agents:control` は、どのセッションでもメッセージを送れるうえに、利用者向けの API の残りすべてを使えます。実行の承認、clarify、steer、resolve-unknown。セッションの一覧、分岐、メッセージ、モデル、名前の変更、削除。定時実行のジョブ（パスの期限が切れたあとも動き続けます）。モデル、スキル、ツールセット。chat completions と responses です。
+  `X-Hermes-Session-Key` を設定したり受け取ったりできるのは `agents:control` だけです。この値で API サーバーの記憶の範囲が決まります。
+- チャットのやり取りと実行は、すべてパスの持ち主によるものとして記録されます。要求の本文に何が書かれていても、やり取りの書き手の ID には、確かめられた持ち主が設定されます。
+- それ以外の道は決して転送されません。`/api/cron/fire`、プラットフォームのイベントの受け口、RoomLink の許可、`/health/detailed` も転送されません。
+- 休止中や再起動中のゲートウェイは、`Retry-After` を付けて 503 を返します。ゲートウェイが受け取ったあとで取りこぼした要求には、再試行の目安を付けずに 502 `peer_gateway_dropped` を返します。すでに実行された可能性があるからです。
+- `/api/peer` を開けるのはピアパスだけです。ピアパスは `verify_token` とは別に確かめられるので、パスでほかのしくみのトークン用の道が通ることはなく、管理画面の範囲を持たないパスで管理画面のセッションが開くこともありません。
+- `/api/status` は `peer_access` を報告します。値は、このエージェントが受け付けるピアパスの取り決めの版（今は `1`）か、ピアパスを受け付けるしくみがひとつも登録されていなければ `0` です。パスを発行する側は、これを報告するエージェントにだけパスを発行してください。`/api/peer` のないエージェントは、パスを管理画面へのサインインとして受け取ってしまうからです。
+- 制御の操作は、パスの持ち主の情報とともに `peer_control` イベントとして `logs/dashboard-auth.log` に書かれます。この道を通して作られたジョブには、出どころとして持ち主が `peer_principal` に記録されます。
+
+同梱の Nous のしくみは、管理画面へのサインインと同じ Portal の鍵と audience でピアパスを確かめます。管理画面へのサインインには `agent_dashboard:access` が含まれ、ピアパスにはピア用の権限しか含まれません。
+`agent_dashboard:access` のない Portal のトークンでは、`scope` の主張をまったく持たないものも含めて、管理画面のセッションは決して開きません。
 
 ### 関門が働いているか確かめる {#verifying-the-gate-is-on}
 

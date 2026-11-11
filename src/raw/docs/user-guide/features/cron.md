@@ -2,7 +2,7 @@
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: f4f915b46f70d296e187061935c318adaa775fa0
+upstream_blob: 129efe69f0492c60893dc50275c524c05f3fe3bc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -929,7 +929,7 @@ cron:
   media_send_timeout_seconds: 600   # 10 minutes per attachment
 ```
 
-あるいは `HERMES_CRON_MEDIA_SEND_TIMEOUT` の環境変数を設定します。解決の順番は、環境変数 → config.yaml → 既定の 300 秒です。タイムアウトした添付は、ジョブの実行ステータスに部分的な配信の失敗として記録されます（テキストは届きます）。
+あるいは `HERMES_CRON_MEDIA_SEND_TIMEOUT` の環境変数を設定します。解決の順番は、環境変数 → config.yaml → 既定の 300 秒です。そのうえで、添付ごとのタイムアウトには、そのファイルを 128 KB/s でアップロードしたときにかかる時間の 1.5 倍が上乗せされます（上乗せは最大 1 時間）。プラットフォームがアップロードに応答するのは、ファイル全体が届いてからだからです。タイムアウトした添付は、ジョブの実行ステータスに部分的な配信の失敗として記録されます（テキストは届きます）。
 
 ## Bot Chat 配信の完了 {#bot-chat-delivery-completion}
 
@@ -944,6 +944,8 @@ cron:
 cron:
   standalone_send_timeout_seconds: 120
 ```
+
+添付を含む配信では、このタイムアウトに、ファイルを 128 KB/s でアップロードしたときにかかる時間の 1.5 倍が上乗せされます（上乗せは最大 1 時間）。これで、遅い回線で大きなファイルを送っているとき、アップロードの途中なのに失敗と報告されることがなくなります。テキストだけの送信には、設定した値がそのまま使われます。
 
 タイムアウトした送信は `last_delivery_error` に `standalone send to <target> timed out after Ns` として記録されます。アダプターがすでに受け取っていた場合は、メッセージが届くこともあります。
 

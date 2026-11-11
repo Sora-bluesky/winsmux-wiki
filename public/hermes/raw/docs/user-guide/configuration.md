@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: ec6e8f179ecbf8910f58ad2044c37f377ecb869f
+upstream_blob: 84bd856e7ec67296b14c38e5a0afff8f8f293293
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -2702,7 +2702,7 @@ streaming:
 **新しい最終メッセージ（Telegram）:** Telegram の `editMessageText` は元のメッセージのタイムスタンプを保つため、時間のかかるストリーミングの返信は、完了したあとも最初のトークンの時刻のままになります。`fresh_final_after_seconds > 0` を設定して明示的に有効にすると、古くなったプレビューを、まったく新しい最終メッセージとして届けます（プレビューの削除はベストエフォートで行います）。既定値は `0` で、ストリーミングした返信は常にその場で確定します。これにより、両方の操作を表示するクライアントで、メッセージが一瞬重複してから削除される流れを避けられます。
 
 :::note プラットフォームごとのストリーミングの既定値
-全体の切り替えである `streaming.enabled` は、既定で `false` です。これをオンにするまで、何もストリーミングされません。有効にしたあとは、ストリーミングするかどうかが**プラットフォームごとに**決まります。Telegram は `display.platforms.telegram.streaming: true`（ストリーミングする）、Discord は `display.platforms.discord.streaming: false`（ストリーミングしない）が初期設定です。そのため、ストリーミングを有効にすると、Telegram はそのままストリーミングされ、Discord はその切り替えを変えるまで、メッセージ全体を一度に返信します。これらのプラットフォームごとの切り替えは、ダッシュボードの **Channels** の切り替えスイッチか、`~/.hermes/config.yaml` を直接編集して調整できます。
+全体の切り替えである `streaming.enabled` は、既定で `false` です。これをオンにするまで、何もストリーミングされません。有効にしたあとは、ストリーミングするかどうかが**プラットフォームごとに**決まります。Telegram は `display.platforms.telegram.streaming: true`（ストリーミングする）、Discord は `display.platforms.discord.streaming: false`（ストリーミングしない）が初期設定です。そのため、ストリーミングを有効にすると、Telegram はそのままストリーミングされ、Discord はその切り替えを変えるまで、メッセージ全体を一度に返信します。これらのプラットフォームごとの切り替えは、ダッシュボードの **Channels** の切り替えスイッチか、`~/.hermes/config.yaml` を直接編集して調整できます。プラットフォームごとの切り替えはメッセージを受け取るたびに読み直されるため、再起動しなくても反映されます。一方、`streaming:` ブロックそのもの（`enabled`、`transport`、`edit_interval`、`buffer_threshold`、`cursor`、`fresh_final_after_seconds`）は、ゲートウェイの起動時に一度だけ読み込まれます。これらのキーを変更したら、ゲートウェイを再起動して変更を反映させてください。なお、プラットフォームごとの切り替えは全体の切り替えの範囲を狭めることしかできません。プラットフォームごとの切り替えだけでストリーミングを有効にすることはできません。
 :::
 
 ## グループチャットのセッション分離 {#group-chat-session-isolation}

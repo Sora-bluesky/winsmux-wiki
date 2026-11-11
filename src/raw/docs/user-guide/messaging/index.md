@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 012071fd3cc5ff61b075e22c191cbef8d4506958
+upstream_blob: 54376d3de2d38eea2e49852d8aca6472e754dfe8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -887,14 +887,20 @@ gateway:
 
 ゲートウェイが再起動したとき（または処理中のセッションを抱えたまま停止したとき）、各プラットフォームのホームチャンネルへ「エージェントが戻りました」「エージェントが中断されました」というメッセージを 1 回だけ送れます。これは `config.yaml` の `gateway_restart_notification` のフラグでプラットフォームごとに制御し、既定値は `true` です。
 
+送り先は、`platform` と `chat_id` の両方を含む `home_channel` オブジェクトで指定します。
+
 ```yaml
 gateway:
   platforms:
     telegram:
-      home_chat_id: "123456789"
+      home_channel:
+        platform: telegram
+        chat_id: "123456789"
       gateway_restart_notification: false   # opt out for this platform
     discord:
-      home_chat_id: "987654321"
+      home_channel:
+        platform: discord
+        chat_id: "987654321"
       # gateway_restart_notification omitted → defaults to true
 ```
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN"
 description: "LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN"
 upstream_path: user-guide/skills/optional/security/security-godmode.md
-upstream_blob: d755caf4e272d7507967748b25668191808bebda
+upstream_blob: c91d91dac6de1a0e09e26fc6c585036bdfa2d3c9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-godmode
 ---
@@ -423,4 +423,4 @@ Claude Sonnet 4 は、明らかに有害な内容に対して、現行のすべ�
 9. **execute_code では必ず `load_godmode.py` を使う** — 個々のスクリプト（`parseltongue.py`、`godmode_race.py`、`auto_jailbreak.py`）には、`if __name__ == '__main__'` ブロックを持つ argparse の CLI エントリポイントがあります。execute_code の中で `exec()` 経由で読み込むと、`__name__` が `'__main__'` になって argparse が発火し、スクリプトがクラッシュします。`load_godmode.py` ローダーは、`__name__` を非 main の値に設定し、sys.argv を管理することでこれを処理します。
 10. **boundary_inversion はモデルのバージョン依存** — Claude 3.5 Sonnet では効きますが、Claude Sonnet 4 や Claude 4.6 では効きません。auto_jailbreak の戦略順は Claude モデルに対してこれを最初に試しますが、失敗すると refusal_inversion に落ちます。モデルのバージョンが分かっているなら、戦略順を更新します。
 11. **グレーゾーンと難しいクエリ** — ジェイルブレイクの技法は、あからさまに有害なもの（フィッシングのテンプレート、マルウェア）よりも、「デュアルユース」のクエリ（ロックピッキング、セキュリティツール、化学）に対してはるかによく効きます。難しいクエリでは、直接 ULTRAPLINIAN に進むか、拒否しない Hermes／Grok のモデルを使います。
-12. **execute_code のサンドボックスには環境変数がない** — Hermes が execute_code 経由で auto_jailbreak を実行するとき、サンドボックスは Hermes の `.env` を引き継ぎません。dotenv を明示的に読み込みます: `import os; from dotenv import load_dotenv; load_dotenv(os.path.join(os.environ.get("HERMES_HOME", os.path.expanduser("~/.hermes")), ".env"))`
+12. **execute_code にはプロバイダーのキーがない（意図的な仕様です）** — execute_code と terminal の子プロセスには、`OPENROUTER_API_KEY` などの Hermes のプロバイダーキーが一切渡りません。スキル側でキーを宣言して取り戻すこともできません。これを回避するために Hermes の `.env` を読み込んだり、ほかの方法で中身を読んだりしてはいけません。そうすると、そのプロファイルのキーがすべてスクリプトに渡ってしまいます。これらのスクリプトが使うキーは、そのスキル専用の設定から用意します。ユーザーがこのスキル用に用意したキーを `api_key=` として渡すか、スクリプトを実行するシェルで export してもらいます。どちらもない場合は、作業を止めてユーザーに確認します。

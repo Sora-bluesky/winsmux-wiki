@@ -32,7 +32,7 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-11-11
+最終取得: 2026-11-12
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
@@ -48,10 +48,11 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-11-11
+最終取得: 2026-11-12
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
+| **Baidu: ERNIE-5.5-Flash-Preview (free)**<br>`baidu/ernie-5.5-flash-preview:free`<br>入力・出力の基本単価0（取得時点） | 1,024,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Cohere: North Mini Code (free)**<br>`cohere/north-mini-code:free`<br>入力・出力の基本単価0（取得時点） | 256,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Dots Studio: Dots3-Note Preview (free)**<br>`dots-studio/dots-3-note-preview:free`<br>入力・出力の基本単価0（取得時点） | 512,000 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-12-31 |
 | **Google: Gemma 4 26B A4B  (free)**<br>`google/gemma-4-26b-a4b-it:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
@@ -67,7 +68,6 @@ raw: /hermes/raw/free.md
 | **Free Models Router**<br>`openrouter/free`<br>入力・出力の基本単価0（取得時点） | 200,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Recursive: Flint (free)**<br>`recursive/flint-v1.0:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Thinking Machines: Inkling 2 Small (free)**<br>`thinkingmachines/inkling-2-small:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **XingChen: Xing4.0 29B A4B (free)**<br>`xingchen-agi/xing4.0-29b-a4b:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 
 ## Google AI Studio（Gemini）
 

@@ -1,6 +1,6 @@
 {
-  "sha": "7ad8d98",
-  "date": "2026-11-10",
+  "sha": "b5f15a6",
+  "date": "2026-11-11",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -1319,7 +1319,7 @@
       "name": "Godmode",
       "description": "Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN",
       "url": "/hermes/docs/user-guide/skills/optional/security/security-godmode/",
-      "date": "2026-09-20",
+      "date": "2026-11-11",
       "source": "optional"
     },
     {

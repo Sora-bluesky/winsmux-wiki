@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ツール検索"
 description: ""
 upstream_path: user-guide/features/tool-search.md
-upstream_blob: 81c1017e7a6bae5b11484dbd17a9121ed4c2ca61
+upstream_blob: 9dfc35275124c7bed468d8f33e1e5e10d53035c2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-search
 ---
@@ -86,7 +86,9 @@ Model: tool_call({ calls: [{ name: "mcp_github_create_issue",
 ツール呼び出し前のフック、ガードレール、承認の確認、ツール呼び出し後の
 フックは、どれも `tool_call` ではなく本来のツール名に対して動きます。
 CLI やゲートウェイの実行履歴の表示も同じようにほどかれるので、橋渡し役では
-なく本来のツールが見えます。
+なく本来のツールが見えます。モデルが遅延対象のツールを本来の名前で直接
+呼んだ場合も、いったん `tool_call` の形に書き換えてから実行します。そのため
+未知のツールとして失敗することはなく、同じ確認をすべて通ります。
 
 ## どんなときに有効になるか {#when-does-it-activate}
 
@@ -124,6 +126,8 @@ tools:
       - todo_list
       - process_manage
       - cronjob_manage
+      - text_to_speech
+      - manage_connections
       - manage_catalog
 ```
 

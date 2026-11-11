@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: 3f750fa9e81eb149b48dd5097d30cdfd41a1ebe3
+upstream_blob: c1d686f3b5cd8e600c4596eacb028aa625ad7b64
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -513,7 +513,9 @@ model:
 
 NVIDIA NIM プロバイダを使うと、Nemotron をはじめとするオープンソースのモデルを、NVIDIA がホストするサービスまたはローカルの NIM エンドポイント経由で使えます。ホスト型エンドポイントのモデル識別子と、ローカルへの導入手順は [build.nvidia.com/models](https://build.nvidia.com/models) にまとまっています。
 
-:::note 以下の例では Nemotron 3.5 Super VL を使います。テキストと画像の入力、推論、ツール呼び出しに対応したモデルです。
+:::note Nemotron 3.5 Super VL
+以下の例では Nemotron 3.5 Super VL を使います。テキストと画像の入力、推論、ツール呼び出しに対応したモデルです。
+:::
 
 #### クラウド（build.nvidia.com） {#cloud-buildnvidiacom}
 
@@ -529,7 +531,9 @@ NVIDIA_API_KEY=nvapi-...
 hermes chat --provider nvidia --model nvidia/nemotron-3.5-super-vl-120b-a12b
 ```
 
-:::note Hermes は `build.nvidia.com` へのリクエストに NIM の課金オリジンのヘッダを自動で付けます。これにより、消費が NVIDIA の課金ダッシュボードで正しいオリジンに計上されます。追加の設定は不要です。
+:::info 課金
+Hermes は `build.nvidia.com` へのリクエストに NIM の課金オリジンのヘッダを自動で付けます。これにより、消費が NVIDIA の課金ダッシュボードで正しいオリジンに計上されます。追加の設定は不要です。
+:::
 
 #### ローカルの NIM {#local-nim}
 
@@ -540,7 +544,7 @@ NVIDIA_API_KEY=local-no-auth
 NVIDIA_BASE_URL=http://localhost:8000/v1
 ```
 
-:::note エンドポイントが認証を必要としない場合は、プレースホルダとして `local-no-auth` を指定します。認証が必要な場合は、そのエンドポイントの API キーを指定してください。
+エンドポイントが認証を必要としない場合は、プレースホルダとして `local-no-auth` を指定します。認証が必要な場合は、そのエンドポイントの API キーを指定してください。
 
 続いて、エンドポイントが提供しているモデルを指定してチャットを開始します。
 
@@ -549,6 +553,10 @@ hermes chat --provider nvidia --model nvidia/nemotron-3.5-super-vl-120b-a12b
 ```
 
 ローカルの NIM エンドポイントは、NVIDIA のホスト型サービスと同じ OpenAI 互換のチャット補完 API を提供します。エンドポイントを切り替えるときは `NVIDIA_BASE_URL` を書き換え、必要に応じて API キーとモデル名も合わせてください。
+
+:::info 画像入力
+ローカルの NIM モデルが models.dev のカタログに載っておらず、画像入力（ビジョン）に対応している場合は、`model.supports_vision: true` を設定すると画像をネイティブに扱えるようになります。詳しくは[カスタムプロバイダのモデルでネイティブの画像入力を使う](#named-custom-providers)を参照してください。
+:::
 
 #### 既定のモデルを設定する {#set-the-default-model}
 
@@ -559,6 +567,10 @@ model:
   provider: "nvidia"
   default: "nvidia/nemotron-3.5-super-vl-120b-a12b"
 ```
+
+:::info 問い合わせ先
+Nemotron のモデル自体に関する問題は、[NVIDIA Nemotron の開発者フォーラム](https://forums.developer.nvidia.com/c/ai-data-science/nvidia-nemotron/669)を参照してください。
+:::
 
 ### GMI Cloud {#gmi-cloud}
 

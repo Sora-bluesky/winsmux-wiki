@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-11",
+  "generatedAt": "2026-11-12",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-11",
-      "attemptedAt": "2026-11-11",
+      "fetchedAt": "2026-11-12",
+      "attemptedAt": "2026-11-12",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -43,11 +43,21 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-11",
-      "attemptedAt": "2026-11-11",
+      "fetchedAt": "2026-11-12",
+      "attemptedAt": "2026-11-12",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
+        {
+          "id": "baidu/ernie-5.5-flash-preview:free",
+          "name": "Baidu: ERNIE-5.5-Flash-Preview (free)",
+          "ctx": 1024000,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
         {
           "id": "cohere/north-mini-code:free",
           "name": "Cohere: North Mini Code (free)",
@@ -192,16 +202,6 @@
           "id": "thinkingmachines/inkling-2-small:free",
           "name": "Thinking Machines: Inkling 2 Small (free)",
           "ctx": 1048576,
-          "tools": true,
-          "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
-          "id": "xingchen-agi/xing4.0-29b-a4b:free",
-          "name": "XingChen: Xing4.0 29B A4B (free)",
-          "ctx": 262144,
           "tools": true,
           "expires": null,
           "freeBasis": "pricing",
