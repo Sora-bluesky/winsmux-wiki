@@ -2,6 +2,88 @@
   "generatedAt": "2026-11-12",
   "entries": [
     {
+      "date": "2026-11-12",
+      "sha": "70e77f2",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/multiplexing-gateway",
+          "title": "Multiplexing Gateway の内部構造",
+          "url": "/hermes/docs/developer-guide/multiplexing-gateway/"
+        },
+        {
+          "id": "developer-guide/terminal-environment-plugin",
+          "title": "ターミナル環境プロバイダプラグイン",
+          "url": "/hermes/docs/developer-guide/terminal-environment-plugin/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/tool-search",
+          "title": "ツール検索",
+          "url": "/hermes/docs/user-guide/features/tool-search/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/slack",
+          "title": "Slack",
+          "url": "/hermes/docs/user-guide/messaging/slack/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/skills/optional/security/security-godmode",
+          "title": "Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN",
+          "url": "/hermes/docs/user-guide/skills/optional/security/security-godmode/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/gateway-classic-cli",
+          "title": "従来型のゲートウェイクライアント",
+          "url": "/hermes/docs/developer-guide/gateway-classic-cli/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        }
+      ]
+    },
+    {
       "date": "2026-11-11",
       "sha": "83c92d3",
       "upstream": null,

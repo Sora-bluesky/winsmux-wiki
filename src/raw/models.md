@@ -27,7 +27,6 @@ Nous Portal で使える全 394 モデル（TEXT 357 / EMBEDDINGS 37 / OTHER 0�
 | Amazon: Titan Multimodal Embeddings G1 `amazon/titan-embed-image-v1` | embeddings | 0K | 入 $0.8 / 出 $0 | 入 - / 出 - | - |
 | Amazon: Titan Embeddings G1 - Text `amazon/titan-embed-text-v1` | embeddings | 8K | 入 $0.1 / 出 $0 | 入 - / 出 - | - |
 | Amazon: Titan Text Embeddings V2 `amazon/titan-embed-text-v2` | embeddings | 8K | 入 $0.02 / 出 $0 | 入 - / 出 - | - |
-| OpenAI: GPT-6.1 Terra Pro `openai/gpt-6.1-terra-pro` | text | 1050K | 入 $1 / 出 $5 | 入 - / 出 - | - |
 | OpenAI: GPT-6.1 Terra Pro (batch) `openai/gpt-6.1-terra-pro:batch` | text | 1050K | 入 $0.5 / 出 $2.5 | 入 - / 出 - | - |
 | OpenAI: GPT-6.1 Terra (batch) `openai/gpt-6.1-terra:batch` | text | 1050K | 入 $0.5 / 出 $2.5 | 入 - / 出 - | - |
 | MoonshotAI: Kimi K3.1 Pro `moonshotai/kimi-k3.1-pro` | text | 1049K | 入 $2 / 出 $10 | 入 - / 出 - | - |
@@ -50,7 +49,6 @@ Nous Portal で使える全 394 モデル（TEXT 357 / EMBEDDINGS 37 / OTHER 0�
 | Google: Nano Banana 2.1 `google/gemini-nano-banana-2.1` | text | 66K | 入 $1.5 / 出 $7.5 | 入 - / 出 - | - |
 | Mistral: Mistral Large 4 `mistralai/mistral-large-4-0` | text | 1049K | 入 $0.7 / 出 $2.1 | 入 - / 出 - | - |
 | inclusionAI: Ling 3.1 Flash `inclusionai/ling-3.1-flash` | text | 1000K | 入 $0.045 / 出 $0.135 | 入 - / 出 - | - |
-| OpenAI: GPT-6.1 Sol Pro `openai/gpt-6.1-sol-pro` | text | 1050K | 入 $2 / 出 $10 | 入 - / 出 - | - |
 | OpenAI: GPT-6.1 Sol Pro (batch) `openai/gpt-6.1-sol-pro:batch` | text | 1050K | 入 $1 / 出 $5 | 入 - / 出 - | - |
 | OpenAI: GPT-6.1 Sol (batch) `openai/gpt-6.1-sol:batch` | text | 1050K | 入 $1 / 出 $5 | 入 - / 出 - | - |
 | Anthropic: Claude Sonnet 5.5 (batch) `anthropic/claude-sonnet-5.5:batch` | text | 1000K | 入 $1 / 出 $5 | 入 - / 出 - | - |
@@ -62,10 +60,8 @@ Nous Portal で使える全 394 モデル（TEXT 357 / EMBEDDINGS 37 / OTHER 0�
 | AionLabs: Aion 3.5 `aion-labs/aion-3.5` | text | 262K | 入 $3 / 出 $6 | 入 - / 出 - | - |
 | Upstage: Solar Mini 4 `upstage/solar-mini4` | text | 524K | 入 $0.05 / 出 $0.2 | 入 $0.1 / 出 $0.4 | 50% |
 | Cohere: Command A+ `cohere/command-a-plus` | text | 192K | 入 $0.3 / 出 $1.5 | 入 - / 出 - | - |
-| OpenAI: GPT-6 Luna Pro `openai/gpt-6-luna-pro` | text | 1050K | 入 $0.1 / 出 $0.5 | 入 - / 出 - | - |
 | OpenAI: GPT-6 Luna Pro (batch) `openai/gpt-6-luna-pro:batch` | text | 1050K | 入 $0.05 / 出 $0.25 | 入 - / 出 - | - |
 | OpenAI: GPT-6 Luna (batch) `openai/gpt-6-luna:batch` | text | 1050K | 入 $0.05 / 出 $0.25 | 入 - / 出 - | - |
-| OpenAI: GPT-6 Sol Pro `openai/gpt-6-sol-pro` | text | 1050K | 入 $2 / 出 $10 | 入 - / 出 - | - |
 | OpenAI: GPT-6 Sol Pro (batch) `openai/gpt-6-sol-pro:batch` | text | 1050K | 入 $1 / 出 $5 | 入 - / 出 - | - |
 | OpenAI: GPT-6 Sol (batch) `openai/gpt-6-sol:batch` | text | 1050K | 入 $1 / 出 $5 | 入 - / 出 - | - |
 | Anthropic: Claude Opus 5.5 (batch) `anthropic/claude-opus-5.5:batch` | text | 1000K | 入 $2 / 出 $10 | 入 - / 出 - | - |
@@ -88,7 +84,6 @@ Nous Portal で使える全 394 モデル（TEXT 357 / EMBEDDINGS 37 / OTHER 0�
 | DeepSeek: DeepSeek V4.1 Flash (batch) `deepseek/deepseek-v4.1-flash:batch` | text | 1049K | 入 $0.112 / 出 $0.336 | 入 - / 出 - | - |
 | Nex AGI: Nex-N2.5-Pro `nex-agi/nex-n2.5-pro` | text | 262K | 入 $0.075 / 出 $0.25 | 入 - / 出 - | - |
 | OpenAI: GPT-6 Astra (batch) `openai/gpt-6-astra:batch` | text | 1050K | 入 $5 / 出 $25 | 入 - / 出 - | - |
-| OpenAI: GPT-6 Astra Pro `openai/gpt-6-astra-pro` | text | 1050K | 入 $10 / 出 $50 | 入 - / 出 - | - |
 | OpenAI: GPT-6 Astra Pro (batch) `openai/gpt-6-astra-pro:batch` | text | 1050K | 入 $5 / 出 $25 | 入 - / 出 - | - |
 | Qwen: Qwen3.8 Max (0902) `qwen/qwen3.8-max-0902` | text | 1000K | 入 $2 / 出 $6 | 入 - / 出 - | - |
 | Qwen: Qwen3.8 Max (0902) (batch) `qwen/qwen3.8-max-0902:batch` | text | 262K | 入 $1.15 / 出 $3.45 | 入 - / 出 - | - |
@@ -138,13 +133,10 @@ Nous Portal で使える全 394 モデル（TEXT 357 / EMBEDDINGS 37 / OTHER 0�
 | Meituan: LongCat 2.0 `meituan/longcat-2.0` | text | 1049K | 入 $0.3 / 出 $1.2 | 入 - / 出 - | - |
 | Thinking Machines: Inkling `thinkingmachines/inkling` | text | 524K | 入 $1 / 出 $4.05 | 入 - / 出 - | - |
 | MoonshotAI: Kimi K3 (batch) `moonshotai/kimi-k3:batch` | text | 1049K | 入 $2.28 / 出 $11.4 | 入 - / 出 - | - |
-| OpenAI: GPT-5.6 Luna Pro `openai/gpt-5.6-luna-pro` | text | 1050K | 入 $0.2 / 出 $1.2 | 入 - / 出 - | - |
 | OpenAI: GPT-5.6 Luna Pro (batch) `openai/gpt-5.6-luna-pro:batch` | text | 1050K | 入 $0.1 / 出 $0.6 | 入 - / 出 - | - |
 | OpenAI: GPT-5.6 Luna (batch) `openai/gpt-5.6-luna:batch` | text | 1050K | 入 $0.1 / 出 $0.6 | 入 - / 出 - | - |
-| OpenAI: GPT-5.6 Terra Pro `openai/gpt-5.6-terra-pro` | text | 1050K | 入 $2 / 出 $12 | 入 - / 出 - | - |
 | OpenAI: GPT-5.6 Terra Pro (batch) `openai/gpt-5.6-terra-pro:batch` | text | 1050K | 入 $1 / 出 $6 | 入 - / 出 - | - |
 | OpenAI: GPT-5.6 Terra (batch) `openai/gpt-5.6-terra:batch` | text | 1050K | 入 $1 / 出 $6 | 入 - / 出 - | - |
-| OpenAI: GPT-5.6 Sol Pro `openai/gpt-5.6-sol-pro` | text | 1050K | 入 $4 / 出 $20 | 入 - / 出 - | - |
 | OpenAI: GPT-5.6 Sol Pro (batch) `openai/gpt-5.6-sol-pro:batch` | text | 1050K | 入 $2 / 出 $10 | 入 - / 出 - | - |
 | OpenAI: GPT-5.6 Sol (batch) `openai/gpt-5.6-sol:batch` | text | 1050K | 入 $2 / 出 $10 | 入 - / 出 - | - |
 | xAI: Grok Latest `~x-ai/grok-latest` | text | 500K | 入 $2 / 出 $6 | 入 - / 出 - | - |
@@ -398,6 +390,14 @@ Nous Portal で使える全 394 モデル（TEXT 357 / EMBEDDINGS 37 / OTHER 0�
 | OpenAI: GPT-5.6 Terra `openai/gpt-5.6-terra` | text | 1050K | 入 $2 / 出 $12 | 入 - / 出 - | - |
 | OpenAI: GPT-5.6 Luna `openai/gpt-5.6-luna` | text | 1050K | 入 $0.2 / 出 $1.2 | 入 - / 出 - | - |
 | OpenAI: GPT-5.5 `openai/gpt-5.5` | text | 1050K | 入 $5 / 出 $30 | 入 - / 出 - | - |
+| OpenAI: GPT-6 Luna Pro `openai/gpt-6-luna-pro` | text | 1050K | 入 $0.1 / 出 $0.5 | 入 - / 出 - | - |
+| OpenAI: GPT-6 Sol Pro `openai/gpt-6-sol-pro` | text | 1050K | 入 $2 / 出 $10 | 入 - / 出 - | - |
+| OpenAI: GPT-6 Astra Pro `openai/gpt-6-astra-pro` | text | 1050K | 入 $10 / 出 $50 | 入 - / 出 - | - |
+| OpenAI: GPT-6.1 Sol Pro `openai/gpt-6.1-sol-pro` | text | 1050K | 入 $2 / 出 $10 | 入 - / 出 - | - |
+| OpenAI: GPT-6.1 Terra Pro `openai/gpt-6.1-terra-pro` | text | 1050K | 入 $1 / 出 $5 | 入 - / 出 - | - |
+| OpenAI: GPT-5.6 Luna Pro `openai/gpt-5.6-luna-pro` | text | 1050K | 入 $0.2 / 出 $1.2 | 入 - / 出 - | - |
+| OpenAI: GPT-5.6 Terra Pro `openai/gpt-5.6-terra-pro` | text | 1050K | 入 $2 / 出 $12 | 入 - / 出 - | - |
+| OpenAI: GPT-5.6 Sol Pro `openai/gpt-5.6-sol-pro` | text | 1050K | 入 $4 / 出 $20 | 入 - / 出 - | - |
 | Anthropic: Claude Fable 5.1 `anthropic/claude-fable-5.1` | text | 1000K | 入 $10 / 出 $50 | 入 - / 出 - | - |
 | Anthropic: Claude Fable 5 `anthropic/claude-fable-5` | text | 1000K | 入 $10 / 出 $50 | 入 - / 出 - | - |
 | Anthropic: Claude Opus 5.5 `anthropic/claude-opus-5.5` | text | 1000K | 入 $4 / 出 $20 | 入 - / 出 - | - |

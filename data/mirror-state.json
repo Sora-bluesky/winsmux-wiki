@@ -72,9 +72,9 @@
       "translatedAt": "2026-10-29T23:06:10.706Z"
     },
     "developer-guide/desktop-plugin-sdk.md": {
-      "blob": "0ab244c5c57c9af878003a060dce8efe5c81a2a3",
+      "blob": "53a2a2a7cf25987cc43ec98cd64e1414f8416d29",
       "status": "translated",
-      "translatedAt": "2026-11-06T22:59:23.093Z"
+      "translatedAt": "2026-11-11T22:47:05.480Z"
     },
     "developer-guide/egress-internals.md": {
       "blob": "dde37d99ace8f900d6f23431db168637c191dda4",
@@ -962,9 +962,9 @@
       "translatedAt": "2026-10-04T22:47:27.640Z"
     },
     "user-guide/profiles.md": {
-      "blob": "da63112aaca50b82e8cf53189a662d21128c9f54",
+      "blob": "1f1ef68c86cd617b08a52065a7769e01367fb710",
       "status": "translated",
-      "translatedAt": "2026-11-10T22:53:12.693Z"
+      "translatedAt": "2026-11-11T22:47:05.484Z"
     },
     "user-guide/secrets/bitwarden.md": {
       "blob": "21c56606391c986077f49f53e598996b955f1afb",
@@ -2411,9 +2411,9 @@
       "translatedAt": "2026-10-23T22:51:08.237Z"
     },
     "developer-guide/gateway-classic-cli.md": {
-      "blob": "448b7e33b2fe0e87daea284b846d3e53f3bf5ff4",
+      "blob": "f5d369eea42e3017f23c9a870c6e4a07178c8c90",
       "status": "translated",
-      "translatedAt": "2026-10-14T23:48:21.671Z"
+      "translatedAt": "2026-11-11T22:47:05.485Z"
     },
     "developer-guide/gateway-command-parity.md": {
       "blob": "ef91436a66338f9bc3b40ab83abb07ac30077e2c",
@@ -2526,5 +2526,5 @@
       "translatedAt": "2026-11-10T22:53:12.700Z"
     }
   },
-  "snapshotCommit": "b5f15a6d3188e94f815d504d5ebbeb926e1bd08a"
+  "snapshotCommit": "db735e474732796dd9c7beca89c8cda7fd4b679d"
 }

@@ -8,6 +8,24 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-12
+
+- [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
+- [ターミナル環境プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/terminal-environment-plugin/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [ツール検索](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-search/)
+- [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
+- [Slack](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/slack/)
+- [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
+- [Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-godmode/)
+- [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
+- [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
+
 ## 2026-11-11
 
 - [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)

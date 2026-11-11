@@ -213,18 +213,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-6.1-terra-pro",
-      "name": "OpenAI: GPT-6.1 Terra Pro",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 1,
-      "outPerM": 5,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
       "id": "openai/gpt-6.1-terra-pro:batch",
       "name": "OpenAI: GPT-6.1 Terra Pro (batch)",
       "type": "text",
@@ -489,18 +477,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-6.1-sol-pro",
-      "name": "OpenAI: GPT-6.1 Sol Pro",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 2,
-      "outPerM": 10,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
       "id": "openai/gpt-6.1-sol-pro:batch",
       "name": "OpenAI: GPT-6.1 Sol Pro (batch)",
       "type": "text",
@@ -633,18 +609,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-6-luna-pro",
-      "name": "OpenAI: GPT-6 Luna Pro",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 0.1,
-      "outPerM": 0.5,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
       "id": "openai/gpt-6-luna-pro:batch",
       "name": "OpenAI: GPT-6 Luna Pro (batch)",
       "type": "text",
@@ -663,18 +627,6 @@
       "ctx": 1050000,
       "inPerM": 0.05,
       "outPerM": 0.25,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-6-sol-pro",
-      "name": "OpenAI: GPT-6 Sol Pro",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 2,
-      "outPerM": 10,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -939,18 +891,6 @@
       "ctx": 1050000,
       "inPerM": 5,
       "outPerM": 25,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-6-astra-pro",
-      "name": "OpenAI: GPT-6 Astra Pro",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 10,
-      "outPerM": 50,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -1545,18 +1485,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5.6-luna-pro",
-      "name": "OpenAI: GPT-5.6 Luna Pro",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 0.2,
-      "outPerM": 1.2,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5.6-luna-pro:batch",
       "name": "OpenAI: GPT-5.6 Luna Pro (batch)",
       "type": "text",
@@ -1581,18 +1509,6 @@
       "free": false
     },
     {
-      "id": "openai/gpt-5.6-terra-pro",
-      "name": "OpenAI: GPT-5.6 Terra Pro",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 2,
-      "outPerM": 12,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
       "id": "openai/gpt-5.6-terra-pro:batch",
       "name": "OpenAI: GPT-5.6 Terra Pro (batch)",
       "type": "text",
@@ -1611,18 +1527,6 @@
       "ctx": 1050000,
       "inPerM": 1,
       "outPerM": 6,
-      "listInPerM": null,
-      "listOutPerM": null,
-      "discount": null,
-      "free": false
-    },
-    {
-      "id": "openai/gpt-5.6-sol-pro",
-      "name": "OpenAI: GPT-5.6 Sol Pro",
-      "type": "text",
-      "ctx": 1050000,
-      "inPerM": 4,
-      "outPerM": 20,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,
@@ -4659,6 +4563,102 @@
       "ctx": 1050000,
       "inPerM": 5,
       "outPerM": 30,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "openai/gpt-6-luna-pro",
+      "name": "OpenAI: GPT-6 Luna Pro",
+      "type": "text",
+      "ctx": 1050000,
+      "inPerM": 0.1,
+      "outPerM": 0.5,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "openai/gpt-6-sol-pro",
+      "name": "OpenAI: GPT-6 Sol Pro",
+      "type": "text",
+      "ctx": 1050000,
+      "inPerM": 2,
+      "outPerM": 10,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "openai/gpt-6-astra-pro",
+      "name": "OpenAI: GPT-6 Astra Pro",
+      "type": "text",
+      "ctx": 1050000,
+      "inPerM": 10,
+      "outPerM": 50,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "openai/gpt-6.1-sol-pro",
+      "name": "OpenAI: GPT-6.1 Sol Pro",
+      "type": "text",
+      "ctx": 1050000,
+      "inPerM": 2,
+      "outPerM": 10,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "openai/gpt-6.1-terra-pro",
+      "name": "OpenAI: GPT-6.1 Terra Pro",
+      "type": "text",
+      "ctx": 1050000,
+      "inPerM": 1,
+      "outPerM": 5,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "openai/gpt-5.6-luna-pro",
+      "name": "OpenAI: GPT-5.6 Luna Pro",
+      "type": "text",
+      "ctx": 1050000,
+      "inPerM": 0.2,
+      "outPerM": 1.2,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "openai/gpt-5.6-terra-pro",
+      "name": "OpenAI: GPT-5.6 Terra Pro",
+      "type": "text",
+      "ctx": 1050000,
+      "inPerM": 2,
+      "outPerM": 12,
+      "listInPerM": null,
+      "listOutPerM": null,
+      "discount": null,
+      "free": false
+    },
+    {
+      "id": "openai/gpt-5.6-sol-pro",
+      "name": "OpenAI: GPT-5.6 Sol Pro",
+      "type": "text",
+      "ctx": 1050000,
+      "inPerM": 4,
+      "outPerM": 20,
       "listInPerM": null,
       "listOutPerM": null,
       "discount": null,

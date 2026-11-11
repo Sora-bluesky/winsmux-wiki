@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "従来型のゲートウェイクライアント"
 description: "hermes chat と --cli がゲートウェイの権限主体に接続するしくみ"
 upstream_path: developer-guide/gateway-classic-cli.md
-upstream_blob: 448b7e33b2fe0e87daea284b846d3e53f3bf5ff4
+upstream_blob: f5d369eea42e3017f23c9a870c6e4a07178c8c90
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-classic-cli
 ---
@@ -16,6 +16,16 @@ sources:
 ensure ライフサイクルと使い捨ての非公開制御チケットを使い、サービスのインストールは行いません。
 `HERMES_TUI_GATEWAY_URL` を明示した場合はリモート専用のままです。接続や
 認証に失敗しても、代わりにローカルのゲートウェイを起動することはありません。
+
+`hermes profile create` も同じ接続経路を使います（`hermes_cli/profile_provision_gateway.py`）。ターミナルのプロファイルに対応する準備済みの
+オーナー（見つかれば使うだけで、このために起動することはありません）か、URL で指定したゲートウェイが、
+接続先のプロファイルで `profiles.create` を実行し、CLI が表示するレシートを返します
+（`report`）。オーナーがいない場合や、ローカルのオーナーがこれらの項目に対応する前のものである場合（`-32601` / `4000`）は、
+CLI が自分のプロセス内で作成します。URL で指定したゲートウェイが、ローカルでの作成に置き換えられることはありません。作成が拒否された場合は、
+その種別（`error.data.type`）をそのまま保ちます。リクエストを送ったあとにソケットが切れた場合や、レシートがそろっていない返答が届いた場合は、
+結果不明として報告し、再試行はしません。`~/.local/bin` のラッパーを書き込むのは CLI で、
+ゲートウェイが書き込むことはありません。それも、ゲートウェイが作ったプロファイルが、この端末で `-p <name>` が選ぶディレクトリと
+一致する場合に限ります（ループバックの URL というだけでは足りません。トンネルやコンテナが別のホームを提供していることがあるためです）。
 
 クライアントは、保存された `Session:` の ID を stderr に出力します。再開するには
 `hermes --cli chat --resume ID` を実行します。入力は新しい `input_id` を付けて受け付けられ、イベントと

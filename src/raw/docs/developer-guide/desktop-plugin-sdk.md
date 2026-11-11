@@ -2,7 +2,7 @@
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 0ab244c5c57c9af878003a060dce8efe5c81a2a3
+upstream_blob: 53a2a2a7cf25987cc43ec98cd64e1414f8416d29
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -1122,8 +1122,8 @@ function TaskCard({ taskId, sessionId }) {
 中核部分は参考例として指示子を 1 つ同梱しています。`::preview{file="…"}` は、作業領域の HTML
 ファイルを**メッセージの中でそのまま**表示します。中身は、生成元を持たないサンドボックスの
 `srcdoc` の iframe です（スクリプトは動き、部品は完全に操作できますが、アプリやその保存領域、
-橋渡しの仕組みには手が届きません）。枠は中身に合わせて大きさを変え（高さは随時、幅は中身の
-自然な広がりに合わせ、メッセージの流れの中で左端に揃います）、テーマの前置きが、アプリで解決済みの
+橋渡しの仕組みには手が届きません）。枠はメッセージの列いっぱいに最大 960px まで広がり、
+ウィンドウの大きさが変わるとそれに合わせて追従します。高さは中身に合わせて随時変わります。また、テーマの前置きが、アプリで解決済みの
 色の値（`--foreground`、`--muted-foreground`、
 `--accent`、`--border`、`--card`）、アプリのフォント、透明な背景を文書に渡します。そのため部品の
 ような HTML は最初から馴染んで見え、丸ごとのページは自分のデザインを保ちます。HTML 以外の対象と
