@@ -2,7 +2,7 @@
 title: "Webhook で GitHub の PR に自動でコメントする"
 description: "Hermes を GitHub につないで、PR の差分を取り、コードの変更をレビューし、コメントを書き込むところまでを自動にします。きっかけは webhook で、こちらから頼む必要はありません"
 upstream_path: guides/webhook-github-pr-review.md
-upstream_blob: bff438a3c9f5ad3ba0caabf45b2f6c1ade18f03c
+upstream_blob: df458e460640799ef30acaa290dd5ca992815449
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/webhook-github-pr-review
 ---
@@ -51,6 +51,7 @@ platforms:
       routes:
         github-pr-review:
           secret: "your-webhook-secret-here"   # must match the GitHub webhook secret exactly
+          signature: github                    # accept only X-Hub-Signature-256 on this route
           events:
             - pull_request
 
@@ -216,6 +217,7 @@ platforms:
       routes:
         github-pr-review:
           secret: "your-webhook-secret-here"
+          signature: github
           events: [pull_request]
           prompt: |
             A pull request event was received (action: {action}).
@@ -266,11 +268,12 @@ deliver_extra:
 
 ## GitLab でも使えます {#gitlab-support}
 
-同じアダプターが GitLab でも動きます。GitLab は認証に `X-Gitlab-Token` を使い（HMAC ではなく、ただの文字列の一致です）、Hermes はどちらも自動で扱います。
+同じアダプターが GitLab でも動きます。GitLab の認証には `X-Gitlab-Token`（HMAC ではなく、ただの文字列の一致です）が使われます。署名用のトークンを設定している場合は、Standard Webhooks 形式の `webhook-signature` で認証します。ルートで指定する署名の方式は `signature: gitlab` に変えてください。`signature: github` のままのルートは、秘密の値が正しくても、GitLab から届くものをすべて `401` で拒否します。
 
 イベントの絞り込みでは、GitLab は `X-GitLab-Event` に `Merge Request Hook`、`Push Hook`、`Pipeline Hook` のような値を入れてきます。`events` にはヘッダーの値をそのまま書いてください。
 
 ```yaml
+signature: gitlab
 events:
   - Merge Request Hook
 ```

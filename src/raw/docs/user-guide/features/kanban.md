@@ -2,7 +2,7 @@
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: 0a5555bdfdc4e1a19d7456c9804b2dba719b2927
+upstream_blob: c5d49c6ad0b7f5742a1b22dc3114337372cee490
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -1275,6 +1275,11 @@ hermes kanban notify-unsubscribe t_abcd \
 
 購読は、タスクが `done` か `archived` に達すると自動で消えます。片付けは要りません。
 
+エージェントがゲートウェイのチャットの中から（端末のツールを通じて）`notify-subscribe` を実行し、対象がその同じチャット（とトピック）である場合、
+`--user-id` を省くと、そのターンの送り主が補われます。`group_sessions_per_user`（既定）が有効なグループでは、これによって
+エージェントを起こす先が、別に作られる共有のセッションではなく、その参加者自身のセッションのままになります。ほかのチャットやトピックへの購読が
+呼び出し元の id を引き継ぐことはありません。`--user-id-alt` を明示した購読も同じです。
+
 **`profile_routes` の下の Discord のスレッド:** ゲートウェイが複数のプロファイルを多重化して*チャンネル*を
 プロファイルへ振り分けている場合、そのチャンネルの*スレッド*について CLI から作った購読には、スレッドの
 経路の手がかりが要ります。ないと通知役はどの経路にも結び付けられず、その購読を飛ばします（WARNING で 1 回
@@ -1287,6 +1292,10 @@ hermes kanban notify-subscribe t_abcd \
 ```
 
 チャットの中から作った購読（`/kanban create`、`kanban_create`）は、これらの手がかりを自動で記録します。
+Telegram のフォーラムのトピックや Slack の DM のスレッドは、それ自身のチャットの中にあります（`chat_id` はスレッドではなく、グループや DM を指します）。
+そのため `--parent-chat-id` は要りません。通知役は、そのチャットを名指ししている経路と照らし合わせます。
+ただし、そのためには `--chat-type`（`dm`、`group`、`channel` のいずれか。ゲートウェイが代わりに記録します）が明示されている必要があります。これがない行は、
+スレッド自身の id を `chat_id` として保存していることがあるので、チャンネルの経路に届けるにはやはり `--parent-chat-id` が要ります。
 
 ### 配信の方式 {#delivery-modes}
 

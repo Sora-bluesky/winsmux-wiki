@@ -10,6 +10,12 @@ raw: /hermes/raw/updates.md
 
 ## 2026-11-12
 
+- [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
+- [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
+
+## 2026-11-12
+
 - [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
 - [ターミナル環境プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/terminal-environment-plugin/)
 - [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
@@ -22,9 +28,6 @@ raw: /hermes/raw/updates.md
 - [Slack](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/slack/)
 - [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
 - [Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-godmode/)
-- [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
-- [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
-- [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
 
 ## 2026-11-11
 
@@ -3123,3 +3126,7 @@ Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ�
 ## 週次まとめ 2026-W45
 
 プロバイダーまわりが広く更新され、プロバイダーの追加や実行時の解決、フォールバック、AWS Bedrock のページに手が入りました。設定・CLI コマンド・環境変数・プラグイン・イベントフックに加え、ゲートウェイと Slack・Telegram・Mattermost、Hermes Desktop のページも見直されています。スキルでは Office・PDF・Excel・PowerPoint を扱うものや Stripe の支払いまわりが新しい内容になり、Notion・Airtable・Shopify・DuckDuckGo・SearXNG などのオプションスキルは公式から外れました。
+
+## 週次まとめ 2026-W46
+
+メッセージングゲートウェイまわりが広く更新され、Telegram・Discord・WhatsApp・Slack の各ページのほか、ゲートウェイの内部やセッションライフサイクル、Multiplexing Gateway の内部構造、従来型のゲートウェイクライアント、Relay ↔ Connector 契約、プラットフォームアダプターの追加に手が入りました。プラグインでは、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、ターミナル環境プロバイダプラグイン、ダッシュボードを広げるページが見直され、Hermes Desktop とデスクトップ版を複数の Hermes につなぐ説明も更新されています。ほかに、Google Gemini やフォールバックプロバイダーなどのモデルプロバイダ、設定・CLIコマンド一覧・環境変数、記憶プロバイダーやコンテキストの圧縮とキャッシュ、サブエージェントへの委任、定期実行タスク、セキュリティ、Nix と NixOS のセットアップのページが新しい内容になりました。

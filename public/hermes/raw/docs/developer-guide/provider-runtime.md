@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "実行時のプロバイダー解決"
 description: "Hermes が実行時にプロバイダー・資格情報・API モード・補助モデルをどう決めているか"
 upstream_path: developer-guide/provider-runtime.md
-upstream_blob: d41b4a886ac01f1d2d96b00bb867446bbd9e9150
+upstream_blob: 045f887b832eaac2e0f856f2bb931244a24f982a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/provider-runtime
 ---
@@ -125,7 +125,7 @@ Hermes はこうしたフィールドを、メインのストリーム、Relay �
 
 - `OPENROUTER_API_KEY` は `openrouter.ai` のエンドポイントにしか送られません
 - `AI_GATEWAY_API_KEY` は `ai-gateway.vercel.sh` のエンドポイントにしか送られません
-- `OPENAI_API_KEY` は独自エンドポイント向け、および最後の受け皿として使われます
+- `OPENAI_API_KEY` は OpenAI のホスト (`*.openai.com`、`*.openai.azure.com`) か、このキーと対で設定された `OPENAI_BASE_URL` と完全に一致する URL にしか送られません
 
 Hermes は次の 2 つも区別します。
 

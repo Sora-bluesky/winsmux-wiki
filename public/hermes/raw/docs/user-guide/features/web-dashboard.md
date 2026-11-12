@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: b4baaaebdbbfcff761973e7336ad9f6e6812d82b
+upstream_blob: ffa066bac65628aa0d467cecd606095fd81e2f17
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -801,7 +801,7 @@ curl -s http://<host>:9119/api/status | jq '.auth_required, .auth_providers'
 
 OAuth の身元の基盤まで結線したくない、つまり「管理画面にパスワードを掛けたいだけ」という自前運用なら、同梱の `plugins/dashboard_auth/basic` の差し込みが `basic` という名前の `DashboardAuthProvider` を登録し、OAuth の飛ばし合いの代わりに**利用者名とパスワード**で認証します。
 
-つながる先は OAuth のしくみと同じ関門です。loopback 以外に割り当てると関門が働き、ログインのページはこのしくみのための入力の面（「◯◯でログイン」のボタンではなく）を描き、ログインより後ろにあるもの、つまりセッションの合鍵、ひとりでに行われる更新、WebSocket の引換券、ログアウト、監査の記録は、OAuth の道とまったく同じです。セッションは、しくみ自身が HMAC で署名して発行する持ち歩きの合鍵なので、**データベースも外の身元の基盤も要りません**。パスワードのハッシュには標準ライブラリの `scrypt` を使います（外部の部品は要りません）。
+つながる先は OAuth のしくみと同じ関門です。loopback 以外に割り当てると関門が働き、ログインのページはこのしくみのための入力の面（「◯◯でログイン」のボタンではなく）を描き、ログインより後ろにあるもの、つまりセッションの合鍵、ひとりでに行われる更新、WebSocket の引換券、ログアウト、監査の記録は、OAuth の道とまったく同じです。セッションは、しくみ自身が HMAC で署名して発行する合鍵なので、**データベースも外の身元の基盤も要りません**。署名の鍵は設定した利用者名とパスワードに結び付いているので、どちらかを変えると、それまでのセッションはすべて終わります。ログアウトすると、そのログイン（とそこから更新されたもの）は、Hermes の置き場にある小さな `dashboard_auth/basic-revoked-sessions.json` のファイルを通して取り消されます。パスワードのハッシュには標準ライブラリの `scrypt` を使います（外部の部品は要りません）。
 
 :::warning 信頼できるネットワークだけで使ってください — 公開のインターネットには向きません
 利用者名とパスワードのしくみは、**信頼できるネットワーク**にある、あるいは **VPN** ごしにしか届かない、自前運用・社内・自宅の管理画面のためのものです。守っているのは共有された資格情報ひとつだけで、その後ろに外の身元の基盤も多要素認証も利用者ごとのアカウントもないので、**管理画面を公開のインターネットに直に晒す用途には向きません**。インターネットに向けるなら、代わりに [Nous Research のしくみ](#default-provider-nous-research)（あるいは自前の[自前の OIDC](#self-hosted-oidc-provider) や[自作のしくみ](#custom-providers)）を使ってください。
@@ -1165,6 +1165,8 @@ def register(ctx):
 ```
 
 ログインのページには登録されたしくみがすべて並びます。いくつも重ねられ、利用者は `/login` でどれかを選びます。
+
+身元の基盤の側で合鍵が取り消されないしくみのために、ログアウトを補う任意の仕掛けが2つあります。アクセストークンが更新の合鍵より長く有効なままになりうるなら、`revoke_access_session(access_token=...)` を上書きしてください（ログアウトのときには、アクセストークンの合鍵も一緒に渡されます）。一度使った更新の合鍵が有効なまま残るなら、`refresh_reuse_detection = False` を設定してください。こうしておくと、関門が更新の繰り返しに備えて30秒だけ覚えておく控えから、ログアウトですでに取り消された入れ替えの結果が返されることはありません。
 
 ### 対話によらない認証（持参する合鍵） {#non-interactive-bearer-token-auth}
 

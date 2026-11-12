@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-11-12、対象期間 = 2026-11-06 〜 2026-11-12（JST）
+生成日 = 2026-11-13、対象期間 = 2026-11-07 〜 2026-11-13（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,6 +16,9 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-11-12 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- 2026-11-12 [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
+- 2026-11-12 [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
 - 2026-11-12 [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
 - 2026-11-12 [ターミナル環境プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/terminal-environment-plugin/)
 - 2026-11-12 [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
@@ -28,9 +31,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-12 [Slack](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/slack/)
 - 2026-11-12 [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
 - 2026-11-12 [Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-godmode/)
-- 2026-11-12 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
-- 2026-11-12 [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
-- 2026-11-12 [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
 - 2026-11-11 [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
 - 2026-11-11 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
 - 2026-11-11 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
@@ -83,20 +83,12 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-07 [Inspecting Hermes Desktop Dom — 動いている Hermes デスクトップの DOM/CSS を CDP で読む](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom/)
 - 2026-11-07 [Node Inspect Debugger — --inspect と Chrome DevTools Protocol の CLI で Node.js をデバッグする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-node-inspect-debugger/)
 - 2026-11-07 [TUI](https://wiki.winsmux.dev/hermes/docs/user-guide/tui/)
-- 2026-11-06 [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
-- 2026-11-06 [公式ドメインとフィッシング対策](https://wiki.winsmux.dev/hermes/docs/getting-started/official-domains/)
-- 2026-11-06 [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
-- 2026-11-06 [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
-- 2026-11-06 [音声モード](https://wiki.winsmux.dev/hermes/docs/user-guide/features/voice-mode/)
-- 2026-11-06 [Feishu / Lark](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/feishu/)
-- 2026-11-06 [Mattermost](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/mattermost/)
-- 2026-11-06 [Hermes S6 Container Supervision — Hermes の Docker イメージで s6 サービスを直したり調べたりする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision/)
 
 ## 週次まとめ
 
-対象週: 2026-W45
+対象週: 2026-W46
 
-プロバイダーまわりが広く更新され、プロバイダーの追加や実行時の解決、フォールバック、AWS Bedrock のページに手が入りました。設定・CLI コマンド・環境変数・プラグイン・イベントフックに加え、ゲートウェイと Slack・Telegram・Mattermost、Hermes Desktop のページも見直されています。スキルでは Office・PDF・Excel・PowerPoint を扱うものや Stripe の支払いまわりが新しい内容になり、Notion・Airtable・Shopify・DuckDuckGo・SearXNG などのオプションスキルは公式から外れました。
+メッセージングゲートウェイまわりが広く更新され、Telegram・Discord・WhatsApp・Slack の各ページのほか、ゲートウェイの内部やセッションライフサイクル、Multiplexing Gateway の内部構造、従来型のゲートウェイクライアント、Relay ↔ Connector 契約、プラットフォームアダプターの追加に手が入りました。プラグインでは、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、ターミナル環境プロバイダプラグイン、ダッシュボードを広げるページが見直され、Hermes Desktop とデスクトップ版を複数の Hermes につなぐ説明も更新されています。ほかに、Google Gemini やフォールバックプロバイダーなどのモデルプロバイダ、設定・CLIコマンド一覧・環境変数、記憶プロバイダーやコンテキストの圧縮とキャッシュ、サブエージェントへの委任、定期実行タスク、セキュリティ、Nix と NixOS のセットアップのページが新しい内容になりました。
 
 ## 正本
 

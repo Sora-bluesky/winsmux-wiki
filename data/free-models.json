@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-12",
+  "generatedAt": "2026-11-13",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-12",
-      "attemptedAt": "2026-11-12",
+      "fetchedAt": "2026-11-13",
+      "attemptedAt": "2026-11-13",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -43,11 +43,21 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-12",
-      "attemptedAt": "2026-11-12",
+      "fetchedAt": "2026-11-13",
+      "attemptedAt": "2026-11-13",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
+        {
+          "id": "apodex/apodex-1.1-mini:free",
+          "name": "Apodex: Apodex 1.1 Mini (free)",
+          "ctx": 262144,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
         {
           "id": "baidu/ernie-5.5-flash-preview:free",
           "name": "Baidu: ERNIE-5.5-Flash-Preview (free)",
@@ -182,6 +192,16 @@
           "id": "openrouter/free",
           "name": "Free Models Router",
           "ctx": 200000,
+          "tools": true,
+          "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "particle-ai/particle-1:free",
+          "name": "Particle AI: Particle-1 (free)",
+          "ctx": 1048576,
           "tools": true,
           "expires": null,
           "freeBasis": "pricing",

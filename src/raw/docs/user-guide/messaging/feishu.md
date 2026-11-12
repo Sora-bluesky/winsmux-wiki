@@ -2,7 +2,7 @@
 title: "Feishu / Lark"
 description: "Hermes Agent を Feishu または Lark の Bot として設定します"
 upstream_path: user-guide/messaging/feishu.md
-upstream_blob: 3e1996633e66a6f178825532ddf4746abbd0d396
+upstream_blob: 5a5f29bac8ea529f1341a80d5ce497726ab32f70
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu
 ---
@@ -481,6 +481,8 @@ Webhook 方式では、悪用を防ぐために送信元 IP ごとの流量制�
 
 上限を超えた要求には HTTP 429（Too Many Requests）を返します。
 
+回数に数えるのは、検証トークンと署名の確認を通った要求だけです。そのため、偽の要求が本物の Feishu からのコールバックのための枠を使い切ってしまうことはありません。署名のない `url_verification` のチャレンジは、検証トークンで認証された場合だけ数えます。
+
 ### Webhook の異常の追跡 {#webhook-anomaly-tracking}
 
 アダプターは、IP アドレスごとに連続したエラー応答を数えています。同じ IP から 6 時間のうちに 25 回続けてエラーが出ると、警告をログに残します。設定を誤ったクライアントや、探りを入れる動きに気づく助けになります。
@@ -603,7 +605,7 @@ WebSocket とグループごとのアクセス制御の設定は、`config.yaml`
 | 相手の Bot が名前でなく `ou_xxxxxx` と表示される | `application:bot.basic_info:read` のスコープを与えます。 |
 | 承認のボタンを押すとエラー 200340（220340 と出ることもあります）が出る | 公開中のアプリのバージョンに、有効なカードのコールバックがありません。**Callback Configuration** のタブ（Event Configuration ではありません）で `card.action.trigger` を追加し、Long Connection かリクエスト URL を選び、**Interactive Card** を有効にしてから、新しいバージョンを公開します。[Feishu アプリ側で必要な設定](#required-feishu-app-configuration)を参照してください。押した操作は Hermes まで届かないので、`gateway.log` には何も出ません。 |
 | 承認のボタンを押すとエラー 200342 / 200343 が出る | Webhook 方式で、Feishu がコールバックのリクエスト URL に接続できないか、名前解決できていません。URL を直すか、Long Connection に切り替えてください。 |
-| `Webhook rate limit exceeded` | 同じ IP から 1 分あたり 120 回を超えています。たいていは設定の誤りか、処理が回り続けているのが原因です。 |
+| `Webhook rate limit exceeded` | 同じ IP から、認証を通った要求が 1 分あたり 120 回を超えています。たいていは設定の誤りか、処理が回り続けているのが原因です。 |
 
 ## ツール群 {#toolset}
 

@@ -2,7 +2,7 @@
 title: "プラグインの公開 API"
 description: "プラグインが import してよい Hermes のモジュールと名前の一覧です。それ以外の Hermes の import には hermes plugins validate が警告を出します"
 upstream_path: developer-guide/plugins/public-api.md
-upstream_blob: 0ed33db205c472233a5c4f8f1f90076205a3773c
+upstream_blob: 01b9498f9d4da22126ee4709c661fd765d35fefd
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/public-api
 ---
@@ -124,3 +124,9 @@ sources:
 | `gateway.session_context` | `get_session_env` | plugins/index.md § プラットフォームプラグイン：セッションの識別情報はタスクローカルなコンテキストから読み取る |
 | `agent.redact` | `redact_sensitive_text` | plugin-llm-access.md § プラグインのフロントエンドから：プラグインの RPC メソッド（秘密情報を決して外に出してはいけない場面では `force=True`） |
 | `hermes_cli.plugin_session` | `session_client` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：どのクライアントがセッションを作成したか |
+| `agent.file_safety` | `get_read_block_error` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
+| `agent.file_safety` | `raise_if_read_blocked` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
+| `agent.file_safety` | `is_write_denied` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
+| `agent.file_safety` | `get_write_denied_error` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
+| `hermes_yaml` | `safe_load` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
+| `hermes_yaml` | `safe_dump` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |

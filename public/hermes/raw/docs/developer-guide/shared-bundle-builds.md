@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "共有バンドルビルド"
 description: ""
 upstream_path: developer-guide/shared-bundle-builds.md
-upstream_blob: 225a5024f7d739b6b19e9bc59996d2adf9aa4dd1
+upstream_blob: 6ad5b8b2cfac85c8b9d211500aab6dcd24b849ae
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/shared-bundle-builds
 ---
@@ -122,8 +122,9 @@ Electron のパッケージングを行わずに、両方のフロントエン�
 python -m scripts.bundles.stage --out /work/agent-payload --ref HEAD
 ```
 
-このコマンドは、TUI と Web のプロダクトが渡されなければ、それらを準備してビルドします。
-また、`--tui` と `--web` を両方指定すれば、準備済みのプロダクトのルートとして受け付けます。
+このコマンドは、TUI、ダッシュボード、Webapp のプロダクトが渡されなければ、それらを準備してビルドします。
+`pnpm run dist:bundled` も、この方法でペイロードをステージングします。また、`--tui` と `--web` を両方指定すれば、
+準備済みのプロダクトのルートとして受け付けます。この場合、ペイロードに Webapp は含まれません。
 どちらか一方だけの指定は拒否されます。単体のプロダクトの入出力の取り決めは、
 ビルダーの README に明記されています。
 
@@ -234,7 +235,7 @@ uv の環境を明示的に組み立てるために `pm.environment.PythonEnviro
 
 | 配布物 | 選ぶプロダクト | 現在の出力の配置 |
 |---|---|---|
-| デスクトップのバンドル版・Store 版 | アイコン、TUI、Web、エージェント、デスクトップ UI | プロダクト: `apps/desktop/build/products/`。エージェント: `apps/desktop/build/agent-payload/`。UI: `apps/desktop/dist/`。パッケージ: `apps/desktop/release/` |
+| デスクトップのバンドル版・Store 版 | アイコン、TUI、Web、Webapp、エージェント、デスクトップ UI | プロダクト: `apps/desktop/build/products/`。エージェント: `apps/desktop/build/agent-payload/`。UI: `apps/desktop/dist/`。パッケージ: `apps/desktop/release/` |
 | デスクトップのライト版 | アイコンとデスクトップ UI | `apps/desktop/dist/` と `apps/desktop/release/`。エージェントのペイロードは含まない |
 | Docker | アイコン、TUI、Web、エージェント | エージェントは `/opt/hermes`、依存関係は `.venv`、PM は `pm-runtime`、生成したコマンドは `libexec` |
 | Nix の TUI | TUI | `$out/lib/hermes-tui/{dist/entry.js,package.json}` |
@@ -246,6 +247,8 @@ uv の環境を明示的に組み立てるために `pm.environment.PythonEnviro
 ネイティブのペイロードには、`hermes-agent`、`tools`、`venv`、`pm-runtime`、`bin`、
 `uv-cache` と、それらのマニフェストや情報ファイルが入ります。コピーされたフロントエンドのアセットは
 `hermes-agent/hermes_cli/tui_dist/` と `hermes-agent/hermes_cli/web_dist/` に置かれます。
+デスクトップのバンドルには、さらに Webapp が `hermes-agent/apps/desktop/dist-webapp/` に入っています。
+`hermes webapp` はこれを同梱されたままの形で配信し、作り直すことはありません。
 TUI のアセットのディレクトリには、`entry.js` と、モジュールモードのパッケージのメタデータが入っています。
 
 Docker は、既存の TUI のプロダクトを `/opt/hermes/ui-tui` に、Web の出力を

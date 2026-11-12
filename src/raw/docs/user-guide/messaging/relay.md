@@ -2,7 +2,7 @@
 title: "Hermes Relay"
 description: "プラットフォームの認証情報をコネクタ側が持つ形で、Hermes をメッセージングのプラットフォームにつなぎます。登録・できること・設定・困ったときの対処まで"
 upstream_path: user-guide/messaging/relay.md
-upstream_blob: 260632291736a712900f5d1c1002b9085e77e765
+upstream_blob: c70d5a7cb0a7b2ca66b077e6b2edbf3bee957ee0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/relay
 ---
@@ -210,6 +210,11 @@ relay の秘密鍵はホスティングする側が用意します。自分で�
 
 **登録したのに何も変わらない** — ゲートウェイは `GATEWAY_RELAY_*` を起動時に読みます。
 再起動してください（`hermes gateway restart`）。
+
+**受け取った添付が見当たらず、ログに `/relay/media/` の URL が「is not on
+the relay origin」と出る** — ゲートウェイは bearer トークンを `GATEWAY_RELAY_URL` のオリジンにしか送りませんが、
+コネクタは置き直し用の URL を自身の `PUBLIC_BASE_URL` をもとに発行します。両方のスキーム・ホスト・
+ポートを揃えてください。
 
 **ある機能（ボタン、メディア、スレッドなど）が黙って素のテキストに落ちる** — その
 プラットフォームのコネクタが、ハンドシェイクの `supported_ops` にその操作を挙げて

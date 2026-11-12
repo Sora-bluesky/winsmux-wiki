@@ -2,7 +2,7 @@
 title: "Bitwarden Secrets Manager"
 description: ""
 upstream_path: user-guide/secrets/bitwarden.md
-upstream_blob: 21c56606391c986077f49f53e598996b955f1afb
+upstream_blob: 461b1f99c55a48453a3b9d2efdd644ddb90c2ff8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/secrets/bitwarden
 ---
@@ -52,7 +52,7 @@ hermes secrets bitwarden setup
 
 1. `bws` が無ければ、版を固定したパッケージを PM に求めます。
 2. アクセストークンの入力を求めます（入力は伏せ字になります）。`~/.hermes/.env` に `BWS_ACCESS_TOKEN` として保存されます。
-3. マシンアカウントが属する Bitwarden の地域を尋ねます。**US Cloud**、**EU Cloud**、**自前ホスト / 独自 URL** から選びます。`config.yaml` に `secrets.bitwarden.server_url` として保存され、`bws` には `BWS_SERVER_URL` として渡されます。
+3. マシンアカウントが属する Bitwarden の地域を尋ねます。**US Cloud**、**EU Cloud**、**自前ホスト / 独自 URL**（`https://`、localhost に限り `http://` も可）から選びます。`config.yaml` に `secrets.bitwarden.server_url` として保存され、`bws` には `BWS_SERVER_URL` として渡されます。
 4. マシンアカウントから見えるプロジェクトを一覧し、そこから 1 つ選ばせます。`config.yaml` に `secrets.bitwarden.project_id` として保存されます。
 5. 試しにプロジェクトのシークレットを取得して、どの環境変数が埋まるかを表示します。
 6. `secrets.bitwarden.enabled: true` に切り替えます。
@@ -128,8 +128,8 @@ secrets:
 |---|---|---|
 | `enabled` | `false` | 全体の切り替えです。false のあいだ、Bitwarden へは一切つなぎません。 |
 | `access_token_env` | `BWS_ACCESS_TOKEN` | 最初のトークンを入れておく環境変数の名前です。`BWS_ACCESS_TOKEN` を別の用途ですでに使っているなら変えてください。 |
-| `project_id` | `""` | 取り込み元のプロジェクトの UUID です。 |
-| `server_url` | `""` | Bitwarden の地域、または自前ホストのエンドポイントです。空なら `bws` の既定（US Cloud、`https://vault.bitwarden.com`）になります。EU Cloud なら `https://vault.bitwarden.eu`、自前ホストなら自分の URL を設定します。`bws` のサブプロセスへ `BWS_SERVER_URL` として渡されます。 |
+| `project_id` | `""` | 取り込み元のプロジェクトの UUID です。UUID の形式になっていない値は受け付けません。 |
+| `server_url` | `""` | Bitwarden の地域、または自前ホストのエンドポイントです。空なら `bws` の既定（US Cloud、`https://vault.bitwarden.com`）になります。EU Cloud なら `https://vault.bitwarden.eu`、自前ホストなら自分の URL を設定します。`bws` のサブプロセスへ `BWS_SERVER_URL` として渡されます。アクセストークンはこのエンドポイントへ送られるため、`https://` でなければなりません。暗号化されない `http://` は、`localhost` を除いて受け付けません。シェルから引き継いだ `BWS_SERVER_URL` にも同じ決まりが適用され、満たしていなければ（警告を出したうえで）使われません。 |
 | `cache_ttl_seconds` | `300` | プロセス内やディスク上の取得結果を、どれだけの時間そのまま使い回すかです。`0` にすると、新しいキャッシュの再利用をしなくなります。 |
 | `encrypted_cache.enabled` | `false` | 最後に成功した取得結果を、AES-GCM で暗号化したキャッシュとして `~/.hermes/bws_cache.enc.json` に保存します。 |
 | `encrypted_cache.max_stale_seconds` | `0` | 暗号化キャッシュを有効にしているとき、そのキャッシュを使えるのはネットワークの不調やタイムアウトのあとだけで、しかもここに設定した古さまでに限られます。認証の失敗では、古いシークレットが使われることはありません。暗号化された書き込みに成功すると、平文の `bws_cache.json` は削除されます。 |

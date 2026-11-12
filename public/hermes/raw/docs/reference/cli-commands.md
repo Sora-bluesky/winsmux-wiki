@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: d624534dddfc211a595202730f1be6cf0fb1ae71
+upstream_blob: fd3b634e959ad9ddcad60c9db94181c429f7bec4
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -150,7 +150,7 @@ hermes chat [options]
 | `--safe-mode` | トラブルシューティングモード: すべてのカスタマイズ（ユーザー設定、ルール/メモリの注入、プラグイン、シェルフック、MCP サーバー）を無効化します（`--ignore-user-config` と `--ignore-rules` を暗黙に含みます）。ゲートウェイは、コードの既定値と明示したオプションだけをセッションに固定し、プロファイルを一切読まない独立したワーカープロセスでターンを実行します。そのため `config.yaml` が壊れていても止まりません。引き継ぐプロファイルの既定値がないので、`--model` の明示が必要です。接続先まですべて明示したいときは `--provider custom --base-url <url> --api-key <key>` と組み合わせてください。 |
 | `--base-url <url>` / `--api-key <key>` | `--provider custom` で使う、OpenAI 互換の接続先と、起動時だけに使うキーを明示します。キーは動いているゲートウェイのメモリ上にこのセッションのあいだだけ保持され、ディスクには書き込まれません。 |
 | `--source <tag>` | フィルタ用のセッションソースタグ（既定: `cli`。one-shot 実行は既定で `oneshot` となり、ピッカーには表示されません）。ユーザーのセッション一覧に出したくないサードパーティ連携には `tool` を使います。明示的な `--source` は、TUI やデスクトップのセッション内から起動した one-shot 実行でも、指定どおりに保存されます。 |
-| `--max-turns <N>` | 1つの会話ターンあたりの最大ツール呼び出し回数（既定: 500、または設定の `agent.max_turns`）。 |
+| `--max-turns <N>` | 1つの会話ターンあたりの最大ツール呼び出し回数（既定: 無制限、または設定の `agent.max_turns`）。 |
 
 例:
 
@@ -915,12 +915,13 @@ hermes webhook subscribe <name> [options]
 | `--deliver` | 配信先: `log`（既定）、`telegram`、`discord`、`slack`、`github_comment`。 |
 | `--deliver-chat-id` | クロスプラットフォーム配信先のチャット/チャンネル ID です。 |
 | `--secret` | カスタムの HMAC シークレットです。省略時は自動生成されます。 |
+| `--signature` | そのルートが受け付ける署名方式です: `generic`（新しいルートの既定。`X-Webhook-Signature-V2` + `X-Webhook-Timestamp`、または Standard Webhooks）、`github`、`gitlab`、`linear` のいずれかを指定します。それ以外の系統のヘッダーはすべて拒否されます。省略時は更新時にそのまま保持されます。詳細は [署名方式を固定する](/hermes/docs/user-guide/messaging/webhooks/#pin-the-signature-scheme) を参照してください。 |
 | `--deliver-only` | エージェントをスキップし、レンダリングした `--prompt` をそのままメッセージとして配信します。LLM のコストはゼロで、配信は1秒未満です。`--deliver` が実際のターゲット（`log` 以外）である必要があります。 |
 | `--mirror-to-session` | 配信した各メッセージを、宛先チャットのセッションにも書き込みます。そのチャットで返信したとき、エージェントが文脈を踏まえて答えられるようになります。既定ではオフです。会話に取り込んでも信頼できる内容を送ってくる送信元に限って有効にしてください。 |
 | `--script` | `~/.hermes/scripts/` 配下のフィルタ/変換スクリプトです。webhook のペイロードは stdin に JSON として渡され、JSON の stdout がペイロードを置き換えます。空の stdout、`[SILENT]`、非ゼロの終了コードは、その webhook を無視します。詳細は [Script Filters and Transforms](/hermes/docs/user-guide/messaging/webhooks/#script-filters-and-transforms) を参照してください。 |
 | `--route-profile` | ルートを多重化されたプロファイルに紐付けます: そのルートは `/p/<profile>/webhooks/<name>` からのみ到達可能になり、エージェントはそのプロファイルとして動作します。既存のプロファイルに対して検証され、省略時は更新時にそのまま保持されます。サブスクリプションファイルを書き込むゲートウェイを選ぶグローバルな `-p/--profile` とは別物です。詳細は [Multi-profile gateways](/hermes/docs/user-guide/multi-profile-gateways/) を参照してください。 |
 
-サブスクリプションは `~/.hermes/webhook_subscriptions.json` に永続化され、ゲートウェイを再起動せずに webhook アダプタによってホットリロードされます。既存の名前で `subscribe` を再実行すると、`--secret` / `--route-profile` を渡さない限り、そのシークレットとプロファイル紐付けが維持されます。
+サブスクリプションは `~/.hermes/webhook_subscriptions.json` に永続化され、ゲートウェイを再起動せずに webhook アダプタによってホットリロードされます。既存の名前で `subscribe` を再実行すると、`--secret` / `--signature` / `--route-profile` を渡さない限り、そのシークレット、署名方式の固定、プロファイル紐付けが維持されます。`hermes webhook test` は、ルートで固定された方式に合わせて署名します（`generic` のルートと、方式を固定していないルートでは V2 を使います）。
 
 ## `hermes doctor` {#hermes-doctor}
 

@@ -1,6 +1,28 @@
 {
-  "generatedAt": "2026-11-12",
+  "generatedAt": "2026-11-13",
   "entries": [
+    {
+      "date": "2026-11-12",
+      "sha": "d7187ad",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/gateway-classic-cli",
+          "title": "従来型のゲートウェイクライアント",
+          "url": "/hermes/docs/developer-guide/gateway-classic-cli/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        }
+      ]
+    },
     {
       "date": "2026-11-12",
       "sha": "70e77f2",
@@ -65,21 +87,6 @@
           "id": "user-guide/skills/optional/security/security-godmode",
           "title": "Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN",
           "url": "/hermes/docs/user-guide/skills/optional/security/security-godmode/"
-        },
-        {
-          "id": "developer-guide/desktop-plugin-sdk",
-          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
-          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
-        },
-        {
-          "id": "developer-guide/gateway-classic-cli",
-          "title": "従来型のゲートウェイクライアント",
-          "url": "/hermes/docs/developer-guide/gateway-classic-cli/"
-        },
-        {
-          "id": "user-guide/profiles",
-          "title": "プロファイル: 複数のエージェントを動かす",
-          "url": "/hermes/docs/user-guide/profiles/"
         }
       ]
     },
@@ -14610,6 +14617,7 @@
     "2026-W42": "ゲートウェイの内部まわりが厚く更新され、コマンド対応表やローカルセッション、Multiplexing Gateway の内部構造、ゲートウェイをいくつも同時に動かす手順が新しい内容になりました。プラグインでは、デスクトップのプラグイン SDK やモデルプロバイダーのプラグイン、カタログへの登録申請の説明が手直しされ、オブザーバーフックやサブエージェントのライフサイクル API の説明にも手が入りました。ほかに、セッションの保存領域とその復旧、デスクトップ版を複数の Hermes につなぐ方法、考えをアイソメトリックの機械の図で説明する Anatomy スキルのページが更新されています。",
     "2026-W43": "プラグインまわりが広く更新され、プラグインの作り方やカタログへの登録申請、デスクトップのプラグイン SDK、画像生成プロバイダやターミナル環境プロバイダのプラグインのページに手が入りました。ゲートウェイでは、コマンド対応表やいくつも同時に動かす手順が引き続き更新され、オブザーバーフックやイベントフック、サブエージェントへの委任の説明も見直されています。ほかに、クイックスタートや設定、CLI コマンド一覧、MCP、カンバン、Telegram、Hermes Desktop、A2A（エージェント間連携）、安定版リリースの受け入れと昇格のページが新しい内容になりました。",
     "2026-W44": "プラグインまわりが広く更新され、プラグインの作り方やデスクトップのプラグイン SDK、モデル・画像生成・動画生成・ウェブ検索のプロバイダのプラグイン、コンテキストエンジンやブラウザ保管庫のプラグインのページに手が入りました。設定では、設定バックエンドの境界層やリモート設定、環境変数、プロバイダーの追加と実行時の解決、フォールバックプロバイダーの説明が見直されています。ほかに、cron の内部構造と定期実行タスク、Nix と Docker のセットアップ、Hermes Desktop、管理画面、カンバン、Git ワークツリーに加え、Notion や Airtable、Box、OpenCode、Node.js と Python のデバッガ、vLLM や Faiss などのスキルのページが新しい内容になりました。",
-    "2026-W45": "プロバイダーまわりが広く更新され、プロバイダーの追加や実行時の解決、フォールバック、AWS Bedrock のページに手が入りました。設定・CLI コマンド・環境変数・プラグイン・イベントフックに加え、ゲートウェイと Slack・Telegram・Mattermost、Hermes Desktop のページも見直されています。スキルでは Office・PDF・Excel・PowerPoint を扱うものや Stripe の支払いまわりが新しい内容になり、Notion・Airtable・Shopify・DuckDuckGo・SearXNG などのオプションスキルは公式から外れました。"
+    "2026-W45": "プロバイダーまわりが広く更新され、プロバイダーの追加や実行時の解決、フォールバック、AWS Bedrock のページに手が入りました。設定・CLI コマンド・環境変数・プラグイン・イベントフックに加え、ゲートウェイと Slack・Telegram・Mattermost、Hermes Desktop のページも見直されています。スキルでは Office・PDF・Excel・PowerPoint を扱うものや Stripe の支払いまわりが新しい内容になり、Notion・Airtable・Shopify・DuckDuckGo・SearXNG などのオプションスキルは公式から外れました。",
+    "2026-W46": "メッセージングゲートウェイまわりが広く更新され、Telegram・Discord・WhatsApp・Slack の各ページのほか、ゲートウェイの内部やセッションライフサイクル、Multiplexing Gateway の内部構造、従来型のゲートウェイクライアント、Relay ↔ Connector 契約、プラットフォームアダプターの追加に手が入りました。プラグインでは、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、ターミナル環境プロバイダプラグイン、ダッシュボードを広げるページが見直され、Hermes Desktop とデスクトップ版を複数の Hermes につなぐ説明も更新されています。ほかに、Google Gemini やフォールバックプロバイダーなどのモデルプロバイダ、設定・CLIコマンド一覧・環境変数、記憶プロバイダーやコンテキストの圧縮とキャッシュ、サブエージェントへの委任、定期実行タスク、セキュリティ、Nix と NixOS のセットアップのページが新しい内容になりました。"
   }
 }

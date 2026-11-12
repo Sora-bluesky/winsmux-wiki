@@ -2,7 +2,7 @@
 title: "Google Gemini"
 description: "Hermes Agent を Google Gemini で使う方法。ネイティブの AI Studio API、API キーの設定、ツール呼び出し、ストリーミング、割り当ての考え方まで"
 upstream_path: guides/google-gemini.md
-upstream_blob: f3f6dca36d7557d43783d514d636da787ceae342
+upstream_blob: 7c8b2658a7f8338662981aa63e11ca72283c3613
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/google-gemini
 ---
@@ -181,6 +181,7 @@ Hermes は、もう一方のサービスの名前を挙げた案内を添えま�
 
 | モデル | ID | 補足 |
 |-------|----|-------|
+| Gemini 4 Hydrogen | `gemini-4-hydrogen` | 日々のコーディングやエージェント作業に向いた、速い Gemini 4 モデル。枠と長いデコードは Argon と同じで、さらに思考レベル `xhigh` も使える。無料枠と有料枠のどちらでも使える |
 | Gemini 4 Carbon | `gemini-4-carbon` | いちばん強力な推論モデル。1 往復あたりの思考は Argon より多く、枠、長いデコード、料金は Argon と同じ。有料枠のみ |
 | Gemini 4 Argon | `gemini-4-argon` | 看板の推論モデル。入力と出力で共有する 1M の枠を持ち、長いデコードで最大 1M トークンまで出力できる |
 | Gemini 3.8 Flash | `gemini-3.8-flash` | 長い工程のエージェント作業やコーディングに強い、いちばん高性能な Flash |
@@ -208,6 +209,10 @@ Hermes は、もう一方のサービスの名前を挙げた案内を添えま�
 | `high` | `high` | 1 回のリクエストの上限 |
 | `xhigh` | `high` | 262,144 トークン（長いデコード） |
 | `max`, `ultra` | `high` | 1,048,576 トークンから入力分を引いた量（長いデコード） |
+
+Gemini 4 Hydrogen には、4 段階目のレベル `xhigh` があります。Hydrogen では、推論の強さが
+`xhigh`、`max`、`ultra` のとき、Hermes は `xhigh` を送ります。出力全体の上限は上の表と同じです。Google 自身が
+Hydrogen に設定している既定のレベルは `high` です。
 
 長いデコードを使わない場合、1 回のリクエストは、ストリーミングなら 65,536 トークン
 （ストリーミングでなければ 32,768 トークン）を出力したところで止まります。この数には思考の分も含まれます。`xhigh` か `max` のときは、Hermes が

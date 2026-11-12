@@ -2,7 +2,7 @@
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: e76dca5e1d936827daf89c1a7ae682f01e6d7628
+upstream_blob: 6e79111cfecf1ee9e9b517ba06e80218b163a57f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -34,6 +34,12 @@ API サーバーの経路が使えないときは、経路が無いという警�
 バックグラウンドのターミナルのプロセスは、それを起動したエージェントのものです。委任の後片付けで子を閉じると、その子に残っているプロセスは、前のターンで始めた作業も含めて終了します。親や兄弟のエージェントが持つプロセスは止まりません。ターミナルの環境を共有していても、プロセスの所有権は移りません。
 
 子は、最終的なまとめを返す前に、自分のビルドやテスト、その他の終わりのあるバックグラウンドのコマンドを待つべきです。子が終わったあとも続いてほしい CI の見張りやサーバーは、親のセッションで起動してください。プロセス ID を返しても、所有権が親へ移るわけではありません。
+
+## バックグラウンドの子からの承認 {#approvals-from-background-children}
+
+親のターンが終わったあとでコマンドの承認が必要になったバックグラウンドの子も、親を起動したチャットで承認を求めます。メッセージ系のプラットフォームでは、承認のカード（または文字だけの `/approve` の案内）がそのチャットに表示されます。`/approve` や `/deny` を送るか、カードをタップすると、その子のコマンドに答えられます。親がまだ返信している間に子が出したカードは、親が返信を終えたあとも答えられます。子を止める（`/stop`）、セッションをリセットする（`/new`）、または子が終わると、まだ答えていない承認の案内は取り下げられます。
+
+親のターンが終わったあとで案内を表示できるチャットがない場合（API サーバーでの実行、webhook、ローカルの閲覧画面）、子のコマンドは「承認の経路がない（no approval channel）」というはっきりした結果で断られます。保留中として報告されることはありません。
 
 ## タスク 1 つ {#single-task}
 
@@ -89,6 +95,8 @@ delegate_task(
 
 例外がひとつあります。親に確定した作業ディレクトリがあるとき、どのサブエージェントのシステムプロンプトにも、その作業ディレクトリの**プロジェクトの文脈ファイル**が埋め込まれます（`.hermes.md` > AGENTS.md の連鎖 > CLAUDE.md > `.cursorrules` の順で、探し方も優先順位も大きさの上限も、メインのエージェントのシステムプロンプトと同じです。SOUL.md は除きます）。リポジトリの中で働くサブエージェントは、そのリポジトリの決まりごとを自分で探し直さなくても、それに従って動けます。
 
+`context` と `goal` は、サブエージェントへの最初の利用者メッセージとして、context を先にして届きます。システムプロンプトにはタスク固有の内容を何も載せないので、同じ親から出たサブエージェントはどれも同じプロンプトの前置きを送ります。そのため、共有している context も含めて、互いのプロンプトキャッシュを使えます。この最初のメッセージは、文脈を圧縮してもそのままの形で残ります。
+
 つまり親のエージェントは、サブエージェントに必要なものを**すべて**呼び出しに載せなければなりません。
 
 ```python
@@ -106,7 +114,7 @@ delegate_task(
 )
 ```
 
-サブエージェントは、あなたの goal と context から組み立てられた、焦点の絞られたシステムプロンプトを受け取ります。そこには、タスクを終わらせたうえで、何をしたか、何が分かったか、変更したファイル、ぶつかった問題を、決まった形のまとめとして返すよう書かれています。
+サブエージェントへの最初のメッセージは、あなたの context の後ろに goal を続けたものです。システムプロンプトには、タスクを終わらせたうえで、何をしたか、何が分かったか、変更したファイル、ぶつかった問題を、決まった形のまとめとして返すよう書かれています。
 
 ### サブエージェントに画像を渡す {#forwarding-images-to-a-subagent}
 
@@ -535,6 +543,20 @@ Background delegations: 1 running
 
 これらの操作はターンの中で同期的に走り（バックグラウンドには回りません）、呼び出した側の起動したツリーの中に閉じています。ある会話が、別のセッションの子を見たり操作したりすることはできません。またターンごとのサブエージェントの起動上限を消費しないので、上限に達したあとでも `stop` は使えます。
 
+**終わった子に続きを頼む。** `{"action": "continue", "subagent_id": "sa-0-1a2b3c4d", "message": "now add tests for it"}` を使うと、すでに結果を返した子に追加の依頼を渡せます。子は同じ振り分け先（モデル、プロバイダ、プロファイル）とツールセットで作り直され、保存された記録から履歴が読み込まれて、`message` が次のターンになります。子は `subagent_id` とセッションをそのまま保ち（`--resume` と同じように記録は追記されます）、自分の `delegation_id` を持つ新しいバックグラウンドの委任として動くので、結果はふつうの完了として届きます。まだ動いている子への続きの依頼は、`steer` を使うよう案内して断られます。子が動いたあとで親が切り替えたために、受け継いだ振り分け先がいまは別のプロバイダや接続先になってしまう子も、同じように断られます。子に続きを頼めるのは、その子を持つ会話（または起動のツリーでその祖先にあたるもの）だけです。子が起動したバックグラウンドのプロセスはもう残っていないので、子には新しいターミナルが与えられます。このターミナルは、子が止まったときのディレクトリと worktree で始まります。続きの依頼はふつうの投入と同じ扱いです。閉じたチャット、`max_concurrent_children`、`max_spawn_depth`、起動の一時停止は、起動を断るときと同じように続きの依頼も断ります。一度きりのセッションや、管理されたワーカーのセッションでは使えません。
+
+**再起動や異常終了のあとでも再開できる。** どの子も、プロファイルの `state.db` に確実に残る記録を持ちます。そのため `continue` は、プロセスが子を覚えている間だけでなく、ゲートウェイの再起動、強制終了、PC の異常終了のあとでも使えます。再起動のあとは、子の振り分け先がその子自身の振り分けの要求から解決し直され、同じプロバイダと接続先に行き着く必要があります。完了しておらず、あなたや親が止めたのでもない子（ゲートウェイの停止、異常終了、利用の上限、プロバイダの拒否）は*再開できる*状態です。その完了の項目には `resume_mode` が付きます。上限による失敗には `failure_resets_at`（プランの期間の上限なら `usage_limit` も）が付くので、いつなら続きがうまくいくかが分かります。`resume_mode` は次のどれかです。
+
+| `resume_mode` | よくある原因 | 続けるのに必要なこと |
+|---|---|---|
+| `AUTO_AT` | リセットの時刻がある利用・レートの上限、一時的なプロバイダのエラー | `failure_resets_at` まで待つ |
+| `AUTO_ON_BOOT` | ゲートウェイの停止、異常終了、強制終了 | 特に何も要らない。副作用のある処理をやり直す前に、git の状態と最後のツールを確かめる |
+| `ON_FIX` | クレジット、認証、モデルの利用権、アカウントのポリシー、リクエストの形のエラー | 先にあなたが原因を直す |
+| `REPAIR_THEN_CONTINUE` | 会話がもう収まらない、または画像・推論の部分が弾かれる | 先に記録を修復する必要がある |
+| `HANDOFF` | この会話に対するプロバイダの安全上の拒否 | 別のモデルを使うか、親が作業を引き取る |
+
+再開できる子の worktree（止まったときにターミナルがあった場所と、子が作った worktree）は、その記録が残っている間、起動時の worktree の片付けから外されます。期間は `delegation.resumable_ttl_hours`（既定は 48）で、件数はプロファイルごとに最大 `delegation.max_resumable`（既定は 32）件です。上限を超えると、いちばん古いものから固定が外れます。固定が外れると、通常の片付けがそのツリーを `refs/hermes/archive/` に保管してから削除します。完了した子と、あなたが止めた子は固定されません。`delegation.auto_resume: true`（既定は `false`。`resume_mode` を読むスケジューラーのために取ってあります）で有効にしないかぎり、ひとりでに再開するものはありません。
+
 ### TUI / ゲートウェイから（セッション向け） {#from-the-tui-gateway-session-facing}
 
 `tools/delegate_tool_registry.py` の `steer_subagent(subagent_id, text)` は、`interrupt_subagent()` の、向きを変える側の対になるものです。[`/steer`](/hermes/docs/reference/slash-commands/) と同じ仕組みで、動いている子にテキストを積みます。テキストは次の区切りで子の最後のツールの結果に足され、実行中のツールの呼び出しが断ち切られることはなく、子はそれを外から届いた利用者のメッセージとして受け取ります。プログラムから使うホストは、セッションに閉じたゲートウェイの RPC `subagent.steer` から届きます。これは `subagent.interrupt` の隣にあります。
@@ -760,6 +782,9 @@ delegation:
   # worktree_isolation: false               # Give each child its own git worktree (see Worktree Isolation above)
   # max_spawn_depth: 1                      # Tree depth (floor 1, no ceiling, default 1 = flat). Raise to 2 to allow orchestrator children to spawn leaves; 3+ for deeper trees.
   # orchestrator_enabled: true              # Disable to force all children to leaf role.
+  # resumable_ttl_hours: 48                 # How long a stopped child stays continuable after a restart, worktree kept
+  # max_resumable: 32                       # Resumable children per profile whose worktree is kept (oldest unpinned first)
+  # auto_resume: false                      # Opt-in: resume such children without being asked
   model: "google/gemini-3-flash-preview"             # Optional provider/model override
   provider: "openrouter"                             # Optional built-in provider
   api_mode: anthropic_messages                       # optional; auto-detected from base_url for anthropic_messages endpoints

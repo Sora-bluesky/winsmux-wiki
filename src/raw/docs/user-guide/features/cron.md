@@ -2,7 +2,7 @@
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: 129efe69f0492c60893dc50275c524c05f3fe3bc
+upstream_blob: ef06782d0432bd3ff1c69b4b54b84c57b0f534ef
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -714,12 +714,18 @@ Telegram のトピックモードを有効にしていると、DM のルート�
 
 ```
 Cronjob Response: Morning feeds
+(job_id: <id>)
 -------------
 
 <agent output here>
 
-Note: The agent cannot see this message, and therefore cannot respond to it.
+To stop or manage this job, send me a new message (e.g. "stop reminder Morning feeds").
 ```
+
+包まれた配信に返信すると、エージェントは引用された報告を、参考のための過去の予約配信という印付きで
+受け取ります。そのため、報告の中の対応事項は、返信で頼まないかぎり新しい依頼としては扱われません。
+長い配信が複数のメッセージに分けて送られた場合は、最初の 1 通だけでなく、すべての部分に印が付きます。
+包まない配信（`wrap_response: false`）には印が付かず、ほかのメッセージと同じように引用されます。
 
 包まずに生のエージェントの出力を届けたいときは、`cron.wrap_response` を `false` にします。
 

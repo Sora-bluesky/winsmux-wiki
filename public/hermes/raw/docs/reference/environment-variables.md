@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 4649be4ed11475187f310ce97fe5f34c33d71d48
+upstream_blob: 49f2e7444101cad4ad59baa8be970522b0363dc3
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -397,6 +397,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `WHATSAPP_HOME_CHANNEL` | 定時実行や通知の配信先になる既定のチャット ID。 |
 | `WHATSAPP_HOME_CHANNEL_NAME` | WhatsApp の既定チャンネルの表示名。 |
 | `WHATSAPP_DEBUG` | 調査のために、橋渡しの中でメッセージのイベントをそのまま記録します（`true`/`false`） |
+| `HERMES_WHATSAPP_BRIDGE_TOKEN` | ゲートウェイが橋渡しの子プロセスにだけ設定します（`.env` には決して書きません）。`platforms/whatsapp/session/.bridge-token` にあるセッションごとの秘密で、橋渡しの HTTP の経路はどれも、これを bearer トークンとして求めます。これを持たずに起動した橋渡しは、要求に応じません。 |
 | `WHATSAPP_CLOUD_PHONE_NUMBER_ID` | WhatsApp Business Cloud API での Meta の電話番号 ID（15〜17 桁。電話番号そのものでは**ありません**） |
 | `WHATSAPP_CLOUD_ACCESS_TOKEN` | Meta のアクセストークン（`EAA` で始まります）。一時のトークンは 24 時間で切れ、システムユーザーのトークンは期限がありません |
 | `WHATSAPP_CLOUD_APP_SECRET` | 受信 webhook の署名を確かめるための、32 文字の 16 進のアプリの秘密 |
@@ -772,7 +773,7 @@ Microsoft Teams のプラットフォーム用アダプター（Bot Framework / 
 | `HERMES_TELEGRAM_TEXT_BATCH_SPLIT_DELAY_SECONDS` | Telegram の 1 通が長さの上限を超えて分割されたとき、分割した塊のあいだに置く間隔（既定: `2.0`）。 |
 | `HERMES_SIMPLEX_TEXT_BATCH_DELAY` | 立て続けに届いた文章を 1 つの MessageEvent にまとめるための静かな時間（秒。既定: `0.8`）。Telegram の文章のまとめ方と同じ考え方です。 |
 | `HERMES_TELEGRAM_MEDIA_BATCH_DELAY_SECONDS` | 溜めた Telegram のメディアを送り出すまでの待ち時間（既定: `0.6`）。 |
-| `HERMES_TELEGRAM_FOLLOWUP_GRACE_SECONDS` | エージェントが終わったあと、追いかけのメッセージを送るまでの待ち時間。最後の配信の塊と競合しないようにするためのものです。 |
+| `HERMES_TELEGRAM_FOLLOWUP_GRACE_SECONDS` | ターンが始まってからこの秒数のあいだに届いた、Telegram の普通の文章による追いかけのメッセージは、そのターンに割り込んだり向きを変えたりせず、待ち行列に加わります（既定 `3`。`0` にするとこの猶予がなくなります）。コマンドとメディアは留め置かれません。 |
 | `HERMES_TELEGRAM_HTTP_CONNECT_TIMEOUT` / `_READ_TIMEOUT` / `_WRITE_TIMEOUT` / `_POOL_TIMEOUT` | 土台になっている `python-telegram-bot` の HTTP のタイムアウトを上書きします（秒）。 |
 | `HERMES_TELEGRAM_INIT_TIMEOUT` | ゲートウェイの起動時、Telegram の `initialize()` の接続の試行 1 回あたりの上限（秒）。届かない予備の IP の連なりで起動が止まり続けるのを防ぎます（既定: `30`）。 |
 | `HERMES_TELEGRAM_HTTP_POOL_SIZE` | Telegram の API への同時 HTTP 接続の上限。 |
@@ -947,7 +948,7 @@ compression:
 `AUXILIARY_WEB_EXTRACT_*` の変数はもう使いません。`web_extract` は、補助の LLM を使わなくなりました。長いページは決まったやり方で切り詰められ、全文はディスクに保存されて `read_file` でページ送りできます。
 :::
 
-処理ごとに直接つなぐエンドポイントについては、Hermes はその処理に設定された API キーか `OPENAI_API_KEY` を使います。そうした独自のエンドポイントに `OPENROUTER_API_KEY` を使い回すことはありません。
+処理ごとに直接つなぐエンドポイントについては、Hermes はその処理に設定された API キーを使います。それが無ければ、主のエンドポイントとまったく同じオリジンに限って主モデルのキーを使い、次に `OPENAI_API_KEY` を使います。ただしこれを使うのは、OpenAI のホスト（`*.openai.com`、`*.openai.azure.com`）か、組みになっている `OPENAI_BASE_URL` とまったく同じ接続先の場合だけです。そうした独自のエンドポイントに `OPENROUTER_API_KEY` を使い回すことはありません。
 
 ## 予備の提供元（config.yaml のみ） {#fallback-providers-configyaml-only}
 

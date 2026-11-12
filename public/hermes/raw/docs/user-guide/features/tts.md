@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md
-upstream_blob: f25b800e821ca896fa291d7061534f848f922dff
+upstream_blob: c143a074c6f227c8841ab3c71f0a84b86f49fb52
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tts
 ---
@@ -206,6 +206,7 @@ tts:
 Telegram のボイスの吹き出しには、Opus/OGG 形式の音声が要ります。
 
 - **OpenAI、ElevenLabs、Mistral** はそのまま Opus を出すので、追加の準備は要りません
+- **Opus を出せない OpenAI 互換サーバー**（Speaches/Kokoro、OpenRouter の音声の経路）では、サーバーが `response_format: opus` を 400/422 で拒んだときに、Hermes が MP3 でもう一度だけ頼み直し、**ffmpeg** で変換します
 - **Edge TTS**（既定）は MP3 を出すので、変換に **ffmpeg** が要ります
 - **MiniMax TTS** は MP3 を出すので、Telegram のボイスの吹き出しにするには **ffmpeg** での変換が要ります
 - **Google Gemini TTS** は生の PCM を出し、**ffmpeg** で直接 Opus に変換して Telegram のボイスの吹き出しにします

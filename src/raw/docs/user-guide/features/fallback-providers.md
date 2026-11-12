@@ -2,7 +2,7 @@
 title: "フォールバックプロバイダー"
 description: "メインのモデルが使えなくなったとき、控えの LLM プロバイダーへ自動で切り替わるように設定します。"
 upstream_path: user-guide/features/fallback-providers.md
-upstream_blob: 781f6e12a9c0cf351b572059b495db7100c3fc59
+upstream_blob: c86b51daa68ce289d5e6b66147b59e9af3c674db
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers
 ---
@@ -343,7 +343,7 @@ auxiliary:
     model: "qwen2.5-vl"
 ```
 
-`base_url` は `provider` より優先されます。認証には設定された `api_key` が使われ、未設定なら `OPENAI_API_KEY` が使われます。独自エンドポイントに `OPENROUTER_API_KEY` が流用されることは**ありません**。
+`base_url` は `provider` より優先されます。認証には設定された `api_key` が使われます。未設定の場合に代わりに `OPENAI_API_KEY` が使われるのは、送り先が OpenAI のホスト（`*.openai.com`、`*.openai.azure.com`）か、そのキーと組になっている `OPENAI_BASE_URL` とまったく同じ URL のときだけです。独自エンドポイントに `OPENROUTER_API_KEY` が流用されることは**ありません**。
 
 ---
 

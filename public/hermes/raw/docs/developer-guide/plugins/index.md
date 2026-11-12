@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 5a60af1708dbcb0c461b33e5ace7af951c7ef868
+upstream_blob: c8445443a6be7abb5632fa8bb5672cf55729469a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -1032,6 +1032,37 @@ def open_skill(name):
 
 プラグインが登録したスキル（`ctx.register_skill`）は、これらのルートの下のディスク上にはありません。`find_all_skills()`
 が返すのはディスク上の一覧だけです。
+
+### Hermes 自身のヘルパーでファイルパスを確かめ、YAML を読む {#check-file-paths-and-read-yaml-with-hermess-own-helpers}
+
+モデルが選んだパス（添付ファイル、書き出し先、要約するファイルなど）を読み書きするプラグインは、Hermes 自身のファイルツールが拒否するのと
+同じパスを拒否してください。認証情報の保管場所、skills-hub のキャッシュ、プロジェクトの `.env` ファイル、そして
+`HERMES_WRITE_SAFE_ROOT` の外にあるものすべてです。独自の拒否リストを持つのではなく、
+次の関数を呼んでください。
+
+| インポート | 得られるもの |
+|---|---|
+| `agent.file_safety.get_read_block_error(path)` | Hermes のファイルツールが `path` の読み取りを拒否する場合はエラー文字列を、それ以外は `None` を返します。絶対パスを渡してください。 |
+| `agent.file_safety.raise_if_read_blocked(path)` | 同じ確認を行い、拒否される場合は `ValueError` を送出します。 |
+| `agent.file_safety.get_write_denied_error(path)` | Hermes のファイルツールが `path` への書き込みを拒否する場合はエラー文字列を、それ以外は `None` を返します。 |
+| `agent.file_safety.is_write_denied(path)` | その書き込みが拒否される場合に `True` を返します。 |
+| `hermes_yaml.safe_load(text)` / `hermes_yaml.safe_dump(data)` | Hermes が自分の設定に使っている YAML の読み込み・書き出しの関数です。Hermes は PyYAML を同梱していないので、プラグインで宣言しない限り `import yaml` は失敗します。 |
+
+```python
+from agent.file_safety import get_read_block_error
+from hermes_yaml import safe_load
+
+def load_recipe(path):
+    if err := get_read_block_error(path):
+        return err
+    with open(path, encoding="utf-8") as fh:
+        return safe_load(fh)
+```
+
+上の例のように、名前そのものを import してください（`from hermes_yaml import safe_load`）。`hermes plugins
+validate` はこの書き方を受け入れますが、`import agent.file_safety` のようにモジュールだけを import すると、内部の import として報告します。
+Hermes 自身の設定を読むときは、`config.yaml` を自分で解析せず、`hermes_cli.config` の `load_config_readonly()` を
+使ってください。
 
 ### 言語パックを同梱する {#ship-a-language-pack}
 

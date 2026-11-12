@@ -2,7 +2,7 @@
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: 88744e0b9a7f1a9730d5e3b01819a16dbeedfcee
+upstream_blob: 21b8fc689e08664b2eb97f54bb5178249baf9d5f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -665,7 +665,7 @@ Hindsight の URL —— なので、あるプロファイルの鍵がほかの�
 | 受信ポート型のプラットフォーム（`/p/<profile>/webhooks/twilio`、`/p/<profile>/line/webhook`、`/p/<profile>/api/messages` など） | 名指しされたプロファイル自身のアダプタとその合言葉（Twilio の認証トークン、LINE のチャンネルのシークレット、Teams のアプリ、BlueBubbles のパスワードなど）。返信もそのアダプタから出る | 合言葉が違えば `401` か `403`、そのアダプタを持たないプロファイルなら `404`。既定プロファイルのアダプタが使われることはない |
 | アダプタの設定（`*_REQUIRE_MENTION`、`*_REACTIONS`、`*_ALLOW_BOTS`、`*_PROXY`、Discord の `allow_mentions`、Matrix の `allowed_users` / `ignore_user_patterns`、Webhook のホスト・ポート・URL、Matrix のスレッド・セッション・E2EE の方針、Discord の遡り取得と添付の上限、Buzz の返信の形、A2A のエージェントカードと公開 URL、WhatsApp のブリッジの方針、Yuanbao のホームチャンネル） | 持ち主のプロファイル。明示した `.env` の値 → そのプロファイルの `config.yaml` → アダプタの既定、の順 | そのアダプタの文書どおりの既定。既定プロファイルの設定が使われることはない。プロファイルが 1 つだけの環境では、各プラットフォームのページに書かれているとおり、環境変数が YAML より勝つ決まりがそのまま保たれる |
 | `MEDIA:` の添付の拒否一覧 | `profiles/` の下のすべてのホームと既定のホーム（確認のたびに数え上げる） | どのやり取りも、ほかのプロファイルの `.env`、`auth.json`、`state.db`、セッション、トークンの保管庫を添付できない |
-| stdio の MCP の子プロセスの環境 | 安全な土台 + 秘密情報の供給元の名前についてそのプロファイルの範囲の値 + サーバー自身の `env:` | そのプロファイルに無い名前は子プロセスにも無い。既定プロファイルへ落ちることはない |
+| stdio の MCP の子プロセスの環境 | 安全な土台 + 秘密情報の供給元の名前についてそのプロファイルの範囲の値（Hermes が管理する認証情報は除く） + サーバー自身の `env:` | そのプロファイルに無い名前は子プロセスにも無い。既定プロファイルへ落ちることはない |
 | 外向きの送信（`send_message`、停止・再起動・`/update` のお知らせ、`/loop` の呼び出し、`profile:` で結び付けた Webhook の送付、`github_comment` のトークン） | そのプロファイル自身のつながっているアダプタと `.env` | はっきり失敗する。既定プロファイルのボットから投稿されることはない |
 | セッションの名前空間 | `agent:<profile>:…`（既定は `agent:main:…` のまま） | 同じチャットにいる 2 つのプロファイルが履歴を共有することはない |
 | ログ | そのプロファイル自身のホームの下の `agent.log` / `errors.log` / `gateway.log` | — |
@@ -688,6 +688,7 @@ Hindsight の URL —— なので、あるプロファイルの鍵がほかの�
 | cron の `.env` での調整（`HERMES_CRON_TIMEOUT`、`HERMES_MODEL` の代替、`HERMES_CRON_MAX_PARALLEL`、事前入力のファイル）、作業役や Bot Chat の子プロセスの環境 | そのプロファイル自身の `.env`。子プロセスが既定プロファイルの `.env` の設定や橋渡しされた `TERMINAL_*` の方針を引き継ぐことはない | cron の既定、またはモデルの拒否。単独の `hermes -p <name> gateway run` とまったく同じ |
 | プロファイルのタスクのかんばんの作業役と知らせ | 担当者の `.env` + `config.yaml`（道具一式の固定、端末の実行先、メディアの方針、表示の言語） | — |
 | `/loop` の刻み、`background_process_notifications` の関門、`notice_delivery`、裏で動くプロセスのチェックポイントからの復帰 | 持ち主のプロファイルの `state.db` / `config.yaml` / `processes.json` | — |
+| 返信のストリーミング（`streaming:` のブロック: `enabled`、`transport`、編集の間隔、カーソル。`gateway.streaming` という書き方も含む） | 受け持たれているプロファイル自身の `config.yaml`。ゲートウェイの起動時に 1 回だけ読み込む | ストリーミングの既定（オフ）。既定プロファイルがストリーミングしていても、`streaming:` のブロックが無いプロファイルはストリーミングしない。有効にするには `hermes -p <name> config set streaming.enabled true` を実行する |
 
 設計上 **共有される** もの: プロセス本体、その PID と錠と `gateway_state.json`
 （既定のホーム）、1 つの HTTP の待ち受け、そして `profile_routes` の表
@@ -862,7 +863,9 @@ LID（`…@lid`）は、橋渡しがそれらを結び付けたあとは同じ�
 送られることはありません。サーバーだけを書いた振り分けは cron の宛先として認められない
 ので、送り先のチャンネルについて `chat_id` の振り分けを足してください。`user_id` を
 書いた振り分けも同じく認められません。cron には認証された送り主が届かないので、
-場所だけを鍵にした振り分けを別に用意する必要があります。このとき、
+場所だけを鍵にした振り分けを別に用意する必要があります。ただし、Telegram の個別のやり取りは例外です。
+Telegram の個別のやり取りでは chat id が利用者の id と同じなので、`user_id` の振り分けがあれば、
+振り分けを足さなくても、その利用者との個別のやり取りへの cron の送付が認められます。このとき、
 振り分けられたプロファイル側に `platforms.<platform>` のブロックは要りません。共有の
 ボットの権限は、衛星側の設定ではなく振り分けから来るからです。
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "音声モード"
 description: "Hermes Agent とリアルタイムで音声のやりとりをする — CLI、Telegram、Discord（DM、テキストチャンネル、ボイスチャンネル）"
 upstream_path: user-guide/features/voice-mode.md
-upstream_blob: 003c45f78331576bb038fa0bda16471cbdfa3ade
+upstream_blob: f9d1021f335b81194c8e4b4a788ff34936e56938
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/voice-mode
 ---
@@ -510,7 +510,11 @@ stt:
                                     # the gateway still caches the audio file and
                                     # passes its path to the agent as part of the
                                     # inbound message, useful for custom pipelines
-                                    # (diarization, alignment, archival, etc.)
+                                    # (diarization, alignment, archival, etc.).
+                                    # When enabled, the agent gets the quoted
+                                    # transcript followed by a
+                                    # "[User sent audio: <path>]" line, so the
+                                    # recording stays reachable after STT succeeds
   provider: "local"                  # "local" (free) | "groq" | "openai" | "mistral" | "xai" | "elevenlabs" | "deepinfra"
   language: "en"                     # global hint for every provider; set "" to auto-detect
   local:

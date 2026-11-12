@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: 1b460b80afa7ed175d75c24715373161230c6ff4
+upstream_blob: 51f63770b3f7580dd7ee3fababa37e1094d7e18a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -407,7 +407,7 @@ Proposed command_allowlist additions (from approval history, last 90 days):
 | 種類 | 例 |
 |----------|----------|
 | OS の資格情報の保管場所 | `~/.ssh/`（鍵、`authorized_keys`）、`~/.aws/`、`~/.kube/`、`/etc/sudoers`、`~/.netrc` |
-| Hermes の秘密情報の保管場所 | HERMES_HOME 配下（有効なプロファイルと全体の root の両方）の `.env`、`.anthropic_oauth.json`、`auth/google_oauth.json`、Bitwarden と 1Password のキャッシュ（`bws_cache.json`、`bws_cache.enc.json`、`op_cache.json`）、Photon サイドカーのトークン（`photon-sidecar.json`）、`vault/`、`browser-profile/`、`mcp-tokens/`、`pairing/`。制御用のファイル（`auth.json`、`config.yaml`、`webhook_subscriptions.json`）は読み取りが拒否されますが、書き込みはできます。 |
+| Hermes の秘密情報の保管場所 | HERMES_HOME 配下（有効なプロファイル、`profiles/` 配下のすべてのプロファイル、全体の root）の `.env`、`.anthropic_oauth.json`、`auth/google_oauth.json`、Bitwarden と 1Password のキャッシュ（`bws_cache.json`、`bws_cache.enc.json`、`op_cache.json`）、Photon サイドカーのトークン（`photon-sidecar.json`）、`vault/`、`browser-profile/`、`mcp-tokens/`、`pairing/`。制御用のファイル（`auth.json`、`config.yaml`、`webhook_subscriptions.json`）は読み取りが拒否されますが、書き込みはできます。 |
 | Windows の NT / デバイス名前空間のパス | `\??\...`、`\\.\...`、`\\?\UNC\...`、`\\?\GLOBALROOT...` — どのプラットフォームでも、読み取りも書き込みも拒否されます。Windows では、こうしたパスを *解決するだけ* で（たとえば `\??\UNC\host\share`）外向きの SMB 認証が走り、利用者の NTLM ハッシュが漏れることがあります。これらの接頭辞は、ふつうのパス正規化も回避します。ふつうの長いローカルパス（`\\?\C:\...`）や素の UNC 共有（`\\server\share`）は影響を受けません。 |
 
 プロジェクトの中にある `.env`、`.env.local`、`.env.production`、`.envrc` は、ディスク上のどこにあっても **読み取りが拒否** されますが（ファイル系のツールは読み取りを断ります）、書き込みはできます。エージェントは代わりに作ったり編集したりできて、ただ中身を読み返せない、ということです。
@@ -758,6 +758,8 @@ PATH, HOME, USER, LANG, LC_ALL, TERM, SHELL, TMPDIR
 
 これに加えて `XDG_*` の変数が渡ります。ほかの環境変数（API キー、トークン、秘密情報）はすべて **取り除かれます**。
 
+[外部の秘密情報の取得元](/hermes/docs/user-guide/secrets/)（Bitwarden、1Password、コマンドのヘルパー）から渡された変数も、MCP のサブプロセスに渡されます。ただし、Hermes が管理する資格情報は除きます。モデルのプロバイダーのキー、Hermes 自身が使うツールのキー、それにボット、ゲートウェイ、リレーのトークンです。この除外は、Hermes がそうした資格情報を読み取るときのどの名前にも及びます。番号付きのローテーション用のキー（`DEEPSEEK_API_KEY_2`）、[資格情報プール](/hermes/docs/user-guide/features/credential-pools/)の項目が指している変数（`source: env:MY_KEY`）、プロファイルの `config.yaml` がプロバイダーのキーとして名指ししている変数（`model`、`custom_providers`、`providers`、`auxiliary`、フォールバックの各項目にある `key_env` / `api_key_env`、または `api_key` のような資格情報の欄に `${VAR}` / `${env:VAR}` と書いたもの）、そして有効なプロファイルが使う、プロファイル名を末尾に付けた形（`TELEGRAM_BOT_TOKEN_<PROFILE>`）です。これらは、どこに保存されていても取り除かれます。サーバーがそのどれかを必要とする場合は、そのサーバーの `env` で宣言してください（たとえば `OPENAI_API_KEY: "${OPENAI_API_KEY}"`）。
+
 MCP サーバーの `env` 設定にはっきり書いた変数は渡されます。
 
 ```yaml
@@ -822,7 +824,7 @@ security:
   allow_private_urls: true   # default: false
 ```
 
-有効にすると、ウェブのツール、ブラウザ、画像認識の URL 取得、ゲートウェイのメディアのダウンロードは、RFC 1918 / ループバック / リンクローカル / CGNAT 宛てを断らなくなります。クラウドのメタデータの窓口（`169.254.169.254`、`metadata.google.internal` など）は、この設定を有効にしても止められたままです。**これは意図して信頼の線を引き直す設定です。** プロンプトインジェクションで与えられた URL をエージェントがローカルのネットワークに対して叩いても許容できるマシンでだけ有効にしてください。外部に面したゲートウェイでは切ったままにすべきです。
+有効にすると、ウェブのツール、ブラウザ、画像認識の URL 取得、ゲートウェイのメディアのダウンロード、cron の `monitor_url` による取得は、RFC 1918 / ループバック / リンクローカル / CGNAT 宛てを断らなくなります。クラウドのメタデータの窓口（`169.254.169.254`、`metadata.google.internal` など）は、この設定を有効にしても止められたままです。**これは意図して信頼の線を引き直す設定です。** プロンプトインジェクションで与えられた URL をエージェントがローカルのネットワークに対して叩いても許容できるマシンでだけ有効にしてください。外部に面したゲートウェイでは切ったままにすべきです。
 
 ホスト名の部分一致による防護（元の IP が公開のものでも、そっくりに見せる Unicode のドメインの細工を止めます）は、この設定にかかわらず効き続けます。
 

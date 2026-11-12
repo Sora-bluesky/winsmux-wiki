@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "自動化の型紙"
 description: "そのまま使える自動化の型紙です。予定した実行、GitHub のできごとをきっかけにした実行、API の Webhook、複数のスキルを組み合わせた流れをそろえています。"
 upstream_path: guides/automation-blueprints.md
-upstream_blob: d1983b07a3cd96ea9e9630de6889d79bbad73ff4
+upstream_blob: f3ebe12318ea65ee54a69a07271a2a4b2fe1965e
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/automation-blueprints
 ---
@@ -64,6 +64,7 @@ Format as a clean digest. If no new issues, respond with [SILENT]." \
 ```bash
 hermes webhook subscribe github-pr-review \
   --events "pull_request" \
+  --signature github \
   --prompt "Review this pull request:
 Repository: {repository.full_name}
 PR #{pull_request.number}: {pull_request.title}
@@ -193,10 +194,14 @@ If healthy, keep it brief. If degraded or failed, provide detailed diagnostics."
 CI/CD の仕組みからは次のように呼び出します。
 
 ```bash
+BODY='{"service":"api","environment":"prod","version":"2.1.0","deployer":"ci","health_url":"https://api.example.com/health"}'
+TS=$(date +%s)
+SIG=$(printf '%s.%s' "$TS" "$BODY" | openssl dgst -sha256 -hmac 'your-secret' | cut -d' ' -f2)
 curl -X POST http://your-server:8644/webhooks/deploy-verify \
   -H "Content-Type: application/json" \
-  -H "X-Hub-Signature-256: sha256=$(echo -n '{"service":"api","environment":"prod","version":"2.1.0","deployer":"ci","health_url":"https://api.example.com/health"}' | openssl dgst -sha256 -hmac 'your-secret' | cut -d' ' -f2)" \
-  -d '{"service":"api","environment":"prod","version":"2.1.0","deployer":"ci","health_url":"https://api.example.com/health"}'
+  -H "X-Webhook-Timestamp: $TS" \
+  -H "X-Webhook-Signature-V2: $SIG" \
+  -d "$BODY"
 ```
 
 ### 警告の仕分け {#alert-triage}
@@ -359,6 +364,7 @@ hermes cron create "0 8 * * *" \
 ```bash
 hermes webhook subscribe github-issues \
   --events "issues" \
+  --signature github \
   --prompt "New GitHub issue received:
 Repository: {repository.full_name}
 Issue #{issue.number}: {issue.title}
@@ -421,6 +427,7 @@ platforms:
 ```bash
 hermes webhook subscribe auto-port \
   --events "pull_request" \
+  --signature github \
   --prompt "PR merged in the source repository:
 Repository: {repository.full_name}
 PR #{pull_request.number}: {pull_request.title}

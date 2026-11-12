@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 84bd856e7ec67296b14c38e5a0afff8f8f293293
+upstream_blob: 01a657dada43f3782f1e0586b90087b6171c81b1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -1154,8 +1154,9 @@ auxiliary:
   compression:
     model: glm-4.7
     base_url: https://api.z.ai/api/coding/paas/v4
+    api_key: ${GLM_API_KEY}
 ```
-OpenAI 互換のカスタムエンドポイントを指定します。認証には `OPENAI_API_KEY` を使います。
+OpenAI 互換のカスタムエンドポイントを指定し、`api_key` で認証します。キーを指定しない場合、Hermes がメインモデルのキーを流用するのは、メインのエンドポイントとオリジンまで完全に一致する場合だけです。また `OPENAI_API_KEY` を使うのも、OpenAI のホストか、そのキーと組になっている `OPENAI_BASE_URL` と完全に一致する場合だけです。
 
 ### 3つの設定項目の関係 {#how-the-three-knobs-interact}
 
@@ -1254,6 +1255,7 @@ systemd がゲートウェイを SIGKILL で強制終了します。launchd は�
 - **通知のみ。** 監視役がターンを強制終了することはありません。長く無応答が続くと実行を取り消す `agent.gateway_timeout` とは、ここが違います。停滞の通知は、エージェントが動けなくなっているようだと伝えるだけで、どうするか（`/new`、`/stop`、または待ち続ける）はユーザーが決めます。
 - **停滞1回につき通知は1回。** 未処理のメッセージがなくなるか活動が再開すると、通知済みの印は解除されます。そのため、いったん回復してから再び停滞したセッションでは、もう一度通知されます。
 - 進んでいるかどうかは、共通の活動状況の記録（ツール呼び出し、API のストリームの進み、圧縮のハートビート）だけで判断します。未処理のメッセージは通知を出すための条件であって、進みを測る時計ではありません。
+- **エージェントが動き出す前。** まだ準備中のターン（セッションの読み込み、会話の記録、`agent:start` フック）では、このタイムアウトを過ぎてから届いた追加のメッセージに「Still starting this turn … Use /stop if it should be cancelled」と返します。準備そのものにかけられる時間は `agent.gateway_timeout` で区切られます。これを過ぎると、ターンは「Turn setup stalled … Please resend your message」と伝えて終わり、次のメッセージが実行されます。準備中のターンは `/stop` と `/new` で終わらせられます。
 
 ```yaml
 agent:
@@ -1609,13 +1611,13 @@ auxiliary:
     reasoning_effort: "none"   # disable thinking for image description
 ```
 
-`base_url` を設定すると、Hermes はプロバイダーの指定を無視して、そのエンドポイントを直接呼び出します（認証には `api_key` か `OPENAI_API_KEY` を使います）。`provider` だけを設定した場合は、そのプロバイダーに組み込まれた認証と base URL を使います。
+`base_url` を設定すると、Hermes はプロバイダーの指定を無視して、そのエンドポイントを直接呼び出します（認証には `api_key` を使います。代わりに使われるキーについては後述します）。`provider` だけを設定した場合は、そのプロバイダーに組み込まれた認証と base URL を使います。
 
 補助タスクで使えるプロバイダー: `auto`、`main`、[プロバイダーのレジストリ](/hermes/docs/reference/environment-variables/) にある任意のプロバイダー（`openrouter`、`nous`、`openai-codex`、`anthropic`、`gemini`、`qwen-oauth`、`zai`、`kimi-coding`、`kimi-coding-cn`、`minimax`、`minimax-cn`、`minimax-oauth`、`deepseek`、`nvidia`、`xai`、`xai-oauth`、`ollama-cloud`、`alibaba`、`bedrock`、`huggingface`、`arcee`、`xiaomi`、`kilocode`、`opencode-zen`、`opencode-go`、`commandcode`、`commandcode-anthropic`、`ai-gateway`、`azure-foundry`）、または `providers:` の辞書に名前を付けて登録したカスタムプロバイダー（例: `provider: "beans"`）。
 
 ローカルの OpenAI 互換サーバーは、それぞれの名前でも指定できます。`provider: ollama`（`vllm`、`llamacpp`、`llama.cpp` も同様）に `http://127.0.0.1:11434` のような `base_url` と空の `api_key` を組み合わせると、仮のキーを使ってカスタムエンドポイント経由で振り分けられます。また、base_url が `host:port` だけの場合は、末尾に `/v1` が自動で付きます。
 
-`provider: openai` は API を直接使うための別名です。ブロックの `base_url`、それがなければ `OPENAI_BASE_URL`、それもなければ `https://api.openai.com/v1` をカスタムエンドポイントとして経由し、`api_key` か `OPENAI_API_KEY` で認証します。どの補助タスクでも解決のしかたは同じです（`compression`/`vision`/`title_generation` のほか、`background_review`、`curator`、MoA のスロットも同じです）。そのため、`provider: openai` のまま `base_url` を消すと、そのタスクは公開の OpenAI エンドポイントに移ります。`providers:` の辞書に `providers.openai` のエントリーがあればそちらが優先され、そのエントリー自身のエンドポイントとキーが使われます。
+`provider: openai` は API を直接使うための別名です。ブロックの `base_url`、それがなければ `OPENAI_BASE_URL`、それもなければ `https://api.openai.com/v1` をカスタムエンドポイントとして経由し、`api_key` で認証します。それがなければ、エンドポイントが OpenAI のホストか、組になっている `OPENAI_BASE_URL` と完全に一致する場合に限り、`OPENAI_API_KEY` で認証します。どの補助タスクでも解決のしかたは同じです（`compression`/`vision`/`title_generation` のほか、`background_review`、`curator`、MoA のスロットも同じです）。そのため、`provider: openai` のまま `base_url` を消すと、そのタスクは公開の OpenAI エンドポイントに移ります。`providers:` の辞書に `providers.openai` のエントリーがあればそちらが優先され、そのエントリー自身のエンドポイントとキーが使われます。
 
 振り分け先を指定した `auxiliary.<task>` のブロックを解決できない場合（未知のプロバイダー、エンドポイントや認証情報の不足）、そのタスクはメインモデルで動き、Hermes はそのことを知らせます。`background_review` はプロバイダー名と理由を示した警告をユーザーに1回だけ表示し（加えてレビューのたびに `agent.log` に `WARNING` の行を書きます）、`hermes doctor` は振り分け先を指定したすべての `auxiliary.<task>` のブロックを同じ解決処理にかけて、失敗するものを報告します。
 
@@ -1640,7 +1642,7 @@ auxiliary:
     provider: "auto"           # "auto", "openrouter", "nous", "codex", "main", etc.
     model: ""                  # e.g. "openai/gpt-4o", "google/gemini-2.5-flash"
     base_url: ""               # Custom OpenAI-compatible endpoint (overrides provider)
-    api_key: ""                # API key for base_url (falls back to OPENAI_API_KEY)
+    api_key: ""                # API key for base_url (OPENAI_API_KEY fallback: OpenAI hosts only)
     timeout: 120               # seconds — LLM API call timeout; vision payloads need generous timeout
     download_timeout: 30       # seconds — image HTTP download; increase for slow connections
     max_concurrency: 8         # max concurrent image encode/resize bursts across the process
@@ -1855,7 +1857,7 @@ auxiliary:
     model: "qwen2.5-vl"
 ```
 
-`base_url` は `provider` より優先されるので、補助タスクを特定のエンドポイントに振り分けるには、これがいちばん明示的な方法です。エンドポイントを直接指定して上書きした場合、Hermes は設定された `api_key` を使い、それがなければ `OPENAI_API_KEY` に切り替えます。このカスタムエンドポイントに `OPENROUTER_API_KEY` を流用することはありません。どちらも設定されていない場合にメインのモデルのキーを流用するのは、`base_url` のオリジン（スキーム・ホスト・ポート）がメインのエンドポイントと完全に一致するときだけです。メインのエンドポイントとは、そのセッションが実際に使っているもの（`/model` で切り替えたあとなら切り替え先）のことで、必ずそのエンドポイント自身のキーと組み合わせます。別のエンドポイントのキーと組み合わせることはありません。
+`base_url` は `provider` より優先されるので、補助タスクを特定のエンドポイントに振り分けるには、これがいちばん明示的な方法です。エンドポイントを直接指定して上書きした場合、Hermes は設定された `api_key` を使います。このカスタムエンドポイントに `OPENROUTER_API_KEY` を流用することはありません。キーが設定されていない場合にメインのモデルのキーを流用するのは、`base_url` のオリジン（スキーム・ホスト・ポート）がメインのエンドポイントと完全に一致するときだけです。メインのエンドポイントとは、そのセッションが実際に使っているもの（`/model` で切り替えたあとなら切り替え先）のことで、必ずそのエンドポイント自身のキーと組み合わせます。別のエンドポイントのキーと組み合わせることはありません。最後の代わりとして使われるのが `OPENAI_API_KEY` で、送られる先は OpenAI のホスト（`*.openai.com`、`*.openai.azure.com`）か、そのキーと組になっている `OPENAI_BASE_URL` と完全に一致するエンドポイントだけです。それ以外のエンドポイントには、それぞれ専用の `api_key` が必要です。
 
 **画像認識に OpenAI の API キーを使う場合:**
 ```yaml
@@ -2295,7 +2297,7 @@ display:
   # notification; other terminals ignore it) and, inside Warp (TERM_PROGRAM=WarpTerminal with the CLI-agent
   # protocol advertised), a warp://cli-agent OSC 777 event (`stop` on completion, `permission_request` on
   # blocking prompts) so Warp's tab status and notification mailbox track Hermes. No extra keys needed.
-  show_reasoning: true    # Show model reasoning/thinking above each response (default: true; toggle with /reasoning show|hide)
+  show_reasoning: true    # Show model reasoning/thinking above each response (default: true; toggle with /reasoning show|hide). On a gateway reply that was streamed, it follows the answer as its own message
   streaming: false        # Stream tokens to terminal as they arrive (real-time output)
   show_cost: false        # Show estimated $ cost in the CLI status bar
   vim_mode: false         # CLI only: vi/vim keybindings in the input composer (Esc → NORMAL, i → INSERT). The live NORMAL/INSERT/REPLACE mode shows at the right of the status bar. Config-only, read at startup.
@@ -2466,7 +2468,7 @@ Telegram/Discord/Slack の返信に付くフッターの例:
 — claude-opus-4.7 · 12 tool calls · 2m 14s · $0.042
 ```
 
-フッターが付くのはターンの**最後の**メッセージだけです。途中の更新にはフッターが付きません。
+フッターが付くのはターンの**最後の**メッセージだけです。途中の更新にはフッターが付きません。その最後のメッセージがフッターだけになってしまう場合（本文がすでに画面に出ているストリーミングの返信や、`MEDIA:` の写真だけの返信）は、写真にキャプションを付けられるプラットフォーム（Telegram）であれば、フッターを最後の写真のキャプションに入れます。ただし、キャプションの文字数の上限（Telegram では1,024文字）に収まる場合に限ります。それ以外の場合は、これまでどおり、フッターを短いメッセージとして単独で送ります。
 
 ### プラットフォームごとの進行状況表示の上書き {#per-platform-progress-overrides}
 
@@ -2490,7 +2492,7 @@ CLI からは、正式なパスを使ってください（`hermes config set dis
 
 Signal は、設定をプラットフォームごとに保存できるため有効なプラットフォームのキーに含まれていますが、現在の Signal のアダプターは送信済みのメッセージを編集できず、ツールの進行状況の吹き出しを表示しません。Signal の `tool_progress` は `off` のままにしてください。各ツール呼び出しをリアルタイムで見たいときは、CLI か、メッセージの編集に対応したメッセージングプラットフォームを使ってください。
 
-`interim_assistant_messages` はゲートウェイ専用です。有効にすると、Hermes はターンの途中で完成したアシスタントの更新を、別々のチャットメッセージとして送ります。これは `tool_progress` とは独立していて、ゲートウェイのストリーミングも必要ありません。
+`interim_assistant_messages` はゲートウェイ専用です。有効にすると、Hermes はターンの途中で完成したアシスタントの更新を、別々のチャットメッセージとして送ります。これは `tool_progress` とは独立していて、ゲートウェイのストリーミングも必要ありません。無効にしている場合でも、モデルが `clarify` の質問と同じメッセージの中に書いた文章は、質問の直前に送られます。質問はその送信を合計で最大15秒まで待ちます。それを過ぎてもまだ送信が続いていれば、質問は待たずに出されます。そのため、回線がとても遅いと、説明の終わりより先に選択肢が届くことがあります。
 
 `show_commentary`（既定は `true`）は、Codex Responses のモデルの commentary チャンネルを制御します。これは、こうしたモデルが非公開の推論と並行して出力する、整った文章での進行状況の実況です。有効にすると、完成した commentary のメッセージがそれぞれ、ターンの途中の更新として表示されます（ゲートウェイでは `interim_assistant_messages` も必要です）。この実況がわずらわしいときは `false` にしてください。その場合、commentary は推論のチャンネルに切り替わり、`show_reasoning` を有効にしているときだけ表示されます。
 
@@ -2701,7 +2703,7 @@ streaming:
 **新しい最終メッセージ（Telegram）:** Telegram の `editMessageText` は元のメッセージのタイムスタンプを保つため、時間のかかるストリーミングの返信は、完了したあとも最初のトークンの時刻のままになります。`fresh_final_after_seconds > 0` を設定して明示的に有効にすると、古くなったプレビューを、まったく新しい最終メッセージとして届けます（プレビューの削除はベストエフォートで行います）。既定値は `0` で、ストリーミングした返信は常にその場で確定します。これにより、両方の操作を表示するクライアントで、メッセージが一瞬重複してから削除される流れを避けられます。
 
 :::note プラットフォームごとのストリーミングの既定値
-全体の切り替えである `streaming.enabled` は、既定で `false` です。これをオンにするまで、何もストリーミングされません。有効にしたあとは、ストリーミングするかどうかが**プラットフォームごとに**決まります。Telegram は `display.platforms.telegram.streaming: true`（ストリーミングする）、Discord は `display.platforms.discord.streaming: false`（ストリーミングしない）が初期設定です。そのため、ストリーミングを有効にすると、Telegram はそのままストリーミングされ、Discord はその切り替えを変えるまで、メッセージ全体を一度に返信します。これらのプラットフォームごとの切り替えは、ダッシュボードの **Channels** の切り替えスイッチか、`~/.hermes/config.yaml` を直接編集して調整できます。プラットフォームごとの切り替えはメッセージを受け取るたびに読み直されるため、再起動しなくても反映されます。一方、`streaming:` ブロックそのもの（`enabled`、`transport`、`edit_interval`、`buffer_threshold`、`cursor`、`fresh_final_after_seconds`）は、ゲートウェイの起動時に一度だけ読み込まれます。これらのキーを変更したら、ゲートウェイを再起動して変更を反映させてください。なお、プラットフォームごとの切り替えは全体の切り替えの範囲を狭めることしかできません。プラットフォームごとの切り替えだけでストリーミングを有効にすることはできません。
+全体の切り替えである `streaming.enabled` は、既定で `false` です。これをオンにするまで、何もストリーミングされません。有効にしたあとは、ストリーミングするかどうかが**プラットフォームごとに**決まります。Telegram は `display.platforms.telegram.streaming: true`（ストリーミングする）、Discord は `display.platforms.discord.streaming: false`（ストリーミングしない）が初期設定です。そのため、ストリーミングを有効にすると、Telegram はそのままストリーミングされ、Discord はその切り替えを変えるまで、メッセージ全体を一度に返信します。これらのプラットフォームごとの切り替えは、ダッシュボードの **Channels** の切り替えスイッチか、`~/.hermes/config.yaml` を直接編集して調整できます。プラットフォームごとの切り替えはメッセージを受け取るたびに読み直されるため、再起動しなくても反映されます。一方、`streaming:` ブロックそのもの（`enabled`、`transport`、`edit_interval`、`buffer_threshold`、`cursor`、`fresh_final_after_seconds`）は、ゲートウェイの起動時に一度だけ読み込まれます。これらのキーを変更したら、ゲートウェイを再起動して変更を反映させてください。なお、プラットフォームごとの切り替えは全体の切り替えの範囲を狭めることしかできません。プラットフォームごとの切り替えだけでストリーミングを有効にすることはできません。`gateway.multiplex_profiles` を使っている場合、受け持つ各プロファイルのターンは、ホストのプロファイルではなく、そのプロファイル自身の `config.yaml` にある `streaming:` ブロックを使います（`hermes -p <profile> config set streaming.enabled true`）。自前の `streaming:` ブロックを持たないプロファイルには既定値（オフ）が使われます。ホストのプロファイルがストリーミングしているというだけでストリーミングされることは、もうありません。
 :::
 
 ## グループチャットのセッション分離 {#group-chat-session-isolation}
@@ -3156,6 +3158,9 @@ delegation:
   max_spawn_depth: 1                        # Delegation tree depth cap (1-3, clamped). 1 = flat (default): parent spawns leaves that cannot delegate. 2 = orchestrator children can spawn leaf grandchildren. 3 = three levels.
   orchestrator_enabled: true                # Global kill switch. When false, role="orchestrator" is ignored and every child is forced to leaf regardless of max_spawn_depth.
   oneshot_max_children: 2                   # Total subagents a one-shot run (hermes chat -q / --oneshot) may spawn; 0 = unlimited. Interactive and gateway sessions are never capped by this.
+  resumable_ttl_hours: 48                   # A child stopped by a restart, crash or provider failure stays continuable (delegate_task action=continue) this long, and its worktree is kept from the startup sweep.
+  max_resumable: 32                         # Per profile, how many such children keep their worktree pinned; the oldest beyond it loses its pin (the record stays).
+  auto_resume: false                        # Opt-in: resume such children automatically. Off = you continue them.
   gateway_mode: auto                        # Gateway sessions: auto | inline | background. auto = join children inside the turn (one answer) on a messaging chat whose display.interim_assistant_messages is off. See Subagent Delegation → Messaging chats without interim messages.
 ```
 
