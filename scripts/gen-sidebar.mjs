@@ -24,7 +24,7 @@ let body = src.slice(start + 2, end + 1);
 // Restricted grammar -> JSON. Strings in the file use single quotes and
 // contain no escapes; keys are bare identifiers; trailing commas allowed.
 body = body
-  .replace(/\/\/[^\n]*/g, '')
+  .replace(/^\s*\/\/[^\n]*/gm, '') // whole-line comments only: '//' inside strings (https://) must survive
   .replace(/'([^'\\\n]*)'/g, (_, s) => JSON.stringify(s))
   .replace(/([{,]\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:/g, '$1"$2":')
   .replace(/,(\s*[}\]])/g, '$1');
