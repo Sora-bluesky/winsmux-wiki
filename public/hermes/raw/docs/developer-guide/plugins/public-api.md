@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインの公開 API"
 description: "プラグインが import してよい Hermes のモジュールと名前の一覧です。それ以外の Hermes の import には hermes plugins validate が警告を出します"
 upstream_path: developer-guide/plugins/public-api.md
-upstream_blob: 01b9498f9d4da22126ee4709c661fd765d35fefd
+upstream_blob: 57ce269c200efafd139f78f84b70a99fa07be58f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/public-api
 ---
@@ -103,6 +103,7 @@ sources:
 | `tools.clarify_gateway` | `SKIPPED` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `tools.url_safety` | `is_safe_url` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `tools.url_safety` | `create_ssrf_safe_async_client` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
+| `tools.url_safety` | `create_ssrf_safe_client` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `gateway.platforms._http_client_limits` | `platform_httpx_limits` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `hermes_cli.gateway_setup_wizard` | `print_setup_header` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `hermes_cli.gateway_setup_wizard` | `confirm_reconfigure` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
@@ -131,3 +132,10 @@ sources:
 | `agent.file_safety` | `get_write_denied_error` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
 | `hermes_yaml` | `safe_load` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
 | `hermes_yaml` | `safe_dump` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
+| `hermes_cli.urllib_security` | `open_credentialed_url` | plugins/index.md § 認証情報付きの HTTP リクエストを、リダイレクトで漏らさずに送る |
+| `hermes_cli.chat_launch` | `hermes_command` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |
+| `hermes_cli.chat_launch` | `print_exit_summary` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |
+| `hermes_cli.gateway_chat` | `shell_client_env` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |
+| `hermes_cli.session_worktree` | `create` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |
+| `hermes_cli.session_worktree` | `restore` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |
+| `hermes_cli.session_worktree` | `finish` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |

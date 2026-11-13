@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 37787af596cfc6a8f7d4c70b63a658f3aca09f8c
+upstream_blob: 848702e74428fae62224e9379137fbf1d6d6280b
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -147,7 +147,7 @@ CLI で `/` を打つと補完メニューが開きます。組み込みコマ�
 | `/paste` | クリップボードの画像を添付します |
 | `/copy [number]` | 直前のアシスタントの返答をクリップボードにコピーします（数字を付けると、後ろから N 番目をコピーします）。CLI 専用です。 |
 | `/image <path>` | 次のプロンプトのためにローカルの画像ファイルを添付します。 |
-| `/debug` | デバッグ用の報告（システム情報とログ）をアップロードし、共有できるリンクを受け取ります。メッセージングでも使えます。 |
+| `/debug [upload\|nous upload\|local]` | デバッグ用の報告を扱います。引数なしの `/debug` はプライバシーに関する注意を表示するだけで、何もアップロードしません。`/debug upload` は公開のペーストサービスにアップロードして共有用のリンクを返し、`/debug nous upload` は Nous 社内のストレージにアップロードします（従来の CLI 専用です。メッセージング、TUI、デスクトップアプリでは受け付けず、代わりに `hermes debug share --nous` かデスクトップの Send diagnostics を案内します）。`/debug local` はアップロードせずに報告をその場に表示します。メッセージングでも使えます。 |
 | `/update` | Hermes Agent を最新版に更新します。 |
 | `/profile` | 今使っているプロファイル名とホームディレクトリを表示します |
 
@@ -311,7 +311,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/deny` | 保留中の危険なコマンドを却下します。 |
 | `/update` | Hermes Agent を最新版に更新します。 |
 | `/restart` | 動いている処理を流し切ってから、ゲートウェイを穏やかに再起動します。ゲートウェイが復帰すると、依頼した人のチャットやスレッドに確認の通知が届きます。 |
-| `/debug` | デバッグ用の報告（システム情報とログ）をアップロードし、共有できるリンクを受け取ります。 |
+| `/debug [upload]` | 引数なしの `/debug` はプライバシーに関する注意を表示するだけで、何もアップロードしません。`/debug upload` は、許可リストに載った項目だけの要約（バージョン、設定キーの名前、エラーの件数。ログやメッセージの本文は含みません）を公開のペーストサービスにアップロードし、共有用のリンクを返します。ログの全文は、`hermes debug share --nous` を使ったときだけ、非公開のストレージに送られます。 |
 | `/help` | メッセージング向けのヘルプを表示します。 |
 | `/<skill-name>` | インストール済みのスキルを名前で呼び出します。 |
 

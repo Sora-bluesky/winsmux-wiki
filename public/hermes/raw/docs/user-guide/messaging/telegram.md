@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Telegram"
 description: "Hermes Agent を Telegram のボットとして設定する"
 upstream_path: user-guide/messaging/telegram.md
-upstream_blob: 02776b7884f46780ff3dde9f254740f33dca7728
+upstream_blob: 2a63f2a9bee6fd7702da99c280057aabeda28e74
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram
 ---
@@ -98,6 +98,11 @@ gateway:
 - 「Offline」が書かれるのは、ゲートウェイが**きれいに**停止したとき（`/stop`、`disconnect`）だけです。
   ひどい落ち方をすると最後の状態が残ります。プロフィールの文章による表示に付きものの限界です。
 - ボットの全体のプロフィールを書き換えるので、既定では無効です。
+- Hermes は、初めて **Online** を書き込む前に、ボット本来の短い説明（@BotFather で設定したもの）を保存し、
+  その控えを再起動や異常終了のあとも持ち続けます。`status_indicator` を無効にすると、次の接続時に
+  あなたの文章が元に戻ります。ただし、そのあと @BotFather で新しい説明を設定していた場合は、そちらが残ります。
+  ゲートウェイが止まっている間に説明を書き換えると、Hermes が保存するのはその新しい文章です。
+  接続時に Hermes があなたの文章を読み取って保存できなかった場合、その回の実行では状態を書き込みません。
 
 ### 冷えた状態からの起動で溜まっていた更新（任意） {#cold-boot-pending-queue-optional}
 
@@ -402,6 +407,7 @@ YAML の重複したキーは、前のものを黙って上書きします。
 TELEGRAM_WEBHOOK_URL=https://my-app.fly.dev/telegram
 TELEGRAM_WEBHOOK_SECRET="$(openssl rand -hex 32)"  # required
 # TELEGRAM_WEBHOOK_PORT=8443        # optional, default 8443
+# TELEGRAM_WEBHOOK_HOST=::          # optional, bind host (e.g. IPv6-only)
 ```
 
 | 変数 | 必須か | 説明 |
@@ -409,6 +415,7 @@ TELEGRAM_WEBHOOK_SECRET="$(openssl rand -hex 32)"  # required
 | `TELEGRAM_WEBHOOK_URL` | はい | Telegram が更新を送る公開の HTTPS の URL。URL のパスは自動で取り出されます（上の例なら `/telegram`）。 |
 | `TELEGRAM_WEBHOOK_SECRET` | **はい**（`TELEGRAM_WEBHOOK_URL` を設定した場合） | 確認のために Telegram がすべての webhook の要求で返してくる秘密のトークン。これがないとゲートウェイは起動を拒みます — [GHSA-3vpc-7q5r-276h](https://github.com/NousResearch/hermes-agent/security/advisories/GHSA-3vpc-7q5r-276h) を参照してください。`openssl rand -hex 32` で作れます。 |
 | `TELEGRAM_WEBHOOK_PORT` | いいえ | webhook のサーバーが待ち受けるローカルのポート（既定: `8443`）。 |
+| `TELEGRAM_WEBHOOK_HOST` | いいえ | webhook のサーバーが待ち受けるローカルのホスト。既定: 未設定 → すべてのインターフェースで IPv4 と IPv6 の両方を待ち受けます（IPv4+IPv6）。IPv6 しか使えない配置（Fly.io の 6PN など）や、待ち受けを特定のインターフェースに固定したいときに設定します。`config.yaml` の `platforms.telegram.extra.webhook_host` でも設定できます。 |
 
 `TELEGRAM_WEBHOOK_URL` が設定されていると、ゲートウェイはポーリングの代わりに HTTP の webhook のサーバーを起動します。設定されていなければポーリングのモードになり、以前の版から振る舞いは変わりません。
 
@@ -830,6 +837,10 @@ Telegram のトピック `31` と `42` のメッセージは、メンション�
 - パターンには Python の正規表現を使います
 - 大文字と小文字は区別しません
 - パターンは、テキストのメッセージとメディアの説明文の両方に対して照合されます
+- 説明文のないボイスメモにはテキストがないので、ボットを起こせるのは返信か @mention だけです。
+  `voice_mention_patterns: true` を設定すると、そうしたグループのボイスメモをまず文字起こしし、話された内容に
+  これらのパターンを照合します。有効にするとグループで宛先のないボイスメモがすべて音声認識（speech-to-text）の
+  プロバイダーへ送られるため、既定では無効です。その回の応答はこの文字起こしを使い回します（STT の呼び出しは 1 回）
 - 不正な正規表現は、ボットを落とすのではなく、ゲートウェイのログに警告を残して無視されます
 - メッセージの先頭でだけ一致させたい場合は `^` で固定してください
 
@@ -1203,6 +1214,8 @@ gateway:
 
 豊かな経路の対象になるメッセージが 32,768 文字という表現の豊かなテキストの上限より長い場合は、ブロックの境目で分けて、複数の豊かなメッセージとして送られます（`<details>` の節、表、コードブロックは、それ自体が上限を超えない限り途中で切られません。超える場合は、表なら次の分割で見出しを繰り返し、コードブロックなら次の分割で開き直します）。Telegram からの拒否（古い `python-telegram-bot` で窓口が未対応、解析のエラー、大きすぎるブロックや列）があれば、**黙って** MarkdownV2 の経路へ落ちるので、メッセージが失われることはありません。一時的なエラーやネットワークのエラーでは、黙って送り直すことは*しません*（最後のメッセージが二重になりません）。
 
+**長い返信はファイルで届きます。** Telegram のメッセージが 8 通より多く必要になる返信（文章でおよそ 32,000 文字）は、Telegram の流量の制限に引っかかりかねないメッセージの連投ではなく、全文を収めた 1 つの `reply-<id>.md` の文書として、短い説明文を添えて送られます。長い返信を逐次表示している間は、上限に達した時点で Hermes は新しいメッセージを開くのをやめ、できあがった返信をファイルとしてアップロードし、それまでにその返信のために投稿していた途中のメッセージを削除します。アップロードに失敗した場合は何も削除されず、返信の残りはふつうのメッセージとして届くので、テキストが失われることはありません。Telegram がボットに削除を許さないメッセージ（48 時間より前のもの、または権限がない場合）は、そのまま残ります。`hermes send` と `send_message` ツールも、長すぎるメッセージに対して同じように動きます。Telegram の文書の上限である 50 MB を超える返信は、番号を振った複数のファイルに分けて送られます。
+
 **MarkdownV2 での代替。** あるメッセージで豊かな経路が使えないとき、Hermes は markdown を MarkdownV2 に変換します。MarkdownV2 には表の書き方がないので、縦棒の表は形を整え直されます。
 
 - **小さな表**は**行ごとのまとまりの箇条書き**へ平らにされます。各行が、列の見出しの下の読みやすい箇条書きになります。2〜4 列で、各セルが短いときに向いています。
@@ -1279,6 +1292,7 @@ TELEGRAM_GROUP_ALLOWED_CHATS="-1001234567890"
 - `TELEGRAM_GROUP_ALLOWED_USERS` は、挙げた送り手をグループ / フォーラムでだけ認可します。`TELEGRAM_ALLOWED_USERS` に入っていない限り、ボットへ DM はできません。
 - `TELEGRAM_GROUP_ALLOWED_CHATS` にあるチャットは、送り手にかかわらずそのチャットのすべてのメンバーを認可します。
 - どれでも `*` を使うと、任意の送り手 / チャットを許可できます。
+- `config.yaml` でこれらの一覧を書き換えると、ゲートウェイを再起動しなくても次のメッセージから反映されます。一覧から外した利用者は、次のメッセージやボタンのタップから拒まれます。複数のプロファイルを受け持つゲートウェイ（`gateway.multiplex_profiles`）では、ホストのプロファイル — ゲートウェイを起動したときのプロファイル — は起動時の一覧を保ち続けます。その一覧を書き換えたら、ゲートウェイを再起動してください。`.env` で設定した値は、引き続き `config.yaml` より優先されます。
 - これは既存のメンションや型による起動、そして `group_topics` + `ignored_threads` の上に重なって働きます。
 
 ### PR #17686 より前からの移行 {#migration-from-before-pr-17686}

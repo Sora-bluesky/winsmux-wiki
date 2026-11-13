@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Multiplexing Gateway の内部構造"
 description: "1 つの gateway ですべてのプロファイルを受け持つモードの設計: スコープの組み立て、シークレットのスコープ、受信のルーティング、永続化"
 upstream_path: developer-guide/multiplexing-gateway.md
-upstream_blob: 22fadd34458fb39ccd4e29d98e7227ffd06aa2cb
+upstream_blob: 2219a3fa91e839127585789f1bc2ed3407f4a61b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/multiplexing-gateway
 ---
@@ -302,7 +302,7 @@ B のターンに漏れ、`env=dict(os.environ)` で起動されるあらゆる�
 | 共有の認証情報 → `profile_routes` で衛星へ | ルーティング先のプロファイル | 受け取った（共有の）アダプター | 受け取ったアダプター。再起動のあとも衛星は主プロファイル経由で流れ続けます |
 | 共有 bot → 自分の bot を持つプロファイル | ルーティング先のプロファイル | 受け取ったアダプター | 受け取ったアダプター。会話は利用者が書き込んだ bot に留まります |
 | 2 つ目以降のプロファイルが持つ bot → `default`（`bot_profile: <secondary>`） | `default`（`agent:main`、既定のホーム） | 受け取った（2 つ目以降の）アダプター | 受け取ったアダプター |
-| 復元された、または合成されたソースで生きている出どころがない | 保存された `source.profile` | **なし**（安全側に倒します） | `(platform, runtime)` を単独で持つアダプター。なければ `None` |
+| 復元された、または合成されたソースで生きている出どころがない | 保存された `source.profile` | **なし**（安全側に倒します） | `(platform, runtime)` を単独で持つアダプター。なければ、そのプラットフォームを肩代わりしているときはそのプロファイルの対応表にある Relay。それもなければ `None` |
 
 多重化していないときはプラットフォームごとにアダプターが 1 つなので、どちらの継ぎ目も
 それを返します。`tests/gateway/test_multiplex_transport_matrix.py` がすべての行を確かめます。
@@ -316,7 +316,16 @@ B のターンに漏れ、`env=dict(os.environ)` で起動されるあらゆる�
 通して返すか、安全側に倒して失敗します。既定の bot 経由でルーティングされた衛星は
 既定の bot から答え続け、2 つ目以降のプロファイルが持つレーンが既定の bot の認証情報に
 落ちることはありません。この列ができる前に書かれた記録は `null` を持ち、共有 bot 向けの
-経験則をそのまま使います。リレー越しでは、送信するフレームごとの `metadata.profile`
+経験則をそのまま使います。
+リレー経由で届いたことを示す印は保存されないため、リレー越しに届いて復元されたレーンには、
+その論理上のプラットフォームに対応する本来のアダプターが見つかりません。その場合の返しは、
+そのプロファイルの対応表に登録された Relay の通信経路がそのプラットフォームを扱えると示していれば、
+その Relay にフォールバックします（`resolve_delivery_transport` と同じ規則です）。Relay を受け持つのは
+主プロファイルだけなので、2 つ目以降のプロファイルのレーンはこれまでどおり安全側に倒して失敗します。
+自動再開、ハートビート、プラグインからの注入は、送り出す前に、復元されたソースをもとに Relay の
+チャットごとの送信経路をあらかじめ整えます。また、再接続した Relay は、自分が肩代わりしている
+すべてのプラットフォームのセッションを再開します。
+リレー越しでは、送信するフレームごとの `metadata.profile`
 （と `follow_up` のキーの名前空間）が、次の `passthrough_forward` でどのプロファイルを
 刻むかをコネクターに伝えるので、ルーティングされたスラッシュコマンドのあとにボタンを
 押しても同じプロファイルに留まります。遅延して届くコールバック（`/model` の選択肢）は

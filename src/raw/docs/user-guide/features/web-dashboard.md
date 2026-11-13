@@ -2,7 +2,7 @@
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: ffa066bac65628aa0d467cecd606095fd81e2f17
+upstream_blob: 138a7f6a09155267f1957b2ca747920d26067138
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -31,7 +31,7 @@ hermes dashboard
 | `--host` | `127.0.0.1` | 待ち受けるアドレス |
 | `--no-open` | — | ブラウザを自動で開かない |
 | `--insecure` | 無効 | **非推奨・何もしません。** かつては loopback 以外に割り当てたときの認証を素通りさせるものでしたが、今は認証を無効にしません。loopback 以外に割り当てた場合は、つねに認証のしくみ（パスワードか OAuth）が要ります |
-| `--isolated` | 無効 | 名前付きのプロファイルから起動したとき（`worker dashboard`）、端末共通の管理画面へ回さず、そのプロファイル専用のサーバーを動かします |
+| `--isolated` | 無効 | 名前付きのプロファイルから起動したとき（`worker dashboard`）、端末共通の管理画面へ回さず、そのプロファイル専用のサーバーを動かします。一覧にはそのプロファイルだけが出ますが、安全を守る境界にはなりません（[複数のプロファイルを扱う](#managing-multiple-profiles)を参照） |
 
 ```bash
 # Custom port
@@ -73,9 +73,21 @@ worker dashboard
 チャットからは、そのプロファイルの MCP サーバー・モデル・スキルが見えます。
 URL に `?profile=` を明示した場合は、そちらが必ず優先されます。
 
-`--isolated` を付けると、この動きをやめて、そのプロファイルだけを対象にした専用の
-サーバーを動かせます（一本化する前の動きです。プロファイルごとの管理画面を、
-わざと別々の認証で公開したいときに役立ちます）。
+`--isolated` を付けると、この動きをやめて、そのプロファイル専用のサーバーを動かせます
+（一本化する前の動きです）。そのサーバーでは、プロファイルの一覧、`/api/status` のプロファイル
+名、まとめて表示するセッションのサイドバー、デスクトップ版のプロファイルの欄（つまりそこから開く
+SOUL の編集画面も）に、起動したプロファイルだけが出ます。
+
+:::warning `--isolated` は安全を守る境界ではありません
+`--isolated` は振り分けと運用を楽にするためのもので、利用者ごとにデータを隔てるものではありません。
+同じ OS ユーザーのもとにあるプロファイルは、ほかのプロファイルのファイルをすべて読めます。
+専用のサーバーでも、プロファイルを指定できる経路、`/api/fs/*`、
+そしてエージェント自身のターミナルやファイルのツールからは、隣のプロファイル
+（`~/.hermes/profiles/*`）にまだ届きます。プロファイルごとのサーバーで認証を分けても、
+これは変わりません。人ごとのデータを分けておきたいとき（家族、
+顧客、チームなど）は、それぞれの Hermes を**別の OS ユーザー**で動かすか、
+**別のコンテナ**で動かしてください。[SECURITY.md](https://github.com/NousResearch/hermes-agent/blob/main/SECURITY.md) の §2.2 を参照してください。
+:::
 
 **チャット**のタブも切り替えに従います。プロファイルを絞ったチャットは、選んだ
 プロファイルの `HERMES_HOME` を渡して PTY の子プロセスを起こすので、そのプロファイルの
@@ -666,6 +678,7 @@ MCP、経路、Webhook、紐付け、システムの各ページを支えてい�
 | `GET /api/curator` · `PUT .../paused` · `POST .../run` | スキルの世話役の状態と、休止・再開と、実行 |
 | `GET /api/portal` | Nous Portal の認証とツールゲートウェイの割り振り（読むだけ） |
 | `POST /api/ops/prompt-size` · `/dump` · `/config-migrate` | 診断（裏で走ります） |
+| `POST /api/ops/debug-share` | 許可された項目だけの不具合調査用のまとめ（ログの行やメッセージの文面は含みません）を、誰でも見られる貼り付けサービスに上げて、その URL を返します（終わるまで待ってから返ります）。中身は `{consent: true, redact?, lines?}`。`"consent": true` がないと `400` を返し、何も上げません |
 | `PUT /api/webhooks/{name}/enabled` | Webhook の経路を有効・無効にします |
 | `POST /api/skills/hub/install` · `/uninstall` · `/update` | スキルのハブでの操作（裏で走ります） |
 | `GET /api/skills/hub/search` | すべての出どころを横断してスキルのハブを探します |

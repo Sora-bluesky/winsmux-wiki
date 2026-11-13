@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "外部プログラムからの連携"
 description: "hermes-agent を外部プログラムから動かすための 3 つのプロトコル: ACP、TUI ゲートウェイの JSON-RPC、OpenAI 互換の HTTP API"
 upstream_path: developer-guide/programmatic-integration.md
-upstream_blob: a62754a5fbee6079e02a768cbdc4a281ef44baba
+upstream_blob: ead7170e9988cb6e52b7ddf022d8b3fa3a53b0ed
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration
 ---
@@ -106,7 +106,7 @@ terminal.resize         clipboard.paste         image.attach
 
 `session.active_list`、`session.activate`、`session.close` は、TUI のセッション切り替えが使う「そのプロセスの中で今動いているセッション」を操作するためのものです。保存済みの記録を探すときは `session.list` や `/resume` を使い、これらのメソッドは TUI ゲートウェイのプロセスで現在開いているセッションにだけ使ってください。
 
-共有ゲートウェイの `hermes-gateway-v1` ソケットでは、セッションの選択画面が、セッションに接続しないまま保存済みの会話を読み取れます。`session.list` は `workspace` によるフォルダーの絞り込みを受け付け、`picker: true` を付けると、各行の `preview`、`last_reply`、`cwd`、`git_branch`、`workspace`、`last_active_at`、`pinned` を返します。`session.transcript({session_id, subagent_id?, cursor?, limit?, order?})` は、会話の表示用の行を、圧縮で引き継がれてきた系譜全体にわたって、古いほうからか新しいほうからページ単位で返します。圧縮による引き継ぎの箇所は、それぞれその位置に `row_kind: "compaction"` の行として入ります（返り値は `{rows, next_cursor, reset}`、カーソルの中身は外から読めない形で、1 ページは最大 2 MiB）。古い順のカーソルは、それ以降に書き込まれた行を定期的に確かめるのにも使えます（カーソルが指していた行の形が変わったときは `reset: true` になります）。また `subagent_id` を指定すると、そのセッションから作業を任された子のセッションを読み取れます。どれも呼び出し側をイベントの受け取り手として登録したり、エージェントを起動したりはしません。詳しくは [ゲートウェイのローカルセッション](/hermes/docs/developer-guide/gateway-local-sessions/) を参照してください。
+共有ゲートウェイの `hermes-gateway-v1` ソケットでは、セッションの選択画面が、セッションに接続しないまま保存済みの会話を読み取れます。`session.list` は `workspace` によるフォルダーの絞り込みを受け付け、`picker: true` を付けると、各行の `preview`、`last_reply`、`cwd`、`git_branch`、`workspace`、`last_active_at`、`pinned` を返します。`scope: "stored"` を付けると `query`（タイトルまたは ID の文字列）も受け付け、`cursor` / `next_cursor` でページ単位に返します（ケイパビリティは `session-list-cursor-v1`）。`session.transcript({session_id, subagent_id?, cursor?, limit?, order?})` は、会話の表示用の行を、圧縮で引き継がれてきた系譜全体にわたって、古いほうからか新しいほうからページ単位で返します。圧縮による引き継ぎの箇所は、それぞれその位置に `row_kind: "compaction"` の行として入ります（返り値は `{rows, next_cursor, reset}`、カーソルの中身は外から読めない形で、1 ページは最大 2 MiB）。古い順のカーソルは、それ以降に書き込まれた行を定期的に確かめるのにも使えます（カーソルが指していた行の形が変わったときは `reset: true` になります）。また `subagent_id` を指定すると、そのセッションから作業を任された子のセッションを読み取れます。どれも呼び出し側をイベントの受け取り手として登録したり、エージェントを起動したりはしません。詳しくは [ゲートウェイのローカルセッション](/hermes/docs/developer-guide/gateway-local-sessions/) を参照してください。
 
 同じ認証済みゲートウェイの中では、動いているセッションを再開したり呼び出したりしても、前の接続が置き換わるのではなく、イベントの受け取り手がもう一つ増えるだけです。ストリーミングと端末のイベントは接続中のすべてのクライアントに届き、片方のクライアントが切断しても、別のクライアントが見ているセッションは終わりません。送信の排他制御と、設定された「実行中の入力の扱い」の方針はそのまま生きています。接続しているクライアントはそのセッションのサブエージェントに指示を差し込めます。これは、別々のゲートウェイのプロセスが同じセッションに書き込めるようになるという意味ではありませんし、持ち主のプロセスを再起動してもプロンプトの受け付けが残るという意味でもありません。
 

@@ -2,7 +2,7 @@
 title: "Opencode — コーディングを OpenCode CLI に任せる（機能追加、PR レビュー）"
 description: "コーディングを OpenCode CLI に任せる（機能追加、PR レビュー）"
 upstream_path: user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode.md
-upstream_blob: e65213a67731bf9f34b5915977326e95e8f0d440
+upstream_blob: 1cf842660eb881d57e6faf3ec75030d3a8a55c82
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode
 ---
@@ -10,6 +10,8 @@ sources:
 # Opencode {#opencode}
 
 コーディングを OpenCode CLI に任せます（機能追加、PR レビュー）。
+
+2 つを並べて詳しく比べたいときは、[Hermes Agent と OpenCode の比較](https://hermes-agent.nousresearch.com/compare/opencode)をご覧ください。
 
 ## skill の情報 {#skill-metadata}
 

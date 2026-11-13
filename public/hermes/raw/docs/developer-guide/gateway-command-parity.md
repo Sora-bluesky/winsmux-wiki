@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイのコマンド対応表"
 description: "共有ゲートウェイ上で、ローカルの各クライアントがスラッシュコマンドをどう扱うか"
 upstream_path: developer-guide/gateway-command-parity.md
-upstream_blob: ef91436a66338f9bc3b40ab83abb07ac30077e2c
+upstream_blob: 3c8a7442135f6b24ff4db20a92d96141725033a9
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-command-parity
 ---
@@ -56,7 +56,7 @@ sources:
 | `/copy` | refused | HermesCLI._handle_copy_command | local | unavailable: terminal | slash.exec: refused | client-local (cli_only) |
 | `/cron` | read（値なし / `list`。add/edit/pause/resume/run/remove は control で、classic CLI 自身のコマンドソケットからだけ受け付けます） | HermesCLI._handle_cron_command | slash.exec | unavailable: terminal | slash.exec | client-local (cli_only) |
 | `/curator` | control | HermesCLI._handle_curator_command | slash.exec | unavailable: advanced | slash.exec |  |
-| `/debug` | control | HermesCLI._handle_debug_command | slash.exec | slash.exec | slash.exec | ログを公開のペーストサービスにアップロードします |
+| `/debug` | control | HermesCLI._handle_debug_command | slash.exec | slash.exec | slash.exec | `/debug upload` は概要を公開のペーストサービスにアップロードします（引数なしの `/debug` はプライバシーに関する注意を表示します） |
 | `/deny` | control | messaging-only: unknown command | slash.exec | slash.exec | slash.exec | messaging-only |
 | `/diff` | read | HermesCLI._handle_diff_command | slash.exec | slash.exec | slash.exec |  |
 | `/discard` | refused | HermesCLI._handle_discard_command | slash.exec: refused | slash.exec: refused | prompt.resolve_unknown |  |

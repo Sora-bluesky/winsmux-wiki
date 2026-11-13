@@ -2,7 +2,7 @@
 title: "macOS バンドルの更新"
 description: ""
 upstream_path: developer-guide/macos-bundle-updates.md
-upstream_blob: 8f7b82b97a29743beb82042e47281cbeefa0211a
+upstream_blob: e4a64bd6ec091528c83f4b4740269b8cafb3027a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/macos-bundle-updates
 ---
@@ -80,6 +80,10 @@ Squirrel.Mac が署名済みのアプリを受け入れるのを待ちます。�
 公開には Apple の認証情報が必要です。公証は既存の署名後フックが担うため、
 electron-builder 側の2つ目の公証経路は無効にしています。
 公開ゲートは、署名、ステープルされたチケット、Gatekeeper の評価を検証します。
+ビルドを記録する際、1 GiB（1,073,741,824 バイト）以上の更新用 ZIP は受け付けません。
+v0.22.0 に同梱されている Electron 44.7 より前の Squirrel.Mac は ZIP 全体をメモリに読み込むため、
+そのサイズの ZIP をダウンロードするとクラッシュするからです
+（[electron/electron#55089](https://github.com/electron/electron/issues/55089)）。
 Darwin の公開ジョブは、arm64 のビルドとそのスモークテストが終わるのを待ってから、チャンネルへの書き込みを1つずつ順に行います。
 
 ## 検証の限界 {#verification-limits}

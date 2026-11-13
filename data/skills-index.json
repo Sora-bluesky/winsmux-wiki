@@ -1,6 +1,6 @@
 {
-  "sha": "273fb85",
-  "date": "2026-11-12",
+  "sha": "04903d9",
+  "date": "2026-11-13",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -39,7 +39,7 @@
       "name": "Claude Code",
       "description": "Delegate coding to Claude Code CLI (features, PRs)",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/",
-      "date": "2026-10-28",
+      "date": "2026-11-12",
       "source": "bundled"
     },
     {
@@ -47,7 +47,7 @@
       "name": "Codex",
       "description": "Delegate coding to OpenAI Codex CLI (features, PRs)",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/",
-      "date": "2026-09-20",
+      "date": "2026-11-12",
       "source": "bundled"
     },
     {
@@ -407,7 +407,7 @@
       "name": "Opencode",
       "description": "Delegate coding to OpenCode CLI (features, PR review)",
       "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/",
-      "date": "2026-10-28",
+      "date": "2026-11-12",
       "source": "optional"
     },
     {
@@ -1311,7 +1311,7 @@
       "name": "1Password",
       "description": "Set up op CLI, sign in, and read or inject secrets",
       "url": "/hermes/docs/user-guide/skills/optional/security/security-1password/",
-      "date": "2026-09-20",
+      "date": "2026-11-13",
       "source": "optional"
     },
     {

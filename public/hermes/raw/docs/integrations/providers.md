@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: c1d686f3b5cd8e600c4596eacb028aa625ad7b64
+upstream_blob: ed15735a0553741dba5a76e823c5737a19f6dc5d
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -1336,7 +1336,11 @@ providers:
 
 各エントリが受け付けるのは、`api`（エンドポイントのベース URL。`base_url`/`url` も別名として使えます）、`name`（任意の表示名。既定は辞書のキー）、`key_env` かインラインの `api_key` か `key_cmd`（後述）、`transport`（`chat_completions` / `anthropic_messages` / `codex_responses`）、`default_model`、`models`、`context_length`、`discover_models`、`extra_body`、`extra_headers`、`session_affinity_header`（会話 ID を載せるヘッダーの名前。セッションを意識するプロキシ向けで、設定しないかぎり無効です）、`ssl_ca_cert` / `ssl_verify`、`catalog_provider`（後述）、そしてエントリを消さずに隠すための `enabled: false` です。
 
-組み込みプロバイダと同じ名前をキーにしたエントリ（`openrouter:`、`Anthropic:`、`deepseek:` など。大文字・小文字は問いません）が独自の `api`/`base_url` を設定している場合、その名前はそのエントリ**そのもの**を指します。`--provider openrouter`、`/model`、`hermes model`、ダッシュボードはどれもこれを `custom:openrouter` として保存し、毎回のターンはあなたのエンドポイントに送られます。エントリがキー（`api_key` か `key_env`）を宣言していればそのキーが使われ、組み込みプロバイダ用の環境変数のキーは一切送られません。キーのないエントリは、`custom:<name>` と同じく組み込みプロバイダ用の環境変数のキーを代わりに使います。エンドポイントを持たない同名のブロック（たとえば `providers.openrouter: {request_timeout_seconds: 300}`）は、組み込みプロバイダの設定を調整するだけです。`model.provider` に指定した組み込みプロバイダがこうしたエントリに置き換えられている場合は、`hermes doctor` が警告を出します。
+組み込みプロバイダと同じ名前をキーにしたエントリ（`openrouter:`、`Anthropic:`、`deepseek:` など。大文字・小文字は問いません）が独自の `api`/`base_url` を設定している場合、その名前はそのエントリ**そのもの**を指します。`--provider openrouter`、`/model`、`hermes model`、ダッシュボードはどれもこれを `custom:openrouter` として保存し、毎回のターンはあなたのエンドポイントに送られます。エントリがキー（`api_key`、`key_env`、`key_cmd` のいずれか）を宣言していればそのキーが使われ、組み込みプロバイダ自身のキーは一切送られません。キーのないエントリに組み込みプロバイダの環境変数のキーとプールのキーが渡されるのは、エントリのアドレスが組み込みプロバイダ自身のホスト（スキーム、ホスト、ポート）を指している場合だけです。それ以外の宛先（プロキシ、ミラー、Kimi の `.cn` エンドポイントのような別リージョンのホスト）には、キーを送りません。組み込みプロバイダのキーは、あなたが指定しないかぎり、そのプロバイダ自身のホスト以外には送られないからです。組み込みプロバイダのキーを自分のエンドポイントで使うには、そのキーを明示してください。`key_env: DEEPSEEK_API_KEY`（組み込みプロバイダの変数）と書くか、エントリを設定した状態で `hermes auth add deepseek` を実行してエンドポイント用のキーを追加します。後者の方法では、エントリのアドレスも一緒に記録されます。エンドポイントを持たない同名のブロック（たとえば `providers.openrouter: {request_timeout_seconds: 300}`）は、組み込みプロバイダの設定を調整するだけです。`model.provider` に指定した組み込みプロバイダがこうしたエントリに置き換えられている場合は、`hermes doctor` が警告を出します。
+
+:::note 移行: 組み込みプロバイダのキーと同名のエントリ
+以前のリリースでは、キーのない `providers.deepseek` エントリに対して、アドレスがどこであっても組み込みプロバイダの環境変数のキー（たとえば `DEEPSEEK_API_KEY`）を送っていました。現在は、このキーは組み込みプロバイダ自身のホストにしか送られません。こうしたエントリが `401` を返すようになった場合は、そのエントリに `key_env: DEEPSEEK_API_KEY`（変数名はお使いのプロバイダのものに置き換えてください）を追加してください。この状況になると、Hermes はエントリごとに 1 回、対処法を示す警告をログに出します。アドレスが記録されるようになる前に（`hermes auth add` やダッシュボードで）組み込みプロバイダのプールへ追加したキーは、組み込みプロバイダ自身のアドレス用として扱われます。そのキーをエントリのホストで使うには、エントリを設定した状態で `hermes auth add <name>` を実行し、キーを追加し直してください。
+:::
 
 #### コマンドで発行する認証情報（`key_cmd`） {#command-minted-credentials-keycmd}
 

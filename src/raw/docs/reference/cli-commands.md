@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: fd3b634e959ad9ddcad60c9db94181c429f7bec4
+upstream_blob: d0f22f2fc4d378aa8f138759699724fe2898436e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -1025,26 +1025,27 @@ config_overrides:
 hermes debug share [options]
 ```
 
-デバッグレポート（システム情報 + 直近のログ）をペーストサービスにアップロードし、共有可能な URL を取得します。素早いサポート依頼に便利です — 対応する側が問題を診断するために必要なものをすべて含みます。
+デバッグ用の概要を公開のペーストサービスにアップロードして共有可能な URL を取得します。（`--nous` を付けた場合は）redaction 済みのログ一式を Nous の非公開ストレージに送ります。
 
 | オプション | 説明 |
 |--------|-------------|
-| `--lines <N>` | ログファイルごとに含める行数（既定: 200）。 |
-| `--expire <days>` | ペーストの有効期限（日数、既定: 7）。 |
+| `--lines <N>` | ファイルごとのログ行数です。概要に載せるエラー件数を数えるために読み取られ、`--nous` / `--local` では（redaction したうえで）レポートにも含まれます（既定: 200）。 |
+| `--expire <days>` | dpaste.com にフォールバックしたときの保存期間（日数。最小 1、既定: 1）。paste.rs のペーストは常に 6 時間後に削除されます。dpaste.com のペーストは期限前に削除できません。 |
 | `--nous` | 公開のペーストサービスの代わりに、Nous 内部の診断ストレージにアップロードします。Nous サポートから非公開の診断バンドルを求められたときに使います。 |
 | `--local` | アップロードせず、レポートをローカルに表示します。 |
-| `--no-redact` | アップロード時のシークレットの redaction を無効にします。既定ではアップロードは redaction されます。 |
+| `--no-redact` | `--nous` で送るログや `--local` で表示するログについて、シークレットの redaction を無効にします。公開のペーストにはログの本文がまったく含まれないため、そちらには影響しません。 |
+| `--yes` | 確認プロンプトを飛ばします（stdin が TTY でない場合は必須です）。 |
 
-レポートには、システム情報（OS、Python のバージョン、Hermes のバージョン）、直近のエージェント・ゲートウェイ・GUI/ダッシュボード・デスクトップのログ（ファイルごとに 512 KB 上限）、あれば更新ログと Desktop からの更新の引き継ぎログ、redaction 済みの API キーの状態が含まれます。既定ではアップロードは redaction されるため、シークレットは含まれません。これはログだけでなく、システムの情報（`fallback_providers` の項目やその URL に含まれる認証情報といった設定値を含みます）にも、ゲートウェイの `/debug` レポートにも当てはまります。
+**公開のペースト（既定）。** アップロードされるのは許可リストで決められた項目だけの概要で、ログの行やメッセージの本文は決して含まれません。含まれるのは、Hermes・Python・OS のバージョン、インストールの種類、接続済みのプラットフォームと設定済みの組み込みツールセットの名前、`config.yaml` のどのキーが設定されているか（キー名だけで、値は含みません。プロバイダや MCP サーバーのようにユーザーが名前を付けた項目は、名前を出さずに数だけを記録します）、そして直近のログの末尾から集計した、ロガー・例外クラス・HTTP ステータスごとの警告/エラーの件数です。ゲートウェイの `/debug upload` コマンドや、ダッシュボードの **Share debug report** ボタンがアップロードするのも、これと同じ概要です。公開のアップロードは paste.rs に送られ、うまくいかなければ dpaste.com を使います。
 
-既定のアップロードは、公開のペーストサービス（paste.rs、dpaste.com の順）を試します。`--nous` は同じデバッグバンドルを非公開の Nous 診断ストレージにアップロードします。返される viewer リンクは Nous チーム用で、14日後に自動削除されます。
+**非公開のバンドル（`--nous`）。** デバッグレポートの全文、システムの情報、エージェント・ゲートウェイ・GUI/ダッシュボード・デスクトップのログ（ファイルごとに 512 KB）、さらにあれば更新ログと Desktop からの更新の引き継ぎログが、Nous の非公開の診断ストレージに送られます。`--no-redact` を指定しない限りシークレットは redaction されますが、ログに含まれるそれ以外の個人データ（名前、ID、メッセージの本文）は伏せられません。返される viewer リンクは Nous チームだけが使うもので、14日後に自動削除されます。`--local` は同じバンドルを、何もアップロードせずに表示します。
 
 ### 例 {#examples}
 
 ```bash
 hermes debug share              # Upload debug report, print URL
-hermes debug share --lines 500  # Include more log lines
-hermes debug share --expire 30  # Keep paste for 30 days
+hermes debug share --lines 500  # Scan more log lines for the summary
+hermes debug share --expire 30  # Keep a dpaste.com fallback paste for 30 days
 hermes debug share --nous       # Upload a private diagnostics bundle for Nous support
 hermes debug share --local      # Print report to terminal (no upload)
 ```
@@ -1831,7 +1832,7 @@ Web ダッシュボードを起動し、設定、API キー、セッションを
 | `--no-open` | — | ブラウザを自動的に開きません |
 | `--insecure` | off | **非推奨 / no-op です。** かつてはループバック以外へのバインドで認証をバイパスしていました。2026年6月の強化以降、公開バインドは*常に*認証プロバイダ（パスワードまたは OAuth）を必要とします。ローカルに留めるには `127.0.0.1` にバインドしてトンネルしてください。 |
 | `--skip-build` | off | Web UI のビルドステップをスキップし、既存の `dist` ディレクトリをそのまま配信します。pnpm が使えない非対話的な環境（Windows のスケジュールタスク、CI）に便利です。事前ビルドは `cd web && pnpm run build` で行ってください。 |
-| `--isolated` | off | 名前付きプロファイル（`worker dashboard`）から起動した場合、マシンダッシュボードへルーティングする代わりに専用のプロファイル別サーバーを実行します。 |
+| `--isolated` | off | 名前付きプロファイル（`worker dashboard`）から起動した場合、マシンダッシュボードへルーティングする代わりに専用のプロファイル別サーバーを実行します。一覧に出るのはそのプロファイルだけです。これはルーティングと運用のための便宜機能で、セキュリティ境界では**ありません**: 同じ OS ユーザーのプロファイル同士は互いの中身を読めます。利用者ごとに分離するには、OS ユーザーを分けるかコンテナを使ってください。 |
 | `--stop` | — | この Hermes ホームの、実行中の `hermes dashboard` / `hermes serve` バックエンドを停止して終了します（`-p <profile>` / `HERMES_HOME` がどれを選ぶか決めます。他のプロファイルのバックエンド、マシン上の他のインストール、そして自分がコマンドを入力したシェルは一切触れられません。所有者を読み取れないバックエンドはそのままにされます）。SIGTERM、10秒の猶予、その後 SIGKILL です。バックエンドより長生きするホスト型 Chat TUI も停止されます（そうしないと削除済みの `state.db-wal` を開いたままにし、次の起動をブロックしてしまいます）。ダッシュボードから起動したメッセージングゲートウェイの bot は触れられません。 |
 | `--status` | — | 実行中の `hermes dashboard` プロセスを一覧して終了します。 |
 

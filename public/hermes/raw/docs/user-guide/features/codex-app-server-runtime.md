@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Codex App-Server ランタイム（任意）"
 description: ""
 upstream_path: user-guide/features/codex-app-server-runtime.md
-upstream_blob: db80c5d40b4802c6c815a98d74ec216347e03f4f
+upstream_blob: 81ac64fb7bc01425c728a8d0a079573deec7f96d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/codex-app-server-runtime
 ---
@@ -12,7 +12,7 @@ sources:
 
 Hermes は、`openai/*`、`openai-codex/*`、[名前付きのカスタムプロバイダ](#named-custom-providers)のターンを、自前のツールループで回す代わりに [Codex CLI app-server](https://github.com/openai/codex) へ任せることもできます。これを有効にすると、端末のコマンド、ファイルの編集、サンドボックス、MCP のツール呼び出しが、すべて Codex のランタイムの中で動きます。Hermes はその外側を包む殻になります（セッションの DB、スラッシュコマンド、ゲートウェイ、記憶とスキルの見直し）。
 
-これは**自分で選んだときだけ有効になる**仕組みです。フラグを切り替えないかぎり、Hermes のふるまいはこれまでどおりです。Hermes が勝手にこのランタイムへ振り分けることはありません。
+これは**自分で選んだときだけ有効になる**仕組みです。フラグを切り替えないかぎり、Hermes のふるまいはこれまでどおりです。Hermes が勝手にこのランタイムへ振り分けることはありません。どちらを使うか迷っている場合は、[Hermes Agent vs Codex](https://hermes-agent.nousresearch.com/compare/codex) で、選べるモデル、対応する環境、料金を出典付きで比べられます。
 
 :::tip
 OpenAI Codex は使っていないという場合、`hermes setup --portal` を使えば Claude や Gemini などを使う Codex 以外のバックエンドをひと息で用意できます。[Nous Portal](/hermes/docs/integrations/nous-portal/) をご覧ください。

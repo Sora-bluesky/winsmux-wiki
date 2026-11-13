@@ -2,7 +2,7 @@
 title: "ブラウザの自動操作"
 description: "browser_exec で本物のブラウザを操ります。Hermes が立ち上げる Chromium、クラウドのブラウザ、Lightpanda、CDP でつなぐ自分の Chrome のどれでも使え、ウェブとのやり取り、フォームの入力、情報の取り出しなどができます。"
 upstream_path: user-guide/features/browser.md
-upstream_blob: c2673bc30b7bd988fa6c2a2de8fb0880b7a2e44d
+upstream_blob: 27c7631900eba834f15d1f5ad8c69637723475a9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/browser
 ---
@@ -122,7 +122,9 @@ Desktop アプリを含むどのインストールにも最初から入ってい
 
 1. `browser.executable_path`。設定されているとき。
 2. Hermes のパッケージマネージャーが入れた Chromium（Chrome for Testing）。
-   インストーラーと `hermes update` が既定で入れます。
+   インストーラーと `hermes update` が既定で入れます。macOS のデスクトップアプリには
+   同梱されていないため、初めてブラウザを使うときに（約 195 MB）
+   `~/.hermes/tools` へダウンロードされます。
 3. 公式の Docker イメージでは `/etc/hermes/chromium-executable-path`。
 4. `PATH` 上にあるシステムの `chromium` / `chromium-browser`（Android/Termux や、
    パッケージマネージャーに Chromium のビルドがない環境）。

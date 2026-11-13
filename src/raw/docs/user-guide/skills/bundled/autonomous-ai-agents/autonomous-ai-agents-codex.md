@@ -2,7 +2,7 @@
 title: "Codex — OpenAI Codex CLI にコーディングを任せる（機能追加、PR）"
 description: "OpenAI Codex CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex.md
-upstream_blob: 7e88ecfa76a4e91da58808ce871f09d7f1b15603
+upstream_blob: b651955b3a7bad65d0f35c993ed1341152d8b822
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex
 ---
@@ -10,6 +10,8 @@ sources:
 # Codex {#codex}
 
 OpenAI Codex CLI にコーディングを任せます（機能追加、PR）。
+
+両者を並べて詳しく比べたいときは、[Hermes Agent と Codex の比較](https://hermes-agent.nousresearch.com/compare/codex)を読んでください。
 
 ## skill の情報 {#skill-metadata}
 

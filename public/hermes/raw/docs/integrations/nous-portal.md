@@ -3,14 +3,14 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Nous Portal"
 description: "1 つの定額契約で 300 以上のフロンティアモデルと Tool Gateway が使える、Hermes Agent の推奨構成"
 upstream_path: integrations/nous-portal.md
-upstream_blob: f820099af7db31e62c24384565eb658938aea7f2
+upstream_blob: d65a203c3469b5cccd1fe4f39cb56d427691f0f3
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/nous-portal
 ---
 
 # Nous Portal {#nous-portal}
 
-[Nous Portal](https://portal.nousresearch.com) は Nous Research が提供する定額の統合ゲートウェイで、**Hermes Agent を動かすうえで推奨される方法**です。OAuth で一度ログインするだけで済むので、モデル研究所・検索 API・画像生成・ブラウザ提供元ごとにアカウントと API キーと請求先を手作業でそろえる、あのやりくりから解放されます。
+[Nous Portal](https://portal.nousresearch.com) は Nous Research が提供する定額の統合ゲートウェイで、**Hermes Agent を動かすうえで推奨される方法**です。OAuth で一度ログインするだけで済むので、モデル研究所・検索 API・画像生成・ブラウザ提供元ごとにアカウントと API キーと請求先を手作業でそろえる、あのやりくりから解放されます。OpenRouter と比べたい場合は、[Nous Portal vs OpenRouter](https://portal.nousresearch.com/compare/openrouter) で料金、無料モデル、プランを出典付きで確認できます。
 
 セットアップに割ける時間が 1 つ分しかないなら、これを選んでください。最短の手順はこうです。
 

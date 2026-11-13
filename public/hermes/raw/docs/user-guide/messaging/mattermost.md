@@ -3,14 +3,14 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Mattermost"
 description: "Hermes Agent を Mattermost のボットとして設定する"
 upstream_path: user-guide/messaging/mattermost.md
-upstream_blob: ee71bc342ab78a267463760a2fe850c9fb709df3
+upstream_blob: d95302e6dd1ae36e8579f7d591b43adff562c04f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/mattermost
 ---
 
 # Mattermost の設定 {#mattermost-setup}
 
-Hermes Agent は Mattermost にボットとして加わり、ダイレクトメッセージやチームのチャンネルから AI アシスタントと話せるようにします。Mattermost は自分のサーバーに置いて動かせるオープンソースの Slack 代替で、自前の設備で運用するぶん、データを最後まで自分の手に残せます。ボットは Mattermost の REST API（v4）でやり取りし、WebSocket でその場の出来事を受け取り、届いたメッセージを Hermes Agent の処理の流れ（ツールの利用、記憶、推論を含みます）に通して、すぐに返事を返します。文章、添付ファイル、画像、スラッシュコマンドに対応します。
+Hermes Agent は Mattermost にボットとして加わり、ダイレクトメッセージやチームのチャンネルから AI アシスタントと話せるようにします。Mattermost は自分のサーバーに置いて動かせるオープンソースの Slack 代替で、自前の設備で運用するぶん、データを最後まで自分の手に残せます。ボットは Mattermost の REST API（v4）でやり取りし、WebSocket でその場の出来事を受け取り、届いたメッセージを Hermes Agent の処理の流れ（ツールの利用、記憶、推論を含みます）に通して、すぐに返事を返します。文章、添付ファイル、画像、スラッシュコマンドに対応します。届いた添付ファイルは、ゲートウェイが許可した送信者のものだけをダウンロードします。1件ごとのサイズの上限は `gateway.max_inbound_media_bytes` で決まります。
 
 Mattermost 用の外部ライブラリは要りません。アダプターが使う `aiohttp` は、すでに Hermes が依存しているものです。
 

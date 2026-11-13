@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "サブエージェントへの委任"
 description: "delegate_task で独立した子エージェントを起動し、作業を並行して進めます"
 upstream_path: user-guide/features/delegation.md
-upstream_blob: 6e79111cfecf1ee9e9b517ba06e80218b163a57f
+upstream_blob: 06b460f93c697fa63292a4f3d99d80644c441b76
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
 ---
@@ -556,7 +556,26 @@ Background delegations: 1 running
 | `REPAIR_THEN_CONTINUE` | 会話がもう収まらない、または画像・推論の部分が弾かれる | 先に記録を修復する必要がある |
 | `HANDOFF` | この会話に対するプロバイダの安全上の拒否 | 別のモデルを使うか、親が作業を引き取る |
 
-再開できる子の worktree（止まったときにターミナルがあった場所と、子が作った worktree）は、その記録が残っている間、起動時の worktree の片付けから外されます。期間は `delegation.resumable_ttl_hours`（既定は 48）で、件数はプロファイルごとに最大 `delegation.max_resumable`（既定は 32）件です。上限を超えると、いちばん古いものから固定が外れます。固定が外れると、通常の片付けがそのツリーを `refs/hermes/archive/` に保管してから削除します。完了した子と、あなたが止めた子は固定されません。`delegation.auto_resume: true`（既定は `false`。`resume_mode` を読むスケジューラーのために取ってあります）で有効にしないかぎり、ひとりでに再開するものはありません。
+再開できる子の worktree（止まったときにターミナルがあった場所と、子が作った worktree）は、その記録が残っている間、起動時の worktree の片付けから外されます。期間は `delegation.resumable_ttl_hours`（既定は 48）で、件数はプロファイルごとに最大 `delegation.max_resumable`（既定は 32）件です。上限を超えると、いちばん古いものから固定が外れます。固定が外れると、通常の片付けがそのツリーを `refs/hermes/archive/` に保管してから削除します。完了した子と、あなたが止めた子は固定されません。`delegation.auto_resume: true`（既定は `false`。後述）で有効にしないかぎり、ひとりでに再開するものはありません。
+
+### 自動の再開（`delegation.auto_resume`、選んで有効に） {#automatic-resume-delegationautoresume-opt-in}
+
+`delegation.auto_resume: true` にすると、止まったバックグラウンドの子をゲートウェイが自分で続けます。`action='continue'` と同じ引き受けと `continue` の経路を通り、子自身の会話と worktree の上で、本当の原因を示すメッセージ（"Your run was stopped by a provider limit; continue where you left off."）を添えて続けます。ゲートウェイは、受け持っているすべてのプロファイルを 15 秒ごとに確かめます。そのときは、プロファイルごとに、そのプロファイル自身の設定、資格情報、`state.db` を使います。
+
+- **再開するもの:** `AUTO_AT` の子は上限のリセットの時刻を過ぎたあとに、`AUTO_ON_BOOT` の子（ゲートウェイの停止、異常終了、強制終了）はゲートウェイがふたたび立ち上がったあとに再開します。
+- **決して再開しないもの:** `ON_FIX`、`REPAIR_THEN_CONTINUE`、`HANDOFF` の子（クレジット、認証、モデルが見つからない、拒否、何度送っても同じになるリクエストのエラー）、あなたや親が止めた子、止まったときに再開を約束されなかった子（`auto_resume` が無効の間に止まった子や、従来型のローカルの CLI のように、どのゲートウェイも受け持っていない親の下で止まった子。こうした子には、手で `continue` するよう案内が出ます）、期限の切れた記録、`max_resumable` によって worktree の固定が外された記録、そして入れ子の子（取りまとめ役のサブエージェント自身のワーカー。代わりにその取りまとめ役が再開します）です。
+- **待っている間は静かです。** 自動の再開を約束された停止では、親に完了は送られません。`delegate_task(action='list')` では、その子は `waiting_to_resume` として表示され、"waiting to resume at 14:05 (attempt 1 of 2); gives up at 19:40" のような注記が付きます。一部の子だけが待っている束では、完了の知らせに、待っている子が同じ状態で並びます。失敗した委任の表示では、それらは失敗として数えられません。
+- **報告は最後に 1 回だけです。** 親が受け取るのは子 1 つにつき 1 回で、再開した実行そのものの結果か、スケジューラーがあきらめたときの終端の失敗 1 件のどちらかです。あきらめるのは、自動の試行を 2 回使い切ったとき、子が最初に止まってから `delegation.auto_resume_deadline_minutes`（既定は 360）が過ぎたとき、上限のリセットがその期限より後になると分かっているとき（その場合はすぐにあきらめます）、または取り除けない理由が出てきたとき（たとえば worktree の固定が外された）です。すでに再開を約束された子は、待っている間に `auto_resume` が無効にされたときや、記録が先に `delegation.resumable_ttl_hours` に達したときにも、失敗を 1 件受け取ります。`auto_resume` が無効の間も、`/stop`、セッションの終了、`action='stop'` で取り消せます。失敗の知らせには、理由、子の最後のまとめ、記録の末尾、そして手で続ける方法（`delegate_task(action='continue', subagent_id=..., message=...)`）か、投げ直す方法が入ります。最後の試行の途中で異常終了した場合も、ありきたりな「結末が分からない（outcome unknown）」ではなく、同じあきらめの報告が届きます。
+- **取り消すのは明示したときだけです。** 待っている再開を取り消すのは、次のものだけです（記録は `superseded` に、`stop` の場合は `stopped` になります。TTL が切れるまでは、手で続けることもできます）。
+  - 待っている子に対する `delegate_task(action='stop', subagent_id=...)`。その子は二度と再開せず、worktree の固定も外れます（記録は残ります）。
+  - 親が自分でその子に続きを頼んだとき。
+  - 親の会話が止められた（`/stop`）、リセットされた（`/new`）、閉じられた、削除された、あるいは結果を受け取る会話がもう存在しないとき。
+  親が始めたほかの作業は、同じリポジトリでの新しいサブエージェントも含めて、再開を取り消しません。こうした判断は、再開が始まろうとしている間も優先されます。スケジューラーは 1 つの `state.db` のトランザクションの中で記録を引き受けてそれらを確かめ直し、子が動き出す直前にももう一度確かめます。そのため、その間に届いた停止、`/stop`、`/new` は再開を取り消します（その試行は数えられません）。すでに動いている子は、ほかの子と同じように `delegate_task(action='stop')` で止めます。
+- **待っている子と同じものは起動しません。** 起動しようとしたタスクの goal が、再開を待っている親の子のどれかの goal と完全に同じ（前後の空白は無視します）なら、その起動は断られます。ツールのエラーには、その `subagent_id`、いつ再開するか、そして 2 つの進め方が示されます。その子を待つか、先に `delegate_task(action='stop', subagent_id=...)` で止めてから投げ直すかです。束の中で断られるのはそのタスクだけで、兄弟のタスクは動きます。この防止は `auto_resume` が無効なら働きません。また、その子が期限を過ぎるか試行を使い切ると、スケジューラーがあきらめの報告を届ける前であっても、断るのをやめます。
+- **確かめられない副作用。** 再開のメッセージは、子にこう伝えます。最後のツールの呼び出しに結果の記録がなく、その呼び出しが実行されたかどうかを確かめられないなら、それを繰り返してはならず、`BLOCKED:` で始まり、その呼び出しの名前を挙げた結果で終えること。
+  同じ上限で止まった親は、再開した子の結果によって起こされるだけです（誰も見ていない間の起こし方には、いつもの回数の上限がかかります）。
+- **回数に上限があります:** 自動の試行は子 1 つにつき最大 2 回で、各試行が動く前に数えます。そのため、再開するたびにゲートウェイを落としてしまう子も、2 回起動したところで止まり、記録にその理由が残ります。再開した子がまた上限に当たると、試行を 1 回数えたうえで待ちに戻ります。再開はそのプロファイル自身の `delegation.max_concurrent_children` の範囲に収まり（数えるのは、そのプロファイルで動いているバックグラウンドの単位だけです）、委任の起動が一時停止されている間は待ち、親の会話自身のモデルの振り分け（その `/model` の選択、チャンネルの上書き、起動時の方針）で動きます。同じリセットを待っている子どうしは、一度に全部ではなく、1 回の見回りにつきプロバイダの接続先ごとに 1 つずつ（15 秒おきに）起動されます。
+- **費用:** 再開した子は誰も見ていないところでトークンを使い、その結果が始める親のターンも同じです。無人での出費を望まない環境では、無効のままにしておいてください。
 
 ### TUI / ゲートウェイから（セッション向け） {#from-the-tui-gateway-session-facing}
 
@@ -785,7 +804,8 @@ delegation:
   # orchestrator_enabled: true              # Disable to force all children to leaf role.
   # resumable_ttl_hours: 48                 # How long a stopped child stays continuable after a restart, worktree kept
   # max_resumable: 32                       # Resumable children per profile whose worktree is kept (oldest unpinned first)
-  # auto_resume: false                      # Opt-in: resume such children without being asked
+  # auto_resume: false                      # Opt-in: the gateway resumes limit/restart-stopped children itself (spends tokens unattended)
+  # auto_resume_deadline_minutes: 360       # Give up (one failure to the parent) this long after a child's first stop
   model: "google/gemini-3-flash-preview"             # Optional provider/model override
   provider: "openrouter"                             # Optional built-in provider
   api_mode: anthropic_messages                       # optional; auto-detected from base_url for anthropic_messages endpoints

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "gateway のローカルセッション"
 description: "ローカルの CLI/TUI セッションを正規の gateway 受付として扱う仕組み"
 upstream_path: developer-guide/gateway-local-sessions.md
-upstream_blob: fd2bed5ed9b0bde232d31cf50b8f98003ccb6972
+upstream_blob: 017c22f37c8c03937f638fb28314ec85b17ab641
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-local-sessions
 ---
@@ -153,6 +153,23 @@ ID ではありません。作成受領記録は元の所有者を保ち、受�
   `last_reply`（そこでの最新の返答で、`preview` と同じように短縮されます。純粋な圧縮の引き継ぎは返答に数えず、
   キャリアはそれが包んでいる返答を示します）、`git_branch`、`last_active_at`、`pinned` が入ります。既定では無効なので、
   1.5 秒ごとの稼働中一覧のポーリングには負担がかかりません。有効にすると、1ページの取得はストアへのまとめた1回の読み取りになります。
+  保存済みスコープでは、ページ送りと検索もできます（`gateway/session_listing.py`）。これに対応する実行環境は、
+  `runtime.describe.capabilities` で `session-list-cursor-v1` を通知します。
+  - `query`: タイトルか ID にこの文字列を含む会話だけを返します（大文字と小文字は区別しません。タイトルは
+    `-`、`_`、`.` と空白を取り除いた形でも一致し、圧縮の連なりのどのセグメントも
+    対象になります）。`hermes sessions list --search` と同じ規則です。1〜200文字で、
+    空白だけの文字列は使えません。
+  - 保存済みの結果にはそれぞれ `next_cursor` が付きます。続きの行がありうるときは中身を解釈できない文字列、
+    一覧を読み切ったときは `null` です。最後のページが空のこともあります。次のページを読むには、これを `cursor` として送り返します。
+    稼働中スコープはページ分けされず、結果に `next_cursor` は付きません。
+  - カーソルが有効なのは、それを返した呼び出しと同じ `workspace`、`query`、`include_hidden` で
+    使う場合だけです。`limit` と `picker` はページごとに変えてもかまいません。それ以外のカーソル、
+    このメソッドが発行していないカーソル、稼働中スコープや `title` と一緒に指定した `query` / `cursor` には
+    `invalid_params` で応答します。
+  - ストアが変わらなければ、`next_cursor` を `null` になるまでたどると、ページ分けせずに1回で読んだときと
+    同じ順序で、すべての会話が1回ずつ一覧に出ます。呼び出しの合間にストアは変わることがあり（新しい
+    メッセージが届いた会話は先頭に移ります）、前のページに出た行が後のページにもう一度出ることがあります。行は
+    `session_id` で識別してください。1回の呼び出しで返すのは最大200行という上限は変わりません。
 - `session.transcript({session_id, subagent_id?, cursor?, limit?, order?, inline_images?})` は、会話に接続せずにその内容を
   読みます（`gateway/session_stored_reads.py`）。権限確認は
   `session.resume` の読み取りと同じ扱いです（`SessionAuthority.authorize`、`session:read`: プロファイル、所有者、またはオペレーター）。

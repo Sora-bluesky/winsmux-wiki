@@ -2,7 +2,7 @@
 title: "認証情報プール"
 description: "プロバイダごとに複数の API キーや OAuth トークンをまとめておき、自動で切り替えてレート制限から復帰します。"
 upstream_path: user-guide/features/credential-pools.md
-upstream_blob: c7baa1624e93afa5d46a14602113b40f44f8458e
+upstream_blob: fe4038ec0fa34aa05c06a08467cfec8552a9ce4d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/credential-pools
 ---
@@ -267,6 +267,8 @@ hermes auth add Together.ai --api-key sk-together-second-key
   }
 }
 ```
+
+独自エンドポイント向けに追加したキー（`hermes auth add` またはダッシュボードの認証情報プールから追加したもの）には、入力したときのエンドポイントのアドレスが記録されます。キーが送られるのは、その接続先（スキーム、ホスト、ポート）だけです。エンドポイントのアドレスを変えると、プールに入っていたキーは新しいアドレスへ引き継がれません。Desktop とダッシュボードの編集画面は、元のキーを使い回さずに、新しいアドレス用のキーを尋ねます（キーを使わないときは、空欄にすると明示します）。アドレスを記録するしくみができる前に追加したキーは、最初に使われたときに、そのエンドポイントのアドレスに結び付けられます。組み込みのプロバイダのキー（たとえば `providers.deepseek` の項目に対する `DEEPSEEK_API_KEY`）がその項目で使われるのは、そのプロバイダ自身のアドレスへ送るときだけです。ただし、項目がその変数を `key_env` として指定している場合（たとえば `key_env: DEEPSEEK_API_KEY`）は別です。キーを渡さなかったときは、Hermes が項目ごとに警告を 1 回だけ記録します。これは、その項目を使う委譲先のサブエージェント（`delegation.provider: deepseek`）や補助タスクにも当てはまります。アドレスなしで組み込みのプロバイダのプールに追加したキーは、そのプロバイダ自身のアドレス用として扱われ、同じ名前の項目に使われることはありません。接続先として区別するのはスキーム、ホスト、ポートだけです。同じホストでパスだけが違う 2 つのエンドポイント（`https://gw.example/tenantA/v1` と `https://gw.example/tenantB/v1`）は同じ接続先とみなされるので、プールのキーを互いに使えます。
 
 ## 自動の読み取り {#auto-discovery}
 

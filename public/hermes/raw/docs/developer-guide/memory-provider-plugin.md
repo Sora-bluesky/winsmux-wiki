@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: 2be9752f68051d537a14eb1248c54b185b2916c2
+upstream_blob: 5cae84a60fb2adcacd56582e9302f5dd8f5b21a2
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -531,7 +531,7 @@ data_dir = Path("~/.hermes/my-provider").expanduser()
 
 1 つのゲートウェイのプロセスが複数のプロファイルを同時に受け持つことがあり、それぞれのターンは別々のスレッドで並行して動きます。エージェントごとに専用の `MemoryManager` と専用のプロバイダーのインスタンスがあり、それぞれ 1 つのプロファイル向けに初期化されます。プロバイダーは次を守る必要があります。
 
-- **読み込むたびに新しいインスタンスを返す。** `register(ctx)` ではプロバイダーを生成してください（`ctx.register_memory_provider(MyProvider())`）。モジュール単位のシングルトンを渡してはいけません。別のプロファイルのマネージャーがすでに結びつけたインスタンスは、マネージャーが初期化を拒み、`memory_provider_instance_shared` をログに残します。
+- **読み込むたびに新しいインスタンスを返す。** `register(ctx)` ではプロバイダーを生成してください（`ctx.register_memory_provider(MyProvider())`）。モジュール単位のシングルトンを渡してはいけません。別のプロファイルの稼働中のマネージャーがすでに結びつけたインスタンスは、複数のプロファイルを受け持つホストであれば、同時に扱う構成かどうかにかかわらず、マネージャーが初期化を拒み、`memory_provider_instance_shared` をログに残します。
 - **`initialize()` で結びつける。** 保存先、パス、クライアント、バンク、テナントはすべて `hermes_home` キーワード（と、`initialize` の中で `get_secret()` を通して読んだ秘密情報）から導き、その結びつきを `self` に保持してください。
 - **プロファイル固有のものをモジュールやクラスの単位に置かない。** 全体で共有する「現在の保存先」を持たず、呼び出しのたびに共有の結びつきを付け替えることもしないでください。2 つのプロファイルの呼び出しは交互に入り込むので、呼び出しごとの付け替えは競合を起こします。
 

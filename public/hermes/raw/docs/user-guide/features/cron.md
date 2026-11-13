@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: ef06782d0432bd3ff1c69b4b54b84c57b0f534ef
+upstream_blob: c4b00d2f912dd648b0944fb9eb421feeead722f1
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -632,8 +632,9 @@ doctor がジョブや状態を書き換えることはありません。報告�
 | `"origin"` | ジョブを作った場所へ返します | メッセージングでの既定 |
 | `"local"` | ローカルのファイルにだけ保存します（`~/.hermes/cron/output/`） | CLI での既定 |
 | `"telegram"` | Telegram のホームチャンネル | `TELEGRAM_HOME_CHANNEL` を使います |
-| `"telegram:123456"` | ID で指定した Telegram のチャット | 直接届けます |
+| `"telegram:123456"` | ID で指定した Telegram のチャット | 直接届けます。宛先がジョブの作成元のチャットそのものなら、ジョブを作ったトピックへ届けます（Telegram と Slack のみ） |
 | `"telegram:-100123:17585"` | 指定した Telegram のトピック | `chat_id:thread_id` の形式 |
+| `"telegram:-100123:1"` | フォーラムの General トピック | ジョブをトピックの中で作った場合でも、トピックの外（チャットの最上位）へ投稿します |
 | `"discord"` | Discord のホームチャンネル | `DISCORD_HOME_CHANNEL` を使います |
 | `"discord:#engineering"` | 指定した Discord のチャンネル | チャンネル名で指定 |
 | `"slack"` | Slack のホームチャンネル | |
@@ -1269,7 +1270,9 @@ cronjob(action="remove", job_id="...")
 
 `cronjob(action="run")` は、ジョブを**バックグラウンドで**すぐに発火させます（`delegate_task` と
 同じです）。ツールの呼び出しはハンドルを返してすぐ戻り、実行が終わると、その結果 — 成功か失敗か、
-配信先、次の予定、出力の抜粋 — が新しいメッセージとして会話に入ってきます。その間もエージェント
+配信先、次の予定 — が新しいメッセージとして会話に入ってきます。出力の抜粋が付くのは、
+`deliver: local` のジョブと、すべての宛先で配信に失敗した実行だけです。チャットへ配信したジョブは
+すでにそこへ出力を投稿しているので、実行を指示した会話（別のトピックかもしれません）へ抜粋を写すことはしません。その間もエージェント
 （とあなた）は作業を続けられますし、すでに走っているジョブは、二重に発火させずに
 「already running」と断られます。
 

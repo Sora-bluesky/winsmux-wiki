@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "1Password — op CLI を用意してサインインし、秘密の値を読み書きする"
 description: "op CLI を用意してサインインし、秘密の値を読み書きする"
 upstream_path: user-guide/skills/optional/security/security-1password.md
-upstream_blob: 5a38286338ab8130bf01d233cf3c0ea749649bc3
+upstream_blob: 981271bf133b8465cf3116aac5381becc73fbf74
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-1password
 ---
@@ -18,7 +18,7 @@ op CLI を用意してサインインし、秘密の値を読み書きします�
 |---|---|
 | 提供元 | 追加の skill です。`hermes skills install official/security/1password` で入れられます |
 | パス | `optional-skills/security/1password` |
-| バージョン | `1.0.0` |
+| バージョン | `1.1.0` |
 | 作者 | arceus77-7, enhanced by Hermes Agent |
 | ライセンス | MIT |
 | 対応プラットフォーム | linux, macos, windows |
@@ -38,8 +38,12 @@ op CLI を用意してサインインし、秘密の値を読み書きします�
 
 - 1Password のアカウント
 - 1Password の CLI（`op`）が入っていること
-- 次のいずれか: デスクトップアプリとの連携、サービスアカウントのトークン（`OP_SERVICE_ACCOUNT_TOKEN`）、Connect サーバー
+- 次のいずれか: デスクトップアプリとの連携、または Hermes の端末で `op` を使うための Connect サーバー
 - Hermes が端末を呼び出すあいだ、認証済みの状態を保つための `tmux`（デスクトップアプリと連携する場合のみ）
+
+Hermes は `OP_SERVICE_ACCOUNT_TOKEN` を、端末にも `execute_code` にも決して渡しません。
+`.env` や `terminal.env_passthrough` に入っている場合も同じです。このトークンがあれば、サービスアカウントが読めるすべての秘密の値を開けてしまうためです。
+ただし、Hermes 自身にプロバイダーのキーを渡す方法としては、今もサービスアカウントが適しています（`hermes secrets onepassword setup`）。
 
 ## こんなときに使います {#when-to-use}
 
@@ -51,10 +55,11 @@ op CLI を用意してサインインし、秘密の値を読み書きします�
 
 ## 認証のやり方 {#authentication-methods}
 
-### サービスアカウント（Hermes ではこれがおすすめ） {#service-account-recommended-for-hermes}
+### サービスアカウント（Hermes 自身による秘密の値の解決、または自分のシェルで使う） {#service-account-hermess-own-secret-resolution-or-your-own-shell}
 
-`${HERMES_HOME:-~/.hermes}/.env` に `OP_SERVICE_ACCOUNT_TOKEN` を設定します（この skill が最初に読み込まれるときに入力を求めます）。
-デスクトップアプリは要りません。`op read`、`op inject`、`op run` が使えます。
+`${HERMES_HOME:-~/.hermes}/.env` にサービスアカウントのトークンを置いておくと、Hermes は起動時に、自分が使うプロバイダーのキーについて `op://` 形式の参照を解決できます（`hermes secrets onepassword setup`）。
+このトークンはエージェントが起動するプロセスからは取り除かれるため、Hermes の端末から実行した `op` には見えません。
+トークンを使って `op` を直接動かしたいときは、Hermes の外で、自分のシェルからコマンドを実行してください:
 
 ```bash
 export OP_SERVICE_ACCOUNT_TOKEN="your-token-here"
@@ -102,7 +107,8 @@ op --version
 Hermes の端末コマンドは既定で対話を挟まないため、呼び出しをまたぐと認証の状態が失われることがあります。
 デスクトップアプリ連携で `op` を安定して使うには、サインインと秘密の値の操作を専用の tmux セッションの中で実行してください。
 
-補足: `OP_SERVICE_ACCOUNT_TOKEN` を使う場合、これは要りません。トークンは端末の呼び出しをまたいで自動的に保たれます。
+補足: サービスアカウントのトークンはここでは決して使えません（「必要なもの」を参照）。そのため、
+Hermes の端末から `op` を対話なしで使うには、代わりに Connect サーバーが必要です。
 
 ```bash
 SOCKET_DIR="${TMPDIR:-${HERMES_HOME:-$HOME/.hermes}/cache/scratch}/hermes-tmux-sockets"
@@ -160,12 +166,12 @@ op run -- sh -c '[ -n "$DB_PASSWORD" ] && echo "DB_PASSWORD is set" || echo "DB_
 - 値そのものをはっきり求められない限り、秘密の値をそのまま利用者に表示しないでください。
 - 秘密の値をファイルに書くのではなく、`op run` / `op inject` を使ってください。
 - 「account is not signed in」と出て失敗したら、同じ tmux セッションでもう一度 `op signin` を実行してください。
-- デスクトップアプリとの連携が使えない環境（画面のない環境や CI）では、サービスアカウントのトークンを使ってください。
+- デスクトップアプリとの連携が使えない環境（画面のない環境や CI）では、Hermes の端末からは Connect サーバーを使ってください。サービスアカウントのトークンが使えるのは、利用者自身のシェルの中か、Hermes 自身が `op://` 形式の参照を解決するときだけです。
 
 ## CI・画面のない環境について {#ci-headless-note}
 
-対話を挟めない場面では、`OP_SERVICE_ACCOUNT_TOKEN` で認証し、対話式の `op signin` は避けてください。
-サービスアカウントには CLI の v2.18.0 以降が必要です。
+Hermes の外で対話を挟めない使い方をするときは、`OP_SERVICE_ACCOUNT_TOKEN` で認証し、対話式の
+`op signin` は避けてください。サービスアカウントには CLI の v2.18.0 以降が必要です。Hermes の端末の中では、Connect サーバーを使ってください。
 
 ## 参考 {#references}
 

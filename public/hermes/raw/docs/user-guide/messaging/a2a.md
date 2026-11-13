@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "A2A（エージェント間連携）"
 description: ""
 upstream_path: user-guide/messaging/a2a.md
-upstream_blob: c6e26aebbf76e695ccb2dd7893526b955524c0fe
+upstream_blob: 2dd70b3c02a45f55c6f60c51c9f9253f3d0920e8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/a2a
 ---
@@ -163,7 +163,7 @@ curl -X POST http://your-host:9900/ \
 ## 困ったときは {#troubleshooting}
 
 - **相手がカードの URL にたどり着けない** — カードが待ち受け用のアドレスを掲げていたのが原因です。外からつながる URL を `A2A_PUBLIC_URL` に設定してください。
-- **`401 Unauthorized`** — トークンが一致していません。サーバー側の `A2A_PEER_TOKENS`/`A2A_BEARER_TOKEN` と、相手の `auth:` の設定を確認してください。
+- **`401 Unauthorized`** — トークンが一致していません。サーバー側の `A2A_PEER_TOKENS`/`A2A_BEARER_TOKEN` と、相手の `auth:` の設定を確認してください。`A2A_PEER_TOKENS` の各項目は `name:token` の形で書く必要があります。トークンだけを書いた項目は無視されます。また、`name:token` の組が 1 つもない値を設定すると、`A2A_BEARER_TOKEN` も設定していない限り、すべての呼び出し元が拒否されます（どちらに当たるかは、ゲートウェイのログに ERROR として記録されます）。
 - **localhost 以外を待ち受けてくれない** — そういう作りです。先にベアラートークンを設定してから `A2A_HOST=0.0.0.0` にしてください。
 - **トークンなしで `403` "Host must be a loopback name…" が返る** — トークンがない場合、サーバーはループバックの名前（`localhost`、`127.x.x.x`、`[::1]`）か `A2A_PUBLIC_URL` のホスト宛てのリクエストにしか応えません。そのため、別のホスト名で開かれていても実際は自分の端末を指している Web ページからは、カードも、提供しているエージェントの一覧も読み取れません。これらの名前のどれかで呼び出すか、ローカルのプロキシが転送してくる名前を `A2A_PUBLIC_URL` に設定するか、トークンを設定してください。
 - **トークンなしで `403` "Content-Type must be application/json" が返る** — POST に `Content-Type` が付いていないか、JSON 以外になっています（素の `curl -d` はフォーム形式で送ります）。`-H 'Content-Type: application/json'` を付けてください。

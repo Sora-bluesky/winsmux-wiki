@@ -2,7 +2,7 @@
 title: "Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）"
 description: "Claude Code CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md
-upstream_blob: 315ecf7fefd6767565c66f75b9825a020ae21f58
+upstream_blob: badd19f465ed64d62c5eb3afd4df8c9cf2db8058
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code
 ---
@@ -10,6 +10,8 @@ sources:
 # Claude Code {#claude-code}
 
 Claude Code CLI にコーディングを任せます（機能追加、PR）。
+
+両者を並べて詳しく比べたい場合は、[Hermes Agent と Claude Code の比較](https://hermes-agent.nousresearch.com/compare/claude-code)をご覧ください。
 
 ## skill の情報 {#skill-metadata}
 

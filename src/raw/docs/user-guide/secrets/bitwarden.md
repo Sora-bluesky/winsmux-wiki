@@ -2,7 +2,7 @@
 title: "Bitwarden Secrets Manager"
 description: ""
 upstream_path: user-guide/secrets/bitwarden.md
-upstream_blob: 461b1f99c55a48453a3b9d2efdd644ddb90c2ff8
+upstream_blob: 4baa3f27dd584086db3a55bbe9454a04f4ed3c31
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/secrets/bitwarden
 ---
@@ -155,6 +155,7 @@ Bitwarden が Hermes の起動を止めることはありません。何か問�
 
 - 最初のトークン（`BWS_ACCESS_TOKEN`）自体が秘密の情報です。これを持っている人は、そのマシンアカウントが読めるシークレットをすべて読めます。他の API キーと同じ扱いにしてください。
 - Hermes は、`override_existing: true` であっても、Bitwarden にこの最初のトークン自体を上書きさせません。`BWS_ACCESS_TOKEN` をプロジェクト内のシークレットとして置いた場合、反映のときに黙って飛ばされます。
+- `BWS_ACCESS_TOKEN` は、エージェントやそのツールが起動するプロセス（ターミナル、`execute_code`、バックグラウンドのプロセス、cron のスクリプト、CLI の補助プログラム）からは取り除かれます。`terminal.env_passthrough` やスキルの `required_environment_variables` で再び許可することもできないため、エージェントが実行した `bws` からトークンが見えることはありません。同じプロファイルで動く Hermes 自身のプロセスには引き続き渡されます。具体的には、Hermes が起動する `bws` の子プロセス、Hermes が起動または再起動するゲートウェイ、`key_cmd` の補助プログラムです。`bws` を使いたいときは、自分のシェルから自分で実行してください。
 - PM は、管理しているアーカイブを `pm/lock.json` にある SHA-256 のハッシュと照合します。食い違えばインストールを中止します。
 - 版も同じロックで決まっています。最初に使うときに「最新」のリリースを探しにいくことはありません。外部の実行ファイルは、こうした PM の確認の対象外です。
 

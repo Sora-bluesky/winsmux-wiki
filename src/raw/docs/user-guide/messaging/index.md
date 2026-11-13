@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 1824ed531d856e7b47c566b735d3b3daf8de3884
+upstream_blob: 255235024c3dc06a806610c504ab336720b44140
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -894,6 +894,8 @@ gateway:
 ### 再起動の通知 {#restart-notifications}
 
 ゲートウェイが再起動したとき（または処理中のセッションを抱えたまま停止したとき）、各プラットフォームのホームチャンネルへ「エージェントが戻りました」「エージェントが中断されました」というメッセージを 1 回だけ送れます。これは `config.yaml` の `gateway_restart_notification` のフラグでプラットフォームごとに制御し、既定値は `true` です。
+
+ホームチャンネルに届く「シャットダウンします」と「オンラインに戻りました」のお知らせは、必ず対になっています。ゲートウェイが止まることをホームのチャットに一度伝えたら、何によって止まったか（`/restart`、`hermes gateway restart`、あるいは `systemctl restart` のようなサービスマネージャー）に関係なく、次に起動したときにオンラインに戻ったことを伝えます。`--replace` で引き継いだ場合は、どちらのお知らせも送りません。入れ替わったゲートウェイがそのまま応答を続けるからです。短いあいだに何度も停止が続く場合（再起動のループ）は、シャットダウンのお知らせを最大 `gateway.restart_loop_guard.max_restarts` 件まで送ります（既定は 3 件。お知らせどうしの間隔が `max_gap_seconds` 未満のあいだは、一続きのループとして数えます）。そのあとは、ゲートウェイが止まらずに動き続けるようになるまで何も送りません。同じ設定は、セッションを自動で再開するときの再起動ループのブレーカーにも使われます。
 
 送り先は、`platform` と `chat_id` の両方を含む `home_channel` オブジェクトで指定します。
 

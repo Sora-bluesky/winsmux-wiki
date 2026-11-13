@@ -1,6 +1,163 @@
 {
-  "generatedAt": "2026-11-13",
+  "generatedAt": "2026-11-14",
   "entries": [
+    {
+      "date": "2026-11-13",
+      "sha": "df1c926",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/plugins/catalog-submission",
+          "title": "プラグインカタログへの登録申請",
+          "url": "/hermes/docs/developer-guide/plugins/catalog-submission/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/plugins/public-api",
+          "title": "プラグインの公開 API",
+          "url": "/hermes/docs/developer-guide/plugins/public-api/"
+        },
+        {
+          "id": "developer-guide/provider-runtime",
+          "title": "実行時のプロバイダー解決",
+          "url": "/hermes/docs/developer-guide/provider-runtime/"
+        },
+        {
+          "id": "developer-guide/shared-bundle-builds",
+          "title": "共有バンドルビルド",
+          "url": "/hermes/docs/developer-guide/shared-bundle-builds/"
+        },
+        {
+          "id": "guides/automation-blueprints",
+          "title": "自動化の型紙",
+          "url": "/hermes/docs/guides/automation-blueprints/"
+        },
+        {
+          "id": "guides/google-gemini",
+          "title": "Google Gemini",
+          "url": "/hermes/docs/guides/google-gemini/"
+        },
+        {
+          "id": "guides/webhook-github-pr-review",
+          "title": "Webhook で GitHub の PR に自動でコメントする",
+          "url": "/hermes/docs/guides/webhook-github-pr-review/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "user-guide/cli",
+          "title": "CLI 画面",
+          "url": "/hermes/docs/user-guide/cli/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/code-execution",
+          "title": "コードの実行",
+          "url": "/hermes/docs/user-guide/features/code-execution/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
+          "id": "user-guide/features/goals",
+          "title": "続く目標（Goal）",
+          "url": "/hermes/docs/user-guide/features/goals/"
+        },
+        {
+          "id": "user-guide/features/kanban",
+          "title": "カンバン（マルチエージェント盤）",
+          "url": "/hermes/docs/user-guide/features/kanban/"
+        },
+        {
+          "id": "user-guide/features/tts",
+          "title": "音声と読み上げ",
+          "url": "/hermes/docs/user-guide/features/tts/"
+        },
+        {
+          "id": "user-guide/features/voice-mode",
+          "title": "音声モード",
+          "url": "/hermes/docs/user-guide/features/voice-mode/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/messaging/feishu",
+          "title": "Feishu / Lark",
+          "url": "/hermes/docs/user-guide/messaging/feishu/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/relay",
+          "title": "Hermes Relay",
+          "url": "/hermes/docs/user-guide/messaging/relay/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/messaging/webhooks",
+          "title": "Webhook",
+          "url": "/hermes/docs/user-guide/messaging/webhooks/"
+        },
+        {
+          "id": "user-guide/messaging/whatsapp",
+          "title": "WhatsApp",
+          "url": "/hermes/docs/user-guide/messaging/whatsapp/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        },
+        {
+          "id": "user-guide/secrets/bitwarden",
+          "title": "Bitwarden Secrets Manager",
+          "url": "/hermes/docs/user-guide/secrets/bitwarden/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        }
+      ]
+    },
     {
       "date": "2026-11-12",
       "sha": "d7187ad",

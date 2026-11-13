@@ -2,7 +2,7 @@
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: 866344cc3a2affdc18a16b9bd2975b134967d63b
+upstream_blob: 9fdf90e0bf544fb4c8b56589fb46449858e26c82
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -299,7 +299,8 @@ validate` はこれらについて非公開 import の警告を出さず、名�
 |---|---|
 | アダプターの基底クラス、送信結果、メディアキャッシュのヘルパー | `gateway.platforms.base`（公開されている名前） |
 | SSRF に安全な HTTP クライアント（接続時の IP 検証、リダイレクトごとの再確認、共有の keepalive 上限） | `from gateway.platforms.helpers import platform_http_client` |
-| 自前で組み立てるための、そのクライアントの部品 | `gateway.platforms.base.ssrf_redirect_guard`（httpx の `response` フック）、`tools.url_safety.create_ssrf_safe_async_client`、`tools.url_safety.is_safe_url`、`gateway.platforms._http_client_limits.platform_httpx_limits` |
+| 自前で組み立てるための、そのクライアントの部品 | `gateway.platforms.base.ssrf_redirect_guard`（httpx の `response` フック）、`tools.url_safety.create_ssrf_safe_async_client`（同期版: `create_ssrf_safe_client`）、`tools.url_safety.is_safe_url`、`gateway.platforms._http_client_limits.platform_httpx_limits` |
+| 手元の `aiohttp.ClientSession` を使って URL を取得し、リダイレクトのたびに転送先を SSRF の観点で確かめる（認証情報を載せたまま別のオリジンへ移る転送は断り、転送をたどる全体に `total` のタイムアウトを 1 つだけかける） | `async with gateway.platforms.helpers.ssrf_checked_aiohttp_get(session, url, **get_kwargs) as resp:`（弾かれた転送先があると `ValueError` を投げます） |
 | 独自の DM / グループの方針（`dm_policy` / `group_policy` / 許可リスト） | `from gateway.platforms.access_policy_mixin import OwnAccessPolicyMixin` |
 | ネイティブのボタンから承認を確定する | `from tools.approval import resolve_gateway_approval_card`（カードのリクエスト ID を渡します。ID なしで呼んでも何も確定しません。どのリクエストも、最初は「拒否」しか選べない状態で始まります。`_send_exec_approval_prompt` を通して描画してください。そうすれば、カードにコマンド全体が表示された時点で、基底の `send_exec_approval` がその印を外せます。`resolve_gateway_approval` のほうは、保留中のリクエストのうち一番古いものに答えます） |
 | 承認に答えてはいけない人からのクリックを断る（`approvals.approvers` で承認できる人を絞っているときの、承認を求めた本人以外の人。チャットで `allow_admin_from` を設定しているときの、`/approve` / `/deny` を許されていない人） | `from gateway.approval_actor import approval_refusal, refusal_text`：確定する前に `approval_refusal(session_key, clicker_id, extra=self.config.extra, request_id=..., choice=choice)` を呼びます（`choice` を渡すと、チャットのスラッシュコマンドの管理者チェックが、その回答に当たる `/approve` か `/deny` で判定できます）。結果が `None` でなければ、それは承認を求めた人の名前です。その場合は `refusal_text(name)` を使ってクリックした人にだけ返事をし、承認は保留のままにします。そのあと `resolve_gateway_approval_card(session_key, choice, request_id, actor_id=clicker_id, extra=self.config.extra)` で確定します。この関数は、確定する項目と照らし合わせて、クリックした人を同じクリティカルセクションの中で確かめ直します。スラッシュコマンドの確認（slash-confirm）や確認（clarify）のボタンが押されたときも、同じように `slash_confirm_refusal(session_key, confirm_id, clicker_id, extra=...)` と `clarify_refusal(clarify_id, clicker_id, extra=...)` を使います。呼ぶのは `slash_confirm.resolve` / `resolve_gateway_clarify` / `mark_awaiting_text` の前です |

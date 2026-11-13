@@ -2,7 +2,7 @@
 title: "管理者による適用範囲"
 description: "システム全体の管理用ディレクトリを使い、管理者が固定して利用者側では変更できない設定と秘密情報を配る仕組みです"
 upstream_path: user-guide/managed-scope.md
-upstream_blob: 6a10e285c0c4f2fd91b354bad4887e073e2ab6e1
+upstream_blob: c514bab280fc6cef2706980b1b63c67eaaf9e802
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/managed-scope
 ---
@@ -46,8 +46,19 @@ API のベース URL、`security.redact_secrets: true` などを、その端末�
 
 場所は環境変数 `HERMES_MANAGED_DIR` で変更できます
 （コンテナや、`/etc` 以外に置く構成のためです）。これは `HERMES_HOME` と同じく、配置や
-初期設定のための調整項目で、管理下のファイルを所有するのと同じ管理者が設定します。Hermes がこれを
-どこかの `.env` に**書き残すことはありません**。
+初期設定のための調整項目で、管理下のファイルを所有するのと同じ管理者が設定します。Hermes は、どの `.env`、秘密情報の取得元、
+`config.yaml` の最上位のキーにこの変数があっても（大文字・小文字の違いを問わず）無視し、読み飛ばしたときは警告をログに記録します。
+起動時の環境（サービスのユニットの `Environment=` やコンテナのイメージ）で設定し、
+`~/.hermes/.env` には書かないでください。NixOS では `services.hermes-agent.environment` の内容が
+`$HERMES_HOME/.env` に書き込まれるため、この変数を渡すのには使えません。代わりに
+`systemd.services.hermes-agent.environment`（バックエンドも動かす場合は
+`systemd.services.hermes-backend.environment` も）を使うか、対話シェル向けには
+`environment.variables` を使ってください。コンテナモードの場合は、`--env` の項目を
+`services.hermes-agent.container.extraOptions` に加え、ディレクトリを
+`container.extraVolumes` でマウントします。Home Manager のモジュールも
+`services.hermes-agent.environment` を同じ `.env` に書き込みます。そのため、代わりにユーザー単位のユニットで変数を設定してください。
+Linux では `systemd.user.services.hermes-agent.Service.Environment`（と `hermes-backend`）、
+macOS では `launchd.agents.hermes-agent.config.EnvironmentVariables`（と `hermes-backend`）を使います。
 
 ```bash
 # Point managed scope at a custom directory (set by IT / the deployment, not the user)

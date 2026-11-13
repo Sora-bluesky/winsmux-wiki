@@ -8,6 +8,39 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-13
+
+- [プラグインカタログへの登録申請](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
+- [実行時のプロバイダー解決](https://wiki.winsmux.dev/hermes/docs/developer-guide/provider-runtime/)
+- [共有バンドルビルド](https://wiki.winsmux.dev/hermes/docs/developer-guide/shared-bundle-builds/)
+- [自動化の型紙](https://wiki.winsmux.dev/hermes/docs/guides/automation-blueprints/)
+- [Google Gemini](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/)
+- [Webhook で GitHub の PR に自動でコメントする](https://wiki.winsmux.dev/hermes/docs/guides/webhook-github-pr-review/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [コードの実行](https://wiki.winsmux.dev/hermes/docs/user-guide/features/code-execution/)
+- [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+- [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
+- [フォールバックプロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/fallback-providers/)
+- [続く目標（Goal）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/goals/)
+- [カンバン（マルチエージェント盤）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/kanban/)
+- [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
+- [音声モード](https://wiki.winsmux.dev/hermes/docs/user-guide/features/voice-mode/)
+- [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- [Feishu / Lark](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/feishu/)
+- [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
+- [Hermes Relay](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/relay/)
+- [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
+- [Webhook](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/webhooks/)
+- [WhatsApp](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/whatsapp/)
+- [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
+- [Bitwarden Secrets Manager](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/bitwarden/)
+- [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
+
 ## 2026-11-12
 
 - [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)

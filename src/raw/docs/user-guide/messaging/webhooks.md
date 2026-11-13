@@ -2,7 +2,7 @@
 title: "Webhook"
 description: "GitHub や GitLab などのサービスからイベントを受け取り、Hermes のエージェント実行を起こす"
 upstream_path: user-guide/messaging/webhooks.md
-upstream_blob: 7a79083afa7611b8c44ad444a7d9c6c853a1c329
+upstream_blob: d91fa433d34519e08530ab2fbf2910a29abfc4d8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks
 ---
@@ -510,7 +510,9 @@ hermes webhook subscribe github-issues \
 
 実行すると webhook の URL と、自動生成された HMAC シークレットが返ります。送信元サービスがその URL へ POST するように設定してください。
 
-独自の方法で署名するサービス向けに `--signature github`、`gitlab`、`linear` のいずれかを渡さない限り、新しい購読は `--signature generic`（タイムスタンプ付きの V2 または Standard Webhooks）に固定されます。既存の購読を更新しても、固定した方式はそのまま残ります。
+独自の方法で署名するサービス向けに `--signature github`、`gitlab`、`linear` のいずれかを渡さない限り、新しい購読は `--signature generic`（タイムスタンプ付きの V2 または Standard Webhooks）に固定されます。既存の購読を更新しても、固定した方式はそのまま残ります。ダッシュボードで既存のルートを保存し直すときも、`signature` を指定しなければ固定した方式はそのまま残ります（明示的に選んだ場合はその方式に置き換わります）。MCP のイベント購読は、最初に作られたときに `generic` に固定されます。
+
+ダッシュボード（Web ダッシュボードとデスクトップアプリ）の **New subscription** フォームでも、**Signature** の選択欄で同じ選択ができ、既定は `generic` です。GitHub、GitLab、Linear から届くルートでは、そのサービスを選んでください。API から使う場合、`POST /api/webhooks` は省略できる `signature` を受け付けます（`generic`、`github`、`gitlab`、`linear` のいずれかで、それ以外の値には `422` を返します）。指定せずに作った新しいルートは `generic` に固定され、指定せずに POST し直したときは保存済みの固定方式がそのまま残ります。
 
 ### 購読の一覧を見る {#list-subscriptions}
 
@@ -583,7 +585,7 @@ platforms:
 
 挙動と安全面の性質は次のとおりです。
 
-- ルートに書いたリストは、そのルートの実行についてプラットフォーム側の webhook 用ツールセットの解決を**置き換え**ます（併合ではありません）。
+- ルートに書いたリストは、そのルートの実行についてプラットフォーム側の webhook 用ツールセットの解決を**置き換え**ます（併合ではありません）。空のリストを明示的に書いた場合（`toolsets: []`）も上書きとして扱われます。そのルートにはプラットフォーム側のツールセットも MCP サーバーも一切与えられず、`platform_toolsets.webhook: []` と同じ状態になります。
 - 名前は `platform_toolsets` の設定と同じ経路で検証され、知らない名前やプラットフォーム側で制限されたツールセットは捨てられます。
 - `hermes webhook subscribe` には、ツールセットを指定するフラグをあえて用意していません。強い権限を与えるのは設定ファイルを手で編集したときだけなので、エージェントが実行中に自分で購読を作っても `terminal` を自分に与えることはできません。
 - 広いツールセットを与えるのは、送信者を完全に自分で握っていて、本物の HMAC シークレットを設定したルートだけにしてください。正しい署名付きのペイロードをそのルートへ POST できる相手は、実質的にそれらのツールを持つエージェントを動かせます。

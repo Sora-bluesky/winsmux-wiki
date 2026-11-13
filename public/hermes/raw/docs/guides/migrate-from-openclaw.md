@@ -3,14 +3,14 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "OpenClaw から移ってくる"
 description: "OpenClaw / Clawdbot の環境を Hermes Agent へ移すための案内です。何が移るのか、設定がどう対応するのか、移したあとに何を確かめるのかをまとめます。"
 upstream_path: guides/migrate-from-openclaw.md
-upstream_blob: dd662aa7fcdff18c60032cf5e48a1c7566f867a0
+upstream_blob: 3dd52799ff3159d91c861703b05ea9c73a26cf56
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/migrate-from-openclaw
 ---
 
 # OpenClaw から移ってくる {#migrate-from-openclaw}
 
-`hermes import-agent openclaw` は、OpenClaw（あるいは古い Clawdbot / Moldbot）の環境を Hermes に取り込みます。この案内では、何が移るのか、設定のキーがどう対応するのか、移したあとに何を確かめるのかを、ひとつずつ見ていきます。
+`hermes import-agent openclaw` は、OpenClaw（あるいは古い Clawdbot / Moldbot）の環境を Hermes に取り込みます。この案内では、何が移るのか、設定のキーがどう対応するのか、移したあとに何を確かめるのかを、ひとつずつ見ていきます。まずどちらを使うか決めたい場合は、[Hermes Agent と OpenClaw の比較](https://hermes-agent.nousresearch.com/compare/openclaw)をご覧ください。ライセンス、使えるモデル、動かす場所の違いを、出典付きで比べています。
 
 このコマンドは、[プラグインカタログ](/hermes/docs/user-guide/features/plugins/)にある公式の **`agent-importers` プラグイン**が提供します。このプラグインは Claude Code、Codex CLI、Cursor の環境も取り込めます（[ほかのエージェントからの取り込み](/hermes/docs/user-guide/import-from-other-agents/)）。以前の書き方の `hermes claw migrate` も、プラグインを入れたあとならそのまま使え、同じ取り込みを実行します。
 

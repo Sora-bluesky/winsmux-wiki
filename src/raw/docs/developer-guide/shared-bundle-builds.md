@@ -2,7 +2,7 @@
 title: "共有バンドルビルド"
 description: ""
 upstream_path: developer-guide/shared-bundle-builds.md
-upstream_blob: 6ad5b8b2cfac85c8b9d211500aab6dcd24b849ae
+upstream_blob: 514b87c414942b4d4587c377f7c65075b0fffdea
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/shared-bundle-builds
 ---
@@ -249,6 +249,9 @@ uv の環境を明示的に組み立てるために `pm.environment.PythonEnviro
 デスクトップのバンドルには、さらに Webapp が `hermes-agent/apps/desktop/dist-webapp/` に入っています。
 `hermes webapp` はこれを同梱されたままの形で配信し、作り直すことはありません。
 TUI のアセットのディレクトリには、`entry.js` と、モジュールモードのパッケージのメタデータが入っています。
+`tools` ストアには、ユーザーのインストールで使う固定された版の PM ツールが同梱されます。ただし macOS の Chromium は例外で、
+ブラウザーツールが初回の使用時に書き込み可能なストアへインストールします。Chromium を含めないのは、Electron 44.7 より前の
+Squirrel.Mac が 1 GiB 以上の更新用 ZIP をダウンロードできず、v0.22.0 には Electron 40 が同梱されているためです。
 
 Docker は、既存の TUI のプロダクトを `/opt/hermes/ui-tui` に、Web の出力を
 `/opt/hermes/hermes_cli/web_dist` に置いたままにします。アセンブラーは、共有の TUI の
@@ -319,6 +322,10 @@ PM のバイナリのダウンロードアーカイブと、ネイティブの u
   キャッシュされた sdist の `src/` ツリー（Rust の `target/` の出力を含む）はコピーの前に除外します。
   macOS と Linux では、uv の wheel のエントリーは `archive-v0/` を指す相対シンボリックリンクのままなので、
   展開済みの各 wheel は1回だけ同梱されます。Windows では、uv はシンボリックリンクの代わりにポインターファイルを書き出します。
+  Windows 以外では、そのあと、ペイロードの venv がバイト単位で同じ内容を持っている `archive-v0/` の各ファイルを、
+  venv 側のコピーを指す相対リンクに置き換えます。これで macOS の更新用 ZIP が小さくなります。Electron 44.7 より前の
+  Squirrel.Mac は、1 GiB 以上の ZIP をダウンロードできないためです。初回の使用時に行うシード処理で、これらのリンクが指す
+  バイト列がマシンのキャッシュにコピーされます。
   プロバイダーのキャッシュは変わりません。ネイティブの署名は、ビルド専用の成果物を
   走査せずに、展開済みのバイナリに届きます。
 - PM ランタイムとアプリケーションのビルドは、プロバイダーの永続的な uv キャッシュを共有します。

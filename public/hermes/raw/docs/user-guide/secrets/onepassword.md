@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "1Password"
 description: ""
 upstream_path: user-guide/secrets/onepassword.md
-upstream_blob: 906be936ed2d86764daa67fb04ca561318e4d46b
+upstream_blob: f945e6b2b88d42dfe30b883f7de03532fafa5bb4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/secrets/onepassword
 ---
@@ -167,6 +167,7 @@ secrets:
 
 - 1Password のサービスアカウントのトークンは、そのアカウントがアクセスできるシークレットをすべて読めます。保存先は `config.yaml` ではなく `~/.hermes/.env` にして、漏れたら 1Password で失効させて作り直してください。
 - Hermes は、`override_existing: true` であっても、解決した値でトークンの環境変数自体を上書きすることを拒みます。
+- エージェントやそのツールが起動するプロセス（ターミナル、`execute_code`、バックグラウンドのプロセス、cron のスクリプト、CLI の補助ツール）からは、`OP_SERVICE_ACCOUNT_TOKEN` が取り除かれます。`terminal.env_passthrough` やスキルの `required_environment_variables` で再び許可することもできないので、エージェントが実行する `op` にトークンが見えることはありません。一方、同じプロファイルで Hermes 自身が動かすプロセスには、引き続きトークンが渡されます。Hermes が呼び出す `op` の子プロセス、Hermes が起動・再起動するゲートウェイ、`op read` のような `key_cmd` の補助コマンドがこれにあたります。サービスアカウントで `op` を自分で実行したいときは、自分のシェルを使ってください。エージェントのターミナルで `op` を使いたいときは、デスクトップアプリとの連携か Connect サーバーを使ってください。
 - `op` の子プロセスに渡す環境変数は、許可した最小限のもの（認証やセッションの変数、`PATH` / `HOME`、`op` の設定の置き場所を決める変数 `OP_CONFIG_DIR` / `XDG_CONFIG_HOME`）だけで、`os.environ` の丸写しではありません。dotenv を読んだあとのプロバイダーの認証情報が、まとめて子プロセスへ引き継がれることはありません。Hermes を動かすユーザーが `~/.config` に書き込めない場合（コンテナではよくあります）は、`OP_CONFIG_DIR` を設定してください。
 - 参照は `op://` で始まることを検証したうえで、オプションの終端を示す `--` のあとに渡します。細工した値が `op` のフラグとして解釈されることはありません。
 

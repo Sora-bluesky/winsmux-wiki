@@ -2,7 +2,7 @@
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 01a657dada43f3782f1e0586b90087b6171c81b1
+upstream_blob: d9b1155e0dd7535831736b844f3921a440a8d9fe
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -69,6 +69,26 @@ hermes config set OPENROUTER_API_KEY sk-or-...  # Saves to .env
 :::info 目安
 シークレット（API キー、ボットトークン、パスワード）は `.env` に書きます。それ以外のすべて（モデル、ターミナルバックエンド、圧縮の設定、記憶の上限、ツールセット）は `config.yaml` に書きます。両方に設定がある場合、シークレット以外の設定では `config.yaml` が優先されます。
 :::
+
+### Hermes が書き込む認証情報 {#credentials-written-by-hermes}
+
+Hermes 自身が設定項目の認証情報を書き込むときは、値はプロファイルの `.env` に保存され、`config.yaml` にはその値への参照だけが書かれます。対象になるのは、次の項目に対する `hermes config set`、ダッシュボードや Desktop のモデルと補助モデル（auxiliary）の選択画面、そして `hermes model` のカスタムエンドポイントと補助モデルの設定手順です。
+
+| 項目 | `.env` での保存名 | `config.yaml` に書かれる内容 |
+|---|---|---|
+| `model.api_key`（`hermes config set`） | `HERMES_MODEL_API_KEY` | `${HERMES_MODEL_API_KEY}` |
+| ダッシュボードで選んだカスタムエンドポイントの `model.api_key` | `HERMES_CUSTOM_<HOST>[_<PORT>][_<PATH>]_<HASH>_API_KEY` | `${...}` |
+| `auxiliary.<task>.api_key` | `AUXILIARY_<TASK>_API_KEY` | `${AUXILIARY_<TASK>_API_KEY}` |
+| `delegation.api_key` | `HERMES_DELEGATION_API_KEY` | `${HERMES_DELEGATION_API_KEY}` |
+| 新しく追加した `custom_providers` の項目 | `HERMES_CUSTOM_<HOST>[_<PORT>][_<PATH>]_<HASH>_API_KEY` | `key_env: <that name>` |
+| `custom_providers.<N>.api_key`（`hermes config set`） | その項目の `HERMES_CUSTOM_..._API_KEY`（`base_url` のない項目では、項目の名前を使って `HERMES_PROVIDER_<NAME>_<HASH>_API_KEY` になります） | `${...}` |
+| `providers.<name>.api_key`（`hermes config set`）、ダッシュボードの Custom Endpoints の項目 | `HERMES_PROVIDER_<NAME>_<HASH>_API_KEY` | `${...}` |
+
+パスの部分が付くのは、それが `/v1` 以外のときだけです。すべて小文字ではないプラグインのタスクキー（`My_Task`）にも `_<HASH>` が付くので、`my_task` と同じ変数を共有することはありません。`<HASH>` は、エンドポイントの URL（またはプロバイダー名）そのものから求めた16進数8文字です。そのため、`my-host.com` と `my.host.com` のように名前の似たエンドポイントが同じ変数を共有することはありません。`config.yaml` にある別のエンドポイントがすでに読んでいる変数を、異なるキーで上書きしようとすると、Hermes は拒否します。参照の形で入力した値（`hermes config set model.api_key '${MY_KEY}'`）は、入力したとおりに保存されます。これらの変数は、`env_passthrough` に挙げられていても、`inherit_credentials` がオンになっていても、ターミナルやサブプロセスの環境からは必ず取り除かれます。ホスト間で `.env` を共有しないリモートの設定バックエンドを使っている場合は、値は渡されたとおりに保存されます。
+
+動いているゲートウェイは、ターンの始めごとに `.env` を読み直すので、新しく保存したキーは再起動しなくても次のメッセージから使われます。起動時にだけ `.env` を読み、ゲートウェイのターンで動いているわけではないプロセスは、`/reload` か再起動のあとでキーを読み込みます。それまでの間は、キーを保存したばかりの補助タスクが、展開されていない `${VAR}` という文字列をそのままキーとして送ってしまいます。
+
+`config.yaml` にすでに直接書かれている認証情報もそのまま使え、自動で移されることはありませんが、おすすめはしません。`hermes config set <field> <value>` を実行すると、1つずつ手作業で移せます。このコマンドは、値を参照の形に書き換えます。
 
 :::tip 組織での運用
 管理者は、システムレベルの管理用ディレクトリを使って、一般ユーザーが
@@ -3160,7 +3180,8 @@ delegation:
   oneshot_max_children: 2                   # Total subagents a one-shot run (hermes chat -q / --oneshot) may spawn; 0 = unlimited. Interactive and gateway sessions are never capped by this.
   resumable_ttl_hours: 48                   # A child stopped by a restart, crash or provider failure stays continuable (delegate_task action=continue) this long, and its worktree is kept from the startup sweep.
   max_resumable: 32                         # Per profile, how many such children keep their worktree pinned; the oldest beyond it loses its pin (the record stays).
-  auto_resume: false                        # Opt-in: resume such children automatically. Off = you continue them.
+  auto_resume: false                        # Opt-in: the gateway resumes children stopped by a limit (at its reset) or a restart/crash, at most twice each, silently (no completion while it waits; see delegate_task list), until you stop it, /stop or /new. Spends tokens unattended. Off = you continue them.
+  auto_resume_deadline_minutes: 360         # With auto_resume: give up this long after a child's first stop and send the parent one failure.
   gateway_mode: auto                        # Gateway sessions: auto | inline | background. auto = join children inside the turn (one answer) on a messaging chat whose display.interim_assistant_messages is off. See Subagent Delegation → Messaging chats without interim messages.
 ```
 
@@ -3170,7 +3191,7 @@ delegation:
 
 **サブエージェントのフォールバックチェーン:** `delegation.fallback_providers` を設定すると、ワーカーに専用のチェーンを持たせられます（項目の形はトップレベルのリストと同じです）。プロバイダー、エンドポイント、モデルのいずれかを明示的に固定した子は、このチェーンが宣言されているときだけそれを使います。宣言されていなければ、親エージェントの経路を借りずに、はっきりとエラーを出して失敗します。固定していない子では、この設定がないか `null` のとき、親のチェーンをそのまま引き継ぎます。子のフォールバック（失敗したときの切り替え先）を完全に無効にするには、`delegation:` の下に `fallback_providers: []` を書きます。
 
-**エンドポイントを直接指定する上書き:** カスタムエンドポイントをいちばん素直な方法で使いたいときは、`delegation.base_url`、`delegation.api_key`、`delegation.model` を設定します。こうするとサブエージェントはその OpenAI 互換のエンドポイントへ直接送られ、`delegation.provider` よりこちらが優先されます。`delegation.api_key` を省いた場合、Hermes が切り替える先は `OPENAI_API_KEY` だけです。`delegation.base_url` と一緒に `delegation.provider` も設定した場合、優先されるのはやはり明示したエンドポイントとキーですが、そのプロバイダーのリクエスト設定（`custom_providers` の項目にある `extra_body` の上書きと最大出力トークン数）はサブエージェントに引き継がれます。
+**エンドポイントを直接指定する上書き:** カスタムエンドポイントをいちばん素直な方法で使いたいときは、`delegation.base_url`、`delegation.api_key`、`delegation.model` を設定します。こうするとサブエージェントはその OpenAI 互換のエンドポイントへ直接送られ、`delegation.provider` よりこちらが優先されます。`delegation.api_key` を省き、`delegation.provider` でプロバイダーを名前で指定している場合（`custom`/`auto` 以外）、`delegation.base_url` はそのプロバイダーのエンドポイントの上書きとして扱われます（メインのエージェントにとっての `model.base_url` と同じです）。このときサブエージェントは、そのプロバイダー自身のキーを使います（たとえば、token-plan の URL で `provider: xiaomi` を使うなら `XIAOMI_API_KEY`）。親エージェントのキーが使われることはありません。プロバイダーを名前で指定していない場合は、`delegation.api_key` を省くと親エージェントのキーを引き継ぎます。`delegation.base_url` と `delegation.api_key` と一緒に `delegation.provider` も設定した場合、優先されるのは明示したエンドポイントとキーですが、そのプロバイダーのリクエスト設定（`custom_providers` の項目にある `extra_body` の上書きと最大出力トークン数）はサブエージェントに引き継がれます。
 
 **子ごとのリクエスト設定（`request_overrides`）:** `delegation.request_overrides` は、サブエージェントが API を呼ぶたびに毎回送るリクエスト設定の dict です。トップレベルのキーは API の引数（kwargs）です（例: `service_tier`）。サブの dict として `extra_body` を書くと、リクエストの `extra_body` にマージされます。この設定は、接続先を決める**3つすべての**分岐（`base_url` の直接指定、名前で指定した `provider`、親からそのまま継承する場合）で使われるので、どの場合でも必ず効きます。優先順位: 明示した `request_overrides` の値は、実行時に決まった上書きや親から来た上書きの**上から**マージされます。トップレベルでは明示したキーが勝ち、`extra_body` は1階層だけ深くマージされます。そのため、実行時の `extra_body` のキー（たとえば、あるプロバイダーに設定された `thinking: {type: disabled}` という性格づけ）は、同じキーを定義し直さない限り残ります。代表的な使い方は、委任した子に OpenRouter のルーティングのヒントを渡すことです。
 

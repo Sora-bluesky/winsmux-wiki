@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "WhatsApp"
 description: "内蔵の Baileys ブリッジを使って Hermes Agent を WhatsApp のボットとして設定する"
 upstream_path: user-guide/messaging/whatsapp.md
-upstream_blob: 2094b29a81a86120571d7dea362915ee9f47f4dc
+upstream_blob: 2063ca407f7376e166ac6f33987bed0615978cdf
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/whatsapp
 ---
@@ -76,6 +76,11 @@ platforms:
 `session_path` を上書きする場合は、プロファイルごとに別の値にしてください。同じ値にすると、プロファイル同士で
 1つの WhatsApp のログインを共有することになります。古い Hermes が起動したブリッジはセッションのディレクトリを報告しないので、
 ブリッジを更新したときと同じように一度だけ再起動されます。
+
+ゲートウェイがクラッシュして動いたまま残ったブリッジを引き継ぐのは、そのゲートウェイが自分で立ち上げるときと同じ設定で起動されていた場合だけです。
+比べるのは、個別のメッセージとグループの方針、許可リスト、使い方、返事の先頭に付ける文字、既読の通知、そのほかのブリッジの設定と、
+ブリッジの `package.json` です。一致しなければ、連携をやり直さずにブリッジを再起動します。
+こうした記録を持たないブリッジ（古い Hermes が起動したもの）は、一度だけ再起動されます。
 
 ### ブリッジの API の認証 {#bridge-api-authentication}
 
@@ -229,7 +234,10 @@ whatsapp:
 取りこぼしません。送り主の許可リストを置いていない場合、
 `allowlist` はグループ JID の一覧だけを信頼して、載っているグループの参加者全員を通します。`open` のほうは、やはり参加者がペアリング済みか
 `WHATSAPP_ALLOW_ALL_USERS=true` である必要があります。初期状態では、通したグループのメッセージにはボットが毎回返します。
-`require_mention: true` / `WHATSAPP_REQUIRE_MENTION=true` にすると、@メンション・ボットへの返信・`/commands` のときだけ返すようになります（`free_response_chats` に入れたグループは対象外です）。
+`require_mention: true` / `WHATSAPP_REQUIRE_MENTION=true` にすると、@メンション・ボットへの返信・`/commands` のときだけ返すようになります（`free_response_chats` に入れたグループは対象外です）。ボットを呼ぶ言葉を正規表現で決めたいときは `mention_patterns` に書きます。
+文字の添えられていないボイスメモがこれに一致するのは、`voice_mention_patterns: true` にした場合だけです。この設定では、グループのボイスメモを先に文字に起こします
+（初期状態では無効です。有効にすると、ボットあてでないボイスメモもすべて音声認識の提供元に送られます。
+そのターンでは、起こした文字をそのまま使います）。
 
 そのあとゲートウェイを起動します。
 
@@ -282,7 +290,7 @@ whatsapp:
   send_read_receipts: false                 # Mark accepted inbound messages as read (blue ticks)
 ```
 
-`send_read_receipts` が `true` のとき、アダプターは個別・グループ・メンションの絞り込みを通ったメッセージを既読にします。弾かれたメッセージ（許可リストにない相手からのものなど）は既読になりません。プライバシーへの配慮から初期状態では無効です。この設定を変えると、次に接続するときブリッジの子プロセスが自動で立ち上げ直されます。
+`send_read_receipts` が `true` のとき、アダプターは個別・グループ・メンションの絞り込みを通ったメッセージを既読にします。弾かれたメッセージ（許可リストにない相手からのものなど）は既読になりません。プライバシーへの配慮から初期状態では無効です。この設定を変えると、ほかのブリッジの設定（個別のメッセージとグループの方針、許可リスト、メンションの設定、使い方、`reply_prefix`、デバッグ、持ち主のメッセージの転送、メッセージの長さ、分割して送る間隔、送信のタイムアウト、メディアのキャッシュのディレクトリ）やブリッジの `package.json` を変えたときと同じように、次に接続するときブリッジの子プロセスが立ち上げ直されます。連携をやり直す必要はありません。
 
 Hermes が送ったメッセージが届いたか、読まれたかは `gateway.log` に記録されます。状態が変わるたびに1行ずつ書かれます（`server_ack`、`delivered`、`read`、`played`、または WhatsApp のエラーコード付きの `error`）。グループでは、相手ごとの受信や既読の知らせがそれぞれ `recipient=` 付きの別の行になります。連携している電話で人が打ち込んだメッセージは記録されません。
 
@@ -346,6 +354,49 @@ gateway:
 ### 引用した返信 {#quoted-replies}
 
 以前のメッセージに返信する（引用する）と、エージェントは引用された文面を文脈として受け取ります。画像、ボイスメモ、動画、文書を引用すると、そのファイルもそのターンに添えられるので、引用した画像の下に「これは何？」と書けば通じます。添付がほかの人から届いたものでも、ボット自身が送ったもの（cron で届いたグラフや生成した画像）でも同じです。WhatsApp が引用に付けて送るのはサムネイルの切れ端だけなので、ファイルはブリッジのダウンロードのキャッシュ（受け取ったメディア。ブリッジが動いているあいだだけメモリに保持）か、ボット自身が送ったものを記録した手元の索引（直近 1000 件）から引き当てます。それより古いものを引用しても、ファイルは添えられません。
+
+---
+
+## 顧客に応対するボット {#customer-facing-bot}
+
+初期設定は、許可リストに載っているのがあなたとあなたのチームだけであることを前提にしています。ボットの番号で
+顧客に応対する場合（`WHATSAPP_ALLOWED_USERS=*`、`WHATSAPP_ALLOW_ALL_USERS=true`、または顧客の
+番号を並べた一覧）、許可リストに載っている人はみな同じように信頼されます。そのため、公開する前に
+ゲートウェイの守りを固めてください。
+
+```yaml
+# ~/.hermes/config.yaml
+display:
+  platforms:
+    whatsapp:
+      tool_progress: "off"              # or "log": no tool-progress bubbles in the chat
+      interim_assistant_messages: false # no mid-turn commentary, only the final reply
+
+platforms:
+  whatsapp:
+    home_channel:                       # or WHATSAPP_HOME_CHANNEL in ~/.hermes/.env
+      platform: whatsapp
+      chat_id: "15551234567@s.whatsapp.net"   # your operator chat, not a customer's
+      name: Operator
+    extra:
+      allow_admin_from:                 # only these senders may run admin slash commands
+        - "15551234567@s.whatsapp.net"
+      group_allow_admin_from:           # same, for group chats (DM admins are not group admins)
+        - "15551234567@s.whatsapp.net"
+      # user_allowed_commands: [new]    # optional: commands customers may still run
+```
+
+- **`tool_progress`** は WhatsApp では初期値が `new` なので、エージェントが動かすツールが一つずつ顧客に見えてしまいます。
+- **`interim_assistant_messages`** は初期値が `true` なので、エージェントがターンの途中で書く説明も顧客に見えてしまいます。
+- **ホームチャンネル:** 設定していないと、新しいセッションでの最初のメッセージ（新しい顧客や、
+  `/new` を実行したあとの人）には、送り主が誰でも「type /sethome」という案内が返ります。また、`/sethome` を実行した人なら誰でも
+  cron や通知の配信先を自分に切り替えられてしまいます。ここには自分のチャットを設定してください。
+- **`allow_admin_from`**（個別のメッセージ）と **`group_allow_admin_from`**（グループ）を設定すると、[スラッシュコマンドのアクセス制御](/hermes/docs/reference/slash-commands/#permissions-and-adminuser-split) が有効になります。
+  顧客が使えるのは `/help` と `/whoami`（と `user_allowed_commands` に入れたもの）だけになり、
+  `/sethome` は実行できず、`/sethome` の案内も届かなくなります。一覧に書く正確な ID は、自分の電話から `/whoami` を送ると
+  確かめられます。
+
+`hermes whatsapp` は、ボットの使い方で全員を許可していて、ホームチャンネルが設定されていないとき、この節を案内する警告を表示します。
 
 ---
 

@@ -2,7 +2,7 @@
 title: "Matrix"
 description: "Hermes Agent を Matrix のボットとして設定する"
 upstream_path: user-guide/messaging/matrix.md
-upstream_blob: 184929217fef463cf5fd93bef9e5ae9de7deda04
+upstream_blob: d5db1ba2e4eb4daec520828126bc4baa3524d506
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/matrix
 ---
@@ -324,6 +324,14 @@ MATRIX_IGNORE_USER_PATTERNS='^@telegram_,^@slack_,^@whatsapp_'
 ```bash
 MATRIX_PROCESS_NOTICES=true
 ```
+
+処理された通知は、ボットからのメッセージとして扱われます。ゲートウェイのボット用のループ防止が働き、
+ペアリングの返信が送られることはありません。`m.notice` はどの Matrix ユーザーでも送れるため、通知だからといって
+権限が与えられることはありません。通知の送り手にも `MATRIX_ALLOWED_USERS`（または人を許可するほかの段階）が必要です。
+ループ防止は、やり取りを打ち切る役目も持っています。既定では、Hermes がある通知の送り手に一度答えると、
+その送り手の次の通知には返信しません。これは、誰かがルームで普通のメッセージを送るか、ルームで通知が
+10 分間途絶えるまで続きます。行き来のやり取りが必要な運用では、`config.yaml` で
+`gateway.bot_loop_guard.bot_replies_expect_reply: true` を設定します（それでも往復は `max_hops` までで、既定は 4 回です）。
 
 ルーム全体への通知の送信は既定で無効です。`@room` で全員を呼び出してよいとはっきり
 決めたボットでないかぎり、`MATRIX_ALLOW_ROOM_MENTIONS=false` のままにしてください。

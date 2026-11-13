@@ -2,14 +2,14 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 49f2e7444101cad4ad59baa8be970522b0363dc3
+upstream_blob: 2c6e3a34bf0ac7b2e707e1f7194338cdf742f1b3
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
 
 # 環境変数の一覧 {#environment-variables-reference}
 
-Hermes は環境変数をプロセスの環境から読み、利用者が管理する秘密については `~/.hermes/.env` からも読みます。API キー、ボットのトークン、OAuth の秘密といった資格情報は `.env` に置いてください。秘密でない振る舞いの設定は、設定キーがあるなら `config.yaml` のほうをおすすめします。以下にはプロセス限りの上書きや、内部の橋渡しに使う変数も含まれます。ここに載っているからというだけで `.env` に書き込むべきではありません。
+Hermes は環境変数をプロセスの環境から読み、利用者が管理する秘密については `~/.hermes/.env` からも読みます。API キー、ボットのトークン、OAuth の秘密といった資格情報は `.env` に置いてください。秘密でない振る舞いの設定は、設定キーがあるなら `config.yaml` のほうをおすすめします。以下にはプロセス限りの上書きや、内部の橋渡しに使う変数も含まれます。ここに載っているからというだけで `.env` に書き込むべきではありません。プラットフォームの YAML の橋渡し（および Telegram/Signal の呼びかけの予備設定）が書き込んだ値は、その設定が変わると更新されます。デーモンが置き換わった場合も同じです。YAML 全体の読み込みに成功したあとは、キーを削除すると、橋渡しが書き込んだまま変更されていない値も取り消されます。読み込みに失敗した場合はこの後片付けは行われません。また、プロセスで明示的に設定した値や、利用者の `.env`、管理用の `.env` の値は引き続き優先されます。橋渡しは自分が書き込んだものを `HERMES_BRIDGED_<NAME>` 変数で記録します。この変数が持つのは値そのものではなく値の SHA-256 ダイジェストで、エージェントのすべての子プロセスからは取り除かれます。プロセスでエクスポートした値が、橋渡し自身が以前書き込んだ値とたまたま同じだった場合は、橋渡しのものとして扱われ、`config.yaml` に従います。
 
 ## LLM の提供元 {#llm-providers}
 
@@ -259,7 +259,7 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `TERMINAL_TIMEOUT` | コマンドのタイムアウト（秒） |
 | `TERMINAL_LIFETIME_SECONDS` | ターミナルセッションを保つ最長の時間（秒） |
 | `TERMINAL_CWD` | ゲートウェイや定時実行のターミナルセッションの作業ディレクトリを直接上書きする、古い方法です。`config.yaml` の `terminal.cwd` をおすすめします。CLI は今も起動時のディレクトリを使います。 |
-| `SUDO_PASSWORD` | 対話の確認なしで sudo を使えるようにします |
+| `SUDO_PASSWORD` | 対話の確認なしで sudo を使えるようにします。値はコマンドを実行するバックエンドへ送られます。[sudo への対応](/hermes/docs/user-guide/features/tools/#sudo-support) を参照してください |
 
 クラウドのサンドボックスをバックエンドにする場合、残るのはファイルシステムの中身です。`TERMINAL_LIFETIME_SECONDS` は、使われていないターミナルセッションを Hermes がいつ片付けるかを決めます。あとから再開するときはサンドボックスを作り直すことがあり、動いていたプロセスがそのまま残るとは限りません。
 
@@ -323,7 +323,11 @@ Anthropic の認証については、Claude Code 自身の資格情報ファイ�
 | `TELEGRAM_CRON_THREAD_ID` | 定時実行の配信を受けるフォーラムのトピック ID。定時実行に限って `TELEGRAM_HOME_CHANNEL_THREAD_ID` より優先されます。トピックを使う運用ではこれを設定してください。定時実行のメッセージへの返信が、システムの入口ではなく新しいセッションを開くようになります（#24409）。 |
 | `TELEGRAM_WEBHOOK_URL` | webhook 方式で使う公開の HTTPS URL（設定すると、問い合わせ方式ではなく webhook になります） |
 | `TELEGRAM_WEBHOOK_PORT` | webhook のサーバーが待ち受ける手元のポート（既定: `8443`） |
+| `TELEGRAM_WEBHOOK_HOST` | webhook のサーバーが待ち受ける手元のホスト。既定: 未設定 → すべてのインターフェースで IPv4 と IPv6 の両方（デュアルスタック）で待ち受けます。IPv6 だけの環境（Fly.io の 6PN など）では明示的に設定してください。`platforms.telegram.extra.webhook_host` と同じです。 |
 | `TELEGRAM_WEBHOOK_SECRET` | 検証のために Telegram が更新のたびに返してくる秘密のトークン。**`TELEGRAM_WEBHOOK_URL` を設定するなら必須です** — 無いとゲートウェイが起動を拒みます（GHSA-3vpc-7q5r-276h）。`openssl rand -hex 32` で作ってください。 |
+| `TELEGRAM_ALLOW_BOTS` | ほかのボットからのメッセージを処理するかどうかを決めます（`none` = ボットのメッセージをすべて拒否、`mentions` = このボットが @メンションされたときだけ許可、`all` = ボットのメッセージをすべて許可。既定: `none`）。`telegram.allow_bots` と同じです。 |
+| `TELEGRAM_GUEST_MODE` | 許可リストに無いグループでも、毎回はっきり @メンションしたときに限ってボットを動かせるようにします（既定: `false`）。`telegram.guest_mode` と同じです。 |
+| `TELEGRAM_OBSERVE_UNMENTIONED_GROUP_MESSAGES` | メンションされていないグループのメッセージを、応答はせずに共有のセッションの文脈へ取り込みます。対象は許可リストにあるチャットやトピックだけです（既定: `false`）。`telegram.observe_unmentioned_group_messages` と同じです。 |
 | `TELEGRAM_REACTIONS` | 処理中にメッセージへ絵文字のリアクションを付けます（既定: `false`） |
 | `TELEGRAM_REQUIRE_MENTION` | Telegram のグループでは、はっきりした呼びかけがないと応答しないようにします。`config.yaml` の `telegram.require_mention` と同じです。 |
 | `TELEGRAM_MENTION_PATTERNS` | Telegram のグループで呼びかけの判定を有効にしたときに受け付ける、呼びかけ語の正規表現。JSON の配列、改行区切り、カンマ区切りのいずれかで書けます。`telegram.mention_patterns` と同じです。 |

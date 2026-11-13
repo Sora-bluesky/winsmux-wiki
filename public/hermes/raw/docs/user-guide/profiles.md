@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プロファイル: 複数のエージェントを動かす"
 description: ""
 upstream_path: user-guide/profiles.md
-upstream_blob: 1f1ef68c86cd617b08a52065a7769e01367fb710
+upstream_blob: 9cbe6877e3af3abdad81b7960d299591290fe685
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profiles
 ---
@@ -70,6 +70,8 @@ hermes profile create mybot
 ```
 
 同梱スキルを入れた新しいプロファイルができます。API キー（ボットのトークンと許可リストは除きます）とモデルはいま使っているプロファイルから受け継ぎ、ログイン情報は既定のプロファイルのものを共有します。Desktop のボットページで既定になっている「Share keys & accounts」と同じ動きです。ゲートウェイのトークンは `mybot setup` を実行して設定してください。
+
+複製したプロファイルが自分のモデルを選んでいない場合は、プロバイダのモデル一覧を問い合わせずに、いま使っているプロファイルのモデルを作成時に受け継ぎます。プロバイダとモデルは複製元で選んでいたものに固定されますが、URL と資格情報の参照先には新しいプロファイルの環境が使われます。複製元のモデル単位のキー、キーの参照先、コンテキスト長の設定はコピーされません。モデルをはっきり指定した場合は、これまでどおりその指定が検証されます。
 
 - `--isolated-auth` を付けると、ログイン情報（`auth.json`）を共有せずに一度だけコピーします。名前付きのプロファイルをもとに作った場合は、常にそのプロファイルのログイン情報のコピーが渡されます。ただし、サブスクリプションのログイン（使い捨ての OAuth）はコピーできないため、そのプロバイダについては新しいプロファイルが既定のプロファイルのログインを読みます。その旨は `profile create` が表示します。
 - `--no-credentials` を付けると、キーもログイン情報もモデルもコピーしません。作成後に `mybot setup` を実行してください。

@@ -2,14 +2,14 @@
 title: "xAI Grok OAuth（SuperGrok / X Premium+）"
 description: "SuperGrok または X Premium+ のサブスクリプションでサインインして、Hermes Agent から Grok モデルを使う — API キーは不要"
 upstream_path: guides/xai-grok-oauth.md
-upstream_blob: 6645229a0c1ebf523850c611aa591a67f786df44
+upstream_blob: 1352a9c7c7d73d655e6ee27857713e85a4f7e889
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/xai-grok-oauth
 ---
 
 # xAI Grok OAuth（SuperGrok / X Premium+） {#xai-grok-oauth-supergrok-x-premium}
 
-Hermes Agent は、[accounts.x.ai](https://accounts.x.ai) に対するブラウザ経由のデバイスコード方式の OAuth ログインで xAI Grok に対応しています。使えるのは **SuperGrok のサブスクリプション**（[grok.com](https://x.ai/grok)）か、**X Premium+ のサブスクリプション**（連携した X アカウント）のどちらかです。`XAI_API_KEY` は要りません。一度ログインすれば、Hermes が裏でセッションを自動的に更新し続けます。
+Hermes Agent は、[accounts.x.ai](https://accounts.x.ai) に対するブラウザ経由のデバイスコード方式の OAuth ログインで xAI Grok に対応しています。使えるのは **SuperGrok のサブスクリプション**（[grok.com](https://x.ai/grok)）か、**X Premium+ のサブスクリプション**（連携した X アカウント）のどちらかです。`XAI_API_KEY` は要りません。一度ログインすれば、Hermes が裏でセッションを自動的に更新し続けます。2 つの製品を比べたい場合は、[Hermes Agent と Grok Bot の比較](https://hermes-agent.nousresearch.com/compare/grok-bot) をご覧ください。モデルの選び方、対応プラットフォーム、料金を出典付きでまとめています。
 
 Premium+ に入っている X アカウントでサインインすると、xAI がそのサブスクリプションの状態を自動的に xAI のセッションへ結び付けます。そのため OAuth の流れは、SuperGrok を直接契約している場合とまったく同じになります。
 

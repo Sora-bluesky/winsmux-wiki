@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 186 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `273fb85`（2026-11-12）時点。この一覧は上流の docs から機械生成しています。
+上流 `04903d9`（2026-11-13）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（44）
 
@@ -26,8 +26,8 @@ raw: /hermes/raw/skills.md
 | [Apple Reminders](/hermes/docs/user-guide/skills/bundled/apple/apple-apple-reminders/) | Apple Reminders via remindctl: add, list, complete | 2026-09-20 |
 | [Findmy](/hermes/docs/user-guide/skills/bundled/apple/apple-findmy/) | Track Apple devices/AirTags via FindMy.app on macOS | 2026-09-20 |
 | [Imessage](/hermes/docs/user-guide/skills/bundled/apple/apple-imessage/) | Send and receive iMessages/SMS via the imsg CLI on macOS | 2026-09-20 |
-| [Claude Code](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/) | Delegate coding to Claude Code CLI (features, PRs) | 2026-10-28 |
-| [Codex](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/) | Delegate coding to OpenAI Codex CLI (features, PRs) | 2026-09-20 |
+| [Claude Code](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/) | Delegate coding to Claude Code CLI (features, PRs) | 2026-11-12 |
+| [Codex](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/) | Delegate coding to OpenAI Codex CLI (features, PRs) | 2026-11-12 |
 | [Computer Use](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use/) | Drive the desktop background-first; escalate on signal | 2026-10-23 |
 | [Hermes Agent](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/) | Use, configure, theme, extend, and orchestrate Hermes Agent | 2026-11-02 |
 | [Architecture Diagram](/hermes/docs/user-guide/skills/bundled/creative/creative-architecture-diagram/) | Dark-themed SVG architecture/cloud/infra diagrams as HTML | 2026-09-20 |
@@ -78,7 +78,7 @@ raw: /hermes/raw/skills.md
 | [Blackbox](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox/) | Delegate coding tasks to the Blackbox AI multi-model CLI | 2026-09-20 |
 | [Dynamic Workflow](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-dynamic-workflow/) | Plan-in-code fan-outs, adversarial verification, waves | 2026-09-19 |
 | [Grok](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok/) | Delegate coding to xAI Grok Build CLI (features, PRs) | 2026-09-20 |
-| [Opencode](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/) | Delegate coding to OpenCode CLI (features, PR review) | 2026-10-28 |
+| [Opencode](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/) | Delegate coding to OpenCode CLI (features, PR review) | 2026-11-12 |
 | [Openhands](/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands/) | Delegate coding to OpenHands CLI (model-agnostic, LiteLLM) | 2026-10-28 |
 | [Evm](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-evm/) | Read-only EVM client: wallets, tokens, gas across 8 chains | 2026-09-20 |
 | [Hyperliquid](/hermes/docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid/) | Hyperliquid market data, account history, trade review | 2026-09-20 |
@@ -191,7 +191,7 @@ raw: /hermes/raw/skills.md
 | [Research Paper Writing](/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/) | Write ML papers for NeurIPS/ICML/ICLR: design→submit | 2026-09-20 |
 | [Rss Feeds](/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/) | Read RSS, Atom, JSON feeds; discover feeds behind a page | 2026-09-20 |
 | [Scrapling](/hermes/docs/user-guide/skills/optional/research/research-scrapling/) | Scrape sites with stealth browsing and Cloudflare bypass | 2026-11-03 |
-| [1Password](/hermes/docs/user-guide/skills/optional/security/security-1password/) | Set up op CLI, sign in, and read or inject secrets | 2026-09-20 |
+| [1Password](/hermes/docs/user-guide/skills/optional/security/security-1password/) | Set up op CLI, sign in, and read or inject secrets | 2026-11-13 |
 | [Godmode](/hermes/docs/user-guide/skills/optional/security/security-godmode/) | Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN | 2026-11-11 |
 | [Oss Forensics](/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/) | GitHub supply-chain forensics: recovery, IOCs, reporting | 2026-09-20 |
 | [Sherlock](/hermes/docs/user-guide/skills/optional/security/security-sherlock/) | Find accounts for a username across 400+ platforms | 2026-09-20 |

@@ -2,7 +2,7 @@
 title: "ツールセット一覧"
 description: "Hermes の中核・複合・プラットフォーム・動的の各ツールセットをまとめた一覧です。"
 upstream_path: reference/toolsets-reference.md
-upstream_blob: e6e4c508cacb6cfcf3277f6dec2636f41b8118f4
+upstream_blob: e139fde28b0c3ed3994a45e91a3cb4a5c8dee325
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference
 ---
@@ -135,6 +135,8 @@ mcp_servers:
 ```
 
 こうしてできた `mcp-github` は、`--toolsets` やプラットフォームの設定から名指しできます。サーバー名をそのまま書いた `github` も、別名として使えます。初めから入っているツールセットと同じ名前（`browser`、`web`）をサーバーに付けた場合、その名前は、初めから入っているツールと、そのサーバーの `mcp__<server>__*` のツールの**両方**を指します。どちらか一方がもう一方を隠すことはありません。
+
+`platform_toolsets.<platform>` では、リストに MCP サーバーの名前が一つもなければ有効なサーバーがすべて使われ、サーバーの名前を挙げればそのサーバーだけが使われます。`no_mcp` を書くと、MCP サーバーはすべて外れます。中身が空だとはっきり書いたリスト（`email: []`）では、MCP サーバーは一つも使われません。
 
 ### プラグインのツールセット {#plugin-toolsets}
 

@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: c8445443a6be7abb5632fa8bb5672cf55729469a
+upstream_blob: 0f8baca01480ab36ff511cc9e04884b3c7771295
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -956,6 +956,16 @@ conn.execute("CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY)")
 
 プラグインごとに1つのディレクトリを使うことで、どのプラグインのデータも1つの予測可能な場所で調べられます。シークレットはここには属しません — 認証情報の読み取りは、他のどこでも同じように、標準の `.env` / secret-scope の経路を通ります。
 
+### テキストを保存・送信する前にシークレットを伏せる {#redact-secrets-before-storing-or-sending-text}
+
+プラグインが保存したりアップロードしたりするテキスト（トランスクリプト、差分、ログなど）には、利用者が貼り付けた API キーが含まれていることがあります。Hermes の内部モジュールを import するのではなく、先に `ctx.redact_text()` に通してください。
+
+```python
+safe = ctx.redact_text(transcript, force=True)  # force: this text leaves the machine
+```
+
+これは Hermes 自身の出力に使われているのと同じ伏せ字処理を、最も強い設定で使います。接頭辞の付いたキーは `«redacted:sk-…»` のような目印に置き換わり、キーの文字は1文字も残りません。`API_KEY=…` のような代入も隠されます。`ctx.register_redaction_patterns()` で登録したパターンも適用されます。`force` を付けない場合、`security.redact_secrets: false` を設定している利用者には、テキストが手を加えられないまま返ります。
+
 ### スキルを同梱する {#bundle-skills}
 
 プラグインは、エージェントが `skill_view("plugin:skill")` で読み込むスキルファイルを同梱できます。`__init__.py` でそれらを登録します。
@@ -1035,7 +1045,7 @@ def open_skill(name):
 ### Hermes 自身のヘルパーでファイルパスを確かめ、YAML を読む {#check-file-paths-and-read-yaml-with-hermess-own-helpers}
 
 モデルが選んだパス（添付ファイル、書き出し先、要約するファイルなど）を読み書きするプラグインは、Hermes 自身のファイルツールが拒否するのと
-同じパスを拒否してください。認証情報の保管場所、skills-hub のキャッシュ、プロジェクトの `.env` ファイル、そして
+同じパスを拒否してください。認証情報の保管場所、skills-hub のキャッシュ、プロジェクトの `.env` ファイル、デバイスファイルと `/proc` のプロセスファイル、そして
 `HERMES_WRITE_SAFE_ROOT` の外にあるものすべてです。独自の拒否リストを持つのではなく、
 次の関数を呼んでください。
 
@@ -1062,6 +1072,21 @@ def load_recipe(path):
 validate` はこの書き方を受け入れますが、`import agent.file_safety` のようにモジュールだけを import すると、内部の import として報告します。
 Hermes 自身の設定を読むときは、`config.yaml` を自分で解析せず、`hermes_cli.config` の `load_config_readonly()` を
 使ってください。
+
+### 認証情報付きの HTTP リクエストを、リダイレクトで漏らさずに送る {#send-a-credentialed-http-request-without-leaking-it-on-redirect}
+
+素の `urllib.request.urlopen` は、別のホストへのリダイレクトを追いかけるときも、`Authorization` ヘッダーを付けたまま送ってしまいます。`hermes_cli.urllib_security.open_credentialed_url(request, timeout=...)` は、Hermes 自身のプロバイダー呼び出しと同じやり方で `urllib.request.Request` を開きます。リダイレクトで元のオリジンを離れるときは認証情報のヘッダーを外し、プロセスに設定済みの opener（プロキシや TLS の信頼設定）はそのまま使います。
+
+```python
+import urllib.request
+
+from hermes_cli.urllib_security import open_credentialed_url
+
+def fetch_models(base_url, api_key):
+    request = urllib.request.Request(f"{base_url}/models", headers={"Authorization": f"Bearer {api_key}"})
+    with open_credentialed_url(request, timeout=10) as response:
+        return response.read()
+```
 
 ### 言語パックを同梱する {#ship-a-language-pack}
 

@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: a251c80661ff40aabe95682708c07e7ebfe60342
+upstream_blob: d9294e95b9bc560d2c02771007bc2d30eb694ba0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -1120,6 +1120,100 @@ plugins:
 - `input()` はファイルの終わり（EOF）を受け取ります。ゲートウェイにはターミナルがありません。ツールの結果かスラッシュコマンドを通して尋ねてください。
 
 従来の CLI のプロセスそのもの（たとえばプラグインのスラッシュコマンド）では、`ctx.session_cwd()` は起動したディレクトリで、`ctx.session_surface()` は `"cli"` です。
+
+## 独自のチャットクライアントを持つプラグイン {#a-plugin-with-its-own-chat-client}
+
+プラグインは、独自のチャットの画面（フロントエンド）を起動するコマンド（`hermes <name>`。`ctx.register_cli_command` で足します）を加えられます。そのフロントエンドは `hermes gateway attach --json` を使って、プロファイルが共有するゲートウェイにつながります（[プログラムからの連携](/hermes/docs/developer-guide/programmatic-integration/)を参照）。
+
+このコマンドが使えるのは、プラグインが Hermes のプロセスの中で動いているとき（`plugins.isolation: in_process`、既定）だけです。`plugins.isolation: host` では Hermes が `ctx.register_cli_command` を飛ばすので、`hermes <name>` はコマンドとして存在しません。
+
+次の3つを import すると、Hermes のターミナルクライアントの起動役（ランチャー）が自分のクライアントの前後で行っていることを、同じように行えます。
+
+- `hermes_cli.gateway_chat.shell_client_env()` は、コマンドを実行したシェルの変数のうち、許可リストに載っているものを dict で返します。環境を変える前にランチャーの中で呼び、その dict を `session.create` の `client_env` として送ってください。そうすると、セッションのコマンドが利用者の `PATH`、仮想環境、ツールチェーンの変数のもとで動きます。資格情報らしい名前は除かれ、ゲートウェイも独自の規則で dict をもう一度絞り込みます。
+- `hermes_cli.chat_launch.hermes_command(args)` は、いま使っている Hermes のインストールを `args` 付きで動かすための argv を返します。`PYTHONPATH` は要りません。子プロセスは、引き継いだ `HERMES_HOME` が指すプロファイルを受け持ちます。これを `hermes gateway attach` 用としてフロントエンドに渡してください。`PATH` 上の `hermes`（別のインストールかもしれません）や `sys.executable`（更新で置き換わることがあります）は使わないでください。
+- `hermes_cli.chat_launch.print_exit_summary(session_id, command=...)` は、チャットが終わったときに Hermes が表示する行（セッションの再開のしかた、その ID、タイトル、メッセージ数、トークン数）を表示します。フロントエンドが終わったあとに、自分のコマンド名を付けて呼んでください。メッセージが1つも無いセッションでは何も表示しません。表示される行には再開のしかたが `--resume <id>`（短い ID）と `-c "<title>"` の2通り書かれるので、コマンドはその両方を受け付ける必要があります。
+
+```python
+import json
+import os
+import subprocess
+import tempfile
+
+def _arguments(parser):
+    # The exit summary prints `hermes my-client --resume <id>` and `hermes my-client -c "<title>"`.
+    parser.add_argument("--resume", "-r", metavar="ID")
+    parser.add_argument("--continue", "-c", dest="title", metavar="TITLE")
+
+def _session_to_resume(args):
+    wanted = args.resume or args.title
+    if not wanted:
+        return None  # a new chat: a new profile has no session store to open yet
+    from hermes_constants import get_hermes_home
+    from hermes_state import SessionDB
+
+    db = SessionDB(db_path=get_hermes_home() / "state.db", read_only=True)
+    try:
+        # The summary prints a short id: resolve_session_id takes a unique prefix.
+        found = db.resolve_session_id(args.resume) if args.resume else db.resolve_session_by_title(args.title)
+    finally:
+        db.close()
+    if not found:
+        raise SystemExit(f"hermes my-client: no session matches {wanted!r}")
+    return found
+
+def _run_chat(args):
+    from hermes_cli.chat_launch import hermes_command, print_exit_summary
+    from hermes_cli.gateway_chat import shell_client_env
+
+    env = dict(os.environ)
+    env["MY_CLIENT_ENV"] = json.dumps(shell_client_env())
+    env["MY_ATTACH_COMMAND"] = json.dumps(hermes_command(["gateway", "attach", "--json", "--start"]))
+    env["MY_RESUME"] = _session_to_resume(args) or ""  # the frontend sends it with session.resume
+    # One file for this launch: the frontend writes {"session_id": ...} there for the session it shows.
+    fd, session_file = tempfile.mkstemp(prefix="my-client-", suffix=".json")
+    os.close(fd)
+    env["MY_SESSION_FILE"] = session_file
+    try:
+        subprocess.run(["my-client"], env=env)
+        with open(session_file, encoding="utf-8") as f:
+            shown = f.read()
+    finally:
+        os.unlink(session_file)
+    if shown:  # empty when the client left before it opened a session
+        print_exit_summary(json.loads(shown)["session_id"], command="hermes my-client")
+
+def register(ctx):
+    ctx.register_cli_command("my-client", "Chat in my client", _arguments, _run_chat)
+```
+
+### `-w`: 新しい worktree でセッションを動かす {#-w-run-the-session-in-a-fresh-worktree}
+
+同じランチャーで、`hermes --tui -w` と同じように `-w` を用意できます。使うのは `hermes_cli.session_worktree` の3つの関数です。
+
+- `create()` は、クライアントが起動する前に呼びます。利用者がいまいるリポジトリの新しい git worktree を、`<repo>/.worktrees/` の下に専用の `hermes/` ブランチで作ります。戻り値は `{"path", "branch", "repo_root", "base"}` で、作れなかったときは `None` です（理由はすでに表示されています）。`path` を `session.create` の `cwd` として送ってください。
+- `restore(session_id)` は、再開したセッションにクライアントがつながる前に呼びます。省略しない完全なセッション ID を渡してください。そのセッションが `-w` の worktree で動いていて、前回の終了でその worktree が消されていた場合は、同じパスに作り直してそのパスを返します。それ以外のときは `None` を返します。これを呼ばないと、ゲートウェイはそのセッションのターンをすべて `workspace_unavailable` で断ります。
+- `finish(info, session_id, ask=...)` は、クライアントが終わったあとに `finally` ブロックの中で呼びます。こうしておけば、起動に失敗したクライアントが worktree を置き去りにすることはありません。正常に終わったときは `ask=True` を渡してください。コミットしていない作業や push していない作業がある worktree について、残す（keep）・保管する（archive）・捨てる（discard）のどれにするかをターミナルで尋ねます。呼ぶのは、クライアントがターミナルを返したあとにしてください。変更が無く、もう何にも使われていない worktree は、ブランチごと削除されます。残した worktree は `session_id` に引き渡されるので、そのセッションを再開できるあいだは Hermes が保持します。
+
+worktree を `git worktree add` で自分で作らないでください。Hermes は `.worktrees/` の下にある、使われなくなった古い worktree を定期的に削除します。ロックされた worktree を残すのは、ロックの理由が Hermes の書いたものであるときだけです。そのため、自分で作った worktree は、保存されたセッションがまだその中で動いていても削除されることがあります。
+
+```python
+import os
+
+from hermes_cli.session_worktree import create, finish, restore
+
+resume = _session_to_resume(args)  # the full session id, from the launcher above
+info = create() if args.worktree else None
+if args.worktree and info is None:
+    raise SystemExit(1)
+if resume and not args.worktree:
+    restore(resume)
+code, session_id = None, resume
+try:
+    code, session_id = run_my_client(cwd=info["path"] if info else os.getcwd(), resume=resume)
+finally:
+    if info:  # also when the client did not start, or Ctrl+C reached the launcher
+        finish(info, session_id, ask=code == 0)
+```
 
 ## プラグインから MCP サーバーを呼ぶ {#calling-mcp-servers-from-plugins}
 

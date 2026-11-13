@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "提供元の振り分け"
 description: "OpenRouter の提供元の優先設定を書いて、費用・速度・品質のどれを重く見るかを決めます。"
 upstream_path: user-guide/features/provider-routing.md
-upstream_blob: 6cb93cd855d7d334a958b25d386211f5345b75b3
+upstream_blob: cb6658b693d5d20483aedffb4a249cd5b366863d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/provider-routing
 ---
@@ -12,7 +12,7 @@ sources:
 
 LLM の窓口に [OpenRouter](https://openrouter.ai) を使っているとき、Hermes Agent は**提供元の振り分け**に対応します。要求を実際にさばく AI の提供元をどれにするか、どの順で優先するかを細かく決められます。
 
-OpenRouter は要求を多くの提供元（Anthropic、Google、AWS Bedrock、Together AI など）へ渡します。提供元の振り分けを使うと、費用・速度・品質のどれを重く見るかを決めたり、この提供元でなければならないという条件を通したりできます。
+OpenRouter は要求を多くの提供元（Anthropic、Google、AWS Bedrock、Together AI など）へ渡します。提供元の振り分けを使うと、費用・速度・品質のどれを重く見るかを決めたり、この提供元でなければならないという条件を通したりできます。2 つの窓口を比べたいときは、[Nous Portal vs OpenRouter](https://portal.nousresearch.com/compare/openrouter) で料金や無料のモデル、プランを確認できます。
 
 :::note
 [Nous Portal](/hermes/docs/integrations/nous-portal/) は振り分けをモデルごとに自分の側で決めていて、呼び出し側から渡された提供元の希望を受け取りません。Hermes は Portal へ `provider` の項目を送らないので、`provider_routing` はそこでは単に無視されます。
