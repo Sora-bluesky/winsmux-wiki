@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コンテキストファイル"
 description: "プロジェクトのコンテキストファイル（.hermes.md、AGENTS.md、CLAUDE.md、全体共通の SOUL.md、.cursorrules）は、どの会話にも自動で読み込まれます"
 upstream_path: user-guide/features/context-files.md
-upstream_blob: eb461c4cfc497a94c897c67049d43b0bf7b7355d
+upstream_blob: 72b457abc8a49c21a36368f747601d37690fe4fd
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files
 ---
@@ -130,7 +130,7 @@ Hermes は、Cursor IDE の `.cursorrules` ファイルと `.cursor/rules/*.mdc`
 コンテキストファイルは、`agent/prompt_builder.py` の `build_context_files_prompt()` が読み込みます。
 
 1. **作業ディレクトリを見る** — `.hermes.md` → `AGENTS.md` → `CLAUDE.md` → `.cursorrules` の順に探します（最初に見つかったものが勝ちます）
-2. **中身を読む** — 各ファイルを UTF-8 のテキストとして読みます
+2. **中身を読む** — 各ファイルを UTF-8 のテキストとして読みます。ファイル（またはシンボリックリンク）の実際の行き先がプロジェクト（git のルート、無ければ作業ディレクトリ）の外にある場合や、ファイル読み込みの拒否リストに載っている場合は、そのファイルを読み飛ばします。そのルートがホームディレクトリかそれより上にあるとき（`$HOME` に置いた dotfiles のリポジトリや、`$HOME` で始めたセッションなど）は、代わりに、行き先がそのファイル自身のあるディレクトリの中に収まっている必要があります。下のディレクトリのコンテキストファイルも同じ決まりに従い、セッションの作業ディレクトリをルートとして扱います
 3. **安全性の検査** — プロンプトインジェクションらしい書きぶりが無いか調べます
 4. **切り詰め** — 文字数の上限を超えたファイルは、先頭と末尾を残して切り詰めます（先頭 70%、末尾 20%、あいだに目印を入れます）。上限は、config.yaml で `context_file_max_chars` が指定されていればその値です。指定が無ければ、モデルのコンテキストウィンドウに応じて自動で決まります（下限 20,000 文字、上限 500,000 文字）
 5. **組み立て** — すべてのまとまりを `# Project Context` という見出しの下にまとめます

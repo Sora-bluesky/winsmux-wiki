@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: 9a7589ada870811671d770407f6c524aac182030
+upstream_blob: a8111ec307f7603e859d6c47651a6e16d54c1fb4
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -144,6 +144,13 @@ CLI の起動処理は、Hermes のほかの部分を import する前に `_appl
 終了済みの台帳の行を片付け、作業が動いている間や `unknown` のままの間は実行を拒否します。
 持ち主が落ちたときに `started` だった入力は、次に持ち主が起動したときに `unknown` になり、
 やり直されることはありません。その後ろの入力は、これが解決されるまで待ちます（`prompt.resolve_unknown`）。
+
+`runtime_epoch` の行は、保存領域の持ち主を区切る柵の役目を果たします。ゲートウェイは起動時に一度だけこの値を読み取り、
+すべての書き込みをこれと照らし合わせます。そのため、この値を上げると持ち主の座を奪うことになります。持ち主を引き継げるのは、
+そのプロファイルのロックを握っているプロセスだけです。別のプロセスがプロファイルの `gateway.lock` の flock を握っている間は、
+`begin_runtime_epoch()` は値の引き上げを拒みます。うっかり値を上げてしまうと、動いているゲートウェイがずっと柵の外に取り残されるからです。
+そうなると、その保存領域への書き込みは、ゲートウェイを再起動するまですべて `stale_epoch` で失敗し、
+`/reset` を実行しても元に戻りません（#142330）。
 
 `hermes sessions recover` を実行すると、上のうち行を持つテーブルが復旧先の
 データベースへコピーされます（FTS の索引と `schema_version` は作り直されます）。

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "よくある質問とトラブル対処"
 description: "Hermes Agent でよくある質問と、つまずきやすい箇所の対処法"
 upstream_path: reference/faq.md
-upstream_blob: a0d1d67d7a7c22808fec65f42bc4f5a3c04be6dc
+upstream_blob: 4175d2f59515142508563f934bc8330255b4fd57
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/faq
 ---
@@ -351,7 +351,7 @@ CLI の起動時の行に、検出したコンテキスト長が出ます（例:
 
 **エラーを返さずに黙り込むローカルサーバー（llama.cpp、Ollama）の場合:** リクエストが大きすぎるとプロバイダーに拒否されると、Hermes は会話を圧縮してリクエストを組み立て直します。再試行の前に、組み立て直した*リクエスト全体*（システムプロンプト + ツールスキーマ + メッセージ）を測り直し、まだしきい値を超えていれば、回数を区切った圧縮をさらに走らせます。それでも収まらない場合は、llama.cpp が黙って切り詰めてしまうような特大のリクエストを送る代わりに、`Context length exceeded: compression could not reduce the rebuilt request below the safe threshold` を出してそのターンを終えます（切り詰められると、サーバーのログに `stop processing: n_tokens = 65535, truncated = 1` と出ます）。このメッセージが出たときは、ほぼ確実に上に挙げた `context_length` の設定が原因です。サーバー側で実際に指定している `-c` / `--ctx-size` に合わせてください。
 
-**「The model server rejected this request as too large, but this conversation is only about N tokens…」と出る場合:** ローカルのサーバー（localhost、LAN、Tailscale）が測定値をいっさい示さずに「コンテキスト超過」と言っている一方で、Hermes 自身が見積もったリクエストは、そのモデルについて把握しているウィンドウよりはるかに小さい状態です。そのため Hermes は圧縮もしませんし、会話のせいにもしません。そのターンは再試行できるまま残ります。スロットが 1 つしかないローカルサーバー（LM Studio、Ollama）では、ほぼ必ず、その時点で別のリクエストがサーバーのコンテキストを占有していることが原因です。たいていは、前のセッションから走っている裏側のメモリ見直しです（`logs/agent.log` に `thread=bg-review` と出ます）。少し待ってから `/retry` を実行してください。ほかに Hermes のプロセスが動いていないのに繰り返し出るなら、サーバーが Hermes の想定より小さいウィンドウでモデルを読み込んでいます。サーバー側のコンテキストの設定を上げるか、`model.context_length` をそれに合わせて下げてください。ホスティング型のプロバイダーでは、このメッセージは出ません。待てば空く共有スロットがないので、同じ拒否が出たらその経路の実際のウィンドウが Hermes の想定より小さいということであり、Hermes は圧縮してから再試行します。
+**「The model server rejected this request as too large, but this conversation is only about N tokens…」と出る場合:** ローカルのサーバー（localhost、LAN、Tailscale）が測定値をいっさい示さずに「コンテキスト超過」と言っている一方で、Hermes 自身が見積もったリクエストは、そのモデルについて把握しているウィンドウよりはるかに小さい状態です。そのため Hermes は圧縮もしませんし、会話のせいにもしません。そのターンは再試行できるまま残ります。スロットが 1 つしかないローカルサーバー（LM Studio、Ollama）では、ほぼ必ず、その時点で別のリクエストがサーバーのコンテキストを占有していることが原因です。たいていは、前のセッションから走っている裏側のメモリ見直しです（`logs/agent.log` に `thread=bg-review` と出ます）。少し待ってから `/retry` を実行してください。ほかに Hermes のプロセスが動いていないのに繰り返し出るなら、サーバーが Hermes の想定より小さいウィンドウでモデルを読み込んでいます。サーバー側のコンテキストの設定を上げるか、`model.context_length` をそれに合わせて下げてください。ホスティング型のプロバイダーでは、このメッセージは出ません。Claude のサブスクリプションを使う DirectSDK プラグインのように、外部のプロセスで動くプロバイダーも同じです。待てば空く共有スロットがないので、同じ拒否が出たらその経路の実際のウィンドウが Hermes の想定より小さいということであり、Hermes は圧縮してから再試行します。
 
 判定を直すには、明示的に指定します。
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）"
 description: "Claude Code CLI にコーディングを任せる（機能追加、PR）"
 upstream_path: user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md
-upstream_blob: badd19f465ed64d62c5eb3afd4df8c9cf2db8058
+upstream_blob: fcb8610ecdf3b5d54bbf39a24daa94f8ab5bd175
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code
 ---
@@ -140,7 +140,7 @@ terminal(command="sleep 15 && tmux capture-pane -t claude-work -p -S -60")
 
 ### 自分から選ぶとき: --dangerously-skip-permissions（隔離された環境だけ） {#opt-in---dangerously-skip-permissions-isolated-environments-only}
 
-これは実行のあいだ許可の確認をすべて止めます。ファイルシステム・シェル・ネットワークへのアクセスが、確認なしで通ります。使ってよいのは、捨ててよい worktree か隔離したコンテナだけです。
+これは実行のあいだ許可の確認をすべて止めます。ファイルシステム・シェル・ネットワークへのアクセスが、確認なしで通ります。使うのは、確認のスキップをはっきり頼まれたときだけにしてください。さらに、Claude Code のプロセス全体をコンテナ、VM、または [sandbox runtime](https://code.claude.com/docs/en/sandbox-environments#sandbox-runtime) といった隔離された境界の中に置き、root ではないユーザーで動かす必要があります。そのセッションがどのファイル、ネットワーク、認証情報に届くのかを把握できている環境に限ります。git worktree（`claude -w` を含む）が隔離するのはファイルの編集だけで、ファイルシステム・ネットワーク・認証情報のサンドボックスにはなりません。組み込みの Bash サンドボックス（`/sandbox`）も、それだけではサンドボックスになりません。ファイル操作のツール、MCP サーバー、フックはホスト上で動いたままだからです。コンテナの中であっても、マウントしたものやそこに保存したもの（`~/.claude` にある Claude Code 自身のログイン情報も含みます）には手が届いてしまいます。
 ```
 ❯ 1. No, exit                    ← DEFAULT (safe choice)
   2. Yes, I accept
@@ -305,9 +305,9 @@ terminal(command="claude -p 'task' --fallback-model haiku --max-turns 5", timeou
 ### 権限と安全 {#permission-safety}
 | フラグ | はたらき |
 |------|--------|
-| `--dangerously-skip-permissions` | 自分から選んだときだけ使います。許可の確認をすべて止めます（ファイル書き込み、bash、ネットワーク）。捨ててよい worktree か隔離したコンテナだけで使ってください。上の「自分から選ぶとき」を参照 |
+| `--dangerously-skip-permissions` | 自分から選んだときだけ使います。許可の確認をすべて止めます（ファイル書き込み、bash、ネットワーク）。コンテナ、VM、sandbox runtime の中だけで使ってください。worktree はサンドボックスになりません。上の「自分から選ぶとき」を参照 |
 | `--allow-dangerously-skip-permissions` | スキップを *選択肢として* 使えるようにします。既定では有効にしません |
-| `--permission-mode <mode>` | `default`、`acceptEdits`、`plan`、`auto`、`dontAsk`、`bypassPermissions` |
+| `--permission-mode <mode>` | `default`、`acceptEdits`、`plan`、`auto`、`dontAsk`、`bypassPermissions`（`bypassPermissions` は `--dangerously-skip-permissions` と同じく確認をスキップするものなので、守るルールも同じです。上の「自分から選ぶとき」を参照） |
 | `--allowedTools <tools...>` | 使ってよいツールを列挙します（カンマまたはスペース区切り） |
 | `--disallowedTools <tools...>` | 使わせないツールを列挙します |
 | `--tools <tools...>` | 組み込みのツール一式を差し替えます（`""` は無し、`"default"` は全部、あるいはツール名） |

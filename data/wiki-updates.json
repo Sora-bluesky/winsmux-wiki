@@ -1,6 +1,263 @@
 {
-  "generatedAt": "2026-11-14",
+  "generatedAt": "2026-11-15",
   "entries": [
+    {
+      "date": "2026-11-14",
+      "sha": "bf3797e",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/adding-platform-adapters",
+          "title": "プラットフォームアダプターを追加する",
+          "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
+        },
+        {
+          "id": "developer-guide/gateway-command-parity",
+          "title": "ゲートウェイのコマンド対応表",
+          "url": "/hermes/docs/developer-guide/gateway-command-parity/"
+        },
+        {
+          "id": "developer-guide/gateway-local-sessions",
+          "title": "gateway のローカルセッション",
+          "url": "/hermes/docs/developer-guide/gateway-local-sessions/"
+        },
+        {
+          "id": "developer-guide/macos-bundle-updates",
+          "title": "macOS バンドルの更新",
+          "url": "/hermes/docs/developer-guide/macos-bundle-updates/"
+        },
+        {
+          "id": "developer-guide/memory-provider-plugin",
+          "title": "メモリープロバイダープラグイン",
+          "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/multiplexing-gateway",
+          "title": "Multiplexing Gateway の内部構造",
+          "url": "/hermes/docs/developer-guide/multiplexing-gateway/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/plugins/public-api",
+          "title": "プラグインの公開 API",
+          "url": "/hermes/docs/developer-guide/plugins/public-api/"
+        },
+        {
+          "id": "developer-guide/programmatic-integration",
+          "title": "外部プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "developer-guide/shared-bundle-builds",
+          "title": "共有バンドルビルド",
+          "url": "/hermes/docs/developer-guide/shared-bundle-builds/"
+        },
+        {
+          "id": "guides/migrate-from-openclaw",
+          "title": "OpenClaw から移ってくる",
+          "url": "/hermes/docs/guides/migrate-from-openclaw/"
+        },
+        {
+          "id": "guides/xai-grok-oauth",
+          "title": "xAI Grok OAuth（SuperGrok / X Premium+）",
+          "url": "/hermes/docs/guides/xai-grok-oauth/"
+        },
+        {
+          "id": "integrations/nous-portal",
+          "title": "Nous Portal",
+          "url": "/hermes/docs/integrations/nous-portal/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "reference/toolsets-reference",
+          "title": "ツールセット一覧",
+          "url": "/hermes/docs/reference/toolsets-reference/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/browser",
+          "title": "ブラウザの自動操作",
+          "url": "/hermes/docs/user-guide/features/browser/"
+        },
+        {
+          "id": "user-guide/features/codex-app-server-runtime",
+          "title": "Codex App-Server ランタイム（任意）",
+          "url": "/hermes/docs/user-guide/features/codex-app-server-runtime/"
+        },
+        {
+          "id": "user-guide/features/credential-pools",
+          "title": "認証情報プール",
+          "url": "/hermes/docs/user-guide/features/credential-pools/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/features/delegation",
+          "title": "サブエージェントへの委任",
+          "url": "/hermes/docs/user-guide/features/delegation/"
+        },
+        {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/provider-routing",
+          "title": "提供元の振り分け",
+          "url": "/hermes/docs/user-guide/features/provider-routing/"
+        },
+        {
+          "id": "user-guide/features/tools",
+          "title": "ツールとツールセット",
+          "url": "/hermes/docs/user-guide/features/tools/"
+        },
+        {
+          "id": "user-guide/features/tts",
+          "title": "音声と読み上げ",
+          "url": "/hermes/docs/user-guide/features/tts/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/managed-scope",
+          "title": "管理者による適用範囲",
+          "url": "/hermes/docs/user-guide/managed-scope/"
+        },
+        {
+          "id": "user-guide/messaging/a2a",
+          "title": "A2A（エージェント間連携）",
+          "url": "/hermes/docs/user-guide/messaging/a2a/"
+        },
+        {
+          "id": "user-guide/messaging/discord",
+          "title": "Discord",
+          "url": "/hermes/docs/user-guide/messaging/discord/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/messaging/matrix",
+          "title": "Matrix",
+          "url": "/hermes/docs/user-guide/messaging/matrix/"
+        },
+        {
+          "id": "user-guide/messaging/mattermost",
+          "title": "Mattermost",
+          "url": "/hermes/docs/user-guide/messaging/mattermost/"
+        },
+        {
+          "id": "user-guide/messaging/telegram",
+          "title": "Telegram",
+          "url": "/hermes/docs/user-guide/messaging/telegram/"
+        },
+        {
+          "id": "user-guide/messaging/webhooks",
+          "title": "Webhook",
+          "url": "/hermes/docs/user-guide/messaging/webhooks/"
+        },
+        {
+          "id": "user-guide/messaging/whatsapp",
+          "title": "WhatsApp",
+          "url": "/hermes/docs/user-guide/messaging/whatsapp/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        },
+        {
+          "id": "user-guide/profiles",
+          "title": "プロファイル: 複数のエージェントを動かす",
+          "url": "/hermes/docs/user-guide/profiles/"
+        },
+        {
+          "id": "user-guide/secrets/bitwarden",
+          "title": "Bitwarden Secrets Manager",
+          "url": "/hermes/docs/user-guide/secrets/bitwarden/"
+        },
+        {
+          "id": "user-guide/secrets/onepassword",
+          "title": "1Password",
+          "url": "/hermes/docs/user-guide/secrets/onepassword/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        },
+        {
+          "id": "user-guide/sessions",
+          "title": "セッション",
+          "url": "/hermes/docs/user-guide/sessions/"
+        },
+        {
+          "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code",
+          "title": "Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）",
+          "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/"
+        },
+        {
+          "id": "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex",
+          "title": "Codex — OpenAI Codex CLI にコーディングを任せる（機能追加、PR）",
+          "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/"
+        },
+        {
+          "id": "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode",
+          "title": "Opencode — コーディングを OpenCode CLI に任せる（機能追加、PR レビュー）",
+          "url": "/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/"
+        },
+        {
+          "id": "user-guide/skills/optional/security/security-1password",
+          "title": "1Password — op CLI を用意してサインインし、秘密の値を読み書きする",
+          "url": "/hermes/docs/user-guide/skills/optional/security/security-1password/"
+        }
+      ]
+    },
     {
       "date": "2026-11-13",
       "sha": "df1c926",

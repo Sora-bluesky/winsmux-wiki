@@ -2,7 +2,7 @@
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: 9a02f8a9ddb71fd7cea9f5fe2801fa3dd9634906
+upstream_blob: d7cd8383ddbbf9a997df7c61b31da5e43b57e6fc
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -222,7 +222,7 @@ hermes gateway install
 
 裏側では次のことが起きます。
 
-1. `schtasks /Create /SC ONLOGON /RL LIMITED /TN Hermes_Gateway` — ログイン時に、昇格していない通常の権限で動くタスクを登録します。UAC の確認は出ません。
+1. `schtasks /Create /TN Hermes_Gateway /XML <file>` — ログイン時に起動するタスクを登録します。XML に書かれた実行ユーザーの設定（`InteractiveToken`、`LeastPrivilege`）により、タスクはログイン時に昇格していない通常の権限で動きます。登録のときに UAC の確認が 1 回だけ出ますが、タスクそのものが昇格した権限で動くことはありません。
 2. グループポリシーで schtasks が禁じられている場合は、小さな `Hermes_Gateway.vbs` という起動用のファイル（`wscript.exe` で画面に出さずに実行されます）を `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup` に書き出す方式に切り替えます。効果は同じで、作りが少し素朴なだけです。`cmd.exe` のショートカットではなく VBScript を使うのは、ログイン時に割り当てられたコンソールが閉じる合図を受け取ると、ゲートウェイが起動し終わる前に落ちてしまうことがあるからです。
    残るのは必ずどちらか一方だけです。タスクの登録に成功するとスタートアップフォルダーの項目（古い `Hermes_Gateway.cmd` も含みます）は取り除かれ、タスクが登録されたままの間は代わりの方式は使われません。両方が残っている古いインストールは、`hermes update` や `hermes doctor --fix` が片づけます。両方あると、ログイン時にゲートウェイが二重に起動してしまうためです。
 3. ゲートウェイは `python.exe` ではなく **`pythonw.exe` で切り離して起動します**。`pythonw.exe` にはコンソールが結び付かないため、同じ立場のプロセスから飛んでくる `CTRL_C_EVENT` の影響を受けません（同じプロセスグループで何かを Ctrl+C したときにゲートウェイが落ちる、という実際に起きていた問題への対策です）。

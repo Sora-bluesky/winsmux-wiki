@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Feishu / Lark"
 description: "Hermes Agent を Feishu または Lark の Bot として設定します"
 upstream_path: user-guide/messaging/feishu.md
-upstream_blob: 5a5f29bac8ea529f1341a80d5ce497726ab32f70
+upstream_blob: ce46cf7abb654115371cf589aa7c00bd288ab1b8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu
 ---
@@ -212,7 +212,7 @@ FEISHU_ENCRYPT_KEY=your-encrypt-key
 SHA256(timestamp + nonce + encrypt_key + body)
 ```
 
-計算したハッシュは `x-lark-signature` ヘッダーの値と、処理時間の差が出ない方法で突き合わせます。署名が不正か無い要求は HTTP 401 で拒否されます。
+計算したハッシュは `x-lark-signature` ヘッダーの値と、処理時間の差が出ない方法で突き合わせます。あわせて、署名の対象になっている `x-lark-request-timestamp` がゲートウェイの時計から 5 分以内に収まっている必要があります。これにより、盗み取られた要求をあとから送り直されても通りません。署名が不正か無い要求や、タイムスタンプが古すぎる要求は HTTP 401 で拒否されます。
 
 :::tip
 WebSocket 方式では署名の検証を SDK 自身が行うため、`FEISHU_ENCRYPT_KEY` は任意です。Webhook 方式では、実運用なら設定を強くおすすめします。
@@ -598,7 +598,7 @@ WebSocket とグループごとのアクセス制御の設定は、`config.yaml`
 | `Another local Hermes gateway is already using this Feishu app_id` | 同じ app_id を同時に使える Hermes は 1 つだけです。先に別のゲートウェイを止めてください。 |
 | グループで Bot が応答しない | Bot が @ メンションされているか確かめ、`FEISHU_GROUP_POLICY` を見直し、方針が `allowlist` なら送信者が `FEISHU_ALLOWED_USERS` に入っているか確かめます |
 | `Webhook rejected: invalid verification token` | `FEISHU_VERIFICATION_TOKEN` が、Feishu アプリの Event Subscriptions の設定にあるトークンと一致しているか確かめます |
-| `Webhook rejected: invalid signature` | `FEISHU_ENCRYPT_KEY` が、Feishu アプリの設定にある暗号化キーと一致しているか確かめます |
+| `Webhook rejected: invalid signature` | `FEISHU_ENCRYPT_KEY` が、Feishu アプリの設定にある暗号化キーと一致しているか、またゲートウェイを動かしているホストの時計が合っているかを確かめます（タイムスタンプが 5 分以上ずれていると、送り直された要求とみなされて拒否されます） |
 | post のメッセージが素のテキストで表示される | Feishu の API が post の中身を受け付けなかった場合の、正常な切り替え動作です。詳しくはログを確認してください。 |
 | 画像やファイルが Bot に届かない | Feishu アプリに `im:message` と `im:resource` の権限スコープを与えます |
 | Bot 自身の識別情報が自動取得できない | たいていは Feishu の Bot 情報のエンドポイントに届かない一時的なネットワークの問題です。当面の対処として `FEISHU_BOT_OPEN_ID` と `FEISHU_BOT_NAME` を手で設定してください。 |

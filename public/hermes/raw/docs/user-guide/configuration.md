@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: d9b1155e0dd7535831736b844f3921a440a8d9fe
+upstream_blob: 5d865151b3fad1a0202c5b5207b4275a8cbd96f9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -143,10 +143,12 @@ database:
   # Use delete on filesystems where WAL is unsafe (network mounts). On
   # virtiofs/9p bind mounts (Docker Desktop, Podman on macOS, OrbStack)
   # Hermes detects the mount and creates fresh databases in delete mode
-  # automatically. Note: an existing on-disk WAL database is never
-  # live-downgraded — Hermes keeps WAL and logs an error telling you the
+  # automatically. On Linux NFS/CIFS/SMB/sshfs mounts, a fresh database
+  # also starts in delete mode unless this key is set (set `wal` to force
+  # WAL there). Note: an existing on-disk WAL database is never
+  # live-downgraded — Hermes keeps WAL and logs a warning telling you the
   # configured delete did not apply (or that the WAL database sits on a
-  # cross-VM mount). To convert an existing database, stop
+  # cross-VM or network mount). To convert an existing database, stop
   # every process using it and run
   # `hermes sessions set-journal-mode delete` (see Sessions).
   journal_mode: wal
@@ -908,16 +910,18 @@ skills:
 
 有効にすると、スキャナーに引っかかった `skill_manage` の書き込みは、スキャナーの判断理由を添えた承認の確認として表示されます。承認した書き込みは反映され、拒否した書き込みはエージェントに理由を説明するエラーを返します。
 
+バックグラウンドで動く自己改善のレビューからの書き込みは、この設定にかかわらず常に走査されます。このレビュー用に分岐したエージェントには `terminal()` がないので、スキルを書き込む手段は `skill_manage` しかないためです。走査で内容に問題が見つかった場合や、走査を最後まで終えられなかった場合、その書き込みは止められます。保留になったレビューの書き込みを `/skills approve` で承認するときも、同じ走査が行われます。
+
 ### スキル書き込みの承認 {#write-approval-for-skill-writes}
 
-上の内容スキャナーとは別に、`skills.write_approval` を使うと、エージェントによるスキルの書き込み（作成／編集／パッチ適用／削除／付属ファイル）の**すべて**に明示的な承認を必須にできます。危険なコマンドと同じ、承認・拒否の仕組みです。
+上の内容スキャナーとは別に、`skills.write_approval` を使うと、`skill_manage` ツールを通したスキルの書き込み（作成／編集／パッチ適用／削除／付属ファイル）のすべてに明示的な承認を必須にできます。危険なコマンドと同じ、承認・拒否の仕組みです。
 
 ```yaml
 skills:
   write_approval: false   # false = write freely (default) | true = stage every write for review
 ```
 
-有効にすると、スキルの書き込みは `~/.hermes/pending/skills/` の下で保留になり、`/skills pending`、`/skills diff <id>`、`/skills approve <id>`、`/skills reject <id>` で確認します。CLI からでも、どのメッセージングプラットフォームからでも操作できます。実行中に `/skills approval on|off` で切り替えられます。記憶にも同じ関門があります（後述の `memory.write_approval`）。詳しい手順: [エージェントのスキルの書き込みに関門を置く](/hermes/docs/user-guide/features/skills/#gating-agent-skill-writes-skillswrite_approval)
+有効にすると、スキルの書き込みは `~/.hermes/pending/skills/` の下で保留になり、`/skills pending`、`/skills diff <id>`、`/skills approve <id>`、`/skills reject <id>` で確認します。CLI からでも、どのメッセージングプラットフォームからでも操作できます。実行中に `/skills approval on|off` で切り替えられます。記憶にも同じ関門があります（後述の `memory.write_approval`）。どちらの関門も、汎用のファイル操作ツールやターミナルによる直接の編集は対象外です。詳しい手順: [エージェントのスキルの書き込みに関門を置く](/hermes/docs/user-guide/features/skills/#gating-agent-skill-writes-skillswrite_approval)
 
 ## 記憶の設定 {#memory-configuration}
 
@@ -927,10 +931,10 @@ memory:
   user_profile_enabled: true
   memory_char_limit: 2200   # ~800 tokens
   user_char_limit: 1375     # ~500 tokens
-  write_approval: false     # true = require approval before any memory write
+  write_approval: false     # true = require approval for memory-tool writes
 ```
 
-`memory.write_approval: true` にすると、記憶への書き込みは反映される前に承認が必要になります。対話中の CLI のターンでは、その場で確認を求めます。メッセージングのセッションと、バックグラウンドで動く自己改善のレビューでは、書き込みを保留にして `/memory pending` → `/memory approve <id>` / `/memory reject <id>` での確認を待ちます。実行中に `/memory approval on|off` で切り替えられます。[記憶への書き込みを制御する](/hermes/docs/user-guide/features/memory/#controlling-memory-writes-write_approval) を参照してください。
+`memory.write_approval: true` にすると、`memory` ツールを通した書き込みは、反映される前に承認が必要になります。対話中の CLI のターンでは、その場で確認を求めます。メッセージングのセッションと、バックグラウンドで動く自己改善のレビューでは、書き込みを保留にして `/memory pending` → `/memory approve <id>` / `/memory reject <id>` での確認を待ちます。実行中に `/memory approval on|off` で切り替えられます。[記憶への書き込みを制御する](/hermes/docs/user-guide/features/memory/#controlling-memory-writes-write_approval) を参照してください。
 
 ## コンテキストファイルの切り詰め {#context-file-truncation}
 
@@ -1226,6 +1230,23 @@ Hermes はこのメッセージを自動で待ち行列に戻しません。順�
 同じになること）を確実に保証できないまま戻すと、同じメッセージを2回処理するおそれがあるからです。
 0以下の値を指定した場合は、既定の5秒が使われます。
 
+## ゲートウェイの SessionDB ループガード {#gateway-sessiondb-loop-guard}
+
+ゲートウェイが止まる原因を調べるためのデバッグ用の仕組みです。ゲートウェイのイベントループ上で `state.db` を同期的に
+読み書きすると、ストレージの処理が終わるまで、すべてのプラットフォームが止まってしまいます。ガードを有効にすると、
+ゲートウェイはそうした呼び出しを検出して知らせます。
+
+```yaml
+gateway:
+  sessiondb_loop_guard: warn   # off (default) | warn | raise
+```
+
+`warn` にすると、問題のある呼び出し箇所ごとに1回だけ、スタックと一緒にログに記録します。`raise` にすると、その呼び出しを
+失敗させます（開発や CI で役立ちます）。オフのときは負荷がまったくかかりません。ストレージのメソッドを一切
+ラップしないからです。設定は次にゲートウェイを起動したときに反映されます。このガードはプロセス全体に効くので、
+多重化して動かしている場合は、起動したプロファイルの `config.yaml` だけがこの設定を決めます。
+ほかのプロファイルに書いた値は無視されます。
+
 ## ゲートウェイ再起動時の待ち時間 {#gateway-restart-drain}
 
 ゲートウェイが止まるときや再起動するとき（SIGTERM、`hermes update`、`hermes gateway stop`、または
@@ -1236,7 +1257,7 @@ Hermes はこのメッセージを自動で待ち行列に戻しません。順�
 agent:
   restart_drain_timeout: 0          # default: interrupt in-flight chat turns at once
   cron_drain_timeout: 30            # floor for cron jobs and api_server (/v1) runs
-  restart_after_turn_timeout: 1800  # /restart and `gateway restart`: wait for turns BEFORE stopping
+  restart_after_turn_timeout: 1800  # /restart and `gateway restart` restart when idle; warn (never interrupt) every N s
 ```
 
 既定の `0` では、再起動すると実行中のターンはすぐに中断されます。そのターンは中断済みとして片付き、
@@ -1422,6 +1443,8 @@ goals:
 
 Hermes には、ストリーミング用に独立した複数のタイムアウトの層があり、それとは別に非ストリーミングの呼び出し向けの停滞検知もあります。停滞の検知がローカルのプロバイダー向けに自動で調整されるのは、暗黙の既定値のままにしている場合だけです。
 
+外部プロセスのプロバイダー（Claude のサブスクリプション用の DirectSDK プラグインや ACP エージェントのように、CLI の子プロセスを通して使うモデル）には、どのモデルでも、下の表の「ローカルのプロバイダー」の列と同じ値が適用されます。子プロセスは、モデルが最初のトークンを出すまで何も送ってこないためです。ただし例外が1つあります。外部プロセスへの非ストリーミングの呼び出しは、上限なしのままにせず、リクエストのタイムアウト（既定は1800秒）で打ち切ります。そのため、入力を読まなくなった子プロセスがあっても、Hermes が固まることはありません。それ以外の点では、ローカルのサーバーとしては扱われません。コンテキストの長さを理由に拒否された場合は圧縮して再試行し、Ollama や llama.cpp かどうかを確かめる問い合わせもしません。
+
 | タイムアウト | 既定値 | ローカルのプロバイダー | 設定／環境変数 |
 |---------|---------|----------------|--------------|
 | ソケットの読み取りタイムアウト | 120秒 | 自動で1800秒に引き上げ | `HERMES_STREAM_READ_TIMEOUT` |
@@ -1440,7 +1463,7 @@ Hermes には、ストリーミング用に独立した複数のタイムアウ�
 
 **ストリームの最大存続時間**は、1つのストリーミング応答にかかる実際の経過時間の合計に上限を設ける設定で、必要なときだけ有効にします。停滞の検知はチャンクが届くたびにリセットされます。そのため、データを送り続けているのにいつまでも終わらないストリーム（チャンクを少しずつ流し続けるゲートウェイや、暴走した生成など）は、いつまでも切断されません。こうしたストリームを打ち切るには、`agent.stream_max_lifetime`（秒）を設定します。接続は停滞による切断と同じ方法で切られ、そのあとは再試行するか、途中まで届いた応答の続きを生成します。実際に適用される停滞ストリームのタイムアウトより前に発動することはありません。また、プロバイダーは応答を返していたので、この打ち切りは停滞ストリームのサーキットブレーカー（`HERMES_STREAM_STALE_GIVEUP`）の回数には数えられません。この上限がかかるのは Chat Completions と Anthropic Messages のストリームだけです。Codex/Responses のストリーム（`codex_responses`。Responses のトランスポートで宣言したカスタムプロバイダーも含みます）と Bedrock のストリームには上限がかかりません。正常な動作でも長時間ストリーミングが続く、長い推論のターンを実行する場合は、`0`（既定値）のままにしておいてください。
 
-**非ストリーミングの停滞検知**は、応答のないまま長く待たされている非ストリーミングの呼び出しを打ち切ります。長いプレフィル中の誤検知を避けるため、Hermes は既定ではローカルのエンドポイントでこの検知を無効にしています。`providers.<id>.stale_timeout_seconds`、`providers.<id>.models.<model>.stale_timeout_seconds`、`HERMES_API_CALL_STALE_TIMEOUT` のいずれかを明示的に設定した場合は、ローカルのエンドポイントでもその値が守られます。
+**非ストリーミングの停滞検知**は、応答のないまま長く待たされている非ストリーミングの呼び出しを打ち切ります。長いプレフィル中の誤検知を避けるため、Hermes は既定ではローカルのエンドポイントでこの検知を無効にしています。`providers.<id>.stale_timeout_seconds`、`providers.<id>.models.<model>.stale_timeout_seconds`、`HERMES_API_CALL_STALE_TIMEOUT` のいずれかを明示的に設定した場合は、ローカルのエンドポイントでも、50kトークンを超える場合でも、その値がそのまま使われます。コンテキストの大きさに応じた引き上げ（50kトークン超で150秒、100kトークン超で240秒）が適用されるのは、暗黙の既定値だけです。
 
 **終端後のストリームの読み切り**は、Codex/Responses のストリームが終端の `response.completed` フレームを受け取ったあと、どれだけ読み続けるかに上限を設けます（リレー側の終了処理が動けるようにするための配慮です）。リレーの中には、終端フレームのあとも SSE のソケットを閉じないものがあります。上限がなかったころは、停滞ストリームの監視役が発火するまでターンが止まったままになり、すでに課金された応答を捨てたうえで再試行していました。`agent.stream_drain_timeout` 秒が過ぎるとストリームを閉じ、完了した応答を返します。接続を正常に閉じるエンドポイントでは読み切りがすぐに終わるので、ここまで待つことはありません。読み切りをまるごと省くには `0` を設定します。
 
@@ -2305,7 +2328,7 @@ display:
   focus_view: false       # CLI focus view (/focus) — reduced output, display-only
   platforms: {}           # Per-platform display overrides (see below)
   interim_assistant_messages: true  # Gateway: send natural mid-turn assistant updates as separate messages
-  suppress_warning_notifications: false  # Opt-in: hide automatic warning/diagnostic notices (see messaging guide)
+  suppress_warning_notifications: false  # Opt-in: hide automatic warning/diagnostic notices, incl. the silence-marker notice (see messaging guide)
   show_commentary: true   # Codex models: deliver commentary-channel progress narration as visible mid-turn updates
   skin: default           # Built-in or custom CLI skin (see user-guide/features/skins)
   personality: ""         # Legacy cosmetic field still surfaced in some summaries
@@ -2680,7 +2703,8 @@ stt:
 voice:
   record_key: "ctrl+b"         # Push-to-talk key inside the CLI
   max_recording_seconds: 120    # Hard stop for long recordings
-  auto_tts: false               # Enable spoken replies automatically when /voice on
+  auto_tts: false               # Enable automatic spoken replies in gateway chats
+  auto_tts_mode: "all"          # "all" (legacy default) | "voice_only"
   beep_enabled: true            # Play record start/stop beeps in CLI voice mode
   beep_volume: 0.3              # Beep amplitude (0.0-1.0); raise it on quiet systems / headphones
   silence_threshold: 200        # RMS threshold for speech detection
@@ -2688,6 +2712,12 @@ voice:
 ```
 
 CLI でマイクを使うモードを有効にするには `/voice on`、録音の開始と停止には `record_key` に設定したキー、音声での返答のオン／オフには `/voice tts` を使います。セットアップ全体の流れとプラットフォームごとの動作については、[音声モード](/hermes/docs/user-guide/features/voice-mode/) を参照してください。
+
+チャットごとの `/voice` モードを明示的に指定していないゲートウェイのチャットでは、`voice.auto_tts` が有効なときに
+どの返信に音声を付けるかを `voice.auto_tts_mode` で決めます。既定の `all` は、これまでどおりの動作です。
+テキストの入力にも音声の入力にも、音声付きで返信します。`voice_only` にすると、返信のきっかけになったメッセージが
+音声入力のときだけ音声を付けます。チャットで `/voice off`、`/voice on`、
+`/voice tts` を明示的に選んだ場合は、そのチャットでは引き続きそちらが全体の既定値より優先されます。
 
 ## ストリーミング {#streaming}
 
@@ -3052,6 +3082,7 @@ discord:
 ```yaml
 security:
   redact_secrets: true           # Redact API key patterns in tool output and logs (on by default)
+  redact_phone_numbers: true     # Mask E.164 phone numbers in replies sent to chats (on by default)
   website_blocklist:             # See Website Blocklist section below
     enabled: false
     domains: []
@@ -3059,6 +3090,7 @@ security:
 ```
 
 - `redact_secrets` — `true` のとき、ツールの出力に含まれる API キー、トークン、パスワードらしきパターンを自動で検出し、会話のコンテキストやログに入る前に伏せ字にします。**既定でオンです**。デバッグや伏せ字処理の開発で、認証情報らしき文字列をそのまま見る必要がある場合に限り、明示的に `false` にしてください。シークレットを含むファイル（`.env` 形式のファイル、シェルの rc/profile ファイル、`HERMES_HOME` にある Hermes の `config.yaml` と、その `backups/config/` 内のコピー）を `read_file`、`search_files`、ターミナルの `cat`/`grep` で読んだ場合も、認証情報の形をした代入（`SOME_API_TOKEN: …`）は、値の見た目にかかわらず、再利用できない `«redacted-secret»` という印に置き換えられます。通常のソースコードやプロジェクトの設定ファイルでは、ベンダー固有の接頭辞のパターンだけが対象なので、`MAX_TOKENS: 100` のようなテスト用のデータが書き換えられることはありません。
+- `redact_phone_numbers` — `true`（既定）のとき、E.164 形式の電話番号（`+15551234567`）は、エージェントの返信と、ゲートウェイがチャットプラットフォームに送るすべての内容の中で伏せ字（`+155****4567`）になります。`redact_secrets: false` にしていても同じです。信頼できる運用者が1人で使う環境で、アシスタントに正確な電話番号を表示させる必要がある場合（連絡先の一覧や通話の記録など）は `false` にしてください。対象になるのは E.164 形式の番号だけです。API キー、ボットのトークン、Bearer トークン、パスワードなど、ほかのシークレットのパターンはすべてチャットでも伏せ字のままで、ログとツールの出力では電話番号も引き続き伏せ字になります。`true` と `false` 以外の値を指定した場合は、伏せ字のままにして警告をログに記録します。
 
 以前の版には、同梱のコマンドスキャナー用の `tirith_*` キーもありました。このスキャナーは取り除かれ、アップグレードするとこれらのキーは消えます。コマンドの中身の検査については [コマンドの中身の検査](/hermes/docs/user-guide/security/#content-level-command-checks) で説明しています。
 
@@ -3078,7 +3110,7 @@ security:
       - "/etc/hermes/blocked-sites.txt"
 ```
 
-有効にすると、ブロック対象のドメインのパターンに一致する URL は、Web ツールやブラウザーツールが動く前に拒否されます。これは `web_search`、`web_extract`、ブラウザーでのページ移動のほか、URL にアクセスするすべてのツールに適用されます。
+有効にすると、ブロック対象のドメインのパターンに一致する URL は、Web ツールやブラウザーツールが動く前に拒否されます。これは `web_extract`、ブラウザーでのページ移動、`vision_analyze` と `video_analyze` に渡す URL、スキルハブからのダウンロードに適用されます。`web_extract` でブロック対象のホストへリダイレクトされた場合は、プロバイダーがそのページを取得したあとで検出されます。ページはエージェントに渡されませんが、ブロック対象のホストにはリクエストが届いています。`web_search` は URL ではなく検索語を受け取るので、結果の一覧を絞り込むことはしません。そのほかの URL の取得（kanban の URL 添付、cron の URL 監視、ゲートウェイでのメディアのダウンロード）には、このブロックリストは使われず、プライベートアドレスへの SSRF を防ぐ検査だけが適用されます。
 
 ドメインのルールでは、次の形式を使えます。
 - 完全一致のドメイン: `admin.example.com`

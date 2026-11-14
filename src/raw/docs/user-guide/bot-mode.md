@@ -2,7 +2,7 @@
 title: "Bot Mode"
 description: "Hermes のプロファイルを、名前を持つ Bot の一覧に変えます。それぞれが自分のチャット、役割、モデル、記憶、スキル、アバターを持ちます。Bot は定期タスクをこなし、グループチャットを共有し、互いにメッセージを送り合います。"
 upstream_path: user-guide/bot-mode.md
-upstream_blob: 7bc858e22e22eda3ab583157012946bc7f5dc1ff
+upstream_blob: 297a2603c50f5ce3555743b6f0dfdd0050871d7d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/bot-mode
 ---
@@ -63,6 +63,8 @@ Bot の唯一のチャットで `/new`（や `/reset`）を打つと、その関
 ## Bot を作る {#creating-a-bot}
 
 一覧で **New Agent** を押します。手早く作る場合は **Name**、**Title**、**Description** の 3 つを埋めるだけで、Bot は数秒で出来上がり、新しい Bot Chat の最初のメッセージとして自己紹介します。
+
+作成時の警告は、ダイアログが閉じて Bot Chat が開いたあとも、どのプロファイルのどの端末についてのものかを添えて表示されたまま残ります。警告は 1 つずつ閉じることも、**Clear all** でまとめて閉じることもできます。モデルの設定がまだ済んでいない場合は、**Configure model** の操作も引き続き使えます。ダッシュボードでも同じく、作成時の警告はすぐに消える成功の通知ではなく、閉じるまで残る結果カードに表示されます。
 
 **Advanced** を開くと、設定できる項目がすべて現れます。
 
@@ -296,7 +298,7 @@ HTTP 接続を 1 本占有するからです。ピアがメッセージを受け
 やり直しても新しい作業を重ねて始めるのではなく元の実行が返ります。`peer stop`
 にその実行 ID をそのまま渡せば、別の番に当たることなく中断できます。
 
-ピアを登録すると、すべての Bot Chat に教えられるメッセージの取り決め（`agent.bot_mode_protocol`）にピアの一覧が自動で含まれ、`message_agent` はピア宛の指定をそのまま受け付けます。`message_agent(target="spark/researcher", …)` のように書き、ピアの主エージェント宛なら `target="spark"` です。つまり **Bot たちは自分で学びます** — ほかの端末に仲間がいることと、そこへの届け方を。ピアを登録したり外したりすると、各 Bot Chat の取り決めは次のメッセージのときに更新されます（capability epoch）。
+ピアを登録すると、すべての Bot Chat に教えられるメッセージの取り決め（`agent.bot_mode_protocol`）にピアの一覧が自動で含まれ、`message_agent` はピア宛の指定をそのまま受け付けます。`message_agent(target="spark/researcher", …)` のように書き、ピアの主エージェント宛なら `target="spark"` です（この名前だけの指定が手元の Bot のフォルダー id や表示名とも一致する場合は、どちらを指すか決められないため断られます。ピア宛なら `spark/<agent>` を使うか、手元の Bot だけが応える名前を使ってください）。つまり **Bot たちは自分で学びます** — ほかの端末に仲間がいることと、そこへの届け方を。ピアを登録したり外したりすると、各 Bot Chat の取り決めは次のメッセージのときに更新されます（capability epoch）。
 
 必要な条件は、ピア側の端末が `api_server` のゲートウェイ基盤を強い `API_SERVER_KEY` とともに動かしていることです。到達できるかどうかは、そちらのネットワーク次第です（LAN、Tailscale、VPN）。この鍵は認証情報なので、`~/.hermes/.env` に `HERMES_PEER_<NAME>_KEY` として置かれます。ピアの名前と URL は `config.yaml` の `bot_peers` の下に置かれます。
 

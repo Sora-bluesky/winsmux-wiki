@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Webhook で GitHub の PR に自動でコメントする"
 description: "Hermes を GitHub につないで、PR の差分を取り、コードの変更をレビューし、コメントを書き込むところまでを自動にします。きっかけは webhook で、こちらから頼む必要はありません"
 upstream_path: guides/webhook-github-pr-review.md
-upstream_blob: df458e460640799ef30acaa290dd5ca992815449
+upstream_blob: 78b9a927cdeb409c1503452018a639058a35e8f1
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/webhook-github-pr-review
 ---
@@ -269,7 +269,7 @@ deliver_extra:
 
 ## GitLab でも使えます {#gitlab-support}
 
-同じアダプターが GitLab でも動きます。GitLab の認証には `X-Gitlab-Token`（HMAC ではなく、ただの文字列の一致です）が使われます。署名用のトークンを設定している場合は、Standard Webhooks 形式の `webhook-signature` で認証します。ルートで指定する署名の方式は `signature: gitlab` に変えてください。`signature: github` のままのルートは、秘密の値が正しくても、GitLab から届くものをすべて `401` で拒否します。
+同じアダプターが GitLab でも動きます。GitLab の認証には `X-Gitlab-Token`（HMAC ではなく、ただの文字列の一致です）が使われます。署名用のトークンを設定している場合は、Standard Webhooks 形式の `webhook-signature` で認証します。ルートで指定する署名の方式は `signature: gitlab` に変えてください。`signature: github` のままのルートは、秘密の値が正しくても、GitLab から届くものをすべて `404` で拒否します。
 
 イベントの絞り込みでは、GitLab は `X-GitLab-Event` に `Merge Request Hook`、`Push Hook`、`Pipeline Hook` のような値を入れてきます。`events` にはヘッダーの値をそのまま書いてください。
 
@@ -297,8 +297,7 @@ GitLab のペイロードの項目名は GitHub とは違います。たとえ�
 
 | 症状 | 確かめること |
 |---|---|
-| `401 Invalid signature` | config.yaml の秘密の値が、GitHub の webhook の秘密の値と一致していません |
-| `404 Unknown route` | URL の中のルート名が、`routes:` のキーと一致していません |
+| `404 Unknown route` | URL の中のルート名が `routes:` のキーと一致していないか、config.yaml の秘密の値が GitHub の webhook の秘密の値と一致していません（ルート名を探られないよう、署名が正しくない場合も同じ 404 が返ります。ゲートウェイのログには `Invalid signature` と出ます） |
 | `429 Rate limit exceeded` | ルートごとの毎分 30 回を超えました。GitHub の画面からテストのイベントを再送したときによく起きます。1 分待つか、`extra.rate_limit` を上げてください |
 | コメントが書き込まれない | `gh` が入っていない、PATH に無い、または認証が済んでいません（`gh auth login`） |
 | エージェントは動くのにコメントが出ない | ゲートウェイのログを見てください。エージェントの出力が空、あるいは「SKIP」だけでも、配信自体は試みられます |

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "スキルの仕組み"
 description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェント管理のスキル、スキルのハブ"
 upstream_path: user-guide/features/skills.md
-upstream_blob: 11c4ab0c7463e45c58c29276dee3e078d02cb072
+upstream_blob: 2b555e553c7ec140d4b3d4a0be3ba5a6448c2854
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -674,7 +674,8 @@ skills:
 `write_approval: true` のとき、`skill_manage` のすべての書き込み（create / edit /
 patch / delete / write_file / remove_file）は、反映されずに**待たされます**。SKILL.md は
 その場で読むには大きすぎるので、前面のターンからの書き込みでも、バックグラウンドの
-レビューからの書き込みでも、同じように待たされます。
+レビューからの書き込みでも、同じように待たされます。ただし、汎用のファイル操作のツールや
+ターミナルでスキルのファイルを直接書き換える場合は、この関門の対象になりません。
 待っている書き込みは `~/.hermes/pending/skills/` に置かれて再起動をまたいで残り、
 危ないコマンドと同じ、見慣れた承認・拒否の流れで確認します。
 

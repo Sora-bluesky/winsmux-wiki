@@ -1378,6 +1378,9 @@
             },
             {
               "id": "developer-guide/programmatic-integration"
+            },
+            {
+              "id": "developer-guide/gateway-ssh-clients"
             }
           ]
         },
@@ -1956,6 +1959,7 @@
     "developer-guide/provider-runtime",
     "developer-guide/config-backend",
     "developer-guide/programmatic-integration",
+    "developer-guide/gateway-ssh-clients",
     "developer-guide/adding-tools",
     "developer-guide/adding-providers",
     "developer-guide/adding-platform-adapters",

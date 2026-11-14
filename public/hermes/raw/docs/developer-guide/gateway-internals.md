@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: 9a892782113ea6d89f3fd59050667f4767cbfee1
+upstream_blob: b2e97d173195ae13a62f92db5bda0da4696c0be5
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -621,6 +621,23 @@ SID を確かめる名前付きパイプを通して発行されます。既定�
 ログには決して残しません。新しく接続するたび、また再接続するたびに、`attach` をもう一度実行してください。
 制御ソケットと直接やり取りするクライアントは、プロセスを起動せずに同じ判定とチケットを得られます。
 [ローカルの制御ソケット](#local-control-socket-public-client-contract) を参照してください。
+SSH でホストに接続するクライアントには、HTTP のチケットと、1つのプロファイルに結び付かない WebSocket のチケットも要ります
+(`hermes gateway tickets`)。
+[SSH 経由のゲートウェイ: クライアントの取り決め](/hermes/docs/developer-guide/gateway-ssh-clients/) を参照してください。
+
+解析できた呼び出しに対する `attach` の返事には、成功でも拒否でも、
+`"start_context": {"windows_service_session": <bool>}` も入ります。これは、呼び出し側が Windows のセッション 0 で昇格した状態で動いているとき
+(管理者が OpenSSH でログインすると、この状態になります) に `true` になり、Windows 以外も含め、
+それ以外ではすべて `false` です。そのようなログインが自分で起動したゲートウェイは、この両方を引き継ぎます。そのため、そのゲートウェイが終了するまで、利用者自身の
+デスクトップアプリは `gateway_other_session` で拒否されます。ただし、登録済みのスケジュールされたタスクは
+例外です。`--start` はそのタスクを実行し、タスクはサインイン中の利用者のセッションで、通常の
+整合性レベルのままゲートウェイを起動します。`attach --start` はこれまでどおりゲートウェイを起動して終了しますが、その前に
+標準エラー出力へ1行の警告を出します。`true` を受け取ったリモートのクライアントは、
+`--start` を付けずに `attach` を実行してください (利用者自身のセッションが起動したゲートウェイなら、
+どちらからも使えます)。ゲートウェイが動いていないときは、そのマシンのデスクトップで、通常の
+(管理者でない) ウィンドウから Hermes を起動するよう利用者に頼んでください。この場面で `hermes gateway install` を勧めてはいけません。
+管理者の確認画面で承認されると、ゲートウェイが昇格した状態で起動することがあり、その場合は通常の
+ウィンドウも拒否されます (`gateway_elevated`)。
 
 接続できる持ち主がいないときは、JSON に `message` が加わり、`url` と `ticket` は含まれません。`message` は
 Ink が表示する判定です。まず `gateway <state>: <reason_code>` (コードがないときは `not ready`) の行があり、

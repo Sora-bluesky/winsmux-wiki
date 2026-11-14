@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: c867d976e8f12fb2d52052b451012c098a42e7ee
+upstream_blob: 7b2fd7a20e11c46e287675afe31996ee1309e76c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -460,7 +460,7 @@ def register(ctx):
 | `transform_terminal_output` | 変換 | 前面のプロセスの出力を上限付きで受け取ったあと、最後の出力の制限の前。最初の文字列が出力を置き換えます。 | `command`、`output`、`returncode`、`task_id`、`env_type` | コマンドや出力に資格情報が含まれることがあります。 |
 | `pre_transcription` | 変換 | プロバイダーが決まったあと、どのバックエンド（組み込み、コマンド型、プラグインが登録したもの）が呼ばれるよりも前に、音声認識の振り分け役が発火させます。辞書の結果は登録の順に適用され、項目ごとに最後の書き手が勝ちます（`prompt`、`language`、`model`。`file_path` は読み取り専用です）。 | `file_path`、`provider`、`model`、`language`、`prompt`、`source` | 最後のプロンプトは音声と一緒に、設定された音声認識のプロバイダーへ送られます。フックの戻り値に秘密の情報を入れないでください。 |
 | `pre_llm_call` | 指示 / 制御 | ループの前に、やり取りごとに 1 回。有効な文字列 / `{"context": ...}` の戻り値はすべてつなげられ、利用者のメッセージへ差し込まれます。最初の有効な `{"action": "block", "message": ...}` は、推論の要求を一度も送らないうちにそのやり取りを終わらせます。 | `session_id`、`task_id`、`turn_id`、`user_message`、`conversation_history`、`is_first_turn`、`model`、`platform`、`parent_session_id`、`sender_id` | 利用者のメッセージと会話の履歴が丸ごと。 |
-| `post_llm_call` | 観測役 | 中断されずに成功したやり取りの締めくくり。戻り値は無視されます。 | `session_id`、`task_id`、`turn_id`、`user_message`、`assistant_response`、`conversation_history`、`model`、`platform`、`side_question_token` | プロンプト、応答、履歴が丸ごと。 |
+| `post_llm_call` | 観測役 | 中断されずに成功したやり取りの締めくくり。戻り値は無視されます。 | `session_id`、`task_id`、`turn_id`、`user_message`、`assistant_response`、`conversation_history`、`model`、`platform`、`side_question_token`、`review_signals` | プロンプト、応答、履歴が丸ごと。 |
 | `transform_llm_output` | 変換 | `post_llm_call` と最後の配信の前。最初の空でない文字列が応答を置き換えます。 | `response_text`、`session_id`、`model`、`platform` | 最後のアシスタントの文章が丸ごと。 |
 | `pre_verify` | 指示 / 制御 | 編集したコードの確認の関門で、上限付きに。最初の有効な続行 / 遮断の指示がやり取りを続けさせます。 | `session_id`、`platform`、`model`、`coding`、`attempt`、`final_response`、`changed_paths` | 下書きの応答と変更されたパス。 |
 | `pre_api_request` | 観測役 | プロバイダーへの試みごとに、送る直前。戻り値は無視されます。 | `task_id`、`turn_id`、`api_request_id`、`session_id`、`user_message`、`conversation_history`、`platform`、`model`、`provider`、`base_url`、`api_mode`、`api_call_count`、`retry_count`、`request_messages`、`message_count`、`tool_count`、`approx_input_tokens`、`request_char_count`、`max_tokens`、`started_at`、`middleware_trace`、`request` | 機微さが高いです。以前からある `user_message`、`conversation_history`、`request_messages` は意図して素のままです。整えられた `request` のほうを使ってください。 |
@@ -792,13 +792,34 @@ def my_callback(session_id: str, user_message: str, assistant_response: str,
 | `conversation_history` | `list` | やり取りが終わったあとのメッセージの一覧全体の写し |
 | `model` | `str` | モデルの識別子 |
 | `platform` | `str` | セッションが動いている場所 |
-| `side_question_token` | `str \| None` | [`ctx.side_question`](/hermes/docs/developer-guide/plugin-llm-access/#asking-the-sessions-own-agent-ctxside_question) 用の1回限りのトークンで、そのセッションのプロファイルにあるすべてのプラグインが共有します。読み込まれたプラグインが `llm.side_question` の権限を持っていない限り `None` で、cron の実行とサブエージェントのやり取りでは常に `None` です |
+| `side_question_token` | `str \| None` | [`ctx.side_question`](/hermes/docs/developer-guide/plugin-llm-access/#asking-the-sessions-own-agent-ctxside_question) または [`ctx.fork_session`](/hermes/docs/developer-guide/plugin-llm-access/#forking-the-sessions-own-agent-ctxfork_session)（やり取りごとに要求は 1 回）用の1回限りのトークンで、そのセッションのプロファイルにあるすべてのプラグインが共有します。読み込まれたプラグインが `llm.side_question` か `llm.session_fork` の権限を持っていない限り `None` で、cron の実行とサブエージェントのやり取りでは常に `None` です |
+| `review_signals` | `dict`（読み取り専用） | このやり取りが終わった時点での自己学習の周期です。[下記](#review_signals) を参照してください |
 
 **発火する場所:** `agent/turn_finalizer.py`（`agent/conversation_loop.py` の `run_conversation()` が呼ぶ `finalize_turn()`）の中、ツールのループが最後の応答とともに抜けたあとです。`if final_response and not interrupted` で守られているので、利用者がやり取りの途中で割り込んだ場合や、エージェントが応答を作れないまま反復の上限に達した場合は発火**しません**。
 
 **戻り値:** 無視されます。
 
 **使いどころ:** 会話のデータを外部の記憶の仕組みへ同期する、応答の質の指標を計算する、やり取りの要約を記録する、あとの処理を起こす。
+
+**`review_signals`** は、Hermes 自身が裏で行う記憶 / スキルの見直しのもとになる数え上げを表します。これを使えば、やり取りのあとに作業をするプラグインは、ツールの呼び出しを自分で数えなくても、利用者の自己学習の周期に合わせて動けます。このフックは見直しの判断より前に発火し、期限の印は、そのあとその判断が使う値そのものです。
+
+| キー | 型 | 意味 |
+|-----|------|---------|
+| `tool_iterations_since_skill_review` | `int` | 前回のスキルの見直し、または `skill_manage` の呼び出しからの、エージェントのループの回数（きっかけの判定が比べた値です。`skill_review_due` のときは、フックのあとでリセットされます） |
+| `user_turns_since_memory_review` | `int` | 前回の記憶の見直し、または `memory` の呼び出しからの、利用者のやり取りの回数（`memory_review_due` のやり取りでは、すでに `0` に戻っています） |
+| `skill_review_due` | `bool` | このやり取りでスキルのきっかけが発火したかどうか（`skills.creation_nudge_interval` に達していて、`skill_manage` が使える） |
+| `memory_review_due` | `bool` | このやり取りで記憶のきっかけが発火したかどうか（`memory.nudge_interval` に達していて、組み込みの記憶が使える） |
+| `background_review_enabled` | `bool` | 期限の来たきっかけが、実際に見直しを分岐させて動かすかどうか。条件は `auxiliary.background_review.enabled` が有効で、cron の実行でもサブエージェントでもないことです |
+| `skill_nudge_interval` | `int` | `skills.creation_nudge_interval`（0 = 無効） |
+| `memory_nudge_interval` | `int` | `memory.nudge_interval`（0 = 無効） |
+
+Hermes は `background_review_enabled and (skill_review_due or memory_review_due)` のときに、見直しを分岐させて動かします。このマッピングはすべてのコールバックで共有され、変更できません。
+
+```python
+def on_post_llm_call(review_signals=None, side_question_token=None, **kwargs):
+    if review_signals and review_signals["skill_review_due"]:
+        ...  # the user's skill cadence is due: do the plugin's own skill follow-up now
+```
 
 **例 — 外部の記憶へ同期する:**
 
@@ -1908,7 +1929,7 @@ def register(ctx):
 
 #### `pre_auxiliary_call` / `post_auxiliary_call` {#preauxiliarycall-postauxiliarycall}
 
-補助の LLM の呼び出し — セッションの題名付け、文脈の圧縮、MoA の助言役とまとめ役、画像、承認の分類、記憶などの周辺の作業 — は、主のツールのループの外で動き、`pre_api_request` / `post_api_request` を発火させ**ません**（あちらはやり取りの範囲に留まるので、やり取りごとに追跡するプラグインが周辺の通信をうっかり見ることはありません）。代わりに `pre_auxiliary_call` / `post_auxiliary_call` を購読してください。プロバイダーへの実際の試みごとに 1 回（再試行と代替も含めて）、同じ中身の形に加えて `aux_task`（作業の名前。たとえば `title_generation`、`compression`、`moa_aggregator`、`vision`、プラグインの [`ctx.side_question`](/hermes/docs/developer-guide/plugin-llm-access/#asking-the-sessions-own-agent-ctxside_question) では `plugin_side_question` で、このときは尋ねたプラグインの `plugin_id` も運びます）とともに発火します。`session_id` / `task_id` / `turn_id` は、やり取りの下で動いている場合は親のやり取りのもの、そうでなければ空です。`api_request_id`（`aux-…`）は 1 つの論理的な呼び出しのすべての試みで共通で、`retry_count` がそれらを区別します。どちらも観測専用で、開く側へ倒れます。例外を投げたり時間切れになったりしたコールバックは記録され、補助の作業は続きます。`post_auxiliary_call` は、試みが例外を投げた場合に `error` / `error_type` を、応答が流れとして返された場合に `streaming: True`（このとき `usage`/`response` は `None`）を運びます。
+補助の LLM の呼び出し — セッションの題名付け、文脈の圧縮、MoA の助言役とまとめ役、画像、承認の分類、記憶などの周辺の作業 — は、主のツールのループの外で動き、`pre_api_request` / `post_api_request` を発火させ**ません**（あちらはやり取りの範囲に留まるので、やり取りごとに追跡するプラグインが周辺の通信をうっかり見ることはありません）。代わりに `pre_auxiliary_call` / `post_auxiliary_call` を購読してください。プロバイダーへの実際の試みごとに 1 回（再試行と代替も含めて）、同じ中身の形に加えて `aux_task`（作業の名前。たとえば `title_generation`、`compression`、`moa_aggregator`、`vision`、プラグインの [`ctx.side_question`](/hermes/docs/developer-guide/plugin-llm-access/#asking-the-sessions-own-agent-ctxside_question) では `plugin_side_question`、プラグインの [`ctx.fork_session`](/hermes/docs/developer-guide/plugin-llm-access/#forking-the-sessions-own-agent-ctxfork_session) の要求ごとには `plugin_fork` で、どちらもそのプラグインの `plugin_id` も運びます）とともに発火します。`session_id` / `task_id` / `turn_id` は、やり取りの下で動いている場合は親のやり取りのもの、そうでなければ空です。`api_request_id`（`aux-…`）は 1 つの論理的な呼び出しのすべての試みで共通で、`retry_count` がそれらを区別します。どちらも観測専用で、開く側へ倒れます。例外を投げたり時間切れになったりしたコールバックは記録され、補助の作業は続きます。`post_auxiliary_call` は、試みが例外を投げた場合に `error` / `error_type` を、応答が流れとして返された場合に `streaming: True`（このとき `usage`/`response` は `None`）を運びます。
 
 ### `on_skill_lifecycle` {#onskilllifecycle}
 

@@ -2,7 +2,7 @@
 title: "Webhook"
 description: "GitHub や GitLab などのサービスからイベントを受け取り、Hermes のエージェント実行を起こす"
 upstream_path: user-guide/messaging/webhooks.md
-upstream_blob: d91fa433d34519e08530ab2fbf2910a29abfc4d8
+upstream_blob: c80c241358f08c262cc8f3d1945944a81e729f2d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks
 ---
@@ -75,7 +75,7 @@ curl http://localhost:8644/health
 |----------|----------|-------------|
 | `events` | いいえ | 受け付けるイベント種別のリスト（例: `["pull_request"]`）。空にすると、すべてのイベントを受け付けます。イベント種別は `X-GitHub-Event`、`X-GitLab-Event`、またはペイロード内の `event_type` から読み取ります。 |
 | `secret` | **はい** | 署名検証に使う HMAC シークレット。ルートに書かなければ全体の `secret` が使われます。`"INSECURE_NO_AUTH"` にすると検証を飛ばしますが、これはテスト専用です。 |
-| `signature` | いいえ | ルートが受け付ける署名方式を 1 つに固定します。`generic`（`X-Webhook-Signature-V2` と `X-Webhook-Timestamp`、または Standard Webhooks / Svix のヘッダー）、`github`（`X-Hub-Signature-256`）、`gitlab`（`X-Gitlab-Token`、または Standard Webhooks のヘッダーで送られる GitLab の署名トークン）、`linear`（`Linear-Signature`）のいずれかを指定します。それ以外のヘッダーの系統には `401` を返します。省略すると、対応しているすべての方式を受け付けます（この項目ができる前と同じ動きです）。`hermes webhook subscribe` は新しいルートに `signature: generic` を書き込みます。設定をおすすめします。[署名方式を固定する](#pin-the-signature-scheme)を参照してください。 |
+| `signature` | いいえ | ルートが受け付ける署名方式を 1 つに固定します。`generic`（`X-Webhook-Signature-V2` と `X-Webhook-Timestamp`、または Standard Webhooks / Svix のヘッダー）、`github`（`X-Hub-Signature-256`）、`gitlab`（`X-Gitlab-Token`、または Standard Webhooks のヘッダーで送られる GitLab の署名トークン）、`linear`（`Linear-Signature`）のいずれかを指定します。それ以外のヘッダーの系統には、知らないルートと同じ `404` を返します。省略すると、対応しているすべての方式を受け付けます（この項目ができる前と同じ動きです）。`hermes webhook subscribe` は新しいルートに `signature: generic` を書き込みます。設定をおすすめします。[署名方式を固定する](#pin-the-signature-scheme)を参照してください。 |
 | `profile` | いいえ | `gateway.multiplex_profiles` を有効にしているとき、このルートを実行できるプロファイル。省略すると既定プロファイル専用のルートになります。プロファイル名（たとえば `coder`）を指定すると、そのルートとシークレットが `/p/coder/webhooks/<route>` に結び付きます。動的な登録では `hermes webhook subscribe <name> --route-profile coder` で設定します。 |
 | `prompt` | いいえ | ペイロードにドット記法でアクセスできるテンプレート文字列（例: `{pull_request.title}`）。省略すると、JSON ペイロード全体がプロンプトに書き出されます。ペイロードの中身は信頼できません。[認証済みは信頼済みではありません](#authenticated-does-not-mean-trusted)を参照してください。 |
 | `filters` | いいえ | 宣言的なペイロードのふるい分け。認証・本文・イベントによる絞り込みのあと、エージェント実行や直接配信の前に評価されます。条件に合わない場合は HTTP 200 で `{"status":"ignored","reason":"filter"}` を返します。 |
@@ -427,9 +427,8 @@ hermes webhook subscribe antenna-matches \
 |--------|---------|
 | `200 OK` | 配信できました。本文: `{"status": "delivered", "route": "...", "target": "...", "delivery_id": "..."}` |
 | `200 OK`（status=duplicate） | 重複除去の保持時間（1 時間）のうちに、同じ `X-GitHub-Delivery` の ID が届きました。再配信はしません。 |
-| `401 Unauthorized` | HMAC 署名が不正、または付いていません。 |
 | `400 Bad Request` | JSON の本文が壊れています。 |
-| `404 Not Found` | 知らないルート名です。 |
+| `404 Not Found` | 知らないルート名か、HMAC 署名が不正または付いていません（ルート名を探られないよう、どちらも同じ応答にしています）。 |
 | `413 Payload Too Large` | 本文が `max_body_bytes` を超えました。 |
 | `429 Too Many Requests` | ルートの流量制限を超えました。 |
 | `502 Bad Gateway` | 送り先のアダプターがメッセージを拒否したか、エラーになりました。詳細はサーバー側のログに残り、応答本文はアダプターの内部が漏れないよう一律で `Delivery failed` になります。 |
@@ -508,7 +507,7 @@ hermes webhook subscribe github-issues \
   --description "Triage new GitHub issues"
 ```
 
-実行すると webhook の URL と、自動生成された HMAC シークレットが返ります。送信元サービスがその URL へ POST するように設定してください。
+実行すると webhook の URL と、自動生成された HMAC シークレットの一部を伏せた形が返ります。シークレットの全体は、`~/.hermes/webhook_subscriptions.json` の中にルート名の項目として保存されます（自分で決めた値を使うなら `--secret` を渡します）。送信元サービスがその URL へ POST するように設定してください。
 
 独自の方法で署名するサービス向けに `--signature github`、`gitlab`、`linear` のいずれかを渡さない限り、新しい購読は `--signature generic`（タイムスタンプ付きの V2 または Standard Webhooks）に固定されます。既存の購読を更新しても、固定した方式はそのまま残ります。ダッシュボードで既存のルートを保存し直すときも、`signature` を指定しなければ固定した方式はそのまま残ります（明示的に選んだ場合はその方式に置き換わります）。MCP のイベント購読は、最初に作られたときに `generic` に固定されます。
 
@@ -604,7 +603,7 @@ webhook アダプターは、いくつもの層で守りを固めています。
 - **GitLab**: `X-Gitlab-Token` ヘッダー — シークレット文字列そのものの照合
 - **Standard Webhooks**: `webhook-id`、`webhook-timestamp`、`webhook-signature` の各ヘッダー — 署名の対象は `{id}.{timestamp}.{raw_body}` で、署名は `v1,<base64-hmac-sha256>` の形です
 - **汎用（V2・推奨）**: `X-Webhook-Signature-V2` と `X-Webhook-Timestamp` のヘッダー — `<timestamp>.<body>` の HMAC-SHA256 の 16 進ダイジェスト。タイムスタンプ（Unix 秒）はサーバー時計の ±300 秒以内である必要があり、これによって盗まれたリクエストの再送を防ぎます。
-- **汎用（V1・拒否）**: `X-Webhook-Signature` は本文だけに署名するため、盗まれたリクエストは配信 ID のキャッシュが切れたあとも有効なままになります。V1 の署名しかないリクエストには、ループバックからであっても `401 Unauthorized` を返します。送信側を上のタイムスタンプ付きの V2 形式へ切り替えてください。ゲートウェイはルートごとに 1 回、移行の手順をログに出します。
+- **汎用（V1・拒否）**: `X-Webhook-Signature` は本文だけに署名するため、盗まれたリクエストは配信 ID のキャッシュが切れたあとも有効なままになります。V1 の署名しかないリクエストには、ループバックからであっても、知らないルートと同じ `404` を返します。送信側を上のタイムスタンプ付きの V2 形式へ切り替えてください。ゲートウェイはルートごとに 1 回、移行の手順をログに出します。
 
 シークレットを設定しているのに、認識できる署名ヘッダーが 1 つもない場合、そのリクエストは拒否されます。
 
@@ -695,8 +694,8 @@ platforms:
 - GitHub の場合は HMAC を使うので、`X-Hub-Signature-256` を見ます
 - GitLab の場合はトークン文字列の照合なので、`X-Gitlab-Token` を見ます
 - 汎用の送信側では `X-Webhook-Signature-V2` と `X-Webhook-Timestamp` を使います。本文だけの V1 署名は拒否されます
-- `signature` を設定したルートは、それ以外の方式をすべて `401` で拒否します（ゲートウェイのログで `is pinned to signature` を探してください）。`--signature` を付けずに `hermes webhook subscribe` で作った購読は `generic` に固定されています
-- ゲートウェイのログに `Invalid signature` の警告が出ていないか確かめます
+- `signature` を設定したルートは、それ以外の方式をすべて、存在しないルートと同じ `404 Unknown route` で拒否します（ゲートウェイのログで `is pinned to signature` を探してください）。`--signature` を付けずに `hermes webhook subscribe` で作った購読は `generic` に固定されています
+- 署名が正しくない場合も、存在しないルートと同じ `404 Unknown route` が返ります。どちらなのかを見分けるには、ゲートウェイのログに `Invalid signature` の警告が出ていないか確かめます
 
 ### イベントが無視される {#event-being-ignored}
 

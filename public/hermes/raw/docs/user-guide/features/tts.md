@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md
-upstream_blob: cf1e931e62a819404ad00193a09f840c544dceb7
+upstream_blob: 41e01d3ee5fa041f0b2d8abd6ff9b4c6b74c5a98
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tts
 ---
@@ -336,7 +336,7 @@ tts:
 
 **`output_format` に指定できる値:** `mp3`（既定）、`wav`、`ogg`、`flac`、`m4a`、`aac`、`amr`、`opus`。コマンドは実際にその形式を作らなければなりません（たとえば `ffmpeg` を使って）。Hermes は宣言された値を確かめて、出力ファイルにその名前を付けるだけです。知らない値なら `mp3` に落ちます。選ばれた形式は `{format}` という置き換え文字としてコマンドにも渡されます。
 
-**子プロセスの環境:** コマンド型の提供元（読み上げも文字起こしも）は、Hermes の秘密の値を子プロセスの環境から取り除いた状態で走ります。ゲートウェイのボットのトークン、LLM の提供元の API キー、内部の中継用の資格情報は消され、`PATH`、`HOME`、ロケールといったふつうの変数は残ります。コマンドの雛形が環境から自前の API キーを必要とするなら（たとえば `curl` の一行コマンド）、提供元の設定の `env_passthrough` に変数名を並べてください。
+**子プロセスの環境:** コマンド型の提供元（読み上げも文字起こしも）は、Hermes の秘密の値を子プロセスの環境から取り除いた状態で走ります。ゲートウェイのボットのトークン、LLM の提供元の API キー、内部の中継用の資格情報は消され、`PATH`、`HOME`、ロケールといったふつうの変数は残ります。コマンドの雛形が環境から自前の API キーを必要とするなら（たとえば `curl` の一行コマンド）、提供元の設定の `env_passthrough` に変数名を並べてください。ただし `OPENAI_API_KEY` のように Hermes が管理する提供元のキーは、ここに書いても受け付けられません（ログに警告を出して外されます）。コマンドで使うキーには、専用の変数名を付けてください。
 
 ```yaml
 tts:

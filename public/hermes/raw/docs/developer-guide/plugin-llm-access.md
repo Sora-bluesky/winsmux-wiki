@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインからの LLM 呼び出し"
 description: "ctx.llm を使うと、プラグインの中からどんな LLM 呼び出しもできます。チャットでも構造化出力でも、同期でも非同期でも同じです。認証はホストが持ち、信頼ゲートは既定で閉じ、JSON Schema による検証も選べます。"
 upstream_path: developer-guide/plugin-llm-access.md
-upstream_blob: 22efc71c202d0c17caf0346a10d1c2186b76f36a
+upstream_blob: a619c06ae25e17c6d0b0f1cb93fd9e3ea8e6c4db
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugin-llm-access
 ---
@@ -409,10 +409,28 @@ def register(ctx):
 
 #### 組み込みの枠を引き継ぐ {#inheriting-a-built-in-slot}
 
-`inherit_from` には、組み込みの補助タスク（`compression`、`mcp`、
-`vision` など）か、自分のプラグイン（またはそれより先に読み込まれたプラグイン）がすでに
-登録したタスクの名前を書きます。すると、運用側が自分のタスクに直接モデルを固定するまで、
-そのタスクは引き継ぎ元の枠のモデルを使います。
+`inherit_from` には、モデルの選択画面に並ぶ組み込みの補助タスク
+（`compression`、`mcp`、`vision`、`curator` など）、`background_review`、あるいは
+自分のプラグイン（またはそれより先に読み込まれたプラグイン）がすでに登録したタスクの名前を書きます。
+それ以外のコアの `auxiliary.*` の設定は、引き継ぎ元になりません。すると、運用側が自分のタスクに
+直接モデルを固定するまで、そのタスクは引き継ぎ元の枠のモデルを使います。
+
+**組み込みの枠のモデルに従うには、運用側の許可が要ります。** 枠の経路
+（`provider`、`model`、`base_url`、`api_key`、`api_mode`、キーを入れる環境変数、
+`reasoning_effort`、`extra_body`、`fallback_chain`）が引き継がれるのは、運用側が
+あなたのプラグインに `allow_task_override` を設定したときだけです。これは、`task=` で
+組み込みの枠を指定できるようにするのと同じ許可です。許可がなければ、タスクは枠の
+それ以外の設定（`timeout` など）だけを引き継ぎ、自分の経路で動きます。つまり、プラグインの
+`defaults`、それがなければ有効になっている本体のモデルです。タスクをユーザーの見直し用や
+curator 用のモデルに従わせたいときは、セットアップの手順にこの設定を書いておいてください。
+
+```yaml
+plugins:
+  entries:
+    my-plugin:
+      llm:
+        allow_task_override: true
+```
 
 ```python
 def register(ctx):
@@ -429,6 +447,8 @@ def register(ctx):
   `auxiliary.compression` を変えると、classifier も次の呼び出しから、プロファイルごとにそれに従います。
 - **優先順位:** 引き継ぎ元が土台になり、その上にプラグインの `defaults`、さらにその上に
   運用側の `auxiliary.<task>` の設定が重なります。
+- **引き継ぎの連鎖は、その根元として扱われます。** 組み込みの枠を引き継いでいる別のプラグインのタスクを
+  引き継いだ場合、その枠の経路が引き継がれるのは、自分のプラグインにも許可があるときだけです。
 - **運用側の固定は、経路まるごとで優先されます。** `auxiliary.classifier` で
   `auto` 以外のプロバイダー、モデル、`base_url` のどれかを設定すると、プロバイダー・モデル・接続先・
   キー・推論の強さはすべてその設定から取られ、引き継ぎ元の経路の値が混ざることはありません。
@@ -533,6 +553,7 @@ plugins:
 | `agent_id=`     | 不許可  | `allow_agent_id_override: true`  |
 | `profile=`      | 不許可  | `allow_profile_override: true`   |
 | もとからある `task=` | 不許可  | `allow_task_override: true`      |
+| 組み込みの枠から引き継いだ経路 | 除外 | `allow_task_override: true` |
 
 上書きは、それぞれ独立して許可されます。`allow_model_override` を与えても
 `allow_provider_override` を与えたことには**なりません**。モデルを選ぶことを
@@ -669,6 +690,204 @@ capabilities:
 `aux_task="plugin_side_question"` と、質問したプラグインを指す `plugin_id` を付けて
 発火します。ターン単位の `pre_api_request` /
 `post_api_request` は、この呼び出しでは発火しません。
+
+## セッション自身のエージェントを分岐させる（`ctx.fork_session`） {#forking-the-sessions-own-agent-ctxforksession}
+
+:::caution 実験的な機能
+`ctx.fork_session` と [`ctx.register_idle_task`](#idle-tasks-ctxregister_idle_task) は
+実験的な機能です。シグネチャや分岐のハンドルの形は、今後のリリースで変わることがあります。ハンドルは、
+プレーンなデータを返す、プラグイン内の小さな関数ひとつの中に閉じ込め、ターンを越えて保存しないでください。
+`fork_session` は、使えなくても困らないものとして扱ってください。要求が拒否されたとき
+（`llm.session_fork` の許可がない、トークンが不正・失効済み・使用済み、許可一覧にないツールを指定した）は `None` を返しますし、
+どこでも使えるわけではありません。`plugins.isolation: host` のもとでは、サードパーティのプラグインの
+`ctx.fork_session` は存在しても `PluginHostUnsupported`（`RuntimeError` の一種）を出します。ハンドルが
+Hermes のプロセス内で動いている実際のセッションのエージェントのスレッドを追うためです。`None` や例外を受けたときに
+「分岐なし」として動き続けるプラグインなら、どちらの環境でも動きます。
+:::
+
+`ctx.side_question` が受け取るのは、テキストの返答ひとつです。これに対して `ctx.fork_session` は、
+セッションのエージェントのコピーを、範囲を限って裏で走らせます。コピーは同じシステムプロンプト、
+`tools[]`、メモリ、会話を持ち、温まったプロンプトキャッシュの上で何段階かのプロンプトをこなします。
+その途中で、プラグインが名前を挙げた自身のツールを呼ぶこともできます。Hermes が自分のメモリやスキルを
+裏で見直すときのやり方を、プラグインにも開いたものです。典型的な使い方は、スキルを作ったり編集したりした
+ターンのあとで、そのスキルが共有する価値のあるものかを分岐に尋ね、共有を提案するプラグイン自身のツールを
+呼ばせる、というものです。
+
+```python
+import json
+import threading
+
+def register(ctx):
+    def offer_share(args, turn_origin=None, **kwargs):
+        if turn_origin != "plugin_fork:wisdom":
+            return json.dumps({"error": "only the background check may offer a share"})
+        ...  # present the approval card for args["skill"]
+        return json.dumps({"offered": True})
+
+    ctx.register_tool("wisdom_offer_share", "wisdom", OFFER_SCHEMA, offer_share)
+
+    def on_post_llm_call(side_question_token=None, review_signals=None, **kwargs):
+        if side_question_token is None or not (review_signals or {}).get("skill_review_due"):
+            return
+        handle = ctx.fork_session(
+            side_question_token,
+            "Did this session create or change a skill the team would benefit from? "
+            "If so, call wisdom_offer_share once for it; otherwise answer 'no'.",
+            tools=["wisdom_offer_share"], max_iterations=4)
+        if handle is not None:  # runs in the background; never wait inside the hook
+            threading.Thread(target=lambda: handle.wait(600) and ctx.state.set(
+                "last_check", handle.outcome), daemon=True).start()
+
+    ctx.register_hook("post_llm_call", on_post_llm_call)
+```
+
+```yaml
+capabilities:
+  - llm.session_fork
+```
+
+同意画面には「ターンのあとで、エージェントのコピーを裏で走らせます。コピーにはメモリを含む
+セッション全体が見え、プラグイン自身のツールを使え、メインモデルのトークンを使います。」と表示されます。
+
+### シグネチャと規則 {#signature-and-rules}
+
+`ctx.fork_session(token, prompt, *, tools=(), max_iterations=8,
+input_budget=None, task=None, timeout=None)` はハンドルを返します。何も始まらなかったときは
+`None` を返します。
+
+* `token` は `post_llm_call` が受け取る `side_question_token` です。上の
+  [リースの規則](#lease-rules)がそのまま当てはまります。ひとつのトークンで行える要求は
+  1ターンに1回だけで、追加の質問*か*分岐のどちらかです。これは全プラグインで共有します。
+  人が見ていないターン（cron、サブエージェント）にはトークンが渡りません。別のプロファイルの
+  プラグインが呼ぶと `None` が返り、トークンは使われません。`llm.session_fork` を持たない
+  プラグインが呼んだときも、分岐の許可一覧（後述）にないツールを指定したときも、同じく
+  `None` が返り、トークンは使われません。それ以外で `None` が返ったときは、トークンは使われたことになります。
+* `prompt` は空でない文字列で、長さは **8192 文字** までです。分岐のユーザーメッセージとして
+  送られます。システムプロンプトと `tools[]` はセッションのものとバイト単位で同じままなので、
+  最初のリクエストはほとんどがキャッシュの読み出しで済みます。
+* `tools` には、分岐が呼んでよいツールの名前を、分岐の許可一覧の中から並べます。許可一覧に
+  入るのは、呼び出しがこのプラグインの `register_tool` で登録したハンドラーに届く名前
+  （その名前の現在の登録がこのプラグインのもので、Hermes がそれをツールレジストリに振り分けるもの）と、
+  Hermes がひとつの中央の一覧で「分岐しても安全」と印を付けたコアのツール（現時点ではありません）です。
+  それ以外のツールはすべて一覧の外です。別のプラグインのツール、すべての MCP ツール、
+  「分岐しても安全」の印が付いていないすべてのコアのツールがそうで、
+  `delegate_task`、`message_agent`、`cronjob_manage`、Kanban のツールも含まれます。
+  Hermes がツールレジストリより先に振り分ける名前は、プラグインが登録していても一覧の外です。
+  その呼び出しはプラグインのハンドラーに決して届かないからです。エージェントレベルのツール、
+  古い別名、Tool Search の橋渡し、`connectors__<connector>__<tool>` という形の名前すべて、
+  セッションのメモリプロバイダーとコンテキストエンジンのツールがこれに当たります。許可一覧にない
+  ツールを指定すると、トークンを使わずに `None` が返ります。ツールのハンドラーは、分岐が追いかけられない
+  仕事（サブエージェント、リモートのエージェントタスク、cron の実行、切り離されたワーカー、
+  MCP サーバーのサンプリング要求）を始められてしまい、その仕事には分岐のツール一覧も、
+  自動で拒否される承認も引き継がれません。プラグイン自身のハンドラーなら、もともと
+  プラグインのコードを動かしているだけです。
+* 指定したツールは、セッションの中にもなければなりません。なければ呼び出しは `None` を返し、
+  トークンは使われます。セッションの中にあるとは、その `tools[]` に載っているか、Tool Search の
+  裏に後回しにされている（既定で有効で、プラグインのツールは既定で後回しになります）ことです。
+  後者の場合、セッションの `tools[]` にはその代わりに `tool_call` の橋渡しが入っています。
+  分岐からもセッションのツールはすべて、バイト単位でそのまま*見えます*（キャッシュを合わせるため）。
+  一覧にない呼び出しは、振り分けの時点で、許可されたツールを挙げたメッセージとともに拒否されます。
+* 後回しにされたツールは `tool_call` を通して呼ばれますが、プラグインは自分のツールのどれが
+  後回しになっているかを知らなくてかまいません。Hermes がプロンプトに一行足して、そのツールを
+  名前を指定して `tool_call` 経由で呼ぶようモデルに伝え、続けてツールのパラメーターを示します。
+  分岐の中では、`tool_call` が運べるのは指定されたツールの呼び出しだけです。それ以外のツール
+  （プラグイン自身の指定されていないツール、別のプラグインのツール、コアのツール、コネクター）への
+  `tool_call` は振り分けの時点で拒否され、`tool_search` と `tool_describe` も拒否されたままです。
+  足した一行が、すでにツールとそのパラメーターを示しているからです。分岐が始まるときには、
+  許可一覧が実際のセッションと照らしてもう一度読み直され、プラグイン自身のものでなくなったツールや、
+  セッションがいまはレジストリより先に扱うようになったツールも、振り分けの時点で拒否されます。
+  一覧が空なら、ツールを持たない分岐になります。
+* `max_iterations` は分岐のループの回数の上限です（1〜16）。分岐全体の入力トークンには、
+  裏で行う見直しと同じ上限があります（`auxiliary.background_review.max_input_tokens`、
+  既定はコンテキストウィンドウの 75%）。`input_budget` では、この上限を下げることしかできません。
+* 危険なコマンドの承認は自動で拒否され、分岐が行ったことは会話記録にもセッションの
+  データベースにも書き込まれません。
+* 分岐は、セッションが次のターンを始めた時点で取り消されます。実行中でも、開始中でも、
+  まだ後回しにされていても同じで、後回しの分岐はそのまま起動しません。例外は、プラグインが
+  差し込むターン（`ctx.inject_message`。分岐自身のツールのハンドラーから差し込む場合も含みます）です。
+  このターンは、セッションで実行中の裏の見直しと実行中の分岐が終わるのを最大 120 秒待ち、
+  そのあとまだ動いているものを取り消します。そのため、差し込んだターンで裏の作業を取り消せるとは
+  考えないでください。この猶予のせいで人が待たされることはありません。差し込んだターンが待っている間に
+  人がセッションへメッセージを送ると、`display.busy_input_mode` がそれをどう扱うかにかかわらず
+  待ちはすぐに終わり、裏の作業は、人のターンのときと同じように取り消されます。キューに入った
+  メッセージ（キューモード、割り込み、差し込んだターンにエージェントがまだ付いていないうちに来た
+  メッセージ）は、差し込んだターンのあとに、届いた順にそれぞれ独立したターンとして実行されます。
+  ターンの向きを変える steer（steer モードや `/steer`）や割り込みモードでの訂正は、差し込んだ
+  ターンそのものに入ります。別のプラグインが差し込んだメッセージでは、待ちは終わりません。
+  ゲートウェイの停止、再起動、プロファイルの退役でも、停止時の後始末に使える時間の範囲内で、
+  同じように待ちは終わります。差し込んだターンはゲートウェイ自身のコンテキストから始まるので、
+  分岐が差し込んだものであっても、そのツール呼び出しには `turn_origin` が付きません。`timeout`
+  （秒、最大 1800）を指定すると、実時間での制限が加わります。どちらも協調的な仕組みで、
+  分岐に割り込みをかけるだけです。分岐は次に割り込みを確かめたところで止まり、分岐のワーカーが
+  終了した時点でハンドルが確定します。割り込みを無視するプロバイダーの呼び出しがあると、それが
+  戻るまでハンドルは開いたままになるので、待つときは上限を付けてください（`handle.wait(t)`）。
+* `task` には、このプラグイン自身の
+  [`register_auxiliary_task`](#task-routed-auxiliary-calls) の経路のどれかを指定します。すると
+  分岐はその経路のモデルで動き、そのモデルは `auxiliary.background_review` と同じように解決されます
+  （違うモデルはキャッシュが冷えた状態から始まり、会話の要約を受け取ります）。プラグインが
+  登録していないタスクを指定すると `None` が返ります。`task` を指定しなければ、分岐はセッションの
+  モデルで動きます。`inherit_from="background_review"` を指定した経路がユーザーの見直し用モデルに
+  従うのは、`allow_task_override` があるときだけです（[組み込みの枠を引き継ぐ](#inheriting-a-built-in-slot)）。
+* Hermes が手元で管理するランタイム（同梱の llama-server）では、分岐は裏の見直しと同じように、
+  マシンが空くまで待ちます（`outcome == "deferred"`）。同じセッションに対して同じプラグインの
+  新しい後回しの分岐が来ると、待っていたほうはそれに置き換えられます（`"superseded"`）。
+
+### ハンドル {#the-handle}
+
+ハンドルには `handle.done`、`handle.cancelled`、`handle.outcome`、`handle.result`（分岐の
+最終的なテキスト、または `None`）、`handle.actions`（分岐が呼んだ許可済みのツール名を
+呼んだ順に並べたもの。`tool_call` を通した呼び出しは、それが運んだツールとして載ります）、
+`handle.wait(timeout)`、`handle.cancel()` があります。
+`outcome` は `deferred`、`running`、`ok`、`cancelled`、
+`superseded`、`timeout`、`budget_exhausted`、`error`、`error:spawn`（分岐のワーカースレッドを
+始められなかった。`fork_session` は例外を出す代わりに、確定済みのハンドルを返します）、
+または `refused:<reason>` のどれかです。拒否の理由は `parent_gone`（分岐が始まる前に
+セッションのエージェントが解放された）、`moa`（Mixture-of-Agents のランタイム）、
+`agent_provider`（自前のツールを実行する、エージェントをプロバイダーとして使うランタイム）、
+`runtime_changed`（そのターンのあとでセッションのモデルかプロバイダーが切り替わった）のどれかです。
+ハンドルが分岐のエージェントそのものを見せることはありません。
+
+### 分岐と実際のエージェントを見分ける {#telling-a-fork-from-the-live-agent}
+
+分岐の中で呼ばれたツールのハンドラーは、キーワード引数
+`turn_origin="plugin_fork:<plugin id>"` を受け取ります（引数として宣言するか、
+`**kwargs` を受け付けてください）。実際に動いているエージェントからの呼び出しには `turn_origin` が
+付きません。上の例ではこれを使って、実際のエージェントが自分の判断でプラグインの
+共有提案ツールを動かせないようにしています。
+
+使用量は `plugin_fork:<plugin id>` としてセッションに課金されます。分岐がプロバイダーに
+送るリクエストのたびに、`pre_auxiliary_call` /
+`post_auxiliary_call` が `aux_task="plugin_fork"` と `plugin_id` を付けて発火します。
+ターン単位の `pre_api_request` / `post_api_request` が発火することはありません。
+
+## アイドル時のタスク（`ctx.register_idle_task`） {#idle-tasks-ctxregisteridletask}
+
+`fork_session` と同じく実験的な機能です（[上](#forking-the-sessions-own-agent-ctxfork_session)の注意書きを見てください）。
+`ctx.register_idle_task(name, fn, *, interval_hours, min_idle_hours=2, first_run="defer")` は、
+セッションを持たないプラグインのジョブを、スキルの curator と同じアイドル時のスケジュールで実行します。
+規則の全体は
+[Hermes がアイドルのときにジョブを実行する](/hermes/docs/developer-guide/plugins/#run-a-job-when-hermes-is-idle-ctxregister_idle_task)にあります。
+タスクの `fn` を書くときに前提とする約束は次のとおりです。
+
+* `fn` は、それを登録したプロファイルの中で、専用のスレッドで動きます。ホストの定期確認
+  （ゲートウェイの定期処理、CLI/TUI の起動時、`hermes serve` の保守用の定期処理）はそれを始めると
+  すぐに戻ります。実行を待つことはなく、ホスト側で時間制限を設けることもありません。
+* 1回の実行は短くしてください。独自の時間制限を設け、プラグインのデータにチェックポイントを残しながら
+  小さな単位で処理して、次の実行が今回止まったところから続けられるようにします。
+* 1回の実行は冪等にしてください。再起動で途中で切られた実行は記録を残さず、あとで最初から
+  やり直されます。そのため、同じ単位を2回処理しても害がないようにする必要があります。
+* ゲートウェイの定期処理が止まるとき（ゲートウェイの停止や、同じプロセス内でのマルチプレクサーの
+  再起動）は、新しい実行は始まらず、ゲートウェイは実行中のものを数秒待ってから、それを残したまま
+  止まります。プラグインのコードは止められず、`fn` に停止の合図も届かないので、まだ動いている実行は
+  裏で続きます。それが終わっても何も記録されず（タスクの状態は実行前のままなので、あとでもう一度
+  実行されます）、確保していた実行権を手放します。Hermes が保証するのは、停止のあとに新しい実行が
+  始まらず、タスクの状態も書き込まれないことだけです。1回の実行は短くしてください。
+* 同じタスクは、実行中のものがある間は次の実行が始まりません。実行権を持つプロセスが死んでいる
+  （クラッシュや強制終了）場合、その実行権は次の定期確認で引き継がれます。持ち主を確かめられない
+  実行権（別のマシンで書かれたもの）は、1時間たつと放棄されたものとみなされます。例外は
+  捕まえられてログに残り、`last_status: error` として記録されます。ホストまで届くことはありません。
+* `fn` からのモデルの呼び出しは、`ctx.llm` とその信頼ゲートを通ります。`fn` にはターンがないので、
+  `side_question_token` は渡らず、セッションを分岐させることもできません。
 
 ## プラグインの全体像の中での位置づけ {#where-this-fits-in-the-plugin-surface}
 

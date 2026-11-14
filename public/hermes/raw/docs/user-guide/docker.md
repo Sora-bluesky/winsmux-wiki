@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: 0cb953d5475b597c940b73cb340e43932543d7e5
+upstream_blob: 90582abc245c2b117d17186abd94db03a19531e4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -308,7 +308,7 @@ Hermes の対処（v2026.9.14 以降）:
   1. そのデータベースを使っている Hermes のプロセスをすべて止めてから、イメージに同梱の Python で一度だけオフライン変換します（イメージに `sqlite3` シェルはありません）: `docker exec hermes python3 -c "import sqlite3; print(sqlite3.connect('/opt/data/state.db').execute('PRAGMA journal_mode=DELETE').fetchone()[0])"`。あとで開いたときに WAL へ戻らないよう、`config.yaml` に `database.journal_mode: delete` を設定してください。
   2. データディレクトリをネイティブのボリュームへ移します。名前付きの Docker ボリューム（`-v hermes-data:/opt/data`）は VM 自身の ext4 ファイルシステム上にあり、WAL が普通に使えます。
 
-検出はコンテナ内の `/proc/self/mountinfo` を読んで行うので、ホストの OS に関係なく働きます。NFS、SMB、一般的な FUSE のマウントは判別しません。これらの上では `database.journal_mode: delete` を明示的に設定してください。gateway、cron、ワーカーの各プロセスがデータベースを同時に開くため、Hermes は SQLite の `locking_mode=EXCLUSIVE` を代わりの手段として用意していません。
+検出はコンテナ内の `/proc/self/mountinfo` を読んで行うので、ホストの OS に関係なく働きます。NFS、CIFS/SMB、sshfs のマウントは別に検出します。こうしたマウント上に新しく作るデータベースは、`database.journal_mode` を設定していない限り、ロールバック（`DELETE`）ジャーナルモードで始まります（WAL を強制したいときは `wal` を設定します）。WAL の共有メモリのロックを取るたびにネットワークの往復が発生し、同時に開いている接続がそこで止まってしまうからです。こうしたマウント上に既にある WAL データベースは WAL のまま使い続けます。その場合は、起動時に `hermes sessions set-journal-mode delete` という直し方を添えた警告を一度だけログに出し、`hermes doctor` もそのデータベースを指摘します。一般的な FUSE のマウントは判別しません。これらの上では `database.journal_mode: delete` を明示的に設定してください。gateway、cron、ワーカーの各プロセスがデータベースを同時に開くため、Hermes は SQLite の `locking_mode=EXCLUSIVE` を代わりの手段として用意していません。
 
 ### 書き換えないインストール先 {#immutable-install-tree}
 

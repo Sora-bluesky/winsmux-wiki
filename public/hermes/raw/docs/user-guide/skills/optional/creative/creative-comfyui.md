@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Comfyui — 拡散モデルのワークフローで画像・動画・音声を生成する"
 description: "拡散モデルのワークフローで画像・動画・音声を生成する"
 upstream_path: user-guide/skills/optional/creative/creative-comfyui.md
-upstream_blob: aba8707c504daf0990684831a9f95c9cbe8fa648
+upstream_blob: 350019c9e5cf3a44bf2ad55e07c09f65ca5405ca
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-comfyui
 ---
@@ -446,11 +446,11 @@ comfy model download \
   --url "https://huggingface.co/Comfy-Org/flux1-dev/resolve/main/flux1-dev-fp8.safetensors" \
   --relative-path models/checkpoints
 
-# CivitAI (set token first):
-comfy model download \
+# CivitAI / gated HuggingFace: pass the token via env for this run only
+# (--set-civitai-api-token / --set-hf-api-token persist it to comfy-cli's config.ini)
+CIVITAI_API_TOKEN="$CIVITAI_API_TOKEN" comfy model download \
   --url "https://civitai.com/api/download/models/128713" \
-  --relative-path models/checkpoints \
-  --set-civitai-api-token "YOUR_TOKEN"
+  --relative-path models/checkpoints
 ```
 
 入っているものの一覧は `comfy model list` で見られます。

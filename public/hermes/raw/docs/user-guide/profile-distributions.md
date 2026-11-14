@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プロファイル配布: エージェントまるごと共有する"
 description: ""
 upstream_path: user-guide/profile-distributions.md
-upstream_blob: a041d507f13902861be331f977cf52945a6c1e1b
+upstream_blob: be38fe367371f6cef2766b2503d4a4b03491a997
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/profile-distributions
 ---
@@ -219,6 +219,8 @@ skills/.*
 これは、導入する側で installer が取り除く [完全に除外されるパス](#whats-not-in-a-distribution-ever) と対応しています。ほかにリポジトリへ入れたくないもの（作業用の一時ファイル、大きな素材、ローカル専用のスキル）も、ここに書き足してください。
 
 cron については `cron/jobs.json` だけをコミットします。Hermes は `cron/` の下にあるそれ以外の項目をすべて実行時の状態（ロック、台帳、出力、提案、今後増えるスケジューラーの付随ファイル）として扱い、配布からインストールしたり置き換えたりすることはありません。`skills/` の直下にある隠し項目も、同じく Hermes がローカルで使う管理用のデータです。一方、作者が作ったスキルのディレクトリの中にある隠しファイルは、そのスキルの一部として扱われます。
+
+配布に入れるジョブは、それぞれ独自の `timezone` に固定できます（たとえば、導入した全員に同じ瞬間に届く `America/New_York` の 09:00 の市況レポートなど）。固定していないジョブは、利用者それぞれのプロファイルのタイムゾーンに従って動きます。詳しくは [配布するプロファイルでの、時刻を固定したジョブと現地時刻で動くジョブ](/hermes/docs/user-guide/features/cron/#pinned-and-local-time-jobs-in-a-shipped-profile) を参照してください。
 
 ### 手順4 — git リポジトリへ push する {#step-4-push-to-a-git-repo}
 

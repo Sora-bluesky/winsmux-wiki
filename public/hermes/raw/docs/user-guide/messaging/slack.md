@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Slack"
 description: "ソケットモードを使って Hermes Agent を Slack のボットとして設定する"
 upstream_path: user-guide/messaging/slack.md
-upstream_blob: 1f28a36d7143a97eb3b7926199ee76f296b7ba97
+upstream_blob: ba91c2a33c7a39b472dcdc217a13987fa46b5dd6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/slack
 ---
@@ -666,7 +666,7 @@ slack:
 :::
 
 :::note ボットに向けたものではないメッセージでの黙る合図
-ボットが人のメッセージに[黙るためのトークン](/hermes/docs/user-guide/messaging/#intentional-silence-tokens)だけで答えた場合、Hermes はふつう代わりに短いお知らせを投稿し、質問が答えのないまま残らないようにします。Slack では、ほかの人を @ で呼んで始まったメッセージや、`free_response_channels` のチャンネルで自分のスレッドを始める、呼びかけのない最上位のメッセージ（既定の `reply_in_thread: true` のとき）なら、トークンのまま黙っていてかまいません。1 対 1 の DM、ボットへの呼びかけ、コマンド、リアクションによる呼び出し、ボットが加わっている会話（スレッドや、`reply_in_thread: false` のチャンネル）でのふつうの続きには、これまでどおりお知らせが出ます。人どうしが @ で呼ばずに話すことの多いスレッドでは、`thread_followup_silence: true` にすると、チャンネルのスレッドでボットに向けられていない返信にも、トークンのまま黙っていられるようになります。DM（1 対 1 もグループも）、ボットへの呼びかけ、スレッドを使わないチャンネルでは、これまでどおりお知らせが出ます。
+ボットが人のメッセージに[黙るためのトークン](/hermes/docs/user-guide/messaging/#intentional-silence-tokens)だけで答えた場合、Hermes はふつう代わりに短いお知らせを投稿し、質問が答えのないまま残らないようにします。Slack では、ほかの人を @ で呼んで始まったメッセージや、`free_response_channels` のチャンネルで自分のスレッドを始める、呼びかけのない最上位のメッセージ（既定の `reply_in_thread: true` のとき）なら、トークンのまま黙っていてかまいません。1 対 1 の DM、ボットへの呼びかけ、コマンド、リアクションによる呼び出し、ボットが加わっている会話（スレッドや、`reply_in_thread: false` のチャンネル）でのふつうの続きには、これまでどおりお知らせが出ます。人どうしが @ で呼ばずに話すことの多いスレッドでは、`thread_followup_silence: true` にすると、チャンネルのスレッドでボットに向けられていない返信にも、トークンのまま黙っていられるようになります。DM（1 対 1 もグループも）、ボットへの呼びかけ、スレッドを使わないチャンネルでは、これまでどおりお知らせが出ます。Slack のすべての会話で（中継を通した Slack や DM も含めて）トークンだけの返事のまま黙っていられるようにするには、`platforms.slack` の下に `allow_silence: true` を書いてください。詳しくは[プラットフォームごと・ルームごとの意図的な沈黙](/hermes/docs/user-guide/messaging/#per-platform-and-per-room-intentional-silence)を参照してください。
 :::
 
 :::info

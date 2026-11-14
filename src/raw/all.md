@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（249 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（250 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -209,7 +209,7 @@ raw: /hermes/raw/all.md
 - [Automated GitHub PR Comments with Webhooks](/hermes/docs/guides/webhook-github-pr-review/)
 - [xAI Grok OAuth (SuperGrok / X Premium+)](/hermes/docs/guides/xai-grok-oauth/)
 
-## Developer Guide（64）
+## Developer Guide（65）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -244,6 +244,7 @@ raw: /hermes/raw/all.md
 - [Gateway local sessions](/hermes/docs/developer-guide/gateway-local-sessions/)
 - [Gateway Monitoring](/hermes/docs/developer-guide/gateway-monitoring/)
 - [Gateway Session Lifecycle](/hermes/docs/developer-guide/gateway-session-lifecycle/)
+- [Gateway over SSH: client contract](/hermes/docs/developer-guide/gateway-ssh-clients/)
 - [Hosted rooms across local profile owners](/hermes/docs/developer-guide/hosted-profile-owners/)
 - [Image Generation Provider Plugins](/hermes/docs/developer-guide/image-gen-provider-plugin/)
 - [macOS bundle updates](/hermes/docs/developer-guide/macos-bundle-updates/)

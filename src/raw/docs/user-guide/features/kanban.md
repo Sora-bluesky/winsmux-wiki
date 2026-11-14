@@ -2,7 +2,7 @@
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: c5d49c6ad0b7f5742a1b22dc3114337372cee490
+upstream_blob: 3808b4a4f908b620ee4d4d9dec9ad862398db3f9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -1279,6 +1279,12 @@ hermes kanban notify-unsubscribe t_abcd \
 `--user-id` を省くと、そのターンの送り主が補われます。`group_sessions_per_user`（既定）が有効なグループでは、これによって
 エージェントを起こす先が、別に作られる共有のセッションではなく、その参加者自身のセッションのままになります。ほかのチャットやトピックへの購読が
 呼び出し元の id を引き継ぐことはありません。`--user-id-alt` を明示した購読も同じです。
+
+`--thread-id` を省いた場合、ゲートウェイのセッションの中から自分のチャットを購読するときは、呼び出し元自身のトピックが対象になります。
+それ以外の場合は、同じチャットに対してこのタスクがすでに持っている購読のスレッドが使われます。そうした購読が複数あるときは、いちばん小さいスレッド id を選び、
+残りを stderr に表示します。推測の手がかりが何もない Telegram の DM が対象のときは、通知が DM の最上位（スレッドの外）に届くことを警告します。
+`--thread-id` を付けない `notify-unsubscribe` も、同じやり方で該当する行を消します。そのチャットにスレッドなしの購読があればそれを、なければ呼び出し元自身のトピックの購読を、
+それもなければそのチャットにただ 1 つあるスレッド付きの購読を消します。
 
 **`profile_routes` の下の Discord のスレッド:** ゲートウェイが複数のプロファイルを多重化して*チャンネル*を
 プロファイルへ振り分けている場合、そのチャンネルの*スレッド*について CLI から作った購読には、スレッドの

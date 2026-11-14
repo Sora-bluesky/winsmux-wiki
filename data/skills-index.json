@@ -1,6 +1,6 @@
 {
-  "sha": "04903d9",
-  "date": "2026-11-13",
+  "sha": "70b1193",
+  "date": "2026-11-14",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -39,7 +39,7 @@
       "name": "Claude Code",
       "description": "Delegate coding to Claude Code CLI (features, PRs)",
       "url": "/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/",
-      "date": "2026-11-12",
+      "date": "2026-11-14",
       "source": "bundled"
     },
     {
@@ -527,7 +527,7 @@
       "name": "Comfyui",
       "description": "Generate images, video, and audio via diffusion workflows",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/",
-      "date": "2026-10-28",
+      "date": "2026-11-14",
       "source": "optional"
     },
     {
@@ -1127,7 +1127,7 @@
       "name": "Box",
       "description": "Box manages cloud files, sharing, search, and metadata",
       "url": "/hermes/docs/user-guide/skills/optional/productivity/productivity-box/",
-      "date": "2026-10-28",
+      "date": "2026-11-14",
       "source": "optional"
     },
     {
@@ -1327,7 +1327,7 @@
       "name": "Oss Forensics",
       "description": "GitHub supply-chain forensics: recovery, IOCs, reporting",
       "url": "/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/",
-      "date": "2026-09-20",
+      "date": "2026-11-14",
       "source": "optional"
     },
     {

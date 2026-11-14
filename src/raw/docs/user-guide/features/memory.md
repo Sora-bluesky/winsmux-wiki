@@ -2,7 +2,7 @@
 title: "ずっと残る記憶"
 description: "Hermes Agent がセッションをまたいで覚えておく仕組み — MEMORY.md、USER.md、そしてセッションの検索"
 upstream_path: user-guide/features/memory.md
-upstream_blob: 3bde00ee5eeebdf1a6aa8133d9e82c7d9c69cf79
+upstream_blob: 3d0291dc247d51bd5932745749685577ed28bb6d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
 ---
@@ -333,6 +333,8 @@ memory:
 
 これが「エージェントが自分について間違った思い込みを保存した」への答えです。`write_approval: true` にしておけば、すべての保存 — とりわけ頼んでいない裏側からのもの — が、人物像に入る前にこちらの可否を待ちます。
 
+この関門がかかるのは、`memory` ツールを通した書き込みです。ファイルシステムの鍵ではありません。表のターンでは、汎用のファイル操作の道具（`write_file`、`patch`）やターミナルを使えば、今でも `MEMORY.md` / `USER.md` を直接書き換えられます。裏側の見直しは、既定ではそれができません。見直しが使ってよい道具の一覧がそうした書き込みの道具を拒んでいるため、`auxiliary.background_review.extra_tools` でそのどれかを名指ししないかぎり、見直しからの保存はかならず関門を通ります（[下](#allowing-a-narrowly-scoped-extra-review-tool-extra_tools)を参照）。
+
 下書きに回った `patch` や `remove`（裏側の見直しは、関門が切れていてもこれらを下書きに回します）は、対象の項目の全文を記録し、`/memory pending` でそれを表示します。承認が適用されるのはまさにその項目だけです。書き込みが下書きに回ったあとでその項目が変わっていたら、書き込みは断られ、却下できるよう保留のまま残ります。この固定の仕組みができる前に下書きに回った `replace`/`patch`/`remove` には確かめられる対象が無いので、これも断られます。却下してから、変更を作り直してください。`/memory approve` は、上書きしたり消したりしたすべての項目の全文を並べて示します。
 
 ## 裏側の見直しの知らせ（`display.memory_notifications`） {#background-review-notifications-displaymemorynotifications}
@@ -443,7 +445,7 @@ skills:
   write_approval: false     # false = write freely (default) | true = require approval
 ```
 
-`write_approval: true` のとき、skill の書き込み（作成 / 編集 / 部分修正 / write_file / 削除）は、どこから来たものでもかならず**下書きに回ります**。要点の1行はその場で見られますが、差分の全文は別のところに置かれます。
+`write_approval: true` のとき、skill の書き込み（`skill_manage` の操作である 作成 / 編集 / 部分修正 / write_file / remove_file / 削除）は、どこから来たものでもかならず**下書きに回ります**。記憶の関門と同じく、対象になるのは `skill_manage` ツールを通した書き込みです。汎用のファイル操作の道具やターミナルで skill のファイルを直接書き換えた場合は対象外です。要点の1行はその場で見られますが、差分の全文は別のところに置かれます。
 
 ```
 /skills pending             # list staged skill writes + a one-line gist each

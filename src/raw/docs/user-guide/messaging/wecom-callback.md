@@ -2,7 +2,7 @@
 title: "WeCom Callback（自社で作るアプリ）"
 description: ""
 upstream_path: user-guide/messaging/wecom-callback.md
-upstream_blob: f33f26eef1d5b181745c930e145fc59e34ef7881
+upstream_blob: b169ab08bbc68119113119c8b26eb030f4da5df3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging/wecom-callback
 ---
@@ -145,7 +145,7 @@ WECOM_CALLBACK_ALLOW_ALL_USERS=true
 
 コールバックの中身はすべて、EncodingAESKey を使った AES-CBC で暗号化されています。アダプターは次のように処理します。
 
-- **受信**: XML の中身を復号し、SHA1 の署名を検証します
+- **受信**: XML の中身を復号して SHA1 の署名を検証し、署名付きのタイムスタンプがゲートウェイの時計と 5 分以上ずれていれば受け付けません（リプレイ攻撃への対策）
 - **送信**: 返信はこちらから API を呼んで送ります（暗号化したコールバックの応答としては返しません）
 
 暗号処理の実装は、Tencent 公式の WXBizMsgCrypt SDK と互換です。
@@ -165,7 +165,8 @@ WeCom は、管理コンソールで登録した **Token** を使ってすべて
 Hermes に設定したトークンと、管理コンソール側が期待するトークンが食い違っているのが
 最もよくある原因です。**Token** と **EncodingAESKey** の両方を管理コンソールから
 コピーし直してください。どちらも途中で切れやすい値です。`~/.hermes/.env` の値で
-`=` の前後に空白が入っていても、署名の確認は失敗します。直したら
+`=` の前後に空白が入っていても、署名の確認は失敗します。ゲートウェイを動かすマシンの時計が 5 分以上ずれている場合も
+同じく失敗します（署名付きのタイムスタンプがリプレイとみなされて拒否されるためです。NTP による時刻合わせは有効のままにしてください）。直したら
 `hermes gateway run` を再起動してください。
 
 **コールバックの URL に届かない / 確認の手順で失敗する。**

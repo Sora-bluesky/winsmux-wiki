@@ -2,7 +2,7 @@
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: c4b00d2f912dd648b0944fb9eb421feeead722f1
+upstream_blob: f690b70ac2298d047d38aff21f459e69b50daac3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -225,6 +225,24 @@ hermes cron create "0 9 * * 1-5" --timezone America/New_York "US market open bri
 - オフセットの付いていない一度きりの時刻（`2026-06-01T09:00:00`）も、ジョブのタイムゾーンで読まれます。自分でオフセットを持っている時刻は、それだけですでに特定の時点を指しています。
 - タイムゾーンを変えると `next_run_at` がすぐに計算し直されるので、次の発火は新しいタイムゾーンの現地時刻で行われます。
 - `interval` のジョブは決まった長さの間隔で動き、現地の時計の時刻を持たないので、固定しても何も変わりません。
+- ジョブのプロンプトに添えられる実行時刻の行（`[CURRENT RUN TIME: ...]`）も固定したタイムゾーンで書かれます。そのため、ニューヨークの 09:00 のジョブには、プロファイルの現地時刻ではなく 09:00 EST と伝わります。`hermes cron list`、`/cron list`、`cronjob(action="list")` は、予定の横に固定したタイムゾーンを表示します。
+
+### 配布するプロファイルでの、タイムゾーンを固定したジョブと現地時刻のジョブ {#pinned-and-local-time-jobs-in-a-shipped-profile}
+
+[プロファイルの配布物](/hermes/docs/user-guide/profile-distributions/)では、両方の種類のジョブをひとつの `cron/jobs.json` に入れて配れます。`timezone` を固定したジョブは、誰がインストールしても、そのタイムゾーンの現地時刻で発火します。固定していないジョブは、各利用者が自分の `config.yaml` に書いた `timezone:` に従います。利用者にそれぞれのタイムゾーンを使い続けてもらいたいなら、配布する `config.yaml` には `timezone:` を入れないでください。`hermes profile update` は、既定では利用者の `config.yaml` をそのまま残します。
+
+```json
+{
+  "jobs": [
+    {"id": "premarket0001", "name": "pre-market", "prompt": "US pre-market update before the 09:30 NYSE open.",
+     "schedule": "0 9 * * 1-5", "timezone": "America/New_York", "deliver": "origin"},
+    {"id": "morningbrf01", "name": "morning-brief", "prompt": "My personal morning brief.",
+     "schedule": "0 7 * * *", "deliver": "origin"}
+  ]
+}
+```
+
+このファイルの場合、ロンドンの利用者には取引開始前の更新が 14:00 に届きます（英国が夏時間を終え、米国はまだ終えていない間の 1 週間は 13:00 です）。香港の利用者には 21:00 か 22:00、ロサンゼルスの利用者には 06:00 に届きます。朝のブリーフは、3 人とも自分の現地時刻の 07:00 に届きます。インストールと更新では、`timezone` が IANA のタイムゾーンになっていない配布ジョブを、そのジョブの名前を挙げて拒否します。そのため、書き間違いが知らないうちに各利用者の現地時刻扱いになることはありません。ジョブは、配布物を作るプロファイルで `hermes cron create ... --timezone America/New_York` を使って作り、できあがった `cron/jobs.json` をコミットします。手で書いてもかまいません。その場合、`schedule` には `hermes cron create` が受け付けるのと同じ文字列を使え、`next_run_at` と実行時の項目はスケジューラーが埋めます。更新は ID でジョブを突き合わせるので、配布するジョブにはすべて、変わらない `id` を付けてください。
 
 ## 埋め合わせの猶予 {#catch-up-window}
 
@@ -736,6 +754,20 @@ cron:
   wrap_response: false
 ```
 
+#### ジョブごとの上書き {#per-job-override}
+
+ジョブ単位でグローバルの設定を上書きできます。たとえば、ほかのジョブはすべてヘッダー付きのまま、ひとつのブリーフィングだけを包まずに届けたい、といった場合です。ジョブに設定した上書きは常に優先され、上書きを持たないジョブは `cron.wrap_response` に従います。
+
+CLI からは次のようにします。
+
+```bash
+hermes cron create "0 8 * * *" "Morning briefing" --no-wrap-response   # deliver raw
+hermes cron edit <job_id> --wrap-response                               # force the wrapper on
+hermes cron edit <job_id> --inherit-wrap-response                       # follow the global setting again
+```
+
+`cronjob` ツールからは、`wrap_response` を `on`、`off`、`inherit` のいずれかに設定します。指定を省くとジョブのいまの設定がそのまま残り、新しいジョブはグローバルの設定を引き継ぎます。ダッシュボードの API は `true`、`false`、`null`（引き継ぎ）を受け付けます。それ以外の値は、文字列の `"false"` も含めて、保存されずに拒否されます。
+
 ### プッシュ通知（`cron.delivery.notify`） {#push-notifications-crondeliverynotify}
 
 cron の出力は途中経過ではなく*最終*の配信なので、既定ではプラットフォームの通知フラグを立てて
@@ -793,6 +825,12 @@ cron:
   配信ごとに専用のスレッドが開かれ、ブリーフがそのスレッドのセッションへ差し込まれます。スレッドの
   中で返信すれば、文脈をすべて持ったまま続けられます。繰り返しのジョブ（毎日のブリーフなど）は
   実行ごとに新しいスレッドを開くので、配信ごとのやりとりが混ざりません。
+  ただし、Telegram のトピック（またはほかのスレッド）の*中で*作ったジョブは、作成元がそのトピックに
+  固定されているので、新しいスレッドではなくそのトピックへ届け続けます。こうしたジョブにも実行ごとに
+  新しいスレッドを開かせたいときは、`platforms.telegram.extra.cron_fresh_thread_per_run: true` を設定します
+  （Telegram のフォーラムトピックが対象です。Discord はジョブのスレッドの中にスレッドを作れないので、
+  スレッドの中で作った Discord のジョブはそこへ届け続けます）。この設定が効くのはジョブ自身のトピックへ
+  戻す配信だけで、明示的な `chat_id:thread_id` の宛先が上書きされることはありません。
 - **DM しかないプラットフォーム**（WhatsApp、Signal、SMS）にはスレッドが無いので、ブリーフは宛先の
   DM のセッションへ写されます（作成元の DM、フォールバックやプラットフォーム名だけのジョブなら
   ホームの DM）。DM そのものが、続きを話す場所になります。
@@ -1459,3 +1497,5 @@ cron のジョブは、まったく新しいエージェントセッションで
 ## セキュリティ {#security}
 
 予約タスクのプロンプトは、作成のときと更新のときに、プロンプトインジェクションと認証情報の持ち出しのパターンについて検査されます。見えない Unicode の細工、SSH のバックドアを仕込もうとするもの、あからさまな秘密情報の持ち出しを含むプロンプトはブロックされます。
+
+秘密の変数から組み立てた `Authorization` ヘッダーを送る `curl` は、`api.github.com` も含め、どのホスト宛てでもブロックされます。予約ジョブから GitHub API を呼ぶときは、プロンプトで `gh api ...` を使わせてください（`gh` CLI は自分で保存したログイン情報を使います。コンテナやプロファイル用の `HOME` を使っている場合は、そのホームの下でログインしておきます）。あるいは、リクエストを `~/.hermes/scripts/` の下の[スクリプト](#no-agent-mode-script-only-jobs)に書き、自分で決めた名前（例: `MY_GITHUB_PAT`）で [`terminal.env_passthrough`](#giving-a-script-a-credential) を通してトークンを渡します。`GITHUB_TOKEN` と `GH_TOKEN` は Hermes が管理する認証情報なので、スクリプトへ渡されることはありません。`--skill` でひも付けたスキルの本文には、組み立て後のプロンプトに対するゆるめの検査が使われるので、同梱の GitHub スキルにある認証付きの `curl` の例はこれまでどおり読み込まれます。

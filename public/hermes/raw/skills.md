@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 186 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `04903d9`（2026-11-13）時点。この一覧は上流の docs から機械生成しています。
+上流 `70b1193`（2026-11-14）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（44）
 
@@ -26,7 +26,7 @@ raw: /hermes/raw/skills.md
 | [Apple Reminders](/hermes/docs/user-guide/skills/bundled/apple/apple-apple-reminders/) | Apple Reminders via remindctl: add, list, complete | 2026-09-20 |
 | [Findmy](/hermes/docs/user-guide/skills/bundled/apple/apple-findmy/) | Track Apple devices/AirTags via FindMy.app on macOS | 2026-09-20 |
 | [Imessage](/hermes/docs/user-guide/skills/bundled/apple/apple-imessage/) | Send and receive iMessages/SMS via the imsg CLI on macOS | 2026-09-20 |
-| [Claude Code](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/) | Delegate coding to Claude Code CLI (features, PRs) | 2026-11-12 |
+| [Claude Code](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/) | Delegate coding to Claude Code CLI (features, PRs) | 2026-11-14 |
 | [Codex](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/) | Delegate coding to OpenAI Codex CLI (features, PRs) | 2026-11-12 |
 | [Computer Use](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-computer-use/) | Drive the desktop background-first; escalate on signal | 2026-10-23 |
 | [Hermes Agent](/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent/) | Use, configure, theme, extend, and orchestrate Hermes Agent | 2026-11-02 |
@@ -93,7 +93,7 @@ raw: /hermes/raw/skills.md
 | [Baoyu Comic](/hermes/docs/user-guide/skills/optional/creative/creative-baoyu-comic/) | Knowledge comics (知识漫画): educational, biography, tutorial | 2026-09-29 |
 | [Brag Slim](/hermes/docs/user-guide/skills/optional/creative/creative-brag-slim/) | Launch video from a project or URL, upstream-maintained | 2026-09-26 |
 | [Brag](/hermes/docs/user-guide/skills/optional/creative/creative-brag/) | Project launch video via Hyperframes, upstream-maintained | 2026-09-26 |
-| [Comfyui](/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/) | Generate images, video, and audio via diffusion workflows | 2026-10-28 |
+| [Comfyui](/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/) | Generate images, video, and audio via diffusion workflows | 2026-11-14 |
 | [Concept Diagrams](/hermes/docs/user-guide/skills/optional/creative/creative-concept-diagrams/) | Generate flat, minimal educational SVG visuals as HTML | 2026-09-20 |
 | [Creative Ideation](/hermes/docs/user-guide/skills/optional/creative/creative-creative-ideation/) | Generate ideas via named methods from creative practice | 2026-09-20 |
 | [Design Md](/hermes/docs/user-guide/skills/optional/creative/creative-design-md/) | Author/validate/export Google's DESIGN.md token spec files | 2026-10-28 |
@@ -168,7 +168,7 @@ raw: /hermes/raw/skills.md
 | [Unsloth](/hermes/docs/user-guide/skills/optional/mlops/mlops-training-unsloth/) | Unsloth: 2-5x faster LoRA/QLoRA fine-tuning, less VRAM | 2026-09-20 |
 | [Stripe Link Cli](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-link-cli/) | Agent payments via Stripe Link — cards, SPT, approvals | 2026-11-03 |
 | [Stripe Projects](/hermes/docs/user-guide/skills/optional/payments/payments-stripe-projects/) | Provision SaaS services + sync creds via Stripe Projects | 2026-11-03 |
-| [Box](/hermes/docs/user-guide/skills/optional/productivity/productivity-box/) | Box manages cloud files, sharing, search, and metadata | 2026-10-28 |
+| [Box](/hermes/docs/user-guide/skills/optional/productivity/productivity-box/) | Box manages cloud files, sharing, search, and metadata | 2026-11-14 |
 | [Canvas](/hermes/docs/user-guide/skills/optional/productivity/productivity-canvas/) | Fetch Canvas LMS courses and assignments via API token | 2026-09-20 |
 | [Decision Questionnaire](/hermes/docs/user-guide/skills/optional/productivity/productivity-decision-questionnaire/) | Turn an unanswerable decision into a questionnaire doc | 2026-09-20 |
 | [Here Now](/hermes/docs/user-guide/skills/optional/productivity/productivity-here-now/) | Publish sites to {slug}.here.now and store files in Drives | 2026-09-20 |
@@ -193,7 +193,7 @@ raw: /hermes/raw/skills.md
 | [Scrapling](/hermes/docs/user-guide/skills/optional/research/research-scrapling/) | Scrape sites with stealth browsing and Cloudflare bypass | 2026-11-03 |
 | [1Password](/hermes/docs/user-guide/skills/optional/security/security-1password/) | Set up op CLI, sign in, and read or inject secrets | 2026-11-13 |
 | [Godmode](/hermes/docs/user-guide/skills/optional/security/security-godmode/) | Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN | 2026-11-11 |
-| [Oss Forensics](/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/) | GitHub supply-chain forensics: recovery, IOCs, reporting | 2026-09-20 |
+| [Oss Forensics](/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/) | GitHub supply-chain forensics: recovery, IOCs, reporting | 2026-11-14 |
 | [Sherlock](/hermes/docs/user-guide/skills/optional/security/security-sherlock/) | Find accounts for a username across 400+ platforms | 2026-09-20 |
 | [Unbroker](/hermes/docs/user-guide/skills/optional/security/security-unbroker/) | Remove your info from data-broker sites, by name or phone | 2026-10-27 |
 | [Web Pentest](/hermes/docs/user-guide/skills/optional/security/security-web-pentest/) | Authorized web pentest: recon, proof-based exploits, report | 2026-10-23 |

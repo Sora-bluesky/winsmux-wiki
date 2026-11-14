@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: c67a36742d9e01ebf8b1fc13c3e41e553aa8e96b
+upstream_blob: d0ed79186e65eddb695aeb1f71e5e2ad2b45ac73
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -246,6 +246,7 @@ approvals:
 | hermes / gateway に対する `pkill`/`killall` | 自分自身を終了させないための防止 |
 | `&`/`disown`/`nohup`/`setsid` を伴う `gateway run` | サービス管理の外でゲートウェイを起動させないための防止 |
 | `docker stop/kill/restart`、`docker compose down/stop/kill/restart` | コンテナのライフサイクル（全体オプションや `docker-compose` も拾います） |
+| `docker`/`podman` `rm`、`container rm/remove`、`volume rm/remove/prune`、`container/system prune`、`podman system reset`、`docker compose rm` / `docker-compose rm` | コンテナとボリュームの破棄（`image rm`/`rmi`/`network rm` は確認の対象外です。pull し直すか作り直せば元に戻せるためです） |
 | `docker -H`/`--host`/`--context`、`DOCKER_HOST=`/`DOCKER_CONTEXT=` | Docker のデーモンの向き先変更 — 別の（多くは遠隔の）デーモンを相手にするコマンドです |
 | `docker context use` | 以降のすべての docker コマンドの既定のデーモンを切り替えます |
 | `podman --remote`/`-r`/`--url`/`--connection`/`--identity`、`CONTAINER_HOST=` | Podman の遠隔デーモンへの向き先変更 |
@@ -410,7 +411,7 @@ Proposed command_allowlist additions (from approval history, last 90 days):
 | 種類 | 例 |
 |----------|----------|
 | OS の資格情報の保管場所 | `~/.ssh/`（鍵、`authorized_keys`）、`~/.aws/`、`~/.kube/`、`/etc/sudoers`、`~/.netrc` |
-| Hermes の秘密情報の保管場所 | HERMES_HOME 配下（有効なプロファイル、`profiles/` 配下のすべてのプロファイル、全体の root）の `.env`、`.anthropic_oauth.json`、`auth/google_oauth.json`、Bitwarden と 1Password のキャッシュ（`bws_cache.json`、`bws_cache.enc.json`、`op_cache.json`）、Photon サイドカーのトークン（`photon-sidecar.json`）、`vault/`、`browser-profile/`、`mcp-tokens/`、`pairing/`。制御用のファイル（`auth.json`、`config.yaml`、`webhook_subscriptions.json`）は読み取りが拒否されますが、書き込みはできます。 |
+| Hermes の秘密情報の保管場所 | HERMES_HOME 配下（有効なプロファイル、`profiles/` 配下のすべてのプロファイル、全体の root）の `.env`、`.anthropic_oauth.json`、`auth/google_oauth.json`、google-workspace スキルの `google_token.json`、`google_client_secret.json`、`google_oauth_pending.json`、Bitwarden と 1Password のキャッシュ（`bws_cache.json`、`bws_cache.enc.json`、`op_cache.json`）、Photon サイドカーのトークン（`photon-sidecar.json`）、`vault/`、`browser-profile/`、`mcp-tokens/`、`pairing/`。制御用のファイル（`auth.json`、`config.yaml`、`webhook_subscriptions.json`）は読み取りが拒否されますが、書き込みはできます。 |
 | Windows の NT / デバイス名前空間のパス | `\??\...`、`\\.\...`、`\\?\UNC\...`、`\\?\GLOBALROOT...` — どのプラットフォームでも、読み取りも書き込みも拒否されます。Windows では、こうしたパスを *解決するだけ* で（たとえば `\??\UNC\host\share`）外向きの SMB 認証が走り、利用者の NTLM ハッシュが漏れることがあります。これらの接頭辞は、ふつうのパス正規化も回避します。ふつうの長いローカルパス（`\\?\C:\...`）や素の UNC 共有（`\\server\share`）は影響を受けません。 |
 
 プロジェクトの中にある `.env`、`.env.local`、`.env.production`、`.envrc` は、ディスク上のどこにあっても **読み取りが拒否** されますが（ファイル系のツールは読み取りを断ります）、書き込みはできます。エージェントは代わりに作ったり編集したりできて、ただ中身を読み返せない、ということです。
@@ -799,7 +800,7 @@ security:
       - "/etc/hermes/blocked-sites.txt"
 ```
 
-止めた URL が要求されると、ツールはそのドメインが方針で止められている旨のエラーを返します。この拒否リストは `web_search`、`web_extract`、`browser_exec`、そして URL を扱えるすべてのツールに効きます。
+止めた URL が要求されると、ツールはそのドメインが方針で止められている旨のエラーを返します。この拒否リストが効くのは、`web_extract`、ブラウザでのページ移動、`vision_analyze` と `video_analyze` に渡す URL、そしてスキルハブからのダウンロードです。`web_extract` が止められたホストへリダイレクトされた場合は、プロバイダーが取得したあとで止めるため、ページの中身はエージェントに渡りませんが、そのホストにはリクエストが届いています。`web_search` は URL ではなく検索語を受け取るので対象外で、検索結果の一覧も絞り込まれません。Kanban の URL 添付、cron の URL 監視、ゲートウェイのメディアのダウンロードでは、プライベートアドレスに対する SSRF の検査だけが行われます。
 
 詳しくは設定ガイドの [ウェブサイトの拒否リスト](/hermes/docs/user-guide/configuration/#website-blocklist)を参照してください。
 

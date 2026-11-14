@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Oss Forensics — GitHub サプライチェーンのフォレンジック: 復元・IOC・報告"
 description: "GitHub サプライチェーンのフォレンジック: 復元・IOC・報告"
 upstream_path: user-guide/skills/optional/security/security-oss-forensics.md
-upstream_blob: 7a03ae0f68fe73fcd2cc15a3c66e89d71cadc156
+upstream_blob: 0eb634b77cbd3b4768f409f8374ea7432abad783
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/security/security-oss-forensics
 ---
@@ -50,7 +50,7 @@ RAPTOR のフォレンジックシステムを応用しています。GitHub Arc
 5. **反証には証明が必要**: 仮説は、具体的で証拠に裏づけられた反論なしには棄却できません。「証拠が見つからなかった」だけでは反証には足りません。それは仮説を「判定不能」にするだけです。
 6. **SHA/URL の二重確認**: 証拠として引用するコミット SHA・URL・外部の識別子は、検証済みとするために、少なくとも 2 つのソースから独立に確認しなければなりません。
 7. **不審なコードの原則**: 調査対象のリポジトリ内で見つけたコードを、ローカルで実行しては絶対にいけません。静的にのみ分析するか、サンドボックス環境で `execute_code` を使います。
-8. **秘密情報のマスク**: 調査中に見つかった API キー・トークン・認証情報は、最終レポートではマスクしなければなりません。内部の記録にのみ残します。
+8. **秘密情報のマスク**: 有効な API キー・トークン・認証情報を、レポート、`iocs.md`、証拠ストアのエントリ、サブエージェントの `context`、その他の通常の作業ファイルに平文で書き込んではいけません。記録するのは、秘密ではない参照情報だけです。具体的には、秘密情報の種類、出所の場所（コミット SHA、パス、行）、証拠項目の ID です。生の秘密情報を保存することが明示的に許可されていて、調査にも必要な場合は、別に指定した、アクセス制御のある証拠ストアに、適切な暗号化と保存期間の管理を施して保管します。通常の成果物には、コピーではなく参照だけを残します。そのストアは、別途明示的な許可がない限り、フェーズ 7 のアーカイブに含めてはいけません。
 
 ---
 
@@ -103,7 +103,7 @@ RAPTOR のフォレンジックシステムを応用しています。GitHub Arc
 
 **アウトプット**: 抽出した IOC を `iocs.md` に記録します。各 IOC には次が必要です:
 - 種別（次から: COMMIT_SHA, FILE_PATH, API_KEY, SECRET, IP_ADDRESS, DOMAIN, PACKAGE_NAME, ACTOR_USERNAME, MALICIOUS_URL, OTHER）
-- 値
+- 値（`API_KEY`/`SECRET` の場合は、ガードレール 8 に従った秘密ではない参照情報を書きます。生の秘密情報は絶対に書きません）
 - 出所（ユーザー提供、推定）
 
 **参照**: IOC の分類については [evidence-types.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/security/oss-forensics/references/evidence-types.md) を参照してください。
@@ -371,7 +371,7 @@ LIMIT 200
 ## フェーズ 7: 完了 {#phase-7-completion}
 
 1. 最終的な証拠件数を数えます: `python SKILL_DIR/scripts/evidence-store.py --store evidence.json list`
-2. 調査ディレクトリ全体をアーカイブします。
+2. 平文の秘密情報が含まれていないことを確かめてから（ガードレール 8）、調査ディレクトリ全体をアーカイブします。
 3. 侵害が確定した場合:
    - 即時の緩和策を挙げます（認証情報のローテーション、依存関係のハッシュ固定、影響を受けたユーザーへの通知）
    - 影響を受けたバージョン／パッケージを特定します

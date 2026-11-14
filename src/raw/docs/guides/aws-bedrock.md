@@ -2,7 +2,7 @@
 title: "AWS Bedrock"
 description: "Hermes Agent を Amazon Bedrock で使う — ネイティブの Converse API、Anthropic SDK 経由の振り分け、Bedrock Mantle 経由の OpenAI モデル、IAM 認証、Guardrails、クロスリージョン推論"
 upstream_path: guides/aws-bedrock.md
-upstream_blob: 695df4f56b6c3875c344755c43c75a725146b8e1
+upstream_blob: 0fd0cbf8d3c012c9bc413faa3b4f2efd9ad61ebf
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/aws-bedrock
 ---
@@ -80,6 +80,42 @@ AWS のリージョンは次のいずれかの方法で指定します（上に�
 2. 環境変数 `AWS_REGION`
 3. 環境変数 `AWS_DEFAULT_REGION`
 4. 既定値の `us-east-1`
+
+### Mantle での Ultrafast {#ultrafast-on-mantle}
+
+**`us-east-1` の Mantle で使う GPT-6.1 Sol** に限り、CLI とメッセージングゲートウェイのターンを組み立てる処理が、
+既存の `agent.service_tier: ultrafast` 設定に対応しています。
+
+```yaml
+model:
+  provider: bedrock
+  default: openai.gpt-6.1-sol
+bedrock:
+  region: us-east-1
+agent:
+  service_tier: ultrafast
+```
+
+こう設定すると、`https://bedrock-mantle.us-east-1.api.aws/openai/v1` にある既存の Responses 経路を通して
+`service_tier: "ultrafast"` が送られます。この経路に決まった場合は、CLI で `/fast ultrafast` も使えます。
+既定のティアで使うには `agent.service_tier: normal` を設定してください（項目ごと省いてもかまいません）。
+これまでのベアラートークンや IAM 署名の経路は変わりません。
+Ultrafast は自分で選んで有効にする有料のオプションで、ただの `/fast fast` が Ultrafast を指すわけではありません。
+
+- **対象範囲：** 有効になるのは、この Mantle エンドポイント上の `openai.gpt-6.1-sol` だけです。
+  このモデルでは、Priority、Flex、Reserved や、auto/cold の高速ウィンドウは有効になりません。
+- **ランタイムのプロファイル：** AWS は `us.openai.gpt-6.1-sol` と `global.openai.gpt-6.1-sol` についても、
+  Responses 経由の Ultrafast を案内しています。ただし Hermes は、これらの ID を引き続き Converse 経由で送ります。
+  この設定でそれらの Ultrafast の経路が有効になることはなく、使う API が切り替わることも、
+  Ultrafast が Converse の `serviceTier` に置き換えられることもありません。
+- **ほかの入口：** この設定で、速度を選ぶピッカーやゲートウェイの `/fast` コマンドに Bedrock の Ultrafast が加わるわけではありません。
+  `request_overrides` を組み立てずに `service_tier` だけを設定するコンストラクターでは、これまでの制限がそのまま残ります。
+- **サービス側の動き：** ティアを指定しても、実際にそのティアで処理されたことや、アカウントで使えることの証明にはなりません。
+  プロバイダーからの応答を確認してください。この連携の検証には、AWS での実際の推論は使っていません。
+
+料金と提供状況については、[AWS の Sol のサービスティアに関するドキュメント](https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-sol.html#model-card-openai-gpt-6-1-sol-tiers)を見てください。
+Mantle の Responses ではガードレールが適用されません。
+ティアを指定したいというだけの理由で、ガードレールに頼っているワークロードを Converse から切り替えないでください。
 
 ### Guardrails {#guardrails}
 

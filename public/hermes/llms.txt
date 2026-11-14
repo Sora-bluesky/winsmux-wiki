@@ -73,6 +73,7 @@ Hermes Agent 0.23.1
 - [developer-guide/gateway-local-sessions（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
 - [developer-guide/gateway-monitoring（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-monitoring/)
 - [developer-guide/gateway-session-lifecycle（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-session-lifecycle/)
+- [developer-guide/gateway-ssh-clients（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-ssh-clients/)
 - [developer-guide/hosted-profile-owners（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/hosted-profile-owners/)
 - [developer-guide/image-gen-provider-plugin（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/image-gen-provider-plugin/)
 - [developer-guide/macos-bundle-updates（日本語版）](https://wiki.winsmux.dev/hermes/docs/developer-guide/macos-bundle-updates/)
@@ -525,6 +526,7 @@ Hermes Agent 0.23.1
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-local-sessions.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-monitoring.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-session-lifecycle.md
+- https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/gateway-ssh-clients.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/hosted-profile-owners.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/image-gen-provider-plugin.md
 - https://wiki.winsmux.dev/hermes/raw/docs/developer-guide/macos-bundle-updates.md

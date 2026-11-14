@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 0f8baca01480ab36ff511cc9e04884b3c7771295
+upstream_blob: 21317108905f177b27600ac95892ac3b1a7616c5
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -277,7 +277,7 @@ def register(ctx):
         ctx.register_tool(...)   # register under a non-conflicting name
 ```
 
-既知の capability id は `tools.override`、`llm.provider_override`、`llm.model_override`、`llm.agent_id_override`、`llm.profile_override`、`llm.task_override`、`llm.side_question`（ターンのあとでセッション自身のエージェントに質問します。[プラグインからの LLM 呼び出し](/hermes/docs/developer-guide/plugin-llm-access/#asking-the-sessions-own-agent-ctxside_question)を参照）、`gateway.platform_actions` です（正本のレジストリは `hermes_cli/plugin_capabilities.py`）。未知の id は無視されます。旧来の capability ごとの設定キー（`plugins.entries.<id>.allow_tool_override` など）も依然として動作しますが非推奨です — ユーザーが単一の、監査可能な同意画面を得られるように、代わりに capability を宣言してください。capability は同意と監査であり、**サンドボックスではありません**。それらは host の API サーフェスをゲートするだけです。
+既知の capability id は `tools.override`、`llm.provider_override`、`llm.model_override`、`llm.agent_id_override`、`llm.profile_override`、`llm.task_override`、`llm.side_question`（ターンのあとでセッション自身のエージェントに質問します。[プラグインからの LLM 呼び出し](/hermes/docs/developer-guide/plugin-llm-access/#asking-the-sessions-own-agent-ctxside_question)を参照）、`llm.session_fork`（セッション自身のエージェントのコピーを、範囲を限ってバックグラウンドで動かします。[プラグインからの LLM 呼び出し](/hermes/docs/developer-guide/plugin-llm-access/#forking-the-sessions-own-agent-ctxfork_session)を参照）、`gateway.platform_actions` です（正本のレジストリは `hermes_cli/plugin_capabilities.py`）。未知の id は無視されます。旧来の capability ごとの設定キー（`plugins.entries.<id>.allow_tool_override` など）も依然として動作しますが非推奨です — ユーザーが単一の、監査可能な同意画面を得られるように、代わりに capability を宣言してください。capability は同意と監査であり、**サンドボックスではありません**。それらは host の API サーフェスをゲートするだけです。
 
 **pip で配布されるプラグイン**には、インストール後の `plugin.yaml` ディレクトリがありません。そのため、代わりに配布メタデータで capability を宣言します。companion となる `hermes_agent.plugin_capabilities` エントリーポイントグループを使います。各宣言は `<plugin-id>.<capability-id>` という名前で、`hermes_agent.plugins` エントリーポイントと同じオブジェクトを指します。
 
@@ -704,6 +704,8 @@ def unit_convert(args: dict, **kwargs) -> str:
 4. **`**kwargs` を受け入れる:** Hermes はコンテキストのキーワード（`task_id`、`session_id`、`conversation_id`、
    `user_task`、`parent_agent`、...）を注入し、あなたのシグネチャが名前を挙げているものだけを転送するので、`def handler(args)` でも
    動作します。`**kwargs` は、加算的に増えていく完全なコンテキストに参加するための方法です。
+   プラグインの[セッションのフォーク](/hermes/docs/developer-guide/plugin-llm-access/#forking-the-sessions-own-agent-ctxfork_session)の中では、
+   ハンドラーは `turn_origin="plugin_fork:<plugin id>"` も受け取ります。通常のターンでの呼び出しには付きません。
 5. **会話ごとの状態は `conversation_id` をキーにして持つ:** `session_id` は、いまのトランスクリプトの区切りを指す名前です。
    ローテーションする圧縮（`compression.in_place: false`）が働くと、会話の途中で別のものに置き換わります。
    `conversation_id` は会話の最初のセッションの ID で、変わることはありません。`/new` と
@@ -1354,7 +1356,7 @@ def register(ctx):
 | [`pre_tool_call`](/hermes/docs/user-guide/features/hooks/#pre_tool_call) | 任意のツールが実行される前 | `tool_name: str, args: dict, task_id: str` | 任意の指示: `{"action": "block", "message": ...}` はその呼び出しを拒否する。`{"action": "approve", "message": ...}` は人間の承認ゲートへエスカレーションする |
 | [`post_tool_call`](/hermes/docs/user-guide/features/hooks/#post_tool_call) | 任意のツールが戻った後 | `tool_name: str, args: dict, result: str, task_id: str, duration_ms: int` | 無視される |
 | [`pre_llm_call`](/hermes/docs/user-guide/features/hooks/#pre_llm_call) | 各ターンにつき1回、ツール呼び出しループの前 | `session_id: str, user_message: str, conversation_history: list, is_first_turn: bool, model: str, platform: str` | [コンテキストの注入](#pre_llm_call-context-injection) |
-| [`post_llm_call`](/hermes/docs/user-guide/features/hooks/#post_llm_call) | 各ターンにつき1回、ツール呼び出しループの後（成功したターンのみ） | `session_id: str, user_message: str, assistant_response: str, conversation_history: list, model: str, platform: str` | 無視される |
+| [`post_llm_call`](/hermes/docs/user-guide/features/hooks/#post_llm_call) | 各ターンにつき1回、ツール呼び出しループの後（成功したターンのみ） | `session_id: str, user_message: str, assistant_response: str, conversation_history: list, model: str, platform: str, side_question_token: str \| None, review_signals: dict` | 無視される |
 | `pre_api_request` | プロバイダーへの生の各 API リクエストの前（モデルがツールを呼ぶ場合、1ターンに複数回） | `session_id: str, model: str, provider: str, base_url: str, api_mode: str, api_call_count: int, message_count: int, tool_count: int, approx_input_tokens: int, max_tokens: int, request: dict` | 無視される |
 | `post_api_request` | プロバイダーへの各 API リクエストが返った後 | `pre_api_request` のフィールドに加えて `api_duration: float, finish_reason: str, response_model: str \| None, usage: dict, response: dict, assistant_content_chars: int, assistant_tool_call_count: int` | 無視される |
 | `api_request_error` | プロバイダーの API 呼び出しが raise したとき | 相関フィールドに加えて `status_code: int \| None, retry_count: int \| None, max_retries: int \| None, retryable: bool \| None, reason: str \| None, error: dict, request: dict` | 無視される |
@@ -1896,6 +1898,57 @@ def register(ctx):
 それ以外では、ゲートウェイが認証したクライアントなら、どのプラグインメソッドでも任意のパラメータで呼び出せます。Hermes は
 メソッドごとに呼び出し元を確かめません（`SECURITY.md` §2.6、ルール 4）。プラグインのメソッドはプラグインのツールと同じように扱い、
 パラメータを検証し、プラグイン自身のデータと操作を超えるものをメソッド経由で公開しないでください。
+
+### ユーザーの自己学習のペースに合わせる（`review_signals`） {#follow-the-users-self-learning-cadence-reviewsignals}
+
+ターンが成功するたびに、`post_llm_call` には `review_signals` が渡されます。これには、Hermes 自身がバックグラウンドで行うメモリとスキルの見直しの元になるカウンター（`skills.creation_nudge_interval`、`memory.nudge_interval`）と、このターンでその見直しを行う時期に来ているか、見直しが有効になっているかが入っています。ターンのあとに独自の処理を行うプラグイン（たとえば、そのターンで使われたスキルを評価するもの）は、ツール呼び出しを自分で数えなくても、ユーザーがすでに調整したのと同じペースで動けます。
+
+```python
+def register(ctx):
+    def on_post_llm_call(review_signals=None, **kwargs):
+        if not review_signals or not review_signals["background_review_enabled"]:
+            return  # cron run, subagent, or the user turned background review off
+        if review_signals["skill_review_due"]:
+            ...  # the same turn Hermes reviews skills on
+
+    ctx.register_hook("post_llm_call", on_post_llm_call)
+```
+
+このフックは Hermes が見直しを行うかどうかを決める前に発火し、時期を示すフラグにはその判断に使われる値がそのまま入っています。キーと意味は [`post_llm_call`](/hermes/docs/user-guide/features/hooks/#review_signals) を参照してください。Hermes 自身の見直しと同じやり方（セッションのエージェントのコピーを、使えるツールを絞ってバックグラウンドで動かす方法）でその処理を行うには、このシグナルを [`ctx.fork_session`](/hermes/docs/developer-guide/plugin-llm-access/#forking-the-sessions-own-agent-ctxfork_session) と組み合わせてください。
+
+### Hermes が待機中のときにジョブを実行する（`ctx.register_idle_task`） {#run-a-job-when-hermes-is-idle-ctxregisteridletask}
+
+実験的な機能です。シグネチャは今後のリリースで変わる可能性があります（[詳細](/hermes/docs/developer-guide/plugin-llm-access/#idle-tasks-ctxregister_idle_task)）。
+
+処理の中には、きっかけになるターンがないものもあります。プラグインのデータを1日1回採点し直す、片付けを提案する、キャッシュを詰める、といったものです。`ctx.register_idle_task` を使うと、こうした処理を、スキルの[キュレーター](/hermes/docs/user-guide/features/curator/)と同じスケジューラーで、同じ場所（提供しているすべてのプロファイルに対するゲートウェイの定期メンテナンス、CLI/TUI の起動時、`hermes serve` の定期メンテナンス）から実行できます。
+
+```python
+def register(ctx):
+    def suggest(run):
+        # run.name, run.idle_for_seconds, run.last_run_at (ISO or None), run.run_count
+        candidates = ctx.state.get("candidates", [])
+        if not candidates:
+            return None
+        result = ctx.llm.complete(
+            messages=[{"role": "user", "content": f"Rank these for promotion: {candidates}"}],
+            task="suggest",  # a task this plugin registered with ctx.register_auxiliary_task
+        )
+        ctx.state.set("ranking", result.text)
+        return f"ranked {len(candidates)} skills"  # optional summary, shown by `hermes plugins idle-tasks`
+
+    ctx.register_idle_task("suggest", suggest, interval_hours=24, min_idle_hours=2)
+```
+
+`register_idle_task(name, fn, *, interval_hours, min_idle_hours=2, first_run="defer")` は `PluginRegistration` を返します（これを破棄するとポーリングが止まります）。タスクが実行されるのは、次の条件をすべて満たしたときです。
+
+- ホストが `min_idle_hours` のあいだ待機状態であること（ゲートウェイの定期メンテナンスと CLI の起動時は完全な待機状態とみなされ、`hermes serve` ではチャットのやり取りがない時間を測ります）。
+- 前回の実行から `interval_hours`（1 未満は 1 に切り上げ）が経過していること。最初のポーリングでは「現在時刻」を記録して1間隔分待つので、キュレーターと同じく、インストールや更新の直後にジョブが走ることはありません。`first_run="immediate"` を指定すると、代わりに最初の待機中のポーリングで実行します。
+- 一時停止されていないこと（`hermes plugins idle-tasks <plugin> --pause <task>`）。
+- このプロセスでもほかのプロセスでも、そのタスクの別の実行が進行中でないこと。
+
+`fn` は、それを登録したプロファイルの中で専用のスレッドで動き、ホストはその完了を待ちません。ポーリングはすぐに戻り、実行中は同じタスクの2回目の実行は始まりません。1回の実行は短く、繰り返しても問題のない処理にしてください。ゲートウェイが停止したとき、まだ動いている実行は何も記録されず、あとで改めて実行されます（[停止時の契約](/hermes/docs/developer-guide/plugin-llm-access/#idle-tasks-ctxregister_idle_task)）。例外はログに出され、`last_status: error` として記録されるだけで、ホストまで伝わることはありません。状態はプラグインのデータディレクトリにある `<data dir>/idle-tasks/<name>.json`（`last_run_at`、`run_count`、`paused`、`last_summary`、`last_status`、`last_error`）に保存されるので、プロファイルごとにそれぞれ別のスケジュールで動きます。
+
+この機能を制限する capability はありません。スケジューラーは、あなた自身の関数を呼ぶだけだからです。その関数が特権の要る処理を行うときは、処理ごとの関門を通ります（モデルの呼び出しなら [`ctx.llm` の信頼の関門](/hermes/docs/developer-guide/plugin-llm-access/#trust-gate) を通る、など）。
 
 ### エージェントのブラウザに生の CDP コマンドを送る {#send-raw-cdp-commands-to-the-agents-browser}
 

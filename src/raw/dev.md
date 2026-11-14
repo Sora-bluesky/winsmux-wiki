@@ -11,9 +11,9 @@ raw: /hermes/raw/dev.md
 
 # developer-guide
 
-Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（64 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
+Hermes Agent 本体を拡張したり、上流に貢献したりする人向けのページ（65 件・日本語版）です。使うだけなら、ここは読まなくて大丈夫です。[よく使う](/hermes/guide/) に戻れます。
 
-## Developer Guide（64）
+## Developer Guide（65）
 
 - [Contributing](/hermes/docs/developer-guide/contributing/)
 - [Architecture](/hermes/docs/developer-guide/architecture/)
@@ -48,6 +48,7 @@ Hermes Agent 本体を拡張したり、上流に貢献したりする人向け�
 - [Gateway local sessions](/hermes/docs/developer-guide/gateway-local-sessions/)
 - [Gateway Monitoring](/hermes/docs/developer-guide/gateway-monitoring/)
 - [Gateway Session Lifecycle](/hermes/docs/developer-guide/gateway-session-lifecycle/)
+- [Gateway over SSH: client contract](/hermes/docs/developer-guide/gateway-ssh-clients/)
 - [Hosted rooms across local profile owners](/hermes/docs/developer-guide/hosted-profile-owners/)
 - [Image Generation Provider Plugins](/hermes/docs/developer-guide/image-gen-provider-plugin/)
 - [macOS bundle updates](/hermes/docs/developer-guide/macos-bundle-updates/)

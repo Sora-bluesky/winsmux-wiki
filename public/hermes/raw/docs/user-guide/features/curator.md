@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "キュレーター"
 description: "エージェントが作ったスキルを裏側で手入れする仕組み。利用状況の記録、古さの判定、書庫入れ、LLM によるレビュー"
 upstream_path: user-guide/features/curator.md
-upstream_blob: 07a7700610c94da06671de01838eded3b2948264
+upstream_blob: 5c5934afeb9f78287a613ebf236020e3620fe3a2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/curator
 ---
@@ -373,7 +373,7 @@ hermes curator status          # lists locked skills
 ロックにできないこと:
 
 - これは**方針の確認であって、サンドボックスではありません。** terminal の確認はコマンドの書き込み先を読むだけなので、独自の処理でスキルに書き込むスクリプトや `execute_code` は調べられません。確実な境界が必要なときは、ファイルシステムの権限と組み合わせてください。
-- `.usage.json` が壊れていると、バックグラウンドの処理は拒まれます（安全側に倒します）が、ふつうのターンはそのまま進むので、ファイル1つが壊れただけでスキルの編集がすべて止まることはありません。ファイルを直すか、`hermes curator unlock <skill>` を実行して書き直してください。
+- `.usage.json` が壊れている（解析できない、または JSON オブジェクトになっていない）と、エージェントはどのスキルがロックされているかを判断できません。そのため `write_file`、`patch`、`terminal` は、すべてのスキルとこの記録そのものへの書き込みを拒み、バックグラウンドの処理も `skill_manage` による変更をすべて拒みます。ただし、ふつうのターンの `skill_manage` はそのまま進むので、ファイル1つが壊れただけでスキルの編集がすべて止まることはありません。`hermes curator lock`/`unlock` やデスクトップのスイッチも、このファイルを書き直すのを同じように拒みます。ファイルにまだ残っているかもしれないロックを失わないためです。JSON を直すか、ファイルを別の場所へ退避してください（退避すると、そのプロファイルのロック、固定、利用回数がすべて消えます）。
 - 手元で変更していない同梱のスキルやハブのスキルを、`hermes update` / `hermes skills update` が更新するのは止め**ません**。これらは自分で打つコマンドであって、エージェントによる書き込みではないからです。
 
 ## 利用状況の記録 {#usage-telemetry}

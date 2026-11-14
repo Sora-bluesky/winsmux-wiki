@@ -2,7 +2,7 @@
 title: "Microsoft Foundry"
 description: "Hermes Agent を Microsoft Foundry で使う — OpenAI 形式と Anthropic 形式のエンドポイント、通信方式とデプロイ済みモデルの自動判別"
 upstream_path: guides/azure-foundry.md
-upstream_blob: 0535d9b1ba3364e901b27569f7d4b1cfbc65860d
+upstream_blob: 7f0b4e3c3073a95901e84d03ab88e75dd685205c
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/azure-foundry
 ---
@@ -275,6 +275,8 @@ model:
 ```
 
 このとき `~/.hermes/.env` に `AZURE_ANTHROPIC_KEY` を設定します。Hermes はベース URL に `azure.com` が含まれていることを見分け、Claude Code の OAuth トークンの流れを迂回して、Azure のキーを `x-api-key` 認証でそのまま使います。
+
+Hermes は、実行時の解決処理（リゾルバー）からもモデルの自動検出からも、Claude Code の OAuth トークンを `azure.com` のホストへ送ることはありません。リゾルバーについては、プロバイダー名が `anthropic`、`claude`、`claude-code` のどれでも、URL を `model.base_url`、`--base-url`、`delegation.base_url` のどれで指定しても同じです。Azure のキーがない場合、リゾルバーは `No Azure Anthropic API key found` を出して止まります。`hermes auth add anthropic` で追加したキーは `api.anthropic.com` 用として記録されるため、Foundry の URL には使われません。`model.api_key`、`key_env`、`AZURE_ANTHROPIC_KEY` のいずれかを使ってください。Azure かどうかは、ホスト名の末尾が `azure.com` かどうかだけで判別します。そのため、ソブリンクラウドのホスト（`*.azure.us`、`*.azure.cn`）や、Foundry の手前に置いたプロキシは Azure として認識されません。
 
 `key_env` が正式なスネークケースの項目名で、`api_key_env`（およびキャメルケースの `keyEnv` / `apiKeyEnv`）も別名として受け付けられます。`key_env` と `AZURE_ANTHROPIC_KEY`／`ANTHROPIC_API_KEY` の両方が設定されている場合は、`key_env` で指定した環境変数が優先されます。
 

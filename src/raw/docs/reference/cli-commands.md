@@ -2,7 +2,7 @@
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: d0f22f2fc4d378aa8f138759699724fe2898436e
+upstream_blob: 711cd21ecf319f7dee109797a7c5694dd147a95b
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -300,6 +300,7 @@ hermes gateway <subcommand>
 | `run` | ゲートウェイをフォアグラウンドで実行します。WSL、Docker、Termux ではこちらを推奨します。 |
 | `ensure` | サービスを登録したり、すでに動いている持ち主を置き換えたりせずに、手元のセッション実行環境を探す、または起動を求めます。JSON を出力します。詳しくは後述します。 |
 | `attach` | このプロファイル用に、ゲートウェイの WebSocket URL と、1回だけ使えるセッションチケットを手元のクライアントに渡します。JSON を出力します。詳しくは後述します。 |
+| `tickets` | SSH 経由でゲートウェイに接続するクライアントのために、1回だけ使える HTTP 用と WebSocket 用のチケットを発行します。JSON を出力します。詳しくは後述します。 |
 | `start` | インストール済みの systemd/launchd バックグラウンドサービスを起動します。 |
 | `stop` | サービス（またはフォアグラウンドプロセス）を停止します。 |
 | `restart` | サービスを再起動します。 |
@@ -351,6 +352,13 @@ JSON オブジェクトを 1 つ出力します（`state`、`reason_code`、そ�
 JSON には `message`（`gateway <state>: <reason>` の行と、対処法があればその内容）が入り、同じ文が stderr にも出力されます。終了コードは、その判定に対応する `ensure` の終了コードになります。Ink TUI も
 同じコードを通して接続します。詳細と接続のルールは
 [ゲートウェイの内部構造: `hermes gateway attach`](/hermes/docs/developer-guide/gateway-internals/#hermes-gateway-attach)にあります。
+
+`hermes gateway tickets (--probe | --serve) [--json]` は、SSH 経由でゲートウェイに接続し、転送したポートを通してその HTTP API を呼び出すクライアントのためのコマンドです。
+`--probe` は JSON の行を 1 つ出力するだけで（`protocol`、発行できるチケットの `purposes`、`windows_service_session`）、ゲートウェイには一切触れません。
+`--serve` は、動いているゲートウェイのエンドポイントを含む最初のあいさつの行（hello 行）を出力したあと、stdin が閉じられるまで、stdin から届く `{"id": ..., "purpose": "native-http"}` の各行に対して、1回だけ使えるチケットを含む行を stdout に 1 行ずつ返します。
+同じゲートウェイが受け持つ別のプロファイル用のチケットが必要なら、行に `"profile": "<name>"` を加えられます。`{"id": ..., "purpose": "interactive"}` を送ると、ゲートウェイが受け持つすべてのプロファイルにつながるソケット用の、WebSocket のチケットを受け取れます。
+このコマンドがゲートウェイを起動することはありません。チケットは stdout にだけ出力され、ログには一切記録されません。行単位のプロトコルとクライアント側のルールは
+[SSH 経由のゲートウェイ: クライアントの取り決め](/hermes/docs/developer-guide/gateway-ssh-clients/)にあります。
 
 ## `hermes lsp` {#hermes-lsp}
 
@@ -894,7 +902,7 @@ hermes webhook <subscribe|list|remove|test>
 
 | サブコマンド | 説明 |
 |------------|-------------|
-| `subscribe` / `add` | webhook のルートを作成します。設定するべき URL と HMAC シークレットを返します。 |
+| `subscribe` / `add` | webhook のルートを作成します。URL と、一部を伏せた HMAC シークレットを表示します。完全なシークレットは、Hermes のホームディレクトリにある `webhook_subscriptions.json` に保存されます。 |
 | `list` / `ls` | エージェントが作成したすべてのサブスクリプションを表示します。 |
 | `remove` / `rm` | 動的なサブスクリプションを削除します。config.yaml の静的なルートには影響しません。 |
 | `test` | テスト用の POST を送り、サブスクリプションが動作しているか確認します。 |
@@ -1593,6 +1601,7 @@ hermes plugins [subcommand]
 | `enable <name>` | 無効化されたプラグインを有効化します。 |
 | `disable <name>` | プラグインを削除せずに無効化します。 |
 | `list`（別名: `ls`） | インストール済みのプラグインを有効/無効状態付きで一覧します。 |
+| `idle-tasks [name] [--pause TASK \| --resume TASK]` | このプロファイルで、プラグインが `ctx.register_idle_task` を使って登録したアイドルタスクを一覧します（状態、実行回数、前回と次回の実行、直近の結果の概要またはエラー）。名前を指定したプラグインのタスクを1つ選んで、一時停止したり再開したりすることもできます。 |
 | `doctor [path-or-id] [--ci]` | 実際のマニフェストパーサ、ローダー、登録経路を通して、ネイティブなプラグインを検証します。`--ci` はエラーがあれば 1 で終了します。 |
 | `pack install <path-or-url> [--force]` | プラグインパック（`hermes-pack.yaml`）をインストールします — それぞれが正確な40文字のコミット SHA にピン留めされた、宣言的なプラグイン群です。必須のレビュー画面（すべてのプラグイン、ソース、ピン留めされた ref、宣言された機能）を表示し、パックの内容に対して1回の確認を求め、その後は通常のピン留めインストールを実行します。各プラグインが宣言する機能は、それぞれ通常のプラグイン単位の同意を通ります — パックが一括で許可することはありません。部分的な失敗はプラグインごとに報告され、どれかが失敗すると非ゼロで終了します。対話モードのみです（`--yes` はありません）。 |
 | `pack export [--enabled-only] [--name NAME]` | 現在のインストールから、stdout にパックの YAML を出力します: git でインストールされた各プラグインのリポジトリ + 正確な SHA と、機密情報を除いた `plugins.entries` の設定です。ローカルのみのプラグイン（git の出自がないもの）は、インストール可能な項目としてではなく、警告コメントとして一覧されます。シークレット、機能の許可、`allow_*` ゲートは常に取り除かれます。 |
@@ -2015,6 +2024,7 @@ hermes update [--gateway] [--check] [--plan] [--no-backup] [--backup] [--yes]
 | `--no-backup` | この実行での、すべての更新前バックアップ（クイックな状態スナップショットとフル zip の両方）をスキップします。`updates.pre_update_backup` の設定に関わらずスキップします。 |
 | `--backup` | この実行で**フル**の更新前バックアップを強制します: クイックな状態スナップショットに加え、`HERMES_HOME` 全体（設定、認証、セッション、スキル、ペアリングデータ）の完全な zip です。既定のモードは `quick` です — 軽量な状態スナップショットのみです。永続的なモードは `config.yaml` の `updates.pre_update_backup: quick | full | off` で設定してください。 |
 | `--yes`, `-y` | 設定の移行やスタッシュの復元といった対話プロンプトに対して、yes を仮定します。API キーの入力はスキップされます。それらは別途 `hermes config migrate` を実行してください。 |
+| `--force` | Linux/macOS: 実行中の作業が終わるのを待たずに、この更新が受け持つすべてのゲートウェイを一斉に停止します（更新を始めるときに指定してください。すでに待機に入っている更新を、あとから中断することはできません）。実行中のターン、バックグラウンドのサブエージェント、ツールやバックグラウンドのプロセスは中断され、約 12 秒たってもまだ動いているゲートウェイは強制終了されます。そのあと更新が実行され、ゲートウェイは新しいコードで再起動します。Windows では、別の `hermes.exe` が見つかったときにも更新を進められるようにするだけです。Windows での一時停止は、これまでどおり作業が終わるのを待ちます（venv を使用中のプロセスに対する保護は回避しません。`--force-venv` を参照してください）。 |
 
 追加の挙動:
 

@@ -2,14 +2,14 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 2c6e3a34bf0ac7b2e707e1f7194338cdf742f1b3
+upstream_blob: 7da88fdb5bc1882cda33d4e14779496605341665
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
 
 # 環境変数の一覧 {#environment-variables-reference}
 
-Hermes は環境変数をプロセスの環境から読み、利用者が管理する秘密については `~/.hermes/.env` からも読みます。API キー、ボットのトークン、OAuth の秘密といった資格情報は `.env` に置いてください。秘密でない振る舞いの設定は、設定キーがあるなら `config.yaml` のほうをおすすめします。以下にはプロセス限りの上書きや、内部の橋渡しに使う変数も含まれます。ここに載っているからというだけで `.env` に書き込むべきではありません。プラットフォームの YAML の橋渡し（および Telegram/Signal の呼びかけの予備設定）が書き込んだ値は、その設定が変わると更新されます。デーモンが置き換わった場合も同じです。YAML 全体の読み込みに成功したあとは、キーを削除すると、橋渡しが書き込んだまま変更されていない値も取り消されます。読み込みに失敗した場合はこの後片付けは行われません。また、プロセスで明示的に設定した値や、利用者の `.env`、管理用の `.env` の値は引き続き優先されます。橋渡しは自分が書き込んだものを `HERMES_BRIDGED_<NAME>` 変数で記録します。この変数が持つのは値そのものではなく値の SHA-256 ダイジェストで、エージェントのすべての子プロセスからは取り除かれます。プロセスでエクスポートした値が、橋渡し自身が以前書き込んだ値とたまたま同じだった場合は、橋渡しのものとして扱われ、`config.yaml` に従います。
+Hermes は環境変数をプロセスの環境から読み、利用者が管理する秘密については `~/.hermes/.env` からも読みます。API キー、ボットのトークン、OAuth の秘密といった資格情報は `.env` に置いてください。秘密でない振る舞いの設定は、設定キーがあるなら `config.yaml` のほうをおすすめします。以下にはプロセス限りの上書きや、内部の橋渡しに使う変数も含まれます。ここに載っているからというだけで `.env` に書き込むべきではありません。プラットフォームの YAML の橋渡し（および Telegram/Signal の呼びかけの予備設定）が書き込んだ値は、その設定が変わると更新されます。デーモンが置き換わった場合も同じです。YAML 全体の読み込みに成功したあとは、キーを削除すると、橋渡しが書き込んだまま変更されていない値も取り消されます。読み込みに失敗した場合はこの後片付けは行われません。プラットフォームの YAML の橋渡しが環境へ写す設定（呼びかけによる絞り込み、リアクション、許可リストなど、橋渡しの対象になっているプラットフォームのキー）では、`config.yaml` にキーを明示すると、プロセスの環境（起動用のツール、サービスの管理の仕組み、親のシェル）から引き継いだ値がその値に置き換わります。ただし、利用者の `.env`、管理用の `.env`、外部の秘密の保管元で設定した値は、引き続き `config.yaml` より優先されます。アダプターが橋渡しを通さず自分の環境から直接読む設定（たとえば `WHATSAPP_REPLY_PREFIX`）では、これまでどおり環境の値が優先されます。橋渡しは自分が書き込んだものを `HERMES_BRIDGED_<NAME>` 変数で記録します。この変数が持つのは値そのものではなく値の SHA-256 ダイジェストで、エージェントのすべての子プロセスからは取り除かれます。プロセスでエクスポートした値が、橋渡し自身が以前書き込んだ値とたまたま同じだった場合は、橋渡しのものとして扱われ、`config.yaml` に従います。
 
 ## LLM の提供元 {#llm-providers}
 
@@ -776,7 +776,7 @@ Microsoft Teams のプラットフォーム用アダプター（Bot Framework / 
 | `HERMES_TELEGRAM_TEXT_BATCH_SPLIT_DELAY_SECONDS` | Telegram の 1 通が長さの上限を超えて分割されたとき、分割した塊のあいだに置く間隔（既定: `2.0`）。 |
 | `HERMES_SIMPLEX_TEXT_BATCH_DELAY` | 立て続けに届いた文章を 1 つの MessageEvent にまとめるための静かな時間（秒。既定: `0.8`）。Telegram の文章のまとめ方と同じ考え方です。 |
 | `HERMES_TELEGRAM_MEDIA_BATCH_DELAY_SECONDS` | 溜めた Telegram のメディアを送り出すまでの待ち時間（既定: `0.6`）。 |
-| `HERMES_TELEGRAM_FOLLOWUP_GRACE_SECONDS` | ターンが始まってからこの秒数のあいだに届いた、Telegram の普通の文章による追いかけのメッセージは、そのターンに割り込んだり向きを変えたりせず、待ち行列に加わります（既定 `3`。`0` にするとこの猶予がなくなります）。コマンドとメディアは留め置かれません。 |
+| `HERMES_TELEGRAM_FOLLOWUP_GRACE_SECONDS` | ターンが始まってからこの秒数のあいだに届いた、Telegram の普通の文章や音声メモによる追いかけのメッセージは、そのターンに割り込んだり向きを変えたりせず、待ち行列に加わります（既定 `3`。`0` にするとこの猶予がなくなります）。コマンドとそれ以外のメディアは留め置かれません。 |
 | `HERMES_TELEGRAM_HTTP_CONNECT_TIMEOUT` / `_READ_TIMEOUT` / `_WRITE_TIMEOUT` / `_POOL_TIMEOUT` | 土台になっている `python-telegram-bot` の HTTP のタイムアウトを上書きします（秒）。 |
 | `HERMES_TELEGRAM_INIT_TIMEOUT` | ゲートウェイの起動時、Telegram の `initialize()` の接続の試行 1 回あたりの上限（秒）。届かない予備の IP の連なりで起動が止まり続けるのを防ぎます（既定: `30`）。 |
 | `HERMES_TELEGRAM_HTTP_POOL_SIZE` | Telegram の API への同時 HTTP 接続の上限。 |

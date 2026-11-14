@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Box — クラウド上のファイル、共有、検索、メタデータを管理します"
 description: "Box でクラウド上のファイル、共有、検索、メタデータを管理します"
 upstream_path: user-guide/skills/optional/productivity/productivity-box.md
-upstream_blob: e3ba0f0b88bb7532c1feb2f949c4e0dd53b866ec
+upstream_blob: c2b8842f41d9001e3cdff1ce9ddb8aca0535931a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/productivity/productivity-box
 ---
@@ -55,12 +55,12 @@ OAuth を使うと、Hermes はブラウザーで認可した Box アカウン�
 
 ## 選ばれたセットアップを対話しながら実行する {#perform-chosen-setup-interactively}
 
-ユーザーが認証方法を選んだときや、Hermes に Box への接続を頼んだときは、`terminal` を通じてセットアップを実行します。次の返答を、ユーザーがコピーして実行するための手順書にしないでください。安全に進められる次の操作は自分で行い、承認、ブラウザーでのサインイン、管理者による操作、Hermes が安全に用意できない秘密情報が必要なときだけ手を止めます。
+ユーザーが認証方法を選んだときや、Hermes に Box への接続を頼んだときは、`terminal` を通じてセットアップを実行します。次の返答を、ユーザーがコピーして実行するための手順書にしないでください。安全に進められる次の操作は自分で行い、承認、ブラウザーでのサインイン、管理者による操作、Hermes が安全に用意できない秘密情報が必要なときだけ手を止めます。ただし、OAuth の `code`/`state` や Client Secret をプロンプトで受け取るログイン（リモートでの `--code` と、すべての `--platform-app` によるログイン）は例外です。Hermes が CLI のプロンプトに中継した内容は、すべて Hermes のコンテキストと会話記録に残ってしまいます。そのため、このコマンドだけはユーザーが自分のターミナルで実行します。
 
 - `box` が見つからない場合は、現在の Hermes ホームの `tools/box-cli` に `@box/cli` をインストールするために必要なターミナル操作の承認を求めます。インストール後は、[CLI ガイド](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/productivity/box/references/cli-guide.md)にある、使っているシェルに合ったコマンドで確認します。npm でのグローバルインストール、`sudo` の使用、npm のグローバル prefix の変更、`PATH` の変更は行わないでください。
-- OAuth の前に、**「Hermes は、Box の認可に使うブラウザーと同じコンピューターで動いていますか。それとも VPS、コンテナー、クラウド VM などのリモートホストで動いていますか。」** と尋ねます。同じコンピューターの場合に限り通常の `box login` を使い、リモートや画面のない環境の場合に限り `box login --code` を使います。OS だけから実行環境の構成を推測しないでください。ユーザーが答えたら [OAuth の設定](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/productivity/box/references/oauth-setup.md)を読みます。
+- OAuth の前に、**「Hermes は、Box の認可に使うブラウザーと同じコンピューターで動いていますか。それとも VPS、コンテナー、クラウド VM などのリモートホストで動いていますか。」** と尋ねます。同じコンピューターの場合に限り通常の `box login` を使い、リモートや画面のない環境の場合に限り `box login --code` を使います。このコマンドは、Hermes ホスト上でユーザー自身のターミナルから実行してもらいます。その際は Hermes と同じ OS ユーザーで、Hermes のターミナルと同じ `HOME` を使います。こうすると `code` と `state` をプロンプトに直接入力できます。チャット、プロセスの `write`/`submit`、コマンドラインを経由させてはいけません。OS だけから実行環境の構成を推測しないでください。ユーザーが答えたら [OAuth の設定](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/productivity/box/references/oauth-setup.md)を読みます。
 - ブラウザーでの認可を始める前に、Hermes はそこでサインインした Box アカウントとして動作することを伝えます。アクセス範囲を絞りたい場合は、必要なファイル、フォルダー、Hub にだけ招待されているアカウントで認可できます。例外的な操作を可能にするためだけに、そのアカウントを管理者にしないでください。
-- カスタムの OAuth Platform App が必要な場合は、CLI の対話式 Platform App 手順を使います。client secret はローカルの CLI プロンプトにだけ入力するようユーザーに頼みます。チャットで求めたり、Hermes の設定に書き込んだり、コミットしたりしてはいけません。
+- カスタムの OAuth Platform App が必要な場合は、CLI の対話式 Platform App 手順を使います。この手順は、Hermes ホスト（ローカルかリモートかを問いません）上でユーザー自身のターミナルから実行してもらいます。その際は Hermes と同じ OS ユーザーで、Hermes のターミナルと同じ `HOME` を使います。CLI は入力中の Client Secret をそのまま画面に表示するため、Client Secret はそのターミナルに直接入力してもらう必要があります。チャットで求めたり、プロセスの `write`/`submit` で中継したり、コマンドラインで渡したり、Hermes の設定に書き込んだり、コミットしたりしてはいけません。ユーザーから完了の報告を受けたら、実行ユーザーを確認します。
 - インストール、ブラウザーでの認可、環境の切り替え、権限の変更に承認が必要な場合は、承認を求め、承認されたらセットアップを再開します。操作の代わりにコマンドの一覧を渡すことはしないでください。
 
 ## 各タスクの始め方 {#start-each-task}

@@ -2,7 +2,7 @@
 title: "モデルプロバイダーのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダー（推論バックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: 8a4dd97e6d32615ddcad4187938404c8884924f4
+upstream_blob: c48a87458dd4f94602c7b95e27a234174c620e37
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -25,6 +25,8 @@ sources:
 4. **従来の単一ファイル** — `<repo>/providers/<name>.py` — ツリー外の editable インストール向けの後方互換です
 
 手順 2 と 3 は**プロファイルの HOME ごと**に効きます。複数のプロファイルを 1 プロセスで受け持つ場合（ローカルの Desktop がつながる多重化ゲートウェイや、`hermes serve` のバックエンド）、検索した時点で結び付いている `$HERMES_HOME` のプラグインが解決されるので、あるプロファイルに入れたプラグインは別のプロファイルからは見えません。使いたいプロファイルすべてにインストールしてください（`hermes -p <profile> plugins install ...`）。
+
+更新も、動いているプロセスに反映されます。`hermes plugins update`、ダッシュボードや Desktop からの更新、ゲートウェイが定期的に行う自動適用は、どれも最後にプラグインの強制的な再走査を行い、そのプロファイルのプロバイダープラグインを調べ直します。ファイル構成が変わったプラグインは、パッケージもサブモジュールもまとめて破棄されてから読み込み直されるので、そのプラグインのプロファイルは新しいバージョンから登録し直されます。変わったかどうかは、`.hermes-catalog.json` に記録された一覧上の固定バージョンで判断し、それが無ければ Python ファイルとマニフェストの更新時刻で判断します。新しいリクエストには新しいバージョンが使われます。すでに作られたクライアントは手元のオブジェクトをそのまま使い続けますが、そのあとに読み込むものはすべて新しいパッケージから来るので、2 つのバージョンが混ざることはありません。
 
 **同じ名前なら、利用者のプラグインが同梱のものを上書きします。** `register_provider()` は後から書いたほうが勝つからです。`$HERMES_HOME/plugins/model-providers/gmi/` というディレクトリを置けば、リポジトリを触らずに組み込みの GMI のプロファイルを置き換えられます。
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes で音声モードを使う"
 description: "CLI・Telegram・Discord・Discord のボイスチャンネルで Hermes の音声モードを設定して使うための実践ガイド"
 upstream_path: guides/use-voice-mode-with-hermes.md
-upstream_blob: 168088a9f6cdcfd59e51c9bce5a0ed867255cd95
+upstream_blob: 26412e6e885002992aba759e6888df4d8c1aea50
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/use-voice-mode-with-hermes
 ---
@@ -183,6 +183,7 @@ voice:
   submit_mode: "direct"  # TUI: direct | draft
   max_recording_seconds: 120
   auto_tts: false
+  auto_tts_mode: "all"  # all (legacy default) | voice_only
   beep_enabled: true
   silence_threshold: 200
   silence_duration: 3.0

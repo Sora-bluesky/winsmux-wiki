@@ -2,7 +2,7 @@
 title: "cron の内部構造"
 description: "Hermes が cron ジョブを保存し、スケジュールし、編集し、一時停止し、スキルを読み込み、届けるまでの仕組み"
 upstream_path: developer-guide/cron-internals.md
-upstream_blob: b00c317f9eae5193387f4cf3140415cfe54b9bd8
+upstream_blob: a96b681939cd8054823b4cd475b820d58beca5fb
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals
 ---
@@ -420,6 +420,8 @@ cron ジョブの結果は、対応しているどのプラットフォームに
 既定（`cron.wrap_response: true`）では、cron の配信に次のものが添えられます。
 - cron ジョブの名前とやったことを示す見出し
 - 届けたメッセージをエージェント自身は会話として見られない、という断り書き
+
+定型文を添えるかどうかは、`cron/scheduler_delivery.py` の `_should_wrap_cron_response(job, user_cfg)` が決めます。ジョブに真偽値の `wrap_response` が保存されていればそれが全体の設定より優先され、`None`（既定）であれば全体の設定に従います。`cron/jobs_tristate.py` の `normalize_wrap_response` が保存する値は、true、false、None のどれかだけです。
 
 cron の応答の先頭に `[SILENT]` を付けると、配信そのものを止められます。ファイルへ書くだけ、あるいは何か別の処理をするだけのジョブに向いています。
 

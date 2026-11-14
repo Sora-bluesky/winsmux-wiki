@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "アプリケーション宣言"
 description: ""
 upstream_path: developer-guide/plugins/application-declarations.md
-upstream_blob: d5130f27affce2d4c7e0797f0d0ab48a2fd9d145
+upstream_blob: 6d7907d741edb177f74a9eed0a1eaa227e4d117e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/application-declarations
 ---
@@ -92,9 +92,9 @@ app:
 | `version.kind` | `pe_resource` \| `plist` \| `uninstall_registry` \| `none` | 既定は `none`。`pe_resource`/`uninstall_registry` は `win32` の下だけ、`plist` は `darwin` の下だけ | `.version_kind` |
 | `version.display_name_prefix` | str | `uninstall_registry` のとき必須 | `.version_arg` |
 | `liveness.kind` | `server_json` \| `none` | 既定は `none` | `.liveness_kind` |
-| `liveness.path` | str | `server_json` のとき必須 | `.liveness_path` |
-| `liveness.pid_key` / `url_key` / `token_key` | str | 既定は `pid` / `http` / `token` | `.liveness_*_key` |
-| `liveness.endpoint_path` | str | 既定は `/mcp`。`initialize` に使うパスで、ファイルに書かれたパスは使いません | `.endpoint_path` |
+| `liveness.path` | str | `server_json` のとき必須。規則は `location` と同じです（ルートから始まる形、または `~` / `%VAR%` / `$VAR` で始まる形。`..` の区切りや URL スキームは不可） | `.liveness_path` |
+| `liveness.pid_key` / `url_key` / `token_key` | str | 既定は `pid` / `http` / `token`。使えるのは単純なキー名だけです（`[A-Za-z0-9_.-]+`） | `.liveness_*_key` |
+| `liveness.endpoint_path` | str | 既定は `/mcp`。`/` で始まる単純なパスで、使える文字は `[A-Za-z0-9._~/-]` です。`@`、`?`、`#`、空白、スキームは使えません。このパスはランタイムファイルから得たループバック URL の後ろに付け足され、ファイルに書かれたパスは使いません | `.endpoint_path` |
 
 `requires.app` が true のとき、`app:` に載っていない OS では `unsupported_os` になります。
 

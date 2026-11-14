@@ -2,7 +2,7 @@
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: d9294e95b9bc560d2c02771007bc2d30eb694ba0
+upstream_blob: 94a36c5bf76106517e5f38501d0ba948575249db
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -435,6 +435,8 @@ hermes plugins enable my-plugin              # add to allow-list
 hermes plugins disable my-plugin             # remove from allow-list + add to disabled (bundled platforms:
                                              # either spelling works, e.g. photon-platform or platforms/photon)
 hermes plugins capabilities [my-plugin]      # declared vs granted capabilities
+hermes plugins idle-tasks [my-plugin]        # background idle jobs plugins registered: last run, next run
+hermes plugins idle-tasks my-plugin --pause suggest   # stop one until --resume
 hermes plugins check-updates                 # read-only: is any installed plugin outdated?
 hermes plugins adopt my-plugin               # track a self-cloned plugin dir (read its git origin)
 hermes plugins trust-update-url my-plugin    # confirm a changed update_url after review
@@ -446,6 +448,9 @@ Hermes は、Git から入れたときの入手元とリビジョンを `.instal
 固定せずに追跡しているインストールは、保存された入手元のリモートの HEAD か、一致する保存済みの
 `update_url` のフィードと比べられます。固定したインストールは固定されたままです。自分でクローンしたディレクトリは、
 `hermes plugins adopt NAME` を実行してはじめて追跡されるインストールになります。
+ほかの場所にあるチェックアウトへのリンクになっているプラグインのディレクトリは、追跡されることがありません。
+Hermes はプラグインのディレクトリの外にあるファイルを変えないからです。更新はそのチェックアウトで pull し、
+プラグインを取り除くときはリンクを削除してください。
 手でコピーしたディレクトリや、入手元の記録とずれたディレクトリには、診断のための案内が出ます。
 pip のエントリーポイントのプラグインは、それを持つ配布パッケージで入手できるバージョンを報告できます。
 ただし、その確認によって Git で管理されるインストールに変わるわけではありません。
@@ -626,7 +631,7 @@ hermes plugins capabilities my-plugin   # one plugin, declared vs granted
 
 権限が与えられているか、*あるいは*古いキーが設定されていれば、その関門は開きます。
 いまの設定はそのままで動き続けます。
-`llm.side_question` には古いキーがありません。同意の手順で宣言され、権限が与えられたときだけ開きます。
+`llm.side_question` と `llm.session_fork` には古いキーがありません。どちらも、同意の手順で宣言され、権限が与えられたときだけ開きます。
 
 :::warning サンドボックスではありません
 権限は**同意と監査のための層**であって、隔離ではありません。プラグインはふつうの
@@ -903,6 +908,9 @@ plugins:
   独自の SDK クライアントを作るモデルプロバイダーのプロファイル（`create_client`）、ターミナルのバックエンド（そのバックエンドのコマンドがこの理由で失敗します。
   `singularity` プラグインがその一例です）、ストリーミングや websocket を使うダッシュボードの
   エンドポイント、Hermes のモジュールに monkeypatch を当てるプラグインです。これらは `isolation: in_process` で動かしてください。
+- **Cookie は使えません。** ホストで動くプラグインの API の応答はゲートウェイ自身のアドレスから返されるので、
+  プラグインがダッシュボードの Cookie を設定したり上書きしたりできないよう、Hermes は応答に含まれる `Set-Cookie` ヘッダーを取り除きます（プラグインごとに1回ログに記録します）。
+  これは、常にホストで動くほかのプロファイルのプラグインにも当てはまります。
 
 **共有の環境で固定する。** `plugins.isolation` は普通のプロファイル設定なので、プロファイルの `config.yaml` を
 編集できる人なら誰でも無効にできます。プロファイルの持ち主どうしを互いに隔離したい場合は、代わりに
