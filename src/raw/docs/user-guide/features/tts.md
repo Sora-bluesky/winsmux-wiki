@@ -2,7 +2,7 @@
 title: "音声と読み上げ"
 description: "どのプラットフォームでも使える、文章の読み上げと音声メッセージの文字起こし"
 upstream_path: user-guide/features/tts.md
-upstream_blob: 41e01d3ee5fa041f0b2d8abd6ff9b4c6b74c5a98
+upstream_blob: 65ef8c302e208c55492f4c1ea791bd16a8502e62
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/tts
 ---
@@ -381,7 +381,7 @@ tts:
 |------------------|------------------------------------------------------|
 | `{input_path}`   | Hermes が書いた一時的な UTF-8 のテキストファイルのパス        |
 | `{text_path}`    | `{input_path}` の別名                             |
-| `{output_path}`  | コマンドが音声を書き込むべきパス                 |
+| `{output_path}`  | コマンドが音声を書き込むべきパス（Hermes が名前を付けた一時ファイルで、書き込み後に指定の場所へ移されます） |
 | `{format}`       | `mp3` / `wav` / `ogg` / `flac`                       |
 | `{voice}`        | `tts.providers.<name>.voice`。未設定なら空       |
 | `{model}`        | `tts.providers.<name>.model`                         |
@@ -410,7 +410,7 @@ tts:
 
 #### 安全について {#security}
 
-コマンド型の提供元は、設定したシェルのコマンドを、その利用者の権限でそのまま実行します。Hermes は置き換え文字の値を引用し、設定された時間切れを守らせますが、コマンドの雛形そのものは信頼された手元の入力という扱いです。PATH に置いたシェルスクリプトと同じ気持ちで扱ってください。
+コマンド型の提供元は、設定したシェルのコマンドを、その利用者の権限でそのまま実行します。Hermes は置き換え文字の値を引用し、呼び出し側が選んだ出力先のパスをコマンドに入れることはせず（コマンドが書き込むのは Hermes が名前を付けた一時ファイルです）、設定された時間切れを守らせますが、コマンドの雛形そのものは信頼された手元の入力という扱いです。PATH に置いたシェルスクリプトと同じ気持ちで扱ってください。
 
 ### Python プラグイン型の提供元 {#python-plugin-providers}
 

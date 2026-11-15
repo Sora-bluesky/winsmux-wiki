@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: 5d865151b3fad1a0202c5b5207b4275a8cbd96f9
+upstream_blob: 50589708ce372a2c2b5d9d1ef72c413da594cee6
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -523,7 +523,7 @@ Hermes のプロセスが終了しても（`/quit`、TUI セッションを閉�
 | `TERMINAL_CONTAINER_PERSISTENT` | `container_persistent` | `true` / `false`。バインドマウントするワークスペースのディレクトリを制御します（`docker_persist_across_processes` とは別の設定です） |
 | `TERMINAL_LIFETIME_SECONDS` | `lifetime_seconds` | アイドル時の回収処理までの時間 |
 | `TERMINAL_TEMP_DIR` | `temp_dir` | セッションの一時ファイルを置くルート（ローカルバックエンド） |
-| `TERMINAL_TIMEOUT` | `timeout` | コマンドごとのタイムアウト |
+| `TERMINAL_TIMEOUT` | `timeout` | コマンドごとのタイムアウト。フォアグラウンドのコマンド（フォアグラウンドの上限である 600 秒まで）と `process_manage` の待機は、ツール共通の期限（`timeouts.tools.sequential_call`、420 秒）を超える場合でも、この時間まで実行されます。そのため、ツール自身のタイムアウトが働き、途中までの出力が返されます |
 | `HERMES_DOCKER_BINARY` | _なし_ | 使う docker / podman のバイナリのパスを指定します |
 
 ### SSH バックエンド {#ssh-backend}
@@ -1536,11 +1536,25 @@ Qwen Cloud（Alibaba DashScope）は提供元がキャッシュの TTL を5分�
 ```yaml
 prompt_caching:
   cache_ttl: "5m"   # "5m", "1h" (Anthropic-supported tiers) or "auto"; other values are ignored
+  route_ttl_ceilings: {}   # per-provider cap, e.g. {nous: "5m"} or {nous: "1h"} to lift a shipped cap
 ```
 
 `cache_ttl` は、ネイティブの Anthropic API、OpenRouter、Nous Portal 経由の Claude に Hermes が付けるブレークポイントの TTL を選びます。Anthropic の2つのティア（`"5m"`、`"1h"`）はそのまま送られ、それ以外の値は無視されます。独自の上限があるプロバイダー（例: 最大5分の Qwen Cloud）では、この設定にかかわらず提供元が許す範囲に収められます。
 
 1時間のティアは書き込みに基本の入力料金の2倍がかかり（5分のティアは1.25倍）、元が取れるのはターンの間隔が5分より長いときだけです。そうでなければ、誰も使わない保持期間のために、ツールの結果をすべて割高な料金で書き込むことになります。`"auto"` は、そのセッションのペースを誰が決めているかで、セッションごとにティアを選びます。人が入力するセッション（CLI、TUI、Desktop、Telegram/Discord/Slack とそのほかのメッセージングプラットフォーム）には `1h`、機械のペースで進むセッション（サブエージェント、cron、`hermes -q` の単発実行、webhook、かんばんのワーカー、API サーバー、ツールから起動される実行やバッチ実行）には `5m` を使います。対話セッションを一日のうちに何度も中断しては再開する環境では、`auto` によって対話セッションのキャッシュ書き込みの費用がおよそ40%減り、並列に展開するサブエージェントの費用は変わりませんでした。委任されたサブエージェントは、設定にかかわらず常に `5m` に固定されます。
+
+`prompt_caching.route_ttl_ceilings` は、プロバイダーごとにティアの上限を決めます。これにより、要求された期間より短くしか保持しないのにそれを知らせない経路には、割高なティアを要求することも、その料金を請求されることもなくなります。プロバイダーのプロファイルにも上限が組み込まれている場合がありますが、設定ファイルの項目のほうが優先されます。Nous Portal には `5m` が組み込まれています。現在、その提供元は1時間のエントリーをおよそ7分で破棄し、5分のティアの料金で請求しているためです。この問題が修正されれば、`route_ttl_ceilings: {nous: "1h"}` と設定するだけで、コードを変えずに上限を引き上げられます。既知のプロバイダーのホストを指す `custom` エンドポイントには、そのプロバイダーの上限が適用されます。
+
+`/context` は、セッションがキャッシュの有効期間に対して今どの状態にあるかを表示します。この表示は、共通のプロンプトキャッシュの時計に基づいています。この時計は、リクエストごとに、実際に送ったティア、応答で確認できたティア、キャッシュされたプロンプトが持つ各ティアの期限を記録します。
+
+- `Prompt cache: warm until 14:32 (58m 10s left; 1h, proven).` この時刻までは、キャッシュされたプロンプト全体が確実に有効（ウォーム）です。期限は、ドキュメントに記された最短の保持期間または確認済みのティアを、キャッシュを最後に読み書きしたリクエストから数えたものです。1つの応答で2つのティアが書き込まれた場合（一部は5分、一部は1時間）は、短いほうに合わせて保証されます。
+- `Prompt cache: may still be warm until 09:10 (at most 23h 5m more; 30m, declared).` 保証された期間は過ぎましたが、プロバイダーがエントリーをもっと長く保持している可能性があります。OpenAI の30分と12時間の保持期間は最短の値で（「エントリーをもっと長く保持する場合がある」とされ、最長24時間）、GPT-5.5 以前ではまったく保証がありません。
+- `Prompt cache: expired 15m ago (5m, declared); the next message re-processes the full prompt.` エントリーが確実に消えたときにだけ表示されます。Anthropic 形式のティアの期間を過ぎたときか、OpenAI の24時間の上限を過ぎたときです。
+- `Prompt cache: unknown (…)` 次のような場合に表示されます。プロバイダーが保持期間を公表していない場合（DeepSeek、Gemini の暗黙的キャッシュ、xAI など）、最後にキャッシュを使ったリクエストのあとでキャッシュの置き場所が変わった場合（`/model` での切り替え、フォールバック、別のエンドポイント URL、圧縮）、ランタイムが独自のキャッシュオプションを設定している場合（Codex app-server）です。
+
+読み取りによって有効期間がどう延びるかは、プロバイダーによって異なります。Anthropic 形式のキャッシュでは、読み取るたびにティアの期間が最初から数え直されます。OpenAI の GPT-5.6 以降では、読み取りから少なくとも30分後まで延長されますが、12時間のティアで書き込んだ分の期間が数え直されることはなく、その期限は書き込み時刻の12時間後のままです。`proven` は、応答の中でティアが明示されたことを表します（Anthropic の `ephemeral_5m/1h_input_tokens`、OpenAI Responses の `ttl_30m/12h_tokens`）。`declared` は、ティアを守ることがわかっている経路で送ったティアです（OpenRouter の Claude、経路ごとの上限、OpenAI がドキュメントに記した最短の保持期間）。`assumed` には保証がありません（1時間を要求した、Anthropic の通信形式を使うほかのゲートウェイ、GPT-5.6 より前の OpenAI、時計が保存されていない状態で再開したセッション）。
+
+この時計はセッションと一緒に保存されます（`sessions.prompt_cache_clock`）。そのため、再開したセッションでも（エージェントが動いていないセッションで `/context` を使った場合も）同じ有効期間が表示されます。時計を保存したあとに圧縮が確定した場合は、再起動をはさんでも状態は不明（unknown）になります。
 
 ## 補助モデル {#auxiliary-models}
 
@@ -3089,7 +3103,7 @@ security:
     shared_files: []
 ```
 
-- `redact_secrets` — `true` のとき、ツールの出力に含まれる API キー、トークン、パスワードらしきパターンを自動で検出し、会話のコンテキストやログに入る前に伏せ字にします。**既定でオンです**。デバッグや伏せ字処理の開発で、認証情報らしき文字列をそのまま見る必要がある場合に限り、明示的に `false` にしてください。シークレットを含むファイル（`.env` 形式のファイル、シェルの rc/profile ファイル、`HERMES_HOME` にある Hermes の `config.yaml` と、その `backups/config/` 内のコピー）を `read_file`、`search_files`、ターミナルの `cat`/`grep` で読んだ場合も、認証情報の形をした代入（`SOME_API_TOKEN: …`）は、値の見た目にかかわらず、再利用できない `«redacted-secret»` という印に置き換えられます。通常のソースコードやプロジェクトの設定ファイルでは、ベンダー固有の接頭辞のパターンだけが対象なので、`MAX_TOKENS: 100` のようなテスト用のデータが書き換えられることはありません。
+- `redact_secrets` — `true` のとき、ツールの出力に含まれる API キー、トークン、パスワードらしきパターンを自動で検出し、会話のコンテキストやログに入る前に伏せ字にします。**既定でオンです**。デバッグや伏せ字処理の開発で、認証情報らしき文字列をそのまま見る必要がある場合に限り、明示的に `false` にしてください。シークレットを含むファイル（`.env` 形式のファイル、シェルの rc/profile ファイル、`~/.aws/credentials`、`~/.aws/config`、`.netrc`（`_netrc`）、`.pgpass`、`.npmrc`、`.pypirc`、`.git-credentials` といった認証情報の保存ファイル、`HERMES_HOME` にある Hermes の `config.yaml` と、その `backups/config/` 内のコピー）を `read_file`、`search_files`、ターミナルの `cat`/`grep` で読んだ場合も、認証情報の形をした代入（`SOME_API_TOKEN: …`）と、こうした認証情報の保存ファイルのパスワード欄は、値の見た目にかかわらず、再利用できない `«redacted-secret»` という印に置き換えられます。通常のソースコードやプロジェクトの設定ファイルでは、ベンダー固有の接頭辞のパターンだけが対象なので、`MAX_TOKENS: 100` のようなテスト用のデータが書き換えられることはありません。
 - `redact_phone_numbers` — `true`（既定）のとき、E.164 形式の電話番号（`+15551234567`）は、エージェントの返信と、ゲートウェイがチャットプラットフォームに送るすべての内容の中で伏せ字（`+155****4567`）になります。`redact_secrets: false` にしていても同じです。信頼できる運用者が1人で使う環境で、アシスタントに正確な電話番号を表示させる必要がある場合（連絡先の一覧や通話の記録など）は `false` にしてください。対象になるのは E.164 形式の番号だけです。API キー、ボットのトークン、Bearer トークン、パスワードなど、ほかのシークレットのパターンはすべてチャットでも伏せ字のままで、ログとツールの出力では電話番号も引き続き伏せ字になります。`true` と `false` 以外の値を指定した場合は、伏せ字のままにして警告をログに記録します。
 
 以前の版には、同梱のコマンドスキャナー用の `tirith_*` キーもありました。このスキャナーは取り除かれ、アップグレードするとこれらのキーは消えます。コマンドの中身の検査については [コマンドの中身の検査](/hermes/docs/user-guide/security/#content-level-command-checks) で説明しています。

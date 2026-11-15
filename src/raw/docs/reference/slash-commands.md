@@ -2,7 +2,7 @@
 title: "スラッシュコマンド早見表"
 description: "対話型 CLI とメッセージング両方のスラッシュコマンドを網羅した早見表"
 upstream_path: reference/slash-commands.md
-upstream_blob: 3367471547b24341c4e0c1a0b266f6fb9e6dd248
+upstream_blob: 6637b5caf2553d32603a0dad3ad4ffc6f2b2d49a
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/slash-commands
 ---
@@ -288,7 +288,7 @@ hermes config set model.aliases.grok x-ai/grok-4
 | `/branch [--here] [name]`（別名: `/fork`） | 今のセッションを分岐させます。スレッドを扱えるプラットフォーム（Discord、Telegram、Slack、Matrix）では、分岐したほうが隣に並ぶ新しいスレッドで開き、このチャットは元のセッションのまま残ります。`--here` を付けると、このチャットのほうを分岐先に切り替えます。 |
 | `/agents`（別名: `/tasks`） | 動いているエージェントとタスクを表示します。 |
 | `/sessions` | 過去のセッションを見て、再開します。 |
-| `/context [all]`（別名: `/ctx`） | コンテキストウィンドウの使用量のゲージとカテゴリごとの内訳です（メッセージング向けのテキスト表示）。`/context all` を使うと、スキルごと・ツールセットごとのコストの詳細が加わります。 |
+| `/context [all]`（別名: `/ctx`） | コンテキストウィンドウの使用量のゲージとカテゴリごとの内訳です（メッセージング向けのテキスト表示）。`/context all` を使うと、スキルごと・ツールセットごとのコストの詳細が加わります。プロンプトキャッシュの行には、キャッシュされたプロンプトがいつまで有効なまま残るか（Hermes がどれだけ確かだと見ているかも、proven（実証済み）、declared（申告どおり）、assumed（推定）のいずれかで示します）、期限が切れてからどれだけ経ったか、またはわからないことが表示されます。 |
 | `/egress [status]` | Docker の egress プロキシの状態を表示します。 |
 | `/init [notes]` | リポジトリを走査して `AGENTS.md` を生成、または更新します。 |
 | `/learn <what to learn from>` | 説明したものから、繰り返し使えるスキルを抽出します。 |

@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: d0ed79186e65eddb695aeb1f71e5e2ad2b45ac73
+upstream_blob: 74c56ddb56ddcd775f36139f0f48e6915d51a225
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -59,7 +59,7 @@ approvals:
 
 | モード | 振る舞い |
 |------|----------|
-| **smart**（既定） | 補助の LLM に危険度を判定させます。危険の少ないコマンド（たとえば `python -c "print('hello')"`）は、そのコマンドにかぎって自動承認されます。本当に危険なコマンドは自動で拒否されます。判断がつかないものは、人への確認に上げます。 |
+| **smart**（既定） | 補助の LLM に危険度を判定させます。危険の少ないコマンド（たとえば `python -c "print('hello')"`）は、そのコマンドにかぎって自動承認されます。本当に危険なコマンドは自動で拒否されます。判断がつかないものは、人への確認に上げます。ただし 1 種類だけ、補助の LLM にけっして回されないものがあります。エージェントが作ったのではない作業を壊しうる `osascript`（`saving no` で書類を閉じる、アプリを終了する、ファイルを消す、キー入力を送る、`do shell script` を使う）と、スクリプトの中身がコマンドラインから見えないものです。これに同意できるのは運用者だけなので、必ず確認が出ます。その答えが効くのは、そのコマンド 1 回だけです。 |
 | **manual** | 危険なコマンドでは必ず利用者に確認します。 |
 | **off** | 承認の検査をすべて止めます。`--yolo` を付けて動かすのと同じです。どのコマンドも確認なしで実行され、`trust: untrusted` の MCP サーバーへの書き込みの呼び出しも、信頼の確認を出さずに実行されます。ただし MCP サーバーに宣言された支出の上限は、引き続き確認を求めます（[YOLO モード](#yolo-mode)を参照）。 |
 
@@ -153,7 +153,7 @@ macOS では、実行される `launchctl submit` と `launchctl bootstrap` の�
 - cron ジョブが人のいない `approve` モードで動いている
 - 利用者がはっきり「常に許可」を押した
 
-この禁止リストは `--yolo` のさらに下にある床です。承認の層がコマンドを見るよりも **前** に働き、上書きするフラグはありません。いま対象になっているパターンは次のとおりです（すべてではありません。`tools/approval.py::UNRECOVERABLE_BLOCKLIST` と同期しています）。
+この禁止リストは `--yolo` のさらに下にある床です。承認の層がコマンドを見るよりも **前** に働き、上書きするフラグはありません。いま対象になっているパターンは次のとおりです（すべてではありません。`tools/approval_detection.py::HARDLINE_PATTERNS` と同期しています）。
 
 | パターン | 絶対禁止の理由 |
 |---|---|
@@ -162,6 +162,8 @@ macOS では、実行される `launchctl submit` と `launchctl bootstrap` の�
 | `:(){ :\|:& };:`（bash のフォーク爆弾） | 再起動するまでホストを占拠します |
 | マウント済みのルートデバイスへの `mkfs.*` | 動いているシステムを初期化します |
 | `dd if=/dev/zero of=/dev/sd*` | 物理ディスクをゼロで埋めます |
+| `format C:`、`Format-Volume`、`Clear-Disk`、`rd /s /q C:\`、`Remove-Item -Recurse C:\`（文字どおりの `-Include *.tmp` による絞り込みと、素の `Clear-Disk -WhatIf` による下見は絶対禁止にならず、承認すれば実行できます） | Windows での同じ種類の操作です。ボリュームを初期化・消去したり、ドライブのルートを再帰的に削除したりします |
+| `Restart-Computer` / `Stop-Computer`（素の `-WhatIf` による下見は絶対禁止にならず、承認すれば実行できます） | Windows で `shutdown`/`reboot` にあたる操作です |
 | 信頼できない URL をルートファイルシステムの最上位で `sh` に流し込む | 遠隔からのコード実行の入口として、承認するには広すぎます |
 
 禁止リストに当たると、ツール呼び出しは理由を説明するエラーをエージェントに返し、何も実行されません。まっとうな作業でこうしたコマンドが必要な場合（消去して入れ直す仕組みを運用している、など）は、エージェントの外で実行してください。
@@ -249,6 +251,7 @@ approvals:
 | `docker -H`/`--host`/`--context`、`DOCKER_HOST=`/`DOCKER_CONTEXT=` | Docker のデーモンの向き先変更 — 別の（多くは遠隔の）デーモンを相手にするコマンドです |
 | `docker context use` | 以降のすべての docker コマンドの既定のデーモンを切り替えます |
 | `podman --remote`/`-r`/`--url`/`--connection`/`--identity`、`CONTAINER_HOST=` | Podman の遠隔デーモンへの向き先変更 |
+| スクリプトが閉じる、終了する、保存する、削除する、移動する、書き込む、キー入力やクリックを送る、`do shell script` や Terminal の `do script` を実行する `osascript` または `osacompile`（JXA の `-l JavaScript` のプログラムはすべて該当します。`¬` による行の継続やコメントも読み通します）、あるいはスクリプトがファイル、パイプ、`$VAR`/`$(...)` の展開、運び役（`sh -c`、`eval`、`ssh`、`xargs` など）から渡されるもの | AppleScript は、どのアプリでも運用者がまだ保存していない作業を捨ててしまえます。`smart` モードでも、必ず人が答える 1 回かぎりの確認になります。検出はコマンドラインを見た経験則であって、安全の境界ではありません。読み取りだけの文字どおりのスクリプト（`get name of first application process whose frontmost is true`、`activate`、`display notification`）は対象になりません |
 
 :::info
 **コンテナでの省略**: `docker`、`modal`、`daytona`、`vercel_sandbox` のバックエンド（または `singularity` や `sprites` のようなコンテナ型のプラグインのバックエンド）で動いているときは、コンテナそのものがセキュリティの境界になるため、危険なコマンドの検査は **飛ばされます**。コンテナの中の破壊的なコマンドは、ホストを傷つけられません。

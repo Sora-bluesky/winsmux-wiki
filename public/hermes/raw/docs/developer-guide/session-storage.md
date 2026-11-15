@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: a8111ec307f7603e859d6c47651a6e16d54c1fb4
+upstream_blob: a07e398598adc23d52d9b22f19f3de1e56e6dfd7
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -211,6 +211,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     title TEXT,
     api_call_count INTEGER DEFAULT 0,
     -- ... additional gateway/workspace/handoff/compression columns ...
+    prompt_cache_clock TEXT,  -- JSON of the latest prompt-cache event (agent/prompt_cache_clock.py)
     FOREIGN KEY (parent_session_id) REFERENCES sessions(id)
 );
 
@@ -220,6 +221,18 @@ CREATE INDEX IF NOT EXISTS idx_sessions_started ON sessions(started_at DESC);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_sessions_title_unique
     ON sessions(title) WHERE title IS NOT NULL;
 ```
+
+`prompt_cache_clock` は NULL でもよい JSON です。直近のリクエストがプロバイダーのプロンプトキャッシュを読み書きした時点の情報を持ちます。
+中身は、経路（プロバイダー、正規化したベース URL、モデル）、要求したキャッシュの段階と実際に認められた段階、段階ごとに 1 つずつの有効期限、
+確実に保たれる終了時刻と推定の終了時刻、確からしさ、送信時刻、そしてセッションのコンテキスト世代です。
+この値は、使用量のカウンターと同じく、キューに積まれたトークン数の一括書き込みに相乗りして保存されます（ターンのループで書き込みが増えることはありません）。
+コンテキスト世代とは、圧縮や刈り込みで保管に回された行（`active = 0, compacted = 1`）の数です。この数は増える一方なので、その場での
+圧縮より前に記録された時計は、再起動後には有効と見なされなくなります。管理下のワーカーの場合は、時計を運ぶ使用量の受領記録の中で、
+持ち主がその数を時計に書き込みます。再開したエージェントは、最初の応答が記録される前に時計を復元します。エージェントを持たない
+`session.context_breakdown` もこの値を読みますが、その行に保存されたモデルと `model_config` のプロバイダー・ベース URL と照らし合わせるので、
+`/model` でモデルを切り替えたあとは `unknown` と報告されます。時計の読み取りはどれも参考情報の扱いです。保存領域からの読み取りに失敗しても
+`unknown` と報告するだけで、ターンを失敗させることはありません。この列ができる前に保存されたセッションでは、
+最新のアシスタントの行のタイムスタンプで代用します（`assumed` 扱いで、確実な値として扱われることはありません）。
 
 `user_id` は、そのセッションの向こう側にいる主体です。メッセージのアダプターは
 プラットフォームの送信者 ID を入れ、認証付きの `hermes serve`（OAuth、または

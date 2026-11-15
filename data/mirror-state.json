@@ -102,9 +102,9 @@
       "translatedAt": "2026-11-13T23:04:55.109Z"
     },
     "developer-guide/model-provider-plugin.md": {
-      "blob": "c48a87458dd4f94602c7b95e27a234174c620e37",
+      "blob": "78942db3e1b24afa927aae63db73ca7e165091c8",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.606Z"
+      "translatedAt": "2026-11-15T22:52:37.840Z"
     },
     "developer-guide/plugin-llm-access.md": {
       "blob": "a619c06ae25e17c6d0b0f1cb93fd9e3ea8e6c4db",
@@ -117,9 +117,9 @@
       "translatedAt": "2026-11-14T23:10:16.611Z"
     },
     "developer-guide/programmatic-integration.md": {
-      "blob": "4303561653905c1af98c39d0f1c79c2bd3dd913d",
+      "blob": "67a648165f733e9a9cb645772d6fc94a15022815",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.613Z"
+      "translatedAt": "2026-11-15T22:52:37.848Z"
     },
     "developer-guide/prompt-assembly.md": {
       "blob": "f51608d4bbb2a8a1c4693788bc52cc84df879c76",
@@ -137,9 +137,9 @@
       "translatedAt": "2026-10-25T22:52:26.935Z"
     },
     "developer-guide/session-storage.md": {
-      "blob": "a8111ec307f7603e859d6c47651a6e16d54c1fb4",
+      "blob": "a07e398598adc23d52d9b22f19f3de1e56e6dfd7",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.614Z"
+      "translatedAt": "2026-11-15T22:52:37.851Z"
     },
     "developer-guide/subagent-lifecycle-api.md": {
       "blob": "56d9388d0758835e59fd2dfed714764d42c8003e",
@@ -442,9 +442,9 @@
       "translatedAt": "2026-10-29T23:06:10.719Z"
     },
     "reference/slash-commands.md": {
-      "blob": "3367471547b24341c4e0c1a0b266f6fb9e6dd248",
+      "blob": "6637b5caf2553d32603a0dad3ad4ffc6f2b2d49a",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.632Z"
+      "translatedAt": "2026-11-15T22:52:37.855Z"
     },
     "reference/tools-reference.md": {
       "blob": "49d01eabbc844f52d31fda378a10dcb8a78c71bd",
@@ -472,9 +472,9 @@
       "translatedAt": "2026-11-12T22:59:44.755Z"
     },
     "user-guide/configuration.md": {
-      "blob": "5d865151b3fad1a0202c5b5207b4275a8cbd96f9",
+      "blob": "50589708ce372a2c2b5d9d1ef72c413da594cee6",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.641Z"
+      "translatedAt": "2026-11-15T22:52:37.869Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "3e15fe3b8a97ddeaa7bfd996c3fd5f90849770d9",
@@ -722,9 +722,9 @@
       "translatedAt": "2026-11-13T23:04:55.173Z"
     },
     "user-guide/features/tts.md": {
-      "blob": "41e01d3ee5fa041f0b2d8abd6ff9b4c6b74c5a98",
+      "blob": "65ef8c302e208c55492f4c1ea791bd16a8502e62",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.663Z"
+      "translatedAt": "2026-11-15T22:52:37.874Z"
     },
     "user-guide/features/vision.md": {
       "blob": "4b466ce0f8a4178909adc1fb51cf421a431c5542",
@@ -987,9 +987,9 @@
       "translatedAt": "2026-11-13T23:04:55.207Z"
     },
     "user-guide/security.md": {
-      "blob": "d0ed79186e65eddb695aeb1f71e5e2ad2b45ac73",
+      "blob": "74c56ddb56ddcd775f36139f0f48e6915d51a225",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.681Z"
+      "translatedAt": "2026-11-15T22:52:37.879Z"
     },
     "user-guide/sessions.md": {
       "blob": "c9debd3173606ed7ecc11c579f1287527e06799d",
@@ -2531,5 +2531,5 @@
       "translatedAt": "2026-11-14T23:10:16.686Z"
     }
   },
-  "snapshotCommit": "70b11939b45aba8c97b9935371cf64d459e5f8df"
+  "snapshotCommit": "4162ecf11f611400fa6e5c42d2f360188ce50b39"
 }

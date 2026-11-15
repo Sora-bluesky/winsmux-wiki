@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "モデルプロバイダーのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダー（推論バックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: c48a87458dd4f94602c7b95e27a234174c620e37
+upstream_blob: 78942db3e1b24afa927aae63db73ca7e165091c8
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -256,11 +256,13 @@ class AcmeProfile(ProviderProfile):
 | `supports_vision` | API がツールの結果メッセージの中の画像を受け付けます | `False` |
 | `supports_vision_tool_messages` | API がリスト形式（マルチパート）のツールメッセージの中身を受け付けます | `True` |
 | `supports_prompt_cache_key` | Chat Completions のエンドポイントが `prompt_cache_key` を仕様として載せています | `False` |
+| `prompt_cache_max_ttl` | そのルートが実際に保持する、最も長いプロンプトキャッシュの段階です（`"5m"`/`"1h"`）。Hermes はそれより長い段階を要求することも、それより長く保持されると見なすこともありません。設定の `prompt_caching.route_ttl_ceilings` のほうが優先されます | `None` |
 | `native_reasoning_details_type` | このプロファイルだけが受け取る、名前空間付きの `<provider>.native_assistant` という推論の運び手です | `None` |
 | `process_command` | 外部プロセスの既定のバイナリです | `""` |
 | `process_args` | 外部プロセスの既定の引数の並びです | `()` |
 | `process_command_env_vars` | バイナリを上書きする環境変数です（優先順） | `()` |
 | `process_args_env_var` | 引数を上書きする環境変数です（shlex で分割されます） | `""` |
+| `login_args` | 外部プロセスの CLI 自身のサインイン方法です。解決済みのバイナリのあとに続ける引数の並びとして書きます。サインインの案内に表示されます | `()` |
 | `fallback_models` | 一覧の取得に失敗したときに選択画面に出す、選りすぐりの候補です | `()` |
 | `model_aliases` | 短い名前 → モデル ID の対応です。`/model <alias>` はまずここで解決されます | `{}` |
 | `hostname` | URL からプロバイダーを逆引きするための基本のホスト名です（空なら `base_url` から導きます） | `""` |
@@ -395,6 +397,7 @@ def fetch_account_usage(self, *, api_key=None, base_url=None):
 | `process_args` | 既定の引数の並びです。たとえば `("--mode", "acp")` |
 | `process_command_env_vars` | バイナリを上書きする環境変数です。並べた順に確認されます |
 | `process_args_env_var` | 引数を上書きする環境変数です（shlex で分割されます） |
+| `login_args` | バイナリのあとに続ける、CLI 自身のサインイン用の引数です。たとえば `("auth", "login")`。エラーの返信、cron の通知、Desktop のサインイン用のカードには、バイナリにこの引数を付けたものが表示されます。空のままなら `hermes model` が表示されます。値は宣言からだけ読み取られ、CLI を実行して調べることはありません |
 
 `process_command_env_vars` と `process_args_env_var` に書く名前は、何を実行するかを決める権限を持ちます。そのため Hermes の汎用の環境変数の書き込み処理（ダッシュボード、MCP やコネクターのインストール、`save_env_value`）はこれらを拒みます。`.env` かシェルで設定してください。
 

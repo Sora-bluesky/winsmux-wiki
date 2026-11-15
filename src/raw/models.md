@@ -1,12 +1,12 @@
 ---
 title: "モデルと料金"
-description: "Nous Portal で使える全 401 モデルの価格一覧（100万トークンあたりの米ドル）"
+description: "Nous Portal で使える全 398 モデルの価格一覧（100万トークンあたりの米ドル）"
 raw: /hermes/raw/models.md
 ---
 
 # モデルと料金
 
-Nous Portal で使える全 401 モデル（TEXT 364 / EMBEDDINGS 37 / OTHER 0）。価格は 100万トークンあたりの米ドル。取得日 2026-11-14。正本: https://portal.nousresearch.com/models
+Nous Portal で使える全 398 モデル（TEXT 361 / EMBEDDINGS 37 / OTHER 0）。価格は 100万トークンあたりの米ドル。取得日 2026-11-15。正本: https://portal.nousresearch.com/models
 
 | モデル | 種別 | コンテキスト | Portal 価格（/1M） | 定価（/1M） | 割引 |
 |---|---|---|---|---|---|
@@ -36,12 +36,12 @@ Nous Portal で使える全 401 モデル（TEXT 364 / EMBEDDINGS 37 / OTHER 0�
 | OpenAI: GPT-6.1 Terra (batch) `openai/gpt-6.1-terra:batch` | text | 1050K | 入 $0.5 / 出 $2.5 | 入 - / 出 - | - |
 | MoonshotAI: Kimi K3.1 Pro `moonshotai/kimi-k3.1-pro` | text | 1049K | 入 $2 / 出 $10 | 入 - / 出 - | - |
 | MiniMax: MiniMax M3.1 Flash `minimax/minimax-m3.1-flash` | text | 1049K | 入 $0.075 / 出 $0.3 | 入 - / 出 - | - |
-| DeepSeek: DeepSeek V4.1 Flash 1017 (batch) `deepseek/deepseek-v4.1-flash-1017:batch` | text | 1049K | 入 $0.05 / 出 $0.15 | 入 - / 出 - | - |
+| DeepSeek: DeepSeek V4.1 Flash 1017 (batch) `deepseek/deepseek-v4.1-flash-1017:batch` | text | 1049K | 入 $0.036 / 出 $0.319 | 入 - / 出 - | - |
 | Elorian: Glimpse `elorian/glimpse` | text | 262K | 入 $0.6 / 出 $3 | 入 - / 出 - | - |
 | Reflection: Beam 1.0 501B A23B `reflection/beam-1.0-501b-a23b` | text | 1049K | 入 $0.3 / 出 $1 | 入 - / 出 - | - |
 | PrismML: Ternary Bonsai 2 9B `prism-ml/ternary-bonsai-2-9b` | text | 262K | 入 $0.08 / 出 $0.13 | 入 - / 出 - | - |
 | Meta: Muse Spark Open `meta/muse-spark-open` | text | 1049K | 入 $1.25 / 出 $4.25 | 入 - / 出 - | - |
-| NVIDIA: Nemotron 3.5 Super VL `nvidia/nemotron-3.5-super-vl` | text | 1049K | 入 $0.15 / 出 $0.47 | 入 - / 出 - | - |
+| NVIDIA: Nemotron 3.5 Super VL `nvidia/nemotron-3.5-super-vl` | text | 1049K | 入 $0.15 / 出 $0.5 | 入 - / 出 - | - |
 | Pareto 26.10 `unbiased/pareto-26.10` | text | 1049K | 入 $0.8 / 出 $3.2 | 入 - / 出 - | - |
 | Pareto Latest `~unbiased/pareto-latest` | text | 1049K | 入 $0.8 / 出 $3.2 | 入 - / 出 - | - |
 | Pareto 26.9 `unbiased/pareto-26.9` | text | 262K | 入 $2.5 / 出 $7.5 | 入 - / 出 - | - |
@@ -79,7 +79,7 @@ Nous Portal で使える全 401 モデル（TEXT 364 / EMBEDDINGS 37 / OTHER 0�
 | PrismML: Ternary Bonsai 2 27B `prism-ml/ternary-bonsai-2-27b` | text | 262K | 入 $0.075 / 出 $0.5 | 入 - / 出 - | - |
 | Z.ai: GLM 5.3 FlashX `z-ai/glm-5.3-flashx` | text | 1049K | 入 $0.37 / 出 $1.25 | 入 - / 出 - | - |
 | DeepSeek: DeepSeek Pro Latest `~deepseek/deepseek-pro-latest` | text | 1049K | 入 $0.0999 / 出 $8 | 入 - / 出 - | - |
-| DeepSeek: DeepSeek Flash Latest `~deepseek/deepseek-flash-latest` | text | 1049K | 入 $0.038 / 出 $0.5 | 入 - / 出 - | - |
+| DeepSeek: DeepSeek Flash Latest `~deepseek/deepseek-flash-latest` | text | 1049K | 入 $0.02 / 出 $0.108 | 入 - / 出 - | - |
 | OpenAI: GPT Astra Latest `~openai/gpt-astra-latest` | text | 1050K | 入 $10 / 出 $50 | 入 - / 出 - | - |
 | OpenAI: GPT Sol Latest `~openai/gpt-sol-latest` | text | 1050K | 入 $2 / 出 $10 | 入 - / 出 - | - |
 | OpenAI: GPT Terra Latest `~openai/gpt-terra-latest` | text | 1050K | 入 $1 / 出 $5 | 入 - / 出 - | - |
@@ -97,7 +97,7 @@ Nous Portal で使える全 401 モデル（TEXT 364 / EMBEDDINGS 37 / OTHER 0�
 | Google: Gemini 3.8 Flash `google/gemini-3.8-flash` | text | 1049K | 入 $0.825 / 出 $4.125 | 入 - / 出 - | - |
 | Google: Gemini 3.8 Flash (batch) `google/gemini-3.8-flash:batch` | text | 1049K | 入 $0.375 / 出 $1.875 | 入 - / 出 - | - |
 | Anthropic: Claude Fable 5.1 (batch) `anthropic/claude-fable-5.1:batch` | text | 1000K | 入 $5 / 出 $25 | 入 - / 出 - | - |
-| IBM: Granite 4.2 8B `ibm-granite/granite-4.2-8b` | text | 131K | 入 $0.06 / 出 $0.25 | 入 - / 出 - | - |
+| IBM: Granite 4.2 8B `ibm-granite/granite-4.2-8b` | text | 131K | 入 $0.06 / 出 $0.15 | 入 - / 出 - | - |
 | Tencent: Hy4 preview `tencent/hy4-preview` | text | 1049K | 入 $0.7506 / 出 $2.2509 | 入 - / 出 - | - |
 | Z.ai: GLM Flash Latest `~z-ai/glm-flash-latest` | text | 1049K | 入 $0.0399 / 出 $0.0784 | 入 - / 出 - | - |
 | Qwen: Qwen3.8 Flash `qwen/qwen3.8-flash` | text | 1000K | 入 $0.15 / 出 $0.47 | 入 - / 出 - | - |
@@ -150,7 +150,6 @@ Nous Portal で使える全 401 モデル（TEXT 364 / EMBEDDINGS 37 / OTHER 0�
 | Tencent: Hy3 `tencent/hy3` | text | 262K | 入 $0.0825 / 出 $0.33 | 入 - / 出 - | - |
 | Sakana: Fugu Ultra `sakana/fugu-ultra` | text | 1000K | 入 $5 / 出 $30 | 入 - / 出 - | - |
 | Google: Nano Banana Pro (Gemini 3 Pro Image) `google/gemini-3-pro-image` | text | 131K | 入 $2 / 出 $12 | 入 - / 出 - | - |
-| Z.ai: GLM 5.2 (batch) `z-ai/glm-5.2:batch` | text | 1049K | 入 $0.322 / 出 $0.989 | 入 - / 出 - | - |
 | MoonshotAI: Kimi K2.7 Code `moonshotai/kimi-k2.7-code` | text | 262K | 入 $0.6 / 出 $3.5 | 入 - / 出 - | - |
 | Anthropic: Claude Fable Latest `~anthropic/claude-fable-latest` | text | 1000K | 入 $8 / 出 $40 | 入 - / 出 - | - |
 | NVIDIA: Nemotron 3 Ultra `nvidia/nemotron-3-ultra-550b-a55b` | text | 262K | 入 $0.6 / 出 $2.4 | 入 - / 出 - | - |
@@ -208,7 +207,7 @@ Nous Portal で使える全 401 モデル（TEXT 364 / EMBEDDINGS 37 / OTHER 0�
 | Z.ai: GLM 5 Turbo `z-ai/glm-5-turbo` | text | 203K | 入 $1.2 / 出 $4 | 入 - / 出 - | - |
 | NVIDIA: Nemotron 3 Super `nvidia/nemotron-3-super-120b-a12b` | text | 262K | 入 $0.075 / 出 $0.4 | 入 - / 出 - | - |
 | ByteDance Seed: Seed-2.0-Lite `bytedance-seed/seed-2.0-lite` | text | 262K | 入 $0.25 / 出 $2 | 入 - / 出 - | - |
-| Qwen: Qwen3.5-9B `qwen/qwen3.5-9b` | text | 262K | 入 $0.127 / 出 $0.186 | 入 - / 出 - | - |
+| Qwen: Qwen3.5-9B `qwen/qwen3.5-9b` | text | 262K | 入 $0.116 / 出 $0.17 | 入 - / 出 - | - |
 | OpenAI: GPT-5.4 Pro `openai/gpt-5.4-pro` | text | 1050K | 入 $30 / 出 $180 | 入 - / 出 - | - |
 | OpenAI: GPT-5.4 `openai/gpt-5.4` | text | 1050K | 入 $2.5 / 出 $15 | 入 - / 出 - | - |
 | Google: Gemini 3.1 Flash Lite Preview `google/gemini-3.1-flash-lite-preview` | text | 1049K | 入 $0.25 / 出 $1.5 | 入 - / 出 - | - |
@@ -229,13 +228,12 @@ Nous Portal で使える全 401 モデル（TEXT 364 / EMBEDDINGS 37 / OTHER 0�
 | Z.ai: GLM 5 `z-ai/glm-5` | text | 205K | 入 $1 / 出 $3.2 | 入 - / 出 - | - |
 | Anthropic: Claude Opus 4.6 `anthropic/claude-opus-4.6` | text | 1000K | 入 $5 / 出 $25 | 入 - / 出 - | - |
 | Qwen: Qwen3 Coder Next `qwen/qwen3-coder-next` | text | 262K | 入 $0.12 / 出 $0.8 | 入 - / 出 - | - |
-| StepFun: Step 3.5 Flash `stepfun/step-3.5-flash` | text | 262K | 入 $0.1 / 出 $0.3 | 入 - / 出 - | - |
 | MoonshotAI: Kimi K2.5 `moonshotai/kimi-k2.5` | text | 262K | 入 $0.5 / 出 $2.5 | 入 - / 出 - | - |
 | OpenAI: GPT Audio `openai/gpt-audio` | text | 128K | 入 $2.5 / 出 $10 | 入 - / 出 - | - |
 | OpenAI: GPT Audio Mini `openai/gpt-audio-mini` | text | 128K | 入 $0.6 / 出 $2.4 | 入 - / 出 - | - |
 | Z.ai: GLM 4.7 Flash `z-ai/glm-4.7-flash` | text | 200K | 入 $0.0605 / 出 $0.4 | 入 - / 出 - | - |
 | OpenAI: GPT-5.2-Codex `openai/gpt-5.2-codex` | text | 400K | 入 $1.75 / 出 $14 | 入 - / 出 - | - |
-| Z.ai: GLM 4.7 `z-ai/glm-4.7` | text | 205K | 入 $0.6 / 出 $2.2 | 入 - / 出 - | - |
+| Z.ai: GLM 4.7 `z-ai/glm-4.7` | text | 205K | 入 $0.4 / 出 $1.75 | 入 - / 出 - | - |
 | Google: Gemini 3 Flash Preview `google/gemini-3-flash-preview` | text | 1049K | 入 $0.5 / 出 $3 | 入 - / 出 - | - |
 | Google: Gemini 3 Flash Preview (batch) `google/gemini-3-flash-preview:batch` | text | 1049K | 入 $0.25 / 出 $1.5 | 入 - / 出 - | - |
 | NVIDIA: Nemotron 3 Nano 30B A3B `nvidia/nemotron-3-nano-30b-a3b` | text | 262K | 入 $0.06 / 出 $0.24 | 入 - / 出 - | - |
@@ -283,7 +281,6 @@ Nous Portal で使える全 401 モデル（TEXT 364 / EMBEDDINGS 37 / OTHER 0�
 | Qwen: Qwen3 Embedding 4B `qwen/qwen3-embedding-4b` | embeddings | 33K | 入 $0.02 / 出 $0 | 入 - / 出 - | - |
 | Anthropic: Claude Haiku 4.5 `anthropic/claude-haiku-4.5` | text | 200K | 入 $1 / 出 $5 | 入 - / 出 - | - |
 | Qwen: Qwen3 VL 8B Instruct `qwen/qwen3-vl-8b-instruct` | text | 262K | 入 $0.25 / 出 $0.75 | 入 - / 出 - | - |
-| Qwen: Qwen3 VL 30B A3B Thinking `qwen/qwen3-vl-30b-a3b-thinking` | text | 262K | 入 $0.29 / 出 $1 | 入 - / 出 - | - |
 | Qwen: Qwen3 VL 30B A3B Instruct `qwen/qwen3-vl-30b-a3b-instruct` | text | 262K | 入 $0.15 / 出 $0.6 | 入 - / 出 - | - |
 | OpenAI: GPT-5 Pro `openai/gpt-5-pro` | text | 400K | 入 $15 / 出 $120 | 入 - / 出 - | - |
 | Z.ai: GLM 4.6 `z-ai/glm-4.6` | text | 205K | 入 $0.5 / 出 $2 | 入 - / 出 - | - |
@@ -303,7 +300,7 @@ Nous Portal で使える全 401 モデル（TEXT 364 / EMBEDDINGS 37 / OTHER 0�
 | OpenAI: GPT-5 Nano (batch) `openai/gpt-5-nano:batch` | text | 400K | 入 $0.025 / 出 $0.2 | 入 - / 出 - | - |
 | OpenAI: gpt-oss-120b `openai/gpt-oss-120b` | text | 131K | 入 $0.15 / 出 $0.6 | 入 - / 出 - | - |
 | OpenAI: gpt-oss-120b (batch) `openai/gpt-oss-120b:batch` | text | 131K | 入 $0.0296 / 出 $0.136 | 入 - / 出 - | - |
-| OpenAI: gpt-oss-20b `openai/gpt-oss-20b` | text | 131K | 入 $0.03 / 出 $0.13 | 入 - / 出 - | - |
+| OpenAI: gpt-oss-20b `openai/gpt-oss-20b` | text | 131K | 入 $0.075 / 出 $0.3 | 入 - / 出 - | - |
 | OpenAI: gpt-oss-20b (batch) `openai/gpt-oss-20b:batch` | text | 131K | 入 $0.024 / 出 $0.112 | 入 - / 出 - | - |
 | Anthropic: Claude Opus 4.1 `anthropic/claude-opus-4.1` | text | 200K | 入 $15 / 出 $75 | 入 - / 出 - | - |
 | Mistral: Codestral 2508 `mistralai/codestral-2508` | text | 256K | 入 $0.3 / 出 $0.9 | 入 - / 出 - | - |
@@ -321,7 +318,7 @@ Nous Portal で使える全 401 モデル（TEXT 364 / EMBEDDINGS 37 / OTHER 0�
 | Google: Gemini 2.5 Pro `google/gemini-2.5-pro` | text | 1049K | 入 $1.25 / 出 $10 | 入 - / 出 - | - |
 | OpenAI: o3 Pro `openai/o3-pro` | text | 200K | 入 $20 / 出 $80 | 入 - / 出 - | - |
 | Google: Gemini 2.5 Pro Preview 06-05 `google/gemini-2.5-pro-preview` | text | 1049K | 入 $1.25 / 出 $10 | 入 - / 出 - | - |
-| DeepSeek: R1 0528 `deepseek/deepseek-r1-0528` | text | 164K | 入 $0.571 / 出 $2.286 | 入 - / 出 - | - |
+| DeepSeek: R1 0528 `deepseek/deepseek-r1-0528` | text | 164K | 入 $0.5 / 出 $2.15 | 入 - / 出 - | - |
 | Mistral: Mistral Medium 3 `mistralai/mistral-medium-3` | text | 131K | 入 $0.4 / 出 $2 | 入 - / 出 - | - |
 | Qwen: Qwen3 30B A3B `qwen/qwen3-30b-a3b` | text | 41K | 入 $0.12 / 出 $0.5 | 入 - / 出 - | - |
 | Qwen: Qwen3 14B `qwen/qwen3-14b` | text | 41K | 入 $0.12 / 出 $0.24 | 入 - / 出 - | - |
