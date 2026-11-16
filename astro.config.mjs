@@ -196,7 +196,8 @@ export default defineConfig({
       // 301 で転送する入口（public/_redirects）と noindex のページ（public/_headers）はサイトマップに載せない
       filter: (page) => {
         const path = page.replace(SITE_URL, '');
-        return !REDIRECTED.has(path) && !NOINDEX.has(path);
+        // 訳（/hermes/docs/）は _headers で googlebot に noindex。クロールを独自ページに寄せる（2026-11-16）
+        return !REDIRECTED.has(path) && !NOINDEX.has(path) && !path.startsWith('/hermes/docs/');
       },
       serialize(item) {
         serializedUrlCount += 1;
