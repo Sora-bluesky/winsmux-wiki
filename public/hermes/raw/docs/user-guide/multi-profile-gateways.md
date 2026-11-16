@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: 20dc37685b20b42294438f4548accc53c477eec7
+upstream_blob: b5eb74ddc77b637de255a3d0472f884d450a3f58
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -461,7 +461,7 @@ POST http://host:8644/p/coder/webhooks/<route>
   借りることもありません。共有のボットを使う衛星側（自分のボットを持たず、
   `profile_routes` を通して届く側）が共有のボットから送れるのは、振り分けによって
   自分に結び付いたチャットだけです。これは、その衛星側の cron の仕事や、
-  `send_message` による送信・反応と同じ決まりです。それ以外の宛先は、振り分けのない
+  `send_message` による送信と同じ決まりです。それ以外の宛先は、振り分けのない
   定位置のチャンネルも含めて、すべて失敗します（502）。Telegram、Slack、Matrix、
   Mattermost（スレッドの id がチャットの範囲で決まるもの）を除くすべてのプラットフォームでは、
   `thread_id` を宛先にするには、その `thread_id` を書いた振り分けが要ります。チャットだけを
@@ -624,7 +624,7 @@ SSH の接続先など）も、振り分けられたやり取りごとにプロ�
 振る舞います。
 
 外向きの名乗りもプロファイルごとです。プロファイル `P` のために動いている
-やり取りが `send_message` の道具（送信、反応、メディア）を呼べば、投稿は `P` 自身の
+やり取りが `send_message` の道具（送信、メディア）を呼べば、投稿は `P` 自身の
 ボットから出ます。`P` のセッション宛ての「Gateway shutting down/restarted」や
 `/update` のお知らせ、`P` のチャットから仕掛けた `/loop` の呼び出し、`P` の Discord の
 ボットで権限のないスラッシュコマンドが使われたときの運用者への知らせ（`P` の
@@ -880,7 +880,7 @@ Telegram の個別のやり取りでは chat id が利用者の id と同じな�
 振り分けられたプロファイル側に `platforms.<platform>` のブロックは要りません。共有の
 ボットの権限は、衛星側の設定ではなく振り分けから来るからです。
 
-振り分けられたプロファイルの `send_message` による送信と反応、それにプラグインの
+振り分けられたプロファイルの `send_message` による送信、それにプラグインの
 `ctx.platform_actions` も、同じ宛先の決まりに従います。ただし、付け加えが 1 つあります。
 やり取りの最中は、受信の振り分けの判定がそのプロファイルに渡すはずの会話であれば、
 そのやり取りの元になった会話も宛先として認められます。サーバーだけを書いた振り分け、

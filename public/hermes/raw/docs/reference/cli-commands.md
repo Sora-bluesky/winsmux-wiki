@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 711cd21ecf319f7dee109797a7c5694dd147a95b
+upstream_blob: 5febec2160e252ccfcc4e17aecf15acedd3624f3
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -1146,10 +1146,32 @@ hermes import <zipfile> [options]
 | オプション | 説明 |
 |--------|-------------|
 | `-f`, `--force` | 既存インストールの確認プロンプトをスキップします。 |
+| `--keep-host` | このエージェントをバックアップの内容で置き換えますが、ホスト側で用意された設定（Hermes Cloud エージェントの Nous Portal へのサインインとプラットフォームの設定）は残します。最初にこのエージェントのフルバックアップを取り、取り消し用の復元ポイントにします。詳しくは後述します。 |
+| `--messaging-off` | `--keep-host` と併用: バックアップ側で動くはずだったメッセージングボットは、トークンと設定を保ったまま、すべてオフの状態で移されます。詳しくは後述します。 |
 
 :::warning
-実行中のプロセスとの競合を避けるため、インポート前にゲートウェイを停止してください。
+実行中のプロセスとの競合を避けるため、インポート前にゲートウェイを停止してください。Docker イメージ内（Hermes Cloud）で `--keep-host` を使う場合は、ゲートウェイの一時停止と再起動をコマンド自身が行います。
 :::
+
+### `--keep-host`: ホスト側の設定を残したままエージェントを置き換える {#--keep-host-replace-an-agent-but-keep-its-hosts-setup}
+
+Settings ▸ [Backup & Transfer](/hermes/docs/user-guide/backup-and-transfer/) は、この仕組みを使って Hermes Cloud のエージェントを手元のエージェントで置き換えます。バックアップに含まれるメモリ、ペルソナ、スキル、会話、スケジュール済みのジョブ、設定、`.env` のキー、`auth.json` のログイン情報はすべて引き継がれます。エージェント側にそのまま残るのは次のものです:
+
+- **`auth.json`**（ルートと各プロファイルのもの）: エージェント自身の Nous Portal へのサインイン（`providers.nous`、`nous` の認証情報プールの行、そしてどちらかが Nous を使っている場合の `active_provider`）。バックアップ側の Nous のトークンが書き込まれることはありません。`shared/nous_auth.json`、`webapp/`（Webapp のサインイン状態）、`install_id`、ロックファイルも、バックアップから取り込まれることはありません。
+- **`config.yaml`**（ルートのホームのもの）: エージェント自身のトップレベルの `model`、`providers`、`fallback_providers`、`fallback`、`auxiliary`、`nous`、`auth`、`web`、`image_gen`、`video_gen`、`tts`、`stt`、`dashboard`、`webapp`、`cron`（スケジューラの設定。ジョブ自体はバックアップから来ます）、`max_concurrent_sessions`、`max_live_sessions`。それ以外のキーはすべてバックアップのものになり、ファイルにはバックアップ側のコメントが残ります。
+- **`.env`**（ルートのホームのもの）: エージェント自身の `NOUS_*`、`HERMES_*`、`TOOL_GATEWAY_*`、`API_SERVER_KEY` の行。
+
+ホスト側のものとして扱われるのはルートのホームだけです。名前付きプロファイルの `config.yaml` と `.env` は丸ごと移され、同じ名前のほかのファイル（スキルの `templates/config.yaml` など）も同様です。
+
+結果は統合ではなく置き換えです。ルートのホームと、バックアップに含まれる各プロファイルでは、バックアップにないファイルは削除されます。バックアップに `auth.json`、`.env`、`config.yaml` がない場合、エージェント側のファイルにはホストが管理する部分だけが残ります。データベース、ログ、ゲートウェイの実行時の記録はそのまま残ります。エージェントにしかないプロファイルは一切変更されません（インポート時に一覧表示されます）。バックアップの書き込み先のフォルダがシンボリックリンクだった場合は、何かを書き込む前にインポートを中止します。メッセージングボットのトークンも引き継がれます。1つのボットトークンに応答できるのは、同時に動いている1つの Hermes だけなので、古い端末のゲートウェイを停止するか、`--messaging-off` を付けてください。
+
+`--messaging-off`（Desktop からの移行では常に付きます）を付けると、すべてのメッセージングボットがオフの状態で移されます。ルートのホームと、バックアップに含まれる各プロファイルで、バックアップ側では動くはずだったボット（`platforms.<id>.enabled: true`、または `enabled` の設定がなく `.env` にトークンがあるもの）には、復元された `config.yaml` に `platforms.<id>.enabled: false` が書き込まれます。これは **Messaging** ページでオン・オフを切り替えるスイッチと同じものです。トークン、許可リスト、その他の設定は変更されずに移され、オンにするまでゲートウェイはそのボットを接続しません。インポート時には `Messaging switched off: Telegram, Discord` と表示されます。受信用のエンドポイント（`api_server`、`webhook`）には手を付けません。取り消しのときはこのフラグを付けないので、エージェント自身のボットは元どおりに戻ります。
+
+ゲートウェイの処理が出し切られたら、何かを書き込む前に、ホームの外にあるメモリプロバイダのファイルも含めてエージェントを `backups/pre-transfer-<time>.zip` にバックアップし、`Undo point: <path>` と表示します。保持されるのは直近の3つです。エージェントを元に戻すには `hermes import <that zip> --force --keep-host` を実行します。同じ置き換えのルールで復元されるので、移行で追加されたファイル（バックアップのスケジュール済みジョブ、スキル、持ち込まれたプロファイル）は再び消えます。復元が途中で失敗した場合、次の `--keep-host` でのインポート（再試行）は、途中まで復元されたエージェントをバックアップし直すのではなく、最初の復元ポイントをそのまま使います。
+
+Docker イメージ内では `state.db` をゲートウェイが持っているため、通常の `hermes import` は、ゲートウェイの実行中はセッションデータベースの復元を拒否します。`--keep-host` は、ゲートウェイに実行中のターンを終えてから終了するよう求めます（`hermes update` が使うのと同じ、制御ソケットへの `pause-for-update` リクエストです）。その前に、ゲートウェイの s6 スロットを1回だけ実行する設定にして、復元中にスーパーバイザーが再起動しないようにし、復元が終わるとスロットを再び起動します。そのゲートウェイが動いているかどうか判断できない場合は、実行を拒否します。コンテナの外では何も一時停止しないので、ほかのインポートと同じく、先にゲートウェイを停止してください。
+
+`--keep-host` の**終了ステータス**: `Import refused; no files restored` が表示されるのは、最初の書き込みの前に止まった場合（リンクされたフォルダがあった、復元ポイントを書き込めなかった、ゲートウェイが一時停止しなかった）だけです。それより後で失敗した場合は、復元されなかったものを一覧し、復元ポイントをもう一度表示します。
 
 **終了ステータス:** アーカイブが壊れている場合は `1` です。何かを書き込む前に、すべてのメンバーを一度展開して CRC を確かめます。1 つでも失敗すると `Error: backup archive is damaged (N member(s) …)` と問題のメンバーを表示し、Hermes のホームには一切手を付けずに止まります。アーカイブ内のファイルを 1 つでも復元できなかった場合も `1` です（`Warnings (N files skipped)` の下に一覧が出て、`Import incomplete: …` とまとめて表示されます）。書き込めたファイルはそのまま残りますが、スクリプトやダッシュボードが途中までの復元を成功として扱うことはありません。インポートが意図してこの端末のものを残すランタイムファイル（`gateway.pid`、`gateway_state.json`、…）と、下で説明する古いバックアップのセッションに関する警告は、終了ステータスに影響しません。
 
@@ -1172,6 +1194,7 @@ hermes import <zipfile> [options]
 ```bash
 hermes import ~/hermes-backup-20260423.zip           # Prompts before overwriting existing config
 hermes import ~/hermes-backup-20260423.zip --force   # Overwrite without prompting
+hermes import ~/hermes-backup-20260423.zip --keep-host --messaging-off   # Replace a cloud agent, keep its Nous sign-in, bots arrive off
 ```
 
 ## `hermes logs` {#hermes-logs}

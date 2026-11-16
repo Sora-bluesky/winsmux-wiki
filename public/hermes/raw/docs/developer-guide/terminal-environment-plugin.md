@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ターミナル環境プロバイダプラグイン"
 description: ""
 upstream_path: developer-guide/terminal-environment-plugin.md
-upstream_blob: d1af14b594e405783f5c2efb84685f6f8013a9e9
+upstream_blob: 27696709dc4ccff254fefee60457b1a2586ca591
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/terminal-environment-plugin
 ---
@@ -340,8 +340,8 @@ def stop_process(self, name, *, scope): ...                          # -> bool
 exec プレフィックスを通して動きます）。プロセスがアイドル停止したあとにサンドボックスを一時停止することと、
 サンドボックス同士のネットワーク分離は、プロバイダ側の受け持ちです。
 
-**認証情報**は、ブローカーへの参照（`sandbox_scope.CredentialRef`）としてホスト型サンドボックスに届き、
-シークレットストアの値がそのまま渡ることはありません。ブローカーはまだ存在しないため、Hermes は何も渡しません。
+**認証情報**について、シークレットストアの値がホスト型サンドボックスにそのまま渡ることは決してありません。
+認証情報のブローカーはまだ存在しないため、Hermes は何も渡しません。
 
 **適合性の確認。** `tools/environments/sandbox_conformance.py` には、Hermes が記録用のスタブバックエンドに対して実行する
 分離チェックがまとめられています（`tests/tools/test_sandbox_scope_conformance.py`）。確かめる内容は次のとおりです。

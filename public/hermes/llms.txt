@@ -168,6 +168,7 @@ Hermes Agent 0.23.1
 - [reference/slash-commands（日本語版）](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
 - [reference/tools-reference（日本語版）](https://wiki.winsmux.dev/hermes/docs/reference/tools-reference/)
 - [reference/toolsets-reference（日本語版）](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
+- [user-guide/backup-and-transfer（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/backup-and-transfer/)
 - [user-guide/bot-mode（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
 - [user-guide/checkpoints-and-rollback（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
 - [user-guide/cli（日本語版）](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
@@ -621,6 +622,7 @@ Hermes Agent 0.23.1
 - https://wiki.winsmux.dev/hermes/raw/docs/reference/slash-commands.md
 - https://wiki.winsmux.dev/hermes/raw/docs/reference/tools-reference.md
 - https://wiki.winsmux.dev/hermes/raw/docs/reference/toolsets-reference.md
+- https://wiki.winsmux.dev/hermes/raw/docs/user-guide/backup-and-transfer.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/bot-mode.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/checkpoints-and-rollback.md
 - https://wiki.winsmux.dev/hermes/raw/docs/user-guide/cli.md

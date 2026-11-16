@@ -2,7 +2,7 @@
 title: "スキルを作る"
 description: "Hermes Agent 向けのスキルの作り方 — SKILL.md の書式、指針、公開まで"
 upstream_path: developer-guide/creating-skills.md
-upstream_blob: f3dc99eb02f2563e485e11181af178a5932cb8c9
+upstream_blob: 46247a0d615e0ae54b9bd2f02254634cdb9b48ad
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills
 ---
@@ -381,8 +381,6 @@ hermes skills install owner/morning-brief
 ```
 
 ブループリントは、まとめられた定期実行の提案の**出どころ**の 1 つです。同じ場所に、選りすぐりの入門用の自動処理や、のちのち使い方の傾向や連携から生まれる提案も並びます。下の [提案される定期実行](#suggested-cron-jobs) を参照してください。
-
-**作った自動処理を分け合う。** 定期実行（`hermes cron create --skill <name> ...`）から読み込まれているブループリントは、SKILL.md に書き出して、ほかのスキルと同じように公開できます。自分向けに調整した自動処理が、ほかの人にとってはコマンド 1 つで入るものになります。
 
 ブループリントの仕組みは、新しい種類のものも、新しい保管場所も、新しい受け渡しの経路も増やしません。ブループリントはスキルであり、スケジュールは定期実行であり、共有は今までどおりの publish・tap・索引の道筋です。
 

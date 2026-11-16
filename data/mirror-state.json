@@ -7,9 +7,9 @@
       "translatedAt": "2026-10-14T23:48:21.601Z"
     },
     "developer-guide/adding-platform-adapters.md": {
-      "blob": "9fdf90e0bf544fb4c8b56589fb46449858e26c82",
+      "blob": "d0fb92ecfccf928fc0a894ab693210990c60acdb",
       "status": "translated",
-      "translatedAt": "2026-11-13T23:04:55.104Z"
+      "translatedAt": "2026-11-16T22:50:21.884Z"
     },
     "developer-guide/adding-providers.md": {
       "blob": "542f8ff34de36680dacbc127b649603b3320621a",
@@ -62,9 +62,9 @@
       "translatedAt": "2026-11-09T22:51:09.677Z"
     },
     "developer-guide/creating-skills.md": {
-      "blob": "f3dc99eb02f2563e485e11181af178a5932cb8c9",
+      "blob": "46247a0d615e0ae54b9bd2f02254634cdb9b48ad",
       "status": "translated",
-      "translatedAt": "2026-11-03T22:50:25.030Z"
+      "translatedAt": "2026-11-16T22:50:21.888Z"
     },
     "developer-guide/cron-internals.md": {
       "blob": "a96b681939cd8054823b4cd475b820d58beca5fb",
@@ -152,9 +152,9 @@
       "translatedAt": "2026-10-23T22:51:08.175Z"
     },
     "developer-guide/trajectory-format.md": {
-      "blob": "e0fbfb319c1bcf499f64e6705d53f50e26e8d90b",
+      "blob": "a07378de35fe6159058ad5926422d45972e17594",
       "status": "translated",
-      "translatedAt": "2026-10-25T22:52:26.936Z"
+      "translatedAt": "2026-11-16T22:50:21.889Z"
     },
     "developer-guide/video-gen-provider-plugin.md": {
       "blob": "784a9107fd2e234c8f5d8e7803fa34d1617583ff",
@@ -397,9 +397,9 @@
       "translatedAt": "2026-11-13T23:04:55.126Z"
     },
     "reference/cli-commands.md": {
-      "blob": "711cd21ecf319f7dee109797a7c5694dd147a95b",
+      "blob": "5febec2160e252ccfcc4e17aecf15acedd3624f3",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.624Z"
+      "translatedAt": "2026-11-16T22:50:21.896Z"
     },
     "reference/cli-symbols.md": {
       "blob": "76d0fcd513551ad62992ffc06f63494b1ad2bed9",
@@ -462,9 +462,9 @@
       "translatedAt": "2026-11-14T23:10:16.634Z"
     },
     "user-guide/checkpoints-and-rollback.md": {
-      "blob": "c25efd0e083748a9c4dba1b2718ee48a11898142",
+      "blob": "c3c3382dcbc54455623dd75138c261ad95b3776a",
       "status": "translated",
-      "translatedAt": "2026-11-06T22:59:23.119Z"
+      "translatedAt": "2026-11-16T22:50:21.897Z"
     },
     "user-guide/cli.md": {
       "blob": "1b5e3613c38b884f60291c83e499b9111150840a",
@@ -482,9 +482,9 @@
       "translatedAt": "2026-11-04T22:47:46.101Z"
     },
     "user-guide/desktop.md": {
-      "blob": "3cf43f3f14afd51ba2a2e29b6ce81244a6904cb7",
+      "blob": "4ec27fc9c6913f14abbeabb84b97fb5eb9fe259d",
       "status": "translated",
-      "translatedAt": "2026-11-08T22:48:26.381Z"
+      "translatedAt": "2026-11-16T22:50:21.901Z"
     },
     "user-guide/docker.md": {
       "blob": "90582abc245c2b117d17186abd94db03a19531e4",
@@ -952,9 +952,9 @@
       "translatedAt": "2026-11-08T22:48:26.396Z"
     },
     "user-guide/multi-profile-gateways.md": {
-      "blob": "20dc37685b20b42294438f4548accc53c477eec7",
+      "blob": "b5eb74ddc77b637de255a3d0472f884d450a3f58",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.678Z"
+      "translatedAt": "2026-11-16T22:50:21.904Z"
     },
     "user-guide/profile-distributions.md": {
       "blob": "be38fe367371f6cef2766b2503d4a4b03491a997",
@@ -1997,9 +1997,9 @@
       "translatedAt": "2026-09-25T22:58:06.487Z"
     },
     "developer-guide/terminal-environment-plugin.md": {
-      "blob": "d1af14b594e405783f5c2efb84685f6f8013a9e9",
+      "blob": "27696709dc4ccff254fefee60457b1a2586ca591",
       "status": "translated",
-      "translatedAt": "2026-11-11T18:01:29.022Z"
+      "translatedAt": "2026-11-16T22:50:21.906Z"
     },
     "user-guide/skills/optional/web-development/web-development-publish-site.md": {
       "blob": "c1e418f65c38e080d7bb5342f305ed2ff25f3970",
@@ -2529,7 +2529,12 @@
       "blob": "a0525e5d143964cc9da7a2f0ab9762b126c185e0",
       "status": "translated",
       "translatedAt": "2026-11-14T23:10:16.686Z"
+    },
+    "user-guide/backup-and-transfer.md": {
+      "blob": "ea1de8c7ee88e3ff42a2d2568e3ad805ba9a0d74",
+      "status": "translated",
+      "translatedAt": "2026-11-16T22:50:21.907Z"
     }
   },
-  "snapshotCommit": "4162ecf11f611400fa6e5c42d2f360188ce50b39"
+  "snapshotCommit": "081e8d9b75b2bedae297a89232b04ef9be7b26a0"
 }

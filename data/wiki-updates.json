@@ -1,6 +1,48 @@
 {
-  "generatedAt": "2026-11-16",
+  "generatedAt": "2026-11-17",
   "entries": [
+    {
+      "date": "2026-11-16",
+      "sha": "8d1c24f",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/model-provider-plugin",
+          "title": "モデルプロバイダーのプラグイン",
+          "url": "/hermes/docs/developer-guide/model-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/programmatic-integration",
+          "title": "外部プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "developer-guide/session-storage",
+          "title": "セッションの保存領域",
+          "url": "/hermes/docs/developer-guide/session-storage/"
+        },
+        {
+          "id": "reference/slash-commands",
+          "title": "スラッシュコマンド早見表",
+          "url": "/hermes/docs/reference/slash-commands/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/tts",
+          "title": "音声と読み上げ",
+          "url": "/hermes/docs/user-guide/features/tts/"
+        },
+        {
+          "id": "user-guide/security",
+          "title": "セキュリティ",
+          "url": "/hermes/docs/user-guide/security/"
+        }
+      ]
+    },
     {
       "date": "2026-11-15",
       "sha": "570f4e4",

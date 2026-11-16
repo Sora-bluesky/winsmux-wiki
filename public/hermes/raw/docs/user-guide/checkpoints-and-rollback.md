@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "チェックポイントと /rollback"
 description: "シャドウの git リポジトリと自動スナップショットで、破壊的な操作からファイルを守るしくみです"
 upstream_path: user-guide/checkpoints-and-rollback.md
-upstream_blob: c25efd0e083748a9c4dba1b2718ee48a11898142
+upstream_blob: c3c3382dcbc54455623dd75138c261ad95b3776a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback
 ---
@@ -98,10 +98,10 @@ checkpoints:
   max_file_size_mb: 10        # skip any single file larger than this
 
   # Auto-maintenance (on by default): sweep ~/.hermes/checkpoints/ in the
-  # background — the CLI on a helper thread right after launch, the gateway
-  # on its housekeeping tick — and delete project entries whose last_touch is
+  # background on the gateway's housekeeping tick (the CLI never runs it)
+  # and delete project entries whose last_touch is
   # older than retention_days. Runs at most once per min_interval_hours,
-  # tracked via a .last_prune marker. It never blocks the prompt or gateway
+  # tracked via a .last_prune marker. It never blocks gateway
   # startup: the `git gc` that reclaims space can take tens of seconds on a
   # large store. This sweep never deletes "orphan" entries (working directory
   # not found) — a missing workdir is ambiguous (deleted project vs. an

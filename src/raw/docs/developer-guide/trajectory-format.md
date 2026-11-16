@@ -2,7 +2,7 @@
 title: "軌跡の形式"
 description: ""
 upstream_path: developer-guide/trajectory-format.md
-upstream_blob: e0fbfb319c1bcf499f64e6705d53f50e26e8d90b
+upstream_blob: a07378de35fe6159058ad5926422d45972e17594
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/trajectory-format
 ---
@@ -68,7 +68,7 @@ Hermes Agent は会話の軌跡を ShareGPT 互換の JSONL 形式で保存し�
 ```
 
 `tool_stats` と `tool_error_counts` の辞書は、あり得るツールをすべて
-（`model_tools.TOOL_TO_TOOLSET_MAP` から）並べ、値が無いものは 0 で埋めて正規化されます。
+（`model_tools.get_all_tool_names()` から）並べ、値が無いものは 0 で埋めて正規化されます。
 これにより行ごとのスキーマが揃い、HuggingFace のデータセットとして読み込めます。
 
 ## conversations 配列（ShareGPT 形式） {#conversations-array-sharegpt-format}

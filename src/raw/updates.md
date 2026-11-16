@@ -8,6 +8,16 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-16
+
+- [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
+- [セッションの保存領域](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
+- [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
+- [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
+
 ## 2026-11-15
 
 - [cron の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/cron-internals/)

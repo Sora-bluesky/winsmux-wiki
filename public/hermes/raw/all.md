@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（250 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（251 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -26,7 +26,7 @@ raw: /hermes/raw/all.md
 - [Platform Support](/hermes/docs/getting-started/platform-support/)
 - [Android / Termux](/hermes/docs/getting-started/termux/)
 
-## Using Hermes（32）
+## Using Hermes（33）
 
 - [CLI](/hermes/docs/user-guide/cli/)
 - [TUI (Ink terminal UI)](/hermes/docs/user-guide/tui/)
@@ -38,6 +38,7 @@ raw: /hermes/raw/all.md
 - [Docker Backend](/hermes/docs/user-guide/docker/)
 - [Security](/hermes/docs/user-guide/security/)
 - [Checkpoints & Rollback](/hermes/docs/user-guide/checkpoints-and-rollback/)
+- [Backup & Transfer](/hermes/docs/user-guide/backup-and-transfer/)
 - [Bot Mode](/hermes/docs/user-guide/bot-mode/)
 - [Hermes Desktop](/hermes/docs/user-guide/desktop/)
 - [Egress proxy](/hermes/docs/user-guide/egress/)

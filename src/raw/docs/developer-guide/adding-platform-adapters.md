@@ -2,7 +2,7 @@
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: 9fdf90e0bf544fb4c8b56589fb46449858e26c82
+upstream_blob: d0fb92ecfccf928fc0a894ab693210990c60acdb
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -217,7 +217,7 @@ gateway:
 | YAML 設定の橋渡し | `apply_yaml_config_fn` が `config.yaml` のキーを環境変数や extras に置き換える |
 | cron での配信 | `cron_deliver_env_var` によって `deliver=<name>` が使えるようになる |
 | `hermes config` の画面の項目 | `plugin.yaml` の `requires_env` と `optional_env` が自動で反映される |
-| 送信の実体（`tools/send_message_tool.py`） | 動いているゲートウェイのアダプターを通して送る |
+| 送信の実体（`gateway/outbound/send.py`） | 動いているゲートウェイのアダプターを通して送る |
 | Webhook でのプラットフォームをまたぐ配信 | 知っているプラットフォームかどうかを登録簿で確かめる |
 | `/update` コマンドの可否 | `allow_update_command` のフラグ |
 | チャンネルの一覧 | プラグインのプラットフォームも数え上げに含まれる |
@@ -845,7 +845,7 @@ await self.handle_message(event)
 
 ### 7. ツール {#7-tools}
 
-1. **`tools/send_message_tool.py`** — プラットフォームの対応表に `"newplat": Platform.NEWPLAT` を足す
+1. **`gateway/outbound/send.py`** — プラットフォームの対応表に `"newplat": Platform.NEWPLAT` を足す
 2. **`tools/cronjob_tools.py`** — 配信先の説明文に `newplat` を足す
 
 ### 8. ツールセット {#8-toolsets}

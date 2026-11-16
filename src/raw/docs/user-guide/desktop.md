@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 3cf43f3f14afd51ba2a2e29b6ce81244a6904cb7
+upstream_blob: 4ec27fc9c6913f14abbeabb84b97fb5eb9fe259d
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -805,6 +805,18 @@ desktop:
 ```
 
 バックスラッシュがそのまま残るように、値は一重引用符で囲むか、引用符なしで書いてください。キーは、上で紹介した起動用のキーと同じく `desktop:` の下にスペース2つ下げて置きます。macOS と Linux では何の効果もありません。
+
+### SSH のリモート：遅い回線で接続がタイムアウトする {#ssh-remote-the-connection-times-out-on-a-slow-link}
+
+アプリは SSH に、接続まで15秒、ポート転送の準備にも15秒の猶予を与えます。接続の制限時間はコマンドラインで `ssh` に渡しているため、`~/.ssh/config` に `ConnectTimeout` を書いても延びません。ネットワークにもっと時間がかかり（つながるまでしばらくかかる VPN、踏み台ホスト、パケットが落ちやすい回線など）、起動が `ssh timed out after 15000ms` で失敗し続けるときは、`config.yaml` で制限時間を延ばしてからアプリを再起動してください。
+
+```yaml
+desktop:
+  ssh_connect_timeout: 60
+  ssh_forward_timeout: 60
+```
+
+どちらの値も秒数を整数で指定し、上限は 120 です。それ以外の値（`60s`、`1.5`、`0`）は無視され、アプリは起動時に `desktop.ssh_connect_timeout was ignored` をログに記録します。キーは、上で紹介した起動用のキーと同じく `desktop:` の下にスペース2つ下げて置きます。
 
 ### 「The host key has CHANGED since you last connected」（SSH のリモート） {#the-host-key-has-changed-since-you-last-connected-ssh-remote}
 
