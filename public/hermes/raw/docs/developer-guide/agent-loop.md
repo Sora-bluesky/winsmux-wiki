@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "エージェントループの内部"
 description: "AIAgent の実行、API モード、ツール、コールバック、フォールバックの挙動を詳しくたどる"
 upstream_path: developer-guide/agent-loop.md
-upstream_blob: e43afe0de936b01d37a3a54fc8ad75912e1fc91b
+upstream_blob: 7e03645689b552164c4af3844c97cf9c198755b8
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/agent-loop
 ---
@@ -221,7 +221,7 @@ for each tool_call in response.tool_calls:
 
 各ターンのあとに、次のことが起きます。
 
-- メッセージがセッションの保管場所に保存されます（`hermes_state.py` を通した SQLite）
+- メッセージがセッションの保管場所に保存されます（`persistence/` にある保存用のインターフェースを通した SQLite）
 - メモリの変更が `MEMORY.md` と `USER.md` に書き出されます
 - そのセッションは、あとから `/resume` や `hermes chat --resume` で再開できます
 

@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-17",
+  "generatedAt": "2026-11-18",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-17",
-      "attemptedAt": "2026-11-17",
+      "fetchedAt": "2026-11-18",
+      "attemptedAt": "2026-11-18",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -53,8 +53,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-17",
-      "attemptedAt": "2026-11-17",
+      "fetchedAt": "2026-11-18",
+      "attemptedAt": "2026-11-18",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -223,7 +223,7 @@
           "name": "Thinking Machines: Inkling 2 Small (free)",
           "ctx": 1048576,
           "tools": true,
-          "expires": null,
+          "expires": "2026-11-19",
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null

@@ -2,7 +2,7 @@
 title: "画像生成"
 description: "FAL.ai 経由で画像を生成します。FLUX 2、GPT Image（1.5 と 2）、Nano Banana Pro、Ideogram、Recraft V4 Pro、Krea 2 など 11 モデルに対応し、`hermes tools` で選べます。"
 upstream_path: user-guide/features/image-generation.md
-upstream_blob: 8badf33d14f9fcb368d9f0d697264037cce38532
+upstream_blob: 8f30534b042fb664b01d2378be36003c640da1ca
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/image-generation
 ---
@@ -131,6 +131,19 @@ image_gen:
 も別名として受け付けます。プロキシや別のホストにつなぐときは `META_BASE_URL` を
 指定します。今のところ文章から画像を作る方向だけで、できあがったものは
 `$HERMES_HOME/cache/images/` に保存されます。
+
+## FAL: GPT Image 2.6 {#fal-gpt-image-26}
+
+GPT Image 2.6（2026 年 11 月）は、`hermes tools` →
+Image Generation → FAL.ai で 2.5 と並んで **GPT Image 2.6 Flare** と **GPT Image 2.6 Sunburst** として表示されます。モデル ID は次のとおりです。
+
+- `openai/gpt-image-2.6/flare/text-to-image`
+- `openai/gpt-image-2.6/sunburst/text-to-image`
+
+Hermes の中での動きは 2.5 と同じです。参考画像を渡すと、対応する
+`openai/gpt-image-2.6/<variant>/edit` の窓口に振り分けられ（16 枚まで）、品質は
+`medium` に固定され、トークン単位の料金も 2.5 と同じです。2.6 の GIF や SVG での出力には
+対応していません。Hermes は常にラスター形式の PNG を求めます。
 
 ## FAL: GPT Image 2.5 {#fal-gpt-image-25}
 

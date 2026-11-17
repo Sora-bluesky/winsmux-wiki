@@ -2,7 +2,7 @@
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 4ec27fc9c6913f14abbeabb84b97fb5eb9fe259d
+upstream_blob: a56c6938ab9f484d33c6bff74afe36150f4715d2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -357,7 +357,7 @@ YAML を書く代わりに、きちんとした UI からプロバイダー・�
 
 ターミナルへ降りずに済むよう、アプリは Hermes のより広い管理機能も表に出しています。
 
-- **Skills** — [スキル](/hermes/docs/user-guide/features/skills/)を見て回り、導入し、管理します。Skills のタブには、導入済みのスキルが有効／無効の切り替えとともに並び、その下に Hermes に同梱された任意スキルの組み込みカタログ全体が並びます。どの項目にも1クリックの **Install** ボタンがあり、導入が終わるとその行は導入済みの一覧へ移ります。公開の Skills Hub にある **Install in Hermes** のボタンは `hermes://skill/install?identifier=...` のリンクを開き、確認したあと同じ仕組みで導入します（[スキルのリンク](/hermes/docs/user-guide/features/skills/#install-from-the-website)を参照してください）。
+- **Skills** — [スキル](/hermes/docs/user-guide/features/skills/)を見て回り、導入し、管理します。Skills のタブには、導入済みのスキルが有効／無効の切り替えとともに並び、その下に Hermes に同梱された任意スキルの組み込みカタログ全体が並びます。どの項目にも1クリックの **Install** ボタンがあり、導入が終わるとその行は導入済みの一覧へ移ります。[Hermes Marketplace](https://hermes-agent.nousresearch.com/marketplace) にある **Install in Hermes** のボタンは、取得元を明示した `hermes://skill/install?identifier=...` のリンクを開き、確認したあと同じ仕組みで導入します（[スキルのリンク](/hermes/docs/user-guide/features/skills/#install-from-the-website)を参照してください）。
 - **メモリグラフ（Star Map）** — チャットで `/journey`（別名 `/learning`、`/memory-graph`）と打つと、学んだスキルとメモリの時間を追った星座図が開き、再生用のつまみで動かせます。ノードはこのパネルから直接編集も削除もできます（スキルは保管に回り、メモリは削除されます）。[Learning Journey](/hermes/docs/user-guide/features/memory/#learning-journey-journey) を参照してください。
 - **Cron** — [予約ジョブ](/hermes/docs/reference/cli-commands/#hermes-cron)を見て管理します。**All profiles** を入れると、すべてのプロファイルのジョブがまとめて並びます。ジョブの実行履歴と操作（一時停止・再開・編集・削除）は、どのプロファイルを使っていても、常にそのジョブを持つプロファイルに向かいます。
 - **Profiles** — [Hermes のプロファイル](/hermes/docs/user-guide/profiles/)（設定・スキル・セッションが分離されています）を切り替えます。

@@ -2,7 +2,7 @@
 title: "ACP の内部"
 description: "ACP アダプタのしくみ — 起動から終了まで、セッション、イベントの橋渡し、承認、ツールの表示"
 upstream_path: developer-guide/acp-internals.md
-upstream_blob: 0e619ccddb8d44bb4c248f1b335452b96b8460c3
+upstream_blob: 4e2d50f22db907a1c66104714687213643dd3144
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/acp-internals
 ---
@@ -198,7 +198,7 @@ ACP は、プロンプトの実行中だけターミナルのツールに承認�
 
 ## 今のところの制限 {#current-limitations}
 
-- ACP のセッションは共有の `~/.hermes/state.db`（SessionDB）に保存され、プロセスを再起動しても自動で戻ります。`session_search` にも出てきます
+- ACP のセッションは共有の `~/.hermes/state.db` に（`persistence_assembly.open_persistence` を通して）保存され、プロセスを再起動しても自動で戻ります。`session_search` にも出てきます
 - テキスト以外のプロンプトの塊は、今のところ本文の取り出しでは無視されます
 - エディタごとの使い勝手は、ACP クライアントの実装によって変わります
 

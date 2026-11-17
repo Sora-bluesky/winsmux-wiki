@@ -2,7 +2,7 @@
 title: "ゲートウェイのセッションライフサイクル"
 description: "ゲートウェイにおける SessionSource・SessionEntry・SessionStore、セッションキーの規則、マルチユーザーの分離"
 upstream_path: developer-guide/gateway-session-lifecycle.md
-upstream_blob: afa8cbdfd2fde794867c9a2e560df2f6115d50b6
+upstream_blob: ba751d46d7d0fca113a26966d94f648b01f68977
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-session-lifecycle
 ---
@@ -154,7 +154,7 @@ SessionEntry にはいくつかの真偽値フラグがあり、次にアクセ�
 
 `SessionStore` はメインの保存層です。メモリ上の辞書（`_entries`）を持って
 `sessions.json` に保存し、セッションのメタデータとメッセージのトランスクリプトについては
-SQLite（`SessionDB`）を正本のストアにしています。
+SQLite（ストレージインターフェースの `sessions` と `messages` のリポジトリ）を正本のストアにしています。
 
 ### コンストラクター {#constructor}
 
@@ -186,7 +186,7 @@ SessionStore(sessions_dir: Path, config: GatewayConfig, has_active_processes_fn=
 | `append_to_transcript(session_id, message, skip_db=False)` | SQLite のトランスクリプトにメッセージを追記します。`skip_db=True` にすると、エージェントがすでに保存済みの場合の二重書き込みを防ぎます。 |
 | `rewrite_transcript(session_id, messages)` | セッションのトランスクリプトを丸ごと置き換えます（`/retry`、`/undo`、`/compress` で使われます）。 |
 | `load_transcript(session_id)` | セッションの SQLite トランスクリプトから、すべてのメッセージを読み込みます。 |
-| `rewind_session(session_id, n=1)` | 論理削除（監査の記録は残ります）で、ユーザーのターンを `n` 回分さかのぼります。`SessionDB.rewind_user_turn`（`hermes_state_rewind.py`）の薄いラッパーで、CLI の `/undo`/`/retry` や TUI と共通の、ただ1つの巻き戻し処理です。`{rewound_count, turns_undone, target_text}` を返します。 |
+| `rewind_session(session_id, n=1)` | 論理削除（監査の記録は残ります）で、ユーザーのターンを `n` 回分さかのぼります。ストアの `messages.rewind_user_turn`（`persistence/sqlite/conversation/_store/rewind.py`）の薄いラッパーで、CLI の `/undo`/`/retry` や TUI と共通の、ただ1つの巻き戻し処理です。`{rewound_count, turns_undone, target_text}` を返します。 |
 
 ### 内部ヘルパー {#internal-helpers}
 
@@ -203,7 +203,7 @@ SessionStore(sessions_dir: Path, config: GatewayConfig, has_active_processes_fn=
   {session_id}.jsonl     # (Legacy, removed in spec 002)
 ```
 
-トランスクリプトの正本のストアは、`SessionDB`（`hermes_state` から）経由の SQLite です。
+トランスクリプトの正本のストアは、ストレージインターフェース（`persistence_assembly.open_persistence`）を通した SQLite です。
 `sessions.json` ファイルには、`session_key → session_id` の対応と、エントリーのメタデータ
 （フラグ、日時、トークン数）が保存されます。SQLite が使えないときストアは
 JSONL に切り替えますが、これは機能を落として動かすための経路です。

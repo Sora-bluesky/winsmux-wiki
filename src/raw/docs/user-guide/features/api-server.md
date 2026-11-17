@@ -2,7 +2,7 @@
 title: "API サーバー"
 description: "hermes-agent を OpenAI 互換の API として公開し、どんなフロントエンドからでも使えるようにします"
 upstream_path: user-guide/features/api-server.md
-upstream_blob: e927f32e92dd71f16055c92d25284501071c8f28
+upstream_blob: 82c591d3afadd1060d870652f7c350b0a53a6253
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server
 ---
@@ -708,7 +708,7 @@ MCP の信頼ゲートでの同意（`trust: untrusted` と設定したサーバ
 | `PATCH` | `/api/sessions/{id}` | 題名か `end_reason` を更新します |
 | `DELETE` | `/api/sessions/{id}` | セッションを消します |
 | `GET` | `/api/sessions/{id}/messages` | そのセッションのメッセージの履歴。`include_compacted=true` を付けると、コンテキストの圧縮で保管に回されたターンも返します（既定では現在のやり取りの記録だけです）。`inline_images=false` を付けると、画像の添付をインラインの data URI ではなく `[image]` というプレースホルダーとして返します。やり取りの記録が数キロバイトで届くので、ネットワーク越しに読むクライアントに向いています |
-| `POST` | `/api/sessions/{id}/fork` | `SessionDB` の系譜をたどってセッションを枝分かれさせます（CLI の `/branch` と同じ考え方です） |
+| `POST` | `/api/sessions/{id}/fork` | セッションの保存先が持つ系譜をたどってセッションを枝分かれさせます（CLI の `/branch` と同じ考え方です） |
 | `POST` | `/api/sessions/{id}/chat` | エージェントの往復を 1 回、待ち合わせる形で走らせます |
 | `POST` | `/api/sessions/{id}/chat/stream` | 往復 1 回を SSE で包んだもの。`assistant.delta`、`assistant.commentary`（往復の途中の補足です。`message_id`、`text`、`already_streamed` が付き、`assistant.completed` に畳み込まれることはありません）、`tool.started`、`tool.completed`、`tool.failed`（エラーで終わったツール）を出し、最後に往復の終わり方に合わせて `run.completed` / `run.failed` / `run.cancelled` のいずれかの終端イベントを出します（[実行の終端状態](/hermes/docs/developer-guide/programmatic-integration/#terminal-run-status) を参照） |
 

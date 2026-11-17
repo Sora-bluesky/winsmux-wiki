@@ -2,7 +2,7 @@
 title: "よくある質問とトラブル対処"
 description: "Hermes Agent でよくある質問と、つまずきやすい箇所の対処法"
 upstream_path: reference/faq.md
-upstream_blob: 4175d2f59515142508563f934bc8330255b4fd57
+upstream_blob: 9534a4306bfc92bdebaf3ff883464743dd0e1836
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/faq
 ---
@@ -648,16 +648,6 @@ hermes chat
 :::warning
 MCP サーバーがリクエストの途中で落ちると、Hermes からはタイムアウトとして見えます。原因を突き止めるには、Hermes 側だけでなくサーバー自身のログも確認してください。
 :::
-
----
-
-### スキルの問題 {#skills-issues}
-
-#### デスクトップアプリで Skills Hub のページが読み込めない（403 / ブロック） {#the-skills-hub-page-wont-load-in-the-desktop-app-403-blocked}
-
-**原因:** ドキュメントのサイト（`hermes-agent.nousresearch.com`）は Vercel を通して配信されています。Vercel の WAF は、問題があるとみなした一部の家庭向け回線の IP 範囲を拒否します。お使いのネットワークがそうした範囲にあると、このドメインへのリクエストはすべて 403 のブロックページになります。
-
-**対処:** Skills Hub の選択画面は、まず本来のドメインを試し、だめなら同じ内容の GitHub Pages の配信（`nousresearch.github.io/hermes-agent`）へ自動で切り替えます。こちらでも同じカタログが見られます。どちらの配信元でもページが開けない場合は、プロキシや DNS フィルター、ファイアウォールが両方のホストをふさいでいないか確かめてください。あわせて、該当する IP 範囲をメンテナーに報告すると、配信側で見直してもらえます。
 
 ---
 

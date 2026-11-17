@@ -2,7 +2,7 @@
 title: "Microsoft Graph のアプリケーションを登録する"
 description: "Teams 会議パイプラインを動かすためのアプリ登録を、Azure ポータルで作る手順"
 upstream_path: guides/microsoft-graph-app-registration.md
-upstream_blob: 70de0498cfedc9f9687eb0dc5961c80842f5304a
+upstream_blob: 0edcd914902ce5611707e6c5fbcd2f8a562e95e3
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/microsoft-graph-app-registration
 ---
@@ -146,7 +146,7 @@ Hermes には Graph 認証のスモークテストが同梱されています。
 ```python
 python -c "
 import asyncio
-from tools.microsoft_graph_auth import MicrosoftGraphTokenProvider
+from plugins.teams_pipeline.graph_auth import MicrosoftGraphTokenProvider
 provider = MicrosoftGraphTokenProvider.from_env()
 token = asyncio.run(provider.get_access_token())
 print('Token acquired, length:', len(token))

@@ -11,7 +11,7 @@ raw: /hermes/raw/all.md
 
 # すべて
 
-公式 docs の全ページ（251 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
+公式 docs の全ページ（252 件）の日本語版です。並びと区分は公式の llms.txt のままにしています。個別 skill のページは [skill](/hermes/guide/skills/) の索引にあります。
 
 日本語の導線は [Hermes Agentをインストールする](/hermes/docs/getting-started/quickstart/)、よく使うページは [よく使う](/hermes/guide/) にあります。
 
@@ -158,7 +158,7 @@ raw: /hermes/raw/all.md
 - [WhatsApp Business (Cloud API)](/hermes/docs/user-guide/messaging/whatsapp-cloud/)
 - [Yuanbao](/hermes/docs/user-guide/messaging/yuanbao/)
 
-## Integrations（11）
+## Integrations（12）
 
 - [Integrations Overview](/hermes/docs/integrations/)
 - [Providers](/hermes/docs/integrations/providers/)
@@ -170,6 +170,7 @@ raw: /hermes/raw/all.md
 - [Fallback Providers](/hermes/docs/user-guide/features/fallback-providers/)
 - [Credential Pools](/hermes/docs/user-guide/features/credential-pools/)
 - [Buzz Integration](/hermes/docs/integrations/buzz/)
+- [NeMo Relay](/hermes/docs/integrations/nemo-relay/)
 - [Nous Portal](/hermes/docs/integrations/nous-portal/)
 
 ## Guides & Tutorials（35）

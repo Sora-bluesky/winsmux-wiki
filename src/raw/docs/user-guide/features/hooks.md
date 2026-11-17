@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 7b2fd7a20e11c46e287675afe31996ee1309e76c
+upstream_blob: 9da800a74d6eb0d6525ae864f2f55297b269154e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -1152,7 +1152,7 @@ def my_callback(session_id: str, platform: str, **kwargs):
 
 ### `on_session_delete` {#onsessiondelete}
 
-セッションが実際になくなったとき、**操作ごとに1回、トランザクションが確定したあとで**発火します。対象は削除（1件ずつ、まとめて、空のセッションの一括掃除、保存期間による刈り込み、実体のない行を刈り込む保守、プロファイルの修復）と、意図的なアーカイブです。どの画面からの操作も最後は同じ `SessionDB` のメソッドに行き着くので、CLI（`hermes sessions delete|prune|archive`、`/exit --delete`）、TUI、デスクトップ / ダッシュボード（1件ずつ・まとめての削除、アーカイブ）、ゲートウェイの API サーバーのすべてで発火します。セッションごとの状態をディスクに持つプラグインは、セッションの保存先を定期的に見に行かなくても後片付けができます。
+セッションが実際になくなったとき、**操作ごとに1回、トランザクションが確定したあとで**発火します。対象は削除（1件ずつ、まとめて、空のセッションの一括掃除、保存期間による刈り込み、実体のない行を刈り込む保守、プロファイルの修復）と、意図的なアーカイブです。どの画面からの操作も最後は同じセッションの保存先への操作に行き着くので、CLI（`hermes sessions delete|prune|archive`、`/exit --delete`）、TUI、デスクトップ / ダッシュボード（1件ずつ・まとめての削除、アーカイブ）、ゲートウェイの API サーバーのすべてで発火します。セッションごとの状態をディスクに持つプラグインは、セッションの保存先を定期的に見に行かなくても後片付けができます。
 
 **コールバックの形:**
 

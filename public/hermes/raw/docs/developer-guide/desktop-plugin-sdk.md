@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 53a2a2a7cf25987cc43ec98cd64e1414f8416d29
+upstream_blob: d5fb0eb655c544df3e8eb62b46afc53b27aa5912
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -2186,7 +2186,7 @@ async def action(body: dict):
 
 経路は `/api/plugins/<id>/` の下に置かれます（`GET /api/plugins/<id>/board` など）。
 バックエンドのコードはゲートウェイのプロセスの中で動くので、hermes-agent のコードを直接
-読み込めます（`hermes_state`、`hermes_cli.config` など）。バックエンドの説明の全体は
+読み込めます（`persistence_assembly`、`hermes_cli.config` など）。バックエンドの説明の全体は
 [ダッシュボードを拡張する → バックエンドの API の経路](/hermes/docs/user-guide/features/extending-the-dashboard/#backend-api-routes)を
 参照してください。置かれ方はまったく同じです。
 

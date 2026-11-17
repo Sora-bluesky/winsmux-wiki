@@ -2,7 +2,7 @@
 title: "プラグインカタログ"
 description: "審査済みのプラグインをワンクリックで入れて、Hermes に新しい力を足す"
 upstream_path: user-guide/features/plugin-catalog.md
-upstream_blob: 1270c91a9180df966c2168fc7e38920f7094b0e5
+upstream_blob: bf1c0c072b0da025c248228017480ac944054762
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog
 ---
@@ -16,17 +16,12 @@ sources:
 hermes plugins install <name>
 ```
 
-見て選びたいときは **[/docs/plugins](https://hermes-agent.nousresearch.com/plugins)** を開いてください。
-カテゴリ（メモリ、デスクトップ、プラットフォーム、Web とブラウザ、ツール、音声、自動化、
-モデル）ごとに棚が分かれていて、検索、ティア絞り込み（公式 / 認証済み / コミュニティ）、機能チップ、
-そして各項目のコピーできるインストールコマンドが並びます。
-
-カード（クリックできます）ごとに専用ページ `/docs/plugins/<name>` もあります。
-説明の全文と注意書き、固定されたコミット、ツール・フック・環境変数、デスクトップ用の
-インストールボタンと CLI コマンド、スクリーンショット（ある場合）と審査時のコミットの README、
-さらに **この作者の他の作品** の棚が載ります。作者ごとのページ `/docs/plugins/by/<maintainer>` には、
-その人がカタログで保守しているものがすべて並びます。どちらも同じカタログファイルからビルド時に
-生成されるので、ページが変わるのは PR がマージされたときだけです。
+見て選びたいときは **[Hermes Marketplace](https://hermes-agent.nousresearch.com/marketplace)** を開いてください。検索やカテゴリ、
+ティアのラベル（公式 / 認証済み / コミュニティ）があり、どの項目にもインストールボタンか CLI コマンドが
+付いています。項目ごとに専用ページ `/marketplace/<name>` があり、説明、
+固定されたコミット、スクリーンショット（ある場合）、審査時のコミットの README、
+同じ保守担当の他のプラグインが載ります。Marketplace は
+同じカタログファイルを読み込んでいるので、掲載内容が変わるのは PR がマージされたときだけです。
 
 カタログは既存の[プラグインの仕組み](/hermes/docs/user-guide/features/plugins/)を置き換えるものではなく、補うものです。
 カタログから入れたものも中身はふつうのプラグインで、カタログは見つけやすさと審査の層を
@@ -258,5 +253,5 @@ git URL の経路は自分のプラグインや、すでに信頼しているリ
   設定
 - [組み込みプラグイン](/hermes/docs/user-guide/features/built-in-plugins/) — Hermes に同梱されているプラグイン
 - [Hermes プラグインを作る](/hermes/docs/developer-guide/plugins/) — 自分で書く
-- [プラグインカタログのページ](https://hermes-agent.nousresearch.com/plugins) — 一覧を見て選ぶ
+- [Hermes Marketplace](https://hermes-agent.nousresearch.com/marketplace) — カタログを見て選ぶ
 - [プラグインカタログへの応募](/hermes/docs/developer-guide/plugins/catalog-submission/) — 受け入れの規則と応募のガイド

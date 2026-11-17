@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-11-17、対象期間 = 2026-11-11 〜 2026-11-17（JST）
+生成日 = 2026-11-18、対象期間 = 2026-11-12 〜 2026-11-18（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,6 +16,15 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-11-17 [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
+- 2026-11-17 [スキルを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/creating-skills/)
+- 2026-11-17 [ターミナル環境プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/terminal-environment-plugin/)
+- 2026-11-17 [軌跡の形式](https://wiki.winsmux.dev/hermes/docs/developer-guide/trajectory-format/)
+- 2026-11-17 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- 2026-11-17 [バックアップと移行](https://wiki.winsmux.dev/hermes/docs/user-guide/backup-and-transfer/)
+- 2026-11-17 [チェックポイントと /rollback](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
+- 2026-11-17 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
+- 2026-11-17 [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
 - 2026-11-16 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
 - 2026-11-16 [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
 - 2026-11-16 [セッションの保存領域](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
@@ -35,7 +44,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-15 [Microsoft Foundry](https://wiki.winsmux.dev/hermes/docs/guides/azure-foundry/)
 - 2026-11-15 [Hermes で音声モードを使う](https://wiki.winsmux.dev/hermes/docs/guides/use-voice-mode-with-hermes/)
 - 2026-11-15 [Webhook で GitHub の PR に自動でコメントする](https://wiki.winsmux.dev/hermes/docs/guides/webhook-github-pr-review/)
-- 2026-11-15 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - 2026-11-15 [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
 - 2026-11-15 [よくある質問とトラブル対処](https://wiki.winsmux.dev/hermes/docs/reference/faq/)
 - 2026-11-15 [Bot Mode](https://wiki.winsmux.dev/hermes/docs/user-guide/bot-mode/)
@@ -58,14 +66,12 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-15 [Telegram](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/telegram/)
 - 2026-11-15 [Webhook](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/webhooks/)
 - 2026-11-15 [WeCom Callback（自社で作るアプリ）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/wecom-callback/)
-- 2026-11-15 [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
 - 2026-11-15 [プロファイル配布: エージェントまるごと共有する](https://wiki.winsmux.dev/hermes/docs/user-guide/profile-distributions/)
 - 2026-11-15 [Claude Code — Claude Code CLI にコーディングを任せる（機能追加、PR）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code/)
 - 2026-11-15 [Comfyui — 拡散モデルのワークフローで画像・動画・音声を生成する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-comfyui/)
 - 2026-11-15 [Box — クラウド上のファイル、共有、検索、メタデータを管理します](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-box/)
 - 2026-11-15 [Oss Forensics — GitHub サプライチェーンのフォレンジック: 復元・IOC・報告](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/)
 - 2026-11-15 [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
-- 2026-11-14 [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
 - 2026-11-14 [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
 - 2026-11-14 [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
 - 2026-11-14 [macOS バンドルの更新](https://wiki.winsmux.dev/hermes/docs/developer-guide/macos-bundle-updates/)
@@ -109,12 +115,8 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-13 [Hermes Relay](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/relay/)
 - 2026-11-12 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - 2026-11-12 [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
-- 2026-11-12 [ターミナル環境プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/terminal-environment-plugin/)
 - 2026-11-12 [ツール検索](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tool-search/)
 - 2026-11-12 [Godmode — LLM のジェイルブレイク: Parseltongue、GODMODE、ULTRAPLINIAN](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-godmode/)
-- 2026-11-11 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
-- 2026-11-11 [ゲートウェイのセッションライフサイクル](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-session-lifecycle/)
-- 2026-11-11 [ダッシュボードを広げる](https://wiki.winsmux.dev/hermes/docs/user-guide/features/extending-the-dashboard/)
 
 ## 週次まとめ
 

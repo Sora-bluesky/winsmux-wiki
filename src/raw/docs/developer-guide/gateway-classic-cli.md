@@ -2,7 +2,7 @@
 title: "従来型のゲートウェイクライアント"
 description: "hermes chat と --cli がゲートウェイの権限主体に接続するしくみ"
 upstream_path: developer-guide/gateway-classic-cli.md
-upstream_blob: f5d369eea42e3017f23c9a870c6e4a07178c8c90
+upstream_blob: 7b0e0e5d4be7502ba34f8fcdecda93ac13a5055c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-classic-cli
 ---
@@ -108,7 +108,7 @@ stream-json`、`-z ... --usage-file`、値なしの `-c`（このターミナル
 `tests/hermes_cli/test_gateway_chat_native.py` は、ネイティブの tmux/PTY 上で、従来型クライアントの
 新規入力、切り離し、保存済み ID での再開、ワンショット実行を、通常のデーモン経由で確かめます。
 その際、ループバックのモデル、隔離した HOME/HERMES_HOME、呼び出し元の cwd を使います。コンストラクターの
-計測では、クライアント側に AIAgent、SessionDB、GatewayRunner が作られないことを記録します。このテストでは
+計測では、クライアント側に AIAgent、書き込み可能なセッションストア、GatewayRunner が作られないことを記録します。このテストでは
 さらに、無効な承認の選択を拒否したあと、接続し直して同意し、テスト用に用意した対象に対して実際の
 ターミナル操作を起こします。古い制御・実行中の Stop のネイティブなテストと、
 ネイティブな確認の質問のやり取りは、別の受け入れ作業として残っています。

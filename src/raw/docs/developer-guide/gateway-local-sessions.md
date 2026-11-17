@@ -2,7 +2,7 @@
 title: "gateway のローカルセッション"
 description: "ローカルの CLI/TUI セッションを正規の gateway 受付として扱う仕組み"
 upstream_path: developer-guide/gateway-local-sessions.md
-upstream_blob: 017c22f37c8c03937f638fb28314ec85b17ab641
+upstream_blob: a9367dd87684b9a4f44fe4e88a9f755d48d3e215
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-local-sessions
 ---
@@ -24,7 +24,7 @@ sources:
 セッション ID はどちらも、永続化された同じ固定の **論理** ID です。圧縮やリセットで非公開の
 物理トランスクリプトの保存先が切り替わっても、クライアント側の ID はどちらも変わりません。作成時に
 エージェントはすぐには立ち上がりませんが、返す前に実際の
-SessionDB/SessionStore 上の ID は確保します。1つの正規の SQLite トランザクションで、
+stored-session/SessionStore 上の ID は確保します。1つの正規の SQLite トランザクションで、
 セッション行、経路、非公開の `gateway.local_policy.v1:<stored-id>` 作成受領記録をまとめて確定します。
 同じ主体（principal）とプロファイルで同じリクエスト ID を繰り返すと、その ID と凍結済みの
 ポリシーを再利用します。デーモンが落ちた後でも同様です。新しいセッションにするときは ID を省きます。
@@ -144,7 +144,7 @@ ID ではありません。作成受領記録は元の所有者を保ち、受�
   非表示・アーカイブ済み・内部用・他者所有の行を除外します。一覧に載せただけでセッションを引き取ることは
   ありません。引き取りは明示的な再開で行われ、既定の稼働中一覧は変わりません。
   どちらのスコープも `workspace` を受け付けます。対象になるのは、最初の行がそのフォルダーにある会話だけで、判定は
-  `hermes -c` と同じ規則（`hermes_state_sessions.workspace_key`）に従います。行の git リポジトリのルートがそれと一致するか、
+  `hermes -c` と同じ規則（`persistence.conversation.sessions.workspace_key`）に従います。行の git リポジトリのルートがそれと一致するか、
   （ルートが記録されていなければ）cwd がそのフォルダーかその配下にあることが条件です。呼び出し側のリポジトリのルート（なければ cwd）を渡します。
   `picker: true` を付けると、各行に選択画面で表示する情報も入ります（`gateway/session_picker_fields.py`）。
   絞り込みが読むのと同じ最初の行からは `cwd` と `workspace` が、会話の現在の

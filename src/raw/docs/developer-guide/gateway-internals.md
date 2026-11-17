@@ -2,7 +2,7 @@
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: b2e97d173195ae13a62f92db5bda0da4696c0be5
+upstream_blob: dcfe916a5f1091c7e2d973d8b449e40eea0b64c9
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -950,7 +950,7 @@ cron の実行には専用のセッションがあります。続きのやり取
 
 ハンドラーはすぐに受領の返事を返し、`anon_auth.run_sign_in` を**専用の単一ワーカーの
 エグゼキューター**（`_login_executor`）で処理します。10 スレッドの共有ゲートウェイプールは使いません。トークンのポーリングは
-コードの有効期限いっぱいまで続くことがあり、共有プールに生きたワーカーが残っていると、停止時に SessionDB の
+コードの有効期限いっぱいまで続くことがあり、共有プールに生きたワーカーが残っていると、停止時にセッションの保存先の
 クローズやチェックポイントが飛ばされてしまうからです。試行はプロセスごとに 1 つで、始めた本人の識別情報が刻まれます。
 同じ本人が 2 回目の `/login` を送ると前の試行を取り消し（取り消された側は、その旨の文面が自分の
 チャットに送られて終わります）、別の本人からの場合は断ります。`task.cancel()` ではワーカースレッド内の

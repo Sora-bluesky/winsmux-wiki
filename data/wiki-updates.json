@@ -1,6 +1,58 @@
 {
-  "generatedAt": "2026-11-17",
+  "generatedAt": "2026-11-18",
   "entries": [
+    {
+      "date": "2026-11-17",
+      "sha": "cac0e77",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/adding-platform-adapters",
+          "title": "プラットフォームアダプターを追加する",
+          "url": "/hermes/docs/developer-guide/adding-platform-adapters/"
+        },
+        {
+          "id": "developer-guide/creating-skills",
+          "title": "スキルを作る",
+          "url": "/hermes/docs/developer-guide/creating-skills/"
+        },
+        {
+          "id": "developer-guide/terminal-environment-plugin",
+          "title": "ターミナル環境プロバイダプラグイン",
+          "url": "/hermes/docs/developer-guide/terminal-environment-plugin/"
+        },
+        {
+          "id": "developer-guide/trajectory-format",
+          "title": "軌跡の形式",
+          "url": "/hermes/docs/developer-guide/trajectory-format/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "user-guide/backup-and-transfer",
+          "title": "バックアップと移行",
+          "url": "/hermes/docs/user-guide/backup-and-transfer/"
+        },
+        {
+          "id": "user-guide/checkpoints-and-rollback",
+          "title": "チェックポイントと /rollback",
+          "url": "/hermes/docs/user-guide/checkpoints-and-rollback/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/multi-profile-gateways",
+          "title": "ゲートウェイをいくつも同時に動かす",
+          "url": "/hermes/docs/user-guide/multi-profile-gateways/"
+        }
+      ]
+    },
     {
       "date": "2026-11-16",
       "sha": "8d1c24f",

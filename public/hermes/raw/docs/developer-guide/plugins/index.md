@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 21317108905f177b27600ac95892ac3b1a7616c5
+upstream_blob: 90f9c226b29c3d410b2e32345c39b8652c4c53f6
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -200,6 +200,71 @@ Hermes の内部は、2026年9月（PR #102117）に `<stem>_<topic>` という�
 こうしたプラグインを直すには、その名前をいま定義しているモジュールから import してください。内部に頼らず、`ctx` と文書化された ABC を使うほうがさらに確実です。旧パスから新パスへの完全な対応表は、互換レイヤーを含んでいた最後のコミットにある
 [`COMPAT_MANIFEST.md`](https://github.com/NousResearch/hermes-agent/blob/5912ed81ed9/COMPAT_MANIFEST.md)
 です。
+
+### `hermes_state` は非推奨: ストレージインターフェースを使う {#hermesstate-deprecated-use-the-storage-interface}
+
+セッションの保存は、ストレージインターフェースの裏側に置かれています。`persistence/` にある型付きの契約と、ただ1つの入口である `persistence_assembly` です。`SessionDB` クラスと `hermes_state_*` モジュールは削除されました。外部のプラグイン向けには、`hermes_state` と `hermes_state_registry` が、上の[廃止方針](#deprecation-policy)に従う一時的な互換モジュールとして残っています。これらは下の表にある名前をストレージインターフェースへ転送するだけで、独自の SQL やデータベース接続は持ちません。
+
+- どちらかのモジュールの名前を初めて使うと、プロセスごとに1回だけ警告が出ます。警告には置き換え先と、削除されるリリースが示されます。
+- これらのモジュールは v0.24、v0.25、v0.26 の間サポートされ、削除されるのは早くても v0.27.0 です。
+- 表にない名前は引き継がれません。旧クラスの mixin と SQLite バックエンド独自のヘルパーには公開の置き換え先がなく、それらを import していると `hermes plugins validate` が報告します。
+
+| `hermes_state` の名前 | 置き換え先 |
+|---|---|
+| `SessionDB()`, `SessionDB(db_path=path)` | `persistence_assembly.open_persistence(profile_scope())`、`open_persistence(profile_scope(home=path.parent))`。ハンドルは `close()` か `with` ブロックで解放します。`session_db` として `SessionDB` を渡されたエージェントは、構築された時点でそれが持っているハンドルを借ります。そのため、その `SessionDB` はエージェントが使われている間ずっと開いたままにしてください。その `close()` はハンドルを解放し、`close()` の後に開き直してもエージェントに新しいハンドルは渡りません |
+| `SessionDB(read_only=True)` | `with open_persistence_reader(profile_scope().profile_dir) as store:`（ストアの作成、移行、修復は一切行いません） |
+| `AsyncSessionDB(db)` | `store.aio`: 同じリポジトリを await できる形にしたもので、各呼び出しはイベントループの外で実行されます |
+| `DEFAULT_DB_PATH` | `persistence_assembly.store_location(profile_scope())` |
+| `create_session`, `end_session`, `reopen_session` | `store.sessions.create(NewSession(...))`、`store.sessions.end`、`store.sessions.reopen` |
+| `append_message` | `store.messages.append(session_id, NewMessage(...))` |
+| `hermes_state_registry.acquire(db_path=None)`, `release(db)`, `release_or_close(db)` | `open_persistence(profile_scope())` とハンドルの `close()`。代わりのモジュールの `acquire` は呼び出し元ごとに専用の `SessionDB` を開き、どちらの release もそれを閉じます |
+| `get_messages` | `store.messages.read_transcript(session_id)`。`as_wire_row()` で以前の dict が得られます |
+| `list_gateway_sessions(platform=None, active_only=True)` | `store.sessions.list_gateway_sessions(platform=..., active_only=...)`。`{**e.session.as_session_row(), "last_active": e.last_active}` でそれぞれ以前の dict が得られます |
+| `get_messages_as_conversation` | `store.messages.read_conversation(session_id)`。`as_openai_message()` でそれぞれ以前の dict が得られます |
+| `get_session` | `store.sessions.get(session_id)`。`as_session_row()` で以前の dict が得られます |
+| `list_sessions_rich`, `session_count` | `store.sessions.list_sessions(SessionQuery(...), SessionWindow(...))`、`store.sessions.count_sessions()` |
+| `set_session_title`, `resolve_session_by_title`, `get_next_title_in_lineage` | `store.sessions.set_title`、`store.sessions.resolve_by_title`、`store.sessions.next_title_in_lineage` |
+| `resolve_session_id` | `store.sessions.resolve_id`: 完全に一致する id を、なければ接頭辞が一致するただ1つの id を返します |
+| `search_messages` | `store.search.search_messages`。`SearchHit` のレコードを返します |
+| `export_session`, `export_all`, `prune_sessions` | `store.maintenance.export_session`、`store.maintenance.export_all`、`store.maintenance.prune_sessions` |
+| `delete_session`, `clear_messages` | `store.sessions.delete`、`store.messages.replace_transcript(session_id, [], ReplaceMode.DESTRUCTIVE)` |
+| `get_meta`, `set_meta`, `list_meta_prefix` | `store.state_meta.get`、`store.state_meta.set`、`store.state_meta.list_prefix` |
+| `StateDbCorruptError`, `StateDbReplacedError` | `persistence.StoreQuarantined`、`persistence.StoreReplaced` |
+| `SessionCompressionInProgressError`, `DeletedWalGenerationError` | `persistence.CompressionInProgress`、`persistence.DeletedWalGeneration` |
+| `SessionResumeTooLargeError`, `SessionExportTooLargeError` | `persistence.conversation.messages.ResumeTooLarge`、`persistence.ExportTooLarge` |
+| `classify_persistence_error`, `is_sqlite_lock_error`, `is_malformed_db_error` | `storage_errors` にある同じ名前 |
+| `apply_wal_with_fallback`, `apply_database_pragmas` | `sqlite_support` にある同じ名前（プラグイン自身の SQLite ファイル用） |
+| `storage_state`, `storage_corrupt_reason` | `persistence_assembly.storage_health(profile_scope()).storage_state()` |
+| `get_hermes_home`, `mkdir_under_hermes_home` | `hermes_constants` にある同じ名前 |
+| `format_session_db_unavailable`, `get_last_init_error` | `storage_user_copy` にある同じ名前 |
+| `resolved_max_resume_messages`, `resolved_max_export_messages` | `storage_limits` にある同じ名前 |
+| `preflight_db_writability`, `read_only_db_uri` | `sqlite_support` にある同じ名前（プラグイン自身の SQLite ファイル用） |
+| `holder_pid_checkable`, `make_user_dir` | `process_identity.holder_pid_checkable`、`hermes_dir_acl.make_user_dir` |
+| `WriterMutexTimeout`, `maintain_after_commit`, `write_site`, `writer_mutex_until`, `note_read_pool_exhausted` | なし: SQLite バックエンド自身の書き込み用と読み取りプール用のヘルパーで、代わりのモジュールが残っている間はそのまま引き継がれます。ストアの操作は、書き込みも読み取りも自分で行います |
+| `divert_session_transcript_jsonl(session_id, messages)` | `session_rescue.divert_session_transcript_jsonl(session_id, messages, sessions_dir=get_hermes_home() / "sessions")` |
+| `session_db`、つまりコンテキストエンジンの `bind_session_state` と `on_session_start` が受け取る `SessionDB` | `persistence`。エージェントのストアハンドルで、そのキーワードを受け付けるフックにはそれと並べて渡されます（[コンテキストエンジンプラグイン](/hermes/docs/developer-guide/context-engine-plugin/#session-storage)） |
+
+`NewSession` と `SessionQuery`/`SessionWindow` は `persistence.conversation.sessions` から、`NewMessage` と `ReplaceMode` は `persistence.conversation.messages` から取り込みます。セッションを一覧していたダッシュボードのルートは、次のように移行します。
+
+```python
+# Before
+from hermes_state import SessionDB
+
+db = SessionDB(read_only=True)
+try:
+    rows = db.list_sessions_rich(limit=50)
+finally:
+    db.close()
+
+# After
+from persistence.conversation.sessions import SessionQuery, SessionWindow
+from persistence_assembly import open_persistence_reader, profile_scope
+
+with open_persistence_reader(profile_scope().profile_dir) as store:
+    rows = [entry.as_list_row() for entry in store.sessions.list_sessions(SessionQuery(), SessionWindow(limit=50))]
+```
+
+リポジトリの実際の使い方は、[セッションストレージ](/hermes/docs/developer-guide/session-storage/#common-operations)に載っています。
 
 ## 作るもの {#what-youre-building}
 
@@ -1091,6 +1156,31 @@ def fetch_models(base_url, api_key):
         return response.read()
 ```
 
+### Hermes と同じ方法で Retry-After ヘッダーを読む {#read-a-retry-after-header-the-way-hermes-does}
+
+レート制限のかかった API（HTTP 429 や 503）は、待つべき時間を `Retry-After` ヘッダーで知らせてくることがよくあります。値は秒数か HTTP の日付のどちらかです。`agent.retry_utils.parse_retry_after_seconds(value)` は、どちらの形でも秒数に変換します。ヘッダーの値を渡しても、ヘッダーのマッピング全体を渡してもかまいません。マッピングを渡すと、`Retry-After`、次に `retry-after` の順に探します。戻り値は `0.0` を下限にした float で、ヘッダーがないときや解析できないときは `None` を返します。その場合にどれだけ待つかは、呼び出し側が決めます。
+
+```python
+import time
+
+from agent.retry_utils import parse_retry_after_seconds
+
+def wait_before_retry(response, fallback=5.0):
+    seconds = parse_retry_after_seconds(response.headers)
+    time.sleep(fallback if seconds is None else seconds)
+```
+
+### Hermes の User-Agent ヘッダーを送る {#send-the-hermes-user-agent-header}
+
+`hermes_cli.version_info.hermes_user_agent(product)` は、プラグインが送るリクエストの `User-Agent` ヘッダーに使う `<product>/<Hermes version>`（たとえば `Hermes-Agent/0.23.1`）を返します。引数には、相手のサービスがあなたの連携を識別するのに使っている製品名を渡します。既定値は `hermes-cli` です。モジュールの読み込み時ではなく、リクエストを組み立てる場所で呼んでください。ソースのチェックアウトから動かしている場合は、バージョンを git から読み取るためです。
+
+```python
+from hermes_cli.version_info import hermes_user_agent
+
+def request_headers(api_key):
+    return {"Authorization": f"Bearer {api_key}", "User-Agent": hermes_user_agent("Hermes-Agent")}
+```
+
 ### 言語パックを同梱する {#ship-a-language-pack}
 
 プラグインは、UI の言語を追加したり、既存の言語の言い回しを差し替えたりできます。しかも全部の画面に一度に効きます。
@@ -1409,7 +1499,7 @@ kanban のライフサイクルフックは、board の DB 変更がコミット
 | `on_session_end` | `agent/turn_finalizer.py` `finalize_turn`。中断で終了したときは `hermes_cli/cli_shutdown.py` `_invoke_interrupted_session_end`、`tui_gateway/session_lifecycle.py` `_finalize_session` |
 | `on_session_finalize` | `hermes_cli/lifecycle.py` `finalize_session`。呼び出し元は `hermes_cli/cli_session_mixin.py` `CLISessionMixin._notify_session_boundary`、`hermes_cli/cli_shutdown.py` `_notify_session_finalize`、`tui_gateway/session_lifecycle.py` `_notify_session_boundary`、`gateway/run_shutdown_session_end.py` `GatewaySessionEndMixin._finalize_session_off_loop` |
 | `on_session_reset` | `hermes_cli/cli_session_mixin.py` `CLISessionMixin._notify_session_boundary`、`tui_gateway/session_registry.py` `_start_session_services`、`gateway/slash_commands_session.py` `GatewaySessionCommandsMixin._handle_reset_command`、`gateway/run_shutdown_session_end.py` `GatewaySessionEndMixin._reset_session_off_loop` |
-| `on_session_delete` | `hermes_state_common.py` `emit_session_deleted` |
+| `on_session_delete` | `session_retention.py` `emit_session_deleted` |
 | `on_session_open` | `gateway/session_open.py` `_Open._deliver` |
 | `on_skill_lifecycle` | `tools/skill_usage.py` `_emit_skill_lifecycle` |
 | `subagent_start` | `tools/delegate_tool.py` `_build_child_agent` |

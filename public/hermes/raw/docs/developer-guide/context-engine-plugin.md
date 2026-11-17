@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コンテキストエンジンのプラグイン"
 description: "組み込みの ContextCompressor を置き換えるコンテキストエンジンのプラグインを作る方法"
 upstream_path: developer-guide/context-engine-plugin.md
-upstream_blob: 1fae25c8b207f02bdf7bb2d408d24c7a75973024
+upstream_blob: cc77e98af9ef3a2346cb782187a9bf8a90a98186
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-engine-plugin
 ---
@@ -104,6 +104,15 @@ compression_count: int = 0       # how many times compress() has run
 | `select_context(request_messages, *, conversation_messages, incoming_message, budget_tokens)` | `None` を返す（何もしない） | **この**リクエストにどのコンテキストを入れるかを選んだり振り分けたりするとき（検索、話題の振り分け）。詳しくは後述します |
 | `on_turn_complete(messages, usage=None, **kwargs)` | 何もしない | 終わったターンを取り込んだり、索引を作ったり、観測したりするとき。詳しくは後述します |
 | `clone_for_agent()` | `copy.deepcopy(self)` | コピーできない状態（ロック、SQLite や DB の接続）をエンジンが持っているとき。[一般のプラグインの仕組みから登録する](#via-general-plugin-system)を参照してください |
+
+### セッションの保存先 {#session-storage}
+
+セッションごとの状態を持つエンジンは、2 つのフックを通じてセッションの保存先を読み取ります。
+
+- `bind_session_state(session_db, session_id, persistence=None)` は、エンジンがこれを定義している場合、エージェントがセッションをエンジンに結びつけるたびに呼ばれます。具体的には、エージェントの起動時、`/new`・`/resume`・`/branch` のあと、ゲートウェイの定期的な整理処理のとき、そして動いているエージェントが無いセッションで `/compress` を実行し、その場限りのエンジンが作られたときです。最初の 2 つの引数は位置引数として渡されることがあります。
+- `on_session_start(session_id, **kwargs)` の `kwargs` に `session_db` と `persistence` が入るのは、別の圧縮処理がすでに作った続きのセッションをエージェントが引き継ぐときだけです。エージェント自身の圧縮のあとの通知や、エージェントの起動時と `/new` のあとの呼び出しには、どちらも含まれません。そのため、`bind_session_state` で受け取ったハンドルを保持しておいてください。
+
+`persistence` は、エージェントのストレージインターフェースのハンドル（`persistence_assembly.Persistence`）です。`persistence.sessions.get(session_id)` や `persistence.messages.read_transcript(session_id)` のほか、[プラグインガイドの置き換え対応表](/hermes/docs/developer-guide/plugins/#hermes_state-deprecated-use-the-storage-interface)に載っている各リポジトリを使えます。Hermes がこれを渡すのは、シグネチャに `persistence` という名前の引数があるか、`**kwargs` を受け取るフックだけです。そのため、2 つの引数だけを受け取る結びつけ処理を持つエンジンも、そのまま動き続けます。`session_db` は同じ保存先を扱う非推奨の `hermes_state.SessionDB` で、v0.27.0 で `hermes_state` とともに削除されます。代わりに `persistence` から読み取ってください。`persistence` を受け取れないセッションフックを持つエンジンには、そのクラス名を示す `DeprecationWarning` が、プロセスごとに 1 回出ます。
 
 ## ターンごとのコンテキスト選択と観測 {#per-turn-context-selection-and-observation}
 

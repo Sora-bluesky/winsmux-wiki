@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "アーキテクチャ"
 description: "Hermes Agent の内部構造 — 主要なサブシステム、実行経路、データの流れ、次に読むべき場所"
 upstream_path: developer-guide/architecture.md
-upstream_blob: 23ce42e2ef917de017fcb1638e59488479538368
+upstream_blob: 4c3f7f393ffcec54a6ce14b255ccbbbc28d808eb
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/architecture
 ---
@@ -45,7 +45,7 @@ sources:
 ┌───────────────────┐              ┌──────────────────────┐
 │ Session Storage   │              │ Tool Backends         │
 │ (SQLite + FTS5)   │              │ Terminal (7 backends) │
-│ hermes_state.py   │              │ Browser (5 backends)  │
+│ persistence/      │              │ Browser (5 backends)  │
 │ gateway/session.py│              │ Web (4 backends)      │
 └───────────────────┘              │ MCP (dynamic)         │
                                    │ File, Vision, etc.    │
@@ -60,7 +60,8 @@ hermes-agent/
 ├── cli.py                    # HermesCLI facade — mixins in hermes_cli/cli_*_mixin.py
 ├── model_tools.py            # Tool discovery, schema collection, dispatch
 ├── toolsets.py               # Tool groupings and platform presets
-├── hermes_state.py           # SQLite session/state database facade (+ hermes_state_*.py siblings)
+├── persistence/              # Storage contracts; persistence/sqlite/ is the SQLite session/state backend
+├── persistence_assembly.py   # open_persistence(): the one entry point to a profile's store
 ├── hermes_constants.py       # HERMES_HOME, profile-aware paths
 ├── batch_runner.py           # Batch trajectory generation
 │
@@ -154,7 +155,7 @@ User input → HermesCLI.process_input()
     → runtime_provider.resolve_runtime_provider()
     → API call (chat_completions / codex_responses / anthropic_messages)
     → tool_calls? → model_tools.handle_function_call() → loop
-    → final response → display → save to SessionDB
+    → final response → display → save to the session store
 ```
 
 ### ゲートウェイのメッセージ {#gateway-message}

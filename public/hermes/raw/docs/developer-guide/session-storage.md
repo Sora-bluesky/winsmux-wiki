@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "セッションの保存領域"
 description: ""
 upstream_path: developer-guide/session-storage.md
-upstream_blob: a07e398598adc23d52d9b22f19f3de1e56e6dfd7
+upstream_blob: 768537e606637b8f9be1fdb3618c5e142a0cb792
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage
 ---
@@ -21,7 +21,7 @@ TUI、Desktop（ローカル）、API サーバー、ACP、cron、Bot Chat、Kan
 ワーカーは、その持ち主を通じて書き込みます（`RuntimeSessionStore` の RPC）。会話の記録を書くために
 自分で `state.db` を開くことはありません。
 
-ソースファイル: `hermes_state.py`（窓口）と、その兄弟にあたる `hermes_state_*.py` 群（スキーマ、fts、検索、圧縮、可搬性、ゲートウェイ、ほか）
+ソースファイル: `persistence/` にある保存領域の契約、入口となる `persistence_assembly.py`（`open_persistence`、`open_persistence_reader`）、そして `persistence/sqlite/` にある SQLite のバックエンド（スキーマ、FTS、検索、圧縮、可搬性、ゲートウェイ、ほか）
 
 ## Hermes のホームとプロファイルの分離 {#hermes-home-and-profile-isolation}
 
@@ -172,8 +172,8 @@ CLI の起動処理は、Hermes のほかの部分を import する前に `_appl
 
 ### sessions テーブル {#sessions-table}
 
-以下は抜粋です。現行の列を全部見るには `hermes_state_common.py` の `SCHEMA_SQL`
-（適用するのは `hermes_state_schema.py`）を参照してください。そちらにはゲートウェイの
+以下は抜粋です。現行の列を全部見るには `persistence/sqlite/_schema_ddl.py` の `SCHEMA_SQL`
+（適用するのは `persistence/sqlite/_schema.py`）を参照してください。そちらにはゲートウェイの
 経路情報である `session_key`、`chat_id`、`chat_type`、`thread_id`、`display_name`、
 `origin_json`、`expiry_finalized`、作業環境の `cwd` / `git_branch` / `git_repo_root`、
 引き継ぎと圧縮失敗に関する列、`profile_name`、`transport_profile`（その通り道を
@@ -301,7 +301,7 @@ FTS5 のテーブルは、`messages` テーブルへの INSERT、UPDATE、DELETE
 トリガーによって同期されます。現在のトリガーは `state_meta` にある
 `fts_rebuild_high_water` / `fts_rebuild_progress` の目印で制御されており（背後で
 FTS の作り直しが進んでいても二重に索引されません）、索引対象の 3 列すべてを
-扱います。正確な SQL は `hermes_state_common.py` の `SCHEMA_SQL` にあります。
+扱います。正確な SQL は `persistence/sqlite/_schema_ddl.py` の `SCHEMA_SQL` にあります。
 
 
 ## ダッシュボードでの閲覧と持ち主による保守 {#dashboard-browsing-and-owner-maintenance}
@@ -358,7 +358,8 @@ SQLite の調整用ファイルまで書き換え不可にするものではあ�
 
 今も複数のプロセスが 1 つの `state.db` を開きます。ゲートウェイ（正規のセッションに書き込む側）、
 読み取り専用で閲覧する側（ダッシュボード、`hermes sessions list`）、保守用のコマンド、
-セッション以外のテーブルに書き込む側です。`SessionDB` クラスは書き込みの競合を次のように処理します。
+セッション以外のテーブルに書き込む側です。SQLite バックエンドで保存領域を保持する役（`persistence/sqlite/_holder.py` の `StoreHolder`）は、
+書き込みの競合を次のように処理します。
 
 - **SQLite のタイムアウトを短く**（既定の 30 秒ではなく 1 秒）
 - **アプリ側での再試行に制限時間を設ける**。ランダムな揺らぎを持たせます（最初の 2 秒は 20〜150 ミリ秒、そのあとは 250 ミリ秒〜1 秒）。持ち時間は通常の書き込みが 20 秒、会話記録の書き込みが 60 秒（失敗するとそのターンが打ち切られるため）、記録目的だけの活動ログの書き込みが 0.5 秒です
@@ -376,7 +377,7 @@ _CHECKPOINT_EVERY_N_WRITES = 50
 ```
 
 書き手が持ち時間を使い切ると、そのターンは `session_persistence_failed:locked` で
-終わります。さらに Linux では `hermes_state_lockowners` が WARNING を出し、その時点で
+終わります。さらに Linux では `persistence/sqlite/_state/lockowners.py` が WARNING を出し、その時点で
 ロックを握っていたプロセスを名前付きで記録します
 （`PID 594094 (hermes --worktree --yolo) holds WAL write lock on state.db-shm`）。
 これは `/proc/locks` から読み取ったもので、SQLite のバイト範囲 `fcntl` ロックは
@@ -388,93 +389,108 @@ _CHECKPOINT_EVERY_N_WRITES = 50
 `~/.hermes/logs/errors.log` で探してください。
 
 ロックの競合は、メッセージの文面ではなく SQLite の結果コード（`SQLITE_BUSY` /
-`SQLITE_LOCKED`、`hermes_state_errors.is_sqlite_lock_error`）で見分けます。ロールバックジャーナル
+`SQLITE_LOCKED`、`storage_errors.is_sqlite_lock_error`）で見分けます。ロールバックジャーナル
 （`delete`）モードでは、FTS5 のテーブルのコンストラクタの中でロックを失うと、`SQLITE_BUSY` と
 `vtable constructor failed:
 messages_fts` という文面で届きます。これも `database is locked` と同じ扱いです。書き込みできる
-`SessionDB` を開くときは最大 `_WRITE_PATIENCE_S` まで待ちます。読み取り専用で開くときは、読み取りの持ち時間
+保存領域を開くときは最大 `_WRITE_PATIENCE_S` まで待ちます。読み取り専用で開くときは、読み取りの持ち時間
 `_READ_BUSY_TIMEOUT_S`（5 秒）を1回だけ待ちます。ロックがそれより長く続くと、ダッシュボードは
 500 ではなく 503（busy）を返します。
 
 
 ## よく使う操作 {#common-operations}
 
+アプリケーションのコードは、ただ 1 つの入口である `persistence_assembly` を通じて保存領域を扱います。`open_persistence(scope)` は、1 つのプロファイルの保存領域に結び付いたハンドルを返します。ハンドルは機能ごとに 1 つずつリポジトリ（`sessions`、`messages`、`lineage`、`search`、`maintenance`、`state_meta` など）を持っており、プロファイルを引数に取る操作はありません。契約とその型付きの記録は `persistence/` にあり、`persistence/sqlite/` の SQLite バックエンドがそれを実装しています。asyncio のイベントループ上で動くコードは、await できる窓口 `store.aio` を使います（`await store.aio.messages.read_transcript(...)`）。各呼び出しはループの外で実行されます。
+
 ### 初期化 {#initialize}
 
 ```python
-from hermes_state import SessionDB
+from pathlib import Path
+from persistence_assembly import open_persistence, open_persistence_reader, profile_scope
 
-db = SessionDB()                           # Default: ~/.hermes/state.db
-db = SessionDB(db_path=Path("~/.hermes/cache/scratch/test.db").expanduser())  # Custom path
+store = open_persistence(profile_scope())          # Default: get_hermes_home() / "state.db"
+store = open_persistence(profile_scope("coder"))   # A named profile's store
+store = open_persistence(profile_scope(home=Path("~/.hermes/cache/scratch/test-home").expanduser()))  # <home>/state.db
+store.close()                                      # Each handle releases its reference once
+
+# Read-only access never creates, migrates or repairs a store
+with open_persistence_reader("coder") as reader:
+    count = reader.sessions.count_sessions()
 ```
+
+同じプロファイルのハンドルは、1 つのプロセスの中で 1 つのバックエンドを共有します。ハンドルを開いただけではファイルに触れません。保存領域が開かれるのはハンドルを最初に使ったときで、`open_persistence(scope, eager=True)` を使えばその場で開かれます。そのため、開けない保存領域の場合は、その時点で型付きのエラーが発生します。
 
 ### セッションの作成と管理 {#create-and-manage-sessions}
 
 ```python
+from persistence.conversation.sessions import NewSession
+
 # Create a new session
-db.create_session(
+store.sessions.create(NewSession(
     session_id="sess_abc123",
     source="cli",
     model="anthropic/claude-sonnet-4.6",
     user_id="user_1",
     parent_session_id=None,  # or previous session ID for lineage
-)
+))
 
 # End a session
-db.end_session("sess_abc123", end_reason="user_exit")
+store.sessions.end("sess_abc123", "user_exit")
 
 # Reopen a session (clear ended_at/end_reason)
-db.reopen_session("sess_abc123")
+store.sessions.reopen("sess_abc123")
 ```
 
 ### メッセージの保存 {#store-messages}
 
 ```python
-msg_id = db.append_message(
-    session_id="sess_abc123",
+from persistence.conversation.messages import NewMessage
+
+msg_id = store.messages.append("sess_abc123", NewMessage(
     role="assistant",
     content="Here's the answer...",
-    tool_calls=[{"id": "call_1", "function": {"name": "terminal", "arguments": "{}"}}],
+    tool_calls=({"id": "call_1", "function": {"name": "terminal", "arguments": "{}"}},),
     token_count=150,
     finish_reason="stop",
     reasoning="Let me think about this...",
-)
+))
 ```
 
 ### メッセージの取り出し {#retrieve-messages}
 
 ```python
-# Raw messages with all metadata
-messages = db.get_messages("sess_abc123")
+# Stored rows with all metadata (TranscriptRow records; as_wire_row() gives the dict)
+rows = store.messages.read_transcript("sess_abc123")
 
 # OpenAI conversation format (for API replay)
-conversation = db.get_messages_as_conversation("sess_abc123")
+conversation = [m.as_openai_message() for m in store.messages.read_conversation("sess_abc123")]
 # Returns: [{"role": "user", "content": "..."}, {"role": "assistant", ...}]
 ```
+
+`TranscriptRead` と `ConversationRequest`（同じモジュール）を使うと、どの表示で読むか（有効な行、表示用の行、全行）、どのページを読むか、圧縮の系譜を根元から先端まで読むかどうかを選べます。
 
 ### セッションのタイトル {#session-titles}
 
 ```python
-# Set a title (must be unique among non-NULL titles)
-db.set_session_title("sess_abc123", "Fix Docker Build")
+# Set a title (must be unique among non-NULL titles; TitleConflict otherwise)
+store.sessions.set_title("sess_abc123", "Fix Docker Build")
 
 # Resolve by title (returns most recent in lineage)
-session_id = db.resolve_session_by_title("Fix Docker Build")
+session_id = store.sessions.resolve_by_title("Fix Docker Build")
 
 # Auto-generate next title in lineage
-next_title = db.get_next_title_in_lineage("Fix Docker Build")
+next_title = store.sessions.next_title_in_lineage("Fix Docker Build")
 # Returns: "Fix Docker Build #2"
 ```
 
 ## 全文検索 {#full-text-search}
 
-`search_messages()` メソッドは FTS5 のクエリ構文に対応しており、利用者が
-入力した文字列は自動で無害化されます。
+`search` リポジトリの `search_messages()` は FTS5 のクエリ構文に対応しており、利用者が入力した文字列は自動で無害化されます。
 
 ### 基本の検索 {#basic-search}
 
 ```python
-results = db.search_messages("docker deployment")
+hits = store.search.search_messages("docker deployment")
 ```
 
 ### FTS5 のクエリ構文 {#fts5-query-syntax}
@@ -491,24 +507,24 @@ results = db.search_messages("docker deployment")
 
 ```python
 # Search only CLI sessions
-results = db.search_messages("error", source_filter=["cli"])
+hits = store.search.search_messages("error", source_filter=["cli"])
 
 # Exclude gateway sessions
-results = db.search_messages("bug", exclude_sources=["telegram", "discord"])
+hits = store.search.search_messages("bug", exclude_sources=["telegram", "discord"])
 
 # Search only user messages
-results = db.search_messages("help", role_filter=["user"])
+hits = store.search.search_messages("help", role_filter=["user"])
 ```
 
 ### 検索結果の形式 {#search-results-format}
 
-結果には次が含まれます。
-- `id`、`session_id`、`role`、`timestamp`
-- `snippet` — FTS5 が作る抜粋。一致部分に `>>>match<<<` の印が付きます
-- `context` — 一致した前後 1 件ずつのメッセージ（本文は 200 文字で切られます）
-- `source`、`model`、`session_started` — 親セッションから取得
+各ヒットは `SearchHit` の記録（`persistence/conversation/search.py`）で、次の項目を持ちます。
+- `message_id`、`session_id`、`role`、`timestamp`、`tool_name`
+- `snippet`: FTS5 が作る抜粋。一致部分に `>>>match<<<` の印が付きます
+- `context`: 一致の直前のメッセージ、一致したメッセージそのもの、直後のメッセージを `SearchContext` の記録として持ちます（本文は 200 文字で切られます）
+- `source`、`model`、`session_started`: 親セッションから取得
 
-`_sanitize_fts5_query()` メソッドは、次のような際どい入力を処理します。
+SQLite バックエンドの `_sanitize_fts5_query()`（`persistence/sqlite/conversation/_store/search.py`）は、次のような際どい入力を処理します。
 - 対になっていない引用符や特殊文字を取り除く
 - ハイフンを含む語を引用符で囲む（`chat-send` → `"chat-send"`）
 - 末尾に残った論理演算子を取り除く（`hello AND` → `hello`）
@@ -585,21 +601,27 @@ LIMIT 10;
 ## 書き出しと後始末 {#export-and-cleanup}
 
 ```python
-# Export a single session with messages
-data = db.export_session("sess_abc123")
+from hermes_constants import get_hermes_dir
+from persistence.conversation.messages import ReplaceMode
 
-# Export all sessions (with messages) as list of dicts
-all_data = db.export_all(source="cli")
+# The profile's retained native inputs, removed with the sessions that hold them.
+media_root = str((get_hermes_dir("cache/documents", "document_cache") / "native-inputs").resolve())
 
-# Delete old sessions (only ended sessions)
-deleted_count = db.prune_sessions(older_than_days=90)
-deleted_count = db.prune_sessions(older_than_days=30, source="telegram")
+# Export a single session with messages (SessionExport: .session row, .messages)
+export = store.maintenance.export_session("sess_abc123")
+
+# Export all sessions (with messages)
+all_exports = store.maintenance.export_all(source="cli")
+
+# Delete old sessions (only ended sessions); returns PruneResult(count, deleted_ids)
+result = store.maintenance.prune_sessions(older_than_days=90, media_root=media_root)
+result = store.maintenance.prune_sessions(older_than_days=30, source="telegram", media_root=media_root)
 
 # Clear messages but keep the session record
-db.clear_messages("sess_abc123")
+store.messages.replace_transcript("sess_abc123", [], ReplaceMode.DESTRUCTIVE)
 
-# Delete session and all messages
-db.delete_session("sess_abc123")
+# Delete session and all messages; returns the removed ids
+store.sessions.delete("sess_abc123", media_root=media_root)
 ```
 
 ## データベースの置き場所 {#database-location}

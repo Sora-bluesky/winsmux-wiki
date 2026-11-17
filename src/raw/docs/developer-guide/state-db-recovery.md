@@ -2,7 +2,7 @@
 title: "state.db の復旧"
 description: "FTS インデックスやファイルそのものが壊れたときに、Hermes が state.db をどう復旧するか"
 upstream_path: developer-guide/state-db-recovery.md
-upstream_blob: c33820b54605d34f661069de0484b666d6b7bf27
+upstream_blob: cb70aaae1e7af943e51e2b78e2cccbc8abdfae91
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/state-db-recovery
 ---
@@ -22,7 +22,7 @@ sources:
 
 ## FTS が壊れているときの稼働中の挙動 {#live-behavior-when-fts-is-corrupt}
 
-FTS への書き込みや検索で破損系のエラーが報告されると、`SessionDB` は次のように動きます。
+FTS への書き込みや検索で破損系のエラーが報告されると、SQLite ストアは次のように動きます。
 
 1. 永続的な `fts_stale` マーカーを記録します。
 2. 同じトランザクション内で、FTS の同期トリガーを削除します。
@@ -30,7 +30,7 @@ FTS への書き込みや検索で破損系のエラーが報告されると、`
 4. 検索は、`LIKE` によるフォールバックで正本の行から返します。
 
 失敗した稼働中の処理が `FTS5('rebuild')` を実行することはありません。復旧を誰が担当するかは
-これまでと変わりません。後で `SessionDB` を開いたときに、プロセス間の入場ロックと
+これまでと変わりません。後でストアを開き直したときに、プロセス間の入場ロックと
 他プロセス保持者の確認を経たうえで再構築することがあります。その確認付きの再構築が
 実行できない場合は、FTS は切り離されたまま、正本への書き込みは使える状態が続き、
 `hermes doctor` が明示的な修復コマンドを案内します。
@@ -39,7 +39,7 @@ FTS への書き込みや検索で破損系のエラーが報告されると、`
 
 稼働中の書き込みで、FTS 由来ではない素の `SQLITE_CORRUPT` / `SQLITE_NOTADB`（`database
 disk image is malformed`、`file is not a database`）が報告された場合、損傷は正本の B-tree、
-スキーマ、またはフリーリストにあります。このとき `SessionDB` はそのハンドルを隔離します（`StateDbCorruptError`）。
+スキーマ、またはフリーリストにあります。このときストアはそのハンドルを隔離します（`StoreQuarantined`。SQLite バックエンドの内部では `StateDbCorruptError`）。
 
 1. 失敗した書き込みは型付きのエラーをそのまま上に伝え、やり直しはしません。
 2. そのハンドルでの以降の書き込みは、ファイルに触れずに即座に失敗します。

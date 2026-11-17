@@ -2,7 +2,7 @@
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: 5cae84a60fb2adcacd56582e9302f5dd8f5b21a2
+upstream_blob: 685622323bcc2ef175c56e0536fe90ffd5414b8d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -129,7 +129,7 @@ class MyMemoryProvider(MemoryProvider):
 | `hermes_home` | 有効なプロファイルの保存先ディレクトリ。 |
 | `platform` | セッションの利用面。`cli`、`gui`、`acp`、`telegram` など。 |
 | `session_title` | 保存されているセッションのタイトル（ある場合）。表示用のラベルが、利用者の選んだ識別名とは限りません。 |
-| `session_title_source` | 保存されているタイトルの出どころ（ある場合）。`derived`、`llm`、`user` のいずれか。自動で付いたタイトルを、明示的な識別名の指定と取り違えないでください。出どころがなければ、プロバイダーは従来の挙動のままです。共通の定数は `hermes_state_common.py` にあります。 |
+| `session_title_source` | 保存されているタイトルの出どころ（ある場合）。`derived`、`llm`、`user` のいずれか。自動で付いたタイトルを、明示的な識別名の指定と取り違えないでください。出どころがなければ、プロバイダーは従来の挙動のままです。値は `persistence.conversation.sessions.TitleSource` で定義されています。 |
 | `cwd` | `AIAgent(cwd=...)` で渡された空でない論理ワークスペース。プロバイダーの初期化より前から使えます。`None` や空文字列のときは含まれません。 |
 | `gateway_session_key` | チャットごとにセッションを分けるための、メッセージングのチャットの安定した識別子。 |
 | `user_id`, `user_id_alt`, `user_name`, `chat_id` | ゲートウェイの識別情報。ある場合に含まれます。 |

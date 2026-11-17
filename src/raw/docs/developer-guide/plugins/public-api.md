@@ -2,7 +2,7 @@
 title: "プラグインの公開 API"
 description: "プラグインが import してよい Hermes のモジュールと名前の一覧です。それ以外の Hermes の import には hermes plugins validate が警告を出します"
 upstream_path: developer-guide/plugins/public-api.md
-upstream_blob: 57ce269c200efafd139f78f84b70a99fa07be58f
+upstream_blob: 92e698e2b29f58a3142efd151248fffeca9afedb
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/public-api
 ---
@@ -60,7 +60,41 @@ sources:
 | `hermes_cli.plugin_provider_requests` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `hermes_constants` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `hermes_platform` | モジュール全体 | developer-guide / plugins のドキュメント |
-| `hermes_state` | モジュール全体 | developer-guide / plugins のドキュメント |
+| `hermes_state` | `AsyncSessionDB` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `DEFAULT_DB_PATH` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `DeletedWalGenerationError` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `SessionCompressionInProgressError` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `SessionDB` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `SessionExportTooLargeError` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `SessionResumeTooLargeError` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `StateDbCorruptError` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `StateDbReplacedError` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `WriterMutexTimeout` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `apply_database_pragmas` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `apply_wal_with_fallback` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `classify_persistence_error` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `divert_session_transcript_jsonl` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `format_session_db_unavailable` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `get_hermes_home` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `get_last_init_error` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `holder_pid_checkable` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `is_malformed_db_error` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `is_sqlite_lock_error` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `maintain_after_commit` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `make_user_dir` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `mkdir_under_hermes_home` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `note_read_pool_exhausted` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `preflight_db_writability` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `read_only_db_uri` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `resolved_max_export_messages` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `resolved_max_resume_messages` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `storage_corrupt_reason` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `storage_state` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `write_site` | developer-guide / plugins のドキュメント |
+| `hermes_state` | `writer_mutex_until` | developer-guide / plugins のドキュメント |
+| `hermes_state_registry` | `acquire` | developer-guide / plugins のドキュメント |
+| `hermes_state_registry` | `release` | developer-guide / plugins のドキュメント |
+| `hermes_state_registry` | `release_or_close` | developer-guide / plugins のドキュメント |
 | `plugins.plugin_storage` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `plugins.plugin_utils` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `pm` | モジュール全体 | developer-guide / plugins のドキュメント |
@@ -70,6 +104,27 @@ sources:
 | `tools.browser_supervisor_capture` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `tools.computer_use.backend` | モジュール全体 | developer-guide / plugins のドキュメント |
 | `tools.registry` | モジュール全体 | developer-guide / plugins のドキュメント |
+| `persistence` | モジュール全体 | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `persistence.conversation.messages` | モジュール全体 | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `persistence.conversation.search` | モジュール全体 | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `persistence.conversation.sessions` | モジュール全体 | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `persistence.housekeeping.maintenance` | モジュール全体 | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `persistence.housekeeping.state_meta` | モジュール全体 | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `persistence_assembly` | モジュール全体 | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `sqlite_support` | `apply_wal_with_fallback` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `sqlite_support` | `apply_database_pragmas` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `sqlite_support` | `preflight_db_writability` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `sqlite_support` | `read_only_db_uri` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `storage_errors` | `classify_persistence_error` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `storage_errors` | `is_sqlite_lock_error` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `storage_errors` | `is_malformed_db_error` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `session_rescue` | `divert_session_transcript_jsonl` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `storage_user_copy` | `format_session_db_unavailable` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `storage_user_copy` | `get_last_init_error` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `storage_limits` | `resolved_max_export_messages` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `storage_limits` | `resolved_max_resume_messages` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `process_identity` | `holder_pid_checkable` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
+| `hermes_dir_acl` | `make_user_dir` | developer-guide/plugins/index.md § `hermes_state` は非推奨：代わりに使うストレージインターフェース |
 | `agent.context_references` | モジュール全体 | PluginContext（hermes_cli/plugins_context.py） |
 | `agent.plugin_llm` | モジュール全体 | PluginContext（hermes_cli/plugins_context.py） |
 | `agent.transcription_provider` | モジュール全体 | PluginContext（hermes_cli/plugins_context.py） |
@@ -132,6 +187,8 @@ sources:
 | `hermes_yaml` | `safe_load` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
 | `hermes_yaml` | `safe_dump` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
 | `hermes_cli.urllib_security` | `open_credentialed_url` | plugins/index.md § 認証情報付きの HTTP リクエストを、リダイレクトで漏らさずに送る |
+| `agent.retry_utils` | `parse_retry_after_seconds` | plugins/index.md § Retry-After ヘッダーを Hermes と同じ方法で読み取る |
+| `hermes_cli.version_info` | `hermes_user_agent` | plugins/index.md § Hermes の User-Agent ヘッダーを送る |
 | `hermes_cli.chat_launch` | `hermes_command` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |
 | `hermes_cli.chat_launch` | `print_exit_summary` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |
 | `hermes_cli.gateway_chat` | `shell_client_env` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |

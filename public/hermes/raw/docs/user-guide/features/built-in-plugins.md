@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "同梱のプラグイン"
 description: "Hermes Agent に最初から入っていて、節目ごとのフックで自動的に動くプラグイン群 — disk-cleanup とその仲間たち"
 upstream_path: user-guide/features/built-in-plugins.md
-upstream_blob: 43a033d62ef4a64d7776b7dd90305c1428b943a5
+upstream_blob: eaecd518f9165671271a514ceea757bebfd3e27e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins
 ---
@@ -157,7 +157,9 @@ hermes plugins install langfuse
 
 ### NeMo Relay の本体組み込み（移行にあたって） {#nemo-relay-native-integration-migration-note}
 
-NeMo Relay は、もう Hermes に同梱されるプラグインではありません。`hermes plugins enable observability/nemo_relay` は実行しないでください。Relay のセッション、ターン、LLM、ツールの流れは Hermes 本体が受け持つようになりました。
+NeMo Relay は、もう Hermes に同梱されるプラグインを使いません。Hermes が直接対応しているので、`hermes plugins enable observability/nemo_relay` は実行しないでください。
+
+準備のしかた、プラグインの設定、トレースの書き出しについては [NeMo Relay のガイド](/hermes/docs/integrations/nemo-relay/) を見てください。
 
 Relay の中間処理や書き出しは、Relay の標準的な `plugins.toml` で設定します。Hermes は Relay の利用者ごとの設定（`~/.config/nemo-relay/plugins.toml`）を読み、続いて端末全体のシステム設定（`/etc/nemo-relay/plugins.toml`、Windows では `%ProgramData%\nemo-relay\plugins.toml`）を読みます。Hermes を立ち上げる前に `HERMES_NEMO_RELAY_PLUGINS_TOML` を設定するのは、利用者ごとの設定の代わりに特定のファイルを使いたいときだけです。その場合もシステム設定のほうが優先されます。この決まりは、その Hermes のプロセスが抱えるすべてのプロファイルに一括で効きます。どのファイルが使われているかは `hermes doctor` で確かめられます。ATOF、ATIF、OpenTelemetry の選び方は [NeMo Relay observability configuration](https://docs.nvidia.com/nemo/relay/configure-plugins/observability/about) を見てください。
 
@@ -230,7 +232,7 @@ gateway:
 **加わるもの:**
 
 - ブラウザの自動操作で Meet の URL に入る、画面を持たない仮想の参加者
-- 設定された音声認識の提供元による、会議の音声のその場での書き起こし
+- Meet 自体のライブ字幕をもとにした、その場での書き起こし（ボットは会議の音声そのものを聞き取らないので、音声認識の料金はかかりません。ただし字幕には取りこぼしがあり、英語に偏りがちです）
 - 通話に入り、書き起こしを随時取り出し、聞いた内容をもとに動くための `meet_join`／`meet_status`／`meet_transcript`／`meet_leave`／`meet_say` の道具立て
 - 会議のあとに残る成果物（書き起こし、状態）。`~/.hermes/workspace/meetings/<meeting_id>/` に保存されます
 

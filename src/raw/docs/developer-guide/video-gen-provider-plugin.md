@@ -2,7 +2,7 @@
 title: "動画生成プロバイダプラグイン"
 description: "Hermes Agent 向けの動画生成バックエンドプラグインを作る方法"
 upstream_path: developer-guide/video-gen-provider-plugin.md
-upstream_blob: 784a9107fd2e234c8f5d8e7803fa34d1617583ff
+upstream_blob: 1655c39cbed26975e0b558677eb922dabf0964d2
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/video-gen-provider-plugin
 ---
@@ -184,6 +184,8 @@ requires_env:
 ここに `model` のパラメータが無いのは意図的です。どのバックエンドとモデルを使うかは利用者の設定（`video_gen.provider` と `video_gen.model`）であって、エージェントが選ぶものではありません。作成した `generate()` には今までどおり `model=` が渡りますが、その値はツール層が解決した、設定どおりのモデルです。
 
 このうちどれが実際に効くかは、プロバイダの `capabilities()` が伝えます。エージェントは使用中のバックエンドの対応内容をツール説明として受け取り、`hermes tools` でバックエンドを変えると、その説明もその場で組み直されます。
+
+ローカルの画像パスが `generate()` にそのまま届くことはありません。ツール層が Hermes の安全確認つきのリゾルバで画像を読み込み、`data:image/...;base64,...` 形式の URL にして渡します（HTTPS の URL や、もともと `data:` 形式の URL は手を加えずにそのまま届きます）。API 側でリクエスト本文の大きさに上限がある場合は、`capabilities()` から `"max_inline_image_chars": N` を返してください。ツール層が、埋め込む画像を合計 N 文字に収まるまで縮小します。指定しなければ、画像は元の大きさのまま送られます。
 
 ## モデルファミリーとエンドポイントの振り分け（FAL のやり方） {#model-families-and-endpoint-routing-the-fal-pattern}
 

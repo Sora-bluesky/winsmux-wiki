@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ダッシュボードを広げる"
 description: "Hermes の Web ダッシュボード向けにテーマとプラグインを作ります — 配色、書体、レイアウト、独自のタブ、外枠のスロット、ページごとのスロット、そして裏側の API ルート"
 upstream_path: user-guide/features/extending-the-dashboard.md
-upstream_blob: 51d8ab83313ea64cd70d4dbdea30cb523a5556b8
+upstream_blob: 80342fd0994ef53c61a06b93a7480e57ffe3e90b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/extending-the-dashboard
 ---
@@ -765,23 +765,19 @@ I/O を使うか、止まる処理を `await asyncio.to_thread(...)` でルー�
 
 #### Hermes の内側に触れる {#accessing-hermes-internals}
 
-裏側のルートはダッシュボードの処理の中で動くので、hermes-agent のコードから直接読み込めます。
+裏側のルートはダッシュボードの処理の中で動くので、hermes-agent のコードから直接読み込めます。セッションの履歴は、保存の仕組みの窓口（`persistence_assembly`。[セッションの保存](/hermes/docs/developer-guide/session-storage/#common-operations)をご覧ください）を通して読み取ります。読み取り用の取っ手が保存先を新しく作ったり、移行したりすることはありません。また、ふつうの `def` のルートにしておけば、読み取りがイベントループを止めずに済みます。
 
 ```python
 from fastapi import APIRouter
-from hermes_state import SessionDB
 from hermes_cli.config import load_config
+from persistence_assembly import open_persistence_reader, profile_scope
 
 router = APIRouter()
 
 @router.get("/session-count")
-async def session_count():
-    db = SessionDB()
-    try:
-        count = len(db.list_sessions(limit=9999))
-        return {"count": count}
-    finally:
-        db.close()
+def session_count():
+    with open_persistence_reader(profile_scope().profile_dir) as store:
+        return {"count": store.sessions.count_sessions()}
 
 @router.get("/config-snapshot")
 async def config_snapshot():

@@ -153,6 +153,7 @@ Hermes Agent 0.23.2
 - [guides/xai-grok-oauth（日本語版）](https://wiki.winsmux.dev/hermes/docs/guides/xai-grok-oauth/)
 - [integrations/buzz（日本語版）](https://wiki.winsmux.dev/hermes/docs/integrations/buzz/)
 - [integrations（日本語版）](https://wiki.winsmux.dev/hermes/docs/integrations/)
+- [integrations/nemo-relay（日本語版）](https://wiki.winsmux.dev/hermes/docs/integrations/nemo-relay/)
 - [integrations/nous-portal（日本語版）](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 - [integrations/providers（日本語版）](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
 - [reference/cli-commands（日本語版）](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
@@ -607,6 +608,7 @@ Hermes Agent 0.23.2
 - https://wiki.winsmux.dev/hermes/raw/docs/guides/xai-grok-oauth.md
 - https://wiki.winsmux.dev/hermes/raw/docs/integrations/buzz.md
 - https://wiki.winsmux.dev/hermes/raw/docs/integrations/index.md
+- https://wiki.winsmux.dev/hermes/raw/docs/integrations/nemo-relay.md
 - https://wiki.winsmux.dev/hermes/raw/docs/integrations/nous-portal.md
 - https://wiki.winsmux.dev/hermes/raw/docs/integrations/providers.md
 - https://wiki.winsmux.dev/hermes/raw/docs/reference/cli-commands.md

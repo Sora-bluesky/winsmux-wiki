@@ -2,7 +2,7 @@
 title: "プラグインカタログへの登録申請"
 description: "Hermes プラグインカタログの登録ガイドライン全文です。申請前に確かめること、すべての掲載項目が従うルール、レビュアーが見る点をまとめています"
 upstream_path: developer-guide/plugins/catalog-submission.md
-upstream_blob: e42dd3c3352e420c694f4680034831c6b1520f97
+upstream_blob: 95c4033c2cab9ff639a684ff35f096fec0787933
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission
 ---
@@ -65,9 +65,9 @@ Hermes プラグインの一覧です。掲載されていること自体が信�
    お断りします。ルール3とルール9に関わる問題は、バグ修正の依頼ではなくお断りになります。
    掲載するには、プラグインの設計そのものを変える必要があるからです。
 
-`/docs/plugins/<name>` にできるプラグインのページは、同じファイルから作られます。
-既定では固定したコミットの README がそこに表示され、`screenshots:` がギャラリーを
-埋めます。別に管理する掲載情報はありません。
+`/marketplace/<name>` にできるプラグインの[マーケットプレイス](https://hermes-agent.nousresearch.com/marketplace)のページは、
+同じファイルから作られます。既定では固定したコミットの README がそこに表示され、
+`screenshots:` がギャラリーを埋めます。別に管理する掲載情報はありません。
 
 ## 登録ルール {#admission-rules}
 

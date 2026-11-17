@@ -2,7 +2,7 @@
 title: "外部サービス連携"
 description: ""
 upstream_path: integrations/index.md
-upstream_blob: 2a44cef7cf775b454755a68e1d00cb725b12d5c3
+upstream_blob: 7af3a5cd685365e4508919e4447a2a6540dab600
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations
 ---
@@ -125,6 +125,10 @@ Hermes は 27 以上のメッセージングサービスでボットとして動
 
 - **[プラグインの仕組み](/hermes/docs/user-guide/features/plugins/)** — 本体のコードに手を入れずに、独自のツール・ライフサイクルのフック・コマンドを足せます。プラグインは `~/.hermes/plugins/`、プロジェクト内の `.hermes/plugins/`、pip で入れたエントリポイントから読み込まれます。
 - **[プラグインを作る](/hermes/docs/developer-guide/plugins/)** — ツール・フック・コマンドを備えた Hermes のプラグインを、順を追って作っていく手引きです。
+
+## 動作の観測 {#observability}
+
+- **[NeMo Relay](/hermes/docs/integrations/nemo-relay/)** — モデルやツールの呼び出し内容を確認したり、ATOF や ATIF の形式でデータを書き出したり、OpenTelemetry のトレースを送ったりできます。Relay のプラグインの設定もここで行います。
 
 ## 学習と評価 {#training-evaluation}
 

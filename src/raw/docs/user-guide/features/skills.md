@@ -2,7 +2,7 @@
 title: "スキルの仕組み"
 description: "必要なときだけ読み込む知識の文書 — 段階的な開示、エージェント管理のスキル、スキルのハブ"
 upstream_path: user-guide/features/skills.md
-upstream_blob: 2b555e553c7ec140d4b3d4a0be3ba5a6448c2854
+upstream_blob: 79aef55a9ce464355e5c4f1a242a08ac665ed4b0
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/skills
 ---
@@ -20,13 +20,13 @@ Hermes に**外部のスキルのディレクトリ**を教えることもでき
 - [同梱スキル一覧](/hermes/docs/reference/skills-catalog/)
 - [公式の追加スキル一覧](/hermes/docs/reference/optional-skills-catalog/)
 
-## Web サイトから入れる {#install-from-the-website}
+## Desktop のインストールリンク {#install-from-the-website}
 
-公開されている [Skills Hub](https://hermes-agent.nousresearch.com/skills) では、インストールできるカードそれぞれに **Install in Hermes**
-のボタンがあります。押すと、URL エンコードされ提供元を明示したスキルの指定付きで Hermes Desktop が開きます。
-追加スキルなら `official/...`、ClawHub なら `clawhub/...`、同梱のスキルなら紛らわしい名前だけの指定ではなく
-リポジトリ内のパスをはっきり書いた指定です。カードに載っている
-CLI のコマンドも、同じ指定を使います。
+[Hermes Marketplace](https://hermes-agent.nousresearch.com/marketplace) のスキルのカードには **Install in Hermes**
+のボタンがあり、押すとこうしたリンクの1つが開きます。Hermes Desktop が受け付けるインストールリンクには、URL エンコードされ提供元を明示したスキルの
+指定が入ります。追加スキルなら `official/...`、ClawHub なら `clawhub/...`、同梱のスキルなら紛らわしい名前だけの指定ではなく
+リポジトリ内のパスをはっきり書いた指定です。
+`hermes skills install <identifier>` でスキルを入れるときも、同じ指定を使います。
 
 ```text
 hermes://skill/install?identifier=official%2Fsecurity%2F1password
@@ -41,7 +41,8 @@ Desktop は **Install “skill-name”?** と表示し、**Source**（提供元�
 別のプロファイルを選んだりすることはできません。開いている会話には、次のメッセージのときに新しいスキルのことが伝えられます。
 
 `skill/install` の経路を使うには、更新した Desktop が必要です。アプリが入っていない、
-またはリンクが認識されない場合は、カードを広げて CLI のインストールコマンドをコピーしてください。
+またはリンクが認識されない場合は、同じく提供元を明示した指定で
+`hermes skills install <identifier>` を実行すると、スキルを入れられます。
 
 
 ## まっさらな状態から始める {#starting-with-a-blank-slate}
@@ -815,7 +816,7 @@ hermes skills tap add myorg/skills-repo
 [skills.sh のスキーマ](https://skills.sh/schemas/skills.sh.schema.json)に沿った
 `skills.sh.json` を置けます。その
 `groupings`（それぞれ `title` とスキル名の並びを持ちます）が索引を作るときに読まれ、
-[スキルのハブ](https://hermes-agent.nousresearch.com/docs)のページに出るカテゴリの
+[Hermes Marketplace](https://hermes-agent.nousresearch.com/marketplace) に出るカテゴリの
 ラベルになります。タグからの推測に頼らずに済むわけです。これは特定の tap 向けではありません。
 このファイルを置いた tap はどれも本物の分類を得られ、Hermes 側の変更は要りません。
 
