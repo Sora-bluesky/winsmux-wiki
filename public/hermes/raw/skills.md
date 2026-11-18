@@ -14,7 +14,7 @@ raw: /hermes/raw/skills.md
 
 公式の skill ページ 186 件の索引です。各行のリンクは日本語版ページへ、正本は各ページの「正本:」リンクから公式へ飛べます。
 
-上流 `3f5a11f`（2026-11-17）時点。この一覧は上流の docs から機械生成しています。
+上流 `4ae451d`（2026-11-18）時点。この一覧は上流の docs から機械生成しています。
 
 ## 最初から入っている（44）
 
@@ -35,7 +35,7 @@ raw: /hermes/raw/skills.md
 | [Baoyu Infographic](/hermes/docs/user-guide/skills/bundled/creative/creative-baoyu-infographic/) | Infographics: 21 layouts x 21 styles (信息图, 可视化) | 2026-09-29 |
 | [Claude Design](/hermes/docs/user-guide/skills/bundled/creative/creative-claude-design/) | Design one-off HTML artifacts (landing, deck, prototype) | 2026-10-28 |
 | [Humanizer](/hermes/docs/user-guide/skills/bundled/creative/creative-humanizer/) | Humanize text: strip AI-isms and add real voice | 2026-09-20 |
-| [Manim Video](/hermes/docs/user-guide/skills/bundled/creative/creative-manim-video/) | Manim CE animations: 3Blue1Brown math/algo videos | 2026-09-20 |
+| [Manim Video](/hermes/docs/user-guide/skills/bundled/creative/creative-manim-video/) | Manim CE animations: 3Blue1Brown math/algo videos | 2026-11-18 |
 | [P5Js](/hermes/docs/user-guide/skills/bundled/creative/creative-p5js/) | p5.js sketches: gen art, shaders, interactive, 3D | 2026-09-20 |
 | [Popular Web Designs](/hermes/docs/user-guide/skills/bundled/creative/creative-popular-web-designs/) | 54 real design systems (Stripe, Linear, Vercel) as HTML/CSS | 2026-10-28 |
 | [Songwriting And Ai Music](/hermes/docs/user-guide/skills/bundled/creative/creative-songwriting-and-ai-music/) | Songwriting craft and Suno AI music prompts | 2026-09-20 |
@@ -61,7 +61,7 @@ raw: /hermes/raw/skills.md
 | [Dogfood](/hermes/docs/user-guide/skills/bundled/software-development/software-development-dogfood/) | Exploratory QA of web apps: find bugs, evidence, reports | 2026-10-23 |
 | [Github](/hermes/docs/user-guide/skills/bundled/software-development/software-development-github/) | GitHub via gh CLI: PRs, issues, reviews, repos, auth | 2026-09-20 |
 | [Requesting Code Review](/hermes/docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review/) | Pre-commit review: security scan, quality gates, auto-fix | 2026-09-20 |
-| [Simplify Code](/hermes/docs/user-guide/skills/bundled/software-development/software-development-simplify-code/) | Parallel 4-agent cleanup of recent code changes | 2026-09-20 |
+| [Simplify Code](/hermes/docs/user-guide/skills/bundled/software-development/software-development-simplify-code/) | Parallel 4-agent cleanup of recent code changes | 2026-11-18 |
 | [Spike](/hermes/docs/user-guide/skills/bundled/software-development/software-development-spike/) | Throwaway experiments to validate an idea before build | 2026-09-20 |
 | [Systematic Debugging](/hermes/docs/user-guide/skills/bundled/software-development/software-development-systematic-debugging/) | 4-phase root cause debugging: understand bugs before fixing | 2026-09-20 |
 | [Test Driven Development](/hermes/docs/user-guide/skills/bundled/software-development/software-development-test-driven-development/) | TDD: enforce RED-GREEN-REFACTOR, tests before code | 2026-09-20 |
@@ -112,7 +112,7 @@ raw: /hermes/raw/skills.md
 | [Simple English](/hermes/docs/user-guide/skills/optional/creative/creative-simple-english/) | Rewrite text to ASD-STE100 Simplified Technical English | 2026-09-20 |
 | [Sketch](/hermes/docs/user-guide/skills/optional/creative/creative-sketch/) | Throwaway HTML mockups: 2-3 design variants to compare | 2026-10-23 |
 | [Social Media Content Calendar](/hermes/docs/user-guide/skills/optional/creative/creative-social-media-content-calendar/) | Plan multi-platform social campaigns: briefs to posting | 2026-09-20 |
-| [System Atlas](/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/) | Build explorable isometric architecture atlases as HTML | 2026-10-04 |
+| [System Atlas](/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/) | Build explorable isometric architecture atlases as HTML | 2026-11-18 |
 | [Tldraw Offline](/hermes/docs/user-guide/skills/optional/creative/creative-tldraw-offline/) | Drive and script tldraw offline canvases with an agent | 2026-09-20 |
 | [Unreal Mcp](/hermes/docs/user-guide/skills/optional/creative/creative-unreal-mcp/) | Automate Unreal Engine editor scenes, actors, and renders | 2026-10-04 |
 | [Jupyter Notebook](/hermes/docs/user-guide/skills/optional/data-science/data-science-jupyter-notebook/) | Iterative Python via live Jupyter kernel (hamelnb) | 2026-09-20 |
@@ -120,9 +120,9 @@ raw: /hermes/raw/skills.md
 | [Docker Management](/hermes/docs/user-guide/skills/optional/devops/devops-docker-management/) | Manage Docker containers, images, volumes, and Compose | 2026-09-20 |
 | [Hermes S6 Container Supervision](/hermes/docs/user-guide/skills/optional/devops/devops-hermes-s6-container-supervision/) | Modify or debug s6 services in the Hermes Docker image | 2026-11-04 |
 | [Inference Sh Cli](/hermes/docs/user-guide/skills/optional/devops/devops-inference-sh-cli/) | Run 150+ AI apps (image, video, LLM) via inference.sh CLI | 2026-09-20 |
-| [Pinggy Tunnel](/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/) | Zero-install localhost tunnels over SSH via Pinggy | 2026-09-20 |
+| [Pinggy Tunnel](/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/) | Zero-install localhost tunnels over SSH via Pinggy | 2026-11-18 |
 | [Setup Wizard Generator](/hermes/docs/user-guide/skills/optional/devops/devops-setup-wizard-generator/) | Generate a bash wizard guiding a human through manual setup | 2026-09-20 |
-| [Watchers](/hermes/docs/user-guide/skills/optional/devops/devops-watchers/) | Poll RSS, JSON APIs, and GitHub with watermark dedup | 2026-09-20 |
+| [Watchers](/hermes/docs/user-guide/skills/optional/devops/devops-watchers/) | Poll RSS, JSON APIs, and GitHub with watermark dedup | 2026-11-18 |
 | [Adversarial Ux Test](/hermes/docs/user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test/) | Roleplay a hostile user to find and triage UX pain points | 2026-09-20 |
 | [Agentmail](/hermes/docs/user-guide/skills/optional/email/email-agentmail/) | Use when an agent needs AgentMail CLI email inboxes | 2026-09-20 |
 | [3 Statement Model](/hermes/docs/user-guide/skills/optional/finance/finance-3-statement-model/) | Build integrated IS/BS/CF financial workbooks in Excel | 2026-10-23 |
@@ -134,12 +134,12 @@ raw: /hermes/raw/skills.md
 | [Polymarket](/hermes/docs/user-guide/skills/optional/finance/finance-polymarket/) | Query Polymarket: markets, prices, orderbooks, history | 2026-09-20 |
 | [Pptx Author](/hermes/docs/user-guide/skills/optional/finance/finance-pptx-author/) | Build PowerPoint decks headless with python-pptx | 2026-11-03 |
 | [Stocks](/hermes/docs/user-guide/skills/optional/finance/finance-stocks/) | Stock quotes, history, search, compare, crypto via Yahoo | 2026-09-20 |
-| [Minecraft Modpack Server](/hermes/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server/) | Host modded Minecraft servers (CurseForge, Modrinth) | 2026-09-20 |
-| [Pokemon Player](/hermes/docs/user-guide/skills/optional/gaming/gaming-pokemon-player/) | Play Pokemon via headless emulator + RAM reads | 2026-09-20 |
+| [Minecraft Modpack Server](/hermes/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server/) | Host modded Minecraft servers (CurseForge, Modrinth) | 2026-11-18 |
+| [Pokemon Player](/hermes/docs/user-guide/skills/optional/gaming/gaming-pokemon-player/) | Play Pokemon via headless emulator + RAM reads | 2026-11-18 |
 | [Fitness Nutrition](/hermes/docs/user-guide/skills/optional/health/health-fitness-nutrition/) | Workout planning, macros, and body metrics via wger/USDA | 2026-09-20 |
 | [Neuroskill Bci](/hermes/docs/user-guide/skills/optional/health/health-neuroskill-bci/) | Use live BCI cognitive and mood state from NeuroSkill | 2026-09-20 |
 | [Fastmcp](/hermes/docs/user-guide/skills/optional/mcp/mcp-fastmcp/) | Build, test, and deploy Python MCP servers | 2026-09-20 |
-| [Mcp Oauth Remote Gateway](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/) | Manual OAuth for remote MCP servers on headless gateways | 2026-09-20 |
+| [Mcp Oauth Remote Gateway](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/) | Manual OAuth for remote MCP servers on headless gateways | 2026-11-18 |
 | [Mcporter](/hermes/docs/user-guide/skills/optional/mcp/mcp-mcporter/) | List, auth, and call MCP servers/tools from the terminal | 2026-09-20 |
 | [Gif Search](/hermes/docs/user-guide/skills/optional/media/media-gif-search/) | Search/download GIFs from Tenor via curl + jq | 2026-10-28 |
 | [Songsee](/hermes/docs/user-guide/skills/optional/media/media-songsee/) | Audio spectrograms/features (mel, chroma, MFCC) via CLI | 2026-10-28 |
@@ -178,17 +178,17 @@ raw: /hermes/raw/skills.md
 | [Shop](/hermes/docs/user-guide/skills/optional/productivity/productivity-shop/) | Shop catalog search, checkout, order tracking, returns | 2026-11-03 |
 | [Siyuan](/hermes/docs/user-guide/skills/optional/productivity/productivity-siyuan/) | Query and edit a SiYuan knowledge base via its API | 2026-11-03 |
 | [Telephony](/hermes/docs/user-guide/skills/optional/productivity/productivity-telephony/) | Provision Twilio numbers, SMS/MMS, and AI outbound calls | 2026-09-20 |
-| [Bioinformatics](/hermes/docs/user-guide/skills/optional/research/research-bioinformatics/) | Gateway to 400+ genomics and computational biology skills | 2026-09-20 |
+| [Bioinformatics](/hermes/docs/user-guide/skills/optional/research/research-bioinformatics/) | Gateway to 400+ genomics and computational biology skills | 2026-11-18 |
 | [Blogwatcher](/hermes/docs/user-guide/skills/optional/research/research-blogwatcher/) | Monitor blogs and RSS/Atom feeds via blogwatcher-cli tool | 2026-09-05 |
 | [Darwinian Evolver](/hermes/docs/user-guide/skills/optional/research/research-darwinian-evolver/) | Evolve prompts/regex/SQL/code with Imbue's evolution loop | 2026-09-20 |
 | [Domain Intel](/hermes/docs/user-guide/skills/optional/research/research-domain-intel/) | Passive recon of subdomains, SSL certs, WHOIS, and DNS | 2026-09-20 |
 | [Drug Discovery](/hermes/docs/user-guide/skills/optional/research/research-drug-discovery/) | Drug discovery: ChEMBL search, drug-likeness, interactions | 2026-09-20 |
 | [Gitnexus Explorer](/hermes/docs/user-guide/skills/optional/research/research-gitnexus-explorer/) | Serve an interactive codebase knowledge graph web UI | 2026-09-20 |
 | [Llm Wiki](/hermes/docs/user-guide/skills/optional/research/research-llm-wiki/) | Karpathy's LLM Wiki: build/query interlinked markdown KB | 2026-10-28 |
-| [Osint Investigation](/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/) | Follow the money via public records and sanctions data | 2026-09-20 |
+| [Osint Investigation](/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/) | Follow the money via public records and sanctions data | 2026-11-18 |
 | [Parallel Cli](/hermes/docs/user-guide/skills/optional/research/research-parallel-cli/) | Agent-native web search, deep research, and enrichment | 2026-11-03 |
-| [Qmd](/hermes/docs/user-guide/skills/optional/research/research-qmd/) | Hybrid local search over notes, docs, and transcripts | 2026-09-20 |
-| [Research Paper Writing](/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/) | Write ML papers for NeurIPS/ICML/ICLR: design→submit | 2026-09-20 |
+| [Qmd](/hermes/docs/user-guide/skills/optional/research/research-qmd/) | Hybrid local search over notes, docs, and transcripts | 2026-11-18 |
+| [Research Paper Writing](/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/) | Write ML papers for NeurIPS/ICML/ICLR: design→submit | 2026-11-18 |
 | [Rss Feeds](/hermes/docs/user-guide/skills/optional/research/research-rss-feeds/) | Read RSS, Atom, JSON feeds; discover feeds behind a page | 2026-09-20 |
 | [Scrapling](/hermes/docs/user-guide/skills/optional/research/research-scrapling/) | Scrape sites with stealth browsing and Cloudflare bypass | 2026-11-03 |
 | [1Password](/hermes/docs/user-guide/skills/optional/security/security-1password/) | Set up op CLI, sign in, and read or inject secrets | 2026-11-13 |
@@ -199,20 +199,20 @@ raw: /hermes/raw/skills.md
 | [Web Pentest](/hermes/docs/user-guide/skills/optional/security/security-web-pentest/) | Authorized web pentest: recon, proof-based exploits, report | 2026-10-23 |
 | [Openhue](/hermes/docs/user-guide/skills/optional/smart-home/smart-home-openhue/) | Control Philips Hue lights, scenes, rooms via OpenHue CLI | 2026-09-20 |
 | [Reddit Reading](/hermes/docs/user-guide/skills/optional/social-media/social-media-reddit-reading/) | Read Reddit: subreddits, search, threads, users | 2026-10-23 |
-| [Ast Grep](/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/) | AST-aware structural code search and rewrite via ast-grep | 2026-09-20 |
-| [Code Wiki](/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/) | Generate wiki docs + Mermaid diagrams for any codebase | 2026-09-20 |
+| [Ast Grep](/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/) | AST-aware structural code search and rewrite via ast-grep | 2026-11-18 |
+| [Code Wiki](/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/) | Generate wiki docs + Mermaid diagrams for any codebase | 2026-11-18 |
 | [Grill Me](/hermes/docs/user-guide/skills/optional/software-development/software-development-grill-me/) | Adversarial plan interview before implementation | 2026-09-20 |
 | [Hermes Agent Skill Authoring](/hermes/docs/user-guide/skills/optional/software-development/software-development-hermes-agent-skill-authoring/) | Author in-repo SKILL.md files: frontmatter and structure | 2026-10-28 |
 | [Inspecting Hermes Desktop Dom](/hermes/docs/user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom/) | Read the live Hermes desktop DOM/CSS over CDP | 2026-11-06 |
 | [Node Inspect Debugger](/hermes/docs/user-guide/skills/optional/software-development/software-development-node-inspect-debugger/) | Debug Node.js via --inspect + Chrome DevTools Protocol CLI | 2026-11-06 |
 | [Pr Lens](/hermes/docs/user-guide/skills/optional/software-development/software-development-pr-lens/) | Draw code changes as animated architecture/data-flow SVGs | 2026-09-19 |
-| [Python Debugpy](/hermes/docs/user-guide/skills/optional/software-development/software-development-python-debugpy/) | Debug Python: pdb REPL + debugpy remote (DAP) | 2026-10-28 |
+| [Python Debugpy](/hermes/docs/user-guide/skills/optional/software-development/software-development-python-debugpy/) | Debug Python: pdb REPL + debugpy remote (DAP) | 2026-11-18 |
 | [Rest Graphql Debug](/hermes/docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug/) | Debug REST/GraphQL APIs: status codes, auth, schemas, repro | 2026-09-20 |
 | [Subagent Driven Development](/hermes/docs/user-guide/skills/optional/software-development/software-development-subagent-driven-development/) | Execute plans via delegate_task subagents (2-stage review) | 2026-09-20 |
 | [Cloudflare Temporary Deploy](/hermes/docs/user-guide/skills/optional/web-development/web-development-cloudflare-temporary-deploy/) | Deploy a Worker live, no account, via wrangler --temporary | 2026-09-20 |
 | [Har Derived Api Client](/hermes/docs/user-guide/skills/optional/web-development/web-development-har-derived-api-client/) | Record a site's XHR into a HAR, derive an HTTP client | 2026-10-23 |
 | [Page Agent](/hermes/docs/user-guide/skills/optional/web-development/web-development-page-agent/) | Embed an in-page natural-language GUI copilot in web apps | 2026-10-23 |
-| [Publish Site](/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/) | Versioned site deploys to GitHub/Cloudflare/Netlify Pages | 2026-09-20 |
+| [Publish Site](/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/) | Versioned site deploys to GitHub/Cloudflare/Netlify Pages | 2026-11-18 |
 | [Scrollcraft](/hermes/docs/user-guide/skills/optional/web-development/web-development-scrollcraft/) | Premium scroll-driven landing pages; scroll = timeline | 2026-09-13 |
 
 ## その他（1）

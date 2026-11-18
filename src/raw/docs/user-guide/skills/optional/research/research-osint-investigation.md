@@ -2,7 +2,7 @@
 title: "Osint Investigation — 公開記録と制裁データから資金の流れを追う"
 description: "公開記録と制裁データから資金の流れを追う"
 upstream_path: user-guide/skills/optional/research/research-osint-investigation.md
-upstream_blob: 8c03b88a6696a8003520932a94323007839fabd6
+upstream_blob: 2a60a304052088cba1a7ed735255646d094ddb12
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-osint-investigation
 ---
@@ -81,25 +81,25 @@ MIT ライセンスの ShinMegamiBoson/OpenPlanter を下敷きにしつつ、�
 
 ### 1. どの情報源が使えるかを見極める {#1-identify-which-sources-apply}
 
-調査を組み立てる前に、データソースの解説ページに目を通します。
+調査を組み立てる前に、データソースの解説ページに目を通します。まず
+`search_files`（`target="files"`、`pattern="*.md"`、`path="SKILL_DIR/references/sources/"`）で一覧を出し、
+案件に必要なページを `read_file` で読みます。
 
 ```
-ls SKILL_DIR/references/sources/
-
 # Federal financial / regulatory
-cat SKILL_DIR/references/sources/sec-edgar.md       # corporate filings
-cat SKILL_DIR/references/sources/usaspending.md     # federal contracts
-cat SKILL_DIR/references/sources/senate-ld.md       # lobbying
-cat SKILL_DIR/references/sources/ofac-sdn.md        # sanctions
-cat SKILL_DIR/references/sources/icij-offshore.md   # offshore leaks
+SKILL_DIR/references/sources/sec-edgar.md       # corporate filings
+SKILL_DIR/references/sources/usaspending.md     # federal contracts
+SKILL_DIR/references/sources/senate-ld.md       # lobbying
+SKILL_DIR/references/sources/ofac-sdn.md        # sanctions
+SKILL_DIR/references/sources/icij-offshore.md   # offshore leaks
 
 # Identity / property / litigation / archives / news
-cat SKILL_DIR/references/sources/nyc-acris.md       # NYC property records
-cat SKILL_DIR/references/sources/opencorporates.md  # global corporate registry
-cat SKILL_DIR/references/sources/courtlistener.md   # court records (federal + state)
-cat SKILL_DIR/references/sources/wayback.md         # Wayback Machine archives
-cat SKILL_DIR/references/sources/wikipedia.md       # Wikipedia + Wikidata
-cat SKILL_DIR/references/sources/gdelt.md           # global news monitoring
+SKILL_DIR/references/sources/nyc-acris.md       # NYC property records
+SKILL_DIR/references/sources/opencorporates.md  # global corporate registry
+SKILL_DIR/references/sources/courtlistener.md   # court records (federal + state)
+SKILL_DIR/references/sources/wayback.md         # Wayback Machine archives
+SKILL_DIR/references/sources/wikipedia.md       # Wikipedia + Wikidata
+SKILL_DIR/references/sources/gdelt.md           # global news monitoring
 ```
 
 どのページも 9 つの節からなる同じ形式です。概要・アクセス方法・スキーマ・収録範囲・

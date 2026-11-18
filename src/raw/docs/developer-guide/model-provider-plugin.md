@@ -2,7 +2,7 @@
 title: "モデルプロバイダーのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダー（推論バックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: 78942db3e1b24afa927aae63db73ca7e165091c8
+upstream_blob: 8ba7b10abe83d02ee0c4a2e62f99047740259cef
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -255,7 +255,7 @@ class AcmeProfile(ProviderProfile):
 | `supports_vision` | API がツールの結果メッセージの中の画像を受け付けます | `False` |
 | `supports_vision_tool_messages` | API がリスト形式（マルチパート）のツールメッセージの中身を受け付けます | `True` |
 | `supports_prompt_cache_key` | Chat Completions のエンドポイントが `prompt_cache_key` を仕様として載せています | `False` |
-| `prompt_cache_max_ttl` | そのルートが実際に保持する、最も長いプロンプトキャッシュの段階です（`"5m"`/`"1h"`）。Hermes はそれより長い段階を要求することも、それより長く保持されると見なすこともありません。設定の `prompt_caching.route_ttl_ceilings` のほうが優先されます | `None` |
+| `prompt_cache_max_ttl` | そのルートが実際に保持する、最も長いプロンプトキャッシュの段階です（`"5m"`/`"1h"`）。Hermes はそれより長い段階を要求することも、それより長く保持されると見なすこともありません。キャッシュの時計も、送った段階をこの値までしか申告しません（`None` の場合、Anthropic 形式の通信を使うゲートウェイへの `1h` の要求は裏付けがないものとして扱われ、それを前提にキャッシュを温めたり圧縮したりすることはありません）。設定の `prompt_caching.route_ttl_ceilings` のほうが優先されます | `None` |
 | `native_reasoning_details_type` | このプロファイルだけが受け取る、名前空間付きの `<provider>.native_assistant` という推論の運び手です | `None` |
 | `process_command` | 外部プロセスの既定のバイナリです | `""` |
 | `process_args` | 外部プロセスの既定の引数の並びです | `()` |
@@ -708,12 +708,15 @@ for p in list_providers():
 
 ## プラグインを試す {#testing-your-plugin}
 
-本番の設定を汚さないように、`HERMES_HOME` を一時ディレクトリに向けてください。
+本番の設定を汚さないように、`HERMES_HOME` を一時ディレクトリに向けてください。そのうえで
+`$HERMES_HOME/plugins/model-providers/my-provider/__init__.py` を書きます（エージェントなら
+`write_file` を使います。これはディレクトリも作ってくれます）。
 
 ```bash
 export HERMES_HOME=$HOME/.hermes/cache/scratch/hermes-plugin-test
-mkdir -p $HERMES_HOME/plugins/model-providers/my-provider
-cat > $HERMES_HOME/plugins/model-providers/my-provider/__init__.py <<'EOF'
+```
+
+```python
 from providers import register_provider
 from providers.base import ProviderProfile
 register_provider(ProviderProfile(
@@ -722,8 +725,9 @@ register_provider(ProviderProfile(
     base_url="https://api.my-provider.example.com/v1",
     auth_type="api_key",
 ))
-EOF
+```
 
+```bash
 export MY_API_KEY=your-test-key
 hermes -z "hello" --provider my-provider -m some-model
 ```

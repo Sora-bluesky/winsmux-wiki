@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Simplify Code — 直近のコード変更を、4 つのエージェントで並行して片づけます"
 description: "直近のコード変更を、4 つのエージェントで並行して片づけます"
 upstream_path: user-guide/skills/bundled/software-development/software-development-simplify-code.md
-upstream_blob: 132841821035e149794506b3e8b2c1880dd5e908
+upstream_blob: 4a630b0f49c9ef57ae745d6ff11ef5e86ab5632e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/software-development/software-development-simplify-code
 ---
@@ -110,7 +110,7 @@ git diff -- src/foo.py            # specific file(s)
 **全員に差分の全文**を渡します（切れ端では駄目です。ファイルをまたぐ問題は、その隙間に
 隠れます）。あわせて、コードベース全体を検索できるようリポジトリの絶対パスも渡します。
 各レビュー役には `terminal`、`file`、`search` のツール一式を持たせます（`git`、
-`read_file`、`search_files` や grep が使えるようにするためです）。
+`read_file`、`search_files` が使えるようにするためです）。
 
 各レビュー役には、次を伝えます。
 - 差分だけで推測せず、既存のコードベースを検索して裏づけを取ること。
@@ -137,7 +137,7 @@ git diff -- src/foo.py            # specific file(s)
 **レビュー役 1 — コードの再利用**
 > Review this diff for code that duplicates functionality already in the
 > codebase. Search utility modules, shared helpers, and adjacent files
-> (use search_files / grep) for existing functions, constants, or patterns
+> (use search_files) for existing functions, constants, or patterns
 > the new code could call instead of reimplementing. Flag: new functions
 > that duplicate existing ones; hand-rolled logic that an existing utility
 > already does (manual string/path manipulation, custom env checks, ad-hoc
@@ -253,7 +253,7 @@ git diff -- src/foo.py            # specific file(s)
   途中で切れることもあります。
 - **未使用コード検出ツールを信じすぎないこと。** `knip`、`ts-prune`、`depcheck` は、
   動的に使われている export（文字列での import、リフレクション）も未使用として挙げます。
-  消す前に必ずシンボル名を grep してください。ツールの結果がきれいでも、証拠にはなりません。
+  消す前に必ず `search_files` でシンボル名を検索してください。ツールの結果がきれいでも、証拠にはなりません。
 - **外向きの約束を確かめずに改名しないこと。** export の名前、API のルート、DB の列名、
   設定のキーは約束事です。名前が悪くても、変えれば使う側が壊れます。外向きの約束に
   関わる変更は RISKY として扱い、自動で改名してはいけません。

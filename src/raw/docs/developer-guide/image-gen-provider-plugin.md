@@ -2,7 +2,7 @@
 title: "画像生成プロバイダのプラグイン"
 description: "Hermes Agent 向けに画像生成のバックエンドのプラグインを作る方法"
 upstream_path: developer-guide/image-gen-provider-plugin.md
-upstream_blob: 6b1edf902f79e6cae58b4ce525c56226caabb587
+upstream_blob: 411f9f9f7f7545b18b8d6479061f7c717ddc5090
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/image-gen-provider-plugin
 ---
@@ -290,8 +290,7 @@ export MY_BACKEND_API_KEY=your-test-key
 hermes plugins enable my-backend
 
 # Pick it as the active provider
-echo "image_gen:" >> $HERMES_HOME/config.yaml
-echo "  provider: my-backend" >> $HERMES_HOME/config.yaml
+hermes config set image_gen.provider my-backend
 
 # Exercise it
 hermes -z "Generate an image of a corgi in a spacesuit"

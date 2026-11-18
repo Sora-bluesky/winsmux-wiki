@@ -2,7 +2,7 @@
 title: "Pinggy Tunnel — Pinggy を使い、SSH 経由でインストール不要の localhost トンネルを張る"
 description: "Pinggy を使い、SSH 経由でインストール不要の localhost トンネルを張ります"
 upstream_path: user-guide/skills/optional/devops/devops-pinggy-tunnel.md
-upstream_blob: 3d92fb49e690cbf584b286ed9c516279f3efdb88
+upstream_blob: 017ba1df655923384cd38f01e1c0288e1f0c5d50
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel
 ---
@@ -119,10 +119,7 @@ echo $! > ~/.hermes/cache/scratch/pinggy-8000.pid
 
 ### 3. ログから URL を取り出す {#3-parse-the-url-out-of-the-log}
 
-```bash
-sleep 4
-grep -oE 'https://[a-z0-9-]+\.[a-z]+\.pinggy\.link' ~/.hermes/cache/scratch/pinggy-8000.log | head -1
-```
+4秒ほど待ってから、`search_files` で `~/.hermes/cache/scratch/pinggy-8000.log` の中から `https://[a-z0-9-]+\.[a-z]+\.pinggy\.link` に一致する箇所を探します。
 
 出力はこのような形になります。
 
@@ -189,7 +186,7 @@ ssh -p 443 -L4300:localhost:4300 -R0:localhost:8000 free@a.pinggy.io
 - **無料枠の同時トンネルは、送信元 IP ごとに1本までです。** 同じマシンから2本目を張ると、たいてい1本目が切れます。Pro 枠ならこの制限はありません。
 - **ユーザー名の `+` は引用符で囲む必要があります。** 裸の `ssh ... b:admin:secret+free@a.pinggy.io` は bash では動きますが、`+` を特別に扱うシェルや、プログラムで組み立てた場合に壊れます。必ずダブルクォートで囲んでください。
 - **アクセス制御のフラグなしで、機微なものをトンネルしないでください。** 素の HTTP トンネルは、URL を知っている人なら誰でも触れます。公開しないサービスには `b:`、`k:`、`w:` を使います。
-- **`process(action='log')` では SSH の表示を取りこぼすことがあります。** Pinggy は URL を出したあと、SSH の接続が対話モードに入ります。必ずログファイルへ書き出し、そのファイルを直接 `grep` してください。`cloudflared-quick-tunnel` と同じやり方です。
+- **`process(action='log')` では SSH の表示を取りこぼすことがあります。** Pinggy は URL を出したあと、SSH の接続が対話モードに入ります。必ずログファイルへ書き出し、そのファイルを直接 `search_files` で検索してください。`cloudflared-quick-tunnel` と同じやり方です。
 - **初回はホスト鍵の確認が出ます。** OpenSSH の既定の設定では、Pinggy のホスト鍵を受け入れるかどうか利用者に尋ねます。人の手を介さずに動かすなら、必ず `-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null` を付けてください。
 - **TCP と TLS のトンネルは https の URL ではなく、`<subdomain>.a.pinggy.online:<port>` の組を返します。** 別の正規表現で読み取ってください（`tcp://` とポート番号）。Pinggy のトンネルが必ず HTTP だと思い込まないことです。
 - **Pro モードでは、トークンはフラグではなくユーザー名として渡します。** `"$PINGGY_TOKEN+a.pinggy.io"` の形です（`free@` は付けません）。トークンがあれば `:persistent` を足して固定のサブドメインも使えます。詳しくは `pinggy.io/docs/` を参照してください。
@@ -202,9 +199,9 @@ ssh -p 443 -L4300:localhost:4300 -R0:localhost:8000 free@a.pinggy.io
 
 ローカルでの作業中に、外部のサービス（Stripe、GitHub、Discord、AgentMail など）から公開 URL へ POST してもらう必要があるときに使います。
 
-```bash
-# 1. Tiny capturing server: every request gets appended to ~/.hermes/cache/scratch/webhook-hits.log
-cat >~/.hermes/cache/scratch/webhook-server.py <<'PY'
+```python
+# 1. Tiny capturing server: write_file ~/.hermes/cache/scratch/webhook-server.py with this,
+#    so every request gets appended to ~/.hermes/cache/scratch/webhook-hits.log
 import http.server, json, datetime, pathlib
 LOG = pathlib.Path("~/.hermes/cache/scratch/webhook-hits.log").expanduser()
 class H(http.server.BaseHTTPRequestHandler):
@@ -220,7 +217,9 @@ class H(http.server.BaseHTTPRequestHandler):
     def do_POST(self): self._capture()
     def log_message(self,*a,**k): pass
 http.server.HTTPServer(("127.0.0.1", 18080), H).serve_forever()
-PY
+```
+
+```bash
 nohup python ~/.hermes/cache/scratch/webhook-server.py >~/.hermes/cache/scratch/webhook-server.log 2>&1 &
 echo $! >~/.hermes/cache/scratch/webhook-server.pid
 

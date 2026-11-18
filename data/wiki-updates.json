@@ -1,6 +1,183 @@
 {
-  "generatedAt": "2026-11-18",
+  "generatedAt": "2026-11-19",
   "entries": [
+    {
+      "date": "2026-11-18",
+      "sha": "9de1642",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/acp-internals",
+          "title": "ACP の内部",
+          "url": "/hermes/docs/developer-guide/acp-internals/"
+        },
+        {
+          "id": "developer-guide/agent-loop",
+          "title": "エージェントループの内部",
+          "url": "/hermes/docs/developer-guide/agent-loop/"
+        },
+        {
+          "id": "developer-guide/architecture",
+          "title": "アーキテクチャ",
+          "url": "/hermes/docs/developer-guide/architecture/"
+        },
+        {
+          "id": "developer-guide/codebase-ownership",
+          "title": "コードベース所有マップ",
+          "url": "/hermes/docs/developer-guide/codebase-ownership/"
+        },
+        {
+          "id": "developer-guide/context-engine-plugin",
+          "title": "コンテキストエンジンのプラグイン",
+          "url": "/hermes/docs/developer-guide/context-engine-plugin/"
+        },
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/gateway-classic-cli",
+          "title": "従来型のゲートウェイクライアント",
+          "url": "/hermes/docs/developer-guide/gateway-classic-cli/"
+        },
+        {
+          "id": "developer-guide/gateway-internals",
+          "title": "ゲートウェイの内部",
+          "url": "/hermes/docs/developer-guide/gateway-internals/"
+        },
+        {
+          "id": "developer-guide/gateway-local-sessions",
+          "title": "gateway のローカルセッション",
+          "url": "/hermes/docs/developer-guide/gateway-local-sessions/"
+        },
+        {
+          "id": "developer-guide/gateway-session-lifecycle",
+          "title": "ゲートウェイのセッションライフサイクル",
+          "url": "/hermes/docs/developer-guide/gateway-session-lifecycle/"
+        },
+        {
+          "id": "developer-guide/memory-provider-plugin",
+          "title": "メモリープロバイダープラグイン",
+          "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/plugins/catalog-submission",
+          "title": "プラグインカタログへの登録申請",
+          "url": "/hermes/docs/developer-guide/plugins/catalog-submission/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/plugins/public-api",
+          "title": "プラグインの公開 API",
+          "url": "/hermes/docs/developer-guide/plugins/public-api/"
+        },
+        {
+          "id": "developer-guide/session-storage",
+          "title": "セッションの保存領域",
+          "url": "/hermes/docs/developer-guide/session-storage/"
+        },
+        {
+          "id": "developer-guide/state-db-recovery",
+          "title": "state.db の復旧",
+          "url": "/hermes/docs/developer-guide/state-db-recovery/"
+        },
+        {
+          "id": "developer-guide/video-gen-provider-plugin",
+          "title": "動画生成プロバイダプラグイン",
+          "url": "/hermes/docs/developer-guide/video-gen-provider-plugin/"
+        },
+        {
+          "id": "guides/microsoft-graph-app-registration",
+          "title": "Microsoft Graph のアプリケーションを登録する",
+          "url": "/hermes/docs/guides/microsoft-graph-app-registration/"
+        },
+        {
+          "id": "integrations",
+          "title": "外部サービス連携",
+          "url": "/hermes/docs/integrations/"
+        },
+        {
+          "id": "integrations/nemo-relay",
+          "title": "NeMo Relay",
+          "url": "/hermes/docs/integrations/nemo-relay/"
+        },
+        {
+          "id": "reference/environment-variables",
+          "title": "環境変数",
+          "url": "/hermes/docs/reference/environment-variables/"
+        },
+        {
+          "id": "reference/faq",
+          "title": "よくある質問とトラブル対処",
+          "url": "/hermes/docs/reference/faq/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/api-server",
+          "title": "API サーバー",
+          "url": "/hermes/docs/user-guide/features/api-server/"
+        },
+        {
+          "id": "user-guide/features/built-in-plugins",
+          "title": "同梱のプラグイン",
+          "url": "/hermes/docs/user-guide/features/built-in-plugins/"
+        },
+        {
+          "id": "user-guide/features/extending-the-dashboard",
+          "title": "ダッシュボードを広げる",
+          "url": "/hermes/docs/user-guide/features/extending-the-dashboard/"
+        },
+        {
+          "id": "user-guide/features/fallback-providers",
+          "title": "フォールバックプロバイダー",
+          "url": "/hermes/docs/user-guide/features/fallback-providers/"
+        },
+        {
+          "id": "user-guide/features/goals",
+          "title": "続く目標（Goal）",
+          "url": "/hermes/docs/user-guide/features/goals/"
+        },
+        {
+          "id": "user-guide/features/heartbeat",
+          "title": "セッションの定期確認（Heartbeat）",
+          "url": "/hermes/docs/user-guide/features/heartbeat/"
+        },
+        {
+          "id": "user-guide/features/hooks",
+          "title": "イベントフック",
+          "url": "/hermes/docs/user-guide/features/hooks/"
+        },
+        {
+          "id": "user-guide/features/image-generation",
+          "title": "画像生成",
+          "url": "/hermes/docs/user-guide/features/image-generation/"
+        },
+        {
+          "id": "user-guide/features/plugin-catalog",
+          "title": "プラグインカタログ",
+          "url": "/hermes/docs/user-guide/features/plugin-catalog/"
+        },
+        {
+          "id": "user-guide/features/skills",
+          "title": "スキルの仕組み",
+          "url": "/hermes/docs/user-guide/features/skills/"
+        }
+      ]
+    },
     {
       "date": "2026-11-17",
       "sha": "cac0e77",

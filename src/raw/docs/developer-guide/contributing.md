@@ -2,7 +2,7 @@
 title: "コントリビュート"
 description: "Hermes Agent へのコントリビュート方法（開発環境のセットアップ、コードスタイル、PR の流れ）"
 upstream_path: developer-guide/contributing.md
-upstream_blob: f5d4ee14521d5cfa81e8a6a1fe2de4a74e739fc9
+upstream_blob: 39f31d0e4832447e8a9f7bcddcee2af7a1ea0d5b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/contributing
 ---
@@ -448,7 +448,7 @@ Hermes を使って作る（または Hermes にレビューさせる）プロ�
 ```
 .agents/
   checks/
-    security.md        # e.g. "grep the diff for shell interpolation; check subprocess calls quote args"
+    security.md        # e.g. "search the diff for shell interpolation; check subprocess calls quote args"
     migrations.md      # e.g. "every schema change ships a backfill and a rollback note"
     public-api.md      # e.g. "exported signatures changed? flag for semver review"
 ```

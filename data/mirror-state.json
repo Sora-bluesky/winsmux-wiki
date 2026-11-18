@@ -47,9 +47,9 @@
       "translatedAt": "2026-11-17T23:02:10.557Z"
     },
     "developer-guide/context-compression-and-caching.md": {
-      "blob": "d2c80435c6f0959bf656b450261215e5db3d88eb",
+      "blob": "9f69c4ca3ca86ab92a0f4695c3392ff1efeb8999",
       "status": "translated",
-      "translatedAt": "2026-11-10T22:53:12.653Z"
+      "translatedAt": "2026-11-18T23:58:35.446Z"
     },
     "developer-guide/context-engine-plugin.md": {
       "blob": "cc77e98af9ef3a2346cb782187a9bf8a90a98186",
@@ -57,9 +57,9 @@
       "translatedAt": "2026-11-17T23:02:10.574Z"
     },
     "developer-guide/contributing.md": {
-      "blob": "f5d4ee14521d5cfa81e8a6a1fe2de4a74e739fc9",
+      "blob": "39f31d0e4832447e8a9f7bcddcee2af7a1ea0d5b",
       "status": "translated",
-      "translatedAt": "2026-11-09T22:51:09.677Z"
+      "translatedAt": "2026-11-18T23:58:35.455Z"
     },
     "developer-guide/creating-skills.md": {
       "blob": "46247a0d615e0ae54b9bd2f02254634cdb9b48ad",
@@ -92,9 +92,9 @@
       "translatedAt": "2026-11-17T23:02:10.560Z"
     },
     "developer-guide/image-gen-provider-plugin.md": {
-      "blob": "6b1edf902f79e6cae58b4ce525c56226caabb587",
+      "blob": "411f9f9f7f7545b18b8d6479061f7c717ddc5090",
       "status": "translated",
-      "translatedAt": "2026-10-25T22:52:26.928Z"
+      "translatedAt": "2026-11-18T23:58:35.457Z"
     },
     "developer-guide/memory-provider-plugin.md": {
       "blob": "685622323bcc2ef175c56e0536fe90ffd5414b8d",
@@ -102,9 +102,9 @@
       "translatedAt": "2026-11-17T23:02:10.573Z"
     },
     "developer-guide/model-provider-plugin.md": {
-      "blob": "78942db3e1b24afa927aae63db73ca7e165091c8",
+      "blob": "8ba7b10abe83d02ee0c4a2e62f99047740259cef",
       "status": "translated",
-      "translatedAt": "2026-11-15T22:52:37.840Z"
+      "translatedAt": "2026-11-18T23:58:35.464Z"
     },
     "developer-guide/plugin-llm-access.md": {
       "blob": "a619c06ae25e17c6d0b0f1cb93fd9e3ea8e6c4db",
@@ -112,9 +112,9 @@
       "translatedAt": "2026-11-14T23:10:16.607Z"
     },
     "developer-guide/plugins/index.md": {
-      "blob": "90f9c226b29c3d410b2e32345c39b8652c4c53f6",
+      "blob": "4e84ff266023d20766f3ee3e92f0435806e93e27",
       "status": "translated",
-      "translatedAt": "2026-11-17T23:02:10.588Z"
+      "translatedAt": "2026-11-18T23:58:35.473Z"
     },
     "developer-guide/programmatic-integration.md": {
       "blob": "67a648165f733e9a9cb645772d6fc94a15022815",
@@ -392,9 +392,9 @@
       "translatedAt": "2026-11-13T23:04:55.121Z"
     },
     "integrations/providers.md": {
-      "blob": "ed15735a0553741dba5a76e823c5737a19f6dc5d",
+      "blob": "c3c88b9f6ca02369fdd1c320537b07e83899719a",
       "status": "translated",
-      "translatedAt": "2026-11-13T23:04:55.126Z"
+      "translatedAt": "2026-11-18T23:58:35.480Z"
     },
     "reference/cli-commands.md": {
       "blob": "5febec2160e252ccfcc4e17aecf15acedd3624f3",
@@ -472,9 +472,9 @@
       "translatedAt": "2026-11-12T22:59:44.755Z"
     },
     "user-guide/configuration.md": {
-      "blob": "32c9b55fd41e4eda5b450aae6ac917523b2f5ee0",
+      "blob": "22e78ba9000cb6e66bcabb383e9f3560f8f53e1d",
       "status": "translated",
-      "translatedAt": "2026-11-17T23:02:10.537Z"
+      "translatedAt": "2026-11-18T23:58:35.494Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "3e15fe3b8a97ddeaa7bfd996c3fd5f90849770d9",
@@ -1087,9 +1087,9 @@
       "translatedAt": "2026-09-20T23:06:07.243Z"
     },
     "user-guide/skills/bundled/creative/creative-manim-video.md": {
-      "blob": "f22a7005d822b5d3be22fa74a882fbce5073e364",
+      "blob": "3164639b7c94a0a03748fd5893d49bb9257d81da",
       "status": "translated",
-      "translatedAt": "2026-09-20T22:40:21.485Z"
+      "translatedAt": "2026-11-18T23:58:35.498Z"
     },
     "user-guide/skills/bundled/creative/creative-p5js.md": {
       "blob": "0246aacef2c903f754ab7d2c851cbbac3e5b3a2f",
@@ -1372,9 +1372,9 @@
       "translatedAt": "2026-09-20T23:06:07.254Z"
     },
     "user-guide/skills/bundled/software-development/software-development-simplify-code.md": {
-      "blob": "132841821035e149794506b3e8b2c1880dd5e908",
+      "blob": "4a630b0f49c9ef57ae745d6ff11ef5e86ab5632e",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.254Z"
+      "translatedAt": "2026-11-18T23:58:35.501Z"
     },
     "user-guide/skills/bundled/software-development/software-development-spike.md": {
       "blob": "3e5b66f2b2099c9f45fb4b427fcded9ed0a64a65",
@@ -1542,14 +1542,14 @@
       "translatedAt": "2026-09-20T22:40:21.502Z"
     },
     "user-guide/skills/optional/devops/devops-pinggy-tunnel.md": {
-      "blob": "3d92fb49e690cbf584b286ed9c516279f3efdb88",
+      "blob": "017ba1df655923384cd38f01e1c0288e1f0c5d50",
       "status": "translated",
-      "translatedAt": "2026-10-25T22:52:26.965Z"
+      "translatedAt": "2026-11-18T23:58:35.502Z"
     },
     "user-guide/skills/optional/devops/devops-watchers.md": {
-      "blob": "9d2fc7f7523baaad78fc64fd2c957fe43ce194db",
+      "blob": "7e74cae174687d4cc2ce61a83b9cc0d754540f72",
       "status": "translated",
-      "translatedAt": "2026-09-20T22:40:21.504Z"
+      "translatedAt": "2026-11-18T23:58:35.505Z"
     },
     "user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test.md": {
       "blob": "91ab50efe73918d32aec1e15eb013c3ccc9dde46",
@@ -1607,14 +1607,14 @@
       "translatedAt": "2026-09-20T23:06:07.265Z"
     },
     "user-guide/skills/optional/gaming/gaming-minecraft-modpack-server.md": {
-      "blob": "73a8e3093a4fafae68ae4cbf2a1b4aba90f1f085",
+      "blob": "c92f33a559181d2b8e6d80eec050926b6c54bc8b",
       "status": "translated",
-      "translatedAt": "2026-09-25T22:58:06.494Z"
+      "translatedAt": "2026-11-18T23:58:35.507Z"
     },
     "user-guide/skills/optional/gaming/gaming-pokemon-player.md": {
-      "blob": "d474e9c3aa7aeafe1ceb429051b56c248a8140b2",
+      "blob": "a1af5b28479ea5b56d8b8172d78065f8edd05c0a",
       "status": "translated",
-      "translatedAt": "2026-09-20T22:40:21.506Z"
+      "translatedAt": "2026-11-18T23:58:35.508Z"
     },
     "user-guide/skills/optional/health/health-fitness-nutrition.md": {
       "blob": "16142f5db21afbec7bc00b171e1b4b491a526855",
@@ -1632,9 +1632,9 @@
       "translatedAt": "2026-09-20T23:06:07.265Z"
     },
     "user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway.md": {
-      "blob": "a618aff3470fe6218b3cd77198e3c58c49d56052",
+      "blob": "65bed14830935d45739074340584727a3e344bb4",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.266Z"
+      "translatedAt": "2026-11-18T23:58:35.511Z"
     },
     "user-guide/skills/optional/mcp/mcp-mcporter.md": {
       "blob": "0bc09c9a4f1dd96fde4821c24c1a9df153a05226",
@@ -1852,9 +1852,9 @@
       "translatedAt": "2026-09-20T23:06:07.269Z"
     },
     "user-guide/skills/optional/research/research-bioinformatics.md": {
-      "blob": "ec08e6c7bb0e49e2041eff08513bf4e6e50b195b",
+      "blob": "1b16b8d2ea19252b8320fc2456bd4abbb05b2db4",
       "status": "translated",
-      "translatedAt": "2026-09-20T22:40:21.526Z"
+      "translatedAt": "2026-11-18T23:58:35.512Z"
     },
     "user-guide/skills/optional/research/research-darwinian-evolver.md": {
       "blob": "f11ed932971f80af10a11380c392a7d37af42e7f",
@@ -1882,9 +1882,9 @@
       "translatedAt": "2026-10-25T22:52:26.975Z"
     },
     "user-guide/skills/optional/research/research-osint-investigation.md": {
-      "blob": "8c03b88a6696a8003520932a94323007839fabd6",
+      "blob": "2a60a304052088cba1a7ed735255646d094ddb12",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.270Z"
+      "translatedAt": "2026-11-18T23:58:35.515Z"
     },
     "user-guide/skills/optional/research/research-parallel-cli.md": {
       "blob": "c0584b85c8ee8ef1f02d394769753f3538a2e5c4",
@@ -1897,9 +1897,9 @@
       "translatedAt": "2026-09-20T22:40:21.528Z"
     },
     "user-guide/skills/optional/research/research-qmd.md": {
-      "blob": "2cefd00a1571d1738f0cbefe4c7cd70ee8ccfa5a",
+      "blob": "8cc2b0a5f576dc81400f2739b48cbbcfbcb83565",
       "status": "translated",
-      "translatedAt": "2026-09-20T22:40:21.528Z"
+      "translatedAt": "2026-11-18T23:58:35.517Z"
     },
     "user-guide/skills/optional/research/research-scrapling.md": {
       "blob": "c308257f784e71d9b5bf8a57efeb62c2fdd13a74",
@@ -1942,9 +1942,9 @@
       "translatedAt": "2026-10-23T22:51:08.225Z"
     },
     "user-guide/skills/optional/software-development/software-development-code-wiki.md": {
-      "blob": "606e2d5b82a7f4a2b88809ea3b53e794b970d7eb",
+      "blob": "1895f26e736fc37b1a6b8c3708c0b8dc79794a01",
       "status": "translated",
-      "translatedAt": "2026-09-20T23:06:07.275Z"
+      "translatedAt": "2026-11-18T23:58:35.518Z"
     },
     "user-guide/skills/optional/software-development/software-development-rest-graphql-debug.md": {
       "blob": "307f04073ad04598ce248f816aa8a6a92193cae4",
@@ -2002,9 +2002,9 @@
       "translatedAt": "2026-11-16T22:50:21.906Z"
     },
     "user-guide/skills/optional/web-development/web-development-publish-site.md": {
-      "blob": "c1e418f65c38e080d7bb5342f305ed2ff25f3970",
+      "blob": "1f55959474ef637c8e595c3adeaa1034d1366dad",
       "status": "translated",
-      "translatedAt": "2026-09-20T22:40:21.533Z"
+      "translatedAt": "2026-11-18T23:58:35.520Z"
     },
     "user-guide/skills/optional/devops/devops-setup-wizard-generator.md": {
       "blob": "ec89593a37fea72f2a05b0cf8204f30b607ee12e",
@@ -2032,9 +2032,9 @@
       "translatedAt": "2026-11-14T23:10:16.684Z"
     },
     "user-guide/skills/optional/research/research-research-paper-writing.md": {
-      "blob": "94f7c9bf8193864c5004330d57670c999c1fba3b",
+      "blob": "3d7dcd8e1d30c59aaa9a164ffa475cf3e86c8be4",
       "status": "translated",
-      "translatedAt": "2026-10-25T22:52:26.978Z"
+      "translatedAt": "2026-11-18T23:58:35.525Z"
     },
     "user-guide/skills/optional/creative/creative-pretext.md": {
       "blob": "7f11acc13b0e62c8ac2ea82a90da5f21765cad80",
@@ -2047,9 +2047,9 @@
       "translatedAt": "2026-08-30T23:05:25.097Z"
     },
     "user-guide/skills/optional/software-development/software-development-ast-grep.md": {
-      "blob": "5e3818e0b785755598c58a3c6171d041d0479c55",
+      "blob": "bb0f3ada31a6569e677e6808d6148ee83864481b",
       "status": "translated",
-      "translatedAt": "2026-09-20T22:40:21.534Z"
+      "translatedAt": "2026-11-18T23:58:35.529Z"
     },
     "user-guide/skills/optional/mlops/mlops-evaluation-weights-and-biases.md": {
       "blob": "d94837dd03c6ad235a0d86dffb025f9c1f0e0b9f",
@@ -2281,9 +2281,9 @@
       "translatedAt": "2026-09-20T23:06:07.285Z"
     },
     "user-guide/skills/optional/creative/creative-system-atlas.md": {
-      "blob": "d00b97eef7d6e3b92fae2d84696730c7e231f019",
+      "blob": "1108d7a4f5e608b0822ef6f33d701c85211fb209",
       "status": "translated",
-      "translatedAt": "2026-10-04T22:47:28.037Z"
+      "translatedAt": "2026-11-18T23:58:35.532Z"
     },
     "user-guide/skills/optional/software-development/software-development-pr-lens.md": {
       "blob": "9568497d55d5ab3915bee2943ca9d56008d2d178",
@@ -2361,9 +2361,9 @@
       "translatedAt": "2026-11-07T22:58:47.888Z"
     },
     "developer-guide/stable-releases.md": {
-      "blob": "4c68bc8749687642a62afd1c0d92a55d4d2ae23e",
+      "blob": "8b99f66c35bfbfd601803a69ce973f6137b1a5c6",
       "status": "translated",
-      "translatedAt": "2026-11-04T22:47:46.111Z"
+      "translatedAt": "2026-11-18T23:58:35.535Z"
     },
     "reference/package-management.md": {
       "blob": "b066d18ddce561ec7808bc4aecc86a90040805c5",
@@ -2511,9 +2511,9 @@
       "translatedAt": "2026-11-06T22:59:23.145Z"
     },
     "user-guide/skills/optional/software-development/software-development-python-debugpy.md": {
-      "blob": "78c5b7ba50256b1f2667ad076d2648262bcad097",
+      "blob": "4686fa0ecd90ef86673accac65f2cd018ef4d7c5",
       "status": "translated",
-      "translatedAt": "2026-10-29T23:07:10.273Z"
+      "translatedAt": "2026-11-18T23:58:35.536Z"
     },
     "getting-started/official-domains.md": {
       "blob": "00225df28f35ace1730223abad40a34b52986719",
@@ -2541,5 +2541,5 @@
       "translatedAt": "2026-11-17T23:02:10.590Z"
     }
   },
-  "snapshotCommit": "3f5a11f624c8c3c7d0e99ddd8b4b7da97fcb7940"
+  "snapshotCommit": "4ae451d4126327c871fd084e60c045dec0c85911"
 }

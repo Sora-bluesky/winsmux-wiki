@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Watchers — RSS・JSON API・GitHub を定期的に見に行き、既読の印で重複を省く"
 description: "RSS・JSON API・GitHub を定期的に見に行き、既読の印で重複を省く"
 upstream_path: user-guide/skills/optional/devops/devops-watchers.md
-upstream_blob: 9d2fc7f7523baaad78fc64fd2c957fe43ce194db
+upstream_blob: 7e74cae174687d4cc2ce61a83b9cc0d754540f72
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/devops/devops-watchers
 ---
@@ -104,11 +104,8 @@ cron のジョブを組んでほしいと、こんなふうにエージェント
 
 ## 状態ファイル {#state-files}
 
-どの見張り役も `$HERMES_HOME/watcher-state/<name>.json` を書きます。中を見るには、こうします。
-
-```bash
-cat $HERMES_HOME/watcher-state/hn.json
-```
+どの見張り役も `$HERMES_HOME/watcher-state/<name>.json` を書きます。中身は
+`read_file` で確認できます（例: `$HERMES_HOME/watcher-state/hn.json`）。
 
 もう一度最初から流し直したい（次の実行を初回として扱いたい）ときは、こうします。
 

@@ -2,7 +2,7 @@
 title: "LLM とモデルプロバイダ"
 description: ""
 upstream_path: integrations/providers.md
-upstream_blob: ed15735a0553741dba5a76e823c5737a19f6dc5d
+upstream_blob: c3c88b9f6ca02369fdd1c320537b07e83899719a
 sources:
   - https://hermes-agent.nousresearch.com/docs/integrations/providers
 ---
@@ -307,6 +307,40 @@ model:
 :::note Z.AI のエンドポイント自動検出
 Z.AI / GLM プロバイダを使うと、Hermes は複数のエンドポイント（グローバル、中国、コーディング向けの各種）を自動で試し、API キーを受け付けるものを見つけます。`GLM_BASE_URL` を手で設定する必要はありません。動くエンドポイントが自動で検出され、キャッシュされます。
 :::
+
+### OpenAI GPT-6.2 Astra と Sol {#openai-gpt-62-astra-and-sol}
+
+`hermes model` の **OpenAI API**（API キー）か **OpenAI Codex**（ChatGPT のサブスクリプション）で、
+`gpt-6.2-astra` または `gpt-6.2-sol` を選んでください。すでに明示的に選んでいるモデルはそのまま変わりません。
+モデルを何も設定していない場合、OpenAI API の既定は `gpt-6.2-sol` です。Codex は、アカウントのカタログが
+使えるときはそれを使い、オフライン時の厳選した控えとして `gpt-6-sol` を使います。
+Codex のモデル選択画面には、アカウントのカタログに GPT-6.2 があるときにそれが表示されます。
+ChatGPT のプランに GPT-6.2 が含まれていない場合は、代わりに `gpt-6-sol` を選んでください。
+
+プランに GPT-6.2 が含まれているのに、任意で使う [Codex app-server ランタイム](/hermes/docs/user-guide/features/codex-app-server-runtime/)が
+古いバイナリのせいでそれを拒否する場合は、Hermes が起動するバイナリ（`model.codex_bin` でパスを明示している場合はそれも含みます）を、
+[0.169.1](https://github.com/openai/codex/releases/tag/rust-v0.169.1) のような対応するリリースに更新してください。
+あるいは、`/codex-runtime auto` を使って新しいセッションを始めれば、Hermes のネイティブな経路で使えます。
+どちらの方法でも、プランで使えるモデルの範囲は変わりません。
+
+どちらのモデルも、ツール呼び出しには Responses を使い、テキストと画像を受け付け、推論の深さ（effort）として
+`low`、`medium`、`high`、`xhigh`、`max` に対応しています。`none` や `minimal` を明示した場合は
+`low` に丸められます。推論を無効にすると、対応していない無効化のフィールドは送られません。
+
+直接 API では、コンテキストウィンドウが 1,050,000 トークン、入力の上限が 922,000 トークン、出力の最大が 128,000
+トークンです。Codex では代わりにアカウントのカタログにあるウィンドウを使い、オフライン時の既定値は、OpenAI の Codex カタログに基づいて
+Astra が 272,000、Sol が 500,000 です。Hermes は、どちらのモデルについても、選択画面用の `-900k` や `-pro` の派生を
+勝手に作ることはしません。
+
+`/fast` はどちらのモデルにも対応しています。Fast は米国と EU での処理に対応し、Ultrafast は米国での処理にのみ
+対応します。Codex では Ultrafast は引き続きアカウントごとに利用が制限されています。直接 API の費用の見積もりは、実際に提供された
+区分（tier）をもとに計算し、2027 年 2 月 28 日（太平洋時間）までの Ultrafast の提供開始記念割引も反映します。
+Codex の利用はサブスクリプションに含まれたままで、API の請求にはなりません。
+
+出典: [Astra](https://developers.openai.com/api/docs/models/gpt-6.2-astra)、
+[Sol](https://developers.openai.com/api/docs/models/gpt-6.2-sol)、
+[移行ガイド](https://developers.openai.com/api/docs/guides/latest-model)、
+[Codex カタログ](https://github.com/openai/codex/blob/main/codex-rs/models-manager/models.json)。
 
 ### xAI（Grok）— Responses API + プロンプトキャッシュ {#xai-grok-responses-api-prompt-caching}
 

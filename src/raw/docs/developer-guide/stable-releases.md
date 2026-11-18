@@ -2,7 +2,7 @@
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 4c68bc8749687642a62afd1c0d92a55d4d2ae23e
+upstream_blob: 8b99f66c35bfbfd601803a69ce973f6137b1a5c6
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -344,6 +344,15 @@ SemVer 上はその安定版の本体と等しくなります。どちらへ進�
 保護された公開コントローラーは、GitHub のプレリリースをドラフトから公開に切り替える前に
 その注釈付きタグオブジェクトを厳密に検証し、両方の状態を読み戻し、
 そのあとで初めて R2 の head を進めます。
+
+プルリクエストと `main` への push では、E2E スイートは実行されません。`Canary Release` が成功するたびに、
+`Canary E2E`（`canary-e2e.yml`）が、クレームで行うのと同じ E2E の呼び出し（`release: true` 付きの完全な
+CI、インストール/更新 E2E、Windows のライブ E2E）を、そのカナリアがタグ付けしたコミットに対して実行します。
+そのため E2E の退行は、次のクレームまで待たずに、取り込まれてから1日以内に見つかります。
+自動実行ですでに合格したコミットは、もう一度は実行されません
+（新しいコミットが無いカナリアは、直前のタグを再開するためです）。この実行は報告するだけです。
+カナリアはその完了を待たず、
+`install-e2e-red.yml` が、最新の実行が赤のあいだ `install-e2e-red` の issue を1つ開いたままにします。
 
 ## カナリアと単発のデスクトップ識別情報 {#canary-and-one-off-desktop-identities}
 

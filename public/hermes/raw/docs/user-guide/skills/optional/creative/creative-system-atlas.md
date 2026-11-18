@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "System Atlas — 見て回れるアイソメトリックの構成アトラスを HTML で作る"
 description: "見て回れるアイソメトリックの構成アトラスを HTML で作る"
 upstream_path: user-guide/skills/optional/creative/creative-system-atlas.md
-upstream_blob: d00b97eef7d6e3b92fae2d84696730c7e231f019
+upstream_blob: 1108d7a4f5e608b0822ef6f33d701c85211fb209
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/creative/creative-system-atlas
 ---
@@ -94,7 +94,7 @@ node <atlas home>/atlas/build.mjs   # writes ../SYSTEM.md and ../atlas.html
 - 描画部は描くたびに場面全体を作り直します。ホバーのハンドラーに余計な `render()` が紛れ込むと、カーソルの下の要素が外れ、ブラウザーがクリックを発生させなくなります。スクリーンショットでは地図が完璧に見えるのに、何も反応しない状態になります。
 - アプリ内ブラウザーの中には `file://` を静的なスナップショットとして描くものがあります。ディスクから開くのではなく、静的サーバー経由で確かめてください。
 - 質問は決して削除しません。解決済みにするか、外したと記録して、ID が変わらないようにします。
-- 判断のたびに、出力を grep して古い言葉（`pending`、古いモデル名、却下された設計）が残っていないか探します。読む人はすべてを読みます。
+- 判断のたびに、`search_files` で出力を検索して古い言葉（`pending`、古いモデル名、却下された設計）が残っていないか探します。読む人はすべてを読みます。
 - 大きな HTML/JS をシェルのヒアドキュメントで書くと壊れやすいです。`write_file` を使い、データ部分は JSON にシリアライズできる形に保ちます。
 
 ## 確認 {#verification}

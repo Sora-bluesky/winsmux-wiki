@@ -2,7 +2,7 @@
 title: "Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 description: "Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）"
 upstream_path: user-guide/skills/optional/software-development/software-development-python-debugpy.md
-upstream_blob: 78c5b7ba50256b1f2667ad076d2648262bcad097
+upstream_blob: 4686fa0ecd90ef86673accac65f2cd018ef4d7c5
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-python-debugpy
 ---
@@ -97,10 +97,7 @@ def compute(x, y):
 
 あとは普通に実行します。`breakpoint()` の行で止まり、ローカル変数に自由に触れます。
 
-**コミットする前に `breakpoint()` を消すのを忘れないでください。** `git diff` で確かめるか、コミット前に grep をかけます。
-```bash
-rg -n 'breakpoint\(\)' --type py
-```
+**コミットする前に `breakpoint()` を消すのを忘れないでください。** `git diff` で確かめるか、`search_files` に `pattern="breakpoint\(\)"` と `file_glob="*.py"` を指定して探します。
 
 ## レシピ 2: スクリプトを pdb の下で起動する（ソースは触らない） {#recipe-2-launch-a-script-under-pdb-no-source-edits}
 
@@ -363,9 +360,7 @@ TUI から対応するスラッシュコマンドを実行し、別のターミ�
 - [ ] 最初のブレークポイントで本当に止まる（止まらないなら、`PYTHONBREAKPOINT=0` になっている、並列実行や出力の取り込みを行うランナーの下にいる、接続前に実行が終わっている、のどれかです）
 - [ ] `where` または `w` で、想定どおりの呼び出し履歴が出る
 - [ ] 後片づけ。コミットするコードに `breakpoint()` や `set_trace()` が残っていない
-  ```bash
-  rg -n 'breakpoint\(\)|set_trace\(|debugpy\.listen' --type py
-  ```
+  （`search_files` に `pattern="breakpoint\(\)|set_trace\(|debugpy\.listen"` と `file_glob="*.py"` を指定して探します）
 
 ## 場面別のレシピ {#one-shot-recipes}
 

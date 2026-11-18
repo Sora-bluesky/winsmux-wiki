@@ -2,7 +2,7 @@
 title: "Minecraft Modpack Server — MOD 入りの Minecraft サーバーを立てる（CurseForge、Modrinth）"
 description: "MOD 入りの Minecraft サーバーを立てる（CurseForge、Modrinth）"
 upstream_path: user-guide/skills/optional/gaming/gaming-minecraft-modpack-server.md
-upstream_blob: 73a8e3093a4fafae68ae4cbf2a1b4aba90f1f085
+upstream_blob: c92f33a559181d2b8e6d80eec050926b6c54bc8b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server
 ---
@@ -81,9 +81,7 @@ ATM10_INSTALL_ONLY=true bash startserver.sh
 ここでライブラリのダウンロードやサーバー jar へのパッチ当てが行われます。
 
 ### 4. EULA に同意する {#4-accept-eula}
-```bash
-echo "eula=true" > ~/minecraft-server/server/eula.txt
-```
+`write_file` で `~/minecraft-server/server/eula.txt` を作り、中身は `eula=true` の 1 行だけにします。
 
 ### 5. server.properties を設定する {#5-configure-serverproperties}
 MOD 入り・LAN 環境で効いてくる主な設定です。
@@ -150,20 +148,18 @@ sudo ufw allow 25565/tcp comment "Minecraft Server"
 確認はこうします: `sudo ufw status | grep 25565`
 
 ### 8. 起動スクリプトを作る {#8-create-launch-script}
+`write_file` で `~/start-minecraft.sh` を次の内容で作ります。
 ```bash
-cat > ~/start-minecraft.sh << 'EOF'
 #!/usr/bin/env bash
 cd ~/minecraft-server/server
 java @user_jvm_args.txt @libraries/net/neoforged/neoforge/<VERSION>/unix_args.txt nogui
-EOF
-chmod +x ~/start-minecraft.sh
 ```
+続けて `chmod +x ~/start-minecraft.sh` で実行できるようにします。
 補足: NeoForge ではなく Forge の場合、引数ファイルのパスが変わります。正確なパスは `startserver.sh` で確かめてください。
 
 ### 9. 自動バックアップを仕込む {#9-set-up-automated-backups}
-バックアップ用のスクリプトを作ります。
+`write_file` で `~/minecraft-server/backup.sh` を作り、バックアップ用のスクリプトを用意します。
 ```bash
-cat > ~/minecraft-server/backup.sh << 'SCRIPT'
 #!/usr/bin/env bash
 SERVER_DIR="$HOME/minecraft-server/server"
 BACKUP_DIR="$HOME/minecraft-server/backups"
@@ -184,9 +180,8 @@ if [ "$BACKUP_COUNT" -gt "$MAX_BACKUPS" ]; then
     echo "[BACKUP] Pruned $REMOVE old backup(s)"
 fi
 echo "[BACKUP] Done at $(date)"
-SCRIPT
-chmod +x ~/minecraft-server/backup.sh
 ```
+続けて `chmod +x ~/minecraft-server/backup.sh` で実行できるようにします。
 
 1 時間ごとの cron を追加します。
 ```bash

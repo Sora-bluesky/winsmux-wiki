@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Bioinformatics — ゲノム解析と計算生物学の 400 以上の skill への入口"
 description: "ゲノム解析と計算生物学の 400 以上の skill への入口"
 upstream_path: user-guide/skills/optional/research/research-bioinformatics.md
-upstream_blob: ec08e6c7bb0e49e2041eff08513bf4e6e50b195b
+upstream_blob: 1b16b8d2ea19252b8320fc2456bd4abbb05b2db4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-bioinformatics
 ---
@@ -57,13 +57,13 @@ sources:
    # ClawBio (runnable pipelines)
    git clone --depth 1 https://github.com/ClawBio/ClawBio.git ~/.hermes/cache/scratch/ClawBio
    ```
-3. 目当ての skill を読みます。
-   ```bash
+3. 目当ての skill を `read_file` で読みます。
+   ```
    # bioSkills — each skill is at: <category>/<skill-name>/SKILL.md
-   cat ~/.hermes/cache/scratch/bioSkills/variant-calling/gatk-variant-calling/SKILL.md
+   ~/.hermes/cache/scratch/bioSkills/variant-calling/gatk-variant-calling/SKILL.md
 
    # ClawBio — each skill is at: skills/<skill-name>/
-   cat ~/.hermes/cache/scratch/ClawBio/skills/pharmgx-reporter/README.md
+   ~/.hermes/cache/scratch/ClawBio/skills/pharmgx-reporter/README.md
    ```
 4. 取ってきた skill は参考資料として使ってください。これらは Hermes 形式の skill ではありません。その分野の専門家が書いた手引きとして扱います。正しいパラメーター、適切なツールの指定、検証済みのパイプラインが載っています。
 

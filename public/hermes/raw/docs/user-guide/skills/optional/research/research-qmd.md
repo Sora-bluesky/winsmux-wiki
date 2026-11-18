@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Qmd — メモ・資料・書き起こしを手元でまとめて検索する"
 description: "メモ・資料・書き起こしを手元でまとめて検索する"
 upstream_path: user-guide/skills/optional/research/research-qmd.md
-upstream_blob: 2cefd00a1571d1738f0cbefe4c7cd70ee8ccfa5a
+upstream_blob: 8cc2b0a5f576dc81400f2739b48cbbcfbcb83565
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/research/research-qmd
 ---
@@ -289,8 +289,9 @@ mcp_servers:
 
 #### macOS（launchd） {#macos-launchd}
 
-```bash
-cat > ~/Library/LaunchAgents/com.qmd.daemon.plist << 'EOF'
+`write_file` で `~/Library/LaunchAgents/com.qmd.daemon.plist` を次の内容で作ります:
+
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
   "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -315,17 +316,17 @@ cat > ~/Library/LaunchAgents/com.qmd.daemon.plist << 'EOF'
   <string>/Users/YOU/.hermes/cache/scratch/qmd-daemon.log</string>
 </dict>
 </plist>
-EOF
+```
 
+```bash
 launchctl load ~/Library/LaunchAgents/com.qmd.daemon.plist
 ```
 
 #### Linux（systemd のユーザーサービス） {#linux-systemd-user-service}
 
-```bash
-mkdir -p ~/.config/systemd/user
+`write_file` で `~/.config/systemd/user/qmd-daemon.service` を次の内容で作ります（入れ先のディレクトリも一緒に作られます）:
 
-cat > ~/.config/systemd/user/qmd-daemon.service << 'EOF'
+```ini
 [Unit]
 Description=QMD MCP Daemon
 After=network.target
@@ -338,8 +339,9 @@ Environment=PATH=/usr/local/bin:/usr/bin:/bin
 
 [Install]
 WantedBy=default.target
-EOF
+```
 
+```bash
 systemctl --user daemon-reload
 systemctl --user enable --now qmd-daemon
 systemctl --user status qmd-daemon

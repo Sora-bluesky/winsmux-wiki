@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Mcp Oauth Remote Gateway — 画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す"
 description: "画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す"
 upstream_path: user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway.md
-upstream_blob: a618aff3470fe6218b3cd77198e3c58c49d56052
+upstream_blob: 65bed14830935d45739074340584727a3e344bb4
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway
 ---
@@ -344,7 +344,7 @@ Hermes は httpx を使うので通るのに、こちらだけ Cloudflare に 40
 
 1. **「画面がない = OAuth は無理」と決めつけないでください。** 手元の CLI なら組み込みの流れで問題なく動きます。問題になるのは、利用者のブラウザと Hermes のプロセスが別の端末にあるリモートの構成だけです。OAuth は使えないと言い切る前に、動いている環境を確かめてください。
 
-2. **skill の説明だけでなく、ソースを読んでください。** `tools/mcp_oauth.py` と `website/docs/` にある MCP の設定資料が拠りどころです。「その機能はありません」と伝える前に、ソースツリーを grep してください。
+2. **skill の説明だけでなく、ソースを読んでください。** `tools/mcp_oauth.py` と `website/docs/` にある MCP の設定資料が拠りどころです。「その機能はありません」と伝える前に、`search_files` でソースツリーを検索してください。
 
 3. **Cloudflare がユーザーエージェントで弾きます。** MCP や OAuth の提供元の多くは Cloudflare を前に置いていて、公開されているはずの情報用エンドポイントでも `python-urllib/*` のユーザーエージェントを 403 で弾きます。この流れのすべてのリクエストに `User-Agent: python-httpx/0.27`（かブラウザらしい文字列）を付けてください。Hermes 自体は httpx を使うので、実際の接続では問題になりません。
 
@@ -380,7 +380,7 @@ Hermes は httpx を使うので通るのに、こちらだけ Cloudflare に 40
 
 - **`mcp-remote` を代わりに使わないでください。** これは npx のサブプロセスを立ち上げますが、その OAuth のコールバックを受けるサーバーも結局リモートのコンテナの localhost に立つので、同じ問題にぶつかります。`mcp-remote` が役に立つのは、MCP クライアントがリモートの HTTP をまったく扱えない場合だけです（Hermes は最初から扱えます）。
 - **利用者が OAuth を望んでいるのに「API のトークンを貼ってくれればヘッダーに入れます」と押し付けないでください。** リモートの構成で組み込みの OAuth がうまくいかない理由を説明したうえで、固定トークンという近道を選択肢として出します。回転が要らず、範囲を絞れるアクセスのためにひと手間かける、という利用者の判断を尊重してください。
-- **ソースを読まずに「Hermes はその機能に対応していません」と言わないでください。** できるかできないかを口にする前に、ソースツリーを grep してください。
+- **ソースを読まずに「Hermes はその機能に対応していません」と言わないでください。** できるかできないかを口にする前に、`search_files` でソースツリーを検索してください。
 
 ## 早見表になるファイル {#quick-reference-files}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Publish Site — サイトに版を付けて GitHub / Cloudflare / Netlify の Pages へ公開します"
 description: "サイトに版を付けて GitHub / Cloudflare / Netlify の Pages へ公開します"
 upstream_path: user-guide/skills/optional/web-development/web-development-publish-site.md
-upstream_blob: c1e418f65c38e080d7bb5342f305ed2ff25f3970
+upstream_blob: 1f55959474ef637c8e595c3adeaa1034d1366dad
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/web-development/web-development-publish-site
 ---
@@ -158,7 +158,7 @@ Cloudflare Pages と Netlify は、公開ごとの履歴も管理画面に残し
 
 - **GitHub Pages では SPA のルートが 404 になります。** Pages には書き換えの仕組みがありません。出力のディレクトリで `index.html` を `404.html` にコピーしておくと（`cp dist/index.html dist/404.html`）、ブラウザ側のルーティングが立て直せます。Cloudflare Pages と Netlify なら `_redirects`（`/* /index.html 200`）で SPA に対応できます。
 - **GitHub Pages は反映が遅れます。** 最初に有効にしたあとサイトが出るまで 1〜10 分、そのあとの push は 1 分ほどかかります。最初の 404 で失敗と決めつけず、`curl` を数回たたいてから原因を探してください。
-- **パスの大文字小文字を区別します。** Pages の置き場所は大文字小文字を区別する Linux です。macOS や Windows では動いていたサイトでも、`Logo.PNG` と書いた参照先が `logo.png` でコミットされていれば 404 になります。ファイルが 404 になったら、HTML の中で大文字小文字が食い違っていないか探してください。
+- **パスの大文字小文字を区別します。** Pages の置き場所は大文字小文字を区別する Linux です。macOS や Windows では動いていたサイトでも、`Logo.PNG` と書いた参照先が `logo.png` でコミットされていれば 404 になります。ファイルが 404 になったら、`search_files` で HTML の中を調べ、大文字小文字が食い違っていないか確かめてください。
 - **プロジェクトのページは URL の途中に名前が入ります。** `https://<owner>.github.io/<name>/` は `/<name>/` の下で配信されるので、`/app.js` のような絶対パスの参照は壊れます。相対パスにするか、ビルドツールの基準パスを設定してください（`vite build --base=/<name>/`）。
 - **`wrangler` の認証にはブラウザが要ります。** `wrangler login` は OAuth の画面を開きます。画面のないセッションでは `CLOUDFLARE_API_TOKEN` を使い（ユーザーが dash.cloudflare.com → API Tokens で作ります）、そのトークンをログに出さないでください。
 - **独自ドメインは DNS が広まるまで待ちます。** 新しい CNAME は数分から数時間かかることがあります。まず公開先の既定の URL（`*.pages.dev`、`*.netlify.app`、`*.github.io`）で確かめ、独自ドメインはそのあと別に確かめてください。2 つの失敗を一緒くたにしないことです。

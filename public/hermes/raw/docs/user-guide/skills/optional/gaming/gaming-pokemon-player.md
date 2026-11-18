@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Pokemon Player — ヘッドレスのエミュレーターと RAM 読み取りでポケモンを遊ぶ"
 description: "ヘッドレスのエミュレーターと RAM 読み取りでポケモンを遊ぶ"
 upstream_path: user-guide/skills/optional/gaming/gaming-pokemon-player.md
-upstream_blob: d474e9c3aa7aeafe1ceb429051b56c248a8140b2
+upstream_blob: a1af5b28479ea5b56d8b8172d78065f8edd05c0a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/gaming/gaming-pokemon-player
 ---
@@ -66,7 +66,7 @@ localhost.run 経由の SSH リバーストンネルを使い、ユーザーが�
 ダッシュボードを見られるようにします。ssh で接続し、ローカルの 9876 番ポートを
 鍵不要の localhost.run のエンドポイントのリモート 80 番へ転送します
 （ssh -R 80:localhost:9876 ssh://nokey@localhost.run）。出力はログファイルへ
-リダイレクトし、10 秒待ってから、ログを grep して .lhr.life の URL を取り出します。
+リダイレクトし、10 秒待ってから、search_files でログを検索して .lhr.life の URL を取り出します。
 その URL の末尾に /dashboard/ を付けたものをユーザーに伝えます。
 トンネルの URL は起動のたびに変わるので、立て直したら新しい URL を伝えてください。
 

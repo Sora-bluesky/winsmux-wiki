@@ -2,7 +2,7 @@
 title: "Ast Grep — ast-grep で構文木を見ながらコードを検索・書き換えする"
 description: "ast-grep で構文木を見ながらコードを検索・書き換えする"
 upstream_path: user-guide/skills/optional/software-development/software-development-ast-grep.md
-upstream_blob: 5e3818e0b785755598c58a3c6171d041d0479c55
+upstream_blob: bb0f3ada31a6569e677e6808d6148ee83864481b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-ast-grep
 ---
@@ -53,7 +53,7 @@ ast-grep で構文木を見ながらコードを検索・書き換えします�
 - 「この一括変換を 200 ファイルに当てて」
 - 「YAML で書いた検査の決まりを走らせて、違反を出して」
 
-答えが文字の並びで決まるとき（文字列リテラルの中身、コメント、ライセンス表記、ファイル名、言語をまたぐ正規表現）は `search_files`（あるいは素の `rg`）に切り替えてください。迷ったら「答えはその言語の構文木で決まるのか、それともファイルの文字の並びで決まるのか」と考えます。前者なら ast-grep、後者なら search_files です。
+答えが文字の並びで決まるとき（文字列リテラルの中身、コメント、ライセンス表記、ファイル名、言語をまたぐ正規表現）は `search_files` に切り替えてください。迷ったら「答えはその言語の構文木で決まるのか、それともファイルの文字の並びで決まるのか」と考えます。前者なら ast-grep、後者なら search_files です。
 
 Hermes と組み合わせるときの注意です。
 - ラッパーや `sg` は `terminal` ツールから実行してください。パターンは必ずシングルクォートで囲み、シェルに `$VAR` を展開させないようにします。

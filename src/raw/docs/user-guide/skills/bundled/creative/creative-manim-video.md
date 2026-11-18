@@ -2,7 +2,7 @@
 title: "Manim Video — Manim CE のアニメーション: 3Blue1Brown 風の数学・アルゴリズム動画"
 description: "Manim CE のアニメーション: 3Blue1Brown 風の数学・アルゴリズム動画"
 upstream_path: user-guide/skills/bundled/creative/creative-manim-video.md
-upstream_blob: f22a7005d822b5d3be22fa74a882fbce5073e364
+upstream_blob: 3164639b7c94a0a03748fd5893d49bb9257d81da
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/bundled/creative/creative-manim-video
 ---
@@ -203,11 +203,14 @@ manim -qh script.py Scene1_Introduction Scene2_CoreConcept  # production
 
 ### 手順 4: つなぐ {#step-4-stitch}
 
-```bash
-cat > concat.txt << 'EOF'
+`write_file` で `concat.txt` を次の内容で作ります。
+
+```
 file 'media/videos/script/480p15/Scene1_Introduction.mp4'
 file 'media/videos/script/480p15/Scene2_CoreConcept.mp4'
-EOF
+```
+
+```bash
 ffmpeg -y -f concat -safe 0 -i concat.txt -c copy final.mp4
 ```
 

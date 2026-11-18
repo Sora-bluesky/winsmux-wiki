@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 90f9c226b29c3d410b2e32345c39b8652c4c53f6
+upstream_blob: 4e84ff266023d20766f3ee3e92f0435806e93e27
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -264,6 +264,18 @@ with open_persistence_reader(profile_scope().profile_dir) as store:
 ```
 
 リポジトリの実際の使い方は、[セッションストレージ](/hermes/docs/developer-guide/session-storage/#common-operations)に載っています。
+
+#### ピン留めされたカタログのプラグインのために残しているターン用ヘルパー {#turn-helpers-kept-for-pinned-catalog-plugins}
+
+同じリファクタリングで、いくつかのターン用ヘルパーが `session_rules.turns` に移されました。カタログでピン留めされている OpenViking（2.1.2）と Honcho（1.2.0）のメモリプラグインは、読み込み時にそれらを元の場所から import します。カタログで再ピン留めしても、インストール済みのプラグインのソースは変わりません。そのため、次の名前に限っては、上の規則の例外として引き続き import できます。
+
+| 以前の import | 現在の定義場所 |
+|---|---|
+| `agent.message_content.flatten_message_text`, `_text_from_part` | `session_rules.turns` |
+| `agent.skill_commands.extract_user_instruction_from_skill_message` | `session_rules.turns` |
+| `hermes_state_common.TITLE_SOURCE_DERIVED`, `TITLE_SOURCE_LLM` | `sessions.title_source` に保存される値 |
+
+これらは `hermes_state` と同じ期間に従います。v0.26 までサポートされ、削除されるのは早くても v0.27.0 です。移動したほかの名前は引き継がれません。プラグインは、いまのうちに `session_rules.turns` から import するようにしてください。
 
 ## 作るもの {#what-youre-building}
 

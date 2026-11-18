@@ -1,6 +1,6 @@
 {
-  "sha": "3f5a11f",
-  "date": "2026-11-17",
+  "sha": "4ae451d",
+  "date": "2026-11-18",
   "skills": [
     {
       "slug": "apple-apple-notes",
@@ -111,7 +111,7 @@
       "name": "Manim Video",
       "description": "Manim CE animations: 3Blue1Brown math/algo videos",
       "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-manim-video/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "bundled"
     },
     {
@@ -319,7 +319,7 @@
       "name": "Simplify Code",
       "description": "Parallel 4-agent cleanup of recent code changes",
       "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-simplify-code/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "bundled"
     },
     {
@@ -679,7 +679,7 @@
       "name": "System Atlas",
       "description": "Build explorable isometric architecture atlases as HTML",
       "url": "/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/",
-      "date": "2026-10-04",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -743,7 +743,7 @@
       "name": "Pinggy Tunnel",
       "description": "Zero-install localhost tunnels over SSH via Pinggy",
       "url": "/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -759,7 +759,7 @@
       "name": "Watchers",
       "description": "Poll RSS, JSON APIs, and GitHub with watermark dedup",
       "url": "/hermes/docs/user-guide/skills/optional/devops/devops-watchers/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -855,7 +855,7 @@
       "name": "Minecraft Modpack Server",
       "description": "Host modded Minecraft servers (CurseForge, Modrinth)",
       "url": "/hermes/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -863,7 +863,7 @@
       "name": "Pokemon Player",
       "description": "Play Pokemon via headless emulator + RAM reads",
       "url": "/hermes/docs/user-guide/skills/optional/gaming/gaming-pokemon-player/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -895,7 +895,7 @@
       "name": "Mcp Oauth Remote Gateway",
       "description": "Manual OAuth for remote MCP servers on headless gateways",
       "url": "/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -1207,7 +1207,7 @@
       "name": "Bioinformatics",
       "description": "Gateway to 400+ genomics and computational biology skills",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-bioinformatics/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -1263,7 +1263,7 @@
       "name": "Osint Investigation",
       "description": "Follow the money via public records and sanctions data",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -1279,7 +1279,7 @@
       "name": "Qmd",
       "description": "Hybrid local search over notes, docs, and transcripts",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-qmd/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -1287,7 +1287,7 @@
       "name": "Research Paper Writing",
       "description": "Write ML papers for NeurIPS/ICML/ICLR: design→submit",
       "url": "/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -1375,7 +1375,7 @@
       "name": "Ast Grep",
       "description": "AST-aware structural code search and rewrite via ast-grep",
       "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -1383,7 +1383,7 @@
       "name": "Code Wiki",
       "description": "Generate wiki docs + Mermaid diagrams for any codebase",
       "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -1431,7 +1431,7 @@
       "name": "Python Debugpy",
       "description": "Debug Python: pdb REPL + debugpy remote (DAP)",
       "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-python-debugpy/",
-      "date": "2026-10-28",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {
@@ -1479,7 +1479,7 @@
       "name": "Publish Site",
       "description": "Versioned site deploys to GitHub/Cloudflare/Netlify Pages",
       "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/",
-      "date": "2026-09-20",
+      "date": "2026-11-18",
       "source": "optional"
     },
     {

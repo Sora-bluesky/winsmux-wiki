@@ -2,7 +2,7 @@
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: d2c80435c6f0959bf656b450261215e5db3d88eb
+upstream_blob: 9f69c4ca3ca86ab92a0f4695c3392ff1efeb8999
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -311,6 +311,8 @@ auxiliary:
 | `codex_responses_compact_threshold` | `null` | `null` または正の整数 | サーバー側の圧縮の発動点です。**`codex_responses_native: true` のときだけ**読まれ、ローカルの圧縮がいつ走るかは変えません。ローカルの発動点は `threshold`（割合）を `threshold_tokens` で頭打ちにしたものです。`null` の場合は、解決済みのローカルの圧縮発動点に 8,192 トークンの余裕を持たせた値に従います。正の整数を指定すると絶対値として扱われ、必要なときだけ下方向に丸められます。不正な値は自動の挙動になります。使えるローカルの発動点がない場合、自動モードは `200000` にフォールバックします |
 | `in_place` | `true` | bool | 新しいセッションに切り替えず、同じセッション ID のまま圧縮します（後述） |
 | `prepare_ahead` | `false` | bool | 任意設定: 発動点が近づいたら次の要約をバックグラウンドで書いておき、それがまだ同じメッセージを対象にしていれば、次の自動の圧縮で差し込みます（後述） |
+
+キャッシュの期限際での圧縮は、プロンプトキャッシュのライフサイクル（`agent/prompt_cache_lifecycle/`。設定キーはありません。後述のプロンプトキャッシュを参照）のステップ 2 にあたります。どの圧縮の経路も、先に要約し、そのあとで保管します。`CompactionWindowMixin._plan_compaction_window`（`agent/context_compressor_window.py`）は何も書き込まず、境界を決めるだけです。`summary_view` は、範囲内のツール結果を元の形に戻して要約役に渡します（`clarify` の結果は絞り込んだ 1 行のままで、古いヘッドレス時代の案内はそこで落ちます）。`_commit_window` は要約ができてから初めて動きます。`tool_result_storage.archive_compaction_drops` が、削除されたり短くされたりした元の結果をそれぞれバイト単位でそのまま `cache/pruned/` に書き出し（短い結果や重複した文字列の結果も含みます）、スタブにそのファイルを指させます。`_offload_window_results` は範囲内の結果を丸ごと保管し、lean モードでは末尾の古くなった結果を縮めます。先回りの処理（`agent/prepared_compaction.py`）は `summary_view` の行を要約するだけで何も書き込まず、保管は差し込む側の `compress()` が行います。要約が中断した場合は何も保管しません。書き込みに失敗した場合は、その結果を丸ごと残したまま圧縮を進めます。ローカル以外のバックエンド（docker、ssh、modal、daytona など）では、保管はせずにただのスタブを残します（そこではモデルがホストのファイルを読めないためです）。
 
 ### その場での圧縮（安定した単一のセッション ID） {#in-place-compaction-single-stable-session-id}
 
@@ -791,8 +793,9 @@ marker = {"type": "ephemeral", "ttl": "1h"}
    システムプロンプトのキャッシュは残ります。3 件の移動窓によって、1〜2 ターンで
    キャッシュが効く状態に戻ります。
 
-4. **TTL の選び方**: 既定は `5m`（5 分）です。ターンの合間に利用者が離席するような
-   長時間のセッションでは `1h` を使ってください。
+4. **TTL の選び方**: 既定は `auto` です。ターンの合間に利用者が離席するような、人のペースで進む
+   セッションでは `1h`、機械のペースで進むセッションでは `5m` になります。どこでも同じ段を
+   使いたい場合は、`5m` か `1h` に固定してください。
 
 5. **モデルの同一性もキャッシュのキーの一部です**: プロバイダー側のキャッシュは、リクエストを
    処理するモデル（およびアカウント / API キー）に紐づいています。会話の途中でモデルが変わると
@@ -810,16 +813,24 @@ marker = {"type": "ephemeral", "ttl": "1h"}
 - プロバイダーが `cache_control` に対応している（Anthropic のネイティブ API か OpenRouter）
 
 ```yaml
-# config.yaml — TTL is configurable: "5m", "1h", or "auto"
+# config.yaml — TTL is configurable: "auto" (default), "5m", or "1h"
 prompt_caching:
-  cache_ttl: "5m"
+  cache_ttl: "auto"
 ```
 
-`"auto"` は、`agent/agent_init.py::_init_prompt_cache_config` の中で `agent/prompt_caching.py::auto_cache_ttl_for_source` を通じてセッションごとに 1 回だけ決まります。人が操作するペースの呼び出し元では `1h`、`MACHINE_PACED_SOURCES`（subagent、cron、oneshot、webhook、kanban、api、tool、batch）では `5m` になります。補助の呼び出しやスタブの呼び出し（`configured_cache_ttl()`）は、`auto` を `5m` として扱います。
+`"auto"` は、`agent/agent_init.py::_init_prompt_cache_config` の中で `agent/prompt_caching.py::auto_cache_ttl_for_source` を通じてセッションごとに 1 回だけ決まります。人が操作するペースの呼び出し元では `1h`、`MACHINE_PACED_SOURCES`（subagent、cron、oneshot、webhook、kanban、api、api_server、tool、batch、curator）では `5m` になります。`auto` のもとでは、サイドエージェント（`side_agent=True`: `/background`、`/btw`、`/refine`）は `5m` を使い、別のモデルへ回されたバックグラウンドのレビューや `/btw` の分岐も、委任された子エージェントと同じく `5m` に抑えられます。補助の呼び出しやスタブの呼び出し（`configured_cache_ttl()`）は、`auto` を `5m` として扱います。
+
+プロンプトキャッシュのライフサイクル（`agent/prompt_cache_lifecycle/`。設定キーはありません。`__init__` が窓口、`replay.py` が再送の形と上限、`economics.py` が `evaluate_economics`、`warmer.py` が制御役、`edge.py` が `EdgeDecision` と `human_paced`、そして圧縮と退避の判定を受け持ちます）は、エージェントごとに 1 つの制御役（`PromptCacheWarmer`。`get_prompt_cache_warmer` から得ます）で、共有の時計（`agent/prompt_cache_clock.py`。TTL の唯一の出どころ）に従って動きます。時計は API の仕様に従います（`classify_route`、2 種類）。`cache_control` の目印が付いたリクエストは、どの通信方式やゲートウェイを通っても `anthropic_spec` です（5m / 1h は求められたとおりに宣言し、`route_ttl_ceiling` で頭打ちにします）。それ以外のキャッシュされるリクエストは、ベンダーやモデルの世代にかかわらずすべて `openai_spec` です（宣言は `30m` で、読み込みがあると `max(existing, read + 30m)` まで延びます）。段から外れるのは期限の見積もりだけです（`_estimated_end`）。`prompt_cache_retention: 24h` を付けて送ったリクエストは、`guaranteed_until` を 30m（温め直しの期限）に保ちつつ、`estimated_until` を `read + 24h` にします。また `is_local_endpoint` のホストは、確度が分かった状態で `estimated_until=None` になります。そのため、どちらも時計の上で冷えたとして刈り込まれることはありませんが、`route_changed` と圧縮による退避は引き続き行われます（chatgpt.com の Codex は保持期間のフィールドを取り除くので、30m のままです）。`prompt_cache_markers_from_catalog=True` を持つプロバイダーのプロファイル（Nous）では、その `/models` カタログが目印を付けるモデルを選びます（`prompt_caching.catalog_cache_markers`。`cache_write` の料金があれば目印を付けます）。`agent/prompt_cache_routes.py` はセッションをまたぐ層です。`prompt_cache_clock._learn` は時計に取り込んだすべてのレスポンスから `observe` に材料を渡し（間隔 = 送信時刻から直前のイベントの `sent_at` を引いたもので、その段と照らし合わせます）、`PromptCacheWarmer.start` / `_refresh` が `learned_window` を適用し、`prompt_caching.learned_or_catalog_markers` によって、学習した目印の好みがカタログより優先されます。規則が成り立つには、`MIN_SAMPLES` 個の異なるセッションから、一致する標本が `MIN_SAMPLES` 個必要です（`observe(session_id=...)`）。`_learn` は、上流がキャッシュしたときと異なる返答を飛ばします。学習した寿命は `longest_hit`（刈り込まれる `hit_gaps` とは別に保持します）を超えていなければならず、学んだ事実は `EXPIRY_SECONDS` を過ぎると失効します。ファイルは、呼び出しのたびに解決される `get_hermes_home()` の下に置かれます。料金の計算では、1h の書き込みに固定の 2 倍ではなく、カタログの `cache_write_1h`（なければ単一の書き込み料金）を使います。`cache_warming_delay_s`（TTL の 5/6 で、期限の少なくとも 10 秒前）の時点で、一度だけ判断します。まず**温め直す**（直前のリクエストを `replay_output_cap(model)` で再送します。OpenAI の GPT-5 / o シリーズでは 1 か 16 です。アイドル中の延命のための再送（keep-alive）は、利用者のメッセージ 1 件につき最大 `WARM_BUDGET`=3 回までです。`agent._executing_tools` が立っているあいだは、延命はその実行の分として記録されます（`tool_warms` / `tool_spent_usd`）。これは回数に数えず、そのツール待ちの支出に対する `evaluate_economics` の「書き直し 1 回分」の上限だけで抑えます。キャッシュに当たらなかった回は `_miss_streak` に数えます。ただし、`prompt_cache_clock.response_upstream`（ゲートウェイの上流のフィールド、なければレスポンス ID の系統。Nous では `chatcmpl` か `gen` か）が、前半部分をキャッシュした返答と異なる場合や、安定したシステムとツールの前半部分の半分をまだ読めていた場合は数えません。本当に当たらなかった回が `REAL_MISSES_TO_STOP`=2 回（または種類を問わず `ANY_MISSES_TO_STOP`=3 回）続くと `_missed_route` が立ち（`_disable_warming`）、`start` はそのセッションのその経路での以降の起動をすべて断ります（`WARMING_DISABLED`。`/context` には `warming_off` と表示されます）。再試行した外れの書き直し分は、金額の上限に計上しません。`_MISSED_ROUTES` はこれをセッション ID ごとに保持し、エージェントを作り直しても残し、圧縮でできた子にも引き継ぎます。これを解除するのは、経路の切り替えか `/new`（`reset_session_state`。予算とラッチも捨てます）だけです。アイドル中の予算は、`_user_turn_count` をキーにした 1 つの `_Budget` オブジェクトで、そのターンのすべての実行が共有します。延命はそれぞれ受け付けの時点（`_admit`）で予算から確保され、`_record` で実際に課金された額と突き合わされるので、途中で差し替えられた実行も数に入ります。外れ、3 回目の延命、金額の上限のいずれかで予算は終わり（`_end_budget`。どの場合もステップ 2 / 3 が判断します）、その後のツールの回の返答が、終わった予算をターンの最後のプロンプトまで持ち越します（`_carry_ended_budget`）。再送にはクライアントごとに上限を設けます。`replay_cap_honoured` は OpenAI / Anthropic の SDK はそのまま認め、それ以外のクライアントは `effective_output_cap` を通す場合だけ認めます（ネイティブの Gemini は思考ありのリクエストを 65,535 まで引き上げるので、温め直しません）。`bounded_chat_replay` は、Gemini の長い出力向けの `max_output_tokens` のような `extra_body` の出力上限を取り除きます）。次に**圧縮する**（予算を使い終えていること、確認済みまたは宣言済みのウィンドウが `MIN_COMPACT_WINDOW_SECONDS` 以上であること、コンテキストが `threshold_tokens` の `COMPACT_CONTEXT_FRACTION` 以上であること、そして増加の歯止め。キャッシュが温かいかどうかは確かめません。要約は新しい補助リクエストだからです）。どちらでもなければ**期限切れとして退避する**（アイドル中で、キャッシュが確実に冷えていて、ひと続きの間に 1 回だけ。担当側が `turn_proactive_prune.offload_cold_history` を実行します）。`PromptCacheWarmer.claim_edge(*, releasing=False, now=None) -> "compact" | "offload" | None` が、warmer のロックのもとでステップ 2 / 3 を判断して確定させます（`edge_decision(...)` は読み取り専用の `EdgeDecision(action, compact, offload)` です）。担当側はその結果をジョブに引数として渡します。圧縮のあとは、次の利用者メッセージが来るまで何も送りません。予算は、`WARM_BUDGET` 回の延命、外れ、担当側によるエージェントの解放のうち、最も早いもので終わります。`claim_edge(releasing=True)` は解放の瞬間に同じ判定を行い、動いている実行を取り消します。期限を過ぎていれば、解放時には代わりに退避します。ステップ 4（冷えた状態からの復帰）は `agent/turn_proactive_prune.turn_start_cold_prune` です。`prompt_cache_clock.prompt_cache_is_cold`（すべての刈り込みと退避が使う、ただ 1 つの「冷えている」の判定）は `route_changed` のときにも True を返すので、`/model` やフォールバックで切り替えると、新しい経路での最初のリクエストの前に退避します。`turn_proactive_prune.route_change_offload` はリクエストを組み立てるたびにその前に動くので、ターンの途中でフォールバックにより再開した場合も退避します（実行中のターンが短くされることはありません）。採算の条件（`evaluate_economics`）は次のとおりです。読み込みの費用に、再送の実際の出力上限（`replay_output_cap`。GPT-5 / o シリーズでは 16）とリクエストごとの手数料を足したものが、それによって防げる書き直しの費用を下回ること。1 つの予算の合計が書き直し 1 回分以内であること。料金が分かっていること。前半部分が `MIN_CACHEABLE_PREFIX_TOKENS` 以上であること。金額の下限はありません。`write-on-hit` は延命の再送からだけ学習します。人が相手のチャットでの `auto` の段は `prompt_cache_lifecycle/tier.py` が受け持ちます。`adaptive_start_tier` は 1h が選ばれる場合も 5m から始め（`_cache_ttl_adaptive`）、`maybe_upgrade_cache_tier`（ターン開始時、`_user_turn_count += 1` のあと）は、時計に保証が残っておらず、最後にキャッシュに触れてから `UPGRADE_AFTER_SECONDS` より長くたっているときだけ `_cache_ttl` を 1h に切り替えます（そのため、温かい前半部分の上で目印が変わることはありません）。引き上げはセッション ID ごとに保持され（圧縮の境界では `carry_cache_tier`）、`requested_ttl` が 1h の保存された時計からも導き直されます。`idle_warming_allowed` は、引き上げが済むまでアイドル中の延命を止めておきます。
+
+- 起動: `turn_response_check.check_api_response` は、各レスポンスを時計に取り込んだあとで `start_prompt_cache_warming` を呼びます。`turn_api_request.build_request_payload` はその実行を取り消します（本物のリクエストがエントリを更新するためです）。`conversation_loop.run_conversation` はターンを抜けるたびに `end_turn_prompt_cache_warming` を呼びます。`human_paced` のエージェントは予算を持ち続け、アイドル中に温め直します。サブエージェント、サイドエージェント（`/bg`、`/btw`）、キャッシュをそろえるための分岐（`_skip_prompt_cache_warming`）、`MACHINE_PACED_SOURCES` は止まります。
+- ステップ 2 / 3 の担当: `CHECK_INTERVAL_SECONDS` ごとに `claim_edge()` を確認し、`compress_now(..., trigger="cache_expiry")`（通常の圧縮モデルを使います。きっかけが `force` ではないので、用意済みの `prepare_ahead` の要約があれば再利用します）か、冷えたときの退避を実行します。担当するのは `tui_gateway/session_reaper.py`（定期処理と回収処理が、最大 3 つのデーモンのワーカーにジョブを積みます。`_cache_expiry_submit`。プロファイルの範囲はセッションごとで、判断の結果に応じて圧縮か `_offload_expired_cache` を選びます）と、`GatewaySessionWatchersMixin._compact_idle_sessions_before_cache_expiry`（定期の後片付けです。`hermes chat --cli` も受け持ち、その `GatewayAgent` のターンはゲートウェイの中で動きます。期限の来たものを探す処理は `asyncio.to_thread` で動きます。読み込みから確定まで `claim_gate` を保持し、`_profile_scope_for_source` を使い、切り離された Desktop のチャットは `route_entry` で扱い、ジョブはセッションごとに上限を設けます）です。どの担当も、圧縮のあとには何も送りません。解放の担当: `GatewayAgentCacheMixin._sweep_idle_cached_agents` と `_enforce_agent_cache_cap` は、追い出す各エージェントを `GatewaySessionWatchersMixin._compact_then_release` に渡します（解放の確定は `asyncio.to_thread` の中で行います。期限の来たチャットは圧縮か退避のジョブを実行し、そのあとエージェントはちょうど 1 回だけ解放されます。タスクの完了時のコールバックと、終了時の `run_watchers.drain_pending_cache_releases` によるものです）。TUI の回収処理（`_reap_idle_sessions`、`_enforce_session_cap`）は `_compact_then_close` を通ります（圧縮か退避を行い、まだ回収できる状態なら閉じます）。積まれた TUI のジョブのうち、そのあいだにチャットが閉じられたものは `_manual_compress_turn` で断られます（`_closing`）。
+- 保管: `_plan_compaction_window` は何も書き込みません（先回りの処理も、ツールの一括実行もすべて、これを通して計画します）。`compress()` は要約ができたあとで 1 回だけ保管します（`_commit_window`）。`_assemble_with_archive_list` は、置き換えた行が参照していた `cache/pruned` のファイルのうち、残した行と要約の本文が参照していないものすべてを、`ARCHIVE_LIST_HEADING` の一覧として付け足します。こうして、`referenced_archive_refs`（保持期間の掃除）がそれぞれのファイルを引き続き見つけられるようにします。
+- 料金: 延命の返答は、`record_response_usage` がループ内のレスポンスに値段を付けるのと同じように、そのリクエスト自身が宣言した段で値段を付けます（`prompt_cache_clock.request_write_tier` + `turn_usage.with_write_tier`）。そのため、段の内訳がない OpenRouter の 1h の書き込みは、入力の 2 倍で課金されます。
+- 安全装置: 各延命は起動時に `context_witness` に結び付けられ、送信の前と、返答を時計に取り込む前にもう一度確かめられます。`_admit` は、`cancel` が取るのと同じロックのもとでの唯一の受け付け口です。リセットの世代番号と `session_totals_lock` が累計を守ります。送信のたびに、前後を `pre/post_auxiliary_call`（`aux_task="cache_warm"`）で挟みます。`evaluate_economics` は、読み込みの費用がそれで防げる書き直しの費用より安いことを求め、アイドル中の予算（または 1 回のツール待ち）で課金される合計をその書き直し分より下に抑えます。キャッシュの料金が分からない場合は起動しません。予算方式の思考は決して再送しません。使用量は、起動時に記録したセッションと経路に計上し、セッションの累計にだけ取り込みます。圧縮機構や使用量アンカーに取り込むことはありません。
 
 CLI は起動時にキャッシュの状態を表示します。
 ```
-💾 Prompt caching: ENABLED (Claude via OpenRouter, 5m TTL)
+💾 Prompt caching: ENABLED (Claude via OpenRouter, 1h TTL)
 ```
 
 ## コンテキストの逼迫に関する警告 {#context-pressure-warnings}

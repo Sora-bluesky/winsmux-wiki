@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Code Wiki — どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する"
 description: "どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する"
 upstream_path: user-guide/skills/optional/software-development/software-development-code-wiki.md
-upstream_blob: 606e2d5b82a7f4a2b88809ea3b53e794b970d7eb
+upstream_blob: 1895f26e736fc37b1a6b8c3708c0b8dc79794a01
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/skills/optional/software-development/software-development-code-wiki
 ---
@@ -108,23 +108,11 @@ mkdir -p "$OUTPUT_DIR/modules" "$OUTPUT_DIR/diagrams"
 
 ### 2. リポジトリの構造をスキャンする {#2-scan-repo-structure}
 
-シェルの作業には `terminal` ツールを、マニフェストには `read_file` を使います。
+ファイル構成の把握には `search_files` を使います（主要な言語ごとに `target="files"`、`pattern="*.<ext>"`、
+`path="."` を指定し、`node_modules`、`venv`、`dist`、`build`、`target` の下で見つかったものは除外します）。マニフェストは `read_file` で読み、
+それ以外の作業には `terminal` ツールを使います。
 
 ```bash
-# Shallow tree first
-ls -la
-
-# Deeper tree, noise filtered
-find . -type d \
-  -not -path '*/\.*' \
-  -not -path '*/node_modules*' \
-  -not -path '*/venv*' \
-  -not -path '*/__pycache__*' \
-  -not -path '*/dist*' \
-  -not -path '*/build*' \
-  -not -path '*/target*' \
-  -maxdepth 3 | sort
-
 # Language breakdown (skip if pygount unavailable)
 pygount --format=summary \
   --folders-to-skip=".git,node_modules,venv,.venv,__pycache__,.cache,dist,build,target" \
@@ -380,8 +368,9 @@ Only write this if the project is a library or API server. If it is:
 
 ### 11. Write the state file
 
-```bash
-cat > "$OUTPUT_DIR/.codewiki-state.json" <<EOF
+`write_file` `$OUTPUT_DIR/.codewiki-state.json` with the values filled in:
+
+```json
 {
   "repo_name": "$REPO_NAME",
   "source_path": "$PWD",
@@ -390,7 +379,6 @@ cat > "$OUTPUT_DIR/.codewiki-state.json" <<EOF
   "generator": "hermes-agent code-wiki skill v0.1.0",
   "modules_documented": []
 }
-EOF
 ```
 
 ### 12. ユーザーに報告する {#12-report-to-user}
