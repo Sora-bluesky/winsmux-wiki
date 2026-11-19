@@ -47,9 +47,9 @@
       "translatedAt": "2026-11-17T23:02:10.557Z"
     },
     "developer-guide/context-compression-and-caching.md": {
-      "blob": "9f69c4ca3ca86ab92a0f4695c3392ff1efeb8999",
+      "blob": "36602ac3f95516a82bd756268ecd8ea6a7699697",
       "status": "translated",
-      "translatedAt": "2026-11-18T23:58:35.446Z"
+      "translatedAt": "2026-11-19T22:48:29.274Z"
     },
     "developer-guide/context-engine-plugin.md": {
       "blob": "cc77e98af9ef3a2346cb782187a9bf8a90a98186",
@@ -87,9 +87,9 @@
       "translatedAt": "2026-09-25T22:58:06.482Z"
     },
     "developer-guide/gateway-internals.md": {
-      "blob": "dcfe916a5f1091c7e2d973d8b449e40eea0b64c9",
+      "blob": "c95c05d8a4ae85d59d83300e4339ccbeb410c842",
       "status": "translated",
-      "translatedAt": "2026-11-17T23:02:10.560Z"
+      "translatedAt": "2026-11-19T22:48:29.283Z"
     },
     "developer-guide/image-gen-provider-plugin.md": {
       "blob": "411f9f9f7f7545b18b8d6479061f7c717ddc5090",
@@ -102,9 +102,9 @@
       "translatedAt": "2026-11-17T23:02:10.573Z"
     },
     "developer-guide/model-provider-plugin.md": {
-      "blob": "8ba7b10abe83d02ee0c4a2e62f99047740259cef",
+      "blob": "99a86257561ff897cea7240229992ae81bdbc7a3",
       "status": "translated",
-      "translatedAt": "2026-11-18T23:58:35.464Z"
+      "translatedAt": "2026-11-19T22:48:29.291Z"
     },
     "developer-guide/plugin-llm-access.md": {
       "blob": "a619c06ae25e17c6d0b0f1cb93fd9e3ea8e6c4db",
@@ -112,14 +112,14 @@
       "translatedAt": "2026-11-14T23:10:16.607Z"
     },
     "developer-guide/plugins/index.md": {
-      "blob": "4e84ff266023d20766f3ee3e92f0435806e93e27",
+      "blob": "9f26a5a89c7292006ea8efdf5c1ddf1b10ca7d5e",
       "status": "translated",
-      "translatedAt": "2026-11-18T23:58:35.473Z"
+      "translatedAt": "2026-11-19T22:48:29.322Z"
     },
     "developer-guide/programmatic-integration.md": {
-      "blob": "67a648165f733e9a9cb645772d6fc94a15022815",
+      "blob": "ed1f8f863cdb6966dad332ab2fab4bab1540474b",
       "status": "translated",
-      "translatedAt": "2026-11-15T22:52:37.848Z"
+      "translatedAt": "2026-11-19T22:48:29.287Z"
     },
     "developer-guide/prompt-assembly.md": {
       "blob": "f51608d4bbb2a8a1c4693788bc52cc84df879c76",
@@ -187,14 +187,14 @@
       "translatedAt": "2026-11-09T22:51:26.060Z"
     },
     "getting-started/platform-support.md": {
-      "blob": "5db054f36bfb60cff54c193cdeca807433e0bcfa",
+      "blob": "8fc60b3c541676527c141229468c43a37a785c13",
       "status": "translated",
-      "translatedAt": "2026-11-03T22:50:25.034Z"
+      "translatedAt": "2026-11-19T22:46:40.658Z"
     },
     "getting-started/quickstart.md": {
-      "blob": "0d7c3a7e542ecbb10ad77544edde7175fa12f616",
+      "blob": "18d454ef20cdbe9f1a24faa68ca2d74f8c54ed27",
       "status": "translated",
-      "translatedAt": "2026-10-26T22:56:07.740Z"
+      "translatedAt": "2026-11-19T22:46:40.663Z"
     },
     "getting-started/termux.md": {
       "blob": "69d3f0b6c32fafc48c48566553d5886c24fcff9c",
@@ -322,9 +322,9 @@
       "translatedAt": "2026-09-24T22:55:05.664Z"
     },
     "guides/run-nemotron-3-ultra-free.md": {
-      "blob": "4239e05e37e39064e8e584923b4e70676af4e7b3",
+      "blob": "a07c995b631bee2246544adb4787dc8c0587905a",
       "status": "translated",
-      "translatedAt": "2026-09-18T22:41:13.113Z"
+      "translatedAt": "2026-11-19T22:46:40.664Z"
     },
     "guides/secure-hermes-on-a-work-machine.md": {
       "blob": "2ecf8cc20faac235a1e55a5b847e5c0f057643a5",
@@ -397,9 +397,9 @@
       "translatedAt": "2026-11-18T23:58:35.480Z"
     },
     "reference/cli-commands.md": {
-      "blob": "5febec2160e252ccfcc4e17aecf15acedd3624f3",
+      "blob": "246e5ac92d14b936ab9a1ddfc9d82a4d8498d6e0",
       "status": "translated",
-      "translatedAt": "2026-11-16T22:50:21.896Z"
+      "translatedAt": "2026-11-19T22:48:29.311Z"
     },
     "reference/cli-symbols.md": {
       "blob": "76d0fcd513551ad62992ffc06f63494b1ad2bed9",
@@ -417,9 +417,9 @@
       "translatedAt": "2026-11-17T23:02:10.583Z"
     },
     "reference/mcp-config-reference.md": {
-      "blob": "48e0c66eb13514cc3d194dfa1ed74afeaf0995f7",
+      "blob": "8a5eda27f38a520e4d7a6a46421dc15705328916",
       "status": "translated",
-      "translatedAt": "2026-10-24T23:12:49.450Z"
+      "translatedAt": "2026-11-19T22:48:29.314Z"
     },
     "reference/model-catalog.md": {
       "blob": "19ee831a2d9c12968411f854d12e6a2ade369558",
@@ -472,9 +472,9 @@
       "translatedAt": "2026-11-12T22:59:44.755Z"
     },
     "user-guide/configuration.md": {
-      "blob": "22e78ba9000cb6e66bcabb383e9f3560f8f53e1d",
+      "blob": "d4f6c0318cf620f2650f71efb0888caeb1a7476e",
       "status": "translated",
-      "translatedAt": "2026-11-18T23:58:35.494Z"
+      "translatedAt": "2026-11-19T22:46:40.673Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "3e15fe3b8a97ddeaa7bfd996c3fd5f90849770d9",
@@ -642,9 +642,9 @@
       "translatedAt": "2026-10-17T22:47:14.261Z"
     },
     "user-guide/features/mcp.md": {
-      "blob": "9e68ace72117672084e9a9e2ebe18c8b37a7e015",
+      "blob": "944b1ae11eb4626e156129d541249b5239c19ecd",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.656Z"
+      "translatedAt": "2026-11-19T22:46:40.676Z"
     },
     "user-guide/features/memory-providers.md": {
       "blob": "a7827a17909641403c3c5edf4ba665db4d7a3606",
@@ -762,9 +762,9 @@
       "translatedAt": "2026-11-06T22:59:23.140Z"
     },
     "user-guide/import-from-other-agents.md": {
-      "blob": "1fdf9ed44a629a3a7e603df48b5d911145f4615e",
+      "blob": "cc2af9a659da7fbc2087d8d1d07b786b5433a4ec",
       "status": "translated",
-      "translatedAt": "2026-11-02T04:44:36.613Z"
+      "translatedAt": "2026-11-19T22:48:29.327Z"
     },
     "user-guide/managed-scope.md": {
       "blob": "c514bab280fc6cef2706980b1b63c67eaaf9e802",
@@ -2181,9 +2181,9 @@
       "translatedAt": "2026-11-17T23:02:10.542Z"
     },
     "user-guide/features/credential-vault.md": {
-      "blob": "0f1f547ba14bc01d34046ff4cd4c64bd13ee9261",
+      "blob": "6dc88c439133b0678f79f249c96e136989ee8ce6",
       "status": "translated",
-      "translatedAt": "2026-11-07T22:58:47.887Z"
+      "translatedAt": "2026-11-19T22:46:40.674Z"
     },
     "user-guide/free-tier.md": {
       "blob": "c03e502406b34d7e0a09fa2c9915aa4eb6494f99",
@@ -2351,9 +2351,9 @@
       "translatedAt": "2026-09-25T22:58:06.504Z"
     },
     "developer-guide/shared-bundle-builds.md": {
-      "blob": "514b87c414942b4d4587c377f7c65075b0fffdea",
+      "blob": "d008f84cf1b7e76e5c33f5f49502375562c8843c",
       "status": "translated",
-      "translatedAt": "2026-11-13T23:04:55.220Z"
+      "translatedAt": "2026-11-19T22:48:29.296Z"
     },
     "developer-guide/source-update-completion.md": {
       "blob": "d5343d1afc456f8b9a3b26f9611b0bd266a338aa",
@@ -2361,9 +2361,9 @@
       "translatedAt": "2026-11-07T22:58:47.888Z"
     },
     "developer-guide/stable-releases.md": {
-      "blob": "8b99f66c35bfbfd601803a69ce973f6137b1a5c6",
+      "blob": "73abc22f200c40d973b67ec69f1c11ecb4ca3b0d",
       "status": "translated",
-      "translatedAt": "2026-11-18T23:58:35.535Z"
+      "translatedAt": "2026-11-19T22:48:29.301Z"
     },
     "reference/package-management.md": {
       "blob": "b066d18ddce561ec7808bc4aecc86a90040805c5",
@@ -2541,5 +2541,5 @@
       "translatedAt": "2026-11-17T23:02:10.590Z"
     }
   },
-  "snapshotCommit": "52811481bc07b18b073790cd2a168a832c92acd7"
+  "snapshotCommit": "bb13381eeeb7393c22889bbb01f335fed5dc3810"
 }

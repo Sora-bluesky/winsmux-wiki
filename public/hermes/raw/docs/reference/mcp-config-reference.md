@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "MCP 設定の早見表"
 description: "Hermes Agent の MCP 設定キー、絞り込みの動き、ユーティリティツールの方針をまとめた早見表です。"
 upstream_path: reference/mcp-config-reference.md
-upstream_blob: 48e0c66eb13514cc3d194dfa1ed74afeaf0995f7
+upstream_blob: 8a5eda27f38a520e4d7a6a46421dc15705328916
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
 ---
@@ -63,6 +63,7 @@ mcp_servers:
 | `connect_timeout` | 数値 | 両方 | 最初に接続するときの制限時間を秒で指定します（既定は `60`） |
 | `protocol` | 文字列 | 両方 | どの世代のプロトコルで話すかの決め方です。`auto`（既定。まず従来の `initialize` のやりとりを試し、サーバーが新しい方式しか受け付けないと断ってきたら 2026-07-28 の `server/discover` によるステートレスな問い合わせに切り替えます）、`stateless`（先に `server/discover` を試し、従来方式は一度だけ再試行します）、`legacy`（従来のやりとりだけを使い、切り替えません）が選べます |
 | `supports_parallel_tool_calls` | 真偽値 | 両方 | このサーバーのツールを同時に走らせてよいかどうかです |
+| `single_instance` | 真偽値 | stdio | 動いている子プロセスを、システム全体で 1 つだけに限ります（書き込めるのが 1 つだけのデータストア向けです）。2 つ目の利用元は、そのリソースがすでに使われていると分かると、静かに待機します（一定の間隔で自分から確認しに行くこともしません）。明示的に再接続したときに再び動き出します。詳しくは MCP のガイドをご覧ください |
 | `skip_preflight` | 真偽値 | HTTP | HEAD/GET に MCP 以外の content type を返してくる、けれども Streamable HTTP としては正しいエンドポイント向けに、事前確認で即座に打ち切る動きを回避します（既定は `false`） |
 | `transport` | 文字列 | HTTP | `sse` にすると、Streamable HTTP ではなく SSE で通信します |
 | `keepalive_interval` | 数値 | 両方 | 生存確認の ping を送る間隔を秒で指定します（下限は 5 秒）。HTTP の既定は `180` です。使っていないセッションをすぐ片付けるサーバーでは、そのセッション有効期間より短くしてください。stdio では、省略すると生存確認を行いません。使う場合は明示的に値を指定してください |

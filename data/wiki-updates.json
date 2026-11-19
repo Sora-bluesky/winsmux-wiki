@@ -1,6 +1,93 @@
 {
-  "generatedAt": "2026-11-19",
+  "generatedAt": "2026-11-20",
   "entries": [
+    {
+      "date": "2026-11-20",
+      "sha": null,
+      "upstream": "bb13381",
+      "pages": [
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/gateway-internals",
+          "title": "ゲートウェイの内部",
+          "url": "/hermes/docs/developer-guide/gateway-internals/"
+        },
+        {
+          "id": "developer-guide/model-provider-plugin",
+          "title": "モデルプロバイダーのプラグイン",
+          "url": "/hermes/docs/developer-guide/model-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/programmatic-integration",
+          "title": "外部プログラムからの連携",
+          "url": "/hermes/docs/developer-guide/programmatic-integration/"
+        },
+        {
+          "id": "developer-guide/shared-bundle-builds",
+          "title": "共有バンドルビルド",
+          "url": "/hermes/docs/developer-guide/shared-bundle-builds/"
+        },
+        {
+          "id": "developer-guide/stable-releases",
+          "title": "安定版リリースの受け入れと昇格",
+          "url": "/hermes/docs/developer-guide/stable-releases/"
+        },
+        {
+          "id": "getting-started/platform-support",
+          "title": "対応プラットフォーム",
+          "url": "/hermes/docs/getting-started/platform-support/"
+        },
+        {
+          "id": "getting-started/quickstart",
+          "title": "Hermes Agent クイックスタート",
+          "url": "/hermes/docs/getting-started/quickstart/"
+        },
+        {
+          "id": "guides/run-nemotron-3-ultra-free",
+          "title": "Hermes Agent で Nemotron 3 Ultra を無料で動かす",
+          "url": "/hermes/docs/guides/run-nemotron-3-ultra-free/"
+        },
+        {
+          "id": "reference/cli-commands",
+          "title": "CLIコマンド一覧",
+          "url": "/hermes/docs/reference/cli-commands/"
+        },
+        {
+          "id": "reference/mcp-config-reference",
+          "title": "MCP 設定の早見表",
+          "url": "/hermes/docs/reference/mcp-config-reference/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/credential-vault",
+          "title": "パスワードとログイン",
+          "url": "/hermes/docs/user-guide/features/credential-vault/"
+        },
+        {
+          "id": "user-guide/features/mcp",
+          "title": "MCP（Model Context Protocol）",
+          "url": "/hermes/docs/user-guide/features/mcp/"
+        },
+        {
+          "id": "user-guide/import-from-other-agents",
+          "title": "他のエージェントから取り込む",
+          "url": "/hermes/docs/user-guide/import-from-other-agents/"
+        }
+      ]
+    },
     {
       "date": "2026-11-19",
       "sha": "7f2e25b",
@@ -15682,6 +15769,7 @@
     "2026-W43": "プラグインまわりが広く更新され、プラグインの作り方やカタログへの登録申請、デスクトップのプラグイン SDK、画像生成プロバイダやターミナル環境プロバイダのプラグインのページに手が入りました。ゲートウェイでは、コマンド対応表やいくつも同時に動かす手順が引き続き更新され、オブザーバーフックやイベントフック、サブエージェントへの委任の説明も見直されています。ほかに、クイックスタートや設定、CLI コマンド一覧、MCP、カンバン、Telegram、Hermes Desktop、A2A（エージェント間連携）、安定版リリースの受け入れと昇格のページが新しい内容になりました。",
     "2026-W44": "プラグインまわりが広く更新され、プラグインの作り方やデスクトップのプラグイン SDK、モデル・画像生成・動画生成・ウェブ検索のプロバイダのプラグイン、コンテキストエンジンやブラウザ保管庫のプラグインのページに手が入りました。設定では、設定バックエンドの境界層やリモート設定、環境変数、プロバイダーの追加と実行時の解決、フォールバックプロバイダーの説明が見直されています。ほかに、cron の内部構造と定期実行タスク、Nix と Docker のセットアップ、Hermes Desktop、管理画面、カンバン、Git ワークツリーに加え、Notion や Airtable、Box、OpenCode、Node.js と Python のデバッガ、vLLM や Faiss などのスキルのページが新しい内容になりました。",
     "2026-W45": "プロバイダーまわりが広く更新され、プロバイダーの追加や実行時の解決、フォールバック、AWS Bedrock のページに手が入りました。設定・CLI コマンド・環境変数・プラグイン・イベントフックに加え、ゲートウェイと Slack・Telegram・Mattermost、Hermes Desktop のページも見直されています。スキルでは Office・PDF・Excel・PowerPoint を扱うものや Stripe の支払いまわりが新しい内容になり、Notion・Airtable・Shopify・DuckDuckGo・SearXNG などのオプションスキルは公式から外れました。",
-    "2026-W46": "メッセージングゲートウェイまわりが広く更新され、Telegram・Discord・WhatsApp・Slack の各ページのほか、ゲートウェイの内部やセッションライフサイクル、Multiplexing Gateway の内部構造、従来型のゲートウェイクライアント、Relay ↔ Connector 契約、プラットフォームアダプターの追加に手が入りました。プラグインでは、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、ターミナル環境プロバイダプラグイン、ダッシュボードを広げるページが見直され、Hermes Desktop とデスクトップ版を複数の Hermes につなぐ説明も更新されています。ほかに、Google Gemini やフォールバックプロバイダーなどのモデルプロバイダ、設定・CLIコマンド一覧・環境変数、記憶プロバイダーやコンテキストの圧縮とキャッシュ、サブエージェントへの委任、定期実行タスク、セキュリティ、Nix と NixOS のセットアップのページが新しい内容になりました。"
+    "2026-W46": "メッセージングゲートウェイまわりが広く更新され、Telegram・Discord・WhatsApp・Slack の各ページのほか、ゲートウェイの内部やセッションライフサイクル、Multiplexing Gateway の内部構造、従来型のゲートウェイクライアント、Relay ↔ Connector 契約、プラットフォームアダプターの追加に手が入りました。プラグインでは、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、ターミナル環境プロバイダプラグイン、ダッシュボードを広げるページが見直され、Hermes Desktop とデスクトップ版を複数の Hermes につなぐ説明も更新されています。ほかに、Google Gemini やフォールバックプロバイダーなどのモデルプロバイダ、設定・CLIコマンド一覧・環境変数、記憶プロバイダーやコンテキストの圧縮とキャッシュ、サブエージェントへの委任、定期実行タスク、セキュリティ、Nix と NixOS のセットアップのページが新しい内容になりました。",
+    "2026-W47": "プラグインまわりが大きく見直され、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、プラグインカタログとその登録申請、同梱のプラグインのほか、モデル・画像生成・動画生成・メモリー・コンテキストエンジン・ターミナル環境の各プロバイダプラグインに手が入りました。スキルでは、スキルの仕組みと作り方に加えて、Manim による数学動画、Pinggy トンネル、RSS や GitHub の定期チェック、Minecraft の MOD 入りサーバー、リモート MCP サーバーの OAuth、バイオインフォマティクス、OSINT 調査、ML 論文の執筆、ast-grep、Code Wiki、debugpy によるデバッグ、サイト公開などのページが更新されています。ほかに、アーキテクチャやエージェントループ・ACP・ゲートウェイの内部、セッションの保存領域と state.db の復旧、設定・環境変数・CLIコマンド一覧・スラッシュコマンド早見表、フォールバックプロバイダー、バックアップと移行、チェックポイントと /rollback、セキュリティ、Hermes Desktop、API サーバーのページが新しい内容になりました。"
   }
 }

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 8b99f66c35bfbfd601803a69ce973f6137b1a5c6
+upstream_blob: 73abc22f200c40d973b67ec69f1c11ecb4ca3b0d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -301,7 +301,7 @@ Store の突き合わせは、フィードとエイリアスがすでに最新�
 デスクトップのワークフローは `jobs` 入力を受け取り、グループは `darwin-arm64`、
 `win32-arm64`、`win32-x64`、`win32-bundle`、`linux-x64`、`linux-arm64`、
 `termux` です。安定版はグループごとに1回ずつ呼び出しますが、linux の
-グループは本物の Linux ビルドができるまで待ちます。また、`termux` と、
+グループ（その診断用 AppImage ビルドを選ぶレーンはまだありません）と、`termux` や
 クレームがそのレーンを外しているほかのグループは呼び出しません。Mac のアーキテクチャと Windows のバンドルは
 受領証をステージングし、各インストール系統は、自分のバイト列がステージングされた時点で
 自分の受領証から開始します。公開をブロックする合流点は `acceptance` ただ1つです。
@@ -510,7 +510,8 @@ R2 だけを読むソースの読み手を出荷する前に、明示的で保�
   該当するソース CI のジョブは、変更されたパスにかかわらずすべて実行されます。
 - OSV の脆弱性検出は、既存の勧告扱いのポリシーを保ちます。必須の
   スキャナーの実行失敗は失敗であり、勧告扱いの検出ではありません。
-- 無効にしている Linux デスクトップのパッケージングは、出荷済みとは主張しません。ネイティブ Linux の
+- Linux デスクトップの AppImage は診断用のカナリアビルドであり、
+  出荷済みとは主張しません。ネイティブ Linux の
   PM バンドル、Docker、Nix、インストール/更新の確認は引き続き必須です。
 - ハウスキーピング、自動修正、コメント、スキル索引/デプロイのワークフローは、
   リリースの受け入れスイートではありません。

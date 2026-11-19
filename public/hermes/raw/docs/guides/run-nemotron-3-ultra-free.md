@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent で Nemotron 3 Ultra を無料で動かす"
 description: "Nous Portal の NVIDIA Nemotron 3 Ultra を試す。6 月 4 日〜18 日は無料、Hermes Agent は初日から対応"
 upstream_path: guides/run-nemotron-3-ultra-free.md
-upstream_blob: 4239e05e37e39064e8e584923b4e70676af4e7b3
+upstream_blob: a07c995b631bee2246544adb4787dc8c0587905a
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/run-nemotron-3-ultra-free
 ---
@@ -70,13 +70,13 @@ iex (irm https://hermes-agent.nousresearch.com/install.ps1)
 source ~/.bashrc   # or source ~/.zshrc
 ```
 
-### 2. クイックセットアップを走らせる {#2-run-quick-setup}
+### 2. セットアップを実行する {#2-run-setup}
 
 ```bash
 hermes setup
 ```
 
-**Quick Setup** を選びます。Hermes がブラウザーのタブを開き、次の手順が終わるのを待ちます。
+**How do you want to power Hermes?** と聞かれたら、**Sign in to Nous Portal** を選びます。Hermes がブラウザーのタブを開き、次の手順が終わるのを待ちます。
 
 ### 3. Nous Portal のアカウントを作る {#3-create-a-nous-portal-account}
 
@@ -98,7 +98,7 @@ nvidia/nemotron-3-ultra:free
 
 ### 6. 話しかけてみる {#6-start-chatting}
 
-クイックセットアップの残りの質問に答えたら、次を実行します。
+セットアップが終わると、次にやることの短い一覧が表示されます。そのあとで次を実行します。
 
 ```bash
 hermes

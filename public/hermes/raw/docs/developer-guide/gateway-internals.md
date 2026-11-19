@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: dcfe916a5f1091c7e2d973d8b449e40eea0b64c9
+upstream_blob: c95c05d8a4ae85d59d83300e4339ccbeb410c842
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -390,7 +390,9 @@ CLI の費用と学習データ利用への同意は、ゲートウェイの探�
 対話のないセットアップや取り込みでは、取り込んだ設定が `install` でも、
 入っていないサービスを導入しません。すでに入っているサービスはそのまま正として扱われ、
 保存された設定にかかわらず起動できます。後から明示的に導入するには `hermes gateway install` を実行します。
-選択が記録されるのは、導入に成功した後だけです。セットアップでもう一度尋ねてほしいときは、
+選択が記録されるのは、導入に成功した後だけです。インストーラーがセットアップの後に行う手順
+`hermes gateway install --if-missing` は、2度目の同意ではありません。断ったことが記録されていれば何も導入せず、
+セットアップで一度も尋ねていなければ同じ質問をします。セットアップでもう一度尋ねてほしいときは、
 `hermes config set gateway.service_install_choice null` で選択を戻してください。
 
 セットアップの段取りは `hermes_cli/gateway_setup_service.py` にあります。その

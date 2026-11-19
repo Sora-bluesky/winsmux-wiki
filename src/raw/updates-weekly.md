@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-11-19、対象期間 = 2026-11-13 〜 2026-11-19（JST）
+生成日 = 2026-11-20、対象期間 = 2026-11-14 〜 2026-11-20（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,14 +16,25 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
-- 2026-11-19 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- 2026-11-20 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- 2026-11-20 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- 2026-11-20 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- 2026-11-20 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- 2026-11-20 [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
+- 2026-11-20 [共有バンドルビルド](https://wiki.winsmux.dev/hermes/docs/developer-guide/shared-bundle-builds/)
+- 2026-11-20 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- 2026-11-20 [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
+- 2026-11-20 [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
+- 2026-11-20 [Hermes Agent で Nemotron 3 Ultra を無料で動かす](https://wiki.winsmux.dev/hermes/docs/guides/run-nemotron-3-ultra-free/)
+- 2026-11-20 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- 2026-11-20 [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
+- 2026-11-20 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- 2026-11-20 [パスワードとログイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-vault/)
+- 2026-11-20 [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
+- 2026-11-20 [他のエージェントから取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/import-from-other-agents/)
 - 2026-11-19 [コントリビュート](https://wiki.winsmux.dev/hermes/docs/developer-guide/contributing/)
 - 2026-11-19 [画像生成プロバイダのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/image-gen-provider-plugin/)
-- 2026-11-19 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
-- 2026-11-19 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
-- 2026-11-19 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
 - 2026-11-19 [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
-- 2026-11-19 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - 2026-11-19 [Manim Video — Manim CE のアニメーション: 3Blue1Brown 風の数学・アルゴリズム動画](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/creative/creative-manim-video/)
 - 2026-11-19 [Simplify Code — 直近のコード変更を、4 つのエージェントで並行して片づけます](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/software-development/software-development-simplify-code/)
 - 2026-11-19 [System Atlas — 見て回れるアイソメトリックの構成アトラスを HTML で作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/)
@@ -47,7 +58,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-18 [コンテキストエンジンのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-engine-plugin/)
 - 2026-11-18 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - 2026-11-18 [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
-- 2026-11-18 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
 - 2026-11-18 [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
 - 2026-11-18 [ゲートウェイのセッションライフサイクル](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-session-lifecycle/)
 - 2026-11-18 [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
@@ -76,11 +86,9 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-17 [スキルを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/creating-skills/)
 - 2026-11-17 [ターミナル環境プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/terminal-environment-plugin/)
 - 2026-11-17 [軌跡の形式](https://wiki.winsmux.dev/hermes/docs/developer-guide/trajectory-format/)
-- 2026-11-17 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - 2026-11-17 [バックアップと移行](https://wiki.winsmux.dev/hermes/docs/user-guide/backup-and-transfer/)
 - 2026-11-17 [チェックポイントと /rollback](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
 - 2026-11-17 [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
-- 2026-11-16 [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
 - 2026-11-16 [スラッシュコマンド早見表](https://wiki.winsmux.dev/hermes/docs/reference/slash-commands/)
 - 2026-11-16 [音声と読み上げ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tts/)
 - 2026-11-16 [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
@@ -99,7 +107,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-15 [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
 - 2026-11-15 [キュレーター](https://wiki.winsmux.dev/hermes/docs/user-guide/features/curator/)
 - 2026-11-15 [カンバン（マルチエージェント盤）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/kanban/)
-- 2026-11-15 [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
 - 2026-11-15 [記憶プロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory-providers/)
 - 2026-11-15 [ずっと残る記憶](https://wiki.winsmux.dev/hermes/docs/user-guide/features/memory/)
 - 2026-11-15 [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
@@ -120,7 +127,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-14 [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
 - 2026-11-14 [macOS バンドルの更新](https://wiki.winsmux.dev/hermes/docs/developer-guide/macos-bundle-updates/)
 - 2026-11-14 [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
-- 2026-11-14 [共有バンドルビルド](https://wiki.winsmux.dev/hermes/docs/developer-guide/shared-bundle-builds/)
 - 2026-11-14 [OpenClaw から移ってくる](https://wiki.winsmux.dev/hermes/docs/guides/migrate-from-openclaw/)
 - 2026-11-14 [xAI Grok OAuth（SuperGrok / X Premium+）](https://wiki.winsmux.dev/hermes/docs/guides/xai-grok-oauth/)
 - 2026-11-14 [Nous Portal](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
@@ -145,18 +151,12 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-14 [Codex — OpenAI Codex CLI にコーディングを任せる（機能追加、PR）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/)
 - 2026-11-14 [Opencode — コーディングを OpenCode CLI に任せる（機能追加、PR レビュー）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/)
 - 2026-11-14 [1Password — op CLI を用意してサインインし、秘密の値を読み書きする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-1password/)
-- 2026-11-13 [実行時のプロバイダー解決](https://wiki.winsmux.dev/hermes/docs/developer-guide/provider-runtime/)
-- 2026-11-13 [自動化の型紙](https://wiki.winsmux.dev/hermes/docs/guides/automation-blueprints/)
-- 2026-11-13 [Google Gemini](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/)
-- 2026-11-13 [CLI 画面](https://wiki.winsmux.dev/hermes/docs/user-guide/cli/)
-- 2026-11-13 [コードの実行](https://wiki.winsmux.dev/hermes/docs/user-guide/features/code-execution/)
-- 2026-11-13 [Hermes Relay](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/relay/)
 
 ## 週次まとめ
 
-対象週: 2026-W46
+対象週: 2026-W47
 
-メッセージングゲートウェイまわりが広く更新され、Telegram・Discord・WhatsApp・Slack の各ページのほか、ゲートウェイの内部やセッションライフサイクル、Multiplexing Gateway の内部構造、従来型のゲートウェイクライアント、Relay ↔ Connector 契約、プラットフォームアダプターの追加に手が入りました。プラグインでは、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、ターミナル環境プロバイダプラグイン、ダッシュボードを広げるページが見直され、Hermes Desktop とデスクトップ版を複数の Hermes につなぐ説明も更新されています。ほかに、Google Gemini やフォールバックプロバイダーなどのモデルプロバイダ、設定・CLIコマンド一覧・環境変数、記憶プロバイダーやコンテキストの圧縮とキャッシュ、サブエージェントへの委任、定期実行タスク、セキュリティ、Nix と NixOS のセットアップのページが新しい内容になりました。
+プラグインまわりが大きく見直され、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、プラグインカタログとその登録申請、同梱のプラグインのほか、モデル・画像生成・動画生成・メモリー・コンテキストエンジン・ターミナル環境の各プロバイダプラグインに手が入りました。スキルでは、スキルの仕組みと作り方に加えて、Manim による数学動画、Pinggy トンネル、RSS や GitHub の定期チェック、Minecraft の MOD 入りサーバー、リモート MCP サーバーの OAuth、バイオインフォマティクス、OSINT 調査、ML 論文の執筆、ast-grep、Code Wiki、debugpy によるデバッグ、サイト公開などのページが更新されています。ほかに、アーキテクチャやエージェントループ・ACP・ゲートウェイの内部、セッションの保存領域と state.db の復旧、設定・環境変数・CLIコマンド一覧・スラッシュコマンド早見表、フォールバックプロバイダー、バックアップと移行、チェックポイントと /rollback、セキュリティ、Hermes Desktop、API サーバーのページが新しい内容になりました。
 
 ## 正本
 

@@ -2,7 +2,7 @@
 title: "対応プラットフォーム"
 description: "Hermes Agent が対応している OS、配布方法、機能の一覧"
 upstream_path: getting-started/platform-support.md
-upstream_blob: 5db054f36bfb60cff54c193cdeca807433e0bcfa
+upstream_blob: 8fc60b3c541676527c141229468c43a37a785c13
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/platform-support
 ---
@@ -49,8 +49,8 @@ Termux を含まないリリースでは、Termux の APT チャンネルは前�
 ブートストラップ用のインストーラー `Hermes-Setup.dmg` は Apple Silicon 向けにしかビルドされていないため、
 Intel の Mac では「この Mac には対応していません」と表示されます。Intel の Mac では、
 [CLI](/hermes/docs/getting-started/installation/#linux--macos--wsl2) を入れて `hermes desktop` を実行してください。
-Linux のデスクトップ版のパッケージ作成はリリースのワークフローで無効にしています。ただし、ローカルでの
-AppImage のビルドと、Linux ネイティブのパッケージマネージャー向けバンドルの確認は用意されています。
+Linux のデスクトップ版の AppImage は、canary タグで診断用の成果物としてビルドされていますが、まだどのリリースでも配布していません。
+ローカルでの AppImage のビルドと、Linux ネイティブのパッケージマネージャー向けバンドルの確認は用意されています。
 
 ## 非対応 {#unsupported}
 

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "モデルプロバイダーのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダー（推論バックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: 8ba7b10abe83d02ee0c4a2e62f99047740259cef
+upstream_blob: 99a86257561ff897cea7240229992ae81bdbc7a3
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -709,13 +709,19 @@ for p in list_providers():
 
 ## プラグインを試す {#testing-your-plugin}
 
-本番の設定を汚さないように、`HERMES_HOME` を一時ディレクトリに向けてください。そのうえで
+本番の設定を汚さないように、`HERMES_HOME` を使い捨てのディレクトリに向けてください。そのうえで
 `$HERMES_HOME/plugins/model-providers/my-provider/__init__.py` を書きます（エージェントなら
 `write_file` を使います。これはディレクトリも作ってくれます）。
 
 ```bash
-export HERMES_HOME=$HOME/.hermes/cache/scratch/hermes-plugin-test
+export HERMES_HOME=$HOME/hermes-plugin-test
 ```
+
+このディレクトリは、`~/.hermes/cache/scratch` など、古くなると自動で消される一時ディレクトリの外に置いてください。
+動いている Hermes は、Hermes のルートの下にある
+`runtime/provider-plugins/` のコピーからプラグインを読み込みます（ルートは `$HERMES_HOME` そのもので、名前付きのプロファイルなら `profiles/` の 1 つ上です）。
+掃除の仕組みがこのコピーを消してしまうと、プロセスを再起動するまで、
+そのプラグインのその後の読み込みが失敗します。
 
 ```python
 from providers import register_provider

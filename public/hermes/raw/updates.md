@@ -8,6 +8,25 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-20
+
+- [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
+- [共有バンドルビルド](https://wiki.winsmux.dev/hermes/docs/developer-guide/shared-bundle-builds/)
+- [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
+- [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
+- [Hermes Agent で Nemotron 3 Ultra を無料で動かす](https://wiki.winsmux.dev/hermes/docs/guides/run-nemotron-3-ultra-free/)
+- [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [パスワードとログイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-vault/)
+- [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
+- [他のエージェントから取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/import-from-other-agents/)
+
 ## 2026-11-19
 
 - [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
@@ -3354,3 +3373,7 @@ Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ�
 ## 週次まとめ 2026-W46
 
 メッセージングゲートウェイまわりが広く更新され、Telegram・Discord・WhatsApp・Slack の各ページのほか、ゲートウェイの内部やセッションライフサイクル、Multiplexing Gateway の内部構造、従来型のゲートウェイクライアント、Relay ↔ Connector 契約、プラットフォームアダプターの追加に手が入りました。プラグインでは、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、ターミナル環境プロバイダプラグイン、ダッシュボードを広げるページが見直され、Hermes Desktop とデスクトップ版を複数の Hermes につなぐ説明も更新されています。ほかに、Google Gemini やフォールバックプロバイダーなどのモデルプロバイダ、設定・CLIコマンド一覧・環境変数、記憶プロバイダーやコンテキストの圧縮とキャッシュ、サブエージェントへの委任、定期実行タスク、セキュリティ、Nix と NixOS のセットアップのページが新しい内容になりました。
+
+## 週次まとめ 2026-W47
+
+プラグインまわりが大きく見直され、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、プラグインカタログとその登録申請、同梱のプラグインのほか、モデル・画像生成・動画生成・メモリー・コンテキストエンジン・ターミナル環境の各プロバイダプラグインに手が入りました。スキルでは、スキルの仕組みと作り方に加えて、Manim による数学動画、Pinggy トンネル、RSS や GitHub の定期チェック、Minecraft の MOD 入りサーバー、リモート MCP サーバーの OAuth、バイオインフォマティクス、OSINT 調査、ML 論文の執筆、ast-grep、Code Wiki、debugpy によるデバッグ、サイト公開などのページが更新されています。ほかに、アーキテクチャやエージェントループ・ACP・ゲートウェイの内部、セッションの保存領域と state.db の復旧、設定・環境変数・CLIコマンド一覧・スラッシュコマンド早見表、フォールバックプロバイダー、バックアップと移行、チェックポイントと /rollback、セキュリティ、Hermes Desktop、API サーバーのページが新しい内容になりました。

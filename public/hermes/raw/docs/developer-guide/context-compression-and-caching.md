@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "コンテキストの圧縮とキャッシュ"
 description: ""
 upstream_path: developer-guide/context-compression-and-caching.md
-upstream_blob: 9f69c4ca3ca86ab92a0f4695c3392ff1efeb8999
+upstream_blob: 36602ac3f95516a82bd756268ecd8ea6a7699697
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching
 ---
@@ -313,7 +313,7 @@ auxiliary:
 | `in_place` | `true` | bool | 新しいセッションに切り替えず、同じセッション ID のまま圧縮します（後述） |
 | `prepare_ahead` | `false` | bool | 任意設定: 発動点が近づいたら次の要約をバックグラウンドで書いておき、それがまだ同じメッセージを対象にしていれば、次の自動の圧縮で差し込みます（後述） |
 
-キャッシュの期限際での圧縮は、プロンプトキャッシュのライフサイクル（`agent/prompt_cache_lifecycle/`。設定キーはありません。後述のプロンプトキャッシュを参照）のステップ 2 にあたります。どの圧縮の経路も、先に要約し、そのあとで保管します。`CompactionWindowMixin._plan_compaction_window`（`agent/context_compressor_window.py`）は何も書き込まず、境界を決めるだけです。`summary_view` は、範囲内のツール結果を元の形に戻して要約役に渡します（`clarify` の結果は絞り込んだ 1 行のままで、古いヘッドレス時代の案内はそこで落ちます）。`_commit_window` は要約ができてから初めて動きます。`tool_result_storage.archive_compaction_drops` が、削除されたり短くされたりした元の結果をそれぞれバイト単位でそのまま `cache/pruned/` に書き出し（短い結果や重複した文字列の結果も含みます）、スタブにそのファイルを指させます。`_offload_window_results` は範囲内の結果を丸ごと保管し、lean モードでは末尾の古くなった結果を縮めます。先回りの処理（`agent/prepared_compaction.py`）は `summary_view` の行を要約するだけで何も書き込まず、保管は差し込む側の `compress()` が行います。要約が中断した場合は何も保管しません。書き込みに失敗した場合は、その結果を丸ごと残したまま圧縮を進めます。ローカル以外のバックエンド（docker、ssh、modal、daytona など）では、保管はせずにただのスタブを残します（そこではモデルがホストのファイルを読めないためです）。
+キャッシュの期限際での圧縮は、プロンプトキャッシュのライフサイクル（`agent/prompt_cache_lifecycle/`。設定キーはありません。後述のプロンプトキャッシュを参照）のステップ 2 にあたります。どの圧縮の経路も、先に要約し、そのあとで保管します。`CompactionWindowMixin._plan_compaction_window`（`agent/context_compressor_window.py`）は何も書き込まず、境界を決めるだけです。`summary_view` は、範囲内のツール結果を元の形に戻して要約役に渡します（`clarify` の結果は絞り込んだ 1 行のままで、古いヘッドレス時代の案内はそこで落ちます）。`_commit_window` は要約ができてから初めて動きます。`tool_result_storage.archive_compaction_drops` が、削除されたり短くされたりした元の結果をそれぞれバイト単位でそのまま `cache/pruned/` に書き出し（短い結果や重複した文字列の結果も含みます）、スタブにそのファイルを指させます。`_offload_window_results` は範囲内の結果を丸ごと保管し、lean モードでは末尾の古くなった結果を縮めます。先回りの処理（`agent/prepared_compaction.py`）は `summary_view` の行を要約するだけで何も書き込まず、保管は差し込む側の `compress()` が行います。要約が中断した場合は何も保管しません。書き込みに失敗した場合は、その結果を丸ごと残したまま圧縮を進めます。サンドボックス化されたバックエンドでは、スタブにはサンドボックスの側から読めるパスを記します（`tool_result_storage._archive_stub_path`。`cache/pruned` は `credential_files._CACHE_DIRS` に含まれているので、docker ではこのフォルダーがバインドマウントされ、modal/ssh/daytona/vercel_sandbox では同期されます）。ただのスタブを残すのは、このフォルダーを公開しないバックエンド（プラグインやホスト型のスコープで、`_archive_backend()` が None になるもの）だけです。
 
 ### その場での圧縮（安定した単一のセッション ID） {#in-place-compaction-single-stable-session-id}
 

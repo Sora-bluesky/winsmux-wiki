@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "他のエージェントから取り込む"
 description: "OpenClaw（~/.openclaw）、Claude Code（~/.claude）、OpenAI Codex CLI（~/.codex）、Cursor（~/.cursor）、Grok Bot、OpenBot の設定を、コマンド1つで Hermes へ取り込みます。指示・ルール・許可リスト・MCP サーバー・スキル・メモリ、Grok Bot / OpenBot のルーティンが対象です。"
 upstream_path: user-guide/import-from-other-agents.md
-upstream_blob: 1fdf9ed44a629a3a7e603df48b5d911145f4615e
+upstream_blob: cc2af9a659da7fbc2087d8d1d07b786b5433a4ec
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/import-from-other-agents
 ---
@@ -16,7 +16,7 @@ sources:
 
 ## かんたんな方法: `hermes setup` {#the-easy-way-hermes-setup}
 
-新しく入れた直後に `hermes setup` を実行すると、ほかの何よりも先に `~/.openclaw`（または旧名の `~/.clawdbot` / `~/.moltbot`）、`~/.claude`、`~/.codex`、`~/.cursor`、Grok Bot のデスクトップアプリ（または `~/Downloads` にある `grok-bot-export*` ファイル）、OpenBot があるかを調べます。見つかると、見つかったものの名前を入れて **「Claude Code から設定を取り込みますか？」** と尋ねます。複数見つかった場合は、続けてチェックリストからどれを取り込むかを選びます（最初は全部にチェックが入っています）。「はい」と答えると、setup はカタログから `agent-importers` プラグインを入れ（すでに入っていれば入れません）、選んだものごとに下で説明する取り込みを実行します。内容の確認と承認の手順もそのまま含まれます。OpenClaw の場合は、以前 Hermes に組み込まれていた OpenClaw 用の手順と同じく `--migrate-secrets` を渡すので、API キーやボットのトークンも引き継がれ、このあとのプロバイダーとメッセージングの設定はすでに埋まった状態になります。続けて Quick Setup を選び、取り込みでモデルがそのキーと一緒に引き継がれていた場合は、そのモデルをそのまま使うか（既定）、Nous Portal に切り替えるかを setup が尋ねます。「いいえ」と答えた場合や、これらのフォルダーが1つもない場合は、何もインストールされません。すでに設定を済ませている場合は、`hermes migrate` を実行すると同じ案内が表示されます。`hermes migrate <agent>`（`openclaw`、`claude-code`、`codex`、`cursor`、`grok-bot`、`openbot`）を実行すれば、1つのエージェントから取り込めます（プラグインが入っていなければ、そのときに入れます）。または、下のコマンドを使ってください。
+新しく入れた直後に `hermes setup` を実行すると、ほかの何よりも先に `~/.openclaw`（または旧名の `~/.clawdbot` / `~/.moltbot`）、`~/.claude`、`~/.codex`、`~/.cursor`、Grok Bot のデスクトップアプリ（または `~/Downloads` にある `grok-bot-export*` ファイル）、OpenBot があるかを調べます。見つかると、見つかったものの名前を入れて **「Claude Code から設定を取り込みますか？」** と尋ねます。複数見つかった場合は、続けてチェックリストからどれを取り込むかを選びます（最初は全部にチェックが入っています）。「はい」と答えると、setup はカタログから `agent-importers` プラグインを入れ（すでに入っていれば入れません）、選んだものごとに下で説明する取り込みを実行します。内容の確認と承認の手順もそのまま含まれます。OpenClaw の場合は、以前 Hermes に組み込まれていた OpenClaw 用の手順と同じく `--migrate-secrets` を渡すので、API キーやボットのトークンも引き継がれ、このあとのプロバイダーとメッセージングの設定はすでに埋まった状態になります。取り込みでモデルがそのキーと一緒に引き継がれていた場合は、「How do you want to power Hermes?」の最初の選択肢を選ぶと、そのモデルをそのまま使います（これが既定です）。「いいえ」と答えた場合や、これらのフォルダーが1つもない場合は、何もインストールされません。すでに設定を済ませている場合は、`hermes migrate` を実行すると同じ案内が表示されます。`hermes migrate <agent>`（`openclaw`、`claude-code`、`codex`、`cursor`、`grok-bot`、`openbot`）を実行すれば、1つのエージェントから取り込めます（プラグインが入っていなければ、そのときに入れます）。または、下のコマンドを使ってください。
 
 ## 手で実行する {#by-hand}
 

@@ -2,7 +2,7 @@
 title: "Hermes Agent クイックスタート"
 description: "Hermes Agent との最初の会話まで。インストールからおしゃべりできるまで 5 分"
 upstream_path: getting-started/quickstart.md
-upstream_blob: 0d7c3a7e542ecbb10ad77544edde7175fa12f616
+upstream_blob: 18d454ef20cdbe9f1a24faa68ca2d74f8c54ed27
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/quickstart
 ---
@@ -91,14 +91,18 @@ hermes setup --portal
 これ 1 つで、ログインし、Nous をプロバイダーに設定し、Tool Gateway を有効にします。
 :::
 
-:::info 初期設定の 3 つのやり方
+:::info 初期設定のやり方
 OpenClaw、Claude Code、Codex CLI、Cursor から移ってきましたか？ 入れたばかりの状態で `hermes setup` を実行し、これらのどれかがパソコンに見つかると、まずその設定を取り込むかどうかを聞いてきます（取り込みのために `agent-importers` プラグインを入れます。[ほかのエージェントからの取り込み](/hermes/docs/user-guide/import-from-other-agents/)を参照）。
 
-入れたばかりの状態で `hermes setup` を実行すると、3 つのやり方から選べます。
+入れたばかりの状態で `hermes setup` を実行すると、**How do you want to power Hermes?**（Hermes を何で動かしますか？）という質問が 1 つだけ出ます。それ以外はすべておすすめの既定値で設定され、次に何をすればよいかが表示されます。
 
-- **Quick Setup（Nous Portal）** — OAuth でログインするだけで、API キーの管理は不要です。モデルと Tool Gateway のツールがまとめて用意され、料金は [Nous Portal の購読](/hermes/docs/integrations/nous-portal/) に付きます。おすすめの近道です。
-- **Full Setup** — プロバイダー、ツール、選択肢を自分で一つずつ見ていきます（キーは自分で用意します）。
-- **Blank Slate** — エージェントを動かすのに最低限必要なもの以外は、すべて **オフ** から始まります。残るのは **プロバイダーとモデル、ファイル操作のツール群、端末のツール群** だけです。Web、ブラウザー、コード実行、画像認識、記憶、委任、定期実行、スキル、プラグイン、MCP サーバーはどれも入らず、圧縮、チェックポイント、賢い振り分け、記憶の取り込みもすべて無効です。この最小の土台を当てたあと、2 つの道のどちらかを選びます。**すべて無効のまま始める**（最小構成のまま終える）か、**すべての設定を見ていく**（ツール、スキル、プラグイン、MCP、メッセージ連携を自分で選んで有効にする）かです。最小限で完全に制御できるエージェントがほしく、必要なものだけを自分で有効にするつもりのときはこれを選んでください。
+- **Free, start now**: アカウントも API キーも要りません。無料の `nous/welcome` モデルで動きます。使えるのは OS のユーザーごとに 1 回だけで、端末で自分で初期設定に答えたときに限ります（コンテナ、CI、スクリプトからの実行では使えません）。使えるときだけ表示されます。
+- **Sign in to Nous Portal**: OAuth でログインし、300 を超えるモデルと [Tool Gateway](/hermes/docs/user-guide/features/tool-gateway/) のツールを使えます。料金は [Nous Portal の購読](/hermes/docs/integrations/nous-portal/) に付きます。
+- **Use my own API key or a subscription**: `hermes model` の選択画面に進みます。ChatGPT/Codex や OpenCode Go の購読でのログイン、Claude、OpenRouter、手元のモデルをはじめ、ほかのすべてのプロバイダーをここから選べます。
+- **Full Setup**: プロバイダー、ツール、選択肢を自分で一つずつ見ていきます。
+- **Blank Slate**: エージェントを動かすのに最低限必要なもの以外は、すべて **オフ** から始まります。残るのは **プロバイダーとモデル、ファイル操作のツール群、端末のツール群** だけです。Web、ブラウザー、コード実行、画像認識、記憶、委任、定期実行、スキル、プラグイン、MCP サーバーはどれも入らず、圧縮、チェックポイント、賢い振り分け、記憶の取り込みもすべて無効です。この最小の土台を当てたあと、2 つの道のどちらかを選びます。**すべて無効のまま始める**（最小構成のまま終える）か、**すべての設定を見ていく**（ツール、スキル、プラグイン、MCP、メッセージ連携を自分で選んで有効にする）かです。最小限で完全に制御できるエージェントがほしく、必要なものだけを自分で有効にするつもりのときはこれを選んでください。
+
+エージェントの取り込みで動くモデルが入った場合は、最初の選択肢を選ぶとそのモデルがそのまま使われます。最初の 3 つの選択肢では、端末のバックエンド、メッセージ連携、サービスの画面は飛ばされます。これらはあとから `hermes setup terminal`、`hermes setup gateway`、`hermes tools` で追加できます。
 
 Blank Slate は `platform_toolsets.cli` の一覧と `agent.disabled_toolsets` を明示的に書き込むので、選んでいないものが読み込まれることはありません。`hermes update` のあとでも同じです。あとから有効にしたくなったら `hermes tools`、スキルを入れたくなったら `hermes skills opt-in --sync`、細かい設定を変えたくなったら `hermes setup agent` を使います。
 :::

@@ -2,7 +2,7 @@
 title: "共有バンドルビルド"
 description: ""
 upstream_path: developer-guide/shared-bundle-builds.md
-upstream_blob: 514b87c414942b4d4587c377f7c65075b0fffdea
+upstream_blob: d008f84cf1b7e76e5c33f5f49502375562c8843c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/shared-bundle-builds
 ---
@@ -410,7 +410,7 @@ macOS の dmgbuild の取得を担当する部分は、厳格なビルドでは�
 ツールのプロバイダーを変更したあとは、ネイティブの DMG の作成、切り離しの診断、署名、公証を
 実際に動かして確かめる必要があります。Windows の x64・ARM64 と、macOS の x64・ARM64 について、
 コールド・ウォームの状態と署名済みの成果物の受け入れ検査は、Linux のヘルパーのテストとは別のままです。
-Linux のデスクトップのリリースレーンは無効のままです。
+Linux のデスクトップ版の AppImage は、カナリア版のタグで診断用の成果物としてビルドされます。スモークテストは行わず、フィードも公開しません。
 
 範囲を絞ったヘルパーのテストでは、次の要件をすべて確かめることはできません。
 
