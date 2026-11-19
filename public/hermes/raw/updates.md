@@ -8,6 +8,33 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-19
+
+- [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
+- [コントリビュート](https://wiki.winsmux.dev/hermes/docs/developer-guide/contributing/)
+- [画像生成プロバイダのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/image-gen-provider-plugin/)
+- [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [Manim Video — Manim CE のアニメーション: 3Blue1Brown 風の数学・アルゴリズム動画](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/creative/creative-manim-video/)
+- [Simplify Code — 直近のコード変更を、4 つのエージェントで並行して片づけます](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/software-development/software-development-simplify-code/)
+- [System Atlas — 見て回れるアイソメトリックの構成アトラスを HTML で作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/)
+- [Pinggy Tunnel — Pinggy を使い、SSH 経由でインストール不要の localhost トンネルを張る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/)
+- [Watchers — RSS・JSON API・GitHub を定期的に見に行き、既読の印で重複を省く](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-watchers/)
+- [Minecraft Modpack Server — MOD 入りの Minecraft サーバーを立てる（CurseForge、Modrinth）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server/)
+- [Pokemon Player — ヘッドレスのエミュレーターと RAM 読み取りでポケモンを遊ぶ](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/gaming/gaming-pokemon-player/)
+- [Mcp Oauth Remote Gateway — 画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/)
+- [Bioinformatics — ゲノム解析と計算生物学の 400 以上の skill への入口](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-bioinformatics/)
+- [Osint Investigation — 公開記録と制裁データから資金の流れを追う](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/)
+- [Qmd — メモ・資料・書き起こしを手元でまとめて検索する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-qmd/)
+- [Research Paper Writing — NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/)
+- [Ast Grep — ast-grep で構文木を見ながらコードを検索・書き換えする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/)
+- [Code Wiki — どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/)
+- [Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-python-debugpy/)
+- [Publish Site — サイトに版を付けて GitHub / Cloudflare / Netlify の Pages へ公開します](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/)
+
 ## 2026-11-18
 
 - [ACP の内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/acp-internals/)

@@ -2,6 +2,133 @@
   "generatedAt": "2026-11-19",
   "entries": [
     {
+      "date": "2026-11-19",
+      "sha": "7f2e25b",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/context-compression-and-caching",
+          "title": "コンテキストの圧縮とキャッシュ",
+          "url": "/hermes/docs/developer-guide/context-compression-and-caching/"
+        },
+        {
+          "id": "developer-guide/contributing",
+          "title": "コントリビュート",
+          "url": "/hermes/docs/developer-guide/contributing/"
+        },
+        {
+          "id": "developer-guide/image-gen-provider-plugin",
+          "title": "画像生成プロバイダのプラグイン",
+          "url": "/hermes/docs/developer-guide/image-gen-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/model-provider-plugin",
+          "title": "モデルプロバイダーのプラグイン",
+          "url": "/hermes/docs/developer-guide/model-provider-plugin/"
+        },
+        {
+          "id": "developer-guide/plugins",
+          "title": "Hermes プラグインを作る",
+          "url": "/hermes/docs/developer-guide/plugins/"
+        },
+        {
+          "id": "developer-guide/stable-releases",
+          "title": "安定版リリースの受け入れと昇格",
+          "url": "/hermes/docs/developer-guide/stable-releases/"
+        },
+        {
+          "id": "integrations/providers",
+          "title": "LLM とモデルプロバイダ",
+          "url": "/hermes/docs/integrations/providers/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/skills/bundled/creative/creative-manim-video",
+          "title": "Manim Video — Manim CE のアニメーション: 3Blue1Brown 風の数学・アルゴリズム動画",
+          "url": "/hermes/docs/user-guide/skills/bundled/creative/creative-manim-video/"
+        },
+        {
+          "id": "user-guide/skills/bundled/software-development/software-development-simplify-code",
+          "title": "Simplify Code — 直近のコード変更を、4 つのエージェントで並行して片づけます",
+          "url": "/hermes/docs/user-guide/skills/bundled/software-development/software-development-simplify-code/"
+        },
+        {
+          "id": "user-guide/skills/optional/creative/creative-system-atlas",
+          "title": "System Atlas — 見て回れるアイソメトリックの構成アトラスを HTML で作る",
+          "url": "/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/"
+        },
+        {
+          "id": "user-guide/skills/optional/devops/devops-pinggy-tunnel",
+          "title": "Pinggy Tunnel — Pinggy を使い、SSH 経由でインストール不要の localhost トンネルを張る",
+          "url": "/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/"
+        },
+        {
+          "id": "user-guide/skills/optional/devops/devops-watchers",
+          "title": "Watchers — RSS・JSON API・GitHub を定期的に見に行き、既読の印で重複を省く",
+          "url": "/hermes/docs/user-guide/skills/optional/devops/devops-watchers/"
+        },
+        {
+          "id": "user-guide/skills/optional/gaming/gaming-minecraft-modpack-server",
+          "title": "Minecraft Modpack Server — MOD 入りの Minecraft サーバーを立てる（CurseForge、Modrinth）",
+          "url": "/hermes/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server/"
+        },
+        {
+          "id": "user-guide/skills/optional/gaming/gaming-pokemon-player",
+          "title": "Pokemon Player — ヘッドレスのエミュレーターと RAM 読み取りでポケモンを遊ぶ",
+          "url": "/hermes/docs/user-guide/skills/optional/gaming/gaming-pokemon-player/"
+        },
+        {
+          "id": "user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway",
+          "title": "Mcp Oauth Remote Gateway — 画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す",
+          "url": "/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-bioinformatics",
+          "title": "Bioinformatics — ゲノム解析と計算生物学の 400 以上の skill への入口",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-bioinformatics/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-osint-investigation",
+          "title": "Osint Investigation — 公開記録と制裁データから資金の流れを追う",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-qmd",
+          "title": "Qmd — メモ・資料・書き起こしを手元でまとめて検索する",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-qmd/"
+        },
+        {
+          "id": "user-guide/skills/optional/research/research-research-paper-writing",
+          "title": "Research Paper Writing — NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる",
+          "url": "/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/"
+        },
+        {
+          "id": "user-guide/skills/optional/software-development/software-development-ast-grep",
+          "title": "Ast Grep — ast-grep で構文木を見ながらコードを検索・書き換えする",
+          "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/"
+        },
+        {
+          "id": "user-guide/skills/optional/software-development/software-development-code-wiki",
+          "title": "Code Wiki — どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する",
+          "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/"
+        },
+        {
+          "id": "user-guide/skills/optional/software-development/software-development-python-debugpy",
+          "title": "Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）",
+          "url": "/hermes/docs/user-guide/skills/optional/software-development/software-development-python-debugpy/"
+        },
+        {
+          "id": "user-guide/skills/optional/web-development/web-development-publish-site",
+          "title": "Publish Site — サイトに版を付けて GitHub / Cloudflare / Netlify の Pages へ公開します",
+          "url": "/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/"
+        }
+      ]
+    },
+    {
       "date": "2026-11-18",
       "sha": "9de1642",
       "upstream": null,
