@@ -2,7 +2,7 @@
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 9f26a5a89c7292006ea8efdf5c1ddf1b10ca7d5e
+upstream_blob: ef0c42b8c37baad63fcab4087186de70f7480c4a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -277,6 +277,27 @@ with open_persistence_reader(profile_scope().profile_dir) as store:
 | `hermes_state_wal`（モジュール全体。例: `apply_wal_with_fallback`） | `sqlite_support` |
 
 これらは `hermes_state` と同じ期間に従います。v0.26 までサポートされ、削除されるのは早くても v0.27.0 です。移動したほかの名前は引き継がれません。プラグインは、いまのうちに `session_rules.turns` と `sqlite_support` から import するようにしてください。
+
+#### ピン留めされたカタログのプラグインを壊すコアの PR {#core-prs-that-break-a-pinned-catalog-plugin}
+
+コアへのプルリクエストが、ピン留めされたカタログのプラグインのどれかが import しているモジュールや名前を削除したり改名したりすると、Repository guards の **Name the pinned catalog plugins this change breaks** ステップから警告が出ます。マージが止められることはありません。この警告は、壊れる変更が出荷される前に、プラグインがどの公開インターフェースを必要としているかを作者に知らせるためのものです。この検査は非公開の import も対象にします。検査が読むのは `scripts/ci/catalog_core_imports/` です。ここには、各カタログエントリがピン留めされた sha の時点で行っている Hermes の import がすべて記録されていて、新しいエントリや再ピン留めに合わせて毎日更新されます。検査はそれらの import を PR のベースとマージコミットに対して解決するので、ネットワークは不要で、プラグインのコードも実行せず、数秒で終わります。
+
+警告は、プラグインごとのチェックの注記、ジョブのサマリー、PR への CI レビューコメントに表示されます。そこにはまず、変更によってなくなるコアの名前ごとに、それが非公開かどうか（`hermes_cli/data/plugin_api.json` に載っていないか）と、それを import しているプラグインの数が並びます。続いて、影響を受ける各プラグインのカタログの記録が示されます。記録の内容は、タイトル、バージョン、tier、カテゴリ、メンテナー、ピン留めされた sha 時点のリポジトリ（とサブディレクトリ）、`plugin-catalog/<name>.yaml` とマーケットプレイスのページへのリンク、そして各 import 行へのリンクです。たとえば次のようになります。
+
+```
+- `hermes_state_wal.apply_wal_with_fallback` (private): 1 plugin: holographic
+...
+- **holographic** 0.29.2 · catalog `holographic` · community · memory · maintainer `...`
+  - repo: https://github.com/... @ `<pin>`
+  - store.py:227 imports `hermes_state_wal.apply_wal_with_fallback`: fails to load
+```
+
+`try` の中にある import で、フォールバック先がまだ解決できるものは、壊れたとはみなされません。プラグインを動かし続けるには、次のどちらかを行います。
+
+1. **その名前に公開インターフェースを用意する**（`ctx` のメソッド、フック、または `hermes_cli/data/plugin_api.json` のエントリで、[公開プラグイン API](/hermes/docs/developer-guide/plugins/public-api/) に載っているもの）。そのうえで、各プラグインのメンテナーにそちらへ移るよう依頼します。
+2. **または、古い名前を import できるまま残す**: 移動したモジュールには `hermes_agent/compat/moves.py` にキーを追加し、移動した名前は元の場所に残します。
+
+手元で実行するには `python3 scripts/ci/catalog_core_imports.py check --base "$(git merge-base origin/main HEAD)"` を使います（マージベースを使うのは、ブランチを切ったあとに `main` へ加わった変更のせいで、そのブランチが責められないようにするためです）。1つのエントリを索引し直すには `python3 scripts/ci/catalog_core_imports.py build <name>` を使います。この検査が確かめるのは、import された名前がまだ存在するかどうかだけです。名前は残っていても振る舞いやシグネチャが変わった場合は検査を通ります。`import module` のあとに属性として読まれる名前（`hermes_constants.get_hermes_home()`）も、import されるのはモジュールだけなので、同じく通ります。
 
 ## 作るもの {#what-youre-building}
 
@@ -882,6 +903,8 @@ state はプロファイルスコープで、アトミックに置き換えら�
 設定と state は所有者が異なります: 設定は `config.yaml` にあるユーザーに見える振る舞いであり、state は `<HERMES_HOME>/plugin-data/` にあるプラグイン所有のランタイムデータです。どちらの API も、他プラグインの名前空間を公開しません。
 
 ### Desktop の設定フォーム {#settings-form-in-the-desktop}
+
+同じ宣言で、プラグインにはターミナル用の編集画面も用意されます。`hermes plugins config <name>` は、`config_schema` のすべてのキーと `requires_env` のすべての変数を現在の値とともに一覧にし、1つずつ編集できるようにします（選択肢と `bool` は選んで切り替える形になり、`secret` と `secret: true` の env エントリは伏せ字で表示されます）。保存には下のフォームと同じ書き込み処理が使われるので、CLI 用のコードも必要ありません。各キーには `label` と `description` を付けてください。利用者の目に入るのはこの2つだけです。
 
 マニフェストの `config_schema` に宣言した各キーは、Desktop アプリの **Settings → Plugins** にあるプラグイン専用のページで、1行ずつ表示されます（このページは Capabilities → Plugins でプラグインの行にある歯車アイコンから開きます）。Desktop 側のコードは不要です — バックエンドの `plugins.manage list` がスキーマと各キーの現在値を返し、保存すると `ctx.set_config()` と同じ書き込み経路を通るため、`plugins.entries.<id>.settings.<key>` があなたのプラグインが読み返す値になります。フォームは `type` によって表駆動されます。
 

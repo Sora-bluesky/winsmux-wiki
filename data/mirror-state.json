@@ -72,9 +72,9 @@
       "translatedAt": "2026-11-14T23:10:16.598Z"
     },
     "developer-guide/desktop-plugin-sdk.md": {
-      "blob": "d5fb0eb655c544df3e8eb62b46afc53b27aa5912",
+      "blob": "822da5fcca04324a9671ba8d083baf66da525126",
       "status": "translated",
-      "translatedAt": "2026-11-17T23:02:10.571Z"
+      "translatedAt": "2026-11-20T22:49:31.081Z"
     },
     "developer-guide/egress-internals.md": {
       "blob": "dde37d99ace8f900d6f23431db168637c191dda4",
@@ -112,14 +112,14 @@
       "translatedAt": "2026-11-14T23:10:16.607Z"
     },
     "developer-guide/plugins/index.md": {
-      "blob": "9f26a5a89c7292006ea8efdf5c1ddf1b10ca7d5e",
+      "blob": "ef0c42b8c37baad63fcab4087186de70f7480c4a",
       "status": "translated",
-      "translatedAt": "2026-11-19T22:48:29.322Z"
+      "translatedAt": "2026-11-20T22:49:31.096Z"
     },
     "developer-guide/programmatic-integration.md": {
-      "blob": "ed1f8f863cdb6966dad332ab2fab4bab1540474b",
+      "blob": "0a56c436f60cb243b63077e1973d0c98da7d9372",
       "status": "translated",
-      "translatedAt": "2026-11-19T22:48:29.287Z"
+      "translatedAt": "2026-11-20T22:49:31.078Z"
     },
     "developer-guide/prompt-assembly.md": {
       "blob": "f51608d4bbb2a8a1c4693788bc52cc84df879c76",
@@ -237,9 +237,9 @@
       "translatedAt": "2026-09-27T22:49:12.640Z"
     },
     "guides/cron-troubleshooting.md": {
-      "blob": "14a7aef87f8da9b8ca3b244ab822a41c7c664160",
+      "blob": "b90b3be17312260523a9b7de8f5454a23d68148d",
       "status": "translated",
-      "translatedAt": "2026-10-14T23:48:21.625Z"
+      "translatedAt": "2026-11-20T22:49:31.075Z"
     },
     "guides/daily-briefing-bot.md": {
       "blob": "88193ec8f8e94b4895091d6cc3d34beae869c6af",
@@ -262,14 +262,14 @@
       "translatedAt": "2026-09-18T22:41:13.111Z"
     },
     "guides/google-gemini.md": {
-      "blob": "7c8b2658a7f8338662981aa63e11ca72283c3613",
+      "blob": "61d8f4457d26bad5845c946a1f3a58825e0c8bb1",
       "status": "translated",
-      "translatedAt": "2026-11-12T22:59:44.739Z"
+      "translatedAt": "2026-11-20T22:49:31.097Z"
     },
     "guides/google-vertex.md": {
-      "blob": "fd8f08e461414910c7847a587d5ee808215c1292",
+      "blob": "8d23788003df0e9de930ab17c4dc3d4f6a736967",
       "status": "translated",
-      "translatedAt": "2026-09-18T22:41:13.111Z"
+      "translatedAt": "2026-11-20T22:49:31.075Z"
     },
     "guides/local-llm-on-mac.md": {
       "blob": "c2492651d682c53c767ed336fecf66636f1d8f3d",
@@ -397,9 +397,9 @@
       "translatedAt": "2026-11-18T23:58:35.480Z"
     },
     "reference/cli-commands.md": {
-      "blob": "246e5ac92d14b936ab9a1ddfc9d82a4d8498d6e0",
+      "blob": "be5c9cbff1c4ab2d99f875152e7c355bac32bb6d",
       "status": "translated",
-      "translatedAt": "2026-11-19T22:48:29.311Z"
+      "translatedAt": "2026-11-20T22:49:31.091Z"
     },
     "reference/cli-symbols.md": {
       "blob": "76d0fcd513551ad62992ffc06f63494b1ad2bed9",
@@ -472,9 +472,9 @@
       "translatedAt": "2026-11-12T22:59:44.755Z"
     },
     "user-guide/configuration.md": {
-      "blob": "d4f6c0318cf620f2650f71efb0888caeb1a7476e",
+      "blob": "0f235e34343cb860ba88a4dbff4eb70f93e7a019",
       "status": "translated",
-      "translatedAt": "2026-11-19T22:46:40.673Z"
+      "translatedAt": "2026-11-20T22:49:31.068Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "3e15fe3b8a97ddeaa7bfd996c3fd5f90849770d9",
@@ -482,9 +482,9 @@
       "translatedAt": "2026-11-04T22:47:46.101Z"
     },
     "user-guide/desktop.md": {
-      "blob": "a56c6938ab9f484d33c6bff74afe36150f4715d2",
+      "blob": "50a420d5bf362c823853915d7b88bb8122901d46",
       "status": "translated",
-      "translatedAt": "2026-11-17T23:02:10.525Z"
+      "translatedAt": "2026-11-20T22:49:31.058Z"
     },
     "user-guide/docker.md": {
       "blob": "90582abc245c2b117d17186abd94db03a19531e4",
@@ -677,9 +677,9 @@
       "translatedAt": "2026-09-18T22:41:13.187Z"
     },
     "user-guide/features/plugins.md": {
-      "blob": "94a36c5bf76106517e5f38501d0ba948575249db",
+      "blob": "1519785423b56d4350028cb072bcb28e80cb51f3",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.660Z"
+      "translatedAt": "2026-11-20T22:49:31.074Z"
     },
     "user-guide/features/provider-routing.md": {
       "blob": "cb6658b693d5d20483aedffb4a249cd5b366863d",
@@ -767,9 +767,9 @@
       "translatedAt": "2026-11-19T22:48:29.327Z"
     },
     "user-guide/managed-scope.md": {
-      "blob": "c514bab280fc6cef2706980b1b63c67eaaf9e802",
+      "blob": "7d3f9e1d776ccdac4b3fc2c293a77b8434f43c5f",
       "status": "translated",
-      "translatedAt": "2026-11-13T23:04:55.182Z"
+      "translatedAt": "2026-11-20T22:49:31.069Z"
     },
     "user-guide/messaging/a2a.md": {
       "blob": "2dd70b3c02a45f55c6f60c51c9f9253f3d0920e8",
@@ -987,9 +987,9 @@
       "translatedAt": "2026-11-13T23:04:55.207Z"
     },
     "user-guide/security.md": {
-      "blob": "74c56ddb56ddcd775f36139f0f48e6915d51a225",
+      "blob": "a2f53ee93583a96aff303f31f0c8dce6d9407c82",
       "status": "translated",
-      "translatedAt": "2026-11-15T22:52:37.879Z"
+      "translatedAt": "2026-11-20T22:49:31.071Z"
     },
     "user-guide/sessions.md": {
       "blob": "c9debd3173606ed7ecc11c579f1287527e06799d",
@@ -2246,9 +2246,9 @@
       "translatedAt": "2026-11-09T22:51:09.720Z"
     },
     "developer-guide/relay-shared-metrics.md": {
-      "blob": "99773172dbc84db5fdd8c45473780943558ef885",
+      "blob": "d9dc0a7d6814ee04941fa8bce467a6f35c8dc934",
       "status": "translated",
-      "translatedAt": "2026-11-02T22:37:46.962Z"
+      "translatedAt": "2026-11-20T22:49:31.084Z"
     },
     "developer-guide/state-db-recovery.md": {
       "blob": "cb70aaae1e7af943e51e2b78e2cccbc8abdfae91",
@@ -2361,9 +2361,9 @@
       "translatedAt": "2026-11-07T22:58:47.888Z"
     },
     "developer-guide/stable-releases.md": {
-      "blob": "73abc22f200c40d973b67ec69f1c11ecb4ca3b0d",
+      "blob": "3baf1366dc82576c380d0cf555699b222bf88f4d",
       "status": "translated",
-      "translatedAt": "2026-11-19T22:48:29.301Z"
+      "translatedAt": "2026-11-20T22:49:31.087Z"
     },
     "reference/package-management.md": {
       "blob": "b066d18ddce561ec7808bc4aecc86a90040805c5",
@@ -2421,9 +2421,9 @@
       "translatedAt": "2026-11-13T23:04:55.224Z"
     },
     "developer-guide/gateway-local-sessions.md": {
-      "blob": "a9367dd87684b9a4f44fe4e88a9f755d48d3e215",
+      "blob": "927810a2b207e591f96f278751cfd2f17480f65a",
       "status": "translated",
-      "translatedAt": "2026-11-17T23:02:10.564Z"
+      "translatedAt": "2026-11-20T22:49:31.076Z"
     },
     "developer-guide/hosted-profile-owners.md": {
       "blob": "576f9745b3663c60aa16190f2af713fd72337cf7",
@@ -2541,5 +2541,5 @@
       "translatedAt": "2026-11-17T23:02:10.590Z"
     }
   },
-  "snapshotCommit": "bb13381eeeb7393c22889bbb01f335fed5dc3810"
+  "snapshotCommit": "a0097551b614afc20477061f1070fe07953a3136"
 }

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "gateway のローカルセッション"
 description: "ローカルの CLI/TUI セッションを正規の gateway 受付として扱う仕組み"
 upstream_path: developer-guide/gateway-local-sessions.md
-upstream_blob: a9367dd87684b9a4f44fe4e88a9f755d48d3e215
+upstream_blob: 927810a2b207e591f96f278751cfd2f17480f65a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-local-sessions
 ---
@@ -97,8 +97,11 @@ ID ではありません。作成受領記録は元の所有者を保ち、受�
 別の主体によるローカルの送信には、キューでの実行と復旧のために、サーバーが書き込む非公開の
 プロファイル/セッション/主体の紐付けが付きます。これはモデルへのリクエストにも、公開される
 セッションのスナップショットにも出ません。この変更は、OpenAI API からローカルセッションへの紐付け（affinity）を実装するものではありません。gateway の
-リスナーは、`webapp.host` でワイルドカードアドレスにバインドしない限り、ループバックにとどまります。Webapp のリスナーは、
-ワイルドカードにバインドしたとき、またはバインド先にかかわらず `webapp.public_url` を設定したときに、ダッシュボードのサインインの関門を有効にし、
+リスナーは、`webapp.host` でワイルドカードアドレスか、このマシンの IP アドレスの1つにバインドしない限り、ループバックにとどまります。
+特定のアドレスにバインドした場合は、同じポートにループバックのソケットも用意され、同じ境界の状態のもとで同じアプリを提供します
+（`loopback_companion`。`gateway/webapp_listener.py` にあります）。ネイティブクライアントはループバックのオリジンしか受け付けないためです。
+このソケットの Host の確認が受け付けるのは、そのアドレス、ループバックの名前、Webapp の公開ホストだけです。Webapp のリスナーは、
+ワイルドカードや特定のアドレスにバインドしたとき、またはバインド先にかかわらず `webapp.public_url` を設定したときに、ダッシュボードのサインインの関門を有効にし、
 そのときは1回限りの起動リンクは使えなくなります。`dashboard.public_url` は Webapp のリスナーには決して適用されません。
 ネイティブクライアント向けの gateway の非公開リスナーは main と同じようにこれを読むので、そのリスナーでのホスト型のサインインは
 引き続き動きます。

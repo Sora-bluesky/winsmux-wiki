@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-11-20、対象期間 = 2026-11-14 〜 2026-11-20（JST）
+生成日 = 2026-11-21、対象期間 = 2026-11-15 〜 2026-11-21（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -124,33 +124,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-15 [Box — クラウド上のファイル、共有、検索、メタデータを管理します](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/productivity/productivity-box/)
 - 2026-11-15 [Oss Forensics — GitHub サプライチェーンのフォレンジック: 復元・IOC・報告](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-oss-forensics/)
 - 2026-11-15 [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
-- 2026-11-14 [ゲートウェイのコマンド対応表](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-command-parity/)
-- 2026-11-14 [macOS バンドルの更新](https://wiki.winsmux.dev/hermes/docs/developer-guide/macos-bundle-updates/)
-- 2026-11-14 [Multiplexing Gateway の内部構造](https://wiki.winsmux.dev/hermes/docs/developer-guide/multiplexing-gateway/)
-- 2026-11-14 [OpenClaw から移ってくる](https://wiki.winsmux.dev/hermes/docs/guides/migrate-from-openclaw/)
-- 2026-11-14 [xAI Grok OAuth（SuperGrok / X Premium+）](https://wiki.winsmux.dev/hermes/docs/guides/xai-grok-oauth/)
-- 2026-11-14 [Nous Portal](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
-- 2026-11-14 [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
-- 2026-11-14 [ツールセット一覧](https://wiki.winsmux.dev/hermes/docs/reference/toolsets-reference/)
-- 2026-11-14 [ブラウザの自動操作](https://wiki.winsmux.dev/hermes/docs/user-guide/features/browser/)
-- 2026-11-14 [Codex App-Server ランタイム（任意）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/codex-app-server-runtime/)
-- 2026-11-14 [認証情報プール](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-pools/)
-- 2026-11-14 [サブエージェントへの委任](https://wiki.winsmux.dev/hermes/docs/user-guide/features/delegation/)
-- 2026-11-14 [提供元の振り分け](https://wiki.winsmux.dev/hermes/docs/user-guide/features/provider-routing/)
-- 2026-11-14 [ツールとツールセット](https://wiki.winsmux.dev/hermes/docs/user-guide/features/tools/)
-- 2026-11-14 [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
-- 2026-11-14 [管理者による適用範囲](https://wiki.winsmux.dev/hermes/docs/user-guide/managed-scope/)
-- 2026-11-14 [A2A（エージェント間連携）](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/a2a/)
-- 2026-11-14 [Matrix](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/matrix/)
-- 2026-11-14 [Mattermost](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/mattermost/)
-- 2026-11-14 [WhatsApp](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/whatsapp/)
-- 2026-11-14 [プロファイル: 複数のエージェントを動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/profiles/)
-- 2026-11-14 [Bitwarden Secrets Manager](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/bitwarden/)
-- 2026-11-14 [1Password](https://wiki.winsmux.dev/hermes/docs/user-guide/secrets/onepassword/)
-- 2026-11-14 [セッション](https://wiki.winsmux.dev/hermes/docs/user-guide/sessions/)
-- 2026-11-14 [Codex — OpenAI Codex CLI にコーディングを任せる（機能追加、PR）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex/)
-- 2026-11-14 [Opencode — コーディングを OpenCode CLI に任せる（機能追加、PR レビュー）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-opencode/)
-- 2026-11-14 [1Password — op CLI を用意してサインインし、秘密の値を読み書きする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/security/security-1password/)
 
 ## 週次まとめ
 

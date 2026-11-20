@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "管理者による適用範囲"
 description: "システム全体の管理用ディレクトリを使い、管理者が固定して利用者側では変更できない設定と秘密情報を配る仕組みです"
 upstream_path: user-guide/managed-scope.md
-upstream_blob: c514bab280fc6cef2706980b1b63c67eaaf9e802
+upstream_blob: 7d3f9e1d776ccdac4b3fc2c293a77b8434f43c5f
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/managed-scope
 ---
@@ -102,7 +102,7 @@ model:
 :::
 
 管理下の `config.yaml` が空でない `terminal.backend` を固定している場合、プロファイルの
-`.env` が存在するのに読み込めないとき（サンドボックスの起動ツールがファイルを渡さず、
+`.env` や `.op.env` が存在するのに読み込めないとき（サンドボックスの起動ツールがそれらのファイルを渡さず、
 中のキーを環境変数として渡す場合など）は、警告を出したうえで「ファイルが無い」ものとして扱われます。
 この固定が無い場合は、これまでどおり読み込みエラーで Hermes が停止します。
 

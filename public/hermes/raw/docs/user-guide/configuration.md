@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Agent の設定"
 description: "config.yaml、プロバイダー、モデル、API キーなど、Hermes Agent の設定方法"
 upstream_path: user-guide/configuration.md
-upstream_blob: d4f6c0318cf620f2650f71efb0888caeb1a7476e
+upstream_blob: 0f235e34343cb860ba88a4dbff4eb70f93e7a019
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 ---
@@ -898,6 +898,17 @@ skills:
 ```
 
 このリストは、セッションごとにシステムプロンプトを最初に組み立てるときに1回だけ解決されます（そのためプロンプトはキャッシュが効いたままになり、編集は次のセッションから反映されます）。見つからないスキルや無効にしたスキルは、警告を出して飛ばします。`--ignore-rules` / `HERMES_IGNORE_RULES=1` を指定すると、このリストは使われません。設定はプロファイル単位です。[CLI 画面 — 設定でいつも自動読み込みする](/hermes/docs/user-guide/cli/#persistent-auto-load-via-config) を参照してください。
+
+### スキル一覧の説明の表示幅 {#skill-index-description-width}
+
+システムプロンプトには、すべてのスキルが `name: description` の形で並びます。モデルがどのスキルを使うかを選ぶときの主な手がかりは、この説明です。既定では、各行に説明の最初の60文字だけが表示されます。スキルを使うきっかけになる言葉が、説明の60文字目より後ろにある場合は、この値を大きくしてください。
+
+```yaml
+skills:
+  index_desc_limit: 200   # default: 60; accepted range 60–1024
+```
+
+行を長くすると、セッションのたびにプロンプトのトークンを多く使います（説明が60文字より長いスキル1つにつき、増えた4文字ごとにおよそ1トークン）。`skill_manage`、`/learn`、キュレーターも同じ幅を使うので、エージェントはこの幅いっぱいまで説明を書くことがあります。同梱のスキルは、引き続き60文字という作成時の基準に従います。新しいセッションから反映され、設定はプロファイル単位です。
 
 ### エージェントによるスキル書き込みの検査 {#guard-on-agent-created-skill-writes}
 
@@ -3383,17 +3394,17 @@ onboarding:
 ```yaml
 webapp:
   enabled: false     # true: the gateway serves the Webapp
-  host: 127.0.0.1    # 127.0.0.1, ::1 or localhost; or 0.0.0.0 / :: for other machines (dashboard sign-in required)
+  host: 127.0.0.1    # 127.0.0.1, ::1 or localhost; 0.0.0.0 / :: or one IP address of this machine for other machines (dashboard sign-in required)
   port: 9120         # fixed, so the browser's address stays the same across gateway restarts
   public_url: ""     # the https:// address a reverse proxy or tunnel serves the Webapp at (sign-in required)
 ```
 
 - `enabled` — ゲートウェイは起動時にこの値を読みます。変えたら、ゲートウェイを再起動してください（`hermes gateway restart`）。
-- `host` — `127.0.0.1`、`::1`、`localhost` のどれかにすると、Webapp はこの端末の中だけで使えます。`0.0.0.0` か `::` にすると、ほかの端末からもつながるようになり、[ダッシュボードのサインイン用プロバイダー](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)が必要になります。プロバイダーが無いと、ゲートウェイはネイティブのクライアント向けにだけ配信し、その理由は `hermes webapp --status` で確かめられます。プロバイダーを追加したら、ゲートウェイを再起動してください。これ以外の値にすると、`127.0.0.2` のような別のループバックアドレスであっても、Webapp は止まったままです。コンテナの中では `0.0.0.0` にしてください。公開したポートや別のコンテナにあるプロキシからは、コンテナのループバックに届かないためです（[Docker → Webapp を動かす](/hermes/docs/user-guide/docker/#running-the-webapp)）。
+- `host` — `127.0.0.1`、`::1`、`localhost` のどれかにすると、Webapp はこの端末の中だけで使えます。`0.0.0.0` か `::` にすると、ほかの端末からもつながるようになり、[ダッシュボードのサインイン用プロバイダー](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)が必要になります。プロバイダーが無いと、ゲートウェイはネイティブのクライアント向けにだけ配信し、その理由は `hermes webapp --status` で確かめられます。プロバイダーを追加したら、ゲートウェイを再起動してください。この端末の IP アドレスを1つ（`192.168.1.20` や `100.101.102.103` のような LAN や Tailscale のアドレス、または IPv6 アドレス）指定すると、そのアドレスからだけつながるようになり、`0.0.0.0` と同じサインインが必要になります。このときゲートウェイは同じポートでループバック（`127.0.0.1`、IPv6 アドレスなら `::1`）でも待ち受け、こちらにも同じサインインがかかるので、この端末の CLI、TUI、デスクトップアプリは引き続き接続できます。指定したアドレスがこの端末のどのネットワークインターフェースにも無いとき、またはループバックのポートがほかで使われているときは、ゲートウェイはどちらでも待ち受けず、ネイティブのクライアント向けにだけ配信し、その理由を `hermes webapp --status` が伝えます。使えるのは、インターフェースに割り当てられるユニキャストアドレスだけです（IPv4 のリンクローカル `169.254.x.x` は使えます）。それ以外の値では、Webapp は止まったままです。たとえば、ホスト名、`127.0.0.2` のような別のループバックアドレス、ブロードキャスト・マルチキャスト・予約済みのアドレス（`255.255.255.255`、`224.0.0.1`、`240.0.0.1`）、`0.0.0.x`、ゾーンの有無にかかわらず IPv6 のリンクローカルアドレス（`fe80::1`、`fe80::1%eth0`）、IPv4 射影 IPv6 アドレスがこれに当たります。`hermes webapp` は、サインインのためにそのアドレスを開きます。**Web Access → Start** が別のアドレス向けに Nous のサインインを登録していた場合は、その別のアドレスを開く代わりに、このアドレスでは Nous のサインインを完了できないと伝えます。コンテナの中では `0.0.0.0` にしてください。公開したポートや別のコンテナにあるプロキシからは、コンテナのループバックに届かないためです（[Docker → Webapp を動かす](/hermes/docs/user-guide/docker/#running-the-webapp)）。
 - `port` — 単独で動くプロファイルのゲートウェイには、既定のゲートウェイとは別のポートが必要です。ポートを設定していない単独のプロファイルでは、**Settings → Web Access → Start** がポートを1つ選び（9120 より大きい空きポートのうち、ほかのプロファイルが使っていない最初のもの）、ここに保存します。自分で設定したポートを置き換えることはありません。このポートがほかで使われているときも、ゲートウェイはネイティブのクライアント向けにだけ配信し、その理由を `hermes webapp --status` が伝えます。このときは、ほかのプログラムが受け取ってしまったおそれがあるので、Webapp のブラウザ用サインインも作り直します。そのため、ポートが空いたら、開いていたタブのために `hermes webapp` をもう一度実行する必要があります。
 - `public_url` — 自分で動かしているリバースプロキシやトンネルが、Webapp を独自のアドレスで配信する（`host:port` へ転送する）ときに設定します。設定すると、`host` がループバックでもダッシュボードのサインインが有効になります。その場合は、Webapp が受け付ける外からのホスト名もこの1つだけになり、サインイン後に戻るコールバックもこの値をもとに組み立てられます。サインイン用プロバイダーが無ければ、`0.0.0.0` のときと同じく、ゲートウェイはネイティブのクライアント向けにだけ配信します。値は `http://` か `https://` で始まり、認証情報・クエリ・フラグメントを含まないアドレスにしてください。それ以外の値では Webapp は止まったままです。`dashboard.public_url` は `hermes dashboard` 用の設定で、Webapp には使われません。一方、`dashboard.trusted_proxies` は Webapp にも使われます。Webapp がプロキシの `X-Forwarded-*` ヘッダーを受け入れるのは、ループバックと、そこに並べたアドレスからだけです（[Docker → トンネルやリバースプロキシの後ろに置く](/hermes/docs/user-guide/docker/#webapp-behind-a-proxy)）。
 
-サインインが有効になるのは、`host` が `0.0.0.0` か `::` のとき、または host の値にかかわらず `public_url` を設定したときです。このとき `hermes webapp` は Webapp のアドレス（`public_url` を設定していればそのアドレスで、サインイン後はここへ戻ります）を開くので、ダッシュボードのアカウントでサインインしてください。このコマンドが出す一度だけ使えるリンクで開けるのは、サインインの要らない Webapp だけです。ネイティブのクライアント（CLI、TUI、デスクトップアプリ）はサインインしません。ゲートウェイがそれらのために用意している待ち受け口は、設定がどうであってもサインインを求めないからです。
+サインインが有効になるのは、`host` が `0.0.0.0`、`::`、またはこの端末の IP アドレスのとき、または host の値にかかわらず `public_url` を設定したときです。このとき `hermes webapp` は Webapp のアドレス（`public_url` を設定していればそのアドレスで、サインイン後はここへ戻ります）を開くので、ダッシュボードのアカウントでサインインしてください。このコマンドが出す一度だけ使えるリンクで開けるのは、サインインの要らない Webapp だけです。ネイティブのクライアント（CLI、TUI、デスクトップアプリ）はサインインしません。ゲートウェイがそれらのために用意している待ち受け口は、設定がどうであってもサインインを求めないからです。
 
 Webapp の設定は、そのプロファイルを配信しているゲートウェイの設定から読まれます。ゲートウェイが配信する名前付きのプロファイルでは既定のプロファイルの設定から、単独で動くプロファイルではそのプロファイル自身の設定から読まれます。
 

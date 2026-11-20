@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-20",
+  "generatedAt": "2026-11-21",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-20",
-      "attemptedAt": "2026-11-20",
+      "fetchedAt": "2026-11-21",
+      "attemptedAt": "2026-11-21",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -63,8 +63,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-20",
-      "attemptedAt": "2026-11-20",
+      "fetchedAt": "2026-11-21",
+      "attemptedAt": "2026-11-21",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -72,16 +72,6 @@
           "id": "baidu/ernie-5.5-flash-preview:free",
           "name": "Baidu: ERNIE-5.5-Flash-Preview (free)",
           "ctx": 1024000,
-          "tools": true,
-          "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
-          "id": "cohere/north-mini-code:free",
-          "name": "Cohere: North Mini Code (free)",
-          "ctx": 256000,
           "tools": true,
           "expires": null,
           "freeBasis": "pricing",

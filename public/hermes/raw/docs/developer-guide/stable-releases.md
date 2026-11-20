@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 73abc22f200c40d973b67ec69f1c11ecb4ca3b0d
+upstream_blob: 3baf1366dc82576c380d0cf555699b222bf88f4d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -135,6 +135,7 @@ python scripts/release.py release --commit "$(git rev-parse origin/main)" --with
 | `windows-store` | オン | 署名なしの Microsoft Store バンドル。Partner Center に提出されます（Azure の署名は不要） |
 | `macos-arm64` | オン | macOS Apple Silicon の DMG と ZIP |
 | `termux` | オフ | Termux（Android aarch64）の APT パッケージ |
+| `linux` | オフ | 診断用の Linux x64 + arm64 AppImage ビルド（関門にはならず、カナリアではオン） |
 | `ci`, `nix`, `docker-tests`, `pm-bundle`, `windows-live`, `install-e2e`, `bootstrap-version` | オン | 単独のテストスイート |
 | `termux-checks` | オン | Termux の検証。`termux` がオンのときだけ実行されます |
 | `smoke` | オン | ビルドした各デスクトップパッケージのネイティブインストールとチャットのスモークテスト |
@@ -330,21 +331,42 @@ Stable はこの2つの MSIX スモークテストを、アーキテクチャご
 `v0.0.0+commit.<YYYYMMDDTHHMMSSZ>.<run-id>` のような注釈付きのビルド後受領証を書き込みます。
 受領証タグは GitHub リリースを作らず、ワークフローも起動しません。
 
-カナリアのソースの識別情報は
-`v<stable>+canary.<YYYYMMDDTHHMMSSZ>` だけです。ビルドメタデータにより、意図的に
-SemVer 上はその安定版の本体と等しくなります。どちらへ進むかは、保護されたチャンネルの記録と埋め込まれた UTC
-タイムスタンプが決めます。デスクトップのクライアントは、ビルドメタデータの順序付けを SemVer に任せず、
-検証済みのそのチャンネルの並びを更新の根拠として扱います。`Canary Release` は毎日 06:41 UTC に既定の
-ブランチから実行され、手動で起動すればいつでも1回走らせられます。実行は
+カナリアのタグは `canary.<YYYYMMDDTHHMMSSZ>-v<stable>` です。これは安定版の `rc.N-v<stable>` と同じクレームの形なので、
+`v*` のリリースタグを一覧にする処理がこれをリリースと取り違えることはありません。
+このタグは、あらゆる場所でカナリアの識別情報になります。GitHub のプレリリース、
+アーカイブ（`releases/tag/<tag>/`）、ビルドに刻印されるタグ、そして
+Docker イメージのタグです。公開されるバージョンは `<stable>+canary.<stamp>` です。ビルド
+メタデータにより、意図的に SemVer 上はその安定版の本体と等しくなります。どちらへ進むかは、保護された
+チャンネルの記録と埋め込まれた UTC タイムスタンプが決めます。デスクトップのクライアントは、
+ビルドメタデータの順序付けを SemVer に任せず、検証済みのそのチャンネルの並びを更新の根拠として扱います。
+
+カナリアは Stable Release のパイプラインそのものを実行します。タグのメッセージがそのままクレームになり、
+実行するレーン（`release.py --canary` は `--only`、`--with`、
+`--without` を受け付け、署名済みパッケージのアップグレード系統を除くすべてのレーンから始めます。
+この系統はカナリアでは決して実行できません）と、赤のテストスイートがあるときに公開を止めるかどうか
+（既定の `--require-green` か、`--no-require-green`）を記録します。`Canary Release`
+は毎日 06:41 UTC に既定のブランチから `--no-require-green` で実行されます。
+それでも公開は、選んだスイートが終わるまで待ちます。候補はビルドに成功し、スモークテストに合格しなければなりませんが、
+関係のないスイートの失敗では止まりません。
+手動で起動すればいつでも1回走らせられ、その場合は `require_green` 入力をオフにしない限り、
+選んだスイートがすべて合格する必要があります。実行は
 `cancel-in-progress: false` で順番待ちになります。`main` に新しいコミットが無ければ、
-未公開のカナリアを再開するか、何もしません。過去の `-canary.` 形式の識別情報には
-対応していません。
+未公開のカナリアを再開するか、何もしません。退役した `v<stable>+canary.<stamp>` 形式と
+`-canary.` 形式の識別情報はもう作られません。古いものは
+`--prune-canaries` で順次整理されます。
 カナリアのタグを push したあとでプロセスが止まった場合は、コマンドを再実行すると、
 リモートのタグオブジェクトを厳密に検証し、欠けたドラフトを補い、
 保護されたカナリアの head がそのタグを受領するまで起動し直します。
 保護された公開コントローラーは、GitHub のプレリリースをドラフトから公開に切り替える前に
 その注釈付きタグオブジェクトを厳密に検証し、両方の状態を読み戻し、
 そのあとで初めて R2 の head を進めます。
+カナリアを公開するのは、Stable Release の `publish-canary` ジョブだけです。
+`desktop-bundled-release.yml` を直接起動してもリリースタグは拒否され、コントローラーは
+ほかのワークフローをカナリアの公開元として認めません。カナリアの Docker エイリアス（`:canary`、
+`:canary-desktop`）は `publish-canary` が成功したあとにだけ動くので、ほかのカナリアチャンネルと同じく、
+クレームのテスト合格ポリシーとレーンに従います。カナリアの
+Termux パッケージは、タグの名前を付けたプール接頭辞の下で `hermes-canary` に入ります。
+安定版の試行のパッケージが、試行 ref の下で `hermes-stable` に入るのと同じです。
 
 プルリクエストと `main` への push では、E2E スイートは実行されません。`Canary Release` が成功するたびに、
 `Canary E2E`（`canary-e2e.yml`）が、クレームで行うのと同じ E2E の呼び出し（`release: true` 付きの完全な

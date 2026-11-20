@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: 246e5ac92d14b936ab9a1ddfc9d82a4d8498d6e0
+upstream_blob: be5c9cbff1c4ab2d99f875152e7c355bac32bb6d
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -1624,6 +1624,7 @@ hermes plugins [subcommand]
 | `remove <name>`（別名: `rm`, `uninstall`） | インストール済みのプラグインを削除します。 |
 | `enable <name>` | 無効化されたプラグインを有効化します。 |
 | `disable <name>` | プラグインを削除せずに無効化します。 |
+| `config <name>`（別名: `configure`, `settings`） | プラグインが宣言している設定を対話的に編集します。対象は、すべての `config_schema` のキー（`plugins.entries.<id>.settings` に保存され、スキーマに照らして検証されます）と、すべての `requires_env` の変数（プロファイルの `.env` に保存されます）です。シークレットの値は伏せた状態で入力し、画面に表示されることも `config.yaml` に書き込まれることもありません。端末がない環境では、各設定とその現在の値、保存先を出力します。端末から `install` を実行すると、最後に新しいプラグインの設定を一覧にして `Edit these now?` と尋ねます（既定は No です。`required` の設定がまだ空のときは、足りない設定を名指しし、既定が Yes になります）。スクリプトや `HERMES_NONINTERACTIVE` の場合は、代わりに案内を1行だけ表示します。 |
 | `list`（別名: `ls`） | インストール済みのプラグインを有効/無効状態付きで一覧します。 |
 | `idle-tasks [name] [--pause TASK \| --resume TASK]` | このプロファイルで、プラグインが `ctx.register_idle_task` を使って登録したアイドルタスクを一覧します（状態、実行回数、前回と次回の実行、直近の結果の概要またはエラー）。名前を指定したプラグインのタスクを1つ選んで、一時停止したり再開したりすることもできます。 |
 | `doctor [path-or-id] [--ci]` | 実際のマニフェストパーサ、ローダー、登録経路を通して、ネイティブなプラグインを検証します。`--ci` はエラーがあれば 1 で終了します。 |
@@ -1916,12 +1917,15 @@ WSL では、リンクを表示して自分で開いてもらいます。macOS �
 既定のゲートウェイが配信する名前付きプロファイルの場合（`hermes -p work webapp`）、Webapp はそのプロファイルで
 開きます。
 
-ダッシュボードのサインインゲートの内側では（`webapp.host: 0.0.0.0` または `::` のとき、あるいは `webapp.public_url` を設定したとき）、
+ダッシュボードのサインインゲートの内側では（`webapp.host: 0.0.0.0`、`::` またはこのマシンの IP アドレスの1つのとき、あるいは `webapp.public_url` を設定したとき）、
 コマンドは1回限りのリンクの代わりに、サインイン後に戻ってくる Webapp のアドレスを開きます。
-`webapp.public_url` を設定していればその URL、LAN では Web Access Start が Nous のサインインを登録したアドレス
+`webapp.public_url` を設定していればその URL、`webapp.host` に IP アドレスを設定していれば、動いているゲートウェイがバインドしているアドレス
+（Web Access Start が別のアドレスで Nous のサインインを登録していた場合、コマンドはそのアドレスを開かず、そこではサインインを完了できないと伝えます）、
+LAN では Web Access Start が Nous のサインインを登録したアドレス
 （`webapp/sign-in-registration.json`。それがまだこのマシンの LAN アドレスと Webapp のポートである間に限ります）、
 それ以外はループバックのアドレスで、パスワードプロバイダーか、そのために手で設定したサインインを配信します。
-そこではダッシュボードのアカウントでサインインします。ゲートウェイが
+そこではダッシュボードのアカウントでサインインします。IP アドレスで配信している場合、`--status` はゲートウェイがバインドしているアドレスについて
+`Serving at http://<address>:<port> (this machine's own clients use http://127.0.0.1:<port>)` と表示します。`config.yaml` の `webapp.host` がそれと異なるときは、再起動後にゲートウェイが配信するそのアドレスも示します。ゲートウェイが
 Webapp を配信できないときは、コマンドがその理由を伝えます。ゲートウェイは Webapp の設定を起動時に読むので、原因を直したら
 `hermes gateway restart` を実行してください。まだビルドされていない Webapp のバンドルは
 例外です。このコマンドがビルドし、動いているゲートウェイがすぐに配信します。

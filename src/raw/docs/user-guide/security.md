@@ -2,7 +2,7 @@
 title: "セキュリティ"
 description: "セキュリティモデル、危険なコマンドの承認、利用者の認可、コンテナによる隔離、本番運用のベストプラクティス"
 upstream_path: user-guide/security.md
-upstream_blob: 74c56ddb56ddcd775f36139f0f48e6915d51a225
+upstream_blob: a2f53ee93583a96aff303f31f0c8dce6d9407c82
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
 ---
@@ -689,6 +689,8 @@ terminal:
     - ANOTHER_TOKEN
 ```
 
+[管理者による適用範囲](/hermes/docs/user-guide/managed-scope/)でも、同じ一覧を設定できます（管理者が設定するもののほか、サンドボックスの起動役が子プロセスに必要な変数を設定するものもあります）。管理者側の一覧はプロファイルの一覧を置き換えます。プロバイダーの資格情報は、どちらから指定しても拒まれます。
+
 どちらの一覧も、`terminal`、`execute_code`、`no_agent` の cron スクリプトに等しく効きます。宣言された変数は、その子プロセスが属するプロファイルの値で渡されます。1 つのプロセスが複数のプロファイルを受け持つ場合（複数プロファイルのゲートウェイ、デスクトップやダッシュボードのバックエンド）、各プロファイルの値はそれぞれの `.env` や秘密情報の取得元から来るのであって、起動したプロファイルが用意したプロセスの環境から来ることはありません。起動したプロファイルの `.env` の資格情報は、受け持たれた側のプロファイルの子プロセスからは落とされます。
 
 ### 資格情報ファイルの受け渡し（OAuth トークンなど） {#credential-file-passthrough}
@@ -719,6 +721,8 @@ terminal:
 ```
 
 パスは `~/.hermes/` からの相対です。ファイルはコンテナの中の `/root/.hermes/` にマウントされます。この一覧を読むのは `tools/credential_files.py` です（`terminal.credential_files`）。`terminal:` のブロックの下にありますが、読み込むのは中核のターミナルバックエンドではなく資格情報ファイルのモジュールなので、同梱の `DEFAULT_CONFIG` のひな型には含まれていません。
+
+[管理者による適用範囲](/hermes/docs/user-guide/managed-scope/)でも、この一覧を設定できます。どちらから指定しても、Hermes 自身の資格情報の保管場所（`.env`、`auth.json`、`mcp-tokens/`、そのほかエージェントが読み取りを拒まれているファイル）がマウントされることはありません。そうしたものを名指しした項目は、スキルが求めた場合と同じく、警告を出して読み飛ばされます。上に挙げた Google Workspace のトークンファイルは、スキルの場合と同じく例外です。
 
 ### 他の CLI のログインを借りる（Codex CLI、Claude Code） {#borrowed-cli-logins}
 
@@ -834,6 +838,8 @@ security:
 
 ホスト名の部分一致による防護（元の IP が公開のものでも、そっくりに見せる Unicode のドメインの細工を止めます）は、この設定にかかわらず効き続けます。
 
+[管理者による適用範囲](/hermes/docs/user-guide/managed-scope/)では、このキー（または旧来の `browser.allow_private_urls`）を固定できます。固定した値は、許す方向にも止める方向にも、この防護の扱いを決めます。`HERMES_ALLOW_PRIVATE_URLS` とプロファイル自身のキーが読まれるのは、管理者による適用範囲がどちらのキーも固定していないときだけです。クラウドと CDP のブラウザは `browser.allow_private_urls` を自分専用の切り替えとしても読むので、それらまで押さえたい場合はそのキーも固定してください。
+
 #### `allow_private_urls` が守る範囲と守らない範囲 {#what-allowprivateurls-covers-and-what-it-doesnt}
 
 この設定が守るのは、Hermes 自身が行う取得と、遠隔のブラウザに渡す取得です。
@@ -876,6 +882,8 @@ security:
   fake_ip_ranges:
     - 198.18.0.0/15
 ```
+
+[管理者による適用範囲](/hermes/docs/user-guide/managed-scope/)でも、このブロックを宣言できます。たとえば、プロキシがこの方法で DNS に答えるサンドボックスの起動役がそうです。管理者側の項目にも、下の決まりが同じように当てはまります。
 
 既定では空で、`allow_private_urls` より狭い設定です。例外になるのは宣言したブロックだけで、
 それはローカルのプロキシが持つ範囲であるべきですし（接続先はあくまでプロキシで、本当の

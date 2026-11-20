@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Google Vertex AI"
 description: "Hermes Agent を Google Cloud Vertex AI の Gemini で使う — OAuth2 のサービスアカウントまたは ADC、GCP の請求とクォータ、固定の API キーは不要"
 upstream_path: guides/google-vertex.md
-upstream_blob: fd8f08e461414910c7847a587d5ee808215c1292
+upstream_blob: 8d23788003df0e9de930ab17c4dc3d4f6a736967
 sources:
   - https://hermes-agent.nousresearch.com/docs/guides/google-vertex
 ---
@@ -93,6 +93,10 @@ Vertex ではモデル ID に `google/` というベンダー接頭辞が必要�
 | モデル | ID |
 |-------|----|
 | Gemini 3.8 Flash | `google/gemini-3.8-flash` |
+| Gemini 4 Neon | `google/gemini-4-neon` |
+| Gemini 4 Hydrogen | `google/gemini-4-hydrogen` |
+| Gemini 4 Carbon | `google/gemini-4-carbon` |
+| Gemini 4 Argon | `google/gemini-4-argon` |
 | Gemini 3.7 Flash | `google/gemini-3.7-flash` |
 | Gemini 3.1 Pro Preview | `google/gemini-3.1-pro-preview` |
 | Gemini 3 Pro Preview | `google/gemini-3-pro-preview` |
@@ -102,7 +106,7 @@ Vertex ではモデル ID に `google/` というベンダー接頭辞が必要�
 | Gemini 2.5 Flash | `google/gemini-2.5-flash` |
 
 :::note Gemini 3.x には `global` リージョンを使います
-Gemini 3.x のプレビューモデルは `global` のエンドポイントから提供されます。リージョン指定のエンドポイント（`us-central1` など）では 404 になることがあります。特別な理由がなければ `region: global` のままにしてください。
+Gemini 3.x のプレビューモデルと Gemini 4 のモデルは `global` のエンドポイントから提供されます。リージョン指定のエンドポイント（`us-central1` など）では 404 になることがあります。特別な理由がなければ `region: global` のままにしてください。
 :::
 
 ## 会話の途中でモデルを切り替える {#switching-models-mid-session}
@@ -116,7 +120,7 @@ Gemini 3.x のプレビューモデルは `global` のエンドポイントか�
 
 ## 推論・思考 {#reasoning-thinking}
 
-Vertex は Gemini の思考予算を OpenAI 互換の形で公開しています。Hermes は推論の強さの設定を `extra_body.google.thinking_config` へ自動的に対応づけるので、`reasoning_effort` はほかの Gemini 系と同じように働きます。
+Vertex は Gemini の思考予算を OpenAI 互換の形で公開しています。Hermes は推論の強さの設定を `extra_body.google.thinking_config` へ自動的に対応づけるので、`reasoning_effort` はほかの Gemini 系と同じように働きます。Gemini 4 Hydrogen と Neon では、`xhigh`・`max`・`ultra` のどれを指定しても `xhigh` の思考レベルが送られます。Gemini 4 Argon と Carbon は `high` が上限です。なお、長い出力（64K を超える出力）はこの経路では使えません。
 
 ## 診断 {#diagnostics}
 
