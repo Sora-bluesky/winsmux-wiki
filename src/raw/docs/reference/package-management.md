@@ -2,7 +2,7 @@
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: b066d18ddce561ec7808bc4aecc86a90040805c5
+upstream_blob: 49b960a16fe31dbf8d7c7817cd5d3e1733b8c40e
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -115,6 +115,9 @@ Windows では `%LOCALAPPDATA%\hermes` です。`HERMES_HOME` とプロファイ
 | 再開可能なダウンロード | 同じルート配下の `cache/partials/`。署名済みペイロードの中には置きません。 |
 | インストールごとの選択とジャーナル | 依存関係の状態ルート配下の `installs/INSTALL_KEY/`。 |
 | Python の世代 | `installs/INSTALL_KEY/environments/`。 |
+| PM 実行環境の世代 | `installs/INSTALL_KEY/pm-runtime/generations/`。 |
+| 世代のリース | `installs/INSTALL_KEY/leases/environments/GENERATION/` と `leases/pm-runtime/GENERATION/`。 |
+| インストールと実行環境の準備のロック | `installs/INSTALL_KEY/locks/`。 |
 | 同期と更新の受領記録 | 有効なホーム配下の `logs/update_receipts/`。 |
 
 インストールキーは、正規のソースまたはペイロードのリポジトリパスから導かれます。
@@ -126,6 +129,17 @@ facts や世代のパスは手で編集しないでください。ランチャ�
 選択中の環境を解決します。プロセスは再起動するまで、すでにインポートしたものを
 使い続けます。ガベージコレクションは、選択中の世代と、読み手が生きている
 リース管理下の世代を残します。
+
+起動時に書き込まれるリースとロックは、世代の中ではなく、常にその横に置かれます。
+そのため、サンドボックス（Landlock、rootless コンテナのマウント、systemd の
+`ReadOnlyPaths=`）では、`environments/` と
+`pm-runtime/generations/` を読み取り専用にしたまま、
+`installs/INSTALL_KEY/leases/` と `installs/INSTALL_KEY/locks/` にだけ書き込みを許可できます。この
+2つのパスはビルドが変わっても同じなので、更新のあとにポリシーへ新しい例外を足す必要はありません。
+どちらのディレクトリも、書き込み可能なインストールで初めて起動したあとに作られています。以前のリリースで起動したプロセスは、
+終了するまで、各世代の中（`.leases/`）でリースを取り、`installs/INSTALL_KEY/.install.lock` と
+`pm-runtime/.prepare.lock` をロックし続けます。ガベージコレクションはどちらの場所のリースも尊重し、
+インストーラーも、古いファイルを開けるときは必ずそちらもロックします。
 
 ダウンロードは、部分ファイルの URL ごとに1つのロックを共有します。失敗または一時停止した転送が
 部分的な保存先を公開することはなく、ガベージコレクションが進行中の

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "画像の貼り付けと視覚認識"
 description: "クリップボードの画像を Hermes CLI に貼り付けて、マルチモーダルな画像解析を行います。"
 upstream_path: user-guide/features/vision.md
-upstream_blob: 4b466ce0f8a4178909adc1fb51cf421a431c5542
+upstream_blob: 6e8063cef1373965c18ab79dfb7796685281390c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/vision
 ---
@@ -207,7 +207,7 @@ CLI のクリップボード、ゲートウェイ（Telegram や Discord の写�
 | **画像対応**（GPT-4V、画像対応の Claude、Gemini、Qwen-VL、MiMo-VL、DeepSeek Flash / V4.1-Flash など） | 上記のプロバイダー標準の画像形式で、**画像そのもの**として送られます。テキストに要約する段階は挟みません。 |
 | **テキスト専用**（DeepSeek V4 Pro、DeepSeek V3、小さめのオープンソースモデル、画像非対応の古いチャット用エンドポイント) | 補助ツールの `vision_analyze` を経由します。補助の画像モデルが画像を説明し、その文章が会話に差し込まれます。 |
 
-この切り替えに設定は要りません。Hermes がプロバイダーのメタデータからいまのモデルの能力を調べ、適切な経路を自動で選びます。実際の使い心地としては、会話の途中で画像対応モデルとそうでないモデルを行き来しても、手順を変えずに画像がそのまま扱えます。テキスト専用モデルには、受け取れずに弾くしかないマルチモーダルなデータではなく、画像について筋の通った文脈が渡ります。
+この切り替えに設定は要りません。Hermes がプロバイダーのメタデータからいまのモデルの能力を調べ、適切な経路を自動で選びます。Nous Portal 経由で提供されるモデルの場合、このメタデータとは Portal 自身のモデル一覧にある、画像入力に対応しているかどうかの印のことです。実際の使い心地としては、会話の途中で画像対応モデルとそうでないモデルを行き来しても、手順を変えずに画像がそのまま扱えます。テキスト専用モデルには、受け取れずに弾くしかないマルチモーダルなデータではなく、画像について筋の通った文脈が渡ります。
 
 自動の判断を上書きしたい場合は、`config.yaml` で `agent.image_input_mode` を設定します。
 

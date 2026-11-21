@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 3baf1366dc82576c380d0cf555699b222bf88f4d
+upstream_blob: 424fcd72e149f76fbb3af3d4abd20a49c3907be5
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -175,8 +175,11 @@ macOS Intel はもうビルドされないので、そうしたクレームが�
   バンドルのファイルだけがあり、どのチャンネルも動かしません。保護された R2 の安定版 head、App Installer と macOS の
   フィード、APT チャンネル、ダウンロードページ、
   `releases/stable/release-candidates.json`、署名済みパッケージの基準は、
-  前回のそろったリリースのままです。公式リポジトリのソースチェックアウトは
-  `releases/stable/release-candidates.json` に従うので、これも動きません。
+  前回のそろったリリースのままです。ただし、既定のチャンネルである
+  `stable` を使う公式リポジトリのソースチェックアウトは、そのままにはなりません。このチャンネルは GitHub で最新の
+  公開済み `vX.Y.Z` リリースを指し（`hermes_cli/source_releases.py` の
+  `_resolve_stable`）、R2 のポインターを読まないので、レーンに関係なく、
+  リリースが公開されるたびにソースチェックアウトも進みます。
 - **完了。** デスクトップのチャンネルを進めるリリースは、保護された R2 の head がそれを指した時点で完了です。
   Docker だけを動かすリリースは、`stable` エイリアスが最終タグに結び付いたダイジェストを指した時点で完了です。
   どのチャンネルも動かさないリリースは、公開された時点で完了です。シーケンサーはこれらの目印を使って、
@@ -368,14 +371,14 @@ Docker イメージのタグです。公開されるバージョンは `<stable>
 Termux パッケージは、タグの名前を付けたプール接頭辞の下で `hermes-canary` に入ります。
 安定版の試行のパッケージが、試行 ref の下で `hermes-stable` に入るのと同じです。
 
-プルリクエストと `main` への push では、E2E スイートは実行されません。`Canary Release` が成功するたびに、
-`Canary E2E`（`canary-e2e.yml`）が、クレームで行うのと同じ E2E の呼び出し（`release: true` 付きの完全な
-CI、インストール/更新 E2E、Windows のライブ E2E）を、そのカナリアがタグ付けしたコミットに対して実行します。
-そのため E2E の退行は、次のクレームまで待たずに、取り込まれてから1日以内に見つかります。
-自動実行ですでに合格したコミットは、もう一度は実行されません
-（新しいコミットが無いカナリアは、直前のタグを再開するためです）。この実行は報告するだけです。
-カナリアはその完了を待たず、
-`install-e2e-red.yml` が、最新の実行が赤のあいだ `install-e2e-red` の issue を1つ開いたままにします。
+プルリクエストと `main` への push では、E2E スイートは実行されません。毎日の `Canary Release` は、
+カナリアのクレームタグを指定して `Stable Release` を起動し、`release: true` 付きの完全な CI、
+インストール/更新 E2E、Windows のライブ E2E を、カナリアのパイプラインの中で直接実行します。
+そのため E2E の退行は、次の安定版のクレームまで待たずに、取り込まれてから1日以内に見つかります。
+定期実行では `--no-require-green` を渡すので、候補のビルドとスモークテストが通っていれば、
+赤のスイートは報告されるだけで、カナリアの公開は止まりません。また `stable-release.yml` の `track-canary-red` ジョブが、
+最新のカナリアの実行が赤のあいだ `install-e2e-red` の issue を1つ開いたままにします（`install-e2e-red.yml`
+は、手動でのドライランによるプレビューや再実行のために引き続き使えます）。
 
 ## カナリアと単発のデスクトップ識別情報 {#canary-and-one-off-desktop-identities}
 
@@ -392,8 +395,9 @@ CI、インストール/更新 E2E、Windows のライブ E2E）を、そのカ�
 
 単発ビルドの刻印には `source: commit-build` が使われます。これらにはアプリの更新フィードも App Installer の
 購読も公開されず、GUI と同梱の CLI のどちらも更新の要求を拒否します。
-受け取った人には、開発者に新しいビルドを頼むよう案内します。ソースチェックアウトは別物で、
-使えるチャンネルは `main` だけです。
+受け取った人には、開発者に新しいビルドを頼むよう案内します。ソースチェックアウトは別物です。公式リポジトリのチェックアウトは
+`stable` に、フォークやミラーは `main` に従い、
+`hermes update --set-channel` で別のチャンネルを選ぶまではそのままです。
 
 `--build-commit` は、起動の前に、決定的に決まるダウンロードページの URL を表示します。
 ドライランでも表示されます:

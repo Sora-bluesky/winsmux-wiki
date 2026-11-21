@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 50a420d5bf362c823853915d7b88bb8122901d46
+upstream_blob: 983fd4519b994de36a121862b132818b0a054092
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -330,6 +330,7 @@ YAML を書く代わりに、きちんとした UI からプロバイダー・�
 - **ターミナルのフォント選択** — **Settings → Appearance** でインストール済みのフォントを選べます。`MesloLGS NF` のような Nerd Fonts は、対話用のターミナルでもエージェント用のターミナルでも Powerlevel10k の区切りやアイコンを描きます。この設定はプロファイルごとに保存されます。
 - **Reasoning Blocks** — **Settings → Chat → Reasoning Blocks**（`config.yaml` の `display.show_reasoning`）で、モデルの思考をトランスクリプトに出すか隠すかを決めます（切ると答えだけが出ます）。開いているチャットは、設定が保存された時点で更新されます。コンポーザーで `/reasoning hide` や `/reasoning show` と打っても同じ設定が切り替わり、開いているトランスクリプトもすぐ追従します。
 - **起動時に前のチャットを開く** — 既定では、冷えた状態から起動しても続きから始まります。**Settings → Appearance** で切る（または `config.yaml` に `display.resume_last_session: false` を書く）と、いつも新しいチャットから始まります。ディープリンクや明示的な行き先は、どちらの設定でも上書きされません。
+- **開くだけのリンク** — `hermes://launch` は Hermes Desktop を開き（すでに動いていればそのウィンドウを前面に出し）、それ以外は何もしません。`launch` のあとに何が付いていても無視されるので、入力欄に文字が入ったり、画面が移動したり、ダイアログが開いたりすることはありません。ページに置く「Hermes を開く」ボタンやショートカットに使えます。
 - **補助モデルの警告** — 補助タスク（タイトル付け、要約などの手伝い）が別のプロバイダーに固定されたまま、メインのモデルを新しいプロバイダーへ切り替えると、アプリが警告します。気づかないうちに作業が2つのプロバイダーへ分かれてしまわないようにするためです。
 - **タスクごとの推論 effort** — **Settings → Model → Auxiliary models** の各行には、プロバイダーとモデルの選択の隣に推論の選択があります。段階を指定するか、**Off** か、**inherit · main model effort**（既定で、そのタスクの上書きを外します）です。これは `config.yaml` に `auxiliary.<task>.reasoning_effort` として保存され、`hermes model` が書くのと同じキーで、設定されていれば行の要約にも出ます。圧縮やタイトル付けのような頻繁に走る手伝いを低い推論や推論なしで回し、メインのエージェントは高いままにしておく、といった使い方ができます。
 - **VS Code Marketplace のテーマ** — 組み込みのテーマのプリセットに加えて、外観の設定には VS Code Marketplace をその場で検索する機能があります。好きなカラーテーマを選べば、アプリがダウンロードし、変換し、デスクトップのテーマとして導入します。同じ取り込み機能はコマンドパレット（*Install theme*）からも使え、取り込んだテーマは外観の設定から削除できます。

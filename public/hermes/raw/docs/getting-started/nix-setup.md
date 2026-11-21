@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Nix と NixOS のセットアップ"
 description: "Nix で Hermes Agent をインストールして動かす方法。手軽な `nix run` から、コンテナモードまで備えた完全に宣言的な NixOS モジュールまで"
 upstream_path: getting-started/nix-setup.md
-upstream_blob: ccff056839e8758d029d0e554c9a389f4bf4f1ec
+upstream_blob: c10cd2d252cee2e2dfc7f022b6be5a72be8070c3
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 ---
@@ -715,6 +715,51 @@ macOS に相当する設定はありません。`RunAtLoad` を付けた `launch
 ```
 
 開くには `hermes webapp` を実行します。ループバック以外の `host` や `public_url` を使う場合は、ダッシュボードと同じく、[ダッシュボードのサインインプロバイダー](/hermes/docs/user-guide/features/web-dashboard/#authentication-gated-mode)のどれかが必要です。`nix build .#webapp` を実行すると、このバンドルだけを単独でビルドできます。ラッパーが `HERMES_WEBAPP_DIST` をそのバンドルに向けているので、`hermes webapp --force-build` を実行しても作り直すものがなく、その旨が表示されます。
+
+### バックエンドをゲートウェイへ移す {#moving-the-backend-to-the-gateway}
+
+`backend.mode` が動かす `hermes-backend` ユニット（または launchd のエージェント）は、ゲートウェイとは別にもうひとつ動く Hermes です。そこで始めたチャットは、そのユニット自身のプロセスで動きます。代わりにゲートウェイの Webapp がバックエンドのアドレスを引き受ければ、すべてのチャットがゲートウェイの中で動くようになります。ただし Nix では、`hermes gateway migrate --backends --apply` はこの移行を行いません。ユニットは Nix が生成したもので、設定も宣言的だからです（`hermes config set` は[使えなくなっています](#managed-mode)）。そのためこのコマンドは終了コード 6 で終わり（何も起動しない `--detach` を付けても同じです）、何も変更しません。終了コード 3 は移行を妨げるものがあるという意味で、指摘された問題を直すまで手順は表示されません。代わりに Nix の設定で変更してください。バックエンドを止め、そのアドレスを Webapp に渡します。
+
+```nix
+{
+  services.hermes-agent = {
+    enable = true;
+    backend.mode = "none";      # was "serve" or "dashboard"; removes the hermes-backend unit
+    settings.webapp = {
+      enabled = true;
+      host = "127.0.0.1";       # the old backend.host
+      port = 9119;              # the old backend.port
+      # public_url = "https://dashboard.example.com";  # only when the backend had one (below)
+    };
+  };
+}
+```
+
+Home Manager では `gateway.enable = true` のままにしておいてください（NixOS モジュールは常にゲートウェイを動かします）。そのうえで再ビルドし、ゲートウェイを再起動します。`config.yaml` が変わっただけではゲートウェイは再起動せず、`webapp` の設定は起動時にしか読まれないからです。
+
+```bash
+# NixOS
+sudo nixos-rebuild switch
+sudo systemctl restart hermes-agent
+
+# Home Manager on Linux
+home-manager switch
+systemctl --user restart hermes-agent
+
+# Home Manager on macOS
+home-manager switch
+launchctl kickstart -k gui/$(id -u)/org.nix-community.home.hermes-agent
+```
+
+確認には `hermes webapp --status` を使います（再起動したばかりのゲートウェイは、アドレスを配信し始めるまで数秒かかります。"The gateway is not running" と表示されたら、5 秒待ってからもう一度実行してください）。あわせて `hermes gateway migrate --backends --dry-run` を実行し、バックエンドが残っていないことを確かめます。そのあとブラウザで以前のアドレス（公開用の `https://` のアドレスがあればそちら）を開き、サインインしてください。
+
+- **公開アドレス。** プロキシやトンネルを通して独自の `https://` ホスト名でアクセスしていたバックエンドは、そのアドレスを `HERMES_DASHBOARD_PUBLIC_URL` か `settings.dashboard.public_url` に持っています。Webapp はどちらも読みません。サインインのコールバックは `webapp.public_url` をもとに組み立てます。`settings.webapp.public_url` が未設定なら、バックエンドが実際に使っていたアドレスを設定してください。次の順に見ていき、最初に見つかった `http://` か `https://` の URL がそれです（空の値や形式の正しくない値は飛ばします）。まず `HERMES_DASHBOARD_PUBLIC_URL`（`environment` か `environmentFiles` で指定したもので、モジュールが Hermes のホームの `.env` に書き込みます）、次に `settings.dashboard.public_url` です。`settings.dashboard.trusted_proxies` は、もともと Webapp にも適用されます。
+
+- **サインイン。** バックエンドで使っていたサインインの設定は、`environmentFiles`（`HERMES_DASHBOARD_BASIC_AUTH_*`、`HERMES_DASHBOARD_OAUTH_CLIENT_ID`、`HERMES_DASHBOARD_OIDC_*`）か `settings.dashboard` にそのまま残してください。Webapp は同じプロバイダーでサインインします。ループバック以外の `host` では、そのどれかが必要です。
+- **アドレス。** `settings.webapp.host` に指定できるのは `127.0.0.1`、`::1`、`localhost`、`0.0.0.0`、`::`、またはこのマシンの IP アドレスのどれかひとつで、ホスト名は使えません。名前（Tailscale の MagicDNS 名など）にバインドしていたバックエンドは、その名前の IP アドレスに置き換えます。`settings.webapp` には `backend.waitFor` や `backend.interfaceName` に相当するものがないので、ゲートウェイの起動時にそのアドレスが使える状態になっている必要があります。
+- **デスクトップ。** `backend.mode = "none"` にすると、`programs.hermes-agent.desktop` のラッパーはアプリをバックエンドに向けなくなり（`HERMES_DESKTOP_REMOTE_URL`）、`backend.sessionTokenFile` も効かなくなります。アプリは代わりに、このマシンのゲートウェイにつなぎます。
+
+[移行後にクライアント側で変わること](/hermes/docs/user-guide/features/web-dashboard/#after-the-move)も参照してください。
 
 ### 動いているか確かめる {#verify-it-works}
 

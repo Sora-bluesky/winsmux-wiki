@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: ef0c42b8c37baad63fcab4087186de70f7480c4a
+upstream_blob: 236ac4d42737aee1286cc98ad5cea41e60791809
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -1057,6 +1057,8 @@ state_file = plugin_data_dir("my-plugin") / "state.json"
 conn = plugin_db("my-plugin")
 conn.execute("CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY)")
 ```
+
+セッションがまだ紐づいている間に、使用中の名前付きプロファイルが削除されたり名前を変えられたりした場合、`plugin_data_dir()` はそのプロファイルのディレクトリを作り直さず、`FileNotFoundError` を送出します。バックグラウンドのフックから書き込むプラグインで、その場合は書き込みを飛ばしたいときは、この例外を捕捉してください。
 
 プラグインごとに1つのディレクトリを使うことで、どのプラグインのデータも1つの予測可能な場所で調べられます。シークレットはここには属しません — 認証情報の読み取りは、他のどこでも同じように、標準の `.env` / secret-scope の経路を通ります。
 

@@ -112,9 +112,9 @@
       "translatedAt": "2026-11-14T23:10:16.607Z"
     },
     "developer-guide/plugins/index.md": {
-      "blob": "ef0c42b8c37baad63fcab4087186de70f7480c4a",
+      "blob": "236ac4d42737aee1286cc98ad5cea41e60791809",
       "status": "translated",
-      "translatedAt": "2026-11-20T22:49:31.096Z"
+      "translatedAt": "2026-11-21T22:57:12.547Z"
     },
     "developer-guide/programmatic-integration.md": {
       "blob": "0a56c436f60cb243b63077e1973d0c98da7d9372",
@@ -182,9 +182,9 @@
       "translatedAt": "2026-09-18T22:41:13.106Z"
     },
     "getting-started/nix-setup.md": {
-      "blob": "ccff056839e8758d029d0e554c9a389f4bf4f1ec",
+      "blob": "c10cd2d252cee2e2dfc7f022b6be5a72be8070c3",
       "status": "translated",
-      "translatedAt": "2026-11-09T22:51:26.060Z"
+      "translatedAt": "2026-11-21T22:57:12.492Z"
     },
     "getting-started/platform-support.md": {
       "blob": "8fc60b3c541676527c141229468c43a37a785c13",
@@ -397,9 +397,9 @@
       "translatedAt": "2026-11-18T23:58:35.480Z"
     },
     "reference/cli-commands.md": {
-      "blob": "be5c9cbff1c4ab2d99f875152e7c355bac32bb6d",
+      "blob": "dfeb3b7bc2e26ad61c4c1faea4b98a8cdac28ba3",
       "status": "translated",
-      "translatedAt": "2026-11-20T22:49:31.091Z"
+      "translatedAt": "2026-11-21T22:57:12.534Z"
     },
     "reference/cli-symbols.md": {
       "blob": "76d0fcd513551ad62992ffc06f63494b1ad2bed9",
@@ -482,14 +482,14 @@
       "translatedAt": "2026-11-04T22:47:46.101Z"
     },
     "user-guide/desktop.md": {
-      "blob": "50a420d5bf362c823853915d7b88bb8122901d46",
+      "blob": "983fd4519b994de36a121862b132818b0a054092",
       "status": "translated",
-      "translatedAt": "2026-11-20T22:49:31.058Z"
+      "translatedAt": "2026-11-21T22:57:12.502Z"
     },
     "user-guide/docker.md": {
-      "blob": "90582abc245c2b117d17186abd94db03a19531e4",
+      "blob": "13dc493df32e67ca1ef473e5305cb1afc9579f1e",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.643Z"
+      "translatedAt": "2026-11-21T22:57:12.507Z"
     },
     "user-guide/egress/index.md": {
       "blob": "90ccbb8a05e663ba816b4ac1e8bef7bca32eed5b",
@@ -642,9 +642,9 @@
       "translatedAt": "2026-10-17T22:47:14.261Z"
     },
     "user-guide/features/mcp.md": {
-      "blob": "944b1ae11eb4626e156129d541249b5239c19ecd",
+      "blob": "f5b4d653c61622dc89f22a1892d189da72c7ac37",
       "status": "translated",
-      "translatedAt": "2026-11-19T22:46:40.676Z"
+      "translatedAt": "2026-11-21T22:57:12.520Z"
     },
     "user-guide/features/memory-providers.md": {
       "blob": "a7827a17909641403c3c5edf4ba665db4d7a3606",
@@ -727,9 +727,9 @@
       "translatedAt": "2026-11-15T22:52:37.874Z"
     },
     "user-guide/features/vision.md": {
-      "blob": "4b466ce0f8a4178909adc1fb51cf421a431c5542",
+      "blob": "6e8063cef1373965c18ab79dfb7796685281390c",
       "status": "translated",
-      "translatedAt": "2026-10-16T22:46:20.846Z"
+      "translatedAt": "2026-11-21T22:57:12.509Z"
     },
     "user-guide/features/voice-mode.md": {
       "blob": "71671b875fd9484268ce29de016a37881bdc5c8b",
@@ -742,9 +742,9 @@
       "translatedAt": "2026-09-25T22:58:06.429Z"
     },
     "user-guide/features/web-dashboard.md": {
-      "blob": "138a7f6a09155267f1957b2ca747920d26067138",
+      "blob": "ba609bef4be57a34af7f19a412b747655caf7bf2",
       "status": "translated",
-      "translatedAt": "2026-11-13T23:04:55.180Z"
+      "translatedAt": "2026-11-21T22:57:12.515Z"
     },
     "user-guide/features/web-search.md": {
       "blob": "1288ee9e391d6030261ecdaa456021ed935d01af",
@@ -1982,9 +1982,9 @@
       "translatedAt": "2026-10-29T23:07:10.274Z"
     },
     "user-guide/windows-native.md": {
-      "blob": "d7cd8383ddbbf9a997df7c61b31da5e43b57e6fc",
+      "blob": "343824ddd24f93b48391c5b4ca715a9d94a5313b",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.683Z"
+      "translatedAt": "2026-11-21T22:57:12.504Z"
     },
     "user-guide/windows-wsl-quickstart.md": {
       "blob": "d361f3176439276070acaa78fdbbd8f066ef29dd",
@@ -2211,9 +2211,9 @@
       "translatedAt": "2026-10-07T22:47:33.828Z"
     },
     "developer-guide/gateway-monitoring.md": {
-      "blob": "8963c052e46ba793f39238d4aff716256226635e",
+      "blob": "06a5bd3901e78a61cfde62d38def8c6dc6686c55",
       "status": "translated",
-      "translatedAt": "2026-09-25T22:58:06.488Z"
+      "translatedAt": "2026-11-21T22:57:12.521Z"
     },
     "developer-guide/gateway-session-lifecycle.md": {
       "blob": "ba751d46d7d0fca113a26966d94f648b01f68977",
@@ -2361,14 +2361,14 @@
       "translatedAt": "2026-11-07T22:58:47.888Z"
     },
     "developer-guide/stable-releases.md": {
-      "blob": "3baf1366dc82576c380d0cf555699b222bf88f4d",
+      "blob": "424fcd72e149f76fbb3af3d4abd20a49c3907be5",
       "status": "translated",
-      "translatedAt": "2026-11-20T22:49:31.087Z"
+      "translatedAt": "2026-11-21T22:57:12.524Z"
     },
     "reference/package-management.md": {
-      "blob": "b066d18ddce561ec7808bc4aecc86a90040805c5",
+      "blob": "49b960a16fe31dbf8d7c7817cd5d3e1733b8c40e",
       "status": "translated",
-      "translatedAt": "2026-11-13T23:04:55.223Z"
+      "translatedAt": "2026-11-21T22:57:12.538Z"
     },
     "user-guide/switching-to-source.md": {
       "blob": "766782bed736ffa0bbb0ff70d3c46212547257a4",
@@ -2541,5 +2541,5 @@
       "translatedAt": "2026-11-17T23:02:10.590Z"
     }
   },
-  "snapshotCommit": "a0097551b614afc20477061f1070fe07953a3136"
+  "snapshotCommit": "3b1ce49ad3b3156c25ed2aa8fdf9bfb69d011bad"
 }

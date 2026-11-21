@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の Docker 設定"
 description: "Hermes Agent を Docker で動かす方法と、Docker をターミナルのバックエンドとして使う方法"
 upstream_path: user-guide/docker.md
-upstream_blob: 90582abc245c2b117d17186abd94db03a19531e4
+upstream_blob: 13dc493df32e67ca1ef473e5305cb1afc9579f1e
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
 ---
@@ -262,6 +262,91 @@ networks:
 
 - **Webapp だけで Nous のサインインを使う:** Portal の [Local Dashboards](https://portal.nousresearch.com/local-dashboards) のページか `hermes dashboard register --redirect-uri` で、Webapp のコールバック `https://<webapp host>/auth/callback` を使ってクライアントを登録します（[ダッシュボードを登録する](/hermes/docs/user-guide/features/web-dashboard/#registering-a-dashboard)を参照してください）。このインストールにすでにダッシュボードのクライアントがあるなら、`hermes dashboard register` はそのクライアントをその場で書き換えるので、ダッシュボードのコールバックも移ってしまいます。また、Webapp のアドレスを `HERMES_DASHBOARD_PUBLIC_URL` に書き込みます。
 - **両方で Nous のサインインを使う:** ネイティブのデスクトップ版の **Settings → Web Access** は、Webapp 専用のクライアントを登録し（`webapp/sign-in-registration.json` に保存されます）、ダッシュボードのクライアントには手を付けません。ただし、これは同じ端末のデスクトップアプリからしか使えないので、画面のないコンテナ向けのコマンドはまだありません。それができるまでは、Nous のクライアントを片方のホスト名に登録し、もう片方ではユーザー名とパスワードでサインインしてください。どちらのログイン画面にも両方の提供元が出ますが、クライアントを登録していないほうのホスト名では Nous のサインインは失敗します。
+
+## ダッシュボードのバックエンドをゲートウェイへ移す {#moving-a-dashboard-backend-to-the-gateway}
+
+ダッシュボード（`HERMES_DASHBOARD=1` を付けた `dashboard` の枠、またはリポジトリの Compose ファイルにある `dashboard` サービス）は、ゲートウェイとは別に動く 2 つ目の Hermes です。そこで始めたチャットは、ダッシュボード自身のプロセスで動きます。代わりにゲートウェイの Webapp にダッシュボードのアドレスを配信させれば、すべてのチャットがゲートウェイの中で動くようになります。コンテナでは、`hermes gateway migrate --backends --apply` はこの移行をしません。枠もサイドカーもイメージと Compose ファイルで宣言されていて、このコマンドはそれらを書き換えないため、何も変えずに理由を伝え、終了コード 6 で終わります（何も起動しない `--detach` を付けても同じです）。終了コード 3 は移行を妨げるものがあるという意味で、示されたものを直すまで手順は表示されません。以下がコンテナでの手順です。まずコンテナの中で `hermes gateway migrate --backends --dry-run` を実行し、見つかったバックエンドとそのアドレスを確かめてください。
+
+イメージには Webapp がビルド済みで入っているので、ビルドするものはありません。ダッシュボードが使っていたサインイン用の変数（`HERMES_DASHBOARD_BASIC_AUTH_*`、`HERMES_DASHBOARD_OAUTH_CLIENT_ID`、`HERMES_DASHBOARD_OIDC_*`）や、`config.yaml` の `dashboard.*` の設定はそのまま残してください。Webapp は同じ提供元でサインインし、`webapp.host` がループバック以外なら提供元が 1 つ必要です。[移行後にクライアントから見て変わること](/hermes/docs/user-guide/features/web-dashboard/#after-the-move)を参照してください。
+
+プロキシやトンネルを通して専用の `https://` のホスト名で開いていたダッシュボードは、そのアドレスを `HERMES_DASHBOARD_PUBLIC_URL` か `dashboard.public_url` に持っています。Webapp はどちらも読まず、サインインのコールバックを `webapp.public_url` をもとに組み立てます。ですから `webapp.public_url` が未設定なら、ダッシュボードが実際に使っていたアドレスをそこへ写してください。ダッシュボードは、次のうち `http://` か `https://` の URL が設定されている最初のものを使います（空の値や形の崩れた値は飛ばします）。
+
+1. Hermes のホームの `.env`（`/opt/data/.env`。コンテナの環境より優先されます）にある `HERMES_DASHBOARD_PUBLIC_URL`、
+2. ダッシュボードのコンテナの環境（`-e`、または Compose のサービスの `environment:`）にある `HERMES_DASHBOARD_PUBLIC_URL`、
+3. `config.yaml` の `dashboard.public_url`。
+
+`dashboard.trusted_proxies` はすでに Webapp にも効いています。次のコマンドは、ダッシュボードが `hermes` コンテナ自身の中で動く `dashboard` の枠の場合に、それぞれの値を読みます。Compose の `dashboard` サービスの場合は、2 番目の値だけはそのサービス自身のコンテナ `hermes-dashboard` から読んでください。
+
+```sh
+docker exec hermes hermes config get webapp.public_url                   # set already: leave it
+docker exec hermes grep '^HERMES_DASHBOARD_PUBLIC_URL=' /opt/data/.env   # 1
+docker exec hermes printenv HERMES_DASHBOARD_PUBLIC_URL                  # 2 (Compose: docker exec hermes-dashboard printenv ...)
+docker exec hermes hermes config get dashboard.public_url                # 3
+docker exec hermes hermes config set webapp.public_url https://dashboard.example.com   # the first one found
+```
+
+### `dashboard` の枠（`HERMES_DASHBOARD=1`） {#the-dashboard-slot-hermesdashboard1}
+
+1. Webapp をダッシュボードのアドレスに向けます。コンテナに `HERMES_DASHBOARD_HOST` と `HERMES_DASHBOARD_PORT` を設定していたなら、その値を使ってください。以下はそれぞれの既定値です。
+
+   ```sh
+   docker exec hermes hermes config set webapp.enabled true
+   docker exec hermes hermes config set webapp.host 0.0.0.0
+   docker exec hermes hermes config set webapp.port 9119
+   ```
+
+   ダッシュボードに公開のアドレスがあり、`webapp.public_url` が未設定なら、上で示したとおりにそのアドレスを `webapp.public_url` へ写してください。
+
+2. `HERMES_DASHBOARD` を外してコンテナを作り直します（コンテナの環境は再起動では変えられません）。自分の `docker run` の行から `-e HERMES_DASHBOARD=1` だけを除き、ポートの公開とサインイン用の変数の受け渡しは残します。[ダッシュボードを動かす](#running-the-dashboard)の例なら、こうなります。
+
+   ```sh
+   docker rm -f hermes
+   docker run -d \
+     --name hermes \
+     --restart unless-stopped \
+     -v ~/.hermes:/opt/data \
+     -p 8642:8642 \
+     -p 9119:9119 \
+     nousresearch/hermes-agent gateway run
+   ```
+
+   [更新する](#upgrading)ときと同じく、データのディレクトリは残り、コンテナ自身のファイルシステムに入れたものは消えます。
+
+3. ゲートウェイがそのアドレスを配信していて、古いバックエンドが残っていないことを確かめてから、ブラウザで元のアドレス（公開の `https://` のアドレスがあればそちら）を開いてサインインします。
+
+   ```sh
+   docker exec hermes hermes webapp --status
+   docker exec hermes hermes gateway migrate --backends --dry-run
+   ```
+
+   起動した直後のゲートウェイは、アドレスを配信し始めるまで数秒かかります。`webapp --status` が "The gateway is not running" と表示したら、5 秒待ってからもう一度実行してください。
+
+### Compose の `dashboard` サービス {#the-compose-dashboard-service}
+
+リポジトリの `docker-compose.yml` は、ダッシュボードを 2 つ目のコンテナとして `127.0.0.1:9119` で動かします。どちらのコンテナもホストのネットワーク（`network_mode: host`）を使うので、このループバックのアドレスはホスト自身のもので、Webapp もそのまま使えます。
+
+1. Webapp をそのアドレスに向けます。
+
+   ```sh
+   docker compose exec gateway hermes config set webapp.enabled true
+   docker compose exec gateway hermes config set webapp.host 127.0.0.1
+   docker compose exec gateway hermes config set webapp.port 9119
+   ```
+
+   ダッシュボードに公開のアドレスがあり、`webapp.public_url` が未設定なら、上で示した順（Hermes のホームの `.env`、次に `docker exec hermes-dashboard printenv HERMES_DASHBOARD_PUBLIC_URL`、次に `dashboard.public_url`）で探し、`docker compose exec gateway hermes config set webapp.public_url https://dashboard.example.com` で写してください。
+
+2. Compose ファイルから `dashboard:` サービスを削除します。そこにあった `HERMES_DASHBOARD_*` のサインイン用の変数は、`gateway` サービスの `environment:` へ移してください。
+
+3. ダッシュボードのコンテナを取り除き、新しい設定を読み込ませるためにゲートウェイを再起動します。
+
+   ```sh
+   docker compose up -d --remove-orphans
+   docker compose restart gateway
+   ```
+
+4. 枠のときと同じように確かめます。`docker compose exec gateway hermes webapp --status` を実行し、元のアドレス（公開のアドレスがあればそちら）を開いてサインインしてください。
+
+`docker-compose.windows.yml` は、ダッシュボードを `ports: - "127.0.0.1:9119:9119"` で公開し、コンテナの中では `0.0.0.0` で待ち受けます。この場合は代わりに `webapp.host 0.0.0.0` を設定し、その `ports:` の項目を `gateway` サービスへ移し、ゲートウェイにサインインの提供元を与え（`0.0.0.0` の Webapp は提供元がないと起動しません）、上のすべての `docker compose` コマンドに `-f docker-compose.windows.yml` を付けてください。
 
 ## 対話的に動かす（CLI のチャット） {#running-interactively-cli-chat}
 

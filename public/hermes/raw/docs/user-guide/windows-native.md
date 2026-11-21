@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: d7cd8383ddbbf9a997df7c61b31da5e43b57e6fc
+upstream_blob: 343824ddd24f93b48391c5b4ca715a9d94a5313b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -247,6 +247,49 @@ hermes gateway uninstall   # Removes schtasks entry, Startup shortcut, pid file
 ### なぜ Windows サービスにしないのか {#why-not-a-windows-service}
 
 サービスはインストールに管理者権限が要り、ゲートウェイの生存期間がユーザーのログインではなく端末の起動に結び付いてしまいます。Hermes を使う人がふつうに望むのは「ログインすればゲートウェイが使える、ログアウトすれば消える」という形です。タスクスケジューラは、昇格なしでちょうどそれを実現します。どうしてもサービスにしたい場合は `nssm` や `sc create` を手作業で使えますが、おそらくその必要はありません。それでも作るなら、名前を `Hermes*` にするか、実行ファイルのパスを Hermes を入れた場所の中（`venv\Scripts\hermes.exe`、チェックアウトしたディレクトリ、`gateway-service\` のいずれか）に向けてください。`hermes update` は、サービス制御マネージャーを通して Hermes のものだと確かに言い切れるサービスだけを止めて動かし直し、タスクスケジューラから起動したゲートウェイは PID を見て一時停止します（タスクスケジューラそのものには手を触れません）。
+
+## ダッシュボードのバックエンドをゲートウェイへ移す {#moving-a-dashboard-backend-to-the-gateway}
+
+Hermes が `hermes dashboard` や `hermes serve` を自動で起動するよう設定することはありません。そのため、Windows でサインイン時に動いているダッシュボードは、利用者自身が作ったタスクスケジューラのタスクか、スタートアップフォルダーの項目です。これはゲートウェイとは別に動く、もう 1 つの Hermes です。そこで始めたチャットは、そのダッシュボード自身のプロセスで動きます。代わりに、ゲートウェイの Webapp がそのアドレスで応答できます。Windows では自動の移行は使えません。次のコマンドは終了コード 6 で終わり、何も変更せずに、見つけたバックエンド向けの手順を表示します。手順は 1 行に 1 つのコマンドで、どれも PowerShell でもコマンド プロンプトでも打ったとおりに使えます（`--detach` を付けても同じで、ここでは何も起動しません）。代わりに終了コード 3 で終わった場合は、移行を妨げているものがあり、手順は表示されません。示された問題を直してから、もう一度実行してください。
+
+```powershell
+hermes gateway migrate --backends --apply
+```
+
+表示された順に、1 つずつ実行してください。`#` で始まる行は実行するものではなく、代わりに何をすればよいかを示しています。`hermes` のコマンドにはどれもプロファイルが指定されている（既定のプロファイルなら `hermes -p default ...`）ので、`hermes profile use` で選んだプロファイルに切り替わってしまうことはありません。標準以外の Hermes のルートを使っている場合は、`hermes` の各行でそのルートも設定され（`$env:HERMES_HOME='C:\Teams\hermes'; hermes -p work ...`）、手順は `# these lines set HERMES_HOME for this Hermes root: run them in PowerShell, not Command Prompt` から始まります。この場合の手順は PowerShell 専用です。既定のプロファイルで `hermes dashboard --no-open --host 0.0.0.0 --port 9119` を実行する `Hermes Dashboard` という名前のタスクスケジューラのタスクなら、手順は次のようになります。
+
+```powershell
+hermes -p default webapp --build-only
+hermes -p default config set webapp.enabled true
+hermes -p default config set webapp.host 0.0.0.0
+hermes -p default config set webapp.port 9119
+schtasks /End /TN "Hermes Dashboard"
+schtasks /Change /TN "Hermes Dashboard" /DISABLE
+hermes -p default gateway status
+# then by what it prints: 'Gateway is not running' (no service installed) -> hermes -p default gateway install; 'No gateway process detected' -> hermes -p default gateway start; 'Gateway process running' or 'Running manually' -> hermes -p default gateway restart
+# the gateway takes a few seconds to serve the address: if the next line prints 'The gateway is not running', wait 5 seconds and run it again
+hermes -p default webapp --status
+```
+
+スタートアップフォルダーのショートカットの場合は、2 行の `schtasks` が次の行に置き換わります（Windows はスタートアップフォルダーに残ったファイルを、名前を変えたものでも開こうとするため、ショートカットは代わりに Hermes のホームへ移されます）。
+
+```powershell
+taskkill /PID <pid> /T /F
+# this Startup-folder entry starts the same command; if it is what starts this backend at sign-in, move it out of the Startup folder (Windows tries to open any file left there, even a renamed one):
+mkdir "<home>\backend_migration"
+# (an 'already exists' error from mkdir is fine)
+move "<shortcut>.lnk" "<home>\backend_migration\<shortcut>.lnk"
+# to undo later: move "<home>\backend_migration\<shortcut>.lnk" "<shortcut>.lnk"
+```
+
+実際に表示される手順には、本物の PID、Hermes のホーム、ショートカットの完全なパスが入ります。
+
+ゲートウェイの行は、`hermes gateway status` の表示に応じて選びます。ゲートウェイのプロセスが動いていると表示されたら（'Gateway process running' または 'Running manually'）、タスクスケジューラのタスクやスタートアップの項目が登録されているかどうかにかかわらず、`hermes -p default gateway restart` を実行してください。`hermes gateway start` はすでに動いているゲートウェイを報告するだけです。また、動いているゲートウェイが `webapp.*` を読み込むのは再起動したときだけなので、古いバックエンドが空けたポートをいつまでも使えません。ゲートウェイのプロセスが無い場合に限り、'Gateway is not running'（サービスが未登録）なら `install`、'No gateway process detected'（タスクや項目はあるが停止中）なら `start` を選びます。`hermes webapp --status` でゲートウェイがそのアドレスで応答していると分かったら、ブラウザで以前のアドレス（公開用の `https://` のアドレスがあればそちら）を開き、サインインしてください。
+
+- サインインの設定は引き継がれます。`config.yaml` のユーザー名とパスワード（`dashboard.basic_auth`）は Webapp にも適用されます。古いバックエンドがサインインの設定を自身の環境変数から得ていた場合、手順には Hermes の `.env` ファイルへ写すべき `HERMES_DASHBOARD_*` 変数の名前が示されます（値は示されません）。
+- 公開用のアドレスは、写した場合にだけ引き継がれます。Webapp はサインインのコールバックを `webapp.public_url` をもとに組み立て、`HERMES_DASHBOARD_PUBLIC_URL` や `dashboard.public_url` は読みません。古いバックエンドは、次のうち `http://` または `https://` の URL になっている最初のものを使っていました（空の値や形式の崩れた値は飛ばされます）。まず Hermes の `.env` ファイルにある `HERMES_DASHBOARD_PUBLIC_URL`（環境変数より優先されます）、次にタスクやショートカットが渡した環境の `HERMES_DASHBOARD_PUBLIC_URL`、最後に `dashboard.public_url`（`hermes -p default config get dashboard.public_url`）です。そのいずれかが設定されていて `webapp.public_url` が未設定の場合、手順にはそれを写すよう指示する行が加わります。ゲートウェイの行より前に、`hermes -p default config edit` で `config.yaml` を開き、`webapp:` の下の `webapp.public_url` にそのアドレスを設定してください。PowerShell は二重引用符の中の `$` を展開してしまうため、手順がアドレスをコマンドラインに書くことはありません。
+- 古いバックエンドでチャットのターンが実行中の場合、コマンドはその件数を知らせます。止めるとそれらは中断されるので、先に終わらせてください。
+- 移行後も、タスクは再起動をまたいで無効のまま（またはショートカットは退避されたまま）です。後で同じアドレスで古い `hermes dashboard` を手動で起動すると、ポートが使用中だと分かり、そのメッセージでゲートウェイが使っていることが示されます。[移行後にクライアント側で気づくこと](/hermes/docs/user-guide/features/web-dashboard/#after-the-move) を参照してください。
 
 ## データの配置 {#data-layout}
 

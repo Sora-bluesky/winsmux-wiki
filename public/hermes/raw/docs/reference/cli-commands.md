@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "CLIコマンド一覧"
 description: "Hermes ターミナルコマンドとコマンドファミリーの正式な一覧"
 upstream_path: reference/cli-commands.md
-upstream_blob: be5c9cbff1c4ab2d99f875152e7c355bac32bb6d
+upstream_blob: dfeb3b7bc2e26ad61c4c1faea4b98a8cdac28ba3
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/cli-commands
 ---
@@ -310,7 +310,7 @@ hermes gateway <subcommand>
 | `install` | systemd（Linux）または launchd（macOS）のバックグラウンドサービスとしてインストールします。 |
 | `uninstall` | インストール済みのサービスを削除します。 |
 | `setup` | メッセージングプラットフォームの対話的セットアップです。 |
-| `migrate` | プロファイルごとの単独ゲートウェイを1つのホストゲートウェイに統合します（`--multiplex`、唯一のモードです — `hermes update` は実際の境界がブロックしない限り自動的に実行します）。再実行すると、途中まで移行済みのホストが収束します。ディスク上のマニフェストは再開用の記録であり、ロールバック用ではありません（`--standalone` はありません）。プリフライトチェック（bot トークンの重複、`/p/<profile>/` の ingress を持たないセカンダリのポートバインダー）を実行し、ブロックされた場合は何も変更しません。フラグ: `--dry-run`, `-y`/`--yes`。`--backends [--json]` を付けると、移行する代わりに serve/dashboard のバックグラウンドサービスとその所有者を報告します。サービス、ユニット、plist、台帳はどれも変更しません（通常の起動時の記録処理は行われます。[ダッシュボードのバックグラウンドサービスを報告する](/hermes/docs/user-guide/features/web-dashboard/#reporting-dashboard-background-services)を参照してください）。[Migrating from per-profile gateways](/hermes/docs/user-guide/multi-profile-gateways/#migrating-from-per-profile-gateways) を参照してください。 |
+| `migrate` | プロファイルごとの単独ゲートウェイを1つのホストゲートウェイに統合します（`--multiplex`、唯一のモードです — `hermes update` は実際の境界がブロックしない限り自動的に実行します）。再実行すると、途中まで移行済みのホストが収束します。ディスク上のマニフェストは再開用の記録であり、ロールバック用ではありません（`--standalone` はありません）。プリフライトチェック（bot トークンの重複、`/p/<profile>/` の ingress を持たないセカンダリのポートバインダー）を実行し、ブロックされた場合は何も変更しません。フラグ: `--dry-run`, `-y`/`--yes`。`--backends [--json]` を付けると、移行する代わりに serve/dashboard のバックグラウンドサービスとその所有者を報告します。サービス、ユニット、plist、台帳はどれも変更しません（通常の起動時の記録処理は行われます。[ダッシュボードのバックグラウンドサービスを報告する](/hermes/docs/user-guide/features/web-dashboard/#reporting-dashboard-background-services)を参照してください）。`--backends --apply --dry-run [--json]` は、このホームの古い dashboard/serve バックエンドを、同じアドレスで動くゲートウェイの Webapp へ移す計画と、移行を妨げる要因をすべて表示します。何も変更しません（オプションは `--address HOST:PORT`、`--keep-webapp-address`、`--force-interrupt` です。[ゲートウェイへの移行を計画する](/hermes/docs/user-guide/features/web-dashboard/#planning-a-move-to-the-gateway-dry-run)を参照してください）。`--backends --apply [--yes]` は実際に移します（`--yes` がなければ端末で確認します）。`--backends --restore [--detach]` は完了した移行を元に戻し、`--backends --status [--json]` は前回の実行結果を報告します（ほかのオプションは `--detach`、`--expect TOKEN` です。終了コードは、ロールバックされた実行／未完了の実行が 4/5、確認が取れなかった `--detach` の実行が 7、`--expect` がもう一致しない場合が 8 です。[ダッシュボードのバックエンドをゲートウェイへ移す](/hermes/docs/user-guide/features/web-dashboard/#moving-a-dashboard-backend-to-the-gateway)を参照してください）。[Migrating from per-profile gateways](/hermes/docs/user-guide/multi-profile-gateways/#migrating-from-per-profile-gateways) を参照してください。 |
 | `migrate-legacy` | リネーム前のインストールから残った古い `hermes.service` ユニットを削除します。プロファイル単位のユニット（`hermes-gateway-<profile>.service`）や関係のないサービスは一切触れません。フラグ: `--dry-run`, `-y`/`--yes`。 |
 | `enroll` | 実験的機能: このゲートウェイを relay コネクタに登録し、コネクタ対応プラットフォーム用の relay 認証情報を保存します。[Hermes Relay](/hermes/docs/user-guide/messaging/relay/) を参照してください。 |
 
@@ -1849,7 +1849,7 @@ hermes serve [options]
 
 Hermes の**バックエンドサーバー**を起動します — [デスクトップアプリ](/hermes/docs/user-guide/desktop/)やリモートクライアントが接続する JSON-RPC/WebSocket ゲートウェイです。これは `hermes dashboard` が実行するのと同じサーバーですが、**ヘッドレス**です: ブラウザ UI を一切開きません。デスクトップアプリは自前で `hermes serve` バックエンドを起動します。リモートホストでヘッドレスなバックエンドが欲しいときは、このコマンドを直接使ってください。下の `hermes dashboard` と同じ `--host` / `--port` / `--insecure` / `--skip-build` / `--stop` / `--status` のオプションを受け付けます（ループバック以外へのバインドは同じ認証ゲートを起動します）。`[web]` エクストラが必要です。埋め込みの Chat ソケットは、POSIX ホストではさらに `[pty]` を必要とします。
 
-**ポートの競合:** 要求されたポート（既定 `9119`）が別のプロセス（例: 2つ目の `hermes serve` やゲートウェイ）に既に取られている場合、このコマンドは機械可読なセンチネル行 `BACKEND_PORT_IN_USE port=<port>` を stdout に、想定される保持者を名指しした人間向けのヒントを出力し、一般的なエラーの代わりにコード **75**（`EX_TEMPFAIL`）で終了します — スクリプトやデスクトップアプリが「ポートが使用中」と「バックエンドが壊れている」を区別できるようにするためです。`--port 0` を渡すと、空いているエフェメラルポートにバインドします（起動に成功すると、`HERMES_BACKEND_READY port=<port>` で選ばれたポートを知らせます）。
+**ポートの競合:** 要求されたポート（既定 `9119`）が別のプロセス（例: 2つ目の `hermes serve` やゲートウェイ）に既に取られている場合、このコマンドは機械可読なセンチネル行 `BACKEND_PORT_IN_USE port=<port>` を stdout に、想定される保持者を名指しした人間向けのヒントを出力し、一般的なエラーの代わりにコード **75**（`EX_TEMPFAIL`）で終了します — スクリプトやデスクトップアプリが「ポートが使用中」と「バックエンドが壊れている」を区別できるようにするためです。`--port 0` を渡すと、空いているエフェメラルポートにバインドします（起動に成功すると、`HERMES_BACKEND_READY port=<port>` で選ばれたポートを知らせます）。ポートを使っているのがこのプロファイル自身のゲートウェイである場合（ゲートウェイがそのアドレスで Webapp を配信するようになったホスト）は、ヒントがその旨と、そこでは古いコマンドがもう必要ないことを伝え、終了コードは代わりに **78**（`EX_CONFIG`）になります。再試行してもポートが空くことはないためです。バックエンドの移行によって古いバックエンドが役目を終えた後（ホームに `backend_migration.json` がある場合）は、OS が2つ目のバインドを許す環境でも（macOS では、ゲートウェイの `*:<port>` と並べて `127.0.0.1:<port>` をバインドできます）、古いコマンドは同じく終了コード 78 で終わります。そのため、ゲートウェイのポートでゲートウェイと並んで動くことはありません（バインドの前にゲートウェイへ問い合わせるのは、この場合だけです）。センチネル行は引き続き最初に出力されます。ゲートウェイへの問い合わせはポートが使用中だとわかってから行うので、ポートが空いていれば以前とまったく同じように起動します。スーパーバイザーは、止めるよう指示しない限り、78 で終わった古いコマンドも再起動します。systemd のユニットには `RestartPreventExitStatus=78` が必要です（指定しないと、`Restart=always` は 75 と同じように 78 も再試行します）。`KeepAlive` を設定した launchd のジョブは、どのような終了でも起動し直すので、アンロードして無効にしてください（`launchctl bootout` と `launchctl disable`）。Windows では、これを起動しているタスクスケジューラのタスクを無効にするか、スタートアップフォルダの項目を削除してください。
 
 ## `hermes dashboard` {#hermes-dashboard}
 
@@ -1868,7 +1868,29 @@ Web ダッシュボードを起動し、設定、API キー、セッションを
 | `--skip-build` | off | Web UI のビルドステップをスキップし、既存の `dist` ディレクトリをそのまま配信します。pnpm が使えない非対話的な環境（Windows のスケジュールタスク、CI）に便利です。事前ビルドは `cd web && pnpm run build` で行ってください。 |
 | `--isolated` | off | 名前付きプロファイル（`worker dashboard`）から起動した場合、マシンダッシュボードへルーティングする代わりに専用のプロファイル別サーバーを実行します。一覧に出るのはそのプロファイルだけです。これはルーティングと運用のための便宜機能で、セキュリティ境界では**ありません**: 同じ OS ユーザーのプロファイル同士は互いの中身を読めます。利用者ごとに分離するには、OS ユーザーを分けるかコンテナを使ってください。 |
 | `--stop` | — | この Hermes ホームの、実行中の `hermes dashboard` / `hermes serve` バックエンドを停止して終了します（`-p <profile>` / `HERMES_HOME` がどれを選ぶか決めます。他のプロファイルのバックエンド、マシン上の他のインストール、そして自分がコマンドを入力したシェルは一切触れられません。所有者を読み取れないバックエンドはそのままにされます）。SIGTERM、10秒の猶予、その後 SIGKILL です。バックエンドより長生きするホスト型 Chat TUI も停止されます（そうしないと削除済みの `state.db-wal` を開いたままにし、次の起動をブロックしてしまいます）。ダッシュボードから起動したメッセージングゲートウェイの bot は触れられません。 |
-| `--status` | — | 実行中の `hermes dashboard` プロセスを一覧して終了します。 |
+| `--status` | — | 実行中の `hermes dashboard` / `hermes serve` プロセスを一覧して終了します（終了コードは常に 0 です）。このコマンド自体を動かしている `hermes` ランチャーは、指定したポート（`--port`、既定 `9119`）を使っていても一覧に出ません。このプロファイルのゲートウェイがそのポートで Webapp を配信している場合は、ゲートウェイと Webapp のアドレスを示す行が表示されます。 |
+
+### `hermes dashboard password` {#hermes-dashboard-password}
+
+ダッシュボードのサインインで求められるユーザー名とパスワードを、`hermes dashboard --host 0.0.0.0` が出す対話プロンプトを使わずに設定・変更します。保存する内容はそのプロンプトとまったく同じで、この Hermes ホームの `config.yaml` の `dashboard.basic_auth` に、ユーザー名、パスワードの scrypt ハッシュ（パスワードそのものは保存しません）、そしてまだなければ署名用のシークレットを書き込みます。これにより、再起動してもサインインが保たれます。同梱の `basic` サインインプラグインが `plugins.disabled` に入っている場合は、それも有効に戻します。
+
+`-p <profile>` を付けると、そのプロファイル自身のサインインを設定します。ダッシュボードのサインインは、リスナーを起動したホームに属します。そのため、この設定を使うのは `hermes -p <profile> dashboard --isolated`（または `serve --isolated`）と、そのプロファイルが単独で動かすゲートウェイです。`--isolated` なしの `hermes -p <profile> dashboard` はマシンダッシュボードを開きます。また、複数のプロファイルを受け持つゲートウェイは、自分のホームの認証情報でサインインさせます。その認証情報は `hermes -p default dashboard password` で設定してください。そのようなゲートウェイがこのプロファイルを受け持っている場合、コマンドは再起動のヒントの代わりに、そのゲートウェイのホームを示します。出力で案内するコマンドはどれもホームを明示します（既定のホームなら `hermes -p default ...`、プロファイルなら `hermes --profile <name> ...`）。`hermes profile use <name>` を実行した後は、単に `hermes ...` と打つと、固定したそのプロファイルが対象になってしまうためです。
+
+同じサインインが、`hermes dashboard` / `hermes serve` でも、ゲートウェイの Webapp でも使えます。どれも起動時にこれを読み込むので、動いているものは再起動してください。どれが動いているかはコマンドが伝えます。新しいパスワードで起動したリスナーでは、古いパスワードで行ったサインインはすべて終了します。`HERMES_DASHBOARD_BASIC_AUTH_USERNAME`、`_PASSWORD`、`_PASSWORD_HASH` は `config.yaml` より優先されるため、コマンドはこれらをこのホームの `.env` から削除します（キーの名前は示しますが、値は決して表示しません）。次の場合は、何かを変更する前に実行を断ります: 管理者が管理用の `.env` でどれかを固定している場合、管理用の `config.yaml` が `dashboard.basic_auth.password_hash` を固定しているか、ユーザー名を別の名前に固定している場合、チェックアウト自身の `.env`（ソースのチェックアウトでは、起動のたびにホームのものの後に読み込まれます）がどれかを与えることになる場合（ローダーが適用するのと同じ方法で判定します。`${...}` は展開され、ホームに自前の `.env` があるときは足りない値を補うだけなので、空の値や解決できない値は何も上書きしません。この共有ファイルをコマンドが編集することはありません）、そして `dashboard.basic_auth.username` が、削除しようとしているキーを指す `${...}` 参照になっている場合です（先にユーザー名を直接の値に書き換えてください）。環境変数の名前で大文字と小文字を区別しない Windows では、このホームかチェックアウトの `.env` に、これらのキーが大文字・小文字の違う綴りで書かれている場合（`hermes_dashboard_basic_auth_password` など）も実行を断ります。その際はファイル、行、キーを示します（値は示しません）。その行を削除するか名前を変えてから、もう一度実行してください。行は1行ずつ読むので、引用符で囲んだ複数行の値の中にある、よく似た行も対象になります。コマンドを実行している環境でどれかが設定されている場合は、警告を出します。その環境から起動したゲートウェイやバックエンドは、引き続きその値でサインインさせるので、そちらでも設定を解除してください。
+
+| オプション | 説明 |
+|--------|-------------|
+| `--username` | サインインに使うユーザー名です（既定: 今有効になっているもの。このホームの `.env`、なければ `config.yaml`、それもなければ `admin`）。空白を含む名前は使えません。 |
+| `--password-stdin` | スクリプトや UI 向けに、パスワードを標準入力から読み込みます。標準入力はパイプかファイルである必要があり、端末は使えません（入力した文字が見えてしまうためです。入力を隠すプロンプトを使うには、このオプションを付けないでください）。使われるのは最初の1行だけで、末尾の `\n` や `\r\n` は含みません。1024 バイト以下の UTF-8 テキストで、空ではいけません。このオプションがない場合、コマンドは端末で2回入力を求め、端末がなければ終了コード 2 で終わります。 |
+
+パスワードを引数として受け付けることはないので、プロセスの一覧やシェルの履歴に残ることはありません。コマンドラインに打ち込む代わりに、ファイルやシークレットストアからパイプで渡してください:
+
+```bash
+hermes dashboard password --username admin --password-stdin < /run/secrets/dashboard_password
+hermes gateway restart
+```
+
+終了コード: `0` は保存できた場合です。`2` は拒否した場合です（パスワードがない、空・長すぎる・UTF-8 でないパスワード、端末での `--password-stdin`、2回の入力が一致しない、ユーザー名に空白がある。いずれも何も変更しません）。`1` は、プロンプトがキャンセルされた場合、上で述べた拒否（管理者による固定、チェックアウトの `.env`、ユーザー名の参照。何も変更しません）、`config.yaml` に書き込めなかった場合、`config.yaml` を更新した後に、上書きしているキーを `.env` から削除できなかった場合（メッセージにキーとファイルが示されます）、またはインストールが管理されている場合（Nix やパッケージマネージャーが設定を管理している場合）です。
 
 ### `hermes dashboard register` {#hermes-dashboard-register}
 
@@ -2039,6 +2061,8 @@ hermes update [--gateway] [--check] [--plan] [--no-backup] [--backup] [--yes]
 [更新とアンインストール](/hermes/docs/getting-started/updating/) を参照してください。
 
 `hermes update` は、このインストールの更新チャンネルに従います。公式リポジトリのソースチェックアウトでは既定が `stable` で、GitHub で公開された最新の `vX.Y.Z` リリースのコミットそのものに合わせます。フォークやミラーでは既定が `main` です。`main` のすべてのコミットを追いたい場合は `hermes update --set-channel main` を実行します。`hermes update --set-channel stable` で元に戻せます。`main` チャンネルでは、チェックアウトが別のブランチにある場合、pull の前に更新用ブランチへ切り替えることがあります。更新の自動 stash フローの外にブランチ上の作業を残しておきたい場合は、更新前にコミットしてください。
+
+更新後、このプロファイルがまだ古い `hermes dashboard` / `hermes serve` バックエンドを動かしている場合、`hermes update` はそれを名指しする段落を1つ表示し、何も変更せずにゲートウェイへの移行内容を確認できるコマンド `hermes -p <profile> gateway migrate --backends --apply --dry-run` を案内します（既定のプロファイルでは `hermes -p default`）。`HERMES_HOME` がプラットフォームの既定以外のルート（`/srv/team-hermes` など）を指している場合、`-p` はシェル自身の `HERMES_HOME` の下でプロファイルを探すため、コマンドはそのルートを明示します。たとえば `HERMES_HOME=/srv/team-hermes hermes -p default ...`、PowerShell なら `$env:HERMES_HOME='C:\team-hermes'; hermes -p default ...` です。プロファイルではないホームも、同じ形でそのパスを使って示されます（[ゲートウェイへの移行を計画する](/hermes/docs/user-guide/features/web-dashboard/#planning-a-move-to-the-gateway-dry-run)と[ダッシュボードのバックエンドをゲートウェイへ移す](/hermes/docs/user-guide/features/web-dashboard/#moving-a-dashboard-backend-to-the-gateway)を参照してください）。この段落はお知らせにすぎず、停止・再起動・移行・確認の問い合わせは一切行いません。更新で再起動されなかったバックエンドは、`/api/health` を持たない v2026.7.30 より古い Hermes のまま動いていることがあります。その場合、dry run は先に更新後の hermes で再起動するよう案内します。更新がこうしたバックエンドを（`hermes gateway migrate --backends` が報告するのと同じ方法で）探すのは、サービスの再起動中に、このプロファイルの serve/dashboard バックエンド（Desktop のものでも、ほかのプロファイルのものでもないもの）にすでに出会った場合だけです。そのため、そうしたバックエンドがない更新では、表示も動作も以前とまったく同じです。バックエンドの移行で古いバックエンドが停止された後は（ホームに `backend_migration.json` がある場合。そのファイルが読めない場合も含みます）、更新によるダッシュボードの再起動は、停止している `hermes-dashboard.service` を停止したままにします。
 
 | オプション | 説明 |
 |--------|-------------|

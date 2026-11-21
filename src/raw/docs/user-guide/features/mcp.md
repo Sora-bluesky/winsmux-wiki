@@ -2,7 +2,7 @@
 title: "MCP（Model Context Protocol）"
 description: "MCP で Hermes Agent を外部の道具サーバーにつなぎ、Hermes が読み込む MCP の道具を細かく選びます"
 upstream_path: user-guide/features/mcp.md
-upstream_blob: 944b1ae11eb4626e156129d541249b5239c19ecd
+upstream_blob: f5b4d653c61622dc89f22a1892d189da72c7ac37
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
 ---
@@ -941,11 +941,17 @@ Hermes は、1 つの HTTP 応答、またはストリームで届く応答の 1
 ```yaml
 mcp_servers:
   docs:
-    command: "docs-server"
+    url: "https://mcp.example.com/mcp"
     supports_parallel_tool_calls: true
+    sampling:
+      enabled: false
+    elicitation:
+      enabled: false
 ```
 
-`supports_parallel_tool_calls` が `true` のとき、Hermes は 1 回の呼び出しのまとまりの中で、そのサーバーの複数の道具を同時に動かすことがあります。もとから入っている読み取り専用の道具（web_search、read_file など）と同じ扱いです。
+`supports_parallel_tool_calls` が `true` のとき、Hermes はそのサーバーの道具を、同時に動かす呼び出しのまとまりに入れます。ただし、**同じサーバー**への呼び出しが実際に重なって動くのは、Streamable HTTP で、サンプリングと問いかけの両方を止めているときだけです。この 2 つの呼び戻しはサーバー全体で共有する状態を抱えているので、どちらかが有効なら RPC は 1 つずつ順番に処理されたままになります。どちらも既定では有効です。
+
+stdio、明示的に指定した古い SSE（`transport: sse`）、自動で SSE に切り替わった接続では、この設定を有効にしても RPC は順番に処理されます。道具の検出と、リソースやプロンプトの補助の道具は、これまでどおりの鍵のかけ方のままです。この設定は呼び出す側のプロファイルに属し、複数のプロファイルが 1 つの接続を共有している場合も同じです。設定がないときや `false` のときは、呼び出しは順番に動きます。道具の承認と、やり直しても安全かどうかの決まりは変わりません。
 
 :::caution
 同時に動かしても大丈夫だと分かっている MCP サーバーだけで有効にしてください。道具が共有の状態、ファイル、データベース、外部のものを読み書きするなら、有効にする前に読み書きのぶつかり方を確かめてください。
