@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-22",
+  "generatedAt": "2026-11-23",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-22",
-      "attemptedAt": "2026-11-22",
+      "fetchedAt": "2026-11-23",
+      "attemptedAt": "2026-11-23",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -20,7 +20,7 @@
         },
         {
           "id": "qwen/qwen4-max:free",
-          "name": "Qwen: Qwen4 Max",
+          "name": "Qwen: Qwen4 Max (free)",
           "ctx": 1000000,
           "tools": true,
           "expires": null,
@@ -30,7 +30,7 @@
         },
         {
           "id": "stepfun/step-3.7-flash:free",
-          "name": "StepFun: Step 3.7 Flash",
+          "name": "StepFun: Step 3.7 Flash (free)",
           "ctx": 262144,
           "tools": true,
           "expires": null,
@@ -40,7 +40,7 @@
         },
         {
           "id": "tencent/hy4-flash:free",
-          "name": "Tencent: Hy4 flash",
+          "name": "Tencent: Hy4 flash (free)",
           "ctx": 1048576,
           "tools": true,
           "expires": null,
@@ -50,7 +50,7 @@
         },
         {
           "id": "upstage/solar-mini4:free",
-          "name": "Upstage: Solar Mini 4",
+          "name": "Upstage: Solar Mini 4 (free)",
           "ctx": 524288,
           "tools": true,
           "expires": null,
@@ -63,8 +63,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-22",
-      "attemptedAt": "2026-11-22",
+      "fetchedAt": "2026-11-23",
+      "attemptedAt": "2026-11-23",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [

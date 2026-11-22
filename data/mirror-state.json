@@ -97,9 +97,9 @@
       "translatedAt": "2026-11-18T23:58:35.457Z"
     },
     "developer-guide/memory-provider-plugin.md": {
-      "blob": "685622323bcc2ef175c56e0536fe90ffd5414b8d",
+      "blob": "2eaae99d9679fafe7bc35151cc73f7c68c9da88a",
       "status": "translated",
-      "translatedAt": "2026-11-17T23:02:10.573Z"
+      "translatedAt": "2026-11-22T22:44:01.430Z"
     },
     "developer-guide/model-provider-plugin.md": {
       "blob": "99a86257561ff897cea7240229992ae81bdbc7a3",
@@ -472,9 +472,9 @@
       "translatedAt": "2026-11-12T22:59:44.755Z"
     },
     "user-guide/configuration.md": {
-      "blob": "0f235e34343cb860ba88a4dbff4eb70f93e7a019",
+      "blob": "e3361fee1b7321b95a9d4e91234847e59ac1f828",
       "status": "translated",
-      "translatedAt": "2026-11-20T22:49:31.068Z"
+      "translatedAt": "2026-11-22T22:44:01.421Z"
     },
     "user-guide/configuring-models.md": {
       "blob": "3e15fe3b8a97ddeaa7bfd996c3fd5f90849770d9",
@@ -557,9 +557,9 @@
       "translatedAt": "2026-11-13T23:04:55.159Z"
     },
     "user-guide/features/cron.md": {
-      "blob": "f690b70ac2298d047d38aff21f459e69b50daac3",
+      "blob": "3ff641711534fb6dcbf91e7230a03103fdaaa5d8",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:31.613Z"
+      "translatedAt": "2026-11-22T22:44:01.426Z"
     },
     "user-guide/features/curator.md": {
       "blob": "5c5934afeb9f78287a613ebf236020e3620fe3a2",
@@ -817,9 +817,9 @@
       "translatedAt": "2026-10-11T22:45:07.855Z"
     },
     "user-guide/messaging/index.md": {
-      "blob": "65fb8244eb11f978468cdc593921208e68558895",
+      "blob": "3a44be4dfbc2a22d9164bb66d0d44b2c78dd41d9",
       "status": "translated",
-      "translatedAt": "2026-11-14T23:10:16.668Z"
+      "translatedAt": "2026-11-22T22:44:01.428Z"
     },
     "user-guide/messaging/irc.md": {
       "blob": "4fd21061621fc5e44a64222b7813561b41b28dd9",
@@ -2541,5 +2541,5 @@
       "translatedAt": "2026-11-17T23:02:10.590Z"
     }
   },
-  "snapshotCommit": "3b1ce49ad3b3156c25ed2aa8fdf9bfb69d011bad"
+  "snapshotCommit": "0f602c5f6f18615632535251d62a2db74ce93b69"
 }

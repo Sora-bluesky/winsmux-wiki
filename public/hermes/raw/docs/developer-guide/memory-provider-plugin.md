@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メモリープロバイダープラグイン"
 description: "Hermes Agent 向けのメモリープロバイダープラグインを作る方法"
 upstream_path: developer-guide/memory-provider-plugin.md
-upstream_blob: 685622323bcc2ef175c56e0536fe90ffd5414b8d
+upstream_blob: 2eaae99d9679fafe7bc35151cc73f7c68c9da88a
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin
 ---
@@ -216,7 +216,8 @@ app-server のセッションは、構築時の cwd ではなく現在のワー�
 秘密情報（`.env` と、設定済みの秘密情報の取得元。1Password など）を結びつけた状態で実行されます。そこに無いキーは未設定として扱われ、呼び出し元の環境が
 使われることはありません。例外（`SystemExit` も含む）はログに記録されるだけで、作成や名前の変更を失敗させることはありません。これらのフックは、
 どの画面から操作しても作成・名前変更の要求の中で実行されるので、ネットワークを使う処理はバックグラウンドのスレッドで行ってください。
-`plugins.isolation: host` の設定では、フックのためだけに起動したプラグインホストは、フックが戻った時点で停止します。
+`plugins.isolation: host` の設定では、これらのフックはプロファイル共有のホストとは別の専用プラグインホストで実行され、戻った時点でそのホストは停止します。
+そのため、共有ホストが import したときのモジュールレベルの状態はフックからは見えません。
 
 組み込みの `replace` と `remove` では、`metadata["previous_content"]` に、組み込みの保存先の
 ロックをかけた状態で選ばれたエントリーの全文が入ります。通知は、書き込みや一括処理がすべて

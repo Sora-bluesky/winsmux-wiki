@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 65fb8244eb11f978468cdc593921208e68558895
+upstream_blob: 3a44be4dfbc2a22d9164bb66d0d44b2c78dd41d9
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -146,8 +146,11 @@ flowchart TB
 - `NO_REPLY`
 - `NO REPLY`
 - `[静默]` / `静默` と `[沉默]` / `沉默` — モデルがトークンをそのまま出さず、中国語に訳してしまったときの表記です
+- `[审核]` / `审核` — トークンを出す代わりに「確認済み、新しいことはなし」と答えてしまったときに、レーンが流れ着く表記です
 
-空白と大文字小文字は正規化されますが、最終応答の全体がそのトークンでなければなりません。「変化がないときは `[SILENT]` を使ってください」といった文は、ふつうに送信されます。
+空白と大文字小文字は正規化され、括弧の*内側*の空白も無視されるので、`[ SILENT ]`、`[SILENT ]`、`[ SILENT]` はどれも黙ります。それでも最終応答の全体がそのトークンでなければなりません。「変化がないときは `[SILENT]` を使ってください」といった文は、ふつうに送信されます。
+
+見えない*書式*文字（ゼロ幅スペース、ゼロ幅接合子、BOM、双方向制御マーク。Unicode のカテゴリ `Cf`）はどこに現れても無視されるので、モデルが `[<U+200B>SILENT]` と書いたトークンも、チャットに届かずに黙ります。
 
 黙るかどうかは送信の判断だけに関わります。Hermes はアシスタントが黙ったターンもセッションの記録に残すので、会話の交互のリズムはそのまま保たれます。
 

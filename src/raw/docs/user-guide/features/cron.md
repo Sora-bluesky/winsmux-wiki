@@ -2,7 +2,7 @@
 title: "定期実行タスク（cron）"
 description: "自然な言葉で自動タスクを予約し、ひとつの cron ツールで管理して、1 つ以上のスキルをひも付けます"
 upstream_path: user-guide/features/cron.md
-upstream_blob: f690b70ac2298d047d38aff21f459e69b50daac3
+upstream_blob: 3ff641711534fb6dcbf91e7230a03103fdaaa5d8
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
 ---
@@ -921,6 +921,8 @@ DM の cron 配信が続きを話せるかどうかを決めるのは、以前�
 Check if nginx is running. If everything is healthy, respond with only [SILENT].
 Otherwise, report the issue.
 ```
+
+返答の全体が崩れた印になっている場合も黙ります。1 文字の欠け・余分・入れ替わり・誤り（`[SLENT]`、`[SLIENT]`）、閉じ括弧の欠け、括弧の内側の空白や見えない文字、コードの書式（`` `[SILENT]` ``）、印の途中で切れた返答（`[`、`[SIL`）がこれに当たります。ほかの語を含む返答（`[SLENT] extra words`）や、括弧の中が別の語の返答（`[URGENT]`、`[SILVER]`）は配信されます。
 
 失敗したジョブは `[SILENT]` の印にかかわらず必ず配信されます。静かにできるのは成功した実行だけです。静かな監視のジョブにしたいときは、報告することが無ければ `[SILENT]` だけを返すようにエージェントへ指示してください。
 
