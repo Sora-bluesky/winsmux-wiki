@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "gateway のローカルセッション"
 description: "ローカルの CLI/TUI セッションを正規の gateway 受付として扱う仕組み"
 upstream_path: developer-guide/gateway-local-sessions.md
-upstream_blob: 927810a2b207e591f96f278751cfd2f17480f65a
+upstream_blob: eb8720c96a47a481482f5046f2a6c73a1cec6bdd
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-local-sessions
 ---
@@ -35,11 +35,15 @@ stored-session/SessionStore 上の ID は確保します。1つの正規の SQLi
 ### クライアントの名乗り {#naming-the-client}
 
 クライアントは、`session.create` に任意の `client` オブジェクトを付けて、自分が何者かを名乗れます。たとえば
-`"client": {"name": "my-client", "version": "1.2.0"}` のようにします。`name` は `a-z`、`0-9`、
+`"client": {"name": "my-client", "version": "1.2.0", "kind": "desktop"}` のようにします。`name` は `a-z`、`0-9`、
 `.`、`_`、`-` からなる1〜64文字で、先頭は英字か数字です。`version` は省略でき、空白を含まない1〜64文字の印字可能な ASCII
-文字です。それ以外は `invalid_params`（項目は `client`）で拒否されます。これを送る相手は、
-`runtime.describe` の `session_create.parameters` に `client` が載っている所有者（機能
+文字です。`kind` も省略でき、1〜32文字の文字列です。
+既知の種類は `desktop`、`webapp`、`tui`、`mobile` です。未知の種類でもエラーにはならず、ラベルはそのまま保たれ、
+種類なしとして読まれます。それ以外は `invalid_params`（項目は `client`）で拒否されます。
+`name` と `version` を送る相手は、`runtime.describe` の `session_create.parameters` に `client` が載っている所有者（機能
 `session-client-v1`）だけにしてください。古い所有者は、未知のキーとして拒否します。
+`kind` を加えるのは、所有者が機能の一覧に `client-identity-v1` も載せている場合だけにしてください。
+`session-client-v1` だけを持つ所有者は、種類を含むラベルを拒否します。
 
 名前は凍結された作成リクエストと一緒に保存されます。そのため、完全一致の再試行で照合する ID の一部になり、
 再起動後も残ります。`session.info` はこれを `client` として返し（送られていなければ含まれません）、
@@ -48,6 +52,37 @@ stored-session/SessionStore 上の ID は確保します。1つの正規の SQLi
 （端末クライアントとしての挙動にするには `source: "tui"` を送ります）、ツールセット、
 承認、権限、プロンプトの文面、テレメトリーのどれも `client` を読みません。Hermes は名前を検証しないので、
 どのクライアントでもどんな名前でも名乗れます。これをもとに何かを許可することは決してしないでください。
+
+同じラベルは、1つのセッションだけでなく接続そのものにも名前を付けます。クライアントは
+`client.capabilities {server_requests: true}` を呼び出した後、
+`client.capabilities {"client": {...}}` を独立した呼び出しとして送ります。送るのは接続ごとに1回で、
+再接続のたびにもう一度送り、エラーの応答は無視します（古い所有者は、その呼び出しに限って未知のパラメーターを拒否します）。
+`runtime.describe` の機能の一覧に `client-identity-v1` を載せている所有者は、接続が続く間このラベルを保持します。
+形式が正しくないラベルを受け取ったときは、前のラベルをそのまま残して `4001` で応答します（ラベルの中に
+未知のキーがあれば、ほかの未知のパラメーターと同じく `4000` です）。デスクトップアプリは `hermes-desktop` /
+`desktop` を、Webapp は `hermes-webapp` / `webapp` を送ります。
+
+`client-activity-v1` を載せている所有者は、在席状況（presence）を保てる接続（WebSocket。stdio では `false` を返します）では、
+`client.capabilities` に `client_activity: true` で応答します。そのときに限り、クライアントは `client.activity {sessions, idle_seconds, basis, can_alert?,
+away?}` を送ります。内容は、表示中のセッション（ID は最大16個、それぞれ最大256文字）、ユーザーの最後の入力から
+どれだけ時間がたったか、
+その値が OS のアイドル時間に基づくもの（`basis: "system"`）か、Hermes の
+ウィンドウ内での入力に基づくもの（`"page"`）か、それらのセッションについてクライアント自身がユーザーの注意を引けるかどうか、そして
+画面がロックされたときの `away: true` です。所有者は接続とセッションごとに、この報告と自分で見た入力（プロンプト、
+自分のリクエストへの回答、中断、方向修正）のうち新しい方を、メモリ上だけに保持します。接続を数に入れるのは、
+その接続がセッションに接続している間だけです。各報告は、その接続の状況をまるごと述べたものとして扱われます。所有者は、
+報告に載っていないすべてのセッションについて、その接続の記録を、自分で見た入力も含めて捨てます。そのため、別のセッション
+（またはセッションのないページ）に移ったクライアントは、今表示しているものを報告すれば取り下げたことになり、
+`sessions: []` を送ればすべて取り下げられます。報告の後に所有者が見た入力は、再び数に入ります。
+報告はセッションを ID だけで指定します。複数のプロファイルを提供するソケットでは、その接続がその ID のセッションに
+接続しているプロファイル1つについてだけ有効で、同じ ID のセッションに複数のプロファイルで接続している間はどれにも
+数えられません。通知プラグインはこれを読んで、ユーザーがコンピューターの前にいる間は通知を控えます。名前と同じく、
+これは由来を示すためだけのもので、何も許可しません。
+
+接続が送信する各ターンには、その接続のラベルが記録されます（受付の `surface_v1.client` に記録され、
+`prompt.submit` の項目になることはありません。別のラベルやラベルなしでの再試行も同じリクエストとして扱われます）。プラグインは、
+ターンのラベルを `hermes_cli.plugin_session.turn_client()` で、セッションに接続している各接続と
+そのアイドル情報を `session_viewers()` で読み取れます。
 
 認証済みの別のビューアーは `session.resume({session_id})` で接続でき、入力は
 `prompt.submit({session_id, submission_id, text})` で送ります。受け付けた受領記録は永続的な

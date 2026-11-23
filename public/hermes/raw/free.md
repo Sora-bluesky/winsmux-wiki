@@ -32,13 +32,12 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [Nous Portalの設定](https://wiki.winsmux.dev/hermes/docs/integrations/nous-portal/)
 
-最終取得: 2026-11-23
+最終取得: 2026-11-24
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
 | **LongCat-2.5:Free**<br>`meituan/longcat-2.5:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **Qwen: Qwen4 Max (free)**<br>`qwen/qwen4-max:free`<br>入力・出力の基本単価0（取得時点） | 1,000,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
-| **StepFun: Step 3.7 Flash (free)**<br>`stepfun/step-3.7-flash:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **StepFun: Step 3.7 Flash (free)**<br>`stepfun/step-3.7-flash:free`<br>入力・出力の基本単価0（取得時点） | 256,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Tencent: Hy4 flash (free)**<br>`tencent/hy4-flash:free`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Upstage: Solar Mini 4 (free)**<br>`upstage/solar-mini4:free`<br>入力・出力の基本単価0（取得時点） | 524,288 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 
@@ -50,11 +49,12 @@ raw: /hermes/raw/free.md
 
 公式の設定手順: [AIプロバイダーの設定](https://wiki.winsmux.dev/hermes/docs/integrations/providers/) / [OpenRouterの利用制限](https://openrouter.ai/docs/api-reference/limits)
 
-最終取得: 2026-11-23
+最終取得: 2026-11-24
 
 | モデル | コンテキスト上限（トークン） | ツール呼び出し（API記載） | 公開仕様の条件判定 | 提供終了予定 |
 |---|---:|---|---|---|
 | **Baidu: ERNIE-5.5-Flash-Preview (free)**<br>`baidu/ernie-5.5-flash-preview:free`<br>入力・出力の基本単価0（取得時点） | 1,024,000 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
+| **Dots Studio: Dots3-Note Preview (free)**<br>`dots-studio/dots-3-note-preview:free`<br>入力・出力の基本単価0（取得時点） | 512,000 | 対応の記載あり | 条件を満たす（動作未確認） | 提供終了予定: 2026-12-31 |
 | **Google: Gemma 4 26B A4B  (free)**<br>`google/gemma-4-26b-a4b-it:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Google: Gemma 4 31B (free)**<br>`google/gemma-4-31b-it:free`<br>入力・出力の基本単価0（取得時点） | 262,144 | 対応の記載あり | 条件を満たす（動作未確認） | 終了日未記載 |
 | **Google: Lyria 3 Clip Preview**<br>`google/lyria-3-clip-preview`<br>入力・出力の基本単価0（取得時点） | 1,048,576 | 対応の記載なし | 条件を満たさない（ツール呼び出し） | 終了日未記載 |

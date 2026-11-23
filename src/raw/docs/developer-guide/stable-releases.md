@@ -2,7 +2,7 @@
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 424fcd72e149f76fbb3af3d4abd20a49c3907be5
+upstream_blob: 380b1e8440ba96254171d172497e9cb1cd4e152f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -67,8 +67,9 @@ Docker Hub、R2、APT、GitHub、Store は、サービスをまたぐ単一の�
 差し替えたりしないでください。
 
 昇格では、R2 の公開オリジン上にある `releases/stable/index.html` の安定版ダウンロードページが置き換わります。
-カナリアのタグビルドは `releases/canary/index.html` を、
-コミットビルドは `releases/commit/<sha>/index.html` を持ちます。各ページに載るのは、ステージング済みで
+カナリアのタグビルドは `releases/canary/index.html` を持ち、
+コミットビルドが持つのは自身のクレームアーカイブのページ、
+`releases/tag/commit.<stamp>-v<version>/index.html` だけです。各ページに載るのは、ステージング済みで
 受領証の裏付けがあるオブジェクトだけです。古い実行が保護されたチャンネルを後退させることはできません。
 
 ## 安定版リリースを実行・公開・中止する {#run-publish-or-abandon-a-stable-release}
@@ -328,10 +329,10 @@ Stable はこの2つの MSIX スモークテストを、アーキテクチャご
 更新と削除を禁止するものです。このルールセットはまだ適用されていません。管理者が適用するまでは、
 これらのロックは自主的な運用にとどまり、push 権限を持つ人なら誰でもマーカー ref を削除したり
 受領証タグを動かしたりできます。試行 ref、マーカー ref、最終タグは変更不可です。
-チャンネルビルドとコミットビルドは、公開に成功したあとにだけ、
-`v0.0.7+channel.<YYYYMMDDTHHMMSSZ>.<run-id>` や
-`v0.0.0+commit.<YYYYMMDDTHHMMSSZ>.<run-id>` のような注釈付きのビルド後受領証を書き込みます。
+チャンネルビルドは、公開に成功したあとにだけ、
+`v0.0.7+channel.<YYYYMMDDTHHMMSSZ>.<run-id>` のような注釈付きのビルド後受領証を書き込みます。
 受領証タグは GitHub リリースを作らず、ワークフローも起動しません。
+コミットビルドは受領証を書き込みません。ビルドの前に作られるクレームタグが、そのまま識別情報になります（後述）。
 
 カナリアのタグは `canary.<YYYYMMDDTHHMMSSZ>-v<stable>` です。これは安定版の `rc.N-v<stable>` と同じクレームの形なので、
 `v*` のリリースタグを一覧にする処理がこれをリリースと取り違えることはありません。
@@ -387,6 +388,8 @@ Termux パッケージは、タグの名前を付けたプール接頭辞の下�
 `release.py --build-commit REV --remote REMOTE` を使います（起動まで行うには `--publish` を追加）。
 そのアプリの識別情報と CLI コマンド（`hermes-<7-character-sha>`）には、固定したコミットが含まれます。
 異なる2つのコミットビルドが互いを置き換えることはありません。
+コミットビルドは Stable Release のパイプラインそのものを実行します
+（[コミットビルド](#commit-builds)を参照）。
 
 ブランディングは実行時の設定ではなく、これらのビルド入力から選ばれます。
 カナリアは黄色/暗い黄色のアイコンを、単発のビルドは短い SHA を載せた赤いアイコンを使います。
@@ -398,20 +401,64 @@ Termux パッケージは、タグの名前を付けたプール接頭辞の下�
 `stable` に、フォークやミラーは `main` に従い、
 `hermes update --set-channel` で別のチャンネルを選ぶまではそのままです。
 
-`--build-commit` は、起動の前に、決定的に決まるダウンロードページの URL を表示します。
-ドライランでも表示されます:
-`https://hermes-assets.nousresearch.com/releases/commit/<full-sha>/index.html`。
-`CLOUDFLARE_R2_PUBLIC_URL` で公開オリジンを上書きできます。受け入れのあと、
-ビルドや組み立てのジョブが失敗してもコミットの要約は実行されます。そこには受領証の裏付けがある
-既存のダウンロードだけが載り、欠けたバイナリは未ビルドと表示されます。
-欠けたバイナリは、存在しないダウンロードではなく、**View build run** の下でワークフローの実行にリンクします。
-無効にしたプラットフォームには、ダウンロードも失敗のリンクもありません。
-ページの公開には、引き続き有効な R2 へのアクセスが必要です。コミットページは GitHub 上のソースに
-リンクし、タグページとチャンネルページは対応する GitHub リリースのタグにリンクします。
-コミットページには、CI の環境ではなくデスクトップのバンドルに渡された、秘密でない明示的な `--bundle-env` の既定値と
-`--bundle-unset` による解除も載ります。
-値は JSON 文字列で表示され（空の値は `""`）、解除には
-**Unset** の表示が付きます。上書きが何も指定されていなければ、この節は出ません。
+### コミットビルド {#commit-builds}
+
+`release.py --build-commit REV --remote REMOTE` は、push 済みの特定のコミットを
+注釈付きタグ `commit.<YYYYMMDDTHHMMSSZ>-v<version>`（REV 時点の pyproject の
+バージョン）でクレームし、既定ブランチからそのタグを対象に `stable-release.yml` を起動します。
+使うのは、安定版やカナリアのリリースと同じクレーム/受け入れのパイプラインです。
+`--publish` を付けない場合は、クレーム、そのレーン、起動コマンドを表示するだけで、
+何も作りません。クレームのメッセージには、レーン、テスト合格ポリシー、
+バンドルの既定値が記録されます。受け入れ時に読むのはクレームだけで、`stable verify` は
+バンドルの環境がクレームと異なる候補の系統をすべて拒否します。Stable Release は
+`main` からしか実行されないので、既定ブランチが別のブランチであるリポジトリではクレームは作られません。
+その場合 `--build-commit` は、代わりにそのブランチ上でタグを使わない `desktop-bundled-release.yml`
+のコミットビルドを起動し（そのページは
+`releases/commit/<sha>/index.html`）、そこでは `--only`、`--with`、
+`--without` を拒否します。
+
+コミットビルドは、レビュー済みのリリースコミットではなく push された任意のコミットを実行するので、
+信頼境界に関する4つの規則を課します:
+
+- **バンドルとスモークテストのみ:** `windows`、`macos-arm64`、`smoke` から始まります。
+  `--with termux` で Termux の `.deb` ビルドが加わり、`--only` / `--without` で
+  この組を絞り込めます。共有キャッシュを使うワークフローとリリース専用のレーン（`ci`、
+  `docker`、`docker-tests`、`nix`、`pm-bundle`、`install-e2e`、`termux-checks`、
+  `windows-live`、`upgrade`、`windows-store`、`linux`、`bootstrap-version`）は
+  拒否されます。
+- **読み取り専用のキャッシュと、APT 署名鍵なし:** ネイティブのビルド系統はすべて
+  （Windows、macOS、Termux）`cache-mode: read` の分岐に回され、キャッシュを保存する手順をすべて飛ばします。
+  コミットの Termux 系統は `TERMUX_APT_GPG_KEY` にも `TERMUX_APT_GPG_PASSPHRASE` にもアクセスできず、
+  ステージングするのはダウンロード用の `.deb` だけです（APT リポジトリは決して作りません）。
+- **識別情報と PR 以前のコミットとの互換性:** パッケージのバージョンはカナリアと同じ形式
+  （`X.Y.Z+commit.<stamp>`、刻印された Windows 用4要素バージョン、Debian の
+  `X.Y.Z~commit.<stamp>-1`）ですが、`Commit<sha7>` というアプリの識別情報と
+  `source: commit-build` は保つので、どのアップデーターもこれを拒否します。
+  ツリーの `scripts/releases/commit_claim_build.txt` でクレームビルドを宣言していないコミット
+  （コミットのクレーム方式のパッケージングより前のコミットはすべてこれにあたります）も、
+  タグを使わない `--commit` の経路で問題なくビルドされ、既定ブランチのコントローラーが
+  それを記録し、スモークテストを行い、クレームアーカイブの下にステージングします。
+  コントローラーが知らない取り決めを宣言している場合は拒否されます。
+- **公開:** ありません。唯一の公開ジョブである `publish-commit` は、受け入れた候補の
+  ダウンロード可能な成果物一式（`.msixbundle`、アーキテクチャごとの
+  `.msix`、macOS の `.dmg` と `.zip`、Termux の `.deb`）を
+  `releases/tag/commit.<stamp>-v<version>/index.html` と実行の要約に載せます
+  （既定の `--require-green` では選んだチェックがすべて終わるまで待ち、
+  `--no-require-green` ではビルドした候補だけを待ちます）。チャンネルやフィードの
+  書き込み処理、APT のステージング、Docker の push、Store への提出は、どれもコミットのクレームを拒否します。
+
+ページはソースコミットにリンクし、デスクトップのバンドルに焼き込まれた（CI の環境ではありません）
+秘密でない明示的な `--bundle-env` の既定値と `--bundle-unset` による解除を、
+JSON 文字列で一覧にします。解除には **Unset** の表示が付き、
+何も無ければこの節は出ません。`--build-commit`
+は起動の前にページの URL を表示し、ドライランでも表示されます。
+`CLOUDFLARE_R2_PUBLIC_URL` で公開オリジンを上書きできます。各コミットビルドは
+専用の並行実行グループで動くので、リリースの後ろで順番待ちになることはありません。また、
+安定版の公開の突き合わせ処理とサンドボックスイメージのワークフローは、どちらもこれを無視します。
+
+コミットビルドは90日間保持されます。毎日のカナリアワークフローの整理処理が、それより古いクレーム
+アーカイブとクレームタグを削除します（タグを使わないビルドによる旧来の
+`releases/commit/<sha>/` ページも、同じ期間で期限切れになります）。
 
 タグ付きのビルドは、ビルドやフィードが失敗したあとにも、成果物が1つもアップロードされなかった場合を含めて、タグごとの診断ページを
 `releases/tag/<tag>/index.html` に公開します。不完全なビルドはチャンネルのページを進めず、

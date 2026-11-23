@@ -8,6 +8,13 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-23
+
+- [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
+- [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+- [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
+
 ## 2026-11-22
 
 - [ゲートウェイの監視](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-monitoring/)

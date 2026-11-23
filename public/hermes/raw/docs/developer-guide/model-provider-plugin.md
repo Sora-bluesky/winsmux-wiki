@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "モデルプロバイダーのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダー（推論バックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: 99a86257561ff897cea7240229992ae81bdbc7a3
+upstream_blob: 485f76482e3bc8e0ccfc2e643c287369ef6648b3
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -22,7 +22,7 @@ sources:
 
 1. **同梱のプラグイン** — `<repo>/plugins/model-providers/<name>/` — Hermes に最初から入っているもの
 2. **利用者のプラグイン** — `$HERMES_HOME/plugins/model-providers/<name>/` — ディレクトリを置くだけで、動いているプロセスも次のプロバイダー検索のときに拾います（再起動は不要です）
-3. **インストール済みのプラグイン** — `$HERMES_HOME/plugins/<name>/`（`hermes plugins install owner/repo` がクローンする場所）— `plugin.yaml` が `kind: model-provider` と宣言しているときだけ読み込まれます。それ以外の種類は、汎用の PluginManager の担当です
+3. **インストール済みのプラグイン** — `$HERMES_HOME/plugins/<name>/`（`hermes plugins install owner/repo` がクローンする場所）— `plugin.yaml` が `kind: model-provider` と宣言しているときだけ読み込まれます。それ以外の種類は、汎用の PluginManager の担当です。`model-providers` は手順 2 のフォルダーなので、`hermes plugins install` は、プラグイン自身の名前が `model-providers`（大文字・小文字を問わない）のものを拒否します。ただし、その名前ですでにインストールされているものを、記録された入手元から入れ直す場合は除きます
 4. **従来の単一ファイル** — `<repo>/providers/<name>.py` — ツリー外の editable インストール向けの後方互換です
 
 手順 2 と 3 は**プロファイルの HOME ごと**に効きます。複数のプロファイルを 1 プロセスで受け持つ場合（ローカルの Desktop がつながる多重化ゲートウェイや、`hermes serve` のバックエンド）、検索した時点で結び付いている `$HERMES_HOME` のプラグインが解決されるので、あるプロファイルに入れたプラグインは別のプロファイルからは見えません。使いたいプロファイルすべてにインストールしてください（`hermes -p <profile> plugins install ...`）。

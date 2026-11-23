@@ -72,9 +72,9 @@
       "translatedAt": "2026-11-14T23:10:16.598Z"
     },
     "developer-guide/desktop-plugin-sdk.md": {
-      "blob": "822da5fcca04324a9671ba8d083baf66da525126",
+      "blob": "8e8ae6736e80296457f4d0b58967dc9f654d5b1f",
       "status": "translated",
-      "translatedAt": "2026-11-20T22:49:31.081Z"
+      "translatedAt": "2026-11-23T22:46:24.383Z"
     },
     "developer-guide/egress-internals.md": {
       "blob": "dde37d99ace8f900d6f23431db168637c191dda4",
@@ -102,9 +102,9 @@
       "translatedAt": "2026-11-22T22:44:01.430Z"
     },
     "developer-guide/model-provider-plugin.md": {
-      "blob": "99a86257561ff897cea7240229992ae81bdbc7a3",
+      "blob": "485f76482e3bc8e0ccfc2e643c287369ef6648b3",
       "status": "translated",
-      "translatedAt": "2026-11-19T22:48:29.291Z"
+      "translatedAt": "2026-11-23T22:43:52.879Z"
     },
     "developer-guide/plugin-llm-access.md": {
       "blob": "a619c06ae25e17c6d0b0f1cb93fd9e3ea8e6c4db",
@@ -117,9 +117,9 @@
       "translatedAt": "2026-11-21T22:57:12.547Z"
     },
     "developer-guide/programmatic-integration.md": {
-      "blob": "0a56c436f60cb243b63077e1973d0c98da7d9372",
+      "blob": "aa8786784418d8977c57750fce8be2c306d1d0aa",
       "status": "translated",
-      "translatedAt": "2026-11-20T22:49:31.078Z"
+      "translatedAt": "2026-11-23T22:43:52.883Z"
     },
     "developer-guide/prompt-assembly.md": {
       "blob": "f51608d4bbb2a8a1c4693788bc52cc84df879c76",
@@ -582,9 +582,9 @@
       "translatedAt": "2026-09-19T22:48:13.847Z"
     },
     "user-guide/features/extending-the-dashboard.md": {
-      "blob": "80342fd0994ef53c61a06b93a7480e57ffe3e90b",
+      "blob": "e644e396a79647051182ea05cf29faac328cbdb3",
       "status": "translated",
-      "translatedAt": "2026-11-17T23:02:10.551Z"
+      "translatedAt": "2026-11-23T22:43:52.885Z"
     },
     "user-guide/features/fallback-providers.md": {
       "blob": "f1678b20db2d6b45d39e3888e28ad434a3c2bf03",
@@ -677,9 +677,9 @@
       "translatedAt": "2026-09-18T22:41:13.187Z"
     },
     "user-guide/features/plugins.md": {
-      "blob": "1519785423b56d4350028cb072bcb28e80cb51f3",
+      "blob": "af6cd9a273e22cc42d052d24cee50237ae256f65",
       "status": "translated",
-      "translatedAt": "2026-11-20T22:49:31.074Z"
+      "translatedAt": "2026-11-23T22:44:18.061Z"
     },
     "user-guide/features/provider-routing.md": {
       "blob": "cb6658b693d5d20483aedffb4a249cd5b366863d",
@@ -742,9 +742,9 @@
       "translatedAt": "2026-09-25T22:58:06.429Z"
     },
     "user-guide/features/web-dashboard.md": {
-      "blob": "ba609bef4be57a34af7f19a412b747655caf7bf2",
+      "blob": "8298556647af281028ac3004cef8b8b1a45cf2df",
       "status": "translated",
-      "translatedAt": "2026-11-21T22:57:12.515Z"
+      "translatedAt": "2026-11-23T22:46:24.376Z"
     },
     "user-guide/features/web-search.md": {
       "blob": "1288ee9e391d6030261ecdaa456021ed935d01af",
@@ -2361,9 +2361,9 @@
       "translatedAt": "2026-11-07T22:58:47.888Z"
     },
     "developer-guide/stable-releases.md": {
-      "blob": "424fcd72e149f76fbb3af3d4abd20a49c3907be5",
+      "blob": "380b1e8440ba96254171d172497e9cb1cd4e152f",
       "status": "translated",
-      "translatedAt": "2026-11-21T22:57:12.524Z"
+      "translatedAt": "2026-11-23T22:47:49.072Z"
     },
     "reference/package-management.md": {
       "blob": "49b960a16fe31dbf8d7c7817cd5d3e1733b8c40e",
@@ -2421,9 +2421,9 @@
       "translatedAt": "2026-11-13T23:04:55.224Z"
     },
     "developer-guide/gateway-local-sessions.md": {
-      "blob": "927810a2b207e591f96f278751cfd2f17480f65a",
+      "blob": "eb8720c96a47a481482f5046f2a6c73a1cec6bdd",
       "status": "translated",
-      "translatedAt": "2026-11-20T22:49:31.076Z"
+      "translatedAt": "2026-11-23T22:47:49.075Z"
     },
     "developer-guide/hosted-profile-owners.md": {
       "blob": "576f9745b3663c60aa16190f2af713fd72337cf7",
@@ -2521,9 +2521,9 @@
       "translatedAt": "2026-11-06T00:06:11.948Z"
     },
     "developer-guide/plugins/public-api.md": {
-      "blob": "92e698e2b29f58a3142efd151248fffeca9afedb",
+      "blob": "5be3df2508528af5f8c368136e245b2b69aa02e4",
       "status": "translated",
-      "translatedAt": "2026-11-17T23:02:10.576Z"
+      "translatedAt": "2026-11-23T22:43:52.886Z"
     },
     "developer-guide/gateway-ssh-clients.md": {
       "blob": "a0525e5d143964cc9da7a2f0ab9762b126c185e0",
@@ -2541,5 +2541,5 @@
       "translatedAt": "2026-11-17T23:02:10.590Z"
     }
   },
-  "snapshotCommit": "0f602c5f6f18615632535251d62a2db74ce93b69"
+  "snapshotCommit": "b98c388a880b1b6fd303c9c2821a3946651a0b4c"
 }

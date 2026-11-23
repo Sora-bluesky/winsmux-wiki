@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 822da5fcca04324a9671ba8d083baf66da525126
+upstream_blob: 8e8ae6736e80296457f4d0b58967dc9f654d5b1f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -1409,6 +1409,9 @@ host.skills.setEnabled(name, on, profile?)  // enable/disable a skill — the Ca
 host.toolsets.list(profile?)               // toolsets + enabled state
 host.toolsets.setEnabled(name, on, profile?)// enable/disable a toolset
 host.profiles.list(scope?: ProfileScope)   // the profile list the profile rail reads
+host.setProfileBackend({ plugin, profile, purpose?, prepare? | url, token })  // run a profile's backend yourself → { applied }
+host.clearProfileBackend({ plugin, profile, beforeApply? })  // give it back to this computer's backend → { applied }
+host.profileBackendFeatures                // { prepare, purpose, beforeApply }: what this build supports
 host.pluginDecisions                       // READ-ONLY atom: this window's plugin on/off decisions (frozen copies)
 host.i18n.registerAppLocale(id, { endonym?, rtl?, translations? })  // add a whole UI language (language pack); returns disposer
 host.i18n.languageOptions()                // [{ id, endonym, rtl, source }] — what the language switcher lists
@@ -1437,6 +1440,67 @@ cron、かんばんなど）。`host.requestProfile` は `host.profileRoutes()` 
 ビルドに備えて、この機能の有無を確かめ（`typeof host.openWorkspace ===
 'function'`）、無ければ通常のペインに落としてください。Bot Mode のグループチャットの部屋が
 参考例です（使えるならメインウィンドウを占有し、そうでなければパネル内の表示にします）。
+
+`host.setProfileBackend()` は、1 つのプロファイルを、あなたのプラグインがこのコンピューターで
+動かすバックエンド（多くはループバックのプロキシの奥にあるサンドボックス）へ振り向けます。
+アプリはまず、ネイティブのダイアログで利用者に確認します。ダイアログには、あなたのプラグインと
+プロファイルの名前、チャットが「このコンピューター上で」動くことが示され、任意で渡す `purpose`
+（1 行、最大 160 文字）がプラグイン自身の言葉として表示されます。受け付けるアドレスは
+`http://127.0.0.1`、`localhost`、`[::1]` だけで、すでに遠隔のホストへつないでいるプロファイルや、
+別のプラグインを通して動いているプロファイルは拒否します。利用者が断ると
+`{ applied: false }` で解決します。
+
+- すでに動いているバックエンドなら `url` と `token` を渡します。利用者が同意してから起動したい
+  なら `prepare` を渡します。この場合アプリは確認を取り、`prepare()` が `{ url, token }` を
+  返すのを待ってから、もう一度尋ねずに切り替えます。それまでプロファイルはこのコンピューターの
+  バックエンドのままです。キャンセルされたときに `prepare` が呼ばれることはありません。
+  例外を投げた場合は何も変わらず、エラーがそのまま呼び出し元へ伝わります。
+- フック（`prepare`、`beforeApply`）は最長 10 分まで動かせます。動いている間、入力欄とキューは
+  メッセージを留めておきます。10 分たっても戻らないフックは留め置きを失い、メッセージはその時点で
+  プロファイルがまだつながっているバックエンドへ送られます。利用者の返答は 5 分間保たれます。
+  フックがそれより遅れて戻ったときは、アプリは切り替える前にもう一度尋ねます。
+- 切り替えでは、そのプロファイルのチャットだけが、開いているすべてのウィンドウで、その場で
+  つなぎ直します。各ウィンドウは表示しているプロファイルのままです。別のゲートウェイに
+  つながっているウィンドウは、そこで表示しているプロファイルが同じ名前であっても、そのままに
+  されます。プロファイルのレールはそのプロファイルに Sandboxed の印を付け、アプリはこの
+  プロファイルについてはこのコンピューターのプロファイルを一覧に出し、そのプロファイルの
+  ホームからデスクトップのプラグインを写し出すのをやめます。
+- `host.clearProfileBackend()` は、同じような確認のあとでプロファイルを元に戻します。
+  `beforeApply` を渡すと、その間にバックエンドを止められます（中核の `profiles_run_elsewhere` の
+  目印も消してください）。アプリは利用者に尋ね、`beforeApply()` を待ってから、もう一度尋ねずに
+  元へ切り替えます。独自のローカルの項目（保存した SSH の設定）を持っていたプロファイルには、
+  それが戻ります。
+- アプリがそのホームのデスクトップのプラグインを読み飛ばすのは、プロファイルがあなたの
+  バックエンドへ振り向けられているか、目印が付いている間だけです。元に戻したあとは、ホームは
+  再びこのコンピューターのものになり、ほかのプロファイルと同じように読まれます。中で見つかった
+  デスクトップのプラグインは写し出されて読み込まれ、Hermes 自身のバックエンドはその
+  `config.yaml`、フック、cron のジョブ、スキルを使います。サンドボックスがホームに書き込めるなら、
+  その中では `plugins/` と `desktop-plugins/` を読み取り専用にし、それ以外にそこへ書けるものは
+  すべて、利用者自身のバックエンドが信頼してしまう入力として扱ってください。
+- 中核の `profiles_run_elsewhere/<profile>.json` の目印がプロファイルを名指ししている間は、
+  アプリはそのプロファイルをこのコンピューターで起動しません。そのため経路を見失っても、
+  安全側に閉じます。
+- プロファイルの接続が切れている間、アプリはプロファイルの経路で
+  `GET /api/plugins/<plugin>/status` を問い合わせます。予定された移行の途中なら
+  `{ "state": "starting" | "restarting" | "stopping" }` を、バックエンドが戻ったら `"running"` を
+  返してください。するとステータスバーと入力欄は、オフラインではなく「Restarting sandbox…」と
+  表示します。再起動や切り替えで途切れた要求はバックエンドを待ち、2 回目に走らせても作業が
+  繰り返されない場合にだけ送り直されます。つまり、ソケットにまだ書き込まれていなかった要求、
+  アプリが繰り返す読み取り（`session.resume`、`session.history`）、`submission_id` か `input_id` を
+  持つ要求です。それ以外の要求は、プラグインが無いときと同じく接続のエラーで失敗し、何も
+  送り直しません。状態の問い合わせへの返答がこれ以外なら、失敗とみなされます。予定された移行が
+  無いときは、接続が黙り込んだ（ハートビートのタイムアウト）要求は送り直されず、呼び出し元に
+  エラーが返ります。
+- 入力欄は、もうすぐ消えるバックエンドへメッセージを渡しません。切り替えの間（`"starting"`、
+  `"stopping"`）は、プロファイルが新しいバックエンドに移るまでメッセージは入力欄に残ります。
+  切り替えの間は、入力欄は `host.composer.submit` やそれを通して送られるほかの要求も受け付けません。
+  何も送られず、キューにも入りませんが、入力欄が見えている間は呼び出しは `true` を返します。
+  `"restarting"` の間は、メッセージはチャットのキューで待ち、バックエンドが戻ったときに送られます。
+  そのため `"restarting"` を返すのは、同じバックエンドが同じセッションを持って戻ってくるときだけに
+  してください。
+
+機能の有無は、`typeof host.setProfileBackend === 'function'` と
+`host.profileBackendFeatures` で確かめてください。
 
 `host.paneVisibility(paneId)` は、そのコントリビューションのペインが実際に画面に出ている間だけ
 `true` になる、読み取り専用の反応する atom を返します。つまり、レイアウトの木構造にあり、

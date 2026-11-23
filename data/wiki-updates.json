@@ -1,6 +1,33 @@
 {
-  "generatedAt": "2026-11-23",
+  "generatedAt": "2026-11-24",
   "entries": [
+    {
+      "date": "2026-11-23",
+      "sha": "bc3fd0c",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/memory-provider-plugin",
+          "title": "メモリープロバイダープラグイン",
+          "url": "/hermes/docs/developer-guide/memory-provider-plugin/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/features/cron",
+          "title": "定期実行タスク（cron）",
+          "url": "/hermes/docs/user-guide/features/cron/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        }
+      ]
+    },
     {
       "date": "2026-11-22",
       "sha": "f714305",

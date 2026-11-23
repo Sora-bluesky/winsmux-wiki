@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ダッシュボードを広げる"
 description: "Hermes の Web ダッシュボード向けにテーマとプラグインを作ります — 配色、書体、レイアウト、独自のタブ、外枠のスロット、ページごとのスロット、そして裏側の API ルート"
 upstream_path: user-guide/features/extending-the-dashboard.md
-upstream_blob: 80342fd0994ef53c61a06b93a7480e57ffe3e90b
+upstream_blob: e644e396a79647051182ea05cf29faac328cbdb3
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/extending-the-dashboard
 ---
@@ -822,6 +822,12 @@ Tailwind のクラスや `style=` の直書きでは足りない見た目が必�
 | 2 | `<repo>/plugins/memory/<name>/dashboard/` | `bundled` |
 | 2 | `<repo>/plugins/<name>/dashboard/` | `bundled` |
 | 3 | `./.hermes/plugins/<name>/dashboard/` | `project` — `HERMES_ENABLE_PROJECT_PLUGINS` が設定されているときだけ |
+
+利用者のプラグインのタブ・ファイル・バックエンドが配信されるのは、`hermes plugins enable <directory name>` で有効にしているあいだだけです（`plugin.yaml` の名前やダッシュボードの `name` でも有効にできますが、ほかにその名前を持つインストール済みのプラグインがないときに限ります）。`plugins.disabled` に入っているプラグインは配信されません。ダッシュボードの `name` がほかのインストール済みプラグインの名前と同じ場合は登録されないので、`dashboard/manifest.json` ではプラグインごとに固有の `name` を付けてください。
+
+:::note アップグレード
+ダッシュボードの `name` は、そのプラグイン自身の名前でなければなりません。Hermes に同梱されているプラグイン（`telegram`、`openai`、`kanban` などのプラットフォーム・プロバイダー・バックエンドのプラグインを含む）や、ほかのインストール済みプラグインの名前は、別のプラグインのダッシュボード名としては登録されず、その名前をどのプラグインが持っているかがログに出ます。更新のあとでプラグインのタブが消えた場合は、`dashboard/manifest.json` の `name` を変え、ディレクトリ名で有効にしてください: `hermes plugins enable <directory name>`。
+:::
 
 ひとつのゲートウェイで複数のプロファイルを扱っているとき、ゲートウェイを起動したときとは別のプロファイルへの要求では、
 まずそのプロファイル自身の `plugins/<name>/dashboard/` を見て、次にルートの `~/.hermes/plugins/<name>/dashboard/` を見ます

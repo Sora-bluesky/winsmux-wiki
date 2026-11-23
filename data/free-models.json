@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-23",
+  "generatedAt": "2026-11-24",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-23",
-      "attemptedAt": "2026-11-23",
+      "fetchedAt": "2026-11-24",
+      "attemptedAt": "2026-11-24",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -19,19 +19,9 @@
           "criteriaReason": null
         },
         {
-          "id": "qwen/qwen4-max:free",
-          "name": "Qwen: Qwen4 Max (free)",
-          "ctx": 1000000,
-          "tools": true,
-          "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
           "id": "stepfun/step-3.7-flash:free",
           "name": "StepFun: Step 3.7 Flash (free)",
-          "ctx": 262144,
+          "ctx": 256000,
           "tools": true,
           "expires": null,
           "freeBasis": "pricing",
@@ -63,8 +53,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-23",
-      "attemptedAt": "2026-11-23",
+      "fetchedAt": "2026-11-24",
+      "attemptedAt": "2026-11-24",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -74,6 +64,16 @@
           "ctx": 1024000,
           "tools": true,
           "expires": null,
+          "freeBasis": "pricing",
+          "criteria": true,
+          "criteriaReason": null
+        },
+        {
+          "id": "dots-studio/dots-3-note-preview:free",
+          "name": "Dots Studio: Dots3-Note Preview (free)",
+          "ctx": 512000,
+          "tools": true,
+          "expires": "2026-12-31",
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null

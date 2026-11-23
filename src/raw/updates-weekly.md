@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-11-23、対象期間 = 2026-11-17 〜 2026-11-23（JST）
+生成日 = 2026-11-24、対象期間 = 2026-11-18 〜 2026-11-24（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,6 +16,10 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-11-23 [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
+- 2026-11-23 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
+- 2026-11-23 [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
+- 2026-11-23 [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
 - 2026-11-22 [ゲートウェイの監視](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-monitoring/)
 - 2026-11-22 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
 - 2026-11-22 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
@@ -35,7 +39,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-21 [定期実行がうまくいかないとき](https://wiki.winsmux.dev/hermes/docs/guides/cron-troubleshooting/)
 - 2026-11-21 [Google Gemini](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/)
 - 2026-11-21 [Google Vertex AI](https://wiki.winsmux.dev/hermes/docs/guides/google-vertex/)
-- 2026-11-21 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - 2026-11-21 [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
 - 2026-11-21 [管理者による適用範囲](https://wiki.winsmux.dev/hermes/docs/user-guide/managed-scope/)
 - 2026-11-21 [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
@@ -75,7 +78,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-18 [コンテキストエンジンのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-engine-plugin/)
 - 2026-11-18 [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
 - 2026-11-18 [ゲートウェイのセッションライフサイクル](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-session-lifecycle/)
-- 2026-11-18 [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
 - 2026-11-18 [プラグインカタログへの登録申請](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
 - 2026-11-18 [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
 - 2026-11-18 [セッションの保存領域](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
@@ -96,13 +98,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-18 [画像生成](https://wiki.winsmux.dev/hermes/docs/user-guide/features/image-generation/)
 - 2026-11-18 [プラグインカタログ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
 - 2026-11-18 [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
-- 2026-11-17 [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
-- 2026-11-17 [スキルを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/creating-skills/)
-- 2026-11-17 [ターミナル環境プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/terminal-environment-plugin/)
-- 2026-11-17 [軌跡の形式](https://wiki.winsmux.dev/hermes/docs/developer-guide/trajectory-format/)
-- 2026-11-17 [バックアップと移行](https://wiki.winsmux.dev/hermes/docs/user-guide/backup-and-transfer/)
-- 2026-11-17 [チェックポイントと /rollback](https://wiki.winsmux.dev/hermes/docs/user-guide/checkpoints-and-rollback/)
-- 2026-11-17 [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
 
 ## 週次まとめ
 

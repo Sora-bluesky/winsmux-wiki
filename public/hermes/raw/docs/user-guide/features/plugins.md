@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグイン"
 description: "プラグインの仕組みで、独自のツール・フック・連携を Hermes に足す"
 upstream_path: user-guide/features/plugins.md
-upstream_blob: 1519785423b56d4350028cb072bcb28e80cb51f3
+upstream_blob: af6cd9a273e22cc42d052d24cee50237ae256f65
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
 ---
@@ -1127,6 +1127,7 @@ plugins:
 - `os.getcwd()` はゲートウェイ自身のディレクトリで、すべてのセッションで共通です。Hermes がこれを変えることはありません。フックやツールが動いているセッションの作業ディレクトリが欲しいときは `ctx.session_cwd()` を使ってください。CLI・TUI・Desktop のセッションなら始めたときのワークスペース、チャットならプロファイルのターミナルの cwd を返します（無いときは `""`）。サブプロセスには `cwd=` として渡してください。動いているターンからセッションを読むので、セッションのために動くコード、つまりターンのフック、ツールのハンドラー、承認のフックで使えます。`pre_gateway_dispatch` のような受信時のフックは、メッセージがどのセッションにも受け付けられる前に動きます。そこではプロファイルのターミナルの cwd を返し、設定が無ければ `""` を返します。
 - `ctx.session_surface()` は、呼び出したセッションのクライアントの名前を返します。`"cli"`、`"tui"`、`"desktop"`、`"acp"`、またはメッセージングのプラットフォーム（`"telegram"` など）です。セッションの外では `""` です。
 - `hermes_cli.plugin_session.session_client()` は、呼び出したローカルのセッションを作ったクライアントを、そのクライアントが `session.create` で名乗ったとおりに返します（`{"name": "my-client", "version": "1.2.0"}`。`version` は送られたときだけ付きます）。セッションの外、メッセージングのチャット、名前を送らなかったクライアント（いまは TUI、Desktop、従来の CLI、ACP のどれも名前を送りません）では `None` を返します。`plugins.isolation: host` のもとでは、プラグインのプロセスにセッションの文脈がありません。代わりに、システムプロンプトのセクションで `info["client"]` を読んでください。この名前はクライアントが自分で付けたラベルで、認証ではありません。これを理由に何かを許可したり、確認を省いたりしないでください。
+- `hermes_cli.plugin_session.turn_client()`（`ctx.turn_client()` でも可）は、いま実行中のターンを送ったクライアントを、その接続が名乗ったとおりに返します（`{"name": "hermes-desktop", "version": "2.1.0", "kind": "desktop"}`。`version` と `kind` は送られたときだけ付きます）。ターンの外、委任された子、何も名乗らなかったクライアント、メッセージング・cron などの自動化のターンでは `None` を返します。`hermes_cli.plugin_session.session_viewers()`（`ctx.session_viewers()` でも可）は、呼び出したセッションにいま接続しているクライアントを、接続ごとに 1 つの dict で並べて返します。中身は `name` と `kind`（何も名乗らなかったときは `None`）、そこで利用者が最後に入力してからの `idle_seconds`（入力が見えていないときは `None`）、`basis`（`"system"`: 端末のアイドル時計、`"page"`: Hermes のウィンドウ内での入力、`"input"`: ゲートウェイ自身が見た入力だけ）、`can_alert`（そのクライアントが自分で利用者の注意を引けるか。このセッションで数に入るそのクライアントの報告がまだないあいだは `None`、この項目を省いた報告は `True` 扱い）です。呼び出したコードがどのセッションにも結び付いていないとき、委任された子、管理されたワーカーの中、セッションが動いていないときは `[]` です。`plugins.isolation: host` のもとでは、2 つの書き方で答えが変わります。モジュールの `plugin_session.turn_client()` / `session_viewers()` はプラグイン自身のプロセスで動き、そこにはゲートウェイもターンもないので、常に `None` / `[]` を返します。一方 `ctx.turn_client()` / `ctx.session_viewers()` は、呼び出したフックの文脈を持ってゲートウェイへ問い合わせ、同じプロセス内で動くときと同じように答えます。ホスト側で動く可能性のあるプラグインでは `ctx` の書き方を使ってください。モジュールの書き方が答えるのはゲートウェイのプロセスの中だけです。どちらも呼び出し元の文脈を読むので、`post_llm_call` や `on_session_end` のようなターンのフックでも正しいセッションについて答えます。プラグイン自身のスラッシュコマンドではターンが動いていないので、`turn_client()` は `None` になり、`session_viewers()` はそのコマンドが入力されたセッションについて答えます。通知プラグインは、ターンを送ったクライアントで利用者が操作中のあいだはスマートフォンへの通知を省く、といった使い方をします。有無は `getattr(plugin_session, "turn_client", None)` で確かめてください。`session_client()` と同じく、これらはクライアントが自分で選んだラベルと報告です。これを理由に何かを許可しないでください。
 - `print()` の出力は、ターミナルではなくゲートウェイの `gateway-stdio.log` に書かれます。代わりに `logging` を使ってください。
 - `input()` はファイルの終わり（EOF）を受け取ります。ゲートウェイにはターミナルがありません。ツールの結果かスラッシュコマンドを通して尋ねてください。
 
