@@ -2,7 +2,7 @@
 title: "プラットフォームアダプターを追加する"
 description: ""
 upstream_path: developer-guide/adding-platform-adapters.md
-upstream_blob: d0fb92ecfccf928fc0a894ab693210990c60acdb
+upstream_blob: e9a73c511f26beb23387e1763d9643d38636fb0e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters
 ---
@@ -307,6 +307,7 @@ validate` はこれらについて非公開 import の警告を出さず、名�
 | ピッカーのカード（`send_model_picker` / `send_choice_picker`）や `/update` の問いかけで、開いた本人以外からのクリックを断る | `from gateway.approval_actor import picker_refusal, update_prompt_refusal, refusal_text`：ピッカーを送ったときのコールバックを渡して `picker_refusal(on_selected, clicker_id, extra=self.config.extra)` を呼ぶか、`update_prompt_refusal(clicker_id, extra=self.config.extra)` を呼びます。結果が `None` でなければ、それは開いた人の名前です。その場合は `refusal_text(name)` を使ってクリックした人にだけ返事をし、カードは開いたままにします。開いた本人と、そのチャットの範囲の管理者は常に通ります |
 | ネイティブの確認（clarify）ボタン | `tools.clarify_gateway`：`get_pending(clarify_id)`（保留中の項目か `None` を返します。`session_key`、`choices`、`multi_select` を読みます）、`resolve_gateway_clarify(clarify_id, text)`、`mark_awaiting_text(clarify_id)`、`SKIPPED` |
 | `setup_fn` のウィザードの手順 | `hermes_cli.gateway_setup_wizard`：`print_setup_header(title)`、`confirm_reconfigure(label, *env_vars)`、`offer_home_channel(home_var, user_id, what)`、`save_env_values(**values)`、`prompt_csv(text, default)`。入力の問いかけは `hermes_cli.setup`（`prompt`、`prompt_choice`、`prompt_yes_no`）から、出力は `hermes_cli.cli_output`（`print_info`、`print_success`、`print_warning`、`print_error`）から、`.env` へのアクセスは `hermes_cli.config`（`save_env_value`、`get_env_value`）を通します |
+| 返信の文中にある沈黙の印（`[SILENT]`、`NO_REPLY`）を見分け、末尾の印を取り除く。判定は Hermes と同じ文字の規則に従います（印だけの返信。実際の返信の終わりに、印が単独の行で置かれている場合。文の途中にある印は普通の文として扱う）。これは文字の検査です。そのターンが黙っていてよいかを決めるのはゲートウェイで、返信が期待される場面では、印だけの返信の代わりに通知を送ることがあります。そのため、ゲートウェイがアダプターに送るよう渡した文を捨てるためにこれらを使わないでください | `from gateway.response_filters import is_intentional_silence_response, strip_trailing_silence_marker, is_autonomous_silence_response`：`is_intentional_silence_response(text)` は、返信全体が印のときだけ `True` です。`strip_trailing_silence_marker(text)` は、末尾にある単独の行の印を除いた返信を返します（それ以外は、印だけの返信も含めて、そのまま返ります）。待っている利用者がいない自律的な実行（cron、webhook）では `is_autonomous_silence_response(text)` を使ってください。こちらは、角かっこの印が返信の先頭にある場合（`[SILENT] nothing new`）や、印が最初か最後の行に単独で置かれている場合も `True` になります |
 
 ```python
 from gateway.platforms.helpers import platform_http_client

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイをいくつも同時に動かす"
 description: ""
 upstream_path: user-guide/multi-profile-gateways.md
-upstream_blob: b5eb74ddc77b637de255a3d0472f884d450a3f58
+upstream_blob: c143143fbebbef9865ffbe6f7b1f12f2087d2802
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways
 ---
@@ -251,6 +251,74 @@ hermes -p coder gateway restart  # reconnect coder with its current configuratio
 プロセスごとの意味のままです。休止は、多重化の考え方に沿って 1 つのプロファイルだけを
 止めるやり方です。[一時的なしくみ](#temporary-gatewaystandalone-true) が残されていた理由の
 「プロファイルごとの停止・再起動」の穴は、これで塞がります。
+
+### プラグインがよそで動かすプロファイル {#profiles-a-plugin-runs-elsewhere}
+
+プロファイルの裏側をまるごとこのホスト以外の場所（たとえばサンドボックスのなか）で動かすプラグインは、
+`<hermes root>/profiles_run_elsewhere/<profile>.json` を置いて、そのプロファイルに印を付けます。中身は
+`{"plugin": "<plugin name>", "since": "<ISO 8601 time>"}` です。このファイルがある間は、
+プラグインが動いているかどうかにかかわらず、ホスト上ではそのプロファイルを何も動かしません。
+
+- ホストのゲートウェイはそのプロファイルを受け持たず（プラットフォーム、cron、Kanban の見張り、
+  `/p/<profile>/` の経路）、デスクトップの cron の刻み役もそれを飛ばします。
+- そのプロファイル用のエージェントは作られません。印が付く前に作られたエージェントも、それ以上
+  やり取りを進めません。ホスト上の cron の刻み役（ゲートウェイのもの、デスクトップのもの、cron の
+  供給元に組み込まれた代わりのもの）も、そのジョブを動かしません。
+- `hermes -p <profile> chat`、`acp`、`cron run`、`cron tick`、`serve`、
+  `dashboard` は、プラグインの名前を挙げたメッセージを出して終了します。
+- `hermes -p <profile> gateway run` は終了コード 78 で終わり、`hermes gateway ensure` は
+  それを断ります（`profile_runs_elsewhere`）。
+- そのプロファイルへのダッシュボードの cron、セッション、ファイル、Webapp の要求には `409` が返り、
+  Kanban の振り分け役は、そのプロファイルに割り当てたカードを `ready` のまま置いておきます
+  （`skipped_nonspawnable`）。
+
+既定プロファイルにも印を付けられます。ホストのゲートウェイは既定プロファイルとして動くので、その場合は
+起動を断るようになります。`default` に印を付ける前に、ホストのゲートウェイを止めておいてください。
+動いているホストのゲートウェイは、新しく印が付いた名前付きのプロファイルを次の走査（30 秒）で外します。
+印の付いたプロファイルそのものとして起動したゲートウェイや、`hermes serve` / `hermes dashboard` の
+裏側は、印が付いても止まりません。そのプロファイルのやり取りも cron のジョブもそれ以上は動かしませんが、
+止めるまでは立ち上がったままなので、印を付ける前に止めてください。読み取れない印も印として
+扱われます。その場合は、プラグインの名前がわからないだけです。
+
+プロファイルに印が付いている間、ホストのプロセスは起動するときに、そのホームから env ファイルも
+秘密情報の供給元も読み込みません。`hermes -p <profile> …` のコマンドも、そのホームの下で起動した
+プラグイン自身のホストのプロセスも、そこにある `.env` や `.op.env` を読まず、`secrets:` の供給元も
+1 つも解決しません。そのプロファイルを受け持つホストのゲートウェイやダッシュボードも、同じく
+どれも解決しません。プラグイン自身のホストのプロセスに要るものは、印を付けたプラグインが用意します。
+あとから値を 1 つだけ引くコマンドも、その `.env` からは何も得られません。そのため `hermes -p <profile> status` や `hermes -p
+<profile> config` では、そのプロファイルの鍵が未設定として表示され、理由を書いた 1 行が添えられます。
+プラグインのホストのプロセスを通して保存した鍵は、それでもファイルに書き込まれます。
+ホストのコマンドは、プロファイル自身のファイルに書かれたものも何ひとつ起動しません。`hermes -p
+<profile> hooks test` はシェルのフックを動かさず、`hermes -p <profile> mcp test`
+（や `mcp add`）は、MCP サーバーを起動したり呼んだりする前に断ります。
+
+印は Hermes のルートの下に置かれ、プロファイルのホームに置かれることはないので、
+そのプロファイル自身の裏側からは消せません。ホスト側のプラグインのコードは、
+[公開のプラグイン API](/hermes/docs/developer-guide/plugins/public-api/) にある 3 つの関数で、
+印を付け、読み、外します。
+
+```python
+from hermes_cli.profiles_run_elsewhere import (
+    clear_profile_run_elsewhere, mark_profile_run_elsewhere, run_elsewhere,
+)
+
+mark_profile_run_elsewhere("ops", "my-plugin")   # before the backend starts elsewhere
+entry = run_elsewhere("ops")                     # entry.plugin == "my-plugin"; None when unmarked
+clear_profile_run_elsewhere("ops", "my-plugin")  # once that backend has stopped
+```
+
+`mark_profile_run_elsewhere` と `clear_profile_run_elsewhere` は、ほかのプラグインが持つ印に対しては
+`ValueError` を投げます。それ以外の書き手は、そのフォルダーに `.` で始まる名前でファイルを書き、
+それを `<profile>.json` に上書きする形で名前を変えます。何も印が付いていないと見なされるのは、
+フォルダーが無いときだけです。その場所に別のものがあったり、フォルダーを読み取れなかったりすると、
+それが直るまで、ホストはどのプロファイルも動かしません。唯一の例外は、そのフォルダーへの
+アクセスを拒まれたプロセスです。プラグインは自分が動かす裏側からそのフォルダーを見えなくしているので、
+そうしたプロセスはここに挙げた断りをどれも当てはめず、その裏側は自分のプロファイルを動かし続けます。
+このホストでまたそのプロファイルを動かすには、
+プラグインの側でこれを切ってください。プラグインがもう入っていないか読み込めなくなっている場合は、
+断るときのメッセージに印のファイルが示されます。そのファイルを消せば、Hermes はこのホストで
+またそのプロファイルを動かせます。プラグインがまだそのプロファイルを動かしている間は、
+このファイルを消さないでください。
 
 ### プロファイルごとのゲートウェイは新しく作らない {#no-new-per-profile-gateways}
 

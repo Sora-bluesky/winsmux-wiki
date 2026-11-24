@@ -2,7 +2,7 @@
 title: "モデルプロバイダーのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダー（推論バックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: 485f76482e3bc8e0ccfc2e643c287369ef6648b3
+upstream_blob: 709e8b77da8db5a99a98249c17981c8ad0565c7b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -353,6 +353,17 @@ class AcmeProfile(ProviderProfile):
 | `hermes_cli.model_setup.persist_model_selection(model, provider, *, base_url=None, api_mode=None)` | `model:` の節を書き込み（`provider` と、指定があればそのあとに `base_url` / `api_mode`）、エンドポイントに直接書かれた資格情報を取り除き、`config.yaml` を保存して、それまで有効だった OAuth プロバイダーを無効にします。保存した節を返します。 |
 | `hermes_cli.model_setup.note_setup_failure(failure_class)` | モデルを選ばずに流れが終わった理由（`"auth"`、`"no_models"` など）を、利用者が同意した場合にだけ集めるプロバイダー設定の指標に記録します。追跡されている流れの外では何もしません。 |
 | `agent.secret_scope.secret_source_label(name)` | 環境変数 `name` を供給した秘密情報の出所プラグインを示す、`" (from Bitwarden)"` のような接尾辞を返します。`.env` やシェルの値なら `""` です。 |
+
+### ネイティブの Gemini の推論向けの公開ヘルパー {#public-helpers-for-native-gemini-reasoning}
+
+ネイティブの Gemini の通信形式（`generateContent`）を使うプロバイダーは、次のヘルパーで推論の設定を対応付けます。こうすると、推論の強さが、組み込みの `gemini` プロバイダーと同じモデルごとの規則に従います。
+リクエストのどのフィールドを使うかと、自分の出力の上限は、引き続きプロファイルが決めます。
+
+| ヘルパー | 働き |
+|---|---|
+| `agent.reasoning_effort.gemini_thinking_config(model, reasoning_config)` | Hermes の推論の設定に対応する、ネイティブの camelCase の `thinkingConfig` を返します（`{"enabled": False}` では、思考を隠したうえで、そのモデルが許す最も低い段階になります。`xhigh` 以上は、それを受け付けるモデルでは `xhigh` になります）。Gemini 以外のモデルや、推論の設定がない場合は `None` です。 |
+| `agent.reasoning_effort.clamp_effort(effort, supported, overrides=None)` | 推論の強さを、宣言された段階のタプルに収めます。対応していればそのまま、そうでなければ最も近い弱い段階にします（それより弱い段階がなければ、最も弱い段階）。 |
+| `agent.reasoning_effort.bare_gemini_model_id(model)` | ネイティブの Gemini クライアントが送るモデル ID です（先頭の `gemini/` と `google/` を取り除きます）。`gemini_thinking_config` はこれをすでに適用しています。HTTP 関連のモジュールは読み込みません。 |
 
 ## アカウントの利用状況 {#account-usage}
 

@@ -2,7 +2,7 @@
 title: "イベントフック"
 description: "節目となるタイミングで独自のコードを走らせる — 活動の記録、通知の送信、Webhook への送信"
 upstream_path: user-guide/features/hooks.md
-upstream_blob: 9da800a74d6eb0d6525ae864f2f55297b269154e
+upstream_blob: 75765efd2be2964592c5e757027a52586b120bda
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks
 ---
@@ -492,6 +492,8 @@ def register(ctx):
 | `post_approval_response` | 観測役 | 判断、時間切れ、あるいはゲートウェイの通知の失敗のあと。戻り値は無視されます。 | `command`、`description`、`pattern_key`、`pattern_keys`、`session_key`、`surface`、`turn_id`、`tool_call_id`、`choice`。賢い経路では `decided_by` が加わることがあります | コマンドの機微さは同じで、加えて判断の情報。 |
 | `on_human_input_request` | 観測役 | エージェントが人の入力を待って止まろうとするとき — sudo のパスワードの問い合わせ、`clarify` の質問、危険なコマンドの承認 — で、CLI、Ink の TUI / デスクトップ、ACP、ゲートウェイのプラットフォームが対象です。戻り値は無視されます。 | `kind`（`"sudo"` \| `"clarify"` \| `"approval"`）、`request_id`、`session_id`、`session_key`、`platform`、`prompt` | `prompt` は必ず伏せ字にされます。入力されたパスワードや答えが渡ることはありません。 |
 | `on_human_input_resolved` | 観測役 | `on_human_input_request` 1 回につきちょうど 1 回、待ちが終わったとき（答えた、飛ばした、時間切れ、取り下げ、失敗）。戻り値は無視されます。 | 要求と同じものに `outcome` が加わります | 結果だけで、答えそのものは渡りません。 |
+| `on_session_prompt` | 観測役 | ゲートウェイの中で、セッションの持ち主が、そのセッションを見ている人たちに向けて、人が答える問い合わせ（承認、clarify、sudo、秘密の情報、パスワードマネージャーの問い合わせ）を開いたときに、登録が済んだあとで 1 回。問い合わせの経路の外で待ち行列に入り、そのセッションを持つプロファイルの中で動きます。戻り値は無視されます。 | `session_id`、`kind`、`prompt_id`、`execution_generation`、`params` | `params` の文字列は必ず伏せ字にされます。答えが渡ることはありません。 |
+| `on_session_prompt_settled` | 観測役 | `on_session_prompt` 1 回につきちょうど 1 回、問い合わせが開いた状態でなくなったとき（答えた、時間切れ、中断、取り下げ、やり取りの終了）。戻り値は無視されます。 | `session_id`、`kind`、`prompt_id`、`execution_generation`、`reason` | 識別子と理由だけ。 |
 | `on_room_member_activity` | 観測役 | Bot モードのゲートウェイで、ホストされたグループチャットのメンバーのやり取りが動いている間、メンバーのセッションが出す実行時のイベント（ツールの開始 / 完了、承認の要求、メッセージ / 推論の差分、エラー）ごとに 1 回。受け手ごとにトークンの経路の外で待ち行列に入ります。戻り値は無視されます。 | `room_id`、`thread_id`、`member_id`、`turn_id`、`task_id`、`execution_generation`、`kind`、`seq`、`payload` | `payload` はクライアントに渡して安全なセッションのイベントの本体です。ツールの引数と結果、伏せ字にした承認のコマンド、逐次に流れるメンバーの文章。 |
 | `kanban_task_claimed` | 観測役 | 取り掛かりが確定したあと、ワーカーの起動の前にディスパッチャーのプロセスで。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id` | 盤 / タスク / プロファイル / 担当者の識別子。 |
 | `kanban_task_completed` | 観測役 | 完了と片付けのあと、ふつうはワーカーのプロセスで。戻り値は無視されます。 | `task_id`、`profile_name`、`board`、`assignee`、`run_id`、`summary` | 要約にプロジェクトや利用者の内容が含まれることがあります。 |
@@ -1660,6 +1662,58 @@ def register(ctx):
 
     ctx.register_hook("on_human_input_request", on_request)
     ctx.register_hook("on_human_input_resolved", on_resolved)
+```
+
+---
+
+### `on_session_prompt` {#onsessionprompt}
+
+ゲートウェイの中で、セッションの持ち主が、そのセッションにつながっている閲覧側（CLI、Ink の TUI、Desktop、スマートフォンのアプリ）に向けて、人が答える問い合わせを開いたときに 1 回発火します。発火するのは、答えが届く場所に問い合わせが登録されたあとです。呼び出しごとに、その問い合わせに答えるための id が付いてくるので、通知からその場で答えてもらうこともできます。
+
+| `kind` | 問い合わせ | `prompt_id` を使って答える手段 |
+|--------|--------|-----------------------------------|
+| `"approval"` | 危険なコマンドの承認（`approval.request` のイベント） | `approval.respond` |
+| `"clarify"` | clarify の質問のカード（`clarify.request` のイベント） | `clarify.respond` |
+| `"sudo"`、`"secret"`、`"vault.unlock_prompt"`、`"vault.code"`、`"vault.save_login"` | 伏せ字で入力する sudo のパスワード、スキルの秘密の情報、パスワードマネージャーのロック解除、ワンタイムコード、ログイン情報の保存の問い合わせ（サーバーからクライアントへの要求フレーム） | その `srq-` の id を付けた応答フレーム |
+| `"clarify"`（要求フレーム） | 従来の CLI の、まとめて答える clarify のパネル、またはプラグインのコマンドの選択肢 | その `srq-` の id を付けた応答フレームか `clarify.lock` |
+
+Desktop のウィンドウの要求のうち、人を介さずにクライアントのアプリが答えるもの（テーマ、ツアー、プレビュー、ウィンドウや端末の読み取り）では発火しません。閲覧側がつながっていなかったために開かれなかった問い合わせでも発火しません。
+
+**コールバックの形:**
+
+```python
+def my_callback(session_id: str, kind: str, prompt_id: str,
+                execution_generation: int | None, params: dict, **kwargs):
+```
+
+| 引数 | 型 | 説明 |
+|-----------|------|-------------|
+| `session_id` | `str` | 問い合わせが開かれた、動いているセッションの id（閲覧側が送り返す id） |
+| `kind` | `str` | 上の表のとおりです |
+| `prompt_id` | `str` | 問い合わせに答えるための id です。対応する `on_session_prompt_settled` にも同じ値が入ります |
+| `execution_generation` | `int \| None` | `approval` / `clarify` のイベントではそのやり取りの世代、要求フレームでは `None` |
+| `params` | `dict` | 閲覧側が受け取ったとおりの問い合わせの深いコピー（イベントの中身、またはフレームの `params`）です。`security.redact_secrets` が無効でも、すべての文字列が秘密の伏せ字処理を通してあります |
+
+人が入力したものは**決して**渡りません。**戻り値:** 無視されます。例外を出したコールバックはデバッグとして記録され、問い合わせには影響しません。呼び出しは 1 つの裏の作業役の上で順番に動き、エージェントのスレッドやイベントループの上で動くことも、セッションのロックを持ったまま動くこともありません。動くのはセッションを持つプロファイルの範囲の中です（複数のプロファイルを持つゲートウェイでは、そのプロファイルのプラグインだけが呼ばれます）。遅いコールバックが遅らせるのは、この 2 つのフックのあとの呼び出しだけです。
+
+**使い分け:** `on_human_input_request` は入口を問いません（メッセージングのプラットフォームや、CLI のプロセス内の問い合わせでも発火します）が、答えに使える id を持たず、複数の質問からなる clarify 全体で 1 回しか発火せず、秘密の情報やパスワードマネージャーの問い合わせでは発火しません。ゲートウェイのセッションの特定の問い合わせに答えたり、その行方を追ったりしたいときは `on_session_prompt` を使ってください。プラグインは `importlib.util.find_spec("gateway.session_prompt_hooks")` で、この機能に対応しているかどうかを確かめられます。
+
+### `on_session_prompt_settled` {#onsessionpromptsettled}
+
+`on_session_prompt` 1 回ごとに、そのあとちょうど 1 回、問い合わせが開いた状態でなくなったときに発火します。答えた（どの閲覧側からでも、チャットのボタンからでも、離れた場所の応答者からでも）、時間切れ、中断、取り下げ、あるいはそのやり取りが終わった場合です。キーワード引数は `session_id`、`kind`、`prompt_id`、`execution_generation`、`reason` です。最後の理由は、要求フレームなら `request.cancel` の理由（`"resolved"`、`"timeout"`、`"interrupted"`）、承認や clarify のイベントなら `"settled"` です。`params` は含まれず、答えも決して渡りません。
+
+```python
+def register(ctx):
+    waiting = {}
+
+    def on_prompt(session_id, kind, prompt_id, params, **kwargs):
+        waiting[prompt_id] = (session_id, kind)  # e.g. notify, with prompt_id as the answer target
+
+    def on_settled(prompt_id, **kwargs):
+        waiting.pop(prompt_id, None)  # e.g. withdraw the notification
+
+    ctx.register_hook("on_session_prompt", on_prompt)
+    ctx.register_hook("on_session_prompt_settled", on_settled)
 ```
 
 ---

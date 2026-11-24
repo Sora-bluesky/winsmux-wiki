@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-24",
+  "generatedAt": "2026-11-25",
   "sources": {
     "nous": {
       "ok": true,
-      "fetchedAt": "2026-11-24",
-      "attemptedAt": "2026-11-24",
+      "fetchedAt": "2026-11-25",
+      "attemptedAt": "2026-11-25",
       "errorCode": null,
       "url": "https://inference-api.nousresearch.com/v1/models",
       "models": [
@@ -53,8 +53,8 @@
     },
     "openrouter": {
       "ok": true,
-      "fetchedAt": "2026-11-24",
-      "attemptedAt": "2026-11-24",
+      "fetchedAt": "2026-11-25",
+      "attemptedAt": "2026-11-25",
       "errorCode": null,
       "url": "https://openrouter.ai/api/v1/models",
       "models": [
@@ -64,16 +64,6 @@
           "ctx": 1024000,
           "tools": true,
           "expires": null,
-          "freeBasis": "pricing",
-          "criteria": true,
-          "criteriaReason": null
-        },
-        {
-          "id": "dots-studio/dots-3-note-preview:free",
-          "name": "Dots Studio: Dots3-Note Preview (free)",
-          "ctx": 512000,
-          "tools": true,
-          "expires": "2026-12-31",
           "freeBasis": "pricing",
           "criteria": true,
           "criteriaReason": null

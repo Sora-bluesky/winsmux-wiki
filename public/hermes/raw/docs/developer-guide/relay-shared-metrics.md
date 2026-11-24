@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Relay 共有メトリクス"
 description: "NeMo Relay の共有メトリクス。何を出力するか、同意と保持期間、ステージングでの検証"
 upstream_path: developer-guide/relay-shared-metrics.md
-upstream_blob: d9dc0a7d6814ee04941fa8bce467a6f35c8dc934
+upstream_blob: 03eaaef482cc351dd51f4e65641c46341c7f9e8f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/relay-shared-metrics
 ---
@@ -361,6 +361,20 @@ Hermes は、再利用とパッチ世代の連続性を、既存の `skills/.usa
 - `compression_prepare_ahead`（`on`/`off`）: プロファイルの設定で `compression.prepare_ahead`（事前準備した圧縮）がオンになっているかどうかです。
   エージェントと同じ真偽の判定で読み（未設定か false なら `off`）、ほかのスナップショットのフィールドと同じく、プロファイル自身の `config.yaml` から読み取ります（管理側スコープの上書きは読みません）。
   このフィールドができる前に数えたスナップショットはこの値を持ちませんが、それでもパッケージにできます。
+- グループチャットの数を表す4つの区分（`0` … `gte_251`）: `group_chat_count_bucket`（解散しておらず、現にあるグループチャット）、`group_chat_active_7d_count_bucket`（直近7日間に、人か予約投稿によるメッセージが投稿されたもの。ボットの返信だけでは数えません）、`group_chat_created_7d_count_bucket`
+  （直近7日間に作られたもの）、`group_chat_peer_count_bucket`（別のゲートウェイが受け持つメンバーがいるもの）です。
+  各プロファイルのスナップショットは、そのゲートウェイがホストしているグループチャット（その `state.db` にあるもの）を数えます。ルートのプロファイルのスナップショットは、単独で動く `hermes serve` バックエンドのグループチャット（ルートの `shared-state.db` にあるもの）のうち、
+  そのゲートウェイが引き継いでいないものも数えます。そのため、どのグループチャットも1回だけ数えます。
+  ストアは読み取るだけで、新しく作ることはありません。ストアがなければ `0` になり、読み取れないストアがある場合は、誤ってゼロを報告するのではなく、
+  4つのフィールドを省きます。
+  この読み取りで、どのプロセスも開いていないストアに `-wal`/`-shm` ファイルが増えることはありません。`-wal` ごとコピーされたのに
+  `-shm` がないストアには、SQLite がその `-wal` を読むために必要な `-shm` が加わります。
+  期間内に作られて解散したグループチャットは、作られたものとして数えません。
+  ルームの ID、名前、メンバー、リンク先、メッセージの本文をイベントに読み込むことはありません。
+- `hosting`（`self_hosted`、`nous_cloud`）: そのインストールを誰がホストしているかです。
+  `HERMES_HOSTING` 環境変数がそう示しているときだけ `nous_cloud` になります（Hermes Cloud は、自分が動かすエージェントにこの変数を設定します）。
+  それ以外の値の場合や設定がない場合は `self_hosted` になり、変数の生の値を記録することはありません。
+  アカウント、エージェント、マシンの識別子は含みません。
 
 ### 判断材料のメトリクス {#decision-data-metrics}
 
@@ -652,7 +666,7 @@ $HERMES_HOME/telemetry/shared_metrics/outbox/*.json
 既存の outbox ファイルでは、パッケージスキーマ v1、v2、v3 はそのままです。
 新しいパッケージは v4 を使います。
 v4 は `hermes.compression.count` と `hermes.memory.op.count` に `failure_class` を加え、それらの v3 のフィールドの組み合わせも引き続き受け付けます（追加の値だけによるその場での拡張として、v4 が安定版のリリースに出たあとにも、
-`hermes.extension.install.count` / `hermes.update.run` への `failure_class` と、前者への `registry` も加えており、それらの以前の v4 のフィールドの組み合わせも引き続き受け付けます。`hermes.prepared_compaction.count` と、スナップショットの任意の `compression_prepare_ahead` も同じ形で加わりました）。
+`hermes.extension.install.count` / `hermes.update.run` への `failure_class` と、前者への `registry` も加えており、それらの以前の v4 のフィールドの組み合わせも引き続き受け付けます。`hermes.prepared_compaction.count` と、スナップショットの任意の `compression_prepare_ahead`、`group_chat_*` の数、`hosting` も同じ形で加わりました）。
 v3 が `hermes.model_route.count`、`hermes.tool_call.count`、タスクのカウンターについて v2 のフィールドの組み合わせを受け付けたのと同じで、アップグレード前に記録したカウンターを安全に出し切れます。
 リポジトリ内のレジストリから導く語彙（ツール名、プラットフォーム、メモリプロバイダー、エラーの分類）は、JSON スキーマではパターンで範囲を限っています。
 正式な許可リストは `shared_metrics_contract.py` です。Hermes がもう出さなくなった値も、

@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes プラグインを作る"
 description: "ツール、フック、データファイル、スキルを備えた完全な Hermes プラグインをステップごとに構築するガイド"
 upstream_path: developer-guide/plugins/index.md
-upstream_blob: 236ac4d42737aee1286cc98ad5cea41e60791809
+upstream_blob: cf20d043143aaf0112aebe744e14d2cede0b6dec
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
 ---
@@ -243,6 +243,8 @@ Hermes の内部は、2026年9月（PR #102117）に `<stem>_<topic>` という�
 | `WriterMutexTimeout`, `maintain_after_commit`, `write_site`, `writer_mutex_until`, `note_read_pool_exhausted` | なし: SQLite バックエンド自身の書き込み用と読み取りプール用のヘルパーで、代わりのモジュールが残っている間はそのまま引き継がれます。ストアの操作は、書き込みも読み取りも自分で行います |
 | `divert_session_transcript_jsonl(session_id, messages)` | `session_rescue.divert_session_transcript_jsonl(session_id, messages, sessions_dir=get_hermes_home() / "sessions")` |
 | `session_db`、つまりコンテキストエンジンの `bind_session_state` と `on_session_start` が受け取る `SessionDB` | `persistence`。エージェントのストアハンドルで、そのキーワードを受け付けるフックにはそれと並べて渡されます（[コンテキストエンジンプラグイン](/hermes/docs/developer-guide/context-engine-plugin/#session-storage)） |
+
+旧クラスの `get_compression_lineage(session_id)` は、代わりのモジュールには引き継がれていません。代わりにハンドルから読んでください。`store.lineage.lineage(session_id)` は、読み取りがたどる圧縮の連鎖の id をタプルで返します。並びは根が先頭ですが、`[0]` は返された連鎖の最初の id であって、元のセッションとは限りません。次のセッションでは `(session_id,)` になります。圧縮の連鎖を持たないセッション、フォークの子や `tool` を出どころとするセッション（読み取りは `tool` のセッションをフォークとして扱うため、圧縮のあとも続いた `tool` の実行は自分の id だけを返します）、検索がたどる最も古い継続の連鎖の外にあるセッション（後から作られた兄弟の継続など）です。未知の id では `()` になります。読み取り専用のハンドルでも使えます。
 
 `NewSession` と `SessionQuery`/`SessionWindow` は `persistence.conversation.sessions` から、`NewMessage` と `ReplaceMode` は `persistence.conversation.messages` から取り込みます。セッションを一覧していたダッシュボードのルートは、次のように移行します。
 
@@ -1547,6 +1549,7 @@ kanban のライフサイクルフックは、board の DB 変更がコミット
 | `agent_loop_stopped` | `gateway/run_agent_cache.py` `GatewayAgentCacheMixin._interrupt_and_clear_session`、`tui_gateway/session_lifecycle.py` `_interrupt_session_turn` |
 | `pre_approval_request` / `post_approval_response` | `tools/approval_context.py` `_fire_approval_hook`。呼び出し元は `tools/approval.py`、`tools/approval_prompt.py`、`tools/approval_gateway_wait.py`、`tools/approval_smart.py`、`tools/file_tools_write_guards.py` |
 | `on_human_input_request` / `on_human_input_resolved` | `tools/human_input_hooks.py` `human_input_request` |
+| `on_session_prompt` / `on_session_prompt_settled` | `gateway/session_prompt_hooks.py`。呼び出し元は `gateway/session_authority.py` `SessionAuthority.register_approval` / `register_clarify`、`gateway/session_pending_controls.py`（プロンプトが `PendingControls.pending` から外れるとき）、`gateway/session_server_requests.py` `_ask` |
 | `on_room_member_activity` | `tui_gateway/hosted_room_member_activity.py` `emit_room_member_activity` |
 | `pre_transcription` | `tools/transcription_command.py` `_apply_pre_transcription_hook` |
 | `kanban_task_claimed` | `hermes_cli/kanban_db.py` `claim_task`（`_fire_task_hook` 経由） |
@@ -2112,6 +2115,37 @@ def register(ctx):
         if tool_name == "deploy" and (run is None or run.scheduled_instant is None):
             return {"action": "block", "message": "deploy only runs from its scheduled cron job"}
     ctx.register_hook("pre_tool_call", guard)
+```
+
+### ジョブを1回だけ予約し、cron の配信先を読み取る {#schedule-a-job-once-and-read-where-cron-delivers-it}
+
+`cron.plugin_api` は、cron ジョブを直接扱うプラグインのコード向けです。`ctx` を持たないコード（ダッシュボードのルートや、単独で動くプロセス）からも使えます。どちらの関数も、cron 自身が実行するのと同じコードを呼び出します。
+
+`ensure_named_job(name, *, prompt, schedule, repeat=None, deliver=None, enabled_toolsets=None, home=None)` は、名前がちょうど `name` である保存済みのジョブ（`hermes cron list` が保存するのと同じ形の、ジョブの dict）を返します。その名前のジョブがなければ作成します。
+
+- `name` は、前後に空白を含まない、空でない文字列でなければなりません。それ以外の名前では、cron があとでそのジョブを見つけられなくなるためです。条件に合わない名前を渡すと `ValueError` が発生し、何も作成されません。
+- 無効にされたジョブも数に入ります。その名前のジョブが2つ以上あると `AmbiguousJobReference`（同じモジュールから import できます）が発生し、何も作成されません。
+- 有効な既存のジョブは、そのトリガーがアクティブなスケジューラープロバイダーに改めて登録されます。プロンプトとスケジュールは更新されません。
+- 新しいジョブは、`hermes cron add` と同じやり方で作成・登録されます。新しいジョブでも既存のジョブでも、登録に失敗すると、呼び出しは `CronSchedulerRegistrationError`（同じモジュールから import できます）を送出します。これは `RuntimeError` の一種で、`.job` には保存済みのジョブが、`.cause` にはプロバイダーのエラーが入っています。ジョブはすでに保存されているので、もう一度 `ensure_named_job` を呼べば、2つ目を作らずにそのジョブを登録します。
+- 検索と作成は、プロセスをまたいでアトミックではありません。プラグインが2か所から同時に呼び出す可能性があるなら、それらの呼び出しを自分で直列化してください（ファイルロックを使うなど）。
+
+`ctx.cron_delivery_platforms(job_id=None)` と `delivery_platforms(job_id=None, *, home=None)` は、cron がいまの時点でジョブの出力を配信するプラットフォームを、小文字の名前のタプルとして、cron の順序で重複なく返します。`()` は、そのジョブがどこにも配信しない（`local`）ことを表します。答えるのはジョブの通常の配信先（`deliver`）についてで、失敗の通知の送り先を決める `failure_deliver` の上書きは参照しません。`job_id=None` の場合は、いま発火している cron の回について、その回が始まった時点の設定で答えます。実行中にジョブストアへ保存された編集や削除で答えが変わることはありません。cron の回の外（または委任された子）では `None` を返します。`job_id` を明示すると、いまストアにある保存済みのジョブについて事前に確かめられます（その id のジョブが保存されていなければ `None` を返します）。`plugins.isolation: host` のもとでは、フックは cron の回が結び付いていないプラグインホストのプロセスで動きます。そのため、フックからは `ctx.cron_delivery_platforms()` を呼んでください。これは呼び出したフックのコンテキストでゲートウェイの中で動き、どちらの分離モードでも機能します。`delivery_platforms(job_id, home=...)` は、コードが `ctx` を持たないときや、別のプロファイルを対象にするときに使います。どちらも cron 自身の解決処理を使うので、`all`、ホームチャンネルへの `origin` のフォールバック、`bot-chat` は cron の規則に従います。チャット ID、スレッド ID、トークンは返しません。cron がすでに出力をあなたのプラットフォームへ配信している場合に、自前の通知を省くために使ってください。どちらも cron が配信するときと同じ処理を行います。`all` の場合は、ホームチャンネルが環境変数で設定されていないプラットフォームごとに、ゲートウェイの設定を1回ずつ読みます。呼ぶのは1回の実行につき1回にとどめ、答えを保持しておいてください。
+
+`cron.plugin_api` のどちらの関数も `home` を受け取ります。これはプロファイルの Hermes ホームで、`~` と環境変数は1回だけ展開されます。`delivery_platforms` は、`home` が `None` でないときは `job_id` の明示が必要で、指定がなければ `ValueError` を送出します。発火しているジョブの配信先を調べるには、両方の引数を省略してください。その場合、調べる対象は発火したプロファイルのままです。`home` を明示すると、呼び出しはそのプロファイルのホーム、cron ストア、シークレット（その `.env`。したがってホームチャンネルも含みます）、設定（スケジュールに使うタイムゾーン）で実行されます。終わったあとは、例外が発生した場合も含めて、呼び出し元の値が元に戻されます。シークレットは、すでにアクティブなプロファイルを指定した場合でも、そのプロファイル自身のファイルから読み込まれます。プロセス自身のものではないプロファイルが外部のシークレットソースを設定している場合は、最初の呼び出しでそのソースが実行されます。Hermes がそのプロファイルの処理を始めるときと同じ動きです。プロセス自身のプロファイルでは、呼び出しはソースを実行しません。そのプロファイルの `.env` と、このプロセスがすでに読み込んだ外部の値を読むだけなので、それらを読み込んでいない単独のプロセスからは見えません。既存のディレクトリでない `home` が作成されることはありません。その場合、`ensure_named_job` は `FileNotFoundError` を送出し、`delivery_platforms` は `None` を返します。ホストされたアクティビティはプロファイルの代わりに動けないため、`home` を結び付ける必要がある呼び出しはそこで例外を送出します。`home=None` ではアクティブなプロファイルが使われます。
+
+```python
+from cron.plugin_api import AmbiguousJobReference, ensure_named_job
+
+def register(ctx):
+    def on_post_llm_call(**kwargs):
+        if "push" in (ctx.cron_delivery_platforms() or ()):
+            return  # cron delivers this run's output through push already
+        try:
+            ensure_named_job("follow-up", prompt="Check on the deploy.", schedule="in 30m")
+        except AmbiguousJobReference:
+            pass  # the user has two jobs with that name; leave them alone
+
+    ctx.register_hook("post_llm_call", on_post_llm_call)
 ```
 
 ### 自動化のブループリントを追加する {#add-automation-blueprints}

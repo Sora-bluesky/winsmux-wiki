@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "カンバン（マルチエージェント盤）"
 description: "複数の Hermes プロファイルを連携させる、SQLite に永続化されたタスク盤"
 upstream_path: user-guide/features/kanban.md
-upstream_blob: 3808b4a4f908b620ee4d4d9dec9ad862398db3f9
+upstream_blob: 46d81ad5ef536c99ce179a117d0338f6f2fed233
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
 ---
@@ -1484,7 +1484,7 @@ hermes kanban runs t_abcd
 | `reconciled` | `{reason, claim_lock, claim_expires, worker_pid}` | 取り残されたカードの手当て: カードが `running` のまま取り掛かりの帳簿が壊れていて（`claim_lock` か `claim_expires` が NULL — 取り掛かりの途中での異常終了、手作業の SQL、DB の復元）、生きたワーカーもいないため、TTL / 異常終了 / 古びた状態のどの経路でも回復できなかった。ディスパッチャーが説明のコメントとともに `ready` へ戻しました。config.yaml の `kanban.reconcile_orphans`（既定 `true`）で制御します。 |
 | `respawn_guarded` | `{reason}` | ディスパッチャーが、このまわりでは準備済みのこのタスクを起動し直すのを拒んだ。理由: `infrastructure_cooldown`（ホストが直前の起動を拒み — 再起動に耐える systemd のスコープがない — 冷却がまだ明けていない。カードの失敗としては決して数えません）、`rate_limit_cooldown`（直前の実行が利用枠の壁に当たった。同じ冷却で、やはり数えません）、`blocker_auth`（直前の失敗が利用枠 / 認証 / 429 のエラーだった — レート制限の時間帯が戻るのを待ちます）、`recent_success`（直近 1 時間に完了した実行がある — 再実行の前にレビューを待ちます）、`active_pr`（最近のコメントに GitHub の PR の URL がある — 以前のワーカーがすでに PR を開いています）。タスクは `ready` のままで、次のまわりに起動の機会がまた来ます。根本の状態が続く場合は、ふつうの `consecutive_failures` のサーキットブレーカーが `failure_limit` 回の失敗のあと `gave_up` で自動的にブロックします。 |
 | `spawn_failed` | `{error, failures}` | 1 回の起動が失敗した（PATH がない、作業場所をマウントできない、など）。数え上げが増え、タスクは再試行のために `ready` へ戻ります。 |
-| `skipped_nonspawnable` | `{assignee}` | 担当プロファイルがこのホームに存在しない（または `kanban.dispatch_profiles` に含まれていない）ため、ディスパッチャーが起動を断った。カードごとに 1 回だけ書かれ、あいだに別のイベントが入ったときだけ繰り返されます。そのため `show`/`tail` は、刻みごとに行を増やさずに見つからないプロファイルの名前を示します。カードは `ready` に残ります。担当を付け替えるか、プロファイルを入れてください。 |
+| `skipped_nonspawnable` | `{assignee}` | 担当プロファイルがこのホームに存在しない（または `kanban.dispatch_profiles` に含まれていないか、プラグインがそのプロファイルを別の場所で動かしている）ため、ディスパッチャーが起動を断った。カードごとに 1 回だけ書かれ、あいだに別のイベントが入ったときだけ繰り返されます。そのため `show`/`tail` は、刻みごとに行を増やさずに見つからないプロファイルの名前を示します。カードは `ready` に残ります。担当を付け替えるか、プロファイルを入れてください。 |
 | `protocol_violation` | `{pid, claimer, exit_code, protocol_violation, worker_output?}` | タスクがまだ `running` の間にワーカーが正常終了した。たいていは、盤への最後の呼び出し（`kanban_complete`、`kanban_request_review`、`kanban_block`）をせずに答えてしまった場合です。違反のたびに出ます（中身の `protocol_violation: true` の印は実行のメタデータへ写され、違反だけを数える再試行の予算に使われます）。予算の範囲内では — `_PROTOCOL_VIOLATION_FAILURE_LIMIT`（既定 3）回の*連続した*違反まで。タスクごとの `max_retries` が上書きします — タスクはもう一度試すために `ready` へ戻るだけです。連続が上限に達すると、ディスパッチャーは `gave_up` も出して自動でブロックします。`worker_output` はワーカー自身が最後に出力した文章（たいていは止まった理由の説明）で、`last_failure_error` にも畳み込まれ、再試行のワーカーには過去の試みのエラーとして示されます。 |
 | `gave_up` | `{failures, effective_limit, limit_source, error, terminal_provider?}` | 不成功の試みが N 回続いてサーキットブレーカーが落ちた。タスクは最後のエラーとともに自動でブロックされます。実効の上限は、タスクの `max_retries`、次にディスパッチャーの `failure_limit` / `kanban.failure_limit`、それもなければ組み込みの既定値の順で決まります。`terminal_provider: true` は、再試行では直せないプロバイダーのエラー（資格情報の失効、モデルの消失）でワーカーが `78` で終了し（再ログイン（`hermes auth` / `setup`）がはっきり必要な起動時の資格情報の失敗も含みます。これは最初のやり取りの前に `78` で終了します。起動時のそれ以外の失敗は `1` で終了します）、上限にかかわらず最初の試みで遮断機が落ち、貼り付いたことを意味します。 |
 

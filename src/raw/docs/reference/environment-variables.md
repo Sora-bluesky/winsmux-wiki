@@ -2,7 +2,7 @@
 title: "環境変数"
 description: "Hermes Agent が使うすべての環境変数をまとめた一覧"
 upstream_path: reference/environment-variables.md
-upstream_blob: 015b658cfe9a02c7c9fb6d8f3db8e19cd2280814
+upstream_blob: 8d4fc04b1f667f81db2ec9a217f43b9a44bd34b0
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/environment-variables
 ---
@@ -862,6 +862,7 @@ Microsoft Teams のプラットフォーム用アダプター（Bot Framework / 
 | `HERMES_REDACT_SECRETS` | `true`/`false` — ツールの出力、ログ、チャットの返答で秘密を伏せるかどうか（既定: `true`）。 |
 | `HERMES_WRITE_SAFE_ROOT` | 指定したディレクトリの外への `write_file`/`patch` を**問答無用で止める**、任意の接頭辞（承認の確認も出ません）。`os.pathsep`（Unix では `:`、Windows では `;`）で区切って複数指定できます。下の [HERMES_WRITE_SAFE_ROOT](#hermes_write_safe_root) を参照してください。 |
 | `HERMES_DISABLE_LAZY_INSTALLS` | テストやインストールの検査で使う PM 内部のポリシーです。真とみなされる値を入れると、必要に応じたインストールを拒否します。利用者向けの設定 `security.allow_lazy_installs` より優先されます。`.env` には書かないでください。 |
+| `HERMES_INSTALL_STATE_DIR` | 自分で用意したインタープリターで Hermes を起動するランチャーが、そのプロセスと子プロセスのために設定します。値は、Hermes のデータフォルダーにある `installs/<key>` の代わりになるフォルダーの絶対パスです。以後のロックや印はそこに置かれます。起動時に Hermes はここから何も読みません。プロセスは再起動されず、何も修復せず、記録された依存関係の環境も選びません（封じられたインストールは、同梱の環境をそのまま使います）。そのようなプロセスの中では、`hermes pm install --extra`、`hermes pm repair` をはじめ、依存関係の環境を作るコマンドはすべて拒否されます。プロセスが動いているあいだ、ランチャーはインタープリターの環境をそのまま保ちます。インストールの環境のどれかで動く Hermes のプロセスはその貸し出しを持ち、そうでないランチャーは自分が管理するインタープリターを使います。起動時専用です。`.env` や秘密情報の出所から来た値は無視されます。インストール自身の状態が見えるものの、読むこともロックすることもできない場所で、サンドボックスのランチャーがこれを使います。 |
 | `HERMES_DISABLE_FILE_STATE_GUARD` | `1` にすると、`patch`/`write_file` の「読んだあとにファイルが変わっています」という保護を切ります。 |
 | `HERMES_BUNDLED_SKILLS` | 起動時に読み込む同梱スキルの一覧を、カンマ区切りで上書きします。 |
 | `HERMES_OPTIONAL_SKILLS` | 初回の実行で自動的に入れる、任意のスキル名をカンマ区切りで。 |

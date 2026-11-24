@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイの内部"
 description: "メッセージングのゲートウェイが起動し、利用者を認可し、セッションを振り分け、メッセージを届けるまで"
 upstream_path: developer-guide/gateway-internals.md
-upstream_blob: c95c05d8a4ae85d59d83300e4339ccbeb410c842
+upstream_blob: a2dd80c0e3b84929607816ca9917c5771c7d924f
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals
 ---
@@ -436,6 +436,10 @@ linger を有効にせず、権限を昇格させず、更新の囲いも外し�
   任意のシェルのランチャーや、書き換えた Windows のランチャーのスクリプトは
   `ensure` では解釈しません。もう一度試す前に、意図したサービス管理の操作で、
   対応している明示的な定義に戻してください。
+- `profile_runs_elsewhere`（状態は `inaccessible`）: プラグインがこのプロファイルのバックエンドを
+  このホスト以外の場所で動かしていて、`<hermes root>/profiles_run_elsewhere/<profile>.json` に
+  その印を付けています。`detail` にプロファイルとプラグインの名前が入ります。このプロファイルを
+  ここで動かすには、そのプラグインの側でこれを止めてください。
 
 これらの拒否では、サービスを起動せず、設定を書き換えず、
 管理されていない代わりのプロセスも立ち上げません。明示的に結び付けた標準の既定ルートと独自ルートの導入は

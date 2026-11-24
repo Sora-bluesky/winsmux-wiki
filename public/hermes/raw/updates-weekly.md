@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-11-24、対象期間 = 2026-11-18 〜 2026-11-24（JST）
+生成日 = 2026-11-25、対象期間 = 2026-11-19 〜 2026-11-25（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,13 +16,21 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-11-24 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
+- 2026-11-24 [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
+- 2026-11-24 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- 2026-11-24 [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
+- 2026-11-24 [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
+- 2026-11-24 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
+- 2026-11-24 [ダッシュボードを広げる](https://wiki.winsmux.dev/hermes/docs/user-guide/features/extending-the-dashboard/)
+- 2026-11-24 [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- 2026-11-24 [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
 - 2026-11-23 [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
 - 2026-11-23 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - 2026-11-23 [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
 - 2026-11-23 [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
 - 2026-11-22 [ゲートウェイの監視](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-monitoring/)
 - 2026-11-22 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
-- 2026-11-22 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
 - 2026-11-22 [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
 - 2026-11-22 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - 2026-11-22 [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
@@ -30,21 +38,15 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-22 [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
 - 2026-11-22 [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
 - 2026-11-22 [画像の貼り付けと視覚認識](https://wiki.winsmux.dev/hermes/docs/user-guide/features/vision/)
-- 2026-11-22 [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
 - 2026-11-22 [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
-- 2026-11-21 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
-- 2026-11-21 [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
-- 2026-11-21 [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
 - 2026-11-21 [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
 - 2026-11-21 [定期実行がうまくいかないとき](https://wiki.winsmux.dev/hermes/docs/guides/cron-troubleshooting/)
 - 2026-11-21 [Google Gemini](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/)
 - 2026-11-21 [Google Vertex AI](https://wiki.winsmux.dev/hermes/docs/guides/google-vertex/)
-- 2026-11-21 [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
 - 2026-11-21 [管理者による適用範囲](https://wiki.winsmux.dev/hermes/docs/user-guide/managed-scope/)
 - 2026-11-21 [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
 - 2026-11-20 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
 - 2026-11-20 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
-- 2026-11-20 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
 - 2026-11-20 [共有バンドルビルド](https://wiki.winsmux.dev/hermes/docs/developer-guide/shared-bundle-builds/)
 - 2026-11-20 [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
 - 2026-11-20 [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
@@ -71,33 +73,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-19 [Code Wiki — どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/)
 - 2026-11-19 [Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-python-debugpy/)
 - 2026-11-19 [Publish Site — サイトに版を付けて GitHub / Cloudflare / Netlify の Pages へ公開します](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/)
-- 2026-11-18 [ACP の内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/acp-internals/)
-- 2026-11-18 [エージェントループの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/agent-loop/)
-- 2026-11-18 [アーキテクチャ](https://wiki.winsmux.dev/hermes/docs/developer-guide/architecture/)
-- 2026-11-18 [コードベース所有マップ](https://wiki.winsmux.dev/hermes/docs/developer-guide/codebase-ownership/)
-- 2026-11-18 [コンテキストエンジンのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-engine-plugin/)
-- 2026-11-18 [従来型のゲートウェイクライアント](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-classic-cli/)
-- 2026-11-18 [ゲートウェイのセッションライフサイクル](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-session-lifecycle/)
-- 2026-11-18 [プラグインカタログへの登録申請](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/catalog-submission/)
-- 2026-11-18 [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
-- 2026-11-18 [セッションの保存領域](https://wiki.winsmux.dev/hermes/docs/developer-guide/session-storage/)
-- 2026-11-18 [state.db の復旧](https://wiki.winsmux.dev/hermes/docs/developer-guide/state-db-recovery/)
-- 2026-11-18 [動画生成プロバイダプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/video-gen-provider-plugin/)
-- 2026-11-18 [Microsoft Graph のアプリケーションを登録する](https://wiki.winsmux.dev/hermes/docs/guides/microsoft-graph-app-registration/)
-- 2026-11-18 [外部サービス連携](https://wiki.winsmux.dev/hermes/docs/integrations/)
-- 2026-11-18 [NeMo Relay](https://wiki.winsmux.dev/hermes/docs/integrations/nemo-relay/)
-- 2026-11-18 [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
-- 2026-11-18 [よくある質問とトラブル対処](https://wiki.winsmux.dev/hermes/docs/reference/faq/)
-- 2026-11-18 [API サーバー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/api-server/)
-- 2026-11-18 [同梱のプラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/built-in-plugins/)
-- 2026-11-18 [ダッシュボードを広げる](https://wiki.winsmux.dev/hermes/docs/user-guide/features/extending-the-dashboard/)
-- 2026-11-18 [フォールバックプロバイダー](https://wiki.winsmux.dev/hermes/docs/user-guide/features/fallback-providers/)
-- 2026-11-18 [続く目標（Goal）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/goals/)
-- 2026-11-18 [セッションの定期確認（Heartbeat）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/heartbeat/)
-- 2026-11-18 [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
-- 2026-11-18 [画像生成](https://wiki.winsmux.dev/hermes/docs/user-guide/features/image-generation/)
-- 2026-11-18 [プラグインカタログ](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugin-catalog/)
-- 2026-11-18 [スキルの仕組み](https://wiki.winsmux.dev/hermes/docs/user-guide/features/skills/)
 
 ## 週次まとめ
 

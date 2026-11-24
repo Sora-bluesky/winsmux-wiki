@@ -4,7 +4,7 @@ description: コンテナで隔離して動かす形。壊されたくないも�
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/docker
   - https://hermes-agent.nousresearch.com/docs/user-guide/security
-hermes_version: "0.23.3"
+hermes_version: "0.23.4"
 confidence: high
 raw: /hermes/raw/entities/docker.md
 ---

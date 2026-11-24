@@ -2,7 +2,7 @@
 title: "プラグインの公開 API"
 description: "プラグインが import してよい Hermes のモジュールと名前の一覧です。それ以外の Hermes の import には hermes plugins validate が警告を出します"
 upstream_path: developer-guide/plugins/public-api.md
-upstream_blob: 5be3df2508528af5f8c368136e245b2b69aa02e4
+upstream_blob: 01825042872e9cd864b5057bd93025e7a6f19a42
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/public-api
 ---
@@ -168,6 +168,9 @@ sources:
 | `hermes_cli.setup` | `prompt_choice` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `hermes_cli.setup` | `prompt_yes_no` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `hermes_cli.cli_output` | モジュール全体 | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
+| `gateway.response_filters` | `is_autonomous_silence_response` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
+| `gateway.response_filters` | `is_intentional_silence_response` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
+| `gateway.response_filters` | `strip_trailing_silence_marker` | adding-platform-adapters.md § プラットフォームプラグイン向けの公開ヘルパー |
 | `gateway.platforms.session_model` | `SessionModelPickerProvider` | adding-platform-adapters.md § 会話ごとのモデル設定とモデル選択プロバイダー（BasePlatformAdapter） |
 | `gateway.platforms.session_model` | `SessionModelSettings` | adding-platform-adapters.md § 会話ごとのモデル設定とモデル選択プロバイダー（BasePlatformAdapter） |
 | `tools.skills_tool` | `find_all_skills` | plugins/index.md § スキルカタログを読み取る |
@@ -182,6 +185,9 @@ sources:
 | `hermes_cli.plugin_session` | `session_client` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：どのクライアントがセッションを作成したか |
 | `hermes_cli.plugin_session` | `turn_client` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：どのクライアントがターンを送り、誰が接続しているか |
 | `hermes_cli.plugin_session` | `session_viewers` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：どのクライアントがターンを送り、誰が接続しているか |
+| `hermes_cli.plugin_session` | `session_source` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：セッションがどう作成されたか、委任された子セッションとフォーク |
+| `hermes_cli.plugin_session` | `in_delegated_child` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：セッションがどう作成されたか、委任された子セッションとフォーク |
+| `hermes_cli.plugin_session` | `fork_origin` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：セッションがどう作成されたか、委任された子セッションとフォーク |
 | `agent.file_safety` | `get_read_block_error` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
 | `agent.file_safety` | `raise_if_read_blocked` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
 | `agent.file_safety` | `is_write_denied` | plugins/index.md § ファイルパスの確認と YAML の読み込みには Hermes 自身のヘルパーを使う |
@@ -197,3 +203,10 @@ sources:
 | `hermes_cli.session_worktree` | `create` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |
 | `hermes_cli.session_worktree` | `restore` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |
 | `hermes_cli.session_worktree` | `finish` | user-guide/features/plugins.md § 独自のチャットクライアントを持つプラグイン |
+| `hermes_cli.profiles_run_elsewhere` | `mark_profile_run_elsewhere` | user-guide/multi-profile-gateways.md § プラグインが別の場所で動かすプロファイル |
+| `hermes_cli.profiles_run_elsewhere` | `clear_profile_run_elsewhere` | user-guide/multi-profile-gateways.md § プラグインが別の場所で動かすプロファイル |
+| `hermes_cli.profiles_run_elsewhere` | `run_elsewhere` | user-guide/multi-profile-gateways.md § プラグインが別の場所で動かすプロファイル |
+| `cron.plugin_api` | モジュール全体 | plugins/index.md § ジョブを一度だけ登録し、cron の配信先を読み取る |
+| `agent.reasoning_effort` | `gemini_thinking_config` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `agent.reasoning_effort` | `clamp_effort` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `agent.reasoning_effort` | `bare_gemini_model_id` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |

@@ -2,7 +2,7 @@
 title: "オブザーバーフック"
 description: "プラグイン向けの読み取り専用テレメトリ契約。イベントの系統、相関 ID、ペイロードの安全性"
 upstream_path: developer-guide/observer-hooks.md
-upstream_blob: 58a527062ecdab6e152140d6c51b77c0df024eb6
+upstream_blob: 3f63cf26d69e78834ccf16581d0054d0b6e6df15
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/observer-hooks
 ---
@@ -212,6 +212,45 @@ API 系のフックは、エージェントループ内でのプロバイダー�
 `platform`、そして必ず伏せ字にされる `prompt` です。解決時のフックには `outcome` が加わります。
 入力されたパスワードや回答そのものは決して含まれません。スマート（補助 LLM による）承認では
 発火しません。実装は `tools/human_input_hooks.py` です。
+
+### セッションの問い合わせのライフサイクル {#session-prompt-lifecycle}
+
+`on_session_prompt` / `on_session_prompt_settled` はゲートウェイで発火します。発火するのは、セッションの持ち主が、
+そのセッションを見ている側（そのセッションにつないでいる CLI、Ink TUI、Desktop、スマートフォンのアプリ）に向けて
+人が答える問い合わせを開いたときと、その問い合わせが開いた状態でなくなったときです。
+`on_human_input_request` と違い、どの呼び出しにも、その問い合わせに答えるための ID が付きます。
+
+| `kind` | 持ち主が次のことをしたときに開く | `prompt_id` で答える手段 |
+| --- | --- | --- |
+| `approval` | `approval.request` イベントを発行したとき | `approval.respond` |
+| `clarify` | `clarify.request` イベントを発行したとき | `clarify.respond` |
+| `sudo`、`secret`、`clarify`、`vault.unlock_prompt`、`vault.code`、`vault.save_login` | サーバーからクライアントへの該当するリクエストフレームを書き込んだとき（ここでの `clarify` は、まとめて答えるパネルです） | その `srq-` ID を持つ応答フレーム、または `clarify.lock` |
+
+クライアントのアプリが自分で答えるウィンドウ系のリクエスト（`theme.*`、`tour`、
+`preview.*`、`window.read`、`terminal.read`、`setup_beat`）や、再接続した閲覧側に
+再送されることのないリクエストでは発火しません。誰にも尋ねようがない問い合わせ
+（つないでいる閲覧側がない場合）でも発火しません。
+
+フィールドは `session_id`、`kind`、`prompt_id`、`execution_generation`（`approval` / `clarify` では
+そのターンの世代、リクエストフレームでは `None`）です。開いたときのフックには `params` も付きます。
+これは閲覧側が受け取った内容のディープコピーで、`on_human_input_request` が `prompt` を伏せ字にするのと
+同じやり方で、すべての文字列が必ず伏せ字にされます（`security.redact_secrets: false` の場合でも同じです）。
+解消時のフックには `reason` が加わります。フレームの場合は `request.cancel` の理由（`resolved`、`timeout`、
+`interrupted`）、`approval.settled` / `clarify.settled` イベントの場合は `settled` です。人が入力した内容は
+決して含まれません。どの問い合わせ ID についても、開いたときの呼び出しと解消時の呼び出しがちょうど 1 回ずつ、
+この順で行われます。
+
+呼び出しはキューに積まれ、1 本のワーカースレッド上で順番に実行されます。セッションのロックを持ったまま実行されたり、
+エージェントのスレッドやイベントループの上で実行されたりすることはありません。また、必ずそのセッションを持つ
+プロファイルのスコープで実行されるので、複数のプロファイルを扱うゲートウェイでも、呼び出しが届くのは
+そのプロファイルのプラグインだけです。コールバックが遅いと、この 2 つのフックの後続の呼び出しが遅れますが、
+それ以外には影響しません。
+
+ゲートウェイのセッションで特定の問い合わせに答えたり、それを追跡したりする必要があるとき（誰かがその場で
+答える通知など）は、これらのフックを使ってください。表示先を問わない「Hermes があなたの応答を待っています」という
+合図がほしい場合は `on_human_input_request` を使ってください。こちらはメッセージングプラットフォームや CLI の
+プロセス内の問い合わせも対象にしますが、答えるための ID はなく、`clarify` の呼び出しごとに 1 回発火します。
+実装は `gateway/session_prompt_hooks.py` です。
 
 ### 承認のライフサイクル {#approval-lifecycle}
 
