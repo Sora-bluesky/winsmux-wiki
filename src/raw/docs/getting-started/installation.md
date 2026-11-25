@@ -2,7 +2,7 @@
 title: "インストール"
 description: "デスクトップ版パッケージ、ソースからのインストーラー、Docker、Nix、Termux の APT パッケージで Hermes Agent を導入する"
 upstream_path: getting-started/installation.md
-upstream_blob: 86d20858d488548a292fb62201d66d6bc4bb2508
+upstream_blob: ca083a9309fb989d3603d06bef53643a29094d2f
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/installation
 ---
@@ -27,15 +27,19 @@ Hermes Agent は 2 分もかからずに動く状態になります。
 お使いのプラットフォーム向けのパッケージを
 [Hermes の公式サイト](https://hermes-agent.nousresearch.com/)からダウンロードします。
 
-- **Windows:** ダウンロードした `.appinstaller` を Windows アプリ インストーラーで開きます。
-  署名済みの MSIX バンドルがインストールされ、更新の取得元も記録されます。
-  Microsoft Store 版のパッケージは Store 側の管理になり、これとは別です。
-- **macOS:** DMG を開き、`Hermes.app` をアプリケーションフォルダーにコピーします。ZIP 版の
-  配布物には、自動アップデーターが使う署名済みのアプリが入っています。
+- **Windows（Windows 11 22H2 / `10.0.22621.0` 以降、x64 または ARM64）:**
+  Microsoft Store から入れるか、`.appinstaller` ファイルをダウンロードして Windows アプリ インストーラーで開きます。
+  署名済みの MSIX バンドルがインストールされ、更新の取得元も登録されます。Microsoft Store 版のパッケージは
+  Store 側の管理になり、これとは別です。
+- **macOS（macOS 13 Ventura 以降、Apple Silicon `arm64`）:** DMG を開き、
+  `Hermes Agent.app` をアプリケーションフォルダーにコピーします。ZIP 版の配布物には、
+  アプリ内のアップデーターが使う署名済みのアプリが入っています。
 
 パッケージ版には、エージェント本体、Python、対応する依存パッケージ、ビルド済みの
 画面一式が同梱されています。初回起動時にこの基本の実行環境をビルドすることはありません。ただし、プロバイダーへの接続や
-任意で追加する連携機能には、引き続きネットワーク接続が必要な場合があります。
+任意で追加する連携機能には、引き続きネットワーク接続が必要な場合があります。パッケージの大きさと、
+ダウンロードにかかる時間・手元でのインストールや入れ替えにかかる時間の目安は、
+[同梱デスクトップアプリの更新](/hermes/docs/getting-started/updating/#bundled-desktop-updates) をご覧ください。
 
 `Hermes-Setup` というブートストラップ用のインストーラーは別物です。こちらはソースを
 ダウンロードしてインストールし、デスクトップアプリをビルドします。[Hermes Desktop](/hermes/docs/user-guide/desktop/) をご覧ください。
@@ -44,8 +48,9 @@ Hermes Agent は 2 分もかからずに動く状態になります。
 デスクトップ版から使うには、上のパッケージのどれかを入れてから、**Settings → Gateways** で接続します。
 [リモートバックエンドへの接続](/hermes/docs/user-guide/desktop/#connecting-to-a-remote-backend) をご覧ください。
 
-:::note
-macOS 版のインストーラーは **Apple Silicon 専用** です。x86（Intel）プロセッサーの macOS は [対応プラットフォームに含まれていません](/hermes/docs/getting-started/platform-support/#unsupported)。
+:::note デスクトップ版の対応 OS と代わりの入れ方
+- **macOS のデスクトップ版:** **Apple Silicon（`arm64`）の macOS 13 Ventura 以降** が必要です。Intel（x86_64）の Mac と macOS 12 Monterey 以前はデスクトップ版の対象外なので、下の [CLI / ソースからのインストーラー（`install.sh`）](#linux--macos--wsl2) を使ってください。
+- **Windows のデスクトップ版（Microsoft Store と `.appinstaller` の MSIX）:** **Windows 11 22H2 以降（`10.0.22621.0`）** の x64 または ARM64 が必要です。Windows 10 や 22H2 より前の Windows 11 では、下の [Windows 用のソースインストーラー（`install.ps1`）](#windows-native) か [WSL2](/hermes/docs/user-guide/windows-wsl-quickstart/) を使ってください。
 :::
 
 ### Hermes Desktop を使わない場合 {#without-hermes-desktop}

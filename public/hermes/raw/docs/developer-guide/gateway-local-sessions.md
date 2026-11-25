@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "gateway のローカルセッション"
 description: "ローカルの CLI/TUI セッションを正規の gateway 受付として扱う仕組み"
 upstream_path: developer-guide/gateway-local-sessions.md
-upstream_blob: eb8720c96a47a481482f5046f2a6c73a1cec6bdd
+upstream_blob: ac304783983f06baf3c148e1a77f032090f81be6
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-local-sessions
 ---
@@ -81,8 +81,8 @@ away?}` を送ります。内容は、表示中のセッション（ID は最大
 
 接続が送信する各ターンには、その接続のラベルが記録されます（受付の `surface_v1.client` に記録され、
 `prompt.submit` の項目になることはありません。別のラベルやラベルなしでの再試行も同じリクエストとして扱われます）。プラグインは、
-ターンのラベルを `hermes_cli.plugin_session.turn_client()` で、セッションに接続している各接続と
-そのアイドル情報を `session_viewers()` で読み取れます。
+ターンのラベルを `hermes_cli.plugin_session.turn_client()` で、どの接続も送っていないターン（プロセスの通知や委任の結果）を生んだ
+Hermes 側の発生元を `turn_origin()` で、セッションに接続している各接続とそのアイドル情報を `session_viewers()` で読み取れます。
 
 認証済みの別のビューアーは `session.resume({session_id})` で接続でき、入力は
 `prompt.submit({session_id, submission_id, text})` で送ります。受け付けた受領記録は永続的な

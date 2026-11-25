@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインの公開 API"
 description: "プラグインが import してよい Hermes のモジュールと名前の一覧です。それ以外の Hermes の import には hermes plugins validate が警告を出します"
 upstream_path: developer-guide/plugins/public-api.md
-upstream_blob: 01825042872e9cd864b5057bd93025e7a6f19a42
+upstream_blob: d960cf5371fb56fdb1302dd1e1ee00cc576aebd1
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/public-api
 ---
@@ -185,6 +185,7 @@ sources:
 | `agent.redact` | `redact_sensitive_text` | plugin-llm-access.md § プラグインのフロントエンドから：プラグインの RPC メソッド（秘密情報を決して外に出してはいけない場面では `force=True`） |
 | `hermes_cli.plugin_session` | `session_client` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：どのクライアントがセッションを作成したか |
 | `hermes_cli.plugin_session` | `turn_client` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：どのクライアントがターンを送り、誰が接続しているか |
+| `hermes_cli.plugin_session` | `turn_origin` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：どのクライアントがターンを送り、誰が接続しているか |
 | `hermes_cli.plugin_session` | `session_viewers` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：どのクライアントがターンを送り、誰が接続しているか |
 | `hermes_cli.plugin_session` | `session_source` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：セッションがどう作成されたか、委任された子セッションとフォーク |
 | `hermes_cli.plugin_session` | `in_delegated_child` | user-guide/features/plugins.md § ゲートウェイ内で動くプラグインのコード：セッションがどう作成されたか、委任された子セッションとフォーク |

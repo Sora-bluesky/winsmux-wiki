@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "安定版リリースの受け入れと昇格"
 description: ""
 upstream_path: developer-guide/stable-releases.md
-upstream_blob: 380b1e8440ba96254171d172497e9cb1cd4e152f
+upstream_blob: 4b6c7ddf2fec8aec595b57bd1b9becb8c4c58e1c
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/stable-releases
 ---
@@ -67,11 +67,25 @@ Docker Hub、R2、APT、GitHub、Store は、サービスをまたぐ単一の�
 最終タグが管理の受領証です。ポインターを直すために、受け入れ済みのバイト列を再ビルドしたり
 差し替えたりしないでください。
 
-昇格では、R2 の公開オリジン上にある `releases/stable/index.html` の安定版ダウンロードページが置き換わります。
+昇格では、R2 の公開オリジン上にある `releases/stable/index.html` の安定版ダウンロードページと、
+バージョン番号の付かない安定版の macOS Apple Silicon 用インストーラー
+`releases/darwin/stable/HermesBundled-mac-arm64.dmg`（受け入れた試行のアーカイブからサーバー側の R2 `CopyObject` で複製し、
+`Cache-Control: no-store` と `Content-Disposition: attachment; filename="HermesBundled-mac-arm64.dmg"` を付けて配信します）が、
+`releases/darwin/stable/stable-mac.yml` と `releases/win32/stable/stable.appinstaller` と一緒に置き換わります。
 カナリアのタグビルドは `releases/canary/index.html` を持ち、
 コミットビルドが持つのは自身のクレームアーカイブのページ、
 `releases/tag/commit.<stamp>-v<version>/index.html` だけです。各ページに載るのは、ステージング済みで
 受領証の裏付けがあるオブジェクトだけです。古い実行が保護されたチャンネルを後退させることはできません。
+安定版を昇格するのは公開用のコントローラーだけです。単体で動かす
+`python -m scripts.bundles.release_artifacts promote` は、公開済みリリースの確認を飛ばすので安定版の候補を拒否します。
+`python -m scripts.releases.channel_releases` も、候補のダイジェストと最終リリースの受領証との照合を飛ばすので、
+`stable` の役割を拒否します。
+どちらも、直列化された `stable-release` グループの外で動くことにもなります。安定版の公開が途中で止まったら、
+Stable Release Publication をもう一度実行して直します。再実行で繰り返されるのは、終わっていない前進
+（head、候補のポインター、Docker の別名のどれかが遅れている）だけです。終わったリリースを昇格し直すことはないので、
+バージョン番号の付かない DMG やダウンロードページを後から埋めることもありません。DMG が変わるのは、デスクトップアプリ一式を昇格するときだけです。
+ダウンロードページは、`complete` がデスクトップアプリ一式のリリースを描いたときにも変わります。そのため、まだ終わっていない古い前進より
+ページが先に進むことがあります。その場合、その昇格は新しいほうのページをそのまま残します。
 
 ## 安定版リリースを実行・公開・中止する {#run-publish-or-abandon-a-stable-release}
 
@@ -174,7 +188,8 @@ macOS Intel はもうビルドされないので、そうしたクレームが�
   候補マニフェストが記録され、`windows-store` がオンなら Store バンドルが提出されます。
   Store だけのリリースにはパッケージの行が無く、Store
   バンドルのファイルだけがあり、どのチャンネルも動かしません。保護された R2 の安定版 head、App Installer と macOS の
-  フィード、APT チャンネル、ダウンロードページ、
+  フィード、バージョン番号の付かない安定版の macOS 用 DMG（`releases/darwin/stable/HermesBundled-mac-arm64.dmg`）、
+  APT チャンネル、ダウンロードページ（`releases/stable/index.html`）、
   `releases/stable/release-candidates.json`、署名済みパッケージの基準は、
   前回のそろったリリースのままです。ただし、既定のチャンネルである
   `stable` を使う公式リポジトリのソースチェックアウトは、そのままにはなりません。このチャンネルは GitHub で最新の

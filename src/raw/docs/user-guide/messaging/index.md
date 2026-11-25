@@ -2,7 +2,7 @@
 title: "メッセージングゲートウェイ"
 description: "Telegram・Discord・Slack・WhatsApp・Signal・SMS・メール・Home Assistant・Mattermost・Matrix・DingTalk・Yuanbao・Microsoft Teams・LINE・Raft・Webhook から、あるいは API サーバー経由で OpenAI 互換のフロントエンドから Hermes と会話する。構成と設定の全体像"
 upstream_path: user-guide/messaging/index.md
-upstream_blob: 3a44be4dfbc2a22d9164bb66d0d44b2c78dd41d9
+upstream_blob: 42d26e73cf782e307576b7dedf288567dba646c7
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/messaging
 ---
@@ -200,7 +200,11 @@ asyncio のループを定期的に調べます（`gateway.loop_watchdog_probe_i
 内部の定期処理も、cron のスケジューラも、組み込みのかんばんディスパッチャも一緒に止まっているので、
 監視スレッドはすべてのスレッドのスタックをログに書き出し、`gateway_state.json` に
 `gateway_state: degraded` と `exit_reason: loop_liveness_watchdog` を記録して、
-終了コード `75` で終了します。サービスの管理側がプロセスを再起動するためです。`hermes gateway status` は
+終了コード `75` で終了します。サービスの管理側がプロセスを再起動するためです。スタックの書き出しと記録は、できる範囲で行うものです。
+Python の中でその書き込みが止まっても（stderr のパイプが詰まっている、ログのハンドラーが固まっている、状態ファイルのロックが握られたままなど）、
+監視スレッドはおよそ 5 秒以内に終了します。そのとき記録は欠けているか、途中までしか書かれていないことがあります。
+スタックの書き出しのファイルそのものは `faulthandler` が書き、書いているあいだはインタープリターのロックを握っています。
+そのため、書き出しの途中でディスクが応答しなくなると、書き込みが戻るまでプロセスが止まったままになることがあります。`hermes gateway status` は
 その記録を `⚠ Gateway exited degraded: event loop stopped dispatching …` として表示し、
 新しいゲートウェイのプロセスが上書きするまで残ります。ダッシュボードのゲートウェイのバッジにも、
 同じ理由で **Degraded** と出ます。監視を止めたいときは `config.yaml` に

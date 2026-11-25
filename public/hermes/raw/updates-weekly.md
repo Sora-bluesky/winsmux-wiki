@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-11-25、対象期間 = 2026-11-19 〜 2026-11-25（JST）
+生成日 = 2026-11-26、対象期間 = 2026-11-20 〜 2026-11-26（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,37 +16,43 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-11-25 [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
+- 2026-11-25 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
+- 2026-11-25 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- 2026-11-25 [オブザーバーフック](https://wiki.winsmux.dev/hermes/docs/developer-guide/observer-hooks/)
+- 2026-11-25 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
+- 2026-11-25 [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
+- 2026-11-25 [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
+- 2026-11-25 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
+- 2026-11-25 [環境変数](https://wiki.winsmux.dev/hermes/docs/reference/environment-variables/)
+- 2026-11-25 [イベントフック](https://wiki.winsmux.dev/hermes/docs/user-guide/features/hooks/)
+- 2026-11-25 [カンバン（マルチエージェント盤）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/kanban/)
+- 2026-11-25 [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
+- 2026-11-25 [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
+- 2026-11-25 [ゲートウェイをいくつも同時に動かす](https://wiki.winsmux.dev/hermes/docs/user-guide/multi-profile-gateways/)
 - 2026-11-24 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - 2026-11-24 [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
-- 2026-11-24 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
-- 2026-11-24 [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
 - 2026-11-24 [外部プログラムからの連携](https://wiki.winsmux.dev/hermes/docs/developer-guide/programmatic-integration/)
 - 2026-11-24 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
 - 2026-11-24 [ダッシュボードを広げる](https://wiki.winsmux.dev/hermes/docs/user-guide/features/extending-the-dashboard/)
-- 2026-11-24 [プラグイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/plugins/)
-- 2026-11-24 [Hermes の管理画面](https://wiki.winsmux.dev/hermes/docs/user-guide/features/web-dashboard/)
 - 2026-11-23 [メモリープロバイダープラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/memory-provider-plugin/)
 - 2026-11-23 [Hermes Agent の設定](https://wiki.winsmux.dev/hermes/docs/user-guide/configuration/)
 - 2026-11-23 [定期実行タスク（cron）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/cron/)
 - 2026-11-23 [メッセージングゲートウェイ](https://wiki.winsmux.dev/hermes/docs/user-guide/messaging/)
 - 2026-11-22 [ゲートウェイの監視](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-monitoring/)
-- 2026-11-22 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
 - 2026-11-22 [Nix と NixOS のセットアップ](https://wiki.winsmux.dev/hermes/docs/getting-started/nix-setup/)
-- 2026-11-22 [CLIコマンド一覧](https://wiki.winsmux.dev/hermes/docs/reference/cli-commands/)
 - 2026-11-22 [パッケージ管理](https://wiki.winsmux.dev/hermes/docs/reference/package-management/)
 - 2026-11-22 [Hermes Desktop](https://wiki.winsmux.dev/hermes/docs/user-guide/desktop/)
 - 2026-11-22 [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
 - 2026-11-22 [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
 - 2026-11-22 [画像の貼り付けと視覚認識](https://wiki.winsmux.dev/hermes/docs/user-guide/features/vision/)
 - 2026-11-22 [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
-- 2026-11-21 [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
 - 2026-11-21 [定期実行がうまくいかないとき](https://wiki.winsmux.dev/hermes/docs/guides/cron-troubleshooting/)
 - 2026-11-21 [Google Gemini](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/)
 - 2026-11-21 [Google Vertex AI](https://wiki.winsmux.dev/hermes/docs/guides/google-vertex/)
 - 2026-11-21 [管理者による適用範囲](https://wiki.winsmux.dev/hermes/docs/user-guide/managed-scope/)
 - 2026-11-21 [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
 - 2026-11-20 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
-- 2026-11-20 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
 - 2026-11-20 [共有バンドルビルド](https://wiki.winsmux.dev/hermes/docs/developer-guide/shared-bundle-builds/)
 - 2026-11-20 [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
 - 2026-11-20 [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
@@ -54,25 +60,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-20 [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
 - 2026-11-20 [パスワードとログイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-vault/)
 - 2026-11-20 [他のエージェントから取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/import-from-other-agents/)
-- 2026-11-19 [コントリビュート](https://wiki.winsmux.dev/hermes/docs/developer-guide/contributing/)
-- 2026-11-19 [画像生成プロバイダのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/image-gen-provider-plugin/)
-- 2026-11-19 [LLM とモデルプロバイダ](https://wiki.winsmux.dev/hermes/docs/integrations/providers/)
-- 2026-11-19 [Manim Video — Manim CE のアニメーション: 3Blue1Brown 風の数学・アルゴリズム動画](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/creative/creative-manim-video/)
-- 2026-11-19 [Simplify Code — 直近のコード変更を、4 つのエージェントで並行して片づけます](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/bundled/software-development/software-development-simplify-code/)
-- 2026-11-19 [System Atlas — 見て回れるアイソメトリックの構成アトラスを HTML で作る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/creative/creative-system-atlas/)
-- 2026-11-19 [Pinggy Tunnel — Pinggy を使い、SSH 経由でインストール不要の localhost トンネルを張る](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-pinggy-tunnel/)
-- 2026-11-19 [Watchers — RSS・JSON API・GitHub を定期的に見に行き、既読の印で重複を省く](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/devops/devops-watchers/)
-- 2026-11-19 [Minecraft Modpack Server — MOD 入りの Minecraft サーバーを立てる（CurseForge、Modrinth）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/gaming/gaming-minecraft-modpack-server/)
-- 2026-11-19 [Pokemon Player — ヘッドレスのエミュレーターと RAM 読み取りでポケモンを遊ぶ](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/gaming/gaming-pokemon-player/)
-- 2026-11-19 [Mcp Oauth Remote Gateway — 画面のないゲートウェイで、リモートの MCP サーバーの OAuth を手作業で通す](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway/)
-- 2026-11-19 [Bioinformatics — ゲノム解析と計算生物学の 400 以上の skill への入口](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-bioinformatics/)
-- 2026-11-19 [Osint Investigation — 公開記録と制裁データから資金の流れを追う](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-osint-investigation/)
-- 2026-11-19 [Qmd — メモ・資料・書き起こしを手元でまとめて検索する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-qmd/)
-- 2026-11-19 [Research Paper Writing — NeurIPS / ICML / ICLR 向けの ML 論文を、設計から投稿まで書き上げる](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/research/research-research-paper-writing/)
-- 2026-11-19 [Ast Grep — ast-grep で構文木を見ながらコードを検索・書き換えする](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-ast-grep/)
-- 2026-11-19 [Code Wiki — どんなコードベースにも wiki ドキュメントと Mermaid 図を生成する](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-code-wiki/)
-- 2026-11-19 [Python Debugpy — Python のデバッグ: pdb の REPL と debugpy のリモート接続（DAP）](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/software-development/software-development-python-debugpy/)
-- 2026-11-19 [Publish Site — サイトに版を付けて GitHub / Cloudflare / Netlify の Pages へ公開します](https://wiki.winsmux.dev/hermes/docs/user-guide/skills/optional/web-development/web-development-publish-site/)
 
 ## 週次まとめ
 

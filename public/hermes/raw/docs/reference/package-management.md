@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "パッケージ管理"
 description: "PM のツール固定、Python 環境、オプションの依存関係、インストールの所有者"
 upstream_path: reference/package-management.md
-upstream_blob: 49b960a16fe31dbf8d7c7817cd5d3e1733b8c40e
+upstream_blob: 589e713fbcc5e5f1729b885e13effac2db3b9471
 sources:
   - https://hermes-agent.nousresearch.com/docs/reference/package-management
 ---
@@ -706,6 +706,14 @@ Hermes 自身が依存する Python のパッケージは、Hermes がロック�
 アップロード日時を公開していないパッケージのミラーでも動きます。唯一の例外は CA の信頼ストア（`certifi`）です。
 乗っ取られた CA を信頼しなくするリリースは、出たその日にロックします。待っている間は、問題のあるルート証明書が信頼されたままになるからです。ミラーを設定するには、`pip.conf` の `index-url`（Hermes が uv に渡します）か
 `UV_INDEX_URL` を使います。
+
+Hermes がインストール先にするプロジェクト・インタープリター・キャッシュは、環境に設定された `UV_*` の設定では
+変えられません。通常のビルドは、uv のインデックスの設定（`UV_EXTRA_INDEX_URL` と、名前付きインデックスの資格情報を含む）と、
+次の通信の設定を引き継ぎます: `UV_NATIVE_TLS`、`UV_INSECURE_HOST`、`UV_HTTP_TIMEOUT`、`UV_HTTP_RETRIES`、
+`UV_CONCURRENT_DOWNLOADS`。固定した実行環境のビルドが引き継ぐのは、通信の設定だけです。回線が遅く、
+`hermes update` が大きな wheel をいくつも同時にダウンロードしてタイムアウトする場合は、`UV_HTTP_TIMEOUT` を上げる前に
+`UV_CONCURRENT_DOWNLOADS=1` を設定してください。古い Hermes から始めた更新は、処理を引き継ぐあいだにこの 2 つを
+落とすことがあります。その更新がタイムアウトしたら、もう一度 `hermes update` を実行してください。
 
 この検査を行うのは `hermes pm lock` だけです。アップロード日時のないミラーに対して実行すると、
 `has no publish time` と表示して止まります。この手順では `https://pypi.org/simple` を使ってください。

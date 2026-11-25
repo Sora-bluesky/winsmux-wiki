@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "macOS バンドルの更新"
 description: ""
 upstream_path: developer-guide/macos-bundle-updates.md
-upstream_blob: e4a64bd6ec091528c83f4b4740269b8cafb3027a
+upstream_blob: b64c8a103f49ac5e98ff6de0ae960242c783ff9e
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/macos-bundle-updates
 ---
@@ -33,7 +33,7 @@ ID に短いコミット SHA が含まれるため、異なるコミットのビ
 登録はしません。ビルダーは従来の URL を `app-update.yml` に書き込みます。
 `updates.desktop_feed_base_url` を使うと、バケットの基底 URL を明示的に指定できます。
 
-- Stable: `releases/darwin/stable/stable-mac.yml`
+- Stable: `releases/darwin/stable/stable-mac.yml`（と、バージョン番号の付かない Apple Silicon 用 DMG の別名 `releases/darwin/stable/HermesBundled-mac-arm64.dmg`。安定版のデスクトップアプリを昇格するときに `Cache-Control: no-store` 付きで更新されます）
 - Canary: `releases/darwin/canary/canary-mac.yml`
 - Light: 同じパスの `darwin/` とチャンネルの間に `light/` を挟んだもの。
 - 成果物: `releases/tag/TAG/FILENAME`。ダウンロードリンクとフィードで共有します。
@@ -78,9 +78,11 @@ Squirrel.Mac が署名済みのアプリを受け入れるのを待ちます。�
   `CLOUDFLARE_R2_SECRET_ACCESS_KEY`: バケットにアクセスするためのシークレット。
 - `CLOUDFLARE_R2_BUCKET`、`CLOUDFLARE_R2_PUBLIC_URL`: リポジトリまたは環境の変数。
 
-公開には Apple の認証情報が必要です。公証は既存の署名後フックが担うため、
-electron-builder 側の2つ目の公証経路は無効にしています。
-公開ゲートは、署名、ステープルされたチケット、Gatekeeper の評価を検証します。
+公開には Apple の認証情報が必要です。`.app` の公証は `afterSign` フックが担います（そのため
+electron-builder 側の2つ目の公証経路は無効にしています）。`artifactBuildCompleted`（`scripts/notarize-dmg.mjs`）は、
+外側の `.dmg` に `--timestamp` 付きで署名し、公証してステープルしたうえで、`codesign`、`stapler`、
+`spctl -t open --context context:primary-signature` で検証し、ステープル後のバイト列から
+`.dmg.blockmap` とフィードのハッシュを作り直します。公開ゲートと macOS のスモークテストは、外側の `.dmg` と中の `.app` の両方を検証します。
 ビルドを記録する際、1 GiB（1,073,741,824 バイト）以上の更新用 ZIP は受け付けません。
 v0.22.0 に同梱されている Electron 44.7 より前の Squirrel.Mac は ZIP 全体をメモリに読み込むため、
 そのサイズの ZIP をダウンロードするとクラッシュするからです

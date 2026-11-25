@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "ゲートウェイの監視"
 description: "ヘルス情報のエクスポート、構造化された診断、フリート全体のクエリ、監視の仕組みを拡張する方法"
 upstream_path: developer-guide/gateway-monitoring.md
-upstream_blob: 06a5bd3901e78a61cfde62d38def8c6dc6686c55
+upstream_blob: 7f93bc354ea0821aa779cf80b99369f3d86a44f8
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-monitoring
 ---
@@ -28,6 +28,7 @@ OTLP/HTTP でエクスポートします。
 | ゲートウェイのゲージ | `/v1/metrics` | `hermes.gateway.up/state/busy/drainable/active_agents/background_work/background_delegations/restart_requested`、`hermes.platform.up/degraded`（値の種類が限られた `error_code` 属性付き） |
 | ヘルス・ライフサイクルのイベント | `/v1/traces` | `gateway.lifecycle` の状態遷移（`starting -> running -> draining -> stopped`、`startup_failed`、終了）、`gateway.health_snapshot`、プラットフォームの状態変化 |
 | 診断 | `/v1/logs` | ゲートウェイの警告・エラーのイベント。本文は固定で、サブシステム、深刻度、エラー分類、エラーコードの属性は値の種類が限られています。整形済みのログメッセージはエクスポートしません |
+| ゲートウェイのメモリのゲージ | `/v1/metrics` | `hermes.gateway.previous_exit` = 1。`hermes.previous_exit` は `none`、`unclean`、`suspected_oom`、`oom_kill_host`、`watchdog`、`watchdog_memory_starved`、`oom_kill_cgroup`、`unknown` のいずれか（前回のゲートウェイがどう終わったかについて記録された最も強い証拠。起動ごとに 1 系列）。`hermes.gateway.memory_pressure` = 1。`hermes.memory_pressure` は `ok`、`elevated`、`critical`、`unknown` のいずれか（30 秒ごとの鼓動から取る、いまのホストのひっ迫） |
 | cron スケジューラーのゲージ | `/v1/metrics` | ティッカーのハートビートと最終成功からの経過時間（取得できないときは省略）、スケジューラーの「期限切れ枠」分岐から数える単調増加の追いつき実行回数、有効なジョブ数と実行中のジョブ数、そして保存済みの `next_run_at` とスケジューラー既存の猶予ルールから求めた期限超過数 |
 | cron 実行のライフサイクル | `/v1/traces` | 永続化された `claimed/running/completed/failed/unknown` の状態、値の種類が限られたソースとエラー分類、中身を推測できないハッシュ化済みのジョブキー、タイムスタンプがある場合の経過時間、スケジューラーが把握している場合の配信結果。終端状態では失敗しても処理を止めない（fail-open）フラッシュを1回試みるため、完了が最大1秒遅れることがあります |
 
@@ -48,6 +49,29 @@ OTLP/HTTP でエクスポートします。
 アラートを設定すると、枠の逼迫具合がわかります。インスタンスごとの稼働中の作業の総量は
 `active_agents` と `background_work` の合計で、プールの飽和は
 `background_delegations` で見てください。
+
+`hermes.gateway.previous_exit` と `hermes.gateway.memory_pressure` は、`/api/status` の `memory` の塊と同じ、
+生存記録と鼓動のファイルから取ります。`previous_exit` は、前回の稼働について記録された最も強い証拠を、次の順で示します。
+
+- `oom_kill_cgroup`: ゲートウェイが正しく終わらずに止まり、最後の鼓動から今回の起動までのあいだに、
+  カーネルの OOM キラーがゲートウェイの cgroup 内のプロセス（ゲートウェイ自身か、そこで動くツールのサブプロセス。
+  カウンターはどちらかまでは示しません）を止めた
+- `watchdog_memory_starved`: ホストのメモリのひっ迫が `critical` のときに、監視役がゲートウェイを止めた
+- `watchdog`
+- `oom_kill_host`: ゲートウェイが正しく終わらずに止まり、そのあいだにカーネルの OOM キラーがホスト上のどこかのプロセス
+  （どのプロセスでもよく、ゲートウェイとは限りません）を止めた
+- `suspected_oom`: 正しく終わらずに止まり、最後の鼓動の時点ですでにひっ迫が深刻だった
+- `unclean`
+- `none`: 悪い証拠は記録されていない（初回の起動もここに入ります）
+- `unknown`: 今回の稼働に生存記録の登録がない
+
+OOM キラーの範囲は、カーネルの `oom_kill` カウンター（cgroup v2 の `memory.events`、`/proc/vmstat`）から取ります。
+比べるのは、止まった稼働の最後の鼓動がその同じ稼働のもので、15 分以内のときだけです。systemd のユニットや
+コンテナを再起動すると cgroup はカウンター 0 で作り直されるので、管理側による再起動のあとは、たいていホスト単位の比較
+（`oom_kill_host`）になります。`oom_kill_cgroup` になるのは、残っている cgroup の中でゲートウェイが再起動したときだけです。
+値が変わるのは次の起動のときだけです。監視役が発動したときは何もエクスポートしません。プロセスはその直後に強制終了し、
+送り出す処理は非同期なので、記録が外に出ることがないからです。その内容は次の起動の `previous_exit` が運びます。
+`memory_pressure` は、鼓動が 150 秒より古いと `unknown` になります。
 
 ## 有効にする {#enabling}
 
@@ -136,7 +160,15 @@ hermes_cron_jobs_overdue > 0
 # Catch-up counter increased, proving at least one stale occurrence was
 # collapsed and run once after a delay.
 increase(hermes_cron_scheduler_catch_up_occurrences[15m]) > 0
+
+# The previous gateway life died uncleanly while the kernel OOM-killed a process
+# in its cgroup, or a watchdog killed it while the host was out of memory.
+hermes_gateway_previous_exit{hermes_previous_exit=~"oom_kill_cgroup|watchdog_memory_starved"} == 1
 ```
+
+メトリクス名の許可リストを置いてエクスポーターの前に立つコレクターでは、
+`hermes.gateway.previous_exit` と `hermes.gateway.memory_pressure` を足す必要があります
+（下の「新しいゲージ・メトリクスを追加する」の手順 4 を参照）。
 
 cron 実行のライフサイクル記録は `hermes.cron_execution` スパンとして届きます。
 次のような値の種類が限られた属性から、アラートを出したりイベントを導いたりします。

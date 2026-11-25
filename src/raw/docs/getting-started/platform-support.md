@@ -2,7 +2,7 @@
 title: "対応プラットフォーム"
 description: "Hermes Agent が対応している OS、配布方法、機能の一覧"
 upstream_path: getting-started/platform-support.md
-upstream_blob: 8fc60b3c541676527c141229468c43a37a785c13
+upstream_blob: caaf456500b2bbe67972ec99454cf8ce7219b2ec
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/platform-support
 ---
@@ -19,8 +19,8 @@ Hermes Agent は多くのプラットフォームと配布方法に対応して�
 
 | OS / アーキテクチャ                                                             | 導入方法                                                                                                           | 補足                                                                                                                                                     |
 | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **macOS**（Apple Silicon）                                                     | [Hermes Desktop](https://hermes-agent.nousresearch.com/), [`install.sh`](/hermes/docs/getting-started/installation/) |
-| [**Windows 10 / 11**](/hermes/docs/user-guide/windows-native/)（x86_64, aarch64） | [`install.ps1`](/hermes/docs/getting-started/installation/), [MSIX 版デスクトップアプリ](/hermes/docs/user-guide/windows-native/) | MSIX パッケージには Windows 11 22H2 以降が必要です。任意の依存関係には[アーキテクチャごとの制限](/hermes/docs/user-guide/windows-native/)があります。 |
+| **macOS**（Apple Silicon）                                                     | [Hermes Desktop](https://hermes-agent.nousresearch.com/), [`install.sh`](/hermes/docs/getting-started/installation/) | macOS のデスクトップ版のバンドル（`Hermes Agent.app`）には、Apple Silicon（`arm64`）の **macOS 13 Ventura 以降** が必要です。Intel の Mac と macOS 12 以前では [`install.sh`](/hermes/docs/getting-started/installation/#linux--macos--wsl2) を使います。 |
+| [**Windows 10 / 11**](/hermes/docs/user-guide/windows-native/)（x86_64, aarch64） | [Microsoft Store / MSIX 版デスクトップアプリ](/hermes/docs/user-guide/windows-native/), [`install.ps1`](/hermes/docs/getting-started/installation/) | デスクトップ版のバンドル（Microsoft Store と `.appinstaller` の MSIX、x64 または ARM64）には **Windows 11 22H2 以降（`10.0.22621.0`）** が必要です。Windows 10 と 22H2 より前の Windows 11 では [`install.ps1`](/hermes/docs/getting-started/installation/#windows-native) か [WSL2](/hermes/docs/user-guide/windows-wsl-quickstart/) を使います。任意の依存関係には[アーキテクチャごとの制限](/hermes/docs/user-guide/windows-native/)があります。 |
 | **Linux / [WSL2](/hermes/docs/user-guide/windows-wsl-quickstart/)**（x86_64, aarch64） | [`install.sh`](/hermes/docs/getting-started/installation/)                                                           | 最新の Ubuntu と WSL2 でテストしています。glibc と systemd があり、Filesystem Hierarchy Standard に沿ったディストリビューションなら、おおむね問題なく動くはずです。 |
 | [**Docker コンテナ**](/hermes/docs/user-guide/docker/)（x86_64, aarch64） | [`docker pull`](/hermes/docs/user-guide/docker/)                                                                           | Docker で導入した場合は `hermes update` を使えません。更新するには新しいイメージを実行します。                                                                  |
 
@@ -40,15 +40,23 @@ Hermes Agent は多くのプラットフォームと配布方法に対応して�
 
 ### ビルド対象とサポートの優先度 {#build-targets-and-support-priority}
 
-リリースでは、macOS のデスクトップ版のバンドルを Apple Silicon（`arm64`）向けにだけビルドします。
+リリースでは、macOS のデスクトップ版のバンドル（`Hermes Agent.app`）を **Apple Silicon（`arm64`）の macOS 13 Ventura 以降** 向けにだけビルドします
+（`LSMinimumSystemVersion` は `13.0` で、Electron 44 が対応する OS の下限に合わせています）。
 Intel の macOS（`x64`）向けのバンドルをビルドしたりテストしたりするリリースや CI のワークフローはありません。
 macOS の更新フィードは arm64 向けだけなので、以前のデスクトップ版のバンドルから入れた Intel の Mac には
-更新が届きません。Termux の APT パッケージは**既定ではビルドされません**。
+更新が届きません。Intel の Mac と macOS 12 Monterey 以前では、
+[CLI / ソースからのインストーラー（`install.sh`）](/hermes/docs/getting-started/installation/#linux--macos--wsl2) を使ってください。
+
+Windows のデスクトップ版のバンドル（Microsoft Store のパッケージと、署名済みの `.appinstaller` の MSIX バンドル。x64 と ARM64）には、
+**Windows 11 22H2 以降（`10.0.22621.0`）**が必要です。Windows 10 と 22H2 より前の Windows 11 は、
+[Windows 用のソースインストーラー（`install.ps1`）](/hermes/docs/getting-started/installation/#windows-native)
+か [WSL2](/hermes/docs/user-guide/windows-wsl-quickstart/) で対応しています。
+
+Termux の APT パッケージは**既定ではビルドされません**。
 リリースに含まれるのは、`release.py release --with termux` を付けてリリースを作ったときだけです。
 Termux を含まないリリースでは、Termux の APT チャンネルは前のリリースのままです。
-ブートストラップ用のインストーラー `Hermes-Setup.dmg` は Apple Silicon 向けにしかビルドされていないため、
-Intel の Mac では「この Mac には対応していません」と表示されます。Intel の Mac では、
-[CLI](/hermes/docs/getting-started/installation/#linux--macos--wsl2) を入れて `hermes desktop` を実行してください。
+以前からあるブートストラップ用のインストーラー `Hermes-Setup.dmg` は Apple Silicon 向けにしかビルドされていないため、
+Intel の Mac では「この Mac には対応していません」と表示されます。
 Linux のデスクトップ版の AppImage は、canary タグで診断用の成果物としてビルドされていますが、まだどのリリースでも配布していません。
 ローカルでの AppImage のビルドと、Linux ネイティブのパッケージマネージャー向けバンドルの確認は用意されています。
 
@@ -61,7 +69,8 @@ Linux のデスクトップ版の AppImage は、canary タグで診断用の成
 
 - aarch64 以外の端末での Android / Termux（aarch64 は APT パッケージで[対応しています](/hermes/docs/getting-started/termux/)）
 - AUR からの導入（役に立つならパッチを本体に取り込むかもしれません &lt;3）
-- 32 ビット x86 の macOS と、Intel の x86_64 向けの macOS デスクトップ版のバンドル（どちらもビルドしていません）。
+- 32 ビット x86 の macOS、Intel の x86_64 向けの macOS デスクトップ版のバンドル（どちらもビルドしていません）、macOS 12 Monterey 以前でのデスクトップ版のバンドル（代わりに [`install.sh`](/hermes/docs/getting-started/installation/#linux--macos--wsl2) を使ってください）
+- Windows 10 や 22H2 より前の Windows 11 でのデスクトップ版のバンドル（Microsoft Store または `.appinstaller` の MSIX）（代わりに [`install.ps1`](/hermes/docs/getting-started/installation/#windows-native) か [WSL2](/hermes/docs/user-guide/windows-wsl-quickstart/) を使ってください）
 - `pypi` からの導入（例: `uv tool install hermes-agent`、`pip install hermes-agent` など）
 - `brew` からの導入（`brew install hermes-agent`）
 

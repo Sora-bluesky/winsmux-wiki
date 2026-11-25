@@ -2,7 +2,7 @@
 title: "Windows（ネイティブ）ガイド"
 description: "Windows 10 / 11 で Hermes Agent をそのまま動かすためのガイド。インストール、機能の対応表、UTF-8 コンソール、Git Bash、タスクスケジューラでのゲートウェイ常駐、エディタの扱い、PATH、アンインストール、よくあるつまずきをまとめます"
 upstream_path: user-guide/windows-native.md
-upstream_blob: 343824ddd24f93b48391c5b4ca715a9d94a5313b
+upstream_blob: fdb48347aa51a2a3d12c09b22f50e737d98cfa8b
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/windows-native
 ---
@@ -52,11 +52,14 @@ Windows のパスが思いがけず短い形になる原因を調べるときは
 
 ### MSIX / アプリ インストーラーと Microsoft Store {#msix-app-installer-and-microsoft-store}
 
-同梱版のデスクトップアプリは、ソースから入れるスクリプトとは別物です。その MSIX パッケージは
-**Windows 11 22H2 以降**が必要です。ソースのスクリプトが Windows 10 に対応しているからといって、
-MSIX パッケージが Windows 10 に対応しているわけではありません。
+同梱版のデスクトップアプリは、ソースから入れるスクリプトとは別物です。Microsoft Store のパッケージにも、
+サイドロード用の `.appinstaller` の MSIX バンドル（x64 と ARM64）にも、
+**Windows 11 22H2 以降（`10.0.22621.0`）**が必要です。ソースのスクリプトが Windows 10 に対応していても、
+MSIX パッケージは対応していません。Windows 10 や 22H2 より前の Windows 11 では、
+上の [Windows 用のソースインストーラー（`install.ps1`）](#quick-install) か
+[WSL2](/hermes/docs/user-guide/windows-wsl-quickstart/) を使ってください。
 
-ダウンロードした `.appinstaller` ファイルを Windows のアプリ インストーラーで開きます。署名付きの
+Microsoft Store から入れるか、ダウンロードした `.appinstaller` ファイルを Windows のアプリ インストーラーで開きます。署名付きの
 ユニバーサル バンドルがインストールされ、更新の取得元が記録されます。パッケージには
 Python、Node、対応する依存関係、ビルド済みの画面が含まれます。初回起動時にチェックアウトを
 クローンしたり、基本の実行環境をビルドしたりはしません。
@@ -69,7 +72,9 @@ MSIX の実行エイリアスとして、`hermes`、`hermes-agent`、`hermes-acp
 サイドロード版の更新は、アプリの「更新」操作と Windows のアプリ インストーラーで行います。
 Hermes は終了処理の前に更新情報のファイルを手元にダウンロードし、自動で起動し直すよう登録します。
 `ms-appinstaller:` の URL プロトコルは必要ありません。更新の確認結果が不明なときは、
-パッケージが最新だという意味ではありません。
+パッケージが最新だという意味ではありません。パッケージの大きさと更新にかかる時間は、
+[同梱デスクトップアプリの更新](/hermes/docs/getting-started/updating/#bundled-desktop-updates)
+を参照してください。
 
 Microsoft Store 版は、Partner Center で登録したパッケージ ID と Store の更新を使います。
 サイドロード版の配信元は使いません。どちらの同梱版の実行環境でも、`hermes update` が

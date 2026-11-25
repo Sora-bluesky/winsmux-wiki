@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "更新とアンインストール"
 description: "Hermes Agent を最新版に更新する方法と、アンインストールの手順"
 upstream_path: getting-started/updating.md
-upstream_blob: aab6ef5938b10ec5cae5d68207ec8d6998a0f84a
+upstream_blob: 690bbf2eda4656dde30d4ff469a6448cd9b61567
 sources:
   - https://hermes-agent.nousresearch.com/docs/getting-started/updating
 ---
@@ -70,13 +70,18 @@ Windows Store、MSIX、同梱デスクトップアプリのインストールは
 
 ### 同梱デスクトップアプリの更新 {#bundled-desktop-updates}
 
+パッケージ版のデスクトップアプリには、**Apple Silicon（`arm64`）の macOS 13 Ventura 以降**（`Hermes Agent.app`）か、
+**Windows 11 22H2 以降（`10.0.22621.0`）**の x64 または ARM64（Microsoft Store と `.appinstaller` の MSIX のどちらも）が必要です。
+Intel の Mac と macOS 12 以前では CLI / ソースからのインストーラー（`install.sh`）を、Windows 10 と
+22H2 より前の Windows 11 では `install.ps1` か [WSL2](/hermes/docs/user-guide/windows-wsl-quickstart/) を使います。
+
 Windows では、サイドロード版のアプリが登録済みの App Installer の配信元を確認します。適用を選ぶと、
 アプリが持っているバックエンドを止める前に `.appinstaller` の記述ファイルをダウンロードし、
 そのローカルファイルを開いてから終了し、パッケージの置き換えを Windows に任せます。
 切り離された待機プロセスが、パッケージのバージョンが変わったあとにアプリを自動で起動し直そうとします。
 待機プロセスの登録に失敗した場合は、手動で開き直すよう警告が出ます。
 
-macOS では、適用を選ぶと ZIP の更新をダウンロードし、署名済みのアプリを Squirrel.Mac が受け入れるのを
+macOS では、適用を選ぶと署名済みの ZIP の更新をダウンロードし、署名済みのアプリを Squirrel.Mac が受け入れるのを
 待ってからバックエンドを止めます。インストールと再起動を求めるのは、この適用の流れだけです。
 普通に終了しただけでは、ダウンロード済みの更新はインストールされません。
 ダウンロードや検証に失敗した場合、バックエンドは動いたままです。
@@ -85,6 +90,17 @@ Store のパッケージは、どちらのサイドロード用の配信でも�
 使えなかったりしても、それを「すでに最新」と受け取ってはいけません。
 アプリと同梱の基本ランタイムは一緒に更新され、ユーザーのデータはパッケージの外に置かれたままです。
 [デスクトップアプリのインストール](/hermes/docs/user-guide/desktop/#install) をご覧ください。
+
+**ダウンロードの大きさと更新にかかる時間:** 同梱版の更新にかかる時間は、ネットワークでのダウンロード
+（回線の速さで変わります）と、手元での検証・入れ替えに分かれます。次の大きさはおおよその値で、リリースごとに変わります。
+
+- **macOS:** DMG からの新規インストールは約 948 MB です。アプリで **Update** を選ぶと、署名済みの更新用 ZIP
+  （全体で約 983 MB）をダウンロードします。ZIP のダウンロードが終わったあと、Squirrel.Mac による展開、コード署名の検証、
+  バンドルの入れ替えに、Apple Silicon でおよそ **50 秒**（M4 の Mac で計測）かかり、そのあとアプリが起動し直します。
+- **Windows:** アーキテクチャごとの MSIX パッケージ全体は、約 1.89 GB（ARM64）から約 2.86 GB（x64）です。
+  Windows のアプリ インストーラーと Microsoft Store は、使っている端末のアーキテクチャの分だけをダウンロードし、
+  リリース間ではブロック単位の差分更新を当てます。そのため、差分のダウンロードはふつう新規インストールより小さく、
+  そのあと手元でパッケージが展開されます。
 
 stable と canary のデスクトップ版は、別々のアプリです。canary を入れても stable は置き換わりません。
 Windows の MSIX でも同じです。それぞれのアプリは自分のデスクトップの状態を持ち、ビルドに焼き込まれた
@@ -624,7 +640,8 @@ hermes uninstall
 どのモードも元に戻せないので、先にバックアップを取ってください。
 
 MSIX や Store 版は、Windows の設定 → アプリ → インストールされているアプリから削除します。macOS では、
-Hermes を終了してからアプリのバンドルをゴミ箱へ移します。Docker、Nix、Termux は、インストールしたときと
+Hermes を終了してから、使っているチャンネルのアプリをゴミ箱へ移します。安定版は `Hermes Agent.app`、
+canary は `Hermes Agent Canary.app`、ソースからビルドしたデスクトップアプリは `Hermes.app` です。Docker、Nix、Termux は、インストールしたときと
 同じ管理ツールを使います。それらのパッケージのファイルは、ソース用のアンインストーラーでは削除されません。
 データの削除は、パッケージの削除とは別の作業です。
 

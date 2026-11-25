@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes Desktop"
 description: "ネイティブの Hermes デスクトップアプリ。ストリーミングされるツール出力、横並びのプレビュー、ファイルブラウザ、音声、cron、プロファイル、スキル、設定を備えた、Hermes と話すための作り込まれた環境です。macOS・Windows・Linux に対応します。"
 upstream_path: user-guide/desktop.md
-upstream_blob: 983fd4519b994de36a121862b132818b0a054092
+upstream_blob: bf8e02cae151a8735642a1c48b2f9485bd9dfc2c
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/desktop
 ---
@@ -12,7 +12,7 @@ sources:
 
 Hermes デスクトップアプリは、CLI やゲートウェイで動くのと**同じ**エージェントをそのまま包んだネイティブアプリです。設定も API キーもセッションもスキルもメモリも共通です。別製品でも簡易版のクローンでもなく、同じ Hermes Agent のコアと設定を使い、それを現代的に設計された UI から動かします。ターミナルで `hermes` を使ったことがあるなら、そこで整えたものはすでにここにありますし、ここでやったことはそちらにも現れます。
 
-動作環境は **macOS（Apple Silicon）・Windows・Linux** です。対応状況の全体は [Platform Support](/hermes/docs/getting-started/platform-support/) を参照してください。
+動作環境は **macOS（Apple Silicon）・Windows・Linux** です。パッケージ版は macOS と Windows に対応しています。それぞれのパッケージに必要な OS のバージョンと、ほかの環境で使うインストーラーは [Platform Support](/hermes/docs/getting-started/platform-support/) にまとめてあります。
 
 :::tip どれがどのインターフェース？
 Hermes には同じエージェントと話すフロントエンドがいくつかあります。
@@ -26,9 +26,9 @@ Hermes には同じエージェントと話すフロントエンドがいくつ�
 
 ## 導入 {#install}
 
-[Hermes Desktop の製品ページ](https://hermes-agent.nousresearch.com/desktop)からアプリをダウンロードするか、[Hermes Desktop のインストール手順](/hermes/docs/getting-started/installation/)に従ってください。
+[Hermes Desktop の製品ページ](https://hermes-agent.nousresearch.com/desktop)からデスクトップ版のパッケージをダウンロードするか、[Hermes Desktop のインストール手順](/hermes/docs/getting-started/installation/)に従ってください。手順には、パッケージごとに必要な OS と、古い環境で使うインストーラーが書いてあります。
 
-すでに Hermes を入れてあるなら、次を実行するだけです。
+Linux では、まず [ソースからのインストール手順](/hermes/docs/getting-started/installation/#linux--macos--wsl2) に従ってください。ソースから Hermes を入れたら、次を実行します。
 
 ```bash
 hermes desktop
@@ -440,7 +440,9 @@ Routines のペインもコンポーザーの中間処理もその場で解除�
 
 アプリはバックグラウンドで更新を確認し、用意ができたらワンクリックで更新できるようにします。
 
-バックグラウンドの確認は、GitHub の API にブランチの先頭を尋ねます。匿名の GitHub へのリクエストは**ネットワークアドレスごと**に1時間 60 回までなので、共有の回線（オフィスの NAT、VPN、プロキシ）では、この端末がほとんど使っていなくても `GitHub API rate limit reached` と報告されることがあります。1時間 5,000 回の枠を使うために、確認は次の順で最初に見つかった資格情報を使います。
+**同梱版のデスクトップアプリ**（署名済みの macOS の `Hermes Agent.app`、Windows の `.appinstaller` の MSIX、Microsoft Store 版）では、更新でパッケージのアプリと同梱の実行環境が一緒に置き換わります。ダウンロードの大きさと、手元でのインストールにかかる時間は [同梱デスクトップアプリの更新](/hermes/docs/getting-started/updating/#bundled-desktop-updates) にあります。
+
+**ソースからビルドしたデスクトップアプリ**では、バックグラウンドの確認は、GitHub の API にブランチの先頭を尋ねます。匿名の GitHub へのリクエストは**ネットワークアドレスごと**に1時間 60 回までなので、共有の回線（オフィスの NAT、VPN、プロキシ）では、この端末がほとんど使っていなくても `GitHub API rate limit reached` と報告されることがあります。1時間 5,000 回の枠を使うために、確認は次の順で最初に見つかった資格情報を使います。
 
 1. アプリを起動した環境の `GITHUB_TOKEN`、次に `GH_TOKEN`。リクエストのたびに読まれ、保存はされません。
 2. [GitHub CLI](https://cli.github.com/) 自身のログイン（`gh auth token`）。Dock や Finder、デスクトップのランチャーから起動したアプリはシェルの変数を持たない最小限の環境を引き継ぐので、この段が効きます。`gh` は `PATH` と、よくある導入先（Homebrew、`/usr/local/bin`、`~/.local/bin`、Windows の GitHub CLI インストーラー）から探されます。答えはアプリが再起動するまでキャッシュされるので、`gh` が走るのはセッションにつき多くても一度です。
@@ -900,7 +902,7 @@ Hermes の署名の identity は安定しているので、更新をまたいで
 
 1. システム設定 → **プライバシーとセキュリティ → フルディスクアクセス**（あるいは
    `open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"` を実行）
-2. 使っているターミナルのアプリ、Desktop を使うなら **Hermes.app** も有効にします。
+2. 使っているターミナルのアプリを有効にします。Desktop を使うなら、使っているチャンネルのアプリも有効にします。安定版は **Hermes Agent.app**、canary は **Hermes Agent Canary.app**、ソースからビルドしたものは **Hermes.app** です。アプリごとに許可が要ります。
 3. 両方を完全に終了してから起動し直します。
 
 `hermes doctor` は、いまのターミナルの文脈がその許可をすでに持っているかを報告し、

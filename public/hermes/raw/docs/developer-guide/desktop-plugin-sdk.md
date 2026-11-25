@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "デスクトップのプラグイン SDK（@hermes/plugin-sdk）"
 description: "ネイティブの Hermes Desktop アプリを拡張します。ペイン、ページ、サイドバーのナビ、ステータスバー、パレットのコマンド、キー割り当て、テーマ、そしてプラグイン専用のバックエンドの名前空間を、import 1 行・ビルド不要で追加できます。"
 upstream_path: developer-guide/desktop-plugin-sdk.md
-upstream_blob: 8e8ae6736e80296457f4d0b58967dc9f654d5b1f
+upstream_blob: 83bc2dce39eeaf9b8cda5d4b0b67a255e15e6d06
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk
 ---
@@ -1384,9 +1384,12 @@ host.openSession(id, { profile?, intent? }) // open a stored session core-style;
                                            //   profile: soft-swap to that profile's backend first
                                            //   intent: 'in-place' (default) | 'stack' | 'tab' | 'window'
 host.newChat(profile?)                     // fresh chat draft, optionally in another profile
-host.openWorkspace(id, { render, title?, minWidth?, onClose? })
+host.openWorkspace(id, { render, title?, minWidth?, onClose?, approvalScope? })
                                            // dock a plugin-rendered tab into the MAIN
-                                           //   workspace zone and reveal it; returns a disposer
+                                           //   workspace zone and reveal it; returns a disposer.
+                                           //   approvalScope: 'per-profile' (a room of several
+                                           //   profiles) shows a per-profile approvals hint in
+                                           //   the statusbar instead of the active profile's mode
 host.paneVisibility(paneId)                // ReadableAtom<boolean> — is a contributed pane
                                            //   actually on screen (its zone's active tab)?
 host.onEvent(type, fn)                     // gateway event stream ('*' = all); returns disposer.

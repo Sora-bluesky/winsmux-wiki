@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "Hermes の管理画面"
 description: "設定、API キー、MCP サーバー、メッセージ連携の紐付け、Webhook、ゲートウェイ、記憶、認証情報、セッション、ログ、集計、定時実行、スキルをブラウザから管理する画面です"
 upstream_path: user-guide/features/web-dashboard.md
-upstream_blob: d1d585bdd64645c3f8fdd08c3e281f748f022ec5
+upstream_blob: b8733611411a0b05e54e6b028df52be19315828a
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard
 ---
@@ -750,7 +750,14 @@ You → /reload
   項目は `pressure`（`ok` / `elevated` / `critical` /
   `unknown`）、`gateway_rss_mb`、`system_total_mb`、`system_available_mb`、
   `swap_used_mb`、`sampled_at`、`boot_id`、`last_boot_unclean`、
-  `last_boot_suspected_oom`。ひっ迫は、システムの空きメモリが 128 MiB（または 15%）を
+  `last_boot_suspected_oom`、`last_boot_oom_kill`（`null`、`cgroup`、`host` のいずれか。ゲートウェイが正しく終わらずに止まり、
+  最後の鼓動から今回の起動までのあいだに、カーネルの OOM キラーがゲートウェイの cgroup 内のプロセス（`cgroup`）/
+  ホスト上のどこかのプロセス（`host`）を止めたことを示します。このカウンターはどのプロセスかまでは示さず、
+  `host` はその端末のほかのプロセスも数えます。systemd のユニットやコンテナを再起動すると cgroup が作り直されるので、
+  そのあとはたいてい `host` になります。`cgroup` になるのは、残っている cgroup の中でゲートウェイが再起動したときだけです。
+  比べるのは最後の鼓動が 15 分以内のときだけで、Linux 専用です）、`last_boot_watchdog_exit`（前回のゲートウェイが
+  監視役に終わらされた。イベントループの生存監視か、終了処理の監視のどちらか）、`last_boot_memory_starved`
+  （その監視役による強制終了が、ホストのメモリのひっ迫が `critical` のときに起きた）。ひっ迫は、システムの空きメモリが 128 MiB（または 15%）を
   切ると `elevated`、64 MiB（または 5%）を切ると `critical` になります。行儀の悪い終わり方が
   OOM で落とされた疑いと見なされるのと同じ水準です。150 秒より古い（あるいは未来の日付の）
   鼓動は、数字はそのままに `pressure` だけ `unknown` へ落とします。死んだゲートウェイの
