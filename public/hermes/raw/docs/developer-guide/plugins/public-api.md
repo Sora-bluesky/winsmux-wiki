@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "プラグインの公開 API"
 description: "プラグインが import してよい Hermes のモジュールと名前の一覧です。それ以外の Hermes の import には hermes plugins validate が警告を出します"
 upstream_path: developer-guide/plugins/public-api.md
-upstream_blob: d960cf5371fb56fdb1302dd1e1ee00cc576aebd1
+upstream_blob: 6ff31a4457a42822a656731f7e7df02462769f01
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/public-api
 ---
@@ -209,6 +209,19 @@ sources:
 | `hermes_cli.profiles_run_elsewhere` | `clear_profile_run_elsewhere` | user-guide/multi-profile-gateways.md § プラグインが別の場所で動かすプロファイル |
 | `hermes_cli.profiles_run_elsewhere` | `run_elsewhere` | user-guide/multi-profile-gateways.md § プラグインが別の場所で動かすプロファイル |
 | `cron.plugin_api` | モジュール全体 | plugins/index.md § ジョブを一度だけ登録し、cron の配信先を読み取る |
-| `agent.reasoning_effort` | `gemini_thinking_config` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
-| `agent.reasoning_effort` | `clamp_effort` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `agent.bounded_response` | `read_streaming_error_body` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `agent.gemini_model_family` | モジュール全体 | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `agent.gemini_urls` | モジュール全体 | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `agent.output_budget_timeout` | モジュール全体 | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `agent.process_bootstrap` | `build_keepalive_http_client` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
 | `agent.reasoning_effort` | `bare_gemini_model_id` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `agent.reasoning_effort` | `clamp_effort` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `agent.reasoning_effort` | `gemini_thinking_config` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `agent.reasoning_effort` | `gemini_top_thinking_level` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `agent.ssl_verify` | `resolve_httpx_verify` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `hermes_cli.auth` | `default_httpx_verify` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `hermes_cli.auth` | `get_provider_auth_state` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `hermes_cli.auth` | `nous_portal_base_url` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `hermes_cli.auth` | `resolve_nous_access_token` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `hermes_cli.config_providers` | `get_custom_provider_tls_settings` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |
+| `tools.schema_sanitizer` | `normalize_type_array` | model-provider-plugin.md § ネイティブ Gemini の推論向けの公開ヘルパー |

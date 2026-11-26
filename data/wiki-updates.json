@@ -2,6 +2,93 @@
   "generatedAt": "2026-11-26",
   "entries": [
     {
+      "date": "2026-11-26",
+      "sha": "9558f82",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/desktop-plugin-sdk",
+          "title": "デスクトップのプラグイン SDK（@hermes/plugin-sdk）",
+          "url": "/hermes/docs/developer-guide/desktop-plugin-sdk/"
+        },
+        {
+          "id": "developer-guide/gateway-local-sessions",
+          "title": "gateway のローカルセッション",
+          "url": "/hermes/docs/developer-guide/gateway-local-sessions/"
+        },
+        {
+          "id": "developer-guide/gateway-monitoring",
+          "title": "ゲートウェイの監視",
+          "url": "/hermes/docs/developer-guide/gateway-monitoring/"
+        },
+        {
+          "id": "developer-guide/macos-bundle-updates",
+          "title": "macOS バンドルの更新",
+          "url": "/hermes/docs/developer-guide/macos-bundle-updates/"
+        },
+        {
+          "id": "developer-guide/plugins/public-api",
+          "title": "プラグインの公開 API",
+          "url": "/hermes/docs/developer-guide/plugins/public-api/"
+        },
+        {
+          "id": "developer-guide/stable-releases",
+          "title": "安定版リリースの受け入れと昇格",
+          "url": "/hermes/docs/developer-guide/stable-releases/"
+        },
+        {
+          "id": "getting-started/installation",
+          "title": "インストール",
+          "url": "/hermes/docs/getting-started/installation/"
+        },
+        {
+          "id": "getting-started/platform-support",
+          "title": "対応プラットフォーム",
+          "url": "/hermes/docs/getting-started/platform-support/"
+        },
+        {
+          "id": "getting-started/updating",
+          "title": "更新とアンインストール",
+          "url": "/hermes/docs/getting-started/updating/"
+        },
+        {
+          "id": "reference/package-management",
+          "title": "パッケージ管理",
+          "url": "/hermes/docs/reference/package-management/"
+        },
+        {
+          "id": "user-guide/configuration",
+          "title": "Hermes Agent の設定",
+          "url": "/hermes/docs/user-guide/configuration/"
+        },
+        {
+          "id": "user-guide/desktop",
+          "title": "Hermes Desktop",
+          "url": "/hermes/docs/user-guide/desktop/"
+        },
+        {
+          "id": "user-guide/features/plugins",
+          "title": "プラグイン",
+          "url": "/hermes/docs/user-guide/features/plugins/"
+        },
+        {
+          "id": "user-guide/features/web-dashboard",
+          "title": "Hermes の管理画面",
+          "url": "/hermes/docs/user-guide/features/web-dashboard/"
+        },
+        {
+          "id": "user-guide/messaging",
+          "title": "メッセージングゲートウェイ",
+          "url": "/hermes/docs/user-guide/messaging/"
+        },
+        {
+          "id": "user-guide/windows-native",
+          "title": "Windows（ネイティブ）ガイド",
+          "url": "/hermes/docs/user-guide/windows-native/"
+        }
+      ]
+    },
+    {
       "date": "2026-11-25",
       "sha": "1e8bd18",
       "upstream": null,

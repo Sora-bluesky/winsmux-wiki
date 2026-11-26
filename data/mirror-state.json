@@ -102,9 +102,9 @@
       "translatedAt": "2026-11-22T22:44:01.430Z"
     },
     "developer-guide/model-provider-plugin.md": {
-      "blob": "709e8b77da8db5a99a98249c17981c8ad0565c7b",
+      "blob": "e52e824e0fd37a4f0daa4bc5128ffd99b8b2dd96",
       "status": "translated",
-      "translatedAt": "2026-11-24T22:44:43.631Z"
+      "translatedAt": "2026-11-26T01:39:02.070Z"
     },
     "developer-guide/plugin-llm-access.md": {
       "blob": "a619c06ae25e17c6d0b0f1cb93fd9e3ea8e6c4db",
@@ -2521,9 +2521,9 @@
       "translatedAt": "2026-11-06T00:06:11.948Z"
     },
     "developer-guide/plugins/public-api.md": {
-      "blob": "d960cf5371fb56fdb1302dd1e1ee00cc576aebd1",
+      "blob": "6ff31a4457a42822a656731f7e7df02462769f01",
       "status": "translated",
-      "translatedAt": "2026-11-25T22:51:26.568Z"
+      "translatedAt": "2026-11-26T01:39:02.083Z"
     },
     "developer-guide/gateway-ssh-clients.md": {
       "blob": "a0525e5d143964cc9da7a2f0ab9762b126c185e0",
@@ -2541,5 +2541,5 @@
       "translatedAt": "2026-11-17T23:02:10.590Z"
     }
   },
-  "snapshotCommit": "3113542d64752423e1e9d2ff13bfbd2ce764dea9"
+  "snapshotCommit": "b579fe6a93880128ff2506cf9818c33b2b131fd9"
 }

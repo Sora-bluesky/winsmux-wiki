@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "モデルプロバイダーのプラグイン"
 description: "Hermes Agent 向けにモデルプロバイダー（推論バックエンド）のプラグインを作る方法"
 upstream_path: developer-guide/model-provider-plugin.md
-upstream_blob: 709e8b77da8db5a99a98249c17981c8ad0565c7b
+upstream_blob: e52e824e0fd37a4f0daa4bc5128ffd99b8b2dd96
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin
 ---
@@ -482,7 +482,7 @@ models.dev が知らない一覧のために、`model_aliases`（`{"sonnet": "cl
 | プラグイン | 見どころ |
 |---|---|
 | `plugins/model-providers/openrouter/` | プロバイダーの優先設定を持つ集約型。モデル一覧が公開されています |
-| `plugins/model-providers/gemini/` | `thinking_config` の変換（ネイティブ形式と OpenAI 互換の入れ子形式の両方） |
+| `plugins/model-providers/google/` | `thinking_config` の変換（ネイティブ形式と OpenAI 互換の入れ子形式の両方） |
 | `plugins/model-providers/kimi-coding/` | `OMIT_TEMPERATURE`、`extra_body.thinking`、トップレベルの `reasoning_effort` |
 | `plugins/model-providers/qwen-oauth/` | メッセージの正規化、`cache_control` の差し込み、VL の高解像度対応 |
 | `plugins/model-providers/nous/` | 出所を示すタグ、「無効なときは推論を送らない」 |
