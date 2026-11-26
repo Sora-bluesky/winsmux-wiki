@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-11-26、対象期間 = 2026-11-20 〜 2026-11-26（JST）
+生成日 = 2026-11-27、対象期間 = 2026-11-21 〜 2026-11-27（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,11 +16,12 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-11-26 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- 2026-11-26 [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
 - 2026-11-26 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - 2026-11-26 [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
 - 2026-11-26 [ゲートウェイの監視](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-monitoring/)
 - 2026-11-26 [macOS バンドルの更新](https://wiki.winsmux.dev/hermes/docs/developer-guide/macos-bundle-updates/)
-- 2026-11-26 [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
 - 2026-11-26 [安定版リリースの受け入れと昇格](https://wiki.winsmux.dev/hermes/docs/developer-guide/stable-releases/)
 - 2026-11-26 [インストール](https://wiki.winsmux.dev/hermes/docs/getting-started/installation/)
 - 2026-11-26 [対応プラットフォーム](https://wiki.winsmux.dev/hermes/docs/getting-started/platform-support/)
@@ -34,7 +35,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-26 [Windows（ネイティブ）ガイド](https://wiki.winsmux.dev/hermes/docs/user-guide/windows-native/)
 - 2026-11-25 [プラットフォームアダプターを追加する](https://wiki.winsmux.dev/hermes/docs/developer-guide/adding-platform-adapters/)
 - 2026-11-25 [ゲートウェイの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-internals/)
-- 2026-11-25 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
 - 2026-11-25 [オブザーバーフック](https://wiki.winsmux.dev/hermes/docs/developer-guide/observer-hooks/)
 - 2026-11-25 [Hermes プラグインを作る](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/)
 - 2026-11-25 [Relay 共有メトリクス](https://wiki.winsmux.dev/hermes/docs/developer-guide/relay-shared-metrics/)
@@ -56,19 +56,12 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-21 [Google Vertex AI](https://wiki.winsmux.dev/hermes/docs/guides/google-vertex/)
 - 2026-11-21 [管理者による適用範囲](https://wiki.winsmux.dev/hermes/docs/user-guide/managed-scope/)
 - 2026-11-21 [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
-- 2026-11-20 [コンテキストの圧縮とキャッシュ](https://wiki.winsmux.dev/hermes/docs/developer-guide/context-compression-and-caching/)
-- 2026-11-20 [共有バンドルビルド](https://wiki.winsmux.dev/hermes/docs/developer-guide/shared-bundle-builds/)
-- 2026-11-20 [Hermes Agent クイックスタート](https://wiki.winsmux.dev/hermes/docs/getting-started/quickstart/)
-- 2026-11-20 [Hermes Agent で Nemotron 3 Ultra を無料で動かす](https://wiki.winsmux.dev/hermes/docs/guides/run-nemotron-3-ultra-free/)
-- 2026-11-20 [MCP 設定の早見表](https://wiki.winsmux.dev/hermes/docs/reference/mcp-config-reference/)
-- 2026-11-20 [パスワードとログイン](https://wiki.winsmux.dev/hermes/docs/user-guide/features/credential-vault/)
-- 2026-11-20 [他のエージェントから取り込む](https://wiki.winsmux.dev/hermes/docs/user-guide/import-from-other-agents/)
 
 ## 週次まとめ
 
-対象週: 2026-W47
+対象週: 2026-W48
 
-プラグインまわりが大きく見直され、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、プラグインカタログとその登録申請、同梱のプラグインのほか、モデル・画像生成・動画生成・メモリー・コンテキストエンジン・ターミナル環境の各プロバイダプラグインに手が入りました。スキルでは、スキルの仕組みと作り方に加えて、Manim による数学動画、Pinggy トンネル、RSS や GitHub の定期チェック、Minecraft の MOD 入りサーバー、リモート MCP サーバーの OAuth、バイオインフォマティクス、OSINT 調査、ML 論文の執筆、ast-grep、Code Wiki、debugpy によるデバッグ、サイト公開などのページが更新されています。ほかに、アーキテクチャやエージェントループ・ACP・ゲートウェイの内部、セッションの保存領域と state.db の復旧、設定・環境変数・CLIコマンド一覧・スラッシュコマンド早見表、フォールバックプロバイダー、バックアップと移行、チェックポイントと /rollback、セキュリティ、Hermes Desktop、API サーバーのページが新しい内容になりました。
+プラグインまわりでは、モデルプロバイダーやメモリープロバイダーのプラグイン、プラグインの公開 API、デスクトップのプラグイン SDK、Hermes プラグインの作り方のページが更新されています。ゲートウェイについては、内部の仕組みやローカルセッション、監視、いくつも同時に動かす方法、プラットフォームアダプターの追加、メッセージングゲートウェイのページに手が入りました。ほかに、インストールと更新・アンインストール、Windows（ネイティブ）ガイド、macOS バンドルの更新、設定、CLIコマンド一覧と環境変数、カンバン、定期実行タスク（cron）、管理画面とダッシュボードの拡張、イベントフックとオブザーバーフックのページが新しい内容になりました。
 
 ## 正本
 

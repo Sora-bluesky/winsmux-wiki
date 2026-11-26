@@ -3,7 +3,7 @@ license: "MIT. Translation of the Hermes Agent documentation, Copyright (c) 2025
 title: "エージェントループの内部"
 description: "AIAgent の実行、API モード、ツール、コールバック、フォールバックの挙動を詳しくたどる"
 upstream_path: developer-guide/agent-loop.md
-upstream_blob: 7e03645689b552164c4af3844c97cf9c198755b8
+upstream_blob: be7646123ad6fefc3e6be9aedd5e73c2b53b614b
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/agent-loop
 ---
@@ -187,7 +187,7 @@ for each tool_call in response.tool_calls:
 エージェントは `IterationBudget` で反復回数を数えています。
 
 - 既定値: 500 回（`agent.max_turns` で変えられます）
-- エージェントごとに別々の上限を持ちます。サブエージェントは `delegation.max_iterations`（既定値 50）で頭打ちになる独自の上限を持つので、親とサブエージェントを合わせた合計は親の上限を超えることがあります
+- エージェントごとに別々の上限を持ちます。サブエージェントは `delegation.max_iterations`（既定値 250）で頭打ちになる独自の上限を持つので、親とサブエージェントを合わせた合計は親の上限を超えることがあります
 - 100% に達すると、エージェントは止まり、そこまでにやった作業のまとめを返します
 
 ### フォールバックのモデル {#fallback-model}

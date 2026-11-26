@@ -10,6 +10,11 @@ raw: /hermes/raw/updates.md
 
 ## 2026-11-26
 
+- [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
+- [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
+
+## 2026-11-26
+
 - [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
 - [gateway のローカルセッション](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-local-sessions/)
 - [ゲートウェイの監視](https://wiki.winsmux.dev/hermes/docs/developer-guide/gateway-monitoring/)
@@ -3465,3 +3470,7 @@ Hermes Desktop とデスクトップのプラグイン SDK、デスクトップ�
 ## 週次まとめ 2026-W47
 
 プラグインまわりが大きく見直され、Hermes プラグインの作り方や公開 API、デスクトップのプラグイン SDK、プラグインカタログとその登録申請、同梱のプラグインのほか、モデル・画像生成・動画生成・メモリー・コンテキストエンジン・ターミナル環境の各プロバイダプラグインに手が入りました。スキルでは、スキルの仕組みと作り方に加えて、Manim による数学動画、Pinggy トンネル、RSS や GitHub の定期チェック、Minecraft の MOD 入りサーバー、リモート MCP サーバーの OAuth、バイオインフォマティクス、OSINT 調査、ML 論文の執筆、ast-grep、Code Wiki、debugpy によるデバッグ、サイト公開などのページが更新されています。ほかに、アーキテクチャやエージェントループ・ACP・ゲートウェイの内部、セッションの保存領域と state.db の復旧、設定・環境変数・CLIコマンド一覧・スラッシュコマンド早見表、フォールバックプロバイダー、バックアップと移行、チェックポイントと /rollback、セキュリティ、Hermes Desktop、API サーバーのページが新しい内容になりました。
+
+## 週次まとめ 2026-W48
+
+プラグインまわりでは、モデルプロバイダーやメモリープロバイダーのプラグイン、プラグインの公開 API、デスクトップのプラグイン SDK、Hermes プラグインの作り方のページが更新されています。ゲートウェイについては、内部の仕組みやローカルセッション、監視、いくつも同時に動かす方法、プラットフォームアダプターの追加、メッセージングゲートウェイのページに手が入りました。ほかに、インストールと更新・アンインストール、Windows（ネイティブ）ガイド、macOS バンドルの更新、設定、CLIコマンド一覧と環境変数、カンバン、定期実行タスク（cron）、管理画面とダッシュボードの拡張、イベントフックとオブザーバーフックのページが新しい内容になりました。
