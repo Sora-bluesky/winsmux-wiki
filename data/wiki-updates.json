@@ -1,6 +1,18 @@
 {
-  "generatedAt": "2026-11-27",
+  "generatedAt": "2026-11-28",
   "entries": [
+    {
+      "date": "2026-11-27",
+      "sha": "9fcb0e0",
+      "upstream": null,
+      "pages": [
+        {
+          "id": "developer-guide/agent-loop",
+          "title": "エージェントループの内部",
+          "url": "/hermes/docs/developer-guide/agent-loop/"
+        }
+      ]
+    },
     {
       "date": "2026-11-26",
       "sha": "5b6ef66",

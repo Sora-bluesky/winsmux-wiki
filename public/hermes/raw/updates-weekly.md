@@ -6,7 +6,7 @@ raw: /hermes/raw/updates-weekly.md
 
 # 今週の更新（Hermes Agent Wiki）
 
-生成日 = 2026-11-27、対象期間 = 2026-11-21 〜 2026-11-27（JST）
+生成日 = 2026-11-28、対象期間 = 2026-11-22 〜 2026-11-28（JST）
 
 ## あなたの Hermes への頼み方
 
@@ -16,6 +16,7 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 
 ## 変わったページ
 
+- 2026-11-27 [エージェントループの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/agent-loop/)
 - 2026-11-26 [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)
 - 2026-11-26 [プラグインの公開 API](https://wiki.winsmux.dev/hermes/docs/developer-guide/plugins/public-api/)
 - 2026-11-26 [デスクトップのプラグイン SDK（@hermes/plugin-sdk）](https://wiki.winsmux.dev/hermes/docs/developer-guide/desktop-plugin-sdk/)
@@ -51,11 +52,6 @@ https://wiki.winsmux.dev/hermes/raw/updates-weekly.md を読んで、私の設�
 - 2026-11-22 [Hermes の Docker 設定](https://wiki.winsmux.dev/hermes/docs/user-guide/docker/)
 - 2026-11-22 [MCP（Model Context Protocol）](https://wiki.winsmux.dev/hermes/docs/user-guide/features/mcp/)
 - 2026-11-22 [画像の貼り付けと視覚認識](https://wiki.winsmux.dev/hermes/docs/user-guide/features/vision/)
-- 2026-11-21 [定期実行がうまくいかないとき](https://wiki.winsmux.dev/hermes/docs/guides/cron-troubleshooting/)
-- 2026-11-21 [Google Gemini](https://wiki.winsmux.dev/hermes/docs/guides/google-gemini/)
-- 2026-11-21 [Google Vertex AI](https://wiki.winsmux.dev/hermes/docs/guides/google-vertex/)
-- 2026-11-21 [管理者による適用範囲](https://wiki.winsmux.dev/hermes/docs/user-guide/managed-scope/)
-- 2026-11-21 [セキュリティ](https://wiki.winsmux.dev/hermes/docs/user-guide/security/)
 
 ## 週次まとめ
 

@@ -8,6 +8,10 @@ raw: /hermes/raw/updates.md
 
 公式 docs への追随記録。
 
+## 2026-11-27
+
+- [エージェントループの内部](https://wiki.winsmux.dev/hermes/docs/developer-guide/agent-loop/)
+
 ## 2026-11-26
 
 - [モデルプロバイダーのプラグイン](https://wiki.winsmux.dev/hermes/docs/developer-guide/model-provider-plugin/)

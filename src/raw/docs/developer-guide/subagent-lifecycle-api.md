@@ -2,7 +2,7 @@
 title: "公開されたサブエージェントのライフサイクル API"
 description: ""
 upstream_path: developer-guide/subagent-lifecycle-api.md
-upstream_blob: 56d9388d0758835e59fd2dfed714764d42c8003e
+upstream_blob: 402033acad96030f1def6a713cca43fe2af1eb6d
 sources:
   - https://hermes-agent.nousresearch.com/docs/developer-guide/subagent-lifecycle-api
 ---
@@ -62,7 +62,7 @@ def launch_review(ctx):
 この API は、ライフサイクルを管理しながら非同期に実行するためのものです。子の生成と
 完了は、`delegate_task` とまったく同じ、ホストが受け持つ経路を通ります。親側の
 ツール解決の復元、記憶への通知、順番に並べた `subagent_stop` のフック、資源の後始末、
-子の費用の集計まで含みます。同期版の `delegate_task` ツール、まとめて任せるやり方、
+子の費用の集計まで含みます。`delegate_task` ツール、まとめて任せるやり方、
 そのゲートウェイや TUI での見え方は、どれも変わりません。最初の実装では、
 メタデータと終わったあとの結果を、プロセスの中に一時間だけ保持します。
 プロセスを再起動したあとは、`reconnect` が `RECONNECT_UNAVAILABLE` を返し、

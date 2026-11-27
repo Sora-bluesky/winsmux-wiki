@@ -2,7 +2,7 @@
 title: "機能の概要"
 description: ""
 upstream_path: user-guide/features/overview.md
-upstream_blob: 6a5922c651139568d6ff324234d516fff478d394
+upstream_blob: 8a51fb6348d66e78f2808c698aa1d52c932a41b2
 sources:
   - https://hermes-agent.nousresearch.com/docs/user-guide/features/overview
 ---
@@ -27,7 +27,7 @@ Hermes Agent には、ただのチャットにとどまらない多彩な機能�
 ## 自動化 {#automation}
 
 - **[定時タスク（cron）](/hermes/docs/user-guide/features/cron/)** — 普段の言葉づかい、または cron の書式でタスクを自動実行するよう予約できます。ジョブにスキルを紐づけたり、結果を好きなプラットフォームへ届けたり、一時停止・再開・編集もできます。
-- **[サブエージェントへの委任](/hermes/docs/user-guide/features/delegation/)** — `delegate_task` ツールは、独立した文脈・絞り込んだツールセット・専用のターミナルセッションを持つ子エージェントを立ち上げます。既定では3つのサブエージェントを同時に走らせられます（設定で変更可能）。
+- **[サブエージェントへの委任](/hermes/docs/user-guide/features/delegation/)** — `delegate_task` ツールは、独立した文脈・絞り込んだツールセット・専用のターミナルセッションを持つ子エージェントを立ち上げます。既定で最大10個のサブエージェントを同時に走らせられます（設定で変更可能）。
 - **[コードの実行](/hermes/docs/user-guide/features/code-execution/)** — `execute_code` ツールを使うと、エージェントが Hermes のツールをプログラムから呼び出す Python スクリプトを書けます。サンドボックス内の RPC 実行によって、何段階もの作業が LLM の1ターンに収まります。
 - **[イベントフック](/hermes/docs/user-guide/features/hooks/)** — 節目となる場面で独自のコードを走らせます。ゲートウェイ側のフックはログ・通知・webhook を、プラグイン側のフックはツールの横取り・計測・安全策を担います。
 - **[一括処理](/hermes/docs/user-guide/features/batch-processing/)** — 数百から数千のプロンプトに対して Hermes エージェントを並列で走らせ、学習データの生成や評価に使える ShareGPT 形式の軌跡データを出力します。
